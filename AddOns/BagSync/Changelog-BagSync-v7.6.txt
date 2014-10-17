@@ -1,0 +1,16 @@
+tag v7.6
+02a58ef1ef4ebba950787dc601e39d4de0395934
+Xruptor <xruptor@manaflux.com>
+2013-09-18 08:47:24 -0500
+
+v7.6
+
+
+--------------------
+
+Xruptor:
+	- -Version update
+	- -TOC update
+Mike Battersby:
+	- Fix bug with player name color.
+	- Add currency tooltips.

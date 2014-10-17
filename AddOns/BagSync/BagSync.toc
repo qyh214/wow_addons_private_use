@@ -1,0 +1,27 @@
+## Interface: 60000
+## Title: BagSync
+## Notes: BagSync tracks your characters items and displays it within tooltips.
+## Author: Xruptor
+## Version: 7.6
+## OptionalDeps: tekDebug
+## SavedVariables: BagSyncDB, BagSyncOpt, BagSyncGUILD_DB, BagSyncTOKEN_DB, BagSyncCRAFT_DB, BagSyncBLACKLIST_DB
+## X-Curse-Packaged-Version: v7.6
+## X-Curse-Project-Name: BagSync
+## X-Curse-Project-ID: bagsync
+## X-Curse-Repository-ID: wow/bagsync/mainline
+
+localization\localization.lua
+libs\LibStub.lua
+libs\CallbackHandler-1.0.lua
+libs\tekKonfigScroll.lua
+libs\LibItemSearch-1.0.lua
+libs\LibDataBroker-1.1.lua
+
+BagSync_Minimap.lua
+BagSync_Search.lua
+BagSync_Tokens.lua
+BagSync_Crafts.lua
+BagSync_Blacklist.lua
+BagSync_Profiles.lua
+BagSync_Config.lua
+BagSync.lua
