@@ -1,0 +1,15 @@
+## Interface: 60000
+## Title: Blizzmove
+## Notes: Move those blizzard windows
+## Author: yess
+## Version: r48
+## X-Email: starfire@fantasymail.de
+## X-Curse-Packaged-Version: r48
+## X-Curse-Project-Name: BlizzMove
+## X-Curse-Project-ID: blizzmove
+## X-Curse-Repository-ID: wow/blizzmove/mainline
+
+## SavedVariables: BlizzMoveDB
+
+Blizzmove.lua
+

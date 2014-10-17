@@ -1,0 +1,39 @@
+------------------------------------------------------------------------
+r151 | superk521 | 2014-03-15 11:57:39 +0000 (Sat, 15 Mar 2014) | 6 lines
+Changed paths:
+   A /tags/1.2.3 (from /trunk:150)
+
+tag as version 1.2.3
+update for newly added ilv 522 and 550 pvp trinkets
+update libs
+
+
+
+------------------------------------------------------------------------
+r150 | superk521 | 2014-03-15 11:53:23 +0000 (Sat, 15 Mar 2014) | 2 lines
+Changed paths:
+   M /trunk/data.lua
+
+update update for newly added ilv522 pvp trinkets
+
+------------------------------------------------------------------------
+r149 | superk521 | 2014-03-15 11:48:31 +0000 (Sat, 15 Mar 2014) | 1 line
+Changed paths:
+   M /trunk/ExtraCD.lua
+
+update to 1.2.3 for 5.4.7
+------------------------------------------------------------------------
+r148 | superk521 | 2014-03-15 11:31:47 +0000 (Sat, 15 Mar 2014) | 1 line
+Changed paths:
+   M /trunk/data.lua
+
+update for ilv550 pvp trinkets
+------------------------------------------------------------------------
+r147 | superk521 | 2014-03-15 11:13:13 +0000 (Sat, 15 Mar 2014) | 1 line
+Changed paths:
+   M /trunk/Libs/AceConfig-3.0/AceConfigRegistry-3.0/AceConfigRegistry-3.0.lua
+   M /trunk/Libs/AceGUI-3.0/AceGUI-3.0.lua
+   M /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-DropDown.lua
+
+update libs
+------------------------------------------------------------------------

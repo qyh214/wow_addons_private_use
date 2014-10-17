@@ -1,0 +1,26 @@
+------------------------------------------------------------------------
+r19 | jamash | 2014-10-14 05:25:18 +0000 (Tue, 14 Oct 2014) | 2 lines
+Changed paths:
+   M /trunk/.pkgmeta
+
+1.12 Beta 1
+TOC update for Warlords of Draenor pre-patch
+------------------------------------------------------------------------
+r18 | jamash | 2014-09-29 05:42:18 +0000 (Mon, 29 Sep 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+Learning Aid 1.12 Alpha 5
+------------------------------------------------------------------------
+r17 | jamash | 2014-09-16 21:57:54 +0000 (Tue, 16 Sep 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+Learning Aid 1.12 ALPHA 4
+------------------------------------------------------------------------
+r16 | jamash | 2014-08-08 04:07:08 +0000 (Fri, 08 Aug 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+Learning Aid 1.12 Alpha 3
+------------------------------------------------------------------------

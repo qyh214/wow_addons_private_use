@@ -1,0 +1,9 @@
+## Interface: 50400
+## Title: Titan Panel [|cffeda55fVolume|r] |cff00aa005.2.3.50400|r
+## Notes: Adds a volume control icon on your Titan Bar
+## Author: Titan Development Team (http://www.titanpanel.org)
+## Dependencies: Titan
+## Version: 5.2.3.50400
+## X-Child-Of: Titan
+
+TitanVolume.xml

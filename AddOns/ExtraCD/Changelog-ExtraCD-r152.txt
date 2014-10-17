@@ -1,0 +1,15 @@
+------------------------------------------------------------------------
+r152 | superk521 | 2014-10-04 06:50:38 +0000 (Sat, 04 Oct 2014) | 4 lines
+Changed paths:
+   M /trunk/ExtraCD.lua
+   M /trunk/ExtraCD.toc
+   M /trunk/Libs/AceConfig-3.0/AceConfigDialog-3.0/AceConfigDialog-3.0.lua
+   M /trunk/Libs/AceDB-3.0/AceDB-3.0.lua
+   M /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-ColorPicker.lua
+   M /trunk/data.lua
+
+**WOD Beta**
+1.update for talent spells (for API GetTalentInfo changed)
+2.update Ace3.0 libs
+more updates and fixes are on the way
+------------------------------------------------------------------------

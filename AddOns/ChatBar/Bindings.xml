@@ -1,0 +1,53 @@
+<Bindings>
+	<Binding name="CHATBAR_SAY" header="CHATBAR_HEADER">
+		ChatBar_UseChatType("SAY");
+	</Binding>
+	<Binding name="CHATBAR_YELL">
+		ChatBar_UseChatType("YELL");
+	</Binding>
+	<Binding name="CHATBAR_GUILD">
+		ChatBar_UseChatType("GUILD");
+	</Binding>
+	<Binding name="CHATBAR_OFFICER">
+		ChatBar_UseChatType("OFFICER");
+	</Binding>
+	<Binding name="CHATBAR_PARTY">
+		ChatBar_UseChatType("PARTY");
+	</Binding>
+	<Binding name="CHATBAR_RAID">
+		ChatBar_UseChatType("RAID");
+	</Binding>
+	<Binding name="CHATBAR_EMOTE">
+		ChatBar_UseChatType("EMOTE");
+	</Binding>
+	<Binding name="CHATBAR_CHANNEL1">
+		ChatBar_UseChatType("CHANNEL", ChatBar_ChannelBindings[1] or 1);
+	</Binding>
+	<Binding name="CHATBAR_CHANNEL2">
+		ChatBar_UseChatType("CHANNEL", ChatBar_ChannelBindings[2] or 2);
+	</Binding>
+	<Binding name="CHATBAR_CHANNEL3">
+		ChatBar_UseChatType("CHANNEL", ChatBar_ChannelBindings[3] or 3);
+	</Binding>
+	<Binding name="CHATBAR_CHANNEL4">
+		ChatBar_UseChatType("CHANNEL", ChatBar_ChannelBindings[4] or 4);
+	</Binding>
+	<Binding name="CHATBAR_CHANNEL5">
+		ChatBar_UseChatType("CHANNEL", ChatBar_ChannelBindings[5] or 5);
+	</Binding>
+	<Binding name="CHATBAR_CHANNEL6">
+		ChatBar_UseChatType("CHANNEL", ChatBar_ChannelBindings[6] or 6);
+	</Binding>
+	<Binding name="CHATBAR_CHANNEL7">
+		ChatBar_UseChatType("CHANNEL", ChatBar_ChannelBindings[7] or 7);
+	</Binding>
+	<Binding name="CHATBAR_CHANNEL8">
+		ChatBar_UseChatType("CHANNEL", ChatBar_ChannelBindings[8] or 8);
+	</Binding>
+	<Binding name="CHATBAR_CHANNEL9">
+		ChatBar_UseChatType("CHANNEL", ChatBar_ChannelBindings[9] or 9);
+	</Binding>
+	<Binding name="CHATBAR_CHANNEL10">
+		ChatBar_UseChatType("CHANNEL", ChatBar_ChannelBindings[10] or 10);
+	</Binding>
+</Bindings>

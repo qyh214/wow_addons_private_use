@@ -1,0 +1,27 @@
+﻿## Interface: 60000
+## Title: Fizzle
+## Author: phyber
+## Notes: Show item durability and quality in the character frame.
+## Notes-zhTW: 在角色視窗顯示耐久度。
+## Notes-zhCN: 在人物装备栏中显示物品品质与耐久度。
+## Version: 60000-1
+## SavedVariablesPerCharacter: FizzleDB
+## X-Category: Inventory
+## X-Embeds: Ace3
+## X-RelSite-WoWI: 5018
+## X-Website: http://phyber.wowinterface.com/
+## X-WoWIPortal: phyber
+## OptionalDeps: Ace3, Voyeur
+## X-Curse-Packaged-Version: 60000-1
+## X-Curse-Project-Name: Fizzle
+## X-Curse-Project-ID: fizzle
+## X-Curse-Repository-ID: wow/fizzle/mainline
+
+#@no-lib-strip@
+embeds.xml
+#@end-no-lib-strip@
+
+Locales\locales.xml
+
+Core.lua
+Inspect.lua

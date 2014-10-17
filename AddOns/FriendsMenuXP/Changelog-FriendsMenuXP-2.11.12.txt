@@ -1,0 +1,14 @@
+------------------------------------------------------------------------
+r25 | warbaby | 2012-11-12 06:24:53 +0000 (Mon, 12 Nov 2012) | 1 line
+Changed paths:
+   A /tags/2.11.12 (from /trunk:24)
+
+Tagging as 2.11.12
+------------------------------------------------------------------------
+r24 | warbaby | 2012-11-12 06:24:07 +0000 (Mon, 12 Nov 2012) | 1 line
+Changed paths:
+   M /trunk/FriendsMenuXP.lua
+   M /trunk/FriendsMenuXP.toc
+
+- fix "Ctrl+Click to target" feature
+------------------------------------------------------------------------

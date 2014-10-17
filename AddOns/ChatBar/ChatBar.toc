@@ -1,0 +1,24 @@
+## Interface: 50400
+## Title: ChatBar
+## Title-deDE: Chat-Leiste
+## Notes: Button Bar for openning chat messages of each type.
+## Notes-deDE: Button-Leiste zum Senden von Chatnachrichten jedes Typs.
+## Notes-frFR: Barre de boutons pour ouvrir les message de discussions de chaque type.
+## Notes-esES: Barra de botones para abrir los mensajes de chat de cada tipo.
+## OptionalDeps: Chronos
+## RequiredDeps:
+## SavedVariablesPerCharacter: ChatBar_VerticalDisplay, ChatBar_AlternateOrientation, ChatBar_HideSpecialChannels, ChatBar_TextOnButtonDisplay, ChatBar_ButtonFlashing, ChatBar_BarBorder, ChatBar_ButtonText, ChatBar_StoredStickies, ChatBar_HiddenButtons, ChatBar_TextChannelNumbers, ChatBar_HideAllButtons, ChatBar_AltArt, ChatBar_ChannelBindings, ChatBar_ButtonScale
+## Author: AnduinLothar
+## Version: 3.5
+## X-Date: $Date$
+## X-Revision: $Rev: 5127 $
+## X-Category: Chat
+## X-Website: http://www.wowinterface.com/downloads/info4422-ChatBar.html
+## X-Email: karlkfi@yahoo.com
+## X-Localizations: enUS
+## X-CompatibleLocales: enUS, enGB
+## X-Mush-Project-Name: ChatBar
+## X-Mush-Packaged-Version: 20
+## X-Mush-UpdateVer: 20
+
+ChatBar.xml

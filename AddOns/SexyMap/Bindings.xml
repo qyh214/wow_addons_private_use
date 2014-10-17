@@ -1,0 +1,9 @@
+<Bindings>
+	<Binding name="TOGGLESEXYMAPGATHERMAP" header="SexyMap">
+		if HudMapCluster:IsVisible() then
+			HudMapCluster:Hide()
+		else
+			HudMapCluster:Show()
+		end
+	</Binding>
+</Bindings>

@@ -1,0 +1,142 @@
+# 1.12b1
+
+Update TOC for Warlords of Draenor pre-patch 6.0.2
+
+# 1.12a5
+
+Talents that override existing spells, like Strangulate/Asphyxiate now
+work correctly.
+
+Retalenting spam filter is working, and now does not display redundant
+entries for spells that are unlearned and then immediately relearned
+when Summarize is selected.
+
+Ignore list is still broken. Do not use.
+
+SpellAPI is more comprehensive and robust.
+
+Deleted a lot of old, commented-out code from previous expansions.
+
+# 1.12a4
+
+Mangle is working.
+Flyouts are working.
+/la search is working.
+Ignore list is broken. Do not use.
+
+# 1.12a3
+
+Actually fixed the issue with spec-specific spells appearing in /la search
+results whether or not they were on an action bar, for reals this time.
+
+Added new object-oriented SpellAPI.lua, which may become an independent
+library at some point.
+
+Pulled out a lot of obsolete code that has succumbed to bitrot.
+There's still a lot left.
+
+Known Issue: If you change specs, all the spec-specific spells for the
+spec you didn't start the current game session in will appear. Probably
+not that difficult to fix, but it's late and I want to get something at
+least semi-functional out tonight.
+
+# 1.12a2
+
+Fixed the issue with spec-specific spells breaking /la search
+[Update: Did not actually fix the issue with spec-specific spells]
+
+# 1.12a1
+
+Updated for WoW 5.0.4 (Pre-Mists of Pandaria patch)
+
+Removed support for mini-pets and mounts due to persistent bugs.
+If you want to see support for mini-pets and mounts return, please
+contact the author at jamash.kj@gmail.com.
+
+# 1.11
+
+Updated for WoW 4.0.1 (Pre-Cataclysm patch)
+
+Includes new "Train All" button on skill and class trainers.
+
+Interface updated to 40000
+
+# 1.10.1
+
+Chinese localizations added (zhCN and zhTW), kindly provided by wowuicn.
+
+# 1.10
+
+The Learning Aid window now grows wider when there are too many
+abilities on it to fit in one column.
+
+Korean localization added, kindly provided by talkswind.
+
+# 1.09
+
+The "Find Shapeshift forms" toggle was backwards.  Fixed.
+
+New Ignore Ability function.  Ctrl-click on an icon in the Learning Aid
+window to ignore that ability when using the Search feature.
+
+You can also use /la ignore Ability Name and /la unignore Ability Name
+
+/la unignoreall to reset the list of ignored abilities
+
+When the option "Show Learn/Unlearn Messages" is set to "Summarize",
+spells that are unlearned and immediately relearned while swapping
+talent specs are not printed to the chat log.
+
+# 1.08
+
+Added an option to toggle whether to search for Shaman totems when
+searching for abilities missing from action bars.
+
+Fixed wrong companion bug (again).
+
+# 1.07.3
+
+Fixed a bug that caused incorrect text to appear on the context menu.
+
+# 1.07.2
+
+Added German translation kindly provided by Freydis88.
+
+# 1.07.1
+
+Fixed long-standing bug that caused the wrong companion to appear when
+learning a new companion under laggy conditions.
+
+# 1.07 Completed Features
+
+When the player unlearns a spell or ability due to a talent reset,
+remember where on the player's action bars that spell or ability was.
+When the spell or ability is relearned, put it back on the player's
+action bar in the same place, as long as that slot is empty.
+
+Same as above, but due to a server-side talent reset.
+
+Remember multiple sets of unlearned ability to action bar button
+mappings.
+
+Filter "You have learned" and "You have unlearned" spam down to two
+lines, saying "You have unlearned A, B, C." and "You have learned X, Y,
+Z."
+  Dual Spec Swapping: Complete
+  Unlearning Talents: Complete
+  Batch-learning Talents with the Talent Preview system: Complete
+  Batch-learning Talents with an addon: Complete
+  Singly-learning Talents with multiple ranks: Complete
+  Pet Talents: Complete
+
+# Future
+
+Rewrite event handlers using the new 3.0 Secure State system.
+
+Fix macro scanner to work with spells that have parentheses in their
+names, such as "Swipe (Bear)".
+
+# Possible
+
+Rewrite entire spell learn / unlearn system to use the system chat
+message event instead of caching and diffing.

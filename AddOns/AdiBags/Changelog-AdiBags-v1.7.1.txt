@@ -1,0 +1,19 @@
+tag v1.7.1
+8b23d02ed11ece37e17fe4eeefbfe182ed404245
+Adirelle <adirelle@gmail.com>
+2014-10-16 22:49:04 +0200
+
+Fixed most issues with the reagent bank.
+
+
+--------------------
+
+Adirelle:
+	- Fixed the reagent section name when displaying the bag slots.
+	- Do not display any bag slot for the reagent bank.
+	- Apparently Blizzard's NewItem system does not support the bank.
+	- Fixed the error happening when the mouse cursor enters bank buttons.
+	- Fix error in BankFrame.lua line 18.
+	- Reuse Blizzard's junk icon and quality border.
+	- Better reageant bank integration, yet not complete
+	- FORGE_MASTER is no more.

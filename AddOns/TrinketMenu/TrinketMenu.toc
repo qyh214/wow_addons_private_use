@@ -1,0 +1,14 @@
+﻿## Interface: 60000
+## Title: TrinketMenu |cFF99CC01rev|r |cFFFF00006.0.1|r
+## Version: 6.0.1
+## Author: Gello, Resike
+## Notes: Addon to manage trinkets.
+## SavedVariables: TrinketMenuOptions
+## SavedVariablesPerCharacter: TrinketMenuPerOptions, TrinketMenuQueue
+
+TrinketMenu.lua
+TrinketMenu.xml
+TrinketMenuOpt.lua
+TrinketMenuOpt.xml
+TrinketMenuQueue.lua
+TrinketMenuQueue.xml

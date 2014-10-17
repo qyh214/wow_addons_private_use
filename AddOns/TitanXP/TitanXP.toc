@@ -1,0 +1,10 @@
+## Interface: 50400
+## Title: Titan Panel [|cffeda55fXP|r] |cff00aa005.2.3.50400|r
+## Notes: Adds information to Titan Panel about XP earned and time to level
+## Author: Titan Development Team (http://www.titanpanel.org)
+## SavedVariables: 
+## OptionalDeps: 
+## Dependencies: Titan
+## Version: 5.2.3.50400
+## X-Child-Of: Titan
+TitanXP.xml

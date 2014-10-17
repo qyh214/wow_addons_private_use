@@ -1,0 +1,31 @@
+## Interface: 60000 
+## Title: WIM
+## Author: Pazza (Bronzebeard), (Updated by Sylvanaar)
+## Version: 3.6.19
+## Notes: Give whispers an instant messenger feel.
+## eMail: johnlangone@gmail.com
+## X-Email: johnlangone@gmail.com
+## X-Website: http://www.wimaddon.com/
+## X-Category: Chat
+## DefaultState: Enabled
+## OptionalDeps: LibStub, CallbackHandler-1.0, ChatThrottleLib, LibSharedMedia-3.0, LibWho-2.0, LibChatHandler-1.0, LibChatAnims
+## X-Embeds: LibStub, CallbackHandler-1.0, ChatThrottleLib, LibSharedMedia-3.0, LibWho-2.0, LibChatHandler-1.0, LibChatAnims
+## SavedVariables: WIM3_Data, WIM3_Cache, WIM3_Filters, WIM3_History, WIM3_ChatFilters, WIM3_Alias
+## X-Curse-Packaged-Version: 3.6.19
+## X-Curse-Project-Name: WIM (WoW Instant Messenger) v3
+## X-Curse-Project-ID: wim-3
+## X-Curse-Repository-ID: wow/wim-3/mainline
+
+Libs\Includes.xml
+Sources\Namespace.lua
+Sources\Locale.lua
+Localization\Includes.xml
+
+WIM.lua
+
+Sources\Includes.xml
+Modules\Includes.xml
+
+ChangeLog.lua
+
+Skins\Default\skin.lua

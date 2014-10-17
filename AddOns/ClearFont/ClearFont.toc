@@ -1,0 +1,16 @@
+﻿## Interface: 60000
+## Title: ClearFont |r|cFF0099FFby Ice|r
+## Title-zhTW: ClearFont |r|cFF0099FFby 逆袭的蓝|r
+## Notes: Modify Game Fonts and Size, Color, Shadow Of Them.(For FontShow ZhTW Mode)
+## Notes-zhTW: 修改游戏字体以及大小、颜色、阴影等特效
+## Notes-zhCN: 修改游戏字体以及大小、颜色、阴影等特效
+## Version: v4.01a
+## Author: Kirkburn
+## URL: http://bbs.game.mop.com/viewthread.php?tid=1503056
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## X-Mush-Project-Name: ClearFont
+## X-Mush-Packaged-Version: v4.01a
+## X-Mush-UpdateVer: 11
+
+ClearFont.lua

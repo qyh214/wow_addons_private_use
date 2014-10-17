@@ -1,0 +1,26 @@
+------------------------------------------------------------------------
+r256 | merialkilrogg | 2013-10-04 07:40:27 +0000 (Fri, 04 Oct 2013) | 4 lines
+Changed paths:
+   A /tags/v1.8.12 (from /trunk:255)
+
+Tagging as v1.8.12
+
+Changes:
+- Updated for WoW 5.4
+------------------------------------------------------------------------
+r255 | merialkilrogg | 2013-10-04 06:08:07 +0000 (Fri, 04 Oct 2013) | 3 lines
+Changed paths:
+   M /trunk/AuctionLite.lua
+   M /trunk/AuctionLite.toc
+
+Bump version number to 1.8.12.
+Bump ToC to 50400.
+
+------------------------------------------------------------------------
+r254 | merialkilrogg | 2013-10-04 06:07:07 +0000 (Fri, 04 Oct 2013) | 2 lines
+Changed paths:
+   M /trunk/Util.lua
+
+Added Haghala's fix for GetAuctionItemInfo in 5.4.
+
+------------------------------------------------------------------------

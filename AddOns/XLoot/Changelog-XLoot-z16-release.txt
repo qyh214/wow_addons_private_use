@@ -1,0 +1,13 @@
+tag z16-release
+4aa51f238e4f1a1902867c0c31a98200d3c226ab
+Xuerian <sky.shell@gmail.com>
+2014-10-15 02:26:40 -0400
+
+TOC bump and minor error fix (Time to find out if anything else is broken!)
+
+
+--------------------
+
+Xuerian:
+	- Avoid red error text on manually closing loot
+	- TOC bump

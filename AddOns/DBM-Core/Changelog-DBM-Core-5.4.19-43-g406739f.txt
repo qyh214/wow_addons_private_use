@@ -1,0 +1,46 @@
+subversion:
+	- Omega via svn r11772: Found bug in IsCreatureGUID that was causing pretty much all bosses to report as wipes.
+	- Omega via svn r11771: Update repo info
+	- tandanu via svn r11770: hello, curse packager? are you alive?
+	- tandanu via svn r11769: poke curse packager
+	- tandanu via svn r11768: update version number for alpha builds
+	test auto-package, it should work now
+	- tandanu via svn r11767: move WoD branch to trunk
+	this is not a merge because there is nothing in trunk that we still need for anything...
+	- update pkgmeta for WoD
+	- TOM_RUS via svn r11763: Fix line endings and port a change from WoD branch
+	- ebmor via svn r11760: deDE update
+	- nbluewiz via svn r11756: # sync worldevent mod. # koKR update.
+	- Omega via svn r11750: fix error
+	- Omega via svn r11747: No reason not to put this change here too
+	- Omega via svn r11745: expand afk grievance protector even further
+	- Omega via svn r11739: Remove one line from CN live
+	- Omega via svn r11738: CN update
+	- Omega via svn r11736: More fixes
+	- Omega via svn r11735: missed couple lines
+	- Omega via svn r11733: Tweaks
+	- Omega via svn r11732: Put break changes on live too
+	- Omega via svn r11724: afk warning sooner
+	- Omega via svn r11723: don't apply tooltip disable to scenarios
+	- nbluewiz via svn r11719: # Remove non-working general channel sync. # koKR update.
+	- Omega via svn r11715: Found the bug in sortedicon that caused it to break if maxicon not defined.
+	- ebmor via svn r11706: deDE update
+	- Omega via svn r11704: Apply a fix that should probably correct any phase 4 timer issues caused by not using cinematic skip
+	- Omega via svn r11696: don't show range frame if not in a group
+	- Omega via svn r11694: Remove unused code
+	- Omega via svn r11691: add string here too
+	- Omega via svn r11682: Add two new voices.
+	- Omega via svn r11680: fix some missed text changes
+	- Omega via svn r11671: Allow manual loading of worldbosses
+	- Omega via svn r11666: Fix missing break, that loop shouldn't run to completion needlessly
+	- Omega via svn r11660: Add TI SVN url.
+	- Omega via svn r11657: Remove this too
+	- Omega via svn r11656: Remove arrow restriction on live as well as include the fix tom rus did.
+	- Omega via svn r11638: Remove oqueue filter, that addon should be using bnet coms now
+	- Omega via svn r11635: Hopefully Fix a rare issue where GUI might fail to load if users model option is turned off on login, but then enabled after login. (Message: ..\AddOns\DBM-GUI\DBM-GUI.lua line 1146: attempt to call upvalue 'CreateAnimationFrame' (a nil value))
+	- Omega via svn r11624: here too
+	- Omega via svn r11617: fixes
+	- Omega via svn r11609: fix garrosh/galagrask issue two fold
+	- Omega via svn r11607: Apparently sending malicous syncs is the thing to do in LFR so add self:IsInCombat() to all in combat sync handlers.
+	- ebmor via svn r11600: deDE update
+	- tandanu via svn r11595: increment version number

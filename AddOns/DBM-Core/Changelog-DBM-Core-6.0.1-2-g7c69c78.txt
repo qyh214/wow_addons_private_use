@@ -1,0 +1,3 @@
+subversion:
+	- Omega via svn r11775: Fix errors with new dungeon, apparently it's event5, not normal5. bah
+	- tandanu via svn r11774: increment alpha version number

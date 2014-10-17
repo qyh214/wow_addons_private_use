@@ -1,0 +1,99 @@
+------------------------------------------------------------------------
+r878 | playerlin | 2014-09-24 06:57:04 +0000 (Wed, 24 Sep 2014) | 1 line
+Changed paths:
+   M /trunk/XPerl.lua
+   M /trunk/XPerl_Options/localization.zhTW.lua
+   M /trunk/localization.zhTW.lua
+
+zhTW locale minor changes. NO actual fixes, try to push a update let Asixandur's r877 commit can be packaged by WoWAce's packager, but if that packager still don't care my commit, then that's it. :(
+------------------------------------------------------------------------
+r877 | Asixandur | 2014-09-16 11:01:41 +0000 (Tue, 16 Sep 2014) | 1 line
+Changed paths:
+   M /trunk/XPerl.lua
+   M /trunk/XPerl_PlayerPet/XPerl_Player_Pet.lua
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+   M /trunk/XPerl_Target/XPerl_Target.lua
+
+More fixes
+------------------------------------------------------------------------
+r876 | Resike | 2014-09-15 11:26:28 +0000 (Mon, 15 Sep 2014) | 2 lines
+Changed paths:
+   M /trunk/XPerl.lua
+
+- Auto reset Player, Target, Focus frames.
+- Rewritten the XPerl_BlizzFrameDisable function.
+------------------------------------------------------------------------
+r875 | Asixandur | 2014-09-15 10:39:52 +0000 (Mon, 15 Sep 2014) | 1 line
+Changed paths:
+   M /trunk/XPerl_Player/XPerl_Player.lua
+
+Fixed another bunch of conditional and / or
+------------------------------------------------------------------------
+r874 | Asixandur | 2014-09-12 16:53:18 +0000 (Fri, 12 Sep 2014) | 1 line
+Changed paths:
+   M /trunk/XPerl_Player/XPerl_Player.lua
+
+Fixed problem with xp bar activation
+------------------------------------------------------------------------
+r873 | Asixandur | 2014-09-12 05:22:46 +0000 (Fri, 12 Sep 2014) | 2 lines
+Changed paths:
+   M /trunk/XPerl.lua
+   M /trunk/XPerl.toc
+   M /trunk/XPerl_ArcaneBar/XPerl_ArcaneBar.toc
+   M /trunk/XPerl_CustomHighlight/XPerl_CustomHighlight.toc
+   M /trunk/XPerl_Options/XPerl_FrameOptions.lua
+   M /trunk/XPerl_Options/XPerl_FrameOptions.xml
+   M /trunk/XPerl_Options/XPerl_Options.toc
+   M /trunk/XPerl_Party/XPerl_Party.toc
+   M /trunk/XPerl_PartyPet/XPerl_PartyPet.toc
+   M /trunk/XPerl_Player/XPerl_Player.toc
+   M /trunk/XPerl_PlayerBuffs/XPerl_PlayerBuffs.toc
+   M /trunk/XPerl_PlayerPet/XPerl_PlayerPet.toc
+   M /trunk/XPerl_RaidAdmin/XPerl_Check.xml
+   M /trunk/XPerl_RaidAdmin/XPerl_RaidAdmin.toc
+   M /trunk/XPerl_RaidAdmin/XPerl_RosterText.xml
+   M /trunk/XPerl_RaidFrames/XPerl_RaidFrames.toc
+   M /trunk/XPerl_RaidHelper/XPerl_RaidHelper.toc
+   M /trunk/XPerl_RaidHelper/XPerl_RaidHelper.xml
+   M /trunk/XPerl_RaidMonitor/XPerl_RaidMonitor.toc
+   M /trunk/XPerl_RaidMonitor/XPerl_RaidMonitor.xml
+   M /trunk/XPerl_RaidPets/XPerl_RaidPets.toc
+   M /trunk/XPerl_Target/XPerl_Target.toc
+   M /trunk/XPerl_TargetTarget/XPerl_TargetTarget.toc
+
+Updated TOC
+1/0(nil) -> true/false conversion tweaks
+------------------------------------------------------------------------
+r872 | Asixandur | 2014-08-27 06:31:35 +0000 (Wed, 27 Aug 2014) | 1 line
+Changed paths:
+   M /trunk/XPerl_Player/XPerl_Player.lua
+
+Let's try to silence this f*** error
+------------------------------------------------------------------------
+r871 | Asixandur | 2014-08-27 06:28:09 +0000 (Wed, 27 Aug 2014) | 1 line
+Changed paths:
+   M /trunk/XPerl.lua
+
+Another fix for 1688
+------------------------------------------------------------------------
+r870 | Asixandur | 2014-08-26 05:54:07 +0000 (Tue, 26 Aug 2014) | 1 line
+Changed paths:
+   M /trunk/XPerl.lua
+
+Fixed 1688
+------------------------------------------------------------------------
+r869 | Asixandur | 2014-08-25 05:06:51 +0000 (Mon, 25 Aug 2014) | 1 line
+Changed paths:
+   M /trunk/XPerl.lua
+   M /trunk/XPerl_Options/XPerl_FrameOptions.xml
+   M /trunk/XPerl_Player/XPerl_Player.lua
+
+Some misc fixes
+------------------------------------------------------------------------
+r868 | playerlin | 2013-11-17 13:39:04 +0000 (Sun, 17 Nov 2013) | 1 line
+Changed paths:
+   M /trunk/XPerl.lua
+   M /trunk/XPerl_Options/localization.zhTW.lua
+
+zhTW update for r867's change.
+------------------------------------------------------------------------
