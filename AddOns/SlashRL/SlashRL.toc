@@ -1,0 +1,11 @@
+## Author: Allara
+## Interface: 60000
+## Notes: Adds a /rl command to reload the UI
+## Title: /rl
+## Version: 1.0
+## X-Curse-Packaged-Version: r16-release
+## X-Curse-Project-Name: /rl
+## X-Curse-Project-ID: project-427
+## X-Curse-Repository-ID: wow/project-427/mainline
+
+SlashRL.xml

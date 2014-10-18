@@ -71,6 +71,7 @@ L["Font"] = "Schrifttyp"
 L["Font Color"] = "Schriftfarbe"
 L["Font Size"] = "Schriftgröße"
 L["Force a square texture. Fixed distortion on square textures."] = "Erzwinge eine rechteckige Textur. Feste Verformung von rechteckigen Texturen."
+L["Garrison Button (When Available)"] = "Garnisons-Knopf (Falls verfügbar)" -- Needs review
 L["Guild Dungeon Difficulty Indicator (When Available)"] = "Gildeninstanzschwierigkeitsindikator (falls verfügbar)"
 L["Heart"] = "Herz"
 L["Height"] = "Höhe"

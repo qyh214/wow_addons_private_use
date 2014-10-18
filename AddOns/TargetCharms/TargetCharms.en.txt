@@ -1,0 +1,146 @@
+TargetCharms
+Author: Gander (sca_tch@hotmail.com)
+Version: 1.5.7
+
+********************
+Table of Contents
+********************
+I.	Overview
+II	SHOW OPTIONS
+III.	Slash Commands
+IV. 	Layout options
+V. 	Version Changes
+
+
+********************
+I - OVERVIEW
+********************
+TargetCharms allows you to place a floating frame for easy and quick
+access to assigning charms/raid icons to targets.  The series of buttons are 
+highly customizable.  The user can display charms/raid icons in whatever 
+arrangement and order you desire, as well as change the frame's opacity, 
+location, and size. A movable "Ready Check" button and world markers/flare menu
+makes it great for raid leaders!
+
+To move icons or "Ready Check" button, right-click and drag them.  They must be set
+to draggable in the setup menu to allow this.  You can ctrl+right-click the frames
+to bring up the setup menu. To move the world markers you will need to go into setup and 
+click "Move Markers".  The first button will turn into a green square that will be
+draggable.
+
+********************
+II - SHOW OPTIONS
+********************
+
+Auto - You should probably set the show value to this if you are going to use the menu.
+	It will automatically show the menus when you are able to use them. The only
+	exception is that it will hide the charms/raid icons buttons when solo.
+
+Show - Will force the menu to always be shown even when not usable.
+
+Hide - Will hide the menu.
+
+
+********************
+III - SLASH COMMANDS
+********************
+
+/tc or /targetcharms
+
+------+-----------
+cmd	action
+------+-----------
+reset	Resets all the options to default.
+setup 	Brings up the setup menu.
+
+
+********************
+IV - LAYOUT OPTIONS
+********************
+
+To change the layout you must type a "placement" character followed 
+by a number corresponding with the charm/raid icon/world marker you want to be displayed. 
+Below is the table of "placement" characters, charms and flares.
+
+-Placement-
+------+-----------
+Char	Direction
+------+----------
+v	Down
+>	Right
+<	Left
+^	Up
+
+-Charms-
+------+-----------
+Num	Charm
+------+----------
+0	Clear
+1	Star
+2	Orange
+3	Diamond
+4	Triangle
+5	Moon
+6	Square
+7	X
+8	Skull
+_	[No button]
+
+-World Markers-
+------+-----------
+Num	Mark
+------+----------
+0	Clear flares
+B	Blue
+R	Red
+P	Purple
+G	Green
+Y	Yellow
+_	[No button]
+
+Or you can choose a preset from the dropdown and click "Set Layout" to enter
+a number of commonly used layouts.
+
+
+********************
+V - CHANGELOG
+********************
+v1.5.7
+changed logic to true/false from 1/nil
+
+v1.5.6
+Changed "/cwm all" to "/cwm 0" Thanks xlhjun
+
+v1.5.5
+Changed group/raid logic. Thanks Grungra.
+
+v1.5.4
+Changed to "mw" macros to resolve taint problems. Thanks HonestyHyj.
+
+v1.5 
+Added world markers
+Removed outdated cmdlines
+
+v1.4
+Ctrl+Right click brings up setup
+Added Toggle Icon option
+Removed drag box - Just right drag icons now
+Brought code up to spec
+
+v1.3
+Fixed dropdown width args
+
+v1.2
+Added Ready Button 
+Added Ready Button Options
+
+v1.1
+**Due to major storage changes, all saved settings will be reset**
+Made drag button visible
+Added numbers to the sliders
+Changed default settings and location
+Added preset layout loading option
+Added option to show frame only when targeting
+Made mod localisable
+
+v1.00 - First public release

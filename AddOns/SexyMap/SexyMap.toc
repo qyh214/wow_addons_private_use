@@ -17,7 +17,7 @@
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, CallbackHandler-1.0, LibStub, Blizzard_TimeManager
 ## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, CallbackHandler-1.0, LibStub
 ## SavedVariables: SexyMap2DB
-## X-Curse-Packaged-Version: v2.4.17
+## X-Curse-Packaged-Version: v2.4.17-2-g4d55c57
 ## X-Curse-Project-Name: SexyMap
 ## X-Curse-Project-ID: sexymap
 ## X-Curse-Repository-ID: wow/sexymap/mainline

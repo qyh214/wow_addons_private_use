@@ -925,7 +925,7 @@ function XLootFrame:Update(in_options)
 				-- Cache available space
 				if auto_space == nil then
 					local open = 0
-					for i = 1, NUM_BAG_SLOTS do
+					for i = 0, NUM_BAG_SLOTS do
 						open = open + GetContainerNumFreeSlots(i)
 					end
 					auto_space = open

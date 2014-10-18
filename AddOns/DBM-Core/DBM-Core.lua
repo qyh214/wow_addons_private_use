@@ -51,7 +51,7 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 11783 $"):sub(12, -3)),
+	Revision = tonumber(("$Revision: 11788 $"):sub(12, -3)),
 	DisplayVersion = "6.0.3 alpha", -- the string that is shown as version
 	ReleaseRevision = 11780 -- the revision of the latest stable version that is available
 }
@@ -224,7 +224,6 @@ local blockEnable = false
 local cachedGetTime = GetTime()
 local lastCombatStarted = cachedGetTime
 local loadcIds = {}
-local forceloadmapIds = {}
 local blockMovieSkipItems = {}
 local inCombat = {}
 local combatInfo = {}
@@ -956,12 +955,6 @@ do
 							local idTable = {strsplit(",", GetAddOnMetadata(i, "X-DBM-Mod-LoadCID"))}
 							for i = 1, #idTable do
 								loadcIds[tonumber(idTable[i]) or ""] = addonName
-							end
-						end
-						if GetAddOnMetadata(i, "X-DBM-Mod-ForceLoad-MapID") then
-							local idTable = {strsplit(",", GetAddOnMetadata(i, "X-DBM-Mod-ForceLoad-MapID"))}
-							for i = 1, #idTable do
-								forceloadmapIds[tonumber(idTable[i]) or ""] = true
 							end
 						end
 						if GetAddOnMetadata(i, "X-DBM-Mod-Block-Movie-Skip-ItemID") then
@@ -1918,7 +1911,7 @@ do
 				inRaid = true
 				sendSync("H")
 				SendAddonMessage("BigWigs", "VQ:0", IsPartyLFG() and "INSTANCE_CHAT" or "RAID")--Basically "H" to bigwigs. Tell Bigwigs users we joined raid. Send revision of 0 so bigwigs ignores revision but still replies with their version information
-				DBM:Schedule(2, DBM.RoleCheck, DBM)
+				DBM:Schedule(2, DBM.RoleCheck, false, DBM)
 				fireEvent("raidJoin", playerName)
 				if BigWigs and BigWigs.db.profile.raidicon and not DBM.Options.DontSetIcons then--Both DBM and bigwigs have raid icon marking turned on.
 					DBM:AddMsg(DBM_CORE_BIGWIGS_ICON_CONFLICT)--Warn that one of them should be turned off to prevent conflict (which they turn off is obviously up to raid leaders preference, dbm accepts either ore turned off to stop this alert)
@@ -1975,7 +1968,7 @@ do
 				inRaid = true
 				sendSync("H")
 				SendAddonMessage("BigWigs", "VQ:0", IsPartyLFG() and "INSTANCE_CHAT" or "PARTY")
-				DBM:Schedule(2, DBM.RoleCheck, DBM)
+				DBM:Schedule(2, DBM.RoleCheck, false, DBM)
 				fireEvent("partyJoin", playerName)
 			end
 			for i = 0, GetNumSubgroupMembers() do
@@ -2379,12 +2372,14 @@ function DBM:LFG_PROPOSAL_SUCCEEDED()
 end
 
 function DBM:ACTIVE_TALENT_GROUP_CHANGED()
-	DBM:RoleCheck()
+	if IsInGroup() then
+		DBM:RoleCheck(false)
+	end
 end
 
 function DBM:UPDATE_SHAPESHIFT_FORM()
-	if class == "WARRIOR" and DBM:AntiSpam(0.5, "STANCE") then--check for stance changes for prot warriors that might be specced into Gladiator Stance
-		DBM:RoleCheck()
+	if IsInGroup() and class == "WARRIOR" and DBM:AntiSpam(0.5, "STANCE") then--check for stance changes for prot warriors that might be specced into Gladiator Stance
+		DBM:RoleCheck(true)
 	end
 end
 
@@ -2588,8 +2583,6 @@ do
 				DBM:RegisterShortTermEvents("UPDATE_MOUSEOVER_UNIT", "UNIT_TARGET_UNFILTERED")
 				targetEventsRegistered = true
 			end
-			if not forceloadmapIds[mapID] then return end
-		-- You entered instance during worldboss combat. Force end worldboss mod.
 		else
 			if targetEventsRegistered then
 				DBM:UnregisterShortTermEvents()
@@ -3248,42 +3241,42 @@ do
 			end
 		end
 
-		syncHandlers["GCB"] = function(sender, modId, ver)
+		syncHandlers["GCB"] = function(sender, modId, ver, difficulty)
 			if not DBM.Options.ShowGuildMessages then return end
-			if not ver or not (ver == "1") then return end--Ignore old versions
+			if not ver or not (ver == "2") then return end--Ignore old versions
 			if DBM:AntiSpam(5, "GCB") then
-				if IsInGroup() then
-					if IsInRaid() then
-						for i = 1, GetNumGroupMembers() do
-							if UnitName("raid"..i) == sender then return end--You are in group with sender, filter message
-						end
-					elseif IsInInstance() then--You are in a dungeon with a group, filter message
-						return
-					end
-				end
+				if IsInInstance() then return end--Simple filter, if you are inside an instance, just filter it, if not in instance, good to go.
 				local bossName = EJ_GetEncounterInfo(modId) or UNKNOWN
-				DBM:AddMsg(DBM_CORE_GUILD_COMBAT_STARTED:format(bossName))
+				local difficultyName = UNKNOWN
+				if difficulty == 16 then
+					difficultyName = PLAYER_DIFFICULTY6
+				elseif difficulty == 15 then
+					difficultyName = PLAYER_DIFFICULTY2
+				else 
+					difficultyName = PLAYER_DIFFICULTY1
+				end
+				DBM:AddMsg(DBM_CORE_GUILD_COMBAT_STARTED:format(difficultyName.."-"..bossName))
 			end
 		end
 		
-		syncHandlers["GCE"] = function(sender, modId, ver, wipe, time, wipeHP)
+		syncHandlers["GCE"] = function(sender, modId, ver, wipe, time, wipeHP, difficulty)
 			if not DBM.Options.ShowGuildMessages then return end
-			if not ver or not (ver == "1") then return end--Ignore old versions
+			if not ver or not (ver == "2") then return end--Ignore old versions
 			if DBM:AntiSpam(5, "GCE") then
-				if IsInGroup() then
-					if IsInRaid() then
-						for i = 1, GetNumGroupMembers() do
-							if UnitName("raid"..i) == sender then return end--You are in group with sender, filter message
-						end
-					elseif IsInInstance() then--You are in a dungeon with a group, filter message
-						return
-					end
-				end
+				if IsInInstance() then return end--Simple filter, if you are inside an instance, just filter it, if not in instance, good to go.
 				local bossName = EJ_GetEncounterInfo(modId) or UNKNOWN
+				local difficultyName = UNKNOWN
+				if difficulty == 16 then
+					difficultyName = PLAYER_DIFFICULTY6
+				elseif difficulty == 15 then
+					difficultyName = PLAYER_DIFFICULTY2
+				else 
+					difficultyName = PLAYER_DIFFICULTY1
+				end
 				if wipe == "1" then
-					DBM:AddMsg(DBM_CORE_GUILD_COMBAT_ENDED_AT:format(bossName, wipeHP, time))
+					DBM:AddMsg(DBM_CORE_GUILD_COMBAT_ENDED_AT:format(difficultyName, bossName, wipeHP, time))
 				else
-					DBM:AddMsg(DBM_CORE_GUILD_BOSS_DOWN:format(bossName, time))
+					DBM:AddMsg(DBM_CORE_GUILD_BOSS_DOWN:format(difficultyName.."-"..bossName, time))
 				end
 			end
 		end
@@ -4175,10 +4168,8 @@ function DBM:StartCombat(mod, delay, event, synced, syncedStartHp)
 					else
 						self:AddMsg(DBM_CORE_COMBAT_STARTED:format(difficultyText..name))
 						if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 then--Only send relevant content, not guild beating down lich king or LFR.
-							--RequestGuildPartyState()
-							local _, numGuildPresent, numGuildRequired = InGuildParty()
-							if numGuildPresent >= numGuildRequired then--Guild Group
-								SendAddonMessage("D4", "GCB\t"..modId.."\t1", "GUILD")
+							if InGuildParty() then--Guild Group
+								SendAddonMessage("D4", "GCB\t"..modId.."\t2\t"..difficultyIndex, "GUILD")
 							end
 						end
 					end
@@ -4314,10 +4305,8 @@ function DBM:EndCombat(mod, wipe)
 					else
 						self:AddMsg(DBM_CORE_COMBAT_ENDED_AT_LONG:format(difficultyText..name, wipeHP, strFromTime(thisTime), totalPulls - totalKills))
 						if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 then
-							--RequestGuildPartyState()
-							local _, numGuildPresent, numGuildRequired = InGuildParty()
-							if numGuildPresent >= numGuildRequired then--Guild Group
-								SendAddonMessage("D4", "GCE\t"..modId.."\t1\t1\t"..strFromTime(thisTime).."\t"..wipeHP, "GUILD")
+							if InGuildParty() then--Guild Group
+								SendAddonMessage("D4", "GCE\t"..modId.."\t2\t1\t"..strFromTime(thisTime).."\t"..wipeHP.."\t"..difficultyIndex, "GUILD")
 							end
 						end
 					end
@@ -4397,10 +4386,8 @@ function DBM:EndCombat(mod, wipe)
 					else
 						msg = DBM_CORE_BOSS_DOWN:format(difficultyText..name, strFromTime(thisTime))
 						if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 then
-							--RequestGuildPartyState()
-							local _, numGuildPresent, numGuildRequired = InGuildParty()
-							if numGuildPresent >= numGuildRequired then--Guild Group
-								SendAddonMessage("D4", "GCE\t"..modId.."\t1\t0\t"..strFromTime(thisTime), "GUILD")
+							if InGuildParty() then--Guild Group
+								SendAddonMessage("D4", "GCE\t"..modId.."\t2\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex, "GUILD")
 							end
 						end
 					end
@@ -4410,10 +4397,8 @@ function DBM:EndCombat(mod, wipe)
 					else
 						msg = DBM_CORE_BOSS_DOWN_NR:format(difficultyText..name, strFromTime(thisTime), strFromTime(bestTime), totalKills)
 						if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 then
-							--RequestGuildPartyState()
-							local _, numGuildPresent, numGuildRequired = InGuildParty()
-							if numGuildPresent >= numGuildRequired then--Guild Group
-								SendAddonMessage("D4", "GCE\t"..modId.."\t1\t0\t"..strFromTime(thisTime), "GUILD")
+							if InGuildParty() then--Guild Group
+								SendAddonMessage("D4", "GCE\t"..modId.."\t2\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex, "GUILD")
 							end
 						end
 					end
@@ -4423,10 +4408,8 @@ function DBM:EndCombat(mod, wipe)
 					else
 						msg = DBM_CORE_BOSS_DOWN_L:format(difficultyText..name, strFromTime(thisTime), strFromTime(lastTime), strFromTime(bestTime), totalKills)
 						if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 then
-							--RequestGuildPartyState()
-							local _, numGuildPresent, numGuildRequired = InGuildParty()
-							if numGuildPresent >= numGuildRequired then--Guild Group
-								SendAddonMessage("D4", "GCE\t"..modId.."\t1\t0\t"..strFromTime(thisTime), "GUILD")
+							if InGuildParty() then--Guild Group
+								SendAddonMessage("D4", "GCE\t"..modId.."\t2\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex, "GUILD")
 							end
 						end
 					end
@@ -5115,13 +5098,13 @@ function DBM:Capitalize(str)
 end
 
 --copied from big wigs with permission from funkydude. Modified by MysticalOS
-function DBM:RoleCheck()
+function DBM:RoleCheck(ignoreLoot)
 	local spec = GetSpecialization()
 	if not spec then return end
 	local role = GetSpecializationRole(spec)
 	local specID = GetLootSpecialization()
 	local _, _, _, _, _, lootrole = GetSpecializationInfoByID(specID)
-	if not InCombatLockdown() and IsInGroup() and ((IsPartyLFG() and difficultyIndex == 14) or not IsPartyLFG()) then
+	if not InCombatLockdown() and ((IsPartyLFG() and (difficultyIndex == 14 or difficultyIndex == 15)) or not IsPartyLFG()) then
 		local tempRole--Use temp role because we still want Role to be "tank" for loot check comparison at bottom (gladiators still use tank gear)
 		if role == "TANK" and UnitBuff("player", gladStance) then--Special handling for gladiator stance
 			tempRole = "DAMAGER"
@@ -5132,7 +5115,7 @@ function DBM:RoleCheck()
 		end
 	end
 	--Loot reminder even if spec isn't known or we are in LFR where we have a valid for role without us being ones that set us.
-	if lootrole and (role ~= lootrole) and DBM.Options.RoleSpecAlert then
+	if not ignoreLoot and lootrole and (role ~= lootrole) and DBM.Options.RoleSpecAlert then
 		self:AddMsg(DBM_CORE_LOOT_SPEC_REMINDER:format(_G[role] or DBM_CORE_UNKNOWN, _G[lootrole]))
 	end
 end

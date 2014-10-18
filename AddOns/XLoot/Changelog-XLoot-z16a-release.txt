@@ -1,0 +1,12 @@
+tag z16a-release
+9e61e118ac2153612099284bf20566548faa718b
+Xuerian <sky.shell@gmail.com>
+2014-10-18 04:13:18 -0400
+
+Fix autolooting ignoring backpack slots
+
+
+--------------------
+
+Xuerian:
+	- Fix autolooting ignoring open slots in backpack
