@@ -1,3 +1,0 @@
-subversion:
-	- Omega via svn r11783: reduce debug spam, only give unit events when actually logging new fights
-	- tandanu via svn r11782: increment version number

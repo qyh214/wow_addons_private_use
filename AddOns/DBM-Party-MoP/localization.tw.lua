@@ -163,6 +163,10 @@ L= DBM:GetModLocalization(698)
 -----------------------
 L= DBM:GetModLocalization(693)
 
+L:SetOptionLocalization({
+	SoundWOP			= "語音警告：重要技能"
+})
+
 -----------------------
 -- Vo'jak --
 -----------------------

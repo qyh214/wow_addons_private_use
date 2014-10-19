@@ -1,2 +1,0 @@
-subversion:
-	- tandanu via svn r11774: increment alpha version number

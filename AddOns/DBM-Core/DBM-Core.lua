@@ -47,13 +47,60 @@
 --    * Share Alike. If you alter, transform, or build upon this work, you may distribute the resulting work only under the same or similar license to this one.
 --
 
+local imsg = CreateFrame("Frame", "EuiDBMStyle", UIParent)
+imsg:SetSize(418, 72)
+imsg:SetPoint("TOP", 0, -190)
+imsg:Hide()
+local timer = 0
+imsg:SetScript('OnShow', function(self)
+	if self.message then 
+		timer = 0
+		self.text:SetText(self.message)
+		self:SetScript("OnUpdate", function(self, elasped)
+			timer = timer + elasped
+			if (timer<0.5) then self:SetAlpha(timer*2) end
+			if (timer>2.5 and timer<3) then self:SetAlpha(1-(timer-1)*2) end
+			if (timer>=4.5 ) then self:Hide() end
+		end)
+		self.message = nil
+	else
+		self:Hide()
+	end
+end)
+		
+imsg.bg = imsg:CreateTexture(nil, 'BACKGROUND')
+imsg.bg:SetTexture([[Interface\LevelUp\LevelUpTex]])
+imsg.bg:SetPoint('BOTTOM')
+imsg.bg:SetSize(326, 103)
+imsg.bg:SetTexCoord(0.00195313, 0.63867188, 0.03710938, 0.23828125)
+imsg.bg:SetVertexColor(1, 1, 1, 0.6)
+
+imsg.lineTop = imsg:CreateTexture(nil, 'BACKGROUND')
+imsg.lineTop:SetDrawLayer('BACKGROUND', 2)
+imsg.lineTop:SetTexture([[Interface\LevelUp\LevelUpTex]])
+imsg.lineTop:SetPoint("TOP")
+imsg.lineTop:SetSize(418, 7)
+imsg.lineTop:SetTexCoord(0.00195313, 0.81835938, 0.01953125, 0.03320313)
+
+imsg.lineBottom = imsg:CreateTexture(nil, 'BACKGROUND')
+imsg.lineBottom:SetDrawLayer('BACKGROUND', 2)
+imsg.lineBottom:SetTexture([[Interface\LevelUp\LevelUpTex]])
+imsg.lineBottom:SetPoint("BOTTOM")
+imsg.lineBottom:SetSize(418, 7)
+imsg.lineBottom:SetTexCoord(0.00195313, 0.81835938, 0.01953125, 0.03320313)
+		
+imsg.text = imsg:CreateFontString(nil, 'ARTWORK', 'GameFont_Gigantic')
+imsg.text:SetPoint("BOTTOM", 0, 12)
+imsg.text:SetTextColor(1, 0.82, 0)
+imsg.text:SetJustifyH("CENTER")
 -------------------------------
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
 	Revision = tonumber(("$Revision: 11788 $"):sub(12, -3)),
 	DisplayVersion = "6.0.3 alpha", -- the string that is shown as version
-	ReleaseRevision = 11780 -- the revision of the latest stable version that is available
+	ReleaseRevision = 11780, -- the revision of the latest stable version that is available
+    SoundMMPath = "Interface\\AddOns\\DBM-Yike", -- thanks a lot, Mini_Dragon
 }
 
 -- Legacy crap; that stupid "Version" field was never a good idea.
@@ -112,8 +159,8 @@ DBM.DefaultOptions = {
 	WhisperStats = false,
 	HideBossEmoteFrame = true,
 	SpamBlockBossWhispers = false,
-	ShowMinimapButton = false,
-	BlockVersionUpdateNotice = false,
+	ShowMinimapButton = true,
+	BlockVersionUpdateNotice = true,
 	ShowSpecialWarnings = true,
 	ShowFlashFrame = true,
 	ShowAdvSWSound = true,
@@ -128,7 +175,7 @@ DBM.DefaultOptions = {
 	LFDEnhance = true,
 	WorldBossNearAlert = false,
 	AFKHealthWarning = true,
-	HideObjectivesFrame = true,
+	HideObjectivesFrame = false,
 	HideTooltips = false,
 	EnableModels = true,
 	RangeFrameFrames = "radar",
@@ -994,6 +1041,7 @@ do
 				"PLAYER_ENTERING_WORLD",
 				"LFG_ROLE_CHECK_SHOW",
 				"LFG_PROPOSAL_SHOW",
+				"READY_CHECK",
 				"LFG_PROPOSAL_FAILED",
 				"LFG_PROPOSAL_SUCCEEDED",
 				"UPDATE_BATTLEFIELD_STATUS",
@@ -1529,7 +1577,7 @@ do
 			if v.displayVersion and not (v.bwrevision or v.bwarevision) then--DBM, no BigWigs
 				self:AddMsg(DBM_CORE_VERSIONCHECK_ENTRY:format(v.name, "DBM "..v.displayVersion, v.revision))
 				if notify and v.revision < DBM.ReleaseRevision then
-					SendChatMessage(chatPrefixShort..DBM_CORE_YOUR_VERSION_OUTDATED, "WHISPER", nil, v.name)
+			--		SendChatMessage(chatPrefixShort..DBM_CORE_YOUR_VERSION_OUTDATED, "WHISPER", nil, v.name)
 				end
 			elseif v.displayVersion and (v.bwrevision or v.bwarevision) then--DBM & BigWigs
 				self:AddMsg(DBM_CORE_VERSIONCHECK_ENTRY_TWO:format(v.name, "DBM "..v.displayVersion, v.revision, v.bwarevision and DBM_BIG_WIGS_ALPHA or DBM_BIG_WIGS, v.bwarevision or v.bwrevision))
@@ -2062,6 +2110,11 @@ do
 		self:Schedule(1.5, updateAllRoster)
 	end
 	
+	--Joined lfr during combat, many unit shows "Somewhat" and invisiable, and break class coloring temporarly. So update roster table again when unit name successfully updated.
+	function DBM:UNIT_NAME_UPDATE_UNFILTERED()
+		self:Unschedule(updateAllRoster)
+		self:Schedule(1.5, updateAllRoster)
+	end
 	function DBM:INSTANCE_GROUP_SIZE_CHANGED()
 		local _, _, _, _, _, _, _, _, instanceGroupSize = GetInstanceInfo()
 		LastGroupSize = instanceGroupSize
@@ -2245,6 +2298,10 @@ do
 	local function setRaidWarningPositon()
 		RaidWarningFrame:ClearAllPoints()
 		RaidWarningFrame:SetPoint(DBM.Options.RaidWarningPosition.Point, UIParent, DBM.Options.RaidWarningPosition.Point, DBM.Options.RaidWarningPosition.X, DBM.Options.RaidWarningPosition.Y)
+		if EuiDBMStyle then
+			EuiDBMStyle:ClearAllPoints()
+			EuiDBMStyle:SetPoint(DBM.Options.SpecialWarningPoint, UIParent, DBM.Options.SpecialWarningPoint, DBM.Options.SpecialWarningX, DBM.Options.SpecialWarningY)
+		end
 	end
 
 	local function migrateSavedOptions()
@@ -2256,6 +2313,19 @@ do
 			end
 		end
 	end
+	
+	local function fixsoundbug()
+		if DBM.Options.CountdownVoice ~= "Mosh" and DBM.Options.CountdownVoice ~= "sst" and DBM.Options.CountdownVoice ~= "yun" and DBM.Options.CountdownVoice ~= "other" then
+			if GetLocale() == "zhTW" then
+				DBM.Options.CountdownVoice = "yun"
+			elseif  GetLocale() == "zhCN" then
+				DBM.Options.CountdownVoice = "Mosh"
+			else
+				DBM.Options.CountdownVoice = "sst"
+			end
+		end
+		if DBM.Options.CountdownVoice == 'sst' then DBM.Options.CountdownVoice = 'Mosh' end
+	end
 
 	function loadOptions()
 		DBM.Options = DBM_SavedOptions
@@ -2263,6 +2333,7 @@ do
 		addDefaultOptions(DBM.Options, DBM.DefaultOptions)
 		-- load special warning options
 		migrateSavedOptions()
+		fixsoundbug()
 		DBM:UpdateSpecialWarningOptions()
 		-- set this with a short delay to prevent issues with other addons also trying to do the same thing with another position ;)
 		DBM:Schedule(5, setRaidWarningPositon)
@@ -2380,6 +2451,13 @@ end
 function DBM:UPDATE_SHAPESHIFT_FORM()
 	if IsInGroup() and class == "WARRIOR" and DBM:AntiSpam(0.5, "STANCE") then--check for stance changes for prot warriors that might be specced into Gladiator Stance
 		DBM:RoleCheck(true)
+	end
+end
+
+--BH ADD
+function DBM:READY_CHECK()
+	if DBM.Options.LFDEnhance then
+		PlaySoundFile("Sound\\interface\\levelup2.ogg", "Master")--Because regular sound uses SFX channel which is too low of volume most of time
 	end
 end
 
@@ -2900,6 +2978,12 @@ do
 			DBM.Bars:CancelBar(DBM_CORE_TIMER_PULL)
 		end
 		if not DBM.Options.DontPlayPTCountdown then
+			DBM:Unschedule(PlaySoundFile, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countfive.mp3", "Master")
+			DBM:Unschedule(PlaySoundFile, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countfour.mp3", "Master")
+			DBM:Unschedule(PlaySoundFile, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countthree.mp3", "Master")
+			DBM:Unschedule(PlaySoundFile, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\counttwo.mp3", "Master")
+			DBM:Unschedule(PlaySoundFile, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countone.mp3", "Master")
+			DBM:Unschedule(PlaySoundFile, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\com_go.mp3", "Master")
 			dummyMod.countdown:Cancel()
 		end
 		if not DBM.Options.DontShowPTCountdownText then
@@ -2912,6 +2996,13 @@ do
 			DBM.Bars:CreateBar(timer, DBM_CORE_TIMER_PULL, "Interface\\Icons\\Spell_Holy_BorrowedTime")
 		end
 		if not DBM.Options.DontPlayPTCountdown then
+			PlaySoundFile("Interface\\AddOns\\DBM-Core\\Sounds\\win.ogg", "Master")
+			if timer > 5 then DBM:Schedule(timer-5, PlaySoundFile, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countfive.mp3", "Master") end
+			if timer > 5 then DBM:Schedule(timer-4, PlaySoundFile, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countfour.mp3", "Master") end
+			if timer > 3 then DBM:Schedule(timer-3, PlaySoundFile, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countthree.mp3", "Master") end
+			if timer > 3 then DBM:Schedule(timer-2, PlaySoundFile, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\counttwo.mp3", "Master") end
+			if timer > 3 then DBM:Schedule(timer-1, PlaySoundFile, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countone.mp3", "Master") end
+			if timer > 1 then DBM:Schedule(timer, PlaySoundFile, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\com_go.mp3", "Master") end
 			dummyMod.countdown:Start(timer)
 		end
 		if not DBM.Options.DontShowPTCountdownText then
@@ -4793,9 +4884,9 @@ end
 do
 
 	function DBM:PLAYER_ENTERING_WORLD()
-		self:Schedule(10, function() if not DBM.Options.HelpMessageShown then DBM.Options.HelpMessageShown = true DBM:AddMsg(DBM_CORE_NEED_SUPPORT) end end)
-		self:Schedule(20, function() if not DBM.Options.ForumsMessageShown then DBM.Options.ForumsMessageShown = DBM.ReleaseRevision self:AddMsg(DBM_FORUMS_MESSAGE) end end)
-		self:Schedule(30, function() if not DBM.Options.SettingsMessageShown then DBM.Options.SettingsMessageShown = true self:AddMsg(DBM_HOW_TO_USE_MOD) end end)
+--		self:Schedule(10, function() if not DBM.Options.HelpMessageShown then DBM.Options.HelpMessageShown = true DBM:AddMsg(DBM_CORE_NEED_SUPPORT) end end)
+	--	self:Schedule(20, function() if not DBM.Options.ForumsMessageShown then DBM.Options.ForumsMessageShown = DBM.ReleaseRevision self:AddMsg(DBM_FORUMS_MESSAGE) end end)
+--		self:Schedule(30, function() if not DBM.Options.SettingsMessageShown then DBM.Options.SettingsMessageShown = true self:AddMsg(DBM_HOW_TO_USE_MOD) end end)
 		if type(RegisterAddonMessagePrefix) == "function" then
 			if not RegisterAddonMessagePrefix("D4") then -- main prefix for DBM4
 				self:AddMsg("Error: unable to register DBM addon message prefix (reached client side addon message filter limit), synchronization will be unavailable") -- TODO: confirm that this actually means that the syncs won't show up
@@ -6389,6 +6480,43 @@ do
 		return unschedule(self.Play, self.mod, self, ...)
 	end
 end
+----------------------------
+--  SoundMMprototype，new class. Add by Mini_Dragon (Brilla@金色平原)
+----------------------------
+do
+    local soundPrototype2 = {}
+    local mt2 = { __index = soundPrototype2 }
+    function bossModPrototype:SoundMM(SoundMMtag,SoundMMoption)
+        self.numSounds = self.numSounds and self.numSounds + 1 or 1
+        if (soundMMoption == nil) then
+            soundMMoption = true
+        end
+        local obj2 = setmetatable(
+            {
+				mod = self,
+            },
+        mt2
+        )
+        self:AddBoolOption(SoundMMtag, SoundMMoption, "misc")
+        return obj2
+    end
+
+    function soundPrototype2:Play(file)
+        if DBM.Options.UseMasterVolume then
+            PlaySoundFile(file, "Master")
+        else
+            PlaySoundFile(file)
+        end
+    end
+
+    function soundPrototype2:Schedule(t, ...)
+        return schedule(t, self.Play, self.mod, self, ...)
+    end
+
+    function soundPrototype2:Cancel(...)
+        return unschedule(self.Play, self.mod, self, ...)
+    end
+end
 
 ----------------------------
 --  Countdown/out object  --
@@ -6419,7 +6547,7 @@ do
 					DBM:Schedule(timer%1, showCountdown, floor(timer))
 				end
 			end
-			local voice = DBM.Options.CountdownVoice
+--[[		local voice = DBM.Options.CountdownVoice
 			local voice2 = DBM.Options.CountdownVoice2
 			local voice3 = DBM.Options.CountdownVoice3
 			if voice == "None" then return end
@@ -6454,6 +6582,23 @@ do
 					for i = count, 1, -1 do
 						self.sound5:Schedule(timer-i, "Interface\\AddOns\\DBM-Core\\Sounds\\"..voice.."\\"..i..".ogg")
 					end
+				end
+			end]]
+			for i = count, 1, -1 do
+				local countvaluei
+				if i == 1 then countvaluei = "countone"
+				elseif i == 2 then countvaluei = "counttwo"
+				elseif i == 3 then countvaluei = "countthree"
+				elseif i == 4 then countvaluei = "countfour"
+				elseif i == 5 then countvaluei = "countfive"
+				elseif i == 6 then countvaluei = "countsix"
+				elseif i == 7 then countvaluei = "countseven"
+				elseif i == 8 then countvaluei = "counteight"
+				elseif i == 9 then countvaluei = "countnine"
+				elseif i == 10 then countvaluei = "countten"
+				elseif i == 11 then countvaluei = "counteleven" end
+				if i <= 11 then
+					self.sound5:Schedule(timer-i, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\"..countvaluei..".mp3")
 				end
 			end
 		end
@@ -6625,6 +6770,8 @@ do
 		frame:SetPoint(DBM.Options.SpecialWarningPoint, UIParent, DBM.Options.SpecialWarningPoint, DBM.Options.SpecialWarningX, DBM.Options.SpecialWarningY)
 		font:SetFont(DBM.Options.SpecialWarningFont, DBM.Options.SpecialWarningFontSize, "THICKOUTLINE")
 		font:SetTextColor(unpack(DBM.Options.SpecialWarningFontCol))
+		EuiDBMStyle:ClearAllPoints()
+		EuiDBMStyle:SetAllPoints(frame)
 	end
 
 	frame:SetScript("OnUpdate", function(self, elapsed)
@@ -6648,7 +6795,12 @@ do
 			if self.announceType == "taunt" and DBM.Options.FilterTankSpec and not self.mod:IsTank() then return end--Don't tell non tanks to taunt, ever.
 			local msg = pformat(self.text, ...)
 			local text = msg:gsub(">.-<", stripServerName)
-			font:SetText(text)
+			if EuiDBMStyle then
+				EuiDBMStyle.message = msg;
+				EuiDBMStyle:Show()
+			else
+				font:SetText(msg)
+			end
 			if DBM.Options.ShowSWarningsInChat then
 				local colorCode = ("|cff%.2x%.2x%.2x"):format(DBM.Options.SpecialWarningFontCol[1] * 255, DBM.Options.SpecialWarningFontCol[2] * 255, DBM.Options.SpecialWarningFontCol[3] * 255)
 				self.mod:AddMsg(colorCode.."["..DBM_CORE_MOVE_SPECIAL_WARNING_TEXT.."] "..text.."|r", nil)
@@ -6937,6 +7089,8 @@ do
 					DBM.Options.SpecialWarningY = yOfs
 					self:Schedule(15, moveEnd)
 					DBM.Bars:CreateBar(15, DBM_CORE_MOVE_SPECIAL_WARNING_BAR)
+					EuiDBMStyle:ClearAllPoints()
+					EuiDBMStyle:SetPoint(point, UIParent, point, xOfs, yOfs)
 				end)
 			end
 			if anchorFrame:IsShown() then
@@ -6963,13 +7117,15 @@ do
 		if moving then
 			return
 		end
-		font:SetText(DBM_CORE_MOVE_SPECIAL_WARNING_TEXT)
+		font:SetText('')
 		frame:Show()
 		frame:SetAlpha(1)
 		frame:SetFrameStrata("TOOLTIP")
 		self:Unschedule(testWarningEnd)
 		self:Schedule(3, testWarningEnd)
 		frame.timer = 3
+		EuiDBMStyle.message = DBM_CORE_MOVE_SPECIAL_WARNING_TEXT
+		EuiDBMStyle:Show()
 		DBM:PlaySpecialWarningSound(number)
 		if DBM.Options.ShowFlashFrame then
 			if number == 1 then
@@ -7475,6 +7631,18 @@ function bossModPrototype:AddDropdownOption(name, options, default, cat, func)
 		self.optionFuncs = self.optionFuncs or {}
 		self.optionFuncs[name] = func
 	end
+end
+
+function bossModPrototype:AddEditBoxOption(name, options, default, cat, func) --Add by Mini_Dragon (Brilla@金色平原)
+    cat = cat or "misc"
+    self.Options[name] = default
+    self:SetOptionCategory(name, cat)
+    self.editboxes = self.editboxes or {}
+    self.editboxes[name] = options
+    if func then
+        self.optionFuncs = self.optionFuncs or {}
+        self.optionFuncs[name] = func
+    end
 end
 
 function bossModPrototype:AddOptionSpacer(cat)
@@ -8151,3 +8319,4 @@ do
 		return modLocalizations[name] or self:CreateModLocalization(name)
 	end
 end
+--Voice driver by Mini_Dragon (Brilla@金色平原)

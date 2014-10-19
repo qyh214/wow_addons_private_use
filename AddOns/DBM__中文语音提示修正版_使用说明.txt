@@ -1,0 +1,35 @@
+﻿DBM-6.0.2 CN-Sound Patch1.1
+
+因DBM随客户端升级导致中文语音提示消失，本DBM包旨在临时修复WOP副本的中文语音提示。
+
+Patch1.1修正内容：
+感谢DBM中文本地化作者Mini_Dragon的大力帮助
+·修正在Patch1中团队副本“围攻奥格瑞玛”中文语音提示的错误；
+
+boss的中文语音提示（by Mini_Dragon）；
+
+
+Patch1版本修正内容：
+·恢复5人副本“围攻砮皂寺”中文语音提示；
+·恢复5人副本“青龙寺”中文语音提示；
+·恢复团队副本“围攻奥格瑞玛”中文语音提示；
+
+其他MOP及早期副本待后续修正，敬请关注 @夏一可死毒舌 的微博！
+因时间有限修改匆忙，可能修改中会引入新的小问题，欢迎到 @夏一可死毒舌 发布本版DBM的微博下方评论并（最好能）@王默66，以便及时了解到并修正！
+
+使用说明：
+·删除你当前客户端内已有的DBM，它通常在你的客户端文件夹的/Interface/AddOns/DBM-XXXXXX...（若干个DBM开头的文件夹全部删除）
+	或/Interface/AddOns/DBM/DBM-XXXXXX...（在DBM文件中，有若干个DBM开头的子文件夹，删除整个DBM文件夹）；
+·解压缩本压缩包后，将DBM-XXXXXX...（若干个DBM开头的文件夹）复制到你的客户端文件夹的/Interface/AddOns中，
+	注意不要将这若干个DBM开头的文件夹放到某一个文件夹中，再放到AddOns中，这样会导致无法加载到插件
+
+正确存放路径应该类似下列这样：
+你的客户端文件夹的/Interface/AddOns/DBM-BlackrockFoundry
+你的客户端文件夹的/Interface/AddOns/DBM-Brawlers
+你的客户端文件夹的/Interface/AddOns/DBM-Core
+你的客户端文件夹的/Interface/AddOns/DBM-...
+
+错误存放路径：（再次说明：不要将这若干个DBM开头的文件夹装到某一个文件夹中再放入AddOns中，否则游戏加载不到DBM！）
+你的客户端文件夹的/Interface/AddOns/DBM-6.0.2 CN-Sound Patch1/DBM-BlackrockFoundry
+你的客户端文件夹的/Interface/AddOns/DBM-6.0.2 CN-Sound Patch1/DBM-Brawlers
+你的客户端文件夹的/Interface/AddOns/DBM-6.0.2 CN-Sound Patch1/DBM-...

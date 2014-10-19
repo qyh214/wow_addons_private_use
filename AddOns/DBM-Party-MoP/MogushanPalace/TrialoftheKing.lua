@@ -1,5 +1,6 @@
 local mod	= DBM:NewMod(708, "DBM-Party-MoP", 5, 321)
 local L		= mod:GetLocalizedStrings()
+local sndWOP	= mod:NewSound(nil, true, "SoundWOP")
 
 mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(61442, 61444, 61445)--61442 (Kuai the Brute), 61453 (Mu'Shiba, Kuai's Add), 61444 (Ming the Cunning), 61445 (Haiyan the Unstoppable)
@@ -82,6 +83,8 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 119922 then
 		warnShockwave:Show()
 		specWarnShockwave:Show()
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\shockwave.mp3")--震懾波
+		sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\shockwave.mp3")--震懾波
 		timerShockwaveCD:Start(shockwaveCD)
 	elseif args.spellId == 119981 then
 		warnWhirlingDervish:Show()

@@ -1,29 +1,32 @@
 local mod	= DBM:NewMod(866, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
+local sndWOP	= mod:NewSound(nil, true, "SoundWOP")
 
-mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10390 $"):sub(12, -3))
 mod:SetCreatureID(72276)
---mod:SetEncounterID(1624)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 145216 144482 144654 144628 144649 144657 146707",
-	"SPELL_AURA_APPLIED 144514 145226 144849 144850 144851",
-	"SPELL_AURA_APPLIED_DOSE 146124",
-	"SPELL_AURA_REMOVED 145226 144849 144850 144851",
-	"SPELL_DAMAGE 145073",
+	"SPELL_CAST_START",
+	"SPELL_AURA_APPLIED",
+	"SPELL_AURA_REMOVED",
+	"SPELL_DAMAGE",
+	"SPELL_MISSED",
+	"SPELL_PERIODIC_DAMAGE",
+	"SPELL_PERIODIC_MISSED",
 	"UNIT_DIED",
+	"UNIT_HEALTH boss1",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5",--This boss can change boss ID any time you jump into one of tests, because he gets unregistered as boss1 then registered as boss2 when you leave, etc
-	"CHAT_MSG_ADDON",
-	"GROUP_ROSTER_UPDATE"
+	"CHAT_MSG_ADDON"
 )
 
 mod:RegisterEvents(
-	"ENCOUNTER_START",
 	"CHAT_MSG_MONSTER_YELL"
 )
+local senddr = {}
+local warneddr = {}
 
 local boss = EJ_GetSectionInfo(8216)
 
@@ -32,11 +35,8 @@ mod:SetBossHealthInfo(
 )
 
 --Amalgam of Corruption
-local warnSelfDoubt						= mod:NewStackAnnounce(146124, 2, nil, mod:IsTank())
+local warnUnleashedAnger				= mod:NewSpellAnnounce(145216, 2, nil, mod:IsTank())
 local warnBlindHatred					= mod:NewSpellAnnounce(145226, 3)
-local warnManifestation					= mod:NewCountAnnounce("ej8232", 1, 147082)
-local warnResidualCorruption			= mod:NewSpellAnnounce(145073)
-local warnLookWithinEnd					= mod:NewEndTargetAnnounce("ej8220", 2, nil, false)
 --Test of Serenity (DPS)
 local warnTearReality					= mod:NewCastAnnounce(144482, 3)
 --Test of Reliance (Healer)
@@ -49,12 +49,11 @@ local warnHurlCorruption				= mod:NewCastAnnounce(144649, 4)
 local warnPiercingCorruption			= mod:NewSpellAnnounce(144657, 3)
 
 --Amalgam of Corruption
-local specWarnUnleashedAnger			= mod:NewSpecialWarningSpell(145216, mod:IsTank())--Cast warning, not stack. for active mitigation timing.
-local specWarnSelfDoubtOther			= mod:NewSpecialWarningTaunt(146124)--Stack warning, to taunt off other tank
+local specWarnUnleashedAnger			= mod:NewSpecialWarningSpell(145216, mod:IsTank())
 local specWarnBlindHatred				= mod:NewSpecialWarningSpell(145226, nil, nil, nil, 2)
+local specWarnBHMove					= mod:NewSpecialWarningMove(145226)
 local specWarnManifestation				= mod:NewSpecialWarningSwitch("ej8232", not mod:IsHealer())--Unleashed Manifestation of Corruption
-local specWarnManifestationSoon			= mod:NewSpecialWarningSoon("ej8232", not mod:IsHealer(), nil, nil, 2)--WHen the ones die inside they don't spawn right away, there is like a 5 second lag.
-local specWarnResidualCorruption		= mod:NewSpecialWarningSpell(145073, false)--spammy. but sometimes needed.
+local specWarnManifestationSoon			= mod:NewSpecialWarningSoon("ej8232", not mod:IsHealer())--WHen the ones die inside they don't spawn right away, there is like a 5-10 second lag, TODO, add a spawn timer for this once timing is figured out.
 --Test of Serenity (DPS)
 local specWarnTearReality				= mod:NewSpecialWarningMove(144482)
 --Test of Reliance (Healer)
@@ -66,11 +65,13 @@ local specWarnTitanicSmash				= mod:NewSpecialWarningMove(144628)
 local specWarnBurstOfCorruption			= mod:NewSpecialWarningSpell(144654, nil, nil, nil, 2)
 local specWarnHurlCorruption			= mod:NewSpecialWarningInterrupt(144649, nil, nil, nil, 3)
 local specWarnPiercingCorruption		= mod:NewSpecialWarningSpell(144657)
+local specWarnTestIn					= mod:NewSpecialWarning("specWarnTestIn")
+local specWarnTestOut					= mod:NewSpecialWarning("specWarnTestOut")
 
 --Amalgam of Corruption
 local timerCombatStarts					= mod:NewCombatTimer(25)
 local timerUnleashedAngerCD				= mod:NewCDTimer(11, 145216, nil, mod:IsTank())
-local timerBlindHatred					= mod:NewBuffActiveTimer(30, 145226, nil, mod:IsHealer())
+local timerBlindHatred					= mod:NewBuffActiveTimer(30, 145226)
 local timerBlindHatredCD				= mod:NewNextTimer(30, 145226)
 --All Tests
 local timerLookWithin					= mod:NewBuffFadesTimer(60, "ej8220")
@@ -87,161 +88,166 @@ local timerHurlCorruptionCD				= mod:NewNextTimer(20, 144649)
 local berserkTimer						= mod:NewBerserkTimer(418)
 
 local countdownLookWithin				= mod:NewCountdownFades(59, "ej8220")
-local countdownLingeringCorruption		= mod:NewCountdown("Alt15.5", 144514)
-local countdownHurlCorruption			= mod:NewCountdown("Alt20", 144649)
+--local countdownLingeringCorruption	= mod:NewCountdown(15.5, 144514, nil, nil, nil, nil, true)
+--local countdownHurlCorruption			= mod:NewCountdown(20, 144649, nil, nil, nil, nil, true)
 
-mod:AddInfoFrameOption("ej8252", false)--May still be buggy but it's needed for heroic.
-
---Upvales, don't need variables
-local corruptionLevel = EJ_GetSectionInfo(8252)
-local Ambiguate = Ambiguate
---Tables, can't recover
-local residue = {}
---Not important, don't need to recover
-local playerInside = false
-local previousPower = nil
---Important, needs recover
-mod.vb.unleashedAngerCast = 0
-mod.vb.manifestationCount = 0
-
---May be buggy with two adds spawning at exact same time
---Two different icon functions end up both marking same mob with 8 and 7 and other mob getting no mark.
---Not sure if GUID table will be fast enough to prevent, we shall see!
-local function addsDelay()
-	mod.vb.manifestationCount = mod.vb.manifestationCount + 1
-	warnManifestation:Show(mod.vb.manifestationCount)
-	specWarnManifestation:Show(mod.vb.manifestationCount)
-end
-
-local function addSync()
-	specWarnManifestationSoon:Show()
-	if mod:IsDifficulty("lfr25") then
-		mod:Schedule(15, addsDelay, GetTime())
+mod:AddBoolOption("InfoFrame", false)
+mod:AddBoolOption("InfoFrame2", true, "sound")
+mod:AddEditBoxOption("prevplayer", 150, "", "sound", 
+function()
+	if mod.Options.prevplayer == "" then return end
+	local checkname = mod.Options.prevplayer
+	local uId = DBM:GetRaidUnitId(checkname)
+	if uId then
+		DBM:AddMsg("["..L.nameset.."]".."|cFF00FF00"..mod.localization.options["prevplayer"]..DBM_CORE_SETTO..checkname.."|r")
+		SendChatMessage("["..L.nameset.."]"..DBM_CORE_SETWISP, "WHISPER", nil, checkname)
 	else
-		mod:Schedule(5, addsDelay, GetTime())
+		DBM:AddMsg("["..L.nameset.."]"..DBM_CORE_WRONGSET.."\""..mod.Options.prevplayer.."\"")
+		DBM:AddMsg("["..L.nameset.."]"..DBM_CORE_WRONGSET.."\""..mod.Options.prevplayer.."\"")
+		DBM:AddMsg("["..L.nameset.."]"..DBM_CORE_WRONGSET.."\""..mod.Options.prevplayer.."\"")
 	end
-end
+end)
 
-local function delayPowerSync()
-	mod:RegisterShortTermEvents(
-		"UNIT_POWER player"
-	)
-	SendAddonMessage("BigWigs", "T:".."BWPower "..UnitPower("player", 10), IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
+local corruptionLevel = EJ_GetSectionInfo(8252)
+local unleashedAngerCast = 0
+local playerInside = false
+
+local function fixdebuffremovebug(checkplayer)
+    if UnitDebuff(checkplayer, GetSpellInfo(144849)) or UnitDebuff(checkplayer, GetSpellInfo(144850)) or UnitDebuff(checkplayer, GetSpellInfo(144851)) then
+		mod:Schedule(1, function() fixdebuffremovebug(checkplayer) end)
+	else
+		specWarnTestOut:Show(checkplayer)
+		sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\otherout.ogg")--隊友出场
+	end
 end
 
 function mod:OnCombatStart(delay)
 	playerInside = false
-	previousPower = nil
-	mod.vb.unleashedAngerCast = 0
-	mod.vb.manifestationCount = 0
-	table.wipe(residue)
 	timerBlindHatredCD:Start(25-delay)
-	if self:IsDifficulty("lfr25") then
-		berserkTimer:Start(600-delay)
+	self:Schedule(21, function()
+		if not playerInside then
+			sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\ex_so_sxzb.ogg")--射線準備
+			sndWOP:Schedule(1, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countthree.ogg")
+			sndWOP:Schedule(2, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\counttwo.ogg")
+			sndWOP:Schedule(3, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countone.ogg")
+		end
+	end)
+	if self:IsLFR() then--Might also be flex as well
+		berserkTimer:Start(600-delay)--No log to confirm 8 min, only one report, so changing back to 10 min for now.
 	else
 		berserkTimer:Start(-delay)
 	end
-	if self.Options.InfoFrame then
+	if self.Options.InfoFrame and not self.Options.InfoFrame2 then
 		DBM.InfoFrame:SetHeader(corruptionLevel)
 		DBM.InfoFrame:Show(5, "playerpower", 5, ALTERNATE_POWER_INDEX)
 	end
-	self:Schedule(1, delayPowerSync)
+	if self.Options.InfoFrame2 then
+		DBM.InfoFrame:SetHeader(GetSpellInfo(144452))
+		DBM.InfoFrame:Show(4, "playersomedebuffs", 144849, 144850, 144851)
+	end
+	table.wipe(senddr)
+	table.wipe(warneddr)
 end
 
 function mod:OnCombatEnd()
-	self:UnregisterShortTermEvents()
-	if self.Options.InfoFrame then
+	if self.Options.InfoFrame or self.Options.InfoFrame2 then
 		DBM.InfoFrame:Hide()
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	local spellId = args.spellId
-	if spellId == 145216 then
-		self.vb.unleashedAngerCast = self.vb.unleashedAngerCast + 1
+	if args.spellId == 145216 then
+		unleashedAngerCast = unleashedAngerCast + 1
+		warnUnleashedAnger:Show(unleashedAngerCast)
 		specWarnUnleashedAnger:Show()
-		if self.vb.unleashedAngerCast < 3 then
-			timerUnleashedAngerCD:Start(nil, self.vb.unleashedAngerCast+1)
+		if unleashedAngerCast < 3 then
+			timerUnleashedAngerCD:Start(nil, unleashedAngerCast+1)
 		end
-	elseif spellId == 144482 then
+	elseif args.spellId == 144482 then
 		warnTearReality:Show()
 		specWarnTearReality:Show()
+		sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\ex_so_slkd.ogg") --撕裂快躲
 		timerTearRealityCD:Start()
-	elseif spellId == 144654 then
+	elseif args.spellId == 144654 then
 		warnBurstOfCorruption:Show()
 		specWarnBurstOfCorruption:Show()
-	elseif spellId == 144628 then
+	elseif args.spellId == 144628 then
 		warnTitanicSmash:Show()
 		specWarnTitanicSmash:Show()
+		sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\ex_so_mjkd.ogg") --猛擊快躲
 		timerTitanicSmashCD:Start()
-	elseif spellId == 144649 then
+	elseif args.spellId == 144649 then
 		warnHurlCorruption:Show()
 		specWarnHurlCorruption:Show(args.sourceName)
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Sound-Yike\\yike\\countthree.ogg")
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Sound-Yike\\yike\\counttwo.ogg")
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Sound-Yike\\yike\\countone.ogg")
+		sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\kickcast.ogg") --快打斷
 		timerHurlCorruptionCD:Start()
-		countdownHurlCorruption:Start()
-	elseif spellId == 144657 then
+--		countdownHurlCorruption:Start()
+		sndWOP:Schedule(17, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countthree.ogg")
+		sndWOP:Schedule(18, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\counttwo.ogg")
+		sndWOP:Schedule(19, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countone.ogg")
+	elseif args.spellId == 144657 then
 		warnPiercingCorruption:Show()
-		specWarnPiercingCorruption:Show()
+		specWarnPiercingCorruption:Show() --穿透打擊 (坦克試練)
 		timerPiercingCorruptionCD:Start()
-	elseif spellId == 146707 then
+	elseif args.spellId == 146707 then
 		warnDishearteningLaugh:Show()
-		specWarnDishearteningLaugh:Show()
+		specWarnDishearteningLaugh:Show() --裂膽之笑 (治療試練)
 		timerDishearteningLaughCD:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	local spellId = args.spellId
-	if spellId == 144514 then
+	if args.spellId == 144514 then
 		warnLingeringCorruption:Show(args.destName)
 		specWarnLingeringCorruption:Show(args.destName)
-		timerLingeringCorruptionCD:Start()
-		countdownLingeringCorruption:Start()
-	elseif spellId == 145226 then
-		self:SendSync("BlindHatred")
-	elseif args:IsSpellID(144849, 144850, 144851) and args:IsPlayer() then--Look Within
-		playerInside = true
-		timerLookWithin:Start()
-		countdownLookWithin:Start()
-	elseif spellId == 146703 and args:IsPlayer() and self:AntiSpam(3, 2) then
-		specWarnBottomlessPitMove:Show()
-	elseif spellId == 146124 then
-		local amount = args.amount or 1
-		warnSelfDoubt:Show(args.destName, amount)
-		if not args:IsPlayer() and amount >= 3 then
-			specWarnSelfDoubtOther:Show(args.destName)
+		if mod:IsHealer() then
+			sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\dispelnow.ogg")--快驅散
 		end
+		timerLingeringCorruptionCD:Start()
+--		countdownLingeringCorruption:Start()
+	elseif args.spellId == 145226 then
+		self:SendSync("BlindHatred")
+	elseif args:IsSpellID(144849, 144850, 144851) then--Look Within
+		if args:IsPlayer() then
+			playerInside = true
+			timerLookWithin:Start()
+			countdownLookWithin:Start()
+			sndWOP:Cancel("Interface\\AddOns\\DBM-Sound-Yike\\yike\\countthree.ogg")
+			sndWOP:Cancel("Interface\\AddOns\\DBM-Sound-Yike\\yike\\counttwo.ogg")
+			sndWOP:Cancel("Interface\\AddOns\\DBM-Sound-Yike\\yike\\countone.ogg")
+		end
+		if args.destName == mod.Options.prevplayer then
+			specWarnTestIn:Show(args.destName)
+			sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\ex_so_mbrc.ogg")--隊友入场			
+			fixdebuffremovebug(args.destName)
+		end
+	elseif args.spellId == 146703 and args:IsPlayer() and self:AntiSpam(3, 2) then
+		specWarnBottomlessPitMove:Show()
+		sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\runaway.ogg") --快躲開
 	end
 end
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	local spellId = args.spellId
-	if args:IsSpellID(144849, 144850, 144851) then--Look Within
-		warnLookWithinEnd:CombinedShow(1, args.destName)
-		if args:IsPlayer() then
-			playerInside = false
-			timerTearRealityCD:Cancel()
-			timerLingeringCorruptionCD:Cancel()
-			countdownLingeringCorruption:Cancel()
-			timerDishearteningLaughCD:Cancel()
-			timerTitanicSmashCD:Cancel()
-			timerHurlCorruptionCD:Cancel()
-			countdownHurlCorruption:Cancel()
-			timerPiercingCorruptionCD:Cancel()
-			timerLookWithin:Cancel()
-			countdownLookWithin:Cancel()
-		end
-	elseif spellId == 145226 then
+	if args:IsSpellID(144849, 144850, 144851) and args:IsPlayer() then--Look Within
+		playerInside = false
+		timerTearRealityCD:Cancel()
+		timerLingeringCorruptionCD:Cancel()
+--		countdownLingeringCorruption:Cancel()
+		timerDishearteningLaughCD:Cancel()
+		timerTitanicSmashCD:Cancel()
+		timerHurlCorruptionCD:Cancel()
+--		countdownHurlCorruption:Cancel()
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Sound-Yike\\yike\\countthree.ogg")
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Sound-Yike\\yike\\counttwo.ogg")
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Sound-Yike\\yike\\countone.ogg")
+		timerPiercingCorruptionCD:Cancel()
+		timerLookWithin:Cancel()
+		countdownLookWithin:Cancel()
+	elseif args.spellId == 145226 then
 		self:SendSync("BlindHatredEnded")
-	end
-end
-
-function mod:SPELL_DAMAGE(sourceGUID, _, _, _, _, _, _, _, spellId)
-	if spellId == 145073 and not residue[sourceGUID] then
-		residue[sourceGUID] = true
-		warnResidualCorruption:Show()
-		specWarnResidualCorruption:Show()
 	end
 end
 
@@ -252,27 +258,29 @@ function mod:UNIT_DIED(args)
 		self:SendSync("ManifestationDied")
 	elseif cid == 72001 then--Greater Corruption (Healer Test)
 		timerLingeringCorruptionCD:Cancel()
-		countdownLingeringCorruption:Cancel()
+--		countdownLingeringCorruption:Cancel()
 		timerDishearteningLaughCD:Cancel()
 	elseif cid == 72051 then--Titanic Corruption (Tank Test)
 		timerTitanicSmashCD:Cancel()
 		timerHurlCorruptionCD:Cancel()
-		countdownHurlCorruption:Cancel()
+--		countdownHurlCorruption:Cancel()
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Sound-Yike\\yike\\countthree.ogg")
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Sound-Yike\\yike\\counttwo.ogg")
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Sound-Yike\\yike\\countone.ogg")
 		timerPiercingCorruptionCD:Cancel()
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 145769 and self:AntiSpam(1, 5) then--Unleash Corruption
-		specWarnManifestationSoon:Show()
-		self:Schedule(5, addsDelay, GetTime())
-	end
-end
-
-function mod:ENCOUNTER_START(id)
-	if id == 1624 then
-		if self.lastWipeTime and GetTime() - self.lastWipeTime < 20 then return end--False ENCOUNTER_START firing on a wipe (blizz bug), ignore it so we don't start pre pull timer
-		self:SendSync("prepull")
+	if spellId == 146179 then--Frayed
+		specWarnManifestation:Show()
+		sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\ptwo.ogg")--二階段準備
+		sndWOP:Schedule(1, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\bigmobsoon.ogg")--準備大怪
+		if mod:IsDps() then
+			sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\killbigmob.ogg")--大怪快打
+		else
+			sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\bigmob.ogg")--大怪出現
+		end
 	end
 end
 
@@ -282,48 +290,94 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
-function mod:OnSync(msg, guid)
-	if msg == "prepull" then
-		if self.lastWipeTime and GetTime() - self.lastWipeTime < 20 then return end
+function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+	if spellId == 145227 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then --射線
+		specWarnBHMove:Show()
+		sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\runaway.ogg") --快躲開
+	end
+end
+mod.SPELL_MISSED = mod.SPELL_DAMAGE
+
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId)
+	if spellId == 146703 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
+		specWarnBottomlessPitMove:Show()
+		sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\runaway.ogg") --快躲開
+	end
+end
+mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+
+function mod:UNIT_HEALTH(uId)
+	if uId ~= "boss1" then return end
+	local h = UnitHealth(uId) / UnitHealthMax(uId) * 100
+	if h > 40 and h < 40.3 and not senddr["dr40"] then
+		senddr["dr40"] = true
+		self:SendSync("dr40")
+	elseif h > 30 and h < 30.3 and not senddr["dr30"] then
+		senddr["dr30"] = true
+		self:SendSync("dr30")
+	elseif h > 20 and h < 20.3 and not senddr["dr20"] then
+		senddr["dr20"] = true
+		self:SendSync("dr20")
+	elseif h > 10 and h < 10.3 and not senddr["dr10"] then
+		senddr["dr10"] = true
+		self:SendSync("dr10")
+	end
+end
+
+function mod:OnSync(msg)
+	if msg == "BlindHatred" then
+		warnBlindHatred:Show()
+		if not playerInside then
+			specWarnBlindHatred:Show()
+		end
+		timerBlindHatred:Start()
+	elseif msg == "BlindHatredEnded" then
+		timerBlindHatredCD:Start()
+		unleashedAngerCast = 0
+		self:Schedule(26, function()
+			if not playerInside then
+				sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\ex_so_sxzb.ogg")--射線準備
+				sndWOP:Schedule(1, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countthree.ogg")
+				sndWOP:Schedule(2, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\counttwo.ogg")
+				sndWOP:Schedule(3, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\countone.ogg")
+			end
+		end)
+	elseif msg == "prepull" then
 		timerCombatStarts:Start()
+	elseif msg == "ManifestationDied" and not playerInside and self:AntiSpam(1) then
+		specWarnManifestationSoon:Show()
+		sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\bigmobsoon.ogg")--準備大怪
+		if mod:IsDps() then
+			sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\killbigmob.ogg")--大怪快打
+		else
+			sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\bigmob.ogg")--大怪出現
+		end
+	elseif msg == "dr40" or msg == "dr30" or msg == "dr20" or msg == "dr10" then
+		if not warneddr[msg] then
+			warneddr[msg] = true
+			specWarnManifestationSoon:Show()
+			sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\bigmobsoon.ogg")--準備大怪
+			if mod:IsDps() then
+				sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\killbigmob.ogg")--大怪快打
+			else
+				sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\bigmob.ogg")--大怪出現
+			end
+		end
 	end
 end
 
 function mod:CHAT_MSG_ADDON(prefix, message, channel, sender)
 	--Because core already registers BigWigs prefix with server, shouldn't need it here
-	if prefix == "D4" and message then
-		sender = Ambiguate(sender, "none")
-		if message:find("ManifestationDied") and not playerInside and self:AntiSpam(1, 1) then
-			addSync()
-		elseif message:find("BlindHatredEnded") and self:AntiSpam(5, 4) then
-			timerBlindHatredCD:Start()
-			self.vb.unleashedAngerCast = 0
-		elseif message:find("BlindHatred") and not message:find("BlindHatredEnded") and self:AntiSpam(5, 3) then
-			warnBlindHatred:Show()
-			if not playerInside then
-				specWarnBlindHatred:Show()
-			end
-			timerBlindHatred:Start()
-		end
-	elseif prefix == "BigWigs" and message then
-		sender = Ambiguate(sender, "none")
+	if prefix == "BigWigs" and message then
 		local bwPrefix, bwMsg = message:match("^(%u-):(.+)")
-		if bwMsg == "InsideBigAddDeath" and not playerInside and self:AntiSpam(1, 1) then
-			addSync()
+		if bwMsg == "InsideBigAddDeath" and not playerInside and self:AntiSpam(1) then
+			specWarnManifestationSoon:Show()
+			sndWOP:Play("Interface\\AddOns\\DBM-Sound-Yike\\yike\\bigmobsoon.ogg")--準備大怪
+			if mod:IsDps() then
+				sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\killbigmob.ogg")--大怪快打
+			else
+				sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Sound-Yike\\yike\\bigmob.ogg")--大怪出現
+			end
 		end
 	end
-end
-
---Make sure we send Bigwigs altPower syncs so DBM users aren't yelled at by raid leaders for not installing BW
-function mod:UNIT_POWER(uId)
-	local currentPower = UnitPower("player", 10)
-	if not previousPower or (previousPower ~= currentPower) then
-		previousPower = currentPower
-		SendAddonMessage("BigWigs", "T:".."BWPower "..currentPower, IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
-	end
-end
-
-function mod:GROUP_ROSTER_UPDATE(uId)
-	local currentPower = UnitPower("player", 10)
-	SendAddonMessage("BigWigs", "T:".."BWPower "..currentPower, IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
 end
