@@ -1,5 +1,5 @@
 ## Interface: 60000
-## X-Curse-Packaged-Version: v1.7.1
+## X-Curse-Packaged-Version: v1.7.4
 ## X-Curse-Project-Name: AdiBags
 ## X-Curse-Project-ID: adibags
 ## X-Curse-Repository-ID: wow/adibags/mainline
@@ -7,8 +7,8 @@
 ## Title: AdiBags Configuration
 ## Notes: Adirelle's bag addon.
 ## Author: Adirelle
-## Version: v1.7.1
-## X-Date: 2014-10-16T20:45:54Z
+## Version: v1.7.4
+## X-Date: 2014-10-18T17:31:49Z
 ## X-Part-Of: AdiBags
 ## LoadOnDemand: 1
 ## Dependencies: AdiBags

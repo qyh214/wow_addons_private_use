@@ -55,6 +55,8 @@ local SECTION_SPACING = addon.SECTION_SPACING
 local BAG_INSET = addon.BAG_INSET
 local HEADER_SIZE = addon.HEADER_SIZE
 
+local BAG_IDS = addon.BAG_IDS
+
 --------------------------------------------------------------------------------
 -- Widget scripts
 --------------------------------------------------------------------------------
@@ -67,14 +69,14 @@ end
 -- Bag creation
 --------------------------------------------------------------------------------
 
-local containerClass, containerProto, containerParentProto = addon:NewClass("Container", "LayeredRegion", "AceEvent-3.0", "AceBucket-3.0")
+local containerClass, containerProto, containerParentProto = addon:NewClass("Container", "LayeredRegion", "AceEvent-3.0")
 
 function addon:CreateContainerFrame(...) return containerClass:Create(...) end
 
 local SimpleLayeredRegion = addon:GetClass("SimpleLayeredRegion")
 
 local bagSlots = {}
-function containerProto:OnCreate(name, bagIds, isBank)
+function containerProto:OnCreate(name, isBank)
 	self:SetParent(UIParent)
 	containerParentProto.OnCreate(self)
 
@@ -87,8 +89,8 @@ function containerProto:OnCreate(name, bagIds, isBank)
 	self:SetScript('OnHide', self.OnHide)
 
 	self.name = name
-	self.bagIds = bagIds
 	self.isBank = isBank
+	self.isReagentBank = false
 
 	self.buttons = {}
 	self.dirtyButtons = {}
@@ -100,7 +102,8 @@ function containerProto:OnCreate(name, bagIds, isBank)
 	self.removed = {}
 	self.changed = {}
 
-	for bagId in pairs(self.bagIds) do
+	local ids
+	for bagId in pairs(BAG_IDS[isBank and "BANK" or "BAGS"]) do
 		self.content[bagId] = { size = 0 }
 		tinsert(bagSlots, bagId)
 		if not addon.itemParentFrames[bagId] then
@@ -161,6 +164,7 @@ function containerProto:OnCreate(name, bagIds, isBank)
 	bagSlotButton.panel = bagSlotPanel
 	bagSlotButton:SetWidth(18)
 	bagSlotButton:SetHeight(18)
+	self.BagSlotButton = bagSlotButton
 	addon.SetupTooltip(bagSlotButton, {
 		L["Equipped bags"],
 		L["Click to toggle the equipped bag panel, so you can change them."]
@@ -187,6 +191,12 @@ function containerProto:OnCreate(name, bagIds, isBank)
 	anchor:SetFrameLevel(self:GetFrameLevel() + 10)
 	self.Anchor = anchor
 
+	if self.isBank then
+		self:CreateReagentTabButton()
+		self:CreateDepositButton()
+	end
+	self:CreateSortButton()
+
 	local content = CreateFrame("Frame", nil, self)
 	content:SetPoint("TOPLEFT", BAG_INSET, -addon.TOP_PADDING)
 	self.Content = content
@@ -207,13 +217,171 @@ end
 
 function containerProto:ToString() return self.name or self:GetName() end
 
+function containerProto:CreateModuleButton(letter, order, onClick, tooltip)
+	local button = CreateFrame("Button", nil, self, "UIPanelButtonTemplate")
+	button:SetText(letter)
+	button:SetSize(20, 20)
+	button:SetScript("OnClick", onClick)
+	button:RegisterForClicks("AnyUp")
+	if order then
+		self:AddHeaderWidget(button, order)
+	end
+	if tooltip then
+		addon.SetupTooltip(button, tooltip, "ANCHOR_TOPLEFT", 0, 8)
+	end
+	return button
+end
+
+ function containerProto:CreateModuleAutoButton(letter, order, title, description, optionName, onShow, onHide)
+	local button
+	local statusTexts = {
+		[false] = '|cffff0000'..L["disabled"]..'|r',
+		[true]  = '|cff00ff00'..L["enabled"]..'|r'
+	}
+	local Description = description:sub(1, 1):upper() .. description:sub(2)
+
+	local onClick
+	if onShow and onHide then
+		onClick = function() onShow() onHide() end
+	else
+		onClick = onShow or onHide
+	end
+
+	button = self:CreateModuleButton(
+		letter,
+		order,
+		function(_, mouseButton)
+			if mouseButton == "RightButton" then
+				local enable = not addon.db.profile[optionName]
+				addon.db.profile[optionName] = enable
+				return PlaySound(enable and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
+			end
+			onClick()
+		end,
+		function(_, tooltip)
+			tooltip:AddLine(title, 1, 1, 1)
+			tooltip:AddLine(format(L["%s is: %s."], Description, statusTexts[not not addon.db.profile[optionName]]))
+			tooltip:AddLine(format(L["Right-click to toggle %s."], description))
+		end
+	)
+
+	if onShow then
+		button:SetScript('OnShow', function()
+			if addon.db.profile[optionName] then
+				onShow()
+			end
+		end)
+	end
+	if onHide then
+		button:SetScript('OnHide', function()
+			if addon.db.profile[optionName] then
+				onHide()
+			end
+		end)
+	end
+
+	return button
+end
+
+function containerProto:CreateDepositButton()
+	local button = self:CreateModuleAutoButton(
+		"D",
+		0,
+		REAGENTBANK_DEPOSIT,
+		L["auto-deposit"],
+		"autoDeposit",
+		DepositReagentBank
+	)
+
+	if not IsReagentBankUnlocked() then
+		button:Hide()
+		button:SetScript('OnEvent', button.Show)
+		button:RegisterEvent('REAGENTBANK_PURCHASED')
+	end
+end
+
+function containerProto:CreateSortButton()
+	self:CreateModuleAutoButton(
+		"S",
+		10,
+		BAG_CLEANUP_BAGS,
+		L["auto-sort"],
+		"autoSort",
+		nil,
+		self.isBank and
+			function()
+				PlaySound("UI_BagSorting_01")
+				SortBankBags()
+				if IsReagentBankUnlocked() then
+					SortReagentBankBags()
+				end
+			end
+		or
+			function()
+				PlaySound("UI_BagSorting_01")
+				SortBags()
+			end
+	)
+end
+
+function containerProto:CreateReagentTabButton()
+	local button
+	button = self:CreateModuleButton(
+		"R",
+		0,
+		function()
+			if not IsReagentBankUnlocked() then
+				PlaySound("igMainMenuOption")
+				return StaticPopup_Show("CONFIRM_BUY_REAGENTBANK_TAB")
+			end
+			local previousBags = self:GetBagIds()
+			self.isReagentBank = not self.isReagentBank
+			self.BagSlotButton:SetEnabled(not self.isReagentBank)
+			if self.isReagentBank and self.BagSlotPanel:IsShown() then
+				self.BagSlotPanel:Hide()
+				self.BagSlotButton:SetChecked(False)
+			end
+			self.Title:SetText(self.isReagentBank and REAGENT_BANK or L["Bank"])
+			self:PauseUpdates()
+			for bag in pairs(previousBags) do
+				self:UpdateContent(bag)
+			end
+			self:ResumeUpdates()
+		end,
+		function(_, tooltip)
+			if not IsReagentBankUnlocked() then
+				tooltip:AddLine(BANKSLOTPURCHASE, 1, 1, 1)
+				tooltip:AddLine(REAGENTBANK_PURCHASE_TEXT)
+				SetTooltipMoney(tooltip, GetReagentBankCost(), nil, COSTS_LABEL)
+				return
+			end
+			tooltip:AddLine(
+				format(
+					L['Click to swap between %s and %s.'],
+					REAGENT_BANK:lower(),
+					L["Bank"]:lower()
+				)
+			)
+		end
+	)
+end
+
 --------------------------------------------------------------------------------
 -- Scripts & event handlers
 --------------------------------------------------------------------------------
 
-function containerProto:BagsUpdated(bagIds)
+function containerProto:GetBagIds()
+	return BAG_IDS[
+		self.isReagentBank and "REAGENTBANK_ONLY" or
+		self.isBank and "BANK_ONLY" or
+		"BAGS"
+	]
+end
+
+function containerProto:BagsUpdated(event, bagIds)
+	local showBag = self:GetBagIds()
 	for bag in pairs(bagIds) do
-		if self.bagIds[bag] then
+		if showBag[bag] then
 			self:UpdateContent(bag)
 		end
 	end
@@ -267,15 +435,14 @@ function containerProto:OnHide()
 	self:PauseUpdates()
 	self:UnregisterAllEvents()
 	self:UnregisterAllMessages()
-	self:UnregisterAllBuckets()
 end
 
 function containerProto:ResumeUpdates()
 	if not self.paused then return end
 	self.paused = false
-	self.bagUpdateBucket = self:RegisterBucketMessage('AdiBags_BagUpdated', 0.2, "BagsUpdated")
+	self:RegisterMessage('AdiBags_BagUpdated', 'BagsUpdated')
 	self:Debug('ResumeUpdates')
-	for bag in pairs(self.bagIds) do
+	for bag in pairs(self:GetBagIds()) do
 		self:UpdateContent(bag)
 	end
 	if self.filtersChanged  then
@@ -289,7 +456,7 @@ end
 function containerProto:PauseUpdates()
 	if self.paused then return end
 	self:Debug('PauseUpdates')
-	self:UnregisterBucket(self.bagUpdateBucket, true)
+	self:UnregisterMessage('AdiBags_BagUpdated')
 	self.paused = true
 end
 
@@ -311,7 +478,7 @@ end
 
 local function FindBagWithRoom(self, itemFamily)
 	local fallback
-	for bag in pairs(self.bagIds) do
+	for bag in pairs(self:GetBagIds()) do
 		local numFree, family = GetContainerNumFreeSlots(bag)
 		if numFree and numFree > 0 then
 			if band(family, itemFamily) ~= 0 then
@@ -428,7 +595,7 @@ function containerProto:UpdateContent(bag)
 	self:Debug('UpdateContent', bag)
 	local added, removed, changed = self.added, self.removed, self.changed
 	local content = self.content[bag]
-	local newSize = GetContainerNumSlots(bag)
+	local newSize = self:GetBagIds()[bag] and GetContainerNumSlots(bag) or 0
 	local _, bagFamily = GetContainerNumFreeSlots(bag)
 	content.family = bagFamily
 	for slot = 1, newSize do

@@ -1,12 +1,12 @@
-local MAJOR, MINOR = "LibItemUpgradeInfo-1.0", 4
+local MAJOR, MINOR = "LibItemUpgradeInfo-1.0", 5
 
 local lib = _G.LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
 local upgradeTable = {
 	[  1] = { upgrade = 1, max = 1, ilevel = 8 },
-	[373] = { upgrade = 1, max = 2, ilevel = 4 },
-	[374] = { upgrade = 2, max = 2, ilevel = 8 },
+	[373] = { upgrade = 1, max = 3, ilevel = 4 },
+	[374] = { upgrade = 2, max = 3, ilevel = 8 },
 	[375] = { upgrade = 1, max = 3, ilevel = 4 },
 	[376] = { upgrade = 2, max = 3, ilevel = 4 },
 	[377] = { upgrade = 3, max = 3, ilevel = 4 },
@@ -44,6 +44,7 @@ local upgradeTable = {
 	[496] = { upgrade = 2, max = 6, ilevel = 8 },
 	[497] = { upgrade = 3, max = 6, ilevel = 12 },
 	[498] = { upgrade = 4, max = 6, ilevel = 16 },
+	[503] = { upgrade = 3, max = 3, ilevel = 1 },
 	[504] = { upgrade = 3, max = 4, ilevel = 12 },
 	[505] = { upgrade = 4, max = 4, ilevel = 16 },
 	[506] = { upgrade = 5, max = 6, ilevel = 20 },
@@ -65,7 +66,7 @@ end
 --   Number - The upgrade ID (possibly 0), or nil if the input is invalid or
 --            does not contain upgrade info
 function lib:GetUpgradeID(itemString)
-	return tonumber(itemString:match("item:%d+:%d+:%d+:%d+:%d+:%d+:%-?%d+:%-?%d+:%d+:%d+:(%d+)"))
+	return tonumber(itemString:match("item:%d+:%d+:%d+:%d+:%d+:%d+:%-?%d+:%-?%d+:%d+:(%d+)"))
 end
 
 -- GetCurrentUpgrade(id)
@@ -260,7 +261,7 @@ do
 			debugTooltip:SetOwner(_G.WorldFrame, "ANCHOR_NONE")
 		end
 		newTable = {}
-		local itemLink = "|cff0070dd|Hitem:89551:0:0:0:0:0:0:0:90:0:0|h[Aspirant's Staff of Harmony]|h|r"
+		local itemLink = "|cff0070dd|Hitem:89551:0:0:0:0:0:0:0:90:0|h[Aspirant's Staff of Harmony]|h|r"
 		local itemLevel = select(4, _G.GetItemInfo(itemLink))
 		assert(itemLevel, "Can't find item level for itemLink")
 		local count, max, batchsize = 0, 10000, 200
