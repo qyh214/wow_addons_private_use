@@ -1,0 +1,10 @@
+﻿## Interface: 60000
+## Title: BigFoot Channel
+## Title-zhCN: 大脚世界频道
+## Title-zhTW: 大腳世界頻道
+## Version: 1.2
+## Author: Abin
+## SavedVariables: BFChannelDB
+
+Includes\InterfaceOptionPage-1.0.lua
+BFChannel.lua

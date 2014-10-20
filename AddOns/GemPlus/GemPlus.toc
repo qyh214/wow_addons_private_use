@@ -1,0 +1,14 @@
+## Interface: 60000
+## Title: GemPlus
+## Version: 1.11
+## Author: Abin
+## X-Category: Auction
+## X-eMail: abinn32@yahoo.com
+## X-Curse-Packaged-Version: v1.11
+## X-Curse-Project-Name: GemPlus
+## X-Curse-Project-ID: GemPlus
+## X-Curse-Repository-ID: wow/gemplus/mainline
+
+Core.lua
+MenuTemplates.lua
+Supports.lua
