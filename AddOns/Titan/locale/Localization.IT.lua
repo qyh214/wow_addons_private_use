@@ -268,6 +268,25 @@ L["TITAN_BAG_PROF_BAG_NAMES"] = {
 -- Cooking
 "Frigorifero Portatile",
 };
+L["TITAN_BAG_PROF_BAG_ENCHANTING"] = {
+"Borsa di Telamagica Incantata", "Borsa di Telarunica Incantata", "Zaino da Incantatore", "Sacca Grande da Incantatore", 
+"Sacca di Fuocoincanto", "Sacca Misteriosa", "Sacca Ultraterrena", "Borsetta da Incantatore \"Esclusiva\" di Dolce Gabbata"};
+L["TITAN_BAG_PROF_BAG_ENGINEERING"] = {
+"Cassetta degli Attrezzi Pesante", "Cassetta degli Attrezzi di Vilferro", "Cassetta degli Attrezzi di Titanio",
+"Cassetta degli Attrezzi d'Elementio", "Cassetta Tecnologica \"Follia\" di Dolce Gabbata"};
+L["TITAN_BAG_PROF_BAG_HERBALISM"] = {
+"Sacca da Erbalista", "Sacca per Erbe Cenariana", "Sacco Cenariano", "Sacca Botanica di Mycah", "Sacca di Smeraldo",
+"Sacca della Spedizione di Hyjal", "Cesta per Erbe \"Verdissima\" di Dolce Gabbata"};
+L["TITAN_BAG_PROF_BAG_INSCRIPTION"] = {
+"Cartella dello Scriba", "Sacca Milletasche", "Zaino da Studente \"Scuola Oggi\" di Dolce Gabbata"};
+L["TITAN_BAG_PROF_BAG_JEWELCRAFTING"] = {
+"Borsa da Orafo", "Borsa di Gioielli", "Pochette da Sera \"Inimitabile\" di Dolce Gabbata"};
+L["TITAN_BAG_PROF_BAG_LEATHERWORKING"] = {
+"Sacca del Conciatore", "Sacca per Molte Pelli", "Zaino da Viaggio del Mastro Bracconiere", "Sacca di Cuoio \"A Pelle\" di Dolce Gabbata"};
+L["TITAN_BAG_PROF_BAG_MINING"] = {
+"Sacco da Minatore", "Sacco da Minatore Rinforzato", "Sacco da Minatore di Mammut", "Sacco di Preziosi \"Diamiani\" di Dolce Gabbata"};
+L["TITAN_BAG_PROF_BAG_FISHING"] = {"Cassetta del Gran Pescatore"};
+L["TITAN_BAG_PROF_BAG_COOKING"] = {"Frigorifero Portatile"};
 
 L["TITAN_CLOCK_TOOLTIP"] = "Orologio";     
 L["TITAN_CLOCK_TOOLTIP_VALUE"] = "Offset ora server: ";

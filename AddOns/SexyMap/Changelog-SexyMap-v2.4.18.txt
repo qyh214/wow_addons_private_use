@@ -1,0 +1,13 @@
+tag v2.4.18
+d9f024df0a24da3f2b4824cbfcedff57842d1b05
+funkydude <none>
+2014-10-17 02:40:24 +0100
+
+Tagging as v2.4.18
+
+
+--------------------
+
+funkydude:
+	- Movers: Remove some old code causing issues.
+	- Replace some fake animations with timers.

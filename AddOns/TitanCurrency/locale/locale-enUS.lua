@@ -1,0 +1,31 @@
+﻿local L = LibStub("AceLocale-3.0"):NewLocale("Titan_Currency","enUS",true)
+
+L["TITAN_CURRENCY_TOOLTIPTEXT"] = "Total Gold on";
+L["TITAN_CURRENCY_ITEMNAME"] = "Currency";
+L["TITAN_CURRENCY_CLEAR_DATA_TEXT"] = "Clear Database";
+L["TITAN_CURRENCY_RESET_SESS_TEXT"] = "Reset Current Session";
+L["TITAN_CURRENCY_DB_CLEARED"] = "Titan Currency - Database cleared.";
+L["TITAN_CURRENCY_SESSION_RESET"] = "Titan Currency - Session reset.";
+L["TITAN_CURRENCY_MENU_TEXT"] = "Currency";
+L["TITAN_CURRENCY_TOOLTIP"] = "Currency Info";
+L["TITAN_CURRENCY_TOGGLE_PLAYER_TEXT"] = "Display player gold";
+L["TITAN_CURRENCY_TOGGLE_ALL_TEXT"] = "Display server gold";
+L["TITAN_CURRENCY_SESS_EARNED"] = "Earned this session";
+L["TITAN_CURRENCY_PERHOUR_EARNED"] = "Earned per hour";
+L["TITAN_CURRENCY_SESS_LOST"] = "Lost this session";
+L["TITAN_CURRENCY_PERHOUR_LOST"] = "Lost per hour";
+L["TITAN_CURRENCY_STATS_TITLE"] = "Session Statistics";
+L["TITAN_CURRENCY_TTL_GOLD"] = "Total Gold";
+L["TITAN_CURRENCY_START_GOLD"] = "Starting Gold";
+L["TITAN_CURRENCY_TOGGLE_SORT_GOLD"] = "Sort table by gold";
+L["TITAN_CURRENCY_TOGGLE_SORT_NAME"] = "Sort table by name";
+L["TITAN_CURRENCY_TOGGLE_GPH_SHOW"] = "Display gold per hour";
+L["TITAN_CURRENCY_TOGGLE_GPH_HIDE"] = "Hide gold per hour";
+
+L["TITAN_CURRENCY_TOGGLE_PLAYER_SHOW"] = "Make this toon visible";
+L["TITAN_CURRENCY_TOGGLE_PLAYER_HIDE"] = "Hide this toon";
+L["TITAN_CURRENCY_STATUS_PLAYER_SHOW"] = "visible";
+L["TITAN_CURRENCY_STATUS_PLAYER_HIDE"] = "hidden";
+L["TITAN_CURRENCY_DELETE_PLAYER"] = "Delete toon";
+L["TITAN_CURRENCY_FACTION_PLAYER_ALLY"] = "Alliance";
+L["TITAN_CURRENCY_FACTION_PLAYER_HORDE"] = "Horde";

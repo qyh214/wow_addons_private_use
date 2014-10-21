@@ -508,11 +508,11 @@ function TitanMapFrame_OnUpdate(self, elapsed)
 		-- **
 --		x_offset = (WorldMapPositioningGuide:GetWidth() / 4) -- center of map
 --			- (TitanMapPlayerLocation:GetWidth() / 2) -- center of coords
-		TitanMapPlayerLocation:SetPoint("BOTTOMLEFT", WorldMapPositioningGuide, "BOTTOMLEFT", 110, 16)
+		TitanMapPlayerLocation:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 75, -12)
 	else
-		x_offset = (WorldMapPositioningGuide:GetWidth() / 3) -- left third of map
+		x_offset = (WorldMapDetailFrame:GetWidth() / 5) -- left fifth of map
 			- (TitanMapPlayerLocation:GetWidth() / 2) -- center of coords
-		TitanMapPlayerLocation:SetPoint("BOTTOMLEFT", WorldMapPositioningGuide, "BOTTOMLEFT", x_offset, 10)
+		TitanMapPlayerLocation:SetPoint("BOTTOMLEFT", WorldMapFrame, "BOTTOMLEFT", x_offset, 10)
 	end
 end
 --[[
