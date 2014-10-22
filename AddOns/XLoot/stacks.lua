@@ -162,7 +162,7 @@ local function AcquireChild(self)
 			return f
 		end
 	end
-	child = self:Factory()
+	local child = self:Factory()
 	table_insert(self.children, child)
 	return child, true
 end
@@ -172,8 +172,8 @@ do
 	local function Push(self)
 		local child, new = AcquireChild(self)
 		if new then
-			children = self.children
-			self:AnchorChild(child, #children > 1 and children[#children-1] or nil)
+			local n = #self.children
+			self:AnchorChild(child, n > 1 and self.children[n-1] or nil)
 		end
 		child:Show()
 		child.active = true

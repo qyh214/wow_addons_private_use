@@ -52,8 +52,8 @@ function XLoot.CanEquipItem(link)
 	for i=2, 5 do
 		local line = _G["XLootTooltipTextRight"..i]
 		if line and line:GetText() then
-			r, g, b = line:GetTextColor()
-			lr, lg, lb = _G["XLootTooltipTextLeft"..i]:GetTextColor()
+			local r, g, b = line:GetTextColor()
+			local lr, lg, lb = _G["XLootTooltipTextLeft"..i]:GetTextColor()
 			return (r > .8 and b > .8 and g > .8 and lr > .8 and lg > .8 and lb > .8) and true or false
 		end
 	end	
@@ -68,4 +68,27 @@ function XLoot.IsItemUpgrade(link)
 	end
 	return false
 end
+-- Tack role icon on to player name and return class colors
+local white = { r = 1, g = 1, b = 1 }
+local dimensions = {
+	HEALER = '48:64',
+	DAMAGER = '16:32',
+	TANK = '32:48'
+}
+function XLoot.FancyPlayerName(name, class, opt)
+	local c = RAID_CLASS_COLORS[class] or white
+	local role = UnitGroupRolesAssigned(name)
+	local short, realm = UnitName(name)
+	if short then
+		name = short
+	end
+	if realm and realm ~= "" then
+		name = name.." *"
+	end
+	if role ~= 'NONE' and opt.role_icon then
+		name = string_format('\124TInterface\\LFGFRAME\\LFGROLE:12:12:-1:0:64:16:%s:0:16\124t%s', dimensions[role], name)
+	end
+	return name, c.r, c.g, c.b
+end
+
 

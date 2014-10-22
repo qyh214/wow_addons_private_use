@@ -381,6 +381,7 @@ function AuctionLite:ClickAuctionSellItemButton_Hook()
         -- Start the scan.
         local query = {
           link = link,
+          exact = true,
           update = function(pct) AuctionLite:UpdateProgressSell(pct) end,
           finish = function(data, link) AuctionLite:SetSellData(data, link) end,
         };

@@ -5,7 +5,7 @@ XLootMonitor.addon = addon
 -- Grab locals
 local print, opt, eframe, anchor = print
 local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or _G.RAID_CLASS_COLORS
-local CopperToString = XLoot.CopperToString
+local CopperToString, FancyPlayerName = XLoot.CopperToString, XLoot.FancyPlayerName
 local table_insert, table_remove = table.insert, table.remove
 local me = UnitName("player")
 
@@ -36,22 +36,6 @@ local defaults = {
 	}
 }
 
--------------------------------------------------------------------------------
--- Helpers
-local white = { r = 1, g = 1, b = 1 }
-local dimensions = {
-	HEALER = '48:64',
-	DAMAGER = '16:32',
-	TANK = '32:48'
-}
-local function FancyPlayerName(name, class)
-	local c = RAID_CLASS_COLORS[class] or white
-	local role = UnitGroupRolesAssigned(name)
-	if role ~= 'NONE' and opt.role_icon then
-		name = string_format('\124TInterface\\LFGFRAME\\LFGROLE:12:12:-1:0:64:16:%s:0:16\124t%s', dimensions[role], name)
-	end
-	return name, c.r, c.g, c.b
-end
 
 -------------------------------------------------------------------------------
 -- Module init
@@ -100,7 +84,7 @@ function events.item(player, link, num)
 		local r, g, b = GetItemQualityColor(quality)
 		local nr, ng, nb
 		if player ~= me then
-			player, nr, ng, nb = FancyPlayerName(player, select(2, UnitClass(player)))
+			player, nr, ng, nb = FancyPlayerName(player, select(2, UnitClass(player)), opt)
 		else
 			player = nil
 		end
@@ -142,6 +126,7 @@ function addon.LOOT_EVENT(event, pattern, ...)
 	end
 end
 
+local mouse_focus
 function addon:MODIFIER_STATE_CHANGED(self, modifier, state)
 	if mouse_focus and MouseIsOver(mouse_focus) then
 		mouse_focus:ShowTooltip()

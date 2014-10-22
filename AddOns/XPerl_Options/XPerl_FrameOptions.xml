@@ -634,7 +634,11 @@
 			</OnLeave>
 			<OnClick>
 				if (self.configBase) then
-					XPerl_Options_SetIndex(self, self:GetChecked())
+					if self:GetChecked() then
+						XPerl_Options_SetIndex(self, 1)
+					else
+						XPerl_Options_SetIndex(self, nil)
+					end
 
 				elseif (type(self.configSelection) == "table") then
 					if (self.configIndex == nil) then
@@ -652,7 +656,11 @@
 						end
 
 						if (type(table) == "table") then
-							table[self.configIndex] = self:GetChecked()
+							if self:GetChecked() then
+								table[self.configIndex] = 1
+							else
+								table[self.configIndex] = nil
+							end
 						end
 					end
 				elseif (self.XconfigVar) then
@@ -1256,7 +1264,11 @@
 						self:SetChecked(XPerlDB.raid.class[self:GetID()].enable)
 					</OnShow>
 					<OnClick>
-						XPerlDB.raid.class[self:GetID()].enable = self:GetChecked()
+						if self:GetChecked() then
+							XPerlDB.raid.class[self:GetID()].enable = 1
+						else
+							XPerlDB.raid.class[self:GetID()].enable = nil
+						end
 						XPerl_Raid_ChangeAttributes()
 						XPerl_Raid_OptionActions()
 					</OnClick>

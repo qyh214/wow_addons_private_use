@@ -1,0 +1,8 @@
+subversion:
+	- Omega via svn r11807: zhCN update
+	- Omega via svn r11806: Fix more bad
+	- Omega via svn r11805: Fix
+	- Omega via svn r11804: only show bug message once
+	- swix via svn r11803: ruRU update
+	- Omega via svn r11802: Add some cinematic start debug
+	- tandanu via svn r11801: increment alpha version

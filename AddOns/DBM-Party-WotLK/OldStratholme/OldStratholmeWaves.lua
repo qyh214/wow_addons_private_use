@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("StratWaves", "DBM-Party-WotLK", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 157 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 164 $"):sub(12, -3))
 
 mod:RegisterEvents(
 	"UPDATE_WORLD_STATES",
@@ -85,11 +85,9 @@ function mod:UPDATE_WORLD_STATES(args)
 end
 
 function mod:UNIT_DIED(args)
-	if bit.band(args.destGUID:sub(0, 5), 0x00F) == 3 then
-		local z = self:GetCIDFromGUID(args.destGUID)
-		if z == 26529 then
-			timerWaveIn:Start()
-		end
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 26529 then
+		timerWaveIn:Start()
 	end
 end
 

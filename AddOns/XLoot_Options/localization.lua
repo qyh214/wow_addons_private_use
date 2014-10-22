@@ -23,8 +23,8 @@ local locales = {
 			font_sizes = "Sizes",
 
 			-- Option labels
-			autoloot_coin = "Auto loot coin",
-			autoloot_coin_desc = "When to automatically loot coin",
+			autoloot_currency = "Auto loot currency",
+			autoloot_currency_desc = "When to automatically loot currency",
 			autoloot_quest = "Auto loot quest items",
 			autoloot_quest_desc = "When to automatically loot quest items",
 			autoloot_all = "Auto loot everything",

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(870, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 6 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10 $"):sub(12, -3))
 mod:SetCreatureID(73720, 71512)
 mod:SetEncounterID(1594)
 mod:DisableESCombatDetection()
@@ -335,7 +335,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function mod:UPDATE_WORLD_STATES()
-	local text = select(7, GetWorldStateUIInfo(5))
+	local text = select(4, GetWorldStateUIInfo(6))
 	local time = tonumber(string.match(text or "", "%d+"))
 	if not time then return end
 	if time > worldTimer then

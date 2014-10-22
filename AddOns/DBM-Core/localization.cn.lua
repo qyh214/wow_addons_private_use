@@ -2,7 +2,7 @@
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
 -- Mini_Dragon(projecteurs@gmail.com)
--- Last update: Oct 6, 2014
+-- Last update: Oct 19, 2014@11805
 
 if GetLocale() ~= "zhCN" then return end
 
@@ -10,26 +10,28 @@ DBM_CORE_NEED_SUPPORT				= "如果你会编程并且英语不错，请来帮助�
 DBM_CORE_NEED_LOGS					= "DBM 需要战斗记录器 (http://www.wowace.com/addons/transcriptor/) 的日志来使得技能判断更准确. 如果你想帮忙，请用 transcriptor 记录并上传日志文件到 http://forums.elitistjerks.com/topic/132677-deadly-boss-mods-60-testing/ (请压缩他们). 我们现在只对团本数据感兴趣."
 DBM_HOW_TO_USE_MOD					= "欢迎使用DBM。在聊天框输入 /dbm help 以获取可用命令的帮助。输入 /dbm 可打开设置窗口。手动打开指定区域的模组即可开始针对各个模块进行设置，也可以浏览首领击杀记录。DBM 会在你首次尝试首领战时自动进行扫描，但是有些设置需要手动开启。"
 
-DBM_FORUMS_MESSAGE					= "发现BUG或错误的计时器?你希望要让某些模组有新的警告，计时器或是特别功能?\n拜访新的Deadly Boss Mods |HDBM:论坛|h|cff3588ffhttp://www.deadlybossmods.com|r (你可以点击链接复制网址)"
+DBM_FORUMS_MESSAGE					= "发现BUG或错误的计时条?你希望要让某些模组有新的警告，计时器或是特别功能?\n拜访新的Deadly Boss Mods |HDBM:论坛|h|cff3588ffhttp://www.deadlybossmods.com|r (你可以点击链接复制网址)"
 DBM_FORUMS_COPY_URL_DIALOG			= "拜访我们的讨论与支持论坛\r\n(hosted by Elitist Jerks!)"
 
 DBM_CORE_LOAD_MOD_ERROR				= "读取%s模块时发生错误：%s"
 DBM_CORE_LOAD_MOD_SUCCESS			= "成功读取%s模块。在聊天框输入 /dbm 或 /dbm help 可进行更多设置。"
-DBM_CORE_LOAD_MOD_COMBAT			= "延迟读取模块 '%s' 直到你脱离战斗"
+DBM_CORE_LOAD_MOD_COMBAT			= "延迟读取模块 '%s' 直到你脱离战斗。"
 DBM_CORE_LOAD_GUI_ERROR				= "无法读取图形界面：%s"
 DBM_CORE_LOAD_GUI_COMBAT			= "DBM无法在战斗中初始化图形界面。请先在非战斗状态打开图形设置界面，之后的战斗中就可以自由打开和关闭该界面了。"
 DBM_CORE_LOAD_SKIN_COMBAT			= "DBM无法在战斗中更换皮肤。请先在非战斗状态更换好皮肤，并重载界面。"
 DBM_CORE_BAD_LOAD					= "DBM检测到由于你在战斗过程中载入模块，有些计时器可能会错误。请在离开战斗后马上重载界面。"
 
+DBM_CORE_BLIZZ_BUGS					= "6.0中的暴雪的插件bug:\n1. 如果你开启音效，你的插件可能会在战斗时丢失声音，因为插件的优先权被下降了而声音通道有限。请在您的“主菜单-系统-声音”菜单中，将“声道”选项调为“中(32)”或“高(64)”。\n2. 插件为每个角色单独保存设置，如果名字中有特殊字符，可能会导致错误。"
+
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "由于玩家数量不足，DBM 无法开启动态距离检测。"
 DBM_CORE_DYNAMIC_ADD_COUNT			= "由于玩家数量不足，DBM 无法开启倒计时。"
 DBM_CORE_DYNAMIC_MULTIPLE			= "由于玩家数量不足，DBM 禁用了多个功能。"
 
-DBM_CORE_LOOT_SPEC_REMINDER			= "你当前的人物专精为 %s. 你当前的拾取选择为 %s."
+DBM_CORE_LOOT_SPEC_REMINDER			= "你当前的人物专精为 %s。你当前的拾取选择为 %s。"
 
-DBM_CORE_BIGWIGS_ICON_CONFLICT		= "DBM检测到你同时开启了Bigwigs,请关闭自动标记以避免冲突"
+DBM_CORE_BIGWIGS_ICON_CONFLICT		= "DBM检测到你同时开启了Bigwigs,请关闭自动标记以避免冲突。"
 
-DBM_CORE_PROVINGGROUNDS_AD			= "6.0 版本的 DBM-ProvingGrounds （白虎寺挑战模块） 已经上线了. 旧的模块 DBM-ProvingGrounds-MoP 已经被禁用. 你可以删除旧版本并且在 deadlybossmods.com 或 Curse 上找到新版本. 本消息只显示一次. "
+DBM_CORE_PROVINGGROUNDS_AD			= "6.0 版本的 DBM-ProvingGrounds （白虎寺挑战模块） 已经上线了. 旧的模块 DBM-ProvingGrounds-MoP 已经被禁用. 你可以删除旧版本并且在 deadlybossmods.com 或 Curse 上找到新版本。本消息只显示一次。"
 
 DBM_CORE_COMBAT_STARTED				= "%s作战开始，祝你走运 :)"
 DBM_CORE_COMBAT_STARTED_IN_PROGRESS	= "已进行的战斗-%s正在作战。祝你走运 :)"
@@ -106,14 +108,15 @@ DBM_CORE_OUTDATED_PVP_MODS			= "你当前使用的DBM-PVP模块已经过期。PV
 DBM_BIG_WIGS						= "BigWigs"
 DBM_BIG_WIGS_ALPHA					= "BigWigs Alpha"
 
-DBM_CORE_UPDATEREMINDER_HEADER			= "你的Deadly Boss Mods版本已过期。\n你可以在如下地址下载到新版本%s（r%d）："
-DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "Your alpha version of Deadly Boss Mods is out-of-date.\n You are at least %d test versions behind. It is recommended that DBM users use the latest alpha or latest stable version. Out of date alphas can lead to poor or incomplete functionality."
-DBM_CORE_UPDATEREMINDER_FOOTER			= (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "Ctrl+C：复制下载地址到剪切板。"
-DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "按下 " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " 复制下载地址到剪切板。"
+DBM_CORE_UPDATEREMINDER_HEADER			= "你的DBM版本已过期。\n你可以在如下地址下载到新版本%s（r%d）："
+DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "你的DBM Alpha 版本已过期了%d个版本。这可能导致你或其他团队成员出错。"
+DBM_CORE_UPDATEREMINDER_FOOTER			= "按下 " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "复制下载地址到剪切板。"
+DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "按下 " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "复制链接到剪切板。"
 DBM_CORE_UPDATEREMINDER_NOTAGAIN		= "检测到新版本后弹出提示框"
 DBM_CORE_UPDATEREMINDER_DISABLE			= "警告：你的DBM已经过时相当多的版本（%d个版本），它已被禁用，直到你更新。这是为了确保它不会导致你或其他团队成员出错。"
 DBM_CORE_UPDATEREMINDER_HOTFIX			= "你的DBM版本会在这首领战斗有不准确的计时器或警告。这问题已被修正在下次正式版更新，或可以更新至最新的alpha版本立即修正此问题。"
 DBM_CORE_UPDATEREMINDER_TESTVERSION		= "警告：你使用了不正确版本的DBM。请确保DBM版本和游戏版本一致。"
+DBM_CORE_VEM							= "你好像在使用VEM。DBM在这种情况下无法被载入。"
 
 DBM_CORE_MOVABLE_BAR				= "拖动我！"
 

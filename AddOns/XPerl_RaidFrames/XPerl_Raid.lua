@@ -51,7 +51,7 @@ local XPerl_ColourHealthBar = XPerl_ColourHealthBar
 -- TODO - Watch for:	 ERR_FRIEND_OFFLINE_S = "%s has gone offline."
 
 local conf, rconf
-XPerl_RequestConfig(function(newConf) conf = newConf rconf = conf.raid end, "$Revision: 877 $")
+XPerl_RequestConfig(function(newConf) conf = newConf rconf = conf.raid end, "$Revision: 879 $")
 
 XPERL_RAIDGRP_PREFIX	= "XPerl_Raid_Grp"
 
@@ -1150,7 +1150,7 @@ function XPerl_Raid_HideShowRaid()
 	end
 
 	for i = 1,WoWclassCount do
-		if (rconf.group[i] == 1 and enable and (i < 11 or rconf.sortByClass) and not singleGroup) then
+		if (rconf.group[i] and enable and (i < 11 or rconf.sortByClass) and not singleGroup) then
 			if (not raidHeaders[i]:IsShown()) then
 				raidHeaders[i]:Show()
 			end

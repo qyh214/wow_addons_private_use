@@ -1,0 +1,15 @@
+subversion:
+	- nbluewiz via svn r11795: # Try to fix UIDropdownMenu taint issue.
+	- nbluewiz via svn r11794: # koKR update.
+	- Omega via svn r11793: oops, move that so it doesn't show every zone change
+	- Omega via svn r11792: oops, move that so it doesn't show every zone change
+	- Omega via svn r11791: Shorten message some
+	- Omega via svn r11790: Disable help message for now. reduce spam new users get while blizz bugs message is in place
+	- Omega via svn r11789: Warn about 6.0 addon bugs that affect DBM
+	- nbluewiz via svn r11788: # Update LSM.
+	- Omega via svn r11787: Fix loading of DMF and Brawlers mods, some obsolete code wasn't completely removed.
+	- Omega via svn r11786: Include difficulty in guild alerts
+	- Omega via svn r11785: Fixed loot check spam Fixed getting alerts for runs that are NOT guild groups.
+	- Omega via svn r11784: Cleaner filter that is basically exactly the same, minos now it won't exclude alerts to people who are in group but waiting outside.
+	- Omega via svn r11783: reduce debug spam, only give unit events when actually logging new fights
+	- tandanu via svn r11782: increment version number

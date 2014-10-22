@@ -10,7 +10,7 @@ local GetLootRollItemInfo, GetLootRollItemLink, GetLootRollTimeLeft, RollOnLoot,
 	= GetLootRollItemInfo, GetLootRollItemLink, GetLootRollTimeLeft, RollOnLoot, UnitGroupRolesAssigned, print, string.format
 local HistoryGetItem, HistoryGetPlayerInfo, HistoryGetNumItems
 	= C_LootHistory.GetItem, C_LootHistory.GetPlayerInfo, C_LootHistory.GetNumItems
-local CanEquipItem, IsItemUpgrade = XLoot.CanEquipItem, XLoot.IsItemUpgrade
+local CanEquipItem, IsItemUpgrade, FancyPlayerName = XLoot.CanEquipItem, XLoot.IsItemUpgrade, XLoot.FancyPlayerName
 
 
 -------------------------------------------------------------------------------
@@ -177,22 +177,6 @@ end
 -------------------------------------------------------------------------------
 -- Frame helpers
 
--- Tack role icon on to player name and return class colors
-local white = { r = 1, g = 1, b = 1 }
-local dimensions = {
-	HEALER = '48:64',
-	DAMAGER = '16:32',
-	TANK = '32:48'
-}
-local function FancyPlayerName(name, class)
-	local c = RAID_CLASS_COLORS[class] or white
-	local role = UnitGroupRolesAssigned(name)
-	if role ~= 'NONE' and opt.role_icon then
-		name = string_format('\124TInterface\\LFGFRAME\\LFGROLE:12:12:-1:0:64:16:%s:0:16\124t%s', dimensions[role], name)
-	end
-	return name, c.r, c.g, c.b
-end
-
 local function SetOutline(fontstring)
 	local f, s = fontstring:GetFont()
 	fontstring:SetFont(f, s, opt.text_outline and 'OUTLINE' or nil)
@@ -318,7 +302,7 @@ function addon:LOOT_HISTORY_ROLL_COMPLETE()
 	-- Winner or lead
 	if top_pid then
 		local name, class = HistoryGetPlayerInfo(hid, top_pid)
-		local player, r, g, b = FancyPlayerName(name, class)
+		local player, r, g, b = FancyPlayerName(name, class, opt)
 		if opt.win_icon then
 			if rtype == 'need' then
 				player = [[|TInterface\Buttons\UI-GroupLoot-Dice-Up:16:16:-1:-1|t]]..player
@@ -584,7 +568,7 @@ do
 		for _,pid in pairs(list) do
 			local name, class, rtype, roll, is_winner, is_me = HistoryGetPlayerInfo(hid, pid)
 			if not name then return nil end
-			local text, r, g, b, color = FancyPlayerName(name, class)
+			local text, r, g, b, color = FancyPlayerName(name, class, opt)
 			if roll ~= nil then
 				if is_winner then
 					color = '44ff22'
@@ -799,7 +783,8 @@ do
 		end
 		local time = GetTime()
 		-- TODO: Remove?
-		if GetLootRollTimeLeft(parent.rollid) == 0 then
+		local status, result = pcall(GetLootRollTimeLeft, parent.rollid)
+		if not status or result == 0 then
 			local ended = parent.rollended
 			if ended then
 				if time - ended > 10 then

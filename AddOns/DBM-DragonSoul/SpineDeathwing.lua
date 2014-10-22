@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(318, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 119 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 134 $"):sub(12, -3))
 mod:SetCreatureID(53879)
 mod:SetEncounterID(1291)
 mod:SetZone()
@@ -41,11 +41,11 @@ local specWarnSealArmor		= mod:NewSpecialWarningSpell(105847, mod:IsDps())
 local specWarnAmalgamation	= mod:NewSpecialWarningSpell("ej4054", false)
 
 local timerSealArmor		= mod:NewCastTimer(23, 105847)
-local timerBarrelRoll		= mod:NewCastTimer(5, "ej4050")
+local timerBarrelRoll		= mod:NewCastTimer(10, "ej4050")
 local timerGripCD			= mod:NewNextTimer(32, 105490)
 local timerDeathCD			= mod:NewCDTimer(8.5, 106199)--8.5-10sec variation.
 
-local countdownRoll			= mod:NewCountdown(5, "ej4050")
+local countdownRoll			= mod:NewCountdown(10, "ej4050")
 local countdownGrip			= mod:NewCountdown("Alt32", 105490, not mod:IsTank())--Can get confusing if used with roll countdown. This is off by default but can be turned on by someone willing to sort out the confusion on their own.
 
 local soundNuclearBlast		= mod:NewSound(105845, mod:IsMelee())
@@ -301,9 +301,9 @@ function mod:RAID_BOSS_EMOTE(msg)
 		countdownRoll:Cancel()--^
 		specWarnRoll:Show()--Warn you right away.
 		self:Schedule(3, checkTendrils)--After 3 seconds of roll starting, check tendrals, you should have leveled him out by now if this wasn't on purpose.
-		self:Schedule(8, clearTendrils)--Clearing 3 seconds after the roll should be sufficent
+		self:Schedule(12, clearTendrils)--Clearing 3 seconds after the roll should be sufficent
 		timerBarrelRoll:Start()
-		countdownRoll:Start(5)
+		countdownRoll:Start(10)
 		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
 			DBM.InfoFrame:SetHeader(L.NoDebuff:format(GetSpellInfo(105563)))
 			DBM.InfoFrame:Show(5, "playergooddebuff", 105563)

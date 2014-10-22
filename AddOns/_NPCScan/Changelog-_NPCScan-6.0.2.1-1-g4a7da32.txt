@@ -1,0 +1,2 @@
+SLOKnightfall:
+	- Fix for missing tools error due to testing flag flag enabled

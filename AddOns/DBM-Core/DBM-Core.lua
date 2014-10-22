@@ -51,9 +51,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 11788 $"):sub(12, -3)),
-	DisplayVersion = "6.0.3 alpha", -- the string that is shown as version
-	ReleaseRevision = 11780 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 11815 $"):sub(12, -3)),
+	DisplayVersion = "6.0.4 alpha", -- the string that is shown as version
+	ReleaseRevision = 11799 -- the revision of the latest stable version that is available
 }
 
 -- Legacy crap; that stupid "Version" field was never a good idea.
@@ -194,7 +194,8 @@ DBM.DefaultOptions = {
 	PGMessageShown = false,
 	AlwaysShowSpeedKillTimer = true,
 	CRT_Enabled = false,
-	HelpMessageShown = false,
+--	HelpMessageShown = false,
+	BugMessageShown = 0,
 	MoviesSeen = {},
 	MovieFilter = "Never",
 	LastRevision = 0,
@@ -897,10 +898,10 @@ do
 			end
 			onLoadCallbacks = nil
 			loadOptions()
-			if not GetAddOnEnableState then--Not 6.0
-				DBM:AddMsg(DBM_CORE_UPDATEREMINDER_MAJORPATCH)
-				return
-			end
+--			if not GetAddOnEnableState then--Not 6.0
+--				DBM:AddMsg(DBM_CORE_UPDATEREMINDER_MAJORPATCH)
+--				return
+--			end
 			if GetAddOnEnableState(playerName, "VEM-Core") >= 1 then
 				DBM:AddMsg(DBM_CORE_VEM)
 				return
@@ -1762,6 +1763,14 @@ end
 do
 	local callOnLoad = {}
 	function DBM:LoadGUI()
+--		if not GetAddOnEnableState then--Not 6.0
+--			DBM:AddMsg(DBM_CORE_UPDATEREMINDER_MAJORPATCH)
+--			return
+--		end
+		if GetAddOnEnableState(playerName, "VEM-Core") >= 1 then
+			DBM:AddMsg(DBM_CORE_VEM)
+			return
+		end
 		if not IsAddOnLoaded("DBM-GUI") then
 			if InCombatLockdown() then
 				guiRequested = true
@@ -2434,9 +2443,11 @@ end
 
 function DBM:PLAYER_REGEN_ENABLED()
 	if loadDelay then
+		DBM:Debug("loadDelay is activating LoadMod again")
 		DBM:LoadMod(loadDelay)
 	end
 	if loadDelay2 then
+		DBM:Debug("loadDelay2 is activating LoadMod again")
 		DBM:LoadMod(loadDelay2)
 	end
 	if guiRequested and not IsAddOnLoaded("DBM-GUI") then
@@ -2461,18 +2472,23 @@ function DBM:UPDATE_BATTLEFIELD_STATUS()
 end
 
 function DBM:CINEMATIC_START()
+	DBM:Debug("CINEMATIC_START fired")
 	if not IsInInstance() or C_Garrison:IsOnGarrisonMap() or DBM.Options.MovieFilter == "Never" then return end
+	DBM:Debug("CINEMATIC_START is enabled and passed first check")
 	for itemId, mapId in pairs(blockMovieSkipItems) do
 		if mapId == LastInstanceMapID then
 			if select(3, GetItemCooldown(itemId)) > 0 then return end
 		end
 	end
+	DBM:Debug("CINEMATIC_START has no visions of time item")
 	SetMapToCurrentZone()
 	local currentFloor = GetCurrentMapDungeonLevel() or 0
 	if DBM.Options.MovieFilter == "Block" or DBM.Options.MovieFilter == "AfterFirst" and DBM.Options.MoviesSeen[LastInstanceMapID..currentFloor] then
 		CinematicFrame_CancelCinematic()
+		DBM:Debug("CINEMATIC_START should be canceling movie")
 	else
 		DBM.Options.MoviesSeen[LastInstanceMapID..currentFloor] = true
+		DBM:Debug("CINEMATIC_START should be allowing movie to play since it's first time")
 	end
 end
 
@@ -2574,7 +2590,11 @@ do
 	local function FixForShittyComputers()
 		timerRequestInProgress = false
 		local _, instanceType, difficulty, _, _, _, _, mapID, instanceGroupSize = GetInstanceInfo()
-		if LastInstanceMapID == mapID then return end--ID hasn't changed, don't waste cpu doing anything else (example situation, porting into garrosh phase 4 is a loading screen)
+		DBM:Debug("Instance Check fired with mapID "..mapID.." and difficulty "..difficulty)
+		if LastInstanceMapID == mapID then
+			DBM:Debug("No action taken because mapID hasn't changed since last check")
+			return
+		end--ID hasn't changed, don't waste cpu doing anything else (example situation, porting into garrosh phase 4 is a loading screen)
 		LastInstanceMapID = mapID
 		LastGroupSize = instanceGroupSize
 		difficultyIndex = difficulty
@@ -2603,6 +2623,7 @@ do
 	end
 	--Faster and more accurate loading for instances, but useless outside of them
 	function DBM:LOADING_SCREEN_DISABLED()
+		DBM:Debug("LOADING_SCREEN_DISABLED fired")
 		FixForShittyComputers()
 		DBM:Schedule(3, FixForShittyComputers, DBM)
 	end
@@ -2636,9 +2657,16 @@ end
 	--The main place we should force a mod load in combat is for IsEncounterInProgress because i'm pretty sure blizzard waves "script ran too long" function for a small amount of time after a DC
 	--Outdoor bosses will try to ignore check, if they fail, well, then we need to try and find ways to make the mods that can't load in combat smaller or load faster.
 function DBM:LoadMod(mod, force)
-	if type(mod) ~= "table" then return false end
-	if mod.isWorldBoss and not IsInInstance() and not force then return end--Don't load world boss mod this way.
+	if type(mod) ~= "table" then
+		DBM:Debug("LoadMod failed because mod table not valid")
+		return false
+	end
+	if mod.isWorldBoss and not IsInInstance() and not force then
+		DBM:Debug("LoadMod denied for "..mod.name.." because world boss mods don't load this way")
+		return
+	end--Don't load world boss mod this way.
 	if InCombatLockdown() and not IsEncounterInProgress() and IsInInstance() then
+		DBM:Debug("LoadMod delayed do to combat")
 		if not loadDelay then--Prevent duplicate DBM_CORE_LOAD_MOD_COMBAT message.
 			self:AddMsg(DBM_CORE_LOAD_MOD_COMBAT:format(tostring(mod.name)))
 		end
@@ -2649,12 +2677,13 @@ function DBM:LoadMod(mod, force)
 		end
 		return
 	end
-
 	local loaded, reason = LoadAddOn(mod.modId)
+	DBM:Debug("LoadMod should have fired LoadAddOn for "..mod.name)
 	if not loaded then
 		if reason then
 			self:AddMsg(DBM_CORE_LOAD_MOD_ERROR:format(tostring(mod.name), tostring(_G["ADDON_"..reason or ""])))
 		else
+			DBM:Debug("LoadAddOn failed and did not give reason")
 --			self:AddMsg(DBM_CORE_LOAD_MOD_ERROR:format(tostring(mod.name), DBM_CORE_UNKNOWN)) -- wtf, this should never happen....(but it does happen sometimes if you reload your UI in an instance...)
 		end
 		return false
@@ -4791,11 +4820,11 @@ function DBM:SendVariableInfo(mod, target)
 end
 
 do
-
 	function DBM:PLAYER_ENTERING_WORLD()
-		self:Schedule(10, function() if not DBM.Options.HelpMessageShown then DBM.Options.HelpMessageShown = true DBM:AddMsg(DBM_CORE_NEED_SUPPORT) end end)
+--		self:Schedule(10, function() if not DBM.Options.HelpMessageShown then DBM.Options.HelpMessageShown = true DBM:AddMsg(DBM_CORE_NEED_SUPPORT) end end)
 		self:Schedule(20, function() if not DBM.Options.ForumsMessageShown then DBM.Options.ForumsMessageShown = DBM.ReleaseRevision self:AddMsg(DBM_FORUMS_MESSAGE) end end)
 		self:Schedule(30, function() if not DBM.Options.SettingsMessageShown then DBM.Options.SettingsMessageShown = true self:AddMsg(DBM_HOW_TO_USE_MOD) end end)
+		self:Schedule(40, function() if DBM.Options.BugMessageShown < 1 then DBM.Options.BugMessageShown = 1 self:AddMsg(DBM_CORE_BLIZZ_BUGS) end end)
 		if type(RegisterAddonMessagePrefix) == "function" then
 			if not RegisterAddonMessagePrefix("D4") then -- main prefix for DBM4
 				self:AddMsg("Error: unable to register DBM addon message prefix (reached client side addon message filter limit), synchronization will be unavailable") -- TODO: confirm that this actually means that the syncs won't show up
@@ -4886,12 +4915,20 @@ do
 				mod = not v.isCustomMod and v
 			end
 			mod = mod or inCombat[1]
-			local hp = ("%d%%"):format(mod.highesthealth and mod:GetHighestBossHealth() or mod:GetLowestBossHealth())
+			local hp = ("%d%%"):format(mod.highesthealth and mod:GetHighestBossHealth() or mod:GetLowestBossHealth()) or DBM_CORE_UNKNOWN
+			local hpText = hp
+			if mod.vb.phase then
+				hpText = hpText.." ("..SCENARIO_STAGE:format(mod.vb.phase)..")"
+			end
+			if mod.numBoss then
+				local bossesKilled = mod.numBoss - mod.vb.bossLeft
+				hpText = hpText.." ("..BOSSES_KILLED:format(bossesKilled, mod.numBoss)..")"
+			end
 			if not autoRespondSpam[sender] then
 				if IsInScenarioGroup() then
 					sendWhisper(sender, chatPrefix..DBM_CORE_AUTO_RESPOND_WHISPER_SCENARIO:format(playerName, difficultyText..(mod.combatInfo.name or ""), getNumAlivePlayers(), DBM:GetNumGroupMembers()))
 				else
-					sendWhisper(sender, chatPrefix..DBM_CORE_AUTO_RESPOND_WHISPER:format(playerName, difficultyText..(mod.combatInfo.name or ""), hp or DBM_CORE_UNKNOWN, IsInInstance() and getNumRealAlivePlayers() or getNumAlivePlayers(), DBM:GetNumRealGroupMembers()))
+					sendWhisper(sender, chatPrefix..DBM_CORE_AUTO_RESPOND_WHISPER:format(playerName, difficultyText..(mod.combatInfo.name or ""), hpText, IsInInstance() and getNumRealAlivePlayers() or getNumAlivePlayers(), DBM:GetNumRealGroupMembers()))
 				end
 				DBM:AddMsg(DBM_CORE_AUTO_RESPONDED)
 			end

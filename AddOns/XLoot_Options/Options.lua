@@ -98,7 +98,7 @@ function addon:OnEnable() -- Construct addon option tables here
 
 	-- Find module options and requested key from AceConfigDialog info table
 	-- Also return meta table for option
-	function path(info)
+	local function path(info)
 		local meta = option_metadata[info.option]
 		local db = meta.module_data.addon.db.profile
 		return meta.subtable and db[meta.subtable] or db, meta.subkey or info[#info], meta
@@ -266,7 +266,7 @@ function addon:OnEnable() -- Construct addon option tables here
 
 	-- Flesh out AceOptionsTables for a given module
 	-- Add features not directly supported
-	function Finalize(module_data, opts, key)
+	local function Finalize(module_data, opts, key)
 		local meta = option_metadata[opts]
 		if not meta then
 			meta = { module_data = module_data }
@@ -460,7 +460,7 @@ function addon:OnEnable() -- Construct addon option tables here
 			}},
 			{ "autolooting", "group", {
 				{ "autolooting_text", "description" },
-				{ "autoloot_coin", "select", when_group, subtable = "autoloots", subkey = "coin" },
+				{ "autoloot_currency", "select", when_group, subtable = "autoloots", subkey = "currency" },
 				{ "autoloot_quest", "select", when_group, subtable = "autoloots", subkey = "quest" },
 				{ "autoloot_all", "select", when_group, subtable = "autoloots", subkey = "all" },
 				{ "autolooting_list", "description" },

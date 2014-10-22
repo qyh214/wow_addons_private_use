@@ -954,6 +954,18 @@
 					<OnClick>
 						AuctionLite:AuctionFrameBuy_Search();
 					</OnClick>
+					<OnEnter>
+						local L = LibStub("AceLocale-3.0"):GetLocale("AuctionLite", false)
+
+						GameTooltip_SetDefaultAnchor(GameTooltip, self)
+						GameTooltip:AddLine(L["Search"], HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, false)
+						GameTooltip:AddLine(L["Shift-click to search for the exact name. Normal click to perform a regular search."],
+							NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true)
+						GameTooltip:Show()
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
 				</Scripts>
 			</Button>
 			<ScrollFrame name="BuyScrollFrame" inherits="FauxScrollFrameTemplate">

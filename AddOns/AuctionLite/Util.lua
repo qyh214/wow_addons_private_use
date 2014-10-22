@@ -134,9 +134,13 @@ end
 -- Zero out the uniqueId field from an item link.
 function AuctionLite:RemoveUniqueId(link)
   if link ~= nil then
-    return link:gsub(":%-?%d*:%-?%d*:(%-?%d*:%-?%d*)|h", function(reforge)
-      return ":0:0:" .. reforge .. "|h";
-    end)
+    return link:gsub(
+        -- Fields: itemID, enchant, gem1, gem2, gem3, gem4, suffixID.
+        "(Hitem:%-?%d+:%-?%d+:%-?%d+:%-?%d+:%-?%d+:%-?%d+:%-?%d+)" ..
+        -- Fields: uniqueID, level.
+        ":%-?%d+:%-?%d+",
+        -- Set uniqueID and level to 0.
+         "%1:0:0")
   else
     return nil;
   end

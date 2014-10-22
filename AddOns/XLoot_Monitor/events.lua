@@ -1,5 +1,6 @@
 local lib = LibStub:NewLibrary("LootEvents", "1.2")
 if not lib then return nil end
+local print = print
 
 --[[// Usage
 	Callbacks recieve (event, chat_event, ...)
@@ -246,14 +247,14 @@ do
 	handler('LOOT_MONEY_SPLIT', function(str) coin(player, str) end)
 
 	-- Currency patterns
-	function currency(link, num)
+	local function currency(link, num)
 		trigger_loot('currency', link:match('currency:(%d+)'), num or 1)
 	end
 	handler('CURRENCY_GAINED_MULTIPLE', currency)
 	handler('CURRENCY_GAINED', currency)
 
 	-- Self crafting
-	function crafted(what, num)
+	local function crafted(what, num)
 		trigger_loot('crafted', what, num or 1)
 	end
 	handler('LOOT_ITEM_CREATED_SELF_MULTIPLE', crafted)

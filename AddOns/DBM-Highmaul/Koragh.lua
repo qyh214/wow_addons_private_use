@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11711 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11811 $"):sub(12, -3))
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetZone()
@@ -20,8 +20,8 @@ mod:RegisterEventsInCombat(
 
 --TODO, find number of targets of MC and add SetIconsUsed with correct icon count.
 --TODO, see if MC has consistent CD (unlike rest of bosses stuff)
-local warnCausticEnergy				= mod:NewTargetAnnounce(161242, 2)
-local warnNullBarrier				= mod:NewTargetAnnounce(156803, 3)
+local warnCausticEnergy				= mod:NewTargetAnnounce(161242, 3)
+local warnNullBarrier				= mod:NewTargetAnnounce(156803, 2)
 local warnVulnerability				= mod:NewTargetAnnounce(160734, 1)
 local warnTrample					= mod:NewTargetAnnounce(163101, 3)--Technically it's supression field, then trample, but everyone is going to know it more by trample cause that's the part of it that matters
 --local warnOverflowingEnergy		= mod:NewSpellAnnounce(161576, 4)--need to find an alternate way to detect this. or just remove :\

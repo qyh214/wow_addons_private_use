@@ -773,6 +773,7 @@ function AuctionLite:ContinuePurchase()
       local query = {
         name = order.name,
         wait = true,
+        exact = true,
         listing = order.current,
         isBuyout = order.isBuyout,
         finish = function(cancelled)
@@ -1039,6 +1040,7 @@ function AuctionLite:MultiScan(items)
     -- Start the scan.
     local query = {
       wait = true,
+      exact = true,
       update = function(pct) AuctionLite:UpdateProgressMulti(pct) end,
       finish = function(data) AuctionLite:SetMultiScanData(data) end,
     };
@@ -1541,6 +1543,7 @@ function AuctionLite:AuctionFrameBuy_Search()
   local query = {
     name = BuyName:GetText(),
     wait = true,
+    exact = IsShiftKeyDown(),
     update = function(pct) AuctionLite:UpdateProgressSearch(pct) end,
     finish = function(data) AuctionLite:SetBuyData(data) end,
   };
