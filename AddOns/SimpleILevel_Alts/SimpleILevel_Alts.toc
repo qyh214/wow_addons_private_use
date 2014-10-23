@@ -1,0 +1,26 @@
+## Interface: 60000
+## X-Curse-Packaged-Version: v2.0.3
+## X-Curse-Project-Name: Simple iLevel - Alts
+## X-Curse-Project-ID: simple-ilevel-alts
+## X-Curse-Repository-ID: wow/simple-ilevel-alts/mainline
+
+## Title: Simple iLevel - Alts
+## Notes: View AiL for all your alts
+
+
+## Author: DrJeckel of Hyjal-US
+## Version: v2.0.3
+## LastUpdate: 2014-10-16T06:31:04Z
+## Dependencies: SimpleILevel
+## SavedVariables: SIL_Alts
+## LoadOnDemand: 1
+
+-- Embedded Libraries
+embeds.xml
+
+-- Locales
+Locale\Locales.xml
+
+-- Defaults
+defaults.lua
+SimpleILevel_Alts.lua
