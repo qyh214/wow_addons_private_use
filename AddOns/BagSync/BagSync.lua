@@ -311,6 +311,9 @@ local function ScanEntireBank()
 	for i = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do
 		SaveBag('bank', i)
 	end
+	if IsReagentBankUnlocked() then 
+		SaveBag('reagentbank', REAGENTBANK_CONTAINER)
+	end
 end
 
 local function ScanVoidBank()
@@ -322,11 +325,17 @@ local function ScanVoidBank()
 		lastItem = nil
 		lastDisplayed = {}
 	
+		local numTabs = 2
+		local index = 0
 		local slotItems = {}
-		for i = 1, 80 do
-			itemID, textureName, locked, recentDeposit, isFiltered = GetVoidItemInfo(i)
-			if (itemID) then
-				slotItems[i] = itemID and tostring(itemID) or nil
+		
+		for tab = 1, numTabs do
+			for i = 1, 80 do
+				itemID, textureName, locked, recentDeposit, isFiltered = GetVoidItemInfo(tab, i)
+				if (itemID) then
+					index = index + 1
+					slotItems[index] = itemID and tostring(itemID) or nil
+				end
 			end
 		end
 		
@@ -597,24 +606,16 @@ end
 ------------------------
 --      Tokens        --
 ------------------------
-
 local function IsInBG()
 	if (GetNumBattlefieldScores() > 0) then
 		return true
-	end
-	local status, mapName, instanceID, minlevel, maxlevel
-	for i=1, GetMaxBattlefieldID() do
-		status, mapName, instanceID, minlevel, maxlevel, teamSize = GetBattlefieldStatus(i)
-		if status == "active" then
-			return true
-		end
 	end
 	return false
 end
 
 local function IsInArena()
 	local a,b = IsActiveBattlefieldArena()
-	if (a == nil) then
+	if not a then
 		return false
 	end
 	return true
@@ -631,8 +632,10 @@ local function ScanTokens()
 	end
 
 	local lastHeader
+	local limit = GetCurrencyListSize()
 	
-	for i=1, GetCurrencyListSize() do
+	for i=1, limit do
+	
 		local name, isHeader, isExpanded, _, _, count, icon = GetCurrencyListInfo(i)
 		--extraCurrencyType = 1 for arena points, 2 for honor points; 0 otherwise (an item-based currency).
 
@@ -640,6 +643,7 @@ local function ScanTokens()
 			if(isHeader and not isExpanded) then
 				ExpandCurrencyList(i,1)
 				lastHeader = name
+				limit = GetCurrencyListSize()
 			elseif isHeader then
 				lastHeader = name
 			end
@@ -687,6 +691,16 @@ local function CountsToInfoString(countTable)
 			info = count
 		end
 		total = total + countTable['bank']
+	end
+	
+	if countTable['reagentbank'] > 0 then
+		local count = L["ReagentBank: %d"]:format(countTable['reagentbank'])
+		if info then
+			info = strjoin(', ', info, count)
+		else
+			info = count
+		end
+		total = total + countTable['reagentbank']
 	end
 
 	if countTable['equip'] > 0 then
@@ -870,6 +884,7 @@ local function AddItemToTooltip(frame, link)
 		local allowList = {
 			["bag"] = 0,
 			["bank"] = 0,
+			["reagentbank"] = 0,
 			["equip"] = 0,
 			["mailbox"] = 0,
 			["void"] = 0,
@@ -878,7 +893,7 @@ local function AddItemToTooltip(frame, link)
 		}
 	
 		local infoString
-		local invCount, bankCount, equipCount, guildCount, mailboxCount, voidbankCount, auctionCount = 0, 0, 0, 0, 0, 0, 0
+		local invCount, bankCount, reagentbankCount, equipCount, guildCount, mailboxCount, voidbankCount, auctionCount = 0, 0, 0, 0, 0, 0, 0, 0
 		local pFaction = v.faction or playerFaction --just in case ;) if we dont know the faction yet display it anyways
 		
 		--check if we should show both factions or not
@@ -1073,13 +1088,18 @@ function BagSync:PLAYER_LOGIN()
 	self:RegisterEvent('GUILDBANKFRAME_OPENED')
 	self:RegisterEvent('GUILDBANKFRAME_CLOSED')
 	self:RegisterEvent('GUILDBANKBAGSLOTS_CHANGED')
+	self:RegisterEvent('PLAYERREAGENTBANKSLOTS_CHANGED')
 	self:RegisterEvent('BAG_UPDATE')
+	self:RegisterEvent('PLAYERBANKSLOTS_CHANGED')
 	self:RegisterEvent('UNIT_INVENTORY_CHANGED')
 	self:RegisterEvent('GUILD_ROSTER_UPDATE')
 	self:RegisterEvent('MAIL_SHOW')
 	self:RegisterEvent('MAIL_INBOX_UPDATE')
 	self:RegisterEvent("AUCTION_HOUSE_SHOW")
 	self:RegisterEvent("AUCTION_OWNED_LIST_UPDATE")
+	
+	--currency
+	self:RegisterEvent('CURRENCY_DISPLAY_UPDATE')
 	
 	--void storage
 	self:RegisterEvent('VOID_STORAGE_OPEN')
@@ -1182,6 +1202,12 @@ end
 --      Event Handlers      --
 ------------------------------
 
+function BagSync:CURRENCY_DISPLAY_UPDATE()
+	if IsInBG() or IsInArena() or InCombatLockdown() or UnitAffectingCombat("player") then return end
+	doTokenUpdate = 0
+	ScanTokens()
+end
+
 function BagSync:PLAYER_REGEN_ENABLED()
 	if IsInBG() or IsInArena() or InCombatLockdown() or UnitAffectingCombat("player") then return end
 	self:UnregisterEvent("PLAYER_REGEN_ENABLED")
@@ -1215,29 +1241,21 @@ end
 
 function BagSync:BAG_UPDATE(event, bagid)
 	-- -1 happens to be the primary bank slot ;)
-	if bagid <= BANK_CONTAINER then return end
-	if not(bagid > NUM_BAG_SLOTS) or atBank or atVoidBank then
+	if (bagid > BANK_CONTAINER) then
 	
 		--this will update the bank/bag slots
 		local bagname
 
 		--get the correct bag name based on it's id, trying NOT to use numbers as Blizzard may change bagspace in the future
 		--so instead I'm using constants :)
-		if bagid < -1 then return end
-		
-		if (bagid >= NUM_BAG_SLOTS + 1) and (bagid <= NUM_BAG_SLOTS + NUM_BANKBAGSLOTS) then
+		if ((bagid >= NUM_BAG_SLOTS + 1) and (bagid <= NUM_BAG_SLOTS + NUM_BANKBAGSLOTS)) then
 			bagname = 'bank'
 		elseif (bagid >= BACKPACK_CONTAINER) and (bagid <= BACKPACK_CONTAINER + NUM_BAG_SLOTS) then
 			bagname = 'bag'
 		else
 			return
 		end
-
-		if atBank then
-			--we have to force the -1 default bank container because blizzard doesn't push updates for it (for some stupid reason)
-			SaveBag('bank', BANK_CONTAINER)
-		end
-
+		
 		--now save the item information in the bag from bagupdate, this could be bag or bank
 		SaveBag(bagname, bagid)
 		
@@ -1261,6 +1279,21 @@ end
 
 function BagSync:BANKFRAME_CLOSED()
 	atBank = false
+end
+
+function BagSync:PLAYERBANKSLOTS_CHANGED(event, slotid)
+	--Remove atBank when/if Blizzard allows Bank access without being at the bank
+	if atBank then
+		SaveBag('bank', BANK_CONTAINER)
+	end
+end
+
+------------------------------
+--		REAGENT BANK		--
+------------------------------
+
+function BagSync:PLAYERREAGENTBANKSLOTS_CHANGED()
+	SaveBag('reagentbank', REAGENTBANK_CONTAINER)
 end
 
 ------------------------------

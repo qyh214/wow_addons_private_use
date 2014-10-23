@@ -7,23 +7,18 @@ Castbars.BaseTickDuration =
 {
     -- Warlock
     [GetSpellInfo(689) or ""] = 1, -- Drain Life
-    [GetSpellInfo(1120) or ""] = 2, -- Drain Soul
+    [GetSpellInfo(103103) or ""] = 1, -- Drain Soul
     [GetSpellInfo(755) or ""] = 1, -- Health Funnel
-    [GetSpellInfo(5740) or ""] = 2, -- Rain of Fire
     [GetSpellInfo(1949) or ""] = 1, -- Hellfire
-    [GetSpellInfo(103103) or ""] = 1, -- Malefic Grasp
-    [GetSpellInfo(108371) or ""] = 1, -- Harvest Life
     -- Druid
     [GetSpellInfo(740) or ""] = 2, -- Tranquility
     [GetSpellInfo(16914) or ""] = 1, -- Hurricane
-    [GetSpellInfo(127663) or ""] = 1, -- Astral Communion
     -- Priest
     [GetSpellInfo(47540) or ""] = 1, -- Penance
     [GetSpellInfo(15407) or ""] = 1, -- Mind Flay
     [GetSpellInfo(129197) or ""] = 1, -- Mind Flay (Insanity)
     [GetSpellInfo(48045) or ""] = 1, -- Mind Sear
     [GetSpellInfo(64843) or ""] = 2, -- Divine Hymn
-    [GetSpellInfo(64901) or ""] = 2, -- Hymn of Hope
     -- Mage
     [GetSpellInfo(10) or ""] = 1, -- Blizzard
     [GetSpellInfo(5143) or ""] = 0.4, -- Arcane Missiles
@@ -57,7 +52,7 @@ function Castbars:CastingBarFrameTicksSet(frame)
         local tickDuration;
         if (baseTickDuration) then
             if (baseTickDuration > 0) then
-                local castTime = select(7, GetSpellInfo(2060));
+                local castTime = select(4, GetSpellInfo(2060)); -- Heal - works for all classes
                 if (not castTime or (castTime == 0)) then
                     castTime = 2500 / (1 + (GetCombatRatingBonus(CR_HASTE_SPELL) or 0) / 100);
                 end
@@ -93,17 +88,13 @@ local spellbook =
 {
     [77767] = true, -- Cobra Shot
     [15407] = true, -- Mind Flay
-    [103103] = true, -- Malefic Grasp
 };
 function Castbars:IsSpellBookSpell(spellId)
     if (spellbook[spellId]) then return true end
     local spellBookSlot = FindSpellBookSlotBySpellID(spellId);
     if (spellBookSlot) then
-        local _, _, offset, spells = GetSpellTabInfo(4);
-        if (spellBookSlot <= (offset + spells)) then
-            spellbook[spellId] = true;
-            return true;
-        end
+        spellbook[spellId] = true;
+        return true;
     end
 end
 
@@ -236,8 +227,8 @@ function Castbars:FrameLatencyQueueRestore(frame)
     if (frame.latency and self.db.profile[frame.configName]["ShowLatency"] and not frame.mergingTradeSkill and frame.spellInSpellBook) then
         local start, stop = frame:GetMinMaxValues();
         local scale = (stop - start);
-        local castTime = select(7, GetSpellInfo(2060)); -- Greater Heal - works for all classes
-        local lockout = (1.5 * (castTime or 3000) / 3000 - GetMaxSpellStartRecoveryOffset() / 1000) / scale;
+        local castTime = select(4, GetSpellInfo(2060)); -- Heal - works for all classes
+        local lockout = (1.5 * (castTime or 2500) / 2500 - GetMaxSpellStartRecoveryOffset() / 1000) / scale;
         local latency;
         if (frame.spellInitialDelay) then
             latency = (frame.spellInitialDelay) / scale;
@@ -251,6 +242,7 @@ function Castbars:FrameLatencyQueueRestore(frame)
         if (frame.channeling) then
             frame.latency:SetTexCoord(0, latency, 0, 1);
             frame.latency:SetPoint("LEFT", frame, "LEFT", 0, 0);
+            frame.queuezone:Hide();
         else
             local queue = 0.4 / scale;
             if ((latency + queue + lockout) > 1) then queue = math.max(1 - (latency + lockout), 0) end
@@ -1437,7 +1429,7 @@ function Castbars:OnInitialize()
             end
             return;
         elseif (event == "ACTIONBAR_UPDATE_COOLDOWN") then
-            local startTime, duration = GetSpellCooldown(7302); -- Frost Armor - works for all classes
+            local startTime, duration = GetSpellCooldown(52127); -- Water Shield - works for all classes
             if (self.db.profile[frame.configName]["ShowCooldownSpark"]) then
                 frame.gcd:SetFrameLevel(frame.backdrop:GetFrameLevel() + 1);
                 if (duration and (duration > 0)) then
