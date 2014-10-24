@@ -51,7 +51,7 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 11815 $"):sub(12, -3)),
+	Revision = tonumber(("$Revision: 11818 $"):sub(12, -3)),
 	DisplayVersion = "6.0.4 alpha", -- the string that is shown as version
 	ReleaseRevision = 11799 -- the revision of the latest stable version that is available
 }
@@ -225,7 +225,6 @@ local blockEnable = false
 local cachedGetTime = GetTime()
 local lastCombatStarted = cachedGetTime
 local loadcIds = {}
-local blockMovieSkipItems = {}
 local inCombat = {}
 local combatInfo = {}
 local bossIds = {}
@@ -956,12 +955,6 @@ do
 							local idTable = {strsplit(",", GetAddOnMetadata(i, "X-DBM-Mod-LoadCID"))}
 							for i = 1, #idTable do
 								loadcIds[tonumber(idTable[i]) or ""] = addonName
-							end
-						end
-						if GetAddOnMetadata(i, "X-DBM-Mod-Block-Movie-Skip-ItemID") then
-							local idTable = {strsplit(",", GetAddOnMetadata(i, "X-DBM-Mod-Block-Movie-Skip-ItemID"))}
-							for i = 1, #idTable do
-								blockMovieSkipItems[tonumber(idTable[i]) or ""] = tonumber(mapIdTable[1])
 							end
 						end
 					end
@@ -2475,12 +2468,6 @@ function DBM:CINEMATIC_START()
 	DBM:Debug("CINEMATIC_START fired")
 	if not IsInInstance() or C_Garrison:IsOnGarrisonMap() or DBM.Options.MovieFilter == "Never" then return end
 	DBM:Debug("CINEMATIC_START is enabled and passed first check")
-	for itemId, mapId in pairs(blockMovieSkipItems) do
-		if mapId == LastInstanceMapID then
-			if select(3, GetItemCooldown(itemId)) > 0 then return end
-		end
-	end
-	DBM:Debug("CINEMATIC_START has no visions of time item")
 	SetMapToCurrentZone()
 	local currentFloor = GetCurrentMapDungeonLevel() or 0
 	if DBM.Options.MovieFilter == "Block" or DBM.Options.MovieFilter == "AfterFirst" and DBM.Options.MoviesSeen[LastInstanceMapID..currentFloor] then
@@ -4006,6 +3993,7 @@ end
 local statVarTable = {
 	--6.0
 	["event5"] = "normal",
+	["event20"] = "lfr25",
 	["event40"] = "lfr25",
 	["normal5"] = "normal",
 	["heroic5"] = "heroic",
@@ -4665,6 +4653,8 @@ function DBM:GetCurrentInstanceDifficulty()
 		return "event40", difficultyName.." - ", difficulty, instanceGroupSize
 	elseif difficulty == 19 then
 		return "event5", difficultyName.." - ", difficulty, instanceGroupSize
+	elseif difficulty == 20 then
+		return "event20", difficultyName.." - ", difficulty, instanceGroupSize
 	else--failsafe
 		return "normal5", "", difficulty, instanceGroupSize
 	end

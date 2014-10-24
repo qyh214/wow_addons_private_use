@@ -1,0 +1,19 @@
+subversion:
+	- Omega via svn r11818: Add difficulty 20, so when it's enabled in future, don't have a repeat of stats errors UBRS caused.
+	- nbluewiz via svn r11817: # Fix info frame bug. # Switch info frame update method to C_Timer.NewTicker.
+	- Omega via svn r11816: skippable items check no longer works correctly. removing. We'll just have to break this quest for the greater convenience of everyone else.
+	- Omega via svn r11815: Include phase and number of bosses in auto reply whispers too, not just "status" ones.
+	- nbluewiz via svn r11814: # adjust second countdown dropdown position.
+	- Omega via svn r11813: This seems to be only way to fix this issue: http://forums.elitistjerks.com/topic/132799-countdown-text-out-of-sync-when-using-slider/#entry2276165
+	- Omega via svn r11812: slightly reduce zone debug. so it's not AS much information. this should still be more than enough.
+	- Omega via svn r11811: CN update Highmaul timer option defaults pass to further reduce active timers
+	- Omega via svn r11810: further improve debug
+	- Omega via svn r11809: Add a bunch of loadmod debug, users are still reporting loadmod failures which should be impossible and can find no coding reason other than blizzard sending bad mapIDs that would cause this.
+	- Omega via svn r11808: Don't try to load GUI if core was denied from loading
+	- Omega via svn r11807: zhCN update
+	- Omega via svn r11806: Fix more bad
+	- Omega via svn r11805: Fix
+	- Omega via svn r11804: only show bug message once
+	- swix via svn r11803: ruRU update
+	- Omega via svn r11802: Add some cinematic start debug
+	- tandanu via svn r11801: increment alpha version

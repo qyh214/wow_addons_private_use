@@ -1,0 +1,15 @@
+------------------------------------------------------------------------
+r19 | mysticalos | 2014-10-14 00:21:34 +0000 (Tue, 14 Oct 2014) | 2 lines
+Changed paths:
+   M /trunk/Archaeology.lua
+   M /trunk/DBM-Archaeology.toc
+
+ToC
+use ogg sound paths in 6.0
+------------------------------------------------------------------------
+r18 | mysticalos | 2013-09-09 18:31:13 +0000 (Mon, 09 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/DBM-Archaeology.toc
+
+TOC
+------------------------------------------------------------------------
