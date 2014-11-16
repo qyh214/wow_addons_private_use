@@ -3,7 +3,8 @@
 ## Title: TargetCharms
 ## Notes: Toolbar for setting charms/raid icons on targets. Ctrl+Right-click in game for setup menu or type /tc setup
 ## Author: Gander
-## Version: 1.5.7 (10/15/2014)
+## Version: 1.6 (10/25/2014)
+## SavedVariables: TargetCharms_OptionsGlobal
 ## SavedVariablesPerCharacter: TargetCharms_Options
 localization.en.lua
 

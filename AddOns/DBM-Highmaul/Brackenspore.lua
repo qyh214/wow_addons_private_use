@@ -1,5 +1,6 @@
 local mod	= DBM:NewMod(1196, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
+local Yike	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 11811 $"):sub(12, -3))
 mod:SetCreatureID(78491)
@@ -79,6 +80,11 @@ function mod:OnCombatStart(delay)
 	countdownFungalFleshEater:Start(32-delay)
 	timerInfestingSporesCD:Start(45-delay)
 	countdownInfestingSpores:Start(45-delay)
+	if mod:IsHealer() then
+		Yike:Schedule(39-delay, "159996rh")
+	else
+		Yike:Schedule(39-delay, "gather")
+	end
 	timerRejuvMushroomCD:Start(80-delay)--Todo, verify 80 in all modes and not still 75 in mythic
 end
 
@@ -86,6 +92,8 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
+	Yike:Cancel("159996rh")
+	Yike:Cancel("gather")
 end
 
 function mod:SPELL_CAST_START(args)
@@ -95,17 +103,26 @@ function mod:SPELL_CAST_START(args)
 		specWarnInfestingSpores:Show()
 		timerInfestingSporesCD:Start()
 		countdownInfestingSpores:Start()
+		if mod:IsHealer() then
+			Yike:Schedule(51, "159996rh") --var
+		else
+			Yike:Schedule(51, "gather") --var
+		end
 	elseif spellId == 160013 then
 		warnDecay:Show()
 		local guid = args.souceGUID
 		if guid == UnitGUID("target") or guid == UnitGUID("focus") then
 			specWarnDecay:Show(args.sourceName)
 			timerDecayCD:Start(args.sourceGUID)
+			Yike:Play("kickcast")
 		end
 	elseif spellId == 159219 then
 		warnNecroticBreath:Show()
 		specWarnNecroticBreath:Show()
 		timerNecroticBreathCD:Start()
+		if mod:IsTank() then
+			Yike:Play("changemt")
+		end
 	end
 end
 
@@ -118,6 +135,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerSporeShooterCD:Start()
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(8)
+		end
+		if mod:IsRangedDps() then
+			Yike:Play("163594k")
 		end
 	elseif spellId == 163241 then
 		timerRotCD:Start()
@@ -141,6 +161,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 164125 and args:GetDestCreatureID() == 78491 then
 		warnCreepingMoss:Show(args.destName)
 		specWarnCreepingMoss:Show()
+		Yike:Play("runaway")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -190,11 +211,17 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnMindFungus:Show()
 		specWarnMindFungus:Show()
 		timerMindFungusCD:Start()
+		if mod:IsRangedDps() then
+			Yike:Play("163141k")
+		end
 	elseif spellId == 163142 then
 		warnFungalFlesheater:Show()
 		specWarnFungalFlesheater:Show()
 		timerFungalFleshEaterCD:Start()
 		countdownFungalFleshEater:Start()
+		if mod:IsMeleeDps() then
+			Yike:Play("163142k")
+		end
 	elseif spellId == 160022 then
 		warnLivingMushroom:Show()
 		timerLivingMushroomCD:Start()

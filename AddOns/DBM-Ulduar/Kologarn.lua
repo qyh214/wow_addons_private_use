@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod("Kologarn", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
+local sndWOP	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 120 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 51 $"):sub(12, -3))
 mod:SetCreatureID(32930)--, 32933, 32934
-mod:SetEncounterID(1137)
 mod:SetModelID(28638)
 mod:SetUsedIcons(5, 6, 7, 8)
 --mod:SetMinSyncRevision(4623)
@@ -11,7 +11,7 @@ mod:SetMinSyncRevision(7)--Could break if someone is running out of date version
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEventsInCombat(
+mod:RegisterEvents(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED",
@@ -43,7 +43,7 @@ local timerRespawnLeftArm		= mod:NewTimer(48, "timerLeftArm")
 local timerRespawnRightArm		= mod:NewTimer(48, "timerRightArm")
 local timerTimeForDisarmed		= mod:NewTimer(10, "achievementDisarmed")	-- 10 HC / 12 nonHC
 
-local soundEyebeam				= mod:NewSound(63346)
+
 
 mod:AddBoolOption("HealthFrame", true)
 mod:AddBoolOption("SetIconOnGripTarget", true)
@@ -68,11 +68,12 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+function mod:SPELL_DAMAGE(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId)
 	if (spellId == 63783 or spellId == 63982) and timerNextShockwave:GetTime() == 0 then
 		timerNextShockwave:Start()
 	elseif (spellId == 63346 or spellId == 63976) and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnEyebeam:Show()
+		sndWOP:Play("justrun")
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
@@ -80,7 +81,6 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 function mod:RAID_BOSS_WHISPER(msg)
 	if msg:find(L.FocusedEyebeam) then
 		specWarnEyebeam:Show()
-		soundEyebeam:Play()
 		yellBeam:Yell()
 		self:SendSync("EyeBeamOn", UnitGUID("player"))
 	end
@@ -105,6 +105,7 @@ end
 local gripTargets = {}
 function mod:GripAnnounce()
 	warnGrip:Show(table.concat(gripTargets, "<, >"))
+	sndWOP:Play("killrhand")
 	table.wipe(gripTargets)
 end
 function mod:SPELL_AURA_APPLIED(args)
@@ -133,6 +134,7 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
         if args.amount >= 2 then 
             if args:IsPlayer() then
                 specWarnCrunchArmor2:Show(args.amount)
+                sndWOP:Play("changemt")
             end
 		end
 	end

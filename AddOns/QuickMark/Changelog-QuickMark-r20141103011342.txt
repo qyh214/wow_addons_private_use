@@ -1,0 +1,32 @@
+Steven Phung:
+	- Formatting
+	- Cleanup
+	- Added LDB support
+	- Added LDB support
+	- Restructuring and renaming
+	- Not creating nolib build with pkgmeta
+	- Removed embeds.xml, general cleanup
+	- Using pkgmeta for Ace3
+	- Added pkgmeta and restructured
+	- Update QuickMark.toc
+	- Create LICENSE
+	- Create README.md
+	- Bump to 5.4
+	- Bump to 5.3
+	- Updated version to 5.2
+	- Fixed the green border issue reported by chanc61.
+	- Update for 5.0
+stphung:
+	- Version number correction.
+	- Updated for 4.3, added border and background color/alpha configuration.
+	- Updated version number for 4.2.
+	- Changed frame strata to medium for ui overlapping standardization.
+	- Removed debug printouts.
+	- Working with 4.1, elegance isn't there but it works.
+	- Using AceConfig to add user interface configuration, preserved the old command line access for the most part except for scaling because I don't think many or anyone scales using the command line.  Also replace the quickmark original frame with qmslick, I think it looks better and should get good feedback hopefully.  This is temporary until I add frame border and background configuration.
+	- Updated to latest version from curse.
+Steven Phung:
+	- Removed unused files.
+	- Moved files into a folder to allow for deployment into the AddOns folder
+	- Initial commit.
+	- Initial commit.

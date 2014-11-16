@@ -1,0 +1,12 @@
+﻿## Interface: 60000
+## Title: Raid|cff7fff7fAchievement|r - Pandaria Scenarios
+## Title-ruRU: Raid|cff7fff7fAchievement|r - Сценарии Пандарии
+## Author: Shurshik
+## Notes: RaidAchievement Pandaria Scenarios Module
+## Notes-ruRU: Модуль RaidAchievement - Сценарии Пандарии
+## Dependencies: RaidAchievement
+## LoadOnDemand: 1
+## SavedVariablesPerCharacter: pzraspisokon
+RaidAchievement_PandaScenarios.lua
+RaidAchievement_PandaScenariosbosses.lua
+RaidAchievement_PandaScenarios.xml

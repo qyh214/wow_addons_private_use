@@ -66,11 +66,16 @@ function mod:OnInitialize()
 			function() self:SendMessage('AdiBags_UpdateAllButtons') end,
 			'AdiBags'
 		)
+		SyLevel:RegisterFilterOnPipe('Adibags', 'Item level text')
+		SyLevelDB.EnabledFilters['Item level text']['Adibags'] = true
 	end
 end
 
 function mod:OnEnable()
 	self:RegisterMessage('AdiBags_UpdateButton', 'UpdateButton')
+	if SyLevel and self.db.profile.useSyLevel and not SyLevel:IsPipeEnabled('Adibags') then
+		SyLevel:EnablePipe('Adibags')
+	end
 	self:SendMessage('AdiBags_UpdateAllButtons')
 end
 
@@ -97,9 +102,9 @@ function mod:UpdateButton(event, button)
 		local _, _, quality, _, reqLevel, _, _, _, loc = GetItemInfo(link)
 		local level = ItemUpgradeInfo:GetUpgradedItemLevel(link) or 0 -- Ugly workaround
 		if level >= settings.minLevel
-			and (quality > 0 or not settings.ignoreJunk)
+			and (quality ~= LE_ITEM_QUALITY_POOR or not settings.ignoreJunk)
 			and (loc ~= "" or not settings.equippableOnly)
-			and (quality ~= 7 or not settings.ignoreHeirloom)
+			and (quality ~= LE_ITEM_QUALITY_HEIRLOOM or not settings.ignoreHeirloom)
 		then
 			if SyLevel then
 				if settings.useSyLevel then
@@ -147,7 +152,7 @@ function mod:GetOptions()
 			name = L['Color scheme'],
 			desc = L['Which color scheme should be used to display the item level ?'],
 			type = 'select',
-			disabled = SyLevelBypass,
+			hidden = SyLevelBypass,
 			values = {
 				none     = L['None'],
 				original = L['Same as InventoryItemLevels'],

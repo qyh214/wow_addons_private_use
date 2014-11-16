@@ -1,7 +1,8 @@
 local mod	= DBM:NewMod("Freya_Elders", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
+local sndWOP	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 148 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
 
 -- passive mod to provide information for multiple fight (trash respawn)
 -- mod:SetCreatureID(32914, 32915, 32913)
@@ -20,7 +21,7 @@ local timerImpale			= mod:NewTargetTimer(5, 62928)
 local specWarnFistofStone	= mod:NewSpecialWarningSpell(62344, mod:IsTank())
 local specWarnGroundTremor	= mod:NewSpecialWarningCast(62932, true)
 
-local soundFistofStone		= mod:NewSound(62344, false)
+
 
 --
 -- Trash: 33430 Guardian Lasher (flower)
@@ -39,15 +40,18 @@ local soundFistofStone		= mod:NewSound(62344, false)
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 62344 then 					-- Fists of Stone
 		specWarnFistofStone:Show()
-		soundFistofStone:Play()
 	elseif args:IsSpellID(62325, 62932) then		-- Ground Tremor
 		specWarnGroundTremor:Show()
+		sndWOP:Play("stopcast")
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(62310, 62928) then 			-- Impale
 		warnImpale:Show(args.destName)
+		if mod:IsTank() or mod:IsHealer() then
+			sndWOP:Play("changemt")
+		end
 		timerImpale:Start(args.destName)
 	end
 end

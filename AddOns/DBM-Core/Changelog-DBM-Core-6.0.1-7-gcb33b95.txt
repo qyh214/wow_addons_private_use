@@ -1,8 +1,0 @@
-subversion:
-	- ebmor via svn r11780: deDE update
-	- ebmor via svn r11779: deDE update (WoD instances dummy translations)
-	- Omega via svn r11778: revert that, that didn't work
-	- Omega via svn r11777: fix error in infoframe too
-	- Omega via svn r11776: fix break timer
-	- Omega via svn r11775: Fix errors with new dungeon, apparently it's event5, not normal5. bah
-	- tandanu via svn r11774: increment alpha version number

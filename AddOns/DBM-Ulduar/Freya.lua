@@ -1,16 +1,16 @@
 local mod	= DBM:NewMod("Freya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
+local sndWOP	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 144 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 73 $"):sub(12, -3))
 
 mod:SetCreatureID(32906)
-mod:SetEncounterID(1133)
 mod:SetModelID(28777)
 mod:RegisterCombat("combat")
 mod:RegisterKill("yell", L.YellKill)
-mod:SetUsedIcons(4, 5, 6, 7, 8)
+mod:SetUsedIcons(6, 7, 8)
 
-mod:RegisterEventsInCombat(
+mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED",
@@ -39,17 +39,13 @@ local specWarnTremor		= mod:NewSpecialWarningCast(62859)	-- Hard mode
 local specWarnBeam			= mod:NewSpecialWarningMove(62865)	-- Hard mode
 
 local enrage 				= mod:NewBerserkTimer(600)
-local timerAlliesOfNature	= mod:NewCDTimer(25, 62678)--I seen 25-35 Variation
+local timerAlliesOfNature	= mod:NewNextTimer(60, 62678)
 local timerSimulKill		= mod:NewTimer(12, "TimerSimulKill")
 local timerFury				= mod:NewTargetTimer(10, 63571)
 local timerTremorCD 		= mod:NewCDTimer(28, 62859)
 local timerLifebinderCD 	= mod:NewCDTimer(40, 62869)
 
-local soundFury				= mod:NewSound(63571)
-
 mod:AddBoolOption("HealthFrame", true)
-mod:AddSetIconOption("SetIconOnFury", 63571, false)
-mod:AddSetIconOption("SetIconOnRoots", 62438, false)
 
 local adds		= {}
 local rootedPlayers 	= {}
@@ -69,6 +65,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(62437, 62859) then
 		specWarnTremor:Show()
+		sndWOP:Play("stopcast")
 		timerTremorCD:Start()
 	end
 end 
@@ -80,14 +77,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnLifebinder:Show()
 		specWarnLifebinder:Show()
 		timerLifebinderCD:Start()
+		sndWOP:Play("killtree")
 	elseif args:IsSpellID(63571, 62589) then -- Nature's Fury
-		if self.Options.SetIconOnFury then
-			altIcon = not altIcon	--Alternates between Skull and X
-			self:SetIcon(args.destName, altIcon and 7 or 8, 10)
-		end
+		altIcon = not altIcon	--Alternates between Skull and X
+		self:SetIcon(args.destName, altIcon and 7 or 8, 10)
 		warnFury:Show(args.destName)
 		if args:IsPlayer() then -- only cast on players; no need to check destFlags
-			soundFury:Play()
 			specWarnFury:Show()
 		end
 		timerFury:Start(args.destName)
@@ -96,10 +91,8 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(62861, 62438) then
-		if self.Options.SetIconOnRoots then
-			iconId = iconId - 1
-			self:SetIcon(args.destName, iconId, 15)
-		end
+		iconId = iconId - 1
+		self:SetIcon(args.destName, iconId, 15)
 		table.insert(rootedPlayers, args.destName)
 		self:Unschedule(showRootWarning)
 		if #rootedPlayers >= 3 then
@@ -110,13 +103,14 @@ function mod:SPELL_AURA_APPLIED(args)
 
 	elseif args:IsSpellID(62451, 62865) and args:IsPlayer() then
 		specWarnBeam:Show()
+		sndWOP:Play("runaway")
 	end 
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 62519 then
 		warnPhase2:Show()
-	elseif args:IsSpellID(62861, 62438) and self.Options.SetIconOnRoots then
+	elseif args:IsSpellID(62861, 62438) then
 		self:RemoveIcon(args.destName)
 		iconId = iconId + 1
 	end

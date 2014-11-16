@@ -1,10 +1,10 @@
 local mod	= DBM:NewMod("BPCouncil", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
+local sndWOP	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 163 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 58 $"):sub(12, -3))
 mod:SetCreatureID(37970, 37972, 37973)
 mod:SetEncounterID(1095)
-mod:DisableEEKillDetection()--IEEU fires for this boss.
 mod:SetModelID(30858)
 mod:SetUsedIcons(7, 8)
 
@@ -50,11 +50,13 @@ local timerConjureFlamesCD		= mod:NewCDTimer(20, 71718)				-- every 20-30 second
 local timerGlitteringSparksCD	= mod:NewCDTimer(20, 71807)				-- This is pretty nasty on heroic
 local timerShockVortex			= mod:NewCDTimer(16.5, 72037)			-- Seen a range from 16,8 - 21,6
 local timerKineticBombCD		= mod:NewCDTimer(18, 72053, nil, mod:IsRanged())				-- Might need tweaking
-local timerShadowPrison			= mod:NewBuffFadesTimer(10, 72999)		-- Hard mode debuff
+local timerShadowPrison			= mod:NewBuffActiveTimer(10, 72999)		-- Hard mode debuff
 
 local berserkTimer				= mod:NewBerserkTimer(600)
 
-local soundEmpoweredFlames		= mod:NewSound(72040)
+
+
+--local soundEmpoweredFlames		= mod:NewSound(72040)
 
 mod:AddBoolOption("EmpoweredFlameIcon", true)
 mod:AddBoolOption("ActivePrinceIcon", false)
@@ -92,14 +94,20 @@ function mod:ShockVortexTarget(targetname, uId)
 	warnShockVortex:Show(targetname)
 	if targetname == UnitName("player") then
 		specWarnVortex:Show()
+		sndWOP:Play("runaway")
 		yellVortex:Yell()
 	else
 		if uId then
 			local inRange = CheckInteractDistance(uId, 2)
+			local x, y = GetPlayerMapPosition(uId)
+			if x == 0 and y == 0 then
+				SetMapToCurrentZone()
+				x, y = GetPlayerMapPosition(uId)
+			end
 			if inRange then
 				specWarnVortexNear:Show(targetname)
+				sndWOP:Play("runaway")
 				if self.Options.VortexArrow then
-					local x, y = UnitPosition(uId)
 					DBM.Arrow:ShowRunAway(x, y, 10, 5)
 				end
 			end
@@ -131,6 +139,7 @@ function mod:SPELL_CAST_START(args)
 		self:BossTargetScanner(37970, "ShockVortexTarget", 0.05, 6)
 	elseif args.spellId == 72039 then
 		warnEmpoweredShockVortex:Show()
+		sndWOP:Play("powervortex")
 		specWarnEmpoweredShockV:Show()
 		timerShockVortex:Start()
 	elseif args.spellId == 71718 then	-- Conjure Flames
@@ -138,6 +147,7 @@ function mod:SPELL_CAST_START(args)
 		timerConjureFlamesCD:Start()
 	elseif args.spellId == 72040 then	-- Conjure Empowered Flames
 		warnEmpoweredFlamesCast:Show()
+		sndWOP:Play("powerflame")
 		timerConjureFlamesCD:Start()
 	end
 end
@@ -147,6 +157,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		activePrince = args.destGUID
 		if self:IsInCombat() then
 			warnTargetSwitch:Show(L.Valanar)
+			sndWOP:Play("changetarget")
 			warnTargetSwitchSoon:Schedule(42)
 			timerTargetSwitch:Start()
 			if self.Options.RangeFrame then
@@ -155,6 +166,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args.spellId == 70981 and self:IsInCombat() then
 		warnTargetSwitch:Show(L.Keleseth)
+		sndWOP:Play("changetarget")
 		warnTargetSwitchSoon:Schedule(42)
 		timerTargetSwitch:Start()
 		activePrince = args.destGUID
@@ -163,6 +175,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args.spellId == 70982 and self:IsInCombat() then
 		warnTargetSwitch:Show(L.Taldaram)
+		sndWOP:Play("changetarget")
 		warnTargetSwitchSoon:Schedule(42)
 		timerTargetSwitch:Start()
 		activePrince = args.destGUID
@@ -174,6 +187,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerShadowPrison:Start()
 			if (args.amount or 1) >= 6 then	--Placeholder right now, might use a different value
 				specWarnShadowPrison:Show(args.amount)
+				if args.amount == 6 or args.amount == 9 or args.amount == 12 or args.amount == 15 then
+					sndWOP:Play("stopmove")
+				end
 			end
 		end
 	elseif args.spellId == 71807 and args:IsDestTypePlayer() then	-- Glittering Sparks(Dot/slow, dangerous on heroic during valanaar)
@@ -194,11 +210,12 @@ end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:match(L.EmpoweredFlames) then
-		local target = DBM:GetUnitFullName(target)
+		local target = DBM:GetFullNameByShortName(target)
 		warnEmpoweredFlames:Show(target)
 		if target == UnitName("player") then
 			specWarnEmpoweredFlames:Show()
-			soundEmpoweredFlames:Play()
+--			soundEmpoweredFlames:Play()
+			sndWOP:Play("justrun")
 		end
 		if self.Options.EmpoweredFlameIcon then
 			self:SetIcon(target, 7, 10)
@@ -226,5 +243,6 @@ function mod:OnSync(msg)
 		else
 			timerKineticBombCD:Start()
 		end
+		sndWOP:Play("bombsoon")
 	end
 end

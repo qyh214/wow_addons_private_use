@@ -1,0 +1,19 @@
+tag v2.4.20
+f62eaadc835ebb58c1ad4af0d2b34f99fb58b37e
+funkydude <none>
+2014-11-01 12:35:31 +0000
+
+Tagging as v2.4.20
+
+
+--------------------
+
+funkydude:
+	- Buttons: force reset the default of the queue status button to being "always show", as "on hover" will cause issues with the "bling" animation using the group finder (when someone new wants to join your group), and hiding it completely will be making people wonder where the bling sound is coming from.
+	- bump version
+	- Removes the circular "waffle-like" texture that shows when using a non-circular minimap in the blue quest objective area.
+MMOSimca:
+	- Update Bindings.xml to use new Patch 6.0 key binding category system
+funkydude:
+	- Buttons: Show the queue status button by default.
+	- Buttons: Remove EBB from hardcoded buttons list as it uses LibDBIcon now, not the old fubar plugin.

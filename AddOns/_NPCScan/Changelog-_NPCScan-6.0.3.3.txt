@@ -1,0 +1,11 @@
+tag 6.0.3.3
+8b3c326352dd6a351f920beb5e1f9fd8a53cd77f
+James D. Callahan III <jcallahan@curse.com>
+2014-11-15 08:26:51 -0600
+
+
+
+--------------------
+
+James D. Callahan III:
+	- Added OptionalDeps entry for LibToast-1.0

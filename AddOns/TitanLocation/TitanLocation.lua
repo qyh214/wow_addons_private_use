@@ -85,7 +85,7 @@ end
 -- DESC : Calculate coordinates and then display data on button
 -- VARS : id = button ID
 -- **************************************************************************
-function TitanPanelLocationButton_GetButtonText(id)		 
+function TitanPanelLocationButton_GetButtonText(id)
 	local button, id = TitanUtils_GetButton(id, true);
 
 	button.px, button.py = GetPlayerMapPosition("player");
@@ -95,7 +95,7 @@ function TitanPanelLocationButton_GetButtonText(id)
 	if button.px == nil then button.px = 0 end
 	if button.py == nil then button.py = 0 end
 	local locationText = "";
-	if (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat1")) then     
+	if (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat1")) then
 		locationText = format(L["TITAN_COORDS_FORMAT"], 100 * button.px, 100 * button.py);
 	elseif (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat2")) then
 		locationText = format(L["TITAN_COORDS_FORMAT2"], 100 * button.px, 100 * button.py);
@@ -120,9 +120,9 @@ function TitanPanelLocationButton_GetButtonText(id)
 	end
 
 	local locationRichText;
-	if (TitanGetVar(TITAN_LOCATION_ID, "ShowColoredText")) then     
+	if (TitanGetVar(TITAN_LOCATION_ID, "ShowColoredText")) then
 		if (TitanPanelLocationButton.isArena) then
-			locationRichText = TitanUtils_GetRedText(locationText);          
+			locationRichText = TitanUtils_GetRedText(locationText);
 		elseif (TitanPanelLocationButton.pvpType == "friendly") then
 			locationRichText = TitanUtils_GetGreenText(locationText);
 		elseif (TitanPanelLocationButton.pvpType == "hostile") then
@@ -285,7 +285,7 @@ function TitanPanelRightClickMenu_PrepareLocationMenu()
 			info.func = TitanPanelLocationButton_ToggleLocationOnMap;
 			info.checked = TitanGetVar(TITAN_LOCATION_ID, "ShowCoordsOnMap");
 			UIDropDownMenu_AddButton(info, _G["UIDROPDOWNMENU_MENU_LEVEL"]);
-		  
+
 			info = {};
 			info.text = L["TITAN_COORDS_MENU_SHOW_LOC_ON_MINIMAP_TEXT"];
 			info.func = TitanPanelLocationButton_ToggleLocOnMiniMap;
@@ -305,7 +305,7 @@ function TitanPanelRightClickMenu_PrepareLocationMenu()
 		if _G["UIDROPDOWNMENU_MENU_VALUE"] == "CoordFormat" then
 			TitanPanelRightClickMenu_AddTitle(L["TITAN_COORDS_FORMAT_COORD_LABEL"], _G["UIDROPDOWNMENU_MENU_LEVEL"]);
 			info = {};
-		 	info.text = L["TITAN_COORDS_FORMAT_LABEL"];
+			info.text = L["TITAN_COORDS_FORMAT_LABEL"];
 			info.func = function()
 				TitanSetVar(TITAN_LOCATION_ID, "CoordsFormat1", 1);
 				TitanSetVar(TITAN_LOCATION_ID, "CoordsFormat2", nil);
@@ -314,7 +314,7 @@ function TitanPanelRightClickMenu_PrepareLocationMenu()
 			end
 			info.checked = TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat1");
 			UIDropDownMenu_AddButton(info, _G["UIDROPDOWNMENU_MENU_LEVEL"]);
-		  
+
 			info = {};
 			info.text = L["TITAN_COORDS_FORMAT2_LABEL"];
 			info.func = function()
@@ -325,7 +325,7 @@ function TitanPanelRightClickMenu_PrepareLocationMenu()
 			end
 			info.checked = TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat2");
 			UIDropDownMenu_AddButton(info, _G["UIDROPDOWNMENU_MENU_LEVEL"]);
-     
+
 			info = {};
 			info.text = L["TITAN_COORDS_FORMAT3_LABEL"];
 			info.func = function()
@@ -400,7 +400,6 @@ function TitanPanelLocationButton_ToggleCursorLocationOnMap()
 	end
 end
 
-
 function TitanPanelLocationButton_ToggleLocOnMiniMap()
 	TitanToggleVar(TITAN_LOCATION_ID, "ShowLocOnMiniMap");
 	TitanPanelLocationButton_LocOnMiniMap()
@@ -426,8 +425,8 @@ end
 -- DESC : Set option to show colored text
 -- **************************************************************************
 function TitanPanelLocationButton_ToggleColor()
-     TitanToggleVar(TITAN_LOCATION_ID, "ShowColoredText");
-     TitanPanelButton_UpdateButton(TITAN_LOCATION_ID);
+	TitanToggleVar(TITAN_LOCATION_ID, "ShowColoredText");
+	TitanPanelButton_UpdateButton(TITAN_LOCATION_ID);
 end
 
 -- **************************************************************************
@@ -437,19 +436,10 @@ end
 function TitanMapFrame_OnUpdate(self, elapsed)
 	-- using :Hide / :Show prevents coords from running
 	--	TitanMapFrame:Hide() -- hide parent
-	if not (TitanGetVar(TITAN_LOCATION_ID, "ShowCoordsOnMap")) then
-		return
-	end
-	-- temp until we figure out what to do with the
-	-- player / cursor on the world map
---	if true then
---		return
---	end
 
 	-- Determine the text to show for player coords
 	--
-	if WorldMapFrameSizeUpButton:IsVisible() 
-	then
+	if WorldMapFrameSizeUpButton:IsVisible() then
 		TitanMapPlayerLocation:SetText("");
 	else
 		self.px, self.py = GetPlayerMapPosition("player");
@@ -470,7 +460,7 @@ function TitanMapFrame_OnUpdate(self, elapsed)
 	end
 
 	-- Determine the text to show for cursor coords
-	--
+
 		-- calc cursor position on the map
 		local cursorLocationText, playerLocationText;
 		local x, y = GetCursorPosition();
@@ -487,27 +477,27 @@ function TitanMapFrame_OnUpdate(self, elapsed)
 			cx = 0
 			cy = 0
 		end
---			cx = cx < 0 and 0 or (cx > 1 and 1 or cx)
---			cy = cy < 0 and 0 or (cy > 1 and 1 or cy)
 		-- per the user requested format
-		if (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat1")) then     				
+		if (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat1")) then
 			cursorLocationText = format(L["TITAN_COORDS_FORMAT"], 100 * cx, 100 * cy);
 		elseif (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat2")) then
 			cursorLocationText = format(L["TITAN_COORDS_FORMAT2"], 100 * cx, 100 * cy);
 		elseif (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat3")) then
 			cursorLocationText = format(L["TITAN_COORDS_FORMAT3"], 100 * cx, 100 * cy);
 		end
-		TitanMapCursorLocation:SetText(format(L["TITAN_COORDS_MAP_CURSOR_COORDS_TEXT"], 
-			TitanUtils_GetHighlightText(cursorLocationText)));
-	
+		if (TitanGetVar(TITAN_LOCATION_ID, "ShowCoordsOnMap")) then
+			TitanMapCursorLocation:SetText(format(L["TITAN_COORDS_MAP_CURSOR_COORDS_TEXT"], 
+				TitanUtils_GetHighlightText(cursorLocationText)));
+		else
+			TitanMapCursorLocation:SetText("");
+		end
+
 	-- Determine where to show the text
-	
+
 	-- *
 	TitanMapPlayerLocation:ClearAllPoints()
 	if ( WorldMapFrameSizeUpButton:IsVisible() ) then
 		-- **
---		x_offset = (WorldMapPositioningGuide:GetWidth() / 4) -- center of map
---			- (TitanMapPlayerLocation:GetWidth() / 2) -- center of coords
 		TitanMapPlayerLocation:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 75, -12)
 	else
 		x_offset = (WorldMapDetailFrame:GetWidth() / 5) -- left fifth of map
@@ -515,15 +505,3 @@ function TitanMapFrame_OnUpdate(self, elapsed)
 		TitanMapPlayerLocation:SetPoint("BOTTOMLEFT", WorldMapFrame, "BOTTOMLEFT", x_offset, 10)
 	end
 end
---[[
--- *
--- WorldMapFrame.sizedDown does not work????
--- Use the maximize / minimize button instead...
--- **
--- Using the WorldMapDetailFrame to center is not working
--- although this is the frame uses in WorldMapQuestShowObjectives_AdjustPosition (WorldMapFrame.lua)
--- WorldMapDetailFrame:GetWidth() returns too large a number. Not sure why.
---
--- This introduces some jitter that will stay until another anchor point can be found.
---
---]]

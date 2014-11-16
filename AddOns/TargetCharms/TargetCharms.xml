@@ -8,11 +8,11 @@
 							<OnClick>
 								if ( button == "RightButton" and IsControlKeyDown()) then
 								else
-									SelectTarget(self:GetParent():GetID(),self:GetID(),button);
+									SelectTarget(self:GetParent():GetName(),self:GetID(),button,self:GetParent():GetName());
 								end
 							</OnClick>
 							<OnMouseDown>
-								if ( button == "RightButton" and (TargetCharms_Options["TargetCharms"]["draggable"] or IsControlKeyDown())) then
+								if ( button == "RightButton" and (TargetCharms_Options[self:GetParent():GetName()]["draggable"] or IsControlKeyDown())) then
 									if (IsControlKeyDown()) then
 										ShowSetup();
 									else
@@ -23,10 +23,12 @@
 								end
 							</OnMouseDown>
 							<OnMouseUp>
-								if ( button == "RightButton" and (TargetCharms_Options["TargetCharms"]["draggable"] or IsControlKeyDown())) then
+								if ( button == "RightButton" and (TargetCharms_Options[self:GetParent():GetName()]["draggable"] or IsControlKeyDown())) then
 									if (IsControlKeyDown()) then
 									else
 										self:GetParent():GetParent():StopMovingOrSizing();
+										UpdateLocation(self:GetParent():GetParent():GetID(),self:GetParent():GetParent():GetLeft(),self:GetParent():GetParent():GetTop() - 32);
+										self:GetParent():GetParent():SetUserPlaced(false);
 									end
 								end
 							</OnMouseUp>
@@ -41,6 +43,47 @@
 						<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
 						<DisabledTexture  alphaMode="ADD" file="Interface\Buttons\UI-Quickslot" />
 					</Button>
+					<Button name="DragCharmTemplate" virtual="true">
+						<Size><AbsDimension x="16" y="16"/></Size>
+						<Scripts>
+							<OnLoad>
+								self:GetParent():GetParent():SetMovable(true);
+     							</OnLoad>
+							<OnMouseDown>
+								if (not InCombatLockdown()) then
+									if (TargetCharms_Options["FlareCharms"]["draggable"] or IsControlKeyDown()) then
+										if (IsControlKeyDown() and button == "RightButton") then
+											ShowSetup();
+										else
+											self:GetParent():GetParent():StartMoving();
+										end
+									end
+								end
+							</OnMouseDown>
+							<OnMouseUp>
+								if (not InCombatLockdown()) then
+									if (TargetCharms_Options["FlareCharms"]["draggable"] or IsControlKeyDown()) then
+										if (IsControlKeyDown()) then
+										else
+											self:GetParent():GetParent():StopMovingOrSizing();
+											UpdateLocation(5,self:GetParent():GetParent():GetLeft(),self:GetParent():GetParent():GetTop() - 32);
+											self:GetParent():GetParent():SetUserPlaced(false);
+										end
+									end
+								end
+							</OnMouseUp>
+						</Scripts>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<Texture file="Interface\BUTTONS\UI-MinusButton-Up">
+	
+								</Texture>
+  							</Layer>
+						</Layers>	
+						<PushedTexture alphaMode="ADD" file="Interface\BUTTONS\UI-MinusButton-Down"/>
+						<HighlightTexture alphaMode="ADD" file="Interface\BUTTONS\UI-MinusButton-Up"/>
+						<DisabledTexture  alphaMode="ADD" file="Interface\BUTTONS\UI-MinusButton-Disabled" />
+					</Button>
 			<Frame name="CharmBarTemplate" virtual="true">
 				<Size><AbsDimension x="32" y="32"/></Size>
 				<Anchors><Anchor point="TOPLEFT" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="0"/></Offset></Anchor></Anchors>
@@ -51,7 +94,7 @@
 				</Layers>
 			</Frame>
 
-	<Frame name="TopCharm" parent="UIParent">
+	<Frame name="TopCharm" ID="1" parent="UIParent">
 		<Size><AbsDimension x="32" y="32"/></Size>
 		<Anchors><Anchor point="TOPLEFT" relativePoint="TOP"><Offset><AbsDimension x="0" y="-20"/></Offset></Anchor></Anchors>			
 			<Frames>
@@ -65,12 +108,6 @@
   					<OnEvent>
 						TargetCharms_OnEvent(self, event); 
 					</OnEvent>
-					<OnMouseDown>
-						self:GetParent():StartMoving();
-					</OnMouseDown>
-					<OnMouseUp>							
-						self:GetParent():StopMovingOrSizing();
-					</OnMouseUp>
 					</Scripts>
 				</Frame>
 					<Button name="TargetCharmsCharm0" parent="TargetCharms">
@@ -84,7 +121,7 @@
 							
 			</Frames>
 	</Frame>
-	<Frame name="TopReady" parent="UIParent">
+	<Frame name="TopReady" ID="3" parent="UIParent">
 		<Size><AbsDimension x="50" y="20"/></Size>
 		<Anchors><Anchor point="TOPLEFT" relativePoint="TOP"><Offset><AbsDimension x="0" y="0"/></Offset></Anchor></Anchors>			
 			<Frames>	
@@ -106,6 +143,7 @@
 								end
 							</OnClick>
 							<OnMouseDown>
+								
 								if ( button == "RightButton" and TargetCharms_Options["ReadyCharm"]["draggable"]) then
 										self:GetParent():StartMoving();
 								end
@@ -116,6 +154,8 @@
 							<OnMouseUp>
 								if ( button == "RightButton" and TargetCharms_Options["ReadyCharm"]["draggable"]) then
 										self:GetParent():StopMovingOrSizing();	
+										UpdateLocation(3,self:GetParent():GetLeft(),self:GetParent():GetTop() - 20);
+										self:GetParent():SetUserPlaced(false);
 								end
 							</OnMouseUp>
 							
@@ -124,7 +164,7 @@
 
 			</Frames>
 	</Frame>
-	<Frame name="TopFlare" parent="UIParent">
+	<Frame name="TopFlare" ID="5" parent="UIParent">
 		<Size><AbsDimension x="32" y="32"/></Size>
 		<Anchors><Anchor point="TOPLEFT" relativePoint="TOP"><Offset><AbsDimension x="100" y="0"/></Offset></Anchor></Anchors>		
 			<Frames>
@@ -133,12 +173,6 @@
 					<OnLoad>
 						self:GetParent():SetMovable(true);
 					</OnLoad>
-					<OnMouseDown>
-						self:GetParent():StartMoving();
-					</OnMouseDown>
-					<OnMouseUp>							
-						self:GetParent():StopMovingOrSizing();
-					</OnMouseUp>
 					</Scripts>
 				</Frame>
 					<Button name="FlareCharmsCharm0"  parent="FlareCharms">

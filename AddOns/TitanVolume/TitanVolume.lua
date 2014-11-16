@@ -18,10 +18,11 @@ function TitanPanelVolumeButton_OnLoad(self)
 			OverrideBlizzSettings = false,
 			VolumeMaster = 1,
 			VolumeAmbience = 0.5,
+			VolumeDialog = 0.5,
 			VolumeSFX = 0.5,
 			VolumeMusic = 0.5,
 			VolumeOutboundChat = 1,
-			VolumeInboundChat = 1,     
+			VolumeInboundChat = 1,
 			DisplayOnRightSide = 1,
 		}
 	};	
@@ -33,6 +34,7 @@ function TitanPanelVolumeButton_OnEvent(self, event, a1, ...)
 		-- Override Blizzard's volume CVar settings
 		if TitanGetVar(TITAN_VOLUME_ID, "VolumeMaster") then SetCVar("Sound_MasterVolume", TitanGetVar(TITAN_VOLUME_ID, "VolumeMaster")) TitanPanelVolume_SetVolumeIcon() end
 		if TitanGetVar(TITAN_VOLUME_ID, "VolumeAmbience") then SetCVar("Sound_AmbienceVolume", TitanGetVar(TITAN_VOLUME_ID, "VolumeAmbience")) end
+		if TitanGetVar(TITAN_VOLUME_ID, "VolumeDialog") then SetCVar("Sound_DialogVolume", TitanGetVar(TITAN_VOLUME_ID, "VolumeDialog")) end
 		if TitanGetVar(TITAN_VOLUME_ID, "VolumeSFX") then SetCVar("Sound_SFXVolume", TitanGetVar(TITAN_VOLUME_ID, "VolumeSFX")) end
 		if TitanGetVar(TITAN_VOLUME_ID, "VolumeMusic") then SetCVar("Sound_MusicVolume", TitanGetVar(TITAN_VOLUME_ID, "VolumeMusic")) end
 		if TitanGetVar(TITAN_VOLUME_ID, "VolumeOutboundChat") then SetCVar("OutboundChatVolume", TitanGetVar(TITAN_VOLUME_ID, "VolumeOutboundChat")) end
@@ -48,6 +50,7 @@ function TitanPanelVolumeButton_OnEnter()
 	-- Confirm master volume value
 	TitanPanelMasterVolumeControlSlider:SetValue(1 - GetCVar("Sound_MasterVolume"));
 	TitanPanelAmbienceVolumeControlSlider:SetValue(1 - GetCVar("Sound_AmbienceVolume"));
+	TitanPanelDialogVolumeControlSlider:SetValue(1 - GetCVar("Sound_DialogVolume"));
 	TitanPanelSoundVolumeControlSlider:SetValue(1 - GetCVar("Sound_SFXVolume"));
 	TitanPanelMusicVolumeControlSlider:SetValue(1 - GetCVar("Sound_MusicVolume"));
 	TitanPanelMicrophoneVolumeControlSlider:SetValue(1 - GetCVar("OutboundChatVolume"));
@@ -69,7 +72,7 @@ function TitanPanelMasterVolumeControlSlider_OnLeave(self)
 	TitanUtils_StartFrameCounting(self:GetParent(), TITAN_VOLUME_FRAME_SHOW_TIME);
 end
 
-function TitanPanelMasterVolumeControlSlider_OnShow(self)        
+function TitanPanelMasterVolumeControlSlider_OnShow(self)
 	_G[self:GetName().."Text"]:SetText(TitanPanelVolume_GetVolumeText(GetCVar("Sound_MasterVolume")));
 	_G[self:GetName().."High"]:SetText(L["TITAN_VOLUME_CONTROL_LOW"]);
 	_G[self:GetName().."Low"]:SetText(L["TITAN_VOLUME_CONTROL_HIGH"]);
@@ -167,7 +170,7 @@ function TitanPanelSoundVolumeControlSlider_OnLeave(self)
 	TitanUtils_StartFrameCounting(self:GetParent(), TITAN_VOLUME_FRAME_SHOW_TIME);
 end
 
-function TitanPanelSoundVolumeControlSlider_OnShow(self)        
+function TitanPanelSoundVolumeControlSlider_OnShow(self)
 	_G[self:GetName().."Text"]:SetText(TitanPanelVolume_GetVolumeText(GetCVar("Sound_SFXVolume")));
 	_G[self:GetName().."High"]:SetText(L["TITAN_VOLUME_CONTROL_LOW"]);
 	_G[self:GetName().."Low"]:SetText(L["TITAN_VOLUME_CONTROL_HIGH"]);
@@ -203,7 +206,7 @@ function TitanPanelAmbienceVolumeControlSlider_OnLeave(self)
 	TitanUtils_StartFrameCounting(self:GetParent(), TITAN_VOLUME_FRAME_SHOW_TIME);
 end
 
-function TitanPanelAmbienceVolumeControlSlider_OnShow(self)        
+function TitanPanelAmbienceVolumeControlSlider_OnShow(self)
 	_G[self:GetName().."Text"]:SetText(TitanPanelVolume_GetVolumeText(GetCVar("Sound_AmbienceVolume")));
 	_G[self:GetName().."High"]:SetText(L["TITAN_VOLUME_CONTROL_LOW"]);
 	_G[self:GetName().."Low"]:SetText(L["TITAN_VOLUME_CONTROL_HIGH"]);
@@ -230,6 +233,47 @@ function TitanPanelVolume_GetVolumeText(volume)
 	return tostring(floor(100 * volume + 0.5)) .. "%";
 end
 
+-- 'Dialog'
+function TitanPanelDialogVolumeControlSlider_OnEnter(self)
+	self.tooltipText = TitanOptionSlider_TooltipText(L["TITAN_VOLUME_CONTROL_TOOLTIP"], TitanPanelVolume_GetVolumeText(GetCVar("Sound_DialogVolume")));
+	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT");
+	GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1);
+	TitanUtils_StopFrameCounting(self:GetParent());
+end
+
+function TitanPanelDialogVolumeControlSlider_OnLeave(self)
+	self.tooltipText = nil;
+	GameTooltip:Hide();
+	TitanUtils_StartFrameCounting(self:GetParent(), TITAN_VOLUME_FRAME_SHOW_TIME);
+end
+
+function TitanPanelDialogVolumeControlSlider_OnShow(self)
+	_G[self:GetName().."Text"]:SetText(TitanPanelVolume_GetVolumeText(GetCVar("Sound_DialogVolume")));
+	_G[self:GetName().."High"]:SetText(L["TITAN_VOLUME_CONTROL_LOW"]);
+	_G[self:GetName().."Low"]:SetText(L["TITAN_VOLUME_CONTROL_HIGH"]);
+	self:SetMinMaxValues(0, 1);
+	self:SetValueStep(0.01);
+	self:SetValue(1 - GetCVar("Sound_DialogVolume"));
+end
+
+function TitanPanelDialogVolumeControlSlider_OnValueChanged(self, a1)
+_G[self:GetName().."Text"]:SetText(TitanPanelVolume_GetVolumeText(1 - self:GetValue()));
+local tempval = self:GetValue();
+	
+	SetCVar("Sound_DialogVolume", 1 - self:GetValue());
+	TitanSetVar(TITAN_VOLUME_ID, "VolumeDialog", 1 - self:GetValue())
+	
+	-- Update GameTooltip
+	if (self.tooltipText) then
+		self.tooltipText = TitanOptionSlider_TooltipText(L["TITAN_VOLUME_CONTROL_TOOLTIP"], TitanPanelVolume_GetVolumeText(1 - self:GetValue()));
+		GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1);
+	end
+end
+
+function TitanPanelVolume_GetVolumeText(volume)
+	return tostring(floor(100 * volume + 0.5)) .. "%";
+end
+
 -- 'Microphone'
 function TitanPanelMicrophoneVolumeControlSlider_OnEnter(self)
 	self.tooltipText = TitanOptionSlider_TooltipText(L["TITAN_VOLUME_CONTROL_TOOLTIP"], TitanPanelVolume_GetVolumeText(GetCVar("OutboundChatVolume")));
@@ -244,7 +288,7 @@ function TitanPanelMicrophoneVolumeControlSlider_OnLeave(self)
 	TitanUtils_StartFrameCounting(self:GetParent(), TITAN_VOLUME_FRAME_SHOW_TIME);
 end
 
-function TitanPanelMicrophoneVolumeControlSlider_OnShow(self)        
+function TitanPanelMicrophoneVolumeControlSlider_OnShow(self)
 	_G[self:GetName().."Text"]:SetText(TitanPanelVolume_GetVolumeText(GetCVar("OutboundChatVolume")));
 	_G[self:GetName().."High"]:SetText(L["TITAN_VOLUME_CONTROL_LOW"]);
 	_G[self:GetName().."Low"]:SetText(L["TITAN_VOLUME_CONTROL_HIGH"]);
@@ -280,7 +324,7 @@ function TitanPanelSpeakerVolumeControlSlider_OnLeave(self)
 	TitanUtils_StartFrameCounting(self:GetParent(), TITAN_VOLUME_FRAME_SHOW_TIME);
 end
 
-function TitanPanelSpeakerVolumeControlSlider_OnShow(self)        
+function TitanPanelSpeakerVolumeControlSlider_OnShow(self)
 	_G[self:GetName().."Text"]:SetText(TitanPanelVolume_GetVolumeText(GetCVar("InboundChatVolume")));
 	_G[self:GetName().."High"]:SetText(L["TITAN_VOLUME_CONTROL_LOW"]);
 	_G[self:GetName().."Low"]:SetText(L["TITAN_VOLUME_CONTROL_HIGH"]);
@@ -308,6 +352,7 @@ function TitanPanelVolumeControlFrame_OnLoad(self)
 	_G[self:GetName().."MusicTitle"]:SetText(L["TITAN_VOLUME_MUSIC_CONTROL_TITLE"]);
 	_G[self:GetName().."SoundTitle"]:SetText(L["TITAN_VOLUME_SOUND_CONTROL_TITLE"]);
 	_G[self:GetName().."AmbienceTitle"]:SetText(L["TITAN_VOLUME_AMBIENCE_CONTROL_TITLE"]);
+	_G[self:GetName().."DialogTitle"]:SetText(L["TITAN_VOLUME_DIALOG_CONTROL_TITLE"]);
 	_G[self:GetName().."MicrophoneTitle"]:SetText(L["TITAN_VOLUME_MICROPHONE_CONTROL_TITLE"]);
 	_G[self:GetName().."SpeakerTitle"]:SetText(L["TITAN_VOLUME_SPEAKER_CONTROL_TITLE"]);
 	self:SetBackdropBorderColor(1, 1, 1);
@@ -337,6 +382,7 @@ function TitanPanelVolumeButton_GetTooltipText()
 	local volumeSoundText = TitanPanelVolume_GetVolumeText(GetCVar("Sound_SFXVolume"));
 	local volumeMusicText = TitanPanelVolume_GetVolumeText(GetCVar("Sound_MusicVolume"));
 	local volumeAmbienceText = TitanPanelVolume_GetVolumeText(GetCVar("Sound_AmbienceVolume"));
+	local volumeDialogText = TitanPanelVolume_GetVolumeText(GetCVar("Sound_DialogVolume"));
 	local volumeMicrophoneText = TitanPanelVolume_GetVolumeText(GetCVar("OutboundChatVolume"));
 	local volumeSpeakerText = TitanPanelVolume_GetVolumeText(GetCVar("InboundChatVolume"));
 	return ""..
@@ -344,6 +390,7 @@ function TitanPanelVolumeButton_GetTooltipText()
 		L["TITAN_VOLUME_SOUND_TOOLTIP_VALUE"].."\t"..TitanUtils_GetHighlightText(volumeSoundText).."\n"..
 		L["TITAN_VOLUME_MUSIC_TOOLTIP_VALUE"].."\t"..TitanUtils_GetHighlightText(volumeMusicText).."\n"..
 		L["TITAN_VOLUME_AMBIENCE_TOOLTIP_VALUE"].."\t"..TitanUtils_GetHighlightText(volumeAmbienceText).."\n"..
+		L["TITAN_VOLUME_DIALOG_TOOLTIP_VALUE"].."\t"..TitanUtils_GetHighlightText(volumeDialogText).."\n"..
 		L["TITAN_VOLUME_MICROPHONE_TOOLTIP_VALUE"].."\t"..TitanUtils_GetHighlightText(volumeMicrophoneText).."\n"..
 		L["TITAN_VOLUME_SPEAKER_TOOLTIP_VALUE"].."\t"..TitanUtils_GetHighlightText(volumeSpeakerText).."\n"..
 		TitanUtils_GetGreenText(L["TITAN_VOLUME_TOOLTIP_HINT1"]).."\n"..

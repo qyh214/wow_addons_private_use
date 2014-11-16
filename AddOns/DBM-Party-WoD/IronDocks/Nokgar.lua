@@ -1,5 +1,6 @@
 local mod	= DBM:NewMod(1235, "DBM-Party-WoD", 4, 558)
 local L		= mod:GetLocalizedStrings()
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 11689 $"):sub(12, -3))
 mod:SetCreatureID(81297, 81305)
@@ -28,6 +29,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 164426 then
 		warnRecklessProvocation:Show(args.destName)
 		specWarnRecklessProvocation:Show(args.destName)
+		sndWOP:Play("stopattack")
+		sndWOP:Schedule(2, "countthree")
+		sndWOP:Schedule(3, "counttwo")
+		sndWOP:Schedule(4, "countone")
+		--may be attack boss
 	elseif args.spellId == 164835 then
 		warnEnrage:CombinedShow(0.3, args.destName)
 		specWarnEnrage:Show(args.destName)

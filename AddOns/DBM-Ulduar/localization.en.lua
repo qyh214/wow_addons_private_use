@@ -77,7 +77,7 @@ L:SetMiscLocalization{
 	YellAir				= "Give us a moment to prepare to build the turrets.",
 	YellAir2			= "Fires out! Let's rebuild those turrets!",
 	YellGround			= "Move quickly! She won't remain grounded for long!",
-	EmotePhase2			= "grounded permanently"
+	EmotePhase2			= "%%s grounded permanently!"
 }
 
 ----------------------------
@@ -132,7 +132,8 @@ L:SetTimerLocalization{
 L:SetWarningLocalization{
 	WarningPhasePunch		= "Phase Punch on >%s< - Stack %d",
 	WarnPhase2Soon			= "Phase 2 soon",
-	warnStarLow				= "Collapsing Star is low"
+	warnStarLow				= "Collapsing Star is low",
+	FirstPullNotice			= "First pull detected, auto correcting timers."
 }
 
 L:SetOptionLocalization{
@@ -229,7 +230,6 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	Pull		= "You will suffer for this trespass!",
 	YellKill	= "I... I am released from his grasp... at last."
 }
 
@@ -408,6 +408,7 @@ L:SetWarningLocalization{
 	WarnBrainPortalSoon				= "Brain Portal in 3 seconds",	
 	SpecWarnFervor					= "Sara's Fervor on you",
 	SpecWarnFervorCast				= "Sara's Fervor is being cast on you",
+	SpecWarnMaladyNear				= "Malady of the Mind on %s near you",
 	specWarnBrainPortalSoon			= "Brain Portal soon"
 }
 
@@ -430,6 +431,7 @@ L:SetOptionLocalization{
 	NextPortal						= "Show timer for next Brain Portal",
 	SetIconOnFervorTarget			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63138),
 	ShowSaraHealth					= "Show health frame for Sara in Phase 1 (must be targeted or focused by at least one raid member)",
+	SpecWarnMaladyNear				= "Show special warning for $spell:63881 near you",
 	SetIconOnBrainLinkTarget		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63802),
 	MaladyArrow						= "Show DBM arrow when $spell:63881 is near you"
 }

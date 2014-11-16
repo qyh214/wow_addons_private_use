@@ -6,6 +6,8 @@ local L
 L= DBM:GetModLocalization(691)
 
 L:SetOptionLocalization({
+	SoundWOP 			= "voice warning: important skills",
+	HudMAP				= "HudMAP: $spell:119622",
 	RangeFrame			= "Show dynamic range frame based on player debuff status for<br/>$spell:119622",
 	SetIconOnMC			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(119622)
 })
@@ -19,6 +21,10 @@ L:SetMiscLocalization({
 -----------------------
 L= DBM:GetModLocalization(725)
 
+L:SetOptionLocalization({
+	SoundWOP 			= "voice warning: important skills"
+})
+
 L:SetMiscLocalization({
 	Pull				= "Bring me their corpses!"
 })
@@ -29,6 +35,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(826)
 
 L:SetOptionLocalization({
+	SoundWOP 			= "voice warning: important skills",
 	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 137511)
 })
 
@@ -42,11 +49,12 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(814)
 
 L:SetOptionLocalization({
+	SoundWOP 			= "voice warning: important skills",
 	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 136340)
 })
 
 L:SetMiscLocalization({
-	Pull				= "Can you feel a chill wind blow? The storm is coming..."
+	Pull				= "Can you feel a chill wind blow?"
 })
 
 ---------------------------
@@ -55,6 +63,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(857)
 
 L:SetOptionLocalization({
+	SoundWOP 			= "voice warning: important skills",
 	SetIconOnBeacon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(144473),
 	BeaconArrow				= "Show DBM Arrow when someone is affected by $spell:144473"
 })
@@ -70,6 +79,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(858)
 
 L:SetOptionLocalization({
+	SoundWOP 				= "voice warning: important skills",
 	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(11, 144532)
 })
 
@@ -86,9 +96,13 @@ L:SetMiscLocalization({
 --------------------------
 L= DBM:GetModLocalization(859)
 
+L:SetOptionLocalization({
+	SoundWOP 				= "voice warning: important skills"
+})
+
 L:SetMiscLocalization({
 	Pull					= "We shall see.",
-	Victory					= "Though you will be surrounded by foes greater than you can imagine, your fortitude shall allow you to endure. Remember this in the times ahead.",
+	Victory					= "SOME RANDOM BLAH BLAH BLAH",
 	VictoryDem				= "Rakkas shi alar re pathrebosh il zila rethule kiel shi shi belaros rikk kanrethad adare revos shi xi thorje Rukadare zila te lok zekul melar "--Cover all bases and all
 })
 
@@ -98,6 +112,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(860)
 
 L:SetOptionLocalization({
+	SoundWOP 				= "voice warning: important skills",
 	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 144642)
 })
 
@@ -112,19 +127,12 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(861)
 
 L:SetOptionLocalization({
+	SoundWOP 				= "voice warning: important skills",
+	HudMAP					= "HUDMAP£º$spell:144689",
 	SetIconOnBurningSoul	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(144689),
 	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(8, 144689)
 })
 
 L:SetMiscLocalization({
 	Pull					= "You will take my place on the eternal brazier."
-})
-
------------------
---  Zandalari  --
------------------
-L = DBM:GetModLocalization("Zandalari")
-
-L:SetGeneralLocalization({
-	name =	"Zandalari"
 })

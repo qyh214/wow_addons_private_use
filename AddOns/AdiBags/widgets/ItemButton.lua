@@ -45,12 +45,14 @@ local ITEM_SIZE = addon.ITEM_SIZE
 
 local buttonClass, buttonProto = addon:NewClass("ItemButton", "Button", "ContainerFrameItemButtonTemplate", "AceEvent-3.0")
 
-local childrenNames = { "Cooldown", "IconTexture", "IconQuestTexture", "Count", "Stock", "NormalTexture" }
+local childrenNames = { "Cooldown", "IconTexture", "IconQuestTexture", "Count", "Stock", "NormalTexture", "NewItemTexture" }
 
 function buttonProto:OnCreate()
 	local name = self:GetName()
 	for i, childName in pairs(childrenNames ) do
-		self[childName] = _G[name..childName]
+		if not self[childName] then
+			self[childName] = _G[name..childName]
+		end
 	end
 	self:RegisterForDrag("LeftButton")
 	self:RegisterForClicks("LeftButtonUp","RightButtonUp")
@@ -99,20 +101,22 @@ end
 local bankButtonClass, bankButtonProto = addon:NewClass("BankItemButton", "ItemButton")
 bankButtonClass.frameTemplate = "BankItemButtonGenericTemplate"
 
-function bankButtonProto:IsLocked()
-	return IsInventoryItemLocked(BankButtonIDToInvSlotID(self.slot))
+function bankButtonProto:OnAcquire(container, bag, slot)
+	self.GetInventorySlot = nil -- Remove the method added by the template
+	self.inventorySlot = bag == REAGENTBANK_CONTAINER and ReagentBankButtonIDToInvSlotID(slot) or BankButtonIDToInvSlotID(slot)
+	return buttonProto.OnAcquire(self, container, bag, slot)
 end
 
-function bankButtonProto:GetInventorySlot()
-	if self.bag == BANK_CONTAINER then
-		return BankButtonIDToInvSlotID(self.slot)
-	elseif self.bag == REAGENTBANK_CONTAINER then
-		return ReagentBankButtonIDToInvSlotID(self.slot)
-	end
+function bankButtonProto:IsLocked()
+	return IsInventoryItemLocked(self.inventorySlot)
 end
 
 function bankButtonProto:UpdateNew()
 	-- Not supported
+end
+
+function bankButtonProto:GetInventorySlot()
+	return self.inventorySlot
 end
 
 --------------------------------------------------------------------------------
@@ -123,7 +127,7 @@ local containerButtonPool = addon:CreatePool(buttonClass)
 local bankButtonPool = addon:CreatePool(bankButtonClass)
 
 function addon:AcquireItemButton(container, bag, slot)
-	if bag == BANK_CONTAINER then
+	if bag == BANK_CONTAINER or bag == REAGENTBANK_CONTAINER then
 		return bankButtonPool:Acquire(container, bag, slot)
 	else
 		return containerButtonPool:Acquire(container, bag, slot)
@@ -325,22 +329,53 @@ function buttonProto:UpdateNew()
 	self.BattlepayItemTexture:SetShown(IsBattlePayItem(self.bag, self.slot))
 end
 
-function buttonProto:UpdateBorder(isolatedEvent)
-	if self.JunkIcon then
-		self.JunkIcon:Hide()
+local function GetBorder(bag, slot, itemId, settings)
+	if settings.questIndicator then
+		local isQuestItem, questId, isActive = GetContainerItemQuestInfo(bag, slot)
+		if questId and not isActive then
+			return TEXTURE_ITEM_QUEST_BANG
+		end
+		if questId or isQuestItem then
+			return TEXTURE_ITEM_QUEST_BORDER
+		end
 	end
-	self.IconBorder:Hide()
-	if self.hasItem then
-		local _, _, quality = GetItemInfo(self.itemId)
-		local color = BAG_ITEM_QUALITY_COLORS[quality]
-		if quality >= LE_ITEM_QUALITY_COMMON and color then
-			self.IconBorder:Show()
-			self.IconBorder:SetVertexColor(color.r, color.g, color.b)
-		end
-		if self.JunkIcon and quality == LE_ITEM_QUALITY_POOR and addon:GetInteractingWindow() == "MERCHANT" then
-			self.JunkIcon:Show()
-		end
+	if not settings.qualityHighlight then
 		return
+	end
+	local _, _, quality = GetItemInfo(itemId)
+	if quality == LE_ITEM_QUALITY_POOR and settings.dimJunk then
+		local v = 1 - 0.5 * settings.qualityOpacity
+		return true, v, v, v, 1, nil, nil, nil, nil, "MOD"
+	end
+	local color = quality ~= LE_ITEM_QUALITY_COMMON and BAG_ITEM_QUALITY_COLORS[quality]
+	if color then
+		return [[Interface\Buttons\UI-ActionButton-Border]], color.r, color.g, color.b, settings.qualityOpacity, 14/64, 49/64, 15/64, 50/64, "ADD"
+	end
+end
+
+function buttonProto:UpdateBorder(isolatedEvent)
+	local texture, r, g, b, a, x1, x2, y1, y2, blendMode
+	if self.hasItem then
+		texture, r, g, b, a, x1, x2, y1, y2, blendMode = GetBorder(self.bag, self.slot, self.itemId, addon.db.profile)
+	end
+	if not texture then
+		self.IconQuestTexture:Hide()
+	else
+		local border = self.IconQuestTexture
+		if texture == true then
+			border:SetVertexColor(1, 1, 1, 1)
+			border:SetTexture(r or 1, g or 1, b or 1, a or 1)
+		else
+			border:SetTexture(texture)
+			border:SetVertexColor(r or 1, g or 1, b or 1, a or 1)
+		end
+		border:SetTexCoord(x1 or 0, x2 or 1, y1 or 0, y2 or 1)
+		border:SetBlendMode(blendMode or "BLEND")
+		border:Show()
+	end
+	if self.JunkIcon then
+		local quality = self.hasItem and select(3, GetItemInfo(self.itemId))
+		self.JunkIcon:SetShown(quality == LE_ITEM_QUALITY_POOR and addon:GetInteractingWindow() == "MERCHANT")
 	end
 	if isolatedEvent then
 		addon:SendMessage('AdiBags_UpdateBorder', self)

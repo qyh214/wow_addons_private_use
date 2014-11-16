@@ -1,0 +1,2 @@
+Hendrik Leppkes:
+	- Move button re-parting/re-layout further down in OnEnable to ensure the new config tables is loaded

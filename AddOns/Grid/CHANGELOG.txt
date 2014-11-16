@@ -1,0 +1,129 @@
+### Version 6.0.2.1679-beta
+
+* Fixed center icon intercepting mouse clicks
+* Removed debug prints triggered by outdated layout plugins
+* Removed outdated spell name auto-completion library
+
+### Version 6.0.2.1674
+
+* Updated for WoW 6.0
+* Updated Clique support
+* Added status modules for Group Leader, Raid Assistant, Master Looter, and Raid Icon
+* [API] GridStatus now calls :UpdateAllUnits (if it exists) on status modules when resetting them.
+* [API] There is now an API for indicators. See the project page for details.
+
+### Version 5.4.7.1653
+
+* Added Soulstone support to the Incoming Resurrection status
+* Added an option to choose a layout to use in Flex Raids (Greltok)
+* Improved options layout for statuses with multiple colors (Greltok)
+* Most statuses will no longer try to update for units not in visible range ([ticket #714](http://www.wowace.com/addons/grid/tickets/714/))
+* Moved Grid's options to the standard Interface Options window, with an option to prefer the old standalone window
+* Removed combined count/duration option for aura text (feel free to use a plugin if you want to spam yourself)
+* [API] GridRoster's IsGUIDInRaid method has been renamed to IsGUIDInGroup. The old name still exists as an alias, but plugins are encouraged to update anyway.
+
+### Version 5.4.1.1628
+
+* Fixed dispellable debuff detection for priests with Mass Dispel
+* Added a combined count/duration display for aura text (Mikk)
+
+### Version 5.3.0.1621
+
+* Fixed switching to the "None" layout
+
+### Version 5.3.0.1618
+
+* Moved the drag tab up slightly to avoid overlapping the backdrop
+* Fixed an issue causing the Center Icon indicator to appear behind the frame
+* Fixed the icon display for the Unit Name status
+* Added support for druids dispelling diseases with Cleanse via Symbiosis cast on a paladin
+
+### Version 5.3.0.1611
+
+* Fixed a frame layering issue
+* Fixed an error that occurred when switching profiles while using the "show duration" option for auras
+
+### Version 5.3.0.1606
+
+* Fixed errors caused by missing files
+
+### Version 5.3.0.1604
+
+* Updated for WoW 5.3
+* Fixed the "Show tab" option (thanks Greltok)
+* Fixed the "Enable right-click menu" option on login ([ticket #696](http://www.wowace.com/addons/grid/tickets/696/))
+
+### Version 5.2.0.1600
+
+* Added a basic status module for absorbs
+* Added an option to enable the standard right-click unit menu
+* Added clamp insets to allow the frame borders to be offscreen
+* Fixed dispel capability detection for druids, and for warlocks with imps
+* Fixed the "World Raid as 40 Player" option (thanks Greltok)
+* Fixed the default aura status for Eternal Flame
+* Fixed errors from the resurrection status module
+
+### Version 5.2.0.1573
+
+* Fixed an error in WoW 5.2
+
+### Version 5.2.0.1571
+
+* Updated for WoW 5.2
+* Added an in-game Help panel with basic info, tips, and FAQs
+* Added a 40-Player Raid layout setting
+* Added a By Class 40 layout
+* Added an option to use the 40-Player Raid layout while in a raid group outside of an instance
+* Added an option to change the layout frame background texture
+* Removed the "Clamp to screen" option; the frame is now permanently clamped, since there's no real reason to allow it to be moved off-screen
+* Changed the "Hide tab" and "Hide minimap icon" option to "Show tab" and "Show minimap icon" -- translators should verify the localization of these options
+
+### Version 5.0.5.1554
+
+* Updated for WoW 5.1
+
+### Version 5.0.5.1552
+
+* Fixed an issue causing delays in updating for group changes in battlegrounds ([ticket #631](http://www.wowace.com/addons/grid/tickets/631/))
+* Fixed an issue causing blank indicators after switching profiles ([ticket #661]](http://www.wowace.com/addons/grid/tickets/661/))
+* Fixed an issue causing Grid not to reappear when leaving a pet battle due to PvP combat
+
+### Version 5.0.5.1548
+
+* Fixed some issues with old custom aura statuses
+
+### Version 5.0.5.1539
+
+* Fixed pet battle hiding so that Grid stays properly hidden when the None layout is selected ([ticket #648](](http://www.wowace.com/addons/grid/tickets/648/)).
+
+### Version 5.0.5.1537
+
+* Added default buffs for monks.
+* Added an option to show the Debuff Type statuses only when your character can dispel them.
+* Grid is now hidden during pet battles ([ticket #643](](http://www.wowace.com/addons/grid/tickets/643/)).
+* Status opacity now has its own option, instead of being part of the status color option.
+* Fixed an issue with range checking while solo ([ticket #627](](http://www.wowace.com/addons/grid/tickets/627/)).
+* Fixed an issue causing icons to be hidden on auras with duration text or coloring enabled ([ticket #644](](http://www.wowace.com/addons/grid/tickets/644/)).
+* Removed backwards compatibility with WoW 4.x.
+* The Resurrect status module now uses LibResInfo-1.0.
+* Added partial Italian localization from kappesante and Holydeath1984.
+* Removed the Class Filter and Range Filter options for statuses. This was announced on the download page and in the forum thread months ago, and nobody presented any compelling arguments for keeping these options, but if you missed the announcements, and this change ruins your life, please come to the WowAce forum thread and tell us why they were useful.
+
+### Version 5.0.4.1520
+
+* Fixed a bug in the Ready Check module ([ticket #626](](http://www.wowace.com/addons/grid/tickets/626/))
+
+### Version 5.0.4.1517
+
+* Updated for WoW 5.0.4
+* The "Minimum Value" setting for the Incoming Heals status is now a percentage of the unit's maximum health, rather than a fixed value.
+* Fixed the text color when disabling the "Invert text color" option.
+* Fixed range checking on dead targets for monks.
+* Fixed the Resurrection module's handling of res casts on targets who already had a res available.
+* Fixed errors in Spanish clients ([ticket #611](](http://www.wowace.com/addons/grid/tickets/611/)).
+* Added monks to the By Class layouts.
+* Added the Blizzard raid bar texture.
+* Increased the default font size from 11 to 12.
+* Increased the default width of the config frame to prevent random wrapping bugs.
+* [API] Status parameter may be passed as either the traditional argument list, or as a table.
+* [API] Status "range" parameter is now treated as a boolean, not a number.

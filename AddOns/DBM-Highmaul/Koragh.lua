@@ -1,7 +1,8 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
+local Yike	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 11811 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11837 $"):sub(12, -3))
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetZone()
@@ -75,6 +76,9 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 162184 then
 		warnExpelMagicShadow:Show()
 		specWarnExpelMagicShadow:Show()
+		if mod:IsHealer() then
+			Yike:Play("healall")
+		end
 	elseif spellId == 161411 then
 		warnExpelMagicFrost:Show()
 		specWarnExpelMagicFrost:Show()
@@ -84,7 +88,8 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 162186 then
 		if UnitExists("boss1") and UnitGUID("boss1") == args.sourceGUID and UnitDetailedThreatSituation("player", "boss1") then--We are highest threat target
 			specWarnExpelMagicArcaneYou:Show()--So show tank warning
-			soundExpelMagicArcane:Play()
+			--soundExpelMagicArcane:Play()
+			Yike:Play("runout")
 		end
 	end
 end
@@ -107,6 +112,9 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 162186 then
 		warnExpelMagicArcane:Show(args.destName)
 		timerExpelMagicArcane:Start(args.destName)
+		if mod:IsTank() then
+			Yike:Play("tauntboss")
+		end
 		if args:IsPlayer() then--Still do yell and range frame here, in case DK
 			yellExpelMagicArcane:Yell()
 			if self.Options.RangeFrame then
@@ -120,12 +128,15 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(7)
 		end
-	elseif spellId == 161242 then
+	elseif spellId == 161242 and self:AntiSpam(3, args.destName) then--Players may wabble in and out of it and we don't want to spam add them to table.
 		warnCausticEnergy:CombinedShow(1, args.destName)--Two targets on mythic, which is why combinedshow.
 	elseif spellId == 163472 then
 		warnMC:CombinedShow(0.5, args.destName)
 		if self:AntiSpam(3, 1) then
 			specWarnMC:Show()
+			if mod:IsDps() then
+				Yike:Play("killmob")
+			end
 		end
 		if self.Options.SetIconOnMC then
 			self:SetSortedIcon(1, args.destName, 1)--TODO, find out number of targets and add
@@ -137,10 +148,9 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 162186 and args:IsPlayer() and self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
-	elseif spellId == 162185 and args:IsPlayer() and self.Options.RangeFrame then
-		if UnitDebuff("player", GetSpellInfo(162186)) then
-			DBM.RangeCheck:Show(5)
-		else
+	elseif spellId == 162185 and args:IsPlayer() then
+		specWarnExpelMagicFire:Cancel()
+		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()
 		end
 	elseif spellId == 163472 and self.Options.SetIconOnMC then

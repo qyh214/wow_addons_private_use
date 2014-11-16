@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 50400
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Ulduar|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Ульдуар|r
@@ -14,7 +14,7 @@
 ## X-DBM-Mod-Category: WotLK
 ## X-DBM-Mod-No-Heroic: 1
 ## X-DBM-Mod-MapID: 603
-## X-DBM-Mod-Sort: 404
+## X-DBM-Mod-Sort: 204
 localization.en.lua
 localization.de.lua
 localization.fr.lua

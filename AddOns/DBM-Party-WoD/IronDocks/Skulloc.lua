@@ -1,5 +1,6 @@
 local mod	= DBM:NewMod(1238, "DBM-Party-WoD", 4, 558)
 local L		= mod:GetLocalizedStrings()
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 11689 $"):sub(12, -3))
 mod:SetCreatureID(83612)
@@ -43,6 +44,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnRapidFire:Show()
 			yellRapidFire:Yell()
+			sndWOP:Play("runout")
 		end
 	end
 end
@@ -57,6 +59,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 168929 then
 		warnCannonBarrage:Show()
 		specWarnCannonBarrage:Show()
+		sndWOP:Play("findshelter")
 	elseif spellId == 169129 then
 		warnBackdraft:Show()
 		specWarnBackdraft:Show()
@@ -68,5 +71,10 @@ end
 function mod:UNIT_SPELLCAST_CHANNEL_STOP(uId, _, _, _, spellId)
 	if spellId == 168929 then
 		specWarnCannonBarrageE:Show()
+		if mod:IsHealer() then
+			sndWOP:Play("safenow")
+		else
+			sndWOP:Play("kickcast")
+		end
 	end
 end

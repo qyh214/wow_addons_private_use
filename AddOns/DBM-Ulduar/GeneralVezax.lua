@@ -1,15 +1,15 @@
 local mod	= DBM:NewMod("GeneralVezax", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
+local sndWOP	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 163 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
 mod:SetCreatureID(33271)
-mod:SetEncounterID(1134)
 mod:SetModelID(28548)
 mod:SetUsedIcons(7, 8)
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEventsInCombat(
+mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"SPELL_INTERRUPT",
 	"SPELL_AURA_APPLIED",
@@ -42,6 +42,7 @@ mod:AddBoolOption("SetIconOnLifeLeach", true)
 mod:AddBoolOption("CrashArrow")
 
 
+
 function mod:OnCombatStart(delay)
 	timerEnrage:Start(-delay)
 	timerHardmode:Start(-delay)
@@ -53,6 +54,7 @@ function mod:SPELL_CAST_START(args)
 		timerSearingFlamesCast:Start()
 	elseif args.spellId == 62662 then 
 		specWarnSurgeDarkness:Show()
+		sndWOP:Play("darkpower")
 		timerNextSurgeofDarkness:Start()
 	end
 end
@@ -84,15 +86,21 @@ function mod:ShadowCrashTarget()
 	warnShadowCrash:Show(targetname)
 	if targetname == UnitName("player") then
 		specWarnShadowCrash:Show(targetname)
+		sndWOP:Play("runaway")
 		yellShadowCrash:Yell()
 	elseif targetname then
 		local uId = DBM:GetRaidUnitId(targetname)
 		if uId then
 			local inRange = CheckInteractDistance(uId, 2)
+			local x, y = GetPlayerMapPosition(uId)
+			if x == 0 and y == 0 then
+				SetMapToCurrentZone()
+				x, y = GetPlayerMapPosition(uId)
+			end
 			if inRange then
 				specWarnShadowCrashNear:Show()
+				sndWOP:Play("runaway")
 				if self.Options.CrashArrow then
-					local x, y = UnitPosition(uId)
 					DBM.Arrow:ShowRunAway(x, y, 15, 5)
 				end
 			end
@@ -112,6 +120,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerLifeLeech:Start(args.destName)
 		if args:IsPlayer() then
 			specWarnLifeLeechYou:Show()
+			sndWOP:Play("runout")
 			yellLifeLeech:Yell()
 		else
 			local uId = DBM:GetRaidUnitId(args.destName)

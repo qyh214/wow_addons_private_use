@@ -1,0 +1,28 @@
+﻿## Interface: 60000
+## Title: Raid|cff7fff7fAchievement|r   Main
+## Title-ruRU: Raid|cff7fff7fAchievement|r   Основной
+## Author: Shurshik
+## Version: 1.129
+## Notes: Group and raid achievements tracker
+## Notes-ruRU: Слежение за групповыми и рейдовыми достижениями
+## URL: http://phoenixstyle.com
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: pseashowfailreas,pseashownewvervar,wherereportraidach, wherereportpartyach,raquantrepeatach,raquantrepeatachtm,raoldvern2, raaddoninstalledsins,raminibutshowt,RA_Settings,rasoundtoplay,raenablebg,psdonaspanvar,radonateq1
+## SavedVariablesPerCharacter: thisaddonworkea
+Localization\localization-enEN.lua
+Localization\localization-ruRU.lua
+Localization\localization-deDE.lua
+Localization\localization-frFR.lua
+Localization\localization-esES.lua
+Localization\localization-esMX.lua
+Localization\localization-koKR.lua
+Localization\localization-zhTW.lua
+Localization\localization-zhCN.lua
+Localization\localization-ptBR.lua
+RaidAchievement.lua
+RaidAchievement.xml
+LibStub.lua
+CallbackHandler-1.0.lua
+LibDataBroker-1.1.lua
+RaBroker.lua

@@ -1,0 +1,2 @@
+Hendrik Leppkes:
+	- Build a lookup table for spell id -> spell book slot, since FindSpellBookSlotBySpellID doesn't work reliably for all spells.

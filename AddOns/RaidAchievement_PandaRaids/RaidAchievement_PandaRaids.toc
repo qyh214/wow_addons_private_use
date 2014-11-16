@@ -1,0 +1,12 @@
+﻿## Interface: 60000
+## Title: Raid|cff7fff7fAchievement|r - Pandaria raids
+## Title-ruRU: Raid|cff7fff7fAchievement|r - Рейды Пандарии
+## Author: Shurshik
+## Notes: RaidAchievement Pandaria Raids Module
+## Notes-ruRU: Модуль RaidAchievement - Рейды Пандарии
+## Dependencies: RaidAchievement
+## LoadOnDemand: 1
+## SavedVariablesPerCharacter: prraspisokon
+RaidAchievement_PandaRaids.lua
+RaidAchievement_PandaRaids.xml
+RaidAchievement_PandaRaidsbosses.lua

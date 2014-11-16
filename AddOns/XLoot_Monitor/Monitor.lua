@@ -18,6 +18,7 @@ local defaults = {
 			direction = "up",
 			visible = true,
 			scale = 1.0,
+			draggable = true,
 			x = UIParent:GetWidth() * .85,
 			y = UIParent:GetHeight() * .2
 		},
@@ -33,6 +34,11 @@ local defaults = {
 
 		fade_own = 10,
 		fade_other = 5,
+		
+		font = STANDARD_TEXT_FONT,
+		font_size_loot = 12,
+		font_size_quantity = 10,
+		font_flag = "OUTLINE",
 	}
 }
 
@@ -298,17 +304,17 @@ do
 
 		local name = frame:CreateFontString(nil, "OVERLAY")
 		name:SetPoint("LEFT", icon_frame, "RIGHT", 2, 0)
-		name:SetFont(STANDARD_TEXT_FONT, 12, "OUTLINE")
+		name:SetFont(opt.font, opt.font_size_loot, opt.font_flag)
 		name:SetJustifyH("LEFT")
 
 		local text = frame:CreateFontString(nil, "OVERLAY")
 		text:SetPoint("LEFT", name, "RIGHT", 0, 0)
-		text:SetFont(STANDARD_TEXT_FONT, 12, "OUTLINE")
+		text:SetFont(opt.font, opt.font_size_loot, opt.font_flag)
 		text:SetJustifyH("LEFT")
 
 		local total = icon_frame:CreateFontString(nil, "OVERLAY")
 		total:SetPoint("CENTER", icon_frame, "CENTER", 0, 0)
-		total:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
+		total:SetFont(opt.font, opt.font_size_quantity, opt.font_flag)
 		total:SetJustifyH("CENTER")
 
 		frame.icon = icon

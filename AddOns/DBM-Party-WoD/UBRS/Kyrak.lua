@@ -1,7 +1,8 @@
 local mod	= DBM:NewMod(1227, "DBM-Party-WoD", 8, 559)
 local L		= mod:GetLocalizedStrings()
+local sndWOP	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 11758 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11380 $"):sub(12, -3))
 mod:SetCreatureID(76021)
 mod:SetEncounterID(1758)
 mod:SetZone()
@@ -39,10 +40,16 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 161203 and not args:IsDestTypePlayer() then
 		warnRejuvSerum:Show(args.destName)
 		specWarnRejuvSerum:Show(args.destName)
+		if mod:IsMagicDispeller() then
+			--sndWOP:Play("dispelboss")
+		end
 --		timerRejuvSerumCD:Start()
 	elseif spellId == 162600 then
 		warnToxicFumes:Show(args.destName)
 		specWarnToxicFumes:Show(args.destName)
+		if mod:IsHealer() then
+			sndWOP:Play("dispelnow")
+		end
 	end
 end
 
@@ -50,6 +57,11 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 161199 then
 		warnDeblitatingFixation:Show()
 		specWarnDeblitatingFixation:Show(args.sourceName)
+		if mod:IsTank() then
+			sndWOP:Play("kickcast")
+		elseif (not mod:IsHealer()) then
+			sndWOP:Play("helpkick")
+		end
 	elseif args.spellId == 161203 then
 		warnRejuvSerumCast:Show()
 	end
@@ -58,6 +70,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 161288 and destGUID == UnitGUID("player") and self:AntiSpam(3, 1) then--Goriona's Void zones
 		specWarnVilebloodSerum:Show()
+		sndWOP:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

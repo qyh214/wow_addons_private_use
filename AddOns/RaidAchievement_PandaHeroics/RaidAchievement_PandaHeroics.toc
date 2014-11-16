@@ -1,0 +1,12 @@
+﻿## Interface: 60000
+## Title: Raid|cff7fff7fAchievement|r - Pandaria Dungeons
+## Title-ruRU: Raid|cff7fff7fAchievement|r - Подземелья Пандарии
+## Author: Shurshik
+## Notes: RaidAchievement Pandaria Dungeons Module
+## Notes-ruRU: Модуль RaidAchievement - Подземелья Пандарии
+## Dependencies: RaidAchievement
+## LoadOnDemand: 1
+## SavedVariablesPerCharacter: phraspisokon
+RaidAchievement_PandaHeroics.lua
+RaidAchievement_PandaHeroicsbosses.lua
+RaidAchievement_PandaHeroics.xml

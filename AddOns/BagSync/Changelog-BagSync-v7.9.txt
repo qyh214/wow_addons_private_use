@@ -1,0 +1,13 @@
+tag v7.9
+a7dd8b5cdaf87f72ad66a9dd3bd49e5cfb814b27
+Xruptor <xruptor@nomail.com>
+2014-10-26 14:39:25 -0500
+
+v7.9
+
+
+--------------------
+
+Xruptor:
+	- -Fix for the ptBR localization -Removed redundant code -Added missing localization strings to the total list of localized strings. -Major shout out and special thanks to ytzyt at Curse for the zhCN and zhTW translations!  Thanks!
+	- -small fix for brazil localization

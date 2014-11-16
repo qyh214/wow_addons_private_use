@@ -1,5 +1,6 @@
 local mod	= DBM:NewMod(1195, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
+local Yike	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 11811 $"):sub(12, -3))
 mod:SetCreatureID(78948, 99999)--78948 Tectus, 80557 Mote of Tectus, 80551 Shard of Tectus
@@ -24,6 +25,7 @@ mod:RegisterEventsInCombat(
 --local warnEarthenPillar				= mod:NewSpellAnnounce(162518, 3)--No way to detect unless it hits a player :\
 local warnTectonicUpheaval			= mod:NewSpellAnnounce(162475, 3)
 local warnCrystallineBarrage		= mod:NewTargetAnnounce(162346, 3)
+local yellCrystallineBarrage		= mod:NewYell(162346)
 local warnEarthwarper				= mod:NewSpellAnnounce("ej10061", 3, 162894)
 local warnBerserker					= mod:NewSpellAnnounce("ej10062", 3, 163312)
 --Night-Twisted NPCs
@@ -70,10 +72,15 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 162475 and self:AntiSpam(5, 1) then--Antispam for later fight.
 		warnTectonicUpheaval:Show()
 		specWarnTectonicUpheaval:Show()
+		Yike:Play("aesoon")
 	elseif spellId == 162968 then
 		warnEarthenFlechettes:Show()
 		specWarnEarthenFlechettes:Show()
 		timerEarthenFlechettesCD:Start(args.sourceGUID)
+		local guid = args.souceGUID
+		if guid == UnitGUID("target") or guid == UnitGUID("focus") then
+			Yike:Play("watchwave")
+		end
 	elseif spellId == 162894 then
 		local GUID = args.sourceGUID
 		--Support for counts for each earth guy up.
@@ -84,8 +91,10 @@ function mod:SPELL_CAST_START(args)
 		warnGiftOfEarth:Show(earthDuders[GUID])
 		specWarnGiftOfEarth:Show(earthDuders[GUID])
 		timerGiftOfEarthCD:Start(GUID)
+		Yike:Play("162894")
 	elseif spellId == 163312 then
 		warnRavingAssault:Show()
+		Yike:Play("dashrun")
 	end
 end
 
@@ -95,6 +104,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnCrystallineBarrage:CombinedShow(1, args.destName)
 		if args:IsPlayer() then
 			specWarnCrystallineBarrage:Show()
+			yellCrystallineBarrage:Yell()
+			Yike:Play("runout")
 		end
 	elseif spellId == 162674 and self.Options.SetIconOnMote and not self:IsLFR() then--Don't mark kill/pickup marks in LFR, it'll be an aoe fest.
 		self:ScanForMobs(args.destGUID, 0, 8, 4, 0.05, 15)
@@ -127,6 +138,9 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, npc)
 		self.vb.EarthwarperAlive = self.vb.EarthwarperAlive + 1
 		warnEarthwarper:Show()
 		specWarnEarthwarper:Show()
+		if mod:IsDps() then
+			Yike:Play("killmob")
+		end
 		timerGiftOfEarthCD:Start(10)
 		timerEarthenFlechettesCD:Start(15)
 		timerEarthwarperCD:Start()
@@ -145,5 +159,6 @@ end
 function mod:OnSync(msg)
 	if msg == "TectusPillar" and self:IsInCombat() then
 		specWarnEarthenPillar:Show()
+		Yike:Play("watchstep")
 	end
 end

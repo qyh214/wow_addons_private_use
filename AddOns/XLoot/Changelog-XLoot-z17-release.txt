@@ -1,0 +1,14 @@
+tag z17-release
+1c4262d51e7b404a3480100dbe883a4f9d0eb82c
+Xuerian <sky.shell@gmail.com>
+2014-10-19 23:33:23 -0400
+
+Change "Autoloot Coin" to "Autoloot Currency", function as expected
+
+
+--------------------
+
+Xuerian:
+	- Clean up global leaks (Thanks Foxlit!)
+	- Change "Autoloot coin" to "Autoloot currency", and function similarly
+	- Use prototype tables instead of local methods for rows and the frame Reorder references to their creation point instead of the end of the frame creation method

@@ -1,15 +1,14 @@
 TargetCharms
 Author: Gander (sca_tch@hotmail.com)
-Version: 1.5.7
+Version: 1.6.1 (10/26/2014)
 
 ********************
 Table of Contents
 ********************
 I.	Overview
-II	SHOW OPTIONS
-III.	Slash Commands
-IV. 	Layout options
-V. 	Version Changes
+II.	Slash Commands
+III. 	Layout options
+IV. 	Version Changes
 
 
 ********************
@@ -24,25 +23,12 @@ makes it great for raid leaders!
 
 To move icons or "Ready Check" button, right-click and drag them.  They must be set
 to draggable in the setup menu to allow this.  You can ctrl+right-click the frames
-to bring up the setup menu. To move the world markers you will need to go into setup and 
-click "Move Markers".  The first button will turn into a green square that will be
-draggable.
-
-********************
-II - SHOW OPTIONS
-********************
-
-Auto - You should probably set the show value to this if you are going to use the menu.
-	It will automatically show the menus when you are able to use them. The only
-	exception is that it will hide the charms/raid icons buttons when solo.
-
-Show - Will force the menu to always be shown even when not usable.
-
-Hide - Will hide the menu.
+to bring up the setup menu. To move the world markers you will need to use the small
+drag button.
 
 
 ********************
-III - SLASH COMMANDS
+II - SLASH COMMANDS
 ********************
 
 /tc or /targetcharms
@@ -55,7 +41,7 @@ setup 	Brings up the setup menu.
 
 
 ********************
-IV - LAYOUT OPTIONS
+III - LAYOUT OPTIONS
 ********************
 
 To change the layout you must type a "placement" character followed 
@@ -96,17 +82,29 @@ R	Red
 P	Purple
 G	Green
 Y	Yellow
+O	Orange
+W	White
+S	Silver
+D	Drag Square - Care, this is a small button and will mess up placement; Best to put it first or last.
 _	[No button]
 
-Or you can choose a preset from the dropdown and click "Set Layout" to enter
+Or you can choose a preset from by clicking the buttons for
 a number of commonly used layouts.
 
 
 ********************
-V - CHANGELOG
+IV - CHANGELOG
 ********************
+v1.6.1
+Bug fix for profiles and frame positions. Sorry for setting reset.
+
+v1.6
+Added new flares and drag button.
+Added profiles and addon interface panel.
+Removed dropdowns to avoid taint.
+
 v1.5.7
-changed logic to true/false from 1/nil
+Changed logic to true/false from 1/nil
 
 v1.5.6
 Changed "/cwm all" to "/cwm 0" Thanks xlhjun

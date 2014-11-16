@@ -1,5 +1,6 @@
 local mod	= DBM:NewMod(1128, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
+local Yike	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 11811 $"):sub(12, -3))
 mod:SetCreatureID(78714)
@@ -68,12 +69,14 @@ function mod:OnCombatStart(delay)
 		timerTigerCD:Start()
 		countdownTiger:Start()
 	end
+	Yike:Schedule(100-delay, "159947r")
 end
 
 function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
+	Yike:Cancel("159947r")
 end
 
 function mod:SPELL_CAST_START(args)
@@ -87,6 +90,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnChainHurl:Show()
 		timerChainHurlCD:Start()
 		countdownChainHurl:Start()
+		Yike:Schedule(100, "159947r")
 	end
 end
 
@@ -97,15 +101,23 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			timerSweeperCD:Start()
 			countdownSweeper:Start()
+			Yike:Play("159947y")
+		else
+			Yike:Play("teamout")
 		end
 	elseif spellId == 159250 then
 		warnBladeDance:Show()
+		--Yike:Play("159250")
 	elseif spellId == 158986 then
 		warnBerserkerRush:Show(args.destName)
 		timerBerserkerRushCD:Start()
+		if mod:IsRanged() then
+			Yike:Play("dashrun")
+		end
 		if args:IsPlayer() then
 			specWarnBerserkerRush:Show(firePillar)
 			yellBerserkerRush:Yell()
+			Yike:Play("159202f")
 		else
 			specWarnBerserkerRushOther:Show(args.destName)
 		end
@@ -124,10 +136,12 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 159202 then
 		warnPillar:Show()
 		timerPillarCD:Start()
+		Yike:Play("159202")
 	elseif spellId == 162497 then
 		warnOnTheHunt:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnOnTheHunt:Show(firePillar)
+			Yike:Play("159202f")
 		end
 	end
 end
@@ -145,5 +159,6 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 	if self:IsMythic() then
 		timerTigerCD:Start()
 		countdownTiger:Start()
+		--if is tank
 	end
 end

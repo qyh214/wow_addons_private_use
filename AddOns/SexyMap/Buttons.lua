@@ -39,7 +39,6 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	DominosMinimapButton = "Dominos",
 	Gatherer_MinimapOptionsButton = "Gatherer",
 	DroodFocusMinimapButton = "Drood Focus",
-	["FuBarPluginElkano's BuffBarsFrameMinimapButton"] = "EBB (Elkano's Buff Bars)",
 	D32MiniMapButton = "Mistra's Diablo Orbs",
 	DKPBidderMapIcon = "DKP-Bidder",
 	HealiumMiniMap = "Healium",
@@ -217,6 +216,7 @@ function mod:OnInitialize(profile)
 				MinimapZoneTextButton = "always",
 				TimeManagerClockButton = "always",
 				MiniMapMailFrame = "always",
+				QueueStatusMinimapButton = "always",
 			},
 			allowDragging = true,
 			lockDragging = false,
@@ -225,6 +225,11 @@ function mod:OnInitialize(profile)
 	end
 
 	self.db = profile.buttons
+	-- XXX temp
+	if not self.db.TEMP then
+		self.db.visibilitySettings.QueueStatusMinimapButton = "always"
+		self.db.TEMP = true
+	end
 end
 
 function mod:OnEnable()

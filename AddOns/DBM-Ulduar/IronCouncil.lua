@@ -1,15 +1,15 @@
 local mod	= DBM:NewMod("IronCouncil", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
+local sndWOP	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 156 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
 mod:SetCreatureID(32867, 32927, 32857)
-mod:SetEncounterID(1140)
 mod:SetModelID(28344)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEventsInCombat(
+mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 	"SPELL_CAST_SUCCESS",
@@ -50,8 +50,10 @@ local timerFusionPunchActive	= mod:NewTargetTimer(4, 61903)
 local warnOverwhelmingPower		= mod:NewTargetAnnounce(61888, 2)
 local timerOverwhelmingPower	= mod:NewTargetTimer(25, 61888)
 local warnStaticDisruption		= mod:NewTargetAnnounce(61912, 3) 
-mod:AddBoolOption("SetIconOnOverwhelmingPower", false)
-mod:AddBoolOption("SetIconOnStaticDisruption", false)
+mod:AddBoolOption("SetIconOnOverwhelmingPower")
+mod:AddBoolOption("SetIconOnStaticDisruption")
+
+
 
 -- Runemaster Molgeim
 -- Lightning Blast ... don't know, maybe 63491
@@ -84,6 +86,7 @@ end
 function mod:RuneTarget()
 	scansDone = scansDone + 1
 	local targetname, uId = self:GetBossTarget(32927)
+--	print(targetname, uId)
 	if targetname and uId then
 		if UnitIsFriend("player", uId) then--He's targeting a friendly unit, he doesn't cast this on players, so it's wrong target.
 			if scansDone < 15 then--Make sure no infinite loop.
@@ -112,8 +115,10 @@ function mod:SPELL_CAST_START(args)
 		warnChainlight:Show()
 	elseif args:IsSpellID(63483, 61915) then	-- LightningWhirl
 		timerLightningWhirl:Start()
+		sndWOP:Play("kickcast")
 	elseif args:IsSpellID(61903, 63493) then	-- Fusion Punch
 		warnFusionPunch:Show()
+		sndWOP:Schedule(1, "dispelnow")
 		timerFusionPunchCast:Start()
 	elseif args:IsSpellID(62274, 63489) then	-- Shield of Runes
 		warnShieldofRunes:Show()
@@ -154,8 +159,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnOverwhelmingPower:Show(args.destName)
 		if self:IsDifficulty("normal10") then
 			timerOverwhelmingPower:Start(60, args.destName)
+			if mod:IsTank() or mod:IsHealer() then
+				sndWOP:Schedule(52, "changemt")
+			end
 		else
 			timerOverwhelmingPower:Start(35, args.destName)
+			if mod:IsTank() or mod:IsHealer() then
+				sndWOP:Schedule(27, "changemt")
+			end
 		end
 		if self.Options.SetIconOnOverwhelmingPower then
 			if self:IsDifficulty("normal10") then

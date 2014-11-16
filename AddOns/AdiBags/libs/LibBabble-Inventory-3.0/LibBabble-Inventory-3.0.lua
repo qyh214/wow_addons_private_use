@@ -1,6 +1,6 @@
 --[[
 Name: LibBabble-Inventory-3.0
-Revision: $Rev: 177 $
+Revision: $Rev: 181 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-inventory-3-0/
 Dependencies: None
@@ -8,7 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Inventory-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 177 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 181 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -399,13 +399,13 @@ elseif GAME_LOCALE == "frFR" then
 	Cloth = "Tissu",
 	Cogwheel = "Crémaillère",
 	Companion = "Compagnon",
-	-- ["Companion Pets"] = "",
+	["Companion Pets"] = "Mascottes", -- Needs review
 	Companions = "Compagnons",
 	Consumable = "Consommable",
 	Container = "Conteneur",
 	Cooking = "Cuisine",
-	-- ["Cooking Bag"] = "",
-	-- Cosmetic = "",
+	["Cooking Bag"] = "Sac de cuisinier", -- Needs review
+	Cosmetic = "Cosmétique", -- Needs review
 	Critter = "Bestiole", -- Needs review
 	Crossbow = "Arbalète",
 	Crossbows = "Arbalètes",
@@ -413,7 +413,7 @@ elseif GAME_LOCALE == "frFR" then
 	Daggers = "Dagues",
 	["Death Knight"] = "Chevalier de la mort",
 	Devices = "Appareils",
-	-- Dragonkin = "",
+	Dragonkin = "Draconien", -- Needs review
 	Drink = "Breuvage",
 	Druid = "Druide",
 	Elemental = "Élémentaire",
@@ -912,10 +912,10 @@ elseif GAME_LOCALE == "esES" then
 }
 elseif GAME_LOCALE == "esMX" then
 	lib:SetCurrentTranslations {
-	Alchemy = "Alquimia",
+	Alchemy = "Alquímia", -- Needs review
 	["Ammo Pouch"] = "Bolsa de Munición",
-	-- Aquatic = "",
-	Archaeology = "Archaeology", -- Needs review
+	Aquatic = "Acuático", -- Needs review
+	Archaeology = "Arqueología", -- Needs review
 	Armor = "Armadura",
 	["Armor Enchantment"] = "Encantamiento de Armadura",
 	Arrow = "Flecha",
@@ -923,7 +923,7 @@ elseif GAME_LOCALE == "esMX" then
 	Back = "Espalda",
 	Bag = "Bolsa",
 	Bandage = "Venda",
-	-- Beast = "",
+	Beast = "Bestia", -- Needs review
 	Blacksmithing = "Herrería",
 	Blue = "Azul",
 	Book = "Libro",
@@ -932,23 +932,23 @@ elseif GAME_LOCALE == "esMX" then
 	Bullet = "Bala",
 	Chest = "Torso",
 	Cloth = "Tela",
-	Cogwheel = "Cogwheel", -- Needs review
-	Companion = "Companion", -- Needs review
-	-- ["Companion Pets"] = "",
-	Companions = "Companions", -- Needs review
+	Cogwheel = "Engranaje", -- Needs review
+	Companion = "Compañero", -- Needs review
+	["Companion Pets"] = "Mascotas de Companía", -- Needs review
+	Companions = "Compañeros", -- Needs review
 	Consumable = "Consumible",
 	Container = "Contenedor",
 	Cooking = "Cocina",
-	-- ["Cooking Bag"] = "",
-	-- Cosmetic = "",
-	-- Critter = "",
+	["Cooking Bag"] = "Bolsa de Cocina", -- Needs review
+	Cosmetic = "Cosmético", -- Needs review
+	Critter = "Alimaña", -- Needs review
 	Crossbow = "Ballesta",
 	Crossbows = "Ballestas",
 	Dagger = "Daga",
 	Daggers = "Dagas",
 	["Death Knight"] = "Caballero de la Muerte",
 	Devices = "Dispositivos",
-	-- Dragonkin = "",
+	Dragonkin = "Dragonante", -- Needs review
 	Drink = "Bebida",
 	Druid = "Druída",
 	Elemental = "Elemental",
@@ -969,7 +969,7 @@ elseif GAME_LOCALE == "esMX" then
 	["Fist Weapon"] = "Arma de Puño",
 	["Fist Weapons"] = "Armas de Puño",
 	Flask = "Frasco",
-	-- Flying = "",
+	Flying = "Volador", -- Needs review
 	["Flying Mount"] = "Flying Mount", -- Needs review
 	Food = "Comida",
 	["Food & Drink"] = "Comida y bebida",
@@ -984,15 +984,15 @@ elseif GAME_LOCALE == "esMX" then
 	Head = "Cabeza",
 	["Held in Off-Hand"] = "Sostener con la mano izquierda",
 	Herb = "Herbalísmo",
-	Herbalism = "Herbalism", -- Needs review
+	Herbalism = "Herbalismo", -- Needs review
 	["Herb Bag"] = "Bolsa de hierbas",
 	Holiday = "Festivo",
-	-- Humanoid = "",
+	Humanoid = "Humanoide", -- Needs review
 	Hunter = "Cazador",
 	Hydraulic = "Hydraulic", -- Needs review
-	Idol = "Ãdolo",
-	Idols = "Ãdolos",
-	Inscription = "Inscription", -- Needs review
+	Idol = "Ídolo", -- Needs review
+	Idols = "Ídolos", -- Needs review
+	Inscription = "Inscripción", -- Needs review
 	["Inscription Bag"] = "Bolsa de inscripción",
 	["Item Enchantment"] = "Item Enchantment", -- Needs review
 	["Item Enhancement"] = "Mejora de Objeto",
@@ -1007,19 +1007,19 @@ elseif GAME_LOCALE == "esMX" then
 	Librams = "Tratados",
 	Mace = "Maza",
 	Mage = "Mago",
-	-- Magic = "",
+	Magic = "Mágico", -- Needs review
 	Mail = "Mallas",
 	["Main Hand"] = "Mano Derecha",
 	Materials = "Materiales",
 	Meat = "Carne",
-	-- Mechanical = "",
+	Mechanical = "Mecánico", -- Needs review
 	Meta = "Meta",
 	["Metal & Stone"] = "Metal y Piedra",
-	Mining = "Mining", -- Needs review
+	Mining = "Minería", -- Needs review
 	["Mining Bag"] = "Bolsa de Minería",
 	Miscellaneous = "Miscelánea",
-	-- Money = "",
-	-- Monk = "",
+	Money = "Dinero", -- Needs review
+	Monk = "Monje", -- Needs review
 	Mount = "Montura",
 	Mounts = "Mounts", -- Needs review
 	Neck = "Cuello",
@@ -1047,8 +1047,8 @@ elseif GAME_LOCALE == "esMX" then
 	Reagent = "Reactivo",
 	Recipe = "Receta",
 	Red = "Rojo",
-	Relic = "Reliquia",
-	Riding = "Riding", -- Needs review
+	Relic = "Relíquia", -- Needs review
+	Riding = "Equitación", -- Needs review
 	Ring = "Anillo",
 	Rogue = "Pícaro",
 	Scroll = "Pergamino",
@@ -1059,7 +1059,7 @@ elseif GAME_LOCALE == "esMX" then
 	Shoulder = "Hombros",
 	Sigils = "Sigilos",
 	Simple = "Simple",
-	Skinning = "Skinning", -- Needs review
+	Skinning = "Desuello", -- Needs review
 	["Soul Bag"] = "Bolsa de Almas",
 	Staff = "Bastón",
 	Staves = "Bastones",
@@ -1077,7 +1077,7 @@ elseif GAME_LOCALE == "esMX" then
 	["Two-Handed Axes"] = "Hachas a Dos Manos",
 	["Two-Handed Maces"] = "Mazas a Dos Manos",
 	["Two-Handed Swords"] = "Espadas a Dos Manos",
-	-- Undead = "",
+	Undead = "No-muerto", -- Needs review
 	Waist = "Cintura",
 	Wand = "Varita",
 	Wands = "Varitas",

@@ -766,7 +766,7 @@ do
 
 					local map_continent = _G.GetCurrentMapContinent()
 					if map_continent >= 1 then
-						expected_zone_name = select(map_continent, _G.GetMapContinents())
+						expected_zone_name = select(map_continent * 2, _G.GetMapContinents())
 					end
 				end
 				invalid_reason = L.FOUND_TAMABLE_WRONGZONE_FORMAT:format(npc_name, _G.GetRealZoneText(), expected_zone_name or L.FOUND_ZONE_UNKNOWN, expected_zone_id)
@@ -1221,10 +1221,12 @@ function private.GenerateTargetMacro(instanceid)
 		end
 	end
 
-	--Add any custom tracked mobs
-	for npc_id, npc_name in pairs(_G._NPCScanOptions.NPCs) do
-		if not _G._NPCScanOptions.IgnoreList.NPCs[npc_id] and _G._NPCScanOptions.NPCWorldIDs[npc_id] == private.LOCALIZED_CONTINENT_NAMES[continent_id] then
-			private.macrotext = private.MACRO_FORMAT_CUSTOM_MOB:format(private.macrotext, npc_name)
+	--Checks for custom mobs and then add them
+	if _G._NPCScanOptions.NPCs then
+		for npc_id, npc_name in pairs(_G._NPCScanOptions.NPCs) do
+			if not _G._NPCScanOptions.IgnoreList.NPCs[npc_id] and _G._NPCScanOptions.NPCWorldIDs[npc_id] == private.LOCALIZED_CONTINENT_NAMES[continent_id] then
+				private.macrotext = private.MACRO_FORMAT_CUSTOM_MOB:format(private.macrotext, npc_name)
+			end
 		end
 	end
 

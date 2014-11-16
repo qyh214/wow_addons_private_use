@@ -1,0 +1,12 @@
+tag z17c-release
+9f9dce2c51f14c8c5ecf601efdaee6a4bb43ef99
+Xuerian <sky.shell@gmail.com>
+2014-10-20 08:10:47 -0400
+
+Fix nil text error, push all the releases
+
+
+--------------------
+
+Xuerian:
+	- Group/Monitor: Fix nil text error, move FancyPlayerName into XLoot helpers

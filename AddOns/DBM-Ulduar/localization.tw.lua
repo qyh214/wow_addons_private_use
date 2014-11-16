@@ -1,4 +1,5 @@
 ﻿if GetLocale() ~= "zhTW" then return end
+
 local L
 
 -----------------------
@@ -74,7 +75,7 @@ L:SetMiscLocalization{
 	YellAir				= "給我們一點時間來準備建造砲塔。",
 	YellAir2			= "火熄了!讓我們重建砲塔!",
 	YellGround			= "快!她可不會在地面上待太久!",
-	EmotePhase2			= "再也飛不動了!"
+	EmotePhase2			= "%%s再也飛不動了!"
 }
 
 ----------------------------
@@ -122,7 +123,8 @@ L:SetTimerLocalization{
 L:SetWarningLocalization{
 	WarningPhasePunch		= "相位拳擊: >%s< - 第%d層",
 	WarnPhase2Soon			= "第2階段即將到來",
-	warnStarLow				= "崩陷之星血量低"
+	warnStarLow				= "崩陷之星血量低",
+	FirstPullNotice			= "檢測為第一次戰鬥，自動校正定時器。"
 }
 
 L:SetOptionLocalization{
@@ -213,7 +215,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	Pull		= "你將為擅闖付出代價!",
 	YellKill	= "我...我終於從他的掌控中...解脫了。"
 }
 
@@ -390,6 +391,7 @@ L:SetWarningLocalization{
 	WarnBrainPortalSoon				= "3秒後腦部傳送門",
 	SpecWarnFervor					= "你中了薩拉的熱誠",
 	SpecWarnFervorCast				= "薩拉的熱誠正在對你施放",
+	SpecWarnMaladyNear				= "你附近的%s中了心靈缺陷",
 	specWarnBrainPortalSoon			= "腦部傳送門即將到來"
 }
 
@@ -410,5 +412,6 @@ L:SetOptionLocalization{
 	WarningSqueeze					= "當你中了壓榨 (觸手綁人)時大喊",
 	NextPortal						= "為下一次傳送門顯示計時器",
 	ShowSaraHealth					= "顯示薩拉在第1階段的血量(必須有最少一名團隊成員設置目標或專注目標)",
+	SpecWarnMaladyNear				= "當你附近的人中了心靈缺陷時顯示特別警告",
 	MaladyArrow						= "當你附近的人中了$spell:63881時顯示DBM箭頭"
 }

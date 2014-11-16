@@ -2,12 +2,12 @@
 ## Title: Moncaí's |cff00ff00Equipment Compare|r
 ## Notes: Replacement for Equip Compare, by Moncaí
 ## Author: Moncaí
-## Version: 6.0.0
+## Version: 6.0.2
 ## X-Website: http://wow.curse.com/downloads/wow-addons/details/moncaicompare.aspx
 ## URL: http://wow.curse.com/downloads/wow-addons/details/moncaicompare.aspx
 ## RequiredDeps:
 ## OptionalDeps: 
-## X-Curse-Packaged-Version: v6.0.0
+## X-Curse-Packaged-Version: v6.0.2
 ## X-Curse-Project-Name: Moncai Compare
 ## X-Curse-Project-ID: moncaicompare
 ## X-Curse-Repository-ID: wow/moncaicompare/mainline

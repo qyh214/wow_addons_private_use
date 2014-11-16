@@ -1,0 +1,106 @@
+## Interface: 60000
+## Version: 6.0.2.1679-beta
+## X-ReleaseDate: "$Date: 2014-10-17 14:02:49 +0000 (Fri, 17 Oct 2014) $"
+## X-Curse-Packaged-Version: 6.0.2.1679-beta
+## X-Curse-Project-Name: Grid
+## X-Curse-Project-ID: grid
+## X-Curse-Repository-ID: wow/grid/mainline
+
+## Title: Grid
+## Notes: A compact grid of party/raid unit frames.
+## Notes-deDE: Ein kompakter Gitter von Gruppen- und Schlachtzugsfenstern.
+## Notes-esES: Una cuadrícula compacta de marcos de unidades para tu grupo o banda.
+## Notes-esMX: Una cuadrícula compacta de marcos de unidades para su grupo o banda.
+## Notes-frFR: Une grille compacte de fenêtres des unités de votre groupe ou raid.
+## Notes-itIT: Una griglia compatta di riquadri delle unità nel tuo gruppo o incursione.
+## Notes-ptBR: Uma grade compacta de quadros das unidades do grupo ou banda.
+## Notes-zhCN: 紧凑方格队伍/团队框架。
+## Notes-zhTW: 緊湊方格隊伍/團隊框架。
+
+## Author: Phanx, Pastamancer, Maia
+## X-Credits: Greltok, Jerry, jlam
+## X-Copyright: Copyright (c) 2006-2014 Pastamancer, Phanx. All rights reserved.
+## X-License: See the accompanying LICENSE file for details.
+## X-CompatibleLocales: enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW
+## X-Localizations: enUS, deDE, esES, esMX, frFR, koKR, ptBR, ruRU, zhCN, zhTW
+## X-Website: http://www.wowace.com/addons/grid/
+## X-AceForum: 2525
+## X-WoWI-ID: 5747
+
+## OptionalDeps: Ace3, LibDBIcon-1.0, LibDualSpec-1.0, LibResInfo-1.0, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, AceGUI-3.0-Spell-EditBox, UTF8, Clique, SharedMedia
+## SavedVariables: GridDB
+
+#@no-lib-strip@
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\AceAddon-3.0\AceAddon-3.0.lua
+Libs\AceBucket-3.0\AceBucket-3.0.lua
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfigRegistry-3.0\AceConfigRegistry-3.0.lua
+Libs\AceConfigDialog-3.0\AceConfigDialog-3.0.lua
+Libs\AceConsole-3.0\AceConsole-3.0.lua
+Libs\AceConfigCmd-3.0\AceConfigCmd-3.0.lua
+Libs\AceDB-3.0\AceDB-3.0.lua
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.lua
+Libs\AceEvent-3.0\AceEvent-3.0.lua
+Libs\AceHook-3.0\AceHook-3.0.lua
+Libs\AceTimer-3.0\AceTimer-3.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+Libs\LibDualSpec-1.0\LibDualSpec-1.0.lua
+Libs\LibResInfo-1.0\LibResInfo-1.0.lua
+Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
+Libs\AceGUI-3.0-SharedMediaWidgets\widget.xml
+Libs\UTF8\utf8.lua
+#@end-no-lib-strip@
+
+Locales\Locale-de.lua
+Locales\Locale-es.lua
+Locales\Locale-fr.lua
+Locales\Locale-it.lua
+Locales\Locale-pt.lua
+Locales\Locale-ru.lua
+Locales\Locale-ko.lua
+Locales\Locale-zhCN.lua
+Locales\Locale-zhTW.lua
+
+Core.lua
+Roster.lua
+Layout.lua
+Layouts.lua
+Frame.lua
+Status.lua
+Help.lua
+
+Indicators\Alpha.lua
+Indicators\Bar.lua
+Indicators\Border.lua
+Indicators\Corner.lua
+Indicators\HealingBar.lua
+Indicators\Icon.lua
+Indicators\Text.lua
+
+Statuses\Absorbs.lua
+Statuses\Aggro.lua
+Statuses\Auras.lua
+Statuses\Group.lua
+Statuses\Heals.lua
+Statuses\Health.lua
+Statuses\Mana.lua
+Statuses\Mouseover.lua
+Statuses\Name.lua
+Statuses\RaidIcon.lua
+Statuses\Range.lua
+Statuses\ReadyCheck.lua
+Statuses\Resurrect.lua
+Statuses\Target.lua
+Statuses\Vehicle.lua
+Statuses\VoiceComm.lua
+
+#@debug@
+# Statuses\Role.lua
+#@end-debug@
+
+#@debug@
+# Statuses\new\GridAura.lua
+#@end-debug@

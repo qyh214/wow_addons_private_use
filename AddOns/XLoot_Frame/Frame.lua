@@ -1,4 +1,4 @@
-﻿--[[---------------------------------------
+--[[---------------------------------------
 	Loot button click hook
 	- row: Loot row
 	- button: Mouse button
@@ -65,6 +65,7 @@ local defaults = {
 		font_size_info = 10,
 		font_size_quantity = 10,
 		font_size_bottombuttons = 10,
+		font_flag = "OUTLINE",
 
 		loot_icon_size = 34,
 		loot_row_height = 30,
@@ -87,6 +88,7 @@ local defaults = {
 
 		autoloots = {
 			currency = 'never',
+			tradegoods = 'never',
 			quest = 'never',
 			list = 'solo',
 			all = 'never',
@@ -240,20 +242,6 @@ end
 --  >Rows
 --  >Loot frame
 
--- Instance prototyping
-local function Instance_New(self, new)
-	local new = new or {}
-	for k,v in pairs(self) do
-		if k ~= "New" then
-			if new[k] ~= nil then
-				new['_'..k] = new[k]
-			end
-			rawset(new, k, v)
-		end
-	end
-	return new
-end
-
 -- Universal events
 local function OnDragStart()
 	if opt.frame_draggable then
@@ -306,10 +294,9 @@ end
 local mouse_focus
 local BuildRow
 do
-	local RowPrototype = { New = Instance_New }
+	local RowPrototype = XLoot.NewPrototype()
 	-- Text helpers
-	local function smalltext(text, size, ext)
-		text:SetFont(opt.font, size or 10, ext or '')
+	local function smalltext(text)
 		text:SetDrawLayer'OVERLAY'
 		text:SetHeight(10)
 		text:SetJustifyH'LEFT'
@@ -403,13 +390,15 @@ do
 		self.frame_item:SetGradientColor(owner:GetColor('loot_color_gradient'))
 		self.text_info:SetTextColor(owner:GetColor('loot_color_info'))
 		self:SetAlpha(opt.loot_alpha)
+
 		
 		-- Text
 		self.text_name:SetFont(opt.font, opt.font_size_loot)
 		self.text_info:SetFont(opt.font, opt.font_size_info)
-		self.text_quantity:SetFont(opt.font, opt.font_size_quantity, 'outline')
-		self.text_bind:SetFont(opt.font, 8, 'outline')
-		self.text_locked:SetFont(opt.font, 9, 'outline')
+		self.text_quantity:SetFont(opt.font, opt.font_size_quantity, opt.font_flag)
+		self.text_bind:SetFont(opt.font, 8, opt.font_flag)
+		self.text_locked:SetFont(opt.font, 9, opt.font_flag)
+		self.text_locked:SetText(LOCKED) -- Can't set text until font is set
 
 		-- Resize fontstrings
 		AdjustFontstringSize(self.text_name)
@@ -565,13 +554,13 @@ do
 		row.text_bind = bind
 		row.text_locked = locked
 		row.text_quantity = quantity
-		
+
 		-- Setup fontstrings
-		smalltext(name, opt.font_size_loot)
-		smalltext(info, opt.font_size_info)
-		smalltext(bind, 8, 'outline')
-		smalltext(locked, 9, 'outline')
-		smalltext(quantity, opt.font_size_quantity, 'outline')
+		smalltext(name)
+		smalltext(info)
+		smalltext(bind)
+		smalltext(locked)
+		smalltext(quantity)
 		name:SetPoint('RIGHT', row, 'RIGHT', -4, 0)
 		info:SetPoint('TOPLEFT', name, 'BOTTOMLEFT', 8, 0)
 		info:SetPoint('TOPRIGHT', name, 'BOTTOMRIGHT')
@@ -582,7 +571,6 @@ do
 		quantity:SetPoint('BOTTOMRIGHT', -2, 2)
 		quantity:SetJustifyH('RIGHT')
 		locked:SetPoint('CENTER')
-		locked:SetText(LOCKED)
 		locked:SetTextColor(1, .2, .1)
 
 		-- Align frames (Dimensions set in UpdateAppearance)
@@ -624,7 +612,7 @@ end
 
 -- Build frame
 do
-	local FramePrototype = { New = Instance_New }
+	local FramePrototype = XLoot.NewPrototype()
 	-- Frame snapping
 	function FramePrototype:SnapToCursor()
 		local x, y = GetCursorPosition()
@@ -854,7 +842,7 @@ do
 			f:SetScript('OnDragStart', OnDragStart)
 			f:SetScript('OnDragStop', OnDragStop)
 			f:SetScript('OnHide', f.OnHide)
-			link:SetScript('OnClick', LinkClick)
+			link:SetScript('OnClick', f.LinkClick)
 
 			-- WoW now shows an error if any parameter is passed, and OnClick passes one
 			local function CloseLoot_Nil()
@@ -890,6 +878,7 @@ function XLootFrame:ParseAutolootList()
 	end
 end
 
+local _bag_slots = {}
 function XLootFrame:Update(in_options)
 	local numloot = GetNumLootItems()
 	if numloot == 0 then return nil end
@@ -906,52 +895,73 @@ function XLootFrame:Update(in_options)
 	
 	-- Autolooting options
 	local party = IsInGroup()
-	local auto, auto_items, auto_space = auto, auto_items
+	local auto, auto_items, bag_slots = auto, auto_items 
 	for k,v in pairs(opt.autoloots) do
 		auto[k] = v == 'always' or (v == 'solo' and not party)
 	end
 	-- Update rows
-	local max_quality, max_width, our_slot, slot, auto_space = 0, 0, 0
+	local max_quality, max_width, our_slot, slot = 0, 0, 0
 	for slot = 1, numloot do
 		local _, icon, name, quantity, quality, locked, isQuestItem, questId, isActive = pcall(GetLootSlotInfo, slot)
 		-- local texture, item, quantity, quality, locked, isQuestItem, questId, isActive = GetLootSlotInfo(slot)
 		if icon then -- Occasionally WoW will open loot with empty or invalid slots
 			local looted = false
-			
+			-- Row data
+			local is_item, link = (GetLootSlotType(slot) == LOOT_SLOT_ITEM)
+			if is_item then
+				link = GetLootSlotLink(slot)
+			end
+
 			-- Autolooting currency
 			local type = GetLootSlotType(slot)
-			if (auto.all or auto.currency) and type == LOOT_SLOT_MONEY or type == LOOT_SLOT_CURRENCY then
+			if (auto.all or auto.currency) and (type == LOOT_SLOT_MONEY or type == LOOT_SLOT_CURRENCY) then
 				LootSlot(slot)
 				looted = true
 				
-			-- Autolooting quest items
-			elseif auto.all or (auto.quest and isQuestItem) or (auto.list and auto_items[name]) then
-				-- Cache available space
-				if auto_space == nil then
-					local open = 0
-					for i = 0, NUM_BAG_SLOTS do
-						open = open + GetContainerNumFreeSlots(i)
+			-- Autolooting items
+			else
+				-- TODO: Pass on to row update
+				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(link or name)
+				if auto.all or (auto.quest and isQuestItem) or (auto.list and auto_items[name]) or (auto.tradegoods and itemType == 'Trade Goods') then
+
+					-- Cache available space
+					--  Specific bag types make this a bit more annoying
+					if not bag_slots then
+						bag_slots = wipe(_bag_slots)
+						for i = 0, NUM_BAG_SLOTS do
+							local open, family = GetContainerNumFreeSlots(i)
+							if family then
+								bag_slots[family] = bag_slots[family] and bag_slots[family] + open or open
+							end
+						end
 					end
-					auto_space = open
-				end
-				-- We have room
-				if auto_space > 0 then
-					LootSlot(slot)
-					auto_space = auto_space - 1
-						-- This could prevent autolooting more quest items from the same loot
-						-- but is faster than checking stack information each time
-						-- and will only affect this loot
-					looted = true
-				-- We might have a partial stack
-				else
-					local cur = GetItemCount(name)
-					local loot = false
-					if cur > 0 then
-						local stack = select(8, GetItemInfo(name))
-						local partial = cur % stack
-						if partial + quantity <= stack then
+
+					-- Simple quest item
+					local family = GetItemFamily(link)
+					if not family and isQuestItem then
+						LootSlot(slot)
+						looted = true
+					else
+						-- We have room
+						family = (family and family <= 4096) and family or 0
+						if bag_slots[0] > 0 or (bag_slots[family] and bag_slots[family] > 0) then
 							LootSlot(slot)
 							looted = true
+							-- Update remaining space
+							family = bag_slots[family] and family or 0 
+							bag_slots[family] = bag_slots[family] - 1
+
+						-- Fits with existing items?
+						else
+							local cur = GetItemCount(link)
+							if cur > 0 then
+								-- local stack = select(8, GetItemInfo(name))
+								local partial = cur % itemStackCount
+								if partial + quantity <= itemStackCount then
+									LootSlot(slot)
+									looted = true
+								end
+							end
 						end
 					end
 				end
@@ -964,11 +974,6 @@ function XLootFrame:Update(in_options)
 				slots[our_slot] = row -- Place in active list
 				
 				--local icon, name, quantity, quality, locked, isQuestItem, questId, isActive = GetLootSlotInfo(slot)
-				-- Row data
-				local is_item, link = (GetLootSlotType(slot) == LOOT_SLOT_ITEM)
-				if is_item then
-					link = GetLootSlotLink(slot)
-				end
 				
 				-- Default UI and tooltip data
 				row.item = link

@@ -1,0 +1,28 @@
+------------------------------------------------------------------------
+r40 | moncai | 2014-10-30 21:21:10 +0000 (Thu, 30 Oct 2014) | 1 line
+Changed paths:
+   A /tags/v6.0.2 (from /trunk:39)
+
+Tagging as v6.0.2
+------------------------------------------------------------------------
+r39 | moncai | 2014-10-30 21:20:37 +0000 (Thu, 30 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/!MoncaiCompare.toc
+   M /trunk/EncounterJournal.lua
+
+Dungeon Journal Tooltip fix
+------------------------------------------------------------------------
+r37 | moncai | 2014-10-17 15:23:53 +0000 (Fri, 17 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/!MoncaiCompare.lua
+   M /trunk/!MoncaiCompare.toc
+   M /trunk/EncounterJournal.lua
+
+Dungeon Journal fix
+------------------------------------------------------------------------
+r35 | moncai | 2014-10-15 20:39:18 +0000 (Wed, 15 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/!MoncaiCompare.toc
+
+Version update for WoD
+------------------------------------------------------------------------

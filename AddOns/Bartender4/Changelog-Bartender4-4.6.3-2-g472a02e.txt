@@ -1,0 +1,3 @@
+Hendrik Leppkes:
+	- Move from a slot lookup table to a spell override table
+	- Build a lookup table for spell id -> spell book slot, since FindSpellBookSlotBySpellID doesn't work reliably for all spells.

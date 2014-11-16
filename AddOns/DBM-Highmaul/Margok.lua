@@ -1,7 +1,8 @@
 local mod	= DBM:NewMod(1197, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
+local Yike	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 11811 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11833 $"):sub(12, -3))
 --mod:SetCreatureID(71859)
 mod:SetEncounterID(1705)
 mod:SetZone()
@@ -197,6 +198,7 @@ function mod:SPELL_CAST_START(args)
 			timerMarkOfChaos:Start(targetName)
 			if UnitIsUnit("boss1target", "player") then
 				specWarnMarkOfChaos:Show()
+				--Yike:Play("runaway")
 			else
 				specWarnMarkOfChaosOther:Show(targetName)
 			end
@@ -271,7 +273,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		if self.Options.SetIconOnBranded then
-			self:SetIcon(1, args.destName)--TODO, find out number of targets and add
+			self:SetIcon(args.destName, 1)--TODO, find out number of targets and add
 		end
 	elseif spellId == 158553 then
 		local amount = args.amount or 1
