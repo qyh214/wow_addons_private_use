@@ -19,11 +19,6 @@ local Roster = Grid:GetModule("GridRoster")
 local GetLootMethod, UnitAffectingCombat, UnitIsGroupAssistant, UnitIsGroupLeader, UnitIsUnit
     = GetLootMethod, UnitAffectingCombat, UnitIsGroupAssistant, UnitIsGroupLeader, UnitIsUnit
 
--- TEMPORARY:
-L["Group Leader ABBR"] = "L"
-L["Group Assistant ABBR"] = "A"
-L["Master Looter ABBR"] = "M"
-
 local GridStatusName = Grid:NewStatusModule("GridStatusGroup")
 GridStatusName.menuName = L["Group"]
 GridStatusName.options = false
@@ -32,30 +27,30 @@ GridStatusName.defaultDB = {
 	leader = {
 		enable = true,
 		priority = 1,
-		text = L["Group Leader ABBR"],
-		color = { r = 0.65, g = 0.65, b = 1, a = 1 },
+		text = L["Group Leader ABBREVIATION"],
+		color = { r = 0.65, g = 0.65, b = 1, a = 1, ignore = true },
 		hideInCombat = true,
 	},
 	assistant = {
 		enable = true,
 		priority = 1,
-		text = L["Group Assistant ABBR"],
-		color = { r = 1, g = 0.75, b = 0.5, a = 1 },
+		text = L["Group Assistant ABBREVIATION"],
+		color = { r = 1, g = 0.75, b = 0.5, a = 1, ignore = true },
 		hideInCombat = true,
 	},
 	master_looter = {
 		enable = true,
 		priority = 1,
-		text = L["Master Looter ABBR"],
-		color = { r = 1, g = 1, b = 0.4, a = 1 },
+		text = L["Master Looter ABBREVIATION"],
+		color = { r = 1, g = 1, b = 0.4, a = 1, ignore = true },
 		hideInCombat = true,
 	},
 }
 
 function GridStatusName:PostInitialize()
-	self:RegisterStatus("leader", L["Group Leader"], nil, true)
-	self:RegisterStatus("assistant", L["Group Assistant"], nil, true)
-	self:RegisterStatus("master_looter", L["Master Looter"], nil, true)
+	self:RegisterStatus("leader", L["Group Leader"])
+	self:RegisterStatus("assistant", L["Group Assistant"])
+	self:RegisterStatus("master_looter", L["Master Looter"])
 end
 
 function GridStatusName:OnStatusEnable(status)
@@ -161,7 +156,7 @@ function GridStatusName:UpdateAllUnits()
 				looterDB.text,
 				nil,
 				nil,
-				"Interface\\GroupFrame\\UI-Group-AssistantIcon"
+				"Interface\\GroupFrame\\UI-Group-MasterLooter"
 			)
 		else
 			self.core:SendStatusLost(guid, "master_looter")

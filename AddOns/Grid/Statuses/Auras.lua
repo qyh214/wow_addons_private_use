@@ -124,14 +124,14 @@ end
 
 GridStatusAuras.defaultDB = {
 	advancedOptions = false,
-
+--[[
 	["boss_aura"] = {
 		desc = L["Boss Aura"],
 		color = { r = 1, g = 0, b = 0, a = 1 },
 		priority = 90,
 		order = 20,
 	},
-
+]]
 	-- Debuff Types
 	["dispel_curse"] = {
 		desc = format(L["Debuff type: %s"], L["Curse"]),
@@ -353,6 +353,9 @@ GridStatusAuras.extraOptions = {}
 function GridStatusAuras:PostInitialize()
 	self:RegisterStatuses()
 
+	-- Wasn't supposed to be released yet, kill it with fire.
+	self.db.boss_aura = nil
+
 	-- Upgrade old localized default status keynames to new locale-independent ones:
 	for status, settings in pairs(GridStatusAuras.defaultDB) do
 		if spell_names[status] and (settings.buff or settings.debuff) then
@@ -519,10 +522,10 @@ function GridStatusAuras:RegisterStatuses()
 						end
 					end
 				end
-				if status == "boss_aura" then
+				--[[if status == "boss_aura" then
 					self:RegisterStatus(status, settings.desc, { text = false }, false, settings.order)
-				
-				elseif settings.buff or settings.debuff or self.defaultDB[status] then
+
+				else]] if settings.buff or settings.debuff or self.defaultDB[status] then
 					local name = settings.text
 					local desc = settings.desc or name
 					local isBuff = not not settings.buff
@@ -998,7 +1001,6 @@ end
 function GridStatusAuras:UpdateDispellable()
 	if PLAYER_CLASS == "DRUID" then
 		PlayerCanDispel.Curse   = IsPlayerSpell(88423) or IsPlayerSpell(2782) -- Nature's Cure / Remove Corruption
-		PlayerCanDispel.Disease = IsPlayerSpell(122288) -- Cleanse, via Symbiosis cast on a paladin
 		PlayerCanDispel.Magic   = IsPlayerSpell(88423)
 		PlayerCanDispel.Poison  = IsPlayerSpell(88423) or IsPlayerSpell(2782) -- RC is base, but doesn't return true for NC
 
@@ -1030,7 +1032,8 @@ function GridStatusAuras:UpdateDispellable()
 		PlayerCanDispel.Magic   = IsPlayerSpell(77130) -- Purify Spirit
 
 	elseif PLAYER_CLASS == "WARLOCK" then
-		PlayerCanDispel.Magic   = IsPlayerSpell(115276, true) or IsPlayerSpell(89808, true) -- Sear Magic (Fel Imp) or Singe Magic (Imp)
+		PlayerCanDispel.Magic   = IsPlayerSpell(115276, true) or IsPlayerSpell(89808, true) or IsPlayerSpell(132411)
+		-- Sear Magic (Fel Imp) or Singe Magic (Imp) or Singe Magic (via Grimoire of Sacrifice) -- NEEDS CHECK
 
 	end
 
@@ -1616,9 +1619,11 @@ function GridStatusAuras:ScanUnitAuras(event, unit, guid)
 			if debuff_names[name] then
 				debuff_names_seen[name] = true
 				self:UnitGainedDebuff(guid, class, name, rank, icon, count, debuffType, duration, expirationTime, casterUnit, canStealOrPurge, shouldConsolidate, spellID, canApply, isBossAura, isCastByPlayer)
+			--[[
 			elseif isBossAura then
 				seenBossAura = true
 				self:UnitGainedBossDebuff(guid, class, name, rank, icon, count, debuffType, duration, expirationTime, casterUnit, canStealOrPurge, shouldConsolidate, spellID, canApply, isBossAura, isCastByPlayer)
+			]]
 			elseif debuff_types[debuffType] then
 				-- elseif so that a named debuff doesn't trigger the type status
 				debuff_types_seen[debuffType] = true
@@ -1660,10 +1665,10 @@ function GridStatusAuras:ScanUnitAuras(event, unit, guid)
 			debuff_types_seen[debuffType] = nil
 		end
 	end
-	
+--[[
 	if not seenBossAura then
 		self:UnitLostBossDebuff(guid, class)
 	end
-
+]]
 	self:ResetDurationTimer(self:HasActiveDurations())
 end

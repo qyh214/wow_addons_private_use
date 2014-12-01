@@ -9,8 +9,8 @@ function TitanPanelVolumeButton_OnLoad(self)
 		id = TITAN_VOLUME_ID,
 		category = "Built-ins",
 		version = TITAN_VERSION,
-		menuText = L["TITAN_VOLUME_MENU_TEXT"], 
-		tooltipTitle = L["TITAN_VOLUME_TOOLTIP"], 
+		menuText = L["TITAN_VOLUME_MENU_TEXT"],
+		tooltipTitle = L["TITAN_VOLUME_TOOLTIP"],
 		tooltipTextFunction = "TitanPanelVolumeButton_GetTooltipText",
 		iconWidth = 32,
 		iconButtonWidth = 18,		
@@ -89,7 +89,7 @@ function TitanPanelMasterVolumeControlSlider_OnShow(self)
 	else
 		TitanPanelVolumeControlFrame:ClearAllPoints();
 		TitanPanelVolumeControlFrame:SetPoint("BOTTOMLEFT", TITAN_PANEL_DISPLAY_PREFIX..TitanUtils_GetWhichBar(TITAN_VOLUME_ID), "TOPLEFT", UIParent:GetRight() - TitanPanelVolumeControlFrame:GetWidth(), 0);
-	end   
+	end
 	
 end
 
@@ -134,7 +134,7 @@ function TitanPanelMusicVolumeControlSlider_OnLeave(self)
 	TitanUtils_StartFrameCounting(self:GetParent(), TITAN_VOLUME_FRAME_SHOW_TIME);
 end
 
-function TitanPanelMusicVolumeControlSlider_OnShow(self)        
+function TitanPanelMusicVolumeControlSlider_OnShow(self)
 	_G[self:GetName().."Text"]:SetText(TitanPanelVolume_GetVolumeText(GetCVar("Sound_MusicVolume")));
 	_G[self:GetName().."High"]:SetText(L["TITAN_VOLUME_CONTROL_LOW"]);
 	_G[self:GetName().."Low"]:SetText(L["TITAN_VOLUME_CONTROL_HIGH"]);

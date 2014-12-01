@@ -1,5 +1,5 @@
 ## Interface: 60000
-## X-Curse-Packaged-Version: v2.0.3
+## X-Curse-Packaged-Version: v2.0.4
 ## X-Curse-Project-Name: Simple iLevel - Alts
 ## X-Curse-Project-ID: simple-ilevel-alts
 ## X-Curse-Repository-ID: wow/simple-ilevel-alts/mainline
@@ -9,8 +9,8 @@
 
 
 ## Author: DrJeckel of Hyjal-US
-## Version: v2.0.3
-## LastUpdate: 2014-10-16T06:31:04Z
+## Version: v2.0.4
+## LastUpdate: 2014-11-01T05:39:24Z
 ## Dependencies: SimpleILevel
 ## SavedVariables: SIL_Alts
 ## LoadOnDemand: 1

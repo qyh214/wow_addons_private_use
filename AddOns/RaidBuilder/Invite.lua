@@ -49,7 +49,7 @@ function Invite:OnInitialize()
 end
 
 ---- Cache
-function Invite:OnEnable(event)
+function Invite:OnEnable()
     local realms = GetAutoCompleteRealms() or {(GetRealmName():gsub('%s+', ''))}
     for i, v in ipairs(realms) do
         self.realms[v] = true
@@ -73,13 +73,16 @@ function Invite:CacheBNetToons()
     wipe(self.accepted)
     wipe(self.bnToons)
     wipe(self.bnFriends)
+
     for i = 1, BNGetNumFriends() do
-        local id, _, battleTag, _, _, _, _, isOnline = BNGetFriendInfo(i)
+        local id, pid, battleTag, _, _, _, _, isOnline = BNGetFriendInfo(i)
         if isOnline then
             for toonIndex = 1, BNGetNumFriendToons(i) do
                 local _, toonName, client, realmName, _, faction = BNGetFriendToonInfo(i, toonIndex)
                 if client == 'WoW' and faction == UnitFactionGroup('player') then
-                    local name = Ambiguate(GetFullName(toonName, (realmName:gsub('%s+', ''))), 'none')
+                    realmName = realmName:gsub('%s', '')
+                    realmName = REALM_EN_MAP[realmName:lower()] or realmName
+                    local name = Ambiguate(GetFullName(toonName, realmName), 'none')
                     
                     battleTag = battleTag or ''
 
@@ -90,7 +93,13 @@ function Invite:CacheBNetToons()
         end
         if battleTag and battleTag ~= '' then
             self.bnFriends[battleTag] = true
+
+            if self.acceptedPids[pid] then
+                BNSetFriendNote(id, L['集合石自动添加的好友'])
+            end
         end
+
+        self.igonredPids[pid] = nil
     end
 end
 
@@ -136,7 +145,7 @@ end
 
 function Invite:BN_FRIEND_INVITE_ADDED()
     local now = time()
-    local hasAppied = AppliedCache:Count() > 0
+    local hasAppied = AppliedCache:IsAnyApplied()
 
     for i = 1, BNGetNumFriendInvites() do
         local id, pid, isBattleTag, _, stamp = BNGetFriendInviteInfo(i)
@@ -149,6 +158,10 @@ function Invite:BN_FRIEND_INVITE_ADDED()
         else
             self.igonredPids[pid] = true
         end
+    end
+
+    if self.lastInviteRequest ~= now and GetCVarBool('showToastWindow') and GetCVarBool('showToastFriendRequest') then
+        BNToastFrame_AddToast(5)
     end
 end
 
@@ -172,30 +185,30 @@ function Invite:BNet_DisableToasts()
     self:UnregisterEvent('BN_FRIEND_ACCOUNT_ONLINE')
 end
 
-function Invite:BNToastFrame_Show()
-    if BNToastFrame.toastType == 5 and BNToastFrame.toastData == 'RaidBuilder-Web' then
-        BNToastFrameDoubleLine:SetText(L['收到一个|cff00ffff集合石|r预约活动请求，请验证是否合法。'])
-    end
-end
+-- function Invite:BNToastFrame_Show()
+--     if BNToastFrame.toastType == 5 and BNToastFrame.toastData == 'RaidBuilder-Web' then
+--         BNToastFrameDoubleLine:SetText(L['收到一个|cff00ffff集合石|r预约活动请求，请验证是否合法。'])
+--     end
+-- end
 
-function Invite:PendingList_Scroll(offset)
-    for i = 1, PENDING_INVITES_TO_DISPLAY do
-        local button = _G['FriendsFramePendingButton'..i]
-        if button and button.index then
-            self:FormatPendingButton(button, self:GetFriendInviteInfo(button.index))
-        end
-    end
-end
+-- function Invite:PendingList_Scroll(offset)
+--     for i = 1, PENDING_INVITES_TO_DISPLAY do
+--         local button = _G['FriendsFramePendingButton'..i]
+--         if button and button.index then
+--             self:FormatPendingButton(button, self:GetFriendInviteInfo(button.index))
+--         end
+--     end
+-- end
 
-function Invite:FormatPendingButton(button, tag, id, stamp, leaderName, selfName, eventId, eventSource)
-    if tag == 'RaidBuilder-Web' then
-        button.webInviteButton = button.webInviteButton or WebInviteButton:New(button)
-        button.webInviteButton:SetInfo(stamp, leaderName, selfName, eventId, eventSource)
-        button.webInviteButton:Show()
-    elseif button.webInviteButton then
-        button.webInviteButton:Hide()
-    end
-end
+-- function Invite:FormatPendingButton(button, tag, id, stamp, leaderName, selfName, eventId, eventSource)
+--     if tag == 'RaidBuilder-Web' then
+--         button.webInviteButton = button.webInviteButton or WebInviteButton:New(button)
+--         button.webInviteButton:SetInfo(stamp, leaderName, selfName, eventId, eventSource)
+--         button.webInviteButton:Show()
+--     elseif button.webInviteButton then
+--         button.webInviteButton:Hide()
+--     end
+-- end
 
 -- GroupInviteResult
 
@@ -276,6 +289,16 @@ function Invite:GetMemberStatus(name, battleTag)
     return info.status
 end
 
+function Invite:ClearRaidBuilderFriend()
+    for i = 1, BNGetNumFriends() do
+        local id,_,_,_,_,_,_,_,_,_,_,_,note = BNGetFriendInfo(i)
+        if note == L['集合石自动添加的好友'] then
+            BNSetFriendNote(id, '')
+            BNRemoveFriend(id)
+        end
+    end
+end
+
 ---- Queue
 
 function Invite:EnQueue(name, battleTag, isWeb, eventId, eventSource)
@@ -328,7 +351,7 @@ function Invite:IsCanInvite(name)
 end
 
 function Invite:IsInGroup(name)
-    return UnitInRaid(name) or UnitInParty(name) or UnitIsUnit('player', name)
+    return UnitInGroup(name) or UnitIsUnit('player', name)
 end
 
 function Invite:IsBNetFriend(battleTag)

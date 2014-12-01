@@ -31,14 +31,6 @@ local filterProto = setmetatable({
 }, { __index = addon.moduleProto })
 addon.filterProto = filterProto
 
-function filterProto:OnEnable()
-	addon:UpdateFilters()
-end
-
-function filterProto:OnDisable()
-	addon:UpdateFilters()
-end
-
 function filterProto:GetPriority()
 	return addon.db.profile.filterPriorities[self.filterName] or self.priority or 0
 end
@@ -68,27 +60,46 @@ local function CompareFilters(a, b)
 	end
 end
 
-local activeFilters = {}
-local allFilters = {}
-function addon:UpdateFilters()
-	wipe(allFilters)
-	for name, filter in self:IterateModules() do
-		if filter.isFilter then
-			tinsert(allFilters, filter)
-		end
+local GetAllFilters, GetActiveFilters
+do
+	local activeFilters
+	local allFilters
+
+	function addon:UpdateFilters()
+		activeFilters, allFilters = nil, nil
+		self:SendMessage('AdiBags_FiltersChanged')
 	end
-	tsort(allFilters, CompareFilters)
-	wipe(activeFilters)
-	for i, filter in ipairs(allFilters) do
-		if filter:IsEnabled() then
-			tinsert(activeFilters, filter)
+
+	function GetAllFilters()
+		if allFilters then
+			return allFilters
 		end
+		allFilters = {}
+		for name, filter in addon:IterateModules() do
+			if filter.isFilter then
+				tinsert(allFilters, filter)
+			end
+		end
+		tsort(allFilters, CompareFilters)
+		return allFilters
 	end
-	self:SendMessage('AdiBags_FiltersChanged')
+
+	function GetActiveFilters()
+		if activeFilters then
+			return activeFilters
+		end
+		activeFilters = {}
+		for i, filter in ipairs(GetAllFilters()) do
+			if filter:IsEnabled() then
+				tinsert(activeFilters, filter)
+			end
+		end
+		return activeFilters
+	end
 end
 
 function addon:IterateFilters()
-	return ipairs(allFilters)
+	return ipairs(GetAllFilters())
 end
 
 function addon:RegisterFilter(name, priority, Filter, ...)
@@ -106,13 +117,17 @@ function addon:RegisterFilter(name, priority, Filter, ...)
 	return filter
 end
 
+function addon:OnModuleCreated(module)
+	self:UpdateFilters()
+end
+
 --------------------------------------------------------------------------------
 -- Filtering process
 --------------------------------------------------------------------------------
 
 local safecall = addon.safecall
 function addon:Filter(slotData, defaultSection, defaultCategory)
-	for i, filter in ipairs(activeFilters) do
+	for i, filter in ipairs(GetActiveFilters()) do
 		local sectionName, category = safecall(filter.Filter, filter, slotData)
 		if sectionName then
 			--[===[@alpha@

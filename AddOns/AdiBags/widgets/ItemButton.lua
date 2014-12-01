@@ -63,6 +63,7 @@ function buttonProto:OnCreate()
 	if self.NewItemTexture then
 		self.NewItemTexture:Hide()
 	end
+	self.SplitStack = nil -- Remove the function set up by the template
 end
 
 function buttonProto:OnAcquire(container, bag, slot)
@@ -92,6 +93,10 @@ end
 
 function buttonProto:IsLocked()
 	return select(3, GetContainerItemInfo(self.bag, self.slot))
+end
+
+function buttonProto:SplitStack(split)
+	SplitContainerItem(self.bag, self.slot, split)
 end
 
 --------------------------------------------------------------------------------
@@ -356,7 +361,7 @@ end
 function buttonProto:UpdateBorder(isolatedEvent)
 	local texture, r, g, b, a, x1, x2, y1, y2, blendMode
 	if self.hasItem then
-		texture, r, g, b, a, x1, x2, y1, y2, blendMode = GetBorder(self.bag, self.slot, self.itemId, addon.db.profile)
+		texture, r, g, b, a, x1, x2, y1, y2, blendMode = GetBorder(self.bag, self.slot, self.itemLink or self.itemId, addon.db.profile)
 	end
 	if not texture then
 		self.IconQuestTexture:Hide()
@@ -374,7 +379,7 @@ function buttonProto:UpdateBorder(isolatedEvent)
 		border:Show()
 	end
 	if self.JunkIcon then
-		local quality = self.hasItem and select(3, GetItemInfo(self.itemId))
+		local quality = self.hasItem and select(3, GetItemInfo(self.itemLink or self.itemId))
 		self.JunkIcon:SetShown(quality == LE_ITEM_QUALITY_POOR and addon:GetInteractingWindow() == "MERCHANT")
 	end
 	if isolatedEvent then

@@ -27,7 +27,7 @@ local UnitExists = UnitExists
 local UnitName = UnitName
 local UnitGUID = UnitGUID
 
-local my_realm = GetRealmName()
+local _, my_realm = UnitFullName("player")
 
 ------------------------------------------------------------------------
 
@@ -41,7 +41,6 @@ local roster = {
 
 -- for debugging
 GridRoster.roster = roster
-
 
 ------------------------------------------------------------------------
 
@@ -282,7 +281,16 @@ do
 		if IsInRaid() then
 			if instanceType == "raid" then
 				local _, _, difficultyID, _, maxPlayers = GetInstanceInfo()
-				lastRaidType = difficultyID == 14 and "raid_flex" or maxPlayers == 10 and "raid_10" or maxPlayers == 25 and "raid_25" or "raid_40"
+				if difficultyID == DIFFICULTY_PRIMARYRAID_LFR or difficultyID == DIFFICULTY_PRIMARYRAID_NORMAL or difficultyID == DIFFICULTY_PRIMARYRAID_HEROIC then
+					lastRaidType = "raid_flex"
+				elseif maxPlayers == 20 or maxPlayers == 25 then
+					-- TEMPORARY, use 25 player raid layout for mythic
+					lastRaidType = "raid_25"
+				elseif maxPlayers == 10 then
+					lastRaidType = "raid_10"
+				else
+					lastRaidType = "raid_40"
+				end
 				return lastRaidType
 			else
 				return lastRaidType or "raid_40"

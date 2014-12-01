@@ -7,14 +7,10 @@ GridFrame:RegisterIndicator("healingBar", L["Healing Bar"],
 	-- New
 	function(frame)
 		local bar = CreateFrame("StatusBar", nil, frame)
+		bar:Hide()
 
 		bar:SetStatusBarTexture("Interface\\Addons\\Grid\\gradient32x32")
 		bar.texture = bar:GetStatusBarTexture()
-
-		bar:SetStatusBarColor(0, 1, 0, 0.5)
-		bar:SetMinMaxValues(0, 1)
-		bar:SetValue(0)
-		bar:Hide()
 
 		return bar
 	end,
@@ -29,9 +25,12 @@ GridFrame:RegisterIndicator("healingBar", L["Healing Bar"],
 		local texture = Media:Fetch("statusbar", profile.texture) or "Interface\\Addons\\Grid\\gradient32x32"
 
 		local frame = self.__owner
+		self:SetAllPoints(frame.indicators.bar)
+	--	self:SetPoint("BOTTOMLEFT", frame.indicators.bar.texture, "TOPLEFT")
+	--	self:SetPoint("BOTTOMRIGHT", frame.indicators.bar.texture, "TOPRIGHT")
 
-		self:SetPoint("BOTTOMLEFT", frame.indicators.bar.texture, "TOPLEFT")
-		self:SetPoint("BOTTOMRIGHT", frame.indicators.bar.texture, "TOPRIGHT")
+		local level, sublevel = self.texture:GetDrawLayer()
+		frame.indicators.bar.texture:SetDrawLayer(level, sublevel + 2)
 
 		self:SetAlpha(profile.healingBar_intensity)
 		self:SetOrientation(profile.orientation)
@@ -46,10 +45,10 @@ GridFrame:RegisterIndicator("healingBar", L["Healing Bar"],
 
 	-- SetStatus
 	function(self, color, text, value, maxValue, texture, texCoords, count, start, duration)
-		-- TODO: update this!
-		if true or not value or not maxValue or value == 0 then
+		if not value or not maxValue or value == 0 or maxValue == 0 then
 			return self:Hide()
 		end
+		--print("SetStatus", self.__id, self.__owner.unit, value, maxValue, format("%0.2f%%", value / maxValue * 100))
 
 		local profile = GridFrame.db.profile
 		local frame = self.__owner
@@ -66,14 +65,23 @@ GridFrame:RegisterIndicator("healingBar", L["Healing Bar"],
 		end
 
 		if profile.healingBar_useStatusColor then
-			--print("SetStatus", self.__id, self.__owner.unit)
 			if profile.invertBarColor then
 				self:SetStatusBarColor(color.r, color.g, color.b)
 			else
 				local mu = profile.healingBar_intensity
 				self:SetStatusBarColor(color.r * mu, color.g * mu, color.b * mu)
 			end
+		else
+			local r, g, b = frame.indicators.bar:GetStatusBarColor()
+			if profile.invertBarColor then
+				self:SetStatusBarColor(r, g, b)
+			else
+				local mu = profile.healingBar_intensity
+				self:SetStatusBarColor(r * mu, g * mu, b * mu)
+			end
 		end
+
+		self:Show()
 	end,
 
 	-- ClearStatus

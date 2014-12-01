@@ -89,8 +89,17 @@ function GridFrame.prototype:ResetIndicator(id)
 end
 
 function GridFrame.prototype:ResetAllIndicators()
-	for _, indicator in pairs(self.indicators) do
-		indicator:Reset()
+	-- Reset default indicators first:
+	for id, indicator in pairs(self.indicators) do
+		if defaultOrder[id] then
+			indicator:Reset()
+		end
+	end
+	-- Then custom ones:
+	for id, indicator in pairs(self.indicators) do
+		if not defaultOrder[id] then
+			indicator:Reset()
+		end
 	end
 end
 
@@ -101,7 +110,10 @@ local initialConfigSnippet = [[
    self:SetHeight(%d)
    self:SetAttribute("initial-width", %d)
    self:SetAttribute("initial-height", %d)
-   self:SetAttribute("type2", %s)
+   local attr = self:GetAttribute("type2")
+   if attr == "togglemnu" or attr == nil then
+      self:SetAttribute("type2", %s)
+   end
 ]]
 
 function GridFrame:GetInitialConfigSnippet()
@@ -143,16 +155,16 @@ end
 -- shows the default unit tooltip
 function GridFrame.prototype:OnEnter()
 	local unit = self.unit
-	local showTooltip = GridFrame.db.profile.showTooltip
+	GridFrame:SendMessage("Grid_UnitFrame_OnEnter", unit, self.unitGUID)
 
+	local showTooltip = GridFrame.db.profile.showTooltip
 	if unit and UnitExists(unit) and (showTooltip == "Always" or (showTooltip == "OOC" and (not InCombatLockdown() or UnitIsDeadOrGhost(unit)))) then
 		UnitFrame_OnEnter(self)
-	else
-		self:OnLeave()
 	end
 end
 
 function GridFrame.prototype:OnLeave()
+	GridFrame:SendMessage("Grid_UnitFrame_OnLeave", self.unit, self.unitGUID)
 	UnitFrame_OnLeave(self)
 end
 
@@ -171,6 +183,7 @@ function GridFrame.prototype:OnAttributeChanged(name, value)
 			end
 		elseif name == "type2" then
 			local wantmenu = GridFrame.db.profile.rightClickMenu
+			--print(self.unit, "OnAttributeChanged", name, value, wantmenu)
 			if wantmenu and (not value or value == "") then
 				self:SetAttribute("type2", "togglemenu")
 			elseif value == "togglemenu" and not wantmenu then
@@ -185,7 +198,7 @@ end
 local COLOR_WHITE = { r = 1, g = 1, b = 1, a = 1 }
 local COORDS_FULL = { left = 0, right = 1, top = 0, bottom = 1 }
 
-function GridFrame.prototype:SetIndicator(id, color, text, value, maxValue, texture, start, duration, stack, texCoords)
+function GridFrame.prototype:SetIndicator(id, color, text, value, maxValue, texture, start, duration, count, texCoords)
 	local profile = GridFrame.db.profile
 
 	if not color then
@@ -331,7 +344,12 @@ GridFrame.defaultDB = {
 
 ------------------------------------------------------------------------
 
+local reloadHandle
+
 function GridFrame:Grid_ReloadLayout()
+	if reloadHandle then
+		reloadHandle = self:CancelTimer(reloadHandle) -- returns nil
+	end
 	self:SendMessage("Grid_ReloadLayout")
 end
 
@@ -360,41 +378,39 @@ GridFrame.options = {
 				frameWidth = {
 					name = L["Frame Width"],
 					desc = L["Adjust the width of each unit's frame."],
-					order = 10, width = "double",
+					order = 1, width = "double",
 					type = "range", min = 10, max = 100, step = 1,
 					set = function(info, v)
 						GridFrame.db.profile.frameWidth = v
-						--GridFrame:ResizeAllFrames()
-						GridFrame:ScheduleTimer("Grid_ReloadLayout", 0.5)
+						GridFrame:ResizeAllFrames()
 					end,
 				},
 				frameHeight = {
 					name = L["Frame Height"],
 					desc = L["Adjust the height of each unit's frame."],
-					order = 20, width = "double",
+					order = 2, width = "double",
 					type = "range", min = 10, max = 100, step = 1,
 					set = function(info, v)
 						GridFrame.db.profile.frameHeight = v
-						--GridFrame:ResizeAllFrames()
-						GridFrame:ScheduleTimer("Grid_ReloadLayout", 0.5)
+						GridFrame:ResizeAllFrames()
 					end,
 				},
 				borderSize = {
 					name = L["Border Size"],
 					desc = L["Adjust the size of the border indicators."],
-					order = 30, width = "double",
+					order = 3, width = "double",
 					type = "range", min = 1, max = 9, step = 1,
 				},
 				cornerSize = {
 					name = L["Corner Size"],
 					desc = L["Adjust the size of the corner indicators."],
-					order = 40, width = "double",
+					order = 4, width = "double",
 					type = "range", min = 1, max = 20, step = 1,
 				},
 				showTooltip = {
 					name = L["Show Tooltip"],
 					desc = L["Show unit tooltip.  Choose 'Always', 'Never', or 'OOC'."],
-					order = 50, width = "double",
+					order = 5, width = "double",
 					type = "select",
 					values = { Always = L["Always"], Never = L["Never"], OOC = L["OOC"] },
 					set = function(info, v)
@@ -404,7 +420,7 @@ GridFrame.options = {
 				rightClickMenu = {
 					name = L["Enable right-click menu"],
 					desc = L["Show the standard unit menu when right-clicking on a frame."],
-					order = 55, width = "double",
+					order = 6, width = "double",
 					type = "toggle",
 					set = function(info, v)
 						GridFrame.db.profile.rightClickMenu = v
@@ -421,7 +437,7 @@ GridFrame.options = {
 				orientation = {
 					name = L["Orientation of Frame"],
 					desc = L["Set frame orientation."],
-					order = 60, width = "double",
+					order = 7, width = "double",
 					type = "select",
 					values = {
 						VERTICAL = L["Vertical"],
@@ -431,7 +447,7 @@ GridFrame.options = {
 				textorientation = {
 					name = L["Orientation of Text"],
 					desc = L["Set frame text orientation."],
-					order = 70, width = "double",
+					order = 8, width = "double",
 					type = "select",
 					values = {
 						VERTICAL = L["Vertical"],
@@ -442,15 +458,15 @@ GridFrame.options = {
 					name = L["Throttle Updates"],
 					desc = L["Throttle updates on group changes. This option may cause delays in updating frames, so you should only enable it if you're experiencing temporary freezes or lockups when people join or leave your group."],
 					type = "toggle",
-					order = 110, width = "double",
+					order = 9, width = "double",
 					set = function(info, v)
 						GridFrame.db.profile.throttleUpdates = v
 						if v then
 							GridFrame:UnregisterMessage("UpdateFrameUnits")
 							GridFrame.bucket_UpdateFrameUnits = GridFrame:RegisterBucketMessage("UpdateFrameUnits", 0.1)
 						else
-							GridFrame:RegisterMessage("UpdateFrameUnits")
 							GridFrame:UnregisterBucket(GridFrame.bucket_UpdateFrameUnits, true)
+							GridFrame:RegisterMessage("UpdateFrameUnits")
 							GridFrame.bucket_UpdateFrameUnits = nil
 						end
 						GridFrame:UpdateFrameUnits()
@@ -461,33 +477,21 @@ GridFrame.options = {
 		bar = {
 			name = L["Bar Options"],
 			desc = L["Options related to bar indicators."],
-			order = 200,
+			order = 2,
 			type = "group",
 			args = {
 				texture = {
 					name = L["Frame Texture"],
 					desc = L["Adjust the texture of each unit's frame."],
-					order = 10, width = "double",
+					order = 1, width = "double",
 					type = "select",
 					values = Media:HashTable("statusbar"),
 					dialogControl = "LSM30_Statusbar",
 				},
-				healingBar_intensity = {
-					name = L["Healing Bar Opacity"],
-					desc = L["Sets the opacity of the healing bar."],
-					order = 20, width = "double",
-					type = "range", min = 0, max = 1, step = 0.01, bigStep = 0.05,
-				},
-				healingBar_useStatusColor = {
-					name = L["Healing Bar Uses Status Color"],
-					desc = L["Make the healing bar use the status color instead of the health bar color."],
-					order = 40, width = "double",
-					type = "toggle",
-				},
 				enableBarColor = {
 					name = format(L["Enable %s indicator"], L["Health Bar Color"]),
 					desc = format(L["Toggle the %s indicator."], L["Health Bar Color"]),
-					order = 30, width = "double",
+					order = 2, width = "double",
 					type = "toggle",
 					set = function(info, v)
 						GridFrame.db.profile.enableBarColor = v
@@ -498,51 +502,60 @@ GridFrame.options = {
 				invertBarColor = {
 					name = L["Invert Bar Color"],
 					desc = L["Swap foreground/background colors on bars."],
-					order = 50, width = "double",
+					order = 3, width = "double",
 					type = "toggle",
 				},
 				invertTextColor = {
 					name = L["Invert Text Color"],
 					desc = L["Darken the text color to match the inverted bar."],
-					order = 50, width = "double",
+					order = 4, width = "double",
 					type = "toggle",
 					disabled = function()
 						return not GridFrame.db.profile.invertBarColor
 					end,
-					hidden = function()
-						return not GridFrame.db.profile.invertBarColor
-					end,
+				},
+				healingBar_intensity = {
+					name = L["Healing Bar Opacity"],
+					desc = L["Sets the opacity of the healing bar."],
+					order = 5, width = "double",
+					type = "range", min = 0, max = 1, step = 0.01, bigStep = 0.05,
+				},
+				healingBar_useStatusColor = {
+					name = L["Healing Bar Uses Status Color"],
+					desc = L["Make the healing bar use the status color instead of the health bar color."],
+					order = 6, width = "double",
+					type = "toggle",
 				},
 			},
 		},
 		icon = {
 			name = L["Icon Options"],
 			desc = L["Options related to icon indicators."],
-			order = 300, width = "double",
+			order = 3,
 			type = "group",
 			args = {
 				iconSize = {
 					name = L["Icon Size"],
 					desc = L["Adjust the size of the center icon."],
-					order = 10, width = "double",
+					order = 1, width = "double",
 					type = "range", min = 5, max = 50, step = 1,
 				},
 				iconBorderSize = {
 					name = L["Icon Border Size"],
 					desc = L["Adjust the size of the center icon's border."],
-					order = 20, width = "double",
+					order = 2, width = "double",
 					type = "range", min = 0, max = 9, step = 1,
 				},
 				enableIconCooldown = {
 					name = format(L["Enable %s"], L["Icon Cooldown Frame"]),
 					desc = L["Toggle center icon's cooldown frame."],
-					order = 30, width = "double",
+					order = 3, width = "double",
 					type = "toggle",
 				},
 				enableIconStackText = {
 					name = format(L["Enable %s"], L["Icon Stack Text"]),
 					desc = L["Toggle center icon's stack count text."],
-					order = 40, width = "double",
+					order = 4, width = "double",
 					type = "toggle",
 				},
 			},
@@ -550,13 +563,13 @@ GridFrame.options = {
 		text = {
 			name = L["Text Options"],
 			desc = L["Options related to text indicators."],
-			order = 400,
+			order = 4,
 			type = "group",
 			args = {
 				font = {
 					name = L["Font"],
 					desc = L["Adjust the font settings"],
-					order = 10, width = "double",
+					order = 1, width = "double",
 					type = "select",
 					values = Media:HashTable("font"),
 					dialogControl = "LSM30_Font",
@@ -564,13 +577,13 @@ GridFrame.options = {
 				fontSize = {
 					name = L["Font Size"],
 					desc = L["Adjust the font size."],
-					order = 20, width = "double",
+					order = 2, width = "double",
 					type = "range", min = 6, max = 24, step = 1,
 				},
 				fontOutline = {
 					name = L["Font Outline"],
 					desc = L["Adjust the font outline."],
-					order = 30, width = "double",
+					order = 3, width = "double",
 					type = "select",
 					values = {
 						NONE = L["None"],
@@ -581,19 +594,19 @@ GridFrame.options = {
 				fontShadow = {
 					name = L["Font Shadow"],
 					desc = L["Toggle the font drop shadow effect."],
-					order = 40, width = "double",
+					order = 4, width = "double",
 					type = "toggle",
 				},
 				textlength = {
 					name = L["Center Text Length"],
 					desc = L["Number of characters to show on Center Text indicator."],
-					order = 50, width = "double",
+					order = 5, width = "double",
 					type = "range", min = 1, max = 12, step = 1,
 				},
 				enableText2 = {
 					name = format(L["Enable %s indicator"], L["Center Text 2"]),
 					desc = format(L["Toggle the %s indicator."], L["Center Text 2"]),
-					order = 60, width = "double",
+					order = 6, width = "double",
 					type = "toggle",
 					set = function(info, v)
 						GridFrame.db.profile.enableText2 = v
@@ -678,7 +691,6 @@ function GridFrame:PostReset()
 
 	-- different fix for ticket #556, maybe fixes #603 too
 	self:ResizeAllFrames()
-	self:ScheduleTimer("Grid_ReloadLayout", 0.1)
 end
 
 ------------------------------------------------------------------------
@@ -709,6 +721,9 @@ function GridFrame:ResizeAllFrames()
 	self:WithAllFrames("SetWidth", self.db.profile.frameWidth)
 	self:WithAllFrames("SetHeight", self.db.profile.frameHeight)
 	self:ResetAllFrames()
+	if not reloadHandle then
+		GridFrame:ScheduleTimer("Grid_ReloadLayout", 0.1)
+	end
 end
 
 function GridFrame:UpdateAllFrames()
@@ -793,7 +808,7 @@ function GridFrame:UpdateIndicator(frame, indicator)
 			status.texture,
 			status.start,
 			status.duration,
-			status.stack,
+			status.count,
 			status.texCoords)
 	else
 		self:Debug("Clearing indicator", indicator, "for", (UnitName(frame.unit)))
@@ -859,7 +874,7 @@ end
 
 ------------------------------------------------------------------------
 
-function GridFrame:Grid_StatusGained(event, guid, status, priority, range, color, text, value, maxValue, texture, start, duration, stack)
+function GridFrame:Grid_StatusGained(event, guid, status, priority, range, color, text, value, maxValue, texture, start, duration, count)
 	for _, frame in pairs(self.registeredFrames) do
 		if frame.unitGUID == guid then
 			self:UpdateIndicatorsForStatus(frame, status)

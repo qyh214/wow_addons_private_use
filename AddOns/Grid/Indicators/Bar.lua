@@ -3,8 +3,8 @@ local GridFrame = Grid:GetModule("GridFrame")
 local Media = LibStub("LibSharedMedia-3.0")
 local L = Grid.L
 
-local function SetBarColor(bar, r, g, b, invert, healingBarAlpha)
-	--print("SetBarColor", "INVERT?", invert, "HBAR?", healingBarAlpha)
+local function SetBarColor(bar, r, g, b, invert)
+	--print("SetBarColor", invert)
 	if invert then
 		bar:SetStatusBarColor(r, g, b, 1)
 		bar.bg:SetVertexColor(r * 0.2, g * 0.2, b * 0.2, 1)
@@ -12,24 +12,28 @@ local function SetBarColor(bar, r, g, b, invert, healingBarAlpha)
 		bar:SetStatusBarColor(r * 0.2, g * 0.2, b * 0.2, 1)
 		bar.bg:SetVertexColor(r, g, b, 1)
 	end
-	do return end -- TEMP
-	if healingBarAlpha then
+
+	local profile = GridFrame.db.profile
+	if not profile.healingBar_useStatusColor then
 		local healingBar = bar.__owner.indicators.healingBar
 		if invert then
-			healingBar:SetStatusBarColor(r, g, b, healingBarAlpha)
+			healingBar:SetStatusBarColor(r, g, b)
 		else
-			healingBar:SetStatusBarColor(r * healingBarAlpha, g * healingBarAlpha, b * healingBarAlpha, healingBarAlpha)
+			local mu = GridFrame.db.profile.healingBar_intensity
+			healingBar:SetStatusBarColor(r * mu, g * mu, b * mu)
 		end
 	end
 end
 
-local function ClearBarColor(bar, healingBar)
-	--print("ClearBarColor", "HBAR?", healingBar)
+local function ClearBarColor(bar, invert)
+	--print("ClearBarColor")
 	bar:SetStatusBarColor(0, 0, 0, 1)
 	bar.bg:SetVertexColor(0, 0, 0, 1)
-	do return end -- TEMP
-	if healingBar then
-		frame.indicators.healingBar:SetStatusBarColor(0, 1, 0, 0.5)
+
+	local profile = GridFrame.db.profile
+	if not profile.healingBar_useStatusColor then
+		local healingBar = bar.__owner.indicators.healingBar
+		healingBar:SetStatusBarColor(0, 1, 0, 0.5)
 	end
 end
 
@@ -97,7 +101,7 @@ GridFrame:RegisterIndicator("bar", L["Health Bar"],
 
 		if color and not profile.enableBarColor then
 			--print("SetStatus", self.__id, frame.unit)
-			SetBarColor(self, color.r, color.g, color.b, profile.invertBarColor, not profile.healingBar_useStatusColor and profile.healingBar_intensity)
+			SetBarColor(self, color.r, color.g, color.b, profile.invertBarColor)
 		end
 	end,
 
@@ -111,7 +115,7 @@ GridFrame:RegisterIndicator("bar", L["Health Bar"],
 		self.texture:SetTexCoord(0, 1, 0, 1)
 
 		if not profile.enableBarColor then
-			ClearBarColor(self, not profile.healingBar_useStatusColor)
+			ClearBarColor(self, profile.invertBarColor)
 		end
 	end
 )
@@ -131,13 +135,13 @@ GridFrame:RegisterIndicator("barcolor", L["Health Bar Color"],
 		local frame = self.__owner
 
 		--print("SetStatus", self.__id, frame.unit)
-		SetBarColor(frame.indicators.bar, color.r, color.g, color.b, profile.invertBarColor, not profile.healingBar_useStatusColor and profile.healingBar_intensity)
+		SetBarColor(frame.indicators.bar, color.r, color.g, color.b, profile.invertBarColor)
 	end,
 
 	-- ClearStatus
 	function(self)
 		local profile = GridFrame.db.profile
 		if not profile.enableBarColor then return end
-		ClearBarColor(self.__owner.indicators.bar, not profile.healingBar_useStatusColor)
+		ClearBarColor(self.__owner.indicators.bar, profile.invertBarColor)
 	end
 )

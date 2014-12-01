@@ -28,26 +28,26 @@ dataobj.OnTooltipShow = nil;
 function SIL_Alt:OnInitialize()
 	self.sort_table = {}
 	self.scanqueue = {}
-    
+
 	self.faction = UnitFactionGroup("player")
 	self.realm = GetRealmName()
 	self.pc = UnitName("player")
-     
+
 	SIL:Print(L.alts.load, GetAddOnMetadata("SimpleILevel_Alts", "Version"));
-    
+
 	self.db = LibStub("AceDB-3.0"):New("SIL_Alts", SILAlt_Defaults, true);
 	SIL.aceConfig:RegisterOptionsTable(L.alts.nameShort, SILAlt_Options, {"sia", "silalt", "simpleilevelalts"});
 	SIL.aceConfigDialog:AddToBlizOptions(L.alts.nameShort, "Alts", L.core.name);
-    
-	
+
+
 	self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", function() SIL_Alt:StartScore('player'); end);
 	self:RegisterEvent("PLAYER_ENTERING_WORLD", function() SIL_Alt:StartScore('player'); end);
 	self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", function() SIL_Alt:StartScore('player'); end);
-    
+
 	SIL_Alt:StartScore('player');
 	SIL_Alt:UpdateLDB();
 	self:SetupSILMenu();
-end   
+end
 
 
 function dataobj:OnEnter()
@@ -57,7 +57,7 @@ function dataobj:OnEnter()
 	tooltip:Clear()
 	-- End Define the tooltip
 
-	-- Start Setup new default fonts 
+	-- Start Setup new default fonts
 	-- New font looking like GameTooltipText but White with height 12
 	local white10Font = CreateFont("white10Font")
 	white10Font:SetFont(GameTooltipText:GetFont(), 10)
@@ -110,7 +110,7 @@ function dataobj:OnEnter()
 	tooltip:AddSeparator()
 	-- End Build the tooltip header
 
-	-- Start Populate Faction/Realm/Character 
+	-- Start Populate Faction/Realm/Character
 	for faction, faction_table in pairs (SIL_Alts.global.alts) do
 		-- Determine if we should show all factions or only the current character's faction
 		if SIL_Alts.global.options.showAllFactions or faction == SIL_Alt.faction  then
@@ -137,13 +137,13 @@ function dataobj:OnEnter()
 						for _,name in ipairs (names) do
 							userver = " - " .. realm;
 							if not SIL_Alts.global.ignore[name .. userver].show == false then
-								
+
 								-- Build tooltip for Max Level Characters Only
-								if SIL_Alts.global.options.onlyMaxLevel and SIL_Alts.global.alts[faction][realm][name].level == 90 then
+								if SIL_Alts.global.options.onlyMaxLevel and SIL_Alts.global.alts[faction][realm][name].level == 100 then
 									local line, column = tooltip:AddLine()
 									tooltip:SetCell(line, 1, SIL_Alts.global.alts[faction][realm][name].name, CLASS_FONTS[SIL_Alts.global.alts[faction][realm][name].class])
 									if not SIL_Alts.global.options.onlyMaxLevel then
-										tooltip:SetCell(line, 2, SIL_Alts.global.alts[faction][realm][name].level, CLASS_FONTS[SIL_Alts.global.alts[faction][realm][name].class], "CENTER") 
+										tooltip:SetCell(line, 2, SIL_Alts.global.alts[faction][realm][name].level, CLASS_FONTS[SIL_Alts.global.alts[faction][realm][name].class], "CENTER")
 									end
 									-- Show Character's Primary Spec
 									if SIL_Alts.global.alts[faction][realm][name]["Primary"] then
@@ -192,7 +192,7 @@ function dataobj:OnEnter()
 											tooltip:SetCell(line, 5, "--")
 										end
 									end
-								
+
 								-- Build tooltip for All Level Characters
 								elseif not SIL_Alts.global.options.onlyMaxLevel then
 									local line, column = tooltip:AddLine()
@@ -256,7 +256,7 @@ function dataobj:OnEnter()
 			end
 		end
 	end
-     	
+
 	tooltip:AddLine(L.core.minimapClick);
 	tooltip:AddLine(L.core.minimapClickDrag);
 
@@ -266,7 +266,7 @@ function dataobj:OnEnter()
 	-- Show it, et voil‡ !
 	tooltip:Show()
 end
- 
+
 
 function dataobj:OnLeave()
 	-- Release the tooltip
@@ -276,7 +276,7 @@ end
 
 
 function SIL_Alt:StartScore(target, callback)
-	if InCombatLockdown() or not CanInspect(target) then 
+	if InCombatLockdown() or not CanInspect(target) then
 		if callback then callback(false, target); end
 		return false;
 	end
@@ -300,7 +300,7 @@ end
 
 
 function SIL_Alt:AddPlayer(target, callback)
-	if InCombatLockdown() or not CanInspect(target) then 
+	if InCombatLockdown() or not CanInspect(target) then
 		if callback then callback(false, target); end
 	return false;
 	end
@@ -325,7 +325,7 @@ function SIL_Alt:AddPlayer(target, callback)
 			realm = GetRealmName();
 		end
 		if name and realm and class and level then
-			
+
 			-- Start a table for them
 			if not self.db.global.alts[faction][realm][name] then
 				self.db.global.alts[faction][realm][name] = {};
@@ -379,7 +379,7 @@ function SIL_Alt:DelayedAvgIlvl()
 	if self.avgilvl and self.avgilvl >= 1 then
 		self.db.global.alts[self.faction][self.realm][self.name].score = self.avgilvl;
 		self:CancelTimer(self.ilvltimer)
-	end		
+	end
 end
 
 
@@ -394,7 +394,7 @@ function SIL_Alt:UpdateLDB(force, auto)
 end
 
 
-function SIL_Alt:UpdateLDBText(label, text)   
+function SIL_Alt:UpdateLDBText(label, text)
 	-- Add the label
 	local ldbtext = text;
 	local ldbUpdated = time();
@@ -407,7 +407,7 @@ function SIL_Alt:FetchOrderedNames(names, characters)
 	for name, name_table in pairs(characters) do
 		table.insert(names, name)
 	end
-	SIL_Alt.sort_table = characters 
+	SIL_Alt.sort_table = characters
 	table.sort(names, revilvlSort)
 end
 
@@ -439,8 +439,8 @@ function SIL_Alt:ToggleShowCharacter(e) self:SetShowCharacter(e, not self:GetSho
 function SIL_Alt:ToggleShowTotals() self:SetShowTotals(not self:GetShowTotals()); end
 
 -- More advanced ones
-function SIL_Alt:SetShowCharacter(e, v) 
-	self.db.global.ignore[e].show = v; 
+function SIL_Alt:SetShowCharacter(e, v)
+	self.db.global.ignore[e].show = v;
 end
 
 function SIL_Alt:GetPlayerNames()
@@ -463,17 +463,17 @@ function SIL_Alt:SetupSILMenu()
 		isTitle = 1,
 		notCheckable = 1,
 	}, 1);
-	SIL:AddMenuItems('middle', {    
+	SIL:AddMenuItems('middle', {
 		text = L.alts.options.onlyMaxLevel,
 		func = function() SIL_Alt:ToggleOnlyMaxLevel(); end,
 		checked = function() return SIL_Alt:GetOnlyMaxLevel(); end,
 	}, 1);
-	SIL:AddMenuItems('middle', {    
+	SIL:AddMenuItems('middle', {
 		text = L.alts.options.showAllRealms,
 		func = function() SIL_Alt:ToggleShowAllRealms(); end,
 		checked = function() return SIL_Alt:GetShowAllRealms(); end,
 	}, 1);
-	SIL:AddMenuItems('middle', {    
+	SIL:AddMenuItems('middle', {
 		text = L.alts.options.showAllFactions,
 		func = function() SIL_Alt:ToggleShowAllFactions(); end,
 		checked = function() return SIL_Alt:GetShowAllFactions(); end,
@@ -538,7 +538,7 @@ SILAlt_Options = {
 		},
 		playerNames = {
 			name = L.alts.options.showCharacter,
-			type = 'multiselect', 
+			type = 'multiselect',
 			values = function() return SIL_Alt:GetPlayerNames(); end;
 			get = function(s,e) return SIL_Alt:GetShowCharacter(e) end;
 			set = function(s,e,v) return SIL_Alt:SetShowCharacter(e, v) end;

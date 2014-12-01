@@ -1346,7 +1346,6 @@ function Castbars:OnInitialize()
     -- Register additional events on CastingBarFrame
     CastingBarFrame:RegisterEvent("UNIT_SPELLCAST_SENT");
     CastingBarFrame:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN");
-    CastingBarFrame:RegisterEvent("UPDATE_TRADESKILL_RECAST");
 
     -- Setup table with all frames
     self.frames = {CastingBarFrame, PetCastingBarFrame, TargetCastingBarFrame, FocusCastingBarFrame, MirrorTimer1, MirrorTimer2, MirrorTimer3};
@@ -1408,24 +1407,16 @@ function Castbars:OnInitialize()
         end
     end
 
-    -- Hook DoTradeSkill
-    local orgDoTradeSkill = DoTradeSkill;
-    DoTradeSkill = function(index, num, ...)
-        orgDoTradeSkill(index, num, ...);
-        CastingBarFrame.mergingTradeSkill = true;
-        CastingBarFrame.countCurrent = 0;
-        CastingBarFrame.countTotal = tonumber(num) or 1;
-    end
-
     self.CastingBarFrame_OnEvent = function(frame, event, ...)
         if (self.ConfigMode) then return end
         frame.Show = nil; -- Protect against addons that override the Show method
         if (event == "UNIT_SPELLCAST_SENT") then
-            local unit, _, _, targetName, id = ...;
+            local unit, spellName, _, targetName, id = ...;
             if (unit == "player") then
                 frame.sentTime = GetTime();
                 frame.sentTargetName = targetName;
                 frame.sentId = id;
+                frame.sentSpellName = spellName;
             end
             return;
         elseif (event == "ACTIONBAR_UPDATE_COOLDOWN") then
@@ -1462,11 +1453,6 @@ function Castbars:OnInitialize()
             frame.configName = UnitIsPossessed("pet") and "CastingBarFrame" or "PetCastingBarFrame";
             self:FrameLayoutRestore(frame);
             return;
-        elseif (event == "UPDATE_TRADESKILL_RECAST") then
-            if (frame.casting) then
-                frame.mergingTradeSkill = nil;
-            end
-            return;
         end
         CastingBarFrame_OnEvent(frame, event, ...);
         if ((event == "UNIT_SPELLCAST_START") or (event == "UNIT_SPELLCAST_CHANNEL_START")) then
@@ -1475,7 +1461,11 @@ function Castbars:OnInitialize()
                 if (self.db.profile.CastingBarFrame.Blacklist[spellName] or self.db.profile.CastingBarFrame.Blacklist[spellId]) then frame:Hide() end
                 if (unit == "player") then
                     frame.spellInSpellBook = self:IsSpellBookSpell(spellId);
-                    frame.spellTargetName = id == frame.sentId and frame.sentTargetName or nil;
+                    if (id == frame.sentId or (event == "UNIT_SPELLCAST_CHANNEL_START") and (spellName == frame.sentSpellName)) then
+                        frame.spellTargetName = frame.sentTargetName;
+                    else
+                        frame.spellTargetName = nil;
+                    end
                     frame.spellTarget = self:NameToUnitID(frame.spellTargetName);
                     frame.spellName = spellName;
                     frame.spellInitialDelay = frame.sentTime and GetTime() - frame.sentTime;
@@ -1487,6 +1477,12 @@ function Castbars:OnInitialize()
                     if (frame.casting) then
                         frame.startTime = GetTime() - (frame.value or 0);
                         frame.delayTime = nil;
+                        local repeatCount = GetTradeskillRepeatCount();
+                        if (not frame.mergingTradeSkill and repeatCount > 1) then
+                            frame.mergingTradeSkill = true;
+                            frame.countCurrent = 0;
+                            frame.countTotal = repeatCount;
+                        end
                         if (frame.mergingTradeSkill) then
                             frame.value = frame.value + frame.maxValue * frame.countCurrent;
                             frame.maxValue = frame.maxValue * frame.countTotal;

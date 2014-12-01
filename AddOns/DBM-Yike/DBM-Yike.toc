@@ -6,5 +6,5 @@
 ## DefaultState: enabled
 ## RequiredDeps: DBM-Core
 ## Author: Yike Xia, Mini_Dragon
-## Notes: 还是要去向女神表白的, 万一女神瞎了呢?
-## Version: 14.11.10
+## Notes: Ensilumi oli alaspäin. Rakastatko minua? 广告位招租。一万金币一天。LOL.
+## Version: 14.11.22

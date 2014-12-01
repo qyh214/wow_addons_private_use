@@ -128,15 +128,15 @@ function GridStatus.modulePrototype:RegisterStatus(status, desc, options, inMain
 					end,
 					set = function(_, v)
 						module.db.profile[status].enable = v
-							if v then
-								if module.OnStatusEnable then
-									module:OnStatusEnable(status)
-								end
-							else
-								if module.OnStatusDisable then
-									module:OnStatusDisable(status)
-								end
+						if v then
+							if module.OnStatusEnable then
+								module:OnStatusEnable(status)
 							end
+						else
+							if module.OnStatusDisable then
+								module:OnStatusDisable(status)
+							end
+						end
 					end,
 				},
 				color = {
@@ -466,13 +466,14 @@ end
 
 ------------------------------------------------------------------------
 
-function GridStatus:SendStatusGained(guid, status, priority, range, color, text, value, maxValue, texture, start, duration, stack, texCoords)
+function GridStatus:SendStatusGained(guid, status, priority, range, color, text, value, maxValue, texture, start, duration, count, texCoords)
 	self:Debug("GridStatus", "SendStatusGained", guid, status, text, value, maxValue)
 	if not guid then return end
 
 	if type(priority) == "table" then
 		-- support tables!
-		priority, range, color, text, value, maxValue, texture, start, duration, stack, texCoords = priority.priority, priority.range, priority.color, priority.text, priority.value, priority.maxValue, priority.texture, priority.start, priority.duration, priority.stack, priority.texCoords
+		local t = priority
+		priority, range, color, text, value, maxValue, texture, start, duration, count, texCoords = t.priority, t.range, t.color, t.text, t.value, t.maxValue, t.texture, t.start, t.duration, t.count or t.stack, t.texCoords
 	end
 
 	local cache = self.cache
@@ -513,7 +514,7 @@ function GridStatus:SendStatusGained(guid, status, priority, range, color, text,
 		and cached.texture == texture
 		and cached.start == start
 		and cached.duration == duration
-		and cached.stack == stack
+		and cached.count == count
 		and cached.texCoords == texCoords
 	then
 		return
@@ -529,10 +530,10 @@ function GridStatus:SendStatusGained(guid, status, priority, range, color, text,
 	cached.texture = texture
 	cached.start = start
 	cached.duration = duration
-	cached.stack = stack
+	cached.count = count
 	cached.texCoords = texCoords
 
-	self:SendMessage("Grid_StatusGained", guid, status, priority, range, color, text, value, maxValue, texture, start, duration, stack, texCoords)
+	self:SendMessage("Grid_StatusGained", guid, status, priority, range, color, text, value, maxValue, texture, start, duration, count, texCoords)
 end
 
 function GridStatus:SendStatusLost(guid, status)

@@ -844,13 +844,19 @@ function GridLayout:AddLayout(layoutName, layout)
 	self.LayoutList[layoutName] = layoutName -- for options
 end
 
-function GridLayout:ReloadLayout()
-	--self:Debug("ReloadLayout")
+function GridLayout:ReloadLayout(event)
+	self:Debug("ReloadLayout", event)
 	local party_type = GridRoster:GetPartyState()
 	-- Switch to 10 Player or 25 Player layout if World Raid support is not enabled
 	if party_type == "raid_40" and not self.db.profile.layouts.raid_outside and not IsInInstance() then
 		local difficulty = GetRaidDifficultyID()
-		party_type = difficulty % 2 == 0 and "raid_25" or "raid_10"
+		if difficulty == DIFFICULTY_PRIMARYRAID_MYTHIC or difficulty == DIFFICULTY_RAID25_HEROIC or difficulty == DIFFICULTY_RAID25_NORMAL then
+			party_type = "raid_25"
+		elseif difficulty == DIFFICULTY_RAID10_HEROIC or difficulty == DIFFICULTY_RAID10_NORMAL then
+			party_type = "raid_10"
+		elseif difficutly ~= DIFFICULTY_RAID40 then
+			party_type = "raid_flex"
+		end
 	end
 	self:LoadLayout(self.db.profile.layouts[party_type])
 end

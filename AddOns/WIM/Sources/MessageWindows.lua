@@ -253,7 +253,7 @@ local function MessageWindow_W2WButtomMenu_OnClick()
 end
 
 local function MessageWindow_W2WButton_OnClick()
-    UIDropDownMenu_Initialize(this:GetParent().w2w_menu, MessageWindow_W2WButton_Initialize, "MENU");
+    UIDropDownMenu_Initialize(this:GetParent().w2w_menu, MessageWindow_W2WButton_Initialize);
     ToggleDropDownMenu(1, nil, this:GetParent().w2w_menu, this, -130, -1);
 end
 
@@ -357,7 +357,7 @@ local function MessageWindow_MsgBox_OnMouseUp()
     CloseDropDownMenus();
     if(arg1 == "RightButton") then
         WIM_MSGBOX_MENU_CUR_USER = this:GetParent().theUser;
-        UIDropDownMenu_Initialize(WIM_MsgBoxMenu, WIM_MsgBoxMenu_Initialize, "MENU");
+        UIDropDownMenu_Initialize(WIM_MsgBoxMenu, WIM_MsgBoxMenu_Initialize);
         ToggleDropDownMenu(1, nil, WIM_MsgBoxMenu, this, 0, 0);
     end
 end

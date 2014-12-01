@@ -23,14 +23,14 @@ Grid.L = L
 --	GridCore
 
 L["Debugging"] = "Debuggen"
--- L["Debugging messages help developers or testers see what is happening inside Grid in real time. Regular users should leave debugging turned off except when troubleshooting a problem for a bug report."] = ""
--- L["Enable debugging messages for the %s module."] = ""
--- L["General"] = ""
+L["Debugging messages help developers or testers see what is happening inside Grid in real time. Regular users should leave debugging turned off except when troubleshooting a problem for a bug report."] = "Debugg Nachrichten helfen Entwicklern und Testern zu sehen was aktuell inerhalb von Grid passiert. Normale Bentzer sollten debugging Nachrichten ausgeschaltet lassen, entseiden sie wollen eine Bug oder ein Problem dokumentieren." -- Needs review
+L["Enable debugging messages for the %s module."] = "Aktiviere Debugging Nachrichten für das %s Modul" -- Needs review
+L["General"] = "Allgemein" -- Needs review
 L["Module debugging menu."] = "Debug-Menü."
 L["Open Grid's options in their own window, instead of the Interface Options window, when typing /grid or right-clicking on the minimap icon, DataBroker icon, or layout tab."] = "Die Optionen des Grid in einem alleinstehenden Fenster anzeigen, anstatt des standarden Intrerfaz-Optionen, nach dem Schreiben '/grid' oder dem Klicken auf dem Minimapsymbol, DataBroker-Symbol oder Grid-Reiter."
--- L["Output Frame"] = ""
+L["Output Frame"] = "Ausgabe  Fenster" -- Needs review
 L["Right-Click for more options."] = "Rechtsklick für Optionen."
--- L["Show debugging messages in this frame."] = ""
+L["Show debugging messages in this frame."] = "Zeige debugg Nachrichten in diesem Fenster" -- Needs review
 L["Show minimap icon"] = "Minikarten Button anzeigen"
 L["Show the Grid icon on the minimap. Note that some DataBroker display addons may hide the icon regardless of this setting."] = "Das Grid-Icon an der Minimap anzeigen. Beachte: Einige DataBroker-Addons können das Icon dennoch verstecken, unabhängig von dieser Einstellung."
 L["Standalone options"] = "Alleinstehenden Optionen"
@@ -185,7 +185,7 @@ L["Layout"] = "Layout"
 L["Layout Anchor"] = "Ankerpunkt des Layouts"
 L["Layout Background"] = "Hintergrund des Layouts"
 L["Layout Padding"] = "Layoutsabstand"
--- L["Layouts"] = ""
+L["Layouts"] = "Layouts" -- Needs review
 L["Left"] = "Links"
 L["Lock Grid to hide this tab."] = "'Grid sperren' um diesen Reiter zu verstecken."
 L["Locks/unlocks the grid for movement."] = "Sperrt Grid oder entsperrt Grid, um den Rahmen zu verschieben."
@@ -267,7 +267,7 @@ L["Click to toggle the frame lock."] = "Linksklick um Grid zu entsperren."
 L["Color"] = "Farbe"
 L["Color for %s"] = "Farbe für %s"
 L["Enable"] = "Aktivieren"
--- L["Opacity"] = ""
+L["Opacity"] = "Deckkraft" -- Needs review
 L["Options for %s."] = "Optionen für %s."
 L["Priority"] = "Priorität"
 L["Priority for %s"] = "Priorität für %s"
@@ -339,9 +339,11 @@ L["Remove %s from the menu"] = "Entfernt %s vom Menü"
 L["%s colors"] = "%s farben"
 L["%s colors and threshold values."] = "%s Farben und Schwellenwerte"
 L["Show advanced options"] = "Zeige erweiterte Optionen" -- Needs review
---[==[ L[ [=[Show advanced options for buff and debuff statuses.
+L[ [=[Show advanced options for buff and debuff statuses.
 
-Beginning users may wish to leave this disabled until you are more familiar with Grid, to avoid being overwhelmed by complicated options menus.]=] ] = "" ]==]
+Beginning users may wish to leave this disabled until you are more familiar with Grid, to avoid being overwhelmed by complicated options menus.]=] ] = [=[Zeige erweiterte Einstellungen für Buff und Debuff Status
+
+Beginner sollten diese Option deaktiviert lassen solange sie noch keie Erfahrung mit Grid gemacht haben, um zu vielen und/oder komplizierten Menüleisten aus dem Weg zu gehen.]=] -- Needs review
 L["Show duration"] = "Dauer anzeigen"
 L["Show if mine"] = "Zeigen wenn es meiner ist"
 L["Show if missing"] = "Zeigen wenn es fehlt"

@@ -1,0 +1,12 @@
+﻿## Interface: 60000
+## Title: Raid|cff7fff7fAchievement|r - WoD Dungeons
+## Title-ruRU: Raid|cff7fff7fAchievement|r - Подземелья WoD
+## Author: Shurshik
+## Notes: RaidAchievement WoD Dungeons Module
+## Notes-ruRU: Модуль RaidAchievement - Подземелья WoD
+## Dependencies: RaidAchievement
+## LoadOnDemand: 1
+## SavedVariablesPerCharacter: wodhraspisokon
+RaidAchievement_WoDHeroics.lua
+RaidAchievement_WoDHeroicsbosses.lua
+RaidAchievement_WoDHeroics.xml

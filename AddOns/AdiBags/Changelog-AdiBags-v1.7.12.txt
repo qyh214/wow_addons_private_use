@@ -1,0 +1,12 @@
+tag v1.7.12
+8c9c9b01224d3ac10403f8c68d18adf80b8010a3
+Adirelle <adirelle@gmail.com>
+2014-11-18 07:42:33 +0100
+
+Bugfix.
+
+
+--------------------
+
+Adirelle:
+	- Missing comma, whoopsy.

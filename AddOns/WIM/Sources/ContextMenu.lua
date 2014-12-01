@@ -135,7 +135,7 @@ function PopContextMenu(tag, parent)
         if(WIM.Menu) then
             WIM.Menu:Hide();
         end
-        UIDropDownMenu_Initialize(menuFrame, initializeMenu, "MENU");
+        UIDropDownMenu_Initialize(menuFrame, initializeMenu);
         ToggleDropDownMenu(1, 1, menuFrame, parent, 0, 0);
         _G.UIDropDownMenu_SetButtonWidth(menuFrame, 25);
 	_G.UIDropDownMenu_SetWidth(menuFrame, 25, 5);

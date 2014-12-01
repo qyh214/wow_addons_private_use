@@ -1,0 +1,15 @@
+tag v2.4.21
+f21110fe206e9f028e8639578753eb178a2195ce
+funkydude <none>
+2014-11-16 16:49:07 +0000
+
+Tagging as v2.4.21
+
+
+--------------------
+
+funkydude:
+	- Buttons: Shrink the Garrison button further.
+	- Buttons: Rework the animations to use SetToFinalAlpha. Add a workaround for the Garrison and LFG buttons, which when set to "on hover" would disappear when they were animating. Change the Garrison button to always on by default.
+	- Buttons: Slightly shrink the Garrison button.
+	- Also fix the "waffle" texture for the HudMap.

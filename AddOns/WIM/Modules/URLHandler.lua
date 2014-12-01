@@ -200,6 +200,10 @@ end
 WIM.RegisterItemRefHandler("wim_url", displayURL);
 
 --context menu
+local isUS = false
+if _G.GetCurrentRegion() == 1 then
+	isUS = true
+end
 local function MENU_ARMORY_CLICKED(self)
     local eu_www = isUS and "www" or "eu";
     local eu_us = isUS and "us" or "eu";

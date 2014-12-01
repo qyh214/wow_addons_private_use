@@ -308,11 +308,7 @@ function containerProto:CreateReagentTabButton()
 				self.BagSlotButton:SetChecked(False)
 			end
 			self.Title:SetText(self.isReagentBank and REAGENT_BANK or L["Bank"])
-			self:PauseUpdates()
-			for bag in pairs(previousBags) do
-				self:UpdateContent(bag)
-			end
-			self:ResumeUpdates()
+			addon:SendMessage('AdiBags_BagSetupChanged')
 		end,
 		function(_, tooltip)
 			if not IsReagentBankUnlocked() then
@@ -391,6 +387,7 @@ function containerProto:OnShow()
 	self:RegisterEvent('AUCTION_MULTISELL_UPDATE')
 	self:RegisterEvent('AUCTION_MULTISELL_FAILURE', "ResumeUpdates")
 	self:RegisterMessage('AdiBags_SpellIsTargetingChanged')
+	self:RegisterMessage('AdiBags_BagSetupChanged')
 	self:ResumeUpdates()
 	containerParentProto.OnShow(self)
 end
@@ -408,7 +405,19 @@ function containerProto:ResumeUpdates()
 	self.paused = false
 	self:RegisterMessage('AdiBags_BagUpdated', 'BagsUpdated')
 	self:Debug('ResumeUpdates')
-	for bag in pairs(self:GetBagIds()) do
+	return self:AdiBags_BagSetupChanged()
+end
+
+function containerProto:PauseUpdates()
+	if self.paused then return end
+	self:Debug('PauseUpdates')
+	self:UnregisterMessage('AdiBags_BagUpdated')
+	self.paused = true
+end
+
+function containerProto:AdiBags_BagSetupChanged()
+	self:Debug('BagSetupChanged')
+	for bag in pairs(self.content) do
 		self:UpdateContent(bag)
 	end
 	if self.filtersChanged  then
@@ -417,13 +426,6 @@ function containerProto:ResumeUpdates()
 		self:UpdateButtons()
 	end
 	self:LayoutSections(true)
-end
-
-function containerProto:PauseUpdates()
-	if self.paused then return end
-	self:Debug('PauseUpdates')
-	self:UnregisterMessage('AdiBags_BagUpdated')
-	self.paused = true
 end
 
 function containerProto:AUCTION_MULTISELL_UPDATE(event, current, total)
@@ -554,9 +556,6 @@ end
 -- Bag content scanning
 --------------------------------------------------------------------------------
 
-local GetDistinctItemID = addon.GetDistinctItemID
-local IsValidItemLink = addon.IsValidItemLink
-
 function containerProto:UpdateContent(bag)
 	self:Debug('UpdateContent', bag)
 	local added, removed, changed = self.added, self.removed, self.changed
@@ -567,7 +566,7 @@ function containerProto:UpdateContent(bag)
 	for slot = 1, newSize do
 		local itemId = GetContainerItemID(bag, slot)
 		local link = GetContainerItemLink(bag, slot)
-		if not itemId or (link and IsValidItemLink(link)) then
+		if not itemId or (link and addon.IsValidItemLink(link)) then
 			local slotData = content[slot]
 			if not slotData then
 				slotData = {
@@ -589,7 +588,7 @@ function containerProto:UpdateContent(bag)
 				link, count = false, 0
 			end
 
-			if GetDistinctItemID(slotData.link) ~= GetDistinctItemID(link) then
+			if slotData.link ~= link then
 				removed[slotData.slotId] = slotData.link
 				slotData.count = count
 				slotData.link = link

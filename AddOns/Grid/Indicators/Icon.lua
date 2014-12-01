@@ -102,7 +102,7 @@ GridFrame:RegisterIndicator("icon", L["Center Icon"],
 			self.cooldown:Hide()
 		end
 
-		if profile.enableIconStackText then
+		if profile.enableIconStackText and type(count) == "number" and count > 1 then
 			self.text:SetText(count)
 		else
 			self.text:SetText("")

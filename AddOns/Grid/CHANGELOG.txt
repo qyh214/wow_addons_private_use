@@ -1,4 +1,33 @@
-### Version 6.0.2.1679-beta
+### Version 6.0.3.1710
+
+* Temporary fix for raid difficulty detection: LFR, Normal, and Heroic will use your chosen "Flexible Raid" layout, and Mythic will use your "25 Player Raid" layout. In the near future, all built-in layouts will automatically adjust their size for your current raid, and there will only be one "Raid" layout setting.
+* Fixed an issue with right-click bindings in Clique (ticket #747)
+* Fixed the Mouseover status not triggering when "Show Tooltip" was set to "Never" (ticket #770)
+* Fixed another issue with status counts (eg. aura stacks) (ticket #768)
+* Fixed the Resurrection status (ticket #745)
+
+#### Known Issues
+
+* WoW is currently reporting incoming heal and absorb amounts that are much too small, so Grid will also show incoming heal and absorb amounts that are much too small. There is nothing I can do about this other than wait for Blizzard to fix the problem on their end.
+
+-------------------
+
+### Version 6.0.2.1699
+
+* **General:**
+* Fixed the options for changing the frame height/width
+* **Statuses:**
+* Fixed the Mouseover status (ticket #748)
+* Fixed the icons for the Role and Master Looter statuses
+* Fixed the appearance of the Group Leader, Group Assistant, and Master Looter statuses when shown on icon-type indicators
+* **Indicators:**
+* Fixed the Healing Bar indicator
+* Fixed the Center Icon indicator showing stack counts of 0 or 1
+* Fixed an error that could sometimes occur when using the Health Bar Color indicator
+* Fixed count property not being passed to indicators (ticket #741)
+* [API] All default indicators are now reset before any third-party indicators
+
+### Version 6.0.2.1679
 
 * Fixed center icon intercepting mouse clicks
 * Removed debug prints triggered by outdated layout plugins
@@ -17,7 +46,7 @@
 * Added Soulstone support to the Incoming Resurrection status
 * Added an option to choose a layout to use in Flex Raids (Greltok)
 * Improved options layout for statuses with multiple colors (Greltok)
-* Most statuses will no longer try to update for units not in visible range ([ticket #714](http://www.wowace.com/addons/grid/tickets/714/))
+* Most statuses will no longer try to update for units not in visible range (ticket #714)
 * Moved Grid's options to the standard Interface Options window, with an option to prefer the old standalone window
 * Removed combined count/duration option for aura text (feel free to use a plugin if you want to spam yourself)
 * [API] GridRoster's IsGUIDInRaid method has been renamed to IsGUIDInGroup. The old name still exists as an alias, but plugins are encouraged to update anyway.
@@ -51,7 +80,7 @@
 
 * Updated for WoW 5.3
 * Fixed the "Show tab" option (thanks Greltok)
-* Fixed the "Enable right-click menu" option on login ([ticket #696](http://www.wowace.com/addons/grid/tickets/696/))
+* Fixed the "Enable right-click menu" option on login (ticket #696)
 
 ### Version 5.2.0.1600
 
@@ -84,7 +113,7 @@
 
 ### Version 5.0.5.1552
 
-* Fixed an issue causing delays in updating for group changes in battlegrounds ([ticket #631](http://www.wowace.com/addons/grid/tickets/631/))
+* Fixed an issue causing delays in updating for group changes in battlegrounds (ticket #631)
 * Fixed an issue causing blank indicators after switching profiles ([ticket #661]](http://www.wowace.com/addons/grid/tickets/661/))
 * Fixed an issue causing Grid not to reappear when leaving a pet battle due to PvP combat
 
@@ -94,16 +123,16 @@
 
 ### Version 5.0.5.1539
 
-* Fixed pet battle hiding so that Grid stays properly hidden when the None layout is selected ([ticket #648](](http://www.wowace.com/addons/grid/tickets/648/)).
+* Fixed pet battle hiding so that Grid stays properly hidden when the None layout is selected (ticket #648).
 
 ### Version 5.0.5.1537
 
 * Added default buffs for monks.
 * Added an option to show the Debuff Type statuses only when your character can dispel them.
-* Grid is now hidden during pet battles ([ticket #643](](http://www.wowace.com/addons/grid/tickets/643/)).
+* Grid is now hidden during pet battles (ticket #643).
 * Status opacity now has its own option, instead of being part of the status color option.
-* Fixed an issue with range checking while solo ([ticket #627](](http://www.wowace.com/addons/grid/tickets/627/)).
-* Fixed an issue causing icons to be hidden on auras with duration text or coloring enabled ([ticket #644](](http://www.wowace.com/addons/grid/tickets/644/)).
+* Fixed an issue with range checking while solo (ticket #627).
+* Fixed an issue causing icons to be hidden on auras with duration text or coloring enabled (ticket #644).
 * Removed backwards compatibility with WoW 4.x.
 * The Resurrect status module now uses LibResInfo-1.0.
 * Added partial Italian localization from kappesante and Holydeath1984.
@@ -111,7 +140,7 @@
 
 ### Version 5.0.4.1520
 
-* Fixed a bug in the Ready Check module ([ticket #626](](http://www.wowace.com/addons/grid/tickets/626/))
+* Fixed a bug in the Ready Check module (ticket #626)
 
 ### Version 5.0.4.1517
 
@@ -120,7 +149,7 @@
 * Fixed the text color when disabling the "Invert text color" option.
 * Fixed range checking on dead targets for monks.
 * Fixed the Resurrection module's handling of res casts on targets who already had a res available.
-* Fixed errors in Spanish clients ([ticket #611](](http://www.wowace.com/addons/grid/tickets/611/)).
+* Fixed errors in Spanish clients (ticket #611).
 * Added monks to the By Class layouts.
 * Added the Blizzard raid bar texture.
 * Increased the default font size from 11 to 12.

@@ -685,7 +685,7 @@ end
 --    CloseDropDownMenus();
 --    if(arg1 == "RightButton") then
 --        WIM_MSGBOX_MENU_CUR_USER = this:GetParent().theUser;
---        UIDropDownMenu_Initialize(WIM_MsgBoxMenu, WIM_MsgBoxMenu_Initialize, "MENU");
+--        UIDropDownMenu_Initialize(WIM_MsgBoxMenu, WIM_MsgBoxMenu_Initialize);
 --        ToggleDropDownMenu(1, nil, WIM_MsgBoxMenu, this, 0, 0);
 --    end
 -- end

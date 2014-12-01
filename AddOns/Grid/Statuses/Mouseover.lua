@@ -14,7 +14,7 @@
 
 local _, Grid = ...
 local L = Grid.L
-local GridFrame
+local GridFrame = Grid:GetModule("GridFrame")
 
 local GridStatusMouseover = Grid:NewStatusModule("GridStatusMouseover")
 GridStatusMouseover.menuName = L["Mouseover"]
@@ -32,41 +32,40 @@ GridStatusMouseover.defaultDB = {
 function GridStatusMouseover:PostInitialize()
 	self:Debug("PostInitialize")
 	self:RegisterStatus("mouseover", L["Mouseover"], nil, true)
-
-	GridFrame = Grid:GetModule("GridFrame")
-	hooksecurefunc(GridFrame.prototype, "OnEnter", self.OnEnter)
-	hooksecurefunc(GridFrame.prototype, "OnLeave", self.OnLeave)
 end
 
 function GridStatusMouseover:OnStatusEnable(status)
 	self:Debug("OnStatusEnable", status)
 	self:RegisterMessage("Grid_RosterUpdated", "UpdateAllUnits")
+	self:RegisterMessage("Grid_UnitFrame_OnEnter", "UnitFrame_OnEnter")
+	self:RegisterMessage("Grid_UnitFrame_OnLeave", "UnitFrame_OnLeave")
+	self:UpdateAllUnits()
 end
 
 function GridStatusMouseover:OnStatusDisable(status)
 	self:Debug("OnStatusDisable", status)
 	self:UnregisterMessage("Grid_RosterUpdated")
+	self:UnregisterMessage("Grid_UnitFrame_OnEnter")
+	self:UnregisterMessage("Grid_UnitFrame_OnLeave")
 	self:SendStatusLostAllUnits(status)
 end
 
-function GridStatusMouseover:UpdateAllUnits(event, ...)
-	self:Debug("UpdateAllUnits", event, ...)
+function GridStatusMouseover:UpdateAllUnits(event)
 	local enabled = self.db.profile.mouseover.enable
 	for i = 1, #GridFrame.registeredFrames do
 		local frame = GridFrame.registeredFrames[i]
 		if enabled and frame:IsMouseOver() then
-			self.OnEnter(frame)
+			self:UnitFrame_OnEnter(frame.unit, frame.unitGUID)
 		else
-			self.OnLeave(frame)
+			self:UnitFrame_OnLeave(frame.unit, frame.unitGUID)
 		end
 	end
 end
 
-function GridStatusMouseover.OnEnter(frame)
-	local guid = frame.unitGUID
+function GridStatusMouseover:UnitFrame_OnEnter(event, unit, guid)
 	local profile = GridStatusMouseover.db.profile.mouseover
 	if guid and profile.enable then
-		GridStatusMouseover:SendStatusGained("mouseover", guid,
+		self.core:SendStatusGained(guid, "mouseover",
 			profile.priority,
 			nil,
 			profile.color,
@@ -75,9 +74,8 @@ function GridStatusMouseover.OnEnter(frame)
 	end
 end
 
-function GridStatusMouseover.OnLeave(frame)
-	local guid = frame.unitGUID
+function GridStatusMouseover:UnitFrame_OnLeave(event, unit, guid)
 	if guid then
-		GridStatusMouseover:SendStatusLost("mouseover", guid)
+		self.core:SendStatusLost(guid, "mouseover")
 	end
 end

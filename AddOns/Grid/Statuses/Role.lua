@@ -22,6 +22,7 @@ GridStatusRole.menuName = L["Role"]
 GridStatusRole.options = false
 GridStatusRole.defaultDB = {
 	role = {
+		enable = true, -- not exposed in the UI
 		priority = 35,
 		TANK = {
 			enable = true,
@@ -81,6 +82,23 @@ function GridStatusRole:PostInitialize()
 			v.r, v.g, v.b, v.a = r, g, b, a
 		else
 			self.db.profile.role[t][k] = r
+		end
+		if k == "enable" then
+			local v2 = false
+			for k2 in pairs(ROLE_TEXCOORDS) do
+				if self.db.profile.role[k2].enable then
+					v2 = true
+					break
+				end
+			end
+			if v2 ~= self.db.profile.role.enable then
+				self.db.profile.role.enable = v2
+				if v2 then
+					self:OnStatusEnable("role")
+				else
+					self:OnStatusDisable("role")
+				end
+			end
 		end
 	end
 
@@ -156,7 +174,7 @@ end
 
 function GridStatusRole:UpdateUnit(event, unit, guid)
 	local role = UnitGroupRolesAssigned(unit) or "NONE"
-	self:Debug("UpdateUnit", event, unit, "=>", role)
+	self:Debug("UpdateUnit", event, unit, role)
 
 	local settings = self.db.profile.role
 	local roleSettings = settings[role]
@@ -164,14 +182,15 @@ function GridStatusRole:UpdateUnit(event, unit, guid)
 	if roleSettings and roleSettings.enable and not (roleSettings.hideInCombat and UnitAffectingCombat("player")) then
 		self.core:SendStatusGained(guid, "role",
 			settings.priority,
-			nil,
+			nil, -- range
 			roleSettings.color,
 			roleSettings.text,
-			nil,
-			nil,
+			nil, -- value
+			nil, -- maxValue
 			ROLE_TEXTURE,
-			nil,
-			nil,
+			nil, -- start
+			nil, -- duration
+			nil, -- count
 			ROLE_TEXCOORDS[role]
 		)
 	else

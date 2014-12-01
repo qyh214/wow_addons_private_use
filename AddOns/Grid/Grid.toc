@@ -1,7 +1,7 @@
 ## Interface: 60000
-## Version: 6.0.2.1679-beta
-## X-ReleaseDate: "$Date: 2014-10-17 14:02:49 +0000 (Fri, 17 Oct 2014) $"
-## X-Curse-Packaged-Version: 6.0.2.1679-beta
+## Version: 6.0.3.1710
+## X-ReleaseDate: "$Date: 2014-10-18 13:17:09 +0000 (Sat, 18 Oct 2014) $"
+## X-Curse-Packaged-Version: 6.0.3.1710
 ## X-Curse-Project-Name: Grid
 ## X-Curse-Project-ID: grid
 ## X-Curse-Repository-ID: wow/grid/mainline
@@ -93,13 +93,10 @@ Statuses\RaidIcon.lua
 Statuses\Range.lua
 Statuses\ReadyCheck.lua
 Statuses\Resurrect.lua
+Statuses\Role.lua
 Statuses\Target.lua
 Statuses\Vehicle.lua
 Statuses\VoiceComm.lua
-
-#@debug@
-# Statuses\Role.lua
-#@end-debug@
 
 #@debug@
 # Statuses\new\GridAura.lua
