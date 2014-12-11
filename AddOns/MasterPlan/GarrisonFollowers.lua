@@ -25,6 +25,7 @@ local CreateMechanicButton do
 			GameTooltip:AddLine(C_Garrison.GetFollowerAbilityDescription(self.id), 1,1,1, 1)
 			if ci and #ci > 0 then
 				GameTooltip:AddLine("|n" .. L"Followers with this trait:", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+				G.sortByFollowerLevels(ci, fi)
 				for i=1,#ci do
 					GameTooltip:AddLine(G.GetFollowerLevelDescription(ci[i], nil, fi[ci[i]]), 1,1,1)
 				end
@@ -37,7 +38,7 @@ local CreateMechanicButton do
 		else
 			GameTooltip:AddLine(ico .. self.name)
 			if ci and #ci > 0 then
-				GameTooltip:AddLine(L"Countered by:", 1,1,1)
+				GameTooltip:AddLine(L"Can be countered by:", 1,1,1)
 				G.sortByFollowerLevels(ci, fi)
 				for i=1,#ci do
 					GameTooltip:AddLine(G.GetFollowerLevelDescription(ci[i], nil, fi[ci[i]]), 1,1,1)
@@ -122,22 +123,19 @@ GameTooltip:HookScript("OnShow", function(self)
 	end
 end)
 
-
 local icons = setmetatable({}, {__index=function(self, k)
 	local f = CreateMechanicButton(mechanicsFrame)
 	f:SetPoint("LEFT", 24*k-20, 0)
 	self[k] = f
 	return f
 end})
-
 local traits, traitGroups = {221, 76, 77, 79}, {
 	{80, 236, icon="Interface\\Icons\\XPBonus_Icon"},
 	{63,64,65,66,67,68,69,70,71,72,73,74,75,78, icon="Interface\\Icons\\PetBattle_Health"},
-	{4,36,37,38,39,40,41,42,43,244, icon="Interface\\Icons\\Ability_Hunter_MarkedForDeath"},
+	{4,36,37,38,39,40,41,42,43, icon="Interface\\Icons\\Ability_Hunter_MarkedForDeath"},
 	{7,8,9,44,45,46,48,49, icon="Interface\\Icons\\Achievement_Zone_Stonetalon_01"},
 	{52,53,54,55,56,57,58,59,60,61,62,227,231, icon="Interface\\Icons\\Trade_Engineering"},
 }
-
 local function syncTotals()
 	local finfo, cinfo, tinfo, i = G.GetFollowerInfo(), G.GetCounterInfo(), G.GetFollowerTraits(), 1
 	for k=1,10 do
@@ -168,7 +166,6 @@ local function syncTotals()
 		i = i + 1
 	end
 end
-
 GarrisonMissionFrame.FollowerTab:HookScript("OnShow", function(self)
 	mechanicsFrame:SetParent(self)
 	mechanicsFrame:ClearAllPoints()
@@ -183,7 +180,10 @@ GarrisonLandingPage.FollowerTab:HookScript("OnShow", function(self)
 	mechanicsFrame:Show()
 	syncTotals()
 end)
-
+hooksecurefunc(C_Garrison, "SetFollowerInactive", function()
+	C_Timer.After(0.25, syncTotals)
+	C_Timer.After(1, syncTotals)
+end)
 
 local UpgradesFrame = CreateFrame("FRAME")
 UpgradesFrame:SetSize(237, 42)
@@ -214,28 +214,29 @@ T.Evie.RegisterEvent("PLAYER_REGEN_DISABLED", function()
 	UpgradesFrame:ClearAllPoints()
 end)
 T.Evie.RegisterEvent("BAG_UPDATE_DELAYED", function()
-	if UpgradesFrame:IsShown() then
+	if UpgradesFrame:IsVisible() then
 		UpgradesFrame:Update()
 	end
 end)
 
 local function UpgradeItem_SetItem(self, id)
 	self.itemID = id
-	local itemName, _, itemQuality, _, _, _, _, _, _, itemTexture = GetItemInfo(id);
+	local count, itemName, _, itemQuality, _, _, _, _, _, _, itemTexture = GetItemCount(id), GetItemInfo(id)
 	if itemName then
 		self.Icon:SetTexture(itemTexture)
 		self.Name:SetText(itemName)
+		self.Count:SetText(count > 1 and count or "")
 		self.Name:SetTextColor(GetItemQualityColor(itemQuality))
 		self.ItemLevel:SetFormattedText("")
 	end
-	self:SetAttribute("macrotext", "/use item:" .. id)
+	self:SetAttribute("macrotext", SLASH_STOPSPELLTARGET1 .. "\n" .. SLASH_USE1 .. " item:" .. id)
 	self:Show()
 end
 local function UpgradeItem_OnClick(self)
 	C_Garrison.CastSpellOnFollower(GarrisonMissionFrame.FollowerTab.followerID)
 end
 local function UpgradeItem_OnEvent(self)
-	if self:IsShown() and self.itemID then
+	if self:IsVisible() and self.itemID then
 		UpgradeItem_SetItem(self, self.itemID)
 	end
 end
@@ -264,6 +265,8 @@ local function UpgradeItem_OnEnter(self)
 end
 local upgradeItems = setmetatable({}, {__index=function(self, i)
 	local b = CreateFrame("Button", nil, UpgradesFrame, "GarrisonFollowerItemButtonTemplate,SecureActionButtonTemplate")
+	b.Count = b:CreateFontString(nil, "ARTWORK", "GameFontHighlightOutline")
+	b.Count:SetPoint("BOTTOMRIGHT", b.Icon, "BOTTOMRIGHT", -1, 2)
 	b:SetAttribute("type", "macro")
 	b:SetPoint("BOTTOM", i > 1 and self[i-1] or UpgradesFrame, i > 1 and "TOP" or "BOTTOM", 0, i > 1 and 4 or 6)
 	b:SetScript("OnEnter", UpgradeItem_OnEnter)
@@ -279,7 +282,7 @@ end})
 function UpgradesFrame:Update()
 	local up = {G.GetUpgradeItems(self.itemLevel, self.isWeapon)}
 	if #up == 0 then return self:Hide() end
-	self:SetHeight(4+48*#up)
+	self:SetHeight(8+46*#up)
 	for i=1,#up do
 		UpgradeItem_SetItem(upgradeItems[i], up[i])
 	end
@@ -302,6 +305,9 @@ local function FollowerItem_OnClick(self, button)
 		UpgradesFrame:Hide()
 	else
 		UpgradesFrame:DisplayFor(self, self.itemLevel, self:GetParent().ItemWeapon == self)
+		if not UpgradesFrame:IsShown() then
+			self.UpgradeIcon:Hide()
+		end
 	end
 end
 local function FollowerItem_OnEnter(self)
@@ -331,10 +337,17 @@ hooksecurefunc("GarrisonFollowerPage_SetItem", function(self, itemID, iLevel)
 		self:SetScript("OnHide", FollowerItem_OnLeave)
 		self.HighlightBorder = CreateFollowerItemHighlight(self)
 	end
-	local isWeapon = self:GetParent().ItemWeapon == self
-	local hasUpgrade = G.GetUpgradeItems(iLevel, isWeapon) ~= nil
-	self.UpgradeIcon:SetShown(hasUpgrade)
+	self.hasUpgrade = G.GetUpgradeItems(iLevel, self:GetParent().ItemWeapon == self)
+	self.UpgradeIcon:SetShown(self.hasUpgrade ~= nil)
 	for i=1,#self.HighlightBorder do
-		self.HighlightBorder[i]:SetShown(hasUpgrade)
+		self.HighlightBorder[i]:SetShown(self.hasUpgrade)
+	end
+end)
+GarrisonMissionFrame.FollowerTab:HookScript("OnUpdate", function(self)
+	if self.ItemWeapon.hasUpgrade and GetItemCount(self.ItemWeapon.hasUpgrade) == 0 then
+		GarrisonFollowerPage_SetItem(self.ItemWeapon, self.ItemWeapon.itemID, self.ItemWeapon.itemLevel)
+	end
+	if self.ItemArmor.hasUpgrade and GetItemCount(self.ItemArmor.hasUpgrade) == 0 then
+		GarrisonFollowerPage_SetItem(self.ItemArmor, self.ItemArmor.itemID, self.ItemArmor.itemLevel)
 	end
 end)

@@ -1,0 +1,13 @@
+tag z21a-release
+321a7bfd83e265e548c8919f9b0a9dc061ff689e
+Xuerian <sky.shell@gmail.com>
+2014-12-09 17:27:51 -0500
+
+Adjust default settings to reduce spam
+
+
+--------------------
+
+Xuerian:
+	- Group: Change default roll tracking options to rare only to reduce spam
+	- Monitor: Raise default thresholds to reduce spam

@@ -51,24 +51,23 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 			-- Get the spell from player.
 			local spell = player.damagespells[dmg.spellname]
 
-			spell.totalhits = spell.totalhits + 1
+			if not dmg.multistrike then
+				spell.totalhits = spell.totalhits + 1
 
-			if spell.max == nil or amount > spell.max then
-				spell.max = amount
-			end
+				if spell.max == nil or amount > spell.max then
+					spell.max = amount
+				end
 
-			if (spell.min == nil or amount < spell.min) and not dmg.missed then
-				spell.min = amount
+				if (spell.min == nil or amount < spell.min) and not dmg.missed then
+					spell.min = amount
+				end
 			end
 
 			spell.damage = spell.damage + amount
 
-			-- Multistrikes can crit.
 			if dmg.multistrike then
 				spell.multistrike = (spell.multistrike or 0) + 1
-			end
-			-- These below are mutually exclusive.
-			if dmg.critical then
+			elseif dmg.critical then
 				spell.critical = (spell.critical or 0) + 1
 			elseif dmg.missed ~= nil then
 				spell[dmg.missed] = (spell[dmg.missed] or 0) + 1

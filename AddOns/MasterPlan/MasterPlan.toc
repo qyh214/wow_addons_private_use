@@ -3,7 +3,7 @@
 ## Notes: Garrision missions UI tweaks.
 ## LoadOnDemand: 1
 ## LoadWith: Blizzard_GarrisonUI
-## Version: 0.9
+## Version: 0.15
 ## Author: foxlit
 ## SavedVariables: MasterPlanConfig, MasterPlanData
 Libs/Evie.lua

@@ -5,7 +5,7 @@
 ## OptionalDeps: Ace3, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, LibDualSpec-1.0
 ## SavedVariables: CastbarsDB
 ## X-Category: Combat
-## X-Curse-Packaged-Version: 3.44
+## X-Curse-Packaged-Version: 3.45
 ## X-Curse-Project-Name: Castbars
 ## X-Curse-Project-ID: castbars
 ## X-Curse-Repository-ID: wow/castbars/mainline

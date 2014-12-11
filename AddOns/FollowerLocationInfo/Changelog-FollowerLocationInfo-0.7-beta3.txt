@@ -1,0 +1,13 @@
+tag 0.7-beta3
+dfe9293b4ea6e6865808002b3b74ce5bb1ade232
+Hizuro <hizuro@gmx.net>
+2014-12-03 22:21:11 +0100
+
+Tagging as 0.7-beta3
+
+
+--------------------
+
+Hizuro:
+	- changed filter system for more flexibility
+	- updated localizations and added more npc names (quest giver and vendors)

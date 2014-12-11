@@ -1,0 +1,37 @@
+------------------------------------------------------------------------
+r228 | xbeeps | 2014-12-02 22:00:43 +0000 (Tue, 02 Dec 2014) | 1 line
+Changed paths:
+   A /tags/3.45 (from /trunk:227)
+
+Tagging as 3.45
+------------------------------------------------------------------------
+r227 | xbeeps | 2014-11-30 22:34:48 +0000 (Sun, 30 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/Castbars.lua
+
+Properly fix the opacity issue without messing up the fadeout of the bar
+------------------------------------------------------------------------
+r226 | xbeeps | 2014-11-30 22:12:12 +0000 (Sun, 30 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/Castbars.lua
+
+Make it possible to decrease the bar width to 50 (was 100)
+------------------------------------------------------------------------
+r225 | xbeeps | 2014-11-30 22:08:08 +0000 (Sun, 30 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/Castbars.lua
+
+Fix issue with opacity settings being overridden by CastingBarFrame_OnEvent when casting a spell and ignored in Configuration Mode.
+------------------------------------------------------------------------
+r223 | xbeeps | 2014-11-30 21:38:48 +0000 (Sun, 30 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/Castbars.lua
+
+Fix target of channeled spells not showing
+------------------------------------------------------------------------
+r221 | xbeeps | 2014-11-24 19:59:15 +0000 (Mon, 24 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/Castbars.lua
+
+Rework the trade skill merge to avoid hooking DoTradeSkill which appears to be protected under certain circumstances. Also avoid the UPDATE_TRADESKILL_RECAST event which isn't needed anymore.
+------------------------------------------------------------------------

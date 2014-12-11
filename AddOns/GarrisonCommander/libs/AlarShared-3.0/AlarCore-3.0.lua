@@ -66,29 +66,41 @@ local wipe=wipe
 local setmetatable=setmetatable
 local NUM_BAG_SLOTS=NUM_BAG_SLOTS
 
-
-local new, del
+-- Recycling function from ACE3
+----newcount, delcount,createdcount,cached = 0,0,0
+local new, del, copy
 do
-	local list=lib.list
-	function new(...)
-			local t = next(list)
-			local tt=select(1,...)
-			if (not t) then
-				 t={}
-			end
-			list[t] = nil
-			if (type(tt)=="table") then
-				 for i,v in pairs(tt) do  t[i]=v  end
-			else
-				 for i,v in pairs({...}) do t[i]=v  end
-			end
+	local pool = setmetatable({},{__mode="k"})
+	function new()
+		--newcount = newcount + 1
+		local t = next(pool)
+		if t then
+			pool[t] = nil
 			return t
+		else
+			--createdcount = createdcount + 1
+			return {}
+		end
+	end
+	function copy(t)
+		local c = new()
+		for k, v in pairs(t) do
+			c[k] = v
+		end
+		return c
 	end
 	function del(t)
-		setmetatable(t, nil)
+		--delcount = delcount + 1
 		wipe(t)
-		list[t] = true
+		pool[t] = true
 	end
+--	function cached()
+--		local n = 0
+--		for k in pairs(pool) do
+--			n = n + 1
+--		end
+--		return n
+--	end
 end
 lib.mix=lib.mix or {}
 local mix=lib.mix --#mix
@@ -1297,38 +1309,42 @@ lib.itemcache=lib.itemcache or
 	setmetatable({miss=0,tot=0},{
 		__index=function(table,key)
 			if (not key) then return lib.emptytable end
-			local t=new(GetItemInfo(key))
-			if (t[2]) then
+			if (key=="miss") then return 0 end
+			if (key=="tot") then return 0 end
+			local p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p99,p100=GetItemInfo(key)
+			if (p2) then
 				if (table.I) then
-					t[99]=table.I:GetItemLevelUpgrade(table.I:GetUpgradeID(t[2]))
+					p99=table.I:GetItemLevelUpgrade(table.I:GetUpgradeID(p2))
 				else
 					debug("No libiteminfo")
-					t[99]=0
+					p99=0
 				end
-				t[100]=t[4]+t[99]
-				rawset(table,t[2],t)
+				p100=p4+p99
+				rawset(table,p2,{p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p2,p3,[99]=p99,[100]=p100})
 			else
-				del(t)
 				return lib.emptytable
 			end
 			table.miss=table.miss+1
-			return t
+			return table[p2]
 		end
 
 	})
 function mix:GetCachingGetItemInfo()
 	do
 		local cache=lib.itemcache
+		wipe(cache)
 		cache.I=LibStub("LibItemUpgradeInfo-1.0",true)
 		return
 		function(itemlink,index)
-			if (tonumber(itemlink)) then
-				if (tonumber(index)) then
-					return select(index,GetItemInfo(itemlink))
-				else
-					return GetItemInfo(itemlink)
-				end
-			end
+--			if (tonumber(itemlink)) then
+--				if (tonumber(index)) then
+--					if (index==99) then return 0 end
+--					if (index==100) then index=4 end
+--					return select(index,GetItemInfo(itemlink))
+--				else
+--					return GetItemInfo(itemlink)
+--				end
+--			end
 			cache.tot=cache.tot+1
 			if (index) then
 				return cache[itemlink][index]

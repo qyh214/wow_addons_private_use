@@ -1,4 +1,23 @@
 = GarrisonCommander helps you when choosing the right follower for the right mission =
+* 1.1.8
+Fix: Followers list was not refreshing after an item update
+Fix: Getting a bit tired of playing Hide and Seek with Masterplan, Fixed (again).
+* 1.1.7
+Fix: Followers cache was not initialized
+FIx: When filling a party using followers with no counters, was taking busy followers in all cases
+* 1.1.6
+Fix: GarrisonCommander was unwilling triggering a mission reordering.
+Fix: First mission list button was opening the wrong mission
+Feature: Reduced memory footprint
+Feature: You can switch between considering busy follower or not via a checkbox in main mission panel
+Feature: Follower are now assigned to mission giving priority to highest level
+Feature: GarrisonCommander is now load on demand when opening Garrison interface
+* 1.1.5
+Fix: Possible clash with another addon
+Fix: Improved follower data refresh. Hopefully no more "You dont have enough followers.." on every button
+* 1.1.4
+Fixed: Was lagging when zoning inside Garrison
+Fixed: Sometimes clicking on a mission button opened the wrong mission page
 * 1.1.3
 Fixed: When used for a long session of mission management, GarrisonCommander could starve with memory. Now it never go over 1M
 Feature: Preview of 1.2.0 Chance of success is now permanently displayed on every mission. In this version it get updated ONLY when you hover on it

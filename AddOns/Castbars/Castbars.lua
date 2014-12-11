@@ -752,7 +752,7 @@ function Castbars:GetOptionsTableForBar(frameConfigName, friendlyName, order)
                 type = "range",
                 order = 100,
                 desc = "Set the width of the " .. friendlyName .. " bar",
-                min = 100,
+                min = 50,
                 max = 600,
                 step = 1,
                 get = function() return self.db.profile[frameConfigName]["Width"] end,
@@ -1459,6 +1459,7 @@ function Castbars:OnInitialize()
             local unit, spellName, _, id, spellId = ...;
             if (unit == frame.unit) then
                 if (self.db.profile.CastingBarFrame.Blacklist[spellName] or self.db.profile.CastingBarFrame.Blacklist[spellId]) then frame:Hide() end
+                if (frame.configName) then frame:SetAlpha(self.db.profile[frame.configName]["Alpha"]) end
                 if (unit == "player") then
                     frame.spellInSpellBook = self:IsSpellBookSpell(spellId);
                     if (id == frame.sentId or (event == "UNIT_SPELLCAST_CHANNEL_START") and (spellName == frame.sentSpellName)) then
@@ -1583,7 +1584,7 @@ function Castbars:Show()
             frame:EnableMouse(true);
             frame.text:SetText(frame.friendlyName);
             frame.statusBar:SetStatusBarColor(unpack(self.db.profile[frame.configName]["BarColor"]));
-            frame.statusBar:SetAlpha(1);
+            frame.statusBar:SetAlpha(self.db.profile[frame.configName]["Alpha"]);
             frame.statusBar:SetValue(select(2, frame.statusBar:GetMinMaxValues()));
             if (frame.spark) then
                 frame.spark:Hide();

@@ -60,9 +60,9 @@ local defaults = {
 			y = AlertFrame:GetTop()
 		},
 
-		track_all = true,
+		track_all = false,
 		track_player_roll = false,
-		track_by_threshold = false,
+		track_by_threshold = true,
 		track_threshold = 3,
 
 		expire_won = 20,
@@ -227,10 +227,16 @@ function addon:START_LOOT_ROLL(id, length, uid, ongoing)
 		frame.text_time:Hide()
 	end
 
+	frame.need.texture_special:SetTexture()
+	frame.greed.texture_special:SetTexture()
+
 	if opt.equip_prefix then
 		local canequip, isupgrade = CanEquipItem(link), IsItemUpgrade(link)
 		if canequip or isupgrade then
-			name = string_format("|cFF%s%s|r%s", isupgrade and "FF4422" or "BBBBBB", is_upgrade and opt.prefix_upgrade or opt.prefix_equippable, name)
+			name = string_format("|cFF%s%s|r%s", isupgrade and "44FF22" or "BBBBBB", is_upgrade and opt.prefix_upgrade or opt.prefix_equippable, name)
+			if isupgrade then
+				(need and frame.need or frame.greed).texture_special:SetTexture([[Interface\AddOns\Pawn\Textures\UpgradeArrow.tga]])
+			end
 		end
 	end
 	frame.need:Toggle(need)
@@ -738,6 +744,11 @@ do
 				b:GetHighlightTexture():SetAlpha(0.5)
 			end
 			b.parent = parent
+
+			local texture_special = b:CreateTexture(nil, 'OVERLAY')
+			texture_special:SetAllPoints(b)
+			texture_special:SetAlpha(0.5)
+			b.texture_special = texture_special
 
 			local text = b:CreateFontString(nil, 'OVERLAY')
 			text:SetFont(STANDARD_TEXT_FONT, 12, 'THICKOUTLINE')
