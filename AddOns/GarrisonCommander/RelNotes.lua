@@ -1,6 +1,6 @@
 local me,ns=...
-local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
-local hlp=LibStub("AceAddon-3.0"):GetAddon(me)
+local hlp=LibStub("LibInit"):GetAddon(me)
+local L=hlp:GetLocale()
 function hlp:loadHelp()
 self:HF_Title(me,"RELNOTES")
 self:HF_Paragraph("Description")
@@ -9,17 +9,26 @@ self:Wiki([[
 == General enhancements ==
 * Mission panel is movable (position not saved, it's jus to see things, panel is so huge...)
 * Success chance extimation shown in mission list (optionally considering only available followers)
+* Proposed party button
+* each follower can bew ignored individually for each mission
+* you can ignore maxed followers
+* you can ignore busy followers
+* you can sort missions
 == Tooltip Enhancements ==
-* base success chance (before adding followers)
-* list of follower that have the necessary counters for the mission, with their status (on mission, available etc)
+* list of additional follower than have useful features for the mission
 * both traits (silver lines) and abilities(blue lines) are shown
 * every follower line has now the icon for countered trait/ability
-* for In mission follower reports remaining time
 * final success chance (optionally considering only available followers)
+== Silent mode ==
+typing /gac silent in chat will eliminate every chat messag from GarrisonCommander
 ]])
-self:RelNotes(1,1,8,[[
-Fix: Followers list was not refreshing after an item update
-Fix: Getting a bit tired of playing Hide and Seek with Masterplan, Fixed (again).
+self:RelNotes(2,0,1)[[
+Fixed: RU,KR,CH (both traditional and simplified) locales where broken
+Fixed: error when upgrading a follower for the first time
+]]
+self:RelNotes(2,0,0,[[
+Gui totally redesigned, tons of feature added
+Check curse site for complete changelog
 ]])
 self:RelNotes(1,1,7,[[
 Fix: Followers cache was not initialized

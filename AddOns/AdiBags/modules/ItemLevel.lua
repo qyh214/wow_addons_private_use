@@ -1,7 +1,22 @@
 --[[
 AdiBags - Adirelle's bag addon.
-Copyright 2013 Adirelle (adirelle@gmail.com)
+Copyright 2013-2014 Adirelle (adirelle@gmail.com)
 All rights reserved.
+
+This file is part of AdiBags.
+
+AdiBags is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AdiBags is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with AdiBags.  If not, see <http://www.gnu.org/licenses/>.
 --]]
 
 local addonName, addon = ...
@@ -21,7 +36,7 @@ local select = _G.select
 local unpack = _G.unpack
 --GLOBALS>
 
-local mod = addon:NewModule('ItemLevel', 'AceEvent-3.0')
+local mod = addon:NewModule('ItemLevel', 'ABEvent-1.0')
 mod.uiName = L['Item level']
 mod.uiDesc = L['Display the level of equippable item in the top left corner of the button.']
 

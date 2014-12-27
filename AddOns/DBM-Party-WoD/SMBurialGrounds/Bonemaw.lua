@@ -1,8 +1,7 @@
 local mod	= DBM:NewMod(1140, "DBM-Party-WoD", 6, 537)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 11370 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12097 $"):sub(12, -3))
 mod:SetCreatureID(75452)
 mod:SetEncounterID(1679)
 
@@ -11,6 +10,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 154175 165578",
 	"RAID_BOSS_EMOTE",
+	"UNIT_SPELLCAST_SUCCEEDED boss1",
 	"UNIT_DIED"
 )
 
@@ -20,17 +20,23 @@ mod:RegisterEventsInCombat(
 local warnBodySlam				= mod:NewTargetAnnounce(154175, 4)
 local warnInhale				= mod:NewSpellAnnounce(154868, 4)
 local warnCorpseBreath			= mod:NewSpellAnnounce(165578, 2)
+local warnSubmerge				= mod:NewSpellAnnounce(177694, 1)
 
 local specWarnBodySlam			= mod:NewSpecialWarningSpell(154175, nil, nil, nil, 2)
 local specWarnInhale			= mod:NewSpecialWarningSpell(153804)
 
-local timerBodySlamCD			= mod:NewCDSourceTimer(30, 154175)--32-35 Variation
+local timerBodySlamCD			= mod:NewCDSourceTimer(30, 154175)
+local timerInhaleCD				= mod:NewCDTimer(30, 154868)
 local timerCorpseBreathCD		= mod:NewCDTimer(28, 165578, nil, false)--32-37 Variation, also not that important so off by default since there will already be up to 3 smash timers
+local timerSubmergeCD			= mod:NewCDTimer(84, 177694)
 
 local soundInhale				= mod:NewSound(153804)
+local voiceBodySlam				= mod:NewVoice(154175)
+local voiceInhale				= mod:NewVoice(153804)
 
 function mod:OnCombatStart(delay)
 	timerBodySlamCD:Start(15-delay, UnitName("boss1"), UnitGUID("boss1"))
+	timerSubmergeCD:Start(-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -39,6 +45,7 @@ function mod:SPELL_CAST_START(args)
 		warnBodySlam:Show(args.sourceName)
 		if self:AntiSpam(3) then--Throttle special warning when more than 1 slam at once happens.
 			specWarnBodySlam:Show()
+			voiceBodySlam:Play("watchstep")
 		end
 		if args:GetSrcCreatureID() == 75452 then--Source is Bonemaw, not one of his adds
 			timerBodySlamCD:Start(30, args.sourceName, args.sourceGUID)
@@ -62,7 +69,15 @@ function mod:RAID_BOSS_EMOTE(msg)
 	if msg:find("spell:153804") then--Slightly faster than combat log
 		warnInhale:Show()
 		specWarnInhale:Show()
-		--soundInhale:Play()
-		sndWOP:Play("153804")
+		soundInhale:Play()
+		timerInhaleCD:Start()
+		voiceInhale:Play("153804") 
+	end
+end
+
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+	if spellId == 177694 then
+		warnSubmerge:Show()
+		timerSubmergeCD:Start()
 	end
 end

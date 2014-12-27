@@ -2,6 +2,21 @@
 AdiBags - Adirelle's bag addon.
 Copyright 2010-2014 Adirelle (adirelle@gmail.com)
 All rights reserved.
+
+This file is part of AdiBags.
+
+AdiBags is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AdiBags is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with AdiBags.  If not, see <http://www.gnu.org/licenses/>.
 --]]
 
 local addonName, addon = ...
@@ -43,7 +58,7 @@ local ITEM_SIZE = addon.ITEM_SIZE
 -- Button initialization
 --------------------------------------------------------------------------------
 
-local buttonClass, buttonProto = addon:NewClass("ItemButton", "Button", "ContainerFrameItemButtonTemplate", "AceEvent-3.0")
+local buttonClass, buttonProto = addon:NewClass("ItemButton", "Button", "ContainerFrameItemButtonTemplate", "ABEvent-1.0")
 
 local childrenNames = { "Cooldown", "IconTexture", "IconQuestTexture", "Count", "Stock", "NormalTexture", "NewItemTexture" }
 
@@ -153,10 +168,10 @@ end)
 function buttonProto:SetSection(section)
 	local oldSection = self.section
 	if oldSection ~= section then
+		self.section = section
 		if oldSection then
 			oldSection:RemoveItemButton(self)
 		end
-		self.section = section
 		return true
 	end
 end
@@ -391,7 +406,7 @@ end
 -- Item stack button
 --------------------------------------------------------------------------------
 
-local stackClass, stackProto = addon:NewClass("StackButton", "Frame", "AceEvent-3.0")
+local stackClass, stackProto = addon:NewClass("StackButton", "Frame", "ABEvent-1.0")
 addon:CreatePool(stackClass, "AcquireStackButton")
 
 function stackProto:OnCreate()

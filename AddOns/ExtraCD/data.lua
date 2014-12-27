@@ -1,7 +1,7 @@
 ﻿local mod = ExtraCD
 
 function mod:GetDataVersion()
-	return 66
+	return 67
 end
 
 function mod:GetSpellData() 
@@ -1111,7 +1111,30 @@ function mod:GetSpellData()
 			duration = 12,
 			cd = 40
 		}, -- Mark of Blackrock
-		
+		[156055] = {
+			desc = "",
+			type = "enchant",
+			enchant = {5275},
+			slot = 16,
+			duration = 12,
+			ppm = 1.55,
+		}, -- Oglethorpe's Missile Splitter
+		[173288] = {
+			desc = "",
+			type = "enchant",
+			enchant = {5383},
+			slot = 16,
+			duration = 12,
+			ppm = 1.55,
+		}, -- Hemet's Heartseeker
+		[156060] = {
+			desc = "",
+			type = "enchant",
+			enchant = {5276},
+			slot = 16,
+			duration = 12,
+			ppm = 1.55,
+		}, -- Megawatt Filament
 		
 		
 		-- meta gems

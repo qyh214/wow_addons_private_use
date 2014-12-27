@@ -2,6 +2,21 @@
 AdiBags - Adirelle's bag addon.
 Copyright 2010-2014 Adirelle (adirelle@gmail.com)
 All rights reserved.
+
+This file is part of AdiBags.
+
+AdiBags is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AdiBags is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with AdiBags.  If not, see <http://www.gnu.org/licenses/>.
 --]]
 
 local addonName, addon = ...
@@ -29,7 +44,7 @@ local type = _G.type
 local unpack = _G.unpack
 --GLOBALS>
 
-LibStub('AceAddon-3.0'):NewAddon(addon, addonName, 'AceEvent-3.0', 'AceBucket-3.0', 'AceHook-3.0', 'AceConsole-3.0')
+LibStub('AceAddon-3.0'):NewAddon(addon, addonName, 'ABEvent-1.0', 'ABBucket-1.0', 'AceHook-3.0', 'AceConsole-3.0')
 --[===[@debug@
 _G[addonName] = addon
 --@end-debug@]===]
@@ -111,8 +126,6 @@ function addon:OnEnable()
 	self:RegisterMessage('AdiBags_BagOpened', 'LayoutBags')
 	self:RegisterMessage('AdiBags_BagClosed', 'LayoutBags')
 
-	self:RegisterEvent('CURRENT_SPELL_CAST_CHANGED')
-
 	self:RawHook("OpenAllBags", true)
 	self:RawHook("CloseAllBags", true)
 	self:RawHook("ToggleAllBags", true)
@@ -158,8 +171,6 @@ function addon:OnEnable()
 	self.sectionFont:ApplySettings()
 	self:UpdatePositionMode()
 
-	self:CURRENT_SPELL_CAST_CHANGED('OnEnable')
-
 	self:Debug('Enabled')
 end
 
@@ -185,10 +196,11 @@ end
 function addon:UpgradeProfile()
 	local profile = self.db.profile
 
-	-- Convert old ordering setting
-	if profile.laxOrdering == true then
-		profile.laxOrdering = 1
-	end
+	-- Remove old settings
+	profile.laxOrdering = nil
+	profile.maxWidth = nil
+	profile.automaticLayout = nil
+	profile.rowWidth = nil
 
 	-- Convert old anchor settings
 	local oldData = profile.anchor
@@ -207,12 +219,6 @@ function addon:UpgradeProfile()
 	-- Convert old "notWhenTrading" setting
 	if profile.virtualStacks.notWhenTrading == true then
 		profile.virtualStacks.notWhenTrading = 3
-	end
-
-	-- Convert old "rowWidth"
-	if type(profile.rowWidth) == "number" then
-		local rowWidth = profile.rowWidth
-		profile.rowWidth = { Bank = rowWidth, Backpack = rowWidth }
 	end
 
 	-- Convert old "backgroundColors"
@@ -268,18 +274,6 @@ if BugGrabber then
 			addon:Debug('Error:', errorObject.message)
 		end
 	end)
-end
-
---------------------------------------------------------------------------------
--- Track spell targeting
---------------------------------------------------------------------------------
-
-function addon:CURRENT_SPELL_CAST_CHANGED(event)
-	local spellIsTargeting = SpellIsTargeting()
-	if self.spellIsTargeting ~= spellIsTargeting then
-		self.spellIsTargeting = spellIsTargeting
-		self:SendMessage('AdiBags_SpellIsTargetingChanged', spellIsTargeting)
-	end
 end
 
 --------------------------------------------------------------------------------
@@ -402,7 +396,7 @@ function addon:ConfigChanged(vars)
 				elseif not enabled and bag:IsEnabled() then
 					bag:Disable()
 				end
-			elseif strmatch(name, 'rowWidth') then
+			elseif strmatch(name, 'columnWidth') then
 				return self:SendMessage('AdiBags_LayoutChanged')
 			elseif strmatch(name, '^skin%.font') then
 				return self:UpdateFonts()
@@ -411,7 +405,7 @@ function addon:ConfigChanged(vars)
 	end
 	if vars.sortingOrder then
 		return self:SetSortingOrder(self.db.profile.sortingOrder)
-	elseif vars.maxHeight or vars.maxWidth or vars.laxOrdering then
+	elseif vars.maxHeight then
 		return self:SendMessage('AdiBags_LayoutChanged')
 	elseif vars.scale then
 		return self:LayoutBags()
@@ -489,7 +483,7 @@ function addon:ShouldStack(slotData)
 			end
 		end
 	elseif conf.others and unstack < 2 then
-		return true, tostring(slotData.link)..hintSuffix
+		return true, tostring(self.GetDistinctItemID(slotData.link))..hintSuffix
 	end
 end
 

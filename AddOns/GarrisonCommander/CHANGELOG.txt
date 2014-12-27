@@ -1,7 +1,9 @@
 = GarrisonCommander helps you when choosing the right follower for the right mission =
-* 1.1.8
-Fix: Followers list was not refreshing after an item update
-Fix: Getting a bit tired of playing Hide and Seek with Masterplan, Fixed (again).
+* 2.0.1
+Fixed: RU,KR,CH (both traditional and simplified) locales where broken
+Fixed: error when upgrading a follower for the first time
+* 2.0.0
+Gui totally redesigned, mission filling, mission sort, follower page enhancements
 * 1.1.7
 Fix: Followers cache was not initialized
 FIx: When filling a party using followers with no counters, was taking busy followers in all cases

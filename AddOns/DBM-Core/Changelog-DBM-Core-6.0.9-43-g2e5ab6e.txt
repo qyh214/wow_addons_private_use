@@ -1,0 +1,44 @@
+subversion:
+	- ultrashining via svn r12177: zhTW update
+	- nbluewiz via svn r12176: # koKR update.
+	- Omega via svn r12175: Shorten Timer Text. nebula has a point, i'm actually not sure why i didn't do this sooner, i had already done it with warning text.
+	- Omega via svn r12174: margok drycodes for mythic since guilds keep complaining about it (and yet won't provide logs). No promises it's even remotely functional since no decent logs. :\
+	- nbluewiz via svn r12173: # Avoid duplicate target in combined show. # Skyreach range frame fix.
+	- nbluewiz via svn r12172: # bad cid.
+	- Omega via svn r12171: Balls forgot code
+	- Omega via svn r12170: tweaks
+	- nbluewiz via svn r12169: # Use sync for ball, but still have strange issue. (added comment for that)
+	- nbluewiz via svn r12168: # iron docks fix.
+	- nbluewiz via svn r12167: # switch to DBM:AddMsg
+	- Omega via svn r12166: make the versioning easier to understand for voice packs. version 1 field, all files needed by dbm 6.0.9 present. Version 2, TBD, whenever more audio files are created and applied to mods that weren't present in 6.0.9.
+	- ultrashining via svn r12165: zhTW update
+	- Omega via svn r12164: Fix nil
+	- nbluewiz via svn r12163: # fix bug.
+	- nbluewiz via svn r12162: # improve /dbm lockout display.
+	- nbluewiz via svn r12161: # fix Xeritac bug.
+	- Omega via svn r12160: Change tectus warning to shockwave, instead of watch wave. it's a frontal cone shockwave attack. Tweak kargath voice warning to play once for melee instead of both times. Melee smart to play on spell cast start. ranged, on success.
+	- nbluewiz via svn r12159: # fix bug.
+	- ultrashining via svn r12158: zhTW update
+	- Omega via svn r12157: Beyond all explanation. +21 is always 2 seconds short, so lets try +23!
+	- nbluewiz via svn r12156: # fix health bug.
+	- nbluewiz via svn r12155: # variables changed.
+	- nbluewiz via svn r12154: # koKR update.
+	- nbluewiz via svn r12153: # check voice option is enabled before mute spec warning sound.
+	- Omega via svn r12152: default filter to off. i think it's users responsibility to set it up. on by default risks on for people that don't want it on or can't find it. people who do want it more likely to find it.
+	- nbluewiz via svn r12151: # koKR update.
+	- Omega via svn r12150: Oops, fix a bug with no sounds at all Fix lua errors on azzakel. Fix voice not cancel on ragewing Added warnings for nether energy. more, when i decipher more chinese.
+	- Omega via svn r12149: MAYBE fix a nil error reported by tom_rus. impossible to tell since he sucks at reporting errors :P
+	- Omega via svn r12148: Finalize last
+	- Omega via svn r12147: Simple, done. Voice pack not match min requirement, filter disabled. no messy args or even more inflation to mod tables or unnecessary overhead. When new voices added to DBM mods, bump voice requirement version, voicepack not match, filter disables until voice pack updated with new support. Removed mistakes in my original code though (double checking needlessly)
+	- Omega via svn r12146: I do not approve of nasty hack. reverting. this is EXACTLy what i said I do not want.
+	- nbluewiz via svn r12145: # more smarter VoiceOverSW tweak.
+	- nbluewiz via svn r12144: # voice version check.
+	- Omega via svn r12143: Prep for sound.
+	- Omega via svn r12142: Add under you warning for fel as well
+	- Omega via svn r12141: More koragh improvement per requests.
+	- nbluewiz via svn r12140: # koKR update.
+	- nbluewiz via svn r12139: # Expel Magic: Fel yell.
+	- Omega via svn r12138: Option text change, that actually doesn't require a UI reload anymore.
+	- Omega via svn r12137: Increment alpha
+	- Omega via svn r12134: This probably won't make tag but it's fine if it doesn't.
+	- Omega via svn r12133: Commit balls fix

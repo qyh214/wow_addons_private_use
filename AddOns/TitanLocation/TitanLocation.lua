@@ -177,7 +177,7 @@ end
 -- NAME : TitanPanelLocationButton_OnEvent()
 -- DESC : Parse events registered to plugin and act on them
 -- **************************************************************************
-function TitanPanelLocationButton_OnEvent(self, event, ...)     
+function TitanPanelLocationButton_OnEvent(self, event, ...)
 	if event == "PLAYER_ENTERING_WORLD" then
 		if not TitanGetVar(TITAN_LOCATION_ID, "ShowLocOnMiniMap") and MinimapBorderTop and MinimapBorderTop:IsShown() then
 			TitanPanelLocationButton_LocOnMiniMap()
@@ -232,6 +232,7 @@ function TitanPanelLocationButton_OnClick(self, button)
 				activeWindow:Insert(message);
 			end
 		else
+			WorldMap_ToggleSizeUp();
 			ToggleFrame(WorldMapFrame);
 		end
 	end
@@ -371,7 +372,7 @@ end
 -- **************************************************************************
 function TitanPanelLocationButton_ToggleDisplay()
 	TitanToggleVar(TITAN_LOCATION_ID, "ShowZoneText");
-	TitanPanelButton_UpdateButton(TITAN_LOCATION_ID);     
+	TitanPanelButton_UpdateButton(TITAN_LOCATION_ID);
 end
 
 -- **************************************************************************

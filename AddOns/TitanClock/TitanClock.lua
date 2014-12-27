@@ -315,7 +315,6 @@ function TitanPanelClockControlSlider_OnValueChangedWheel(self, a1)
 	end
 
 	TitanSetVar(TITAN_CLOCK_ID, "OffsetHour", 0 - self:GetValue());
---	local realmName = GetRealmName();
 	if ( ServerTimeOffsets[realmName] ) then
 		ServerTimeOffsets[realmName] = TitanGetVar(TITAN_CLOCK_ID, "OffsetHour");
 	end
@@ -332,7 +331,6 @@ end
 function TitanPanelClockControlSlider_OnValueChanged(self, a1)
 	_G[self:GetName().."Text"]:SetText(TitanPanelClock_GetOffsetText(0 - self:GetValue()));
 	TitanSetVar(TITAN_CLOCK_ID, "OffsetHour", 0 - self:GetValue());
---	local realmName = GetRealmName();
 	if ( ServerTimeOffsets[realmName] ) then
 		ServerTimeOffsets[realmName] = TitanGetVar(TITAN_CLOCK_ID, "OffsetHour");
 	end
@@ -369,7 +367,6 @@ function TitanPanelClockControlCheckButton_OnClick(self, button)
 	else
 		TitanSetVar(TITAN_CLOCK_ID, "Format", TITAN_CLOCK_FORMAT_12H);
 	end
---	local realmName = GetRealmName();
 	if ( ServerHourFormat[realmName] ) then
 		ServerHourFormat[realmName] = TitanGetVar(TITAN_CLOCK_ID, "Format");
 	end

@@ -131,6 +131,13 @@ function mod:AddDataOption(spellId)
 				set = function(info, value) db.ppm = tonumber(value) self:ResetAllIcons() end,
 				pattern = "^%d+$",
 			},
+			refreshable = {
+				type = "toggle",
+				name = L["Refreshable"],
+				desc = L["Check this if the buff is refreshable up to 130% normal duration."],
+				get = function() return db.refreshable end,
+				set = function(info, value) db.refreshable = value self:ResetAllIcons() end,
+			},
 			spellId = {
 				name = L["Spell ID"],
 				type = "input",

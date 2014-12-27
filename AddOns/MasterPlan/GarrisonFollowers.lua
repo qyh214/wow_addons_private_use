@@ -1,11 +1,12 @@
 local _, T = ...
+if T.Mark ~= 16 then return end
 local G, L = T.Garrison, T.L
 
 local function countFreeFollowers(f, finfo)
 	local ret = 0
 	for i=1,#f do
 		local st = finfo[f[i]].status
-		if not (st == GARRISON_FOLLOWER_INACTIVE or st == GARRISON_FOLLOWER_WORKING) then
+		if not (st == GARRISON_FOLLOWER_INACTIVE or st == GARRISON_FOLLOWER_WORKING or T.config.ignore[f[i]]) then
 			ret = ret + 1
 		end
 	end
@@ -17,7 +18,7 @@ mechanicsFrame:SetSize(1,1) mechanicsFrame:Hide()
 local floatingMechanics = CreateFrame("Frame", nil, mechanicsFrame)
 local CreateMechanicButton do
 	local function Mechanic_OnEnter(self)
-		local ci, fi = self.info, G.GetFollowerInfo()
+		local ci, finfo = self.info, G.GetFollowerInfo()
 		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
 		local ico = "|T" .. self.Icon:GetTexture() .. ":0:0:0:0:64:64:4:60:4:60|t "
 		if self.isTrait then
@@ -25,23 +26,23 @@ local CreateMechanicButton do
 			GameTooltip:AddLine(C_Garrison.GetFollowerAbilityDescription(self.id), 1,1,1, 1)
 			if ci and #ci > 0 then
 				GameTooltip:AddLine("|n" .. L"Followers with this trait:", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
-				G.sortByFollowerLevels(ci, fi)
+				G.sortByFollowerLevels(ci, finfo)
 				for i=1,#ci do
-					GameTooltip:AddLine(G.GetFollowerLevelDescription(ci[i], nil, fi[ci[i]]), 1,1,1)
+					GameTooltip:AddLine(G.GetFollowerLevelDescription(ci[i], nil, finfo[ci[i]]), 1,1,1)
 				end
 			else
 				GameTooltip:AddLine("|n" .. L"You have no followers with this trait.", 1,0.50,0, 1)
 			end
 		elseif self.isTraitGroup then
-			floatingMechanics:SetOwner(self, ci, fi)
+			floatingMechanics:SetOwner(self, ci, finfo)
 			return
 		else
 			GameTooltip:AddLine(ico .. self.name)
 			if ci and #ci > 0 then
 				GameTooltip:AddLine(L"Can be countered by:", 1,1,1)
-				G.sortByFollowerLevels(ci, fi)
+				G.sortByFollowerLevels(ci, finfo)
 				for i=1,#ci do
-					GameTooltip:AddLine(G.GetFollowerLevelDescription(ci[i], nil, fi[ci[i]]), 1,1,1)
+					GameTooltip:AddLine(G.GetFollowerLevelDescription(ci[i], nil, finfo[ci[i]]), 1,1,1)
 				end
 			else
 				GameTooltip:AddLine(L"You have no followers to counter this mechanic.", 1,0.50,0, 1)
@@ -82,7 +83,7 @@ floatingMechanics:SetFrameStrata("DIALOG")
 floatingMechanics:SetBackdrop({edgeFile="Interface/Tooltips/UI-Tooltip-Border", bgFile="Interface/DialogFrame/UI-DialogBox-Background-Dark", tile=true, edgeSize=16, tileSize=16, insets={left=4,right=4,bottom=4,top=4}})
 floatingMechanics:SetBackdropBorderColor(1, 0.85, 0.6)
 floatingMechanics.buttons = {}
-function floatingMechanics:SetOwner(owner, info)
+function floatingMechanics:SetOwner(owner, info, finfo)
 	self.owner, self.expire = owner
 	self:SetPoint("TOPRIGHT", owner, "BOTTOMRIGHT", 16, -2)
 	self:SetSize(10 + 24 * #info, 34)
@@ -94,7 +95,8 @@ function floatingMechanics:SetOwner(owner, info)
 			self.buttons[i] = ico
 		end
 		ico.Icon:SetTexture(C_Garrison.GetFollowerAbilityIcon(ci.id))
-		ico.Count:SetText(#ci > 0 and #ci or "")
+		local nf = countFreeFollowers(ci, finfo)
+		ico.Count:SetText(nf > 0 and nf or "")
 		ico.id, ico.name, ico.isTrait, ico.info = ci.id, C_Garrison.GetFollowerAbilityName(ci.id), true, ci
 		ico:Show()
 	end
@@ -343,7 +345,15 @@ hooksecurefunc("GarrisonFollowerPage_SetItem", function(self, itemID, iLevel)
 		self.HighlightBorder[i]:SetShown(self.hasUpgrade)
 	end
 end)
-GarrisonMissionFrame.FollowerTab:HookScript("OnUpdate", function(self)
+local function resetOnShow(self)
+	if self.itemID and self.itemLevel then
+		GarrisonFollowerPage_SetItem(self, self.itemID, self.itemLevel)
+	end
+end
+GarrisonMissionFrame.FollowerTab.ItemWeapon:HookScript("OnShow", resetOnShow)
+GarrisonMissionFrame.FollowerTab.ItemArmor:HookScript("OnShow", resetOnShow)
+GarrisonMissionFrame.FollowerTab.ItemWeapon:HookScript("OnUpdate", function()
+	local self = GarrisonMissionFrame.FollowerTab
 	if self.ItemWeapon.hasUpgrade and GetItemCount(self.ItemWeapon.hasUpgrade) == 0 then
 		GarrisonFollowerPage_SetItem(self.ItemWeapon, self.ItemWeapon.itemID, self.ItemWeapon.itemLevel)
 	end

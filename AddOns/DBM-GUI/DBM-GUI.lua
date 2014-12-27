@@ -44,7 +44,7 @@
 
 
 
-local revision =("$Revision: 11916 $"):sub(12, -3)
+local revision =("$Revision: 12152 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -416,6 +416,7 @@ do
 	end
 
 	local sounds = MixinSharedMedia3("sound", {
+		{ sound=true, text = "None", value = "None" },
 		{ sound=true, text = "SW 1", value = 1 },
 		{ sound=true, text = "SW 2", value = 2 },
 		{ sound=true, text = "SW 3", value = 3 },
@@ -1541,6 +1542,7 @@ local function CreateOptionsMenu()
 			{	text	= "Bear (Male Child)",value = "Bear"},
 			{	text	= "Anshlun (ptBR Male)",value = "Anshlun"},
 			{	text	= "Neryssa (ptBR Female)",value = "Neryssa"},
+			{	text	= "Yike (zhCN Female)",value 	= "Yike"},
 			{	text	= "None (Overrides ALL voices)",value 	= "None"},
 		}
 		local CountSoundDropDown = raidwarnoptions:CreateDropdown(L.CountdownVoice, countSounds,
@@ -1559,6 +1561,7 @@ local function CreateOptionsMenu()
 			{	text	= "Bear (Male Child)",value = "Bear"},
 			{	text	= "Anshlun (ptBR Male)",value = "Anshlun"},
 			{	text	= "Neryssa (ptBR Female)",value = "Neryssa"},
+			{	text	= "Yike (zhCN Female)",value 	= "Yike"},
 		}
 		local CountSoundDropDown2 = raidwarnoptions:CreateDropdown(L.CountdownVoice2, countSounds2,
 		DBM.Options.CountdownVoice2, function(value)
@@ -1580,6 +1583,7 @@ local function CreateOptionsMenu()
 		DBM.Options.ChosenVoicePack, function(value)
 			DBM.Options.ChosenVoicePack = value
 			DBM:Debug("DBM.Options.ChosenVoicePack is set to "..DBM.Options.ChosenVoicePack)
+			DBM:CheckVoicePackVersion(value)
 		end
 		)
 		VoiceDropDown:SetPoint("TOPLEFT", CountSoundDropDown2, "TOPLEFT", 0, -40)
@@ -1960,10 +1964,11 @@ local function CreateOptionsMenu()
 
 	do
 		local specPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_SpecWarnFrame, "option")
-		local specArea = specPanel:CreateArea(L.Area_SpecWarn, nil, 515, true)
+		local specArea = specPanel:CreateArea(L.Area_SpecWarn, nil, 560, true)
 		local check1 = specArea:CreateCheckButton(L.SpecWarn_Enabled, true, nil, "ShowSpecialWarnings")
 		local check2 = specArea:CreateCheckButton(L.SpecWarn_FlashFrame, true, nil, "ShowFlashFrame")
 		local check3 = specArea:CreateCheckButton(L.SpecWarn_AdSound, true, nil, "ShowAdvSWSound")
+		local check4 = specArea:CreateCheckButton(L.SpecWarn_NoSoundsWVoice, true, nil, "VoiceOverSpecW")
 
 		local showbutton = specArea:CreateButton(L.SpecWarn_DemoButton, 120, 16)
 		showbutton:SetPoint('TOPRIGHT', specArea.frame, "TOPRIGHT", -5, -5)
@@ -1978,7 +1983,7 @@ local function CreateOptionsMenu()
 		movemebutton:SetScript("OnClick", function() DBM:MoveSpecialWarning() end)
 
 		local color0 = specArea:CreateColorSelect(64)
-		color0:SetPoint('TOPLEFT', specArea.frame, "TOPLEFT", 20, -110)
+		color0:SetPoint('TOPLEFT', specArea.frame, "TOPLEFT", 20, -150)
 		local color0text = specArea:CreateText(L.SpecWarn_FontColor, 80)
 		color0text:SetPoint("BOTTOM", color0, "TOP", 5, 4)
 		local color0reset = specArea:CreateButton(L.Reset, 64, 10, nil, GameFontNormalSmall)
@@ -2022,7 +2027,7 @@ local function CreateOptionsMenu()
 				DBM:ShowTestSpecialWarning(nil, 1)
 			end
 		)
-		FontDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -105)
+		FontDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -145)
 
 		local fontSizeSlider = specArea:CreateSlider(L.SpecWarn_FontSize, 16, 60, 1, 200)
 		fontSizeSlider:SetPoint('TOPLEFT', FontDropDown, "TOPLEFT", 20, -45)
@@ -2149,7 +2154,7 @@ local function CreateOptionsMenu()
 				DBM.Options.SpecialWarningSound = value
 			end
 		)
-		SpecialWarnSoundDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -210)
+		SpecialWarnSoundDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -250)
 
 		local flashdurSlider = specArea:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
 		flashdurSlider:SetPoint('TOPLEFT', SpecialWarnSoundDropDown, "TOPLEFT", 20, -45)
@@ -2188,7 +2193,7 @@ local function CreateOptionsMenu()
 				DBM.Options.SpecialWarningSound2 = value
 			end
 		)
-		SpecialWarnSoundDropDown2:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -315)
+		SpecialWarnSoundDropDown2:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -355)
 
 		local flashdurSlider2 = specArea:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
 		flashdurSlider2:SetPoint('TOPLEFT', SpecialWarnSoundDropDown2, "TOPLEFT", 20, -45)
@@ -2227,7 +2232,7 @@ local function CreateOptionsMenu()
 				DBM.Options.SpecialWarningSound3 = value
 			end
 		)
-		SpecialWarnSoundDropDown3:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -415)
+		SpecialWarnSoundDropDown3:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -460)
 
 		local flashdurSlider3 = specArea:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
 		flashdurSlider3:SetPoint('TOPLEFT', SpecialWarnSoundDropDown3, "TOPLEFT", 20, -45)
@@ -2370,6 +2375,7 @@ local function CreateOptionsMenu()
 		local spamOutArea = spamPanel:CreateArea(L.Area_SpamFilter_Outgoing, nil, 170, true)
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowAnnounce, true, nil, "DontShowBossAnnounces")
 		spamOutArea:CreateCheckButton(L.DontShowFarWarnings, true, nil, "DontShowFarWarnings")
+		spamOutArea:CreateCheckButton(L.SpamBlockNoRunAway, true, nil, "DontPlayRunAway")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSendWhisper, true, nil, "DontSendBossWhispers")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSetIcon, true, nil, "DontSetIcons")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoRangeFrame, true, nil, "DontShowRangeFrame")
@@ -2396,7 +2402,7 @@ local function CreateOptionsMenu()
 		local SPTCDT = spamPTArea:CreateCheckButton(L.DontShowPTCountdownText, true, nil, "DontShowPTCountdownText")
 		
 		local PTSlider = spamPTArea:CreateSlider(L.PT_Threshold, 3, 30, 1, 300)   -- (text , min_value , max_value , step , width)
-		PTSlider:SetPoint('TOPLEFT', SPTCDT, "TOPLEFT", 62, -40)--Position seems based on text size so on diff locals it'll actually be in different places :\
+		PTSlider:SetPoint('BOTTOMLEFT', SPTCDT, "BOTTOMLEFT", 80, -40)--Position based on slider, text anchored to slider. English has large text, so must move slider to middle :\
 		PTSlider:HookScript("OnShow", function(self) self:SetValue(math.floor(DBM.Options.PTCountThreshold)) end)
 		PTSlider:HookScript("OnValueChanged", function(self) DBM.Options.PTCountThreshold = math.floor(self:GetValue()) end)
 		
@@ -2409,16 +2415,17 @@ local function CreateOptionsMenu()
 
 	do
 		local hideBlizzPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_HideBlizzard, "option")
-		local hideBlizzArea = hideBlizzPanel:CreateArea(L.Area_HideBlizzard, nil, 160, true)
+		local hideBlizzArea = hideBlizzPanel:CreateArea(L.Area_HideBlizzard, nil, 240, true)
 		hideBlizzArea:CreateCheckButton(L.HideBossEmoteFrame, true, nil, "HideBossEmoteFrame")
 		hideBlizzArea:CreateCheckButton(L.HideWatchFrame, true, nil, "HideObjectivesFrame")
+		hideBlizzArea:CreateCheckButton(L.HideGarrisonUpdates, true, nil, "HideGarrisonUpdates")
 		hideBlizzArea:CreateCheckButton(L.HideTooltips, true, nil, "HideTooltips")
 		local filterYell	= hideBlizzArea:CreateCheckButton(L.SpamBlockSayYell, true, nil, "FilterSayAndYell")
 		
 		local movieOptions = {
 			{	text	= L.Disable,	value 	= "Never"},
-			{	text	= L.AfterFirst	,value 	= "AfterFirst"},
-			{	text	= L.Always		,value 	= "Block"},
+			{	text	= L.AfterFirst,	value 	= "AfterFirst"},
+			{	text	= L.Always,		value 	= "Block"},
 		}
 		local blockMovieDropDown = hideBlizzArea:CreateDropdown(L.DisableCinematics, movieOptions,
 		DBM.Options.MovieFilter, function(value)
@@ -2427,6 +2434,19 @@ local function CreateOptionsMenu()
 		)
 		blockMovieDropDown:SetPoint("TOPLEFT", filterYell, "TOPLEFT", 0, -40)
 
+		local pingFilterOptions = {
+			{	text	= L.Disable,					value 	= 0},
+			{	text	= L.HideApplicantAlertsFull,	value 	= 1},
+			{	text	= L.HideApplicantAlertsNotL,	value 	= 2},
+		}
+		local blockApplicantsDropDown = hideBlizzArea:CreateDropdown(L.HideApplicantAlerts, pingFilterOptions,
+		DBM.Options.HideApplicantAlerts, function(value)
+			DBM.Options.HideApplicantAlerts = value
+		end
+		)
+		blockApplicantsDropDown:SetPoint("TOPLEFT", blockMovieDropDown, "TOPLEFT", 0, -40)
+		
+		hideBlizzArea:AutoSetDimension()
 		hideBlizzPanel:SetMyOwnHeight()
 	end
 	

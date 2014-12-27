@@ -1,15 +1,35 @@
-## Interface: 60000
-## X-Curse-Packaged-Version: v1.7.12
+# AdiBags - Adirelle's bag addon.
+# Copyright 2010-2014 Adirelle (adirelle@gmail.com)
+# All rights reserved.
+#
+# This file is part of AdiBags.
+#
+# AdiBags is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# AdiBags is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AdiBags.  If not, see <http://www.gnu.org/licenses/>.
+## X-Curse-Packaged-Version: v1.8.3
 ## X-Curse-Project-Name: AdiBags
 ## X-Curse-Project-ID: adibags
 ## X-Curse-Repository-ID: wow/adibags/mainline
 
+## Interface: 60000
+
 ## Title: AdiBags
 ## Notes: Adirelle's bag addon.
 ## Author: Adirelle
-## Version: v1.7.12
+## Version: v1.8.3
 ## SavedVariables: AdiBagsDB
-## X-Date: 2014-11-18T06:42:24Z
+## X-Date: 2014-12-21T09:05:20Z
+## X-License: GPL v3
 ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3, LibBabble-Inventory-3.0, LibSharedMedia-3.0, LibItemUpgradeInfo-1.0, Scrap, BrainDead, !BugGrabber, SyLevel
 #@alpha@
 # ## OptionalDeps: AdiDebug, BugSack, Swatter
@@ -21,10 +41,7 @@ libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 libs\BugGrabber\load.xml
 libs\AceAddon-3.0\AceAddon-3.0.xml
 libs\AceDB-3.0\AceDB-3.0.xml
-libs\AceEvent-3.0\AceEvent-3.0.xml
-libs\AceTimer-3.0\AceTimer-3.0.xml
 libs\AceHook-3.0\AceHook-3.0.xml
-libs\AceBucket-3.0\AceBucket-3.0.xml
 libs\AceConsole-3.0\AceConsole-3.0.xml
 libs\LibBabble-Inventory-3.0\lib.xml
 libs\LibSharedMedia-3.0\lib.xml
@@ -34,6 +51,7 @@ libs\LibItemUpgradeInfo-1.0\LibItemUpgradeInfo-1.0.xml
 libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 
 Localization.lua
+core\EventHandlers.lua
 core\Constants.lua
 core\Utility.lua
 core\Fonts.lua

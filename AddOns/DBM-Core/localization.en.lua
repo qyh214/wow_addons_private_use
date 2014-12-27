@@ -14,7 +14,7 @@ DBM_CORE_LOAD_GUI_COMBAT			= "GUI cannot be initially loaded in combat. GUI will
 DBM_CORE_LOAD_SKIN_COMBAT			= "DBM timers failed to skin during combat. Your timers will likely not work correctly and generate several lua errors. This is often caused by 3rd party mods trying to apply skin changes in combat. Recommended to reloadui after you leave combat"
 DBM_CORE_BAD_LOAD					= "DBM has detected your mod for this instance failed to fully load correctly because of combat. As soon as you are out of combat, please do /console reloadui as soon as possible."
 
-DBM_CORE_BLIZZ_BUGS					= "Blizzard Bug with Addons in 6.0:\n1. If you play with sound effects enabled, you may lose addon sounds in combat if number of simultaneous sounds exceeds your max sound channels. Patch 6.0 set mods to lower channel priority. To work around this problem, DBM now force sets your sound channels to 64 automatically. If you still experience mod sound loss, only work around is to disable 'Sound Effects' completely."
+DBM_CORE_BLIZZ_BUGS					= "Blizzard change with Addons in 6.0:\n1. If you play with sound effects enabled, you may lose addon sounds in combat if number of simultaneous sounds exceeds your max sound channels. Mods get set to lower channel priority. To work around this, DBM now force sets your sound channels to 64 automatically. If you still experience mod sound loss, only work around is to disable 'Sound Effects' completely."
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM has disabled dynamic range frame on this fight do to insufficient information about number of players needed to affect clump check for a group of your size."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM has disabled add count warnings on this fight do to insufficient information about number of adds that spawn for a group of your size."
@@ -98,6 +98,7 @@ DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: No boss mod installed"
 DBM_CORE_VERSIONCHECK_FOOTER		= "Found %d player(s) with DBM & %d player(s) with Bigwigs"
 DBM_CORE_YOUR_VERSION_OUTDATED      = "Your version of Deadly Boss Mods is out-of-date. Please visit http://www.deadlybossmods.com to get the latest version."
 DBM_CORE_OUTDATED_PVP_MODS			= "Your DBM-PvP mods are out of date and should be removed if they are not used, or updated to new stand alone package. These mods are no longer included with DBM-Core download. Latest PVP mods can be found at http://www.deadlybossmods.com"
+DBM_CORE_VOICE_PACK_OUTDATED		= "Your DBM voice pack is missing sounds supported by this version of DBM. Special warning sound filter has been disabled. Please download a newer version of voice pack or contact author for an update that contains missing audio files"
 DBM_BIG_WIGS						= "BigWigs"
 DBM_BIG_WIGS_ALPHA					= "BigWigs Alpha"
 
@@ -270,10 +271,13 @@ DBM_CORE_AUTO_TIMER_TEXTS = {
 	cd			= "%s CD",
 	cdcount		= "%s CD (%%d)",
 	cdsource	= "%s CD: >%%s<",
+	cdspecial	= "Special Ability CD",
 	next		= "Next %s",
 	nextcount	= "Next %s (%%d)",
 	nextsource	= "Next %s: >%%s<",
-	achievement	= "%s"
+	nextspecial	= "Next Special Ability",
+	achievement	= "%s",
+	phase		= "Next Phase"
 }
 
 DBM_CORE_AUTO_TIMER_OPTIONS = {
@@ -284,10 +288,13 @@ DBM_CORE_AUTO_TIMER_OPTIONS = {
 	cd			= "Show timer for $spell:%s cooldown",
 	cdcount		= "Show timer for $spell:%s cooldown",
 	cdsource	= "Show timer (with source) for $spell:%s cooldown",--Maybe better wording?
+	cdspecial	= "Show timer for special ability cooldown",
 	next		= "Show timer for next $spell:%s",
 	nextcount	= "Show timer for next $spell:%s",
 	nextsource	= "Show timer (with source) for next $spell:%s",--Maybe better wording?
-	achievement	= "Show timer for %s"
+	nextspecial	= "Show timer for next special ability",
+	achievement	= "Show timer for %s",
+	phase		= "Show timer for next phase"
 }
 
 
@@ -296,7 +303,8 @@ DBM_CORE_AUTO_ICONS_OPTION_TEXT2		= "Set icons on $spell:%s"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT			= "Show DBM Arrow to move toward target affected by $spell:%s"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT2		= "Show DBM Arrow to move away from target affected by $spell:%s"
 DBM_CORE_AUTO_SOUND_OPTION_TEXT			= "Play \"run away\" sound for $spell:%s"
-DBM_CORE_AUTO_VOICE_OPTION_TEXT			= "Play spoken alerts for $spell:%s using selected voice pack"
+DBM_CORE_AUTO_VOICE_OPTION_TEXT			= "Play spoken alerts for $spell:%s"
+DBM_CORE_AUTO_VOICE2_OPTION_TEXT		= "Play spoken alerts for phase changes"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Play countdown sound for $spell:%s cooldown"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2	= "Play countdown sound for when $spell:%s fades"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Play countout sound for $spell:%s duration"
@@ -333,8 +341,10 @@ DBM_INSTANCE_INFO_REQUESTED			= "Sent request for raid lockout information to th
 DBM_INSTANCE_INFO_STATUS_UPDATE		= "Got responses from %d players of %d DBM users: %d sent data, %d denied the request. Waiting %d more seconds for responses..."
 DBM_INSTANCE_INFO_ALL_RESPONSES		= "Received responses from all raid members"
 DBM_INSTANCE_INFO_DETAIL_DEBUG		= "Sender: %s ResultType: %s InstanceName: %s InstanceID: %s Difficulty: %d Size: %d Progress: %s"
-DBM_INSTANCE_INFO_DETAIL_HEADER		= "%s (%d), difficulty %d:"
+DBM_INSTANCE_INFO_DETAIL_HEADER		= "%s, difficulty %s:"
 DBM_INSTANCE_INFO_DETAIL_INSTANCE	= "    ID %s, progress %d: %s"
+DBM_INSTANCE_INFO_DETAIL_INSTANCE2	= "    Progress %d: %s"
+DBM_INSTANCE_INFO_NOLOCKOUT			= "There is no raid lockout information in your raid group."
 DBM_INSTANCE_INFO_STATS_DENIED		= "Denied the request: %s"
 DBM_INSTANCE_INFO_STATS_AWAY		= "Away: %s"
 DBM_INSTANCE_INFO_STATS_NO_RESPONSE	= "No recent DBM version installed: %s"

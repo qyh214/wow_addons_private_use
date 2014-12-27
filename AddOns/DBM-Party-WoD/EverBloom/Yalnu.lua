@@ -1,8 +1,7 @@
 local mod	= DBM:NewMod(1210, "DBM-Party-WoD", 5, 556)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 11483 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12037 $"):sub(12, -3))
 mod:SetCreatureID(83846)
 mod:SetEncounterID(1756)
 mod:SetZone()
@@ -28,6 +27,9 @@ local specWarnGenesis			= mod:NewSpecialWarningSpell(169613)--Everyone. "Switch"
 local timerFontOfLife			= mod:NewNextTimer(15, 169120)
 local timerGenesis				= mod:NewNextTimer(60.5, 169613)
 
+local voiceColossalBlow			= mod:NewVoice(169179)
+local voiceGenesis				= mod:NewVoice(169613)
+
 function mod:OnCombatStart(delay)
 	timerFontOfLife:Start(-delay)
 	timerGenesis:Start(25-delay)
@@ -38,17 +40,12 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 169179 then
 		warnColossalBlow:Show()
 		specWarnColossalBlow:Show()
-		sndWOP:Play("shockwave")
+		voiceColossalBlow:Play("shockwave")
 	elseif spellId == 169613 then
 		warnGenesis:Show()
 		specWarnGenesis:Show()
 		timerGenesis:Start()
-		sndWOP:Play("169613")
-		sndWOP:Schedule(10, "countfive")
-		sndWOP:Schedule(11, "countfour")
-		sndWOP:Schedule(12, "countthree")
-		sndWOP:Schedule(13, "counttwo")
-		sndWOP:Schedule(14, "countone")
+		voiceGenesis:Play("169613")
 	end
 end
 

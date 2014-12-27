@@ -2,6 +2,21 @@
 AdiBags - Adirelle's bag addon.
 Copyright 2010-2014 Adirelle (adirelle@gmail.com)
 All rights reserved.
+
+This file is part of AdiBags.
+
+AdiBags is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AdiBags is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with AdiBags.  If not, see <http://www.gnu.org/licenses/>.
 --]]
 
 -- Various utility functions
@@ -137,6 +152,40 @@ function addon.IsValidItemLink(link)
 	if type(link) == "string" and (strmatch(link, "battlepet:") or (strmatch(link, 'item:[-:%d]+') and not strmatch(link, 'item:%d+:0:0:0:0:0:0:0:0:0'))) then
 		return true
 	end
+end
+
+--------------------------------------------------------------------------------
+-- Get distinct item IDs from item links
+--------------------------------------------------------------------------------
+
+local function __GetDistinctItemID(link)
+	if not link or not addon.IsValidItemLink(link) then return end
+	if strmatch(link, "battlepet:") then
+		return link
+	else
+		local itemString, id, enchant, gem1, gem2, gem3, gem4, suffix, reforge = strmatch(link, '(item:(%-?%d+):(%-?%d+):(%-?%d+):(%-?%d+):(%-?%d+):(%-?%d+):(%-?%d+):%-?%d+:%-?%d+:(%-?%d+))')
+		id = tonumber(id)
+		local equipSlot = select(9, GetItemInfo(id))
+		if equipSlot and equipSlot ~= "" and equipSlot ~= "INVTYPE_BAG" then
+			-- Rebuild an item link without noise
+			id = strjoin(':', 'item', id, enchant, gem1, gem2, gem3, gem4, suffix, "0", "0", reforge)
+		end
+		return id
+	end
+end
+
+local distinctIDs = setmetatable({}, {__index = function(t, link)
+	local result = __GetDistinctItemID(link)
+	if result then
+		t[link] = result
+		return result
+	else
+		return link
+	end
+end})
+
+function addon.GetDistinctItemID(link)
+	return link and distinctIDs[link]
 end
 
 --------------------------------------------------------------------------------

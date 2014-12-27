@@ -1,0 +1,12 @@
+﻿## Interface: 60000
+## Title: Raid|cff7fff7fAchievement|r - WoD raids
+## Title-ruRU: Raid|cff7fff7fAchievement|r - Рейды WoD
+## Author: Shurshik
+## Notes: RaidAchievement WoD Raids Module
+## Notes-ruRU: Модуль RaidAchievement - Рейды WoD
+## Dependencies: RaidAchievement
+## LoadOnDemand: 1
+## SavedVariablesPerCharacter: wodrraspisokon
+RaidAchievement_WoDRaids.lua
+RaidAchievement_WoDRaids.xml
+RaidAchievement_WoDRaidsbosses.lua

@@ -2,6 +2,21 @@
 AdiBags - Adirelle's bag addon.
 Copyright 2010-2014 Adirelle (adirelle@gmail.com)
 All rights reserved.
+
+This file is part of AdiBags.
+
+AdiBags is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AdiBags is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with AdiBags.  If not, see <http://www.gnu.org/licenses/>.
 --]]
 
 local addonName, addon = ...
@@ -39,7 +54,6 @@ function bagProto:OnEnable()
 		end
 		hookedBags[id] = self
 	end
-	self:RegisterMessage('AdiBags_BagUpdated')
 	if self.PostEnable then
 		self:PostEnable()
 	end
@@ -82,9 +96,6 @@ function bagProto:Close()
 	if self.frame and self.frame:IsShown() then
 		self:Debug('Close')
 		self.frame:Hide()
-		if self.needSorting and addon.db.profile.autoSort then
-			self:Sort()
-		end
 		addon:SendMessage('AdiBags_BagClosed', self.bagName, self)
 		if self.PostClose then
 			self:PostClose()
@@ -126,22 +137,6 @@ function bagProto:CreateFrame()
 	return addon:CreateContainerFrame(self.bagName, self.isBank, self)
 end
 
-function bagProto:AdiBags_BagUpdated(event, ids)
-	if self.sorting then
- 		self.sorting = false
-		return
-	end
-
-	if self.needSorting then return end
-	
-	for id in pairs(ids) do
-		if self.bagIds[id] then
-			self.needSorting = true
-			return
-		end
-	end
-end
-
 --------------------------------------------------------------------------------
 -- Bags methods
 --------------------------------------------------------------------------------
@@ -154,7 +149,7 @@ end
 
 function addon:NewBag(name, order, isBank, ...)
 	self:Debug('NewBag', name, order, isBank, ...)
-	local bag = addon:NewModule(name, bagProto, 'AceEvent-3.0', ...)
+	local bag = addon:NewModule(name, bagProto, 'ABEvent-1.0', ...)
 	bag.bagName = name
 	bag.bagIds = addon.BAG_IDS[isBank and "BANK" or "BAGS"]
 	bag.isBank = isBank
@@ -221,8 +216,6 @@ do
 	
 	function backpack:Sort()
 		PlaySound("UI_BagSorting_01")
-		self.sorting = true
-		self.needSorting = false
 		SortBags()
 	end
 end
@@ -235,16 +228,21 @@ do
 	-- L["Bank"]
 	local bank = addon:NewBag("Bank", 20, true, 'AceHook-3.0')
 
+	local UIHider = CreateFrame("Frame")
+	UIHider:Hide()
+
 	local function NOOP() end
 
 	function bank:PostEnable()
 		self:RegisterMessage('AdiBags_InteractingWindowChanged')
 
-		BankFrame:Hide()
 		self:RawHookScript(BankFrame, "OnEvent", NOOP, true)
-		self:RawHook(BankFrame, "Show", "Open", true)
-		self:RawHook(BankFrame, "Hide", "Close", true)
-		--self:RawHook(BankFrame, "IsShown", "IsOpen", true)
+		self:RawHookScript(BankFrame, "OnShow", NOOP, true)
+		self:RawHookScript(BankFrame, "OnHide", NOOP, true)
+		self:Hook(BankFrame, "Show", "Open", true)
+		self:Hook(BankFrame, "Hide", "Close", true)
+
+		BankFrame:SetParent(UIHider)
 
 		if addon:GetInteractingWindow() == "BANKFRAME" then
 			self:Open()
@@ -255,6 +253,7 @@ do
 		if addon:GetInteractingWindow() == "BANKFRAME" then
 			self.hooks[BankFrame].Show(BankFrame)
 		end
+		BankFrame:SetParent(UIParent)
 	end
 
 	function bank:AdiBags_InteractingWindowChanged(event, new, old)
@@ -270,19 +269,19 @@ do
 	end
 	
 	function bank:PreOpen()
-		if addon.db.profile.autoDeposit then
+		self.hooks[BankFrame].Show(BankFrame)
+		if addon.db.profile.autoDeposit and not IsModifierKeyDown() then
 			DepositReagentBank()
 		end
 	end
 
 	function bank:PostClose()
+		self.hooks[BankFrame].Hide(BankFrame)
 		CloseBankFrame()
 	end
 	
 	function bank:Sort()
 		PlaySound("UI_BagSorting_01")
-		self.sorting = true
-		self.needSorting = false
 		SortBankBags()
 		if IsReagentBankUnlocked() then
 			SortReagentBankBags()

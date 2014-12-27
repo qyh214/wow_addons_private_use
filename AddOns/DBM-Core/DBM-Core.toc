@@ -16,14 +16,18 @@
 ## DefaultState: enabled
 ## Author: Tandanu and Nitram
 ## X-Website: http://www.deadlybossmods.com
+## X-Curse-Packaged-Version: 6.0.9-43-g2e5ab6e
+## X-Curse-Project-Name: Deadly Boss Mods
+## X-Curse-Project-ID: deadly-boss-mods
+## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
 
 #@no-lib-strip@
-embeds.xml
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 Libs\LibChatAnims\LibChatAnims.xml
 Libs\LibSharedMedia-3.0\lib.xml
 #@end-no-lib-strip@
+
 localization.en.lua
 localization.de.lua
 localization.cn.lua
@@ -41,4 +45,3 @@ DBM-RangeCheck.lua
 DBM-BossHealth.lua
 DBM-BossHealth.xml
 DBM-InfoFrame.lua
-DBM-HudMap.lua

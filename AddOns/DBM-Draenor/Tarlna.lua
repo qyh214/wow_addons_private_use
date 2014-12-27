@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(1211, "DBM-Draenor", nil, 557)
 local L		= mod:GetLocalizedStrings()
-local Yike	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 11927 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12134 $"):sub(12, -3))
 mod:SetCreatureID(81535)
 mod:SetReCombatTime(20)
 mod:SetZone()
+mod:SetMinSyncRevision(11969)
 
 mod:RegisterCombat("combat_yell", L.Pull)
 
@@ -24,18 +24,22 @@ local warnGenesis					= mod:NewSpellAnnounce(175979, 4)
 local warnSavageVines				= mod:NewTargetAnnounce(176004, 2)
 local warnGrowUntamedMandragora		= mod:NewSpellAnnounce(176013, 3)
 
-local specWarnColossalBlow			= mod:NewSpecialWarningSpell(175973, nil, nil, nil, 2)
-local specWarnGenesis				= mod:NewSpecialWarningSpell(175979)--Everyone. "Switch" is closest generic to "run around stomping flowers". Might need custom message
+local specWarnColossalBlow			= mod:NewSpecialWarningSpell(175973, nil, nil, nil, 2, nil, true)
+local specWarnGenesis				= mod:NewSpecialWarningSpell(175979, nil, nil, nil, nil, nil, true)--Everyone. "Switch" is closest generic to "run around stomping flowers". Might need custom message
 local specWarnSavageVines			= mod:NewSpecialWarningYou(176004)
 local yellSavageVines				= mod:NewYell(176004)
 local specWarnSavageVinesNear		= mod:NewSpecialWarningClose(176004)
-local specWarnGrowUntamedMandragora	= mod:NewSpecialWarningSwitch(176013, not mod:IsHealer())
+local specWarnGrowUntamedMandragora	= mod:NewSpecialWarningSwitch(176013, not mod:IsHealer(), nil, nil, nil, nil, true)
 
 --local timerColossalBlowCD			= mod:NewNextTimer(60, 175973)
 local timerGenesisCD				= mod:NewCDTimer(45, 169613)--45-60 variation
 local timerGrowUntamedMandragoraCD	= mod:NewCDTimer(30, 176013)
 
---mod:AddReadyCheckOption(32518, false)
+local voiceColossalBlow				= mod:NewVoice(175973)
+local voiceMandragora				= mod:NewVoice(176013, mod:IsDps())
+local voiceGenesis					= mod:NewVoice(175979)
+
+--mod:AddReadyCheckOption(37462, false)
 mod:AddRangeFrameOption(8, 175979)
 
 local UnitDebuff = UnitDebuff
@@ -53,7 +57,10 @@ end
 
 function mod:OnCombatStart(delay, yellTriggered)
 --	if yellTriggered then
-
+		--Vines--7
+		--Colossal Bow--14
+		--timerGrowUntamedMandragoraCD:Start(18-delay)
+		--timerGenesisCD:Start(20-delay)
 --	end
 end
 
@@ -69,12 +76,12 @@ function mod:SPELL_CAST_START(args)
 		warnColossalBlow:Show()
 		specWarnColossalBlow:Show()
 		--timerColossalBlow:Start()
-		sndWOP:Play("shockwave")
+		voiceColossalBlow:Play("shockwave")
 	elseif spellId == 175979 then
 		warnGenesis:Show()
 		specWarnGenesis:Show()
 		timerGenesisCD:Start()
-		Yike:Play("169613") --same in Yalnu
+		voiceGenesis:Play("169613")
 	end
 end
 
@@ -84,9 +91,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnGrowUntamedMandragora:Show()
 		specWarnGrowUntamedMandragora:Show()
 		timerGrowUntamedMandragoraCD:Start()
-		if not mod:IsHealer() then
-			Yike:Play("killmob")
-		end
+		voiceMandragora:Play("killmob")
 	end
 end
 

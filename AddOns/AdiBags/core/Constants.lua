@@ -2,6 +2,21 @@
 AdiBags - Adirelle's bag addon.
 Copyright 2010-2014 Adirelle (adirelle@gmail.com)
 All rights reserved.
+
+This file is part of AdiBags.
+
+AdiBags is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AdiBags is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with AdiBags.  If not, see <http://www.gnu.org/licenses/>.
 --]]
 
 local addonName, addon = ...
@@ -110,10 +125,11 @@ addon.DEFAULT_SETTINGS = {
 			Bank = { point = "TOPLEFT", xOffset = 32, yOffset = -104 },
 		},
 		scale = 0.8,
-		rowWidth = { ['*'] = 9 },
+		columnWidth = {
+			Backpack = 4,
+			Bank = 6,
+		},
 		maxHeight = 0.60,
-		maxWidth = 0.40,
-		laxOrdering = 0,
 		qualityHighlight = true,
 		qualityOpacity = 1.0,
 		dimJunk = true,
@@ -128,7 +144,6 @@ addon.DEFAULT_SETTINGS = {
 			freeSpace = true,
 			notWhenTrading = 1,
 		},
-		automaticLayout = 0,
 		skin = {
 			background = "Blizzard Tooltip",
 			border = "Blizzard Tooltip",
@@ -140,8 +155,8 @@ addon.DEFAULT_SETTINGS = {
 		rightClickConfig = true,
 		autoOpen = true,
 		hideAnchor = false,
-		autoSort = false,
 		autoDeposit = false,
+		compactLayout = false,
 	},
 	char = {
 		collapsedSections = {

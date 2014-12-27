@@ -1,86 +1,115 @@
 local mod	= DBM:NewMod(1197, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
-local Yike	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 11959 $"):sub(12, -3))
-mod:SetCreatureID(77428)
+mod:SetRevision(("$Revision: 12175 $"):sub(12, -3))
+mod:SetCreatureID(77428, 78623)
 mod:SetEncounterID(1705)
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)--Unknown total number of icons replication will use.
+mod:SetBossHPInfoToHighest()--For mythic chogal
+mod:SetHotfixNoticeRev(12073)
+mod:SetMinSyncRevision(12073)--Avoid premature combat end on mythic
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 156238 156467 157349 163988 164075 156471 164299 164232 164301 163989 164076 164235 163990 164077 164240 164303 158605 164176 164178 164191",
+	"SPELL_CAST_START 156238 156467 157349 163988 164075 156471 164299 164232 164301 163989 164076 164235 163990 164077 164240 164303 158605 164176 164178 164191 165243 165876",
 	"SPELL_CAST_SUCCESS 158563",
-	"SPELL_AURA_APPLIED 157763 158553 156225 164004 164005 164006 158605 164176 164178 164191",
-	"SPELL_AURA_APPLIED_DOSE 158553",
-	"SPELL_AURA_REMOVED 158605 164176 164178 164191 157763 156225 164004 164005 164006",
-	"UNIT_SPELLCAST_SUCCEEDED boss1"
+	"SPELL_AURA_APPLIED 157763 158553 156225 164004 164005 164006 158605 164176 164178 164191 157801 178468 165102 165595 176533",
+	"SPELL_AURA_APPLIED_DOSE 158553 178468 165595",
+	"SPELL_AURA_REFRESH 157763",
+	"SPELL_AURA_REMOVED 158605 164176 164178 164191 157763 156225 164004 164005 164006 165102 165595",
+	"UNIT_DIED",
+	"UNIT_SPELLCAST_SUCCEEDED boss1",
+	"CHAT_MSG_MONSTER_YELL"
 )
 
---TODO, combine options to reduce GUI mod options in same manor that was done with paragons.
---Phase 1: Might of the Crown
-local warnBranded								= mod:NewTargetAnnounce(156225, 4)
-local warnDestructiveResonance					= mod:NewSpellAnnounce(156467, 3)--Find out if target scanning works
-local warnMarkOfChaos							= mod:NewTargetAnnounce(158605, 4)
-local warnForceNova								= mod:NewCountAnnounce(157349, 3)
-local warnSummonArcaneAberration				= mod:NewSpellAnnounce(156471, 3)
---Phase 2: Rune of Displacement
-local warnBrandedDisplacement					= mod:NewTargetAnnounce(164004, 4)
-local warnDestructiveResonanceDisplacement		= mod:NewSpellAnnounce(164075, 4)--Find out if target scanning works
-local warnMarkOfChaosDisplacement				= mod:NewTargetAnnounce(164176, 4)
-local warnForceNovaDisplacement					= mod:NewCountAnnounce(164232, 3)
-local warnSummonDisplacingArcaneAberration		= mod:NewSpellAnnounce(164299, 3)
+--TODO, do more fancy stuff with radar in phase 4 when i have more logs, like closing it when it's not needed. Or may just leave it as is depending on preferences.
+--TODO, verify chogal yell hack works without localizing. This is a pure drycode that is attempting to detect phase 4 with no chat log by using cataclysm encounter journal, that can't possibly go wrong right?
+--TODO, mythic phase 4 timers, and any other fixes from stuff that's bound to be broken in this quick and dirty drycode.
+--All Phases
+mod:AddBoolOption("warnBranded", true, "announce")
+local warnBranded								= mod:NewStackAnnounce("OptionVersion2", 156225, 4, nil, nil, false)
+local warnBrandedDisplacement					= mod:NewStackAnnounce("OptionVersion2", 164004, 4, nil, nil, false)
+local warnBrandedFortification					= mod:NewStackAnnounce("OptionVersion2", 164005, 4, nil, nil, false)
+local warnBrandedReplication					= mod:NewStackAnnounce("OptionVersion2", 164006, 4, nil, nil, false)
+mod:AddBoolOption("warnResonance", true, "announce")
+local warnDestructiveResonance					= mod:NewSpellAnnounce("OptionVersion2", 156467, 3, nil, nil, false)
+local warnDestructiveResonanceDisplacement		= mod:NewSpellAnnounce("OptionVersion2", 164075, 4, nil, nil, false)
+local warnDestructiveResonanceFortification		= mod:NewSpellAnnounce("OptionVersion2", 164076, 4, nil, nil, false)
+local warnDestructiveResonanceReplication		= mod:NewSpellAnnounce("OptionVersion2", 164077, 4, nil, nil, false)
+mod:AddBoolOption("warnMarkOfChaos", true, "announce")
+local warnMarkOfChaos							= mod:NewTargetAnnounce("OptionVersion2", 158605, 4, nil, nil, false)
+local warnMarkOfChaosDisplacement				= mod:NewTargetAnnounce("OptionVersion2", 164176, 4, nil, nil, false)
+local warnMarkOfChaosFortification				= mod:NewTargetAnnounce("OptionVersion2", 164178, 4, nil, nil, false)
+local warnMarkOfChaosReplication				= mod:NewTargetAnnounce("OptionVersion2", 164191, 4, nil, nil, false)
+mod:AddBoolOption("warnForceNova", true, "announce")
+local warnForceNova								= mod:NewCountAnnounce("OptionVersion2", 157349, 3, nil, nil, false)
+local warnForceNovaDisplacement					= mod:NewCountAnnounce("OptionVersion2", 164232, 3, nil, nil, false)
+local warnForceNovaFortification				= mod:NewCountAnnounce("OptionVersion2", 164235, 3, nil, nil, false)
+local warnForceNovaReplication					= mod:NewCountAnnounce("OptionVersion2", 164240, 3, nil, nil, false)
+mod:AddBoolOption("warnAberration", true, "announce")
+local warnSummonArcaneAberration				= mod:NewCountAnnounce("OptionVersion2", 156471, 3, nil, nil, false)
+local warnSummonDisplacingArcaneAberration		= mod:NewCountAnnounce("OptionVersion2", 164299, 3, nil, nil, false)
+local warnSummonFortifiedArcaneAberration		= mod:NewCountAnnounce("OptionVersion2", 164301, 3, nil, nil, false)
+local warnSummonReplicatingArcaneAberration		= mod:NewCountAnnounce("OptionVersion2", 164303, 3, nil, nil, false)
 --Intermission: Dormant Runestones
 local warnFixate								= mod:NewTargetAnnounce("OptionVersion2", 157763, 3, nil, not mod:IsTank())
---Phase 3: Rune of Fortification
-local warnBrandedFortification					= mod:NewTargetAnnounce(164005, 4)
-local warnDestructiveResonanceFortification		= mod:NewSpellAnnounce(164076, 4)--Find out if target scanning works
-local warnMarkOfChaosFortification				= mod:NewTargetAnnounce(164178, 4)
-local warnForceNovaFortification				= mod:NewCountAnnounce(164235, 3)
-local warnSummonFortifiedArcaneAberration		= mod:NewSpellAnnounce(164301, 3)
+local warnNetherEnergy							= mod:NewStackAnnounce(178468, 3)--Mythic
 --Intermission: Lineage of Power
 local warnKickToTheFace							= mod:NewTargetAnnounce("OptionVersion2", 158563, 3, nil, mod:IsTank())
 local warnCrushArmor							= mod:NewStackAnnounce(158553, 2, nil, mod:IsTank())
---Phase 4: Rune of Replication
-local warnBrandedReplication					= mod:NewTargetAnnounce(164006, 4)
-local warnDestructiveResonanceReplication		= mod:NewSpellAnnounce(164077, 4)--Find out if target scanning works
-local warnMarkOfChaosReplication				= mod:NewTargetAnnounce(164191, 4)
-local warnForceNovaReplication					= mod:NewCountAnnounce(164240, 3)
-local warnSummonReplicatingArcaneAberration		= mod:NewSpellAnnounce(164303, 3)
+--Mythic
+local warnGlimpseOfMadness						= mod:NewSpellAnnounce(165243, 3)
+local warnEnvelopingNight						= mod:NewCountAnnounce(165876, 3)
+local warnInfiniteDarkness						= mod:NewTargetAnnounce(165102, 3, nil, mod:IsHealer())
+local warnGazeSelf								= mod:NewStackAnnounce(165595, 4)
 
---Phase 1: Might of the Crown
-local specWarnDestructiveResonance				= mod:NewSpecialWarningSpell(156467, nil, nil, nil, 2)--If target scanning works make this personal.
-local specWarnMarkOfChaos						= mod:NewSpecialWarningMoveAway(158605, nil, nil, nil, 3)
-local specWarnMarkOfChaosOther					= mod:NewSpecialWarningTaunt(158605)
-local specWarnBranded							= mod:NewSpecialWarningStack(156225, nil, 5)--Debuff Name "Branded"
-local yellBranded								= mod:NewYell(156225, L.BrandedYell)--Always use the short yell, to reduce clutter. Maybe only need to yell on fortification though? (the one player can't move for)
---Phase 2: Rune of Displacement
-local specWarnDestructiveResonanceDisplacement	= mod:NewSpecialWarningSpell(164075, nil, nil, nil, 2)--If target scanning works make this personal.
-local specWarnMarkOfChaosDisplacement			= mod:NewSpecialWarningMoveAway(164176, nil, nil, nil, 3)
-local specWarnMarkOfChaosDisplacementOther		= mod:NewSpecialWarningTaunt(164176)
+--All Phases
+--Special warnings cannot be combined because it breaks custom sounds, however, they will be grouped up better now at least.
+local specWarnDestructiveResonance				= mod:NewSpecialWarningSpell(156467, nil, nil, nil, 2)
+local specWarnDestructiveResonanceDisplacement	= mod:NewSpecialWarningSpell(164075, nil, nil, nil, 2)
+local specWarnDestructiveResonanceFortification	= mod:NewSpecialWarningSpell(164076, nil, nil, nil, 2)
+local specWarnDestructiveResonanceReplication	= mod:NewSpecialWarningSpell(164077, nil, nil, nil, 2)
+
+local specWarnMarkOfChaos						= mod:NewSpecialWarningMoveAway(158605, nil, nil, nil, 3, nil, true)
+local specWarnMarkOfChaosDisplacement			= mod:NewSpecialWarningMoveAway(164176, nil, nil, nil, 3, nil, true)
+local specWarnMarkOfChaosFortification			= mod:NewSpecialWarningMoveAway(164178, nil, nil, nil, 3, nil, true)
+local specWarnMarkOfChaosReplication			= mod:NewSpecialWarningMoveAway(164191, nil, nil, nil, 3, nil, true)
+
+local specWarnMarkOfChaosFortificationNear		= mod:NewSpecialWarningClose(164178, nil, nil, nil, 3, nil, true)
+local yellMarkOfChaosFortification				= mod:NewYell(164178)
+local yellMarkOfChaosReplication				= mod:NewYell(164191)
+
+local specWarnMarkOfChaosOther					= mod:NewSpecialWarningTaunt(158605, nil, nil, nil, nil, nil, true)
+local specWarnMarkOfChaosDisplacementOther		= mod:NewSpecialWarningTaunt(164176, nil, nil, nil, nil, nil, true)
+local specWarnMarkOfChaosFortificationOther		= mod:NewSpecialWarningTaunt(164178, nil, nil, nil, nil, nil, true)
+local specWarnMarkOfChaosReplicationOther		= mod:NewSpecialWarningTaunt(164191, nil, nil, nil, nil, nil, true)
+
+local specWarnBranded							= mod:NewSpecialWarningStack(156225, nil, 5)--Debuff Name "Branded" for Arcane Wrath
 local specWarnBrandedDisplacement				= mod:NewSpecialWarningStack(164004, nil, 5)
-local specWarnBrandedDisplacementNear			= mod:NewSpecialWarningClose(164004)--Displacement version of branded makes player unable to move from raid, raid moves from player
---Intermission: Dormant Runestones
-local specWarnFixate							= mod:NewSpecialWarningYou(157763)--Change to run warning?
-local specWarnTransitionEnd						= mod:NewSpecialWarningEnd(157278)
---Phase 3: Rune of Fortification
-local specWarnDestructiveResonanceFortification	= mod:NewSpecialWarningSpell(164076, nil, nil, nil, 2)--If target scanning works make this personal.
-local specWarnMarkOfChaosFortification			= mod:NewSpecialWarningYou(164178, nil, nil, nil, 3)--Debuffed player can not move for this one
-local yellMarkOfChaosFortification				= mod:NewYell(164178)--So give yell
-local specWarnMarkOfChaosFortificationNear		= mod:NewSpecialWarningClose(164178, nil, nil, nil, 3)--And super important "near" warning.
-local specWarnMarkOfChaosFortificationOther		= mod:NewSpecialWarningTaunt(164178)
 local specWarnBrandedFortification				= mod:NewSpecialWarningStack(164005, nil, 8)
+local specWarnBrandedReplication				= mod:NewSpecialWarningStack(164006, nil, 5)
+local yellBranded								= mod:NewYell(156225, L.BrandedYell)
+
+local specWarnBrandedDisplacementNear			= mod:NewSpecialWarningClose(164004)--Displacement version of branded makes player unable to move from raid, raid moves from player
+
+local specWarnAberration						= mod:NewSpecialWarningSwitch("ej9945", not mod:IsHealer())--can use short name for all of them
+
+--Intermission: Dormant Runestones
+local specWarnFixate							= mod:NewSpecialWarningMoveAway(157763, nil, nil, nil, nil, nil, true)
+local yellFixate								= mod:NewYell(157763)
+local specWarnSlow								= mod:NewSpecialWarningDispel(157801, mod:IsHealer())--Seems CD long enough not too spammy, requested feature.
+local specWarnTransitionEnd						= mod:NewSpecialWarningEnd(157278)
+local specWarnNetherEnergy						= mod:NewSpecialWarningStack(178468, nil, 3)
 --Intermission: Lineage of Power
 local specWarnKickToTheFace						= mod:NewSpecialWarningSpell(158563, mod:IsTank())
 local specWarnKickToTheFaceOther				= mod:NewSpecialWarningTaunt(158563)
---Phase 4: Rune of Replication
-local specWarnDestructiveResonanceReplication	= mod:NewSpecialWarningSpell(164077, nil, nil, nil, 2)--If target scanning works make this personal.
-local specWarnMarkOfChaosReplication			= mod:NewSpecialWarningYou(164191, nil, nil, nil, 3)--Debuffed player can not move for this one
-local yellMarkOfChaosReplication				= mod:NewYell(164191)--Give a yell to this one too since balls form at that location of player
-local specWarnMarkOfChaosReplicationOther		= mod:NewSpecialWarningTaunt(164191)
-local specWarnBrandedReplication				= mod:NewSpecialWarningStack(164006, nil, 5)
+--Mythic
+local specWarnGaze								= mod:NewSpecialWarningStack(165595, nil, 1)--For now, warn for all stacks until more conclusive understanding of fight.
+local yellGaze									= mod:NewYell(165595, L.GazeYell)
+local specWarnEnvelopingNight					= mod:NewSpecialWarningSpell(165876, nil, nil, nil, 2, nil, true)
+local specWarnGrowingDarkness					= mod:NewSpecialWarningMove(176533, nil, nil, nil, nil, nil, true)
 
 --All Phases (No need to use different timers for empowered abilities. Short names better for timers.)
 local timerArcaneWrathCD						= mod:NewCDTimer(50, 156238, nil, not mod:IsTank())--Pretty much a next timer, HOWEVER can get delayed by other abilities so only reason it's CD timer anyways
@@ -88,22 +117,49 @@ local timerDestructiveResonanceCD				= mod:NewCDTimer(15, 156467, nil, not mod:I
 local timerMarkOfChaos							= mod:NewTargetTimer(8, 158605, nil, mod:IsTank())
 local timerMarkOfChaosCD						= mod:NewCDTimer(50, 158605, nil, mod:IsTank())
 local timerForceNovaCD							= mod:NewCDCountTimer(45, 157349)--45-52
-local timerSummonArcaneAberrationCD				= mod:NewCDTimer(45, 156471, nil, not mod:IsHealer())--45-52 Variation Noted
-local timerTransition							= mod:NewCastTimer(76.5, 157278)
+local timerSummonArcaneAberrationCD				= mod:NewCDCountTimer(45, "ej9945", nil, not mod:IsHealer(), nil, 156471)--45-52 Variation Noted
+local timerTransition							= mod:NewPhaseTimer(74)
+--Intermission: Lineage of Power
+local timerCrushArmorCD							= mod:NewNextTimer(6, 158553, nil, mod:IsTank())
+local timerKickToFaceCD							= mod:NewNextTimer(20, 158563, nil, mod:IsTank())
+--Mythic
+local timerGaze									= mod:NewBuffFadesTimer(10, 165595)
 
 local countdownArcaneWrath						= mod:NewCountdown(50, 156238, not mod:IsTank())--Probably will add for whatever proves most dangerous on mythic
 local countdownMarkofChaos						= mod:NewCountdown("Alt50", 158605, mod:IsTank())
 local countdownForceNova						= mod:NewCountdown("AltTwo45", 157349)
+local countdownTransition						= mod:NewCountdown(74, 157278)
+local countdownGaze								= mod:NewCountdownFades("Alt10", 165595)
+
+local voiceDestructiveResonance 				= mod:NewVoice(156467, not mod:IsMelee())
+local voiceForceNova	 						= mod:NewVoice(157349)
+local voiceMarkOfChaos							= mod:NewVoice(158605)
+local voicePhaseChange							= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT) --this string should write into language file
+local voiceFixate								= mod:NewVoice(157763)
+local voiceArcaneAberration						= mod:NewVoice(156471, mod:IsDps())
+local voiceEnvelopingNight 						= mod:NewVoice(165876)
+local voiceGrowingDarkness						= mod:NewVoice(176533)
 
 mod:AddRangeFrameOption("35/13/5")
 mod:AddSetIconOption("SetIconOnBrandedDebuff", 156225, false)
+mod:AddSetIconOption("SetIconOnInfiniteDarkness", 165102, false)
 
 mod.vb.markActive = false
 mod.vb.playerHasMark = false
-mod.vb.playerHasBranded = false
-mod.vb.brandedActive = 0
+mod.vb.jumpDistance = 13
+mod.vb.lastMarkedTank = nil
+mod.vb.isTransition = false
+mod.vb.phase = 1
+mod.vb.arcaneAdd = 0
+mod.vb.envelopingCount = 0
 
-local GetSpellInfo, UnitDebuff = GetSpellInfo, UnitDebuff
+local jumpDistance1 = {
+	[1] = 200, [2] = 100, [3] = 50, [4] = 25, [5] = 12.5, [6] = 7,--Or 5
+}
+local jumpDistance2 = {
+	[1] = 200, [2] = 150, [3] = 113, [4] = 85, [5] = 63, [6] = 48, [7] =36, [8] = 27, [9] = 21, [10] = 16, [11] = 12, [12] = 9, [13] = 7,--or 5
+}
+local GetSpellInfo, UnitDebuff, UnitDetailedThreatSituation, select = GetSpellInfo, UnitDebuff, UnitDetailedThreatSituation, select
 local chaosDebuff1 = GetSpellInfo(158605)
 local chaosDebuff2 = GetSpellInfo(164176)
 local chaosDebuff3 = GetSpellInfo(164178)
@@ -112,9 +168,11 @@ local brandedDebuff1 = GetSpellInfo(156225)
 local brandedDebuff2 = GetSpellInfo(164004)
 local brandedDebuff3 = GetSpellInfo(164005)
 local brandedDebuff4 = GetSpellInfo(164006)
-local UnitDetailedThreatSituation = UnitDetailedThreatSituation
+local fixateDebuff = GetSpellInfo(157763)
+local gazeDebuff = GetSpellInfo(165595)
 local playerName = UnitName("player")
-local debuffFilterMark, debuffFilterBranded, debuffFilterCombined
+local chogallName = EJ_GetEncounterInfo(167)
+local debuffFilterMark, debuffFilterBranded, debuffFilterCombined, debuffFilterFixate, debuffFilterGaze
 do
 	debuffFilterMark = function(uId)
 		if UnitDebuff(uId, chaosDebuff1) or UnitDebuff(uId, chaosDebuff2) or UnitDebuff(uId, chaosDebuff3) or UnitDebuff(uId, chaosDebuff4) then
@@ -131,28 +189,53 @@ do
 			return true
 		end
 	end
+	debuffFilterFixate = function(uId)
+		if UnitDebuff(uId, fixateDebuff) then
+			return true
+		end
+	end
+	debuffFilterGaze = function(uId)
+		if select(11, UnitDebuff(uId, gazeDebuff)) == 165595 then--Two debuffs with same name, need correct one
+			return true
+		end
+	end
 end
 
-local function updateRangeFrame(markPreCast)
-	if not mod.Options.RangeFrame then return end
-	if not mod:IsTank() and mod.vb.brandedActive > 0 then--Active branded out there, not a tank. Branded is always prioritized over mark for non tanks since 90% of time tanks handle this on their own, while rest of raid must ALWAYS handle branded
-		if mod.vb.playerHasBranded then--Player has Branded debuff
-			DBM.RangeCheck:Show(13, nil)--Show everyone
+local function updateRangeFrame(self, markPreCast)
+	if not self.Options.RangeFrame then return end
+	if self:IsMythic() and self.vb.phase == 4 then
+		if select(11, UnitDebuff("player", gazeDebuff)) == 165595 then--Player has gaze
+			DBM.RangeCheck:Show(8, nil)
+		else
+			DBM.RangeCheck:Show(8, debuffFilterGaze)
+		end
+		return--Other crap doesn't happen in phase 4 mythic so stop here.
+	end
+	if not self:IsTank() and self.vb.brandedActive > 0 then--Active branded out there, not a tank. Branded is always prioritized over mark for non tanks since 90% of time tanks handle this on their own, while rest of raid must ALWAYS handle branded
+		local distance = self.vb.jumpDistance
+		if self.vb.playerHasBranded then--Player has Branded debuff
+			DBM.RangeCheck:Show(distance, nil)--Show everyone
 		else--No branded debuff on player, so show a filtered range finder
-			if mod.vb.markActive then--Even though we set range to 13 instead of 35, show marked tank dots on radar too, not just branded dots.
-				DBM.RangeCheck:Show(13, debuffFilterCombined)--If it turns out needed, i'll force a combined filter of 35 so safe distances for both active debuffs are used.
-			else--no branded tank, So show ONLY branded dots
-				DBM.RangeCheck:Show(13, debuffFilterBranded)
+			if self.vb.markActive and self.vb.lastMarkedTank and self:CheckNearby(35, self.vb.lastMarkedTank) then--There is an active tank with debuff and they are too close
+				DBM.RangeCheck:Show(35, debuffFilterCombined)--Show marked instead of branded if the marked tank is NOT far enough out
+			else--no branded tank in range, So show ONLY branded dots
+				DBM.RangeCheck:Show(distance, debuffFilterBranded)
 			end
 		end
 	else--no branded, or player is a tank
-		if markPreCast or mod.vb.markActive then--Mark of Chaos is active, or is being cast
-			if mod.vb.playerHasMark then--Player has mark of chaos debuff, or is current highest threat during mark of chaos cast
+		if markPreCast or self.vb.markActive then--Mark of Chaos is active, or is being cast
+			if self.vb.playerHasMark then--Player has mark of chaos debuff, or is current highest threat during mark of chaos cast
 				DBM.RangeCheck:Show(35, nil)
 			else--Not boss target during cast, not debuffed, use filtered range frame to show only players affected by mark of chaos.
 				DBM.RangeCheck:Show(35, debuffFilterMark)
 			end
-		else--We got this far, no mark of chaos, no branded, no nothing, finally hide the range frame!
+		elseif self.vb.isTransition then
+			if UnitDebuff("player", fixateDebuff) then
+				DBM.RangeCheck:Show(5, nil)
+			else
+				DBM.RangeCheck:Show(5, debuffFilterFixate)
+			end
+		else--We got this far, no mark of chaos, no branded, fixate, no nothing, finally hide the range frame!
 			DBM.RangeCheck:Hide()
 		end
 	end
@@ -162,24 +245,30 @@ function mod:OnCombatStart(delay)
 	self.vb.markActive = false
 	self.vb.playerHasMark = false
 	self.vb.playerHasBranded = false
+	self.vb.isTransition = false
+	self.vb.lastMarkedTank = nil
 	self.vb.brandedActive = 0
 	self.vb.forceCount = 0
+	self.vb.jumpDistance = 13
+	self.vb.phase = 1
+	self.vb.arcaneAdd = 0
+	self.vb.envelopingCount = 0
 	timerArcaneWrathCD:Start(6-delay)
 	countdownArcaneWrath:Start(6-delay)
 	timerDestructiveResonanceCD:Start(15-delay)
-	timerSummonArcaneAberrationCD:Start(25-delay)
+	timerSummonArcaneAberrationCD:Start(25-delay, 1)
 	timerMarkOfChaosCD:Start(33.5-delay)
 	countdownMarkofChaos:Start(33.5-delay)
-	timerForceNovaCD:Start(-delay)
+	timerForceNovaCD:Start(-delay, 1)
 	countdownForceNova:Start(-delay)
-	print("DBM调试信息: 暴雪爸爸偷偷摸摸地，不停地修改着这场战斗的参数。DBM在这场战斗中的威力有限，请谅解。")
-	margokp2flag = false
+	voiceForceNova:Schedule(38.5-delay, "157349")
 end
 
 function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
+	self:UnregisterShortTermEvents()
 end
 
 function mod:SPELL_CAST_START(args)
@@ -189,111 +278,153 @@ function mod:SPELL_CAST_START(args)
 		countdownArcaneWrath:Start()
 	-----
 	elseif spellId == 156467 then
-		warnDestructiveResonance:Show()
+		if self.Options.warnResonance then
+			warnDestructiveResonance:Show()
+		end
 		specWarnDestructiveResonance:Show()
 		timerDestructiveResonanceCD:Start()
+		voiceDestructiveResonance:Play("runaway")
 	elseif spellId == 164075 then
-		warnDestructiveResonanceDisplacement:Show()
+		if self.Options.warnResonance then
+			warnDestructiveResonanceDisplacement:Show()
+		end
 		specWarnDestructiveResonanceDisplacement:Show()
 		timerDestructiveResonanceCD:Start()
+		voiceDestructiveResonance:Play("runaway")
 	elseif spellId == 164076 then
-		warnDestructiveResonanceFortification:Show()
+		if self.Options.warnResonance then
+			warnDestructiveResonanceFortification:Show()
+		end
 		specWarnDestructiveResonanceFortification:Show()
 		timerDestructiveResonanceCD:Start()
+		voiceDestructiveResonance:Play("runaway")
 	elseif spellId == 164077 then
-		warnDestructiveResonanceReplication:Show()
+		if self.Options.warnResonance then
+			warnDestructiveResonanceReplication:Show()
+		end
 		specWarnDestructiveResonanceReplication:Show()
 		timerDestructiveResonanceCD:Start()
+		voiceDestructiveResonance:Play("watchstep")
 	-----
 	elseif spellId == 157349 then
 		self.vb.forceCount = self.vb.forceCount + 1
-		warnForceNova:Show(self.vb.forceCount)
+		if self.Options.warnForceNova then
+			warnForceNova:Show(self.vb.forceCount)
+		end
 		timerForceNovaCD:Start(nil, self.vb.forceCount+1)
 		countdownForceNova:Start()
+		voiceForceNova:Schedule(38.5, "157349")
 	elseif spellId == 164232 then
 		self.vb.forceCount = self.vb.forceCount + 1
-		warnForceNovaDisplacement:Show(self.vb.forceCount)
+		if self.Options.warnForceNova then
+			warnForceNovaDisplacement:Show(self.vb.forceCount)
+		end
 		timerForceNovaCD:Start(nil, self.vb.forceCount+1)
 		countdownForceNova:Start()
+		voiceForceNova:Schedule(38.5, "157349")
 	elseif spellId == 164235 then
 		self.vb.forceCount = self.vb.forceCount + 1
-		warnForceNovaFortification:Show(self.vb.forceCount)
+		if self.Options.warnForceNova then
+			warnForceNovaFortification:Show(self.vb.forceCount)
+		end
 		timerForceNovaCD:Start(nil, self.vb.forceCount+1)
 		countdownForceNova:Start()
+		voiceForceNova:Schedule(38.5, "157349")
 	elseif spellId == 164240 then
 		self.vb.forceCount = self.vb.forceCount + 1
-		warnForceNovaReplication:Show(self.vb.forceCount)
+		if self.Options.warnForceNova then
+			warnForceNovaReplication:Show(self.vb.forceCount)
+		end
 		timerForceNovaCD:Start(nil, self.vb.forceCount+1)
-		countdownForceNova:Start()
+		voiceForceNova:Schedule(38.5, "157349")
+		if not self:IsMelee() then
+			voiceForceNova:Play("range5") --keep range 5 years
+		end
 	-----
 	elseif spellId == 156471 then
-		warnSummonArcaneAberration:Show()
-		timerSummonArcaneAberrationCD:Start()
+		self.vb.arcaneAdd = self.vb.arcaneAdd + 1
+		if self.Options.warnAberration then
+			warnSummonArcaneAberration:Show(self.vb.arcaneAdd)
+		end
+		specWarnAberration:Show()
+		timerSummonArcaneAberrationCD:Start(nil, self.vb.arcaneAdd+1)
+		voiceArcaneAberration:Play("killmob")
 	elseif spellId == 164299 then
-		warnSummonDisplacingArcaneAberration:Show()
-		timerSummonArcaneAberrationCD:Start()
+		self.vb.arcaneAdd = self.vb.arcaneAdd + 1
+		if self.Options.warnAberration then
+			warnSummonDisplacingArcaneAberration:Show(self.vb.arcaneAdd)
+		end
+		specWarnAberration:Show()
+		timerSummonArcaneAberrationCD:Start(nil, self.vb.arcaneAdd+1)
+		voiceArcaneAberration:Play("killmob")
 	elseif spellId == 164301 then
-		warnSummonFortifiedArcaneAberration:Show()
-		timerSummonArcaneAberrationCD:Start()
+		self.vb.arcaneAdd = self.vb.arcaneAdd + 1
+		if self.Options.warnAberration then
+			warnSummonFortifiedArcaneAberration:Show(self.vb.arcaneAdd)
+		end
+		specWarnAberration:Show()
+		timerSummonArcaneAberrationCD:Start(nil, self.vb.arcaneAdd+1)
+		voiceArcaneAberration:Play("killmob")
 	elseif spellId == 164303 then
-		warnSummonReplicatingArcaneAberration:Show()
-		timerSummonArcaneAberrationCD:Start()
+		self.vb.arcaneAdd = self.vb.arcaneAdd + 1
+		if self.Options.warnAberration then
+			warnSummonReplicatingArcaneAberration:Show(self.vb.arcaneAdd)
+		end
+		specWarnAberration:Show()
+		timerSummonArcaneAberrationCD:Start(nil, self.vb.arcaneAdd+1)
+		voiceArcaneAberration:Play("killmob")
 	elseif args:IsSpellID(158605, 164176, 164178, 164191) then
 		local targetName, uId = self:GetBossTarget(77428)
 		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
 		timerMarkOfChaosCD:Start()
 		countdownMarkofChaos:Start()
 		if spellId == 158605 then
-			warnMarkOfChaos:Show(targetName)
+			if self.Options.warnMarkOfChaos then
+				warnMarkOfChaos:Show(targetName)
+			end
 			timerMarkOfChaos:Start(targetName)
 			if tanking or (status == 3) then
 				specWarnMarkOfChaos:Show()
-				Yike:Play("runout")
+				voiceMarkOfChaos:Play("runout")
 			else
 				specWarnMarkOfChaosOther:Show(targetName)
-				if mod:IsTank() then				
-					Yike:Play("tauntboss")
-				end
+				voiceMarkOfChaos:Play("changemt")
 			end
 		elseif spellId == 164176 then
-			warnMarkOfChaosDisplacement:Show(targetName)
+			if self.Options.warnMarkOfChaos then
+				warnMarkOfChaosDisplacement:Show(targetName)
+			end
 			if tanking or (status == 3) then
-				specWarnMarkOfChaosDisplacement:Show()
+				--No action, displacement you don't run out until fast FINISHES since cast finish ports you into raid.
 			else
 				specWarnMarkOfChaosDisplacementOther:Show(targetName)
-				if mod:IsTank() then				
-					Yike:Play("tauntboss")
-				end
+				voiceMarkOfChaos:Play("changemt")
 			end
 		elseif spellId == 164178 then
-			warnMarkOfChaosFortification:Show(targetName)
+			if self.Options.warnMarkOfChaos then
+				warnMarkOfChaosFortification:Show(targetName)
+			end
 			if tanking or (status == 3) then
-				specWarnMarkOfChaosFortification:Show()
-				yellMarkOfChaosFortification:Yell()
+				if not (self:IsMythic() and self.vb.phase == 2) then--Cannot run out on mythic during displacement/fort. Can during fort/replication though.
+					specWarnMarkOfChaosFortification:Show()
+					voiceMarkOfChaos:Play("runout")--Tank can still run out during cast
+				end
 			else
-				specWarnMarkOfChaosFortificationOther:Show()
-				if mod:IsTank() then				
-					Yike:Play("tauntboss")
-				else
-					Yike:Play("justrun")
-				end
-				if self:CheckNearby(35, targetName) then
-					specWarnMarkOfChaosFortificationNear:Show(targetName)
-				end
+				specWarnMarkOfChaosFortificationOther:Show(targetName)
+				voiceMarkOfChaos:Play("changemt")
 			end
 		elseif spellId == 164191 then
-			warnMarkOfChaosReplication:Show(targetName)
+			if self.Options.warnMarkOfChaos then
+				warnMarkOfChaosReplication:Show(targetName)
+			end
 			if tanking or (status == 3) then
 				specWarnMarkOfChaosReplication:Show()
 				yellMarkOfChaosReplication:Yell()
+				voiceMarkOfChaos:Play("runout")
 			else
 				specWarnMarkOfChaosReplicationOther:Show(targetName)
-				if mod:IsTank() then				
-					Yike:Play("tauntboss")
-				else
-					Yike:Play("justrun")
-					Yike:Schedule(2, "watchstep")
-				end
+				voiceMarkOfChaos:Play("changemt")
+				voiceMarkOfChaos:Schedule(1.5, "watchstep")
 			end
 		end
 		if tanking or (status == 3) then
@@ -301,8 +432,15 @@ function mod:SPELL_CAST_START(args)
 		else
 			self.vb.playerHasMark = false
 		end
-		updateRangeFrame(true)
-		self:Schedule(4, updateRangeFrame)--Cast + 1, since sometimes tank resists, so we'll want to hide frame after 4 seconds if no debuff has gone out in 2.
+		updateRangeFrame(self, true)
+		self:Schedule(4, updateRangeFrame, self)--Cast + 1, since sometimes tank resists, so we'll want to hide frame after 4 seconds if no debuff has gone out in 2.
+	elseif spellId == 165243 then
+		warnGlimpseOfMadness:Show()
+	elseif spellId == 165876 then
+		self.vb.envelopingCount = self.vb.envelopingCount + 1
+		warnEnvelopingNight:Show(self.vb.envelopingCount)
+		specWarnEnvelopingNight:Show(self.vb.envelopingCount)
+		voiceEnvelopingNight:Play("aesoon")
 	end
 end
 
@@ -310,6 +448,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 158563 then
 		warnKickToTheFace:Show(args.destName)
+		timerKickToFaceCD:Start()
 		if args:IsPlayer() then
 			specWarnKickToTheFace:Show()
 		else
@@ -324,71 +463,153 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnFixate:CombinedShow(1, args.destName)
 		if args:IsPlayer() then
 			specWarnFixate:Show()
-			Yike:Play("targetyou")
-			if self.Options.RangeFrame then
-				DBM.RangeCheck:Show(5)
+			if not self:IsLFR() then
+				yellFixate:Yell()
+				voiceFixate:Play("runout")
+				voiceFixate:Schedule(1.5,"targetyou")
 			end
+			updateRangeFrame(self)
 		end
 	elseif args:IsSpellID(156225, 164004, 164005, 164006) then
 		self.vb.brandedActive = self.vb.brandedActive + 1
 		local uId = DBM:GetRaidUnitId(args.destName)
-		local _, _, _, stack1, _, _, _, _, _, _, _, _, _, _, stack2 = UnitDebuff(uId, GetSpellInfo(spellId))
-		DBM:Debug(stack1, stack2)
-		if not stack1 and not stack2 then
-			print("Branded/Arcane Wrath stack count drycode failed with arg4 and arg15, All warnings/Yells/icons will be disabled")
+		local _, _, _, currentStack = UnitDebuff(uId, GetSpellInfo(spellId))
+		local fortified = (self:IsMythic() and self.vb.phase == 3) or spellId == 164005--Phase 3 uses replication ID, so need hack for mythic fortified/replication phase.
+		if not currentStack then
+			print("currentStack is nil, report to dbm authors. Branded warning disabled.")--Should never happen but added just in case.
 			return
 		end
-		local currentStack = stack2 or stack1
-		if (spellId == 164005 and currentStack > 6) or currentStack > 3 then--yells and general announces for target 1 stack before move.
+		if (not fortified and currentStack > 2) or currentStack > 5 then--yells and general announces for target 2 stack before move.
+			if fortified then
+				self.vb.jumpDistance = jumpDistance2[currentStack] or 5
+			else
+				self.vb.jumpDistance = jumpDistance1[currentStack] or 5
+			end
 			if args:IsPlayer() then
 				self.vb.playerHasBranded = true
 				if not self:IsLFR() then
-					yellBranded:Yell(currentStack, playerName)
+					yellBranded:Yell(currentStack.."-"..self.vb.jumpDistance, playerName)
 				end
 			end
 			if spellId == 156225 then
-				warnBranded:Show(args.destName)
+				if self.Options.warnBranded then
+					warnBranded:Show(args.destName, currentStack)
+				end
 				if args:IsPlayer() and currentStack > 4 then--Special warning only for person that needs to get out
 					specWarnBranded:Show(currentStack)
 				end
 			elseif spellId == 164004 then
-				warnBrandedDisplacement:Show(args.destName)
+				if self.Options.warnBranded then
+					warnBrandedDisplacement:CombinedShow(0.5, args.destName, currentStack)
+				end
 				if currentStack > 4  then--Special warning only for person that needs to get out
 					if args:IsPlayer() then
 						specWarnBrandedDisplacement:Show(currentStack)
-					elseif self:CheckNearby(13, args.destName) then
+					elseif self:CheckNearby(self.vb.jumpDistance, args.destName) then
 						specWarnBrandedDisplacementNear:Show(args.destName)
 					end
 				end
 			elseif spellId == 164005 then
-				warnBrandedFortification:Show(args.destName)
-				if args:IsPlayer() and currentStack > 7  then--Special warning only for person that needs to get out
+				if self.Options.warnBranded then
+					warnBrandedFortification:CombinedShow(0.5, args.destName, currentStack)
+				end
+				if args:IsPlayer() and currentStack > 6  then--Special warning only for person that needs to get out
 					specWarnBrandedFortification:Show(currentStack)
 				end
 			elseif spellId == 164006 then
-				warnBrandedReplication:CombinedShow(0.5, args.destName)
+				if self.Options.warnBranded then
+					warnBrandedReplication:Show(args.destName, currentStack)--Changed from combined show cause it can only be max targets, and important to have stack counts.
+				end
 				if args:IsPlayer() and currentStack > 4 then--Special warning only for person that needs to get out
 					specWarnBrandedReplication:Show(currentStack)
 				end
 			end
 			if self.Options.SetIconOnBrandedDebuff then
-				self:SetSortedIcon(0.5, args.destName, 1)
+				if spellId == 164006 or (self:IsMythic() and spellId == 164004) then--On mythic, displacement/replication in phase 1. Using dipslacemnet spellid, on two targets.
+					self:SetSortedIcon(1, args.destName, 1, 2)
+				else
+					self:SetIcon(args.destName, 1)
+				end
 			end
-			updateRangeFrame()--Update it here cause we don't need it before stacks get to relevant levels.
+			updateRangeFrame(self)--Update it here cause we don't need it before stacks get to relevant levels.
 		end
 	elseif spellId == 158553 then
 		local amount = args.amount or 1
 		warnCrushArmor:Show(args.destName, amount)
+		timerCrushArmorCD:Start()
+	elseif spellId == 178468 and UnitGUID("target") == args.destGUID then
+		local amount = args.amount or 1
+		warnNetherEnergy:Show(args.destName, amount)
+		specWarnNetherEnergy:Show(amount)
 	elseif args:IsSpellID(158605, 164176, 164178, 164191) then
 		--Update frame again in case he swaped targets during cast (happens)
 		self.vb.markActive = true
+		self.vb.lastMarkedTank = args.destName
 		if args:IsPlayer() then
 			self.vb.playerHasMark = true
+			if spellId == 164176 then 
+				specWarnMarkOfChaosDisplacement:Show()
+				voiceMarkOfChaos:Play("runout")
+			elseif spellId == 164178 then
+				if self:IsMythic() and self.vb.phase == 2 then
+					specWarnMarkOfChaosFortification:Show()
+				end
+				yellMarkOfChaosFortification:Yell()--Always yell when root occurs in all modes though, because that's when raid really needs to know WHERE you are.
+			end
 		else
 			self.vb.playerHasMark = false
+			if spellId == 164178 and self:CheckNearby(35, args.destName) then
+				specWarnMarkOfChaosFortificationNear:Show(args.destName)
+				voiceMarkOfChaos:Play("justrun")
+			end
 		end
 		self:Unschedule(updateRangeFrame)
-		updateRangeFrame()
+		updateRangeFrame(self)
+	elseif spellId == 157801 then
+		specWarnSlow:Show(args.destName)
+	elseif spellId == 165102 then
+		warnInfiniteDarkness:CombinedShow(0.3, args.destName)
+		if self.Options.SetIconOnInfiniteDarkness then
+			self:SetSortedIcon(1, args.destName, 1, 3)
+		end
+	elseif spellId == 165595 then
+		if args:IsPlayer() then
+			local amount = args.amount or 1
+			warnGazeSelf:Show(args.destName, amount)
+			specWarnGaze:Show(amount)
+			timerGaze:Cancel()
+			countdownGaze:Cancel()
+			timerGaze:Start()
+			countdownGaze:Start()
+			yellGaze:Cancel()
+			yellGaze:Schedule(9, 1)
+			yellGaze:Schedule(8, 2)
+			yellGaze:Schedule(7, 3)
+			yellGaze:Schedule(6, 4)
+			yellGaze:Schedule(5, 5)
+			yellGaze:Schedule(3, 7)
+			yellGaze:Yell(10)
+		end
+		updateRangeFrame(self)
+	elseif spellId == 176533 and args:IsPlayer() and self:AntiSpam(2, 1) then
+		specWarnGrowingDarkness:Show()
+		voiceGrowingDarkness:Play("runout")
+	end
+end
+
+function mod:SPELL_AURA_REFRESH(args)
+	local spellId = args.spellId
+	if spellId == 157763 then
+		warnFixate:CombinedShow(1, args.destName)
+		if args:IsPlayer() then
+			specWarnFixate:Show()
+			if not self:IsLFR() then
+				yellFixate:Yell()
+				voiceFixate:Play("runout")
+				voiceFixate:Schedule(1.5,"targetyou")
+			end
+			updateRangeFrame(self)
+		end
 	end
 end
 
@@ -396,12 +617,13 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if args:IsSpellID(158605, 164176, 164178, 164191) then
 		self.vb.markActive = false
+		self.vb.lastMarkedTank = nil
 		if args:IsPlayer() then
 			self.vb.playerHasMark = false
 		end
-		updateRangeFrame()
+		updateRangeFrame(self)
 	elseif spellId == 157763 and args:IsPlayer() and self.Options.RangeFrame then
-		DBM.RangeCheck:Hide()
+		updateRangeFrame(self)
 	elseif args:IsSpellID(156225, 164004, 164005, 164006) then
 		self.vb.brandedActive = self.vb.brandedActive - 1
 		if args:IsPlayer() then
@@ -410,13 +632,37 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.SetIconOnBrandedDebuff then
 			self:SetIcon(args.destName, 0)
 		end
-		updateRangeFrame()
+		updateRangeFrame(self)
+	elseif spellId == 165102 and self.Options.SetIconOnInfiniteDarkness then
+		self:SetIcon(args.destName, 0)
+	elseif spellId == 165595 then
+		if args:IsPlayer() then
+			timerGaze:Cancel()
+			countdownGaze:Cancel()
+		end
+		updateRangeFrame(self)
+	end
+end
+
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId)
+	if spellId == 176533 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
+		specWarnGrowingDarkness:Show()
+		voiceGrowingDarkness:Play("runout")
+	end
+end
+mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 78549 then--Reaver
+		timerCrushArmorCD:Cancel()
+		timerKickToFaceCD:Cancel()
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 164751 or spellId == 164810 then--Teleport to Fortification/Teleport to Replication. For these two, cancel all CD timers, these transitions are both over a minute long.
-		Yike:Play("ptran")
+		self.vb.isTransition = true
 		timerArcaneWrathCD:Cancel()
 		countdownArcaneWrath:Cancel()
 		timerDestructiveResonanceCD:Cancel()
@@ -425,43 +671,64 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		countdownMarkofChaos:Cancel()
 		timerForceNovaCD:Cancel()
 		countdownForceNova:Cancel()
+		voiceForceNova:Cancel()
 		timerTransition:Start()
+		countdownTransition:Start()
+		voicePhaseChange:Play("ptran")
+		updateRangeFrame(self)
+		if spellId == 164810 then
+			timerCrushArmorCD:Start(23)
+			timerKickToFaceCD:Start(42)
+		end
 	elseif spellId == 158012 or spellId == 157964 then--Power of Foritification/Replication
 		self.vb.forceCount = 0
+		self.vb.arcaneAdd = 0
+		self.vb.isTransition = false
 		specWarnTransitionEnd:Show()
 		timerArcaneWrathCD:Start(8.5)
 		countdownArcaneWrath:Start(8.5)
 		timerDestructiveResonanceCD:Start(18)
-		timerSummonArcaneAberrationCD:Start(28)
+		timerSummonArcaneAberrationCD:Start(28, 1)
 		timerMarkOfChaosCD:Start(36.5)
 		countdownMarkofChaos:Start(36.5)
-		timerForceNovaCD:Start(48.5)
+		timerForceNovaCD:Start(48.5, 1)
+		voiceForceNova:Schedule(42, "157349")
 		countdownForceNova:Start(48.5)
-	end
-	if spellId == 158012 then
-		Yike:Play("pthree")
-	end
-	if spellId == 157964 then
-		Yike:Play("four")
+		if spellId == 158012 then
+			if self:IsMythic() then
+				self.vb.phase = 2
+				voicePhaseChange:Play("ptwo")	
+			else
+				self.vb.phase = 3
+				voicePhaseChange:Play("pthree")
+			end
+		end
+		if spellId == 157964 then
+			if self:IsMythic() then
+				self.vb.phase = 3
+				voicePhaseChange:Play("pthree")	
+			else
+				self.vb.phase = 4
+				voicePhaseChange:Play("pfour")
+			end
+		end
+		if self.Options.RangeFrame then
+			DBM.RangeCheck:Hide()
+		end
+	elseif spellId == 164336 then--Teleport to Displacement (first phase change that has no transition)
+		voicePhaseChange:Play("ptwo")
+		self.vb.phase = 2
 	end
 end
 
-function mod:UNIT_HEALTH(uId)
-	if self:GetUnitCreatureId(uId) == 77428 then
-		local h = UnitHealth(uId) / UnitHealthMax(uId) * 100
-		if h > 89 and h < 91 and not margokp2flag then
-			Yike:Play("ptwo")
-			margokp2flag = true
-		self:SendSync("p2")
-		end
+function mod:CHAT_MSG_MONSTER_YELL(msg, npc)
+	if npc == chogallName and not self.vb.phase == 4 then--Some creative shit right here. Screw localized text.
+		self.vb.phase = 4
+		voicePhaseChange:Play("pfour")
+		updateRangeFrame(self)
+		self:RegisterShortTermEvents(
+			"SPELL_PERIODIC_DAMAGE 176533",
+			"SPELL_PERIODIC_MISSED 176533"
+		)
 	end
 end
-
-function mod:OnSync(msg)
-	if msg == "p2" then
-		if not margokp2flag then
-			sndWOP:Play("ptwo")
-			margokp2flag = true
-		end
-	end
-end 
