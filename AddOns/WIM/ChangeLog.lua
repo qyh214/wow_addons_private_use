@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 440 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 444 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,6 +16,12 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.6.23", "01/02/2015", [[
+	*Fixed another 3 missing options in 'Window Settings'
+]]);
+addEntry("3.6.22", "12/28/2014", [[
+	*Fixed 3 more missing options in 'Display Settings'
+]]);
 addEntry("3.6.21", "11/30/2014", [[
 	*WIM should no longer taint join battleground.
 	*The window behavior options should be visible once again. Not as pretty as they used to be though.

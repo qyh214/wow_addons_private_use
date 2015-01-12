@@ -1,7 +1,7 @@
 ﻿local mod = ExtraCD
 
 function mod:GetDataVersion()
-	return 67
+	return 69
 end
 
 function mod:GetSpellData() 
@@ -120,6 +120,54 @@ function mod:GetSpellData()
 		-- type = "item" 
 		-- item = {the item id}
 		-- WOD 6.0
+		[177161] = {
+			desc = "",
+			type = "item",
+			item = {118302, 118303},
+			cd = 0,
+			ppm = 0.92,
+			duration = 10,
+		}, -- AGI Ring 690
+		[177172] = {
+			desc = "",
+			type = "item",
+			item = {118308, 118307},
+			cd = 0,
+			ppm = 0.92,
+			duration = 10,
+		}, -- AGI Ring 710
+		[177159] = {
+			desc = "",
+			type = "item",
+			item = {118301, 118304},
+			cd = 0,
+			ppm = 0.92,
+			duration = 10,
+		}, -- INT Ring 690
+		[177176] = {
+			desc = "",
+			type = "item",
+			item = {118306, 118309},
+			cd = 0,
+			ppm = 0.92,
+			duration = 10,
+		}, -- INT Ring 710
+		[177160] = {
+			desc = "",
+			type = "item",
+			item = {118300, 118303},
+			cd = 0,
+			ppm = 0.92,
+			duration = 10,
+		}, -- STR Ring 690
+		[177175] = {
+			desc = "",
+			type = "item",
+			item = {118305, 118308},
+			cd = 0,
+			ppm = 0.92,
+			duration = 10,
+		}, -- STR Ring 710
 		[177063] = {
 			desc = "",
 			type = "item",

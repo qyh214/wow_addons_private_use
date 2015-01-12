@@ -296,8 +296,6 @@ local function General_WindowSettings()
     frame.menu.nextOffSetY = -10;
     frame.menu:CreateButton(L["Set Window Spawn Location"], ShowDemoWindow);
     frame.menu.nextOffSetY = -10;
-    frame.menu.sub = frame.menu:CreateSection();
-    options.AddFramedBackdrop(frame.menu.sub);
     local cascade = {L["Up"], L["Down"], L["Left"], L["Right"], L["Up"].." & "..L["Left"], L["Up"].." & "..L["Right"], L["Down"].." & "..L["Left"], L["Down"].." & "..L["Right"]};
     local tsList = {};
     for i=1, #cascade do
@@ -307,9 +305,9 @@ local function General_WindowSettings()
             justifyH = "LEFT",
         });
     end
-    frame.menu.sub:CreateCheckButtonMenu(L["Cascade overlapping windows."], db.winCascade, "enabled", nil, nil, tsList, db.winCascade, "direction", nil);
-    frame.menu.sub:CreateCheckButton(L["Ignore arrow keys in message box."], db, "ignoreArrowKeys", nil, function(self) UpdateAllWindowProps(); end);
-    frame.menu.sub:CreateCheckButton(L["Allow <ESC> to hide windows."], db, "escapeToHide", L["Windows will also be hidden when frames such as the world map are shown."], function(self) UpdateAllWindowProps(); end);
+    frame.menu:CreateCheckButtonMenu(L["Cascade overlapping windows."], db.winCascade, "enabled", nil, nil, tsList, db.winCascade, "direction", nil);
+    frame.menu:CreateCheckButton(L["Ignore arrow keys in message box."], db, "ignoreArrowKeys", nil, function(self) UpdateAllWindowProps(); end);
+    frame.menu:CreateCheckButton(L["Allow <ESC> to hide windows."], db, "escapeToHide", L["Windows will also be hidden when frames such as the world map are shown."], function(self) UpdateAllWindowProps(); end);
     return frame;
 end
 
@@ -357,11 +355,9 @@ local function General_VisualSettings()
     frame.menu.nextOffSetY = -30;
     frame.menu.alpha = frame.menu:CreateSlider(L["Window Alpha"], "1", "100", 1, 100, 1, db, "windowAlpha", function(self) UpdateAllWindowProps(); end);
     frame.menu.nextOffSetY = -35;
-    frame.menu.sub = frame.menu:CreateSection();
-    options.AddFramedBackdrop(frame.menu.sub);
-    frame.menu.sub:CreateCheckButton(L["Enable window fading effects."], db, "winFade");
-    frame.menu.sub:CreateCheckButton(L["Enable window animation effects."], db, "winAnimation");
-    frame.menu.sub:CreateCheckButton(L["Display item links when hovering over them."], db, "hoverLinks");
+	frame.menu:CreateCheckButton(L["Enable window fading effects."], db, "winFade");
+	frame.menu:CreateCheckButton(L["Enable window animation effects."], db, "winAnimation");
+	frame.menu:CreateCheckButton(L["Display item links when hovering over them."], db, "hoverLinks");
     
     return frame;
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BSMTrash", "DBM-Party-WoD", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11981 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -22,7 +22,7 @@ local warnBloodRage						= mod:NewTargetAnnounce(151548, 4, nil, mod:IsMagicDisp
 local warnSubjugate						= mod:NewTargetAnnounce(151697, 3, nil, mod:IsHealer())
 local warnSlaversRage					= mod:NewTargetAnnounce(151965, 3, nil, mod:CanRemoveEnrage())
 
-local specWarnCrush						= mod:NewSpecialWarningMove(151447, mod:IsTank())
+local specWarnCrush						= mod:NewSpecialWarningDodge(151447, mod:IsTank())
 local specWarnCinderSplash				= mod:NewSpecialWarningSpell(152298, nil, nil, nil, 2)
 local specWarnRoar						= mod:NewSpecialWarningInterrupt(151545, not mod:IsHealer())--Maybe healer need warning too, if interrupt gets off, healer can't heal for 5 seconds
 local specWarnLavaBurst					= mod:NewSpecialWarningInterrupt(151558, not mod:IsHealer())
@@ -74,7 +74,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 151545 and validWarning(args.sourceGUID) then--Antispam
 		warnRoar:Show()
 		specWarnRoar:Show(args.sourceName)
-	elseif spellId == 151558 then
+	elseif spellId == 151558 and validWarning(args.sourceGUID) then
 		warnLavaBurst:Show()
 		specWarnLavaBurst:Show(args.sourceName)
 	elseif spellId == 151581 then

@@ -1,6 +1,6 @@
 --[[
 Name: LibBabble-Inventory-3.0
-Revision: $Rev: 181 $
+Revision: $Rev: 183 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-inventory-3-0/
 Dependencies: None
@@ -8,7 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Inventory-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 181 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 183 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -566,7 +566,7 @@ elseif GAME_LOCALE == "koKR" then
 	Back = "등",
 	Bag = "가방",
 	Bandage = "붕대",
-	-- Beast = "",
+	Beast = "야수", -- Needs review
 	Blacksmithing = "대장기술",
 	Blue = "푸른색",
 	Book = "책",
@@ -591,7 +591,7 @@ elseif GAME_LOCALE == "koKR" then
 	Daggers = "단검류",
 	["Death Knight"] = "죽음의 기사",
 	Devices = "기계 장치",
-	-- Dragonkin = "",
+	Dragonkin = "용족", -- Needs review
 	Drink = "음료",
 	Druid = "드루이드",
 	Elemental = "원소",
@@ -630,7 +630,7 @@ elseif GAME_LOCALE == "koKR" then
 	Herbalism = "약초채집",
 	["Herb Bag"] = "약초 가방",
 	Holiday = "축제용품",
-	-- Humanoid = "",
+	Humanoid = "인간형", -- Needs review
 	Hunter = "사냥꾼",
 	Hydraulic = "Hydraulic", -- Needs review
 	Idol = "우상",
@@ -662,7 +662,7 @@ elseif GAME_LOCALE == "koKR" then
 	["Mining Bag"] = "채광 가방",
 	Miscellaneous = "기타",
 	-- Money = "",
-	-- Monk = "",
+	Monk = "수도사", -- Needs review
 	Mount = "탈것",
 	Mounts = "탈것",
 	Neck = "목",
@@ -720,7 +720,7 @@ elseif GAME_LOCALE == "koKR" then
 	["Two-Handed Axes"] = "양손 도끼류",
 	["Two-Handed Maces"] = "양손 둔기류",
 	["Two-Handed Swords"] = "양손 도검류",
-	-- Undead = "",
+	Undead = "언데드", -- Needs review
 	Waist = "허리",
 	Wand = "마법봉",
 	Wands = "마법봉류",

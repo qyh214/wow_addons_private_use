@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(971, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12125 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12390 $"):sub(12, -3))
 mod:SetCreatureID(77404)
 mod:SetEncounterID(1706)
 mod:SetZone()
+mod:SetModelSound("sound\\creature\\thebutcher\\VO_60_OGRERAID_BUTCHER_AGGRO.ogg", "sound\\creature\\thebutcher\\VO_60_OGRERAID_BUTCHER_SPELL_B.ogg")
 
 mod:RegisterCombat("combat")
 
@@ -21,7 +22,7 @@ mod:RegisterEventsInCombat(
 local warnCleave					= mod:NewCountAnnounce(156157, 2, nil, false)
 local warnBoundingCleave			= mod:NewCountAnnounce(156160, 3)
 local warnTenderizer				= mod:NewStackAnnounce(156151, 2, nil, mod:IsTank())
-local warnCleaver					= mod:NewSpellAnnounce(156143, 3, nil, mod:IsTank())--Saberlash
+local warnCleaver					= mod:NewSpellAnnounce("OptionVersion2", 156143, 3, nil, false)--Saberlash
 local warnFrenzy					= mod:NewTargetAnnounce(156598, 4)
 
 local specWarnTenderizer			= mod:NewSpecialWarningStack(156151, nil, 2)
@@ -40,7 +41,7 @@ local timerBoundingCleave			= mod:NewCastTimer(15, 156160)
 
 local berserkTimer					= mod:NewBerserkTimer(300)
 
-local countdownCleaver				= mod:NewCountdown("Alt8.5", 156143, mod:IsTank())
+local countdownTenderizer			= mod:NewCountdown("Alt17", 156151, mod:IsTank())
 local countdownBoundingCleave		= mod:NewCountdown(60, 156160)
 
 local voiceCleave					= mod:NewVoice(156157, mod:IsMelee())
@@ -59,9 +60,9 @@ function mod:OnCombatStart(delay)
 	self.vb.boundingCleave = 0
 	self.vb.isFrenzied = false
 	timerTenderizerCD:Start(6-delay)
+	countdownTenderizer:Start(6-delay)
 	timerCleaveCD:Start(10-delay)--Verify this wasn't caused by cleave bug.
 	timerCleaverCD:Start(12-delay)
-	countdownCleaver:Start(12-delay)
 	timerBoundingCleaveCD:Start(-delay, 1)
 	voiceBoundingCleaveSoon:Schedule(53.5-delay, "156160")
 	countdownBoundingCleave:Start(-delay)
@@ -69,7 +70,7 @@ function mod:OnCombatStart(delay)
 		berserkTimer:Start(240-delay)
 		self:RegisterShortTermEvents(
 			"SPELL_PERIODIC_DAMAGE 163046",
-			"SPELL_PERIODIC_MISSED 163046"
+			"SPELL_ABSORBED 163046"
 		)
 	elseif self:IsHeroic() then
 		berserkTimer:Start(-delay)
@@ -87,7 +88,11 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 156157 or spellId == 156293 then
 		self.vb.cleaveCount = self.vb.cleaveCount + 1
 		warnCleave:Show(self.vb.cleaveCount)
-		timerCleaveCD:Start()
+		if self.vb.isFrenzied then
+			timerCleaveCD:Start(5)
+		else
+			timerCleaveCD:Start()
+		end
 		if not self:IsLFR() then --never play this in LFR
 			voiceCleave:Play("156157")
 		end
@@ -107,6 +112,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		warnTenderizer:Show(args.destName, amount)
 		timerTenderizerCD:Start()
+		countdownTenderizer:Start()
 		if amount >= 2 then
 			voiceTenderizer:Play("changemt")
 			if args:IsPlayer() then
@@ -150,7 +156,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 156143 then
 		warnCleaver:Show()
 		timerCleaverCD:Start()
-		countdownCleaver:Start()
 	elseif spellId == 156172 then--The cleave finisher of Bounding Cleave. NOT to be confused with other cleave.
 		specWarnBoundingCleaveEnded:Show()
 		--Timer for when regular cleave resumes
@@ -168,19 +173,19 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId
 		voicePaleVitriol:Play("runaway")
 	end
 end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 156197 or spellId == 156257 then
 		self.vb.cleaveCount = 0
 		self.vb.boundingCleave = self.vb.boundingCleave + 1
 		timerCleaveCD:Cancel()
+		countdownTenderizer:Cancel()
 		warnBoundingCleave:Show(self.vb.boundingCleave)
 		specWarnBoundingCleave:Show(self.vb.boundingCleave)
 		timerTenderizerCD:Start(15)
+		countdownTenderizer:Start(15)
 		timerCleaverCD:Start(21)
-		countdownCleaver:Cancel()
-		countdownCleaver:Start(21)
 		if self.vb.isFrenzied then
 			timerBoundingCleave:Start(5)
 			timerBoundingCleaveCD:Start(30, self.vb.boundingCleave+1)

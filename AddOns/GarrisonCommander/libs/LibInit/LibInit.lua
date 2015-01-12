@@ -19,7 +19,7 @@
 --
 local pp=print -- Keeping a handy plain print around
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 2
+local MINOR_VERSION = 4
 --GAME_LOCALE="itIT"
 local me, ns = ...
 local LibStub=LibStub
@@ -791,7 +791,7 @@ function lib:AddText(text,image,imageHeight,imageWidth,imageCoords)
 end
 
 --self:AddToggle("AUTOLEAVE",true,"Quick Battlefield Leave","Alt-Click on hide button in battlefield alert leaves the queue")
-function lib:AddBoolean(flag,defaultvalue,name,description,icon)
+function lib:AddToggle(flag,defaultvalue,name,description,icon)
 	description=description or name
 	local group=getgroup(self)
 	local t={
@@ -813,10 +813,6 @@ function lib:AddBoolean(flag,defaultvalue,name,description,icon)
 			self.db.profile.toggles[flag]=defaultvalue
 	end
 	return t
-end
-function lib:AddToggle(flag,defaultvalue,name,description)
-	description=description or name
-	return self:AddBoolean(flag,defaultvalue,name,description)
 end
 -- self:AddEdit("REFLECTTO",1,{a=1,b=2},"Whisper reflection receiver:","All your whispers will be forwarded to this guy")
 function lib:AddSelect(flag,defaultvalue,values,name,description)
@@ -861,6 +857,7 @@ function lib:AddSlider(flag,defaultvalue,min,max,name,description,step)
 		get="OptToggleGet",
 		set="OptToggleSet",
 		desc=description,
+		width="full",
 		arg=flag,
 		step=step,
 		isPercent=isPercent,
@@ -899,17 +896,11 @@ function lib:AddEdit(flag,defaultvalue,name,description,usage)
 	return t
 end
 
--- self:AddAction(["btopenspells",]"openSpells","Opens spell panel","You can choose yoru spells in spell panel")
+-- self:AddAction("openSpells","Opens spell panel","You can choose yoru spells in spell panel")
 function lib:AddAction(method,label,description,private)
 	label=label or method
 	description=description or label
 		local group=getgroup(self)
-		if type(self[method]) ~="function" and type(self[label])=="function" then
-			local appo=method
-			method=label
-			label=appo
-			appo=nil
-		end
 		local t={
 			func=method,
 			name=label,
@@ -1507,18 +1498,31 @@ function lib:ScheduleLeaveCombatAction(method, ...)
 	t.self = self
 	table.insert(combatSchedules, t)
 end
-function lib:Popup(msg,timeout)
+function lib:Popup(msg,timeout,OnAccept,OnCancel)
 	msg=msg or "Something strange happened"
 	StaticPopupDialogs["LIBINIT_POPUP"] = StaticPopupDialogs["LIBINIT_POPUP"] or
 	{
-	text = TEXT(msg),
-	button1 = TEXT("OK"),
-	showAlert = 1,
+	text = msg,
+	button1 = ACCEPT,
+	showAlert = true,
 	timeout = timeout or 60,
-	exclusive = 1,
-	whileDead = 1,
-	interruptCinematic = 1
+	exclusive = true,
+	whileDead = true,
+	interruptCinematic = true
 	};
+	local popup=StaticPopupDialogs["LIBINIT_POPUP"]
+	popup.text=msg
+	popup.OnCancel=nil
+	popup.OnAccept=OnAccept
+	popup.button2=nil
+	if (OnCancel) then
+		if (type(OnCancel)=="function") then
+			popup.OnCancel=OnCancel
+		end
+		popup.button2 = CANCEL
+	end
+
+
 	StaticPopup_Show("LIBINIT_POPUP");
 end
 --- reembed routine

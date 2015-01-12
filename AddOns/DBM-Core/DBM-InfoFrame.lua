@@ -71,19 +71,14 @@ local value = {}
 --Entire InfoFrame is a looping onupdate function. All of these globals get used several times a second
 local GetRaidTargetIndex = GetRaidTargetIndex
 local UnitName = UnitName
-local UnitHealth = UnitHealth
-local UnitPower = UnitPower
-local UnitPowerMax = UnitPowerMax
-local UnitDebuff = UnitDebuff
-local UnitBuff = UnitBuff
-local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+local UnitHealth, UnitPower, UnitPowerMax = UnitHealth, UnitPower, UnitPowerMax
+local UnitDebuff, UnitBuff = UnitDebuff, UnitBuff
+local UnitIsDeadOrGhost, UnitThreatSituation = UnitIsDeadOrGhost, UnitThreatSituation
 local GetSpellInfo = GetSpellInfo
-local UnitThreatSituation = UnitThreatSituation
-local GetRaidRosterInfo = GetRaidRosterInfo
 local UnitPosition = UnitPosition
-local GetPartyAssignment = GetPartyAssignment
-local UnitGroupRolesAssigned = UnitGroupRolesAssigned
+local GetRaidRosterInfo, GetPartyAssignment, UnitGroupRolesAssigned = GetRaidRosterInfo, GetPartyAssignment, UnitGroupRolesAssigned
 local twipe = table.wipe
+local select = select
 
 ---------------------
 --  Dropdown Menu  --
@@ -332,6 +327,24 @@ local function updateBadPlayerDebuffs()
 	updateIcons()
 end
 
+--Duplicate of updateBadPlayerDebuffs
+--needed when specific spellid must be checked because spellname for more than 1 spell
+local function updateBadPlayerDebuffsBySpellID()
+	twipe(lines)
+	local spellName = GetSpellInfo(value[1])
+	local tankIgnored = value[2]
+	for uId in DBM:GetGroupMembers() do
+		if tankIgnored and UnitGroupRolesAssigned(uId) == "TANK" or GetPartyAssignment("MAINTANK", uId, 1) then
+		else
+			if select(11, UnitDebuff(uId, spellName)) == value[1] and not UnitIsDeadOrGhost(uId) then
+				lines[UnitName(uId)] = ""
+			end
+		end
+	end
+	updateLines()
+	updateIcons()
+end
+
 --Debuffs that are bad to have, but we want to show players who do NOT have them
 local function updateReverseBadPlayerDebuffs()
 	twipe(lines)
@@ -430,6 +443,7 @@ local events = {
 	["playerbuff"] = updatePlayerBuffs,
 	["playergooddebuff"] = updateGoodPlayerDebuffs,
 	["playerbaddebuff"] = updateBadPlayerDebuffs,
+	["playerbaddebuffbyspellid"] = updateBadPlayerDebuffsBySpellID,
 	["reverseplayerbaddebuff"] = updateReverseBadPlayerDebuffs,
 	["playeraggro"] = updatePlayerAggro,
 	["playerbuffstacks"] = updatePlayerBuffStacks,
@@ -448,6 +462,7 @@ local friendlyEvents = {
 	["playerbuff"] = true,
 	["playergooddebuff"] = true,
 	["playerbaddebuff"] = true,
+	["playerbaddebuffbyspellid"] = true,
 	["reverseplayerbaddebuff"] = true,
 	["playeraggro"] = true,
 	["playerbuffstacks"] = true,
@@ -482,7 +497,7 @@ function onUpdate(frame)
 				linesShown = linesShown + 1
 				if leftText == UnitName("player") then--It's player.
 					addedSelf = true
-					if currentEvent == "health" or currentEvent == "playerpower" or currentEvent == "playerbuff" or currentEvent == "playergooddebuff" or currentEvent == "playerbaddebuff" or currentEvent == "playertargets" or (currentEvent == "playeraggro" and value[1] == 3) then--Red
+					if currentEvent == "health" or currentEvent == "playerpower" or currentEvent == "playerbuff" or currentEvent == "playergooddebuff" or currentEvent == "playerbaddebuff" or currentEvent == "playerbaddebuffbyspellid" or currentEvent == "playertargets" or (currentEvent == "playeraggro" and value[1] == 3) then--Red
 						frame:AddDoubleLine(icon or leftText, rightText, 255, 0, 0, 255, 255, 255)-- (leftText, rightText, left.R, left.G, left.B, right.R, right.G, right.B)
 					else--Green
 						frame:AddDoubleLine(icon or leftText, rightText, 0, 255, 0, 255, 255, 255)

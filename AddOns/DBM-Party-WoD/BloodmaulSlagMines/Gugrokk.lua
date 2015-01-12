@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(889, "DBM-Party-WoD", 2, 385)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12099 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12216 $"):sub(12, -3))
 mod:SetCreatureID(74790)
 mod:SetEncounterID(1654)
 mod:SetZone()
@@ -12,7 +12,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 150677 150784 150755",
 	"SPELL_AURA_APPLIED 150678",
 	"SPELL_PERIODIC_DAMAGE 150784",
-	"SPELL_PERIODIC_MISSED 150784"
+	"SPELL_ABSORBED 150784"
 )
 
 --TODO, Add heroic ability "Flame Buffet"? Seems to just stack up over time and not really need warnings.
@@ -81,4 +81,4 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		voiceMagmaEruption:Play("runaway")
 	end
 end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE

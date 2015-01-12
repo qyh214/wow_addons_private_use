@@ -1,6 +1,6 @@
 ﻿-- Mini Dragon(projecteurs@gmail.com)
 -- Yike Xia
--- Last update: Dec 15, 2014@12036
+-- Last update: Dec 27, 2014@12193
 
 if GetLocale() ~= "zhCN" then return end
 local L
@@ -29,6 +29,13 @@ L:SetMiscLocalization({
 ------------------
 L= DBM:GetModLocalization(1196)
 
+L:SetOptionLocalization({
+	InterruptCounter	= "凋零打断计数器重置",
+	Two					= "在两个打断后",
+	Three				= "在三个打断后",
+	Four				= "在四个打断后"
+})
+
 --------------
 -- Twin Ogron --
 --------------
@@ -46,6 +53,14 @@ L:SetOptionLocalization({
 --------------------
 L= DBM:GetModLocalization(1153)
 
+L:SetWarningLocalization({
+	specWarnExpelMagicFelFades	= "邪能5秒后消失 - 返回原位"
+})
+
+L:SetOptionLocalization({
+	specWarnExpelMagicFelFades	= "为$spell:172895提供返回原位的特殊警报"
+})
+
 L:SetMiscLocalization({
 	supressionTarget1	= "我要碾碎你！", --Thanks xuesj87@NGA
 	supressionTarget2	= "闭嘴！", --Thanks 纸醉金迷°@NGA
@@ -59,7 +74,9 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1197)
 
 L:SetMiscLocalization({
-	BrandedYell			= "烙印(%s)->%s"
+	BrandedYell			= "%2$s 中了 烙印 (%1$s)!",
+	GazeYell			= "凝视于 %d 秒后结束",
+	PlayerDebuffs		= "距离最近的疯狂之眼"  --165243
 })
 -------------
 --  Trash  --

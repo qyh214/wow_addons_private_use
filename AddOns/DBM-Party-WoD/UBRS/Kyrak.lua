@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1227, "DBM-Party-WoD", 8, 559)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12114 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
 mod:SetCreatureID(76021)
 mod:SetEncounterID(1758)
 mod:SetZone()
@@ -12,7 +12,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 161203 162600",
 	"SPELL_CAST_START 161199 161203 155037",
 	"SPELL_PERIODIC_DAMAGE 161288",
-	"SPELL_PERIODIC_MISSED 161288",
+	"SPELL_ABSORBED 161288",
 	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
@@ -25,9 +25,9 @@ local warnToxicFumes				= mod:NewTargetAnnounce(162600, 3, nil, mod:IsHealer())
 local warnVilebloodSerum			= mod:NewSpellAnnounce(161209, 3)--Some may think this is spammy but the puddles tick literally instantly giving not much time to move before 2nd tick which may kill you.
 
 local specWarnDebilitatingFixation	= mod:NewSpecialWarningInterrupt("OptionVersion2", 161199, not mod:IsHealer(), nil, nil, 3)
-local specWarnEruption				= mod:NewSpecialWarningMove(155037, mod:IsTank())
+local specWarnEruption				= mod:NewSpecialWarningDodge(155037, mod:IsTank())
 local specWarnRejuvSerum			= mod:NewSpecialWarningDispel(161203, mod:IsMagicDispeller())
-local specWarnToxicFumes			= mod:NewSpecialWarningDispel(162600, mod:IsHealer())
+local specWarnToxicFumes			= mod:NewSpecialWarningDispel("OptionVersion2", 162600, mod:CanRemovePoison())
 local specWarnVilebloodSerum		= mod:NewSpecialWarningMove(161288)
 
 local timerDebilitatingCD			= mod:NewNextTimer(20, 161199)--Every 20 seconds exactly, at least in challenge mode.
@@ -91,7 +91,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		end
 	end
 end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_DIED(args)
 	if self:GetCIDFromGUID(args.destGUID) == 82556 then

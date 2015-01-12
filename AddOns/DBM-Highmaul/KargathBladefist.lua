@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(1128, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12160 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12375 $"):sub(12, -3))
 mod:SetCreatureID(78714)
 mod:SetEncounterID(1721)
 mod:SetZone()
 --mod:SetUsedIcons(7)
+mod:SetModelSound("sound\\creature\\kargath\\VO_60_HMR_KARGATH_INTRO1.ogg", "sound\\creature\\kargath\\VO_60_HMR_KARGATH_SPELL2.ogg")
 mod:SetHotfixNoticeRev(11928)
 
 mod:RegisterCombat("combat")
@@ -16,7 +17,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 159947 158986 159178 159202 162497",
 	"SPELL_AURA_APPLIED_DOSE 159178",
 	"SPELL_PERIODIC_DAMAGE 159413",
-	"SPELL_PERIODIC_MISSED 159413",
+	"SPELL_ABSORBED 159413",
 	"CHAT_MSG_RAID_BOSS_EMOTE"
 --	"UNIT_SPELLCAST_CHANNEL_STOP boss1"
 )
@@ -162,7 +163,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId
 		specWarnMaulingBrew:Show()
 	end
 end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 	--Only fires for one thing, so no reason to localize

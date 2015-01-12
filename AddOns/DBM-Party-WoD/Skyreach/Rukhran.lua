@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(967, "DBM-Party-WoD", 7, 476)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12173 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12197 $"):sub(12, -3))
 mod:SetCreatureID(76143)
 mod:SetEncounterID(1700)
 mod:SetZone()
@@ -25,7 +25,7 @@ local specWarnQuills			= mod:NewSpecialWarningSpell(159382, nil, nil, nil, 2)
 local specWarnQuillsEnd			= mod:NewSpecialWarningEnd(159382)
 
 local timerSolarFlareCD			= mod:NewCDTimer(18, 153810)
---local timerQuillsCD				= mod:NewCDTimer(64, 159382)--Health based
+local timerQuills				= mod:NewBuffActiveTimer(17, 159382)
 
 local voiceSolarFlare			= mod:NewVoice(153810, not mod:IsTank())
 local voiceQuills				= mod:NewVoice(159382)
@@ -66,7 +66,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 159382 then
 		warnQuills:Show()
 		specWarnQuills:Show()
-		--timerQuillsCD:Start()
+		timerQuills:Start()
 		voiceQuills:Play("findshelter")
 	end
 end

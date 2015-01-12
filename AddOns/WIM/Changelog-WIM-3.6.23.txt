@@ -1,0 +1,23 @@
+------------------------------------------------------------------------
+r445 | mysticalos | 2015-01-02 12:08:57 +0000 (Fri, 02 Jan 2015) | 1 line
+Changed paths:
+   A /tags/3.6.23 (from /trunk:444)
+
+Tagging as 3.6.23
+------------------------------------------------------------------------
+r444 | mysticalos | 2015-01-02 12:06:56 +0000 (Fri, 02 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/ChangeLog.lua
+   M /trunk/Sources/Options/CoreOptions.lua
+   M /trunk/WIM.lua
+
+Fixed more missing option bugs
+------------------------------------------------------------------------
+r442 | mysticalos | 2014-12-28 20:27:01 +0000 (Sun, 28 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/ChangeLog.lua
+   M /trunk/Sources/Options/CoreOptions.lua
+   M /trunk/WIM.lua
+
+fix 3 more options that somehow went invisible at some point. 
+------------------------------------------------------------------------

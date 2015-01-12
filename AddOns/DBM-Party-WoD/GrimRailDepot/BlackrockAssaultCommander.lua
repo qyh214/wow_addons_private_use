@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1163, "DBM-Party-WoD", 3, 536)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12037 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
 mod:SetCreatureID(79545)
 mod:SetEncounterID(1732)
 mod:SetZone()
@@ -25,7 +25,7 @@ local warnPhase3				= mod:NewPhaseAnnounce(3)
 
 local specWarnSupressiveFire	= mod:NewSpecialWarningYou(160681)
 local yellSupressiveFire		= mod:NewYell(160681)
-local specWarnShrapnelblast		= mod:NewSpecialWarningMove(160943, mod:IsTank(), nil, nil, 3)--160943 boss version, 166675 trash version.
+local specWarnShrapnelblast		= mod:NewSpecialWarningDodge(160943, mod:IsTank(), nil, nil, 3)--160943 boss version, 166675 trash version.
 local specWarnSlagBlast			= mod:NewSpecialWarningMove(166570)
 
 local timerSupressiveFire		= mod:NewTargetTimer(10, 160681)

@@ -2,9 +2,9 @@
 ## Title: Blizzmove
 ## Notes: Move those blizzard windows
 ## Author: yess
-## Version: v1.3.6
+## Version: v1.3.7
 ## X-Email: starfire@fantasymail.de
-## X-Curse-Packaged-Version: v1.3.6
+## X-Curse-Packaged-Version: v1.3.7
 ## X-Curse-Project-Name: BlizzMove
 ## X-Curse-Project-ID: blizzmove
 ## X-Curse-Repository-ID: wow/blizzmove/mainline

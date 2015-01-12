@@ -4,6 +4,8 @@ function phraonload()
 	phracounter1=0
 	_, phraenglishclass = UnitClass("player")
 	phrahuntertime=0
+	
+	raPandaModVers=6.002
 
 local _, a2 = GetInstanceInfo()
 if select(3,GetInstanceInfo())==2 and a2=="party" then
@@ -415,7 +417,7 @@ end
 --Stormstout Brewery
 if GetCurrentMapAreaID()==876 then
 
-if arg2=="SPELL_DAMAGE" and arg10==106784 then
+if arg2=="SPELL_DAMAGE" and arg10==106784 and UnitGUID("boss1") and arg7==UnitGUID("boss1") then
   phracounter1=phracounter1+1
   if phracounter1==20 then
     if phraspisokon[9]==1 then

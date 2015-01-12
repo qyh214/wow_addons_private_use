@@ -1,21 +1,9 @@
 local _, T = ...
-if T.Mark ~= 16 then return end
+if T.Mark ~= 23 then return end
 local EV, G, L = T.Evie, T.Garrison, T.L
 
 local roamingParty, easyDrop = T.MissionsUI.roamingParty, T.MissionsUI.easyDrop
 local MISSION_PAGE_FRAME = GarrisonMissionFrame.MissionTab.MissionPage
-
-local Hide do
-	local dungeon = CreateFrame("Frame")
-	dungeon:Hide()
-	function Hide(f, ...)
-		if f then
-			f:SetParent(dungeon)
-			return Hide(...)
-		end
-	end
-end
-Hide(GarrisonMissionFrameMissionsTab1, GarrisonMissionFrameMissionsTab2)
 
 do -- GarrisonFollowerList_SortFollowers
 	local toggle = CreateFrame("CheckButton", nil, GarrisonMissionFrameFollowers, "InterfaceOptionsCheckButtonTemplate")
@@ -192,6 +180,26 @@ hooksecurefunc("GarrisonFollowerList_Update", function(self)
 		end
 	end
 end)
+do -- Follower counter button tooltips
+	local fake, old = {}
+	local function OnEnter(self, ...)
+		old, fake.info = self, self.info
+		return GarrisonMissionMechanicFollowerCounter_OnEnter(self, ...)
+	end
+	hooksecurefunc("GarrisonFollowerButton_UpdateCounters", function(self)
+		if old and (fake.info ~= old.info or not (old:IsShown() and old:IsMouseOver())) then
+			GarrisonMissionMechanicFollowerCounter_OnLeave(fake)
+			old, fake.info = nil
+		end
+		for i=1,#self.Counters do
+			local self = self.Counters[i]
+			self:SetScript("OnEnter", OnEnter)
+			if self:IsShown() and self:IsMouseOver() then
+				OnEnter(self)
+			end
+		end
+	end)
+end
 
 hooksecurefunc("GarrisonFollowerList_Update", function(self)
 	local buttons, fl = self.FollowerList.listScroll.buttons, G.GetFollowerInfo()
@@ -322,7 +330,7 @@ local lfgButton do
 		local f1, f2, f3 = ff[1].info, ff[2].info, ff[3].info
 		f1, f2, f3 = f1 and f1.followerID, mi.numFollowers > 1 and f2 and f2.followerID, mi.numFollowers > 1 and f3 and f3.followerID
 
-		local mm = G.GetSuggestedGroups(mi, nil, false, f1, f2, f3)
+		local mm = G.GetSuggestedGroups(mi, false, f1, f2, f3)
 		if #mm > 1 then
 			easyDrop:Open(self, mm, "TOPRIGHT", self, "TOPLEFT", -2, 12)
 		end
@@ -429,19 +437,30 @@ do -- Counter-follower lists
 		return t
 	end
 	local function GetTraitListText(trait, mlvl)
-		local finfo, c, cn = G.GetFollowerInfo(), {}, 1
+		local finfo, c, c2, cn = G.GetFollowerInfo(), {}, {}, 1
 		for k,v in pairs(finfo) do
 			if v.isCollected and v.traits and v.traits[trait] then
 				c[cn], cn = k, cn + 1
+			end
+			if v.isCollected and v.affinity == trait then
+				c2[#c2 + 1] = k
 			end
 		end
 		local mi = GarrisonMissionFrame.MissionTab.MissionPage.missionInfo
 		local mlvl = mlvl or mi and G.GetFMLevel(mi) or 0
 		T.Garrison.sortByFollowerLevels(c, finfo)
+		T.Garrison.sortByFollowerLevels(c2, finfo)
 		for i=1,#c do
 			c[i] = T.Garrison.GetFollowerLevelDescription(c[i], mlvl, finfo[c[i]])
 		end
-		return cn > 1 and (NORMAL_FONT_COLOR_CODE .. L"Followers with this trait:" .. "|r\n" .. table.concat(c, "\n")) or ""
+		local base = cn > 1 and (NORMAL_FONT_COLOR_CODE .. L"Followers with this trait:" .. "|r\n" .. table.concat(c, "\n")) or ""
+		if #c2 > 0 then
+			for i=1,#c2 do
+				c2[i] = T.Garrison.GetFollowerLevelDescription(c2[i], mlvl, finfo[c[i]])
+			end
+			base = (cn > 1 and (base .. "\n\n") or "") .. NORMAL_FONT_COLOR_CODE .. L"Followers activating this trait:" .. "|r\n" .. table.concat(c2, "\n")
+		end
+		return base
 	end
 	
 	local atip = GarrisonFollowerAbilityTooltip
@@ -478,6 +497,15 @@ do -- Counter-follower lists
 			end
 		end
 	end)
+	hooksecurefunc("GarrisonFollowerTooltipTemplate_SetGarrisonFollower", function(self, data)
+		for i=1,#self.Abilities do
+			local ci = self.Abilities[i].CounterIcon
+			if ci:IsShown() then
+				ci:SetMask("")
+				ci:SetTexCoord(4/64,60/64,4/64,60/64)
+			end
+		end
+	end)
 	
 	local ctip = GarrisonMissionMechanicFollowerCounterTooltip
 	ctip.CounterOthers = ctip:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
@@ -504,8 +532,8 @@ do -- Counter-follower lists
 		local mech = T.Garrison.GetMechanicInfo((self.Icon:GetTexture() or ""):lower())
 		local text = GetCounterListText(mech, self.missionLevel)
 		if text ~= "" then
-			local height = self:GetHeight()-self.Description:GetHeight()
-			self.Description:SetText(self.Description:GetText() .. "\n\n" .. text)
+			local height, dt = self:GetHeight()-self.Description:GetHeight(), self.Description:GetText()
+			self.Description:SetText((dt and dt .. "\n\n" .. text or text))
 			self:SetHeight(height + self.Description:GetHeight() + 4)
 		end
 	end)
@@ -523,6 +551,30 @@ do -- suppress completion toast while missions UI is visible
 			AlertFrame:RegisterEvent("GARRISON_MISSION_FINISHED")
 			registered = false
 		end
+	end)
+end
+do -- Rewards
+	local function Reward_OnClick(self)
+		if IsModifiedClick("CHATLINK") then
+			local q, text = self.quantity and self.quantity > 1 and self.quantity .. " " or ""
+			if self.itemID then
+				text = select(2, GetItemInfo(self.itemID))
+				if text then
+					text = q .. text
+				end
+			elseif self.currencyID and self.currencyID > 0 and self.currencyQuantity then
+				text = self.currencyQuantity .. " " .. GetCurrencyLink(self.currencyID)
+			elseif self.title then
+				text = q .. self.title
+			end
+			if text then
+				ChatEdit_InsertLink(text)
+			end
+		end
+	end
+	hooksecurefunc("GarrisonMissionPage_SetReward", function(self, reward)
+		self.quantity = reward.quantity or reward.followerXP
+		self:SetScript("OnMouseUp", Reward_OnClick)
 	end)
 end
 

@@ -1,3 +1,0 @@
-funkydude:
-	- Movers: Remove some old code causing issues.
-	- Replace some fake animations with timers.

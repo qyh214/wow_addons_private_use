@@ -1,3 +1,0 @@
-funkydude:
-	- Buttons: Show the queue status button by default.
-	- Buttons: Remove EBB from hardcoded buttons list as it uses LibDBIcon now, not the old fubar plugin.

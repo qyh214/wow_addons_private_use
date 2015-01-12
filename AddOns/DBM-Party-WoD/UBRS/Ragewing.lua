@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1229, "DBM-Party-WoD", 8, 559)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12150 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
 mod:SetCreatureID(76585)
 mod:SetEncounterID(1760)
 mod:SetZone()
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_DAMAGE 155051",
 	"SPELL_MISSED 155051",
 	"SPELL_PERIODIC_DAMAGE 155057",
-	"SPELL_PERIODIC_MISSED 155057",
+	"SPELL_ABSORBED 155057",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -29,9 +29,9 @@ local specWarnMagmaSpit		= mod:NewSpecialWarningMove(155051)
 local specWarnMagmaSpitYou	= mod:NewSpecialWarningYou(155051)
 local yellMagmaSpit			= mod:NewYell(155051)
 local specWarnMagmaPool		= mod:NewSpecialWarningMove(155057)
-local specWarnEngulfingFire	= mod:NewSpecialWarningSpell(154996, nil, nil, nil, 3)
+local specWarnEngulfingFire	= mod:NewSpecialWarningDodge(154996, nil, nil, nil, 3)
 
-local timerEngulfingFireCD	= mod:NewCDTimer(22, 154996)
+local timerEngulfingFireCD	= mod:NewCDTimer(24, 154996)
 local timerSwirlingWinds	= mod:NewBuffActiveTimer(20, 167203)
 
 local voiceEngulfingFire	= mod:NewVoice(154996)
@@ -51,7 +51,7 @@ function mod:MagmaSpitTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
-	timerEngulfingFireCD:Start(13-delay)--Needs more data
+	timerEngulfingFireCD:Start(15-delay)--Needs more data
 	self.vb.firstBreath = false
 	voiceEngulfingFire:Schedule(12, "breathsoon")
 end
@@ -65,6 +65,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 167203 then
 		warnSwirlingWinds:Show()
 		timerSwirlingWinds:Start()
+		timerEngulfingFireCD:Cancel()
 		voiceEngulfingFire:Cancel()
 	end
 end
@@ -90,7 +91,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		voiceMagmaPool:Play("runaway")
 	end
 end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 --This boss actually does fire IEEU so boss1 works
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)

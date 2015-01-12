@@ -8,7 +8,7 @@ local mod = ExtraCD
 local tinsert, tremove = table.insert, table.remove
 local tonumber, tostring = tonumber, tostring
 local ECD_TEXT = "ExtraCD"
-local ECD_VERSION = "1.3.3"
+local ECD_VERSION = "1.3.4"
 local ECD_AUTHOR = "superk"
 local active = {}
 local equippedItems = {}
@@ -119,7 +119,8 @@ function mod:ChangeProfile()
 end
 
 function mod:ShowConfig()
-	InterfaceOptionsFrame_OpenToCategory(GetAddOnMetadata("ExtraCD", "Title"))
+	InterfaceOptionsFrame_OpenToCategory(self.optionFrames.profiles)
+	InterfaceOptionsFrame_OpenToCategory(self.optionFrames.general)
 end
 
 function mod:OnInitialize()
@@ -130,27 +131,7 @@ function mod:OnInitialize()
 	self.db1.RegisterCallback(self, "OnProfileChanged", "ChangeProfile")
 	self.db1.RegisterCallback(self, "OnProfileCopied", "ChangeProfile")
 	self.db1.RegisterCallback(self, "OnProfileReset", "ChangeProfile")
-	self.db = self.db1.profile
-	local bliz_options = {
-		name = "ExtraCD",
-		type = 'group',
-	}
-	bliz_options.args = {
-		load = {
-		name = L["Load Config"],
-		type = 'execute',
-		func = function()
-			self:OnOptionCreate() 
-			bliz_options.args.load.disabled = true 
-			GameTooltip:Hide()
-			--fix for in 5.3 BLZOptionsFrame can't refresh on load
-			InterfaceOptionsFrame:Hide()
-			InterfaceOptionsFrame:Show()
-		end,
-		}
-	}
-	AceConfig:RegisterOptionsTable("ExtraCD_bliz", bliz_options)
-	AceConfigDialog:AddToBlizOptions("ExtraCD_bliz", "ExtraCD")
+	self.db = self.db1.profile	
 end
 
 function mod:OnEnable()
@@ -176,6 +157,7 @@ function mod:OnEnable()
 			self:StartTimer(k, GetTime(), true, math.max(v.cd, v.duration))
 		end
 	end
+	self:OnOptionCreate()
 end
 
 function mod:OnDisable()
@@ -351,24 +333,12 @@ function mod:ScanPlayerICDs()
 	local _, class = UnitClass("player")
 	local spec = GetSpecialization()
 	local talentGroup = GetActiveSpecGroup()
-	local link1 = GetInventoryItemLink("player", 13)
-	local link2 = GetInventoryItemLink("player", 14)
-	local link3 = GetInventoryItemLink("player", 16)
-	local link4 = GetInventoryItemLink("player", 15)
-	local trinket1
-	local trinket2
-	local waepon1
-	local cloak
-	if link1 then trinket1 = link1:match("item:(%d+)") end
-	if link2 then trinket2 = link2:match("item:(%d+)") end
-	if link3 then weapon1 = link3:match("item:(%d+)") end
-	if link4 then cloak = link4:match("item:(%d+)") end
-		
+
 	local items = {}
 	for i = 1, 19 do
 		local link = GetInventoryItemLink("player", i)
 		if link then
-			items[tonumber(link:match("item:(%d+)"))] = true
+			items[tonumber(link:match("item:(%d+)"))] = i
 		end
 	end
 
@@ -429,17 +399,8 @@ function mod:ScanPlayerICDs()
 					else 
 						specppm = v.ppm
 					end
-					if tonumber(trinket1 or -1) == item then
-						tinsert (active, {cd = v.cd or 0, ppm = specppm, icon = icon, id = tonumber(k), type = "item", slot = 13, duration = v.duration or 0})
-						break
-					elseif tonumber(trinket2 or -1) == item  then
-						tinsert (active, {cd = v.cd or 0, ppm = specppm, icon = icon, id = tonumber(k), type = "item", slot = 14, duration = v.duration or 0})
-						break
-					elseif tonumber(weapon1 or -1) == item  then
-						tinsert (active, {cd = v.cd or 0, ppm = specppm, icon = icon, id = tonumber(k), type = "item", slot = 16, duration = v.duration or 0})
-						break
-					elseif tonumber(cloak or -1) == item  then
-						tinsert (active, {cd = v.cd or 0, ppm = specppm, icon = icon, id = tonumber(k), type = "item", slot = 15, duration = v.duration or 0})
+					if items[item] then
+						tinsert (active, {cd = v.cd or 0, ppm = specppm, icon = icon, id = tonumber(k), type = "item", slot = items[item], duration = v.duration or 0})
 						break
 					end
 				end

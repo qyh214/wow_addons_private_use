@@ -19,6 +19,7 @@ local pi, pi2 = math.pi, math.pi * 2
 local floor = math.floor
 local sin, cos, atan2, sqrt, min = math.sin, math.cos, math.atan2, math.sqrt, math.min
 local UnitPosition = UnitPosition
+local GetTime = GetTime
 
 --------------------
 --  Create Frame  --
@@ -260,7 +261,7 @@ end
 function arrowFrame:Move()
 	targetType = "rotate"
 	runAwayArrow = false
-	hideDistance = 5
+	hideDistance = 0
 	frame:EnableMouse(true)
 	frame:Show()
 	DBM.Bars:CreateBar(25, DBM_ARROW_MOVABLE, "Interface\\Icons\\Spell_Holy_BorrowedTime")

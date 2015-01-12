@@ -1,4 +1,23 @@
 = GarrisonCommander helps you when choosing the right follower for the right mission =
+* 2.1.4
+Fix: Mission page semi transparet when MP is installed
+Fix: Was spamming "released" on main window closing
+* 2.1.3
+Fix: Another step in hide and seek with Master Plan. Use GC Interface now works also with MP 0.22.1. This fix also reenables Garrison Mission Manager
+Fix: A minor incompatibility wuth some addons was causing them to display very small menus in some options pages. Thanks to Goldshire for pointing it
+* 2.1.2
+Fix: Mission should appear sorted as requested bith on startup and after a mission completion
+Fix: Removed a couple fo rare lua error
+* 2.1.1
+Feature: Countered mechanics are now shown in standard mission button both in big and small screen mode
+Feature: New sort method: mission age
+Fix: Changed key for "skip auto fill" from shift to ctrl. Now it works
+Fix: In mission page, counter ability were not shown in follower icon
+* 2.1.0
+Feature: new layout is now optional, you can revert to 1.1.8 leayout disabling "big screen"
+Feature: Mission page autopopulation is now optional
+Feature: If Master Plan is detecte, you can choose which layout you want between GC's one and MP's one
+Fix: error "Message: ...rface\AddOns\GarrisonCommander\GarrisonCommander.lua:930: attempt to compare number with nil"
 * 2.0.1
 Fixed: RU,KR,CH (both traditional and simplified) locales where broken
 Fixed: error when upgrading a follower for the first time

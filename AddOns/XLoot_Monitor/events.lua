@@ -65,7 +65,7 @@ local temp_list, template = {},
 [[local string_match = string.match
 return function(message)
 	local pcall_status, m1, m2, m3, m4, m5 = pcall(string_match, message, [=[^%s$]=])
-	assert(pcall_status, "Please report this on XLootGroup's addon page", message, [=[^%s$]=], m1)
+	assert(pcall_status, "Please report this on XLoot's curse page", message, [=[^%s$]=], m1)
 	return %s
 end]]
 

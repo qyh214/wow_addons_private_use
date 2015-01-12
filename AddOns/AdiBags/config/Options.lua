@@ -274,7 +274,7 @@ local function GetOptions()
 		name = addonName..' DEV',
 		--@end-debug@]===]
 		--@non-debug@
-		name = addonName..' v1.8.3',
+		name = addonName..' v1.8.4',
 		--@end-non-debug@
 		type = 'group',
 		handler = addon:GetOptionHandler(addon),
@@ -500,6 +500,13 @@ local function GetOptions()
 								order = 60,
 								hasAlpha = true,
 								arg = { "skin", "BankColor" },
+							},
+							reagentBankColor = {
+								name = L['Reagent bank color'],
+								type = 'color',
+								order = 70,
+								hasAlpha = true,
+								arg = { "skin", "ReagentBankColor" },
 							},
 						},
 					}

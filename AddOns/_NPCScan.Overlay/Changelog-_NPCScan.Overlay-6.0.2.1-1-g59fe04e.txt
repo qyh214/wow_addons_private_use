@@ -1,2 +1,0 @@
-James D. Callahan III:
-	- Added LibQTip-1.0 to OptionalDeps

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank7", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11901 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
 mod:SetModelID(46798)
 mod:SetZone()
 
@@ -28,7 +28,7 @@ local specWarnGhost				= mod:NewSpecialWarningSpell(133465, false)--Dark Summone
 local specWarnMinesSpawning		= mod:NewSpecialWarningSpell(133015)--Battletron
 local specWarnCharge			= mod:NewSpecialWarningSpell(138845)--Ahoo'ru
 local specWarnCompleteHeal		= mod:NewSpecialWarningInterrupt(142621, nil, nil, nil, 3)--Ahoo'ru
-local specWarnDivineCircle		= mod:NewSpecialWarningMove(142585)--Ahoo'ru
+local specWarnDivineCircle		= mod:NewSpecialWarningDodge(142585)--Ahoo'ru
 
 local timerRockets				= mod:NewBuffActiveTimer(9, 133212)--Max Megablast
 local timerShadowboltCD			= mod:NewCDTimer(12, 125212)--Dark Summoner

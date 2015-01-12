@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1235, "DBM-Party-WoD", 4, 558)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12090 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12372 $"):sub(12, -3))
 mod:SetCreatureID(81297, 81305)
 mod:SetEncounterID(1749)
 mod:SetZone()
@@ -43,13 +43,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnRecklessProvocation:Show(args.destName)
 		timerRecklessProvocation:Start()
 		voiceRecklessProvocation:Play("stopattack")
-	elseif args.spellId == 164835 and args:GetSrcCreatureID() == 81297 then
+	elseif args.spellId == 164835 and self:AntiSpam(2, 1) then
 		warnEnrage:Show()
 		specWarnEnrage:Show(args.destName)
-		if self:AntiSpam() then
-			voiceEnrage:Play("trannow") --multi sound
-		end
-	elseif args.spellId == 164632 and args:IsPlayer() and self:AntiSpam(2) then
+		voiceEnrage:Play("trannow") --multi sound
+	elseif args.spellId == 164632 and args:IsPlayer() and self:AntiSpam(2, 2) then
 		specWarnBurningArrowsMove:Show()
 	end
 end

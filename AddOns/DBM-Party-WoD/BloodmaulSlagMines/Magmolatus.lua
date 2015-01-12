@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(893, "DBM-Party-WoD", 2, 385)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12172 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
 mod:SetCreatureID(74366, 74475)--74366 Forgemaster Gog'duh, 74475 Magmolatus
 mod:SetEncounterID(1655)
 mod:SetMainBossID(74475)
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 149997 149975 150032",
 	"SPELL_CAST_START 149941 150038 150023",
 	"SPELL_PERIODIC_DAMAGE 150011",
-	"SPELL_PERIODIC_MISSED 150011",
+	"SPELL_ABSORBED 150011",
 	"UNIT_DIED"
 )
 
@@ -27,13 +27,13 @@ local warnMoltenImpact			= mod:NewSpellAnnounce(150038, 4)
 local warnWitheringFlames		= mod:NewTargetAnnounce(150032, 3, nil, mod:IsHealer())
 
 local specWarnMagmaBarrage		= mod:NewSpecialWarningMove(150011)
-local specWarnRoughSmash		= mod:NewSpecialWarningMove(149941, mod:IsMelee())
+local specWarnRoughSmash		= mod:NewSpecialWarningDodge(149941, mod:IsMelee())
 local specWarnRuination			= mod:NewSpecialWarningSwitch("ej8622", not mod:IsHealer())
 local specWarnCalamity			= mod:NewSpecialWarningSwitch("ej8626", not mod:IsHealer())
 local specWarnFirestorm			= mod:NewSpecialWarningInterrupt(149997, not mod:IsHealer())
 local specWarnDancingFlames		= mod:NewSpecialWarningDispel(149975, mod:IsHealer())
 local specWarnMagmolatus		= mod:NewSpecialWarningSwitch("ej8621", mod:IsTank())--Dps can turn this on too I suppose but 5 seconds after boss spawns they are switching to add anyways, so this is mainly for tank to pick it up
-local specWarnSlagSmash			= mod:NewSpecialWarningMove(150023, mod:IsMelee())
+local specWarnSlagSmash			= mod:NewSpecialWarningDodge(150023, mod:IsMelee())
 local specWarnMoltenImpact		= mod:NewSpecialWarningSpell(150038, nil, nil, nil, 2)
 local specWarnWitheringFlames	= mod:NewSpecialWarningDispel(150032, mod:IsHealer())
 
@@ -136,7 +136,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		specWarnMagmaBarrage:Show()
 	end
 end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_DIED(args)
 	if not DBM.BossHealth:IsShown() then return end

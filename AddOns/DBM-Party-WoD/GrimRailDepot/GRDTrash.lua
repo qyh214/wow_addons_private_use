@@ -1,18 +1,19 @@
 local mod	= DBM:NewMod("GRDTrash", "DBM-Party-WoD", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12034 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_AURA_APPLIED 176025",
+	"SPELL_AURA_APPLIED 176025 166340",
+	"SPELL_AURA_APPLIED_DOSE 166340",
 	"SPELL_CAST_START 166675 176032",
 	"SPELL_CAST_SUCCESS 163966",
-	"SPELL_PERIODIC_DAMAGE 176033 166340",
-	"SPELL_PERIODIC_MISSED 176033 166340"
+	"SPELL_PERIODIC_DAMAGE 176033",
+	"SPELL_ABSORBED 176033"
 )
 
 local warnActivating					= mod:NewCastAnnounce(163966, 2, 5, nil, not mod:IsHealer())
@@ -49,8 +50,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnLavaWreath:Show()
 		end
+	elseif spellId == 166340 and args:IsPlayer() and self:AntiSpam(2, 3) then
+		specWarnThunderzone:Show()
 	end
 end
+mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled or self:IsDifficulty("normal5") then return end
@@ -69,7 +73,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if not self.Options.Enabled or self:IsDifficulty("normal5") then return end
 	local spellId = args.spellId
-	if spellId == 163966 then
+	if spellId == 163966 and self:AntiSpam(2, 3) then
 		warnActivating:Show()
 		specWarnActivating:Show(args.sourceName)
 	end
@@ -78,8 +82,6 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 176033 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
 		specWarnFlametongueGround:Show()
-	elseif spellId == 166340 and destGUID == UnitGUID("player") and self:AntiSpam(2, 3) then
-		specWarnThunderzone:Show()
 	end
 end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE

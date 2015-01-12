@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1216, "DBM-Party-WoD", 1, 547)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12150 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
 mod:SetCreatureID(75927)
 mod:SetEncounterID(1678)
 mod:SetZone()
@@ -13,7 +13,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 153392 153764",
 	"SPELL_CAST_START 153764 154221 157173",
 	"SPELL_PERIODIC_DAMAGE 153616 153726",
-	"SPELL_PERIODIC_MISSED 153616 153726",
+	"SPELL_ABSORBED 153616 153726",
 	"SPELL_SUMMON 164081",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
@@ -30,7 +30,7 @@ local specWarnCurtainOfFlame		= mod:NewSpecialWarningMoveAway(153396)
 local specWarnCurtainOfFlameNear	= mod:NewSpecialWarningClose(153396)
 local yellWarnCurtainOfFlame		= mod:NewYell(153396)
 local specWarnFelLash				= mod:NewSpecialWarningYou("OptionVersion2", 153234)
-local specWarnFelStomp				= mod:NewSpecialWarningMove("OptionVersion2", 157173, mod:IsMelee())
+local specWarnFelStomp				= mod:NewSpecialWarningDodge("OptionVersion2", 157173, mod:IsMelee())
 local specWarnClawsOfArgus			= mod:NewSpecialWarningSpell(153764)
 local specWarnClawsOfArgusEnd		= mod:NewSpecialWarningEnd(153764)
 local specWarnSummonFelguard		= mod:NewSpecialWarningSwitch(164081, mod:IsTank())
@@ -165,7 +165,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		specWarnFelSpark:Show()
 	end
 end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:SPELL_SUMMON(args)
 	if args.spellId == 164081 then

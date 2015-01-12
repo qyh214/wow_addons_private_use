@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(1148, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12125 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12390 $"):sub(12, -3))
 mod:SetCreatureID(78238, 78237)--Pol 78238, Phemos 78237
 mod:SetEncounterID(1719)
 mod:SetZone()
+--Could not find south path for this one
 mod:SetHotfixNoticeRev(11939)
 
 mod:RegisterCombat("combat")
@@ -15,14 +16,15 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED_DOSE 167200 158241",
 	"SPELL_AURA_REFRESH 163372",
 	"SPELL_AURA_REMOVED 163372",
-	"SPELL_CAST_SUCCESS 158385"
+	"SPELL_CAST_SUCCESS 158385",
+	"UNIT_SPELLCAST_START boss1 boss2"
 )
 
 --Phemos
 local warnEnfeeblingroar			= mod:NewCountAnnounce(158057, 3)
 local warnWhirlwind					= mod:NewCountAnnounce(157943, 3)
 local warnQuake						= mod:NewCountAnnounce(158200, 3)
-local warnArcaneTwisted				= mod:NewTargetAnnounce(163297, 2)--Mythic, the boss that's going to use empowered abilities
+local warnArcaneTwisted				= mod:NewTargetAnnounce("OptionVersion2", 163297, 2, nil, false)--Mythic, the boss that's going to use empowered abilities
 local warnArcaneVolatility			= mod:NewTargetAnnounce(163372, 4)--Mythic
 local warnArcaneWound				= mod:NewStackAnnounce("OptionVersion2", 167200, 2, nil, false)--Arcane debuff irrelevant. off by default, even for tanks unless blizz changes it.
 --Pol
@@ -154,7 +156,7 @@ local function updateInfoFrame()
 		if bossPower < 33 then--Shield Charge
 			lines[UnitName("boss1")] = bossPower
 			if UnitBuff("boss1", arcaneTwisted) then--Empowered attack
-				lines["|cFFFF0000"..GetSpellInfo(158134).."|r"] = GetSpellInfo(163336)
+				lines["|cFF9932CD"..GetSpellInfo(158134).."|r"] = GetSpellInfo(163336)
 			else
 				lines[GetSpellInfo(158134)] = ""
 			end
@@ -167,7 +169,7 @@ local function updateInfoFrame()
 		lines[UnitName("boss2")] = bossPower2
 		if bossPower2 < 33 then--Shield Charge
 			if UnitBuff("boss2", arcaneTwisted) then--Empowered attack
-				lines["|cFFFF0000"..GetSpellInfo(158134).."|r"] = GetSpellInfo(163336)
+				lines["|cFF9932CD"..GetSpellInfo(158134).."|r"] = GetSpellInfo(163336)
 			else
 				lines[GetSpellInfo(158134)] = ""
 			end
@@ -259,7 +261,6 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 158093 then
 		warnInterruptingShout:Show()
 		specWarnInterruptingShout:Show()
-		timerInterruptingShout:Start()
 		if not self:IsMythic() then
 			timerPulverizeCD:Start(polEnergyRate+1)--Next Special
 			countdownPol:Start(polEnergyRate+1)
@@ -394,6 +395,16 @@ function mod:SPELL_CAST_SUCCESS(args)
 		voicePol:Schedule(polEnergyRate-6.5, "158134")
 		if self.Options.RangeFrame and not UnitDebuff("player", arcaneDebuff) then--Show range 3 for everyone, unless have arcane debuff, then you already have range 8 showing everyone that's more important
 			DBM.RangeCheck:Show(3, nil)
+		end
+	end
+end
+
+function mod:UNIT_SPELLCAST_START(uId, _, _, _, spellId)
+	if spellId == 158093 then
+		local _, _, _, _, startTime, endTime = UnitCastingInfo(uId)
+		local time = ((endTime or 0) - (startTime or 0)) / 1000
+		if time then
+			timerInterruptingShout:Start(time)
 		end
 	end
 end

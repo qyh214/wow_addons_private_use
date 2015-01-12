@@ -1,5 +1,5 @@
 local _, T = ...
-if T.Mark ~= 16 then return end
+if T.Mark ~= 23 then return end
 local G, L = T.Garrison, T.L
 
 local function countFreeFollowers(f, finfo)
@@ -32,6 +32,17 @@ local CreateMechanicButton do
 				end
 			else
 				GameTooltip:AddLine("|n" .. L"You have no followers with this trait.", 1,0.50,0, 1)
+			end
+			if not ci then
+			elseif ci.activated and ci.activated ~= true then
+				GameTooltip:AddLine("|n" .. L"Followers activating this trait:", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+				local ci = ci.activated
+				G.sortByFollowerLevels(ci, finfo)
+				for i=1,#ci do
+					GameTooltip:AddLine(G.GetFollowerLevelDescription(ci[i], nil, finfo[ci[i]]), 1,1,1)
+				end
+			elseif ci.activated == true and self.id ~= 78 then
+				GameTooltip:AddLine("|n" .. L"You have no followers who activate this trait.", 1,0.50,0, 1)
 			end
 		elseif self.isTraitGroup then
 			floatingMechanics:SetOwner(self, ci, finfo)
@@ -132,8 +143,8 @@ local icons = setmetatable({}, {__index=function(self, k)
 	return f
 end})
 local traits, traitGroups = {221, 76, 77, 79}, {
-	{80, 236, icon="Interface\\Icons\\XPBonus_Icon"},
-	{63,64,65,66,67,68,69,70,71,72,73,74,75,78, icon="Interface\\Icons\\PetBattle_Health"},
+	{80, 236, 29, icon="Interface\\Icons\\XPBonus_Icon"},
+	{63,64,65,66,67,68,69,70,71,72,73,74,75,78, icon="Interface\\Icons\\PetBattle_Health", affinities=true},
 	{4,36,37,38,39,40,41,42,43, icon="Interface\\Icons\\Ability_Hunter_MarkedForDeath"},
 	{7,8,9,44,45,46,48,49, icon="Interface\\Icons\\Achievement_Zone_Stonetalon_01"},
 	{52,53,54,55,56,57,58,59,60,61,62,227,231, icon="Interface\\Icons\\Trade_Engineering"},
@@ -159,8 +170,9 @@ local function syncTotals()
 	for k=1,#traitGroups do
 		local ico, c, tg, m = icons[i], 0, traitGroups[k], {g=traitGroups[k]}
 		for i=1,#tg do
-			local v = tinfo[tg[i]] or {}
-			m[#m+1], c, v.id = v, c + countFreeFollowers(v, finfo), tg[i]
+			local tid = tg[i]
+			local v = tinfo[tid] or {}
+			m[#m+1], c, v.id, v.activated = v, c + countFreeFollowers(v, finfo), tid, tinfo[-tid] or tg.affinities
 		end
 		ico.Icon:SetTexture(tg.icon or C_Garrison.GetFollowerAbilityIcon(tg[1]))
 		ico.Count:SetText(c > 0 and c or "")
@@ -360,4 +372,8 @@ GarrisonMissionFrame.FollowerTab.ItemWeapon:HookScript("OnUpdate", function()
 	if self.ItemArmor.hasUpgrade and GetItemCount(self.ItemArmor.hasUpgrade) == 0 then
 		GarrisonFollowerPage_SetItem(self.ItemArmor, self.ItemArmor.itemID, self.ItemArmor.itemLevel)
 	end
+end)
+GarrisonMissionFrame.FollowerTab.AbilitiesFrame.Counters[1]:SetScript("OnEnter", GarrisonMissionMechanic_OnEnter)
+GarrisonMissionFrame.FollowerTab.AbilitiesFrame.Counters[1]:SetScript("OnLeave", function(self)
+	GarrisonMissionMechanicTooltip:Hide()
 end)

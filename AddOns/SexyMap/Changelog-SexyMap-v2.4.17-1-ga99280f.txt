@@ -1,2 +1,0 @@
-funkydude:
-	- Replace some fake animations with timers.

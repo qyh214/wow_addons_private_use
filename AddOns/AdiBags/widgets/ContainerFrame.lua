@@ -72,6 +72,8 @@ local HEADER_SIZE = addon.HEADER_SIZE
 
 local BAG_IDS = addon.BAG_IDS
 
+local LSM = LibStub('LibSharedMedia-3.0')
+
 --------------------------------------------------------------------------------
 -- Widget scripts
 --------------------------------------------------------------------------------
@@ -237,6 +239,9 @@ function containerProto:OnCreate(name, isBank, bagObject)
 	self:UpdateSkin()
 	self.paused = true
 	self.forceLayout = true
+
+	LSM.RegisterCallback(self, 'LibSharedMedia_Registered', 'UpdateSkin')
+	LSM.RegisterCallback(self, 'LibSharedMedia_SetGlobal', 'UpdateSkin')
 
 	local ForceFullLayout = function() self.forceLayout = true end
 
@@ -461,6 +466,7 @@ function containerProto:ShowReagentTab(show)
 	end
 	self.forceLayout = true
 	self:RefreshContents()
+	self:UpdateSkin()
 end
 
 function containerProto:AUCTION_MULTISELL_UPDATE(event, current, total)
@@ -568,7 +574,7 @@ end
 --------------------------------------------------------------------------------
 
 function containerProto:UpdateSkin()
-	local backdrop, r, g, b, a = addon:GetContainerSkin(self.name)
+	local backdrop, r, g, b, a = addon:GetContainerSkin(self.name, self.isReagentBank)
 	self:SetBackdrop(backdrop)
 	self:SetBackdropColor(r, g, b, a)
 	local m = max(r, g, b)
@@ -745,7 +751,7 @@ function containerProto:DispatchItem(slotData, fullUpdate)
 		return
 	end
 
-	if sectionName == L["Recent Items"] or (not existing and not fullUpdate and slotData.link) then
+	if sectionName == L["Recent Items"] or (not fullUpdate and slotData.link) then
 		self.ToSortSection:AddItemButton(slotId, button)
 		return
 	end

@@ -26,7 +26,7 @@
 ## X-DBM-Mod-Name-ruRU: Бойцовская гильдия
 ## X-DBM-Mod-Sort: 135
 ## X-DBM-Mod-MapID: 369,1043
-## X-Curse-Packaged-Version: 6.0.9-43-g2e5ab6e
+## X-Curse-Packaged-Version: 6.0.11-66-ga4c600d
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline

@@ -1,14 +1,13 @@
 ﻿## Interface: 60000
 ## X-Min-Interface: 60000
-## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Sound-Yike|r
+## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Voicepack Yike|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0夏一可语音包|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0夏一可語音包|r
 ## DefaultState: enabled
 ## RequiredDeps: DBM-Core
 ## Author: Yike Xia, Mini_Dragon
 ## Notes: https://github.com/Mini-Dragon/DBM-VoicePack-Yike
-## Version: 14.12.23
 ## X-DBM-Voice: 1
 ## X-DBM-Voice-Name: Yike Xia(夏一可)
 ## X-DBM-Voice-ShortName: Yike
-## X-DBM-Voice-Version: 1
+## X-DBM-Voice-Version: 2

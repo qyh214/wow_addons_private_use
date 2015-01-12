@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1139, "DBM-Party-WoD", 6, 537)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12037 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12241 $"):sub(12, -3))
 mod:SetCreatureID(75509)
 mod:SetEncounterID(1677)
 
@@ -21,7 +21,7 @@ local specWarnDarkCommunion		= mod:NewSpecialWarningSwitch(153153, not mod:IsHea
 local specWarnWhispers			= mod:NewSpecialWarningSpell(153094, nil, nil, nil, 2)
 local specWarnDarkEclipse		= mod:NewSpecialWarningSpell(164974, nil, nil, nil, 3)
 
-local timerDarkCommunionCD		= mod:NewCDTimer(45.5, 153153)
+local timerDarkCommunionCD		= mod:NewCDTimer(60, 153153)
 local timerDarkEclipseCD		= mod:NewNextTimer(45.5, 164974)--timer seems changed?
 
 local voiceDarkCommunion		= mod:NewVoice(153153, mod:IsDps())
@@ -30,7 +30,7 @@ local voiceDarkEclipse			= mod:NewVoice(164974)
 --local countdownDarkCommunion	= mod:NewCountdown(45.5, 153153)
 
 function mod:OnCombatStart(delay)
-	timerDarkCommunionCD:Start(15-delay)
+	timerDarkCommunionCD:Start(24-delay)
 	--countdownDarkCommunion:Start(15-delay)
 	timerDarkEclipseCD:Start(-delay)
 end

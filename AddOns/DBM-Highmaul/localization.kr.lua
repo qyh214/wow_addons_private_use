@@ -58,6 +58,15 @@ L:SetOptionLocalization({
 --------------------
 L= DBM:GetModLocalization(1153)
 
+
+L:SetWarningLocalization({
+	specWarnExpelMagicFelFades	= "5초 후 악마 사라짐 - 처음 지점으로 이동!"
+})
+
+L:SetOptionLocalization({
+	specWarnExpelMagicFelFades	= "$spell:172895 주문이 사라지기 전에 처음 지점 이동 특수 경고 보기"
+})
+
 L:SetMiscLocalization({
 	supressionTarget1	= "박살내주마!",
 	supressionTarget2	= "침묵!",
@@ -72,7 +81,8 @@ L= DBM:GetModLocalization(1197)
 
 L:SetMiscLocalization({
 	BrandedYell			= "%2$s 에게 낙인! (%1$s)",
-	GazeYell			= "%d초 후 시선 사라짐!"
+	GazeYell			= "%d초 후 시선 사라짐!",
+	PlayerDebuffs		= "광기의 눈길 가까움"
 })
 
 -------------

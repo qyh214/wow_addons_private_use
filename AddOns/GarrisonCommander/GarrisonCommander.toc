@@ -4,9 +4,9 @@
 ## Notes-itIT: Ti aiuta a scegliere il giusto seguace per la giusta missione
 ## Notes-frFR: Vous aide au moment de choisir le droit utilisateur pour la bonne mission
 ## Author: Alar of Daggerspine
-## Version: 2.0.1 0bb4b05
-## X-Version: 2.0.1
-## X-Revision: 0bb4b05
+## Version: 2.1.4 6cde88d
+## X-Version: 2.1.4
+## X-Revision: 6cde88d
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
 ## OptionalDeps:
@@ -20,9 +20,9 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2014-12-24T18:08:48Z
+## X-Date: 2015-01-11T19:03:49Z
 ## X-Embeds:
-## X-Curse-Packaged-Version: 2.0.1
+## X-Curse-Packaged-Version: 2.1.4
 ## X-Curse-Project-Name: GarrisonCommander
 ## X-Curse-Project-ID: garrisoncommander
 ## X-Curse-Repository-ID: wow/garrisoncommander/mainline

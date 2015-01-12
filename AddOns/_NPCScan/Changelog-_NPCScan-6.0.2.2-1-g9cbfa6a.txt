@@ -1,2 +1,0 @@
-SLOKnightfall:
-	- -Fix for vignette not placing raid icon over target. -Update to Bai'Jin the Butcher's name from Bai-Jin the Butcher

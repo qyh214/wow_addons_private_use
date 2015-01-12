@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank3", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11898 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
 mod:SetModelID(28649)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -15,8 +15,8 @@ local warnVolatileFlames		= mod:NewSpellAnnounce(134740, 3)--Vian the Volatile
 local warnFireLine				= mod:NewCastAnnounce(133607, 4, 2)--Vian the Volatile
 local warnDevastatingThrust		= mod:NewSpellAnnounce(134777, 4)--Ixx
 
-local specWarnFireLine			= mod:NewSpecialWarningMove(133607)--Vian the Volatile
-local specWarnDevastatingThrust	= mod:NewSpecialWarningMove(134777)--Ixx
+local specWarnFireLine			= mod:NewSpecialWarningDodge(133607)--Vian the Volatile
+local specWarnDevastatingThrust	= mod:NewSpecialWarningDodge(134777)--Ixx
 
 local timerVolatileFlamesCD		= mod:NewCDTimer(11, 134740)--Vian the Volatile
 local timerFireLineCD			= mod:NewCDTimer(15, 133607)--Vian the Volatile
