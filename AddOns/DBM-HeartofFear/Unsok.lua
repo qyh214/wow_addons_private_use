@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(737, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(62511)
 mod:SetEncounterID(1499)
 mod:SetZone()
@@ -27,9 +27,7 @@ mod:RegisterEventsInCombat(
 local warnReshapeLifeTutor		= mod:NewAnnounce("warnReshapeLifeTutor", 1, 122784)--Another LFR focused warning really.
 local warnReshapeLife			= mod:NewAnnounce("warnReshapeLife", 4, 122784)
 local warnWillPower				= mod:NewAnnounce("warnWillPower", 3, 63050)
-local warnAmberScalpel			= mod:NewSpellAnnounce(121994, 3)
-local warnParasiticGrowth		= mod:NewTargetAnnounce(121949, 4, nil, mod:IsHealer())
-local warnAmberGlob				= mod:NewTargetAnnounce(125502, 4)--Heroic drycode, might need some tweaks
+local warnAmberGlob				= mod:NewTargetAnnounce(125502, 4)
 --Construct
 local warnAmberExplosion		= mod:NewAnnounce("warnAmberExplosion", 3, 122398, false)--In case you want to get warned for all of them, but could be spammy later fight so off by default. This announce includes source of cast.
 local warnStruggleForControl	= mod:NewTargetAnnounce(122395, 2, nil, false)--Disabled in phase 3 as at that point it's just a burn.
@@ -39,16 +37,14 @@ local warnLivingAmber			= mod:NewSpellAnnounce("ej6261", 2, nil, false)--122348 
 local warnBurningAmber			= mod:NewCountAnnounce("ej6567", 2, nil, false)--Keep track of Burning Amber Puddles. Spammy, but nessesary for heroic for someone managing them.
 --Amber Monstrosity
 local warnAmberCarapace			= mod:NewTargetAnnounce(122540, 4)--Monstrosity Shielding Boss (phase 2 start)
-local warnMassiveStomp			= mod:NewCastAnnounce(122408, 3, nil, nil, mod:IsMelee())
 local warnAmberExplosionSoon	= mod:NewSoonAnnounce(122402, 3)
 local warnAmberExplosionAM		= mod:NewAnnounce("warnAmberExplosionAM", 4, 122398)-- in koKR, even 25 man, most starts have only 1 construct. So this warning needs to be enabled by default on koKR. 10 man also uses 1 construct start.
-local warnFling					= mod:NewSpellAnnounce(122413, 3, nil, mod:IsTank())--think this always does his aggro target but not sure. If it does random targets it will need target scanning.
 local warnInterruptsAvailable	= mod:NewAnnounce("warnInterruptsAvailable", 1, 122398)
 
 --Boss
 local specwarnAmberScalpel			= mod:NewSpecialWarningSpell(121994, nil, nil, nil, 2)
 local specwarnReshape				= mod:NewSpecialWarningYou(122784)
-local specwarnParasiticGrowth		= mod:NewSpecialWarningTarget(121949, mod:IsHealer())
+local specwarnParasiticGrowth		= mod:NewSpecialWarningTarget(121949, "Healer")
 local specwarnParasiticGrowthYou	= mod:NewSpecialWarningYou(121949) -- This warn will be needed at player is clustered together. Especially on Phase 3.
 local specwarnAmberGlob				= mod:NewSpecialWarningYou(125502)
 --Construct
@@ -61,23 +57,23 @@ local specwarnWillPower				= mod:NewSpecialWarning("specwarnWillPower")--Special
 --Living Amber
 local specwarnBurningAmber		= mod:NewSpecialWarningMove(122504)--Standing in a puddle
 --Amber Monstrosity
-local specwarnAmberMonstrosity	= mod:NewSpecialWarningSwitch("ej6254", not mod:IsHealer())
-local specwarnFling				= mod:NewSpecialWarningSpell(122413, mod:IsTank())
-local specwarnMassiveStomp		= mod:NewSpecialWarningSpell(122408, mod:IsMelee(), nil, nil, 2)
+local specwarnAmberMonstrosity	= mod:NewSpecialWarningSwitch("ej6254", "-Healer")
+local specwarnFling				= mod:NewSpecialWarningSpell(122413, "Tank")
+local specwarnMassiveStomp		= mod:NewSpecialWarningSpell(122408, "Melee", nil, nil, 2)
 
 --Boss
 local timerReshapeLifeCD		= mod:NewNextCountTimer(50, 122784)--50 second cd in phase 1-2, 15 second in phase 3. if no construct is up, cd is ignored and boss casts it anyways to make sure 1 is always up.
 local timerAmberScalpelCD		= mod:NewNextTimer(40, 121994)--40 seconds after last one ENDED
 local timerAmberScalpel			= mod:NewBuffActiveTimer(10, 121994)
-local timerParasiticGrowthCD	= mod:NewCDTimer(35, 121949, nil, mod:IsHealer())--35-50 variation (most of the time 50, rare pulls he decides to use 35 sec cd instead)
-local timerParasiticGrowth		= mod:NewTargetTimer(30, 121949, nil, mod:IsHealer())
+local timerParasiticGrowthCD	= mod:NewCDTimer(35, 121949, nil, "Healer")--35-50 variation (most of the time 50, rare pulls he decides to use 35 sec cd instead)
+local timerParasiticGrowth		= mod:NewTargetTimer(30, 121949, nil, "Healer")
 --Construct
 local timerAmberExplosionCD		= mod:NewNextSourceTimer(13, 122398)--13 second cd on player controled units, 18 seconds on non player controlled constructs
 local timerDestabalize			= mod:NewTimer(15, "timerDestabalize", 123059)--timer Enables for all players. It's very importantant for heroic. (espcially on phase 2)
 local timerStruggleForControl	= mod:NewTargetTimer(5, 122395, nil, false)
 --Amber Monstrosity
-local timerMassiveStompCD		= mod:NewCDTimer(18, 122408, nil, mod:IsMelee())--18-25 seconds variation
-local timerFlingCD				= mod:NewCDTimer(25, 122413, nil, mod:IsTank())--25-40sec variation.
+local timerMassiveStompCD		= mod:NewCDTimer(18, 122408, nil, "Melee")--18-25 seconds variation
+local timerFlingCD				= mod:NewCDTimer(25, 122413, nil, "Tank")--25-40sec variation.
 local timerAmberExplosionAMCD	= mod:NewTimer(46, "timerAmberExplosionAMCD", 122402)--Special timer just for amber monstrosity. easier to cancel, easier to tell apart. His bar is the MOST important and needs to be seperate from any other bar option.
 local timerAmberExplosion		= mod:NewCastTimer(2.5, 122402)
 
@@ -243,7 +239,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 	elseif spellId == 121949 then
-		warnParasiticGrowth:Show(args.destName)
 		if not playerIsConstruct then--Healers do need to know this, but it's still a distraction as a construct for sound, they got the reg warning.
 			specwarnParasiticGrowth:Show(args.destName)
 		end
@@ -385,12 +380,10 @@ function mod:SPELL_CAST_START(args)
 		self:Schedule(0.5, warnAmberExplosionCast, 122402)--Always check available interrupts and special warn if not
 	elseif spellId == 122408 then
 		if not playerIsConstruct then
-			warnMassiveStomp:Show()--Don't even need normal warning as a construct, it just doesn't matter
 			specwarnMassiveStomp:Show()
 		end
 		timerMassiveStompCD:Start()--Still start timer so you still have it when you leave construct
 	elseif spellId == 122413 then
-		warnFling:Show()--Tanks and healers still need to know this even as a construct
 		if not playerIsConstruct then
 			specwarnFling:Show()
 		end
@@ -403,7 +396,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 122348 then
 		warnLivingAmber:Show()
 	elseif spellId == 121994 then
-		warnAmberScalpel:Show()
 		specwarnAmberScalpel:Show()
 	elseif spellId == 122532 then
 		Puddles = Puddles + 1

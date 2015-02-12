@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(818, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 30 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(68036)--Crimson Fog 69050
 mod:SetEncounterID(1572)
 mod:SetZone()
@@ -23,7 +23,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_DIED"
 )
 
-local warnHardStare					= mod:NewSpellAnnounce(133765, 3, nil, mod:IsTank() or mod:IsHealer())--Announce CAST not debuff, cause it misses a lot, plus we have 1 sec to hit an active mitigation
+local warnHardStare					= mod:NewSpellAnnounce(133765, 3, nil, "Tank|Healer")--Announce CAST not debuff, cause it misses a lot, plus we have 1 sec to hit an active mitigation
 local warnForceOfWill				= mod:NewTargetAnnounce(136413, 4)
 local warnLingeringGaze				= mod:NewTargetAnnounce(138467, 3)
 mod:AddBoolOption("warnBeam", nil, "announce")
@@ -32,7 +32,7 @@ local warnBeamHeroic				= mod:NewAnnounce("warnBeamHeroic", 4, 139204, true, fal
 local warnAddsLeft					= mod:NewAnnounce("warnAddsLeft", 2, 134123)
 local warnDisintegrationBeam		= mod:NewSpellAnnounce("ej6882", 4)
 local warnLifeDrain					= mod:NewTargetAnnounce(133795, 3)--Some times needs to block this even dps. So warn for everyone.
-local warnDarkParasite				= mod:NewTargetAnnounce(133597, 3, nil, mod:IsHealer())--Heroic
+local warnDarkParasite				= mod:NewTargetAnnounce(133597, 3, nil, "Healer")--Heroic
 local warnIceWall					= mod:NewSpellAnnounce(134587, 3, 111231)
 
 local specWarnSeriousWound			= mod:NewSpecialWarningStack(133767, nil, 5)--This we will use debuff on though.
@@ -50,11 +50,11 @@ local specWarnYellowBeam			= mod:NewSpecialWarningYou(133738, nil, nil, nil, 3)
 local specWarnFogRevealed			= mod:NewSpecialWarning("specWarnFogRevealed", nil, nil, nil, 2)--Use another "Be Aware!" sound because Lingering Gaze comes on Spectrum phase.
 local specWarnDisintegrationBeam	= mod:NewSpecialWarningSpell("ej6882", nil, nil, nil, 2)
 local specWarnEyeSore				= mod:NewSpecialWarningMove(140502)
-local specWarnLifeDrain				= mod:NewSpecialWarningTarget(133795, mod:IsTank())
+local specWarnLifeDrain				= mod:NewSpecialWarningTarget(133795, "Tank")
 local yellLifeDrain					= mod:NewYell(133795, L.LifeYell)
 
-local timerHardStareCD				= mod:NewCDTimer(12, 133765, nil, mod:IsTank() or mod:IsHealer())
-local timerSeriousWound				= mod:NewTargetTimer(60, 133767, nil, mod:IsTank() or mod:IsHealer())
+local timerHardStareCD				= mod:NewCDTimer(12, 133765, nil, "Tank|Healer")
+local timerSeriousWound				= mod:NewTargetTimer(60, 133767, nil, "Tank|Healer")
 local timerLingeringGazeCD			= mod:NewCDTimer(46, 138467)
 local timerForceOfWillCD			= mod:NewCDTimer(20, 136413)--Actually has a 20 second cd but rarely cast more than once per phase because of how short the phases are (both beams phases cancel this ability)
 local timerLightSpectrumCD			= mod:NewNextTimer(60, "ej6891")
@@ -63,7 +63,7 @@ local timerDisintegrationBeamCD		= mod:NewNextTimer(136, "ej6882")
 local timerLifeDrainCD				= mod:NewCDTimer(40, 133795)
 local timerLifeDrain				= mod:NewBuffActiveTimer(18, 133795)
 local timerIceWallCD				= mod:NewNextTimer(120, 134587, nil, nil, nil, 111231)
-local timerDarkParasiteCD			= mod:NewCDTimer(60.5, 133597, nil, mod:IsHealer())--Heroic 60-62. (the timer is tricky and looks far more variable but it really isn't, it just doesn't get to utilize it's true cd timer more than twice per fight)
+local timerDarkParasiteCD			= mod:NewCDTimer(60.5, 133597, nil, "Healer")--Heroic 60-62. (the timer is tricky and looks far more variable but it really isn't, it just doesn't get to utilize it's true cd timer more than twice per fight)
 local timerDarkParasite				= mod:NewTargetTimer("OptionVersion2", 30, 133597, nil, false)--Spammy bar in 25 man not useful.
 local timerDarkPlague				= mod:NewTargetTimer("OptionVersion2", 30, 133598, nil, false)--Spammy bar in 25 man not useful.
 local timerObliterateCD				= mod:NewNextTimer(80, 137747)--Heroic

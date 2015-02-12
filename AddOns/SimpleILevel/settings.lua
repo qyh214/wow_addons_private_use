@@ -8,29 +8,29 @@ local L = LibStub("AceLocale-3.0"):GetLocale("SimpleILevel", true);
 --[[
     MoP Colors:
         White 0, #FFFFFF, 255, 255, 255
-        Yellow 333, #FFFF00, 255, 255, 0
+        Yellow 463, #FFFF00, 255, 255, 0
         Green 463, #00FF00, 0, 255, 0
-        Teal 516, #00FFFF, 0, 255, 255
-        Blue H T15, #0066ff, 0, 102, 255 - Raw Blue was to dark
-        Purple H T16, #FF00FF, 255, 0, 255
-        Red H T17, #FF0000, 255, 0, 0
+        Teal 518, #00FFFF, 0, 255, 255
+        Blue H T17, #0066ff, 0, 102, 255 - Raw Blue was to dark
+        Purple H T18, #FF00FF, 255, 0, 255
+        Red H T19, #FF0000, 255, 0, 0
 ]]--
-SIL_ColorIndex = {0,333,463,516,549,572,1000};
+SIL_ColorIndex = {0,463,615,695,740,785,1000};
 SIL_Colors = {
     -- White base color
     [0] =       {['r']=255,     ['g']=255,      ['b']=255,      ['rgb']='FFFFFF',   ['p']=0,},
-    -- Yellow for Cata dungeon gear
-    [333] =     {['r']=255,     ['g']=255,      ['b']=0,        ['rgb']='FFFF00',   ['p']=0,},
-    -- Green for MoP dungeon gear
-    [463] =     {['r']=0,       ['g']=255,      ['b']=0,        ['rgb']='00FF00',   ['p']=333,},
-    -- Teal for Heroic T14
-    [516] =     {['r']=0,       ['g']=255,      ['b']=255,      ['rgb']='00FFFF',   ['p']=463,},
-    -- Blue for Heroic T15
-    [549] =     {['r']=0,       ['g']=102,      ['b']=255,      ['rgb']='0066ff',   ['p']=516,},
-    -- Purple for Heroic T16
-    [572] =     {['r']=255,     ['g']=0,        ['b']=255,      ['rgb']='FF00FF',   ['p']=549,},
+    -- Yellow for MoP dungeon gear
+    [463] =     {['r']=255,     ['g']=255,      ['b']=0,        ['rgb']='FFFF00',   ['p']=0,},
+    -- Green for WoD dungeon gear
+    [615] =     {['r']=0,       ['g']=255,      ['b']=0,        ['rgb']='00FF00',   ['p']=463,},
+    -- Teal for Mythic T17
+    [695] =     {['r']=0,       ['g']=255,      ['b']=255,      ['rgb']='00FFFF',   ['p']=615,},
+    -- Blue for Mythic T18
+    [740] =     {['r']=0,       ['g']=102,      ['b']=255,      ['rgb']='0066ff',   ['p']=695,},
+    -- Purple for Mythic T19
+    [785] =     {['r']=255,     ['g']=0,        ['b']=255,      ['rgb']='FF00FF',   ['p']=740,},
     -- Red for a max score
-    [1000] =    {['r']=255,     ['g']=0,        ['b']=0,        ['rgb']='FF0000',   ['p']=572,},
+    [1000] =    {['r']=255,     ['g']=0,        ['b']=0,        ['rgb']='FF0000',   ['p']=785,},
 };
 
 -- Suported channel localization table

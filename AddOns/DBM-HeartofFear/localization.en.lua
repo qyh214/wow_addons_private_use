@@ -6,7 +6,6 @@ local L
 L= DBM:GetModLocalization(745)
 
 L:SetWarningLocalization({
-	warnAttenuation		= "%s on %s (%s)",
 	warnEcho			= "Echo has spawned",
 	warnEchoDown		= "Echo defeated",
 	specwarnAttenuation	= "%s on %s (%s)",
@@ -14,7 +13,6 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnAttenuation		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(127834),
 	warnEcho			= "Announce when an Echo spawns",
 	warnEchoDown		= "Announce when an Echo is defeated",
 	specwarnAttenuation	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(127834),

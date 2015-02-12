@@ -1193,11 +1193,12 @@ target_button:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 target_button:RegisterEvent("VARIABLES_LOADED")
 target_button:RegisterEvent("PLAYER_REGEN_ENABLED")
 target_button:SetScript("OnEvent", function(self, event_name, ...)
-	--Only needs to trigger after combat if a delay was set
-	if self == "PLAYER_REGEN_ENABLED" and MacroDelay then
+	if event_name == "PLAYER_REGEN_ENABLED" then
+		-- Only needs to trigger after combat if a delay was set
+		if not MacroDelay then
+			return
+		end
 		MacroDelay = false
-	elseif self == "PLAYER_REGEN_ENABLED" then 
-		return
 	end
 	private.GenerateTargetMacro()
 end)
@@ -1210,7 +1211,7 @@ function private.GenerateTargetMacro(instanceid)
 	_G.SetMapToCurrentZone()
 	local map_id = _G.GetCurrentMapAreaID()
 	local zone_name = _G.GetMapNameByID(map_id)
-	local continent_id = _G.GetCurrentMapContinent();
+	local continent_id = _G.GetCurrentMapContinent()
 
 	private.macrotext = "/cleartarget"
 

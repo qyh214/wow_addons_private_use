@@ -12,7 +12,8 @@
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
-## SavedVariablesPerCharacter: DBMWorldEvents_SavedVars, DBMWorldEvents_SavedStats
+## SavedVariables: DBMWorldEvents_AllSavedVars
+## SavedVariablesPerCharacter: DBMWorldEvents_SavedStats
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: OTHER
 ## X-DBM-Mod-Category: WOD
@@ -40,7 +41,8 @@
 ## X-DBM-Mod-MapID: 230,189,33,547,1004, 1, 0
 ## X-DBM-Mod-Sort: 150
 ## X-DBM-Mod-LoadCID: 55003,54499,15467,15466,49687,15664
-## X-Curse-Packaged-Version: 6.0.11-66-ga4c600d
+## X-DBM-Mod-MinCoreRevision: 12473
+## X-Curse-Packaged-Version: 6.0.15-123-g6ef0612
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
@@ -60,3 +62,4 @@ Holidays\CorenDirebrew.lua
 Holidays\HeadlessHorseman.lua
 Holidays\Greench.lua
 Quests\Plants.lua
+Quests\Invasions.lua

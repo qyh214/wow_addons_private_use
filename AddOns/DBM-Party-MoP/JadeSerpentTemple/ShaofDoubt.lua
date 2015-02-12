@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(335, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(56439)
 mod:SetEncounterID(1439)
 mod:SetZone()
@@ -19,7 +19,7 @@ local warnWitherWill			= mod:NewSpellAnnounce(106736, 3)
 local warnTouchofNothingness	= mod:NewTargetAnnounce(106113, 4)
 local warnBoundsOfReality		= mod:NewSpellAnnounce(117665, 3)
 
-local specWarnTouchOfNothingness= mod:NewSpecialWarningDispel(106113, mod:IsHealer())
+local specWarnTouchOfNothingness= mod:NewSpecialWarningDispel(106113, "Healer")
 local specWarnShadowsOfDoubt	= mod:NewSpecialWarningMove(110099)--Actually used by his trash, but in a speed run, you tend to pull it all together
 
 local timerWitherWillCD			= mod:NewCDTimer(6, 106736)--6-10 second variations.

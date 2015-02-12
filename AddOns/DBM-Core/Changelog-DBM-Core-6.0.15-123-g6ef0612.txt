@@ -1,0 +1,124 @@
+subversion:
+	- nbluewiz via svn r12888: # increase bomb scanning time for thogar.
+	- Omega via svn r12887: Actually remove notes from here Also add in 2 man at arms spawns based on IEEU overlap with train data
+	- Omega via svn r12886: 7:28 worth of mythic train timers
+	- nbluewiz via svn r12885: # fix error.
+	- Omega via svn r12884: Fix fire mender creatureid so auto marking works
+	- nbluewiz via svn r12883: # change to 9 sec waring.
+	- Omega via svn r12882: Update notes
+	- Omega via svn r12881: re-enable it i guess. but leave it as "soon"
+	- Omega via svn r12880: Disable useless warning for now.
+	- Omega via svn r12879: Hansgar and Franzok jump warnings. Added support to core for target scanner filtering by targetname. Needed by hansgar and franzok method.
+	- Omega via svn r12878: add nil check to thogar targetname. i saw at least one that had bad target. (possibly died during cast)
+	- Omega via svn r12877: Comment out that for now, since sometimes, it nil errors. just so users dont have to have errors while i'm still raiding and can't finish what i started there.
+	- Omega via svn r12876: tweak hud update rate, 0.05 was a little sluggish. 0.04 looks better
+	- nbluewiz via svn r12875: # fix train 12 bug.
+	- Omega via svn r12874: Notes
+	- Omega via svn r12873: Mythic Thogar update
+	- Omega via svn r12872: Pass text to callback, not message, to prevent transcriptor logs from logging bad messages
+	- Omega via svn r12871: Fix proto grenade spam on mythic (always casts 2)
+	- Omega via svn r12870: Switch onupdate frame to ticker. reduces hudmap cpu usage by 50% without adversely affecting animations. tests are showing hudmap went to 0.4ms per cycle to 0.2ms per cycle when a single animation is present.
+	- Omega via svn r12869: Fixes for dogs rapidly changing target like 0.04 seconds after selecting previous target
+	- Omega via svn r12868: bw version
+	- Omega via svn r12867: stupid.
+	- TOM_RUS via svn r12866: This should fix nil error
+	- Omega via svn r12865: Notes
+	- TOM_RUS via svn r12864: Should be working this time
+	- nbluewiz via svn r12863: # revert end Searing Plates warning for hansgar. # delay timer cancel on boat. # faster lane warning and Delayed Siege Bomb for thogar.
+	- Omega via svn r12862: This should probably fix that nil
+	- Omega via svn r12861: possibly fix some hud nil errors
+	- Omega via svn r12860: 6 min berserk on mythic gruul as well Fix first rippling smash timer on kromog
+	- Omega via svn r12859: Update inferno slice for mythic, cast time of inferno slice was lowered since mythic testing. offsetting timers by 1 second.
+	- Omega via svn r12858: Add mythic berserk to hans and frans
+	- Omega via svn r12857: Fix blast timer bug
+	- Omega via svn r12856: Some debug
+	- Omega via svn r12855: And color change. green seems to positive for a negative debuff
+	- Omega via svn r12854: Fix some durations
+	- Omega via svn r12853: Revert to last working state. the refactoring had a ridiculous number of errors. every time one was fixed only found another one. It didn't seem to be registering or clearing any callbacks at all.
+	- Omega via svn r12852: Actually that last fix did work
+	- Omega via svn r12851: Fix a bug where it was canceling old timers too soon. It's still not fully fixed though because right now it's canceling ALL bars. which is a bug because it should only cancel bar with passed arg.
+	- Omega via svn r12850: That actually wasn't issue. sometimes, it's just nil all together, not even sure how it's possible.
+	- Omega via svn r12849: Strange, sometimes, DBMHudMap is nil when upvalue is created, so just avoid that issue by not creating upvalue for it. it shouldn't be nil by time it's used Hopefully fix http://prntscr.com/63o5bp Man TOM you made a mess before bed :P
+	- Omega via svn r12848: Try to fix this error http://prntscr.com/63nzkp If it doesn't, i may have to temp revert callback changes so people can get through raids without so many errors.
+	- Omega via svn r12847: Other mods
+	- TOM_RUS via svn r12846: Add HudMap functions to bossModPrototype
+	- Omega via svn r12845: Blizz reverted mark for death hotfix
+	- nbluewiz via svn r12844: # koKR update.
+	- TOM_RUS via svn r12843: Cleanup whitespaces and some unused stuff
+	- Omega via svn r12842: ES update
+	- Omega via svn r12841: Detect if Hud loaded, and if not, alert user that they need to restart client to avoid broken mods that'll result in nil errors if they update and only reloadui.
+	- Omega via svn r12840: Force default reset for those that used alpha with it off by default.
+	- Omega via svn r12839: Hud options for iron maidens
+	- Omega via svn r12838: Remove bad
+	- Omega via svn r12837: Fix "target" which was basically just passing nil.
+	- TOM_RUS via svn r12836: ruRU update
+	- nbluewiz via svn r12835: # koKR update.
+	- Omega via svn r12834: Fix typos
+	- Omega via svn r12833: Add another test to gruul Tweaks and micro optimizing. Fix some global leaks that have probably existed here since original mod. Still one leak i can't figure out because i can't figure out the intent.
+	- Omega via svn r12832: Don't do hud like range frame. Support multiple options within a single mod if warranted. More tweaks to enable/disable
+	- Omega via svn r12831: Fix two bugs
+	- Omega via svn r12830: Add blast furnace berserk timer. Make the tuesday hotfix adjustments to marked for death Fix a bug where countdown was wrong in phase 3 on marked for death, plus micro optimize timers while at it so they only fire :Start once. Added countdown for fades by request.
+	- Omega via svn r12829: Add trash warnings for the mini boss before blackhand
+	- Omega via svn r12828: And make it on by default.
+	- Omega via svn r12827: Attempt to kill frame when not in combat. and activate it in combat only if mods use it.
+	- TOM_RUS via svn r12826: Comment out unused table for visibility
+	- Omega via svn r12825: Tweaks, notes
+	- TOM_RUS via svn r12824: Experimental HudMap stuff
+	- Omega via svn r12823: Global option. disabled by default while testing, and feedback is under way
+	- Omega via svn r12822: Add basic option prototype for now that may need tweaking later.
+	- Omega via svn r12821: Some tweaks to blackhand as well as fix placement for one of voice files More berserk timer fixes.
+	- Omega via svn r12820: Hide range frame on tank debuff fade too
+	- nbluewiz via svn r12819: # fix wrong bw version.
+	- nbluewiz via svn r12818: # bw version.
+	- nbluewiz via svn r12817: # koKR update.
+	- Omega via svn r12816: remove legacy stuff Add dispel warning to blast furnace.
+	- Omega via svn r12815: CN update
+	- Omega via svn r12814: Fix option bug
+	- Omega via svn r12813: works better when spellid is registered
+	- Omega via svn r12812: Some tweaks
+	- Omega via svn r12811: Add gruul and darmoc berserks Hold off on kromog 8 minute normal berserk until blizzard answers the WTF on it. (8min normal, none on heroic?)
+	- nbluewiz via svn r12810: # re-fix health order.
+	- nbluewiz via svn r12809: # fix profile creation error. # fix lua error in kromog.
+	- Omega via svn r12808: Rearrange boss order to match progression difficulty order, vs bad dungeon journal order. LFRers will disagree with order, since LFr forces you to do first 3 in a fixed order with oregorger before gruul, but i'm sorting on difficulty order for normal+, not linear LFR order.
+	- nbluewiz via svn r12807: # try to fix unknown yell bug?
+	- nbluewiz via svn r12806: # add collect ore warn.
+	- nbluewiz via svn r12805: # fix lua error.
+	- nbluewiz via svn r12804: # fix bad default.
+	- nbluewiz via svn r12803: # fix acid torrent cd.
+	- nbluewiz via svn r12802: # fix voice also.
+	- Omega via svn r12801: Tweak
+	- Omega via svn r12800: Fixed width font menus
+	- Omega via svn r12799: french update
+	- nbluewiz via svn r12798: # double line special warning.
+	- nbluewiz via svn r12797: # fix another error.
+	- nbluewiz via svn r12796: # fix error.
+	- nbluewiz via svn r12795: # blast rate warn.
+	- nbluewiz via svn r12794: # better end specials warn.
+	- Omega via svn r12793: Improve attach slag bomb behavior for tanks
+	- nbluewiz via svn r12792: # fix untranslated spell.
+	- nbluewiz via svn r12791: # generic mount warning for darmac.
+	- Omega via svn r12790: Add note to known issues thread.
+	- Omega via svn r12789: Tweak
+	- nbluewiz via svn r12788: # Savage Howl, this may simple and better.
+	- Omega via svn r12787: change savage howl to generic warning
+	- Omega via svn r12786: Count shattering smashes Improve warnings to show to relevant rolls to reduce unnecessary warnings Fix voice spam bugs Added countdown for Shattering Smash Added countdown for slag bombs Added countdown for marked for death Added taunt warning for attach slag bomb for the forced tank swap.
+	- nbluewiz via svn r12785: # fix heroic bad inferno slice cd after rampage.
+	- nbluewiz via svn r12784: # change first gruul timer to special timer.
+	- nbluewiz via svn r12783: # bad typo.
+	- nbluewiz via svn r12782: # adjust some kromog timer by video.
+	- nbluewiz via svn r12781: # oops bad timer.
+	- nbluewiz via svn r12780: # add fire storm ended. # fix Blazin Radiance warn showing at end.
+	- nbluewiz via svn r12779: # fix thogar info frame update.
+	- Omega via svn r12778: Tweak
+	- Omega via svn r12777: Add elementalists remaining warning Add countdown for blast Refactor blast timer to be less jittery
+	- nbluewiz via svn r12776: # fix bad tab.
+	- nbluewiz via svn r12775: # fix range frame hide bug.
+	- Omega via svn r12774: Switch to UnitPosition for boat
+	- Omega via svn r12773: Add optional nearby too (spammy in stack strats, so off by default)
+	- Omega via svn r12772: Remove unused, tweaks
+	- Omega via svn r12771: Re-enable melt, with target warning off by default.
+	- Omega via svn r12770: Use mod schedule. not DBM schedule, that way it stops when mod:stop is called Tweaks
+	- Omega via svn r12769: VP authors readme update
+	- TOM_RUS via svn r12768: ruRU update
+	- nbluewiz via svn r12767: # Timer cancel and recovery on boat or leave boat. # ship timer cancel below 25% or all ship player returned. # small adjust some timer.
+	- tandanu via svn r12766: increment version number

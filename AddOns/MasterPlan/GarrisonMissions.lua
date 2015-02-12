@@ -230,9 +230,8 @@ hooksecurefunc("GarrisonFollowerList_Update", function(self)
 	end
 end)
 local function Mechanic_OnClick(self)
-	if self:IsMouseOver() and self.info and self.info.name then
-		GarrisonMissionFrameFollowers.SearchBox:SetText(self.info.name)
-		GarrisonMissionFrameFollowers.SearchBox.clearText = self.info.name
+	if self:IsMouseOver() then
+		T.Mechanic_OnClick(self)
 	end
 end
 hooksecurefunc("GarrisonMissionPage_SetEnemies", function(enemies)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(698, "DBM-Party-MoP", 5, 321)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(61398)
 mod:SetEncounterID(1441)
 mod:SetZone()
@@ -17,12 +17,12 @@ mod:RegisterEventsInCombat(
 
 local warnGroundSmash		= mod:NewCastAnnounce(119684, 3)
 local warnStaff				= mod:NewSpellAnnounce("ej5973", 2)
-local warnRoar				= mod:NewSpellAnnounce(122959, 3, nil, mod:IsTank() or mod:IsHealer())
+local warnRoar				= mod:NewSpellAnnounce(122959, 3, nil, "Healer|Tank")
 local warnWhirlwindingAxe	= mod:NewSpellAnnounce(119374, 4)
 local warnStreamBlades		= mod:NewSpellAnnounce("ej5972", 4)
 local warnCrossbowTrap		= mod:NewSpellAnnounce("ej5974", 4)
 
-local specWarnSmash			= mod:NewSpecialWarningMove(119684, mod:IsTank())
+local specWarnSmash			= mod:NewSpecialWarningMove(119684, "Healer")
 
 local timerSmashCD			= mod:NewCDTimer(28, 119684)
 local timerStaffCD			= mod:NewCDTimer(23, "ej5973")--23~25 sec.

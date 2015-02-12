@@ -1,6 +1,10 @@
+TipTacItemRef Changes | 2014 Oct 16 -- WIP
+-----------------------------------
+- Tried to fix a Lua error happening due to GetAchievementCriteriaInfo() being called for non existing criteria indexes.
+
 TipTacItemRef Changes | 2014 Oct 16
 -----------------------------------
-- Updated the "GetUpgradedItemLevel" library. This update will again properly find the correct itemlevel of updated items.
+- Updated the "GetUpgradedItemLevel" library. This update will again properly find the correct itemLevel of upgraded items.
 
 TipTacItemRef Changes | 2014 Oct 15
 -----------------------------------

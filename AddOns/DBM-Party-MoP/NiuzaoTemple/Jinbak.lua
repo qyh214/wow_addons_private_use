@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(693, "DBM-Party-MoP", 6, 324)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(61567)
 mod:SetEncounterID(1465)
 mod:SetZone()
@@ -19,8 +19,8 @@ mod:RegisterEventsInCombat(
 local warnDetonate			= mod:NewSpellAnnounce(120001, 3)
 
 local specWarnSapResidue	= mod:NewSpecialWarningStack(119941, true, 6)
-local specWarnDetonate		= mod:NewSpecialWarningSpell(120001, mod:IsHealer(), nil, nil, true)
-local specWarnGlob			= mod:NewSpecialWarningSwitch("ej6494", not mod:IsHealer())
+local specWarnDetonate		= mod:NewSpecialWarningSpell(120001, "Healer", nil, nil, 2)
+local specWarnGlob			= mod:NewSpecialWarningSwitch("ej6494", "-Healer")
 
 local timerDetonateCD		= mod:NewNextTimer(45.5, 120001)
 local timerDetonate			= mod:NewCastTimer(5, 120001)

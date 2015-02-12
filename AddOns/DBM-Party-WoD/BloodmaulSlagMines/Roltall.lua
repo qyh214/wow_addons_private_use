@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(887, "DBM-Party-WoD", 2, 385)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12216 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12686 $"):sub(12, -3))
 mod:SetCreatureID(75786)
 mod:SetEncounterID(1652)
 mod:SetZone()
@@ -69,7 +69,7 @@ function mod:SPELL_CAST_START(args)
 		warnBurningSlag:Show()
 		specWarnBurningSlag:Show()
 		timerFieryBoulderCD:Start()
-		voiceBurningSlag:Play("firecircle")
+		--voiceBurningSlag:Play("firecircle") not proper voice. disable.
 	end
 end
 

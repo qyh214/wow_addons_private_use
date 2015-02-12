@@ -14,7 +14,13 @@ SpeakinSpell = LibStub("AceAddon-3.0"):NewAddon("SpeakinSpell", "AceConsole-3.0"
 -- CURRENT VERSION
 -------------------------------------------------------------------------------
 
-SpeakinSpell.CURRENT_VERSION = GetAddOnMetadata("SpeakinSpell", "version") 
+-- SpeakinSpell version specified in the TOC file uses the format: 
+-- WoW version + SS Release version, ex. "6.0.3.xx"
+SpeakinSpell.CURRENT_VERSION = GetAddOnMetadata("SpeakinSpell", "version")
+
+-- so the target WoW version is a substring of that...
+-- (used in "/ss ad" messages)
+SpeakinSpell.WOWVERSION = string.sub(SpeakinSpell.CURRENT_VERSION, 1, 5) -- ex. "6.0.3"
 
 -------------------------------------------------------------------------------
 -- DEBUG vs. RETAIL
@@ -47,7 +53,6 @@ SpeakinSpell.DEVELOPER_MODE = false
 -------------------------------------------------------------------------------
 -- CONSTANTS
 -------------------------------------------------------------------------------
-SpeakinSpell.WOWVERSION ="WOW 5.4.x"
 SpeakinSpell.URL = "Search www.curse.com for \"SpeakinSpell\""
 
 SpeakinSpell.ALL_URLs = [[

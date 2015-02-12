@@ -540,8 +540,8 @@ local function ModifyUnitTooltip()
 		-- name
 		lineOne[#lineOne + 1] = reaction;
 		lineOne[#lineOne + 1] = name;
-		-- guild/title
-		if (u.title) then
+		-- guild/title -- since WoD, npc title can be a single space character
+		if (u.title) and (u.title ~= " ") then
 			-- Az: this doesn't work with "Mini Diablo" or "Mini Thor", which has the format: 1) Mini Diablo 2) Lord of Terror 3) Player's Pet 4) Level 1 Non-combat Pet
 			local gttLine = isColorBlind and GameTooltipTextLeft3 or GameTooltipTextLeft2;
 			gttLine:SetFormattedText("%s<%s>",reaction,u.title);
@@ -761,7 +761,7 @@ local function CreateAura()
 	aura.cooldown:SetReverse(1);
 	aura.cooldown:SetAllPoints();
 	aura.cooldown:SetFrameLevel(aura:GetFrameLevel());
-	aura.cooldown.noCooldownCount = cfg.noCooldownCount;
+	aura.cooldown.noCooldownCount = cfg.noCooldownCount or nil;
 	aura.border = aura:CreateTexture(nil,"OVERLAY");
 	aura.border:SetPoint("TOPLEFT",-1,1);
 	aura.border:SetPoint("BOTTOMRIGHT",1,-1);
@@ -923,7 +923,8 @@ end
 -- HOOK: GTT OnShow -- This ensures that default anchored world frame tips have the proper color, their internal function seems to set them to a dark blue color
 local function GTTHook_OnShow(self,...)
 	gtt_anchorType, gtt_anchorPoint = GetAnchorPosition();
-	if (gtt_anchorType == "mouse") and (self:GetAnchorType() ~= "ANCHOR_CURSOR") then
+	local gttAnchor = self:GetAnchorType();
+	if (gtt_anchorType == "mouse") and (gttAnchor ~= "ANCHOR_CURSOR") and (gttAnchor ~= "ANCHOR_CURSOR_RIGHT") then
 		tt:AnchorFrameToMouse(self);
 	end
 	if (self:IsOwned(UIParent)) and (not self:GetUnit()) then
@@ -934,13 +935,19 @@ end
 -- HOOK: GTT OnUpdate
 local function GTTHook_OnUpdate(self,elapsed)
 	-- This ensures that mouse anchored world frame tips have the proper color, their internal function seems to set them to a dark blue color
-	if (self:GetAnchorType() == "ANCHOR_CURSOR") then
+	local gttAnchor = self:GetAnchorType();
+	if (gttAnchor == "ANCHOR_CURSOR") or (gttAnchor == "ANCHOR_CURSOR_RIGHT") then
 		self:SetBackdropColor(unpack(cfg.tipColor));
 		self:SetBackdropBorderColor(unpack(cfg.tipBorderColor));
 		return;
 	-- Anchor GTT to Mouse
 	elseif (gtt_anchorType == "mouse") and (self.default) then
 		tt:AnchorFrameToMouse(self);
+	end
+
+	-- WoD: This background color reset, from OnShow(), has been copied down here. It seems resetting the color in OnShow() wasn't enough, as the color changes after the tip is being shown
+	if (self:IsOwned(UIParent)) and (not self:GetUnit()) then
+		self:SetBackdropColor(unpack(cfg.tipColor));
 	end
 
 	-- Fadeout / Update Tip if Showing a Unit
@@ -1013,6 +1020,10 @@ end
 
 -- HOOK: GTT OnTooltipCleared -- This will clean up auras, bars, raid icon and vars for the gtt when we aren't showing a unit
 local function GTTHook_OnTooltipCleared(self,...)
+	-- WoD: resetting the back/border color seems to be a necessary action, otherwise colors may stick when showing the next tooltip thing (world object tips)
+	self:SetBackdropColor(unpack(cfg.tipColor));
+	self:SetBackdropBorderColor(unpack(cfg.tipBorderColor));
+	-- wipe the vars
 	wipe(u);
 	gtt_lastUpdate = 0;
 	gtt_numLines = 0;

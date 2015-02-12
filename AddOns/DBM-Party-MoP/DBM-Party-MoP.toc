@@ -9,7 +9,8 @@
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0隊伍首領-潘達利亞之謎|r
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
-## SavedVariablesPerCharacter: DBMPartyMoP_SavedVars, DBMPartyMoP_SavedStats
+## SavedVariables: DBMPartyMoP_AllSavedVars
+## SavedVariablesPerCharacter: DBMPartyMoP_SavedStats
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: PARTY
 ## X-DBM-Mod-Category: MOP
@@ -27,6 +28,7 @@
 ## X-DBM-Mod-Name-frFR: Groupe (MoP)
 ## X-DBM-Mod-Sort: 225
 ## X-DBM-Mod-MapID: 960,961,959,962,994,1011,1007,1001,1004
+## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.de.lua
 localization.es.lua

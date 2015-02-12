@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 444 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 449 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,6 +16,9 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.6.24", "02/01/2015", [[
+	*Grabbed new WhoLib for 2 bugfixes related to that lib.
+]]);
 addEntry("3.6.23", "01/02/2015", [[
 	*Fixed another 3 missing options in 'Window Settings'
 ]]);
@@ -37,18 +40,6 @@ addEntry("3.6.18", "04/11/2014", [[
 addEntry("3.6.17", "03/05/2014", [[
 	*Fix issue that caused incoming whispers not to record for non battle.net.
 	*Strip realm name from more chat channels if WIM is used for them instead of blizzard chat tabs.
-]]);
-addEntry("3.6.16", "02/20/2014", [[
-	*More fixes to prevent double whisper windows from -realm inconsistencies in blizzards code changes.
-]]);
-addEntry("3.6.15", "02/20/2014", [[
-	*Much better compatability with patch 5.4.7 whisper changes.
-]]);
-addEntry("3.6.13", "12/31/2014", [[
-	*Improvements for patch 5.4.2 (ie it should again recognize who is in guild)
-	*/w interrcept now works again. It may not work as well with autocomplete as it used to though.
-	*RealID/BattleTag conversations will now be saved under associated battletag instead of whatever tooname person is on.
-	*Updated wholib that now better supports connected realms.
 ]]);
 
 

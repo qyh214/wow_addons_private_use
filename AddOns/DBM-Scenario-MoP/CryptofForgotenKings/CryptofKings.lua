@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d504", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 30 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1030)
@@ -28,10 +28,10 @@ local warnDarkforce			= mod:NewSpellAnnounce(120215, 4)--normal 5, heroic 3.5 ca
 
 --Jin Ironfist
 --local specWarnRelentless	= mod:NewSpecialWarningRun(120817)--Maybe on heroic this actually deadly and you must run? if so, uncomment
-local specWarnEnrage		= mod:NewSpecialWarningDispel(127823, mod:CanRemoveEnrage())
+local specWarnEnrage		= mod:NewSpecialWarningDispel(127823, "RemoveEnrage")
 --Maragor
 local specWarnFear			= mod:NewSpecialWarningInterrupt(142884)
-local specWarnGuardianStrike= mod:NewSpecialWarningRun(119843, mod:IsMelee())
+local specWarnGuardianStrike= mod:NewSpecialWarningRun(119843, "Melee")
 --Abomination of Anger
 local specWarnDarkforce		= mod:NewSpecialWarningRun(120215, nil, nil, nil, 4)
 

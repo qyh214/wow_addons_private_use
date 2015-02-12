@@ -10,13 +10,15 @@
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
-## SavedVariablesPerCharacter: DBMMogushanVaults_SavedVars, DBMMogushanVaults_SavedStats
+## SavedVariables: DBMMogushanVaults_AllSavedVars
+## SavedVariablesPerCharacter: DBMMogushanVaults_SavedStats
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: MOP
 ## X-DBM-Mod-Has-LFR : 1
 ## X-DBM-Mod-Sort: 205
 ## X-DBM-Mod-MapID: 1008
+## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.es.lua
 localization.it.lua

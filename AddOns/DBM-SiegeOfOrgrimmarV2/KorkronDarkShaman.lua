@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(856, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 25 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(71859, 71858)--haromm, Kardris
 mod:SetEncounterID(1606)
 mod:SetZone()
@@ -18,7 +18,7 @@ mod:RegisterEventsInCombat(
 )
 
 --Dogs
-local warnRend						= mod:NewStackAnnounce(144304, 2, nil, mod:IsTank() or mod:IsHealer())
+local warnRend						= mod:NewStackAnnounce(144304, 2, nil, "Tank|Healer")
 
 --General
 local warnPoisonmistTotem			= mod:NewSpellAnnounce(144288, 3)--85%
@@ -27,15 +27,12 @@ local warnAshflareTotem				= mod:NewSpellAnnounce(144290, 3)--45%
 local warnRustedIronTotem			= mod:NewSpellAnnounce(144291, 3)--Heroic (95%)
 
 --Earthbreaker Haromm
-local warnFroststormStrike			= mod:NewStackAnnounce(144215, 2, nil, mod:IsTank() or mod:IsHealer())
+local warnFroststormStrike			= mod:NewStackAnnounce(144215, 2, nil, "Tank|Healer")
 local warnToxicMists				= mod:NewTargetAnnounce(144089, 2, nil, false)
 local warnFoulStream				= mod:NewTargetAnnounce(144090, 4)
-local warnAshenWall					= mod:NewSpellAnnounce(144070, 4)
-local warnIronTomb					= mod:NewSpellAnnounce(144328, 3)
 --Wavebinder Kardris
 local warnToxicStorm				= mod:NewTargetAnnounce(144005, 2)
 local warnFoulGeyser				= mod:NewTargetAnnounce(143990, 4)
-local warnFallingAsh				= mod:NewCastAnnounce(143973, 4, 3)
 local warnIronPrison				= mod:NewTargetAnnounce(144330, 3)
 
 --Earthbreaker Haromm
@@ -57,7 +54,7 @@ local specWarnIronPrison			= mod:NewSpecialWarningPreWarn(144330, nil, 4)--If th
 local yellIronPrisonFades			= mod:NewYell(144330, L.PrisonYell, false)--Off by default since it's an atypical yell (it's not used for avoiding person it's used to get healer attention to person)
 
 --Earthbreaker Haromm
-local timerFroststormStrike			= mod:NewTargetTimer(30, 144215, nil, mod:IsTank())
+local timerFroststormStrike			= mod:NewTargetTimer(30, 144215, nil, "Tank")
 local timerToxicMistsCD				= mod:NewCDTimer(32, 144089, nil, false)--Pretty much a next timers unless boss is casting something else
 local timerFoulStreamCD				= mod:NewCDTimer(32.5, 144090)--Pretty much a next timers unless boss is casting something else
 local timerAshenWallCD				= mod:NewCDTimer(32.5, 144070)--Pretty much a next timers unless boss is casting something else
@@ -67,11 +64,11 @@ local timerToxicStormCD				= mod:NewCDTimer(32, 144005)--Pretty much a next time
 local timerFoulGeyserCD				= mod:NewCDTimer(32.5, 143990)--Pretty much a next timers unless boss is casting something else
 local timerFallingAsh				= mod:NewCastTimer(17, 143973)
 local timerFallingAshCD				= mod:NewCDCountTimer(32.5, 143973)--Pretty much a next timers unless boss is casting something else
-local timerIronPrison				= mod:NewTargetTimer(60, 144330, nil, mod:IsHealer())
+local timerIronPrison				= mod:NewTargetTimer(60, 144330, nil, "Healer")
 local timerIronPrisonCD				= mod:NewCDTimer(31.5, 144330)--Pretty much a next timers unless boss is casting something else
 local timerIronPrisonSelf			= mod:NewBuffFadesTimer(60, 144330)
 
-local countdownFoulGeyser			= mod:NewCountdown(32.5, 143990, mod:IsTank() or mod:IsRangedDps())
+local countdownFoulGeyser			= mod:NewCountdown(32.5, 143990)
 local countdownFallingAsh			= mod:NewCountdown("Alt15", 143973)
 
 local berserkCD						= mod:NewCDTimer(540, 26662)
@@ -158,7 +155,6 @@ function mod:SPELL_CAST_START(args)
 		specWarnFoulGeyser:Show()
 		countdownFoulGeyser:Start()
 	elseif spellId == 144070 and self:CheckTankDistance(args.sourceGUID, 30) then
-		warnAshenWall:Show()
 		timerAshenWallCD:Start()
 		specWarnAshenWall:Show()
 	elseif spellId == 143973 then--No filter, damages entire raid. / In split strat, this sometimes goes out of combatlog range. So use sync.
@@ -166,7 +162,6 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 144330 and self:CheckTankDistance(args.sourceGUID, 50) then
 		timerIronPrisonCD:Start()
 	elseif spellId == 144328 and self:CheckTankDistance(args.sourceGUID, 50) then
-		warnIronTomb:Show()
 		timerIronTombCD:Start()
 		specWarnIronTomb:Show()
 	end
@@ -272,12 +267,10 @@ function mod:OnSync(msg)
 		timerFallingAsh:Start()
 		if self:IsMythic() then--On heroic, base spell 1 second cast, not 2.
 			timerFallingAshCD:Start(16, self.vb.ashCount+1)
-			warnFallingAsh:Schedule(13)
 			specWarnFallingAsh:Schedule(13)--Give special warning 3 seconds before happens, not cast
 			countdownFallingAsh:Start(16)
 		else
 			timerFallingAshCD:Start(nil, self.vb.ashCount+1)
-			warnFallingAsh:Schedule(14)
 			specWarnFallingAsh:Schedule(14)--Give special warning 3 seconds before happens, not cast
 			countdownFallingAsh:Start(17)
 		end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(816, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 30 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 35 $"):sub(12, -3))
 mod:SetCreatureID(69078, 69132, 69134, 69131)--69078 Sul the Sandcrawler, 69132 High Prestess Mar'li, 69131 Frost King Malakk, 69134 Kazra'jin --Adds: 69548 Shadowed Loa Spirit,
 mod:SetEncounterID(1570)
 mod:SetZone()
@@ -48,7 +48,7 @@ local warnTwistedFate				= mod:NewSpellAnnounce(137891, 4)--Heroic Only
 --Frost King Malak
 local warnBitingCold				= mod:NewTargetAnnounce(136992, 3)--136917 is cast ID version, 136992 is player debuff
 local warnFrostBite					= mod:NewTargetAnnounce(136922, 4)--136990 is cast ID version, 136922 is player debuff
-local warnFrigidAssault				= mod:NewStackAnnounce(136903, 3, nil, mod:IsTank() or mod:IsHealer())
+local warnFrigidAssault				= mod:NewStackAnnounce(136903, 3, nil, "Tank|Healer")
 --Kazra'jin
 local warnRecklessCharge			= mod:NewCastAnnounce(137122, 3, 2, nil, false)
 local warnDischarge					= mod:NewCountAnnounce(137166, 3)
@@ -62,8 +62,8 @@ local specWarnSandBolt				= mod:NewSpecialWarningInterrupt(136189, false)
 local specWarnSandStorm				= mod:NewSpecialWarningSpell(136894, nil, nil, nil, 2)
 local specWarnQuickSand				= mod:NewSpecialWarningMove(136860)
 --High Prestess Mar'li
-local specWarnBlessedLoaSpirit		= mod:NewSpecialWarningSwitch(137203, mod:IsRangedDps())--Ranged should handle this, melee chasing it around is huge dps loss for possessed. On 10 man 2 ranged was enough. If you do not have 2 ranged, 1 or 2 melee will have to help and probably turn this on manually
-local specWarnShadowedLoaSpirit		= mod:NewSpecialWarningSwitch(137350, mod:IsRangedDps())
+local specWarnBlessedLoaSpirit		= mod:NewSpecialWarningSwitch(137203, "RangedDps")--Ranged should handle this, melee chasing it around is huge dps loss for possessed. On 10 man 2 ranged was enough. If you do not have 2 ranged, 1 or 2 melee will have to help and probably turn this on manually
+local specWarnShadowedLoaSpirit		= mod:NewSpecialWarningSwitch(137350, "RangedDps")
 local specWarnMarkedSoul			= mod:NewSpecialWarningRun(137359, nil, nil, nil, 4)
 local specWarnTwistedFate			= mod:NewSpecialWarningSwitch(137891)
 --Frost King Malak
@@ -92,8 +92,8 @@ local timerBitingCold				= mod:NewBuffFadesTimer(30, 136917)
 local timerBitingColdCD				= mod:NewCDTimer(45, 136917)--10 man Cds (and probably LFR), i have no doubt on 25 man this will either have a shorter cd or affect 3 targets with same CD. Watch for timer diffs though
 local timerFrostBite				= mod:NewBuffFadesTimer(30, 136990)
 local timerFrostBiteCD				= mod:NewCDTimer(45, 136990)--^same comment as above
-local timerFrigidAssault			= mod:NewTargetTimer(15, 136903, nil, mod:IsTank() or mod:IsHealer())
-local timerFrigidAssaultCD			= mod:NewCDTimer(30, 136904, nil, mod:IsTank() or mod:IsHealer())--30 seconds after last one ended (maybe even a next timer, i'll change it with more logs.)
+local timerFrigidAssault			= mod:NewTargetTimer(15, 136903, nil, "Tank|Healer")
+local timerFrigidAssaultCD			= mod:NewCDTimer(30, 136904, nil, "Tank|Healer")--30 seconds after last one ended (maybe even a next timer, i'll change it with more logs.)
 --Kazra'jin
 
 
@@ -104,7 +104,7 @@ mod:AddBoolOption("PHealthFrame", true)
 mod:AddBoolOption("RangeFrame")--For Sand Bolt and charge and biting cold
 mod:AddBoolOption("SetIconOnBitingCold", true)
 mod:AddBoolOption("SetIconOnFrostBite", true)
-mod:AddBoolOption("AnnounceCooldowns", mod:HasRaidCooldown())
+mod:AddBoolOption("AnnounceCooldowns", "RaidCooldown")
 
 local lingeringPresence = GetSpellInfo(136467)
 local boltCasts = 0

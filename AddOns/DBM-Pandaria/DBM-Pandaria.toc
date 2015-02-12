@@ -10,7 +10,8 @@
 ## Author: MysticalOS/nBlueWiz
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
-## SavedVariablesPerCharacter: DBMPandaria_SavedVars, DBMPandaria_SavedStats
+## SavedVariables: DBMPandaria_AllSavedVars
+## SavedVariablesPerCharacter: DBMPandaria_SavedStats
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: MOP
@@ -19,6 +20,7 @@
 ## X-DBM-Mod-Sort: 206
 ## X-DBM-Mod-MapID: 870,1064
 ## X-DBM-Mod-LoadCID: 62346,60491,69161,69099,71952,71954,72057,71953,71955,69768,69769,69841,69842
+## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.de.lua
 localization.es.lua

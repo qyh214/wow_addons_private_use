@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(745, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(62980)--63554 (Special invisible Vizier that casts the direction based spellid versions of attenuation)
 mod:SetEncounterID(1507)
 mod:SetZone()
@@ -27,19 +27,17 @@ mod:RegisterEventsInCombat(
 --Notes: Currently, his phase 2 chi blast abiliteis are not detectable via traditional combat log. maybe with transcriptor.
 local warnInhale			= mod:NewStackAnnounce(122852, 2)
 local warnExhale			= mod:NewTargetAnnounce(122761, 3)
-local warnForceandVerve		= mod:NewCastAnnounce(122713, 4, 4)
-local warnAttenuation		= mod:NewAnnounce("warnAttenuation", 4, 127834)
 local warnConvert			= mod:NewTargetAnnounce(122740, 4)
 local warnEcho				= mod:NewAnnounce("warnEcho", 4, 127834)--Maybe come up with better icon later then just using attenuation icon
 local warnEchoDown			= mod:NewAnnounce("warnEchoDown", 1, 127834)--Maybe come up with better icon later then just using attenuation icon
 
 local specwarnPlatform		= mod:NewSpecialWarning("specwarnPlatform")
 local specwarnForce			= mod:NewSpecialWarningSpell(122713)
-local specwarnConvert		= mod:NewSpecialWarningSwitch(122740, not mod:IsHealer())
-local specwarnExhale		= mod:NewSpecialWarningTarget(122761, mod:IsHealer() or mod:IsTank())
-local specwarnAttenuation	= mod:NewSpecialWarning("specwarnAttenuation", nil, nil, nil, true)
+local specwarnConvert		= mod:NewSpecialWarningSwitch(122740, "-Healer")
+local specwarnExhale		= mod:NewSpecialWarningTarget(122761, "Healer|Tank")
+local specwarnAttenuation	= mod:NewSpecialWarning("specwarnAttenuation", nil, nil, nil, 3)
 
---Timers aren't worth a crap, at all, but added anyways. if people complain about how inaccurate they are tell them to go to below thread or get bent.
+--Timers aren't worth a crap, at all, but added anyways. if people complain about how inaccurate they are tell them to go to below thread.
 --http://us.battle.net/wow/en/forum/topic/7004456927 for more info on lack of timers.
 local timerExhale				= mod:NewTargetTimer(6, 122761)
 local timerForceCD				= mod:NewCDTimer(35, 122713)--35-50 second variation
@@ -134,7 +132,6 @@ function mod:SPELL_CAST_START(args)
 		--http://worldoflogs.com/reports/rt-g8ncl718wga0jbuj/xe/?enc=bosses&boss=66791&x=%28spellid+%3D+127834+or+spellid+%3D+122496+or+spellid+%3D+122497%29+and+fulltype+%3D+SPELL_CAST_START
 		local bossCID = args:GetSrcCreatureID()--Figure out CID because GetBossTarget expects a CID.
 		local _, uId = self:GetBossTarget(bossCID)--Now lets get a uId. We can't simply just use boss1target and boss2target because echos do not have BossN ID. This is why we use GetBossTarget
-		warnAttenuation:Show(args.spellName, args.sourceName, lastDirection)--Always give basic warning. we don't need special warning to run in circles but on heroic green orbs go MUCH further than discs, we still need to be aware of them somewhat.
 		if uId then--Now we know who is tanking that boss
 			local inRange = DBM.RangeCheck:GetDistance("player", uId)--We check how far we are from the tank who has that boss
 			if (inRange and inRange < 60) then--Only show warning if we are near the boss casting it (or rathor, the player tanking that boss). I realize orbs go very far, but the special warning is for the dance, not stray discs, that's what normal warning is for
@@ -191,7 +188,6 @@ end
 --"<55.0 21:38:55> [CLEU] UNIT_DIED#true#0x0000000000000000#nil#-2147483648#-2147483648#0xF130FE9600003072#Echo of Force and Verve#68168#0", -- [10971]
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 122933 then--Clear Throat (4 seconds before force and verve)
-		warnForceandVerve:Show()
 		specwarnForce:Show()
 		timerForceCast:Start()
 		if platform < 4 then

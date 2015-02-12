@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(683, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(60585, 60586, 60583)--60583 Protector Kaolan, 60585 Elder Regail, 60586 Elder Asani
 mod:SetEncounterID(1409)
 mod:SetZone()
@@ -33,27 +33,24 @@ local warnPhase3					= mod:NewPhaseAnnounce(3)
 --Elder Asani
 local warnWaterBolt					= mod:NewCountAnnounce(118312, 3, nil, false)
 local warnCleansingWaters			= mod:NewTargetAnnounce(117309, 3)--Phase 1+ ability. If target scanning fails, will switch to spell announce
-local warnCorruptingWaters			= mod:NewSpellAnnounce(117227, 4)--Phase 2+ ability.
 --Elder Regail (Also uses Overwhelming Corruption in phase 3)
-local warnLightningPrison			= mod:NewTargetAnnounce(111850, 3)--Phase 1+ ability.
-local warnLightningStorm			= mod:NewSpellAnnounce(118077, 4)--Phase 2+ ability.								
+local warnLightningPrison			= mod:NewTargetAnnounce(111850, 3)--Phase 1+ ability.							
 --Protector Kaolan
-local warnTouchofSha				= mod:NewTargetAnnounce(117519, 3, nil, mod:IsHealer())--Phase 1+ ability. He stops casting it when everyone in raid has it then ceases. If someone dies and is brezed, he casts it on them again.
-local warnDefiledGround				= mod:NewSpellAnnounce(117986, 3, nil, mod:IsMelee())--Phase 2+ ability.
-local warnExpelCorruption			= mod:NewSpellAnnounce(117975, 4)--Phase 3 ability.
+local warnTouchofSha				= mod:NewTargetAnnounce(117519, 3, nil, "Healer")--Phase 1+ ability. He stops casting it when everyone in raid has it then ceases. If someone dies and is brezed, he casts it on them again.
+local warnDefiledGround				= mod:NewSpellAnnounce(117986, 3, nil, "Melee")--Phase 2+ ability.
 --Heroic
 local warnGroupOrder				= mod:NewAnnounce("warnGroupOrder", 1, 118191, false)--25 man for now, unless someone codes a 10 man version of it into code then it can be both.
 
 --Elder Asani
 local specWarnCleansingWaters		= mod:NewSpecialWarningTarget(117309, false)--This is if you want to move the boss out of waters before they can even gain it. Many strats don't ever move boss and just dispel it
-local specWarnCleansingWatersDispel	= mod:NewSpecialWarningDispel(117309, mod:IsMagicDispeller())--The boss wasn't moved in time, now he needs to be dispelled.
-local specWarnCorruptingWaters		= mod:NewSpecialWarningSwitch("ej5821", mod:IsDps())
+local specWarnCleansingWatersDispel	= mod:NewSpecialWarningDispel(117309, "MagicDispeller")--The boss wasn't moved in time, now he needs to be dispelled.
+local specWarnCorruptingWaters		= mod:NewSpecialWarningSwitch("ej5821", "Dps")
 --Elder Regail
 local specWarnLightningPrison		= mod:NewSpecialWarningYou(111850)--Debuff you gain before you are hit with it.
 local yellLightningPrison			= mod:NewYell(111850)
 local specWarnLightningStorm		= mod:NewSpecialWarningSpell(118077, nil, nil, nil, 2)--Since it's multiple targets, will just use spell instead of dispel warning.
 --Protector Kaolan
-local specWarnDefiledGround			= mod:NewSpecialWarningMove(117986, mod:IsTank())
+local specWarnDefiledGround			= mod:NewSpecialWarningMove(117986, "Tank")
 local specWarnExpelCorruption		= mod:NewSpecialWarningSpell(117975, nil, nil, nil, 2)--Entire raid needs to move.
 --Minions of Fear
 local specWarnYourGroup				= mod:NewSpecialWarning("specWarnYourGroup", false)
@@ -68,7 +65,7 @@ local timerLightningStormCD			= mod:NewCDTimer(42, 118077)--Shorter Cd in phase 
 local timerLightningStorm			= mod:NewBuffActiveTimer(14, 118077)
 --Protector Kaolan
 local timerTouchOfShaCD				= mod:NewCDTimer(29, 117519)--Need new heroic data, timers confirmed for 10 man and 25 man normal as 29 and 12
-local timerDefiledGroundCD			= mod:NewNextTimer(15.5, 117986, nil, mod:IsMelee())
+local timerDefiledGroundCD			= mod:NewNextTimer(15.5, 117986, nil, "Melee")
 local timerExpelCorruptionCD		= mod:NewNextTimer(38.5, 117975)--It's a next timer, except first cast. that one variates.
 
 local countdownLightningStorm		= mod:NewCountdown(42, 118077, false)
@@ -243,16 +240,13 @@ function mod:SPELL_CAST_START(args)
 		self:BossTargetScanner(60586, "WatersTarget", 0.1, 15, true, true)
 		timerCleansingWatersCD:Start()
 	elseif spellId == 117975 then
-		warnExpelCorruption:Show()
 		specWarnExpelCorruption:Show()
 		timerExpelCorruptionCD:Start()
 		countdownExpelCorruption:Start(38.5)
 	elseif spellId == 117227 then
-		warnCorruptingWaters:Show()
 		specWarnCorruptingWaters:Show()
 		timerCorruptingWatersCD:Start()
 	elseif spellId == 118077 then
-		warnLightningStorm:Show()
 		specWarnLightningStorm:Show()
 		if phase == 3 then
 			timerLightningStormCD:Start(32)

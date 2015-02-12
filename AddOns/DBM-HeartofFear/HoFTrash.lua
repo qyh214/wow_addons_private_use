@@ -13,7 +13,6 @@ mod:RegisterEvents(
 )
 
 local warnUnseenStrike			= mod:NewTargetAnnounce(122949, 4, 123017)
-local warnDispatch				= mod:NewSpellAnnounce(125877, 3)
 
 local specWarnUnseenStrike		= mod:NewSpecialWarningYou(123017)
 local specWarnUnseenStrikeOther	= mod:NewSpecialWarningMoveTo(123017)
@@ -55,7 +54,6 @@ end
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
 	if args.spellId == 125877 then
-		warnDispatch:Show()
 		if args.sourceGUID == UnitGUID("target") then
 			specWarnDispatch:Show(args.sourceName)
 		end

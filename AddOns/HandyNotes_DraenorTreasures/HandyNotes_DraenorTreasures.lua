@@ -11,7 +11,7 @@ shrine = "Interface\\Icons\\inv_misc_statue_02",
 glider = "Interface\\Icons\\inv_feather_04",
 rocket = "Interface\\Icons\\ability_mount_rocketmount",
 }
-PlayerFaction, _ = UnitFactionGroup("player")
+local PlayerFaction, _ = UnitFactionGroup("player")
 DraenorTreasures.nodes = { }
 local nodes = DraenorTreasures.nodes
 local isTomTomloaded = false
@@ -592,62 +592,7 @@ nodes["garrisonffhorde_tier2"] = {
 nodes["garrisonffhorde_tier3"] = {
 [74505620]={ "34937", "Lady Sena's Other Materials Stash", "Garrison Resources", "", "default", "FFRTreasures","824"},
 }
-if (IsQuestFlaggedCompleted(36249) or IsQuestFlaggedCompleted(36250)) then
---Gorgrond Lumber Mill is active if either of these Quest IDs are true
-nodes["Gorgrond"][49074846]={ "950000", "Aged Stone Container", "", "QuestID is missing, will stay active until manually disabled", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][42345477]={ "36003", "Aged Stone Container", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][47514363]={ "36717", "Aged Stone Container", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][53354679]={ "35701", "Ancient Titan Chest", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][50155376]={ "35984", "Ancient Titan Chest", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][42084607]={ "36720", "Ancient Titan Chest", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][41988155]={ "35982", "Botani Essence Seed", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][49657883]={ "35968", "Forgotten Ogre Cache", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][47016905]={ "35971", "Forgotten Skull Cache", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][45808931]={ "36019", "Forgotten Skull Cache", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][39335627]={ "36716", "Forgotten Skull Cache", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][56745727]={ "35965", "Mysterious Petrified Pod", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][41147726]={ "35980", "Mysterious Petrified Pod", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][60507276]={ "36015", "Mysterious Petrified Pod", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][63285719]={ "36430", "Mysterious Petrified Pod", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][47647679]={ "36714", "Mysterious Petrified Pod", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][51756909]={ "36715", "Mysterious Petrified Pod", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][40956732]={ "35979", "Obsidian Crystal Formation", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][45969357]={ "35975", "Remains of Explorer Engineer Toldirk Ashlamp", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][51806148]={ "35966", "Remains of Grimnir Ashpick", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][51647226]={ "35967", "Unknown Petrified Egg", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][45318195]={ "35981", "Unknown Petrified Egg", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][42914350]={ "36001", "Unknown Petrified Egg", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][53007906]={ "36713", "Unknown Petrified Egg", "", "", "default", "GorgrondLumber","824"}
-nodes["Gorgrond"][47245180]={ "36718", "Unknown Petrified Egg", "", "", "default", "GorgrondLumber","824"}
-end
-if (IsQuestFlaggedCompleted(36251) or IsQuestFlaggedCompleted(36252)) then
---Gorgrond Sparring Arena is active if either of these Quest IDs are true
-nodes["Gorgrond"][45634931]={ "36722", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][43224574]={ "36723", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][41764527]={ "36726", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][48115516]={ "36730", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][51334055]={ "36734", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][46056305]={ "36736", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][58125146]={ "36739", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][59567275]={ "36781", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][45748821]={ "36784", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][45544298]={ "36733", "Ancient Ogre Cache", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][45076993]={ "36737", "Ancient Ogre Cache", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][61555855]={ "36740", "Ancient Ogre Cache", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][54257313]={ "36782", "Ancient Ogre Cache", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][42179308]={ "36787", "Ancient Ogre Cache", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][41528652]={ "36789", "Ancient Ogre Cache", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][49425084]={ "36710", "Ancient Titan Chest", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][42195203]={ "36727", "Ancient Titan Chest", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][43365169]={ "36731", "Ancient Titan Chest", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][47923998]={ "36735", "Ancient Titan Chest", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][50326658]={ "36738", "Ancient Titan Chest", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][49128248]={ "36783", "Ancient Titan Chest", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][48114638]={ "36721", "Obsidian Crystal Formation", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][41855889]={ "36728", "Obsidian Crystal Formation", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][42056429]={ "36729", "Obsidian Crystal Formation", "", "", "default", "GorgrondBoulder","824"}
-nodes["Gorgrond"][44184665]={ "36732", "Obsidian Crystal Formation", "", "", "default", "GorgrondBoulder","824"}
-end
+
 if (PlayerFaction == "Alliance") then
 nodes["ShadowmoonValleyDR"][29600620]={ "35281", "Bahameye", "Fire Ammonite", "", "rare", "SMVRares","111666"}
 nodes["Gorgrond"][60805400]={ "36502", "Biolante", "Quest Item for XP", "You must finish the quest before this element gets removed from the map", "rare", "GorgrondRares","116159"}
@@ -1162,11 +1107,11 @@ end
 
 function DraenorTreasures:WorldEnter()
  self:UnregisterEvent("PLAYER_ENTERING_WORLD")
- self:ScheduleTimer("ShadowElixirs", 5)
+ self:ScheduleTimer("QuestCheck", 5)
  self:ScheduleTimer("RegisterWithHandyNotes", 8)
 end
 
-function DraenorTreasures:ShadowElixirs()
+function DraenorTreasures:QuestCheck()
 do
 	if ((IsQuestFlaggedCompleted(36386) == false) or (IsQuestFlaggedCompleted(36390) == false) or (IsQuestFlaggedCompleted(36389) == false) or (IsQuestFlaggedCompleted(36392) == false) or (IsQuestFlaggedCompleted(36388) == false) or (IsQuestFlaggedCompleted(36381) == false)) then
 		nodes["SpiresOfArak"][43901500]={ "36395", "Elixir of Shadow Sight 1", "Elixir of Shadow Sight", "Elixir can be used at Shrine of Terrok for 1 of 6 i585 Weapons (see Gift of Anzu) Object will be removed as soon as you loot all Gifts of Anzu", "default", "SoATreasures","115463"}
@@ -1175,6 +1120,62 @@ do
 		nodes["SpiresOfArak"][48906250]={ "36399", "Elixir of Shadow Sight 4", "Elixir of Shadow Sight", "Elixir can be used at Shrine of Terrok for 1 of 6 i585 Weapons (see Gift of Anzu) Object will be removed as soon as you loot all Gifts of Anzu", "default", "SoATreasures","115463"}
 		nodes["SpiresOfArak"][55602200]={ "36400", "Elixir of Shadow Sight 5", "Elixir of Shadow Sight", "Elixir can be used at Shrine of Terrok for 1 of 6 i585 Weapons (see Gift of Anzu) Object will be removed as soon as you loot all Gifts of Anzu", "default", "SoATreasures","115463"}
 		nodes["SpiresOfArak"][53108450]={ "36401", "Elixir of Shadow Sight 6", "Elixir of Shadow Sight", "Elixir can be used at Shrine of Terrok for 1 of 6 i585 Weapons (see Gift of Anzu) Object will be removed as soon as you loot all Gifts of Anzu", "default", "SoATreasures","115463"}
+	end
+	if (IsQuestFlaggedCompleted(36249) or IsQuestFlaggedCompleted(36250)) then
+		--Gorgrond Lumber Mill is active if either of these Quest IDs are true
+		nodes["Gorgrond"][49074846]={ "950000", "Aged Stone Container", "", "QuestID is missing, will stay active until manually disabled", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][42345477]={ "36003", "Aged Stone Container", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][47514363]={ "36717", "Aged Stone Container", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][53354679]={ "35701", "Ancient Titan Chest", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][50155376]={ "35984", "Ancient Titan Chest", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][42084607]={ "36720", "Ancient Titan Chest", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][41988155]={ "35982", "Botani Essence Seed", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][49657883]={ "35968", "Forgotten Ogre Cache", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][47016905]={ "35971", "Forgotten Skull Cache", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][45808931]={ "36019", "Forgotten Skull Cache", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][39335627]={ "36716", "Forgotten Skull Cache", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][56745727]={ "35965", "Mysterious Petrified Pod", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][41147726]={ "35980", "Mysterious Petrified Pod", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][60507276]={ "36015", "Mysterious Petrified Pod", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][63285719]={ "36430", "Mysterious Petrified Pod", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][47647679]={ "36714", "Mysterious Petrified Pod", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][51756909]={ "36715", "Mysterious Petrified Pod", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][40956732]={ "35979", "Obsidian Crystal Formation", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][45969357]={ "35975", "Remains of Explorer Engineer Toldirk Ashlamp", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][51806148]={ "35966", "Remains of Grimnir Ashpick", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][51647226]={ "35967", "Unknown Petrified Egg", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][45318195]={ "35981", "Unknown Petrified Egg", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][42914350]={ "36001", "Unknown Petrified Egg", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][53007906]={ "36713", "Unknown Petrified Egg", "", "", "default", "GorgrondLumber","824"}
+		nodes["Gorgrond"][47245180]={ "36718", "Unknown Petrified Egg", "", "", "default", "GorgrondLumber","824"}
+	end
+	if (IsQuestFlaggedCompleted(36251) or IsQuestFlaggedCompleted(36252)) then
+		--Gorgrond Sparring Arena is active if either of these Quest IDs are true
+		nodes["Gorgrond"][45634931]={ "36722", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][43224574]={ "36723", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][41764527]={ "36726", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][48115516]={ "36730", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][51334055]={ "36734", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][46056305]={ "36736", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][58125146]={ "36739", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][59567275]={ "36781", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][45748821]={ "36784", "Aged Stone Container", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][45544298]={ "36733", "Ancient Ogre Cache", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][45076993]={ "36737", "Ancient Ogre Cache", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][61555855]={ "36740", "Ancient Ogre Cache", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][54257313]={ "36782", "Ancient Ogre Cache", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][42179308]={ "36787", "Ancient Ogre Cache", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][41528652]={ "36789", "Ancient Ogre Cache", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][49425084]={ "36710", "Ancient Titan Chest", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][42195203]={ "36727", "Ancient Titan Chest", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][43365169]={ "36731", "Ancient Titan Chest", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][47923998]={ "36735", "Ancient Titan Chest", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][50326658]={ "36738", "Ancient Titan Chest", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][49128248]={ "36783", "Ancient Titan Chest", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][48114638]={ "36721", "Obsidian Crystal Formation", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][41855889]={ "36728", "Obsidian Crystal Formation", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][42056429]={ "36729", "Obsidian Crystal Formation", "", "", "default", "GorgrondBoulder","824"}
+		nodes["Gorgrond"][44184665]={ "36732", "Obsidian Crystal Formation", "", "", "default", "GorgrondBoulder","824"}
 	end
 end
 end

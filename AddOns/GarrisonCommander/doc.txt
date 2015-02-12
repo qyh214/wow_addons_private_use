@@ -1,0 +1,254 @@
+GarrisonMissionFrame_CheckCompleteMissions(OnShow) Controlla se sono presenti missione complete. Se è già mostrato GMF.MissionComplete ritorna
+	Viene chiamato
+	1) su onshow del pannello missioni con OnShow=true
+	2) sull'evento GARRISON_MISSION_FINISHED con OnSHow=false
+	- Inizializza GMF.MissionComplete.completeMissions
+	- Se ci sono missioni complete e GMF è mostrato
+		- le conta (#GMF.MissionComplete.completeMissions
+		- mostra GMF.MissionTab.MissionList.CompleteDialog
+		- MissionCompletePreload_LoadMission(id) id=missionID prima missione completata
+			- Usa una globale per la missione corrente, in modo da uscire se è sempre farlo sulla stessa
+			- Rimuove eventuali modelli già prensenti via MissionCompletePreload_Cancel
+			- Carica tutti i modelli necessari
+		- abilita il viewbutton GarrisonMissionFrameMissions.CompleteDialog.BorderFrame.ViewButton
+			- Onclick :
+				- GarrisonMissionFrame_ShowCompleteMissions
+					- continua a farsi rilanciare finché non ha finito di caricare i modelli, poi:
+					- Nasconde GMF.MissionTab.MissionList.CompleteDialog
+					- mostra GMF.MissionComplete GMF.MissionCompleteBackground
+					- GarrisonMissionComplete_Initialize(GMF.MissionComplete.completeMissions,GMF.MissionComplete.currentIndex)
+
+
+
+Altre utilities
+
+GarrisonMissionFrame_SelectTab(id): switcha fra missioni e followers
+	id è numerico, 1 mostra le missioni, altro mostra i followers
+
+GarrisonMissionList_SetTab(tab): switcha fra active e available
+	tab è l'oggetto tab "available" o "in progress" (GarrisonMissionFrameMissionsTab[12])
+
+Pannelli utili:
+
+GMF.MissionTab.MissionList.CompleteDialog.BorderFrame.LoadingFrame Loading col tondino
+
+
+Dump: value=C_Garrison.GetMissionRewardInfo(91)
+[1]={
+	[163]={
+		itemID=112848,
+		quantity=1
+	}
+}
+
+--[[
+
+GMFMissions.CompleteDialog.BorderFrame.CompleteAll
+Garrison page structure
+Tab selection:
+Managed by
+GarrisonMissionFrameTab(1|2) onclick:
+->GarrisonMissionFrameTab_OnClick(self)
+--->GarrisonMissionFrame_SelectTab(self:GetID()) - 1 for Missions, 2 for followers
+
+Main Container is GarrisonMissionFrame
+Followers tab selected:
+->GarrisonMissionFrameFollowers -> anchored GarrisonMissionFrame TOPLEFT 33,-64
+-->GarrisonMissionFrameFollowersListScrollFrame
+--->GarrisonMissionFrameFollowersListScrooFrameScrollChild
+---->GarrisonMissionFrameFollowersListScrooFrameButton(1..9)
+->GarrisonMissionFrame.FollowerTab -> abcuored GarrisonMissionFrame TOPRIGHT -35 -64
+Missions tab selected
+->GarrisonMissionFrameMissions -> anchored (parent)e TOPLEFT 35,-65
+
+
+
+
+GarrisonMissionFrameMissionsListScrollFrameButtonx.info:
+Dump: value=GarrisonMissionFrameMissionsListScrollFrameButton1.info
+[1]={
+	description="In a remote corner of Talador, a small faction of draenei has embraced the worship of Sargeras. Stop their cult before it spreads.",
+	cost=10,
+	duration="4 hr",
+	durationSeconds=14400,
+	level=100,
+	type="Combat",
+	locPrefix="GarrMissionLocation-Talador",
+	rewards={
+		[290]={
+			title="Money Reward",
+			quantity=600000,
+			icon="Interface\\Icons\\inv_misc_coin_01",
+			currencyID=0
+		}
+	},
+	numRewards=1,
+	numFollowers=2,
+	state=-2,
+	iLevel=0,
+	name="Cult of Sargeras",
+	followers={
+	},
+	location="Talador",
+	isRare=false,
+	typeAtlas="GarrMission_MissionIcon-Combat",
+	missionID=126
+}
+Dump: value=G.GetFollowerInfo("0x000000000002F5E1")
+[1]={
+	displayHeight=0.5,
+	iLevel=600,
+	scale=0.60000002384186,
+	classAtlas="GarrMission_ClassIcon-Druid",
+	garrFollowerID="0x0000000000000022",
+	displayScale=1,
+	status="On Mission",
+	level=100,
+	quality=4,
+	portraitIconID=1066112,
+	isFavorite=false,
+	xp=0,
+	className="Guardian Druid",
+	classSpec=8,
+	name="Qiana Moonshadow",
+	followerID="0x000000000002F5E1",
+	height=1.3999999761581,
+	displayID=55047,
+	levelXP=0,
+	isCollected=true
+}
+value=GarrisonMissionFrame.MissionTab.MissionList.availableMissions[13]
+[1]={
+	description="Scouts report a many-headed beast named Festerbloom waylaying travelers crossing the Murkbog.  Clear the path for everyone's sake.",
+	cost=20,
+	duration="10 hr",
+	durationSeconds=36000,
+	level=96,
+	type="Combat",
+	locPrefix="GarrMissionLocation-SpiresofArak",
+	rewards={
+		[778]={
+			title="Bonus Follower XP",
+			followerXP=1400,
+			tooltip="+1,400 XP",
+			icon="Interface\\Icons\\XPBonus_Icon",
+			name="+1,400 XP"
+		}
+	},
+	numRewards=1,
+	numFollowers=3,
+	state=-2,
+	iLevel=0,
+	name="Murkbog Terror",
+	followers={
+	},
+	location="Spires of Arak",
+	isRare=false,
+	typeAtlas="GarrMission_MissionIcon-Combat",
+	missionID=374
+}
+Dump: value=GarrisonMissionFrame.MissionTab.MissionList.inProgressMissions
+[1]={
+	description="The voidlords and voidcallers plaguing Shadowmoon Valley are being summoned by someone. Find and kill whoever is responsible.",
+	cost=15,
+	duration="6 hr",
+	durationSeconds=21600,
+	level=100,
+	timeLeft="1 hr 12 min",
+	type="Combat",
+	inProgress=true,
+	locPrefix="GarrMissionLocation-ShadowmoonValley",
+	rewards={
+		[251]={
+			title="Bonus Follower XP",
+			followerXP=8000,
+			tooltip="+8,000 XP",
+			icon="Interface\\Icons\\XPBonus_Icon",
+			name="+8,000 XP"
+		}
+	},
+	numRewards=1,
+	numFollowers=3,
+	state=-1,
+	iLevel=0,
+	name="Twisting the Nether",
+	followers={
+		[1]="0x000000000002F5E1",
+		[2]="0x0000000000079D62",
+		[3]="0x00000000001307EF"
+	},
+	location="Shadowmoon Valley",
+	isRare=false,
+	typeAtlas="GarrMission_MissionIcon-Combat",
+	missionID=114
+}
+Dump: value=G.GetMissionInfo(119)
+local location, xp, environment, environmentDesc, environmentTexture, locPrefix, isExhausting, enemies = C_Garrison.GetMissionInfo(missionID);
+[1]="Nagrand",
+[2]=1500,
+[3]="Orc",
+[4]="Lok'tar ogar!",
+[5]="Interface\\ICONS\\Achievement_Boss_General_Nazgrim.blp",
+[6]="GarrMissionLocation-Nagrand",
+[7]=false,
+[8]={
+	[1]={
+		portraitFileDataID=1067358,
+		displayID=56189,
+		name="Warsong Earthcaller",
+		mechanics={
+			[4]={
+				description="A dangerous harmful effect that should be dispelled.",
+				name="Magic Debuff",
+				icon="Interface\\ICONS\\Spell_Shadow_ShadowWordPain.blp"
+			},
+			[8]={
+				description="A dangerous spell that should be interrupted.",
+				name="Powerful Spell",
+				icon="Interface\\ICONS\\Spell_Shadow_ShadowBolt.blp"
+			}
+		}
+	}
+}
+local totalTimeString, totalTimeSeconds, isMissionTimeImproved, successChance, partyBuffs, isEnvMechanicCountered, xpBonus, materialMultiplier = C_Garrison.GetPartyMissionInfo(MISSION_PAGE_FRAME.missionInfo.missionID);
+Dump: value=C_Garrison.GetPartyMissionInfo(118)
+[1]="8 hr",
+[2]=28800,
+[3]=false,
+[4]=0,
+[5]={
+},
+[6]=false,
+[7]=0,
+[8]=1
+Dump: value=table returned by GetFollowerInfo for a collected follower
+[1]={
+	displayHeight=0.5,
+	iLevel=600,
+	isCollected=true,
+	classAtlas="GarrMission_ClassIcon-Druid",
+	garrFollowerID="0x0000000000000022",
+	displayScale=1,
+	level=100,
+	quality=4,
+	portraitIconID=1066112,
+	isFavorite=false,
+	xp=0,
+	className="Guardian Druid",
+	classSpec=8,
+	name="Qiana Moonshadow",
+	followerID="0x000000000002F5E1",
+	height=1.3999999761581,
+	displayID=55047,
+	scale=0.60000002384186,
+	levelXP=0
+}
+	local location, xp, environment, environmentDesc, environmentTexture, locPrefix, isExhausting, enemies = G.GetMissionInfo(missionID)
+--]]
+-- In case we need to change rown number in GMF
+		if (not self:IsFollowerList()) then
+			HybridScrollFrame_CreateButtons(frame.MissionTab.MissionList.listScroll, "GarrisonMissionListButtonTemplate", 13, -8, nil, nil, nil, -4);
+			GarrisonMissionList_Update();
+		else
+			HybridScrollFrame_CreateButtons(frame.FollowerList.listScroll, "GarrisonMissionFollowerButtonTemplate", 7, -7, nil, nil, nil, -6);
+		end

@@ -9,13 +9,15 @@
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
-## SavedVariablesPerCharacter: DBMSiegeOfOrgrimmarV2_SavedVars, DBMSiegeOfOrgrimmarV2_SavedStats
+## SavedVariables: DBMSiegeOfOrgrimmarV2_AllSavedVars
+## SavedVariablesPerCharacter: DBMSiegeOfOrgrimmarV2_SavedStats
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: MOP
 ## X-DBM-Mod-Has-Mythic : 1
 ## X-DBM-Mod-Sort: 201
 ## X-DBM-Mod-MapID: 1136
+## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.br.lua
 localization.de.lua

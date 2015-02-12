@@ -1,6 +1,6 @@
 ﻿-- Mini Dragon(projecteurs@gmail.com)
 -- Yike Xia
--- Last update: Dec 27, 2014@12186
+-- Last update: Feb 8, 2015@12810
 
 if GetLocale() ~= "zhCN" then return end
 local L
@@ -9,15 +9,6 @@ local L
 -- Gruul --
 ---------------
 L= DBM:GetModLocalization(1161)
-
-L:SetWarningLocalization({
-})
-
-L:SetOptionLocalization({
-})
-
-L:SetMiscLocalization({
-})
 
 ---------------------------
 -- Oregorger, The Devourer --
@@ -29,15 +20,27 @@ L= DBM:GetModLocalization(1202)
 ---------------------------
 L= DBM:GetModLocalization(1154)
 
+L:SetWarningLocalization({
+	warnBlastFrequency	= "冲击施法频率增加:大约每%d秒一次"
+})
+
+L:SetOptionLocalization({
+	warnBlastFrequency	= "当$spell:155209施法频率增加时发出警告"
+})
+
 ------------------
 -- Hans'gar And Franzok --
 ------------------
 L= DBM:GetModLocalization(1155)
 
 --------------
--- Flamebender Ka'graz --
+-- Flamebender Ka'graz -- 
 --------------
 L= DBM:GetModLocalization(1123)
+
+L:SetMiscLocalization({
+	TorrentYell	= "%d秒后熔岩激流消失"
+})
 
 --------------------
 --Kromog, Legend of the Mountain --
@@ -55,34 +58,12 @@ L= DBM:GetModLocalization(1122)
 L= DBM:GetModLocalization(1147)
 
 L:SetMiscLocalization({
-	--Might not even need to use yells if my npc target works in all languages.
-	--depends on if "Train" is boss target in all languages and if that spellid hack also matches it in all languages.
-	--At the very least this helps read transcriptor logs :)
-	cannonTrain		= "火炮车",
+	lane			= "轨道",
+	oneTrain		= "随机单轨道快车",
+	oneRandom		= "随机出现在一个轨道上",
 	threeTrains		= "随机三轨道快车",
-	helperMessage	= "建议你使用 'Thogar Assist' 索戈尔助手插件配合DBM作战。下载地址 http://wow.curseforge.com/addons/thogar-assist/",
-	commandTrain1	= "指挥车到了",
-	commandTrain2	= "老大来了",
-	moreThanOne1	= "列车进站",
-	moreThanOne2	= "快速前进",
-	moreThanOne3	= "清理轨道",
-	cannon1			= "那是火炮",
-	cannon2			= "炸弹来了",
-	driveBy1		= "快点！有多快跑多快！",
-	driveBy2		= "快车，本站不停。",
-	driveBy3		= "特快专列来了！",
-	driveBy4		= "让它过去！",
-	driveBy5		= "真呛人。",
-	smallAdds1		= "他们来了——下车吧，伙计们！",
-	smallAdds2		= "军列进站！",
-	smallAdds3		= "Ah - reinforcements.", --PH
-	--Some of these flamethrowers are iffy so verify flamethrower again in videos to be very sure.
-	--These may also be something else entirely so going to only debug these right now
-	flameThrower1	= "我在赶时间！",
-	flameThrower2	= "你们没时间了",
-	flameThrower3	= "没什么大不了的。进站的列车多的是！",
-	flameThrower4	= "你们正巧赶上了高峰时间。",
-	flameThrower5	= "让我们加快速度。"
+	threeRandom		= "随机出现在三个轨道上",
+	helperMessage	= "建议使用第三方插件 'Thogar Assist' 索戈尔助手插件或DBM语音包来帮助你作战。这些都可以在Curse上找到。"
 })
 
 --------------------------

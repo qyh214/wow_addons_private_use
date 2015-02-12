@@ -260,7 +260,6 @@ function target_button:Update(ID, Name, Source)
 
 --Quick fix to not show Haakun's actual model due to it causing the game to crash
 	if ID == HaakunID or Name == HaakunName then
-		Model:Reset()
 		Model:SetCreature(29147)
 		self:UnregisterEvent("UNIT_MODEL_CHANGED")
 	end
@@ -358,9 +357,8 @@ end
 function target_button:UNIT_MODEL_CHANGED(_, UnitID)
 
 	--Quick fix to not show Haakun's actual model due to it causing the game to crash
-	local name = UnitName(UnitID)
-	if Name == HaakunName then
-		self.Model:Reset()
+	local MobName = UnitName(UnitID)
+	if MobName == HaakunName then
 		self.Model:SetCreature(29147)
 		self:UnregisterEvent("UNIT_MODEL_CHANGED")
 		return

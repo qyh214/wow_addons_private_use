@@ -65,32 +65,32 @@ end
 L=l:NewLocale(me,"frFR")
 if (L) then
 -- L["Click to toggle Garrison Mission Frame"] = ""
--- L["Click to toggle Help page"] = ""
--- L["Consider again"] = ""
--- L["Disables automatic population of mission page screen. You can also press control while clicking to disable it for a single mission"] = ""
--- L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"] = ""
--- L["Do not prefill mission page"] = ""
--- L["Ignore for all missions"] = ""
--- L["Ignore for this mission"] = ""
--- L["Ignore \"maxed\" followers"] = ""
--- L["Left Click to see available missions"] = ""
+L["Click to toggle Help page"] = "Cliquez ici pour basculer vers la page d'aide" -- Needs review
+L["Consider again"] = "Reconsid\195\169rer" -- Needs review
+L["Disables automatic population of mission page screen. You can also press control while clicking to disable it for a single mission"] = "D\195\169sactiver le remplissage automatique des personnages sur la page de mission. Vous pouvez appuyer sur 'CTRL' tout en cliquant sur une seule mission" -- Needs review
+L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"] = "D\195\169sactiver ceci vous donnera l'interface du 1.1.8. Besoin de recharger l'interface" -- Needs review
+L["Do not prefill mission page"] = "Ne pas pr\195\169-remplir la page de mission" -- Needs review
+L["Ignore for all missions"] = "Ignorer pour toutes les missions" -- Needs review
+L["Ignore for this mission"] = "Ignorer pour cette mission" -- Needs review
+L["Ignore \"maxed\" followers"] = "Ignorer les sujets \"maxi.\"" -- Needs review
+L["Left Click to see available missions"] = "Clic gauche pour voir les missions disponible" -- Needs review
 -- L["Level 100 epic followers are not used for match making unless they are needed to fill up the roster."] = ""
 -- L["Minimun chance success under which ignore missions"] = ""
 -- L["Mission shown for follower"] = ""
--- L["Must reload interface to apply"] = ""
--- L["Number of followers"] = ""
--- L["Only first %1$d missions with over %2$d%% chance of success are shown"] = ""
--- L["Original method"] = ""
+L["Must reload interface to apply"] = "Doit recharger l'interface pour appliquer" -- Needs review
+L["Number of followers"] = "Nombre de sujets" -- Needs review
+L["Only first %1$d missions with over %2$d%% chance of success are shown"] = "Seuls les %1$d premi\195\168res missions avec plus de %2$d%% de chances de succ\195\168s sont affich\195\169s" -- Needs review
+L["Original method"] = "M\195\169thode originale" -- Needs review
 -- L["Original sort restores original sorting method, whatever it was (If you have another addon sorting mission, it should kick in again)"] = ""
--- L["Other useful followers"] = ""
--- L["Right click to open ignore menu"] = ""
--- L["Sort missions by:"] = ""
--- L["Success Chance"] = ""
--- L["Switches between Garrison Commander and Master Plan mission interface. Tested with MP 0.20.x"] = ""
--- L["Unlock Panel"] = ""
--- L["Use big screen"] = ""
--- L["Use GC Interface"] = ""
--- L["You have ignored followers"] = ""
+L["Other useful followers"] = "Autres sujets utiles" -- Needs review
+L["Right click to open ignore menu"] = "Clic droit pour ouvrir le menu 'ignorer'" -- Needs review
+L["Sort missions by:"] = "Trier les missions par:" -- Needs review
+L["Success Chance"] = "Chance de succ\195\168s" -- Needs review
+L["Switches between Garrison Commander and Master Plan mission interface. Tested with MP 0.20.x"] = "Bascule entre l'interface de Garrison Commander et Master Plan. Test\195\169 avec MP 0.20.x" -- Needs review
+L["Unlock Panel"] = "D\195\169verrouille le panneau" -- Needs review
+L["Use big screen"] = "Utilise la gd taille" -- Needs review
+L["Use GC Interface"] = "Utiliser l'interface de GC" -- Needs review
+L["You have ignored followers"] = "Vous avez ignor\195\169 des sujets" -- Needs review
 
 return
 end

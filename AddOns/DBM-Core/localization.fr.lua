@@ -1,5 +1,5 @@
 ﻿if GetLocale() ~= "frFR" then return end
-DBM_CORE_NEED_SUPPORT				= "Vous êtes bon en programmation ou en langues ? Si oui, l'équipe de DBM a besoin de votre aide pour que DBM reste le meilleur boss mod de WoW. Rejoignez l'équipe en visitant www.deadlybossmods.com ou en envoyant un message à tandanu@deadlybossmods.com ou à nitram@deadlybossmods.com."
+DBM_CORE_NEED_SUPPORT				= "Vous êtes bon en programmation ou en langues ? Si oui, l'équipe de DBM a besoin de votre aide pour que DBM reste le meilleur boss mod de WoW. Rejoignez l'équipe en visitant http://forums.elitistjerks.com/topic/132449-dbm-localizers-needed/"
 DBM_HOW_TO_USE_MOD					= "Bienvenue sur DBM. Tapez /dbm help pour une liste des commandes supportées. Pour accédez aux options, tapez /dbm dans la fenêtre de discussion pour commencer la configuration. Chargez des zones spécifiques manuellement pour configurer tous les paramètres spécifiques aux boss selon vos envies. DBM essaie de le faire pour vous en analysant votre spécialisation au premier lancement, mais nous savons que de toute façon certaines personnes souhaitant activer d'autres options."
 
 DBM_FORUMS_MESSAGE                                      = "Tu as remarqué un bug ou un timer mal réglé? Tu penses que certains combats ont besoin de plus d'alertes, timers ou autres fonctionnalités?\nVisite le nouveau sujet sur DBM, les rapports de bug et propositions sur le forum à l'adresse suivante: |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (you can click the link to copy the URL)"
@@ -51,7 +51,7 @@ DBM_CORE_TIMER_FORMAT				= "%d |4minute:minutes; et %d |4seconde:secondes;"
 DBM_CORE_MIN						= "min"
 DBM_CORE_MIN_FMT					= "%d min"
 DBM_CORE_SEC						= "sec"
-DBM_CORE_SEC_FMT					= "%d sec"
+DBM_CORE_SEC_FMT					= "%s sec"
 
 DBM_CORE_GENERIC_WARNING_OTHERS         = "et un autre"
 DBM_CORE_GENERIC_WARNING_OTHERS2        = "et %d autres"
@@ -62,8 +62,8 @@ DBM_CORE_GENERIC_TIMER_COMBAT		= "Le combat débute dans"
 DBM_CORE_OPTION_TIMER_COMBAT		= "Montre le timer avant le début du combat"
 DBM_CORE_OPTION_HEALTH_FRAME		= "Afficher le cadre de vie des Boss"
 
-DBM_CORE_OPTION_CATEGORY_TIMERS		= "Bars"
-DBM_CORE_OPTION_CATEGORY_WARNINGS	= "Announces"
+DBM_CORE_OPTION_CATEGORY_TIMERS		= "Barres"
+DBM_CORE_OPTION_CATEGORY_WARNINGS	= "Avertissements"
 
 DBM_CORE_AUTO_RESPONDED						= "Répondu automatiquement."
 DBM_CORE_STATUS_WHISPER						= "%s: %s, %d/%d joueurs en vie"
@@ -85,7 +85,6 @@ DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (r%d)"--One Boss mod
 DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: DBM non installé"--Two Boss mods
 DBM_CORE_VERSIONCHECK_FOOTER		= "%d joueurs trouvés avec Deadly Boss Mods & %d joueurs avec BigWigs"
 DBM_CORE_YOUR_VERSION_OUTDATED      = "Votre version de Deadly Boss Mods est périmée. Veuillez vous rendre sur www.deadlybossmods.com pour obtenir la dernière version."
-DBM_CORE_OUTDATED_PVP_MODS                      = "Vos mods DBM-PvP sont périmés et devraient être désactivés s'ils ne sont pas utilisés, ou mis à jours séparément (PvP package). Ces mods ne sont plus inclus avec l'installation de DBM-Core. Les dernières versions des PvP mods peuvent être trouvés sur http://www.deadlybossmods.com"
 
 DBM_CORE_UPDATEREMINDER_HEADER		= "Votre version de Deadly Boss Mods est périmée.\nLa version %s (r%d) est disponible au téléchargement ici:"
 DBM_CORE_UPDATEREMINDER_HEADER_ALPHA    = "Votre version Alpha de DBM-alpha est périmée.\n Vous avez au moins %d versions de test de retard. Il est recommandé au utilisateurs d'utiliser la dernière version alpha ou la dernière version stable. Les versions alpha périmées peuvent mener à des fonctionnalités absentes ou cassées."
@@ -196,21 +195,23 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.fades           = "%s s'est dissipé"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.soon            = "%s bientôt"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.prewarn         = "%s dans %s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel		= "%s on >%%s< - dissipez maintenant"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt	= "%s - interrompez >%%s<!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt		= "%s - interrompez >%%s<!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount= "%s - interrompez >%%s<! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you             = "%s sur vous"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= "%s sur >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt           = "%s sur >%%s< - provoquez maintenant"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close		= "%s sur >%%s< près de vous"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move		= "%s - écartez-vous"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.dodge 	= DBM_CORE_AUTO_SPEC_WARN_TEXTS.move--FIXME (this is a temp until localized properly as a dodge warning)
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveaway        = "%s - écartez-vous du raid"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveto          = "%s - dirigez-vous vers >%%s<"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.run		= "%s - fuyez"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast		= "%s - arrêtez d'incanter"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect         = "%s sur >%%s< - arrêtez d'attaquer"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.count           = "%s! (%%d)"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%s (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.dodge 	= "%s - esquivez" --not sure in which case the message appears but this should work
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveaway      = "%s - écartez-vous du raid"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveto        = "%s - dirigez-vous vers >%%s<"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.run			= "%s - fuyez"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast			= "%s - arrêtez d'incanter"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect       = "%s sur >%%s< - arrêtez d'attaquer"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.count         = "%s! (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack			= "%s (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= ">%s< - Changer de cible"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= ">%s< - Changer de cible (%%d)"
 
 
 -- Auto-generated Special Warning Localizations
@@ -218,7 +219,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell 		= "Afficher une alerte spéciale pour $s
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.ends            = "Afficher une alerte spéciale lorsque $spell:%s se termine"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.fades           = "Afficher une alerte spéciale lorsque $spell:%s se dissipe"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.soon            = "Afficher une alerte préventive spéciale pour $spell:%s"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.prewarn         = "Afficher une alerte préventive spéciale %d seconds avant $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.prewarn         = "Afficher une alerte préventive spéciale %s seconds avant $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dispel 		= "Afficher une alerte spéciale lorsque $spell:%s doit être dissipé/volé"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt	= "Afficher une alerte spéciale lorsque $spell:%s doit être interrompu"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you 		= "Afficher une alerte spéciale lorsque vous subissez $spell:%s"
@@ -226,7 +227,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target 		= "Afficher une alerte spéciale lorsqu
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt           = "Afficher une alerte spéciale de provoquer lorsque l'autre tank subit $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close 		= "Afficher une alerte spéciale lorsque quelqu'un proche de vous subit $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move 		= "Afficher une alerte spéciale lorsque vous devez sortir de $spell:%s"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dodge 		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move--FIXME (this is a temp until localized properly as a dodge warning)
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dodge 		= "Afficher une alerte spéciale lorqu'il faut esquiver $spell:%s" --not sure in which case the message appears but this should work
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveaway        = "Afficher une alerte spéciale lorsque vous subissez $spell:%s et devez vous écarter du raid"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveto          = "Afficher une alerte spéciale lorsque vous devez vous rapprocher de quelqu'un subissant $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run 		= "Afficher une alerte spéciale lorsque vous devez fuir $spell:%s"
@@ -235,6 +236,8 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.reflect         = "Afficher une alerte spéciale
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.count           = "Afficher une alerte spéciale pour $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack 		= "Afficher une alerte spéciale lorsque vous cumulez >=%d stacks de $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch 		= "Afficher une alerte spéciale de changement de cible pour\n $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS.target		= "%s: >%%s<"

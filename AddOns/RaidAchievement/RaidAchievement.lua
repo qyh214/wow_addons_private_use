@@ -6,7 +6,7 @@ if GetLocale()=="deDE" or GetLocale()=="ruRU" or GetLocale()=="zhTW" or GetLocal
 end
 
 
-	raversion=6.011
+	raversion=6.013
 	local raverstiptext="alpha"
 	if string.len(raversion)==6 then
 		raverstiptext="beta"
@@ -1191,6 +1191,17 @@ end
 end
 
 --тут добавить рейды WoD
+if GetCurrentMapAreaID()==988 then
+if IsAddOnLoaded("RaidAchievement_WoDRaids")==false and waswodrtryloadea==nil then
+waswodrtryloadea=1
+local loaded, reason = LoadAddOn("RaidAchievement_WoDRaids")
+if loaded then
+print("|cff99ffffRaidAchievement|r - "..pseamoduleload.." RaidAchievement_WoDRaids!")
+else
+print("|cff99ffffRaidAchievement|r - "..pseamodulenotload.." RaidAchievement_WoDRaids! "..raerrormodulereq.." RaidAchievement_Pandaria")
+end
+end
+end
 
 --героики вотлк
 local idheroics={522,534,530,525,526,603,602,601,520,524,536,542,533}
@@ -1353,9 +1364,9 @@ if IsAddOnLoaded("RaidAchievement_WoDHeroics")==false and wasphtryloadea==nil th
 wasphtryloadea=1
 local loaded, reason = LoadAddOn("RaidAchievement_WoDHeroics")
 if loaded then
-print("|cff99ffffRaidAchievement|r - "..pseamoduleload.." "..psealeftmenupanda.."!")
+print("|cff99ffffRaidAchievement|r - "..pseamoduleload.." WoDHeroics!")
 else
-print("|cff99ffffRaidAchievement|r - "..pseamodulenotload.." "..psealeftmenupanda.."! "..raerrormodulereq.." RaidAchievement_WoD")
+print("|cff99ffffRaidAchievement|r - "..pseamodulenotload.." WoDHeroics! "..raerrormodulereq.." RaidAchievement_WoD")
 end
 end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(828, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 33 $"):sub(12, -3))
 mod:SetCreatureID(69712)
 mod:SetEncounterID(1573)
 mod:SetZone()
@@ -21,7 +21,7 @@ mod:RegisterEventsInCombat(
 local warnCaws				= mod:NewSpellAnnounce(138923, 2)
 local warnQuills			= mod:NewCountAnnounce(134380, 4)
 local warnFlock				= mod:NewAnnounce("warnFlock", 3, 15746)--Some random egg icon
-local warnTalonRake			= mod:NewStackAnnounce(134366, 3, nil, mod:IsTank() or mod:IsHealer())
+local warnTalonRake			= mod:NewStackAnnounce(134366, 3, nil, "Tank|Healer")
 local warnDowndraft			= mod:NewSpellAnnounce(134370, 3)
 local warnFeedYoung			= mod:NewSpellAnnounce(137528, 3)--No Cd because it variable based on triggering from eggs, it's cast when one of young call out and this varies too much
 local warnPrimalNutriment	= mod:NewCountAnnounce(140741, 1)
@@ -32,7 +32,7 @@ local specWarnTalonRake		= mod:NewSpecialWarningStack(134366, nil, 2)--Might cha
 local specWarnTalonRakeOther= mod:NewSpecialWarningTaunt(134366)
 local specWarnDowndraft		= mod:NewSpecialWarningSpell(134370, nil, nil, nil, 2)
 local specWarnFeedYoung		= mod:NewSpecialWarningSpell(137528)
-local specWarnBigBird		= mod:NewSpecialWarning("specWarnBigBird", mod:IsTank())
+local specWarnBigBird		= mod:NewSpecialWarning("specWarnBigBird", "Tank")
 local specWarnBigBirdSoon	= mod:NewSpecialWarning("specWarnBigBirdSoon", false)
 local specWarnFeedPool		= mod:NewSpecialWarningMove(138319, false)
 
@@ -41,15 +41,15 @@ local timerQuills			= mod:NewBuffActiveTimer(10, 134380)
 local timerQuillsCD			= mod:NewCDCountTimer(62.5, 134380)--variable because he has two other channeled abilities with different cds, so this is cast every 62.5-67 seconds usually after channel of some other spell ends
 local timerFlockCD	 		= mod:NewTimer(30, "timerFlockCD", 15746)
 local timerFeedYoungCD	 	= mod:NewCDTimer(30, 137528)--30-40 seconds (always 30 unless delayed by other channeled spells)
-local timerTalonRakeCD		= mod:NewCDTimer(20, 134366, nil, mod:IsTank() or mod:IsHealer())--20-30 second variation
-local timerTalonRake		= mod:NewTargetTimer(60, 134366, nil, mod:IsTank() or mod:IsHealer())
+local timerTalonRakeCD		= mod:NewCDTimer(20, 134366, nil, "Tank|Healer")--20-30 second variation
+local timerTalonRake		= mod:NewTargetTimer(60, 134366, nil, "Tank|Healer")
 local timerDowndraft		= mod:NewBuffActiveTimer(10, 134370)
 local timerDowndraftCD		= mod:NewCDTimer(97, 134370)
 local timerFlight			= mod:NewBuffFadesTimer(10, 133755)
 local timerPrimalNutriment	= mod:NewBuffFadesTimer(30, 140741)
 local timerLessons			= mod:NewBuffFadesTimer(60, 140571, nil, false)
 
-mod:AddBoolOption("RangeFrame", mod:IsRanged())
+mod:AddBoolOption("RangeFrame", "Ranged")
 mod:AddDropdownOption("ShowNestArrows", {"Never", "Northeast", "Southeast", "Southwest", "West", "Northwest", "Guardians"}, "Never", "misc")
 --Southwest is inconsistent between 10 and 25 because blizz activates lower SW on 10 man but does NOT activate upper SW (middle is activated in it's place)
 --As such, the options have to be coded special so that Southwest sends 10 man to upper middle and sends 25 to actual upper southwest (option text explains this difference)

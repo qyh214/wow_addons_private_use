@@ -1,7 +1,7 @@
 ﻿local mod = ExtraCD
 
 function mod:GetDataVersion()
-	return 69
+	return 72
 end
 
 function mod:GetSpellData() 
@@ -82,6 +82,18 @@ function mod:GetSpellData()
 			cd = 180,
 			duration = 3,
 		}, -- Purgatory	
+		
+		-- warlock
+		[171982] = {
+			desc = "",
+			type = "talent",
+			class = "WARLOCK",
+			tier = 5,
+			column = 3,
+			cd = 0,
+			ppm = 1.33,
+			duration = 15,
+		}, -- Grimoire of Synergy
 		
 	-- spec
 		-- type = "spec" 
@@ -187,7 +199,7 @@ function mod:GetSpellData()
 		[177051] = {
 			desc = "",
 			type = "item",
-			item = {113931},
+			item = {113948},
 			cd = 0,
 			ppm = 0.92,
 			duration = 10,
@@ -402,6 +414,7 @@ function mod:GetSpellData()
 			duration = 10,
 		}, -- Xeri'tac's Unhatched Egg Sac
 		
+		--[[ removed procs
 		-- MOP 5.4
 		-- Legendary cloak
 		[148010] = {
@@ -841,7 +854,7 @@ function mod:GetSpellData()
 			cd = 45,
 			duration = 20,
 		}, -- H
-		
+		]]
 		
 		-- pvp 660(H/L Tournoment set) 660(H/L set) 620(H/L set) 550(H/L set) 522(H/L set) 496(H/L set) 496(H/L) 483 476 458
 		[126707] = {
@@ -866,6 +879,7 @@ function mod:GetSpellData()
 			duration = 20,
 		}, -- STR
 		
+		--[[ removed procs
 		-- Darkmoon Card 476
 		[128985] = {
 			desc = "",
@@ -976,29 +990,29 @@ function mod:GetSpellData()
 			cd = 85,
 			duration = 25,
 		}, -- Searing Words
-		
-		-- 450 and others
+		]]
+		-- Alchemist's Stones
 		[60234] = {
 			desc = "",
 			type = "item",
-			item = {75274},
+			item = {75274, 122604, 122603, 122602, 122601, 109262},
 			cd = 55,
 			duration = 15,
-		}, -- Zen Alchemist Stone(Intellect)
+		}, -- Alchemist's Stone(Intellect)
 		[60233] = {
 			desc = "",
 			type = "item",
-			item = {75274},
+			item = {75274, 122604, 122603, 122602, 122601, 109262},
 			cd = 55,
 			duration = 15,
-		}, -- Zen Alchemist Stone(Agility)
+		}, -- Alchemist's Stone(Agility)
 		[60229] = {
 			desc = "",
 			type = "item",
-			item = {75274},
+			item = {75274, 122604, 122603, 122602, 122601, 109262},
 			cd = 55,
 			duration = 15,
-		}, -- Zen Alchemist Stone(Strength)
+		}, -- Alchemist's Stone(Strength)
 	
 	-- item set
 		-- type = "itemset"
@@ -1110,7 +1124,7 @@ function mod:GetSpellData()
 		[159675] = {
 			desc = "",
 			type = "enchant",
-			enchant = {5337},
+			enchant = {5337, 5355},
 			slot = 16,
 			ppm = 1.15,
 			duration = 20,
@@ -1119,16 +1133,17 @@ function mod:GetSpellData()
 		[159234] = {
 			desc = "",
 			type = "enchant",
-			enchant = {5330},
+			enchant = {5330, 5352},
 			slot = 16,
 			ppm = 2.5,
 			duration = 6,
+			refreshable = true,
 			cd = 0
 		}, -- Mark of the Thunderlord
 		[159676] = {
 			desc = "",
 			type = "enchant",
-			enchant = {5334},
+			enchant = {5334, 5356},
 			slot = 16,
 			ppm = 3,
 			duration = 6,
@@ -1137,7 +1152,7 @@ function mod:GetSpellData()
 		[159678] = {
 			desc = "",
 			type = "enchant",
-			enchant = {5335},
+			enchant = {5335, 5353},
 			slot = 16,
 			duration = 15,
 			cd = 40
@@ -1154,7 +1169,7 @@ function mod:GetSpellData()
 		[159679] = {
 			desc = "",
 			type = "enchant",
-			enchant = {5336},
+			enchant = {5336, 5354},
 			slot = 16,
 			duration = 12,
 			cd = 40
@@ -1184,7 +1199,7 @@ function mod:GetSpellData()
 			ppm = 1.55,
 		}, -- Megawatt Filament
 		
-		
+		--[[ removed procs
 		-- meta gems
 		-- type = "gem",
 		-- slot = 1 (head)  
@@ -1258,5 +1273,6 @@ function mod:GetSpellData()
 			duration = 4,
 			ppm = 1.61
 		}, -- Courageous Primal Diamond -- Shaman
+		]]
 	}
 end

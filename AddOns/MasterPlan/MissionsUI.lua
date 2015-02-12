@@ -358,6 +358,12 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 					end
 				end
 			end
+			local function FollowerButton_OnClick(self)
+				local id = self.info and self.info.followerID
+				if id and IsModifiedClick("CHATLINK") then
+					ChatEdit_InsertLink(C_Garrison.GetFollowerLink(id))
+				end
+			end
 			local function LevelPulse_OnStop(self)
 				self:GetParent().pulse:SetAlpha(0)
 			end
@@ -395,6 +401,7 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 				
 				b:SetScript("OnEnter", FollowerButton_OnEnter)
 				b:SetScript("OnLeave", GarrisonMissionPageFollowerFrame_OnLeave)
+				b:SetScript("OnClick", FollowerButton_OnClick)
 				b:Hide()
 				return b
 			end
@@ -428,6 +435,18 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 					GameTooltip:Hide()
 				end
 			end
+			local function OnClick(self)
+				local link
+				if not IsModifiedClick("CHATLINK") then
+				elseif self.itemID then
+					link = select(2, GetItemInfo(self.itemID))
+				elseif self.currencyID and self.currencyID > 0 then
+					link = GetCurrencyLink(self.currencyID)
+				end
+				if link then
+					ChatEdit_InsertLink(link)
+				end
+			end
 			local function SetIcon(self, texture)
 				self.Icon:SetTexture(texture)
 				self.Icon:SetTexCoord(4/64, 60/64, 4/64, 60/64)
@@ -446,6 +465,7 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 				i.Quantity:SetPoint("BOTTOMRIGHT", -3, 4)
 				i:SetScript("OnEnter", OnEnter)
 				i:SetScript("OnLeave", OnLeave)
+				i:SetScript("OnClick", OnClick)
 				self[k], i.SetIcon = i, SetIcon
 				return i
 			end})
@@ -2050,9 +2070,39 @@ do -- interestMissionsHandle
 	end
 	local function Follower_OnClick(self)
 		if self.followerID then
-			GarrisonMissionFrame.selectedFollower = self.followerID
-			GarrisonFollowerPage_ShowFollower(GarrisonMissionFrame.FollowerTab, self.followerID)
+			local fid = self.followerID
+			GarrisonMissionFrame.selectedFollower = fid
+			GarrisonFollowerPage_ShowFollower(GarrisonMissionFrame.FollowerTab, fid)
 			GarrisonMissionFrameTab2:Click()
+			local fl, idx, btn = GarrisonMissionFrameFollowers.followers do
+				for i=1,#fl do
+					if fl[i].followerID == fid then
+						idx = i
+						break
+					end
+				end
+				if idx then
+					local fl = GarrisonMissionFrameFollowers.followersList
+					for j=1,2 do
+						for i=1,#fl do
+							if fl[i] == idx then
+								btn = i
+								break
+							end
+						end
+						if btn then
+							break
+						else
+							GarrisonMissionFrameFollowers.SearchBox:SetText("")
+						end
+					end
+				end
+			end
+			if btn then
+				local v = 62*btn - 62
+				GarrisonMissionFrameFollowersListScrollFrameScrollBar:SetValue(v)
+				HybridScrollFrame_SetOffset(GarrisonMissionFrameFollowersListScrollFrame, v)
+			end
 		end
 	end
 	local function Follower_OnEnter(self, info)
@@ -2101,13 +2151,14 @@ do -- interestMissionsHandle
 		t, b.chance = b:CreateFontString(nil, "ARTWORK", "GameFontNormal"), t
 		t:SetPoint("TOPLEFT", b.title, "BOTTOMLEFT", 0, -2)
 		t, b.seen = {}, t
-		for i=1,6 do
+		for i=1,7 do
 			t[i] = CreateThreat(b)
 			t[i]:SetPoint("RIGHT", t[i-1], "LEFT", -10, 0)
 		end
 		t[1]:ClearAllPoints()
-		t[1]:SetPoint("TOPRIGHT", -150, -5)
+		t[1]:SetPoint("TOPRIGHT", -140, -5)
 		t[4]:SetPoint("TOPRIGHT", t[1], "BOTTOMRIGHT", -15.5, -3)
+		t[7]:SetPoint("RIGHT", t[3], "LEFT", -10, 0)
 		b.threats = t
 		
 		b.followers = {}
@@ -2133,6 +2184,7 @@ do -- interestMissionsHandle
 		[-2]={115280, 3},
 		[-3]={115510, 18},
 		[-4]={122484, 1},
+		[-5]={994, 1}
 	}
 	local GetHighmaulReward do
 		local r = {
@@ -2156,7 +2208,7 @@ do -- interestMissionsHandle
 	local unusedFollowers = CreateFrame("Button") do
 		unusedFollowers:SetSize(880, 38)
 		local t = unusedFollowers:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		t:SetText(L"Unused followers:")
+		t:SetText(L"Redundant followers:")
 		t:SetPoint("BOTTOM", unusedFollowers, "TOP", 0, 3)
 		for i=1,21 do
 			local t = CreateFollowerPortrait(unusedFollowers, 34, i)
@@ -2228,7 +2280,10 @@ do -- interestMissionsHandle
 			tb:SetShown(tid)
 			if tid then
 				SetThreat(tb, d[2], G.GetMechanicInfo(tid))
-				if best and best[6+i] then
+				local countered = best and best[6+i]
+				if countered == 0.5 then
+					tb.Border:SetVertexColor(1, 0.65, 0.1)
+				elseif countered then
 					tb.Border:SetVertexColor(0.2, 1, 0.2)
 				else
 					tb.Border:SetVertexColor(1, 0.2, 0.2)
@@ -2268,6 +2323,10 @@ do -- interestMissionsHandle
 			r.tooltipTitle, r.tooltipText, r.currencyID, r.itemID = GARRISON_REWARD_MONEY, GetMoneyString(ri[2]), 0
 			r.icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_02")
 			r.quantity:SetFormattedText("%d", ri[2] / 1e4)
+		elseif ri[1] < 2e4 then
+			r.currencyID, r.itemID, r.tooltipTitle, r.tooltipText = ri[1]
+			r.quantity:SetText(ri[2] > 1 and ri[2] or "")
+			r.icon:SetTexture((select(3,GetCurrencyInfo(ri[1]))))
 		else
 			r.itemID, r.currencyID, r.tooltipTitle, r.tooltipText = ri[1]
 			r.quantity:SetText(ri[2] > 1 and ri[2] or "")
@@ -2297,10 +2356,13 @@ do -- interestMissionsHandle
 		{413, 100, 3, 86000, -3, 27, 1, 2, 4, 6, 7, 8}, -- Pumping Iron
 		{411, 100, 3, 86000, -3, 29, 2, 3, 3, 6, 8, 9}, -- Rocks Fall. Everyone Dies.
 		{409, 100, 3, 86000, -3, 22, 1, 2, 3, 6, 9, 9}, -- The Great Train Robbery
-		{446, 660, 3, 28800, -4, 18, 1, 3, 6, 7, 9, 10}, -- Slagworks
-		{447, 660, 3, 28800, -4, 21, 1, 2, 3, 3, 6, 10}, -- Black Forge
-		{448, 660, 3, 28800, -4, 24, 4, 4, 6, 7, 7, 8}, -- Iron Assembly
-		{449, 660, 3, 28800, -4, 11, 1, 2, 3, 6, 9, 10}, -- Blackhand's Crucible
+		{408, 100, 3, 86000, -3, 11, 1, 2, 3, 6, 7, 10}, -- The Pits
+		{358, 100, 3, 36000, -5, 22, 2, 3, 6}, -- Drov the Ruiner
+		{359, 100, 3, 36000, -5, 21, 1, 3, 7}, -- Rukhmar
+		{446, 660, 3, 28800, -4, 18, 1, 2, 3, 6, 7, 9, 10}, -- Slagworks
+		{447, 660, 3, 28800, -4, 21, 1, 2, 3, 3, 6, 8, 10}, -- Black Forge
+		{448, 660, 3, 28800, -4, 24, 3, 4, 4, 6, 7, 7, 8}, -- Iron Assembly
+		{449, 660, 3, 28800, -4, 11, 1, 2, 3, 6, 8, 9, 10}, -- Blackhand's Crucible
 	}, {unused={}}
 	interestMissionsHandle = core:CreateHandle(CreateInterestMission, setData, 60)
 	interestUI:SetScript("OnShow", function()
@@ -2430,9 +2492,8 @@ function GarrisonMissionFrame_CheckCompleteMissions(onShow, ...)
 			T.UpdateMissionTabs()
 		end
 	end
-	if onShow and not activeUI:IsVisible() and GarrisonMissionFrame:IsShown() and #C_Garrison.GetCompleteMissions() > 0 then
-		GarrisonMissionFrame_SelectTab(1)
-		PanelTemplates_SetTab(GarrisonMissionFrame, 3)
+	if onShow and not activeUI:IsVisible() and #C_Garrison.GetCompleteMissions() > 0 then
+		missionList.activeTab:Click()
 	end
 end
 do -- periodic comleted missions check
@@ -2460,6 +2521,7 @@ function api:SetMissionsUI(tab)
 	availUI:SetShown(tab == 1)
 	activeUI:SetShown(tab == 3)
 	interestUI:SetShown(tab == 4)
+	GarrisonMissionFrame.MissionTab.MissionList.EmptyListString:SetAlpha(tab == 1 and 1 or 0)
 	if not activeUI:IsShown() then
 		if activeUI.completionState == "RUNNING" then
 			G.AbortCompleteMissions()

@@ -1,0 +1,14 @@
+tag v2.4.22
+241bec16881211ca59df1d5b2bed2faef487ab19
+funkydude <none>
+2015-02-01 15:08:19 +0000
+
+Tagging as v2.4.22
+
+
+--------------------
+
+funkydude:
+	- Re-add the nag to remove the old tracker fix addon that now causes errors.
+	- Buttons: Optimize button grabbing.
+	- Make auto zoom out work when clicking the zoom buttons also.

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1238, "DBM-Party-WoD", 4, 558)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12205 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
 mod:SetCreatureID(83612)
 mod:SetEncounterID(1754)
 mod:SetZone()
@@ -28,7 +28,7 @@ local specWarnCannonBarrage	= mod:NewSpecialWarningSpell(168929, nil, nil, nil, 
 local specWarnCannonBarrageE= mod:NewSpecialWarningEnd(168929)
 
 local timerRapidFireCD		= mod:NewNextTimer(12, 168398)
-local timerRapidFire		= mod:NewTargetTimer(5, 168398, nil, not mod:IsTank())
+local timerRapidFire		= mod:NewTargetTimer(5, 168398, nil, "-Tank")
 local timerGronSmashCD		= mod:NewCDTimer(70, 168227)--Timer is too variable, which is why i never enabled. every time i kill boss it's diff. today 2nd gron smash happened at 49 seconds, 21 seconds sooner than this timer
 
 local voiceRapidFire		= mod:NewVoice(168398)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(689, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 30 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 33 $"):sub(12, -3))
 mod:SetCreatureID(60009)--60781 Soul Fragment
 mod:SetEncounterID(1390)
 mod:SetZone()
@@ -29,23 +29,19 @@ mod:RegisterEventsInCombat(
 
 local warnPhase						= mod:NewAnnounce("WarnPhase", 1, "Interface\\Icons\\Spell_Nature_WispSplode")
 --Nature/Fist
-local warnLightningLash				= mod:NewStackAnnounce(131788, 3, nil, mod:IsTank())
+local warnLightningLash				= mod:NewStackAnnounce(131788, 3, nil, "Tank")
 local warnLightningFists			= mod:NewSpellAnnounce(116157, 3)
-local warnEpicenter					= mod:NewCountAnnounce(116018, 4)
 --Fire/Spear
-local warnFlamingSpear				= mod:NewStackAnnounce(116942, 3, nil, mod:IsTank())
+local warnFlamingSpear				= mod:NewStackAnnounce(116942, 3, nil, "Tank")
 local warnWildSpark					= mod:NewTargetCountAnnounce(116784, 4)
 local yellWildSpark					= mod:NewYell(116784)
-local warnDrawFlame					= mod:NewCountAnnounce(116711, 4)
-local warnWildfireInfusion			= mod:NewStackAnnounce(116821, 3, nil, mod:IsHealer())
+local warnWildfireInfusion			= mod:NewStackAnnounce(116821, 3, nil, "Healer")
 --Arcane/Staff
-local warnArcaneShock				= mod:NewStackAnnounce(131790, 3, nil, mod:IsTank())
+local warnArcaneShock				= mod:NewStackAnnounce(131790, 3, nil, "Tank")
 local warnArcaneResonance			= mod:NewTargetAnnounce(116417, 4)
-local warnArcaneVelocity			= mod:NewCountAnnounce(116364, 4)
 --Shadow/Shield (Heroic Only)
-local warnShadowBurn				= mod:NewStackAnnounce(131792, 3, nil, mod:IsTank())
+local warnShadowBurn				= mod:NewStackAnnounce(131792, 3, nil, "Tank")
 local warnChainsOfShadow			= mod:NewSpellAnnounce(118783, 2, nil, false)
-local warnSiphoningShield			= mod:NewCountAnnounce(117203, 4)
 --Tank Abilities
 local warnReversalLightningFists	= mod:NewTargetAnnounce(118302, 2)--this spell can interrupt Epicenter, so needs to warn.
 local warnNullBarrier				= mod:NewSpellAnnounce(115817, 1)
@@ -53,48 +49,48 @@ local warnNullBarrier				= mod:NewSpellAnnounce(115817, 1)
 --Nature/Fist
 local specWarnLightningLash			= mod:NewSpecialWarningStack(131788, nil, 2)
 local specWarnLightningLashOther	= mod:NewSpecialWarningTaunt(131788)
-local specWarnEpicenter				= mod:NewSpecialWarningRun(116018, nil, nil, nil, true)
+local specWarnEpicenter				= mod:NewSpecialWarningCount(116018, nil, nil, nil, 2)
 --Fire/Spear
 local specWarnFlamingSpear			= mod:NewSpecialWarningStack(116942, nil, 2)
 local specWarnFlamingSpearOther		= mod:NewSpecialWarningTaunt(116942)
 local specWarnWildSpark				= mod:NewSpecialWarningYou(116784)
 local specWarnWildfire				= mod:NewSpecialWarningMove(116793)
-local specWarnDrawFlame				= mod:NewSpecialWarningSpell(116711, nil, nil, nil, 2)
+local specWarnDrawFlame				= mod:NewSpecialWarningCount(116711, nil, nil, nil, 2)
 --Arcane/Staff
 local specWarnArcaneShock			= mod:NewSpecialWarningStack(131790, nil, 2)
 local specWarnArcaneShockOther		= mod:NewSpecialWarningTaunt(131790)
 local specWarnArcaneResonance		= mod:NewSpecialWarningMoveAway(116417)
 local yellArcaneResonance			= mod:NewYell(116417)
-local specWarnArcaneVelocity		= mod:NewSpecialWarningSpell(116364, nil, nil, nil, 2)
+local specWarnArcaneVelocity		= mod:NewSpecialWarningCount(116364, nil, nil, nil, 2)
 --Shadow/Shield (Heroic Only)
 local specWarnShadowBurn			= mod:NewSpecialWarningStack(131792, nil, 2)
 local specWarnShadowBurnOther		= mod:NewSpecialWarningTaunt(131792)
-local specWarnSiphoningShield		= mod:NewSpecialWarningSpell(117203)
+local specWarnSiphoningShield		= mod:NewSpecialWarningCount(117203)
 --Tank Abilities
 local specWarnBarrierNow			= mod:NewSpecialWarning("specWarnBarrierNow")--Because i'm so damn tired of tanks not having a clue how/when to use this in LFR
 local specWarnNullBarrier			= mod:NewSpecialWarningSpell(115817) -- Null Barrier is important all members, espcially Earth and Arcane Phase.
 
 --Nature/Fist
-local timerLightningLash			= mod:NewTargetTimer(20, 131788, nil, mod:IsTank())
-local timerLightningLashCD			= mod:NewCDTimer(9, 131788, nil, mod:IsTank())--9-20 second variation.
+local timerLightningLash			= mod:NewTargetTimer(20, 131788, nil, "Tank")
+local timerLightningLashCD			= mod:NewCDTimer(9, 131788, nil, "Tank")--9-20 second variation.
 local timerLightningFistsCD			= mod:NewCDTimer(14, 116157)
 local timerEpicenterCD				= mod:NewCDCountTimer(30, 116018)
 local timerEpicenter				= mod:NewBuffActiveTimer(10, 116018)
 --Fire/Spear
-local timerFlamingSpear				= mod:NewTargetTimer(20, 116942, nil, mod:IsTank())
-local timerFlamingSpearCD			= mod:NewCDTimer(9, 116942, nil, mod:IsTank())--8-11second variation, usually 10 though.
+local timerFlamingSpear				= mod:NewTargetTimer(20, 116942, nil, "Tank")
+local timerFlamingSpearCD			= mod:NewCDTimer(9, 116942, nil, "Tank")--8-11second variation, usually 10 though.
 local timerWildSpark				= mod:NewTargetTimer(5, 116784)
 local timerDrawFlame				= mod:NewBuffActiveTimer(6, 116711)
 local timerDrawFlameCD				= mod:NewNextCountTimer(30, 116711)--30 seconds after last ended.
 --Arcane/Staff
-local timerArcaneShock				= mod:NewTargetTimer(20, 131790, nil, mod:IsTank())
-local timerArcaneShockCD			= mod:NewCDTimer(9, 131790, nil, mod:IsTank())--not comfirmed
+local timerArcaneShock				= mod:NewTargetTimer(20, 131790, nil, "Tank")
+local timerArcaneShockCD			= mod:NewCDTimer(9, 131790, nil, "Tank")--not comfirmed
 local timerArcaneResonanceCD		= mod:NewCDTimer(15.5, 116417)
 local timerArcaneVelocityCD			= mod:NewCDCountTimer(18, 116364)--18 seconds after last ended.
 local timerArcaneVelocity			= mod:NewBuffActiveTimer(8, 116364)
 --Shadow/Shield (Heroic Only)
-local timerShadowBurn				= mod:NewTargetTimer(20, 131792, nil, mod:IsTank())
-local timerShadowBurnCD				= mod:NewCDTimer(9, 131792, nil, mod:IsTank())
+local timerShadowBurn				= mod:NewTargetTimer(20, 131792, nil, "Tank")
+local timerShadowBurnCD				= mod:NewCDTimer(9, 131792, nil, "Tank")
 local timerChainsOfShadowCD			= mod:NewCDTimer(6, 118783, nil, false)--6-10sec variation noted
 local timerSiphoningShieldCD		= mod:NewCDCountTimer(35, 117203)--35-38sec variation noted
 --Tank Abilities
@@ -104,7 +100,7 @@ local timerNullBarrierCD			= mod:NewCDTimer(55, 115817)
 
 mod:AddBoolOption("SetIconOnWS", true)
 mod:AddBoolOption("SetIconOnAR", true)
-mod:AddBoolOption("RangeFrame", mod:IsRanged())
+mod:AddBoolOption("RangeFrame", "Ranged")
 
 local phase = 0
 local arIcon = 8
@@ -174,9 +170,8 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 116711 then
 		sparkCount = 0
 		specialCount = specialCount + 1
-		warnDrawFlame:Show(specialCount)
 		timerDrawFlame:Start()
-		specWarnDrawFlame:Show()
+		specWarnDrawFlame:Show(specialCount)
 		if UnitBuff(GetSpellInfo(115811), "player") and self:IsDifficulty("lfr25") then
 			specWarnBarrierNow:Show()
 		end
@@ -197,8 +192,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 116364 then
 		specialCount = specialCount + 1
-		warnArcaneVelocity:Show(specialCount)
-		specWarnArcaneVelocity:Show()
+		specWarnArcaneVelocity:Show(specialCount)
 		timerArcaneVelocity:Start()
 		if UnitBuff(GetSpellInfo(115811), "player") and self:IsDifficulty("lfr25") then
 			specWarnBarrierNow:Show()
@@ -291,8 +285,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 116018 then
 		specialCount = specialCount + 1
-		warnEpicenter:Show(specialCount)
-		specWarnEpicenter:Show()
+		specWarnEpicenter:Show(specialCount)
 		timerEpicenter:Start()
 		timerEpicenterCD:Start(nil, specialCount + 1)
 		if UnitBuff(GetSpellInfo(115811), "player") and self:IsDifficulty("lfr25") then
@@ -387,8 +380,7 @@ end
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 117203 then--Siphoning Shield
 		specialCount = specialCount + 1
-		warnSiphoningShield:Show(specialCount)
-		specWarnSiphoningShield:Show()
+		specWarnSiphoningShield:Show(specialCount)
 		timerSiphoningShieldCD:Start(nil, specialCount + 1)
 	elseif spellId == 121631 and self:AntiSpam(2, 2) then--Draw Essence.
 		--Best place to cancel timers, vs duplicating cancel code in all 4 yells above.

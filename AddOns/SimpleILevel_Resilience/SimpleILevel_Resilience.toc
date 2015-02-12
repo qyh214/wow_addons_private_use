@@ -1,5 +1,5 @@
 ## Interface: 60000
-## X-Curse-Packaged-Version: 3.2.14
+## X-Curse-Packaged-Version: 3.2.15
 ## X-Curse-Project-Name: Simple iLevel
 ## X-Curse-Project-ID: simple-ilevel
 ## X-Curse-Repository-ID: wow/simple-ilevel/mainline
@@ -29,7 +29,7 @@
 ## Notes-zhTW: 於提示欄顯示其他玩家裝備幾件PvP裝備
 
 ## Author: Scotepi
-## Version: 3.2.14
+## Version: 3.2.15
 ## Dependencies: SimpleILevel
 ## SavedVariables: SIL_ResilSettings
 ## LoadOnDemand: 1

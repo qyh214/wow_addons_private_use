@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(708, "DBM-Party-MoP", 5, 321)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 21 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(61442, 61444, 61445)--61442 (Kuai the Brute), 61453 (Mu'Shiba, Kuai's Add), 61444 (Ming the Cunning), 61445 (Haiyan the Unstoppable)
 mod:SetEncounterID(1442)
 mod:SetZone()
@@ -25,10 +25,10 @@ local warnWhirlingDervish	= mod:NewSpellAnnounce(119981, 3)--Ming's Attack
 local warnTraumaticBlow		= mod:NewTargetAnnounce(123655, 3)--Haiyan's Attack
 local warnConflag			= mod:NewTargetAnnounce(120201, 3)--Haiyan's Attack
 
-local specWarnRavage		= mod:NewSpecialWarningTarget(119946, mod:IsHealer())
-local specWarnShockwave		= mod:NewSpecialWarningMove(119922, mod:IsTank())--Not sure if he always faced it toward tank, or did it blackhorn style, if it's blackhorn style this needs to be changed to a targetscan if possible
+local specWarnRavage		= mod:NewSpecialWarningTarget(119946, "Healer")
+local specWarnShockwave		= mod:NewSpecialWarningMove(119922, "Tank")--Not sure if he always faced it toward tank, or did it blackhorn style, if it's blackhorn style this needs to be changed to a targetscan if possible
 local specWarnLightningBolt	= mod:NewSpecialWarningInterrupt(123654, false)
-local specWarnConflag		= mod:NewSpecialWarningTarget(120201, mod:IsHealer())
+local specWarnConflag		= mod:NewSpecialWarningTarget(120201, "Healer")
 
 local timerRavage			= mod:NewTargetTimer(11, 119946)
 local timerRavageCD			= mod:NewCDTimer(20, 119946)

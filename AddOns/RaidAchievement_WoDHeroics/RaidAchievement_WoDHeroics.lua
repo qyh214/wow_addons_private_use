@@ -375,7 +375,7 @@ end
 if GetCurrentMapAreaID()==995 then
 
 
-if arg2=="SPELL_CAST_START" and arg10==154899 and arg4 then
+if arg2=="SPELL_CAST_START" and arg10==154899 then
 	if rawodonecounter1==nil then
 		rawodonecounter1=0
 	end

@@ -388,9 +388,13 @@ function TipTypeFuncs:achievement(link,linkToken,id,guid,completed,month,day,yea
 					r2, g2, b2 = unpack(criteriaList[i + 1].done and COLOR_COMPLETE or COLOR_INCOMPLETE);
 				end
 				if (not isPlayer) then
-					myDone1 = select(3,GetAchievementCriteriaInfo(id,i));
+					local success, _, _, completed = pcall(GetAchievementCriteriaInfo,id,i);
+					myDone1 = (success and completed);
+					--myDone1 = select(3,GetAchievementCriteriaInfo(id,i));
 					if (i + 1 <= #criteriaList) then
-						myDone2 = select(3,GetAchievementCriteriaInfo(id,i + 1));
+						local success, _, _, completed = pcall(GetAchievementCriteriaInfo,id,i + 1);
+						myDone2 = (success and completed); 
+						--myDone2 = select(3,GetAchievementCriteriaInfo(id,i + 1));
 					end
 				end
 				myDone1 = (isPlayer and "" or BoolCol(myDone1).."*|r")..criteriaList[i].label;

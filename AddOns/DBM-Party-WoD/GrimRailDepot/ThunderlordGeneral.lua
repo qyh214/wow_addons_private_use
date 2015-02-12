@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1133, "DBM-Party-WoD", 3, 536)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
 mod:SetCreatureID(80005)
 mod:SetEncounterID(1736)
 mod:SetZone()
@@ -23,7 +23,7 @@ local specWarnFreezingSnare		= mod:NewSpecialWarningYou(162066)
 local specWarnFreezingSnareNear	= mod:NewSpecialWarningClose(162066)
 local yellFreezingSnare			= mod:NewYell(162066)
 local specWarnDiffusedEnergy	= mod:NewSpecialWarningMove(161588)
-local specWarnSpinningSpear		= mod:NewSpecialWarningDodge("OptionVersion2", 162058, mod:IsTank())
+local specWarnSpinningSpear		= mod:NewSpecialWarningDodge("OptionVersion2", 162058, "Tank")
 local specWarnMark				= mod:NewSpecialWarningMoveAway(163447)
 local yellMark					= mod:NewYell(163447)
 

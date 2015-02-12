@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HighmaulTrash", "DBM-Highmaul")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12365 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12576 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -51,7 +51,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnArcaneVol:CombinedShow(1, args.destName)
 		if args:IsPlayer() then
 			specWarnArcaneVol:Show()
-			if not self:IsLFR() then
+			if not self:IsLFR() and self:AntiSpam(3, 1) then
 				yellArcaneVol:Yell()
 			end
 		end

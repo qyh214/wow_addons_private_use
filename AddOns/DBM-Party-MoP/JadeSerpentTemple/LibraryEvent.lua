@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(664, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(59051, 59726, 58826)--59051 (Strife), 59726 (Anger), 58826 (Zao Sunseeker). This event has a random chance to be Zao (solo) or Anger and Strife (together)
 mod:SetEncounterID(1417)
 mod:SetZone()
@@ -23,7 +23,7 @@ local warnIntensity			= mod:NewStackAnnounce(113315, 3)
 local warnUltimatePower		= mod:NewTargetAnnounce(113309, 4)
 
 local specWarnIntensity		= mod:NewSpecialWarning("SpecWarnIntensity")
-local specWarnUltimatePower	= mod:NewSpecialWarningTarget(113309, nil, nil, nil, true)
+local specWarnUltimatePower	= mod:NewSpecialWarningTarget(113309, nil, nil, nil, 2)
 
 local timerUltimatePower	= mod:NewTargetTimer(15, 113309)
 

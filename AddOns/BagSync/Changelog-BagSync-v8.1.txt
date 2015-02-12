@@ -1,0 +1,14 @@
+tag v8.1
+da10225fcd2a9729aa222ff10bfe61b9caf488cf
+Xruptor <xruptor@manaflux.com>
+2015-01-16 20:01:07 -0600
+
+v8.1
+
+
+--------------------
+
+Xruptor:
+	- -Merge pull request #17 from Blazeflack @ GitHub.com Fix for issue #16: Bank not synced when exiting game
+Steffen:
+	- Fix for issue #16: Bank not synced when exiting game

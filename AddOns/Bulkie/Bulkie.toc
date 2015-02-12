@@ -1,0 +1,6 @@
+## Interface: 60000
+## Title: Bulkie
+## Author: FrostWyrm/tlemburg/Lucronax
+## Version: v1.0.1
+
+bulkie.lua

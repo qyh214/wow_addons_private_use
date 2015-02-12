@@ -16,7 +16,12 @@ function SpeakinSpell:Advertise(Channel, msgtarget)
 	-- advertise into a channel for the kind of group you are in
 	-- unless a channel has been specified
 	if Channel == "" or Channel == nil then
-		Channel = SpeakinSpell.DEFAULTS.AD_CHANNELS[ self:GetScenarioKey() ]
+		-- check for instance and change channel to INSTANCE_CHAT if true
+		if self:CheckForInstance() then 
+			Channel = "INSTANCE_CHAT"
+		else
+			Channel = SpeakinSpell.DEFAULTS.AD_CHANNELS[ self:GetScenarioKey() ]
+		end
 	end
 	
 	-- select a random ad that was not used last time
@@ -38,12 +43,13 @@ function SpeakinSpell:Advertise(Channel, msgtarget)
 	msg = self:FormatSubs(msg, DetectedEvent)
 	
 	-- speak in chat
-   -- add a check for instance and change channel to INSTANCE_CHAT if true
-   
-   if self:CheckForInstance()==true then 
-      Channel="INSTANCE_CHAT"
-   end
-   
-	SendChatMessage( SpeakinSpell.URL.." for "..SpeakinSpell.WOWVERSION , Channel, nil, msgtarget)	
-	SendChatMessage( msg,              Channel, nil, msgtarget)
+
+	-- Search curse.com for "SpeakinSpell"
+	SendChatMessage( SpeakinSpell.URL, Channel, nil, msgtarget)
+	-- "Version 6.0.3.03 for WoW 6.0.3" taking version info from the TOC file
+	-- TODO: this should be localized, using substitutions to support flexible word order
+	SendChatMessage( GAME_VERSION_LABEL.." "..SpeakinSpell.CURRENT_VERSION.." for WoW "..SpeakinSpell.WOWVERSION , Channel, nil, msgtarget)	
+	-- Random witty phrase from Locales\Ads-xxXX.lua
+	-- "SpeakinSpell: the cure for the boring pug where nobody ever says anything!"
+	SendChatMessage( msg, Channel, nil, msgtarget)
 end

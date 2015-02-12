@@ -1,0 +1,14 @@
+tag 6.0.3.5
+64469142390180f5c609234f248d0f29e3908faf
+James D. Callahan III <jcallahan@curse.com>
+2015-01-23 10:09:26 -0600
+
+
+
+--------------------
+
+James D. Callahan III:
+	- Minor cleanup and parameter fix for target button's OnEvent script. Ticket #85
+	- Semicolon removal.
+SLOKnightfall:
+	- Possible fix for alerts not triggering.

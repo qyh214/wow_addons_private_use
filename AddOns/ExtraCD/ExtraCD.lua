@@ -8,7 +8,7 @@ local mod = ExtraCD
 local tinsert, tremove = table.insert, table.remove
 local tonumber, tostring = tonumber, tostring
 local ECD_TEXT = "ExtraCD"
-local ECD_VERSION = "1.3.4"
+local ECD_VERSION = "1.3.5"
 local ECD_AUTHOR = "superk"
 local active = {}
 local equippedItems = {}
@@ -93,6 +93,8 @@ mod.RELATED_SLOT = {
 	[15] = "BACK",
 	[16] = "MAINHAND",
 	[18] = "RANGED",
+	[11] = "RING1", 
+	[12] = "RING2",
 }
 
 mod.EVENT = {
@@ -360,7 +362,7 @@ function mod:ScanPlayerICDs()
 							--local icon = GetItemIcon(tonumber(itemID))
 							local _, _, icon = GetSpellInfo(tonumber(k))
 							if v.ppm and not self.db.showRPPM then break end
-							tinsert (active, {cd = v.cd or 0, ppm = v.ppm, icon = icon, id = tonumber(k), type = "enchant", slot = v.slot, duration = v.duration or 0})
+							tinsert (active, {cd = v.cd or 0, ppm = v.ppm, icon = icon, id = tonumber(k), type = "enchant", slot = v.slot, duration = v.duration or 0, refreshable = v.refreshable})
 							break
 						end
 					end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(829, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(68905, 68904)--Lu'lin 68905, Suen 68904
 mod:SetEncounterID(1560)
 mod:SetZone()
@@ -33,11 +33,11 @@ mod:SetBossHealthInfo(
 local warnNight							= mod:NewAnnounce("warnNight", 2, 108558)
 local warnCrashingStarSoon				= mod:NewSoonAnnounce(137129, 3)
 local warnTearsOfSun					= mod:NewSpellAnnounce(137404, 3)
-local warnBeastOfNightmares				= mod:NewTargetAnnounce(137375, 3, nil, mod:IsTank() or mod:IsHealer())
+local warnBeastOfNightmares				= mod:NewTargetAnnounce(137375, 3, nil, "Tank|Healer")
 --Light
 local warnDay							= mod:NewAnnounce("warnDay", 2, 122789)
 local warnLightOfDay					= mod:NewSpellAnnounce(137403, 2, nil, false)--Spammy, but leave it as an option at least
-local warnFanOfFlames					= mod:NewStackAnnounce(137408, 2, nil, mod:IsTank() or mod:IsHealer())
+local warnFanOfFlames					= mod:NewStackAnnounce(137408, 2, nil, "Tank|Healer")
 local warnFlamesOfPassion				= mod:NewSpellAnnounce(137414, 2)--Todo, check target scanning
 local warnIceComet						= mod:NewSpellAnnounce(137419, 1)
 local warnNuclearInferno				= mod:NewCastAnnounce(137491, 4, 4)--Heroic
@@ -52,8 +52,8 @@ local warnTidalForce					= mod:NewCastAnnounce(137531, 3, 2)
 --Darkness
 local specWarnCosmicBarrage				= mod:NewSpecialWarningCount(136752, true, nil, nil, 2)--better as a cosmic barrage warning with cast bar being stars. Also good as count warning for cooldowns
 local specWarnTearsOfSun				= mod:NewSpecialWarningSpell(137404, nil, nil, nil, 2)
-local specWarnBeastOfNightmares			= mod:NewSpecialWarningTarget(137375, mod:IsTank() or mod:IsHealer())
-local specWarnCorruptedHealing			= mod:NewSpecialWarningStack(137360, mod:IsHealer())
+local specWarnBeastOfNightmares			= mod:NewSpecialWarningTarget(137375, "Tank|Healer")
+local specWarnCorruptedHealing			= mod:NewSpecialWarningStack(137360, "Healer")
 --Light
 local specWarnFanOfFlames				= mod:NewSpecialWarningStack(137408, nil, 2)
 local specWarnFanOfFlamesOther			= mod:NewSpecialWarningTaunt(137408)
@@ -69,12 +69,12 @@ local timerCrashingStar					= mod:NewNextTimer(4.5, 137129)
 local timerCosmicBarrageCD				= mod:NewCDCountTimer(22, 136752)--VERY IMPORTANT on heroic, do not remove. many heroic strat ignore adds and group up BEFORE day phase starts so adds come to middle at phase start. Variation is unimportant, timer isn't to see when next cast is, it's to show safety window for when no cast will happen
 local timerTearsOfTheSunCD				= mod:NewCDTimer(41, 137404)
 local timerTearsOfTheSun				= mod:NewBuffActiveTimer(10, 137404)
-local timerBeastOfNightmaresCD			= mod:NewCDTimer(51, 137375, nil, mod:IsTank() or mod:IsHealer())
+local timerBeastOfNightmaresCD			= mod:NewCDTimer(51, 137375, nil, "Tank|Healer")
 --Light
 local timerDuskCD						= mod:NewTimer(360, "timerDuskCD", "Interface\\Icons\\achievement_zone_easternplaguelands")--it seems always 360s after combat entered. (day timer is variables, so not reliable to day phase)
 local timerLightOfDayCD					= mod:NewCDTimer(6, 137403, nil, false)--Trackable in day phase using UNIT event since boss1 can be used in this phase. Might be useful for heroic to not run behind in shadows too early preparing for a special
-local timerFanOfFlamesCD				= mod:NewCDTimer(12, 137408, nil, mod:IsTank() or mod:IsHealer())
-local timerFanOfFlames					= mod:NewTargetTimer(30, 137408, nil, mod:IsTank())
+local timerFanOfFlamesCD				= mod:NewCDTimer(12, 137408, nil, "Tank|Healer")
+local timerFanOfFlames					= mod:NewTargetTimer(30, 137408, nil, "Tank")
 --local timerFlamesOfPassionCD			= mod:NewCDTimer(30, 137414)--Also very high variation. (31~65). Can be confuse, no use.
 local timerIceCometCD					= mod:NewCDTimer(20.5, 137419)--Every 20.5-25 seconds on normal. On 10 heroic, variables 20.5~41s. 25 heroic vary 20.5-27.
 local timerNuclearInferno				= mod:NewBuffActiveTimer(12, 137491)

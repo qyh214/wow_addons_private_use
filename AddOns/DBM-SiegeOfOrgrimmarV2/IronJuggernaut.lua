@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(864, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 30 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 33 $"):sub(12, -3))
 mod:SetCreatureID(71466)
 mod:SetEncounterID(1600)
 mod:SetZone()
@@ -27,21 +27,17 @@ local warnBorerDrill			= mod:NewSpellAnnounce(144218, 4)
 local warnLaserBurn				= mod:NewTargetAnnounce(144459, 2, nil, false)
 local warnMortarCannon			= mod:NewSpellAnnounce(144316, 3, nil, false)--Could not get target scanning working.
 local warnCrawlerMine			= mod:NewSpellAnnounce(144673, 3)
-local warnIgniteArmor			= mod:NewStackAnnounce(144467, 2, nil, mod:IsTank())--Seems redundant to count debuffs and warn for breath, so just do debuffs
+local warnIgniteArmor			= mod:NewStackAnnounce(144467, 2, nil, "Tank")--Seems redundant to count debuffs and warn for breath, so just do debuffs
 local warnRicochet				= mod:NewSpellAnnounce(144356, 3, 144327)
 --Siege Mode
-local warnSeismicActivity		= mod:NewSpellAnnounce(144483, 2)--A mere activation of phase
 local warnExplosiveTar			= mod:NewSpellAnnounce(144492, 3)
-local warnShockPulse			= mod:NewCountAnnounce(144485, 4)
 local warnCutterLaser			= mod:NewTargetAnnounce(146325, 4)--Not holding my breath this shows in combat log.
-local warnMortarBarrage			= mod:NewSpellAnnounce(144555, 4)--Heroic
 
 --Assault Mode
 local specWarnIgniteArmor		= mod:NewSpecialWarningStack(144467, nil, 3)
 local specWarnIgniteArmorOther	= mod:NewSpecialWarningTaunt(144467)
 local specWarnBorerDrill		= mod:NewSpecialWarningSpell(144218, false, nil, nil, 2)
 local specWarnBorerDrillMove	= mod:NewSpecialWarningMove(144218)
-local specWarnRicochet			= mod:NewSpecialWarningSpell(144356, false, nil, nil, 3)
 --Siege Mode
 local specWarnSeismicActivity	= mod:NewSpecialWarningSpell(144483, nil, nil, nil, 2)
 local specWarnShockPulse		= mod:NewSpecialWarningCount(144485, nil, nil, nil, 2)
@@ -52,9 +48,9 @@ local specWarnMortarBarrage		= mod:NewSpecialWarningSpell(144555, nil, nil, nil,
 
 local timerDemolisherCanonCD	= mod:NewCDTimer(8.5, 144154, nil, false)--Spammy. off by default
 --Assault Mode
-local timerAssaultModeCD		= mod:NewNextTimer(62, 141395, nil, "timerAssaultModeCD")--141395 is correct timer text but it's wrong spellid, custom option text for real timer description
-local timerIgniteArmor			= mod:NewTargetTimer(30, 144467, nil, mod:IsTank() or mod:IsHealer())
-local timerIgniteArmorCD		= mod:NewCDTimer(10, 144467, nil, mod:IsTank())
+local timerAssaultModeCD		= mod:NewNextTimer(62, 141395, nil, nil, "timerAssaultModeCD")--141395 is correct timer text but it's wrong spellid, custom option text for real timer description
+local timerIgniteArmor			= mod:NewTargetTimer(30, 144467, nil, "Tank|Healer")
+local timerIgniteArmorCD		= mod:NewCDTimer(10, 144467, nil, "Tank")
 local timerLaserBurnCD			= mod:NewCDTimer(11.5, 144459, nil, false)--Also off by default(bar spam)
 local timerBorerDrillCD			= mod:NewCDTimer(17, 144218)
 local timerCrawlerMineCD		= mod:NewCDTimer(30, 144673)
@@ -68,7 +64,7 @@ local timerMortarBarrageCD		= mod:NewNextTimer(30, 144555)
 
 local berserkTimer				= mod:NewBerserkTimer(600)
 
-mod:AddRangeFrameOption(6, 144154, mod:IsRanged())
+mod:AddRangeFrameOption(6, 144154, "Ranged")
 
 --Important, needs recover
 mod.vb.shockCount = 0
@@ -112,7 +108,6 @@ function mod:SPELL_CAST_START(args)
 		timerCrawlerMineCD:Cancel()
 		timerBorerDrillCD:Cancel()
 		timerRicochetCD:Cancel()
-		warnSeismicActivity:Show()
 		specWarnSeismicActivity:Show()
 		timerExplosiveTarCD:Start(7)
 		timerShockPulseCD:Start(nil, 1)
@@ -122,7 +117,6 @@ function mod:SPELL_CAST_START(args)
 		timerAssaultModeCD:Start()
 	elseif spellId == 144485 then
 		self.vb.shockCount = self.vb.shockCount + 1
-		warnShockPulse:Show(self.vb.shockCount)
 		specWarnShockPulse:Show(self.vb.shockCount)
 		if self.vb.shockCount < 3 then
 			timerShockPulseCD:Start(nil, self.vb.shockCount+1)
@@ -220,7 +214,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			timerRicochetCD:Start(22)
 		end--]]--TODO, verify consistency, as 22 seems odd and could have just been a delayed cast.
 	elseif spellId == 144555 then
-		warnMortarBarrage:Show()
 		specWarnMortarBarrage:Show()
 		if not self.vb.firstMortar then
 			self.vb.firstMortar = true
@@ -228,7 +221,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		end
 	elseif spellId == 144356 then
 		warnRicochet:Show()
-		specWarnRicochet:Show()
 		timerRicochetCD:Start()
 	end
 end

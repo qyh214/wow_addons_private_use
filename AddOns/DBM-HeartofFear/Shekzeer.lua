@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(743, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 30 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 33 $"):sub(12, -3))
 mod:SetCreatureID(62837)--62847 Dissonance Field, 63591 Kor'thik Reaver, 63589 Set'thik Windblade
 mod:SetEncounterID(1501)
 mod:SetZone()
@@ -20,20 +20,18 @@ mod:RegisterEventsInCombat(
 )
 
 local warnScreech				= mod:NewSpellAnnounce(123735, 3, nil, false)--Not useful.
-local warnCryOfTerror			= mod:NewTargetAnnounce(123788, 3, nil, mod:IsRanged())
-local warnEyes					= mod:NewStackAnnounce(123707, 2, nil, mod:IsTank() or mod:IsHealer())
+local warnCryOfTerror			= mod:NewTargetAnnounce(123788, 3, nil, "Ranged")
+local warnEyes					= mod:NewStackAnnounce(123707, 2, nil, "Tank|Healer")
 local warnDissonanceField		= mod:NewCountAnnounce(123255, 3)
 local warnSonicDischarge		= mod:NewSoonAnnounce(123504, 4)--Iffy reliability but better then nothing i suppose.
-local warnRetreat				= mod:NewSpellAnnounce(125098, 4)
 local warnAmberTrap				= mod:NewAnnounce("warnAmberTrap", 2, 125826)
 local warnTrapped				= mod:NewTargetAnnounce(125822, 1)--Trap used
 local warnStickyResin			= mod:NewTargetAnnounce(124097, 3)
 local warnFixate				= mod:NewTargetAnnounce(125390, 3, nil, false)--Spammy
-local warnAdvance				= mod:NewSpellAnnounce(125304, 4)
 local warnVisions				= mod:NewTargetAnnounce(124862, 4)--Visions of Demise
 local warnPhase2				= mod:NewPhaseAnnounce(2)
-local warnCalamity				= mod:NewSpellAnnounce(124845, 3, nil, mod:IsHealer())
-local warnConsumingTerror		= mod:NewSpellAnnounce(124849, 4, nil, not mod:IsTank())
+local warnCalamity				= mod:NewSpellAnnounce(124845, 3, nil, "Healer")
+local warnConsumingTerror		= mod:NewSpellAnnounce(124849, 4, nil, "-Tank")
 local warnHeartOfFear			= mod:NewTargetAnnounce(125638, 4)
 
 local specwarnSonicDischarge	= mod:NewSpecialWarningSpell(123504, nil, nil, nil, true)
@@ -45,33 +43,33 @@ local specwarnAmberTrap			= mod:NewSpecialWarningSpell(125826, false)
 local specwarnStickyResin		= mod:NewSpecialWarningYou(124097)
 local yellStickyResin			= mod:NewYell(124097, nil, false)
 local specwarnFixate			= mod:NewSpecialWarningYou(125390)
-local specWarnDispatch			= mod:NewSpecialWarningInterrupt(124077, mod:IsMelee())
+local specWarnDispatch			= mod:NewSpecialWarningInterrupt(124077, "Melee")
 local specWarnAdvance			= mod:NewSpecialWarningSpell(125304)
 local specwarnVisions			= mod:NewSpecialWarningYou(124862)
 local yellVisions				= mod:NewYell(124862, nil, false)
-local specWarnConsumingTerror	= mod:NewSpecialWarningSpell(124849, not mod:IsTank())
+local specWarnConsumingTerror	= mod:NewSpecialWarningSpell(124849, "-Tank")
 local specWarnHeartOfFear		= mod:NewSpecialWarningYou(125638)
 local yellHeartOfFear			= mod:NewYell(125638)
 
 local timerScreechCD			= mod:NewNextTimer(7, 123735, nil, false)
-local timerCryOfTerror			= mod:NewTargetTimer(20, 123788, nil, mod:IsHealer())
-local timerCryOfTerrorCD		= mod:NewCDTimer(25, 123788, nil, mod:IsRanged())
-local timerEyes					= mod:NewTargetTimer(30, 123707, nil, mod:IsTank())
-local timerEyesCD				= mod:NewNextTimer(11, 123707, nil, mod:IsTank())
+local timerCryOfTerror			= mod:NewTargetTimer(20, 123788, nil, "Healer")
+local timerCryOfTerrorCD		= mod:NewCDTimer(25, 123788, nil, "Ranged")
+local timerEyes					= mod:NewTargetTimer(30, 123707, nil, "Tank")
+local timerEyesCD				= mod:NewNextTimer(11, 123707, nil, "Tank")
 local timerDissonanceFieldCD	= mod:NewNextCountTimer(65, 123255)
 local timerPhase1				= mod:NewNextTimer(156.4, 125304)--156.4 til ENGAGE fires and boss is out, 157.4 until "advance" fires though. But 156.4 is more accurate timer
 local timerDispatchCD			= mod:NewCDTimer(12, 124077)--Every 12-15 seconds on 25 man. on 10 man i've heard it's every 20ish?
 local timerPhase2				= mod:NewNextTimer(151, 125098)--152 until trigger, but probalby 150 or 151 til adds are targetable.
-local timerCalamityCD			= mod:NewCDTimer(6, 124845, nil, mod:IsHealer())
+local timerCalamityCD			= mod:NewCDTimer(6, 124845, nil, "Healer")
 local timerVisionsCD			= mod:NewCDTimer(19.5, 124862)
-local timerConsumingTerrorCD	= mod:NewCDTimer(32, 124849, nil, not mod:IsTank())
+local timerConsumingTerrorCD	= mod:NewCDTimer(32, 124849, nil, "-Tank")
 local timerCorruptedDissonance	= mod:NewNextTimer(20, 126122)--10 seconds after first and 20 seconds after
 local timerHeartOfFear			= mod:NewBuffFadesTimer(6, 125638)
 
 local berserkTimer				= mod:NewBerserkTimer(900)
 
 mod:AddBoolOption("InfoFrame")--On by default because these do more then just melee, they interrupt spellcasting (bad for healers)
-mod:AddBoolOption("RangeFrame", mod:IsRanged())
+mod:AddBoolOption("RangeFrame", "Ranged")
 mod:AddBoolOption("StickyResinIcons", true)
 mod:AddBoolOption("HeartOfFearIcon", true)
 
@@ -296,7 +294,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		timerCryOfTerrorCD:Cancel()
 		timerDissonanceFieldCD:Cancel()
 		timerEyesCD:Cancel()
-		warnRetreat:Show()
 		specWarnRetreat:Show()
 		timerPhase1:Start()
 		if self.Options.InfoFrame then
@@ -309,7 +306,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	elseif spellId == 125304 then
 		fieldCount = 0
 		timerPhase1:Cancel()--If you kill everything it should end early.
-		warnAdvance:Show()
 		specWarnAdvance:Show()
 		timerDissonanceFieldCD:Start(20, 1)
 		timerPhase2:Start()--Assumed same as pull

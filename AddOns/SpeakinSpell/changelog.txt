@@ -1,4 +1,56 @@
 --------------
+6.0.3.06
+--------------
+
+
+Fixed yet another Lua error in the new "Name" vs "Name-Realm" logic
+
+
+--------------
+6.0.3.05 - beta
+--------------
+
+Fixed another Lua error in the new "Name" vs "Name-Realm" logic
+
+
+--------------
+6.0.3.04 - beta
+--------------
+
+Fixed another Lua error in the new "Name" vs "Name-Realm" logic
+
+Should now display "Name" instead of "Name-Realm" for all <target> and <caster> substitutions
+
+
+--------------
+6.0.3.03 - beta
+--------------
+
+Updated WoW version for "/ss ad" messages, 
+and the ads will not be forced into the /i chat channel if you specify another channel like "/ss ad /g"
+
+Fixed a syntax error in "Name" vs "Name-Realm" logic
+
+
+--------------
+6.0.3.02 - beta
+--------------
+
+Fixed syntax errors so it will load
+
+
+--------------
+6.0.3.01 - beta
+--------------
+
+Updated TOC file for WoW 6.x
+
+Fixed issues related to "Name" vs "Name-Realm"
+
+Updated supporting libraries
+
+
+--------------
 5.4.7.00
 --------------
 Fixed bug with the racial language selection.

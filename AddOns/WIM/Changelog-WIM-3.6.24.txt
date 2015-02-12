@@ -1,0 +1,40 @@
+------------------------------------------------------------------------
+r450 | mysticalos | 2015-02-02 00:54:49 +0000 (Mon, 02 Feb 2015) | 1 line
+Changed paths:
+   A /tags/3.6.24 (from /trunk:449)
+
+Tagging as 3.6.24
+------------------------------------------------------------------------
+r449 | mysticalos | 2015-02-02 00:50:43 +0000 (Mon, 02 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/ChangeLog.lua
+   M /trunk/WIM.lua
+
+Bump for wholib update
+------------------------------------------------------------------------
+r448 | mysticalos | 2015-01-16 01:17:50 +0000 (Fri, 16 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/Modules/History.lua
+
+oops, remove some of that debug
+------------------------------------------------------------------------
+r447 | mysticalos | 2015-01-16 00:22:51 +0000 (Fri, 16 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/Modules/History.lua
+
+More tweaks to work around blizzard bug with BNGetFriendInfoByID returning nil for all args, if user starts a realid conbo using BDA (not wow) while wow is open.
+------------------------------------------------------------------------
+r446 | mysticalos | 2015-01-10 10:04:21 +0000 (Sat, 10 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/Modules/History.lua
+
+If neither btag or toonname can be found, use UNKNOWN
+------------------------------------------------------------------------
+r444 | mysticalos | 2015-01-02 12:06:56 +0000 (Fri, 02 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/ChangeLog.lua
+   M /trunk/Sources/Options/CoreOptions.lua
+   M /trunk/WIM.lua
+
+Fixed more missing option bugs
+------------------------------------------------------------------------

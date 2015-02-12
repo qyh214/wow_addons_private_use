@@ -1,4 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="libs\Ace3\LibStub\LibStub.lua"/>
 	<Include file="libs\LibDeformat-3.0\lib.xml"/>
 	<Include file="libs\LibInit\LibInit.xml"/>
 </Ui>

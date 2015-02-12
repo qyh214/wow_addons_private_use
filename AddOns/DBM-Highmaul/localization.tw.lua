@@ -69,9 +69,21 @@ L:SetMiscLocalization({
 --------------------------
 L= DBM:GetModLocalization(1197)
 
+L:SetTimerLocalization({
+	timerNightTwistedCD		= "下一次夜狂信徒"
+})
+
+L:SetOptionLocalization({
+	GazeYellType		= "設定瘋狂之眼的大喊方式",
+	Countdown			= "倒數直到消失",
+	Stacks				= "堆疊層數",
+	timerNightTwistedCD	= "為下一次夜狂信徒顯示計時器"
+})
+
 L:SetMiscLocalization({
-	BrandedYell			= "%2$s中了烙印(%1$s)",
+	BrandedYell			= "烙印(%d層)%d碼",
 	GazeYell			= "凝視結束於%d秒內",
+	GazeYell2			= "%s中了凝視(%d)",
 	PlayerDebuffs		= "最接近的瘋狂之眼"
 })
 

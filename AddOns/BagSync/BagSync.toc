@@ -2,10 +2,10 @@
 ## Title: BagSync
 ## Notes: BagSync tracks your characters items and displays it within tooltips.
 ## Author: Xruptor
-## Version: 8.0
+## Version: 8.1
 ## OptionalDeps: tekDebug
 ## SavedVariables: BagSyncDB, BagSyncOpt, BagSyncGUILD_DB, BagSyncTOKEN_DB, BagSyncCRAFT_DB, BagSyncBLACKLIST_DB
-## X-Curse-Packaged-Version: v8.0
+## X-Curse-Packaged-Version: v8.1
 ## X-Curse-Project-Name: BagSync
 ## X-Curse-Project-ID: bagsync
 ## X-Curse-Repository-ID: wow/bagsync/mainline

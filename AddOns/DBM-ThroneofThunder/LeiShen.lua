@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(832, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 31 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(68397)--Diffusion Chain Conduit 68696, Static Shock Conduit 68398, Bouncing Bolt conduit 68698, Overcharge conduit 68697
 mod:SetEncounterID(1579)
 mod:SetZone()
@@ -28,11 +28,11 @@ local warnDiffusionChainSpread			= mod:NewAnnounce("warnDiffusionChainSpread", 4
 local warnOvercharged					= mod:NewTargetAnnounce(136295, 3)
 local warnBouncingBolt					= mod:NewSpellAnnounce(136361, 3)
 --Phase 1
-local warnDecapitate					= mod:NewTargetAnnounce(134912, 4, nil, mod:IsTank() or mod:IsHealer())
+local warnDecapitate					= mod:NewTargetAnnounce(134912, 4, nil, "Tank|Healer")
 local warnThunderstruck					= mod:NewCountAnnounce(135095, 3)--Target scanning seems to not work
 --Phase 2
 local warnPhase2						= mod:NewPhaseAnnounce(2)
-local warnFusionSlash					= mod:NewSpellAnnounce(136478, 4, nil, mod:IsTank() or mod:IsHealer())
+local warnFusionSlash					= mod:NewSpellAnnounce(136478, 4, nil, "Tank|Healer")
 local warnLightningWhip					= mod:NewCountAnnounce(136850, 3)
 local warnSummonBallLightning			= mod:NewCountAnnounce(136543, 3)--This seems to be VERY important to spread for. It spawns an orb for every person who takes damage. MUST range 6 this.
 local warnGorefiendsGrasp				= mod:NewCountAnnounce(108199, 1)
@@ -60,7 +60,7 @@ local specWarnThunderstruck				= mod:NewSpecialWarningCount(135095, nil, nil, ni
 local specWarnCrashingThunder			= mod:NewSpecialWarningMove(135150)
 local specWarnIntermissionSoon			= mod:NewSpecialWarning("specWarnIntermissionSoon")
 --Phase 2
-local specWarnFusionSlash				= mod:NewSpecialWarningSpell(136478, mod:IsTank(), nil, nil, 3)--Cast (394514 is debuff. We warn for cast though because it knocks you off platform if not careful)
+local specWarnFusionSlash				= mod:NewSpecialWarningSpell(136478, "Tank", nil, nil, 3)--Cast (394514 is debuff. We warn for cast though because it knocks you off platform if not careful)
 local specWarnLightningWhip				= mod:NewSpecialWarningCount(136850, nil, nil, nil, 2)
 local specWarnSummonBallLightning		= mod:NewSpecialWarningCount(136543)
 local specWarnOverloadedCircuits		= mod:NewSpecialWarningMove(137176)
@@ -82,11 +82,11 @@ local timerOverchargeCD					= mod:NewCDTimer(40, 136295)
 local timerBouncingBoltCD				= mod:NewCDTimer(40, 136361)
 local timerSuperChargedConduits			= mod:NewBuffActiveTimer(47, 137045)--Actually intermission only, but it fits best with conduits
 --Phase 1
-local timerDecapitateCD					= mod:NewCDTimer(50, 134912, nil, mod:IsTank())--Cooldown with some variation. 50-57ish or so.
+local timerDecapitateCD					= mod:NewCDTimer(50, 134912, nil, "Tank")--Cooldown with some variation. 50-57ish or so.
 local timerThunderstruck				= mod:NewCastTimer(4.8, 135095)--4 sec cast. + landing 0.8~1.3 sec.
 local timerThunderstruckCD				= mod:NewNextCountTimer(46, 135095)--Seems like an exact bar
 --Phase 2
-local timerFussionSlashCD				= mod:NewCDTimer(42.5, 136478, nil, mod:IsTank())
+local timerFussionSlashCD				= mod:NewCDTimer(42.5, 136478, nil, "Tank")
 local timerLightningWhip				= mod:NewCastTimer(4, 136850)
 local timerLightningWhipCD				= mod:NewNextCountTimer(45.5, 136850)--Also an exact bar
 local timerSummonBallLightningCD		= mod:NewNextCountTimer(45.5, 136543)--Seems exact on live, versus the variable it was on PTR

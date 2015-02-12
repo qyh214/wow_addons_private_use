@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1160, "DBM-Party-WoD", 6, 537)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12631 $"):sub(12, -3))
 mod:SetCreatureID(76407)
 mod:SetEncounterID(1682)
 
@@ -37,8 +37,8 @@ function mod:OmenOfDeathTarget(targetname, uId)
 		specWarnOmenOfDeath:Show()
 		yellOmenOfDeath:Yell()
 		voiceOmenOfDeath:Play("runaway")
-	elseif self:CheckNearby(5, targetname) then
-		specWarnOmenOfDeathNear:Show()
+	elseif self:CheckNearby(8, targetname) then
+		specWarnOmenOfDeathNear:Show(targetname)
 	end
 end
 

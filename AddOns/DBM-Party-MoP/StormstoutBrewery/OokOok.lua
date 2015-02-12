@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(668, "DBM-Party-MoP", 2, 302)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(56637)
 mod:SetEncounterID(1412)
 mod:SetZone()
@@ -18,7 +18,7 @@ mod:RegisterEventsInCombat(
 local warnGroundPound		= mod:NewSpellAnnounce(106807, 3)
 local warnBananas			= mod:NewStackAnnounce(106651, 2)
 
-local specWarnGroundPound	= mod:NewSpecialWarningMove(106807, mod:IsTank())
+local specWarnGroundPound	= mod:NewSpecialWarningMove(106807, "Tank")
 
 local timerGroundPoundCD	= mod:NewCDTimer(10.5, 106807)
 

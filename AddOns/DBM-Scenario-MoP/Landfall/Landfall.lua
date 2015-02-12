@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Landfall", "DBM-Scenario-MoP")--Alliance : 590, Horde : 595
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1103, 1102)
@@ -12,7 +12,7 @@ mod:RegisterEventsInCombat(
 )
 mod.onlyNormal = true
 
-local warnDivineStorm		= mod:NewSpellAnnounce(135404, 4, nil, mod:IsMelee())
+local warnDivineStorm		= mod:NewSpellAnnounce(135404, 4, nil, "Melee")
 local warnDivineLight		= mod:NewSpellAnnounce(135403, 4)
 
 local warnAchFiveAlive		= mod:NewAnnounce("WarnAchFiveAlive", 3, nil, false)

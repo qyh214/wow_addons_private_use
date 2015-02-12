@@ -11,7 +11,7 @@
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
-## SavedVariablesPerCharacter: DBMBrawlers_SavedVars
+## SavedVariables: DBMBrawlers_AllSavedVars
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: OTHER
 ## X-DBM-Mod-Category: WOD
@@ -26,7 +26,8 @@
 ## X-DBM-Mod-Name-ruRU: Бойцовская гильдия
 ## X-DBM-Mod-Sort: 135
 ## X-DBM-Mod-MapID: 369,1043
-## X-Curse-Packaged-Version: 6.0.11-66-ga4c600d
+## X-DBM-Mod-MinCoreRevision: 12473
+## X-Curse-Packaged-Version: 6.0.15-123-g6ef0612
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline

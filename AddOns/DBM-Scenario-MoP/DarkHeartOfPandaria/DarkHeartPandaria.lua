@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d647", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1144)
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 
 --Trash (and somewhat Urtharges)
 local warnStoneRain				= mod:NewSpellAnnounce(142139, 3)--Hit debuff, interrupt or move out of it
-local warnSpellShatter			= mod:NewCastAnnounce("OptionVersion2", 141421, 3, 2, nil, mod:IsSpellCaster())--Spell interrupt. Cast time is long enough to /stopcasting this
+local warnSpellShatter			= mod:NewCastAnnounce("OptionVersion2", 141421, 3, 2, nil, "SpellCaster")--Spell interrupt. Cast time is long enough to /stopcasting this
 local warnSummonFieryAnger		= mod:NewCastAnnounce(141488, 3, 2.5)
 local warnDetonate				= mod:NewCastAnnounce(141456, 4, 5)--Can kill or run away from. It's actually more practical to ignore it and let it kill itself to speed up run
 --Urtharges the Destroyer
@@ -26,7 +26,7 @@ local warnMalevolentForce		= mod:NewCastAnnounce(142840, 4, 2)
 
 --Trash (and somewhat Urtharges)
 local specWarnStoneRain			= mod:NewSpecialWarningSpell(142139, nil, nil, nil, 2)--Let you choose to interrupt it or move out of it.
-local specWarnSpellShatter		= mod:NewSpecialWarningCast("OptionVersion3", 141421, mod:IsSpellCaster())
+local specWarnSpellShatter		= mod:NewSpecialWarningCast("OptionVersion3", 141421, "SpellCaster")
 local specWarnSummonFieryAnger	= mod:NewSpecialWarningInterrupt(141488)
 local specWarnDetonate			= mod:NewSpecialWarningRun(141456)--Technically can kill it too vs run, but I favor run strategy more.
 --Urtharges the Destroyer
@@ -36,7 +36,7 @@ local specWarnCallElemental		= mod:NewSpecialWarningSpell(141872)
 local specWarnMalevolentForce	= mod:NewSpecialWarningInterrupt(142840)--Not only cast by last boss but trash near him as well, interrupt important for both. Although only bosses counts for achievement.
 
 --Trash
-local timerSpellShatter			= mod:NewCastTimer(2, 141421, nil, mod:IsSpellCaster())
+local timerSpellShatter			= mod:NewCastTimer(2, 141421, nil, "SpellCaster")
 
 mod:RemoveOption("HealthFrame")
 

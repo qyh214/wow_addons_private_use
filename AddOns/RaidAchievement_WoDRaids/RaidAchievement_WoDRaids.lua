@@ -1,7 +1,7 @@
 ﻿function wodrraonload()
 
 SetMapToCurrentZone()
-if GetCurrentMapAreaID()==9999999 then
+if GetCurrentMapAreaID()==988 then
 	RaidAchievement_wodrra:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	RaidAchievement_wodrra:RegisterEvent("UNIT_POWER")
 	RaidAchievement_wodrra:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE")
@@ -20,7 +20,7 @@ end
 
 wodrraspisokach25={
 
-
+8929,
 
 
 }
@@ -43,7 +43,7 @@ function wodrra_OnUpdate(curtime)
 if rpradelayzonech and curtime>rpradelayzonech then
 rpradelayzonech=nil
 SetMapToCurrentZone()
-if GetCurrentMapAreaID()==9999999 then
+if GetCurrentMapAreaID()==988 then
 RaidAchievement_wodrra:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 RaidAchievement_wodrra:RegisterEvent("UNIT_POWER")
 RaidAchievement_wodrra:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE")
@@ -208,6 +208,20 @@ local arg1, arg2, arg3,arg4,arg5,arg6,argNEW1,arg7,arg8,arg9,argNEW2,arg10,arg11
 
 --ТУТ АЧИВЫ
 
+--BRF (2 dung)
+if GetCurrentMapAreaID()==988 then
+
+if arg2=="UNIT_DIED" then
+  if wodrraspisokon[1]==1 and raachdone1 then
+  local id=raGetUnitID(arg7)
+  if id==77337 then
+      prrafailnoreason(1)
+    end
+  end
+end
+
+end
+--
 
 
 

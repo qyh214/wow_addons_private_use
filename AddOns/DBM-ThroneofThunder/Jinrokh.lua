@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(827, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 30 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(69465)
 mod:SetEncounterID(1577)
 mod:SetZone()
@@ -17,7 +17,7 @@ mod:RegisterEventsInCombat(
 )
 
 local warnFocusedLightning			= mod:NewTargetAnnounce(137399, 4)
-local warnStaticBurst				= mod:NewTargetAnnounce(137162, 3, nil, mod:IsTank() or mod:IsHealer())
+local warnStaticBurst				= mod:NewTargetAnnounce(137162, 3, nil, "Tank|Healer")
 local warnThrow						= mod:NewTargetAnnounce(137175, 2)
 local warnStorm						= mod:NewSpellAnnounce(137313, 3)
 local warnIonization				= mod:NewSpellAnnounce(138732, 4)
@@ -31,10 +31,10 @@ local specWarnThrowOther			= mod:NewSpecialWarningTaunt(137175)
 local specWarnWaterMove				= mod:NewSpecialWarning("specWarnWaterMove")
 local specWarnStorm					= mod:NewSpecialWarningSpell(137313, nil, nil, nil, 2)
 local specWarnElectrifiedWaters		= mod:NewSpecialWarningMove(138006)
-local specWarnIonization			= mod:NewSpecialWarningSpell(138732, not mod:IsTank(), nil, nil, 2)
+local specWarnIonization			= mod:NewSpecialWarningSpell(138732, "-Tank", nil, nil, 2)
 
 local timerFocusedLightningCD		= mod:NewCDTimer(10, 137399)--10-18 second variation, tends to lean toward 11-12 except when delayed by other casts such as throw or storm. Pull one also seems to variate highly
-local timerStaticBurstCD			= mod:NewCDTimer(19, 137162, nil, mod:IsTank())
+local timerStaticBurstCD			= mod:NewCDTimer(19, 137162, nil, "Tank")
 local timerThrowCD					= mod:NewCDTimer(26, 137175)--90-93 variable (26-30 seconds after storm. verified in well over 50 logs)
 local timerStorm					= mod:NewBuffActiveTimer(17, 137313)--2 second cast, 15 second duration
 local timerStormCD					= mod:NewCDTimer(60.5, 137313)--90-93 variable (60.5~67 seconds after throw)

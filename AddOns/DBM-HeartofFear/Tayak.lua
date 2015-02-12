@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(744, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 31 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 33 $"):sub(12, -3))
 mod:SetCreatureID(62543)
 mod:SetEncounterID(1504)
 mod:SetZone()
@@ -19,12 +19,10 @@ mod:RegisterEventsInCombat(
 )
 
 local warnTempestSlash					= mod:NewSpellAnnounce(125692, 2)
-local warnOverwhelmingAssault			= mod:NewStackAnnounce(123474, 3, nil, mod:IsTank() or mod:IsHealer())
+local warnOverwhelmingAssault			= mod:NewStackAnnounce(123474, 3, nil, "Tank|Healer")
 local warnWindStep						= mod:NewTargetAnnounce(123175, 3)
 local warnUnseenStrike					= mod:NewTargetAnnounce(122949, 4, 123017)
 local warnIntensify						= mod:NewStackAnnounce(123471, 2)
-local warnBladeTempest					= mod:NewCastAnnounce(125310, 4)--Phase 1 heroic
-local warnStormUnleashed				= mod:NewSpellAnnounce(123815, 3)--Phase 2
 
 local specWarnUnseenStrike				= mod:NewSpecialWarningYou(122949)
 local specWarnUnseenStrikeOther			= mod:NewSpecialWarningMoveTo(122949)--Everyone needs to know this, and run to this person.
@@ -35,8 +33,8 @@ local specWarnBladeTempest				= mod:NewSpecialWarningRun("OptionVersion2", 12531
 local specWarnStormUnleashed			= mod:NewSpecialWarningSpell(123814, nil, nil, nil, true)
 
 local timerTempestSlashCD				= mod:NewNextTimer(15.5, 125692)
-local timerOverwhelmingAssault			= mod:NewTargetTimer(45, 123474, nil, mod:IsTank())
-local timerOverwhelmingAssaultCD		= mod:NewCDTimer(20.5, 123474, nil, mod:IsTank() or mod:IsHealer())--Only ability with a variation in 2 pulls so far. He will use every 20.5 seconds unless he's casting something else, then it can be delayed as much as an extra 15-20 seconds. TODO: See if there is a way to detect when variation is going to occur and call update timer.
+local timerOverwhelmingAssault			= mod:NewTargetTimer(45, 123474, nil, "Tank")
+local timerOverwhelmingAssaultCD		= mod:NewCDTimer(20.5, 123474, nil, "Tank|Healer")--Only ability with a variation in 2 pulls so far. He will use every 20.5 seconds unless he's casting something else, then it can be delayed as much as an extra 15-20 seconds. TODO: See if there is a way to detect when variation is going to occur and call update timer.
 local timerWindStepCD					= mod:NewCDTimer(25, 123175)
 local timerUnseenStrike					= mod:NewCastTimer(4.8, 123017)
 local timerUnseenStrikeCD				= mod:NewCDTimer(53, 123017) -- 53~61 cd.
@@ -47,7 +45,7 @@ local timerBladeTempestCD				= mod:NewNextTimer(60, 125310)--Always cast after i
 local countdownTempest					= mod:NewCountdown(60, 125310)
 local berserkTimer						= mod:NewBerserkTimer(490)
 
-mod:AddBoolOption("RangeFrame", mod:IsRanged())--For Wind Step
+mod:AddBoolOption("RangeFrame", "Ranged")--For Wind Step
 mod:AddBoolOption("UnseenStrikeArrow")
 
 local intensifyCD = 60
@@ -117,7 +115,6 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 125310 then
-		warnBladeTempest:Show()
 		specWarnBladeTempest:Show()
 		timerBladeTempest:Start()
 		timerBladeTempestCD:Start()
@@ -178,7 +175,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		timerIntensifyCD:Cancel()
 		timerBladeTempestCD:Cancel()
 		countdownTempest:Cancel()
-		warnStormUnleashed:Show()
 		specWarnStormUnleashed:Show()
 	end
 end

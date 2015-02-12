@@ -10,13 +10,15 @@
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
-## SavedVariablesPerCharacter: DBMThroneofThunder_SavedVars, DBMThroneofThunder_SavedStats
+## SavedVariables: DBMThroneofThunder_AllSavedVars
+## SavedVariablesPerCharacter: DBMThroneofThunder_SavedStats
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: MOP
 ## X-DBM-Mod-Has-LFR : 1
 ## X-DBM-Mod-Sort: 202
 ## X-DBM-Mod-MapID: 1098
+## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.it.lua
 localization.kr.lua

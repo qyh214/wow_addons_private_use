@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(677, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 21 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 36 $"):sub(12, -3))
 mod:SetCreatureID(60399, 60400)--60396 (Rage), 60397 (Strength), 60398 (Courage), 60480 (Titan Spark), 60399 (Qin-xi), 60400 (Jan-xi)
 mod:SetEncounterID(1407)
 mod:SetZone()
@@ -25,31 +25,31 @@ local warnRageActivated			= mod:NewCountAnnounce("ej5678", 3, 116525)
 local warnFocusedAssault		= mod:NewTargetAnnounce(116525, 2, nil, false)--Completely and totally spammy, this option is just here for those that want this info despite the spam.
 --Strength
 local warnStrengthActivated		= mod:NewCountAnnounce("ej5677", 3, 116550)
-local warnEnergizingSmash		= mod:NewSpellAnnounce(116550, 3, nil, mod:IsMelee())--Also might be spammy
+local warnEnergizingSmash		= mod:NewSpellAnnounce(116550, 3, nil, "Melee")--Also might be spammy
 --Courage
 local warnCourageActivated		= mod:NewCountAnnounce("ej5676", 3, 116778)
 local warnFocusedDefense		= mod:NewTargetAnnounce(116778, 4)
 --Jan-xi and Qin-xi
 local warnBossesActivatedSoon	= mod:NewPreWarnAnnounce("ej5726", 10, 3, 116815)
 local warnBossesActivated		= mod:NewSpellAnnounce("ej5726", 3, 116815)
-local warnArcLeft				= mod:NewCountAnnounce(116968, 4, 89570, mod:IsMelee())--This is a pre warn, gives you time to move
-local warnArcRight				= mod:NewCountAnnounce(116971, 4, 87219, mod:IsMelee())--This is a pre warn, gives you time to move
-local warnArcCenter				= mod:NewCountAnnounce(116972, 4, 74922, mod:IsMelee())--This is a pre warn, gives you time to move
-local warnStomp					= mod:NewCountAnnounce(116969, 4, nil, mod:IsMelee())--This is NOT a pre warn, only fires when stomp ends cast. :(
+local warnArcLeft				= mod:NewCountAnnounce(116968, 4, 89570, "Melee")--This is a pre warn, gives you time to move
+local warnArcRight				= mod:NewCountAnnounce(116971, 4, 87219, "Melee")--This is a pre warn, gives you time to move
+local warnArcCenter				= mod:NewCountAnnounce(116972, 4, 74922, "Melee")--This is a pre warn, gives you time to move
+local warnStomp					= mod:NewCountAnnounce(116969, 4, nil, "Melee")--This is NOT a pre warn, only fires when stomp ends cast. :(
 local warnTitanGas				= mod:NewCountAnnounce(116779, 4)
 
 --Rage
 local specWarnFocusedAssault	= mod:NewSpecialWarningYou(116525, false)
 --Strength
-local specWarnStrengthActivated	= mod:NewSpecialWarningSpell("ej5677", mod:IsTank())--These still need to be tanked. so give tanks special warning when these spawn, and dps can enable it too depending on dps strat.
+local specWarnStrengthActivated	= mod:NewSpecialWarningSpell("ej5677", "Tank")--These still need to be tanked. so give tanks special warning when these spawn, and dps can enable it too depending on dps strat.
 --Courage
-local specWarnCourageActivated	= mod:NewSpecialWarningSwitch("ej5676", mod:IsDps())--These really need to die asap. If they reach the tank, you will have a dead tank on hands very soon after.
+local specWarnCourageActivated	= mod:NewSpecialWarningSwitch("ej5676", "Dps")--These really need to die asap. If they reach the tank, you will have a dead tank on hands very soon after.
 local specWarnFocusedDefense	= mod:NewSpecialWarningYou(116778)
 --Sparks (Heroic Only)
 local specWarnFocusedEnergy		= mod:NewSpecialWarningYou(116829)
 --Jan-xi and Qin-xi
-local specWarnBossesActivated	= mod:NewSpecialWarningSwitch("ej5726", mod:IsTank())
-local specWarnCombo				= mod:NewSpecialWarningSpell("ej5672", mod:IsMelee())
+local specWarnBossesActivated	= mod:NewSpecialWarningSwitch("ej5726", "Tank")
+local specWarnCombo				= mod:NewSpecialWarningSpell("ej5672", "Melee")
 local specWarnTitanGas			= mod:NewSpecialWarningSpell(116779, nil, nil, nil, 2)
 
 --Rage
@@ -67,7 +67,7 @@ local berserkTimer				= mod:NewBerserkTimer(780)
 
 mod:AddBoolOption("CountOutCombo")
 mod:AddBoolOption("InfoFrame", false)
-mod:AddBoolOption("ArrowOnCombo", mod:IsTank())--Very accurate for tank, everyone else not so much (tanks always in front, and boss always faces tank, so if he spins around on you, you expect it, melee on other hand have backwards arrows if you spun him around.
+mod:AddBoolOption("ArrowOnCombo", "Tank")--Very accurate for tank, everyone else not so much (tanks always in front, and boss always faces tank, so if he spins around on you, you expect it, melee on other hand have backwards arrows if you spun him around.
 
 --Upvales, don't need variables
 local focusedAssault = GetSpellInfo(116525)

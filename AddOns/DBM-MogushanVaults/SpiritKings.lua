@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(687, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 30 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
 mod:SetCreatureID(60701, 60708, 60709, 60710)--Adds: 60731 Undying Shadow, 60958 Pinning Arrow
 mod:SetEncounterID(1436)
 mod:SetZone()
@@ -34,7 +34,7 @@ local warnCrazyThought			= mod:NewCastAnnounce(117833, 2, nil, nil, false)--Just
 local warnMaddeningShout		= mod:NewSpellAnnounce(117708, 4)
 local warnCrazed				= mod:NewTargetAnnounce(117737, 3)--Basically stance change
 local warnCowardice				= mod:NewTargetAnnounce(117756, 3)--^^
-local warnDelirious				= mod:NewTargetAnnounce(117837, 4, nil, mod:CanRemoveEnrage() or mod:IsTank())--Heroic Ability
+local warnDelirious				= mod:NewTargetAnnounce(117837, 4, nil, "RemoveEnrage|Tank")--Heroic Ability
 --Qiang
 local warnAnnihilate			= mod:NewCastAnnounce(117948, 4)
 local warnFlankingOrders		= mod:NewSpellAnnounce(117910, 4)
@@ -49,24 +49,24 @@ local warnSleightOfHand			= mod:NewTargetAnnounce(118162, 4)--Heroic Ability
 local warnActivated				= mod:NewTargetAnnounce(118212, 3, 78740)
 
 --Zian
-local specWarnUndyingShadow		= mod:NewSpecialWarningSwitch("ej5854", mod:IsDps())
+local specWarnUndyingShadow		= mod:NewSpecialWarningSwitch("ej5854", "Dps")
 local specWarnFixate			= mod:NewSpecialWarningRun(118303, nil, nil, nil, 4)
 local yellFixate				= mod:NewYell(118303)
 local specWarnCoalescingShadows	= mod:NewSpecialWarningMove(117558)
 local specWarnShadowBlast		= mod:NewSpecialWarningInterrupt(117628, false)--very spammy. better to optional use
 local specWarnShieldOfDarkness	= mod:NewSpecialWarningTarget(117697, nil, nil, nil, 3)--Heroic Ability
-local specWarnShieldOfDarknessD	= mod:NewSpecialWarningDispel(117697, mod:IsMagicDispeller())--Heroic Ability
+local specWarnShieldOfDarknessD	= mod:NewSpecialWarningDispel(117697, "MagicDispeller")--Heroic Ability
 --Meng
 local specWarnMaddeningShout	= mod:NewSpecialWarningSpell(117708, nil, nil, nil, 2)
 local specWarnCrazyThought		= mod:NewSpecialWarningInterrupt(117833, false)--At discretion of whoever to enable. depending on strat, you may NOT want to interrupt these (or at least not all of them)
-local specWarnDelirious			= mod:NewSpecialWarningDispel(117837, mod:CanRemoveEnrage() or mod:IsTank())--Heroic Ability
+local specWarnDelirious			= mod:NewSpecialWarningDispel(117837, "RemoveEnrage|Tank")--Heroic Ability
 --Qiang
 local specWarnAnnihilate		= mod:NewSpecialWarningSpell(117948)--Maybe tweak options later or add a bool for it, cause on heroic, it's not likely ranged will be in front of Qiang if Zian or Subetai are up.
 local specWarnFlankingOrders	= mod:NewSpecialWarningSpell(117910, nil, nil, nil, 2)
 local specWarnImperviousShield	= mod:NewSpecialWarningTarget(117961)--Heroic Ability
 --Subetai
 local specWarnVolley			= mod:NewSpecialWarningSpell(118094, nil, nil, nil, 2)
-local specWarnPinningArrow		= mod:NewSpecialWarningSwitch("ej5861", mod:IsDps())
+local specWarnPinningArrow		= mod:NewSpecialWarningSwitch("ej5861", "Dps")
 local specWarnPillage			= mod:NewSpecialWarningMove(118047)--Works as both a You and near warning
 local specWarnSleightOfHand		= mod:NewSpecialWarningTarget(118162)--Heroic Ability
 
@@ -78,7 +78,7 @@ local timerUSRevive				= mod:NewTimer(60, "timerUSRevive", 117539)
 local timerShieldOfDarknessCD  	= mod:NewNextTimer(42.5, 117697)
 --Meng
 local timerMaddeningShoutCD		= mod:NewCDTimer(47, 117708)--47-50 sec variation. So a CD timer instead of next.
-local timerDeliriousCD			= mod:NewCDTimer(20.5, 117837, nil, mod:CanRemoveEnrage())
+local timerDeliriousCD			= mod:NewCDTimer(20.5, 117837, nil, "RemoveEnrage")
 --Qiang
 local timerMassiveAttackCD		= mod:NewCDTimer(5, 117921)--This timer needed for all players to figure out Flanking Orders moves.
 local timerAnnihilateCD			= mod:NewNextTimer(39, 117948)
@@ -96,7 +96,7 @@ local berserkTimer				= mod:NewBerserkTimer(600)
 local countdownImperviousShield	= mod:NewCountdown(42, 117961)
 local countdownShieldOfDarkness	= mod:NewCountdown(42.5, 117697)
 
-mod:AddBoolOption("RangeFrame", mod:IsRanged())--For multiple abilities. the abiliies don't seem to target melee (unless a ranged is too close or a melee is too far.)
+mod:AddBoolOption("RangeFrame", "Ranged")--For multiple abilities. the abiliies don't seem to target melee (unless a ranged is too close or a melee is too far.)
 
 local Zian = EJ_GetSectionInfo(5852)
 local Meng = EJ_GetSectionInfo(5835)

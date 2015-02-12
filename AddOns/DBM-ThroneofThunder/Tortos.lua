@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(825, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 29 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(67977)
 mod:SetEncounterID(1565)
 mod:SetZone()
@@ -18,7 +18,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
-local warnBite						= mod:NewSpellAnnounce(135251, 3, nil, mod:IsTank())
+local warnBite						= mod:NewSpellAnnounce(135251, 3, nil, "Tank")
 local warnRockfall					= mod:NewSpellAnnounce(134476, 2)
 local warnCallofTortos				= mod:NewSpellAnnounce(136294, 3)
 local warnQuakeStomp				= mod:NewCountAnnounce(134920, 3)
@@ -32,9 +32,9 @@ local specWarnQuakeStomp			= mod:NewSpecialWarningCount(134920, nil, nil, nil, 2
 local specWarnRockfall				= mod:NewSpecialWarningSpell(134476, false, nil, nil, 2)
 local specWarnStoneBreath			= mod:NewSpecialWarningInterrupt("OptionVersion2", 133939, nil, nil, nil, 3)
 local specWarnCrystalShell			= mod:NewSpecialWarning("specWarnCrystalShell", false)
-local specWarnSummonBats			= mod:NewSpecialWarningSwitch("ej7140", mod:IsTank())--Dps can turn it on too, but not on by default for dps cause quite frankly dps should NOT switch right away, tank needs to get aggro first and where they spawn is semi random.
+local specWarnSummonBats			= mod:NewSpecialWarningSwitch("ej7140", "Tank")--Dps can turn it on too, but not on by default for dps cause quite frankly dps should NOT switch right away, tank needs to get aggro first and where they spawn is semi random.
 
-local timerBiteCD					= mod:NewCDTimer(8, 135251, nil, mod:IsTank())
+local timerBiteCD					= mod:NewCDTimer(8, 135251, nil, "Tank")
 local timerRockfallCD				= mod:NewCDTimer(10, 134476)
 local timerCallTortosCD				= mod:NewNextTimer(60.5, 136294)
 local timerStompCD					= mod:NewCDCountTimer(47, 134920)
@@ -51,7 +51,7 @@ local berserkTimer					= mod:NewBerserkTimer(780)
 mod:AddBoolOption("InfoFrame")
 mod:AddSetIconOption("SetIconOnTurtles", "ej7129", false, true)
 mod:AddBoolOption("ClearIconOnTurtles", false)--Different option, because you may want auto marking but not auto clearing. or you may want auto clearning when they "die" but not auto marking when they spawn
-mod:AddBoolOption("AnnounceCooldowns", mod:HasRaidCooldown())
+mod:AddBoolOption("AnnounceCooldowns", "RaidCooldown")
 
 local shelldName = GetSpellInfo(137633)
 local shellConcussion = GetSpellInfo(136431)

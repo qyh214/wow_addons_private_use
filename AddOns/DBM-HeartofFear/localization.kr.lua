@@ -7,7 +7,6 @@ local L
 L= DBM:GetModLocalization(745)
 
 L:SetWarningLocalization({
-	warnAttenuation		= "%s : %s (%s)",
 	warnEcho			= "메아리 생성",
 	warnEchoDown		= "메아리 처치",
 	specwarnAttenuation	= "%s : %s (%s)",

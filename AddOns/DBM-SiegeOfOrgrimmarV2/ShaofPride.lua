@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(867, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 6 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(71734)
 mod:SetEncounterID(1604)
 mod:SetZone()
@@ -18,14 +18,11 @@ mod:RegisterEventsInCombat(
 )
 
 --Sha of Pride
-local warnGiftOfTitans			= mod:NewTargetAnnounce(144359, 1, nil, mod:IsHealer())
-local warnSwellingPride			= mod:NewCountAnnounce(144400, 3)
-local warnMark					= mod:NewTargetAnnounce(144351, 3, nil, mod:IsHealer())
-local warnWoundedPride			= mod:NewTargetAnnounce(144358, 4, nil, mod:IsTank() or mod:IsHealer())
-local warnSelfReflection		= mod:NewSpellAnnounce(144800, 3)
+local warnGiftOfTitans			= mod:NewTargetAnnounce(144359, 1, nil, "Healer")
+local warnMark					= mod:NewTargetAnnounce(144351, 3, nil, "Healer")
+local warnWoundedPride			= mod:NewTargetAnnounce(144358, 4, nil, "Healer|Tank")
 local warnCorruptedPrison		= mod:NewTargetAnnounce(144574, 3)
 local warnBanishment			= mod:NewTargetAnnounce(145215, 3)--Heroic
-local warnWeakenedResolve		= mod:NewTargetAnnounce(147207, 2, nil, false)--Heroic
 local warnUnleashed				= mod:NewSpellAnnounce(144832, 3)--Phase 2
 --Pride / These 5 warnings can be show at same time. Can be extremely spam. Need to throttle these warnings. (core changes not enough)
 local warnBurstingPride			= mod:NewTargetAnnounce(144911, 2, nil, false)--25-49 Energy (off by default, who has them isn't as relevant as to where they are
@@ -34,11 +31,10 @@ local warnAuraOfPride			= mod:NewTargetAnnounce(146817, 3, nil, false)--75-99 En
 local warnOvercome				= mod:NewTargetAnnounce(144843, 3)--100 Energy (pre mind control) Also very important who has
 local warnOvercomeMC			= mod:NewTargetAnnounce(605, 4)--Mind control version (use priest mind control spellid to discribe. because have same spell name in pre-warning)
 --Manifestation of Pride
-local warnManifestation			= mod:NewSpellAnnounce("ej8262", 3, "Interface\\Icons\\achievement_raid_terraceofendlessspring04")
 local warnMockingBlast			= mod:NewSpellAnnounce(144379, 3, nil, false)
 
 --Sha of Pride
-local specWarnGiftOfTitans		= mod:NewSpecialWarningYou(144359, mod:IsHealer())
+local specWarnGiftOfTitans		= mod:NewSpecialWarningYou(144359, "Healer")
 local yellGiftOfTitans			= mod:NewYell(146594, nil, false)
 local specWarnSwellingPride		= mod:NewSpecialWarningCount(144400, nil, nil, nil, 2)
 local specWarnWoundedPride		= mod:NewSpecialWarningYou(144358)--Cast/personal warning
@@ -57,15 +53,15 @@ local yellAuraOfPride			= mod:NewYell(146818, nil, false)
 local specWarnOvercome			= mod:NewSpecialWarningYou(144843, nil, nil, nil, 3)--100 EnergyHonestly, i have a feeling your best option if this happens is to find a way to kill yourself!
 local specWarnBanishment		= mod:NewSpecialWarningYou(145215, nil, nil, nil, 3)--Heroic
 --Manifestation of Pride
-local specWarnManifestation		= mod:NewSpecialWarningSwitch("ej8262", not mod:IsHealer())--Spawn warning, need trigger first
+local specWarnManifestation		= mod:NewSpecialWarningSwitch("ej8262", "-Healer")--Spawn warning, need trigger first
 local specWarnMockingBlast		= mod:NewSpecialWarningInterrupt(144379)
 
 --Sha of Pride
-local timerGiftOfTitansCD		= mod:NewNextTimer(25.5, 144359, nil, not mod:IsTank())--NOT cast or tied or boss, on it's own. Off for tanks because it can't target tanks, ever
+local timerGiftOfTitansCD		= mod:NewNextTimer(25.5, 144359, nil, "-Tank")--NOT cast or tied or boss, on it's own. Off for tanks because it can't target tanks, ever
 --These abilitie timings are all based on boss1 UNIT_POWER. All timers have a 1 second variance
-local timerMarkCD				= mod:NewNextTimer(20.5, 144351, nil, mod:IsHealer())
+local timerMarkCD				= mod:NewNextTimer(20.5, 144351, nil, "Healer")
 local timerSelfReflectionCD		= mod:NewNextTimer(25, 144800)
-local timerWoundedPrideCD		= mod:NewNextTimer(30, 144358, nil, mod:IsTank())--A tricky on that is based off unit power but with variable timings, but easily workable with an 11, 26 rule
+local timerWoundedPrideCD		= mod:NewNextTimer(30, 144358, nil, "Tank")--A tricky on that is based off unit power but with variable timings, but easily workable with an 11, 26 rule
 local timerBanishmentCD			= mod:NewNextTimer(37.5, 145215)
 local timerCorruptedPrisonCD	= mod:NewNextTimer(53, 144574)--Technically 51 for Imprison base cast, but this is timer til debuffs go out.
 local timerManifestationCD		= mod:NewNextTimer(60, "ej8262", nil, nil, nil, "Interface\\Icons\\achievement_raid_terraceofendlessspring04")
@@ -131,7 +127,6 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 144400 then
 		self.vb.swellingCount = self.vb.swellingCount + 1
-		warnSwellingPride:Show(self.vb.swellingCount)
 		specWarnSwellingPride:Show(self.vb.swellingCount)
 	elseif spellId == 144379 then
 		local sourceGUID = args.sourceGUID
@@ -203,7 +198,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerSwellingPrideCD:Start(75, self.vb.swellingCount + 1)--Not yet verified if altered or not (it would be 62 instead of 60 though since we'd be starting at 0 energy instead of cast finish of last swelling)
 		countdownSwellingPride:Start(75)--Not yet verified if altered or not (it would be 62 instead of 60 though since we'd be starting at 0 energy instead of cast finish of last swelling)
 	elseif spellId == 144800 then
-		warnSelfReflection:Show()
 		specWarnSelfReflection:Show()
 	elseif spellId == 146823 and self.Options.SetIconOnFragment then--Banishment cast. Not want to use applied for add mark scheduling
 		self:ScanForMobs(72569, 0, 8, 2, 0.2, 10)
@@ -272,7 +266,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellCorruptedPrison:Yell()
 		end
 	elseif spellId == 147207 then
-		warnWeakenedResolve:Show(args.destName)
 		if args:IsPlayer() then
 			timerWeakenedResolve:Start()
 		end
@@ -293,7 +286,6 @@ function mod:UNIT_POWER_FREQUENT(uId)
 	local power = UnitPower(uId)
 	if power > 81 and not manifestationWarned then--May not be 100% precise, but very close, it spawns around 80-85 energy
 		manifestationWarned = true
-		warnManifestation:Show()
 		specWarnManifestation:Show()--No spawn trigger to speak of. fortunately for us, they spawn based on boss power.
 	elseif power > 10 and power < 82 and manifestationWarned then
 		manifestationWarned = false

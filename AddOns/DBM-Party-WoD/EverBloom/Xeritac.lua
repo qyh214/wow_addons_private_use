@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1209, "DBM-Party-WoD", 5, 556)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12216 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
 mod:SetCreatureID(84550)
 mod:SetEncounterID(1752)--TODO: VERIFY, "Boss 4" isn't descriptive enough
 mod:SetZone()
@@ -25,7 +25,7 @@ local warnPhase2					= mod:NewPhaseAnnounce(2, 2)
 local warnConsume					= mod:NewSpellAnnounce(169248, 4)
 local warnGaseousVolley				= mod:NewSpellAnnounce(169248, 3)
 
-local specWarnVenomCrazedPaleOne	= mod:NewSpecialWarningSwitch("ej10502", not mod:IsHealer())
+local specWarnVenomCrazedPaleOne	= mod:NewSpecialWarningSwitch("ej10502", "-Healer")
 --local specWarnConsume				= mod:NewSpecialWarningSpell(169248)
 local specWarnGaseousVolley			= mod:NewSpecialWarningSpell(169382, nil, nil, nil, 2)
 local specWarnToxicGas				= mod:NewSpecialWarningMove(169223)

@@ -140,7 +140,7 @@ end
 function SpeakinSpell:SPELL_AURA_APPLIED(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 	local funcname = "SPELL_AURA_APPLIED"
 	-- we're only concerned with buffs we receive
-	if dstName ~= UnitName("player") then
+	if not SpeakinSpell:NameIsMe(dstName) then
 		--self:DebugMsg(funcname, "not cast on you")
 		return
 	end
@@ -161,13 +161,13 @@ function SpeakinSpell:SPELL_AURA_APPLIED(timestamp, eventtype, srcGUID, srcName,
 		name = spellName,
 		type = "SPELL_AURA_APPLIED_"..tostring(auraType),
 		-- event-specific data for substitutions
-		caster = srcName,
-		target = dstName,
+		caster = self:PlayerNameNoRealm(srcName),
+		target = self:PlayerNameNoRealm(dstName),
 		spellid = spellId,
 	}
 	
 	-- buffs cast on me by someone other than me are treated differently than buffs I cast on myself
-	if srcName ~= UnitName("player") then
+	if not SpeakinSpell:NameIsMe(srcName) then
 		self:DebugMsg(funcname, "not cast by you")
 		DetectedEventStub.type = tostring(DetectedEventStub.type).."_FOREIGN"
 	end
@@ -181,7 +181,7 @@ end
 function SpeakinSpell:SPELL_AURA_REMOVED(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 	local funcname = "SPELL_AURA_REMOVED"
 	-- we're only concerned with buffs on ourselves
-	if dstName ~= UnitName("player") then
+	if not SpeakinSpell:NameIsMe(dstName) then
 		--self:DebugMsg(funcname, "not fading from you")
 		return
 	end
@@ -202,14 +202,14 @@ function SpeakinSpell:SPELL_AURA_REMOVED(timestamp, eventtype, srcGUID, srcName,
 		name = spellName,
 		type = "SPELL_AURA_REMOVED_"..tostring(auraType),
 		-- event-specific data for substitutions
-		caster = srcName,
-		target = dstName,
+		caster = self:PlayerNameNoRealm(srcName),
+		target = self:PlayerNameNoRealm(dstName),
 		spellid = spellId,
 	}
 	
 	-- buffs cast on me by someone other than me are treated differently than buffs I cast on myself
 	-- but I don't care about the caster for fading debuffs
---	if srcName ~= UnitName("player") then
+--	if not SpeakinSpell:NameIsMe(srcName) then
 --		self:DebugMsg(funcname, "not cast by you")
 --		DetectedEventStub.type = tostring(DetectedEventStub.type).."_FOREIGN"
 --	end
@@ -255,7 +255,7 @@ end
 function SpeakinSpell:SPELL_MISSED(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...) 
 	--We only care about blocks/parries/etc. if it happens to the player
 	--REVIEW: No, other way around... we only care if this is the player's miss, i.e. the player is the source
-	if srcName ~= UnitName("player") then
+	if not SpeakinSpell:NameIsMe(srcName) then
 		return
 	end
 	--extra parameters with "SPELL_" prefix
@@ -295,7 +295,7 @@ function SpeakinSpell:DamageEvent(eventtype, spellId, spellName, srcName, dstNam
 	local funcname = "DamageEvent"
 	
 	-- we only care about damage done by me
-	if srcName ~= UnitName("player") then
+	if not SpeakinSpell:NameIsMe(srcName) then
 		return
 	end
 
@@ -315,8 +315,8 @@ function SpeakinSpell:DamageEvent(eventtype, spellId, spellName, srcName, dstNam
 			spellname = spellName,
 			
 			-- spell/ability was cast by source on dest
-			caster = srcName,
-			target = dstName,
+			caster = self:PlayerNameNoRealm(srcName),
+			target = self:PlayerNameNoRealm(dstName),
 			
 			-- event-specific substitions
 			damage		= amount or 0,
@@ -347,8 +347,8 @@ function SpeakinSpell:DamageEvent(eventtype, spellId, spellName, srcName, dstNam
 			spellname = spellName,
 			
 			-- spell/ability was cast by source on dest
-			caster = srcName,
-			target = dstName,
+			caster = self:PlayerNameNoRealm(srcName),
+			target = self:PlayerNameNoRealm(dstName),
 			
 			-- event-specific substitions
 			damage		= amount or 0,
@@ -804,6 +804,7 @@ function SpeakinSpell:UNIT_SPELLCAST_SENT(event, caster, spellname, spellrank, t
 	-- TODO: That leaves one case for instant casts that fire SENT -> SUCCEEDED
 	--		SUCCEEDED can't tell what's an instant cast (castTime=0 for channeled spells)
 	PendingSpellcastsSent[spellname] = {
+		-- NOTE: don't remove the realm name from the target here - not until we setup the detected event stub
 		target = target,		-- the true spell target we don't get from the other events
 		interrupted = false,	-- used to suppress redundant interrupts
 		AnnouncedStart = false, -- whether we announced "when I start casting" this spell (since START might be skipped)
@@ -936,8 +937,8 @@ function SpeakinSpell:OnSpellcastEvent(event, caster, spellname, spellrank, spel
 		type = event, --unless we change UNIT_SPELLCAST_START to UNIT_SPELLCAST_SENT below or add PET
 		name = spellname,
 		-- event-specific data for substitutions
-		caster = caster,
-		target = target,
+		caster = self:PlayerNameNoRealm(caster),
+		target = self:PlayerNameNoRealm(target),
 		spellid = spellid,
 		rank = spellrank, --NOTE: ranks are still available in WoW 4.0.3 for Polymorph, and professions
 	}
@@ -1181,13 +1182,14 @@ arg8
 --]]
 function SpeakinSpell:CHAT_MSG_WHISPER(event, msg, author, language, status, id, ...)
 	-- Chat Event: Whispered While In-Combat
-	if	self.RuntimeData.InCombat		and 
-		type(author) == "string"		and
-		author ~= UnitName("player")	then
+	if	self.RuntimeData.InCombat			and 
+		type(author) == "string"			and
+		not SpeakinSpell:NameIsMe(author)	then
 
 		local DetectedEventStub = {
 			type = "CHAT",
 			name = L["Whispered While In-Combat"],
+			--TODO: remove realm name from author? what if you use <caster> to whisper back, how does that work?
 			caster = author, -- the name of the player who whispered to you
 			target = UnitName("player"), -- the target of the whisper is you, the player
 			-- event-specific substitution
@@ -1231,7 +1233,7 @@ function SpeakinSpell:CHAT_MSG_GUILD(event, message, sender, ...)
 			name = L[
 [[A guild member said ding]]
 			],
-			caster = sender,
+			caster = self:PlayerNameNoRealm(sender),
 			target = SpeakinSpell:GetGuildName(),
 		}
 		self:OnSpeechEvent( DetectedEventStub )
@@ -1248,7 +1250,7 @@ function SpeakinSpell:CHAT_MSG_PARTY(event, message, sender, ...)
 			name = L[
 [[A party member said ding]]
 			],
-			caster = sender,
+			caster = self:PlayerNameNoRealm(sender),
 			--target = SpeakinSpell:GetGuildName(), -- assume default target logic
 		}
 		self:OnSpeechEvent( DetectedEventStub )
@@ -1274,7 +1276,7 @@ function SpeakinSpell:AUTOFOLLOW_BEGIN(event, unit)
 	local DetectedEventStub = {
 		type = "EVENT",
 		name = L["Begin /follow"],
-		target = unit,
+		target = self:PlayerNameNoRealm(unit),
 	}
 	self:OnSpeechEvent( DetectedEventStub )
 end
@@ -1343,7 +1345,8 @@ arg7, arg8
     Some integer. (Ris: the achievement ID???)
 --]]
 function SpeakinSpell:CHAT_MSG_ACHIEVEMENT(event, ChatMessage, EarnedBy, ...)
-	if EarnedBy == UnitName("player") then -- don't congratulate myself (we DO get this message for our own achievements)
+	-- don't congratulate myself (we DO get this message for our own achievements)
+	if SpeakinSpell:NameIsMe(EarnedBy) then
 		return
 	end
 	local ndx = string.find(ChatMessage, "|") -- find the clickable link in the achievement message
@@ -1360,8 +1363,8 @@ function SpeakinSpell:CHAT_MSG_ACHIEVEMENT(event, ChatMessage, EarnedBy, ...)
 		desc = achievement,
 		spelllink = achievement,
 		-- and standard meaning for target and caster OF THE EVENT (the player who earned the achievement)
-		target = EarnedBy,
-		caster = EarnedBy,
+		target = self:PlayerNameNoRealm(EarnedBy),
+		caster = self:PlayerNameNoRealm(EarnedBy),
 	}
 	self:OnSpeechEvent( DetectedEventStub )
 end
@@ -1381,7 +1384,7 @@ arg7, arg8, arg11
     Some integer that (but not the achievement ID, or the total number of achievement points for the player; this seems to increment if two consecutive achievements are posted (needs to be verified)). 
 --]]
 function SpeakinSpell:CHAT_MSG_GUILD_ACHIEVEMENT(event, ChatMessage, EarnedBy, ...)
-	if EarnedBy == UnitName("player") then -- don't congratulate myself (we DO get this message for our own achievements)
+	if SpeakinSpell:NameIsMe(EarnedBy) then -- don't congratulate myself (we DO get this message for our own achievements)
 		return
 	end
 	local ndx = string.find(ChatMessage, "|") -- find the clickable link in the achievement message
@@ -1398,8 +1401,8 @@ function SpeakinSpell:CHAT_MSG_GUILD_ACHIEVEMENT(event, ChatMessage, EarnedBy, .
 		desc = achievement,
 		spelllink = achievement,
 		-- and standard meaning for target and caster OF THE EVENT (the player who earned the achievement)
-		target = EarnedBy,
-		caster = EarnedBy,
+		target = self:PlayerNameNoRealm(EarnedBy),
+		caster = self:PlayerNameNoRealm(EarnedBy),
 	}
 	self:OnSpeechEvent( DetectedEventStub )
 end
@@ -1546,7 +1549,7 @@ function SpeakinSpell:RESURRECT_REQUEST(event, caster)
 	local DetectedEventStub = {
 		type = "EVENT",
 		name = L["a player sent me a rez"],
-		caster = caster,
+		caster = self:PlayerNameNoRealm(caster),
 		target = UnitName("player"),
 	}
 	self:OnSpeechEvent( DetectedEventStub )

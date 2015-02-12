@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(729, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(62983)--62995 Animated Protector
 mod:SetEncounterID(1506)
 
@@ -19,19 +19,18 @@ mod:RegisterEventsInCombat(
 )
 
 local warnProtect						= mod:NewSpellAnnounce(123250, 2)
-local warnHide							= mod:NewCountAnnounce(123244, 3)
 local warnHideOver						= mod:NewAnnounce("warnHideOver", 2, 123244)--Because we can. with creativeness, the boss returning is detectable a full 1-2 seconds before even visible. A good signal to stop aoe and get ready to return norm DPS
 local warnGetAway						= mod:NewCountAnnounce(123461, 3)
-local warnSpray							= mod:NewStackAnnounce(123121, 3, nil, mod:IsTank() or mod:IsHealer())
+local warnSpray							= mod:NewStackAnnounce(123121, 3, nil, "Tank|Healer")
 
-local specWarnAnimatedProtector			= mod:NewSpecialWarningSwitch("ej6224", not mod:IsHealer())
-local specWarnHide						= mod:NewSpecialWarningSpell(123244, nil, nil, nil, 2)
+local specWarnAnimatedProtector			= mod:NewSpecialWarningSwitch("ej6224", "-Healer")
+local specWarnHide						= mod:NewSpecialWarningCount(123244, nil, nil, nil, 2)
 local specWarnGetAway					= mod:NewSpecialWarningSpell(123461, nil, nil, nil, 2)
-local specWarnSpray						= mod:NewSpecialWarningStack(123121, mod:IsTank(), 6)
+local specWarnSpray						= mod:NewSpecialWarningStack(123121, "Tank", 6)
 local specWarnSprayOther				= mod:NewSpecialWarningTaunt(123121)
 
 local timerSpecialCD					= mod:NewTimer(50, "timerSpecialCD", 123250)--Variable, 49.5-55 seconds
-local timerSpray						= mod:NewTargetTimer(10, 123121, nil, mod:IsTank() or mod:IsHealer())
+local timerSpray						= mod:NewTargetTimer(10, 123121, nil, "Tank|Healer")
 local timerGetAway						= mod:NewBuffActiveTimer(30, 123461)
 local timerScaryFogCD					= mod:NewNextTimer(10, 123705)
 
@@ -172,8 +171,7 @@ function mod:SPELL_CAST_START(args)
 		hideActive = true
 		timerScaryFogCD:Cancel()
 		self:UnscheduleMethod("ScaryFogRepeat")
-		warnHide:Show(specialsCast)
-		specWarnHide:Show()
+		specWarnHide:Show(specialsCast)
 		timerSpecialCD:Start(nil, specialsCast+1)
 		self:SetWipeTime(60)--If she hides at 1.6% or below, she will be killed during hide. In this situration, yell fires very slowly. This hack can prevent recording as wipe.
 		self:RegisterShortTermEvents(

@@ -1,4 +1,4 @@
-local REVISION = 8;
+local REVISION = 9;
 if (type(AzOptionsFactory) == "table") and (AzOptionsFactory.vers >= REVISION) then
 	return;
 end
@@ -141,7 +141,7 @@ local function CheckButton_OnLeave(self)
 end
 
 local function CheckButton_OnClick(self)
-	self.factory:ChangeSettingFunc(self.option.var,self:GetChecked() and true or false);	-- Az: WoD patch made GetChecked() return bool instead of 1/nil
+	self.factory:ChangeSettingFunc(self.option.var,self:GetChecked() and true or false);	-- WoD patch made GetChecked() return bool instead of 1/nil
 end
 
 -- New CheckButton

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(682, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 36 $"):sub(12, -3))
 mod:SetCreatureID(60143)
 mod:SetEncounterID(1434)
 mod:SetZone()
@@ -42,7 +42,7 @@ local timerBanishmentCD				= mod:NewCDTimer(65, 116272)
 local timerSoulSever				= mod:NewBuffFadesTimer(30, 116278)--Tank version of spirit realm
 local timerCrossedOver				= mod:NewBuffFadesTimer(30, 116161)--Dps version of spirit realm
 local timerSpiritualInnervation		= mod:NewBuffFadesTimer(30, 117549)
-local timerShadowyAttackCD			= mod:NewCDTimer(8, "ej6698", nil, mod:IsTank(), nil, 117222)
+local timerShadowyAttackCD			= mod:NewCDTimer(8, "ej6698", nil, "Tank", nil, 117222)
 local timerFrailSoul				= mod:NewBuffFadesTimer(30, 117723)
 
 local berserkTimer					= mod:NewBerserkTimer(360)

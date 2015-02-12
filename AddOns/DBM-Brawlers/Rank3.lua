@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank3", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12554 $"):sub(12, -3))
 mod:SetModelID(28649)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -28,6 +28,7 @@ mod:AddBoolOption("SetIconOnBlat", true)--Blat
 
 local brawlersMod = DBM:GetModByName("Brawlers")
 local blatGUID = 0
+local GetRaidTargetIndex = GetRaidTargetIndex
 
 function mod:SPELL_CAST_START(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
@@ -52,7 +53,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:PLAYER_TARGET_CHANGED()
-	if self.Options.SetIconOnBlat and not DBM.Options.DontSetIcons and UnitGUID("target") == blatGUID then
+	if self.Options.SetIconOnBlat and not DBM.Options.DontSetIcons and UnitGUID("target") == blatGUID and GetRaidTargetIndex("target") ~= 8 then
 		SetRaidTarget("target", 8)
 	end
 end

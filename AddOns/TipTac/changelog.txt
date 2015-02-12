@@ -1,7 +1,13 @@
+TipTac Changes | 2015 Jan 14
+----------------------------
+- If you had your tooltip anchored to the mouse, you may have had some issues with a few UI frames, especially the Garrison UI. An exception for "ANCHOR_CURSOR_RIGHT" was added, which should fix this (thanks ywfn).
+- Added some fixes which should resolve the issues where the tooltip background color changes into navy blue.
+- No longer shows empty title for certain NPCs.
+
 TipTac Changes | 2014 Oct 16
 ----------------------------
 - Options: Fixed the issue that caused checkboxes not to save their state when checked.
-- TipTacItemRef: Updated the "GetUpgradedItemLevel" library. This update will again properly find the correct itemlevel of updated items.
+- TipTacItemRef: Updated the "GetUpgradedItemLevel" library. This update will again properly find the correct itemLevel of upgraded items.
 
 TipTac Changes | 2014 Oct 15
 ----------------------------

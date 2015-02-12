@@ -140,6 +140,45 @@ function SpeakinSpell:GetPlayerFullTitleName()
 end
 
 
+-- NameWithRealm is either "Name" or "Name-Realm"
+-- return "Name" for use in natural speech
+function SpeakinSpell:PlayerNameNoRealm( NameWithRealm )
+
+    -- ignore empty input
+    if NameWithRealm == nil or NameWithRealm == "" then
+        return NameWithRealm
+    end
+    
+	local index = string.find( NameWithRealm, "-" )
+	if (index and (index >= 0)) then
+		-- found the delimiter between player name and realm name
+		return string.sub( NameWithRealm, 1, index-1 )
+	else
+		-- looks like the realm name was not included
+		return NameWithRealm
+	end
+end
+
+
+-- InputName is either "Name" or "Name-Realm"
+-- Return true if this is referring to the player
+-- Return false if this is someone else
+-- for determining if an event applies to myself or not
+function SpeakinSpell:NameIsMe( InputName )
+	local player = UnitName("player")
+	local realm = GetRealmName()
+	
+	if InputName == player then
+		return true
+	end
+	if InputName == player.."-"..realm then
+		return true
+	end
+	
+	return false
+end
+
+
 function SpeakinSpell:GetDefaultTarget(ShowDebugMsg)
 	-- try the currently selected target
 	local target = UnitName("target")
@@ -362,6 +401,9 @@ function SpeakinSpell:GetScenarioKey()
 end
 
 
+-- languageName, languageIndex = GetLanguageByIndex(index)
+-- GetRacialLanguage returns the localized languageName
+-- do not use with SendChatMessage which needs the locale-independant languageIndex
 function SpeakinSpell:GetRacialLanguage()
 	-- return GetLanguageByIndex( 2 ) -- appears to be non-deterministically ordered
 	--TODOLATER: is this *always* GetLanguageByIndex(1) ??

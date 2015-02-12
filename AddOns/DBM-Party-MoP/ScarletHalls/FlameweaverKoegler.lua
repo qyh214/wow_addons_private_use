@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(656, "DBM-Party-MoP", 8, 311)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(59150)
 mod:SetEncounterID(1420)
 
@@ -22,8 +22,8 @@ local warnDragonsBreath			= mod:NewSpellAnnounce(113641, 4)--This is showing Mag
 
 local specWarnFireballVolley	= mod:NewSpecialWarningInterrupt(113691, true)
 local specWarnPyroblast			= mod:NewSpecialWarningInterrupt(113690, false)
-local specWarnQuickenedMind		= mod:NewSpecialWarningDispel(113682, mod:IsMagicDispeller())
---local specWarnDragonsBreathDispel		= mod:NewSpecialWarningDispel(113641, mod:IsMagicDispeller())
+local specWarnQuickenedMind		= mod:NewSpecialWarningDispel(113682, "MagicDispeller")
+--local specWarnDragonsBreathDispel		= mod:NewSpecialWarningDispel(113641, "MagicDispeller")
 local specWarnDragonsBreath		= mod:NewSpecialWarningSpell(113641, nil, nil, nil, true)
 
 local timerPyroblastCD			= mod:NewCDTimer(6, 113690, nil, false)

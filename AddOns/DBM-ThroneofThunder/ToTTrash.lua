@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ToTTrash", "DBM-ThroneofThunder")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetModelID(47785)
 mod:SetZone()
 
@@ -22,7 +22,7 @@ local warnFixated				= mod:NewSpellAnnounce(140306, 3)
 local warnConductiveShield		= mod:NewTargetAnnounce(140296, 4)
 
 local specWarnStormEnergy		= mod:NewSpecialWarningYou(139322)
-local specWarnShadowNova		= mod:NewSpecialWarningRun(139899, mod:IsMelee(), nil, nil, 3)--This hurls you pretty damn far. If you aren't careful you're as good as gone.
+local specWarnShadowNova		= mod:NewSpecialWarningRun(139899, "Melee", nil, nil, 3)--This hurls you pretty damn far. If you aren't careful you're as good as gone.
 local specWarnStormCloud		= mod:NewSpecialWarningYou(139900)
 local specWarnSonicScreech		= mod:NewSpecialWarningInterrupt(136751)
 local specWarnConductiveShield	= mod:NewSpecialWarningTarget(140296)

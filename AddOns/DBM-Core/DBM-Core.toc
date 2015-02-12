@@ -11,12 +11,13 @@
 ## Notes: Deadly Boss Mods
 ## Dependencies: DBM-StatusBarTimers
 ## OptionalDependencies: LibStub, CallbackHandler-1.0, LibSharedMedia-3.0, LibChatAnims
-## SavedVariablesPerCharacter: DBM_SavedOptions, DBT_SavedOptions
+## SavedVariables: DBM_AllSavedOptions
+## SavedVariablesPerCharacter: DBM_UsedProfile, DBM_UseDualProfile
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: Tandanu and Nitram
 ## X-Website: http://www.deadlybossmods.com
-## X-Curse-Packaged-Version: 6.0.11-66-ga4c600d
+## X-Curse-Packaged-Version: 6.0.15-123-g6ef0612
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
@@ -45,3 +46,4 @@ DBM-RangeCheck.lua
 DBM-BossHealth.lua
 DBM-BossHealth.xml
 DBM-InfoFrame.lua
+DBM-HudMap.lua

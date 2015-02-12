@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(824, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 30 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(69427)
 mod:SetEncounterID(1576)
 mod:SetZone()
@@ -23,10 +23,10 @@ mod:RegisterEventsInCombat(
 local warnCrimsonWake				= mod:NewTargetAnnounce(138480, 3)
 local warnMatterSwap				= mod:NewTargetAnnounce(138609, 3)--Debuff.
 local warnMatterSwapped				= mod:NewAnnounce("warnMatterSwapped", 3, 138618)--Actual swap(caused by dispel)
-local warnExplosiveSlam				= mod:NewStackAnnounce(138569, 2, nil, mod:IsTank() or mod:IsHealer())
+local warnExplosiveSlam				= mod:NewStackAnnounce(138569, 2, nil, "Tank|Healer")
 --Boss
 local warnActivation				= mod:NewCastAnnounce(139537, 3, 60)
-local warnAnimaRing					= mod:NewTargetAnnounce(136954, 3, nil, mod:IsTank())
+local warnAnimaRing					= mod:NewTargetAnnounce(136954, 3, nil, "Tank")
 local warnAnimaFont					= mod:NewTargetAnnounce(138691, 3)
 local warnInterruptingJolt			= mod:NewCountAnnounce(138763, 4)
 local warnEmpowerGolem				= mod:NewTargetAnnounce(138780, 3)
@@ -36,7 +36,7 @@ local specWarnCrimsonWake			= mod:NewSpecialWarningMove(138485)--Standing in stu
 local yellCrimsonWake				= mod:NewYell(138480)
 local specWarnMatterSwap			= mod:NewSpecialWarningYou(138609)
 local specWarnExplosiveSlam			= mod:NewSpecialWarningStack(138569, nil, 4)--Assumed value drycode, won't know until cd is observed
-local specWarnExplosiveSlamOther	= mod:NewSpecialWarningTarget(138569, mod:IsTank())--Not black and white, so not using Taunt type warning
+local specWarnExplosiveSlamOther	= mod:NewSpecialWarningTarget(138569, "Tank")--Not black and white, so not using Taunt type warning
 --Boss
 local specWarnAnimaRing				= mod:NewSpecialWarningYou(136954)
 local specWarnAnimaRingOther		= mod:NewSpecialWarningTarget(136954, false)
@@ -45,11 +45,11 @@ local specWarnAnimaFont				= mod:NewSpecialWarningYou(138691)
 local specWarnInterruptingJolt		= mod:NewSpecialWarningCast(138763, nil, nil, nil, 2)
 
 local timerMatterSwap				= mod:NewTargetTimer(12, 138609)--If not dispelled, it ends after 12 seconds regardless
-local timerExplosiveSlam			= mod:NewTargetTimer(25, 138569, nil, mod:IsTank() or mod:IsHealer())
+local timerExplosiveSlam			= mod:NewTargetTimer(25, 138569, nil, "Tank|Healer")
 --Boss
 local timerAnimusActivation			= mod:NewCastTimer(60, 139537)--LFR only
 local timerSiphonAnimaCD			= mod:NewNextCountTimer(20, 138644)--Needed mainly for heroic. not important on normal/LFR
-local timerAnimaRingCD				= mod:NewNextTimer(24.2, 136954, nil, mod:IsTank())--Updated/Verified post march 19 hotfix
+local timerAnimaRingCD				= mod:NewNextTimer(24.2, 136954, nil, "Tank")--Updated/Verified post march 19 hotfix
 local timerAnimaFontCD				= mod:NewCDTimer(25, 138691)
 local timerInterruptingJolt			= mod:NewCastTimer(2.2, 138763)
 local timerInterruptingJoltCD		= mod:NewCDCountTimer(21.5, 138763)--seems 23~24 normal and lfr. every 21.5 exactly on heroic
@@ -59,7 +59,7 @@ local berserkTimer					= mod:NewBerserkTimer(600)
 
 local countdownActivation			= mod:NewCountdown(60, 139537)
 local countdownInterruptingJolt		= mod:NewCountdown(21.5, 138763)
-local countdownAnimaRing			= mod:NewCountdown(24.2, 136954, mod:IsTank(), nil, nil, nil, true)
+local countdownAnimaRing			= mod:NewCountdown(24.2, 136954, "Tank", nil, nil, nil, true)
 
 local crimsonWake = GetSpellInfo(138485)--Debuff ID I believe, not cast one. Same spell name though
 local siphon = 0

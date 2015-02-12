@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d652", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1099)
@@ -19,7 +19,7 @@ local warnThrowBomb				= mod:NewSpellAnnounce(132995, 3, nil, false)
 local warnVolatileConcoction	= mod:NewSpellAnnounce(141327, 3)
 --Admiral Hagman
 local warnVerticalSlash			= mod:NewSpellAnnounce(141187, 4)
-local warnCounterShot			= mod:NewSpellAnnounce(136473, 2, nil, mod:IsSpellCaster())
+local warnCounterShot			= mod:NewSpellAnnounce(136473, 2, nil, "SpellCaster")
 
 --Lieutenant Drak'on
 local specWarnSwashbuckling		= mod:NewSpecialWarningSpell(141438)
@@ -27,7 +27,7 @@ local specWarnSwashbuckling		= mod:NewSpecialWarningSpell(141438)
 local specWarnVolatileConcoction= mod:NewSpecialWarningSpell(141327)
 --Admiral Hagman
 local specWarnVerticalSlash		= mod:NewSpecialWarningSpell(141187)
-local specWarnCounterShot		= mod:NewSpecialWarningCast(136473, mod:IsSpellCaster())
+local specWarnCounterShot		= mod:NewSpecialWarningCast(136473, "SpellCaster")
 
 --Lieutenant Drak'on
 local timerSwashbucklingCD		= mod:NewNextTimer(16, 141438)

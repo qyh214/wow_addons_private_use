@@ -219,7 +219,7 @@ local SubstitutionFunctions = {
 	return UnitName("target")
 end,
 ["lasttarget"] = function(de)
-	return SpeakinSpell.RuntimeData.LastSpellcastSentTarget
+	return SpeakinSpell:PlayerNameNoRealm(SpeakinSpell.RuntimeData.LastSpellcastSentTarget)
 end,
 ["realm"] = function(de) 
 	return GetRealmName()
@@ -507,6 +507,9 @@ end
 local SearchOrder = {
 	-- Basic Substitutions from the event information
 	[1] = function( sk, de, CurrentEvent )
+		--NOTE: don't apply SpeakinSpell:PlayerNameNoRealm() here
+		--      some of these values might not be name-realm but could still contain the "-" 
+		--      so that would trick PlayerNameNoRealm logic to truncate the result incorrectly
 		return de[ sk.key ]
 	end,
 	-- In case the Current Event defines something the Parent Event doesn't
@@ -619,7 +622,7 @@ end
 
 
 function SpeakinSpell:SubstituteMe( sk, de )
-	if sk.me and (sk.unit == UnitName("player")) then
+	if sk.me and (SpeakinSpell:NameIsMe(sk.unit)) then
 		sk.unit = self:FormatEmbeddedSubs( sk.me, de )
 		return true
 	else

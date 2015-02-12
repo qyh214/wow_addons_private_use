@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(861, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(72057)
 mod:SetReCombatTime(20)
 mod:SetZone()
@@ -18,12 +18,11 @@ mod:RegisterEventsInCombat(
 local warnAncientFlame			= mod:NewSpellAnnounce(144695, 2)--probably add a move warning with right DAMAGE event
 local warnMagmaCrush			= mod:NewSpellAnnounce(144688, 3)
 local warnBurningSoul			= mod:NewTargetAnnounce(144689, 3)
-local warnEternalAgony			= mod:NewSpellAnnounce(144696, 4)
 
 local specWarnBurningSoul		= mod:NewSpecialWarningMoveAway(144689)
 local yellBurningSoul			= mod:NewYell(144689)
 local specWarnPoolOfFire		= mod:NewSpecialWarningMove(144693)
-local specWarnEternalAgony		= mod:NewSpecialWarningSpell(144696, nil, nil, nil, 2)--Fights over, this is 5 minute berserk spell.
+local specWarnEternalAgony		= mod:NewSpecialWarningSpell(144696, nil, nil, nil, 3)--Fights over, this is 5 minute berserk spell.
 
 --local timerAncientFlameCD		= mod:NewCDTimer(43, 144695)--Insufficent logs
 --local timerBurningSoulCD		= mod:NewCDTimer(22, 144689)--22-30 sec variation (maybe larger, small sample size)
@@ -53,7 +52,6 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 144696 then
-		warnEternalAgony:Show()
 		specWarnEternalAgony:Show()
 	elseif spellId == 144688 then
 		warnMagmaCrush:Show()

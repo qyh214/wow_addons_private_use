@@ -112,14 +112,19 @@ do
 	end
 
 	local function setRange(self, range)
-		rangeCheck:Hide()
-		rangeCheck:Show(range, mainFrame.filter, true)
+		rangeCheck:Hide(true)
+		rangeCheck:Show(range, mainFrame.filter, true, mainFrame.redCircleNumPlayers or 1)
+	end
+	
+	local function setThreshold(self, threshold)
+		rangeCheck:Hide(true)
+		rangeCheck:Show(mainFrame.range, mainFrame.filter, true, threshold)
 	end
 
 	local function setFrames(self, option)
 		DBM.Options.RangeFrameFrames = option
-		rangeCheck:Hide()
-		rangeCheck:Show(mainFrame.range, mainFrame.filter, true)
+		rangeCheck:Hide(true)
+		rangeCheck:Show(mainFrame.range, mainFrame.filter, true, mainFrame.redCircleNumPlayers or 1)
 	end
 
 	local function toggleLocked()
@@ -135,6 +140,14 @@ do
 			info.hasArrow = true
 			info.keepShownOnClick = true
 			info.menuList = "range"
+			UIDropDownMenu_AddButton(info, 1)
+
+			info = UIDropDownMenu_CreateInfo()
+			info.text = DBM_CORE_RANGECHECK_SETTHRESHOLD
+			info.notCheckable = true
+			info.hasArrow = true
+			info.keepShownOnClick = true
+			info.menuList = "threshold"
 			UIDropDownMenu_AddButton(info, 1)
 
 			info = UIDropDownMenu_CreateInfo()
@@ -164,7 +177,7 @@ do
 			info = UIDropDownMenu_CreateInfo()
 			info.text = HIDE
 			info.notCheckable = true
-			info.func = rangeCheck.Hide
+			info.func = function() rangeCheck:Hide(true) end
 			info.arg1 = rangeCheck
 			UIDropDownMenu_AddButton(info, 1)
 
@@ -224,6 +237,55 @@ do
 				info.func = setRange
 				info.arg1 = 28
 				info.checked = (mainFrame.range == 28)
+				UIDropDownMenu_AddButton(info, 2)
+			elseif menu == "threshold" then
+				info = UIDropDownMenu_CreateInfo()
+				info.text = 1
+				info.func = setThreshold
+				info.arg1 = 1
+				info.checked = (mainFrame.redCircleNumPlayers == 1)
+				UIDropDownMenu_AddButton(info, 2)
+
+				info = UIDropDownMenu_CreateInfo()
+				info.text = 2
+				info.func = setThreshold
+				info.arg1 = 2
+				info.checked = (mainFrame.redCircleNumPlayers == 2)
+				UIDropDownMenu_AddButton(info, 2)
+				
+				info = UIDropDownMenu_CreateInfo()
+				info.text = 3
+				info.func = setThreshold
+				info.arg1 = 3
+				info.checked = (mainFrame.redCircleNumPlayers == 3)
+				UIDropDownMenu_AddButton(info, 2)
+				
+				info = UIDropDownMenu_CreateInfo()
+				info.text = 4
+				info.func = setThreshold
+				info.arg1 = 4
+				info.checked = (mainFrame.redCircleNumPlayers == 4)
+				UIDropDownMenu_AddButton(info, 2)
+				
+				info = UIDropDownMenu_CreateInfo()
+				info.text = 5
+				info.func = setThreshold
+				info.arg1 = 5
+				info.checked = (mainFrame.redCircleNumPlayers == 5)
+				UIDropDownMenu_AddButton(info, 2)
+				
+				info = UIDropDownMenu_CreateInfo()
+				info.text = 6
+				info.func = setThreshold
+				info.arg1 = 6
+				info.checked = (mainFrame.redCircleNumPlayers == 6)
+				UIDropDownMenu_AddButton(info, 2)
+				
+				info = UIDropDownMenu_CreateInfo()
+				info.text = 8
+				info.func = setThreshold
+				info.arg1 = 8
+				info.checked = (mainFrame.redCircleNumPlayers == 8)
 				UIDropDownMenu_AddButton(info, 2)
 			elseif menu == "sounds" then
 				info = UIDropDownMenu_CreateInfo()
@@ -319,11 +381,19 @@ end
 ------------------------
 --  Create the frame  --
 ------------------------
+local frameBackdrop = {
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+	tile = true,
+	tileSize = 16,
+	insets = { left = 2, right = 14, top = 2, bottom = 2 },
+}
+
 function createTextFrame()
 	local elapsed = 0
 	local textFrame = CreateFrame("GameTooltip", "DBMRangeCheck", UIParent, "GameTooltipTemplate")
 	dropdownFrame = CreateFrame("Frame", "DBMRangeCheckDropdown", textFrame, "UIDropDownMenuTemplate")
 	textFrame:SetFrameStrata("DIALOG")
+	textFrame:SetBackdrop(frameBackdrop)
 	textFrame:SetPoint(DBM.Options.RangeFramePoint, UIParent, DBM.Options.RangeFramePoint, DBM.Options.RangeFrameX, DBM.Options.RangeFrameY)
 	textFrame:SetHeight(64)
 	textFrame:SetWidth(64)
@@ -437,7 +507,7 @@ end
 --  OnUpdate  --
 ----------------
 do
-	local rotation, pixelsperyard, activeDots, numPlayers, circleColor, prevRange, prevNumClosePlayer, prevColor = 0, 0, 0, 0, 0, 0, 0, 0
+	local rotation, pixelsperyard, activeDots, numPlayers, circleColor, prevRange, prevThreshold, prevNumClosePlayer, prevclosestRange, prevColor, prevType = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	local unitList = {}
 
 	local function setDot(id)
@@ -501,21 +571,25 @@ do
 			textFrame:ClearLines()
 			textFrame:SetText(DBM_CORE_RANGECHECK_HEADER:format(activeRange), 1, 1, 1)
 		end
-		if rEnabled and prevRange ~= activeRange then
+		if rEnabled and (prevRange ~= activeRange or prevThreshold ~= mainFrame.redCircleNumPlayers) then
 			prevRange = activeRange
 			pixelsperyard = min(radarFrame:GetWidth(), radarFrame:GetHeight()) / (activeRange * 3)
 			radarFrame.circle:SetSize(activeRange * pixelsperyard * 2, activeRange * pixelsperyard * 2)
-			radarFrame.text:SetText(DBM_CORE_RANGERADAR_HEADER:format(activeRange))
+			radarFrame.text:SetText(DBM_CORE_RANGERADAR_HEADER:format(activeRange, mainFrame.redCircleNumPlayers))
 		end
 
 		local playerX, playerY, _, playerMapId = UnitPosition("player")
 
 		rotation = (2 * pi) - GetPlayerFacing()
 		local closePlayer = 0
+		local closestRange = nil
+		local closetName = nil
+		local reverse = mainFrame.reverse
+		local filter = mainFrame.filter
+		local type = reverse and 2 or filter and 1 or 0
 		for i = 1, numPlayers do
 			local uId = unitList[i]
 			local dot = dots[i]
-			local filter = mainFrame.filter
 			local x, y, _, mapId = UnitPosition(uId)
 			if UnitExists(uId) and playerMapId == mapId and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and (not filter or filter(uId)) then
 				local cy = x - playerX
@@ -523,9 +597,15 @@ do
 				local range = (cx * cx + cy * cy) ^ 0.5
 				--local range = UnitDistanceSquared(uId) ^ 0.5
 				local inRange = false
-				if range < (activeRange * 1.1) then-- add 10% because of map data inaccuracies
+				if range < (activeRange) then
 					closePlayer = closePlayer + 1
 					inRange = true
+					if not closestRange then
+						closestRange = range
+					elseif range < closestRange then
+						closestRange = range
+					end
+					if not closetName then closetName = UnitName(uId) end
 				end
 				if tEnabled and inRange and closePlayer < 6 then-- display up to 5 players in text range frame.
 					local playerName = UnitName(uId)
@@ -551,16 +631,21 @@ do
 			textFrame:Show()
 		end
 		if rEnabled then
-			if prevNumClosePlayer ~= closePlayer then
-				radarFrame.inRangeText:SetText(DBM_CORE_RANGERADAR_IN_RANGE_TEXT:format(closePlayer))
+			if prevNumClosePlayer ~= closePlayer or prevclosestRange ~= closestRange or prevType ~= type then
+				if closePlayer == 1 then
+					radarFrame.inRangeText:SetText(DBM_CORE_RANGERADAR_IN_RANGE_TEXTONE:format(closetName, closestRange))
+				else
+					radarFrame.inRangeText:SetText(DBM_CORE_RANGERADAR_IN_RANGE_TEXT:format(closePlayer, closestRange))
+				end
 				if closePlayer >= warnThreshold then -- only show the text if the circle is red
-					circleColor = 2
+					circleColor = reverse and 1 or 2
 					radarFrame.inRangeText:Show()
 				else
-					circleColor = 1
+					circleColor = reverse and 2 or 1
 					radarFrame.inRangeText:Hide()
 				end
 				prevNumClosePlayer = closePlayer
+				prevclosestRange = closestRange
 			end
 
 			if UnitIsDeadOrGhost("player") then
@@ -621,7 +706,8 @@ end
 ---------------
 --  Methods  --
 ---------------
-function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers)
+local restoreRange, restoreFilter, restoreThreshold, restoreReverse = nil, nil, nil, nil
+function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers, reverse)
 	if (DBM:GetNumRealGroupMembers() < 2 or DBM.Options.DontShowRangeFrame) and not forceshow then return end
 	if type(range) == "function" then -- the first argument is optional
 		return self:Show(nil, range)
@@ -642,6 +728,7 @@ function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers)
 	mainFrame.range = range
 	mainFrame.filter = filter
 	mainFrame.redCircleNumPlayers = redCircleNumPlayers
+	mainFrame.reverse = reverse
 	if not mainFrame.eventRegistered then
 		mainFrame.eventRegistered = true
 		updateIcon()
@@ -650,22 +737,31 @@ function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers)
 	end
 	updater:SetScript("OnLoop", updateRangeFrame)
 	updater:Play()
+	if forceshow and not DBM.Options.DontRestoreRange then--Force means user activaetd range frame, store user value for restore function
+		restoreRange, restoreFilter, restoreThreshold, restoreReverse = mainFrame.range, mainFrame.filter, mainFrame.redCircleNumPlayers, mainFrame.reverse
+	end
 end
 
-function rangeCheck:Hide()
-	updater:Stop()
-	activeRange = 0
-	if mainFrame.eventRegistered then
-		mainFrame.eventRegistered = nil
-		mainFrame:UnregisterAllEvents()
-	end
-	if textFrame then
-		textFrame.isShown = nil
-		textFrame:Hide()
-	end
-	if radarFrame then
-		radarFrame.isShown = nil
-		radarFrame:Hide() 
+function rangeCheck:Hide(force)
+	if restoreRange and not force then--Restore range frame to way it was when boss mod is done with it
+		rangeCheck:Show(restoreRange, restoreFilter, true, restoreThreshold, restoreReverse)
+	else
+		restoreRange, restoreFilter, restoreThreshold, restoreReverse = nil, nil, nil, nil
+		DBM.Options.RestoreRange = nil--Set nil here because it means force was passed.
+		updater:Stop()
+		activeRange = 0
+		if mainFrame.eventRegistered then
+			mainFrame.eventRegistered = nil
+			mainFrame:UnregisterAllEvents()
+		end
+		if textFrame then
+			textFrame.isShown = nil
+			textFrame:Hide()
+		end
+		if radarFrame then
+			radarFrame.isShown = nil
+			radarFrame:Hide() 
+		end
 	end
 end
 

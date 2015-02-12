@@ -39,9 +39,10 @@ function SpeakinSpell:ResComm_ResStart(event, resser, endTime, target)
 		--endtime = endTime, -- this is a number value, and not very useful to our purposes
 	}
 	-- use the player's role in this in the event name (and thus the key)
-	if		resser == UnitName("player") then
+	-- TODO: what if you're both the caster and the target?
+	if SpeakinSpell:NameIsMe(resser) then
 		destub.name = L["Start Casting (I'm the caster)"]
-	elseif	target == UnitName("player") then
+	elseif SpeakinSpell:NameIsMe(target) then
 		destub.name = L["Start Casting (I'm the target)"]
 	else
 		destub.name = L["Start Casting (I'm not involved)"]
@@ -61,9 +62,10 @@ function SpeakinSpell:ResComm_ResEnd(event, resser, target)
 		target = target,
 	}
 	-- use the player's role in this in the event name (and thus the key)
-	if		resser == UnitName("player") then
+	-- TODO: what if you're both the caster and the target?
+	if SpeakinSpell:NameIsMe(resser) then
 		destub.name = L["End Casting (I'm the caster)"]
-	elseif	target == UnitName("player") then
+	elseif SpeakinSpell:NameIsMe(target) then
 		destub.name = L["End Casting (I'm the target)"]
 	else
 		destub.name = L["End Casting (I'm not involved)"]

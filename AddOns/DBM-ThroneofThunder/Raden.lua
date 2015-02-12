@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(831, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 35 $"):sub(12, -3))
 mod:SetCreatureID(69473)--69888
 mod:SetEncounterID(1580, 1581)
 mod:SetZone()
@@ -22,41 +22,41 @@ mod.onlyHeroic = true
 
 --Anima
 local warnAnima					= mod:NewSpellAnnounce(138331, 2)--Switched to anima phase
-local warnMurderousStrike		= mod:NewSpellAnnounce(138333, 4, nil, mod:IsTank() or mod:IsHealer())--Tank (think thrash, like sha. Gains buff, uses on next melee attack)
+local warnMurderousStrike		= mod:NewSpellAnnounce(138333, 4, nil, "Tank|Healer")--Tank (think thrash, like sha. Gains buff, uses on next melee attack)
 local warnUnstableAnima			= mod:NewTargetAnnounce(138288)--May range frame needed. 138295 is damage id according to wowhead, 138288 is debuff cast.
-local warnSanguineHorror		= mod:NewCountAnnounce(138338, 3, nil, not mod:IsHealer())--Adds
+local warnSanguineHorror		= mod:NewCountAnnounce(138338, 3, nil, "-Healer")--Adds
 --Vita
 local warnVita					= mod:NewSpellAnnounce(138332, 2)--Switched to vita phase
-local warnFatalStrike			= mod:NewSpellAnnounce(138334, 4, nil, mod:IsTank() or mod:IsHealer())--Tank (think thrash, like sha. Gains buff, uses on next melee attack)
+local warnFatalStrike			= mod:NewSpellAnnounce(138334, 4, nil, "Tank|Healer")--Tank (think thrash, like sha. Gains buff, uses on next melee attack)
 local warnUnstableVita			= mod:NewTargetAnnounce(138297, 4)
-local warnCracklingStalker		= mod:NewCountAnnounce(138339, 3, nil, not mod:IsHealer())--Adds
+local warnCracklingStalker		= mod:NewCountAnnounce(138339, 3, nil, "-Healer")--Adds
 --General
 local warnCreation				= mod:NewCountAnnounce(138321, 3)--aka Orbs/Balls
 local warnPhase2				= mod:NewPhaseAnnounce(2, 2)
 local warnCallEssence			= mod:NewSpellAnnounce(139040, 4, 139071)
 
 --Anima
-local specWarnMurderousStrike	= mod:NewSpecialWarningSpell(138333, mod:IsTank(), nil, nil, 3)
-local specWarnSanguineHorror	= mod:NewSpecialWarningSwitch(138338, mod:IsRangedDps() or mod:IsTank())
+local specWarnMurderousStrike	= mod:NewSpecialWarningSpell(138333, "Tank", nil, nil, 3)
+local specWarnSanguineHorror	= mod:NewSpecialWarningSwitch(138338, "Ranged|Tank")
 local specWarnAninaSensitive	= mod:NewSpecialWarningYou(139318)
 local specWarnUnstableAnima		= mod:NewSpecialWarningYou(138288, nil, nil, nil, 3)
 local yellUnstableAnima			= mod:NewYell(138288, nil, false)
 --Vita
-local specWarnFatalStrike		= mod:NewSpecialWarningSpell(138334, mod:IsTank(), nil, nil, 3)
-local specWarnCracklingStalker	= mod:NewSpecialWarningSwitch(138339, mod:IsRangedDps() or mod:IsTank())
+local specWarnFatalStrike		= mod:NewSpecialWarningSpell(138334, "Tank", nil, nil, 3)
+local specWarnCracklingStalker	= mod:NewSpecialWarningSwitch(138339, "Ranged|Tank")
 local specWarnVitaSensitive		= mod:NewSpecialWarningYou(138372)
 local specWarnUnstablVita		= mod:NewSpecialWarningYou(138297, nil, nil, nil, 3)
 local specWarnUnstablVitaJump	= mod:NewSpecialWarning("specWarnUnstablVitaJump", nil, nil, nil, 1)
 local yellUnstableVita			= mod:NewYell(138297, nil, false)
 --General
-local specWarnCreation			= mod:NewSpecialWarningSpell(138321, mod:IsDps())
-local specWarnCallEssence		= mod:NewSpecialWarningSpell(139040, mod:IsDps())
+local specWarnCreation			= mod:NewSpecialWarningSpell(138321, "Dps")
+local specWarnCallEssence		= mod:NewSpecialWarningSpell(139040, "Dps")
 
 --Anima
-local timerMurderousStrikeCD	= mod:NewCDTimer(33, 138333, nil, mod:IsTank())--Gains 3 power per second roughly and uses special at 100 Poewr
+local timerMurderousStrikeCD	= mod:NewCDTimer(33, 138333, nil, "Tank")--Gains 3 power per second roughly and uses special at 100 Poewr
 --local timerSanguineHorrorCD	= mod:NewCDCountTimer(41, 138338)--CD not known. No one fights him in anima phase for more than like 1-2 seconds.
 --Vita
-local timerFatalStrikeCD		= mod:NewCDTimer(10, 138334, nil, mod:IsTank())--Gains 10 power per second roughly and uses special at 100 Poewr
+local timerFatalStrikeCD		= mod:NewCDTimer(10, 138334, nil, "Tank")--Gains 10 power per second roughly and uses special at 100 Poewr
 local timerUnstableVita			= mod:NewTargetTimer(12, 138297)
 local timerCracklingStalkerCD	= mod:NewCDCountTimer(41, 138339)
 --General
@@ -67,7 +67,6 @@ local countdownUnstableVita		= mod:NewCountdownFades(11, 138297)
 local countdownCreation			= mod:NewCountdown(32.5, 138321, nil, nil, nil, nil, true)
 
 mod:AddBoolOption("SetIconsOnVita", false)--Both the vita target and furthest from vita target
-local ShowedBigWigsmessage		= mod:NewSpellAnnounce("ShowedBigWigsmessage", 1, nil, false, false)--Dummy option
 
 local creationCount = 0
 local stalkerCount = 0

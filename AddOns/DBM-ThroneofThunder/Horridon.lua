@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(819, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 30 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(68476)
 mod:SetEncounterID(1575)
 mod:SetZone()
@@ -27,7 +27,7 @@ TODO: See if this has some target scanning. On heroic these can one shot non tan
 "<431.7 15:32:55> [CLEU] SPELL_SUMMON#false#0xF1310E38000020EE#Amani'shi Beast Shaman#2632#128#0xF1310E5F00002779#Lightning Nova Totem#2600#0#136487#Lightning Nova Totem#1", -- [67957]
 --]]
 local warnCharge				= mod:NewTargetAnnounce(136769, 4)
-local warnPuncture				= mod:NewStackAnnounce(136767, 2, nil, mod:IsTank() or mod:IsHealer())
+local warnPuncture				= mod:NewStackAnnounce(136767, 2, nil, "Tank|Healer")
 local warnDoubleSwipe			= mod:NewSpellAnnounce(136741, 3)
 local warnAdds					= mod:NewAnnounce("warnAdds", 2, 43712)--Some random troll icon
 local warnDino					= mod:NewSpellAnnounce("ej7086", 3, 137237)
@@ -38,7 +38,7 @@ local warnVenomBolt				= mod:NewSpellAnnounce(136587, 3, nil, false)
 local warnChainLightning		= mod:NewSpellAnnounce(136480, 3, nil, false)
 local warnFireball				= mod:NewSpellAnnounce(136465, 3, nil, false)
 local warnBestialCry			= mod:NewStackAnnounce(136817, 3)
-local warnRampage				= mod:NewTargetAnnounce(136821, 4, nil, mod:IsTank() or mod:IsHealer())
+local warnRampage				= mod:NewTargetAnnounce(136821, 4, nil, "Tank|Healer")
 local warnDireCall				= mod:NewCountAnnounce(137458, 3)
 local warnDireFixate			= mod:NewTargetAnnounce(140946, 4)
 
@@ -48,8 +48,8 @@ local specWarnDoubleSwipe		= mod:NewSpecialWarningSpell(136741, nil, nil, nil, 2
 local specWarnPuncture			= mod:NewSpecialWarningStack(136767, nil, 9)--9 seems like a good number, we'll start with that. Timing wise the swap typically comes when switching gates though.
 local specWarnPunctureOther		= mod:NewSpecialWarningTaunt(136767)
 local specWarnSandTrap			= mod:NewSpecialWarningMove(136723)
-local specWarnDino				= mod:NewSpecialWarningSwitch("ej7086", not mod:IsHealer())
-local specWarnMending			= mod:NewSpecialWarningInterrupt(136797, mod:IsDps())--High priority interrupt. All dps needs warning because boss heals 1% per second it's not interrupted.
+local specWarnDino				= mod:NewSpecialWarningSwitch("ej7086", "-Healer")
+local specWarnMending			= mod:NewSpecialWarningInterrupt(136797, "Dps")--High priority interrupt. All dps needs warning because boss heals 1% per second it's not interrupted.
 local specWarnOrbofControl		= mod:NewSpecialWarning("specWarnOrbofControl", false)--Usually an assigned role for 1-2 people. Do not want someone assigned to interrupts for example hear this and think it's interrupt time. This should be turned on by orb person
 local specWarnVenomBolt			= mod:NewSpecialWarningInterrupt(136587)--Can be on for all since it only triggers off target/focus
 local specWarnChainLightning	= mod:NewSpecialWarningInterrupt(136480)--Can be on for all since it only triggers off target/focus
@@ -58,8 +58,8 @@ local specWarnLivingPoison		= mod:NewSpecialWarningMove(136646)
 local specWarnFrozenBolt		= mod:NewSpecialWarningMove(136573)--Debuff used by Frozen Orbs
 local specWarnLightningNova		= mod:NewSpecialWarningMove(136490)--Mainly for LFR or normal. On heroic you're going to die.
 local specWarnHex				= mod:NewSpecialWarningYou(136512)
-local specWarnJalak				= mod:NewSpecialWarningSwitch("ej7087", mod:IsTank())--To pick him up (and maybe dps to switch, depending on strat)
-local specWarnRampage			= mod:NewSpecialWarningTarget(136821, mod:IsTank() or mod:IsHealer())--Dog is pissed master died, need more heals and cooldowns. Maybe warn dps too? his double swipes and charges will be 100% worse too.
+local specWarnJalak				= mod:NewSpecialWarningSwitch("ej7087", "Tank")--To pick him up (and maybe dps to switch, depending on strat)
+local specWarnRampage			= mod:NewSpecialWarningTarget(136821, "Tank|Healer")--Dog is pissed master died, need more heals and cooldowns. Maybe warn dps too? his double swipes and charges will be 100% worse too.
 local specWarnDireCall			= mod:NewSpecialWarningCount(137458, nil, nil, nil, 2)--Heroic
 local specWarnDireFixate		= mod:NewSpecialWarningRun(140946, nil, nil, nil, 4)--Heroic
 
@@ -69,8 +69,8 @@ local timerDinoCD				= mod:NewNextTimer(56.75, "ej7086", nil, nil, nil, 137237)-
 local timerCharge				= mod:NewCastTimer(3.4, 136769)
 local timerChargeCD				= mod:NewCDTimer(50, 136769)--50-60 second depending on i he's casting other stuff or stunned
 local timerDoubleSwipeCD		= mod:NewCDTimer(17, 136741)--17 second cd unless delayed by a charge triggered double swipe, then it's extended by failsafe code
-local timerPuncture				= mod:NewTargetTimer(90, 136767, nil, mod:IsTank() or mod:IsHealer())
-local timerPunctureCD			= mod:NewCDTimer(11, 136767, nil, mod:IsTank() or mod:IsHealer())
+local timerPuncture				= mod:NewTargetTimer(90, 136767, nil, "Tank|Healer")
+local timerPunctureCD			= mod:NewCDTimer(11, 136767, nil, "Tank|Healer")
 local timerJalakCD				= mod:NewNextTimer(10, "ej7087", nil, nil, nil, 2457)--Maybe it's time for a better worded spawn timer than "Next mobname". Maybe NewSpawnTimer with "mobname activates" or something.
 local timerBestialCryCD			= mod:NewNextCountTimer(10, 136817)
 local timerDireCallCD			= mod:NewCDCountTimer(62, 137458)--Heroic (every 62-70 seconds)

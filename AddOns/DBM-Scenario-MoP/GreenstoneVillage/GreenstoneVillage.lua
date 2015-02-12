@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d492", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1024)
@@ -22,7 +22,7 @@ local warnJadeStatue			= mod:NewSpellAnnounce(119364, 4)
 local warnSummonSeedlings		= mod:NewSpellAnnounce(117664, 2)
 
 --Cursed Brew
-local specWarnBrewBubble		= mod:NewSpecialWarningSwitch(131143, mod:IsDps())
+local specWarnBrewBubble		= mod:NewSpecialWarningSwitch(131143, "Dps")
 --Beast of Jade
 local specWarnJadeStatue		= mod:NewSpecialWarningInterrupt(119364)
 

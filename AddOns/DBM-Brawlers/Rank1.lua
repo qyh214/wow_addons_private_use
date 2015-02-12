@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank1", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
 mod:SetModelID(46327)--Last Boss of Rank 1
 mod:SetZone()
 
@@ -23,7 +23,7 @@ local warnChainLightning		= mod:NewSpellAnnounce(39945, 3)--Akama
 
 local specWarnLumberingCharge	= mod:NewSpecialWarningDodge(134527)--Goredome
 local specWarnFireWall			= mod:NewSpecialWarningSpell(132666)--Sanoriak
-local specWarnShadowStrikes		= mod:NewSpecialWarningDispel(126209, mod:IsMagicDispeller())--Akama
+local specWarnShadowStrikes		= mod:NewSpecialWarningDispel(126209, "MagicDispeller")--Akama
 local specWarnChainLightning	= mod:NewSpecialWarningInterrupt(39945)--Akama
 
 local timerLumberingChargeCD	= mod:NewCDTimer(7, 134527)--Goredome

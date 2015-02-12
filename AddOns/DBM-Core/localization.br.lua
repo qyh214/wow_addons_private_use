@@ -1,6 +1,6 @@
 ﻿if GetLocale() ~= "ptBR" then return end
 
-DBM_CORE_NEED_SUPPORT				= "Are you good with programming or languages? If yes, the DBM team needs your help to keep DBM the best boss mod for WoW. Join the team by visiting www.deadlybossmods.com or sending a message to tandanu@deadlybossmods.com or nitram@deadlybossmods.com."
+DBM_CORE_NEED_SUPPORT				= "Are you good with programming or languages? If yes, the DBM team needs your help to keep DBM the best boss mod for WoW. Join the team by visiting http://forums.elitistjerks.com/topic/132449-dbm-localizers-needed/"
 DBM_HOW_TO_USE_MOD					= "Bem vindo ao DBM. Digite /dbm help para obter uma lista dos comandos disponíveis. Para acessar as opções, digite /dbm no seu chat para começar a configuração. Carrege zonas específicas manualmente para configurar opções específicas de cada chefe para o seu gosto pessoal. O DBM tenta fazer isso automaticamente para você, observando sua spec na primeira vez que é executado. De qualquer forma, você pode querer habilitar outras opções."
 
 DBM_CORE_LOAD_MOD_ERROR				= "Erro ao carregar módulo %s: %s "
@@ -22,7 +22,7 @@ DBM_CORE_TIMER_FORMAT				= "%d |4minuto:minutos; and %d |4segundo:segundos;"
 DBM_CORE_MIN						= "min"
 DBM_CORE_MIN_FMT					= "%d min"
 DBM_CORE_SEC						= "seg"
-DBM_CORE_SEC_FMT					= "%d seg"
+DBM_CORE_SEC_FMT					= "%s seg"
 DBM_CORE_DEAD						= "morto"
 DBM_CORE_OK							= "Ok"
 
@@ -188,10 +188,13 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run 		= "Exibir aviso especial para $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.cast 		= "Exibir aviso especial para o lançamento de $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack 		= "Exibir aviso especial para pilha >=%d de $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch		= "Exibir aviso especial para mudar de alvo para $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
 
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.spell		= "%s!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel	= "%s em >%%s< - remova agora"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt	= "%s - interrompa >%%s<"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount	= "%s - interrompa >%%s< (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you		= "%s em você"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target	= "%s em >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close		= "%s em >%%s< perto de você"
@@ -201,6 +204,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.run		= "%s - corra para longe"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast		= "%s - pare de lançar"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%s (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch	= ">%s< - mude de alvo"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= ">%s< - mude de alvo (%%d)"
 
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT		= "Colocar ícones nos alvos de $spell:%s"

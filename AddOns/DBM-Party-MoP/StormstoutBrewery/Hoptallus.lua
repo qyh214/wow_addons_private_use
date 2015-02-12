@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(669, "DBM-Party-MoP", 2, 302)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 30 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(56717)
 mod:SetEncounterID(1413)
 mod:SetZone()
@@ -16,8 +16,8 @@ mod:RegisterEventsInCombat(
 local warnFurlwind			= mod:NewSpellAnnounce(112992, 3)
 local warnCarrotBreath		= mod:NewSpellAnnounce(112944, 4)
 
-local specWarnFurlwind		= mod:NewSpecialWarningRun(112992, mod:IsMelee())
-local specWarnCarrotBreath	= mod:NewSpecialWarningSpell(112944, nil, nil, nil, true)
+local specWarnFurlwind		= mod:NewSpecialWarningRun(112992, "Melee")
+local specWarnCarrotBreath	= mod:NewSpecialWarningSpell(112944, nil, nil, nil, 2)
 
 local timerFurlwind			= mod:NewBuffActiveTimer(9.5, 112992)
 local timerFurlwindCD		= mod:NewNextTimer(25, 112992)--True CD, 43 seconds, but triggering off alternating abilities reduces timer spam.

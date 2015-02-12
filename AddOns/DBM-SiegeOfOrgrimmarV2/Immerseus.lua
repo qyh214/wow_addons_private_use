@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(852, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(71543)
 mod:SetEncounterID(1602)
 mod:SetReCombatTime(45)--Lets just assume he has same bug as tsulong in advance and avoid problems
@@ -21,22 +21,18 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_RAID_BOSS_EMOTE"
 )
 
-local warnBreath						= mod:NewSpellAnnounce(143436, 3, nil, mod:IsTank() or mod:IsHealer())
-local warnShaBolt						= mod:NewSpellAnnounce(143295, 3, nil, false)
-local warnSwirl							= mod:NewSpellAnnounce(143309, 4)
 local warnSplit							= mod:NewSpellAnnounce(143020, 2, nil, false)--Blizzard ones are loud enough
 local warnReform						= mod:NewSpellAnnounce(143469, 2, nil, false)--These are redundant, but some DO like them for the DBM sound vs blizz one so not completely removed
 local warnSwellingCorruptionCast		= mod:NewSpellAnnounce(143578, 2, 143574)--Heroic (this is the boss spellcast trigger spell NOT personal debuff warning)
 
-local specWarnBreath					= mod:NewSpecialWarningSpell(143436, mod:IsTank())
+local specWarnBreath					= mod:NewSpecialWarningSpell(143436, "Tank|Healer")
 local specWarnShaSplash					= mod:NewSpecialWarningMove(143297)
 local specWarnSwirl						= mod:NewSpecialWarningSpell(143309, nil, nil, nil, 2)
 local specWarnSwellingCorruptionTarget	= mod:NewSpecialWarningTarget(143578, false)
 local specWarnSwellingCorruptionFades	= mod:NewSpecialWarningFades(143578, false)
 
-local timerBreathCD						= mod:NewCDTimer(35, 143436, nil, mod:IsTank() or mod:IsHealer())--35-65 second variation wtf?
+local timerBreathCD						= mod:NewCDTimer(35, 143436, nil, "Tank|Healer")--35-65 second variation wtf?
 local timerSwirl						= mod:NewBuffActiveTimer(13, 143309)
-local timerShaBoltCD					= mod:NewCDTimer(6, 143295, nil, false)--every 6-20 seconds (yeah it variates that much)
 local timerSwirlCD						= mod:NewCDTimer(48.5, 143309)
 local timerShaResidue					= mod:NewBuffFadesTimer(10, 143459, nil, false)
 local timerPurifiedResidue				= mod:NewBuffFadesTimer(15, 143524, nil, false)
@@ -60,11 +56,9 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 143436 then
-		warnBreath:Show()
 		specWarnBreath:Show()
 		timerBreathCD:Start()
 	elseif spellId == 143309 then
-		warnSwirl:Show()
 		specWarnSwirl:Show()
 		timerSwirl:Start()
 		timerSwirlCD:Show()
@@ -104,10 +98,7 @@ end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 143293 and self:AntiSpam(3, 2) then--Sha Bolt
-		warnShaBolt:Show()
-		timerShaBoltCD:Start()
-	elseif spellId == 143578 then--Swelling Corruption
+	if spellId == 143578 then--Swelling Corruption
 		warnSwellingCorruptionCast:Show()
 		timerSwellingCorruptionCD:Start()
 	end
@@ -125,7 +116,6 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		warnSplit:Show()
 		timerBreathCD:Cancel()
 		timerSwirlCD:Cancel()
-		timerShaBoltCD:Cancel()
 		timerSwellingCorruptionCD:Cancel()
 	end
 end

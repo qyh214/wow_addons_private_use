@@ -165,6 +165,9 @@ function SpeakinSpell:GetChatLanguageForSpell(EventTableEntry)
 
 		--self:DebugMsg(funcname, string.format(L["Random:%d <= Chance:%d"], Random, Chance) )
 		if Random <= Chance then -- use racial language
+			--NOTE: languageName, languageIndex = GetLanguageByIndex(index)
+			--      SpeakinSpell:GetRacialLanguage() returns the localized languageName
+			--      but SendChatMessage needs the locale-independant languageIndex
 			return select(2, GetLanguageByIndex(2))
 		else -- use Common
 			return nil --more reliable than GetDefaultLanguage("player") for our purposes here
@@ -174,6 +177,9 @@ function SpeakinSpell:GetChatLanguageForSpell(EventTableEntry)
 		return nil
 	elseif "RACIAL" == EventTableEntry.RPLanguage then
 		-- use the racial language
+		--NOTE: languageName, languageIndex = GetLanguageByIndex(index)
+		--      SpeakinSpell:GetRacialLanguage() returns the localized languageName
+		--      but SendChatMessage needs the locale-independant languageIndex
 		return select(2, GetLanguageByIndex(2));
 	else
 		-- invalid option, assume common
@@ -476,7 +482,7 @@ if channel == "PARTY"  or channel == "RAID" then
 end
    
 	--TODOFUTURE: make it an option to whisper yourself - but be wary of the auto self-cast logic
-	local EnableWhisperTarget = DetectedEvent.EventTableEntry.WhisperTarget and DetectedEvent.target and (DetectedEvent.target ~= "") and (DetectedEvent.target ~= "Unknown") and (DetectedEvent.target ~= UnitName("player")) and UnitIsFriend("player",DetectedEvent.target)
+	local EnableWhisperTarget = DetectedEvent.EventTableEntry.WhisperTarget and DetectedEvent.target and (DetectedEvent.target ~= "") and (DetectedEvent.target ~= "Unknown") and (not SpeakinSpell:NameIsMe(DetectedEvent.target)) and UnitIsFriend("player",DetectedEvent.target)
 
 	if not channel and not EnableWhisperTarget then
 		-- this spell's speeches have no target for the current situation

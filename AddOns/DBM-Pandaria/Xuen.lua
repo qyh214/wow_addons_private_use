@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(860, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(71953)
 mod:SetReCombatTime(20)
 mod:SetZone()
@@ -17,17 +17,17 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED target focus"
 )
 
-local warnSpectralSwipe				= mod:NewStackAnnounce(144638, 2, nil, mod:IsTank() or mod:IsHealer())
+local warnSpectralSwipe				= mod:NewStackAnnounce(144638, 2, nil, "Tank|Healer")
 local warnAgility					= mod:NewTargetAnnounce(144631, 3)
 local warnCracklingLightning		= mod:NewSpellAnnounce(144635, 3)--According to data, spread range is 60 yards so spreading out for this seems pointless. it's just healed through
 local warnChiBarrage				= mod:NewSpellAnnounce(144642, 4)
 
-local specWarnSpectralSwipe			= mod:NewSpecialWarningStack(144638, mod:IsTank(), 5)
-local specWarnSpectralSwipeOther	= mod:NewSpecialWarningTarget(144638, mod:IsTank())
-local specWarnAgility				= mod:NewSpecialWarningDispel(144631, mod:IsMagicDispeller(), nil, nil, 3)
+local specWarnSpectralSwipe			= mod:NewSpecialWarningStack(144638, "Tank", 5)
+local specWarnSpectralSwipeOther	= mod:NewSpecialWarningTaunt(144638)
+local specWarnAgility				= mod:NewSpecialWarningDispel(144631, "MagicDispeller", nil, nil, 3)
 local specWarnChiBarrage			= mod:NewSpecialWarningSpell(144642, nil, nil, nil, 2)
 
-local timerSpectralSwipe			= mod:NewTargetTimer(60, 144638, nil, mod:IsTank() or mod:IsHealer())
+local timerSpectralSwipe			= mod:NewTargetTimer(60, 144638, nil, "Tank|Healer")
 local timerSpectralSwipeCD			= mod:NewCDTimer(12, 144638)
 --local timerAgilityCD				= mod:NewCDTimer(25, 144631)
 local timerCracklingLightning		= mod:NewBuffActiveTimer(13, 144635)

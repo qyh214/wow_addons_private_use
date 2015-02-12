@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12390 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12676 $"):sub(12, -3))
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetZone()
@@ -24,12 +24,8 @@ mod:RegisterEventsInCombat(
 
 --TODO, find number of targets of MC and add SetIconsUsed with correct icon count.
 --TODO, see if MC works. I think it's every 3rd balls
-local warnCausticEnergy				= mod:NewTargetAnnounce("OptionVersion2", 161242, 3, nil, false)
-local warnNullBarrier				= mod:NewTargetAnnounce(156803, 2)
-local warnVulnerability				= mod:NewTargetAnnounce("OptionVersion2", 160734, 1, nil, false)
-local warnTrample					= mod:NewTargetCountAnnounce(163101, 3)--Technically it's supression field, then trample, but everyone is going to know it more by trample cause that's the part of it that matters
-local warnExpelMagicFire			= mod:NewSpellAnnounce(162185, 3)
-local warnExpelMagicShadow			= mod:NewSpellAnnounce(162184, 3, nil, mod:IsHealer())
+local warnCausticEnergy				= mod:NewTargetAnnounce("OptionVersion3", 161242, 3, nil, "Melee")
+local warnTrample					= mod:NewTargetAnnounce(163101, 3)--Technically it's supression field, then trample, but everyone is going to know it more by trample cause that's the part of it that matters
 local warnExpelMagicFrost			= mod:NewTargetAnnounce(161411, 3)
 local warnExpelMagicArcane			= mod:NewTargetAnnounce(162186, 4)
 local warnBallsSoon					= mod:NewPreWarnAnnounce(161612, 6.5, 2)
@@ -40,21 +36,22 @@ local warnExpelMagicFel				= mod:NewTargetAnnounce(172895, 4)
 
 local specWarnNullBarrier			= mod:NewSpecialWarningTarget(156803)--Only warn for boss
 local specWarnVulnerability			= mod:NewSpecialWarningTarget(160734)--Switched to target warning since some may be assined adds, some to boss, but all need to know when this phase starts
-local specWarnTrample				= mod:NewSpecialWarningYou(163101, nil, nil, nil, nil, nil, true)
+local specWarnTrample				= mod:NewSpecialWarningYou(163101, nil, nil, nil, nil, nil, 2)
 local yellTrample					= mod:NewYell(163101)
 local specWarnTrampleNear			= mod:NewSpecialWarningClose(163101)
-local specWarnExpelMagicFire		= mod:NewSpecialWarningMoveAway(162185, nil, nil, nil, nil, nil, true)
-local specWarnExpelMagicShadow		= mod:NewSpecialWarningSpell(162184, mod:IsHealer(), nil, nil, nil, nil, true)
-local specWarnExpelMagicFrost		= mod:NewSpecialWarningSpell(161411, false, nil, nil, nil, nil, true)
-local specWarnExpelMagicArcaneYou	= mod:NewSpecialWarningMoveAway(162186, nil, nil, nil, 3, nil, true)
-local specWarnExpelMagicArcane		= mod:NewSpecialWarningTaunt(162186, nil, nil, nil, nil, nil, true)
+local specWarnExpelMagicFire		= mod:NewSpecialWarningMoveAway(162185, nil, nil, nil, nil, nil, 2)
+local specWarnExpelMagicShadow		= mod:NewSpecialWarningSpell(162184, "Healer", nil, nil, nil, nil, 2)
+local specWarnExpelMagicFrostYou	= mod:NewSpecialWarningYou(161411, false)
+local specWarnExpelMagicFrost		= mod:NewSpecialWarningSpell(161411, false, nil, nil, nil, nil, 2)
+local specWarnExpelMagicArcaneYou	= mod:NewSpecialWarningMoveAway(162186, nil, nil, nil, 3, nil, 2)
+local specWarnExpelMagicArcane		= mod:NewSpecialWarningTaunt(162186, nil, nil, nil, nil, nil, 2)
 local yellExpelMagicArcane			= mod:NewYell(162186)
-local specWarnBallsSoon				= mod:NewSpecialWarningPreWarn(161612, nil, 6.5, nil, nil, nil, nil, true)
+local specWarnBallsSoon				= mod:NewSpecialWarningPreWarn(161612, nil, 6.5, nil, nil, nil, nil, 2)
 --local specWarnMCSoon				= mod:NewSpecialWarningPreWarn(163472, true, 6.5)
-local specWarnMC					= mod:NewSpecialWarningSwitch(163472, mod:IsDps())
+local specWarnMC					= mod:NewSpecialWarningSwitch(163472, "Dps")
 local specWarnForfeitPower			= mod:NewSpecialWarningInterrupt(163517)--Spammy?
 local specWarnExpelMagicFel			= mod:NewSpecialWarningYou(172895)--Maybe needs "do not move" warning or at very least "try not to move" since sometimes you have to move for trample.
-local specWarnExpelMagicFelFades	= mod:NewSpecialWarning("specWarnExpelMagicFelFades", nil, nil, nil, 3, nil, true)--No generic that describes this
+local specWarnExpelMagicFelFades	= mod:NewSpecialWarning("specWarnExpelMagicFelFades", nil, nil, nil, 3, nil, 2)--No generic that describes this
 local yellExpelMagicFel				= mod:NewYell(172895)
 local specWarnExpelMagicFelMove		= mod:NewSpecialWarningMove(172917)--Under you (fire). If not enough maybe add periodic damage too?
 
@@ -64,11 +61,12 @@ local timerExpelMagicFire			= mod:NewBuffFadesTimer("OptionVersion2", 11.5, 1621
 local timerExpelMagicFireCD			= mod:NewCDTimer(60, 162185)--60-66 Variation
 local timerExpelMagicFrost			= mod:NewBuffActiveTimer("OptionVersion3", 20, 161411, nil, false)
 local timerExpelMagicFrostCD		= mod:NewCDTimer(60, 161411)--60-63 variation
-local timerExpelMagicShadowCD		= mod:NewCDTimer(60, 162184, nil, mod:IsHealer() or mod:IsTank())--60-63 variation
-local timerExpelMagicArcane			= mod:NewTargetTimer(10, 162186, nil, mod:IsTank() or mod:IsHealer())
-local timerExpelMagicArcaneCD		= mod:NewCDTimer(26, 162186, nil, mod:IsTank())--26-32
+local timerExpelMagicShadowCD		= mod:NewCDTimer(60, 162184, nil, "Tank|Healer")--60-63 variation
+local timerExpelMagicArcane			= mod:NewTargetTimer(10, 162186, nil, "Tank|Healer")
+local timerExpelMagicArcaneCD		= mod:NewCDTimer(26, 162186, nil, "Tank")--26-32
 local timerBallsCD					= mod:NewNextCountTimer(30, 161612)
-local timerExpelMagicFelCD			= mod:NewCDTimer("OptionVersion2", 15.5, 172895, nil, not mod:IsTank())--Mythic
+mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
+local timerExpelMagicFelCD			= mod:NewCDTimer("OptionVersion2", 15.5, 172895, nil, "-Tank")--Mythic
 local timerExpelMagicFel			= mod:NewBuffFadesTimer(12, 172895)--Mythic
 
 local countdownMagicFire			= mod:NewCountdownFades(11.5, 162185)
@@ -76,10 +74,10 @@ local countdownBalls				= mod:NewCountdown("Alt30", 161612)
 local countdownFel					= mod:NewCountdownFades("AltTwo11", 172895)
 
 local voiceExpelMagicFire			= mod:NewVoice(162185)
-local voiceExpelMagicShadow			= mod:NewVoice(162184, mod:IsHealer())
+local voiceExpelMagicShadow			= mod:NewVoice("OptionVersion2", 162184, "Healer")
 local voiceExpelMagicFrost			= mod:NewVoice(161411)
-local voiceExpelMagicArcane			= mod:NewVoice("OptionVersion2", 162186, mod:IsTank())
-local voiceMC						= mod:NewVoice(163472, mod:IsDps())
+local voiceExpelMagicArcane			= mod:NewVoice("OptionVersion3", 162186)
+local voiceMC						= mod:NewVoice(163472, "Dps")
 local voiceTrample					= mod:NewVoice(163101)
 local voiceBalls					= mod:NewVoice(161612)
 local voiceExpelMagicArcaneFel		= mod:NewVoice(172895)
@@ -89,25 +87,27 @@ mod:AddSetIconOption("SetIconOnMC", 163472, false)
 mod:AddSetIconOption("SetIconOnFel", 172895, false)
 mod:AddArrowOption("FelArrow", 172895, true, 3)
 
-mod.vb.supressionCount = 0
 mod.vb.ballsCount = 0
 mod.vb.shieldCharging = false
+mod.vb.fireActive = false
 local lastX, LastY = nil, nil--Not in VB table because it player personal position
 local barName = GetSpellInfo(156803)
+local arcaneDebuff = GetSpellInfo(162186)
 
 local function closeRange(self)
-	if self.Options.RangeFrame then
+	if self.Options.RangeFrame and not UnitDebuff("player", arcaneDebuff) then
 		DBM.RangeCheck:Hide()
 	end
+	self.vb.fireActive = false
 end
 
 local function ballsWarning(self)
-	warnBallsSoon:Show()
 	DBM:Debug("Balls should be falling in 6.5 second")
 	if UnitPower("player", 10) > 0 then--Player is soaker
-		specWarnBallsSoon:Show()
+		specWarnBallsSoon:Show()--Player who soaks
 		voiceBalls:Play("161612")
 	else
+		warnBallsSoon:Show()--Everyone else
 		if self:IsMythic() and ((self.vb.ballsCount+1) % 2) == 0 then
 --			specWarnMCSoon:Show()
 		end
@@ -132,12 +132,15 @@ end
 
 function mod:FrostTarget(targetname, uId)
 	warnExpelMagicFrost:Show(targetname)
+	if targetname == UnitName("player") then
+		specWarnExpelMagicFrostYou:Show()
+	end
 end
 
 function mod:OnCombatStart(delay)
-	self.vb.supressionCount = 0
 	self.vb.ballsCount = 0
 	self.vb.shieldCharging = false
+	self.vb.fireActive = false
 	timerExpelMagicFireCD:Start(6-delay)
 	timerExpelMagicArcaneCD:Start(30-delay)
 	timerBallsCD:Start(36-delay, 1)
@@ -165,7 +168,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 162185 then
-		warnExpelMagicFire:Show()
+		self.vb.fireActive = true
 		specWarnExpelMagicFire:Schedule(5)--Give you about 4 seconds to spread out
 		--Even if you AMS or resist debuff, need to avoid others that didn't, so rangecheck now here
 		if self.Options.RangeFrame then
@@ -182,7 +185,6 @@ function mod:SPELL_CAST_START(args)
 		voiceExpelMagicFire:Schedule(5, "scatter")
 		self:Schedule(11.5, closeRange, self)
 	elseif spellId == 162184 then
-		warnExpelMagicShadow:Show()
 		specWarnExpelMagicShadow:Show()
 		if self.vb.shieldCharging then
 			timerExpelMagicShadowCD:Start(87)
@@ -248,7 +250,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 156803 then
 		self.vb.shieldCharging = false
-		warnNullBarrier:Show(args.destName)
 		specWarnNullBarrier:Show(args.destName)
 	elseif spellId == 162186 then
 		warnExpelMagicArcane:Show(args.destName)
@@ -276,7 +277,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnMC:CombinedShow(0.5, args.destName)
 		if self:AntiSpam(3, 1) then
 			specWarnMC:Show()
-			voiceMC:Play("killmob")
+			voiceMC:Play("findmc")
 		end
 		if self.Options.SetIconOnMC then
 			self:SetSortedIcon(1, args.destName, 8, nil, true)--TODO, find out number of targets and add
@@ -301,7 +302,7 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 162186 and args:IsPlayer() and self.Options.RangeFrame then
+	if spellId == 162186 and args:IsPlayer() and self.Options.RangeFrame and not self.vb.fireActive then
 		DBM.RangeCheck:Hide()
 	elseif spellId == 163472 and self.Options.SetIconOnMC then
 		self:SetIcon(args.destName, 0)
@@ -318,64 +319,57 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 156803 then--Null barrier fall off boss
 		DBM:Debug("Koragh Lost his shield")
 		self.vb.shieldCharging = true
-		warnVulnerability:Show(args.destName)
 		specWarnVulnerability:Show(args.destName)
 		timerVulnerability:Start()
 		timerTrampleCD:Cancel()
 		--Here we making a fucking mess, because his timers pause during shield phase then resume. All with different rates from one another
 		if self:IsMythic() then
 		--Fel https://www.warcraftlogs.com/reports/kDzfJ812QZgpwa9h#view=events&pins=2%24Off%24%23244F4B%24expression%24ability.id+%3D+172895+and+type+%3D%22begincast%22+or+ability.id+%3D+156803+and+(type+%3D+%22applybuff%22+or+type+%3D+%22removebuff%22)&fight=11
-			local felElapsed, felTotalTotal = timerExpelMagicFelCD:GetTime()
-			local felRemaining = felTotalTotal - felElapsed
+			local felRemaining = timerExpelMagicFelCD:GetRemaining()
 			if felRemaining > 0 then--Basically, a 0 0 check.
 				timerExpelMagicFelCD:Start(felRemaining+23)
 			end
 		end
 		--Frost https://www.warcraftlogs.com/reports/kDzfJ812QZgpwa9h#view=events&pins=2%24Off%24%23244F4B%24expression%24ability.id+%3D+172747+and+type+%3D+%22begincast%22+or+ability.id+%3D+156803+and+(type+%3D+%22applybuff%22+or+type+%3D+%22removebuff%22)&fight=11
 		--https://www.warcraftlogs.com/reports/6bF47HT9hN3Xcj2n#view=events&pins=2%24Off%24%23244F4B%24expression%24ability.id+%3D+172747+and+type+%3D+%22begincast%22+or+ability.id+%3D+156803+and+(type+%3D+%22applybuff%22+or+type+%3D+%22removebuff%22)&fight=40
-		local frostElapsed, frostTotal = timerExpelMagicFrostCD:GetTime()
-		local frostRemaining = frostTotal - frostElapsed
+		local frostRemaining = timerExpelMagicFrostCD:GetRemaining()
 		if frostRemaining > 0 then--Basically, a 0 0 check.
 			timerExpelMagicFrostCD:Start(frostRemaining+23)--Not perfect. It's every 60 seconds exacty, unless delayed by shield phase, then it's remaining+24-27
 		end
 		--Shadow https://www.warcraftlogs.com/reports/kDzfJ812QZgpwa9h#view=events&pins=2%24Off%24%23244F4B%24expression%24ability.id+%3D+162184+and+type+%3D+%22begincast%22+or+ability.id+%3D+156803+and+(type+%3D+%22applybuff%22+or+type+%3D+%22removebuff%22)&fight=1
-		local shadowElapsed, shadowTotal = timerExpelMagicShadowCD:GetTime()
-		local shadowRemaining = shadowTotal - shadowElapsed
+		local shadowRemaining = timerExpelMagicShadowCD:GetRemaining()
 		if shadowRemaining > 0 then--Basically, a 0 0 check.
 			timerExpelMagicShadowCD:Start(shadowRemaining+27)--Note the difference, shadow is +27-30 not +23-26
 		end
 		--Arcane https://www.warcraftlogs.com/reports/kDzfJ812QZgpwa9h#view=events&pins=2%24Off%24%23244F4B%24expression%24ability.id+%3D+162186+and+type+%3D+%22applydebuff%22+or+ability.id+%3D+156803+and+(type+%3D+%22applybuff%22+or+type+%3D+%22removebuff%22)&fight=9
-		local arcaneElapsed, arcaneTotal = timerExpelMagicArcaneCD:GetTime()
-		local arcaneRemaining = arcaneTotal - arcaneElapsed
+		local arcaneRemaining = timerExpelMagicArcaneCD:GetRemaining()
 		if arcaneRemaining > 0 then--Basically, a 0 0 check.
 			timerExpelMagicArcaneCD:Start(arcaneRemaining+27)--Note the difference, shadow is +27-30 not +23-26
 		end
 		--Fire https://www.warcraftlogs.com/reports/kDzfJ812QZgpwa9h#view=events&pins=2%24Off%24%23244F4B%24expression%24ability.id+%3D+162185+and+type+%3D+%22begincast%22+or+ability.id+%3D+156803+and+(type+%3D+%22applybuff%22+or+type+%3D+%22removebuff%22)&fight=12
 		--https://www.warcraftlogs.com/reports/Wj4MnfLQ8t3HzFgy#fight=10&type=summary&view=events&pins=2%24Off%24%23244F4B%24expression%24ability.id+%3D+162185+and+type+%3D+%22begincast%22+or+ability.id+%3D+156803+and+(type+%3D+%22applybuff%22+or+type+%3D+%22removebuff%22)
-		local fireElapsed, fireTotal = timerExpelMagicArcaneCD:GetTime()
-		local fireRemaining = fireTotal - fireElapsed
+		local fireRemaining = timerExpelMagicArcaneCD:GetRemaining()
 		if fireRemaining > 0 then--Basically, a 0 0 check.
 			timerExpelMagicFireCD:Start(fireRemaining+27)--Note the difference, shadow is +27-30 not +23-26
 		end
 		--Balls
-		local ballsElapsed, ballsTotal = timerBallsCD:GetTime(self.vb.ballsCount+1)
-		if (ballsElapsed == 0) and (ballsTotal == 0) then
+		local ballsRemaining = timerBallsCD:GetRemaining(self.vb.ballsCount+1)
+		if ballsRemaining == 0 then
 			DBM:Debug("Koragh lost his balls?")--Should not happen, but just in case, i want to see when it does clearly
 			return
 		end
-		local ballsRemaining = ballsTotal - ballsElapsed
 		--http://worldoflogs.com/reports/umazvvirdsanfg8a/xe/?s=11657&e=12290&x=spell+%3D+%22Overflowing+Energy%22+or+spellid+%3D+156803&page=1
 		if ballsRemaining > 5 then--If 5 seconds or less on timer, balls are already falling and will not be delayed. If remaining >5 it'll be delayed by 20 seconds (entirety of charge phase)
 			timerBallsCD:Cancel()
-			timerBallsCD:Start(ballsRemaining+22, self.vb.ballsCount+1)
+			timerBallsCD:Start(ballsRemaining+23, self.vb.ballsCount+1)
 			countdownBalls:Cancel()
 			specWarnBallsSoon:Cancel()
-			countdownBalls:Start(ballsRemaining+22)
+			countdownBalls:Start(ballsRemaining+23)
 			self:Unschedule(ballsWarning)
 			self:Unschedule(checkBossForgot)--Cancel check boss forgot
-			self:Schedule(ballsRemaining+15.5, ballsWarning, self)
-			self:Schedule(ballsRemaining+32, checkBossForgot, self)--Fire checkbossForgot 5 seconds after raid should have soaked or taken damage
-			DBM:Debug("timerBallsCD is extending by 22 seconds due to shield phase")
+			self:Schedule(ballsRemaining+16.5, ballsWarning, self)
+			self:Schedule(ballsRemaining+33, checkBossForgot, self)--Fire checkbossForgot 5 seconds after raid should have soaked or taken damage
+			DBM:Debug("timerBallsCD is extending by 23 seconds due to shield phase")
 		else
 			DBM:Debug("remaining less than 5, no action taken")
 		end	
@@ -394,9 +388,7 @@ function mod:OnSync(msg, targetname)
 		timerTrampleCD:Start()
 		local target = DBM:GetUnitFullName(targetname)
 		if target and self:AntiSpam(3, target) then--Syncs sending from same realm don't send realm name, while other realms do, so it bypasses sync spam code since two diff args. So filter here after GetUnitFullName
-			--Investigating someone theory that frost orbs are after every 4 self.vb.supressionCount, except for first, which is after 2. They wanted a counter added
-			self.vb.supressionCount = self.vb.supressionCount + 1
-			warnTrample:Show(self.vb.supressionCount, target)
+			warnTrample:Show(target)
 			if target == UnitName("player") then
 				specWarnTrample:Show()
 				yellTrample:Yell()

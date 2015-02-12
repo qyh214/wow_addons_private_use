@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(868, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 21 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(72311, 72560, 72249, 73910, 72302, 72561, 73909)--Boss needs to engage off friendly NCPS, not the boss. I include the boss too so we don't detect a win off losing varian. :)
 mod:SetEncounterID(1622)
 mod:DisableESCombatDetection()
@@ -32,7 +32,6 @@ mod:RegisterEventsInCombat(
 )
 
 --Stage 2: Bring Her Down!
-local warnWarBanner					= mod:NewSpellAnnounce(147328, 3)
 local warnFracture					= mod:NewTargetAnnounce(146899, 3)
 local warnChainHeal					= mod:NewCastAnnounce(146757, 4)
 local warnAdd						= mod:NewCountAnnounce("ej8553", 2, "Interface\\ICONS\\INV_Misc_Head_Orc_01.blp")
@@ -40,25 +39,20 @@ local warnProto						= mod:NewCountAnnounce("ej8587", 2, 59961)
 local warnTowerOpen					= mod:NewAnnounce("warnTowerOpen", 1, "Interface\\ICONS\\Achievement_BG_DefendXtowers_AV.blp")
 local warnDemolisher				= mod:NewSpellAnnounce("ej8562", 3, 116040)
 local warnTowerGrunt				= mod:NewAnnounce("warnTowerGrunt", 3, 89253)
-----Master Cannoneer Dragryn (Tower)
-local warnMuzzleSpray				= mod:NewSpellAnnounce(147824, 3)--147824 spams combat log, 147825 is actual cast but does not show in combat log only UNIT event
-----Lieutenant General Krugruk (Tower)
-local warnArcingSmash				= mod:NewSpellAnnounce(147688, 3)
 ----High Enforcer Thranok (Road)
-local warnCrushersCall				= mod:NewSpellAnnounce(146769, 4)
-local warnShatteringCleave			= mod:NewSpellAnnounce(146849, 3, nil, mod:IsTank())
+local warnShatteringCleave			= mod:NewSpellAnnounce(146849, 3, nil, "Tank")
 
 --Phase 3: Galakras,The Last of His Progeny
 local warnPhase2					= mod:NewPhaseAnnounce(2, 2)
 local warnFlamesofGalakrondTarget	= mod:NewTargetAnnounce(147068, 4)
-local warnFlamesofGalakrond			= mod:NewStackAnnounce(147029, 2, nil, mod:IsTank())
-local warnPulsingFlames				= mod:NewCountAnnounce(147042, 3)
+local warnFlamesofGalakrond			= mod:NewStackAnnounce(147029, 2, nil, "Tank")
+local warnPulsingFlames				= mod:NewCountAnnounce(147042, 3, nil, false)
 
 --Stage 2: Bring Her Down!
 local specWarnAdds					= mod:NewSpecialWarningSpell("ej8553", false)
 local specWarnProto					= mod:NewSpecialWarningSpell("ej8587", false)
-local specWarnWarBanner				= mod:NewSpecialWarningSwitch(147328, not mod:IsHealer())
-local specWarnFracture				= mod:NewSpecialWarningTarget(146899, mod:IsHealer())
+local specWarnWarBanner				= mod:NewSpecialWarningSwitch(147328, "-Healer")
+local specWarnFracture				= mod:NewSpecialWarningTarget(146899, "Healer")
 local specWarnChainheal				= mod:NewSpecialWarningInterrupt(146757)
 ----Master Cannoneer Dragryn (Tower)
 local specWarnMuzzleSpray			= mod:NewSpecialWarningSpell(147824, nil, nil, nil, 2)
@@ -73,8 +67,8 @@ local specWarnFlamesofGalakrond		= mod:NewSpecialWarningSpell(147029, false)--Ca
 local specWarnFlamesofGalakrondYou	= mod:NewSpecialWarningYou(147068)
 local yellFlamesofGalakrond			= mod:NewYell(147068)
 local specWarnFlamesofGalakrondStack= mod:NewSpecialWarningStack(147029, nil, 6)
-local specWarnFlamesofGalakrondOther= mod:NewSpecialWarningTarget(147029, mod:IsTank())
-local specWarnPulsingFlames			= mod:NewSpecialWarningSpell(147042, false, nil, nil, 2)
+local specWarnFlamesofGalakrondOther= mod:NewSpecialWarningTarget(147029, "Tank")
+local specWarnPulsingFlames			= mod:NewSpecialWarningCount(147042, false, nil, nil, 2)
 
 --Stage 2: Bring Her Down!
 local timerCombatStarts				= mod:NewCombatTimer(34.5)
@@ -84,12 +78,12 @@ local timerTowerCD					= mod:NewTimer(99, "timerTowerCD", 88852)
 local timerTowerGruntCD				= mod:NewTimer(60, "timerTowerGruntCD", 89253)
 local timerDemolisherCD				= mod:NewNextTimer(20, "ej8562", nil, nil, nil, 116040)--EJ is just not complete yet, shouldn't need localizing
 ----High Enforcer Thranok (Road)
-local timerShatteringCleaveCD		= mod:NewCDTimer(7.5, 146849, nil, mod:IsTank())
+local timerShatteringCleaveCD		= mod:NewCDTimer(7.5, 146849, nil, "Tank")
 local timerCrushersCallCD			= mod:NewCDTimer(30, 146769)
 
 --Phase 3: Galakras,The Last of His Progeny
 local timerFlamesofGalakrondCD		= mod:NewCDTimer(6, 147068)
-local timerFlamesofGalakrond		= mod:NewTargetTimer(15, 147029, nil, mod:IsTank())
+local timerFlamesofGalakrond		= mod:NewTargetTimer(15, 147029, nil, "Tank")
 local timerPulsingFlamesCD			= mod:NewNextCountTimer(25, 147042)
 local timerPulsingFlames			= mod:NewBuffActiveTimer(7, 147042)
 
@@ -135,7 +129,6 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 147688 and (not DBM.Options.DontShowFarWarnings or UnitPower("player", 10) > 0) then--Tower Spell
-		warnArcingSmash:Show()
 		specWarnArcingSmash:Show()
 	elseif spellId == 146757 and (not DBM.Options.DontShowFarWarnings or UnitPower("player", 10) == 0) then
 		local source = args.sourceGUID
@@ -149,10 +142,8 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 147824 and (not DBM.Options.DontShowFarWarnings or UnitPower("player", 10) > 0) and self:AntiSpam(3, 2) then--Tower Spell
-		warnMuzzleSpray:Show()
 		specWarnMuzzleSpray:Show()
 	elseif spellId == 146769 and (not DBM.Options.DontShowFarWarnings or UnitPower("player", 10) == 0) then
-		warnCrushersCall:Show()
 		specWarnCrushersCall:Show()
 		timerCrushersCallCD:Start()
 	elseif spellId == 146849 and (not DBM.Options.DontShowFarWarnings or UnitPower("player", 10) == 0) then
@@ -176,7 +167,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetIcon(args.destName, 2)
 		end
 	elseif spellId == 147328 and (not DBM.Options.DontShowFarWarnings or UnitPower("player", 10) == 0) then
-		warnWarBanner:Show()
 		specWarnWarBanner:Show()
 	elseif spellId == 146899 and (not DBM.Options.DontShowFarWarnings or UnitPower("player", 10) == 0) then
 		warnFracture:Show(args.destName)
@@ -184,7 +174,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 147042 then
 		self.vb.pulseCount = self.vb.pulseCount + 1
 		warnPulsingFlames:Show(self.vb.pulseCount)
-		specWarnPulsingFlames:Show()
+		specWarnPulsingFlames:Show(self.vb.pulseCount)
 		timerPulsingFlames:Start()
 		timerPulsingFlamesCD:Start(nil, self.vb.pulseCount + 1)
 	end
