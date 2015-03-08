@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12676 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13161 $"):sub(12, -3))
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetZone()
@@ -58,10 +58,10 @@ local specWarnExpelMagicFelMove		= mod:NewSpecialWarningMove(172917)--Under you 
 local timerVulnerability			= mod:NewBuffActiveTimer(23, 160734)--more like 23-24 than 20
 local timerTrampleCD				= mod:NewCDTimer(16, 163101)
 local timerExpelMagicFire			= mod:NewBuffFadesTimer("OptionVersion2", 11.5, 162185, nil, false)--Has countdown, and fight has a lot of itmers now, i found this timer HIGHLY distracting when trying to process multiple important ability cds at once.
-local timerExpelMagicFireCD			= mod:NewCDTimer(60, 162185)--60-66 Variation
+local timerExpelMagicFireCD			= mod:NewCDTimer(58, 162185)--58-66 Variation
 local timerExpelMagicFrost			= mod:NewBuffActiveTimer("OptionVersion3", 20, 161411, nil, false)
 local timerExpelMagicFrostCD		= mod:NewCDTimer(60, 161411)--60-63 variation
-local timerExpelMagicShadowCD		= mod:NewCDTimer(60, 162184, nil, "Tank|Healer")--60-63 variation
+local timerExpelMagicShadowCD		= mod:NewCDTimer(59, 162184, nil, "Tank|Healer")--60-63 variation
 local timerExpelMagicArcane			= mod:NewTargetTimer(10, 162186, nil, "Tank|Healer")
 local timerExpelMagicArcaneCD		= mod:NewCDTimer(26, 162186, nil, "Tank")--26-32
 local timerBallsCD					= mod:NewNextCountTimer(30, 161612)
@@ -86,6 +86,8 @@ mod:AddRangeFrameOption("5")
 mod:AddSetIconOption("SetIconOnMC", 163472, false)
 mod:AddSetIconOption("SetIconOnFel", 172895, false)
 mod:AddArrowOption("FelArrow", 172895, true, 3)
+mod:AddHudMapOption("HudMapOnMC", 163472)
+mod:AddHudMapOption("HudMapForFel", 172895)
 
 mod.vb.ballsCount = 0
 mod.vb.shieldCharging = false
@@ -93,6 +95,7 @@ mod.vb.fireActive = false
 local lastX, LastY = nil, nil--Not in VB table because it player personal position
 local barName = GetSpellInfo(156803)
 local arcaneDebuff = GetSpellInfo(162186)
+local DBMHudMap = DBMHudMap
 
 local function closeRange(self)
 	if self.Options.RangeFrame and not UnitDebuff("player", arcaneDebuff) then
@@ -150,6 +153,9 @@ function mod:OnCombatStart(delay)
 	self:Schedule(29.5-delay, ballsWarning, self)
 	if self:IsMythic() then
 		timerExpelMagicFelCD:Start(5-delay)
+		if self.Options.HudMapOnMC or self.Options.HudMapForFel then
+			DBMHudMap:Enable()
+		end
 	end
 	if DBM.BossHealth:IsShown() then--maybe need another option
 		DBM.BossHealth:AddBoss(function() return UnitPower("boss1", 10) end, barName)--Null Barrier health bar
@@ -162,6 +168,23 @@ function mod:OnCombatEnd()
 	end
 	if self.Options.FelArrow then
 		DBM.Arrow:Hide()
+	end
+	if self.Options.HudMapOnMC or self.Options.HudMapForFel then
+		DBMHudMap:Disable()
+	end
+end
+
+function mod:ArcaneTarget()
+	local targetName, uId = self:GetBossTarget(79015)
+	local tanking, status = UnitDetailedThreatSituation("player", "boss1")
+	if tanking or (status == 3) then--Player is current target
+		specWarnExpelMagicArcaneYou:Show()--So show tank warning
+		voiceExpelMagicArcane:Play("runout")
+	else
+		if self:AntiSpam(3.5, targetName) then--Set anti spam with target name
+			specWarnExpelMagicArcane:Show(targetName)--Sometimes targetname is nil, and then it warns for unknown, but with the new status == 3 check, it'll still warn correct tank, so useful anyways
+			voiceExpelMagicArcane:Play("changemt")
+		end
 	end
 end
 
@@ -210,22 +233,11 @@ function mod:SPELL_CAST_START(args)
 		self:BossTargetScanner(79015, "FrostTarget", 0.1, 16)
 	elseif spellId == 163517 then
 		warnForfeitPower:Show()
-		local guid = args.sourceGUID
-		if (guid == UnitGUID("target")) or (guid == UnitGUID("focus")) then
+		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnForfeitPower:Show(args.sourceName)
 		end
 	elseif spellId == 162186 then
-		local targetName, uId = self:GetBossTarget(79015)
-		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
-		if tanking or (status == 3) then--Player is current target
-			specWarnExpelMagicArcaneYou:Show()--So show tank warning
-			voiceExpelMagicArcane:Play("runout")
-		else
-			if self:AntiSpam(2, targetName) then--Set anti spam with target name
-				specWarnExpelMagicArcane:Show(targetName)--Sometimes targetname is nil, and then it warns for unknown, but with the new status == 3 check, it'll still warn correct tank, so useful anyways
-				voiceExpelMagicArcane:Play("changemt")
-			end
-		end
+		self:ScheduleMethod(0.1, "ArcaneTarget")
 	elseif spellId == 172895 then
 		timerExpelMagicFelCD:Start()
 	end
@@ -252,7 +264,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.shieldCharging = false
 		specWarnNullBarrier:Show(args.destName)
 	elseif spellId == 162186 then
-		warnExpelMagicArcane:Show(args.destName)
 		timerExpelMagicArcane:Start(args.destName)
 		if self.vb.shieldCharging then--Sometimes debuff land during shield charging, if this happens, it's still extended
 			timerExpelMagicArcaneCD:Start(49)--26+23
@@ -266,9 +277,11 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.RangeCheck:Show(5)
 			end
 		else
-			if self:AntiSpam(2, args.destName) then--if antispam matches cast start warning, it won't warn again, if name is different, it'll trigger new warning
+			if self:AntiSpam(3.5, args.destName) and self:IsTank() then--if antispam matches cast start warning, it won't warn again, if name is different, it'll trigger new warning
 				specWarnExpelMagicArcane:Show(args.destName)
 				voiceExpelMagicArcane:Play("changemt")
+			else
+				warnExpelMagicArcane:Show(args.destName)
 			end
 		end
 	elseif spellId == 161242 and self:AntiSpam(23, args.destName) and not self:IsLFR() then--Players may wabble in and out of it and we don't want to spam warnings.
@@ -282,6 +295,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnMC then
 			self:SetSortedIcon(1, args.destName, 8, nil, true)--TODO, find out number of targets and add
 		end
+		if self.Options.HudMapOnMC then
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 0, 1, 0, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+		end
 	elseif spellId == 172895 then
 		warnExpelMagicFel:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
@@ -291,6 +307,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellExpelMagicFel:Schedule(11)--Yell right before expire, not apply
 			lastX, LastY = UnitPosition("player")
 			self:Schedule(7, returnPosition, self)
+			if self.Options.HudMapForFel then
+				DBMHudMap:RegisterStaticMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 12, 0, 1, 0, 0.5):Pulse(0.5, 0.5)
+			end
 		end
 		if self.Options.SetIconOnFel then
 			self:SetSortedIcon(1, args.destName, 1, 3)
@@ -304,13 +323,21 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 162186 and args:IsPlayer() and self.Options.RangeFrame and not self.vb.fireActive then
 		DBM.RangeCheck:Hide()
-	elseif spellId == 163472 and self.Options.SetIconOnMC then
-		self:SetIcon(args.destName, 0)
+	elseif spellId == 163472 then
+		if self.Options.SetIconOnMC then
+			self:SetIcon(args.destName, 0)
+		end
+		if self.Options.HudMapOnMC then
+			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+		end
 	elseif spellId == 172895 then
 		if args:IsPlayer() then
 			lastX, LastY = nil, nil
 			if self.Options.FelArrow then
 				DBM.Arrow:Hide()
+			end
+			if self.Options.HudMapForFel then
+				DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
 			end
 		end
 		if self.Options.SetIconOnFel then
@@ -348,7 +375,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		--Fire https://www.warcraftlogs.com/reports/kDzfJ812QZgpwa9h#view=events&pins=2%24Off%24%23244F4B%24expression%24ability.id+%3D+162185+and+type+%3D+%22begincast%22+or+ability.id+%3D+156803+and+(type+%3D+%22applybuff%22+or+type+%3D+%22removebuff%22)&fight=12
 		--https://www.warcraftlogs.com/reports/Wj4MnfLQ8t3HzFgy#fight=10&type=summary&view=events&pins=2%24Off%24%23244F4B%24expression%24ability.id+%3D+162185+and+type+%3D+%22begincast%22+or+ability.id+%3D+156803+and+(type+%3D+%22applybuff%22+or+type+%3D+%22removebuff%22)
-		local fireRemaining = timerExpelMagicArcaneCD:GetRemaining()
+		local fireRemaining = timerExpelMagicFireCD:GetRemaining()
 		if fireRemaining > 0 then--Basically, a 0 0 check.
 			timerExpelMagicFireCD:Start(fireRemaining+27)--Note the difference, shadow is +27-30 not +23-26
 		end

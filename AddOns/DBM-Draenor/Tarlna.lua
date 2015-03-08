@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod(1211, "DBM-Draenor", nil, 557)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12676 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13152 $"):sub(12, -3))
 mod:SetCreatureID(81535)
+mod:SetEncounterID(1770)
 mod:SetReCombatTime(20)
 mod:SetZone()
 mod:SetMinSyncRevision(11969)
 
-mod:RegisterCombat("combat_yell", L.Pull)--no yell
+mod:RegisterCombat("combat")--no yell
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 175973 175979",
@@ -39,7 +40,7 @@ local voiceMandragora				= mod:NewVoice(176013, "Dps")
 local voiceGenesis					= mod:NewVoice(175979)
 
 --mod:AddReadyCheckOption(37462, false)
-mod:AddRangeFrameOption(8, 175979)
+--mod:AddRangeFrameOption(8, 175979)
 
 local UnitDebuff = UnitDebuff
 local debuffName = GetSpellInfo(176004)
@@ -48,10 +49,6 @@ do
 	debuffFilter = function(uId)
 		return UnitDebuff(uId, debuffName)
 	end
-end
-
-local function hideRangeFrame()
-	DBM.RangeCheck:Hide()
 end
 
 function mod:OnCombatStart(delay, yellTriggered)
@@ -109,9 +106,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			if UnitDebuff("player", debuffName) then
 				DBM.RangeCheck:Show(8, nil)
 			else
-				DBM.RangeCheck:Show(8, debuffFilter)
+				DBM.RangeCheck:Show(8, debuffFilter, nil, nil, nil, 8)
 			end
-			self:Schedule(8, hideRangeFrame)
 		end
 	end
 end

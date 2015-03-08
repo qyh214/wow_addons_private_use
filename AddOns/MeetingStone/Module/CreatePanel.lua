@@ -51,6 +51,24 @@ function CreatePanel:OnInitialize()
         title:SetPoint('TOPRIGHT', -10, 0)
         title:SetHeight(40)
 
+        local summary = CreateFrame('Frame', nil, InfoWidget)
+        summary:SetPoint('TOPLEFT', title, 'BOTTOMLEFT', -15, 0)
+        summary:SetPoint('RIGHT', -5, 0)
+        summary:SetHeight(15)
+        summary:EnableMouse(true)
+        local summaryLabel = summary:CreateFontString(nil, 'OVERLAY', 'GameFontDisableSmallLeft')
+        summaryLabel:SetPoint('LEFT')
+        summaryLabel:SetPoint('RIGHT')
+        summary:SetScript('OnEnter', function(summary)
+            if (summaryLabel:GetStringWidth() or 0) > summaryLabel:GetWidth() then
+                GameTooltip:SetOwner(summary, 'ANCHOR_RIGHT')
+                GameTooltip:SetText(title:GetText() or '')
+                GameTooltip:AddLine(summaryLabel:GetText() or '', GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b, true)
+                GameTooltip:Show()
+            end
+        end)
+        summary:SetScript('OnLeave', GameTooltip_Hide)
+
         local mode = InfoWidget:CreateTexture(nil, 'ARTWORK')
         mode:SetTexture([[INTERFACE\GROUPFRAME\UI-GROUP-MAINASSISTICON]])
         mode:SetPoint('BOTTOMLEFT', 10, 10)
@@ -71,6 +89,7 @@ function CreatePanel:OnInitialize()
         InfoWidget.Mode = modeText
         InfoWidget.Loot = lootText
         InfoWidget.Background = bg
+        InfoWidget.Summary = summaryLabel
     end
 
     local MemberWidget = GUI:GetClass('TitleWidget'):New(ViewBoardWidget) do
@@ -440,6 +459,7 @@ function CreatePanel:ShowViewboard(enable)
         self.InfoWidget.Title:SetText(activityType and activityType.text or UNKNOWN)
         self.InfoWidget.Mode:SetText(activityMode and activityMode.text or UNKNOWN)
         self.InfoWidget.Loot:SetText(activityLoot and activityLoot.text or UNKNOWN)
+        self.InfoWidget.Summary:SetText(activity:GetActivitySummary() or '')
 
         self.MemberWidget.Member:SetShown(self.MemberWidget.Member:SetMember(activity))
 
@@ -502,18 +522,20 @@ function CreatePanel:CreateActivity()
 
         ActivityVoice = self.VoiceBox:GetText(),
         ActivityItemLevel = self.ItemLevel:GetNumber(),
-        ActivitySummary = self.SummaryBox:GetText(),
+        ActivitySummary = self.SummaryBox:GetText():gsub('\n', ''),
 
         MinLevel = minLevel > 0 and minLevel or nil,
         MaxLevel = maxLevel > 0 and maxLevel or nil,
         PvPRating = pvpRating > 0 and pvpRating or nil,
+        Source = GetAddonSource(true),
     })
 
     local handler = self:IsActivityCreated() and C_LFGList.UpdateListing or C_LFGList.CreateListing
 
-    if handler(activity:GetCreateArguments()) then
+    if handler(activity:GetCreateArguments(handler == C_LFGList.UpdateListing and (select(8, C_LFGList.GetActiveEntryInfo())))) then
         self.CreateButton:Disable()
         Profile:SaveActivityProfile(activity)
+        Profile:SaveCreateHistory(activityType.value)
         self:SendMessage('MEETINGSTONE_CREATING_ACTIVITY', true)
         if handler == C_LFGList.CreateListing then
             Logic:SEI(activity)
@@ -674,7 +696,7 @@ function CreatePanel:ActivityUpdated(_, createNew, createFailed)
         end
         self:SetWidgetEnabled(isLeader)
         self.CreateButton:SetText('创建活动')
-        self.CreateButton:Disable()
+        self:CheckOptions()
         self.DisbandButton:Disable()
         self:ShowViewboard(false)
     end
@@ -720,6 +742,7 @@ function CreatePanel:UpdateSummaryMaxLetters()
         MinLevel = minLevel > 0 and minLevel or nil,
         MaxLevel = maxLevel > 0 and maxLevel or nil,
         PvPRating = pvpRating > 0 and pvpRating or nil,
+        Source = GetAddonSource(true),
     })
 
     local len = select(2, CodeCommentData(activity))

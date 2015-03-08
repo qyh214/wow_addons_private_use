@@ -1,4 +1,8 @@
-TipTacItemRef Changes | 2014 Oct 16 -- WIP
+TipTacItemRef Changes | 2015 Mar 04
+-----------------------------------
+- TOC version updated to 60100 for the 6.1 patch.
+
+TipTacItemRef Changes | 2015 Jan 14
 -----------------------------------
 - Tried to fix a Lua error happening due to GetAchievementCriteriaInfo() being called for non existing criteria indexes.
 

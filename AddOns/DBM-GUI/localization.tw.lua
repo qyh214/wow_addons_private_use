@@ -212,6 +212,7 @@ L.SpamBlockNoSendWhisper	= "不發送密語給其他玩家"
 L.SpamBlockNoSetIcon		= "不設置標記在目標上"
 L.SpamBlockNoRangeFrame		= "不顯示距離框架"
 L.SpamBlockNoInfoFrame		= "不顯示訊息框架"
+L.SpamBlockNoHudMap			= "不要顯示HudMap"
 L.SpamBlockNoHealthFrame	= "不顯示血量框架"
 L.SpamBlockNoCountdowns		= "不播放倒數音效"
 L.SpamBlockNoIconRestore	= "不在戰鬥結束後記住和還原團隊圖示狀態"
@@ -225,12 +226,9 @@ L.SpamBlockBossWhispers		= "當戰鬥時過濾 &lt;DBM&gt; 密語警告"
 
 L.Area_SpecFilter			= "專精過濾選項"
 L.FilterTankSpec			= "非坦克專精時過濾掉坦克專精的特定警告 (註:不建議玩家關閉此選項因大多數的坦克嘲諷警告都是預設開啟。)"
---Healer and Damager not in use yet. Tank is easily black and white. if not a tank, disable taunt warnings. Pretty obvious.
---Healer and Damager a bit more tricky, since often times, Healer DO need to switch and kill adds designated a dps roll (hi disc attonement priest)
---Or a dps does need to handle debuff dispels. Or a dps/tank need to know when aoe damage is going out just as much as healer for personal CDs
---Etc etc. Point being, I translate these but I'm not sure they could ever actually be used as effectively as the tank spec filter.
---L.FilterHealerSpec		= "非治療專精時過濾掉治療專精的特定警告"--Not in use
---L.FilterDamagerSpec		= "非傷害專精時過濾掉治療傷害的特定警告"--Not in use
+L.FilterInterrupts			= "過濾可中斷技能的警告如果施法者不是你的目標或專注目標。(註：此選項不套用於可能會導致滅團的必須中斷技能)"
+L.FilterDispels				= "過濾可驅散技能如果你的驅散技正在冷卻中"
+L.FilterSelfHud				= "從HudMap過濾你自己(排除Hud的距離功能)"
 
 L.Area_PullTimer			= "開怪計時器過濾選項"
 L.DontShowPTNoID			= "阻擋與你不同區域ID送出的開怪倒數計時條"
@@ -259,11 +257,12 @@ L.Always					= ALWAYS
 L.Panel_ExtraFeatures		= "額外功能"
 L.Area_ChatAlerts			= "文字警告選項"
 L.RoleSpecAlert				= "當你加入團隊時捨取專精不符合你目前專精顯示警告訊息"
-L.CheckGear					= "當你裝備的裝備等級低於包包裡40等以上時顯示警告訊息"
+L.CheckGear					= "開怪時顯示裝備警告訊息 (當你裝備的裝備等級低於包包裡40等以上或主手武器沒有裝備時顯示警告訊息)"
 L.WorldBossAlert			= "當你的工會成員或是朋友可能在你的伺服器上開戰世界首領時顯示警告訊息(如果發送者是被戰復的會不準確)"
 L.Area_SoundAlerts			= "聲音警告選項"
 L.LFDEnhance				= "使用主要聲音頻道播放準備確認音效給角色確認和戰場/隨機團隊進場(I.E. 即使因為被關閉了也會發出音效而且很大聲!)"
 L.WorldBossNearAlert		= "當你需要的世界首領在你附近開戰播放準備確認音效(蓋過特定首領選項)"
+L.RLReadyCheckSound			= "從主要音效頻道播放準備確認音效"
 L.AFKHealthWarning			= "播放警告聲音假如你在暫離時被攻擊"
 L.Area_AutoLogging			= "自動記錄選項"
 L.AutologBosses				= "自動使用暴雪戰鬥日誌記錄首領戰鬥(為了紀錄藥水事件等其他事件請於開打前使用/dbm pull)"

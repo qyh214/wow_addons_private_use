@@ -1,4 +1,8 @@
 ﻿function wodrraonload()
+	wodrraachdone1=true
+	wodrracounter1=0
+	wodrratimerfurnace=nil
+	wodrratimerkromog=nil
 
 SetMapToCurrentZone()
 if GetCurrentMapAreaID()==988 then
@@ -21,6 +25,9 @@ end
 wodrraspisokach25={
 
 8929,
+8980, --http://www.wowhead.com/achievement=8980 Stamp Stamp Revolution
+8930, --http://www.wowhead.com/achievement=8930 Ya, We've got time
+8983, --http://www.wowhead.com/achievement=8983 Would you give me a hand
 
 
 }
@@ -55,72 +62,19 @@ end
 end
 
 
-
-
---после 10 сек после ачивки чек
-if ratrackgoodattack2 and curtime>ratrackgoodattack2+10 then
-
-    ratrackgoodattack2=nil
-    --собираем инфо по тем кто в рейде!
-    local taball={}
-    local _, instanceType, pppl, _, maxPlayers, dif = GetInstanceInfo()
-    if pppl and (pppl==4 or pppl==6 or pppl==7 or pppl==14) then
-      psdifflastfight=25
-    end
-		local psgroup=2
-		if psdifflastfight==25 then
-			psgroup=5
-		end
-		for i = 1,GetNumGroupMembers() do
-			local name, _, subgroup, _, _, _, _, online, isDead = GetRaidRosterInfo(i)
-			if subgroup<=psgroup then
-				table.insert(taball,name)
-			end
-		end
-		--если 75% игроков нанесло атаку...
-		if #taball>0 then
-      if #ratrackgoodattack1<#taball then
-        if #ratrackgoodattack1>=#taball*0.01 then
-          --поиск ников что не сделали свое дело!
-          for k=1,#ratrackgoodattack1 do
-             if ratrackgoodattack1[k] then
-               if #taball>0 then
-                 for j=1,#taball do
-                   if taball[j] and taball[j]==ratrackgoodattack1[k] then
-                     table.remove(taball,j)
-                   end
-                 end
-               end
-             end
-          end
-          if #taball<7 and #taball>0 then
-            --вывод списка фейлеров
-            local text=""
-            for v=1,#taball do
-              text=text..taball[v]
-              if v~=#taball then
-                text=text..", "
-              end
-            end
-            raplaysound(3,wodrraspisokach25[4])
-            if (wherereportraidach=="sebe") then
-              DEFAULT_CHAT_FRAME:AddMessage("- "..achlinnk.." NO DAMAGE: "..text)
-            else
-            if (UnitIsGroupAssistant("player")==nil and UnitIsGroupLeader("player")==nil) and wherereportraidach=="raid_warning" then
-              razapuskanonsa("raid", "{rt8} "..achlinnk.." NO DAMAGE: "..text)
-            else
-              razapuskanonsa(wherereportraidach, "{rt8} "..achlinnk.." NO DAMAGE: "..text)
-            end
-            end
-          end
-        end
-      end
-    end
-    ratrackgoodattack1=nil
-    ratrackgoodattack2=nil
-    ratrackgoodattack3=nil
+-- Ya, We've got time
+if wodrratimerfurnace and GetTime()>wodrratimerfurnace then
+   wodrratimerfurnace=nil -- reset timer since achievement is failed
+   wodrrafailnoreason(3)
 end
 
+-- Would you give me a hand
+if wodrratimerkromog and GetTime()>wodrratimerkromog then
+   wodrratimerkromog=nil -- reset timer since achievement is failed
+   wodrrafailnoreason(4,wodrracounter1)
+   wodrraachdone1=true --продолжаем следить за ачивкой
+   wodrracounter1=0
+end
 
 
 end
@@ -136,6 +90,10 @@ if event == "PLAYER_REGEN_DISABLED" then
 if (rabilresnut and GetTime()<rabilresnut+3) or racheckbossincombat then
 else
 --обнулять все данные при начале боя тут:
+wodrraachdone1=true
+wodrracounter1=0
+wodrratimerfurnace=nil
+wodrratimerkromog=nil
 raramapwidth=nil
 raramapheight=nil
 psranormgolong=nil
@@ -212,15 +170,62 @@ local arg1, arg2, arg3,arg4,arg5,arg6,argNEW1,arg7,arg8,arg9,argNEW2,arg10,arg11
 if GetCurrentMapAreaID()==988 then
 
 if arg2=="UNIT_DIED" then
-  if wodrraspisokon[1]==1 and raachdone1 then
+  if wodrraspisokon[1]==1 and wodrraachdone1 then
   local id=raGetUnitID(arg7)
   if id==77337 then
-      prrafailnoreason(1)
+      wodrrafailnoreason(1)
     end
   end
 end
 
+-- Stamp Stamp Revolution
+
+if (arg2=="SPELL_DAMAGE" and arg10==158140) and arg4 and arg8 then
+   raunitisplayer(arg7,arg8)
+   if raunitplayertrue then
+      if wodrraspisokon[2]==1 and wodrraachdone1 then
+         wodrrafailnoreason(2,arg8)
+      end
+   end
 end
+
+-- Ya, We've Got Time
+
+if arg2=="UNIT_DIED" then
+  if wodrraspisokon[3]==1 and wodrraachdone1 then
+     local id=raGetUnitID(arg7)
+     if id==76815 then
+       wodrracounter1=wodrracounter1+1
+
+       if wodrratimerfurnace==nil then -- start the timer if this was first kill
+          wodrratimerfurnace=GetTime()+10
+       end
+       if wodrracounter1==4 then
+          wodrratimerfurnace=nil -- reset timer since achievement is completed
+          wodrraachcompl(3)
+       end
+     end
+  end
+end
+-- Would you give me a hand
+if arg2=="UNIT_DIED" then
+  if wodrraspisokon[4]==1 and wodrraachdone1 then
+     local id=raGetUnitID(arg7)
+     if id==77893 then
+       wodrracounter1=wodrracounter1+1
+
+       if wodrratimerkromog==nil then -- start the timer if this was first kill
+          wodrratimerkromog=GetTime()+5
+       end
+       if wodrracounter1>=10 then
+          wodrratimerkromog=nil -- reset timer since achievement is completed
+          wodrraachcompl(4)
+       end
+     end
+  end
+end
+end
+--
 --
 
 
@@ -294,7 +299,7 @@ local t = f:CreateFontString()
 t:SetFont(GameFontNormal:GetFont(), rafontsset[2])
 t:SetWidth(548)
 if i==3 then
-  t:SetText(wodrraName.." - |cffff0000"..raspectext.."|r")
+  t:SetText(wodrraName)
 else
   t:SetText(wodrraName)
 end

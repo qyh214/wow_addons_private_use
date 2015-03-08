@@ -5,6 +5,12 @@ local L
 ---------------
 L= DBM:GetModLocalization(1161)
 
+L:SetOptionLocalization({
+	MythicSoakBehavior	= "Set Mythic difficulty group soak preference for special warnings",
+	ThreeGroup			= "3 Group 1 stack each strat",
+	TwoGroup			= "2 Group 2 stacks each strat" 
+})
+
 ---------------------------
 -- Oregorger, The Devourer --
 ---------------------------
@@ -16,11 +22,20 @@ L= DBM:GetModLocalization(1202)
 L= DBM:GetModLocalization(1154)
 
 L:SetWarningLocalization({
-	warnBlastFrequency	= "Blast frequency increased : Approx Every %d sec"
+	warnRegulators		= "Heat Regulator remaining: %d",
+	warnBlastFrequency	= "Blast frequency increased: Approx Every %d sec"
 })
 
 L:SetOptionLocalization({
-	warnBlastFrequency	= "Announce when $spell:155209 frequency increased"
+	warnRegulators		= "Announce how many Heat Regulator remain",
+	warnBlastFrequency	= "Announce when $spell:155209 frequency increased",
+	VFYellType			= "Set yell type for Volatile Fire (Mythic difficulty only)",
+	Countdown			= "Countdown until expires",
+	Apply				= "Only applied"
+})
+
+L:SetMiscLocalization({
+	heatRegulator		= "Heat Regulator"
 })
 
 ------------------
@@ -41,10 +56,6 @@ L:SetOptionLocalization({
 --------------
 L= DBM:GetModLocalization(1123)
 
-L:SetMiscLocalization({
-	TorrentYell	= "Torrent fading in %d"
-})
-
 --------------------
 --Kromog, Legend of the Mountain --
 --------------------
@@ -60,6 +71,17 @@ L= DBM:GetModLocalization(1122)
 --------------------------
 L= DBM:GetModLocalization(1147)
 
+L:SetWarningLocalization({
+	specWarnSplitSoon	= "Raid split in 10"
+})
+
+L:SetOptionLocalization({
+	specWarnSplitSoon	= "Show special warning 10 seconds before raid split",
+	InfoFrameSpeed		= "Set when InfoFrame shows next train information",
+	Immediately			= "As soon as doors open for current train",
+	Delayed				= "After current train has come out" 
+})
+
 L:SetMiscLocalization({
 	Train			= GetSpellInfo(174806),
 	lane			= "Lane",
@@ -74,6 +96,14 @@ L:SetMiscLocalization({
 -- The Iron Maidens --
 --------------------------
 L= DBM:GetModLocalization(1203)
+
+L:SetWarningLocalization({
+	specWarnReturnBase	= "Return to dock NOW!"
+})
+
+L:SetOptionLocalization({
+	specWarnReturnBase	= "Show special warning when boat player can safely return to dock"
+})
 
 L:SetMiscLocalization({
 	shipMessage		= "prepares to man the Dreadnaught's Main Cannon!"

@@ -1,2 +1,0 @@
-Hendrik Leppkes:
-	- Don't execute the state updat handler when the button is not assigned to the bar

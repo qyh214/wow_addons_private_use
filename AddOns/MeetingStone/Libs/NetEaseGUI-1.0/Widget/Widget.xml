@@ -26,4 +26,5 @@
   <Script file="AlphaFlash.lua" />
   <Script file="VerticalLine.lua" />
   <Script file="PanelBlocker.lua" />
+  <Script file="AutoCompleteFrame.lua" />
 </Ui>

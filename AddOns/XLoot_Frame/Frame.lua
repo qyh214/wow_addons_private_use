@@ -381,6 +381,7 @@ do
 	end
 	
 	-- Appearance/skin updates
+	local resize_texts = {'text_name', 'text_info'}
 	function RowPrototype:UpdateAppearance()
 		local owner, opt = self.owner, self.owner.opt
 		-- Colors
@@ -401,8 +402,13 @@ do
 		self.text_locked:SetText(LOCKED) -- Can't set text until font is set
 
 		-- Resize fontstrings
-		AdjustFontstringSize(self.text_name)
-		AdjustFontstringSize(self.text_info)
+		for i=1,#resize_texts do
+			local fontstring = self[resize_texts[i]]
+			local text = fontstring:GetText()
+			fontstring:SetText("A")
+			AdjustFontstringSize(fontstring)
+			fontstring:SetText(text)
+		end
 
 		-- Dimensions
 		self.frame_item:SetWidth(opt.loot_icon_size)
@@ -887,7 +893,7 @@ function XLootFrame:Update(in_options)
 	-- Construct frame
 	if not self.built then
 		self:BuildFrame()
-		XLootFrame:ParseAutolootList()
+		self:ParseAutolootList()
 	end
 
 	-- References
@@ -907,13 +913,13 @@ function XLootFrame:Update(in_options)
 		if icon then -- Occasionally WoW will open loot with empty or invalid slots
 			local looted = false
 			-- Row data
-			local is_item, link = (GetLootSlotType(slot) == LOOT_SLOT_ITEM)
+			local type = GetLootSlotType(slot)
+			local is_item, link = (type == LOOT_SLOT_ITEM)
 			if is_item then
 				link = GetLootSlotLink(slot)
 			end
 
 			-- Autolooting currency
-			local type = GetLootSlotType(slot)
 			if (auto.all or auto.currency) and (type == LOOT_SLOT_MONEY or type == LOOT_SLOT_CURRENCY) then
 				LootSlot(slot)
 				looted = true
@@ -954,12 +960,9 @@ function XLootFrame:Update(in_options)
 						-- Fits with existing items?
 						else
 							local partial = GetItemCount(link) % itemStackCount
-							if partial > 0 then
-								-- local stack = select(8, GetItemInfo(name))
-								if partial + quantity < itemStackCount then
-									LootSlot(slot)
-									looted = true
-								end
+							if partial > 0 and (partial + quantity < itemStackCount) then
+								LootSlot(slot)
+								looted = true
 							end
 						end
 

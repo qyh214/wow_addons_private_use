@@ -77,6 +77,7 @@ function SummaryGrid:Constructor(parent)
     local Summary = self:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightLeft') do
         Summary:SetPoint('LEFT', VoiceChat, 'RIGHT', 1, 0)
         Summary:SetPoint('RIGHT', -2, 0)
+        Summary:SetWordWrap(false)
     end
 
     self.VoiceChat = VoiceChat

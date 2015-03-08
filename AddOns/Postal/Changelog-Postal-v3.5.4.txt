@@ -1,0 +1,56 @@
+------------------------------------------------------------------------
+r388 | stanzilla | 2015-03-01 19:25:30 +0000 (Sun, 01 Mar 2015) | 1 line
+Changed paths:
+   A /tags/v3.5.4 (from /trunk:387)
+
+Tagging as v3.5.4
+------------------------------------------------------------------------
+r387 | stanzilla | 2015-03-01 19:25:19 +0000 (Sun, 01 Mar 2015) | 1 line
+Changed paths:
+   M /trunk/Postal.toc
+
+looks like someone forgot to do that before and we were already behind => bump again
+------------------------------------------------------------------------
+r386 | stanzilla | 2015-03-01 19:24:36 +0000 (Sun, 01 Mar 2015) | 1 line
+Changed paths:
+   M /trunk/Postal.toc
+
+bump version
+------------------------------------------------------------------------
+r385 | stanzilla | 2015-03-01 19:09:14 +0000 (Sun, 01 Mar 2015) | 1 line
+Changed paths:
+   M /trunk/Postal.lua
+
+remove a pre-4.0 workaround for a Blizzard bug that was already fixed.
+------------------------------------------------------------------------
+r384 | stanzilla | 2015-03-01 19:02:24 +0000 (Sun, 01 Mar 2015) | 1 line
+Changed paths:
+   M /trunk/Localization.lua
+   M /trunk/Postal.lua
+
+revert Localization.lua changes by Devilone that broke WowAce translation tool polling
+------------------------------------------------------------------------
+r383 | stanzilla | 2015-03-01 18:44:02 +0000 (Sun, 01 Mar 2015) | 1 line
+Changed paths:
+   M /trunk/Postal.lua
+
+pull in updated translations
+------------------------------------------------------------------------
+r382 | stanzilla | 2015-03-01 18:34:53 +0000 (Sun, 01 Mar 2015) | 1 line
+Changed paths:
+   M /trunk/Postal.lua
+
+change SetDesaturated() from 1/0 to true/false
+------------------------------------------------------------------------
+r381 | stanzilla | 2015-03-01 18:15:15 +0000 (Sun, 01 Mar 2015) | 1 line
+Changed paths:
+   M /trunk/Modules/Express.lua
+
+remove mousewheel scrolling from Express module as Blizzard does that in the default UI now.
+------------------------------------------------------------------------
+r380 | stanzilla | 2015-02-24 16:19:15 +0000 (Tue, 24 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/Postal.toc
+
+Update TOC for Patch 6.1
+------------------------------------------------------------------------

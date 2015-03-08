@@ -44,7 +44,7 @@
 
 
 
-local revision =("$Revision: 12840 $"):sub(12, -3)
+local revision =("$Revision: 13222 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -440,7 +440,7 @@ do
 			name = name:gsub("%$journal:(%d+)", replaceJournalLinks)
 		end
 		local dropdown
-		if modvar and modvar:find("SpecialWarningSound") then
+		if modvar and modvar:find("SWSound") then
 			dropdown = self:CreateDropdown(nil, sounds, nil, nil, function(value)
 				mod.Options[modvar] = value
 				DBM:PlaySpecialWarningSound(value)
@@ -2373,6 +2373,7 @@ local function CreateOptionsMenu()
 				DBM.Options.SpecialWarningSound = DBM.DefaultOptions.SpecialWarningSound
 				DBM.Options.SpecialWarningSound2 = DBM.DefaultOptions.SpecialWarningSound2
 				DBM.Options.SpecialWarningSound3 = DBM.DefaultOptions.SpecialWarningSound3
+				DBM.Options.SpecialWarningSound4 = DBM.DefaultOptions.SpecialWarningSound4
 				DBM.Options.SpecialWarningFontSize = DBM.DefaultOptions.SpecialWarningFontSize
 				DBM.Options.SpecialWarningFlashCol1[1] = DBM.DefaultOptions.SpecialWarningFlashCol1[1]
 				DBM.Options.SpecialWarningFlashCol1[2] = DBM.DefaultOptions.SpecialWarningFlashCol1[2]
@@ -2398,6 +2399,7 @@ local function CreateOptionsMenu()
 				SpecialWarnSoundDropDown:SetSelectedValue(DBM.Options.SpecialWarningSound)
 				SpecialWarnSoundDropDown2:SetSelectedValue(DBM.Options.SpecialWarningSound2)
 				SpecialWarnSoundDropDown3:SetSelectedValue(DBM.Options.SpecialWarningSound3)
+				SpecialWarnSoundDropDown4:SetSelectedValue(DBM.Options.SpecialWarningSound4)
 				fontSizeSlider:SetValue(DBM.DefaultOptions.SpecialWarningFontSize)
 				color0:SetColorRGB(DBM.Options.SpecialWarningFontCol[1], DBM.Options.SpecialWarningFontCol[2], DBM.Options.SpecialWarningFontCol[3])
 				color1:SetColorRGB(DBM.Options.SpecialWarningFlashCol1[1], DBM.Options.SpecialWarningFlashCol1[2], DBM.Options.SpecialWarningFlashCol1[3])
@@ -2433,9 +2435,9 @@ local function CreateOptionsMenu()
 		end)
 		CountSoundDropDown2:SetPoint("LEFT", CountSoundDropDown, "RIGHT", 50, 0)
 
-		local CountSoundDropDown3 = spokenGeneralArea:CreateDropdown(L.CountdownVoice3, DBM.Counts, "DBM", "CountdownVoice3", function(value)
-			DBM.Options.CountdownVoice3 = value
-			DBM:PlayCountSound(1, DBM.Options.CountdownVoice3)
+		local CountSoundDropDown3 = spokenGeneralArea:CreateDropdown(L.CountdownVoice3, DBM.Counts, "DBM", "CountdownVoice3v2", function(value)
+			DBM.Options.CountdownVoice3v2 = value
+			DBM:PlayCountSound(1, DBM.Options.CountdownVoice3v2)
 		end)
 		CountSoundDropDown3:SetPoint("TOPLEFT", CountSoundDropDown, "TOPLEFT", 0, -45)
 
@@ -2535,8 +2537,11 @@ local function CreateOptionsMenu()
 		spamArea:CreateCheckButton(L.StripServerName, true, nil, "StripServerName")
 		spamArea:CreateCheckButton(L.SpamBlockBossWhispers, true, nil, "SpamBlockBossWhispers")
 
-		local spamSpecArea = spamPanel:CreateArea(L.Area_SpecFilter, nil, 40, true)
+		local spamSpecArea = spamPanel:CreateArea(L.Area_SpecFilter, nil, 120, true)
 		spamSpecArea:CreateCheckButton(L.FilterTankSpec, true, nil, "FilterTankSpec")
+		spamSpecArea:CreateCheckButton(L.FilterInterrupts, true, nil, "FilterInterrupt")
+		spamSpecArea:CreateCheckButton(L.FilterDispels, true, nil, "FilterDispel")
+		spamSpecArea:CreateCheckButton(L.FilterSelfHud, true, nil, "FilterSelfHud")
 
 		local spamPTArea = spamPanel:CreateArea(L.Area_PullTimer, nil, 160, true)
 		spamPTArea:CreateCheckButton(L.DontShowPTNoID, true, nil, "DontShowPTNoID")
@@ -2562,7 +2567,7 @@ local function CreateOptionsMenu()
 		local hideBlizzArea = hideBlizzPanel:CreateArea(L.Area_HideBlizzard, nil, 305, true)
 		hideBlizzArea:CreateCheckButton(L.HideBossEmoteFrame, true, nil, "HideBossEmoteFrame")
 		hideBlizzArea:CreateCheckButton(L.HideWatchFrame, true, nil, "HideObjectivesFrame")
-		hideBlizzArea:CreateCheckButton(L.HideGarrisonUpdates, true, nil, "HideGarrisonUpdates")
+		hideBlizzArea:CreateCheckButton(L.HideGarrisonUpdates, true, nil, "HideGarrisonToasts")
 		hideBlizzArea:CreateCheckButton(L.HideGuildChallengeUpdates, true, nil, "HideGuildChallengeUpdates")
 		hideBlizzArea:CreateCheckButton(L.HideTooltips, true, nil, "HideTooltips")
 		hideBlizzArea:CreateCheckButton(L.DisableSFX, true, nil, "DisableSFX")
@@ -2602,6 +2607,7 @@ local function CreateOptionsMenu()
 		local soundAlertsArea		= extraFeaturesPanel:CreateArea(L.Area_SoundAlerts, nil, 100, true)
 		local LFDEnhance			= soundAlertsArea:CreateCheckButton(L.LFDEnhance, true, nil, "LFDEnhance")
 		local WorldBossNearAlert	= soundAlertsArea:CreateCheckButton(L.WorldBossNearAlert, true, nil, "WorldBossNearAlert")
+		local RLReadyCheckSound		= soundAlertsArea:CreateCheckButton(L.RLReadyCheckSound, true, nil, "RLReadyCheckSound")
 		local AFKHealthWarning		= soundAlertsArea:CreateCheckButton(L.AFKHealthWarning, true, nil, "AFKHealthWarning")
 
 		local bossLoggingArea		= extraFeaturesPanel:CreateArea(L.Area_AutoLogging, nil, 100, true)
@@ -3495,8 +3501,8 @@ do
 						button = catpanel:CreateLine(v.text)
 					elseif type(mod.Options[v]) == "boolean" then
 						lastButton = button
-						if mod.Options[v .. "SpecialWarningSound"] then
-							button = catpanel:CreateCheckButton(mod.localization.options[v], true, nil, nil, nil, mod, v .. "SpecialWarningSound")
+						if mod.Options[v .. "SWSound"] then
+							button = catpanel:CreateCheckButton(mod.localization.options[v], true, nil, nil, nil, mod, v .. "SWSound")
 						else
 							button = catpanel:CreateCheckButton(mod.localization.options[v], true)
 						end

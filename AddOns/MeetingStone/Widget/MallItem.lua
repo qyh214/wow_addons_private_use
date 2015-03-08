@@ -53,40 +53,6 @@ function MallItem:Constructor(parent)
         Strikethrough:Hide()
     end
 
-    local Discount = CreateFrame('Frame', nil, self) do
-        Discount:SetPoint('TOPRIGHT', 1, -2)
-        Discount:SetSize(32,32)
-        Discount:Hide()
-
-        local DiscountRight = Discount:CreateTexture(nil, 'ARTWORK', nil, 3)
-        DiscountRight:SetTexture([[Interface\Store\Store-Main]])
-        DiscountRight:SetTexCoord(0.98828125, 0.99609375, 0.19921875, 0.23046875)
-        DiscountRight:SetSize(8, 32)
-        DiscountRight:SetPoint('TOPRIGHT', 1, -2)
-
-        local DiscountLeft = Discount:CreateTexture(nil, 'ARTWORK', nil, 3)
-        DiscountLeft:SetTexture([[Interface\Store\Store-Main]])
-        DiscountLeft:SetTexCoord(0.98828125, 0.99609375, 0.10546875, 0.13671875)
-        DiscountLeft:SetSize(8, 32)
-        DiscountLeft:SetPoint('RIGHT', DiscountRight, 'LEFT', -40, 0)
-
-        local DiscountMiddle = Discount:CreateTexture(nil, 'ARTWORK', nil, 3)
-        DiscountMiddle:SetTexture([[Interface\Store\Store-Main]])
-        DiscountMiddle:SetTexCoord(0.32910156, 0.36230469, 0.69042969, 0.72167969)
-        DiscountMiddle:SetSize(34, 32)
-        DiscountMiddle:SetPoint('RIGHT', DiscountRight, 'LEFT', 0, 0)
-        DiscountMiddle:SetPoint('LEFT', DiscountLeft, 'RIGHT', 0, 0)
-
-        local Text = Discount:CreateFontString(nil, 'OVERLAY', 'GameFontNormalMed2')
-        Text:SetPoint('CENTER', DiscountMiddle, 1, 2)
-        Text:SetSize(50, 30)
-        Text:SetTextColor(1, 1, 1)
-
-        Discount.SetText = function(_, text)
-            Text:SetText(text)
-        end
-    end
-
     local Name = self:CreateFontString(nil, 'ARTWORK', 'GameFontNormalMed3') do
         Name:SetSize(120, 40)
         Name:SetPoint('BOTTOM', 0, 42)
@@ -142,8 +108,46 @@ function MallItem:Constructor(parent)
         end)
     end
 
-    self:RegisterEvent('GET_ITEM_INFO_RECEIVED', function()
-        self:SetIcon(self.data.itemId)
+    local Discount = CreateFrame('Frame', nil, self) do
+        Discount:SetFrameLevel(Model:GetFrameLevel() + 1)
+        Discount:SetPoint('TOPRIGHT', 1, -2)
+        Discount:SetSize(32,32)
+        Discount:Hide()
+
+        local DiscountRight = Discount:CreateTexture(nil, 'ARTWORK', nil, 3)
+        DiscountRight:SetTexture([[Interface\Store\Store-Main]])
+        DiscountRight:SetTexCoord(0.98828125, 0.99609375, 0.19921875, 0.23046875)
+        DiscountRight:SetSize(8, 32)
+        DiscountRight:SetPoint('TOPRIGHT', 1, -2)
+
+        local DiscountLeft = Discount:CreateTexture(nil, 'ARTWORK', nil, 3)
+        DiscountLeft:SetTexture([[Interface\Store\Store-Main]])
+        DiscountLeft:SetTexCoord(0.98828125, 0.99609375, 0.10546875, 0.13671875)
+        DiscountLeft:SetSize(8, 32)
+        DiscountLeft:SetPoint('RIGHT', DiscountRight, 'LEFT', -40, 0)
+
+        local DiscountMiddle = Discount:CreateTexture(nil, 'ARTWORK', nil, 3)
+        DiscountMiddle:SetTexture([[Interface\Store\Store-Main]])
+        DiscountMiddle:SetTexCoord(0.32910156, 0.36230469, 0.69042969, 0.72167969)
+        DiscountMiddle:SetSize(34, 32)
+        DiscountMiddle:SetPoint('RIGHT', DiscountRight, 'LEFT', 0, 0)
+        DiscountMiddle:SetPoint('LEFT', DiscountLeft, 'RIGHT', 0, 0)
+
+        local Text = Discount:CreateFontString(nil, 'OVERLAY', 'GameFontNormalMed2')
+        Text:SetPoint('CENTER', DiscountMiddle, 1, 2)
+        Text:SetSize(50, 30)
+        Text:SetTextColor(1, 1, 1)
+
+        Discount.SetText = function(_, text)
+            Text:SetText(text)
+        end
+    end
+
+    self:RegisterEvent('GET_ITEM_INFO_RECEIVED')
+    self:SetScript('OnEvent', function(_, _, id)
+        if self.data and self.data.itemId == id then
+            self:SetIcon(self.data.itemId)
+        end
     end)
 
     self:SetCheckedTexture(CheckedTexture)
@@ -168,25 +172,25 @@ function MallItem:SetMagnifier(enable)
     end
 end
 
-function MallItem:SetPrice(price, discount)
+function MallItem:SetPrice(price, originalPrice)
     self.Price:ClearAllPoints()
 
-    if discount then
+    if originalPrice then
         self.Price:SetPoint('BOTTOMRIGHT', self, 'BOTTOM', -2, 30)
 
         self.SalePrice:ClearAllPoints()
         self.SalePrice:SetPoint('BOTTOMLEFT', self, 'BOTTOM', 2, 30)
-        self.SalePrice:SetFormattedText('%d*', discount)
+        self.SalePrice:SetFormattedText('%d*', price)
 
-        self.Discount:SetText(format('-%d%%', (1-discount/price)*100))
+        self.Discount:SetText(format(L['%.1f折'], ceil(price/originalPrice*100)/10))
     else
         self.Price:SetPoint('BOTTOM', self, 0, 30)
     end
 
-    self.Discount:SetShown(discount)
-    self.SalePrice:SetShown(discount)
-    self.Strikethrough:SetShown(discount)
-    self.Price:SetText(format('%d*', price or ''))
+    self.Discount:SetShown(originalPrice)
+    self.SalePrice:SetShown(originalPrice)
+    self.Strikethrough:SetShown(originalPrice)
+    self.Price:SetText(format('%d*', originalPrice or price or ''))
 end
 
 function MallItem:SetText(text)
@@ -231,18 +235,18 @@ function MallItem:SetIcon(id)
         SetPortraitToTexture(self.Icon, texture)
     end
 
-    self.data.link = link
-
     if not self.data.text then
         self.data.text = name
-        self:SetText(name)
     end
+
+    self.data.link = link
+    self:SetText(self.data.text)
 end
 
 function MallItem:SetData(data)
     self.data = data
     self:SetText(data.text)
     self:SetModel(data.model)
-    self:SetPrice(data.price, data.discount)
+    self:SetPrice(data.price, data.originalPrice)
     self:SetIcon(data.itemId)
 end

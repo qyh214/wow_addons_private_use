@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'ListView', 4
+local WIDGET, VERSION = 'ListView', 5
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local ListView = GUI:NewClass(WIDGET, 'ScrollFrame', VERSION, 'Refresh', 'View', 'Scroll', 'Select', 'Filter')
@@ -97,7 +97,7 @@ function ListView:UpdateItems()
 
         if groupHandle then
             local item = self:GetItem(index)
-            local itemGroupData = type(item[groupHandle]) == 'function' and item[groupHandle](item) or item[groupHandle]
+            local itemGroupData = groupHandle(item)
 
             startButton = startButton or button
             endButton = endButton or button

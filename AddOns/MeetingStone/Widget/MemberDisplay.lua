@@ -18,18 +18,27 @@ function LFGListGroupDataDisplay_Update(self, activityID, displayData, disabled)
     if displayType == LE_LFG_LIST_DISPLAY_TYPE_ROLE_COUNT or displayType == LE_LFG_LIST_DISPLAY_TYPE_HIDE_ALL then
         self.RoleCount:Show()
         self.Enumerate:Hide()
+        self.PlayerCount:Hide()
         LFGListGroupDataDisplayRoleCount_Update(self.RoleCount, displayData, disabled)
     elseif displayType == LE_LFG_LIST_DISPLAY_TYPE_ROLE_ENUMERATE then
         self.RoleCount:Hide()
         self.Enumerate:Show()
+        self.PlayerCount:Hide()
         LFGListGroupDataDisplayEnumerate_Update(self.Enumerate, maxPlayers, displayData, disabled, LFG_LIST_GROUP_DATA_ROLE_ORDER)
     elseif displayType == LE_LFG_LIST_DISPLAY_TYPE_CLASS_ENUMERATE then
         self.RoleCount:Hide()
         self.Enumerate:Show()
+        self.PlayerCount:Hide()
         LFGListGroupDataDisplayEnumerate_Update(self.Enumerate, maxPlayers, displayData, disabled, LFG_LIST_GROUP_DATA_CLASS_ORDER)
+    elseif displayType == LE_LFG_LIST_DISPLAY_TYPE_PLAYER_COUNT then
+        self.RoleCount:Hide()
+        self.Enumerate:Hide()
+        self.PlayerCount:Show()
+        LFGListGroupDataDisplayPlayerCount_Update(self.PlayerCount, displayData, disabled)
     else
         self.RoleCount:Hide()
         self.Enumerate:Hide()
+        self.PlayerCount:Hide()
     end
 end
 

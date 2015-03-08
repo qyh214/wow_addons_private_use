@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod(1262, "DBM-Draenor", nil, 557)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12756 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13152 $"):sub(12, -3))
 mod:SetCreatureID(83746)
+mod:SetEncounterID(1755)
 mod:SetReCombatTime(20)
 mod:SetZone()
 mod:SetMinSyncRevision(11969)
 
-mod:RegisterCombat("combat_yell", L.Pull)
+mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 167647 167615",
@@ -32,7 +33,7 @@ local timerSolarBreathCD		= mod:NewCDTimer(29, 167679, nil, "Tank")
 local timerSharpBeakCD			= mod:NewCDTimer("OptionVersion2", 12, 167614, nil, "Tank|Healer")
 
 --mod:AddReadyCheckOption(37474, false)
-mod:AddRangeFrameOption(8, 167647)
+--mod:AddRangeFrameOption(8, 167647)
 
 function mod:OnCombatStart(delay, yellTriggered)
 --	if yellTriggered then

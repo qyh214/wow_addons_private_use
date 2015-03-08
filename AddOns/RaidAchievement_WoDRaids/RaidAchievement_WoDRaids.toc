@@ -1,4 +1,4 @@
-﻿## Interface: 60000
+﻿## Interface: 60100
 ## Title: Raid|cff7fff7fAchievement|r - WoD raids
 ## Title-ruRU: Raid|cff7fff7fAchievement|r - Рейды WoD
 ## Author: Shurshik

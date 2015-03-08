@@ -1,24 +1,27 @@
 local mod	= DBM:NewMod(1195, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12676 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13170 $"):sub(12, -3))
 mod:SetCreatureID(78948, 80557, 80551, 99999)--78948 Tectus, 80557 Mote of Tectus, 80551 Shard of Tectus
 mod:SetEncounterID(1722)--Hopefully win will work fine off this because otherwise tracking shard deaths is crappy
 mod:SetZone()
+mod:SetMinSyncRevision(13109)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
 mod:SetModelSound("sound\\creature\\tectus\\VO_60_HMR_TECTUS_AGGRO_01.ogg", "sound\\creature\\tectus\\vo_60_hmr_tectus_spell_05.ogg")
+mod:SetHotfixNoticeRev(13109)
 
 mod:RegisterCombat("combat")
 mod:SetMinSyncTime(4)--Rise Mountain can occur pretty often.
+mod:SetWipeTime(30)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 162475 162968 162894 163312",
 	"SPELL_AURA_APPLIED 162346 162658",
 	"SPELL_AURA_REMOVED 162346",
+	"SPELL_CAST_SUCCESS 181089 181113",
 	"SPELL_PERIODIC_DAMAGE 162370",
 	"SPELL_ABSORBED 162370",
 	"CHAT_MSG_MONSTER_YELL",
-	"UNIT_SPELLCAST_SUCCEEDED boss1",
 	"UNIT_DIED"
 )
 
@@ -39,8 +42,8 @@ local specWarnRavingAssault			= mod:NewSpecialWarningDodge(163312, "Melee", nil,
 local specWarnEarthenFlechettes		= mod:NewSpecialWarningDodge(162968, "Melee", nil, nil, nil, nil, 2)
 local specWarnGiftOfEarth			= mod:NewSpecialWarningCount(162894, "Melee", nil, nil, nil, nil, 2)
 
-local timerEarthwarperCD			= mod:NewNextTimer(41, "ej10061", nil, nil, nil, 162894)--Both of these get delayed by upheavel
-local timerBerserkerCD				= mod:NewNextTimer(41, "ej10062", nil, "Tank", nil, 163312)--Both of these get delayed by upheavel
+local timerEarthwarperCD			= mod:NewNextTimer(40, "ej10061", nil, nil, nil, 162894)--Both of these get delayed by upheavel
+local timerBerserkerCD				= mod:NewNextTimer(40, "ej10062", nil, "Tank", nil, 163312)--Both of these get delayed by upheavel
 local timerGiftOfEarthCD			= mod:NewCDTimer(10.5, 162894, nil, "Melee")--10.5 but obviously delayed if stuns were used.
 local timerEarthenFlechettesCD		= mod:NewCDTimer(14, 162968, nil, "Melee")--14 but obviously delayed if stuns were used. Also tends to be recast immediately if stun interrupted
 local timerCrystalBarrageCD			= mod:NewNextSourceTimer(30, 162346, nil, false)--Very accurate but spammy mess with 4+ adds up.
@@ -64,9 +67,9 @@ mod:AddSetIconOption("SetIconOnMote", "ej10064", false, true)--Working with both
 mod:AddSetIconOption("SetIconOnCrystal", 162370, false)--icons 1 and 2, no conflict with icon on earthwarper
 
 local UnitGUID, UnitExists = UnitGUID, UnitExists
-local Earthwarper = EJ_GetSectionInfo(10061)
-local Berserker = EJ_GetSectionInfo(10062)
 mod.vb.EarthwarperAlive = 0
+mod.vb.shardDeath = 0
+mod.vb.moteDeath = 0
 mod.vb.healthPhase = 0
 local earthDuders = {}
 
@@ -74,69 +77,77 @@ local tectusN = EJ_GetEncounterInfo(1195)
 local shardN = EJ_GetSectionInfo(10063)
 local moteN = EJ_GetSectionInfo(10064)
 local moteH = {}
+local tectusGUID
+local shardGUID = {}
 local ltectusH, lshardC, lshardT, lmoteC, lmoteT = 1, 1, 1, 1, 1 -- not need to sync.
 
 function mod:CustomHealthUpdate()
 	local tectusH, shardC, shardT, moteC, moteT = 0, 0, 0, 0, 0
-	if UnitExists("boss1") then
-		self.vb.healthPhase = 1
-		tectusH = UnitHealth("boss1") / UnitHealthMax("boss1") * 100
-		ltectusH = tectusH
-	end
-	if UnitExists("boss2") then
-		self.vb.healthPhase = 2
-		shardC = shardC + 1
-		shardT = shardT + (UnitHealth("boss2") / UnitHealthMax("boss2") * 100)
-		lshardC = shardC
-		lshardT = shardT
-	end
-	if UnitExists("boss3") then
-		self.vb.healthPhase = 2
-		shardC = shardC + 1
-		shardT = shardT + (UnitHealth("boss3") / UnitHealthMax("boss3") * 100)
-		lshardC = shardC
-		lshardT = shardT
+	local moteGUID = {}
+	for i = 1, 5 do
+		local unitID = "boss"..i
+		local guid = UnitGUID(unitID)
+		if UnitExists(unitID) then
+			local cid = self:GetCIDFromGUID(guid)
+			if cid == 78948 then
+				tectusH = UnitHealth(unitID) / UnitHealthMax(unitID) * 100
+				tectusGUID = guid
+				ltectusH = tectusH
+			elseif cid == 80551 then
+				shardC = shardC + 1
+				shardT = shardT + (UnitHealth(unitID) / UnitHealthMax(unitID) * 100)
+				shardGUID[guid] = true
+				lshardC = shardC
+				lshardT = shardT
+			elseif cid == 80557 then
+				local health = UnitHealth(unitID) / UnitHealthMax(unitID) * 100
+				moteC = moteC + 1
+				moteT = moteT + health
+				moteGUID[guid] = true
+				lmoteC = moteC
+				lmoteT = moteH
+				moteH[guid] = health
+			end
+		end
 	end
 	for guid, health in pairs(moteH) do
-		local newhealth = self:GetBossHPByGUID(guid) or health
-		if newhealth >= 1 then
-			self.vb.healthPhase = 3
-			moteC = moteC + 1
-			moteT = moteT + newhealth
-			lmoteC = moteC
-			lmoteT = moteH
-			moteH[guid] = newhealth
+		if not moteGUID[guid] then
+			local newhealth = self:GetBossHPByGUID(guid) or health
+			if newhealth >= 1 then
+				self.vb.healthPhase = 3
+				moteC = moteC + 1
+				moteT = moteT + newhealth
+				moteGUID[guid] = true
+				lmoteC = moteC
+				lmoteT = moteH
+				moteH[guid] = newhealth
+			end
 		end
 	end
 	if DBM.BossHealth:IsShown() then
-		if UnitExists("boss1") then
-			if DBM.BossHealth:HasBoss(78948) then
-				DBM.BossHealth:RemoveBoss(78948)
-			end
-			if not DBM.BossHealth:HasBoss("boss1") then
-				DBM.BossHealth:AddBoss("boss1", tectusN)
-			end
-		else
-			if DBM.BossHealth:HasBoss("boss1") then
-				DBM.BossHealth:RemoveBoss("boss1")
+		if DBM.BossHealth:HasBoss(78948) then
+			DBM.BossHealth:RemoveBoss(78948)
+		end
+		if tectusGUID then
+			if tectusH > 0 then
+				if not DBM.BossHealth:HasBoss(tectusGUID) then
+					DBM.BossHealth:AddBoss(tectusGUID, tectusN)
+				end
+			else
+				if DBM.BossHealth:HasBoss(tectusGUID) then
+					DBM.BossHealth:RemoveBoss(tectusGUID)
+				end
 			end
 		end
-		if UnitExists("boss2") then
-			if not DBM.BossHealth:HasBoss("boss2") then
-				DBM.BossHealth:AddBoss("boss2", shardN)
-			end
-		else
-			if DBM.BossHealth:HasBoss("boss2") then
-				DBM.BossHealth:RemoveBoss("boss2")
-			end
-		end
-		if UnitExists("boss3") then
-			if not DBM.BossHealth:HasBoss("boss3") then
-				DBM.BossHealth:AddBoss("boss3", shardN)
-			end
-		else
-			if DBM.BossHealth:HasBoss("boss3") then
-				DBM.BossHealth:RemoveBoss("boss3")
+		for guid, value in pairs(shardGUID) do
+			if shardT > 0 then
+				if not DBM.BossHealth:HasBoss(guid) then
+					DBM.BossHealth:AddBoss(guid, shardN)
+				end
+			else
+				if DBM.BossHealth:HasBoss(guid) then
+					DBM.BossHealth:RemoveBoss(guid)
+				end
 			end
 		end
 		for guid, health in pairs(moteH) do
@@ -158,11 +169,13 @@ end
 function mod:OnCombatStart(delay)
 	table.wipe(earthDuders)
 	self.vb.EarthwarperAlive = 0
+	self.vb.moteDeath = 0
+	self.vb.shardDeath = 0
 	self.vb.healthPhase = 1
 	table.wipe(moteH)
-	timerEarthwarperCD:Start(11-delay)
-	countdownEarthwarper:Start(11-delay)
-	timerBerserkerCD:Start(21-delay)
+	timerEarthwarperCD:Start(8-delay)
+	countdownEarthwarper:Start(8-delay)
+	timerBerserkerCD:Start(18-delay)
 	if self:IsMythic() then
 		--Figure out berserk
 	elseif self:IsDifficulty("normal", "heroic") then
@@ -172,7 +185,6 @@ function mod:OnCombatStart(delay)
 	end
 	if DBM.BossHealth:IsShown() then
 		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss("boss1", tectusN)
 	end
 end
 
@@ -253,6 +265,48 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 181113 then--Encounter Spawn
+		local cid = self:GetCIDFromGUID(args.sourceGUID)
+		if cid == 80599 then--Earth Warper
+			self.vb.EarthwarperAlive = self.vb.EarthwarperAlive + 1
+			specWarnEarthwarper:Show()
+			voiceEarthwarper:Play("killmob")
+			timerGiftOfEarthCD:Start(10)--TODO, verify timing on new event
+			timerEarthenFlechettesCD:Start(15)--TODO, verify timing on new event
+			timerEarthwarperCD:Start()--TODO, verify timing on new event
+			countdownEarthwarper:Start()--TODO, verify timing on new event
+			if self.Options.SetIconOnEarthwarper and self.vb.EarthwarperAlive < 9 and not (self:IsMythic() and self.Options.SetIconOnMote) then--Support for marking up to 8 mobs (you're group is terrible)
+				self:ScanForMobs(80599, 2, 9-self.vb.EarthwarperAlive, 1, 0.2, 13, "SetIconOnEarthwarper")
+			end
+		elseif cid == 80822 then
+			warnBerserker:Show()
+			timerBerserkerCD:Start()
+		end
+	elseif spellId == 181089 then--Encounter Event
+		local cid = self:GetCIDFromGUID(args.sourceGUID)
+		if cid == 78948 then
+			self.vb.healthPhase = 2
+			if not self:IsMythic() then
+				timerEarthwarperCD:Cancel()
+				countdownEarthwarper:Cancel()
+				timerBerserkerCD:Cancel()
+			end
+		elseif cid == 80551 then
+			self.vb.shardDeath = self.vb.shardDeath + 1
+			if self.vb.shardDeath == 2 then
+				self.vb.healthPhase = 3
+			end
+		elseif cid == 80557 then--Mote of Tectus
+			self.vb.moteDeath = self.vb.moteDeath + 1
+			if self.vb.moteDeath == 8 then
+				DBM:EndCombat(self)
+			end
+		end
+	end
+end
+
 function mod:SPELL_PERIODIC_DAMAGE(sourceGUID, sourceName, _, _, destGUID, destName, _, _, spellId)
 	if spellId == 162370 then
 		if (self.vb.healthPhase == 0 or self.vb.healthPhase == 3) and not moteH[sourceGUID] and sourceName == moteN then -- try to recover moteH table if timer recovery worked.
@@ -277,34 +331,8 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 140562 then--Break Player Targetting (cast when tectus splits)
-		--TODO< need mythic logs to see if they restart. the adds don't stop spawning on mythic. but no idea if split resets the timer.
-		timerEarthwarperCD:Cancel()
-		countdownEarthwarper:Cancel()
-		timerBerserkerCD:Cancel()
-	end
-end
-
---"<11.7 15:07:19> [CHAT_MSG_MONSTER_YELL] CHAT_MSG_MONSTER_YELL#MASTER! I COME FOR YOU!#Night-Twisted Earthwarper#####0#0##0#480#nil#0#false#false", -- [1951]
---"<21.3 15:07:28> [CHAT_MSG_MONSTER_YELL] CHAT_MSG_MONSTER_YELL#Graaagh! KAHL...  AHK... RAAHHHH!#Night-Twisted Berserker#####0#0##0#482#nil#0#false#false", -- [4086]
---It's posssible this method has one bug in it. If an add kills a player, it might do a death yell and triggers false message. However, above translations are out of date and not what i was seeing during fight.
 function mod:CHAT_MSG_MONSTER_YELL(msg, npc)
-	if npc == Earthwarper then
-		self.vb.EarthwarperAlive = self.vb.EarthwarperAlive + 1
-		specWarnEarthwarper:Show()
-		voiceEarthwarper:Play("killmob")
-		timerGiftOfEarthCD:Start(10)
-		timerEarthenFlechettesCD:Start(15)
-		timerEarthwarperCD:Start()
-		countdownEarthwarper:Start()
-		if self.Options.SetIconOnEarthwarper and self.vb.EarthwarperAlive < 9 and not (self:IsMythic() and self.Options.SetIconOnMote) then--Support for marking up to 8 mobs (you're group is terrible)
-			self:ScanForMobs(80599, 2, 9-self.vb.EarthwarperAlive, 1, 0.2, 10, "SetIconOnEarthwarper")
-		end
-	elseif npc == Berserker then
-		warnBerserker:Show()
-		timerBerserkerCD:Start()
-	elseif msg == L.pillarSpawn or msg:find(L.pillarSpawn) then
+	if msg == L.pillarSpawn or msg:find(L.pillarSpawn) then
 		self:SendSync("TectusPillar")
 	end
 end

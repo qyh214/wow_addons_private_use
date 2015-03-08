@@ -12,6 +12,7 @@ function DataBroker:OnInitialize()
     local LDB = LibStub('LibDataBroker-1.1')
     local BrokerObject = LDB:NewDataObject('MeetingStone', {
         type = 'data source',
+        icon = ADDON_LOGO,
 
         OnEnter = function(owner)
             local anchor = owner:GetBottom() < GetScreenHeight() / 2 and 'ANCHOR_TOP' or 'ANCHOR_BOTTOM'
@@ -22,7 +23,9 @@ function DataBroker:OnInitialize()
             else
                 GameTooltip:AddDoubleLine(ICON1 .. L['申请中活动'], C_LFGList.GetNumApplications(), 1, 1, 1, 1, 1, 1)
             end
-            GameTooltip:AddDoubleLine(ICON2 .. L['活动总数'], self.activityCount or 0, 1, 1, 1, 1, 1, 1)
+            local item = BrowsePanel:GetCurrentActivity()
+            local label = item and format(L['“%s”总数'], item.text) or L['活动总数']
+            GameTooltip:AddDoubleLine(ICON2 .. label, self.activityCount or 0, 1, 1, 1, 1, 1, 1)
             GameTooltip:Show()
         end,
 
@@ -72,7 +75,7 @@ function DataBroker:OnInitialize()
     end
 
     local BrokerText = BrokerPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight') do
-        BrokerText:SetPoint('CENTER', 12, 0)
+        BrokerText:SetPoint('CENTER', 0, 0)
         BrokerText:SetText(BrokerObject.text)
     end
 
@@ -94,6 +97,7 @@ function DataBroker:OnInitialize()
     self.BrokerFlash = BrokerFlash
 
     LDB.RegisterCallback(self, 'LibDataBroker_AttributeChanged_MeetingStone', 'OnDataBrokerChanged')
+    LibStub('LibDBIcon-1.0'):Register('MeetingStone', BrokerObject, self.db.profile.minimap)
 
     BrokerObject.text = L['集合石']
     BrokerObject.icon = [[Interface\AddOns\MeetingStone\Media\Mark\0]]
@@ -103,9 +107,34 @@ function DataBroker:OnInitialize()
     self:RegisterEvent('LFG_LIST_APPLICANT_UPDATED')
     self:RegisterMessage('MEETINGSTONE_NEW_VERSION')
     self:RegisterMessage('MEETINGSTONE_ACTIVITIES_COUNT_UPDATED')
+    self:RegisterMessage('MEETINGSTONE_SETTING_CHANGED')
 end
 
-function DataBroker:MEETINGSTONE_NEW_VERSION(_, verion, url, isSupport, changeLog)
+function DataBroker:MEETINGSTONE_SETTING_CHANGED(_, key, value, onUser)
+    if key == 'panel' then
+        self.BrokerPanel:SetShown(value)
+    elseif key == 'panelLock' then
+        self.BrokerPanel:SetMovable(not value)
+        if value then
+            self.BrokerPanel:SetScript('OnDragStart', nil)
+            self.BrokerPanel:SetScript('OnDragStop', nil)
+        else
+            self.BrokerPanel:MakeDraggable()
+        end
+    elseif key == 'sound' then
+        self:SetMinimapButtonSound(value)
+    elseif key == 'ignore' then
+        if value then
+            Addon:EnableModule('Misc')
+        else
+            Addon:DisableModule('Misc')
+        end
+        IgnoreList_Update()
+    end
+end
+
+
+function DataBroker:MEETINGSTONE_NEW_VERSION(_, _, _, isSupport)
     if not isSupport then
         self:UnregisterAllEvents()
         self:UnregisterAllMessages()
@@ -152,4 +181,9 @@ end
 
 function DataBroker:SetMinimapButtonGlow(enable)
     QueueStatusMinimapButton_SetGlowLock(QueueStatusMinimapButton, 'lfglist-applicant', enable)
+end
+
+local org_OnLoop = QueueStatusMinimapButton.EyeHighlightAnim:GetScript('OnLoop')
+function DataBroker:SetMinimapButtonSound(enable)
+    QueueStatusMinimapButton.EyeHighlightAnim:SetScript('OnLoop', enable and org_OnLoop or nil)
 end

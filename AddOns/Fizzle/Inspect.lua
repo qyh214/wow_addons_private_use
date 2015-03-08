@@ -85,7 +85,7 @@ function mod:UpdateBorders()
 			if link and border then
 				local itemID = GetItemID(link)
 				local _, _, quality, iLevel = GetItemInfo(itemID)
-				
+
 				if quality then
 					local r, g, b = GetItemQualityColor(quality)
 					border:SetVertexColor(r, g, b)

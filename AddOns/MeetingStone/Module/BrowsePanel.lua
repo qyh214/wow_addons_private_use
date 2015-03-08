@@ -9,6 +9,8 @@ function BrowsePanel:OnInitialize()
 
     self.activityHash = {}
     self.activityList = {}
+    self.bossFilter = {}
+    self.activityId = nil
 
     local ActivityList = GUI:GetClass('DataGridView'):New(self) do
         ActivityList:SetAllPoints(self)
@@ -286,11 +288,12 @@ function BrowsePanel:OnInitialize()
         ActivityDropdown:SetDefaultText(L['请选择活动类型'])
         ActivityDropdown:SetCallback('OnSelectChanged', function(_, data, ...)
             self:Search(data.categoryId, data.fullName, data.filters, data.baseFilter, data.value)
+            self:UpdateBossFilter(data.activityId)
         end)
     end
 
     local function RefreshFilter()
-        self.ActivityList:SetFilterText(self.SearchInput:GetMatchText(), self.LootDropdown:GetValue())
+        self.ActivityList:SetFilterText(self.SearchInput:GetMatchText(), self.LootDropdown:GetValue(), self.bossFilter)
     end
 
     local LootLabel = self:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight') do
@@ -300,7 +303,7 @@ function BrowsePanel:OnInitialize()
 
     local LootDropdown = GUI:GetClass('Dropdown'):New(self) do
         LootDropdown:SetPoint('LEFT', LootLabel, 'RIGHT', 10, 0)
-        LootDropdown:SetSize(150, 26)
+        LootDropdown:SetSize(140, 26)
         LootDropdown:SetText(L['全部'])
         LootDropdown:SetDefaultText(L['全部'])
         LootDropdown:SetMenuTable(ACTIVITY_LOOT_MENUTABLE_WITHALL)
@@ -308,13 +311,101 @@ function BrowsePanel:OnInitialize()
     end
 
     local SearchInput = GUI:GetClass('SearchBox'):New(self) do
-        SearchInput:SetSize(170, 15)
+        SearchInput:SetSize(160, 15)
         SearchInput:SetPoint('LEFT', LootDropdown, 'RIGHT', 10, 0)
+        SearchInput:EnableAutoComplete(true)
+        SearchInput:SetMaxHistoryLines(MAX_SEARCHBOX_HISTORY_LINES)
         SearchInput:SetCallback('OnTextChanged', RefreshFilter)
+        SearchInput:SetCallback('OnEditFocusGained', function()
+            SearchInput:SetAutoComplete(Profile:GetSearchInputHistory(self.ActivityDropdown:GetItem().value))
+        end)
+        SearchInput:SetCallback('OnEditFocusLost', function(_, text)
+            if text ~= '' then
+                Profile:SaveSearchInputHistory(self.ActivityDropdown:GetItem().value, text)
+            end
+        end)
+    end
+
+    local AdvFilterPanel = CreateFrame('Frame', nil, self) do
+        GUI:Embed(AdvFilterPanel, 'Refresh')
+        AdvFilterPanel:SetSize(200, 300)
+        AdvFilterPanel:SetPoint('TOPLEFT', MainPanel, 'TOPRIGHT', -5, -30)
+        AdvFilterPanel:SetFrameLevel(ActivityList:GetFrameLevel()+5)
+        AdvFilterPanel:EnableMouse(true)
+        AdvFilterPanel:SetBackdrop{
+            edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
+            edgeSize = 16,
+        }
+        AdvFilterPanel:Hide()
+        AdvFilterPanel:HookScript('OnShow', function()
+            self.AdvButton:SetNormalTexture([[Interface\Buttons\UI-SpellbookIcon-PrevPage-Up]])
+            self.AdvButton:SetPushedTexture([[Interface\Buttons\UI-SpellbookIcon-PrevPage-Down]])
+            self.AdvButton:SetDisabledTexture([[Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled]])
+        end)
+        AdvFilterPanel:HookScript('OnHide', function()
+            self.AdvButton:SetNormalTexture([[Interface\Buttons\UI-SpellbookIcon-NextPage-Up]])
+            self.AdvButton:SetPushedTexture([[Interface\Buttons\UI-SpellbookIcon-NextPage-Down]])
+            self.AdvButton:SetDisabledTexture([[Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled]])
+        end)
+
+        local closeButton = CreateFrame('Button', nil, AdvFilterPanel, 'UIPanelCloseButton') do
+            closeButton:SetPoint('TOPRIGHT', -3, -5)
+        end
+
+        local bg = AdvFilterPanel:CreateTexture(nil, 'BACKGROUND') do
+            bg:SetPoint('TOPLEFT', 2, -2)
+            bg:SetPoint('BOTTOMRIGHT', -2, 2)
+            bg:SetTexture([[Interface\FrameGeneral\UI-Background-Rock]])
+        end
+    end
+
+    local BossFilter = GUI:GetClass('ScrollFrame'):New(AdvFilterPanel) do
+        local Border = CreateFrame('Frame', nil, AdvFilterPanel, 'InsetFrameTemplate') do
+            Border:SetPoint('TOPLEFT', 10, -40)
+            Border:SetPoint('BOTTOMRIGHT', -10, 50)
+            BossFilter:SetParent(Border)
+        end
+
+        local Label = Border:CreateFontString(nil, 'ARTWORK', 'GameFontNormal') do
+            Label:SetPoint('BOTTOMLEFT', Border, 'TOPLEFT', 0, 2)
+            Label:SetText(BOSS)
+        end
+
+        local Help = GUI:GetClass('TitleButton'):New(Border) do
+            Help:SetPoint('LEFT', Label, 'RIGHT', 10, 0)
+            Help:SetTexture([[Interface\FriendsFrame\InformationIcon]])
+            Help:SetTooltip(
+                L['首领帮助'],
+                GRAY_FONT_COLOR_CODE .. L['忽略'] .. '|r',
+                GREEN_FONT_COLOR_CODE .. L['未击杀'] .. '|r',
+                RED_FONT_COLOR_CODE .. L['已击杀'] .. '|r'
+            )
+        end
+
+        local ScrollChild = CreateFrame('Frame', nil, BossFilter) do
+            ScrollChild:SetSize(1, 1)
+            ScrollChild:SetPoint('TOPLEFT')
+            BossFilter:SetScrollChild(ScrollChild)
+        end
+
+        BossFilter.buttons = setmetatable({}, {__index = function(buttons, i)
+            local button = BossCheckBox:New(ScrollChild)
+            button:SetSize(22, 22)
+            button:SetPoint('TOPLEFT', ScrollChild, 'TOPLEFT', 5, -(i-1)*22)
+            button:SetCallback('OnCheckChanged', function(button)
+                self.bossFilter[button:GetText()] = button:GetChecked()
+                RefreshFilter()
+            end)
+            buttons[i] = button
+            return button
+        end})
+
+        BossFilter:SetPoint('TOPLEFT', 5, -5)
+        BossFilter:SetPoint('BOTTOMRIGHT', -5, 5)
     end
 
     local RefreshButton = Addon:GetClass('RefreshButton'):New(self) do
-        RefreshButton:SetPoint('TOPRIGHT', MainPanel, 'TOPRIGHT', -20, -35)
+        RefreshButton:SetPoint('TOPRIGHT', MainPanel, 'TOPRIGHT', -40, -38)
         RefreshButton:SetTooltip(LFG_LIST_SEARCH_AGAIN)
         RefreshButton:SetScript('OnClick', function()
             self:Search()
@@ -329,6 +420,19 @@ function BrowsePanel:OnInitialize()
         RefreshButton.OnUpdate = function(RefreshButton, elasped)
             RefreshButton:SetText(format(D_SECONDS, ceil(self:TimeLeft(self.disableRefreshTimer))))
         end
+    end
+
+    local AdvButton = CreateFrame('Button', nil, self) do
+        AdvButton:SetNormalTexture([[Interface\Buttons\UI-SpellbookIcon-NextPage-Up]])
+        AdvButton:SetPushedTexture([[Interface\Buttons\UI-SpellbookIcon-NextPage-Down]])
+        AdvButton:SetDisabledTexture([[Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled]])
+        AdvButton:SetHighlightTexture([[Interface\Buttons\UI-Common-MouseHilight]], 'ADD')
+        AdvButton:SetSize(32, 32)
+        AdvButton:SetPoint('LEFT', RefreshButton, 'RIGHT', 0, 0)
+        AdvButton:SetScript('OnClick', function()
+            self.AdvFilterPanel:SetShown(not self.AdvFilterPanel:IsShown())
+        end)
+        GUI:SetTooltip(AdvButton, 'ANCHOR_RIGHT', L['高级过滤'])
     end
 
     local ActivityTotals = self:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightRight') do
@@ -408,6 +512,7 @@ function BrowsePanel:OnInitialize()
         },
     }
 
+
     MainPanel:AddHelpButton(self, HelpPlate)
 
     self.ActivityList = ActivityList
@@ -419,6 +524,9 @@ function BrowsePanel:OnInitialize()
     self.LootDropdown = LootDropdown
     self.ActivityTotals = ActivityTotals
     self.RefreshButton = RefreshButton
+    self.AdvFilterPanel = AdvFilterPanel
+    self.BossFilter = BossFilter
+    self.AdvButton = AdvButton
 
     self:RegisterEvent('LFG_LIST_AVAILABILITY_UPDATE')
     self:RegisterEvent('LFG_LIST_SEARCH_RESULTS_RECEIVED')
@@ -467,18 +575,19 @@ end
 function BrowsePanel:UpdateActivity(id)
     if not self.activityHash[id] then
         self:CacheActivity(id)
+        self:SendMessage('MEETINGSTONE_ACTIVITIES_COUNT_UPDATED', #self.activityList)
     else
         self.activityHash[id]:Update(true)
     end
 end
 
 function BrowsePanel:CacheActivity(id)
-    local _id, activityId, title = C_LFGList.GetSearchResultInfo(id)
+    local _id, activityId, title, comment = C_LFGList.GetSearchResultInfo(id)
     if not _id then
         return
     elseif not activityId then
         return
-    elseif title:match('单刷') or title == '勿扰' then
+    elseif title:match('单刷') or comment:match('单刷') or title == '勿扰' then
         return
     end
 
@@ -486,11 +595,10 @@ function BrowsePanel:CacheActivity(id)
 
     tinsert(self.activityList, activity)
     self.activityHash[id] = activity
-
-    self:SendMessage('MEETINGSTONE_ACTIVITIES_COUNT_UPDATED', #self.activityList)
 end
 
 function BrowsePanel:LFG_LIST_SEARCH_RESULTS_RECEIVED(event)
+    self.lastReceived = time()
     self.SearchingBlocker:Hide()
 
     wipe(self.activityList)
@@ -506,6 +614,8 @@ function BrowsePanel:LFG_LIST_SEARCH_RESULTS_RECEIVED(event)
     for _, id in ipairs(resultList) do
         self:CacheActivity(id)
     end
+
+    self:SendMessage('MEETINGSTONE_ACTIVITIES_COUNT_UPDATED', #self.activityList)
 
     local isFailed = event == 'LFG_LIST_SEARCH_FAILED'
     self.NoResultBlocker:SetShown(resultCount == 0)
@@ -642,4 +752,36 @@ function BrowsePanel:ToggleActivityMenu(anchor, activity)
     }, 'cursor')
 end
 
-BrowsePanel.Update = BrowsePanel.Search
+function BrowsePanel:GetCurrentActivity()
+    return self.ActivityDropdown:GetItem()
+end
+
+function BrowsePanel:Update()
+    if self.lastReceived and time() - self.lastReceived < 300 then
+        return
+    end
+    self:Search()
+end
+
+function BrowsePanel:UpdateBossFilter(activityId)
+    if self.activityId ~= activityId then
+        wipe(self.bossFilter)
+    end
+    self.activityId = activityId
+
+    local bossList = RAID_PROGRESSION_LIST[activityId]
+    if bossList then
+        for i, v in ipairs(bossList) do
+            local button = self.BossFilter.buttons[i]
+            button:Show()
+            button:SetText(v.name)
+            button:SetChecked(self.bossFilter[v.name])
+        end
+    end
+
+    self.AdvButton:SetEnabled(bossList)
+
+    for i = (bossList and #bossList or 0) + 1, #self.BossFilter.buttons do
+        self.BossFilter.buttons[i]:Hide()
+    end
+end

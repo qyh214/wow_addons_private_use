@@ -1,59 +1,9 @@
-local api, addonName, T = {}, ...
+local addonName, T = ...
 if T.Mark ~= 23 then
 	local m = "You must restart World of Warcraft after installing this update."
 	if type(T.L) == "table" and type(T.L[m]) == "string" then m = T.L[m] end
 	return print("|cffffffff[Master Plan]: |cffff8000" .. m)
 end
-
-local defaults = {
-	availableMissionSort="xp",
-	sortFollowers=true,
-	batchMissions=true,
-	dropLessSalvage=true,
-	riskReward=1,
-	xpPerGold=0,
-	xpCapGrace=2000,
-	goldRewardThreshold=2000000,
-	ignore={},
-	complete={},
-}
-
-local conf = setmetatable({}, {__index=defaults})
-T.Evie.RegisterEvent("ADDON_LOADED", function(ev, addon)
-	if addon == addonName then
-		local pc, seen
-		if type(MasterPlanPC) == "table" then
-			pc, MasterPlanPC = MasterPlanPC
-		else
-			pc = {}
-		end
-		
-		seen, pc.seen = type(pc.seen) == "table" and pc.seen or {}
-		for k,v in pairs(pc) do
-			local tv = type(v)
-			if k ~= "ignore" and k ~= "seen" and k ~= "complete" and tv == type(defaults[k]) then
-				conf[k] = v
-			elseif k == "ignore" and tv == "table" then
-				for k,v in pairs(v) do
-					conf.ignore[k] = v
-				end
-			end
-		end
-		T._SetMissionSeenTable(seen, pc.complete)
-		conf.version = GetAddOnMetadata(addonName, "Version")
-		T.Evie.RaiseEvent("MP_SETTINGS_CHANGED")
-		
-		return "remove"
-	end
-end)
-T.Evie.RegisterEvent("PLAYER_LOGOUT", function()
-	local seen, complete = securecall(T._GetMissionSeenTable)
-	MasterPlanPC, conf.ignore, conf.seen, conf.complete = conf, next(conf.ignore) and conf.ignore, seen or conf.seen, complete or conf.complete
-	T._ObserveMissions()
-end)
-
-setmetatable(api, {__index={GarrisonAPI=T.Garrison}})
-T.config = conf
 
 do -- Localizer stub
 	local LL, L = type(T.L) == "table" and T.L or {}, newproxy(true)
@@ -62,6 +12,56 @@ do -- Localizer stub
 	end
 	T.L = L
 end
+
+local conf, api = setmetatable({}, {__index={
+	availableMissionSort="xp",
+	sortFollowers=true,
+	batchMissions=true,
+	riskReward=1,
+	xpPerCopper=1e-5,
+	xpPerResource=5e-1,
+	xpWithToken=1,
+	xpCapGrace=2000,
+	goldRewardThreshold=100e4,
+	levelDecay=0.9,
+	currencyWasteThreshold=0.25,
+	legendStep=0,
+	ignore={},
+	complete={},
+}})
+T.config, api = conf, setmetatable({}, {__index={GarrisonAPI=T.Garrison}})
+
+T.Evie.RegisterEvent("ADDON_LOADED", function(ev, addon)
+	if addon == addonName then
+		T.Evie.RegisterEvent("PLAYER_LOGOUT", function()
+			local complete = securecall(T._GetMissionSeenTable)
+			MasterPlanPC, conf.ignore, conf.complete = conf, next(conf.ignore) and conf.ignore, complete or conf.complete
+		end)
+		
+		local pc
+		if type(MasterPlanPC) == "table" then
+			pc, MasterPlanPC = MasterPlanPC
+		else
+			pc = {}
+		end
+		
+		for k,v in pairs(pc) do
+			local tv = type(v)
+			if k ~= "ignore" and k ~= "complete" and tv == type(conf[k]) then
+				conf[k] = v
+			elseif k == "ignore" and tv == "table" then
+				for k,v in pairs(v) do
+					conf.ignore[k] = v
+				end
+			end
+		end
+		T._SetMissionSeenTable(pc.complete)
+		conf.version = GetAddOnMetadata(addonName, "Version")
+		T.Evie.RaiseEvent("MP_SETTINGS_CHANGED")
+		
+		return "remove"
+	end
+end)
 
 function api:GetSortFollowers()
 	return conf.sortFollowers

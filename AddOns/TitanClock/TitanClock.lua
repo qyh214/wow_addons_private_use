@@ -2,7 +2,6 @@
 -- * TitanClock.lua
 -- *
 -- * By: TitanMod, Dark Imakuni, Adsertor and the Titan Development Team
--- *     (HonorGoG, jaketodd422, joejanko, Lothayer, Tristanian)
 -- **************************************************************************
 
 -- ******************************** Constants *******************************

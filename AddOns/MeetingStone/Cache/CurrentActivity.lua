@@ -34,12 +34,14 @@ local attrs = {
     'MaxLevel',
     'PvPRating',
 
+    'LeaderName',
     'LeaderClass',
     'LeaderItemLevel',
     'LeaderProgression',
 
     'AddonVersion',
     'IsMeetingStone',
+    'Source',
 }
 
 for i, v in ipairs(attrs) do
@@ -63,7 +65,7 @@ end
 function CurrentActivity:FromSystem(activityID, ilvl, title, comment, voiceChat)
     local summary, isMeetingStone, activityType, shortVersion, 
         activityMode, activityLoot, leaderClass, leaderItemLevel, 
-        leaderProgression, _, minLevel, maxLevel, pvpRating = DecodeCommetData(comment)
+        leaderProgression, _, minLevel, maxLevel, pvpRating, source, leaderName = DecodeCommetData(comment)
 
     self:SetActivityID(activityID)
     self:SetActivityItemLevel(ilvl)
@@ -87,18 +89,19 @@ function CurrentActivity:FromSystem(activityID, ilvl, title, comment, voiceChat)
 
         self:SetAddonVersion(shortVersion)
         self:SetIsMeetingStone(true)
+        self:SetSource(source)
+        self:SetLeaderName(leaderName or '')
     else
         self:SetActivitySummary(title)
         self:SetMinLevel('')
         self:SetMaxLevel('')
     end
-
 end
 
 function CurrentActivity:GetSummaryText()
-    return format('%s-%s-%s-%s', L['集合石'], self:GetActivityLootText(), self:GetActivityModeText(), self:GetActivityTypeText())
+    return format('%s-%s-%s-%s', L['集合石'], self:GetActivityTypeText(), self:GetActivityModeText(), self:GetActivityLootText())
 end
 
-function CurrentActivity:GetCreateArguments()
-    return self:GetActivityID(), self:GetSummaryText(), self:GetActivityItemLevel(), self:GetActivityVoice(), format('%s%s', self:GetActivitySummary(), (CodeCommentData(self)))
+function CurrentActivity:GetCreateArguments(autoAccept)
+    return self:GetActivityID(), self:GetSummaryText(), self:GetActivityItemLevel(), self:GetActivityVoice(), format('%s%s', self:GetActivitySummary(), (CodeCommentData(self))), autoAccept
 end

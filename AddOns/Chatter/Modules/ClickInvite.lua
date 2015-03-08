@@ -70,11 +70,11 @@ function mod:Decorate(frame)
 	self:RawHook(frame, "AddMessage", true)
 end
 
-local chatEvent, chatEventTarget
+local arg1, chatEvent, chatEventTarget
 
 function mod:ChatFrame_MessageEventHandler(frame, event, ...)
 	chatEvent = event
-	local arg1,chatEventTarget = ...
+	arg1, chatEventTarget = ...
 	return self.hooks["ChatFrame_MessageEventHandler"](frame, event, ...)
 end
 
@@ -96,7 +96,7 @@ function mod:OnEnable()
 			self:RawHook(cf, "AddMessage", true)
 		end
 	end
-	self:RawHook(nil, "SetItemRef", true)
+	self:RawHook(_G.ItemRefTooltip, "SetHyperlink", true)	
 	self:RawHook("ChatFrame_MessageEventHandler", true)
 end
 
@@ -121,9 +121,8 @@ function mod:AddMessage(frame, text, ...)
 	return self.hooks[frame].AddMessage(frame, text, ...)
 end
 
-function mod:SetItemRef(link, text, button)
+function mod:SetHyperlink(frame, link, ...)
 	local linkType = sub(link, 1, 6)
-	-- Chatter:Print(IsAltKeyDown(), linkType, self.db.profile.altClickToInvite)
 	if IsAltKeyDown() and linkType == "player" and self.db.profile.altClickToInvite then
 		local name = match(link, "player:([^:]+)")
 		InviteUnit(name)
@@ -133,7 +132,7 @@ function mod:SetItemRef(link, text, button)
 		InviteUnit(name)
 		return nil
 	end
-	return self.hooks.SetItemRef(link, text, button)
+	return self.hooks[frame].SetHyperlink(frame, link, text, button, ...) 
 end
 
 function mod:Info()

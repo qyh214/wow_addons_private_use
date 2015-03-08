@@ -6,6 +6,7 @@
   <Script file="ChangeLog.lua" />
   <Script file="Data.lua" />
   <Script file="API.lua" />
+  <Script file="MenuTableAPI.lua" />
   <Script file="Main.lua" />
   <Script file="Profile.lua" />
   <Include file="Logic\Logic.xml" />

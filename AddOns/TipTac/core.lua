@@ -177,10 +177,11 @@ tt.tipsToModify = TT_TipsToModify;
 
 local tipBackdrop = { tile = false, insets = {} };
 
--- Constants
+-- String Constants
 local TT_LevelMatch = "^"..TOOLTIP_UNIT_LEVEL:gsub("%%s",".+"); -- Was changed to match other localizations properly, used to match: "^"..LEVEL.." .+" -- Az: doesn't actually match the level line on the russian client! 14.02.24: Doesn't match for Italian client either.
 local TT_LevelMatchPet = "^"..TOOLTIP_WILDBATTLEPET_LEVEL_CLASS:gsub("%%s",".+");
 local TT_NotSpecified = "Not specified";
+local TT_Targeting = BINDING_HEADER_TARGETING;
 local TT_Reaction = {
 	"Tapped",					-- No localized string of this
 	FACTION_STANDING_LABEL2,	-- Hostile
@@ -569,7 +570,9 @@ local function ModifyUnitTooltip()
 				lineOne[#lineOne + 1] = "\n  ";
 				AddTarget(lineOne,target);
 			elseif (cfg.showTarget == "last") then
-				lineInfo[#lineInfo + 1] = "\n|cffffd100Targeting: ";
+				lineInfo[#lineInfo + 1] = "\n|cffffd100";
+				lineInfo[#lineInfo + 1] = TT_Targeting;
+				lineInfo[#lineInfo + 1] = ": ";
 				AddTarget(lineInfo,target);
 			end
 		end
@@ -924,7 +927,7 @@ end
 local function GTTHook_OnShow(self,...)
 	gtt_anchorType, gtt_anchorPoint = GetAnchorPosition();
 	local gttAnchor = self:GetAnchorType();
-	if (gtt_anchorType == "mouse") and (gttAnchor ~= "ANCHOR_CURSOR") and (gttAnchor ~= "ANCHOR_CURSOR_RIGHT") then
+	if (self.default) and (gtt_anchorType == "mouse") and (gttAnchor ~= "ANCHOR_CURSOR") and (gttAnchor ~= "ANCHOR_CURSOR_RIGHT") then
 		tt:AnchorFrameToMouse(self);
 	end
 	if (self:IsOwned(UIParent)) and (not self:GetUnit()) then
@@ -1323,7 +1326,7 @@ function tt:ApplyGeneralAppearance(first)
 	if (cfg.reactColoredBackdrop) then
 		gtt:SetBackdropColor(unpack(cfg["colReactBack"..u.reactionIndex]));
 	end
-	if (cfg.reactColoredBorder) then
+	if (cfg.reactColoredBorder) then	-- Az: this will override the classColoredBorder config, perhaps have that option take priority instead?
 		gtt:SetBackdropBorderColor(unpack(cfg["colReactBack"..u.reactionIndex]));
 	-- Class Colored Border
 	elseif (first) and (cfg.classColoredBorder) and (u.isPlayer) then

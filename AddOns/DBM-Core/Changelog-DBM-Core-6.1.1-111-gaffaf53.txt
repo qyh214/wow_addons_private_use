@@ -1,0 +1,112 @@
+subversion:
+	- Omega via svn r13244: Rest of work
+	- Omega via svn r13243: zone ids
+	- nbluewiz via svn r13242: # koKR update. # register combat for Annihilon.
+	- nbluewiz via svn r13241: # fix bad mythic train.
+	- Omega via svn r13240: gah, even more fix
+	- Omega via svn r13239: Fix more
+	- Omega via svn r13238: Some fixes
+	- Omega via svn r13237: Refactor a little
+	- Omega via svn r13236: Refactor a little
+	- Omega via svn r13235: Fix something I missed
+	- Omega via svn r13234: These two as well
+	- nbluewiz via svn r13233: # fix timer recovery. (especially break timer)
+	- Omega via svn r13232: Convert a few mods from linux line endings to windows. no actual code changes, just fixing consistency so copy and paste between some mods doesn?\226?\128?\153t conflict line endings.
+	- Omega via svn r13231: Support for Annihilon
+	- Omega via svn r13230: Some debug prep
+	- nbluewiz via svn r13229: # oh forgot this. fix bug.
+	- nbluewiz via svn r13228: # some cd fix and drycoded falling debris warn.
+	- Omega via svn r13227: Fix bug where stone breath timer was getting canceled in wrong place. Fixed another bug where count would be wrong now that stone breath doesn?\226?\128?\153t reset count
+	- Omega via svn r13226: Some mythic blackhand updates
+	- nbluewiz via svn r13225: # fix hp report on wipe. # fix blast cd in blast furnace. # whitespace cleanup.
+	- nbluewiz via svn r13224: # bw version.
+	- nbluewiz via svn r13223: # fix bad timer in twin ogron. # koKR update.
+	- Omega via svn r13222: Many users reported that this option was off by default because they used alpha. When I changed default I didn?\226?\128?\153t change variable, so I?\226?\128?\153m doing that now.
+	- Omega via svn r13221: CN update
+	- Omega via svn r13220: CN update
+	- Omega via svn r13219: CN update
+	- Omega via svn r13218: CN update
+	- Omega via svn r13217: fix bug
+	- Omega via svn r13216: Wow, this has been broken since 5.0. No wonder status whispers weren?\226?\128?\153t properly detecting people from same raid group half the time and auto responding inappropriately
+	- Omega via svn r13215: Improve gruul soak code with configurable setup.
+	- Omega via svn r13214: ptBR update
+	- Omega via svn r13213: Fix one of train add types, train data was fine, one of add types was nerfed a while back. Looks like voice file D23 never existed though. and D2B3 definitely doesn?\226?\128?\153t. Need D2B3 voice. Any mother mythic ones missing?
+	- Omega via svn r13212: Kromog fixes *Don?\226?\128?\153t reset stone breath count *Fix Trembling earth timers, fights been nerfed since I last collected data on it. *Improve interaction of mythic ability with grasping earth to correct timer when needed. Blast Furnace *Code cleanup, no functional changes.
+	- Omega via svn r13211: Do a better job with voice support in some places.
+	- ultrashining via svn r13210: zhTW update
+	- Omega via svn r13209: white space
+	- nbluewiz via svn r13208: # fix mythic thogar.
+	- nbluewiz via svn r13207: # koKR update.
+	- nbluewiz via svn r13206: # some brf fix.
+	- nbluewiz via svn r13205: # fix dropdown option resetting bug.
+	- Omega via svn r13204: Adjust extend slightly really fix oregorger bad interrupt announce on phase change.
+	- Omega via svn r13203: Redo hansgar and franzok scanning again
+	- ebmor via svn r13202: deDE update
+	- Omega via svn r13201: fix spammy nil errors ?\226?\128?\156Message: ...terface\AddOns\DBM-BlackrockFoundry\BlastFurnace.lua:469: attempt to perform arithmetic on global 'debuffTime' (a nil value)?\226?\128?\157
+	- nbluewiz via svn r13200: # koKR update.
+	- nbluewiz via svn r13199: # unitbuff or debuff fix. # fix dmf rings.
+	- Omega via svn r13198: Fix icon bug
+	- Omega via svn r13197: Add faster info frame option, with the delay being default.
+	- ebmor via svn r13196: deDE update
+	- Omega via svn r13195: Fix it so ?\226?\128?\156safenow?\226?\128?\157 only plays when you?\226?\128?\153re actually safe. instead of scheduling and assuming that you are.
+	- Omega via svn r13194: Oops, wrong one, this one
+	- Omega via svn r13193: Sorry pewsey, but this is a cooler default voice for 3.
+	- Omega via svn r13192: #Brawlers Update *Fix icon bug in rank 4 *Add new warning to rank 7 *Reduce double warn spam for fighters
+	- Omega via svn r13191: Fix blast furnace timers a little. Better angle on firecallers in video to improve being slightly off as well as fix a bug that was causing each firecaller to be .5 seconds more off than previous, making it as much as 3 seconds off later fight. Add in code to try and deal with the 35/55 variation on second slag. do 35 second timer initially, but if no slag by 40, auto correct to show 15 seconds remaining at 40 second mark. Add distance filter to rupture. Raise most of filters to 40 yards for max caster range (regulators still much more than 40 yards apart so should still filter sides just fine.
+	- Omega via svn r13190: Debuglevel 3 for the win. I see now what?\226?\128?\153s going on with hansgar. when first jump fails, it?\226?\128?\153s because boss was interrupted by a stamper (stampers falling on boss interrupt his cast cause the boss dodges out of stampers). When this happens, the code must treat second cast as if it?\226?\128?\153s first, so it works correctly. THIS should finally fix the last jump scan issue.
+	- Omega via svn r13189: count scans
+	- Omega via svn r13188: Fix a bug where an interrupt warning would fire when boss lost buff at start of frenzy
+	- ultrashining via svn r13187: zhTW update
+	- Omega via svn r13186: CD adjust
+	- Omega via svn r13185: Comment out statement in languages it?\226?\128?\153s not updated in yet, so it?\226?\128?\153s not sending out of date information to anyone.
+	- nbluewiz via svn r13184: # koKR update.
+	- Omega via svn r13183: Verified mythic margok event. Good thing i wanted and didn?\226?\128?\153t rush to use new event. There is quite a notable timing difference.
+	- Omega via svn r13182: shorten
+	- Omega via svn r13181: additional text
+	- Omega via svn r13180: Enable notice for this
+	- Omega via svn r13179: Fix bug
+	- Omega via svn r13178: Commits seemed bugged again, no emails, no curse push
+	- Omega via svn r13177: NO ONE is going to be happy with this change, but it?\226?\128?\153s only clean change i can think of erase all user custom sounds in all mods, and reset defaults.
+	- Omega via svn r13176: more CD adjust
+	- Omega via svn r13175: Others too
+	- Omega via svn r13174: cd fixes
+	- Omega via svn r13173: string
+	- Omega via svn r13172: quick mythic improvement, more work later
+	- nbluewiz via svn r13171: # fix margok cd.
+	- nbluewiz via svn r13170: # correct fix for tectus.
+	- nbluewiz via svn r13169: # cd adjust.
+	- Omega via svn r13168: fix bad global access. no idea if correct fix, I didn?\226?\128?\153t review this mess.
+	- Omega via svn r13167: Antispam DMF
+	- Omega via svn r13166: 6.1 seems to have changed EJ_GetEncounterInfo to be more sensitive and now errors when it used to report nil before. This fix should fix that.
+	- nbluewiz via svn r13165: # fix another cd.
+	- nbluewiz via svn r13164: # fix various timer and antispam.
+	- nbluewiz via svn r13163: # forgot this.
+	- Omega via svn r13162: CN update
+	- nbluewiz via svn r13161: # more fixes
+	- nbluewiz via svn r13160: # fix dispel warning for blast furnace. # start other cd bar after first special had used in gruul.
+	- nbluewiz via svn r13159: # fix various invalid cd.
+	- Omega via svn r13158: Enable mythic timers on normal too Re-add old code (commented out of course). I suspect this is a bug and not intended. it?\226?\128?\153ll probably be reverted so having code handy is good.
+	- nbluewiz via svn r13157: # fix blast furnace error. # debug tweak.
+	- nbluewiz via svn r13156: # fix bad range frame filter in highmaul trash.
+	- nbluewiz via svn r13155: # fix health report and frame stuff in tectus.
+	- Omega via svn r13154: Better win detection for tectus, it?\226?\128?\153ll be faster, and not fail if EE or BK missing
+	- nbluewiz via svn r13153: # better timer expire debug. # fix cd for Expel Magic: Fire and Rippling Smash.
+	- Omega via svn r13152: Add encounter IDs to ruk and tarlna. drov doesn?\226?\128?\153t have one?
+	- Omega via svn r13151: Fix bug from last commit, where Icon was set to false instead of defaults
+	- nbluewiz via svn r13150: # Tweak warnings in Blast Furnace.
+	- Omega via svn r13149: Make timers behave like they did prior to 6.1 and truncate names instead of wrapping
+	- Omega via svn r13148: More tank warn tweaks Fixate off by default. works good, but too spammy. dogs often desync on mythic and it results in warnings every 3-4 seconds when 3 dogs on different schedules. Better timer defaults for abilities that target only ranged. Lower breath swap number. 3 too much.
+	- nbluewiz via svn r13147: # correct fix r13146
+	- nbluewiz via svn r13146: # FIXED: do not report bad 0% health.
+	- Omega via svn r13145: Lower stack amount
+	- Omega via svn r13144: aknor?\226?\128?\153s warnings are spammy and not very useful, since they don?\226?\128?\153t actually help avoid anything.
+	- Omega via svn r13143: Even longer
+	- nbluewiz via svn r13142: # revert last changes.
+	- nbluewiz via svn r13141: # ADDED: Temp hack for 6.1 play sound.
+	- Omega via svn r13140: Fix breakage
+	- Omega via svn r13139: ok WTF, no commit?
+	- Omega via svn r13138: Update sharedmedia
+	- Omega via svn r13137: Allow BOSS_KILL to fire EndCombat victory. Does not fire for wipes but thats ok, detecting wipes is easy with checkforwipe. This however will detect a lot of 5 man victories without needing yells or hacks anymore. Pass sync off as EE since it?\226?\128?\153s extremely similar.
+	- Omega via svn r13136: Shorten breath hud a little more
+	- Omega via svn r13135: Forgot to comment this out Also, fix lua error in debug
+	- tandanu via svn r13134: increment alpha version

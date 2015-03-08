@@ -60,17 +60,8 @@ function Logic:SOCKET_VERSION(_, ...)
 end
 
 function Logic:SERVER_CONNECTED()
-    self:SendServer('SLOGIN', ADDON_VERSION, UnitGUID('player'), self:GetAddonSource(), select(2, BNGetInfo()))
+    self:SendServer('SLOGIN', ADDON_VERSION, UnitGUID('player'), GetAddonSource(), select(2, BNGetInfo()))
     self:SendMessage('MEETINGSTONE_SERVER_STATUS_UPDATED', true)
-end
-
-function Logic:GetAddonSource(mark)
-    for line in gmatch('\033\033\033\049\054\051\085\073\033\033\033\058\050\058\049\010\066\105\103\070\111\111\116\058\051\058\049\010\068\117\111\119\097\110\058\052\058\048\010\069\108\118\085\073\058\053\058\049', '[^\r\n]+') do
-        local n, v, c = line:match('^(.+):(%d+):(%d+)$')
-        if IsAddOnLoaded(n) and (not mark or c == '1') then
-            return tonumber(v)
-        end
-    end
 end
 
 ---- Mall API
@@ -79,18 +70,24 @@ function Logic:MallQueryPoint()
     self:SendServer('MALLQUERY', UnitGUID('player'), ADDON_VERSION_SHORT)
 end
 
-function Logic:MallPurchase(id, ok)
+function Logic:MallPurchase(id, price, confirm)
     if not id then
+        debug('MallPurchase args #1 is null', 2)
         return
     end
-    self:SendServer('MALLPURCHASE', id, UnitGUID('player'), ADDON_VERSION_SHORT, ok)
+
+    self:SendServer('MALLPURCHASE', id, UnitGUID('player'), ADDON_VERSION_SHORT, confirm, price)
+    debug(format('MALLPURCHASE: %s %s', id, price))
 end
 
 function Logic:Exchange(text)
     if not text or text == '' then
+        debug('code is null', 2)
         return
     end
+
     self:SendServer('EXCHANGE', text, UnitGUID('player'), ADDON_VERSION_SHORT)
+    debug('EXCHANGE: ' .. text)
 end
 
 function Logic:SEI(activity)
@@ -126,4 +123,17 @@ function Logic:SEJ(activity, comment, tank, healer, damager)
         tank,
         healer,
         dammager)
+end
+
+function Logic:AddIgnore(name, msg)
+    if not name or UnitIsUnit('player', Ambiguate(name, 'none')) then
+        return
+    end
+
+    self:SendServer('IGNORE',
+        name,
+        msg,
+        UnitGUID('player'),
+        GetPlayerBattleTag(),
+        ADDON_VERSION)
 end

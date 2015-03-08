@@ -229,7 +229,7 @@ function MallPanel:Purchase()
         if result then
             self.PurchaseButton:Disable()
             self:SetCover(true)
-            Logic:MallPurchase(item.id)
+            Logic:MallPurchase(item.id, item.price)
         end
     end)
 end
@@ -253,7 +253,10 @@ function MallPanel:PurchaseResult(event, result, reply)
         if item then
             GUI:CallMessageDialog(result, function(ok)
                 if ok then
-                    Logic:MallPurchase(item.id, ok)
+                    Logic:MallPurchase(item.id, item.price, ok)
+                else
+                    self:SetCover(false)
+                    System:Logf(L['购买失败：用户取消购买商品。'])
                 end
             end)
         else

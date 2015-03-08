@@ -1,4 +1,4 @@
-﻿## Interface: 60000
+﻿## Interface: 60100
 ## X-Min-Interface: 60000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Draenor|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0드레노어|r
@@ -19,7 +19,7 @@
 ## X-DBM-Mod-MapID: 1116, 1159, 1331, 1158, 1153, 1152, 1330
 ## X-DBM-Mod-LoadCID: 83746, 81535, 81252
 ## X-DBM-Mod-MinCoreRevision: 12473
-## X-Curse-Packaged-Version: 6.0.15-123-g6ef0612
+## X-Curse-Packaged-Version: 6.1.1-111-gaffaf53
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
@@ -28,6 +28,7 @@ localization.kr.lua
 localization.de.lua
 localization.ru.lua
 localization.tw.lua
+localization.br.lua
 Drov.lua
 Tarlna.lua
 Rukhmar.lua

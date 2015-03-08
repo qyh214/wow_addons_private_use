@@ -564,6 +564,10 @@ do
 	end
 
 	function updateRangeFrame()
+		if mainFrame.hideTime > 0 and GetTime() > mainFrame.hideTime then
+			rangeCheck:Hide()
+			return
+		end
 		activeRange = mainFrame.range
 		local tEnabled = textFrame.isShown
 		local rEnabled = radarFrame.isShown
@@ -597,7 +601,7 @@ do
 				local range = (cx * cx + cy * cy) ^ 0.5
 				--local range = UnitDistanceSquared(uId) ^ 0.5
 				local inRange = false
-				if range < (activeRange) then
+				if range < (activeRange+0.5) then
 					closePlayer = closePlayer + 1
 					inRange = true
 					if not closestRange then
@@ -646,6 +650,7 @@ do
 				end
 				prevNumClosePlayer = closePlayer
 				prevclosestRange = closestRange
+				prevType = type
 			end
 
 			if UnitIsDeadOrGhost("player") then
@@ -707,7 +712,7 @@ end
 --  Methods  --
 ---------------
 local restoreRange, restoreFilter, restoreThreshold, restoreReverse = nil, nil, nil, nil
-function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers, reverse)
+function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers, reverse, hideTime)
 	if (DBM:GetNumRealGroupMembers() < 2 or DBM.Options.DontShowRangeFrame) and not forceshow then return end
 	if type(range) == "function" then -- the first argument is optional
 		return self:Show(nil, range)
@@ -716,12 +721,12 @@ function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers, reverse)
 	redCircleNumPlayers = redCircleNumPlayers or 1
 	textFrame = textFrame or createTextFrame()
 	radarFrame = radarFrame or createRadarFrame()
-	if DBM.Options.RangeFrameFrames == "text" or DBM.Options.RangeFrameFrames == "both" then
+	if (DBM.Options.RangeFrameFrames == "text" or DBM.Options.RangeFrameFrames == "both") and not textFrame.isShown then
 		textFrame.isShown = true
 		textFrame:Show()
 		textFrame:SetOwner(UIParent, "ANCHOR_PRESERVE")
 	end
-	if DBM.Options.RangeFrameFrames == "radar" or DBM.Options.RangeFrameFrames == "both" then
+	if (DBM.Options.RangeFrameFrames == "radar" or DBM.Options.RangeFrameFrames == "both") and not radarFrame.isShown then
 		radarFrame.isShown = true
 		radarFrame:Show()
 	end
@@ -729,6 +734,7 @@ function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers, reverse)
 	mainFrame.filter = filter
 	mainFrame.redCircleNumPlayers = redCircleNumPlayers
 	mainFrame.reverse = reverse
+	mainFrame.hideTime = hideTime and (GetTime() + hideTime) or 0
 	if not mainFrame.eventRegistered then
 		mainFrame.eventRegistered = true
 		updateIcon()
@@ -767,6 +773,10 @@ end
 
 function rangeCheck:IsShown()
 	return textFrame and textFrame.isShown or radarFrame and radarFrame.isShown
+end
+
+function rangeCheck:SetHideTime(hideTime)
+	mainFrame.hideTime = hideTime and (GetTime() + hideTime) or 0
 end
 
 -- GetDistance(uId) -- distance between you and the given uId

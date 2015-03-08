@@ -1,10 +1,10 @@
-## Interface: 60000
+## Interface: 60100
 ## Title: Master Plan
 ## Notes: Garrision missions UI tweaks.
 ## LoadOnDemand: 1
 ## LoadWith: Blizzard_GarrisonUI
 ## RequiredDeps: Blizzard_GarrisonUI
-## Version: 0.25.1
+## Version: 0.32
 ## Author: foxlit
 ## X-Website: http://www.townlong-yak.com/master-plan/
 ## SavedVariablesPerCharacter: MasterPlanPC
@@ -17,4 +17,3 @@ MasterPlan.lua
 MissionsUI.lua
 GarrisonMissions.lua
 GarrisonFollowers.lua
-Misc.lua

@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'PanelBlocker', 1
+local WIDGET, VERSION = 'PanelBlocker', 2
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local PanelBlocker = GUI:NewClass(WIDGET, 'Frame', VERSION)
@@ -24,6 +24,11 @@ function PanelBlocker:OnInit()
     end
     self:SetScript('OnShow', self.OnShow)
     self:Fire('OnInit')
+
+    for i, v in ipairs({self:GetChildren()}) do
+        v:SetFrameLevel(self:GetFrameLevel() + 1)
+    end
+
     self:Fire('OnFormat')
 end
 

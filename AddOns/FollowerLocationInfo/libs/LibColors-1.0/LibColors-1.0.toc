@@ -1,0 +1,12 @@
+## Interface: 60100
+## Title: LibColors-1.0
+## Notes: A library to easy coloring strings by hex codes, color tables, class names, color names and more.
+## Author: Hizuro
+## Version: 1.0.8-Release2
+## OptionalDeps: LibStub
+## X-Curse-Packaged-Version: 1.0.8-Release2
+## X-Curse-Project-Name: LibColors-1.0
+## X-Curse-Project-ID: libstringcoloring-1-0
+## X-Curse-Repository-ID: wow/libstringcoloring-1-0/mainline
+
+LibColors-1.0-all.xml

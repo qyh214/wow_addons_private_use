@@ -1,4 +1,4 @@
-﻿## Interface: 60000
+﻿## Interface: 60100
 ## X-Min-Interface: 60000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0World Events|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Eventos del Mundo|r
@@ -19,16 +19,16 @@
 ## X-DBM-Mod-Category: WOD
 ## X-DBM-Mod-Has-Single-Format: 1
 ## X-DBM-Mod-World-Boss: 1
-## X-DBM-Mod-SubCategories: Holidays,Quests
-## X-DBM-Mod-SubCategories-deDE: Feiertage,Quests
-## X-DBM-Mod-SubCategories-ruRU: Праздники,Задания
-## X-DBM-Mod-SubCategories-koKR: 연간 이벤트,퀘스트
-## X-DBM-Mod-SubCategories-zhTW: 節慶,任務
-## X-DBM-Mod-SubCategories-zhCN: 节日,任务
-## X-DBM-Mod-SubCategories-esES: Fiestas,Quests
-## X-DBM-Mod-SubCategories-esMX: Holidays,Quests
-## X-DBM-Mod-SubCategories-ptBR: Holidays,Quests
-## X-DBM-Mod-SubCategories-frFR: Vacances,Quêtes
+## X-DBM-Mod-SubCategories: Holidays,Quests,Garrison Invasions
+## X-DBM-Mod-SubCategories-deDE: Feiertage,Quests,Garrison Invasions
+## X-DBM-Mod-SubCategories-ruRU: Праздники,Задания,Garrison Invasions
+## X-DBM-Mod-SubCategories-koKR: 연간 이벤트,퀘스트,주둔지 침공
+## X-DBM-Mod-SubCategories-zhTW: 節慶,任務,Garrison Invasions
+## X-DBM-Mod-SubCategories-zhCN: 节日,任务,Garrison Invasions
+## X-DBM-Mod-SubCategories-esES: Fiestas,Quests,Garrison Invasions
+## X-DBM-Mod-SubCategories-esMX: Holidays,Quests,Garrison Invasions
+## X-DBM-Mod-SubCategories-ptBR: Holidays,Quests,Garrison Invasions
+## X-DBM-Mod-SubCategories-frFR: Vacances,Quêtes,Garrison Invasions
 ## X-DBM-Mod-Name: World Events
 ## X-DBM-Mod-Name-esES: Eventos del Mundo
 ## X-DBM-Mod-Name-ruRU: Игровые события
@@ -42,7 +42,7 @@
 ## X-DBM-Mod-Sort: 150
 ## X-DBM-Mod-LoadCID: 55003,54499,15467,15466,49687,15664
 ## X-DBM-Mod-MinCoreRevision: 12473
-## X-Curse-Packaged-Version: 6.0.15-123-g6ef0612
+## X-Curse-Packaged-Version: 6.1.1-111-gaffaf53
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
@@ -62,4 +62,5 @@ Holidays\CorenDirebrew.lua
 Holidays\HeadlessHorseman.lua
 Holidays\Greench.lua
 Quests\Plants.lua
-Quests\Invasions.lua
+Invasions\Invasions.lua
+Invasions\Annihilon.lua

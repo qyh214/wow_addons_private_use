@@ -191,7 +191,19 @@ function MainPanel:OnInitialize()
         end
     }
 
-    self.GameTooltip = CreateFrame('GameTooltip', 'MeetingStoneTooltip', self, 'GameTooltipTemplate')
+    local GameTooltip = CreateFrame('GameTooltip', 'MeetingStoneTooltip', self, 'GameTooltipTemplate')
+    
+    -- local SourceTexture = GameTooltip:CreateTexture(nil, 'ARTWORK')
+    -- SourceTexture:SetSize(64, 64)
+    -- SourceTexture:SetPoint('CENTER', GameTooltip, 'TOPRIGHT')
+
+    -- GameTooltip.SourceTexture = SourceTexture
+
+    -- GameTooltip:SetScript('OnHide', function(self)
+    --     self.SourceTexture:Hide()
+    -- end)
+
+    self.GameTooltip = GameTooltip
 end
 
 function MainPanel:OpenActivityTooltip(activity)
@@ -253,7 +265,7 @@ function MainPanel:OpenActivityTooltip(activity)
         GameTooltip:AddLine(' ')
         GameTooltip:AddDoubleLine(L['副本进度/经验：'], activity:GetName())
         for i, v in ipairs(progressions) do
-            local color = completedEncounters and tContains(completedEncounters, v.name) and RED_FONT_COLOR or GREEN_FONT_COLOR
+            local color = completedEncounters and activity:IsBossKilled(v.name) and RED_FONT_COLOR or GREEN_FONT_COLOR
             GameTooltip:AddDoubleLine(v.name, GetProgressionTex(progressionValue, i), color.r, color.g, color.b)
         end
     elseif completedEncounters and #completedEncounters > 0 then
@@ -271,6 +283,19 @@ function MainPanel:OpenActivityTooltip(activity)
 
     -- GameTooltip:AddLine(activity:BaseSortHandler())
 
+    -- local icon = SOURCE_ICONS[activity:GetSource()]
+    -- if icon then
+    --     GameTooltip.SourceTexture:Show()
+    --     GameTooltip.SourceTexture:SetTexture(icon)
+    -- else
+    --     GameTooltip.SourceTexture:Hide()
+    -- end
+
+    local version = activity:GetVersion()
+    if version then
+        GameTooltip:AddDoubleLine(' ', GetFullVersion(version), 1, 1, 1, 0.5, 0.5, 0.5)
+    end
+
     GameTooltip:Show()
 end
 
@@ -284,6 +309,7 @@ local function AppendGameTooltipStatistic(label, value, title, lastTitle)
 end
 
 function MainPanel:OpenApplicantTooltip(applicant)
+    local GameTooltip =  self.GameTooltip
     local name = applicant:GetName()
     local class = applicant:GetClass()
     local level = applicant:GetLevel()
@@ -308,7 +334,7 @@ function MainPanel:OpenApplicantTooltip(applicant)
     end
 
     -- Add statistics
-    local stats = applicant:GetStats()
+    local stats = C_LFGList.GetApplicantMemberStats(applicant:GetID(), applicant:GetIndex())
     local lastTitle
 
     -- Tank proving ground
@@ -358,6 +384,14 @@ function MainPanel:OpenApplicantTooltip(applicant)
             GameTooltip:AddDoubleLine(v.name, GetProgressionTex(progressionValue, i), 1, 1, 1)
         end
     end
+
+    -- local icon = SOURCE_ICONS[applicant:GetSource()]
+    -- if icon then
+    --     GameTooltip.SourceTexture:Show()
+    --     GameTooltip.SourceTexture:SetTexture(icon)
+    -- else
+    --     GameTooltip.SourceTexture:Hide()
+    -- end
 
     GameTooltip:Show()
 end

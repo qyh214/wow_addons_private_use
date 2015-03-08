@@ -10,35 +10,38 @@ BINDING_NAME_TOGGLEFOLLOWERLOCATIONINFO	= L["Toggle FollowerLocationInfo Display
 ns.faction, ns.factionLocale = UnitFactionGroup("player"); L[ns.faction] = ns.factionLocale;
 nFaction = ((ns.faction=="Alliance") and 1) or ((ns.faction=="Horde") and 2) or 0;
 
-FollowerLocationInfo_Toggle, FollowerLocationInfo_ToggleCollected, FollowerLocationInfo_ToggleIDs, FollowerLocationInfo_ResetConfig,FollowerLocationInfo_MinimapButton,FollowerLocationInfo_ToggleList=nil,nil,nil,nil,nil,nil;
+FollowerLocationInfo_Toggle, FollowerLocationInfo_ToggleCollected, FollowerLocationInfo_ToggleIDs, FollowerLocationInfo_ResetConfig,FollowerLocationInfo_MinimapButton,FollowerLocationInfo_ToggleList,FollowerLocationInfoCoordFrame_Set,Desc_Update=nil;
 local NUM_FILTERS = 3;
+local GetPlayerMapPosition = GetPlayerMapPosition;
 local configMenu, List_Update, FollowerLocationInfoFrame_OnEvent,ExternalURL;
 local nFaction = (ns.faction=="Alliance") and 1 or 2;
 local followers, zoneNames, classes, collectGroups, classNames1, classNames2, abilityNames,counterNames = nil,{},{},{},{},{},{},{};
-local numHidden,numRealFollowers, numKnownFollowers, numCollectedFollowers = (292-48),0,0,0;
-local qualities = {nil,_G.UnitPopupButtons.ITEM_QUALITY2_DESC,_G.UnitPopupButtons.ITEM_QUALITY3_DESC,_G.UnitPopupButtons.ITEM_QUALITY4_DESC};
+local numHidden,numRealFollowers, numKnownFollowers, numCollectedFollowers,numOfficalFollowers = (292-48),0,0,0,0;
 local initState,doRefresh={minimap=false},false;
+local coordsFrameInit=true;
 local ClassFilterLabel, AbilityFilterLabel = L["Classes & Class speccs"], L["Abilities/Counters & Traits"];
 local ListButtonOffsetX, ListButtonOffsetY = 0,1;
 local updateLock,onEvent=false,false;
+local tooltip=false;
+local DescSelected = false;
 local ListEntrySelected, ListEntries = false,{};
 local FollowersCollected,knownAbilities = {},{};
 local SearchStr,Filters,ClassFilter,AbilityFilter = "",{},"","";
-local ids = {[32]=true,[34]=true,[153]=true,[154]=true,[155]=true,[157]=true,[159]=true,[168]=true,[170]=true,[171]=true,[176]=true,[177]=true,[178]=true,[179]=true,[180]=true,[182]=true,[183]=true,[184]=true,[185]=true,[186]=true,[189]=true,[190]=true,[192]=true,[193]=true,[194]=true,[195]=true,[202]=true,[203]=true,[204]=true,[205]=true,[207]=true,[208]=true,[209]=true,[211]=true,[212]=true,[216]=true,[217]=true,[218]=true,[219]=true,[224]=true,[225]=true,[453]=true,[455]=true,[458]=true,[459]=true,[460]=true,[462]=true,[463]=true};
+local ExternalURLValues = {WoWHead = "WoWHead",WoWDB = "WoWDB (english only)",Buffed = "Buffed"};
 local factionZoneOrder = (ns.faction:lower()=="alliance") and {962,947,971,949,946,948,950,941,978,1009,964,969,984,987,988,989,993,994,995,1008,-1,0}
 														   or {962,941,976,949,946,948,950,947,978,1011,964,969,984,987,988,989,993,994,995,1008,-1,0};
 for i,v in ipairs(factionZoneOrder) do if (v>0) then zoneNames[v] = GetMapNameByID(v); end end
-zoneNames[-1] = L["hidden followers"];
+zoneNames[-1] = L["Inn recruitement"];
 zoneNames[0] = L["No description found for..."];
 
 local modelPositions={
 	-- Alliance races ------------------------------------------
 	DraeneiF	= {1.9,0,-0.7},		DraeneiM	= {1.5,0,-0.62},
 	DwarfF		= {0.9,0,-0.27},	DwarfM		= {1.5,0,-0.45},
-	GnomeF		= {0.5,0,-0.18},	GnomeM		= {0.5,0,-0.18},
+	GnomeF		= {0.4,0,-0.18},	GnomeM		= {0.4,0,-0.18},
 	HumanF		= {1.2,0,-0.52},	HumanM		= {1.5,0,-0.59},
 	NightElfF	= {2,0,-0.62},		NightElfM	= {2,0,-0.62},
-	WorgenF		= {3,0,-0.62},		WorgenM		= {1.5,0,-0.62},
+	WorgenF		= {1.5,0,-0.62},	WorgenM		= {1.5,0,-0.62},
 	-- Horde races ---------------------------------------------
 	BloodElfF	= {1.5,0,-0.51},	BloodElfM	= {2,0,-0.62},
 	GoblinF		= {0.7,0,-0.24},	GoblinM		= {0.7,0,-0.24},
@@ -51,13 +54,12 @@ local modelPositions={
 	-- Misc unplayable races -----------------------------------
 	Mech		= {2,0,-2.5},		Orge		= {1.4,0,-0.67},
 	Zyclope		= {8,0,-3},			Gnoll		= {0.5,0,-0.15},
-	Saberon		= {1.45,0,-0.37},	Arakkoa		= {1.5,0,-0.28},
+	Saberon		= {1.45,0,-0.37},	Arakkoa		= {1.2,0,-0.28},
 	Hozen		= {2,0,-0.62},		Jinyu		= {2,0,-0.62}
 };
 
 
 --[=[ Broker & Minimap ]=]
-
 local broker = {obj=nil,minimap=nil,update=nil,tooltip=nil,click=nil};
 do
 	broker.lDB = LibStub("LibDataBroker-1.1");
@@ -69,9 +71,29 @@ do
 	end
 
 	broker.update = function()
+		local obj = broker.lDB:GetDataObjectByName(addon);
+		local label = {};
+
 		-- coords
+		if(FollowerLocationInfoDB.BrokerTitle_Coords)then
+			local x, y = GetPlayerMapPosition("player")
+			if(x~=0 and y~=0)then
+				tinsert(label,("%1.1f, %1.1f"):format(x*100,y*100));
+			else
+				tinsert(label,"−−.−, −−.−");
+			end
+		end
+
 		-- follower count / max
-		
+		if(FollowerLocationInfoDB.BrokerTitle_NumFollowers)then
+			tinsert(label,numCollectedFollowers..'/'..numOfficalFollowers);
+		end
+
+		if(#label==0)then
+			tinsert(label,addon);
+		end
+
+		if (obj) then obj.text = table.concat(label,", "); end
 	end
 
 	broker.tooltip = function()
@@ -223,13 +245,6 @@ local function getLocale(Type,id)
 	return false;
 end
 
-local function IsQuestCompleted(QuestID)
-	if (not questsCompleted) or ((questsCompleted) and ((time() - questsCompleted.last)<300)) then
-		questsCompleted = {ids=GetQuestsCompleted(), last=time()};
-	end
-	return (questsCompleted.ids[QuestID]==true);
-end
-
 local Collector = {data={},hLink=false};
 do
 	local this,tt = Collector;
@@ -299,26 +314,6 @@ local function GetQuestTitle(QuestID)
 	return FollowerLocationInfoDB.questTitles[QuestID];
 end
 
-local function GetBlizzardData()
-	if (updateLock) then return end
-	local l,c,id,ID = C_Garrison.GetFollowers(),0;
-	for i,v in ipairs(l) do
-		if (v) then
-			id=v.followerID;
-
-			if (v.garrFollowerID) then
-				id=tonumber(v.garrFollowerID);
-				FollowersCollected[id] = true;
-				c=c+1;
-			end
-		end
-	end
-	if (numCollectedFollowers~=c) then
-		numCollectedFollowers=c;
-		followers=nil;
-	end
-end
-
 local function GetFollowers()
 	followers={};
 	classNames1={};
@@ -329,7 +324,7 @@ local function GetFollowers()
 	for i,v in pairs(ns.follower_basics) do
 		local d = nil;
 
-		if (FollowerLocationInfoDB.ShowHiddenFollowers==false) and (not ids[i]) then
+		if (FollowerLocationInfoDB.ShowHiddenFollowers==false) and (v[3]==false) then
 			-- ignore
 		else
 			local abilities={};
@@ -436,13 +431,45 @@ local function GetFollowers()
 					tinsert(d.desc,{"abilities",abilities});
 				end
 
-				if (not ids[i]) then
+				if (v[3]==false) then
 					-- mark as hidden and add it to special zone
 					d.hidden=true;
-					ns.followers[i] = {zone=-1};
+					ns.followers[i] = {
+						zone=-1,
+						{"requirement", (nFaction==1) and L["Lunarfall Inn"] or L["Frostwall Tavern"]},
+						{"desc",{
+							enUS = "This follower can be recrute in your Lunarfall Inn or Frostwall Tavern"
+						}}
+					};
 				end
 				followers[i] = d;
 			end
+		end
+	end
+end
+
+local function GetBlizzardData()
+	if (updateLock) then return end
+	local l,c,id,ID = C_Garrison.GetFollowers(),0;
+	numOfficalFollowers = #l;
+	for i,v in ipairs(l) do
+		if (v) then
+			id=v.followerID;
+
+			if (v.garrFollowerID) then
+				id=tonumber(v.garrFollowerID);
+				FollowersCollected[id] = true;
+				c=c+1;
+			end
+		end
+	end
+	if (numCollectedFollowers~=c) then
+		numCollectedFollowers=c;
+		followers=nil;
+		GetFollowers();
+		if (coordsFrameInit==true) and (FollowerLocationInfoDB.ShowCoordsFrame==true) then
+			coordsFrameInit=false;
+			FollowerLocationInfoCoordFrame_Toggle(true);
 		end
 	end
 end
@@ -471,80 +498,292 @@ end
 --[=[[ Configurations ]=]
 function configMenu(self,anchorA,anchorB)
 	createMenu(self,{
-		--{ label = SETTINGS, title = true },
-		--{ separator = true },
-		{ label = "DataBroker", title=true }, --childs = {
-			{
-				label = L["Show minimap button"], tooltip = {L["Minimap"],L["Show/Hide minimap button"]},
-				checked = function() return FollowerLocationInfoDB.Minimap.enabled; end,
-				--func  = function() FollowerLocationInfoDB.Minimap.enabled = not FollowerLocationInfoDB.Minimap.enabled; if (not FollowerLocationInfoDB.Minimap.enabled) then lDBI:Hide(addon); else lDBI:Show(addon); end end
-				func = function() FollowerLocationInfo_MinimapButton(); end
-			},
-			{
-				label = L["Show coordinations on broker"], --tooltip={L[""],L[""]},
-				dbType="bool", keyName="BrokerTitle_Coords",
-				disabled = true
-			},
-			{
-				label = L["Show follower count on broker"], --tooltip={L[""],L[""]},
-				dbType="bool", keyName="BrokerTitle_NumFollowers",
-				disabled = true
-			},
-		--}},
+		{ label = "DataBroker", title=true },
+		{
+			label = L["Show minimap button"], tooltip = {L["Minimap"],L["Show/Hide minimap button"]},
+			checked = function() return FollowerLocationInfoDB.Minimap.enabled; end,
+			func = function() FollowerLocationInfo_MinimapButton(); end
+		},
+		{
+			label = L["Show coordinations on broker"], tooltip={L["Coordinations on broker"],L["Show your coordinations of your current position on broker button"]},
+			dbType="bool", keyName="BrokerTitle_Coords",
+			disabled = false
+		},
+		{
+			label = L["Show follower count on broker"], tooltip={L["Follower count on broker"],L["Show count of collected and available followers on broker button"]},
+			dbType="bool", keyName="BrokerTitle_NumFollowers",
+			disabled = false
+		},
 		{ separator = true },
-		{ label = "Follower list", title=true }, --childs = {
-			{
-				label = L["Show FollowerID"], tooltip={L["Follower ID"],L["Show/Hide followerID's in follower list"]},
-				dbType="bool", keyName="ShowFollowerID",
-				event = function() List_Update(); end
-			},
-			{
-				label = L["Show collected followers"], tooltip = {L["Collected followers"],L["Show/Hide collected and not collectable followers in follower list"]},
-				dbType="bool", keyName="ShowCollectedFollower",
-				event = function() followers=nil; List_Update(); end,
-			},
-			{
-				label = L["Show hidden followers"], tooltip = {L["Hidden followers"],L["Show/Hide hidden followers in follower list"]},
-				dbType="bool", keyName="ShowHiddenFollowers",
-				event = function() followers=nil; List_Update(); end,
-			},
-		--}},
+		{ label = "Follower list", title=true },
+		{
+			label = L["Show FollowerID"], tooltip={L["Follower ID"],L["Show followerID's in follower list"]},
+			dbType="bool", keyName="ShowFollowerID",
+			event = function() List_Update(); end
+		},
+		{
+			label = L["Show collected followers"], tooltip = {L["Collected followers"],L["Show collected and not collectable followers in follower list"]},
+			dbType="bool", keyName="ShowCollectedFollower",
+			event = function() followers=nil; List_Update(); end,
+		},
+		{
+			label = L["Show hidden followers"], tooltip = {L["Hidden followers"],L["Show hidden followers in follower list"]},
+			dbType="bool", keyName="ShowHiddenFollowers",
+			event = function() followers=nil; List_Update(); end,
+		},
 		{ separator = true },
-		{ label = "Misc.", title=true },--childs = {
-			{
-				label = L["Show coordination frame"], --tooltip = {L[""],L[""]},
-				dbType="bool", keyName="ShowCoordsFrame",
-				--event  = function() end,
-				disabled = true
-			},
-			--[[
-			{
-				--name = "questIdUrl",
-				label = L["Fav. website"],
-				tooltip = {L["Fav. website"],L["Choose your favorite website for further informations to a quest."]},
-				dbType="select", keyName="questIdUrl
-				default = "WoWHead",
-				values = {
-					WoWHead = "WoWHead",
-					WoWDB = "WoWDB (english only)",
-					Buffed = "Buffed"
-				}
-			}
-			]]
-		--}}
+		{ label = "Misc.", title=true },
+---		{
+---			label = L["Show coordination frame"], tooltip = {L["Coordination frame"],L["Show the coordination frame"]},
+---			dbType="bool", keyName="ShowCoordsFrame",
+---			event  = function()
+---				if (FollowerLocationInfoDB.ShowCoordsFrame) then
+---					FollowerLocationInfoCoordFrame:Show();
+---				else
+---					FollowerLocationInfoCoordFrame:Hide();
+---				end
+---			end
+---		},
+		{
+			label = L["Favorite website"], tooltip = {L["Favorite website"],L["Choose your favorite website for further informations to a quest."]},
+			dbType="select", keyName="ExternalURL",
+			default = "WoWHead",
+			values = ExternalURLValues,
+			event = function()
+				Desc_Update()
+			end
+		}
 	},anchorA,anchorB);
 end
 
 
+--[=[ FollowerLocationInfoCoordFrame ]=]
+do
+	local tooltip = {obj=false,cnt={}};
+	local events = {};
+
+	function FollowerLocationInfoCoordFrame_Toggle(force)
+		local isShown=FollowerLocationInfoCoordFrame:IsShown();
+		if (force~=nil) then isShown=not force; end
+		if (isShown) then
+			FollowerLocationInfoDB.ShowCoordsFrame=false;
+			FollowerLocationInfoCoordFrame:Hide();
+		else
+			FollowerLocationInfoDB.ShowCoordsFrame=true;
+		---	FollowerLocationInfoCoordFrame:Show();
+		end
+	end
+
+	local function FollowerLocationInfoCoordFrame_Tooltip(parent)
+		local Hint="|cfff0a55f%s |cffffffff|| |cff00ff00%s|r";
+		if (FollowerLocationInfoDB.LockedInCombat) and (InCombatLockdown()) then
+			parent=false;
+		end
+		if (parent) then
+			if(parent~=true)then
+				GameTooltip:SetOwner(parent,"ANCHOR_BOTTOM");
+			end
+			GameTooltip:ClearLines();
+			if (type(tooltip.cnt)=="table") and (#tooltip.cnt>0) then
+				for i,v in ipairs(tooltip.cnt) do
+					if (type(v)=="table") then
+						GameTooltip:AddLine(unpack(v));
+					else
+						GameTooltip:AddLine(tostring(v),1,1,1,1);
+					end
+				end
+			else
+				GameTooltip:AddLine(L["No follower selected to track it..."],.8,.8,.8);
+			end
+			GameTooltip:AddLine(" ");
+			GameTooltip:AddLine(Hint:format(L["Left-click"],L["Open FollowerLocationInfo"]));
+			GameTooltip:AddLine(Hint:format(L["Right-click"],L["Open menu"]));
+			GameTooltip:Show();
+			tooltip.obj=GameTooltip;
+		elseif (tooltip.obj) then
+			tooltip.obj:Hide();
+			tooltip.obj=false;
+		end
+	end
+
+	local function FollowerLocationInfoCoordFrame_Update(frame,event)
+
+		if (event=="PLAYER_REGEN_DISABLED") then
+			if (FollowerLocationInfoDB.CoordsFrame_LockedInCombat) then
+				frame:SetMovable(false);
+			end
+			if (FollowerLocationInfoDB.CoordsFrame_HideInCombat) and (FollowerLocationInfoDB.ShowCoordsFrame) then
+				frame:Hide();
+			end
+		elseif (event=="PLAYER_REGEN_ENABLED") then
+			if (FollowerLocationInfoDB.CoordsFrame_LockedInCombat) then
+				frame:SetMovable(true);
+			end
+			if (FollowerLocationInfoDB.CoordsFrame_HideInCombat) and (FollowerLocationInfoDB.ShowCoordsFrame) then
+				frame:Show();
+			end
+		else
+			wipe(tooltip.cnt);
+			local data,Type,id = nil,nil,FollowerLocationInfoDB.CoordsFrameTarget;
+			local ev = function(...) for _,n in ipairs({...}) do if (not events[n]==nil) then events[n]=1; end end end;
+
+			if (not id) then
+				for event,state in pairs(events) do
+					if (state==2) then -- state 2 == registered
+						frame:UnregisterEvent(event);
+						events[event]=nil; -- state nil == unregistered, do not register it
+					end
+				end
+			elseif (type(followers)=="table") and (followers[id]) then
+				local target = followers[id];
+				tinsert(tooltip.cnt,{("|c%s%s|r"):format(target.classColor,target.name)});
+				if (type(target.desc)=="table") and (#target.desc>0) then
+					local zCurrent = GetCurrentMapZone();
+
+					for i,v in ipairs(target.desc) do
+						local curTarget,zTarget,coords=false;
+						if (type(v[2][3])=="number") and (type(v[2][4])=="number") and (type(v[2][5])=="number") then
+							zTarget = GetMapNameByID(v[2][3]);
+							coords = ("%.1f, %.1f"):format(v[2][4],v[2][5]);
+							ev("ZONE_CHANGED");
+						end
+
+						if (v[1]=="quest") or (v[1]=="questrow") or (v[1]=="event") then
+							ev("QUEST_LOG_UPDATE","QUEST_COMPLETE");
+							--
+						elseif (v[1]=="vendor") then
+							--local title = qTitle .. ( (qGiver~="") and ("|n%s: %s"):format(L["Quest giver"],qGiver) or "" ) .. ("|n(%s @ %s)"):format(qZone,qCoord);
+						end
+
+						if (curTarget) then
+						end
+					end
+
+					for event,state in pairs(events) do
+						if (state==1) then -- state 1 == ready to register
+							frame:RegisterEvent(event);
+							events[event]=2;
+						end
+					end
+				end
+			end
+		end
+
+		if (tooltip.obj~=false) then
+			FollowerLocationInfoCoordFrame_Tooltip(true);
+		end
+	end
+
+	function FollowerLocationInfoCoordFrame_Set(bool)
+		local frame = FollowerLocationInfoCoordFrame;
+		if (bool) then
+			FollowerLocationInfoDB.CoordsFrameTarget = (DescSelected and DescSelected.followerID) and DescSelected.followerID or false;
+			if (not frame:IsShown()) then
+				frame:Show();
+			end
+		else
+			FollowerLocationInfoDB.CoordsFrameTarget = false;
+		end
+		FollowerLocationInfoCoordFrame_Update(frame,"FLI_TARGET_CHANGED");
+	end
+
+	local function FollowerLocationInfoCoordFrame_Menu(self,anchorA,anchorB)
+		createMenu(self,{
+			{
+				label = L["Unset tracking"], --tooltip = {L["Unset tracking"],L["Show/Hide minimap button"]},
+				func = function() FollowerLocationInfoCoordFrame_Set(false) end,
+				disabled = (FollowerLocationInfoDB.CoordsFrameTarget==false)
+			},
+			{ separator=true },
+			---{
+			---	label = self:IsMovable() and L["Lock frame"] or L["Unlock frame"], --tooltip = {L["Lock frame"],L["Lock frame position on screen"]},
+			---	func = function() self:SetMovable(not self:IsMovable()); end
+			---},
+			{
+				label = L["Hide frame"], --tooltip = {L["Hide frame"],L["Show/Hide minimap button"]},
+				func = function() FollowerLocationInfoCoordFrame_Toggle(false); end
+			},
+			{
+				label = L["Left-click option"], --tooltip = {L["Target & Mark"],L["
+				--- Open FollowerLocationInfo
+					--- Opens FollowerLocationInfo on Left-click
+				--- Target & Mark
+					--- Target and Mark NPC's like NPCScan on Left-click
+			}
+		},anchorA,anchorB);
+	end
+
+	local function FollowerLocationInfoCoordFrame_OnUpdate(self,elapse)
+		local x,y=GetPlayerMapPosition("player");
+		if (x==0) and (y==0) then
+			self.Coords1:SetText("−−.−, −−.−");
+		else
+			self.Coords1:SetText(("%.1f, %.1f"):format(x*100,y*100));
+		end
+	end
+
+	local function FollowerLocationInfoCoordFrame_OnClick(self,button)
+		if (button=="LeftButton") then
+			if (FollowerLocationInfoDB.TargetMark) then
+				FollowerLocationInfo_TargetNPC();
+			else
+				FollowerLocationInfo_Toggle();
+			end
+		elseif (button=="RightButton") then
+			GameTooltip:Hide();
+			FollowerLocationInfoCoordFrame_Menu(self,"TOP","BOTTOM");
+		end
+	end
+
+	local function FollowerLocationInfoCoordFrame_OnShow(self)
+		FollowerLocationInfoCoordFrame_Update(self, "FLI_TARGET_CHANGED");
+
+		self.elapsed=0;
+		self:SetScript("OnUpdate",FollowerLocationInfoCoordFrame_OnUpdate);
+	end
+
+	function FollowerLocationInfoCoordFrame_OnLoad(self)
+		self.current=false;
+		self.elapsed=0;
+		self.firstLoad=true;
+
+		-- tooltip show/hide
+		self:SetScript("OnEnter",function() FollowerLocationInfoCoordFrame_Tooltip(self); end);
+		self:SetScript("OnLeave",function() FollowerLocationInfoCoordFrame_Tooltip(false); end);
+
+		-- frame show/hide
+		self:SetScript("OnShow",FollowerLocationInfoCoordFrame_OnShow);
+		self:SetScript("OnHide",function()
+			self:SetScript("OnUpdate",nil);
+			for event,state in pairs(events) do
+				if (state==2) then
+					frame:UnregisterEvent(event);
+				end
+			end
+			wipe(events);
+		end);
+
+		-- frame event handler
+		self:SetScript("OnEvent",FollowerLocationInfoCoordFrame_Update);
+		--self:RegisterEvent("PLAYER_ENTERING_WORLD");
+		self:RegisterEvent("PLAYER_REGEN_DISABLED");
+		self:RegisterEvent("PLAYER_REGEN_ENABLED");
+
+		-- frame click
+		self:SetScript("OnMouseUp",FollowerLocationInfoCoordFrame_OnClick);
+
+		-- frame drag
+		self:RegisterForDrag("LeftButton");
+		self:SetScript("OnDragStart",function() if (not self.isLocked) then self:StartMoving(); end end);
+		self:SetScript("OnDragStop",function() if (not self.isLocked) then self:StopMovingOrSizing(); end end);
+	end
+end
+
 --[=[ FLI.Desc ]=]
-local DescSelected = false;
-
---local function Desc_TooltipEnter(self) end
---local function Desc_TooltipLeave(self) end
-
 local function Desc_AddInfo(self, count, objType, ...)
 	local p,objs,_ = self.Child,{...};
 	local obj = objs[1];
+	--- local TrackingToggle = FollowerLocationInfoFrame.TrackingToggle;
 
 	local addLine = function(title, text, img, menu, tooltip, click)
 		local l = nil
@@ -607,6 +846,7 @@ local function Desc_AddInfo(self, count, objType, ...)
 			if (type(v[2])=="number") and (type(v[3])=="number") then
 				location = ("%s%1.1f, %1.1f"):format((location) and location.." @ " or "",v[2],v[3]);
 				MenuEntry_AddWaypoint(menu,v[1],v[2],v[3],((v[4]) and v[4] or self.info.name).."|n("..location..")");
+				--- TrackingToggle:Show();
 			end
 			if (location) and (type(v[4])=="string") then
 				addLine(title, ("%s|n(%s)"):format(v[4],location),nil,menu);
@@ -636,10 +876,10 @@ local function Desc_AddInfo(self, count, objType, ...)
 					tinsert(menu,{ label = TRACK_QUEST, func=function() QuestMapQuestOptions_TrackQuest(v[1]); end });
 					tinsert(menu,{ label = L["Open questlog"], func=function() securecall("QuestMapFrame_OpenToQuestDetails", v[1]); end });
 					tinsert(menu,{ label = L["Share quest"], func=function() QuestLogPushQuest(qIndex) end, disabled=(not (GetQuestLogPushable(qIndex) and IsInGroup())) });
-				elseif (IsQuestCompleted(v[1])) then
+				elseif (IsQuestFlaggedCompleted(v[1])) then
 					qTitle2 = qTitle .. " |cff888888"..L["(Completed)"].."|r"
 				end
-				tinsert(menu,{ label = L["On WoWHead"], func=function()
+				tinsert(menu,{ label = L["On %s"]:format(ExternalURLValues[FollowerLocationInfoDB.ExternalURL]), func=function()
 					ExternalURL = urls[FollowerLocationInfoDB.ExternalURL]("q",v[1]);
 					StaticPopup_Show("FLI_URL_DIALOG");
 				end });
@@ -656,6 +896,7 @@ local function Desc_AddInfo(self, count, objType, ...)
 					qCoord = ("%1.1f, %1.1f"):format(v[4],v[5]);
 					local title = qTitle .. ( (qGiver~="") and ("|n%s: %s"):format(L["Quest giver"],qGiver) or "" ) .. ("|n(%s @ %s)"):format(qZone,qCoord);
 					MenuEntry_AddWaypoint(menu,v[3],v[4],v[5],title);
+					--- TrackingToggle:Show();
 				elseif (type(v[4])=="string") then
 					qCoord = L[v[4]];
 				end
@@ -716,6 +957,7 @@ local function Desc_AddInfo(self, count, objType, ...)
 			if (type(v[3])=="number") and (type(v[4])=="number") then
 				location = ("(%s%1.1f, %1.1f)"):format((location) and location.." @ " or "",v[3],v[4]); -- merge zone name with coordinations
 				MenuEntry_AddWaypoint(menu,v[2],v[3],v[4],((npc) and npc or L["Vendor for "]..self.info.name).. "|n"..location );
+				--- TrackingToggle:Show();
 			elseif (type(v[3])) then
 				location = ("(%s @ %s)"):format(location,L[v[3]]); -- merge zone name with named location like buildings in garrison...
 			end
@@ -814,13 +1056,12 @@ local function Desc_AddInfo(self, count, objType, ...)
 	return count;
 end
 
-local function Desc_Update()
+function Desc_Update()
 	local self = FollowerLocationInfoFrame.Desc;
 	local DescHead = FollowerLocationInfoFrame.DescHeader;
 	local InfoHead = FollowerLocationInfoFrame.InfoHeader;
 	local Model = FollowerLocationInfoFrame.Model;
 	local Loading = FollowerLocationInfoFrame.Loading;
-	local BigModel = FollowerLocationInfoFrame.BigModelViewer.Model;
 	local line,count = nil,0;
 
 	if (not self.lines) then
@@ -832,6 +1073,7 @@ local function Desc_Update()
 	Model:Hide();
 	DescHead:Hide();
 	InfoHead:Hide();
+	--- FollowerLocationInfoFrame.TrackingToggle:Hide();
 	Loading:Show();
 	for index=1, #self.lines do
 		line = self.lines[index];
@@ -873,7 +1115,7 @@ local function Desc_Update()
 		elseif (self.info.modelPosition) then
 			pos = self.info.modelPosition;
 		end
-		BigModel:SetDisplayInfo(self.info.displayID);
+		FollowerLocationInfoFrame.BigModelViewer.Model:SetDisplayInfo(self.info.displayID);
 		Model:SetDisplayInfo(self.info.displayID);
 		Model:SetPosition(unpack(pos));
 
@@ -885,7 +1127,7 @@ local function Desc_Update()
 		DescHead.Class:SetText("|cffffffff" .. self.info.className .. "|r");
 		DescHead.Misc:SetText(("%s: %d, %s: %s%s|r"):format(
 			LEVEL,		self.info.level,
-			QUALITY,	qualities[self.info.quality].color.hex, qualities[self.info.quality].text
+			QUALITY,	ITEM_QUALITY_COLORS[self.info.quality].hex, _G[("ITEM_QUALITY%d_DESC"):format(self.info.quality)]
 		));
 
 		Model:Show();
@@ -1144,9 +1386,9 @@ local function ListEntries_Update(clear)
 						if not (v.className:lower()==filter[2] or v.class==filter[2]) then
 							ignore=true;
 						end
-					elseif (filter[1]=="ability") then
+					elseif (filter[1]=="ability") and (type(v.abilities)=="table") then
 						local dontIgnore,name,cname=false,false,false;
-						for _,V in ipairs(v.abilities) do
+						for _,V in ipairs(v.abilities) do  --[=[ TODO: sometimes got string? ]=]
 							V=tostring(V);
 							name = C_Garrison.GetFollowerAbilityName(V);
 							local counter = {C_Garrison.GetFollowerAbilityCounterMechanicInfo(V)};
@@ -1275,7 +1517,7 @@ function List_Update()
 				button.tooltip={("%s (%d)"):format(obj.name,obj.level)};
 
 				if (obj.quality) then
-					tinsert(button.tooltip,("%s: %s%s|r"):format(QUALITY,qualities[obj.quality].color.hex,qualities[obj.quality].text));
+					tinsert(button.tooltip,("%s: %s%s|r"):format(QUALITY,ITEM_QUALITY_COLORS[obj.quality].hex, _G[("ITEM_QUALITY%d_DESC"):format(obj.quality)]));
 					if (button["quality"..obj.quality]) then
 						button["quality"..obj.quality]:Show();
 					end
@@ -1339,6 +1581,7 @@ end
 
 --[=[ event handling ]=]
 local eventFrame=CreateFrame("Frame");
+eventFrame.elapsed = 0;
 eventFrame:SetScript("OnEvent", function(self,event,arg1,...)
 	if (event=="ADDON_LOADED") and (arg1==addon) then
 		if (FollowerLocationInfoDB==nil) then
@@ -1352,21 +1595,34 @@ eventFrame:SetScript("OnEvent", function(self,event,arg1,...)
 			FollowerLocationInfoDB.questTitles = {};
 		end
 		for i,v in pairs({
+			-- LDB Options
 			Minimap = {enabled=true},
+			LDB_OwnCoords = false,
+			LDB_TarCoords = false,
+			LDB_NumFollowers = true,
+
+			-- FLI Options
 			ShowFollowerID = true,
-			ShowCoordsFrame = true,
-			BrokerTitle_Coords = false,
-			BrokerTitle_NumFollowers = true,
 			ShowCollectedFollower = false,
 			ShowHiddenFollowers = false,
 			ExternalURL = "WoWHead",
 			ListOpen = true,
-			language = false
+			language = false, -- ?
+			HideInCombat = true,
+			LockedInCombat = true,
+
+			-- CoordsFrame Options
+			ShowCoordsFrame = true,
+			CoordsFrameTarget = false,
+			TargetMark = false,
+			CoordsFrame_HideInCombat = true,
+			CoordsFrame_LockedInCombat = true
 		}) do
 			if (FollowerLocationInfoDB[i]==nil) then
 				FollowerLocationInfoDB[i] = v;
 			end
 		end
+
 		for i,v in pairs(_G.RAID_CLASS_COLORS) do
 			if (_G.CUSTOM_CLASS_COLORS) and (_G.CUSTOM_CLASS_COLORS[i]) and (_G.CUSTOM_CLASS_COLORS[i].colorStr) then
 				classes[i] = _G.CUSTOM_CLASS_COLORS[i];
@@ -1416,6 +1672,16 @@ eventFrame:SetScript("OnEvent", function(self,event,arg1,...)
 
 	if (event=="GARRISON_FOLLOWER_LIST_UPDATE") then
 		GetBlizzardData();
+	end
+end);
+eventFrame:SetScript("OnUpdate", function(self,elapse)
+	local elapseLength = 10; -- seconds
+	if(FollowerLocationInfoDB.BrokerTitle_Coords)then
+		elapseLength = 0.5;
+	end
+	self.elapsed = self.elapsed + elapse;
+	if(self.elapsed>elapseLength)then
+		broker.update()
 	end
 end);
 eventFrame:RegisterEvent("ADDON_LOADED");
@@ -1525,7 +1791,7 @@ function FollowerLocationInfo_ToggleList(force)
 
 	local n, h = self.ListToggle:GetNormalTexture(),self.ListToggle:GetHighlightTexture();
 	if (force==false) or (self.List:IsShown()) then
-		local tx=[[Interface\Buttons\UI-SpellbookIcon-NextPage-Up]];
+		local tx=[[Interface\Buttons\UI-SpellbookIcon-PrevPage-Up]];
 		self.List:Hide();
 		self.ListBG:Hide();
 		self.ListOptionBG:Hide()
@@ -1622,7 +1888,6 @@ do
 	end
 end
 
-
 --[=[ FollowerLocationInfoFrame ]=]
 local function FollowerLocationInfoFrame_OnShow(self)
 	--DescSelected=false;
@@ -1656,8 +1921,6 @@ function FollowerLocationInfoFrame_OnLoad(self)
 	self:SetUserPlaced(true);
 	self:SetFrameLevel(10);
 	self:SetScript("OnShow", FollowerLocationInfoFrame_OnShow);
-	self.RegisterEvent = error;
-	self.UnregisterEvent = error;
 
 	-- FLI -- FilterElements
 	self.Search:SetScript("OnTextChanged", List_Search);
@@ -1672,6 +1935,16 @@ function FollowerLocationInfoFrame_OnLoad(self)
 	self.BigModelViewer:SetFrameLevel(self:GetFrameLevel()-4);
 	self.BigModelViewer.Border:SetFrameLevel(self:GetFrameLevel()-2);
 	self.BigModelViewerToggle.tooltip = L["Show/Hide big 3d model viewer"];
+
+	-- FLI.TrackingToggle
+	self.TrackingToggle:SetText(L["Track it"]);
+	self.TrackingToggle.Left:SetDesaturated(true);
+	self.TrackingToggle.Middle:SetDesaturated(true);
+	self.TrackingToggle.Right:SetDesaturated(true);
+	self.TrackingToggle:SetScript("Onclick",function() FollowerLocationInfoCoordFrame_Set(true); end);
+
+	-- FLI.CloseOnEscapePressed
+	tinsert(UISpecialFrames, self:GetName());
 end
 
 
@@ -1714,6 +1987,8 @@ SlashCmdList["FOLLOWERLOCATIONINFO"] = function(cmd)
 		FollowerLocationInfo_ResetConfig();
 	--elseif (cmd=="resetscale") then
 		--FollowerLocationInfo_ResetScale();
+	elseif (cmd=="genbasics") and (ns.generate_basics) then
+		ns.generate_basics();
 	elseif (cmd=="collectlocales") then
 		FollowerLocationInfo_Collector();
 	elseif (cmd=="delcollectedlocales") then

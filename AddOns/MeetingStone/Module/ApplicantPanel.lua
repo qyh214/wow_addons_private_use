@@ -1,7 +1,7 @@
 
 BuildEnv(...)
 
-ApplicantPanel = Addon:NewModule(CreateFrame('Frame', nil, ManagerPanel), 'ApplicantPanel', 'AceEvent-3.0', 'NetEaseGUI-DropMenu-1.0')
+ApplicantPanel = Addon:NewModule(CreateFrame('Frame', nil, ManagerPanel), 'ApplicantPanel', 'AceEvent-3.0', 'NetEaseGUI-DropMenu-1.0', 'AceTimer-3.0')
 
 
 local function _PartySortHandler(applicant)
@@ -152,7 +152,9 @@ function ApplicantPanel:OnInitialize()
         ApplicantList:SetItemSpacing(0)
         ApplicantList:SetHeaderPoint('BOTTOMLEFT', ApplicantList, 'TOPLEFT', -2, 2)
         ApplicantList:SetSingularAdapter(true)
-        ApplicantList:SetGroupHandle('GetID')
+        ApplicantList:SetGroupHandle(function(applicant)
+            return applicant:GetID()
+        end)
         ApplicantList:SetCallback('OnRoleClick', function(_, _, applicant, role)
             C_LFGList.SetApplicantMemberRole(applicant:GetID(), applicant:GetIndex(), role)
         end)
@@ -165,7 +167,9 @@ function ApplicantPanel:OnInitialize()
         ApplicantList:SetCallback('OnItemEnter', function(_, _, applicant)
             MainPanel:OpenApplicantTooltip(applicant)
         end)
-        ApplicantList:SetCallback('OnItemLeave', GameTooltip_Hide)
+        ApplicantList:SetCallback('OnItemLeave', function()
+            MainPanel:CloseTooltip()
+        end)
         ApplicantList:SetCallback('OnItemMenu', function(_, button, applicant)
             self:ToggleEventMenu(button, applicant)
         end)
@@ -178,10 +182,28 @@ function ApplicantPanel:OnInitialize()
         end)
     end
 
+    local AutoInvite = GUI:GetClass('CheckBox'):New(self) do
+        AutoInvite:SetPoint('TOPRIGHT', self, 'BOTTOMRIGHT', -60, -7)
+        AutoInvite:SetText(L['自动邀请'])
+        AutoInvite:SetSize(20, 20)
+        AutoInvite:SetScript('OnClick', function(AutoInvite)
+            local checked = AutoInvite:GetChecked()
+            self:SetAutoInvite(checked)
+        end)
+    end
+
     self.ApplicantList = ApplicantList
+    self.AutoInvite = AutoInvite
 
     self:RegisterEvent('LFG_LIST_APPLICANT_UPDATED', 'UpdateApplicantsList')
     self:RegisterEvent('LFG_LIST_APPLICANT_LIST_UPDATED', 'UpdateApplicantsList')
+    self:RegisterEvent('LFG_LIST_ACTIVE_ENTRY_UPDATE', function()
+        AutoInvite:SetChecked(select(8, C_LFGList.GetActiveEntryInfo()))
+    end)
+
+    self:RegisterMessage('MEETINGSTONE_PERMISSION_UPDATE', function(_, canCreate, isManager)
+        self.AutoInvite:SetEnabled(C_LFGList.GetActiveEntryInfo() and canCreate)
+    end)
 
     self:SetScript('OnShow', function()
         DataBroker:SetMinimapButtonGlow(false)
@@ -229,6 +251,7 @@ function ApplicantPanel:Invite(id, numMembers)
         end
     else
         C_LFGList.InviteApplicant(id)
+        return true
     end
 end
 
@@ -286,4 +309,41 @@ function ApplicantPanel:ToggleEventMenu(button, applicant)
             text = CANCEL,
         },
     }, 'cursor')
+end
+
+function ApplicantPanel:SetAutoInvite(flag)
+    LFGListUtil_SetAutoAccept(flag)
+end
+
+function ApplicantPanel:CanInvite(applicant)
+    local status = applicant:GetStatus()
+    local numMembers = applicant:GetNumMembers()
+
+    local numAllowed = select(ACTIVITY_RETURN_VALUES.maxPlayers, C_LFGList.GetActivityInfo(CreatePanel:GetCurrentActivity():GetActivityID()))
+    if numAllowed == 0 then
+        numAllowed = MAX_RAID_MEMBERS
+    end
+
+    local currentCount = GetNumGroupMembers(LE_PARTY_CATEGORY_HOME)
+    local numInvited = C_LFGList.GetNumInvitedApplicantMembers()
+
+    if numMembers + currentCount > numAllowed then
+        return
+    elseif numMembers + currentCount + numInvited > numAllowed then
+        return
+    elseif status == 'applied' then
+        return true
+    end
+end
+
+function ApplicantPanel:StartInvite()
+    local list = self.ApplicantList:GetItemList()
+    for i, v in ipairs(list) do
+        if self:CanInvite(v) then
+            if self:Invite(v:GetID(), v:GetNumMembers()) then
+                debug('invite: ' .. v:GetName() .. ' ' .. v:GetLocalizedClass())
+            end
+            break
+        end
+    end
 end

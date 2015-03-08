@@ -1,6 +1,6 @@
 
 local GUI = LibStub('NetEaseGUI-1.0')
-local View = GUI:NewEmbed('Select', 3)
+local View = GUI:NewEmbed('Select', 4)
 if not View then
     return
 end

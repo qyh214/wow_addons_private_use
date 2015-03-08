@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Moonfang", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12491 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13167 $"):sub(12, -3))
 mod:SetCreatureID(71992)
 --mod:SetModelID(328)
 mod:SetZone()
@@ -15,9 +15,6 @@ mod:RegisterEventsInCombat(
 )
 
 local warnLeap				= mod:NewTargetAnnounce(144546, 2)
-local warnCallPack			= mod:NewSpellAnnounce(144602, 3)
-local warnMoonfangTears		= mod:NewSpellAnnounce(144702, 3)
-local warnMoonfangCurse		= mod:NewSpellAnnounce(144590, 4)
 
 local specWarnLeap			= mod:NewSpecialWarningYou(144546)
 local yellLeap				= mod:NewYell(144546)
@@ -45,13 +42,10 @@ function mod:SPELL_CAST_START(args)
 		timerLeapCD:Start()
 		self:BossTargetScanner(71992, "LeapTarget", 0.05, 16)
 	elseif spellId == 144590 then
-		warnMoonfangCurse:Show()
 		specWarnMoonfangCurse:Show()
 	elseif spellId == 144602 then
-		warnCallPack:Show()
 		specWarnCallPack:Show()
 	elseif spellId == 144702 then
-		warnMoonfangTears:Show()
 		specWarnTears:Show()
 		timerMoonfangsTearCD:Start()
 	end

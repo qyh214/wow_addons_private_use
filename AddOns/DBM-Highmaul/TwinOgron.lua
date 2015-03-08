@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1148, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12676 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13223 $"):sub(12, -3))
 mod:SetCreatureID(78238, 78237)--Pol 78238, Phemos 78237
 mod:SetEncounterID(1719)
 mod:SetZone()
@@ -36,7 +36,7 @@ local specWarnArcaneVolatility		= mod:NewSpecialWarningMoveAway(163372, nil, nil
 local yellArcaneVolatility			= mod:NewYell(163372)--Mythic
 --Pol
 local specWarnShieldCharge			= mod:NewSpecialWarningSpell(158134, nil, nil, nil, 2, nil, 2)
-local specWarnInterruptingShout		= mod:NewSpecialWarningCast("OptionVersion2", 158093, "SpellCaster")
+local specWarnInterruptingShout		= mod:NewSpecialWarningCast("OptionVersion2", 158093, "SpellCaster", nil, nil, 2, nil, 2)
 local specWarnPulverize				= mod:NewSpecialWarningSpell(158385, nil, nil, nil, 2, nil, 2)
 local specWarnArcaneCharge			= mod:NewSpecialWarningSpell(163336, nil, nil, nil, 2)
 
@@ -66,6 +66,7 @@ local voicePhemos					= mod:NewVoice(nil, nil, "PhemosSpecialVoice")
 local voicePol						= mod:NewVoice(nil, nil, "PolSpecialVoice")
 local voiceBlaze					= mod:NewVoice(158241)
 local voiceArcaneVolatility			= mod:NewVoice(163372)
+local voiceInterruptingShout		= mod:NewVoice(158093, "SpellCaster")
 
 mod:AddRangeFrameOption("8/3", 163372)
 mod:AddInfoFrameOption("ej9586")
@@ -182,8 +183,8 @@ function mod:OnCombatStart(delay)
 	self.vb.arcaneCast = 0
 	self.vb.arcaneDebuff = 0
 	self.vb.PulverizeRadar = false
-	timerQuakeCD:Start(11.5-delay, 1)
-	countdownPhemos:Start(11.5-delay)
+	timerQuakeCD:Start(12-delay, 1)
+	countdownPhemos:Start(12-delay)
 	if self:IsMythic() then
 		PhemosEnergyRate = 28
 		polEnergyRate = 23
@@ -223,7 +224,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 158057 then
 		self.vb.EnfeebleCount = self.vb.EnfeebleCount + 1
 		specWarnEnfeeblingRoar:Show(self.vb.EnfeebleCount)
-		if not self:IsMythic() then--On all other difficulties, quake is 1 second longer
+		if not self:IsMythic() and self.vb.QuakeCount == 1 then--On all other difficulties, quake is 1 second longer (only first)
 			timerQuakeCD:Start(PhemosEnergyRate+1, self.vb.QuakeCount+1)--Next Special
 			countdownPhemos:Start(PhemosEnergyRate+1)	
 			voicePhemos:Schedule(PhemosEnergyRate + 1 - 6.5, "158200")
@@ -249,7 +250,8 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 158093 then
 		specWarnInterruptingShout:Show()
-		if not self:IsMythic() then
+		voiceInterruptingShout:Play("stopcast")
+		if not self:IsMythic() and self.vb.PulverizeCount == 0 then
 			timerPulverizeCD:Start(polEnergyRate+1)--Next Special
 			countdownPol:Start(polEnergyRate+1)
 			voicePol:Schedule(polEnergyRate + 1 - 6.5, "157952") --pulverize

@@ -1,13 +1,13 @@
-## Interface: 60000
+## Interface: 60100
 ## Title: Chatter
 ## Notes: Lightweight Chat Improvements
 ## Notes-zhTW: 一個輕量級的聊天增強插件
 ## Notes-zhCN: 一个轻量级的聊天增强插件
 ## Author: Antiarc
 ## X-Category: Chat/Communication
-## Version: 1.4.5
+## Version: 1.4.6
 ## SavedVariables: ChatterDB
-## X-Curse-Packaged-Version: 1.4.5
+## X-Curse-Packaged-Version: 1.4.6
 ## X-Curse-Project-Name: Chatter
 ## X-Curse-Project-ID: chatter
 ## X-Curse-Repository-ID: wow/chatter/mainline

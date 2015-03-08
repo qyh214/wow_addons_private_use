@@ -16,6 +16,23 @@ L= DBM:GetModLocalization(1202)
 ---------------------------
 L= DBM:GetModLocalization(1154)
 
+L:SetWarningLocalization({
+	warnRegulators		= "Осталось Регуляторов температуры: %d",
+	warnBlastFrequency	= "Частота взрывов увеличилась: каждые ~%d сек"
+})
+
+L:SetOptionLocalization({
+	warnRegulators		= "Объявлять сколько Регуляторов температуры осталось",
+	warnBlastFrequency	= "Объявлять когда увеличивается частота $spell:155209",
+	VFYellType			= "Тип крика для Неустойчивого огня (только Эпохальный режим)",
+	Countdown			= "Отсчет до спадения",
+	Apply				= "Только получение дебаффа"
+})
+
+L:SetMiscLocalization({
+	heatRegulator		= "Регулятор температуры"
+})
+
 ------------------
 -- Hans'gar And Franzok --
 ------------------
@@ -25,10 +42,6 @@ L= DBM:GetModLocalization(1155)
 -- Flamebender Ka'graz --
 --------------
 L= DBM:GetModLocalization(1123)
-
-L:SetMiscLocalization({
-	return1		= "Wait till they get a load of me."--Not used yet but just in case my current hack to avoid localizing doesn't work
-})
 
 --------------------
 --Kromog, Legend of the Mountain --
@@ -45,6 +58,14 @@ L= DBM:GetModLocalization(1122)
 --------------------------
 L= DBM:GetModLocalization(1147)
 
+L:SetWarningLocalization({
+	specWarnSplitSoon	= "Разделение рейда через 10 сек"
+})
+
+L:SetOptionLocalization({
+	specWarnSplitSoon	= "Спец-предупредение за 10 секунд до разделения рейда"
+})
+
 L:SetMiscLocalization({
 	Train			= GetSpellInfo(174806),
 	lane			= "Путь",
@@ -59,6 +80,14 @@ L:SetMiscLocalization({
 -- The Iron Maidens --
 --------------------------
 L= DBM:GetModLocalization(1203)
+
+L:SetWarningLocalization({
+	specWarnReturnBase	= "Возвращайтесь на причал!"
+})
+
+L:SetOptionLocalization({
+	specWarnReturnBase	= "Спец-предупреждение когда игрок на борту может безопасно вернуться на причал"
+})
 
 L:SetMiscLocalization({
 	shipMessage		= "prepares to man the Dreadnaught's Main Cannon!"

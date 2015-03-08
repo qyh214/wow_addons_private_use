@@ -1,11 +1,11 @@
-﻿## Interface: 60000
+﻿## Interface: 60100
 ## Title: GladiatorlosSA
 ## Notes: PVP Spell Sound Alert
 ## Notes-zhTW: PVP技能語音提示
 ## Author: Abatorlos(of Spinebreaker), DuskAshes, superk521, zuhligan
 ## SavedVariables: GladiatorlosSADB
 ## Version: 2.0
-## X-Curse-Packaged-Version: 2.3.4
+## X-Curse-Packaged-Version: 2.3.5
 ## X-Curse-Project-Name: GladiatorlosSA
 ## X-Curse-Project-ID: gladiatorlossa
 ## X-Curse-Repository-ID: wow/gladiatorlossa/mainline

@@ -224,14 +224,11 @@ L.DontShowFarWarnings		= "Do not show announces/timers for events that are far a
 L.StripServerName			= "Strip realm name in warnings and timers"
 L.SpamBlockBossWhispers		= "Filter &lt;DBM&gt; warning whispers while fighting"
 
-L.Area_SpecFilter			= "Spec Filter Options"
+L.Area_SpecFilter			= "Role Filter Options"
 L.FilterTankSpec			= "Filter warnings designated for Tank role when not tank spec. (Note: Disabling this is not recommended for most users as 'taunt' warnings are now all on by default.)"
---Healer and Damager not in use yet. Tank is easily black and white. if not a tank, disable taunt warnings. Pretty obvious.
---Healer and Damager a bit more tricky, since often times, Healer DO need to switch and kill adds designated a dps roll (hi disc attonement priest)
---Or a dps does need to handle debuff dispels. Or a dps/tank need to know when aoe damage is going out just as much as healer for personal CDs
---Etc etc. Point being, I translate these but I'm not sure they could ever actually be used as effectively as the tank spec filter.
---L.FilterHealerSpec		= "Filter warnings designated for Healer role when not Healer spec"--Not in use
---L.FilterDamagerSpec		= "Filter warnings designated for Damager role when not Damager spec"--Not in use
+L.FilterInterrupts			= "Filter warnings for interruptable spells if caster is not your current target or focus target. (Note: does not apply to spells deemed critical to interrupt that will likely result in raid wipes if missed)"
+L.FilterDispels				= "Filter warnings for dispelable spells if your dispel is on cooldown."
+L.FilterSelfHud				= "Filter yourself from HudMap (Excludes range based Hud functions)"
 
 L.Area_PullTimer			= "Pull, Break, Combat, & Custom Timer Filter Options"
 L.DontShowPTNoID			= "Block Pull Timer if not sent from same zone as you"
@@ -260,11 +257,12 @@ L.Always					= ALWAYS
 L.Panel_ExtraFeatures		= "Extra Features"
 L.Area_ChatAlerts			= "Text Alert Options"
 L.RoleSpecAlert				= "Show alert message on raid join when your loot spec does not match current spec"
-L.CheckGear					= "Show alert message during pull when your equiped ilvl is much lower than bag ilvl (40+)"
+L.CheckGear					= "Show gear alert message during pull (when your equipped ilvl is much lower than bag ilvl (40+) or main weapon is not equipped)"
 L.WorldBossAlert			= "Show alert message when world bosses might have been engaged on your realm by guildies or friends (inaccurate if sender is CRZed)"
 L.Area_SoundAlerts			= "Sound Alert Options"
 L.LFDEnhance				= "Play readycheck sound for role checks &amp; BG/LFG proposals in Master audio channel (I.E. sounds work even if SFX are off and are generally louder)"
 L.WorldBossNearAlert		= "Play readycheck sound when world bosses you are near to are pulled that you need (Overrides boss-specific option)"
+L.RLReadyCheckSound			= "Play readycheck sounds from actual ready checks through master audio channel."
 L.AFKHealthWarning			= "Play alert sound if you are losing health while AFK"
 L.Area_AutoLogging			= "Auto Logging Options"
 L.AutologBosses				= "Automatically record boss encounters using blizzard combat log (Use /dbm pull before bosses to start logging early for pre pots and other events.)"

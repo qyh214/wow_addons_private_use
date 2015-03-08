@@ -88,7 +88,7 @@ function ManagerPanel:CheckUseable()
         end
     end
 
-    self:SendMessage('MEETINGSTONE_PERMISSION_UPDATE', isLeader and not msg)
+    self:SendMessage('MEETINGSTONE_PERMISSION_UPDATE', isLeader and not msg, isManager)
 end
 
 function ManagerPanel:GetActivity()

@@ -12,4 +12,5 @@
   <Script file="MallCategoryItem.lua" />
   <Script file="MallItem.lua" />
   <Script file="Cover.lua" />
+  <Script file="BossCheckBox.lua" />
 </Ui>

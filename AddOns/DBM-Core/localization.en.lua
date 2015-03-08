@@ -15,7 +15,7 @@ DBM_CORE_LOAD_SKIN_COMBAT			= "DBM timers failed to skin during combat. Your tim
 DBM_CORE_BAD_LOAD					= "DBM has detected your mod for this instance failed to fully load correctly because of combat. As soon as you are out of combat, please do /console reloadui as soon as possible."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s could not be loaded because your DBM-Core does not meet requirements. An updated version is required"
 
-DBM_CORE_BLIZZ_BUGS					= "Blizzard change with Addons in 6.0:\n1. If you play with sound effects enabled, you may lose addon sounds in combat if number of simultaneous sounds exceeds your max sound channels. Mods get set to lower channel priority. To work around this, DBM now force sets your sound channels to 64 automatically. If you still experience mod sound loss, only work around is to disable 'Sound Effects' completely."
+DBM_CORE_BLIZZ_BUGS					= "Do to changes in 6.1 that disabled playing .wav media, all custom user sounds have been reset to defaults to force wipe any bad/missing sounds a user may have set in their mods. This reset will not occur again and you're safe to reconfigure custom sounds once more. Remember, once you set custom sounds on one profile, you can copy sound settings from that profile to others from the mod stats window."
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM has disabled dynamic range frame on this fight do to insufficient information about number of players needed to affect clump check for a group of your size."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM has disabled add count warnings on this fight do to insufficient information about number of adds that spawn for a group of your size."
@@ -130,7 +130,7 @@ DBM_CORE_VERSIONCHECK_OUTDATED		= "Following %d player(s) have outdated boss mod
 DBM_CORE_YOUR_VERSION_OUTDATED      = "Your version of Deadly Boss Mods is out-of-date. Please visit http://www.deadlybossmods.com to get the latest version."
 DBM_CORE_VOICE_PACK_OUTDATED		= "Your DBM voice pack may be missing sounds supported by this version of DBM. Special warning sound filter has been disabled. Please download a newer version of voice pack or contact author for an update that contains missing audio files"
 DBM_CORE_VOICE_MISSING				= "You had a DBM voice pack selected that could not be found. Your selection has been reset to 'None'. If this is an error, make sure your voice pack is properly installed and enabled in addons."
-DBM_CORE_VOICE_COUNT_MISSING		= "Countdown voice %d is set to a voice pack that could not be found. It has be reset to default settings."
+DBM_CORE_VOICE_COUNT_MISSING		= "Countdown voice %d is set to a voice/count pack that could not be found. It has be reset to default settings."
 DBM_BIG_WIGS						= "BigWigs"
 DBM_BIG_WIGS_ALPHA					= "BigWigs Alpha"
 
@@ -213,6 +213,8 @@ DBM_CORE_TIMER_PULL					= "Pull in"
 DBM_CORE_ANNOUNCE_PULL				= "Pull in %d sec. (Sent by %s)"
 DBM_CORE_ANNOUNCE_PULL_NOW			= "Pull now!"
 DBM_CORE_GEAR_WARNING				= "Warning: Check gear. Your equipped ilvl is %d lower than bag ilvl"
+DBM_CORE_GEAR_WARNING_WEAPON		= "Warning: Check if your weapon is correctly equipped."
+DBM_CORE_GEAR_FISHING_POLE			= "Fishing Pole"
 
 DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Achievement"--BATTLE_PET_SOURCE_6
 
@@ -273,7 +275,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
 	run				= "%s - run away",
 	cast			= "%s - stop casting",
 	reflect			= "%s on >%%s< - stop attacking",
-	count			= "%s! (%%d)",
+	count			= "%s! (%%s)",
 	stack			= "%%d stacks of %s on you",
 	switch			= ">%s< - switch targets",
 	switchcount		= ">%s< - switch targets (%%d)"
@@ -355,7 +357,11 @@ DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Play countdown sound for $spell:%s coold
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2	= "Play countdown sound for when $spell:%s fades"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Play countout sound for $spell:%s duration"
 DBM_CORE_AUTO_YELL_OPTION_TEXT			= "Yell when you are affected by $spell:%s"
-DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT		= "%s on " .. UnitName("player") .. "!"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT = {
+	yell	= "%s on " .. UnitName("player") .. "!",
+	count	= "%s on " .. UnitName("player") .. "! (%%d)",
+	fade	= "%s fading in %%d"
+}
 DBM_CORE_AUTO_HUD_OPTION_TEXT			= "Show HudMap for $spell:%s"
 DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "Show HudMap for various mechanics"
 DBM_CORE_AUTO_RANGE_OPTION_TEXT			= "Show range frame (%s) for $spell:%s"--string used for range so we can use things like "5/2" as a value for that field

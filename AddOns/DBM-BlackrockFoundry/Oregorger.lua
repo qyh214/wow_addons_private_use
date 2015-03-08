@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(1202, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12806 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13204 $"):sub(12, -3))
 mod:SetCreatureID(77182)
 mod:SetEncounterID(1696)
 mod:SetZone()
+mod:SetHotfixNoticeRev(12963)
 
 mod:RegisterCombat("combat")
 
@@ -14,19 +15,19 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED_DOSE 156834",
 	"SPELL_CAST_SUCCESS 156390 156834",
 	"SPELL_PERIODIC_DAMAGE 156203",
-	"SPELL_PERIODIC_MISSED 156203",
+	"SPELL_ABSORBED 156203",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 --[[Berserk?
 "<4.4 14:25:47> [INSTANCE_ENCOUNTER_ENGAGE_UNIT] Fake Args:#true#true#Oregorger#Creature:0:3314:1205:13906:77182
 "<328.2 14:31:10> CHAT_MSG_RAID_BOSS_EMOTE#Oregorger has gone insane from hunger!#Oregorger#####0#0##0#164#0000000000000000#0#false#false", -- [5]--]]
-local warnAcidTorrent				= mod:NewSpellAnnounce(156240, 3)
+local warnAcidTorrent				= mod:NewCountAnnounce(156240, 3)
 local warnRetchedBlackrock			= mod:NewTargetAnnounce("OptionVersion2", 156179, 3, nil, "Ranged")
 local warnCollectOre				= mod:NewCountAnnounce(165184, 2)
 
 local specWarnBlackrockBarrage		= mod:NewSpecialWarningInterruptCount(156877, false, nil, nil, nil, nil, 3)--Off by default since only interruptors want this on for their duty
-local specWarnAcidTorrent			= mod:NewSpecialWarningSpell(156240, "Tank", nil, nil, 3)--No voice filter, because voice is for tank swap that comes AFTER breath, this warning is to alert tank they need to move into position to soak breath, NOT taunt
+local specWarnAcidTorrent			= mod:NewSpecialWarningCount(156240, "Tank", nil, nil, 3)--No voice filter, because voice is for tank swap that comes AFTER breath, this warning is to alert tank they need to move into position to soak breath, NOT taunt
 local yellRetchedBlackrock			= mod:NewYell(156179)
 local specWarnRetchedBlackrockNear	= mod:NewSpecialWarningClose(156179)
 local specWarnRetchedBlackrock		= mod:NewSpecialWarningMove(156203, nil, nil, nil, nil, nil, 2)
@@ -34,13 +35,13 @@ local specWarnExplosiveShard		= mod:NewSpecialWarningDodge("OptionVersion3", 156
 local specWarnHungerDrive			= mod:NewSpecialWarningSpell("ej9964", nil, nil, nil, 2)
 local specWarnHungerDriveEnded		= mod:NewSpecialWarningFades("ej9964")
 
-local timerBlackrockSpinesCD		= mod:NewCDTimer(20, 156834)--20-23 (cd for barrages themselves too inconsistent and useless. but CD for when he recharges his spines, quite consistent)
-local timerAcidTorrentCD			= mod:NewCDTimer("OptionVersion2", 13, 156240, nil, "Tank|Healer")
+local timerBlackrockSpinesCD		= mod:NewCDTimer(18.5, 156834)--20-23 (cd for barrages themselves too inconsistent and useless. but CD for when he recharges his spines, quite consistent)
+local timerAcidTorrentCD			= mod:NewCDCountTimer("OptionVersion2", 13, 156240, nil, "Tank|Healer")
 local timerExplosiveShardCD			= mod:NewCDTimer("OptionVersion3", 12, 156390, nil, "MeleeDps")--Every 12-20 seconds
 local timerExplosiveShard			= mod:NewCastTimer(3.5, 156390, nil, "MeleeDps")
-local timerRetchedBlackrockCD		= mod:NewCDTimer("OptionVersion2", 17, 156179, nil, "Ranged")--Every 17-23 seconds
+local timerRetchedBlackrockCD		= mod:NewCDTimer("OptionVersion2", 16, 156179, nil, "Ranged")--Every 17-23 seconds
 
-local countdownAcidTorrent			= mod:NewCountdown(23, 156240, "Tank")
+local countdownAcidTorrent			= mod:NewCountdown(13, 156240, "Tank")
 
 local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 local voiceRetchedBlackrock			= mod:NewVoice(156203)  --runaway
@@ -49,25 +50,29 @@ local voiceAcidTorrent				= mod:NewVoice(156240)--changemt after 3 seconds (afte
 
 --local berserkTimer				= mod:NewBerserkTimer(324)--Auto berserk when reaching 3rd hunger drive phase. Time bariable because phase slightly variable.
 
+mod.vb.torrentCount = 0
+
 local lastOre = 0 -- not need sync
 
 function mod:RetchedBlackrockTarget(targetname, uId)
 	if not targetname then return end
-	warnRetchedBlackrock:Show(targetname)
 	if targetname == UnitName("player") then
 		if self:AntiSpam(2.5, 2) then
 			specWarnRetchedBlackrock:Show()
 		end
 		yellRetchedBlackrock:Yell()
-	elseif self:CheckNearby(6, targetname) then
+	elseif self:CheckNearby(10, targetname) then
 		specWarnRetchedBlackrockNear:Show(targetname)
+	else
+		warnRetchedBlackrock:Show(targetname)
 	end
 end
 
 function mod:OnCombatStart(delay)
+	self.vb.torrentCount = 0
 	timerRetchedBlackrockCD:Start(5-delay)--5-7
 	timerExplosiveShardCD:Start(9.5-delay)
-	timerAcidTorrentCD:Start(12-delay)--12-13
+	timerAcidTorrentCD:Start(12-delay, 1)--12-13
 	countdownAcidTorrent:Start(12-delay)
 	timerBlackrockSpinesCD:Start(13-delay)--13-16
 --	berserkTimer:Start(-delay)
@@ -80,16 +85,17 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 156240 then
+		self.vb.torrentCount = self.vb.torrentCount + 1
 		if self.Options.SpecWarn156240spell then
-			specWarnAcidTorrent:Show()
+			specWarnAcidTorrent:Show(self.vb.torrentCount)
 		else
-			warnAcidTorrent:Show()
+			warnAcidTorrent:Show(self.vb.torrentCount)
 		end
-		timerAcidTorrentCD:Start()
+		timerAcidTorrentCD:Start(nil, self.vb.torrentCount+1)
 		countdownAcidTorrent:Start()
 		voiceAcidTorrent:Schedule(3, "changemt")
 	elseif spellId == 156179 then
-		self:BossTargetScanner(77182, "RetchedBlackrockTarget", 0.02, 16)
+		self:ScheduleMethod(0.1, "BossTargetScanner", 77182, "RetchedBlackrockTarget", 0.04, 16)--give 0.1 delay before scan start.
 		timerRetchedBlackrockCD:Start()
 	end
 end
@@ -97,15 +103,18 @@ end
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 155819 then
+		self.vb.torrentCount = 0
 		self:UnregisterShortTermEvents()
 		specWarnHungerDriveEnded:Show()
 		voicePhaseChange:Play("phasechange")
 		timerRetchedBlackrockCD:Start(5)
 		timerExplosiveShardCD:Start(7)--7-9
-		timerAcidTorrentCD:Start(11)--11-12
+		timerAcidTorrentCD:Start(11, 1)--11-12
 		countdownAcidTorrent:Start(11)
-		timerBlackrockSpinesCD:Start(15)
+		timerBlackrockSpinesCD:Start(14)
 	elseif spellId == 156834 then
+		local bossPower = UnitPower("boss1")
+		if bossPower == 0 then return end--Avoid announce bug caused by SPELL_AURA_REMOVED fired at 0 energy, before boss going into frenzy)
 		local amount = args.amount or 0--amount reported for all (SPELL_AURA_APPLIED_DOSE) but 0 (SPELL_AURA_REMOVED)
 		local kickCount = self:IsMythic() and (5 - amount) or (3 - amount)
 		specWarnBlackrockBarrage:Show(args.sourceName, kickCount)
@@ -141,10 +150,11 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		voiceRetchedBlackrock:Play("runaway")
 	end
 end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 165127 then--Hunger Dive Phase
+		self.vb.feedingFrenzy = true
 		timerBlackrockSpinesCD:Cancel()
 		timerRetchedBlackrockCD:Cancel()
 		timerAcidTorrentCD:Cancel()
@@ -161,7 +171,7 @@ end
 
 function mod:UNIT_POWER_FREQUENT()
 	local ore = UnitPower("boss1")
-	if self:AntiSpam(10) and lastOre ~= ore then
+	if (self:AntiSpam(10) or ore == 100) and lastOre ~= ore then
 		lastOre = ore
 		warnCollectOre:Show(ore)
 	end

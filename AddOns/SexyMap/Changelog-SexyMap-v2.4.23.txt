@@ -1,0 +1,12 @@
+tag v2.4.23
+b501cce7354d4bbbc3d9447a6688f190e26b5dae
+funkydude <none>
+2015-02-25 01:23:55 +0000
+
+Tagging as v2.4.23
+
+
+--------------------
+
+funkydude:
+	- bump version

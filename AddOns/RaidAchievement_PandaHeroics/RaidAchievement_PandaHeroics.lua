@@ -5,7 +5,7 @@ function phraonload()
 	_, phraenglishclass = UnitClass("player")
 	phrahuntertime=0
 	
-	raPandaModVers=6.002
+	raPandaModVers=6.100
 
 local _, a2 = GetInstanceInfo()
 if select(3,GetInstanceInfo())==2 and a2=="party" then

@@ -110,7 +110,7 @@ function TitanPanelCurrencyButton_GetTooltipText()
    cCount = GetCurrencyListSize();
    for index=1, cCount do 
       name, isHeader, isExpanded, isUnused, isWatched, count, icon, maximum, hasWeeklyLimit, currentWeeklyAmount, unknown = GetCurrencyListInfo(index)
-      if (count~=0) then
+      if (count~=0) and not isUnused then
             if icon~=nil then
          display=name.."--".."\t"..count.." |T"..icon..":16|t"
             end

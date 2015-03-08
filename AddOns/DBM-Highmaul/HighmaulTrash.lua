@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HighmaulTrash", "DBM-Highmaul")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12576 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13156 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -27,6 +27,15 @@ local specWarnWildFlames			= mod:NewSpecialWarningMove(173827)
 
 mod:RemoveOption("HealthFrame")
 mod:RemoveOption("SpeedKillTimer")
+mod:AddRangeFrameOption(8, 166200)
+
+local debuff = GetSpellInfo(166200)
+local DebuffFilter
+do
+	DebuffFilter = function(uId)
+		return UnitDebuff(uId, debuff)
+	end
+end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
@@ -54,6 +63,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			if not self:IsLFR() and self:AntiSpam(3, 1) then
 				yellArcaneVol:Yell()
 			end
+			if self.Options.RangeFrame then
+				DBM.RangeCheck:Show(8, nil, nil, nil, nil, 6.5)
+			end
+		end
+		if self.Options.RangeFrame and not UnitDebuff("player", debuff) then
+			DBM.RangeCheck:Show(8, DebuffFilter, nil, nil, nil, 6.5)
 		end
 	elseif spellId == 173827 and args:IsPlayer() then
 		specWarnWildFlames:Show()

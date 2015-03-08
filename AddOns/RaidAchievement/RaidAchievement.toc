@@ -1,4 +1,4 @@
-﻿## Interface: 60000
+﻿## Interface: 60100
 ## Title: Raid|cff7fff7fAchievement|r   Main
 ## Title-ruRU: Raid|cff7fff7fAchievement|r   Основной
 ## Author: Shurshik

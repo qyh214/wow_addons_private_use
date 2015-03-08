@@ -212,7 +212,7 @@ function Fizzle:MakeTypeTable()
 		"MainHand",
 		"SecondaryHand",
 	}
-         
+
 	-- Items without durability but with some quality, needed for border colouring.
 	nditems = {
 		"Ammo",
@@ -226,7 +226,7 @@ function Fizzle:MakeTypeTable()
 		"Tabard",
 		"Shirt",
 	}
-         
+
 	for _, item in ipairs(items) do
 		self:CreateBorder("Character", item, "Fizzle", true)
 	end
@@ -264,7 +264,7 @@ function Fizzle:UpdateItems()
 
 			if (((v2 ~= 0) and ((percent ~= 100) or db.DisplayWhenFull)) and not db.HideText) then
 				local text
-			
+
 				-- Colour our string depending on current durability percentage
 				str:SetTextColor(GetThresholdColour(v1/v2))
 
@@ -285,13 +285,13 @@ function Fizzle:UpdateItems()
 				-- No durability in slot, so hide the text.
 				str:SetText("")
 			end
-             
+
 			--Finally, colour the borders
 			if db.Border then
 				self:ColourBorders(id, item)
 			end
 		end
-         
+
 		-- Colour the borders of ND items
 		if db.Border then
 			self:ColourBordersND()

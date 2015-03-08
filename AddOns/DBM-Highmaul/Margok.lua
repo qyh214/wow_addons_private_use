@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1197, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12728 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13199 $"):sub(12, -3))
 mod:SetCreatureID(77428, 78623)
 mod:SetEncounterID(1705)
 mod:SetZone()
@@ -15,7 +15,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 156238 156467 157349 163988 164075 156471 164299 164232 164301 163989 164076 164235 163990 164077 164240 164303 158605 164176 164178 164191 165243 165876 178607",
-	"SPELL_CAST_SUCCESS 158563 165102",
+	"SPELL_CAST_SUCCESS 158563 165102 181113",
 	"SPELL_AURA_APPLIED 157763 158553 156225 164004 164005 164006 158605 164176 164178 164191 157801 178468 165102 165595 176533",
 	"SPELL_AURA_APPLIED_DOSE 158553 178468 165595 159515",
 	"SPELL_AURA_REFRESH 157763",
@@ -116,7 +116,7 @@ local timerSummonArcaneAberrationCD				= mod:NewCDCountTimer(45, "ej9945", nil, 
 mod:AddTimerLine(DBM_CORE_INTERMISSION)
 local timerTransition							= mod:NewPhaseTimer(74)
 local timerCrushArmorCD							= mod:NewNextTimer(6, 158553, nil, "Tank")
-local timerKickToFaceCD							= mod:NewNextTimer(20, 158563, nil, "Tank")
+local timerKickToFaceCD							= mod:NewCDTimer(17, 158563, nil, "Tank")
 --Mythic
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerGaze									= mod:NewBuffFadesTimer(15, 165595)
@@ -151,6 +151,8 @@ mod:AddRangeFrameOption("35/13/5")
 mod:AddSetIconOption("SetIconOnBrandedDebuff", 156225, false)
 mod:AddSetIconOption("SetIconOnInfiniteDarkness", 165102, false)
 mod:AddInfoFrameOption(176537)
+mod:AddHudMapOption("HudMapOnMarkOfChaos", 158605)
+mod:AddHudMapOption("HudMapOnBranded", 156225, false)
 mod:AddDropdownOption("GazeYellType", {"Countdown", "Stacks"}, "Countdown", "misc")
 
 mod.vb.markActive = false
@@ -180,6 +182,7 @@ local playerName = UnitName("player")
 local chogallName = EJ_GetEncounterInfo(167)
 local inter1 = EJ_GetSectionInfo(9891)
 local inter2 = EJ_GetSectionInfo(9893)
+local DBMHudMap = DBMHudMap
 
 local debuffFilterMark, debuffFilterBranded, debuffFilterFixate, debuffFilterGaze
 do
@@ -207,7 +210,7 @@ do
 		end
 	end
 	debuffFilterGaze = function(uId)
-		if select(11, UnitDebuff(uId, gazeDebuff)) == 165595 then--Two debuffs with same name, need correct one
+		if UnitDebuff(uId, gazeDebuff) then
 			return true
 		end
 	end
@@ -216,14 +219,14 @@ end
 local function updateRangeFrame(self, markPreCast)
 	if not self.Options.RangeFrame then return end
 	if self:IsMythic() and self.vb.phase == 4 then
-		if select(11, UnitDebuff("player", gazeDebuff)) == 165595 then--Player has gaze
+		if UnitDebuff("player", gazeDebuff) then--Player has gaze
 			DBM.RangeCheck:Show(8, nil)
 		else
 			DBM.RangeCheck:Show(8, debuffFilterGaze)
 		end
 		return--Other crap doesn't happen in phase 4 mythic so stop here.
 	end
-	if not self:IsTank() and self.vb.brandedActive > 0 then--Active branded out there, not a tank. Branded is always prioritized over mark for non tanks since 90% of time tanks handle this on their own, while rest of raid must ALWAYS handle branded
+	if not self:IsTank() and self.vb.brandedActive > 0 and not self:IsLFR() then--Active branded out there, not a tank. Branded is always prioritized over mark for non tanks since 90% of time tanks handle this on their own, while rest of raid must ALWAYS handle branded
 		local distance = self.vb.jumpDistance
 		if self.vb.playerHasBranded then--Player has Branded debuff
 			if self.vb.markActive and self:CheckNearby(36, self.vb.lastMarkedTank) then
@@ -277,6 +280,25 @@ local function delayedRangeUpdate(self)
 	updateRangeFrame(self)
 end
 
+local function stopP3Timers()
+	timerArcaneWrathCD:Cancel()
+	countdownArcaneWrath:Cancel()
+	timerDestructiveResonanceCD:Cancel()
+	timerSummonArcaneAberrationCD:Cancel()
+	timerMarkOfChaosCD:Cancel()
+	countdownMarkofChaos:Cancel()
+	timerForceNovaCD:Cancel()
+	voiceForceNova:Cancel()
+	countdownForceNova:Cancel()
+	timerForceNovaFortification:Cancel()
+	countdownForceNova:Cancel()
+	specWarnForceNova:Cancel()
+end
+local function NightTwisted(self)
+	timerNightTwistedCD:Start()
+	self:Schedule(30, NightTwisted, self)
+end
+
 function mod:OnCombatStart(delay)
 	self.vb.markActive = false
 	self.vb.noTaunt = false
@@ -293,8 +315,8 @@ function mod:OnCombatStart(delay)
 	self.vb.madnessAdd = 0
 	self.vb.envelopingCount = 0
 	self.vb.mineCount = 0
-	timerArcaneWrathCD:Start(6-delay)
-	countdownArcaneWrath:Start(6-delay)
+	timerArcaneWrathCD:Start(5.5-delay)
+	countdownArcaneWrath:Start(5.5-delay)
 	timerDestructiveResonanceCD:Start(15-delay)
 	timerSummonArcaneAberrationCD:Start(25-delay, 1)
 	timerMarkOfChaosCD:Start(33.5-delay)
@@ -314,6 +336,9 @@ function mod:OnCombatStart(delay)
 	else
 		self:SetBossHPInfoToHighest(1)
 	end
+	if self.Options.HudMapOnMarkOfChaos or self.Options.HudMapOnBranded then
+		DBMHudMap:Enable()
+	end
 end
 
 function mod:OnCombatEnd()
@@ -324,6 +349,9 @@ function mod:OnCombatEnd()
 		DBM.InfoFrame:Hide()
 	end
 	self:UnregisterShortTermEvents()
+	if self.Options.HudMapOnMarkOfChaos or self.Options.HudMapOnBranded then
+		DBMHudMap:Disable()
+	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -368,13 +396,13 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 157349 then
 		self.vb.forceCount = self.vb.forceCount + 1
 		specWarnForceNova:Show()
-		local novaTime = self.vb.forceCount == 1 and 46 or 50.5--Often 51, but 2x I did see 50.5 so 50.5 is safer
+		local novaTime = self.vb.forceCount == 1 and 45 or 50.5--Often 51, but 2x I did see 50.5 so 50.5 is safer
 		timerForceNovaCD:Start(novaTime, self.vb.forceCount+1)
 		countdownForceNova:Start(novaTime)
 		voiceForceNova:Schedule(novaTime-6.5, "157349")
 	elseif spellId == 164232 then
 		self.vb.forceCount = self.vb.forceCount + 1
-		local novaTime = self.vb.forceCount == 1 and 46 or 50.5
+		local novaTime = self.vb.forceCount == 1 and 45 or 50.5
 		timerForceNovaCD:Start(novaTime, self.vb.forceCount+1)
 		countdownForceNova:Start(novaTime)
 		voiceForceNova:Schedule(novaTime-6.5, "157349")
@@ -399,7 +427,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 164235 then
 		self.vb.forceCount = self.vb.forceCount + 1
 		specWarnForceNova:Show()
-		local novaTime = self.vb.forceCount == 1 and 46 or 50.5
+		local novaTime = self.vb.forceCount == 1 and 45 or 50.5
 		timerForceNovaCD:Start(novaTime, self.vb.forceCount+1)
 		countdownForceNova:Start(novaTime)
 		voiceForceNova:Schedule(novaTime-6.5, "157349")
@@ -438,7 +466,7 @@ function mod:SPELL_CAST_START(args)
 		self:Schedule(3.5, updateRangeFrame, self)
 		self:Schedule(4, updateRangeFrame, self)
 		specWarnForceNovaRep:Show()
-		local novaTime = self.vb.forceCount == 1 and 46 or 50.5
+		local novaTime = self.vb.forceCount == 1 and 45 or 50.5
 		timerForceNovaCD:Start(novaTime, self.vb.forceCount+1)
 		countdownForceNova:Start(novaTime)
 		voiceForceNova:Schedule(novaTime-6.5, "157349")
@@ -557,6 +585,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 165102 then
 		timerInfiniteDarknessCD:Start()
+	elseif spellId == 181113 then--Encounter Spawn
+		timerTransition:Start(36.5)--Boss/any arcane adds still active during this, so do not cancel timers here, canceled on margok death
+		self:Schedule(13, stopP3Timers, self)--Terminate timers when King Prison activates.
+		self:Schedule(34, NightTwisted, self)
 	end
 end
 
@@ -573,7 +605,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			updateRangeFrame(self)
 		end
-	elseif args:IsSpellID(156225, 164004, 164005, 164006) then
+	elseif args:IsSpellID(156225, 164004, 164005, 164006) and not self:IsLFR() then
 		self.vb.brandedActive = self.vb.brandedActive + 1
 		local name = args.destName
 		local uId = DBM:GetRaidUnitId(name)
@@ -591,11 +623,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		--Yell for all stacks
 		if args:IsPlayer() then
 			self.vb.playerHasBranded = true
-			if not self:IsLFR() then
-				yellBranded:Yell(currentStack, self.vb.jumpDistance)
-				self:Schedule(1, updateRangeFrame, self)
-				self:Schedule(2, updateRangeFrame, self)
-			end
+			yellBranded:Yell(currentStack, self.vb.jumpDistance)
+			self:Schedule(1, updateRangeFrame, self)
+			self:Schedule(2, updateRangeFrame, self)
 		end
 		--General warnings after 3 stacks
 		if currentStack > 2 then
@@ -645,6 +675,9 @@ function mod:SPELL_AURA_APPLIED(args)
 				end
 			end
 			updateRangeFrame(self)--Update it here cause we don't need it before stacks get to relevant levels.
+			if self.Options.HudMapOnBranded then
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 4, 5, 0, 0, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+			end
 		end
 	elseif spellId == 158553 then
 		local amount = args.amount or 1
@@ -679,7 +712,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.lastMarkedTank = args.destName
 		local uId = DBM:GetRaidUnitId(args.destName)
 		local _, _, _, _, _, duration, expires, _, _ = UnitDebuff(uId, args.spellName)
-		timerMarkOfChaos:Start(duration, args.destName)
+		if expires then
+		timerMarkOfChaos:Start(expires-GetTime(), args.destName)
+		end
 		if args:IsPlayer() then
 			self.vb.playerHasMark = true
 			if spellId == 164176 then 
@@ -704,7 +739,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		updateRangeFrame(self)
-	elseif spellId == 157801 then
+		if self.Options.HudMapOnMarkOfChaos then
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 7, 1, 0, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+		end
+	elseif spellId == 157801 and self:CheckDispelFilter() then
 		specWarnSlow:CombinedShow(1, args.destName)
 		voiceSlow:Play("dispelnow")
 	elseif spellId == 165102 then
@@ -768,9 +806,12 @@ function mod:SPELL_AURA_REMOVED(args)
 		if spellId == 164178 then
 			self:Unschedule(trippleMarkCheck)
 		end
+		if self.Options.HudMapOnMarkOfChaos then
+			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+		end
 	elseif spellId == 157763 and args:IsPlayer() and self.Options.RangeFrame then
 		updateRangeFrame(self)
-	elseif args:IsSpellID(156225, 164004, 164005, 164006) then
+	elseif args:IsSpellID(156225, 164004, 164005, 164006) and not self:IsLFR() then
 		self.vb.brandedActive = self.vb.brandedActive - 1
 		if args:IsPlayer() then
 			self.vb.playerHasBranded = false
@@ -779,6 +820,9 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 		updateRangeFrame(self)
+		if self.Options.HudMapOnBranded then
+			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+		end
 	elseif spellId == 165102 and self.Options.SetIconOnInfiniteDarkness then
 		self:SetIcon(args.destName, 0)
 	elseif spellId == 165595 then
@@ -864,9 +908,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 				self.vb.phase = 3
 				warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase:format(3))
 				voicePhaseChange:Play("pthree")
-				self:RegisterShortTermEvents(
-					"CHAT_MSG_MONSTER_YELL"
-				)
 			else
 				self.vb.phase = 4
 				warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase:format(4))
@@ -880,7 +921,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		countdownMarkofChaos:Cancel()
 		countdownForceNova:Cancel()
 		voiceForceNova:Cancel()
---[[	local tr1 = timerArcaneWrathCD:GetRemaining()
+		local tr1 = timerArcaneWrathCD:GetRemaining()
 		local tr2 = timerDestructiveResonanceCD:GetRemaining()
 		local tr3 = timerSummonArcaneAberrationCD:GetRemaining()
 		local tr4 = timerMarkOfChaosCD:GetRemaining()
@@ -888,8 +929,9 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		--if less than 10 seconds remaining on timer bars get delayed.
 		--Figuring out n is problem. It'll still be variable. the only thing consistent is cast order.
 		--but casts can be delayed 3-13 seconds based on how many get backed up in queue :\
+		local n = 10 -- just extend 10s if left time is below 10s.
 		if tr1 > 0 and tr1 < 10 then
-			countdownArcaneWrath:Start(tr1+n)
+		--	countdownArcaneWrath:Start(tr1+n)
 			timerArcaneWrathCD:Start(tr1+n)
 		end
 		if tr2 > 0 and tr2 < 10 then
@@ -899,13 +941,13 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			timerSummonArcaneAberrationCD:Start(tr3+n)
 		end
 		if tr4 > 0 and tr4 < 10 then
-			timerMarkOfChaosCD:Start(tr4+n)		
-			countdownMarkofChaos:Start(tr4+n)
+			timerMarkOfChaosCD:Start(tr4+n)
+		--	countdownMarkofChaos:Start(tr4+n)
 		end
 		if tr5 > 0 and tr5 < 10 then
 			timerForceNovaCD:Start(tr5+n)
-			countdownForceNova:Start(tr5+n)
-		end--]]
+		--	countdownForceNova:Start(tr5+n)
+		end
 		self.vb.phase = 2
 		warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase:format(2))
 		voicePhaseChange:Play("ptwo")
@@ -926,38 +968,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(L.PlayerDebuffs)
-			DBM.InfoFrame:Show(5, "playerbaddebuffbyspellid", 176537)
-		end
-	end
-end
-
---"<54.77 00:46:30> [CHAT_MSG_MONSTER_YELL] CHAT_MSG_MONSTER_YELL#You know nothing of the power you meddle with, Mar'gok. (It calls to us. We know! Its power will be ours!)#Cho'gall
---"<64.00 00:46:40> [UNIT_SPELLCAST_SUCCEEDED] Cho'gall [[target:King Prison::0:178540]]", -- [19041]
-do
-	local function stopP3Timers()
-		timerArcaneWrathCD:Cancel()
-		countdownArcaneWrath:Cancel()
-		timerDestructiveResonanceCD:Cancel()
-		timerSummonArcaneAberrationCD:Cancel()
-		timerMarkOfChaosCD:Cancel()
-		countdownMarkofChaos:Cancel()
-		timerForceNovaCD:Cancel()
-		voiceForceNova:Cancel()
-		countdownForceNova:Cancel()
-		timerForceNovaFortification:Cancel()
-		countdownForceNova:Cancel()
-		specWarnForceNova:Cancel()
-	end
-	local function NightTwisted(self)
-		timerNightTwistedCD:Start()
-		self:Schedule(30, NightTwisted, self)
-	end
-	function mod:CHAT_MSG_MONSTER_YELL(msg, npc)
-		if npc == chogallName then--Some creative shit right here. Screw localized text. This will trigger off first yell at start of 35 second RP Sender is 丘加利 (Cho'gall)
-			self:UnregisterShortTermEvents()--Unregister Yell
-			timerTransition:Start(34)--Boss/any arcane adds still active during this, so do not cancel timers here, canceled on margok death
-			self:Schedule(10, stopP3Timers, self)--Terminate timers when King Prison activates.
-			self:Schedule(31, NightTwisted, self)
+			DBM.InfoFrame:Show(5, "playerbaddebuff", 176537)
 		end
 	end
 end

@@ -1,0 +1,14 @@
+tag 1.4.6
+1eed2d9b006740028a16378f6f5dc7f888a4e6b2
+Benjamin Staneck <staneck@gmail.com>
+2015-03-03 21:58:50 +0100
+
+
+
+--------------------
+
+Benjamin Staneck:
+	- This ClickInvite now works again (after years) and should not taint Twitter functionality, thanks to Sylvanaar for his help fixing this!
+	- fix a c stack overflow
+	- change URL copy method hooks so Twitter links work
+	- Update TOC for Patch 6.1

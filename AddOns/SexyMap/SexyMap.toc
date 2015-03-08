@@ -1,5 +1,5 @@
-## Interface: 60000
-## Version: 2.4.22
+## Interface: 60100
+## Version: 2.4.23
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
 ## Notes-deDE: Spice up your minimap with some sexy options.
@@ -17,7 +17,7 @@
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, CallbackHandler-1.0, LibStub, Blizzard_TimeManager
 ## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, CallbackHandler-1.0, LibStub
 ## SavedVariables: SexyMap2DB
-## X-Curse-Packaged-Version: v2.4.22
+## X-Curse-Packaged-Version: v2.4.23
 ## X-Curse-Project-Name: SexyMap
 ## X-Curse-Project-ID: sexymap
 ## X-Curse-Repository-ID: wow/sexymap/mainline

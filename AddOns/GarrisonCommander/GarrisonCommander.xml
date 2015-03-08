@@ -135,7 +135,7 @@
 					</Anchors>
 					<Color r="0.698" g="0.941" b="1" a="1"/>
 				</FontString>
-				<FontString parentKey="Percent" inherits="NumberFontNormalHuge" justifyH="RIGHT" justifyV="BOTTOM" >
+				<FontString parentKey="Percent" inherits="NumberFontNormal" justifyH="RIGHT" justifyV="BOTTOM" >
 					<Size x="150" y="50"/>
 					<Anchors>
 						<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="0" y="5"/>

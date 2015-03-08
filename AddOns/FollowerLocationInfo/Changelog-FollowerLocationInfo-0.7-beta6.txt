@@ -1,0 +1,13 @@
+tag 0.7-beta6
+7d3a5e2334eca30e80e9029614639275e53c8a93
+Hizuro <hizuro@gmx.net>
+2015-02-27 20:10:28 +0100
+
+Tagging as 0.7-beta6
+
+
+--------------------
+
+Hizuro:
+	- update some follower descriptions
+	- fix wrong loaded xml file

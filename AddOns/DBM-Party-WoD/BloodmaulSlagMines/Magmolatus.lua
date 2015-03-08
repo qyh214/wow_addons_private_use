@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(893, "DBM-Party-WoD", 2, 385)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12926 $"):sub(12, -3))
 mod:SetCreatureID(74366, 74475)--74366 Forgemaster Gog'duh, 74475 Magmolatus
 mod:SetEncounterID(1655)
 mod:SetMainBossID(74475)
@@ -105,11 +105,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 149975 then
 		warnDancingFlames:CombinedShow(0.3, args.destName)--heroic is 2 targets so combined.
-		if self:AntiSpam(2, 2) then--only show once. (prevent loud sound)
-			specWarnDancingFlames:Show(args.destName)
-			voiceDancingFlames:Play("dispelnow")
+		if self:CheckDispelFilter() then--only show once. (prevent loud sound)
+			specWarnDancingFlames:CombinedShow(0.3, args.destName)
+			if self:AntiSpam(2, 2) then
+				voiceDancingFlames:Play("dispelnow")
+			end
 		end
-	elseif spellId == 150032 then
+	elseif spellId == 150032 and self:CheckDispelFilter() then
 		warnWitheringFlames:Show(args.destName)
 		specWarnWitheringFlames:Show(args.destName)
 		voiceWitheringFlames:Play("dispelnow")

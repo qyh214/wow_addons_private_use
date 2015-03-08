@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'ScrollBar', 3
+local WIDGET, VERSION = 'ScrollBar', 4
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local ScrollBar = GUI:NewClass(WIDGET, 'Slider.UIPanelScrollBarTemplate', VERSION)
@@ -21,8 +21,12 @@ function ScrollBar:Constructor(parent)
 end
 
 function ScrollBar:OnValueChanged(value)
-    self:UpdateButton()
-    self:GetParent():SetOffset(value)
+    value = floor(value + 0.5)
+    if value ~= self.prevValue then
+        self.prevValue = value
+        self:UpdateButton()
+        self:GetParent():SetOffset(value)
+    end
 end
 
 function ScrollBar:UpdateButton()

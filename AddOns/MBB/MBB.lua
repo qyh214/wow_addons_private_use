@@ -66,9 +66,11 @@ v1.40 - Update for 5.4.
 
 v2.00 - Update for 6.0.
 
+v2.01 - Update for 6.1.
+
 --]]
 
-MBB_Version = "2.00";
+MBB_Version = "2.01";
 
 -- Setup some variable for debugging.
 MBB_DebugFlag = 0;

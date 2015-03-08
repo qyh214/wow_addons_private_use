@@ -1,18 +1,23 @@
 local mod	= DBM:NewMod(1162, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12860 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13244 $"):sub(12, -3))
 mod:SetCreatureID(77692)
 mod:SetEncounterID(1713)
 mod:SetZone()
+mod:SetHotfixNoticeRev(13105)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 157060 157054 156704 157592 158217",
 	"SPELL_CAST_SUCCESS 158130 170469",
-	"SPELL_AURA_APPLIED 156766 161923 173917 156852",
+	"SPELL_AURA_APPLIED 156766 161923 173917 156852 157059",
 	"SPELL_AURA_APPLIED_DOSE 156766"
+)
+
+mod:RegisterEvents(
+	"CHAT_MSG_ADDON"--Has to be out of combat
 )
 
 --TODO, see how second trembling earth CD works and if current code even works for other timers. Mythic pulls were very short :\
@@ -22,35 +27,64 @@ local warnWarpedArmor				= mod:NewStackAnnounce(156766, 2, nil, "Tank")
 
 local specWarnGraspingEarth			= mod:NewSpecialWarningMoveTo(157060, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(157060), nil, nil, nil, 2)
 local specWarnThunderingBlows		= mod:NewSpecialWarningSpell(157054, nil, nil, nil, 3)
-local specWarnRipplingSmash			= mod:NewSpecialWarningDodge(157592, nil, nil, nil, 2)
-local specWarnStoneBreath			= mod:NewSpecialWarningCount(156852, nil, nil, nil, 2)
+local specWarnRipplingSmash			= mod:NewSpecialWarningDodge(157592, nil, nil, nil, 2, nil, 2)
+local specWarnStoneBreath			= mod:NewSpecialWarningCount(156852, nil, nil, nil, 2, nil, 2)
 local specWarnSlam					= mod:NewSpecialWarningSpell(156704, "Tank")
 local specWarnWarpedArmor			= mod:NewSpecialWarningStack(156766, nil, 2)
 local specWarnWarpedArmorOther		= mod:NewSpecialWarningTaunt(156766)
 local specWarnTremblingEarth		= mod:NewSpecialWarningSpell(173917, nil, nil, nil, 2)
-local specWarnCalloftheMountain		= mod:NewSpecialWarningCount(158217, nil, nil, nil, 3)
+local specWarnCalloftheMountain		= mod:NewSpecialWarningCount(158217, nil, nil, nil, 3, nil, 2)
 
 local timerGraspingEarthCD			= mod:NewCDTimer(114, 157060)--Unless see new logs on normal showing it can still be 111, raising to 115, average i saw was 116-119
 local timerThunderingBlowsCD		= mod:NewNextTimer(12, 157054)
-local timerRipplingSmashCD			= mod:NewCDTimer(26, 157592)--If it comes off CD early enough into ThunderingBlows/Grasping Earth, he skips a cast. Else, he'll cast it very soon after.
+local timerRipplingSmashCD			= mod:NewCDTimer(21, 157592)--If it comes off CD early enough into ThunderingBlows/Grasping Earth, he skips a cast. Else, he'll cast it very soon after.
 --local timerStoneGeyserCD			= mod:NewNextTimer(30, 158130)
-local timerStoneBreathCD			= mod:NewCDCountTimer(22.5, 156852)
+local timerStoneBreathCD			= mod:NewCDCountTimer(22, 156852)
 local timerSlamCD					= mod:NewCDTimer(23, 156704, nil, "Tank")
 local timerWarpedArmorCD			= mod:NewCDTimer(14, 156766, nil, "Tank")
-local timerTremblingEarthCD			= mod:NewNextTimer(30, 173917)
+local timerTremblingEarthCD			= mod:NewCDTimer(178.5, 173917)
 local timerTremblingEarth			= mod:NewBuffActiveTimer(25, 173917)
 local timerCalloftheMountain		= mod:NewCastTimer(5, 158217)
 
-local berserkTimer					= mod:NewBerserkTimer(480)
+local berserkTimer					= mod:NewBerserkTimer(540)
 
 local countdownThunderingBlows		= mod:NewCountdown(12, 157054)
 local countdownTremblingEarth		= mod:NewCountdownFades("Alt25", 173917)
 
 local voiceGraspingEarth 			= mod:NewVoice(157060)--157060, safenow
 local voiceWarpedArmor				= mod:NewVoice(156766)
+local voiceCallofMountain			= mod:NewVoice(158217)--Findshelter
+local voiceRipplingSmash			= mod:NewVoice(157592)
+local voiceStoneBreath	 			= mod:NewVoice(156852)
+
+mod:AddArrowOption("RuneArrow", 157060, false, 3)--Off by default, because hud does a much better job, and in case user is running both Exorsus Raid Tools and DBM (ExRT has it's own arrow)
+mod:AddHudMapOption("HudMapForRune", 157060)--TODO, maybe custom option text explaining that this option only works if RL is running Exorsus Raid Tools and sends you assigned rune location
 
 mod.vb.mountainCast = 0
 mod.vb.stoneBreath = 0
+local playerX, playerY = nil, nil
+
+--Not local functions, so they can also be used as a test functions as well
+function mod:RuneStart()
+	if playerX and playerY then
+		if self.Options.RuneArrow then
+			DBM.Arrow:ShowRunTo(playerX, playerY, 0)
+		end
+		if self.Options.HudMapForRune then
+			DBMHudMap:Enable()
+			DBMHudMap:RegisterPositionMarker(157060, "HudMapForRune", "highlight", playerX, playerY, 3, 20, 0, 1, 0, 0.5):Pulse(0.5, 0.5)
+		end
+	end
+end
+
+function mod:RuneOver()
+	if self.Options.RuneArrow then
+		DBM.RangeCheck:Hide()
+	end
+	if self.Options.HudMapForRune then
+		DBMHudMap:Disable()
+	end
+end
 
 function mod:OnCombatStart(delay)
 	self.vb.mountainCast = 0
@@ -59,38 +93,57 @@ function mod:OnCombatStart(delay)
 	timerWarpedArmorCD:Start(15-delay)
 	timerSlamCD:Start(25-delay)--More data needed
 	timerRipplingSmashCD:Start(23.5-delay)
-	timerGraspingEarthCD:Start(51-delay)
-	berserkTimer:Start(-delay)--8 minutes on normal and heroic verified, but sometimes late?
+	timerGraspingEarthCD:Start(50-delay)--50-55 variable
+	berserkTimer:Start(-delay)
+	if self:IsMythic() then
+		timerTremblingEarthCD:Start(82.5-delay)
+	end
+end
+
+function mod:OnCombatEnd()
+	if self.Options.RuneArrow then
+		DBM.Arrow:Hide()
+	end
+	if self.Options.HudMapForRune then
+		DBMHudMap:Disable()
+	end
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 157060 then
-		self.vb.stoneBreath = 0
 		specWarnGraspingEarth:Show(RUNES)
-		timerThunderingBlowsCD:Start()
-		countdownThunderingBlows:Start()
-		timerSlamCD:Cancel()
 		timerStoneBreathCD:Cancel()
+		if self:IsLFR() then
+			timerThunderingBlowsCD:Start(20.5)
+			countdownThunderingBlows:Start(20.5)
+			timerStoneBreathCD:Start(28, self.vb.stoneBreath+1)
+		else
+			timerThunderingBlowsCD:Start()
+			countdownThunderingBlows:Start()
+			timerStoneBreathCD:Start(31, self.vb.stoneBreath+1)--Verified it happens on mythic, if rune of trembling earth doesn't come first
+		end
+		timerSlamCD:Cancel()
 		timerRipplingSmashCD:Cancel()
 		timerWarpedArmorCD:Cancel()
 		voiceGraspingEarth:Play("157060")
-		voiceGraspingEarth:Schedule(12, "safenow")
+		self:RuneStart()
 		if self:IsMythic() then
-			timerTremblingEarthCD:Start()
-			timerGraspingEarthCD:Start(123)--TODO, see if normal is still 111 after last
+			timerGraspingEarthCD:Start(122)
 		else
 			timerGraspingEarthCD:Start()
-			timerStoneBreathCD:Start(31, 1)
-			timerRipplingSmashCD:Start(41)
+			timerRipplingSmashCD:Start(35)
 		end
 	elseif spellId == 157054 then
 		specWarnThunderingBlows:Show()
+		--Hide rune arrow and hud at this point, if thundering is being cast, runes vanished
+		self:RuneOver()
 		--Starting timers for slam and rippling seem useless, 10-30 sec variation for first ones.
 		--after that they get back into their consistency
 	elseif spellId == 157592 then
 		specWarnRipplingSmash:Show()
 		timerRipplingSmashCD:Start()
+		voiceRipplingSmash:Play("shockwave")
 	elseif spellId == 156704 then
 		specWarnSlam:Show()
 		timerSlamCD:Start()
@@ -98,6 +151,15 @@ function mod:SPELL_CAST_START(args)
 		self.vb.mountainCast = self.vb.mountainCast + 1
 		specWarnCalloftheMountain:Show(self.vb.mountainCast)
 		timerCalloftheMountain:Start()
+		voiceCallofMountain:Play("findshelter")
+		if self.vb.mountainCast == 3 then--Start timers for resume normal phase
+			timerStoneBreathCD:Start(9, self.vb.stoneBreath+1)--Or 12
+			timerWarpedArmorCD:Start(14)--or 17
+			--Above 2 timers are always either 9 and 14 or 12 and 17. Haven't figured out case for the +3sec to both of them yet
+			--First slam and first rippling still too variable to start here.
+			--after that they get back into their consistency
+			--Rippling smash is WILDLY variable on mythic, to point that any timer for it is completely useless
+		end
 	end
 end
 
@@ -131,14 +193,106 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnTremblingEarth:Show()
 		timerTremblingEarth:Start()
 		countdownTremblingEarth:Start()
-		timerSlamCD:Cancel()--Can't cast slam during this
-		timerRipplingSmashCD:Cancel()--Or rippling
+		timerSlamCD:Cancel()
+		timerRipplingSmashCD:Cancel()
 		timerWarpedArmorCD:Cancel()
 		timerStoneBreathCD:Cancel()
+		timerTremblingEarthCD:Start()
+		local remaining = timerGraspingEarthCD:GetRemaining()
+		if remaining < 50 then--Will come off cd during mythic phase, update timer because mythic phase is coded to prevent this from happening and will push ability to about 12-17 seconds after mythic phase ended
+			timerGraspingEarthCD:Start(62)
+		end
 	elseif spellId == 156852 then
 		self.vb.stoneBreath = self.vb.stoneBreath + 1
 		specWarnStoneBreath:Show(self.vb.stoneBreath)
 		timerStoneBreathCD:Start(nil, self.vb.stoneBreath+1)
+		voiceStoneBreath:Play("breathsoon")
+	elseif spellId == 157059 and args:IsPlayer() then
+		voiceGraspingEarth:Play("safenow")
+		self:RuneOver()
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
+
+do
+	--Exorsus Raid Tools Comm snooping to detect player assignment even if player isn't running Exorsus Raid Tools.
+	--Runes locations are from ExRT and not 100% vetted accurate.
+	local runes = {
+		[1] = {3673.47,329.81},
+		[2] = {3669.83,320.84},
+		[3] = {3667.69,309.80},
+		[4] = {3663.56,334.03},
+		[5] = {3661.87,325.15},
+		[6] = {3660.95,315.54},
+		[7] = {3659.29,303.60},
+		[8] = {3652.30,324.41},
+		[9] = {3650.33,315.57},
+		[10] = {3649.88,332.94},
+		[11] = {3649.72,306.76},
+		[12] = {3642.71,324.18},
+		[13] = {3641.32,315.93},
+		[14] = {3640.92,308.55},
+		[15] = {3636.36,331.65},
+		[16] = {3633.00,304.03},
+		[17] = {3632.95,317.41},
+		[18] = {3631.94,310.38},
+		[19] = {3630.81,325.00},
+		[20] = {3624.18,317.63},
+		[21] = {3623.51,306.16},
+		[22] = {3623.30,330.92},
+		[23] = {3617.37,312.64},
+		[24] = {3615.52,323.41},
+		[25] = {3612.18,306.78},
+		[26] = {3611.77,333.36},
+		[27] = {3605.63,318.56},
+		[28] = {3604.92,328.65},
+		[29] = {3603.65,308.19},
+		[30] = {3597.34,336.12},
+		[31] = {3596.64,325.87},
+		[32] = {3594.69,315.58},
+		[33] = {3594.69,306.78},--Added manually
+		[34] = {3587.57,323.10},
+		[35] = {3587.45,333.16},
+	}	
+	RegisterAddonMessagePrefix("EXRTADD")
+	local playerName = UnitName("player")
+	local assignedPosition
+	function mod:CHAT_MSG_ADDON(prefix, message, channel, sender)
+		if prefix ~= "EXRTADD" then return end
+		local subPrefix,pos1,name1,pos2,name2,pos3,name3 = strsplit("\t", message)
+		if subPrefix ~= "kromog" then return end
+		DBM:Debug("Sender: "..sender.."Pos1: "..pos1..", Name1: "..(name1 or "nil")..", Pos2: "..pos2..", Name2: "..(name2 or "nil")..", Pos3: "..pos3..", Name3: "..(name3 or "nil"), 3)
+		--Check if player removed from a cached assignment
+		if assignedPosition and pos1 and tonumber(pos1) == assignedPosition and name1 ~= playerName then
+			assignedPosition, playerX, playerY = nil, nil, nil
+			DBM:Debug("Player is no longer asisgned to position "..pos1)
+		end
+		if assignedPosition and pos2 and tonumber(pos2) == assignedPosition and name2 ~= playerName then
+			assignedPosition, playerX, playerY = nil, nil, nil
+			DBM:Debug("Player is no longer asisgned to position "..pos2)
+		end
+		if assignedPosition and pos3 and tonumber(pos3) == assignedPosition and name3 ~= playerName then
+			assignedPosition, playerX, playerY = nil, nil, nil
+			DBM:Debug("Player is no longer asisgned to position "..pos3)
+		end
+		--Now the add player assignment code
+		if name1 and name1 == playerName then
+			assignedPosition = tonumber(pos1)
+			playerX = runes[assignedPosition][2]
+			playerY = runes[assignedPosition][1]
+			DBM:Debug("Player is assigned to position "..assignedPosition..": "..playerX..", "..playerY)
+		end
+		if name2 and name2 == playerName then
+			assignedPosition = tonumber(pos2)
+			playerX = runes[assignedPosition][2]
+			playerY = runes[assignedPosition][1]
+			DBM:Debug("Player is assigned to position "..assignedPosition..": "..playerX..", "..playerY)
+		end
+		if name3 and name3 == playerName then
+			assignedPosition = tonumber(pos3)
+			playerX = runes[assignedPosition][2]
+			playerY = runes[assignedPosition][1]
+			DBM:Debug("Player is assigned to position "..assignedPosition..": "..playerX..", "..playerY)
+		end
+	end
+end

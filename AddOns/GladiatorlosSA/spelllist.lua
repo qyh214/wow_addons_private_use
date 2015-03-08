@@ -51,6 +51,7 @@
 				-- WoD
 			[152151] = "ShadowReflection",
 			[84747] = "deepInsight",
+			[84746] = "moderateInsight",
 
 			--warrior
 				-- OLD
@@ -154,6 +155,7 @@
 			[74001] = "combatReadinessDown", -- 戰鬥就緒結束
 			[871] = "shieldWallDown", -- 盾墻結束
 			[112048] = "shieldBarrierDown", -- Added
+			[174926] = "shieldBarrierDown", -- Added
 			[33206] = "PSDown", -- 壓制結束
 			[5277] = "evasionDown", -- 閃避結束
 			[45438] = "iceBlockDown", -- 冰箱結束
@@ -318,8 +320,9 @@
 			[107570] = "stormBolt",
 			[114192] = "mockingBanner",
 				-- WoD
-			[156287] = "Ravager",
+			[152277] = "Ravager",
 			[176289] = "SiegeBreaker", -- Maybe useless
+			[174926] = "shieldBarrier", -- Added
 			[112048] = "shieldBarrier", -- Added
 
 			--priest

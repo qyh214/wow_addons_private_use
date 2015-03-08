@@ -4,9 +4,9 @@ if ramanyachon and raquantrepeatachtm==0 and raquantrepeatach>=raquantrepdone th
 raquantrepdone=raquantrepdone+1
 else
 	if failsecond then
-		raachdone2=false
+		wodrraachdone2=false
 	else
-		raachdone1=false
+		wodrraachdone1=false
 	end
 if raquantrepeatach==raquantrepdone-1 and raquantrepeatachtm==0 then
 raquantrepdone=raquantrepdone+1
@@ -19,7 +19,7 @@ end
 
 --общий для выполненого с 1 события
 function wodrraachcompl(icranrach)
-raachdone1=nil
+wodrraachdone1=nil
 raplaysound(2,wodrraspisokach25[icranrach])
 pseareportallok()
 end
@@ -33,19 +33,19 @@ if raunitplayertrue then
 		raquantrepdone=raquantrepdone+1
 	else
 		if lnn==1 then
-			raachdone1=false
+			wodrraachdone1=false
 		end
 		if lnn==2 then
-			raachdone2=false
+			wodrraachdone2=false
 		end
 		if lnn==3 then
-			raachdone3=false
+			wodrraachdone3=false
 		end
 		if lnn==4 then
-			raachdone4=false
+			wodrraachdone4=false
 		end
 		if lnn==5 then
-      raachdone5=false
+      wodrraachdone5=false
     end
 		if raquantrepeatach==raquantrepdone-1 and raquantrepeatachtm==0 then
 			raquantrepdone=raquantrepdone+1

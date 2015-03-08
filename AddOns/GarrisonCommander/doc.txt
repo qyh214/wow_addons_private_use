@@ -32,6 +32,12 @@ Pannelli utili:
 
 GMF.MissionTab.MissionList.CompleteDialog.BorderFrame.LoadingFrame Loading col tondino
 
+GMFMissions.CompleteDialog è il fondino nero dietro il pannello con la tipa con la benda
+GMFMissions.CompleteDialog.BorderFrame è il pannello con la tipa con la benda
+GMFMissions.CompleteDialog.BorderFrame.Stage  è lo sfondo colorato
+GMFMissions.CompleteDialog.BorderFrame.Model è la tipa con la benda
+
+
 
 Dump: value=C_Garrison.GetMissionRewardInfo(91)
 [1]={
@@ -252,3 +258,187 @@ Dump: value=table returned by GetFollowerInfo for a collected follower
 		else
 			HybridScrollFrame_CreateButtons(frame.FollowerList.listScroll, "GarrisonMissionFollowerButtonTemplate", 7, -7, nil, nil, nil, -6);
 		end
+
+
+Fonts:
+* GameFontNormal
+* GameFontNormalSmall
+* GameFontNormalLarge
+* GameFontHighlight
+* GameFontHighlightSmall
+* GameFontHighlightSmallOutline
+* GameFontHighlightLarge
+* GameFontDisable
+* GameFontDisableSmall
+* GameFontDisableLarge
+* GameFontGreen
+* GameFontGreenSmall
+* GameFontGreenLarge
+* GameFontRed
+* GameFontRedSmall
+* GameFontRedLarge
+* GameFontWhite
+* GameFontDarkGraySmall
+* NumberFontNormalYellow
+* NumberFontNormalSmallGray
+* QuestFontNormalSmall
+* DialogButtonHighlightText
+* ErrorFont
+* TextStatusBarText
+* CombatLogFont
+
+Xp bonus:
+570
+593
+
+------- Methods
+AddFollowerToMission",
+AssignFollowerToBuilding",
+CanGenerateRecruits",
+CanOpenMissionChest",
+CanSetRecruitmentPreference",
+CanUpgradeGarrison",
+CancelConstruction",
+CastSpellOnFollower",
+CastSpellOnMission",
+CloseArchitect",
+CloseGarrisonTradeskillNPC",
+CloseMissionNPC",
+CloseRecruitmentNPC",
+CloseTradeskillCrafter",
+GenerateRecruits",
+GetAllEncounterThreats() Returns the full list of possibile threats
+GetAvailableMissions",
+GetAvailableRecruits",
+GetBasicMissionInfo",
+GetBuildingInfo",
+GetBuildingLockInfo",
+GetBuildingSizes",
+GetBuildingSpecInfo",
+GetBuildingTimeRemaining",
+GetBuildingTooltip",
+GetBuildingUpgradeInfo",
+GetBuildings",
+GetBuildingsForPlot",
+GetBuildingsForSize",
+GetCompleteMissions",
+GetFollowerAbilities(followerID),
+GetFollowerAbilityAtIndex",
+GetFollowerAbilityAtIndexByID",
+GetFollowerAbilityCounterMechanicInfo",
+GetFollowerAbilityDescription",
+GetFollowerAbilityIcon",
+GetFollowerAbilityIsTrait",
+GetFollowerAbilityLink",
+GetFollowerAbilityName",
+GetFollowerActivationCost",
+GetFollowerBiasForMission",
+GetFollowerClassSpec",
+GetFollowerClassSpecAtlas",
+GetFollowerClassSpecByID",
+GetFollowerClassSpecName",
+GetFollowerDisplayID",
+GetFollowerDisplayIDByID",
+GetFollowerInfo",
+GetFollowerInfoForBuilding",
+GetFollowerItemLevelAverage",
+GetFollowerItems",
+GetFollowerLevel",
+GetFollowerLevelXP",
+GetFollowerLink",
+GetFollowerLinkByID",
+GetFollowerMissionCompleteInfo"
+GetFollowerMissionTimeLeft",
+GetFollowerMissionTimeLeftSeconds",
+GetFollowerModelItems",
+GetFollowerName",
+GetFollowerNameByID",
+GetFollowerPortraitIconIDByID"
+GetFollowerQuality",
+GetFollowerQualityTable",
+GetFollowerSoftCap",
+GetFollowerSourceTextByID",
+GetFollowerStatus"
+GetFollowerTraitAtIndex",
+GetFollowerTraitAtIndexByID",
+GetFollowerXP",
+GetFollowerXPTable",
+GetFollowersTraitsForMission"
+GetGarrisonInfo",
+GetGarrisonUpgradeCost",
+GetInProgressMissions",
+GetLandingPageItems",
+GetLandingPageShipmentCount",
+GetLandingPageShipmentInfo",
+GetMissionCompleteEncounters",
+GetMissionDisplayIDs",
+GetMissionInfo",
+GetMissionLink",
+GetMissionMaxFollowers",
+GetMissionName",
+GetMissionRewardInfo",
+GetMissionSuccessChance",
+GetMissionTimes",
+GetMissionUncounteredMechanics",
+GetNumActiveFollowers",
+GetNumFollowerActivationsRemaining",
+GetNumFollowerDailyActivations",
+GetNumFollowers",
+GetNumFollowersForMechanic",
+GetNumFollowersOnMission",
+GetNumPendingShipments",
+GetNumShipmentReagents",
+GetOwnedBuildingInfo",
+GetOwnedBuildingInfoAbbrev",
+GetPartyBuffs",
+GetPartyMentorLevels",
+GetPartyMissionInfo",
+GetPendingShipmentInfo",
+GetPlots",
+GetPlotsForBuilding",
+GetPossibleFollowersForBuilding"
+GetRecruitAbilities",
+GetRecruiterAbilityCategories",
+GetRecruiterAbilityList",
+GetRecruitmentPreferences",
+GetRewardChance",
+GetShipmentContainerInfo",
+GetShipmentItemInfo",
+GetShipmentReagentCurrencyInfo",
+GetShipmentReagentInfo",
+GetShipmentReagentItemLink",
+GetSpecChangeCost",
+GetTabForPlot",
+IsAboveFollowerSoftCap",
+IsFollowerCollected",
+IsFollowerUnique",
+IsInvasionAvailable",
+IsMechanicFullyCountered",
+IsOnGarrisonMap",
+IsOnShipmentQuestForNPC",
+IsUsingPartyGarrison",
+IsVisitGarrisonAvailable",
+MarkMissionComplete",
+MissionBonusRoll",
+PlaceBuilding",
+RecruitFollower",
+RemoveFollower",
+RemoveFollowerFromBuilding",
+RemoveFollowerFromMission",
+RequestGarrisonUpgradeable",
+RequestLandingPageShipmentInfo",
+RequestShipmentCreation",
+RequestShipmentInfo",
+SearchForFollower",
+SetBuildingActive",
+SetBuildingSpecialization",
+SetFollowerFavorite",
+SetFollowerInactive",
+SetRecruitmentPreferences",
+SetUsingPartyGarrison",
+StartMission",
+SwapBuildings",
+TargetSpellHasFollowerItemLevelUpgrade",
+UpgradeBuilding",
+UpgradeGarrison",
+

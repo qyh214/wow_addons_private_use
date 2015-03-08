@@ -137,7 +137,7 @@ do
 		for _,event in ipairs(events) do
 			ChatFrame_AddMessageEventFilter(event, self.filterFunc)
 		end
-		self:RawHook("SetItemRef", true)
+		self:RawHook(_G.ItemRefTooltip, "SetHyperlink", true)
 	end
 	function mod:OnDisable()
 		for _,event in ipairs(events) do
@@ -243,7 +243,7 @@ do
 end
 
 
-function mod:SetItemRef(link, text, button,...)
+function mod:SetHyperlink(frame, link, ...)
 	if sub(link, 1, 3) == "url" then
 		local currentLink = sub(link, 5)
 		currentLink = mangleLinkForVoiceChat(currentLink)
@@ -253,7 +253,7 @@ function mod:SetItemRef(link, text, button,...)
 		Dialog:Spawn("ChatterUrlCopyDialog", {url=currentLink})
 		return ...
 	end
-	return self.hooks.SetItemRef(link, text, button, ...)
+	return self.hooks[frame].SetHyperlink(frame, link, text, button, ...) 
 end
 
 function mod:Info()

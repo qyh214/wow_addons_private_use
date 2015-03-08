@@ -1,3 +1,9 @@
+TipTac Changes | 2015 Mar 04
+----------------------------
+- TOC version updated to 60100 for the 6.1 patch.
+- The "Targeting" text is now using a localized string (BINDING_HEADER_TARGETING). It may not be entirely correct for all locales though.
+- Fixed an anchoring issue for mouse anchored tooltips. It was especially noticeable together with Titan Panel.
+
 TipTac Changes | 2015 Jan 14
 ----------------------------
 - If you had your tooltip anchored to the mouse, you may have had some issues with a few UI frames, especially the Garrison UI. An exception for "ANCHOR_CURSOR_RIGHT" was added, which should fix this (thanks ywfn).

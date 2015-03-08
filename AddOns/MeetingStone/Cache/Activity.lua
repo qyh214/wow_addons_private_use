@@ -7,6 +7,7 @@ local AceSerializer = LibStub('AceSerializer-3.0')
 local AceEvent = LibStub('AceEvent-3.0')
 
 function Activity:Constructor(id)
+    self.killedBosses = {}
     self:SetID(id)
     self:Update()
 end
@@ -26,6 +27,7 @@ local attrs = {
     'MinLevel',
     'MaxLevel',
     'PvPRating',
+    'Source',
 
     'Mode',
     'Loot',
@@ -74,16 +76,12 @@ function Activity:Update(flag)
     local _, appStatus, pendingStatus, appDuration = C_LFGList.GetApplicationInfo(id)
 
     local summary, isMeetingStone, customId, version, mode, loot,
-            class, itemLevel, procession, leaderPvPRating, minLevel, maxLevel, pvpRating = DecodeCommetData(comment)
+            class, itemLevel, procession, leaderPvPRating, minLevel, maxLevel, pvpRating, source, creator = DecodeCommetData(comment)
 
     if isMeetingStone then
         self:SetVersion(version)
         self:SetMode(mode)
         self:SetLoot(loot)
-        self:SetLeaderClass(class)
-        self:SetLeaderItemLevel(itemLevel)
-        self:SetLeaderProcession(procession)
-        self:SetLeaderPvPRating(leaderPvPRating)
         self:SetSummary(summary)
         self:SetComment(nil)
         self:SetCustomID(customId)
@@ -91,6 +89,19 @@ function Activity:Update(flag)
         self:SetMinLevel(minLevel or 1)
         self:SetMaxLevel(maxLevel or MAX_PLAYER_LEVEL)
         self:SetPvPRating(pvpRating or 0)
+        self:SetSource(source)
+
+        if creator and creator ~= leader then
+            self:SetLeaderClass(nil)
+            self:SetLeaderItemLevel(nil)
+            self:SetLeaderPvPRating(nil)
+            self:SetLeaderProcession(nil)
+        else
+            self:SetLeaderClass(class)
+            self:SetLeaderItemLevel(itemLevel)
+            self:SetLeaderPvPRating(leaderPvPRating)
+            self:SetLeaderProcession(procession)
+        end
     else
         self:SetVersion(nil)
         self:SetMode(0xFF)
@@ -109,6 +120,14 @@ function Activity:Update(flag)
 
     if leader then
         self:SetLeaderShort(leader:match('^(.+)%-') or leader)
+    end
+
+    wipe(self.killedBosses)
+    local completedEncounters = C_LFGList.GetSearchResultEncounterInfo(id)
+    if completedEncounters then
+        for i, v in ipairs(completedEncounters) do
+            self.killedBosses[v] = true
+        end
     end
 
     self:SetActivityID(activityId)
@@ -189,7 +208,7 @@ function Activity:IsSelf()
     return self:GetLeader() and UnitIsUnit(self:GetLeader(), 'player')
 end
 
-function Activity:Match(search, loot)
+function Activity:Match(search, loot, bossFilter)
     if loot and loot ~= 0 then
         if self:GetLoot() ~= loot then
             return false
@@ -206,6 +225,19 @@ function Activity:Match(search, loot)
             return true
         end
         return false
+    end
+    if bossFilter and next(bossFilter) then
+        for boss, flag in pairs(bossFilter) do
+            if flag then
+                if self:IsBossKilled(boss) then
+                    return false
+                end
+            else
+                if not self:IsBossKilled(boss) then
+                    return false
+                end
+            end
+        end
     end
     return true
 end
@@ -231,4 +263,8 @@ end
 
 function Activity:IsUnusable()
     return self:IsDelisted() or self:IsApplicationFinished()
+end
+
+function Activity:IsBossKilled(name)
+    return self.killedBosses[name]
 end

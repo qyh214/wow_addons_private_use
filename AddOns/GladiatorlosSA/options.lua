@@ -31,10 +31,12 @@ local function setOption(info, value)
 		PlaySoundFile("Interface\\Addons\\"..gsadb.path_menu.."\\"..name..".ogg",gsadb.output_menu);
 	end
 end
+
 local function getOption(info)
 	local name = info[#info]
 	return gsadb[name]
 end
+
 local function spellOption(order, spellID, ...)
 	local spellname, _, icon = GetSpellInfo(spellID)				
 	if (spellname ~= nil) then
@@ -146,14 +148,6 @@ function GSA:MakeCustomOption(key)
 				type = 'select',
 				dialogControl = 'LSM30_Sound',
 				values =  LSM:HashTable("sound"),
-				--get = function()
-				--	return current
-				--end,
-				--set = function(self,key)
-				--	current = key
-				--end,
-				--values =  AceGUIWidgetLSMlists.sound,
-				--values = function() return AceGUIWidgetLSMlists.sound end,
 				disabled = function() return not db[key].existingsound end,
 				order = 40,
 			},
@@ -279,9 +273,7 @@ function GSA:OnOptionCreate()
 						args = {
 							path = {
 								type = 'select',
-								--name = L["Voice language"],
 								name = L["Default / Female voice"], -- added to 2.3
-								--desc = L["Select language of the alert"],
 								desc = L["Select the default voice pack of the alert"], -- added to 2.3
 								values = self.GSA_LANGUAGE,
 								order = 1,
@@ -517,7 +509,7 @@ function GSA:OnOptionCreate()
 								inline = true,
 								name = L["|cffFFF569Rogue|r"],
 								order = 12,
-								args = listOption({51713,2983,31224,13750,5277,74001,114018,152151,51690,84747},"auraApplied"), -- add 51690 2.2.2 / 84747 added 2.3.4
+								args = listOption({51713,2983,31224,13750,5277,74001,114018,152151,51690,84746,84747},"auraApplied"), -- add 51690 2.2.2 / 84747 added 2.3.4 / 84746 2.3.5
 							},
 							shaman	= {
 								type = 'group',
@@ -623,7 +615,7 @@ function GSA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC79C6EWarrior|r"],
 								order = 14,
-								args = listOption({871,112048,114030},"auraRemoved"), --@ 103827 (double charge) removed (maybe a mistake:p)
+								args = listOption({871,174926,112048,114030},"auraRemoved"), --@ 103827 (double charge) removed (maybe a mistake:p)
 							},
 						},
 					},
@@ -827,7 +819,7 @@ function GSA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC79C6EWarrior|r"],
 								order = 114,
-								args = listOption({97462,5246,6552,2457,71,107566,102060,46968,118000,107570,114192,114028,156287,176289,114028,112048},"castSuccess"), -- 112048 moved from aura applied
+								args = listOption({97462,5246,6552,2457,71,107566,102060,46968,118000,107570,114192,114028,152277,176289,114028,174926,112048},"castSuccess"),
 							},
 						},
 					},

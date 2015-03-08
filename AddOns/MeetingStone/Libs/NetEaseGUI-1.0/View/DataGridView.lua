@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'DataGridView', 9
+local WIDGET, VERSION = 'DataGridView', 10
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local DataGridView = GUI:NewClass(WIDGET, GUI:GetClass('ListView'), VERSION)
@@ -57,6 +57,7 @@ function DataGridView:OnItemCreated(button)
 
         Grid:SetPoint('TOPLEFT', x, 0)
         Grid:SetPoint('BOTTOMLEFT', x, 0)
+        Grid:SetFrameLevel(button:GetFrameLevel()+1)
         Grid.key = v.key
 
         if i == #self.sortButtons then

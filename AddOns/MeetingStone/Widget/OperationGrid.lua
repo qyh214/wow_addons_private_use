@@ -68,7 +68,7 @@ function OperationGrid:SetMember(applicant, activityID)
         self:SetText(L['你的邀请已满。'])
     elseif status == 'applied' then
         self.DeclineButton:SetShown(enable)
-        self:SetSpinner(applicant:GetPendingStatus())
+        self:SetSpinner(enable and applicant:GetPendingStatus())
     else
         self:SetText(INVITE_STATUS_NAMES[status])
     end
@@ -79,7 +79,6 @@ function OperationGrid:SetInviteButton(enable, numMembers)
         self.InviteButton:Show()
         self.InviteButton:SetPoint('BOTTOM', self:GetParent().bg, 'BOTTOM', 0, 5)
         self.StatusText:SetPoint('BOTTOM', self:GetParent().bg, 'BOTTOM', 0, 5)
-
         if numMembers > 1 then
             self.InviteButton:SetFormattedText(LFG_LIST_INVITE_GROUP, numMembers)
         else

@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'DataGridViewGridItem', 6
+local WIDGET, VERSION = 'DataGridViewGridItem', 8
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local DataGridViewGridItem = GUI:NewClass(WIDGET, 'Button', VERSION)
@@ -10,15 +10,15 @@ end
 local STYLES = {
     LEFT = function(self)
         self.Icon:Hide()
-        self:SetNormalFontObject('GameFontHighlightSmallLeft')
+        self:SetNormalFontObject('GameFontHighlightLeft')
     end,
     RIGHT = function(self)
         self.Icon:Hide()
-        self:SetNormalFontObject('GameFontHighlightSmallRight')
+        self:SetNormalFontObject('GameFontHighlightRight')
     end,
     NORMAL = function(self)
         self.Icon:Hide()
-        self:SetNormalFontObject('GameFontHighlightSmall')
+        self:SetNormalFontObject('GameFontHighlight')
     end,
     ICON = function(self, width, height)
         self.width = tonumber(width)
@@ -39,7 +39,7 @@ local STYLES = {
         -- self.Text:SetPoint('TOPRIGHT')
         -- self.Text:SetPoint('BOTTOMRIGHT')
         self.Text:SetPoint('RIGHT')
-        self:SetNormalFontObject('GameFontHighlightSmallLeft')
+        self:SetNormalFontObject('GameFontHighlightLeft')
     end,
 }
 
@@ -87,6 +87,7 @@ function DataGridViewGridItem:Constructor(parent, style)
     local Text = self:CreateFontString(nil, 'OVERLAY')
     Text:SetPoint('LEFT')
     Text:SetPoint('RIGHT')
+    Text:SetWordWrap(false)
     self:SetFontString(Text)
 
     local Icon = self:CreateTexture(nil, 'OVERLAY')

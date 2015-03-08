@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1227, "DBM-Party-WoD", 8, 559)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12492 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12926 $"):sub(12, -3))
 mod:SetCreatureID(76021)
 mod:SetEncounterID(1758)
 mod:SetZone()
@@ -51,7 +51,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnRejuvSerum:Show(args.destName)
 --		timerRejuvSerumCD:Start()
 		voiceRejuvSerum:Play("dispelboss")
-	elseif spellId == 162600 then
+	elseif spellId == 162600 and self:CheckDispelFilter() then
 		warnToxicFumes:Show(args.destName)
 		specWarnToxicFumes:Show(args.destName)
 		voiceToxicFumes:Play("dispelnow")

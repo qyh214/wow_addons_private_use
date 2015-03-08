@@ -13,6 +13,7 @@ _G.BINDING_HEADER_MEETINGSTONE = ADDON_TITLE
 _G.BINDING_NAME_MEETINGSTONE_TOGGLE = L['打开主界面']
 
 MAX_PLAYER_LEVEL = MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
+MAX_SEARCHBOX_HISTORY_LINES = 5
 
 INVITE_STATUS_NAMES = {
     failed = LFG_LIST_APP_CANCELLED,
@@ -218,41 +219,41 @@ RAID_PROGRESSION_LIST = {
         { id = 9282, name = '卡加斯·刃拳' },
         { id = 9287, name = '屠夫' },
         { id = 9297, name = '布兰肯斯波' },
-        { id = 9292, name = '泰克图斯' },
+        { id = 9292, name = '泰克图斯，活体之山' },
         { id = 9302, name = '独眼魔双子' },
         { id = 9308, name = '克拉戈' },
         { id = 9313, name = '元首马尔高克' },
     },  --  悬槌堡（普通）
     [038] = {
-        { id = 9584, name = '卡加斯·刃拳' },
+        { id = 9284, name = '卡加斯·刃拳' },
         { id = 9288, name = '屠夫' },
         { id = 9298, name = '布兰肯斯波' },
-        { id = 9293, name = '泰克图斯' },
+        { id = 9293, name = '泰克图斯，活体之山' },
         { id = 9303, name = '独眼魔双子' },
         { id = 9310, name = '克拉戈' },
         { id = 9314, name = '元首马尔高克' },
     },  --  悬槌堡（英雄）
     [039] = {
         { id = 9317, name = '格鲁尔', },
-        { id = 9321, name = '奥尔高格' },
+        { id = 9321, name = '吞噬者奥尔高格' },
         { id = 9336, name = '兽王达玛克' },
         { id = 9331, name = '缚火者卡格拉兹' },
         { id = 9327, name = '汉斯加尔与弗兰佐克' },
         { id = 9340, name = '主管索戈尔' },
         { id = 9349, name = '爆裂熔炉' },
-        { id = 9355, name = '克罗莫格' },
+        { id = 9355, name = '克罗莫格，远山传奇' },
         { id = 9359, name = '钢铁女武神' },
         { id = 9363, name = '黑手' },
     },  --  黑石铸造厂（普通）
     [040] = {
         { id = 9318, name = '格鲁尔' },
-        { id = 9322, name = '奥尔高格' },
+        { id = 9322, name = '吞噬者奥尔高格' },
         { id = 9337, name = '兽王达玛克' },
         { id = 9332, name = '缚火者卡格拉兹' },
         { id = 9328, name = '汉斯加尔与弗兰佐克' },
         { id = 9341, name = '主管索戈尔' },
         { id = 9351, name = '爆裂熔炉' },
-        { id = 9356, name = '克罗莫格' },
+        { id = 9356, name = '克罗莫格，远山传奇' },
         { id = 9360, name = '钢铁女武神' },
         { id = 9364, name = '黑手' },
     },  --  黑石铸造厂（英雄）
@@ -452,4 +453,11 @@ RAID_PROGRESSION_LIST = {
         { id = 7924, name = '伊拉贡' },
         { id = 7927, name = '皇帝的意志' },
     },  --  魔古山宝库（25人英雄）
+}
+
+SOURCE_ICONS = {
+    [0] = [[Interface\AddOns\MeetingStone\Media\Mark\0]],
+    [2] = [[Interface\AddOns\MeetingStone\Media\Mark\2]],
+    [3] = [[Interface\AddOns\MeetingStone\Media\Mark\3]],
+    [5] = [[Interface\AddOns\MeetingStone\Media\Mark\5]],
 }

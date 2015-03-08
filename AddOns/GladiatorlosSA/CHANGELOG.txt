@@ -1,23 +1,28 @@
+- version 2.3.5
+	* Korean locale updated (by jungwan2)
+	* Moderate Insight added (moderateInsight.ogg)
+	* enUS Male_voice (Will) removed from the main addon
+
 - version 2.3.4
-		* Wyvern Sting moved from Cast_Success to Cast-Start (#c365)
-		* Roar of Sacrifice added. (#c332) (roarOfSacrifice.ogg)
-		* Gender Detection : "sourceGUID or destGUID error" friendlyinterupt fixed
-		* "Custom" sound improved but waiting for approval from mikord/MSBT
-		* Custom profile bug sometimes; i'm on it
-		* General/Advanced : Added **"Change Output"** to let you choose the default sound Output. But be warned, it's NOT fully tested! Use it and feedback !
-		* Shield Barrier moved from AuraApplied to SpellCastSucces
-		* Shield Barrier Down disabled by default
-		* Will Voice(Male) : In order to avoid TTS bugz i changed many voices pronunciation
-			** Dark simulacrum : "dark simula"
-			** Enraged regeneration : "enraged regen"
-			** Grimoire of sacrifice : "sacrifice grim"
-			** Grimoire of service : "double demon"\\
-			** Hand of freedom : "freedom"
-			** Shroud Of Concealment : "Mass stealth"
-			** And many small bug
-		* Julie Voice(female) : Old low-quality voice replaced with HQ ones.
-		* deepInsigt added (deepInsight.ogg, deepInsightDown.ogg) (#c368)
-		* Will voices lowered (Amplified by 0.89)
+	* Wyvern Sting moved from Cast_Success to Cast-Start (#c365)
+	* Roar of Sacrifice added. (#c332) (roarOfSacrifice.ogg)
+	* Gender Detection : "sourceGUID or destGUID error" friendlyinterupt fixed
+	* "Custom" sound improved but waiting for approval from mikord/MSBT
+	* Custom profile bug sometimes; i'm on it
+	* General/Advanced : Added **"Change Output"** to let you choose the default sound Output. But be warned, it's NOT fully tested! Use it and feedback !
+	* Shield Barrier moved from AuraApplied to SpellCastSucces
+	* Shield Barrier Down disabled by default
+	* Will Voice(Male) : In order to avoid TTS bugz i changed many voices pronunciation
+		** Dark simulacrum : "dark simula"
+		** Enraged regeneration : "enraged regen"
+		** Grimoire of sacrifice : "sacrifice grim"
+		** Grimoire of service : "double demon"\\
+		** Hand of freedom : "freedom"
+		** Shroud Of Concealment : "Mass stealth"
+		** And many small bug
+	* Julie Voice(female) : Old low-quality voice replaced with HQ ones.
+	* deepInsigt added (deepInsight.ogg, deepInsightDown.ogg) (#c368)
+	* Will voices lowered (Amplified by 0.89)
 
 - version 2.3.3
 	* default voice pack setted to US(female) (enUS fix)

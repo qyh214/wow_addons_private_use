@@ -57,15 +57,16 @@ function ServerDataCache:FormatMallData(cache, isNew)
 
         for i, item in ipairs(goods) do
             local id, priceInfo, itemId, model, faction, text, tip = FormatMallGood(item)
-            local price, discount = strsplit(',', priceInfo)
+            local price, originalPrice = strsplit(',', priceInfo)
 
             if not faction or faction == pFaction then
                 tinsert(category.item, {
                     id = id,
                     text = text,
                     price = price,
+                    originalPrice = originalPrice,
                     tip = tip and {strsplit('@', tip)},
-                    itemId = itemId,
+                    itemId = itemId and tonumber(itemId),
                     model = model,
                     })
             end

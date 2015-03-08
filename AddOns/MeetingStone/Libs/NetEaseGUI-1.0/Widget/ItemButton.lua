@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'ItemButton', 5
+local WIDGET, VERSION = 'ItemButton', 6
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local Class = LibStub('LibClass-1.0')
@@ -17,6 +17,7 @@ function ItemButton:Constructor(parent, highlightWithoutChecked)
 
     self:SetParent(parent)
     self:SetMotionScriptsWhileDisabled(true)
+    self:SetFrameLevel(parent:GetFrameLevel() + 1)
 
     self:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 
@@ -48,6 +49,9 @@ function ItemButton:OnClick(button)
             self:GetOwner():SetSelected(self:GetID())
         end
         self:FireHandler('OnItemClick')
+        if self.highlightWithoutChecked then
+            self:UnlockHighlight()    
+        end
     elseif button == 'RightButton' then
         self:FireHandler('OnItemMenu')
     end

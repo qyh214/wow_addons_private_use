@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'Dropdown', 4
+local WIDGET, VERSION = 'Dropdown', 6
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local Dropdown = GUI:NewClass(WIDGET, 'Button', VERSION)
@@ -51,12 +51,15 @@ function Dropdown:Constructor(parent)
     local Text = self:CreateFontString(nil, 'OVERLAY', 'GameFontHighlightSmallLeft')
     Text:SetPoint('LEFT', 10, 0)
     Text:SetPoint('RIGHT', MenuButton, 'LEFT')
+    Text:SetWordWrap(false)
 
     self.Text = Text
     self.MenuButton = MenuButton
 
     self:SetScript('OnEnable', self.OnEnable)
     self:SetScript('OnDisable', self.OnDisable)
+
+    self:SetScript('OnClick', self.ToggleMenu)
 end
 
 function Dropdown:OnEnable()

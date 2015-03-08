@@ -1,6 +1,8 @@
 
 BuildEnv(...)
 
+debug = neteasedebug or nop
+
 Addon = LibStub('AceAddon-3.0'):NewAddon('MeetingStone', 'AceEvent-3.0', 'LibModule-1.0', 'LibClass-1.0', 'AceHook-3.0')
 
 GUI = LibStub('NetEaseGUI-1.0')
@@ -34,7 +36,7 @@ function Addon:MakeSortOrder()
     end
 end
 
-function Addon:MEETINGSTONE_NEW_VERSION(_, verion, url, isSupport, changeLog)
+function Addon:MEETINGSTONE_NEW_VERSION(_, version, url, isSupport, changeLog)
     version = format('%.02f', tonumber(version) or 0)
     if not isSupport then
         self.url = url

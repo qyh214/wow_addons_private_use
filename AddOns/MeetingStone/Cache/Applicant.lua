@@ -25,7 +25,6 @@ local attrs = {
     'LocalizedClass',
     'Level',
     'ItemLevel',
-    'Stats',
     'IsTank',
     'IsHealer',
     'IsDamage',
@@ -34,6 +33,7 @@ local attrs = {
     'PvPRating',
     'Progression',
     'IsMeetingStone',
+    'Source',
 
     'Result',
     'Touchy',
@@ -71,7 +71,7 @@ function Applicant:SetData(...)
     local name, class, localizedClass, level, itemLevel, tank, healer, damage, assignedRole, relationship,
             index, id, status, pendingStatus, numMembers, isNew, msg, orderID = ...
 
-    local msg, isMeetingStone, progression, pvpRating  = DecodeDescriptionData(msg)
+    local msg, isMeetingStone, progression, pvpRating, source  = DecodeDescriptionData(msg)
 
     self:SetID(id)
     self:SetStatus(status)
@@ -88,7 +88,6 @@ function Applicant:SetData(...)
     self:SetLocalizedClass(localizedClass)
     self:SetLevel(level)
     self:SetItemLevel(floor(itemLevel))
-    self:SetStats(C_LFGList.GetApplicantMemberStats(id, index))
     self:SetIsTank(tank)
     self:SetIsHealer(healer)
     self:SetIsDamage(damage)
@@ -97,6 +96,7 @@ function Applicant:SetData(...)
     self:SetIsMeetingStone(isMeetingStone)
 
     self:SetPvPRating(isMeetingStone and tonumber(pvpRating) or 0)
+    self:SetSource(source)
     if isMeetingStone then
         self:SetProgression(progression)
     end

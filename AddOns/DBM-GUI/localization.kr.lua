@@ -80,8 +80,8 @@ L.RaidWarnColor_1 			= "색상 1"
 L.RaidWarnColor_2 			= "색상 2"
 L.RaidWarnColor_3 			= "색상 3"
 L.RaidWarnColor_4 			= "색상 4"
-L.InfoRaidWarning			= [[공격대 경보 창 위치와 알림 색상을 수정할 수 있습니다.
-DBM은 공격대 경보 창에 "X : Y" 같은 알림을 표시합니다.]]
+L.InfoRaidWarning			= [[알림 창 위치와 알림 색상을 수정할 수 있습니다.
+DBM은 별도 알림 창에 알림을 표시합니다.]]
 L.ColorResetted 			= "현재 색상 설정을 초기화 합니다."
 L.ShowWarningsInChat 		= "알림을 대화창에서도 보기"
 L.ShowFakedRaidWarnings 	= "대화창 알림 메세지를 공격대 경보처럼 보기"
@@ -222,12 +222,9 @@ L.SpamBlockBossWhispers		= "전투 중 다른 공격대원 또는 파티원이 �
 
 L.Area_SpecFilter			= "역할 경고 숨기기"
 L.FilterTankSpec			= "방어 전담이 아닐 경우 방어 전담용 경고 보지 않기(참고: 도발 경고는 대부분 기본값으로 켜짐 상태이기 때문에 이 설정을 끄지 않는 것을 권장합니다.)"
---Healer and Damager not in use yet. Tank is easily black and white. if not a tank, disable taunt warnings. Pretty obvious.
---Healer and Damager a bit more tricky, since often times, Healer DO need to switch and kill adds designated a dps roll (hi disc attonement priest)
---Or a dps does need to handle debuff dispels. Or a dps/tank need to know when aoe damage is going out just as much as healer for personal CDs
---Etc etc. Point being, I translate these but I'm not sure they could ever actually be used as effectively as the tank spec filter.
---L.FilterHealerSpec		= "치유 전담이 아닐 경우 치유 전담용 경고 보지 않기"--Not in use
---L.FilterDamagerSpec		= "공격 전담이 아닐 경우 치유 전담용 경고 보지 않기"--Not in use
+L.FilterInterrupts			= "자신의 대상이나 주시 대상이 아닌 대상의 차단 경고 보지 않기(참고: 차단 실패시 공격대 전체에 치명적인 영향을 주는 주문에는 적용되지 않습니다.)"
+L.FilterDispels				= "해제 주문이 재사용 대기시간 중일 경우 해제 경고 보지 않기"
+L.FilterSelfHud				= "자기 자신의 범위 정보를 보이지 않기(거리 비례 범위 정보는 제외)"
 
 L.Area_PullTimer			= "특수 바(전투 예정/시작, 휴식, 사용자 바) 기능 끄기"
 L.DontShowPTNoID			= "같은 인스턴스에 있지 않은 사용자가 보낸 전투 예정 바 차단"
@@ -256,11 +253,12 @@ L.Always					= "모든 동영상"
 L.Panel_ExtraFeatures		= "기타 기능"
 L.Area_ChatAlerts			= "문자 알림 설정"
 L.RoleSpecAlert				= "공격대 참여시 전문화와 설정된 전리품 전문화가 맞지 않을시 대화창에 알림 보기"
-L.CheckGear					= "전투 시작시 착용 아이템 레벨이 가방 아이템 레벨보다 낮을 경우 경고 보기(40+)"
+L.CheckGear					= "전투 시작시 착용 장비 경고 보기(착용 아이템 레벨이 가방 아이템 레벨보다 40 이상 낮거나 주 장비가 장착되어 있지 않은 경우)"
 L.WorldBossAlert			= "현재 서버에서 친구 또는 길드원에 의해 야외 우두머리 전투가 시작 된 경우 메세지 보이기(서버 공용지역에서 보낸 경우 부정확할 수 있습니다)"
 L.Area_SoundAlerts			= "소리 알림 설정"
 L.LFDEnhance				= "전장/공격대 찾기 입장, 역할 확인 소리를 주 음량 설정에 맞추어 듣기(환경 소리가 꺼져 있을 때도 작동하며, 일반적으로 환경 소리보다 더 크게 들립니다)"
 L.WorldBossNearAlert		= "근처에서 야외 우두머리 전투가 시작된 경우 전투 준비 소리 듣기(우두머리별 설정 무시)"
+L.RLReadyCheckSound			= "전투 준비 소리를 주 음량 설정에 맞추어 듣기"
 L.AFKHealthWarning			= "자리 비움 상태 도중 체력이 줄면 경고음 듣기"
 L.Area_AutoLogging			= "자동 전투 기록 설정"
 L.AutologBosses				= "우두머리 전투시 블리자드 전투 기록 자동 활성화(전투 시작전 주요 정보를 기록하려면, /dbm pull 명령어를 사용하세요)"

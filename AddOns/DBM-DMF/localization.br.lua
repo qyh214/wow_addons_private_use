@@ -1,4 +1,6 @@
-﻿if GetLocale() ~= "ptBR" then return end
+﻿-- Last update: Feb,21th,2015 Brazilian Portuguese format)
+-- Por GlitterStorm @ Azralon
+if GetLocale() ~= "ptBR" then return end
 
 local L
 
@@ -8,7 +10,7 @@ local L
 L = DBM:GetModLocalization("Cannon")
 
 L:SetGeneralLocalization({
-	name = "Blastenheimer 5000"
+	name = "Blastenheimer 5000 Ultra Cannon"
 })
 
 -------------
@@ -17,7 +19,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("Gnoll")
 
 L:SetGeneralLocalization({
-	name = "Whack-a-Gnoll"
+	name = "Pancada-no-Gnoll"
 })
 
 L:SetWarningLocalization({
@@ -41,11 +43,11 @@ L:SetOptionLocalization({
 L = DBM:GetModLocalization("Shot")
 
 L:SetGeneralLocalization({
-	name = "Shooting Gallery"
+	name = "Galeria de tiro"
 })
 
 L:SetOptionLocalization({
-	SetBubbles			= "Automaticamente desabilitar balões de fala durante $spell:101871<br/>(Voltando ao normal ao fim da partida)"
+	SetBubbles			= "Desabilita automaticamente balões de fala durante $spell:101871<br/>(Voltando ao normal ao fim da partida)"
 })
 
 ----------------------
@@ -54,5 +56,37 @@ L:SetOptionLocalization({
 L = DBM:GetModLocalization("Tonks")
 
 L:SetGeneralLocalization({
-	name = "Tonk Challenge"
+	name = "Comandante de Tonque"
+})
+
+---------------------------
+--  Fire Ring Challenge  --
+---------------------------
+L = DBM:GetModLocalization("Rings")
+
+L:SetGeneralLocalization({
+	name = "Desafio da Ave Flamejante"
+})
+
+-----------------------
+--  Darkmoon Rabbit  --
+-----------------------
+L = DBM:GetModLocalization("Rabbit")
+
+L:SetGeneralLocalization({
+	name = "Coelho de Negraluna"
+})
+
+-------------------------
+--  Darkmoon Moonfang  --
+-------------------------
+L = DBM:GetModLocalization("Moonfang")
+
+L:SetGeneralLocalization({
+	name = "Presa Lunar"
+})
+
+L:SetWarningLocalization({
+	specWarnCallPack		= "Convocar a matilha - Corra > 40 metros do Presa Lunar!",
+	specWarnMoonfangCurse	= "Maldição do Presa Lunar - Corra > 10 metros do Presa Lunar!"
 })

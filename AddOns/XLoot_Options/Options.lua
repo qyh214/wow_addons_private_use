@@ -103,11 +103,15 @@ function addon:OnEnable() -- Construct addon option tables here
 	-- General config methods
 
 	-- Find module options and requested key from AceConfigDialog info table
-	-- Also return meta table for option
+	--	returns:
+	--	db -- Current settings table for option (May be a subtable)
+	--	k -- Current settings key for option
+	--	meta -- Config metatable for option
+	--  full_db -- Full settings table for module
 	local function path(info)
 		local meta = option_metadata[info.option]
 		local db = meta.module_data.addon.db.profile
-		return meta.subtable and db[meta.subtable] or db, meta.subkey or info[#info], meta
+		return meta.subtable and db[meta.subtable] or db, meta.subkey or info[#info], meta, db
 	end
 
 	-- Generic option getter
@@ -166,9 +170,9 @@ function addon:OnEnable() -- Construct addon option tables here
 	-- Dependencies
 	-- TODO: Recursive dependencies
 	local function requires(info)
-		local db, k, meta = path(info)
-		return ((meta.requires and (not db[meta.requires]) or false)
-				or (meta.requires_inverse and db[meta.requires_inverse] or false))
+		local db, k, meta, full_db = path(info)
+		return ((meta.requires and (not full_db[meta.requires]) or false)
+				or (meta.requires_inverse and full_db[meta.requires_inverse] or false))
 	end
 
 	-------------------------------------------------------------------------------
@@ -179,7 +183,7 @@ function addon:OnEnable() -- Construct addon option tables here
 
 	function BetterOptions.Compile(set)
 		for i,v in ipairs(set) do
-			local t, key = BetterOptions.any(v)
+			local t, key = BetterOptions.any_type(v)
 			t.order = i
 			set[key] = t
 			set[i] = nil
@@ -188,15 +192,16 @@ function addon:OnEnable() -- Construct addon option tables here
 	end
 
 	local BetterOptionsTypes = {}
-	function BetterOptions.any(t)
+	BetterOptions.types = BetterOptionsTypes
+	function BetterOptions.any_type(t)
 		-- Simple
 		if type(t) == 'string' then
 			t = { t }
 		end
 
 		-- Shift required elements
-		local key = table_remove(t, 1)
-		t.type = table_remove(t, 1)
+		local key = table.remove(t, 1)
+		t.type = table.remove(t, 1)
 		-- Infer toggle by default
 		if not t.type then
 			t.type = "toggle"
@@ -218,6 +223,14 @@ function addon:OnEnable() -- Construct addon option tables here
 		return t, key
 	end
 
+	-- Many options are short enough that t[n] and t[n+1] can comfortably represent t.subtable and t.subkey
+	function BetterOptions.infer_db_path(t, offset)
+		offset = offset or 0
+		t.subtable = t.subtable or t[1+offset]
+		t.subkey = t.subkey or t[2+offset]
+	end
+
+
 	function BetterOptionsTypes.group(t)
 		t.args = t.args or t[1]
 		if t.inline == nil then
@@ -229,24 +242,27 @@ function addon:OnEnable() -- Construct addon option tables here
 		end
 	end
 
+	function BetterOptionsTypes.toggle(t)
+		BetterOptions.infer_db_path(t)
+	end
+
 	function BetterOptionsTypes.select(t)
 		t.items = t.items or t[1]
+		BetterOptions.infer_db_path(t, 1)
 	end
 
 	function BetterOptionsTypes.alpha(t)
 		t.min = 0.0
 		t.max = 1.0
 		t.step = 0.1
-		t.subtable = t.subtable or t[1]
-		t.subkey = t.subkey or t[2]
+		BetterOptions.infer_db_path(t)
 	end
 
 	function BetterOptionsTypes.scale(t)
 		t.min = 0.1
 		t.max = 2.0
 		t.step = 0.1
-		t.subtable = t.subtable or t[1]
-		t.subkey = t.subkey or t[2]
+		BetterOptions.infer_db_path(t)
 	end
 
 	function BetterOptionsTypes.color(t)
@@ -254,7 +270,7 @@ function addon:OnEnable() -- Construct addon option tables here
 	end
 
 	function BetterOptionsTypes.range(t)
-		t.min = t.max or t[1]
+		t.min = t.min or t[1]
 		t.max = t.max or t[2]
 		t.step = t.step or t[3]
 		t.softMin = t.softMin or t[4]
@@ -498,12 +514,12 @@ function addon:OnEnable() -- Construct addon option tables here
 			}},
 			{ "autolooting", "group", {
 				{ "autolooting_text", "description" },
-				{ "autoloot_currency", "select", when_group, subtable = "autoloots", subkey = "currency" },
-				{ "autoloot_quest", "select", when_group, subtable = "autoloots", subkey = "quest" },
-				{ "autoloot_tradegoods", "select", when_group, subtable = "autoloots", subkey = "tradegoods" },
-				{ "autoloot_all", "select", when_group, subtable = "autoloots", subkey = "all" },
+				{ "autoloot_currency", "select", when_group, "autoloots", "currency" },
+				{ "autoloot_quest", "select", when_group, "autoloots", "quest" },
+				{ "autoloot_tradegoods", "select", when_group, "autoloots", "tradegoods" },
+				{ "autoloot_all", "select", when_group, "autoloots", "all" },
 				{ "autolooting_list", "description" },
-				{ "autoloot_list", "select", when_group, subtable = "autoloots", subkey = "list" },
+				{ "autoloot_list", "select", when_group, "autoloots", "list" },
 				{ "autoloot_item_list", "input", width = "double" },
 				{ "autolooting_details", "description" },
 			}},
@@ -534,8 +550,8 @@ function addon:OnEnable() -- Construct addon option tables here
 	if XLoot:GetModule("Group", true) then
 		addon:RegisterOptions({ name = "Group", addon =  XLootGroup }, {
 			{ "anchors", "group", {
-				{ "roll_anchor_visible", "toggle", subtable = "roll_anchor", subkey = "visible", set = set_anchor },
-				{ "alert_anchor_visible", "toggle", subtable = "alert_anchor", subkey = "visible", set = set_anchor, width = "double" },
+				{ "roll_anchor_visible", "toggle", "roll_anchor", "visible", set = set_anchor },
+				{ "alert_anchor_visible", "toggle", "alert_anchor", "visible", set = set_anchor, width = "double" },
 			}},
 			{ "other_frames", "group", {
 				"hook_bonus",
@@ -544,7 +560,7 @@ function addon:OnEnable() -- Construct addon option tables here
 				{ "alert_skin", requires = "hook_alert", width = "double" },
 			}},
 			{ "rolls", "group", {
-				{ "roll_direction", "select", directions, name = L.growth_direction, subtable = "roll_anchor", subkey = "direction" },
+				{ "roll_direction", "select", directions, "roll_anchor", "direction" , name = L.growth_direction },
 				{ "text_outline", "toggle" },
 				{ "text_time", "toggle" },
 				{ "roll_scale", "scale", "roll_anchor", "scale" },
@@ -572,7 +588,7 @@ function addon:OnEnable() -- Construct addon option tables here
 					{ "alert_scale", "scale" },
 					{ "alert_offset", "range", 0.1, 10.0, 0.1 },
 					{ "alert_alpha", "alpha" },
-					{ "alert_direction", "select", directions, subtable = "alert_anchor", subkey = "direction", name = L.growth_direction },
+					{ "alert_direction", "select", directions, "alert_anchor", "direction", name = L.growth_direction },
 				},
 				defaults = { requires = "hook_alert" }
 			}

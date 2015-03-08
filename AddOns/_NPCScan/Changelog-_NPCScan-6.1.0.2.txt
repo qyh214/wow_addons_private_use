@@ -1,0 +1,12 @@
+tag 6.1.0.2
+7f5ca6a72849b8ea78e61dcf2e49bb49044a7e37
+SLOKnightfall <SLOKnightfall@gmail.com>
+2015-02-25 23:56:21 -0800
+
+Taging 6.1.0.2
+
+
+--------------------
+
+SLOKnightfall:
+	- Fix to for broken default alert sounds.

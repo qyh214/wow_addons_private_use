@@ -1,6 +1,6 @@
 
 local GUI = LibStub('NetEaseGUI-1.0')
-local View = GUI:NewEmbed('View', 4)
+local View = GUI:NewEmbed('View', 6)
 if not View then
     return
 end
@@ -83,6 +83,7 @@ function View:GetButton(i)
 
         button:Hide()
         button:SetOwner(self)
+        button:SetFrameLevel(parent:GetFrameLevel()+1)
 
         self.buttons[i] = button
         self:UpdateItemPosition(i)
@@ -118,7 +119,9 @@ function View:SetItemHighlightWithoutChecked(flag)
 end
 
 function View:SetGroupHandle(handle)
-    self.groupHandle = handle
+    if type(handle) == 'function' then
+        self.groupHandle = handle
+    end
 end
 
 function View:GetGroupHandle()

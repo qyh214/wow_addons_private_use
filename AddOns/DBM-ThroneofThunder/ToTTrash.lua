@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ToTTrash", "DBM-ThroneofThunder")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 40 $"):sub(12, -3))
 mod:SetModelID(47785)
 mod:SetZone()
 
@@ -73,7 +73,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 139895 then
 		self:Schedule(0.2, SpiritFireTarget, args.sourceGUID)
 		timerSpiritfireCD:Start()
-		if self.Options.RangeFrame and not DBM.RangeCheck:IsShown() then
+		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(3)
 		end
 	elseif spellId == 136751 and (args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus")) then
@@ -93,7 +93,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnStormEnergy:Show()
 		end
-		if self.Options.RangeFrame and not DBM.RangeCheck:IsShown() then
+		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(10)
 		end
 		self:Unschedule(warnStormEnergyTargets)
@@ -103,7 +103,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnStormCloud:Show()
 		end
-		if self.Options.RangeFrame and not DBM.RangeCheck:IsShown() then
+		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(10)
 		end
 		self:Unschedule(warnStormCloudTargets)

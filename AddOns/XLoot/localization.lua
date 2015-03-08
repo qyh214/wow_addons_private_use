@@ -54,11 +54,19 @@ locales.ruRU["skin_legacy"] = "XLoot: Legacy"
 locales.ruRU["skin_smooth"] = "XLoot: Smooth"
 locales.ruRU["skin_svelte"] = "XLoot: Svelte"
 
+locales.zhCN["anchor_hide"] = "隐藏" -- Needs review
+locales.zhCN["anchor_hide_desc"] = [=[在此位置锁定此模块
+这将隐藏锚点
+但可通过选项重新显示]=] -- Needs review
 locales.zhCN["skin_legacy"] = "XLoot: Legacy"
 locales.zhCN["skin_smooth"] = "XLoot: Smooth"
 locales.zhCN["skin_svelte"] = "XLoot: Svelte"
 
 
+locales.zhTW["anchor_hide"] = "隱藏" -- Needs review
+locales.zhTW["anchor_hide_desc"] = [=[鎖定此模組在此位置上
+這會隱藏此錨點,
+但它可以藉由選項再次顯示]=] -- Needs review
 locales.zhTW["skin_legacy"] = "XLoot: 傳統"
 locales.zhTW["skin_smooth"] = "XLoot: 滑順"
 locales.zhTW["skin_svelte"] = "XLoot: 苗條"

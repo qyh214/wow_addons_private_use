@@ -1,14 +1,5 @@
---[[
-    EditBox.lua
-    Create a EditBox with a scroll bar
-    ver     1.0.0
-    author  Jai
-    email   814683@qq.com
-    edit    2013-10-16 12:26:15
-    change    
-]]--
 
-local WIDGET, VERSION = 'EditBox', 7
+local WIDGET, VERSION = 'EditBox', 8
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local EditBox = GUI:NewClass(WIDGET, 'Frame', VERSION)
@@ -262,11 +253,11 @@ function EditBox:OnMouseWheel(delta)
 end
 
 function EditBox:GetText()
-    return self:GetEditBox():GetText()
+    return self.EditBox:GetText()
 end
 
 function EditBox:SetText(text)
-    self:GetEditBox():SetText(text or '')
+    self.EditBox:SetText(text or '')
 end
 
 function EditBox:SetReadOnly(readonly)
@@ -285,13 +276,12 @@ function EditBox:SetTop(isTop)
 end
 
 function EditBox:SetFocus(is)
-    local editBox = self:GetEditBox()
-    editBox[is and 'SetFocus' or 'ClearFocus'](editBox)
+    self.EditBox[is and 'SetFocus' or 'ClearFocus'](self.EditBox)
 end
 
 function EditBox:SetTabPressed(func)
     if type(func) == 'function' then
-        self:GetEditBox():SetScript('OnTabPressed', function(self)
+        self.EditBox:SetScript('OnTabPressed', function(self)
             func()
         end)
     end
@@ -306,11 +296,11 @@ function EditBox:ClearCopy()
 end
 
 function EditBox:SetMaxLetters(maxLetters)
-    self:GetEditBox():SetMaxLetters(maxLetters)
+    self.EditBox:SetMaxLetters(maxLetters)
 end
 
 function EditBox:SetMaxBytes(maxBytes)
-    self:GetEditBox():SetMaxBytes(maxBytes)
+    self.EditBox:SetMaxBytes(maxBytes)
 end
 
 function EditBox:SetSinglelLine()

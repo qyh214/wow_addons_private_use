@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Tonks", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12283 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13167 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterEvents(
@@ -11,8 +11,6 @@ mod:RegisterEvents(
 	"UNIT_EXITED_VEHICLE player"
 )
 mod.noStatistics = true
-
-local warnMarked				= mod:NewSpellAnnounce(102341, 4)
 
 local specWarnMarked			= mod:NewSpecialWarningRun("OptionVersion2", 102341, nil, nil, nil, 4)
 
@@ -25,7 +23,6 @@ mod:RemoveOption("SpeedKillTimer")
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 102341 and UnitGUID("pet") == args.destGUID and self:AntiSpam() then
-		warnMarked:Show()
 		specWarnMarked:Show()
 	end
 end

@@ -691,6 +691,8 @@ locales.zhCN.Core = {
 }
 locales.zhCN.Frame = {
 	autoloot_all = "自动拾取所有物品",
+	autoloot_currency = "自动拾取货币", -- Needs review
+	autoloot_currency_desc = "何时自动拾取货币", -- Needs review
 	autolooting = "自动拾取",
 	autolooting_details = "XLoot将会在拾取时选择最高的设置。",
 	autolooting_list = [=[要自动拾取的特定物品，请在下面列出来。
@@ -701,6 +703,8 @@ locales.zhCN.Frame = {
 	autoloot_list_desc = "什么时候自动拾取列表中的物品",
 	autoloot_quest = "自动拾取任务物品",
 	autoloot_quest_desc = "何时自动拾取任务物品",
+	autoloot_tradegoods = "自动拾取贸易物资", -- Needs review
+	autoloot_tradegoods_desc = "何时自动拾取任意类型的贸易物资", -- Needs review
 	colors = "颜色",
 	font = "字体",
 	fonts = "字体",
@@ -757,6 +761,19 @@ locales.zhCN.Group = {
 	expire_lost = "失败/忽略的掷骰",
 	expire_won = "胜利的掷骰",
 	extra_info = "细节",
+	hook_alert = "调整拾取警报", -- Needs review
+	hook_alert_desc = [=[('你赢得了n..' popups)
+将拾取警报吸附至一个可移动的锚点
+
+禁用此项可提升与其他拾取插件的兼容性. 
+
+(需要重载用户界面 /console reloadui,/rl)]=], -- Needs review
+	hook_bonus = "调整额外掷骰", -- Needs review
+	hook_bonus_desc = [=[将额外掷骰吸附至一个可移动的锚点
+
+禁用此项可提升与其他拾取插件的兼容性. 
+
+(需要重载用户界面 /console reloadui,/rl)]=], -- Needs review
 	other_frames = "其他框体",
 	panel_title = "群体拾取框体",
 	prefix_equippable = "可装备物品的标示",

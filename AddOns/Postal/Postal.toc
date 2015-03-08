@@ -1,5 +1,5 @@
-## Interface: 60000
-## Version: 3.5.1
+## Interface: 60100
+## Version: 3.5.4
 ## Title: Postal
 ## Author: Xinhuan
 ## X-Credits: Ammo, Rabbit, Grennon, Mikk
@@ -13,7 +13,7 @@
 ## Notes-ptBR: Postal: Apoio caixa reforçada
 ## OptionalDeps: Ace3, !BlizzBugsSuck, !ClassColors
 ## SavedVariables: Postal3DB
-## X-Curse-Packaged-Version: v3.5.3
+## X-Curse-Packaged-Version: v3.5.4
 ## X-Curse-Project-Name: Postal
 ## X-Curse-Project-ID: postal
 ## X-Curse-Repository-ID: wow/postal/mainline

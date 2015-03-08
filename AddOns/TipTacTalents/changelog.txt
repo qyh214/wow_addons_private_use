@@ -1,3 +1,7 @@
+TipTacTalents Changes | 2015 Mar 04
+-----------------------------------
+- TOC version updated to 60100 for the 6.1 patch.
+
 TipTacTalents Changes | 2014 Oct 15
 -----------------------------------
 - TOC version has been changed to 60000 for the Warlords of Draenor 6.0.2 patch.

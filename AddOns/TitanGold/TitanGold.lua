@@ -1,6 +1,6 @@
 --[[
 -- **************************************************************************
--- * Updates for the new TitanPanel: Titan Development Team        
+-- * Updates for the new TitanPanel: Titan Development Team
 -- * 2010 Jul : Started from Titan Gold Tracker to create this Titan version
 -- **************************************************************************
 
@@ -27,6 +27,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Titan", true)
 local TitanGold = LibStub("AceAddon-3.0"):NewAddon("TitanGold", "AceTimer-3.0")
 local GoldTimer = nil;
 local _G = getfenv(0);
+local realmName = GetRealmName();
 -- ******************************** Functions *******************************
 
 --[[
@@ -201,7 +202,7 @@ function TitanPanelGoldButton_OnLoad(self)
 	if (not GoldSave) then 
 		GoldSave={};
 	end
-	GOLD_INDEX = UnitName("player").."_"..GetRealmName().."::"..UnitFactionGroup("Player");
+	GOLD_INDEX = UnitName("player").."_"..realmName.."::"..UnitFactionGroup("Player");
 end
 
 -- **************************************************************************
@@ -252,7 +253,7 @@ function TitanPanelGoldButton_GetTooltipText()
 	-- the following code will parse the database and then display all members from the same faction/server
 	-- to the user
 
-	local server = GetRealmName().."::"..UnitFactionGroup("Player");
+	local server = realmName.."::"..UnitFactionGroup("Player");
 	GoldSave[GOLD_INDEX].gold = GetMoney("player")
 	local currentMoneyRichText = ""; -- initialize the variable to hold the array
 	local coin_str = ""
@@ -336,7 +337,7 @@ function TitanPanelGoldButton_GetTooltipText()
 	end
 
 	local final_tooltip = L["TITAN_GOLD_TOOLTIPTEXT"].." : "
-		..GetRealmName().." : "..select(2,UnitFactionGroup("Player"));
+		..realmName.." : "..select(2,UnitFactionGroup("Player"));
 	if (UnitFactionGroup("Player")=="Alliance") then
 		GOLD_COLOR = TITAN_GOLD_GREEN;
 	else
@@ -360,7 +361,7 @@ function TitanPanelGoldButton_FindGold()
 		return ""
 	end
 
-	local server = GetRealmName().."::"..UnitFactionGroup("Player");
+	local server = realmName.."::"..UnitFactionGroup("Player");
 	local ret_str = ""
 	local ttlgold = 0;
 
@@ -382,7 +383,7 @@ end
 -- DESC: Calculates total gold for display per user selections
 -- *******************************************************************************************
 function TitanPanelGoldButton_TotalGold()
-	local server = GetRealmName().."::"..UnitFactionGroup("Player");
+	local server = realmName.."::"..UnitFactionGroup("Player");
 	GoldSave[GOLD_INDEX].gold = GetMoney("player")
 	local ttlgold = 0;
 
@@ -403,7 +404,7 @@ end
 local function ShowMenuButtons(faction)
 	local info = {};
 	local name = GetUnitName("player");
-	local server = GetRealmName();
+	local server = realmName;
 	for index, money in pairs(GoldSave) do
 		local character, charserver = string.match(index, "(.*)_(.*)::"..faction);
 		if character then
@@ -427,7 +428,7 @@ end
 local function DeleteMenuButtons(faction)
 	local info = {};
 	local name = GetUnitName("player");
-	local server = GetRealmName();
+	local server = realmName;
 	for index, money in pairs(GoldSave) do
 		local character, charserver = string.match(index, "(.*)_(.*)::"..faction);
 		info.notCheckable = true

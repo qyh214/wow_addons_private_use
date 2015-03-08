@@ -1,0 +1,18 @@
+tag 6.1-1
+1c386ea885b559d825314bce03d8ce1850b7da12
+Xuerian <sky.shell@gmail.com>
+2015-03-02 21:50:45 -0500
+
+Fix loot alert anchor direction being unchangeable. Also more sane version notation.
+
+
+--------------------
+
+Xuerian:
+	- options: Improve documentation of path(info)
+	- options: Standardize db path inference in BetterOptions, support inference in toggles, and update options tables to use this
+	- options: Add reference to BetterOptiosnTypes
+	- options: Fix range.min inference
+	- options: Minor refactoring
+	- options: Fix any option with requires or requires_inverse that is also a subtable/subkey by returning the full module db in path(info) and using in requires(info)
+	- frame: Cleanup

@@ -1,8 +1,8 @@
 ﻿-- DBM_Core
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
--- Mini_Dragon(projecteurs@gmail.com)
--- Last update: Feb 8, 2015@12810
+-- Mini Dragon(projecteurs@gmail.com)
+-- Last update: Mar 5, 2015
 
 if GetLocale() ~= "zhCN" then return end
 
@@ -22,7 +22,7 @@ DBM_CORE_LOAD_SKIN_COMBAT			= "DBM无法在战斗中更换皮肤。请先在非�
 DBM_CORE_BAD_LOAD					= "DBM检测到由于你在战斗过程中载入模块，有些计时器可能会错误。请在离开战斗后马上重载界面。"
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s 模块无法被载入。 DBM核心版本过旧。请升级DBM。"
 
-DBM_CORE_BLIZZ_BUGS					= "6.0中的暴雪的插件bug:\n1. 如果你开启音效，你的插件可能会在战斗时丢失声音，因为插件的优先权被下降了而声音通道有限。DBM已经强制将声音通道数设置为64。在这种情况下还丢失报警声音，你可以考虑关闭游戏音效。"
+DBM_CORE_BLIZZ_BUGS					= "6.1 禁用了用.wav 文件播放，如果你的的插件有缺失或损毁的自定义音效，那么配置文件会被强制恢复到默认值。这个恢复到默认值只会发生一次，然后你可以再次重新设定自定义音效。记住，一旦你在某个配置文件下设定了自定义音效，你可以从模组状态窗口复制音效配置到另一个配置文件。"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "由于玩家数量不足，DBM 无法开启动态距离检测。"
 DBM_CORE_DYNAMIC_ADD_COUNT			= "由于玩家数量不足，DBM 无法开启倒计时。"
@@ -152,6 +152,8 @@ DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "你的DBM已经过期,它已被禁用,直
 DBM_CORE_UPDATEREMINDER_TESTVERSION		= "警告：你使用了不正确版本的DBM。请确保DBM版本和游戏版本一致。"
 DBM_CORE_VEM							= "你好像在使用VEM。DBM在这种情况下无法被载入。"
 DBM_CORE_3RDPROFILES					= "警告: DBM-Profiles已经无法和本版本DBM兼容。DBM核心已经自带配置文件管理系统，请移除DBM-Profiles避免冲突。"
+DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "警告: 如果你不完全重启游戏，DBM可能会工作不正常。此次更新包含了新的文件，或者toc文件的改变，这是重载界面无法加载的。不重启游戏可能导致作战模块功能错误。"
+
 
 DBM_CORE_MOVABLE_BAR				= "拖动我！"
 
@@ -222,7 +224,11 @@ DBM_CORE_ANNOUNCE_BREAK_OVER		= "休息已结束"
 DBM_CORE_TIMER_PULL					= "开怪倒计时"
 DBM_CORE_ANNOUNCE_PULL				= "%d秒后开怪 （由 %s 发送）"
 DBM_CORE_ANNOUNCE_PULL_NOW			= "开怪！"
-DBM_CORE_GEAR_WARNING				= "警告：请检查你的装备. 你当前的装备装等比背包装等低了 %d 点。"
+DBM_CORE_GEAR_WARNING				= "警告：请检查你的装备。你当前的装备装等比背包装等低了 %d 点"
+DBM_CORE_GEAR_WARNING_WEAPON		= "警告：请检查你的武器并确保已被正确装备"
+DBM_CORE_GEAR_FISHING_POLE			= "钓鱼竿"
+
+
 
 DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "成就：限时击杀"
 
@@ -277,7 +283,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveto			= "%s - 靠近 >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.run				= "%s - 快跑"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast				= "%s - 停止施法"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect			= ">%%s<中了%s - 快停手"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.count				= "%s! (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.count				= "%s! (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack				= "你叠加了%%d层%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch			= ">%s< - 转换目标"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount		= ">%s< - 转换目标 (%%d)"
@@ -351,7 +357,11 @@ DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT			= "倒计时：$spell:%s的冷却时间倒
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2		= "倒计时：$spell:%s消失时"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT			= "倒计时：$spell:%s的持续时间正计时"
 DBM_CORE_AUTO_YELL_OPTION_TEXT				= "当你受到$spell:%s影响时大喊"
-DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT			= UnitName("player") .. " 中了 %s!"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.yell		= UnitName("player") .. " 中了 %s!"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.count		= UnitName("player") .. " 中了 %s! (%%d)"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.fade		= "%s 于%%d秒后消失"
+DBM_CORE_AUTO_HUD_OPTION_TEXT				= "为$spell:%s显示HudMap"
+DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI			= "为多个机制显示HudMap"
 DBM_CORE_AUTO_RANGE_OPTION_TEXT				= "距离监视(%s码)：$spell:%s"--string used for range so we can use things like "5/2" as a value for that field
 DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT		= "距离监视(%s码)"--For when a range frame is just used for more than one thing
 DBM_CORE_AUTO_RRANGE_OPTION_TEXT			= "反转距离监视(%s码)：$spell:%s"--Reverse range frame (green when players in range, red when not)
