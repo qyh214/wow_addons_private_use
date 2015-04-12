@@ -1,7 +1,7 @@
 ﻿local mod = ExtraCD
 
 function mod:GetDataVersion()
-	return 72
+	return 73
 end
 
 function mod:GetSpellData() 
@@ -67,7 +67,7 @@ function mod:GetSpellData()
 			desc = "",
 			type = "talent",
 			class = "PRIEST",
-			tier = 4,
+			tier = 1,
 			column = 3,
 			cd = 90,
 		}, -- Angelic Bulwark
@@ -855,29 +855,73 @@ function mod:GetSpellData()
 			duration = 20,
 		}, -- H
 		]]
+		-- pvp 660(H/L WS1)
+		[182068] = {
+			desc = "",
+			type = "item",
+			item = {111223, 115750},
+			cd = 50,
+			duration = 20,
+		}, -- AGI
+		[182067] = {
+			desc = "",
+			type = "item",
+			item = {111228, 115755},
+			cd = 50,
+			duration = 20,
+		}, -- SP
+		[182069] = {
+			desc = "",
+			type = "item",
+			item = {111233, 115760},
+			cd = 50,
+			duration = 20,
+		}, -- STR
+		-- pvp 620(H/L WS1)
+		[182059] = {
+			desc = "",
+			type = "item",
+			item = {119927, 115150},
+			cd = 50,
+			duration = 20,
+		}, -- AGI
+		[182057] = {
+			desc = "",
+			type = "item",
+			item = {119932, 115155},
+			cd = 50,
+			duration = 20,
+		}, -- SP
+		[182062] = {
+			desc = "",
+			type = "item",
+			item = {119937, 115160},
+			cd = 50,
+			duration = 20,
+		}, -- STR
 		
-		-- pvp 660(H/L Tournoment set) 660(H/L set) 620(H/L set) 550(H/L set) 522(H/L set) 496(H/L set) 496(H/L) 483 476 458
+		--[[pvp 660(H/L Tournoment set) 660(H/L set) 620(H/L set) 550(H/L set) 522(H/L set) 496(H/L set) 496(H/L) 483 476 458
 		[126707] = {
 			desc = "",
 			type = "item",
-			item = {117730, 117931, 111223, 115750, 119927, 115150, 103347,102643,102840,103150,100586,100200,100026,99777,94356,91104,84935,91457,84349},
+			item = {117730, 117931, 103347,102643,102840,103150,100586,100200,100026,99777,94356,91104,84935,91457,84349},
 			cd = 50,
 			duration = 20,
 		}, -- AGI
 		[126705] = {
 			desc = "",
 			type = "item",
-			item = {117735, 117936, 111228, 115755, 119932, 115155, 103506,102766,102963,103309,100712,100491,100152,99938,94482,91401,84941,91754,84489},
+			item = {117735, 117936, 103506,102766,102963,103309,100712,100491,100152,99938,94482,91401,84941,91754,84489},
 			cd = 50,
 			duration = 20,
 		}, -- SP
 		[126700] = {
 			desc = "",
 			type = "item",
-			item = {117740, 117941, 111233, 115760, 119937, 115160, 103516,102699,102896,103319,100505,100645,100085,99948,94415,91415,84937,91768,84495},
+			item = {117740, 117941, 103516,102699,102896,103319,100505,100645,100085,99948,94415,91415,84937,91768,84495},
 			cd = 50,
 			duration = 20,
-		}, -- STR
+		}, -- STR ]]
 		
 		--[[ removed procs
 		-- Darkmoon Card 476
@@ -1028,6 +1072,15 @@ function mod:GetSpellData()
 			cd = 30,
 		}, -- Feral PVP 4P
 		]]
+		[166868] = {
+			type = "itemset",
+			class = "MAGE",
+			spec = 2,
+			items = {115550, 115551, 115552, 115553, 115554},
+			piece = 4,
+			ppm = 0.7,
+			duration = 4,
+		}, -- Fire Mage T17 4P
 
 	-- enchant
 		-- type = "enchant",

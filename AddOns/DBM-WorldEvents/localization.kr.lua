@@ -181,3 +181,21 @@ L = DBM:GetModLocalization("Annihilon")
 L:SetGeneralLocalization({
 	name = "파멸혼"
 })
+
+--------------
+--  Teluur  --
+--------------
+L = DBM:GetModLocalization("Teluur")
+
+L:SetGeneralLocalization({
+	name = "텔루어"
+})
+
+----------------------
+--  Lady Fleshsear  --
+----------------------
+L = DBM:GetModLocalization("LadyFleshsear")
+
+L:SetGeneralLocalization({
+	name = "여군주 살점소각"
+})

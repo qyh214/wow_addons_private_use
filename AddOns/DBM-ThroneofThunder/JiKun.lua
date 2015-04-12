@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(828, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 33 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 51 $"):sub(12, -3))
 mod:SetCreatureID(69712)
 mod:SetEncounterID(1573)
 mod:SetZone()
@@ -18,6 +18,7 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_EMOTE"
 )
 
+--TODO, log it so i can tweak timer spam some. don't start CDs unitl quills END event
 local warnCaws				= mod:NewSpellAnnounce(138923, 2)
 local warnQuills			= mod:NewCountAnnounce(134380, 4)
 local warnFlock				= mod:NewAnnounce("warnFlock", 3, 15746)--Some random egg icon
@@ -42,11 +43,11 @@ local timerQuillsCD			= mod:NewCDCountTimer(62.5, 134380)--variable because he h
 local timerFlockCD	 		= mod:NewTimer(30, "timerFlockCD", 15746)
 local timerFeedYoungCD	 	= mod:NewCDTimer(30, 137528)--30-40 seconds (always 30 unless delayed by other channeled spells)
 local timerTalonRakeCD		= mod:NewCDTimer(20, 134366, nil, "Tank|Healer")--20-30 second variation
-local timerTalonRake		= mod:NewTargetTimer(60, 134366, nil, "Tank|Healer")
+local timerTalonRake		= mod:NewTargetTimer("OptionVersion2", 60, 134366, nil, false)
 local timerDowndraft		= mod:NewBuffActiveTimer(10, 134370)
 local timerDowndraftCD		= mod:NewCDTimer(97, 134370)
 local timerFlight			= mod:NewBuffFadesTimer(10, 133755)
-local timerPrimalNutriment	= mod:NewBuffFadesTimer(30, 140741)
+local timerPrimalNutriment	= mod:NewBuffFadesTimer("OptionVersion2", 30, 140741, nil, false)
 local timerLessons			= mod:NewBuffFadesTimer(60, 140571, nil, false)
 
 mod:AddBoolOption("RangeFrame", "Ranged")

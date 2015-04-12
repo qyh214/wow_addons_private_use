@@ -130,7 +130,7 @@ nodes["FrostfireRidge"] = {
 [37265914]={ "34967", "Raided Loot", "Garrison Resources", "On top of the tower", "default", "FFRTreasures","824"},
 [09834533]={ "34641", "Sealed Jug", "Flavor Item - Lore", "", "default", "FFRTreasures","111407"},
 [27654280]={ "33500", "Slave's Stash", "Alcoholic Beverages", "", "default", "FFRTreasures","43696"},
-[23971291]={ "34647", "Snow-Covered Strongbox", "Garrison Resources", "", "default", "FFRTreasures","824"},
+[23971291]={ "34647", "Snow-Covered Strongbox", "Gold", "", "default", "FFRTreasures",""},
 [16124972]={ "33942", "Supply Dump", "Garrison Resources", "", "default", "FFRTreasures","824"},
 [64722573]={ "33946", "Survivalist's Cache", "Garrison Resources", "", "default", "FFRTreasures","824"},
 [34192348]={ "32803", "Thunderlord Cache", "i516 Agility/Strength Polearm", "", "default", "FFRTreasures","107658"},
@@ -280,7 +280,7 @@ nodes["Talador"] = {
 [65471137]={ "34233", "Jug of Aged Ironwine", "Alcoholic Beverages", "", "default", "TaladorTreasures","117568"},
 [75684140]={ "34261", "Keluu's Belongings", "Gold", "", "default", "TaladorTreasures",""},
 [53972769]={ "34290", "Ketya's Stash", "Pet", "", "default", "TaladorTreasures","116402"},
-[38191242]={ "34258", "Light of the Sea", "Garrison Resources", "", "default", "TaladorTreasures","824"},
+[38191242]={ "34258", "Light of the Sea", "Gold", "", "default", "TaladorTreasures",""},
 [68805620]={ "34101", "Lightbearer", "Trash Item", "", "default", "TaladorTreasures","109192"},
 [52562954]={ "34235", "Luminous Shell", "i557 Intellect Neck", "", "default", "TaladorTreasures","116132"},
 [78211471]={ "34263", "Pure Crystal Dust", "i554 Agility Ring", "", "default", "TaladorTreasures","117572"},
@@ -315,7 +315,7 @@ nodes["Talador"] = {
 [46005500]={ "34145", "Frenzied Golem", "i563 Agility/Strength 1H Sword or i563 Caster Dagger", "", "rare", "TaladorRares","113287"},
 [67408060]={ "34929", "Gennadian", "i558 Trinket Agility + Mastery Proc", "", "rare", "TaladorRares","116075"},
 [31806380]={ "34189", "Glimmerwing", "Shorttime Speedbuff with limited charges", "", "rare", "TaladorRares","116113"},
-[22207400]={ "36919", "Grrbrrgle", "no loot", "Restless Crate; quest doesn't flag as completed, probably bugged", "rare", "TaladorRares",""},
+[22207400]={ "36919", "Grrbrrgle", "i588 Agility/Intellect Leather Waist", "Click on the Restless Crate", "rare", "TaladorRares",""},
 [47603900]={ "37340", "Gug'tol", "i620 Caster Sword", "!!! Level 101 !!!", "hundredrare", "TaladorHundred","119402"},
 [48002500]={ "37312", "Haakun the All-Consuming", "i620 Strength 1H Sword", "!!! Level 100 !!!", "hundredrare", "TaladorHundred","119403"},
 [62004600]={ "34185", "Hammertooth", "i558 Agility/Intellect Mail Chest", "", "rare", "TaladorRares","116124"},
@@ -349,7 +349,7 @@ nodes["SpiresOfArak"] = {
 [36195446]={ "36462", "Admiral Taylor's Coffer", "Garrison Resources", "Requires An Old Key", "default", "SoATreasures","824"},
 [37705640]={ "36462", "An Old Key", "Key for a Chest in Admiral Taylors Garrison", "", "default", "SoATreasures","116020"},
 [49203721]={ "36445", "Assassin's Spear", "i580 Agility Polearm", "", "default", "SoATreasures","116835"},
-[55539086]={ "36366", "Campaign Contributions", "Gold", "", "default", "SoATreasures",""},
+[55539086]={ "36367", "Campaign Contributions", "Gold", "", "default", "SoATreasures",""},
 [68428898]={ "36453", "Coinbender's Payment", "Garrison Resources", "", "default", "SoATreasures","824"},
 [36585791]={ "36418", "Ephial's Dark Grimoire", "i579 Offhand", "", "default", "SoATreasures","116914"},
 [50502210]={ "36246", "Fractured Sunstone", "Trash Item", "", "default", "SoATreasures","116919"},
@@ -1188,17 +1188,16 @@ do
 		while state do
 			    -- QuestID[1], Name[2], Loot[3], Notes[4], Icon[5], Tag[6], ItemID[7]
 			    if (value[1] and self.db.profile[value[6]] and not DraenorTreasures:HasBeenLooted(value)) then
+					if ((value[7] ~= nil) and (value[7] ~= "")) then
+				 	GetIcon(value[7]) --this should precache the Item, so that the loot is correctly returned
+					end
 					if ((value[5] == "default") or (value[5] == "unknown")) then
 						if ((value[7] ~= nil) and (value[7] ~= "")) then
 							return state, nil, GetIcon(value[7]), DraenorTreasures.db.profile.icon_scale_treasures, DraenorTreasures.db.profile.icon_alpha
 						else
-							GetIcon(value[7]) --this should precache the Item, so that the loot is correctly returned
 							return state, nil, iconDefaults[value[5]], DraenorTreasures.db.profile.icon_scale_treasures, DraenorTreasures.db.profile.icon_alpha
 						end
 					end
-				if ((value[7] ~= nil) and (value[7] ~= "")) then
-				 	GetIcon(value[7]) --this should precache the Item, so that the loot is correctly returned
-				end
 				 return state, nil, iconDefaults[value[5]], DraenorTreasures.db.profile.icon_scale_rares, DraenorTreasures.db.profile.icon_alpha
 				end
 			state, value = next(t, state)

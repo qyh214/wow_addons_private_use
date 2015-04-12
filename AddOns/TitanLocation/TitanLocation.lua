@@ -232,7 +232,10 @@ function TitanPanelLocationButton_OnClick(self, button)
 				activeWindow:Insert(message);
 			end
 		else
-			WorldMap_ToggleSizeUp();
+			--WorldMap_ToggleSizeUp();
+			if (not GetCVarBool("miniWorldMap")) then
+				WorldMap_ToggleSizeUp();
+			end
 			ToggleFrame(WorldMapFrame);
 		end
 	end

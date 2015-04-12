@@ -1,0 +1,6 @@
+## Interface: 60100
+## Title: Master Plan A
+## Notes: It's... always... planning things.|n|n|cff36e5ff"The alphabet has 28 more letters. Stay cool."
+## SavedVariables: MasterPlanAG
+## Globe-Main: MasterPlan
+..\MasterPlan\PlanA\PlanA.xml

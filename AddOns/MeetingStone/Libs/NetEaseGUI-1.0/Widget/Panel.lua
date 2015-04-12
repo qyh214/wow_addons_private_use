@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'Panel', 6
+local WIDGET, VERSION = 'Panel', 9
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local Panel = GUI:NewClass(WIDGET, 'Frame.NetEasePanelTemplate', VERSION)
@@ -31,17 +31,30 @@ function Panel:OnHide()
     PlaySound('igCharacterInfoClose')
 end
 
-Panel.ShowPortrait = ButtonFrameTemplate_ShowPortrait
-Panel.HidePortrait = ButtonFrameTemplate_HidePortrait
+function Panel:HidePortrait()
+    self.PortraitFrame:Hide()
+    self.TopLeftCorner:Show()
+    self.TopBorderBar:SetPoint('TOPLEFT', self.TopLeftCorner, 'TOPRIGHT',  0, 0)
+    self.LeftBorderBar:SetPoint('TOPLEFT', self.TopLeftCorner, 'BOTTOMLEFT',  0, 0)
+end
+
+function Panel:ShowPortrait()
+    self.PortraitFrame:Show();
+    self.TopLeftCorner:Hide();
+    self.TopBorderBar:SetPoint('TOPLEFT', self.PortraitFrame, 'TOPRIGHT',  0, -10)
+    self.LeftBorderBar:SetPoint('TOPLEFT', self.PortraitFrame, 'BOTTOMLEFT',  8, 0)
+end
 
 function Panel:SetTopHeight(height)
     self.topHeight = height
     self.Inset:SetPoint('TOPLEFT', 4, -height)
+    self.Inset2:SetPoint('TOPLEFT', 4, -height)
 end
 
 function Panel:SetBottomHeight(height)
     self.bottomHeight = height
     self.Inset:SetPoint('BOTTOMRIGHT', -6, height)
+    self.Inset2:SetPoint('BOTTOMRIGHT', -6, height)
 end
 
 function Panel:GetTopHeight()
@@ -54,13 +67,13 @@ end
 
 function Panel:SetIcon(texture, left, right, top, bottom)
     if texture == 'player' or texture == 'target' or texture == 'focus' or type(texture) == 'table' then
-        SetPortraitTexture(self.portrait, type(texture) == 'table' and texture[1] or texture)
+        SetPortraitTexture(self.Portrait, type(texture) == 'table' and texture[1] or texture)
     elseif left then
-        self.portrait:SetTexture(texture)
-        self.portrait:SetTexCoord(left, right, top, bottom)
+        self.Portrait:SetTexture(texture)
+        self.Portrait:SetTexCoord(left, right, top, bottom)
     else
-        SetPortraitToTexture(self.portrait, texture)
-        self.portrait:SetTexCoord(0, 1, 0, 1)
+        SetPortraitToTexture(self.Portrait, texture)
+        self.Portrait:SetTexCoord(0, 1, 0, 1)
     end
 end
 
@@ -167,6 +180,8 @@ function Panel:GetTabFrame()
         TabFrame:SetCallback('OnSelectChanged', function(tabframe, index, data)
             for i, data in ipairs(self.PanelList) do
                 if i == index then
+                    self.Inset:SetShown(not data.noInset)
+                    self.Inset2:SetShown(data.noInset)
                     self:SetTopHeight(data.topHeight)
                     self:SetBottomHeight(data.bottomHeight)
                     data.panel:Show()
@@ -182,8 +197,11 @@ end
 
 function Panel:UpdateTab()
     if not self.noTab then
-        self:GetTabFrame():SetSelected(self.selectTab or 1)
-        self.selectTab = nil
+        if self.selectTab then
+            self:GetTabFrame():SetSelected(self.selectTab)
+            self.selectTab = nil
+        end
+        self:GetTabFrame():Refresh()
     else
         if self.PanelList[1] then
             self.PanelList[1].panel:Show()
@@ -207,7 +225,7 @@ local function OnShow(panel)
     end
 end
 
-function Panel:RegisterPanel(name, panel, padding, topHeight, bottomHeight)
+function Panel:RegisterPanel(name, panel, padding, topHeight, bottomHeight, noInset)
     if self.noTab then
         if #self.PanelList > 0 then
             error([[Can register only one panel into notab container.]], 2)
@@ -222,18 +240,23 @@ function Panel:RegisterPanel(name, panel, padding, topHeight, bottomHeight)
         panel = panel,
         topHeight = topHeight or self:GetTopHeight(),
         bottomHeight = bottomHeight or self:GetBottomHeight(),
+        noInset = noInset,
     })
 
     padding = padding or 10
 
     panel:Hide()
     panel:SetOwner(self)
-    panel:SetParent(self.Inset)
+    panel:SetParent(noInset and self.Inset2 or self.Inset)
     panel:ClearAllPoints()
     panel:SetPoint('TOPLEFT', padding, -padding)
     panel:SetPoint('BOTTOMRIGHT', -padding, padding)
     panel:SetScript('OnShow', OnShow)
-    panel:SetFrameLevel(10)
+    panel:SetFrameLevel(self.Inset:GetFrameLevel()+1)
+
+    if self.PortraitFrame then
+        self.PortraitFrame:SetFrameLevel(max(panel:GetFrameLevel()+1, self.PortraitFrame:GetFrameLevel()))
+    end
 end
 
 function Panel:UnregisterPanel(name)

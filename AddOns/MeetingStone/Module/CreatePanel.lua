@@ -527,7 +527,7 @@ function CreatePanel:CreateActivity()
         MinLevel = minLevel > 0 and minLevel or nil,
         MaxLevel = maxLevel > 0 and maxLevel or nil,
         PvPRating = pvpRating > 0 and pvpRating or nil,
-        Source = GetAddonSource(true),
+        Source = GetAddonSource(),
     })
 
     local handler = self:IsActivityCreated() and C_LFGList.UpdateListing or C_LFGList.CreateListing
@@ -742,7 +742,7 @@ function CreatePanel:UpdateSummaryMaxLetters()
         MinLevel = minLevel > 0 and minLevel or nil,
         MaxLevel = maxLevel > 0 and maxLevel or nil,
         PvPRating = pvpRating > 0 and pvpRating or nil,
-        Source = GetAddonSource(true),
+        Source = GetAddonSource(),
     })
 
     local len = select(2, CodeCommentData(activity))

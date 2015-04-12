@@ -1,0 +1,345 @@
+**r951**
+* Event fix for Compact UnitFrame Profiles.
+
+**r950**
+* Layout fixes.
+* Should no longer create excessive number of combat icon textures in the options frame.
+* Auto disable Compact UnitFrame Profiles when the raid frames are enabled.
+* Death Knight rune position fix for docked runes.
+* Death Knight runes should properly be gradient after login.
+* Fixed some leaks.
+* Some other smaller fixes.
+
+**r949**
+* Maximum frame scaling no longer should flip out some frame elements.
+* Addon communication fixes and updates.
+* The "/zperl" command should properly toggle the options frame.
+* Some other smaller fixes.
+
+**r948**
+* Properly loading the layout for profiles.
+* Reverted the new raid dropdowns, since it still taints up to the roof.
+* ScrollBar fixes.
+* Some other GUI fixes.
+
+**r947**
+* Removed the "Set Focus" options from the non-secure raid unit dropdown.
+* Reverted "ZPerl_FrameOptions.lua" to r945.
+* More secure taint-free dropdown changes.
+* The target assist frame should no longer change locations when changing focus, there will be an assist frame for focus only later.
+* Some smaller GUI fixes.
+
+**r946**
+* Absorb highlight fixes.
+* Absorb highlights should properly fall off when the absorb buff is removed by any source.
+* Buff helper tooltip fixes.
+* Frame options tweaks.
+* The druid bar should properly update in combat too.
+* The extra druid bar's values should properly hide when the player values ar disabled.
+* The extra druid bar's percentages should properly hide when the player percentages ar disabled.
+* Added a proper dropdown handler for the stat part of the raid frames.
+
+**r945**
+* zhTW update(for options added on r944), no actual change.
+
+**r944**
+* Added 2D Class Portrait option for every portrait frame.
+* Some other smaller fixes.
+
+**r943**
+* "One group raid" party fix.
+
+**r942**
+* Some smaller taint fix.
+* Party/raid fix with the "One group raid" setting.
+* Party and raid frames will only show/hide when out of combat with "One group raid" enabled.
+* Party frames are now should be as wide as the player/target frames by default.
+* Some other smaller fixes.
+
+**r941**
+* zhTW update, no actual code change.
+
+**r940**
+* Wake up the repo server.
+
+**r939**
+* Fixed Clique support.
+* Some raid pet fix.
+
+**r938**
+* Party frames can be securely shown/hidden while in combat too.
+* The addon usage information for tooltips should properly work again.
+* The class icon for the party frames from now can be disabled properly.
+* Added an option to toggle Heal Prediction bars for each frame.
+* Added an option to enable/disable party frames.
+* Enabling/disabling the party and raid frames should also show/hide their mover frame too.
+* Increased Combat Flashing Frame's flash time to 1.2 second.
+* The settings upgrade functions should properly work with global profiles too.
+* The 30 yard indicator icon for the target frame should be on a proper layer level.
+* Some raid pet fixes.
+* Removed all CTRA parser.
+* Fixed some leaks.
+* Localization updates.
+* A lot of other smaller fixes.
+
+**r937**
+* Updated for 6.1.0.
+* Reenabled Combat Flashing Frames and Highlight Debuff support for raid and raid pet frames.
+* Combat Flashing Frames should no longer cause FPS issues while in bigger raid groups.
+* Combat Flashing Frames should work as intended for raid frames too.
+* Additional Combat Flashing Frame optimizations.
+* Raid buff/debuff optimizations.
+* Added an option to enable/disable "Blizzard Cooldown Text" support for buffs/debuffs.
+* Loads of other GUI tweaks for player, target, targettarget, targettargettarget, focus, focustarget, party, partytargets and raid frames.
+
+**r936**
+* Heal prediction fixes.
+* Some other smaller fixes.
+
+**r935**
+* Wake up the repo server.
+
+**r934**
+* Combo point and bar fixes.
+
+**r933**
+* Some more possible FPS related issue fixes.
+* Target Highlighting will only work on party and raid frames, as they should.
+* Force Death Knight rune frame creation.
+* Raid buff/debuff fix.
+
+**r932**
+* More FPS fixes with the raid frames.
+* Keybinding options fixes.
+* Removed CTRA parser.
+* Removed some debug code.
+
+**r931**
+* Wake up the repo server.
+
+**r930**
+* Raid group fixes.
+
+**r929**
+* Fixed the FPS issues in combat.
+* Temporary disabled combat flashing for raid and raid pet frames.
+* Raid pet align fixes.
+* Some performance optimizations.
+
+**r928**
+* Party event fixes.
+
+**r927**
+* Say goodbye to Secure Header taints.
+* Event fixes for target and focus frames.
+* Event tweaks for party members.
+* Raid pet frame fixes.
+* Buffs and debuffs SetDrawEdge is disabled.
+* Loads of other smaller tweaks.
+
+**r926**
+* Wake up the repo server.
+
+**r925**
+* Fixed an abusive frame creation with the Voice module.
+
+**r924**
+* Wake up the repo server.
+
+**r923**
+* Added a toggle button for OmniCC support.
+* Combat lockdown button fixes, after combat fades.
+* Combat lockdown icon texture fix.
+* A lot of GUI fixes.
+
+**r922**
+* Focus can be set from raid frames taint free.
+* Raid pet frames target dropdown fix.
+* Raid pet frames can have target markers.
+* Some other smaller fixes.
+
+**r921**
+* Full raid update after leaving combat with tainted frames.
+* Reaction highlight enable/disable fix.
+* Added Monk's Resuscitate.
+
+**r920**
+* Version bump.
+
+**r919**
+* File fixes.
+
+**r918**
+* Say goodbye to CompactRaidFrame taints.
+* Say goodbye to DropDown taints.
+* Loads of other tweaks/fixes.
+* Client restart required.
+
+**r917**
+* Version bump.
+* Auto version increment is still not working for some reason.
+
+**r916**
+* Version bump.
+
+**r915**
+* Toc updates.
+* Version bump.
+
+**r914**
+* Testing the auto packaging.
+* Some GUI fixes.
+
+**r913**
+* Stop updating party buffs, when the party is not visible for any reason.
+* Focus highlighting on the target frame should be updated properly on target change too.
+* Color pickers text color can be set to disabled/gray.
+
+**r912**
+* Re-enabled OmniCC support.
+* Anticipation support for the combo bar frame.
+* Raid role icons should update properly after enable/disable.
+* Virtual raid frames should not appear in configuration mode, when the group is disabled.
+* Removed old combo-like debuffs functions.
+* Some other smaller fixes.
+
+**r911**
+* Player buffs/debuffs should showing/hiding when enabling/disabling them immediately.
+* Coloring options should apply to the options frame immediately.
+* GUI cleanup.
+
+**r910**
+* Added Totem frame for warriors.
+* Totem GUI fixes.
+* Custom Highlight GUI fixes.
+* Some other smaller fixes.
+
+**r909**
+* Priest totem fix.
+* Removed debug code.
+
+**r908**
+* Monk totem fix. (Thanks to: Sadia)
+
+**r907**
+* Disabling OmniCC support for buffs, to check performance issues without it.
+* Fix for users with disabled "CompactRaidFrame".
+
+**r906**
+* Auto fixing tainted/unclickable frames after combat end.
+* Increased "CompactRaidFrameManager" strata to "HIGH".
+* Load/unload addon modules should properly work again.
+* Removed some useless events.
+
+**r905**
+* Reverting the last fixes, need to look into this more.
+
+**r904**
+* Fixed combat raid taints.
+
+**r903**
+* Custom Highlight fixes. (Thanks to Muz01699.)
+
+**r902**
+* Fixed the degrading FPS issues with the raid frames.
+
+**r901**
+* Shield fix.
+
+**r900**
+* More fixes on the degrading FPS issues.
+* Fixed some taints.
+
+**r899**
+* Version bump.
+
+**r898**
+* Vehicle event fixes.
+* Boss icon fix.
+* Range detection fixes.
+
+**r897**
+* Fixed degrading FPS issues, had to temporary remove Status Highlighting/Shields functionality for this.
+* Some event handler updates.
+* Fixed the tooltip issues.
+* Some other smaller fixes.
+
+**r896**
+* Event fixes for target and focus frames.
+
+**r895**
+* Proper buff/debuff wrapping fixes for every frame.
+* Fixed the degrading fps issues is heavy combats.
+* Changing the extra width of target and focus frames should properly update buffs and debuffs.
+* Some other minor fixes.
+
+**r894**
+* Fixed the damn fishing pole error.
+* Fixed the redisplaying portrait issues.
+* Focus target changes should be much more faster.
+* Changing targets should properly update focus target too.
+* Setting/changing focus should no longer pointlessly update the target frame.
+* Pet target taint fix.
+
+**r893**
+* Status highlighting fixes. (Thanks to: dvyn.)
+* More buff/debuff wrapping issues fixed on: player, target, targettarget, targettargettarget, focus, focustarget. (Not yet on party frames.)
+* Target's target taint fix in combat.
+* CompactUnitFrames are no longer killed on load.
+* Added upvalues.
+* Absorb error fix.
+* Fixed a lot of leaks.
+
+**r892**
+* Buff/debuff wrapping fix.
+* Raid leak fixes.
+* Slider ondrag value fixes.
+* Loads of smaller GUI tweaks.
+* A lot of other smaller fixes.
+
+**r891**
+* Pet target fixes.
+* Some other various fixes.
+
+**r890**
+* Texture path fixes.
+
+**r889**
+* Slash command fix.
+* Status Highlight is enabled for all classes. (It's partially broken still.)
+* Custom Highlight fixes.
+
+**r888**
+* More check button fixes.
+* Aggro warning should work again while not grouped.
+
+**r887**
+* Fixed DK rune swipe.
+* DK rune swipe has round texture now.
+* DK rune cooldowns now ignores the default cooldown numbers.
+
+**r886**
+* TargetTarget module updates and bugfixes.
+
+**r885**
+* Fix for last commit.
+
+**r884**
+* Removed a buggy dev command.
+* Global fixes.
+
+**r883**
+* More global scope fixes.
+
+**r882**
+* Global scope fixes.
+
+**r881**
+* Importing updates.
+* De-xperlializing, round one.
+
+**r880**
+* Importing updates.
+
+**r879**
+* Initial fork.

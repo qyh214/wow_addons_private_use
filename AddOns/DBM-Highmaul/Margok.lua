@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1197, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13199 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13249 $"):sub(12, -3))
 mod:SetCreatureID(77428, 78623)
 mod:SetEncounterID(1705)
 mod:SetZone()
@@ -335,9 +335,6 @@ function mod:OnCombatStart(delay)
 		end
 	else
 		self:SetBossHPInfoToHighest(1)
-	end
-	if self.Options.HudMapOnMarkOfChaos or self.Options.HudMapOnBranded then
-		DBMHudMap:Enable()
 	end
 end
 

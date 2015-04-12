@@ -8,7 +8,7 @@ local mod = ExtraCD
 local tinsert, tremove = table.insert, table.remove
 local tonumber, tostring = tonumber, tostring
 local ECD_TEXT = "ExtraCD"
-local ECD_VERSION = "1.3.5"
+local ECD_VERSION = "1.3.6"
 local ECD_AUTHOR = "superk"
 local active = {}
 local equippedItems = {}
@@ -141,6 +141,7 @@ function mod:OnEnable()
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED","OnTalentChanged")
 	self:RegisterEvent("PLAYER_TALENT_UPDATE","OnTalentChanged")
+	self:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED","OnTalentChanged")
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED","OnInventoryChanged")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED","EnterCombat")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED","LeaveCombat")
@@ -175,6 +176,7 @@ function mod:CreateBar()
 	bar:EnableMouse(false)
 	bar:Show()
 	bar.active = active	
+	bar.btns = {}
 	return bar
 end
 
@@ -235,8 +237,8 @@ end
 function mod:CreateIcon(order, bar)
 	local isize = self.db.iconsize
 	local fsize = self.db.textsize
-	bar[order] = tremove(unusedButtons)
-	if not bar[order] then
+	bar.btns[order] = tremove(unusedButtons)
+	if not bar.btns[order] then
 		local btn = CreateFrame("Button", nil, bar)
 		btn:EnableMouse(true)
 		btn:RegisterForClicks("AnyUp", "AnyDown")
@@ -251,16 +253,16 @@ function mod:CreateIcon(order, bar)
 		btn:SetScript("OnMouseDown", function(self, button) if button == "LeftButton" and bar:IsMovable() then bar:StartMoving() end end)
 		btn:SetScript("OnMouseUp", function(self, button) if button == "LeftButton" and bar:IsMovable() then bar:StopMovingOrSizing() mod:SavePosition() end end)
 		btn.CreateOverlay = createOverlay
-		bar[order] = btn
+		bar.btns[order] = btn
 	end
-	local btn = bar[order]
+	local btn = bar.btns[order]
 	btn:SetWidth(isize)
 	btn:SetHeight(isize)
 	local row = math.ceil(order / self.db.rowmax) - 1
 	if (order - 1) % self.db.rowmax == 0 then 
 		btn:SetPoint("TOPLEFT", bar, 0, -(isize + self.db.iconinterval) * row)
 	else
-		btn:SetPoint("TOPLEFT", bar[order-1], isize + self.db.iconinterval, 0)
+		btn:SetPoint("TOPLEFT", bar.btns[order-1], isize + self.db.iconinterval, 0)
 	end
 	--btn:SetFrameStrata("LOW")
 	btn:Show()
@@ -377,15 +379,17 @@ function mod:ScanPlayerICDs()
 					end		
 				end
 			elseif v.type == "itemset" and self.db.itemset then
-				local p = 0
-				for _, item in ipairs(v.items) do
-					if items[item] then
-						p = p + 1
+				if (v.spec or spec) == spec then 
+					local p = 0
+					for _, item in ipairs(v.items) do
+						if items[item] then
+							p = p + 1
+						end
 					end
-				end
-				if p >= v.piece then
-					local _, _, icon = GetSpellInfo(tonumber(k))
-					tinsert (active, {cd = v.cd or 0, icon = icon, id = tonumber(k), type = "itemset", duration = v.duration or 0})
+					if p >= v.piece then
+						local _, _, icon = GetSpellInfo(tonumber(k))
+						tinsert (active, {cd = v.cd or 0, ppm = v.ppm, icon = icon, id = tonumber(k), type = "itemset", duration = v.duration or 0})
+					end
 				end
 			elseif v.type == "item" and self.db.item then
 				for _, item in ipairs(v.item) do
@@ -478,7 +482,7 @@ function mod:IsEquipedChanged()
 end
 
 function mod:OnTalentChanged()
-	if self.db.talent then
+	if self.db.talent or self.db.itemset then
 		self:ResetAllIcons()
 		self:ResetActiveOrders()
 	end
@@ -533,7 +537,7 @@ end
 
 function mod:ReleaseAllIcons()
 	for k, v in pairs (active) do
-		local btn = self.bar[k]
+		local btn = self.bar.btns[k]
 		if btn then
 			if btn.overlay then
 				if btn.overlay.animIn:IsPlaying() then
@@ -544,7 +548,7 @@ function mod:ReleaseAllIcons()
 			end		
 			cdcache[v.id] = {start = btn.start or -200, cd = btn.cooldown, isPre = btn.isPre}
 			btn:Hide()
-			self.bar[k] = nil
+			self.bar.btns[k] = nil
 			active[k] = nil
 			tinsert(unusedButtons, btn)
 		end
@@ -618,7 +622,7 @@ local function UpdateIcon(btn, elapsed)
 end
 
 function mod:EndTimer(order)
-	local btn = self.bar[order]
+	local btn = self.bar.btns[order]
 	btn.timeleft = -1
 	btn.text:SetText("")
 	if self.db.showcd then
@@ -631,7 +635,7 @@ function mod:EndTimer(order)
 end
 
 function mod:StartTimer(order, nowTime, isPre, past)
-	local btn = self.bar[order]
+	local btn = self.bar.btns[order]
 	if UnitAffectingCombat("player") == 1 then
 		btn.maxMultiplesFlag = 0
 	end
@@ -652,7 +656,7 @@ function mod:StartTimer(order, nowTime, isPre, past)
 end
 
 function mod:RefreshTimer(order, nowTime)
-	local btn = self.bar[order]
+	local btn = self.bar.btns[order]
 	if UnitAffectingCombat("player") == 1 then
 		btn.maxMultiplesFlag = 0
 	end
@@ -673,8 +677,8 @@ function mod:EnterCombat()
 	if self.db.combat then self.bar:Show() end
 	self:StartProcTest()
 	for k, v in pairs(active) do
-		if self.bar[k].maxMultiplesFlag == 1 then
-			self.bar[k].maxMultiplesFlag = 0
+		if self.bar.btns[k].maxMultiplesFlag == 1 then
+			self.bar.btns[k].maxMultiplesFlag = 0
 		end
 	end
 end
@@ -683,7 +687,7 @@ function mod:LeaveCombat()
 	if self.db.combat then self.bar:Hide() end
 	self:EndProcTest()
 	for k, v in pairs(active) do
-		self.bar[k].maxMultiplesFlag = 1
+		self.bar.btns[k].maxMultiplesFlag = 1
 	end
 end
 
@@ -728,7 +732,7 @@ function mod:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 			if event == "SPELL_AURA_APPLIED" then
 				atApplied = GetTime()
 				for k, v in pairs (active) do
-					local btn = self.bar[k]
+					local btn = self.bar.btns[k]
 					if btn then
 						atcache[v.id] = {start = btn.start or -200, cd = btn.cooldown, isPre = btn.isPre}
 					end
@@ -754,8 +758,8 @@ function mod:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 						--[[if v.id == 116 and event ~= "SPELL_CAST_START" then
 							return
 						else]]
-						if v.refreshable and self.bar[k].duration + self.bar[k].start > GetTime() then
-							if GetTime() - self.bar[k].start > 0.5 then 
+						if v.refreshable and self.bar.btns[k].duration + self.bar.btns[k].start > GetTime() then
+							if GetTime() - self.bar.btns[k].start > 0.5 then 
 								self:RefreshTimer(k, GetTime())	
 							end							
 						else

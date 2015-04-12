@@ -63,10 +63,10 @@ locales.zhCN["skin_smooth"] = "XLoot: Smooth"
 locales.zhCN["skin_svelte"] = "XLoot: Svelte"
 
 
-locales.zhTW["anchor_hide"] = "隱藏" -- Needs review
+locales.zhTW["anchor_hide"] = "隱藏"
 locales.zhTW["anchor_hide_desc"] = [=[鎖定此模組在此位置上
 這會隱藏此錨點,
-但它可以藉由選項再次顯示]=] -- Needs review
+但它可以藉由選項再次顯示]=]
 locales.zhTW["skin_legacy"] = "XLoot: 傳統"
 locales.zhTW["skin_smooth"] = "XLoot: 滑順"
 locales.zhTW["skin_svelte"] = "XLoot: 苗條"

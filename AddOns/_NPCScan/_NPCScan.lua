@@ -85,7 +85,8 @@ local OptionsDefault = {
 	},
 	CacheWarnings = false,
 	ShowAlertAsToast = false,
-	PersistentToast = false,}
+	PersistentToast = false,
+}
 
 local OptionsCharacterDefault = {
 	Version = DB_VERSION,
@@ -192,12 +193,12 @@ do
 
 
 
---For players: Player-[server ID]-[player UID] (Example: "Player-976-0002FD64")
---For creatures, pets, objects, and vehicles: [Unit type]-0-[server ID]-[instance ID]-[zone UID]-[ID]-[Spawn UID] (Example: "Creature-0-976-0-11-31146-000136DF91")
---Unit Type Names: "Creature", "Pet", "GameObject", and "Vehicle"
---For vignettes: Vignette-0-[server ID]-[instance ID]-[zone UID]-0-[spawn UID] (Example: "Vignette-0-970-1116-7-0-0017CAE465" for rare mob Sulfurious)
+	--For players: Player-[server ID]-[player UID] (Example: "Player-976-0002FD64")
+	--For creatures, pets, objects, and vehicles: [Unit type]-0-[server ID]-[instance ID]-[zone UID]-[ID]-[Spawn UID] (Example: "Creature-0-976-0-11-31146-000136DF91")
+	--Unit Type Names: "Creature", "Pet", "GameObject", and "Vehicle"
+	--For vignettes: Vignette-0-[server ID]-[instance ID]-[zone UID]-0-[spawn UID] (Example: "Vignette-0-970-1116-7-0-0017CAE465" for rare mob Sulfurious)
 
---Disableing cache checking due to it nolonger working. will revisit
+	--Disabling cache checking due to it nolonger working. will revisit
 	function private.NPCNameFromCache(npc_id)
 		tooltip:SetOwner(_G.WorldFrame, "ANCHOR_NONE")
 		--tooltip:SetHyperlink(("unit:Creature-0-0-0-0-%d:0000000000"):format(npc_id))
@@ -264,7 +265,8 @@ do
 
 		for achievement_id in pairs(private.OptionsCharacter.Achievements) do
 			for criteria_id, npc_id in pairs(private.ACHIEVEMENTS[achievement_id].Criteria) do
-				if private.OptionsCharacter.AchievementsAddFound or not select(3, GetAchievementCriteriaInfoByID(achievement_id, criteria_id)) then -- Not completed
+				-- Not completed
+				if private.OptionsCharacter.AchievementsAddFound or not select(3, GetAchievementCriteriaInfoByID(achievement_id, criteria_id)) then
 					self[npc_id] = private.NPCNameFromCache(npc_id)
 				end
 			end
@@ -312,7 +314,8 @@ local function ScanAdd(npc_id)
 		if ScanIDs[npc_id] then
 			ScanIDs[npc_id] = ScanIDs[npc_id] + 1
 		else
-			if not next(ScanIDs) then -- First
+			-- First
+			if not next(ScanIDs) then
 				private.Updater:Play()
 			end
 			ScanIDs[npc_id] = 1
@@ -333,7 +336,8 @@ local function ScanRemove(npc_id)
 		ScanIDs[npc_id] = nil
 		private.Overlays.Remove(npc_id)
 
-		if not next(ScanIDs) then -- Last
+		-- Last
+		if not next(ScanIDs) then
 			private.Updater:Stop()
 		end
 	end
@@ -591,7 +595,8 @@ function private.SetAchievementsAddFound(enable)
 	private.Config.Search.add_found_checkbox:SetChecked(enable)
 
 	for _, achievement in pairs(private.ACHIEVEMENTS) do
-		if AchievementDeactivate(achievement) then -- Was active
+		-- Was active
+		if AchievementDeactivate(achievement) then
 			AchievementActivate(achievement)
 		end
 	end
@@ -717,7 +722,7 @@ function private.Synchronize()
 
 	for achievement_id, achievement in pairs(private.ACHIEVEMENTS) do
 		-- If defaults, don't enable completed achievements unless explicitly allowed
-		if character_options.Achievements[achievement_id] then --and (not is_default_scan or character_options.AchievementsAddFound or not achievement.is_completed) then
+		if character_options.Achievements[achievement_id] then
 			private.AchievementAdd(achievement_id)
 		end
 	end
@@ -760,8 +765,9 @@ do
 			if _G.IsResting() then
 				PetList[npc_id] = npc_name -- Suppress error message until the player stops resting
 			else
+				-- GetMapNameByID returns nil for continent maps
 				local expected_zone_name = expected_zone_id and _G.GetMapNameByID(expected_zone_id) or nil
-				if not expected_zone_name then -- GetMapNameByID returns nil for continent maps
+				if not expected_zone_name then
 					_G.SetMapByID(expected_zone_id)
 
 					local map_continent = _G.GetCurrentMapContinent()
@@ -769,7 +775,7 @@ do
 						expected_zone_name = select(map_continent * 2, _G.GetMapContinents())
 					end
 				end
-				invalid_reason = L.FOUND_TAMABLE_WRONGZONE_FORMAT:format(npc_name, _G.GetRealZoneText(), expected_zone_name or L.FOUND_ZONE_UNKNOWN, expected_zone_id)
+				invalid_reason = L.FOUND_TAMABLE_WRONGZONE_FORMAT:format(npc_name, _G.GetRealZoneText(), expected_zone_name or _G.UNKNOWN, expected_zone_id)
 			end
 		end
 		_G.SetMapByID(current_zone_id)
@@ -799,14 +805,14 @@ do
 		if not recorded_time then
 			return true
 		end
-		local  time_remaining = _G.GetTime() - recorded_time
+		local time_remaining = _G.GetTime() - recorded_time
 		private.Debug(MOUSEOVER_TARGET_DELAY - time_remaining)
 		return time_remaining > MOUSEOVER_TARGET_DELAY
 	end
 
 	--Check to see if a alert is already shown for the mob
 	function private.DuplicateAlertCheck(npc_id)
-		if _NPCScanButton:IsShown() and tonumber(npc_id) ==  tonumber(_NPCScanButton.ID) then 
+		if _NPCScanButton:IsShown() and tonumber(npc_id) == tonumber(_NPCScanButton.ID) then
 			private.Debug("Alert already shown")
 			return false
 		end
@@ -815,13 +821,13 @@ do
 
 	-- Validates found mobs before showing alerts.
 	function private.OnFound(npc_id, npc_name)
---[[  No need to deactivate mobs as cache scanning is deactivated. Re-enable if cache scanning works again.
-		NPCDeactivate(npc_id)
+		--[[  No need to deactivate mobs as cache scanning is deactivated. Re-enable if cache scanning works again.
+				NPCDeactivate(npc_id)
 
-		for achievement_id in pairs(private.OptionsCharacter.Achievements) do
-			AchievementNPCDeactivate(private.ACHIEVEMENTS[achievement_id], npc_id)
-		end
---]]
+				for achievement_id in pairs(private.OptionsCharacter.Achievements) do
+					AchievementNPCDeactivate(private.ACHIEVEMENTS[achievement_id], npc_id)
+				end
+		--]]
 		local is_valid = true
 		local is_tamable = private.TAMABLE_ID_TO_NAME[npc_id]
 		local invalid_reason
@@ -965,9 +971,8 @@ function private.Frame:PLAYER_LOGIN(event_name)
 	self[event_name] = nil
 
 	if not private.Options.ChangeAlertShown then
-	Dialog:Spawn("NPCSCAN_WOD_CHANGES")
-	private.Options.ChangeAlertShown = true
-
+		Dialog:Spawn("NPCSCAN_WOD_CHANGES")
+		private.Options.ChangeAlertShown = true
 	end
 end
 
@@ -1165,12 +1170,12 @@ function private.Frame:UPDATE_MOUSEOVER_UNIT()
 
 	--[Unit type]-0-[server ID]-[instance ID]-[zone UID]-[ID]-[Spawn UID] (Example: "Creature-0-976-0-11-31146-000136DF91")
 	local mouseover_guid = _G.UnitGUID(unit_token)
-	local _,_,_,_,_,_,_,mouseover_id = string.find(mouseover_guid, "(%a+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)")
+	local _, _, _, _, _, _, _, mouseover_id = string.find(mouseover_guid, "(%a+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)")
 	local target_guid = _G.UnitGUID("target")
-	local target_id = nil
+	local target_id
 
 	if target_guid then
-		 _,_,_,_,_,_,_,target_id = string.find(target_guid, "(%a+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)")
+		_, _, _, _, _, _, _, target_id = string.find(target_guid, "(%a+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)")
 	end
 
 	if (private.NPC_ID_TO_NAME[tonumber(mouseover_id)] or private.Options.NPCs[tonumber(mouseover_id)]) and mouseover_id ~= target_id then
@@ -1215,7 +1220,7 @@ function private.GenerateTargetMacro(instanceid)
 
 	private.macrotext = "/cleartarget"
 
-	-- Generate target macro with tracked mobs in zone 
+	-- Generate target macro with tracked mobs in zone
 	for npc_id, map_zone_name in pairs(private.NPC_ID_TO_MAP_NAME) do
 		if zone_name == map_zone_name and not _G._NPCScanOptions.IgnoreList.NPCs[npc_id] then
 			private.macrotext = private.MACRO_FORMAT:format(private.macrotext, private.NPC_ID_TO_NAME[npc_id])
@@ -1241,7 +1246,7 @@ function private.GenerateTargetMacro(instanceid)
 		end
 	end
 
-	if instanceid then 
+	if instanceid then
 		private.macrotext = private.macrotext .. "\n/run _G._NPCScan.SetVignetteTarget()"
 	else
 		private.macrotext = private.macrotext .. "\n/run _G._NPCScan.CheckMacroTarget()"
@@ -1255,7 +1260,7 @@ end
 function private.CheckMacroTarget()
 	local target_guid = UnitGUID("target")
 	if target_guid then
-		local _,_,_,_,_,_,_,target_id = string.find(target_guid, "(%a+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)")
+		local _, _, _, _, _, _, _, target_id = string.find(target_guid, "(%a+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)")
 		target_id = tonumber(target_id)
 		if (private.NPC_ID_TO_NAME[target_id] or private.Options.NPCs[target_id]) and not UnitIsDeadOrGhost("target") then
 			private.Debug("Mob Found Via Macro")

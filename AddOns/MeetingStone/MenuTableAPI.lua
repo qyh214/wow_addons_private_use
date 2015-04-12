@@ -34,7 +34,8 @@ local function MakeCustomActivityMenuTable(activityId, baseFilter, isCreator)
     for _, id in ipairs(customData) do
         local data = {}
         data.text = ACTIVITY_CUSTOM_NAMES[id]
-        data.fullName = format('"\001^1^N%d^', id)
+        -- data.fullName = format('"\001^1^N%d^', id)
+        data.fullName = data.text
         data.categoryId = categoryId
         data.groupId = groupId
         data.activityId = activityId

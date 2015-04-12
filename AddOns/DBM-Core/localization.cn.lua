@@ -2,7 +2,7 @@
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: Mar 5, 2015
+-- Last update: Apr 6, 2015@13545
 
 if GetLocale() ~= "zhCN" then return end
 
@@ -22,7 +22,7 @@ DBM_CORE_LOAD_SKIN_COMBAT			= "DBM无法在战斗中更换皮肤。请先在非�
 DBM_CORE_BAD_LOAD					= "DBM检测到由于你在战斗过程中载入模块，有些计时器可能会错误。请在离开战斗后马上重载界面。"
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s 模块无法被载入。 DBM核心版本过旧。请升级DBM。"
 
-DBM_CORE_BLIZZ_BUGS					= "6.1 禁用了用.wav 文件播放，如果你的的插件有缺失或损毁的自定义音效，那么配置文件会被强制恢复到默认值。这个恢复到默认值只会发生一次，然后你可以再次重新设定自定义音效。记住，一旦你在某个配置文件下设定了自定义音效，你可以从模组状态窗口复制音效配置到另一个配置文件。"
+DBM_CORE_BLIZZ_BUGS					= "6.1 禁用了用.wav 文件播放，所有的语音配置都被重置了一次。这个恢复到默认值只会发生一次，然后你可以再次重新设定自定义音效。记住，一旦你在某个配置文件下设定了自定义音效，你可以从模组状态窗口复制音效配置到另一个配置文件。"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "由于玩家数量不足，DBM 无法开启动态距离检测。"
 DBM_CORE_DYNAMIC_ADD_COUNT			= "由于玩家数量不足，DBM 无法开启倒计时。"
@@ -138,7 +138,7 @@ DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s：未安装DBM"
 DBM_CORE_VERSIONCHECK_FOOTER		= "团队中有%d名成员正在使用DBM， %d名成员正在使用Bigwigs"
 DBM_CORE_VERSIONCHECK_OUTDATED		= "下列%d名玩家的DBM版本已经过期:%s"
 DBM_CORE_YOUR_VERSION_OUTDATED		= "你的DBM已经过期。请访问 http://dev.deadlybossmods.com 下载最新版本。"
-DBM_CORE_VOICE_PACK_OUTDATED		= "你当前使用的DBM语音包已经过期。特殊警报屏蔽（当心，毁灭）已被禁用。请下载最新语音包，或联系语音包作者更新。"
+DBM_CORE_VOICE_PACK_OUTDATED		= "你当前使用的DBM语音包已经过期。有些特殊警告的屏蔽（当心，毁灭）已被禁用。请下载最新语音包，或联系语音包作者更新。"
 DBM_CORE_VOICE_MISSING				= "DBM找不到你当前选择的语音包。语音包选项已经被设置成'None'。请确保你的语音包被正确安装和启用。"
 DBM_CORE_VOICE_COUNT_MISSING		= "在 %d 语音包中找不到倒计时语音。倒计时已恢复为默认值"
 
@@ -147,13 +147,14 @@ DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "你的DBM Alpha 版本已过期了%d个�
 DBM_CORE_UPDATEREMINDER_FOOTER			= "按下 " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "复制下载地址到剪切板。"
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "按下 " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "复制链接到剪切板。"
 DBM_CORE_UPDATEREMINDER_DISABLE			= "警告：你的DBM已经过期了%d个版本，它已被禁用，直到你更新。这是为了确保它不会导致你或其他团队成员出错。"
-DBM_CORE_UPDATEREMINDER_HOTFIX			= "你的DBM版本会在这首领战斗有不准确的计时器或警告。这问题会在下次正式版更新。你也可以更新至最新的alpha版本立即修正此问题。"
+DBM_CORE_UPDATEREMINDER_HOTFIX			= "你的DBM版本会在这首领战斗中有问题。最新版的DBM已经修复了这个问题。"
+DBM_CORE_UPDATEREMINDER_HOTFIX_ALPHA	= "你的DBM版本会在这首领战斗中有问题。最新版的DBM（或Alpha版本）已经修复了这个问题。"
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "你的DBM已经过期,它已被禁用,直到你更新.这是为了确保它不会导致你或其他团队成员出错.这次更新是一个非常重要的补丁,请确保你得到的是最新版."
 DBM_CORE_UPDATEREMINDER_TESTVERSION		= "警告：你使用了不正确版本的DBM。请确保DBM版本和游戏版本一致。"
 DBM_CORE_VEM							= "你好像在使用VEM。DBM在这种情况下无法被载入。"
 DBM_CORE_3RDPROFILES					= "警告: DBM-Profiles已经无法和本版本DBM兼容。DBM核心已经自带配置文件管理系统，请移除DBM-Profiles避免冲突。"
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "警告: 如果你不完全重启游戏，DBM可能会工作不正常。此次更新包含了新的文件，或者toc文件的改变，这是重载界面无法加载的。不重启游戏可能导致作战模块功能错误。"
-
+DBM_CORE_OUT_OF_DATE_NAG				= "你的DBM已经过期并且你决定不弹出升级提示窗口。这可能导致你或其他团队成员出错。"
 
 DBM_CORE_MOVABLE_BAR				= "拖动我！"
 
@@ -199,9 +200,10 @@ DBM_CORE_SLASHCMD_HELP				= {
 	"/dbm timer endloop: 停止所有的 ltimer 和 cltimer.",
 	"/dbm break <分钟>: 开始一个<分钟>时间的休息计时条。并向所有团队成员发送这个DBM休息计时条(需要队长或助理权限)。",
 	"/dbm pull <秒>: 开始一个<秒>时间的开怪计时条。 并向所有团队成员发送这个DBM开怪计时条(需要队长或助理权限)。",
-	"/dbm arrow: 显示DBM箭头，输入/dbm arrow查询 更多信息。",
+	"/dbm arrow: 显示DBM箭头，输入'/dbm arrow'查询更多信息。",
 	"/dbm lockout: 查询团队成员当前的副本锁定状态(副本CD)(也可使用：lockouts, ids)(需要队长或助理权限)。",
-	"/dbm lag: 检测全团网络延时。"
+	"/dbm lag: 检测全团网络延时",
+	"/dbm hud: 显示DBM hud，输入'/dbm hud'查询更多信息。"
 }
 
 DBM_ERROR_NO_PERMISSION				= "你无权进行该操作。(需要队长或助理权限?)"
@@ -212,6 +214,7 @@ DBM_CORE_UNKNOWN					= "未知"
 DBM_CORE_LEFT						= "左"
 DBM_CORE_RIGHT						= "右"
 DBM_CORE_BACK						= "后"
+DBM_CORE_MIDDLE						= "中"
 DBM_CORE_FRONT						= "前"
 DBM_CORE_INTERMISSION				= "中场时间"
 
@@ -234,7 +237,7 @@ DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "成就：限时击杀"
 
 -- Auto-generated Warning Localizations
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.target				= "%s -> >%%s<"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount		= "%s (%%d) -> >%%s<"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount		= "%s (%%s) -> >%%s<"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell				= "%s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.ends 				= "%s 结束"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.fades				= "%s 消失"
@@ -244,7 +247,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.soon				= "即将 %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prewarn			= "%2$s后 %1$s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase				= "第%s阶段"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prephase			= "第%s阶段 即将到来"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.count				= "%s (%%d)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.count				= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack				= "%s -> >%%s< (%%d)"
 
 local prewarnOption			= "预警：$spell:%s"
@@ -274,6 +277,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt			= "%s - 快打断"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount	= "%s - 快打断 (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you				= "你中了%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target			= ">%%s<中了%s"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.targetcount		= ">%%s<中了%s (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt				= ">%%s<中了%s - 快嘲讽"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close				= "你附近的>%%s<中了%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move				= "%s - 快躲开"
@@ -374,6 +378,19 @@ DBM_CORE_MOVE_WARNING_BAR				= "可拖动的团队警报"
 DBM_CORE_MOVE_WARNING_MESSAGE			= "感谢您使用Deadly Boss Mods"
 DBM_CORE_MOVE_SPECIAL_WARNING_BAR		= "可拖动的特别警报"
 DBM_CORE_MOVE_SPECIAL_WARNING_TEXT		= "特别警报"
+
+DBM_CORE_HUD_INVALID_TYPE				= "无效的HUD类型"
+DBM_CORE_HUD_INVALID_TARGET				= "没有给定HUD目标"
+DBM_CORE_HUD_INVALID_SELF				= "不能把自己设定成HUD目标"
+DBM_CORE_HUD_INVALID_ICON				= "当使用团队标记作为HUD目标定义时，不能定义一个没有团队标记的目标"
+DBM_CORE_HUD_USAGE	= {
+	"DBM-HudMap 可用命令：",
+	"/dbm hud <类型> <目标> <持续时间>  新建一个指向玩家的HUD指示器",
+	"变量-类型: red, blue, green, yellow, icon (请输入英语。如果类型是团队标记需要给目标标记团队标记)",
+	"变量-目标: target, focus, <玩家名字> (请输入英语。如果是玩家名字请区分大小写)",
+	"变量-持续时间: 秒数. 如果这个参数留空, 默认为20分钟",
+	"/dbm hud hide  清空并关闭HUD"
+}
 
 DBM_ARROW_MOVABLE				= "可移动箭头"
 DBM_ARROW_ERROR_USAGE	= {

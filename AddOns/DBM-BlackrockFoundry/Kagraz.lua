@@ -1,18 +1,19 @@
 local mod	= DBM:NewMod(1123, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13148 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13556 $"):sub(12, -3))
 mod:SetCreatureID(76814)--76794 Cinder Wolf, 80590 Aknor Steelbringer
 mod:SetEncounterID(1689)
 mod:SetZone()
-mod:SetHotfixNoticeRev(12869)
+mod:SetUsedIcons(6, 5, 4, 3)
+mod:SetHotfixNoticeRev(13445)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 156018 156040 155382 155064",
 	"SPELL_CAST_SUCCESS 155776 155074",
-	"SPELL_AURA_APPLIED 155277 155493 154952 163284 155074 154932 154950",
+	"SPELL_AURA_APPLIED 155277 154952 163284 155074 154932 154950",
 	"SPELL_AURA_APPLIED_DOSE 163284 155074",
 	"SPELL_AURA_REMOVED 155277 154932 154950 154952 155493",
 	"SPELL_PERIODIC_DAMAGE 155314",
@@ -35,7 +36,6 @@ local warnCharringBreath				= mod:NewStackAnnounce(155074, 2, nil, "Tank")
 
 local specWarnLavaSlash					= mod:NewSpecialWarningMove(155318, nil, nil, nil, nil, nil, 2)
 local specWarnMoltenTorrent				= mod:NewSpecialWarningYou(154932, nil, nil, nil, nil, nil, 2)
-local specWarnMoltenTorrentOther		= mod:NewSpecialWarningMoveTo(154932, false)--Strat dependant. most strats i saw ran these into meleee instead of running to the meteor target.
 local yellMoltenTorrent					= mod:NewFadesYell(154932)
 local specWarnCinderWolves				= mod:NewSpecialWarningSpell(155776, nil, nil, nil, nil, nil, 2)
 local specWarnOverheated				= mod:NewSpecialWarningSwitch(154950, "Tank")
@@ -43,8 +43,8 @@ local specWarnFixate					= mod:NewSpecialWarningYou(154952, nil, nil, nil, 3, ni
 local specWarnFixateEnded				= mod:NewSpecialWarningEnd(154952, false)
 local specWarnBlazinRadiance			= mod:NewSpecialWarningMoveAway(155277, nil, nil, nil, nil, nil, 2)
 local yellBlazinRadiance				= mod:NewYell(155277, nil, false)
-local specWarnFireStorm					= mod:NewSpecialWarningSpell(155493, nil, nil, nil, 2, nil, 2)
-local specWarnFireStormEnded			= mod:NewSpecialWarningEnd(155493)
+local specWarnFireStorm					= mod:NewSpecialWarningCount(155493, nil, nil, nil, 2, nil, 2)
+local specWarnFireStormEnded			= mod:NewSpecialWarningEnd(155493, nil, nil, nil, nil, nil, 2)
 local specWarnRisingFlames				= mod:NewSpecialWarningStack(163284, nil, 6)--stack guessed
 local specWarnRisingFlamesOther			= mod:NewSpecialWarningTaunt(163284, nil, nil, nil, nil, nil, 2)
 local specWarnCharringBreath			= mod:NewSpecialWarningStack(155074, nil, 2)--Assumed based on timing and casts, that you swap every breath.
@@ -54,16 +54,18 @@ local specWarnCharringBreathOther		= mod:NewSpecialWarningTaunt(155074)
 local timerLavaSlashCD					= mod:NewCDTimer(14.5, 155318, nil, false)
 local timerMoltenTorrentCD				= mod:NewCDTimer("OptionVersion2", 14, 154932, nil, "Ranged")
 local timerSummonEnchantedArmamentsCD	= mod:NewCDTimer("OptionVersion2", 45, 156724, nil, "Ranged")--45-47sec variation
-local timerSummonCinderWolvesCD			= mod:NewNextTimer(74, 155776)
+local timerSummonCinderWolvesCD			= mod:NewNextTimer(76, 155776)
 local timerOverheated					= mod:NewTargetTimer(14, 154950, nil, "Tank")
 local timerCharringBreathCD				= mod:NewNextTimer(5, 155074, nil, "Tank")
 local timerFixate						= mod:NewBuffFadesTimer(9.6, 154952)
 local timerBlazingRadianceCD			= mod:NewCDTimer(12, 155277, nil, false)--somewhat important but not important enough. there is just too much going on to be distracted by this timer
-local timerFireStormCD					= mod:NewNextTimer(63, 155493)
-local timerFireStorm					= mod:NewBuffActiveTimer(12, 155493)
+local timerFireStormCD					= mod:NewNextCountTimer(61, 155493)
+local timerFireStorm					= mod:NewBuffActiveTimer(14, 155493)
 
-local countdownCinderWolves				= mod:NewCountdown(74, 155776)
-local countdownFireStorm				= mod:NewCountdown(63, 155493)--Same voice as wolves cause never happen at same time, in fact they alternate.
+local berserkTimer						= mod:NewBerserkTimer(420)
+
+local countdownCinderWolves				= mod:NewCountdown(76, 155776)
+local countdownFireStorm				= mod:NewCountdown(61, 155493)--Same voice as wolves cause never happen at same time, in fact they alternate.
 local countdownEnchantedArmaments		= mod:NewCountdown("OptionVersion2", "Alt45", 156724, false)
 local countdownOverheated				= mod:NewCountdownFades("Alt20", 154950, "Tank")
 
@@ -76,10 +78,13 @@ local voiceFireStorm					= mod:NewVoice(155493) --aoe
 local voiceLavaSlash					= mod:NewVoice(155318) --runaway
 
 mod:AddRangeFrameOption("10/6")
-mod:AddArrowOption("TorrentArrow", 154932, false, true)--Depend strat arrow useful if ranged run to torrent person strat. arrow useless if run torrent into melee strat.
+mod:AddSetIconOption("SetIconOnAdds", 155776, true, true)
 mod:AddHudMapOption("HudMapOnFixate", 154952, false)
 
+mod.vb.firestorm = 0
 local fixateTagets = {}
+local activeBossGUIDS = {}
+local wolfIcon = 2--Compatible with bigwigs and DXE
 
 local function showFixate(self)
 	local text = {}
@@ -94,25 +99,26 @@ local function showFixate(self)
 end
 
 function mod:OnCombatStart(delay)
+	self.vb.firestorm = 0
+	wolfIcon = 2
 	table.wipe(fixateTagets)
+	table.wipe(activeBossGUIDS)
 	timerLavaSlashCD:Start(11-delay)
 	timerMoltenTorrentCD:Start(30-delay)
 	timerSummonCinderWolvesCD:Start(60-delay)
 	countdownCinderWolves:Start(60-delay)
+	if self:IsMythic() then
+		berserkTimer:Start(-delay)
+	end
 	if self.Options.RangeFrame and self:IsRanged() then
 		DBM.RangeCheck:Show(6)
-	end
-	if self.Options.HudMapOnFixate then
-		DBMHudMap:Enable()
 	end
 end
 
 function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
-	end
-	if self.Options.TorrentArrow then
-		DBM.Arrow:Hide()
 	end
 	if self.Options.HudMapOnFixate then
 		DBMHudMap:Disable()
@@ -137,9 +143,16 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 155776 then
 		specWarnCinderWolves:Show()
 		timerBlazingRadianceCD:Start(34)
-		timerFireStormCD:Start()
+		timerFireStormCD:Start(nil, self.vb.firestorm+1)
+		voiceFireStorm:Schedule(56.5, "aesoon")
 		countdownFireStorm:Start()
 		voiceCinderWolves:Play("killmob")
+		wolfIcon = 2
+		if self.Options.SetIconOnAdds and not self:IsLFR() then
+			self:RegisterShortTermEvents(
+				"INSTANCE_ENCOUNTER_ENGAGE_UNIT"--We register here to make sure we wipe vb.on pull
+			)
+		end
 	elseif spellId == 155074 then
 		timerCharringBreathCD:Start()
 	end
@@ -148,7 +161,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 155277 then
-		warnBlazingRadiance:CombinedShow(0.5, args.destName)--Assume it can affect more than one target
+		warnBlazingRadiance:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnBlazinRadiance:Show()
 			yellBlazinRadiance:Yell()
@@ -157,14 +170,6 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.RangeCheck:Show(10)
 			end
 		end
-	elseif spellId == 155493 then
-		specWarnFireStorm:Show()
-		timerBlazingRadianceCD:Cancel()
-		timerFireStorm:Start()
-		timerMoltenTorrentCD:Start(44)
-		timerSummonCinderWolvesCD:Start()
-		countdownCinderWolves:Start()
-		voiceFireStorm:Play("aesoon")--maybe gather?
 	elseif spellId == 154952 then
 		--Schedule, do to dogs changing mind bug
 		if not fixateTagets[args.destName] then
@@ -209,7 +214,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 	elseif spellId == 154932 then
-		warnMoltenTorrent:Show(args.destName)
 		timerMoltenTorrentCD:Start()
 		if args:IsPlayer() then
 			specWarnMoltenTorrent:Show()
@@ -220,10 +224,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellMoltenTorrent:Schedule(2, 4)
 			yellMoltenTorrent:Schedule(1, 5)
 		else
-			specWarnMoltenTorrentOther:Show(args.destName)
-			if self.Options.TorrentArrow then
-				DBM.Arrow:ShowRunTo(args.destName, 3, 5)
-			end
+			warnMoltenTorrent:Show(args.destName)
 		end
 	elseif spellId == 154950 then
 		specWarnOverheated:Show()
@@ -245,11 +246,8 @@ function mod:SPELL_AURA_REMOVED(args)
 			end
 		end
 	elseif spellId == 154932 then
-		if self.Options.TorrentArrow then
-			DBM.Arrow:Hide()
-		end
 		if args:IsPlayer() then
-			yellMoltenTorrent:Cancel()--In case player dieds
+			yellMoltenTorrent:Cancel()--In case player dies
 		end
 	elseif spellId == 154950 then
 		timerOverheated:Cancel(args.destName)
@@ -271,6 +269,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 155493 then
 		specWarnFireStormEnded:Show()
+		if self:IsMelee() then
+			voiceFireStorm:Play("safenow")
+		else
+			voiceFireStorm:Play("scatter")
+		end
 	end
 end
 
@@ -281,6 +284,25 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId
 	end
 end
 mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
+
+function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
+	local expectedTotal = self:IsMythic() and 6 or 4
+	for i = 1, 5 do
+		local unitID = "boss"..i
+		local unitGUID = UnitGUID(unitID)
+		if UnitExists(unitID) and not activeBossGUIDS[unitGUID] then
+			local cid = self:GetCIDFromGUID(unitGUID)
+			if cid == 76794 then--Cinder Wolf
+				wolfIcon = wolfIcon + 1
+				activeBossGUIDS[unitGUID] = true
+				SetRaidTarget(unitID, wolfIcon)
+				if wolfIcon == expectedTotal then--All wolves marked
+					self:UnregisterShortTermEvents()
+				end
+			end
+		end
+	end
+end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 163644 then
@@ -295,41 +317,14 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	elseif spellId == 154914 then
 		warnLavaSlash:Show()
 		timerLavaSlashCD:Start()
+	elseif spellId == 155564 then--Firestorm (2 seconds faster than spell cast start
+		self.vb.firestorm = self.vb.firestorm + 1
+		specWarnFireStorm:Show(self.vb.firestorm)
+		timerBlazingRadianceCD:Cancel()
+		timerFireStorm:Start()
+		timerMoltenTorrentCD:Start(42.5)
+		timerSummonCinderWolvesCD:Start()
+		countdownCinderWolves:Start()
+		voiceFireStorm:Play("gather")
 	end
 end
-
---[[
-Blizzard dog fixate bugs.
---Good Fixate
-"<223.35 14:20:47> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-0000DBAB80#Cinder Wolf#Player-84-061B9D28#Tenebear#154952#Fixate#DEBUFF#nil", -- [8683]
-"<223.35 14:20:47> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-00015BAB80#Cinder Wolf#Player-84-061BBF60#Fedor#154952#Fixate#DEBUFF#nil", -- [8684]
-"<223.35 14:20:47> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-0001DBAB80#Cinder Wolf#Player-84-061BBF60#Fedor#154952#Fixate#DEBUFF#nil",
-"<223.82 14:20:48> DBM_Announce#Fixate on >Tenebear<, >Fedor<", -- [20]
---Good Fixate
-"<233.36 14:20:57> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-0000DBAB80#Cinder Wolf#Player-84-07146D45#Skrabble#154952#Fixate#DEBUFF#nil", -- [9682]
-"<233.36 14:20:57> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-00015BAB80#Cinder Wolf#Player-84-06170BC0#Hauntd#154952#Fixate#DEBUFF#nil", -- [9683]
-"<233.36 14:20:57> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-0001DBAB80#Cinder Wolf#Player-84-061C0456#Gligz#154952#Fixate#DEBUFF#nil", -- [
-"<233.87 14:20:58> DBM_Announce#Fixate on >Skrabble<, >Hauntd<, >Gligz<", -- [23]
---Bad Fixate (dogs changed mind and switched targets 0.04 seconds after picking first targets
-"<243.35 14:21:07> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-0000DBAB80#Cinder Wolf#Player-84-061C0456#Gligz#154952#Fixate#DEBUFF#nil", -- [10795]
-"<243.35 14:21:07> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-00015BAB80#Cinder Wolf#Player-84-061B9D28#Tenebear#154952#Fixate#DEBUFF#nil", -- [10796]
-"<243.35 14:21:07> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-0001DBAB80#Cinder Wolf#Player-84-061C0E66#Will#154952#Fixate#DEBUFF#nil", -- [1
-"<243.39 14:21:07> [CLEU] SPELL_AURA_REMOVED#Creature-0-3017-1205-30555-76794-00015BAB80#Cinder Wolf#Player-84-061B9D28#Tenebear#154952#Fixate#DEBUFF#nil", -- [10810]
-"<243.39 14:21:07> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-00005BAB80#Overheated Cinder Wolf#Player-84-0714763A#Hartlin#154952#Fixate#DEBUFF#nil", -- [10811]
-"<243.39 14:21:07> [CLEU] SPELL_AURA_REMOVED#Creature-0-3017-1205-30555-76794-0000DBAB80#Cinder Wolf#Player-84-061C0456#Gligz#154952#Fixate#DEBUFF#nil", -- [10812]
-"<243.39 14:21:07> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-0000DBAB80#Cinder Wolf#Player-84-07146D45#Skrabble#154952#Fixate#DEBUFF#nil", -- [10813]
-"<243.39 14:21:07> [CLEU] SPELL_AURA_REMOVED#Creature-0-3017-1205-30555-76794-0001DBAB80#Cinder Wolf#Player-84-061C0E66#Will#154952#Fixate#DEBUFF#nil", -- [10814]
-"<243.39 14:21:07> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-0001DBAB80#Cinder Wolf#Player-84-0714763A#Hartlin#154952#Fixate#DEBUFF#nil", -- [10815]
-"<243.88 14:21:08> DBM_Announce#Fixate on >Gligz<, >Tenebear<, >Will<, >Hartlin<, >Skrabble<", -- [29]
---Bad Fixate (dogs changed mind and switched targets 0.02 seconds after picking first targets
-"<253.39 14:21:17> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-0000DBAB80#Cinder Wolf#Player-84-061C0456#Gligz#154952#Fixate#DEBUFF#nil", -- [11819]
-"<253.39 14:21:17> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-00005BAB80#Cinder Wolf#Player-84-061BDB6C#Zarastro#154952#Fixate#DEBUFF#nil", -- [11820]
-"<253.39 14:21:17> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-0001DBAB80#Cinder Wolf#Player-84-061C0E66#Will#154952#Fixate#DEBUFF#nil", -- [11821]
-"<253.41 14:21:17> [CLEU] SPELL_AURA_REMOVED#Creature-0-3017-1205-30555-76794-00005BAB80#Cinder Wolf#Player-84-061BDB6C#Zarastro#154952#Fixate#DEBUFF#nil", -- [11825]
-"<253.41 14:21:17> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-00005BAB80#Cinder Wolf#Player-84-061C0E66#Will#154952#Fixate#DEBUFF#nil", -- [11826]
-"<253.41 14:21:17> [CLEU] SPELL_AURA_REMOVED#Creature-0-3017-1205-30555-76794-0000DBAB80#Cinder Wolf#Player-84-061C0456#Gligz#154952#Fixate#DEBUFF#nil", -- [11827]
-"<253.41 14:21:17> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-0000DBAB80#Cinder Wolf#Player-84-07148F4E#Zevoa#154952#Fixate#DEBUFF#nil", -- [11828]
-"<253.41 14:21:17> [CLEU] SPELL_AURA_REMOVED#Creature-0-3017-1205-30555-76794-0001DBAB80#Cinder Wolf#Player-84-061C0E66#Will#154952#Fixate#DEBUFF#nil", -- [11829]
-"<253.41 14:21:17> [CLEU] SPELL_AURA_APPLIED#Creature-0-3017-1205-30555-76794-0001DBAB80#Cinder Wolf#Player-84-07148F4E#Zevoa#154952#Fixate#DEBUFF#nil", -- [11830]
-"<253.93 14:21:18> DBM_Announce#Fixate on >Gligz<, >Zarastro<, >Will<, >Zevoa<", -- [34]
---]]

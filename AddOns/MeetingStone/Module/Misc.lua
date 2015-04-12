@@ -48,6 +48,7 @@ function Misc:OnEnable()
     self:RawHook('GetIgnoreName', true)
     self:RawHook('GetSelectedIgnore', true)
     self:RawHook('SetSelectedIgnore', true)
+    self:RawHook('IsIgnored', true)
     self:Hook('ChatFrame_OnHyperlinkShow', true)
 end
 
@@ -63,6 +64,7 @@ function Misc:OnDisable()
     self:Unhook('GetIgnoreName')
     self:Unhook('GetSelectedIgnore')
     self:Unhook('SetSelectedIgnore')
+    self:Unhook('IsIgnored')
     self:Unhook('ChatFrame_OnHyperlinkShow')
     self.selectedIgnore = nil
 end
@@ -80,10 +82,9 @@ function Misc:DelIgnore(name)
         name = self:GetIgnoreName(name)
     end
 
-    local had, blz = self:IsIgnored(name)
-    if blz then
+    if self.hooks.IsIgnored(name) then
         self.hooks.DelIgnore(name)
-    elseif had then
+    elseif Profile:IsIgnored(name) then
         Profile:DelIgnore(name)
         IgnoreList_Update()
     end
@@ -91,15 +92,9 @@ end
 
 function Misc:IsIgnored(name)
     if not name then
-        return
+        return false
     end
-
-    for i = 1, self.hooks.GetNumIgnores() do
-        if name == self.hooks.GetIgnoreName(i) then
-            return true, true
-        end
-    end
-    return Profile:IsIgnored(name)
+    return self.hooks.IsIgnored(name) or Profile:IsIgnored(name)
 end
 
 function Misc:AddIgnore(name, msg)

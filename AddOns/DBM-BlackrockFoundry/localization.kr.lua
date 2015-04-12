@@ -23,20 +23,25 @@ L= DBM:GetModLocalization(1202)
 L= DBM:GetModLocalization(1154)
 
 L:SetWarningLocalization({
-	warnRegulators		= "열기 조절 장치 남음: %d",
-	warnBlastFrequency	= "폭파 시전 빈도 증가됨: 약 %d초 마다 시전"
+	warnRegulators			= "열기 조절 장치 남음: %d",
+	warnBlastFrequency		= "폭파 시전 빈도 증가됨: 약 %d초 마다 시전",
+	specWarnTwoVolatileFire	= "변덕스러운 불 중복됨!"
 })
 
 L:SetOptionLocalization({
-	warnRegulators		= "열기 조절 장치 남은숫자 알림 보기",
-	warnBlastFrequency	= "$spell:155209 시전 빈도 증가시 알림 보기",
-	VFYellType			= "변덕스러운 불 대화 알림 방식 선택(신화 난이도)",
-	Countdown			= "남은시간 초세기",
-	Apply				= "받을때만 알리기"
+	warnRegulators			= "열기 조절 장치 남은숫자 알림 보기",
+	warnBlastFrequency		= "$spell:155209 시전 빈도 증가시 알림 보기",
+	specWarnTwoVolatileFire	= "$spell:176121 중복시 특수 경고 보기",
+	InfoFrame				= "$spell:155192 와 $spell:155196 정보를 정보 창으로 보기",
+	VFYellType2				= "변덕스러운 불 대화 알림 방식 선택(신화 난이도)",
+	Countdown				= "남은시간 초세기",
+	Apply					= "받을때만 알리기"
 })
 
 L:SetMiscLocalization({
-	heatRegulator		= "열기 조절 장치"
+	heatRegulator		= "열기 조절 장치",
+	Regulator			= "조절 장치 %d",
+	bombNeeded			= "폭탄 %d개 남음"
 })
 
 ------------------
@@ -62,6 +67,10 @@ L= DBM:GetModLocalization(1123)
 --------------------
 L= DBM:GetModLocalization(1162)
 
+L:SetMiscLocalization({
+	ExRTNotice		= "ExRT 애드온으로부터 위치 받음 (%s|1이;가; 보냄). 당신의 위치: %s"
+})
+
 --------------------------
 -- Beastlord Darmac --
 --------------------------
@@ -76,14 +85,19 @@ L:SetWarningLocalization({
 	specWarnSplitSoon	= "10초 안에 공격대 상하로 분리하세요!",
 	InfoFrameSpeed		= "정보 창에서 언제 다음 기차를 보여줄 것인지 설정",
 	Immediately			= "등장할 기차 문이 열릴 때(5초전)",
-	Delayed				= "기차가 실제로 등장한 후" 
+	Delayed				= "기차가 실제로 등장한 후",
+	HudMapUseIcons		= "범위정보에 녹색원 대신 전술 목표 아이콘 사용하기"
 })
 
 L:SetOptionLocalization({
 	specWarnSplitSoon	= "공격대 분리 10초 전에 특수 경고 보기",
 	InfoFrameSpeed		= "다음 열차 정보 창 업데이트 시기 설정",
 	Immediately			= "다음 열차 등장 문이 열릴 때(5초 전)",
-	Delayed				= "열차가 실제로 등장하기 직전"
+	Delayed				= "열차가 실제로 등장하기 직전",
+	TrainVoiceAnnounce	= "다음 열차 음성 안내 방식 선택(신화 난이도)",
+	LanesOnly			= "선로 정보만 안내",
+	MovementsOnly		= "이동 방향만 안내(신화 난이도)",
+	LanesandMovements	= "선로 정보와 이동 방향 동시 안내(신화 난이도)"
 })
 
 L:SetMiscLocalization({
@@ -106,7 +120,9 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	specWarnReturnBase	= "무쌍호에서 안전하게 본진으로 복귀할 수 있을때 특수 경고 보기"
+	specWarnReturnBase	= "무쌍호에서 안전하게 본진으로 복귀할 수 있을때 특수 경고 보기",
+	filterBladeDash3	= "$spell:170395 효과가 있을 경우 $spell:155794 특수 경고를 보이지 않기",
+	filterBloodRitual3	= "$spell:170405 효과가 있을 경우 $spell:158078 특수 경고를 보이지 않기"
 })
 
 L:SetMiscLocalization({
@@ -117,6 +133,20 @@ L:SetMiscLocalization({
 -- Blackhand --
 --------------------------
 L= DBM:GetModLocalization(959)
+
+L:SetWarningLocalization({
+	specWarnMFDPosition		= "표적 피할 위치: %s",
+	specWarnSlagPosition	= "폭탄 피할 위치: %s"
+})
+
+L:SetOptionLocalization({
+	PositionsAllPhases	= "모든 단계에서 $spell:156096 대화 알림시 위치 정보 표기(기본은 3단계에만 사용합니다. 대체적으로 테스트 목적이 강하므로, 활성화는 추천 드리지 않습니다.)"
+})
+
+L:SetMiscLocalization({
+	customMFDSay	= "%2$s에게 죽음의 표적! (%1$s)",
+	customSlagSay	= "%2$s에게 잿가루 폭탄 부착! (%1$s)"
+})
 
 -------------
 --  Trash  --

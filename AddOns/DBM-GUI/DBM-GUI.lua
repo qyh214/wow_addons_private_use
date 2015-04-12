@@ -44,7 +44,7 @@
 
 
 
-local revision =("$Revision: 13222 $"):sub(12, -3)
+local revision =("$Revision: 13552 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -59,8 +59,9 @@ local soundsRegistered = false
 --------------------------------------------------------
 --  Cache frequently used global variables in locals  --
 --------------------------------------------------------
-local GetSpellInfo = GetSpellInfo
-local EJ_GetSectionInfo = EJ_GetSectionInfo
+local GetSpellInfo, EJ_GetSectionInfo = GetSpellInfo, EJ_GetSectionInfo
+local tinsert, tremove, tsort, twipe = table.insert, table.remove, table.sort, table.wipe
+local mfloor, mmax = math.floor, math.max
 
 function DBM_GUI:ShowHide(forceshow)
 	if forceshow == true then
@@ -121,7 +122,7 @@ do
 
 		self:SetLastObj(panel)
 		self.panels = self.panels or {}
-		table.insert(self.panels, {frame = panel, parent = self, framename = FrameTitle..self:GetCurrentID()})
+		tinsert(self.panels, {frame = panel, parent = self, framename = FrameTitle..self:GetCurrentID()})
 		local obj = self.panels[#self.panels]
 		panel.panelid = #self.panels
 		return setmetatable(obj, prottypemetatable)
@@ -130,11 +131,11 @@ do
 	-- This function don't realy destroy a window, it just hides it
 	function PanelPrototype:Destroy()
 		if self.frame.FrameTyp == 2 then
-			table.remove(DBM_GUI_Options.Buttons, self.frame.categoryid)
+			tremove(DBM_GUI_Options.Buttons, self.frame.categoryid)
 		else
-			table.remove(DBM_GUI_Bosses.Buttons, self.frame.categoryid)
+			tremove(DBM_GUI_Bosses.Buttons, self.frame.categoryid)
 		end
-		table.remove(self.parent.panels, self.frame.panelid)
+		tremove(self.parent.panels, self.frame.panelid)
 		self.frame:Hide()
 	end
 
@@ -173,7 +174,7 @@ do
 
 		self:SetLastObj(area)
 		self.areas = self.areas or {}
-		table.insert(self.areas, {frame = area, parent = self, framename = FrameTitle..self:GetCurrentID()})
+		tinsert(self.areas, {frame = area, parent = self, framename = FrameTitle..self:GetCurrentID()})
 		return setmetatable(self.areas[#self.areas], prottypemetatable)
 	end
 
@@ -195,7 +196,7 @@ end
 do
 	local FrameNames = {}
 	function DBM_GUI:AddFrame(FrameName)
-		table.insert(FrameNames, FrameName)
+		tinsert(FrameNames, FrameName)
 	end
 	function DBM_GUI:IsPresent(FrameName)
 		for k,v in ipairs(FrameNames) do
@@ -267,9 +268,9 @@ local function MixinSharedMedia3(mediatype, mediatable)
 	-- sort LibSharedMedia keys alphabetically (case-insensitive)
 	local keytable = {}
 	for k in next, LibStub("LibSharedMedia-3.0", true):HashTable(mediatype) do
-		table.insert(keytable, k)
+		tinsert(keytable, k)
 	end
-	table.sort(keytable, function (a, b) return a:lower() < b:lower() end);
+	tsort(keytable, function (a, b) return a:lower() < b:lower() end);
 	-- DBM values (mediatable) first, LibSharedMedia values (sorted alphabetically) afterwards
 	local result = mediatable
 	for i=1,#keytable do
@@ -288,11 +289,11 @@ local function MixinSharedMedia3(mediatype, mediatable)
 			end
 			if insertme then
 				if mediatype == "sound" then
-					table.insert(result, {text=k, value=v, sound=true})
+					tinsert(result, {text=k, value=v, sound=true})
 				elseif mediatype == "statusbar" then
-					table.insert(result, {text=k, value=v, texture=v})
+					tinsert(result, {text=k, value=v, texture=v})
 				elseif mediatype == "font" then
-					table.insert(result, {text=k, value=v, font=v})
+					tinsert(result, {text=k, value=v, font=v})
 				end
 			end
 		end
@@ -487,7 +488,7 @@ do
 			html:ClearAllPoints()
 			html:SetPoint("TOPLEFT", textbeside, "TOPRIGHT", textpad, -4)
 			html:SetHeight(ht)
-			button.myheight = math.max(ht+12,button.myheight)
+			button.myheight = mmax(ht+12,button.myheight)
 		end
 
 		if dbmvar and DBM.Options[dbmvar] ~= nil then
@@ -836,7 +837,7 @@ function ListFrameButtonsPrototype:CreateCategory(frame, parent)
 
 	self:SetParentHasChilds(parent)
 
-	table.insert(self.Buttons, {
+	tinsert(self.Buttons, {
 		frame = frame,
 		parent = parent
 	})
@@ -879,10 +880,10 @@ end
 do
 	local mytable = {}
 	function ListFrameButtonsPrototype:GetVisibleTabs()
-		table.wipe(mytable)
+		twipe(mytable)
 		for k,v in ipairs(self.Buttons) do
 			if v.parent == nil then
-				table.insert(mytable, v)
+				tinsert(mytable, v)
 
 				if v.frame.showsub then
 					self:GetVisibleSubTabs(v.frame.name, mytable)
@@ -896,7 +897,7 @@ end
 function ListFrameButtonsPrototype:GetVisibleSubTabs(parent, t)
 	for i, v in ipairs(self.Buttons) do
 		if v.parent == parent then
-			table.insert(t, v)
+			tinsert(t, v)
 			if v.frame.showsub then
 				self:GetVisibleSubTabs(v.frame.name, t)
 			end
@@ -936,18 +937,10 @@ function UpdateAnimationFrame(mod)
 	DBM_BossPreview:ClearModel()
 	DBM_BossPreview:SetDisplayInfo(displayId or mod.modelId or 0)
 	DBM_BossPreview:SetSequence(4)
-	if DBM.Options.ModelSoundValue == "Short" then
-		if DBM.Options.UseMasterVolume then
-			PlaySoundFile(mod.modelSoundShort or 0, "Master")
-		else
-			PlaySoundFile(mod.modelSoundShort or 0)
-		end
-	elseif DBM.Options.ModelSoundValue == "Long" then
-		if DBM.Options.UseMasterVolume then
-			PlaySoundFile(mod.modelSoundLong or 0, "Master")
-		else
-			PlaySoundFile(mod.modelSoundLong or 0)
-		end
+	if mod.modelSoundShort and DBM.Options.ModelSoundValue == "Short" then
+		DBM:PlaySoundFile(mod.modelSoundShort)
+	elseif mod.modelSoundLong and DBM.Options.ModelSoundValue == "Long" then
+		DBM:PlaySoundFile(mod.modelSoundLong)
 	end
 end
 
@@ -1159,7 +1152,7 @@ do
 		end
 
 		for i, element in ipairs(TABLE) do
-			table.insert(displayedElements, element.frame)
+			tinsert(displayedElements, element.frame)
 		end
 
 
@@ -1275,13 +1268,13 @@ do
 		local button = CreateFrame("BUTTON", name.."Button1", frame, "DBM_GUI_FrameButtonTemplate")
 		button:SetPoint("TOPLEFT", frame, 0, -8)
 		frame.buttonHeight = button:GetHeight()
-		table.insert(buttons, button)
+		tinsert(buttons, button)
 
 		local maxButtons = (frame:GetHeight() - 8) / frame.buttonHeight
 		for i = 2, maxButtons do
 			button = CreateFrame("BUTTON", name.."Button"..i, frame, "DBM_GUI_FrameButtonTemplate")
 			button:SetPoint("TOPLEFT", buttons[#buttons], "BOTTOMLEFT")
-			table.insert(buttons, button)
+			tinsert(buttons, button)
 		end
 		frame.buttons = buttons
 	end
@@ -1415,7 +1408,7 @@ local function CreateOptionsMenu()
 		----------------------------------------------
 		--             General Options              --
 		----------------------------------------------
-		local generaloptions = DBM_GUI_Frame:CreateArea(L.General, nil, 185, true)
+		local generaloptions = DBM_GUI_Frame:CreateArea(L.General, nil, 200, true)
 
 		local enabledbm = generaloptions:CreateCheckButton(L.EnableDBM, true)
 		enabledbm:SetScript("OnShow",  function() enabledbm:SetChecked(DBM:IsEnabled()) end)
@@ -1429,10 +1422,18 @@ local function CreateOptionsMenu()
 		MiniMapIcon:SetScript("OnShow", function(self)
 			self:SetChecked( DBM.Options.ShowMinimapButton )
 		end)
-		local UseMasterVolume			= generaloptions:CreateCheckButton(L.UseMasterVolume, true, nil, "UseMasterVolume")
+		local soundChannelsList = {
+			{	text	= L.UseMasterChannel,	value 	= "Master"},
+			{	text	= L.UseDialogChannel,	value 	= "Dialog"},
+			{	text	= L.UseSFXChannel,		value 	= "SFX"},
+		}
+		local SoundChannelDropdown = generaloptions:CreateDropdown(L.UseSoundChannel, soundChannelsList, "DBM", "UseSoundChannel", function(value)
+			DBM.Options.UseSoundChannel = value
+		end)
+		SoundChannelDropdown:SetPoint("TOPLEFT", generaloptions.frame, "TOPLEFT", 0, -75)
 
 		local bmrange  = generaloptions:CreateButton(L.Button_RangeFrame, 120, 30)
-		bmrange:SetPoint('TOPLEFT', UseMasterVolume, "BOTTOMLEFT", 0, -5)
+		bmrange:SetPoint('TOPLEFT', SoundChannelDropdown, "BOTTOMLEFT", 15, -5)
 		bmrange:SetScript("OnClick", function(self)
 			if DBM.RangeCheck:IsShown() then
 				DBM.RangeCheck:Hide(true)
@@ -1950,13 +1951,14 @@ local function CreateOptionsMenu()
 		local specPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_SpecWarnFrame, "option")
 		local specArea = specPanel:CreateArea(L.Area_SpecWarn, nil, 645, true)
 		local check1 = specArea:CreateCheckButton(L.SpecWarn_Enabled, true, nil, "ShowSpecialWarnings")
-		local check2 = specArea:CreateCheckButton(L.ShowSWarningsInChat, true, nil, "ShowSWarningsInChat")
-		local check3 = specArea:CreateCheckButton(L.SpecWarn_FlashFrame, true, nil, "ShowFlashFrame")
+		local check2 = specArea:CreateCheckButton(L.SpecWarn_ClassColor, true, nil, "SWarnClassColor")
+		local check3 = specArea:CreateCheckButton(L.ShowSWarningsInChat, true, nil, "ShowSWarningsInChat")
+		local check4 = specArea:CreateCheckButton(L.SpecWarn_FlashFrame, true, nil, "ShowFlashFrame")
 
 		local flashSlider = specArea:CreateSlider(L.SpecWarn_FlashFrameRepeat, 1, 3, 1, 100)
 		flashSlider:SetPoint('BOTTOMLEFT', check3, "BOTTOMLEFT", 330, 0)
-		flashSlider:HookScript("OnShow", function(self) self:SetValue(math.floor(DBM.Options.SpecialWarningFlashRepeatAmount)) end)
-		flashSlider:HookScript("OnValueChanged", function(self) DBM.Options.SpecialWarningFlashRepeatAmount = math.floor(self:GetValue()) end)
+		flashSlider:HookScript("OnShow", function(self) self:SetValue(mfloor(DBM.Options.SpecialWarningFlashRepeatAmount)) end)
+		flashSlider:HookScript("OnValueChanged", function(self) DBM.Options.SpecialWarningFlashRepeatAmount = mfloor(self:GetValue()) end)
 
 		local showbutton = specArea:CreateButton(L.SpecWarn_DemoButton, 120, 16)
 		showbutton:SetPoint('TOPRIGHT', specArea.frame, "TOPRIGHT", -5, -5)
@@ -2536,6 +2538,7 @@ local function CreateOptionsMenu()
 		spamArea:CreateCheckButton(L.DontShowFarWarnings, true, nil, "DontShowFarWarnings")
 		spamArea:CreateCheckButton(L.StripServerName, true, nil, "StripServerName")
 		spamArea:CreateCheckButton(L.SpamBlockBossWhispers, true, nil, "SpamBlockBossWhispers")
+		--spamArea:CreateCheckButton(L.BlockVersionUpdateNotice, true, nil, "BlockVersionUpdateNotice2")
 
 		local spamSpecArea = spamPanel:CreateArea(L.Area_SpecFilter, nil, 120, true)
 		spamSpecArea:CreateCheckButton(L.FilterTankSpec, true, nil, "FilterTankSpec")
@@ -2552,8 +2555,8 @@ local function CreateOptionsMenu()
 
 		local PTSlider = spamPTArea:CreateSlider(L.PT_Threshold, 3, 30, 1, 300)   -- (text , min_value , max_value , step , width)
 		PTSlider:SetPoint('BOTTOMLEFT', SPTCDT, "BOTTOMLEFT", 80, -40)--Position based on slider, text anchored to slider. English has large text, so must move slider to middle :\
-		PTSlider:HookScript("OnShow", function(self) self:SetValue(math.floor(DBM.Options.PTCountThreshold)) end)
-		PTSlider:HookScript("OnValueChanged", function(self) DBM.Options.PTCountThreshold = math.floor(self:GetValue()) end)
+		PTSlider:HookScript("OnShow", function(self) self:SetValue(mfloor(DBM.Options.PTCountThreshold)) end)
+		PTSlider:HookScript("OnValueChanged", function(self) DBM.Options.PTCountThreshold = mfloor(self:GetValue()) end)
 
 		spamPTArea:AutoSetDimension()
 		spamArea:AutoSetDimension()
@@ -2697,10 +2700,10 @@ local function CreateOptionsMenu()
 		createButton:SetPoint('LEFT', createTextbox, "RIGHT", 10, 0)
 		createButton:SetScript("OnClick", function() DBM_GUI.dbm_profilePanel_create() end)
 		createButton:SetScript("OnShow", function()
-			table.wipe(profileDropdown)
+			twipe(profileDropdown)
 			for name, tb in pairs(DBM_AllSavedOptions) do
 				local dropdown = { text = name, value = name }
-				table.insert(profileDropdown, dropdown)
+				tinsert(profileDropdown, dropdown)
 			end
 		end)
 
@@ -2772,7 +2775,11 @@ local function CreateOptionsMenu()
 	end
 
 	-- Set Revision // please don't translate this!
-	DBM_GUI_OptionsFrameRevision:SetText("Deadly Boss Mods "..DBM.DisplayVersion.." (r"..DBM.Revision..")")
+	if DBM.NewerVersion then
+		DBM_GUI_OptionsFrameRevision:SetText("Deadly Boss Mods "..DBM.DisplayVersion.." (r"..DBM.Revision.."). |cffff0000Version "..DBM.NewerVersion.." is available.|r")
+	else	
+		DBM_GUI_OptionsFrameRevision:SetText("Deadly Boss Mods "..DBM.DisplayVersion.." (r"..DBM.Revision..")")
+	end
 	if L.TranslationBy then
 		DBM_GUI_OptionsFrameTranslation:SetText(L.TranslationByPrefix .. L.TranslationBy)
 	end
@@ -2784,7 +2791,6 @@ end
 DBM:RegisterOnGuiLoadCallback(CreateOptionsMenu, 1)
 
 do
-	local mfloor = math.floor
 	local function OnShowGetStats(bossid, statsType, top1value1, top1value2, top1value3, top2value1, top2value2, top2value3, top3value1, top3value2, top3value3, bottom1value1, bottom1value2, bottom1value3, bottom2value1, bottom2value2, bottom2value3, bottom3value1, bottom3value2, bottom3value3)
 		return function(self)
 			local mod = DBM:GetModByName(bossid)
@@ -2847,7 +2853,7 @@ do
 			resetButton:SetPoint('TOPLEFT', 10, -14)
 			resetButton:SetScript("OnClick", function() DBM:LoadAllModDefaultOption(addon.modId) end)
 			resetButton:SetScript("OnShow", function()
-				table.wipe(modProfileDropdown)
+				twipe(modProfileDropdown)
 				local savedVarsName = addon.modId:gsub("-", "").."_AllSavedVars"
 				for charname, charTable in pairs(_G[savedVarsName]) do
 					for bossid, optionTable in pairs(charTable) do
@@ -2855,7 +2861,7 @@ do
 							if optionTable[i] then
 								local displayText = (i == 0 and charname.." ("..ALL..")") or charname.." ("..SPECIALIZATION..i.."-"..(charTable["talent"..i] or "")..")"
 								local dropdown = { text = displayText, value = charname.."|"..tostring(i) }
-								table.insert(modProfileDropdown, dropdown)
+								tinsert(modProfileDropdown, dropdown)
 							end
 						end
 						break
@@ -3350,7 +3356,7 @@ do
 					end
 				end
 
-				table.insert(area.onshowcall, OnShowGetStats(mod.id, statsType, top1value1, top1value2, top1value3, top2value1, top2value2, top2value3, top3value1, top3value2, top3value3, bottom1value1, bottom1value2, bottom1value3, bottom2value1, bottom2value2, bottom2value3, bottom3value1, bottom3value2, bottom3value3))
+				tinsert(area.onshowcall, OnShowGetStats(mod.id, statsType, top1value1, top1value2, top1value3, top2value1, top2value2, top2value3, top3value1, top3value2, top3value3, bottom1value1, bottom1value2, bottom1value3, bottom2value1, bottom2value2, bottom2value3, bottom3value1, bottom3value2, bottom3value3))
 			end
 		end
 		area.frame:SetScript("OnShow", function(self)

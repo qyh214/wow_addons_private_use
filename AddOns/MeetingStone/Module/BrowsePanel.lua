@@ -314,15 +314,16 @@ function BrowsePanel:OnInitialize()
         SearchInput:SetSize(160, 15)
         SearchInput:SetPoint('LEFT', LootDropdown, 'RIGHT', 10, 0)
         SearchInput:EnableAutoComplete(true)
-        SearchInput:SetMaxHistoryLines(MAX_SEARCHBOX_HISTORY_LINES)
+        SearchInput:EnableAutoCompleteFilter(false)
         SearchInput:SetCallback('OnTextChanged', RefreshFilter)
-        SearchInput:SetCallback('OnEditFocusGained', function()
-            SearchInput:SetAutoComplete(Profile:GetSearchInputHistory(self.ActivityDropdown:GetItem().value))
-        end)
-        SearchInput:SetCallback('OnEditFocusLost', function(_, text)
+        SearchInput:SetCallback('OnEditFocusLost', function(SearchInput)
+            local text = SearchInput:GetText()
             if text ~= '' then
                 Profile:SaveSearchInputHistory(self.ActivityDropdown:GetItem().value, text)
             end
+        end)
+        SearchInput:SetCallback('OnEditFocusGained', function(SearchInput)
+            SearchInput:SetAutoCompleteList(Profile:GetSearchInputHistory(ActivityDropdown:GetItem().value))
         end)
     end
 

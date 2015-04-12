@@ -1,0 +1,18 @@
+tag 6.1.2.1
+9baa6fcdd644667d10a98852677ff3178048713a
+James D. Callahan III <jcallahan@curse.com>
+2015-03-31 18:37:29 -0500
+
+
+
+--------------------
+
+James D. Callahan III:
+	- Added data for: Mandragoraster, Titarus, Ancient Inferno, Oraggro, Horgg, and Morgo Kain.
+	- Cleaned up batshit zone name code.
+	- Removed unnecessary comments.
+	- Removed SEARCH_LEVEL_TYPE_FORMAT; it wasn't used anywhere.
+	- Whitespace.
+	- Removed FOUND_ZONE_UNKNOWN; it was just another name for UNKNOWN...
+	- Formatting fixes.
+	- Dead code removal.

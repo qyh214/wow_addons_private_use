@@ -1,9 +1,9 @@
 ## Interface: 60100
-## Title: Titan Panel [|cffeda55fVolume|r] |cff00aa005.5.3.60100|r
+## Title: Titan Panel [|cffeda55fVolume|r] |cff00aa005.5.4.60100|r
 ## Notes: Adds a volume control icon on your Titan Bar
 ## Author: Titan Development Team (http://www.titanpanel.org)
 ## Dependencies: Titan
-## Version: 5.5.3.60100
+## Version: 5.5.4.60100
 ## X-Child-Of: Titan
 
 TitanVolume.xml

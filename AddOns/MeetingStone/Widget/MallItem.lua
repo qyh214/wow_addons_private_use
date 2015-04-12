@@ -3,11 +3,12 @@ BuildEnv(...)
 
 local MallItem = Addon:NewClass('MallItem', GUI:GetClass('ItemButton'))
 
+GUI:Embed(MallItem, 'Refresh')
+
 function MallItem:Constructor(parent)
     local Background = self:CreateTexture(nil, 'BACKGROUND') do
         Background:SetTexture([[Interface\Store\Store-Main]])
         Background:SetTexCoord(0.18457031, 0.32714844, 0.64550781, 0.84960938)
-        Background:SetSize(146, 209)
         Background:SetAllPoints(true)
     end
 
@@ -38,8 +39,8 @@ function MallItem:Constructor(parent)
         Price:SetPoint('BOTTOM', 0, 30)
     end
 
-    local SalePrice = self:CreateFontString(nil, 'ARTWORK', 'GameFontNormalMed3', 3) do
-        SalePrice:SetPoint('LEFT', Price, 'RIGHT', 10, 0)
+    local SalePrice = self:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall2', 3) do
+        SalePrice:SetPoint('BOTTOMLEFT', self, 'BOTTOM', 2, 30)
         SalePrice:SetTextColor(GREEN_FONT_COLOR.r, GREEN_FONT_COLOR.g, GREEN_FONT_COLOR.b)
         SalePrice:Hide()
     end
@@ -63,7 +64,6 @@ function MallItem:Constructor(parent)
         CheckedTexture:SetTexture([[Interface\Store\Store-Main]])
         CheckedTexture:SetTexCoord(0.37011719, 0.50683594, 0.74218750, 0.94042969)
         CheckedTexture:SetBlendMode('ADD')
-        CheckedTexture:SetSize(140, 203)
         CheckedTexture:SetPoint('CENTER')
         CheckedTexture:Hide()
     end
@@ -72,7 +72,6 @@ function MallItem:Constructor(parent)
         HighlightTexture:SetTexture([[Interface\Store\Store-Main]])
         HighlightTexture:SetTexCoord(0.37011719, 0.50683594, 0.54199219, 0.74023438)
         HighlightTexture:SetBlendMode('ADD')
-        HighlightTexture:SetSize(140, 203)
         HighlightTexture:SetPoint('CENTER')
         HighlightTexture:Hide()
     end
@@ -99,12 +98,12 @@ function MallItem:Constructor(parent)
             self:SetMagnifier(false)
         end)
         Magnifier:SetScript('OnClick', function()
-            if not self.data.model then
+            if not self.model then
                 return
             end
             local frame = ModelPreviewFrame
-            ModelPreviewFrame_ShowModel(self.data.model, true)
-            frame.Display.Name:SetText(self.data.text)
+            ModelPreviewFrame_ShowModel(self.model, true)
+            frame.Display.Name:SetText(self.text)
         end)
     end
 
@@ -124,7 +123,7 @@ function MallItem:Constructor(parent)
         DiscountLeft:SetTexture([[Interface\Store\Store-Main]])
         DiscountLeft:SetTexCoord(0.98828125, 0.99609375, 0.10546875, 0.13671875)
         DiscountLeft:SetSize(8, 32)
-        DiscountLeft:SetPoint('RIGHT', DiscountRight, 'LEFT', -40, 0)
+        DiscountLeft:SetPoint('TOPLEFT', -1, -2)
 
         local DiscountMiddle = Discount:CreateTexture(nil, 'ARTWORK', nil, 3)
         DiscountMiddle:SetTexture([[Interface\Store\Store-Main]])
@@ -135,20 +134,15 @@ function MallItem:Constructor(parent)
 
         local Text = Discount:CreateFontString(nil, 'OVERLAY', 'GameFontNormalMed2')
         Text:SetPoint('CENTER', DiscountMiddle, 1, 2)
-        Text:SetSize(50, 30)
         Text:SetTextColor(1, 1, 1)
 
         Discount.SetText = function(_, text)
             Text:SetText(text)
+            Discount:SetWidth(Text:GetStringWidth() + 20)
         end
     end
 
-    self:RegisterEvent('GET_ITEM_INFO_RECEIVED')
-    self:SetScript('OnEvent', function(_, _, id)
-        if self.data and self.data.itemId == id then
-            self:SetIcon(self.data.itemId)
-        end
-    end)
+    self:SetScript('OnEvent', self.Refresh)
 
     self:SetCheckedTexture(CheckedTexture)
     self:SetHighlightTexture(HighlightTexture)
@@ -162,6 +156,17 @@ function MallItem:Constructor(parent)
     self.Strikethrough = Strikethrough
     self.SalePrice = SalePrice
     self.Discount = Discount
+
+    self:SetScript('OnSizeChanged', self.OnSizeChanged)
+end
+
+function MallItem:OnSizeChanged(width, height)
+    self:GetHighlightTexture():SetSize(width-6, height-6)
+    self:GetCheckedTexture():SetSize(width-6, height-6)
+end
+
+function MallItem:IsMagnifierShown()
+    return self.model
 end
 
 function MallItem:SetMagnifier(enable)
@@ -173,80 +178,117 @@ function MallItem:SetMagnifier(enable)
 end
 
 function MallItem:SetPrice(price, originalPrice)
-    self.Price:ClearAllPoints()
-
-    if originalPrice then
-        self.Price:SetPoint('BOTTOMRIGHT', self, 'BOTTOM', -2, 30)
-
-        self.SalePrice:ClearAllPoints()
-        self.SalePrice:SetPoint('BOTTOMLEFT', self, 'BOTTOM', 2, 30)
-        self.SalePrice:SetFormattedText('%d*', price)
-
-        self.Discount:SetText(format(L['%.1f折'], ceil(price/originalPrice*100)/10))
-    else
-        self.Price:SetPoint('BOTTOM', self, 0, 30)
-    end
-
-    self.Discount:SetShown(originalPrice)
-    self.SalePrice:SetShown(originalPrice)
-    self.Strikethrough:SetShown(originalPrice)
-    self.Price:SetText(format('%d*', originalPrice or price or ''))
+    self.price, self.originalPrice = price, originalPrice
+    self:Refresh()
 end
 
 function MallItem:SetText(text)
-    self.Name:SetText(text)
+    self.text = text
+    self:Refresh()
 end
 
 function MallItem:SetModel(id)
-    self.Model:SetShown(id)
-    self.Shadows:SetShown(id)
-
-    if not id then
-        return
-    end
-
-    self.Model:SetDisplayInfo(id)
-    self.Model:SetDoBlend(false)
-    self.Model:SetAnimation(0, -1)
-    self.Model:SetRotation(0.61)
-    self.Model:SetPosition(0, 0, 0)
-    self.Model:SetPortraitZoom(0)
+    self.model = id
+    self:Refresh()
 end
 
-function MallItem:IsMagnifierShown()
-    return self.data.model
+function MallItem:SetItem(id)
+    self.item = id
+    self:Refresh()
 end
 
-function MallItem:SetIcon(id)
-    local enable = not self.data.model
-    self.Icon:SetShown(enable)
-
-    if not id then
-        return
-    end
-
-    local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(id)
-
-    if not texture then
-        return
-    end
-
-    if enable then
-        SetPortraitToTexture(self.Icon, texture)
-    end
-
-    if not self.data.text then
-        self.data.text = name
-    end
-
-    self.data.link = link
-    self:SetText(self.data.text)
+function MallItem:SetIcon(icon)
+    self.icon = icon
+    self:Refresh()
 end
 
-function MallItem:SetData(data)
-    self.data = data
-    self:SetText(data.text)
-    self:SetModel(data.model)
-    self:SetPrice(data.price, data.originalPrice)
-    self:SetIcon(data.itemId)
+function MallItem:SetStartTime(hour)
+    self.hour = hour
+    self:Refresh()
+end
+
+function MallItem:SetCurrency(currency)
+    self.currency = currency
+    self:Refresh()
+end
+
+function MallItem:Update()
+    if self.item then
+        local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, icon = GetItemInfo(self.item)
+        if name then
+            self:UnregisterAllEvents()
+            self.text = name
+            self.icon = icon
+        else
+            self:RegisterEvent('GET_ITEM_INFO_RECEIVED')
+            self.text = RED_FONT_COLOR_CODE .. RETRIEVING_ITEM_INFO .. '|r'
+            self.icon = GetItemIcon(self.item)
+        end
+    end
+
+    self.Model:SetShown(self.model)
+    self.Icon:SetShown(not self.model)
+
+    if self.model then
+        self.Model:SetDisplayInfo(self.model)
+        self.Model:SetDoBlend(false)
+        self.Model:SetAnimation(0, -1)
+        self.Model:SetRotation(0.61)
+        self.Model:SetPosition(0, 0, 0)
+        self.Model:SetPortraitZoom(0)
+    elseif self.icon then
+        local id = tonumber(self.icon)
+        if id then
+            if self.Icon:SetToFileData(id) then
+                SetPortraitToTexture(self.Icon, self.Icon:GetTexture())
+            end
+        else
+            SetPortraitToTexture(self.Icon, self.icon)
+        end
+    end
+
+    if self.price then
+        self.Price:ClearAllPoints()
+        self.SalePrice:SetShown(self.originalPrice)
+        self.Strikethrough:SetShown(self.originalPrice)
+
+        if self.originalPrice then
+            self.SalePrice:SetText(self.price .. (self.currency or '*'))
+            self.Price:SetText(self.originalPrice .. (self.currency or '*'))
+            self.Price:SetPoint('BOTTOMRIGHT', self, 'BOTTOM', -2, 30)
+        else
+            self.Price:SetText(self.price .. (self.currency or '*'))
+            self.Price:SetPoint('BOTTOM', self, 0, 30)
+        end
+    end
+
+    if self.hour then
+        self.Discount:SetText(format('%d:00 秒杀', self.hour))
+        self.Discount:Show()
+    elseif self.price and self.originalPrice then
+        self.Discount:SetText(format(L['%.1f折'], ceil(self.price/self.originalPrice*100)/10))
+        self.Discount:Show()
+    else
+        self.Discount:Hide()
+    end
+
+    if self.text then
+        self.Name:SetText(self.text)
+    end
+end
+
+function MallItem:Clear()
+    self.item = nil
+    self.model = nil
+    self.price = nil
+    self.originalPrice = nil
+    self.hour = nil
+    self.icon = nil
+    self.currency = nil
+end
+
+local orig_FireFormat = MallItem.FireFormat
+function MallItem:FireFormat()
+    self:Clear()
+    orig_FireFormat(self)
 end

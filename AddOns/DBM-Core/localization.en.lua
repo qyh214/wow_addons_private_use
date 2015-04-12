@@ -15,7 +15,7 @@ DBM_CORE_LOAD_SKIN_COMBAT			= "DBM timers failed to skin during combat. Your tim
 DBM_CORE_BAD_LOAD					= "DBM has detected your mod for this instance failed to fully load correctly because of combat. As soon as you are out of combat, please do /console reloadui as soon as possible."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s could not be loaded because your DBM-Core does not meet requirements. An updated version is required"
 
-DBM_CORE_BLIZZ_BUGS					= "Do to changes in 6.1 that disabled playing .wav media, all custom user sounds have been reset to defaults to force wipe any bad/missing sounds a user may have set in their mods. This reset will not occur again and you're safe to reconfigure custom sounds once more. Remember, once you set custom sounds on one profile, you can copy sound settings from that profile to others from the mod stats window."
+DBM_CORE_BLIZZ_BUGS					= "Do to changes in 6.1 that disabled playing .wav media, all custom special warning sounds have been reset to defaults to force wipe any bad/missing sounds a user may have set in their mods. This reset will not occur again and you're safe to reconfigure custom sounds once more and copy to other characters with profiles features."
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM has disabled dynamic range frame on this fight do to insufficient information about number of players needed to affect clump check for a group of your size."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM has disabled add count warnings on this fight do to insufficient information about number of adds that spawn for a group of your size."
@@ -128,7 +128,7 @@ DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: No boss mod installed"
 DBM_CORE_VERSIONCHECK_FOOTER		= "Found %d player(s) with DBM & %d player(s) with Bigwigs"
 DBM_CORE_VERSIONCHECK_OUTDATED		= "Following %d player(s) have outdated boss mod version: %s"
 DBM_CORE_YOUR_VERSION_OUTDATED      = "Your version of Deadly Boss Mods is out-of-date. Please visit http://www.deadlybossmods.com to get the latest version."
-DBM_CORE_VOICE_PACK_OUTDATED		= "Your DBM voice pack may be missing sounds supported by this version of DBM. Special warning sound filter has been disabled. Please download a newer version of voice pack or contact author for an update that contains missing audio files"
+DBM_CORE_VOICE_PACK_OUTDATED		= "Your DBM voice pack may be missing sounds supported by this version of DBM. Some special warning sounds will not be supressed for alerts using voices not supported by your voice pack version. Please download a newer version of voice pack or contact author for an update that contains missing audio files"
 DBM_CORE_VOICE_MISSING				= "You had a DBM voice pack selected that could not be found. Your selection has been reset to 'None'. If this is an error, make sure your voice pack is properly installed and enabled in addons."
 DBM_CORE_VOICE_COUNT_MISSING		= "Countdown voice %d is set to a voice/count pack that could not be found. It has be reset to default settings."
 DBM_BIG_WIGS						= "BigWigs"
@@ -138,13 +138,15 @@ DBM_CORE_UPDATEREMINDER_HEADER			= "Your version of Deadly Boss Mods is out-of-d
 DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "Your alpha version of Deadly Boss Mods is out-of-date.\n You are at least %d test versions behind. It is recommended that DBM users use the latest alpha or latest stable version. Out of date alphas can lead to poor or incomplete functionality."
 DBM_CORE_UPDATEREMINDER_FOOTER			= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the download link to your clipboard."
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the link to your clipboard."
-DBM_CORE_UPDATEREMINDER_DISABLE			= "WARNING: Do to your Deadly Boss Mods being drastically out of date (at least %d revisions), it has been disabled until updated. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow raid members."
-DBM_CORE_UPDATEREMINDER_HOTFIX			= "Your version of DBM will have incorrect timers or warnings during this boss encounter. This is corrected in a newer release (or alpha release if newer release version not yet available)"
+DBM_CORE_UPDATEREMINDER_DISABLE			= "WARNING: Do to your Deadly Boss Mods being drastically out of date, it has been disabled until updated. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow raid members."
+DBM_CORE_UPDATEREMINDER_HOTFIX			= "DBM version you are on has known issues during this boss encounter that are corrected if you update to latest release"
+DBM_CORE_UPDATEREMINDER_HOTFIX_ALPHA	= "DBM version you are on has known issues during this boss encounter that are corrected in an upcoming release (or latest alpha version)"
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "WARNING: Do to your Deadly Boss Mods being out of date, DBM has been disabled until updated, since this is a major game patch. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow group members. Make sure you download a newer version from deadlybossmods.com or curse as soon as possible."
 DBM_CORE_UPDATEREMINDER_TESTVERSION		= "WARNING: You are using a version of Deadly Boss Mods not intended to be used with this game version. Please make sure you download the appropriate version for your game client from deadlybossmods.com or curse."
 DBM_CORE_VEM							= "WARNING: You are running both Deadly Boss Mods and Voice Encounter Mods. DBM will not run in this configuration and therefore will not be loaded."
 DBM_CORE_3RDPROFILES					= "WARNING: DBM-Profiles not compatible with this version of DBM. It must be removed before DBM can proceed to avoid conflict."
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "WARNING: This DBM update will not work correctly if you don't fully restart your game client. This update contains new files or .toc file changes that cannot be loaded via ReloadUI. You may encounter broken functionality or errors if you continue without a client restart."
+DBM_CORE_OUT_OF_DATE_NAG				= "Your version of Deadly Boss Mods is out-of-date and you have elected to ignore popup notification. It is recommended you update so you are not missing an important alert or timer, or is missing a yell rest of raid is counting on seeing from you."
 
 DBM_CORE_MOVABLE_BAR				= "Drag me!"
 
@@ -187,9 +189,10 @@ DBM_CORE_SLASHCMD_HELP				= {
 	"/dbm timer endloop: Stops any looping ltimer or cltimer.",
 	"/dbm break <min>: Starts a break timer for <min> minutes. Gives all raid members with DBM a break timer (requires leader/promoted status).",
 	"/dbm pull <sec>: Starts a pull timer for <sec> seconds. Gives all raid members with DBM a pull timer (requires leader/promoted status).",
-	"/dbm arrow: Shows the DBM arrow, see /dbm arrow help for details.",
+	"/dbm arrow: Shows the DBM arrow, see '/dbm arrow help' for details.",
 	"/dbm lockout: Asks raid members for their current raid instance lockouts (aliases: lockouts, ids) (requires leader/promoted status).",
-	"/dbm lag: Performs a raid-wide latency check."
+	"/dbm lag: Performs a raid-wide latency check.",
+	"/dbm hud: Shows the DBM hud, see '/dbm hud' for details."
 }
 
 DBM_ERROR_NO_PERMISSION				= "You don't have the required permission to do this."
@@ -200,6 +203,7 @@ DBM_CORE_UNKNOWN					= "unknown"--UNKNOWN which is "Unknown" (does u vs U matter
 DBM_CORE_LEFT						= "Left"
 DBM_CORE_RIGHT						= "Right"
 DBM_CORE_BACK						= "Back"--BACK
+DBM_CORE_MIDDLE						= "Middle"
 DBM_CORE_FRONT						= "Front"
 DBM_CORE_INTERMISSION				= "Intermission"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
 
@@ -221,7 +225,7 @@ DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Achievement"--BATTLE_PET_SOURCE_6
 -- Auto-generated Warning Localizations
 DBM_CORE_AUTO_ANNOUNCE_TEXTS = {
 	target		= "%s on >%%s<",
-	targetcount	= "%s (%%d) on >%%s<",
+	targetcount	= "%s (%%s) on >%%s<",
 	spell		= "%s",
 	ends 		= "%s ended",
 	endtarget	= "%s ended: >%%s<",
@@ -232,7 +236,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS = {
 	prewarn		= "%s in %s",
 	phase		= "Phase %s",
 	prephase	= "Phase %s soon",
-	count		= "%s (%%d)",
+	count		= "%s (%%s)",
 	stack		= "%s on >%%s< (%%d)"
 }
 
@@ -266,6 +270,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
 	interruptcount	= "%s - interrupt >%%s<! (%%d)",
 	you				= "%s on you",
 	target			= "%s on >%%s<",
+	targetcount		= "%s (%%s) on >%%s< ",
 	taunt			= "%s on >%%s< - taunt now",
 	close			= "%s on >%%s< near you",
 	move			= "%s - move away",
@@ -307,6 +312,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
 }
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS = {
@@ -377,6 +383,20 @@ DBM_CORE_MOVE_WARNING_MESSAGE		= "Thanks for using Deadly Boss Mods"
 DBM_CORE_MOVE_SPECIAL_WARNING_BAR	= "Special warning movable"
 DBM_CORE_MOVE_SPECIAL_WARNING_TEXT	= "Special Warning"
 
+DBM_CORE_HUD_INVALID_TYPE			= "Invalid HUD type defined"
+DBM_CORE_HUD_INVALID_TARGET			= "No valid target given for HUD"
+DBM_CORE_HUD_INVALID_SELF			= "Cannot use self as target for HUD"
+DBM_CORE_HUD_INVALID_ICON			= "Cannot use icon method for HUD on a target with no icon"
+DBM_CORE_HUD_SUCCESS				= "HUD successful started with your parameters. This will cancel after %s, or by calling '/dbm hud hide'."
+DBM_CORE_HUD_USAGE	= {
+	"DBM-HudMap usage:",
+	"/dbm hud <type> <target> <duration> creates a HUD that points to a player for the desired duration",
+	"Valid types: red, blue, green, yellow, icon (requires a target with raid icon)",
+	"Valid targets: target, focus, <playername>",
+	"Valid durations: any number (in seconds). If left blank, 20min will be used.",
+	"/dbm hud hide  disables and hides the HUD"
+}
+
 DBM_ARROW_MOVABLE					= "Arrow movable"
 DBM_ARROW_ERROR_USAGE	= {
 	"DBM-Arrow usage:",
@@ -391,6 +411,7 @@ DBM_SPEED_KILL_TIMER_TEXT	= "Record Victory"
 DBM_SPEED_KILL_TIMER_OPTION	= "Show a timer to beat your fastest victory"
 DBM_SPEED_CLEAR_TIMER_TEXT	= "Best Clear"
 DBM_COMBAT_RES_TIMER_TEXT	= "Next CR Charge"
+DBM_CORE_TIMER_RESPAWN		= "Respawn"
 
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s requested to see your current instance IDs and progress.\nDo you want to send this information to %s? He or she will be able to request this information during your current session (i. e. until you relog)."

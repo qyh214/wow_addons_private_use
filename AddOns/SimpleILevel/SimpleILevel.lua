@@ -16,7 +16,7 @@ SIL = LibStub("AceAddon-3.0"):NewAddon(L.core.name, "AceEvent-3.0", "AceConsole-
 SIL.category = GetAddOnMetadata("SimpleILevel", "X-Category");
 SIL.version = GetAddOnMetadata("SimpleILevel", "Version");
 SIL.versionMajor = 3;                    -- Used for cache DB versioning
-SIL.versionRev = 'r221';    -- Used for version information
+SIL.versionRev = 'r225';    -- Used for version information
 SIL.action = {};        -- DB of unitGUID->function to run when a update comes through
 SIL.hooks = {};         -- List of hooks in [type][] = function;
 SIL.autoscan = 0;       -- time() value of last autoscan, must be more then 1sec

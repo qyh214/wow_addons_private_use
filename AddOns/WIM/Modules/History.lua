@@ -119,6 +119,7 @@ local function createWidget()
 end
 
 
+--BNet_GetValidatedCharacterName
 local function recordWhisper(inbound, ...)
     local msg, from = ...;
     if not from then

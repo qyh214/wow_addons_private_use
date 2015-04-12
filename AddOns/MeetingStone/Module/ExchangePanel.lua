@@ -110,7 +110,7 @@ function ExchangePanel:UpdateStatus(event, isConnected)
         end
     else
         self:StopTimer()
-        self.WorkingCover:SetText(L['服务器连线中，请稍后'])
+        self.WorkingCover:SetText(L['服务器连线中，请稍候'])
         self.WorkingCover:Show()
     end
 end

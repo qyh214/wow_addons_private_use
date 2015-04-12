@@ -17,9 +17,12 @@
 -- @class file
 -- @name LibInit
 --
-local pp=print -- Keeping a handy plain print around
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 5
+local MINOR_VERSION = 13
+local nop=function()end
+local dprint=function (self,...)	print(self.ID,'DBG',...) end
+local pp=print -- Keeping a handy plain print around
+if LibDebug then LibDebug() end
 --GAME_LOCALE="itIT"
 local me, ns = ...
 local LibStub=LibStub
@@ -31,7 +34,6 @@ local C=LibStub("LibInit-Colorize")()
 local I=LibStub("LibItemUpgradeInfo-1.0")
 
 -- Upvalues
-local nop=function()end
 local _G=_G
 local floor=floor
 local abs=abs
@@ -65,11 +67,13 @@ local strconcat=strconcat
 local strjoin=strjoin
 local strsplit=strsplit
 local select=select
+local coroutine=coroutine
 local cachedGetItemInfo
 --]]
 -- Help sections
 local titles
 local RELNOTES
+local LIBRARIES
 local PROFILE
 local HELPSECTIONS
 local AceConfig = LibStub("AceConfig-3.0",true)
@@ -125,7 +129,6 @@ lib.debugs=lib.debugs or {}
 lib.toggles=lib.toggles or {}
 lib.addon=lib.addon or {}
 lib.chats=lib.chats or {}
-
 function lib:NewAddon(name,full,...)
 	if (not Ace) then
 		error("Could not find Ace3 Library")
@@ -134,7 +137,7 @@ function lib:NewAddon(name,full,...)
 	local mixins=new()
 	if (type(full)=='boolean') then
 		for i,k in  LibStub:IterateLibraries() do
-			if (i:match("Ace%w*-3%.0") and k.Embed) then print("Found",i) tinsert(mixins,i) end
+			if (i:match("Ace%w*-3%.0") and k.Embed) then tinsert(mixins,i) end
 		end
 	else
 		tinsert(mixins,full)
@@ -150,11 +153,15 @@ function lib:NewAddon(name,full,...)
 	local target=Ace:NewAddon(name,unpack(mixins))
 	del(mixins)
 	target.interface=select(4,GetBuildInfo())
-	target.version=GetAddOnMetadata(name,'Version')
+	target.version=GetAddOnMetadata(name,'Version') or "Internal"
 	if (target.version:sub(1,1)=='@') then
 		target.version=GetAddOnMetadata(name,'X-Version') or 0
 	end
-	target.revision=GetAddOnMetadata(name,'X-revision')
+	local b,e=target.version:find(" ")
+	if b and b>1 then
+			target.version=target.version:sub(1,b-1)
+	end
+	target.revision=GetAddOnMetadata(name,'X-revision') or "Alpha"
 	if (target.revision:sub(1,1)=='@') then
 		target.revision='Development'
 	end
@@ -175,6 +182,39 @@ function lib:NewAddon(name,full,...)
 	}
 	return target
 end
+-- Combat scheduler done with LibCallbackHandler
+local CallbackHandler = LibStub:GetLibrary("CallbackHandler-1.0")
+if not lib.CombatScheduler then
+	lib.CombatScheduler = CallbackHandler:New(lib,"_OnLeaveCombat","_CancelCombatAction")
+	lib.CombatFrame=CreateFrame("Frame")
+	lib.CombatFrame:SetScript("OnEvent",function()
+		lib.CombatScheduler:Fire("LIBINIT_END_COMBAT")
+		if lib.CombatScheduler.insertQueue then
+			wipe(lib.CombatScheduler.insertQueue) -- hackish, depends on internal callbackhanlder implementation
+		end
+		wipe(lib.CombatScheduler.events)
+		lib.CombatScheduler.recurse=0
+	end)
+	lib.CombatFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+end
+function lib:OnLeaveCombat(...)
+	lib._OnLeaveCombat(self,"LIBINIT_END_COMBAT",...)
+	if (not InCombatLockdown()) then
+		lib.CombatFrame:GetScript("OnEvent")()
+	end
+end
+function lib:NewSubModule(name,...)
+	local module=self:NewModule(name,...)
+	module.OnInitialized=function()end -- placeholder
+	module.OnInitialize=function(self,...) return  self:OnInitialized(...) end
+	module.OnEnable=nil
+	module.OnDisable=nil
+	return module
+end
+function lib:NewSubClass(name)
+	return self:NewSubModule(name,self)
+	-- To avoid strange interactions
+end
 --- Returns a closure to call a method as simple local function
 --@usage local print=lib:Wrap("print")
 function lib:Wrap(nome)
@@ -192,6 +232,25 @@ function lib:GetAddon(name)
 end
 function lib:GetLocale()
 	return AceLocale:GetLocale(self.name)
+end
+function lib:Gradient(perc)
+	return self:ColorGradient(perc,0,1,0,1,1,0,1,0,0)
+end
+function lib:ColorToString(r,g,b)
+	return format("%02X%02X%02X", 255*r, 255*g, 255*b)
+end
+function lib:ColorGradient(perc, ...)
+	if perc >= 1 then
+		local r, g, b = select(select('#', ...) - 2, ...)
+		return r, g, b
+	elseif perc <= 0 then
+		local r, g, b = ...
+		return r, g, b
+	end
+	local num = select('#', ...) / 3
+	local segment, relperc = math.modf(perc*(num-1))
+	local r1, g1, b1, r2, g2, b2 = select((segment*3)+1, ...)
+	return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
 end
 local combatSchedules = lib.combatSchedules
 -- Gestione variabili
@@ -426,6 +485,14 @@ local function LoadDefaults(self)
 				guiHidden=true,
 			},
 --@end-debug@]===]
+			debug = {
+				name="DBG",
+				desc="Enable debug",
+				type="execute",
+				func="Debug",
+				guiHidden=true,
+				cmdHidden=true,
+			},
 			silent = {
 				name="SILENT",
 				desc="Eliminates startup messages",
@@ -1120,21 +1187,19 @@ function lib:StopAutomaticEvents(ignore)
 		end
 	end
 end
+function lib:Dprint(...)
+end
 function lib:Notify(...)
 	return self:CustomPrint(C.orange.r,C.orange.g,C.orange.b, nil, nil, ' ', ...)
 end
-function lib:Debug(...)
-	if (self.DebugOn or _G.ALARDEVELOPMENTPC) then
-		self:Print(...)
+function lib:Debug()
+	self.DebugOn=not self.DebugOn
+	pp(self.name,"debug:",self.DebugOn and "On" or "Off")
+	if self.DebugOn then
+		self.Dprint=dprint
+	else
+		self.Dprint=nop
 	end
-end
---[[
-function lib:Print(...)
-	return self:CustomPrint(nil, nil, nil, nil, nil, ' ', ...)
-end
---]]
-function lib:Dump(...)
-	return self:CustomPrint(nil, nil, nil, nil, nil, true, ...)
 end
 
 function lib:Colorize(stringa,colore)
@@ -1254,6 +1319,7 @@ function lib:Gui(info)
 		self:Print("No GUI available")
 	end
 end
+
 function lib:Help(info)
 	if (AceConfigDialog and AceGUI) then
 		if (neveropened) then
@@ -1353,12 +1419,12 @@ function lib:GetCachingGetItemInfo()
 		local cache=lib.itemcache
 		wipe(cache)
 		return
-		function(itemID,index)
+		function(key,index)
 			index=index or 1
 			cache.tot=cache.tot+1
-			local cached=cache[index]
+			local cached=cache[key]
 			if (cached) then
-				return select(1,strsplit(';',cached))
+				return select(index,strsplit(';',cached))
 			end
 		end
 	end
@@ -1386,28 +1452,72 @@ function lib:Embed(target)
 	lib.mixinTargets[target] = true
 end
 
-if (not _G.table.kpairs) then
-		function _G.table.kpairs(t,f)
-			local a = {}
-			for n in pairs(t) do table.insert(a, n) end
-			table.sort(a, f)
-			local i = 0      -- iterator variable
-			local iter = function ()   -- iterator function
-				i = i + 1
-				if a[i] == nil then
-						return nil
-				else
-						local k=a[i]
-						a[i]=nil -- Should optimize memory usage
-						return k, t[k]
-				end
-			end
-			return iter
+local function kpairs(t,f)
+	local a = new()
+	for n in pairs(t) do table.insert(a, n) end
+	table.sort(a, f)
+	local i = 0      -- iterator variable
+	local iter = function ()   -- iterator function
+		i = i + 1
+		if a[i] == nil then
+				del(a)
+				return nil
+		else
+				local k=a[i]
+				a[i]=nil -- Should optimize memory usage
+				return k, t[k]
 		end
+	end
+	return iter
 end
 if (not _G.kpairs) then
-		_G.kpairs=table.kpairs
+		_G.kpairs=kpairs
 end
+-- This metatable is used to generate a sorted proxy to an hashed table.
+-- It should not used directly
+lib.mt={__metatable=true,__version=MINOR_VERSION}
+local mt=lib.mt
+function mt:__index(k)
+	print(self,self.__source)
+	if k=="n" then
+		return #mt.keys[self.__source]
+	end
+	return self.__source[k]
+end
+function mt:__len()
+	return #self.__keys
+end
+function mt:__newindex(k,v)
+	local pos=#self.__keys+1
+	for i,x in ipairs(self.__keys) do
+		if x>k then
+			pos=i
+			break;
+		end
+	end
+	if (k:sub(1,2)~="__") then
+		table.insert(self.__keys,pos,k)
+	end
+	self.__source[k]=v -- We want to trigger metamethods on original table
+end
+function mt:__call()
+	do
+		local current=0
+		return function(unsorted,i)
+			current=current+1
+			local k=self.__keys[current]
+			if k then return k,self.__source[k] end
+		end,self,0
+	end
+end
+function lib:GetSortedProxy(table)
+	local proxy=setmetatable({__keys={},__source=table,__metatable=true},mt)
+	for k,v in pairs(table) do
+		proxy[k]=v
+	end
+	return proxy
+end
+
 -------------------------------------------------------------------------------
 -- ScheduleLeaveCombatAction Port
 -- Shamelessly stolen from Ace2
@@ -1500,8 +1610,49 @@ function lib:ScheduleLeaveCombatAction(method, ...)
 	t.self = self
 	table.insert(combatSchedules, t)
 end
-function lib:Popup(msg,timeout,OnAccept,OnCancel)
+function lib:coroutineExecute(interval,func)
+	local co=coroutine.wrap(func)
+	local interval=interval
+	local repeater
+	repeater=function()
+		if (co()) then
+			C_Timer.After(interval,repeater)
+		else
+			repeater=nil
+		end
+	end
+	return repeater()
+end
+if not lib.secureframe then
+	lib.secureframe=CreateFrame("Button",nil,nil,"StaticPopupButtonTemplate,SecureActionButtonTemplate")
+	lib.secureframe:Hide()
+end
+local function StopSpellCasting(this)
+	local b2=_G[this:GetName().."Button2"]
+	local AC=lib.secureframe
+	AC:SetParent(b2)
+	AC:SetAllPoints()
+	AC:SetText(b2:GetText())
+	AC:SetAttribute("type","stop")
+	AC:SetScript("PostClick",function() b2:Click() end)
+	AC:Show()
+end
+local function StopSpellCastingCleanup(this)
+	local AC=lib.secureframe
+	AC:SetParent(nil)
+	AC:Hide()
+
+end
+local StaticPopupDialogs=StaticPopupDialogs
+local StaticPopup_Show=StaticPopup_Show
+function lib:Popup(msg,timeout,OnAccept,OnCancel,data,StopCasting)
 	msg=msg or "Something strange happened"
+	if type(timeout)=="function" then
+		StopCasting=data
+		data=OnCancel
+		OnAccept=timeout
+		timeout=60
+	end
 	StaticPopupDialogs["LIBINIT_POPUP"] = StaticPopupDialogs["LIBINIT_POPUP"] or
 	{
 	text = msg,
@@ -1513,6 +1664,13 @@ function lib:Popup(msg,timeout,OnAccept,OnCancel)
 	interruptCinematic = true
 	};
 	local popup=StaticPopupDialogs["LIBINIT_POPUP"]
+	if StopCasting then
+		popup.OnShow=StopSpellCasting
+		popup.OnHide=StopSpellCastingCleanup
+	else
+		popup.OnShow=nil
+		popup.OnHide=nil
+	end
 	popup.text=msg
 	popup.OnCancel=nil
 	popup.OnAccept=OnAccept
@@ -1523,15 +1681,17 @@ function lib:Popup(msg,timeout,OnAccept,OnCancel)
 		end
 		popup.button2 = CANCEL
 	end
-
-
-	StaticPopup_Show("LIBINIT_POPUP");
+	StaticPopup_Show("LIBINIT_POPUP",nil,nil,data);
 end
 local factory={} --#factory
 do
 	local nonce=0
 	local GetTime=GetTime
-	function factory:Slider(father,min,max,current,message)
+	function factory:Slider(father,min,max,current,message,tooltip)
+		if type(message)=="table" then
+			tooltip=message.desc
+			message=message.name
+		end
 		local name=tostring(self)..GetTime()*1000 ..nonce
 		nonce=nonce+1
 		local sl = CreateFrame('Slider',name, father, 'OptionsSliderTemplate')
@@ -1559,15 +1719,21 @@ do
 			return value
 		end
 		sl:SetScript("OnValueChanged",sl.OnValueChanged)
+		sl.tooltip=tooltip
 		return sl
 	end
-	function factory:Checkbox(father,current,message)
+	function factory:Checkbox(father,current,message,tooltip)
+		if type(message)=="table" then
+			tooltip=message.desc
+			message=message.name
+		end
 		local name=tostring(self)..GetTime()*1000 ..nonce
 		nonce=nonce+1
 		local ck=CreateFrame("CheckButton",name,father,"ChatConfigCheckButtonTemplate")
 		ck.Text=_G[name..'Text']
 		ck.Text:SetText(message)
 		ck:SetChecked(current)
+		ck.tooltip=tooltip
 		return ck
 	end
 end
@@ -1585,46 +1751,101 @@ local me=MAJOR_VERSION .. MINOR_VERSION
 
 do
 	local L=l:NewLocale(me,"enUS",true,true)
-	--@localization(locale="enUS", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
+	L["Configuration"] = true
+L["Description"] = true
+L["Libraries"] = true
+L["Release Notes"] = true
+L["Toggles"] = true
+
 	L=l:NewLocale(me,"ptBR")
 	if (L) then
-	--@localization(locale="ptBR", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
+	L["Configuration"] = "configura\195\167\195\163o"
+L["Description"] = "Descri\195\167\195\163o"
+L["Libraries"] = "bibliotecas"
+L["Release Notes"] = "Notas de Lan\195\167amento"
+L["Toggles"] = "Alterna"
+
 	end
 	L=l:NewLocale(me,"frFR")
 	if (L) then
-	--@localization(locale="frFR", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
+	L["Configuration"] = "configuration"
+L["Description"] = "description"
+L["Libraries"] = "biblioth\195\168ques"
+L["Release Notes"] = "notes de version"
+L["Toggles"] = "Bascule"
+
 	end
 	L=l:NewLocale(me,"deDE")
 	if (L) then
-	--@localization(locale="deDE", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
+	L["Configuration"] = "Konfiguration"
+L["Description"] = "Beschreibung"
+L["Libraries"] = "Bibliotheken"
+L["Release Notes"] = true
+L["Toggles"] = "Schaltet"
+
 	end
 	L=l:NewLocale(me,"itIT")
 	if (L) then
-	--@localization(locale="itIT", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
+	L["Configuration"] = "Configurazione"
+L["Description"] = "Descrizione"
+L["Libraries"] = "Librerie"
+L["Release Notes"] = "Note di rilascio"
+L["Toggles"] = "Interruttori"
+
 	end
 	L=l:NewLocale(me,"koKR")
 	if (L) then
-	--@localization(locale="koKR", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
+	L["Configuration"] = "\234\181\172\236\132\177"
+L["Description"] = "\236\132\164\235\170\133"
+L["Libraries"] = "\235\157\188\236\157\180\235\184\140\235\159\172\235\166\172"
+L["Release Notes"] = "\235\166\180\235\166\172\236\138\164 \235\133\184\237\138\184"
+L["Toggles"] = "\236\160\132\237\153\152"
+
 	end
 	L=l:NewLocale(me,"esMX")
 	if (L) then
-	--@localization(locale="esMX", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
+	L["Configuration"] = "Configuraci\195\179n"
+L["Description"] = "Descripci\195\179n"
+L["Libraries"] = "Bibliotecas"
+L["Release Notes"] = "Notas de la versi\195\179n"
+L["Toggles"] = "Alterna"
+
 	end
 	L=l:NewLocale(me,"ruRU")
 	if (L) then
-	--@localization(locale="ruRU", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
+	L["Configuration"] = "\208\154\208\190\208\189\209\132\208\184\208\179\209\131\209\128\208\176\209\134\208\184\209\143"
+L["Description"] = "\208\158\208\191\208\184\209\129\208\176\208\189\208\184\208\181"
+L["Libraries"] = "\208\145\208\184\208\177\208\187\208\184\208\190\209\130\208\181\208\186\208\184"
+L["Release Notes"] = "\208\159\209\128\208\184\208\188\208\181\209\135\208\176\208\189\208\184\209\143 \208\186 \208\178\209\139\208\191\209\131\209\129\208\186\209\131"
+L["Toggles"] = "\208\159\208\181\209\128\208\181\208\186\208\187\209\142\209\135\208\181\208\189\208\184\208\181"
+
 	end
 	L=l:NewLocale(me,"zhCN")
 	if (L) then
-	--@localization(locale="zhCN", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
+	L["Configuration"] = "\233\133\141\231\189\174"
+L["Description"] = "\232\175\180\230\152\142"
+L["Libraries"] = "\229\155\190\228\185\166\233\166\134"
+L["Release Notes"] = "\229\143\145\232\161\140\232\175\180\230\152\142"
+L["Toggles"] = "\229\136\135\230\141\162"
+
 	end
 	L=l:NewLocale(me,"esES")
 	if (L) then
-	--@localization(locale="esES", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
+	L["Configuration"] = "Configuraci\195\179n"
+L["Description"] = "Descripci\195\179n"
+L["Libraries"] = "Bibliotecas"
+L["Release Notes"] = "Notas de la versi\195\179n"
+L["Toggles"] = "Alterna"
+
 	end
 	L=l:NewLocale(me,"zhTW")
 	if (L) then
-	--@localization(locale="zhTW", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
+	L["Configuration"] = "\233\133\141\231\189\174"
+L["Description"] = "\232\175\180\230\152\142"
+L["Libraries"] = "\229\155\190\228\185\166\233\166\134"
+L["Release Notes"] = "\229\143\145\232\161\140\232\175\180\230\152\142"
+L["Toggles"] = "\229\136\135\230\141\162"
+
 	end
 end
 L=LibStub("AceLocale-3.0"):GetLocale(me,true)

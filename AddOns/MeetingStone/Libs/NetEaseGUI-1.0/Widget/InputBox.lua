@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'InputBox', 3
+local WIDGET, VERSION = 'InputBox', 4
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local InputBox = GUI:NewClass(WIDGET, 'EditBox', VERSION)
@@ -7,65 +7,12 @@ if not InputBox then
     return
 end
 
-function InputBox:Constructor(parent)
-    local tLeft = self:CreateTexture(nil, 'BACKGROUND')
-    tLeft:SetTexture([[Interface\Common\Common-Input-Border]])
-    tLeft:SetTexCoord(0, 0.0625, 0, 0.625)
-    tLeft:SetSize(8, 20)
-    tLeft:SetPoint('LEFT')
+local ARROW_DELTA = {
+    UP = -1,
+    DOWN = 1
+}
 
-    local tRight = self:CreateTexture(nil, 'BACKGROUND')
-    tRight:SetTexture([[Interface\Common\Common-Input-Border]])
-    tRight:SetTexCoord(0.9375, 1.0, 0, 0.625)
-    tRight:SetSize(8, 20)
-    tRight:SetPoint('RIGHT')
-
-    local tMid = self:CreateTexture(nil, 'BACKGROUND')
-    tMid:SetTexture([[Interface\Common\Common-Input-Border]])
-    tMid:SetTexCoord(0.0625, 0.9375, 0, 0.625)
-    tMid:SetPoint('TOPLEFT', tLeft, 'TOPRIGHT')
-    tMid:SetPoint('BOTTOMRIGHT', tRight, 'BOTTOMLEFT')
-
-    local Label = self:CreateFontString(nil, 'OVERLAY', 'GameFontHighlight')
-    Label:Hide()
-
-    self:SetScript('OnEscapePressed', EditBox_ClearFocus)
-    self:SetScript('OnEnterPressed', EditBox_ClearFocus)
-    self:SetScript('OnEditFocusLost', EditBox_ClearHighlight)
-    self:SetScript('OnEditFocusGained', EditBox_HighlightText)
-    self:SetScript('OnTextChanged', self.OnTextChanged)
-
-    self:SetParent(parent)
-    self:SetFontObject('GameFontHighlightSmall')
-    self:SetAutoFocus(nil)
-    self:SetTextInsets(8, 8, 0, 0)
-
-    local Prompt = self:CreateFontString(nil, 'ARTWORK', 'GameFontDisableSmall')
-    Prompt:SetJustifyH('LEFT')
-    Prompt:SetJustifyV('TOP')
-    Prompt:SetPoint('LEFT', 8, 0)
-
-    self.Prompt = Prompt
-    self.Label = Label
-
-    self:SetScript('OnDisable', self.OnDisable)
-    self:SetScript('OnEnable', self.OnEnable)
-end
-
-function InputBox:SetPrompt(prompt)
-    self.Prompt:SetText(prompt)
-end
-
-function InputBox:GetPrompt()
-    return self.Prompt:GetText()
-end
-
-function InputBox:OnTextChanged(...)
-    self.Prompt:SetShown(self:GetText() == '')
-    self:Fire('OnTextChanged', ...)
-end
-
-local _MatchChars = {
+local MATCH_CHARS = {
     ['('] = '%(',
     [')'] = '%)',
     ['.'] = '%.',
@@ -80,8 +27,166 @@ local _MatchChars = {
     ['$'] = '%$',
 }
 
+local AutoCompleteMenu = GUI:GetClass('AutoCompleteFrame'):New(UIParent) do
+    AutoCompleteMenu:SetColumnCount(1)
+    AutoCompleteMenu:SetRowCount(10)
+    AutoCompleteMenu:Hide()
+    AutoCompleteMenu:SetSize(1, 1)
+    AutoCompleteMenu:SetSelectMode('RADIO')
+
+    AutoCompleteMenu:SetCallback('OnItemFormatted', function(_, button, data)
+        button:SetText(data)
+    end)
+    AutoCompleteMenu:SetCallback('OnItemClick', function(AutoCompleteMenu, _, data)
+        AutoCompleteMenu:GetParent():SetText(data)
+        AutoCompleteMenu:GetParent():ClearFocus()
+    end)
+    AutoCompleteMenu:SetScript('OnHide', function(AutoCompleteMenu)
+        AutoCompleteMenu:SetSelected(nil)
+    end)
+
+    function AutoCompleteMenu:Open(parent)
+        self:SetParent(parent)
+        self:SetFrameStrata(parent:GetFrameStrata())
+        self:SetFrameLevel(parent:GetFrameLevel()+50)
+        self:SetPoint('TOPLEFT', parent.tLeft, 'BOTTOMLEFT', 7, 0)
+        self:SetPoint('TOPRIGHT', parent.tRight, 'BOTTOMRIGHT', -9, 0)
+        self:Show()
+        self:Refresh()
+    end
+end
+
+function InputBox:Constructor(parent)
+    local tLeft = self:CreateTexture(nil, 'BACKGROUND') do
+        tLeft:SetTexture([[Interface\Common\Common-Input-Border]])
+        tLeft:SetTexCoord(0, 0.0625, 0, 0.625)
+        tLeft:SetSize(8, 20)
+        tLeft:SetPoint('LEFT')
+    end
+
+    local tRight = self:CreateTexture(nil, 'BACKGROUND') do
+        tRight:SetTexture([[Interface\Common\Common-Input-Border]])
+        tRight:SetTexCoord(0.9375, 1.0, 0, 0.625)
+        tRight:SetSize(8, 20)
+        tRight:SetPoint('RIGHT')
+    end
+
+    local tMid = self:CreateTexture(nil, 'BACKGROUND') do
+        tMid:SetTexture([[Interface\Common\Common-Input-Border]])
+        tMid:SetTexCoord(0.0625, 0.9375, 0, 0.625)
+        tMid:SetPoint('TOPLEFT', tLeft, 'TOPRIGHT')
+        tMid:SetPoint('BOTTOMRIGHT', tRight, 'BOTTOMLEFT')
+    end
+
+    local Label = self:CreateFontString(nil, 'OVERLAY', 'GameFontHighlight') do
+        Label:Hide()
+    end
+
+    local Prompt = self:CreateFontString(nil, 'ARTWORK', 'GameFontDisableSmall') do
+        Prompt:SetJustifyH('LEFT')
+        Prompt:SetJustifyV('TOP')
+        Prompt:SetPoint('LEFT', 8, 0)
+    end
+
+    self.Prompt = Prompt
+    self.Label = Label
+    self.tLeft = tLeft
+    self.tRight = tRight
+
+    self:SetParent(parent)
+    self:SetFontObject('GameFontHighlightSmall')
+    self:SetAutoFocus(nil)
+    self:SetTextInsets(8, 8, 0, 0)
+
+    self:SetScript('OnEscapePressed', self.ClearFocus)
+    self:SetScript('OnEnterPressed', self.OnEnterPressed)
+    self:SetScript('OnEditFocusLost', self.OnEditFocusLost)
+    self:SetScript('OnEditFocusGained', self.OnEditFocusGained)
+    self:SetScript('OnTextChanged', self.OnTextChanged)
+    self:SetScript('OnDisable', self.OnDisable)
+    self:SetScript('OnEnable', self.OnEnable)
+end
+
+function InputBox:OnEnterPressed()
+    if self.enableAutoComplete then
+        local item = AutoCompleteMenu:GetSelectedItem()
+        if item then
+            self:SetText(item)
+        end
+    end
+    self:ClearFocus()
+end
+
+function InputBox:OnEditFocusLost()
+    self:HighlightText(0, 0)
+    AutoCompleteMenu:Hide()
+    self:Fire('OnEditFocusLost')
+end
+
+function InputBox:OnEditFocusGained()
+    self:HighlightText()
+    self:RefreshAutoComplete()
+    self:Fire('OnEditFocusGained')
+end
+
+function InputBox:OnArrowPressed(key)
+    local delta = ARROW_DELTA[key]
+    if not delta then
+        return
+    end
+
+    local index = AutoCompleteMenu:GetSelected()
+    local count = AutoCompleteMenu:GetItemCount()
+
+    if not index then
+        index = delta == 1 and 1 or count
+    else
+        index = (index + delta - 1) % count + 1
+    end
+
+    local offset = AutoCompleteMenu:GetOffset()
+    local maxCount = AutoCompleteMenu:GetMaxCount()
+
+    if index < offset then
+        offset = index
+    elseif index >= offset + maxCount then
+        offset = index - maxCount + 1
+    end
+
+    AutoCompleteMenu:SetOffset(offset)
+    AutoCompleteMenu:SetSelected(index)
+end
+
+function InputBox:OnTextChanged(...)
+    self.Prompt:SetShown(self:GetText() == '')
+    self:RefreshAutoComplete()
+    self:Fire('OnTextChanged', ...)
+end
+
+function InputBox:OnDisable()
+    if self.Label:IsShown() then
+        self.Label:SetAlpha(0.5)
+        self:SetFontObject('GameFontDisableSmall')
+    end
+end
+
+function InputBox:OnEnable()
+    if self.Label:IsShown() then
+        self.Label:SetAlpha(1)
+        self:SetFontObject('GameFontHighlightSmall')
+    end
+end
+
+function InputBox:SetPrompt(prompt)
+    self.Prompt:SetText(prompt)
+end
+
+function InputBox:GetPrompt()
+    return self.Prompt:GetText()
+end
+
 function InputBox:GetMatchText()
-    return (self:GetText():gsub('[().%+-*?^$%%%[%]]', _MatchChars))
+    return (self:GetText():gsub('[().%+-*?^$%%%[%]]', MATCH_CHARS))
 end
 
 function InputBox:SetLabel(text, anchor, spacing)
@@ -101,21 +206,61 @@ function InputBox:SetLabel(text, anchor, spacing)
     self.Label:Show()
 end
 
-function InputBox:OnDisable()
-    if self.Label:IsShown() then
-        self.Label:SetAlpha(0.5)
-        self:SetFontObject('GameFontDisableSmall')
-    end
-end
-
-function InputBox:OnEnable()
-    if self.Label:IsShown() then
-        self.Label:SetAlpha(1)
-        self:SetFontObject('GameFontHighlightSmall')
-    end
-end
-
-local org_SetText = InputBox.SetText
+local orig_SetText = InputBox.SetText
 function InputBox:SetText(text)
-    org_SetText(self, text or '')
+    return orig_SetText(self, text or '')
+end
+
+function InputBox:EnableAutoComplete(flag)
+    self.enableAutoComplete = flag
+    self:SetScript('OnArrowPressed', flag and self.OnArrowPressed or nil)
+    self:RefreshAutoComplete()
+end
+
+function InputBox:IsAutoCompleteEnabled()
+    return self.enableAutoComplete
+end
+
+function InputBox:EnableAutoCompleteFilter(flag)
+    self.disableAutoCompleteFilter = not flag or nil
+    self:RefreshAutoComplete()
+end
+
+function InputBox:IsAutoCompleteFilterEnabled()
+    return not self.disableAutoCompleteFilter
+end
+
+function InputBox:SetAutoCompleteList(data)
+    self.autoCompleteData = data
+    self:RefreshAutoComplete()
+end
+
+function InputBox:GetAutoCompleteData()
+    return self.autoCompleteData
+end
+
+function InputBox:RefreshAutoComplete()
+    if not self.enableAutoComplete or not self.autoCompleteData or not self:HasFocus() then
+        return AutoCompleteMenu:Hide()
+    end
+
+    local text = self:GetMatchText():lower()
+    local list
+    if self.disableAutoCompleteFilter or text == '' then
+        list = self.autoCompleteData
+    else
+        list = {} do
+            for i, v in ipairs(self.autoCompleteData) do
+                if v:lower():match(text) then
+                    tinsert(list, v)
+                end
+            end
+        end
+    end
+    if #list == 0 then
+        return AutoCompleteMenu:Hide()
+    end
+
+    AutoCompleteMenu:SetItemList(list)
+    AutoCompleteMenu:Open(self)
 end

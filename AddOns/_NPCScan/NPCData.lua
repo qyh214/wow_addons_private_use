@@ -936,7 +936,9 @@ local NPC_DATA = {
 	[83634] = { world_id = ZN.DRAENOR,                  map_name = ZN.NAGRAND,                     is_tamable = false, is_achievement = false }, -- Scout Pokhar
 	[83643] = { world_id = ZN.DRAENOR,                  map_name = ZN.NAGRAND,                     is_tamable = false, is_achievement = false }, -- Malroc Stonesunder
 	[83680] = { world_id = ZN.DRAENOR,                  map_name = ZN.NAGRAND,                     is_tamable = false, is_achievement = false }, -- Outrider Duretha
+	[83683] = { world_id = ZN.DRAENOR,                  map_name = ZN.ASHRAN,                      is_tamable = false, is_achievement = true  }, -- Mandragoraster
 	[83691] = { world_id = ZN.DRAENOR,                  map_name = ZN.ASHRAN,                      is_tamable = false, is_achievement = true  }, -- Panthora
+	[83713] = { world_id = ZN.DRAENOR,                  map_name = ZN.ASHRAN,                      is_tamable = false, is_achievement = true  }, -- Titarus
 	[83819] = { world_id = ZN.DRAENOR,                  map_name = ZN.ASHRAN,                      is_tamable = false, is_achievement = true  }, -- Brickhouse
 	[83990] = { world_id = ZN.DRAENOR,                  map_name = ZN.SPIRES_OF_ARAK,              is_tamable = false, is_achievement = false }, -- Solar Magnifier
 	[84110] = { world_id = ZN.DRAENOR,                  map_name = ZN.ASHRAN,                      is_tamable = false, is_achievement = true  }, -- Korthall Soulgorger
@@ -961,9 +963,11 @@ local NPC_DATA = {
 	[84854] = { world_id = ZN.DRAENOR,                  map_name = ZN.ASHRAN,                      is_tamable = false, is_achievement = false }, -- Slippery Slime
 	[84856] = { world_id = ZN.DRAENOR,                  map_name = ZN.SPIRES_OF_ARAK,              is_tamable = false, is_achievement = false }, -- Blightglow
 	[84872] = { world_id = ZN.DRAENOR,                  map_name = ZN.SPIRES_OF_ARAK,              is_tamable = false, is_achievement = false }, -- Oskiira the Vengeful
+	[84875] = { world_id = ZN.DRAENOR,                  map_name = ZN.ASHRAN,                      is_tamable = false, is_achievement = true  }, -- Ancient Inferno
 	[84887] = { world_id = ZN.DRAENOR,                  map_name = ZN.SPIRES_OF_ARAK,              is_tamable = false, is_achievement = false }, -- Betsi Boombasket
 	[84890] = { world_id = ZN.DRAENOR,                  map_name = ZN.SPIRES_OF_ARAK,              is_tamable = false, is_achievement = false }, -- Festerbloom
 	[84893] = { world_id = ZN.DRAENOR,                  map_name = ZN.ASHRAN,                      is_tamable = false, is_achievement = true  }, -- Goregore
+	[84904] = { world_id = ZN.DRAENOR,                  map_name = ZN.ASHRAN,                      is_tamable = false, is_achievement = true  }, -- Oraggro
 	[84911] = { world_id = ZN.DRAENOR,                  map_name = ZN.SHADOWMOON_VALLEY,           is_tamable = false, is_achievement = false }, -- Demidos
 	[84912] = { world_id = ZN.DRAENOR,                  map_name = ZN.SPIRES_OF_ARAK,              is_tamable = false, is_achievement = false }, -- Sunderthorn
 	[84925] = { world_id = ZN.DRAENOR,                  map_name = ZN.SHADOWMOON_VALLEY,           is_tamable = false, is_achievement = false }, -- Quartermaster Hershak
@@ -988,6 +992,8 @@ local NPC_DATA = {
 	[86571] = { world_id = ZN.DRAENOR,                  map_name = ZN.GORGROND,                    is_tamable = false, is_achievement = true  }, -- Durp the Hated
 	[86574] = { world_id = ZN.DRAENOR,                  map_name = ZN.GORGROND,                    is_tamable = false, is_achievement = true  }, -- Inventor Blammo
 	[86579] = { world_id = ZN.DRAENOR,                  map_name = ZN.GORGROND,                    is_tamable = false, is_achievement = true  }, -- Blademaster Ro'gor
+	[86577] = { world_id = ZN.DRAENOR,                  map_name = ZN.GORGROND,                    is_tamable = false, is_achievement = true  }, -- Horgg
+	[86582] = { world_id = ZN.DRAENOR,                  map_name = ZN.GORGROND,                    is_tamable = false, is_achievement = true  }, -- Morgo Kain
 	[86689] = { world_id = ZN.DRAENOR,                  map_name = ZN.SHADOWMOON_VALLEY,           is_tamable = false, is_achievement = false }, -- Sneevel
 	[86724] = { world_id = ZN.DRAENOR,                  map_name = ZN.SPIRES_OF_ARAK,              is_tamable = false, is_achievement = false }, -- Hermit Palefur
 	[86732] = { world_id = ZN.DRAENOR,                  map_name = ZN.NAGRAND,                     is_tamable = false, is_achievement = false }, -- Bergruu

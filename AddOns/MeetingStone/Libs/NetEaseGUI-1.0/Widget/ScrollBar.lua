@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'ScrollBar', 4
+local WIDGET, VERSION = 'ScrollBar', 6
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local ScrollBar = GUI:NewClass(WIDGET, 'Slider.UIPanelScrollBarTemplate', VERSION)
@@ -13,6 +13,7 @@ function ScrollBar:Constructor(parent)
     end
     self:SetParent(parent)
     self:SetScript('OnValueChanged', self.OnValueChanged)
+    self:SetScript('OnMinMaxChanged', self.OnMinMaxChanged)
     self:SetValueStep(1)
     self:SetMinMaxValues(0, 1)
     self:SetValue(0)
@@ -27,6 +28,12 @@ function ScrollBar:OnValueChanged(value)
         self:UpdateButton()
         self:GetParent():SetOffset(value)
     end
+end
+
+function ScrollBar:OnMinMaxChanged(...)
+    self.minVal, self.maxVal = ...
+    self:UpdateButton()
+    self:UpdateShown()
 end
 
 function ScrollBar:UpdateButton()
@@ -54,15 +61,6 @@ end
 ScrollBar.SetScrollStep = ScrollBar.SetStepsPerPage
 ScrollBar.GetScrollStep = ScrollBar.GetStepsPerPage
 
-local orig_SetMinMaxValues = ScrollBar.SetMinMaxValues
-
-function ScrollBar:SetMinMaxValues(minVal, maxVal)
-    orig_SetMinMaxValues(self, minVal, maxVal)
-    self.minVal, self.maxVal = minVal, maxVal
-    self:UpdateButton()
-    self:UpdateShown()
-end
-
 function ScrollBar:AtTop()
     return self:GetValue() == self.minVal
 end
@@ -77,4 +75,9 @@ end
 
 function ScrollBar:ScrollToBottom()
     self:SetValue(self.maxVal)
+end
+
+local orig_GetValue = ScrollBar.GetValue
+function ScrollBar:GetValue()
+    return floor(orig_GetValue(self) + 0.5)
 end

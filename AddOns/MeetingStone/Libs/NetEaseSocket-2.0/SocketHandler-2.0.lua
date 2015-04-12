@@ -4,15 +4,17 @@ local SocketMiddleware = LibStub('NetEaseSocketMiddleware-2.0')
 local AceTimer = LibStub('AceTimer-3.0')
 local AceEvent = LibStub('AceEvent-3.0')
 
-local MAJOR, MINOR = 'SocketHandler-2.0', 12
+local MAJOR, MINOR = 'SocketHandler-2.0', 13
 local SocketHandler,oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not SocketHandler then return end
+
+local random = fastrandom or random
 
 local SOCKET_NORMAL  = 1
 local SOCKET_CONNECT = 2
 local SOCKET_READY   = 3
 
-local CONNECT_DELAY = 60
+local CONNECT_DELAY = (...):match('^!!!!!!!!') and 10 or 60
 local RETRY_DELAY = CONNECT_DELAY
 
 local NOT_FOUND_MATCH = ERR_CHAT_PLAYER_NOT_FOUND_S:format('(.+)')
@@ -27,6 +29,7 @@ SocketHandler.EventHandler = SocketHandler.EventHandler or {}
 SocketHandler.objects = SocketHandler.objects or {}
 SocketHandler.channels = SocketHandler.channels or {}
 SocketHandler.connectQueue = SocketHandler.connectQueue or {}
+SocketHandler.connectStatus = SocketHandler.connectStatus or {}
 
 SocketHandler.status = SOCKET_NORMAL
 SocketHandler.isLoggedIn = false
@@ -89,12 +92,13 @@ end
 function SocketHandler:PreServer(cmd, distribution, sender, ...)
     if cmd == 'NETEASE_CONNECT_SUCCESS' then
         local key, channelName = ...
-        if self.connectKey and self.connectKey == key then
-            self:CancelTimer(self.retryConnectTimer)
+        local statusTable = self.statusTable
+        local connectKey = statusTable and statusTable.connectKey
+        if connectKey and connectKey == key then
+            self:CancelTimer(statusTable.retryConnectTimer)
             self.target = sender
-            self.status = SOCKET_READY
-            self.connectKey = nil
-            self.retryConnectTimer = nil
+            statusTable.status = SOCKET_READY
+            statusTable.retryConnectTimer = nil
 
             self:SetChannel(channelName)
 
@@ -123,6 +127,7 @@ end
 function SocketHandler:ListenSocket(prefix, target)
     self.prefix = prefix
     self.connectTarget = formatTarget(target)
+    self:UpdateStatusTable()
     self:Listen(prefix, 4)
 end
 
@@ -154,12 +159,16 @@ function SocketHandler:SendSocket(target, cmd, ...)
 end
 
 function SocketHandler:ConnectServer(target)
-    self.connectTarget = formatTarget(target) or self.connectTarget
-    self.status = SOCKET_CONNECT
-
-    if not self.connectTarget then
-        error('Can`t found connectTarget in object', 2)
+    if not self.prefix then
+        error('Can`t found prefix in object', 4)
     end
+    self.connectTarget = formatTarget(target) or self.connectTarget
+    if not self.connectTarget then
+        error('Can`t found connectTarget in object', 4)
+    end
+
+    self:UpdateStatusTable()
+    self.statusTable.status = SOCKET_CONNECT
 
     self:RegisterCallback('NETEASE_CONNECT_SUCCESS', 'OnSocket')
     self:RegisterCallback('NETEASE_CHANNEL_OWNER', 'OnSocket')
@@ -192,9 +201,16 @@ function SocketHandler:SendServer(cmd, ...)
 end
 
 function SocketHandler:TryConnect()
+    local statusTable = self.statusTable
+    if not statusTable then
+        return
+    end
+    if self:TimeLeft(statusTable.retryConnectTimer) > 0 then
+        return
+    end
     if self.isLoggedIn then
         self:Send('WHISPER', self.connectTarget, 'NETEASE_CONNECT', self:GetConnectKey())
-        self.retryConnectTimer = self:ScheduleTimer('TryConnect', RETRY_DELAY)
+        statusTable.retryConnectTimer = self:ScheduleTimer('TryConnect', RETRY_DELAY)
     else
         if not tContains(connectQueue, self) then
             tinsert(connectQueue, self)
@@ -202,11 +218,22 @@ function SocketHandler:TryConnect()
     end
 end
 
-function SocketHandler:GetConnectKey()
-    if not self.connectKey then
-        self.connectKey = tostring(random(0x100000, 0xFFFFFF))
+function SocketHandler:UpdateStatusTable()
+    if self.prefix and self.connectTarget then
+        local key = self.prefix .. '.' .. self.connectTarget
+        self.connectStatus[key] = self.connectStatus[key] or {}
+        self.statusTable = self.connectStatus[key]
+    else
+        self.statusTable = nil
     end
-    return self.connectKey
+end
+
+function SocketHandler:GetConnectKey()
+    local statusTable = self.statusTable
+    if not statusTable.connectKey then
+        statusTable.connectKey = tostring(random(0x100000, 0xFFFFFF))
+    end
+    return statusTable.connectKey
 end
 
 function SocketHandler:SetChannel(channelName)
@@ -231,7 +258,8 @@ function SocketHandler:SetChannel(channelName)
 end
 
 function SocketHandler:IsReady()
-    return self.status == SOCKET_READY
+    local statusTable = self.statusTable
+    return statusTable and statusTable.status == SOCKET_READY
 end
 
 function SocketHandler:IsServer(sender)

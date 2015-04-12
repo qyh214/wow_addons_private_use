@@ -1,6 +1,6 @@
 
 local GUI = LibStub('NetEaseGUI-1.0')
-local View = GUI:NewEmbed('Scroll', 2)
+local View = GUI:NewEmbed('Scroll', 3)
 if not View then
     return
 end
@@ -60,6 +60,9 @@ end
 
 function View:SetOffset(offset)
     self.offset = floor(offset + 0.5)
+    if self.ScrollBar then
+        self.ScrollBar:SetValue(self.offset)
+    end
     self:Refresh()
 end
 
@@ -86,7 +89,6 @@ function View:UpdateScrollBar(position)
     elseif self:IsHoldBottom() and self:AtBottom() then
         value = maxValue
     elseif self.ScrollBar then
-        -- value = self.ScrollBar:GetValue()
         value = self:GetOffset()
     elseif self.GetReverse and self:GetReverse() then
         value = maxValue
@@ -113,17 +115,17 @@ function View:ScrollToBottom()
 end
 
 function View:EnableHoldBottom(flag)
-    self.notHoldBottom = not flag or nil
+    self.holdBottom = flag or nil
 end
 
 function View:EnableHoldTop(flag)
-    self.notHoldTop = not flag or nil
+    self.holdTop = flag or nil
 end
 
 function View:IsHoldBottom()
-    return not self.notHoldBottom
+    return self.holdBottom
 end
 
 function View:IsHoldTop()
-    return not self.notHoldTop
+    return self.holdTop
 end

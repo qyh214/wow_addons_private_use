@@ -55,7 +55,12 @@ end
 function Addon:Toggle()
     if Logic:IsSupport() then
         Addon:ToggleModule('MainPanel')
-        MainPanel:SelectPanel(C_LFGList.GetActiveEntryInfo() and ManagerPanel or BrowsePanel)
+        
+        if C_LFGList.GetActiveEntryInfo() then
+            MainPanel:SelectPanel(ManagerPanel)
+        elseif DataCache:GetObject('ActivitiesData'):IsNew() then
+            MainPanel:SelectPanel(ActivitiesParent)
+        end
     else
         self:ShowNewVersion(self.url, self.changeLog)
     end

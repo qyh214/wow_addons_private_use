@@ -3,17 +3,20 @@
 ## Notes: Garrision missions UI tweaks.
 ## LoadOnDemand: 1
 ## LoadWith: Blizzard_GarrisonUI
-## RequiredDeps: Blizzard_GarrisonUI
-## Version: 0.32
+## RequiredDeps: Blizzard_GarrisonUI, MasterPlanA
+## Version: 0.40
 ## Author: foxlit
 ## X-Website: http://www.townlong-yak.com/master-plan/
 ## SavedVariablesPerCharacter: MasterPlanPC
+## Globe-Pre: MasterPlanA
 Libs/Evie.lua
+Libs/Reframe.lua
 Locale.lua
-Mark-23.lua
+Mark-40.lua
 GarrisonAPI-Data.lua
 GarrisonAPI.lua
 MasterPlan.lua
 MissionsUI.lua
 GarrisonMissions.lua
 GarrisonFollowers.lua
+GarrisonLanding.lua

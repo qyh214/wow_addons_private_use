@@ -54,11 +54,19 @@ function Button:SetTooltip(...)
 end
 
 function Button:OnEnable()
-    self.Icon:SetDesaturated(false)
+    if self.Cooldown then
+        self.Cooldown:SetCooldown(0, 0)
+    else
+        self.Icon:SetDesaturated(false)
+    end
 end
 
 function Button:OnDisable()
-    self.Icon:SetDesaturated(true)
+    if self.Cooldown then
+        self.Cooldown:SetCooldown(GetTime(), self.cooldown)
+    else
+        self.Icon:SetDesaturated(true)
+    end
 end
 
 function Button:SetIcon(icon)
@@ -67,4 +75,20 @@ end
 
 function Button:SetIconTexCoord(left, right, top, bottom)
     self.Icon:SetTexCoord(left, right, top, bottom)
+end
+
+function Button:SetCooldown(cooldown)
+    if not self.Cooldown then
+        local Cooldown = CreateFrame('Cooldown', nil, self, 'CooldownFrameTemplate') do
+            Cooldown:SetPoint('TOPLEFT', 4, -4)
+            Cooldown:SetPoint('BOTTOMRIGHT', -4, 4)
+            Cooldown:SetHideCountdownNumbers(true)
+            Cooldown:SetScript('OnCooldownDone', function()
+                self:Enable()
+            end)
+        end
+        self.Cooldown = Cooldown
+    end
+    self.cooldown = cooldown
+    self.Icon:SetDesaturated(false)
 end

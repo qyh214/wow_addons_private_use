@@ -72,7 +72,7 @@ function CodeDescriptionData(activity)
         return nil, 0
     else
         local activityId = activity:GetActivityID()
-        local data = format('(%s)', AceSerializer:Serialize(GetPlayerRaidProgression(activityId), GetPlayerPVPRating(activityId), GetAddonSource(true)))
+        local data = format('(%s)', AceSerializer:Serialize(GetPlayerRaidProgression(activityId), GetPlayerPVPRating(activityId), GetAddonSource()))
         return data, strlenutf8(data)
     end
 end
@@ -166,17 +166,27 @@ function GetActivityName(id)
     return ACTIVITY_CUSTOM_NAMES[id] or ACTIVITY_NAME_CACHE[id]
 end
 
-function GetAddonSource(mark)
-    for line in gmatch('\033\033\033\049\054\051\085\073\033\033\033\058\050\058\049\010\066\105\103\070\111\111\116\058\051\058\049\010\068\117\111\119\097\110\058\052\058\048\010\069\108\118\085\073\058\053\058\049', '[^\r\n]+') do
-        local n, v, c = line:match('^(.+):(%d+):(%d+)$')
-        if IsAddOnLoaded(n) and (not mark or c == '1') then
+function GetAddonSource()
+    for line in gmatch('\066\105\103\070\111\111\116\058\049\010\033\033\033\049\054\051\085\073\033\033\033\058\050\010\068\117\111\119\097\110\058\052\010\069\108\118\085\073\058\056', '[^\r\n]+') do
+        local n, v = line:match('^(.+):(%d+)$')
+        if IsAddOnLoaded(n) then
             return tonumber(v)
         end
     end
-
     return 0
 end
 
 function GetFullVersion(version)
     return version:gsub('(%d)(%d)(%d%d)', '%10%200.%3')
+end
+
+function FormatActivitiesSummaryUrl(summary, url)
+    return (summary:gsub('{URL([^}]*)}', function(info)
+        local path, text = info:match('^(.*):(.+)$')
+        if not path then
+            path = info
+            text = url .. path
+        end
+        return format('|Hurl:%s%s|h|cff00ffff[%s]|r|h', url, path, text)
+    end))
 end

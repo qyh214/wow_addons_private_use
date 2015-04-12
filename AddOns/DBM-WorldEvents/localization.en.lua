@@ -179,3 +179,30 @@ L = DBM:GetModLocalization("Annihilon")
 L:SetGeneralLocalization({
 	name = "Annihilon"
 })
+
+--------------
+--  Teluur  --
+--------------
+L = DBM:GetModLocalization("Teluur")
+
+L:SetGeneralLocalization({
+	name = "Teluur"
+})
+
+----------------------
+--  Lady Fleshsear  --
+----------------------
+L = DBM:GetModLocalization("LadyFleshsear")
+
+L:SetGeneralLocalization({
+	name = "Lady Fleshsear"
+})
+
+----------------------
+--  Commander Dro'gan  --
+----------------------
+L = DBM:GetModLocalization("Drogan")
+
+L:SetGeneralLocalization({
+	name = "Commander Dro'gan"
+})

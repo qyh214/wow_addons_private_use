@@ -1,6 +1,6 @@
 
 local GUI = LibStub('NetEaseGUI-1.0')
-local View = GUI:NewEmbed('Blocker', 1)
+local View = GUI:NewEmbed('Blocker', 4)
 if not View then
     return
 end
@@ -37,9 +37,10 @@ end
 function View:UpdateBlockers()
     local prevBlocker = self
     for i, blocker in ipairs(self.blockers) do
-        if blocker:IsShown() or blocker:Fire('OnCheck') then
+        if blocker:IsVisible() or (blocker:GetParent():IsVisible() and blocker:Fire('OnCheck')) then
             blocker:Show()
             blocker:SetFrameLevel(prevBlocker:GetFrameLevel() + 50)
+            blocker:Fire('OnFormat')
             prevBlocker = blocker
         else
             blocker:Hide()
@@ -50,14 +51,13 @@ function View:UpdateBlockers()
         if self.HideHelpButtons then
             self:HideHelpButtons()
         end
-        self.portrait:SetParent(prevBlocker)
-        self.portraitFrame:SetParent(prevBlocker)
+        if self.PortraitFrame then
+            self.PortraitFrame:SetFrameLevel(max(prevBlocker:GetFrameLevel()+1, self.PortraitFrame:GetFrameLevel()))
+        end
     else
         if self.ShowHelpButtons then
             self:ShowHelpButtons()
         end
-        self.portrait:SetParent(self)
-        self.portraitFrame:SetParent(self)
     end
 end
 

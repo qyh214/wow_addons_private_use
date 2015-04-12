@@ -13,4 +13,6 @@
   <Script file="MallItem.lua" />
   <Script file="Cover.lua" />
   <Script file="BossCheckBox.lua" />
+  <Script file="LotteryItem.lua" />
+  <Script file="ActivitiesTabItem.lua" />
 </Ui>

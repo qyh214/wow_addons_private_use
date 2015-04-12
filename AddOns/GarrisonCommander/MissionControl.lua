@@ -130,6 +130,7 @@ do
 				GMC.ml.widget:SetTitleColor(C.Green())
 				wipe(GMCUsedFollowers)
 				this:Enable()
+				GMC.runButton:Enable()
 				if (#GMC.ml.Parties>0) then
 					GMC.runButton:Enable()
 				end
@@ -158,7 +159,7 @@ do
 					minimumChance=tonumber(GMC.settings.rewardChance[checkprio]) or 100
 				end
 				local party={members={},perc=0}
-				self:MCMatchMaker(missionID,party,false,false)
+				self:MCMatchMaker(missionID,party,GMC.settings.skipEpic)
 				xprint ("                           Requested",class,";",minimumChance,"Mission",party.perc,party.full)
 				if ( party.full and party.perc >= minimumChance) then
 					xprint("                           Mission accepted")
@@ -185,6 +186,7 @@ end
 
 function addon:GMC_OnClick_Run(this,button)
 	this:Disable()
+	GMC.logoutButton:Disable()
 	do
 	local elapsed=0
 	local co=coroutine.wrap(self.GMCRunMission)
@@ -195,6 +197,7 @@ function addon:GMC_OnClick_Run(this,button)
 			local rc=co(self)
 			if (not rc) then
 				self:Unhook(GMC.runButton,'OnUpdate')
+				GMC.logoutButton:Enable()
 			end
 		end
 	end
@@ -206,9 +209,16 @@ function addon:GMC_OnClick_Start(this,button)
 	GMC.ml.widget:ClearChildren()
 	if (self:GetTotFollowers(AVAILABLE) == 0) then
 		GMC.ml.widget:SetTitle("All followers are busy")
+		GMC.ml.widget:SetTitleColor(C.Orange())
+		return
+	end
+	if ( G.IsAboveFollowerSoftCap() ) then
+		GMC.ml.widget:SetTitle(GARRISON_MAX_FOLLOWERS_MISSION_TOOLTIP)
+		GMC.ml.widget:SetTitleColor(C.Red())
 		return
 	end
 	this:Disable()
+	GMC.ml.widget:SetTitleColor(C.Green())
 	addon:GMCCreateMissionList(aMissions)
 	wipe(GMCUsedFollowers)
 	wipe(GMC.ml.Parties)
@@ -222,6 +232,13 @@ function addon:GMC_OnClick_Start(this,button)
 	self:RawHookScript(GMC.startButton,'OnUpdate',"GMCCalculateMissions")
 
 end
+function addon:HasSalvageYard()
+	local buildings=G.GetBuildings()
+	for i =1,#buildings do
+		local building=buildings[i]
+		if building.texPrefix=="GarrBuilding_SalvageYard_1_A" then return true end
+	end
+end
 local chestTexture
 function addon:GMCBuildPanel(bigscreen)
 	db=self.db.global
@@ -230,8 +247,9 @@ function addon:GMCBuildPanel(bigscreen)
 	chestTexture='GarrMission-'..UnitFactionGroup('player').. 'Chest'
 	GMC = CreateFrame('FRAME', 'GMCOptions', GMF)
 	GMC.settings=dbcache.missionControl
-	GMC:SetPoint('CENTER')
-	GMC:SetSize(GMF:GetWidth(), GMF:GetHeight())
+	GMC:SetAllPoints()
+	--GMC:SetPoint('LEFT')
+	--GMC:SetSize(GMF:GetWidth(), GMF:GetHeight())
 	GMC:Hide()
 	local chance=self:GMCBuildChance()
 	local duration=self:GMCBuildDuration()
@@ -240,14 +258,14 @@ function addon:GMCBuildPanel(bigscreen)
 	local list=self:GMCBuildMissionList()
 	duration:SetPoint("TOPLEFT",0,-50)
 	chance:SetPoint("TOPLEFT",duration,"TOPRIGHT",bigscreen and 50 or 10,0)
-	priorities:SetPoint("TOPLEFT",duration,"BOTTOMLEFT",25,-40)
-	rewards:SetPoint("TOPLEFT",priorities,"TOPRIGHT",bigscreen and 50 or 15,0)
+	priorities:SetPoint("TOPLEFT",duration,"BOTTOMLEFT",25,-50)
+	rewards:SetPoint("TOPLEFT",priorities,"TOPRIGHT",bigscreen and 50 or 15,30)
 	list:SetPoint("TOPLEFT",chance,"TOPRIGHT",10,-30)
 	list:SetPoint("BOTTOMRIGHT",GMF,"BOTTOMRIGHT",-25,25)
 	GMC.startButton = CreateFrame('BUTTON',nil,  list.frame, 'GameMenuButtonTemplate')
 	GMC.startButton:SetText('Calculate')
 	GMC.startButton:SetWidth(148)
-	GMC.startButton:SetPoint('TOPLEFT',15,25)
+	GMC.startButton:SetPoint('TOPLEFT',10,25)
 	GMC.startButton:SetScript('OnClick', function(this,button) self:GMC_OnClick_Start(this,button) end)
 	GMC.startButton:SetScript('OnEnter', function() GameTooltip:SetOwner(GMC.startButton, 'ANCHOR_TOPRIGHT') GameTooltip:AddLine('Assign your followers to missions.') GameTooltip:Show() end)
 	GMC.startButton:SetScript('OnLeave', function() GameTooltip:Hide() end)
@@ -255,15 +273,20 @@ function addon:GMCBuildPanel(bigscreen)
 	GMC.runButton:SetText('Send all mission at once')
 	GMC.runButton:SetScript('OnEnter', function()
 		GameTooltip:SetOwner(GMC.runButton, 'ANCHOR_TOPRIGHT')
-		GameTooltip:AddLine('Submit all yopur mission at once. No question asked.')
-		GameTooltip:AddLine('You can also send mission one by one clicking on each button.')
+		GameTooltip:AddLine(L["Submit all your mission at once. No question asked."])
+		GameTooltip:AddLine(L["You can also send mission one by one clicking on each button."])
 		GameTooltip:Show()
 	end)
 	GMC.runButton:SetScript('OnLeave', function() GameTooltip:Hide() end)
 	GMC.runButton:SetWidth(148)
-	GMC.runButton:SetPoint('TOPRIGHT',-15,25)
 	GMC.runButton:SetScript('OnClick',function(this,button) self:GMC_OnClick_Run(this,button) end)
 	GMC.runButton:Disable()
+	GMC.runButton:SetPoint('TOPRIGHT',-10,25)
+	GMC.logoutButton=CreateFrame('BUTTON', nil,list.frame, 'GameMenuButtonTemplate')
+	GMC.logoutButton:SetText(LOGOUT)
+	GMC.logoutButton:SetWidth(ns.bigscreen and 148 or 90)
+	GMC.logoutButton:SetScript("OnClick",function() GMF:Hide() Logout() end )
+	GMC.logoutButton:SetPoint('TOP',0,25)
 	GMC.skipRare=factory:Checkbox(GMC,GMC.settings.skipRare,L["Ignore rare missions"])
 	GMC.skipRare:SetPoint("TOPLEFT",priorities,"BOTTOMLEFT",0,-10)
 	GMC.skipRare:SetScript("OnClick",function(this)
@@ -271,14 +294,23 @@ function addon:GMCBuildPanel(bigscreen)
 		addon:GMC_OnClick_Start(GMC.startButton,"LeftUp")
 	end)
 	local warning=GMC:CreateFontString(nil,"ARTWORK","CombatTextFont")
-	warning:SetText(L["Epic followers are NEVER sent alone on xp only missions"])
+	warning:SetText(L["Epic followers are NOT sent alone on xp only missions"])
 	warning:SetPoint("TOPLEFT",GMC,"TOPLEFT",0,-25)
 	warning:SetPoint("TOPRIGHT",GMC,"TOPRIGHT",0,-25)
 	warning:SetJustifyH("CENTER")
 	warning:SetTextColor(C.Orange())
-	GMC.Credits=GMC:CreateFontString(nil,"ARTWORK","DestinyFontLarge")
+	if (GMC.settings.skipEpic) then warning:Show() else warning:Hide() end
+	GMC.skipEpic=factory:Checkbox(GMC,GMC.settings.skipEpic,L["Ignore epic followers for xp only missions"])
+	GMC.skipEpic:SetPoint("TOPLEFT",GMC.skipRare,"BOTTOMLEFT",0,-10)
+	GMC.skipEpic:SetScript("OnClick",function(this)
+		GMC.settings.skipEpic=this:GetChecked()
+		if (GMC.settings.skipEpic) then warning:Show() else warning:Hide() end
+		addon:GMC_OnClick_Start(GMC.startButton,"LeftUp")
+	end)
+	GMC.Credits=GMC:CreateFontString(nil,"ARTWORK","QuestFont_Shadow_Small")
 	GMC.Credits:SetWidth(0)
-	GMC.Credits:SetFormattedText(C("Original concept and interface by %s",'Yellow'),C("Motig","Red") )
+	GMC.Credits:SetFormattedText(C(L["Original concept and interface by %s"],'Yellow'),C("Motig","Red") )
+	GMC.Credits:SetJustifyH("LEFT")
 	GMC.Credits:SetPoint("BOTTOMLEFT",25,25)
 	return GMC
 end
@@ -412,8 +444,6 @@ end
 function addon:GMCBuildRewards()
 	--Allowed rewards
 	GMC.aif = CreateFrame('FRAME', nil, GMC)
-	GMC.aif:SetPoint('CENTER', 0, 120)
-
 	GMC.itf = GMC.aif:CreateFontString()
 	GMC.itf:SetFontObject('GameFontNormalHuge')
 	GMC.itf:SetText('Allowed Rewards')
@@ -431,7 +461,8 @@ function addon:GMCBuildRewards()
 		{t = 'Enable/Disable other currency awards. (Resources/Seals)', i= 'Interface\\Icons\\inv_garrison_resource', key = 'resources'},
 		{t = 'Enable/Disable Follower XP Bonus rewards.', i = 'Interface\\Icons\\XPBonus_Icon', key = 'xp'},
 		{t = 'Enable/Disable follower equip enhancement.', i = 'Interface\\ICONS\\Garrison_ArmorUpgrade', key = 'followerEquip'},
-		{t = 'Enable/Disable item tokens.', i = "Interface\\ICONS\\INV_Bracer_Cloth_Reputation_C_01", key = 'equip'}
+		{t = 'Enable/Disable item tokens.', i = "Interface\\ICONS\\INV_Bracer_Cloth_Reputation_C_01", key = 'equip'},
+		{t = 'Enable/Disable other rewards.', i = "Interface\\ICONS\\INV_Box_02", key = 'generic'}
 	}
 	local scale=1.1
 	GMC.ignoreFrames = {}
@@ -506,11 +537,12 @@ local addPriorityRule,prioRefresh,removePriorityRule,prioMenu,prioTitles,prioChe
 do
 -- 1 = item, 2 = folitem, 3 = exp, 4 = money, 5 = resource
 	prioTitles={
-		itemLevel="Equipment",
-		followerUpgrade="Followr Upgrade",
-		xp="Xp gain",
-		gold="Gold Reward",
-		resources="Resource Rewards"
+		itemLevel=L["Equipment"],
+		followerUpgrade=L["Follower Upgrade"],
+		xp=L["Xp gain"],
+		gold=L["Gold Reward"],
+		resources=L["Resource Rewards"],
+		generic=L["Other Rewards"]
 	}
 	prioVoices=0
 	for _ in pairs(prioTitles) do prioVoices=prioVoices+1 end
@@ -559,7 +591,7 @@ _G.XPRIO=prioRefresh
 function addon:GMCBuildPriorities()
 	--Prio
 	GMC.pf = CreateFrame('FRAME', nil, GMC)
-	GMC.pf:SetSize(256, 240)
+	GMC.pf:SetSize(256, prioVoices *32 +60)
 
 	GMC.pft = GMC.pf:CreateFontString()
 	GMC.pft:SetFontObject('GameFontNormalHuge')
@@ -570,7 +602,7 @@ function addon:GMCBuildPriorities()
 	GMC.pft2 = GMC.pf:CreateFontString()
 	GMC.pft2:SetFontObject('GameFontNormal')
 	GMC.pft2:SetText('Prioritize missions with certain a reward.')
-	GMC.pft2:SetPoint('BOTTOM', 0, 16)
+	GMC.pft2:SetPoint('BOTTOM', 0, 0)
 	GMC.pft2:SetTextColor(1, 1, 1)
 	GMC.pmf = CreateFrame("FRAME", "GMC_PRIO_MENU", GMC.pf, "UIDropDownMenuTemplate")
 

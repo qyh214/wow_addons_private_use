@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod("Annihilon", "DBM-WorldEvents", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13243 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13573 $"):sub(12, -3))
 mod:SetCreatureID(90802)
 mod:SetZone(1159, 1331, 1158, 1153, 1152, 1330)--4 of these not needed, but don't know what's what ATM
 
 mod:RegisterCombat("combat")
+mod:SetMinCombatTime(15)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 180939 180932",
@@ -13,17 +14,14 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 180950"
 )
 
---Annihilon
 local warnVoidBomb				= mod:NewTargetAnnounce(180939, 3)
 local warnWhirlingVoid			= mod:NewTargetAnnounce(180932, 2)
 local warnTwistMind				= mod:NewTargetAnnounce(180950, 4)
 
---Annihilon
 local specWarnVoidBomb			= mod:NewSpecialWarningYou(180939)
 local yellVoidBomb				= mod:NewYell(180939)
 local specWarnTwistMind			= mod:NewSpecialWarningSwitch(180950, "Dps")
 
---Annihilon
 local timerWhirlingVoidCD		= mod:NewCDTimer(14, 180932)
 local timerTwistMindCD			= mod:NewCDTimer(28, 180950)
 
@@ -46,10 +44,12 @@ function mod:BombTarget(targetname, uId)
 	end
 end
 
-function mod:OnCombatStart(delay)
+function mod:OnCombatStart(delay, summonTriggered)
 	self.vb.MCCount = 0
-	timerWhirlingVoidCD:Start(7.5)--Only one pull, small sample
-	timerTwistMindCD:Start(34)--Only one pull, small sample	
+	if summonTriggered then
+		timerWhirlingVoidCD:Start(7.5)--Only one pull, small sample
+		timerTwistMindCD:Start(34)--Only one pull, small sample	
+	end
 end
 
 function mod:OnCombatEnd()
@@ -59,7 +59,6 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 180939 then
 		self:BossTargetScanner(90802, "BombTarget", 0.05, 25)
@@ -69,7 +68,6 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 180950 then
 		self.vb.MCCount = self.vb.MCCount + 1
@@ -77,9 +75,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:AntiSpam(2, 1) then
 			specWarnTwistMind:Show()
 			timerTwistMindCD:Start()
-			if self.Options.HudMapOnMC then
-				DBMHudMap:Enable()
-			end
 		end
 		if self.Options.HudMapOnMC then
 			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 30, 1, 1, 0, 0.5, nil, true):Pulse(0.5, 0.5)
@@ -88,7 +83,6 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 180950 then
 		self.vb.MCCount = self.vb.MCCount - 1
@@ -98,7 +92,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.vb.MCCount == 0 then
 			specWarnTwistMind:Show()
 			timerTwistMindCD:Start()
-			DBMHudMap:Disable()
 		end
 	end
 end

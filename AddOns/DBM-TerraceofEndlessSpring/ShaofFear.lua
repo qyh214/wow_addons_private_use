@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(709, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(60999)--61042 Cheng Kang, 61046 Jinlun Kun, 61038 Yang Guoshi, 61034 Terror Spawn
 mod:SetEncounterID(1431)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -84,6 +84,13 @@ local countdownBreathOfFear				= mod:NewCountdown(33.3, 119414, nil, nil, 10)
 mod:AddBoolOption("RangeFrame")--For Eerie Skull (2 yards) and Unstable Bolt (3 yards)
 mod:AddBoolOption("SetIconOnHuddle")
 
+mod.vb.phase = 1
+mod.vb.dreadSprayCounter = 0
+mod.vb.specialsCast = 000--Huddle(100), Spout(10), Strike(1)
+mod.vb.thrashCount = 0
+mod.vb.submergeCount = 0
+mod.vb.specialCount = 0
+local huddleIcon = 8
 local wallLight = GetSpellInfo(117964)
 local fearless = GetSpellInfo(118977)
 local waterspout = GetSpellInfo(120519)
@@ -95,14 +102,7 @@ local huddleInTerrorTargets = {}
 local huddleInTerrorIcons = {}
 local platformSent = false
 local onPlatform = false--Used to determine when YOU are sent to a platform, so we know to activate MobID on next shoot
-local phase2 = false
-local dreadSprayCounter = 0
-local thrashCount = 0
-local submergeCount = 0
-local specialCount = 0
-local huddleIcon = 8
 local MobID = 0
-local specialsCast = 000--Huddle(100), Spout(10), Strike(1)
 
 local Spawns = {
 	[1] = 1,
@@ -133,32 +133,32 @@ local function warnOminousCackleTargets()
 end
 
 local function warnWaterspoutTargets()
-	warnWaterspout:Show(specialCount, table.concat(waterspoutTargets, "<, >"))
+	warnWaterspout:Show(mod.vb.specialCount, table.concat(waterspoutTargets, "<, >"))
 	table.wipe(waterspoutTargets)
 end
 
 local function warnHuddleInTerrorTargets()
-	warnHuddleInTerror:Show(specialCount, table.concat(huddleInTerrorTargets, "<, >"))
+	warnHuddleInTerror:Show(mod.vb.specialCount, table.concat(huddleInTerrorTargets, "<, >"))
 	table.wipe(huddleInTerrorTargets)
 	huddleIcon = 8
 end
 
-local function startSpecialTimers()
+local function startSpecialTimers(self)
 	if not mod.Options.timerSpecialAbility then return end
 	--Huddle(100), Spout(10), Strike(1)
-	if specialsCast == 110 then
+	if self.vb.specialsCast == 110 then
 		timerImplacableStrikeCD:Start()
 	end
-	if specialsCast == 101 then
+	if self.vb.specialsCast == 101 then
 		timerWaterspoutCD:Start()
 	end
-	if specialsCast == 100 then
+	if self.vb.specialsCast == 100 then
 		timerSpoStrCD:Start()
 	end
-	if specialsCast == 010 then--Huddle is NEVER cast 3rd.
+	if self.vb.specialsCast == 010 then--Huddle is NEVER cast 3rd.
 		timerHuddleInTerrorCD:Start()
 	end
-	if specialsCast == 001 then
+	if self.vb.specialsCast == 001 then
 		timerHuddleInTerrorCD:Start()
 	end
 end
@@ -223,13 +223,13 @@ function mod:OnCombatStart(delay)
 	countdownBreathOfFear:Start(33.3-delay)
 	platformSent = false
 	onPlatform = false
-	phase2 = false
-	dreadSprayCounter = 0
-	thrashCount = 0
-	submergeCount = 0
+	self.vb.phase = 1
+	self.vb.dreadSprayCounter = 0
+	self.vb.thrashCount = 0
+	self.vb.submergeCount = 0
 	huddleIcon = 8
 	MobID = nil
-	specialsCast = 000
+	self.vb.specialsCast = 000
 	table.wipe(ominousCackleTargets)
 	table.wipe(platformGUIDs)
 	table.wipe(waterspoutTargets)
@@ -271,7 +271,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 119414 and self:AntiSpam(5, 1) and not phase2 then--using this with antispam is still better then registering SPELL_CAST_SUCCESS for a single event when we don't have to. Less cpu cause mod won't have to check every SPELL_CAST_SUCCESS event.
+	if spellId == 119414 and self:AntiSpam(5, 1) and self.vb.phase < 2 then--using this with antispam is still better then registering SPELL_CAST_SUCCESS for a single event when we don't have to. Less cpu cause mod won't have to check every SPELL_CAST_SUCCESS event.
 		if not platformSent or self.Options.warnBreathOnPlatform then--not in middle, not your problem
 			timerBreathOfFearCD:Start()
 			countdownBreathOfFear:Start(33.3)
@@ -307,12 +307,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		self:LeavePlatform()
 	elseif spellId == 131996 and not platformSent then
 		specWarnThrash:Show()
-		if phase2 then
-			thrashCount = thrashCount + 1
+		if self.vb.phase == 2 then
+			self.vb.thrashCount = self.vb.thrashCount + 1
 			if self.Options.warnThrash then
-				warnThrashHeroic:Show(thrashCount)
+				warnThrashHeroic:Show(self.vb.thrashCount)
 			end
-			if thrashCount == 3 then
+			if self.vb.thrashCount == 3 then
 				timerDreadTrashCD:Start()
 			else
 				timerThrashCD:Start()
@@ -324,7 +324,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerThrashCD:Start()
 		end
 	elseif spellId == 132007 then
-		thrashCount = 0
+		self.vb.thrashCount = 0
 		warnDreadThrash:Show()
 		specWarnDreadThrash:Show()
 		timerThrashCD:Start()
@@ -352,13 +352,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		if self:AntiSpam(5, 3) then
-			if specialCount == 3 then specialCount = 0 end
-			specialCount = specialCount + 1
-			specialsCast = specialsCast + 10--Huddle (100), Spout(10), Strike(1)
+			if self.vb.specialCount == 3 then self.vb.specialCount = 0 end
+			self.vb.specialCount = self.vb.specialCount + 1
+			self.vb.specialsCast = self.vb.specialsCast + 10--Huddle (100), Spout(10), Strike(1)
 		end
 		self:Unschedule(warnWaterspoutTargets)
 		self:Schedule(0.3, warnWaterspoutTargets)
-		startSpecialTimers()
+		startSpecialTimers(self)
 	elseif spellId == 120629 then-- Huddle In Terror
 		huddleInTerrorTargets[#huddleInTerrorTargets + 1] = args.destName
 		if self.Options.SetIconOnHuddle then
@@ -373,13 +373,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		if self:AntiSpam(5, 3) then
-			if specialCount == 3 then specialCount = 0 end
-			specialCount = specialCount + 1
-			specialsCast = specialsCast + 100--Huddle (100), Spout(10), Strike(1)
+			if self.vb.specialCount == 3 then self.vb.specialCount = 0 end
+			self.vb.specialCount = self.vb.specialCount + 1
+			self.vb.specialsCast = self.vb.specialsCast + 100--Huddle (100), Spout(10), Strike(1)
 		end
 		self:Unschedule(warnHuddleInTerrorTargets)
 		self:Schedule(0.5, warnHuddleInTerrorTargets)
-		startSpecialTimers()
+		startSpecialTimers(self)
 	elseif spellId == 120268 then -- Champion Of The Light
 		warnChampionOfTheLight:Show(args.destName)
 		if args:IsPlayer() then
@@ -394,7 +394,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		onPlatform = true
 	elseif spellId == 120047 then
 		timerDreadSpray:Cancel(args.sourceGUID)
-		dreadSprayCounter = 0
+		self.vb.dreadSprayCounter = 0
 	elseif spellId == 118977 and args:IsPlayer() then
 		timerFearless:Cancel()
 	elseif spellId == 120629 and self.Options.SetIconOnHuddle then
@@ -421,18 +421,18 @@ function mod:SPELL_CAST_START(args)
 		specWarnDeathBlossom:Show()
 		self:ScheduleMethod(40, "CheckPlatformLeaved")--you may leave platform soon after Death Blossom casted. failsafe for UNIT_DIED not fire, and fearless fails.
 	elseif spellId == 120672 then -- Implacable Strike
-		if specialCount == 3 then specialCount = 0 end
-		specialCount = specialCount + 1
-		specialsCast = specialsCast + 1--Huddle (100), Spout(10), Strike(1)
-		warnImplacableStrike:Show(specialCount)
+		if self.vb.specialCount == 3 then self.vb.specialCount = 0 end
+		self.vb.specialCount = self.vb.specialCount + 1
+		self.vb.specialsCast = self.vb.specialsCast + 1--Huddle (100), Spout(10), Strike(1)
+		warnImplacableStrike:Show(self.vb.specialCount)
 		specWarnImplacableStrike:Show()
-		startSpecialTimers()
+		startSpecialTimers(self)
 	elseif spellId == 120455 then
-		submergeCount = submergeCount + 1
-		warnDreadSpawns:Schedule(5, Spawns[submergeCount])
-		specWarnSubmerge:Show(submergeCount)
-		timerSubmergeCD:Start(nil, submergeCount+1)
-		specialsCast = 000
+		self.vb.submergeCount = self.vb.submergeCount + 1
+		warnDreadSpawns:Schedule(5, Spawns[self.vb.submergeCount])
+		specWarnSubmerge:Show(self.vb.submergeCount)
+		timerSubmergeCD:Start(nil, self.vb.submergeCount+1)
+		self.vb.specialsCast = 000
 		if self.Options.timerSpecialAbility then
 			timerSpecialAbilityCD:Start()
 		end
@@ -444,26 +444,26 @@ end
 function mod:SPELL_CAST_SUCCESS(args)--Handling Dread Sprays
 	local spellId = args.spellId
 	if spellId == 120047 and onPlatform then
-		dreadSprayCounter = 0
+		self.vb.dreadSprayCounter = 0
 	elseif spellId == 119983 and onPlatform then
+		self.vb.dreadSprayCounter = self.vb.dreadSprayCounter+1
 		if not self.Options.specWarnMovement then return end
-		dreadSprayCounter = dreadSprayCounter+1
 		if MobID == 61046 then
-			if dreadSprayCounter == 6 then
+			if self.vb.dreadSprayCounter == 6 then
 				MoveWarningForward:Show()
 			end
 		end	
 		if MobID == 61042 then
-			if dreadSprayCounter == 6 then
+			if self.vb.dreadSprayCounter == 6 then
 				MoveWarningForward:Show()
 			end
 		end	
 		if MobID == 61038 then
-			if dreadSprayCounter == 3 then
+			if self.vb.dreadSprayCounter == 3 then
 				MoveWarningRight:Show()
 			end
 		end
-		if dreadSprayCounter == 16 then
+		if self.vb.dreadSprayCounter == 16 then
 			MoveWarningBack:Show()
 		end
 	end
@@ -482,12 +482,12 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 114936 and self:AntiSpam(10, 2) then--Heroic Phase 2
-		phase2 = true
+		self.vb.phase = 2
 		platformSent = false
 		onPlatform = false
-		submergeCount = 0
-		thrashCount = 0
-		specialCount = 0
+		self.vb.submergeCount = 0
+		self.vb.thrashCount = 0
+		self.vb.specialCount = 0
 		timerThrashCD:Cancel()
 		timerBreathOfFearCD:Cancel()
 		countdownBreathOfFear:Cancel()

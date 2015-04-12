@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'ListView', 5
+local WIDGET, VERSION = 'ListView', 6
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local ListView = GUI:NewClass(WIDGET, 'ScrollFrame', VERSION, 'Refresh', 'View', 'Scroll', 'Select', 'Filter')
@@ -108,7 +108,7 @@ function ListView:UpdateItems()
                 endButton = button
             else
                 startButton:Group(singularLine, endButton)
-                startButton:Refresh()
+                startButton:FireFormat()
 
                 startButton = button
                 endButton = button
@@ -119,13 +119,13 @@ function ListView:UpdateItems()
 
             if i == realCount then
                 startButton:Group(singularLine, endButton)
-                startButton:Refresh()
+                startButton:FireFormat()
             end
         elseif isSingularAdapter then
             button:Group(i % 2 == 0)
         end
 
-        button:Refresh()
+        button:FireFormat()
     end
 
     for i = realCount + 1, #self.buttons do

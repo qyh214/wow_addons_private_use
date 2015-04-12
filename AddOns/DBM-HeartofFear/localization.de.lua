@@ -7,7 +7,6 @@ local L
 L= DBM:GetModLocalization(745)
 
 L:SetWarningLocalization({
-	warnAttenuation		= "%s auf %s (%s)",
 	warnEcho			= "Echo erschienen",
 	warnEchoDown		= "Echo besiegt",
 	specwarnAttenuation	= "%s auf %s (%s)",

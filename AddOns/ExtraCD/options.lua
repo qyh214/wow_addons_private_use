@@ -129,7 +129,7 @@ function mod:AddDataOption(spellId)
 					return tostring(specppm)
 				end,
 				set = function(info, value) db.ppm = tonumber(value) self:ResetAllIcons() end,
-				pattern = "^%d+$",
+				pattern = "^[%d%.]+$",
 			},
 			refreshable = {
 				type = "toggle",

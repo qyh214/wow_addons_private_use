@@ -92,7 +92,7 @@ function TabView:UpdateItems()
         button:SetID(i)
         button:SetChecked(self:IsSelected(i))
         button:Show()
-        button:Refresh()
+        button:FireFormat()
         button:SetStatus(status)
 
         self:UpdateItemPosition(i)

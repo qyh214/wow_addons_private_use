@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'GridView', 5
+local WIDGET, VERSION = 'GridView', 6
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local GridView = GUI:NewClass(WIDGET, 'Frame', VERSION, 'Refresh', 'View', 'Scroll', 'Select', 'Owner')
@@ -72,7 +72,7 @@ function GridView:UpdateItems()
         button:SetID(index)
         button:SetChecked(self:IsSelected(index))
         button:Show()
-        button:Refresh()
+        button:FireFormat()
         
         autoWidth = max(autoWidth, button:GetAutoWidth() or 0)
         maxRight = max(maxRight, button:GetRight())

@@ -1,6 +1,6 @@
 
 local GUI = LibStub('NetEaseGUI-1.0')
-local Help = GUI:NewEmbed('Help', 1)
+local Help = GUI:NewEmbed('Help', 3)
 if not Help then
     return
 end
@@ -18,12 +18,23 @@ local function HelpOnHide()
     HelpPlate_Hide()
 end
 
+local function HelpOnShow(self)
+    local parent = self:GetParent()
+    repeat
+        if parent.PortraitFrame then
+            return self:SetFrameLevel(parent.PortraitFrame:GetFrameLevel()+1)
+        end
+        parent = parent:GetParent()
+    until not parent
+end
+
 function Help:AddHelpButton(parent, helpPlate)
     local HelpButton = CreateFrame('Button', nil, parent, 'MainHelpPlateButton')
     HelpButton:SetPoint('TOPLEFT', self, 39, 20)
     HelpButton.helpPlate = helpPlate
     HelpButton:SetScript('OnClick', HelpOnClick)
     HelpButton:SetScript('OnHide', HelpOnHide)
+    HelpButton:SetScript('OnShow', HelpOnShow)
 
     self.helpButtons[parent] = HelpButton
 end

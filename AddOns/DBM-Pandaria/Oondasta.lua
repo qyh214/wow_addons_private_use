@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod(826, "DBM-Pandaria", nil, 322)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 53 $"):sub(12, -3))
 mod:SetCreatureID(69161)
-mod:SetReCombatTime(20)
+mod:SetEncounterID(1587)
+mod:SetReCombatTime(20, 10)
 mod:SetZone()
 
 mod:RegisterCombat("combat_yell", L.Pull)

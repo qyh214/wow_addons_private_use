@@ -35,6 +35,8 @@ local defaults = {
 		alert_alpha = 1,
 		alert_scale = 1,
 		alert_offset = 4,
+		alert_background = false,
+		alert_icon_frame = false,
 
 		hook_bonus = true,
 		bonus_skin = true,
@@ -101,8 +103,8 @@ function addon:OnEnable()
 		anchor_pretty = { r = .6, g = .6, b = .6, a = .8 },
 		row = { gradient = false },
 		item = { backdrop = false },
-		alert = { gradient = false },
-		alert_item = { gradient = false, backdrop = false },
+		alert = { gradient = true },
+		alert_item = { gradient = true, backdrop = false },
 		bonus = { }
 	}, 'row')
 
@@ -134,7 +136,8 @@ function addon:OnEnable()
 			if mouse_focus and mouse_focus.aexpire and (mouse_focus.aexpire - time) < 5 then
 				mouse_focus.aexpire = time + 5
 			end
-			for i, frame in ipairs(anchor.expiring) do
+			for i=#anchor.expiring,1,-1 do
+				local frame = anchor.expiring[i]
 				if frame.aexpire and time > frame.aexpire then
 					anchor:Pop(frame)
 					table.remove(anchor.expiring, i)
@@ -163,14 +166,28 @@ function addon:OnEnable()
 	end
 
 	-- Hook alert actions
-	if not opt.compat_alert then
+	if opt.hook_alert then
+		hooksecurefunc('LootUpgradeFrame_SetUp', self.AlertFrameHook)
 		hooksecurefunc('LootWonAlertFrame_SetUp', self.AlertFrameHook)
-		hooksecurefunc('AlertFrame_SetLootWonAnchors', self.AlertFrameAnchorHook)
+		hooksecurefunc('MoneyWonAlertFrame_SetUp', self.AlertFrameHook)
+		local SetLootWonAnchors = AlertFrame_SetLootWonAnchors
+		local SetLootUpgradeFrameAnchors = AlertFrame_SetLootUpgradeFrameAnchors
+		local SetMoneyWonAnchors = AlertFrame_SetMoneyWonAnchors
+
+		local function SetAnchorPassthrough(alertAnchor)
+			return alertAnchor
+		end
+
+		AlertFrame_SetLootWonAnchors = SetAnchorPassthrough
+		AlertFrame_SetLootUpgradeFrameAnchors = SetAnchorPassthrough
+		AlertFrame_SetMoneyWonAnchors = SetAnchorPassthrough
+
+		hooksecurefunc('AlertFrame_FixAnchors', self.FixAnchors)
 	end
 	-- hooksecurefunc('BonusRollFrame_StartBonusRoll', self.BonusRollFrame_StartBonusRoll)
 	-- hooksecurefunc('BonusRollFrame_FinishedFading', self.BonusRollFrame_Hide)
 	-- BonusRollFrame._SetPoint, BonusRollFrame.SetPoint = BonusRollFrame.SetPoint, addon.BonusRollFrame_SetPoint
-	if not opt.compat_bonus then
+	if opt.hook_bonus then
 		hooksecurefunc(BonusRollFrame, 'SetPoint', self.BonusRollFrame_SetPoint)
 		hooksecurefunc(BonusRollFrame, 'Show', self.BonusRollFrame_Show)
 		hooksecurefunc(BonusRollFrame, 'Hide', self.BonusRollFrame_Hide)
@@ -426,65 +443,113 @@ function addon:MODIFIER_STATE_CHANGED()
 	end
 end
 
+local function MaybeVisible(element, state)
+	if element then
+		if state then
+			element:Show()
+		else
+			element:Hide()
+		end
+	end
+end
+
 local alert_frames = {}
-function addon.AlertFrameHook(alert, link)
+function addon.AlertFrameHook(alert)
 	-- Reskin toast
 	local elements = alert_frames[alert]
 	if not elements then
 		elements = {}
+		if not (opt.alert_background and opt.alert_icon_frame) then
+			local name
+			if alert.ItemName then
+				name = alert.ItemName
+				alert.Label:ClearAllPoints()
+				alert.Label:SetPoint('TOPLEFT', alert.Icon, 'TOPRIGHT', 15, -5)
+			elseif alert.BaseQualityItemName then
+				name = alert.BaseQualityItemName
+				alert.TitleText:ClearAllPoints()
+				alert.TitleText:SetPoint('TOPLEFT', alert.Icon, 'TOPRIGHT', 15, -2)
+			elseif alert.Amount then
+				name = alert.Amount
+				alert.Label:ClearAllPoints()
+				alert.Label:SetPoint('TOPLEFT', alert.Icon, 'TOPRIGHT', 15, -2)
+			end
+			name:ClearAllPoints()
+			name:SetPoint('LEFT', alert.Icon, 'RIGHT', 10, -6)
+		end
 		if opt.alert_skin then
-			alert.Background:Hide()
-			alert.IconBorder:Hide()
-			alert.ItemName:SetPoint('BOTTOMRIGHT', -25, 27)
-
 			local overlay = CreateFrame('Frame', nil, alert)
 			overlay:SetPoint('TOPLEFT', 11, -11)
 			overlay:SetPoint('BOTTOMRIGHT', -11, 11)
 			overlay:SetFrameLevel(alert:GetFrameLevel())
 			elements.overlay = overlay
 			Skinner:Skin(overlay, 'alert')
-			-- overlay:SetGradientColor(.5, .5, .5, .4)
+			if opt.alert_background then
+				local backdrop = CreateFrame('Frame', nil, alert)
+				backdrop:SetAllPoints(overlay)
+				backdrop:SetFrameLevel(alert:GetFrameLevel()-1)
+				overlay.gradient:SetParent(backdrop)
+			end
 
 			local icon_frame = CreateFrame('Frame', nil, alert)
 			icon_frame:SetPoint('CENTER', alert.Icon, 'CENTER', 0, 0)
-			icon_frame:SetWidth(53)
-			icon_frame:SetHeight(54)
+			icon_frame:SetWidth(alert.Icon:GetWidth() + 4)
+			icon_frame:SetHeight(alert.Icon:GetHeight() + 4)
 			elements.icon_frame = icon_frame
 			Skinner:Skin(icon_frame, 'alert_item')
-			-- icon_frame:SetGradientColor(.5, .5, .5, .4)
 		end
 
-		alert:SetAlpha(opt.alert_alpha)
-		alert:SetScale(opt.alert_scale)
 		alert_frames[alert] = elements
 	end
+	MaybeVisible(alert.Background, opt.alert_background)
+	MaybeVisible(alert.IconBorder, opt.alert_icon_frame)
+	MaybeVisible(alert.BaseQualityBorder, opt.alert_icon_frame)
+	MaybeVisible(alert.UpgradeQualityBorder, opt.alert_icon_frame)
+	alert:SetAlpha(opt.alert_alpha)
+	alert:SetScale(opt.alert_scale)
 
 	-- Update toast
 	if opt.alert_skin then
-		local _, _, rarity = GetItemInfo(link)
-		local c = ITEM_QUALITY_COLORS[rarity]
+		local c
+		if alert.hyperlink then
+			local _, _, rarity = GetItemInfo(alert.hyperlink)
+			c = ITEM_QUALITY_COLORS[rarity]
+		else
+			c = {r = 1, g = .8, b = 0.1}
+		end
 		if type(c) == "table" then -- Sanity check due to 5.4.1 reported error
+			elements.overlay:SetGradientColor(c.r, c.g, c.b, .2)
+			elements.icon_frame:SetGradientColor(c.r, c.g, c.b, .2)
 			elements.overlay:SetBorderColor(c.r, c.g, c.b)
 			elements.icon_frame:SetBorderColor(c.r, c.g, c.b)
 		end
 	end
 end
 
-function addon.AlertFrameAnchorHook()
+local AlertFrameTables = {
+	'LOOT_WON_ALERT_FRAMES',
+	'LOOT_UPGRADE_ALERT_FRAMES',
+	'MONEY_WON_ALERT_FRAMES'
+}
+
+function addon.FixAnchors(frames, anchor)
 	local anchor = alert_anchor
 	local up, first, x, y = opt.alert_anchor.direction == 'up', true, 44, -10
-	for i=1, #LOOT_WON_ALERT_FRAMES do
-		local frame = LOOT_WON_ALERT_FRAMES[i]
-		if frame:IsShown() then
-			frame:ClearAllPoints()
-			if up then
-				frame:SetPoint("BOTTOM", anchor, "TOP", x, y)
-			else
-				frame:SetPoint("TOP", anchor, "BOTTOM", x, -y)
-			end
-			anchor = frame
-			if first then
-				first, x, y = false, 0, opt.alert_offset - 24
+	for ix=1, #AlertFrameTables do
+		local t = _G[AlertFrameTables[ix]]
+		for i=1, #t do
+			local frame = t[i]
+			if frame:IsShown() then
+				frame:ClearAllPoints()
+				if up then
+					frame:SetPoint("BOTTOM", anchor, "TOP", x, y)
+				else
+					frame:SetPoint("TOP", anchor, "BOTTOM", x, -y)
+				end
+				anchor = frame
+				if first then
+					first, x, y = false, 0, opt.alert_offset - 20
+				end
 			end
 		end
 	end
@@ -991,19 +1056,21 @@ function addon:ApplyOptions()
 
 	anchor:Restack()
 	for _,frame in pairs(anchor.children) do
-		frame:SetWidth(opt.roll_width)
-		frame.need:SetWidth(opt.roll_button_size)
-		frame.need:SetHeight(opt.roll_button_size)
-		frame.greed:SetWidth(opt.roll_button_size)
-		frame.greed:SetHeight(opt.roll_button_size)
-		frame.disenchant:SetWidth(opt.roll_button_size)
-		frame.disenchant:SetHeight(opt.roll_button_size)
-		frame.pass:SetWidth(opt.roll_button_size)
-		frame.pass:SetHeight(opt.roll_button_size)
-		SetOutline(frame.text_status)
-		SetOutline(frame.text_loot)
-		if not opt.text_time then
-			frame.text_time:SetText()
+		if frame.need then
+			frame:SetWidth(opt.roll_width)
+			frame.need:SetWidth(opt.roll_button_size)
+			frame.need:SetHeight(opt.roll_button_size)
+			frame.greed:SetWidth(opt.roll_button_size)
+			frame.greed:SetHeight(opt.roll_button_size)
+			frame.disenchant:SetWidth(opt.roll_button_size)
+			frame.disenchant:SetHeight(opt.roll_button_size)
+			frame.pass:SetWidth(opt.roll_button_size)
+			frame.pass:SetHeight(opt.roll_button_size)
+			SetOutline(frame.text_status)
+			SetOutline(frame.text_loot)
+			if not opt.text_time then
+				frame.text_time:SetText()
+			end
 		end
 	end
 end

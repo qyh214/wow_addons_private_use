@@ -1,4 +1,4 @@
-﻿## Interface: 60000
+﻿## Interface: 60100
 ## Title: ExtraCD
 ## Notes: Display internal cd or rppm of items, enchants, talents and abilities
 ## Notes-zhTW: 物品,附魔,天賦和技能的內置冷卻或RPPM監視
@@ -6,7 +6,7 @@
 ## Author: superk
 ## SavedVariables: ExtraCDDB
 ## Version: 1.3
-## X-Curse-Packaged-Version: 1.3.5b
+## X-Curse-Packaged-Version: 1.3.6
 ## X-Curse-Project-Name: ExtraCD
 ## X-Curse-Project-ID: extracd
 ## X-Curse-Repository-ID: wow/extracd/mainline

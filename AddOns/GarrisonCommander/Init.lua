@@ -9,9 +9,11 @@ local GetChatFrame=GetChatFrame
 local format=format
 local GetTime=GetTime
 local strjoin=strjoin
+local strspilit=strsplit
 local tostringall=tostringall
 --[===[@debug@
 LoadAddOn("Blizzard_DebugTools")
+if LibDebug then LibDebug() end
 --@end-debug@]===]
 ns.addon=LibStub("LibInit"):NewAddon(me,'AceHook-3.0','AceTimer-3.0','AceEvent-3.0','AceBucket-3.0')
 local chatframe=ns.addon:GetChatFrame("aDebug")
@@ -25,16 +27,18 @@ ns.AceGUI=LibStub("AceGUI-3.0")
 ns.D=LibStub("LibDeformat-3.0")
 ns.C=ns.addon:GetColorTable()
 ns.L=ns.addon:GetLocale()
+ns.G=C_Garrison
 ns.print=ns.addon:Wrap("Print")
 ns.dprint=ns.print
 ns.trace=ns.addon:Wrap("Trace")
 ns.xprint=function() end
 ns.xdump=function() end
 ns.xtrace=function() end
+_G.GARRISON_FOLLOWER_MAX_ITEM_LEVEL = _G.GARRISON_FOLLOWER_MAX_ITEM_LEVEL or 675
 --[===[@debug@
---ns.xprint=function(...) pd("|cffff9900DBG|r",...) end
---ns.xdump=function(d,t) pp("|cffff9900DMP|r",t) DevTools_Dump(d) end
---ns.xtrace=ns.trace
+	ns.xprint=print
+	ns.xdump=function(d,t) pp("|cffff9900DMP|r",t) DevTools_Dump(d) end
+	ns.xtrace=print
 --@end-debug@]===]
 do
 	--[===[@debug@
@@ -110,6 +114,101 @@ function addon:releaseEvents()
 end
 local holdEvents,releaseEvents=addon.holdEvents,addon.releaseEvents
 ns.OnLeave=function() GameTooltip:Hide() end
+local upgrades={
+	"wt:120302:1",
+	"we:114128:3",
+	"we:114129:6",
+	"we:114131:9",
+	"wf:114616:615",
+	"wf:114081:630",
+	"wf:114622:645",
+	"at:120301:1",
+	"ae:114745:3",
+	"ae:114808:6",
+	"ae:114822:9",
+	"af:114807:615",
+	"af:114806:630",
+	"af:114746:645",
+}
+local followerItems={}
+local items={
+[114053]={icon='inv_glove_plate_dungeonplate_c_06',quality=2},
+[114052]={icon='inv_jewelry_ring_146',quality=3},
+[114109]={icon='inv_sword_46',quality=3},
+[114068]={icon='inv_misc_pvp_trinket',quality=3},
+[114058]={icon='inv_chest_cloth_reputation_c_01',quality=3},
+[114063]={icon='inv_shoulder_cloth_reputation_c_01',quality=3},
+[114059]={icon='inv_boots_cloth_reputation_c_01',quality=3},
+[114066]={icon='inv_jewelry_necklace_70',quality=3},
+[114057]={icon='inv_bracer_cloth_reputation_c_01',quality=3},
+[114101]={icon='inv_belt_cloth_reputation_c_01',quality=3},
+[114098]={icon='inv_helmet_cloth_reputation_c_01',quality=3},
+[114096]={icon='inv_boots_cloth_reputation_c_01',quality=3},
+[114108]={icon='inv_sword_46',quality=3},
+[114094]={icon='inv_bracer_cloth_reputation_c_01',quality=3},
+[114099]={icon='inv_pants_cloth_reputation_c_01',quality=3},
+[114097]={icon='inv_gauntlets_cloth_reputation_c_01',quality=3},
+[114105]={icon='inv_misc_pvp_trinket',quality=3},
+[114100]={icon='inv_shoulder_cloth_reputation_c_01',quality=3},
+[114110]={icon='inv_sword_46',quality=3},
+[114080]={icon='inv_misc_pvp_trinket',quality=3},
+[114070]={icon='inv_chest_cloth_reputation_c_01',quality=3},
+[114075]={icon='inv_shoulder_cloth_reputation_c_01',quality=3},
+[114071]={icon='inv_boots_cloth_reputation_c_01',quality=3},
+[114078]={icon='inv_jewelry_necklace_70',quality=3},
+[114069]={icon='inv_bracer_cloth_reputation_c_01',quality=3},
+[114112]={icon='inv_sword_46',quality=4},
+[114087]={icon='inv_misc_pvp_trinket',quality=4},
+[114083]={icon='inv_chest_cloth_reputation_c_01',quality=4},
+[114085]={icon='inv_shoulder_cloth_reputation_c_01',quality=4},
+[114084]={icon='inv_boots_cloth_reputation_c_01',quality=4},
+[114086]={icon='inv_jewelry_necklace_70',quality=4},
+[114082]={icon='inv_bracer_cloth_reputation_c_01',quality=4},
+}
+for i=1,#upgrades do
+	local _,id,level=strsplit(':',upgrades[i])
+	followerItems[id]=level
+end
+function addon:GetUpgrades()
+	return upgrades
+end
+function addon:GetItems()
+	return items
+end
+-- to be moved in LibInit
+--[[
+function addon:coroutineExecute(interval,func)
+	local co=coroutine.wrap(func)
+	local interval=interval
+	local repeater
+	repeater=function()
+		if (co()) then
+			C_Timer.After(interval,repeater)
+		else
+			repeater=nil
+		end
+	end
+	return repeater()
+end
+--]]
+addon:coroutineExecute(0.1,
+	function ()
+		for itemID,_ in pairs(followerItems) do
+			GetItemInfo(itemID)
+			coroutine.yield(true)
+		end
+		for i,v in pairs(items) do
+			GetItemInfo(i)
+			coroutine.yield(true)
+		end
+	end
+)
+function addon:GetType(itemID)
+	if (items[itemID]) then return "equip" end
+	if (followerItems[itemID]) then return "followerEquip" end
+	return "generic"
+end
+
 
 -------------------- to be estracted to CountersCache
 --

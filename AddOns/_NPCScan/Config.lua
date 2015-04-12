@@ -379,13 +379,10 @@ function panel:ControlOnEnter()
 	_G.GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1)
 end
 
-
 -- Reverts to default options.
 function panel:default()
 	private.Synchronize() -- Resets all
 end
-
-
 
 _G.InterfaceOptions_AddCategory(panel)
 

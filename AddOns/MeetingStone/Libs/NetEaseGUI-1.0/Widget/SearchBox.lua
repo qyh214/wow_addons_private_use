@@ -1,8 +1,9 @@
 
-local WIDGET, VERSION = 'SearchBox', 3
+local WIDGET, VERSION = 'SearchBox', 4
 
 local GUI = LibStub('NetEaseGUI-1.0')
-local SearchBox = GUI:NewClass(WIDGET, GUI:GetClass('InputBox'), VERSION)
+local InputBox = GUI:GetClass('InputBox')
+local SearchBox = GUI:NewClass(WIDGET, InputBox, VERSION)
 if not SearchBox then
     return
 end
@@ -23,23 +24,6 @@ function SearchBox:Constructor(parent)
         ClearButton:Hide()
     end
 
-    local AutoComplete = GUI:GetClass('AutoCompleteFrame'):New(self) do
-        AutoComplete:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', 7, -2)
-        AutoComplete:SetPoint('TOPRIGHT', self, 'BOTTOMRIGHT', -9, -2)
-        AutoComplete:SetHeight(110)
-        AutoComplete:SetColumnCount(1)
-        AutoComplete:Hide()
-
-        AutoComplete:SetCallback('OnItemFormatted', function(_, button, data)
-            button:SetText(data)
-        end)
-        AutoComplete:SetCallback('OnItemClick', function(_, _, data)
-            self:SetText(data)
-            self:ClearFocus()
-        end)
-    end
-
-    self.AutoComplete = AutoComplete
     self.SearchIcon = SearchIcon
     self.ClearButton = ClearButton
 
@@ -58,25 +42,18 @@ end
 
 function SearchBox:OnEditFocusLost()
     local text = self:GetText()
-    self:HighlightText(0, 0)
-
     if text == '' then
         self.SearchIcon:SetVertexColor(0.6, 0.6, 0.6)
         self.ClearButton:Hide()
     end
-
-    if self:IsAutoCompleteEnabled() then
-        self.AutoComplete:Hide()
-    end
-
-    self:Fire('OnEditFocusLost', text)
+    InputBox.OnEditFocusLost(self)
 end
 
 function SearchBox:OnEditFocusGained()
     self:HighlightText()
     self.SearchIcon:SetVertexColor(1.0, 1.0, 1.0)
     self.ClearButton:Show()
-    self:Fire('OnEditFocusGained')
+    InputBox.OnEditFocusGained(self)
 end
 
 function SearchBox:Clear()
@@ -88,27 +65,4 @@ end
 
 function SearchBox:OnHide()
     self:SetText('')
-    self.AutoComplete:Hide()
-end
-
-function SearchBox:EnableAutoComplete(flag)
-    self._enableAutoComplete = flag
-end
-
-function SearchBox:IsAutoCompleteEnabled()
-    return self._enableAutoComplete
-end
-
-function SearchBox:SetAutoComplete(data)
-    self.AutoCompleteData = data
-    self.AutoComplete:SetItemList(data)
-    self.AutoComplete:SetShown(data and #data > 0) 
-end
-
-function SearchBox:GetAutoComplete()
-    return self.AutoCompleteData
-end
-
-function SearchBox:SetMaxHistoryLines(count)
-    self.AutoComplete:SetRowCount(count)
 end

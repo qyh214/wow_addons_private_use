@@ -7,4 +7,5 @@
 	<Include file="..\GarrisonCommander\libs\Ace3\AceTimer-3.0\AceTimer-3.0.xml"/>
 	<Include file="..\GarrisonCommander\libs\Ace3\AceLocale-3.0\AceLocale-3.0.xml"/>
 	<Include file="..\GarrisonCommander\libs\Ace3\AceDB-3.0\AceDB-3.0.xml"/>
+	<Include file="..\GarrisonCommander\libs\LibInit\LibInit.xml"/>
 </Ui>

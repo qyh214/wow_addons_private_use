@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'TitleWidget', 1
+local WIDGET, VERSION = 'TitleWidget', 2
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local TitleWidget = GUI:NewClass(WIDGET, 'Frame', VERSION)
@@ -31,11 +31,16 @@ function TitleWidget:GetText()
     return self.Text:GetText()
 end
 
-function TitleWidget:SetObject(object)
+function TitleWidget:SetObject(object, left, right, top, bottom)
+    left = left or 5
+    right = right or left or 5
+    top = top or left or 5
+    bottom = top or left or 5
+
     object:SetParent(self)
     object:ClearAllPoints()
-    object:SetPoint('TOPLEFT', self, 'TOPLEFT', 5, -20)
-    object:SetPoint('BOTTOMRIGHT', self, 'BOTTOMRIGHT', -5, 5)
+    object:SetPoint('TOPLEFT', self, 'TOPLEFT', left, -top-15)
+    object:SetPoint('BOTTOMRIGHT', self, 'BOTTOMRIGHT', -right, bottom)
     object:Show()
 
     self.Object = object

@@ -62,7 +62,12 @@ function MallPanel:OnInitialize()
         ItemList:SetSelectMode('RADIO')
         ItemList:SetItemHighlightWithoutChecked(true)
         ItemList:SetCallback('OnItemFormatted', function(ItemList, button, data)
-            button:SetData(data)
+            button:SetItem(data.itemId)
+            button:SetModel(data.model)
+            button:SetText(data.name)
+            button:SetIcon(data.icon)
+            button:SetPrice(data.price, data.originalPrice)
+            button:SetStartTime(data.startTime)
         end)
         ItemList:SetCallback('OnItemEnter', function(ItemList, button, data)
             button:SetMagnifier(true)
@@ -176,7 +181,7 @@ end
 
 function MallPanel:QueryPoint()
     self.QueryPointButton:Disable()
-    self.QueryPointButton:SetText(L['查询中，请稍后 ...'])
+    self.QueryPointButton:SetText(L['查询中，请稍候 ...'])
     self:ScheduleTimer('UnlockQueryButton', 120)
     Logic:MallQueryPoint()
     self.queryTimeout = self:ScheduleTimer('QueryResult', 120, nil, -1)
@@ -208,9 +213,9 @@ function MallPanel:OpenTooltip(frame, data)
             end
         end
         GameTooltip:Show()
-    elseif data.link then
+    elseif data.itemId then
         GameTooltip:SetOwner(frame, 'ANCHOR_RIGHT')
-        GameTooltip:SetHyperlink(data.link)
+        GameTooltip:SetHyperlink('item:'..data.itemId)
         GameTooltip:Show()
     end
 end
@@ -224,8 +229,12 @@ function MallPanel:Purchase()
     if not item then
         return
     end
+    local name = GetItemInfo(item.itemId)
+    if not name then
+        return
+    end
 
-    GUI:CallMessageDialog(format(L['确认消耗 |cff00ff00%d|r 积分购买 |cff00ff00%s|r 吗？'], item.price, item.text), function(result)
+    GUI:CallMessageDialog(format(L['确认消耗 |cff00ff00%d|r 积分购买 |cff00ff00%s|r 吗？'], item.price, name), function(result)
         if result then
             self.PurchaseButton:Disable()
             self:SetCover(true)
@@ -237,7 +246,7 @@ end
 function MallPanel:SetCover(enable)
     if enable then
         local item = self:GetItem() or {}
-        ExchangePanel:SetCover(true, format(L.MallPurchaseSummary, item.text, item.price),
+        ExchangePanel:SetCover(true, format(L.MallPurchaseSummary, GetItemInfo(item.itemId), item.price),
             function()
                 MallPanel:PurchaseResult(nil, L['操作超时，请|cff00ff00查询积分|r，如果积分|cffff0000已经扣除|r，请留意当前角色游戏邮箱，如果|cff00ff00积分未扣除|r，请稍后再尝试购买。'])
             end)
@@ -268,7 +277,7 @@ function MallPanel:PurchaseResult(event, result, reply)
         System:Error(result)
 
         if item then
-            System:Logf(L['兑换平台购买%s，%s'], item.text, result)
+            System:Logf(L['兑换平台购买%s，%s'], GetItemInfo(item.itemId), result)
         end
     end
 end

@@ -20,13 +20,14 @@ local callbacks = CallbackHandler:New(mod)
 local GetNumGroupMembers, GetNumSubgroupMembers = GetNumGroupMembers, GetNumSubgroupMembers
 local GetTime, UIParent = GetTime, UIParent
 local UnitExists, UnitIsUnit, UnitPosition, GetPlayerFacing = UnitExists, UnitIsUnit, UnitPosition, GetPlayerFacing
+local GetInstanceInfo = GetInstanceInfo
 
 local targetCanvasAlpha
 
 local textureLookup = {
-	diamond		= [[Interface\TARGETINGFRAME\UI-RAIDTARGETINGICON_3.BLP]],
 	star		= [[Interface\TARGETINGFRAME\UI-RaidTargetingIcon_1.blp]],
 	circle		= [[Interface\TARGETINGFRAME\UI-RaidTargetingIcon_2.blp]],
+	diamond		= [[Interface\TARGETINGFRAME\UI-RaidTargetingIcon_3.BLP]],
 	triangle	= [[Interface\TARGETINGFRAME\UI-RaidTargetingIcon_4.blp]],
 	moon		= [[Interface\TARGETINGFRAME\UI-RaidTargetingIcon_5.blp]],
 	square		= [[Interface\TARGETINGFRAME\UI-RaidTargetingIcon_6.blp]],
@@ -256,7 +257,6 @@ function mod:Enable()
 	self.mainFrame:Show()
 	self.mainFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	self.mainFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
---	updateFrame:SetScript("OnUpdate", onUpdate)
 	self.canvas:SetAlpha(1)
 	self:UpdateCanvasPosition()
 
@@ -273,7 +273,6 @@ end
 function mod:Disable()
 	if not self.HUDEnabled then return end
 	DBM:Debug("HudMap Deactivating", 2)
---	updateFrame:SetScript("OnUpdate", nil)
 	self:FreeEncounterMarkers()
 	--Anything else needed? maybe clear all marks, hide any frames, etc?
 	self.mainFrame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
@@ -1178,10 +1177,15 @@ function mod:PlaceRangeMarkerOnPartyMember(texture, person, radius, duration, r,
 end
 
 local encounterMarkers = {}
+local activeMarkers = 0
 function mod:RegisterEncounterMarker(spellid, name, marker)
-	if not self.HUDEnabled then return end
+	if DBM.Options.DontShowHudMap2 then return end
+	if not self.HUDEnabled then
+		self:Enable()
+	end
 	local key = spellid..name
 	encounterMarkers[key] = marker
+	activeMarkers = activeMarkers + 1
 	marker.RegisterCallback(self, "Free", "FreeEncounterMarker", key)
 end
 
@@ -1215,7 +1219,12 @@ end
 -- automatically called if marker was registered using RegisterEncounterMarker when "Free" callback fires (when time runs out for example)
 function mod:FreeEncounterMarker(key)
 	if not self.HUDEnabled then return end
+	if not encounterMarkers[key] then return end
 	encounterMarkers[key] = nil
+	activeMarkers = activeMarkers - 1
+	if activeMarkers == 0 then--No markers left, disable hud
+		self:Disable()
+	end
 end
 
 -- should be called to manually free marker

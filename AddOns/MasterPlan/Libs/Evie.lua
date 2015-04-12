@@ -1,5 +1,5 @@
-local Evie, next, securecall, _, T = {}, next, securecall, ...
-local frame, listeners, locked = CreateFrame("FRAME"), {}, {}
+local Evie, easy, next, securecall, _, T = {}, newproxy(true), next, securecall, ...
+local frame, listeners, locked, easy_mt = CreateFrame("FRAME"), {}, {}, getmetatable(easy)
 
 local function Register(event, func)
 	if type(event) ~= "string" or type(func) ~= "function" then
@@ -29,7 +29,7 @@ local function Unregister(event, func)
 		lock[func] = nil
 	end
 end
-local function RaiseEvent(_, event, ...)
+local function Raise(_, event, ...)
 	if listeners[event] then
 		local lock = locked[event]
 		locked[event] = lock or true
@@ -49,16 +49,12 @@ local function RaiseEvent(_, event, ...)
 	end
 end
 function Evie.RaiseEvent(event, ...)
-	return RaiseEvent(nil, event, ...)
+	return Raise(nil, event, ...)
 end
-do
-	local function ok(f, ...)
-		return true, f(...)
-	end
-	function Evie.ProtectedCall(...)
-		return securecall(ok, ...)
-	end
+function easy_mt:__newindex(e, f)
+	Register(e, f)
 end
 
-frame:SetScript("OnEvent", RaiseEvent)
-T.Evie, Evie.RegisterEvent, Evie.UnregisterEvent = Evie, Register, Unregister
+frame:SetScript("OnEvent", Raise)
+easy_mt.__call, easy_mt.__index, Evie.raw = Raise, Evie, Evie
+T.Evie, Evie.RegisterEvent, Evie.UnregisterEvent = easy, Register, Unregister

@@ -532,9 +532,9 @@ do
 	function BuildRow(frame, i)
 		local frame_name, opt, fake = frame:GetName()..'Button'..i, frame.opt, frame.fake
 		-- Create frames
-		local row = CreateFrame('Button', fake and nil or frame_name, frame)
+		local row = CreateFrame('Button', not fake and frame_name or nil, frame)
 		local item = CreateFrame('Frame', nil, row)
-		local tex = item:CreateTexture(fake and nil or frame_name..'IconTexture', 'BACKGROUND')
+		local tex = item:CreateTexture(not fake and frame_name..'IconTexture' or nil, 'BACKGROUND')
 		local bang = item:CreateTexture(nil, 'OVERLAY')
 		row.owner = frame
 		row.frame_item = item
@@ -550,7 +550,7 @@ do
 		RowPrototype:New(row)
 
 		-- Create fontstrings
-		local name = row:CreateFontString(fake and nil or frame_name..'Text')
+		local name = row:CreateFontString(not fake and frame_name..'Text' or nil)
 		local info = row:CreateFontString()
 		local bind = item:CreateFontString()
 		local quantity = item:CreateFontString()

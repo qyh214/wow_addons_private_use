@@ -152,10 +152,11 @@ local function CreateSlider(parent, title, minText, maxText, min, max, step, dbT
     s.valText:SetText("");
     s:SetValueStep(step);
     s:SetScript("OnValueChanged", function(self)
-            self.valText:SetText(self:GetValue());
-            dbTree[varName] = self:GetValue();
+	    	local newValue = self:GetValue()
+            self.valText:SetText(newValue);
+            dbTree[varName] = newValue;
             if(type(valChanged) == "function") then
-                valChanged(self, self:GetValue());
+                valChanged(self, newValue);
             end
         end);
     s:SetScript("OnShow", function(self)

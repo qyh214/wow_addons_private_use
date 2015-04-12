@@ -92,6 +92,7 @@ DBM_CORE_UPDATEREMINDER_FOOTER		= "Faites la combinaison " .. (IsMacClient() and
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC  = "Faites la combinaison " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " pour copier le lien dans votre presse-papier."
 DBM_CORE_UPDATEREMINDER_DISABLE                 = "ALERTE: Compte tenu que votre version DBM est fortement périmée (%d révisions), DBM a été désactivé jusqu'à ce que vous le mettiez à jour. Ceci, pour éviter que des versions incompatibles de DBM ne cause de mauvaises éxpériences de jeu pour vous et les membres du raid."
 DBM_CORE_UPDATEREMINDER_HOTFIX                  = "Votre version de DBM contient des timers et alertes incorrects sur ce boss. Ceci a été corrigé dans la dernière version (ou alpha si la prochaine version n'est pas encore disponible)."
+DBM_CORE_UPDATEREMINDER_HOTFIX_ALPHA	= DBM_CORE_UPDATEREMINDER_HOTFIX--TEMP, FIX ME!
 
 DBM_CORE_MOVABLE_BAR				= "Bougez-moi !"
 
@@ -159,7 +160,7 @@ DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Victoire rapide"
 
 -- Auto-generated Warning Localizations
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.target		= "%s sur >%%s<"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%d) sur >%%s<"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%s) sur >%%s<"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell		= "%s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.ends		= "%s s'est terminé"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.endtarget	= "%s s'est terminé: >%%s<"
@@ -170,7 +171,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.soon		= "%s imminent"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prewarna	= "%s de %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase		= "Phase %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prephase	= "Phase %s imminente"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.count		= "%s (%%d)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.count		= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack		= "%s sur >%%s< (%%d)"
 
 local prewarnOption = "Alerte préventive concernant $spell:%s"

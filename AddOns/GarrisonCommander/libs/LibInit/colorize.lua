@@ -22,7 +22,7 @@ local MINOR_VERSION = 2
 -- @return blue value
 -- @name C.Azure.c
 -- @return hex string "rrggbb"
--- @name tostring(C.Azure(
+-- @name tostring(C.Azure)
 -- @return hex string "rrggbb"
 -- @name C(testo,colore)
 -- @return "|cff" .. >color code for azure> .. "test" .. "|r"

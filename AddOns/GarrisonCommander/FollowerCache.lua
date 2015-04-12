@@ -18,7 +18,10 @@ local format=format
 local tostring=tostring
 local GetItemInfo=GetItemInfo
 local index={}
+local names={}
 local sorted={}
+local threats={}
+local traits={}
 local function keyToIndex(key)
 	if (not Mbase.followers or not next(Mbase.followers)) then
 		Mbase.dirtyList=false
@@ -34,12 +37,29 @@ local function keyToIndex(key)
 	end
 	wipe(index)
 	wipe(sorted)
+	wipe(names)
+	wipe(threats)
+	wipe(traits)
 	for i=1,#Mbase.followers do
 		if Mbase.followers[i].isCollected then
-			index[Mbase.followers[i].followerID]=i
+			local follower=Mbase.followers[i]
+			names[follower.name]=i
+			index[follower.followerID]=i
 			tinsert(sorted,i)
-			if Mbase.followers[i].followerID==key then
+			if follower.followerID==key or follower.name==key then
 				idx=i
+			end
+			if (follower.abilities) then
+				for _,ability in pairs(follower.abilities) do
+					traits[ability.id]=traits[ability.id]or {}
+					tinsert(traits[ability.id],follower.followerID)
+					if (not ability.isTrait) then
+						for id,_ in pairs(ability.counters) do
+							threats[id]=threats[id]or {}
+							tinsert(threats[id],follower.followerID)
+						end
+					end
+				end
 			end
 		end
 	end
@@ -76,15 +96,15 @@ function addon:CanCounter(followerID,id)
 	end
 end
 function addon:HasTrait(followerID,trait)
-	local abilities=self:GetFollowerData(followerID,'abilities')
-	for i=1,#abilities do
-		local ability=abilities[i]
-		if ability.isTrait then
-			if ability.ID==trait then
-				return true
-			end
-		end
-	end
+	local list=traits[trait]
+	if list then return tContains(list,followerID) end
+end
+function addon:HasAbility(followerID,trait)
+	return self:HasTrait(followerID,trait)
+end
+function addon:CanCounter(followerID,threat)
+	local list=threats[threat]
+	if list then return tContains(list,followerID) end
 end
 function addon:GetFollowerData(followerID,key,default)
 	local idx=keyToIndex(followerID)
@@ -94,6 +114,7 @@ function addon:GetFollowerData(followerID,key,default)
 		ns.xprint("Not found",followerID,key,"at",idx,"len",#Mbase.followers)
 		print(debugstack())
 --@end-debug@]===]
+		return default
 	end
 	if (key==nil) then
 		return follower
@@ -133,4 +154,10 @@ function addon:GetFollowerIterator(func)
 			end
 		end
 	end,sorted,0
+end
+function addon:GetFollowersWithTrait(trait)
+	return traits[trait]
+end
+function addon:GetFollowersWithCounterFor(threat)
+	return threats[threat]
 end

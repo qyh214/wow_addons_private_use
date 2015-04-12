@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'ItemButton', 6
+local WIDGET, VERSION = 'ItemButton', 7
 
 local GUI = LibStub('NetEaseGUI-1.0')
 local Class = LibStub('LibClass-1.0')
@@ -83,7 +83,7 @@ function ItemButton:GetAutoWidth()
     return self:GetWidth()
 end
 
-function ItemButton:Refresh()
+function ItemButton:FireFormat()
     self:FireHandler('OnItemFormatted')
 
     if self.isEntered then

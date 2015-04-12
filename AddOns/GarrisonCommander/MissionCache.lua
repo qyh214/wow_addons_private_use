@@ -52,11 +52,33 @@ function addon:GetMissionData(missionID,key,default)
 			end
 		end
 	end
+	if not mission then
+		mission=self:GetModule("MissionCompletion"):GetMission(missionID)
+		if mission then
+			mission.improvedDurationSeconds=mission.isMissionTimeImproved and mission.improvedDurationSeconds/2 or mission.improvedDurationSeconds
+		end
+	end
+--[===[@debug@
+	if not mission then
+		self:Print("Could not find info for mission",missionID,G.GetMissionName(missionID))
+	end
+--@end-debug@]===]
+
 	if (key==nil) then
 		return mission
 	end
+	if not mission then
+		return default
+	end
 	if (type(mission[key])~='nil') then
 		return mission[key]
+	end
+	if key=='improvedDurationSeconds' then
+		if self:GetParty(missionID,'isMissionTimeImproved') then
+			return mission.durationSeconds/2
+		else
+			return mission.durationSeconds
+		end
 	end
 	if (key=='rank') then
 		mission.rank=mission.level < GARRISON_FOLLOWER_MAX_LEVEL and mission.level or mission.iLevel
@@ -78,6 +100,8 @@ function AddExtraData(mission)
 	mission.followerUpgrade=0
 	mission.itemLevel=0
 	mission.xpBonus=0
+	mission.others=0
+	mission.xp=mission.xp or 0
 	local numrewards=0
 	for k,v in pairs(mission.rewards) do
 		numrewards=numrewards+1
@@ -87,7 +111,7 @@ function AddExtraData(mission)
 		if (v.icon=="Interface\\Icons\\XPBonus_Icon" and v.followerXP) then
 			mission.xpBonus=mission.xpBonus+v.followerXP
 		elseif (v.itemID) then
-			if (v.itemID~=120205) then
+			if (v.itemID~=120205) then -- xp item
 				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(v.itemID)
 				if (itemName and (not v.quantity or v.quantity==1) and not v.followerXP ) then
 					if (itemLevel > 1 and itemMinLevel >=90 ) then
@@ -95,11 +119,13 @@ function AddExtraData(mission)
 					else
 						mission.followerUpgrade=itemRarity
 					end
+				else
+					mission.others=mission.others+v.quantity
 				end
 			end
 		end
 	end
-	if (mission.resources==0 and mission.gold==0 and mission.itemLevel==0 and mission.followerUpgrade==0 and numrewards <2) then
+	if (mission.resources==0 and mission.gold==0 and mission.itemLevel==0 and mission.followerUpgrade==0 and mission.others==0 and numrewards <2) then
 		mission.xpOnly=true
 		mission.class="xp"
 	else

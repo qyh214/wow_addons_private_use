@@ -6,12 +6,10 @@ local _G = getfenv(0)
 -- Functions
 local pairs = _G.pairs
 
-
 -------------------------------------------------------------------------------
 -- AddOn namespace.
 -------------------------------------------------------------------------------
 local FOLDER_NAME, private = ...
-
 
 -------------------------------------------------------------------------------
 -- General constants.
@@ -22,7 +20,7 @@ private.NUM_RAID_ICONS = 8
 -------------------------------------------------------------------------------
 -- Zones.
 -------------------------------------------------------------------------------
-private.CONTINENT_IDS = {
+local CONTINENT_IDS = {
 	KALIMDOR = 1,
 	EASTERN_KINGDOMS = 2,
 	OUTLAND = 3,
@@ -32,46 +30,20 @@ private.CONTINENT_IDS = {
 	DRANOR = 7,
 }
 
+private.CONTINENT_IDS = CONTINENT_IDS
 
---Many map API calls now return both the map name and map id.  This extracts a table of just map
---names from the returned data.
-local function extract_map_names(...)
-	local t = {}
-	for i=1, select("#", ...), 2 do
-	k = select(i, ...)
-	v = select(i+1, ...)
-	t[#t+1] = v
-	end
-	return t
-end
-
-
+local continentNames = {}
 do
-	local VIRTUAL_CONTINENTS = {
-		[private.CONTINENT_IDS.THE_MAELSTROM] = true
-	}
- --13, 14,466,485,751,862,962
-
-
-	local MapContinents = { _G.GetMapContinents() }  --Now returns both mapid and World name
-	private.LOCALIZED_CONTINENT_NAMES = extract_map_names(_G.GetMapContinents())
-
---[[
-	for continent_id, continent_name in pairs(MapContinents) do
-		if type(continent_name) == "string" then  --Weeds out the extra map id from names
-		_G.tinsert(private.LOCALIZED_CONTINENT_NAMES,  continent_name)
+	local continentData = { _G.GetMapContinents() }
+	for continentDataIndex = 1, #continentData do
+		-- Odd indices are IDs, even are names.
+		if continentDataIndex % 2 == 0 then
+			continentNames[#continentNames + 1] = continentData[continentDataIndex]
 		end
 	end
---]]
-	for continent_id in pairs(VIRTUAL_CONTINENTS) do
-		private.LOCALIZED_CONTINENT_NAMES[continent_id] = nil
-	end
-
-	private.LOCALIZED_CONTINENT_IDS = {}
-	for continent_id, continent_name in pairs(private.LOCALIZED_CONTINENT_NAMES) do
-			private.LOCALIZED_CONTINENT_IDS[continent_name] = continent_id
-	end
 end -- do-block
+
+private.LOCALIZED_CONTINENT_NAMES = continentNames
 
 private.ZONE_IDS = {
 	DUROTAR = 4,
@@ -174,7 +146,6 @@ private.ZONE_IDS = {
 	ISLE_OF_GIANTS = 929,
 	THRONE_OF_THUNDER = 930,
 	TIMELESS_ISLE = 951,
---WoD Areas 
 	FROSTFIRE_RIDGE = 941,
 	TANAAN_JUNGLE = 945,
 	TALADOR = 946,
@@ -183,9 +154,9 @@ private.ZONE_IDS = {
 	GORGROND = 949,
 	NAGRAND = 950,
 	DRAENOR = 962,
-	TANAAN_JUNGLE = 970, -- - ASSAULT ON THE DARK PORTAL
+	TANAAN_JUNGLE = 970,
 	LUNARFALL = 971,
-	FROSTWALL = 976, 
+	FROSTWALL = 976,
 	ASHRAN = 978,
 	STORMSHIELD = 1009,
 	WARSPEAR = 1011,
@@ -203,17 +174,26 @@ for label, id in pairs(private.ZONE_IDS) do
 	private.ZONE_ID_TO_LABEL[id] = label
 end
 
-do
-	local continent_names = extract_map_names(_G.GetMapContinents())
-	private.ZONE_NAMES.KALIMDOR = continent_names[1]
-	private.ZONE_NAMES.EASTERN_KINGDOMS = continent_names[2]
-	private.ZONE_NAMES.OUTLAND = continent_names[3]
-	private.ZONE_NAMES.NORTHREND = continent_names[4]
-	private.ZONE_NAMES.THE_MAELSTROM = continent_names[5]
-	private.ZONE_NAMES.PANDARIA = continent_names[6]
-	private.ZONE_NAMES.DRAENOR = continent_names[7]
+private.ZONE_NAMES.KALIMDOR = continentNames[CONTINENT_IDS.KALIMDOR]
+private.ZONE_NAMES.EASTERN_KINGDOMS = continentNames[CONTINENT_IDS.EASTERN_KINGDOMS]
+private.ZONE_NAMES.OUTLAND = continentNames[CONTINENT_IDS.OUTLAND]
+private.ZONE_NAMES.NORTHREND = continentNames[CONTINENT_IDS.NORTHREND]
+private.ZONE_NAMES.THE_MAELSTROM = continentNames[CONTINENT_IDS.THE_MAELSTROM]
+private.ZONE_NAMES.PANDARIA = continentNames[CONTINENT_IDS.PANDARIA]
+private.ZONE_NAMES.DRAENOR = continentNames[CONTINENT_IDS.DRAENOR]
+
+local VIRTUAL_CONTINENTS = {
+	[CONTINENT_IDS.THE_MAELSTROM] = true
+}
+
+for continent_id in pairs(VIRTUAL_CONTINENTS) do
+	private.LOCALIZED_CONTINENT_NAMES[continent_id] = nil
 end
 
+private.LOCALIZED_CONTINENT_IDS = {}
+for continent_id, continent_name in pairs(private.LOCALIZED_CONTINENT_NAMES) do
+	private.LOCALIZED_CONTINENT_IDS[continent_name] = continent_id
+end
 
 -------------------------------------------------------------------------------
 -- Achievements.

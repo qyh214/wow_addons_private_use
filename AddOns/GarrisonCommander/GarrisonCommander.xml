@@ -49,7 +49,7 @@
 					<TexCoords left="0" right="0.5" top="0.5" bottom="1"/>
 				</Texture>
 				<FontString parentKey="Signature" inherits="QuestTitleFontBlackShadow" justifyH="RIGHT" justifyV="TOP" text="Garrison Commander" >
-					<Size x="220" y="80"/>
+					<Size x="300" y="80"/>
 					<Anchors>
 						<Anchor point="TOPRIGHT"  x="-30" y="-2"/>
 					</Anchors>
@@ -358,6 +358,52 @@
 			<OnLoad>
 				self.Anim:Play();
 			</OnLoad>
+		</Scripts>
+	</Frame>
+	<Frame name="GarrisonCommanderUpgradeButton" enableMouse="true" virtual="true">
+		<Size x="32" y="32"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Icon">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="1">
+				<FontString parentKey="Quantity" inherits="NumberFontNormal">
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativeKey="$parent.Icon"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="Level" inherits="NumberFontNormal">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+				if (self.itemID) then
+					GameTooltip:SetItemByID(self.itemID);
+					return;
+				end
+				if (self.currencyID and self.currencyID ~= 0) then
+					GameTooltip:SetCurrencyByID(self.currencyID);
+					return;
+				end
+				if (self.title) then
+					GameTooltip:SetText(self.title);
+				end
+				if (self.tooltip) then
+					GameTooltip:AddLine(self.tooltip, 1, 1, 1, true);
+				end
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave function="GameTooltip_Hide"/>
 		</Scripts>
 	</Frame>
 </Ui>

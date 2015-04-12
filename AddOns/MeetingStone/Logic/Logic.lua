@@ -8,7 +8,7 @@ function Logic:OnInitialize()
         return
     end
 
-    self:ListenSocket('NERB', 'S1' .. UnitFactionGroup('player'))
+    self:ListenSocket('NERB', ADDON_SERVER)
 
     self:RegisterServer('SDV', 'SOCKET_DATA_VALUE')
     self:RegisterServer('SSM', 'SOCKET_SYSTEM_MESSAGE')
@@ -60,7 +60,7 @@ function Logic:SOCKET_VERSION(_, ...)
 end
 
 function Logic:SERVER_CONNECTED()
-    self:SendServer('SLOGIN', ADDON_VERSION, UnitGUID('player'), GetAddonSource(), select(2, BNGetInfo()))
+    self:SendServer('SLOGIN', ADDON_VERSION, UnitGUID('player'), GetAddonSource(), select(2, BNGetInfo()), DataCache:GetQueryData())
     self:SendMessage('MEETINGSTONE_SERVER_STATUS_UPDATED', true)
 end
 

@@ -129,7 +129,7 @@ DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s：尚未安裝任何團隊首領模組"
 DBM_CORE_VERSIONCHECK_FOOTER		= "找到有%d玩家正在使用DBM且有%d玩家正在使用Bigwigs"
 DBM_CORE_VERSIONCHECK_OUTDATED		= "下列有%d玩家正在使用過期的首領模組:%s"
 DBM_CORE_YOUR_VERSION_OUTDATED		= "你的 Deadly Boss Mod 已經過期。請到http://dev.deadlybossmods.com下載最新版本。"
-DBM_CORE_VOICE_PACK_OUTDATED		= "你的DBM語音包缺少在這個版本的DBM需要的語音。特別警告音效篩選器已經被關閉。請下載新版本的語音包或是聯絡語音包作者更新並加入缺少的語音。"
+DBM_CORE_VOICE_PACK_OUTDATED		= "你的DBM語音包可能缺少在這個版本的DBM需要的語音。部分警告音效已經被停用。請下載新版本的語音包或是聯絡語音包作者更新並加入缺少的語音。"
 DBM_CORE_VOICE_MISSING				= "DBM找不到你所選取的語音包。你的語音包選項已經被重置為'None'。請確定你的語音包已正確的安裝與啟用。"
 DBM_CORE_VOICE_COUNT_MISSING		= "所選取的語音/倒數語音包%d找不到倒數語音。設定已被重置回預設值。"
 
@@ -139,11 +139,13 @@ DBM_CORE_UPDATEREMINDER_FOOTER			= "按下" .. (IsMacClient() and "Cmd-C" or "Ct
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "按下" .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "：複製網址到剪貼簿。"
 DBM_CORE_UPDATEREMINDER_DISABLE			= "警告: 你的DBM版本已大幅度的過期(至少過期%d個版本)，DBM已被禁用了除非更新至最新版本。這是為了確保舊而不相容的程式碼不會對你而團隊夥伴造成低落的遊戲體驗。"
 DBM_CORE_UPDATEREMINDER_HOTFIX			= "你的DBM版本會在這首領戰鬥有不準確的計時器或警告。這問題已被修正在新版正式版(或是更新到最新的alpha如果新版正式版還未釋出。)"
+DBM_CORE_UPDATEREMINDER_HOTFIX_ALPHA	= DBM_CORE_UPDATEREMINDER_HOTFIX--TEMP, FIX ME!
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "警告:你的DBM已經過期，DBM已被禁用直到你更新至最新版，因為遊戲大改版。為了不讓舊的程式碼拖累遊戲體驗。請至deadlybossmods.com或是curse下載最新版本的DBM。"
 DBM_CORE_UPDATEREMINDER_TESTVERSION		= "警告:你使用的DBM版本和遊戲版本不相容。請到deadlybossmods.com或是curse下載符合你遊戲版本的DBM。"
 DBM_CORE_VEM							= "警告:你同時使用DBM和VEM。DBM將停用而無法執行。"
 DBM_CORE_3RDPROFILES					= "警告:DBM-Profiles不相容此版本DBM。請移除避免衝突。"
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "警告:如果你沒有重啟你的遊戲，這次DBM更新可能無法正確運作。這次更新包含了新的檔案或是.toc檔更新而不能使用ReloadUI載入。如果沒有將遊戲完全重啟可能會導致錯誤或功能不完整。"
+DBM_CORE_OUT_OF_DATE_NAG				= "你的DBM版本已經過期你設定忽略彈出更新提示。還是建議你更新避免缺少一些重要的警告或是計時器，而其他人也看不到從你發出的大喊警告。"
 
 DBM_CORE_MOVABLE_BAR				= "拖動我!"
 
@@ -186,9 +188,10 @@ DBM_CORE_SLASHCMD_HELP				= {
 	"/dbm timer endloop：停止任何無限循環的計時器。",
 	"/dbm break <分鐘>: 開始休息計時器<分鐘>。向所有團隊成員發送一個DBM休息計時器（需要團隊隊長或助理權限）。",
 	"/dbm pull <秒數>: 開始備戰計時器<秒數>。向所有團隊成員發送一個DBM備戰計時器（需要團隊隊長或助理權限）。",
-	"/dbm arrow: 顯示DBM箭頭, 輸入 /dbm arrow help 獲得更多訊息。",
+	"/dbm arrow: 顯示DBM箭頭, 輸入'/dbm arrow help'獲得更多訊息。",
 	"/dbm lockout: 向團隊成員請求他們當前的團隊副本鎖定訊息(鎖定訊息、副本id) (需要團隊隊長或助理權限)。",
-	"/dbm lag: 進行團隊範圍內的網路延遲檢測。"
+	"/dbm lag: 進行團隊範圍內的網路延遲檢測。",
+	"/dbm hud: 顯示DBM hud，輸入'/dbm hud'獲得更多訊息。"
 }
 
 DBM_ERROR_NO_PERMISSION				= "無權進行此操作。"
@@ -199,6 +202,7 @@ DBM_CORE_UNKNOWN					= "未知"
 DBM_CORE_LEFT						= "左"
 DBM_CORE_RIGHT						= "右"
 DBM_CORE_BACK						= "後"
+DBM_CORE_MIDDLE						= "中"
 DBM_CORE_FRONT						= "前"
 DBM_CORE_INTERMISSION				= "中場時間"
 
@@ -218,7 +222,7 @@ DBM_CORE_GEAR_FISHING_POLE			= "釣魚竿"
 DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "成就"
 
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.target			= "%s:>%%s<"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%d):>%%s<"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%s):>%%s<"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell			= "%s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.ends 			= "%s結束"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.endtarget		= "%s結束:>%%s<"
@@ -229,7 +233,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.soon			= "%s即將到來"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prewarn		= "%s在%s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase			= "第%s階段"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prephase		= "第%s階段即將到來"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.count			= "%s (%%d)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.count			= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack			= ">%%s<中了%s (%%d)"
 
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target		= "提示$spell:%s的目標"
@@ -295,6 +299,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack		= "為中了>=%d層$spell:%s時顯示特�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch		= "需對$spell:%s更換目標時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target
 
 DBM_CORE_AUTO_TIMER_TEXTS.target			= "%s:>%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.cast				= "%s"
@@ -341,7 +346,7 @@ DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "為$spell:%s的持續時間播放倒數�
 DBM_CORE_AUTO_YELL_OPTION_TEXT			= "當你中了$spell:%s時大喊"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.yell	= "" .. UnitName("player") .. "中了%s!"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.count	= "" .. UnitName("player") .. "中了%s!(%%d)"
-DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.fade	= "%s消退於%%d!"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.fade	= "%s消退在%%d秒!"
 DBM_CORE_AUTO_HUD_OPTION_TEXT			= "為$spell:%s顯示HudMap"
 DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "為不同的機制顯示HudMap"
 DBM_CORE_AUTO_RANGE_OPTION_TEXT			= "為$spell:%2$s顯示距離框架(%1$s碼)"
@@ -356,6 +361,20 @@ DBM_CORE_MOVE_WARNING_BAR			= "可移動提示"
 DBM_CORE_MOVE_WARNING_MESSAGE		= "感謝您使用Deadly Boss Mods"
 DBM_CORE_MOVE_SPECIAL_WARNING_BAR	= "可拖動的特別警告"
 DBM_CORE_MOVE_SPECIAL_WARNING_TEXT	= "特別警告"
+
+DBM_CORE_HUD_INVALID_TYPE			= "無效的HUD類型定義"
+DBM_CORE_HUD_INVALID_TARGET			= "無有效的HUD目標"
+DBM_CORE_HUD_INVALID_SELF			= "不能將HUD目标設定成自己"
+DBM_CORE_HUD_INVALID_ICON			= "不能設定對無團隊標記的目標"
+DBM_CORE_HUD_SUCCESS				= "HUD成功使用你的參數運作。這會在%s後取消，或是使用'/dbm hud hide'指令取消。"
+DBM_CORE_HUD_USAGE	= {
+	"DBM-HudMap 用法:",
+	"/dbm hud <類型> <目標> <持續時間>  建立一個指向玩家的HUD",
+	"有效類型: red, blue, green, yellow, icon(需要團隊標記)",
+	"有效目標: target, focus, <玩家名字>",
+	"有效持續時間: 任何秒數。如果無輸入值則預設為20分鐘",
+	"/dbm hud hide  關閉並隱藏HUD"
+}
 
 DBM_ARROW_MOVABLE					= "可移動箭頭"
 DBM_ARROW_ERROR_USAGE	= {

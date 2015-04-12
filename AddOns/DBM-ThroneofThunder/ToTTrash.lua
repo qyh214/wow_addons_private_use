@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ToTTrash", "DBM-ThroneofThunder")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 40 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 50 $"):sub(12, -3))
 mod:SetModelID(47785)
 mod:SetZone()
 
@@ -29,7 +29,7 @@ local specWarnConductiveShield	= mod:NewSpecialWarningTarget(140296)
 
 local timerSpiritfireCD			= mod:NewCDTimer(12, 139895)
 local timerShadowNovaCD			= mod:NewCDTimer(12, 139899)
-local timerFixatedCD			= mod:NewNextTimer(15.7, 140306)
+local timerFixatedCD			= mod:NewNextTimer(15, 140306)
 local timerConductiveShield		= mod:NewTargetTimer(10, 140296)
 local timerConductiveShieldCD	= mod:NewCDSourceTimer(20, 140296)--On 25 man, it always 20, But 10 man, it variables.
 

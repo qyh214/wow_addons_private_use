@@ -4,12 +4,12 @@
 ## Notes-itIT: Ti aiuta a scegliere il giusto seguace per la giusta missione
 ## Notes-frFR: Vous aide au moment de choisir le droit utilisateur pour la bonne mission
 ## Author: Alar of Daggerspine
-## Version: 2.3.7.1
-## X-Version: 2.3.7.1
-## X-Revision: 96225c2
+## Version: 2.4.8.1 054ec05
+## X-Version: 2.4.8
+## X-Revision: 054ec05
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
-## OptionalDeps:
+## OptionalDeps: LibInit
 ## DefaultState: Enabled
 ## LoadOnDemand: 1
 ## LoadWith: Blizzard_GarrisonUI
@@ -20,9 +20,9 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2015-02-27T19:29:10Z
+## X-Date: 2015-04-07T21:05:00Z
 ## X-Embeds:
-## X-Curse-Packaged-Version: 2.3.7.1
+## X-Curse-Packaged-Version: 2.4.8.1
 ## X-Curse-Project-Name: GarrisonCommander
 ## X-Curse-Project-ID: garrisoncommander
 ## X-Curse-Repository-ID: wow/garrisoncommander/mainline
@@ -30,6 +30,8 @@ embeds.xml
 localization.lua
 wowhead.lua
 Init.lua
+Widgets.lua
+GarrisonCommander.xml
 MissionCache.lua
 FollowerCache.lua
 PartyCache.lua
@@ -38,5 +40,5 @@ MissionCompletion.lua
 FollowerPage.lua
 MatchMaker.lua
 FollowerRecruiting.lua
-GarrisonCommander.xml
+BuildingPage.lua
 RelNotes.lua

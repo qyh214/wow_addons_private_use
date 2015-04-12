@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(819, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 39 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 50 $"):sub(12, -3))
 mod:SetCreatureID(68476)
 mod:SetEncounterID(1575)
 mod:SetZone()
@@ -68,9 +68,9 @@ local timerAdds					= mod:NewTimer(18.91, "timerAdds", 43712)
 local timerDinoCD				= mod:NewNextTimer(18.9, "ej7086", nil, nil, nil, 137237)
 local timerCharge				= mod:NewCastTimer(3.4, 136769)
 local timerChargeCD				= mod:NewCDTimer(50, 136769)--50-60 second depending on i he's casting other stuff or stunned
-local timerDoubleSwipeCD		= mod:NewCDTimer(17, 136741)--17 second cd unless delayed by a charge triggered double swipe, then it's extended by failsafe code
+local timerDoubleSwipeCD		= mod:NewCDTimer(16.5, 136741)--16.5 second cd unless delayed by a charge triggered double swipe, then it's extended by failsafe code
 local timerPuncture				= mod:NewTargetTimer("OptionVersion2", 90, 136767, nil, false)
-local timerPunctureCD			= mod:NewCDTimer(11, 136767, nil, "Tank|Healer")
+local timerPunctureCD			= mod:NewCDTimer(10.5, 136767, nil, "Tank|Healer")
 local timerJalakCD				= mod:NewNextTimer(10, "ej7087", nil, nil, nil, 2457)--Maybe it's time for a better worded spawn timer than "Next mobname". Maybe NewSpawnTimer with "mobname activates" or something.
 local timerBestialCryCD			= mod:NewNextCountTimer(10, 136817)
 local timerDireCallCD			= mod:NewCDCountTimer(62, 137458)--Heroic (every 62-70 seconds)
@@ -140,13 +140,13 @@ function mod:SPELL_CAST_START(args)
 		warnDoubleSwipe:Show()
 		specWarnDoubleSwipe:Show()
 		--The only flaw is charge is sometimes delayed by unexpected events like using an orb, we may fail to start timer once in a while when it DOES come before a charge.
-		if timerChargeCD:GetTime() < 32 then--Check if charge is less than 18 seconds away, if it is, double swipe is going tobe delayed by quite a bit and we'll trigger timer after charge
+		if timerChargeCD:GetTime() < 32 then--Check if charge is less than 18 seconds away, if it is, double swipe is going to be delayed by quite a bit and we'll trigger timer after charge
 			timerDoubleSwipeCD:Start()
 		end
 	elseif spellId == 136770 then--Double swipe that follows a charge (136769)
 		warnDoubleSwipe:Show()
 		specWarnDoubleSwipe:Show()
-		timerDoubleSwipeCD:Start(11.5)--Hard coded failsafe. 136741 version is always 11.5 seconds after 136770 version
+		timerDoubleSwipeCD:Start(11)--Hard coded failsafe. 136741 version is always 11 seconds after 136770 version
 	elseif spellId == 137458 then
 		direNumber = direNumber + 1
 		warnDireCall:Show(direNumber)
@@ -177,11 +177,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerPuncture:Start(args.destName)
 		timerPunctureCD:Start()
 		if args:IsPlayer() then
-			if threatamount >= 9 then
+			if amount >= threatamount then
 				specWarnPuncture:Show(amount)
 			end
 		else
-			if threatamount >= 9 and not UnitDebuff("player", GetSpellInfo(136767)) and not UnitIsDeadOrGhost("player") then--Other tank has at least one stack and you have none
+			if amount >= threatamount and not UnitDebuff("player", GetSpellInfo(136767)) and not UnitIsDeadOrGhost("player") then--Other tank has at least one stack and you have none
 				specWarnPunctureOther:Show(args.destName)--So nudge you to taunt it off other tank already.
 			end
 		end

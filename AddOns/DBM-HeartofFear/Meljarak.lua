@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(741, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 45 $"):sub(12, -3))
 mod:SetCreatureID(62397)
 mod:SetEncounterID(1498)
 mod:SetZone()
@@ -140,7 +140,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 122055 and args:IsPlayer() then
 		local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)
-		timerResidue:Start(expires-GetTime())
+		if expires then
+			timerResidue:Start(expires-GetTime())
+		end
 	end
 end
 mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED

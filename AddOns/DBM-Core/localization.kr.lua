@@ -140,13 +140,15 @@ DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "사용중인 DBM alpha 버전이 오래�
 DBM_CORE_UPDATEREMINDER_FOOTER			= (IsMacClient() and "Cmd-C" or "Ctrl-C").. " 를 누르면 주소를 복사하실 수 있습니다."
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= (IsMacClient() and "Cmd-C" or "Ctrl-C").. " 를 누르면 주소를 복사하실 수 있습니다."
 DBM_CORE_UPDATEREMINDER_URL				= "http://www.inven.co.kr/board/powerbbs.php?come_idx=3716"
-DBM_CORE_UPDATEREMINDER_DISABLE			= "경고: 현재 사용중인 DBM 버전은 지나치게 오래되어(r%d 가량) 사용하실 수 없습니다. 이것은 당신 및 공격대원에게 잘못된 알림으로 혼동을 주지 않기 위함입니다. 계속 사용하시려면 지금 즉시 최신 버전으로 업데이트하여 주시기 바랍니다."
-DBM_CORE_UPDATEREMINDER_HOTFIX			= "지금 사용하시는 DBM 버전은 이 전투에서 잘못된 경고를 표시합니다. 이 오류는 다음 버전에서 수정되오나, 다음 버전이 없을 경우 최신 alpha 버전으로 업데이트 하면 수정할 수 있습니다."
+DBM_CORE_UPDATEREMINDER_DISABLE			= "경고: 현재 사용중인 DBM 버전은 지나치게 오래되어 업데이트를 하지 않으면 사용하실 수 없습니다. 이것은 당신 및 공격대원에게 잘못된 알림으로 혼동을 주지 않기 위함입니다. 계속 사용하시려면 지금 즉시 최신 버전으로 업데이트하여 주시기 바랍니다."
+DBM_CORE_UPDATEREMINDER_HOTFIX			= "지금 사용하시는 DBM 버전은 이 전투에서 잘못된 경고를 표시합니다. 이 오류는 다음 버전으로 업데이트 하시면 수정됩니다."
+DBM_CORE_UPDATEREMINDER_HOTFIX_ALPHA	= "지금 사용하시는 DBM 버전은 이 전투에서 잘못된 경고를 표시합니다. 이 오류는 다음에 출시될 버전 또는 최신 알파 버전으로 업데이트 하시면 수정됩니다."
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "경고: DBM 버전이 오래되어 현재 게임 버전에서는 작동하지 않을 것입니다. 당신 또는 같은 공격대원에게 잘못된 알림을 보내거나 게임이 느려지는 것을 막기 위함을 양해하여 주시기 바랍니다. 지금 당장 최신 버전으로 업데이트 하여 주시기 바랍니다."
 DBM_CORE_UPDATEREMINDER_TESTVERSION		= "경고: 현재 게임 버전과 맞지 않는 DBM을 사용중입니다. 현재 게임 버전에 맞는 DBM을 다운로드 받아 다시 설치하시기 바랍니다."
 DBM_CORE_VEM							= "경고: 당신은 DBM과 VEM을 동시에 사용중입니다. 현재 설정에서는 DBM이 작동하지 않으므로 DBM을 불러오지 않습니다."
 DBM_CORE_3RDPROFILES					= "경고: DBM-Profiles는 이 버전의 DBM과 호환되지 않습니다. 충돌을 방지하기 위해 해당 애드온을 제거하셔야 DBM을 불러올 수 있습니다."
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "경고: 지금 업데이트하신 DBM은 게임 클라이언트를 완전히 재시작하지 전까지 정상작동하지 않습니다. 이 업데이트는 새 파일이 추가되었거나 UI 재시작으로는 불러올 수 없는 TOC 변경이 포함되어 있습니다. 재시작 없이 사용하실 경우 오류가 발생하거나 작동하지 않을 수 있습니다."
+DBM_CORE_OUT_OF_DATE_NAG				= "경고: 현재 사용중인 DBM 버전이 오래되었으며 현재 업데이트 팝업 끄기가 선택된 상태입니다. 중요한 알림, 바 그리고 공격대원 모두가 볼 수 있는 대화 알림을 놓치지 않기 위해 업데이트 하시는 것을 강력하게 권장 드립니다."
 
 DBM_CORE_MOVABLE_BAR				= "나를 움직이세요~_~"
 
@@ -197,7 +199,8 @@ DBM_CORE_SLASHCMD_HELP				= {
 	"/dbm pull <숫자>: <숫자>초 후 전투 예정 바를 보냄. DBM을 설치한 모든 공격대원이 볼 수 있음(승급 권한 필요)",
 	"/dbm arrow: DBM 화살표 도움말을 봄",
 	"/dbm lockout: 현재 공격대원에게 공격대 귀속 정보를 요청(승급 권한 필요)",
-	"/dbm lag: 공격대원의 지연시간을 확인함"
+	"/dbm lag: 공격대원의 지연시간을 확인함",
+	"/dbm hud: DBM 범위표시 도움말을 봄"
 }
 
 DBM_ERROR_NO_PERMISSION				= "해당 명령어를 실행하기 위한 권한을 가지고 있지 않습니다."
@@ -208,6 +211,7 @@ DBM_CORE_UNKNOWN					= "알 수 없음"--UNKNOWN
 DBM_CORE_LEFT						= "왼쪽"
 DBM_CORE_RIGHT						= "오른쪽"
 DBM_CORE_BACK						= "뒤쪽"--BACK
+DBM_CORE_MIDDLE						= "가운데"
 DBM_CORE_FRONT						= "앞쪽"
 DBM_CORE_INTERMISSION				= "사잇 단계"
 
@@ -227,7 +231,7 @@ DBM_CORE_GEAR_FISHING_POLE			= "낚싯대"
 DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Speed Kill(업적)"--BATTLE_PET_SOURCE_6
 
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.target			= "%s: >%%s<"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%d): >%%s<"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%s): >%%s<"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell			= "%s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.ends			= "%s 종료"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.endtarget		= "%s 종료: >%%s<"
@@ -238,7 +242,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.soon			= "곧 %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prewarn		= "%2$s 후 %1$s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase			= "%s 단계"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prephase		= "곧 %s 단계"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.count			= "%s (%%d)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.count			= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack			= "%s: >%%s< (%%d)"
 
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target		= "$spell:%s 대상 알림 보기"
@@ -267,6 +271,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt		= "%s: >%%s< - 차단!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount= "%s: >%%s< - 차단! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you			= "당신에게 %s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= ">%%s<에게 %1$s!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.targetcount	= ">%%2$s<에게 %1$s! (%%1$s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt			= ">%%s<에게 %1$s - 도발!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close			= "가까운 곳에 %s (>%%s<)!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move			= "%s - 바닥 피하세요!"
@@ -304,6 +309,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack		= "당신이 $spell:%2$s %1$d중첩 이�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch		= "$spell:%s 대상 전환 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount	= "$spell:%s 대상 특수 경고 보기"
 
 DBM_CORE_AUTO_TIMER_TEXTS.target			= "%s: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.cast				= "%s"
@@ -341,7 +347,7 @@ DBM_CORE_AUTO_ICONS_OPTION_TEXT			= "$spell:%s 대상에게 전술 목표 아이
 DBM_CORE_AUTO_ICONS_OPTION_TEXT2		= "$spell:%s 에게 전술 목표 아이콘 설정"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT			= "$spell:%s 대상 방향으로 DBM 화살표 보기"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT2		= "$spell:%s 대상 반대 방향으로 DBM 화살표 보기"
-DBM_CORE_AUTO_ARROW_OPTION_TEXT3		= "$spell:%s 관련 특정 위치로 DBM 화살표 보기"
+DBM_CORE_AUTO_ARROW_OPTION_TEXT3		= "$spell:%s 주문과 관련된 DBM 화살표 보기"
 DBM_CORE_AUTO_VOICE_OPTION_TEXT			= "$spell:%s 주문에 대한 음성안내 소리 듣기"
 DBM_CORE_AUTO_VOICE2_OPTION_TEXT		= "단계 전환시 음성안내 소리 듣기"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "$spell:%s 이전에 초세기 듣기"
@@ -366,6 +372,20 @@ DBM_CORE_MOVE_WARNING_MESSAGE			= "<Deadly Boss Mods>를 사용해 주셔셔 감
 DBM_CORE_MOVE_SPECIAL_WARNING_BAR		= "특수 경고 이동 가능"
 DBM_CORE_MOVE_SPECIAL_WARNING_TEXT		= "특수 경고"
 
+DBM_CORE_HUD_INVALID_TYPE			= "범위정보 형식이 잘못 되었습니다."
+DBM_CORE_HUD_INVALID_TARGET			= "범위정보 대상이 잘못 되었습니다."
+DBM_CORE_HUD_INVALID_SELF			= "자신을 범위 정보 대상으로 설정할 수 없습니다."
+DBM_CORE_HUD_INVALID_ICON			= "대상에게 전술 목표 아이콘이 설정되어 있지 않으면 아이콘 범위정보 기능을 사용할 수 없습니다."
+DBM_CORE_HUD_SUCCESS				= "범위정보를 %s동안 표시합니다. '/dbm hud hide'를 입력하시면 즉시 숨길 수 있습니다."
+DBM_CORE_HUD_USAGE	= {
+	"DBM 범위정보 사용법:",
+	"/dbm hud <형식> <대상> <지속시간> 지정된 형식으로 지정된 대상을 가리키는 범위정보를 만듭니다. <지속시간>초 동안 지속됩니다.",
+	"유효한 형식: red, blue, green, yellow, icon (대상에게 전술 목표 아이콘이 설정되어 있어야 합니다.)",
+	"유효한 대상: target, focus, <대상이름>",
+	"유효한 시간: 아무 숫자(초단위). 빈칸일 경우, 20분이 사용됩니다.",
+	"/dbm hud hide  범위정보를 숨기고 비활성화 합니다."
+}
+
 DBM_ARROW_MOVABLE						= "화살표 움직이기"
 DBM_ARROW_ERROR_USAGE	= {
 	"DBM 화살표 사용법:",
@@ -382,6 +402,7 @@ DBM_SPEED_KILL_TIMER_TEXT	= "최고 기록"
 DBM_SPEED_KILL_TIMER_OPTION	= "최고 기록을 바로 보기"
 DBM_SPEED_CLEAR_TIMER_TEXT	= "최고 기록"
 DBM_COMBAT_RES_TIMER_TEXT	= "다음 전투 부활 충전"
+DBM_CORE_TIMER_RESPAWN		= "재생성"
 
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s 님이 당신의 공격대 귀속 정보를 요청합니다.\n이 요청을 수락하면 재접속 전까지는\n%s 님의 요청을 더 이상 받지 않습니다. 수락하시겠습니까?"

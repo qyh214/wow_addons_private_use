@@ -8,9 +8,6 @@
 local private = select( 2, ... )
 private.L = setmetatable( {
 	NPCs = {};
-	-- Phrases localized by default UI
-	FOUND_ZONE_UNKNOWN = UNKNOWN;
-	SEARCH_LEVEL_TYPE_FORMAT = UNIT_TYPE_LEVEL_TEMPLATE; -- Level, Type
 }, {
 	__index = function ( self, Key )
 		if ( Key ~= nil ) then

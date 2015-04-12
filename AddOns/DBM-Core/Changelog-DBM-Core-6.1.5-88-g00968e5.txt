@@ -1,0 +1,90 @@
+subversion:
+	- Omega via svn r13575: Added alternate interrupt method option to oregorger. Default is still based on buffs. Drop down to change this is in bottom of mod options
+	- Omega via svn r13574: Also, mods work better when they are loaded
+	- Omega via svn r13573: #Invasions Update *Added Commander Dro?\226?\128?\153gan mod *Fix all of invasion bosses triggering wipe messages before combat starts. *Added footman filter to target scanner to improve target scanner on garrison invasion bosses. *Only do combat start timers for summons. Re-engage would not have same timers (this assumes you can re-enrage after a wipe?)
+	- Omega via svn r13572: Remove unneeded locals. Most of these have been in core a long time, i just forgot about them, use the core localizations and add middle to them. Should ensure helper works better in more languages.
+	- ebmor via svn r13571: deDE update
+	- nbluewiz via svn r13570: # koKR update.
+	- ebmor via svn r13569: deDE update
+	- Omega via svn r13568: #Blast Furnace Update *Range frame had a lot of bugs in it still, plus wasn?\226?\128?\153t very smart. replace entire range frame on this fight with smarter custom range check function similar to margok that calls updates only when player status changes or phase changes, and then runs through a list of conditions to determine which frame to show. *Fixed timer on volatile fire being 0.7 seconds too long.
+	- Omega via svn r13567: rupture off by default for tanks. it doesn?\226?\128?\153t target them, and they have enough bars with adds
+	- Omega via svn r13566: Smaller balls
+	- Omega via svn r13565: Lady Fleshsear mod. Fixed bug where start combat didn?\226?\128?\153t work for teluur
+	- Omega via svn r13564: Bump BW version
+	- Omega via svn r13563: Fix one bad train call Fix range/melee split on train 1 on pull so melee are on top of adds and ranged outside of them for first grenades.
+	- Omega via svn r13562: Add blackhands respawn time
+	- Omega via svn r13561: Iron maidens felt like 20 seconds as well, but not 100% verified. Remove stray print from debug. New method working perfect now. tested on several blast furnace resets
+	- Omega via svn r13560: Remove extra sync send on iron maidens and the DBM onsync handler. the new method worked flawlessly and even better, as expected, supported early near warnings /icons on bigwigs users too, not just DBM users.
+	- Omega via svn r13559: add the whisper debug prints to transcriptor listener, removing redundancy and double syncing for no reason.
+	- Omega via svn r13558: try to fix new respawn timer code
+	- Omega via svn r13557: Fix bug causing debug to print bosses 2-5 at any debug level
+	- Omega via svn r13556: change how boss respawn time works since it?\226?\128?\153s actually variable based on boss. it is a fixed time, but not globally but rather per boss level. most probably 10, but some longer. For accuracy, only enabling on blast furnace and gruul (which seems to be 20 second respawn) Attempt to fix non working icons on wolves
+	- Omega via svn r13555: Add rolling fury cast count to oregorger, off by default.
+	- Omega via svn r13554: More improvements for handling double volatile fire.
+	- Omega via svn r13553: Check if player has a second volatile fire debuff when hide is called, to prevent premature hiding when first of two expires.
+	- Omega via svn r13552: Bump BW version
+	- Omega via svn r13551: #Blast Furnace Update *Improve range frame for fixate do to splash damage it causes. Warn for fixates in phase 3.
+	- Omega via svn r13550: #Blast Furnace Update *Fix infoframe bomb counter if regulators aren?\226?\128?\153t boss 3 and boss 4 *Fixed spam if user gets two volatile fires at same time *Changed yell default to apply because the countdown default is a spammy mess and most do not like it (10 targets get debuff at same time). If people prefer countdown they can change it. *Fixed bug where tank warning was saying to dodge an attack that can?\226?\128?\153t be dodged. Changed sound to 1 since attack isn?\226?\128?\153t a near one shotting dodgable attack like it was in beta *Added timer (off by default) for volatile Fire *Changed Rupture to a higher priority warning. good placement of it is critical, especially phase 2 (if dropped on an elementalists it?\226?\128?\153s pretty much a wipe since melee can?\226?\128?\153t go near it). *Tweaks to blast timer, almost always saw CD start before expires messages, for like 8 out of 10 blasts. *0.5 second tweak on first adds (and all subsequent ones as well)
+	- Omega via svn r13549: Added boss respawn timer. verified good. 12 seconds after visual despawn but exactly 10 seconds from ENCOUNTER_END
+	- Omega via svn r13548: Always warn dispel. they need to be dispelled even when shielded, especially on mythic.
+	- Omega via svn r13547: Fix countdown timer for security guard not working (i added option for it, then forgot to actually do anything with it
+	- Omega via svn r13546: CN update
+	- Omega via svn r13545: #Thogar Update *Add voices for lane movements *Add dropdown to control behavior of voices, by default, voices are still incoming lanes. They must be changed to movements or lanes and movements. *Code cleanup on Hud Helper
+	- Omega via svn r13544: Prevent nil errors if target changes to nil
+	- Omega via svn r13543: Abort correct scanner on death
+	- Omega via svn r13542: Fix lua error, otherwise, seems to work
+	- Omega via svn r13541: Add experimental UNIT_TARGET scan method for niche cases where regular scanning can fall short (or requires way too much cpu to prevent it from falling short, such as doing a rapid burst of 40 scans on darmac to catch a split second target). Something I?\226?\128?\153ve wanted to do years ago on Lich king when DXE had more accurate trap/defile scanner, during its prime. Of course at the time I was far too amateur to add it, and didn?\226?\128?\153t think to revisit idea until now, after seeing more adoption of method. Now is as good of time as any to revisit something a noob couldn?\226?\128?\153t do years ago.
+	- Omega via svn r13540: More fixes and tweaks
+	- Omega via svn r13539: More debug fixes
+	- Omega via svn r13538: apparently, darmac actually looks at superheated shrapnal target in LFR. I?\226?\128?\153ve never seen him have a target in mythic, but no reason not to warn the target in difficulties it works in. Also only scan for 2 seconds. instead of 4
+	- Omega via svn r13537: Add some more stuff to debug mode
+	- nbluewiz via svn r13536: # fix acid torrent spec warning not shows. # add voice for superheated sharpenl.
+	- nbluewiz via svn r13535: # koKR update.
+	- Omega via svn r13534: Disable in LFR
+	- Omega via svn r13533: Add wolf icons, since everyone else is, plus people are asking for it on twitter.
+	- Omega via svn r13532: Full teluur mod.
+	- Omega via svn r13531: I?\226?\128?\153ll finish this later, but this should be working combat detection at least
+	- Omega via svn r13530: More micro optimize plus bug fix where cached isMoving didn?\226?\128?\153t nil out when self.moving did, causing it to still be true when it?\226?\128?\153s not in last function. This bug probably made enlarge remove from list one frame slower than needed. Not really noticeable considering 1 frame is nothing, but still. :)
+	- Omega via svn r13529: Very minor optimize to ApplyStyle. Anything to keep it under 200ms for slow computers
+	- Omega via svn r13528: Fix bad global
+	- Omega via svn r13527: Another one
+	- Omega via svn r13526: Fix bug in two more places
+	- Omega via svn r13525: tweak checkwipe for world bosses while at it. 30 second is too long of a wipe time. soloers on sha of anger may reset him and engage right away on respawn. Same for other older bosses. 15 second more than enough time because people die at boss, should rez near their corpse and i?\226?\128?\153m pretty sure 15 seconds more than enough time to get back into combat.
+	- Omega via svn r13524: Fix the cause of checkwipe not working
+	- tandanu via svn r13523: disallow unscheduling *everything* with unschedule()
+	add unscheduleAll() if you really need to to this (e.g. DBM:Disable())
+	- Omega via svn r13522: Grammer
+	- Omega via svn r13521: Added pointless option (off by default) to make people feel better. the number of people not using DBM because it won?\226?\128?\153t give positions in phases that DO NOT NEED THEM is mind boggling. So add option to pointlessly assign positions in phases 1 and 2 so dbm can assign them to positions they will IGNORE in those phases.
+	- Omega via svn r13520: Timing adjust on vocal counts, may need more adjust. this is generous
+	- ultrashining via svn r13519: zhTW update
+	- Omega via svn r13518: Add option to use regular green circles instead of raid icons for thogar movement helper
+	- Omega via svn r13517: Change rapid fore syncing to support detecting rapid fire earlier from bigwigs users Fixed a bug where blade dash counter would become wrong if target dies/boss recasts
+	- Omega via svn r13516: Prevent timer debug on blade dash if target dies during cast (causing boss to recast it). Also fix double countdown caused by this too
+	- Omega via svn r13515: Fix wrapping if template is loaded from defaultskin instead of DBT
+	- Omega via svn r13514: Tweak to make more localization friendly
+	- Omega via svn r13513: Fix rounding
+	- Omega via svn r13512: and again
+	- Omega via svn r13511: Fix infoframe
+	- Omega via svn r13510: That didn?\226?\128?\153t trigger, try this
+	- Omega via svn r13509: No actual coding change, just packager bump
+	- Omega via svn r13508: Don?\226?\128?\153t need that
+	- Omega via svn r13507: #Blast Furnace Update *Fix bug where MC bombs had no warnings *Fixed bug where no bomb warning would fire if player got a bomb refresh. *Changed phase 1 info frame to show bombs remaining for regulators instead of showing who has bombs. This is more useful.
+	- Omega via svn r13506: There is not a single nil check missing here, not a one. if this still nil errors. I?\226?\128?\153m completely removing all skin support and merging default skin into DBT as mandatory ONLY skin, period.
+	- Omega via svn r13505: Small timing adjust
+	- Omega via svn r13504: Further simplify
+	- Omega via svn r13503: Shift line number again and tweak a little
+	- Omega via svn r13502: Try this fix
+	- Omega via svn r13501: Fix error
+	- Omega via svn r13500: lower force disable
+	- Omega via svn r13499: Even more debug
+	- Omega via svn r13498: And remove this. Apparently this is not the cause, but the error then is literally impossible by all standards. a nil error when every part of the function has a nil check.
+	- Omega via svn r13497: Push more timer debug
+	- Omega via svn r13496: Don?\226?\128?\153t run skin check if options table is corrupt. silence one lua error but no idea how to fix corrupt option table. This is something that?\226?\128?\153s been broken since profiles were added, it?\226?\128?\153s about when saw the start of these errors. LoadOptions must fail to repair broken option tables/create working defaults.
+	- Omega via svn r13495: Bump BW version
+	- Omega via svn r13494: Because I can?\226?\128?\153t reproduce the error and am counting on 3rd parties to actually test alphas correctly, do this to know for sure
+	- Omega via svn r13493: More fix attempts, and some debug
+	- Omega via svn r13492: Better formatting
+	- Omega via svn r13491: Actually, this may be fix for at least that error
+	- Omega via svn r13490: nevermind, misread my own code, false alarm
+	- Omega via svn r13489: Lol, minutes after release, find a bug. but this one sooo minor. Oh well.
+	- tandanu via svn r13488: increment alpha version

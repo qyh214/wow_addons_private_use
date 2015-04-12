@@ -1,7 +1,7 @@
 
 local GUI = assert(LibStub('NetEaseGUI-1.0'), 'NetEaseGUI-DropMenu-1.0 requests NetEaseGUI')
 
-local WIDGET, VERSION = 'DropMenu', 6
+local WIDGET, VERSION = 'DropMenu', 7
 local DropMenu = GUI:NewClass(WIDGET, GUI:GetClass('GridView'), VERSION, 'Owner')
 if not DropMenu then
     return
@@ -163,7 +163,10 @@ function DropMenu:OpenMenu(level, menuTable, owner, ...)
 
     local Menu = _MenuList[level]
 
-    Menu:SetRowCount(owner.GetMaxItem and owner:GetMaxItem() or nil)
+    local maxItem = owner.GetMaxItem and owner:GetMaxItem()
+
+    Menu:SetRowCount(maxItem)
+    Menu:SetScrollStep(max((maxItem or 0)-1, 1))
     Menu:SetLevel(level)
     if Menu:GetItemList() ~= menuTable then
         Menu:SetOffset(1)

@@ -1,10 +1,10 @@
 ## Interface: 60100
-## Title: Titan Panel [|cffeda55fLootType|r] |cff00aa005.5.3.60100|r
+## Title: Titan Panel [|cffeda55fLootType|r] |cff00aa005.5.4.60100|r
 ## Notes: Adds group loot and instance difficulty information to Titan Panel
 ## Author: Titan Development Team (http://www.titanpanel.org)
 ## SavedVariables: 
 ## OptionalDeps: 
 ## Dependencies: Titan
-## Version: 5.5.3.60100
+## Version: 5.5.4.60100
 ## X-Child-Of: Titan
 TitanLootType.xml

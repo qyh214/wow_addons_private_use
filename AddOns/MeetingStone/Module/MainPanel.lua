@@ -106,16 +106,12 @@ function MainPanel:OnInitialize()
                 Content:SetText('版本：' .. ADDON_VERSION)
             end
 
-            local Frame = GUI:GetClass('ScrollFrame'):New(HelpBlocker) do
-                Frame:SetPoint('TOPLEFT', 360, -20)
-                Frame:SetPoint('BOTTOMRIGHT', -20, 20)
-            end
-
-            local SummaryHtml = GUI:GetClass('SummaryHtml'):New(Frame) do
+            local SummaryHtml = GUI:GetClass('ScrollSummaryHtml'):New(HelpBlocker) do
+                SummaryHtml:SetPoint('TOPLEFT', 360, -15)
+                SummaryHtml:SetPoint('BOTTOMRIGHT', -20, 20)
                 SummaryHtml:SetSpacing('h2', 20)
                 SummaryHtml:SetSpacing('h1', 10)
                 SummaryHtml:SetText(ADDON_SUMMARY)
-                Frame:SetScrollChild(SummaryHtml)
             end
 
             local EnterButton = CreateFrame('Button', nil, HelpBlocker, 'UIPanelButtonTemplate') do

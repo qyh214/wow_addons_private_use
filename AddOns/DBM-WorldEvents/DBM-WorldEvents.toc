@@ -20,10 +20,10 @@
 ## X-DBM-Mod-Has-Single-Format: 1
 ## X-DBM-Mod-World-Boss: 1
 ## X-DBM-Mod-SubCategories: Holidays,Quests,Garrison Invasions
-## X-DBM-Mod-SubCategories-deDE: Feiertage,Quests,Garrison Invasions
+## X-DBM-Mod-SubCategories-deDE: Feiertage,Quests,Garnisonsinvasionen
 ## X-DBM-Mod-SubCategories-ruRU: Праздники,Задания,Garrison Invasions
 ## X-DBM-Mod-SubCategories-koKR: 연간 이벤트,퀘스트,주둔지 침공
-## X-DBM-Mod-SubCategories-zhTW: 節慶,任務,Garrison Invasions
+## X-DBM-Mod-SubCategories-zhTW: 節慶,任務,要塞入侵
 ## X-DBM-Mod-SubCategories-zhCN: 节日,任务,Garrison Invasions
 ## X-DBM-Mod-SubCategories-esES: Fiestas,Quests,Garrison Invasions
 ## X-DBM-Mod-SubCategories-esMX: Holidays,Quests,Garrison Invasions
@@ -42,7 +42,7 @@
 ## X-DBM-Mod-Sort: 150
 ## X-DBM-Mod-LoadCID: 55003,54499,15467,15466,49687,15664
 ## X-DBM-Mod-MinCoreRevision: 12473
-## X-Curse-Packaged-Version: 6.1.1-111-gaffaf53
+## X-Curse-Packaged-Version: 6.1.5-88-g00968e5
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
@@ -64,3 +64,6 @@ Holidays\Greench.lua
 Quests\Plants.lua
 Invasions\Invasions.lua
 Invasions\Annihilon.lua
+Invasions\Teluur.lua
+Invasions\LadyFleshsear.lua
+Invasions\Drogan.lua

@@ -18,7 +18,7 @@ local MAJOR = "LibToast-1.0"
 
 _G.assert(LibStub, MAJOR .. " requires LibStub")
 
-local MINOR = 10 -- Should be manually increased
+local MINOR = 11 -- Should be manually increased
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not lib then
@@ -275,11 +275,11 @@ local function StringValue(input)
 end
 
 if not lib.templates[lib.sink_template] then
-    lib.templates[lib.sink_template] = function(toast, ...)
+    lib.templates[lib.sink_template] = function(toast, text, _, _, _, _, _, _, _, _, iconTexture)
         local calling_object = CallingObject()
         toast:SetTitle(StringValue(lib.sink_titles[calling_object]))
-        toast:SetText(...)
-        toast:SetIconTexture(StringValue(lib.sink_icons[calling_object]))
+        toast:SetText(text)
+        toast:SetIconTexture(iconTexture or StringValue(lib.sink_icons[calling_object]))
     end
 end
 
@@ -667,7 +667,7 @@ function lib:DefineSink(display_name, texture_path)
                 source = lib
                 func = lib.Spawn
             end
-            func(source, lib.sink_template, text)
+            func(source, lib.sink_template, text, ...)
             internal_call = nil
         end)
         lib.registered_sink = true

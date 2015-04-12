@@ -113,7 +113,7 @@ function party:AddFollower(followerID)
 		else
 			ns.xprint("Unable to add",followerID, G.GetFollowerName(followerID),"to",ID,code,self:IsIn(followerID),G.GetFollowerStatus(followerID))
 			ns.xprint(members[1],members[2],members[3])
-			ns.xprint(debugstack(1,6,0))
+			print(debugstack(1,6,0))
 --@end-debug@]===]
 		end
 	end
@@ -194,7 +194,7 @@ end
 function addon:GetParties()
 	return self:GetParty()
 end
-function addon:GetParty(missionID,key)
+function addon:GetParty(missionID,key,default)
 	if not missionID then return parties end
 	local party=parties[missionID]
 	if #party.members==0 and G.GetNumFollowersOnMission(missionID)>0 then

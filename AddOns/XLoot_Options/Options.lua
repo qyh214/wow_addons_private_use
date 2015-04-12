@@ -234,7 +234,7 @@ function addon:OnEnable() -- Construct addon option tables here
 	function BetterOptionsTypes.group(t)
 		t.args = t.args or t[1]
 		if t.inline == nil then
-			t.inline = (t[2] ~= nil and t[2] or true)
+			t.inline = (t[2] == nil and true or t[2])
 		end
 
 		if t.args then
@@ -266,7 +266,9 @@ function addon:OnEnable() -- Construct addon option tables here
 	end
 
 	function BetterOptionsTypes.color(t)
-		t.hasAlpha = t.hasAlpha or t[1]
+		if t.hasAlpha == nil then
+			t.hasAlpha = t[1]
+		end
 	end
 
 	function BetterOptionsTypes.range(t)
@@ -449,7 +451,7 @@ function addon:OnEnable() -- Construct addon option tables here
 		}
 	end
 
-	local font_flags = {
+	local font_flag = {
 		{ "", "NONE" },
 		{ "OUTLINE", "OUTLINE" },
 		{ "THICKOUTLINE", "THICKOUTLINE" },
@@ -525,7 +527,7 @@ function addon:OnEnable() -- Construct addon option tables here
 			}},
 			{ "font", "group", {
 				{ "font", fonts },
-				{ "font_flag", font_flags },
+				{ "font_flag", font_flag },
 				{ "font_sizes", "header" },
 				{ "font_size_loot", "range", 4, 26, 1 },
 				{ "font_size_info", "range", 4, 26, 1 },
@@ -554,9 +556,9 @@ function addon:OnEnable() -- Construct addon option tables here
 				{ "alert_anchor_visible", "toggle", "alert_anchor", "visible", set = set_anchor, width = "double" },
 			}},
 			{ "other_frames", "group", {
-				"hook_bonus",
+				{ "hook_bonus" },
 				{ "bonus_skin", requires = "hook_bonus", width = "double" },
-				"hook_alert",
+				{ "hook_alert" },
 				{ "alert_skin", requires = "hook_alert", width = "double" },
 			}},
 			{ "rolls", "group", {
@@ -586,9 +588,11 @@ function addon:OnEnable() -- Construct addon option tables here
 			}},
 			{ "alerts", "group", {
 					{ "alert_scale", "scale" },
-					{ "alert_offset", "range", 0.1, 10.0, 0.1 },
+					{ "alert_offset", "range", -5, 20, 0.1 },
 					{ "alert_alpha", "alpha" },
 					{ "alert_direction", "select", directions, "alert_anchor", "direction", name = L.growth_direction },
+					{ "alert_background" },
+					{ "alert_icon_frame" },
 				},
 				defaults = { requires = "hook_alert" }
 			}
@@ -621,7 +625,7 @@ function addon:OnEnable() -- Construct addon option tables here
 			}},
 			{ "font", "group", {
 				{ "font", fonts },
-				{ "font_flags", font_flags },
+				{ "font_flag", font_flag },
 				{ "font_sizes", "header" },
 				{ "font_size_loot", "range", 4, 26, 1 },
 				{ "font_size_quantity", "range", 4, 26, 1 },

@@ -1,0 +1,12 @@
+tag 6.1-5
+e00c80b5ea961b0ce917e1ecb4843e9e262da3f1
+Xuerian <sky.shell@gmail.com>
+2015-03-21 04:56:50 -0400
+
+Group: Fix alert offsets
+
+
+--------------------
+
+Xuerian:
+	- Group: Fix alert offsets, increase offset option range

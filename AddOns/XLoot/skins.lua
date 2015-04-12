@@ -281,7 +281,7 @@ do
 		-- Return cached
 		if not data.compiled[name] then
 			data.compiled[name] = {}
-		elseif #data.compiled[name] > 0 then
+		elseif next(data.compiled[name]) then
 			return data.compiled[name]
 		end
 		-- Generate to cache
