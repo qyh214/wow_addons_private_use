@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRare2", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13192 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14030 $"):sub(12, -3))
 --mod:SetCreatureID(60491)
 mod:SetModelID(48465)
 mod:SetZone()
@@ -30,23 +30,22 @@ local warnOnFire					= mod:NewTargetAnnounce(141388, 4)--Anthracite
 
 local specWarnRPS					= mod:NewSpecialWarning("specWarnRPS")--Ro-Shambo
 local specWarnEightChomps			= mod:NewSpecialWarningDodge(142788)--Mecha-Bruce
-local specWarnBlindCleave			= mod:NewSpecialWarningRun("OptionVersion2", 141192, nil, nil, nil, 4)--Blind Hero
+local specWarnBlindCleave			= mod:NewSpecialWarningRun(141192, nil, nil, 2, 4)--Blind Hero
 local specWarnBoomingBoogaloo		= mod:NewSpecialWarningSpell(140894, nil, nil, nil, 2)--Master Boom Boom
 local specWarnDeployBoom			= mod:NewSpecialWarningSpell(140912, nil, nil, nil, 3)--Master Boom Boom
 local specWarnSmolderingHeat		= mod:NewSpecialWarningYou(142400)--Anthracite
 
-local timerEightChompsCD			= mod:NewCDTimer(9.5, 142788)--Mecha-Bruce
+local timerEightChompsCD			= mod:NewCDTimer(9.5, 142788, nil, nil, nil, 3)--Mecha-Bruce
 local timerBetterStrongerFasterCD	= mod:NewCDTimer(20, 142795)--Mecha-Bruce
-local timerStasisBeamCD				= mod:NewCDTimer(20, 142769)--Mecha-Bruce
-local timerRockpaperScissorsCD		= mod:NewCDTimer(42, 141206)--Ro-Shambo
+local timerStasisBeamCD				= mod:NewCDTimer(20, 142769, nil, nil, nil, 3)--Mecha-Bruce
+local timerRockpaperScissorsCD		= mod:NewCDTimer(42, 141206, nil, nil, nil, 6)--Ro-Shambo
 local timerBlindStrikeCD			= mod:NewNextTimer(2.5, 141189)--Blind Hero
 local timerSwiftStrikeCD			= mod:NewNextTimer(2.4, 141190, nil, false)--May help some but off by default so it doesn't detour focus from the most important one, blind cleave(Blind Hero)
 local timerBlindCleaveD				= mod:NewNextTimer(13, 141192)--Blind Hero
 local timerSmolderingHeatCD			= mod:NewCDTimer(20, 142400)--Anthracite
-local timerCooled					= mod:NewTargetTimer(20, 141371)--Anthracite
+local timerCooled					= mod:NewTargetTimer(20, 141371, nil, nil, nil, 6)--Anthracite
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 mod:AddBoolOption("SpeakOutStrikes", true)--Blind Hero
 mod:AddBoolOption("ArrowOnBoxing")--Ro-Shambo
 

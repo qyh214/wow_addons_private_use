@@ -8,24 +8,16 @@ followerTooltip="colore + nome del follower"
 size= level
 Plot=framde del piedistallino
 Icon e IconRing contenuto e nordo dell'iconcina
-
-
 --]]
 local me,ns=...
-local addon=ns.addon
---[===[@debug@
-if LibDebug then LibDebug() end
---@end-debug@]===]
+ns.Configure()
+local addon=addon
 local GBF=GarrisonBuildingFrame
 local GBFMap=GBF.MapFrame
-local G=C_Garrison
 local CreateFrame=CreateFrame
 local GARRISON_FOLLOWER_MAX_LEVEL=GARRISON_FOLLOWER_MAX_LEVEL
-local L=ns.L
-local D=ns.D
-local C=ns.C
 local new,del=ns.new,ns.del
-local module=addon:NewModule("BuildingPage",addon) --#module
+local module=addon:NewSubClass("BuildingPage") --#module
 function module:OnInitialize()
 	--module:SafeHookScript(GBFMap,"OnShow","AddFollowersToMap")
 	module:SafeSecureHook("GarrisonBuildingList_Show","AddCheckBox")

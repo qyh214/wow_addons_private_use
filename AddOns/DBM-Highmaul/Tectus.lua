@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1195, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13339 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14083 $"):sub(12, -3))
 mod:SetCreatureID(78948, 80557, 80551, 99999)--78948 Tectus, 80557 Mote of Tectus, 80551 Shard of Tectus
 mod:SetEncounterID(1722)--Hopefully win will work fine off this because otherwise tracking shard deaths is crappy
 mod:SetZone()
@@ -11,7 +11,7 @@ mod:SetModelSound("sound\\creature\\tectus\\VO_60_HMR_TECTUS_AGGRO_01.ogg", "sou
 mod:SetHotfixNoticeRev(13109)
 
 mod:RegisterCombat("combat")
-mod:SetMinSyncTime(4)--Rise Mountain can occur pretty often.
+mod.syncThreshold = 4--Rise Mountain can occur pretty often.
 mod:SetWipeTime(30)
 
 mod:RegisterEventsInCombat(
@@ -31,22 +31,22 @@ mod:RegisterEventsInCombat(
 local warnCrystallineBarrage		= mod:NewTargetAnnounce(162346, 3)
 local warnBerserker					= mod:NewSpellAnnounce("ej10062", 3, 163312)
 
-local specWarnEarthwarper			= mod:NewSpecialWarningSwitch("OptionVersion2", "ej10061", "-Healer", nil, nil, nil, nil, 2)
-local specWarnTectonicUpheaval		= mod:NewSpecialWarningSpell(162475, nil, nil, nil, 2, nil, 2)
-local specWarnEarthenPillar			= mod:NewSpecialWarningDodge(162518, nil, nil, nil, 3, nil, 2)
-local specWarnCrystallineBarrageYou	= mod:NewSpecialWarningYou(162346, nil, nil, nil, nil, nil, 2)
+local specWarnEarthwarper			= mod:NewSpecialWarningSwitch("ej10061", "-Healer", nil, 2, nil, 2)
+local specWarnTectonicUpheaval		= mod:NewSpecialWarningSpell(162475, nil, nil, nil, 2, 2)
+local specWarnEarthenPillar			= mod:NewSpecialWarningDodge(162518, nil, nil, nil, 3, 2)
+local specWarnCrystallineBarrageYou	= mod:NewSpecialWarningYou(162346, nil, nil, nil, nil, 2)
 local yellCrystalineBarrage			= mod:NewYell(162346)
-local specWarnCrystallineBarrage	= mod:NewSpecialWarningMove(162370, nil, nil, nil, nil, nil, 2)
+local specWarnCrystallineBarrage	= mod:NewSpecialWarningMove(162370, nil, nil, nil, nil, 2)
 --Night-Twisted NPCs
-local specWarnRavingAssault			= mod:NewSpecialWarningDodge(163312, "Melee", nil, nil, nil, nil, 2)
-local specWarnEarthenFlechettes		= mod:NewSpecialWarningDodge(162968, "Melee", nil, nil, nil, nil, 2)
-local specWarnGiftOfEarth			= mod:NewSpecialWarningCount(162894, "Melee", nil, nil, nil, nil, 2)
+local specWarnRavingAssault			= mod:NewSpecialWarningDodge(163312, "Melee", nil, nil, nil, 2)
+local specWarnEarthenFlechettes		= mod:NewSpecialWarningDodge(162968, "Melee", nil, nil, nil, 2)
+local specWarnGiftOfEarth			= mod:NewSpecialWarningCount(162894, "Melee", nil, nil, nil, 2)
 
-local timerEarthwarperCD			= mod:NewNextTimer(40, "ej10061", nil, nil, nil, 162894)--Both of these get delayed by upheavel
-local timerBerserkerCD				= mod:NewNextTimer(40, "ej10062", nil, "Tank", nil, 163312)--Both of these get delayed by upheavel
-local timerGiftOfEarthCD			= mod:NewCDTimer(10.5, 162894, nil, "Melee")--10.5 but obviously delayed if stuns were used.
-local timerEarthenFlechettesCD		= mod:NewCDTimer(14, 162968, nil, "Melee")--14 but obviously delayed if stuns were used. Also tends to be recast immediately if stun interrupted
-local timerCrystalBarrageCD			= mod:NewNextSourceTimer(30, 162346, nil, false)--Very accurate but spammy mess with 4+ adds up.
+local timerEarthwarperCD			= mod:NewNextTimer(40, "ej10061", nil, nil, nil, 1, 162894)--Both of these get delayed by upheavel
+local timerBerserkerCD				= mod:NewNextTimer(40, "ej10062", nil, "Tank", nil, 1, 163312)--Both of these get delayed by upheavel
+local timerGiftOfEarthCD			= mod:NewCDTimer(10.5, 162894, nil, "Melee", nil, 4)--10.5 but obviously delayed if stuns were used.
+local timerEarthenFlechettesCD		= mod:NewCDTimer(14, 162968, nil, "Melee", nil, 5)--14 but obviously delayed if stuns were used. Also tends to be recast immediately if stun interrupted
+local timerCrystalBarrageCD			= mod:NewNextSourceTimer(30, 162346, nil, false, nil, 3)--Very accurate but spammy mess with 4+ adds up.
 local timerCrystalBarrage			= mod:NewBuffFadesTimer(15, 162346)
 
 local berserkTimer					= mod:NewBerserkTimer(600)

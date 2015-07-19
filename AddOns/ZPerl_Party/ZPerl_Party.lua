@@ -3,7 +3,7 @@
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local XPerl_Party_Events = { }
---local checkRaidNextUpdate
+local checkRaidNextUpdate
 local PartyFrames = { }
 local startupDone
 local conf, pconf
@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 942 $")
+end, "$Revision: 972 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -33,17 +33,16 @@ local partyAnchor
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 
-
-
 local XPerl_Party_HighlightCallback
+
+local feignDeath = GetSpellInfo(5384)
 
 ----------------------
 -- Loading Function --
 ----------------------
 function XPerl_Party_Events_OnLoad(self)
-	-- Added UNIT_POWER/UNIT_MAXPOWER to events list for 4.0 (By PlayerLin)
 	local events = {
-		"PLAYER_ENTERING_WORLD", "PARTY_MEMBER_ENABLE", "PARTY_MEMBER_DISABLE", "GROUP_ROSTER_UPDATED", "UNIT_PHASE", "UNIT_COMBAT", "UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PORTRAIT_UPDATE", "UNIT_TARGET", "UNIT_POWER", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED", "RAID_TARGET_UPDATE", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED", "PLAYER_LOGIN", "UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED","PARTY_LOOT_METHOD_CHANGED", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
+		"PLAYER_ENTERING_WORLD", "PARTY_MEMBER_ENABLE", "PARTY_MEMBER_DISABLE", "GROUP_ROSTER_UPDATE", "UNIT_PHASE", "UNIT_COMBAT", "UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PORTRAIT_UPDATE", "UNIT_TARGET", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED", "RAID_TARGET_UPDATE", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED", "PLAYER_LOGIN", "UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED","PARTY_LOOT_METHOD_CHANGED", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
 	}
 	for i, event in pairs(events) do
 		self:RegisterEvent(event)
@@ -52,12 +51,9 @@ function XPerl_Party_Events_OnLoad(self)
 	partyHeader:UnregisterEvent("UNIT_NAME_UPDATE") -- IMPORTANT! Fix for WoW 2.1 UNIT_NAME_UPDATE lockup issues
 
 	UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE") -- IMPORTANT! Stops raid framerate lagging when members join/leave/zone
-
-	
-	self:RegisterEvent("GROUP_ROSTER_UPDATE") --Try detecting when we switch to raid.
 	
 	for i = 1, 4 do
-		XPerl_BlizzFrameDisable(getglobal("PartyMemberFrame"..i))
+		XPerl_BlizzFrameDisable(_G["PartyMemberFrame"..i])
 	end
 
 	self:SetScript("OnEvent", XPerl_Party_OnEvent)
@@ -244,9 +240,9 @@ function XPerl_Party_UpdateHealth(self)
 	local Partyhealth, Partyhealthmax = UnitHealth(partyid), UnitHealthMax(partyid)
 	local reason
 
-	if (self.feigning and not UnitIsFeignDeath(partyid)) then
+	--[[if (self.feigning and not UnitBuff(partyid, feignDeath)) then
 		self.feigning = nil
-	end
+	end]]
 
 	XPerl_SetHealthBar(self, Partyhealth, Partyhealthmax)
 	XPerl_Party_UpdateHealPrediction(self)
@@ -254,24 +250,18 @@ function XPerl_Party_UpdateHealth(self)
 	if (not UnitIsConnected(partyid)) then
 		reason = XPERL_LOC_OFFLINE
 	else
-		if (self.feigning and conf.showFD) then
+		if (UnitBuff(partyid, feignDeath) and conf.showFD) then
 			reason = XPERL_LOC_FEIGNDEATH
-
 		elseif (self.afk and conf.showAFK) then
 			reason = CHAT_MSG_AFK
-
 		elseif (UnitIsDead(partyid)) then
 			reason = XPERL_LOC_DEAD
-
 		elseif (UnitIsGhost(partyid)) then
 			reason = XPERL_LOC_GHOST
-
 		elseif ((Partyhealth == 1) and (Partyhealthmax == 1)) then
 			reason = XPERL_LOC_UPDATING
-
 		elseif (UnitBuff(partyid, spiritOfRedemption)) then
 			reason = XPERL_LOC_DEAD
-
 		end
 	end
 
@@ -364,7 +354,7 @@ function XPerl_Party_SetDebuffLocation(self)
 		else
 			if (self.petFrame and self.petFrame:IsVisible()) then
 				if (pconf.flip) then
-					debuff1:SetPoint("TOPRIGHT", self.petFrame.nameFrame, "TOPRIGHT", 0, -4)
+					debuff1:SetPoint("TOPRIGHT", self.petFrame.nameFrame, "TOPLEFT", 0, -4)
 				else
 					debuff1:SetPoint("TOPLEFT", self.petFrame.nameFrame, "TOPRIGHT", 0, -4)
 				end
@@ -384,25 +374,27 @@ function XPerl_Party_SetDebuffLocation(self)
 				if (self.perlDebuffs > maxDebuffWidth) then
 					self.debuffFrame:SetScale(0.5)
 
-					local Anchor, aHalf, aPrev
+					local Anchor, aHalf, aPrev, x
 					if (pconf.flip) then
 						Anchor = "TOPRIGHT"
 						aHalf = "BOTTOMRIGHT"
 						aPrev = "TOPLEFT"
+						x = -2
 					else
 						Anchor = "TOPLEFT"
 						aHalf = "BOTTOMLEFT"
 						aPrev = "TOPRIGHT"
+						x = 0
 					end
 
 					local halfPoint = ceil(self.perlBuffs / 2)
-					for k,v in pairs(self.buffFrame.debuff) do
+					for k, v in pairs(self.buffFrame.debuff) do
 						if (prev) then
 							v:ClearAllPoints()
 							if (k == halfPoint) then
-								v:SetPoint(Anchor, debuff1, aHalf, 0, 0)
+								v:SetPoint(Anchor, debuff1, aHalf, x, 0)
 							else
-								v:SetPoint(Anchor, prev, aPrev, 0, 0)
+								v:SetPoint(Anchor, prev, aPrev, x, 0)
 							end
 						end
 						prev = v
@@ -410,16 +402,47 @@ function XPerl_Party_SetDebuffLocation(self)
 				else
 					self.debuffFrame:SetScale(1)
 
+					local Anchor, aPrev, x
+					if (pconf.flip) then
+						Anchor = "TOPRIGHT"
+						aPrev = "TOPLEFT"
+						x = -2
+					else
+						Anchor = "TOPLEFT"
+						aPrev = "TOPRIGHT"
+						x = 0
+					end
+
 					local prev
-					for k,v in pairs(self.buffFrame.debuff) do
+					for k, v in pairs(self.buffFrame.debuff) do
 						if (prev) then
 							v:ClearAllPoints()
-							v:SetPoint("TOPLEFT", prev, "TOPRIGHT", 0, 0)
+							v:SetPoint(Anchor, prev, aPrev, x, 0)
 						end
 						prev = v
 					end
 				end
 			else
+				local Anchor, aPrev, x
+				if (pconf.flip) then
+					Anchor = "TOPRIGHT"
+					aPrev = "TOPLEFT"
+					x = -2
+				else
+					Anchor = "TOPLEFT"
+					aPrev = "TOPRIGHT"
+					x = 0
+				end
+
+				local prev
+				for k, v in pairs(self.buffFrame.debuff) do
+					if (prev) then
+						v:ClearAllPoints()
+						v:SetPoint(Anchor, prev, aPrev, x, 0)
+					end
+					prev = v
+				end
+
 				self.debuffFrame:SetScale(1)
 			end
 		end
@@ -438,16 +461,18 @@ local function XPerl_Party_BuffPositions(self)
 			if (pconf.buffs.wrap) then
 				XPerl_Unit_BuffPositions(self, self.buffFrame.buff, nil, self.conf.buffs.size)
 			end
-			XPerl_Party_SetDebuffLocation(self)
+			if pconf.debuffs.enable then
+				XPerl_Party_SetDebuffLocation(self)
+			end
 		end
 	end
 end
 
 -- XPerl_Party_Buff_UpdateAll
 local function XPerl_Party_Buff_UpdateAll(self)
-	if not self:IsVisible() then
+	--[[if not self:IsVisible() then
 		return
-	end
+	end]]
 	if (self.conf) then
 		if (not pconf.buffs.enable and not pconf.debuffs.enable) then
 			self.buffFrame:Hide()
@@ -457,11 +482,14 @@ local function XPerl_Party_Buff_UpdateAll(self)
 			XPerl_Party_BuffPositions(self)
 		end
 
-		if (select(2, UnitClass(self.partyid)) == "HUNTER") then
-			local feigning = UnitIsFeignDeath(self.partyid)
-			if (feigning ~= self.feigning) then
-				self.feigning = feigning
-				XPerl_Party_UpdateHealth(self)
+		if conf.showFD then
+			local _, class = UnitClass(self.partyid)
+			if (class == "HUNTER") then
+				local feigning = UnitBuff(self.partyid, feignDeath)
+				if (feigning ~= self.feigning) then
+					self.feigning = feigning
+					XPerl_Party_UpdateHealth(self)
+				end
 			end
 		end
 
@@ -863,12 +891,16 @@ function XPerl_Party_OnUpdate(self, elapsed)
 			end
 		end
 
-		XPerl_Party_UpdateRange(self, partyid)
+		self.time = self.time + elapsed
+		if (self.time >= 0.2) then
+			self.time = 0
+			XPerl_Party_UpdateRange(self, partyid)
 
-		XPerl_UpdateSpellRange(self, partyid)
-		XPerl_UpdateSpellRange(self.targetFrame, self.targetid)
+			XPerl_UpdateSpellRange(self, partyid)
+			XPerl_UpdateSpellRange(self.targetFrame, self.targetid)
+		end
 
-		--[[if (checkRaidNextUpdate) then
+		if (checkRaidNextUpdate) then
 			checkRaidNextUpdate = checkRaidNextUpdate - 1
 			if (checkRaidNextUpdate <= 0) then
 				checkRaidNextUpdate = nil
@@ -877,13 +909,13 @@ function XPerl_Party_OnUpdate(self, elapsed)
 				-- Due to a bug in the API (WoW 2.0.1), GetPartyLeaderIndex() can often claim
 				-- that party1 is the leader, even when they're not. So, we do a delayed check
 				-- after a party change
-				for i, frame in pairs(PartyFrames) do
+				--[[for i, frame in pairs(PartyFrames) do
 					if (frame.partyid) then
 						XPerl_Party_UpdateLeader(frame)
 					end
-				end
+				end]] -- Do we really need this now?
 			end
-		end]] -- Do we really need this now?
+		end
 	--end
 end
 
@@ -963,10 +995,6 @@ end
 -- 		end
 -- 	end
 -- end
-
-function XPerl_Party_Events:GROUP_ROSTER_UPDATE()
-	CheckRaid()
-end
 
 function XPerl_Party_Events:PARTY_LOOT_METHOD_CHANGED()
 	
@@ -1115,47 +1143,42 @@ function XPerl_Party_Events:PLAYER_ENTERING_WORLD()
 	XPerl_Party_UpdateDisplayAll()
 end
 
--- GROUP_ROSTER_UPDATED
-function XPerl_Party_Events:GROUP_ROSTER_UPDATED()
-	CheckRaid()
-end
-
 -- XPerl_Party_GetUnitFrameByUnit
 function XPerl_Party_GetUnitFrameByUnit(unitid)
 	return PartyFrames[unitid]
 end
 
-do
-	local rosterGuids
-	-- XPerl_Party_GetUnitFrameByGUID
-	function XPerl_Party_GetUnitFrameByGUID(guid)
-		local unitid = rosterGuids and rosterGuids[guid]
-		if (unitid) then
-			return PartyFrames[unitid]
-		end
+local rosterGuids
+-- XPerl_Party_GetUnitFrameByGUID
+function XPerl_Party_GetUnitFrameByGUID(guid)
+	local unitid = rosterGuids and rosterGuids[guid]
+	if (unitid) then
+		return PartyFrames[unitid]
 	end
+end
 
-	local function BuildGuidMap()
-		if (GetNumSubgroupMembers() > 0) then
-			rosterGuids = XPerl_GetReusableTable()
-			for i = 1,GetNumSubgroupMembers() do
-				local guid = UnitGUID("party"..i)
-				if (guid) then
-					rosterGuids[guid] = "party"..i
-				end
+local function BuildGuidMap()
+	if (GetNumSubgroupMembers() > 0) then
+		--rosterGuids = XPerl_GetReusableTable()
+		rosterGuids = { }
+		for i = 1, GetNumSubgroupMembers() do
+			local guid = UnitGUID("party"..i)
+			if (guid) then
+				rosterGuids[guid] = "party"..i
 			end
-		else
-			rosterGuids = XPerl_FreeTable(rosterGuids)
 		end
+	else
+		--rosterGuids = XPerl_FreeTable(rosterGuids)
+		rosterGuids = { }
 	end
+end
 
-	function XPerl_Party_Events:GROUP_ROSTER_UPDATE()
-		BuildGuidMap()
-		--checkRaidNextUpdate = 3
-		CheckRaid()
-		XPerl_SetHighlights()
-		XPerl_Party_UpdateDisplayAll()
-	end
+function XPerl_Party_Events:GROUP_ROSTER_UPDATE()
+	BuildGuidMap()
+	checkRaidNextUpdate = 3
+	CheckRaid()
+	XPerl_SetHighlights()
+	XPerl_Party_UpdateDisplayAll()
 end
 
 XPerl_Party_Events.PLAYER_LOGIN = XPerl_Party_Events.GROUP_ROSTER_UPDATE
@@ -1165,12 +1188,12 @@ function XPerl_Party_Events:UNIT_PORTRAIT_UPDATE()
 	XPerl_Unit_UpdatePortrait(self)
 end
 
--- UNIT_POWER / UNIT_MAXPOWER
-function XPerl_Party_Events:UNIT_POWER()
-		XPerl_Party_UpdateMana(self)
+-- UNIT_POWER_FREQUENT / UNIT_MAXPOWER
+function XPerl_Party_Events:UNIT_POWER_FREQUENT()
+	XPerl_Party_UpdateMana(self)
 end
 
-XPerl_Party_Events.UNIT_MAXPOWER = XPerl_Party_Events.UNIT_POWER
+XPerl_Party_Events.UNIT_MAXPOWER = XPerl_Party_Events.UNIT_POWER_FREQUENT
 
 -- UNIT_DISPLAYPOWER
 function XPerl_Party_Events:UNIT_DISPLAYPOWER()
@@ -1250,9 +1273,9 @@ local function CalcWidth(self)
 	if (pconf and pconf.portrait) then
 		w = w + (self.portraitFrame:GetWidth() or 0) - 2
 
-		if (pconf.level or pconf.classIcon) then
+		--[[if (pconf.level or pconf.classIcon) then
 			w = w + (self.levelFrame:GetWidth() or 0) - 2
-		end
+		end]]
 	else
 		w = w + (self.levelFrame:GetWidth() or 0) - 2
 	end
@@ -1344,8 +1367,8 @@ function XPerl_Party_Set_Bits1(self)
 		self.levelFrame:SetHeight(22)
 
 		if (pconf.flip) then
-			self.levelFrame:SetPoint("TOPRIGHT", self, "TOPRIGHT", 0, 0)
-			self.portraitFrame:SetPoint("TOPRIGHT", self.levelFrame, "TOPLEFT", 2, 0)
+			self.portraitFrame:SetPoint("TOPRIGHT", self, "TOPRIGHT", 0, 0)
+			self.levelFrame:SetPoint("TOPLEFT", self.portraitFrame, "TOPRIGHT", -2, 0)
 			self.nameFrame:SetPoint("TOPRIGHT", self.portraitFrame, "TOPLEFT", 2, 0)
 			self.statsFrame:SetPoint("TOPRIGHT", self.nameFrame, "BOTTOMRIGHT", 0, 3)
 
@@ -1354,11 +1377,11 @@ function XPerl_Party_Set_Bits1(self)
 
 			self.buffFrame:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT", -2, 0)
 
-			self.highlight:SetPoint("TOPRIGHT", self.levelFrame, "TOPRIGHT", 0, 0)
+			self.highlight:SetPoint("TOPRIGHT", self.portraitFrame, "TOPRIGHT", 0, 0)
 			self.highlight:SetPoint("BOTTOMLEFT", self.statsFrame, "BOTTOMLEFT", 0, 0)
 		else
-			self.levelFrame:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
-			self.portraitFrame:SetPoint("TOPLEFT", self.levelFrame, "TOPRIGHT", -2, 0)
+			self.portraitFrame:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
+			self.levelFrame:SetPoint("TOPRIGHT", self.portraitFrame, "TOPLEFT", 2, 0)
 			self.nameFrame:SetPoint("TOPLEFT", self.portraitFrame, "TOPRIGHT", -2, 0)
 			self.statsFrame:SetPoint("TOPLEFT", self.nameFrame, "BOTTOMLEFT", 0, 3)
 
@@ -1367,7 +1390,7 @@ function XPerl_Party_Set_Bits1(self)
 
 			self.buffFrame:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 2, 0)
 
-			self.highlight:SetPoint("TOPLEFT", self.levelFrame, "TOPLEFT", 0, 0)
+			self.highlight:SetPoint("TOPLEFT", self.portraitFrame, "TOPLEFT", 0, 0)
 			self.highlight:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, 0)
 		end
 	end

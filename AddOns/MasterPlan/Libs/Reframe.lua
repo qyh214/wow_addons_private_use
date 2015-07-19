@@ -1,10 +1,24 @@
 local _, T = ...
 local E = T.Evie
 
+function T.GetMouseFocus()
+	local f = GetMouseFocus()
+	return f and f.IsForbidden and not f:IsForbidden() and f or nil
+end
+function T.IsDescendantOf(self, ancestor)
+	if not (self and ancestor) then
+		return false
+	end
+	repeat
+		self = not self:IsForbidden() and self:GetParent()
+	until (self or ancestor) == ancestor
+	return self == ancestor
+end
+
 hooksecurefunc("UIDropDownMenu_StopCounting", function(self)
-	local mf = self and GetMouseFocus()
+	local mf = self and T.GetMouseFocus()
 	if mf and mf.tooltipTitle == nil and mf.tooltipText == nil and type(mf.tooltipOnButton) == "function" and
-	   not mf:IsForbidden() and mf:GetParent() == self then
+	   mf:GetParent() == self then
 		self.tooltipOwner, self.tooltipOnLeave = mf, securecall(mf.tooltipOnButton, mf, mf.arg1, mf.arg2)
 	else
 		self.tooltipOwner, self.tooltipOnLeave = nil
@@ -49,7 +63,16 @@ local CreateLazyItemButton do
 	local itemIDs = {}
 	local function OnEnter(self)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		GameTooltip:SetItemByID(itemIDs[self])
+		local iid = itemIDs[self]
+		GameTooltip:SetItemByID(iid)
+		for i=0,4 do
+			for j=1,GetContainerNumSlots(i) do
+				if GetContainerItemID(i, j) == iid then
+					GameTooltip:SetBagItem(i, j)
+					break
+				end
+			end
+		end
 		GameTooltip:Show()
 	end
 	local function OnLeave(self)
@@ -86,3 +109,5 @@ local CreateLazyItemButton do
 	end
 	T.CreateLazyItemButton = CreateLazyItemButton
 end
+
+ShoppingTooltip1TextLeft3:SetJustifyH("LEFT")

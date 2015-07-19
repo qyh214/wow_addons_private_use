@@ -10,6 +10,7 @@
 -----------------------------------------------------------
 
 -- object = EmbedEventObject([object]) -- Embed events to given object
+-- object = EmbedEventObject("name", object) -- Embed events to the addon object presents in the global "..."
 
 -- object:RegisterEvent("event" [, func])
 -- object:RegisterEvent("event" [, "method"])
@@ -32,13 +33,21 @@
 local type = type
 local CreateFrame = CreateFrame
 local tinsert = tinsert
+local GetAddOnMetadata = GetAddOnMetadata
+local tonumber = tonumber
+local tostring = tostring
+local select = select
+local _G = _G
 
 local MAJOR_VERSION = 1
-local MINOR_VERSION = 6
+local MINOR_VERSION = 7
 local LIB_NAME = "EmbedEvent-1.0"
 
 -- To prevent older libraries from over-riding newer ones...
 if type(EmbedEventObject_IsNewerVersion) == "function" and not EmbedEventObject_IsNewerVersion(MAJOR_VERSION, MINOR_VERSION) then return end
+
+local PLAYER_CLASS = select(2, UnitClass("player"))
+local PLAYER_RACE = select(2, UnitRace("player"))
 
 local function Object_RegisterEvent(self, event, method)
 	if type(method) ~= "function" and type(method) ~= "string" then
@@ -168,25 +177,70 @@ end
 
 local OPTION_EVENT_PREFX = "OnOptionChanged_" -- Option event name prefix
 
-function Object_BroadcastOptionEvent(self, option, ...)
+local function Object_BroadcastOptionEvent(self, option, ...)
 	if type(option) == "string" then
 		Object_BroadcastEvent(self, OPTION_EVENT_PREFX..option, ...)
 	end
 end
 
-function Object_RegisterOptionCallback(self, option, func, arg1)
+local function Object_RegisterOptionCallback(self, option, func, arg1)
 	if type(option) == "string" then
 		Object_RegisterEventCallback(self, OPTION_EVENT_PREFX..option, func, arg1)
 	end
 end
 
-function EmbedEventObject(object)
-	if type(object) ~= "table" then
+local function Object_Print(self, msg, r, g, b)
+	DEFAULT_CHAT_FRAME:AddMessage("|cffffff78"..self.name..":|r "..tostring(msg), r or 0.5, g or 0.75, b or 1)
+end
+
+local function Object_PlayerClass(self, ...)
+	local COUNT = select("#", ...)
+	if COUNT == 0 then
+		return PLAYER_CLASS
+	end
+
+	local i
+	for i = 1, COUNT do
+		if select(i, ...) == PLAYER_CLASS then
+			return PLAYER_CLASS
+		end
+	end
+end
+
+local function Object_PlayerRace(self, ...)
+	local COUNT = select("#", ...)
+	if COUNT == 0 then
+		return PLAYER_RACE
+	end
+
+	local i
+	for i = 1, COUNT do
+		if select(i, ...) == PLAYER_RACE then
+			return PLAYER_RACE
+		end
+	end
+end
+
+function EmbedEventObject(arg1, arg2)
+	local name, object
+	if type(arg1) == "string" and type(arg2) == "table" then
+		name, object = arg1, arg2
+	elseif type(arg1) == "table" then
+		object = arg1
+	else
 		object = {}
 	end
 
 	if object[LIB_NAME] then
 		return object
+	end
+
+	if name then
+		_G[name] = object
+		object.version = GetAddOnMetadata(name, "Version") or "1.0"
+		object.numericVersion = tonumber(object.version) or 1.0
+		object.name = name
+		object.Print = Object_Print
 	end
 
 	local frame = CreateFrame("Frame")
@@ -209,6 +263,8 @@ function EmbedEventObject(object)
 	object.RegisterEventCallback = Object_RegisterEventCallback
 	object.BroadcastOptionEvent = Object_BroadcastOptionEvent
 	object.RegisterOptionCallback = Object_RegisterOptionCallback
+	object.PlayerClass = Object_PlayerClass
+	object.PlayerRace = Object_PlayerRace
 
 	return object
 end

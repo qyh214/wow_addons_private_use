@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Rings", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13199 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -20,7 +20,6 @@ local timerGame		= mod:NewBuffActiveTimer(10, 170820)
 local countdownGame	= mod:NewCountdownFades(10, 170820)
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 local wingsName = GetSpellInfo(170820)
 local UnitBuff = UnitBuff

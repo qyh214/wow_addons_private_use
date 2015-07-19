@@ -74,7 +74,7 @@ function ActivitiesLottery:OnInitialize()
     self.LotteryPrice = LotteryPrice
     self.Summary = Summary
 
-    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_PLAYERINFO_UPDATE', 'RefreshButton')
+    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_PERSONINFO_UPDATE', 'RefreshButton')
     self:RegisterMessage('MEETINGSTONE_ACTIVITIES_DATA_UPDATED')
     self:RegisterMessage('MEETINGSTONE_ACTIVITIES_LOTTERY_SENDING', 'Start')
     self:RegisterMessage('MEETINGSTONE_ACTIVITIES_LOTTERY_RESULT')

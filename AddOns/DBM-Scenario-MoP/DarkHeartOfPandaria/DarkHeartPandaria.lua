@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d647", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 60 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1144)
@@ -26,7 +26,7 @@ local warnMalevolentForce		= mod:NewCastAnnounce(142840, 4, 2)
 
 --Trash (and somewhat Urtharges)
 local specWarnStoneRain			= mod:NewSpecialWarningSpell(142139, nil, nil, nil, 2)--Let you choose to interrupt it or move out of it.
-local specWarnSpellShatter		= mod:NewSpecialWarningCast("OptionVersion3", 141421, "SpellCaster")
+local specWarnSpellShatter		= mod:NewSpecialWarningCast(141421, "SpellCaster", nil, 3)
 local specWarnSummonFieryAnger	= mod:NewSpecialWarningInterrupt(141488)
 local specWarnDetonate			= mod:NewSpecialWarningRun(141456)--Technically can kill it too vs run, but I favor run strategy more.
 --Urtharges the Destroyer

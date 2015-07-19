@@ -328,16 +328,19 @@ function CreatePanel:OnInitialize()
         CreateButton:SetScript('OnClick', function(CreateButton)
             self:CreateActivity()
         end)
+        MagicButton_OnLoad(CreateButton)
     end
 
     local DisbandButton = CreateFrame('Button', nil, self, 'UIPanelButtonTemplate') do
-        DisbandButton:SetPoint('BOTTOM', ManagerPanel:GetOwner(), 'BOTTOM', 60, 4)
+        -- DisbandButton:SetPoint('BOTTOM', ManagerPanel:GetOwner(), 'BOTTOM', 60, 4)
+        DisbandButton:SetPoint('LEFT', CreateButton, 'RIGHT', 0, 0)
         DisbandButton:SetSize(120, 22)
         DisbandButton:SetText(L['解散活动'])
         DisbandButton:Disable()
         DisbandButton:SetScript('OnClick', function()
             self:DisbandActivity()
         end)
+        MagicButton_OnLoad(DisbandButton)
     end
 
     local CreateHelpPlate do

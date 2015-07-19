@@ -249,7 +249,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.cd		= "Rech. %s "
 DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "Rech. %s (%%d)"
 DBM_CORE_AUTO_TIMER_TEXTS.cdsource	= "Rech. %s: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.next		= "Proch. %s"
-DBM_CORE_AUTO_TIMER_TEXTS.nextcount	= "Proch. %s (%%d)"
+DBM_CORE_AUTO_TIMER_TEXTS.nextcount	= "Proch. %s (%%s)"
 DBM_CORE_AUTO_TIMER_TEXTS.nextsource	= "Proch. %s: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.achievement	= "%s"
 
@@ -296,7 +296,6 @@ DBM_ARROW_ERROR_USAGE	= {
 }
 
 DBM_SPEED_KILL_TIMER_TEXT	= "Record à battre"
-DBM_SPEED_KILL_TIMER_OPTION	= "Afficher le timer de délai pour battre votre record"
 DBM_SPEED_CLEAR_TIMER_TEXT      = "Meilleur clean"
 
 

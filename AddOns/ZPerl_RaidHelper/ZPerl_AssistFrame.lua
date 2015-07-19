@@ -5,15 +5,15 @@
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 947 $")
+end, "$Revision: 967 $")
 
 local myClass
 local playerAggro, petAggro
 local doUpdate					-- In cases where we get multiple UNIT_TARGET events in 1 frame, we just set a flag and do during OnUpdate
 local friendlyUnitList = {"player", "pet"}
 local enemyUnitList = {}			-- Players with mobs targetted that target me
-local wholeEnemyUnitList = {}			-- Players with mobs targetted
-local currentPlayerAggro = {}
+local wholeEnemyUnitList = { }			-- Players with mobs targetted
+local currentPlayerAggro = { }
 
 local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
@@ -80,7 +80,7 @@ function XPerl_SetFrameSides()
 			end
 		end
 	else
-        	XPerl_Assists_Frame:Hide()
+		XPerl_Assists_Frame:Hide()
 	end
 
 	XPerl_Assists_Frame.LastSetView = {ZPerlConfigHelper.AssistsFrame, ZPerlConfigHelper.TargettingFrame}
@@ -273,13 +273,14 @@ local function MakeFriendlyUnitList()
 	end
 
 	--friendlyUnitList = {"player", "pet"}
-	XPerl_FreeTable(friendlyUnitList)
-	friendlyUnitList = XPerl_GetReusableTable()
+	--XPerl_FreeTable(friendlyUnitList)
+	--friendlyUnitList = XPerl_GetReusableTable()
+	friendlyUnitList = { }
 	tinsert(friendlyUnitList, "player")
 	tinsert(friendlyUnitList, "pet")
 
 	local name, petname
-	for i = start,total do
+	for i = start, total do
 		if (i == 0) then
 			name, petname = "player", "pet"
 		else
@@ -320,20 +321,18 @@ function XPerl_Assists_OnEvent(self, event, unit)
 			ZPerlConfigHelper.sizeAssistsY = y
 		end
 		XPerlAssistPin:SetButtonTex()
-
 	elseif (event == "GROUP_ROSTER_UPDATE") then
 		MakeFriendlyUnitList()
 		doUpdate = true
-
 	elseif (event == "PLAYER_DEAD" or event == "PLAYER_REGEN_ENABLED") then
-		XPerl_FreeTable(currentPlayerAggro)
-		currentPlayerAggro = XPerl_GetReusableTable()
+		--XPerl_FreeTable(currentPlayerAggro)
+		--currentPlayerAggro = XPerl_GetReusableTable()
+		currentPlayerAggro = { }
 		if (XPerl_Highlight) then
 			XPerl_Highlight:ClearAll("AGGRO")
 		end
 		XPerl_UpdateAssists()
 		XPerl_ShowAssists()
-
 	elseif (event == "PLAYER_ENTERING_WORLD") then
 		if (XPerl_Highlight) then
 			XPerl_Highlight:ClearAll("AGGRO")
@@ -346,7 +345,6 @@ end
 -- XPerl_Assists_OnUpdate
 local UpdateTime = 0
 function XPerl_Assists_OnUpdate(self, arg1)
-	
 	UpdateTime = arg1 + UpdateTime
 	if (doUpdate or UpdateTime >= 0.2) then
 		if (doUpdate or #enemyUnitList > 0) then
@@ -399,27 +397,27 @@ local function XPerl_AddEnemy(anyEnemy, FoundEnemy, name)
 			end
 
 			FoundEnemy[name] = true
-			local n = XPerl_GetReusableTable()
+			--local n = XPerl_GetReusableTable()
+			--[[local n = { }
 			n[1] = UnitName(namet)
 			n[2] = ""
-			tinsert(targetting, n)
-			--tinsert(targetting, {UnitName(namet), ""})
+			tinsert(targetting, n)]]
+			tinsert(targetting, {UnitName(namet), ""})
 			return true
 		end
-
 	-- 1.8.3 Added check to see if mob is targetting our target, and add to that list
 	elseif (UnitExists("target") and UnitIsUnit("target", namett)) then
 		-- We can still use the FoundEnemy list, because it's not too important if
 		-- we're targetting ourself and the mob doesn't show on both self and target lists
 		if (not XPerl_FoundEnemyBefore(FoundEnemy, name)) then
 			FoundEnemy[name] = true
-			local n = XPerl_GetReusableTable()
+			--local n = XPerl_GetReusableTable()
+			--[[local n = { }
 			n[1] = UnitName(namet)
-			n[2] = ""
-			--tinsert(assists, {UnitName(namet), ""})
+			n[2] = ""]]
+			tinsert(assists, {UnitName(namet), ""})
 			return true
 		end
-
 	elseif (not petAggro and ZPerlConfigHelper.AggroWarning == 1 and UnitExists(namett) and UnitIsUnit("pet", namett)) then
 		petAggro = true
 		--petFadeStart = GetTime()
@@ -433,15 +431,16 @@ local HealerClasses = {PRIEST = true, SHAMAN = true, PALADIN = true, DRUID = tru
 
 -- XPerl_UpdateAssists
 function XPerl_UpdateAssists()
-
-	XPerl_FreeTable(wholeEnemyUnitList)
-	wholeEnemyUnitList = XPerl_GetReusableTable()
+	--XPerl_FreeTable(wholeEnemyUnitList)
+	--wholeEnemyUnitList = XPerl_GetReusableTable()
+	wholeEnemyUnitList = { }
 
 	local oldPlayerAggro = currentPlayerAggro
-	currentPlayerAggro = XPerl_GetReusableTable()
-	--if (XPerl_Highlight) then
-	--	XPerl_Highlight:ClearAll("AGGRO")
-	--end
+	--currentPlayerAggro = XPerl_GetReusableTable()
+	currentPlayerAggro = { }
+	--[[if (XPerl_Highlight) then
+		XPerl_Highlight:ClearAll("AGGRO")
+	--end]]
 
 	if (ZPerlConfigHelper) and (ZPerlConfigHelper.TargetCounters == 0) then
 		if (XPerl_Target_AssistFrame) then
@@ -460,48 +459,53 @@ function XPerl_UpdateAssists()
 	end
 
 	local assistCount, targettingCount, anyEnemy = 0, 0, false
-	local start,i,total,prefix,name,petname
+	--local start, i, total, prefix, name, petname
 
-	local FoundEnemy = XPerl_GetReusableTable()
+	--local FoundEnemy = XPerl_GetReusableTable()
+	local FoundEnemy = { }
 
 	-- Re-use all the old tables from last pass
-	assists = XPerl_Assists_Frame.assists
-	targetting = XPerl_Assists_Frame.targetting
-	if (assists) then
-		for k,v in pairs(assists) do
-			XPerl_FreeTable(v)
+	--assists = XPerl_Assists_Frame.assists
+	--targetting = XPerl_Assists_Frame.targetting
+	--[[if (assists) then
+		for k, v in pairs(assists) do
+			--XPerl_FreeTable(v)
 			assists[k] = nil
 		end
-	end
-	if (targetting) then
-		for k,v in pairs(targetting) do
-			XPerl_FreeTable(v)
+	end]]
+	--[[if (targetting) then
+		for k, v in pairs(targetting) do
+			--XPerl_FreeTable(v)
 			targetting[k] = nil
 		end
-	end
-	XPerl_FreeTable(assists)
-	XPerl_FreeTable(targetting)
+	end]]
+	--XPerl_FreeTable(assists)
+	--XPerl_FreeTable(targetting)
+	--assists = { }
+	--targetting = { }
 
 	-- Get new tables
-	assists = XPerl_GetReusableTable()
-	targetting = XPerl_GetReusableTable()
-	XPerl_Assists_Frame.assists, XPerl_Assists_Frame.targetting = assists, targetting
+	--assists = XPerl_GetReusableTable()
+	assists = { }
+	--targetting = XPerl_GetReusableTable()
+	targetting = { }
 
 	playerAggro, petAggro = false, false
 
 	local targetname = UnitName("target")
-	for i,name in pairs(friendlyUnitList) do
+	for i, name in pairs(friendlyUnitList) do
 		if (UnitExists(name.."target") and not UnitIsDeadOrGhost(name)) then
-			local class, engClass = UnitClass(name)
+			local _, engClass = UnitClass(name)
 
 			if (targetname) then
 				if (UnitIsUnit("target", name.."target")) then
 					assistCount = assistCount + 1
-					local n = XPerl_GetReusableTable()
+					--local n = XPerl_GetReusableTable()
+					--[[local n = { }
 					n[1] = UnitName(name)
 					n[2] = engClass
-					tinsert(assists, n)
-					--tinsert (assists, {UnitName(name), engClass})
+					tinsert(assists, n)]]
+					tinsert(assists, {UnitName(name), engClass})
 				end
 			end
 
@@ -509,11 +513,12 @@ function XPerl_UpdateAssists()
 			if (not selfFlag or HealerClasses[engClass]) then
 				if (UnitIsUnit("player", name.."target")) then
 					targettingCount = targettingCount + 1
-					local n = XPerl_GetReusableTable()
+					--local n = XPerl_GetReusableTable()
+					--[[local n = { }
 					n[1] = UnitName(name)
 					n[2] = engClass
-					tinsert(targetting, n)
-					--tinsert(targetting, {UnitName(name), engClass})
+					tinsert(targetting, n)]]
+					tinsert(targetting, {UnitName(name), engClass})
 				end
 			end
 
@@ -543,16 +548,19 @@ function XPerl_UpdateAssists()
 					end
 
 					FoundEnemy["focus"] = true
-					local n = XPerl_GetReusableTable()
+					--local n = XPerl_GetReusableTable()
+					--[[local n = { }
 					n[1] = UnitName("focus")
 					n[2] = ""
-					tinsert(targetting, n)
-					--tinsert(targetting, {UnitName("focus"), ""})
+					tinsert(targetting, n)]]
+					tinsert(targetting, {UnitName("focus"), ""})
 					return true
 				end
 			end
 		end
 	end
+
+	XPerl_Assists_Frame.assists, XPerl_Assists_Frame.targetting = assists, targetting
 
 	--[[if (GetNumGroupMembers() == 0) then
 		-- Don't show it if we're on our own... we know we have aggro..
@@ -566,19 +574,19 @@ function XPerl_UpdateAssists()
 	enemyUnitList = FoundEnemy
 
 	if (XPerl_Highlight and conf and conf.highlight.AGGRO) then
-		for k,v in pairs(oldPlayerAggro) do
+		for k, v in pairs(oldPlayerAggro) do
 			if (not currentPlayerAggro[k]) then
 				XPerl_Highlight:Remove(v, "AGGRO")
 			end
 		end
-		for k,v in pairs(currentPlayerAggro) do
+		for k, v in pairs(currentPlayerAggro) do
 			if (not oldPlayerAggro[k]) then
 				XPerl_Highlight:Add(v, "AGGRO", 0)
 			end
 		end
 	end
 
-	if (ZPerlConfigHelper.ShowTargetCounters == 1) then
+	if (ZPerlConfigHelper and ZPerlConfigHelper.ShowTargetCounters == 1) then
 		if (XPerl_Player_TargettingFrame) then
 			if (XPerl_Player) then
 				local conf = (conf and conf.colour.border) or (ZPerlConfigHelper and ZPerlConfigHelper.BorderColour) or {r = 0.5, g = 0.5, b = 0.5}
@@ -627,11 +635,11 @@ function XPerl_UpdateAssists()
 		XPerl_Target_AssistFrame:Hide()
 	end
 
-	XPerl_FreeTable(oldPlayerAggro)
-	XPerl_FreeTable(FoundEnemy)
+	--XPerl_FreeTable(oldPlayerAggro)
+	--XPerl_FreeTable(FoundEnemy)
 end
 
--- XPerl_Assists_GetFriendlyUnitList
+-- XPerl_Assists_GetEnemyUnitList
 function XPerl_Assists_GetEnemyUnitList()
 	return wholeEnemyUnitList
 end

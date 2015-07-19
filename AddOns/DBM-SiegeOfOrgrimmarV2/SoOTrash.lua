@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("SoOTrash", "DBM-SiegeOfOrgrimmarV2")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 63 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -26,7 +26,6 @@ local specWarnLockedOn				= mod:NewSpecialWarningRun(146680)
 local specWarnCrawlerMineFixate		= mod:NewSpecialWarningYou("ej8212")
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 local galakrasMod = DBM:GetModByName("868")--Because for first 10-20 seconds of galakras, EncounterInProcess() return false, so mod.isTrashMod = true won't filter first set of adds
 

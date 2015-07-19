@@ -648,7 +648,7 @@ do
 
 	-- @return Width and height of Map in yards or nil if unavailable.
 	function private.GetMapSize(Map)
-		return MapWidths[Map], MapHeights[Map]
+		return MapWidths[Map] or 0, MapHeights[Map] or 0
 	end
 
 	-- Loads defaults, validates settings, and begins listening for Overlay API messages.
@@ -669,7 +669,7 @@ do
 			for i=1, needed do
 				print(startingID+i)
 				private.OverlayKeyColors[startingID + i] = private.OverlayKeyColors[i]
-			end 
+			end
 		end
 
 		if not private.Options then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(853, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 57 $"):sub(12, -3))
 mod:SetCreatureID(71152, 71153, 71154, 71155, 71156, 71157, 71158, 71160, 71161)
 mod:SetEncounterID(1593)
 mod:DisableESCombatDetection()
@@ -49,7 +49,7 @@ local warnCalculated				= mod:NewTargetAnnounce(144095, 3)--Wild variation on ti
 --Ka'roz the Locust
 local warnFlash						= mod:NewTargetCountAnnounce("ej8058", 3)
 --Rik'kal the Dissector
-local warnInjection					= mod:NewStackAnnounce(143339)
+local warnInjection					= mod:NewStackAnnounce(143339, 3)
 local warnMutate					= mod:NewTargetCountAnnounce(143337, 3)
 local warnParasitesLeft				= mod:NewAddsLeftAnnounce("ej8065", 3, 143383, "Tank")
 --Hisek the Swarmkeeper

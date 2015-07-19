@@ -5,7 +5,7 @@ L["TITAN_PANEL"] = "Titan Panel";
 local TITAN_PANEL = "Titan Panel";
 L["TITAN_DEBUG"] = "<Titan>";
 L["TITAN_PRINT"] = "Titan";
-     
+
 L["TITAN_NA"] = "N/A";
 L["TITAN_SECONDS"] = "秒";
 L["TITAN_MINUTES"] = "分";
@@ -53,7 +53,7 @@ L["TITAN_PANEL_CHARS"] = "角色"
 L["TITAN_PANEL_CHARS_DESC"] = "这些是有设置数据的角色."
 L["TITAN_PANEL_REGISTER_START"] = "正在注册 "..TITAN_PANEL.." 扩展组件..."
 L["TITAN_PANEL_REGISTER_END"] = "注册完成."
-     
+
 -- slash command help
 L["TITAN_PANEL_SLASH_RESET_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."使用命令: |cffffffff/titan {reset | reset tipfont/tipalpha/panelscale/spacing}";
 L["TITAN_PANEL_SLASH_RESET_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset: |cffffffffResets "..TITAN_PANEL.."重置为默认设置.";
@@ -69,26 +69,28 @@ L["TITAN_PANEL_SLASH_PROFILE_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."使用命令: |
 L["TITAN_PANEL_SLASH_PROFILE_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."profile use <名字> <服务器>: |cffffffff使用此服务器下的此角色的配置设置.";
 L["TITAN_PANEL_SLASH_PROFILE_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<名字>: |cffffffff可以是角色名也可以是配置文件名."
 L["TITAN_PANEL_SLASH_PROFILE_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<服务器>: |cffffffff可以是服务器名也可以是 Titan配置模板名."
+L["TITAN_PANEL_SLASH_SILENT_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {silent}";
+L["TITAN_PANEL_SLASH_SILENT_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."silent: |cffffffffToggles "..TITAN_PANEL.." to load silently.";
 L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."使用命令: |cffffffff/titan {help | help <主题>}";
-L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<主题>: reset/gui/profile/help ";
+L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<主题>: reset/gui/profile/silent/help ";
 L["TITAN_PANEL_SLASH_ALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."使用命令: |cffffffff/titan <topic>";
 L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<主题>: |cffffffffreset/gui/profile/help ";
-     
+
 -- slash command responses
 L["TITAN_PANEL_SLASH_RESP1"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.."Titan Panel 提示文字缩放已重置.";
 L["TITAN_PANEL_SLASH_RESP2"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.."Titan Panel 提示窗口的透明度已重置.";
 L["TITAN_PANEL_SLASH_RESP3"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.."Titan Panel 缩放已重置.";
 L["TITAN_PANEL_SLASH_RESP4"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.."Titan Panel 按钮间距已重置.";
-     
+
 -- global profile locale
-L["TITAN_PANEL_GLOBAL"] = "全局";     
-L["TITAN_PANEL_GLOBAL_PROFILE"] = "全局陪置";     
-L["TITAN_PANEL_GLOBAL_USE"] = "使用全局配置";     
-L["TITAN_PANEL_GLOBAL_USE_AS"] = "设为全局配置";     
-L["TITAN_PANEL_GLOBAL_USE_DESC"] = "为所有角色使用全局配置";     
-L["TITAN_PANEL_GLOBAL_RESET_PART"] = "重置选项";     
-L["TITAN_PANEL_GLOBAL_ERR_1"] = "当一个全局配置文件在使用中时你可以无法加载";  
-     
+L["TITAN_PANEL_GLOBAL"] = "全局";
+L["TITAN_PANEL_GLOBAL_PROFILE"] = "全局陪置";
+L["TITAN_PANEL_GLOBAL_USE"] = "使用全局配置";
+L["TITAN_PANEL_GLOBAL_USE_AS"] = "设为全局配置";
+L["TITAN_PANEL_GLOBAL_USE_DESC"] = "为所有角色使用全局配置";
+L["TITAN_PANEL_GLOBAL_RESET_PART"] = "重置选项";
+L["TITAN_PANEL_GLOBAL_ERR_1"] = "当一个全局配置文件在使用中时你可以无法加载";
+
 -- general panel locale
 L["TITAN_PANEL_VERSION_INFO"] = "版本|cffffd700 |cffff8c00"..TITAN_PANEL.." 开发团队出品"; 
 L["TITAN_PANEL_MENU_TITLE"] = TITAN_PANEL;
@@ -145,7 +147,7 @@ L["TITAN_PANEL_MENU_TOOLTIPS_SHOWN"] = "显示提示文字";
 L["TITAN_PANEL_MENU_TOOLTIPS_SHOWN_IN_COMBAT"] = "在战斗中隐藏提示文字";
 L["TITAN_PANEL_MENU_AUTOHIDE_IN_COMBAT"] = "在战斗中锁定自动隐藏的面板条";
 L["TITAN_PANEL_MENU_RESET"] = "重置 "..TITAN_PANEL.." 为默认";
-L["TITAN_PANEL_MENU_TEXTURE_SETTINGS"] = "皮肤";     
+L["TITAN_PANEL_MENU_TEXTURE_SETTINGS"] = "皮肤";
 L["TITAN_PANEL_MENU_LSM_FONTS"] = "面板字体"
 L["TITAN_PANEL_MENU_ENABLED"] = "启用";
 L["TITAN_PANEL_MENU_DISABLED"] = "禁用";
@@ -159,7 +161,8 @@ L["TITAN_PANEL_MENU_DISPLAY_ON_BAR"] = "选择扩展组件显示在哪个面板�
 L["TITAN_PANEL_MENU_SHOW"] = "显示扩展组件";
 L["TITAN_PANEL_MENU_PLUGIN_RESET"] = "刷新扩展组件";
 L["TITAN_PANEL_MENU_PLUGIN_RESET_DESC"] = "刷新扩展组件的文本和位置";
-   
+L["TITAN_PANEL_MENU_SILENT_LOAD"] = "Silent Load";
+
 -- localization strings for AceConfigDialog-3.0     
 L["TITAN_ABOUT_VERSION"] = "版本";
 L["TITAN_ABOUT_AUTHOR"] = "作者";
@@ -219,10 +222,10 @@ L["TITAN_SKINS_RESET_DEFAULTS_TITLE"] = "恢复默认";
 L["TITAN_SKINS_RESET_DEFAULTS_DESC"] = "恢复皮肤列表至默认值.";
 L["TITAN_PANEL_MENU_LSM_FONTS_DESC"] = "选择Titan条上各个模块的字体样式.";
 L["TITAN_PANEL_MENU_FONT_SIZE"] = "字体大小";
-	L["TITAN_PANEL_MENU_FONT_SIZE_DESC"] = "设置面板上的字体大小.";
-	L["TITAN_PANEL_MENU_FRAME_STRATA"] = "面板框架层叠";
-	L["TITAN_PANEL_MENU_FRAME_STRATA_DESC"] = "设置"..TITAN_PANEL.."的框架是否显示在最前.";
-	-- /end localization strings for AceConfigDialog-3.0
+L["TITAN_PANEL_MENU_FONT_SIZE_DESC"] = "设置面板上的字体大小.";
+L["TITAN_PANEL_MENU_FRAME_STRATA"] = "面板框架层叠";
+L["TITAN_PANEL_MENU_FRAME_STRATA_DESC"] = "设置"..TITAN_PANEL.."的框架是否显示在最前.";
+-- /end localization strings for AceConfigDialog-3.0
 
 L["TITAN_PANEL_MENU_ADV"] = "高级";
 L["TITAN_PANEL_MENU_ADV_DESC"] = "当你遇到页面框架出错时更改计时器.".."\n"; --？？
@@ -230,9 +233,9 @@ L["TITAN_PANEL_MENU_ADV_PEW"] = "登陆界面"; --？？
 L["TITAN_PANEL_MENU_ADV_PEW_DESC"] = "当你登陆登出游戏或者进出副本时遇到页面框架出错时更改设定值(通常是增大).";
 L["TITAN_PANEL_MENU_ADV_VEHICLE"] = "坐骑";
 L["TITAN_PANEL_MENU_ADV_VEHICLE_DESC"] = "当你上下坐骑遇到页面框架出错时更改设定值(通常是增大).";
-    
+
 L["TITAN_AUTOHIDE_TOOLTIP"] = "控制"..TITAN_PANEL.."自动隐藏 开/关";
-     
+
 L["TITAN_BAG_FORMAT"] = "%d/%d";
 L["TITAN_BAG_BUTTON_LABEL"] = "背包: ";
 L["TITAN_BAG_TOOLTIP"] = "背包状态";
@@ -246,29 +249,26 @@ L["TITAN_BAG_MENU_SHOW_AVAILABLE_SLOTS"] = "显示可用空间";
 L["TITAN_BAG_MENU_SHOW_DETAILED"] = "显示详细的提示信息";
 L["TITAN_BAG_MENU_IGNORE_SLOTS"] = "忽略容器";
 L["TITAN_BAG_MENU_IGNORE_PROF_BAGS_SLOTS"] = "忽略专业技能包";
-L["TITAN_BAG_PROF_BAG_NAMES"] = {
--- Enchanting
+
+L["TITAN_BAG_PROF_BAG_ENCHANTING"] = {
 "魔化魔纹布包", "魔化符文布包", "附魔师之袋", "大附魔袋", "魔焰背包", 
-"神秘背包", "异界之袋", "“马车——限定款”附魔之夜手提包",
--- Engineering
-"重工具箱", "魔铁工具箱", "泰坦神铁工具箱", "氪金工具箱", "源质工具箱", "“马车——狂人”高科技背包",
--- Herbalism
+"神秘背包", "异界之袋", "“马车——限定款”附魔之夜手提包"};
+L["TITAN_BAG_PROF_BAG_ENGINEERING"] = {
+"重工具箱", "魔铁工具箱", "泰坦神铁工具箱", "氪金工具箱", "源质工具箱", "“马车——狂人”高科技背包"};
+L["TITAN_BAG_PROF_BAG_HERBALISM"] = {
 "草药袋", "塞纳里奥草药包", "塞纳留斯之袋", "麦卡的草药包", "翡翠包", "海加尔远征背囊",
-"“马车——拥抱绿野”草药手提袋",
--- Inscription
-"皇家铭文师背包", "无尽口袋", "“马车——珊德拉”学徒手提包",
--- Jewelcrafting
-"宝石袋", "珠宝袋", "“马车——限定款”宝石镶嵌挎包",
--- Leatherworking
-"制皮匠的背包", "大皮袋", "猎户的旅行背包", "“马车——米亚”真皮背包",
--- Mining
-"矿物包", "加固矿工袋", "猛犸皮矿石包", "三重加固的矿工袋", "“马车——克莉斯汀娜”珍藏金属背包",
--- Fishing
-"捕鱼大师的工具箱",
--- Cooking
-"便携式冷柜",
-};
-     
+"“马车——拥抱绿野”草药手提袋"};
+L["TITAN_BAG_PROF_BAG_INSCRIPTION"] = {
+"皇家铭文师背包", "无尽口袋", "“马车——珊德拉”学徒手提包", "Burnished Inscription Bag"};
+L["TITAN_BAG_PROF_BAG_JEWELCRAFTING"] = {
+"宝石袋", "珠宝袋", "“马车——限定款”宝石镶嵌挎包"};
+L["TITAN_BAG_PROF_BAG_LEATHERWORKING"] = {
+"制皮匠的背包", "大皮袋", "猎户的旅行背包", "“马车——米亚”真皮背包", "Burnished Leather Bag"};
+L["TITAN_BAG_PROF_BAG_MINING"] = {
+"矿物包", "加固矿工袋", "猛犸皮矿石包", "三重加固的矿工袋", "“马车——克莉斯汀娜”珍藏金属背包", "Burnished Mining Bag"};
+L["TITAN_BAG_PROF_BAG_FISHING"] = {"捕鱼大师的工具箱"};
+L["TITAN_BAG_PROF_BAG_COOKING"] = {"便携式冷柜", "Advanced Refrigeration Unit"};
+
 L["TITAN_CLOCK_TOOLTIP"] = "时钟";     
 L["TITAN_CLOCK_TOOLTIP_VALUE"] = "与服务器的时差: ";
 L["TITAN_CLOCK_TOOLTIP_LOCAL_TIME"] = "本地时间: ";
@@ -291,32 +291,32 @@ L["TITAN_CLOCK_MENU_DISPLAY_ON_RIGHT_SIDE"] = "在最右侧显示";
 L["TITAN_CLOCK_MENU_HIDE_GAMETIME"] = "隐藏 时间/日历 按钮";
 L["TITAN_CLOCK_MENU_HIDE_MAPTIME"] = "隐藏时间按钮";
 L["TITAN_CLOCK_MENU_HIDE_CALENDAR"] = "隐藏日历按钮";
-     
-L["TITAN_COORDS_FORMAT"] = "(%.d, %.d)";
-L["TITAN_COORDS_FORMAT2"] = "(%.1f, %.1f)";
-L["TITAN_COORDS_FORMAT3"] = "(%.2f, %.2f)";
-L["TITAN_COORDS_FORMAT_LABEL"] = "(xx , yy)";
-L["TITAN_COORDS_FORMAT2_LABEL"] = "(xx.x , yy.y)";
-L["TITAN_COORDS_FORMAT3_LABEL"] = "(xx.xx , yy.yy)";
-L["TITAN_COORDS_FORMAT_COORD_LABEL"] = "坐标格式";
-L["TITAN_COORDS_BUTTON_LABEL"] = "位置: ";
-L["TITAN_COORDS_TOOLTIP"] = "所在位置信息";
-L["TITAN_COORDS_TOOLTIP_HINTS_1"] = "提示: Shift + 左键单击添加所在位置";
-L["TITAN_COORDS_TOOLTIP_HINTS_2"] = "信息到聊天窗口.";
-L["TITAN_COORDS_TOOLTIP_ZONE"] = "区域: ";
-L["TITAN_COORDS_TOOLTIP_SUBZONE"] = "具体地点: ";
-L["TITAN_COORDS_TOOLTIP_PVPINFO"] = "PVP 信息: ";
-L["TITAN_COORDS_TOOLTIP_HOMELOCATION"] = "炉石位置";
-L["TITAN_COORDS_TOOLTIP_INN"] = "旅店: ";
-L["TITAN_COORDS_MENU_TEXT"] = "坐标";
-L["TITAN_COORDS_MENU_SHOW_ZONE_ON_PANEL_TEXT"] = "显示区域信息";
-L["TITAN_COORDS_MENU_SHOW_COORDS_ON_MAP_TEXT"] = "在世界地图上显示坐标";
-L["TITAN_COORDS_MAP_CURSOR_COORDS_TEXT"] = "鼠标位置(X,Y): %s";
-L["TITAN_COORDS_MAP_PLAYER_COORDS_TEXT"] = "玩家位置(X,Y): %s";
-L["TITAN_COORDS_NO_COORDS"] = "无坐标";
-L["TITAN_COORDS_MENU_SHOW_LOC_ON_MINIMAP_TEXT"] = "在小地图显示位置";
-L["TITAN_COORDS_MENU_UPDATE_WORLD_MAP"] = "当切换地区时更新世界地图";
-     
+
+L["TITAN_LOCATION_FORMAT"] = "(%.d, %.d)";
+L["TITAN_LOCATION_FORMAT2"] = "(%.1f, %.1f)";
+L["TITAN_LOCATION_FORMAT3"] = "(%.2f, %.2f)";
+L["TITAN_LOCATION_FORMAT_LABEL"] = "(xx , yy)";
+L["TITAN_LOCATION_FORMAT2_LABEL"] = "(xx.x , yy.y)";
+L["TITAN_LOCATION_FORMAT3_LABEL"] = "(xx.xx , yy.yy)";
+L["TITAN_LOCATION_FORMAT_COORD_LABEL"] = "坐标格式";
+L["TITAN_LOCATION_BUTTON_LABEL"] = "位置: ";
+L["TITAN_LOCATION_TOOLTIP"] = "所在位置信息";
+L["TITAN_LOCATION_TOOLTIP_HINTS_1"] = "提示: Shift + 左键单击添加所在位置";
+L["TITAN_LOCATION_TOOLTIP_HINTS_2"] = "信息到聊天窗口.";
+L["TITAN_LOCATION_TOOLTIP_ZONE"] = "区域: ";
+L["TITAN_LOCATION_TOOLTIP_SUBZONE"] = "具体地点: ";
+L["TITAN_LOCATION_TOOLTIP_PVPINFO"] = "PVP 信息: ";
+L["TITAN_LOCATION_TOOLTIP_HOMELOCATION"] = "炉石位置";
+L["TITAN_LOCATION_TOOLTIP_INN"] = "旅店: ";
+L["TITAN_LOCATION_MENU_TEXT"] = "坐标";
+L["TITAN_LOCATION_MENU_SHOW_ZONE_ON_PANEL_TEXT"] = "显示区域信息";
+L["TITAN_LOCATION_MENU_SHOW_COORDS_ON_MAP_TEXT"] = "在世界地图上显示坐标";
+L["TITAN_LOCATION_MAP_CURSOR_COORDS_TEXT"] = "鼠标位置(X,Y): %s";
+L["TITAN_LOCATION_MAP_PLAYER_COORDS_TEXT"] = "玩家位置(X,Y): %s";
+L["TITAN_LOCATION_NO_COORDS"] = "无坐标";
+L["TITAN_LOCATION_MENU_SHOW_LOC_ON_MINIMAP_TEXT"] = "在小地图显示位置";
+L["TITAN_LOCATION_MENU_UPDATE_WORLD_MAP"] = "当切换地区时更新世界地图";
+
 L["TITAN_FPS_FORMAT"] = "%.1f";
 L["TITAN_FPS_BUTTON_LABEL"] = "FPS: ";
 L["TITAN_FPS_MENU_TEXT"] = "FPS";
@@ -325,7 +325,7 @@ L["TITAN_FPS_TOOLTIP_AVG_FPS"] = "平均 FPS: ";
 L["TITAN_FPS_TOOLTIP_MIN_FPS"] = "最低 FPS: ";
 L["TITAN_FPS_TOOLTIP_MAX_FPS"] = "最高 FPS: ";
 L["TITAN_FPS_TOOLTIP"] = "每秒画面帧数";
-     
+
 L["TITAN_LATENCY_FORMAT"] = "%d".."ms";
 L["TITAN_LATENCY_BANDWIDTH_FORMAT"] = "%.3f ".."KB/s";
 L["TITAN_LATENCY_BUTTON_LABEL"] = "延迟: ";
@@ -335,7 +335,7 @@ L["TITAN_LATENCY_TOOLTIP_LATENCY_WORLD"] = "游戏延迟 (世界): ";
 L["TITAN_LATENCY_TOOLTIP_BANDWIDTH_IN"] = "接收带宽: ";
 L["TITAN_LATENCY_TOOLTIP_BANDWIDTH_OUT"] = "发送带宽: ";
 L["TITAN_LATENCY_MENU_TEXT"] = "延迟";
-     
+
 L["TITAN_LOOTTYPE_BUTTON_LABEL"] = "分配: ";
 L["TITAN_LOOTTYPE_FREE_FOR_ALL"] = "自由拾取";
 L["TITAN_LOOTTYPE_ROUND_ROBIN"] = "轮流拾取";
@@ -350,11 +350,11 @@ L["TITAN_LOOTTYPE_TOOLTIP_HINT1"] = "左键单击将Roll点.";
 L["TITAN_LOOTTYPE_TOOLTIP_HINT2"] = "右键点击选择Roll点类型.";
 L["TITAN_LOOTTYPE_DUNGEONDIFF_LABEL"] = "五人副本难度";
 L["TITAN_LOOTTYPE_DUNGEONDIFF_LABEL2"] = "团队副本难度";
-	L["TITAN_LOOTTYPE_SHOWDUNGEONDIFF_LABEL"] = "显示副本难度";
-	L["TITAN_LOOTTYPE_SETDUNGEONDIFF_LABEL"] = "设置五人副本难度";
-	L["TITAN_LOOTTYPE_SETRAIDDIFF_LABEL"] = "设置团队副本难度";
-	L["TITAN_LOOTTYPE_AUTODIFF_LABEL"] = "自动设定(基于队伍类型)";
-     
+L["TITAN_LOOTTYPE_SHOWDUNGEONDIFF_LABEL"] = "显示副本难度";
+L["TITAN_LOOTTYPE_SETDUNGEONDIFF_LABEL"] = "设置五人副本难度";
+L["TITAN_LOOTTYPE_SETRAIDDIFF_LABEL"] = "设置团队副本难度";
+L["TITAN_LOOTTYPE_AUTODIFF_LABEL"] = "自动设定(基于队伍类型)";
+
 L["TITAN_MEMORY_FORMAT"] = "%.3f".."MB";
 L["TITAN_MEMORY_FORMAT_KB"] = "%d".."KB";
 L["TITAN_MEMORY_RATE_FORMAT"] = "%.3f".."KB/s";
@@ -364,9 +364,7 @@ L["TITAN_MEMORY_TOOLTIP_CURRENT_MEMORY"] = "当前: ";
 L["TITAN_MEMORY_TOOLTIP_INITIAL_MEMORY"] = "起始: ";
 L["TITAN_MEMORY_TOOLTIP_INCREASING_RATE"] = "增长率: ";
 L["TITAN_MEMORY_KBMB_LABEL"] = "KB/MB";     
-     
-L["TITAN_MONEY_FORMAT"] = "%d".."g"..", %02d".."s"..", %02d".."c";
-     
+
 L["TITAN_PERFORMANCE_TOOLTIP"] = "性能信息";
 L["TITAN_PERFORMANCE_MENU_TEXT"] = "性能";
 L["TITAN_PERFORMANCE_ADDONS"] = "插件使用";
@@ -392,7 +390,7 @@ L["TITAN_PERFORMANCE_CONTROL_TITLE"] = "被监视的插件";
 L["TITAN_PERFORMANCE_CONTROL_HIGH"] = "40";
 L["TITAN_PERFORMANCE_CONTROL_LOW"] = "1";
 L["TITAN_PERFORMANCE_TOOLTIP_HINT"] = "左键点击回收内存.";
-		     
+
 L["TITAN_XP_FORMAT"] = "%s";
 L["TITAN_XP_PERCENT_FORMAT"] = "(%.1f%%)";
 L["TITAN_XP_BUTTON_LABEL_XPHR_LEVEL"] = "经验/小时 当前等级: ";
@@ -432,50 +430,50 @@ L["TITAN_XP_GAIN_PATTERN"] = "(.*)死亡，你获得(%d+)点经验。";
 L["TITAN_XP_XPGAINS_LABEL_SHORT"] = "预估获得经验: ";
 L["TITAN_XP_XPGAINS_LABEL"] = "升级所需杀怪数 (基于最后杀怪所获%s点经验): ";
 L["TITAN_XP_MENU_SIMPLE_BUTTON_XPGAIN"] = "显示升级所需(基于最后一次所获经验)";
-     
-     --Titan Repair
-   L["REPAIR_LOCALE"] = {
-          menu = "修理",
-          tooltip = "耐久度信息",
-          button = "耐久度: ",
-          normal = "修理费用 (正常): ",
-          friendly = "修理费用 (友善): ",
-          honored = "修理费用 (尊敬): ",
-          revered = "修理费用 (崇敬): ",
-          exalted = "修理费用 (崇拜): ",
-          buttonNormal = "显示正常费用",
-          buttonFriendly = "显示(声望友善)费用 (5%折扣)",
-          buttonHonored = "显示(声望尊敬)费用 (10%折扣)",
-          buttonRevered = "显示(声望崇敬)费用 (15%折扣)",
-          buttonExalted = "显示(声望崇拜)费用 (20%折扣)",
-          percentage = "显示为百分比",
-          itemnames = "显示物品名称",
-          mostdamaged = "耐久度最低的",
-          showdurabilityframe = "显示耐久度面板",
-          undamaged = "显示未掉耐久度的物品",
-          discount = "折扣",
-          nothing = "没有需要修理的物品",
-          confirmation = "你确定要修理所有装备吗 ?",
-          badmerchant = "这个商人不能修理，现在将显示正常费用",
-          popup = "显示维修框",
-          showinventory = "统计背包中的需修理物品",
-          WholeScanInProgress = "更新中...",
-          AutoReplabel = "自动修理",
-          AutoRepitemlabel = "自动修理所有物品",
-          ShowRepairCost = "显示修理费用",
-		      ignoreThrown = "忽略投掷武器",
-		  		ShowItems = "显示物品",
-		  		ShowDiscounts = "显示折扣",
-		  		ShowCosts = "显示花费",
-		  		Items = "物品",
-		  		Discounts = "折扣",
-		  		Costs = "花费",
-				CostTotal = "总花费",
-				CostBag = "背包内花费",
-				CostEquip = "身上装备花费",
- 				TooltipOptions = "提示文字",
-    };
-     
+
+--Titan Repair
+L["REPAIR_LOCALE"] = {
+	menu = "修理",
+	tooltip = "耐久度信息",
+	button = "耐久度: ",
+	normal = "修理费用 (正常): ",
+	friendly = "修理费用 (友善): ",
+	honored = "修理费用 (尊敬): ",
+	revered = "修理费用 (崇敬): ",
+	exalted = "修理费用 (崇拜): ",
+	buttonNormal = "显示正常费用",
+	buttonFriendly = "显示(声望友善)费用 (5%折扣)",
+	buttonHonored = "显示(声望尊敬)费用 (10%折扣)",
+	buttonRevered = "显示(声望崇敬)费用 (15%折扣)",
+	buttonExalted = "显示(声望崇拜)费用 (20%折扣)",
+	percentage = "显示为百分比",
+	itemnames = "显示物品名称",
+	mostdamaged = "耐久度最低的",
+	showdurabilityframe = "显示耐久度面板",
+	undamaged = "显示未掉耐久度的物品",
+	discount = "折扣",
+	nothing = "没有需要修理的物品",
+	confirmation = "你确定要修理所有装备吗 ?",
+	badmerchant = "这个商人不能修理，现在将显示正常费用",
+	popup = "显示维修框",
+	showinventory = "统计背包中的需修理物品",
+	WholeScanInProgress = "更新中...",
+	AutoReplabel = "自动修理",
+	AutoRepitemlabel = "自动修理所有物品",
+	ShowRepairCost = "显示修理费用",
+	ignoreThrown = "忽略投掷武器",
+	ShowItems = "显示物品",
+	ShowDiscounts = "显示折扣",
+	ShowCosts = "显示花费",
+	Items = "物品",
+	Discounts = "折扣",
+	Costs = "花费",
+	CostTotal = "总花费",
+	CostBag = "背包内花费",
+	CostEquip = "身上装备花费",
+	TooltipOptions = "提示文字",
+};
+
 L["TITAN_REPAIR"] = "Titan 修理"
 L["TITAN_REPAIR_GBANK_TOTAL"] = "公会银行总资金 :"
 L["TITAN_REPAIR_GBANK_WITHDRAW"] = "公会银行允许的费用 :"
@@ -485,7 +483,7 @@ L["TITAN_REPAIR_GBANK_NORIGHTS"] = "你没有公会或你没有权限使用公�
 L["TITAN_REPAIR_CANNOT_AFFORD"] = "现在，至少，你没钱来修理."
 L["TITAN_REPAIR_REPORT_COST_MENU"] = "报告修理费到聊天频道"
 L["TITAN_REPAIR_REPORT_COST_CHAT"] = "修理花费 "
-     
+
 L["TITAN_PLUGINS_MENU_TITLE"] = "扩展模块"; 
 
 L["TITAN_GOLD_TOOLTIPTEXT"] = "统计所持有金币信息";
@@ -551,7 +549,3 @@ L["TITAN_VOLUME_CONTROL_LOW"] = "低";
 L["TITAN_VOLUME_MENU_TEXT"] = "音量控制";
 L["TITAN_VOLUME_MENU_AUDIO_OPTIONS_LABEL"] = "显示 声音控制" ;
 L["TITAN_VOLUME_MENU_OVERRIDE_BLIZZ_SETTINGS"] = "替换默认声音控制";
-
--- Version : Simplified Chinese
--- Translated by Yeachan
--- Email:yeachan@live.com

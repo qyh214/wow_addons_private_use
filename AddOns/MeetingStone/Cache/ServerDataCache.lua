@@ -30,13 +30,16 @@ end
 
 local PLAYER_FACTION = UnitFactionGroup('player') == 'Alliance' and 1 or 2
 local function FormatMallGood(encode)
+    if not encode or encode == '' then
+        return {id = 0, price = 0}
+    end
     local id, priceInfo, item, icon, faction, tip, startTime = strsplit(';', encode)
     local faction = tonumber(faction)
     if faction and faction ~= PLAYER_FACTION then
         return
     end
 
-    local price, originalPrice = strsplit(',', priceInfo)
+    local price, originalPrice, smallText = strsplit(',', priceInfo)
     local itemId = tonumber(item)
     local model = icon and tonumber(icon)
     local icon = not model and icon and icon:match('^!(.+)$')
@@ -55,16 +58,19 @@ local function FormatMallGood(encode)
         model = model,
         icon = icon,
         tip = tip,
-        priceType = priceType == '!' and 1 or 2
+        priceType = priceType == '!' and 1 or 2,
+        smallText = smallText,
     }
 end
 
 local function UnpackGoodList(encode)
     local list = {}
-    for item in encode:gmatch('[^#]+') do
-        local good = FormatMallGood(item)
-        if good then
-            tinsert(list, good)
+    if encode and encode ~= '' then
+        for item in encode:gmatch('[^#]+') do
+            local good = FormatMallGood(item)
+            if good then
+                tinsert(list, good)
+            end
         end
     end
     return list
@@ -105,7 +111,7 @@ end
 
 function ServerDataCache:FormatActivitiesData(ActivitiesData, title, target, summary, url, misc, mall, lotteryItem, lottery)
     local data = {}
-    local tabs, signup, gift, bg = strsplit(';', misc)
+    local tabs, signup, gift, bg, noScore = strsplit(';', misc)
 
     tabs = tonumber(tabs)
     signup = tonumber(signup)
@@ -115,6 +121,7 @@ function ServerDataCache:FormatActivitiesData(ActivitiesData, title, target, sum
     data.signUpLeader = bit.band(signup, 1) > 0
     data.signUpMember = bit.band(signup, 2) > 0
     data.gift = tonumber(gift)
+    data.noScore = noScore == '1'
     data.background = bg
     data.title = title
     data.target = target

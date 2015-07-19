@@ -6,7 +6,7 @@ XPerl_ProductName		= "|cFFD00000Z-Perl|r UnitFrames"
 XPerl_ShortProductName	= "|cFFD00000Z-Perl|r"
 XPerl_Author			= "|cFFFF8080Resike|r"
 XPerl_Description		= XPerl_ProductName.." by "..XPerl_Author
-XPerl_VersionNumber 	= "4.0.1 beta"
+XPerl_VersionNumber		= "4.0.4 release"
 XPerl_Version			= XPerl_Description.." - "..XPerl_VersionNumber
 XPerl_LongDescription	= "UnitFrame replacement for new look Player, Pet, Party, Target, Target's Target, Focus, Raid"
 XPerl_ModMenuIcon		= "Interface\\Icons\\INV_Misc_Gem_Pearl_02"
@@ -23,18 +23,18 @@ XPERL_MINIMENU_ASSIST	= "Show Assists Frame"
 XPERL_MINIMENU_CASTMON	= "Show Casting Monitor"
 XPERL_MINIMENU_RAIDAD	= "Show Raid Admin"
 XPERL_MINIMENU_ITEMCHK	= "Show Item Checker"
-XPERL_MINIMENU_RAIDBUFF = "Raid Buffs"
+XPERL_MINIMENU_RAIDBUFF	= "Raid Buffs"
 XPERL_MINIMENU_ROSTERTEXT="Roster Text"
-XPERL_MINIMENU_RAIDSORT = "Raid Sort"
+XPERL_MINIMENU_RAIDSORT	= "Raid Sort"
 XPERL_MINIMENU_RAIDSORT_GROUP = "Sort by Group"
 XPERL_MINIMENU_RAIDSORT_CLASS = "Sort by Class"
 
-XPERL_TYPE_NOT_SPECIFIED = "Not specified"
-XPERL_TYPE_PET		= PET			-- "Pet"
-XPERL_TYPE_BOSS 	= "Boss"
-XPERL_TYPE_RAREPLUS = "Rare+"
-XPERL_TYPE_ELITE	= "Elite"
-XPERL_TYPE_RARE 	= "Rare"
+XPERL_TYPE_NOT_SPECIFIED	= "Not specified"
+XPERL_TYPE_PET				= PET
+XPERL_TYPE_BOSS				= "Boss"
+XPERL_TYPE_RAREPLUS 		= "Rare+"
+XPERL_TYPE_ELITE			= "Elite"
+XPERL_TYPE_RARE				= "Rare"
 
 -- Zones
 XPERL_LOC_ZONE_SERPENTSHRINE_CAVERN	= "Serpentshrine Cavern"
@@ -55,6 +55,7 @@ XPERL_LOC_ZONE_RUBY_SANCTUM			= "The Ruby Sanctum"
 XPERL_LOC_DEAD		= DEAD			-- "Dead"
 XPERL_LOC_GHOST 	= "Ghost"
 XPERL_LOC_FEIGNDEATH	= "Feign Death"
+XPERL_LOC_FEIGNDEATHSHORT	= "FD"
 XPERL_LOC_OFFLINE	= PLAYER_OFFLINE	-- "Offline"
 XPERL_LOC_RESURRECTED	= "Resurrected"
 XPERL_LOC_SS_AVAILABLE	= "SS Available"
@@ -75,7 +76,7 @@ XPERL_LOC_STATUSTIPLIST = {
 }
 
 XPERL_OK		= "OK"
-XPERL_CANCEL		= "Cancel"
+XPERL_CANCEL	= "Cancel"
 
 XPERL_LOC_LARGENUMDIV	= 1000
 XPERL_LOC_LARGENUMTAG	= "K"
@@ -104,7 +105,7 @@ XPERL_DRAGHINT2		= "|c00FFFFFFShift+Click|r to resize window"
 -- Usage
 XPerlUsageNameList	= {XPerl = "Core", XPerl_Player = "Player", XPerl_PlayerPet = "Pet", XPerl_Target = "Target", XPerl_TargetTarget = "Target's Target", XPerl_Party = "Party", XPerl_PartyPet = "Party Pets", XPerl_RaidFrames = "Raid Frames", XPerl_RaidHelper = "Raid Helper", XPerl_RaidAdmin = "Raid Admin", XPerl_TeamSpeak = "TS Monitor", XPerl_RaidMonitor = "Raid Monitor", XPerl_RaidPets = "Raid Pets", XPerl_ArcaneBar = "Arcane Bar", XPerl_PlayerBuffs = "Player Buffs", XPerl_GrimReaper = "Grim Reaper"}
 XPERL_USAGE_MEMMAX	= "UI Mem Max: %d"
-XPERL_USAGE_MODULES = "Modules: "
+XPERL_USAGE_MODULES	= "Modules: "
 XPERL_USAGE_NEWVERSION	= "*Newer version"
 XPERL_USAGE_AVAILABLE	= "%s |c00FFFFFF%s|r is available for download"
 
@@ -134,7 +135,7 @@ XPERL_HIGHLIGHT_SPELLS = {
 		[GetSpellInfo(774)] = 12,			-- Rejuvenation (old id 26982)
 		[GetSpellInfo(8936)] = 6,			-- Regrowth (old id 26980)
 		[GetSpellInfo(139)] = 12,			-- Renew (old id 25222)
-	    [GetSpellInfo(48438)] = 7,			-- Wild Growth 
+		[GetSpellInfo(48438)] = 7,			-- Wild Growth 
 		[GetSpellInfo(33763)] = 8,			-- Lifebloom
 		[GetSpellInfo(28880)] = 15,			-- Gift of the Naaru (Racial)
 		[GetSpellInfo(61295)] = 15,			-- Riptide
@@ -186,5 +187,5 @@ XPerl_ArcaneExclusions = {
 	[GetSpellInfo(30129)] = true,						-- Charred Earth - Nightbane debuff, can't be cleansed, but shows as magic
 	[GetSpellInfo(31651)] = {MAGE = true, WARLOCK = true, PRIEST = true},	-- Banshee Curse, Melee hit rating debuff
 	[GetSpellInfo(38913)] = {ROGUE = true},				-- Silence
-	[GetSpellInfo(31555)] = {ROGUE = true, WARRIOR = true}, -- Decayed Intellect
+	[GetSpellInfo(31555)] = {ROGUE = true, WARRIOR = true},	-- Decayed Intellect
 }

@@ -12,7 +12,7 @@ local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 
-XPerl_SetModuleRevision("$Revision: 865 $")
+XPerl_SetModuleRevision("$Revision: 972 $")
 
 XPERL_RAIDMON_UNIT_WIDTH_MIN = 50
 XPERL_RAIDMON_UNIT_WIDTH_MAX = 150
@@ -30,7 +30,6 @@ local castColours = {
 
 -- XPerl_RaidMonitor_OnLoad
 function XPerl_RaidMonitor_OnLoad(self)
-
 	cast = self
 	XPerl_RaidMonitor_Init(self)
 
@@ -276,7 +275,6 @@ end
 
 -- cast:OnEvent
 function XPerl_RaidMonitor_OnEvent(self, event, a, b, c, d, e)
---if (a == "raid2") then ChatFrame2:AddMessage(event) end
 	local e = self[event]
 	if (e) then
 		e(self, a, b, c, d, e)
@@ -486,13 +484,16 @@ function cast:UNIT_MANA(unit)
 	end
 end
 
-cast.UNIT_MAXMANA = cast.UNIT_MANA
+cast.UNIT_POWER_FREQUENT = cast.UNIT_MANA
+cast.UNIT_MAXPOWER = cast.UNIT_MANA
+
+--[[cast.UNIT_MAXMANA = cast.UNIT_MANA
 cast.UNIT_RAGE = cast.UNIT_MANA
 cast.UNIT_MAXRAGE = cast.UNIT_MANA
 cast.UNIT_ENERGY = cast.UNIT_MANA
 cast.UNIT_MAXENERGY = cast.UNIT_MANA
 cast.UNIT_RUNIC_POWER = cast.UNIT_MANA
-cast.UNIT_MAXRUNIC_POWER = cast.UNIT_MANA
+cast.UNIT_MAXRUNIC_POWER = cast.UNIT_MANA]]
 
 -- cast:PLAYER_REGEN_DISABLED
 function cast:PLAYER_REGEN_DISABLED()
@@ -811,14 +812,11 @@ end
 -- cast:EnableDisable()
 function cast:EnableDisable()
 
-	local events = {"UNIT_MANA", "UNIT_MAXMANA", "UNIT_RAGE", "UNIT_MAXRAGE", "UNIT_ENERGY", "UNIT_MAXENERGY",
-			"UNIT_HEALTH", "UNIT_HEALTHMAX", "UNIT_TARGET", "PLAYER_TARGET_CHANGED",
-			"UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_INTERRUPTED",
-			"UNIT_SPELLCAST_DELAYED", "UNIT_SPELLCAST_CHANNEL_START", "UNIT_SPELLCAST_SUCCEEDED",
-			"UNIT_SPELLCAST_CHANNEL_UPDATE", "UNIT_SPELLCAST_CHANNEL_STOP", "PLAYER_ENTERING_WORLD", "GROUP_ROSTER_UPDATE",
-			"PLAYER_REGEN_DISABLED", "PLAYER_REGEN_ENABLED"}
+	local events = {
+		"UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MANA", "UNIT_HEALTH", "UNIT_HEALTHMAX", "UNIT_TARGET", "PLAYER_TARGET_CHANGED", "UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_INTERRUPTED", "UNIT_SPELLCAST_DELAYED", "UNIT_SPELLCAST_CHANNEL_START", "UNIT_SPELLCAST_SUCCEEDED", "UNIT_SPELLCAST_CHANNEL_UPDATE", "UNIT_SPELLCAST_CHANNEL_STOP", "PLAYER_ENTERING_WORLD", "GROUP_ROSTER_UPDATE", "PLAYER_REGEN_DISABLED", "PLAYER_REGEN_ENABLED"
+	}
 
-	for k,v in pairs(events) do
+	for k, v in pairs(events) do
 		if (self:IsShown()) then
 			self:RegisterEvent(v)
 		else

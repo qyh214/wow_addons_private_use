@@ -4,8 +4,9 @@ BuildEnv(...)
 local MallItem = Addon:NewClass('MallItem', GUI:GetClass('ItemButton'))
 
 GUI:Embed(MallItem, 'Refresh')
+LibStub('AceTimer-3.0'):Embed(MallItem)
 
-function MallItem:Constructor(parent)
+function MallItem:Constructor()
     local Background = self:CreateTexture(nil, 'BACKGROUND') do
         Background:SetTexture([[Interface\Store\Store-Main]])
         Background:SetTexCoord(0.18457031, 0.32714844, 0.64550781, 0.84960938)
@@ -79,6 +80,11 @@ function MallItem:Constructor(parent)
     local Model = CreateFrame('PlayerModel', nil, self) do
         Model:SetSize(126, 124)
         Model:SetPoint('BOTTOM', 0, 80)
+        Model:SetDoBlend(false)
+        Model:SetAnimation(0, -1)
+        Model:SetRotation(0.61)
+        Model:SetPosition(0, 0, 0)
+        Model:SetPortraitZoom(0)
     end
 
     local Magnifier = CreateFrame('Button', nil, self) do
@@ -142,6 +148,25 @@ function MallItem:Constructor(parent)
         end
     end
 
+    local CheckMark = CreateFrame('Frame', nil, self) do
+        CheckMark:SetFrameLevel(Model:GetFrameLevel() + 1)
+        CheckMark:SetPoint('TOPRIGHT', -8, -8)
+        CheckMark:SetSize(27, 27)
+        CheckMark:Hide()
+
+        local bg = CheckMark:CreateTexture(nil, 'OVERLAY')
+        bg:SetAllPoints(true)
+        bg:SetTexture([[Interface\Store\Store-Main]])
+        bg:SetTexCoord(0.81347656, 0.83984375, 0.41992188, 0.44628906)
+
+        CheckMark:SetScript('OnEnter', function()
+            GameTooltip:SetOwner(CheckMark, 'ANCHOR_TOP')
+            GameTooltip:SetText(L['你已经拥有了该物品！'], 1, 1, 1)
+            GameTooltip:Show()
+        end)
+        CheckMark:SetScript('OnLeave', GameTooltip_Hide)
+    end
+
     self:SetScript('OnEvent', self.Refresh)
 
     self:SetCheckedTexture(CheckedTexture)
@@ -156,8 +181,11 @@ function MallItem:Constructor(parent)
     self.Strikethrough = Strikethrough
     self.SalePrice = SalePrice
     self.Discount = Discount
+    self.CheckMark = CheckMark
 
     self:SetScript('OnSizeChanged', self.OnSizeChanged)
+    self:SetScript('OnShow', self.OnShow)
+    self:SetScript('OnHide', self.OnHide)
 end
 
 function MallItem:OnSizeChanged(width, height)
@@ -212,11 +240,16 @@ function MallItem:SetCurrency(currency)
     self:Refresh()
 end
 
+function MallItem:SetSmallText(text)
+    self.smallText = text
+    self:Refresh()
+end
+
 function MallItem:Update()
     if self.item then
         local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, icon = GetItemInfo(self.item)
         if name then
-            self:UnregisterAllEvents()
+            self:UnregisterEvent('GET_ITEM_INFO_RECEIVED')
             self.text = name
             self.icon = icon
         else
@@ -230,12 +263,10 @@ function MallItem:Update()
     self.Icon:SetShown(not self.model)
 
     if self.model then
-        self.Model:SetDisplayInfo(self.model)
-        self.Model:SetDoBlend(false)
-        self.Model:SetAnimation(0, -1)
-        self.Model:SetRotation(0.61)
-        self.Model:SetPosition(0, 0, 0)
-        self.Model:SetPortraitZoom(0)
+        if self.Model:GetID() ~= self.model then
+            self.Model:SetDisplayInfo(self.model)
+            self.Model:SetID(self.model)
+        end
     elseif self.icon then
         local id = tonumber(self.icon)
         if id then
@@ -257,7 +288,16 @@ function MallItem:Update()
             self.Price:SetText(self.originalPrice .. (self.currency or '*'))
             self.Price:SetPoint('BOTTOMRIGHT', self, 'BOTTOM', -2, 30)
         else
-            self.Price:SetText(self.price .. (self.currency or '*'))
+            if type(self.price) == 'function' then
+                local price = self.price()
+                if price and self.data.status() then
+                    self.Price:SetText(GetMoneyString(price, true))
+                else
+                    self.Price:SetText(TOKEN_MARKET_PRICE_NOT_AVAILABLE)
+                end
+            else
+                self.Price:SetText(self.price .. (self.currency or '*'))
+            end
             self.Price:SetPoint('BOTTOM', self, 0, 30)
         end
     end
@@ -268,6 +308,9 @@ function MallItem:Update()
     elseif self.price and self.originalPrice then
         self.Discount:SetText(format(L['%.1f折'], ceil(self.price/self.originalPrice*100)/10))
         self.Discount:Show()
+    elseif self.smallText then
+        self.Discount:SetText(self.smallText)
+        self.Discount:Show()
     else
         self.Discount:Hide()
     end
@@ -275,9 +318,17 @@ function MallItem:Update()
     if self.text then
         self.Name:SetText(self.text)
     end
+
+    if self.item and (PlayerHasToy(self.item) or PlayerHasMount(self.model) or PlayerHasPet(self.text) or PlayerHasItem(self.item)) then
+        self.Discount:Hide()
+        self.CheckMark:Show()
+    else
+        self.CheckMark:Hide()
+    end
 end
 
 function MallItem:Clear()
+    self.data = nil
     self.item = nil
     self.model = nil
     self.price = nil
@@ -291,4 +342,73 @@ local orig_FireFormat = MallItem.FireFormat
 function MallItem:FireFormat()
     self:Clear()
     orig_FireFormat(self)
+end
+
+function MallItem:SetToken(data)
+    self:SetItem(data.itemId)
+    self:SetPrice(data.price)
+end
+
+function MallItem:UpdateToken()
+    if type(self.data.update) == 'function' then
+        self.data.update()
+    end
+end
+
+function MallItem:SetAutoUpdate(enable)
+    self.isToken = enable
+    if enable then
+        self.event = self.data.event
+        self:RegisterEvent(self.event)
+        self.timer = self:ScheduleTimer('UpdateToken', 300)
+    else
+        if self.timer then
+            self:CancelTimer(self.timer)
+            self.timer = nil
+        end
+        if self.event then
+            self:UnregisterEvent(self.event)
+            self.event = nil
+        end
+    end
+end
+
+function MallItem:SetData(data)
+    self.data = data
+    if data.itemId == WOW_TOKEN_ITEM_ID then
+        self:SetToken(data)
+        self:SetAutoUpdate(true)
+    else
+        self:SetItem(data.itemId)
+        self:SetModel(data.model)
+        self:SetText(data.name)
+        self:SetIcon(data.icon)
+        self:SetPrice(data.price, data.originalPrice)
+        self:SetStartTime(data.startTime)
+        self:SetAutoUpdate(false)
+        self:SetSmallText(data.smallText)
+    end
+end
+
+function MallItem:OnShow()
+    if self.isToken then
+        self.event = self.data.event
+        self:RegisterEvent(self.event)
+        if self.timer then
+            self:CancelTimer(self.timer)
+        end
+        self.timer = self:ScheduleTimer('UpdateToken', 300)
+        self:UpdateToken()
+    end
+end
+
+function MallItem:OnHide()
+    if self.timer then
+        self:CancelTimer(self.timer)
+        self.timer = nil
+    end
+    if self.event then
+        self:UnregisterEvent(self.event)
+        self.event = nil
+    end
 end

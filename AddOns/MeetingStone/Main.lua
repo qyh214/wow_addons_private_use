@@ -3,24 +3,38 @@ BuildEnv(...)
 
 debug = neteasedebug or nop
 
-Addon = LibStub('AceAddon-3.0'):NewAddon('MeetingStone', 'AceEvent-3.0', 'LibModule-1.0', 'LibClass-1.0', 'AceHook-3.0')
+Addon = LibStub('AceAddon-3.0'):NewAddon('MeetingStone', 'AceEvent-3.0', 'LibModule-1.0', 'LibClass-2.0', 'AceHook-3.0')
 
-GUI = LibStub('NetEaseGUI-1.0')
+GUI = LibStub('NetEaseGUI-2.0')
 
 function Addon:OnInitialize()
     self:RawHook('LFGListUtil_OpenBestWindow', 'Toggle', true)
 
     self:RegisterEvent('LFG_LIST_AVAILABILITY_UPDATE', 'MakeSortOrder')
     self:RegisterMessage('MEETINGSTONE_NEW_VERSION')
+
+    self.mountCache = setmetatable({}, {
+        __index = function(t, k)
+            for i = 1, C_MountJournal.GetNumMounts() do
+                local displayId = C_MountJournal.GetMountInfoExtra(i)
+                if displayId == k then
+                    t[k] = select(11, C_MountJournal.GetMountInfo(i))
+                    return t[k]
+                end
+            end
+        end
+    })
+    self:RegisterEvent('COMPANION_LEARNED', function()
+        wipe(self.mountCache)
+    end)
 end
 
 function Addon:OnEnable()
-    if not IsAddOnLoaded('RaidBuilder') then
+    if IsAddOnLoaded('RaidBuilder') then
+        DisableAddOn('RaidBuilder')
+        GUI:CallWarningDialog(L.FoundRaidBuilder, true, nil, ReloadUI)
         return
     end
-
-    DisableAddOn('RaidBuilder')
-    GUI:CallWarningDialog(L.FoundRaidBuilder, true, nil, ReloadUI)
 end
 
 function Addon:MakeSortOrder()
@@ -55,7 +69,7 @@ end
 function Addon:Toggle()
     if Logic:IsSupport() then
         Addon:ToggleModule('MainPanel')
-        
+
         if C_LFGList.GetActiveEntryInfo() then
             MainPanel:SelectPanel(ManagerPanel)
         elseif DataCache:GetObject('ActivitiesData'):IsNew() then
@@ -72,4 +86,8 @@ function Addon:ShowNewVersion(url, changeLog)
     else
         GUI:CallUrlDialog(url, L.NotSupportVersion, 1)
     end
+end
+
+function Addon:FindMount(id)
+    return self.mountCache[id]
 end

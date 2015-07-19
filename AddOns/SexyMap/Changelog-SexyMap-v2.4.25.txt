@@ -1,0 +1,12 @@
+tag v2.4.25
+f358b29394e15aaa297ea731f87ae8e4ad79d3f8
+funkydude <none>
+2015-06-24 02:29:24 +0100
+
+Tagging as v2.4.25
+
+
+--------------------
+
+funkydude:
+	- bump toc

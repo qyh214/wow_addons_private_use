@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(817, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 57 $"):sub(12, -3))
 mod:SetCreatureID(68078, 68079, 68080, 68081)--Ro'shak 68079, Quet'zal 68080, Dam'ren 68081, Iron Qon 68078
 mod:SetEncounterID(1559)
 mod:SetMainBossID(68078)
@@ -27,10 +27,8 @@ local warnThrowSpear					= mod:NewTargetAnnounce(134926, 3)--Target scanning doe
 local warnPhase1						= mod:NewPhaseAnnounce(1)
 local warnMoltenInferno					= mod:NewSpellAnnounce(134664, 2, nil, false)--highly variables cd, also can be spammy. disbled by default.
 local warnUnleashedFlame				= mod:NewSpellAnnounce(134611, 3, nil, false)--Spammy and unnesssary. Every 6 seconds is too often for a non important warning. people can turn it on if they want.
-local warnMoltenOverload				= mod:NewSpellAnnounce(137221, 4)
 local warnWhirlingWinds					= mod:NewSpellAnnounce(139167, 3)--Heroic Phase 1
 local warnPhase2						= mod:NewPhaseAnnounce(2)
-local warnWindStorm						= mod:NewSpellAnnounce(136577, 4)
 local warnWindStormEnd					= mod:NewEndAnnounce(136577, 4)
 local warnLightningStorm				= mod:NewTargetAnnounce(136192, 3)
 local warnFrostSpike					= mod:NewSpellAnnounce(139180, 3)--Heroic Phase 2
@@ -39,7 +37,6 @@ local warnDeadZone						= mod:NewAnnounce("warnDeadZone", 3, 137229)
 local warnFreeze						= mod:NewTargetAnnounce(135145, 3, nil, false)--Spammy, more of a duh type warning I think
 local warnPhase4						= mod:NewPhaseAnnounce(4)
 local warnRisingAnger					= mod:NewStackAnnounce(136323, 2, nil, false)
-local warnFistSmash						= mod:NewCountAnnounce(136146, 3)
 
 local specWarnImpale					= mod:NewSpecialWarningStack(134691, nil, 2)
 local specWarnImpaleOther				= mod:NewSpecialWarningTaunt(134691)
@@ -55,7 +52,7 @@ local specWarnStormCloud				= mod:NewSpecialWarningMove(137669)
 local specWarnLightningStorm			= mod:NewSpecialWarningYou(136192)
 local yellLightningStorm				= mod:NewYell(136192)
 local specWarnFrozenBlood				= mod:NewSpecialWarningMove(136520)
-local specWarnFistSmash					= mod:NewSpecialWarningSpell(136146, nil, nil, nil, 2)
+local specWarnFistSmash					= mod:NewSpecialWarningCount(136146, nil, nil, nil, 2)
 
 local timerImpale						= mod:NewTargetTimer(40, 134691, nil, "Tank|Healer")
 local timerImpaleCD						= mod:NewCDTimer(20, 134691, nil, "Tank|Healer")
@@ -241,7 +238,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnScorched:Show(amount)
 		end
 	elseif spellId == 137221 then
-		warnMoltenOverload:Show()
 		specWarnMoltenOverload:Show()
 		timerMoltenOverload:Start()
 	elseif spellId == 136192 then
@@ -371,7 +367,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 				timerFrostSpikeCD:Start(15)
 			end
 			timerLightningStormCD:Start()
-			warnWindStorm:Schedule(52)
 			specWarnWindStorm:Schedule(52)
 			timerWindStorm:Schedule(52)
 			timerWindStormCD:Start(52)
@@ -381,7 +376,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			timerLightningStormCD:Cancel()
 			timerWindStorm:Cancel()
 			timerWindStormCD:Cancel()
-			warnWindStorm:Cancel()
 			specWarnWindStorm:Cancel()
 			timerFrostSpikeCD:Cancel()
 			timerImpaleCD:Cancel()
@@ -413,10 +407,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnFrostSpike:Show()
 		timerFrostSpikeCD:Start()
 	elseif spellId == 137656 and self.vb.phase == 2 and self:AntiSpam(2, 1) then--Rushing Winds (Wind Storm end trigger). ANTISPAM still needed, multiple get cast
-		warnWindStorm:Cancel()
 		specWarnWindStorm:Cancel()
 		warnWindStormEnd:Show()
-		warnWindStorm:Schedule(70)
 		specWarnWindStorm:Schedule(70)
 		timerWindStorm:Schedule(70)
 		timerWindStormCD:Start()
@@ -427,8 +419,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			self:Unschedule(checkSpear)
 		end
 		self.vb.fistSmashCount = self.vb.fistSmashCount + 1
-		warnFistSmash:Show(self.vb.fistSmashCount)
-		specWarnFistSmash:Show()
+		specWarnFistSmash:Show(self.vb.fistSmashCount)
 		timerFistSmash:Start()
 		if self:IsHeroic() then
 			timerFistSmashCD:Start(28, self.vb.fistSmashCount+1) -- heroic cd longer.
@@ -461,7 +452,6 @@ function mod:UNIT_DIED(args)
 			self:Schedule(25, checkSpear)
 			timerThrowSpearCD:Start()
 			warnPhase2:Show()
-			warnWindStorm:Schedule(49.5)
 			specWarnWindStorm:Schedule(49.5)
 			timerWindStorm:Schedule(49.5)
 			timerWindStormCD:Start(49.5)
@@ -469,7 +459,6 @@ function mod:UNIT_DIED(args)
 	elseif cid == 68080 then--Quet'zal
 		timerLightningStormCD:Cancel()
 		timerWindStormCD:Cancel()
-		warnWindStorm:Cancel()
 		specWarnWindStorm:Cancel()
 		timerWindStorm:Cancel()
 		if not self:IsDifficulty("lfr25") then--LFR has no concept of clearing arcing, they certainly don't use info/range frames

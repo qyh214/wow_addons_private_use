@@ -1,7 +1,7 @@
 ﻿local mod = ExtraCD
 
 function mod:GetDataVersion()
-	return 73
+	return 74
 end
 
 function mod:GetSpellData() 
@@ -131,6 +131,56 @@ function mod:GetSpellData()
 	-- item
 		-- type = "item" 
 		-- item = {the item id}
+		-- WOD 6.2
+		[183926] = {
+			desc = "",
+			type = "item",
+			item = {124226},
+			cd = 0,
+			ppm = 1,
+			duration = 20,
+		}, -- Malicious Censer
+		[184073] = {
+			desc = "",
+			type = "item",
+			item = {124230},
+			cd = 0,
+			ppm = 1.5,
+			duration = 10,
+		}, -- Prophecy of Fear
+		[183931] = {
+			desc = "",
+			type = "item",
+			item = {124241},
+			cd = 0,
+			ppm = 3,
+			duration = 10,
+		}, -- Anzu's Cursed Plume
+		[184293] = {
+			desc = "",
+			type = "item",
+			item = {124225},
+			cd = 0,
+			ppm = 1,
+			duration = 10,
+		}, -- Soul Capacitor
+		[183941] = {
+			desc = "",
+			type = "item",
+			item = {124236},
+			cd = 0,
+			ppm = 1,
+			duration = 20,
+		}, -- Unending Hunger
+		[183924] = {
+			desc = "",
+			type = "item",
+			item = {124228},
+			cd = 0,
+			ppm = 1,
+			duration = 20,
+		}, -- Desecrated Shadowmoon Insignia
+		
 		-- WOD 6.0
 		[177161] = {
 			desc = "",
@@ -855,47 +905,70 @@ function mod:GetSpellData()
 			duration = 20,
 		}, -- H
 		]]
-		-- pvp 660(H/L WS1)
+		-- pvp 705(H/L WS3)
+		[190026] = {
+			desc = "",
+			type = "item",
+			item = {125336, 124857, 125971, 126450},
+			cd = 50,
+			duration = 20,
+		}, -- AGI
+		[190027] = {
+			desc = "",
+			type = "item",
+			item = {125341, 124862, 125976, 126455},
+			cd = 50,
+			duration = 20,
+		}, -- INT
+		[190025] = {
+			desc = "",
+			type = "item",
+			item = {124868, 125345, 125982, 126459},
+			cd = 50,
+			duration = 20,
+		}, -- STR
+		
+		-- pvp 660(H/L WS1, Tourment H/L)
 		[182068] = {
 			desc = "",
 			type = "item",
-			item = {111223, 115750},
+			item = {111223, 115750, 117730, 117931},
 			cd = 50,
 			duration = 20,
 		}, -- AGI
 		[182067] = {
 			desc = "",
 			type = "item",
-			item = {111228, 115755},
+			item = {111228, 115755, 117735, 117936},
 			cd = 50,
 			duration = 20,
-		}, -- SP
+		}, -- INT
 		[182069] = {
 			desc = "",
 			type = "item",
-			item = {111233, 115760},
+			item = {111233, 115760, 117740, 117941},
 			cd = 50,
 			duration = 20,
 		}, -- STR
-		-- pvp 620(H/L WS1)
+		-- pvp 620(H/L WS1 WS2 WS3)
 		[182059] = {
 			desc = "",
 			type = "item",
-			item = {119927, 115150},
+			item = {119927, 115150, 125031, 125508, 126145, 126622},
 			cd = 50,
 			duration = 20,
 		}, -- AGI
 		[182057] = {
 			desc = "",
 			type = "item",
-			item = {119932, 115155},
+			item = {119932, 115155, 125036, 125513, 126150, 126627},
 			cd = 50,
 			duration = 20,
-		}, -- SP
+		}, -- INT
 		[182062] = {
 			desc = "",
 			type = "item",
-			item = {119937, 115160},
+			item = {119937, 115160, 125519, 125042, 126156, 126633},
 			cd = 50,
 			duration = 20,
 		}, -- STR
@@ -1039,21 +1112,21 @@ function mod:GetSpellData()
 		[60234] = {
 			desc = "",
 			type = "item",
-			item = {75274, 122604, 122603, 122602, 122601, 109262},
+			item = {75274, 122604, 122603, 122602, 122601, 109262, 128024, 128023},
 			cd = 55,
 			duration = 15,
 		}, -- Alchemist's Stone(Intellect)
 		[60233] = {
 			desc = "",
 			type = "item",
-			item = {75274, 122604, 122603, 122602, 122601, 109262},
+			item = {75274, 122604, 122603, 122602, 122601, 109262, 128024, 128023},
 			cd = 55,
 			duration = 15,
 		}, -- Alchemist's Stone(Agility)
 		[60229] = {
 			desc = "",
 			type = "item",
-			item = {75274, 122604, 122603, 122602, 122601, 109262},
+			item = {75274, 122604, 122603, 122602, 122601, 109262, 128024, 128023},
 			cd = 55,
 			duration = 15,
 		}, -- Alchemist's Stone(Strength)

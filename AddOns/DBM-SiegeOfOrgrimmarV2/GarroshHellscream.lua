@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(869, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 68 $"):sub(12, -3))
 mod:SetCreatureID(71865)
 mod:SetEncounterID(1623)
 mod:SetZone()
@@ -72,7 +72,7 @@ local yellMalice					= mod:NewYell(147209, nil, false)
 local specWarnBombardment			= mod:NewSpecialWarningCount(147120, nil, nil, nil, 2)
 local specWarnBombardmentOver		= mod:NewSpecialWarningEnd(147120)
 local specWarnISFixate				= mod:NewSpecialWarningYou(147665)
-local specWarnIronStarSpawn			= mod:NewSpecialWarningSpell("OptionVersion2", 147047)
+local specWarnIronStarSpawn			= mod:NewSpecialWarningSpell(147047)
 local specWarnManifestRage			= mod:NewSpecialWarningInterrupt(147011, nil, nil, nil, 3)
 local specWarnMaliciousBlast		= mod:NewSpecialWarningStack(147235, nil, 1)
 local specWarnNapalm				= mod:NewSpecialWarningMove(147136)
@@ -81,12 +81,12 @@ local timerRoleplay					= mod:NewTimer(120.5, "timerRoleplay", "Interface\\Icons
 --Stage 1: A Cry in the Darkness
 local timerDesecrateCD				= mod:NewCDCountTimer(35, 144748)
 local timerHellscreamsWarsongCD		= mod:NewNextTimer(42.2, 144821, nil, "Tank|Healer")
-local timerFarseerWolfRiderCD		= mod:NewNextTimer(50, "ej8294", nil, nil, nil, 144585)--EJ says they come faster as phase progresses but all i saw was 3 spawn on any given pull and it was 30 50 50
-local timerSiegeEngineerCD			= mod:NewNextTimer(40, "ej8298", nil, nil, nil, 144616)
+local timerFarseerWolfRiderCD		= mod:NewNextTimer(50, "ej8294", nil, nil, nil, nil, 144585)--EJ says they come faster as phase progresses but all i saw was 3 spawn on any given pull and it was 30 50 50
+local timerSiegeEngineerCD			= mod:NewNextTimer(40, "ej8298", nil, nil, nil, nil, 144616)
 local timerPowerIronStar			= mod:NewCastTimer(16.5, 144616)
 --Intermission: Realm of Y'Shaarj
-local timerEnterRealm				= mod:NewNextTimer(145.5, 144866, nil, nil, nil, 144945)
-local timerRealm					= mod:NewBuffActiveTimer(60.5, "ej8305", nil, nil, nil, 144945)--May be too long, but intermission makes more sense than protection buff which actually fades before intermission ends if you do it right.
+local timerEnterRealm				= mod:NewNextTimer(145.5, 144866, nil, nil, nil, nil, 144945)
+local timerRealm					= mod:NewBuffActiveTimer(60.5, "ej8305", nil, nil, nil, nil, 144945)--May be too long, but intermission makes more sense than protection buff which actually fades before intermission ends if you do it right.
 --Stage Two: Power of Y'Shaarj
 local timerWhirlingCorruptionCD		= mod:NewCDCountTimer(49.5, 144985)--One bar for both, "empowered" makes timer too long
 local timerWhirlingCorruption		= mod:NewBuffActiveTimer(9, 144985, nil, false)
@@ -94,7 +94,7 @@ local timerTouchOfYShaarjCD			= mod:NewCDCountTimer(45, 145071)
 local timerGrippingDespair			= mod:NewTargetTimer(15, 145183, nil, "Tank")
 --Starge Three: MY WORLD
 --Starge Four: Heroic Hidden Phase
-local timerEnterGarroshRealm		= mod:NewNextTimer(20, 146984, nil, nil, nil, 144945)
+local timerEnterGarroshRealm		= mod:NewNextTimer(20, 146984, nil, nil, nil, nil, 144945)
 local timerMaliceCD					= mod:NewNextTimer(29.5, 147209)--29.5-33sec variation
 local timerBombardmentCD			= mod:NewNextTimer(55, 147120)
 local timerBombardment				= mod:NewBuffActiveTimer(13, 147120)

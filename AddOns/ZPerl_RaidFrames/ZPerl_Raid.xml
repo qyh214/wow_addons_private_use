@@ -166,7 +166,8 @@
 					</BackgroundInsets>
 				</Backdrop>
 				<Frames>
-					<StatusBar name="$parenthealthBar" inherits="XPerlRaidStatusBar">
+					<!-- Health Bar -->
+					<StatusBar name="$parenthealthBar" drawLayer="BACKGROUND" inherits="XPerlRaidStatusBar">
 						<Size>
 							<AbsDimension x="70" y="15"/>
 						</Size>
@@ -184,32 +185,8 @@
 						</Anchors>
 						<BarColor r="0" g="0.8" b="0"/>
 					</StatusBar>
-
-					<StatusBar name="$parentmanaBar" inherits="XPerlRaidStatusBar">
-						<Size>
-							<AbsDimension x="70" y="7"/>
-						</Size>
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parenthealthBar" relativePoint="BOTTOMLEFT">
-								<Offset>
-									<AbsDimension x="0" y="0"/>
-								</Offset>
-							</Anchor>
-							<Anchor point="BOTTOMRIGHT" relativeTo="$parenthealthBar" relativePoint="BOTTOMRIGHT">
-								<Offset>
-									<AbsDimension x="0" y="-7"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<BarColor r="0" g="0" b="1"/>
-						<Scripts>
-							<OnLoad>
-								self:SetScale(0.7)
-							</OnLoad>
-						</Scripts>
-					</StatusBar>
-
-					<StatusBar name="$parentexpectedHealth" drawLayer="OVERLAY" hidden="true" setAllPoints="true">
+					<!-- Expected Health Bar -->
+					<StatusBar name="$parentexpectedHealth" drawLayer="BACKGROUND" hidden="true">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parenthealthBar">
 								<Offset>
@@ -232,7 +209,30 @@
 							</OnLoad>
 						</Scripts>
 					</StatusBar>
-
+					<!-- Mana Bar -->
+					<StatusBar name="$parentmanaBar" drawLayer="BACKGROUND" inherits="XPerlRaidStatusBar">
+						<Size>
+							<AbsDimension x="70" y="7"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parenthealthBar" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="BOTTOMRIGHT" relativeTo="$parenthealthBar" relativePoint="BOTTOMRIGHT">
+								<Offset>
+									<AbsDimension x="0" y="-7"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<BarColor r="0" g="0" b="1"/>
+						<Scripts>
+							<OnLoad>
+								self:SetScale(0.7)
+							</OnLoad>
+						</Scripts>
+					</StatusBar>
 					<Frame name="$parentready" hidden="true" setAllPoints="true" topLevel="true">
 						<Layers>
 							<Layer level="OVERLAY">
@@ -305,7 +305,9 @@
 	</Frame>
 
 	<Frame name="XPerl_Raid_TitleDragTemplate" clampedToScreen="true" movable="true" frameStrata="LOW" virtual="true">
-		<Size><AbsDimension x="80" y="10"/></Size>
+		<Size>
+			<AbsDimension x="80" y="10"/>
+		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT">
 				<Offset>
@@ -356,7 +358,9 @@
 				</Layers>
 			</Frame>
 			<Frame name="$parentVirtual" hidden="true">
-				<Size><AbsDimension x="80" y="10"/></Size>
+				<Size>
+					<AbsDimension x="80" y="10"/>
+				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentTitle"/>
 				</Anchors>

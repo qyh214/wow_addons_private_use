@@ -1,0 +1,13 @@
+tag v8
+52962382edc4b6d9a7b77d74b7183760b9cfe22b
+Mini_Dragon <projecteurs@gmail.com>
+2015-04-13 14:43:39 -0700
+
+Add some new voice(84747, 118038, 84746, 53480)
+
+
+--------------------
+
+Mini_Dragon:
+	- Update some
+	- 60100

@@ -5,9 +5,7 @@ LotteryItem = Addon:NewClass('LotteryItem', 'Button')
 
 GUI:Embed(LotteryItem, 'Refresh')
 
-function LotteryItem:Constructor(parent)
-    self:SetParent(parent)
-
+function LotteryItem:Constructor()
     local Background = self:CreateTexture(nil, 'BACKGROUND') do
         Background:SetTexture([[Interface\Store\Store-Main]])
         Background:SetTexCoord(0.18457031, 0.32714844, 0.64550781, 0.84960938)

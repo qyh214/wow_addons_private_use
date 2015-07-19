@@ -11,8 +11,9 @@ ADDON_REGIONSUPPORT = GetCurrentRegion() == 5
 ADDON_SERVER = 'S1' .. UnitFactionGroup('player')
 SERVER_TIMEOUT = 120
 
+_G.BINDING_NAME_MEETINGSTONE_TOGGLE = L['打开/关闭集合石']
+_G.BINDING_HEADER_NETEASE = '网易插件'
 _G.BINDING_HEADER_MEETINGSTONE = ADDON_TITLE
-_G.BINDING_NAME_MEETINGSTONE_TOGGLE = L['打开主界面']
 
 MAX_PLAYER_LEVEL = MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
 MAX_SEARCHBOX_HISTORY_LINES = 5
@@ -177,6 +178,7 @@ CATEGORY = {
             [14] = true,
             [15] = true,
             [67] = true,
+            [110] = true,
         },
         activities = {
             [398] = true,
@@ -466,3 +468,13 @@ SOURCE_ICONS = {
     [3] = [[Interface\AddOns\MeetingStone\Media\Mark\3]],
     [5] = [[Interface\AddOns\MeetingStone\Media\Mark\5]],
 }
+
+DEFAULT_SPAMWORD = [[
+!%d+元
+!tao.*bao
+!支.*付.*宝
+!淘.*宝
+5173
+平台
+门票
+]]

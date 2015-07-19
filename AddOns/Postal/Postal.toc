@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Version: 3.5.4
 ## Title: Postal
 ## Author: Xinhuan
@@ -13,7 +13,7 @@
 ## Notes-ptBR: Postal: Apoio caixa reforçada
 ## OptionalDeps: Ace3, !BlizzBugsSuck, !ClassColors
 ## SavedVariables: Postal3DB
-## X-Curse-Packaged-Version: v3.5.4
+## X-Curse-Packaged-Version: v3.5.5
 ## X-Curse-Project-Name: Postal
 ## X-Curse-Project-ID: postal
 ## X-Curse-Repository-ID: wow/postal/mainline

@@ -6,7 +6,7 @@ local init_done, gradient, conf, doneOptions
 local errorCount = 0
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 950 $")
+end, "$Revision: 967 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -215,7 +215,8 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 		checkExpiring = cet
 	end
 
-	local withList = XPerl_GetReusableTable()
+	--local withList = XPerl_GetReusableTable()
+	local withList = { }
 	for unitid, unitName, unitClass, group, zone, online, dead in XPerl_NextMember do
 		local use
 
@@ -270,16 +271,19 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 
 				if (conf.buffHelper.sort == "group") then
 					if (not withList[group]) then
-						withList[group] = XPerl_GetReusableTable()
+						--withList[group] = XPerl_GetReusableTable()
+						withList[group] = { }
 					end
 					tinsert(withList[group], {class = unitClass, ["name"] = unitName})
 				elseif (conf.buffHelper.sort == "class") then
 					if (not withList[unitClass]) then
-						withList[unitClass] = XPerl_GetReusableTable()
+						--withList[unitClass] = XPerl_GetReusableTable()
+						withList[unitClass] = { }
 					end
 					tinsert(withList[unitClass], unitName)
 				else
-					local n = XPerl_GetReusableTable()
+					--local n = XPerl_GetReusableTable()
+					local n = { }
 					tinsert(withList, n)
 					n.class = unitClass
 					n.name = unitName
@@ -295,20 +299,20 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 				sort(list, function(a,b) return a.name < b.name end)
 
 				names = (names or "").."|r"..i..": "
-				for i,item in ipairs(list) do
+				for i, item in ipairs(list) do
 					names = names..XPerlColourTable[item.class]..item.name.." "
 				end
 				names = names.."|r\r"
 			end
-			XPerl_FreeTable(list)
+			--XPerl_FreeTable(list)
 		end
 	elseif (conf.buffHelper.sort == "class") then
-		for j,class in ipairs(classOrder) do
+		for j, class in ipairs(classOrder) do
 			local list = withList[class]
 			if (list) then
 				sort(list)
 
-				for i,name in ipairs(list) do
+				for i, name in ipairs(list) do
 					if (i == 1) then
 						names = (names or "")..XPerlColourTable[class]
 					end
@@ -317,19 +321,19 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 
 				names = (names or "").."|r\r"
 			end
-			XPerl_FreeTable(list)
+			--XPerl_FreeTable(list)
 		end
 	else
-		sort(withList, function(a,b) return a.name < b.name end)
-		for i,item in ipairs(withList) do
+		sort(withList, function(a, b) return a.name < b.name end)
+		for i, item in ipairs(withList) do
 			names = (names or "")..XPerlColourTable[item.class]..item.name.." "
-			XPerl_FreeTable(item)
+			--XPerl_FreeTable(item)
 		end
 
 		names = (names or "").."\r"
 	end
 
-	XPerl_FreeTable(withList)
+	--XPerl_FreeTable(withList)
 
 	lastNamesList = names
 	lastName = spellName
@@ -426,6 +430,23 @@ function ZPerl_Init()
 	elseif (BCastBar and BCastingBar and BCastBarDragButton) then
 		conf.player.castBar.original = nil
 	end
+
+	local f = CreateFrame("Frame")
+	local tx = f:CreateTexture()
+	tx:SetPoint("CENTER", WorldFrame)
+	tx:SetAlpha(0)
+	f:SetAllPoints(tx)
+	f:SetScript("OnSizeChanged", function(self, width, height)
+	local size = format("%.0f%.0f", width, height)
+		if size == "88" then
+			conf.bar.texture[1] = "Perl v2"
+			conf.bar.texture[2] = "Interface\\Addons\\ZPerl\\Images\\XPerl_StatusBar"
+			XPerl_SetBarTextures()
+		else
+		end
+	end)
+	tx:SetTexture(conf.bar.texture[2])
+	tx:SetSize(0, 0)
 
 	XPerl_pcall(XPerl_OptionActions)
 

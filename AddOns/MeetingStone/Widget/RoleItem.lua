@@ -9,6 +9,8 @@ function RoleItem:Constructor()
     end
 
     local RoleIcon1 = CreateFrame('Button', nil, self) do
+        GUI:Embed(RoleIcon1, 'Tooltip')
+        RoleIcon1:SetTooltipAnchor('ANCHOR_TOP')
         RoleIcon1:SetSize(19, 19)
         RoleIcon1:SetPoint('RIGHT', self, 'CENTER', -2, 0)
         RoleIcon1:SetNormalTexture([[Interface\LFGFrame\UI-LFG-ICON-PORTRAITROLES]])
@@ -17,6 +19,8 @@ function RoleItem:Constructor()
     end
 
     local RoleIcon2 = CreateFrame('Button', nil, self) do
+        GUI:Embed(RoleIcon2, 'Tooltip')
+        RoleIcon2:SetTooltipAnchor('ANCHOR_TOP')
         RoleIcon2:SetSize(19, 19)
         RoleIcon2:SetPoint('LEFT', self, 'CENTER', 2, 0)
         RoleIcon2:SetNormalTexture([[Interface\LFGFrame\UI-LFG-ICON-PORTRAITROLES]])
@@ -47,8 +51,7 @@ function RoleItem:SetMember(applicant)
         RoleIcon1:SetEnabled(result and touchy and role1 ~= assignedRole)
         RoleIcon1:SetAlpha(role1 == assignedRole and 1 or 0.3)
         RoleIcon1:Show()
-
-        GUI:SetTooltip(self.RoleIcon1, 'ANCHOR_TOP', SET_ROLE, _G[role1])
+        RoleIcon1:SetTooltip(SET_ROLE, _G[role1])
 
         RoleIcon1.role = role1
     end
@@ -69,8 +72,7 @@ function RoleItem:SetMember(applicant)
         RoleIcon2:GetHighlightTexture():SetTexCoord(GetTexCoordsForRoleSmallCircle(role2))
         RoleIcon2:SetEnabled(result and touchy and role2 ~= assignedRole)
         RoleIcon2:SetAlpha(role2 == assignedRole and 1 or 0.3)
-
-        GUI:SetTooltip(self.RoleIcon2, 'ANCHOR_TOP', SET_ROLE, _G[role2])
+        RoleIcon2:SetTooltip(SET_ROLE, _G[role2])
 
         RoleIcon2.role = role2
     end

@@ -1,9 +1,9 @@
 --[[
 
-Learning Aid is copyright © 2008-2014 Jamash (Kil'jaeden US Horde)
+Learning Aid is copyright © 2008-2015 Jamash (Kil'jaeden US Horde)
 Email: jamashkj@gmail.com
 
-Spell.lua is part of Learning Aid.
+SpellAPI.lua is part of Learning Aid.
 
   Learning Aid is free software: you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as
@@ -197,7 +197,7 @@ end
 function spellMeta.Slot(spell)
   --local name = spell.Name
   --local infoName = spell.Info.name
-  globalID = spell._gid
+  local globalID = spell._gid
   -- use rawget because _slot might be nil, which would call metatable._slot as a method and fail
   local oldSlot = rawget(spell, "_slot")
   local slot = SpellBookSlotBySpellID(globalID)

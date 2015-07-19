@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(889, "DBM-Party-WoD", 2, 385)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14030 $"):sub(12, -3))
 mod:SetCreatureID(74790)
 mod:SetEncounterID(1654)
 mod:SetZone()
@@ -21,14 +21,14 @@ local warnUnstableSlag			= mod:NewSpellAnnounce(150677, 3)
 local warnMagmaEruption			= mod:NewSpellAnnounce(150784, 3)
 local warnMoltenCore			= mod:NewTargetAnnounce(150678, 2)
 
-local specWarnMoltenBlast		= mod:NewSpecialWarningInterrupt("OptionVersion2", 150677, "-Healer")
-local specWarnUnstableSlag		= mod:NewSpecialWarningSwitch("OptionVersion2", 150755, "Dps")
+local specWarnMoltenBlast		= mod:NewSpecialWarningInterrupt(150677, "-Healer", nil, 2)
+local specWarnUnstableSlag		= mod:NewSpecialWarningSwitch(150755, "Dps", nil, 2)
 local specWarnMagmaEruptionCast	= mod:NewSpecialWarningSpell(150784, nil, nil, nil, 2)
 local specWarnMagmaEruption		= mod:NewSpecialWarningMove(150784)
 local specWarnMoltenCore		= mod:NewSpecialWarningDispel(150678, "MagicDispeller")
 
 local timerMagmaEruptionCD		= mod:NewCDTimer(20, 150784)
-local timerUnstableSlagCD		= mod:NewCDTimer(20, 150755)
+local timerUnstableSlagCD		= mod:NewCDTimer(20, 150755, nil, nil, nil, 1)
 
 local countdownUnstableSlag		= mod:NewCountdown(20, 150755)
 
@@ -69,8 +69,11 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 150678 and not args:IsDestTypePlayer() then
-		warnMoltenCore:Show(args.destName)
-		specWarnMoltenCore:Show(args.destName)
+		if self.Options.SpecWarn150678dispel then
+			specWarnMoltenCore:Show(args.destName)
+		else
+			warnMoltenCore:Show(args.destName)
+		end
 		voiceMoltenCore:Play("dispelboss")
 	end
 end

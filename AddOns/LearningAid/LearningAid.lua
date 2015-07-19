@@ -1,8 +1,8 @@
 --[[
 
-Learning Aid version 1.12 Beta 1
-Compatible with World of Warcraft version 6.0.2
-Learning Aid is copyright © 2008-2014 Jamash (Kil'jaeden US Horde)
+Learning Aid version 1.12 Beta 3
+Compatible with World of Warcraft version 6.2.0
+Learning Aid is copyright Â© 2008-2015 Jamash (Kil'jaeden US Horde)
 Email: jamashkj@gmail.com
 
 LearningAid.lua is part of Learning Aid.
@@ -40,6 +40,12 @@ local addonName, private = ...
 private.debug = 0
 private.debugCount = 0
 private.debugLimit = 10000 -- how many lines of log to keep before deleting earliest line
+-- FIXME TODO -- Have a way to configure this
+private.debugWindow = ChatFrame6
+private.debugWindow:SetMaxLines(private.debugLimit)
+-- FIXME TODO --
+-- FIXME TODO --
+
 private.logAllEvents = false
 private.shadow = { }
 private.wrappers = { }
@@ -49,11 +55,11 @@ private.noLog = { -- do not log calls to these functions even when call logging 
   GetVisible = true,
   GetText = true,
   ListJoin = true,
+  UnlinkSpell = true,
+  RealSpellBookItemInfo = true
   --SpellInfo = true,
   --SpellBookInfo = true,
-  -- MOP -- PLAYER_GUILD_UPDATE = true,
-  -- MOP -- UpdateGuild = true,
-  -- PANDARIA -- COMPANION_UPDATE = true
+
 }
 
 local LA = { 
@@ -105,8 +111,10 @@ local LA = {
 --  petLearning = false,
   activatePrimarySpec = 63645, -- global spellID
   activateSecondarySpec = 63644, -- global spellID
-  racialSpell = 20549, -- War Stomp (Tauren)
-  racialPassiveSpell = 20550, -- Endurance (Tauren)
+  autoAttack = 6603, -- global spellID
+  autoShot = 75, -- global spellID
+  racialSpell = 20549, -- War Stomp (Tauren). Used to determine the subName text for racials.
+  racialPassiveSpell = 20550, -- Endurance (Tauren). Used to determine the subName text for racial passives.
   ridingSpells = {
     [33388] = true,  -- Apprentice (60% ground speed)
     [33391] = true,  -- Journeyman (100% ground speed)
@@ -239,9 +247,9 @@ function LA:Init()
   -- create lock button in the upper left corner of the frame
   local lockButton = CreateFrame("Button", nil, titleBar)
   self.lockButton = lockButton
-  lockButton:SetWidth(20)
-  lockButton:SetHeight(20)
-  lockButton:SetPoint("LEFT", titleBar, "LEFT", 15, 0)
+  lockButton:SetWidth(24)
+  lockButton:SetHeight(24)
+  lockButton:SetPoint("LEFT", titleBar, "LEFT", 18, -3)
   lockButton:SetNormalTexture("Interface/LFGFrame/UI-LFG-ICON-LOCK")
   lockButton:SetScript("OnClick", function() if self.saved.locked then self:Unlock() else self:Lock() end end)
   
@@ -285,7 +293,11 @@ function LA:Init()
       end
     end
   )
-
+  --[[
+  Due to lack of foresight, some options have negative implications.
+  shapeshift, if true, 
+  
+  ]]
   self.options = {
     handler = self,
     type = "group",
@@ -297,7 +309,7 @@ function LA:Init()
         set = function(info, val) if val then self:Lock() else self:Unlock() end end,
         get = function(info) return self.saved.locked end,
         width = "full",
-        order = 1
+        order = 40
       },
       restoreactions = {
         name = self:GetText("restoreActions"),
@@ -306,8 +318,9 @@ function LA:Init()
         set = function(info, val) self.saved.restoreActions = val end,
         get = function(info) return self.saved.restoreActions end,
         width = "full",
-        order = 2
+        order = 30
       },
+--[[ No longer needed as of patch 6.2.0!
       filter = {
         name = self:GetText("showLearnSpam"),
         desc = self:GetText("showLearnSpamHelp"),
@@ -331,15 +344,16 @@ function LA:Init()
           end
         end,
         get = function(info) return self.saved.filterSpam end,
-        order = 3
+        order = 20,
       },
+--]]
       reset = {
         name = self:GetText("resetPosition"),
         desc = self:GetText("resetPositionHelp"),
         type = "execute",
         func = "ResetFramePosition",
         --width = "full",
-        order = 4
+        order = 41
       },
       missing = {
         type = "group",
@@ -362,7 +376,7 @@ function LA:Init()
             set = function(info, val) self.saved.shapeshift = val end,
             get = function(info) return self.saved.shapeshift end,
             width = "full",
-            order = 3
+            order = 4
           },
           macros = {
             name = self:GetText("searchInsideMacros"),
@@ -371,24 +385,26 @@ function LA:Init()
             set = function(info, val) self.saved.macros = val end,
             get = function(info) return self.saved.macros end,
             width = "full",
-            order = 4
+            order = 3
           },
           ignore = {
             name = self:GetText("ignore"),
             desc = self:GetText("ignoreHelp"),
             type = "input",
             guiHidden = true,
-            set = "ChatCommandIgnore"
+            set = "ChatCommandIgnore",
+            order = 10
           },
           unignore = {
             name = self:GetText("unignore"),
             desc = self:GetText("unignoreHelp"),
             type = "input",
             guiHidden = true,
-            set = "ChatCommandUnignore"
+            set = "ChatCommandUnignore",
+            order = 11
           },
           unignoreall = {
-            order = 5,
+            order = 12,
             name = self:GetText("unignoreAll"),
             desc = self:GetText("unignoreAllHelp"),
             type = "execute",
@@ -411,8 +427,23 @@ function LA:Init()
         func = function() InterfaceOptionsFrame_OpenToCategory(self.optionsFrame) end,
         guiHidden = true
       },
+      copybar = {
+        name = self:GetText("copyActionBar"),
+        desc = self:GetText("copyActionBarHelp"),
+        guiHidden = true,
+        type = "input",
+        set = function (info, val) LA:CopyActionBar(val) end
+      },
+      pastebar = {
+        name = self:GetText("pasteActionBar"),
+        desc = self:GetText("pasteActionBarHelp"),
+        guiHidden = true,
+        type = "input",
+        set = function (info, val) LA:PasteActionBar(val) end
+      },
       advanced = {
         type = "group",
+        inline = true,
         name = self:GetText("advanced"),
         args = {
           framestrata = {
@@ -477,11 +508,11 @@ function LA:Init()
                 type = "execute",
                 func = function ()
                   local i = 1
-                  local spellName, spellRank = GetSpellBookItemName(i, BOOKTYPE_SPELL)
+                  local spellName = GetSpellBookItemName(i, BOOKTYPE_SPELL)
                   while spellName do
                     self:AddButton(self.Spell.Book[i])
                     i = i + 1
-                    spellName, spellRank = GetSpellBookItemName(i, BOOKTYPE_SPELL)
+                    spellName = GetSpellBookItemName(i, BOOKTYPE_SPELL)
                   end
                 end
               }
@@ -551,11 +582,10 @@ function LA:Init()
   end)
   ]]
   hooksecurefunc("SetCVar", function (cvar, value)
-    if cvar == nil then cvar = "" end
-    if value == nil then value = "" end
-    cvarLower = string.lower(cvar)
+    cvar = string.lower(tostring(cvar))
+    value = tostring(value)
     self:DebugPrint("SetCVar("..cvar..", "..value..")")
-    if cvarLower == "uiscale" or cvarLower == "useuiscale" then
+    if cvar == "uiscale" or cvar == "useuiscale" then
       self:AutoSetMaxHeight()
     end      
   end)
@@ -590,7 +620,7 @@ function LA:Init()
   local baseEvents = {
     "ACTIVE_TALENT_GROUP_CHANGED",
     "ADDON_LOADED",
-    "CHAT_MSG_SYSTEM",
+    -- DRAENOR 6.2 -- "CHAT_MSG_SYSTEM",
     -- PANDARIA -- "COMPANION_LEARNED",
     -- PANDARIA -- "COMPANION_UPDATE",
     "PET_TALENT_UPDATE",
@@ -639,30 +669,31 @@ function LA:Init()
     self.frame:SetFrameStrata(self.saved.frameStrata)
   end
 end
+--[[ No longer needed as of patch 6.2.0!
 
 -- this is a function
 function private.spellSpamFilter(...) return LA:spellSpamFilter(...) end
 
 -- this is a method
 function LA:spellSpamFilter(chatFrame, event, message, ...)
-  local spell
+  -- local spell -- unused
   local patterns = self.patterns
   if (self.saved.filterSpam ~= self.FILTER_SHOW_ALL) and (
-    (
-      self.state.untalenting or
-      self.state.retalenting or
-     (self.pendingTalentCount > 0) or
-     (self.saved.filterSpam == self.FILTER_SHOW_NONE) or
-      self.state.learning or
+    --(
+      --self.state.untalenting or
+      --self.state.retalenting or
+     --(self.pendingTalentCount > 0) or
+     --(self.saved.filterSpam == self.FILTER_SHOW_NONE) or
+      --self.state.learning or
 --      self.petLearning or
-      (self.pendingBuyCount > 0)
-    ) and (
+      --(self.pendingBuyCount > 0)
+    --) and (
       string.match(message, patterns.learnSpell) or 
       string.match(message, patterns.learnAbility) or
       string.match(message, patterns.learnPassive) or
-      string.match(message, patterns.unlearnSpell)
+      string.match(message, patterns.unlearnSpell) or
 --    )
-  ) or
+  --) or
     string.match(message, patterns.petLearnAbility) or
     string.match(message, patterns.petLearnSpell) or
     string.match(message, patterns.petUnlearnSpell)
@@ -674,7 +705,7 @@ function LA:spellSpamFilter(chatFrame, event, message, ...)
     return false, message, ... -- pass the message along
   end
 end
-
+--]]
 function LA:GetText(id, ...)
   if not id then
     if self.DebugPrint then
@@ -755,7 +786,7 @@ function LA:UpgradeIgnoreList()
   end
 end
 function LA:Ignore(spell)
-  if "SPELL" == spell.status then
+  if "SPELL" == spell.Status then
     self.ignore[spell.ID] = true
   end
   -- FIXME FIXME FIXME -- do something with flyouts
@@ -824,10 +855,10 @@ function LA:IsIgnored(spell)
   --end
 end
 function LA:ToggleIgnore(spell)
-  if self:IsIgnored(spell.ID) then
-    self:Unignore(spell.ID)
+  if self:IsIgnored(spell) then
+    self:Unignore(spell)
   else
-    self:Ignore(spell.ID)
+    self:Ignore(spell)
   end
 end
 function LA:UnignoreAll()
@@ -888,6 +919,7 @@ function LA:ProcessQueue()
     wipe(self.queue)
   end
 end
+-- Possibly obsolete as of 6.2.0
 function LA:FormatSpells(t)
   local str = ""
   for i, spell in ipairs(t) do
@@ -902,28 +934,37 @@ end
 local function spellCompare (a,b)
   return a.SpecName < b.SpecName
 end
+--[[ No longer needed as of patch 6.2.0!
+
 function LA:PrintPending()
   local learned = self.spellsLearned
   local unlearned = self.spellsUnlearned
+  self:DebugPrint('Learned '..(#learned)..', unlearned '..#unlearned)
   if self.saved.filterSpam == self.FILTER_SUMMARIZE then
     -- lots of work just to remove stuff that's unlearned and then immediately relearned
     if #learned > 0 and #unlearned > 0 then
+      self:DebugPrint('Removing duplicate spells')
       local spells = { }
       local learnedDupes = { }
       local unlearnedDupes = { }
-      local name
+      local specName
+      -- Create a lookup table of "SpellSpecName" = n for each index in 
+      -- LA.spellsLearned[] and LA.spellsUnlearned[]
       for index, spell in ipairs(learned) do
         spells[spell.SpecName] = index
       end
       for index, spell in ipairs(unlearned) do
-        name = spell.SpecName
-        if spells[name] then
-          tinsert(learnedDupes, spells[name])
-          tinsert(unlearnedDupes, index) -- do not disturb the table while traversing it
+        specName = spell.SpecName
+        if spells[specName] then
+          -- do not disturb the table while traversing it
+          tinsert(learnedDupes, spells[specName])
+          tinsert(unlearnedDupes, index)
         end
       end
+      -- Ensure the indices are in order
       table.sort(learnedDupes)
-      for i = #learnedDupes, 1, -1 do -- go backwards so later indices don't change when removing earlier elements
+      -- go backwards so later indices don't change when removing earlier elements
+      for i = #learnedDupes, 1, -1 do 
         tremove(learned, learnedDupes[i])
       end
       table.sort(unlearnedDupes)
@@ -956,7 +997,7 @@ function LA:PrintPending()
   wipe(self.spellsUnlearned)
   wipe(self.pendingTalents)
 end
-
+--]]
 
 function LA:OnShow()
   -- PANDARIA -- self:RegisterEvent("COMPANION_UPDATE", "OnEvent")

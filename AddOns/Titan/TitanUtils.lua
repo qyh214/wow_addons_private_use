@@ -1412,7 +1412,7 @@ function TitanUtils_RegisterPluginList()
 	local id
 	local cnt = 0
 	if TitanPluginToBeRegisteredNum > 0 then
-		if not Titan__InitializedPEW then
+		if not Titan__InitializedPEW and not TitanAllGetVar("Silenced") then
 			TitanDebug(L["TITAN_PANEL_REGISTER_START"], "normal")
 		end
 		for index, value in ipairs(TitanPluginToBeRegistered) do
@@ -1421,7 +1421,7 @@ function TitanUtils_RegisterPluginList()
 			end
 			cnt = cnt + 1
 		end
-		if not Titan__InitializedPEW then
+		if not Titan__InitializedPEW and not TitanAllGetVar("Silenced") then
 			TitanDebug((L["TITAN_PANEL_REGISTER_END"].." "..cnt), "normal")
 		end
 	end
@@ -1874,6 +1874,15 @@ function TitanDebug(debug_message, debug_type)
 		time_stamp = ""
 	else
 		time_stamp = TitanUtils_GetGoldText(date("%H:%M:%S")..": ")
+	end
+	if debug_message == true then
+		debug_message = "<true>";
+	end
+	if debug_message == false then
+		debug_message = "<false>";
+	end
+	if debug_message == nil then
+		debug_message = "<nil>";
 	end
 
 	msg =

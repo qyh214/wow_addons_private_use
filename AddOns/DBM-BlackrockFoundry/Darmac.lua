@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod(1122, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13543 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14080 $"):sub(12, -3))
 mod:SetCreatureID(76865)--No need to add beasts to this. It's always main boss that's engaged first and dies last.
 mod:SetEncounterID(1694)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
 mod:SetHotfixNoticeRev(12975)
+mod.respawnTime = 29.5
 
 mod:RegisterCombat("combat")
 
@@ -40,45 +41,45 @@ local warnCrushArmor				= mod:NewStackAnnounce(155236, 2, nil, "Tank")
 local warnStampede					= mod:NewSpellAnnounce(155247, 3)
 
 --Boss basic attacks
-local specWarnCallthePack			= mod:NewSpecialWarningSwitch("OptionVersion2", 154975, "Tank", nil, nil, nil, nil, 2)
-local specWarnPinDown				= mod:NewSpecialWarningSpell("OptionVersion3", 154960, "Ranged", nil, nil, 2, nil, 2)
+local specWarnCallthePack			= mod:NewSpecialWarningSwitch(154975, "Tank", nil, 2, nil, 2)
+local specWarnPinDown				= mod:NewSpecialWarningSpell(154960, "Ranged", nil, 3, 2, 2)
 local yellPinDown					= mod:NewYell(154960)
 --Boss gained abilities (beast deaths grant boss new abilities)
-local specWarnRendandTear			= mod:NewSpecialWarningMove(155385, "Melee", nil, nil, nil, nil, 2)--Always returns to melee (tank)
+local specWarnRendandTear			= mod:NewSpecialWarningMove(155385, "Melee", nil, nil, nil, 2)--Always returns to melee (tank)
 local specWarnSuperheatedShrapnel	= mod:NewSpecialWarningDodge(155499, nil, nil, nil, 2)
 local specWarnFlameInfusion			= mod:NewSpecialWarningMove(155657)
-local specWarnTantrum				= mod:NewSpecialWarningCount(162275, nil, nil, nil, 2, nil, 2)
+local specWarnTantrum				= mod:NewSpecialWarningCount(162275, nil, nil, nil, 2, 2)
 local specWarnEpicenter				= mod:NewSpecialWarningMove(159043)
 local specWarnSuperheatedScrap		= mod:NewSpecialWarningMove(156823)
 local yellSuperheated				= mod:NewYell(156823)
 --Beast abilities (living)
 local specWarnSavageHowl			= mod:NewSpecialWarningTarget(155198, "Tank|Healer")
-local specWarnSavageHowlDispel		= mod:NewSpecialWarningDispel("OptionVersion2", 155198, "RemoveEnrage", nil, nil, nil, nil, 2)
+local specWarnSavageHowlDispel		= mod:NewSpecialWarningDispel(155198, "RemoveEnrage", nil, 2, nil, 2)
 local specWarnConflag				= mod:NewSpecialWarningDispel(155399, false)--Just too buggy, cast 3 targets, but can be as high as 5 seconds apart, making warning very spammy. Therefor, MUST stay off by default to reduce DBM spam :\
 local specWarnSearingFangs			= mod:NewSpecialWarningStack(155030, nil, 12)--Stack count assumed, may be 2
 local specWarnSearingFangsOther		= mod:NewSpecialWarningTaunt(155030)--No evidence of this existing ANYWHERE in any logs. removed? Bugged?
 local specWarnInfernoPyre			= mod:NewSpecialWarningMove(156824)
 local specWarnCrushArmor			= mod:NewSpecialWarningStack(155236, nil, 3)--6-9 second cd, 15 second duration, 3 is smallest safe swap, sometimes 2 when favorable RNG
-local specWarnCrushArmorOther		= mod:NewSpecialWarningTaunt(155236)
-local specWarnInfernoBreath			= mod:NewSpecialWarningDodge(154989, nil, nil, nil, 2, nil, 2)
+local specWarnCrushArmorOther		= mod:NewSpecialWarningTaunt(155236, nil, nil, nil, nil, 2)
+local specWarnInfernoBreath			= mod:NewSpecialWarningDodge(154989, nil, nil, nil, 2, 2)
 local yellInfernoBreath				= mod:NewYell(154989)
 
 --Boss basic attacks
 mod:AddTimerLine(CORE_ABILITIES)--Core Abilities
-local timerPinDownCD				= mod:NewCDTimer("OptionVersion2", 19.7, 155365, nil, "Ranged")--Every 19.7 seconds unless delayed by other things. CD timer used for this reason
-local timerCallthePackCD			= mod:NewCDTimer("OptionVersion2", 31.5, 154975, nil, "Tank")--almost always 31, but cd resets to 11 whenever boss dismounts a beast (causing some calls to be less or greater than 31 seconds apart. In rare cases, boss still interrupts his own cast/delays cast even when not caused by gaining beast buff
+local timerPinDownCD				= mod:NewCDTimer(19.7, 155365, nil, "Ranged", 2)--Every 19.7 seconds unless delayed by other things. CD timer used for this reason
+local timerCallthePackCD			= mod:NewCDTimer(31.5, 154975, nil, "Tank", 2, 1)--almost always 31, but cd resets to 11 whenever boss dismounts a beast (causing some calls to be less or greater than 31 seconds apart. In rare cases, boss still interrupts his own cast/delays cast even when not caused by gaining beast buff
 --Boss gained abilities (beast deaths grant boss new abilities)
 mod:AddTimerLine(SPELL_BUCKET_ABILITIES_UNLOCKED)--Abilities Unlocked
-local timerRendandTearCD			= mod:NewCDTimer(12, 155385)
-local timerSuperheatedShrapnelCD	= mod:NewCDTimer(14.2, 155499)
-local timerTantrumCD				= mod:NewNextCountTimer(29.5, 162275)
+local timerRendandTearCD			= mod:NewCDTimer(12, 155385, nil, nil, nil, 3)
+local timerSuperheatedShrapnelCD	= mod:NewCDTimer(14.2, 155499, nil, nil, nil, 3)
+local timerTantrumCD				= mod:NewNextCountTimer(29.5, 162275, nil, nil, nil, 2)
 local timerEpicenterCD				= mod:NewCDCountTimer(19.5, 159043, nil, "Melee")
 --Beast abilities (living)
 mod:AddTimerLine(BATTLE_PET_DAMAGE_NAME_8)--Beast
-local timerSavageHowlCD				= mod:NewCDTimer("OptionVersion2", 25, 155198, nil, "Healer|Tank|RemoveEnrage")
-local timerConflagCD				= mod:NewCDTimer("OptionVersion2", 20, 155399, nil, "Healer")
-local timerStampedeCD				= mod:NewCDTimer(20, 155247)--20-30 as usual
-local timerInfernoBreathCD			= mod:NewNextTimer(20, 154989)
+local timerSavageHowlCD				= mod:NewCDTimer(25, 155198, nil, "Healer|Tank|RemoveEnrage", 2, 5)
+local timerConflagCD				= mod:NewCDTimer(20, 155399, nil, "Healer", 2, 5)
+local timerStampedeCD				= mod:NewCDTimer(20, 155247, nil, nil, nil, 3)--20-30 as usual
+local timerInfernoBreathCD			= mod:NewNextTimer(20, 154989, nil, nil, nil, 3)
 
 local berserkTimer					= mod:NewBerserkTimer(720)
 
@@ -86,7 +87,7 @@ local countdownPinDown				= mod:NewCountdown(19.7, 154960, "Ranged")
 local countdownCallPack				= mod:NewCountdown("Alt31", 154975, "Tank")
 local countdownEpicenter			= mod:NewCountdown("AltTwo20", 159043, "Melee")
 
-local voiceCallthePack				= mod:NewVoice("OptionVersion2", 154975, "Tank") --killmob
+local voiceCallthePack				= mod:NewVoice(154975, "Tank", nil, 2) --killmob
 local voiceSavageHowl				= mod:NewVoice(155198, "RemoveEnrage") --trannow
 local voicePinDown					= mod:NewVoice(154960, "Ranged") --helpme
 local voiceInfernoBreath			= mod:NewVoice(154989) --breathsoon
@@ -201,7 +202,7 @@ function mod:SuperheatedTarget(targetname, uId)
 	end
 	if self.Options.HudMapOnBreath then
 		--Static marker, breath doesn't move once a target is picked. it's aimed at static location player WAS
-		DBMHudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5):Pulse(0.5, 0.5)
+		DBMHudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
 	end
 end
 
@@ -213,7 +214,7 @@ function mod:BreathTarget(targetname, uId)
 	end
 	if self.Options.HudMapOnBreath then
 		--Static marker, breath doesn't move once a target is picked. it's aimed at static location player WAS
-		DBMHudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5):Pulse(0.5, 0.5)
+		DBMHudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
 	end
 end
 
@@ -323,27 +324,33 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 155030 then
 		local amount = args.amount or 1
 		if amount % 3 == 0 and amount >= 12 then--Stack assumed, may need revising
-			warnSearingFangs:Show(args.destName, amount)
 			if amount >= 12 then
 				if args:IsPlayer() then
 					specWarnSearingFangs:Show(amount)
 				else
-					if not UnitDebuff("player", GetSpellInfo(155030)) and not UnitIsDeadOrGhost("player") then
+					if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 						specWarnSearingFangsOther:Show(args.destName)
+					else
+						warnSearingFangs:Show(args.destName, amount)
 					end
 				end
+			else
+				warnSearingFangs:Show(args.destName, amount)
 			end
 		end
 	elseif spellId == 155236 then
 		local amount = args.amount or 1
-		warnCrushArmor:Show(args.destName, amount)
 		if amount >= 3 and args:IsPlayer() then
 			specWarnCrushArmor:Show(amount)
 		elseif amount >= 2 and not args:IsPlayer() then--Swap at 2 WHEN POSSIBLE but 50/50 you have to go to 3.
 			if not UnitDebuff("player", GetSpellInfo(155236)) and not UnitIsDeadOrGhost("player") then
 				specWarnCrushArmorOther:Show(args.destName)
+			else
+				warnCrushArmor:Show(args.destName, amount)
 			end
 			voiceCrushArmor:Play("changemt")
+		else
+			warnCrushArmor:Show(args.destName, amount)
 		end
 	elseif args:IsSpellID(155458, 155459, 155460, 155462, 163247) then
 		DBM:Debug("SPELL_AURA_APPLIED, Boss absorbing beast abilities", 2)

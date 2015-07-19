@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Omen", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13232 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14030 $"):sub(12, -3))
 mod:SetCreatureID(15467)
 mod:SetModelID(15879)
 mod:SetReCombatTime(10)
@@ -21,8 +21,8 @@ local warnStarfall				= mod:NewSpellAnnounce(26540, 3)
 
 local specWarnStarfall			= mod:NewSpecialWarningMove(26540)
 
-local timerCleaveCD				= mod:NewCDTimer(8.5, 104903)
-local timerStarfallCD			= mod:NewCDTimer(15, 26540)
+local timerCleaveCD				= mod:NewCDTimer(8.5, 104903, nil, nil, nil, 6)
+local timerStarfallCD			= mod:NewCDTimer(15, 26540, nil, nil, nil, 2)
 
 function mod:OnCombatStart(delay)
 	timerCleaveCD:Start(10.5-delay)--Consistent?

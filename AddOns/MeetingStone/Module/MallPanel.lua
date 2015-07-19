@@ -36,11 +36,15 @@ function MallPanel:OnInitialize()
             button:SetText(data.text)
             button:SetIcon(data.coord)
             button:SetNew(data.new)
+            button:SetBlue(data.text == TOKEN_FILTER_LABEL)
         end)
         CategoryList:SetCallback('OnSelectChanged', function(CategoryList, index, data)
             self:UpdateWindow()
             self.ItemList:SetItemList(data.item)
             self.ItemList:Refresh()
+            if type(data.update) == 'function' then
+                data.update()
+            end
         end)
     end
 
@@ -62,12 +66,7 @@ function MallPanel:OnInitialize()
         ItemList:SetSelectMode('RADIO')
         ItemList:SetItemHighlightWithoutChecked(true)
         ItemList:SetCallback('OnItemFormatted', function(ItemList, button, data)
-            button:SetItem(data.itemId)
-            button:SetModel(data.model)
-            button:SetText(data.name)
-            button:SetIcon(data.icon)
-            button:SetPrice(data.price, data.originalPrice)
-            button:SetStartTime(data.startTime)
+            button:SetData(data)
         end)
         ItemList:SetCallback('OnItemEnter', function(ItemList, button, data)
             button:SetMagnifier(true)
@@ -78,7 +77,7 @@ function MallPanel:OnInitialize()
             GameTooltip:Hide()
         end)
         ItemList:SetCallback('OnSelectChanged', function(ItemList, index, data)
-            self:UpdateWindow()
+            self:UpdateWindow(data)
         end)
     end
 
@@ -113,6 +112,7 @@ function MallPanel:OnInitialize()
         PurchaseButton:SetScript('OnClick', function()
             self:Purchase()
         end)
+        MagicButton_OnLoad(PurchaseButton)
 
         local PurchaseButtonFlashFrame = CreateFrame('Frame', nil, PurchaseButton)
         PurchaseButtonFlashFrame:SetAllPoints(true)
@@ -170,8 +170,25 @@ function MallPanel:OnInitialize()
     ExchangePanel:SetCover(true, L.GoodsLoadingSummary)
 end
 
-function MallPanel:UpdateWindow()
-    self.PurchaseButton:SetEnabled(self:GetItem())
+function MallPanel:UpdateWindow(data)
+    if data and data.itemId == WOW_TOKEN_ITEM_ID then
+        if data.status() then
+            local price = data.price()
+            local enable = price and GetMoney() >= price
+            self.PurchaseButton:SetEnabled(enable)
+            self.PurchaseButton:SetText(enable and L['立即兑换'] or ERR_NOT_ENOUGH_GOLD)
+            self.PurchaseButton:SetScript('OnClick', data.buyout)
+        else
+            self.PurchaseButton:Disable()
+            self.PurchaseButton:SetText(TOKEN_MARKET_PRICE_NOT_AVAILABLE)
+        end
+    else
+        self.PurchaseButton:SetEnabled(self:GetItem())
+        self.PurchaseButton:SetText(L['立即兑换'])
+        self.PurchaseButton:SetScript('OnClick', function()
+            self:Purchase()
+        end)
+    end
 end
 
 function MallPanel:UnlockQueryButton()
@@ -282,7 +299,32 @@ function MallPanel:PurchaseResult(event, result, reply)
     end
 end
 
+local WOWTOKEN = {
+    text = TOKEN_FILTER_LABEL,
+    new = true,
+    coord = MALL_CATEGORY_ICON_LIST[6],
+    update = C_WowTokenPublic.UpdateMarketPrice,
+    item = {
+        {
+            itemId = WOW_TOKEN_ITEM_ID,
+            price = C_WowTokenPublic.GetCurrentMarketPrice,
+            status = C_WowTokenPublic.GetCommerceSystemStatus,
+            buyout = function(button)
+                AuctionFrame_LoadUI()
+                C_WowTokenPublic.BuyToken()
+                button:Disable()
+            end,
+            update = C_WowTokenPublic.UpdateMarketPrice,
+            event = 'TOKEN_MARKET_PRICE_UPDATED',
+        },
+    },
+}
+
 function MallPanel:MallDataUpdated(event, list, isNew)
+    if type(list) == 'table' then
+        tinsert(list, WOWTOKEN)
+    end
+
     self.CategoryList:SetItemList(list)
     self.CategoryList:SetSelected(1)
     self:SetCover(false)

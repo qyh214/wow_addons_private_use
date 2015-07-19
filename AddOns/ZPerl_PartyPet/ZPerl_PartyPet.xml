@@ -2,7 +2,7 @@
 
 	<Script file="ZPerl_PartyPet.lua"/>
 
-	<Button name="XPerl_Party_Pet_FrameTemplate" inherits="SecureUnitButtonTemplate" clampedToScreen="true" frameStrata="LOW" hidden="true" movable="false" virtual="true">
+	<Button name="XPerl_Party_Pet_FrameTemplate" inherits="SecureUnitButtonTemplate" frameStrata="LOW" hidden="true" movable="false" virtual="true">
 		<Size>
 			<AbsDimension x="80" y="55"/>
 		</Size>

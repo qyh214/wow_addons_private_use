@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(893, "DBM-Party-WoD", 2, 385)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12926 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14030 $"):sub(12, -3))
 mod:SetCreatureID(74366, 74475)--74366 Forgemaster Gog'duh, 74475 Magmolatus
 mod:SetEncounterID(1655)
 mod:SetMainBossID(74475)
@@ -36,7 +36,7 @@ local specWarnSlagSmash			= mod:NewSpecialWarningDodge(150023, "Melee")
 local specWarnMoltenImpact		= mod:NewSpecialWarningSpell(150038, nil, nil, nil, 2)
 local specWarnWitheringFlames	= mod:NewSpecialWarningDispel(150032, "Healer")
 
-local timerMoltenImpactCD		= mod:NewNextTimer(21.5, 150038)
+local timerMoltenImpactCD		= mod:NewNextTimer(21.5, 150038, nil, nil, nil, 1)
 
 local voiceRuination			= mod:NewVoice("ej8622", "-Healer")
 local voiceCalamity				= mod:NewVoice("ej8626", "-Healer")

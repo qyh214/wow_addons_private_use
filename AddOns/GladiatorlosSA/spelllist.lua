@@ -14,10 +14,10 @@
 			[50334] = "berserk", -- 狂暴
 			[69369] = "predatorSwiftness", -- PredatorSwiftness 猛獸迅捷
 				-- Mist of Pandaria
-			[124974] = "natureVigil", --
-			[112071] = "celestialAlignment", --
+			[124974] = "natureVigil",
+			[112071] = "celestialAlignment",
 			[102342] = "ironBark",
-			[102351] = "canarionWard", -- ZAdded
+			[102351] = "canarionWard",
 				-- WoD
 			[155835] = "BristlingFur",
 			
@@ -31,8 +31,8 @@
 			[31884] = "avengingWrath",
 			[31842] = "divineFavor",
 				-- Mist of pandaria
-			[114039] = "handOfPurity", --
-			[105809] = "holyAvenger",--
+			[114039] = "handOfPurity",
+			[105809] = "holyAvenger",
 			[114917] = "healingExecution",
 				-- WoD
 			[152262] = "Seraphim",
@@ -62,6 +62,7 @@
 			[12328] = "sweepingStrikes", -- 橫掃攻擊
 			[46924] = "bladestorm", -- 劍刃風暴
 			[1719] = "recklessness", -- 魯莽
+			[118038] = "dieByTheSword", -- add 2.3.6
 				-- Mist of pandaria
 			[114029] = "safeguard",
 			[114030] = "vigilance",
@@ -166,6 +167,7 @@
 			[51690] = "killingSpreeDown", -- added to 2.2.2
 			[114030] = "vigilanceDown",
 			[84747] = "deepInsightDown",
+			[118038] = "dieByTheSwordDown", -- add 2.3.6
 				-- Mist of pandaria
 			[108271] = "astralShiftDown",
 			[120954] = "fortifyingBrewDown",
@@ -192,12 +194,12 @@
 				-- OLD
 			[33786] = "cyclone", -- 吹風
 				-- Mist of pandaria
-			[339] = "entanglingRoots", --
+			[339] = "entanglingRoots",
 
 			--paladin
 				-- Mist of pandaria
 			[20066] = "repentance", -- 懺悔
-			[115750] = "blindingLight", -- 
+			[115750] = "blindingLight",
 
 			--rogue
 
@@ -265,18 +267,18 @@
 			[740] = "tranquility",
 			[78675] = "solarBeam", -- 太陽光束
 				-- Mist of pandaria
-			[102280] = "displacerBeast", --
-			[108238] = "renewal", --
-			[102359] = "massEntanglement", --
-			[33831] = "fNatureRoot", --
-			[102703] = "fNatureStun", --
-			[102693] = "fNatureHealing", --
-			[102706] = "fNatureProtect", --
-			[99] = "disorientingRoar", --
-			[5211] = "mightyBash", --
-			[102560] = "incarnationElune", --
-			[102543] = "incarnationKitty", --
-			[102558] = "incarnationUrsoc", --
+			[102280] = "displacerBeast",
+			[108238] = "renewal",
+			[102359] = "massEntanglement",
+			[33831] = "fNatureRoot",
+			[102703] = "fNatureStun",
+			[102693] = "fNatureHealing",
+			[102706] = "fNatureProtect",
+			[99] = "disorientingRoar",
+			[5211] = "mightyBash",
+			[102560] = "incarnationElune",
+			[102543] = "incarnationKitty",
+			[102558] = "incarnationUrsoc",
 			[33891] = "incarnationTree",
 			[102417] = "wildCharge",
 			[102383] = "wildCharge",
@@ -292,7 +294,7 @@
 			[853] = "hammerofjustice", -- 制裁			
 			[31821] = "auraMastery", -- 光環精通
 				-- Mist of pandaria
-			[105593] = "fistOfJustice", --
+			[105593] = "fistOfJustice",
 			[85499] = "speedOfLight",
 
 			--rogue
@@ -310,7 +312,7 @@
 			[97462] = "rallyingCry", -- 集結怒吼
 			[5246] = "fear3", -- 破膽怒吼
 			[6552] = "pummel", -- 拳擊
-			[107566] = "staggeringShout", --
+			[107566] = "staggeringShout",
 			[2457] = "battlestance", -- 戰鬥姿態
 			[71] = "defensestance", -- 防禦姿態
 				-- Mist of pandaria				

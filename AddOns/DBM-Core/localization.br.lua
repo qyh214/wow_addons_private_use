@@ -16,8 +16,6 @@ DBM_CORE_LOAD_SKIN_COMBAT			= "Os DBM temporizadores falharam em aparecer em com
 DBM_CORE_BAD_LOAD					= "DBM detectou que a sua mod desta área falhou ao tentar carregar por completo por estar em combate. Use o comando /reloadui assim que sair de combate para corrigir o problema."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s não foi carregado por não cumprir os requerimentos. Uma atualização da mod é necessária. Obrigado."
 
-DBM_CORE_BLIZZ_BUGS					= "Blizzard mudanças para addons na 6.0:\n1. Caso você jogue com efeitos sonoros habilitados, poderá 'perder' os de addons em combate, se os mesmos excederem o numero máximo de canais de sons. Para tentar corrigir isso, DBM agora força os canais de sons em 64, caso o perda de sim persista a única solução e desabilitar efeitos sonoros por completo."
-
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM desabilitou o quadro de alcance dinâmico nesta luta, por falta de informação sobre o numero de jogadores à ficarem amontoados para um grupo desse tamanho."
 
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM desabilitou aviso da contagem de adds nesta luta, por falta de informação da quantidade de adds para um grupo deste tamanho."
@@ -238,7 +236,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.cd			= "%s recarrega"
 DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "%s recarrega (%%d)"
 DBM_CORE_AUTO_TIMER_TEXTS.cdsource		= "%s recarrega: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.next			= "Próx. %s"
-DBM_CORE_AUTO_TIMER_TEXTS.nextcount		= "Próx. %s (%%d)"
+DBM_CORE_AUTO_TIMER_TEXTS.nextcount		= "Próx. %s (%%s)"
 DBM_CORE_AUTO_TIMER_TEXTS.nextsource	= "Próx %s: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.achievement	= "%s"
 
@@ -338,8 +336,6 @@ DBM_ARROW_ERROR_USAGE	= {
 }
 
 DBM_SPEED_KILL_TIMER_TEXT	= "Vitória em tempo recorde"
-DBM_SPEED_KILL_TIMER_OPTION	= "Exibir cronógrafo para bater sua vitória mais rápida"
-
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s solicitou suas IDs de instância e progresso atuais.\nVocê deseja enviar essa informação para %s? Ele(a) poderá requisitar essa informação durante a sessão atual (i. e. até que você reconecte)."
 DBM_ERROR_NO_RAID					= "Você precisa estar em um grupo de raide para utilizar essa funcionalidade."

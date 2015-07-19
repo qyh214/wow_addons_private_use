@@ -1,7 +1,47 @@
-==GarrisonCommander helps you when choosing the right follower for the right mission==
-* 2.4.7
+*GarrisonCommander helps you when choosing the right follower for the right mission*
+
+* *2.6.8*
+Fix: Works even if some naval mission onclick is hijacked
+
+* *2.6.7*
+Feature: Shipyard mission autofill!! See the success chance in map and have your fleet automagically setup
+Fix: Consolidate broker colours for buttons, Now, red, always means ypu need to check it
+
+* *2.6.6*
+Feature: Quick mission completion enabled for shipyard\
+Feature: In Ship missions mission expire time added
+Fix: Sometimes interacting with shipyard raised a protection issue
+Change: I could not verify if "Improved logistic" actuall works so I removed that check from Broker. Cache size will be 500 or 1000
+More shipyard features incoming
+
+* *2.6.5*
+Feature: Garrison Broker is now aware of enhanced Garrison Cache sizes (750 and 1000)
+Feature: Ship list enhanced with "xp to go"
+I started working on shipyard
+
+* *2.6.4*
+Completed traits list in follower page for both Horde and Alliance
+Added Seal of Tempered Fate as a unique category in mission control
+
+* *2.6.3*
+Added Draenic Weaponry and Draenic Armor Set to the enhancement list
+
+* *2.6.2*
+Fixed all raised issues both from Curse comments and from CurseForge tickets
+
+* *2.6.0*
+Feature: priorities and allowed items are now the in the same list. Drag items around to change priorities
+Feature: Should now try more aggressively to maximise outcome of gold,oil and resources missions
+Feature: In follower page, a list of trait is shown in the bottom. It works like the one for abilities
+Feature: Tooltip enhancement can be disabled
+Fix: In "Other Useful followers" list in tooltip, inactive followers are no longer shown
+
+* *2.5.0*
+Greatly improved matchmaking
+Mission control: unified priorities and allowed itmes. Now you can just drag items around to change priority
+* *2.4.7*
 Fix: Sometimes daily reset was not fired at dure time
 Feature: Redone all buttomns to be more consistent. Old behaviour configurable via options
 Feature: Update frequency is now configurable.
 Feature: Right clicking on any button open menu
-Feature: To manually register ah harvest as done or undone you need now to keep shift pressed
+Feature: To manually register an harvest as done or undone you need now to keep shift pressed

@@ -1,3 +1,7 @@
+TipTacTalents Changes | 2015 Jul 02
+-----------------------------------
+- TOC version changed to 60200 for the 6.2 patch.
+
 TipTacTalents Changes | 2015 Mar 04
 -----------------------------------
 - TOC version updated to 60100 for the 6.1 patch.

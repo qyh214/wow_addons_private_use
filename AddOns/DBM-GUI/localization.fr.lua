@@ -163,7 +163,6 @@ L.BarSort					= "Classer en fonction du temps restant" --was missing
 -- Tab: Spec Warn Frame
 L.Panel_SpecWarnFrame		= "Alertes spéciales"
 L.Area_SpecWarn				= "Options des alertes spéciales"
-L.SpecWarn_Enabled			= "Afficher des alertes spéciales pour les techniques des boss"
 L.SpecWarn_FlashFrame		= "Faire flasher l'écran lors des alertes spéciales"
 L.SpecWarn_FlashFrameRepeat	= "Répéter %d fois (si activé)" --was missing
 L.ShowSWarningsInChat 		= "Afficher les alertes spéciales dans la fenêtre de discussion"
@@ -212,7 +211,6 @@ L.BarWidth					= "Longueur des barres : %d"
 L.Panel_SpamFilter				= "Filtres globaux et de spam"
 L.Area_SpamFilter_Outgoing		= "Options des filtres globaux"
 L.SpamBlockNoShowAnnounce		= "Ne pas afficher d'annonces ou jouer de sons d'alerte"
-L.SpamBlockNoSendWhisper		= "Ne pas chuchoter les alertes boss aux autres joueurs"
 L.SpamBlockNoSetIcon			= "Ne pas placer d'icônes sur les cibles"
 L.SpamBlockNoRangeFrame			= "Ne pas afficher le cadre des portées"
 L.SpamBlockNoInfoFrame			= "Ne pas afficher le cadre d'information"

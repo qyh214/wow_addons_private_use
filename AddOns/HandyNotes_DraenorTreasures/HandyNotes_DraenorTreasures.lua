@@ -15,11 +15,14 @@ local PlayerFaction, _ = UnitFactionGroup("player")
 DraenorTreasures.nodes = { }
 local nodes = DraenorTreasures.nodes
 local isTomTomloaded = false
+local isDBMloaded = false
 
 if (IsAddOnLoaded("TomTom")) then 
 	isTomTomloaded = true
 end
-
+if (IsAddOnLoaded("DBM-Core")) then 
+	isDBMloaded = true
+end
 
 nodes["ShadowmoonValleyDR"] = {
 --SMV Treasures
@@ -556,8 +559,124 @@ nodes["NagrandDraenor"] = {
 [41004400]={ "37226", "Xelganak", "Reputation Item for Steamwheedle Preservation Society", "", "swprare", "NagrandSWP","118661"},
 }
 nodes["TanaanJungle"] = {
---TanaanJungleRares
+[15005440]={ "38754", "Axe of Weeping Wolf", "i650 Strength 2H Axe", "First floor of north-east tower", "default", "TanaanTreasures","127325"},
+[15905930]={ "38757", "The Eye of Grannok", "i650 Intellect/Haste/Multistrike Trinket", "Second floor of south-east tower", "default", "TanaanTreasures","128220"},
+[17305690]={ "38755", "Spoils of War", "500 Garrison Resources", "", "default", "TanaanTreasures","824"},
+[17005300]={ "38283", "Stolen Captains Chest", "a little bit of gold", "", "default", "TanaanTreasures",""},
+[15904980]={ "38208", "Weathered Axe", "i650 Agility 1H Axe", "In the podling cave", "default", "TanaanTreasures","127324"},
+[25305020]={ "38735", "Borrowed Enchanted Spyglass", "i650 Intellect/Critical Trinket", "At the top of the east tower", "default", "TanaanTreasures","128222"},
+[22004780]={ "38678", "Bleeding Hollow Warchest", "100 Garrison Resources", ".", "default", "TanaanTreasures","824"},
+[26804410]={ "38683", "Looted Bleeding Hollow Treasure", "Transformation Item", "Tanaan campaign #3 completion is required to unlock", "default", "TanaanTreasures","127709"},
+[19304090]={ "38320", "The Blade of Kra'nak", "i650 Agility 1H Sword", "Underwater", "default", "TanaanTreasures","127338"},
+[31403110]={ "38732", "Jeweled Arakkoa Effigy", "WoD Gem", "Jump through the rocks", "default", "TanaanTreasures","127413"},
+[28803460]={ "38863", "Partially Mined Apexis Crystal", "Apexis Crystals", "Cave Entrance is at 29.2 / 31.1", "default", "TanaanTreasures","823"},
+[34703460]={ "38742", "Skull of the Mad Chief", "Item for Slow Fall/Water Walk", "Cave Entrance is at 32.5 / 37.4", "default", "TanaanTreasures","127669"},
+[26506300]={ "38741", "Looted Bleeding Hollow Treasure", "Apexis Crystals and Garrison Resources", "At the top of the tower", "default", "TanaanTreasures","823"},
+[32407040]={ "38426", "Tome of Secrets", "Toy", "", "default", "TanaanTreasures","127670"},
+[30407200]={ "38629", "Polished Crystal", "WoD Gem", "", "default", "TanaanTreasures","127390"},
+[37004620]={ "38640", "Pale Removal Equipment", "Garrison Resources", "", "default", "TanaanTreasures","824"},
+[36304350]={ "37956", "Strange Sapphire", "i650 Stamina/Bonus Armor Trinket", "", "default", "TanaanTreasures","127397"},
+[43203830]={ "38821", "The Commanders Shield", "i650 Strength/Intellect Shield", "", "default", "TanaanTreasures","127348"},
+[42803540]={ "38822", "Dazzling Rod", "Toy", "	At the top of the north-east tower", "default", "TanaanTreasures","127859"},
+[46904210]={ "38776", "Sacrificial Blade", "i650 Spellpower Dagger", "", "default", "TanaanTreasures","127328"},
+[46904440]={ "38773", "Fel-Drenched Satchel", "Cosmetic Headgear(Goggles)", "", "default", "TanaanTreasures","128218"},
+[46903660]={ "38771", "Book of Zyzzix", "i650 Caster Offhand", "", "default", "TanaanTreasures","127347"},
+[50806490]={ "38731", "Overgrown Relic", "i650 Agility/Strength Ring", "", "default", "TanaanTreasures","127412"},
+[54806930]={ "38593", "Lodged Hunting Spear", "i650 Agility Polearm", "", "default", "TanaanTreasures","127334"},
+[47907040]={ "38705", "Crystalized Essence of Elements", "i650 Caster Fist Weapon", "", "default", "TanaanTreasures","127329"},
+[57006500]={ "38591", "Forgotten Sack", "Flavour Item + Raw Beast Hides", "", "default", "TanaanTreasures","110609"},
+[46207280]={ "38739", "Mysterious Corrupted Obelisk", "Accessory", "Tanaan campaign #5 completion is required to unlock", "default", "TanaanTreasures","128320"},
+[41607330]={ "38657", "Forgotten Champions Blade", "i650 Strength 2H Sword", "", "default", "TanaanTreasures","127339"},
+[40807550]={ "38639", "The Perfect Blossom", "Toy", "Get the immunity buff from nearby Mysterious Fruits to prevent loot cast interruption.", "default", "TanaanTreasures","127766"},
+[40607980]={ "38638", "Snake Charmer Flute", "i650 Caster 2H Mace", "", "default", "TanaanTreasures","127333"},
+[34407830]={ "38762", "Stashed Iron Sea Booty #3", "Gold and Garrison Resources", "Cave Entrance is at 37.5 / 76.0", "default", "TanaanTreasures","824"},
+[35007730]={ "38761", "Stashed Iron Sea Booty #2", "Gold and Garrison Resources", "Cave Entrance is at 37.5 / 76.0", "default", "TanaanTreasures","824"},
+[33907810]={ "38760", "Stashed Iron Sea Booty #1", "Gold and Garrison Resources", "Cave Entrance is at 37.5 / 76.0", "default", "TanaanTreasures","824"},
+[35907860]={ "38758", "Ironbeards Treasure", "Gold and Garrison Resources", "", "default", "TanaanTreasures","824"},
+[37708070]={ "38788", "Brazier of Awakening", "Ressurection Accessory", "", "default", "TanaanTreasures","127770"},
+[48507520]={ "38814", "Looted Mystical Staff", "i650 Caster Staff", "Cave Entrance is at 44.4 / 77.5", "default", "TanaanTreasures","127337"},
+[49907680]={ "38809", "Bleeding Hollow Mushroom Stash", "Food with Side effects", "Cave Entrance is at 44.4 / 77.5", "default", "TanaanTreasures","128223"},
+[62107070]={ "38602", "Crystalized Fel Spike", "i650 Intellect/Spirit Trinket", "", "default", "TanaanTreasures","128217"},
+[61207580]={ "38601", "Blackfang Isle Cache", "Garrison Resources", "", "default", "TanaanTreasures","824"},
+[49907960]={ "38703", "Scouts Belongings", "i650 Agility Cloak", "Top of the cave", "default", "TanaanTreasures","127354"},
+[49908120]={ "38702", "Discarded Helm", "i650 Agility/Intellect Mail Helm", "Inside the cave", "default", "TanaanTreasures","127312"},
+[64704280]={ "38701", "Loose Soil", "Transformation Toy", "", "default", "TanaanTreasures","127396"},
+[51702430]={ "38686", "Rune Etched Femur", "i650 Wand", "", "default", "TanaanTreasures","127341"},
+[58502520]={ "38679", "Jewel of the Fallen Star", "WoD Gem", "", "default", "TanaanTreasures","115524"},
+[62602050]={ "38682", "Censer of Torment", "i650 Strength/Versatility Trinket", "", "default", "TanaanTreasures","127401"},
+[51603270]={ "39075", "Fel-Tainted Apexis Formation", "Apexis Crystals", "Hanging from the pillar's edge", "default", "TanaanTreasures","823"},
+[28702330]={ "38334", "Jewel of Hellfire", "Toy", "", "default", "TanaanTreasures","127668"},
+[63402810]={ "38740", "Forgotten Shard of the Cipher", "Pet", "Tanaan campaign #6 completion is required to unlock", "default", "TanaanTreasures","128309"},
+[54909070]={ "39470", "Dead Mans Chest", "Garrison Resource", "", "default", "TanaanTreasures","824"},
+[65908500]={ "39469", "Bejeweled Egg", "Trash Item", "", "default", "TanaanTreasures","128386"},
+[69705600]={ "38704", "Forgotten Iron Horde Supplies", "Garrison Resources", "", "default", "TanaanTreasures","824"},
+[73604320]={ "38779", "Stashed Bleeding Hollow Loot", "Gold + Trash Item", "First floor of north-east tower.", "default", "TanaanTreasures",""},
+
+[13605680]={ "38747", "Tho'gar Gorefist", "i655 Agility/Intellect Mail Boots", "", "hundredrare", "TanaanHundred","127310","28347"},
+[13005700]={ "38751", "The Iron Houndmaster", "i655 Strength/Intellect Plate Shoulders", "Capture Strongpoint (west) to make him spawn. Iron Front event required", "hundredrare", "TanaanHundred","127321","28350"},
+[16005920]={ "38750", "Grannok", "i655 Intellect Neck", "At the top of the south-east tower.", "hundredrare", "TanaanHundred","127649","28348"},
+[15005420]={ "38746", "Commander Krag'goth", "i655 Strength/Intellect Plate Gloves", "At the top of the north-east tower", "hundredrare", "TanaanHundred","127319", "28346"},
+[16005720]={ "38752", "Szirek the Twisted", "i655 Cloth Gloves", "Capture Strongpoint (east) to make him spawn. Iron Front event required", "hundredrare", "TanaanHundred","127296","28349"},
+[16804860]={ "38282", "Podlord Wakkawam", "i655 Agility Staff", "", "hundredrare", "TanaanHundred","127336", "28329"},
+[23605200]={ "38262", "Bilkor the Thrower", "i655 Agility/Intellect Leather Shoulder", "", "hundredrare", "TanaanHundred","127307","28351"},
+[20404980]={ "38263", "Rogond the Tracker", "i655 Agility/Intellect Mail Shoulder", "", "hundredrare", "TanaanHundred","127314","28352"},
+[19805360]={ "38736", "Driss Vile", "i655 Gun", "At the top of the south tower", "hundredrare", "TanaanHundred","127331","28369"},
+[25504620]={ "38264", "Drivnul", "i655 Cloth Pants", "", "hundredrare", "TanaanHundred","127298","28354"},
+[23204840]={ "38265", "Dorg the Bloody", "i655 Cloth Belt", "Killing mobs in the area will make him spawn somewhere in the area", "hundredrare", "TanaanHundred","127301","28353"},
+[22805120]={ "38266", "Bloodhunter Zulk", "i655 Agility/Intellect Leather Boots", "Interrupting Bleeding Hollow activities will make him spawn", "hundredrare", "TanaanHundred","127303","28355"},
+[22205080]={ "39159", "Remnant of the Blood Moon", "Toy", "Draining Blood Moon empty will make it spawn. Zeth'Gol event required", "hundredrare", "TanaanHundred","127666"},
+[16804340]={ "38034", "Rasthe", "i655 Crit/Mastery/Multistrike Trinket", "", "hundredrare", "TanaanHundred","127661","28341"},
+[20404000]={ "38028", "High Priest Ikzan", "Transformation Accessory", "Roams the whole camp", "hundredrare", "TanaanHundred","122117"},
+[27603280]={ "37937", "Varyx the Damned", "i655 Intellect Ring", "Need 5 players to open his prison", "hundredrare", "TanaanHundred","127351", "28340"},
+[26305420]={ "38496", "Relgor", "i655 Agility Polearm", "", "hundredrare", "TanaanHundred","127335","28356"},
+[28605080]={ "38775", "Felbore", "i655 Strength Ring", "Cave Entrance is at 31.3 / 53.5", "hundredrare", "TanaanHundred","127350","28372"},
+[31406800]={ "38031", "Ceraxas", "Fel Pup - Pet", "doesn't actually drop the pet, but spawns the quest required to get it", "hundredrare", "TanaanHundred","","28336"},
+[27607480]={ "38030", "Jax'zor", "i655 Strength/Intellect Plate Belt", "Cave Entrance is at 29.6 / 70.6", "hundredrare", "TanaanHundred","127322","28335"},
+[25807900]={ "38032", "Mistress Thavra", "i655 Cloth Shoulders", "Cave Entrance is at 29.6 / 70.6", "hundredrare", "TanaanHundred","127300","28337"},
+[25407720]={ "38029", "Lady Oran", "i655 Agility/Intellect Mail Wrist", "Cave Entrance is at 29.6 / 70.6", "hundredrare", "TanaanHundred","127316","28334"},
+[31607280]={ "38026", "Imp-Master Valessa", "Accessory", "", "hundredrare", "TanaanHundred","127655","28333"},
+[35404680]={ "38609", "Belgork", "i655 Strength/Intellect Shield", "", "hundredrare", "TanaanHundred","127650","28363"},
+[34004440]={ "38620", "Thromma the Gutslicer", "i655 Agility Dagger", "", "hundredrare", "TanaanHundred","127327","28362"},
+[33003570]={ "38709", "Gorabosh", "i655 Agility/Intellect Leather Gloves", "", "hundredrare", "TanaanHundred","127304","28368"},
+[37003280]={ "39045", "Zoug the Heavy", "i655 Agility/Intellect Leather Belt", "", "hundredrare", "TanaanHundred","127308","28723"},
+[39603260]={ "39046", "Harbormaster Korak", "i655 Agility/Intellect Mail Body", "", "hundredrare", "TanaanHundred","127309","28724"},
+[42403730]={ "37953", "Sergeant Mor'grak", "i655 Strength/Intellect Plate Boots", "", "hundredrare", "TanaanHundred","127318","28339"},
+[44603760]={ "37990", "Cindral the Wildfire", "i655 Versatility/Mastery/Multistrike Trinket", "Killing all Remnant of Cindral in the forge will make it spawn", "hundredrare", "TanaanHundred","127660","28338"},
+[45804700]={ "38634", "Felsmith Damorka", "i655 Agility/Intellect Leather Body", "", "hundredrare", "TanaanHundred","127302","28726"},
+[50003600]={ "38411", "Executor Riloth", "i655 Strength/Intellect Plate Bracer", "", "hundredrare", "TanaanHundred","127323","28380"},
+[46204240]={ "38400", "Grand Warlock Nethekurse", "i655 Cloth Body", "", "hundredrare", "TanaanHundred","127299","28343"},
+[51004600]={ "38749", "Commander Org'mok", "i655 Agility/Intellect Mail Pants", "Patrols around the area", "hundredrare", "TanaanHundred","127313","28731"},
+[48005720]={ "38820", "Captain Grok'mar", "i655 Strength/Intellect Plate Pants", "", "hundredrare", "TanaanHundred","127664","28730"},
+[49706140]={ "38812", "Shadowthrash", "i655 Agility/Intellect Leather Bracer", "", "hundredrare", "TanaanHundred","127665","28725"},
+[52206510]={ "38726", "Magwia", "i655 Strength 1H Mace", "", "hundredrare", "TanaanHundred","127332","28345"},
+[40807000]={ "38209", "Bramblefell", "Toy - Cooking Fire", "", "hundredrare", "TanaanHundred","127652" ,"28330"},
+[39606810]={ "38825", "Kris'kar the Unredeemed ", "i655 Strength 1H Sword", "Cave Entrance is at 42.5 / 68.9", "hundredrare", "TanaanHundred","127653","28377"},
+[34307250]={ "38654", "The Goreclaw", "i655 Agility/Intellect Leather Helm", "Cave Entrance is at 36.2 / 72.4", "hundredrare", "TanaanHundred","127305","28367"},
+[39407380]={ "38632", "The Night Haunter", "i655 Strength Cloak", "Collect 10 Stacks of his debuff to spawn him by finding 'copies' of him or by touching mutilated corpses", "hundredrare", "TanaanHundred","127355","28366"},
+[41007880]={ "38628", "Sylissa", "i655 Agility/Intellect Mail Gloves", "", "hundredrare", "TanaanHundred","127311","28364"},
+[41807380]={ "38631", "Rendrak", "i655 Intellect Cloak", "", "hundredrare", "TanaanHundred","127356","28365"},
+[36207970]={ "38756", "Captain Ironbeard ", "Toy", "Cave Entrance is at 37.5 / 76.0", "hundredrare", "TanaanHundred","127659","28370"},
+[34607820]={ "38764", "Glub'glok", "i655 Strength/Intellect Plate Body", "Cave Entrance is at 37.5 / 76.0. You need to open a chest to actually spawn him", "hundredrare", "TanaanHundred","127317","28371"},
+[51007440]={ "38696", "Bleeding Hollow Horror", "i655 Stamina/Bonus Armor Trinket", "Cave Entrance is at 44.4 / 77.5", "hundredrare", "TanaanHundred","127654","28376"},
+[57606720]={ "38589", "Broodlord Ixkor", "i655 Agility Ring", "", "hundredrare", "TanaanHundred","127349","28357"},
+[62607200]={ "38600", "Soulslicer", "i655 Agility/Intellect Mail Belt", "", "hundredrare", "TanaanHundred","127315","28358"},
+[63608110]={ "38604", "Gloomtalon", "i655 Agility/Intellect Leather Pants", "", "hundredrare", "TanaanHundred","127306","28359"},
+[52108390]={ "38605", "Krell the Serene", "i655 Agility/Multistrike Trinket", "", "hundredrare", "TanaanHundred","127418","28360"},
+[48807280]={ "38597", "The Blackfang", "i655 Agility Fist Weapon", "", "hundredrare", "TanaanHundred","127330","28361"},
+[48402850]={ "38207", "Zeter'el", "i655 Strength 2H Sword", "Cave Entrance is at 48.1 / 33.0", "hundredrare", "TanaanHundred","127340","28331"},
+[52802560]={ "38211", "Felspark", "i655 Cloth Bracer", "", "hundredrare", "TanaanHundred","127656","28332"},
+[53602170]={ "38557", "Painmistress Selora", "i655 Cloth Helm", "Complete the event by killing mob waves to make her spawn", "hundredrare", "TanaanHundred","127297","28342"},
+[57102280]={ "38457", "Putre'thar", "i655 Intellect/Spirit Trinket", "", "hundredrare", "TanaanHundred","127657","28727"},
+[53002000]={ "38580", "Overlord Ma'gruth", "i655 Strength/Intellect Plate Helm", "", "hundredrare", "TanaanHundred","127320","28729"},
+[60202090]={ "38579", "Xanzith the Everlasting", "i655 Intellect Offhand", "", "hundredrare", "TanaanHundred","127658","28728"},
+[65403660]={ "38700", "Steelsnout", "i655 Agility/Strength Cloak", "", "hundredrare", "TanaanHundred","127357","28344"},
+[52604020]={ "38430", "Argosh the Destroyer", "i655 Crossbow", "", "hundredrare", "TanaanHundred","127326","28722"},
 [41407960]={ "37407", "Keravnos", "unknown", "", "hundredrare", "TanaanHundred",""},
+
+[15406340]={ "39288", "Terrorfist", "Mounts + Oil", "His spawn will be announced by Frogan: A massive gronnling is heading for Rangari Refuge! We are going to require some assistance!", "hundredrare", "TanaanBoss",""},
+[23204040]={ "39287", "Deathtalon", "Mounts + Oil", "His spawn will be announced by Shadow Lord Iskar: Behind the veil, all you find is death!", "hundredrare", "TanaanBoss",""},
+[32407400]={ "39290", "Vengeance", "Mounts + Oil", "His spawn will be announced by Tyrant Velhari: Insects deserve to be crushed!", "hundredrare", "TanaanBoss",""},
+[47005260]={ "39289", "Doomroller", "Mounts + Oil", "His spawn will be announced by Siegemaster Mar'tak: Hah-ha! Trample their corpses!", "hundredrare", "TanaanBoss",""},
 }
 nodes["garrisonsmvalliance_tier1"] = {
 [49604380]={ "35530", "Lunarfall Egg", "Garrison Resources", "on a wagon", "default", "SMVTreasures","824"},
@@ -619,7 +738,7 @@ nodes["Talador"][61107170]={ "34116", "Norana's Cache", "i564 Agility Neck", "",
 nodes["Gorgrond"][51206360]={ "35818", "Roardan the Sky Terror", "Quest Item for XP", "Flies around a lot, Coordinates are just somewhere on his route!You must finish the quest before this element gets removed from the map", "rare", "GorgrondRares","113459"}
 end
 
- function GetItem(ID)
+local function GetItem(ID)
 	if (ID == "824" or ID == "823") then
 		local currency, _, _ = GetCurrencyInfo(ID)
 		if (currency ~= nil) then
@@ -636,7 +755,7 @@ end
 		end
 	end
 end	
- function GetIcon(ID)
+local function GetIcon(ID)
 	if (ID == "824" or ID == "823") then
 		local _, _, icon = GetCurrencyInfo(ID)
 		if (icon ~= nil) then
@@ -708,6 +827,17 @@ local function generateMenu(button, level)
 			info.func = addtoTomTom
 			info.arg1 = clickedMapFile
 			info.arg2 = clickedCoord
+			UIDropDownMenu_AddButton(info, level)
+		end
+		if isDBMloaded == true then
+			info.text = "Add this treasure as DBM Arrow"
+			info.func = AddDBMArrow
+			info.arg1 = clickedMapFile
+			info.arg2 = clickedCoord
+			UIDropDownMenu_AddButton(info, level)
+			
+			info.text = "Hide DBM Arrow"
+			info.func = HideDBMArrow
 			UIDropDownMenu_AddButton(info, level)
 		end
 
@@ -825,13 +955,6 @@ SMVHundredRares = {
    order = 3,
    width = "half",
   },
-SMVShrines = {
-   type = "toggle",
-   name = "Shrines",
-   arg = "SMVShrine",
-   order = 4,
-   width = "half",
-  },
 FFRGroup = {
 	name = "Frostfire Ridge",
 	desc = "Frostfire Ridge",
@@ -867,13 +990,6 @@ FFRHundredRares = {
    arg = "FFRHundred",
    width = "half",
    order = 14,
-  },
-FFRShrines = {
-   type = "toggle",
-   name = "Shrines",
-   arg = "FFRShrine",
-   order = 15,
-   width = "half",
   },
 GorgrondGroup = {
 	name = "Gorgrond",
@@ -1032,15 +1148,47 @@ TanaanHundredRares = {
    desc = "Level 100 Rarespawns",
    width = "normal",
    order = 56,
-  },  
+  },
+TanaanHundredAchievement = {
+   type = "toggle",
+   name = "Only Show the ones missing for the achievement [Jungle Stalker]",
+   arg = "TanaanHundredAchievement",
+   desc = "This has priority over the option [Always show  already looted Rares]",
+   width = "normal",
+   order = 57,
+  },
+TanaanTreasures = {
+   type = "toggle",
+   name = "Treasures",
+   arg = "TanaanTreasures",
+   desc = "Level 100 Rarespawns",
+   width = "normal",
+   order = 59,
+  },
+TanaanBoss = {
+   type = "toggle",
+   name = "Bosses",
+   arg = "TanaanBoss",
+   desc = "Mount & Oil Bosses",
+   width = "normal",
+   order = 58,
+  },   
 	},
   },
-  alwaysshow = {
+  alwaysshowrares = {
    type = "toggle",
-   name = "Also show already looted(killed) Treasures(Rares)",
-   desc = "Show every treasure/rare regardless of looted status",
-   arg = "alwaysshow",
+   name = "Also show already looted Rares",
+   desc = "Show every rare regardless of looted status",
+   arg = "alwaysshowrares",
    order = 100,
+   width = "full",
+  },
+  alwaysshowtreasures = {
+   type = "toggle",
+   name = "Also show already looted Treasures",
+   desc = "Show every treasure regardless of looted status",
+   arg = "alwaysshowtreasures",
+   order = 101,
    width = "full",
   },
     show_loot = {
@@ -1048,14 +1196,14 @@ TanaanHundredRares = {
    name = "Show Loot",
    desc = "Shows the Loot for each Treasure/Rare",
    arg = "show_loot",
-   order = 101,
+   order = 102,
    },
   show_notes = {
    type = "toggle",
    name = "Show Notes",
    desc = "Shows the notes each Treasure/Rare if available",
    arg = "show_notes",
-   order = 101,
+   order = 103,
    },
 	 },
 	},
@@ -1068,16 +1216,15 @@ function DraenorTreasures:OnInitialize()
    icon_scale_treasures = 1.5,
    icon_scale_rares = 2.0,
    icon_alpha = 1.00,
-   alwaysshow = false,
+   alwaysshowrares = false,
+   alwaysshowtreasures = false,
    save = true,
    SMVTreasures = true,
    SMVRares = true,
    SMVHundred = true,
-   SMVShrine = true,
    FFRTreasures = true,
    FFRRares = true,
    FFRHundred = true,
-   FFRShrine = true,
    FFRBF = false,
    GorgrondTreasures = true,
    GorgrondRares = true,
@@ -1096,6 +1243,9 @@ function DraenorTreasures:OnInitialize()
    NagrandHundred = true,
    NagrandSWP = true,
    TanaanHundred = true,
+   TanaanHundredAchievement = false,
+   TanaanBoss = true,
+   TanaanTreasures = true,
    show_loot = true,
    show_notes = true,
    },
@@ -1186,8 +1336,40 @@ do
 		if not t then return nil end
 		local state, value = next(t, prestate)
 		while state do
+				if (value[1] and self.db.profile[value[6]] and not DraenorTreasures:HasBeenLooted(value)) and (value[6] == "TanaanHundred") then
+					if (self.db.profile.TanaanHundredAchievement) then
+						if ((value[8] ~= nil) and (value[8] ~= "")) then
+							local _, _, completed, _, _, _, _, _, _, _, _ = GetAchievementCriteriaInfoByID(10070, value[8])
+							if (completed == false) then
+								if ((value[7] ~= nil) and (value[7] ~= "")) then
+									GetIcon(value[7]) --this should precache the Item, so that the loot is correctly returned
+								end
+								if ((value[5] == "default") or (value[5] == "unknown")) then
+									if ((value[7] ~= nil) and (value[7] ~= "")) then
+										return state, nil, GetIcon(value[7]), DraenorTreasures.db.profile.icon_scale_treasures, DraenorTreasures.db.profile.icon_alpha
+									else
+										return state, nil, iconDefaults[value[5]], DraenorTreasures.db.profile.icon_scale_treasures, DraenorTreasures.db.profile.icon_alpha
+									end
+								end
+								return state, nil, iconDefaults[value[5]], DraenorTreasures.db.profile.icon_scale_rares, DraenorTreasures.db.profile.icon_alpha
+							end
+						end
+					else
+						if ((value[7] ~= nil) and (value[7] ~= "")) then
+							GetIcon(value[7]) --this should precache the Item, so that the loot is correctly returned
+						end
+						if ((value[5] == "default") or (value[5] == "unknown")) then
+						if ((value[7] ~= nil) and (value[7] ~= "")) then
+							return state, nil, GetIcon(value[7]), DraenorTreasures.db.profile.icon_scale_treasures, DraenorTreasures.db.profile.icon_alpha
+						else
+							return state, nil, iconDefaults[value[5]], DraenorTreasures.db.profile.icon_scale_treasures, DraenorTreasures.db.profile.icon_alpha
+						end
+					end
+					return state, nil, iconDefaults[value[5]], DraenorTreasures.db.profile.icon_scale_rares, DraenorTreasures.db.profile.icon_alpha	
+					end
+				end
 			    -- QuestID[1], Name[2], Loot[3], Notes[4], Icon[5], Tag[6], ItemID[7]
-			    if (value[1] and self.db.profile[value[6]] and not DraenorTreasures:HasBeenLooted(value)) then
+			    if (value[1] and self.db.profile[value[6]] and not DraenorTreasures:HasBeenLooted(value)) and (value[6] ~= "TanaanHundred") then
 					if ((value[7] ~= nil) and (value[7] ~= "")) then
 				 	GetIcon(value[7]) --this should precache the Item, so that the loot is correctly returned
 					end
@@ -1223,7 +1405,8 @@ function ResetDB()
 end
 
 function DraenorTreasures:HasBeenLooted(value)
-if (self.db.profile.alwaysshow) then return false end
+if (self.db.profile.alwaysshowtreasures and (string.find(value[6], "Treasures") ~= nil)) then return false end
+if (self.db.profile.alwaysshowrares and (string.find(value[6], "Treasures") == nil)) then return false end
 if (DraenorTreasures.db.char[value[1]] and self.db.profile.save) then return true end
 if (IsQuestFlaggedCompleted(value[1])) then
 	return true
@@ -1260,4 +1443,44 @@ function addtoTomTom(button, mapFile, coord)
 			world = true
 		})
 	end
+end
+
+if isDBMloaded == true then
+			local ArrowDesc = DBMArrow:CreateFontString(nil, "OVERLAY", "GameTooltipText")
+			ArrowDesc:SetWidth(400)
+			ArrowDesc:SetHeight(100)
+			ArrowDesc:SetPoint("CENTER", DBMArrow, "CENTER", 0, -35)
+			ArrowDesc:SetTextColor(1, 1, 1, 1)
+			ArrowDesc:SetJustifyH("CENTER")
+			DBMArrow.Desc = ArrowDesc
+end
+
+function AddDBMArrow(button, mapFile, coord)
+	if isDBMloaded == true then
+			local mapId = HandyNotes:GetMapFiletoMapID(mapFile)
+			local x, y = HandyNotes:getXY(coord)
+			local desc = nodes[mapFile][coord][2];
+			if (nodes[mapFile][coord][3] ~= nil) and (DraenorTreasures.db.profile.show_loot == true) then
+				if ((nodes[mapFile][coord][7] ~= nil) and (nodes[mapFile][coord][7] ~= "")) then
+					desc = desc.."\nLoot: " .. GetItem(nodes[mapFile][coord][7]);
+					desc = desc.."\nLootinfo: " .. nodes[mapFile][coord][3];
+				else
+					desc = desc.."\nLoot: " .. nodes[mapFile][coord][3];
+				end
+			end
+			if (nodes[mapFile][coord][4] ~= "") and (DraenorTreasures.db.profile.show_notes == true) then
+				desc = desc.."\nNotes: " .. nodes[mapFile][coord][4]
+			end
+			if not DBMArrow.Desc:IsShown() then
+				DBMArrow.Desc:Show()
+			end
+			x = x*100
+			y = y*100
+			DBMArrow.Desc:SetText(desc)
+			DBM.Arrow:ShowRunTo(x, y, nil, nil, true)
+	end
+end
+
+function HideDBMArrow()
+	DBM.Arrow:Hide(true)
 end

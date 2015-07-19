@@ -1,6 +1,6 @@
 --[[
 
-Learning Aid is copyright © 2008-2014 Jamash (Kil'jaeden US Horde)
+Learning Aid is copyright Â© 2008-2015 Jamash (Kil'jaeden US Horde)
 Email: jamashkj@gmail.com
 
 ActionBar.lua is part of Learning Aid.
@@ -185,9 +185,9 @@ function LA:FindMissingActions()
   local spells = {}
   local types = {}
   local subTypes = {}
-  local tracking = {}
-  local shapeshift = {}
-  local totem = {}
+  --local tracking = {}
+  --local shapeshift = {}
+  --local totem = {}
   local results = {}
   local macroSpells = {}
   local flyouts = {}
@@ -206,13 +206,14 @@ function LA:FindMissingActions()
   end
   ]]
   if (not self.saved.totem) and self.enClass == "SHAMAN" then
+    -- Treat all Totem spells as though already on an action bar.
     self:DebugPrint("Searching for totems")
     for totemType = 1, MAX_TOTEMS do
       local totemSpells = {GetMultiCastTotemSpells(totemType)}
       for index, globalID in ipairs(totemSpells) do
         -- name, rank, icon, cost, isFunnel, powerType, castTime, minRange, maxRange = GetSpellInfo(spell)
         --local totemName = GetSpellInfo(globalID)
-        totem[globalID] = true
+        spells[globalID] = true
         --self:DebugPrint("Found totem "..totemName)
       end
     end
@@ -239,7 +240,7 @@ function LA:FindMissingActions()
       --self:DebugPrint("Found globalID for spell "..actionID..'='..self.specSpellCache[actionID])
       local gID = spell.ID
       local sID = spell.SpecID
-      self:DebugPrint(self.name..":FindMissingActions() found spell "..actionID.."/"..gID.."/"..sID)
+      self:DebugPrint(self.name..":FindMissingActions() found spell "..actionID.."/"..gID.."/"..sID.." in action slot "..slot)
       spells[gID] = true
       spells[sID] = true
       
@@ -284,43 +285,45 @@ function LA:FindMissingActions()
   end
   -- End Macaroon code
   if not self.saved.shapeshift then
+    -- Treat all Shapeshift/stance/presence/aspect spells as though already on an action bar
     local numForms = GetNumShapeshiftForms()
     for form = 1, numForms do
-      local formTexture, formName, formIsCastable, formIsActive = GetShapeshiftFormInfo(form)
-      local status, globalID = GetSpellBookItemInfo(formName)
+      local formTexture, formName, formIsCastable, formIsActive, globalID = GetShapeshiftFormInfo(form)
       assert(globalID)
-      shapeshift[globalID] = true
+      spells[globalID] = true
     end
   end
-  local _, _, start, count = GetSpellTabInfo(2) -- the current spec
-  for i = start + 1, start + count do
-    local spell = self.Spell.Book[i]
-    assert(spell, "Spell "..i.." doesn't exist!")
-    if "SPELL" == spell.Status then
-      local spellName = spell.Name
-      local spellNameLower = strLower(spellName)
-      local globalID = spell.ID
-      local specID = spell.SpecID
-      if spell.Known and not (
-        self:IsIgnored(spell) or
-        spells[globalID] or
-        spells[specID] or -- spell is on any action bar
-        spell.Passive or
-        -- spell is not a tracking spell, or displaying tracking spells has been enabled
-        --(not tracking[spellName]) and
-        shapeshift[globalID] or
-        totem[globalID] or
-        macroSpells[spellNameLower] or
-        macroSpells[globalID]
-      )
-      then
-        self:DebugPrint("Spell "..globalID..' "'..spellName..'" is not on any action bar.')
-      --if macroSpells[spellNameLower] then self:DebugPrint("Found spell in macro") end
+  for tab = 1, 2 do
+    local _, _, start, count = GetSpellTabInfo(tab) -- the current spec
+    for i = start + 1, start + count do
+      local spell = self.Spell.Book[i]
+      assert(spell, "Spell "..i.." doesn't exist!")
+      if "SPELL" == spell.Status then
+        local spellName = spell.Name
+        local spellNameLower = strLower(spellName)
+        local globalID = spell.ID
+        local specID = spell.SpecID
+        if spell.Known and not (
+          self:IsIgnored(spell) or
+          spells[globalID] or
+          spells[specID] or -- spell is on any action bar
+          spell.Passive or
+          -- spell is not a tracking spell, or displaying tracking spells has been enabled
+          --(not tracking[spellName]) and
+          -- spells[globalID] or
+          -- totem[globalID] or
+          macroSpells[spellNameLower] or
+          macroSpells[globalID]
+        )
+        then
+          self:DebugPrint("Spell "..globalID..' "'..spellName..'" is not on any action bar.')
+        --if macroSpells[spellNameLower] then self:DebugPrint("Found spell in macro") end
+          table.insert(results, spell)
+        end
+      elseif "FLYOUT" == spell.Status and not flyouts[spell.ID] then
+        -- print("you have not got "..spell.Name.." on your action bar bro") -- DEBUG FIXME DEBUG FIXME
         table.insert(results, spell)
       end
-    elseif "FLYOUT" == spell.Status and not flyouts[spell.ID] then
-      -- print("you have not got "..spell.Name.." on your action bar bro") -- DEBUG FIXME DEBUG FIXME
-      table.insert(results, spell)
     end
   end
   table.sort(results, function (a, b) return a.Slot < b.Slot end)
@@ -368,16 +371,39 @@ local actionBarAliases = {
   defensive = 8,
   bear = 9,
   berserker = 9,
-  moonkin = 10
-}
-function LA:CopyActionBar(barID)
-  if not self.barClipboard then
-    self.barClipboard = {}
-  else
-    wipe(self.barClipboard)
+  moonkin = 10,
+  __index = function (index)
+    if nil == index or 'current' == index or '' == index or 0 == index then
+      -- bar runs from 1 to NUM_ACTIONBAR_PAGES (6)
+      local bar = GetActionBarPage()
+      -- offset is from the first NUM_ACTIONBAR_PAGES (6) "normal" action bars, 0 if not offset
+      local offset = GetBonusBarOffset()
+      if 1 == bar and 0 ~= offset then
+        return offset + NUM_ACTIONBAR_PAGES
+      else
+        return bar
+      end
+    end
   end
+}
+local function cleanChatInput(msg)
+  if type(msg) == "string" then
+    msg = strtrim(msg)
+    if strmatch(msg, "^%d+$") then
+      msg = tonumber(msg)
+    end
+  end
+  return msg
+end
+
+function LA:CopyActionBar(barID, barClipboard)
+  self.barClipboard = self.barClipboard or { }
+  if not barClipboard then
+    barClipboard = self.barClipboard
+  end
+  barID = cleanChatInput(barID)
   if type(barID) == "number" then
-    barID = math.floor(barID)
+    barID = math.floor(tonumber(barID))
     assert(barID >= 1 and barID <= 10)
   elseif type(barID) == "string" and actionBarAliases[barID] then
     barID = actionBarAliases[barID]
@@ -387,12 +413,13 @@ function LA:CopyActionBar(barID)
     local id = i + barOffset
     if HasAction(id) then
       local slot = {}
-      slot.type, slot.globalID, slot.subType = GetActionInfo(id)
-      self.barClipboard[i] = slot
+      slot.type, slot.ID, slot.subType = GetActionInfo(id)
+      barClipboard[i] = slot
     end
   end
 end
-function LA:PasteActionBar(barID)
+function LA:PasteActionBar(barID, barClipboard)
+  barID = cleanChatInput(barID)
   if self.barClipboard then
     if type(barID) == "string" then
       barID = actionBarAliases[barID]
@@ -402,15 +429,17 @@ function LA:PasteActionBar(barID)
       local slot = self.barClipboard[i]
       if slot then
         if slot.type == "spell" then
-          PickupSpell(slot.globalID)
+          self.Spell.Global[slot.ID]:Pickup()
         elseif slot.type == "companion" then
-          PickupCompanion(slot.subType, self.companionCache[slot.subType][slot.globalID].index)
+          PickupCompanion(slot.subType, self.companionCache[slot.subType][slot.ID].index)
         elseif slot.type == "macro" then
-          PickupMacro(slot.globalID)
+          PickupMacro(slot.ID)
         elseif slot.type == "equipmentset" then
-          PickupEquipmentSetByName(slot.globalID)
+          PickupEquipmentSetByName(slot.ID)
         elseif slot.type == "item" then
-          PickupItem(slot.globalID)
+          PickupItem(slot.ID)
+        elseif slot.type == "flyout" then
+          self.Spell.Flyout[slot.ID]:Pickup()
         end
         PlaceAction(i + barOffset)
       else

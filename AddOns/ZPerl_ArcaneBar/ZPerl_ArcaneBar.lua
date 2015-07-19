@@ -12,7 +12,7 @@ end
 --@end-debug@]===]
 
 local conf
-XPerl_RequestConfig(function(new) conf = new end, "$Revision: 634 $")
+XPerl_RequestConfig(function(new) conf = new end, "$Revision: 960 $")
 
 -- Registers frame to spellcast events.
 
@@ -23,9 +23,9 @@ local barColours = {
 	failure = {r = 1.0, g = 0.0, b = 0.0}
 }
 
-local events = {"UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED",
-		"UNIT_SPELLCAST_INTERRUPTED", "UNIT_SPELLCAST_DELAYED", "UNIT_SPELLCAST_CHANNEL_START",
-		"UNIT_SPELLCAST_CHANNEL_UPDATE", "UNIT_SPELLCAST_CHANNEL_STOP", "PLAYER_ENTERING_WORLD"}
+local events = {
+	"UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_INTERRUPTED", "UNIT_SPELLCAST_DELAYED", "UNIT_SPELLCAST_CHANNEL_START", "UNIT_SPELLCAST_CHANNEL_UPDATE", "UNIT_SPELLCAST_CHANNEL_STOP", "PLAYER_ENTERING_WORLD"
+}
 
 -- enableToggle
 local function enableToggle(self, value)
@@ -300,9 +300,9 @@ function XPerl_ArcaneBar_OnUpdate(self, elapsed)
 		local status = getTime
 		if (status > self.maxValue) then
 			status = self.maxValue
-			self.tex:SetTexCoord(0,1,0,1)
+			self.tex:SetTexCoord(0, 1, 0, 1)
 			self.casting = nil
-			self.barFlash:SetAlpha(0.0)
+			self.barFlash:SetAlpha(0)
 			self.barFlash:Show()
 			if (not self.fadeOut) then
 				self.flash = 1
@@ -323,7 +323,6 @@ function XPerl_ArcaneBar_OnUpdate(self, elapsed)
 		self.barSpark:SetPoint("CENTER", self, "LEFT", sparkPosition, 1)
 
 		ShowPrecast(self, "RIGHT")
-
 	elseif (self.channeling) then
 		local time = getTime
 		if (time > self.endTime) then
@@ -331,7 +330,7 @@ function XPerl_ArcaneBar_OnUpdate(self, elapsed)
 		end
 		if (time == self.endTime) then
 			self.channeling = nil
-			self.barFlash:SetAlpha(0.0)
+			self.barFlash:SetAlpha(0)
 			self.barFlash:Show()
 			if (not self.fadeOut) then
 				self.flash = 1
@@ -349,10 +348,8 @@ function XPerl_ArcaneBar_OnUpdate(self, elapsed)
 		self.barSpark:SetPoint("CENTER", self, "LEFT", sparkPosition, 1)
 
 		ShowPrecast(self, "LEFT")
-
 	elseif (getTime < self.holdTime) then
 		return
-
 	elseif (self.flash) then
 		local alpha = self.barFlash:GetAlpha() + elapsed * 3	-- CASTING_BAR_FLASH_STEP
 		if (alpha < 1) then
@@ -360,7 +357,6 @@ function XPerl_ArcaneBar_OnUpdate(self, elapsed)
 		else
 			self.flash = nil
 		end
-
 	elseif (self.fadeOut) then
 		local alpha = self:GetAlpha() - elapsed * 2			-- CASTING_BAR_ALPHA_STEP
 		if (alpha > 0) then
@@ -398,7 +394,7 @@ end
 -- XPerl_ArcaneBar_Set
 function XPerl_ArcaneBar_Set()
 	if (conf) then
-		for k,v in pairs(ArcaneBars) do
+		for k, v in pairs(ArcaneBars) do
 			if (v.optFrame and v.optFrame.conf and v.optFrame.conf.castBar) then
 				enableToggle(v.bar, v.optFrame.conf.castBar.enable)
 

@@ -1,16 +1,14 @@
 
 BuildEnv(...)
 
-local Button = Addon:NewClass('Button', 'Button')
+local Button = Addon:NewClass('Button', 'Button') do
+    GUI:Embed(Button, 'Tooltip')
+    Button:SetTooltipAnchor('ANCHOR_RIGHT')
+end
 
-function Button:Constructor(parent)
-    if not parent then
-        return
-    end
-
+function Button:Constructor()
     self:EnableMouse(true)
     self:RegisterForClicks('LeftButtonUp')
-    self:SetParent(parent)
     self:SetSize(36, 36)
     self:SetBackdrop{
         edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]],
@@ -49,10 +47,6 @@ function Button:SetText(text)
     self:SetHitRectInsets(0, -self.Text:GetWidth(), 0, 0)
 end
 
-function Button:SetTooltip(...)
-    GUI:SetTooltip(self, 'ANCHOR_RIGHT', ...)
-end
-
 function Button:OnEnable()
     if self.Cooldown then
         self.Cooldown:SetCooldown(0, 0)
@@ -88,6 +82,7 @@ function Button:SetCooldown(cooldown)
             end)
         end
         self.Cooldown = Cooldown
+        self:SetDisabledFontObject('GameFontNormalSmallLeft')
     end
     self.cooldown = cooldown
     self.Icon:SetDesaturated(false)

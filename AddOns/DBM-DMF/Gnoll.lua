@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("Gnoll", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13167 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14037 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 101612",
 	"SPELL_AURA_REMOVED 101612",
 	"UNIT_SPELLCAST_SUCCEEDED player",
-	"QUEST_WATCH_UPDATE"
+	"UNIT_POWER_FREQUENT player"
 )
 mod.noStatistics = true
 
@@ -27,7 +27,6 @@ local gameEarnedPoints = 0
 local gameMaxPoints = 0
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 101612 and args:IsPlayer() then
@@ -54,20 +53,21 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellID)
 	if spellID == 102044 then--Hogger
-		if gameEarnedPoints < 30 then--You earned 30 points in first game, stop counting points you didn't earn so you get more accurate depiction of hwo many you missed, not how many you ignored when you finished.
-			gameMaxPoints = gameMaxPoints + 3
-		end
-		if self:AntiSpam() then
+		gameMaxPoints = gameMaxPoints + 3
+		if self:AntiSpam(2, 1) then
 			specWarnHogger:Show()
 		end
 	elseif spellID == 102036 then--Gnoll
-		if gameEarnedPoints < 30 then
-			gameMaxPoints = gameMaxPoints + 1
-		end
+		gameMaxPoints = gameMaxPoints + 1
 		warnGnoll:Show()
 	end
 end
 
-function mod:QUEST_WATCH_UPDATE()
-	gameEarnedPoints = gameEarnedPoints + 1
+function mod:UNIT_POWER_FREQUENT(uId, type)
+	if type == "ALTERNATE" then
+		local playerPower = UnitPower("player", 10)
+		if playerPower > gameEarnedPoints then
+			gameEarnedPoints = playerPower
+		end
+	end
 end

@@ -142,7 +142,7 @@ do
 		for Index = Count + 1, #self do
 			self[ Index ]:Hide()
 		end
-		self:SetSize( Width + 32, Height + 32 )
+		self:SetSize( Width + 60, Height + 32 )
 		self:Show()
 		if ( not self.Container:IsShown() ) then -- Previously too large OnSizeChanged won't fire
 			panel.KeyOnSizeChanged( self ) -- Force size validation

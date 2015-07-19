@@ -2,5 +2,6 @@
 	<Script file="PartyDungeons.lua"/>
 	<Script file="BlackrockFoundry.lua"/>
 	<Script file="Highmaul.lua"/>
+	<Script file="HellfireCitadel.lua"/>
 	<Script file="Draenor.lua"/>
 </Ui>

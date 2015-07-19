@@ -8,7 +8,9 @@ local strfind = strfind
 local tonumber = tonumber
 
 local CreateFrame = CreateFrame
+local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
 local GetTime = GetTime
+local InCombatLockdown = InCombatLockdown
 local RegisterUnitWatch = RegisterUnitWatch
 local UnitAffectingCombat = UnitAffectingCombat
 local UnitBuff = UnitBuff
@@ -16,16 +18,27 @@ local UnitClassification = UnitClassification
 local UnitExists = UnitExists
 local UnitFactionGroup = UnitFactionGroup
 local UnitGUID = UnitGUID
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
 local UnitIsAFK = UnitIsAFK
 local UnitIsCharmed = UnitIsCharmed
+local UnitIsConnected = UnitIsConnected
+local UnitIsDead = UnitIsDead
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitIsFriend = UnitIsFriend
+local UnitIsGhost = UnitIsGhost
 local UnitIsPVP = UnitIsPVP
 local UnitIsPVPFreeForAll = UnitIsPVPFreeForAll
 local UnitIsVisible = UnitIsVisible
 local UnitLevel = UnitLevel
+local UnitName = UnitName
+local UnitPower = UnitPower
+local UnitPowerMax = UnitPowerMax
 local UnregisterUnitWatch = UnregisterUnitWatch
 
 local UIParent = UIParent
+
+local feignDeath = GetSpellInfo(5384)
 
 local conf
 XPerl_RequestConfig(function(new)
@@ -42,18 +55,7 @@ XPerl_RequestConfig(function(new)
 	if XPerl_PetTarget then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 938 $")
-
-local UnitName = UnitName
-local UnitHealth = UnitHealth
-local UnitHealthMax = UnitHealthMax
-local UnitIsConnected = UnitIsConnected
-local UnitIsGhost = UnitIsGhost
-local UnitIsDead = UnitIsDead
-local UnitIsDeadOrGhost = UnitIsDeadOrGhost
-local UnitPower = UnitPower
-local UnitPowerMax = UnitPowerMax
-local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
+end, "$Revision: 972 $")
 
 local buffSetup
 
@@ -65,8 +67,14 @@ function ZPerl_TargetTarget_OnLoad(self)
 
 	self.tutorialPage = 9
 	
-	local events = {"UNIT_HEALTH", "UNIT_POWER", "UNIT_AURA"};
-	self.guid = 0;
+	local events = {
+		"UNIT_HEALTH",
+		"UNIT_POWER_FREQUENT",
+		"UNIT_AURA"
+	}
+
+	self.guid = 0
+
 	-- Events
 	self:RegisterEvent("RAID_TARGET_UPDATE")
 	if (self == XPerl_TargetTarget) then
@@ -75,26 +83,26 @@ function ZPerl_TargetTarget_OnLoad(self)
 		self.partyid = "targettarget"
 		self:RegisterEvent("UNIT_TARGET")
 		self:RegisterEvent("PLAYER_TARGET_CHANGED")
-		for i,event in pairs(events) do
+		for i, event in pairs(events) do
 			self:RegisterEvent(event)
 		end
-		--self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
+		self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
 	elseif (self == XPerl_FocusTarget) then
 		self.parentid = "focus"
 		self.partyid = "focustarget"
 		self:RegisterEvent("UNIT_TARGET")
-		for i,event in pairs(events) do
+		for i, event in pairs(events) do
 			self:RegisterEvent(event)
 		end
-		--self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
+		self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
 	elseif (self == XPerl_PetTarget) then
 		self.parentid = "pet"
 		self.partyid = "pettarget"
 		self:RegisterEvent("UNIT_TARGET")
-		for i,event in pairs(events) do
+		for i, event in pairs(events) do
 			self:RegisterEvent(event)
 		end
-		--self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
+		self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
 	else
 		self.parentid = "targettarget"
 		self.partyid = "targettargettarget"
@@ -215,11 +223,10 @@ end
 
 -- XPerl_TargetTarget_UpdateDisplay
 function XPerl_TargetTarget_UpdateDisplay(self, force)
-
 	local partyid = self.partyid
 	if self.conf.enable and UnitExists(self.parentid) and UnitIsConnected(partyid) then
 		self.targetname = UnitName(partyid)
-		if self.targetname ~= nil then
+		if self.targetname then
 			local t = GetTime()
 			if not force and t < (self.lastUpdate + 0.3) then
 				return
@@ -229,10 +236,10 @@ function XPerl_TargetTarget_UpdateDisplay(self, force)
 
 			XPerl_TargetTarget_UpdatePVP(self)
 
-			-- Save these 2, so we know whether to update the frame later
+			-- Save these, so we know whether to update the frame later
 			self.targethp = UnitHealth(partyid)
 			self.targetmana = UnitPower(partyid)
-			self.guid = UnitGUID(partyid);
+			self.guid = UnitGUID(partyid)
 			self.afk = UnitIsAFK(partyid) and conf.showAFK
 
 			XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
@@ -315,12 +322,11 @@ end
 
 -- XPerl_TargetTarget_OnUpdate
 function XPerl_TargetTarget_OnUpdate(self, elapsed)
-
 	local partyid = self.partyid
 	local newHP = UnitHealth(partyid)
 	local newMana = UnitPower(partyid)
 	local newAFK = UnitIsAFK(partyid)
-	local newGuid = UnitGUID(partyid);
+	local newGuid = UnitGUID(partyid)
 
 	if ((newGuid ~= self.guid) or (newHP ~= self.targethp) or (newMana ~= self.targetmana) or (newAFK ~= self.afk)) then
 		XPerl_TargetTarget_UpdateDisplay(self)
@@ -341,14 +347,17 @@ end
 
 -- XPerl_TargetTargetTarget_OnUpdate
 function XPerl_TargetTargetTarget_OnUpdate(self, elapsed)
+	local newGuid = UnitGUID(self.partyid)
 
-	local newName = UnitName(self.partyid)
-	local newGuid = UnitGUID(self.partyid);
-	
-	if not newName then
-		newName = ""
-		--newHP = 0
-		--newMana = 0
+	if conf.showFD then
+		local _, class = UnitClass(self.partyid)
+		if class == "HUNTER" then
+			local feigning = UnitBuff(self.partyid, feignDeath)
+			if feigning ~= self.feigning then
+				self.feigning = feigning
+				XPerl_Target_UpdateHealth(self)
+			end
+		end
 	end
 
 	if self == XPerl_TargetTargetTarget and newGuid ~= self.guid then
@@ -365,15 +374,12 @@ end
 -- Event Handler --
 -------------------
 function ZPerl_TargetTarget_OnEvent(self, event, unitID, ...)
-
 	if event == "RAID_TARGET_UPDATE" then
 		XPerl_TargetTarget_RaidIconUpdate(self)
-
 	elseif event == "PLAYER_TARGET_CHANGED" then
 		XPerl_TargetTarget_UpdateDisplay(self, true)
-
-	elseif strfind(event, "^UNIT_") then--(event == "UNIT_TARGET") then
-		if (unitID == "target" or unitID == "player") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget) then
+	elseif strfind(event, "^UNIT_") then
+		if ((unitID == "target" or unitID == "player") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget)) then
 			XPerl_NoFadeBars(true)
 			XPerl_TargetTarget_UpdateDisplay(self, true)
 			XPerl_NoFadeBars()
@@ -513,7 +519,6 @@ function XPerl_TargetTarget_Set_Bits()
 	if conf.targettargettarget.enable then
 		if not XPerl_TargetTargetTarget then
 			local ttt = CreateFrame("Button", "XPerl_TargetTargetTarget", UIParent, "ZPerl_TargetTarget_Template")
-
 			ttt:SetPoint("TOPLEFT", XPerl_TargetTarget.statsFrame, "TOPRIGHT", 5, 0)
 		end
 	end
@@ -521,7 +526,6 @@ function XPerl_TargetTarget_Set_Bits()
 	if conf.focustarget.enable then
 		if not XPerl_FocusTarget then
 			local ttt = CreateFrame("Button", "XPerl_FocusTarget", UIParent, "ZPerl_TargetTarget_Template")
-
 			ttt:SetPoint("TOPLEFT", XPerl_Focus.levelFrame, "TOPRIGHT", 5, 0)
 		end
 	end
@@ -529,7 +533,6 @@ function XPerl_TargetTarget_Set_Bits()
 	if conf.pettarget.enable and XPerl_Player_Pet then
 		if not XPerl_PetTarget then
 			local pt = CreateFrame("Button", "XPerl_PetTarget", XPerl_Player_Pet, "ZPerl_TargetTarget_Template")
-
 			pt:SetPoint("BOTTOMLEFT", XPerl_Player_Pet.statsFrame, "BOTTOMRIGHT", 5, 0)
 		end
 		if (not InCombatLockdown()) then

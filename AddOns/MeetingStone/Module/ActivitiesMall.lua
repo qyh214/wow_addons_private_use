@@ -154,13 +154,14 @@ function ActivitiesMall:OnInitialize()
     end
 
     local BuyButton = CreateFrame('Button', nil, self, 'UIPanelButtonTemplate') do
-        BuyButton:SetPoint('TOP', self, 'BOTTOM', 0, -8)
+        BuyButton:SetPoint('BOTTOM', MainPanel, 'BOTTOM', 104, 4)
         BuyButton:SetSize(120, 22)
         BuyButton:SetText(L['立即兑换'])
         BuyButton:Disable()
         BuyButton:SetScript('OnClick', function()
             self:Buy()
         end)
+        MagicButton_OnLoad(BuyButton)
     end
 
     self.BuyButton = BuyButton

@@ -1,7 +1,4 @@
-﻿--如果你可以提供最新的中文譯文，請發送電郵到yeachan@live.com或者聯絡Titan Developement Team。
-
-
-local L = LibStub("AceLocale-3.0"):NewLocale("Titan","zhTW")
+﻿local L = LibStub("AceLocale-3.0"):NewLocale("Titan","zhTW")
 if not L then return end
 
 L["TITAN_PANEL"] = "Titan Panel";
@@ -56,7 +53,7 @@ L["TITAN_PANEL_CHARS"] = "Characters"
 L["TITAN_PANEL_CHARS_DESC"] = "These are characters with configuration data."
 L["TITAN_PANEL_REGISTER_START"] = "Register "..TITAN_PANEL.." plugins..."
 L["TITAN_PANEL_REGISTER_END"] = "Registration process done."
-	
+
 -- slash command help
 L["TITAN_PANEL_SLASH_RESET_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."輸入: |cffffffff/titan {reset | reset tipfont/tipalpha/panelscale/spacing}";
 L["TITAN_PANEL_SLASH_RESET_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset: |cffffffff重置面板為預設值/位置。";
@@ -72,26 +69,28 @@ L["TITAN_PANEL_SLASH_PROFILE_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffff
 L["TITAN_PANEL_SLASH_PROFILE_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."profile use <name> <server>: |cffffffffSets the profile to the requested saved profile.";
 L["TITAN_PANEL_SLASH_PROFILE_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<name>: |cffffffffcan be either the character name or the custom profile name."
 L["TITAN_PANEL_SLASH_PROFILE_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<server>: |cffffffffcan be either the server name or 'TitanCustomProfile'."
+L["TITAN_PANEL_SLASH_SILENT_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {silent}";
+L["TITAN_PANEL_SLASH_SILENT_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."silent: |cffffffffToggles "..TITAN_PANEL.." to load silently.";
 L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {help | help <topic>}";
-L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/help ";
+L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/silent/help ";
 L["TITAN_PANEL_SLASH_ALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan <topic>";
-L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/help ";
-	
+L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/silent/help ";
+
 -- slash command responses
 L["TITAN_PANEL_SLASH_RESP1"] = LIGHTYELLOW_FONT_COLOR_CODE.."Titan Panel 提示文字大小已重置。";
 L["TITAN_PANEL_SLASH_RESP2"] = LIGHTYELLOW_FONT_COLOR_CODE.."Titan Panel 提示視窗透明度已重置。";
 L["TITAN_PANEL_SLASH_RESP3"] = LIGHTYELLOW_FONT_COLOR_CODE.."Titan Panel 大小已重置。";
 L["TITAN_PANEL_SLASH_RESP4"] = LIGHTYELLOW_FONT_COLOR_CODE.."Titan Panel 按鈕間距已重置。";
-     
+
 -- global profile locale
-L["TITAN_PANEL_GLOBAL"] = "Global";     
-L["TITAN_PANEL_GLOBAL_PROFILE"] = "Global Profile";     
-L["TITAN_PANEL_GLOBAL_USE"] = "Use Global Profile";     
-L["TITAN_PANEL_GLOBAL_USE_AS"] = "Use as Global Profile";     
-L["TITAN_PANEL_GLOBAL_USE_DESC"] = "Use a global profile for all characters";     
-L["TITAN_PANEL_GLOBAL_RESET_PART"] = "resetting options";     
+L["TITAN_PANEL_GLOBAL"] = "Global";
+L["TITAN_PANEL_GLOBAL_PROFILE"] = "Global Profile";
+L["TITAN_PANEL_GLOBAL_USE"] = "Use Global Profile";
+L["TITAN_PANEL_GLOBAL_USE_AS"] = "Use as Global Profile";
+L["TITAN_PANEL_GLOBAL_USE_DESC"] = "Use a global profile for all characters";
+L["TITAN_PANEL_GLOBAL_RESET_PART"] = "resetting options";
 L["TITAN_PANEL_GLOBAL_ERR_1"] = "You may not load a profile when a global profile is in use";
-	
+
 -- general panel locale
 L["TITAN_PANEL_VERSION_INFO"] = "|cffff8c00Titan Development Team |cffffffff Presents ".." |cffffffff";
 L["TITAN_PANEL_MENU_TITLE"] = "泰坦面版";
@@ -162,6 +161,7 @@ L["TITAN_PANEL_MENU_DISPLAY_ON_BAR"] = "Display on Bar";
 L["TITAN_PANEL_MENU_SHOW"] = "Show plugin";
 L["TITAN_PANEL_MENU_PLUGIN_RESET"] = "Refresh plugins";
 L["TITAN_PANEL_MENU_PLUGIN_RESET_DESC"] = "Refresh plugin text and position";
+L["TITAN_PANEL_MENU_SILENT_LOAD"] = "Silent Load";
 
 -- localization strings for AceConfigDialog-3.0   
 L["TITAN_ABOUT_VERSION"] = "Version";
@@ -233,9 +233,9 @@ L["TITAN_PANEL_MENU_ADV_PEW"] = "Entering World";
 L["TITAN_PANEL_MENU_ADV_PEW_DESC"] = "Change value (usually increase) if frames do not adjust when entering / leaving world or an instance.";
 L["TITAN_PANEL_MENU_ADV_VEHICLE"] = "Vehicle";
 L["TITAN_PANEL_MENU_ADV_VEHICLE_DESC"] = "Change value (usually increase) if frames do not adjust when entering / leaving vehicle.";
-	
+
 L["TITAN_AUTOHIDE_TOOLTIP"] = "自動隱藏 開/關";
-	
+
 L["TITAN_BAG_FORMAT"] = "%d/%d";
 L["TITAN_BAG_BUTTON_LABEL"] = "背包: ";
 L["TITAN_BAG_TOOLTIP"] = "背包";
@@ -249,29 +249,26 @@ L["TITAN_BAG_MENU_SHOW_AVAILABLE_SLOTS"] = "顯示剩餘空間";
 L["TITAN_BAG_MENU_SHOW_DETAILED"] = "顯示詳細提示訊息";
 L["TITAN_BAG_MENU_IGNORE_SLOTS"] = "忽略容器";
 L["TITAN_BAG_MENU_IGNORE_PROF_BAGS_SLOTS"] = "忽略專業背包空間";
-L["TITAN_BAG_PROF_BAG_NAMES"] = {
--- Enchanting
+
+L["TITAN_BAG_PROF_BAG_ENCHANTING"] = {
 "Enchanted Mageweave Pouch", "Enchanted Runecloth Bag", "Enchanter's Satchel", "Big Bag of Enchantment", "Spellfire Bag", 
-"Mysterious Bag", "Otherworldly Bag", "\"Carriage - Exclusive\" Enchanting Evening Purse",
--- Engineering
-"Heavy Toolbox", "Fel Iron Toolbox", "Titanium Toolbox", "Khorium Toolbox", "Elementium Toolbox", "\"Carriage - Maddy\" High Tech Bag",
--- Herbalism
+"Mysterious Bag", "Otherworldly Bag", "\"Carriage - Exclusive\" Enchanting Evening Purse"};
+L["TITAN_BAG_PROF_BAG_ENGINEERING"] = {
+"Heavy Toolbox", "Fel Iron Toolbox", "Titanium Toolbox", "Khorium Toolbox", "Elementium Toolbox", "\"Carriage - Maddy\" High Tech Bag"};
+L["TITAN_BAG_PROF_BAG_HERBALISM"] = {
 "Herb Pouch", "Cenarion Herb Bag", "Satchel of Cenarius", "Mycah's Botanical Bag", "Emerald Bag", "Hyjal Expedition Bag",
-"\"Carriage - Going Green\" Herb Tote Bag",
--- Inscription
-"Scribe's Satchel", "Pack of Endless Pockets", "\"Carriage - Xandera\" Student's Satchel",
--- Jewelcrafting
-"Gem Pouch", "Bag of Jewels", "\"Carriage - Exclusive\" Gem Studded Clutch",
--- Leatherworking
-"Leatherworker's Satchel", "Bag of Many Hides", "Trapper's Traveling Pack", "\"Carriage - Meeya\" Leather Bag",
--- Mining
-"Mining Sack", "Reinforced Mining Bag", "Mammoth Mining Bag", "\"Carriage - Christina\" Precious Metal Bag",
--- Fishing
-"Lure Master Tackle Box",
--- Cooking
-"Portable Refrigerator",
-};
-	
+"\"Carriage - Going Green\" Herb Tote Bag"};
+L["TITAN_BAG_PROF_BAG_INSCRIPTION"] = {
+"Scribe's Satchel", "Pack of Endless Pockets", "\"Carriage - Xandera\" Student's Satchel", "Burnished Inscription Bag"};
+L["TITAN_BAG_PROF_BAG_JEWELCRAFTING"] = {
+"Gem Pouch", "Bag of Jewels", "\"Carriage - Exclusive\" Gem Studded Clutch"};
+L["TITAN_BAG_PROF_BAG_LEATHERWORKING"] = {
+"Leatherworker's Satchel", "Bag of Many Hides", "Trapper's Traveling Pack", "\"Carriage - Meeya\" Leather Bag", "Burnished Leather Bag"};
+L["TITAN_BAG_PROF_BAG_MINING"] = {
+"Mining Sack", "Reinforced Mining Bag", "Mammoth Mining Bag", "\"Carriage - Christina\" Precious Metal Bag", "Burnished Mining Bag"};
+L["TITAN_BAG_PROF_BAG_FISHING"] = {"Lure Master Tackle Box"};
+L["TITAN_BAG_PROF_BAG_COOKING"] = {"Portable Refrigerator", "Advanced Refrigeration Unit"};
+
 L["TITAN_CLOCK_TOOLTIP"] = "時鐘";
 L["TITAN_CLOCK_TOOLTIP_VALUE"] = "時差值: ";
 L["TITAN_CLOCK_TOOLTIP_LOCAL_TIME"] = "本地時間: ";
@@ -295,32 +292,32 @@ L["TITAN_CLOCK_MENU_HIDE_GAMETIME"] = "隱藏 時間/日曆 按鈕";
 L["TITAN_CLOCK_MENU_HIDE_MAPTIME"] = "Hide Time Button";
 L["TITAN_CLOCK_MENU_HIDE_CALENDAR"] = "Hide Calendar Button";
 
-	
-L["TITAN_COORDS_FORMAT"] = "(%.d, %.d)";
-L["TITAN_COORDS_FORMAT2"] = "(%.1f, %.1f)";
-L["TITAN_COORDS_FORMAT3"] = "(%.2f, %.2f)";
-L["TITAN_COORDS_FORMAT_LABEL"] = "(xx , yy)";
-L["TITAN_COORDS_FORMAT2_LABEL"] = "(xx.x , yy.y)";
-L["TITAN_COORDS_FORMAT3_LABEL"] = "(xx.xx , yy.yy)";
-L["TITAN_COORDS_FORMAT_COORD_LABEL"] = "座標格式";
-L["TITAN_COORDS_BUTTON_LABEL"] = "座標: ";
-L["TITAN_COORDS_TOOLTIP"] = "座標資訊";
-L["TITAN_COORDS_TOOLTIP_HINTS_1"] = "提示:Shift+滑鼠左鍵來增加位置資訊";
-L["TITAN_COORDS_TOOLTIP_HINTS_2"] = "顯示資訊在頻道上";
-L["TITAN_COORDS_TOOLTIP_ZONE"] = "區域: ";
-L["TITAN_COORDS_TOOLTIP_SUBZONE"] = "地區: ";
-L["TITAN_COORDS_TOOLTIP_PVPINFO"] = "PVP 資訊: ";
-L["TITAN_COORDS_TOOLTIP_HOMELOCATION"] = "爐石設定位置";
-L["TITAN_COORDS_TOOLTIP_INN"] = "旅館: ";
-L["TITAN_COORDS_MENU_TEXT"] = "位置";
-L["TITAN_COORDS_MENU_SHOW_ZONE_ON_PANEL_TEXT"] = "顯示區域文字";
-L["TITAN_COORDS_MENU_SHOW_COORDS_ON_MAP_TEXT"] = "顯示座標在世界地圖上";
-L["TITAN_COORDS_MAP_CURSOR_COORDS_TEXT"] = "游標(X,Y): %s";
-L["TITAN_COORDS_MAP_PLAYER_COORDS_TEXT"] = "玩家(X,Y): %s";
-L["TITAN_COORDS_NO_COORDS"] = "無座標";
-L["TITAN_COORDS_MENU_SHOW_LOC_ON_MINIMAP_TEXT"] = "在小地圖上顯示位置";
-L["TITAN_COORDS_MENU_UPDATE_WORLD_MAP"] = "Update World Map When Zone Changes";
-	
+
+L["TITAN_LOCATION_FORMAT"] = "(%.d, %.d)";
+L["TITAN_LOCATION_FORMAT2"] = "(%.1f, %.1f)";
+L["TITAN_LOCATION_FORMAT3"] = "(%.2f, %.2f)";
+L["TITAN_LOCATION_FORMAT_LABEL"] = "(xx , yy)";
+L["TITAN_LOCATION_FORMAT2_LABEL"] = "(xx.x , yy.y)";
+L["TITAN_LOCATION_FORMAT3_LABEL"] = "(xx.xx , yy.yy)";
+L["TITAN_LOCATION_FORMAT_COORD_LABEL"] = "座標格式";
+L["TITAN_LOCATION_BUTTON_LABEL"] = "座標: ";
+L["TITAN_LOCATION_TOOLTIP"] = "座標資訊";
+L["TITAN_LOCATION_TOOLTIP_HINTS_1"] = "提示:Shift+滑鼠左鍵來增加位置資訊";
+L["TITAN_LOCATION_TOOLTIP_HINTS_2"] = "顯示資訊在頻道上";
+L["TITAN_LOCATION_TOOLTIP_ZONE"] = "區域: ";
+L["TITAN_LOCATION_TOOLTIP_SUBZONE"] = "地區: ";
+L["TITAN_LOCATION_TOOLTIP_PVPINFO"] = "PVP 資訊: ";
+L["TITAN_LOCATION_TOOLTIP_HOMELOCATION"] = "爐石設定位置";
+L["TITAN_LOCATION_TOOLTIP_INN"] = "旅館: ";
+L["TITAN_LOCATION_MENU_TEXT"] = "位置";
+L["TITAN_LOCATION_MENU_SHOW_ZONE_ON_PANEL_TEXT"] = "顯示區域文字";
+L["TITAN_LOCATION_MENU_SHOW_COORDS_ON_MAP_TEXT"] = "顯示座標在世界地圖上";
+L["TITAN_LOCATION_MAP_CURSOR_COORDS_TEXT"] = "游標(X,Y): %s";
+L["TITAN_LOCATION_MAP_PLAYER_COORDS_TEXT"] = "玩家(X,Y): %s";
+L["TITAN_LOCATION_NO_COORDS"] = "無座標";
+L["TITAN_LOCATION_MENU_SHOW_LOC_ON_MINIMAP_TEXT"] = "在小地圖上顯示位置";
+L["TITAN_LOCATION_MENU_UPDATE_WORLD_MAP"] = "Update World Map When Zone Changes";
+
 L["TITAN_FPS_FORMAT"] = "%.1f";
 L["TITAN_FPS_BUTTON_LABEL"] = "FPS: ";
 L["TITAN_FPS_MENU_TEXT"] = "FPS";
@@ -329,7 +326,7 @@ L["TITAN_FPS_TOOLTIP_AVG_FPS"] = "平均 FPS: ";
 L["TITAN_FPS_TOOLTIP_MIN_FPS"] = "最小 FPS: ";
 L["TITAN_FPS_TOOLTIP_MAX_FPS"] = "最大 FPS: ";
 L["TITAN_FPS_TOOLTIP"] = "每秒的畫面數";
-	
+
 L["TITAN_LATENCY_FORMAT"] = "%d".."ms";
 L["TITAN_LATENCY_BANDWIDTH_FORMAT"] = "%.3f ".."KB/s";
 L["TITAN_LATENCY_BUTTON_LABEL"] = "連線速度: ";
@@ -339,7 +336,7 @@ L["TITAN_LATENCY_TOOLTIP_LATENCY_WORLD"] = "Game Latency (world): ";
 L["TITAN_LATENCY_TOOLTIP_BANDWIDTH_IN"] = "頻寬(IN): ";
 L["TITAN_LATENCY_TOOLTIP_BANDWIDTH_OUT"] = "頻寬(OUT): ";
 L["TITAN_LATENCY_MENU_TEXT"] = "Latency";
-	
+
 L["TITAN_LOOTTYPE_BUTTON_LABEL"] = "拾取方式: ";
 L["TITAN_LOOTTYPE_FREE_FOR_ALL"] = "自由拾取";
 L["TITAN_LOOTTYPE_ROUND_ROBIN"] = "輪流拾取";
@@ -358,7 +355,7 @@ L["TITAN_LOOTTYPE_SHOWDUNGEONDIFF_LABEL"] = "顯示副本難度";
 L["TITAN_LOOTTYPE_SETDUNGEONDIFF_LABEL"] = "設置五人副本難度";
 L["TITAN_LOOTTYPE_SETRAIDDIFF_LABEL"] = "設置團隊副本難度";
 L["TITAN_LOOTTYPE_AUTODIFF_LABEL"] = "自動設定 (基於隊伍類型)";
-	
+
 L["TITAN_MEMORY_FORMAT"] = "%.3f".."MB";
 L["TITAN_MEMORY_FORMAT_KB"] = "%d".."KB";
 L["TITAN_MEMORY_RATE_FORMAT"] = "%.3f".."KB/s";
@@ -368,9 +365,7 @@ L["TITAN_MEMORY_TOOLTIP_CURRENT_MEMORY"] = "目前: ";
 L["TITAN_MEMORY_TOOLTIP_INITIAL_MEMORY"] = "初始: ";
 L["TITAN_MEMORY_TOOLTIP_INCREASING_RATE"] = "增加比率: ";
 L["TITAN_MEMORY_KBMB_LABEL"] = "KB/MB";
-	
-L["TITAN_MONEY_FORMAT"] = "%d".."g"..", %02d".."s"..", %02d".."c";
-	
+
 L["TITAN_PERFORMANCE_TOOLTIP"] = "畫面表現";
 L["TITAN_PERFORMANCE_MENU_TEXT"] = "畫面表現";
 L["TITAN_PERFORMANCE_ADDONS"] = "插件使用情況";
@@ -438,47 +433,47 @@ L["TITAN_XP_XPGAINS_LABEL"] = "升級所需擊殺數(基於最後擊殺獲得的
 L["TITAN_XP_MENU_SIMPLE_BUTTON_XPGAIN"] = "顯示升級所需(基於最後所獲經驗)";
 	
 -- Titan Repair
-   L["REPAIR_LOCALE"] = {
-		      menu = "裝備耐久度",
-		      tooltip = "裝備耐久度",
-          button = "裝備耐久度: ",
-		      normal = "修裝花費 (正常): ",
-		      friendly = "修裝花費 (友善): ",
-		      honored = "修裝花費 (尊敬): ",
-		      revered = "修裝花費 (崇敬): ",
-	    	  exalted = "修裝花費 (崇拜): ",
-		      buttonNormal = "顯示正常",
-		      buttonFriendly = "顯示友善 (5%)",
-		      buttonHonored = "顯示尊敬 (10%)",
-		      buttonRevered = "顯示崇敬 (15%)",
-		      buttonExalted = "顯示崇拜 (20%)",
-		      percentage = "顯示百分比",
-		      itemnames = "顯示物品的名稱",
-		      mostdamaged = "損壞最多的",
-          showdurabilityframe = "顯示耐久面板",
-		      undamaged = "顯示未損壞的物品",
-		      discount = "顯示折扣於物品名稱和按鈕上",
-		      nothing = "沒有損壞的物品",
-		      confirmation = "你要修理所有已裝備物品嗎?",
-		      badmerchant = "此商人無法修裝。 顯示正常的修裝花費",
-		      popup = "顯示修理對話框",
-		      showinventory = "計算背包中裝備損壞度",
-		      WholeScanInProgress = "更新中...",
-		      AutoReplabel = "自動修裝",
-		      AutoRepitemlabel = "自動修理所有裝備",
-          ShowRepairCost = "顯示修裝費用",
-		      ignoreThrown = "忽略投擲武器",
-		  		ShowItems = "Show Items",
-		  		ShowDiscounts = "Show Discounts",
-		  		ShowCosts = "Show Costs",
-		  		Items = "Items",
-		  		Discounts = "Discounts",
-		  		Costs = "Costs",
-				CostTotal = "Total Cost",
-				CostBag = "Bag Cost",
-				CostEquip = "Equip Cost",
- 				TooltipOptions = "Tooltip",
-	};
+L["REPAIR_LOCALE"] = {
+	menu = "裝備耐久度",
+	tooltip = "裝備耐久度",
+	button = "裝備耐久度: ",
+	normal = "修裝花費 (正常): ",
+	friendly = "修裝花費 (友善): ",
+	honored = "修裝花費 (尊敬): ",
+	revered = "修裝花費 (崇敬): ",
+	exalted = "修裝花費 (崇拜): ",
+	buttonNormal = "顯示正常",
+	buttonFriendly = "顯示友善 (5%)",
+	buttonHonored = "顯示尊敬 (10%)",
+	buttonRevered = "顯示崇敬 (15%)",
+	buttonExalted = "顯示崇拜 (20%)",
+	percentage = "顯示百分比",
+	itemnames = "顯示物品的名稱",
+	mostdamaged = "損壞最多的",
+	showdurabilityframe = "顯示耐久面板",
+	undamaged = "顯示未損壞的物品",
+	discount = "顯示折扣於物品名稱和按鈕上",
+	nothing = "沒有損壞的物品",
+	confirmation = "你要修理所有已裝備物品嗎?",
+	badmerchant = "此商人無法修裝。 顯示正常的修裝花費",
+	popup = "顯示修理對話框",
+	showinventory = "計算背包中裝備損壞度",
+	WholeScanInProgress = "更新中...",
+	AutoReplabel = "自動修裝",
+	AutoRepitemlabel = "自動修理所有裝備",
+	ShowRepairCost = "顯示修裝費用",
+	ignoreThrown = "忽略投擲武器",
+	ShowItems = "Show Items",
+	ShowDiscounts = "Show Discounts",
+	ShowCosts = "Show Costs",
+	Items = "Items",
+	Discounts = "Discounts",
+	Costs = "Costs",
+	CostTotal = "Total Cost",
+	CostBag = "Bag Cost",
+	CostEquip = "Equip Cost",
+	TooltipOptions = "Tooltip",
+};
 
 L["TITAN_REPAIR"] = "泰坦修理"
 L["TITAN_REPAIR_GBANK_TOTAL"] = "公會銀行資金 :"
@@ -489,8 +484,6 @@ L["TITAN_REPAIR_GBANK_NORIGHTS"] = "你沒有公會或者你沒有使用公會�
 L["TITAN_REPAIR_CANNOT_AFFORD"] = "你現在支付不起修理費用."
 L["TITAN_REPAIR_REPORT_COST_MENU"] = "輸出修理費用到聊天頻道"
 L["TITAN_REPAIR_REPORT_COST_CHAT"] = "修理費用是 "
-
---L["TITAN_PLUGINS_MENU_TITLE"] = "擴展插件";
 
 L["TITAN_GOLD_TOOLTIPTEXT"] = "總計金錢於";
 L["TITAN_GOLD_ITEMNAME"] = "金錢追蹤";
@@ -554,6 +547,3 @@ L["TITAN_VOLUME_CONTROL_LOW"] = "低";
 L["TITAN_VOLUME_MENU_TEXT"] = "音量";
 L["TITAN_VOLUME_MENU_AUDIO_OPTIONS_LABEL"] = "顯示 聲音選項" ;
 L["TITAN_VOLUME_MENU_OVERRIDE_BLIZZ_SETTINGS"] = "替換默認聲音控制";
-
--- Version : Traditional Chinese
--- Translated by Juha,added by yeachan.

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(887, "DBM-Party-WoD", 2, 385)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12686 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14030 $"):sub(12, -3))
 mod:SetCreatureID(75786)
 mod:SetEncounterID(1652)
 mod:SetZone()
@@ -19,15 +19,15 @@ local warnFieryBoulder			= mod:NewCountAnnounce(153247, 3)
 local warnHeatWave				= mod:NewSpellAnnounce(152940, 3)
 local warnBurningSlag			= mod:NewSpellAnnounce(152939, 3)
 
-local specWarnFieryBoulder		= mod:NewSpecialWarningSpell("OptionVersion2", 153247, nil, nil, nil, 2)--Important to everyone
+local specWarnFieryBoulder		= mod:NewSpecialWarningSpell(153247, nil, nil, 2, 2)--Important to everyone
 local specWarnHeatWave			= mod:NewSpecialWarningSpell(152940, false, nil, nil, 2)
 local specWarnBurningSlag		= mod:NewSpecialWarningSpell(152939, false, nil, nil, 2)
 local specWarnBurningSlagFire	= mod:NewSpecialWarningMove(152939)
 
 local timerFieryBoulderCD		= mod:NewNextTimer(13.3, 153247)--13.3-13.4 Observed
 local timerHeatWave				= mod:NewBuffActiveTimer(9.5, 152940)
-local timerHeatWaveCD			= mod:NewNextTimer(9.5, 152940)--9.5-9.8 Observed
-local timerBurningSlagCD		= mod:NewNextTimer(10.7, 152939)--10.7-11 Observed
+local timerHeatWaveCD			= mod:NewNextTimer(9.5, 152940, nil, nil, nil, 2)--9.5-9.8 Observed
+local timerBurningSlagCD		= mod:NewNextTimer(10.7, 152939, nil, nil, nil, 3)--10.7-11 Observed
 
 local voiceFieryBoulder			= mod:NewVoice(153247)
 local voiceHeatWave				= mod:NewVoice(152940)

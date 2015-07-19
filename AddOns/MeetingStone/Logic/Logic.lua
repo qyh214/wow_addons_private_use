@@ -72,22 +72,18 @@ end
 
 function Logic:MallPurchase(id, price, confirm)
     if not id then
-        debug('MallPurchase args #1 is null', 2)
         return
     end
 
     self:SendServer('MALLPURCHASE', id, UnitGUID('player'), ADDON_VERSION_SHORT, confirm, price)
-    debug(format('MALLPURCHASE: %s %s', id, price))
 end
 
 function Logic:Exchange(text)
     if not text or text == '' then
-        debug('code is null', 2)
         return
     end
 
     self:SendServer('EXCHANGE', text, UnitGUID('player'), ADDON_VERSION_SHORT)
-    debug('EXCHANGE: ' .. text)
 end
 
 function Logic:SEI(activity)
@@ -136,4 +132,8 @@ function Logic:AddIgnore(name, msg)
         UnitGUID('player'),
         GetPlayerBattleTag(),
         ADDON_VERSION)
+end
+
+function Logic:SendCommand(cmd, ...)
+    self:SendServer(cmd, UnitGUID('player'), GetPlayerBattleTag(), ADDON_VERSION_SHORT, ...)
 end

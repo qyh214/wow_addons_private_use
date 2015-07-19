@@ -3,19 +3,22 @@
   <Frame virtual="true" name="NetEaseCoverAnimation">
     <Layers>
       <Layer level="ARTWORK">
-        <Texture atlas="groupfinder-waitdot" parentKey="Waitdot2" useAtlasSize="true" hidden="false" alpha="0">
+        <Texture atlas="groupfinder-waitdot" parentKey="Waitdot2" hidden="false" alpha="0">
+          <Size x="16" y="16" />
           <Anchors>
             <Anchor x="0" point="CENTER" y="0" />
           </Anchors>
         </Texture>
-        <Texture atlas="groupfinder-waitdot" parentKey="Waitdot1" useAtlasSize="true" hidden="false" alpha="0">
+        <Texture atlas="groupfinder-waitdot" parentKey="Waitdot1" hidden="false" alpha="0">
+          <Size x="16" y="16" />
           <Anchors>
-            <Anchor x="-16" point="CENTER" relativeKey="$parent.Waitdot2" y="0" />
+            <Anchor x="-17" point="CENTER" relativeKey="$parent.Waitdot2" y="0" />
           </Anchors>
         </Texture>
-        <Texture atlas="groupfinder-waitdot" parentKey="Waitdot3" useAtlasSize="true" hidden="false" alpha="0">
+        <Texture atlas="groupfinder-waitdot" parentKey="Waitdot3" hidden="false" alpha="0">
+          <Size x="16" y="16" />
           <Anchors>
-            <Anchor x="16" point="CENTER" relativeKey="$parent.Waitdot2" y="0" />
+            <Anchor x="17" point="CENTER" relativeKey="$parent.Waitdot2" y="0" />
           </Anchors>
         </Texture>
       </Layer>

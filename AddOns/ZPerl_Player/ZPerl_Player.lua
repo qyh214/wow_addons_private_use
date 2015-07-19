@@ -2,8 +2,8 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-local XPerl_Player_Events = {}
-local isOutOfControl = nil
+local XPerl_Player_Events = { }
+local isOutOfControl
 local playerClass, playerName
 local conf, pconf
 XPerl_RequestConfig(function(new)
@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 950 $")
+end, "$Revision: 972 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -505,9 +505,18 @@ local function XPerl_Player_DruidBarUpdate(self)
 		druidBarExtra = 0
 	end
 
+	-- Highlight update
+	--[[if (druidBarExtra) then
+		self.highlight:SetPoint("TOPLEFT", self.levelFrame, "TOPLEFT", 0, 0)
+		self.highlight:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, 0)
+	else
+		self.highlight:SetPoint("BOTTOMLEFT", self.classFrame, "BOTTOMLEFT", -2, -2)
+		self.highlight:SetPoint("TOPRIGHT", self.nameFrame, "TOPRIGHT", 0, 0)
+	end]]
+
 	local form = GetShapeshiftFormID()
 	if (self.runes and not InCombatLockdown()) then
-		if (form and form ~= MOONKIN_FORM) or GetSpecialization() ~= 1 or (not pconf or not pconf.showRunes) then 
+		if (form and form ~= MOONKIN_FORM) or GetSpecialization() ~= 1 or (not pconf or not pconf.showRunes) then
 			self.runes:Hide()
 		else
 			self.runes:Show()
@@ -515,10 +524,20 @@ local function XPerl_Player_DruidBarUpdate(self)
 	end
 
 	local h = 40 + ((druidBarExtra + (pconf.repBar and 1 or 0) + (pconf.xpBar and 1 or 0)) * 10)
-	if (pconf.extendPortrait) then
-		self.portraitFrame:SetHeight(62 + druidBarExtra * 10 + (((pconf.xpBar and 1 or 0) + (pconf.repBar and 1 or 0)) * 10))
+	if InCombatLockdown() then
+		XPerl_ProtectedCall(XPerl_Player_DruidBarUpdate, self)
+	else
+		if (pconf.extendPortrait) then
+			self.portraitFrame:SetHeight(62 + druidBarExtra * 10 + (((pconf.xpBar and 1 or 0) + (pconf.repBar and 1 or 0)) * 10))
+		else
+			self.portraitFrame:SetHeight(62)
+		end
 	end
-	self.statsFrame:SetHeight(h)
+	if (InCombatLockdown() and GetSpecialization() == 1 and pconf.showRunes) then
+		XPerl_ProtectedCall(XPerl_Player_DruidBarUpdate, self)
+	else
+		self.statsFrame:SetHeight(h)
+	end
 
 	XPerl_StatsFrameSetup(self, {druidBar, self.statsFrame.xpBar, self.statsFrame.repBar})
 	if (XPerl_Player_Buffs_Position) then
@@ -572,7 +591,7 @@ local function XPerl_Player_UpdateMana(self)
 	end
 end
 
-
+local feignDeath = GetSpellInfo(5384)
 local spiritOfRedemption = GetSpellInfo(27827)
 
 -- XPerl_Player_UpdateHealth
@@ -582,25 +601,22 @@ function XPerl_Player_UpdateHealth(self)
 	local hb = sf.healthBar
 	local playerhealth, playerhealthmax = UnitHealth(partyid), UnitHealthMax(partyid)
 
+	self.afk = UnitIsAFK(partyid) and conf.showAFK == 1
+
 	XPerl_SetHealthBar(self, playerhealth, playerhealthmax)
 	XPerl_Player_UpdateHealPrediction(self)
 
 	local greyMsg
 	if (UnitIsDead(partyid)) then
-		--if (UnitIsFeignDeath("player")) then
-		--	greyMsg = XPERL_LOC_FEIGNDEATH
-		--else
-			greyMsg = XPERL_LOC_DEAD
-		--end
-		elseif (UnitIsGhost(partyid)) then
+		greyMsg = XPERL_LOC_DEAD
+	elseif (UnitIsGhost(partyid)) then
 		greyMsg = XPERL_LOC_GHOST
-
 	elseif (UnitIsAFK("player") and conf.showAFK) then
 		greyMsg = CHAT_MSG_AFK
-
+	elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
+		greyMsg = XPERL_LOC_FEIGNDEATHSHORT
 	elseif (UnitBuff(partyid, spiritOfRedemption)) then
 		greyMsg = XPERL_LOC_DEAD
-
 	end
 
 	if (greyMsg) then
@@ -684,6 +700,14 @@ end
 -- XPerl_Player_OnUpdate
 function XPerl_Player_OnUpdate(self, elapsed)
 	CombatFeedback_OnUpdate(self, elapsed)
+
+	local partyid = self.partyid
+	local newAFK = UnitIsAFK(partyid)
+
+	if (conf.showAFK and newAFK ~= self.afk) then
+		XPerl_Player_UpdateHealth(self)
+	end
+
 	if (self.PlayerFlash) then
 		XPerl_Player_CombatFlash(self, elapsed, false)
 	end
@@ -825,7 +849,7 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 	self:UnregisterEvent("VARIABLES_LOADED")
 
 	local events = {
-		"PLAYER_ENTERING_WORLD", "PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "GROUP_ROSTER_UPDATE", "PLAYER_UPDATE_RESTING", "PLAYER_REGEN_ENABLED", "PLAYER_REGEN_DISABLED", "PLAYER_ENTER_COMBAT", "PLAYER_LEAVE_COMBAT", "PLAYER_DEAD", "UPDATE_FACTION", "UNIT_AURA", "PLAYER_CONTROL_LOST", "PLAYER_CONTROL_GAINED", "UNIT_COMBAT","UNIT_POWER_FREQUENT","UNIT_MAXPOWER","UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "PLAYER_FLAGS_CHANGED", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE", "PLAYER_TALENT_UPDATE", "RAID_TARGET_UPDATE", "UPDATE_SHAPESHIFT_FORM", "RUNE_TYPE_UPDATE", "RUNE_POWER_UPDATE","PLAYER_LEVEL_UP","UPDATE_EXHAUSTION","PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
+		"PLAYER_ENTERING_WORLD", "PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "GROUP_ROSTER_UPDATE", "PLAYER_UPDATE_RESTING", "PLAYER_REGEN_ENABLED", "PLAYER_REGEN_DISABLED", "PLAYER_ENTER_COMBAT", "PLAYER_LEAVE_COMBAT", "PLAYER_DEAD", "UPDATE_FACTION", "UNIT_AURA", "PLAYER_CONTROL_LOST", "PLAYER_CONTROL_GAINED", "UNIT_COMBAT", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "PLAYER_FLAGS_CHANGED", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE", "PLAYER_TALENT_UPDATE", "RAID_TARGET_UPDATE", "UPDATE_SHAPESHIFT_FORM", "RUNE_TYPE_UPDATE", "RUNE_POWER_UPDATE", "PLAYER_LEVEL_UP", "UPDATE_EXHAUSTION", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"
 	}
 
 	for i, event in pairs(events) do
@@ -872,7 +896,7 @@ end
 XPerl_Player_Events.UNIT_MAXHEALTH = XPerl_Player_Events.UNIT_HEALTH_FREQUENT
 XPerl_Player_Events.PLAYER_DEAD = XPerl_Player_Events.UNIT_HEALTH_FREQUENT
 
--- UNIT_POWER
+-- UNIT_POWER_FREQUENT
 function XPerl_Player_Events:UNIT_POWER_FREQUENT()
 	XPerl_Player_UpdateMana(self)
 end
@@ -881,13 +905,6 @@ end
 function XPerl_Player_Events:UNIT_MAXPOWER()
 	XPerl_Player_UpdateMana(self)
 end
-
---[[XPerl_Player_Events.UNIT_RAGE			= XPerl_Player_Events.UNIT_MAXMANA
-XPerl_Player_Events.UNIT_MAXRAGE		= XPerl_Player_Events.UNIT_RAGE
-XPerl_Player_Events.UNIT_RUNIC_POWER	= XPerl_Player_Events.UNIT_MAXMANA
-XPerl_Player_Events.UNIT_MAXRUNIC_POWER	= XPerl_Player_Events.UNIT_RUNIC_POWER
-XPerl_Player_Events.UNIT_ENERGY			= XPerl_Player_Events.UNIT_MAXMANA
-XPerl_Player_Events.UNIT_MAXENERGY		= XPerl_Player_Events.UNIT_ENERGY--]]
 
 -- UNIT_DISPLAYPOWER
 function XPerl_Player_Events:UNIT_DISPLAYPOWER()
@@ -953,7 +970,7 @@ end
 function XPerl_Player_Events:PLAYER_TALENT_UPDATE()
 	XPerl_Player_UpdateMana(self)
 	
-	if(playerClass == "PRIEST") then
+	if (playerClass == "PRIEST") then
 		--[[if (self.runes) then
 			self.runes:Hide()
 		end]]
@@ -1013,12 +1030,23 @@ function XPerl_Player_Events:UNIT_AURA()
 			XPerl_Target_UpdateCombo(XPerl_Focus)
 		end
 	end
+
+	if conf.showFD then
+		local _, class = UnitClass(self.partyid)
+		if (class == "HUNTER") then
+			local feigning = UnitBuff(self.partyid, feignDeath)
+			if (feigning ~= self.feigning) then
+				self.feigning = feigning
+				XPerl_Player_UpdateHealth(self)
+			end
+		end
+	end
 end
 
 -- PLAYER_CONTROL_LOST
 function XPerl_Player_Events:PLAYER_CONTROL_LOST()
 	if (pconf.fullScreen.enable and not UnitOnTaxi("player")) then
-		isOutOfControl = 1
+		isOutOfControl = true
 	end
 end
 
@@ -1198,7 +1226,7 @@ function XPerl_Player_Set_Bits(self)
 
 	if (pconf.portrait) then
 		self.portraitFrame:Show()
-		self.portraitFrame:SetWidth(60)
+		self.portraitFrame:SetWidth(62)
 	else
 		self.portraitFrame:Hide()
 		self.portraitFrame:SetWidth(3)
@@ -1281,19 +1309,14 @@ function XPerl_Player_Set_Bits(self)
 	XPerl_SwitchAnchor(self, "TOPLEFT")
 	self:SetHeight(max(h1, h2))
 
-	self.highlight:ClearAllPoints()
 	if (pconf.extendPortrait or (self.runes and pconf.showRunes and pconf.dockRunes)) then
 		self.portraitFrame:SetHeight(62 + (((pconf.xpBar and 1 or 0) + (pconf.repBar and 1 or 0)) * 10))
-		--self.highlight:SetPoint("TOPLEFT", self.levelFrame, "TOPLEFT", 0, 0)
-		--self.highlight:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, 0)
 	else
 		self.portraitFrame:SetHeight(62)
-		--self.highlight:SetPoint("BOTTOMLEFT", self.classFrame, "BOTTOMLEFT", -2, -2)
-		--self.highlight:SetPoint("TOPRIGHT", self.nameFrame, "TOPRIGHT", 0, 0)
 	end
 	
 	if (self.runes) then
-		if ( pconf.showRunes) then
+		if (pconf.showRunes) then
 			self.runes:Show()
 		else
 			self.runes:Hide()
@@ -1307,13 +1330,13 @@ function XPerl_Player_Set_Bits(self)
 	XPerl_Player_InitMoonkin(self)
 	XPerl_Player_InitWarlock(self)
 
-	self.highlight:ClearAllPoints()
+	--[[self.highlight:ClearAllPoints()
 	if (not pconf.level and not pconf.classIcon and (not ZPerlConfigHelper or ZPerlConfigHelper.ShowTargetCounters == 0)) then
 		self.highlight:SetPoint("TOPLEFT", self.portraitFrame, "TOPLEFT", 0, 0)
 	else
 		self.highlight:SetPoint("TOPLEFT", self.levelFrame, "TOPLEFT", 0, 0)
 	end
-	self.highlight:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
+	self.highlight:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)]]
 
 	if (playerClass == "SHAMAN" or playerClass == "DRUID" or playerClass == "MAGE" or playerClass == "MONK" or playerClass == "PRIEST" or playerClass == "WARRIOR") then
 		if (not pconf.totems) then
@@ -1408,9 +1431,9 @@ end
 
 -- XPerl_Player_InitWarlock
 function XPerl_Player_InitWarlock(self)
-	if ( select(2,UnitClass("player")) == "WARLOCK" ) then
+	if (select(2, UnitClass("player")) == "WARLOCK" ) then
 
-		if (not WarlockPowerFrame or WarlockPowerFrame:GetParent() ~= PlayerFrame or not WarlockPowerFrame:IsShown() or not pconf.showRunes ) then
+		if (not WarlockPowerFrame or WarlockPowerFrame:GetParent() ~= PlayerFrame or not WarlockPowerFrame:IsShown() or not pconf.showRunes) then
 			-- Only hijack runes if not already done so by another mod
 			return
 		end
@@ -1429,9 +1452,9 @@ end
 
 -- XPerl_Player_InitPaladin
 function XPerl_Player_InitPaladin(self)
-	if ( select(2,UnitClass("player")) == "PALADIN") then
+	if (select(2, UnitClass("player")) == "PALADIN") then
 
-		if (not PaladinPowerBar or PaladinPowerBar:GetParent() ~= PlayerFrame or not PaladinPowerBar:IsShown() or not pconf.showRunes ) then
+		if (not PaladinPowerBar or PaladinPowerBar:GetParent() ~= PlayerFrame or not PaladinPowerBar:IsShown() or not pconf.showRunes) then
 			-- Only hijack runes if not already done so by another mod
 			return
 		end
@@ -1448,9 +1471,9 @@ end
 
 --XPerl_Player_InitPriest
 function XPerl_Player_InitPriest(self)
-	if ( select(2,UnitClass("player")) == "PRIEST") then
+	if (select(2, UnitClass("player")) == "PRIEST") then
 
-		if (not PriestBarFrame or (PriestBarFrame:GetParent() ~= PlayerFrame and PriestBarFrame:GetParent() ~= self.runes) or not PriestBarFrame:IsShown() or not pconf.showRunes ) then
+		if (not PriestBarFrame or (PriestBarFrame:GetParent() ~= PlayerFrame and PriestBarFrame:GetParent() ~= self.runes) or not PriestBarFrame:IsShown() or not pconf.showRunes) then
 			-- Only hijack runes if not already done so by another mod
 			return
 		end
@@ -1468,9 +1491,9 @@ end
 
 -- XPerl_Player_InitMonk
 function XPerl_Player_InitMonk(self)
-	if ( select(2,UnitClass("player")) == "MONK") then
+	if (select(2, UnitClass("player")) == "MONK") then
 
-		if (not MonkHarmonyBar or MonkHarmonyBar:GetParent() ~= PlayerFrame or not MonkHarmonyBar:IsShown() or not pconf.showRunes ) then
+		if (not MonkHarmonyBar or MonkHarmonyBar:GetParent() ~= PlayerFrame or not MonkHarmonyBar:IsShown() or not pconf.showRunes) then
 			-- Only hijack runes if not already done so by another mod
 			return
 		end
@@ -1486,9 +1509,9 @@ function XPerl_Player_InitMonk(self)
 end
 --XPerl_Player_InitMoonkin
 function XPerl_Player_InitMoonkin(self)
-	if ( select(2,UnitClass("player")) == "DRUID") then
+	if (select(2, UnitClass("player")) == "DRUID") then
 
-		if (not EclipseBarFrame or EclipseBarFrame:GetParent() ~= PlayerFrame or not EclipseBarFrame:IsShown() or not pconf.showRunes ) then
+		if (not EclipseBarFrame or EclipseBarFrame:GetParent() ~= PlayerFrame or not EclipseBarFrame:IsShown() or not pconf.showRunes) then
 			-- Only hijack runes if not already done so by another mod
 			return
 		end
@@ -1568,9 +1591,7 @@ function XPerl_Player_InitDK(self)
 		
 			prev = rune
 		end
-
 	end
-	
 	XPerl_Player_InitDK = nil
 end
 

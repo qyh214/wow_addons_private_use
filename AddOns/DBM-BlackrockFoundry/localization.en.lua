@@ -99,7 +99,7 @@ L:SetOptionLocalization({
 	TrainVoiceAnnounce	= "Set when spoken alerts will play for trains",
 	LanesOnly			= "Only announce incoming lanes",
 	MovementsOnly		= "Only announce lane movements (Mythic Only)",
-	LanesandMovements	= "Announce incoming lanes & movmeents (Mythic Only)"
+	LanesandMovements	= "Announce incoming lanes & movements (Mythic Only)"
 })
 
 L:SetMiscLocalization({
@@ -128,7 +128,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	shipMessage		= "prepares to man the Dreadnaught's Main Cannon!"
+	shipMessage		= "prepares to man the Dreadnaught's Main Cannon!",
+	EarlyBladeDash	= "Too slow!"
 })
 
 --------------------------
@@ -142,7 +143,8 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	PositionsAllPhases	= "Give positions for $spell:156096 yells during all phases (Instead of just phase 3. This is mostly for testing and assurances, this option is not actually recommended)"
+	PositionsAllPhases	= "Give positions for $spell:156096 yells during all phases (Instead of just phase 3. This is mostly for testing and assurances, this option is not actually needed)",
+	InfoFrame			= "Show info frame for $spell:155992 and $spell:156530"
 })
 
 L:SetMiscLocalization({

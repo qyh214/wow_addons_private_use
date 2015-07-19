@@ -3,7 +3,7 @@ BuildEnv(...)
 
 local SummaryGrid = Addon:NewClass('SummaryGrid', GUI:GetClass('DataGridViewGridItem'))
 
-function SummaryGrid:Constructor(parent)
+function SummaryGrid:Constructor()
     local ExpirationTime = self:CreateFontString(nil, 'ARTWORK', 'GameFontGreenSmall') do
         ExpirationTime:SetWidth(35)
         ExpirationTime:SetPoint('RIGHT', -35, 0)

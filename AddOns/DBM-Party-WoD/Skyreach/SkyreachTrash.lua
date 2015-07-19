@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("SkyreachTrash", "DBM-Party-WoD", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12088 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -19,7 +19,6 @@ local voiceSolarDetonation			= mod:NewVoice(160288)
 mod:AddRangeFrameOption(3, 160288)--Range guessed. Maybe 5. one tooltip says 1.5 but it def seemed bigger then that. closer to 3-5
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 mod.vb.debuffCount = 0
 local Debuff = GetSpellInfo(160288)

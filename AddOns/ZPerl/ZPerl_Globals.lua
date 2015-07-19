@@ -29,7 +29,7 @@ function XPerl_SetModuleRevision(rev)
 end
 local AddRevision = XPerl_SetModuleRevision
 
-XPerl_SetModuleRevision("$Revision: 950 $")
+XPerl_SetModuleRevision("$Revision: 967 $")
 
 function XPerl_Notice(...)
 	if (DEFAULT_CHAT_FRAME) then
@@ -350,7 +350,7 @@ local function XPerl_RegisterLDB()
 end
 
 
-local function settingspart1(self,event)
+local function settingspart1(self, event)
 	playerName = UnitName("player")
 	self:UnregisterEvent(event)
 
@@ -452,6 +452,18 @@ function XPerl_LoadFrameLayout(name)
 
 		XPerl_RestoreAllPositions()
 	end
+end
+
+-- XPerl_Raid_GetGap
+function XPerl_Raid_GetGap()
+	if (XPerl_Raid_Grp2) then
+		if (XPerlDB.raid.anchor == "TOP" or XPerlDB.raid.anchor == "BOTTOM") then
+			return tonumber(floor(floor(((XPerl_Raid_Grp2:GetLeft() or 0) - (XPerl_Raid_Grp1:GetRight() or XPerl_Raid_Grp2:GetLeft() or 80) + 0.5) * 100) / 100))
+		else
+			return tonumber(floor((floor(((XPerl_Raid_Grp1:GetTop() or XPerl_Raid_Grp2:GetTop() or 200) - (XPerl_Raid_Grp2:GetBottom() or 200) + 0.5) * 100) / 100) - 46))
+		end
+	end
+	return 0
 end
 
 -- XPerl_Globals_OnEvent
@@ -613,7 +625,7 @@ function XPerl_ValidateSettings()
 
 	local list = {"player", "pet", "party", "partypet", "target", "focus", "targettarget", "targettargettarget", "focustarget", "pettarget", "raid"}
 
-	for k,v in pairs(list) do
+	for k, v in pairs(list) do
 		validate(conf[v])
 	end
 

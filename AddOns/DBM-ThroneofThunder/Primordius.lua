@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(820, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 67 $"):sub(12, -3))
 mod:SetCreatureID(69017)--69070 Viscous Horror, 69069 good ooze, 70579 bad ooze (patched out of game, :\)
 mod:SetEncounterID(1574)
 mod:SetZone()
@@ -23,14 +23,12 @@ local warnDebuffCount				= mod:NewAnnounce("warnDebuffCount", 1, 140546)
 local warnMalformedBlood			= mod:NewStackAnnounce(136050, 2, nil, "Tank|Healer")--No cd bars for this because it's HIGHLY variable (lowest priority spell so varies wildly depending on bosses 3 buffs)
 local warnPrimordialStrike			= mod:NewSpellAnnounce(136037, 3, nil, "Tank|Healer")
 local warnGasBladder				= mod:NewTargetAnnounce(136215, 4)--Stack up in front for (but not too close or cleave will get you)
-local warnCausticGas				= mod:NewCastAnnounce(136216, 3)
 local warnEruptingPustules			= mod:NewTargetAnnounce(136246, 4)
 local warnPathogenGlands			= mod:NewTargetAnnounce(136225, 3)
 local warnVolatilePathogen			= mod:NewTargetAnnounce(136228, 4)
 local warnMetabolicBoost			= mod:NewTargetAnnounce(136245, 3)--Makes Malformed Blood, Primordial Strike and melee 50% more often
 local warnVentralSacs				= mod:NewTargetAnnounce(136210, 2)--This one is a joke, if you get it, be happy.
 local warnAcidicSpines				= mod:NewTargetAnnounce(136218, 3)
-local warnViscousHorror				= mod:NewCountAnnounce("ej6969", "Tank", 137000)
 local warnBlackBlood				= mod:NewStackAnnounce(137000, 2, nil, "Tank|Healer")
 
 local specWarnFullyMutated			= mod:NewSpecialWarningYou(140546)
@@ -46,7 +44,7 @@ local timerPrimordialStrikeCD		= mod:NewCDTimer(24, 136037)
 local timerCausticGasCD				= mod:NewCDTimer(14, 136216)
 local timerVolatilePathogenCD		= mod:NewCDTimer(27, 136228)--Too cute blizzard, too cute. (those who get the 28 reference for pathogen get an A+)
 local timerBlackBlood				= mod:NewTargetTimer(60, 137000, nil, "Tank|Healer")
-local timerViscousHorrorCD			= mod:NewNextCountTimer(30, "ej6969", nil, nil, nil, 137000)
+local timerViscousHorrorCD			= mod:NewNextCountTimer(30, "ej6969", nil, nil, nil, nil, 137000)
 
 local berserkTimer					= mod:NewBerserkTimer(480)
 
@@ -66,7 +64,6 @@ local UnitDebuff = UnitDebuff
 local function BigOoze()
 	bigOozeCount = bigOozeCount + 1
 	bigOozeAlive = bigOozeAlive + 1
-	warnViscousHorror:Show(bigOozeCount)
 	specWarnViscousHorror:Show(bigOozeCount)
 	timerViscousHorrorCD:Start(30, bigOozeCount+1)
 	mod:Schedule(30, BigOoze)
@@ -133,7 +130,6 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 136216 then
-		warnCausticGas:Show()
 		specWarnCausticGas:Show()
 		timerCausticGasCD:Start()
 	end

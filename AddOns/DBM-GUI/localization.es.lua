@@ -165,7 +165,6 @@ L.BarFlash					= "Parpadear barras apunto de expirar"
 -- Tab: Spec Warn Frame
 L.Panel_SpecWarnFrame		= "Avisos Especiales"
 L.Area_SpecWarn				= "Opciones de Avisos Especiales"
-L.SpecWarn_Enabled			= "Mostrar Avisos Especiales para habilidades de jefes"
 L.SpecWarn_FlashFrame		= "Mostrar un flash de pantalla para avisos especiales"
 L.SpecWarn_Font				= "Fuente usada para avisos especiales"
 L.SpecWarn_FontSize			= "Tamaño de fuente: %d"
@@ -198,7 +197,6 @@ L.BigBrotherAnnounceToRaid		= "Anunciar los resultados de Big Brother a la banda
 
 L.Area_SpamFilter_Outgoing		= "Opciones de Filtro Global"
 L.SpamBlockNoShowAnnounce		= "No mostrar avisos o reproducir sonidos"
-L.SpamBlockNoSendWhisper		= "No enviar susurros a otros jugadores"
 L.SpamBlockNoSetIcon			= "No poner iconos en objetivos"
 L.SpamBlockNoRangeFrame			= "No mostrar radar de rango"
 L.SpamBlockNoInfoFrame			= "No mostrar marco de información"

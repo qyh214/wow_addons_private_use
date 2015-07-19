@@ -10,12 +10,12 @@ XPerl_RequestConfig(function(New)
 	conf = New
 	pconf = New.party
 	petconf = New.partypet
-	for k,v in pairs(PartyPetFrames) do
+	for k, v in pairs(PartyPetFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 938 $")
+end, "$Revision: 972 $")
 
-local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
+--local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
 local AllPetFrames = {}
 local UnitName = UnitName
@@ -37,7 +37,7 @@ function XPerl_Party_Pet_OnLoadEvents(self)
 	self.time = 0
 
 	local events = {
-		"UNIT_COMBAT", "UNIT_FACTION", "UNIT_AURA", "UNIT_FLAGS", "UNIT_HEALTH", "UNIT_MAXHEALTH", "PLAYER_ENTERING_WORLD", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
+		"UNIT_COMBAT", "UNIT_FACTION", "UNIT_AURA", "UNIT_FLAGS", "UNIT_HEALTH", "UNIT_MAXHEALTH", "PLAYER_ENTERING_WORLD", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"
 	}
 
 	for k, v in pairs(events) do
@@ -60,9 +60,10 @@ do
 	local guids
 	-- XPerl_Party_Pet_UpdateGUIDs
 	function XPerl_Party_Pet_UpdateGUIDs()
-		del(guids)
-		guids = new()
-		for i = 1,GetNumSubgroupMembers() do
+		--del(guids)
+		--guids = new()
+		guids = { }
+		for i = 1, GetNumSubgroupMembers() do
 			local id = "partypet"..i
 			if (UnitExists(id)) then
 				guids[UnitGUID(id)] = PartyPetFrames[id]
@@ -92,7 +93,7 @@ end
 -- CheckVisiblity()
 local function CheckVisiblity()
 	local on
-	for i,frame in pairs(PartyPetFrames) do
+	for i, frame in pairs(PartyPetFrames) do
 		if (frame:IsShown()) then
 			on = true
 		end
@@ -134,31 +135,31 @@ function XPerl_Party_Pet_OnLoad(self)
 			debuffParent = true,
 			debuffSizeMod = 0,
 			debuffAnchor1 = function(self, b)
-						local relation = self.buffFrame.buff and self.buffFrame.buff[1]
-						if (not relation) then
-							relation = XPerl_GetBuffButton(self, 1, 0, true)
-						end
-						if (relation) then
-							if (pconf.flip) then
-								b:SetPoint("TOPRIGHT", relation, "BOTTOMRIGHT", 0, 0)
-							else
-								b:SetPoint("TOPLEFT", relation, "BOTTOMLEFT", 0, 0)
-							end
-						else
-							if (pconf.flip) then
-								b:SetPoint("TOPRIGHT", 0, -14)
-							else
-								b:SetPoint("TOPLEFT", 0, -14)
-							end
-						end
-					end,
-			buffAnchor1 =	function(self, b)
-						if (pconf.flip) then
-							b:SetPoint("TOPRIGHT", 0, 0)
-						else
-							b:SetPoint("TOPLEFT", 0, 0)
-						end
-					end,
+				local relation = self.buffFrame.buff and self.buffFrame.buff[1]
+				if (not relation) then
+					relation = XPerl_GetBuffButton(self, 1, 0, true)
+				end
+				if (relation) then
+					if (pconf.flip) then
+						b:SetPoint("TOPRIGHT", relation, "BOTTOMRIGHT", 0, 0)
+					else
+						b:SetPoint("TOPLEFT", relation, "BOTTOMLEFT", 0, 0)
+					end
+				else
+					if (pconf.flip) then
+						b:SetPoint("TOPRIGHT", 0, -14)
+					else
+						b:SetPoint("TOPLEFT", 0, -14)
+					end
+				end
+			end,
+			buffAnchor1 = function(self, b)
+				if (pconf.flip) then
+					b:SetPoint("TOPRIGHT", 0, 0)
+				else
+					b:SetPoint("TOPLEFT", 0, 0)
+				end
+			end,
 		}
 	end
 
@@ -175,18 +176,16 @@ function XPerl_Party_Pet_OnLoad(self)
 
 	self.FlashFrames = {self.nameFrame, self.statsFrame}
 
-	self:SetScript("OnShow",
-		function(self)
-			self.conf = conf.partypet
-			CheckVisiblity()
-			XPerl_Party_Pet_UpdateDisplay(self)
-			XPerl_Party_SetDebuffLocation(self:GetParent())
-		end)
-	self:SetScript("OnHide",
-		function(self)
-			CheckVisiblity()
-			XPerl_Party_SetDebuffLocation(self:GetParent())
-		end)
+	self:SetScript("OnShow", function(self)
+		self.conf = conf.partypet
+		CheckVisiblity()
+		XPerl_Party_Pet_UpdateDisplay(self)
+		XPerl_Party_SetDebuffLocation(self:GetParent())
+	end)
+	self:SetScript("OnHide", function(self)
+		CheckVisiblity()
+		XPerl_Party_SetDebuffLocation(self:GetParent())
+	end)
 
 	self.time = 0
 	self.tutorialPage = 5
@@ -208,9 +207,9 @@ local function XPerl_Party_Pet_UpdateName(self)
 		if (Partypetname ~= nil) then
 			self.nameFrame.text:SetText(Partypetname)
 			if (UnitIsPVP(self.ownerid)) then
-				self.nameFrame.text:SetTextColor(0,1,0)
+				self.nameFrame.text:SetTextColor(0, 1, 0)
 			else
-				self.nameFrame.text:SetTextColor(0.5,0.5,1)
+				self.nameFrame.text:SetTextColor(0.5, 0.5, 1)
 			end
 		end
 	end
@@ -224,21 +223,21 @@ function XPerl_Party_Pet_UpdateHealth(self)
 
 	local Partypethealth, Partypethealthmax = UnitHealth(self.partyid), UnitHealthMax(self.partyid)
 	local healthPct
-	if UnitIsDeadOrGhost(self.partyid) or (Partypethealth == 0 and Partypethealthmax == 0) then--Probably dead target
-		healthPct = 0--So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
-	elseif Partypethealth > 0 and Partypethealthmax == 0 then--We have current ho but max hp failed.
-		Partypethealthmax = Partypethealth--Make max hp at least equal to current health
-		healthPct = 100--And percent 100% cause a number divided by itself is 1, duh.
+	if UnitIsDeadOrGhost(self.partyid) or (Partypethealth == 0 and Partypethealthmax == 0) then -- Probably dead target
+		healthPct = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
+	elseif Partypethealth > 0 and Partypethealthmax == 0 then -- We have current ho but max hp failed.
+		Partypethealthmax = Partypethealth -- Make max hp at least equal to current health
+		healthPct = 100 -- And percent 100% cause a number divided by itself is 1, duh.
 	else
-		healthPct = Partypethealth / Partypethealthmax--Everything is dandy, so just do it right way.
+		healthPct = Partypethealth / Partypethealthmax -- Everything is dandy, so just do it right way.
 	end
-	local phealthPct = format("%3.0f", healthPct * 100)
+	--local phealthPct = format("%3.0f", healthPct * 100)
 
 	self.statsFrame.healthBar:SetMinMaxValues(0, Partypethealthmax)
 	self.statsFrame.healthBar:SetValue(Partypethealth)
 	XPerl_ColourHealthBar(self, healthPct)
 
-	--XPerl_Party_Pet_UpdateHealPrediction(self)
+	XPerl_Party_Pet_UpdateHealPrediction(self)
 
 	if (UnitIsDead(self.partyid)) then
 		self.statsFrame:SetGrey()
@@ -251,7 +250,7 @@ function XPerl_Party_Pet_UpdateHealth(self)
 				self.statsFrame.healthBar.text:SetText(Partypethealth - Partypethealthmax)
 			end
 		else
-			self.statsFrame.healthBar.text:SetFormattedText("%.0f%%",(100*(Partypethealth / Partypethealthmax))+0.5)
+			self.statsFrame.healthBar.text:SetFormattedText("%.0f%%", (100 * (Partypethealth / Partypethealthmax)))
 		end
 
 		self.statsFrame.healthBar.text:Show()
@@ -294,7 +293,7 @@ local function XPerl_Party_Pet_UpdateMana(self)
 		if (XPerl_GetDisplayedPowerType(self.partyid) >= 1) then
 			self.statsFrame.manaBar.text:SetText(Partypetmana)
 		else
-			self.statsFrame.manaBar.text:SetFormattedText("%.0f%%",(100*(Partypetmana / Partypetmanamax))+0.5)
+			self.statsFrame.manaBar.text:SetFormattedText("%.0f%%", (100 * (Partypetmana / Partypetmanamax)))
 		end
 	end
 end
@@ -329,7 +328,7 @@ end
 
 -- XPerl_Party_Pet_UpdateDisplayAll
 function XPerl_Party_Pet_UpdateDisplayAll()
-	for i,frame in pairs(PartyPetFrames) do
+	for i, frame in pairs(PartyPetFrames) do
 		if (frame:IsShown()) then
 			XPerl_Party_Pet_UpdateDisplay(frame)
 		end
@@ -386,15 +385,20 @@ end
 
 -- XPerl_Party_Pet_OnUpdate
 function XPerl_Party_Pet_OnUpdate(self, elapsed)
-	for i,f in pairs(PartyPetFrames) do
-		if (f:IsShown()) then
-			if (f.PlayerFlash) then
-				XPerl_Party_Pet_CombatFlash(f, elapsed, false)
+	for unit, frame in pairs(PartyPetFrames) do
+		if (frame:IsShown()) then
+			local visible = UnitIsVisible(unit)
+			if frame.visible ~= visible then
+				XPerl_Party_Pet_UpdateDisplay(frame)
+				frame.visible = visible
 			end
-			f.time = f.time + elapsed
-			if (f.time > 0.2) then
-				f.time = 0
-				XPerl_UpdateSpellRange(f, nil, false)
+			if (frame.PlayerFlash) then
+				XPerl_Party_Pet_CombatFlash(frame, elapsed, false)
+			end
+			frame.time = frame.time + elapsed
+			if (frame.time > 0.2) then
+				frame.time = 0
+				XPerl_UpdateSpellRange(frame, nil, false)
 			end
 		end
 	end
@@ -481,7 +485,7 @@ end
 -- UNIT_MAXHEALTH
 function XPerl_Party_Pet_Events:UNIT_MAXHEALTH()
 	XPerl_Party_Pet_UpdateHealth(self)
-	XPerl_Unit_UpdateLevel(self)
+	--XPerl_Unit_UpdateLevel(self)
 end
 
 -- UNIT_AURA
@@ -499,13 +503,8 @@ function XPerl_Party_Pet_Events:UNIT_MANA()
 	XPerl_Party_Pet_UpdateMana(self)
 end
 
-XPerl_Party_Pet_Events.UNIT_MAXMANA	= XPerl_Party_Pet_Events.UNIT_MANA
-XPerl_Party_Pet_Events.UNIT_RAGE	= XPerl_Party_Pet_Events.UNIT_MANA
-XPerl_Party_Pet_Events.UNIT_MAXRAGE	= XPerl_Party_Pet_Events.UNIT_MANA
-XPerl_Party_Pet_Events.UNIT_FOCUS	= XPerl_Party_Pet_Events.UNIT_MANA
-XPerl_Party_Pet_Events.UNIT_MAXFOCUS	= XPerl_Party_Pet_Events.UNIT_MANA
-XPerl_Party_Pet_Events.UNIT_ENERGY	= XPerl_Party_Pet_Events.UNIT_MANA
-XPerl_Party_Pet_Events.UNIT_MAXENERGY	= XPerl_Party_Pet_Events.UNIT_MANA
+XPerl_Party_Pet_Events.UNIT_POWER_FREQUENT = XPerl_Party_Pet_Events.UNIT_MANA
+XPerl_Party_Pet_Events.UNIT_MAXPOWER = XPerl_Party_Pet_Events.UNIT_MANA
 
 function XPerl_Party_Pet_Events:UNIT_HEAL_PREDICTION(unit)
 	if (unit == self.partyid) then
@@ -513,7 +512,7 @@ function XPerl_Party_Pet_Events:UNIT_HEAL_PREDICTION(unit)
 	end
 end
 
--- EnableDisable()
+-- EnableDisable
 local function EnableDisable(self)
 	if (petconf.enable) then
 		RegisterUnitWatch(self)
@@ -629,7 +628,7 @@ function XPerl_Party_Pet_Set_Bits()
 		end
 	end
 
-	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.mana, {"UNIT_RAGE", "UNIT_MAXRAGE", "UNIT_ENERGY", "UNIT_MAXENERGY", "UNIT_MANA", "UNIT_MAXMANA", "UNIT_DISPLAYPOWER"})
+	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.mana, {"UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MANA", "UNIT_DISPLAYPOWER"})
 	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.name, {"UNIT_NAME_UPDATE"})
 	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.name and petconf.level, {"UNIT_LEVEL"})
 end

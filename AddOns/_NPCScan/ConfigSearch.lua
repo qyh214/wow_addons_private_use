@@ -6,11 +6,12 @@ local _G = getfenv(0)
 -- Functions
 local pairs = _G.pairs
 local select = _G.select
+local tostring = _G.tostring
 local type = _G.type
 
 -- Libraries
 local math = _G.math
-
+local table = _G.table
 
 -------------------------------------------------------------------------------
 -- AddOn namespace.
@@ -35,8 +36,8 @@ local TEXTURE_READY = [[|TInterface\RaidFrame\ReadyCheck-Ready:0|t]]
 -- Variables.
 -------------------------------------------------------------------------------
 local panel_tabs = {}
-local selected_npc = nil
-local current_tab = nil
+local selected_npc
+local current_tab
 
 
 -------------------------------------------------------------------------------
@@ -251,34 +252,34 @@ end)
 panel.npc_remove_button = npc_remove_button
 
 local ach_npc_remove_button = _G.CreateFrame("Button", nil, ach_npc_controls, "UIPanelButtonTemplate")
---ach_npc_remove_button:SetSize(50, 20)
 ach_npc_remove_button:SetPoint("BOTTOMRIGHT", panel, -16, 16)
 ach_npc_remove_button.tooltipText = L.SEARCH_IGNORE_DESC
 ach_npc_remove_button:SetScript("OnEnter", private.Config.ControlOnEnter)
 ach_npc_remove_button:SetScript("OnLeave", _G.GameTooltip_Hide)
 ach_npc_remove_button:SetText(L.SEARCH_IGNORE)
-ach_npc_remove_button:SetSize(ach_npc_remove_button:GetTextWidth()+25, 20)
+ach_npc_remove_button:SetSize(ach_npc_remove_button:GetTextWidth() + 25, 20)
 
 ach_npc_remove_button:SetScript("OnClick", function(self)
-					if  selected_npc == nil then return end
-					local npc_name = selected_npc["name"]
-					local npc_id = selected_npc["id"]
-					local world_id = selected_npc["world"]
-					local zone_name = selected_npc["zone"]
-					if current_tab == "IGNORE" then
-						private.Options.IgnoreList.NPCs[npc_id] = nil
-						private.Options.IgnoreList.MapName[npc_id] = nil
-						private.Options.IgnoreList.WorldID[npc_id] = nil
-						private.ReavtivateIgnoreMob(npc_id, world_id)
-					else
-						private.Options.IgnoreList.NPCs[npc_id] = npc_name
-						private.Options.IgnoreList.MapName[npc_id] = zone_name
-						private.Options.IgnoreList.WorldID[npc_id] = world_id
-						private.DeavtivateIgnoreMob(npc_id)
-					end
-					private.Config.Search.UpdateTab(current_tab)
-					selected_npc = nil
-					end)
+	if selected_npc == nil then
+		return
+	end
+	local npc_id = selected_npc["id"]
+	local world_id = selected_npc["world"]
+
+	if current_tab == "IGNORE" then
+		private.Options.IgnoreList.NPCs[npc_id] = nil
+		private.Options.IgnoreList.MapName[npc_id] = nil
+		private.Options.IgnoreList.WorldID[npc_id] = nil
+		private.ReavtivateIgnoreMob(npc_id, world_id)
+	else
+		private.Options.IgnoreList.NPCs[npc_id] = selected_npc["name"]
+		private.Options.IgnoreList.MapName[npc_id] = selected_npc["zone"]
+		private.Options.IgnoreList.WorldID[npc_id] = world_id
+		private.DeavtivateIgnoreMob(npc_id)
+	end
+	private.Config.Search.UpdateTab(current_tab)
+	selected_npc = nil
+end)
 
 panel.ach_npc_remove_button = ach_npc_remove_button
 
@@ -498,7 +499,7 @@ do
 			end
 		else
 			tooltip:SetText(TEXT_TAB_TOOLTIPS[tab.identifier] or _G.UNKNOWN, nil, nil, nil, nil, true)
-			if tab.checkbox then  
+			if tab.checkbox then
 				if not tab.checkbox:GetChecked() then
 					local red = _G.RED_FONT_COLOR
 					tooltip:AddLine(L.SEARCH_ACHIEVEMENT_DISABLED, red.r, red.g, red.b)
@@ -769,11 +770,13 @@ do
 		panel.table.Header:SetAlpha(ALPHA_ACTIVE)
 	end
 
-	local function  SetSelectedID(npc_id, npc_name, npc_world, npc_zone)
-		selected_npc = { name = npc_name,
-					id = npc_id,
-					world = npc_world,
-					zone = npc_zone,}
+	local function SetSelectedID(npc_id, npc_name, npc_world, npc_zone)
+		selected_npc = {
+			name = npc_name,
+			id = npc_id,
+			world = npc_world,
+			zone = npc_zone,
+		}
 	end
 
 	local npc_tab = AddTab("NPC", UpdateCustomTab, ActivateCustomTab, DeactivateCustomTab)
@@ -793,9 +796,9 @@ do
 		if not npc_id then
 			return
 		end
-		SetSelectedID(npc_id, L.NPCs[tostring(npc_id)],  private.NPC_ID_TO_WORLD_NAME[npc_id] , private.NPC_ID_TO_MAP_NAME[npc_id])
+		SetSelectedID(npc_id, L.NPCs[tostring(npc_id)], private.NPC_ID_TO_WORLD_NAME[npc_id], private.NPC_ID_TO_MAP_NAME[npc_id])
 		current_tab = "IGNORE"
-		end
+	end
 
 	local rare_npc_tab = AddTab("RARENPC", UpdateRareTab, ActivateNPCTab, DeactivateNPCTab)
 	rare_npc_tab.table_row_on_select = function(text_table, npc_id)
@@ -803,41 +806,45 @@ do
 			return
 		end
 		current_tab = "RARENPC"
-		SetSelectedID(npc_id, private.UNTAMABLE_ID_TO_NAME[npc_id], private.NPC_ID_TO_WORLD_NAME[npc_id] , private.NPC_ID_TO_MAP_NAME[npc_id])
-		end
+		SetSelectedID(npc_id, private.UNTAMABLE_ID_TO_NAME[npc_id], private.NPC_ID_TO_WORLD_NAME[npc_id], private.NPC_ID_TO_MAP_NAME[npc_id])
+	end
 
 	local beast_tab = AddTab("BEASTS", UpdateTameableTab, ActivateNPCTab, DeactivateNPCTab)
 	beast_tab.table_row_on_select = function(text_table, npc_id)
 		if not npc_id then
 			return
 		end
-		SetSelectedID(npc_id, private.TAMABLE_NON_ACHIEVMENT_LIST[npc_id], private.NPC_ID_TO_WORLD_NAME[npc_id] , private.NPC_ID_TO_MAP_NAME[npc_id])
+		SetSelectedID(npc_id, private.TAMABLE_NON_ACHIEVMENT_LIST[npc_id], private.NPC_ID_TO_WORLD_NAME[npc_id], private.NPC_ID_TO_MAP_NAME[npc_id])
 		current_tab = "BEASTS"
-		end
+	end
 
-	function pairsByKeys (t, f)
+	local function pairsByKeys(t, f)
 		local a = {}
-		for n in pairs(t) do table.insert(a, n) end
-			table.sort(a, f)
-			local i = 0      -- iterator variable
-			local iter = function ()   -- iterator function
+		for n in pairs(t) do
+			table.insert(a, n)
+		end
+		table.sort(a, f)
+
+		local i = 0
+		local iter = function()
 			i = i + 1
-			if a[i] == nil then return nil
-				else return a[i], t[a[i]]
+			if a[i] == nil then
+				return nil
+			else
+				return a[i], t[a[i]]
 			end
 		end
 		return iter
 	end
 
---	for achievement_id in pairs(private.ACHIEVEMENTS) do
 	for achievement_id in pairsByKeys(private.ACHIEVEMENTS) do
 		local Ach_tab = AddTab(achievement_id, UpdateAchievementTab, ActivateAchievementTab, DeactivateAchievementTab)
 		Ach_tab.table_row_on_select = function(text_table, npc_id)
-		if not npc_id then
-			return
-		end
-		SetSelectedID(npc_id, L.NPCs[tostring(npc_id)],  private.NPC_ID_TO_WORLD_NAME[npc_id] , private.NPC_ID_TO_MAP_NAME[npc_id])
-		current_tab = achievement_id
+			if not npc_id then
+				return
+			end
+			SetSelectedID(npc_id, L.NPCs[tostring(npc_id)], private.NPC_ID_TO_WORLD_NAME[npc_id], private.NPC_ID_TO_MAP_NAME[npc_id])
+			current_tab = achievement_id
 		end
 	end
 end -- do-block

@@ -1,12 +1,12 @@
-﻿## Interface: 60000
+﻿## Interface: 60100
 ## Title: GladiatorlosSA_zhCN(Yike_Xia)
 ## Title-zhCN:GladiatorlosSA_夏一可语音包
 ## Title-zhTW:GladiatorlosSA_夏一可語音包
 ## Notes: GSA plugin for Chinese voice set
 ## Author: Yike Xia, Mini_Dragon
 ## Dependencies: GladiatorlosSA
-## Version: 1.0
-## X-Curse-Packaged-Version: v7
+## Version: 20150413
+## X-Curse-Packaged-Version: v8
 ## X-Curse-Project-Name: GladiatorlosSA_zhCN
 ## X-Curse-Project-ID: gladiatorlossa_zhcn
 ## X-Curse-Repository-ID: wow/gladiatorlossa_zhcn/mainline

@@ -258,7 +258,6 @@ TITAN_PANEL_SAVED_VARIABLES = {
 	LockAutoHideInCombat = false,
 	VersionShown = 1,
 	ToolTipsShown = 1,
-	Silenced = false,
 	HideTipsInCombat = false,
 	-- for the independent bars
 	Bar_Show = true,
@@ -292,6 +291,8 @@ TITAN_ALL_SAVED_VARIABLES = {
 	-- Global profile
 	GlobalProfileUse = false,
 	GlobalProfileName = TITAN_PROFILE_NONE,
+	-- Silent Load
+	Silenced = false,
 };
 
 -- The skins released with Titan
@@ -591,7 +592,7 @@ function TitanVariables_ExtraPluginSettings()
 	for id, plugin in pairs(TitanPluginSettings) do
 		if (id and TitanUtils_IsPluginRegistered(id)) then
 		else
-			TitanRegisterExtra(id)								
+			TitanRegisterExtra(id)
 		end
 	end
 end
@@ -824,13 +825,11 @@ NOTE:
 :NOTE
 --]]
 function TitanPanelGetVar(var)
-	if (var and TitanPanelSettings) then		
+	if (var and TitanPanelSettings) then
 		if TitanPanelSettings[var] == "Titan Nil" then 
 			TitanPanelSettings[var] = false 
 		end		
-		return TitanUtils_Ternary(TitanPanelSettings[var] == false, 
-				nil, 
-				TitanPanelSettings[var]);
+		return TitanUtils_Ternary(TitanPanelSettings[var] == false, nil, TitanPanelSettings[var]);
 	end
 end
 
@@ -875,13 +874,11 @@ NOTE:
 :NOTE
 --]]
 function TitanAllGetVar(var)
-	if (var and TitanAll) then		
+	if (var and TitanAll) then
 		if TitanAll[var] == "Titan Nil" then 
 			TitanAll[var] = false 
-		end		
-		return TitanUtils_Ternary(TitanAll[var] == false, 
-				nil, 
-				TitanAll[var]);
+		end
+		return TitanUtils_Ternary(TitanAll[var] == false, nil, TitanAll[var]);
 	end
 end
 
@@ -896,7 +893,7 @@ NOTE:
 :NOTE
 --]]
 function TitanAllSetVar(var, value)
-	if (var and TitanAll) then		
+	if (var and TitanAll) then
 		TitanAll[var] = TitanUtils_Ternary(value, value, false);
 	end
 end

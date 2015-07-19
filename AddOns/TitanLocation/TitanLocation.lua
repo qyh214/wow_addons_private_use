@@ -27,9 +27,9 @@ function TitanPanelLocationButton_OnLoad(self)
 		id = TITAN_LOCATION_ID,
 		category = "Built-ins",
 		version = TITAN_VERSION,
-		menuText = L["TITAN_COORDS_MENU_TEXT"],
+		menuText = L["TITAN_LOCATION_MENU_TEXT"],
 		buttonTextFunction = "TitanPanelLocationButton_GetButtonText",
-		tooltipTitle = L["TITAN_COORDS_TOOLTIP"],
+		tooltipTitle = L["TITAN_LOCATION_TOOLTIP"],
 		tooltipTextFunction = "TitanPanelLocationButton_GetTooltipText",
 		icon = "Interface\\AddOns\\TitanLocation\\TitanLocation",
 		iconWidth = 16,
@@ -96,11 +96,11 @@ function TitanPanelLocationButton_GetButtonText(id)
 	if button.py == nil then button.py = 0 end
 	local locationText = "";
 	if (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat1")) then
-		locationText = format(L["TITAN_COORDS_FORMAT"], 100 * button.px, 100 * button.py);
+		locationText = format(L["TITAN_LOCATION_FORMAT"], 100 * button.px, 100 * button.py);
 	elseif (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat2")) then
-		locationText = format(L["TITAN_COORDS_FORMAT2"], 100 * button.px, 100 * button.py);
+		locationText = format(L["TITAN_LOCATION_FORMAT2"], 100 * button.px, 100 * button.py);
 	elseif (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat3")) then
-		locationText = format(L["TITAN_COORDS_FORMAT3"], 100 * button.px, 100 * button.py);
+		locationText = format(L["TITAN_LOCATION_FORMAT3"], 100 * button.px, 100 * button.py);
 	end
 
 	if button.px == 0 and button.py == 0 then
@@ -115,7 +115,7 @@ function TitanPanelLocationButton_GetButtonText(id)
 		end
 	else
 		if button.px == 0 and button.py == 0 then
-			locationText = L["TITAN_COORDS_NO_COORDS"];
+			locationText = L["TITAN_LOCATION_NO_COORDS"];
 		end
 	end
 
@@ -136,7 +136,7 @@ function TitanPanelLocationButton_GetButtonText(id)
 		locationRichText = TitanUtils_GetHighlightText(locationText);
 	end
 
-	return L["TITAN_COORDS_BUTTON_LABEL"], locationRichText;
+	return L["TITAN_LOCATION_BUTTON_LABEL"], locationRichText;
 end
 
 -- **************************************************************************
@@ -163,14 +163,14 @@ function TitanPanelLocationButton_GetTooltipText()
 	end
 
 	return ""..
-		L["TITAN_COORDS_TOOLTIP_ZONE"].."\t"..TitanUtils_GetHighlightText(TitanPanelLocationButton.zoneText).."\n"..
-		TitanUtils_Ternary((TitanPanelLocationButton.subZoneText == ""), "", L["TITAN_COORDS_TOOLTIP_SUBZONE"].."\t"..TitanUtils_GetHighlightText(TitanPanelLocationButton.subZoneText).."\n")..          
-		TitanUtils_Ternary((pvpInfoRichText == ""), "", L["TITAN_COORDS_TOOLTIP_PVPINFO"].."\t"..pvpInfoRichText.."\n")..
+		L["TITAN_LOCATION_TOOLTIP_ZONE"].."\t"..TitanUtils_GetHighlightText(TitanPanelLocationButton.zoneText).."\n"..
+		TitanUtils_Ternary((TitanPanelLocationButton.subZoneText == ""), "", L["TITAN_LOCATION_TOOLTIP_SUBZONE"].."\t"..TitanUtils_GetHighlightText(TitanPanelLocationButton.subZoneText).."\n")..          
+		TitanUtils_Ternary((pvpInfoRichText == ""), "", L["TITAN_LOCATION_TOOLTIP_PVPINFO"].."\t"..pvpInfoRichText.."\n")..
 		"\n"..
-		TitanUtils_GetHighlightText(L["TITAN_COORDS_TOOLTIP_HOMELOCATION"]).."\n"..
-		L["TITAN_COORDS_TOOLTIP_INN"].."\t"..TitanUtils_GetHighlightText(GetBindLocation()).."\n"..
-		TitanUtils_GetGreenText(L["TITAN_COORDS_TOOLTIP_HINTS_1"]).."\n"..
-		TitanUtils_GetGreenText(L["TITAN_COORDS_TOOLTIP_HINTS_2"]);
+		TitanUtils_GetHighlightText(L["TITAN_LOCATION_TOOLTIP_HOMELOCATION"]).."\n"..
+		L["TITAN_LOCATION_TOOLTIP_INN"].."\t"..TitanUtils_GetHighlightText(GetBindLocation()).."\n"..
+		TitanUtils_GetGreenText(L["TITAN_LOCATION_TOOLTIP_HINTS_1"]).."\n"..
+		TitanUtils_GetGreenText(L["TITAN_LOCATION_TOOLTIP_HINTS_2"]);
 end
 
 -- **************************************************************************
@@ -221,13 +221,13 @@ function TitanPanelLocationButton_OnClick(self, button)
 			if ( activeWindow ) then
 				if (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat1")) then
 					message = TitanUtils_ToString(self.zoneText).." "..
-					format(L["TITAN_COORDS_FORMAT"], 100 * self.px, 100 * self.py);
+					format(L["TITAN_LOCATION_FORMAT"], 100 * self.px, 100 * self.py);
 				elseif (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat2")) then
 					message = TitanUtils_ToString(self.zoneText).." "..
-					format(L["TITAN_COORDS_FORMAT2"], 100 * self.px, 100 * self.py);
+					format(L["TITAN_LOCATION_FORMAT2"], 100 * self.px, 100 * self.py);
 				elseif (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat3")) then
 					message = TitanUtils_ToString(self.zoneText).." "..
-					format(L["TITAN_COORDS_FORMAT3"], 100 * self.px, 100 * self.py);
+					format(L["TITAN_LOCATION_FORMAT3"], 100 * self.px, 100 * self.py);
 				end
 				activeWindow:Insert(message);
 			end
@@ -279,26 +279,26 @@ function TitanPanelRightClickMenu_PrepareLocationMenu()
 		if _G["UIDROPDOWNMENU_MENU_VALUE"] == "Options" then
 			TitanPanelRightClickMenu_AddTitle(L["TITAN_PANEL_OPTIONS"], _G["UIDROPDOWNMENU_MENU_LEVEL"]);
 			info = {};
-			info.text = L["TITAN_COORDS_MENU_SHOW_ZONE_ON_PANEL_TEXT"];
+			info.text = L["TITAN_LOCATION_MENU_SHOW_ZONE_ON_PANEL_TEXT"];
 			info.func = TitanPanelLocationButton_ToggleDisplay;
 			info.checked = TitanGetVar(TITAN_LOCATION_ID, "ShowZoneText");
 			UIDropDownMenu_AddButton(info, _G["UIDROPDOWNMENU_MENU_LEVEL"]);
 
 			info = {};
-			info.text = L["TITAN_COORDS_MENU_SHOW_COORDS_ON_MAP_TEXT"];
+			info.text = L["TITAN_LOCATION_MENU_SHOW_COORDS_ON_MAP_TEXT"];
 			info.func = TitanPanelLocationButton_ToggleLocationOnMap;
 			info.checked = TitanGetVar(TITAN_LOCATION_ID, "ShowCoordsOnMap");
 			UIDropDownMenu_AddButton(info, _G["UIDROPDOWNMENU_MENU_LEVEL"]);
 
 			info = {};
-			info.text = L["TITAN_COORDS_MENU_SHOW_LOC_ON_MINIMAP_TEXT"];
+			info.text = L["TITAN_LOCATION_MENU_SHOW_LOC_ON_MINIMAP_TEXT"];
 			info.func = TitanPanelLocationButton_ToggleLocOnMiniMap;
 			info.checked = TitanGetVar(TITAN_LOCATION_ID, "ShowLocOnMiniMap");
 			info.disabled = InCombatLockdown()
 			UIDropDownMenu_AddButton(info, _G["UIDROPDOWNMENU_MENU_LEVEL"]);
 			
 			info = {};
-			info.text = L["TITAN_COORDS_MENU_UPDATE_WORLD_MAP"];
+			info.text = L["TITAN_LOCATION_MENU_UPDATE_WORLD_MAP"];
 			info.func = function()
 				TitanToggleVar(TITAN_LOCATION_ID, "UpdateWorldmap");
 			end
@@ -307,9 +307,9 @@ function TitanPanelRightClickMenu_PrepareLocationMenu()
 			UIDropDownMenu_AddButton(info, _G["UIDROPDOWNMENU_MENU_LEVEL"]);
 		end
 		if _G["UIDROPDOWNMENU_MENU_VALUE"] == "CoordFormat" then
-			TitanPanelRightClickMenu_AddTitle(L["TITAN_COORDS_FORMAT_COORD_LABEL"], _G["UIDROPDOWNMENU_MENU_LEVEL"]);
+			TitanPanelRightClickMenu_AddTitle(L["TITAN_LOCATION_FORMAT_COORD_LABEL"], _G["UIDROPDOWNMENU_MENU_LEVEL"]);
 			info = {};
-			info.text = L["TITAN_COORDS_FORMAT_LABEL"];
+			info.text = L["TITAN_LOCATION_FORMAT_LABEL"];
 			info.func = function()
 				TitanSetVar(TITAN_LOCATION_ID, "CoordsFormat1", 1);
 				TitanSetVar(TITAN_LOCATION_ID, "CoordsFormat2", nil);
@@ -320,7 +320,7 @@ function TitanPanelRightClickMenu_PrepareLocationMenu()
 			UIDropDownMenu_AddButton(info, _G["UIDROPDOWNMENU_MENU_LEVEL"]);
 
 			info = {};
-			info.text = L["TITAN_COORDS_FORMAT2_LABEL"];
+			info.text = L["TITAN_LOCATION_FORMAT2_LABEL"];
 			info.func = function()
 				TitanSetVar(TITAN_LOCATION_ID, "CoordsFormat1", nil);
 				TitanSetVar(TITAN_LOCATION_ID, "CoordsFormat2", 1);
@@ -331,7 +331,7 @@ function TitanPanelRightClickMenu_PrepareLocationMenu()
 			UIDropDownMenu_AddButton(info, _G["UIDROPDOWNMENU_MENU_LEVEL"]);
 
 			info = {};
-			info.text = L["TITAN_COORDS_FORMAT3_LABEL"];
+			info.text = L["TITAN_LOCATION_FORMAT3_LABEL"];
 			info.func = function()
 				TitanSetVar(TITAN_LOCATION_ID, "CoordsFormat1", nil);
 				TitanSetVar(TITAN_LOCATION_ID, "CoordsFormat2", nil);
@@ -356,7 +356,7 @@ function TitanPanelRightClickMenu_PrepareLocationMenu()
 
 	info = {};
 	info.notCheckable = true
-	info.text = L["TITAN_COORDS_FORMAT_COORD_LABEL"];
+	info.text = L["TITAN_LOCATION_FORMAT_COORD_LABEL"];
 	info.value = "CoordFormat"
 	info.hasArrow = 1;
 	UIDropDownMenu_AddButton(info);
@@ -450,17 +450,17 @@ function TitanMapFrame_OnUpdate(self, elapsed)
 		if self.px == nil then self.px = 0 end
 		if self.py == nil then self.py = 0 end
 		if self.px == 0 and self.py == 0 then
-			playerLocationText = L["TITAN_COORDS_NO_COORDS"]
+			playerLocationText = L["TITAN_LOCATION_NO_COORDS"]
 		else
 			if (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat1")) then
-				playerLocationText = format(L["TITAN_COORDS_FORMAT"], 100 * self.px, 100 * self.py);
+				playerLocationText = format(L["TITAN_LOCATION_FORMAT"], 100 * self.px, 100 * self.py);
 			elseif (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat2")) then
-				playerLocationText = format(L["TITAN_COORDS_FORMAT2"], 100 * self.px, 100 * self.py);
+				playerLocationText = format(L["TITAN_LOCATION_FORMAT2"], 100 * self.px, 100 * self.py);
 			elseif (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat3")) then
-				playerLocationText = format(L["TITAN_COORDS_FORMAT3"], 100 * self.px, 100 * self.py);
+				playerLocationText = format(L["TITAN_LOCATION_FORMAT3"], 100 * self.px, 100 * self.py);
 			end
 		end
-		TitanMapPlayerLocation:SetText(format(L["TITAN_COORDS_MAP_PLAYER_COORDS_TEXT"], TitanUtils_GetHighlightText(playerLocationText)));
+		TitanMapPlayerLocation:SetText(format(L["TITAN_LOCATION_MAP_PLAYER_COORDS_TEXT"], TitanUtils_GetHighlightText(playerLocationText)));
 	end
 
 	-- Determine the text to show for cursor coords
@@ -483,14 +483,14 @@ function TitanMapFrame_OnUpdate(self, elapsed)
 		end
 		-- per the user requested format
 		if (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat1")) then
-			cursorLocationText = format(L["TITAN_COORDS_FORMAT"], 100 * cx, 100 * cy);
+			cursorLocationText = format(L["TITAN_LOCATION_FORMAT"], 100 * cx, 100 * cy);
 		elseif (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat2")) then
-			cursorLocationText = format(L["TITAN_COORDS_FORMAT2"], 100 * cx, 100 * cy);
+			cursorLocationText = format(L["TITAN_LOCATION_FORMAT2"], 100 * cx, 100 * cy);
 		elseif (TitanGetVar(TITAN_LOCATION_ID, "CoordsFormat3")) then
-			cursorLocationText = format(L["TITAN_COORDS_FORMAT3"], 100 * cx, 100 * cy);
+			cursorLocationText = format(L["TITAN_LOCATION_FORMAT3"], 100 * cx, 100 * cy);
 		end
 		if (TitanGetVar(TITAN_LOCATION_ID, "ShowCoordsOnMap")) then
-			TitanMapCursorLocation:SetText(format(L["TITAN_COORDS_MAP_CURSOR_COORDS_TEXT"], 
+			TitanMapCursorLocation:SetText(format(L["TITAN_LOCATION_MAP_CURSOR_COORDS_TEXT"], 
 				TitanUtils_GetHighlightText(cursorLocationText)));
 		else
 			TitanMapCursorLocation:SetText("");

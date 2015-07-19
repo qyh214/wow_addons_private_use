@@ -5,6 +5,7 @@
 		GetUpgradedItemLevelFromItemLink(itemLink)
 		= return value is the modified itemLevel based on the item's upgrade
 	Changelog:
+	* REV-07 (15.07.02) Patch 6.2:		A new field in the item string was added "specializationID", pushing the "upgradeId" field to the 11th place.
 	* REV-06 (14.10.15) Patch 6.0.2:	Updated the pattern match for "upgradeId" to work for WoD.
 	* REV-05 (14.05.24) Patch 5.4.8:	Added IDs 504 to 507.
 	* REV-04 (13.09.21) Patch 5.4:		Added IDs 491 to 498 to the table.
@@ -13,20 +14,22 @@
 --]]
 
 -- Make sure we do not override a newer revision.
-local REVISION = 6;
+local REVISION = 7;
 if (type(GET_UPGRADED_ITEM_LEVEL_REV) == "number") and (GET_UPGRADED_ITEM_LEVEL_REV >= REVISION) then
 	return;
 end
 GET_UPGRADED_ITEM_LEVEL_REV = REVISION;
 
--- Item links data change in 6.0:
+-- [Item links data change in 6.0, WoD]
 --	itemID:enchant:gem1:gem2:gem3:gem4:suffixID:uniqueID:level:reforgeId:upgradeId
 --	itemID:enchant:gem1:gem2:gem3:gem4:suffixID:uniqueID:level:upgradeId:instanceDifficultyID:numBonusIDs:bonusID1:bonusID2
+-- [6.2 Change -- 10th param, specializationID]
+--	itemID:enchant:gem1:gem2:gem3:gem4:suffixID:uniqueID:level:specializationID:upgradeId:instanceDifficultyID:numBonusIDs:bonusID1:bonusID2
 
 -- Extraction pattern for the complete itemLink, including all its properties
 local ITEMLINK_PATTERN = "(item:[^|]+)";
--- Matches the 10th property, upgradeId, of an itemLink. This pattern now scans from the start of the itemLink to make it future-proof with further property additions to itemLinks.
-local ITEMLINK_PATTERN_UPGRADE = "item:"..("[^:]+:"):rep(9).."(%d+)";
+-- Matches the 11th property, upgradeId, of an itemLink. This pattern now scans from the start of the itemLink to make it future-proof with further property additions to itemLinks.
+local ITEMLINK_PATTERN_UPGRADE = "item:"..("[^:]+:"):rep(10).."(%d+)";
 
 -- Table for adjustment of levels due to upgrade -- Source: http://www.wowinterface.com/forums/showthread.php?t=45388
 local UPGRADED_LEVEL_ADJUST = {

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(966, "DBM-Party-WoD", 7, 476)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14030 $"):sub(12, -3))
 mod:SetCreatureID(76141)
 mod:SetEncounterID(1699)--Verify, name doesn't match
 mod:SetZone()
@@ -18,10 +18,10 @@ mod:RegisterEventsInCombat(
 local warnEnergize		= mod:NewSpellAnnounce(154159, 3)
 
 local specWarnBurst		= mod:NewSpecialWarningCount(154135, nil, nil, nil, 2)
-local specWarnSmash		= mod:NewSpecialWarningDodge("OptionVersion2", 154110, "Tank")
+local specWarnSmash		= mod:NewSpecialWarningDodge(154110, "Tank", nil, 2)
 
-local timerEnergozeCD	= mod:NewNextTimer(20, 154159)
-local timerBurstCD		= mod:NewCDCountTimer(23, 154135)
+local timerEnergozeCD	= mod:NewNextTimer(20, 154159, nil, nil, nil, 5)
+local timerBurstCD		= mod:NewCDCountTimer(23, 154135, nil, nil, nil, 2)
 
 mod.vb.burstCount = 0
 local skyTrashMod = DBM:GetModByName("SkyreachTrash")

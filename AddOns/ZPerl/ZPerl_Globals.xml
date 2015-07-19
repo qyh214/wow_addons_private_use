@@ -209,8 +209,8 @@
 				</Anchors>
 				<BarColor r="0" g="0.8" b="0"/>
 			</StatusBar>
-
-			<StatusBar name="$parentexpectedHealth" drawLayer="OVERLAY" hidden="true">
+			<!-- Expected Health Bar -->
+			<StatusBar name="$parentexpectedHealth" drawLayer="BACKGROUND" hidden="true">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parenthealthBar">
 						<Offset>
@@ -233,7 +233,6 @@
 					</OnLoad>
 				</Scripts>
 			</StatusBar>
-
 			<!-- Mana Bar -->
 			<StatusBar name="$parentmanaBar" drawLayer="BACKGROUND" inherits="XPerlStatusBar">
 				<Size>

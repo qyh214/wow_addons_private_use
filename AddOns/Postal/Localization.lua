@@ -117,7 +117,7 @@ L["Add Contact"] = "Kontakt hinzufügen"
 L["Add multiple item mail tooltips"] = "Füge mehrere Gegenstandstooltips den Mails hinzu."
 L["Adds a contact list next to the To: field."] = "Setzt eine Kontaktliste neben das Empfängerfeld."
 L["AH-related mail"] = "Auktionshaus Nachrichten"
--- L["All Alts"] = "All Alts"
+L["All Alts"] = "Alle Charakter"
 L["Allows you to copy the contents of a mail."] = "Erlaubt Dir die Inhalte einer Nachricht zu kopieren."
 L["Alts"] = "Twinks"
 L["Auto-Attach similar items on Control-Click"] = "Automatisches anhängen ähnlicher Gegenstände bei STRG-Klick"
@@ -146,7 +146,7 @@ L[ [=[|cFFFFCC00*|r Shift-Click to take item/money from mail.
 |cFFFFCC00*|r Alt-Click to move an item from your inventory to the current outgoing mail (same as right click in default UI).]=] ] = [=[|cFFFFCC00*|r Shift-Klick um Gegenstände/Gold aus Nachrichten zu entnehmen.
 |cFFFFCC00*|r Strg-Klick um die Nachricht zurückzuschicken.
 |cFFFFCC00*|r Alt-Klick um einen Gegenstand aus dem Inventar an die ausgehende Nachricht anzuhängen (gleich dem Rechtsklick der Standard-UI).
-|cFFFFCC00*|r Ermöglicht das Durchblättern des Postfachs mit dem Mausrad.]=] -- Needs review
+|cFFFFCC00*|r Ermöglicht das Durchblättern des Postfachs mit dem Mausrad.]=]
 L[ [=[|cFFFFCC00*|r Simple filters are available for various mail types.
 |cFFFFCC00*|r Shift-Click the Open All button to override the filters and take ALL mail.
 |cFFFFCC00*|r OpenAll will never delete any mail (mail without text is auto-deleted by the game when all attached items and gold are taken).
@@ -230,7 +230,7 @@ L["Add Contact"] = "Añadir contacto"
 L["Add multiple item mail tooltips"] = "Añadir ventana emergente en correos con múltiples objetos"
 L["Adds a contact list next to the To: field."] = "Añade una lista de contactos al lado del campo Para:"
 L["AH-related mail"] = "(Correo relacionado con la casa de subastas)"
--- L["All Alts"] = "All Alts"
+L["All Alts"] = "Cualquier personaje"
 L["Allows you to copy the contents of a mail."] = "Te permite copiar el contenido de un correo."
 L["Alts"] = "Personajes secundarios"
 L["Auto-Attach similar items on Control-Click"] = "Autoadjuntar objetos similares con Ctrl-Clic"
@@ -259,7 +259,7 @@ L[ [=[|cFFFFCC00*|r Shift-Click to take item/money from mail.
 |cFFFFCC00*|r Alt-Click to move an item from your inventory to the current outgoing mail (same as right click in default UI).]=] ] = [=[|cFFFFCC00*|r Shift-Clic para tomar objetos/dinero del correo.
 |cFFFFCC00*|r Ctrl-Clic para devolver el correo.
 |cFFFFCC00*|r Alt-Clic para mover un objeto del inventario al correo de salida actual (igual que clic derecho en la IU predeterminado).
-|cFFFFCC00*|r Rueda del ratón para desplazarse en la bandeja de entrada.]=] -- Needs review
+|cFFFFCC00*|r Rueda del ratón para desplazarse en la bandeja de entrada.]=]
 L[ [=[|cFFFFCC00*|r Simple filters are available for various mail types.
 |cFFFFCC00*|r Shift-Click the Open All button to override the filters and take ALL mail.
 |cFFFFCC00*|r OpenAll will never delete any mail (mail without text is auto-deleted by the game when all attached items and gold are taken).
@@ -343,7 +343,7 @@ L["Add Contact"] = "Ajouter un contact"
 L["Add multiple item mail tooltips"] = "Ajouter plusieurs article à l'info bulles du courrier"
 L["Adds a contact list next to the To: field."] = "Ajoute une liste des contacts à côté du champ \"À :\"."
 L["AH-related mail"] = "Courriers relatifs à l'HV"
--- L["All Alts"] = "All Alts"
+L["All Alts"] = "Tout caractère"
 L["Allows you to copy the contents of a mail."] = "Permet de copier le contenu d'un courrier."
 L["Alts"] = "Rerolls"
 L["Auto-Attach similar items on Control-Click"] = "Ajouter les objets similaires avec CTRL+Clique"
@@ -372,7 +372,7 @@ L[ [=[|cFFFFCC00*|r Shift-Click to take item/money from mail.
 |cFFFFCC00*|r Alt-Click to move an item from your inventory to the current outgoing mail (same as right click in default UI).]=] ] = [=[|cFFFFCC00*|r Shift-clic gauche pour prendre le contenu du courrier.
 |cFFFFCC00*|r Ctrl-clic gauche pour renvoyer le courrier.
 |cFFFFCC00*|r Alt-clic gauche pour déplacer un objet de votre inventaire vers le courrier sortant actuel (même comportement que le clic droit dans l'IU par défaut).
-|cFFFFCC00*|r Molette de la souris pour faire défiler la boîte de réception.]=] -- Needs review
+|cFFFFCC00*|r Molette de la souris pour faire défiler la boîte de réception.]=]
 L[ [=[|cFFFFCC00*|r Simple filters are available for various mail types.
 |cFFFFCC00*|r Shift-Click the Open All button to override the filters and take ALL mail.
 |cFFFFCC00*|r OpenAll will never delete any mail (mail without text is auto-deleted by the game when all attached items and gold are taken).
@@ -456,7 +456,7 @@ L["Add Contact"] = "접속 목록에 추가"
 L["Add multiple item mail tooltips"] = "다중 우편물에 툴팁 추가"
 L["Adds a contact list next to the To: field."] = "다음 접속 목록에 추가하려면 To: field"
 L["AH-related mail"] = "경매장 우편"
--- L["All Alts"] = "All Alts"
+L["All Alts"] = "모든 문자"
 L["Allows you to copy the contents of a mail."] = "편지의 내용을 복사합니다."
 L["Alts"] = "다른 캐릭터"
 L["Auto-Attach similar items on Control-Click"] = "CTRL-클릭하여 같은 아이템을 자동으로 받습니다."
@@ -485,7 +485,7 @@ L[ [=[|cFFFFCC00*|r Shift-Click to take item/money from mail.
 |cFFFFCC00*|r Alt-Click to move an item from your inventory to the current outgoing mail (same as right click in default UI).]=] ] = [=[|cFFFFCC00*|r Shift-클릭으로 우편에서 아이템/돈을 바로 취득 합니다.
 |cFFFFCC00*|r Ctrl-클릭으로 우편물을 반송합니다.
 |cFFFFCC00*|r Alt-클릭으로 가방에서 아이템을 우편함으로 바로 등록합니다.(기본 UI의 우-클릭과 같은 기능)
-|cFFFFCC00*|r 마우스휠로 우편함을 스크롤 합니다.]=] -- Needs review
+|cFFFFCC00*|r 마우스휠로 우편함을 스크롤 합니다.]=]
 L[ [=[|cFFFFCC00*|r Simple filters are available for various mail types.
 |cFFFFCC00*|r Shift-Click the Open All button to override the filters and take ALL mail.
 |cFFFFCC00*|r OpenAll will never delete any mail (mail without text is auto-deleted by the game when all attached items and gold are taken).
@@ -569,7 +569,7 @@ L["Add Contact"] = "Добавить контакт"
 L["Add multiple item mail tooltips"] = "Добавить подсказку для почты со множеством вещей."
 L["Adds a contact list next to the To: field."] = "Добавляет список контактов в поле адресата."
 L["AH-related mail"] = "Аукционные письма"
--- L["All Alts"] = "All Alts"
+L["All Alts"] = "Любой символ"
 L["Allows you to copy the contents of a mail."] = "Позволяет скопировать текст письма."
 L["Alts"] = "Альты"
 L["Auto-Attach similar items on Control-Click"] = "Control+щелчок автоматически прикрепляет аналогичные предметы"
@@ -598,7 +598,7 @@ L[ [=[|cFFFFCC00*|r Shift-Click to take item/money from mail.
 |cFFFFCC00*|r Alt-Click to move an item from your inventory to the current outgoing mail (same as right click in default UI).]=] ] = [=[|cFFFFCC00*|r Shift+щелчок снимает с почты предметы/деньги.
 |cFFFFCC00*|r Ctrl+щелчок возвращает почту.
 |cFFFFCC00*|r Alt+щелчок помещает предмет из вашего инвентаря в исходящую почту (как щелчок правой кнопкой в стандартном UI).
-|cFFFFCC00*|r Колесо мыши прокручивает список входящей почты.]=] -- Needs review
+|cFFFFCC00*|r Колесо мыши прокручивает список входящей почты.]=]
 L[ [=[|cFFFFCC00*|r Simple filters are available for various mail types.
 |cFFFFCC00*|r Shift-Click the Open All button to override the filters and take ALL mail.
 |cFFFFCC00*|r OpenAll will never delete any mail (mail without text is auto-deleted by the game when all attached items and gold are taken).
@@ -682,44 +682,43 @@ L["Add Contact"] = "添加联系人"
 L["Add multiple item mail tooltips"] = "添加多个物品的邮件提示"
 L["Adds a contact list next to the To: field."] = "添加联系人列表到收件人栏。"
 L["AH-related mail"] = "拍卖相关邮件"
--- L["All Alts"] = "All Alts"
+L["All Alts"] = "全部小号"
 L["Allows you to copy the contents of a mail."] = "允许你复制信的内容物。"
 L["Alts"] = "小号"
 L["Auto-Attach similar items on Control-Click"] = "Ctrl+点击自动附加相同物品"
 L["Autofill last person mailed"] = "自动填写最后的收件人"
-L["Auto-Send on Alt-Click"] = "Alt-点击自动发送"
+L["Auto-Send on Alt-Click"] = "Alt+点击自动发送"
 L["BlackBook"] = "黑名单"
 L["Block incoming trade requests while in a mail session."] = "在进行邮件操作中阻止交易请求。"
 L["CarbonCopy"] = "复本"
-L["|cffeda55fAlt-Click|r to send this item to %s."] = "|cffeda55fAlt-点击|r将该物品发送给%s。"
-L["|cffeda55fControl-Click|r to attach similar items."] = "|cffeda55fCtrl-点击|r附加类似物品。"
-L["|cffeda55fCtrl-Click|r to return it to sender."] = "|cffeda55fCtrl-点击|r将信退给发件人。"
-L["|cffeda55fShift-Click|r to take the contents."] = "|cffeda55fShift-点击|r获得该邮件的内容副本。"
+L["|cffeda55fAlt-Click|r to send this item to %s."] = "|cffeda55fAlt+点击|r将该物品发送给%s。"
+L["|cffeda55fControl-Click|r to attach similar items."] = "|cffeda55fCtrl+点击|r附加类似物品。"
+L["|cffeda55fCtrl-Click|r to return it to sender."] = "|cffeda55fCtrl+点击|r将信退给发件人。"
+L["|cffeda55fShift-Click|r to take the contents."] = "|cffeda55fShift+点击|r获得该邮件的内容副本。"
 L[ [=[|cFFFFCC00*|r Selected mail will be batch opened or returned to sender by clicking Open or Return.
 |cFFFFCC00*|r You can Shift-Click 2 checkboxes to mass select every mail between the 2 checkboxes.
 |cFFFFCC00*|r You can Ctrl-Click a checkbox to mass select or unselect every mail from that sender.
 |cFFFFCC00*|r Select will never delete any mail (mail without text is auto-deleted by the game when all attached items and gold are taken).
 |cFFFFCC00*|r Select will skip CoD mails and mails from Blizzard.
 |cFFFFCC00*|r Disable the Verbose option to stop the chat spam while opening mail.]=] ] = [=[|cFFFFCC00*|r 点击打开或者退信，被选中的邮件会被批量打开或退回。
-|cFFFFCC00*|r 按住Shift键点击分别点击2封信的复选框，会将这2封信之前的所有新选中。
-|cFFFFCC00*|r 按住Ctrl键点击一封信的复选框，可以将所有来自该发件人的信选中或者取消选中。
+|cFFFFCC00*|r Shift+点击分别点击2封信的复选框，会将这2封信之前的所有新选中。
+|cFFFFCC00*|r Ctrl+点击一封信的复选框，可以将所有来自该发件人的信选中或者取消选中。
 |cFFFFCC00*|r 选中则不删除任何邮件（游戏默认当一封没有任何文字的信中的附件被取走之后自动删除该邮件）。
 |cFFFFCC00*|r 选中将跳过付款取信的邮件以及来自暴雪的邮件。
 |cFFFFCC00*|r 关闭消息模式，取信时聊天窗口将不再显示信息。]=]
 L[ [=[|cFFFFCC00*|r Shift-Click to take item/money from mail.
 |cFFFFCC00*|r Ctrl-Click to return mail.
-|cFFFFCC00*|r Alt-Click to move an item from your inventory to the current outgoing mail (same as right click in default UI).]=] ] = [=[|cFFFFCC00*|r 按住shift点击取走信中的金币或者物品。
-|cFFFFCC00*|r 按住Ctrl点击退信。
-|cFFFFCC00*|r 按住Alt点击背包中的物品，将其添加到附件中（同游戏本身的右键点击）。
-|cFFFFCC00*|r 鼠标滚轮翻页。]=] -- Needs review
+|cFFFFCC00*|r Alt-Click to move an item from your inventory to the current outgoing mail (same as right click in default UI).]=] ] = [=[|cFFFFCC00*|r Shift+点击取走信中的金币或者物品。
+|cFFFFCC00*|r Ctrl+点击退信。
+|cFFFFCC00*|r Alt+点击背包中的物品，将其添加到附件中（同游戏本身的右键点击）。]=]
 L[ [=[|cFFFFCC00*|r Simple filters are available for various mail types.
 |cFFFFCC00*|r Shift-Click the Open All button to override the filters and take ALL mail.
 |cFFFFCC00*|r OpenAll will never delete any mail (mail without text is auto-deleted by the game when all attached items and gold are taken).
 |cFFFFCC00*|r OpenAll will skip CoD mails and mails from Blizzard.
 |cFFFFCC00*|r Disable the Verbose option to stop the chat spam while opening mail.]=] ] = [=[|cFFFFCC00*|r各种邮件类型都有简单的过滤条件可用。
 |cFFFFCC00*|rShift+点击“打开所有”按钮可以忽略这些过滤并收取所有邮件。
-|cFFFFCC00*|rOpenAll功能将不会删除任何邮件（无内容邮件将在附件和金钱被收取后自动删除）。
-|cFFFFCC00*|rOpenAll功能将会阻止付款取信邮件和暴雪发送的邮件。
+|cFFFFCC00*|r打开所有功能将不会删除任何邮件（无内容邮件将在附件和金钱被收取后自动删除）。
+|cFFFFCC00*|r打开所有功能将会阻止付款取信邮件和暴雪发送的邮件。
 |cFFFFCC00*|r请关闭详细信息选项来取消打开邮件时的聊天窗口信息。]=]
 L[ [=[|cFFFFCC00*|r This module will list your contacts, friends, guild mates, alts and track the last 10 people you mailed.
 |cFFFFCC00*|r It will also autocomplete all names in your BlackBook.]=] ] = [=[|cFFFFCC00*|r该模块将列出你所有的联系人、好友、公会成员、小号和你最近发送邮件的10个人。
@@ -734,7 +733,7 @@ L["Copy this mail"] = "复制这封信"
 L["Delete"] = "删除"
 L["Disable Blizzard's auto-completion popup menu"] = "关闭暴雪的自动完成弹出菜单"
 L["DoNotWant"] = "不想要"
-L["Enable Alt-Click to send mail"] = "允许 Alt-点击发送邮件"
+L["Enable Alt-Click to send mail"] = "允许 Alt+点击发送邮件"
 L["Exclude randoms you interacted with"] = "防止你随意地受到影响"
 L["Express"] = "快件"
 L["Friends"] = "好友"
@@ -744,11 +743,11 @@ L["In Progress"] = "处理中"
 L["Keep free space"] = "保留背包空间"
 L["Mouse click short cuts for mail."] = "鼠标快捷方式。"
 L["Name auto-completion options"] = "姓名自动完成选项"
-L["New Profile"] = "新配置"
-L["New Profile Name:"] = "新配置名称："
+L["New Profile"] = "新配置文件"
+L["New Profile Name:"] = "新配置文件名称："
 L["Non-AH related mail"] = "非拍卖相关邮件"
 L["Not all messages are shown, refreshing mailbox soon to continue Open All..."] = "尚有邮件未能显示，请重整收件匣后继续开启…"
-L["Not taking more items as there are now only %d regular bagslots free."] = "无法拿取更多物品，目前仅有 %d 个背包位置。"
+L["Not taking more items as there are now only %d regular bagslots free."] = "无法拿取更多物品，目前仅有%d个背包位置。"
 L["Open"] = "打开"
 L["OpenAll"] = "打开所有"
 L["Open All"] = "打开所有"
@@ -760,24 +759,24 @@ L["Open all mail with attachments"] = "打开所有带有附件的邮件"
 L["Open all Outbid on mail"] = "打开所有超过出价的邮件"
 L["Opening Speed"] = "收信速度"
 L["Other options"] = "其他选项"
-L["Part %d"] = "第 %d 组"
+L["Part %d"] = "第%d组"
 L["Please post bugs or suggestions at the wowace forums thread at |cFF00FFFFhttp://forums.wowace.com/showthread.php?t=3909|r. When posting bugs, indicate your locale and Postal's version number v%s."] = "请到 WowAce 的论坛|cFF00FFFFhttp://forums.wowace.com/showthread.php?t=3909|r 报告 Bug 或者提交建议。报告 Bug 时请说明 Postal 的版本 v%s。"
 L["Prints the amount of money collected during a mail session."] = "显示在一次邮件操作中所收到的金币。"
 L["Processing Message"] = "正在处理邮件"
-L["Profile"] = "配置"
+L["Profile"] = "配置文件"
 L["Rake"] = "收款显示"
 L["Recently Mailed"] = "最近邮寄"
 L["Refreshing mailbox..."] = "重新整理收件匣…"
 L["Remove Contact"] = "删除联系人"
-L["Reset Profile"] = "重置配置"
+L["Reset Profile"] = "重置配置文件"
 L["Return"] = "退信"
 L["Select"] = "选择"
 L["Set subject field to value of coins sent if subject is blank."] = "在主题为空时将主题自动填充为金币数量。"
 L["Shows a clickable visual icon as to whether a mail will be returned or deleted on expiry."] = "显示一个可点击的图标以确定邮件将被退回或是到期删除。"
 L["Skipping"] = "忽略"
 L["Some Messages May Have Been Skipped."] = "部分邮件可能被忽略。"
-L["There are %i more messages not currently shown."] = "还有 %i 或更多的邮件没有显示。"
-L["There are %i more messages not currently shown. More should become available in %i seconds."] = "当前还有 %i  条信息没有显示。将在 %i 内显示。"
+L["There are %i more messages not currently shown."] = "还有%i或更多的邮件没有显示。"
+L["There are %i more messages not currently shown. More should become available in %i seconds."] = "当前还有%i条信息没有显示。将在%i秒内显示。"
 L["TradeBlock"] = "阻止交易"
 L["Use Mr.Plow after opening"] = "打开邮件后使用 Mr.Plow 插件进行背包整理"
 L["Use Postal's auto-complete"] = "使用 Postal 的自动完成"
@@ -795,7 +794,7 @@ L["Add Contact"] = "新增聯絡人"
 L["Add multiple item mail tooltips"] = "新增多個物品的郵件提示框"
 L["Adds a contact list next to the To: field."] = "在收件人輸入框旁邊添加一個聯絡列表。"
 L["AH-related mail"] = "拍賣相關信件"
--- L["All Alts"] = "All Alts"
+L["All Alts"] = "所有Alts"
 L["Allows you to copy the contents of a mail."] = "允許你複製信的內容物。"
 L["Alts"] = "分身"
 L["Auto-Attach similar items on Control-Click"] = "Ctrl+點擊時自動附加相似物品"
@@ -823,8 +822,8 @@ L[ [=[|cFFFFCC00*|r Shift-Click to take item/money from mail.
 |cFFFFCC00*|r Ctrl-Click to return mail.
 |cFFFFCC00*|r Alt-Click to move an item from your inventory to the current outgoing mail (same as right click in default UI).]=] ] = [=[|cFFFFCC00*|r Shift-點擊將從郵件拿取物品/金錢。
 |cFFFFCC00*|r 按Ctrl -點擊將退還信件。
-|cFFFFCC00*|r 按Alt-點擊一件物品將從您的背包移到目前的外寄信件（等同UI默認的右鍵點擊 ） 。
-|cFFFFCC00*|r 用滑鼠滾輪滾動收件匣。]=] -- Needs review
+|cFFFFCC00*|r 按Alt-點擊一件物品將從您的背包移到目前的外寄信件（等同UI預設的右鍵點擊 ） 。
+|cFFFFCC00*|r 用滑鼠滾輪滾動收件匣。]=]
 L[ [=[|cFFFFCC00*|r Simple filters are available for various mail types.
 |cFFFFCC00*|r Shift-Click the Open All button to override the filters and take ALL mail.
 |cFFFFCC00*|r OpenAll will never delete any mail (mail without text is auto-deleted by the game when all attached items and gold are taken).
@@ -937,7 +936,7 @@ L[ [=[|cFFFFCC00*|r Shift-Click to take item/money from mail.
 |cFFFFCC00*|r Alt-Click to move an item from your inventory to the current outgoing mail (same as right click in default UI).]=] ] = [=[|cFFFFCC00*|r Shift-Clique para pegar o item/dinheiro da carta.
 |cFFFFCC00*|r Ctrl-Clique para retornar a carta.
 |cFFFFCC00*|r Alt-Clique para mover um item do seu inventário para a carta atual (mesma coisa de clique direito na IU padrão).
-|cFFFFCC00*|r Mousewheel para rolar a caixa de entrada.]=] -- Needs review
+|cFFFFCC00*|r Mousewheel para rolar a caixa de entrada.]=]
 L[ [=[|cFFFFCC00*|r Simple filters are available for various mail types.
 |cFFFFCC00*|r Shift-Click the Open All button to override the filters and take ALL mail.
 |cFFFFCC00*|r OpenAll will never delete any mail (mail without text is auto-deleted by the game when all attached items and gold are taken).
@@ -1021,7 +1020,7 @@ L["Add Contact"] = "Aggiungi Contatto"
 L["Add multiple item mail tooltips"] = "Aggiunge più voci alle informazioni nella lettera"
 L["Adds a contact list next to the To: field."] = "Aggiunge una lista dei contatti vicino al campo A:"
 L["AH-related mail"] = "Lettera relativa alla Casa d'Aste"
--- L["All Alts"] = "All Alts"
+L["All Alts"] = "Tutti gli Alt"
 L["Allows you to copy the contents of a mail."] = "Ti permette di copiare il contenuto di una lettera"
 L["Alts"] = "Alts"
 L["Auto-Attach similar items on Control-Click"] = "Allega in automatico oggetti simili con Control-Click"
@@ -1047,10 +1046,9 @@ L[ [=[|cFFFFCC00*|r Selected mail will be batch opened or returned to sender by 
 |cFFFFCC00*|r Disabilita l'opzione testuale per fermare lo spam durante l'apertura delle lettere]=]
 L[ [=[|cFFFFCC00*|r Shift-Click to take item/money from mail.
 |cFFFFCC00*|r Ctrl-Click to return mail.
-|cFFFFCC00*|r Alt-Click to move an item from your inventory to the current outgoing mail (same as right click in default UI).]=] ] = [=[|cFFFFCC00*|r Shift-Click per prendere gli oggetti o le monete dalle lettere.
-|cFFFFCC00*|r Ctrl-Click per rimandare le lettere.
-|cFFFFCC00*|r Alt-Click per muovere un oggetto dall'inventario alla corrente lettera in uscita (come il tasto destro del mouse nell' UI di default).
-|cFFFFCC00*|r La Rotellina del mouse per scorrere la casella di posta.]=] -- Needs review
+|cFFFFCC00*|r Alt-Click to move an item from your inventory to the current outgoing mail (same as right click in default UI).]=] ] = [=[|cFFFFCC00*|r Shift-Click per prendere gli oggetti o le monete dalla posta.
+|cFFFFCC00*|r Ctrl-Click per rimandare indietro la posta.
+|cFFFFCC00*|r Alt-Click per muovere un oggetto dall'inventario alla lettera in uscita attuale (come il tasto destro del mouse nell' UI di default).]=]
 L[ [=[|cFFFFCC00*|r Simple filters are available for various mail types.
 |cFFFFCC00*|r Shift-Click the Open All button to override the filters and take ALL mail.
 |cFFFFCC00*|r OpenAll will never delete any mail (mail without text is auto-deleted by the game when all attached items and gold are taken).

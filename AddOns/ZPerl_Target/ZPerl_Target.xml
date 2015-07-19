@@ -419,11 +419,7 @@
 			<Frame name="$parenthighlight" inherits="XPerl_HighlightTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentnameFrame"/>
-					<Anchor point="BOTTOMRIGHT" relativeTo="$parentportraitFrame">
-						<Offset>
-							<AbsDimension x="26" y="-1"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentportraitFrame"/>
 				</Anchors>
 			</Frame>
 
@@ -498,7 +494,7 @@
 					<AbsDimension x="28" y="14"/>
 				</Size>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="XPerl_FocusnameFrame"/>
+					<Anchor point="RIGHT" relativeTo="XPerl_FocusnameFrame"/>
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY">

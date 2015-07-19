@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 951 $")
-XPerl_SetModuleRevision("$Revision: 951 $")
+end, "$Revision: 972 $")
+XPerl_SetModuleRevision("$Revision: 972 $")
 
 -- Upvalus
 local _G = _G
@@ -135,7 +135,7 @@ end
 -- Compact Raid frame manager
 local c = _G.CompactRaidFrameManager
 if c then
-	c:SetFrameStrata("High")
+	c:SetFrameStrata("Medium")
 end
 
 ------------------------------------------------------------------------------
@@ -173,12 +173,13 @@ function XPerl_FreeTable(t, deep)
 			end
 			t[k] = nil
 		end
-		t[''] = 0
-		t[''] = nil
+		--t[''] = 0
+		--t[''] = nil
 	end
 end
 
 function XPerl_TableStats()
+	print(requested, freed)
 	return requested, freed
 end
 
@@ -293,7 +294,7 @@ local function FindABandage()
 		[1251] = true, -- Linen Bandage
 	}
 
-	for k,v in pairs(bandages) do
+	for k, v in pairs(bandages) do
 		if (GetItemCount(k) > 0) then
 			return GetItemInfo(k)
 		end
@@ -313,7 +314,7 @@ local function DoRangeCheck(unit, opt)
 	local range
 	if (opt.PlusHealth) then
 		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
-		--Begin 4.3 divide by 0 work around.
+		-- Begin 4.3 divide by 0 work around.
 		local percent
 		if UnitIsDeadOrGhost(unit) or (hp == 0 and hpMax == 0) then -- Probably dead target
 			percent = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
@@ -323,7 +324,7 @@ local function DoRangeCheck(unit, opt)
 		else
 			percent = hp / hpMax -- Everything is dandy, so just do it right way.
 		end
-		--End divide by 0 work around
+		-- End divide by 0 work around
 		if (percent > opt.HealthLowPoint) then
 			range = 0
 		end
@@ -498,9 +499,9 @@ function XPerl_StartupSpellRange()
 		if (self.spell) then
 			bCanUse = GetSpellInfo(self.spell)
 		end
-		if ((type(self.spell) ~= "string" and type(self.item) ~= "string") or not bCanUse) then
+		if ((type(self.spell) ~= "string") or not bCanUse) then
 			self.spell = XPerl_DefaultRangeSpells[playerClass] and XPerl_DefaultRangeSpells[playerClass].spell
-			if (type(self.spell) ~= "string") then
+			if (type(self.item) ~= "string") then
 				self.item = (XPerl_DefaultRangeSpells.ANY and XPerl_DefaultRangeSpells.ANY.item) or ""
 			end
 		end
@@ -551,7 +552,7 @@ function XPerl_SetChildMembers(self)
 		local match = "^"..n.."(.+)$"
 
 		local function AddList(list)
-			for k,v in pairs(list) do
+			for k, v in pairs(list) do
 				local t = v:GetName()
 				if (t) then
 					local found = strmatch(t, match)
@@ -570,7 +571,7 @@ function XPerl_SetChildMembers(self)
 		local c = {self:GetChildren()}
 		AddList(c, true)
 
-		for k,v in pairs(c) do
+		for k, v in pairs(c) do
 			if (v:GetName()) then
 				XPerl_SetChildMembers(v)
 			end
@@ -1273,7 +1274,7 @@ function XPerl_MinimapButton_Details(tt, ldb)
 		local showDiff = IsShiftKeyDown()
 
 		local allAddonsCPU = 0
-		for i = 1,GetNumAddOns() do
+		for i = 1, GetNumAddOns() do
 			allAddonsCPU = allAddonsCPU + GetAddOnCPUUsage(i)
 		end
 
@@ -1334,7 +1335,6 @@ function XPerl_GetDisplayedPowerType(unitID) -- copied from CompactUnitFrame.lua
 	end
 end
 
--- XPerl_SetManaBarType
 local ManaColours = {
 	[SPELL_POWER_MANA] = "mana",
 	[SPELL_POWER_RAGE] = "rage",
@@ -1344,6 +1344,8 @@ local ManaColours = {
 	[SPELL_POWER_RUNIC_POWER] = "runic_power",
 	[SPELL_POWER_ALTERNATE_POWER] = "energy", -- used by some bosses, show it as energy bar
 }
+
+-- XPerl_SetManaBarType
 function XPerl_SetManaBarType(self)
 	local m = self.statsFrame.manaBar
 	if (m and not self.statsFrame.greyMana) then
@@ -1361,7 +1363,7 @@ function XPerl_SetManaBarType(self)
 	end
 end
 
--- XPerl_TooltipModiferPressed()
+-- XPerl_TooltipModiferPressed
 function XPerl_TooltipModiferPressed(buffs)
 	local mod, ic
 	if (buffs) then
@@ -2051,7 +2053,7 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 	name, rank, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, index, "RAID")
 	if (buff) then
 		-- We need the index of the buff unfiltered later for tooltips
-		for i = 1,1000 do
+		for i = 1, 40 do
 			local name1, rank1, buff1, count1, debuffType1, dur1, max1, isMine1, isStealable1 = func(unit, i)
 			if (not name1) then
 				break
@@ -2067,7 +2069,7 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 
 	-- See how many filtered buffs WoW has returned by default
 	local normalBuffFilterCount = 0
-	for i = 1,1000 do
+	for i = 1, 40 do
 		name = func(unit, i, "RAID")
 		if (not name) then
 			normalBuffFilterCount = i - 1
@@ -2080,7 +2082,7 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 	local foundValid = 0
 	local classExceptions = exceptions[playerClass]
 	local allExceptions = exceptions.ALL
-	for i = 1,1000 do
+	for i = 1, 40 do
 		name, rank, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, i)
 		if (not name) then
 			break
@@ -2116,7 +2118,7 @@ end
 local function DebuffException(unit, start, flag, func, raidFrames)
 	local name, rank, buff, count, debuffType, dur, max, caster, isStealable, index
 	local valid = 0
-	for i = 1, 1000 do
+	for i = 1, 40 do
 		name, rank, buff, count, debuffType, dur, max, caster, isStealable, index = BuffException(unit, i, flag, func, DebuffExceptions, raidFrames)
 		if (not name) then
 			break
@@ -2781,7 +2783,7 @@ local function XPerl_Unit_BuffPositionsType(self, list, useSmallStart, buffSizeB
 	local maxRows = self.conf.buffs.rows or 99
 	local decrementMaxRowsIfLastIsBig -- Descriptive variable names ftw... If only upvalues took no actual memory space for the name... :(
 
-	for i = 1,#list do
+	for i = 1, #list do
 		if (curRow > maxRows) then
 			hideFrom = i
 			break
@@ -2992,7 +2994,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 		if (self.conf.buffs.enable and maxBuffs and maxBuffs > 0) then
 			local buffIconIndex = 1
 			self.buffFrame:Show()
-			for mine = 1,2 do
+			for mine = 1, 2 do
 				if (self.conf.buffs.onlyMine and mine == 2) then
 					if (not UnitCanAttack("player", partyid)) then
 						break
@@ -3006,7 +3008,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 				-- player's buffs are first anyway". Well, usually they are, but in the case of hunters
 				-- and warlocks, the pet triggered buffs can be anywhere, but we still want those alongside
 				-- our own buffs.
-				for buffnum = 1,maxBuffs do
+				for buffnum = 1, maxBuffs do
 					local filter = castableOnly == 1 and "RAID" or nil
 					local name, rank, buff, count, _, duration, endTime, isMine, isStealable = XPerl_UnitBuff(partyid, buffnum, filter)
 					if (not name) then
@@ -3093,7 +3095,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 					end
 				end
 			end
-			for buffnum = lastIcon + 1,40 do
+			for buffnum = lastIcon + 1, 40 do
 				local button = self.buffFrame.buff and self.buffFrame.buff[buffnum]
 				if (button) then
 					button.expireTime = nil
@@ -3110,7 +3112,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 			local buffIconIndex = 1
 			self.debuffFrame:Show()
 			lastIcon = 0
-			for mine = 1,2 do
+			for mine = 1, 2 do
 				if (self.conf.debuffs.onlyMine and mine == 2) then
 					if (UnitCanAttack("player", partyid)) then
 						break
@@ -3348,28 +3350,30 @@ function XPerl_NextMember(_, last)
 	if (last) then
 		local raidCount = GetNumGroupMembers()
 		if (raidCount > 0) then
-			local i = tonumber(strmatch(last, "^raid(%d+)"))
-			if (i and i < raidCount) then
-				i = i + 1
-				local unitName, rank, group, level, _, unitClass, zone, online, dead = GetRaidRosterInfo(i)
-				return "raid"..i, unitName, unitClass, group, zone, online, dead
-			end
-		else
-			local partyCount = GetNumSubgroupMembers()
-			if (partyCount > 0) then
-				local id
-				if (last == "player") then
-					id = "party1"
-				else
-					local i = tonumber(strmatch(last, "^party(%d+)"))
-					if (i and i < partyCount) then
-						i = i + 1
-						id = "party"..i
-					end
+			if (IsInRaid()) then
+				local i = tonumber(strmatch(last, "^raid(%d+)"))
+				if (i and i < raidCount) then
+					i = i + 1
+					local unitName, rank, group, level, _, unitClass, zone, online, dead = GetRaidRosterInfo(i)
+					return "raid"..i, unitName, unitClass, group, zone, online, dead
 				end
+			else
+				local partyCount = GetNumSubgroupMembers()
+				if (partyCount > 0) then
+					local id
+					if (last == "player") then
+						id = "party1"
+					else
+						local i = tonumber(strmatch(last, "^party(%d+)"))
+						if (i and i < partyCount) then
+							i = i + 1
+							id = "party"..i
+						end
+					end
 
-				if (id) then
-					return id, UnitName(id), select(2, UnitClass(id)), 1, "", UnitIsConnected(id), UnitIsDeadOrGhost(id)
+					if (id) then
+						return id, UnitName(id), select(2, UnitClass(id)), 1, "", UnitIsConnected(id), UnitIsDeadOrGhost(id)
+					end
 				end
 			end
 		end

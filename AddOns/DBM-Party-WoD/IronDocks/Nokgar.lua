@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1235, "DBM-Party-WoD", 4, 558)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13746 $"):sub(12, -3))
 mod:SetCreatureID(81297, 81305)
 mod:SetEncounterID(1749)
 mod:SetZone()
@@ -24,7 +24,7 @@ local warnBurningArrows					= mod:NewSpellAnnounce(164635, 3)
 local warnRecklessProvocation			= mod:NewTargetAnnounce(164426, 3)
 local warnEnrage						= mod:NewSpellAnnounce(164835, 3, nil, "RemoveEnrage|Tank")
 
-local specWarnBurningArrows				= mod:NewSpecialWarningSpell(164635, nil, nil, nil, true)
+local specWarnBurningArrows				= mod:NewSpecialWarningSpell(164635, nil, nil, nil, 2)
 local specWarnBurningArrowsMove			= mod:NewSpecialWarningMove(164635)
 local specWarnRecklessProvocation		= mod:NewSpecialWarningReflect(164426)
 local specWarnRecklessProvocationEnd	= mod:NewSpecialWarningEnd(164426)

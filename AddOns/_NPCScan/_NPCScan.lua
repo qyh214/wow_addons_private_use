@@ -103,6 +103,8 @@ local OptionsCharacterDefault = {
 		[private.ACHIEVEMENT_IDS.HERALDS_OF_THE_LEGION] = true,
 		[private.ACHIEVEMENT_IDS.FIGHT_THE_POWER] = true,
 		[private.ACHIEVEMENT_IDS.ANCIENT_NO_MORE] = true,
+		[private.ACHIEVEMENT_IDS.HELLBANE] = true,
+		[private.ACHIEVEMENT_IDS.JUNGLE_STALKER] = true,
 	},
 	AchievementsAddFound = true,
 	AlertScreenEdgeFlash = true,

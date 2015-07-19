@@ -1,7 +1,7 @@
 
 BuildEnv(...)
 
-ApplicantPanel = Addon:NewModule(CreateFrame('Frame', nil, ManagerPanel), 'ApplicantPanel', 'AceEvent-3.0', 'NetEaseGUI-DropMenu-1.0', 'AceTimer-3.0')
+ApplicantPanel = Addon:NewModule(CreateFrame('Frame', nil, ManagerPanel), 'ApplicantPanel', 'AceEvent-3.0', 'AceTimer-3.0')
 
 
 local function _PartySortHandler(applicant)
@@ -183,9 +183,9 @@ function ApplicantPanel:OnInitialize()
     end
 
     local AutoInvite = GUI:GetClass('CheckBox'):New(self) do
-        AutoInvite:SetPoint('TOPRIGHT', self, 'BOTTOMRIGHT', -60, -7)
+        -- AutoInvite:SetPoint('TOPRIGHT', self, 'BOTTOMRIGHT', -60, -7)
+        AutoInvite:SetPoint('BOTTOMRIGHT', self, 'TOPLEFT', -80, 7)
         AutoInvite:SetText(L['自动邀请'])
-        AutoInvite:SetSize(20, 20)
         AutoInvite:SetScript('OnClick', function(AutoInvite)
             local checked = AutoInvite:GetChecked()
             self:SetAutoInvite(checked)
@@ -266,7 +266,7 @@ end
 function ApplicantPanel:ToggleEventMenu(button, applicant)
     local name = applicant:GetName()
 
-    self:ToggleMenu(button, {
+    GUI:ToggleMenu(button, {
         {
             text = name,
             isTitle = true,
@@ -341,7 +341,6 @@ function ApplicantPanel:StartInvite()
     for i, v in ipairs(list) do
         if self:CanInvite(v) then
             if self:Invite(v:GetID(), v:GetNumMembers()) then
-                debug('invite: ' .. v:GetName() .. ' ' .. v:GetLocalizedClass())
             end
             break
         end

@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(959, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13572 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14024 $"):sub(12, -3))
 mod:SetCreatureID(77325)--68168
 mod:SetEncounterID(1704)
 mod:SetZone()
 mod:SetUsedIcons(3, 2, 1)
-mod:SetHotfixNoticeRev(13480)
-mod:SetRespawnTime(30)--3rd party told, they say 33 second from visual despawn, which SHOULD be 30 seconds from ENCOUNTER_END event dbm uses
+mod:SetHotfixNoticeRev(13759)
+mod.respawnTime = 29.5
 
 mod:RegisterCombat("combat")
 
@@ -23,9 +23,11 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, get damage ID for fire on ground created by Mortar
+--TODO, check position of highest threat tank in phase 2 and guess which siege engine is going to come out (and type for mythic)?
 local warnPhase						= mod:NewPhaseChangeAnnounce()
 --Stage One: The Blackrock Forge
 local warnMarkedforDeath			= mod:NewTargetCountAnnounce(156096, 4)--If not in combat log, find a RAID_BOSS_WHISPER event.
+local warnMassiveDemolition			= mod:NewCountAnnounce("OptionVersion2", 156479, 3, nil, "Ranged")--As a regular warning, not too spammy and perfectly reasonable for ranged to be on by default.
 --Stage Two: Storage Warehouse
 local warnSiegemaker				= mod:NewCountAnnounce("ej9571", 3, 156667)
 local warnFixate					= mod:NewTargetAnnounce(156653, 4)
@@ -33,49 +35,50 @@ local warnFixate					= mod:NewTargetAnnounce(156653, 4)
 local warnAttachSlagBombs			= mod:NewTargetCountAnnounce(157000, 4)
 
 --Stage One: The Blackrock Forge
-local specWarnDemolition			= mod:NewSpecialWarningCount(156425, nil, nil, nil, 2, nil, 2)
+local specWarnDemolition			= mod:NewSpecialWarningCount(156425, nil, nil, nil, 2, 2)
 local specWarnMassiveDemolition		= mod:NewSpecialWarningCount(156479, false, nil, nil, 2)
-local specWarnMarkedforDeath		= mod:NewSpecialWarningYou(156096, nil, nil, nil, 3, nil, 2)
-local specWarnMFDPosition			= mod:NewSpecialWarning("specWarnMFDPosition", nil, false, nil, 1, nil, 4)--Mythic Position Assignment. No option, connected to specWarnMarkedforDeath
-local specWarnMarkedforDeathOther	= mod:NewSpecialWarningTargetCount(156096, false)
+local specWarnMarkedforDeath		= mod:NewSpecialWarningYou(156096, nil, nil, nil, 3, 2)
+local specWarnMFDPosition			= mod:NewSpecialWarning("specWarnMFDPosition", nil, false, nil, 1, 4)--Mythic Position Assignment. No option, connected to specWarnMarkedforDeath
+local specWarnMarkedforDeathOther	= mod:NewSpecialWarningTargetCount(156096, false, nil, nil, nil, 2)
 local yellMarkedforDeath			= mod:NewYell(156096)
-local specWarnThrowSlagBombs		= mod:NewSpecialWarningSpell(156030, nil, nil, nil, 2, nil, 2)--This spell is not gtfo.
-local specWarnShatteringSmash		= mod:NewSpecialWarningCount(155992, "Melee", nil, nil, nil, nil, 2)
+local specWarnThrowSlagBombs		= mod:NewSpecialWarningCount(156030, nil, nil, nil, 2, 2)--This spell is not gtfo.
+local specWarnShatteringSmash		= mod:NewSpecialWarningCount(155992, "Melee", nil, nil, nil, 2)
 local specWarnMoltenSlag			= mod:NewSpecialWarningMove(156401)
 --Stage Two: Storage Warehouse
 local specWarnSiegemaker			= mod:NewSpecialWarningCount("ej9571", false)--Kiter switch. off by default. 
-local specWarnSiegemakerPlatingFades= mod:NewSpecialWarningFades("OptionVersion2", 156667, "Ranged")--Plating removed, NOW dps switch
+local specWarnSiegemakerPlatingFades= mod:NewSpecialWarningFades(156667, "Ranged", nil, 2)--Plating removed, NOW dps switch
 local specWarnFixate				= mod:NewSpecialWarningRun(156653, nil, nil, nil, 4)
 local yellFixate					= mod:NewYell(156653)
-local specWarnMassiveExplosion		= mod:NewSpecialWarningSpell(163008, nil, nil, nil, 2, nil, 2)--Mythic
+local specWarnMortarSoon			= mod:NewSpecialWarningSoon(156530, "Ranged")--Mortar prefers the furthest targets from siege engine. It's ranged job to bait it to a wall
+local specWarnMassiveExplosion		= mod:NewSpecialWarningSpell(163008, nil, nil, nil, 2, 2)--Mythic
 --Stage Three: Iron Crucible
 local specWarnSlagEruption			= mod:NewSpecialWarningCount(156928, nil, nil, nil, 2)
-local specWarnAttachSlagBombs		= mod:NewSpecialWarningYou(157000, nil, nil, nil, nil, nil, 2)--May change to sound 3, but I don't want it confused with the even more threatening marked for death, so for now will try 1
-local specWarnAttachSlagBombsOther	= mod:NewSpecialWarningTaunt(157000, nil, nil, nil, nil, nil, 2)
+local specWarnAttachSlagBombs		= mod:NewSpecialWarningYou(157000, nil, nil, nil, nil, 2)--May change to sound 3, but I don't want it confused with the even more threatening marked for death, so for now will try 1
+local specWarnAttachSlagBombsOther	= mod:NewSpecialWarningTaunt(157000, nil, nil, nil, nil, 2)
 local specWarnSlagPosition			= mod:NewSpecialWarning("specWarnSlagPosition", nil, false, nil, 1)
 local yellAttachSlagBombs			= mod:NewYell("OptionVersion2", 157000)
-local specWarnMassiveShatteringSmash= mod:NewSpecialWarningCount("OptionVersion2", 158054, nil, nil, nil, 3, nil, 2)
+local specWarnMassiveShatteringSmash= mod:NewSpecialWarningCount(158054, nil, nil, 2, 3, 2)
 local specWarnFallingDebris			= mod:NewSpecialWarningCount(162585, nil, nil, nil, 2)--Mythic (like Meteor)
 
 --Stage One: The Blackrock Forge
 mod:AddTimerLine(SCENARIO_STAGE:format(1))
-local timerDemolitionCD				= mod:NewNextCountTimer(45, 156425)
-local timerMassiveDemolitionCD		= mod:NewNextCountTimer(6, 156479)
-local timerMarkedforDeathCD			= mod:NewNextCountTimer(15.5, 156096)
-local timerThrowSlagBombsCD			= mod:NewCDTimer(24.5, 156030)--It's a next timer, but sometimes delayed by Shattering Smash
-local timerShatteringSmashCD		= mod:NewCDCountTimer(44.5, 155992)--power based, can variate a little do to blizzard buggy power code.
+local timerDemolitionCD				= mod:NewNextCountTimer(45, 156425, nil, nil, nil, 2)
+local timerMassiveDemolitionCD		= mod:NewNextCountTimer(6, 156479, nil, nil, nil, 2)
+local timerMarkedforDeathCD			= mod:NewNextCountTimer(15.5, 156096, nil, nil, nil, 3)
+local timerThrowSlagBombsCD			= mod:NewCDCountTimer(24.5, 156030, nil, "Melee", nil, 3)--It's a next timer, but sometimes delayed by Shattering Smash
+local timerShatteringSmashCD		= mod:NewCDCountTimer(44.5, 155992, nil, nil, nil, 5)--power based, can variate a little do to blizzard buggy power code.
 local timerImpalingThrow			= mod:NewCastTimer(5, 156111)--How long marked target has to aim throw at Debris Pile or Siegemaker
 --Stage Two: Storage Warehouse
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
-local timerSiegemakerCD				= mod:NewNextCountTimer(50, "ej9571", nil, nil, nil, 156667)
+local timerSiegemakerCD				= mod:NewNextCountTimer(50, "ej9571", nil, nil, nil, 1, 156667)
 local timerMassiveExplosion			= mod:NewCastTimer(5, 163008)
 --Stage Three: Iron Crucible
 mod:AddTimerLine(SCENARIO_STAGE:format(3))
-local timerSlagEruptionCD			= mod:NewCDCountTimer(32.5, 156928)
-local timerAttachSlagBombsCD		= mod:NewCDCountTimer(25.5, 157000)--26-28. Do to increased cast time vs phase 1 and 2 slag bombs, timer is 1 second longer on CD
+local timerSlagEruptionCD			= mod:NewCDCountTimer(32.5, 156928, nil, nil, nil, 2)
+local timerAttachSlagBombsCD		= mod:NewCDCountTimer(25.5, 157000, nil, nil, nil, 3)--26-28. Do to increased cast time vs phase 1 and 2 slag bombs, timer is 1 second longer on CD
 local timerSlagBomb					= mod:NewCastTimer(5, 157015)
 local timerFallingDebris			= mod:NewCastTimer(6, 162585)--Mythic
-local timerFallingDebrisCD			= mod:NewNextCountTimer(40, 162585)--Mythic
+local timerFallingDebrisCD			= mod:NewNextCountTimer(40, 162585, nil, nil, nil, 5)--Mythic
 
 local countdownShatteringSmash		= mod:NewCountdown(45.5, 155992)
 local countdownSlagBombs			= mod:NewCountdown("Alt25", 156030, "Melee")
@@ -83,7 +86,7 @@ local countdownMarkedforDeath		= mod:NewCountdown("AltTwo25", 156096, "-Tank")
 local countdownMarkedforDeathFades	= mod:NewCountdownFades("AltTwo5", 156096)--Same voice should be fine, never will overlap, and both for same spell, so people will understand
 
 local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
-local voiceSiegemaker				= mod:NewVoice("OptionVersion2", "ej9571", "Ranged") -- ej9571.ogg tank coming
+local voiceSiegemaker				= mod:NewVoice("ej9571", "Ranged", nil, 2) -- ej9571.ogg tank coming
 local voiceShatteringSmash			= mod:NewVoice(155992, "Melee") --carefly
 local voiceMarkedforDeath			= mod:NewVoice(156096) --target: findshelter; else: 156096.ogg marked for death
 local voiceDemolition				= mod:NewVoice(156425) --AOE
@@ -95,6 +98,7 @@ mod:AddSetIconOption("SetIconOnMarked", 156096, true)
 mod:AddRangeFrameOption("6/10")
 mod:AddBoolOption("PositionsAllPhases", false)
 mod:AddHudMapOption("HudMapOnMFD", 156096)
+mod:AddBoolOption("InfoFrame")
 
 mod.vb.phase = 1
 mod.vb.demolitionCount = 0
@@ -110,6 +114,7 @@ local smashTank = nil
 local UnitDebuff, UnitName, UnitClass, UnitPowerMax = UnitDebuff, UnitName, UnitClass, UnitPowerMax
 local markTargets = {}
 local slagTargets = {}
+local mortarsWarned = {}
 local DBMHudMap = DBMHudMap
 local tankFilter
 local yellMFD2 = mod:NewYell(156096, L.customMFDSay, true, false)
@@ -167,7 +172,7 @@ local function warnMarked(self)
 					if self.Options.Yell156096 then
 						yellMFD2:Yell(DBM_CORE_LEFT, playerName)
 					end
-					voiceMarkedforDeath:Schedule(0.7, "left")--Schedule another 0.7, for total of 1.2 second after "find shelder"
+					voiceMarkedforDeath:Play("left")--Schedule another 0.7, for total of 1.2 second after "find shelder"
 				elseif mfdFound == 2 then
 					if self.Options.SpecWarn156096you then
 						specWarnMFDPosition:Show(DBM_CORE_RIGHT)
@@ -175,7 +180,7 @@ local function warnMarked(self)
 					if self.Options.Yell156096 then
 						yellMFD2:Yell(DBM_CORE_RIGHT, playerName)
 					end
-					voiceMarkedforDeath:Schedule(0.7, "right")--Schedule another 0.7, for total of 1.2 second after "find shelder"
+					voiceMarkedforDeath:Play("right")--Schedule another 0.7, for total of 1.2 second after "find shelder"
 				elseif mfdFound == 3 then
 					if self.Options.SpecWarn156096you then
 						specWarnMFDPosition:Show(DBM_CORE_MIDDLE)
@@ -183,7 +188,7 @@ local function warnMarked(self)
 					if self.Options.Yell156096 then
 						yellMFD2:Yell(DBM_CORE_MIDDLE, playerName)
 					end
-					voiceMarkedforDeath:Schedule(0.7, "center")--Schedule another 0.7, for total of 1.2 second after "find shelder"
+					voiceMarkedforDeath:Play("center")--Schedule another 0.7, for total of 1.2 second after "find shelder"
 				end
 			end
 			if mfdFound == expectedTotal then break end
@@ -191,26 +196,9 @@ local function warnMarked(self)
 	end
 end
 
-local function meleeCheck(uId)
-	if UnitGroupRolesAssigned(uId) == "HEALER" then
-		return false
-	end
-	local _, class = UnitClass(uId)
-	--Because healers filtered out already, paladin and monk can only be melee if not "healer"
-	if class == "WARRIOR" or class == "ROGUE" or class == "DEATHKNIGHT" or class == "PALADIN" or class == "MONK" then
-		return true
-	end
-	--Inspect throttle exists, so have to do it this way
-	if class == "DRUID" or class == "SHAMAN" then
-		if UnitPowerMax(uId) < 35000 then
-			return true
-		end
-	end
-	return false
-end
-
-local slagDebuff = GetSpellInfo(156096)
+local slagDebuff = GetSpellInfo(157000)
 local function checkSlag(self)
+	DBM:Debug("checkSlag running", 2)
 	local numGroupMembers = DBM:GetNumGroupMembers()
 	if numGroupMembers < 2 then return end--Future proofing solo raid. can't assign 2 positions if less than 2 people
 	--Was originally going to also do this as 3 positions, but changed to match BW for compatability, for users who want to run DBM in BW dominant raids.
@@ -222,40 +210,48 @@ local function checkSlag(self)
 		local unitID = "raid"..i
 		if UnitDebuff(unitID, slagDebuff) then--Tank excluded on purpose to match BW helper
 			slagFound = slagFound + 1
-			if meleeCheck(unitID) then
+			if self:IsMeleeDps(unitID) then
+				DBM:Debug("Slag found on melee"..totalMelee, 2)
 				totalMelee = totalMelee + 1
 			end
 			tempTable[slagFound] = UnitName(unitID)
+			DBM:Debug("Slag "..slagFound.." found on "..UnitName(unitID), 2)
 			if slagFound == 2 then break end
 		end
 	end
 	if totalMelee == 1 then--Melee count exactly 1
+		DBM:Debug("Slag melee count exactly 1, should be assigning 1 ranged one melee")
 		--Assign melee to middle and ranged to back
-		local playerIsMelee = meleeCheck("player")
+		local playerIsMelee = self:IsMeleeDps()
 		if playerIsMelee and ((tempTable[1] == playerName) or (tempTable[2] == playerName)) then
 			if self.Options.SpecWarn157000you then
 				specWarnSlagPosition:Show(DBM_CORE_MIDDLE)
-				if self.Options.Yell1570002 then
-					yellSlag2:Yell(DBM_CORE_MIDDLE, playerName)
-				end
+			end
+			if self.Options.Yell1570002 then
+				yellSlag2:Yell(DBM_CORE_MIDDLE, playerName)
 			end
 		elseif not playerIsMelee and ((tempTable[1] == playerName) or (tempTable[2] == playerName)) then
 			if self.Options.SpecWarn157000you then
 				specWarnSlagPosition:Show(DBM_CORE_BACK)
-				if self.Options.Yell1570002 then
-					yellSlag2:Yell(DBM_CORE_BACK, playerName)
-				end
+			end
+			if self.Options.Yell1570002 then
+				yellSlag2:Yell(DBM_CORE_BACK, playerName)
 			end
 		end	
 	else--Just use roster order
+		DBM:Debug("Slag on 2 ranged or 2 melee")
 		if tempTable[1] == playerName then
 			if self.Options.SpecWarn157000you then
 				specWarnSlagPosition:Show(DBM_CORE_MIDDLE)
+			end
+			if self.Options.Yell1570002 then
 				yellSlag2:Yell(DBM_CORE_MIDDLE, playerName)
 			end
 		elseif tempTable[2] == playerName then
 			if self.Options.SpecWarn157000you then
 				specWarnSlagPosition:Show(DBM_CORE_BACK)
+			end
+			if self.Options.Yell1570002 then
 				yellSlag2:Yell(DBM_CORE_BACK, playerName)
 			end
 		end	
@@ -268,31 +264,45 @@ local function warnSlag(self)
 	table.wipe(slagTargets)
 end
 
+--/run DBM:GetModByName("959"):NoteTestFunction(1)
+function mod:NoteTestFunction(count)
+	specWarnShatteringSmash:Show(count)
+end
+
 function mod:OnCombatStart(delay)
 	table.wipe(markTargets)
 	table.wipe(slagTargets)
+	table.wipe(mortarsWarned)
 	self.vb.phase = 1
 	self.vb.demolitionCount = 0
 	self.vb.SlagEruption = 0
 	self.vb.smashCount = 0
 	self.vb.markCount = 0
-	timerThrowSlagBombsCD:Start(5.5-delay)
-	countdownSlagBombs:Start(5.5-delay)
+	self.vb.slagCastCount = 0
+	timerThrowSlagBombsCD:Start(5.2-delay, 1)
+	countdownSlagBombs:Start(5.2-delay)
 	timerDemolitionCD:Start(15-delay, 1)
 	timerShatteringSmashCD:Start(21-delay, 1)
 	if self:IsTank() then--Ability only concerns tank in phase 1
 		countdownShatteringSmash:Start(21-delay)
+		if self.Options.InfoFrame then--Only tanks in phase 1
+			DBM.InfoFrame:Show(5, "enemypower", 1)
+		end
 	end
 	timerMarkedforDeathCD:Start(36-delay, 1)
 	countdownMarkedforDeath:Start(36-delay)
 end
 
 function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
 	if self.Options.HudMapOnMFD then
 		DBMHudMap:Disable()
+	end
+	if self.Options.InfoFrame then--Only tanks in phase 1
+		DBM.InfoFrame:Hide()
 	end
 end
 
@@ -309,8 +319,8 @@ function mod:SPELL_CAST_START(args)
 			end
 		else
 			if self:IsMythic() then
-				timerShatteringSmashCD:Start(31.5, self.vb.smashCount+1)
-				countdownShatteringSmash:Start(31.5)
+				timerShatteringSmashCD:Start(30.5, self.vb.smashCount+1)
+				countdownShatteringSmash:Start(30.5)
 			else
 				timerShatteringSmashCD:Start(nil, self.vb.smashCount+1)
 				countdownShatteringSmash:Start()--Not phase 1, concerns everyone not just tank
@@ -375,7 +385,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerImpalingThrow:Start()
 			timerMarkedforDeathCD:Start(timer, self.vb.markCount+1)
 			countdownMarkedforDeath:Start(timer)
-			DBM:Debug("Running experimental timerShatteringSmashCD adjust because debugmode is enabled", 2)
 			local elapsed, total = timerShatteringSmashCD:GetTime(self.vb.smashCount+1)
 			local remaining = total - elapsed
 			DBM:Debug("Smash Elapsed: "..elapsed.." Smash Total: "..total.." Smash Remaining: "..remaining.." MFD Timer: "..timer, 2)
@@ -389,28 +398,25 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		markTargets[#markTargets + 1] = args.destName
 		self:Unschedule(warnMarked)
-		if (self:IsMythic() and #markTargets == 3) or #markTargets == 2 then--Have all targets, warn immediately
+		local expectedMFDCount = self:IsMythic() and 3 or 2
+		if #markTargets == expectedMFDCount then--Have all targets, warn immediately
 			warnMarked(self)
 		else
-			self:Schedule(0.5, warnMarked, self)
+			self:Schedule(1.5, warnMarked, self)
 		end
 		if args:IsPlayer() then
 			specWarnMarkedforDeath:Show()
-			voiceMarkedforDeath:Play("findshelter")
 			countdownMarkedforDeathFades:Start()
-			if self:IsLFR() or (self.Options.PositionsAllPhases and self.vb.phase < 3) then
+			if self:IsLFR() or (not self.Options.PositionsAllPhases and self.vb.phase < 3) then
 				yellMarkedforDeath:Yell()
+				voiceMarkedforDeath:Play("findshelter")
 			end
 		end
 		if self.Options.SetIconOnMarked then
-			if self:IsMythic() then
-				self:SetSortedIcon(1, args.destName, 1, 3)
-			else
-				self:SetSortedIcon(1, args.destName, 1, 2)
-			end
+			self:SetSortedIcon(1.5, args.destName, 1, expectedMFDCount)
 		end
 		if self.Options.HudMapOnMFD then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 5, 1, 1, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 5, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 		end
 	elseif spellId == 157000 then--Non Tank Version
 		if self:AntiSpam(5, 4) then
@@ -524,8 +530,9 @@ mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if (spellId == 156031 or spellId == 156998) and self:AntiSpam(2, 2) then--156031 phase 1, 156991 phase 2. 156998 is also usuable for phase 2 but 156991
-		specWarnThrowSlagBombs:Show()
-		timerThrowSlagBombsCD:Start()
+		self.vb.slagCastCount = self.vb.slagCastCount + 1
+		specWarnThrowSlagBombs:Show(self.vb.slagCastCount)
+		timerThrowSlagBombsCD:Start(nil, self.vb.slagCastCount+1)
 		countdownSlagBombs:Start()
 		voiceThrowSlagBombs:Play("bombsoon")
 	elseif spellId == 156425 then
@@ -540,18 +547,33 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		timerMassiveDemolitionCD:Start(nil, 1)
 		if self:IsMythic() then
 			timerMassiveDemolitionCD:Schedule(6, 3, 2)
-			specWarnMassiveDemolition:Schedule(6, 1)
 			timerMassiveDemolitionCD:Schedule(9, 3, 3)
-			specWarnMassiveDemolition:Schedule(9, 2)
 			timerMassiveDemolitionCD:Schedule(12, 3, 4)
-			specWarnMassiveDemolition:Schedule(12, 3)
-			specWarnMassiveDemolition:Schedule(15, 4)
+			if self.Options.SpecWarn156479count then
+				specWarnMassiveDemolition:Schedule(6, 1)
+				specWarnMassiveDemolition:Schedule(9, 2)
+				specWarnMassiveDemolition:Schedule(12, 3)
+				specWarnMassiveDemolition:Schedule(15, 4)
+			else
+				warnMassiveDemolition:Schedule(6, 1)
+				warnMassiveDemolition:Schedule(9, 2)
+				warnMassiveDemolition:Schedule(12, 3)
+				warnMassiveDemolition:Schedule(15, 4)
+			end
 		else
 			timerMassiveDemolitionCD:Schedule(6, 5, 2)
-			specWarnMassiveDemolition:Schedule(6, 1)
 			timerMassiveDemolitionCD:Schedule(11, 5, 3)
-			specWarnMassiveDemolition:Schedule(11, 2)
-			specWarnMassiveDemolition:Schedule(16, 3)
+			if self.Options.SpecWarn156479count then
+				specWarnMassiveDemolition:Schedule(6, 1)
+				specWarnMassiveDemolition:Schedule(11, 2)
+				specWarnMassiveDemolition:Schedule(16, 3)	
+			else
+				if not self:IsLFR() then
+					warnMassiveDemolition:Schedule(6, 1)
+					warnMassiveDemolition:Schedule(11, 2)
+					warnMassiveDemolition:Schedule(16, 3)
+				end
+			end
 		end
 		voiceDemolition:Play("aesoon")
 	elseif spellId == 161347 then--Phase 2 Trigger
@@ -560,14 +582,16 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		self.vb.siegemaker = 0
 		self.vb.markCount = 0
 		self.vb.markCount2 = 0
+		self.vb.slagCastCount = 0
 		timerDemolitionCD:Cancel()
 		timerMassiveDemolitionCD:Cancel()
 		timerMassiveDemolitionCD:Unschedule()
 		specWarnMassiveDemolition:Cancel()
+		warnMassiveDemolition:Cancel()
 		countdownSlagBombs:Cancel()
 		countdownSlagBombs:Start(11)
 		timerThrowSlagBombsCD:Cancel()
-		timerThrowSlagBombsCD:Start(11)--11-12.5
+		timerThrowSlagBombsCD:Start(11, 1)--11-12.5
 		timerSiegemakerCD:Start(15, 1)
 		countdownShatteringSmash:Cancel()
 		timerShatteringSmashCD:Cancel()
@@ -588,11 +612,18 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		if self.Options.RangeFrame and not self:IsMelee() then
 			DBM.RangeCheck:Show(6)
 		end
+		if self.Options.InfoFrame then--Everyone in phase 2 and 3
+			DBM.InfoFrame:Show(5, "enemypower", 1)
+		end
+		self:RegisterShortTermEvents(
+			"UNIT_POWER_FREQUENT boss2 boss3 boss4 boss5"
+		)
 	elseif spellId == 161348 then--Phase 3 Trigger
+		self:UnregisterShortTermEvents()
 		self.vb.phase = 3
 		self.vb.smashCount = 0
 		self.vb.markCount = 0
-		self.vb.slagCount = 0
+		self.vb.slagCastCount = 0
 		timerSiegemakerCD:Cancel()
 		timerThrowSlagBombsCD:Cancel()
 		countdownSlagBombs:Cancel()
@@ -619,5 +650,14 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()
 		end
+	end
+end
+
+function mod:UNIT_POWER_FREQUENT(uId)
+	local power = UnitPower(uId)
+	local guid = UnitGUID(uId)
+	if power > 70 and not mortarsWarned[guid] then
+		specWarnMortarSoon:Show()
+		mortarsWarned[guid] = true
 	end
 end

@@ -1,3 +1,108 @@
+**r972**
+* More possible FPS issue fixes.
+* Fixed an issue with range finder spells/items.
+* Fixed a layer issue with expected health bars.
+* In the "Helper" tab, disabling "Enemy Targeting" will also disable "Aggro Warning" as it should.
+* Flipped party frames with pet frames enabled will have their debuff position fixed.
+* Flipped party frames will have their debuff grow position fixed.
+* The level and the class frame is no longer party of the party's secure unit frame, also the highlight will exclude this frames.
+* Party pet power bars are properly updated again.
+* Party pets are no longer clamped to screen.
+* Party and raid pets are getting a full update when the pet becomes targetable/untargetable.
+* Fixed a taint with player frame for druids.
+* Some other smaller player frame fixes.
+* Fixed an issue with raid/raid pet frames what caused excessive frame updates and performance degradements.
+* Removed some outdated events from the "Raid Monitor" module.
+* A lot of other smaller fixes, clean ups and optimizations.
+
+**r971**
+* Updated for 6.2.0.
+* Tagging as 4.0.3 release.
+
+**r970**
+* Binding fixes.
+
+**r969**
+* The mouse over highlight will exlcude the class and level frames for the player, target, focus and party frames.
+* More taint fixes for balance druids. (The damn boomkinz.)
+* The focus target indicator is now anchored to the right side on the focuses name fame, to prevent overlapping with the pvp indicator.
+* Feign death status fixes.
+* AFK status fixes.
+* AFK status should get updated instantly.
+
+**r968**
+* Fixed an error with the party "Feign Death" status.
+
+**r967**
+* Fixed a major issue with party roster updates.
+* More possible FPS fixes.
+* Fixed the "Feign Death" status for every frame.
+* Logging in with invalid bar texture, will auto reset it to it's default value.
+* Added a dropdown to delete profiles. (You cannot delete the currently loaded profile.)
+* "One Group Raid" party should properly hide the raid frames.
+* Fixed an issue with the "Raid Helper" module.
+* Fixed a taint with the "Raid Frames" module, when loggin into combat.
+* Fixed some global leaks.
+
+**r966**
+* zhTW update for recently new Option UI strings.
+
+**r965**
+* Wake up the repo server.
+
+**r964**
+* Elite text/graphic can be disabled completely for target and focus frames.
+
+**r963**
+* Fixed a major issue with group detection.
+* More FPS related fixes.
+* Meta-table kills.
+* Player highlight fixes for druids after changing forms.
+* Fixed a taint with the player frame for Balance Druids.
+
+**r962**
+* Version fix.
+* Raid fixes.
+* Some clean ups.
+
+**r961**
+* Fixed a saved variable issue with the raid size.
+
+**r960**
+* Some FPS issue fixes.
+* Fixed an on load issue.
+* Added an option to change the raid frame's width.
+* Raid gap is now a saved variable.
+* The cast bar check boxes should be properly disabled when it's handler module is disabled.
+* Killing meta-tables.
+* A lot of smaller GUI fixes.
+
+**r959**
+* Tagging as 4.0.1 release.
+
+**r958**
+* Wake up the repo server.
+
+**r957**
+* "Raid Helper" module optimizations.
+
+**r956**
+* Fixed the excessive metatable FPS issues caused by the "Raid Helper" module.
+
+**r955**
+* Raid Manager strata fix.
+* Some other smaller chanes.
+
+**r954**
+* zhTW update for r953's new option.
+
+**r953**
+* Added the "Big Stealable Buffs" option for the focus frame.
+* Some other fixes.
+
+**r952**
+* Fixed the Compact Unit Profile taint.
+
 **r951**
 * Event fix for Compact UnitFrame Profiles.
 

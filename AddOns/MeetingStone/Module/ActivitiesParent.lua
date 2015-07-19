@@ -5,15 +5,11 @@ if not ADDON_REGIONSUPPORT then
     return
 end
 
-local InTabPanel = GUI:GetClass('InTabPanel')
-
 ActivitiesParent = Addon:NewModule(CreateFrame('Frame'), 'ActivitiesParent', 'AceEvent-3.0', 'AceTimer-3.0')
+GUI:Embed(ActivitiesParent, 'Refresh', 'TabPanel')
 
 function ActivitiesParent:OnInitialize()
-    GUI:Embed(self, 'Owner')
     MainPanel:RegisterPanel(L['最新官方活动'], self, 3, 20, 1, true)
-
-    self.PanelList = {}
 
     local LBackground = self:CreateTexture(nil, 'BORDER') do
         LBackground:SetWidth(209)
@@ -116,41 +112,50 @@ function ActivitiesParent:OnInitialize()
         TabFrame:SetOrientation('VERTICAL', 'LEFT')
         TabFrame:SetItemClass(ActivitiesTabItem)
         TabFrame:EnableMenu(nil)
-        TabFrame:SetItemList(self.PanelList)
+        TabFrame:SetItemList(self:GetPanelList())
         TabFrame:SetCallback('OnItemFormatted', function(TabFrame, button, data)
             button:SetText(data.name)
             button:SetIcon(data.icon)
         end)
         TabFrame:SetCallback('OnSelectChanged', function(TabFrame, index, data)
-            for i, data in ipairs(self.PanelList) do
+            for i, data in ipairs(self:GetPanelList()) do
                 data.panel:SetShown(i == index)
             end
-            Title:SetText(self.PanelList[index].name)
+            Title:SetText(self:GetPanelList()[index].name)
         end)
     end
 
     local Inset = CreateFrame('Frame', nil, self, 'InsetFrameTemplate') do
-        Inset:SetPoint('BOTTOMRIGHT', 0, 25)
+        Inset:SetPoint('BOTTOMRIGHT', 0, 22)
         Inset:SetPoint('TOPLEFT', LBackground, 'TOPRIGHT', 10, -48)
     end
 
     local ScoreButton = Addon:GetClass('Button'):New(self) do
+        ScoreButton:Hide()
         ScoreButton:SetPoint('TOPRIGHT', MainPanel, 'TOPRIGHT', -130, -30)
         ScoreButton:SetText(L['活动点数：'] .. 'NaN')
         ScoreButton:SetIcon([[Interface\ICONS\Racial_Dwarf_FindTreasure]])
         ScoreButton:SetCooldown(SERVER_TIMEOUT)
-        ScoreButton:SetScript('OnClick', function()
-            Activities:QueryPlayerInfo()
-        end)
         ScoreButton:SetTooltip(L['查询活动点数'], L['查询间隔120秒'])
+        ScoreButton:SetScript('OnClick', function()
+            Activities:QueryPersonInfo()
+        end)
+        ScoreButton:SetScript('OnShow', function(ScoreButton)
+            self.PlayerInfoButton:ClearAllPoints()
+            self.PlayerInfoButton:SetPoint('RIGHT', ScoreButton, 'RIGHT', -110, 0)
+        end)
+        ScoreButton:SetScript('OnHide', function(ScoreButton)
+            self.PlayerInfoButton:ClearAllPoints()
+            self.PlayerInfoButton:SetPoint('TOPRIGHT', MainPanel, 'TOPRIGHT', -90, -30)
+        end)
     end
 
     local PlayerInfoButton = Addon:GetClass('Button'):New(self) do
-        PlayerInfoButton:SetPoint('RIGHT', ScoreButton, 'RIGHT', -110, 0)
-        PlayerInfoButton:SetText(L['收货信息'])
+        PlayerInfoButton:SetPoint('TOPRIGHT', MainPanel, 'TOPRIGHT', -90, -30)
+        PlayerInfoButton:SetText(L['联系方式'])
         PlayerInfoButton:SetIcon([[Interface\ICONS\INV_Letter_05]])
         PlayerInfoButton:SetScript('OnClick', function()
-            PlayerInfoDialog:Open(L['填写你的收货信息'], L['收货信息'])
+            PlayerInfoDialog:Open(L['填写你的联系方式'], L['联系方式'])
         end)
     end
 
@@ -176,7 +181,7 @@ function ActivitiesParent:OnInitialize()
             elseif not Activities:GetActivitiesInfo() then
                 Blocker:SetText(L['正在获取活动信息，请稍候'])
             elseif not Activities:GetScore() then
-                Blocker:SetText(L['正在获取活动点数信息，请稍候'])
+                Blocker:SetText(L['正在获取个人信息，请稍候'])
             else
                 local item = Activities:GetBuyingItem()
                 if item then
@@ -209,11 +214,11 @@ function ActivitiesParent:OnInitialize()
         end)
     end
 
-    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_PLAYERINFO_UPDATE')
+    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_PERSONINFO_UPDATE')
     self:RegisterMessage('MEETINGSTONE_ACTIVITIES_DATA_UPDATED')
-    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_BUY_TIMEOUT', 'RefreshBlocker')
-    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_BUY_RESULT', 'RefreshBlocker')
-    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_BUY_SENDING', 'RefreshBlocker')
+    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_BUY_TIMEOUT', 'Refresh')
+    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_BUY_RESULT', 'Refresh')
+    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_BUY_SENDING', 'Refresh')
     self:RegisterMessage('MEETINGSTONE_ACTIVITIES_QUERY_SENDING')
     self:RegisterMessage('MEETINGSTONE_ACTIVITIES_QUERY_TIMEOUT', 'OnShow')
     self:RegisterMessage('MEETINGSTONE_ACTIVITIES_SERVER_CONNECTED', 'OnShow')
@@ -226,7 +231,7 @@ function ActivitiesParent:OnInitialize()
     self:SetScript('OnShow', self.OnShow)
 end
 
-function ActivitiesParent:RefreshBlocker()
+function ActivitiesParent:Update()
     self.Blocker:Hide()
 
     if not self:IsVisible() then
@@ -237,24 +242,25 @@ end
 
 function ActivitiesParent:MEETINGSTONE_ACTIVITIES_QUERY_SENDING()
     self.ScoreButton:Disable()
-    self:RefreshBlocker()
+    self:Refresh()
 end
 
 function ActivitiesParent:OnShow()
     if self:IsVisible() and Activities:IsConnected() and not Activities:GetPersonInfo() then
-        Activities:QueryPlayerInfo()
+        Activities:QueryPersonInfo()
     end
-    self:RefreshBlocker()
+    self:Refresh()
     DataCache:GetObject('ActivitiesData'):SetIsNew(false)
 end
 
-function ActivitiesParent:MEETINGSTONE_ACTIVITIES_PLAYERINFO_UPDATE()
+function ActivitiesParent:MEETINGSTONE_ACTIVITIES_PERSONINFO_UPDATE()
+    self.ScoreButton:SetShown(Activities:IsActivityHasScore())
     self.ScoreButton:SetText(L['活动点数：'] .. Activities:GetScore())
     self.queryTimer = nil
-    self:SetScript('OnShow', self.RefreshBlocker)
+    self:SetScript('OnShow', self.Refresh)
     self:UnregisterMessage('MEETINGSTONE_ACTIVITIES_QUERY_TIMEOUT')
     self:UnregisterMessage('MEETINGSTONE_SERVER_STATUS_UPDATED')
-    self:RefreshBlocker()
+    self:Refresh()
 end
 
 function ActivitiesParent:MEETINGSTONE_ACTIVITIES_DATA_UPDATED(_, data)
@@ -273,32 +279,10 @@ function ActivitiesParent:MEETINGSTONE_ACTIVITIES_DATA_UPDATED(_, data)
         self:UnregisterPanel(L['活动抽奖'])
     end
     self.TabFrame:Refresh()
-    self:RefreshBlocker()
+    self:Refresh()
 end
 
+local orig_RegisterPanel = ActivitiesParent.RegisterPanel
 function ActivitiesParent:RegisterPanel(name, icon, ...)
-    InTabPanel.RegisterPanel(self, name, ...)
-
-    self.PanelList[#self.PanelList].icon = icon
+    orig_RegisterPanel(self, name, ...).icon = icon
 end
-
-ActivitiesParent.UpdateTab = InTabPanel.UpdateTab
-ActivitiesParent.UnregisterPanel = InTabPanel.UnregisterPanel
-ActivitiesParent.IsPanelRegistered = InTabPanel.IsPanelRegistered
-ActivitiesParent.UnregisterAllPanels = InTabPanel.UnregisterAllPanels
-ActivitiesParent.EnableTab = InTabPanel.EnableTab
-ActivitiesParent.DisableTab = InTabPanel.DisableTab
-ActivitiesParent.SetTabEnabled = InTabPanel.SetTabEnabled
-ActivitiesParent.SelectTab = InTabPanel.SelectTab
-ActivitiesParent.SetTabText = InTabPanel.SetTabText
-ActivitiesParent.GetPanelIndex = InTabPanel.GetPanelIndex
-ActivitiesParent.SelectPanel = InTabPanel.SelectPanel
-ActivitiesParent.EnablePanel = InTabPanel.EnablePanel
-ActivitiesParent.DisablePanel = InTabPanel.DisablePanel
-ActivitiesParent.SetPanelEnabled = InTabPanel.SetPanelEnabled
-ActivitiesParent.SetPanelText = InTabPanel.SetPanelText
-ActivitiesParent.GetSelectedTab = InTabPanel.GetSelectedTab
-ActivitiesParent.GetSelectedPanel = InTabPanel.GetSelectedPanel
-ActivitiesParent.GetTabFrame = InTabPanel.GetTabFrame
-ActivitiesParent.GetTopHeight = InTabPanel.GetTopHeight
-ActivitiesParent.GetBottomHeight = InTabPanel.GetBottomHeight

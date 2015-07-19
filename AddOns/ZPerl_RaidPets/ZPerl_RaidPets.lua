@@ -9,7 +9,7 @@ XPerl_RequestConfig(function(New)
 	conf = New
 	raidconf = New.raid
 	rconf = New.raidpet
-end, "$Revision: 939 $")
+end, "$Revision: 972 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -34,11 +34,21 @@ end
 
 -- XPerl_RaidPets_OnUpdate
 local function XPerl_RaidPets_OnUpdate(self, elapsed)
-	self.time = self.time + elapsed
-	if (self.time > 0.3) then
-		for unit, frame in pairs(RaidPetFrameArray) do
-			if (unit) then
-				XPerl_UpdateSpellRange(frame, unit, true)
+	for unit, frame in pairs(RaidPetFrameArray) do
+		if (frame:IsShown()) then
+			local visible = UnitIsVisible(unit)
+			if frame.visible ~= visible then
+				if XPerl_RaidPets_UpdateDisplay then
+					XPerl_RaidPets_UpdateDisplay(frame)
+				end
+				frame.visible = visible
+			end
+			self.time = self.time + elapsed
+			if (self.time > 0.2) then
+				self.time = 0
+				if (unit) then
+					XPerl_UpdateSpellRange(frame, unit, true)
+				end
 			end
 		end
 	end
@@ -85,9 +95,9 @@ end
 -- XPerl_RaidPets_OnLoad
 function XPerl_RaidPets_OnLoad(self)
 	self.time = 0
-	self.Array = {}
+	self.Array = { }
 
-	--XPerl_Raid_GrpPets:UnregisterEvent("UNIT_NAME_UPDATE")		-- Fix for WoW 2.1 UNIT_NAME_UPDATE issue
+	--XPerl_Raid_GrpPets:UnregisterEvent("UNIT_NAME_UPDATE") -- Fix for WoW 2.1 UNIT_NAME_UPDATE issue
 
 	self:SetScript("OnEvent", XPerl_RaidPets_OnEvent)
 	self:SetScript("OnUpdate", XPerl_RaidPets_OnUpdate)
@@ -200,7 +210,7 @@ local function XPerl_RaidPets_RaidTargetUpdate(self)
 end
 
 -- XPerl_RaidPets_UpdateDisplay
-local function XPerl_RaidPets_UpdateDisplay(self)
+function XPerl_RaidPets_UpdateDisplay(self)
 	XPerl_RaidPets_UpdateName(self)
 	XPerl_RaidPets_UpdateHealth(self)
 	XPerl_RaidPets_RaidTargetUpdate(self)
@@ -541,7 +551,7 @@ function XPerl_RaidPets_OptionActions()
 	SetMainHeaderAttributes(XPerl_Raid_GrpPets)
 
 	local events = {
-		"PLAYER_ENTERING_WORLD", "PLAYER_REGEN_ENABLED", "RAID_TARGET_UPDATE", "VARIABLES_LOADED", "GROUP_ROSTER_UPDATE", "UNIT_PET", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE","PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
+		"PLAYER_ENTERING_WORLD", "PLAYER_REGEN_ENABLED", "RAID_TARGET_UPDATE", "VARIABLES_LOADED", "GROUP_ROSTER_UPDATE", "UNIT_PET", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"
 	}
 
 	for i, event in pairs(events) do

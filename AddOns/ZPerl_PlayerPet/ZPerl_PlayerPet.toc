@@ -1,4 +1,4 @@
-﻿## Interface: 60100
+﻿## Interface: 60200
 ## Author: Resike
 ## Title: Z-Perl |cffeda55fPlayer Pet|r
 ## Title-itIT: Z-Perl |cffeda55fFamiglio Giocatore|r
@@ -12,7 +12,7 @@
 ## Notes-deDE: Ersetzt das Begleiterfenster des Spielers.
 ## Notes-zhTW: 顯示玩家單位的寵物框架
 ## RequiredDeps: ZPerl, ZPerl_Player
-## X-Curse-Packaged-Version: r951
+## X-Curse-Packaged-Version: r972
 ## X-Curse-Project-Name: Z-Perl UnitFrames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

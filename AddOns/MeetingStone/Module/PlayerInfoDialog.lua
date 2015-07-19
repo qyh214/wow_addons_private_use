@@ -5,9 +5,8 @@ PlayerInfoDialog = GUI:GetClass('TitlePanel'):New(UIParent) do
     GUI:Embed(PlayerInfoDialog, 'Tab')
     PlayerInfoDialog:Hide()
     PlayerInfoDialog:SetSize(400, 250)
-    -- PlayerInfoDialog:SetPoint('CENTER')
     PlayerInfoDialog:SetFrameStrata('DIALOG')
-    PlayerInfoDialog:SetText(L['收货信息'])
+    PlayerInfoDialog:SetText(L['联系方式'])
     PlayerInfoDialog:SetScript('OnHide', StaticPopupSpecial_Hide)
 end
 
@@ -30,7 +29,7 @@ local AddressInput = GUI:GetClass('InputBox'):New(InfoParent) do
     AddressInput:SetPoint('TOPLEFT', AccountInput, 'BOTTOMLEFT', 0, -15)
     AddressInput:SetSize(200, 15)
     AddressInput:SetMaxLetters(256)
-    AddressInput:SetLabel(L['收货地址'])
+    AddressInput:SetLabel(L['联系地址'])
     PlayerInfoDialog:RegisterInputBox(AddressInput)
 end
 
@@ -52,7 +51,7 @@ local TelInput = GUI:GetClass('InputBox'):New(InfoParent) do
 end
 
 local ErrorInfo = InfoParent:CreateFontString(nil, 'ARTWORK', 'GameFontRedSmall') do
-    ErrorInfo:SetPoint('TOP', TelInput, 'BOTTOM', 0, -10)
+    ErrorInfo:SetPoint('BOTTOM', 0, 10)
     ErrorInfo:SetPoint('LEFT')
     ErrorInfo:SetPoint('RIGHT')
 end
@@ -96,6 +95,13 @@ local CancelButton = CreateFrame('Button', nil, PlayerInfoDialog, 'UIPanelButton
     CancelButton:SetScript('OnClick', HideParentPanel)
 end
 
+local Filters = {
+    { key = 'Account', object = AccountInput },
+    { key = 'Address', object = AddressInput },
+    { key = 'Contact', object = ContactInput },
+    { key = 'Tel', object = TelInput },
+}
+
 local function OnTextChanged()
     PlayerInfoDialog:UpdateButton()
 end
@@ -118,29 +124,36 @@ function PlayerInfoDialog:CheckInput()
     if not InfoParent:IsShown() then
         return
     end
-    local email = AccountInput:GetText():trim()
-    if email == '' then
-        return L['战网帐号不能为空']
-    end
-    if not email:match('^.+@.+%..+$') then
-        return L['战网帐号格式不正确']
+    if AccountInput:IsVisible() then
+        local email = AccountInput:GetText():trim()
+        if email == '' then
+            return L['战网帐号不能为空']
+        end
+        if not email:match('^.+@.+%..+$') then
+            return L['战网帐号格式不正确']
+        end
     end
 
-    local address = AddressInput:GetText():trim()
-    if address == '' then
-        return L['收货地址不能为空']
+    if AddressInput:IsVisible() then
+        local address = AddressInput:GetText():trim()
+        if address == '' then
+            return L['收货地址不能为空']
+        end
     end
     
-    local contact = ContactInput:GetText():trim()
-    if contact == '' then
-        return L['联系人不能为空']
+    if ContactInput:IsVisible() then
+        local contact = ContactInput:GetText():trim()
+        if contact == '' then
+            return L['联系人不能为空']
+        end
     end
 
-    local tel = TelInput:GetText():trim()
-    if tel == '' then
-        return L['联系电话不能为空']
+    if TelInput:IsVisible() then
+        local tel = TelInput:GetText():trim()
+        if tel == '' then
+            return L['联系电话不能为空']
+        end
     end
-
 end
 
 function PlayerInfoDialog:UpdateHeight()
@@ -170,19 +183,51 @@ function PlayerInfoDialog:UpdateInput()
 end
 
 function PlayerInfoDialog:UpdateButton()
-    AcceptButton:SetText(InfoParent:IsShown() and OKAY or L['完善收货信息'])
+    AcceptButton:SetText(InfoParent:IsShown() and OKAY or self.acceptText or L['完善联系方式'])
 
     local err = self:CheckInput()
     AcceptButton:SetEnabled(not err)
     ErrorInfo:SetText(err or '')
 end
 
+function PlayerInfoDialog:UpdateFilter()
+    local filters = {} do
+        if self.filters then
+            for key in self.filters:gmatch('[^,]+') do
+                filters[key] = true
+            end
+        end
+    end
+
+    local count = 0
+    local prevObject
+    for _, v in ipairs(Filters) do
+        if not filters[v.key] then
+            v.object:Show()
+            if not prevObject then
+                v.object:SetPoint('TOPLEFT', 100, 0)
+            else
+                v.object:SetPoint('TOPLEFT', prevObject, 'BOTTOMLEFT', 0, -15)
+            end
+            prevObject = v.object
+            count = count + 1
+        else
+            v.object:Hide()
+        end
+    end
+
+    InfoParent:SetHeight(count * 30 + 20)
+end
+
 PlayerInfoDialog:SetScript('OnShow', function(self)
+    self:UpdateFilter()
     self:UpdateButton()
     self:UpdateHeight()
 end)
 
-function PlayerInfoDialog:Open(text, title, fold, noCancel)
+function PlayerInfoDialog:Open(text, title, fold, noCancel, filters, acceptText)
+    self.filters = filters
+    self.acceptText = acceptText
     self.noCancel = noCancel
     self.foldText = fold
     self:SetText(title)

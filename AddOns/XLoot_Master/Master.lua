@@ -114,7 +114,7 @@ function addon.AnnounceAward(data)
 			text = text .. " ("..data.special..")"
 		end
 		if out then
-			SendChatMessage(text, out)
+			pcall(SendChatMessage, text, out)
 		end
 		if opt.award_guildannounce and IsInGuild() then
 			SendChatMessage(text, "GUILD")

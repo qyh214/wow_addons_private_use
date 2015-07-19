@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(816, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 35 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 60 $"):sub(12, -3))
 mod:SetCreatureID(69078, 69132, 69134, 69131)--69078 Sul the Sandcrawler, 69132 High Prestess Mar'li, 69131 Frost King Malakk, 69134 Kazra'jin --Adds: 69548 Shadowed Loa Spirit,
 mod:SetEncounterID(1570)
 mod:SetZone()
@@ -39,22 +39,17 @@ local warnPossessed					= mod:NewStackAnnounce(136442, 2, nil, nil, "warnPossess
 --Sul the Sandcrawler
 local warnSandBolt					= mod:NewCountAnnounce(136189, 3, nil, false)--Spammy but important for heroic for internet rotation.
 local warnQuicksand					= mod:NewSpellAnnounce(136521, 2)
-local warnSandstorm					= mod:NewSpellAnnounce(136894, 3)
 --High Prestess Mar'li
-local warnBlessedLoaSpirit			= mod:NewSpellAnnounce(137203, 4)
-local warnShadowedLoaSpirit			= mod:NewSpellAnnounce(137350, 4)
 local warnMarkedSoul				= mod:NewTargetAnnounce(137359, 4)--Shadowed Loa Spirit fixate target, no need to warn for Shadowed Loa Spirit AND this, so we just warn for this
-local warnTwistedFate				= mod:NewSpellAnnounce(137891, 4)--Heroic Only
 --Frost King Malak
 local warnBitingCold				= mod:NewTargetAnnounce(136992, 3)--136917 is cast ID version, 136992 is player debuff
 local warnFrostBite					= mod:NewTargetAnnounce(136922, 4)--136990 is cast ID version, 136922 is player debuff
 local warnFrigidAssault				= mod:NewStackAnnounce(136903, 3, nil, "Tank|Healer")
 --Kazra'jin
 local warnRecklessCharge			= mod:NewCastAnnounce(137122, 3, 2, nil, false)
-local warnDischarge					= mod:NewCountAnnounce(137166, 3)
 
 --All
-local specWarnPossessed				= mod:NewSpecialWarning("OptionVersion2", "specWarnPossessed")
+local specWarnPossessed				= mod:NewSpecialWarning("specWarnPossessed", nil, nil, 2)
 local specWarnDarkPower				= mod:NewSpecialWarningSpell(136507, nil, nil, nil, 2)
 local specWarnSoulFragment			= mod:NewSpecialWarningYou(137641)
 --Sul the Sandcrawler
@@ -62,8 +57,8 @@ local specWarnSandBolt				= mod:NewSpecialWarningInterrupt(136189, false)
 local specWarnSandStorm				= mod:NewSpecialWarningSpell(136894, nil, nil, nil, 2)
 local specWarnQuickSand				= mod:NewSpecialWarningMove(136860)
 --High Prestess Mar'li
-local specWarnBlessedLoaSpirit		= mod:NewSpecialWarningSwitch(137203, "RangedDps")--Ranged should handle this, melee chasing it around is huge dps loss for possessed. On 10 man 2 ranged was enough. If you do not have 2 ranged, 1 or 2 melee will have to help and probably turn this on manually
-local specWarnShadowedLoaSpirit		= mod:NewSpecialWarningSwitch(137350, "RangedDps")
+local specWarnBlessedLoaSpirit		= mod:NewSpecialWarningSwitch(137203, "Dps")
+local specWarnShadowedLoaSpirit		= mod:NewSpecialWarningSwitch(137350, "Dps")
 local specWarnMarkedSoul			= mod:NewSpecialWarningRun(137359, nil, nil, nil, 4)
 local specWarnTwistedFate			= mod:NewSpecialWarningSwitch(137891)
 --Frost King Malak
@@ -145,19 +140,15 @@ function mod:SPELL_CAST_START(args)
 		warnQuicksand:Show()
 		timerQuickSandCD:Start()
 	elseif spellId == 136894 then
-		warnSandstorm:Show()
 		specWarnSandStorm:Show()
 		timerSandStormCD:Start()
 	elseif spellId == 137203 then
-		warnBlessedLoaSpirit:Show()
 		specWarnBlessedLoaSpirit:Show()
 		timerBlessedLoaSpiritCD:Start()
 	elseif spellId == 137350 then
-		warnShadowedLoaSpirit:Show()
 		specWarnShadowedLoaSpirit:Show()
 		timerShadowedLoaSpiritCD:Start()
 	elseif spellId == 137891 then
-		warnTwistedFate:Show()
 		specWarnTwistedFate:Show()
 		timerTwistedFateCD:Start()
 	elseif spellId == 136990 then
@@ -273,7 +264,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 137166 then
 		dischargeCount = dischargeCount + 1
-		warnDischarge:Show(dischargeCount)
 		specWarnDischarge:Show(dischargeCount)
 		if self.Options.AnnounceCooldowns then
 			DBM:PlayCountSound(dischargeCount)

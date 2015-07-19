@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 938 $")
+XPerl_SetModuleRevision("$Revision: 955 $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -23,7 +23,7 @@ if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
 end
 
-local new, del = XPerl_GetReusableTable, XPerl_FreeTable
+--local new, del = XPerl_GetReusableTable, XPerl_FreeTable
 
 -- Dup colours used to show which tanks have the same target
 local MTdupColours = {
@@ -322,7 +322,7 @@ end
 local function RemoveDupMT(name)
 	for k, v in pairs(ZPerl_MainTanks) do
 		if (strlower(v[2]) == strlower(name)) then
-			ZPerl_MainTanks[k] = del(ZPerl_MainTanks[k])
+			ZPerl_MainTanks[k] = { }
 			return true
 		end
 	end
@@ -381,24 +381,24 @@ end
 function XPerl_MTRosterChanged()
 	ValidateTankList()
 
-	del(MainTanks, true)
-	MainTanks = new()
+	--del(MainTanks, true)
+	MainTanks = {}
 
 	blizzMTanks, ctraTanks = 0, 0
 	
 	-- if conf is nothing, just return.
 	if (conf == nil) then
-                return
-        else
-                if (conf and conf.UseCTRATargets == 1) then
-                        for index,entry in pairs(ZPerl_MainTanks) do
-                                local raidid = GetRaidIDByName(entry[2])
-                                if (raidid) then
-                                        ctraTanks = ctraTanks + 1
-                                        tinsert(MainTanks, new(raidid, UnitName("raid"..raidid)))
-                                end
-                        end
-                end
+		return
+	else
+		if (conf and conf.UseCTRATargets == 1) then
+			for index, entry in pairs(ZPerl_MainTanks) do
+				local raidid = GetRaidIDByName(entry[2])
+				if (raidid) then
+					ctraTanks = ctraTanks + 1
+					tinsert(MainTanks, {raidid, UnitName("raid"..raidid)})
+				end
+			end
+		end
 	end
 
 	-- Blizzard defined main tanks bit. Looks a bit convoluted, but this is all so the order of the tanks is defined
@@ -406,8 +406,8 @@ function XPerl_MTRosterChanged()
 	-- guarentees of course. This is up to your raid leader, but imo it's better than the default raid ID ordering.
 	if (conf and conf.UseBlizzardMTTargets == 1) then
 		-- Remember old tanks
-		local oldBlizzardNames = new()
-		for i,n in ipairs(BlizzardMainTanks) do
+		local oldBlizzardNames = { }
+		for i, n in ipairs(BlizzardMainTanks) do
 			oldBlizzardNames[n] = true
 		end
 
@@ -441,7 +441,7 @@ function XPerl_MTRosterChanged()
 				end
 			end
 		end
-		oldBlizzardNames = del(oldBlizzardNames)
+		oldBlizzardNames = { }
 
 		for i,name in ipairs(BlizzardMainTanks) do
 			local found
@@ -451,7 +451,7 @@ function XPerl_MTRosterChanged()
 				end
 			end
 			if (not found) then
-				tinsert(MainTanks, new(i, name))
+				tinsert(MainTanks, {i, name})
 				blizzMTanks = blizzMTanks + 1
 			end
 		end
@@ -464,7 +464,7 @@ function XPerl_MTRosterChanged()
 			for i = 1,GetNumGroupMembers() do
 				local id = "raid"..i
 				if (select(2, UnitClass(id)) == "WARRIOR") then
-					tinsert(MainTanks, new(i, UnitName(id)))
+					tinsert(MainTanks, {i, UnitName(id)})
 				end
 			end
 		end
@@ -505,8 +505,8 @@ local function ProcessCTRAMessage(unitName, msg)
 
 			RemoveDupMT(name)
 
-			del(ZPerl_MainTanks[tonumber(num)])
-			ZPerl_MainTanks[tonumber(num)] = new(mtID, name)
+			--del(ZPerl_MainTanks[tonumber(num)])
+			ZPerl_MainTanks[tonumber(num)] = {mtID, name}
 
 			mtListUpdate = true
 		end
@@ -530,7 +530,7 @@ end
 
 -- XPerl_SplitCTRAMessage
 function XPerl_SplitCTRAMessage(msg, char)
-	local arr = new()
+	local arr = { }
 	while (strfind(msg, char) ) do
 		local iStart, iEnd = strfind(msg, char)
 		tinsert(arr, strsub(msg, 1, iStart - 1))
@@ -588,13 +588,13 @@ end
 -- Check MTs all have unique targets
 local function ScanForMTDups()
 	local dup = 1
-	local dups = new()
+	local dups = { }
 
-	for i,unit in pairs(XUnits) do
+	for i, unit in pairs(XUnits) do
 		XPerl_SetupFrameSimple(unit, conf.Background_Transparency)
 	end
 
-	for i,t1 in pairs(MainTanks) do
+	for i, t1 in pairs(MainTanks) do
 		local any = false
 
 		if (UnitExists("raid"..t1[1].."target") and not UnitIsDeadOrGhost("raid"..t1[1])) then
@@ -625,7 +625,7 @@ local function ScanForMTDups()
 		end
 	end
 
-	del(dups)
+	--del(dups)
 end
 
  -- updates when roles are assigned
@@ -764,10 +764,10 @@ end
 -- GROUP_ROSTER_UPDATE
 function Events:GROUP_ROSTER_UPDATE()
 	if (not IsInRaid()) then
-		del(MainTanks, 1)
-		MainTanks = new()
-		del(BlizzardMainTanks)
-		BlizzardMainTanks = new()
+		--del(MainTanks, 1)
+		MainTanks = { }
+		--del(BlizzardMainTanks)
+		BlizzardMainTanks = { }
 	end
 	--XPerlRaidHelperCheck:show()
 end
@@ -1081,8 +1081,8 @@ function XPerl_MakeTankList()
 	XPerl_MyTarget:Hide()
 	XGaps = 0
 
-	local tanks = new()
-	for i = 1,10 do
+	local tanks = { }
+	for i = 1, 10 do
 		if (MainTanks[i]) then
 			tinsert(tanks, MainTanks[i][2])
 			if (#tanks >= conf.MaxMainTanks) then
@@ -1100,7 +1100,7 @@ function XPerl_MakeTankList()
 	XPerl_MTTargets:SetAttribute("nameList", table.concat(tanks, ","))
 	XPerl_MTTargets:Show()
 
-	del(tanks)
+	--del(tanks)
 
 	if (XPerl_NoFadeBars) then XPerl_NoFadeBars() end
 

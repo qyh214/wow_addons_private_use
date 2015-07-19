@@ -14,7 +14,7 @@ setfenv(1, WIM);
 
 -- Core information
 addonTocName = "WIM";
-version = "3.6.25";
+version = "3.6.27";
 beta = false; -- flags current version as beta.
 debug = false; -- turn debugging on and off.
 useProtocol2 = true; -- test switch for new W2W Protocol. (Dev use only)
@@ -462,7 +462,7 @@ function IsInParty(user)
 end
 
 function IsInRaid(user)
-    for i=1, GetNumGroupMembers() do
+    for i=1, _G.GetNumGroupMembers() do
         if(_G.GetUnitName("raid"..i, true) == user) then
             return true;
         end

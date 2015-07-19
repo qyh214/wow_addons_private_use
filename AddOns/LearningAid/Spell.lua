@@ -1,6 +1,6 @@
 --[[
 
-Learning Aid is copyright © 2008-2014 Jamash (Kil'jaeden US Horde)
+Learning Aid is copyright Â© 2008-2015 Jamash (Kil'jaeden US Horde)
 Email: jamashkj@gmail.com
 
 Spell.lua is part of Learning Aid.
@@ -92,6 +92,9 @@ function LA:UpdateSpellBook()
   --local racialPassive = self.Spell.Global[self.racialPassiveSpell].SubName
   -- tab 1 is general, tab 2 is current spec, tabs 3, 4 (and possibly 5 if druid)
   -- are other specs. The remaining tabs are all professions, I think.
+  local s2g = self.specToGlobal
+  local g2s = self.globalToSpec
+  
   for tab = 1, 2 do
     local tabName, tabTexture, tabOffset, tabSpells, tabIsGuild, offspecID = GetSpellTabInfo(tab)
     for slot = tabOffset + 1, tabOffset + tabSpells do
@@ -118,9 +121,28 @@ function LA:UpdateSpellBook()
         known[globalID] = slot
         if specGlobalID ~= globalID then
           -- sometimes it's difficult to tell which spells are which (Mangle in particular)
-          self.specToGlobal[specGlobalID] = globalID
-          self.globalToSpec[globalID] = specGlobalID
+          s2g[specGlobalID] = globalID
+          g2s[globalID] = specGlobalID
           self.nameToGlobal[strlower(specName)] = globalID
+        else
+          -- Both IDs are the same.
+          -- Sometimes certain spells, such as Monk's Flying Serpent Kick go
+          -- from having different IDs to having the same ID.
+          -- Check for old invalid cache entries.
+          -- If new ID is N, old global id is G, and old spec id is S
+          --- s2g[G] == S
+          --- g2s[S] == G
+          --- Both entries are now wrong and should be deleted
+          --- if N == S, then s2g[N] == G, so delete g2s[s2g[N]] and s2g[N]
+          if s2g[globalID] then
+            g2s[s2g[globalID]] = nil -- 
+            s2g[globalID] = nil
+          --- if N == G, then g2s[N] == S, so delete s2g[g2s[N]] and g2s[N]
+          elseif g2s[globalID] then
+            s2g[g2s[globalID]] = nil
+            g2s[globalID] = nil
+          end
+          -- Are you confused yet? I know I am.
         end
         numKnown = numKnown + 1
       end
@@ -207,7 +229,7 @@ function LA:DiffSpellBook()
   if updated > 1 then
     self:DebugPrint("Multiple updates ("..updated..") in DiffSpellBook")
   end
-  -- TODO: Detect flyout changes (right now the spell button can't handle flyouts)
+  -- TODO: Detect flyout changes
   return updated
 end
 -- A new spellbook ID has been added, bumping existing spellbook IDs up by one

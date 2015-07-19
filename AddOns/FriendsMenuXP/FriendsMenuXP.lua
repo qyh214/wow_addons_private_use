@@ -1,4 +1,8 @@
 --[[
+-- 对右键菜单来说, 继承UIDropDownTemplate意义不大, 只是作为一个容器在用, Button和Text都不会显示出来
+--]]
+
+--[[
 	text,                                              --按钮名称
 	textHeight,                                        --按钮字体大小
 	icon,                                              --按钮图片路径
@@ -42,7 +46,7 @@ FriendsMenuXP_Buttons["TARGET"] = {
     isSecure = 1,
     attributes = "type:macro;macrotext:/targetexact $name$",
     func = function(name)
-        if(UnitName("target")~=name) then
+        if(UnitName("target")~=name and GetUnitName("target", true)~=name) then
             DEFAULT_CHAT_FRAME:AddMessage(string.gsub(FRIENDS_MENU_XP_CANNOT_TARGET, "%$name%$", name), 1,1,0);
         end
     end,
@@ -172,7 +176,7 @@ FriendsMenuXP_Buttons["PVP_REPORT_AFK"] = {
 FriendsMenuXP_Buttons["SET_FOCUS"] = {
     text = SET_FOCUS,
     isSecure = 1,
-    attributes = "type:macro;macrotext:/focus $name$",
+    attributes = "type:macro;macrotext:/targetexact $name$\n/focus\n/targetlasttarget",
 }
 
 FriendsMenuXP_Buttons["PROMOTE"] = {
@@ -304,6 +308,7 @@ FriendsMenuXP_Buttons["ARMORY"] = {
         local host = portal == 'cn' and "http://www.battlenet.com.cn/" or ("http://%s.battle.net/"):format(GetCVar'portal')
 
         local armory = host.."wow/character/"..urlencode(r).."/"..urlencode(n).."/advanced"
+        local armoryNoDecode = host.."wow/character/"..r.."/"..n.."/advanced"
 
         local editBox = ChatEdit_ChooseBoxForSend();
         ChatEdit_ActivateChat(editBox);
@@ -524,7 +529,7 @@ end
 function FriendsMenuXPButton_OnClick(self)
     local func = self.func;
     if ( func ) then
-        func(self:GetParent().name, self:GetParent());
+        func(FriendsMenuXP_ShrinkSameRealmPlayerName(self:GetParent().name), self:GetParent());
     end;
 
     self:GetParent():Hide();
@@ -563,7 +568,7 @@ function FriendsMenuXP_InitiateMaskButton()
         if(button=="RightButton") then self:Hide() end --showing the mask button will trigger OnHyperlinkLeave
     --[[
             if(button=="RightButton" and FRIENDSMENU_NOW_LINK_PLAYER.link) then
-                local name, lineid, chatType, chatTarget = strsplit(":", FRIENDSMENU_NOW_LINK_PLAYER.link);
+                local _, name, lineid, chatType, chatTarget = strsplit(":", FRIENDSMENU_NOW_LINK_PLAYER.link);
                 FriendsMenuXP_FriendsShowDropdown(name, 1, lineid, chatType, FRIENDSMENU_NOW_LINK_PLAYER.chatFrame);
             end
     ]]
@@ -599,6 +604,8 @@ function FriendsMenuXP_OnLoad(self)
     self:RegisterEvent("ADDON_LOADED"); -- for RaidUI
 
     if(FRIENDS_MENU_XP_LOADED) then DEFAULT_CHAT_FRAME:AddMessage(FRIENDS_MENU_XP_LOADED,1,1,0); end
+	-- 5.4.1, fix IsDisabledByParentalControls taint
+	--setfenv(MainMenuMicroButton:GetScript("OnMouseUp"), setmetatable({ UpdateMicroButtons = function() end }, { __index = _G }))
 end
 
 function FriendsMenuXP_OnEvent(self, event, ...)
@@ -836,7 +843,7 @@ function FriendsMenu_Initialize(dropDownList, buttonSet, appendBottom)
 
     for _, v in pairs(FriendsMenuXP_ButtonSet[buttonSet]) do
         info = FriendsMenuXP_Buttons[v];
-        if info and (not info.show or (dropDownList.name and info.show(dropDownList.name, dropDownList))) then
+        if info and (not info.show or (dropDownList.name and info.show(FriendsMenuXP_ShrinkSameRealmPlayerName(dropDownList.name), dropDownList))) then
             if(not info.isSecure or strfind(dropDownList:GetName(), "Secure")) then
                 FriendsMenuXP_AddButton(dropDownList, info);
             end
@@ -965,7 +972,7 @@ function FriendsMenuXP_AddButton(listFrame, info)
     end
     button.attributes = "";
     if(info.isSecure and info.attributes) then
-        local attribs = gsub(info.attributes,"%$name%$", listFrame.name);
+        local attribs = gsub(info.attributes,"%$name%$", FriendsMenuXP_ShrinkSameRealmPlayerName(listFrame.name));
         local aaa = {strsplit(";", attribs)};
         for k,v in pairs(aaa) do
             if(v and v~="") then
@@ -1009,6 +1016,11 @@ if not RunOnNextFrame then
         __visible = nil
     end)
 end
+
+local realm = GetRealmName()
+function FriendsMenuXP_ShrinkSameRealmPlayerName(name)
+    return name and name:gsub("%-"..realm, "") or name
+end    
 
 hooksecurefunc("SecureActionButton_OnClick", function(self, button, down)
     if __visible==false and DropDownList1:IsVisible() then
@@ -1081,3 +1093,5 @@ hooksecurefunc("UIDropDownMenu_StopCounting", function(self)
         end
     end
 end)
+
+

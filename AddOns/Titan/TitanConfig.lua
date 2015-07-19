@@ -54,9 +54,9 @@ VAR: scale - the scale the user has selected for Titan
 OUT: None
 --]]
 local function TitanAdjustPanelScale(scale)
-	Titan_AdjustScale()		
+	Titan_AdjustScale()
 
-	-- Adjust frame positions								
+	-- Adjust frame positions
 	TitanPanel_AdjustFrames(TITAN_PANEL_PLACE_BOTH, true)
 end
 

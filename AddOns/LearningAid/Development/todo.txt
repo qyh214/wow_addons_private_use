@@ -1,4 +1,22 @@
 Bugs:
+
+# 2015-06-23: Patch 6.2.0 release day
+
+Spam filter is busted. No messages show regardless of setting.
+INCORRECT: There is no more spam when changing specs! HALLELUJAH
+
+# 2015-01-05
+
+Ignore list savedvariables code mismatch with ignore list update code. Need to reconcile and possibly
+update data format number and update UpgradeIgnoreList to handle the old to new conversion
+Make a copy of saved variables files before doing that!
+
+Find Missing Actions is borked for Monks, again.
+
+RFE: Global option to automatically ignore auto attack / auto shot
+
+# 2014
+
 Error when learning warlock talent grimoire of service (extra temp demons)
   which brings up a button with the flyout
   then unlearning the talent

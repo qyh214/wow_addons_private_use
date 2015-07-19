@@ -3,9 +3,10 @@
 	wodrracounter1=0
 	wodrratimerfurnace=nil
 	wodrratimerkromog=nil
+	rscupdhpcheckhr=GetTime()
 
 SetMapToCurrentZone()
-if GetCurrentMapAreaID()==988 then
+if GetCurrentMapAreaID()==988 or GetCurrentMapAreaID()==1026 then
 	RaidAchievement_wodrra:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	RaidAchievement_wodrra:RegisterEvent("UNIT_POWER")
 	RaidAchievement_wodrra:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE")
@@ -29,6 +30,13 @@ wodrraspisokach25={
 8930, --http://www.wowhead.com/achievement=8930 Ya, We've got time
 8983, --http://www.wowhead.com/achievement=8983 Would you give me a hand
 
+--6.2 patch
+10026,
+10057,
+
+9972,
+9979,
+
 
 }
 
@@ -45,12 +53,39 @@ end
 function wodrra_OnUpdate(curtime)
 
 
+if rscupdhpcheckhr and GetTime()>rscupdhpcheckhr and GetCurrentMapAreaID()==1026 and UnitGUID("boss3") then
+	rscupdhpcheckhr=GetTime()+2
+	if wodrraspisokon[5]==1 and wodrraachdone1 then
+	if (raGetUnitID(UnitGUID("boss3"))==90018) then
+		local lhp1=UnitHealth("boss3")
+		local lhp2=UnitHealthMax("boss3")
+		if (lhp1 and lhp1>0 and lhp2 and lhp2>0) then
+			--считаем
+			if (lhp1<(lhp2*0.9)) then
+				wodrrafailnoreason(5)
+			end
+		end
+	end
+	if (raGetUnitID(UnitGUID("boss2"))==90018) then
+		local lhp1=UnitHealth("boss2")
+		local lhp2=UnitHealthMax("boss2")
+		if (lhp1 and lhp1>0 and lhp2 and lhp2>0) then
+			--считаем
+			if (lhp1<(lhp2*0.9)) then
+				wodrrafailnoreason(5)
+			end
+		end
+	end
+	end
+end
+
+
 
 
 if rpradelayzonech and curtime>rpradelayzonech then
 rpradelayzonech=nil
 SetMapToCurrentZone()
-if GetCurrentMapAreaID()==988 then
+if GetCurrentMapAreaID()==988 or GetCurrentMapAreaID()==1026 then
 RaidAchievement_wodrra:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 RaidAchievement_wodrra:RegisterEvent("UNIT_POWER")
 RaidAchievement_wodrra:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE")
@@ -228,8 +263,40 @@ end
 --
 --
 
+if GetCurrentMapAreaID()==1026 then
+if arg2=="UNIT_DIED" then
+  if wodrraspisokon[6]==1 and wodrraachdone1 then
+     local id=raGetUnitID(arg7)
+     if id==94808 then
+       wodrracounter1=wodrracounter1+1
 
+       if wodrracounter1==10 then
+          wodrraachcompl(6)
+       end
+     end
+  end
+end
 
+if arg2=="UNIT_DIED" then
+  if wodrraspisokon[7]==1 and wodrraachdone1 then
+     local id=raGetUnitID(arg7)
+     if id==90980 then
+          wodrrafailnoreason(7)
+     end
+  end
+end
+
+if arg2=="UNIT_DIED" then
+  if wodrraspisokon[8]==1 and wodrraachdone1 then
+     local id=raGetUnitID(arg7)
+     if id==93145 then
+          wodrraachcompl(8)
+     end
+  end
+end
+
+end
+--
 
 
 

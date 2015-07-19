@@ -5,7 +5,7 @@
 ## Author: Abatorlos(of Spinebreaker), DuskAshes, superk521, zuhligan
 ## SavedVariables: GladiatorlosSADB
 ## Version: 2.0
-## X-Curse-Packaged-Version: 2.3.5
+## X-Curse-Packaged-Version: 2.3.6
 ## X-Curse-Project-Name: GladiatorlosSA
 ## X-Curse-Project-ID: gladiatorlossa
 ## X-Curse-Repository-ID: wow/gladiatorlossa/mainline

@@ -1,4 +1,4 @@
-﻿## Interface: 60100
+﻿## Interface: 60200
 ## Title: Raid|cff7fff7fAchievement|r - WoD Dungeons
 ## Title-ruRU: Raid|cff7fff7fAchievement|r - Подземелья WoD
 ## Author: Shurshik

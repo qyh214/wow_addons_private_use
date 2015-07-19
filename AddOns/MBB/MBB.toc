@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: MinimapButtonBag
 ## Author: karlsnyder
 ## X-Category: Map
@@ -13,7 +13,7 @@
 ## X-Curse-Project-Name: MBB
 ## X-Curse-Project-ID: mbb
 ## X-Curse-Repository-ID: wow/mbb/mainline
-## X-Curse-Packaged-Version: v2.01
+## X-Curse-Packaged-Version: v2.02
 ## X-Curse-Project-Name: MBB
 ## X-Curse-Project-ID: mbb
 ## X-Curse-Repository-ID: wow/mbb/mainline

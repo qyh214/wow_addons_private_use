@@ -198,7 +198,9 @@ do
 			xprint(L.linkall_threshold_missed)
 			return false
 		end
-
+		if (channel == 'RAID' or channel == 'RAID_WARNING') and not IsInRaid() and IsInGroup() then
+			channel = 'PARTY'
+		end
 		for k, v in pairs(output) do
 			v  = string.gsub(v, "\n", " ", 1, true) -- DIE NEWLINES, DIE A HORRIBLE DEATH
 			SendChatMessage(v, channel)

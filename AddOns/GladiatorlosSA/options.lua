@@ -4,11 +4,19 @@ local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local AceConfig = LibStub("AceConfig-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("GladiatorlosSA")
 local LSM = LibStub("LibSharedMedia-3.0")
+local options_created = false -- ***** @
 
 local GSA_OUTPUT = {["MASTER"] = L["Master"],["SFX"] = L["SFX"],["AMBIENCE"] = L["Ambience"],["MUSIC"] = L["Music"]}
 
 function GSA:ShowConfig()
 	for i=1,2 do InterfaceOptionsFrame_OpenToCategory(GetAddOnMetadata("GladiatorlosSA", "Title")) end -- ugly fix
+end
+
+function GSA:ShowConfig2() -- ***** @
+	if options_created == false then
+		self:OnOptionCreate()
+	end
+	AceConfigDialog:Open("GladiatorlosSA")
 end
 
 function GSA:ChangeProfile()
@@ -60,11 +68,15 @@ local function spellOption(order, spellID, ...)
 	end
 end
 
+--local GSA_SPELL_LIST = {}
 local function listOption(spellList, listType, ...)
 	local args = {}
 	for k, v in pairs(spellList) do
-		if GSA.spellList[listType][v] then
-			rawset (args, GSA.spellList[listType][v] ,spellOption(k, v))
+		local GSA_SpellName = GSA.spellList[listType][v]
+		--local GSA_SpellPath = "Interface\\AddOns\\GladiatorlosSA\\Voice_enUS\\"..GSA_SpellName..".ogg"
+		if GSA_SpellName then
+			rawset (args, GSA_SpellName, spellOption(k, v))
+			--rawset (GSA_SPELL_LIST, GSA_SpellName, GSA_SpellPath)
 		else 
 		--[[debug
 			print (v)
@@ -121,16 +133,28 @@ function GSA:MakeCustomOption(key)
 			existingsound = {
 				name = L["Use existing sound"],
 				type = 'toggle',
-				--disabled = true,
-				order = 41, -- 30
+				order = 41,
 			},
 			soundfilepath = {
 				name = L["file path"],
 				type = 'input',
 				width = 'double',
-				order = 27,
+				order = 26,
 				disabled = function() return db[key].existingsound end,
 			},
+			-- existingGSASound = {
+				-- name = "choose a GSA sound",
+				-- type = 'select',
+				-- dialogControl = 'LSM30_Sound',
+				-- values =  GSA_SPELL_LIST,
+				-- set = function(info, value)
+					-- local name = info[#info]
+					-- db[key][name] = value
+
+					-- end,
+				-- disabled = function() return db[key].existingsound end,
+				-- order = 27,
+			-- },
 			test = {
 				type = 'execute',
 				order = 28,
@@ -164,17 +188,23 @@ function GSA:MakeCustomOption(key)
 				get = function(info, k) return db[key].eventtype[k] end,
 				set = function(info, k, v) db[key].eventtype[k] = v end,
 			},
-			sourceuidfilter = {
-				type = 'select',
-				order = 61,
-				name = L["Source unit"],
-				values = self.GSA_UNIT,
-			},
 			sourcetypefilter = {
 				type = 'select',
 				order = 59,
 				name = L["Source type"],
 				values = self.GSA_TYPE,
+			},
+			desttypefilter = {
+				type = 'select',
+				order = 60,
+				name = L["Dest type"],
+				values = self.GSA_TYPE,
+			},
+			sourceuidfilter = {
+				type = 'select',
+				order = 61,
+				name = L["Source unit"],
+				values = self.GSA_UNIT,
 			},
 			sourcecustomname = {
 				type= 'input',
@@ -187,12 +217,6 @@ function GSA:MakeCustomOption(key)
 				order = 65,
 				name = L["Dest unit"],
 				values = self.GSA_UNIT,
-			},
-			desttypefilter = {
-				type = 'select',
-				order = 60,
-				name = L["Dest type"],
-				values = self.GSA_TYPE,
 			},
 			destcustomname = {
 				type= 'input',
@@ -209,10 +233,9 @@ function GSA:MakeCustomOption(key)
 	}
 end
 	
-
 function GSA:OnOptionCreate()
 	gsadb = self.db1.profile
-	
+	options_created = true -- ***** @
 	self.options = {
 		type = "group",
 		name = GetAddOnMetadata("GladiatorlosSA", "Title"),
@@ -530,7 +553,7 @@ function GSA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC79C6EWarrior|r"],
 								order = 15,
-								args = listOption({55694,871,18499,23920,12328,46924,12292,1719,107574,114029,114030},"auraApplied"),
+								args = listOption({55694,871,18499,23920,12328,46924,12292,1719,107574,114029,114030,118038},"auraApplied"), -- add 118038 2.3.6
 							},
 						},
 					},
@@ -615,7 +638,7 @@ function GSA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC79C6EWarrior|r"],
 								order = 14,
-								args = listOption({871,174926,112048,114030},"auraRemoved"), --@ 103827 (double charge) removed (maybe a mistake:p)
+								args = listOption({871,174926,112048,114030,118038},"auraRemoved"), --@ 103827 (double charge) removed (maybe a mistake:p) / add 118038 2.3.6
 							},
 						},
 					},

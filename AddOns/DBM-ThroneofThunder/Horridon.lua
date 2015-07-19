@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(819, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 50 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 70 $"):sub(12, -3))
 mod:SetCreatureID(68476)
 mod:SetEncounterID(1575)
 mod:SetZone()
@@ -28,18 +28,11 @@ TODO: See if this has some target scanning. On heroic these can one shot non tan
 --]]
 local warnCharge				= mod:NewTargetAnnounce(136769, 4)
 local warnPuncture				= mod:NewStackAnnounce(136767, 2, nil, "Tank|Healer")
-local warnDoubleSwipe			= mod:NewSpellAnnounce(136741, 3)
 local warnAdds					= mod:NewAnnounce("warnAdds", 2, 43712)--Some random troll icon
-local warnDino					= mod:NewSpellAnnounce("ej7086", 3, 137237)
-local warnMending				= mod:NewSpellAnnounce(136797, 4)
 local warnOrbofControl			= mod:NewAnnounce("warnOrbofControl", 4, "INTERFACE\\ICONS\\INV_MISC_ORB_01.BLP")
 local warnCrackedShell			= mod:NewStackAnnounce(137240, 2)
-local warnVenomBolt				= mod:NewSpellAnnounce(136587, 3, nil, false)
-local warnChainLightning		= mod:NewSpellAnnounce(136480, 3, nil, false)
-local warnFireball				= mod:NewSpellAnnounce(136465, 3, nil, false)
 local warnBestialCry			= mod:NewStackAnnounce(136817, 3)
 local warnRampage				= mod:NewTargetAnnounce(136821, 4, nil, "Tank|Healer")
-local warnDireCall				= mod:NewCountAnnounce(137458, 3)
 local warnDireFixate			= mod:NewTargetAnnounce(140946, 4)
 
 local specWarnCharge			= mod:NewSpecialWarningYou(136769)--Maybe add a near warning later. person does have 3.4 seconds to react though and just move out of group.
@@ -49,7 +42,7 @@ local specWarnPuncture			= mod:NewSpecialWarningStack(136767, nil, 9)--9 seems l
 local specWarnPunctureOther		= mod:NewSpecialWarningTaunt(136767)
 local specWarnSandTrap			= mod:NewSpecialWarningMove(136723)
 local specWarnDino				= mod:NewSpecialWarningSwitch("ej7086", "-Healer")
-local specWarnMending			= mod:NewSpecialWarningInterrupt(136797, "Dps")--High priority interrupt. All dps needs warning because boss heals 1% per second it's not interrupted.
+local specWarnMending			= mod:NewSpecialWarningInterrupt(136797, "-Healer")--High priority interrupt. All dps needs warning because boss heals 1% per second it's not interrupted.
 local specWarnOrbofControl		= mod:NewSpecialWarning("specWarnOrbofControl", false)--Usually an assigned role for 1-2 people. Do not want someone assigned to interrupts for example hear this and think it's interrupt time. This should be turned on by orb person
 local specWarnVenomBolt			= mod:NewSpecialWarningInterrupt(136587)--Can be on for all since it only triggers off target/focus
 local specWarnChainLightning	= mod:NewSpecialWarningInterrupt(136480)--Can be on for all since it only triggers off target/focus
@@ -63,17 +56,17 @@ local specWarnRampage			= mod:NewSpecialWarningTarget(136821, "Tank|Healer")--Do
 local specWarnDireCall			= mod:NewSpecialWarningCount(137458, nil, nil, nil, 2)--Heroic
 local specWarnDireFixate		= mod:NewSpecialWarningRun(140946, nil, nil, nil, 4)--Heroic
 
-local timerDoor					= mod:NewTimer(113.5, "timerDoor", 2457)
-local timerAdds					= mod:NewTimer(18.91, "timerAdds", 43712)
-local timerDinoCD				= mod:NewNextTimer(18.9, "ej7086", nil, nil, nil, 137237)
+local timerDoor					= mod:NewTimer(113.5, "timerDoor", 2457, nil, nil, 6)
+local timerAdds					= mod:NewTimer(18.91, "timerAdds", 43712, nil, nil, 1)
+local timerDinoCD				= mod:NewNextTimer(18.9, "ej7086", nil, nil, nil, 1, 137237)
 local timerCharge				= mod:NewCastTimer(3.4, 136769)
-local timerChargeCD				= mod:NewCDTimer(50, 136769)--50-60 second depending on i he's casting other stuff or stunned
+local timerChargeCD				= mod:NewCDTimer(50, 136769, nil, nil, nil, 3)--50-60 second depending on i he's casting other stuff or stunned
 local timerDoubleSwipeCD		= mod:NewCDTimer(16.5, 136741)--16.5 second cd unless delayed by a charge triggered double swipe, then it's extended by failsafe code
-local timerPuncture				= mod:NewTargetTimer("OptionVersion2", 90, 136767, nil, false)
-local timerPunctureCD			= mod:NewCDTimer(10.5, 136767, nil, "Tank|Healer")
-local timerJalakCD				= mod:NewNextTimer(10, "ej7087", nil, nil, nil, 2457)--Maybe it's time for a better worded spawn timer than "Next mobname". Maybe NewSpawnTimer with "mobname activates" or something.
-local timerBestialCryCD			= mod:NewNextCountTimer(10, 136817)
-local timerDireCallCD			= mod:NewCDCountTimer(62, 137458)--Heroic (every 62-70 seconds)
+local timerPuncture				= mod:NewTargetTimer(90, 136767, nil, false, 2)
+local timerPunctureCD			= mod:NewCDTimer(10.5, 136767, nil, "Tank|Healer", nil, 5)
+local timerJalakCD				= mod:NewNextTimer(10, "ej7087", nil, nil, nil, 1, 2457)--Maybe it's time for a better worded spawn timer than "Next mobname". Maybe NewSpawnTimer with "mobname activates" or something.
+local timerBestialCryCD			= mod:NewNextCountTimer(10, 136817, nil, nil, nil, 2)
+local timerDireCallCD			= mod:NewCDCountTimer(62, 137458, nil, nil, nil, 2)--Heroic (every 62-70 seconds)
 
 local berserkTimer				= mod:NewBerserkTimer(720)
 
@@ -136,24 +129,20 @@ Delayed by Charge version
 --]]
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 136741 then--Regular double swipe
-		warnDoubleSwipe:Show()
+	if spellId == 136741 and self:AntiSpam(3, 5) then--Regular double swipe
 		specWarnDoubleSwipe:Show()
 		--The only flaw is charge is sometimes delayed by unexpected events like using an orb, we may fail to start timer once in a while when it DOES come before a charge.
 		if timerChargeCD:GetTime() < 32 then--Check if charge is less than 18 seconds away, if it is, double swipe is going to be delayed by quite a bit and we'll trigger timer after charge
 			timerDoubleSwipeCD:Start()
 		end
-	elseif spellId == 136770 then--Double swipe that follows a charge (136769)
-		warnDoubleSwipe:Show()
+	elseif spellId == 136770 and self:AntiSpam(3, 5) then--Double swipe that follows a charge (136769)
 		specWarnDoubleSwipe:Show()
-		timerDoubleSwipeCD:Start(11)--Hard coded failsafe. 136741 version is always 11 seconds after 136770 version
+		timerDoubleSwipeCD:Start(10.6)--Hard coded failsafe. 136741 version is always 11 seconds after 136770 version
 	elseif spellId == 137458 then
 		direNumber = direNumber + 1
-		warnDireCall:Show(direNumber)
 		specWarnDireCall:Show(direNumber)
 		timerDireCallCD:Start(nil, direNumber+1)--CD still reset when he breaks a door?
 	elseif spellId == 136587 then
-		warnVenomBolt:Show()
 		if args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus") then
 			specWarnVenomBolt:Show(args.sourceName)
 		end
@@ -163,7 +152,6 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 136797 then
-		warnMending:Show()
 		specWarnMending:Show(args.sourceName)
 	end
 end
@@ -201,12 +189,10 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 137240 then
 		warnCrackedShell:Show(args.destName, args.amount or 1)
 	elseif spellId == 136480 then
-		warnChainLightning:Show()
 		if args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus") then
 			specWarnChainLightning:Show(args.sourceName)
 		end
 	elseif spellId == 136465 then
-		warnFireball:Show()
 		if args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus") then
 			specWarnFireball:Show(args.sourceName)
 		end
@@ -285,6 +271,7 @@ function mod:OnSync(msg, targetname)
 	if msg == "ChargeTo" and targetname and self:AntiSpam(5, 4) then
 		local target = DBM:GetUnitFullName(targetname)
 		if target then
+			timerDoubleSwipeCD:Cancel()
 			warnCharge:Show(target)
 			timerCharge:Start()
 			timerChargeCD:Start()
@@ -303,7 +290,6 @@ function mod:OnSync(msg, targetname)
 	--So it goes, door, 18.91 seconds later, 1 add jumps down. 18.91 seconds later, next 2 drop down. 18.91 seconds later, dinomancer drops down, then 56.75 seconds later, next door starts.
 		doorNumber = doorNumber + 1
 		timerDinoCD:Schedule(37.8)
-		warnDino:Schedule(56.75)
 		specWarnDino:Schedule(56.75)
 		if self.Options.SetIconOnAdds then
 			self:ScanForMobs(balcMobs, 0, 7, 6, 0.2, 64)

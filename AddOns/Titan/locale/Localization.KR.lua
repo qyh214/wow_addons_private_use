@@ -5,7 +5,7 @@ L["TITAN_PANEL"] = "타이탄 패널";
 local TITAN_PANEL = "타이탄 패널";
 L["TITAN_DEBUG"] = "<Titan>";
 L["TITAN_PRINT"] = "Titan";
-     
+
 L["TITAN_NA"] = "없음";
 L["TITAN_SECONDS"] = "초";
 L["TITAN_MINUTES"] = "분";
@@ -69,28 +69,30 @@ L["TITAN_PANEL_SLASH_PROFILE_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."사용법: |cff
 L["TITAN_PANEL_SLASH_PROFILE_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."프로필 사용 <name> <server>: |cffffffff저장된 프로필로 현재 프로필을 설정합니다.";
 L["TITAN_PANEL_SLASH_PROFILE_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<name>: |cffffffff캐릭터 이름 또는 다른 이름으로 프로필을 변경할 수 있습니다."
 L["TITAN_PANEL_SLASH_PROFILE_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<server>: |cffffffff현재 서버이름 또는 'TitanCustomProfile'로 프로필을 변경할 수 있습니다."
+L["TITAN_PANEL_SLASH_SILENT_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {silent}";
+L["TITAN_PANEL_SLASH_SILENT_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."silent: |cffffffffToggles "..TITAN_PANEL.." to load silently.";
 L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."사용법: |cffffffff/titan {help | 도움말 <topic>}";
-L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/help ";
+L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/silent/help ";
 L["TITAN_PANEL_SLASH_ALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."사용법: |cffffffff/titan <topic>";
-L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/help ";
-    
+L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/silent/help ";
+
 -- slash command responses
 L["TITAN_PANEL_SLASH_RESP1"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." 툴팁 글꼴 크기가 초기화 되었습니다.";
 L["TITAN_PANEL_SLASH_RESP2"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." 툴팁 투명도가 초기화 되었습니다.";
 L["TITAN_PANEL_SLASH_RESP3"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." 크기가 초기화 되었습니다.";
 L["TITAN_PANEL_SLASH_RESP4"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." 버튼 공간이 초기화되었습니다.";
-     
+
 -- global profile locale
-L["TITAN_PANEL_GLOBAL"] = "공통";     
-L["TITAN_PANEL_GLOBAL_PROFILE"] = "공통 프로필";     
-L["TITAN_PANEL_GLOBAL_USE"] = "공통 프로필 사용";     
-L["TITAN_PANEL_GLOBAL_USE_AS"] = "공통 프로필로 사용합니다.";     
-L["TITAN_PANEL_GLOBAL_USE_DESC"] = "모든 캐릭터를 공통 프로필로 사용합니다.";     
-L["TITAN_PANEL_GLOBAL_RESET_PART"] = "설정 초기화";     
-L["TITAN_PANEL_GLOBAL_ERR_1"] = "공통 프로필로 사용할때 불러오지 못할 수도 있습니다.";     
+L["TITAN_PANEL_GLOBAL"] = "공통";
+L["TITAN_PANEL_GLOBAL_PROFILE"] = "공통 프로필";
+L["TITAN_PANEL_GLOBAL_USE"] = "공통 프로필 사용";
+L["TITAN_PANEL_GLOBAL_USE_AS"] = "공통 프로필로 사용합니다.";
+L["TITAN_PANEL_GLOBAL_USE_DESC"] = "모든 캐릭터를 공통 프로필로 사용합니다.";
+L["TITAN_PANEL_GLOBAL_RESET_PART"] = "설정 초기화";
+L["TITAN_PANEL_GLOBAL_ERR_1"] = "공통 프로필로 사용할때 불러오지 못할 수도 있습니다.";
 
 -- general panel locale
-L["TITAN_PANEL_VERSION_INFO"] = "|cffff8c00"..TITAN_PANEL.." |cffffd700개발팀";     
+L["TITAN_PANEL_VERSION_INFO"] = "|cffff8c00"..TITAN_PANEL.." |cffffd700개발팀";
 L["TITAN_PANEL_MENU_TITLE"] = "타이판 패널";
 L["TITAN_PANEL_MENU_HIDE"] = "숨김";
 L["TITAN_PANEL_MENU_IN_COMBAT_LOCKDOWN"] = "(전투중)";
@@ -145,7 +147,7 @@ L["TITAN_PANEL_MENU_TOOLTIPS_SHOWN"] = "툴팁 표시";
 L["TITAN_PANEL_MENU_TOOLTIPS_SHOWN_IN_COMBAT"] = "전투중 툴팁 숨기기";
 L["TITAN_PANEL_MENU_AUTOHIDE_IN_COMBAT"] = "전투시 바를 자동으로 숨깁니다.";
 L["TITAN_PANEL_MENU_RESET"] = "패널을 초기값으로 되돌립니다.";
-L["TITAN_PANEL_MENU_TEXTURE_SETTINGS"] = "스킨";     
+L["TITAN_PANEL_MENU_TEXTURE_SETTINGS"] = "스킨";
 L["TITAN_PANEL_MENU_LSM_FONTS"] = "패널 글꼴"
 L["TITAN_PANEL_MENU_ENABLED"] = "사용";
 L["TITAN_PANEL_MENU_DISABLED"] = "중지";
@@ -159,8 +161,9 @@ L["TITAN_PANEL_MENU_DISPLAY_ON_BAR"] = "바에 표시";
 L["TITAN_PANEL_MENU_SHOW"] = "플러그인 표시";
 L["TITAN_PANEL_MENU_PLUGIN_RESET"] = "플러그인 갱신";
 L["TITAN_PANEL_MENU_PLUGIN_RESET_DESC"] = "플러그인 글자와 위치를 갱신합니다.";
-    
--- localization strings for AceConfigDialog-3.0     
+L["TITAN_PANEL_MENU_SILENT_LOAD"] = "Silent Load";
+
+-- localization strings for AceConfigDialog-3.0
 L["TITAN_ABOUT_VERSION"] = "버전";
 L["TITAN_ABOUT_AUTHOR"] = "제작자";
 L["TITAN_ABOUT_CREDITS"] = "만든이";
@@ -171,10 +174,10 @@ L["TITAN_ABOUT_LICENSE"] = "저작권";
 L["TITAN_PANEL_CONFIG_MAIN_LABEL"] = "타이탄 바에 대한 정보입니다. 유저에게 필요한 정보 또는 기능을 여러 플러그인을 통해 바에 표시하고 변겅할 수 있는 버튼등을 위 또는 아래에 표시합니다.";			 
 L["TITAN_TRANS_MENU_TEXT"] = TITAN_PANEL.." 투명도";
 L["TITAN_TRANS_MENU_TEXT_SHORT"] = "투명도";
-L["TITAN_TRANS_MENU_DESC"] = "타이탄 및 툴팁의 투명도를 조절합니다.";		
+L["TITAN_TRANS_MENU_DESC"] = "타이탄 및 툴팁의 투명도를 조절합니다.";
 L["TITAN_TRANS_MAIN_CONTROL_TITLE"] = "메인바";
 L["TITAN_TRANS_AUX_CONTROL_TITLE"] = "보조바";
-L["TITAN_TRANS_CONTROL_TITLE_TOOLTIP"] = "툴팁";		 
+L["TITAN_TRANS_CONTROL_TITLE_TOOLTIP"] = "툴팁";
 L["TITAN_TRANS_TOOLTIP_DESC"] = "여러 플러그인 툴팁의 투명도를 조절합니다.";
 L["TITAN_UISCALE_MENU_TEXT"] = TITAN_PANEL.." 크기와 글꼴";
 L["TITAN_UISCALE_MENU_TEXT_SHORT"] = "크기와 글꼴";
@@ -183,7 +186,7 @@ L["TITAN_UISCALE_CONTROL_TITLE_PANEL"] = "패널 크기";
 L["TITAN_UISCALE_CONTROL_TITLE_BUTTON"] = "버튼 간격";
 L["TITAN_UISCALE_CONTROL_TITLE_ICON"] = "아이콘 간격";
 L["TITAN_UISCALE_CONTROL_TOOLTIP_TOOLTIPFONT"] = "툴팁 글꼴 크기";
-L["TITAN_UISCALE_TOOLTIP_DISABLE_TEXT"] = "툴팁 글꼴 크기 불가";		 
+L["TITAN_UISCALE_TOOLTIP_DISABLE_TEXT"] = "툴팁 글꼴 크기 불가";
 L["TITAN_UISCALE_MENU_DESC"] = "UI 및 패널의 여러가지를 조절합니다.";
 L["TITAN_UISCALE_SLIDER_DESC"] = "전체 UI의 크기를 설정합니다.";
 L["TITAN_UISCALE_PANEL_SLIDER_DESC"] = "패널의 버튼 및 아이콘의 크기를 설정합니다.";
@@ -230,9 +233,9 @@ L["TITAN_PANEL_MENU_ADV_PEW"] = "월드 진이붕";
 L["TITAN_PANEL_MENU_ADV_PEW_DESC"] = "Change value (usually increase) if frames do not adjust when entering / leaving world or an instance.";
 L["TITAN_PANEL_MENU_ADV_VEHICLE"] = "탈 것";
 L["TITAN_PANEL_MENU_ADV_VEHICLE_DESC"] = "Change value (usually increase) if frames do not adjust when entering / leaving vehicle.";
-    
+
 L["TITAN_AUTOHIDE_TOOLTIP"] = "패널 자동 숨김을 전환합니다.";
-     
+
 L["TITAN_BAG_FORMAT"] = "%d/%d";
 L["TITAN_BAG_BUTTON_LABEL"] = "가방: ";
 L["TITAN_BAG_TOOLTIP"] = "가방 정보";
@@ -246,30 +249,27 @@ L["TITAN_BAG_MENU_SHOW_AVAILABLE_SLOTS"] = "남은 공간 표시";
 L["TITAN_BAG_MENU_SHOW_DETAILED"] = "상세 툴팁 표시";
 L["TITAN_BAG_MENU_IGNORE_SLOTS"] = "특수 가방 제외";
 L["TITAN_BAG_MENU_IGNORE_PROF_BAGS_SLOTS"] = "전문기술 가방 제외";
-L["TITAN_BAG_PROF_BAG_NAMES"] = {
--- Enchanting
-"마력 깃든 마법매듭 가방", "마력 깃든 룬매듭 가방", "마법부여사의 가방", "큰 마법용품 가방", "마법불꽃 가방",
-"불가사의한 가방", "다른 세상의 가방", "\"나르지 독점 상품\" 마법부여 나들이 지갑",
--- Engineering
-"무거운 공구함", "지옥무쇠 연장통", "티타늄 연장통", "엘레멘티움 연장통", "\"나르지 아가씨용\" 최첨단 가방",
--- Herbalism
-"약초 주머니", "세나리온 약초 가방", "세나리우스의 주머니", "미카의 채집용 주머니", "에메랄드 가방", "하이잘 원정대 가방",
-"\"나르지 자연주의\" 약초용 손가방",
--- Inscription
-"주문각인사의 가방", "무한 주머니 가방", "\"나르지 실용주의\" 학생 가방",
--- Jewelcrafting
-"보석 주머니", "보석 자루", "\"나르지 독점 상품\" 보석 박힌 손지갑",
--- Leatherworking
-"가죽세공인의 가방", "가죽 덧댄 가방", "덫사냥꾼의 여행 가방", "\"나르지 보들보들\" 가죽 가방",
--- Mining
-"강화된 채광용 자루", "채광용 자루", "매머드 채광 자루", "\"나르지 찰캉찰캉\" 귀중한 금속 가방",
--- Fishing
-"미끼 낚시의 대가 낚시상자",
--- Cooking
-"Portable Refrigerator",
-};
 
-L["TITAN_CLOCK_TOOLTIP"] = "시계";     
+L["TITAN_BAG_PROF_BAG_ENCHANTING"] = {
+"마력 깃든 마법매듭 가방", "마력 깃든 룬매듭 가방", "마법부여사의 가방", "큰 마법용품 가방", "마법불꽃 가방",
+"불가사의한 가방", "다른 세상의 가방", "\"나르지 독점 상품\" 마법부여 나들이 지갑"};
+L["TITAN_BAG_PROF_BAG_ENGINEERING"] = {
+"무거운 공구함", "지옥무쇠 연장통", "티타늄 연장통", "엘레멘티움 연장통", "\"나르지 아가씨용\" 최첨단 가방"};
+L["TITAN_BAG_PROF_BAG_HERBALISM"] = {
+"약초 주머니", "세나리온 약초 가방", "세나리우스의 주머니", "미카의 채집용 주머니", "에메랄드 가방", "하이잘 원정대 가방",
+"\"나르지 자연주의\" 약초용 손가방"};
+L["TITAN_BAG_PROF_BAG_INSCRIPTION"] = {
+"주문각인사의 가방", "무한 주머니 가방", "\"나르지 실용주의\" 학생 가방", "Burnished Inscription Bag"};
+L["TITAN_BAG_PROF_BAG_JEWELCRAFTING"] = {
+"보석 주머니", "보석 자루", "\"나르지 독점 상품\" 보석 박힌 손지갑"};
+L["TITAN_BAG_PROF_BAG_LEATHERWORKING"] = {
+"가죽세공인의 가방", "가죽 덧댄 가방", "덫사냥꾼의 여행 가방", "\"나르지 보들보들\" 가죽 가방", "Burnished Leather Bag"};
+L["TITAN_BAG_PROF_BAG_MINING"] = {
+"강화된 채광용 자루", "채광용 자루", "매머드 채광 자루", "\"나르지 찰캉찰캉\" 귀중한 금속 가방", "Burnished Mining Bag"};
+L["TITAN_BAG_PROF_BAG_FISHING"] = {"미끼 낚시의 대가 낚시상자"};
+L["TITAN_BAG_PROF_BAG_COOKING"] = {"Portable Refrigerator", "Advanced Refrigeration Unit"};
+
+L["TITAN_CLOCK_TOOLTIP"] = "시계";
 L["TITAN_CLOCK_TOOLTIP_VALUE"] = "서버 기준 시간 값: ";
 L["TITAN_CLOCK_TOOLTIP_LOCAL_TIME"] = "지역 시간: ";
 L["TITAN_CLOCK_TOOLTIP_SERVER_TIME"] = "서버 시간: ";
@@ -291,32 +291,31 @@ L["TITAN_CLOCK_MENU_DISPLAY_ON_RIGHT_SIDE"] = "오른쪽에 표시";
 L["TITAN_CLOCK_MENU_HIDE_GAMETIME"] = "시간/달력 버튼 숨기기";
 L["TITAN_CLOCK_MENU_HIDE_MAPTIME"] = "시간 버튼 숨기기";
 L["TITAN_CLOCK_MENU_HIDE_CALENDAR"] = "달력 버튼 숨기기";
-     
-L["TITAN_COORDS_FORMAT"] = "(%.d, %.d)";
-L["TITAN_COORDS_FORMAT2"] = "(%.1f, %.1f)";
-L["TITAN_COORDS_FORMAT3"] = "(%.2f, %.2f)";
-L["TITAN_COORDS_FORMAT_LABEL"] = "(xx , yy)";
-L["TITAN_COORDS_FORMAT2_LABEL"] = "(xx.x , yy.y)";
-L["TITAN_COORDS_FORMAT3_LABEL"] = "(xx.xx , yy.yy)";
-L["TITAN_COORDS_FORMAT_COORD_LABEL"] = "좌표 형식";
-L["TITAN_COORDS_BUTTON_LABEL"] = "위치: ";
-L["TITAN_COORDS_TOOLTIP"] = "지역 정보";
-L["TITAN_COORDS_TOOLTIP_HINTS_1"] = "힌트: 대화창에 현재 위치를";
-L["TITAN_COORDS_TOOLTIP_HINTS_2"] = "쉬프트 + 클릭으로 입력합니다.";
-L["TITAN_COORDS_TOOLTIP_ZONE"] = "지역: ";
-L["TITAN_COORDS_TOOLTIP_SUBZONE"] = "세부지역: ";
-L["TITAN_COORDS_TOOLTIP_PVPINFO"] = "PVP 정보: ";
-L["TITAN_COORDS_TOOLTIP_HOMELOCATION"] = "여관 위치";
-L["TITAN_COORDS_TOOLTIP_INN"] = "여관: ";
-L["TITAN_COORDS_MENU_TEXT"] = "좌표";
-L["TITAN_COORDS_MENU_SHOW_ZONE_ON_PANEL_TEXT"] = "지역 표시";
-L["TITAN_COORDS_MENU_SHOW_COORDS_ON_MAP_TEXT"] = "세계 지도에 좌표 표시";
-L["TITAN_COORDS_MAP_CURSOR_COORDS_TEXT"] = "커서(X,Y): %s";
-L["TITAN_COORDS_MAP_PLAYER_COORDS_TEXT"] = "플레이어(X,Y): %s";
-L["TITAN_COORDS_NO_COORDS"] = "좌표 없음";
-L["TITAN_COORDS_MENU_SHOW_LOC_ON_MINIMAP_TEXT"] = "미니맵에 위치를 표시합니다.";
--- L["TITAN_COORDS_MENU_UPDATE_WORLD_MAP"] = "지역이 변경되면 세계지도를 갱신합니다.";
-     
+
+L["TITAN_LOCATION_FORMAT"] = "(%.d, %.d)";
+L["TITAN_LOCATION_FORMAT2"] = "(%.1f, %.1f)";
+L["TITAN_LOCATION_FORMAT3"] = "(%.2f, %.2f)";
+L["TITAN_LOCATION_FORMAT_LABEL"] = "(xx , yy)";
+L["TITAN_LOCATION_FORMAT2_LABEL"] = "(xx.x , yy.y)";
+L["TITAN_LOCATION_FORMAT3_LABEL"] = "(xx.xx , yy.yy)";
+L["TITAN_LOCATION_FORMAT_COORD_LABEL"] = "좌표 형식";
+L["TITAN_LOCATION_BUTTON_LABEL"] = "위치: ";
+L["TITAN_LOCATION_TOOLTIP"] = "지역 정보";
+L["TITAN_LOCATION_TOOLTIP_HINTS_1"] = "힌트: 대화창에 현재 위치를";
+L["TITAN_LOCATION_TOOLTIP_HINTS_2"] = "쉬프트 + 클릭으로 입력합니다.";
+L["TITAN_LOCATION_TOOLTIP_ZONE"] = "지역: ";
+L["TITAN_LOCATION_TOOLTIP_SUBZONE"] = "세부지역: ";
+L["TITAN_LOCATION_TOOLTIP_PVPINFO"] = "PVP 정보: ";
+L["TITAN_LOCATION_TOOLTIP_HOMELOCATION"] = "여관 위치";
+L["TITAN_LOCATION_TOOLTIP_INN"] = "여관: ";
+L["TITAN_LOCATION_MENU_TEXT"] = "좌표";
+L["TITAN_LOCATION_MENU_SHOW_ZONE_ON_PANEL_TEXT"] = "지역 표시";
+L["TITAN_LOCATION_MENU_SHOW_COORDS_ON_MAP_TEXT"] = "세계 지도에 좌표 표시";
+L["TITAN_LOCATION_MAP_CURSOR_COORDS_TEXT"] = "커서(X,Y): %s";
+L["TITAN_LOCATION_MAP_PLAYER_COORDS_TEXT"] = "플레이어(X,Y): %s";
+L["TITAN_LOCATION_NO_COORDS"] = "좌표 없음";
+L["TITAN_LOCATION_MENU_SHOW_LOC_ON_MINIMAP_TEXT"] = "미니맵에 위치를 표시합니다.";
+
 L["TITAN_FPS_FORMAT"] = "%.1f";
 L["TITAN_FPS_BUTTON_LABEL"] = "FPS: ";
 L["TITAN_FPS_MENU_TEXT"] = "FPS";
@@ -325,7 +324,7 @@ L["TITAN_FPS_TOOLTIP_AVG_FPS"] = "평균 FPS: ";
 L["TITAN_FPS_TOOLTIP_MIN_FPS"] = "최소 FPS: ";
 L["TITAN_FPS_TOOLTIP_MAX_FPS"] = "최대 FPS: ";
 L["TITAN_FPS_TOOLTIP"] = "시간당 프레임율";
-     
+
 L["TITAN_LATENCY_FORMAT"] = "%d".."ms";
 L["TITAN_LATENCY_BANDWIDTH_FORMAT"] = "%.3f ".."KB/s";
 L["TITAN_LATENCY_BUTTON_LABEL"] = "지연시간: ";
@@ -335,7 +334,7 @@ L["TITAN_LATENCY_TOOLTIP_LATENCY_WORLD"] = "게임 지연시간(세계): ";
 L["TITAN_LATENCY_TOOLTIP_BANDWIDTH_IN"] = "입력 대역폭: ";
 L["TITAN_LATENCY_TOOLTIP_BANDWIDTH_OUT"] = "출력 대역폭: ";
 L["TITAN_LATENCY_MENU_TEXT"] = "지연시간";
-     
+
 L["TITAN_LOOTTYPE_BUTTON_LABEL"] = "루팅: ";
 L["TITAN_LOOTTYPE_FREE_FOR_ALL"] = "자유 획득";
 L["TITAN_LOOTTYPE_ROUND_ROBIN"] = "차례대로 획득";
@@ -354,7 +353,7 @@ L["TITAN_LOOTTYPE_SHOWDUNGEONDIFF_LABEL"] = "공격대/던전 난이도 표시";
 L["TITAN_LOOTTYPE_SETDUNGEONDIFF_LABEL"] = "던전 난이도 설정";
 L["TITAN_LOOTTYPE_SETRAIDDIFF_LABEL"] = "공격대 난이도 설정";
 L["TITAN_LOOTTYPE_AUTODIFF_LABEL"] = "자동 (파티 기본)";
-     
+
 L["TITAN_MEMORY_FORMAT"] = "%.3f".."MB";
 L["TITAN_MEMORY_FORMAT_KB"] = "%d".."KB";
 L["TITAN_MEMORY_RATE_FORMAT"] = "%.3f".."KB/s";
@@ -364,9 +363,7 @@ L["TITAN_MEMORY_TOOLTIP_CURRENT_MEMORY"] = "현재: ";
 L["TITAN_MEMORY_TOOLTIP_INITIAL_MEMORY"] = "초기: ";
 L["TITAN_MEMORY_TOOLTIP_INCREASING_RATE"] = "증가율: ";
 L["TITAN_MEMORY_KBMB_LABEL"] = "KB/MB";     
-     
-L["TITAN_MONEY_FORMAT"] = "%d".."G"..", %02d".."S"..", %02d".."C";
-     
+
 L["TITAN_PERFORMANCE_TOOLTIP"] = "성능 정보";
 L["TITAN_PERFORMANCE_MENU_TEXT"] = "성능";
 L["TITAN_PERFORMANCE_ADDONS"] = "애드온 사용";
@@ -392,7 +389,7 @@ L["TITAN_PERFORMANCE_CONTROL_TITLE"] = "애드온 갯수";
 L["TITAN_PERFORMANCE_CONTROL_HIGH"] = "40";
 L["TITAN_PERFORMANCE_CONTROL_LOW"] = "1";
 L["TITAN_PERFORMANCE_TOOLTIP_HINT"] = "힌트: 왼쪽 클릭으로 메모리를 청소합니다.";
-		     
+
 L["TITAN_XP_FORMAT"] = "%s";
 L["TITAN_XP_PERCENT_FORMAT"] = "(%.1f%%)";
 L["TITAN_XP_BUTTON_LABEL_XPHR_LEVEL"] = "현재 레벨에서의 시간당 경험치: ";
@@ -433,59 +430,59 @@ L["TITAN_XP_XPGAINS_LABEL_SHORT"] = "획득: ";
 L["TITAN_XP_XPGAINS_LABEL"] = "레벨당 획득한 경험치 (최근 획득한 경험치 %s 기준): ";
 L["TITAN_XP_MENU_SIMPLE_BUTTON_XPGAIN"] = "레벨당 경험치 획득 표시";
 
-     --Titan Repair
-     L["REPAIR_LOCALE"] = {
-          menu = "수리",
-          tooltip = "내구도 정보",
-          button = "내구도: ",
-          normal = "수리비용 (중립적): ",
-          friendly = "수리비용 (약간 우호적): ",
-          honored = "수리비용 (우호적): ",
-          revered = "수리비용 (매우 우호적): ",
-          exalted = "수리비용 (확고한 동맹): ",
-          buttonNormal = "중립적 표시",
-          buttonFriendly = "약간 우호적 표시 (5%)",
-          buttonHonored = "우호적 표시 (10%)",
-          buttonRevered = "매우 우호적 표시 (15%)",
-          buttonExalted = "확고한 동맹 표시 (20%)",
-          percentage = "백분율로 표시",
-          itemnames = "아이템 이름 표시",
-          mostdamaged = "최대 공격력 표시",
-          showdurabilityframe = "내구도 프레임 표시",
-          undamaged = "내구도 100% 아이템 표시",
-          discount = "할인",
-          nothing = "내구도 없음",
-          confirmation = "모든 아이템을 수리하시겠습니까 ?",
-          badmerchant = "이 상인은 수리가 가능하지 않습니다. 대신에 수리 비용을 표시합니다.",
-          popup = "수리 팝업 창 표시",
-          showinventory = "가방 내구도 조사",
-          WholeScanInProgress = "갱신중...",
-          AutoReplabel = "자동 수리",
-          AutoRepitemlabel = "모든 아이템을 자동 수리 합니다.",
-          ShowRepairCost = "수리비용 표시",
-		  		ignoreThrown = "투척 무기 제외",
-		  		ShowItems = "아이템 표시",
-		  		ShowDiscounts = "할인 표시",
-		  		ShowCosts = "수리비용 표시",
-		  		Items = "아이템",
-		  		Discounts = "할인",
-		  		Costs = "수리비용",
-				CostTotal = "총 비용",
-				CostBag = "가방 비용",
-				CostEquip = "장착 비용",
- 				TooltipOptions = "툴팁",
-    };
-     
-     L["TITAN_REPAIR"] = "타이탄 수리"
-     L["TITAN_REPAIR_GBANK_TOTAL"] = "길드 은행 금액 :"
-     L["TITAN_REPAIR_GBANK_WITHDRAW"] = "길드 은행 취소 수락 :"
-     L["TITAN_REPAIR_GBANK_USEFUNDS"] = "길드 은행 사용"
-     L["TITAN_REPAIR_GBANK_NOMONEY"] = "길드 은행의 잔액이 부족하여 수리가 불가능합니다."
-     L["TITAN_REPAIR_GBANK_NORIGHTS"] = "길드가 없거나 길드 은행의 비용으로 수리할 권한이 없습니다."
-     L["TITAN_REPAIR_CANNOT_AFFORD"] = "길드 은행의 잔액이 부족하여 현재는 수리할 수 없습니다."
-     L["TITAN_REPAIR_REPORT_COST_MENU"] = "대화창에 수리비용 표시"
-     L["TITAN_REPAIR_REPORT_COST_CHAT"] = "수리비용: "
-     
+--Titan Repair
+L["REPAIR_LOCALE"] = {
+	menu = "수리",
+	tooltip = "내구도 정보",
+	button = "내구도: ",
+	normal = "수리비용 (중립적): ",
+	friendly = "수리비용 (약간 우호적): ",
+	honored = "수리비용 (우호적): ",
+	revered = "수리비용 (매우 우호적): ",
+	exalted = "수리비용 (확고한 동맹): ",
+	buttonNormal = "중립적 표시",
+	buttonFriendly = "약간 우호적 표시 (5%)",
+	buttonHonored = "우호적 표시 (10%)",
+	buttonRevered = "매우 우호적 표시 (15%)",
+	buttonExalted = "확고한 동맹 표시 (20%)",
+	percentage = "백분율로 표시",
+	itemnames = "아이템 이름 표시",
+	mostdamaged = "최대 공격력 표시",
+	showdurabilityframe = "내구도 프레임 표시",
+	undamaged = "내구도 100% 아이템 표시",
+	discount = "할인",
+	nothing = "내구도 없음",
+	confirmation = "모든 아이템을 수리하시겠습니까 ?",
+	badmerchant = "이 상인은 수리가 가능하지 않습니다. 대신에 수리 비용을 표시합니다.",
+	popup = "수리 팝업 창 표시",
+	showinventory = "가방 내구도 조사",
+	WholeScanInProgress = "갱신중...",
+	AutoReplabel = "자동 수리",
+	AutoRepitemlabel = "모든 아이템을 자동 수리 합니다.",
+	ShowRepairCost = "수리비용 표시",
+	ignoreThrown = "투척 무기 제외",
+	ShowItems = "아이템 표시",
+	ShowDiscounts = "할인 표시",
+	ShowCosts = "수리비용 표시",
+	Items = "아이템",
+	Discounts = "할인",
+	Costs = "수리비용",
+	CostTotal = "총 비용",
+	CostBag = "가방 비용",
+	CostEquip = "장착 비용",
+	TooltipOptions = "툴팁",
+};
+
+L["TITAN_REPAIR"] = "타이탄 수리"
+L["TITAN_REPAIR_GBANK_TOTAL"] = "길드 은행 금액 :"
+L["TITAN_REPAIR_GBANK_WITHDRAW"] = "길드 은행 취소 수락 :"
+L["TITAN_REPAIR_GBANK_USEFUNDS"] = "길드 은행 사용"
+L["TITAN_REPAIR_GBANK_NOMONEY"] = "길드 은행의 잔액이 부족하여 수리가 불가능합니다."
+L["TITAN_REPAIR_GBANK_NORIGHTS"] = "길드가 없거나 길드 은행의 비용으로 수리할 권한이 없습니다."
+L["TITAN_REPAIR_CANNOT_AFFORD"] = "길드 은행의 잔액이 부족하여 현재는 수리할 수 없습니다."
+L["TITAN_REPAIR_REPORT_COST_MENU"] = "대화창에 수리비용 표시"
+L["TITAN_REPAIR_REPORT_COST_CHAT"] = "수리비용: "
+
 L["TITAN_PLUGINS_MENU_TITLE"] = "플러그인";
 
 L["TITAN_GOLD_TOOLTIPTEXT"] = "타이탄 소지금 켬";

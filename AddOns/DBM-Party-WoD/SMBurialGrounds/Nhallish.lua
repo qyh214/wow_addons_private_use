@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1168, "DBM-Party-WoD", 6, 537)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12736 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14030 $"):sub(12, -3))
 mod:SetCreatureID(75829)
 mod:SetEncounterID(1688)
 
@@ -19,15 +19,15 @@ local warnVoidVortex			= mod:NewSpellAnnounce(152801, 3)
 local warnSoulShred				= mod:NewSpellAnnounce(152979, 3)
 local warnVoidDevastation		= mod:NewSpellAnnounce(153067, 4)
 
-local specWarnVoidVortex		= mod:NewSpecialWarningRun("OptionVersion2", 152801, nil, nil, nil, 4, nil, true)
+local specWarnVoidVortex		= mod:NewSpecialWarningRun(152801, nil, nil, 2, 4, 2)
 local specWarnSoulShred			= mod:NewSpecialWarningSpell(152979)
 local specWarnVoidDevastation	= mod:NewSpecialWarningSpell(153067, nil, nil, nil, 2)
 local specWarnVoidDevastationM	= mod:NewSpecialWarningMove(153070)
 
-local timerVoidVortexCD			= mod:NewCDTimer(72, 152801)
-local timerSoulShredCD			= mod:NewNextTimer(71, 152979)
+local timerVoidVortexCD			= mod:NewCDTimer(72, 152801, nil, nil, nil, 2)
+local timerSoulShredCD			= mod:NewNextTimer(71, 152979, nil, nil, nil, 6)
 local timerSoulShred			= mod:NewBuffFadesTimer(20, 152979)
-local timerVoidDevastationCD	= mod:NewNextTimer(71, 153067)
+local timerVoidDevastationCD	= mod:NewNextTimer(71, 153067, nil, nil, nil, 3)
 
 local voiceWarnSoulShred		= mod:NewVoice(152979)
 local voiceVoidVortex			= mod:NewVoice(152801)

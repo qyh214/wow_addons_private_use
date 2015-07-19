@@ -81,7 +81,8 @@ function RewardPanel:OnInitialize()
         ConfirmButton:Disable()
         ConfirmButton:SetScript('OnClick', function()
             self:Purchase()
-            end)
+        end)
+        MagicButton_OnLoad(ConfirmButton)
     end
 
     self.InputBox = InputBox

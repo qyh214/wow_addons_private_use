@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1291, "DBM-Draenor", nil, 557)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13055 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14030 $"):sub(12, -3))
 mod:SetCreatureID(81252)
 mod:SetReCombatTime(20)
 mod:SetZone()
@@ -14,11 +14,11 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 175827"
 )
 
-local specWarnColossalSlam		= mod:NewSpecialWarningDodge(175791, nil, nil, nil, 2, nil, 2)
+local specWarnColossalSlam		= mod:NewSpecialWarningDodge(175791, nil, nil, nil, 2, 2)
 local specWarnCallofEarth		= mod:NewSpecialWarningSpell(175827)
 
-local timerColossalSlamCD		= mod:NewCDTimer(16, 175791)--16-35 second variation? Then again was a bad pull with no tank, boss running loose so may have affected timer
-local timerCallofEarthCD		= mod:NewCDTimer(90, 175827)
+local timerColossalSlamCD		= mod:NewCDTimer(16, 175791, nil, nil, nil, 3)--16-35 second variation? Then again was a bad pull with no tank, boss running loose so may have affected timer
+local timerCallofEarthCD		= mod:NewCDTimer(90, 175827, nil, nil, nil, 1)
 
 local voiceColossalSlam			= mod:NewVoice(175791)
 

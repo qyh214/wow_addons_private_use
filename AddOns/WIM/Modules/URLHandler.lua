@@ -21,16 +21,12 @@ local URL = CreateModule("URLHandler", true);
 
 armoryLinks = {
     {
-        title = "Armory-Light",
-        url = "http://www.armory-light.com/{eu/us}/{realm}/{user}"
-    },
-    {
         title = "ArmoryLite",
         url = "http://armorylite.com/{eu/us}/{realm}/{user}"
     },
     {
-        title = "GuildOx",
-        url = "http://www.guildox.com/go/g.asp?a=8&p={user}&r={realm}-{eu/us}"
+        title = "AskMrRobot",
+        url = "http://www.askmrrobot.com/wow/player/{eu/us}/{realm}/{user}"
     },
     {
         title = "WoW Armory",
@@ -38,11 +34,11 @@ armoryLinks = {
     },
     {
         title = "WoW-Heroes",
-        url = "http://www.wow-heroes.com/character/{eu/us}/{realm}/{user}"
+        url = "http://www.wow-heroes.com/character/{eu/us}/{realm}/{user}/"
     },
     {
-		    title = "Wowhead Profiler",
-		    url = "http://www.wowhead.com/profile={eu/us}.{realm-}.{user}",
+		title = "Wowhead Profiler",
+		url = "http://www.wowhead.com/profile={eu/us}.{realm-}.{user}",
     }
 };
 

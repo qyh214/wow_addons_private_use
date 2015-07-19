@@ -136,7 +136,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.cd			= "%s CD"
 DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "%s CD (%%d)"
 DBM_CORE_AUTO_TIMER_TEXTS.cdsource		= "%s CD: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.next			= "Prossimo %s"
-DBM_CORE_AUTO_TIMER_TEXTS.nextcount		= "Prossimo %s (%%d)"
+DBM_CORE_AUTO_TIMER_TEXTS.nextcount		= "Prossimo %s (%%s)"
 DBM_CORE_AUTO_TIMER_TEXTS.nextsource	= "Prossimo %s: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.achievement	= "%s"
 
@@ -235,7 +235,6 @@ DBM_ARROW_ERROR_USAGE	= {
 }
 
 DBM_SPEED_KILL_TIMER_TEXT	= "Miglior Uccisione"
-DBM_SPEED_KILL_TIMER_OPTION	= "Visualizza un timer per battere il tuo record"
 
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s ha richiesto di vedere l'ID e il progress della tua incursione.\nVuoi inviare questa informazione a %s? Potra' richiederti quest'informazione per tutta questa sessione (finche' non rilogghi)."

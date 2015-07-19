@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1214, "DBM-Party-WoD", 5, 556)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12637 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14002 $"):sub(12, -3))
 mod:SetCreatureID(81522)
 mod:SetEncounterID(1746)
 
@@ -32,7 +32,7 @@ local specWarnBrittleBarkEnd	= mod:NewSpecialWarningEnd(164275, false)--Added fo
 local timerParchedGrasp			= mod:NewCDTimer(12, 164357)
 
 local voiceLivingLeaves			= mod:NewVoice(169495)
-local voiceUncheckedGrowth		= mod:NewVoice("OptionVersion2", 164294, false)--Almost no one kill them. tank picks up, but dps burn boss.
+local voiceUncheckedGrowth		= mod:NewVoice(164294, false, nil, 2)--Almost no one kill them. tank picks up, but dps burn boss.
 
 
 function mod:OnCombatStart(delay)

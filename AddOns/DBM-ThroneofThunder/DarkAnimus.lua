@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(824, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 57 $"):sub(12, -3))
 mod:SetCreatureID(69427)
 mod:SetEncounterID(1576)
 mod:SetZone()
@@ -28,7 +28,6 @@ local warnExplosiveSlam				= mod:NewStackAnnounce(138569, 2, nil, "Tank|Healer")
 local warnActivation				= mod:NewCastAnnounce(139537, 3, 60)
 local warnAnimaRing					= mod:NewTargetAnnounce(136954, 3, nil, "Tank")
 local warnAnimaFont					= mod:NewTargetAnnounce(138691, 3)
-local warnInterruptingJolt			= mod:NewCountAnnounce(138763, 4)
 local warnEmpowerGolem				= mod:NewTargetAnnounce(138780, 3)
 
 local specWarnCrimsonWakeYou		= mod:NewSpecialWarningRun(138480, nil, nil, nil, 4)--Kiter
@@ -42,7 +41,7 @@ local specWarnAnimaRing				= mod:NewSpecialWarningYou(136954)
 local specWarnAnimaRingOther		= mod:NewSpecialWarningTarget(136954, false)
 local yellAnimaRing					= mod:NewYell(136954)
 local specWarnAnimaFont				= mod:NewSpecialWarningYou(138691)
-local specWarnInterruptingJolt		= mod:NewSpecialWarningCast(138763, nil, nil, nil, 2)
+local specWarnInterruptingJolt		= mod:NewSpecialWarningCount(138763, nil, nil, nil, 2)
 
 local timerMatterSwap				= mod:NewTargetTimer(12, 138609)--If not dispelled, it ends after 12 seconds regardless
 local timerExplosiveSlam			= mod:NewTargetTimer(25, 138569, nil, "Tank|Healer")
@@ -106,8 +105,7 @@ function mod:SPELL_CAST_START(args)
 		countdownAnimaRing:Start()
 	elseif args:IsSpellID(138763, 139867, 139869) then--Normal version is 2.2 sec cast. Heroic is 1.4 second cast. LFR is 3.8 sec cast (thus why it has different spellid)
 		jolt = jolt + 1
-		warnInterruptingJolt:Show(jolt)
-		specWarnInterruptingJolt:Show()
+		specWarnInterruptingJolt:Show(jolt)
 		if self:IsDifficulty("lfr25") then
 			timerInterruptingJolt:Start(3.8)
 		else

@@ -3,7 +3,7 @@ BuildEnv(...)
 
 local MallCategoryItem = Addon:NewClass('MallCategoryItem', GUI:GetClass('ItemButton'))
 
-function MallCategoryItem:Constructor(parent)
+function MallCategoryItem:Constructor()
     local bg = self:CreateTexture(nil, 'BACKGROUND') do
         bg:SetTexture([[Interface\Store\Store-Main]])
         bg:SetTexCoord(0.56542969, 0.73730469, 0.41992188, 0.45703125)
@@ -54,6 +54,7 @@ function MallCategoryItem:Constructor(parent)
     self.Icon = Icon
     self.HighlightTexture = HighlightTexture
     self.CheckedTexture = CheckedTexture
+    self.bg = bg
 end
 
 function MallCategoryItem:SetText(text)
@@ -68,4 +69,18 @@ end
 
 function MallCategoryItem:SetIcon(coord)
     self.Icon:SetTexCoord(unpack(coord))
+end
+
+function MallCategoryItem:SetBlue(enable)
+    self.bg:ClearAllPoints()
+    if enable then
+        self.bg:SetTexCoord(0, 1, 0, 1)
+        self.bg:SetAtlas('token-button-category')
+        self.bg:SetPoint('TOPLEFT', 3, 0)
+        self.bg:SetPoint('BOTTOMRIGHT', -3, 3)
+    else
+        self.bg:SetTexture([[Interface\Store\Store-Main]])
+        self.bg:SetTexCoord(0.56542969, 0.73730469, 0.41992188, 0.45703125)
+        self.bg:SetAllPoints(true)
+    end
 end

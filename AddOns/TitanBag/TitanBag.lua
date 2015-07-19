@@ -28,9 +28,9 @@ function TitanPanelBagButton_OnLoad(self)
 		category = "Built-ins",
 		version = TITAN_VERSION,
 		menuText = L["TITAN_BAG_MENU_TEXT"],
-		buttonTextFunction = "TitanPanelBagButton_GetButtonText", 
+		buttonTextFunction = "TitanPanelBagButton_GetButtonText",
 		tooltipTitle = L["TITAN_BAG_TOOLTIP"],
-		tooltipTextFunction = "TitanPanelBagButton_GetTooltipText", 
+		tooltipTextFunction = "TitanPanelBagButton_GetTooltipText",
 		icon = "Interface\\AddOns\\TitanBag\\TitanBag",
 		iconWidth = 16,
 		controlVariables = {
@@ -43,8 +43,6 @@ function TitanPanelBagButton_OnLoad(self)
 		savedVariables = {
 			ShowUsedSlots = 1,
 			ShowDetailedInfo = false,
-			CountAmmoPouchSlots = false,
-			CountShardBagSlots = false,
 			CountProfBagSlots = false,
 			ShowIcon = 1,
 			ShowLabelText = 1,
@@ -95,48 +93,70 @@ end
 -- **************************************************************************
 function TitanPanelBagButton_GetButtonText(id)
 	local button, id = TitanUtils_GetButton(id, true);
-	local totalSlots, usedSlots, availableSlots;
-	local useme;
+	local totalBagSlots, usedBagSlots, availableBagSlots, bag, bagText, bagRichText, color;
+	local totalProfBagSlots = {0,0,0,0,0};
+	local usedProfBagSlots = {0,0,0,0,0};
+	local availableProfBagSlots = {0,0,0,0,0};
+	local bagRichTextProf = {"","","","",""};
 
-	totalSlots = 0;
-	usedSlots = 0;
+	totalBagSlots = 0;
+	usedBagSlots = 0;
 	for bag = 0, 4 do
-		if TitanGetVar(TITAN_BAG_ID, "CountProfBagSlots") and TitanBag_IsProfBag(GetBagName(bag)) then
-			useme = 1;
-		elseif not TitanBag_IsProfBag(GetBagName(bag)) then
-			useme = 1;
-		else
-			useme = 0;
-		end
-
-		if useme == 1 then
+		if not TitanBag_IsProfBag(GetBagName(bag)) then
 			local size = GetContainerNumSlots(bag);
 			if (size and size > 0) then
-				totalSlots = totalSlots + size;
+				totalBagSlots = totalBagSlots + size;
 				for slot = 1, size do
 					if (GetContainerItemInfo(bag, slot)) then
-						usedSlots = usedSlots + 1;
+						usedBagSlots = usedBagSlots + 1;
 					end
 				end
 			end
 		end
+		if TitanGetVar(TITAN_BAG_ID, "CountProfBagSlots") and TitanBag_IsProfBag(GetBagName(bag)) then
+			local size = GetContainerNumSlots(bag);
+			if (size and size > 0) then
+				totalProfBagSlots[bag+1] = size;
+				for slot = 1, size do
+					if (GetContainerItemInfo(bag, slot)) then
+						usedProfBagSlots[bag+1] = usedProfBagSlots[bag+1] + 1;
+					end
+				end
+				availableProfBagSlots[bag+1] = totalProfBagSlots[bag+1] - usedProfBagSlots[bag+1];
+			end
+		end
 	end
-	availableSlots = totalSlots - usedSlots;
+	availableBagSlots = totalBagSlots - usedBagSlots;
 
-	local bagText, bagRichText, color;
 	if (TitanGetVar(TITAN_BAG_ID, "ShowUsedSlots")) then
-		bagText = format(L["TITAN_BAG_FORMAT"], usedSlots, totalSlots);
+		bagText = format(L["TITAN_BAG_FORMAT"], usedBagSlots, totalBagSlots);
 	else
-		bagText = format(L["TITAN_BAG_FORMAT"], availableSlots, totalSlots);
+		bagText = format(L["TITAN_BAG_FORMAT"], availableBagSlots, totalBagSlots);
 	end
 
 	if ( TitanGetVar(TITAN_BAG_ID, "ShowColoredText") ) then
-		color = TitanUtils_GetThresholdColor(TITAN_BAG_THRESHOLD_TABLE, usedSlots / totalSlots);
+		color = TitanUtils_GetThresholdColor(TITAN_BAG_THRESHOLD_TABLE, usedBagSlots / totalBagSlots);
 		bagRichText = TitanUtils_GetColoredText(bagText, color);
 	else
 		bagRichText = TitanUtils_GetHighlightText(bagText);
 	end
 
+	for bag = 1, 5 do
+		if totalProfBagSlots[bag] > 0 then
+			if (TitanGetVar(TITAN_BAG_ID, "ShowUsedSlots")) then
+				bagText = "  [" .. format(L["TITAN_BAG_FORMAT"], usedProfBagSlots[bag], totalProfBagSlots[bag]) .. "]";
+			else
+				bagText = "  [" .. format(L["TITAN_BAG_FORMAT"], availableProfBagSlots[bag], totalProfBagSlots[bag]) .. "]";
+			end
+			if ( TitanGetVar(TITAN_BAG_ID, "ShowColoredText") ) then
+				bagType, color = TitanBag_IsProfBag(GetBagName(bag-1));
+				bagRichTextProf[bag] = TitanUtils_GetColoredText(bagText, color);
+			else
+				bagRichTextProf[bag] = TitanUtils_GetHighlightText(bagText);
+			end
+		end
+	end
+	bagRichText = bagRichText..bagRichTextProf[1]..bagRichTextProf[2]..bagRichTextProf[3]..bagRichTextProf[4]..bagRichTextProf[5];
 	return L["TITAN_BAG_BUTTON_LABEL"], bagRichText;
 end
 
@@ -229,16 +249,6 @@ function TitanPanelRightClickMenu_PrepareBagMenu()
 			info.checked = TitanGetVar(TITAN_BAG_ID, "ShowDetailedInfo");
 			UIDropDownMenu_AddButton(info, _G["UIDROPDOWNMENU_MENU_LEVEL"]);
 		end
---[[
-		if _G["UIDROPDOWNMENU_MENU_VALUE"] == "IgnoreCont" then
-			TitanPanelRightClickMenu_AddTitle(L["TITAN_BAG_MENU_IGNORE_SLOTS"], _G["UIDROPDOWNMENU_MENU_LEVEL"])
-			info = {};
-			info.text = L["TITAN_BAG_MENU_IGNORE_PROF_BAGS_SLOTS"];
-			info.func = TitanPanelBagButton_ToggleIgnoreProfBagSlots;
-			info.checked = TitanUtils_Toggle(TitanGetVar(TITAN_BAG_ID, "CountProfBagSlots"));
-			UIDropDownMenu_AddButton(info, _G["UIDROPDOWNMENU_MENU_LEVEL"]);
-		end
---]]
 		return
 	end
 	
@@ -251,14 +261,7 @@ function TitanPanelRightClickMenu_PrepareBagMenu()
 	info.value = "Options"
 	info.hasArrow = 1;
 	UIDropDownMenu_AddButton(info);
---[[
-	info = {};
-	info.notCheckable = true
-	info.text = L["TITAN_BAG_MENU_IGNORE_SLOTS"];
-	info.value = "IgnoreCont"
-	info.hasArrow = 1;
-	UIDropDownMenu_AddButton(info);
---]]
+
 	TitanPanelRightClickMenu_AddSpacer();
 	info = {};
 	info.text = L["TITAN_BAG_MENU_IGNORE_PROF_BAGS_SLOTS"];
@@ -266,11 +269,11 @@ function TitanPanelRightClickMenu_PrepareBagMenu()
 	info.checked = TitanUtils_Toggle(TitanGetVar(TITAN_BAG_ID, "CountProfBagSlots"));
 	UIDropDownMenu_AddButton(info, _G["UIDROPDOWNMENU_MENU_LEVEL"]);
 
-	TitanPanelRightClickMenu_AddSpacer();     
+	TitanPanelRightClickMenu_AddSpacer();
 	TitanPanelRightClickMenu_AddToggleIcon(TITAN_BAG_ID);
 	TitanPanelRightClickMenu_AddToggleLabelText(TITAN_BAG_ID);
 	TitanPanelRightClickMenu_AddToggleColoredText(TITAN_BAG_ID);
-	TitanPanelRightClickMenu_AddSpacer();     
+	TitanPanelRightClickMenu_AddSpacer();
 	TitanPanelRightClickMenu_AddCommand(L["TITAN_PANEL_MENU_HIDE"], TITAN_BAG_ID, TITAN_PANEL_MENU_FUNC_HIDE);
 end
 
@@ -307,14 +310,75 @@ end
 
 -- **************************************************************************
 -- NAME : TitanBag_IsProfBag(name)
--- DESC : Test to see if bag is a profession bag
+-- DESC : est to see if bag is a profession bag
 -- VARS : name = item name
+-- OUT  : bagType = type of profession matching bag name
+--        color = the color associated with the profession
 -- **************************************************************************
 function TitanBag_IsProfBag(name)
+	local bagType, color;
 	if (name) then
-		for index, value in pairs(L["TITAN_BAG_PROF_BAG_NAMES"]) do
+		for index, value in pairs(L["TITAN_BAG_PROF_BAG_ENCHANTING"]) do
 			if (string.find(name, value, 1, true)) then
-				return true;
+				bagType = "ENCHANTING";
+				color = {r=0,g=0,b=1}; -- BLUE
+				return bagType, color;
+			end
+		end
+		for index, value in pairs(L["TITAN_BAG_PROF_BAG_ENGINEERING"]) do
+			if (string.find(name, value, 1, true)) then
+				bagType = "ENGINEERING";
+				color = {r=1,g=0.49,b=0.04}; -- ORANGE
+				return bagType, color;
+			end
+		end
+		for index, value in pairs(L["TITAN_BAG_PROF_BAG_HERBALISM"]) do
+			if (string.find(name, value, 1, true)) then
+				bagType = "HERBALISM";
+				color = {r=0,g=1,b=0}; -- GREEN
+				return bagType, color;
+			end
+		end
+		for index, value in pairs(L["TITAN_BAG_PROF_BAG_INSCRIPTION"]) do
+			if (string.find(name, value, 1, true)) then
+				bagType = "INSCRIPTION";
+				color = {r=0.58,g=0.51,b=0.79}; -- PURPLE
+				return bagType, color;
+			end
+		end
+		for index, value in pairs(L["TITAN_BAG_PROF_BAG_JEWELCRAFTING"]) do
+			if (string.find(name, value, 1, true)) then
+				bagType = "JEWELCRAFTING";
+				color = {r=1,g=0,b=0}; -- RED
+				return bagType, color;
+			end
+		end
+		for index, value in pairs(L["TITAN_BAG_PROF_BAG_LEATHERWORKING"]) do
+			if (string.find(name, value, 1, true)) then
+				bagType = "LEATHERWORKING";
+				color = {r=0.78,g=0.61,b=0.43}; -- TAN
+				return bagType, color;
+			end
+		end
+		for index, value in pairs(L["TITAN_BAG_PROF_BAG_MINING"]) do
+			if (string.find(name, value, 1, true)) then
+				bagType = "MINING";
+				color = {r=1,g=1,b=1}; -- WHITE
+				return bagType, color;
+			end
+		end
+		for index, value in pairs(L["TITAN_BAG_PROF_BAG_FISHING"]) do
+			if (string.find(name, value, 1, true)) then
+				bagType = "FISHING";
+				color = {r=0.41,g=0.8,b=0.94}; -- LIGHT_BLUE
+				return bagType, color;
+			end
+		end
+		for index, value in pairs(L["TITAN_BAG_PROF_BAG_COOKING"]) do
+			if (string.find(name, value, 1, true)) then
+				bagType = "COOKING";
+				color = {r=0.96,g=0.55,b=0.73}; -- PINK
+				return bagType, color;
 			end
 		end
 	end

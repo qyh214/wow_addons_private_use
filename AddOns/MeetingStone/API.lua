@@ -190,3 +190,46 @@ function FormatActivitiesSummaryUrl(summary, url)
         return format('|Hurl:%s%s|h|cff00ffff[%s]|r|h', url, path, text)
     end))
 end
+
+local SPAMWORD = setmetatable({}, {
+    __mode = 'k',
+    __index = function(t, k)
+        local result = false
+        for i, v in ipairs(Profile:GetSpamWords()) do
+            if strfind(k, v.text, 1, v.pain) then
+                result = true
+                break
+            end
+        end
+        t[k] = result
+        return t[k]
+    end,
+})
+
+function CheckSpamWord(word)
+    if word then
+        return SPAMWORD[word]
+    end
+end
+
+function ClearSpamWordCache()
+    wipe(SPAMWORD)
+end
+
+function PlayerHasPet(name)
+    return select(2, C_PetJournal.FindPetIDByName(name)) ~= nil
+end
+
+function PlayerHasItem(id)
+    for i = -3, 11 do
+        for j = 1, GetContainerNumSlots(i) do
+            if GetContainerItemID(i, j) == id then
+                return true
+            end
+        end
+    end
+end
+
+function PlayerHasMount(id)
+    return Addon:FindMount(id)
+end

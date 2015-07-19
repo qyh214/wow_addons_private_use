@@ -4,12 +4,7 @@ BuildEnv(...)
 
 local Cover = Addon:NewClass('Cover', 'Frame')
 
-function Cover:Constructor(parent)
-    if not parent then
-        return
-    end
-
-    self:SetParent(parent)
+function Cover:Constructor()
     self:SetFrameLevel(50)
     self:EnableMouse(true)
     self:EnableMouseWheel(true)

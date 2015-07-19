@@ -6,7 +6,7 @@ if GetLocale()=="deDE" or GetLocale()=="ruRU" or GetLocale()=="zhTW" or GetLocal
 end
 
 
-	raversion=6.100
+	raversion=6.204
 	local raverstiptext="alpha"
 	if string.len(raversion)==6 then
 		raverstiptext="beta"
@@ -496,16 +496,6 @@ raraerrordfdfdpsdonatefr2:Show()
 --t4:SetText(atext)
 t4:SetJustifyH("CENTER")
 t4:SetJustifyV("BOTTOM")
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1191,7 +1181,7 @@ end
 end
 
 --тут добавить рейды WoD
-if GetCurrentMapAreaID()==988 then
+if GetCurrentMapAreaID()==988 or GetCurrentMapAreaID()==1026 then
 if IsAddOnLoaded("RaidAchievement_WoDRaids")==false and waswodrtryloadea==nil then
 waswodrtryloadea=1
 local loaded, reason = LoadAddOn("RaidAchievement_WoDRaids")
@@ -2012,38 +2002,38 @@ end
 
 --звук при выполнении
 if i==2 then
-	if rasoundtoplay[2]==1 then
-		if rasoundtoplay[3]==1 then
-			local _, _, _, completed = GetAchievementInfo(achievid)
-			if completed==false then
-				if criteria then
-					local a1,_,a3=GetAchievementCriteriaInfo(achievid,criteria)
-					if a3==false then
-            --для марио звук не меняется!!
-            if achievid==8077 then
-              raplaysound2(23)
-            else
-              raplaysound2(rasoundtoplay[5])
-            end
-					end
-				else
-            --для марио звук не меняется!!
-            if achievid==8077 then
-              raplaysound2(23)
-            else          
-              raplaysound2(rasoundtoplay[5])
-            end
-				end
-			end
+if rasoundtoplay[2]==1 then
+	if rasoundtoplay[3]==1 then
+		local _, _, _, completed = GetAchievementInfo(achievid)
+		if completed==false then
+			if criteria then
+				local a1,_,a3=GetAchievementCriteriaInfo(achievid,criteria)
+				if a3==false then
+		--для марио звук не меняется!!
+		if achievid==8077 then
+		  raplaysound2(23)
 		else
-            --для марио звук не меняется!!
-            if achievid==8077 then
-              raplaysound2(23)
-            else
-              raplaysound2(rasoundtoplay[5])
-            end
+		  raplaysound2(rasoundtoplay[5])
+		end
+				end
+			else
+		--для марио звук не меняется!!
+		if achievid==8077 then
+		  raplaysound2(23)
+		else          
+		  raplaysound2(rasoundtoplay[5])
+		end
+			end
+		end
+	else
+		--для марио звук не меняется!!
+		if achievid==8077 then
+		  raplaysound2(23)
+		else
+		  raplaysound2(rasoundtoplay[5])
 		end
 	end
+end
 end
 end
 
@@ -2246,10 +2236,10 @@ end
 function raaddonloadedcheckspam()
 
 if radonateq1==nil then
-  radonateq1=0
+	radonateq1=0
 end
 if radonateq1<50 then
-  radonateq1=radonateq1+1
+	radonateq1=radonateq1+1
 end
 
 if radonateq1==50 then

@@ -1,0 +1,14 @@
+------------------------------------------------------------------------
+r230 | xbeeps | 2015-04-26 20:17:06 +0000 (Sun, 26 Apr 2015) | 1 line
+Changed paths:
+   A /tags/3.46 (from /trunk:229)
+
+Tagging as 3.46
+------------------------------------------------------------------------
+r229 | xbeeps | 2015-04-26 20:11:59 +0000 (Sun, 26 Apr 2015) | 1 line
+Changed paths:
+   M /trunk/Castbars.lua
+   M /trunk/Castbars.toc
+
+Bump TOC and add Searing Insanity to channeled spells
+------------------------------------------------------------------------

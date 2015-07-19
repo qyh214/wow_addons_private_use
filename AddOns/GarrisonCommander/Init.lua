@@ -1,6 +1,5 @@
 local me, ns = ...
 local _G=_G
-local pp=print
 local setmetatable=setmetatable
 local next=next
 local pairs=pairs
@@ -11,16 +10,18 @@ local GetTime=GetTime
 local strjoin=strjoin
 local strspilit=strsplit
 local tostringall=tostringall
+local tostring=tostring
+local tonumber=tonumber
+local type=type
 --[===[@debug@
 LoadAddOn("Blizzard_DebugTools")
-if LibDebug then LibDebug() end
+print(LoadAddOn("LibDebug"))
+if LibDebug then LibDebug() ns.print=print else ns.print=function() end end
 --@end-debug@]===]
+--@non-debug@
+ns.print=function() end
+--@end-non-debug@
 ns.addon=LibStub("LibInit"):NewAddon(me,'AceHook-3.0','AceTimer-3.0','AceEvent-3.0','AceBucket-3.0')
-local chatframe=ns.addon:GetChatFrame("aDebug")
-local function pd(...)
-	--if (chatframe) then chatframe:AddMessage(format("GC:%6.3f %s",GetTime(),strjoin(' ',tostringall(...)))) end
-	pp(format("|cff808080GC:%6.3f|r %s",GetTime(),strjoin(' ',tostringall(...))))
-end
 local addon=ns.addon --#addon
 ns.toc=select(4,GetBuildInfo())
 ns.AceGUI=LibStub("AceGUI-3.0")
@@ -28,23 +29,25 @@ ns.D=LibStub("LibDeformat-3.0")
 ns.C=ns.addon:GetColorTable()
 ns.L=ns.addon:GetLocale()
 ns.G=C_Garrison
-ns.print=ns.addon:Wrap("Print")
-ns.dprint=ns.print
-ns.trace=ns.addon:Wrap("Trace")
-ns.xprint=function() end
-ns.xdump=function() end
-ns.xtrace=function() end
+ns.GMF=_G.GarrisonMissionFrame
+if not ns.GMF then
+	print("GarrisonCommander is being loaded before Blizzard_GarrisonUI is available")
+	print(GetTime())
+	LoadAddOn("Blizzard_GarrisonUI")
+	print(GetTime())
+	ns.GMF=_G.GarrisonMissionFrame
+end
+if not ns.GMF then error("GarrisonCommander is being loaded before Blizzard_GarrisonUI is available") end
+ns.GMFMissions=_G.GarrisonMissionFrameMissions
+ns.GSF=_G.GarrisonShipyardFrame
+ns.GSFMissions=_G.GarrisonShipyardFrame.MissionTab.MissionList
 _G.GARRISON_FOLLOWER_MAX_ITEM_LEVEL = _G.GARRISON_FOLLOWER_MAX_ITEM_LEVEL or 675
---[===[@debug@
-	ns.xprint=print
-	ns.xdump=function(d,t) pp("|cffff9900DMP|r",t) DevTools_Dump(d) end
-	ns.xtrace=print
---@end-debug@]===]
 do
 	--[===[@debug@
 	local newcount, delcount,createdcount,cached = 0,0,0
 	--@end-debug@]===]
 	local pool = setmetatable({},{__mode="k"})
+	---@function [parent=#ns] new
 	function ns.new()
 	--[===[@debug@
 		newcount = newcount + 1
@@ -60,13 +63,15 @@ do
 			return {}
 		end
 	end
-	function ns.copy(t)
+	---@function [parent=#ns] tCopy
+	function ns.tCopy(t)
 		local c = ns.new()
 		for k, v in pairs(t) do
 			c[k] = v
 		end
 		return c
 	end
+	---@function [parent=#ns] del
 	function ns.del(t)
 	--[===[@debug@
 		delcount = delcount + 1
@@ -75,6 +80,7 @@ do
 		pool[t] = true
 	end
 	--[===[@debug@
+	---@function [parent=#ns] cached
 	function cached()
 		local n = 0
 		for k in pairs(pool) do
@@ -82,18 +88,51 @@ do
 		end
 		return n
 	end
-	function ns.addon:CacheStats()
-		ns.print("Created:",createdcount)
-		ns.print("Aquired:",newcount)
-		ns.print("Released:",delcount)
-		ns.print("Cached:",cached())
+	function addon:CacheStats()
+		print("Created:",createdcount)
+		print("Aquired:",newcount)
+		print("Released:",delcount)
+		print("Cached:",cached())
 	end
 	--@end-debug@]===]
+end
+-- my implementation of tonumber which accounts for nan and inf
+---@function [parent=#ns] tonumber
+
+function ns.tonumber(value)
+	if value~=value then return nil
+	elseif value==math.huge then return nil
+	else return tonumber(value) or nil
+	end
+end
+-- my implementation of type which accounts for nan and inf
+---@function [parent=#ns] type
+function ns.type(value)
+	if value~=value then return nil
+	elseif value==math.huge then return nil
+	else return type(value)
+	end
+end
+ns.orig={}
+ns.over={}
+local orig=ns.orig
+local over=ns.over
+-- Blizzard functions override
+function ns.override(blizfunc,...)
+	local overrider=blizfunc
+	if select('#',...) > 0 then
+		blizfunc=strjoin('.',blizfunc,...)
+		overrider=strjoin('_',overrider,...)
+	end
+	assert(type(over[overrider])=="function",overrider)
+	if (orig[overrider]) then return end -- already hooked
+	local code="local orig,over,overrider=... orig[overrider]=_G."..blizfunc.." _G."..blizfunc.."=over[overrider]"
+	assert(loadstring(code, "Executing " ..code))(orig,over,overrider)
 end
 
 local stacklevel=0
 local frames
-function addon:holdEvents()
+function ns.holdEvents()
 	if stacklevel==0 then
 		frames={GetFramesRegisteredForEvent('GARRISON_FOLLOWER_LIST_UPDATE')}
 		for i=1,#frames do
@@ -102,7 +141,7 @@ function addon:holdEvents()
 	end
 	stacklevel=stacklevel+1
 end
-function addon:releaseEvents()
+function ns.releaseEvents()
 	stacklevel=stacklevel-1
 	assert(stacklevel>=0)
 	if (stacklevel==0) then
@@ -112,7 +151,6 @@ function addon:releaseEvents()
 		frames=nil
 	end
 end
-local holdEvents,releaseEvents=addon.holdEvents,addon.releaseEvents
 ns.OnLeave=function() GameTooltip:Hide() end
 local upgrades={
 	"wt:120302:1",
@@ -122,6 +160,7 @@ local upgrades={
 	"wf:114616:615",
 	"wf:114081:630",
 	"wf:114622:645",
+	"wf:128307:645",
 	"at:120301:1",
 	"ae:114745:3",
 	"ae:114808:6",
@@ -129,6 +168,7 @@ local upgrades={
 	"af:114807:615",
 	"af:114806:630",
 	"af:114746:645",
+	"af:128308:645",
 }
 local followerItems={}
 local items={
@@ -165,9 +205,24 @@ local items={
 [114086]={icon='inv_jewelry_necklace_70',quality=4},
 [114082]={icon='inv_bracer_cloth_reputation_c_01',quality=4},
 }
+local itemcaches={
+[118529]=655,--Cache of Highmaul Treasures,
+[122484]=670, --Blackrock Foundry Spoils,
+[128391]=685,--Iron Fleet Treasure Chest
+[122486]=700, --Blackrock Foundry Spoils
+[120301]=600, -- Folower Generic armor upgrade
+[120302]=600, -- Folower Generic weapon upgrade
+
+}
+function addon:GetTrueLevel(itemid,itemlevel)
+	return itemcaches[itemid] or itemlevel
+end
 for i=1,#upgrades do
 	local _,id,level=strsplit(':',upgrades[i])
-	followerItems[id]=level
+	followerItems[tonumber(id)]=level
+end
+function addon:IsFollowerUpgrade(id)
+	return followerItems[id]
 end
 function addon:GetUpgrades()
 	return upgrades
@@ -208,8 +263,120 @@ function addon:GetType(itemID)
 	if (followerItems[itemID]) then return "followerEquip" end
 	return "generic"
 end
+-- Thanks to wowheade
+ns.traitTable={
+[1]={
+	[45]="Cave Dweller",
+	[8]="Cold-Blooded",
+	[46]="Guerilla Fighter",
+	[48]="Marshwalker",
+	[7]="Mountaineer",
+	[44]="Naturalist",
+	[49]="Plainsrunner",
+	[9]="Wastelander",
+},
+[2]={
+	[326] = "Apexis Attenuation",
+	[80]  ="Extra Training",
+	[29]  ="Fast Learner",
+	[314] ="Greasemonkey",
+	[236] = "Heartstone Pro",
+	[248] = "Mentor",
+	[79]  ="Scavenger",
+	[256] ="Treasure Hunter",
+},
+[3]={
+	[77]="Burst of Power",
+	[221]="Epic Mount",
+	[76]="High Stamina",
+	[250]="Speed of Light",
+},
+[4]={
+	[201]="Combat Experience",
+	[303]="Demonic Knowledge",
+	[47]="Master Assassin",
+},
+[5]={
+	[244]="Brute",
+	[78]="Lone Wolf",
+},
+[6]={
+	[54]="Alchemy",
+	[227]="Angler",
+	[55]="Blacksmithing",
+	[231]="Bodyguard",
+	[56]="Enchanting",
+	[57]="Engineering",
+	[62]="Evergreen",
+	[53]="Herbalism",
+	[52]="Mining",
+	[58]="Inscription",
+	[59]="Jewelcrafting",
+	[60]="Leatherworking",
+	[62]="Skinning",
+	[61]="Tailoring",
+},
+[7]={
+	[67] = "Ally of Argus",
+	[254]= "Bird Watcher",
+	[69] = "Brew Aficionado",
+	[68] = "Canine Companion",
+	[70] = "Child of Draenor",
+	[66] = "Child of the Moon",
+	[71] = "Death Fascination",
+	[65] = "Dwarvenborn",
+	[75] = "Economist",
+	[74] = "Elvenkind",
+	[63] = "Gnome-Lover",
+	[64] = "Humanist",
+	[253]= "Mechano Affictionado",
+	[252]= "Ogre Buddy",
+	[72] = "Totemist",
+	[73] = "Voodoo Zealot",
+	[255]= "Wildling",
+},
+[8]={
+	[37]="Beastslayer",
+	[36]="Demonslayer",
+	[325]="Exorcist",
+	[41]="Furyslayer",
+	[40]="Gronnslayer",
+	[38]="Ogreslayer",
+	[4]="Orcslayer",
+	[39]="Primalslayer",
+	[43]="Talonslayer",
+	[42]="Voidslayer",
+},
+[9]={
+	[232]="Dancer"
+}
+}
 
+-- Pseudo Global Support.
+-- Calling ns.Configure() will give to the calling function a preloaded env
 
+local ENV={}
+
+for k,v in pairs(ns) do
+	ENV[k]=v
+end
+setmetatable(ENV,
+{__index=_G,
+__newindex=function(t,k,v)
+	assert(type(_G[k]) == 'nil',"Attempting to override global " ..k)
+	return rawset(t,k,v)
+end
+}
+)
+
+---@function [parent=#ns] Configure
+function ns.Configure()
+		local old_env = getfenv(2)
+		if old_env ~= _G and old_env ~= ENV then
+			error("The calling function has a modified environment, I won't replace it.", 2)
+		end
+		setfenv(2, ENV)
+end
 -------------------- to be estracted to CountersCache
 --
 --local G=C_Garrison
@@ -218,8 +385,21 @@ end
 --})
 --
 --
+--
 
---@non-debug@
-if true then return end
---@end-non-debug@
-
+--[[ TtraitTable generator
+local TT=C_Garrison.GetRecruiterAbilityList(true)
+local map={}
+local  keys={}
+for i,v in pairs(C_Garrison.GetRecruiterAbilityCategories()) do
+	keys[v]=i
+end
+for  _,trait in  pairs(TT) do
+	local key=keys[trait.category]
+	if type(map[key])~="table"  then
+			map[key]={}
+	end
+	map[key][trait.id]=trait.name
+end
+ATEINFO['abilities']=map
+--]]

@@ -59,7 +59,7 @@ L["TITAN_PANEL_REGISTER_START"] = "Enregistrement des plugins "..TITAN_PANEL..".
 L["TITAN_PANEL_REGISTER_END"] = "Enregistrement des plugins effectué."
 
 -- slash command help
-L["TITAN_PANEL_SLASH_RESET_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Utilisation: |cffffffff/tp {reset | reset tipfont/tipalpha/panelscale/spacing}";
+L["TITAN_PANEL_SLASH_RESET_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {reset | reset tipfont/tipalpha/panelscale/spacing}";
 L["TITAN_PANEL_SLASH_RESET_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset: | cffffffffRéinitialise les valeurs et positions de "..TITAN_PANEL..".";
 L["TITAN_PANEL_SLASH_RESET_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset tipfont: |cffffffffRéinitialise l'échelle des polices des tooltips de "..TITAN_PANEL..".";
 L["TITAN_PANEL_SLASH_RESET_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset tipalpha: |cffffffffRéinitialise la transparence des tooltips de "..TITAN_PANEL..".";
@@ -69,14 +69,16 @@ L["TITAN_PANEL_SLASH_GUI_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/t
 L["TITAN_PANEL_SLASH_GUI_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."gui control: |cffffffffOuvre le panneau de configuration de "..TITAN_PANEL..".";
 L["TITAN_PANEL_SLASH_GUI_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."gui trans: |cffffffffOuvre le panneau de configuration de la transparence.";
 L["TITAN_PANEL_SLASH_GUI_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."gui skin: |cffffffffOuvre le panneau de configuration des skins.";
-L["TITAN_PANEL_SLASH_PROFILE_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Utilisation: |cffffffff/titan {profile use <profile>}";
+L["TITAN_PANEL_SLASH_PROFILE_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {profile use <profile>}";
 L["TITAN_PANEL_SLASH_PROFILE_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."profile use <nom> <serveur>: |cffffffffcharge le profil choisi :";
 L["TITAN_PANEL_SLASH_PROFILE_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<nom>: |cffffffffle nom du personnage ou le profil personnalisé."
 L["TITAN_PANEL_SLASH_PROFILE_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<serveur>: |cffffffffle nom du serveur ou 'TitanCustomProfile'."
-L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Utilisation: |cffffffff/titan {help | help <topic>}";
-L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/help ";
-L["TITAN_PANEL_SLASH_ALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Utilisation: |cffffffff/titan <topic>";
-L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/help ";
+L["TITAN_PANEL_SLASH_SILENT_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {silent}";
+L["TITAN_PANEL_SLASH_SILENT_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."silent: |cffffffffToggles "..TITAN_PANEL.." pour charger silencieusement.";
+L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {help | help <topic>}";
+L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/silent/help ";
+L["TITAN_PANEL_SLASH_ALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan <topic>";
+L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/silent/help ";
 
 -- slash command responses
 L["TITAN_PANEL_SLASH_RESP1"] = LIGHTYELLOW_FONT_COLOR_CODE.."L'échelle des polices des tooltips de "..TITAN_PANEL.." a été réinitialisée.";
@@ -163,6 +165,7 @@ L["TITAN_PANEL_MENU_DISPLAY_ON_BAR"] = "Choisir la barre sur laquelle afficher l
 L["TITAN_PANEL_MENU_SHOW"] = "Afficher le plugin";
 L["TITAN_PANEL_MENU_PLUGIN_RESET"] = "Rafraîchir les plugins";
 L["TITAN_PANEL_MENU_PLUGIN_RESET_DESC"] = "Rafraîchit le texte et la position des plugins";
+L["TITAN_PANEL_MENU_SILENT_LOAD"] = "Chargement silencieux";
 
 -- localization strings for AceConfigDialog-3.0
 L["TITAN_ABOUT_VERSION"] = "Version";
@@ -248,28 +251,25 @@ L["TITAN_BAG_BACKPACK"] = "Sac à dos";
 L["TITAN_BAG_MENU_SHOW_USED_SLOTS"] = "Montrer les emplacements utilisés";
 L["TITAN_BAG_MENU_SHOW_AVAILABLE_SLOTS"] = "Montrer les emplacements libres";
 L["TITAN_BAG_MENU_SHOW_DETAILED"] = "Afficher les détails";
-L["TITAN_BAG_MENU_IGNORE_SLOTS"] = "Ignorer les emplacements"; -- ??
+L["TITAN_BAG_MENU_IGNORE_SLOTS"] = "Ignorer les sacs de métiers";
 L["TITAN_BAG_MENU_IGNORE_PROF_BAGS_SLOTS"] = "Ignorer les emplacements des sacs spécifiques aux métiers";
-L["TITAN_BAG_PROF_BAG_NAMES"] = {
--- enchanting
-"Bourse enchantée en tisse-mage","Sac de soirée enchanteur en exclusivité pour La Tannée","Sac enchanté en étoffe runique","Sacoche d'enchanteur","Grand sac d'enchantement","Sac du feu-sorcier","Sac mystérieux","Sac surnaturel",
--- engineering
-"Sac de haute technologie « Maddy » par La Tannée","Lourde boîte à outils","Boîte à outils en gangrefer","Boîte à outils en titane","Boîte à outils en élémentium",
--- herbalism
-"Bourse d'herbes","Sac fourre-tout d'herboriste « T vert » par La Tannée","Sac d'herbes cénarien","Sacoche de Cénarius","Sac de botanique de Mycah","Sac émeraude","Sac d'expédition d'Hyjal",
--- inscription
-"Sacoche d'étudiant « Xandera » par La Tannée","Sacoche de calligraphie","Sac des poches infinies",
--- jewelcrafting
-"Pochette brodée de gemmes en exclusivité pour La Tannée","Bourse de gemmes","Sac de joyaux",
--- leatherworking
-"Sac en cuir « Meeya » par La Tannée","Sacoche de travailleur du cuir","Sac des nombreuses peaux","Sac de voyage de trappeur",
--- mining
-"Sac à métaux précieux « Christina » par La Tannée","Sac de mineur","Sac de mineur renforcé","Sac de mineur colossal",
--- Fishing
-"Boîte d'appâts du maître des leurres",
--- Cooking
-"Réfrigérateur portable",
-};
+
+L["TITAN_BAG_PROF_BAG_ENCHANTING"] = {
+"Bourse enchantée en tisse-mage","Sac de soirée enchanteur en exclusivité pour La Tannée","Sac enchanté en étoffe runique","Sacoche d'enchanteur","Grand sac d'enchantement","Sac du feu-sorcier","Sac mystérieux","Sac surnaturel"};
+L["TITAN_BAG_PROF_BAG_ENGINEERING"] = {
+"Sac de haute technologie « Maddy » par La Tannée","Lourde boîte à outils","Boîte à outils en gangrefer","Boîte à outils en titane","Boîte à outils en élémentium"};
+L["TITAN_BAG_PROF_BAG_HERBALISM"] = {
+"Bourse d'herbes","Sac fourre-tout d'herboriste « T vert » par La Tannée","Sac d'herbes cénarien","Sacoche de Cénarius","Sac de botanique de Mycah","Sac émeraude","Sac d'expédition d'Hyjal"};
+L["TITAN_BAG_PROF_BAG_INSCRIPTION"] = {
+"Sacoche d'étudiant « Xandera » par La Tannée","Sacoche de calligraphie","Sac des poches infinies", "Sac de calligraphie bruni"};
+L["TITAN_BAG_PROF_BAG_JEWELCRAFTING"] = {
+"Pochette brodée de gemmes en exclusivité pour La Tannée","Bourse de gemmes","Sac de joyaux"};
+L["TITAN_BAG_PROF_BAG_LEATHERWORKING"] = {
+"Sac en cuir « Meeya » par La Tannée","Sacoche de travailleur du cuir","Sac des nombreuses peaux","Sac de voyage de trappeur", "Sac en cuir bruni"};
+L["TITAN_BAG_PROF_BAG_MINING"] = {
+"Sac à métaux précieux « Christina » par La Tannée","Sac de mineur","Sac de mineur renforcé","Sac de mineur colossal", "Sac de mineur bruni"};
+L["TITAN_BAG_PROF_BAG_FISHING"] = {"Boîte d'appâts du maître des leurres"};
+L["TITAN_BAG_PROF_BAG_COOKING"] = {"Réfrigérateur portable", "Unité réfrigérante améliorée"};
 
 L["TITAN_CLOCK_TOOLTIP"] = "Horloge";
 L["TITAN_CLOCK_TOOLTIP_VALUE"] = "Décalage horaire : ";
@@ -294,30 +294,30 @@ L["TITAN_CLOCK_MENU_HIDE_GAMETIME"] = "Cacher le bouton du calendrier";
 L["TITAN_CLOCK_MENU_HIDE_MAPTIME"] = "Cacher le bouton d'horloge";
 L["TITAN_CLOCK_MENU_HIDE_CALENDAR"] = "Cacher le bouton du calendrier";
 
-L["TITAN_COORDS_FORMAT"] = "(%.d, %.d)";
-L["TITAN_COORDS_FORMAT2"] = "(%.1f, %.1f)";
-L["TITAN_COORDS_FORMAT3"] = "(%.2f, %.2f)";
-L["TITAN_COORDS_FORMAT_LABEL"] = "(xx , yy)";
-L["TITAN_COORDS_FORMAT2_LABEL"] = "(xx.x , yy.y)";
-L["TITAN_COORDS_FORMAT3_LABEL"] = "(xx.xx , yy.yy)";
-L["TITAN_COORDS_FORMAT_COORD_LABEL"] = "Format des coordonnées";
-L["TITAN_COORDS_BUTTON_LABEL"] = "Pos. : ";
-L["TITAN_COORDS_TOOLTIP"] = "Info de position";
-L["TITAN_COORDS_TOOLTIP_HINTS_1"] = "Astuce : shift-clic-gauche pour ajouter";
-L["TITAN_COORDS_TOOLTIP_HINTS_2"] = "l'info de position dans les dialogues.";
-L["TITAN_COORDS_TOOLTIP_ZONE"] = "Zone : ";
-L["TITAN_COORDS_TOOLTIP_SUBZONE"] = "Sous Zone : ";
-L["TITAN_COORDS_TOOLTIP_PVPINFO"] = "Info JCJ : ";
-L["TITAN_COORDS_TOOLTIP_HOMELOCATION"] = "Position du foyer";
-L["TITAN_COORDS_TOOLTIP_INN"] = "Auberge : ";
-L["TITAN_COORDS_MENU_TEXT"] = "Position";
-L["TITAN_COORDS_MENU_SHOW_ZONE_ON_PANEL_TEXT"] = "Montrer le texte de la zone";
-L["TITAN_COORDS_MENU_SHOW_COORDS_ON_MAP_TEXT"] = "Montrer les coordonnées sur la carte du monde";
-L["TITAN_COORDS_MAP_CURSOR_COORDS_TEXT"] = "Curseur : %s";
-L["TITAN_COORDS_MAP_PLAYER_COORDS_TEXT"] = "Joueur : %s";
-L["TITAN_COORDS_NO_COORDS"] = "Pas de coords";
-L["TITAN_COORDS_MENU_SHOW_LOC_ON_MINIMAP_TEXT"] = "Montrer la zone au dessus de la minicarte";
-L["TITAN_COORDS_MENU_UPDATE_WORLD_MAP"] = "Mettre à jour la carte du monde lors de changements de zone";
+L["TITAN_LOCATION_FORMAT"] = "(%.d, %.d)";
+L["TITAN_LOCATION_FORMAT2"] = "(%.1f, %.1f)";
+L["TITAN_LOCATION_FORMAT3"] = "(%.2f, %.2f)";
+L["TITAN_LOCATION_FORMAT_LABEL"] = "(xx , yy)";
+L["TITAN_LOCATION_FORMAT2_LABEL"] = "(xx.x , yy.y)";
+L["TITAN_LOCATION_FORMAT3_LABEL"] = "(xx.xx , yy.yy)";
+L["TITAN_LOCATION_FORMAT_COORD_LABEL"] = "Format des coordonnées";
+L["TITAN_LOCATION_BUTTON_LABEL"] = "Pos. : ";
+L["TITAN_LOCATION_TOOLTIP"] = "Info de position";
+L["TITAN_LOCATION_TOOLTIP_HINTS_1"] = "Astuce : shift-clic-gauche pour ajouter";
+L["TITAN_LOCATION_TOOLTIP_HINTS_2"] = "l'info de position dans les dialogues.";
+L["TITAN_LOCATION_TOOLTIP_ZONE"] = "Zone : ";
+L["TITAN_LOCATION_TOOLTIP_SUBZONE"] = "Sous Zone : ";
+L["TITAN_LOCATION_TOOLTIP_PVPINFO"] = "Info JCJ : ";
+L["TITAN_LOCATION_TOOLTIP_HOMELOCATION"] = "Position du foyer";
+L["TITAN_LOCATION_TOOLTIP_INN"] = "Auberge : ";
+L["TITAN_LOCATION_MENU_TEXT"] = "Position";
+L["TITAN_LOCATION_MENU_SHOW_ZONE_ON_PANEL_TEXT"] = "Montrer le texte de la zone";
+L["TITAN_LOCATION_MENU_SHOW_COORDS_ON_MAP_TEXT"] = "Montrer les coordonnées sur la carte du monde";
+L["TITAN_LOCATION_MAP_CURSOR_COORDS_TEXT"] = "Curseur : %s";
+L["TITAN_LOCATION_MAP_PLAYER_COORDS_TEXT"] = "Joueur : %s";
+L["TITAN_LOCATION_NO_COORDS"] = "Pas de coords";
+L["TITAN_LOCATION_MENU_SHOW_LOC_ON_MINIMAP_TEXT"] = "Montrer la zone au dessus de la minicarte";
+L["TITAN_LOCATION_MENU_UPDATE_WORLD_MAP"] = "Mettre à jour la carte du monde lors de changements de zone";
 
 L["TITAN_FPS_FORMAT"] = "%.1f";
 L["TITAN_FPS_BUTTON_LABEL"] = "IPS : ";
@@ -366,8 +366,6 @@ L["TITAN_MEMORY_TOOLTIP_CURRENT_MEMORY"] = "Actuel : ";
 L["TITAN_MEMORY_TOOLTIP_INITIAL_MEMORY"] = "Initial : ";
 L["TITAN_MEMORY_TOOLTIP_INCREASING_RATE"] = "Taux d'augmentation : ";
 L["TITAN_MEMORY_KBMB_LABEL"] = "Ko/Mo";
-
-L["TITAN_MONEY_FORMAT"] = "%d".."o"..", %02d".."a"..", %02d".."c";
 
 L["TITAN_PERFORMANCE_TOOLTIP"] = "Performances";
 L["TITAN_PERFORMANCE_MENU_TEXT"] = "Performances";
@@ -486,8 +484,6 @@ L["TITAN_REPAIR_GBANK_NORIGHTS"] = "Vous n'êtes soit pas dans une guilde, soit 
 L["TITAN_REPAIR_CANNOT_AFFORD"] = "Vous n'avez pas assez pour payer les réparations."
 L["TITAN_REPAIR_REPORT_COST_MENU"] = "Annoncer les coût de réparation sur le chat"
 L["TITAN_REPAIR_REPORT_COST_CHAT"] = "Coût des réparations : "
-
---	L["TITAN_PLUGINS_MENU_TITLE"] = "Plug-ins";
 
 L["TITAN_GOLD_TOOLTIPTEXT"] = "Or total sur";
 L["TITAN_GOLD_ITEMNAME"] = "Titan Gold";

@@ -2,7 +2,7 @@
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: Mar 11, 2015@13282
+-- Last update: Jul 8 2015, 8:04 UTC@14062
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
@@ -83,7 +83,7 @@ L.ModelSoundOptions			= "为模型查看器设置声音选项"
 L.ModelSoundShort			= "短"
 L.ModelSoundLong			= "长"
 
-L.Button_RangeFrame			= "显示/隐藏距离监视信息框体"
+L.Button_RangeFrame			= "显示/隐藏距离雷达框体"
 L.Button_InfoFrame			= "显示/隐藏信息框体"
 L.Button_TestBars			= "测试计时条"
 
@@ -122,7 +122,7 @@ L.ShowLoadMessage 			= "在聊天窗口中显示模块载入信息"
 L.ShowPizzaMessage 			= "在聊天窗口中显示计时条广播信息"
 L.ShowCombatLogMessage 		= "在聊天窗口中显示DBM战斗记录"
 L.ShowTranscriptorMessage	= "在聊天窗口中显示DBM Transcriptor 记录"
-L.ShowAllVersions	 		= "在聊天窗口中显示所有团员的Boss模组版本"
+L.ShowAllVersions	 		= "当执行版本检查时,在聊天窗口中显示所有团员的Boss模组版本(如果禁用，仍旧显示过期/目前总结)"
 L.CombatMessages			= "战斗信息设置"
 L.ShowEngageMessage 		= "在聊天窗口中显示开战信息"
 L.ShowKillMessage 			= "在聊天窗口中显示击杀信息"
@@ -130,9 +130,10 @@ L.ShowWipeMessage 			= "在聊天窗口中显示灭团信息"
 L.ShowGuildMessages 		= "在聊天窗口中显示工会开战，击杀，灭团信息"
 L.ShowRecoveryMessage 		= "在聊天窗口中显示计时条恢复信息"
 L.WhisperMessages			= "密语信息设置"
-L.AutoRespond 				= "在战斗中自动回复他人密语"
-L.EnableStatus 				= "回复“status”密语"
-L.WhisperStats 				= "在回复的密语中包含击杀或灭团次数统计信息"
+L.AutoRespond 				= "在战斗中自动回复私聊"
+L.EnableStatus 				= "回复“status”私聊当前战斗信息"
+L.WhisperStats 				= "在回复的私聊中包含击杀或灭团次数统计信息"
+L.DisableStatusWhisper 		= "屏蔽全团成员的自动回复私聊(需要团长权限)。只对普通/英雄/神话团队和挑战/神话五人小队有效。"
 
 -- Tab: Barsetup
 L.BarSetup   				= "计时条设置"
@@ -149,6 +150,23 @@ L.Slider_BarOffSetX 		= "X偏移: %d"
 L.Slider_BarOffSetY 		= "Y偏移: %d"
 L.Slider_BarWidth 			= "宽度: %d"
 L.Slider_BarScale 			= "缩放: %0.2f"
+
+--Types
+L.BarStartColorAdd			= "初始颜色 (小怪入场)"
+L.BarEndColorAdd			= "结束颜色 (小怪入场)"
+L.BarStartColorAOE			= "初始颜色 (AOE)"
+L.BarEndColorAOE			= "结束颜色 (AOE)"
+L.BarStartColorDebuff		= "初始颜色 (点名技能)"
+L.BarEndColorDebuff			= "结束颜色 (点名技能)"
+L.BarStartColorInterrupt	= "初始颜色 (打断)"
+L.BarEndColorInterrupt		= "结束颜色 (打断)"
+L.BarStartColorRole			= "初始颜色 (Role)"
+L.BarEndColorRole			= "结束颜色 (Role)"
+L.BarStartColorPhase		= "初始颜色 (阶段转换)"
+L.BarEndColorPhase			= "结束颜色 (阶段转换)"
+
+-- Tab: Timers
+L.AreaTitle_BarColors		= "按类型分类着色"
 L.AreaTitle_BarSetup 		= "计时条综合设置"
 L.AreaTitle_BarSetupSmall 	= "小型计时条设置"
 L.AreaTitle_BarSetupHuge 	= "大型计时条设置"
@@ -165,28 +183,47 @@ L.Bar_EnlargePercent		= "在%0.1f%%后计时条变大"
 L.BarSpark					= "计时条闪光"
 L.BarFlash					= "当计时条快走完时闪动"
 L.BarSort					= "按剩余时间排序"
+L.BarColorByType			= "计时条按类型分类着色"
 
 -- Tab: Spec Warn Frame
 L.Panel_SpecWarnFrame		= "特殊警报"
 L.Area_SpecWarn				= "特殊警报设置"
-L.SpecWarn_Enabled			= "显示首领技能特殊警报"
 L.SpecWarn_ClassColor		= "为特殊警报启用分职业着色"
-L.SpecWarn_FlashFrame		= "特殊警报时屏幕边缘泛光"
 L.ShowSWarningsInChat 		= "在聊天窗口中显示特殊警报"
+L.SWarnNameInNote			= "使用自定义注记的特殊警报请选择SW5"
+L.SpecWarn_FlashFrame		= "特殊警报时屏幕边缘泛光"
+L.SpecWarn_FlashFrameRepeat	= "重复 %d 次 (如果开启的话)"
 L.SpecWarn_Font				= "特殊警报字体"
 L.SpecWarn_FontSize			= "字体大小: %d"
 L.SpecWarn_FontColor		= "字体颜色"
 L.SpecWarn_FontType			= "选择字体"
+L.SpecWarn_FlashRepeat		= "重复泛光"
 L.SpecWarn_FlashColor		= "泛光顏色 (%d)"
 L.SpecWarn_FlashDur			= "泛光持续时间: %0.1f"
 L.SpecWarn_FlashAlpha		= "泛光透明度: %0.1f"
 L.SpecWarn_DemoButton		= "测试警报"
 L.SpecWarn_MoveMe			= "设置位置"
 L.SpecWarn_ResetMe			= "重置"
-L.SpecialWarnSound			= "针对你发出特殊警报时播放的声音"
+L.SpecialWarnSound			= "针对你的行为发出特殊警报时播放的声音"
 L.SpecialWarnSound2			= "针对所有人发出特殊警报时播放的声音(默认:当心)"
 L.SpecialWarnSound3			= "针对非常重要事件(灭团点)的特殊警报播放的声音(默认:毁灭)"
 L.SpecialWarnSound4			= "特殊警报: 快跑啊 小女孩"
+L.SpecialWarnSound5			= "使用自定义注记特殊警报的声音"
+
+-- Tab: Heads Up Display Frame
+L.Panel_HUD					= "抬头显示设置(HUD)"
+L.Area_HUDOptions			= "HUD 选项"
+L.HUDColorOverride			= "全局HUD颜色"
+L.HUDSizeOverride			= "全局HUD大小"
+L.HUDAlphaOverride			= "全局HUD透明度"
+L.HUDTextureOverride		= "全局HUD材质 (当团队标记作为材质时不适用)"
+L.HUDColorSelect			= "HUD 颜色 %d"
+L.HUDTextureSelect1			= "选择主要HUD材质"
+L.HUDTextureSelect2			= "选择次要HUD材质"
+L.HUDTextureSelect3			= "选择第三HUD材质"
+L.HUDTextureSelect4			= "选择'跑向'HUD材质"
+L.HUDSizeSlider				= "圆环半径 %0.1f."
+L.HUDAlphaSlider			= "透明度: %0.1f"
 
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "语音警告"
@@ -217,14 +254,17 @@ L.BarWidth					= "计量条宽度: %d"
 L.Panel_SpamFilter			= "DBM全局及信息过滤"
 L.Area_SpamFilter_Outgoing	= "DBM全局过滤设置"
 L.SpamBlockNoShowAnnounce	= "不显示警报或播放警报音效"
-L.SpamBlockNoSendWhisper	= "不发送悄悄话提示给其他玩家"
+L.SpamBlockNoSpecWarn		= "不要显示特殊特殊警报和特殊警报音效"
+L.SpamBlockNoShowTimers		= "不显示计时器"
 L.SpamBlockNoSetIcon		= "不设定标记在目标上"
-L.SpamBlockNoRangeFrame		= "不显示距离监视器"
-L.SpamBlockNoInfoFrame		= "不显示信息监视器"
+L.SpamBlockNoRangeFrame		= "不显示距离雷达框体"
+L.SpamBlockNoInfoFrame		= "不显示信息框体"
 L.SpamBlockNoHudMap			= "不显示HudMap"
 
 L.SpamBlockNoHealthFrame	= "不显示生命值监视器"
-L.SpamBlockNoCountdowns		= "不要播放倒数"
+L.SpamBlockNoCountdowns		= "不要播放倒数语音"
+L.SpamBlockNoYells			= "不要再战斗中大喊我中了..."
+L.SpamBlockNoNoteSync		= "不接受别人分享的自定义注记"
 L.SpamBlockNoIconRestore	= "当战斗结束后不保存团队标记状态(大饼 星星 月亮 方块这些)"
 L.SpamBlockNoRangeRestore	= "当boss暂时消失时不恢复距离指示器"
 
@@ -287,6 +327,8 @@ L.AutoAcceptFriendInvite	= "自动接受来自好友列表里的好友的组队�
 L.AutoAcceptGuildInvite		= "自动接受同工会成员的组队邀请"
 L.Area_Advanced				= "高级选项"
 L.FakeBW					= "当检查Bigwig时，假装DBM就是Bigwig"
+L.AITimer					= "DBM为没遇见过的战斗使用人工智能自动产生计时器(在初期的Beta或PTR的Boss测试非常有帮助)。此功能不会对多目标技能生效。"
+L.AutoCorrectTimer			= "自动校正时间过长的计时器(适合在公会正在进行全新副本而DBM模块还没被更新至可靠的程度)。这选项可能会使某些计时器错乱，如Boss在阶段转换时重置技能CD而DBM实在无能为力o_O"
 
 L.PizzaTimer_Headline 		= '创造一个自定义计时器'
 L.PizzaTimer_Title			= '名字 (如 “泡面倒计时”)'
@@ -314,7 +356,8 @@ L.ModAllReset				= "重置所有Boss模块选项"
 L.ModAllStatReset			= "重置所有Boss模块状态"
 L.SelectModProfileCopy		= "复制所有选项："
 L.SelectModProfileCopySound	= "只复制声音选项："
-L.SelectModProfileDelete	= "删除Boss模块选项："
+L.SelectModProfileCopyNote	= "只复制自定义注记："
+L.SelectModProfileDelete	= "删除Boss模块设置："
 
 -- Misc
 L.FontHeight	= 20

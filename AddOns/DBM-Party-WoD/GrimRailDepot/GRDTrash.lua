@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GRDTrash", "DBM-Party-WoD", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -28,7 +28,6 @@ local specWarnShrapnelblast				= mod:NewSpecialWarningMove(166675, "Tank", nil, 
 local specWarnThunderzone				= mod:NewSpecialWarningMove(166340)
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 function mod:FlametongueTarget(targetname, uId)
 	if not targetname then return end

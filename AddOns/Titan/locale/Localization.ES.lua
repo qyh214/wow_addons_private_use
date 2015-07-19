@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("Titan","esES")
+local L = LibStub("AceLocale-3.0"):NewLocale("Titan","esES")
 if not L then return end
 
 L["TITAN_DEBUG"] = "<Titan>";
@@ -58,9 +58,9 @@ L["TITAN_PANEL_CHARS_DELETE_BUTTON"] = "Borrar datos del persojane"
 L["TITAN_PANEL_CHARS_DELETE_MSG"] = "eliminados los datos del personaje."
 L["TITAN_PANEL_REGISTER_START"] = "Registrar plugins de "..TITAN_PANEL.."..."
 L["TITAN_PANEL_REGISTER_END"] = "Proceso de registro completado."
-  
+
 -- slash command help
-L["TITAN_PANEL_SLASH_RESET_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {reset | reset tipfont/tipalpha/panelscale/spacing}";
+L["TITAN_PANEL_SLASH_RESET_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Uso: |cffffffff/titan {reset | reset tipfont/tipalpha/panelscale/spacing}";
 L["TITAN_PANEL_SLASH_RESET_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset: |cffffffffResetea "..TITAN_PANEL.." a sus valores y posiciones por defecto.";
 L["TITAN_PANEL_SLASH_RESET_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset tipfont: |cffffffffResetea la escala de la fuente en los tooltips a su valor por defecto.";
 L["TITAN_PANEL_SLASH_RESET_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset tipalpha: |cffffffffResetea la transparencia de los tooltips a su valor por defecto.";
@@ -74,10 +74,12 @@ L["TITAN_PANEL_SLASH_PROFILE_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Uso: |cffffffff
 L["TITAN_PANEL_SLASH_PROFILE_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."profile use <nombre> <servidor>: |cffffffffActiva el perfil grabado.";
 L["TITAN_PANEL_SLASH_PROFILE_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<nombre>: |cffffffffpuede ser tanto un nombre de personaje como el nombre de un perfil personalizado."
 L["TITAN_PANEL_SLASH_PROFILE_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<servidor>: |cffffffffpuede ser el nombre del servidor o 'TitanCustomProfile'."
+L["TITAN_PANEL_SLASH_SILENT_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Uso: |cffffffff/titan {silent}";
+L["TITAN_PANEL_SLASH_SILENT_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."silent: |cffffffffOrdena a "..TITAN_PANEL.." que cargue silenciosamente.";
 L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Uso: |cffffffff/titan {help | help <topic>}";
-L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/help ";
+L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/silent/help ";
 L["TITAN_PANEL_SLASH_ALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Uso: |cffffffff/titan <topic>";
-L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/help ";
+L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/silent/help ";
 
 -- slash command responses
 L["TITAN_PANEL_SLASH_RESP1"] = LIGHTYELLOW_FONT_COLOR_CODE.."La escala de la fuente en los tooltips de Titan Panel ha sido reseteada.";
@@ -132,7 +134,6 @@ L["TITAN_PANEL_MENU_MANAGE_SETTINGS"] = "Gestionar";
 L["TITAN_PANEL_MENU_LOAD_SETTINGS"] = "Cargar ajustes";
 L["TITAN_PANEL_MENU_DELETE_SETTINGS"] = "Borrar";
 L["TITAN_PANEL_MENU_SAVE_SETTINGS"] = "Grabar";
---L["TITAN_PANEL_MENU_DOUBLE_BAR"] = "Barra superior doble";
 L["TITAN_PANEL_MENU_CONFIGURATION"] = "Configuración";
 L["TITAN_PANEL_OPTIONS"] = "Opciones";
 L["TITAN_PANEL_MENU_TOP"] = "Superior"
@@ -176,6 +177,7 @@ L["TITAN_PANEL_MENU_DISPLAY_ON_BAR"] = "Elige en qué barra se mostrará el plug
 L["TITAN_PANEL_MENU_SHOW"] = "Mostrar plugin";
 L["TITAN_PANEL_MENU_PLUGIN_RESET"] = "Actualizar plugins";
 L["TITAN_PANEL_MENU_PLUGIN_RESET_DESC"] = "Actualizar texto y posición de plugin";
+L["TITAN_PANEL_MENU_SILENT_LOAD"] = "Carga silenciosa";
 
 -- localization strings for AceConfigDialog-3.0     
 L["TITAN_ABOUT_VERSION"] = "Versión";
@@ -226,7 +228,6 @@ L["TITAN_SKINS_NAME_DESC"] = "Introduce un nombre para tu nuevo skin. Se usará 
 L["TITAN_SKINS_NAME_EXAMPLE"] = "ejemplo: mi skin Titan";
 L["TITAN_SKINS_PATH_TITLE"] = "<Ruta del skin>";
 L["TITAN_SKINS_PATH_DESC"] = "<Ruta del skin> en el directorio de instalación de "..TITAN_PANEL..". Mirar el ejemplo superior." 
---L["TITAN_SKINS_PATH_EXAMPLE"] = "ejemplo: Interface\\AddOns\\Titan\\Artwork\\Custom\\<directorio de mi skin>\\";
 L["TITAN_SKINS_ADD_HEADER"] = "Añadir skin";
 L["TITAN_SKINS_ADD_DESC"] = "Añade un nuevo skin a la lista de skins disponibles para el Panel.";
 L["TITAN_SKINS_REMOVE_HEADER"] = "Eliminar skin";
@@ -235,7 +236,6 @@ L["TITAN_SKINS_REMOVE_BUTTON"] = "Eliminar";
 L["TITAN_SKINS_REMOVE_BUTTON_DESC"] = "Elimina el skin selecionado de la lista de skins disponibles para el Panel.";
 L["TITAN_SKINS_REMOVE_NOTES"] = "Serás el único responsable si eliminas cualquier skin personalizado no deseado "
 	.." del directorio de instalación de "..TITAN_PANEL..". Los addons no pueden añadir o eliminar archivos."
---L["TITAN_SKINS_NOTES"] = "|cff19ff19Notas:|r Al añadir un nuevo skin, por favor asegurate de que el directorio que contiene tus imágenes personalizadas ha sido creado antes de cargar 'World of Warcraft' y que la ruta introducida corresponde a ese directorio exactamente (las rutas son sensibles a mayúsculas y minúsculas y siempre acaban con el carácter '\\')..";
 L["TITAN_SKINS_RESET_DEFAULTS_TITLE"] = "Resetear lista";
 L["TITAN_SKINS_RESET_DEFAULTS_DESC"] = "Resetea la lista de skins a sus valores por defecto, los skins incluidos de serie.";
 L["TITAN_PANEL_MENU_LSM_FONTS_DESC"] = "Elige el tipo de letra utilizado por los diferentes plugins en las barras "..TITAN_PANEL..".";
@@ -253,7 +253,6 @@ L["TITAN_PANEL_MENU_ADV_VEHICLE"] = "Vehículo";
 L["TITAN_PANEL_MENU_ADV_VEHICLE_DESC"] = "Cambia el valor (habitualmente incrementándolo) si los marcos no se ajustan al entrar o salir de un vehículo.";
 
 L["TITAN_AUTOHIDE_TOOLTIP"] = "Activar/Desactivar la característica de auto-ocultación de "..TITAN_PANEL;
---L["TITAN_AUTOHIDE_MENU_TEXT"] = "Auto-ocultar";
 
 L["TITAN_BAG_FORMAT"] = "%d/%d";
 L["TITAN_BAG_BUTTON_LABEL"] = "Bolsas: ";
@@ -267,31 +266,7 @@ L["TITAN_BAG_MENU_SHOW_USED_SLOTS"] = "Mostrar huecos usados";
 L["TITAN_BAG_MENU_SHOW_AVAILABLE_SLOTS"] = "Mostrar huecos libres";
 L["TITAN_BAG_MENU_SHOW_DETAILED"] = "Mostrar tooltip detallado";
 L["TITAN_BAG_MENU_IGNORE_SLOTS"] = "Ignorar bolsas";
---L["TITAN_BAG_MENU_IGNORE_AMMO_POUCH_SLOTS"] = "Ignorar bolsas de munición";
---L["TITAN_BAG_MENU_IGNORE_SHARD_BAGS_SLOTS"] = "Ignorar bolsas de almas";
 L["TITAN_BAG_MENU_IGNORE_PROF_BAGS_SLOTS"] = "Ignorar bolsas de profesión";
---L["TITAN_BAG_SHARD_BAG_NAMES"] = {"Faltriquera de almas", "Bolsa de tela vil", "Bolsa de tela vil del Núcleo", "Bolsa de las Sombras de ébano", "Faltriquera de almas pequeña", "Caja de almas"};
---L["TITAN_BAG_AMMO_POUCH_NAMES"] = {"munición", "Carcaj", "Bandolera", "pólvora", "lámina"};
-L["TITAN_BAG_PROF_BAG_NAMES"] = {
--- Enchanting (blue)
-"Faltriquera de tejido mágico encantada","Bolsa de paño rúnico encantada","Cartera de encantador","Bolsa de encantamiento grande","Bolsa de fuego de hechizo","Bolsa misteriosa","Bolsa de otro mundo","Bolso de noche encantador \"Trasportín exclusivo\"",
--- Engineering (orange)
-"Caja de herramientas pesada","Caja de herramientas de hierro vil","Caja de herramientas de titanio","Caja de herramientas de elementium","Bolsa de alta tecnología \"Transportín Maddy\"",
--- Herbalism (green)
-"Faltriquera de hierbas","Bolsa de hierbas Cenarion","Cartera de Cenarius","Bolsa de expedición de Hyjal","Bolsa esmeralda","Bolsa Botánica de Mycah","Portahierbas \"Trasportín ecológico\"",
--- Inscription (purple)
-"Cartera de escriba","Bolsa de bolsillos infinitos","Cartera de estudiante \"Transportín Xandera\"",
--- Jewelcrafting (red)
-"Faltriquera de gemas","Bolsa de joyas","Agarre con tachuelas de gemas \"Trasportín exclusivo\"",
--- Leatherworking (brown)
-"Cartera de peletero","Mochila de viaje de trampero","Bolsa de muchos pellejos","Bolsa de cuero \"Transportín Meeya\"",
--- Mining (white)
-"Saco de minero","Bolsa de minero reforzada","Bolsa de minero descomunal","Bolsa de metal precioso \"Trasportín Christina\"",
--- Fishing (cyan)
-"Caja de aparejos \"Maestro del Cebo\"",
--- Cooking (magenta)
-"Refrigerador portátil",
-};
 
 L["TITAN_BAG_PROF_BAG_ENCHANTING"] = {
 "Faltriquera de tejido mágico encantada","Bolsa de paño rúnico encantada","Cartera de encantador","Bolsa de encantamiento grande","Bolsa de fuego de hechizo","Bolsa misteriosa","Bolsa de otro mundo","Bolso de noche encantador \"Trasportín exclusivo\""};
@@ -300,18 +275,15 @@ L["TITAN_BAG_PROF_BAG_ENGINEERING"] = {
 L["TITAN_BAG_PROF_BAG_HERBALISM"] = {
 "Faltriquera de hierbas","Bolsa de hierbas Cenarion","Cartera de Cenarius","Bolsa de expedición de Hyjal","Bolsa esmeralda","Bolsa Botánica de Mycah","Portahierbas \"Trasportín ecológico\""};
 L["TITAN_BAG_PROF_BAG_INSCRIPTION"] = {
-"Cartera de escriba","Bolsa de bolsillos infinitos","Cartera de estudiante \"Transportín Xandera\""};
+"Cartera de escriba","Bolsa de bolsillos infinitos","Cartera de estudiante \"Transportín Xandera\"", "Bolsa pulida de inscripción"};
 L["TITAN_BAG_PROF_BAG_JEWELCRAFTING"] = {
 "Faltriquera de gemas","Bolsa de joyas","Agarre con tachuelas de gemas \"Trasportín exclusivo\""};
 L["TITAN_BAG_PROF_BAG_LEATHERWORKING"] = {
-"Cartera de peletero","Mochila de viaje de trampero","Bolsa de muchos pellejos","Bolsa de cuero \"Transportín Meeya\""};
+"Cartera de peletero","Mochila de viaje de trampero","Bolsa de muchos pellejos","Bolsa de cuero \"Transportín Meeya\"", "Bolsa pulida de piel"};
 L["TITAN_BAG_PROF_BAG_MINING"] = {
-"Saco de minero","Bolsa de minero reforzada","Bolsa de minero descomunal","Bolsa de metal precioso \"Trasportín Christina\""};
+"Saco de minero","Bolsa de minero reforzada","Bolsa de minero descomunal","Bolsa de metal precioso \"Trasportín Christina\"", "Bolsa pulida de minería"};
 L["TITAN_BAG_PROF_BAG_FISHING"] = {"Caja de aparejos \"Maestro del Cebo\""};
-L["TITAN_BAG_PROF_BAG_COOKING"] = {"Refrigerador portátil"};
-
---L["TITAN_BGMINIMAP_MENU_TEXT"] = "Campo de Batalla en minimapa"
---L["TITAN_BGMINIMAP_TOOLTIP"] = "Botón Campode Batalla en minimapa"
+L["TITAN_BAG_PROF_BAG_COOKING"] = {"Refrigerador portátil", "Unidad de refrigeración avanzada"};
 
 L["TITAN_CLOCK_TOOLTIP"] = "Reloj";
 L["TITAN_CLOCK_TOOLTIP_VALUE"] = "Ajuste horario: ";
@@ -336,31 +308,30 @@ L["TITAN_CLOCK_MENU_HIDE_GAMETIME"] = "Ocultar botón de hora/calendario";
 L["TITAN_CLOCK_MENU_HIDE_MAPTIME"] = "Ocultar botón de hora";
 L["TITAN_CLOCK_MENU_HIDE_CALENDAR"] = "Ocultar botón de calendario";
 
-
-L["TITAN_COORDS_FORMAT"] = "(%.d, %.d)";
-L["TITAN_COORDS_FORMAT2"] = "(%.1f, %.1f)";
-L["TITAN_COORDS_FORMAT3"] = "(%.2f, %.2f)";
-L["TITAN_COORDS_FORMAT_LABEL"] = "(xx , yy)";
-L["TITAN_COORDS_FORMAT2_LABEL"] = "(xx.x , yy.y)";
-L["TITAN_COORDS_FORMAT3_LABEL"] = "(xx.xx , yy.yy)";
-L["TITAN_COORDS_FORMAT_COORD_LABEL"] = "Formato de coordenadas";
-L["TITAN_COORDS_BUTTON_LABEL"] = "Loc: ";
-L["TITAN_COORDS_TOOLTIP"] = "Ubicación";
-L["TITAN_COORDS_TOOLTIP_HINTS_1"] = "Consejo: Shift + Click-Izq. para poner la ubicación";
-L["TITAN_COORDS_TOOLTIP_HINTS_2"] = "en el chat de mensajes.";
-L["TITAN_COORDS_TOOLTIP_ZONE"] = "Zona: ";
-L["TITAN_COORDS_TOOLTIP_SUBZONE"] = "Subzona: ";
-L["TITAN_COORDS_TOOLTIP_PVPINFO"] = "Info PVP: ";
-L["TITAN_COORDS_TOOLTIP_HOMELOCATION"] = "Ubicación de mi casa";
-L["TITAN_COORDS_TOOLTIP_INN"] = "Posada: ";
-L["TITAN_COORDS_MENU_TEXT"] = "Ubicación";
-L["TITAN_COORDS_MENU_SHOW_ZONE_ON_PANEL_TEXT"] = "Mostrar texto de zona";
-L["TITAN_COORDS_MENU_SHOW_COORDS_ON_MAP_TEXT"] = "Mostrar coordenadas en el mapamundi";
-L["TITAN_COORDS_MAP_CURSOR_COORDS_TEXT"] = "Cursor(X,Y): %s";
-L["TITAN_COORDS_MAP_PLAYER_COORDS_TEXT"] = "Jugador(X,Y): %s";
-L["TITAN_COORDS_NO_COORDS"] = "Sin Coordenadas";
-L["TITAN_COORDS_MENU_SHOW_LOC_ON_MINIMAP_TEXT"] = "Mostrar el nombre de la ubicación sobre el minimapa";
-L["TITAN_COORDS_MENU_UPDATE_WORLD_MAP"] = "Actualizar mapamundi cuando cambia la zona";
+L["TITAN_LOCATION_FORMAT"] = "(%.d, %.d)";
+L["TITAN_LOCATION_FORMAT2"] = "(%.1f, %.1f)";
+L["TITAN_LOCATION_FORMAT3"] = "(%.2f, %.2f)";
+L["TITAN_LOCATION_FORMAT_LABEL"] = "(xx , yy)";
+L["TITAN_LOCATION_FORMAT2_LABEL"] = "(xx.x , yy.y)";
+L["TITAN_LOCATION_FORMAT3_LABEL"] = "(xx.xx , yy.yy)";
+L["TITAN_LOCATION_FORMAT_COORD_LABEL"] = "Formato de coordenadas";
+L["TITAN_LOCATION_BUTTON_LABEL"] = "Loc: ";
+L["TITAN_LOCATION_TOOLTIP"] = "Ubicación";
+L["TITAN_LOCATION_TOOLTIP_HINTS_1"] = "Consejo: Shift + Click-Izq. para poner la ubicación";
+L["TITAN_LOCATION_TOOLTIP_HINTS_2"] = "en el chat de mensajes.";
+L["TITAN_LOCATION_TOOLTIP_ZONE"] = "Zona: ";
+L["TITAN_LOCATION_TOOLTIP_SUBZONE"] = "Subzona: ";
+L["TITAN_LOCATION_TOOLTIP_PVPINFO"] = "Info PVP: ";
+L["TITAN_LOCATION_TOOLTIP_HOMELOCATION"] = "Ubicación de mi casa";
+L["TITAN_LOCATION_TOOLTIP_INN"] = "Posada: ";
+L["TITAN_LOCATION_MENU_TEXT"] = "Ubicación";
+L["TITAN_LOCATION_MENU_SHOW_ZONE_ON_PANEL_TEXT"] = "Mostrar texto de zona";
+L["TITAN_LOCATION_MENU_SHOW_COORDS_ON_MAP_TEXT"] = "Mostrar coordenadas en el mapamundi";
+L["TITAN_LOCATION_MAP_CURSOR_COORDS_TEXT"] = "Cursor(X,Y): %s";
+L["TITAN_LOCATION_MAP_PLAYER_COORDS_TEXT"] = "Jugador(X,Y): %s";
+L["TITAN_LOCATION_NO_COORDS"] = "Sin Coordenadas";
+L["TITAN_LOCATION_MENU_SHOW_LOC_ON_MINIMAP_TEXT"] = "Mostrar el nombre de la ubicación sobre el minimapa";
+L["TITAN_LOCATION_MENU_UPDATE_WORLD_MAP"] = "Actualizar mapamundi cuando cambia la zona";
 
 L["TITAN_FPS_FORMAT"] = "%.1f";
 L["TITAN_FPS_BUTTON_LABEL"] = "FPS: ";
@@ -409,8 +380,6 @@ L["TITAN_MEMORY_TOOLTIP_CURRENT_MEMORY"] = "Actual: ";
 L["TITAN_MEMORY_TOOLTIP_INITIAL_MEMORY"] = "Inicial: ";
 L["TITAN_MEMORY_TOOLTIP_INCREASING_RATE"] = "Ratio de Incremento: ";
 L["TITAN_MEMORY_KBMB_LABEL"] = "KB/MB";
-
-L["TITAN_MONEY_FORMAT"] = "%d".."o"..", %02d".."p"..", %02d".."b";
 
 L["TITAN_PERFORMANCE_TOOLTIP"] = "Monitorización";
 L["TITAN_PERFORMANCE_MENU_TEXT"] = "Monitorización";
@@ -530,8 +499,6 @@ L["TITAN_REPAIR_GBANK_NORIGHTS"] = "O no perteneces a una Hermandad, o no tienes
 L["TITAN_REPAIR_CANNOT_AFFORD"] = "No puedes permitirte reparar, en este momento."
 L["TITAN_REPAIR_REPORT_COST_MENU"] = "Informar en el chat del coste de la reparación"
 L["TITAN_REPAIR_REPORT_COST_CHAT"] = "El coste de la reparación ha sido "
-
---L["TITAN_PLUGINS_MENU_TITLE"] = "Plug-ins";
 
 L["TITAN_GOLD_TOOLTIPTEXT"] = "Oro total en";
 L["TITAN_GOLD_ITEMNAME"] = "Titan Gold";

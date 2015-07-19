@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(677, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 36 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 67 $"):sub(12, -3))
 mod:SetCreatureID(60399, 60400)--60396 (Rage), 60397 (Strength), 60398 (Courage), 60480 (Titan Spark), 60399 (Qin-xi), 60400 (Jan-xi)
 mod:SetEncounterID(1407)
 mod:SetZone()
@@ -53,13 +53,13 @@ local specWarnCombo				= mod:NewSpecialWarningSpell("ej5672", "Melee")
 local specWarnTitanGas			= mod:NewSpecialWarningSpell(116779, nil, nil, nil, 2)
 
 --Rage
-local timerRageActivates		= mod:NewNextCountTimer(30, "ej5678", nil, nil, nil, 116525)
+local timerRageActivates		= mod:NewNextCountTimer(30, "ej5678", nil, nil, nil, nil, 116525)
 --Strength
-local timerStrengthActivates	= mod:NewNextCountTimer(50, "ej5677", nil, nil, nil, 116550)--It's actually 50-55 variation but 50 is good enough.
+local timerStrengthActivates	= mod:NewNextCountTimer(50, "ej5677", nil, nil, nil, nil, 116550)--It's actually 50-55 variation but 50 is good enough.
 --Courage
-local timerCourageActivates		= mod:NewNextCountTimer(100, "ej5676", nil, nil, nil, 116778)
+local timerCourageActivates		= mod:NewNextCountTimer(100, "ej5676", nil, nil, nil, nil, 116778)
 --Jan-xi and Qin-xi
-local timerBossesActivates		= mod:NewNextTimer(107, "ej5726", nil, nil, nil, 116815)--Might be a little funny sounding "Next Jan-xi and Qin-xi" May just localize it later.
+local timerBossesActivates		= mod:NewNextTimer(107, "ej5726", nil, nil, nil, nil, 116815)--Might be a little funny sounding "Next Jan-xi and Qin-xi" May just localize it later.
 local timerTitanGas				= mod:NewBuffActiveTimer(30, 116779)
 local timerTitanGasCD			= mod:NewNextCountTimer(150, 116779)
 

@@ -1,6 +1,6 @@
 --[[
 
-Learning Aid is copyright © 2008-2014 Jamash (Kil'jaeden US Horde)
+Learning Aid is copyright Â© 2008-2015 Jamash (Kil'jaeden US Horde)
 Email: jamashkj@gmail.com
 
 Events.lua is part of Learning Aid.
@@ -74,6 +74,8 @@ function LA:ACTIVE_TALENT_GROUP_CHANGED(newSpec, oldSpec)
   -- nothing to see here, just making an entry in the debug log
   -- print("LA:ACTIVE_TALENT_GROUP_CHANGED:", ...)
 end
+--[[ No longer needed as of patch 6.2.0!
+  
 function LA:CHAT_MSG_SYSTEM(message)
   -- note: pet spells, when learned, do not come as links
   -- player spells do come as links
@@ -101,7 +103,7 @@ function LA:CHAT_MSG_SYSTEM(message)
     else
       str = string.match(message, self.patterns.petUnlearnSpell)
       if str then
-        print("Unlearning pet spells is broken, yo")
+        print("Unlearning pet spells is broken, yo: "..str)
         t = self.petUnlearned
       end
     end
@@ -111,8 +113,10 @@ function LA:CHAT_MSG_SYSTEM(message)
     end
   end
 end
+
+--]]
 function LA:CURRENT_SPELL_CAST_CHANGED()
-  local frame = self.frame
+  -- local frame = self.frame -- unused
   local buttons = self.buttons
   for i = 1, self:GetVisible() do
     local button = buttons[i]

@@ -18,11 +18,11 @@
 -- @name LibInit
 --
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 13
+local MINOR_VERSION = 15
 local nop=function()end
-local dprint=function (self,...)	print(self.ID,'DBG',...) end
 local pp=print -- Keeping a handy plain print around
 if LibDebug then LibDebug() end
+local dprint=function (self,...)	print(self.ID,'DBG',...) end
 --GAME_LOCALE="itIT"
 local me, ns = ...
 local LibStub=LibStub
@@ -327,11 +327,12 @@ function lib:Parse(msg,n)
 end
 ---
 -- Parses an itemlink and returns itemId without calling API again
--- @param string itemlink
+-- @param itemlink string
 -- @return number itemId or 0
 function lib:GetItemID(itemlink)
 	if (type(itemlink)=="string") then
-			return tonumber(itemlink:match("Hitem:(%d+):")) or 0
+			return tonumber(GetItemInfoFromHyperlink(itemlink)) or 0
+			--return tonumber(itemlink:match("Hitem:(%d+):")) or 0
 	else
 			return 0
 	end
@@ -888,7 +889,6 @@ function lib:AddToggle(flag,defaultvalue,name,description,icon)
 			cmdHidden=true,
 			icon=icon,
 			order=getorder(self,group),
-
 	}
 	lib.toggles[self][flag]=t
 	group.args[flag]=t
@@ -1024,9 +1024,9 @@ function lib:AddTable(flag,table)
 	group.args[flag]=table
 	lib.toggles[self][flag]=table
 end
-function lib:_OpenCmd(info,args)
-	local method=info.arg
-	self[method](self,strsplit(' ',args))
+local function OpenCmd(self,info,args)
+	print("libinit",info.arg,self,args,strsplit(' ',args))
+	return self[info.arg](self,args,strsplit(' ',args))
 end
 function lib:AddOpenCmd(command,method,description,arguments,private)
 	method=method or command
@@ -1047,8 +1047,8 @@ function lib:AddOpenCmd(command,method,description,arguments,private)
 		name=command,
 		type="input",
 		arg=method,
-		get=function() end,
-		set="_OpenCmd",
+		get=function(...) end,
+		set=function(...) return OpenCmd(self,...) end,
 		desc=description,
 		order=getorder(self,group),
 		guiHidden=true,
@@ -1473,6 +1473,9 @@ end
 if (not _G.kpairs) then
 		_G.kpairs=kpairs
 end
+function lib:getKpairs()
+	return kpairs
+end
 -- This metatable is used to generate a sorted proxy to an hashed table.
 -- It should not used directly
 lib.mt={__metatable=true,__version=MINOR_VERSION}
@@ -1735,6 +1738,65 @@ do
 		ck:SetChecked(current)
 		ck.tooltip=tooltip
 		return ck
+	end
+	function factory:Dropdown(father,current,list,message,tooltip)
+		if type(message)=="table" then
+			tooltip=message.desc
+			message=message.name
+		end
+		do
+		local dd=CreateFrame("Frame",nil,father)
+		if (tooltip) then
+			dd.tooltip=tooltip
+			dd:SetScript("OnEnter",function(self)
+					GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+					GameTooltip:SetText(self.tooltip, nil, nil, nil, nil, (self.tooltipStyle or true));
+				end
+			)
+		end
+		dd:SetScript("OnLeave",function() GameTooltip:Hide() end)
+		dd.text=dd:CreateFontString(nil,"ARTWORK","GameFontHighlight")
+		function dd:SetText(...)
+			self.text:SetText(...)
+		end
+		function dd:SetFormattedText(...)
+			self.text:SetFormattedText(...)
+		end
+		function dd:SetTextColor(...)
+			self.text:SetTextColor(...)
+		end
+		function dd:OnChange() end
+		function dd:OnValueChanged(this,index,value)
+			print(this:GetName(),value,index)
+			value=value or index
+			UIDropDownMenu_SetSelectedID(dd,index)
+			return self:OnChange(value)
+		end
+		function dd:SetOnChange(func)
+			self.OnChange=func
+		end
+		dd.list=list
+		local name=tostring(self)..GetTime()*1000 ..nonce
+		nonce=nonce+1
+		dd.dropdown=CreateFrame('Frame',name,father,"UIDropDownMenuTemplate")
+		UIDropDownMenu_Initialize(frame, function(...)
+			local i=0
+			for k,v in pairs(dd.list) do
+				i=i+1
+				local info=UIDropDownMenu_CreateInfo()
+				info.text=v
+				info.value=v
+				info.func=function(...) return dd:OnValueChanged(...) end
+				info.arg1=i
+				info.arg2=v
+				UIDropDownMenu_AddButton(info,1)
+			end
+		end)
+		UIDropDownMenu_SetWidth(frame, 100);
+		UIDropDownMenu_SetButtonWidth(frame, 124)
+		UIDropDownMenu_SetSelectedID(frame, 1)
+		UIDropDownMenu_JustifyText(frame, "LEFT")
+		end
 	end
 end
 function lib:GetFactory()

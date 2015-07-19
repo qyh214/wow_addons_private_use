@@ -1,29 +1,12 @@
 local me, ns = ...
-local addon=ns.addon --#addon
-local L=ns.L
-local D=ns.D
-local C=ns.C
-local AceGUI=ns.AceGUI
+local pp=print
 local _G=_G
-local new, del, copy =ns.new,ns.del,ns.copy
--- Courtesy of Motig
--- Concept and interface reused with permission
--- Mission building rewritten from scratch
---local GMC_G = {}
+ns.Configure()
+local addon=ns.addon --#addon
 local factory=addon:GetFactory()
---GMC_G.frame = CreateFrame('FRAME')
-local aMissions={}
-local dbcache
-local cache
-local db
-local GMC
-local GMF=GarrisonMissionFrame
-local G=C_Garrison
-local GMCUsedFollowers={}
 local wipe=wipe
 local pairs=pairs
 local tinsert=tinsert
-local xprint=ns.xprint
 local coroutine=coroutine
 local GetItemInfo=GetItemInfo
 local GarrisonMissionFrame_SetItemRewardDetails=GarrisonMissionFrame_SetItemRewardDetails
@@ -36,11 +19,6 @@ local GameTooltip=GameTooltip
 local StaticPopupDialogs=StaticPopupDialogs
 local YES=YES
 local NO=NO
---[===[@debug@
-_G.GAC=addon
-if LibDebug then LibDebug() end
---@end-debug@]===]
-local dbg
 local GARRISON_FOLLOWER_MAX_ITEM_LEVEL=GARRISON_FOLLOWER_MAX_ITEM_LEVEL
 function addon:ShowImprovements()
 	local scroller=self:GetScroller("Items")
@@ -212,6 +190,103 @@ end
 function addon:FollowerPageStartUp()
 	self:RegisterEvent("GARRISON_FOLLOWER_UPGRADED","DelayedRefresh")
 	self:RegisterEvent("CHAT_MSG_LOOT","DelayedRefresh")
+	self:GarrisonTraitCountersFrame_OnLoad(GarrisonTraitCountersFrame, L["%s |4follower:followers with %s"])
+	self:HookScript(GarrisonTraitCountersFrame,"OnEvent","GarrisonTraitCountersFrame_OnEvent")
+	self:HookScript(GarrisonTraitCountersFrame,"OnShow","GarrisonTraitCountersFrame_OnShow")
+end
+--[[
+		<Scripts>
+			<OnLoad function="GarrisonTraitCountersFrame_OnLoad"/>
+			<OnEvent function="GarrisonTraitCountersFrame_OnEvent"/>
+			<OnShow function="GarrisonTraitCountersFrame_Update"/>
+		</Scripts>
+--]]
+
+function addon:GarrisonTraitCountersFrame_OnLoad(this, tooltipString)
+	print("Load")
+	this:ClearAllPoints()
+	this:SetParent(GarrisonThreatCountersFrame:GetParent())
+	this:SetPoint("BOTTOMLEFT",185,6)
+	this:Show()
+	this.tooltipString = tooltipString;
+	this.choice=CreateFrame('Frame',this:GetName()..tostring(GetTime()*1000),this,"UIDropDownMenuTemplate")
+	this.choice.button=_G[this.choice:GetName()..'Button']
+	this.choice:SetPoint("TOPLEFT",-192,0)
+	addon:FillCounters(this,1)
+	this.TraitsList[1]:SetScript("OnEnter",_G.GarrisonTraitCounter_OnEnter)
+	--this.TraitsList[1]:SetScript("OnEnter",pp)
+	do
+		local frame=this.choice
+		local list=G.GetRecruiterAbilityCategories()
+		local function sel(this,category,index)
+			UIDropDownMenu_SetSelectedID(frame,index)
+			self:FillCounters(frame:GetParent(),category)
+		end
+		UIDropDownMenu_Initialize(frame, function(...)
+			local i=0
+			for v,k in pairs(list) do
+				if ns.traitTable[v] then
+					i=i+1
+					local info=UIDropDownMenu_CreateInfo()
+					info.text=k
+					info.value=v
+					info.func=sel
+					info.arg1=v
+					info.arg2=i
+					UIDropDownMenu_AddButton(info,1)
+				end
+			end
+		end)
+		UIDropDownMenu_SetWidth(frame, 150);
+		UIDropDownMenu_SetButtonWidth(frame, 174)
+		UIDropDownMenu_SetSelectedID(frame, 1)
+		UIDropDownMenu_JustifyText(frame, "LEFT")
+		--EasyMenu(list,frame,frame,0,0,nil,5)
+	end
+	this:RegisterEvent("GARRISON_FOLLOWER_LIST_UPDATE");
 end
 
+function addon:GarrisonTraitCountersFrame_OnEvent(this, event, ...)
+	if ( this:IsVisible() ) then
+		self:GarrisonTraitCountersFrame_OnShow(this);
+	end
+end
+
+function addon:GarrisonTraitCountersFrame_OnShow(this)
+	for i = 1, #this.TraitsList do
+		local t=addon:GetFollowersWithTrait(this.TraitsList[i].id)
+		local n=t and #t or 0
+		this.TraitsList[i].Count:SetText(n);
+	end
+end
+
+---@function [parent=#addon] GarrisonTraitCounter_OnEnter
+-- Need to be a global
+function _G.GarrisonTraitCounter_OnEnter(this)
+	GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+	GameTooltip:SetText(this:GetParent().tooltipString:format(this.Count:GetText(), this.name), nil, nil, nil, nil, true);
+end
+function addon:FillCounters(this,category)
+	local i=0
+	for id,name in pairs(ns.traitTable[category]) do
+		i=i+1
+		local frame = this.TraitsList[i];
+		local offset=(ns.bigscreen and 22 or 17)
+
+		if ( not frame ) then
+			frame = CreateFrame("Button", nil, this, "GarrisonTraitCounterTemplate");
+			frame:SetPoint("LEFT", this.TraitsList[i-1], "RIGHT", 14, 0);
+			frame:SetScript("OnEnter",GarrisonTraitCounter_OnEnter)
+			this.TraitsList[i] = frame;
+		end
+		frame.Icon:SetTexture(G.GetFollowerAbilityIcon(id))
+		frame.name = name;
+		frame.id = id;
+		frame:Show()
+	end
+	self:GarrisonTraitCountersFrame_OnShow(GarrisonTraitCountersFrame)
+	for j=i+1,#this.TraitsList do
+		this.TraitsList[j]:Hide()
+	end
+end
 

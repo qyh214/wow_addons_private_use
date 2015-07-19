@@ -12,7 +12,6 @@ function Activity:Constructor(id)
     self:Update()
 end
 
-
 local attrs = {
     'ID',
     'ActivityID',
@@ -208,24 +207,37 @@ function Activity:IsSelf()
     return self:GetLeader() and UnitIsUnit(self:GetLeader(), 'player')
 end
 
-function Activity:Match(search, loot, bossFilter)
+function Activity:Match(search, loot, bossFilter, enableSpamWord)
     if loot and loot ~= 0 then
         if self:GetLoot() ~= loot then
             return false
         end
     end
-    if search then
-        if self:GetSummary() and self:GetSummary():lower():match(search) then
-            return true
-        end
-        if self:GetComment() and self:GetComment():lower():match(search) then
-            return true
-        end
-        if self:GetLeader() and self:GetLeader():lower():match(search) then
-            return true
-        end
+
+    local summary, comment = self:GetSummary(), self:GetComment()
+    if summary then
+        summary = summary:lower()
+    end
+    if comment then
+        comment = comment:lower()
+    end
+
+    if enableSpamWord and (CheckSpamWord(summary) or CheckSpamWord(comment)) then
         return false
     end
+
+    if search then
+        if summary and summary:find(search, 1, true) then
+            return true
+        elseif comment and comment:find(search, 1, true) then
+            return true
+        elseif self:GetLeader() and self:GetLeader():lower():find(search, 1, true) then
+            return true
+        else
+            return false
+        end
+    end
+
     if bossFilter and next(bossFilter) then
         for boss, flag in pairs(bossFilter) do
             if flag then

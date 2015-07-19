@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1216, "DBM-Party-WoD", 1, 547)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14030 $"):sub(12, -3))
 mod:SetCreatureID(75927)
 mod:SetEncounterID(1678)
 mod:SetZone()
@@ -29,8 +29,8 @@ local warnFelPool					= mod:NewSpellAnnounce(153616, 1)
 local specWarnCurtainOfFlame		= mod:NewSpecialWarningMoveAway(153396)
 local specWarnCurtainOfFlameNear	= mod:NewSpecialWarningClose(153396)
 local yellWarnCurtainOfFlame		= mod:NewYell(153396)
-local specWarnFelLash				= mod:NewSpecialWarningYou("OptionVersion2", 153234)
-local specWarnFelStomp				= mod:NewSpecialWarningDodge("OptionVersion2", 157173, "Melee")
+local specWarnFelLash				= mod:NewSpecialWarningYou(153234, nil, nil, 2)
+local specWarnFelStomp				= mod:NewSpecialWarningDodge(157173, "Melee", nil, 2)
 local specWarnClawsOfArgus			= mod:NewSpecialWarningSpell(153764)
 local specWarnClawsOfArgusEnd		= mod:NewSpecialWarningEnd(153764)
 local specWarnSummonFelguard		= mod:NewSpecialWarningSwitch(164081, "Tank")
@@ -38,10 +38,10 @@ local specWarnFelblast				= mod:NewSpecialWarningInterrupt(154221, "-Healer")--V
 local specWarnFelPool				= mod:NewSpecialWarningMove(153616)
 local specWarnFelSpark				= mod:NewSpecialWarningMove(153726)
 
-local timerCurtainOfFlameCD			= mod:NewNextTimer(20, 153396)--20sec cd but can be massively delayed by adds phases
-local timerFelLash					= mod:NewTargetTimer("OptionVersion2", 7.5, 153234, nil, "Tank|Healer")
+local timerCurtainOfFlameCD			= mod:NewNextTimer(20, 153396, nil, nil, nil, 3)--20sec cd but can be massively delayed by adds phases
+local timerFelLash					= mod:NewTargetTimer(7.5, 153234, nil, "Tank|Healer", 2, 5)
 local timerClawsOfArgus				= mod:NewBuffActiveTimer(20, 153764)
-local timerClawsOfArgusCD			= mod:NewNextTimer(70, 153764)
+local timerClawsOfArgusCD			= mod:NewNextTimer(70, 153764, nil, nil, nil, 6)
 
 local countdownClawsOfArgus			= mod:NewCountdown(70, 153764)
 local countdownCurtainOfFlame		= mod:NewCountdown("Alt20", 153396)

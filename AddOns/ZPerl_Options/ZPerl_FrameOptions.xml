@@ -248,6 +248,9 @@
 		<Size>
 			<AbsDimension x="32" y="32"/>
 		</Size>
+		<HitRectInsets>
+			<AbsInset left="6" right="6" top="4" bottom="4"/>
+		</HitRectInsets>
 		<NormalTexture file="Interface\Addons\ZPerl_Options\Images\LeftRightArrows">
 			<TexCoords left="0" right="0.25" top="0" bottom="0.5"/>
 		</NormalTexture>
@@ -266,6 +269,9 @@
 		<Size>
 			<AbsDimension x="32" y="32"/>
 		</Size>
+		<HitRectInsets>
+			<AbsInset left="6" right="6" top="4" bottom="4"/>
+		</HitRectInsets>
 		<NormalTexture file="Interface\Addons\ZPerl_Options\Images\LeftRightArrows">
 			<TexCoords left="0" right="0.25" top="0.5" bottom="1"/>
 		</NormalTexture>
@@ -383,6 +389,9 @@
 		<Size>
 			<AbsDimension x="50" y="24"/>
 		</Size>
+		<HitRectInsets>
+			<AbsInset left="0" right="8" top="0" bottom="0"/>
+		</HitRectInsets>
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture name="$parentLeft" file="Interface\Common\Common-Input-Border">
@@ -2501,7 +2510,7 @@
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
 							<OnClick>
-								local new = XPerl_Options_DecrementSibling(self,"Gap")
+								local new = XPerl_Options_DecrementSibling(self, "Gap")
 								XPerl_Raid_SetGap(new)
 							</OnClick>
 						</Scripts>
@@ -2529,15 +2538,16 @@
 								self.editing = nil
 							</OnEditFocusLost>
 							<OnShow>
-								if (XPerl_Raid_GetGap) then
-									self:SetText(XPerl_Raid_GetGap())
-								end
+								self:SetText(XPerlDB.raid.gap or "0")
 							</OnShow>
 							<OnTextChanged>
-								if (self.editing and XPerl_Raid_SetGap) then
+								if self.editing and XPerl_Raid_SetGap then
 									XPerl_Raid_SetGap(tonumber(self:GetText()))
 								end
 							</OnTextChanged>
+							<OnEnterPressed>
+								self:ClearFocus()
+							</OnEnterPressed>
 						</Scripts>
 					</EditBox>
 
@@ -2554,7 +2564,7 @@
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
 							<OnClick>
-								local new = XPerl_Options_IncrementSibling(self,"Gap")
+								local new = XPerl_Options_IncrementSibling(self, "Gap")
 								XPerl_Raid_SetGap(new)
 							</OnClick>
 						</Scripts>
@@ -4747,6 +4757,8 @@
 								XPerl_SetMyGlobal()
 								XPerl_Options_DropDown_LoadSettings:Hide()
 								XPerl_Options_DropDown_LoadSettings:Show()
+								XPerl_Options_DropDown_DeleteSettings:Hide()
+								XPerl_Options_DropDown_DeleteSettings:Show()
 							</OnClick>
 							<OnShow>
 								self:SetChecked(ZPerlConfigSavePerCharacter)
@@ -4801,7 +4813,6 @@
 						<Scripts>
 							<OnLoad>
 								XPerl_Options_RegisterProtected(_G[self:GetName().."Button"])
-								--XPerl_Options_LoadSettings_OnLoad(self)
 							</OnLoad>
 							<OnShow>
 								XPerl_Options_LoadSettings_OnLoad(self)
@@ -4812,6 +4823,49 @@
 							<OnEnter>
 								GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -15, 0)
 								GameTooltip:SetText(XPERL_CONF_LOAD_SETTINGS_DESC, nil, nil, nil, nil, true)
+								_G[self:GetName().."Label"]:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
+							</OnEnter>
+							<OnLeave>
+								_G[self:GetName().."Label"]:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+								GameTooltip:Hide()
+							</OnLeave>
+						</Scripts>
+					</Frame>
+
+					<Frame name="XPerl_Options_DropDown_DeleteSettings" inherits="Lib_UIDropDownMenuTemplate" enableMouse="true">
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="XPerl_Options_DropDown_LoadSettings" relativePoint="TOPLEFT">
+								<Offset>
+									<AbsDimension x="20" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<FontString name="$parentLabel" inherits="GameFontNormalSmall" text="XPERL_CONF_DELETE_SETTINGS">
+									<Anchors>
+										<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
+											<Offset>
+												<AbsDimension x="21" y="3"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnLoad>
+								XPerl_Options_RegisterProtected(_G[self:GetName().."Button"])
+							</OnLoad>
+							<OnShow>
+								XPerl_Options_DeleteSettings_OnLoad(self)
+								if (not ZPerlConfigSavePerCharacter) then
+									self:Hide()
+								end
+							</OnShow>
+							<OnEnter>
+								GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -15, 0)
+								GameTooltip:SetText(XPERL_CONF_DELETE_SETTINGS_DESC, nil, nil, nil, nil, true)
 								_G[self:GetName().."Label"]:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
 							</OnEnter>
 							<OnLeave>
@@ -4837,9 +4891,11 @@
 					<OnShow>
 						if (not IsAddOnLoaded("ZPerl_ArcaneBar")) then
 							local n = self:GetName().."_"
-							_G[n.."OldCastBar"]:Disable()
-							_G[n.."CastTime"]:Disable()
-							_G[n.."ArcaneBar"]:Disable()
+							XPerl_Options_EnableCheck(_G[n.."ArcaneBar"])
+							XPerl_Options_EnableCheck(_G[n.."PreCast"])
+							XPerl_Options_EnableCheck(_G[n.."CastTime"])
+							XPerl_Options_EnableCheck(_G[n.."CastTimeInside"])
+							XPerl_Options_EnableCheck(_G[n.."OldCastBar"])
 						end
 					</OnShow>
 				</Scripts>
@@ -5029,9 +5085,9 @@
 								self.configIndex = "enable"
 								self.configClick = XPerl_ArcaneBar_Set
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self,"CastTime")
-									XPerl_Options_EnableSibling(self,"PreCast")
-									XPerl_Options_EnableSibling(self,"CastTimeInside", "CastTime")
+									XPerl_Options_EnableSibling(self, "CastTime")
+									XPerl_Options_EnableSibling(self, "PreCast")
+									XPerl_Options_EnableSibling(self, "CastTimeInside", "CastTime")
 								end
 							</OnLoad>
 						</Scripts>
@@ -5074,7 +5130,7 @@
 								self.configBase = "XPerlDB.player.castBar"
 								self.configIndex = "castTime"
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self,"CastTimeInside")
+									XPerl_Options_EnableSibling(self, "CastTimeInside")
 								end
 							</OnLoad>
 						</Scripts>
@@ -6952,8 +7008,7 @@
 					</OnLoad>
 					<OnShow>
 						if (not IsAddOnLoaded("ZPerl_ArcaneBar")) then
-							local n = self:GetName().."_"
-							_G[n.."ArcaneBar"]:Disable()
+							XPerl_Options_EnableCheck(_G[self:GetName().."_".."ArcaneBar"])
 						end
 					</OnShow>
 				</Scripts>
@@ -7319,12 +7374,13 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGET_ELITE")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(not XPerlDB.target.eliteGfx)
+								self:SetChecked(not XPerlDB.target.eliteGfx and not XPerlDB.target.eliteNone)
 							</OnShow>
 							<OnClick>
 								XPerlDB.target.elite = true
 								XPerlDB.target.eliteGfx = nil
-								XPerl_Options_CheckRadio(self,{"Elite", "EliteGfx"})
+								XPerlDB.target.eliteNone = nil
+								XPerl_Options_CheckRadio(self, {"Elite", "EliteGfx", "EliteNone"})
 								XPerl_Target_UpdateDisplay(XPerl_Target)
 							</OnClick>
 						</Scripts>
@@ -7334,7 +7390,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_Elite" relativePoint="TOPRIGHT">
 								<Offset>
-									<AbsDimension x="65" y="0"/>
+									<AbsDimension x="55" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -7348,7 +7404,33 @@
 							<OnClick>
 								XPerlDB.target.elite = true
 								XPerlDB.target.eliteGfx = true
-								XPerl_Options_CheckRadio(self,{"Elite", "EliteGfx"})
+								XPerlDB.target.eliteNone = nil
+								XPerl_Options_CheckRadio(self, {"Elite", "EliteGfx", "EliteNone"})
+								XPerl_Target_UpdateDisplay(XPerl_Target)
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_EliteNone" inherits="XPerlRadioButtonTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parent_EliteGfx" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="70" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGET_ELITE_NONE")
+							</OnLoad>
+							<OnShow>
+								self:SetChecked(XPerlDB.target.eliteNone)
+							</OnShow>
+							<OnClick>
+								XPerlDB.target.elite = true
+								XPerlDB.target.eliteGfx = nil
+								XPerlDB.target.eliteNone = true
+								XPerl_Options_CheckRadio(self, {"Elite", "EliteGfx", "EliteNone"})
 								XPerl_Target_UpdateDisplay(XPerl_Target)
 							</OnClick>
 						</Scripts>
@@ -8468,7 +8550,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_BigBuffsStealable" relativePoint="BOTTOMLEFT">
 								<Offset>
-									<AbsDimension x="-24" y="-12"/>
+									<AbsDimension x="3" y="-8"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -8723,8 +8805,7 @@
 					</OnLoad>
 					<OnShow>
 						if (not IsAddOnLoaded("ZPerl_ArcaneBar")) then
-							local n = self:GetName().."_"
-							_G[n.."ArcaneBar"]:Disable()
+							XPerl_Options_EnableCheck(_G[self:GetName().."_".."ArcaneBar"])
 						end
 					</OnShow>
 				</Scripts>
@@ -9121,12 +9202,13 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUS_ELITE")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(not XPerlDB.focus.eliteGfx)
+								self:SetChecked(not XPerlDB.focus.eliteGfx and not XPerlDB.focus.eliteNone)
 							</OnShow>
 							<OnClick>
 								XPerlDB.focus.elite = true
 								XPerlDB.focus.eliteGfx = nil
-								XPerl_Options_CheckRadio(self,{"Elite", "EliteGfx"})
+								XPerlDB.focus.eliteNone = nil
+								XPerl_Options_CheckRadio(self, {"Elite", "EliteGfx", "EliteNone"})
 								XPerl_Target_UpdateDisplay(XPerl_Focus)
 							</OnClick>
 						</Scripts>
@@ -9136,7 +9218,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_Elite" relativePoint="TOPRIGHT">
 								<Offset>
-									<AbsDimension x="65" y="0"/>
+									<AbsDimension x="55" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -9150,7 +9232,33 @@
 							<OnClick>
 								XPerlDB.focus.elite = true
 								XPerlDB.focus.eliteGfx = true
-								XPerl_Options_CheckRadio(self,{"Elite", "EliteGfx"})
+								XPerlDB.focus.eliteNone = nil
+								XPerl_Options_CheckRadio(self, {"Elite", "EliteGfx", "EliteNone"})
+								XPerl_Target_UpdateDisplay(XPerl_Focus)
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_EliteNone" inherits="XPerlRadioButtonTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parent_EliteGfx" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="70" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUS_ELITE_NONE")
+							</OnLoad>
+							<OnShow>
+								self:SetChecked(XPerlDB.focus.eliteNone)
+							</OnShow>
+							<OnClick>
+								XPerlDB.focus.elite = true
+								XPerlDB.focus.eliteGfx = nil
+								XPerlDB.focus.eliteNone = true
+								XPerl_Options_CheckRadio(self, {"Elite", "EliteGfx", "EliteNone"})
 								XPerl_Target_UpdateDisplay(XPerl_Focus)
 							</OnClick>
 						</Scripts>
@@ -9720,6 +9828,7 @@
 									XPerl_Options_EnableSibling(self, "OnlyMyBuffs")
 									XPerl_Options_EnableSibling(self, "BigBuffs")
 									XPerl_Options_EnableSibling(self, "BigPet", "BigBuffs")
+									XPerl_Options_EnableSibling(self, "BigBuffsStealable")
 									XPerl_Options_EnableSibling(self, "BuffSize")
 								end
 							</OnLoad>
@@ -9808,6 +9917,28 @@
 								self.flashFrame = {XPerl_FocusbuffFrame, XPerl_FocusdebuffFrame}
 								self.configBase = "XPerlDB.focus.buffs"
 								self.configIndex = "bigpet"
+								self.configClick = XPerl_Target_Reset
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_BigBuffsStealable" inherits="XPerlCheckButtonTemplate">
+						<Size>
+							<AbsDimension x="26" y="26"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_BigBuffs" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="0" y="-14"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUS_BIGSTEALABLE")
+								self.flashFrame = XPerl_Target_BuffFrame
+								self.configBase = "XPerlDB.focus.buffs"
+								self.configIndex = "bigStealable"
 								self.configClick = XPerl_Target_Reset
 							</OnLoad>
 						</Scripts>
@@ -9911,9 +10042,9 @@
 							<AbsDimension x="120" y="16"/>
 						</Size>
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parent_BigPet" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOPLEFT" relativeTo="$parent_BigBuffsStealable" relativePoint="BOTTOMLEFT">
 								<Offset>
-									<AbsDimension x="-24" y="-12"/>
+									<AbsDimension x="3" y="-8"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -10163,7 +10294,7 @@
 					</OnLoad>
 					<OnShow>
 						if (not IsAddOnLoaded("ZPerl_ArcaneBar")) then
-							_G[self:GetName().."_".."ArcaneBar"]:Disable()
+							XPerl_Options_EnableCheck(_G[self:GetName().."_".."ArcaneBar"])
 						end
 					</OnShow>
 				</Scripts>
@@ -11386,6 +11517,7 @@
 									XPerl_Options_EnableSibling(self, "Custom_Alpha")
 									XPerl_Options_EnableSibling(self, "Custom_Add")
 									XPerl_Options_EnableSibling(self, "Custom_Config")
+									XPerl_Options_EnableSibling(self, "Width")
 								end
 								self.configBase = "XPerlDB.raid"
 								self.configIndex = "enable"
@@ -11469,13 +11601,13 @@
 						<Scripts>
 							<OnShow>
 								if (IsAddOnLoaded("ZPerl_RaidPets")) then
-									XPerl_Options_GetSibling("RaidPets",self):Show()
-									XPerl_Options_GetSibling("AlignToRaid",self):Show()
-									self:SetPoint("TOP", XPerl_Options_GetSibling("AlignToRaid",self), "BOTTOMLEFT", 0, 6)
+									XPerl_Options_GetSibling("RaidPets", self):Show()
+									XPerl_Options_GetSibling("AlignToRaid", self):Show()
+									self:SetPoint("TOP", XPerl_Options_GetSibling("AlignToRaid", self), "BOTTOMLEFT", 0, 6)
 								else
-									XPerl_Options_GetSibling("RaidPets",self):Hide()
-									XPerl_Options_GetSibling("AlignToRaid",self):Hide()
-									self:SetPoint("TOP", XPerl_Options_GetSibling("NotInBG",self), "BOTTOMLEFT", 0, 6)
+									XPerl_Options_GetSibling("RaidPets", self):Hide()
+									XPerl_Options_GetSibling("AlignToRaid", self):Hide()
+									self:SetPoint("TOP", XPerl_Options_GetSibling("NotInBG", self), "BOTTOMLEFT", 0, 6)
 								end
 							</OnShow>
 							<OnLoad>
@@ -11945,6 +12077,40 @@
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
+
+					<Slider name="$parent_Width" inherits="XPerlSlider">
+						<Size>
+							<AbsDimension x="150" y="16"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_Healer" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="5" y="-10"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								self:SetMinMaxValues(0, 100)
+								self:SetValueStep(1)
+								self:SetObeyStepOnDrag(true)
+								XPerl_SliderSetup(self)
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_WIDTHBONUS")
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+							<OnShow>
+								self:SetValue(XPerlDB.raid.size.width or 0)
+							</OnShow>
+							<OnValueChanged>
+								if XPerlDB.raid.size.width ~= value then
+									XPerlDB.raid.size.width = value
+									XPerl_Raid_SetWidth()
+									XPerl_Raid_SetGap(XPerlDB.raid.gap or 0)
+								end
+								_G[self:GetName().."Current"]:SetText(XPerlDB.raid.size.width)
+							</OnValueChanged>
+						</Scripts>
+					</Slider>
 
 					<Frame name="$parent_Groups">
 						<Scripts>
@@ -13389,7 +13555,7 @@
 											local list = {"Player", "PlayerBuffs", "PlayerPet", "Target", "TargetTarget", "Party", "PartyPet", "ArcaneBar", "RaidFrames", "RaidPets", "RaidHelper", "RaidMonitor", "RaidAdmin"}
 											local enable
 											for i, name in pairs(list) do
-												if XPerl_Options_GetSiblingChecked(name,self) ~= IsAddOnLoaded("ZPerl_"..name) then
+												if XPerl_Options_GetSiblingChecked(name, self) ~= IsAddOnLoaded("ZPerl_"..name) then
 													enable = true
 													break
 												end
@@ -14911,7 +15077,7 @@
 							<OnValueChanged>
 								if (ZPerlConfigHelper.Background_Transparency ~= value / 100) then
 									ZPerlConfigHelper.Background_Transparency = value / 100
-									if (XPerl_Frame) then
+									if XPerl_Frame then
 										XPerl_SetupFrameSimple(XPerl_Frame, ZPerlConfigHelper.Background_Transparency)
 									end
 								end
@@ -15079,13 +15245,7 @@
 											XPerl_Options_EnableSibling(self, "BackTransparency")
 										end
 										self.XconfigVar = "TargetCounters"
-										self.configClick = function()
-											if (ZPerlConfigHelper.TargetCounters == 1) then
-												XPerl_AssistsView_Open()
-											else
-												XPerl_AssistsView_Close()
-											end
-										end
+										self.configClick = XPerl_UpdateAssists
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
@@ -15124,6 +15284,9 @@
 								<Scripts>
 									<OnLoad>
 										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGET_COUNTERSENEMY")
+										self.Validate = function()
+											XPerl_Options_EnableSibling(self, "AggroWarning")
+										end
 										self.XconfigVar = "TargetCountersEnemy"
 										self.configClick = XPerl_UpdateAssists
 									</OnLoad>

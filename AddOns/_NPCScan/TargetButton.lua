@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Localized Lua globals. 
+-- Localized Lua globals.
 -------------------------------------------------------------------------------
 local _G = getfenv(0)
 
@@ -9,6 +9,7 @@ local type = _G.type
 
 -- Libraries
 local math = _G.math
+local string = _G.string
 
 -------------------------------------------------------------------------------
 -- AddOn namespace.
@@ -45,7 +46,7 @@ target_button:SetBackdropBorderColor(0.7, 0.15, 0.05) -- Brown
 target_button:HookScript("OnShow", function(self)
 	self:RegisterEvent("MODIFIER_STATE_CHANGED")
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")
-	self:EnableDrag(IsControlKeyDown())
+	self:EnableDrag(_G.IsControlKeyDown())
 
 end)
 
@@ -266,7 +267,7 @@ function target_button:Update(ID, Name, Source)
 
 	if Source == "Unknown Vignette" then
 		Model:SetDisplayInfo(28089)
-		if Name == "Vignette Mob" then 
+		if Name == "Vignette Mob" then
 			self:SetAttribute("macrotext", private.macrotext)
 		else
 			self:SetAttribute("macrotext", "/cleartarget\n/targetexact " .. Name)
@@ -307,7 +308,7 @@ end
 
 -- Enables or disables dragging when the drag modifier is held.
 function target_button:MODIFIER_STATE_CHANGED()
-	self:EnableDrag(IsControlKeyDown())
+	self:EnableDrag(_G.IsControlKeyDown())
 end
 
 do
@@ -357,8 +358,7 @@ end
 function target_button:UNIT_MODEL_CHANGED(_, UnitID)
 
 	--Quick fix to not show Haakun's actual model due to it causing the game to crash
-	local MobName = UnitName(UnitID)
-	if MobName == HaakunName then
+	if _G.UnitName(UnitID) == HaakunName then
 		self.Model:SetCreature(29147)
 		self:UnregisterEvent("UNIT_MODEL_CHANGED")
 		return
@@ -458,7 +458,7 @@ TitleBackground:SetHeight(18)
 TitleBackground:SetTexCoord(0, 0.9765625, 0, 0.3125)
 TitleBackground:SetAlpha(0.8)
 
-local Title = target_button:CreateFontString(nil, "OVERLAY", "GameFontHighlightMedium", 1)
+local Title = target_button:CreateFontString(nil, "OVERLAY", "GameFontHighlight", 1)
 Title:SetPoint("TOPLEFT", TitleBackground, 0, 2)
 Title:SetPoint("RIGHT", TitleBackground)
 target_button:SetFontString(Title)

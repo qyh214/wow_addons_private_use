@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(829, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 57 $"):sub(12, -3))
 mod:SetCreatureID(68905, 68904)--Lu'lin 68905, Suen 68904
 mod:SetEncounterID(1560)
 mod:SetZone()
@@ -32,7 +32,6 @@ mod:SetBossHealthInfo(
 --Darkness
 local warnNight							= mod:NewAnnounce("warnNight", 2, 108558)
 local warnCrashingStarSoon				= mod:NewSoonAnnounce(137129, 3)
-local warnTearsOfSun					= mod:NewSpellAnnounce(137404, 3)
 local warnBeastOfNightmares				= mod:NewTargetAnnounce(137375, 3, nil, "Tank|Healer")
 --Light
 local warnDay							= mod:NewAnnounce("warnDay", 2, 122789)
@@ -40,7 +39,6 @@ local warnLightOfDay					= mod:NewSpellAnnounce(137403, 2, nil, false)--Spammy, 
 local warnFanOfFlames					= mod:NewStackAnnounce(137408, 2, nil, "Tank|Healer")
 local warnFlamesOfPassion				= mod:NewSpellAnnounce(137414, 2)--Todo, check target scanning
 local warnIceComet						= mod:NewSpellAnnounce(137419, 1)
-local warnNuclearInferno				= mod:NewCastAnnounce(137491, 4, 4)--Heroic
 --Celestials Assist
 local warnTiger							= mod:NewSpellAnnounce(138855)
 local warnSerpent						= mod:NewSpellAnnounce(138306)
@@ -145,7 +143,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 136752 then
 		self:SendSync("CosmicBarrage")
 	elseif spellId == 137404 then
-		warnTearsOfSun:Show()
 		specWarnTearsOfSun:Show()
 		timerTearsOfTheSun:Start()
 		if timerDayCD:GetTime() < 145 then
@@ -159,16 +156,20 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 137408 then
 		local amount = args.amount or 1
-		warnFanOfFlames:Show(args.destName, amount)
+		local threatamount = self:IsTrivial(100) and 6 or 2
 		timerFanOfFlames:Start(args.destName)
 		timerFanOfFlamesCD:Start()
 		if args:IsPlayer() then
-			if amount >= 2 then
+			if amount >= threatamount then
 				specWarnFanOfFlames:Show(amount)
+			else
+				warnFanOfFlames:Show(args.destName, amount)
 			end
 		else
-			if amount >= 2 and not UnitDebuff("player", GetSpellInfo(137408)) and not UnitIsDeadOrGhost("player") then
+			if amount >= threatamount and not UnitDebuff("player", GetSpellInfo(137408)) and not UnitIsDeadOrGhost("player") then
 				specWarnFanOfFlamesOther:Show(args.destName)
+			else
+				warnFanOfFlames:Show(args.destName, amount)
 			end
 		end
 	elseif spellId == 137417 and args:IsPlayer() and self:AntiSpam(3, 4) then
@@ -345,7 +346,6 @@ function mod:OnSync(msg)
 		end
 	elseif msg == "Inferno" then
 		infernoCount = infernoCount + 1
-		warnNuclearInferno:Show()
 		specWarnNuclearInferno:Show(infernoCount)
 		timerNuclearInferno:Start()
 		if phase3Started then

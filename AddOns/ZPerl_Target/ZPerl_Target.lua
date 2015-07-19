@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 948 $")
+end, "$Revision: 972 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 local format = format
@@ -42,6 +42,8 @@ local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
 local buffSetup
 local lastInspectPending = 0
 local mobhealth
+
+local feignDeath = GetSpellInfo(5384)
 
 ----------------------
 -- Loading Function --
@@ -438,15 +440,12 @@ local function XPerl_Target_UpdateClassification(self)
 			if (targetclassification == "worldboss") then
 				bossType = XPERL_TYPE_BOSS
 				self.bossFrame.text:SetTextColor(1, 0.5, 0.5)
-
 			elseif (targetclassification == "rareelite") then
 				bossType = XPERL_TYPE_RAREPLUS
 				self.bossFrame.text:SetTextColor(0.8, 0.8, 0.8)
-
 			elseif (targetclassification == "elite") then
 				bossType = XPERL_TYPE_ELITE
 				self.bossFrame.text:SetTextColor(1, 1, 0.5)
-
 			elseif (targetclassification == "rare") then
 				bossType = XPERL_TYPE_RARE
 				self.bossFrame.text:SetTextColor(0.8, 0.8, 0.8)
@@ -456,7 +455,7 @@ local function XPerl_Target_UpdateClassification(self)
 		self.typeFramePlayer:Hide()
 	end
 
-	if (bossType) then
+	if (partyid == "target" and bossType and not tconf.eliteNone) or (partyid == "focus" and bossType and not fconf.eliteNone) then
 		self.bossFrame:Show()
 		self.bossFrame.text:SetText(bossType)
 		self.bossFrame:SetWidth(self.bossFrame.text:GetStringWidth() + 10)
@@ -774,11 +773,13 @@ function XPerl_Target_UpdateHealth(self)
 	local hbt = self.statsFrame.healthBar.text
 	local hp, hpMax, percent = XPerl_Target_GetHealth(self)
 
-	if (self.targethp == 100) then
+	self.afk = UnitIsAFK(partyid) and conf.showAFK == 1
+
+	--[[if (self.targethp == 100) then
 		-- Try to work around the occasion WoW targettarget bug of a zero hp tank who is not at zero hp
 		if (not UnitIsDeadOrGhost(partyid)) then
 			if (UnitInRaid(partyid)) then
-				for i = 1,GetNumGroupMembers() do
+				for i = 1, GetNumGroupMembers() do
 					local id = "raid"..i
 					if (UnitIsUnit(id, partyid)) then
 						hp, hpMax, percent = UnitHealth(id), UnitHealthMax(id), false
@@ -787,7 +788,7 @@ function XPerl_Target_UpdateHealth(self)
 				end
 			end
 		end
-	end
+	end]]
 
 	XPerl_SetHealthBar(self, hp, hpMax)
 	XPerl_Target_UpdateHealPrediction(self)
@@ -805,21 +806,18 @@ function XPerl_Target_UpdateHealth(self)
 		if (UnitIsGhost(partyid)) then
 			self.statsFrame.manaBar.percent:Hide()
 			hb.percent:SetText(XPERL_LOC_GHOST)
-
-		elseif (UnitIsDead(partyid) or (self.feigning and conf.showFD)) then
+		elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
+			--self.statsFrame.manaBar.percent:Hide()
+			--hb.percent:SetText(XPERL_LOC_DEAD)
+			hbt:SetText(XPERL_LOC_FEIGNDEATH)
+		elseif (UnitIsDead(partyid)) then
 			self.statsFrame.manaBar.percent:Hide()
 			hb.percent:SetText(XPERL_LOC_DEAD)
-			if (conf.showFD and UnitIsFeignDeath(partyid)) then
-				hbt:SetText(XPERL_LOC_FEIGNDEATH)
-			end
-
 		elseif (UnitExists(partyid) and not UnitIsConnected(partyid)) then
 			self.statsFrame.manaBar.percent:Hide()
 			hb.percent:SetText(XPERL_LOC_OFFLINE)
-
-		elseif (UnitIsAFK(partyid) and conf.showAFK and (self == XPerl_Target or self == XPerl_Focus)) then
+		elseif (UnitIsAFK(partyid) and conf.showAFK) --[[and (self == XPerl_Target or self == XPerl_Focus))]] then
 			hb.percent:SetText(CHAT_MSG_AFK)
-
 		else
 			self.statsFrame.manaBar.percent:Show()
 			color = true
@@ -827,20 +825,14 @@ function XPerl_Target_UpdateHealth(self)
 	else
 		if (UnitIsGhost(partyid)) then
 			hbt:SetText(XPERL_LOC_GHOST)
-
-		elseif (UnitIsDead(partyid) or (self.feigning and conf.showFD)) then
-			if (self.feigning or UnitIsFeignDeath(partyid)) then
-				hbt:SetText(XPERL_LOC_FEIGNDEATH)
-			else
-				hbt:SetText(XPERL_LOC_DEAD)
-			end
-
+		elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
+			hbt:SetText(XPERL_LOC_FEIGNDEATH)
+		elseif (UnitIsDead(partyid)) then
+			hbt:SetText(XPERL_LOC_DEAD)
 		elseif (UnitExists(partyid) and not UnitIsConnected(partyid)) then
 			hbt:SetText(XPERL_LOC_OFFLINE)
-
 		elseif (UnitIsAFK(partyid) and conf.showAFK) then
 			hbt:SetText(CHAT_MSG_AFK)
-
 		else
 			color = true
 		end
@@ -1029,7 +1021,8 @@ end
 
 -- XPerl_Target_UpdateDisplay
 function XPerl_Target_UpdateDisplay(self)
-	if (UnitExists(self.partyid)) then
+	local partyid = self.partyid
+	if (UnitExists(partyid)) then
 		XPerl_NoFadeBars(true)
 
 		XPerl_Target_UpdateName(self)
@@ -1040,7 +1033,7 @@ function XPerl_Target_UpdateDisplay(self)
 		XPerl_Target_SetMana(self)
 		XPerl_Target_UpdateHealth(self)
 		XPerl_Target_Update_Combat(self)
-		XPerl_Unit_ThreatStatus(self, self.partyid == "target" and "player" or nil, true)
+		XPerl_Unit_ThreatStatus(self, partyid == "target" and "player" or nil, true)
 
 		RaidTargetUpdate(self)
 
@@ -1059,18 +1052,18 @@ function XPerl_Target_UpdateDisplay(self)
 			XPerl_Unit_UpdatePortrait(self)
 		end
 
-		XPerl_Highlight:SetHighlight(self, UnitGUID(self.partyid))
-		XPerl_UpdateSpellRange(self, self.partyid)
+		XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
+		XPerl_UpdateSpellRange(self, partyid)
 
 		XPerl_NoFadeBars()
 
 		-- Some optimizing here to limit the amount of work done on a target change
-		--[[local buffOptionString = tostring(self.statsFrame.manaBar:IsVisible() or 0)..tostring(self.bossFrame:IsVisible() or 0)..tostring(self.creatureTypeFrame:IsVisible() or 0)..tostring(self.statsFrame:GetWidth())
+		local buffOptionString = tostring(self.statsFrame.manaBar:IsVisible() or 0)..tostring(self.bossFrame:IsVisible() or 0)..tostring(self.creatureTypeFrame:IsVisible() or 0)..tostring(self.statsFrame:GetWidth())
 		if (self.buffOptionString ~= buffOptionString) then
 			self.buffOptionString = buffOptionString
 			-- Work out where all our buffs can fit, we only do this for a fresh target
 			XPerl_Targets_BuffPositions(self)
-		end]]
+		end
 
 		XPerl_Targets_BuffUpdate(self)
 		--XPerl_Target_DebuffUpdate(self)
@@ -1083,6 +1076,13 @@ end
 -- XPerl_Target_OnUpdate
 function XPerl_Target_OnUpdate(self, elapsed)
 	CombatFeedback_OnUpdate(self, elapsed)
+
+	local partyid = self.partyid
+	local newAFK = UnitIsAFK(partyid)
+
+	if (conf.showAFK and newAFK ~= self.afk) then
+		XPerl_Target_UpdateHealth(self)
+	end
 
 	self.RangeUpdate = self.RangeUpdate + elapsed
 	if (self.RangeUpdate > 0.2) then
@@ -1099,6 +1099,7 @@ function XPerl_Target_OnUpdate(self, elapsed)
 			RaidTargetUpdate(self)
 		end
 	end
+
 	if (self.PlayerFlash) then
 		XPerl_Target_CombatFlash(self, elapsed, false)
 	end
@@ -1160,7 +1161,7 @@ end
 -- PLAYER_ENTERING_WORLD
 function XPerl_Target_Events:PLAYER_ENTERING_WORLD()
 	if (UnitExists("focus")) then
-		self.feigning = nil
+		--self.feigning = nil
 		self.PlayerFlash = 0
 		XPerl_CombatFlashSetFrames(self)
 		XPerl_Target_UpdateDisplay(self)
@@ -1285,7 +1286,7 @@ function XPerl_Target_Events:PLAYER_TARGET_CHANGED()
 		end
 	end
 
-	self.feigning = nil
+	self.feigning = UnitBuff(self.partyid, feignDeath)
 	self.PlayerFlash = 0
 	XPerl_CombatFlashSetFrames(XPerl_Target)
 	XPerl_Target_UpdateDisplay(XPerl_Target)
@@ -1324,7 +1325,7 @@ function XPerl_Target_Events:PLAYER_FOCUS_CHANGED()
 		XPerl_Target.statsFrame.focusTarget:Hide()
 	end
 
-	self.feigning = nil
+	self.feigning = UnitBuff(self.partyid, feignDeath)
 	self.PlayerFlash = 0
 	XPerl_CombatFlashSetFrames(XPerl_Focus)
 	XPerl_Target_UpdateDisplay(XPerl_Focus)
@@ -1357,7 +1358,7 @@ function XPerl_Target_Events:RAID_TARGET_UPDATE()
 	RaidTargetUpdate(XPerl_Focus)
 end
 
--- UNIT_POWER / UNIT_MAXPOWER
+-- UNIT_POWER_FREQUENT / UNIT_MAXPOWER
 function XPerl_Target_Events:UNIT_POWER_FREQUENT()
 	XPerl_Target_SetMana(self)
 end
@@ -1407,11 +1408,14 @@ function XPerl_Target_Events:UNIT_AURA()
 	XPerl_Targets_BuffUpdate(self)
 	--XPerl_Target_DebuffUpdate(self)
 
-	if (select(2, UnitClass(self.partyid)) == "HUNTER") then
-		local f = UnitIsFeignDeath(self.partyid)
-		if (f ~= self.feigning) then
-			self.feigning = f
-			XPerl_Target_UpdateHealth(self)
+	if conf.showFD then
+		local _, class = UnitClass(self.partyid)
+		if class == "HUNTER" then
+			local feigning = UnitBuff(self.partyid, feignDeath)
+			if feigning ~= self.feigning then
+				self.feigning = feigning
+				XPerl_Target_UpdateHealth(self)
+			end
 		end
 	end
 end
@@ -1545,7 +1549,7 @@ function XPerl_Target_Set_Bits(self)
 		self.typeFramePlayer.classTexture:Hide()
 	end
 
-	self.highlight:SetPoint("BOTTOMRIGHT", self.portraitFrame, "BOTTOMRIGHT", 26, -1)
+	--self.highlight:SetPoint("BOTTOMRIGHT", self.portraitFrame, "BOTTOMRIGHT", 26, -1)
 
 	self.conf.buffs.size = tonumber(self.conf.buffs.size) or 20
 	XPerl_SetBuffSize(self)

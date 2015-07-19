@@ -1,0 +1,12 @@
+tag 6.2.0.2
+faf622022626790b81f4f569342a62450f23a6e0
+James D. Callahan III <jcallahan@curse.com>
+2015-07-14 00:40:47 -0500
+
+Localization updates.
+
+
+--------------------
+
+SLOKnightfall:
+	- Added Paths to Tanaan Jungle area Fixed spawn for to The Razza Removed Trigore the Lasher from North Barrens

@@ -6,10 +6,15 @@ if (not LibStub:GetLibrary("LibDataBroker-1.1",true)) then
 	return
 end
 local pp=print
-if (LibDebug) then LibDebug() end
 --[===[@debug@
 LoadAddOn("Blizzard_DebugTools")
+LoadAddOn("LibDebug")
+if LibDebug then LibDebug() end
 --@end-debug@]===]
+local print=print
+--@non-debug@
+print=function() end
+--@end-non-debug@
 local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 --local addon=LibStub("AceAddon-3.0"):NewAddon(me,"AceTimer-3.0","AceEvent-3.0","AceConsole-3.0") --#addon
 local addon=LibStub("LibInit"):NewAddon(me,"AceTimer-3.0","AceEvent-3.0","AceConsole-3.0","AceHook-3.0") --#addon
@@ -17,6 +22,7 @@ local C=addon:GetColorTable()
 local dataobj --#Missions
 local farmobj --#Farms
 local workobj --#Works
+local cacheobj --#Cache
 local SecondsToTime=SecondsToTime
 local type=type
 local strsplit=strsplit
@@ -40,6 +46,7 @@ local NEXT=NEXT
 local NONE=C(NONE,"Red")
 local DONE=C(DONE,"Green")
 local NEED=C(NEED,"Red")
+local IsQuestFlaggedCompleted=IsQuestFlaggedCompleted
 
 local CAPACITANCE_SHIPMENT_COUNT=CAPACITANCE_SHIPMENT_COUNT -- "%d of %d Work Orders Available";
 local CAPACITANCE_SHIPMENT_READY=CAPACITANCE_SHIPMENT_READY -- "Work Order ready for pickup!";
@@ -52,10 +59,14 @@ local GARRISON_SHIPMENT_IN_PROGRESS=GARRISON_SHIPMENT_IN_PROGRESS -- "Work Order
 local GARRISON_SHIPMENT_READY=GARRISON_SHIPMENT_READY -- "Work Order Ready";
 local QUEUED_STATUS_WAITING=QUEUED_STATUS_WAITING -- "Waiting"
 local CAPACITANCE_ALL_COMPLETE=format(CAPACITANCE_ALL_COMPLETE,'') -- "All work orders will be completed in: %s";
-local  GARRISON_NUM_COMPLETED_MISSIONS=format(GARRISON_NUM_COMPLETED_MISSIONS,'999'):gsub('999','') -- "%d Completed |4Mission:Missions;";
+local GARRISON_NUM_COMPLETED_MISSIONS=format(GARRISON_NUM_COMPLETED_MISSIONS,'999'):gsub('999','') -- "%d Completed |4Mission:Missions;";
 local KEY_BUTTON1="Shift " .. KEY_BUTTON1
 local KEY_BUTTON2="Shift " .. KEY_BUTTON2
 local EMPTY=EMPTY -- "Empty"
+local GARRISON_CACHE=GARRISON_CACHE
+local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
+local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
+
 local dbversion=1
 local frequency=5
 local ldbtimer=nil
@@ -93,10 +104,17 @@ function addon:ldbCleanup()
 end
 function addon:ldbUpdate()
 	dataobj:Update()
+	cacheobj:Update()
 end
 function addon:GARRISON_MISSION_STARTED(event,missionID)
 	local duration=select(2,G.GetPartyMissionInfo(missionID)) or 0
-	local k=format("%015d.%4d.%s",time() + duration,missionID,ns.me)
+	local followerType=self.db.global.missionType[missionID]
+	if not followerType then
+		local t=G.GetBasicMissionInfo(missionID)
+		followerType=t.followerTypeID
+		self.db.global.missionType[missionID]=followerType
+	end
+	local k=format("%015d.%4d.%s.%d",time() + duration,missionID,ns.me,followerType)
 	tinsert(self.db.realm.missions,k)
 	table.sort(self.db.realm.missions)
 	self:ldbUpdate()
@@ -113,6 +131,21 @@ end
 function addon:ZONE_CHANGED_NEW_AREA()
 	self:ScheduleTimer("CheckEvents",1)
 	self:ScheduleTimer("DiscoverFarms",1)
+
+end
+function addon:QUEST_TURNED_IN(event,quest,item,gold)
+	if quest==37485 then
+		self.db.realm.cachesize[ns.me] = 1000
+		self:Print(L["Your garrison cache size was increased to %d"],1000)
+--[[
+	elseif quest==38445 then
+		self.db.realm.cachesize[ns.me] = 750
+		self:Print(L["Your garrison cache size was increased to %d"],750)
+	elseif quest==37935 then
+		self.db.realm.cachesize[ns.me] = 750
+		self:Print(L["Your garrison cache size was increased to %d"],750)
+--]]
+	end
 
 end
 function addon:UNIT_SPELLCAST_START(event,unit,name,rank,lineID,spellID)
@@ -156,7 +189,7 @@ function addon:CheckDateReset()
 	end
 	self:ScheduleTimer("CheckDateReset",60)
 --[===[@debug@
-	if (today~=oldToday) then
+	if (false and today~=oldToday) then
 		self:Popup(format("o:%s y:%s t:%s r:%s [w:%s m:%s d:%s y:%s] ",oldToday,yesterday,today,reset,CalendarGetDate()))
 		dataobj:Update()
 		farmobj:Update()
@@ -175,14 +208,30 @@ function addon:CountMissing()
 	end
 	return missing,tot
 end
+function addon:CountCaches()
+	local tot=0
+	local missing=0
+	local now=time()
+	local expired=400*600 -- 1 risorsa ogni 10 minuti, per fullare servono 500 * 600 secondi
+	for p,j in pairs(self.db.realm.caches) do
+		local expired=(addon.db.realm.cachesize[p] or 500)*0.9 *600
+		if j>0 then
+			tot=tot+1
+			if j+expired < now then
+				missing=missing+1
+			end
+		end
+	end
+	return missing,tot
+end
 function addon:CountEmpty()
 	local tot=0
 	local missing=0
-	local expire=time()+3600*24
+	local expire=time()+3600*12
 	for p,j in pairs(self.db.realm.orders) do
-		for s,_ in pairs(j) do
+		for s,w in pairs(j) do
 			tot=tot+1
-			if not j[s] or j[s] < expire then missing=missing+1 end
+			if not w or w < expire then missing=missing+1 end
 		end
 	end
 	return missing,tot
@@ -247,8 +296,12 @@ function addon:SetDbDefaults(default)
 		orders={["*"]={
 				["*"]=false
 			}},
+		caches={["*"]=0},
+		cachesize={["*"]=false},
 		dbversion=1
 	}
+	default.global.missionType={}
+	default.profile['allowedWorkOrders']={["*"]=true}
 end
 function addon:OnInitialized()
 	if dbversion>self.db.realm.dbversion then
@@ -270,18 +323,30 @@ function addon:OnInitialized()
 			v[s]=tonumber(v[s]) or 0
 		end
 	end
+	-- I was not satisfied with logistic improved, now Ignore it
+	for k,v in pairs(addon.db.realm.cachesize) do
+		if v and v==750 then
+			addon.db.realm.cachesize[k]=500
+		end
+	end
 
 	ns.me=GetUnitName("player",false)
 	self:RegisterEvent("GARRISON_MISSION_STARTED")
 	self:RegisterEvent("GARRISON_MISSION_NPC_OPENED","ldbCleanup")
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	self:RegisterEvent("SHIPMENT_CRAFTER_INFO")
+	self:RegisterEvent("SHOW_LOOT_TOAST")
+	--self:RegisterEvent("QUEST_AUTOCOMPLETE",print)
+	--self:RegisterEvent("QUEST_COMPLETE",print)
+	--self:RegisterEvent("QUEST_FINISH",print)
+	self:RegisterEvent("QUEST_TURNED_IN")
 	--self:RegisterEvent("SHIPMENT_CRAFTER_REAGENT_UPDATE",print)
 	self:AddLabel(GARRISON_NUM_COMPLETED_MISSIONS)
 	self:AddToggle("OLDINT",false,L["Use old interface"],L["Uses the old, more intrusive interface"])
-	self:AddToggle("SHOWNEXT",false,L["Show next toon"],L["Show the next toon whicg will complete a mission"])
+	self:AddToggle("SHOWNEXT",false,L["Show next toon"],L["Show the next toon which will complete a mission"])
 	self:AddSlider("FREQUENCY",5,1,60,L["Update frequency"])
 	frequency=self:GetNumber("FREQUENCY",5)
+	self:ScheduleTimer("DelayedInit",5)
 end
 function addon:ApplyFREQUENCY(value)
 	frequency=value
@@ -294,6 +359,14 @@ function addon:SHIPMENT_CRAFTER_INFO(...)
 	self:WorkUpdate(...)
 
 end
+function addon:SHOW_LOOT_TOAST(event,typeIdentifier, itemLink, quantity, specID, sex, isPersonal, lootSource)
+	if (isPersonal and lootSource==10) then -- GARRISON_CACHE
+		self.db.realm.caches[ns.me]=time()
+		self.db.realm.caches[ns.me]=time()
+		self.db.realm.cachesize[ns.me]=self:GetImprovedCacheSize()
+		cacheobj:Update()
+	end
+end
 function addon:DelayedInit()
 	self:CheckDateReset()
 	self:WorkUpdate()
@@ -302,7 +375,22 @@ function addon:DelayedInit()
 	farmobj:Update()
 	workobj:Update()
 	dataobj:Update()
+	self.db.realm.cachesize[ns.me] = self:GetImprovedCacheSize()
 end
+function addon:GetImprovedCacheSize()
+	if IsQuestFlaggedCompleted(37485) then
+		return 1000 -- Arakkoa item
+--[[
+	elseif IsQuestFlaggedCompleted(38445) then
+		return 750 --Alliance improved logistic
+	elseif IsQuestFlaggedCompleted(37953) then
+		return 750 --Horde improved logistic
+--]]
+	else
+		return 500
+	end
+end
+
 function addon:OnEnabled()
 	self:ScheduleTimer("DelayedInit",5)
 end
@@ -349,13 +437,29 @@ workobj=LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("GC-WorkOrders", {
 	category = "Interface",
 	icon = "Interface\\Icons\\Trade_Engineering"
 })
+cacheobj=LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("GC-Cache", {
+	type = "data source",
+	label = "GC " .. GARRISON_CACHE,
+	text=QUEUED_STATUS_WAITING,
+	category = "Interface",
+	icon = "Interface\\Icons\\inv_garrison_resource"
+})
 function farmobj:Update()
 	local n,t=addon:CountMissing()
 	if (t>0) then
-		local c=addon:ColorToString(addon:Gradient((t-n)/t))
+		local c=addon:ColorToString(addon:Gradient(n/t))
 		farmobj.text=format("|cff%s%d|r/|cff%s%d|r",c,t-n,C.Green.c,t)
 	else
 		farmobj.text=NONE
+	end
+end
+function cacheobj:Update()
+	local n,t=addon:CountCaches()
+	if (t>0) then
+		local c=addon:ColorToString(addon:Gradient(n/t))
+		cacheobj.text=format("|cff%s%d|r/|cff%s%d|r",c,t-n,C.Green.c,t)
+	else
+		cacheobj.text=NONE
 	end
 end
 function farmobj:OnTooltipShow()
@@ -375,6 +479,16 @@ function farmobj:OnTooltipShow()
 	self:AddDoubleLine(KEY_BUTTON2,NEED)
 	self:AddLine(me,C.Silver())
 end
+function cacheobj:OnTooltipShow()
+	self:AddLine(GARRISON_CACHE)
+	for k,v in kpairs(addon.db.realm.caches) do
+		local m=addon.db.realm.cachesize[k] or 500
+		local resources=math.min(m,math.floor((time()-v)*(1/600)))
+		self:AddDoubleLine(k==ns.me and C(k,"green") or C(k,"Orange"),format("%d/%d",resources,m),nil,nil,nil,
+		addon:ColorGradient(resources/m,0,1,0,1,1,0,1,0,0))
+	end
+	self:AddLine(me,C.Silver())
+end
 
 function dataobj:OnTooltipShow()
 	self:AddLine(L["Mission awaiting"])
@@ -382,9 +496,10 @@ function dataobj:OnTooltipShow()
 	local now=time()
 	for i=1,#db do
 		if db[i] then
-			local t,missionID,pc=strsplit('.',db[i])
+			local t,missionID,pc,followerType=strsplit('.',db[i])
 			t=tonumber(t) or 0
-			local name=G.GetMissionName(missionID)
+			followerType=tonumber(followerType) or LE_FOLLOWER_TYPE_GARRISON_6_0
+			local name= (followerType==LE_FOLLOWER_TYPE_SHIPYARD_6_2) and C(G.GetMissionName(missionID),"cyan") or G.GetMissionName(missionID)
 			if (name) then
 				local msg=format("|cff%s%s|r: %s",pc==ns.me and C.Green.c or C.Orange.c,pc,name)
 				if t > now then
@@ -427,7 +542,7 @@ end
 function workobj:Update()
 	local n,t=addon:CountEmpty()
 	if (t>0) then
-		local c=addon:ColorToString(addon:Gradient((t-n)/t))
+		local c=addon:ColorToString(addon:Gradient((n)/t))
 		workobj.text=format("|cff%s%d|r/|cff%s%d|r",c,t-n,C.Green.c,t)
 	else
 		workobj.text=NONE
@@ -436,17 +551,26 @@ function workobj:Update()
 end
 function workobj:OnTooltipShow()
 	self:AddLine(CAPACITANCE_WORK_ORDERS)
+	local now=time()
+	local normal=24*3600
+	local short=12*3600
+	local long=48*3600
 	for k,v in kpairs(addon.db.realm.orders) do
 		if (k==ns.me) then
 			self:AddLine(k,C.Green())
 		else
 			self:AddLine(k,C.Orange())
 		end
+
 		for s,d in kpairs(v) do
-			local delta=d-time()
+			local delta=d-now
 			if (delta >0) then
-				local hours=delta/(3600*48)
-				self:AddDoubleLine(s,SecondsToTime(delta),nil,nil,nil,addon:Gradient(hours))
+				local gradient=1
+				if delta > long then gradient=0
+				elseif delta > normal then  gradient=0.25
+				elseif delta >short then gradient=0.5
+				end
+				self:AddDoubleLine(s,SecondsToTime(delta),nil,nil,nil,addon:Gradient(gradient))
 			else
 				self:AddDoubleLine(s,EMPTY,nil,nil,nil,C:Red())
 			end
@@ -457,6 +581,7 @@ end
 
 farmobj.OnLeave=dataobj.OnLeave
 workobj.OnLeave=dataobj.OnLeave
+cacheobj.OnLeave=dataobj.OnLeave
 function farmobj:OnClick(button)
 	if (IsShiftKeyDown()) then
 		for k,v in pairs(addon.db.realm.farms) do
@@ -486,6 +611,7 @@ function dataobj:OnClick(button)
 	end
 end
 workobj.OnClick=dataobj.OnClick
+cacheobj.OnClick=dataobj.OnClick
 function dataobj:Update()
 	if addon:GetBoolean("OLDINT") then return self:OldUpdate() end
 	local now=time()
@@ -538,7 +664,7 @@ function dataobj:OldUpdate()
 		completed=completed+1
 	end
 	self.text=format("%s: %s (Tot: |cff00ff00%d|r) %s: %s",READY,ready,completed,NEXT,prox)
-end
+end-- Resources rate: 144 a day
 
 --[===[@debug@
 local function highdebug(tb)

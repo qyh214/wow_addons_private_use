@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 453 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 460 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,6 +16,14 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.6.27", "06/23/2015", [[
+	*Tabs should no longer incorrectly cascade.
+	*Updated Interface version to 6.2.
+]]);
+addEntry("3.6.26", "04/20/2015", [[
+	*Fixed lua error in IsInraid filter function.
+	*Updated profile links.
+]]);
 addEntry("3.6.25", "03/25/2015", [[
 	*Grabbed new WhoLib for 2 bugfixes related to that lib.
 ]]);

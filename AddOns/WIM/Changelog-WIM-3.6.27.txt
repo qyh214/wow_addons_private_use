@@ -1,0 +1,21 @@
+------------------------------------------------------------------------
+r461 | mysticalos | 2015-06-23 07:55:36 +0000 (Tue, 23 Jun 2015) | 1 line
+Changed paths:
+   A /tags/3.6.27 (from /trunk:460)
+
+Tagging as 3.6.27
+------------------------------------------------------------------------
+r460 | mysticalos | 2015-06-23 07:36:09 +0000 (Tue, 23 Jun 2015) | 1 line
+Changed paths:
+   M /trunk/ChangeLog.lua
+   M /trunk/WIM.lua
+   M /trunk/WIM.toc
+
+Bump toc and version
+------------------------------------------------------------------------
+r459 | mysticalos | 2015-06-19 21:32:13 +0000 (Fri, 19 Jun 2015) | 1 line
+Changed paths:
+   M /trunk/Sources/WindowHandler.lua
+
+Don’t cascade windows if tabs are enabled. Ticket #435
+------------------------------------------------------------------------

@@ -204,6 +204,7 @@ do
 	end
 
 	local function Restack(self)
+		local children = self.children
 		for i,child in ipairs(self.children) do
 			child:ClearAllPoints()
 			self:AnchorChild(child, i == 1 and self or self.children[i-1])

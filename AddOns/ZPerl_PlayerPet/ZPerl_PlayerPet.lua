@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision: 938 $")
+end, "$Revision: 972 $")
 
 local XPerl_Player_Pet_HighlightCallback
 
@@ -66,7 +66,6 @@ function XPerl_Player_Pet_OnLoad(self)
 	XPerl_SecureUnitButton_OnLoad(self.nameFrame, "pet", nil, PetFrameDropDown, XPerl_ShowGenericMenu)	--PetFrame.menu)
 
 	--RegisterUnitWatch(self)
-	-- Added UNIT_POWER/UNIT_MAXPOWER shit on events list by PlayerLin
 	local events = {
 		"UNIT_HEALTH", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PET", "PET_ATTACK_START", "UNIT_COMBAT", "UNIT_SPELLMISS", "VARIABLES_LOADED", "PLAYER_REGEN_ENABLED", "PLAYER_ENTERING_WORLD", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE", "UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED", "UNIT_TARGET", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
 	}
@@ -110,7 +109,8 @@ function XPerl_Player_Pet_OnLoad(self)
 			w = w - 2 + self.portraitFrame:GetWidth()
 		end
 		if (not self.buffSpacing) then
-			self.buffSpacing = XPerl_GetReusableTable()
+			--self.buffSpacing = XPerl_GetReusableTable()
+			self.buffSpacing = { }
 		end
 		self.buffSpacing.rowWidth = w
 		self.buffSpacing.smallRowHeight = 0
@@ -281,9 +281,6 @@ end
 
 -- VARIABLES_LOADED
 function XPerl_Player_Pet_Events:VARIABLES_LOADED()
-	-- added UNIT_POWER event check for 4.0 by PlayerLin, thanks Brounks.
-	--XPerl_UnitEvents(self, XPerl_Player_Pet_Events, {"UNIT_FOCUS", "UNIT_MAXFOCUS", "UNIT_PET_EXPERIENCE", "UNIT_POWER"})
-
 	XPerl_Player_Pet_Events.VARIABLES_LOADED = nil
 end
 
@@ -333,8 +330,6 @@ XPerl_Player_Pet_Events.UNIT_MAXHEALTH = XPerl_Player_Pet_Events.UNIT_HEALTH
 -- Ticket 735 Player Pet frame's power bar fix.
 -- Thanks Brounks pointed out again... -.- By PlayerLin
 
--- UNIT_POWER/UNIT_MAXPOWER shit for 4.0 and later.
--- All power bars will be firing UNIT_POWER/UNIT_MAXPOWER events.
 function XPerl_Player_Pet_Events:UNIT_POWER_FREQUENT()
 	XPerl_Player_Pet_UpdateMana(self)
 	XPerl_Player_Pet_UpdateCombat(self)

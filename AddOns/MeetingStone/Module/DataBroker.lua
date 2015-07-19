@@ -36,7 +36,7 @@ function DataBroker:OnInitialize()
         OnClick = function(owner, button)
             GameTooltip:Hide()
             if button == 'RightButton' then
-                -- self:ToggleMenu(owner, self:CreateMenuTable())
+                -- GUI:ToggleMenu(owner, self:CreateMenuTable())
             else
                 Addon:Toggle()
             end
@@ -130,6 +130,8 @@ function DataBroker:MEETINGSTONE_SETTING_CHANGED(_, key, value, onUser)
             Addon:DisableModule('Misc')
         end
         IgnoreList_Update()
+    elseif key == 'spamWord' then
+        self:SendMessage('MEETINGSTONE_SPAMWORD_STATUS_UPDATE', value, onUser)
     end
 end
 

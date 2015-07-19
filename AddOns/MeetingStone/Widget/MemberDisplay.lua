@@ -3,9 +3,7 @@ BuildEnv(...)
 
 MemberDisplay = Addon:NewClass('MemberDisplay', GUI:GetClass('DataGridViewGridItem'))
 
-function MemberDisplay:Constructor(parent)
-    self:SetParent(parent)
-
+function MemberDisplay:Constructor()
     local DataDisplay = CreateFrame('Frame', nil, self, 'LFGListGroupDataDisplayTemplate') do
         DataDisplay:SetPoint('CENTER')
     end

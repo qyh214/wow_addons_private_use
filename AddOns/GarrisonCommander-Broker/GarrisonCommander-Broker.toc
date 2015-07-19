@@ -1,15 +1,15 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: GarrisonCommander-Broker
 ## Notes: Data-Broker for GarrisonCommander
 ## Notes-itIT: Data-Broker per GarrisonCommander
 ## Notes-frFR: Data-Broker pour GarrisonCommander
 ## Author: Alar of Daggerspine
-## Version: 2.4.8.1 054ec05
-## X-Version: 2.4.8
-## X-Revision: 054ec05
+## Version: 2.6.8 6.2
+## X-Version: 2.6.5
+## X-Revision: 8139382
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
-## OptionalDeps: Titan, Bazooka, ChocolateBar , FuBar , LibDataBroker-1.1
+## OptionalDeps: Titan, Bazooka, ChocolateBar , FuBar , LibDataBroker-1.1, LibDebug
 ## DefaultState: Enabled
 ## SavedVariables: dbGACB
 ## X-ID: GACB
@@ -17,9 +17,9 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2015-04-07T21:05:00Z
+## X-Date: 2015-07-18T00:03:27Z
 ## X-Embeds:
-## X-Curse-Packaged-Version: 2.4.8.1
+## X-Curse-Packaged-Version: 2.6.8
 ## X-Curse-Project-Name: GarrisonCommander
 ## X-Curse-Project-ID: garrisoncommander
 ## X-Curse-Repository-ID: wow/garrisoncommander/mainline

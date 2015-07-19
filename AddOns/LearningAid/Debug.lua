@@ -1,6 +1,6 @@
 --[[
 
-Learning Aid is copyright © 2008-2014 Jamash (Kil'jaeden US Horde)
+Learning Aid is copyright Â© 2008-2015 Jamash (Kil'jaeden US Horde)
 Email: jamashkj@gmail.com
 
 Debug.lua is part of Learning Aid.
@@ -43,37 +43,37 @@ function LA:TestAdd(kind, ...)
     local id = t[i]
     if kind == BOOKTYPE_SPELL then
       if not IsPassiveSpell(id, kind) then
-        print("Test: Adding button with spell id "..id)
+        print(addonName..": Test: Adding button with spell id "..id)
         if InCombatLockdown() then
           table.insert(self.queue, { action = "SHOW", id = id, kind = kind })
         else
           self:AddButton(kind, id)
         end
       else
-        print("Test: Spell id "..id.." is passive or does not exist")
+        print(addonName.." Test: Spell id "..id.." is passive or does not exist")
       end
     elseif kind == "CRITTER" or kind == "MOUNT" then
       if GetCompanionInfo(kind, id) then
-        print("Test: Adding companion type "..kind.." id "..id)
+        print(addonName..": Test: Adding companion type "..kind.." id "..id)
         if InCombatLockdown() then
           table.insert(self.queue, { action = "SHOW", id = id, kind = kind})
         else
           self:AddButton(kind, id)
         end
       else
-        print("Test: Companion type "..kind..", id "..id.." does not exist")
+        print(addonName.." Test: Companion type "..kind..", id "..id.." does not exist")
       end
     else
-      print("Test: Action type "..kind.." is not valid.  Valid types are spell, CRITTER or MOUNT.")
+      print(addonName.." Test: Action type "..kind.." is not valid.  Valid types are spell, CRITTER or MOUNT.")
     end
   end
 end
 function LA:TestRemove(kind, ...)
-  print("Testing!")
+  print(addonName.." Testing!")
   local t = {...}
   for i = 1, #t do
     local id = t[i]
-    print("Test: Removing "..kind.." id "..id)
+    print(addonName.." Test: Removing "..kind.." id "..id)
     if InCombatLockdown() then
       table.insert(self.queue, { action = "CLEAR", id = id, kind = kind })
     else
@@ -101,7 +101,11 @@ end
 function private:DebugPrint(...)
   local p = private
   p.debugCount = p.debugCount + 1
-  LearningAid_DebugLog[p.debugCount] = LA:ListJoin(...)
+  local output = LA:ListJoin(...)
+  LearningAid_DebugLog[p.debugCount] = output
+  if p.debugWindow then
+    p.debugWindow:AddMessage(p.debugCount..': '..output)
+  end
   if p.debugCount > p.debugLimit then
     LearningAid_DebugLog[p.debugCount - p.debugLimit] = nil
   end

@@ -1,3 +1,8 @@
+- version 2.3.6
+	* "Drinking" in arena fixed ( thx to HTB1980 for the idea )
+	* "Drinking" genders detection in arena added.
+	* "Die By The Sword" added. (dieByTheSword.ogg dieByTheSwordDown.ogg)
+
 - version 2.3.5
 	* Korean locale updated (by jungwan2)
 	* Moderate Insight added (moderateInsight.ogg)

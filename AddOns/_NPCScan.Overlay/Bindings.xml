@@ -8,7 +8,7 @@
 	</Binding>
 
 	<Binding name="MINIMAP_PATH _NPCScan.Overlay.Button:LeftButton" category="ADDONS">
-		Minimap_Toggle()
+		NPCScanOverlayMinimap_Toggle()
 	</Binding>
 
 

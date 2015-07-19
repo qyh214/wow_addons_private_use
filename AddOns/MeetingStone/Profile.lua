@@ -13,7 +13,8 @@ function Profile:OnInitialize()
             annData = {},
             serverDatas = {},
             ignoreHash = {},
-        }
+            spamWord = {},
+        },
     }
 
     local cdb = {
@@ -24,6 +25,8 @@ function Profile:OnInitialize()
                 panelLock = false,
                 sound = true,
                 ignore = true,
+                onlyms = false,
+                spamWord = false,
             },
             minimap = {
                 minimapPos = 192.68,
@@ -35,7 +38,7 @@ function Profile:OnInitialize()
     }
 
     self.ignoreCache = {}
-    self.gdb = LibStub('AceDB-3.0'):New('MEETINGSTONE_UI_DB', gdb)
+    self.gdb = LibStub('AceDB-3.0'):New('MEETINGSTONE_UI_DB', gdb, true)
     self.cdb = LibStub('AceDB-3.0'):New('MEETINGSTONE_CHARACTER_DB', cdb)
 end
 
@@ -45,6 +48,7 @@ function Profile:OnEnable()
         'panelLock',
         'sound',
         'ignore',
+        'spamWord',
     }
 
     for _, key in ipairs(settings) do
@@ -52,6 +56,7 @@ function Profile:OnEnable()
     end
 
     self:RefreshIgnoreCache()
+    self:ImportDefaultSpamWord()
 end
 
 function Profile:SaveActivityProfile(activity)
@@ -181,4 +186,137 @@ end
 
 function Profile:GetIgnoreName(index)
     return self.ignoreCache[index]
+end
+
+function Profile:IsOnlyMeetingStoneActivity()
+    return self.cdb.profile.settings.onlyms
+end
+
+function Profile:GetSpamWordIndex(word)
+    for i, v in ipairs(self.gdb.global.spamWord) do
+        if v.text == word.text and v.pain == word.pain then
+            return i
+        end
+    end
+end
+
+local function sortSpamWord(a, b)
+    return a.text < b.text
+end
+
+function Profile:SortSpamWord()
+    sort(self.gdb.global.spamWord, sortSpamWord)
+end
+
+function Profile:AddSpamWord(word, delay)
+    if type(word) ~= 'table'  then
+        System:Log(L['添加失败，未输入关键字。'])
+        return
+    end
+
+    if word.pain then
+        word.text = word.text:lower():trim()
+    end
+
+    if self:GetSpamWordIndex(word) then
+        System:Logf(L['添加失败，关键字“%s”已存在。'], word.text)
+    else
+        tinsert(self.gdb.global.spamWord, word)
+        System:Logf(L['添加成功，关键字“%s”已添加。'], word.text)
+        if not delay then
+            ClearSpamWordCache()
+            self:SortSpamWord()
+            self:SendMessage('MEETINGSTONE_SPAMWORD_UPDATE', word)
+        end
+    end
+end
+
+function Profile:DelSpamWord(word)
+    if type(word) ~= 'table'  then
+        System:Log(L['删除失败，未输入关键字。'])
+        return
+    end
+
+    local index = self:GetSpamWordIndex(word, pain)
+    if index then
+        ClearSpamWordCache()
+        tremove(self.gdb.global.spamWord, index)
+        System:Logf(L['删除成功，关键字“%s”已删除。'], word.text)
+        self:SendMessage('MEETINGSTONE_SPAMWORD_UPDATE')
+    else
+        System:Logf(L['删除失败，关键字“%s”不存在。'], word.text)
+    end
+end
+
+function Profile:GetSpamWords()
+    return self.gdb.global.spamWord
+end
+
+function Profile:GetSpamWordStatus()
+    return self.cdb.profile.settings.spamWord
+end
+
+function Profile:SetSpamWordEnabled(enable)
+    if self.cdb.profile.settings.spamWord ~= enable then
+        self.cdb.profile.settings.spamWord = enable
+        self:SendMessage('MEETINGSTONE_SETTING_CHANGED', 'spamWord', enable)
+    end
+end
+
+function Profile:SaveImportSpamWord(text)
+    if type(text) ~= 'string' then
+        return
+    end
+
+    local list = {('\n'):split(text)}
+
+    if #list == 0 then
+        return
+    end
+
+    for i, v in ipairs(list) do
+        local enable, text = v:match('^([!]*)(.+)$')
+        if text then
+            enable = enable == '' and true or nil
+            local word = { text = text, pain = enable }
+            self:AddSpamWord(word, true)
+        end
+    end
+
+    ClearSpamWordCache()
+    self:SortSpamWord()
+end
+
+function Profile:ImportDefaultSpamWord()
+    if self.gdb.global.spamWord.default then
+        return
+    end
+    self.gdb.global.spamWord.default = true
+    self:SaveImportSpamWord(DEFAULT_SPAMWORD)
+    self:SendMessage('MEETINGSTONE_SPAMWORD_UPDATE')
+end
+
+function Profile:ResetSpamWord()
+    wipe(self.gdb.global.spamWord)
+    self:ImportDefaultSpamWord()
+    System:Log(L['关键字列表已恢复默认'])
+end
+
+function Profile:ExportSpamWord()
+    local text = {}
+    for i, v in ipairs(self.gdb.global.spamWord) do
+        if not v.pain then
+            tinsert(text, '!' .. v.text)
+        else
+            tinsert(text, v.text)
+        end
+    end
+
+    return table.concat(text, '\n')
+end
+
+function Profile:ImportSpamWord(text)
+    self:SaveImportSpamWord(text)
+    self:SendMessage('MEETINGSTONE_SPAMWORD_UPDATE')
+    System:Log(L['导入关键字完成'])
 end

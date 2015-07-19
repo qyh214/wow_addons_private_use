@@ -19,6 +19,7 @@ Castbars.BaseTickDuration =
     [GetSpellInfo(129197) or ""] = 1, -- Mind Flay (Insanity)
     [GetSpellInfo(48045) or ""] = 1, -- Mind Sear
     [GetSpellInfo(64843) or ""] = 2, -- Divine Hymn
+    [GetSpellInfo(179338) or ""] = 1, -- Searing Insanity
     -- Mage
     [GetSpellInfo(10) or ""] = 1, -- Blizzard
     [GetSpellInfo(5143) or ""] = 0.4, -- Arcane Missiles

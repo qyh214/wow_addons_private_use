@@ -4,7 +4,7 @@
 
 local XPerl_Raid_Events = { }
 local RaidGroupCounts = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-local myGroup = 0
+local myGroup
 local FrameArray = { }		-- List of raid frames indexed by raid ID
 local RaidPositions = { }	-- Back-matching of unit names to raid ID
 local ResArray = { }		-- List of currently active resserections in progress
@@ -14,6 +14,7 @@ local rosterUpdated
 local percF = "%.1f"..PERCENT_SYMBOL
 local percD = "%d"..PERCENT_SYMBOL
 local fullyInitiallized
+local SkipHighlightUpdate
 
 local taintFrames = { }
 
@@ -21,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 951 $")
+end, "$Revision: 972 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -93,7 +94,7 @@ local raidHeaders = { }
 -- XPerl_Raid_OnLoad
 function XPerl_Raid_OnLoad(self)
 	local events = {
-		--[["CHAT_MSG_ADDON", ]]"PLAYER_ENTERING_WORLD", "VARIABLES_LOADED", "COMPACT_UNIT_FRAME_PROFILES_LOADED", "GROUP_ROSTER_UPDATE", "UNIT_FLAGS", "UNIT_AURA", "UNIT_POWER", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED", "UNIT_COMBAT", "UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_INTERRUPTED", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED", "RAID_TARGET_UPDATE", "PLAYER_LOGIN", "ROLE_CHANGED_INFORM", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE", "UNIT_CONNECTION", "PLAYER_REGEN_ENABLED"
+		--[["CHAT_MSG_ADDON", ]]"PLAYER_ENTERING_WORLD", "VARIABLES_LOADED", "COMPACT_UNIT_FRAME_PROFILES_LOADED", "GROUP_ROSTER_UPDATE", "UNIT_FLAGS", "UNIT_AURA", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED", "UNIT_COMBAT", "UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_INTERRUPTED", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED", "RAID_TARGET_UPDATE", "PLAYER_LOGIN", "ROLE_CHANGED_INFORM", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE", "UNIT_CONNECTION", "PLAYER_REGEN_ENABLED"
 	}
 
 	for i, event in pairs(events) do
@@ -295,7 +296,6 @@ local function XPerl_Raid_CheckFlags(partyid)
 				unitInfo.ressed = nil
 				XPerl_Raid_UpdateManaType(FrameArray[partyid], true)
 			end
-
 		elseif (unitInfo.afk) then
 			if (UnitIsAFK(partyid)) then
 				if (conf.showAFK) then
@@ -361,6 +361,7 @@ local function XPerl_Raid_ShowFlags(self, flags)
 	--del(flags)
 end
 
+local feignDeath = GetSpellInfo(5384)
 local spiritOfRedemption = GetSpellInfo(27827)
 
 -- XPerl_Raid_UpdateHealth
@@ -401,11 +402,9 @@ function XPerl_Raid_UpdateHealth(self)
 	local myRoster = ZPerl_Roster[name]
 	if (name and UnitIsConnected(partyid)) then
 		self.disco = nil
-		if (myRoster and myRoster.fd) then
-			if (not UnitIsFeignDeath(partyid)) then
-				myRoster.fd = nil
-			end
-		end
+		--[[if (self.feigning and not UnitBuff(partyid, feignDeath)) then
+			self.feigning = nil
+		end]]
 
 		local flags = XPerl_Raid_CheckFlags(partyid)
 		if (flags) then
@@ -416,34 +415,32 @@ function XPerl_Raid_UpdateHealth(self)
 				XPerl_Raid_UpdateName(self)
 			end
 			return
+		elseif (UnitBuff(partyid, feignDeath) and conf.showFD) then
+			XPerl_NoFadeBars(true)
+			self.statsFrame.healthBar.text:SetText(XPERL_LOC_FEIGNDEATH)
+			self.statsFrame:SetGrey()
+			XPerl_NoFadeBars()
 		elseif (UnitBuff(partyid, spiritOfRedemption)) then
 			self.dead = true
 			XPerl_Raid_ShowFlags(self, XPERL_LOC_DEAD)
 			XPerl_Raid_UpdateName(self)
-		elseif (UnitIsDead(partyid) or (myRoster and myRoster.fd and conf.showFD)) then
-			if (myRoster and myRoster.fd) then
-				XPerl_NoFadeBars(true)
-				self.statsFrame.healthBar.text:SetText(XPERL_LOC_FEIGNDEATH)
-				self.statsFrame:SetGrey()
-				XPerl_NoFadeBars()
-			else
-				self.dead = true
-				XPerl_Raid_ShowFlags(self, XPERL_LOC_DEAD)
-				XPerl_Raid_UpdateName(self)
-			end
+		elseif (UnitIsDead(partyid)) then
+			self.dead = true
+			XPerl_Raid_ShowFlags(self, XPERL_LOC_DEAD)
+			XPerl_Raid_UpdateName(self)
 		elseif (UnitIsGhost(partyid)) then
 			self.dead = true
 			XPerl_Raid_ShowFlags(self, XPERL_LOC_GHOST)
 			XPerl_Raid_UpdateName(self)
 		else
-			if (self.dead or (myRoster and ((myRoster.fd and conf.showFD) or myRoster.ressed))) then
+			if (self.dead or (myRoster and ((UnitBuff(partyid, feignDeath) and conf.showFD) or myRoster.ressed))) then
 				XPerl_Raid_UpdateManaType(self, true)
 			end
 			self.dead = nil
 
 			-- Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
 			local percentHp
-			if health > 0 and healthmax == 0 then -- We have current ho but max hp failed.
+			if health > 0 and healthmax == 0 then -- We have current hp but max hp failed.
 				healthmax = health -- Make max hp at least equal to current health
 				percentHp = 100 -- And percent 100% cause a number divided by itself is 1, duh.
 			elseif health == 0 and healthmax == 0 then -- Probably dead target
@@ -812,12 +809,12 @@ local function UpdateBuffs(self)
 
 			if (rconf.buffs.inside) then
 				if (buffCount > 3 + (rconf.mana and 1 or 0)) then
-					self.statsFrame:SetWidth(60)
+					self.statsFrame:SetWidth(60 + rconf.size.width)
 				else
-					self.statsFrame:SetWidth(70)
+					self.statsFrame:SetWidth(70 + rconf.size.width)
 				end
 			else
-				self.statsFrame:SetWidth(80)
+				self.statsFrame:SetWidth(80 + rconf.size.width)
 			end
 
 			bf.buff[1]:ClearAllPoints()
@@ -842,7 +839,7 @@ local function UpdateBuffs(self)
 				end
 			end
 		else
-			self.statsFrame:SetWidth(80)
+			self.statsFrame:SetWidth(80 + rconf.size.width)
 
 			bf:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 0, 1)
 
@@ -859,24 +856,22 @@ local function UpdateBuffs(self)
 			end
 		end
 	else
-		self.statsFrame:SetWidth(80)
+		self.statsFrame:SetWidth(80 + rconf.size.width)
 		if (bf:IsShown()) then
 			bf:Hide()
 		end
 	end
 
-	local myRoster = ZPerl_Roster[UnitName(partyid)]
-	if (myRoster) then
-		local _, class = UnitClass(partyid)
-		if (class == "HUNTER") then
-			if (UnitIsFeignDeath(partyid)) then
-				if (not myRoster.fd) then
-					myRoster.fd = GetTime()
+	if conf.showFD then
+		local myRoster = ZPerl_Roster[UnitName(partyid)]
+		if myRoster then
+			local _, class = UnitClass(partyid)
+			if class == "HUNTER" then
+				local feigning = UnitBuff(partyid, feignDeath)
+				if feigning ~= self.feigning then
+					self.feigning = feigning
 					XPerl_Raid_UpdateHealth(self)
 				end
-			elseif (myRoster.fd) then
-				myRoster.fd = nil
-				XPerl_Raid_UpdateHealth(self)
 			end
 		end
 	end
@@ -1011,9 +1006,12 @@ function XPerl_Raid_OnUpdate(self, elapsed)
 						XPerl_UpdateSpellRange(frame, unit, true)
 					end
 				end]]--
-				
-				if (frame.partyid) then
-					XPerl_UpdateSpellRange(frame, frame.partyid, true)
+				self.time = self.time + elapsed
+				if (self.time > 0.2) then
+					self.time = 0
+					if (frame.partyid) then
+						XPerl_UpdateSpellRange(frame, frame.partyid, true)
+					end
 				end
 			end
 		end
@@ -1192,7 +1190,7 @@ function XPerl_Raid_OnEvent(self, event, unit, ...)
 end
 
 local function DisableCompactRaidFrames()
-	if not CompactUnitFrameProfiles then
+	if not CompactUnitFrameProfiles or not CompactUnitFrameProfiles.selectedProfile then
 		return
 	end
 	SetRaidProfileOption(CompactUnitFrameProfiles.selectedProfile, "autoActivate2Players", false)
@@ -1206,14 +1204,14 @@ local function DisableCompactRaidFrames()
 	SetRaidProfileOption(CompactUnitFrameProfiles.selectedProfile, "autoActivateSpec2", false)
 	SetRaidProfileOption(CompactUnitFrameProfiles.selectedProfile, "autoActivatePvP", false)
 	SetRaidProfileOption(CompactUnitFrameProfiles.selectedProfile, "autoActivatePvE", false)
-	CompactUnitFrameProfiles_ApplyCurrentSettings()
-	CompactUnitFrameProfiles_UpdateCurrentPanel()
+	--CompactUnitFrameProfiles_ApplyCurrentSettings()
+	--CompactUnitFrameProfiles_UpdateCurrentPanel()
 	CompactUnitFrameProfiles_SaveChanges(CompactUnitFrameProfiles)
 	if not InCombatLockdown() then
 		SetCVar("useCompactPartyFrames", 0)
 		CompactUnitFrameProfilesRaidStylePartyFrames:SetChecked(false)
+		CompactRaidFrameManager_SetSetting("IsShown", false)
 	end
-	CompactRaidFrameManager_SetSetting("IsShown", false)
 end
 
 -- COMPACT_UNIT_FRAME_PROFILES_LOADED
@@ -1315,50 +1313,48 @@ function XPerl_Raid_Events:PLAYER_ENTERING_WORLD()
 	XPerl_Raid_Events.PLAYER_ENTERING_WORLDsmall = nil
 end
 
-do
-	local rosterGuids
-	-- XPerl_Raid_GetUnitFrameByGUID
-	function XPerl_Raid_GetUnitFrameByGUID(guid)
-		local unitid = rosterGuids and rosterGuids[guid]
-		if (unitid) then
-			return FrameArray[unitid]
-		end
+local rosterGuids
+-- XPerl_Raid_GetUnitFrameByGUID
+function XPerl_Raid_GetUnitFrameByGUID(guid)
+	local unitid = rosterGuids and rosterGuids[guid]
+	if (unitid) then
+		return FrameArray[unitid]
 	end
+end
 
-	local function BuildGuidMap()
-		if (IsInRaid()) then
-			rosterGuids = { }
-			for i = 1, GetNumGroupMembers() do
-				local guid = UnitGUID("raid"..i)
-				if (guid) then
-					rosterGuids[guid] = "raid"..i
-				end
-			end
-		else
-			rosterGuids = { }
-		end
-	end
-
-	-- GROUP_ROSTER_UPDATE
-	function XPerl_Raid_Events:GROUP_ROSTER_UPDATE()
-		rosterUpdated = true -- Many roster updates can occur during 1 video frame, so we'll check everything at end of last one
-		BuildGuidMap()
-		if (IsInRaid()) then
-			XPerl_Raid_Frame:Show()
-			if (rconf.raid_role) then
-				for i, frame in pairs(FrameArray) do
-					if (frame.partyid) then
-						XPerl_Raid_RoleUpdate(self, UnitGroupRolesAssigned(self.partyid))
-					end
-				end
+local function BuildGuidMap()
+	if (IsInRaid()) then
+		rosterGuids = { }
+		for i = 1, GetNumGroupMembers() do
+			local guid = UnitGUID("raid"..i)
+			if (guid) then
+				rosterGuids[guid] = "raid"..i
 			end
 		end
+	else
+		rosterGuids = { }
 	end
+end
 
-	-- PLAYER_LOGIN
-	function XPerl_Raid_Events:PLAYER_LOGIN()
-		BuildGuidMap()
+-- GROUP_ROSTER_UPDATE
+function XPerl_Raid_Events:GROUP_ROSTER_UPDATE()
+	rosterUpdated = true -- Many roster updates can occur during 1 video frame, so we'll check everything at end of last one
+	BuildGuidMap()
+	if (IsInRaid()) then
+		XPerl_Raid_Frame:Show()
+		if (rconf.raid_role) then
+			for i, frame in pairs(FrameArray) do
+				if (frame.partyid) then
+					XPerl_Raid_RoleUpdate(self, UnitGroupRolesAssigned(self.partyid))
+				end
+			end
+		end
 	end
+end
+
+-- PLAYER_LOGIN
+function XPerl_Raid_Events:PLAYER_LOGIN()
+	BuildGuidMap()
 end
 
 -- UNIT_FLAGS
@@ -1398,14 +1394,14 @@ function XPerl_Raid_Events:UNIT_DISPLAYPOWER()
 	XPerl_Raid_UpdateMana(self)
 end
 
--- UNIT_POWER
-function XPerl_Raid_Events:UNIT_POWER()
+-- UNIT_POWER_FREQUENT
+function XPerl_Raid_Events:UNIT_POWER_FREQUENT()
 	if (rconf.mana) then
 		XPerl_Raid_UpdateMana(self)
 	end
 end
 
-XPerl_Raid_Events.UNIT_MAXPOWER = XPerl_Raid_Events.UNIT_POWER
+XPerl_Raid_Events.UNIT_MAXPOWER = XPerl_Raid_Events.UNIT_POWER_FREQUENT
 
 -- UNIT_NAME_UPDATE
 function XPerl_Raid_Events:UNIT_NAME_UPDATE()
@@ -1797,8 +1793,32 @@ function XPerl_ScaleRaid()
 	end
 end
 
+-- XPerl_Raid_SetWidth
+function XPerl_Raid_SetWidth()
+	if (InCombatLockdown()) then
+		XPerl_OutOfCombatQueue[XPerl_Raid_SetWidth] = true
+		return
+	end
+	for i = 1, WoWclassCount do
+		local f = _G["XPerl_Raid_Title"..i]
+		if (f) then
+			f:SetWidth(80 + rconf.size.width)
+			f.virtual:SetWidth(80 + rconf.size.width)
+		end
+		for j = 1, 40 do
+			local f = _G["XPerl_Raid_Grp"..i.."UnitButton"..j]
+			if (f) then
+				f:SetWidth(80 + rconf.size.width)
+				f.nameFrame:SetWidth(80 + rconf.size.width)
+				f.statsFrame:SetWidth(80 + rconf.size.width)
+			end
+		end
+	end
+end
+
 -- XPerl_RaidTitles
 function XPerl_RaidTitles()
+	XPerl_Raid_SetWidth()
 	local singleGroup
 	if (XPerl_Party_SingleGroup) then
 		if (conf.party.smallRaid and fullyInitiallized) then
@@ -1813,7 +1833,7 @@ function XPerl_RaidTitles()
 		local titleFrame = frame.text
 		local virtualFrame = frame.virtual
 
-		if (not rconf.sortByClass and myGroup == i) then
+		if (not rconf.sortByClass and IsInRaid() and myGroup and myGroup == i) then
 			c = HIGHLIGHT_FONT_COLOR
 		else
 			c = NORMAL_FONT_COLOR
@@ -1858,22 +1878,19 @@ function XPerl_RaidTitles()
 				if (rconf.anchor == "TOP") then
 					virtualFrame:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 0, 0)
 					virtualFrame:SetHeight(((rconf.mana and 1 or 0) * rows + 38) * rows + (rconf.spacing * (rows - 1)))
-					virtualFrame:SetWidth(80)
-
+					virtualFrame:SetWidth(80 + rconf.size.width)
 				elseif (rconf.anchor == "LEFT") then
 					virtualFrame:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 0, 0)
 					virtualFrame:SetHeight((rconf.mana and 1 or 0) * 5 + 38)
-					virtualFrame:SetWidth(80 * rows + (rconf.spacing * (rows - 1)))
-
+					virtualFrame:SetWidth(80 * rows + (rconf.spacing * (rows - 1)) + rconf.size.width)
 				elseif (rconf.anchor == "BOTTOM") then
 					virtualFrame:SetPoint("BOTTOMLEFT", frame, "TOPLEFT", 0, 0)
 					virtualFrame:SetHeight(((rconf.mana and 1 or 0) * rows + 38) * rows + (rconf.spacing * (rows - 1)))
-					virtualFrame:SetWidth(80)
-
+					virtualFrame:SetWidth(80 + rconf.size.width)
 				elseif (rconf.anchor == "RIGHT") then
 					virtualFrame:SetPoint("TOPRIGHT", frame, "BOTTOMRIGHT", 0, 0)
 					virtualFrame:SetHeight((rconf.mana and 1 or 0) * 5 + 38)
-					virtualFrame:SetWidth(80 * rows + (rconf.spacing * (rows - 1)))
+					virtualFrame:SetWidth(80 * rows + (rconf.spacing * (rows - 1)) + rconf.size.width)
 				end
 
 				virtualFrame:SetBackdropColor(conf.colour.frame.r, conf.colour.frame.g, conf.colour.frame.b, conf.colour.frame.a)
@@ -2178,7 +2195,7 @@ function XPerl_RaidTipExtra(unitid)
 				end
 			end
 
-			if (UnitIsDeadOrGhost(unitid) and not UnitIsFeignDeath(unitid)) then
+			if (UnitIsDeadOrGhost(unitid) and not UnitBuff(unitid, feignDeath)) then
 				if (stats.resCount) then
 					GameTooltip:AddLine(XPERL_LOC_RESURRECTED.." x"..stats.resCount)
 				end
@@ -2354,6 +2371,7 @@ function XPerl_Raid_Set_Bits(self)
 	SkipHighlightUpdate = nil
 
 	XPerl_ScaleRaid()
+	XPerl_Raid_SetWidth()
 
 	for i = 1, WoWclassCount do
 		XPerl_SavePosition(_G["XPerl_Raid_Title"..i], true)
@@ -2363,7 +2381,7 @@ function XPerl_Raid_Set_Bits(self)
 		Setup1RaidFrame(frame)
 	end
 
-	local manaEvents = {"UNIT_DISPLAYPOWER", "UNIT_POWER", "UNIT_MAXPOWER"}
+	local manaEvents = {"UNIT_DISPLAYPOWER", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER"}
 	for i, event in pairs(manaEvents) do
 		if (rconf.mana) then
 			self:RegisterEvent(event)

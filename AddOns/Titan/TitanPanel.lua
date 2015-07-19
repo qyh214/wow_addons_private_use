@@ -13,7 +13,7 @@ local TITAN_PANEL_FROM_BOTTOM_MAIN = 1;
 local TITAN_PANEL_FROM_TOP_MAIN = 1;
 
 local _G = getfenv(0);
-local InCombatLockdown	= _G.InCombatLockdown;
+local InCombatLockdown = _G.InCombatLockdown;
 local IsTitanPanelReset = nil;
 local numOfTextures = 0;
 local numOfTexturesHider = 0;
@@ -329,11 +329,13 @@ function TitanPanel_PlayerEnteringWorld()
 		-- Also sync the LDB object with the Tian plugin
 		TitanLDBRefreshButton()
 	else
-		-- only do this sort of initialization on the first PEW event
-		TitanPrint("", "header")
-
 		-- Get Profile and Saved Vars
-		TitanVariables_InitTitanSettings();			
+		TitanVariables_InitTitanSettings();
+
+		-- only do this sort of initialization on the first PEW event
+		if not TitanAllGetVar("Silenced") then
+			TitanPrint("", "header")
+		end
 
 		if not ServerTimeOffsets then
 			ServerTimeOffsets = {};
@@ -347,7 +349,7 @@ function TitanPanel_PlayerEnteringWorld()
 		TitanPanelTopAnchor:ClearAllPoints();
 		TitanPanelTopAnchor:SetPoint("TOPLEFT", "UIParent", "TOPLEFT", 0, 0);
 		TitanPanelBottomAnchor:ClearAllPoints();
-		TitanPanelBottomAnchor:SetPoint("BOTTOMLEFT", "UIParent", "BOTTOMLEFT", 0, 0); 
+		TitanPanelBottomAnchor:SetPoint("BOTTOMLEFT", "UIParent", "BOTTOMLEFT", 0, 0);
 
 		-- Ensure the bars are created before the 
 		-- plugins are registered. 
@@ -620,6 +622,10 @@ local function handle_slash_help(cmd)
 		TitanPrint(L["TITAN_PANEL_SLASH_PROFILE_2"], "plain")
 		TitanPrint(L["TITAN_PANEL_SLASH_PROFILE_3"], "plain")
 	end
+	if cmd == "silent" then
+		TitanPrint(L["TITAN_PANEL_SLASH_SILENT_0"], "plain")
+		TitanPrint(L["TITAN_PANEL_SLASH_SILENT_1"], "plain")
+	end
 	if cmd == "help" then
 		TitanPrint(L["TITAN_PANEL_SLASH_HELP_0"], "plain")
 		TitanPrint(L["TITAN_PANEL_SLASH_HELP_1"], "plain")
@@ -730,6 +736,29 @@ local function handle_profile_cmds(cmd_list)
 end
 
 --[[ local
+NAME: handle_silent_cmds
+DESC: Helper to execute the silent commands from the user.
+VAR: cmd_list - A table containing the list of 'words' the user typed in
+OUT: None
+--]]
+local function handle_silent_cmds(cmd_list)
+	local cmd = cmd_list[1]
+	local p1 = cmd_list[2] or nil
+	-- sanity check
+	if (not cmd == "silent") then
+		return
+	end
+	
+	if TitanAllGetVar("Silenced") then
+		TitanAllSetVar("Silenced", false);
+		TitanPrint(L["TITAN_PANEL_MENU_SILENT_LOAD"].." ".. L["TITAN_PANEL_MENU_DISABLED"], "info")
+	else
+		TitanAllSetVar("Silenced", true);
+		TitanPrint(L["TITAN_PANEL_MENU_SILENT_LOAD"].." ".. L["TITAN_PANEL_MENU_ENABLED"], "info")
+	end		
+end
+
+--[[ local
 NAME: handle_help_cmds
 DESC: Helper to execute the help commands from the user.
 VAR: cmd_list - A table containing the list of 'words' the user typed in
@@ -769,6 +798,8 @@ local function TitanPanel_RegisterSlashCmd(cmd_str)
 		handle_giu_cmds(cmd_list)
 	elseif (cmd == "profile") then
 		handle_profile_cmds(cmd_list)
+	elseif (cmd == "silent") then
+		handle_silent_cmds(p1)
 	elseif (cmd == "help") then
 		handle_slash_help(p1)
 	else

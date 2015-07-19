@@ -14,12 +14,13 @@
   <Include file="AceGUI-3.0\AceGUI-3.0.xml" />
   <Include file="AceConfig-3.0\AceConfig-3.0.xml" />
   <Script file="Env\Env.lua" />
-  <Include file="LibClass-1.0\LibClass-1.0.xml" />
+  <Include file="LibClass-2.0\LibClass-2.0.xml" />
   <Include file="LibModule-1.0\LibModule-1.0.xml" />
+  <Include file="NetEaseBase64-1.0\NetEaseBase64-1.0.xml" />
   <Include file="NetEaseSocketMiddleware-2.0\NetEaseSocketMiddleware-2.0.xml" />
+  <Include file="NetEaseBroadMiddleware-2.0\NetEaseBroadMiddleware-2.0.xml" />
   <Include file="NetEaseSocket-2.0\NetEaseSocket-2.0.xml" />
-  <Include file="NetEaseGUI-1.0\NetEaseGUI-1.0.xml" />
-  <Include file="NetEaseGUI-DropMenu-1.0\NetEaseGUI-DropMenu-1.0.xml" />
+  <Include file="NetEaseGUI-2.0\NetEaseGUI-2.0.xml" />
   <Script file="crc32\crc32.lua" />
   <Script file="LibDataBroker-1.1\LibDataBroker-1.1.lua" />
   <Script file="LibDBIcon-1.0\LibDBIcon-1.0.lua" />

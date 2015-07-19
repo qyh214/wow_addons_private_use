@@ -8,7 +8,7 @@ end
 ActivitiesSummary = Addon:NewModule(CreateFrame('Frame'), 'ActivitiesSummary', 'AceEvent-3.0')
 
 function ActivitiesSummary:OnInitialize()
-    GUI:Embed(self, 'Owner')
+    GUI:Embed(self, 'Owner', 'Refresh')
     ActivitiesParent:RegisterPanel(L['活动简介'], [[Interface\ICONS\ACHIEVEMENT_GUILDPERK_HONORABLEMENTION_RANK2]], self, 6)
 
     local Banner = CreateFrame('Frame', nil, self) do
@@ -31,7 +31,6 @@ function ActivitiesSummary:OnInitialize()
     end
 
     local GiftButton = Addon:GetClass('Button'):New(Banner) do
-        GiftButton:SetPoint('BOTTOMLEFT', 20, 20)
         GiftButton:SetText(L['每日礼包'])
         GiftButton:SetIcon([[Interface\ICONS\INV_Misc_Gift_02]])
         GiftButton:SetCooldown(SERVER_TIMEOUT)
@@ -39,6 +38,24 @@ function ActivitiesSummary:OnInitialize()
         GiftButton:SetScript('OnClick', function()
             Activities:SignIn()
             GiftButton:Disable()
+        end)
+    end
+
+    local MemberButton = Addon:GetClass('Button'):New(Banner) do
+        MemberButton:SetText(L['我想了解'])
+        MemberButton:SetIcon([[Interface\ICONS\Raf-Icon]])
+        MemberButton:Hide()
+        MemberButton:SetScript('OnClick', function()
+            Activities:SignUp(false)
+        end)
+    end
+
+    local LeaderButton = Addon:GetClass('Button'):New(Banner) do
+        LeaderButton:SetText(L['团长申请'])
+        LeaderButton:SetIcon([[Interface\ICONS\Spell_Holy_ReviveChampion]])
+        LeaderButton:Hide()
+        LeaderButton:SetScript('OnClick', function()
+            Activities:SignUp(true)
         end)
     end
 
@@ -58,10 +75,14 @@ function ActivitiesSummary:OnInitialize()
     self.Target = Target
     self.Summary = Summary
     self.GiftButton = GiftButton
+    self.MemberButton = MemberButton
+    self.LeaderButton = LeaderButton
     self.Background = Background
 
+    self.buttons = {self.GiftButton, self.MemberButton, self.LeaderButton}
+
     self:RegisterMessage('MEETINGSTONE_ACTIVITIES_DATA_UPDATED')
-    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_PLAYERINFO_UPDATE', 'RefreshGift')
+    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_PERSONINFO_UPDATE', 'Refresh')
 end
 
 function ActivitiesSummary:MEETINGSTONE_ACTIVITIES_DATA_UPDATED(_, data)
@@ -69,9 +90,27 @@ function ActivitiesSummary:MEETINGSTONE_ACTIVITIES_DATA_UPDATED(_, data)
     self.Summary:SetText(data.summary)
     self.Target:SetText(data.target)
     self.Background:SetTexture([[Interface\AddOns\MeetingStone\Media\Activities\]] .. data.background)
-    self:RefreshGift()
+    self:Refresh()
 end
 
-function ActivitiesSummary:RefreshGift()
+function ActivitiesSummary:Update()
     self.GiftButton:SetShown(Activities:CanSignIn())
+    self.MemberButton:SetShown(Activities:CanMemberSignUp())
+    self.LeaderButton:SetShown(Activities:CanLeaderSignUp())
+
+    local prevButton
+    local count = 0
+    for i, button in ipairs(self.buttons) do
+        if button:IsShown() then
+            button:ClearAllPoints()
+            if not prevButton then
+                button:SetPoint('BOTTOMLEFT', 20, 10)
+            else
+                button:SetPoint('BOTTOMLEFT', prevButton, 'TOPLEFT', 0, 5)
+            end
+            prevButton = button
+            count = count + 1
+        end
+    end
+    self.Target:SetPoint('TOPLEFT', self.Title, 'BOTTOMLEFT', 0, count < 3 and -30 or -10)
 end

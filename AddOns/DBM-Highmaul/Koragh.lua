@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13249 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14024 $"):sub(12, -3))
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetZone()
@@ -22,8 +22,6 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
---TODO, find number of targets of MC and add SetIconsUsed with correct icon count.
---TODO, see if MC works. I think it's every 3rd balls
 local warnCausticEnergy				= mod:NewTargetAnnounce("OptionVersion3", 161242, 3, nil, "Melee")
 local warnTrample					= mod:NewTargetAnnounce(163101, 3)--Technically it's supression field, then trample, but everyone is going to know it more by trample cause that's the part of it that matters
 local warnExpelMagicFrost			= mod:NewTargetAnnounce(161411, 3)
@@ -36,37 +34,36 @@ local warnExpelMagicFel				= mod:NewTargetAnnounce(172895, 4)
 
 local specWarnNullBarrier			= mod:NewSpecialWarningTarget(156803)--Only warn for boss
 local specWarnVulnerability			= mod:NewSpecialWarningTarget(160734)--Switched to target warning since some may be assined adds, some to boss, but all need to know when this phase starts
-local specWarnTrample				= mod:NewSpecialWarningYou(163101, nil, nil, nil, nil, nil, 2)
+local specWarnTrample				= mod:NewSpecialWarningYou(163101, nil, nil, nil, nil, 2)
 local yellTrample					= mod:NewYell(163101)
 local specWarnTrampleNear			= mod:NewSpecialWarningClose(163101)
-local specWarnExpelMagicFire		= mod:NewSpecialWarningMoveAway(162185, nil, nil, nil, nil, nil, 2)
-local specWarnExpelMagicShadow		= mod:NewSpecialWarningSpell(162184, "Healer", nil, nil, nil, nil, 2)
+local specWarnExpelMagicFire		= mod:NewSpecialWarningMoveAway(162185, nil, nil, nil, nil, 2)
+local specWarnExpelMagicShadow		= mod:NewSpecialWarningSpell(162184, "Healer", nil, nil, nil, 2)
 local specWarnExpelMagicFrostYou	= mod:NewSpecialWarningYou(161411, false)
-local specWarnExpelMagicFrost		= mod:NewSpecialWarningSpell(161411, false, nil, nil, nil, nil, 2)
-local specWarnExpelMagicArcaneYou	= mod:NewSpecialWarningMoveAway(162186, nil, nil, nil, 3, nil, 2)
-local specWarnExpelMagicArcane		= mod:NewSpecialWarningTaunt(162186, nil, nil, nil, nil, nil, 2)
+local specWarnExpelMagicFrost		= mod:NewSpecialWarningSpell(161411, false, nil, nil, nil, 2)
+local specWarnExpelMagicArcaneYou	= mod:NewSpecialWarningMoveAway(162186, nil, nil, nil, 3, 2)
+local specWarnExpelMagicArcane		= mod:NewSpecialWarningTaunt(162186, nil, nil, nil, nil, 2)
 local yellExpelMagicArcane			= mod:NewYell(162186)
-local specWarnBallsSoon				= mod:NewSpecialWarningPreWarn(161612, nil, 6.5, nil, nil, nil, nil, 2)
---local specWarnMCSoon				= mod:NewSpecialWarningPreWarn(163472, true, 6.5)
+local specWarnBallsSoon				= mod:NewSpecialWarningPreWarn(161612, nil, 6.5, nil, nil, nil, 2)
 local specWarnMC					= mod:NewSpecialWarningSwitch(163472, "Dps")
 local specWarnForfeitPower			= mod:NewSpecialWarningInterrupt(163517)--Spammy?
 local specWarnExpelMagicFel			= mod:NewSpecialWarningYou(172895)--Maybe needs "do not move" warning or at very least "try not to move" since sometimes you have to move for trample.
-local specWarnExpelMagicFelFades	= mod:NewSpecialWarning("specWarnExpelMagicFelFades", nil, nil, nil, 3, nil, 2)--No generic that describes this
+local specWarnExpelMagicFelFades	= mod:NewSpecialWarning("specWarnExpelMagicFelFades", nil, nil, nil, 3, 2)--No generic that describes this
 local yellExpelMagicFel				= mod:NewYell(172895)
 local specWarnExpelMagicFelMove		= mod:NewSpecialWarningMove(172917)--Under you (fire). If not enough maybe add periodic damage too?
 
-local timerVulnerability			= mod:NewBuffActiveTimer(23, 160734)--more like 23-24 than 20
-local timerTrampleCD				= mod:NewCDTimer(16, 163101)
-local timerExpelMagicFire			= mod:NewBuffFadesTimer("OptionVersion2", 11.5, 162185, nil, false)--Has countdown, and fight has a lot of itmers now, i found this timer HIGHLY distracting when trying to process multiple important ability cds at once.
-local timerExpelMagicFireCD			= mod:NewCDTimer(58, 162185)--58-66 Variation
-local timerExpelMagicFrost			= mod:NewBuffActiveTimer("OptionVersion3", 20, 161411, nil, false)
-local timerExpelMagicFrostCD		= mod:NewCDTimer(60, 161411)--60-63 variation
-local timerExpelMagicShadowCD		= mod:NewCDTimer(59, 162184, nil, "Tank|Healer")--60-63 variation
+local timerVulnerability			= mod:NewBuffActiveTimer(23, 160734, nil, nil, nil, 6)--more like 23-24 than 20
+local timerTrampleCD				= mod:NewCDTimer(16, 163101, nil, nil, nil, 3)
+local timerExpelMagicFire			= mod:NewBuffFadesTimer(11.5, 162185, nil, false, 2)--Has countdown, and fight has a lot of itmers now, i found this timer HIGHLY distracting when trying to process multiple important ability cds at once.
+local timerExpelMagicFireCD			= mod:NewCDTimer(58, 162185, nil, nil, nil, 3)--58-66 Variation
+local timerExpelMagicFrost			= mod:NewBuffActiveTimer(20, 161411, nil, false, 3)
+local timerExpelMagicFrostCD		= mod:NewCDTimer(60, 161411, nil, nil, nil, 2)--60-63 variation
+local timerExpelMagicShadowCD		= mod:NewCDTimer(59, 162184, nil, "Tank|Healer", nil, 5)--60-63 variation
 local timerExpelMagicArcane			= mod:NewTargetTimer(10, 162186, nil, "Tank|Healer")
-local timerExpelMagicArcaneCD		= mod:NewCDTimer(26, 162186, nil, "Tank")--26-32
-local timerBallsCD					= mod:NewNextCountTimer(30, 161612)
+local timerExpelMagicArcaneCD		= mod:NewCDTimer(26, 162186, nil, "Tank", nil, 5)--26-32
+local timerBallsCD					= mod:NewNextCountTimer(30, 161612, nil, nil, nil, 5)
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
-local timerExpelMagicFelCD			= mod:NewCDTimer("OptionVersion2", 15.5, 172895, nil, "-Tank")--Mythic
+local timerExpelMagicFelCD			= mod:NewCDTimer(15.5, 172895, nil, "-Tank", 2, 3)--Mythic
 local timerExpelMagicFel			= mod:NewBuffFadesTimer(12, 172895)--Mythic
 
 local countdownMagicFire			= mod:NewCountdownFades(11.5, 162185)
@@ -74,9 +71,9 @@ local countdownBalls				= mod:NewCountdown("Alt30", 161612)
 local countdownFel					= mod:NewCountdownFades("AltTwo11", 172895)
 
 local voiceExpelMagicFire			= mod:NewVoice(162185)
-local voiceExpelMagicShadow			= mod:NewVoice("OptionVersion2", 162184, "Healer")
+local voiceExpelMagicShadow			= mod:NewVoice(162184, "Healer", nil, 2)
 local voiceExpelMagicFrost			= mod:NewVoice(161411)
-local voiceExpelMagicArcane			= mod:NewVoice("OptionVersion3", 162186)
+local voiceExpelMagicArcane			= mod:NewVoice(162186, nil, nil, 3)
 local voiceMC						= mod:NewVoice(163472, "Dps")
 local voiceTrample					= mod:NewVoice(163101)
 local voiceBalls					= mod:NewVoice(161612)
@@ -111,9 +108,6 @@ local function ballsWarning(self)
 		voiceBalls:Play("161612")
 	else
 		warnBallsSoon:Show()--Everyone else
-		if self:IsMythic() and ((self.vb.ballsCount+1) % 2) == 0 then
---			specWarnMCSoon:Show()
-		end
 	end
 end
 
@@ -293,7 +287,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetSortedIcon(1, args.destName, 8, nil, true)--TODO, find out number of targets and add
 		end
 		if self.Options.HudMapOnMC then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 0, 1, 0, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 0, 1, 0, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 		end
 	elseif spellId == 172895 then
 		warnExpelMagicFel:CombinedShow(0.5, args.destName)
@@ -305,7 +299,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			lastX, LastY = UnitPosition("player")
 			self:Schedule(7, returnPosition, self)
 			if self.Options.HudMapForFel then
-				DBMHudMap:RegisterStaticMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 12, 0, 1, 0, 0.5):Pulse(0.5, 0.5)
+				DBMHudMap:RegisterStaticMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 12, 0, 1, 0, 0.5, nil, nil, 4):Pulse(0.5, 0.5)
 			end
 		end
 		if self.Options.SetIconOnFel then

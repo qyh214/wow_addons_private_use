@@ -122,7 +122,6 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
-
 		<Scripts>
 			<OnLoad>
 				self:RegisterForClicks("AnyUp")
@@ -142,7 +141,6 @@
 				XPerl_SavePosition(self)
 			</OnDragStop>
 		</Scripts>
-
 		<Frames>
 			<Frame name="$parentportraitFrame" inherits="XPerl_Portrait_Template">
 				<Anchors>
@@ -164,7 +162,6 @@
 					</BackgroundInsets>
 				</Backdrop>
 			</Frame>
-
 			<Button name="$parentnameFrame" inherits="SecureUnitButtonTemplate">
 				<Scripts>
 					<OnLoad>
@@ -291,7 +288,6 @@
 								</Anchor>
 							</Anchors>
 						</Texture>
-
 						<!-- Master Loot Icon -->
 						<Texture name="$parentmasterIcon" file="Interface\GroupFrame\UI-Group-MasterLooter" hidden="true">
 							<Size>
@@ -305,7 +301,7 @@
 								</Anchor>
 							</Anchors>
 						</Texture>
-
+						<!-- Role Icon -->
 						<Texture name="$parentroleIcon" file="Interface\GroupFrame\UI-Group-MainAssistIcon" hidden="true">
 							<Anchors>
 								<Anchor point="TOPLEFT">
@@ -316,7 +312,6 @@
 							</Anchors>
 							<Size><AbsDimension x="16" y="16"/></Size>
 						</Texture>
-
 						<!-- Rest/Combat Icon -->
 						<Texture name="$parentcombatIcon" file="Interface\CharacterFrame\UI-StateIcon" hidden="true">
 							<Size>
@@ -327,7 +322,6 @@
 							</Anchors>
 							<TexCoords left="0.5" right = "1.0" top="0.0" bottom="0.5"/>
 						</Texture>
-
 						<FontString name="$parenttext" inherits="GameFontNormal">
 							<Anchors>
 								<Anchor point="TOPLEFT"/>
@@ -339,7 +333,6 @@
 							</Anchors>
 							<Color r="1" g="1" b="0" />
 						</FontString>
-
 						<FontString name="$parentgroup" inherits="GameFontNormalSmall" text="G" hidden="true" justifyH="LEFT">
 							<Anchors>
 								<Anchor point="LEFT">
@@ -389,7 +382,6 @@
 					</OnLoad>
 				</Scripts>
 			</Frame>
-
 			<Frame name="$parentclassFrame">
 				<Size>
 					<AbsDimension x="20" y="20"/>
@@ -418,7 +410,6 @@
 					</BackgroundInsets>
 				</Backdrop>
 			</Frame>
-
 			<!-- Player Stats -->
 			<Frame name="$parentstatsFrame" inherits="XPerl_Stats_Template">
 				<Anchors>
@@ -440,7 +431,6 @@
 					</BackgroundInsets>
 				</Backdrop>
 			</Frame>
-
 			<Frame name="$parentgroupFrame" hidden="true">
 				<Size>
 					<AbsDimension x="65" y="18"/>
@@ -476,7 +466,6 @@
 					</OnLoad>
 				</Scripts>
 			</Frame>
-
 			<Frame name="$parenthitIndicator" frameStrata="HIGH">
 				<Layers>
 					<Layer level="OVERLAY">
@@ -492,14 +481,9 @@
 					</Layer>
 				</Layers>
 			</Frame>
-
 			<Frame name="$parenthighlight" inherits="XPerl_HighlightTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentclassFrame">
-						<Offset>
-							<AbsDimension x="-2" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeTo="$parentportraitFrame"/>
 					<Anchor point="TOPRIGHT" relativeTo="$parentnameFrame"/>
 				</Anchors>
 			</Frame>

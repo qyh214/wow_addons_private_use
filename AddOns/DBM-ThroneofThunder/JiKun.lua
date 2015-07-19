@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(828, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 51 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 70 $"):sub(12, -3))
 mod:SetCreatureID(69712)
 mod:SetEncounterID(1573)
 mod:SetZone()
@@ -20,14 +20,11 @@ mod:RegisterEventsInCombat(
 
 --TODO, log it so i can tweak timer spam some. don't start CDs unitl quills END event
 local warnCaws				= mod:NewSpellAnnounce(138923, 2)
-local warnQuills			= mod:NewCountAnnounce(134380, 4)
 local warnFlock				= mod:NewAnnounce("warnFlock", 3, 15746)--Some random egg icon
 local warnTalonRake			= mod:NewStackAnnounce(134366, 3, nil, "Tank|Healer")
-local warnDowndraft			= mod:NewSpellAnnounce(134370, 3)
-local warnFeedYoung			= mod:NewSpellAnnounce(137528, 3)--No Cd because it variable based on triggering from eggs, it's cast when one of young call out and this varies too much
 local warnPrimalNutriment	= mod:NewCountAnnounce(140741, 1)
 
-local specWarnQuills		= mod:NewSpecialWarningSpell(134380, nil, nil, nil, 2)
+local specWarnQuills		= mod:NewSpecialWarningCount(134380, nil, nil, nil, 2)
 local specWarnFlock			= mod:NewSpecialWarning("specWarnFlock", false)--For those assigned in egg/bird killing group to enable on their own (and tank on heroic)
 local specWarnTalonRake		= mod:NewSpecialWarningStack(134366, nil, 2)--Might change to 2 if blizz fixes timing issues with it
 local specWarnTalonRakeOther= mod:NewSpecialWarningTaunt(134366)
@@ -39,15 +36,15 @@ local specWarnFeedPool		= mod:NewSpecialWarningMove(138319, false)
 
 --local timerCawsCD			= mod:NewCDTimer(15, 138923)--Variable beyond usefulness. anywhere from 18 second cd and 50.
 local timerQuills			= mod:NewBuffActiveTimer(10, 134380)
-local timerQuillsCD			= mod:NewCDCountTimer(62.5, 134380)--variable because he has two other channeled abilities with different cds, so this is cast every 62.5-67 seconds usually after channel of some other spell ends
-local timerFlockCD	 		= mod:NewTimer(30, "timerFlockCD", 15746)
-local timerFeedYoungCD	 	= mod:NewCDTimer(30, 137528)--30-40 seconds (always 30 unless delayed by other channeled spells)
-local timerTalonRakeCD		= mod:NewCDTimer(20, 134366, nil, "Tank|Healer")--20-30 second variation
-local timerTalonRake		= mod:NewTargetTimer("OptionVersion2", 60, 134366, nil, false)
+local timerQuillsCD			= mod:NewCDCountTimer(62.5, 134380, nil, nil, nil, 2)--variable because he has two other channeled abilities with different cds, so this is cast every 62.5-67 seconds usually after channel of some other spell ends
+local timerFlockCD	 		= mod:NewTimer(30, "timerFlockCD", 15746, nil, nil, 1)
+local timerFeedYoungCD	 	= mod:NewCDTimer(29.8, 137528, nil, nil, nil, 5)--30-40 seconds (always 30 unless delayed by other channeled spells)
+local timerTalonRakeCD		= mod:NewCDTimer(20, 134366, nil, "Tank|Healer", nil, 5)--20-30 second variation
+local timerTalonRake		= mod:NewTargetTimer(60, 134366, nil, false, 2)
 local timerDowndraft		= mod:NewBuffActiveTimer(10, 134370)
-local timerDowndraftCD		= mod:NewCDTimer(97, 134370)
+local timerDowndraftCD		= mod:NewCDTimer(97, 134370, nil, nil, nil, 2)
 local timerFlight			= mod:NewBuffFadesTimer(10, 133755)
-local timerPrimalNutriment	= mod:NewBuffFadesTimer("OptionVersion2", 30, 140741, nil, false)
+local timerPrimalNutriment	= mod:NewBuffFadesTimer(30, 140741, nil, false, 2)
 local timerLessons			= mod:NewBuffFadesTimer(60, 140571, nil, false)
 
 mod:AddBoolOption("RangeFrame", "Ranged")
@@ -56,13 +53,13 @@ mod:AddDropdownOption("ShowNestArrows", {"Never", "Northeast", "Southeast", "Sou
 --As such, the options have to be coded special so that Southwest sends 10 man to upper middle and sends 25 to actual upper southwest (option text explains this difference)
 --West and Northwest are obviously nests that 10 man/LFR never see so the options won't do anything outside of 25 man (thus the 25 man only text)
 
-local flockCount = 0
-local quillsCount = 0
+mod.vb.flockCount = 0
+mod.vb.quillsCount = 0
 local flockName = EJ_GetSectionInfo(7348)
 
 function mod:OnCombatStart(delay)
-	flockCount = 0
-	quillsCount = 0
+	self.vb.flockCount = 0
+	self.vb.quillsCount = 0
 	timerTalonRakeCD:Start(24)
 	if self:IsDifficulty("normal10", "heroic10", "lfr25") then
 		timerQuillsCD:Start(60-delay, 1)
@@ -137,7 +134,6 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_SPELLCAST_CHANNEL_START(uId, _, _, _, spellId)
 	if spellId == 137528 then
-		warnFeedYoung:Show()
 		specWarnFeedYoung:Show()
 		if self:IsDifficulty("normal10", "heroic10", "lfr25") then
 			timerFeedYoungCD:Start(40)
@@ -149,17 +145,15 @@ end
 
 function mod:UNIT_SPELLCAST_START(uId, _, _, _, spellId)
 	if spellId == 134380 then
-		quillsCount = quillsCount + 1
-		warnQuills:Show(quillsCount)
-		specWarnQuills:Show()
+		self.vb.quillsCount = self.vb.quillsCount + 1
+		specWarnQuills:Show(self.vb.quillsCount)
 		timerQuills:Start()
 		if self:IsDifficulty("normal10", "heroic10", "lfr25") then
-			timerQuillsCD:Start(81, quillsCount+1)--81 sec normal, sometimes 91s?
+			timerQuillsCD:Start(81, self.vb.quillsCount+1)--81 sec normal, sometimes 91s?
 		else
-			timerQuillsCD:Start(nil, quillsCount+1)
+			timerQuillsCD:Start(nil, self.vb.quillsCount+1)
 		end
 	elseif spellId == 134370 then
-		warnDowndraft:Show()
 		specWarnDowndraft:Show()
 		timerDowndraft:Start()
 		if self:IsHeroic() then
@@ -272,8 +266,9 @@ end
 
 function mod:CHAT_MSG_MONSTER_EMOTE(msg, _, _, _, target)
 	if msg:find(L.eggsHatch) and self:AntiSpam(5, 2) then
-		flockCount = flockCount + 1--Now flock set number instead of nest number (for LFR it's both)
-		local flockCountText = tostring(flockCount)
+		self.vb.flockCount = self.vb.flockCount + 1--Now flock set number instead of nest number (for LFR it's both)
+		local flockCount = self.vb.flockCount
+		local flockCountText = tostring(self.vb.flockCount)
 		local currentDirection, currentLocation = GetNestPositions(flockCount)
 		local nextDirection, _ = GetNestPositions(flockCount+1)--timer code will probably always stay the same, locations in timer is too much text for a timer.
 		if self:IsDifficulty("lfr25", "normal10", "heroic10") then

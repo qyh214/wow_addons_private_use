@@ -268,8 +268,8 @@ function TipTypeFuncs:item(link,linkToken,id)
 	if (cfg.if_itemQualityBorder) then
 		self:SetBackdropBorderColor(GetItemQualityColor(itemRarity or 0));
 	end
-	-- level + id
-	if (cfg.if_showItemLevelAndId) then
+	-- level + id -- Do not alter the tip, if we failed to get a valid "itemLevel" or "id"
+	if (cfg.if_showItemLevelAndId) and (itemLevel) and (id) then
 		for i = 2, self:NumLines() do
 			local line = _G[self:GetName().."TextLeft"..i];
 			if (line and (line:GetText() or ""):match(ITEM_LEVEL.."+")) then

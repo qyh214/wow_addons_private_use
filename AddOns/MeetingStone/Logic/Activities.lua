@@ -24,6 +24,7 @@ function Activities:OnInitialize()
     self:RegisterServer('OABR', 'OA_BUY_RESULT')
     self:RegisterServer('OALR', 'OA_LOTTERY_RESULT')
     self:RegisterServer('OASR', 'OA_SIGNIN_RESULT')
+    self:RegisterServer('OAUR', 'OA_SIGNUP_RESULT')
     self:RegisterServer('OAAUR', 'OA_SETADDRESS_RESULT')
 
     self:RegisterTimeOut('OAB', 'OABR', 'OnBuyTimeOut')
@@ -124,9 +125,9 @@ function Activities:OA_SETADDRESS_RESULT(_, success, msg)
         self.contact = self._contact
         self.tel = self._tel
         self.address = self._address
-        System:Log(L['设置收货信息成功。'])
+        System:Log(L['设置联系方式成功。'])
     else
-        System:Error(L['设置收货信息失败，'] .. msg)
+        System:Error(L['设置联系方式失败，'] .. msg)
     end
 end
 
@@ -142,8 +143,10 @@ function Activities:OA_QUERY_RESULT(_, score1, score2, contact, tel, email, addr
         self.tel = tel
         self.address = address
         self.canSignIn = not signIn or nil
-        self:SendMessage('MEETINGSTONE_ACTIVITIES_PLAYERINFO_UPDATE')
-        System:Log(L['当前可用活动点数：'] .. score1)
+        self:SendMessage('MEETINGSTONE_ACTIVITIES_PERSONINFO_UPDATE')
+        if self:IsActivityHasScore() then
+            System:Log(L['当前可用活动点数：'] .. score1)
+        end
     end
 end
 
@@ -172,7 +175,7 @@ function Activities:OA_SIGNIN_RESULT(_, score, msg, scoreType)
     self.canSignIn = nil
     if not score or not scoreType then
         System:Error(msg)
-        self:SendMessage('MEETINGSTONE_ACTIVITIES_PLAYERINFO_UPDATE')
+        self:SendMessage('MEETINGSTONE_ACTIVITIES_PERSONINFO_UPDATE')
     else
         self:UpdateScore(score, scoreType)
         System:Message(msg)
@@ -186,6 +189,16 @@ function Activities:OA_SCORE_UPDATE(_, score, msg, scoreType)
     end
     self:UpdateScore(score, scoreType)
     System:Log(msg)
+end
+
+function Activities:OA_SIGNUP_RESULT(_, success, msg, isLeader)
+    if success and isLeader then
+        PlayerInfoDialog:Open(msg, L['报名成功'], msg, true, nil, L['完善联系方式'])
+    elseif success then
+        System:Message(msg);
+    else
+        System:Error(msg);
+    end
 end
 
 ---- TimeOut
@@ -208,7 +221,7 @@ end
 ---- Interface
 
 function Activities:UpdateScore(score1, score2)
-    if not self.scoreQueried then
+    if not self:IsActivityHasScore() or not self.scoreQueried then
         return
     end
 
@@ -224,7 +237,7 @@ function Activities:UpdateScore(score1, score2)
     else
         return
     end
-    self:SendMessage('MEETINGSTONE_ACTIVITIES_PLAYERINFO_UPDATE')
+    self:SendMessage('MEETINGSTONE_ACTIVITIES_PERSONINFO_UPDATE')
 end
 
 function Activities:Buy(id)
@@ -245,6 +258,10 @@ function Activities:SignIn()
     self:SendServer('OAS', GetAddonSource())
 end
 
+function Activities:SignUp(isLeader)
+    self:SendServer('OAU', isLeader or false, GetTotalAchievementPoints(), IsGuildLeader())
+end
+
 function Activities:GetActivitiesInfo()
     if not self.data then
         return
@@ -256,7 +273,7 @@ function Activities:GetBuyingItem()
     return self:GetMallItemInfo(self.buyingItem)
 end
 
-function Activities:QueryPlayerInfo()
+function Activities:QueryPersonInfo()
     self:SendServer('OAQ')
     self:SendMessage('MEETINGSTONE_ACTIVITIES_QUERY_SENDING')
 end
@@ -269,7 +286,7 @@ function Activities:SetPersonInfo(contact, tel, email, address)
         self._address = address
         self:SendServer('OAAU', contact, tel, email, address)
     else
-        System:Log(L['设置收货信息成功。'])
+        System:Log(L['设置联系方式成功。'])
     end
 end
 
@@ -290,5 +307,18 @@ function Activities:GetScore()
 end
 
 function Activities:CanSignIn()
-    return self.canSignIn and self.data and self.data.gift and bit.band(self.data.gift, GetAddonSource()) > 0
+    local source = GetAddonSource()
+    return self.canSignIn and self.data and self.data.gift and ((source == 0 and self.data.gift < 0) or bit.band(abs(self.data.gift), source) > 0)
+end
+
+function Activities:CanLeaderSignUp()
+    return self.data and self.data.signUpMember
+end
+
+function Activities:CanMemberSignUp()
+    return self.data and self.data.signUpLeader
+end
+
+function Activities:IsActivityHasScore()
+    return not self.data.noScore
 end

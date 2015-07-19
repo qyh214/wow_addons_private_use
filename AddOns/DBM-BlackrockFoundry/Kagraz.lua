@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod(1123, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13556 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14080 $"):sub(12, -3))
 mod:SetCreatureID(76814)--76794 Cinder Wolf, 80590 Aknor Steelbringer
 mod:SetEncounterID(1689)
 mod:SetZone()
 mod:SetUsedIcons(6, 5, 4, 3)
 mod:SetHotfixNoticeRev(13445)
+mod.respawnTime = 29.5
 
 mod:RegisterCombat("combat")
 
@@ -21,7 +22,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---Pointless add fight starts with (need to keep alive for follower achievement
 local warnDevastatingSlam				= mod:NewSpellAnnounce("OptionVersion2", 156018, 4, nil, false)
 local warnDropHammer					= mod:NewSpellAnnounce("OptionVersion2", 156040, 3, nil, false)
 
@@ -34,33 +34,33 @@ local warnBlazingRadiance				= mod:NewTargetAnnounce(155277, 3)
 local warnRisingFlames					= mod:NewStackAnnounce(163284, 2, nil, "Tank")
 local warnCharringBreath				= mod:NewStackAnnounce(155074, 2, nil, "Tank")
 
-local specWarnLavaSlash					= mod:NewSpecialWarningMove(155318, nil, nil, nil, nil, nil, 2)
-local specWarnMoltenTorrent				= mod:NewSpecialWarningYou(154932, nil, nil, nil, nil, nil, 2)
+local specWarnLavaSlash					= mod:NewSpecialWarningMove(155318, nil, nil, nil, nil, 2)
+local specWarnMoltenTorrent				= mod:NewSpecialWarningYou(154932, nil, nil, nil, nil, 2)
 local yellMoltenTorrent					= mod:NewFadesYell(154932)
-local specWarnCinderWolves				= mod:NewSpecialWarningSpell(155776, nil, nil, nil, nil, nil, 2)
+local specWarnCinderWolves				= mod:NewSpecialWarningSpell(155776, nil, nil, nil, nil, 2)
 local specWarnOverheated				= mod:NewSpecialWarningSwitch(154950, "Tank")
-local specWarnFixate					= mod:NewSpecialWarningYou(154952, nil, nil, nil, 3, nil, 2)
+local specWarnFixate					= mod:NewSpecialWarningYou(154952, nil, nil, nil, 3, 2)
 local specWarnFixateEnded				= mod:NewSpecialWarningEnd(154952, false)
-local specWarnBlazinRadiance			= mod:NewSpecialWarningMoveAway(155277, nil, nil, nil, nil, nil, 2)
+local specWarnBlazinRadiance			= mod:NewSpecialWarningMoveAway(155277, nil, nil, nil, nil, 2)
 local yellBlazinRadiance				= mod:NewYell(155277, nil, false)
-local specWarnFireStorm					= mod:NewSpecialWarningCount(155493, nil, nil, nil, 2, nil, 2)
-local specWarnFireStormEnded			= mod:NewSpecialWarningEnd(155493, nil, nil, nil, nil, nil, 2)
+local specWarnFireStorm					= mod:NewSpecialWarningCount(155493, nil, nil, nil, 2, 2)
+local specWarnFireStormEnded			= mod:NewSpecialWarningEnd(155493, nil, nil, nil, nil, 2)
 local specWarnRisingFlames				= mod:NewSpecialWarningStack(163284, nil, 6)--stack guessed
-local specWarnRisingFlamesOther			= mod:NewSpecialWarningTaunt(163284, nil, nil, nil, nil, nil, 2)
+local specWarnRisingFlamesOther			= mod:NewSpecialWarningTaunt(163284, nil, nil, nil, nil, 2)
 local specWarnCharringBreath			= mod:NewSpecialWarningStack(155074, nil, 2)--Assumed based on timing and casts, that you swap every breath.
 local specWarnCharringBreathOther		= mod:NewSpecialWarningTaunt(155074)
 --
 
-local timerLavaSlashCD					= mod:NewCDTimer(14.5, 155318, nil, false)
-local timerMoltenTorrentCD				= mod:NewCDTimer("OptionVersion2", 14, 154932, nil, "Ranged")
-local timerSummonEnchantedArmamentsCD	= mod:NewCDTimer("OptionVersion2", 45, 156724, nil, "Ranged")--45-47sec variation
-local timerSummonCinderWolvesCD			= mod:NewNextTimer(76, 155776)
-local timerOverheated					= mod:NewTargetTimer(14, 154950, nil, "Tank")
-local timerCharringBreathCD				= mod:NewNextTimer(5, 155074, nil, "Tank")
+local timerLavaSlashCD					= mod:NewCDTimer(14.5, 155318, nil, false, nil, 3)
+local timerMoltenTorrentCD				= mod:NewCDTimer(14, 154932, nil, "Ranged", 2, 3)
+local timerSummonEnchantedArmamentsCD	= mod:NewCDTimer(45, 156724, nil, "Ranged", 2, 3)--45-47sec variation
+local timerSummonCinderWolvesCD			= mod:NewNextTimer(76, 155776, nil, nil, nil, 1)
+local timerOverheated					= mod:NewTargetTimer(14, 154950, nil, "Tank", nil, 5)
+local timerCharringBreathCD				= mod:NewNextTimer(5, 155074, nil, "Tank", nil, 5)
 local timerFixate						= mod:NewBuffFadesTimer(9.6, 154952)
-local timerBlazingRadianceCD			= mod:NewCDTimer(12, 155277, nil, false)--somewhat important but not important enough. there is just too much going on to be distracted by this timer
-local timerFireStormCD					= mod:NewNextCountTimer(61, 155493)
-local timerFireStorm					= mod:NewBuffActiveTimer(14, 155493)
+local timerBlazingRadianceCD			= mod:NewCDTimer(12, 155277, nil, false, nil, 3)--somewhat important but not important enough. there is just too much going on to be distracted by this timer
+local timerFireStormCD					= mod:NewNextCountTimer(61, 155493, nil, nil, nil, 2)
+local timerFireStorm					= mod:NewBuffActiveTimer(14, 155493, nil, nil, nil, 6)
 
 local berserkTimer						= mod:NewBerserkTimer(420)
 
@@ -68,6 +68,7 @@ local countdownCinderWolves				= mod:NewCountdown(76, 155776)
 local countdownFireStorm				= mod:NewCountdown(61, 155493)--Same voice as wolves cause never happen at same time, in fact they alternate.
 local countdownEnchantedArmaments		= mod:NewCountdown("OptionVersion2", "Alt45", 156724, false)
 local countdownOverheated				= mod:NewCountdownFades("Alt20", 154950, "Tank")
+local countdownMoltenTorrent			= mod:NewCountdownFades("AltTwo6", 154932)
 
 local voiceMoltenTorrent				= mod:NewVoice(154932) --runin
 local voiceFixate						= mod:NewVoice(154952) --justrun
@@ -91,7 +92,7 @@ local function showFixate(self)
 	for name, time in pairs(fixateTagets) do
 		text[#text + 1] = name
 		if self.Options.HudMapOnFixate then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(154952, "highlight", name, 3.5, 10, 1, 1, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(154952, "highlight", name, 3, 10, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 		end
 	end
 	warnFixate:Show(table.concat(text, "<, >"))
@@ -186,37 +187,44 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 163284 then
 		local amount = args.amount or 1
 		if amount % 3 == 0 then
-			warnRisingFlames:Show(args.destName, amount)
 			if amount >= 6 then
 				if args:IsPlayer() then--At this point the other tank SHOULD be clear.
 					specWarnRisingFlames:Show(amount)
 				else--Taunt as soon as stacks are clear, regardless of stack count.
-					if not UnitDebuff("player", GetSpellInfo(163284)) and not UnitIsDeadOrGhost("player") then
+					if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 						specWarnRisingFlamesOther:Show(args.destName)
 						voiceRisingFlames:Play("changemt")
+					else
+						warnRisingFlames:Show(args.destName, amount)
 					end
 				end
+			else
+				warnRisingFlames:Show(args.destName, amount)
 			end
 		end
 	elseif spellId == 155074 then
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId, "boss1") or self:IsTanking(uId, "boss2") or self:IsTanking(uId, "boss3") or self:IsTanking(uId, "boss4") or self:IsTanking(uId, "boss5") then
 			local amount = args.amount or 1
-			warnCharringBreath:Show(args.destName, amount)
 			if amount >= 2 then
 				if args:IsPlayer() then
 					specWarnCharringBreath:Show(amount)
 				else--Taunt as soon as stacks are clear, regardless of stack count.
 					if not UnitDebuff("player", GetSpellInfo(155074)) and not UnitIsDeadOrGhost("player") then
 						specWarnCharringBreathOther:Show(args.destName)
+					else
+						warnCharringBreath:Show(args.destName, amount)
 					end
 				end
+			else
+				warnCharringBreath:Show(args.destName, amount)
 			end
 		end
 	elseif spellId == 154932 then
 		timerMoltenTorrentCD:Start()
 		if args:IsPlayer() then
 			specWarnMoltenTorrent:Show()
+			countdownMoltenTorrent:Start(6)
 			voiceMoltenTorrent:Play("runin")
 			yellMoltenTorrent:Schedule(5, 1)
 			yellMoltenTorrent:Schedule(4, 2)
@@ -295,7 +303,9 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 			if cid == 76794 then--Cinder Wolf
 				wolfIcon = wolfIcon + 1
 				activeBossGUIDS[unitGUID] = true
-				SetRaidTarget(unitID, wolfIcon)
+				if self:CanSetIcon("SetIconOnAdds") then--Check if elected
+					SetRaidTarget(unitID, wolfIcon)
+				end
 				if wolfIcon == expectedTotal then--All wolves marked
 					self:UnregisterShortTermEvents()
 				end

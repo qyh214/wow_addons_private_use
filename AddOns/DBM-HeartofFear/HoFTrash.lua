@@ -22,7 +22,6 @@ local specWarnDispatch			= mod:NewSpecialWarningInterrupt(125877)
 local timerUnseenStrike			= mod:NewCastTimer(4.8, 123017)
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 mod:AddBoolOption("UnseenStrikeArrow")
 
 local spellName = GetSpellInfo(122949)

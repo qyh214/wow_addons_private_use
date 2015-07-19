@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(865, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 67 $"):sub(12, -3))
 mod:SetCreatureID(71504)--71591 Automated Shredder
 mod:SetEncounterID(1601)
 mod:SetZone()
@@ -50,11 +50,11 @@ local specWarnCrawlerMine				= mod:NewSpecialWarningSwitch("ej8212", "-Healer")
 local specWarnAssemblyLine				= mod:NewSpecialWarningCount("ej8202", false)--Not all in raid need, just those assigned
 local specWarnShockwaveMissile			= mod:NewSpecialWarningSpell(143641, nil, nil, nil, 2)
 local specWarnReadyToGo					= mod:NewSpecialWarningTarget(145580)
-local specWarnLaserFixate				= mod:NewSpecialWarningRun("OptionVersion2", 143828, nil, nil, nil, 4)
+local specWarnLaserFixate				= mod:NewSpecialWarningRun(143828, nil, nil, 2, 4)
 local yellLaserFixate					= mod:NewYell(143828)
 local specWarnSuperheated				= mod:NewSpecialWarningMove(143856)--From lasers. Hard to see, this warning will help a ton
 local specWarnMagneticCrush				= mod:NewSpecialWarningSpell(144466, nil, nil, nil, 2)
-local specWarnCrawlerMineFixate			= mod:NewSpecialWarningRun("OptionVersion2", "ej8212", "Melee", nil, nil, 4)
+local specWarnCrawlerMineFixate			= mod:NewSpecialWarningRun("ej8212", "Melee", nil, 2, 4)
 local yellCrawlerMineFixate				= mod:NewYell("ej8212", nil, false)
 
 --Siegecrafter Blackfuse
@@ -63,12 +63,12 @@ local timerElectroStaticCharge			= mod:NewTargetTimer(60, 143385, nil, "Tank")
 local timerElectroStaticChargeCD		= mod:NewCDTimer(17, 143385, nil, "Tank")--17-22 second variation
 local timerLaunchSawbladeCD				= mod:NewCDTimer(10, 143265)--10-15sec cd
 --Automated Shredders
-local timerAutomatedShredderCD			= mod:NewNextTimer(60, "ej8199", nil, "Tank", nil, 85914)
+local timerAutomatedShredderCD			= mod:NewNextTimer(60, "ej8199", nil, "Tank", nil, nil, 85914)
 local timerOverloadCD					= mod:NewCDCountTimer(10, 145444)
 local timerDeathFromAboveDebuff			= mod:NewTargetTimer(5, 144210, nil, "-Healer")
 local timerDeathFromAboveCD				= mod:NewNextTimer(40, 144208, nil, "-Healer")
 --The Assembly Line
-local timerAssemblyLineCD				= mod:NewNextCountTimer(40, "ej8202", nil, "Dps", nil, 59193)
+local timerAssemblyLineCD				= mod:NewNextCountTimer(40, "ej8202", nil, "Dps", nil, nil, 59193)
 local timerPatternRecognition			= mod:NewBuffFadesTimer(60, 144236, nil, false)
 local timerLaserFixate					= mod:NewBuffFadesTimer(15, 143828)
 local timerBreakinPeriod				= mod:NewTargetTimer(60, 145269, nil, false)--Many mines can be up at once so timer off by default do to spam

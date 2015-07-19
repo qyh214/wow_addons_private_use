@@ -1,6 +1,6 @@
 --[[
 
-Learning Aid is copyright © 2008-2014 Jamash (Kil'jaeden US Horde)
+Learning Aid is copyright Â© 2008-2015 Jamash (Kil'jaeden US Horde)
 Email: jamashkj@gmail.com
 
 SpellButton.lua is part of Learning Aid.
@@ -383,7 +383,7 @@ end
 function LA:SpellButton_OnModifiedClick(spellButton, mouseButton)
   local item = spellButton.item
   local itemName = item.SpecName
-  itemSubName = item.SpecSubName
+  local itemSubName = item.SpecSubName
   if IsModifiedClick("CHATLINK") and "SPELL" == spellButton.item.Status then
     if MacroFrame and MacroFrame:IsShown() then
       if not item.Passive then

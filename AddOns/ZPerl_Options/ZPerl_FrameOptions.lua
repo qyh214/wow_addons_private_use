@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 950 $")
+XPerl_SetModuleRevision("$Revision: 972 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -224,7 +224,7 @@ function XPerl_Options_EnableCheck(self, on)
 end
 
 -- XPerl_Options_IncrementSibling
-function XPerl_Options_IncrementSibling(self,sibling)
+function XPerl_Options_IncrementSibling(self, sibling)
 	local siblingName = self:GetParent():GetName().."_"..sibling
 	local siblingFrame = _G[siblingName]
 
@@ -237,7 +237,7 @@ function XPerl_Options_IncrementSibling(self,sibling)
 end
 
 -- XPerl_Options_DecrementSibling
-function XPerl_Options_DecrementSibling(self,sibling)
+function XPerl_Options_DecrementSibling(self, sibling)
 	local siblingName = self:GetParent():GetName().."_"..sibling
 	local siblingFrame = _G[siblingName]
 
@@ -564,10 +564,30 @@ end
 function XPerl_Options_LoadSettings_Initialize()
 	local list = GetPlayerList()
 
-	for i,entry in pairs(list) do
+	for i, entry in pairs(list) do
 		local info = Lib_UIDropDownMenu_CreateInfo()
 		info.text = entry.name
 		info.func = XPerl_Options_LoadSettings_OnClick
+		Lib_UIDropDownMenu_AddButton(info)
+	end
+end
+
+-- XPerl_Options_DeleteSettings_OnLoad
+function XPerl_Options_DeleteSettings_OnLoad(self)
+	self.displayMode = "MENU"
+	Lib_UIDropDownMenu_Initialize(self, XPerl_Options_DeleteSettings_Initialize)
+	Lib_UIDropDownMenu_SetWidth(self, 140)
+	XPerl_Options_DropDown_DeleteSettingsText:SetText("")
+end
+
+-- XPerl_Options_DeleteSettings_Initialize
+function XPerl_Options_DeleteSettings_Initialize()
+	local list = GetPlayerList()
+
+	for i, entry in pairs(list) do
+		local info = Lib_UIDropDownMenu_CreateInfo()
+		info.text = entry.name
+		info.func = XPerl_Options_DeleteSettings_OnClick
 		Lib_UIDropDownMenu_AddButton(info)
 	end
 end
@@ -585,8 +605,8 @@ function XPerl_Options_Anchor_Initialize()
 	local info
 	local current = XPerl_Options_Party_Anchor.varGet() or "TOP"
 
-	for k,v in pairs(XPerl_AnchorList) do
-		info = {}
+	for k, v in pairs(XPerl_AnchorList) do
+		info = { }
 		info.text = v
 		info.func = XPerl_Options_Anchor_OnClick
 
@@ -620,9 +640,6 @@ end
 -- CopySelectedSettings
 local CopyFrom
 local function CopySelectedSettings()
-	--ChatFrame7:AddMessage("Copying settings from "..CopyFrom)
-	--Lib_UIDropDownMenu_SetSelectedID(XPerl_Options_DropDown_LoadSettings, self:GetID(), 1)
-
 	XPerlDB = XPerl_CopyTable(CopyFrom.config)
 
 	if (ZPerlConfigSavePerCharacter) then
@@ -656,6 +673,36 @@ function XPerl_Options_LoadSettings_OnClick(self)
 		if (entry) then
 			CopyFrom = entry
 			XPerl_Popup(format("Copy settings from %s?", entry.name), CopySelectedSettings)
+		end
+	end
+end
+
+-- DeleteSelectedSettings
+local DeleteFrom
+local function DeleteSelectedSettings()
+	local realm, player = string.match(DeleteFrom.name, "([^,]+) / ([^,]+)")
+
+	ZPerlConfigNew[realm][player] = nil
+
+	XPerl_GiveConfig()
+
+	XPerl_Options:Hide()
+	XPerl_Options:Show()
+
+	XPerl_OptionActions()
+end
+
+-- XPerl_Options_DeleteSettings_OnClick
+function XPerl_Options_DeleteSettings_OnClick(self)
+
+	local list = GetPlayerList()
+
+	if (self:GetID() ~= MyIndex) then
+		local entry = list[self:GetID()]
+
+		if (entry) then
+			DeleteFrom = entry
+			XPerl_Popup(format("Delete settings from profile %s?", entry.name), DeleteSelectedSettings)
 		end
 	end
 end
@@ -705,15 +752,17 @@ function XPerl_Options_TextureSelect_Onload(self)
 		end
 	end
 
-	FauxScrollFrame_Update(self.scrollBar, #self.list, 10, 1)
+	if self and self.scrollBar and self.list then
+		FauxScrollFrame_Update(self.scrollBar, #self.list, 10, 1)
+	end
 
 	XPerl_Options_TextureSelect_Onload = nil
 end
 
 -- XPerl_Options_SetTabColor
 function XPerl_Options_SetTabColor(self, color)
-	for i,y in pairs({"Enabled", "Disabled"}) do
-		for j,z in pairs({"Left", "Right", "Middle"}) do
+	for i, y in pairs({"Enabled", "Disabled"}) do
+		for j, z in pairs({"Left", "Right", "Middle"}) do
 			local f = _G[self:GetName()..y..z]
 			--if (XPerlDB and XPerlDB.colour.gradient.enable) then
 				local c = XPerlDB.colour.gradient.s
@@ -1162,7 +1211,7 @@ function XPerl_Player_GetGap()
 			if (tl and ts) then
 				local targetLeft = tl * ts
 				local a = targetLeft - playerLeft
-				return floor(floor((a + 0.01) * 100) / 100 + 4)
+				return tonumber(floor(floor((a + 0.5) * 100) / 100 + 4))
 			end
 		end
 	end
@@ -1171,42 +1220,43 @@ end
 
 -- XPerl_Player_SetGap
 function XPerl_Player_SetGap(newGap)
-	if (type(newGap) == "number") then
-		newGap = newGap - 4
+	if not newGap or type(newGap) ~= "number" then
+		return
+	end
+	newGap = newGap - 4
 
-		local function SetChildGap(self, other)
-			if (self and other) then
-				local top = other:GetTop()
-				local left
+	local function SetChildGap(self, other)
+		if (self and other) then
+			local top = other:GetTop()
+			local left
 
-				if (self == XPerl_Player) then
-					left = ((self.statsFrame:GetRight() * self:GetEffectiveScale()) + newGap) / other:GetEffectiveScale()
-				else
-					left = ((self:GetRight() * self:GetEffectiveScale()) + newGap) / other:GetEffectiveScale()
-				end
-
-				if (self == XPerl_Target or self == XPerl_TargetTarget or self == XPerl_Focus) then
-					if (self.levelFrame and self.levelFrame:IsShown()) then
-						left = left + self.levelFrame:GetWidth()
-					end
-				end
-
-				other:ClearAllPoints()
-				other:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top)
-				other:SetUserPlaced(true)
-				XPerl_SavePosition(other)
+			if (self == XPerl_Player) then
+				left = ((self.statsFrame:GetRight() * self:GetEffectiveScale()) + newGap) / other:GetEffectiveScale()
+			else
+				left = ((self:GetRight() * self:GetEffectiveScale()) + newGap) / other:GetEffectiveScale()
 			end
-		end
 
-		SetChildGap(XPerl_Player, XPerl_Target)
-		SetChildGap(XPerl_Target, XPerl_TargetTarget)
-		SetChildGap(XPerl_TargetTarget, XPerl_TargetTargetTarget)
-		SetChildGap(XPerl_Focus, XPerl_FocusTarget)
-		SetChildGap(XPerl_Player_Pet, XPerl_PetTarget)
+			if (self == XPerl_Target or self == XPerl_TargetTarget or self == XPerl_Focus) then
+				if (self.levelFrame and self.levelFrame:IsShown()) then
+					left = left + self.levelFrame:GetWidth()
+				end
+			end
 
-		if (XPerl_Player) then
-			XPerl_SavePosition(XPerl_Player)
+			other:ClearAllPoints()
+			other:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top)
+			other:SetUserPlaced(true)
+			XPerl_SavePosition(other)
 		end
+	end
+
+	SetChildGap(XPerl_Player, XPerl_Target)
+	SetChildGap(XPerl_Target, XPerl_TargetTarget)
+	SetChildGap(XPerl_TargetTarget, XPerl_TargetTargetTarget)
+	SetChildGap(XPerl_Focus, XPerl_FocusTarget)
+	SetChildGap(XPerl_Player_Pet, XPerl_PetTarget)
+
+	if (XPerl_Player) then
+		XPerl_SavePosition(XPerl_Player)
 	end
 end
 
@@ -1245,41 +1295,29 @@ function XPerl_Player_AlignTop()
 	AlignChildTop(XPerl_Player_Pet, XPerl_PetTarget)
 end
 
--- Moving stuff
-function XPerl_Raid_GetGap()
-	if (XPerl_Raid_Grp2) then
-		if (XPerlDB.raid.anchor == "TOP" or XPerlDB.raid.anchor == "BOTTOM") then
-			return floor((floor(((XPerl_Raid_Grp2:GetLeft() or 0) - (XPerl_Raid_Grp1:GetRight() or XPerl_Raid_Grp2:GetLeft() or 80) + 0.01) * 100) / 100))
-		else
-			return floor((floor(((XPerl_Raid_Grp1:GetTop() or XPerl_Raid_Grp2:GetTop() or 200) - (XPerl_Raid_Grp2:GetBottom() or 200) + 0.01) * 100) / 100) - 46)
-		end
-	end
-	return (0)
-end
-
 -- InterestingFrames
 local function InterestingFrames()
 	local interest = XPerl_Options.raidAlign
-	local ret = {}
+	local ret = { }
 
 	if (interest == "all") then
-		for i = 1,WoWclassCount do
+		for i = 1, WoWclassCount do
 			tinsert(ret, _G["XPerl_Raid_Title"..i])
 		end
 	elseif (interest == "odd") then
-		for i = 1,WoWclassCount,2 do
+		for i = 1, WoWclassCount, 2 do
 			tinsert(ret, _G["XPerl_Raid_Title"..i])
 		end
 	elseif (interest == "even") then
-		for i = 2,WoWclassCount,2 do
+		for i = 2, WoWclassCount, 2 do
 			tinsert(ret, _G["XPerl_Raid_Title"..i])
 		end
 	elseif (interest == "first4") then
-		for i = 1,4 do
+		for i = 1, 4 do
 			tinsert(ret, _G["XPerl_Raid_Title"..i])
 		end
 	elseif (interest == "last4") then
-		for i = 5,WoWclassCount do
+		for i = 5, WoWclassCount do
 			tinsert(ret, _G["XPerl_Raid_Title"..i])
 		end
 	end
@@ -1288,43 +1326,45 @@ end
 
 -- XPerl_Raid_SetGap
 function XPerl_Raid_SetGap(newGap)
-	if (type(newGap) == "number") then
-		local frames = InterestingFrames()
+	if not newGap or type(newGap) ~= "number" then
+		return
+	end
+	local frames = InterestingFrames()
 
-		if (XPerlDB.raid.anchor == "TOP" or XPerlDB.raid.anchor == "BOTTOM") then
-			local framePrev
+	if (XPerlDB.raid.anchor == "TOP" or XPerlDB.raid.anchor == "BOTTOM") then
+		local framePrev
 
-			for i,frame in pairs(frames) do
-				if (framePrev and frame) then
-					local right = framePrev:GetRight()
-					local top = frame:GetTop()
+		for i, frame in pairs(frames) do
+			if (framePrev and frame) then
+				local right = framePrev:GetRight()
+				local top = frame:GetTop()
 
-					frame:ClearAllPoints()
-					frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", right + newGap, top)
-					frame:SetUserPlaced(true)
-					XPerl_SavePosition(frame)
-				end
-
-				framePrev = frame
+				frame:ClearAllPoints()
+				frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", right + newGap, top)
+				frame:SetUserPlaced(true)
+				XPerl_SavePosition(frame)
 			end
-		else
-			local framePrev
 
-			for i,frame in pairs(frames) do
-				if (framePrev and frame) then
-					local bottom = framePrev:GetBottom()
-					local left = frame:GetLeft()
+			framePrev = frame
+		end
+	else
+		local framePrev
 
-					frame:ClearAllPoints()
-					frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, bottom + newGap - 26)
-					frame:SetUserPlaced(true)
-					XPerl_SavePosition(frame)
-				end
+		for i, frame in pairs(frames) do
+			if (framePrev and frame) then
+				local bottom = framePrev:GetBottom()
+				local left = frame:GetLeft()
 
-				framePrev = frame
+				frame:ClearAllPoints()
+				frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, bottom + newGap - 26)
+				frame:SetUserPlaced(true)
+				XPerl_SavePosition(frame)
 			end
+
+			framePrev = frame
 		end
 	end
+	XPerlDB.raid.gap = newGap
 end
 
 -- XPerl_Raid_AlignTop
@@ -1337,7 +1377,7 @@ function XPerl_Raid_AlignTop()
 
 	local top = frames[1]:GetTop()
 
-	for i,frame in pairs(frames) do
+	for i, frame in pairs(frames) do
 		local left = frame:GetLeft()
 
 		frame:ClearAllPoints()
@@ -1357,7 +1397,7 @@ function XPerl_Raid_AlignLeft()
 
 	local left = frames[1]:GetLeft()
 
-	for i,frame in pairs(frames) do
+	for i, frame in pairs(frames) do
 		local top = frame:GetTop()
 
 		frame:ClearAllPoints()
@@ -1373,10 +1413,10 @@ end
 
 -- XPerl_Options_LayoutGetList
 function XPerl_Options_LayoutGetList(self)
-	local list = {}
+	local list = { }
 
 	if (ZPerlConfigNew.savedPositions) then
-		for realmName,realmList in pairs(ZPerlConfigNew.savedPositions) do
+		for realmName, realmList in pairs(ZPerlConfigNew.savedPositions) do
 			for playerName,frames in pairs(realmList) do
 				if (realmName == "saved") then
 					tinsert(list, playerName)
@@ -1415,10 +1455,10 @@ end
 -- XPerl_Options_SaveFrameLayout
 function XPerl_Options_SaveFrameLayout(name)
 	if (not ZPerlConfigNew.savedPositions) then
-		ZPerlConfigNew.savedPositions = {}
+		ZPerlConfigNew.savedPositions = { }
 	end
 	if (not ZPerlConfigNew.savedPositions.saved) then
-		ZPerlConfigNew.savedPositions.saved = {}
+		ZPerlConfigNew.savedPositions.saved = { }
 	end
 	ZPerlConfigNew.savedPositions.saved[name] = XPerl_CopyTable(XPerl_GetSavePositionTable())
 end
@@ -1493,7 +1533,7 @@ function XPerl_Options_LayoutFill(self, setName)
 
 	local newName
 	local line = 1
-	for i = self.start,self.start+#self.line-1 do
+	for i = self.start,self.start + #self.line - 1 do
 		if (i > #list) then
 			break
 		end
@@ -2484,6 +2524,10 @@ local function XPerl_Raid_ConfigDefault(default)
 			type		= 1,
 		},
 		anchor			= "TOP",
+		gap				= 0,
+		size = {
+			width		= 0,
+		},
 	}
 end
 
@@ -2830,7 +2874,7 @@ function XPerl_Options_Custom_ScanForIcons(self)
 		local dbname = self.iconDB and self.iconDB
 		if (dbname) then
 			local list = XPerl_GetReusableTable()
-			for name,id in pairs(dbname) do
+			for name, id in pairs(dbname) do
 				local success, ret = pcall(strfind, name, search)
 				if (success and ret) then
 					tinsert(list, id)
@@ -3187,9 +3231,15 @@ if (XPerl_UpgradeSettings) then
 				old.party.enable = 1
 			end
 
-			--[[if (oldVersion < "4.0.2") then
+			if (oldVersion < "4.0.2") then
 				old.raid.sortByRole = nil
-			end]]
+				old.raid.gap = XPerl_Raid_GetGap()
+			end
+
+			if (oldVersion < "4.0.3") then
+				old.raid.size = { }
+				old.raid.size.width = 0
+			end
 		end
 	end
 

@@ -1,0 +1,15 @@
+------------------------------------------------------------------------
+r44 | moncai | 2015-06-25 13:31:50 +0000 (Thu, 25 Jun 2015) | 1 line
+Changed paths:
+   A /tags/v6.2.0 (from /trunk:43)
+
+Taggin as v6.2.0
+------------------------------------------------------------------------
+r43 | moncai | 2015-06-25 13:29:30 +0000 (Thu, 25 Jun 2015) | 2 lines
+Changed paths:
+   M /trunk/!MoncaiCompare.lua
+   M /trunk/!MoncaiCompare.toc
+
+6.2.0 update
+* Fix incompatibility due to updated Blizzard code
+------------------------------------------------------------------------

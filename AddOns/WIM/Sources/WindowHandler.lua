@@ -1217,7 +1217,7 @@ local function placeWindow(win)
                         break;
                 end
         end
-        if(not lastWindow or db.winCascade.enabled == false) then
+        if (not lastWindow or db.winCascade.enabled == false) or (db.tabs.whispers.enabled and win.type == "whisper") or (db.tabs.chat.enabled and win.type == "chat") then
                 win:SetPoint("TOPLEFT", WindowParent, "BOTTOMLEFT", db.winLoc.left/win:GetEffectiveScale(), (db.winLoc.top)/win:GetEffectiveScale());
         else
                 local casc = cascadeDirection[db.winCascade.direction];

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(971, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13161 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14080 $"):sub(12, -3))
 mod:SetCreatureID(77404)
 mod:SetEncounterID(1706)
 mod:SetZone()
@@ -25,17 +25,17 @@ local warnCleaver					= mod:NewSpellAnnounce("OptionVersion2", 156143, 3, nil, f
 local warnFrenzy					= mod:NewSpellAnnounce(156598, 4)
 
 local specWarnTenderizer			= mod:NewSpecialWarningStack(156151, nil, 2)
-local specWarnTenderizerOther		= mod:NewSpecialWarningTaunt(156151, nil, nil, nil, nil, nil, 2)
-local specWarnGushingWounds			= mod:NewSpecialWarningStack(156152, nil, 2, nil, nil, nil, nil, 2)
-local specWarnBoundingCleave		= mod:NewSpecialWarningCount(156160, nil, nil, nil, 2, nil, 2)
+local specWarnTenderizerOther		= mod:NewSpecialWarningTaunt(156151, nil, nil, nil, nil, 2)
+local specWarnGushingWounds			= mod:NewSpecialWarningStack(156152, nil, 2, nil, nil, nil, 2)
+local specWarnBoundingCleave		= mod:NewSpecialWarningCount(156160, nil, nil, nil, 2, 2)
 local specWarnBoundingCleaveEnded	= mod:NewSpecialWarningEnd(156160)
-local specWarnPaleVitriol			= mod:NewSpecialWarningMove(163046, nil, nil, nil, nil, nil, 2)--Mythic
+local specWarnPaleVitriol			= mod:NewSpecialWarningMove(163046, nil, nil, nil, nil, 2)--Mythic
 
-local timerCleaveCD					= mod:NewCDTimer(6, 156157, nil, false)
-local timerTenderizerCD				= mod:NewCDTimer(15.2, 156151, nil, "Tank")
-local timerCleaverCD				= mod:NewCDTimer(7.5, 156143, nil, "Tank")
+local timerCleaveCD					= mod:NewCDTimer(6, 156157, nil, false, nil, 5)
+local timerTenderizerCD				= mod:NewCDTimer(15.2, 156151, nil, "Tank", nil, 5)
+local timerCleaverCD				= mod:NewCDTimer(7.5, 156143, nil, "Tank", nil, 5)
 local timerGushingWounds			= mod:NewBuffFadesTimer(15, 156152)
-local timerBoundingCleaveCD			= mod:NewNextCountTimer(60, 156160)
+local timerBoundingCleaveCD			= mod:NewNextCountTimer(60, 156160, nil, nil, nil, 2)
 local timerBoundingCleave			= mod:NewCastTimer(15, 156160)
 
 local berserkTimer					= mod:NewBerserkTimer(300)
@@ -44,7 +44,7 @@ local countdownTenderizer			= mod:NewCountdown("Alt17", 156151, "Tank")
 local countdownBoundingCleave		= mod:NewCountdown(60, 156160)
 
 local voiceCleave					= mod:NewVoice(156157, "Melee")
-local voiceTenderizer				= mod:NewVoice("OptionVersion2", 156151)
+local voiceTenderizer				= mod:NewVoice(156151, nil, nil, 2)
 local voiceGushingWound				= mod:NewVoice(156152, false)--off by default because only one person needs to run out in most strats, not everyone. Only that person should enable option
 local voiceFrenzy					= mod:NewVoice(156598)
 local voiceBoundingCleaveSoon		= mod:NewVoice(156160)
@@ -109,7 +109,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 156151 then
 		local amount = args.amount or 1
-		warnTenderizer:Show(args.destName, amount)
 		timerTenderizerCD:Start()
 		countdownTenderizer:Start()
 		if amount >= 2 then
@@ -117,10 +116,14 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnTenderizer:Show(amount)
 			else
-				if not UnitDebuff("player", GetSpellInfo(156151)) and not UnitIsDeadOrGhost("player") then
+				if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 					specWarnTenderizerOther:Show(args.destName)
+				else
+					warnTenderizer:Show(args.destName, amount)
 				end
 			end
+		else
+			warnTenderizer:Show(args.destName, amount)
 		end
 	elseif spellId == 156598 then
 		self.vb.isFrenzied = true

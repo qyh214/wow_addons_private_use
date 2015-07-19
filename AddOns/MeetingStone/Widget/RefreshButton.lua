@@ -1,13 +1,12 @@
 
 BuildEnv(...)
 
-local RefreshButton = Addon:NewClass('RefreshButton', 'Button.UIMenuButtonStretchTemplate')
+local RefreshButton = Addon:NewClass('RefreshButton', 'Button.UIMenuButtonStretchTemplate') do
+    GUI:Embed(RefreshButton, 'Tooltip')
+    RefreshButton:SetTooltipAnchor('ANCHOR_RIGHT')
+end
 
-function RefreshButton:Constructor(parent)
-    if not parent then
-        return
-    end
-
+function RefreshButton:Constructor()
     local Icon = self:CreateTexture(nil, 'ARTWORK') do
         Icon:SetSize(16, 16)
         Icon:SetTexture([[Interface\BUTTONS\UI-RefreshButton]])
@@ -23,7 +22,6 @@ function RefreshButton:Constructor(parent)
         self:SetDisabledFontObject('GameFontDisable')
     end
 
-    self:SetParent(parent)
     self:SetSize(83, 31)
     self:SetText(REFRESH)
     self.Icon = Icon
@@ -40,8 +38,4 @@ end
 function RefreshButton:OnDisable()
     self.Icon:SetDesaturated(true)
     self.Icon:SetAlpha(0.5)
-end
-
-function RefreshButton:SetTooltip(...)
-    GUI:SetTooltip(self, 'ANCHOR_RIGHT', ...)
 end

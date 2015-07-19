@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(742, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 67 $"):sub(12, -3))
 mod:SetCreatureID(62442)--62919 Unstable Sha, 62969 Embodied Terror
 mod:SetEncounterID(1505)
 mod:SetReCombatTime(60)--fix lfr combat re-starts after killed.
@@ -36,14 +36,14 @@ local yellNightmares					= mod:NewYell(122770)
 local specWarnDarkOfNight				= mod:NewSpecialWarningSwitchCount("ej6550", "Dps")
 local specWarnTerrorize					= mod:NewSpecialWarningDispel(123012, "Healer")
 
-local timerNightCD						= mod:NewNextTimer(121, "ej6310", nil, nil, nil, 130013)
+local timerNightCD						= mod:NewNextTimer(121, "ej6310", nil, nil, nil, nil, 130013)
 local timerSunbeamCD					= mod:NewCDTimer(41, 122789)
 local timerShadowBreathCD				= mod:NewCDTimer(26, 122752, nil, "Tank|Healer")
 local timerNightmaresCD					= mod:NewNextTimer(15.5, 122770)
-local timerDarkOfNightCD				= mod:NewCDTimer(30.5, "ej6550", nil, nil, nil, 130013)
-local timerDayCD						= mod:NewNextTimer(121, "ej6315", nil, nil, nil, 122789)
-local timerSummonUnstableShaCD			= mod:NewNextTimer(18, "ej6320", nil, nil,nil, "Interface\\Icons\\achievement_raid_terraceofendlessspring04")
-local timerSummonEmbodiedTerrorCD		= mod:NewNextCountTimer(41, "ej6316", nil, nil, nil, "Interface\\Icons\\achievement_raid_terraceofendlessspring04")
+local timerDarkOfNightCD				= mod:NewCDTimer(30.5, "ej6550", nil, nil, nil, nil, 130013)
+local timerDayCD						= mod:NewNextTimer(121, "ej6315", nil, nil, nil, nil, 122789)
+local timerSummonUnstableShaCD			= mod:NewNextTimer(18, "ej6320", nil, nil, nil, nil, "Interface\\Icons\\achievement_raid_terraceofendlessspring04")
+local timerSummonEmbodiedTerrorCD		= mod:NewNextCountTimer(41, "ej6316", nil, nil, nil, nil, "Interface\\Icons\\achievement_raid_terraceofendlessspring04")
 local timerTerrorizeCD					= mod:NewCDTimer(13.5, 123012)--Besides being cast 14 seconds after they spawn, i don't know if they recast it if they live too long, their health was too undertuned to find out.
 local timerSunBreathCD					= mod:NewNextCountTimer(29, 122855)
 local timerBathedinLight				= mod:NewBuffFadesTimer(6, 122858, nil, "Healer")

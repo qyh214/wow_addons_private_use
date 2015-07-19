@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(864, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 33 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 68 $"):sub(12, -3))
 mod:SetCreatureID(71466)
 mod:SetEncounterID(1600)
 mod:SetZone()
@@ -41,7 +41,7 @@ local specWarnBorerDrillMove	= mod:NewSpecialWarningMove(144218)
 --Siege Mode
 local specWarnSeismicActivity	= mod:NewSpecialWarningSpell(144483, nil, nil, nil, 2)
 local specWarnShockPulse		= mod:NewSpecialWarningCount(144485, nil, nil, nil, 2)
-local specWarnCutterLaser		= mod:NewSpecialWarningRun("OptionVersion2", 146325, nil, nil, nil, 4)
+local specWarnCutterLaser		= mod:NewSpecialWarningRun(146325, nil, nil, 2, 4)
 local specWarnExplosiveTar		= mod:NewSpecialWarningMove(144498)
 local yellCutterLaser			= mod:NewYell(146325)
 local specWarnMortarBarrage		= mod:NewSpecialWarningSpell(144555, nil, nil, nil, 2)
@@ -54,7 +54,7 @@ local timerIgniteArmorCD		= mod:NewCDTimer(10, 144467, nil, "Tank")
 local timerLaserBurnCD			= mod:NewCDTimer(11.5, 144459, nil, false)--Also off by default(bar spam)
 local timerBorerDrillCD			= mod:NewCDTimer(17, 144218)
 local timerCrawlerMineCD		= mod:NewCDTimer(30, 144673)
-local timerRicochetCD			= mod:NewCDTimer(15, 144356, nil, nil, nil, 144327)
+local timerRicochetCD			= mod:NewCDTimer(15, 144356, nil, nil, nil, nil, 144327)
 --Siege Mode
 local timerSiegeModeCD			= mod:NewNextTimer(114, 84974, nil, nil, "timerSiegeModeCD")--Wish spell name was a litlte shorter but still better than localizing
 local timerCutterLaser			= mod:NewBuffFadesTimer(10, 146325)--Spell tooltip says 15 but combat log showed 10

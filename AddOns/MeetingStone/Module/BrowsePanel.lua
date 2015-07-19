@@ -1,7 +1,7 @@
 
 BuildEnv(...)
 
-BrowsePanel = Addon:NewModule(CreateFrame('Frame'), 'BrowsePanel', 'AceEvent-3.0', 'AceTimer-3.0', 'NetEaseGUI-DropMenu-1.0')
+BrowsePanel = Addon:NewModule(CreateFrame('Frame'), 'BrowsePanel', 'AceEvent-3.0', 'AceTimer-3.0')
 
 function BrowsePanel:OnInitialize()
     GUI:Embed(self, 'Owner', 'Refresh')
@@ -14,6 +14,7 @@ function BrowsePanel:OnInitialize()
 
     local ActivityList = GUI:GetClass('DataGridView'):New(self) do
         ActivityList:SetAllPoints(self)
+        ActivityList:SetItemHighlightWithoutChecked(true)
         ActivityList:SetItemHeight(32)
         ActivityList:SetItemSpacing(1)
         ActivityList:SetItemClass(Addon:GetClass('BrowseItem'))
@@ -260,6 +261,8 @@ function BrowsePanel:OnInitialize()
     end
 
     local SignUpButton = CreateFrame('Button', nil, self, 'UIPanelButtonTemplate') do
+        GUI:Embed(SignUpButton, 'Tooltip')
+        SignUpButton:SetTooltipAnchor('ANCHOR_TOP')
         SignUpButton:SetSize(120, 22)
         SignUpButton:SetPoint('BOTTOM', MainPanel, 'BOTTOM', 0, 4)
         SignUpButton:SetText(L['申请加入'])
@@ -271,9 +274,7 @@ function BrowsePanel:OnInitialize()
         SignUpButton:SetScript('OnShow', function()
             self:UpdateSignUpButton(self.ActivityList:GetSelectedItem())
         end)
-        SignUpButton.SetTooltip = function(self, ...)
-            GUI:SetTooltip(self, 'ANCHOR_TOP', ...)
-        end
+        MagicButton_OnLoad(SignUpButton)
     end
 
     local ActivityLabel = self:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight') do
@@ -293,7 +294,7 @@ function BrowsePanel:OnInitialize()
     end
 
     local function RefreshFilter()
-        self.ActivityList:SetFilterText(self.SearchInput:GetMatchText(), self.LootDropdown:GetValue(), self.bossFilter)
+        self.ActivityList:SetFilterText(self.SearchInput:GetText():lower(), self.LootDropdown:GetValue(), self.bossFilter, Profile:GetSpamWordStatus())
     end
 
     local LootLabel = self:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight') do
@@ -424,6 +425,9 @@ function BrowsePanel:OnInitialize()
     end
 
     local AdvButton = CreateFrame('Button', nil, self) do
+        GUI:Embed(AdvButton, 'Tooltip')
+        AdvButton:SetTooltipAnchor('ANCHOR_RIGHT')
+        AdvButton:SetTooltip(L['高级过滤'])
         AdvButton:SetNormalTexture([[Interface\Buttons\UI-SpellbookIcon-NextPage-Up]])
         AdvButton:SetPushedTexture([[Interface\Buttons\UI-SpellbookIcon-NextPage-Down]])
         AdvButton:SetDisabledTexture([[Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled]])
@@ -433,7 +437,6 @@ function BrowsePanel:OnInitialize()
         AdvButton:SetScript('OnClick', function()
             self.AdvFilterPanel:SetShown(not self.AdvFilterPanel:IsShown())
         end)
-        GUI:SetTooltip(AdvButton, 'ANCHOR_RIGHT', L['高级过滤'])
     end
 
     local ActivityTotals = self:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightRight') do
@@ -472,6 +475,15 @@ function BrowsePanel:OnInitialize()
         IconSummary:SetScript('OnLeave', GameTooltip_Hide)
     end
 
+    local SpamWord = GUI:GetClass('CheckBox'):New(self) do
+        SpamWord:SetPoint('BOTTOMRIGHT', MainPanel, -230, 5)
+        SpamWord:SetText(L['关键字过滤'])
+        SpamWord:SetScript('OnClick', function(SpamWord)
+            Profile:SetSpamWordEnabled(SpamWord:GetChecked())
+            RefreshFilter()
+        end)
+    end
+
     local HelpPlate = {
         FramePos = { x = -10,          y = 75 },
         FrameSize = { width = 830, height = 425 },
@@ -506,10 +518,16 @@ function BrowsePanel:OnInitialize()
             ToolTipText = L.BrowseHelpApply,
         },
         {
-            ButtonPos = { x = 550,  y = -389 },
-            HighLightBox = { x = 550, y = -397, width = 275, height = 28 },
+            ButtonPos = { x = 720,  y = -389 },
+            HighLightBox = { x = 720, y = -397, width = 105, height = 28 },
             ToolTipDir = 'UP',
             ToolTipText = L.BrowseHelpStatus,
+        },
+        {
+            ButtonPos = { x = 570,  y = -389 },
+            HighLightBox = { x = 570, y = -397, width = 130, height = 28 },
+            ToolTipDir = 'UP',
+            ToolTipText = L.BrowseHelpSpamWord,
         },
     }
 
@@ -528,6 +546,9 @@ function BrowsePanel:OnInitialize()
     self.AdvFilterPanel = AdvFilterPanel
     self.BossFilter = BossFilter
     self.AdvButton = AdvButton
+    self.SpamWord = SpamWord
+
+    self.RefreshFilterHandler = RefreshFilter
 
     self:RegisterEvent('LFG_LIST_AVAILABILITY_UPDATE')
     self:RegisterEvent('LFG_LIST_SEARCH_RESULTS_RECEIVED')
@@ -536,6 +557,9 @@ function BrowsePanel:OnInitialize()
     self:RegisterEvent('LFG_LIST_SEARCH_RESULT_UPDATED')
     self:RegisterEvent('LFG_LIST_APPLICATION_STATUS_UPDATED', 'LFG_LIST_SEARCH_RESULT_UPDATED')
     self:RegisterMessage('LFG_LIST_SEARCH_RESULT_REMOVED')
+    
+    self:RegisterMessage('MEETINGSTONE_SPAMWORD_STATUS_UPDATE', 'OnToggleSpamWord')
+    self:RegisterMessage('MEETINGSTONE_SPAMWORD_UPDATE', RefreshFilter)
 
     LFGListApplicationDialog.SignUpButton:SetScript('OnClick', function(self)
         local dialog = self:GetParent()
@@ -682,8 +706,10 @@ function BrowsePanel:Search(categoryId, fullName, filters, baseFilter, searchVal
         return
     end
 
+    local searchText = Profile:IsOnlyMeetingStoneActivity() and format('%s-%s', L['集合石'], self.fullName or '') or self.fullName or ''
+
     Profile:SetLastSearchValue(self.searchValue)
-    C_LFGList.Search(self.categoryId, self.fullName or '', self.filters, self.baseFilter)
+    C_LFGList.Search(self.categoryId, searchText, self.filters, self.baseFilter)
     self.SearchingBlocker:Show()
     self.NoResultBlocker:Hide()
     self.RefreshButton:Disable()
@@ -698,7 +724,7 @@ end
 function BrowsePanel:ToggleActivityMenu(anchor, activity)
     local usable, reason = self:CheckSignUpStatus(activity)
 
-    self:ToggleMenu(anchor, {
+    GUI:ToggleMenu(anchor, {
         {
             text = activity:GetName(),
             isTitle = true,
@@ -748,6 +774,12 @@ function BrowsePanel:ToggleActivityMenu(anchor, activity)
             },
         },
         {
+            text = L['加入关键字过滤'],
+            func = function()
+                SettingPanel:AddSpamWord(activity:GetSummary() or activity:GetComment())
+            end,
+        },
+        {
             text = CANCEL,
         },
     }, 'cursor')
@@ -784,5 +816,12 @@ function BrowsePanel:UpdateBossFilter(activityId)
 
     for i = (bossList and #bossList or 0) + 1, #self.BossFilter.buttons do
         self.BossFilter.buttons[i]:Hide()
+    end
+end
+
+function BrowsePanel:OnToggleSpamWord(_, enable, onUser)
+    if onUser or self.SpamWord:GetChecked() ~= enable then
+        self.SpamWord:SetChecked(enable)
+        self.RefreshFilterHandler()
     end
 end

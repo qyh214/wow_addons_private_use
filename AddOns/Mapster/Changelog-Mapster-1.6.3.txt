@@ -1,0 +1,13 @@
+tag 1.6.3
+b4bae8886669c7558cdd04fa69b709f1edb24ff5
+Hendrik Leppkes <h.leppkes@gmail.com>
+2015-06-29 16:31:01 +0200
+
+Tag as 1.6.3
+
+
+--------------------
+
+Hendrik Leppkes:
+	- Update TOC for 6.2
+	- Add Tanaan Jungle to FogClear

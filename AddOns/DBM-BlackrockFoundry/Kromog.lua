@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(1162, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13423 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14080 $"):sub(12, -3))
 mod:SetCreatureID(77692)
 mod:SetEncounterID(1713)
 mod:SetZone()
 mod:SetHotfixNoticeRev(13105)
+mod.respawnTime = 29.5
 
 mod:RegisterCombat("combat")
 
@@ -20,30 +21,38 @@ mod:RegisterEvents(
 	"CHAT_MSG_ADDON"--Has to be out of combat
 )
 
---TODO, see how second trembling earth CD works and if current code even works for other timers. Mythic pulls were very short :\
+--Expression:  (ability.id = 157060 or ability.id = 158217) and type = "begincast" or ability.id = 173917 and type = "applybuff"
+--TODO, FUCK this fight and it's timers. It's impossible to make them correct in all cases. they are just FAR too god damn variable
+--https://www.warcraftlogs.com/reports/rHwKLVfXPQCYBcvW#fight=3&view=events&pins=2%24Off%24%23244F4B%24expression%24(ability.id+%3D+157060+or+ability.id+%3D+158217)+and+type+%3D+%22begincast%22+or+ability.id+%3D+173917+and+type+%3D+%22applybuff%22
+--https://www.warcraftlogs.com/reports/W3Z9mzCvYADkfyG6#fight=27&view=events&pins=2%24Off%24%23244F4B%24expression%24(ability.id+%3D+157060+or+ability.id+%3D+158217)+and+type+%3D+%22begincast%22+or+ability.id+%3D+173917+and+type+%3D+%22applybuff%22
+--https://www.warcraftlogs.com/reports/kvpLjynmPgNMFJtB#fight=13&view=events&pins=2%24Off%24%23244F4B%24expression%24(ability.id+%3D+157060+or+ability.id+%3D+158217)+and+type+%3D+%22begincast%22+or+ability.id+%3D+173917+and+type+%3D+%22applybuff%22+
+--https://www.warcraftlogs.com/reports/dPLkxbZpCQj7R3D2#fight=8&view=events&pins=2%24Off%24%23244F4B%24expression%24(ability.id+%3D+157060+or+ability.id+%3D+158217)+and+type+%3D+%22begincast%22+or+ability.id+%3D+173917+and+type+%3D+%22applybuff%22
+--https://www.warcraftlogs.com/reports/tyV24fQzhNnKjbDk#pins=2%24Off%24%23244F4B%24expression%24+(ability.id+%3D+157060+or+ability.id+%3D+158217)+and+type+%3D+%22begincast%22+or+ability.id+%3D+173917+and+type+%3D+%22applybuff%22&view=events&fight=6
+--Even more variations I don't have off hand. Basically because the cds are variable, and the two abilities delay eachother, it's a roulette and toss up what the fuck is even gonna happen from pull to pull.
+--I still hold I at least try to get a lot closer than BW does which has even more wrong timers. However, it's IMPOSSIBLE to ever get them correct without the damn wow source code
 local warnCrushingEarth				= mod:NewTargetAnnounce(161923, 3, nil, false)--Players who failed to move. Off by default since announcing failures is not something DBM generally does by default. Can't announce pre cast unfortunately. No detection
 local warnStoneGeyser				= mod:NewSpellAnnounce(158130, 2)
 local warnWarpedArmor				= mod:NewStackAnnounce(156766, 2, nil, "Tank")
 local warnFrenzy					= mod:NewSpellAnnounce(156861, 3)
 
-local specWarnGraspingEarth			= mod:NewSpecialWarningMoveTo(157060, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(157060), nil, nil, nil, 2)
+local specWarnGraspingEarth			= mod:NewSpecialWarningMoveTo(157060, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(157060), nil, nil, 2)
 local specWarnThunderingBlows		= mod:NewSpecialWarningSpell(157054, nil, nil, nil, 3)
-local specWarnRipplingSmash			= mod:NewSpecialWarningDodge(157592, nil, nil, nil, 2, nil, 2)
-local specWarnStoneBreath			= mod:NewSpecialWarningCount(156852, nil, nil, nil, 2, nil, 2)
+local specWarnRipplingSmash			= mod:NewSpecialWarningDodge(157592, nil, nil, nil, 2, 2)
+local specWarnStoneBreath			= mod:NewSpecialWarningCount(156852, nil, nil, nil, 2, 2)
 local specWarnSlam					= mod:NewSpecialWarningSpell(156704, "Tank")
 local specWarnWarpedArmor			= mod:NewSpecialWarningStack(156766, nil, 2)
 local specWarnWarpedArmorOther		= mod:NewSpecialWarningTaunt(156766)
 local specWarnTremblingEarth		= mod:NewSpecialWarningCount(173917, nil, nil, nil, 2)
-local specWarnCalloftheMountain		= mod:NewSpecialWarningCount(158217, nil, nil, nil, 3, nil, 2)
+local specWarnCalloftheMountain		= mod:NewSpecialWarningCount(158217, nil, nil, nil, 3, 2)
 
-local timerGraspingEarthCD			= mod:NewCDTimer(114, 157060)--Unless see new logs on normal showing it can still be 111, raising to 115, average i saw was 116-119
-local timerThunderingBlowsCD		= mod:NewNextTimer(12, 157054)
-local timerRipplingSmashCD			= mod:NewCDTimer(21, 157592)--If it comes off CD early enough into ThunderingBlows/Grasping Earth, he skips a cast. Else, he'll cast it very soon after.
-local timerStoneBreathCD			= mod:NewCDCountTimer(22, 156852)
-local timerSlamCD					= mod:NewCDTimer(23, 156704, nil, "Tank")
-local timerWarpedArmorCD			= mod:NewCDTimer(14, 156766, nil, "Tank")
-local timerTremblingEarthCD			= mod:NewCDTimer(153.5, 173917)
-local timerTremblingEarth			= mod:NewBuffActiveTimer(25, 173917)
+local timerGraspingEarthCD			= mod:NewCDTimer(114, 157060, nil, nil, nil, 6)--Unless see new logs on normal showing it can still be 111, raising to 115, average i saw was 116-119
+local timerThunderingBlowsCD		= mod:NewNextTimer(12, 157054, nil, nil, nil, 2)
+local timerRipplingSmashCD			= mod:NewCDTimer(21, 157592, nil, nil, nil, 3)--If it comes off CD early enough into ThunderingBlows/Grasping Earth, he skips a cast. Else, he'll cast it very soon after.
+local timerStoneBreathCD			= mod:NewCDCountTimer(22, 156852, nil, nil, nil, 2)
+local timerSlamCD					= mod:NewCDTimer(23, 156704, nil, "Tank", nil, 5)
+local timerWarpedArmorCD			= mod:NewCDTimer(14, 156766, nil, "Tank", nil, 5)
+local timerTremblingEarthCD			= mod:NewCDTimer(153.5, 173917, nil, nil, nil, 6)
+local timerTremblingEarth			= mod:NewBuffActiveTimer(25, 173917, nil, nil, nil, 6)
 local timerCalloftheMountain		= mod:NewCastTimer(5, 158217)
 
 local berserkTimer					= mod:NewBerserkTimer(540)
@@ -72,7 +81,7 @@ function mod:RuneStart()
 			DBM.Arrow:ShowRunTo(playerX, playerY, 0)
 		end
 		if self.Options.HudMapForRune then
-			DBMHudMap:RegisterPositionMarker(157060, "HudMapForRune", "highlight", playerX, playerY, 3, 20, 0, 1, 0, 0.5):Pulse(0.5, 0.5)
+			DBMHudMap:RegisterPositionMarker(157060, "HudMapForRune", "highlight", playerX, playerY, 3, 20, 0, 1, 0, 0.5, nil, 4):Pulse(0.5, 0.5)
 		end
 	end
 end
@@ -131,7 +140,7 @@ function mod:SPELL_CAST_START(args)
 		voiceGraspingEarth:Play("157060")
 		self:RuneStart()
 		if self:IsMythic() then
-			timerGraspingEarthCD:Start(122)
+			timerGraspingEarthCD:Start(66)
 			local remaining = timerTremblingEarthCD:GetRemaining()
 			if remaining < 32 then
 				DBM:Debug("Trembling earth CD extended by Grasping Earth")
@@ -186,7 +195,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 156766 then
 		local amount = args.amount or 1
-		warnWarpedArmor:Show(args.destName, amount)
 		if self.vb.frenzied then
 			timerWarpedArmorCD:Start(10.2)
 		else
@@ -196,10 +204,14 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnWarpedArmor:Show(amount)
 			else--Taunt as soon as stacks are clear, regardless of stack count.
-				if not UnitDebuff("player", GetSpellInfo(156766)) and not UnitIsDeadOrGhost("player") then
+				if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 					specWarnWarpedArmorOther:Show(args.destName)
+				else
+					warnWarpedArmor:Show(args.destName, amount)
 				end
 			end
+		else
+			warnWarpedArmor:Show(args.destName, amount)
 		end
 	elseif spellId == 161923 then
 		warnCrushingEarth:CombinedShow(0.5, args.destName)

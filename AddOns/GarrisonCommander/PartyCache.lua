@@ -1,8 +1,7 @@
 local me,ns=...
-local addon=ns.addon --#addon
-local holdEvents,releaseEvents=addon.holdEvents,addon.releaseEvents
+ns.Configure()
+local addon=addon --#addon
 --upvalue
-local G=C_Garrison
 local setmetatable=setmetatable
 local rawset=rawset
 local tContains=tContains
@@ -13,8 +12,6 @@ local pcall=pcall
 local type=type
 local pairs=pairs
 local format=format
-
---
 -- Temporary party management
 local parties=setmetatable({},{
 	__index=function(t,k)  rawset(t,k,
@@ -60,9 +57,12 @@ local ID,maxFollowers,members,ignored,threats=0,1,{},{},{}
 function party:Open(missionID,followers)
 	maxFollowers=followers
 	ID=missionID
-	for enemy,menaces in pairs(G.GetMissionUncounteredMechanics(ID)) do
-		for i=1,#menaces do
-			tinsert(threats,format("%d:%d",enemy,menaces[i]))
+	local mechanics=G.GetMissionUncounteredMechanics(ID)
+	if (type(mechanics)=="table") then
+		for enemy,menaces in pairs(mechanics) do
+			for i=1,#menaces do
+				tinsert(threats,format("%d:%d",enemy,menaces[i]))
+			end
 		end
 	end
 	holdEvents()
@@ -89,13 +89,16 @@ end
 function party:IsEmpty()
 	return maxFollowers>0 and #members==0
 end
+function party:IsFull()
+	return maxFollowers and #members>=maxFollowers
+end
 
 function party:Dump()
-	ns.xprint("Dumping party for mission",ID)
+	print("Dumping party for mission",ID)
 	for i=1,#members do
-		ns.xprint(addon:GetFollowerData(members[i],'fullname'),G.GetFollowerStatus(members[i] or 1))
+		print(addon:GetFollowerData(members[i],'fullname'),G.GetFollowerStatus(members[i] or 1))
 	end
-	ns.xprint(G.GetPartyMissionInfo(ID))
+	print(G.GetPartyMissionInfo(ID))
 end
 
 function party:AddFollower(followerID)
@@ -109,12 +112,6 @@ function party:AddFollower(followerID)
 		if (rc and code) then
 			tinsert(members,followerID)
 			return true
---[===[@debug@
-		else
-			ns.xprint("Unable to add",followerID, G.GetFollowerName(followerID),"to",ID,code,self:IsIn(followerID),G.GetFollowerStatus(followerID))
-			ns.xprint(members[1],members[2],members[3])
-			print(debugstack(1,6,0))
---@end-debug@]===]
 		end
 	end
 end
@@ -138,7 +135,18 @@ function party:StoreFollowers(table)
 	return #table
 end
 local function fsort(a,b)
-	return addon:GetFollowerData(a,"rank")>addon:GetFollowerData(b,"rank")
+	--return addon:GetFollowerData(a,"rank")>addon:GetFollowerData(b,"rank")
+	local rank1=addon:GetAnyData(0,a,"rank")
+	local rank2=addon:GetAnyData(0,b,"rank")
+	if tonumber(rank1) and tonumber(rank2) then
+		return rank1 < rank2
+	else
+		print(a,rank1)
+		print(b,rank2)
+		print(G.GetFollowerName(a))
+		print(G.GetFollowerName(b))
+		return 0
+	end
 end
 function party:Close(desttable)
 	local perc
@@ -161,9 +169,6 @@ function party:Close(desttable)
 	end
 	if (desttable) then
 		addPartyMissionInfo(desttable,ID)
-		if (ns.toc < 60100) then
-			desttable.goldMultiplier = 1
-		end
 		desttable.full=self:FreeSlots()==0
 		desttable.threats=desttable.threats or {}
 		wipe(desttable.threats)
@@ -201,8 +206,10 @@ function addon:GetParty(missionID,key,default)
 		--Running Mission, taking followers from mission data
 		local followers=self:GetMissionData(missionID,'followers')
 		addPartyMissionInfo(party,missionID)
-		for i=1,#followers do
-			party.members[i]=followers[i]
+		if followers then
+			for i=1,#followers do
+				party.members[i]=followers[i]
+			end
 		end
 	end
 	if key then

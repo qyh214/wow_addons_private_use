@@ -7,9 +7,7 @@ local TEXTURE_NIL = [[]]
 local TEXTURE_TRUE = [[Interface\BUTTONS\UI-CheckBox-Check]]
 local TEXTURE_FALSE = [[Interface\BUTTONS\UI-MultiCheck-Up]]
 
-function BossCheckBox:Constructor(parent)
-    self:SetParent(parent)
-
+function BossCheckBox:Constructor()
     self:SetNormalTexture([[Interface\BUTTONS\UI-CheckBox-Up]])
     self:SetPushedTexture([[Interface\BUTTONS\UI-CheckBox-Down]])
     self:SetHighlightTexture([[Interface\BUTTONS\UI-CheckBox-Highlight]], 'ADD')

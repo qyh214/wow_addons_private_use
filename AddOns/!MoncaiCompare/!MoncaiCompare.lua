@@ -24,7 +24,7 @@ end
 
 ItemRefTooltip:SetScript("OnTooltipSetItem", function(self)
 	if (not IsModifiedClick("COMPAREITEMS") and self:IsMouseOver()) then
-		GameTooltip_ShowCompareItem(self, 1);
+		GameTooltip_ShowCompareItem(self);
 		self.comparing = true;
 	end
 end 
@@ -34,7 +34,7 @@ ItemRefTooltip:SetScript("OnDragStop", function(self)
 	self:StopMovingOrSizing();
 	ValidateFramePosition(self);
 	if (not IsModifiedClick("COMPAREITEMS") ) then --We do this to choose where the comparison is shown
-		GameTooltip_ShowCompareItem(self, true);
+		GameTooltip_ShowCompareItem(self);
 		self.comparing = true;
 	end
 end
@@ -42,7 +42,7 @@ end
 
 GameTooltip:SetScript("OnTooltipSetItem", function(self)
 	if ( not IsModifiedClick("COMPAREITEMS") and not self:IsEquippedItem() ) then
-		GameTooltip_ShowCompareItem(self, true);
+		GameTooltip_ShowCompareItem(self);
 	else
 		local shoppingTooltip1, shoppingTooltip2 = unpack(self.shoppingTooltips);
 		shoppingTooltip1:Hide();

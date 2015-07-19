@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BSMTrash", "DBM-Party-WoD", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -23,7 +23,6 @@ local specWarnSubjugate					= mod:NewSpecialWarningDispel(151697, "Healer")
 local specWarnSlaversRage				= mod:NewSpecialWarningDispel(151965, "RemoveEnrage")
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 local UnitExists, UnitGUID, UnitAffectingCombat = UnitExists, UnitGUID, UnitAffectingCombat
 local function validWarning(GUID)

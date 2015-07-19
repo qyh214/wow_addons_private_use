@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(850, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 67 $"):sub(12, -3))
 mod:SetCreatureID(71515)
 mod:SetEncounterID(1603)
 mod:SetZone()
@@ -68,7 +68,7 @@ local yellHuntersMark				= mod:NewYell(143882, nil, false)
 local specWarnHuntersMarkOther		= mod:NewSpecialWarningTarget(143882, false)
 
 --Nazgrim Core Abilities
-local timerAddsCD					= mod:NewNextCountTimer(45, "ej7920", nil, nil, nil, 2457)
+local timerAddsCD					= mod:NewNextCountTimer(45, "ej7920", nil, nil, nil, nil, 2457)
 local timerSunder					= mod:NewTargetTimer(30, 143494, nil, "Tank|Healer")
 local timerSunderCD					= mod:NewCDTimer(8, 143494, nil, "Tank")
 local timerExecuteCD				= mod:NewCDTimer(18, 143502, nil, "Tank")
