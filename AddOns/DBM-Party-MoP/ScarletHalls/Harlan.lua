@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(654, "DBM-Party-MoP", 8, 311)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(58632)
 mod:SetEncounterID(1421)
 
@@ -22,8 +22,8 @@ local warnBladesofLight			= mod:NewCastAnnounce(111216, 4)
 local specWarnBladesofLight		= mod:NewSpecialWarningSpell(111216, nil, nil, nil, 2)
 
 local timerDragonsReachCD		= mod:NewCDTimer(7, 111217)--12 on normal, 7 on heroic, OR, 7 in both and it was buffed on normal since i've run it. For time being i'll make it 7 but change it from next to CD
-local timerCallReinforcementsCD	= mod:NewCDTimer(20, "ej5378")--adjusted in build 15799?
-local timerBladesofLightCD		= mod:NewNextTimer(30, 111216)
+local timerCallReinforcementsCD	= mod:NewCDTimer(20, "ej5378", nil, nil, nil, 1)--adjusted in build 15799?
+local timerBladesofLightCD		= mod:NewNextTimer(30, 111216, nil, nil, nil, 2)
 
 --CallReinforcementsCD DATA
 --"<1789.8> RAID_BOSS_EMOTE#|TInterface\\Icons\\ability_warrior_battleshout.blp:20|tArmsmaster Harlan calls on two of his allies to join the fight!#0#false", -- [19]

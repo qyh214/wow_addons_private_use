@@ -29,7 +29,7 @@ function XPerl_SetModuleRevision(rev)
 end
 local AddRevision = XPerl_SetModuleRevision
 
-XPerl_SetModuleRevision("$Revision: 967 $")
+XPerl_SetModuleRevision("$Revision: 974 $")
 
 function XPerl_Notice(...)
 	if (DEFAULT_CHAT_FRAME) then
@@ -250,53 +250,6 @@ function XPerl_RegisterBasics(self, eventArray)
 	XPerl_UnitEvents(self, eventArray, events)
 end
 
---[[
--- XPerl_GuildStatusUpdate()
-function XPerl_GuildRoster_Update()
-	if (conf.colour.class and conf.colour.guildList) then
-		local col = _G.GuildRosterColumnButton4
-		if (_G.GuildFrame.selectedTab ~= 2 or not col or col.sortType ~= "zone") then
-			return
-		end
-
-		local myZone = GetRealZoneText()
-
-		local scrollFrame = GuildRosterContainer
-		local offset = HybridScrollFrame_GetOffset(scrollFrame)
-		local buttons = scrollFrame.buttons
-		local numButtons = #buttons
-		local button, index, class
-		local totalMembers, onlineMembers = GetNumGuildMembers()
-		local selectedGuildMember = GetGuildRosterSelection()
-
-		for i = 1, numButtons do
-			button = buttons[i]
-			index = offset + i
-			local name, rank, rankIndex, level, class, zone, note, officernote, online, status, classFileName, achievementPoints, achievementRank, isMobile = GetGuildRosterInfo(index)
-
-			local color = GetQuestDifficultyColor(level)
-			if (online) then
-				_G["GuildRosterContainerButton"..i.."String1"]:SetTextColor(color.r, color.g, color.b)
-			else
-				_G["GuildRosterContainerButton"..i.."String1"]:SetTextColor(color.r / 2, color.g / 2, color.b / 2)
-			end
-
-			if (zone == myZone) then
-				if (online) then
-					_G["GuildRosterContainerButton"..i.."String3"]:SetTextColor(0, 1, 0)
-				else
-					_G["GuildRosterContainerButton"..i.."String3"]:SetTextColor(0, 0.5, 0)
-				end
-			end
-
-		end
-	end
-end
-
-if (_G.GuildRoster_Update) then
-	hooksecurefunc("GuildRoster_Update", XPerl_GuildRoster_Update)
-end ]]
-
 -- onEventPostSetup
 local function onEventPostSetup(self, event, unit, ...)
 	--if (unit and XPerl_UnitEvent(unit, event, unit, ...)) then
@@ -494,19 +447,6 @@ function XPerl_Globals_OnEvent(self, event, arg1, ...)
 		end
 		self:UnregisterEvent(event)
 		settingspart1(self, event)
-		-- Tell DHUD to hide Blizzard default Player and Target frames
-		--[[if (type(DHUD_Config) == "table") then
-			if (XPerl_Player) then
-				DHUD_Config["bplayer"] = 0
-			end
-			if (XPerl_Target) then
-				DHUD_Config["btarget"] = 0
-			end
-		end]]
-	--[[elseif (event == "ADDON_LOADED") then
-		if (arg1 == "Blizzard_GuildUI") then
-			hooksecurefunc("GuildRoster_Update", XPerl_GuildRoster_Update)
-		end]]
 	elseif (event == "PLAYER_LOGIN") then
 		self:UnregisterEvent(event)
 		startupCheckSettings(self,event)
@@ -562,8 +502,8 @@ function XPerl_LoadOptions()
 
 		if (not ok) then
 			XPerl_Notice("Failed to load Z-Perl Options ("..tostring(reason)..")")
-		else
-			collectgarbage()			-- Reclaims about 1.4Mb from loading options
+		--[[else
+			collectgarbage()]]			-- Reclaims about 1.4Mb from loading options
 		end
 	end
 
@@ -638,9 +578,9 @@ function XPerl_ValidateSettings()
 
 	if (conf.colour and not conf.colour.gradient) then
 		conf.colour.gradient = {
-			enable	= 1,
-			s	= {r = 0.25, g = 0.25, b = 0.25, a = 1},
-			e	= {r = 0.1, g = 0.1, b = 0.1, a = 0}
+			enable = 1,
+			s = {r = 0.25, g = 0.25, b = 0.25, a = 1},
+			e = {r = 0.1, g = 0.1, b = 0.1, a = 0}
 		}
 	end
 

@@ -55,7 +55,7 @@ XPerl_RequestConfig(function(new)
 	if XPerl_PetTarget then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 972 $")
+end, "$Revision: 974 $")
 
 local buffSetup
 
@@ -64,13 +64,12 @@ function ZPerl_TargetTarget_OnLoad(self)
 	self:RegisterForClicks("AnyUp")
 	self:RegisterForDrag("LeftButton")
 	XPerl_SetChildMembers(self)
-
-	self.tutorialPage = 9
 	
 	local events = {
 		"UNIT_HEALTH",
 		"UNIT_POWER_FREQUENT",
-		"UNIT_AURA"
+		"UNIT_AURA",
+		"UNIT_TARGET"
 	}
 
 	self.guid = 0
@@ -78,41 +77,75 @@ function ZPerl_TargetTarget_OnLoad(self)
 	-- Events
 	self:RegisterEvent("RAID_TARGET_UPDATE")
 	if (self == XPerl_TargetTarget) then
-		self.tutorialPage = 8
 		self.parentid = "target"
 		self.partyid = "targettarget"
-		self:RegisterEvent("UNIT_TARGET")
 		self:RegisterEvent("PLAYER_TARGET_CHANGED")
 		for i, event in pairs(events) do
-			self:RegisterEvent(event)
+			self:RegisterUnitEvent(event, "target")
+		end
+		if (conf.targettarget.healprediction) then
+			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "target")
+		else
+			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		end
+		if (conf.targettarget.absorbs) then
+			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "target")
+		else
+			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 		end
 		self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
 	elseif (self == XPerl_FocusTarget) then
 		self.parentid = "focus"
 		self.partyid = "focustarget"
-		self:RegisterEvent("UNIT_TARGET")
+		self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 		for i, event in pairs(events) do
-			self:RegisterEvent(event)
+			self:RegisterUnitEvent(event, "focus")
+		end
+		if (conf.focustarget.healprediction) then
+			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "focus")
+		else
+			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		end
+		if (conf.focustarget.absorbs) then
+			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "focus")
+		else
+			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 		end
 		self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
 	elseif (self == XPerl_PetTarget) then
 		self.parentid = "pet"
 		self.partyid = "pettarget"
-		self:RegisterEvent("UNIT_TARGET")
 		for i, event in pairs(events) do
-			self:RegisterEvent(event)
+			self:RegisterUnitEvent(event, "pet")
+		end
+		if (conf.pettarget.healprediction) then
+			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "pet")
+		else
+			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		end
+		if (conf.pettarget.absorbs) then
+			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "pet")
+		else
+			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 		end
 		self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
 	else
 		self.parentid = "targettarget"
 		self.partyid = "targettargettarget"
+		for i, event in pairs(events) do
+			self:RegisterUnitEvent(event, "target")
+		end
+		if (conf.targettarget.healprediction) then
+			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "target")
+		else
+			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		end
+		if (conf.targettarget.absorbs) then
+			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "target")
+		else
+			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		end
 		self:SetScript("OnUpdate", XPerl_TargetTargetTarget_OnUpdate)
-	end
-
-	if (conf.targettarget.healprediction) then
-		self:RegisterEvent("UNIT_HEAL_PREDICTION")
-	else
-		self:UnregisterEvent("UNIT_HEAL_PREDICTION")
 	end
 
 	XPerl_SecureUnitButton_OnLoad(self, self.partyid, XPerl_ShowGenericMenu)
@@ -194,11 +227,18 @@ end
 
 -- XPerl_TargetTarget_Buff_UpdateAll
 local function XPerl_TargetTarget_Buff_UpdateAll(self)
-	if self.conf.buffs.enable or self.conf.debuffs.enable then
+	if self.conf.buffs.enable then
 		self.buffFrame:Show()
-		XPerl_Targets_BuffUpdate(self)
 	else
 		self.buffFrame:Hide()
+	end
+	if self.conf.debuffs.enable then
+		self.debuffFrame:Show()
+	else
+		self.debuffFrame:Hide()
+	end
+	if self.conf.buffs.enable or self.conf.debuffs.enable then
+		XPerl_Targets_BuffUpdate(self)
 	end
 end
 
@@ -224,6 +264,12 @@ end
 -- XPerl_TargetTarget_UpdateDisplay
 function XPerl_TargetTarget_UpdateDisplay(self, force)
 	local partyid = self.partyid
+	if not UnitExists(partyid) then
+		self.targethp = UnitHealth(partyid)
+		self.targetmana = UnitPower(partyid)
+		self.guid = UnitGUID(partyid)
+		self.afk = UnitIsAFK(partyid)
+	end
 	if self.conf.enable and UnitExists(self.parentid) and UnitIsConnected(partyid) then
 		self.targetname = UnitName(partyid)
 		if self.targetname then
@@ -237,8 +283,6 @@ function XPerl_TargetTarget_UpdateDisplay(self, force)
 			XPerl_TargetTarget_UpdatePVP(self)
 
 			-- Save these, so we know whether to update the frame later
-			self.targethp = UnitHealth(partyid)
-			self.targetmana = UnitPower(partyid)
 			self.guid = UnitGUID(partyid)
 			self.afk = UnitIsAFK(partyid) and conf.showAFK
 
@@ -323,41 +367,67 @@ end
 -- XPerl_TargetTarget_OnUpdate
 function XPerl_TargetTarget_OnUpdate(self, elapsed)
 	local partyid = self.partyid
-	local newHP = UnitHealth(partyid)
-	local newMana = UnitPower(partyid)
 	local newAFK = UnitIsAFK(partyid)
-	local newGuid = UnitGUID(partyid)
 
-	if ((newGuid ~= self.guid) or (newHP ~= self.targethp) or (newMana ~= self.targetmana) or (newAFK ~= self.afk)) then
-		XPerl_TargetTarget_UpdateDisplay(self)
-	else
-		self.time = elapsed + self.time
-		if self.time >= 0.2 then
-			XPerl_TargetTarget_Update_Combat(self)
-			XPerl_TargetTarget_Update_Control(self)
-			XPerl_TargetTarget_UpdatePVP(self)
-			XPerl_TargetTarget_Buff_UpdateAll(self)
-			XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
-			XPerl_UpdateSpellRange(self, partyid)
-			XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
-			self.time = 0
-		end
+	if (conf.showAFK and newAFK ~= self.afk) then
+		XPerl_Target_UpdateHealth(self)
 	end
-end
-
--- XPerl_TargetTargetTarget_OnUpdate
-function XPerl_TargetTargetTarget_OnUpdate(self, elapsed)
-	local newGuid = UnitGUID(self.partyid)
 
 	if conf.showFD then
-		local _, class = UnitClass(self.partyid)
+		local _, class = UnitClass(partyid)
 		if class == "HUNTER" then
-			local feigning = UnitBuff(self.partyid, feignDeath)
+			local feigning = UnitBuff(partyid, feignDeath)
 			if feigning ~= self.feigning then
 				self.feigning = feigning
 				XPerl_Target_UpdateHealth(self)
 			end
 		end
+	end
+
+	self.time = elapsed + self.time
+	if self.time >= 0.2 then
+		XPerl_TargetTarget_Update_Combat(self)
+		XPerl_TargetTarget_Update_Control(self)
+		XPerl_TargetTarget_UpdatePVP(self)
+		XPerl_TargetTarget_Buff_UpdateAll(self)
+		XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
+		XPerl_UpdateSpellRange(self, partyid)
+		XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
+		self.time = 0
+	end
+end
+
+-- XPerl_TargetTargetTarget_OnUpdate
+function XPerl_TargetTargetTarget_OnUpdate(self, elapsed)
+	local partyid = self.partyid
+	local newAFK = UnitIsAFK(partyid)
+	local newGuid = UnitGUID(partyid)
+
+	if (conf.showAFK and newAFK ~= self.afk) then
+		XPerl_Target_UpdateHealth(self)
+	end
+
+	if conf.showFD then
+		local _, class = UnitClass(partyid)
+		if class == "HUNTER" then
+			local feigning = UnitBuff(partyid, feignDeath)
+			if feigning ~= self.feigning then
+				self.feigning = feigning
+				XPerl_Target_UpdateHealth(self)
+			end
+		end
+	end
+
+	self.time = elapsed + self.time
+	if self.time >= 0.2 then
+		XPerl_TargetTarget_Update_Combat(self)
+		XPerl_TargetTarget_Update_Control(self)
+		XPerl_TargetTarget_UpdatePVP(self)
+		XPerl_TargetTarget_Buff_UpdateAll(self)
+		XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
+		XPerl_UpdateSpellRange(self, partyid)
+		XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
+		self.time = 0
 	end
 
 	if self == XPerl_TargetTargetTarget and newGuid ~= self.guid then
@@ -367,19 +437,41 @@ function XPerl_TargetTargetTarget_OnUpdate(self, elapsed)
 		return
 	end
 
-	XPerl_TargetTarget_OnUpdate(self, elapsed)
+	--XPerl_TargetTarget_OnUpdate(self, elapsed)
 end
 
 -------------------
 -- Event Handler --
 -------------------
-function ZPerl_TargetTarget_OnEvent(self, event, unitID, ...)
+function XPerl_TargetTarget_OnEvent(self, event, unitID, ...)
 	if event == "RAID_TARGET_UPDATE" then
 		XPerl_TargetTarget_RaidIconUpdate(self)
 	elseif event == "PLAYER_TARGET_CHANGED" then
 		XPerl_TargetTarget_UpdateDisplay(self, true)
+	elseif event == "PLAYER_FOCUS_CHANGED" then
+		XPerl_TargetTarget_UpdateDisplay(self, true)
 	elseif strfind(event, "^UNIT_") then
-		if ((unitID == "target" or unitID == "player") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget)) then
+		if (unitID == "target") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget) then
+			XPerl_NoFadeBars(true)
+			XPerl_TargetTarget_UpdateDisplay(self, true)
+			if XPerl_FocusTarget and XPerl_FocusTarget:IsShown() then
+				XPerl_TargetTarget_UpdateDisplay(XPerl_FocusTarget, true)
+			end
+			XPerl_NoFadeBars()
+		elseif unitID == "focus" and self == XPerl_FocusTarget then
+			XPerl_NoFadeBars(true)
+			XPerl_TargetTarget_UpdateDisplay(self, true)
+			XPerl_NoFadeBars()
+		elseif unitID == "pet" and self == XPerl_PetTarget then
+			XPerl_NoFadeBars(true)
+			XPerl_TargetTarget_UpdateDisplay(self, true)
+			if XPerl_FocusTarget and XPerl_FocusTarget:IsShown() then
+				XPerl_TargetTarget_UpdateDisplay(XPerl_FocusTarget, true)
+			end
+			XPerl_NoFadeBars()
+		end
+	--[[elseif event == "UNIT_TARGET" then
+		if (unitID == "target") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget) then
 			XPerl_NoFadeBars(true)
 			XPerl_TargetTarget_UpdateDisplay(self, true)
 			XPerl_NoFadeBars()
@@ -392,6 +484,33 @@ function ZPerl_TargetTarget_OnEvent(self, event, unitID, ...)
 			XPerl_TargetTarget_UpdateDisplay(self, true)
 			XPerl_NoFadeBars()
 		end
+	elseif event == "UNIT_HEAL_PREDICTION" or event == "UNIT_HEALTH" then
+		if (unitID == "target") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget) then
+			XPerl_Target_UpdateHealth(self)
+		elseif unitID == "focus" and self == XPerl_FocusTarget then
+			XPerl_Target_UpdateHealth(self)
+		elseif unitID == "pet" and self == XPerl_PetTarget then
+			XPerl_Target_UpdateHealth(self)
+		end
+	elseif event == "UNIT_POWER_FREQUENT" then
+		if (unitID == "target") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget) then
+			XPerl_Target_SetMana(self)
+		elseif unitID == "focus" and self == XPerl_FocusTarget then
+			XPerl_Target_SetMana(self)
+		elseif unitID == "pet" and self == XPerl_PetTarget then
+			XPerl_Target_SetMana(self)
+		end
+	elseif event == "UNIT_AURA" then
+		if (unitID == "target") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget) then
+			XPerl_TargetTarget_Buff_UpdateAll(self)
+			XPerl_Target_UpdateAbsorbPrediction(self)
+		elseif unitID == "focus" and self == XPerl_FocusTarget then
+			XPerl_TargetTarget_Buff_UpdateAll(self)
+			XPerl_Target_UpdateAbsorbPrediction(self)
+		elseif unitID == "pet" and self == XPerl_PetTarget then
+			XPerl_TargetTarget_Buff_UpdateAll(self)
+			XPerl_Target_UpdateAbsorbPrediction(self)
+		end]]
 	end
 end
 

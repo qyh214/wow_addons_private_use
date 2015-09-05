@@ -23,22 +23,78 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 972 $")
+end, "$Revision: 975 $")
 
-local percD = "%d"..PERCENT_SYMBOL
-local format = format
+-- Upvalues
+local _G = _G
 local bit_band = bit.band
+local format = format
+local max = max
+local pairs = pairs
+local string = string
+local tonumber = tonumber
+local tostring = tostring
+local type = type
+local unpack = unpack
+
+local CanInspect = CanInspect
+local CheckInteractDistance = CheckInteractDistance
+local GetComboPoints = GetComboPoints
+local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
+local GetInspectSpecialization = GetInspectSpecialization
+local GetLootMethod = GetLootMethod
 local GetNumGroupMembers = GetNumGroupMembers
+local GetRaidRosterInfo = GetRaidRosterInfo
+local GetSpecializationInfoByID = GetSpecializationInfoByID
+local GetSpellInfo = GetSpellInfo
+local GetTime = GetTime
+local InCombatLockdown = InCombatLockdown
+local NotifyInspect = NotifyInspect
+local PlaySound = PlaySound
+local RegisterUnitWatch = RegisterUnitWatch
+local UnitAura = UnitAura
+local UnitBattlePetType = UnitBattlePetType
+local UnitBuff = UnitBuff
+local UnitCanAssist = UnitCanAssist
+local UnitCanAttack = UnitCanAttack
+local UnitClass = UnitClass
+local UnitClassBase = UnitClassBase
+local UnitClassification = UnitClassification
+local UnitCreatureType = UnitCreatureType
+local UnitDebuff = UnitDebuff
+local UnitExists = UnitExists
+local UnitFactionGroup = UnitFactionGroup
+local UnitGUID = UnitGUID
+local UnitHasVehicleUI = UnitHasVehicleUI
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
+local UnitInParty = UnitInParty
+local UnitInRaid = UnitInRaid
+local UnitInVehicle = UnitInVehicle
+local UnitIsAFK = UnitIsAFK
+local UnitIsBattlePetCompanion = UnitIsBattlePetCompanion
+local UnitIsCharmed = UnitIsCharmed
 local UnitIsConnected = UnitIsConnected
 local UnitIsDead = UnitIsDead
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+local UnitIsEnemy = UnitIsEnemy
+local UnitIsFriend = UnitIsFriend
 local UnitIsGhost = UnitIsGhost
+local UnitIsGroupLeader = UnitIsGroupLeader
+local UnitIsPlayer = UnitIsPlayer
+local UnitIsPVP = UnitIsPVP
+local UnitIsPVPFreeForAll = UnitIsPVPFreeForAll
+local UnitIsUnit = UnitIsUnit
+local UnitIsVisible = UnitIsVisible
+local UnitIsWildBattlePet = UnitIsWildBattlePet
+local UnitLevel = UnitLevel
+local UnitName = UnitName
+local UnitPlayerControlled = UnitPlayerControlled
 local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
-local UnitName = UnitName
-local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
+local UnregisterUnitWatch = UnregisterUnitWatch
+
+local percD = "%d"..PERCENT_SYMBOL
 local buffSetup
 local lastInspectPending = 0
 local mobhealth
@@ -53,16 +109,16 @@ function XPerl_Target_OnLoad(self, partyid)
 	self:RegisterForDrag("LeftButton")
 	XPerl_SetChildMembers(self)
 
-	CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
+	--CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
 
-	self.hitIndicator.text:SetPoint("CENTER", self.portraitFrame, "CENTER", 0, 0)
+	--self.hitIndicator.text:SetPoint("CENTER", self.portraitFrame, "CENTER", 0, 0)
 
 	local events = {
-		"UNIT_COMBAT", "PLAYER_FLAGS_CHANGED", "PARTY_MEMBER_DISABLE", "PARTY_MEMBER_ENABLE", "RAID_TARGET_UPDATE", "GROUP_ROSTER_UPDATE", "PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "UNIT_THREAT_LIST_UPDATE","UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_FLAGS", "UNIT_CLASSIFICATION_CHANGED", "UNIT_PORTRAIT_UPDATE", "UNIT_AURA", "UNIT_HEALTH_FREQUENT","UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE"--[[, "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"]]
+		"UNIT_COMBAT", "PLAYER_FLAGS_CHANGED", "UNIT_CONNECTION", "UNIT_PHASE", "RAID_TARGET_UPDATE", "GROUP_ROSTER_UPDATE", "PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "UNIT_THREAT_LIST_UPDATE", --[["UNIT_SPELLMISS",]] "UNIT_FACTION", "UNIT_FLAGS", "UNIT_CLASSIFICATION_CHANGED", "UNIT_PORTRAIT_UPDATE", "UNIT_AURA", "UNIT_HEALTH_FREQUENT", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE"--[[, "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"]]
 	}
 
 	for i, event in pairs(events) do
-		if string.find(event, "UNIT_") then
+		if string.find(event, "^UNIT_") then
 			self:RegisterUnitEvent(event, partyid)
 		else
 			self:RegisterEvent(event)
@@ -77,7 +133,7 @@ function XPerl_Target_OnLoad(self, partyid)
 		XPerl_BlizzFrameDisable(TargetofTargetFrame)
 
 		self.statsFrame.focusTarget:SetVertexColor(0.7, 1, 1, 0.5)
-		self.tutorialPage = 3
+
 		self:RegisterEvent("PLAYER_TARGET_CHANGED")
 		self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 	
@@ -88,7 +144,6 @@ function XPerl_Target_OnLoad(self, partyid)
 	else
 		XPerl_BlizzFrameDisable(FocusFrame)
 
-		self.tutorialPage = 10
 		self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 		self:RegisterEvent("PLAYER_ENTERING_WORLD")
 		--self:SetScript("OnShow", XPerl_Target_UpdateDisplay)
@@ -150,7 +205,7 @@ function XPerl_Target_OnLoad(self, partyid)
 	--RegisterUnitWatch(self)
 
 	--self.PlayerFlash = 0
-	self.perlBuffs, self.perlDebuffs, self.RangeUpdate = 0, 0, 0
+	self.perlBuffs, self.perlDebuffs, self.time = 0, 0, 0
 
 	--XPerl_InitFadeFrame(self)
 
@@ -261,7 +316,7 @@ function XPerl_Target_UpdateCombo(self)
 			self.nameFrame.cpMeter:SetValue(combopoints)
 		end
 		self.nameFrame.cpMeter:Show()
-		if (r) then
+		if r and g and b then
 			self.nameFrame.cpMeter:SetStatusBarColor(r, g, b, 0.7)
 		else
 			self.nameFrame.cpMeter:Hide()
@@ -275,7 +330,7 @@ function XPerl_Target_UpdateCombo(self)
 		--self.nameFrame.cpMeter:Hide()
 		self.cpFrame:Show()
 		self.cpFrame.text:SetText(combopoints)
-		if (r) then
+		if r and g and b then
 			self.cpFrame.text:SetTextColor(r, g, b)
 		else
 			self.cpFrame:Hide()
@@ -304,12 +359,12 @@ local function XPerl_Target_DebuffUpdate(self)
 		--[[if (playerClass == "WARRIOR") then
 			numDebuffs = TargetDebuffInformation(XPERL_SPELL_SUNDER)
 		elseif (playerClass == "MAGE") then
-			if (select(5,GetTalentTabInfo(3)) > select(5,GetTalentTabInfo(2))) then
+			if (select(5, GetTalentTabInfo(3)) > select(5, GetTalentTabInfo(2))) then
 				numDebuffs = TargetDebuffInformation(XPERL_SPELL_WINTERCH)
 			else
 				numDebuffs = TargetDebuffInformation(XPERL_SPELL_FIREV)
 			end
-		end]]--
+		end]]
 
 		local r, g, b = GetComboColour(numDebuffs)
 		if (tconf.combo.enable) then
@@ -344,10 +399,10 @@ local function XPerl_Target_UpdatePVP(self)
 
 	local pvp = self.conf.pvpIcon and ((UnitIsPVPFreeForAll(partyid) and "FFA") or (UnitIsPVP(partyid) and (UnitFactionGroup(partyid) ~= "Neutral") and UnitFactionGroup(partyid)))
 	if (pvp) then
-		self.nameFrame.pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
-		self.nameFrame.pvpIcon:Show()
+		self.nameFrame.pvp.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
+		self.nameFrame.pvp:Show()
 	else
-		self.nameFrame.pvpIcon:Hide()
+		self.nameFrame.pvp:Hide()
 	end
 
 	if (self.conf.reactionHighlight) then
@@ -360,7 +415,9 @@ local function XPerl_Target_UpdatePVP(self)
 			self.nameFrame.text:SetTextColor(1, 1, 1, conf.transparency.text)
 		end
 	else
-		self.nameFrame:SetBackdropColor(0, 0, 0)
+		if not self.conf.highlightDebuffs.enable then
+			self.nameFrame:SetBackdropColor(conf.colour.frame.r, conf.colour.frame.g, conf.colour.frame.b, conf.colour.frame.a)
+		end
 		XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
 	end
 
@@ -569,19 +626,18 @@ do
 		LTQ:RegisterCallback("TalentQuery_Ready", TalentQuery_Ready)
 	else
 		hooksecurefunc("NotifyInspect", function(unit)
-				if (UnitIsUnit("player", unit) or UnitInVehicle(unit) or not (UnitExists(unit) and CanInspect(unit) and UnitIsVisible(unit) and UnitIsConnected(unit) and CheckInteractDistance(unit, 4))) then
-					return
-				end
-				lastInspectUnit = unit
-				lastInspectPending = lastInspectPending + 1
-				if (lastInspectPending > 1) then
-					lastInspectInvalid = true
-				end
-				lastInspectTime = GetTime()
-				lastInspectGUID = UnitGUID(unit)
-				lastInspectName = UnitFullName(unit)
+			if (UnitIsUnit("player", unit) or UnitInVehicle(unit) or not (UnitExists(unit) and CanInspect(unit) and UnitIsVisible(unit) and UnitIsConnected(unit) and CheckInteractDistance(unit, 4))) then
+				return
 			end
-		)
+			lastInspectUnit = unit
+			lastInspectPending = lastInspectPending + 1
+			if (lastInspectPending > 1) then
+				lastInspectInvalid = true
+			end
+			lastInspectTime = GetTime()
+			lastInspectGUID = UnitGUID(unit)
+			lastInspectName = UnitFullName(unit)
+		end)
 
 		-- INSPECT_READY
 		function XPerl_Target_Events:INSPECT_READY(guid)
@@ -611,7 +667,8 @@ do
 					elseif (inspectReady and guid == UnitGUID(partyid)) then
 						local remoteInspectNeeded = not UnitIsUnit("player", partyid) or nil
 						group =  GetInspectSpecialization("target")
-						name1 = group and select(2, GetSpecializationInfoByID(group)) or "None"
+						local _, spec = GetSpecializationInfoByID(group)
+						name1 = group and spec or "None"
 
 						inspectReady = nil
 					end
@@ -791,6 +848,7 @@ function XPerl_Target_UpdateHealth(self)
 	end]]
 
 	XPerl_SetHealthBar(self, hp, hpMax)
+	XPerl_Target_UpdateAbsorbPrediction(self)
 	XPerl_Target_UpdateHealPrediction(self)
 
 	if (percent) then
@@ -883,6 +941,35 @@ function XPerl_Target_UpdateHealPrediction(self)
 	end
 end
 
+-- XPerl_Target_UpdateAbsorbPrediction
+function XPerl_Target_UpdateAbsorbPrediction(self)
+	if self == XPerl_Target then
+		if tconf.absorbs then
+			XPerl_SetExpectedAbsorbs(self)
+		else
+			self.statsFrame.expectedAbsorbs:Hide()
+		end
+	elseif self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget then
+		if conf.targettarget.absorbs then
+			XPerl_SetExpectedAbsorbs(self)
+		else
+			self.statsFrame.expectedAbsorbs:Hide()
+		end
+	elseif self == XPerl_Focus then
+		if fconf.absorbs then
+			XPerl_SetExpectedAbsorbs(self)
+		else
+			self.statsFrame.expectedAbsorbs:Hide()
+		end
+	elseif self == XPerl_FocusTarget then
+		if conf.focustarget.absorbs then
+			XPerl_SetExpectedAbsorbs(self)
+		else
+			self.statsFrame.expectedAbsorbs:Hide()
+		end
+	end
+end
+
 -- XPerl_Target_GetHealth
 function XPerl_Target_GetHealth(self)
 	local hp, hpMax = XPerl_Unit_GetHealth(self)
@@ -907,7 +994,7 @@ end
 
 -- XPerl_Target_Update_Range
 function XPerl_Target_Update_Range(self)
-	if (not self.conf.range30yard or CheckInteractDistance(self.partyid, 1) or not UnitIsConnected(self.partyid)) then
+	if (not tconf.range30yard or CheckInteractDistance(self.partyid, 1) or not UnitIsConnected(self.partyid)) then
 		self.nameFrame.rangeIcon:Hide()
 	else
 		self.nameFrame.rangeIcon:Show()
@@ -989,7 +1076,6 @@ local function RaidTargetUpdate(self)
 	local raidIcon = self.nameFrame.raidIcon
 
 	XPerl_Update_RaidIcon(raidIcon, self.partyid)
-	XPerl_Update_RaidIcon(self.eliteFrame.raidIcon, self.partyid)
 
 	raidIcon:ClearAllPoints()
 	if (self.conf.raidIconAlternate) then
@@ -1000,7 +1086,6 @@ local function RaidTargetUpdate(self)
 		raidIcon:SetHeight(32)
 		raidIcon:SetWidth(32)
 		raidIcon:SetPoint("CENTER", self.nameFrame, "CENTER", 0, 0)
-		self.eliteFrame.raidIcon:Hide()
 	end
 end
 
@@ -1012,10 +1097,11 @@ local function XPerl_Target_CheckDebuffs(self)
 		else
 			XPerl_CheckDebuffs(self, self.partyid, true)
 		end
+	end
 
-		if (self.conf.reactionHighlight) then
-			XPerl_Target_UpdatePVP(self)
-		end
+	if (self.conf.reactionHighlight) then
+		local c = XPerl_ReactionColour(self.partyid)
+		self.nameFrame:SetBackdropColor(c.r, c.g, c.b)
 	end
 end
 
@@ -1045,7 +1131,7 @@ function XPerl_Target_UpdateDisplay(self)
 			self.cpFrame:Hide()
 			self.nameFrame.cpMeter:Hide()
 			self.deferring = true
-			self.RangeUpdate = -0.3
+			self.time = -0.3
 		else
 			XPerl_Target_UpdateLeader(self)
 			XPerl_Target_UpdateCombo(self)
@@ -1053,6 +1139,8 @@ function XPerl_Target_UpdateDisplay(self)
 		end
 
 		XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
+	
+		XPerl_Target_Update_Range(self)
 		XPerl_UpdateSpellRange(self, partyid)
 
 		XPerl_NoFadeBars()
@@ -1067,7 +1155,9 @@ function XPerl_Target_UpdateDisplay(self)
 
 		XPerl_Targets_BuffUpdate(self)
 		--XPerl_Target_DebuffUpdate(self)
-		XPerl_Target_CheckDebuffs(self)
+		if (self.conf.highlightDebuffs.enable) then
+			XPerl_Target_CheckDebuffs(self)
+		end
 
 		XPerl_Target_UpdatePVP(self)
 	end
@@ -1075,7 +1165,7 @@ end
 
 -- XPerl_Target_OnUpdate
 function XPerl_Target_OnUpdate(self, elapsed)
-	CombatFeedback_OnUpdate(self, elapsed)
+	--CombatFeedback_OnUpdate(self, elapsed)
 
 	local partyid = self.partyid
 	local newAFK = UnitIsAFK(partyid)
@@ -1084,23 +1174,29 @@ function XPerl_Target_OnUpdate(self, elapsed)
 		XPerl_Target_UpdateHealth(self)
 	end
 
-	self.RangeUpdate = self.RangeUpdate + elapsed
-	if (self.RangeUpdate > 0.2) then
-		self.RangeUpdate = 0
-		XPerl_Target_Update_Range(self)
-		XPerl_UpdateSpellRange(self)
+	if self.deferring or conf.rangeFinder.enabled or tconf.range30yard then
+		self.time = self.time + elapsed
+		if (self.time > 0.2) then
+			self.time = 0
+			if tconf.range30yard then
+				XPerl_Target_Update_Range(self)
+			end
+			if conf.rangeFinder.enabled then
+				XPerl_UpdateSpellRange(self)
+			end
 
-		if (self.deferring) then
-			self.deferring = nil
-			XPerl_Target_UpdateLeader(self)
-			XPerl_Target_Update_Combat(self)
-			XPerl_Target_UpdateCombo(self)
-			XPerl_Unit_UpdatePortrait(self)
-			RaidTargetUpdate(self)
+			if (self.deferring) then
+				self.deferring = nil
+				XPerl_Target_UpdateLeader(self)
+				XPerl_Target_Update_Combat(self)
+				XPerl_Target_UpdateCombo(self)
+				XPerl_Unit_UpdatePortrait(self)
+				RaidTargetUpdate(self)
+			end
 		end
 	end
 
-	if (self.PlayerFlash) then
+	if (conf.combatFlash and self.PlayerFlash) then
 		XPerl_Target_CombatFlash(self, elapsed, false)
 	end
 end
@@ -1168,7 +1264,7 @@ function XPerl_Target_Events:PLAYER_ENTERING_WORLD()
 	end
 end
 
-local amountIndex = {
+--[[local amountIndex = {
 	SWING_DAMAGE = 1,
 	RANGE_DAMAGE = 4,
 	SPELL_DAMAGE = 4,
@@ -1176,15 +1272,16 @@ local amountIndex = {
 	DAMAGE_SHIELD = 4,
 	ENVIRONMENTAL_DAMAGE = 2,
 }
+
 local missIndex = {
 	SWING_MISSED = 1,
 	RANGE_MISSED = 4,
 	SPELL_MISSED = 4,
 	SPELL_PERIODIC_MISSED = 4,
-}
+}]]
 
 -- DoEvent
-local function DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
+--[[local function DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 	local feedbackText = self.feedbackText
 	local fontHeight = self.feedbackFontHeight
 	local text
@@ -1213,7 +1310,7 @@ local function DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGU
 		end
 
 	elseif (event == "SPELL_HEAL" or event == "SPELL_PERIODIC_HEAL") then
-		local amount, overhealing, absorbed, critical = select(4, ...)
+		local _, _, _, amount, overhealing, absorbed, critical = ...
 		if (amount and amount ~= 0) then
 			if (critical) then
 				fontHeight = fontHeight * 1.5
@@ -1234,27 +1331,27 @@ local function DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGU
 		feedbackText:SetAlpha(0)
 		feedbackText:Show()
 	end
-end
+end]]
 
 -- COMBAT_LOG_EVENT_UNFILTERED
-function XPerl_Target_Events:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
+--[[function XPerl_Target_Events:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
 	if (self.conf.hitIndicator and self.conf.portrait) then
 		if (bit_band(dstFlags, self.combatMask) ~= 0 and bit_band(srcFlags, 0x00000001) ~= 0) then
 			DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 		end
 	end
-end
+end]]
 
 -- UNIT_COMBAT
 function XPerl_Target_Events:UNIT_COMBAT(unitID, action, descriptor, damage, damageType)
 	if (unitID == self.partyid) then
 		XPerl_Target_Update_Combat(self)
 	
-		if (not self.conf.ownDamageOnly) then
+		--[[if (not self.conf.ownDamageOnly) then
 			if (self.conf.hitIndicator and self.conf.portrait) then
 				CombatFeedback_OnCombatEvent(self, action, descriptor, damage, damageType)
 			end
-		end
+		end]]
 	
 		if (action == "HEAL") then
 			XPerl_Target_CombatFlash(self, 0, true, true)
@@ -1265,11 +1362,11 @@ function XPerl_Target_Events:UNIT_COMBAT(unitID, action, descriptor, damage, dam
 end
 
 -- UNIT_SPELLMISS
-function XPerl_Target_Events:UNIT_SPELLMISS(...)
+--[[function XPerl_Target_Events:UNIT_SPELLMISS(...)
 	if (self.conf.hitIndicator and self.conf.portrait) then
 		CombatFeedback_OnSpellMissEvent(self, ...)
 	end
-end
+end]]
 
 -- PLAYER_TARGET_CHANGED
 function XPerl_Target_Events:PLAYER_TARGET_CHANGED()
@@ -1288,19 +1385,17 @@ function XPerl_Target_Events:PLAYER_TARGET_CHANGED()
 
 	self.feigning = UnitBuff(self.partyid, feignDeath)
 	self.PlayerFlash = 0
-	XPerl_CombatFlashSetFrames(XPerl_Target)
-	XPerl_Target_UpdateDisplay(XPerl_Target)
-
-	if (XPerl_TargetTarget_Set_Bits) then
-		if (XPerl_FocusTarget) then
-			XPerl_TargetTarget_UpdateDisplay(XPerl_FocusTarget)
-		end
-	end
+	XPerl_CombatFlashSetFrames(self)
+	XPerl_Target_UpdateDisplay(self)
 
 	if (UnitIsUnit("target", "focus")) then
-		XPerl_Target.statsFrame.focusTarget:Show()
+		self.statsFrame.focusTarget:Show()
 	else
-		XPerl_Target.statsFrame.focusTarget:Hide()
+		self.statsFrame.focusTarget:Hide()
+	end
+
+	if (XPerl_Focus and XPerl_Focus:IsShown() and XPerl_FocusTarget) then
+		XPerl_TargetTarget_UpdateDisplay(XPerl_FocusTarget)
 	end
 end
 
@@ -1319,25 +1414,21 @@ function XPerl_Target_Events:PLAYER_FOCUS_CHANGED()
 		end
 	end
 
+	self.feigning = UnitBuff(self.partyid, feignDeath)
+	self.PlayerFlash = 0
+	XPerl_CombatFlashSetFrames(self)
+	XPerl_Target_UpdateDisplay(self)
+
 	if (UnitIsUnit("target", "focus")) then
 		XPerl_Target.statsFrame.focusTarget:Show()
 	else
 		XPerl_Target.statsFrame.focusTarget:Hide()
 	end
 
-	self.feigning = UnitBuff(self.partyid, feignDeath)
-	self.PlayerFlash = 0
-	XPerl_CombatFlashSetFrames(XPerl_Focus)
-	XPerl_Target_UpdateDisplay(XPerl_Focus)
-
-	if (XPerl_TargetTarget_Set_Bits) then
-		if (XPerl_FocusTarget) then
-			XPerl_TargetTarget_UpdateDisplay(XPerl_FocusTarget)
-		end
+	if (XPerl_FocusTarget) then
+		XPerl_TargetTarget_UpdateDisplay(XPerl_FocusTarget)
 	end
 end
-
---XPerl_Target_Events.PLAYER_FOCUS_CHANGED = XPerl_Target_Events.PLAYER_TARGET_CHANGED
 
 -- UNIT_HEALTH, UNIT_MAXHEALTH
 function XPerl_Target_Events:UNIT_HEALTH_FREQUENT()
@@ -1403,7 +1494,9 @@ end
 
 -- UNIT_AURA
 function XPerl_Target_Events:UNIT_AURA()
-	XPerl_Target_CheckDebuffs(self)
+	if (self.conf.highlightDebuffs.enable) then
+		XPerl_Target_CheckDebuffs(self)
+	end
 
 	XPerl_Targets_BuffUpdate(self)
 	--XPerl_Target_DebuffUpdate(self)
@@ -1433,22 +1526,25 @@ function XPerl_Target_Events:PLAYER_FLAGS_CHANGED()
 	XPerl_Target_UpdateHealth(self)
 end
 
--- PARTY_MEMBER_ENABLE
-function XPerl_Target_Events:PARTY_MEMBER_ENABLE()
-	if (UnitInParty(self.partyid)) then
-		XPerl_Target_Update_Combat(self)
-		XPerl_Target_UpdatePVP(self)
-		XPerl_Target_UpdateHealth(self)
+-- UNIT_CONNECTION
+function XPerl_Target_Events:UNIT_CONNECTION(unit, online)
+	if (unit == self.partyid) then
+		XPerl_Target_UpdateDisplay(self)
 	end
 end
 
-XPerl_Target_Events.PARTY_MEMBER_DISABLE = XPerl_Target_Events.PARTY_MEMBER_ENABLE
+-- UNIT_PHASE
+function XPerl_Target_Events:UNIT_PHASE(unit)
+	if (unit == self.partyid) then
+		XPerl_Target_UpdateDisplay(self)
+	end
+end
 
 -- PARTY_LOOT_METHOD_CHANGED
 function XPerl_Target_Events:PARTY_LOOT_METHOD_CHANGED()
 	XPerl_Target_UpdateLeader(self)
 end
-XPerl_Target_Events.GROUP_ROSTER_UPDATE= XPerl_Target_Events.PARTY_LOOT_METHOD_CHANGED
+XPerl_Target_Events.GROUP_ROSTER_UPDATE = XPerl_Target_Events.PARTY_LOOT_METHOD_CHANGED
 XPerl_Target_Events.PARTY_LEADER_CHANGED  = XPerl_Target_Events.PARTY_LOOT_METHOD_CHANGED
 
 function XPerl_Target_Events:UNIT_THREAT_LIST_UPDATE(unit)
@@ -1475,6 +1571,26 @@ function XPerl_Target_Events:UNIT_HEAL_PREDICTION(unit)
 	elseif self == XPerl_FocusTarget then
 		if (conf.focustarget.healprediction and unit == self.partyid) then
 			XPerl_SetExpectedHealth(self)
+		end
+	end
+end
+
+function XPerl_Target_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
+	if self == XPerl_Target then
+		if (tconf.absorbs and unit == self.partyid) then
+			XPerl_SetExpectedAbsorbs(self)
+		end
+	elseif self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget then
+		if (conf.targettarget.absorbs and unit == self.partyid) then
+			XPerl_SetExpectedAbsorbs(self)
+		end
+	elseif self == XPerl_Focus then
+		if (fconf.absorbs and unit == self.partyid) then
+			XPerl_SetExpectedAbsorbs(self)
+		end
+	elseif self == XPerl_FocusTarget then
+		if (conf.focustarget.absorbs and unit == self.partyid) then
+			XPerl_SetExpectedAbsorbs(self)
 		end
 	end
 end
@@ -1555,9 +1671,15 @@ function XPerl_Target_Set_Bits(self)
 	XPerl_SetBuffSize(self)
 
 	if (tconf.healprediction) then
-		self:RegisterEvent("UNIT_HEAL_PREDICTION")
+		self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "target", "focus")
 	else
 		self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+	end
+
+	if (tconf.absorbs) then
+		self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "target", "focus")
+	else
+		self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 	end
 
 	XPerl_Target_SetWidth(self)
@@ -1577,11 +1699,11 @@ function XPerl_Target_Set_Bits(self)
 
 	XPerl_StatsFrameSetup(self)
 
-	if (self.conf.ownDamageOnly and (self.conf.hitIndicator and self.conf.portrait)) then
+	--[[if (self.conf.ownDamageOnly and (self.conf.hitIndicator and self.conf.portrait)) then
 		self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	else
 		self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-	end
+	end]]
 
 	self.buffFrame:ClearAllPoints()
 	if (self.conf.buffs.above) then
@@ -1607,6 +1729,8 @@ function ComboFrame_Update()
 
 		local fadeInfo = { }
 		for i = 1, MAX_COMBO_POINTS do
+			comboPoint = _G["ComboPoint" .. i]
+			comboPoint:Show()
 			comboPointHighlight = _G["ComboPoint"..i.."Highlight"]
 			comboPointShine = _G["ComboPoint"..i.."Shine"]
 			if (i <= comboPoints) then
@@ -1619,6 +1743,9 @@ function ComboFrame_Update()
 					UIFrameFade(comboPointHighlight, fadeInfo)
 				end
 			else
+				if (ENABLE_COLORBLIND_MODE == "1") then
+					comboPoint:Hide()
+				end
 				comboPointHighlight:SetAlpha(0)
 				comboPointShine:SetAlpha(0)
 			end
@@ -1650,6 +1777,8 @@ function XPerl_Target_Set_BlizzCPFrame(self)
 	ComboPoint3:ClearAllPoints()
 	ComboPoint4:ClearAllPoints()
 	ComboPoint5:ClearAllPoints()
+	-- Fix for ComboPoint5
+	ComboPoint5:SetSize(12, 12)
 
 	if (tconf.combo.blizzard) then
 		-- This setup will put the buttons along the top of the portrait frame
@@ -1662,28 +1791,28 @@ function XPerl_Target_Set_BlizzCPFrame(self)
 			ComboPoint2:SetPoint("LEFT", ComboPoint1, "RIGHT", 0, 1)
 			ComboPoint3:SetPoint("LEFT", ComboPoint2, "RIGHT", 0, 1)
 			ComboPoint4:SetPoint("LEFT", ComboPoint3, "RIGHT", 0, -1)
-			ComboPoint5:SetPoint("LEFT", ComboPoint4, "RIGHT", 0, -4)
+			ComboPoint5:SetPoint("LEFT", ComboPoint4, "RIGHT", 0, -1)
 		elseif (tconf.combo.pos == "bottom") then
 			ComboFrame:SetPoint("BOTTOMLEFT", self.portraitFrame, "BOTTOMLEFT", -1, -4)
 			ComboPoint1:SetPoint("BOTTOMLEFT", 0, 0)
 			ComboPoint2:SetPoint("LEFT", ComboPoint1, "RIGHT", 0, -1)
 			ComboPoint3:SetPoint("LEFT", ComboPoint2, "RIGHT", 0, -1)
 			ComboPoint4:SetPoint("LEFT", ComboPoint3, "RIGHT", 0, 1)
-			ComboPoint5:SetPoint("LEFT", ComboPoint4, "RIGHT", 0, -1)
+			ComboPoint5:SetPoint("LEFT", ComboPoint4, "RIGHT", 0, 1)
 		elseif (tconf.combo.pos == "left") then
 			ComboFrame:SetPoint("BOTTOMLEFT", self.portraitFrame, "BOTTOMLEFT", -1, 0)
 			ComboPoint1:SetPoint("BOTTOMLEFT", 0, 0)
 			ComboPoint2:SetPoint("BOTTOM", ComboPoint1, "TOP", -1, 0)
 			ComboPoint3:SetPoint("BOTTOM", ComboPoint2, "TOP", -1, 0)
 			ComboPoint4:SetPoint("BOTTOM", ComboPoint3, "TOP", 1, 0)
-			ComboPoint5:SetPoint("BOTTOM", ComboPoint4, "TOP", 3, -5)
+			ComboPoint5:SetPoint("BOTTOM", ComboPoint4, "TOP", 1, 0)
 		elseif (tconf.combo.pos == "right") then
 			ComboFrame:SetPoint("BOTTOMRIGHT", self.portraitFrame, "BOTTOMRIGHT", 2, 0)
 			ComboPoint1:SetPoint("BOTTOMRIGHT", 0, 0)
 			ComboPoint2:SetPoint("BOTTOM", ComboPoint1, "TOP", 1, 0)
 			ComboPoint3:SetPoint("BOTTOM", ComboPoint2, "TOP", 1, 0)
 			ComboPoint4:SetPoint("BOTTOM", ComboPoint3, "TOP", -1, 0)
-			ComboPoint5:SetPoint("BOTTOM", ComboPoint4, "TOP", 0, -5)
+			ComboPoint5:SetPoint("BOTTOM", ComboPoint4, "TOP", -1, 0)
 		end
 
 		ComboFrame:RegisterEvent("PLAYER_TARGET_CHANGED")

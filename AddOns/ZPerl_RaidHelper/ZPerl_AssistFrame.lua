@@ -5,7 +5,7 @@
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 967 $")
+end, "$Revision: 974 $")
 
 local myClass
 local playerAggro, petAggro
@@ -20,8 +20,8 @@ local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 -- XPerl_Assists_OnLoad(self)
 function XPerl_Assists_OnLoad(self)
-	self:SetMinResize(170,40)
-	self:SetMaxResize(1000,600)
+	self:SetMinResize(170, 40)
+	self:SetMaxResize(1000, 600)
 
 	self:RegisterEvent("VARIABLES_LOADED")
 	self:RegisterEvent("UNIT_TARGET")
@@ -589,20 +589,20 @@ function XPerl_UpdateAssists()
 	if (ZPerlConfigHelper and ZPerlConfigHelper.ShowTargetCounters == 1) then
 		if (XPerl_Player_TargettingFrame) then
 			if (XPerl_Player) then
-				local conf = (conf and conf.colour.border) or (ZPerlConfigHelper and ZPerlConfigHelper.BorderColour) or {r = 0.5, g = 0.5, b = 0.5}
+				local color = (conf and conf.colour.border) or (ZPerlConfigHelper and ZPerlConfigHelper.BorderColour) or {r = 0.5, g = 0.5, b = 0.5}
 
 				if (anyEnemy) then
-					XPerl_Player_TargettingFrame:SetBackdropBorderColor(1, 0.2, 0.2, conf.a)
+					XPerl_Player_TargettingFrame:SetBackdropBorderColor(1, 0.2, 0.2, color.a)
 				else
-					XPerl_Player_TargettingFrame:SetBackdropBorderColor(conf.r, conf.g, conf.b, conf.a)
+					XPerl_Player_TargettingFrame:SetBackdropBorderColor(color.r, color.g, color.b, color.a)
 				end
 
 				if (targettingCount == 0) then
-					XPerl_Player_TargettingFrametext:SetTextColor(1,0.5,0.5)
+					XPerl_Player_TargettingFrametext:SetTextColor(1, 0.5, 0.5, conf.transparency.text)
 				elseif (targettingCount > 5) then
-					XPerl_Player_TargettingFrametext:SetTextColor(0.5,1,0.5)
+					XPerl_Player_TargettingFrametext:SetTextColor(0.5, 1, 0.5, conf.transparency.text)
 				else
-					XPerl_Player_TargettingFrametext:SetTextColor(0.5,0.5,1)
+					XPerl_Player_TargettingFrametext:SetTextColor(0.5, 0.5, 1, conf.transparency.text)
 				end
 
 				XPerl_Player_TargettingFrame:SetText(targettingCount)
@@ -615,11 +615,11 @@ function XPerl_UpdateAssists()
 		if (XPerl_Target_AssistFrame) then
 			if (XPerl_Target) then
 				if (assistCount < 2) then
-					XPerl_Target_AssistFrametext:SetTextColor(1,0.5,0.5)
+					XPerl_Target_AssistFrametext:SetTextColor(1, 0.5, 0.5, conf.transparency.text)
 				elseif (assistCount > (#friendlyUnitList / 2)) then
-					XPerl_Target_AssistFrametext:SetTextColor(0.5,1,0.5)
+					XPerl_Target_AssistFrametext:SetTextColor(0.5, 1, 0.5, conf.transparency.text)
 				else
-					XPerl_Target_AssistFrametext:SetTextColor(0.5,0.5,1)
+					XPerl_Target_AssistFrametext:SetTextColor(0.5, 0.5, 1, conf.transparency.text)
 				end
 
 				if (targetname) then

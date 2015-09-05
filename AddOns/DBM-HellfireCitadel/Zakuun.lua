@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1391, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14060 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14437 $"):sub(12, -3))
 mod:SetCreatureID(89890)
 mod:SetEncounterID(1777)
 mod:SetZone()
-mod:SetUsedIcons(6, 5, 4, 3, 2, 1)--Seeds ever go over 5?
-mod:SetHotfixNoticeRev(14038)
+mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
+mod:SetHotfixNoticeRev(14433)
 mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 179406 181508 181515",
 	"SPELL_CAST_SUCCESS 181508 181515 179709 179582",
 	"SPELL_AURA_APPLIED 181508 181515 182008 179670 179711 179681 179407 179667 189030 189031 189032",
-	"SPELL_AURA_REMOVED 179711 181508 181515 179667 189030 189031 189032",
+	"SPELL_AURA_REMOVED 179711 181508 181515 179667 189030 189031 189032 182008",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -68,8 +68,10 @@ local voiceSeedsofDestruction			= mod:NewVoice(181508)--Runout
 local voiceEnrage						= mod:NewVoice(179681)--enrage
 
 mod:AddRangeFrameOption(10, 179711)
+mod:AddInfoFrameOption(182008, false)
 --Icon options will conflict on mythic or 25-30 players (when you get 5 targets for each debuff). Below that, they can coexist.
 mod:AddSetIconOption("SetIconOnSeeds", 181508, true)--Start at 8, descending. On by default, because it's quite imperative to know who/where seed targets are at all times.
+mod:AddSetIconOption("SetIconOnLatent", 182008, false)
 mod:AddHudMapOption("HudMapOnSeeds", 181508)
 mod:AddDropdownOption("SeedsBehavior", {"Iconed", "Numbered", "DirectionLine", "FreeForAll"}, "Iconed", "misc")--CrossPerception, CrossCardinal, ExCardinal
 
@@ -80,6 +82,8 @@ mod.vb.SoulCleaveCount = 0
 mod.vb.CavitationCount = 0
 mod.vb.SeedsCount = 0
 mod.vb.Enraged = false
+mod.vb.yellType = "Icon"
+mod.vb.latentIcon = 8
 local yellSeeds2 = mod:NewPosYell(181508, nil, true, false)
 local seedsTargets = {}
 local befouledName = GetSpellInfo(179711)
@@ -106,7 +110,6 @@ local function updateRangeFrame(self)
 end
 
 local playerName = UnitName("player")
-local yellType = "Icon"
 local iconedAssignments = {RAID_TARGET_1, RAID_TARGET_2, RAID_TARGET_3, RAID_TARGET_4, RAID_TARGET_5}
 local iconedVoiceAssignments = {"mm1", "mm2", "mm3", "mm4", "mm5"}
 local numberedAssignments = {1, 2, 3, 4, 5}
@@ -117,17 +120,17 @@ local function warnSeeds(self)
 	--Sort alphabetical to match bigwigs, and since combat log order may diff person to person
 	table.sort(seedsTargets)
 	warnSeedofDestruction:Show(self.vb.SeedsCount, table.concat(seedsTargets, "<, >"))
-	if self:IsLFR() or yellType == "FreeForAll" then return end
+	if self:IsLFR() or self.vb.yellType == "FreeForAll" then return end
 	--Generate type
 	local currentType
 	local currentVoice
-	if yellType == "Icon" then
+	if self.vb.yellType == "Icon" then
 		currentType = iconedAssignments
 		currentVoice = iconedVoiceAssignments
-	elseif yellType == "Numbered" then
+	elseif self.vb.yellType == "Numbered" then
 		currentType = numberedAssignments
 		currentVoice = numberedVoiceAssignments
-	elseif yellType == "DirectionLine" then
+	elseif self.vb.yellType == "DirectionLine" then
 		currentType = DirectionLineAssignments
 		currentVoice = DirectionVoiceAssignments
 	end
@@ -138,7 +141,7 @@ local function warnSeeds(self)
 				specWarnSeedPosition:Show(currentType[i])
 			end
 			if self.Options.Yell181508 then
-				yellSeeds2:Yell(currentType[i])
+				yellSeeds2:Yell(currentType[i], i, i)
 			end
 			if currentVoice and currentVoice[i] then
 				voiceSeedsofDestruction:Play(currentVoice[i])
@@ -164,7 +167,7 @@ local function delayModCheck(self)
 		for i = 1, GetNumGroupMembers() do
 			local uId = "raid"..i
 			if UnitIsGroupLeader(uId, LE_PARTY_CATEGORY_HOME) then
-				if self:CheckBigWigs(UnitName(uId)) then
+				if self:CheckBigWigs(DBM:GetUnitFullName(uId)) then
 					leaderHasBW = true
 				end
 				break
@@ -172,7 +175,7 @@ local function delayModCheck(self)
 		end
 		if leaderHasBW then
 			DBM:AddMsg(L.BWConfigMsg)
-			yellType = "Numbered"
+			self.vb.yellType = "Numbered"
 		end
 	end
 end
@@ -185,6 +188,7 @@ function mod:OnCombatStart(delay)
 	self.vb.SoulCleaveCount = 0
 	self.vb.CavitationCount = 0
 	self.vb.SeedsCount = 0
+	self.vb.latentIcon = 8
 	self.vb.Enraged = false
 	timerRumblingFissureCD:Start(5.5-delay, 1)
 	timerBefouledCD:Start(17-delay, 1)
@@ -205,15 +209,23 @@ function mod:OnCombatStart(delay)
 	else--No sync was sent, lets see if raid leader is bigwigs user.
 		self:Schedule(5, delayModCheck, self)--Do this after 5 seconds, allow time to see if we get a sync
 	end
+	if self.Options.InfoFrame then
+		local spellName = GetSpellInfo(182008)
+		DBM.InfoFrame:SetHeader(spellName)
+		DBM.InfoFrame:Show(10, "playerbaddebuff", spellName, true)
+	end
 end
 
 function mod:OnCombatEnd()
-	yellType = "Icon"--Reset on combat end, resetting on combat start could accidentally overright raid leaders assignment set on combat start.
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
+	self.vb.yellType = "Icon"--Reset on combat end, resetting on combat start could accidentally overright raid leaders assignment set on combat start.
+	if self.Options.RangeFrame then
+		DBM.RangeCheck:Hide()
+	end
 	if self.Options.HudMapOnSeeds then
 		DBMHudMap:Disable()
+	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
 	end
 end 
 
@@ -261,7 +273,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 181508 or spellId == 181515 then--181508 disarmed version, 181515 enraged version
 		if args:IsPlayer() then
 			specWarnSeedofDestruction:Show()
-			if self:IsLFR() or yellType == "FreeForAll" then
+			if self:IsLFR() or self.vb.yellType == "FreeForAll" then
 				yellSeedsofDestruction:Yell()
 				voiceSeedsofDestruction:Play("runout")
 			end
@@ -271,7 +283,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			countdownSeedsofDestruction:Start()--Everyone, because waves occur.
 		end
 		if self.Options.HudMapOnSeeds then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 13, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 13, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 		end
 		seedsTargets[#seedsTargets+1] = args.destName
 		self:Unschedule(warnSeeds)
@@ -283,6 +295,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 182008 then
 		warnLatentEnergy:CombinedShow(1, args.destName)
+		if self.Options.SetIconOnLatent then
+			if self.vb.latentIcon == 0 then self.vb.latentIcon = 8 end
+			self:SetIcon(args.destName, self.vb.latentIcon)
+			self.vb.latentIcon = self.vb.latentIcon - 1
+		end
 	elseif spellId == 179667 then--Disarmed
 		self.vb.SeedsCount = 0
 		specWarnDisarmed:Show()
@@ -295,6 +312,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerSeedsofDestructionCD:Cancel()
 		countdownSeedsofDestructionCD:Cancel()
 		timerRumblingFissureCD:Cancel()
+		timerSoulCleaveCD:Cancel()
 		self.vb.Enraged = true
 		self.vb.CavitationCount = 0
 		self.vb.SeedsCount = 0
@@ -319,7 +337,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		updateRangeFrame(self)
 	elseif spellId == 179407 then
-		warnDisembodied:Show(self.vb.SoulCleaveCount, args.destName)
+		warnDisembodied:CombinedShow(0.3, self.vb.SoulCleaveCount, args.destName)
 		countdownDisembodied:Start()
 		if not args:IsPlayer() then
 			specWarnDisembodied:Show(args.destName)
@@ -351,6 +369,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerCavitationCD:Start(33, 1)
 		timerDisarmCD:Start()
 		countdownDisarm:Start()
+	elseif spellId == 182008 and self.Options.SetIconOnLatent then
+		self:SetIcon(args.destName, 0)
 	end
 end
 
@@ -368,19 +388,19 @@ function mod:OnSync(msg)
 	if self:IsLFR() then return end
 	if msg == "Iconed" then
 		self:Unschedule(delayModCheck)
-		yellType = "Icon"
+		self.vb.yellType = "Icon"
 		DBM:AddMsg(L.DBMConfigMsg:format(msg))
 	elseif msg == "Numbered" then
 		self:Unschedule(delayModCheck)
-		yellType = "Numbered"
+		self.vb.yellType = "Numbered"
 		DBM:AddMsg(L.DBMConfigMsg:format(msg))
 	elseif msg == "DirectionLine" then
 		self:Unschedule(delayModCheck)
-		yellType = "DirectionLine"
+		self.vb.yellType = "DirectionLine"
 		DBM:AddMsg(L.DBMConfigMsg:format(msg))
 	elseif msg == "FreeForAll" then
 		self:Unschedule(delayModCheck)
-		yellType = "FreeForAll"
+		self.vb.yellType = "FreeForAll"
 		DBM:AddMsg(L.DBMConfigMsg:format(msg))
 	end	
 end

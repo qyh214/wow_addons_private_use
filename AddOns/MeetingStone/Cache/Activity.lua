@@ -90,6 +90,8 @@ function Activity:Update(flag)
         self:SetPvPRating(pvpRating or 0)
         self:SetSource(source)
 
+        creator = creator and Ambiguate(creator, 'none')
+
         if creator and creator ~= leader then
             self:SetLeaderClass(nil)
             self:SetLeaderItemLevel(nil)

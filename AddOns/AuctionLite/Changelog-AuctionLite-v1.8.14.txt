@@ -1,0 +1,27 @@
+------------------------------------------------------------------------
+r266 | merialkilrogg | 2015-08-09 03:46:01 +0000 (Sun, 09 Aug 2015) | 1 line
+Changed paths:
+   A /tags/v1.8.14 (from /trunk:265)
+
+Tagging as v1.8.14
+------------------------------------------------------------------------
+r265 | merialkilrogg | 2015-08-09 03:42:26 +0000 (Sun, 09 Aug 2015) | 2 lines
+Changed paths:
+   M /trunk/AuctionLite.lua
+   M /trunk/AuctionLite.toc
+
+Changed TOC to 60200.
+Bumped version number to 1.8.14.
+------------------------------------------------------------------------
+r264 | merialkilrogg | 2015-08-09 03:42:06 +0000 (Sun, 09 Aug 2015) | 1 line
+Changed paths:
+   M /trunk/Locale/enUS.lua
+
+Removed temporary localization string fix now that the phrase has been added.
+------------------------------------------------------------------------
+r263 | Phanx | 2014-10-30 15:45:41 +0000 (Thu, 30 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/Locale/enUS.lua
+
+- Temporary fix for "missing entry" error (ticket #112) until the project manager adds the missing string to the WoWAce localization app
+------------------------------------------------------------------------

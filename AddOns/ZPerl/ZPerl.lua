@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 972 $")
-XPerl_SetModuleRevision("$Revision: 972 $")
+end, "$Revision: 976 $")
+XPerl_SetModuleRevision("$Revision: 976 $")
 
 -- Upvalus
 local _G = _G
@@ -26,9 +26,11 @@ local max = max
 local min = min
 local next = next
 local pairs = pairs
+local print = print
 local select = select
 local setmetatable = setmetatable
 local sin = sin
+local string = string
 local strmatch = strmatch
 local strsub = strsub
 local strupper = strupper
@@ -38,7 +40,6 @@ local tremove = tremove
 local type = type
 local unpack = unpack
 
-local ArcaneExclusions = XPerl_ArcaneExclusions
 local CheckInteractDistance = CheckInteractDistance
 local DebuffTypeColor = DebuffTypeColor
 local GetAddOnCPUUsage = GetAddOnCPUUsage
@@ -58,9 +59,6 @@ local GetRealZoneText = GetRealZoneText
 local GetSpecialization = GetSpecialization
 local GetSpellInfo = GetSpellInfo
 local GetTime = GetTime
-local hugeNumDiv = XPERL_LOC_HUGENUMDIV
-local hugeNumDiv10 = hugeNumDiv * 10
-local hugeNumTag = XPERL_LOC_HUGENUMTAG
 local InCombatLockdown = InCombatLockdown
 local IsAddOnLoaded = IsAddOnLoaded
 local IsAltKeyDown = IsAltKeyDown
@@ -69,9 +67,6 @@ local IsInRaid = IsInRaid
 local IsItemInRange = IsItemInRange
 local IsShiftKeyDown = IsShiftKeyDown
 local IsSpellInRange = IsSpellInRange
-local largeNumDiv = XPERL_LOC_LARGENUMDIV
-local largeNumDiv100 = largeNumDiv * 100
-local largeNumTag = XPERL_LOC_LARGENUMTAG
 local SecureButton_GetUnit = SecureButton_GetUnit
 local SetCursor = SetCursor
 local SetPortraitTexture = SetPortraitTexture
@@ -90,12 +85,14 @@ local UnitDetailedThreatSituation = UnitDetailedThreatSituation
 local UnitExists = UnitExists
 local UnitFactionGroup = UnitFactionGroup
 local UnitGetIncomingHeals = UnitGetIncomingHeals
+local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 local UnitInParty = UnitInParty
 local UnitInRaid = UnitInRaid
 local UnitInRange = UnitInRange
 local UnitInVehicle = UnitInVehicle
+local UnitIsAFK = UnitIsAFK
 local UnitIsConnected = UnitIsConnected
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitIsEnemy = UnitIsEnemy
@@ -125,6 +122,15 @@ local BuffFrame = BuffFrame
 local GameTooltip = GameTooltip
 local Minimap = Minimap
 local UIParent = UIParent
+
+local ArcaneExclusions = XPerl_ArcaneExclusions
+
+local largeNumDiv = XPERL_LOC_LARGENUMDIV
+local largeNumDiv100 = largeNumDiv * 100
+local largeNumTag = XPERL_LOC_LARGENUMTAG
+local hugeNumDiv = XPERL_LOC_HUGENUMDIV
+local hugeNumDiv10 = hugeNumDiv * 10
+local hugeNumTag = XPERL_LOC_HUGENUMTAG
 
 --[==[@debug@
 local function d(...)
@@ -356,17 +362,73 @@ local function DoRangeCheck(unit, opt)
 	if (not range) then
 		if (opt.interact) then
 			if (opt.interact == 5) then
-				range = UnitInRange(unit) -- 40 yards
-			else
-				range = CheckInteractDistance(unit, opt.interact)
+				--[[range, checkedRange = UnitInRange(unit) -- 40 yards
+				if not checkedRange then
+					range = 1
+				end]]
+				local checkedRange
+				if UnitCanAssist("player", unit) then
+					-- Vial of the Sunwell (40y)
+					range = IsItemInRange(34471, unit)
+					if range == nil then
+						-- Fallback (40y)
+						range, checkedRange = UnitInRange(unit)
+						if not checkedRange then
+							range = 1
+						end
+					end
+				else
+					-- The Decapitator (40y)
+					range = IsItemInRange(28767, unit)
+					if range == nil then
+						-- Fallback (40y)
+						range, checkedRange = UnitInRange(unit)
+						if not checkedRange then
+							range = 1
+						end
+					end
+				end
+			elseif (opt.interact == 3) then
+				-- Sparrowhawk Net (10y)
+				range = IsItemInRange(32321, unit)
+				if range == nil then
+					-- Fallback (8y)
+					range = CheckInteractDistance(unit, 2)
+				end
+			elseif (opt.interact == 2) then
+				if UnitCanAssist("player", unit) then
+					-- Mistletoe (20y)
+					range = IsItemInRange(21519, unit)
+					if range == nil then
+						-- Fallback (28y)
+						range = CheckInteractDistance(unit, 1)
+					end
+				else
+					-- Gnomish Death Ray (20y)
+					range = IsItemInRange(10645, unit)
+					if range == nil then
+						-- Fallback (28y)
+						range = CheckInteractDistance(unit, 1)
+					end
+				end
+			elseif (opt.interact == 1) then
+				-- Handful of Snowflakes (30y)
+				range = IsItemInRange(34191, unit)
+				if range == nil then
+					range = CheckInteractDistance(unit, opt.interact)
+				end
+			--[[else
+				range = CheckInteractDistance(unit, opt.interact)]]
 			end
-			-- 1 = Inspect = 28 yards
-			-- 2 = Trade = 11.11 yards
-			-- 3 = Duel = 9.9 yards
+			-- CheckInteractDistance
+			-- 1 = Compare Achievements = 28 yards
+			-- 2 = Trade = 8 yards
+			-- 3 = Duel = 7 yards
 			-- 4 = Follow = 28 yards
-		elseif (opt.spell) then
+			-- 5 = ??? = 7 yards
+		elseif (opt.spell and UnitCanAssist("player", unit)) then
 			range = IsSpellInRange(opt.spell, unit)
-		elseif (opt.item) then
+		elseif (opt.item and UnitCanAssist("player", unit)) then
 			range = IsItemInRange(opt.item, unit)
 		else
 			range = 1
@@ -394,7 +456,7 @@ function XPerl_UpdateSpellRange2(self, overrideUnit, isRaidFrame)
 		local mainA, nameA, statsA -- Receives main, name and stats alpha levels
 
 		if (rf.enabled and (isRaidFrame or not conf.rangeFinder.raidOnly)) then
-			if (not UnitIsVisible(unit)) or UnitInVehicle(unit) then
+			if (not UnitIsVisible(unit))--[[ or UnitInVehicle(unit)]] then
 				if (rf.Main.enabled) then
 					mainA = conf.transparency.frame * rf.Main.FadeAmount
 				else
@@ -405,11 +467,9 @@ function XPerl_UpdateSpellRange2(self, overrideUnit, isRaidFrame)
 						statsA = rf.StatsFrame.FadeAmount
 					end
 				end
-
 			--[[elseif (XPerl_Highlight:HasEffect(UnitName(unit), "AGGRO")) then
 				mainA = conf.transparency.frame]]
-
-			elseif (UnitCanAssist("player", unit)) then
+			else
 				if (rf.Main.enabled) then
 					mainA = DoRangeCheck(unit, rf.Main)
 					if (mainA) then
@@ -769,7 +829,7 @@ function XPerl_ColourHealthBar(self, healthPct, partyid)
 	end
 	local bar = self.statsFrame.healthBar
 	if (--[[string.find(partyid, "raid") and ]]conf.colour.classbar and UnitIsPlayer(partyid)) then
-		local class = select(2, UnitClass(partyid))
+		local _, class = UnitClass(partyid)
 		if (class) then
 			local c = barColours[class]
 			if (c) then
@@ -790,7 +850,7 @@ end
 function XPerl_SetValuedText(self, current, Max, suffix)
 	if (Max >= hugeNumDiv) then
 		if (abs(current) < largeNumDiv100) then
-			-- 123/12.3M
+			-- 12345/12.3M
 			self:SetFormattedText("%d/%.1f%s%s", current, Max / hugeNumDiv, hugeNumTag, suffix or "")
 		else
 			if (abs(current) >= hugeNumDiv) then
@@ -804,10 +864,10 @@ function XPerl_SetValuedText(self, current, Max, suffix)
 	else
 		if (Max > largeNumDiv100) then
 			if (abs(current) < largeNumDiv100) then
-				-- 123/123.4K
+				-- 12345/123.4K
 				self:SetFormattedText("%d/%.1f%s%s", current, Max / largeNumDiv, largeNumTag, suffix or "")
 			else
-				-- 12345/123.4K
+				-- 12.3K/123.4K
 				self:SetFormattedText("%.1f%s/%.1f%s%s", current / largeNumDiv, largeNumTag, Max / largeNumDiv, largeNumTag, suffix or "")
 			end
 		else
@@ -823,10 +883,10 @@ function XPerl_SetHealthBar(self, hp, Max)
 	local bar = self.statsFrame.healthBar
 	bar:SetMinMaxValues(0, Max)
 	local percent
-	if hp >= 1 and Max == 0 then--For some dumb reason max HP is 0, normal HP is not, so lets use normal HP as max
+	if hp >= 1 and Max == 0 then -- For some dumb reason max HP is 0, normal HP is not, so lets use normal HP as max
 		Max = hp
 		percent = 100
-	elseif hp == 0 and Max == 0 then--Both are 0, so it's probably dead since usually current HP returns correctly when Max HP fails.
+	elseif hp == 0 and Max == 0 then -- Both are 0, so it's probably dead since usually current HP returns correctly when Max HP fails.
 		percent = 0
 	else
 		percent = hp / Max
@@ -1155,7 +1215,7 @@ function ZPerl_MinimapButton_Init(self)
 	collectgarbage()
 	UpdateAddOnMemoryUsage()
 	local totalKB = 0
-	for k,v in pairs(xpModList) do
+	for k, v in pairs(xpModList) do
 		local usedKB = GetAddOnMemoryUsage(v)
 		if ((usedKB or 0) > 0) then
 			xpStartupMemory[v] = usedKB
@@ -1283,7 +1343,7 @@ function XPerl_MinimapButton_Details(tt, ldb)
 		UpdateAddOnCPUUsage()
 		local totalKB, totalCPU, diffKB, diff = 0, 0, 0
 		local cpuText = ""
-		for k,v in pairs(xpModList) do
+		for k, v in pairs(xpModList) do
 			local usedKB = GetAddOnMemoryUsage(v)
 			local usedCPU = GetAddOnCPUUsage(v)
 			if ((usedKB or 0) > 0) then
@@ -1297,7 +1357,7 @@ function XPerl_MinimapButton_Details(tt, ldb)
 				if (showDiff) then
 					diff = usedKB - xpStartupMemory[v]
 					diffKB = diffKB + diff
-					tt:AddDoubleLine(format(" %s", v), format("%.1fkb (%s%.1fkb|r)%s", usedKB, DiffColour(diff / 500), diff, cpuText), 1, 1, 0.5, 1, 1, 1)
+					tt:AddDoubleLine(format(" %s", v), format("%.1fkb (%s%.1fkb|r)%s", usedKB, DiffColour(diff / 1000), diff, cpuText), 1, 1, 0.5, 1, 1, 1)
 				else
 					tt:AddDoubleLine(format(" %s", v), format("%.1fkb%s", usedKB, cpuText), 1, 1, 0.5, 1, 1, 1)
 				end
@@ -1305,7 +1365,7 @@ function XPerl_MinimapButton_Details(tt, ldb)
 		end
 
 		if (showDiff) then
-			local color = DiffColour(diffKB / 2000)
+			local color = DiffColour(diffKB / 3000)
 
 			tt:AddDoubleLine("Total", format("%.1fkb (%s%.1fkb|r)", totalKB, color, diffKB), 1, 1, 1, 1, 1, 1)
 		else
@@ -1419,6 +1479,9 @@ function XPerl_PlayerTip(self, unitid)
 
 	GameTooltip_SetDefaultAnchor(GameTooltip, self)
 	GameTooltip:SetUnit(unitid)
+	local r, g, b = GameTooltip_UnitColor(unitid)
+	GameTooltipTextLeft1:SetTextColor(r, g, b)
+	GameTooltip:Show()
 
 	if (XPerl_RaidTipExtra) then
 		XPerl_RaidTipExtra(unitid)
@@ -1443,7 +1506,8 @@ function XPerl_ColourFriendlyUnit(self, partyid)
 		color = conf.colour.reaction.enemy
 	else
 		if (conf.colour.class) then
-			color = XPerl_GetClassColour(select(2, UnitClass(partyid)))
+			local _, class = UnitClass(partyid)
+			color = XPerl_GetClassColour(class)
 		else
 			if (UnitIsPVP(partyid)) then
 				color = conf.colour.reaction.friend
@@ -1463,7 +1527,6 @@ function XPerl_ReactionColour(argUnit)
 			if (UnitIsEnemy("player", argUnit)) then
 				-- Dueling
 				return conf.colour.reaction.enemy
-
 			elseif (UnitIsPVP(argUnit)) then
 				return conf.colour.reaction.friend
 			end
@@ -1512,7 +1575,8 @@ function XPerl_SetUnitNameColor(self, unit)
 	if (UnitIsPlayer(unit) or not UnitIsVisible(unit)) then -- Changed UnitPlayerControlled to UnitIsPlayer for 2.3.5
 		-- 1.8.3 - Changed to override pvp name colours
 		if (conf.colour.class) then
-			color = XPerl_GetClassColour(select(2, UnitClass(unit)))
+			local _, class = UnitClass(unit)
+			color = XPerl_GetClassColour(class)
 		else
 			color = XPerl_ReactionColour(unit)
 		end
@@ -1706,7 +1770,7 @@ local bgDef = {
 	tile = true,
 	tileSize = 32,
 	edgeSize = 16,
-	insets = {left = 5, right = 5, top = 5, bottom = 5}
+	insets = {left = 2, right = 2, top = 2, bottom = 2}
 }
 local normalEdge = "Interface\\Tooltips\\UI-Tooltip-Border"
 local curseEdge = "Interface\\Addons\\ZPerl\\Images\\XPerl_Curse"
@@ -1719,7 +1783,7 @@ function XPerl_CheckDebuffs(self, unit, resetBorders)
 		return
 	end
 
-	local high = conf.highlightDebuffs.enable or (self == XPerl_Target and conf.target.highlightDebuffs.enable)
+	local high = conf.highlightDebuffs.enable or (self == XPerl_Target and conf.target.highlightDebuffs.enable) or (self == XPerl_Focus and conf.focus.highlightDebuffs.enable)
 
 	if (resetBorders or not high or not getShow) then
 		-- Reset the frame edges back to normal in case they changed options while debuffed.
@@ -2098,7 +2162,8 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 
 		if (type(good) == "string") then
 			if (not unitClass) then
-				unitClass = select(2, UnitClass(unit))
+				local _, class = UnitClass(unit)
+				unitClass = class
 			end
 			if (good ~= unitClass) then
 				good = nil
@@ -2170,86 +2235,6 @@ function XPerl_TooltipSetUnitDebuff(self, unit, ind, filter, raidFrames)
 		end
 	end
 end
-
---[[
-local colourList = {}
-for class,localClass in pairs(LOCALIZED_CLASS_NAMES_MALE) do
-	colourList[localClass] = class
-end
-for class,localClass in pairs(LOCALIZED_CLASS_NAMES_FEMALE) do
-	colourList[localClass] = class
-end
-
--- XPerl_WhoList_Update
-function XPerl_WhoList_Update()
-	if (conf.colour.class and conf.colour.guildList) then
-		local numWhos, totalCount = GetNumWhoResults()
-		local whoOffset = FauxScrollFrame_GetOffset(WhoListScrollFrame)
-
-		local myZone = GetRealZoneText()
-		local myRace = UnitRace("player")
-		local myGuild = GetGuildInfo("player")
-
-		for i=1, WHOS_TO_DISPLAY, 1 do
-			local name, guild, level, race, class, zone = GetWhoInfo(whoOffset + i)
-			local color
-			if (not name) then
-				break
-			end
-
-			_G["WhoFrameButton"..i.."Name"]:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
-			if (conf.tooltip.xperlInfo and XPerl_GetUsage) then
-				local u = XPerl_GetUsage(name)
-				if (u) then
-					_G["WhoFrameButton"..i.."Name"]:SetTextColor(1, 0.4, 0.4)
-				end
-			end
-
-			if (conf.colour.class and conf.colour.guildList) then
-				if (Lib_UIDropDownMenu_GetSelectedID(WhoFrameDropDown) == 1) then
-					-- Zone
-					if (zone == myZone) then
-						_G["WhoFrameButton"..i.."Variable"]:SetTextColor(0, 1, 0)
-					else
-						_G["WhoFrameButton"..i.."Variable"]:SetTextColor(1, 1, 1)
-					end
-				elseif (Lib_UIDropDownMenu_GetSelectedID(WhoFrameDropDown) == 2) then
-					if (guild == myGuild) then
-						_G["WhoFrameButton"..i.."Variable"]:SetTextColor(0, 1, 0)
-					else
-						_G["WhoFrameButton"..i.."Variable"]:SetTextColor(1, 1, 1)
-					end
-
-				elseif (Lib_UIDropDownMenu_GetSelectedID(WhoFrameDropDown) == 3) then
-					if (race == myRace) then
-						_G["WhoFrameButton"..i.."Variable"]:SetTextColor(0, 1, 0)
-					else
-						_G["WhoFrameButton"..i.."Variable"]:SetTextColor(1, 1, 1)
-					end
-				end
-
-				_G["WhoFrameButton"..i.."Class"]:SetTextColor(1, 1, 1)
-				class = colourList[class]
-				if (class) then
-					local color = XPerl_GetClassColour(class)
-					if (color) then
-						_G["WhoFrameButton"..i.."Class"]:SetTextColor(color.r, color.g, color.b)
-					end
-				end
-
-				local color = GetDifficultyColor(level)
-				_G["WhoFrameButton"..i.."Level"]:SetTextColor(color.r, color.g, color.b)
-			else
-				_G["WhoFrameButton"..i.."Variable"]:SetTextColor(1, 1, 1)
-				_G["WhoFrameButton"..i.."Level"]:SetTextColor(1, 1, 1)
-				_G["WhoFrameButton"..i.."Class"]:SetTextColor(1, 1, 1)
-			end
-		end
-	end
-end
-
-hooksecurefunc("WhoList_Update", XPerl_WhoList_Update)
-]]
 
 ----------------------
 -- Fading Bar Stuff --
@@ -2967,10 +2952,10 @@ function XPerl_Unit_BuffPositions(self, buffList1, buffList2, size1, size2)
 	end
 end
 
-local function fixMeBlizzard(self)
+--[[local function fixMeBlizzard(self)
 	self.anim:Play()
 	self:SetScript("OnUpdate", nil)
-end
+end]]
 
 -- XPerl_Unit_UpdateBuffs(self)
 function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curableOnly)
@@ -3074,7 +3059,8 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 							end
 
 							button.steal:Show()
-							button.steal:SetScript("OnUpdate", fixMeBlizzard) -- Workaround for Play not always working...
+							button.steal.anim:Play()
+							--button.steal:SetScript("OnUpdate", fixMeBlizzard) -- Workaround for Play not always working...
 						else
 							if (button.steal) then
 								button.steal:Hide()
@@ -3180,7 +3166,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 					end
 				end
 			end
-			for buffnum = lastIcon + 1,40 do
+			for buffnum = lastIcon + 1, 40 do
 				local button = self.buffFrame.debuff and self.buffFrame.debuff[buffnum]
 				if (button) then
 					button.expireTime = nil
@@ -3233,7 +3219,13 @@ end
 function XPerl_Update_RaidIcon(self, unit)
 	local index = GetRaidTargetIndex(unit)
 	if (index) then
-		SetRaidTargetIconTexture(self, index)
+		local mark
+		if unit == "player" or unit == "target" or unit == "focus" then
+			mark = self.texture
+		else
+			mark = self
+		end
+		SetRaidTargetIconTexture(mark, index)
 		self:Show()
 	else
 		self:Hide()
@@ -3372,7 +3364,8 @@ function XPerl_NextMember(_, last)
 					end
 
 					if (id) then
-						return id, UnitName(id), select(2, UnitClass(id)), 1, "", UnitIsConnected(id), UnitIsDeadOrGhost(id)
+						local _, class = UnitClass(id)
+						return id, UnitName(id), class, 1, "", UnitIsConnected(id), UnitIsDeadOrGhost(id)
 					end
 				end
 			end
@@ -3382,7 +3375,8 @@ function XPerl_NextMember(_, last)
 			local unitName, rank, group, level, _, unitClass, zone, online, dead = GetRaidRosterInfo(1)
 			return "raid1", unitName, unitClass, group, zone, online, dead
 		else
-			return "player", UnitName("player"), select(2, UnitClass("player")), 1, GetRealZoneText(), 1, UnitIsDeadOrGhost("player")
+			local _, class = UnitClass("player")
+			return "player", UnitName("player"), class, 1, GetRealZoneText(), 1, UnitIsDeadOrGhost("player")
 		end
 	end
 end
@@ -3759,22 +3753,71 @@ function XPerl_RegisterScalableFrame(self, anchorFrame, minScale, maxScale, resi
 	self.corner.scaling = nil
 end
 
--- XPerl_SetExpectedHealth
-function XPerl_SetExpectedHealth(self)
-	local bar = self.statsFrame.expectedHealth
+-- XPerl_SetExpectedAbsorbs
+function XPerl_SetExpectedAbsorbs(self)
+	local bar
+	if self.statsFrame then
+		bar = self.statsFrame.expectedAbsorbs
+	else
+		bar = self.expectedAbsorbs
+	end
 	if (bar) then
-		--if (conf.highlight and conf.highlight.HEAL) then
-			local amount = UnitGetIncomingHeals(self.partyid)
-			if (amount and amount > 0 and not UnitIsDeadOrGhost(self.partyid)) then
-				local healthMax = UnitHealthMax(self.partyid)
-				local health = UnitHealth(self.partyid)
-				
-				bar:Show()
-				bar:SetMinMaxValues(0, healthMax)
-				bar:SetValue(min(healthMax, health + amount))
+		local amount = UnitGetTotalAbsorbs(self.partyid)
+		if (amount and amount > 0 and not UnitIsDeadOrGhost(self.partyid)) then
+			local healthMax = UnitHealthMax(self.partyid)
+			local health = UnitHealth(self.partyid)
+
+			if UnitIsAFK(self.partyid) then
+				bar:SetStatusBarColor(0.2, 0.2, 0.2, 0.7)
+			else
+				bar:SetStatusBarColor(0.14, 0.33, 0.7, 0.7)
+			end
+
+			bar:Show()
+			bar:SetMinMaxValues(0, healthMax)
+
+			local healthBar
+			if self.statsFrame then
+				healthBar = self.statsFrame.healthBar
+			else
+				healthBar = self.healthBar
+			end
+			local min, max = healthBar:GetMinMaxValues()
+			local position = ((max - healthBar:GetValue()) / max) * healthBar:GetWidth()
+
+			if healthBar:GetWidth() <= 0 then
 				return
 			end
-		--end
+
+			bar:SetValue(amount * (healthBar:GetWidth() / (healthBar:GetWidth() - position)))
+
+			bar:SetPoint("TopRight", healthBar, "TopRight", -position, 0)
+			bar:SetPoint("BottomRight", healthBar, "BottomRight", -position, 0)
+			return
+		end
+		bar:Hide()
+	end
+end
+
+-- XPerl_SetExpectedHealth
+function XPerl_SetExpectedHealth(self)
+	local bar
+	if self.statsFrame then
+		bar = self.statsFrame.expectedHealth
+	else
+		bar = self.expectedHealth
+	end
+	if (bar) then
+		local amount = UnitGetIncomingHeals(self.partyid)
+		if (amount and amount > 0 and not UnitIsDeadOrGhost(self.partyid)) then
+			local healthMax = UnitHealthMax(self.partyid)
+			local health = UnitHealth(self.partyid)
+			
+			bar:Show()
+			bar:SetMinMaxValues(0, healthMax)
+			bar:SetValue(min(healthMax, health + amount))
+			return
+		end
 		bar:Hide()
 	end
 end
@@ -3854,7 +3897,7 @@ function XPerl_Unit_ThreatStatus(self, relative, immediate)
 		else
 			self.threatFrames = {}
 		end
-		if (self[mode]) then		-- If desired parent frame exists
+		if (self[mode]) then -- If desired parent frame exists
 			t = CreateFrame("Frame", self:GetName().."Threat"..mode, self[mode], "XPerl_ThreatTemplate"..mode)
 			t:SetAllPoints()
 			self.threatFrames[mode] = t

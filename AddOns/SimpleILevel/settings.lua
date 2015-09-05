@@ -33,7 +33,7 @@ SIL_Colors = {
     [1000] =    {['r']=255,     ['g']=0,        ['b']=0,        ['rgb']='FF0000',   ['p']=785,},
 };
 
--- Suported channel localization table
+-- Supported channel localization table
 SIL_Channels = {
     SYSTEM = string.lower(CHAT_MSG_SYSTEM),
     GROUP = string.lower(GROUP),

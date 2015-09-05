@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1186, "DBM-Party-WoD", 1, 547)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14030 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14196 $"):sub(12, -3))
 mod:SetCreatureID(76177)
 mod:SetEncounterID(1685)
 mod:SetZone()
@@ -32,7 +32,7 @@ local voiceSoulVessel			= mod:NewVoice(155327)
 local voiceTornSpirits			= mod:NewVoice(153994)
 
 function mod:OnCombatStart(delay)
-	timerSoulVesselCD:Start(22-delay)
+	timerSoulVesselCD:Start(20-delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)

@@ -70,11 +70,11 @@ local dims
 --------------------------------------------------------
 local UnitPosition = UnitPosition
 local GetPlayerFacing = GetPlayerFacing
-local UnitName, UnitClass, UnitIsUnit, UnitIsDeadOrGhost, UnitAffectingCombat, UnitExists = UnitName, UnitClass, UnitIsUnit, UnitIsDeadOrGhost, UnitAffectingCombat, UnitExists
+local UnitName, UnitClass, UnitIsUnit, UnitIsDeadOrGhost, UnitIsConnected, UnitInPhase, UnitAffectingCombat, UnitExists = UnitName, UnitClass, UnitIsUnit, UnitIsDeadOrGhost, UnitIsConnected, UnitInPhase, UnitAffectingCombat, UnitExists
 local IsInRaid, GetNumGroupMembers, GetNumSubgroupMembers = IsInRaid, GetNumGroupMembers, GetNumSubgroupMembers
 local GetRaidTargetIndex = GetRaidTargetIndex
 local GetTime = GetTime
-local max, sin, cos, pi = math.max, math.sin, math.cos, math.pi
+local max, sin, cos, pi, pi2 = math.max, math.sin, math.cos, math.pi, math.pi * 2
 
 -- for Phanx' Class Colors
 local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
@@ -398,7 +398,7 @@ function createTextFrame()
 	end)
 	textFrame:SetScript("OnDragStop", function(self)
 		self:StopMovingOrSizing()
-		ValidateFramePosition(self)
+		--ValidateFramePosition(self)
 		local point, _, _, x, y = self:GetPoint(1)
 		DBM.Options.RangeFrameX = x
 		DBM.Options.RangeFrameY = y
@@ -430,7 +430,7 @@ function createRadarFrame()
 	end)
 	radarFrame:SetScript("OnDragStop", function(self)
 		self:StopMovingOrSizing()
-		ValidateFramePosition(self)
+		--ValidateFramePosition(self)
 		local point, _, _, x, y = self:GetPoint(1)
 		DBM.Options.RangeFrameRadarX = x
 		DBM.Options.RangeFrameRadarY = y
@@ -572,7 +572,7 @@ do
 
 		local playerX, playerY, _, playerMapId = UnitPosition("player")
 
-		rotation = (2 * pi) - GetPlayerFacing()
+		rotation = pi2 - GetPlayerFacing()
 		local sinTheta = sin(rotation)
 		local cosTheta = cos(rotation)
 		local closePlayer = 0
@@ -585,7 +585,7 @@ do
 			local uId = unitList[i]
 			local dot = dots[i]
 			local x, y, _, mapId = UnitPosition(uId)
-			if UnitExists(uId) and playerMapId == mapId and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and (not filter or filter(uId)) then
+			if UnitExists(uId) and playerMapId == mapId and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and UnitInPhase(uId) and (not filter or filter(uId)) then
 				local cy = x - playerX
 				local cx = y - playerY
 				local range = (cx * cx + cy * cy) ^ 0.5

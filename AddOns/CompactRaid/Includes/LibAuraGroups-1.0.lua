@@ -12,9 +12,14 @@
 -- API documentation:
 ------------------------------------------------------------
 
--- lib = _G["LibAuraGroups-1.0"]
+-- lib = _G["LibAuraGroups"]
 --
 -- Get an object handle of the library.
+------------------------------------------------------------
+
+-- lib:GetGroupLocalName("group")
+--
+-- Returns localized name of the group.
 ------------------------------------------------------------
 
 -- lib:GetAuraGroup("aura")
@@ -38,92 +43,183 @@
 -- lib:AuraSameGroup("aura1", "aura2")
 --
 -- Returns name of the group to which both of the 2 given auras belong to.
-------------------------------------------------------------
-
--- lib:UnitAffectDebuff("unit", "group")
---
--- Checks whether an unit is affected by the given debuff group.  Return values are:
--- name, icon, count, dispelType, duration, expires, caster.
 
 ------------------------------------------------------------
 -- Group names & contents:
 ------------------------------------------------------------
 --
 -- STATS
--- Mark of the Wild, Legacy of the Emperor, Blessing of Kings, Embrace of the Shale Spider
-
 -- STAMINA
--- Power Word: Fortitude, Imp: Blood Pact, Commanding Shout, Qiraji Fortitude, Dark Intent
-
 -- ATTACK_POWER
--- Horn of the Winter, Trueshot Aura, Battle Shout
-
 -- SPELL_POWER
--- Arcane Brilliance, Burning Wrath, Dark Intent, Dalaran Brilliance
-
--- ATTACK_HASTE
--- Unholy Aura, Swiftblade's Cunning, Unleashed Rage, Serpent's Swiftness
-
--- SPELL_HASTE
--- Moonkin Aura, Shadowform, Elemental Oath
-
+-- VERSATILITY
+-- HASTE
 -- CRITICAL_STRIKE
--- Leader of the Pack, Arcane Brilliance, Legacy of the White Tiger, Furious Howl, Dalaran Brilliance
-
---- MASTERY
--- Legacy of the White Tiger, Blessing of Might, Grace of Air, Roar of Courage
-
--- COOLDOWN_HASTE
--- Heroism, Exhausted, Bloodlust, Sated, Time Warp, Temporal Displacement, Ancient Hysteria
-
--- MAGE_ICE_BLOCK
--- Ice Block, Hypothermia
-
--- PALADIN_PROTECTION
--- Divine Shield, Hand of Protection, Forbearance
-
--- PRIEST_SHIELD
--- Power Word: Shield, Weakened Soul
-
--- MAGIC_VULNERABILITY
--- Master Poisoner, Curse of the Elements, Fire Breath, Lightning Breath
-
--- SLOW_CASTING
--- Necrotic Strike, Mind-numbing Poison, Curse of Enfeeblement, Slow, Spore Cloud, Tailspin, Lava Breath
+-- MULTISTRIKE
+-- MASTERY
+-- BLOODLUST
+-- ICE_BLOCK
+-- DEVINE_SHIELD
+-- POWERWORD_SHIELD
 
 ------------------------------------------------------------
--- Debuff Effects:
-------------------------------------------------------------
 
--- WEAKENED_ARMOR
--- Weaken Armor (Brought by: Faerie Fire, Expose Armor, Sunder Armor)
+local AURA_GROUPS = {
 
--- PHYSICAL_VULNERABILITY
--- Physical Vulnerability (Brought by: Brittle Bones, Ebon Plaguebringer, Judgments of the Bold, Colossus Smash)
+	["STATS"] = {		-- 属性
 
--- MAGIC_VULNERABILITY
--- Master Poisoner, Curse of the Elements, Fire Breath, Lightning Breath
+		1126,		-- 德鲁伊：野性印记
+		115921,		-- 武僧：帝王传承
+		116781,		-- 武僧：白虎传承
+		20217,		-- 圣骑士：王者祝福
+		90363,		-- 页岩蛛：页岩蛛之拥
+		159988,		-- 狗：野性嚎叫
+		160017,		-- 猩猩：金刚之力
+		160077,		-- 虫：大地之力
+		160206,		-- 独来独往：巨猿之力
+	},
 
--- WEAKENED_BLOWS
--- Weakened Blows (Brought by: Scarlet Fever, Thrash, Hammer of the Righteous, Thunder Clap, Keg Smash, Earth Shock)
+	["STAMINA"] = {		-- 耐力
 
--- SLOW_CASTING
--- Necrotic Strike, Mind-numbing Poison, Curse of Enfeeblement, Slow, Spore Cloud, Tailspin, Lava Breath
+		21562,		-- 牧师：真言术：韧
+		166928,		-- 术士：血之契印
+		469,		-- 战士：命令怒吼
+		160003,		-- 双头飞龙：野性活力
+		160014,		-- 山羊：坚韧
+		90364,		-- 异种虫：其拉虫群坚韧
+		160199,		-- 独来独往：巨熊之韧
+	},
 
--- MORTAL_WOUNDS
--- Mortal Wounds (Brought by: Mortal Strike, Wild Strike, Wound Poison, Widow Venom, Rising Sun Kick)
-------------------------------------------------------------
+	["ATTACK_POWER"] = {	-- 攻击强度
+
+		57330,		-- 死亡骑士：寒冬号角
+		19506,		-- 猎人：强击光环
+		6673,		-- 战士：战斗怒吼
+	},
+
+	["SPELL_POWER"] = {	-- 法术强度
+
+		1459,		-- 法师：奥术光辉
+		61316,		-- 法师：达拉然光辉
+		109773,		-- 术士：黑暗意图
+		90364,		-- 异种虫：其拉虫群坚韧
+		126309,		-- 水黾：静水
+		160205,		-- 独来独往：神龙之智
+	},
+
+	["VERSATILITY"] = {	-- 全能
+
+		55610,		-- 死亡骑士：邪恶光环
+		1126,		-- 德鲁伊：野性印记
+		167187,		-- 圣骑士：圣洁光环
+		167188,		-- 战士：英姿勃发
+		159735,		-- 猛禽：坚韧
+		35290,		-- 野猪：不屈
+		160045,		-- 箭猪：防御鬃毛
+		50518,		-- 掠食者：角质护甲
+		57386,		-- 裂蹄牛：狂野之力
+		160077,		-- 虫：大地之力
+		172967,		-- 独来独往：掠食者之力
+	},
+
+	["HASTE"] = {		-- 急速
+
+		55610,		-- 死亡骑士：邪恶光环
+		49868,		-- 牧师：思维加速
+		113742,		-- 潜行者：狡诈迅刃
+		116956,		-- 萨满祭司：风之优雅
+		160003,		-- 双头飞龙：野性活力
+		135678,		-- 孢子蝠：充能孢子
+		160074,		-- 黄蜂：虫群之速
+		160203,		-- 独来独往：土狼之速
+	},
+
+	["CRITICAL_STRIKE"] = {	-- 爆击
+
+		17007,		-- 德鲁伊：兽群领袖
+		1459,		-- 法师：奥术光辉
+		61316,		-- 法师：达拉然光辉
+		116781,		-- 武僧：白虎传承
+		90309,		-- 魔暴龙：惊人咆哮
+		126373,		-- 魁麟：无畏之嚎
+		160052,		-- 迅猛龙：兽群之力
+		90363,		-- 页岩蛛：页岩蛛之拥
+		126309,		-- 水黾：静水
+		24604,		-- 狼：狂怒之嚎
+		160200,		-- 独来独往：迅猛龙之恶
+	},
+
+	["MULTISTRIKE"] = {	-- 溅射
+
+		166916,		-- 武僧：狂风骤雨
+		49868,		-- 牧师：思维加速
+		113742,		-- 潜行者：狡诈迅刃
+		109773,		-- 术士：黑暗意图
+		159733,		-- 蜥蜴：怨毒凝视
+		54644,		-- 奇美拉：冰霜吐息
+		58604,		-- 熔岩犬：狂暴撕咬
+		34889,		-- 龙鹰：迅捷打擊
+		160011,		-- 狐狸：矫健身姿
+		57386,		-- 裂蹄牛：狂野之力
+		24844,		-- 风蛇：狂风呼啸
+		172968,		-- 独来独往：龙鹰之速
+	},
+
+	["MASTERY"] = {		-- 精通
+
+		155522,		-- 死亡骑士：幽冥之力
+		24907,		-- 德鲁伊：枭兽光环
+		19740,		-- 圣骑士：力量祝福
+		16956,		-- 萨满祭司：风之优雅
+		93435,		-- 猫科：勇气咆哮
+		160039,		-- 多头蛇：敏锐感知
+		128997,		-- 灵魂兽：灵魂兽祝福
+		160073,		-- 陆行鸟：平步青云
+		160198,		-- 独来独往：猫之优雅
+	},
+
+	["BLOODLUST"] = {	-- 嗜血加速
+
+		2825,		-- 萨满祭司：嗜血
+		32182,		-- 萨满祭司：英勇
+		80353,		-- 法师：时间扭曲
+		160452,		-- 虚空鳐：虚空之风
+		90355,		-- 熔岩犬：远古狂乱
+		57723,		-- 精疲力尽
+		57724,		-- 心满意足
+		80354,		-- 时空错位
+	},
+
+	["ICE_BLOCK"] = {	-- 法师
+
+		27619,		-- 寒冰屏障
+		41425,		-- 低温
+	},
+
+	["DEVINE_SHIELD"] = {	-- 圣骑士
+
+		642,		-- 圣盾术
+		1022,		-- 保护之手
+		25771,		-- 自律
+	},
+
+	["POWERWORD_SHIELD"] = {-- 牧师
+
+		17,		-- 真言术：盾
+		6788,		-- 虚弱灵魂
+	},
+}
 
 local type = type
 local select = select
 local GetSpellInfo = GetSpellInfo
 local pairs = pairs
+local ipairs = ipairs
 local UnitBuff = UnitBuff
 local UnitDebuff = UnitDebuff
-local _
 
 local LIBNAME = "LibBuffGroups-1.0"
-local VERSION = 1.06
+local VERSION = 1.21
 
 local lib = _G[LIBNAME]
 if lib and lib.version >= VERSION then return end
@@ -135,8 +231,7 @@ end
 lib.version = VERSION
 _G.LibBuffGroups = lib
 
-local auraGroupList = {} -- Aura groups
-local debuffGroupList = {} -- Debuff effect groups
+lib.auraGroupList = {}
 
 local function AddGroup(groupList, group, ...)
 	if type(group) ~= "string" then
@@ -164,91 +259,13 @@ local function AddGroup(groupList, group, ...)
 	end
 end
 
-local function AddAuraGroup(group, ...)
-	AddGroup(auraGroupList, group, ...)
-end
-
-local function AddDebuffGroup(group, ...)
-	AddGroup(debuffGroupList, group, ...)
-end
-
-------------------------------------------------------------
--- Initialize aura groups
-------------------------------------------------------------
-
--- STATS
-AddAuraGroup("STATS", 1126, 115921, 20217, 90363) -- Mark of the Wild, Legacy of the Emperor, Blessing of Kings, Embrace of the Shale Spider
-
--- STAMINA
-AddAuraGroup("STAMINA", 109773, 21562, 103127, 469, 90364) -- Dark Intent, Power Word: Fortitude, Imp: Blood Pact, Commanding Shout, Qiraji Fortitude
-
--- ATTACK_POWER
-AddAuraGroup("ATTACK_POWER", 57330, 19506, 6673) -- Horn of the Winter, Trueshot Aura, Battle Shout
-
--- SPELL_POWER
-AddAuraGroup("SPELL_POWER", 109773, 1459, 77747, 61316) -- Dark Intent, Arcane Brilliance, Burning Wrath, Dalaran Brilliance
-
--- ATTACK_HASTE
-AddAuraGroup("ATTACK_HASTE", 55610, 113742, 30809, 128433) -- Unholy Aura, Swiftblade's Cunning, Unleashed Rage, Serpent's Swiftness
-
--- SPELL_HASTE
-AddAuraGroup("SPELL_HASTE", 24907, 15473, 51470) -- Moonkin Aura, Shadowform, Elemental Oath
-
--- CRITICAL_STRIKE
-AddAuraGroup("CRITICAL_STRIKE", 17007, 1459, 116781, 24604, 61316) -- Leader of the Pack, Arcane Brilliance, Legacy of the White Tiger, Furious Howl, Dalaran Brilliance
-
---- MASTERY
-AddAuraGroup("MASTERY", 116781, 19740, 116956, 93435) -- Legacy of the White Tiger, Blessing of Might, Grace of Air, Roar of Courage
-
--- COOLDOWN_HASTE
-AddAuraGroup("COOLDOWN_HASTE", 32182, 57723, 2825, 57724, 80353, 80354, 90355) -- Heroism, Exhausted, Bloodlust, Sated, Time Warp, Temporal Displacement, Ancient Hysteria
-
--- MAGE_ICE_BLOCK
-AddAuraGroup("MAGE_ICE_BLOCK", 27619, 41425) -- Ice Block, Hypothermia
-
--- PALADIN_PROTECTION
-AddAuraGroup("PALADIN_PROTECTION", 642, 1022, 25771) -- Divine Shield, Hand of Protection, Forbearance
-
--- PRIEST_SHIELD
-AddAuraGroup("PRIEST_SHIELD", 17, 6788) -- Power Word: Shield, Weakened Soul
-
--- MAGIC_VULNERABILITY
-AddAuraGroup("MAGIC_VULNERABILITY", 58410, 1490, 34889, 24844) -- Master Poisoner, Curse of the Elements, Fire Breath, Lightning Breath
-
--- SLOW_CASTING
-AddAuraGroup("SLOW_CASTING", 73975, 5761, 109466, 79880, 50274, 90314, 58604) -- Necrotic Strike, Mind-numbing Poison, Curse of Enfeeblement, Slow, Spore Cloud, Tailspin, Lava Breath
-
-
-------------------------------------------------------------
--- Initialize debuff effect groups
-------------------------------------------------------------
-
--- WEAKENED_ARMOR
-AddDebuffGroup("WEAKENED_ARMOR", 113746) -- Faerie Fire, Expose Armor, Sunder Armor
-
--- PHYSICAL_VULNERABILITY
-AddDebuffGroup("PHYSICAL_VULNERABILITY", 81326) -- Brittle Bones, Ebon Plaguebringer, Judgments of the Bold, Colossus Smash
-
--- MAGIC_VULNERABILITY
-AddDebuffGroup("MAGIC_VULNERABILITY", 58410, 1490, 34889, 24844) -- Master Poisoner, Curse of the Elements, Fire Breath, Lightning Breath
-
--- WEAKENED_BLOWS
-AddDebuffGroup("WEAKENED_BLOWS", 115798) -- Scarlet Fever, Thrash, Hammer of the Righteous, Thunder Clap, Keg Smash, Earth Shock
-
--- SLOW_CASTING
-AddDebuffGroup("SLOW_CASTING", 73975, 5761, 109466, 79880, 50274, 90314, 58604) -- Necrotic Strike, Mind-numbing Poison, Curse of Enfeeblement, Slow, Spore Cloud, Tailspin, Lava Breath
-
--- MORTAL_WOUNDS
-AddDebuffGroup("MORTAL_WOUNDS", 115804) -- Mortal Strike, Wild Strike, Wound Poison, Widow Venom, Rising Sun Kick
-
-
 function lib:GetAuraGroup(aura)
 	if not aura then
 		return
 	end
 
 	local group
-	for group, list in pairs(auraGroupList) do
+	for group, list in pairs(lib.auraGroupList) do
 		if list[aura] then
 			return group
 		end
@@ -256,7 +273,7 @@ function lib:GetAuraGroup(aura)
 end
 
 local function InternalGetGroupAuras(group)
-	return auraGroupList[group]
+	return lib.auraGroupList[group]
 end
 
 function lib:GetGroupAuras(group)
@@ -278,7 +295,7 @@ local function FindAura(list, unit, exclude)
 		return
 	end
 
-	local aura, name, icon, count, dispelType, duration, expires, caster
+	local _, aura, name, icon, count, dispelType, duration, expires, caster
 	for aura in pairs(list) do
 		if aura ~= exclude then
 			name, _, icon, count, dispelType, duration, expires, caster = UnitBuff(unit, aura)
@@ -315,8 +332,8 @@ function lib:UnitAura(unit, aura, group)
 
 	local list = InternalGetGroupAuras(group)
 	if not list then
-		local v
-		for _, v in pairs(auraGroupList) do
+		local _, v
+		for _, v in pairs(lib.auraGroupList) do
 			if v[aura] then
 				list = v
 				break
@@ -330,7 +347,7 @@ end
 function lib:AuraSameGroup(aura1, aura2)
 	if aura1 and aura2 and aura1 ~= aura2 then
 		local group, list
-		for group, list in pairs(auraGroupList) do
+		for group, list in pairs(lib.auraGroupList) do
 			if list[aura1] and list[aura2] then
 				return group
 			end
@@ -338,21 +355,38 @@ function lib:AuraSameGroup(aura1, aura2)
 	end
 end
 
-function lib:UnitAffectDebuff(unit, group)
-	if type(unit) ~= "string" then
-		return
-	end
+local GROUP_NAMES = {
+	STATS = STAT_CATEGORY_ATTRIBUTES,
+	STAMINA = SPELL_STAT3_NAME,
+	ATTACK_POWER = STAT_CATEGORY_ATTRIBUTES,
+	SPELL_POWER = STAT_SPELLPOWER,
+	VERSATILITY = STAT_VERSATILITY,
+	HASTE = STAT_HASTE,
+	CRITICAL_STRIKE = STAT_CRITICAL_STRIKE,
+	MULTISTRIKE = STAT_MULTISTRIKE,
+	MASTERY = STAT_MASTERY,
+	BLOODLUST = GetSpellInfo(2825),
+	ICE_BLOCK = GetSpellInfo(27691),
+	DEVINE_SHIELD = GetSpellInfo(642),
+	POWERWORD_SHIELD = GetSpellInfo(17),
+}
 
-	local list = debuffGroupList[group]
-	if not list then
-		return
-	end
+function lib:GetGroupLocalName(group)
+	return GROUP_NAMES[group]
+end
 
-	local aura, name, icon, count, dispelType, duration, expires, caster
-	for aura in pairs(list) do
-		name, _, icon, count, dispelType, duration, expires, caster = UnitDebuff(unit, aura)
-		if name then
-			return name, icon, count, dispelType, duration, expires, caster
+do
+	local group, data
+	for group, data in pairs(AURA_GROUPS) do
+		local list = {}
+		lib.auraGroupList[group] = list
+
+		local _, id
+		for _, id in ipairs(data) do
+			local name = GetSpellInfo(id)
+			if name then
+				list[name] = id
+			end
 		end
 	end
 end

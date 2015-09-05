@@ -39,13 +39,15 @@ local function Button_OnUpdate(self)
 	end
 end
 
+local NUM_BUTTONS = NUM_WORLD_RAID_MARKERS + 1
+
 local i
-for i = 1, 6 do
-	local button = menu:AddButton(i == 6 and REMOVE_WORLD_MARKERS or _G["WORLD_MARKER"..i], "SecureActionButtonTemplate")
+for i = 1, NUM_BUTTONS do
+	local button = menu:AddButton(i == NUM_BUTTONS and REMOVE_WORLD_MARKERS or _G["WORLD_MARKER"..i], "SecureActionButtonTemplate")
 	button:SetID(i)
 	button:HookScript("OnClick", Button_OnClick)
 	button:SetAttribute("type", "worldmarker")
-	if i == 6 then
+	if i == NUM_BUTTONS then
 		button:SetAttribute("action", "clear")
 	else
 		button:SetAttribute("marker", i)

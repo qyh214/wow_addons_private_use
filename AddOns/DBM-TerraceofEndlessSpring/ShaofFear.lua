@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(709, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
 mod:SetCreatureID(60999)--61042 Cheng Kang, 61046 Jinlun Kun, 61038 Yang Guoshi, 61034 Terror Spawn
 mod:SetEncounterID(1431)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -55,27 +55,27 @@ local specWarnChampionOfTheLight		= mod:NewSpecialWarningYou(120268)
 local specWarnSubmerge					= mod:NewSpecialWarningCount(120455, nil, nil, nil, 2)
 
 -- Normal and heroic Phase 1
-local timerThrashCD						= mod:NewCDTimer(9, 131996, nil, "Tank|Healer")--Every 9-12 seconds.
-local timerBreathOfFearCD				= mod:NewNextTimer(33.3, 119414)--Based off bosses energy, he casts at 100 energy, and gains about 3 energy per second, so every 33-34 seconds is a breath.
-local timerOminousCackleCD				= mod:NewNextTimer(45.5, 119693)
+local timerThrashCD						= mod:NewCDTimer(9, 131996, nil, "Tank|Healer", nil, 5)--Every 9-12 seconds.
+local timerBreathOfFearCD				= mod:NewNextTimer(33.3, 119414, nil, nil, nil, 2)--Based off bosses energy, he casts at 100 energy, and gains about 3 energy per second, so every 33-34 seconds is a breath.
+local timerOminousCackleCD				= mod:NewNextTimer(45.5, 119693, nil, nil, nil, 3)
 local timerDreadSpray					= mod:NewBuffActiveTimer(8, 120047)
-local timerDreadSprayCD					= mod:NewNextTimer(20.5, 120047)
+local timerDreadSprayCD					= mod:NewNextTimer(20.5, 120047, nil, nil, nil, 2)
 local timerDeathBlossom					= mod:NewBuffActiveTimer(5, 119888)
 --local timerTerrorSpawnCD				= mod:NewNextTimer(60, 119108)--every 60 or so seconds, maybe a little more maybe a little less, not sure. this is just based on instinct after seeing where 30 fit.
 local timerFearless						= mod:NewBuffFadesTimer(30, 118977)
 -- Heroic Phase 2
-local timerDreadTrashCD					= mod:NewCDTimer(9, 132007, nil, "Tank|Healer")--Share Trash CD.
+local timerDreadTrashCD					= mod:NewCDTimer(9, 132007, nil, "Tank|Healer", nil, 5)--Share Trash CD.
 local timerNakedAndAfraid				= mod:NewTargetTimer(25, 120669, nil, "Tank|Healer")--25 on 10 man, 50 on 25 (requiring 3 tanks)
-local timerNakedAndAfraidCD				= mod:NewCDTimer(30, 120669, nil, "Tank|Healer")-- varies, but mostly 30. can get delayed upwards of 15 seconds though between submerge and specials
-local timerSubmergeCD					= mod:NewCDCountTimer(51.5, 120455)
+local timerNakedAndAfraidCD				= mod:NewCDTimer(30, 120669, nil, "Tank|Healer", nil, 5)-- varies, but mostly 30. can get delayed upwards of 15 seconds though between submerge and specials
+local timerSubmergeCD					= mod:NewCDCountTimer(51.5, 120455, nil, nil, nil, 6)
 mod:AddBoolOption("timerSpecialAbility", true, "timer")--Better to have one option for his shared special timer than 7
-local timerWaterspoutCD					= mod:NewCDTimer(10, 120519, nil, nil, false)
-local timerHuddleInTerrorCD				= mod:NewCDTimer(10, 120629, nil, nil, false)
-local timerImplacableStrikeCD			= mod:NewCDTimer(9.5, 120672, nil, nil, false)
-local timerSpecialAbilityCD				= mod:NewTimer(12, "timerSpecialAbilityCD", 1449, nil, false)--1st Ability 12sec after Submerge
-local timerSpoHudCD						= mod:NewTimer(10, "timerSpoHudCD", 64044, nil, false)--Waterspout or Huddle in Terror next
-local timerSpoStrCD						= mod:NewTimer(10, "timerSpoStrCD", 1953, nil, false)--Waterspout or Implacable Strike next
-local timerHudStrCD						= mod:NewTimer(10, "timerHudStrCD", 64044, nil, false)-- Huddle in Terror or Implacable Strike next
+local timerWaterspoutCD					= mod:NewCDTimer(10, 120519, nil, nil, false, 3)
+local timerHuddleInTerrorCD				= mod:NewCDTimer(10, 120629, nil, nil, false, 3)
+local timerImplacableStrikeCD			= mod:NewCDTimer(9.5, 120672, nil, nil, false, 3)
+local timerSpecialAbilityCD				= mod:NewTimer(12, "timerSpecialAbilityCD", 1449, nil, false, 3)--1st Ability 12sec after Submerge
+local timerSpoHudCD						= mod:NewTimer(10, "timerSpoHudCD", 64044, nil, false, 3)--Waterspout or Huddle in Terror next
+local timerSpoStrCD						= mod:NewTimer(10, "timerSpoStrCD", 1953, nil, false, 3)--Waterspout or Implacable Strike next
+local timerHudStrCD						= mod:NewTimer(10, "timerHudStrCD", 64044, nil, false, 3)-- Huddle in Terror or Implacable Strike next
 
 local berserkTimer						= mod:NewBerserkTimer(900)
 

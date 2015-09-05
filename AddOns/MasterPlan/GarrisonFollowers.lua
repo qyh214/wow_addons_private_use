@@ -85,12 +85,13 @@ floatingMechanics.buttons = {}
 function floatingMechanics:SetOwner(owner, info)
 	self.owner, self.expire = owner
 	self:SetPoint("TOPRIGHT", owner, "BOTTOMRIGHT", 16, -2)
-	self:SetSize(10 + 24 * #info, 34)
+	self:SetSize(10 + 27 * #info, 38)
 	for i=1,#info do
 		local ico, ci = self.buttons[i], info[i]
 		if not ico then
 			ico = CreateMechanicButton(self)
-			ico:SetPoint("LEFT", 24 * i - 18, 0)
+			ico:SetSize(24, 24)
+			ico:SetPoint("LEFT", 27 * i - 21, 0)
 			self.buttons[i] = ico
 		end
 		Mechanic_SetTrait(ico, ci.id, ci)
@@ -129,7 +130,7 @@ local icons = setmetatable({}, {__index=function(self, k)
 	return f
 end})
 local traits, traitGroups = {221, 76, 77}, {
-	{80, 236, 29, icon="Interface\\Icons\\XPBonus_Icon"},
+	{80, 236, 29, 79, 256, 314, icon="Interface\\Icons\\Trade_Archaeology_ChestOfTinyGlassAnimals"},
 	{4,36,37,38,39,40,41,42,43, 7,8,9,44,45,46,48,49, icon="Interface\\Icons\\Ability_Hunter_MarkedForDeath"},
 	{52,53,54,55,56,57,58,59,60,61,62,227,231, icon="Interface\\Icons\\Trade_Engineering"},
 }

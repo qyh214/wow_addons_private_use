@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(745, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(62980)--63554 (Special invisible Vizier that casts the direction based spellid versions of attenuation)
 mod:SetEncounterID(1507)
 mod:SetZone()
@@ -40,12 +40,12 @@ local specwarnAttenuation	= mod:NewSpecialWarning("specwarnAttenuation", nil, ni
 --Timers aren't worth a crap, at all, but added anyways. if people complain about how inaccurate they are tell them to go to below thread.
 --http://us.battle.net/wow/en/forum/topic/7004456927 for more info on lack of timers.
 local timerExhale				= mod:NewTargetTimer(6, 122761)
-local timerForceCD				= mod:NewCDTimer(35, 122713)--35-50 second variation
+local timerForceCD				= mod:NewCDTimer(35, 122713, nil, nil, nil, 2)--35-50 second variation
 local timerForceCast			= mod:NewCastTimer(4, 122713)
 local timerForce				= mod:NewBuffActiveTimer(12.5, 122713)
-local timerAttenuationCD		= mod:NewCDTimer(32.5, 127834)--32.5-41 second variations, when not triggered off exhale. It's ALWAYS 11 seconds after exhale.
+local timerAttenuationCD		= mod:NewCDTimer(32.5, 127834, nil, nil, nil, 2)--32.5-41 second variations, when not triggered off exhale. It's ALWAYS 11 seconds after exhale.
 local timerAttenuation			= mod:NewBuffActiveTimer(14, 127834)
-local timerConvertCD			= mod:NewCDTimer(33, 122740)--33-50 second variations
+local timerConvertCD			= mod:NewCDTimer(33, 122740, nil, nil, nil, 3)--33-50 second variations
 
 local berserkTimer				= mod:NewBerserkTimer(660)
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(685, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(56719)
 mod:SetEncounterID(1305)
 mod:SetZone()
@@ -22,7 +22,7 @@ local warnEnrage				= mod:NewSpellAnnounce(38166, 4)
 local specWarnShaSpike			= mod:NewSpecialWarningMove(106877)
 local specWarnShaSpikeNear		= mod:NewSpecialWarningClose(106877)
 
-local timerDisorientingSmashCD	= mod:NewCDTimer(13, 106872)--variables. not confirmed
+local timerDisorientingSmashCD	= mod:NewCDTimer(13, 106872)--variable. not confirmed
 local timerShaSpikeCD			= mod:NewNextTimer(9, 106877)
 
 function mod:ShaSpikeTarget(targetname, uId)

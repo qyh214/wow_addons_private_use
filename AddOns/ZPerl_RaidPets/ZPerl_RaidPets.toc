@@ -12,7 +12,7 @@
 ## Notes-deDE: Z-Perl Schlachtzugsbegleiter
 ## Notes-zhTW: Z-Perl 團隊寵物框架
 ## Dependencies: ZPerl_RaidFrames
-## X-Curse-Packaged-Version: r972
+## X-Curse-Packaged-Version: r976
 ## X-Curse-Project-Name: Z-Perl UnitFrames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

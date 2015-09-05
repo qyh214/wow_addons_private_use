@@ -108,4 +108,6 @@ addon.L = {
 	["show privilege icons"] = "Show privilege icons",
 	["show friendly npc"] = "Show friendly NPC (character option)",
 	["show direction arrow"] = "Show direction arrow",
+	["character profiles"] = "Character profiles",
+	["deleting profile"] = "Deleting profile data |cff00ff00%s|r, are you sure?",
 }

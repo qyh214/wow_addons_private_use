@@ -12,7 +12,7 @@ local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 
-XPerl_SetModuleRevision("$Revision: 972 $")
+XPerl_SetModuleRevision("$Revision: 974 $")
 
 XPERL_RAIDMON_UNIT_WIDTH_MIN = 50
 XPERL_RAIDMON_UNIT_WIDTH_MAX = 150
@@ -169,7 +169,7 @@ local function UpdateTarget(self)
 			self.bar:SetMinMaxValues(0, hpMax)
 			self.bar:SetValue(hp)
 
-			local class = select(2, UnitClass(id))
+			local _, class = UnitClass(id)
 			if (class) then
 				local c = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
 				if (c) then
@@ -205,7 +205,7 @@ local function UpdateUnit(self)
 			ScaleBarColour(self.bar, self.mana / self.manaMax, "rbg")
 		end
 
-		local class = select(2, UnitClass(id))
+		local _, class = UnitClass(id)
 		if (class) then
 			local c = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
 			if (c) then
@@ -258,7 +258,7 @@ function XPerl_CastMon_ChildUnits(self)
 
 	self:SetScript("OnAttributeChanged", onAttrChanged)
 
-	local class = select(2, UnitClass("player"))
+	local _, class = UnitClass("player")
 	if (class == "DRUID") then
 		self:SetAttribute("type2", "spell")
 		self:SetAttribute("spell2", XPERL_MONITOR_INNERVATE)
@@ -841,7 +841,8 @@ function cast:SetFrameSizes()
 
 	local count = 0
 	for i = 1,GetNumGroupMembers() do
-		if (config.classes[select(2, UnitClass("raid"..i))]) then
+		local _, class = UnitClass("raid"..i)
+		if (config.classes[class]) then
 			count = count + 1
 		end
 	end

@@ -1,13 +1,10 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-
 	<Script file="ZPerl_Target.lua"/>
-
 	<Button name="XPerl_TargetTemplate" inherits="SecureUnitButtonTemplate" virtual="true" clampedToScreen="true" frameStrata="LOW" movable="true" parent="UIParent" hidden="true">
 		<Size>
 			<!-- The size of this frame determines what can be clicked for the menu and moving, hence it is the same size as the name frame. -->
 			<AbsDimension x="220" y="62"/>
 		</Size>
-
 		<Scripts>
 			<OnEnter function="ZPerl_Unit_OnEnter"/>
 			<OnLeave function="ZPerl_Unit_OnLeave"/>
@@ -29,7 +26,6 @@
 				end
 			</OnHide>
 		</Scripts>
-
 		<Frames>
 			<!-- Target Name -->
 			<Button name="$parentnameFrame" inherits="SecureUnitButtonTemplate">
@@ -69,6 +65,55 @@
 					</BackgroundInsets>
 				</Backdrop>
 				<Frames>
+					<!-- PVP Icon -->
+					<Frame name="$parentpvp">
+						<Scripts>
+							<OnLoad>
+								self:SetScale(0.7)
+								self:SetFrameLevel(self:GetParent():GetFrameLevel() + 2)
+							</OnLoad>
+						</Scripts>
+						<Size>
+							<AbsDimension x="62" y="62"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="-5" y="1"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="OVERLAY">
+								<Texture name="$parenticon" file="Interface\TargetingFrame\UI-PVP-FFA" setAllPoints="true"/>
+							</Layer>
+						</Layers>
+					</Frame>
+					<!-- Raid Target Icon -->
+					<Frame name="$parentraidIcon" hidden="true">
+						<Scripts>
+							<OnLoad>
+								self:SetFrameLevel(self:GetParent():GetFrameLevel() + 5)
+							</OnLoad>
+						</Scripts>
+						<Size>
+							<AbsDimension x="32" y="32"/>
+						</Size>
+						<Anchors>
+							<Anchor point="CENTER" relativePoint="TOPLEFT">
+								<Offset>
+									<AbsDimension x="5" y="-4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<Texture name="$parenttexture" file="Interface\TargetingFrame\UI-RaidTargetingIcons" setAllPoints="true"/>
+								<TexCoords left="0" right="0.25" top="0" bottom="0.25"/>
+							</Layer>
+						</Layers>
+					</Frame>
+					<!-- Combo Point Meter -->
 					<StatusBar name="$parentcpMeter">
 						<Anchors>
 							<Anchor point="TOPLEFT">
@@ -98,9 +143,8 @@
 							<Anchors>
 								<Anchor point="RIGHT"/>
 							</Anchors>
-							<TexCoords left="0.5" right = "1.0" top="0.0" bottom="0.5"/>
+							<TexCoords left="0.49" right="1.0" top="0.0" bottom="0.49"/>
 						</Texture>
-
 						<!-- 30 Yard Range Icon, re-incarnated... -->
 						<Texture name="$parentrangeIcon" file="Interface\Addons\ZPerl\Images\XPerl_30Yard" hidden="true">
 							<Size>
@@ -115,22 +159,6 @@
 							</Anchors>
 							<TexCoords left="0" right="1" top="0" bottom="0.4" />
 						</Texture>
-					</Layer>
-					<Layer level="OVERLAY">
-						<!-- PVP Icon -->
-						<Texture name="$parentpvpIcon" file="Interface\TargetingFrame\UI-PVP-FFA" hidden="true">
-							<Size>
-								<AbsDimension x="40" y="40"/>
-							</Size>
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-									<Offset>
-										<AbsDimension x="-5" y="0"/>
-									</Offset>
-								</Anchor>
-							</Anchors>
-						</Texture>
-
 						<!-- Warning Icon -->
 						<Texture name="$parentwarningIcon" file="Interface\Minimap\Ping\ping6" alphaMode="ADD" hidden="true">
 							<Size>
@@ -144,18 +172,6 @@
 								</Anchor>
 							</Anchors>
 						</Texture>
-
-						<!-- Raid Target Icon -->
-						<Texture name="$parentraidIcon" file="Interface\TargetingFrame\UI-RaidTargetingIcons" hidden="true">
-							<Size>
-								<AbsDimension x="32" y="32"/>
-							</Size>
-							<Anchors>
-								<Anchor point="CENTER"/>
-							</Anchors>
-							<TexCoords left="0" right="0.25" top="0" bottom="0.25" />
-						</Texture>
-
 						<!-- Leader Icon -->
 						<Texture name="$parentleaderIcon" file="Interface\GroupFrame\UI-Group-LeaderIcon" hidden="true">
 							<Size>
@@ -169,7 +185,6 @@
 								</Anchor>
 							</Anchors>
 						</Texture>
-
 						<!-- Master Loot Icon -->
 						<Texture name="$parentmasterIcon" file="Interface\GroupFrame\UI-Group-MasterLooter" hidden="true">
 							<Size>
@@ -183,7 +198,6 @@
 								</Anchor>
 							</Anchors>
 						</Texture>
-
 						<FontString name="$parenttext" inherits="GameFontNormal">
 							<Anchors>
 								<Anchor point="TOPLEFT"/>
@@ -197,7 +211,6 @@
 					</Layer>
 				</Layers>
 			</Button>
-
 			<!-- Target Portrait -->
 			<Frame name="$parentportraitFrame" inherits="XPerl_Portrait_Template">
 				<Anchors>
@@ -219,7 +232,6 @@
 					</BackgroundInsets>
 				</Backdrop>
 			</Frame>
-
 			<!--Level Frame-->
 			<Frame name="$parentlevelFrame" inherits="XPerl_BorderStyleTemplate">
 				<Size>
@@ -262,7 +274,6 @@
 					</OnLoad>
 				</Scripts>
 			</Frame>
-
 			<Frame name="$parentcreatureTypeFrame" inherits="XPerl_BorderStyleTemplate">
 				<Size>
 					<AbsDimension x="68" y="22"/>
@@ -280,7 +291,6 @@
 					</Layer>
 				</Layers>
 			</Frame>
-
 			<Frame name="$parenttypeFramePlayer">
 				<Size>
 					<AbsDimension x="20" y="20"/>
@@ -310,7 +320,6 @@
 					</BackgroundInsets>
 				</Backdrop>
 			</Frame>
-
 			<Frame name="$parentbossFrame" inherits="XPerl_BorderStyleTemplate">
 				<Size>
 					<AbsDimension x="38" y="20"/>
@@ -354,7 +363,6 @@
 					</Layer>
 				</Layers>
 			</Frame>
-
 			<!-- Target Stats -->
 			<Frame name="$parentstatsFrame" inherits="XPerl_Stats_Template">
 				<Anchors>
@@ -383,9 +391,10 @@
 					</BackgroundInsets>
 				</Backdrop>
 			</Frame>
-
 			<Frame name="$parenteliteFrame" hidden="true">
-				<Size><AbsDimension x="128" y="128"/></Size>
+				<Size>
+					<AbsDimension x="128" y="128"/>
+				</Size>
 				<Anchors>
 					<Anchor point="RIGHT">
 						<Offset>
@@ -397,22 +406,6 @@
 					<Layer level="BORDER">
 						<Texture name="$parenttex" file="Interface\Addons\ZPerl\Images\XPerl_Elite" setAllPoints="true"/>
 					</Layer>
-					<Layer level="OVERLAY">
-						<!-- Raid Target Icon -->
-						<Texture name="$parentraidIcon" file="Interface\TargetingFrame\UI-RaidTargetingIcons" hidden="true">
-							<Size>
-								<AbsDimension x="16" y="16"/>
-							</Size>
-							<Anchors>
-								<Anchor point="TOPLEFT">
-									<Offset>
-										<AbsDimension x="15" y="-25"/>
-									</Offset>
-								</Anchor>
-							</Anchors>
-							<TexCoords left="0" right="0.25" top="0" bottom="0.25" />
-						</Texture>
-					</Layer>
 				</Layers>
 			</Frame>
 
@@ -422,8 +415,7 @@
 					<Anchor point="BOTTOMRIGHT" relativeTo="$parentportraitFrame"/>
 				</Anchors>
 			</Frame>
-
-			<Frame name="$parenthitIndicator" frameStrata="HIGH">
+			<!--<Frame name="$parenthitIndicator" frameStrata="HIGH">
 				<Layers>
 					<Layer level="OVERLAY">
 						<FontString name="$parenttext" inherits="NumberFontNormalHuge" hidden="true" text="Error!">
@@ -434,8 +426,7 @@
 						</FontString>
 					</Layer>
 				</Layers>
-			</Frame>
-
+			</Frame>-->
 			<!-- Buffs Frame -->
 			<Frame name="$parentbuffFrame">
 				<Size>
@@ -449,8 +440,7 @@
 					</Anchor>
 				</Anchors>
 			</Frame>
-
-			<!-- Buffs Frame -->
+			<!-- Debuffs Frame -->
 			<Frame name="$parentdebuffFrame">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentbuffFrame"/>
@@ -459,7 +449,6 @@
 			</Frame>
 		</Frames>
 	</Button>
-
 	<Button name="XPerl_Target" inherits="XPerl_TargetTemplate">
 		<Anchors>
 			<Anchor point="TOPLEFT">
@@ -474,7 +463,6 @@
 			</OnLoad>
 		</Scripts>
 	</Button>
-
 	<Button name="XPerl_Focus" inherits="XPerl_TargetTemplate">
 		<Anchors>
 			<Anchor point="TOPLEFT">
@@ -494,7 +482,7 @@
 					<AbsDimension x="28" y="14"/>
 				</Size>
 				<Anchors>
-					<Anchor point="RIGHT" relativeTo="XPerl_FocusnameFrame"/>
+					<Anchor point="LEFT" relativeTo="XPerl_FocusnameFrame"/>
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY">

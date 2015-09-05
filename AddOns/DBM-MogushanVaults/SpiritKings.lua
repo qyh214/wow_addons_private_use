@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(687, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(60701, 60708, 60709, 60710)--Adds: 60731 Undying Shadow, 60958 Pinning Arrow
 mod:SetEncounterID(1436)
 mod:SetZone()
@@ -72,21 +72,21 @@ local specWarnSleightOfHand		= mod:NewSpecialWarningTarget(118162)--Heroic Abili
 
 --Zian
 local timerChargingShadowsCD	= mod:NewCDTimer(12, 117685)
-local timerUndyingShadowsCD		= mod:NewCDTimer(41.5, 117506)--For most part it's right, but i also think on normal he can only summon a limited amount cause he did seem to skip one? leaving a CD for now until know for sure.
+local timerUndyingShadowsCD		= mod:NewCDTimer(41.5, 117506, nil, nil, nil, 1)--For most part it's right, but i also think on normal he can only summon a limited amount cause he did seem to skip one? leaving a CD for now until know for sure.
 local timerFixate			  	= mod:NewTargetTimer(20, 118303)
-local timerUSRevive				= mod:NewTimer(60, "timerUSRevive", 117539)
+local timerUSRevive				= mod:NewTimer(60, "timerUSRevive", 117539, nil, nil, 1)
 local timerShieldOfDarknessCD  	= mod:NewNextTimer(42.5, 117697)
 --Meng
-local timerMaddeningShoutCD		= mod:NewCDTimer(47, 117708)--47-50 sec variation. So a CD timer instead of next.
-local timerDeliriousCD			= mod:NewCDTimer(20.5, 117837, nil, "RemoveEnrage")
+local timerMaddeningShoutCD		= mod:NewCDTimer(47, 117708, nil, nil, nil, 3)--47-50 sec variation. So a CD timer instead of next.
+local timerDeliriousCD			= mod:NewCDTimer(20.5, 117837, nil, "RemoveEnrage", nil, 5)
 --Qiang
 local timerMassiveAttackCD		= mod:NewCDTimer(5, 117921)--This timer needed for all players to figure out Flanking Orders moves.
-local timerAnnihilateCD			= mod:NewNextTimer(39, 117948)
+local timerAnnihilateCD			= mod:NewNextTimer(39, 117948, nil, nil, nil, 3)
 local timerFlankingOrdersCD		= mod:NewCDTimer(40, 117910)--Every 40 seconds on normal, but on heroic it has a 40-50 second variation so has to be a CD bar instead of next
 local timerImperviousShieldCD	= mod:NewCDTimer(42, 117961)
 --Subetai
-local timerVolleyCD				= mod:NewNextTimer(41, 118094)
-local timerRainOfArrowsCD		= mod:NewTimer(50.5, "timerRainOfArrowsCD", 118122)--heroic 41s fixed cd. normal and lfr 50.5~60.5 variable cd.
+local timerVolleyCD				= mod:NewNextTimer(41, 118094, nil, nil, nil, 3)
+local timerRainOfArrowsCD		= mod:NewTimer(50.5, "timerRainOfArrowsCD", 118122, nil, nil, 3)--heroic 41s fixed cd. normal and lfr 50.5~60.5 variable cd.
 local timerPillageCD			= mod:NewNextTimer(41, 118047)
 local timerSleightOfHandCD		= mod:NewCDTimer(42, 118162)
 local timerSleightOfHand		= mod:NewBuffActiveTimer(11, 118162)--2+9 (cast+duration)

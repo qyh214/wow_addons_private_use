@@ -18,23 +18,37 @@
 -- @name LibInit
 --
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 15
+local MINOR_VERSION = 17
 local nop=function()end
 local pp=print -- Keeping a handy plain print around
-if LibDebug then LibDebug() end
-local dprint=function (self,...)	print(self.ID,'DBG',...) end
+local _G=_G -- Unmodified env
+local dprint=function() end
+if LibDebug then
+	--pulling libdebug print in without pulling also the whole _G management and without changing loading addon env
+	LibDebug()
+	dprint=print
+	setfenv(1,_G)
+end
 --GAME_LOCALE="itIT"
 local me, ns = ...
 local LibStub=LibStub
 local module,old=LibStub:NewLibrary(MAJOR_VERSION,MINOR_VERSION)
-if (not module) then return end -- Already exists this same version
+if module then
+	if old then
+		dprint("Upgrading ",MAJOR_VERSION,old,'to',MINOR_VERSION)
+	else
+		dprint("Loading ",MAJOR_VERSION,MINOR_VERSION)
+	end
+else
+	dprint("Equal or newer",MAJOR_VERSION,'already loaded')
+	return
+end
 local lib=module --#Lib
 local L
 local C=LibStub("LibInit-Colorize")()
-local I=LibStub("LibItemUpgradeInfo-1.0")
-
 -- Upvalues
 local _G=_G
+dprint("Local _G",_G)
 local floor=floor
 local abs=abs
 local wipe=wipe
@@ -327,11 +341,13 @@ function lib:Parse(msg,n)
 end
 ---
 -- Parses an itemlink and returns itemId without calling API again
--- @param itemlink string
--- @return number itemId or 0
+-- @param #Lib self
+-- @param #string itemlink
+-- @return #number itemId or 0
 function lib:GetItemID(itemlink)
 	if (type(itemlink)=="string") then
-			return tonumber(GetItemInfoFromHyperlink(itemlink)) or 0
+			local itemid,context=GetItemInfoFromHyperlink(itemlink)
+			return tonumber(itemid) or 0
 			--return tonumber(itemlink:match("Hitem:(%d+):")) or 0
 	else
 			return 0
@@ -454,7 +470,7 @@ function lib:NumericVersion()
 	end
 end
 function lib:OnInitialized()
-	print(L["You should at least override this function to make a working addon"])
+	print("|cff33ff99"..tostring( self ).."|r:",L["You should at least override this function to make a working addon"])
 end
 function lib:LoadHelp()
 end
@@ -522,6 +538,10 @@ local function LoadDefaults(self)
 		}
 	}
 	self.DbDefaults={
+		char={
+			firstrun=true,
+			lastversion=0,
+		},
 		global={
 			firstrun=true,
 			lastversion=0,
@@ -565,8 +585,8 @@ function lib:RegisterDatabase(dbname,defaults,profile)
 	return AceDB:New(dbname,defaults,profile)
 end
 function lib:OnInitialize(...)
-
 --[===[@debug@
+	dprint("OnInitialize",...)
 	LoadAddOn("Blizzard_DebugTools")
 --@end-debug@]===]
 	self.numericversion=self:NumericVersion() -- Initialized now becaus NumericVersion could be overrided
@@ -599,7 +619,10 @@ function lib:OnInitialize(...)
 					end
 			}
 	)
+	--===============================================================================
+	-- Calls initialization Callback
 	local ignoreProfile=self:OnInitialized(...)
+	--===============================================================================
 	if (not self.OnDisabled) then
 		self.OptionsTable.args.on=nil
 		self.OptionsTable.args.off=nil
@@ -1394,47 +1417,6 @@ end
 function lib:GetColorTable()
 	return C
 end
-lib.emptytable={false,false}
-lib.itemcache=lib.itemcache or
-	setmetatable({miss=0,tot=0},{
-		__index=function(table,key)
-			if (not key) then return "" end
-			if (key=="miss") then return 0 end
-			if (key=="tot") then return 0 end
-			local cached=strjoin(';',tostringall(GetItemInfo(key)))
-			local itemLink=select(2,strsplit(';',cached))
-			if not itemLink then return nil end
-			local itemID=lib:GetItemID(itemLink)
-			local name=select(1,strsplit(';',cached))
-			rawset(table,itemLink,cached)
-			rawset(table,itemID,cached)
-			rawset(table,name,cached)
-			table.miss=table.miss+1
-			return cached
-		end
-
-	})
-function lib:GetCachingGetItemInfo()
-	do
-		local cache=lib.itemcache
-		wipe(cache)
-		return
-		function(key,index)
-			index=index or 1
-			cache.tot=cache.tot+1
-			local cached=cache[key]
-			if (cached) then
-				return select(index,strsplit(';',cached))
-			end
-		end
-	end
-end
-function lib:GetCacheStats()
-	local c=lib.itemcache
-	local h=c.tot-c.miss
-	local perc=( h>0) and h/c.tot*100 or 0
-	return c.miss,h,perc
-end
 -- In case of upgrade, we need to redo embed for ALL Addons
 -- This function get called on addon creation
 -- Anything I define here is immediately available to addon code
@@ -1690,12 +1672,20 @@ local factory={} --#factory
 do
 	local nonce=0
 	local GetTime=GetTime
+	local function SetScript(this,...)
+		this.child:SetScript(...)
+	end
+	local function SetStep(this,value)
+		this:SetObeyStepOnDrag(true)
+		this:SetValueStep(value)
+		this:SetStepsPerPage(1)
+	end
 	function factory:Slider(father,min,max,current,message,tooltip)
 		if type(message)=="table" then
 			tooltip=message.desc
 			message=message.name
 		end
-		local name=tostring(self)..GetTime()*1000 ..nonce
+		local name=tostring(GetTime()*1000) ..nonce
 		nonce=nonce+1
 		local sl = CreateFrame('Slider',name, father, 'OptionsSliderTemplate')
 		sl:SetWidth(128)
@@ -1703,7 +1693,7 @@ do
 		sl:SetOrientation('HORIZONTAL')
 		sl:SetMinMaxValues(min, max)
 		sl:SetValue(current)
-		sl:SetValueStep(1)
+		sl.SetStep=SetStep
 		sl.Low=_G[name ..'Low']
 		sl.Low:SetText(min)
 		sl.High=_G[name .. 'High']
@@ -1721,8 +1711,11 @@ do
 			end
 			return value
 		end
+		sl.SetText=function(this,value) this.Text:SetText(value) end
+		sl.SetFormattedText=function(this,...) this.Text:SetFormattedText(...) end
+		sl.SetTextColor=function(this,...) this.Text:SetTextColor(...) end
 		sl:SetScript("OnValueChanged",sl.OnValueChanged)
-		sl.tooltip=tooltip
+		sl.tooltipText=tooltip
 		return sl
 	end
 	function factory:Checkbox(father,current,message,tooltip)
@@ -1730,14 +1723,20 @@ do
 			tooltip=message.desc
 			message=message.name
 		end
-		local name=tostring(self)..GetTime()*1000 ..nonce
+		local name=tostring(GetTime()*1000) ..nonce
 		nonce=nonce+1
-		local ck=CreateFrame("CheckButton",name,father,"ChatConfigCheckButtonTemplate")
+		local frame=CreateFrame("Frame",nil,father)
+		local ck=CreateFrame("CheckButton",name,frame,"ChatConfigCheckButtonTemplate")
+		frame.SetScript=SetScript
+		frame.child=ck
+		ck:SetPoint('TOPLEFT')
 		ck.Text=_G[name..'Text']
 		ck.Text:SetText(message)
 		ck:SetChecked(current)
 		ck.tooltip=tooltip
-		return ck
+		frame:SetWidth(ck:GetWidth()+ck.Text:GetWidth()+2)
+		frame:SetHeight(ck:GetHeight())
+		return frame
 	end
 	function factory:Dropdown(father,current,list,message,tooltip)
 		if type(message)=="table" then
@@ -1776,7 +1775,7 @@ do
 			self.OnChange=func
 		end
 		dd.list=list
-		local name=tostring(self)..GetTime()*1000 ..nonce
+		local name=tostring(GetTime()*1000) ..nonce
 		nonce=nonce+1
 		dd.dropdown=CreateFrame('Frame',name,father,"UIDropDownMenuTemplate")
 		UIDropDownMenu_Initialize(frame, function(...)
@@ -1802,112 +1801,78 @@ end
 function lib:GetFactory()
 	return factory
 end
+---@function [parent=#ns] Configure
+local meta={__index=_G,
+__newindex=function(t,k,v)
+	dprint(t,k,v)
+	assert(type(_G[k]) == 'nil',"Attempting to override global " ..k)
+	return rawset(t,k,v)
+end
+}
+function lib.SetCustomEnvironment(ENV)
+	local old_env = getfenv(2)
+	if old_env==ENV then return end
+	if getmetatable(ENV)==meta then return end
+	if not getmetatable(ENV) then
+		if not ENV.print then ENV.print=dprint end
+		setmetatable(ENV,meta)
+		ENV.dprint=dprint
+	else
+		assert(false,"ENV already has metatable")
+	end
+	setfenv(2, ENV)
+end
 --- reembed routine
 for target,_ in pairs(lib.mixinTargets) do
 	lib:Embed(target)
 end
 local l=LibStub("AceLocale-3.0")
--- To avoid clash between versions, localization is versione on major and minor
+-- To avoid clash between versions, localization is versioned on major and minor
 -- Lua strings are immutable so having more copies of the same string does not waist a noticeable slice of memory
 local me=MAJOR_VERSION .. MINOR_VERSION
 
 do
 	local L=l:NewLocale(me,"enUS",true,true)
-	L["Configuration"] = true
-L["Description"] = true
-L["Libraries"] = true
-L["Release Notes"] = true
-L["Toggles"] = true
-
+	--@localization(locale="enUS", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
 	L=l:NewLocale(me,"ptBR")
 	if (L) then
-	L["Configuration"] = "configura\195\167\195\163o"
-L["Description"] = "Descri\195\167\195\163o"
-L["Libraries"] = "bibliotecas"
-L["Release Notes"] = "Notas de Lan\195\167amento"
-L["Toggles"] = "Alterna"
-
+	--@localization(locale="ptBR", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
 	end
 	L=l:NewLocale(me,"frFR")
 	if (L) then
-	L["Configuration"] = "configuration"
-L["Description"] = "description"
-L["Libraries"] = "biblioth\195\168ques"
-L["Release Notes"] = "notes de version"
-L["Toggles"] = "Bascule"
-
+	--@localization(locale="frFR", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
 	end
 	L=l:NewLocale(me,"deDE")
 	if (L) then
-	L["Configuration"] = "Konfiguration"
-L["Description"] = "Beschreibung"
-L["Libraries"] = "Bibliotheken"
-L["Release Notes"] = true
-L["Toggles"] = "Schaltet"
-
+	--@localization(locale="deDE", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
 	end
 	L=l:NewLocale(me,"itIT")
 	if (L) then
-	L["Configuration"] = "Configurazione"
-L["Description"] = "Descrizione"
-L["Libraries"] = "Librerie"
-L["Release Notes"] = "Note di rilascio"
-L["Toggles"] = "Interruttori"
-
+	--@localization(locale="itIT", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
 	end
 	L=l:NewLocale(me,"koKR")
 	if (L) then
-	L["Configuration"] = "\234\181\172\236\132\177"
-L["Description"] = "\236\132\164\235\170\133"
-L["Libraries"] = "\235\157\188\236\157\180\235\184\140\235\159\172\235\166\172"
-L["Release Notes"] = "\235\166\180\235\166\172\236\138\164 \235\133\184\237\138\184"
-L["Toggles"] = "\236\160\132\237\153\152"
-
+	--@localization(locale="koKR", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
 	end
 	L=l:NewLocale(me,"esMX")
 	if (L) then
-	L["Configuration"] = "Configuraci\195\179n"
-L["Description"] = "Descripci\195\179n"
-L["Libraries"] = "Bibliotecas"
-L["Release Notes"] = "Notas de la versi\195\179n"
-L["Toggles"] = "Alterna"
-
+	--@localization(locale="esMX", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
 	end
 	L=l:NewLocale(me,"ruRU")
 	if (L) then
-	L["Configuration"] = "\208\154\208\190\208\189\209\132\208\184\208\179\209\131\209\128\208\176\209\134\208\184\209\143"
-L["Description"] = "\208\158\208\191\208\184\209\129\208\176\208\189\208\184\208\181"
-L["Libraries"] = "\208\145\208\184\208\177\208\187\208\184\208\190\209\130\208\181\208\186\208\184"
-L["Release Notes"] = "\208\159\209\128\208\184\208\188\208\181\209\135\208\176\208\189\208\184\209\143 \208\186 \208\178\209\139\208\191\209\131\209\129\208\186\209\131"
-L["Toggles"] = "\208\159\208\181\209\128\208\181\208\186\208\187\209\142\209\135\208\181\208\189\208\184\208\181"
-
+	--@localization(locale="ruRU", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
 	end
 	L=l:NewLocale(me,"zhCN")
 	if (L) then
-	L["Configuration"] = "\233\133\141\231\189\174"
-L["Description"] = "\232\175\180\230\152\142"
-L["Libraries"] = "\229\155\190\228\185\166\233\166\134"
-L["Release Notes"] = "\229\143\145\232\161\140\232\175\180\230\152\142"
-L["Toggles"] = "\229\136\135\230\141\162"
-
+	--@localization(locale="zhCN", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
 	end
 	L=l:NewLocale(me,"esES")
 	if (L) then
-	L["Configuration"] = "Configuraci\195\179n"
-L["Description"] = "Descripci\195\179n"
-L["Libraries"] = "Bibliotecas"
-L["Release Notes"] = "Notas de la versi\195\179n"
-L["Toggles"] = "Alterna"
-
+	--@localization(locale="esES", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
 	end
 	L=l:NewLocale(me,"zhTW")
 	if (L) then
-	L["Configuration"] = "\233\133\141\231\189\174"
-L["Description"] = "\232\175\180\230\152\142"
-L["Libraries"] = "\229\155\190\228\185\166\233\166\134"
-L["Release Notes"] = "\229\143\145\232\161\140\232\175\180\230\152\142"
-L["Toggles"] = "\229\136\135\230\141\162"
-
+	--@localization(locale="zhTW", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="blank" )@
 	end
 end
 L=LibStub("AceLocale-3.0"):GetLocale(me,true)

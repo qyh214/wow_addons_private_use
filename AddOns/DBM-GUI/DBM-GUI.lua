@@ -43,7 +43,7 @@
 --
 
 
-local revision =("$Revision: 14075 $"):sub(12, -3)
+local revision =("$Revision: 14464 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -971,7 +971,6 @@ DBM_GUI_Options = CreateNewFauxScrollFrameList()
 
 
 local UpdateAnimationFrame, CreateAnimationFrame
-
 function UpdateAnimationFrame(mod)
 	DBM_BossPreview.currentMod = mod
 	local displayId = nil
@@ -1006,156 +1005,6 @@ local function CreateAnimationFrame()
 	mobstyle:SetPortraitZoom(0.4)
 	mobstyle:SetRotation(0)
 	mobstyle:SetClampRectInsets(0, 0, 24, 0)
-
---[[    ** FANCY STUFF WE DO NOT USE FOR NOW **
-
-	mobstyle.playlist = { 	-- start animation outside of our fov
-				{set_y = 0, set_x = 1.1, set_z = 0, setfacing = -90, setalpha = 1},
-				-- wait outside fov befor begining
-				{mintime = 1000, maxtime = 7000},	-- randomtime to wait
-				-- {time = 10000},  			-- just wait 10 seconds
-
-				-- move in the fov and to waypoint #1
-				{animation = 4, time = 1500, move_x = -0.7},
-				{animation = 0, time = 10, endfacing = -90 }, -- rotate in an animation
-
-				-- stay on waypoint #1
-				{setfacing = -90},
-				{animation = 0, time = 10000},
-				--{animation = 0, time = 2000, randomanimation = {45,46,47}},	-- play a random emote
-
-				-- move to next waypoint
-				{setfacing = -90},
-				{animation = 4, time = 5000, move_x = -2.5},
-
-				-- stay on waypoint #2
-				{setfacing = 0},
-				{animation = 0, time = 10000,},
-
-
-				-- move to the horizont
-				{setfacing = 180},
-				{animation = 4, time = 10000, toscale=0.005},
-
-				-- die and despawn
-				{animation = 1, time = 5000},
-				{animation = 6, time = 2000, toalpha = 0},
-
-				-- we want so sleep a little while on animation end
-				{mintime = 1000, maxtime = 3000},
-	}
-
-	mobstyle.animationTypes = {1, 4, 5, 14, 40} -- die, walk, run, kneel?, swim/fly
-	mobstyle.animation = 3
-	mobstyle:SetScript("OnUpdate", function(self, e)
-		if not self.enabled then return end
-
-		self.atime = self.atime + e*1000
-
-		if self.atime >= 10000 then
-			mobstyle.animation = floor(math.random(1, #mobstyle.animationTypes))
-			self.atime = 0
-		end
-		self:SetSequenceTime(mobstyle.animationTypes[mobstyle.animation], self.atime)
-	end)
-
-	mobstyle:SetScript("OnUpdate", function(self, e)
-		--if true then return end
-		if not self.enabled then return end
-		self.atime = self.atime + e * 1000
-		if self.apos == 0 or self.atime >= (self.playlist[self.apos].time or 0) then
-			self.apos = self.apos + 1
-			if self.apos <= #self.playlist and self.playlist[self.apos].setfacing then
-				self:SetFacing( (self.playlist[self.apos].setfacing + self.modelRotation) * math.pi/180)
-			end
-			if self.apos <= #self.playlist and self.playlist[self.apos].setalpha then
-				self:SetAlpha(self.playlist[self.apos].setalpha)
-			end
-			if self.apos <= #self.playlist and (self.playlist[self.apos].set_y or self.playlist[self.apos].set_x or self.playlist[self.apos].set_z) then
-				self.pos_y = self.playlist[self.apos].set_y or self.pos_y
-				self.pos_x = self.playlist[self.apos].set_x or self.pos_x
-				self.pos_z = self.playlist[self.apos].set_z or self.pos_z
-				self:SetPosition(
-					self.pos_z + self.modelOffsetZ,
-					self.pos_x + self.modelOffsetX,
-					self.pos_y + self.modelOffsetY
-				)
-			end
-			if self.apos > #self.playlist then
-
-				self:SetAlpha(1)
-				self:SetModelScale(1.0)
-				self:SetPosition(0, 0, 0)
-				self:SetCreature(self.currentMod.modelId or self.currentMod.creatureId or 0)
-
-				self.apos = 0
-				self.pos_x = 0
-				self.pos_y = 0
-				self.pos_z = 0
-				self.alpha = 1
-				self.scale = self.modelscale
-
-				self:SetAlpha(self.alpha)
-				self:SetFacing(self.modelRotation)
-				self:SetModelScale(self.modelscale)
-				self:SetPosition(
-					self.pos_z + self.modelOffsetZ,
-					self.pos_x + self.modelOffsetX,
-					self.pos_y + self.modelOffsetY
-				)
-				return
-			end
-			self.rotation = self:GetFacing()
-			if self.playlist[self.apos].randomanimation then
-				self.playlist[self.apos].animation = self.playlist[self.apos].randomanimation[math.random(1, #self.playlist[self.apos].randomanimation)]
-			end
-			if self.playlist[self.apos].mintime and self.playlist[self.apos].maxtime then
-				self.playlist[self.apos].time = math.random(self.playlist[self.apos].mintime, self.playlist[self.apos].maxtime)
-			end
-
-
-			self.atime = 0
-			self.playlist[self.apos].animation = self.playlist[self.apos].animation or 0
-			self:SetSequenceTime(self.playlist[self.apos].animation, self.atime)
-		end
-
-		if self.playlist[self.apos].animation > 0 then
-			self:SetSequenceTime(self.playlist[self.apos].animation,  self.atime)
-		end
-
-		if self.playlist[self.apos].endfacing then -- not self.playlist[self.apos].endfacing == self:GetFacing()
-			self.rotation = self.rotation + (e * 2 * math.pi * -- Rotations per second
-						((self.playlist[self.apos].endfacing/360)
-						/ (self.playlist[self.apos].time/1000))
-						)
-
-			self:SetFacing( self.rotation )
-		end
-		if self.playlist[self.apos].move_x then
-			--self.pos_x = self.pos_x + (self.playlist[self.apos].move_x / (self.playlist[self.apos].time/1000) ) * e
-			self.pos_x = self.pos_x + (((self.playlist[self.apos].move_x / (self.playlist[self.apos].time/1000) ) * e) * self.modelMoveSpeed)
-			self:SetPosition(self.pos_z+self.modelOffsetZ, self.pos_x+self.modelOffsetX, self.pos_y+self.modelOffsetY)
-		end
-		if self.playlist[self.apos].move_y then
-			self.pos_y = self.pos_y + (self.playlist[self.apos].move_y / (self.playlist[self.apos].time/1000) ) * e
-			--self:SetPosition(self.pos_y, self.pos_x, self.pos_z)
-			self:SetPosition(self.pos_z+self.modelOffsetZ, self.pos_x+self.modelOffsetX, self.pos_y+self.modelOffsetY)
-		end
-		if self.playlist[self.apos].move_z then
-			self.pos_z = self.pos_z + (self.playlist[self.apos].move_z / (self.playlist[self.apos].time/1000) ) * e
-			--self:SetPosition(self.pos_y, self.pos_x, self.pos_z)
-			self:SetPosition(self.pos_z+self.modelOffsetZ, self.pos_x+self.modelOffsetX, self.pos_y+self.modelOffsetY)
-		end
-		if self.playlist[self.apos].toalpha then
-			self.alpha = self.alpha - ((1 - self.playlist[self.apos].toalpha) / (self.playlist[self.apos].time/1000) ) * e
-			self:SetAlpha(self.alpha)
-		end
-		if self.playlist[self.apos].toscale then
-			self.scale = self.scale - ((self.modelscale - self.playlist[self.apos].toscale) / (self.playlist[self.apos].time/1000) ) * e
-			if self.scale < 0 then self.scale = 0.0001 end
-			self:SetModelScale(self.scale)
-		end
-	end)--]]
 	return mobstyle
 end
 
@@ -1514,6 +1363,23 @@ local function CreateOptionsMenu()
 		latencySlider:HookScript("OnShow", function(self) self:SetValue(DBM.Options.LatencyThreshold) end)
 		latencySlider:HookScript("OnValueChanged", function(self) DBM.Options.LatencyThreshold = self:GetValue() end)
 
+		local resetbutton = generaloptions:CreateButton(L.Button_ResetInfoRange, 120, 16)
+		resetbutton:SetPoint('BOTTOMRIGHT', generaloptions.frame, "BOTTOMRIGHT", -5, 5)
+		resetbutton:SetNormalFontObject(GameFontNormalSmall)
+		resetbutton:SetHighlightFontObject(GameFontNormalSmall)
+		resetbutton:SetScript("OnClick", function()
+			DBM.Options.InfoFrameX = DBM.DefaultOptions.InfoFrameX
+			DBM.Options.InfoFrameY = DBM.DefaultOptions.InfoFrameY
+			DBM.Options.InfoFramePoint = DBM.DefaultOptions.InfoFramePoint
+			DBM.Options.RangeFrameX = DBM.DefaultOptions.RangeFrameX
+			DBM.Options.RangeFrameY = DBM.DefaultOptions.RangeFrameY
+			DBM.Options.RangeFramePoint = DBM.DefaultOptions.RangeFramePoint
+			DBM.Options.RangeFrameRadarX = DBM.DefaultOptions.RangeFrameRadarX
+			DBM.Options.RangeFrameRadarY = DBM.DefaultOptions.RangeFrameRadarY
+			DBM.Options.RangeFrameRadarPoint = DBM.DefaultOptions.RangeFrameRadarPoint
+			DBM:RepositionFrames()
+		end)
+
 		--Model viewer options
 		local modelarea = DBM_GUI_Frame:CreateArea(L.ModelOptions, nil, 90, true)
 
@@ -1566,17 +1432,18 @@ local function CreateOptionsMenu()
 		--            Raid Warning Colors            --
 		-----------------------------------------------
 		local RaidWarningPanel = DBM_GUI_Frame:CreateNewPanel(L.Tab_RaidWarning, "option")
-		local raidwarnoptions = RaidWarningPanel:CreateArea(L.RaidWarning_Header, nil, 355, true)
+		local raidwarnoptions = RaidWarningPanel:CreateArea(L.RaidWarning_Header, nil, 375, true)
 
 		local ShowWarningsInChat 	= raidwarnoptions:CreateCheckButton(L.ShowWarningsInChat, true, nil, "ShowWarningsInChat")
 		local ShowFakedRaidWarnings = raidwarnoptions:CreateCheckButton(L.ShowFakedRaidWarnings,  true, nil, "ShowFakedRaidWarnings")
 		local WarningIconLeft		= raidwarnoptions:CreateCheckButton(L.WarningIconLeft,  true, nil, "WarningIconLeft")
 		local WarningIconRight 		= raidwarnoptions:CreateCheckButton(L.WarningIconRight,  true, nil, "WarningIconRight")
 		local WarningIconChat 		= raidwarnoptions:CreateCheckButton(L.WarningIconChat,  true, nil, "WarningIconChat")
+		local WarningAlphabetical	= raidwarnoptions:CreateCheckButton(L.WarningAlphabetical,  true, nil, "WarningAlphabetical")
 
 		-- RaidWarn Font
 		local Fonts = MixinSharedMedia3("font", {
-			{	text	= "Default",		value 	= STANDARD_TEXT_FONT,			font = STANDARD_TEXT_FONT		},
+			{	text	= "Default",		value 	= DBM.STANDARD_TEXT_FONT,		font = DBM.STANDARD_TEXT_FONT		},
 			{	text	= "Arial",			value 	= "Fonts\\ARIALN.TTF",			font = "Fonts\\ARIALN.TTF"		},
 			{	text	= "Skurri",			value 	= "Fonts\\skurri.ttf",			font = "Fonts\\skurri.ttf"		},
 			{	text	= "Morpheus",		value 	= "Fonts\\MORPHEUS.ttf",		font = "Fonts\\MORPHEUS.ttf"	}
@@ -1587,7 +1454,7 @@ local function CreateOptionsMenu()
 			DBM:UpdateWarningOptions()
 			DBM:AddWarning(DBM_CORE_MOVE_WARNING_MESSAGE)
 		end)
-		FontDropDown:SetPoint("TOPLEFT", WarningIconChat, "BOTTOMLEFT", 0, -10)
+		FontDropDown:SetPoint("TOPLEFT", WarningAlphabetical, "BOTTOMLEFT", 0, -10)
 
 		-- RaidWarn Font Style
 		local FontStyles = {
@@ -2230,16 +2097,16 @@ local function CreateOptionsMenu()
 
 		local Styles = {
 			{	text	= L.BarDBM,				value	= "DBM" },
-			{	text	= L.BarBigWigs,			value 	= "BigWigs" }
+			{	text	= L.BarSimple,			value 	= "NoAnim" }
 		}
 
-		local StyleDropDown = BarSetup:CreateDropdown(L.BarStyle, Styles, "DBT", "Style", function(value)
-			DBM.Bars:SetOption("Style", value)
+		local StyleDropDown = BarSetup:CreateDropdown(L.BarStyle, Styles, "DBT", "BarStyle", function(value)
+			DBM.Bars:SetOption("BarStyle", value)
 		end)
 		StyleDropDown:SetPoint("TOPLEFT", TextureDropDown, "BOTTOMLEFT", 0, -10)
 
 		local Fonts = MixinSharedMedia3("font", {
-			{	text	= "Default",		value 	= STANDARD_TEXT_FONT,			font = STANDARD_TEXT_FONT		},
+			{	text	= "Default",		value 	= DBM.STANDARD_TEXT_FONT,		font = DBM.STANDARD_TEXT_FONT	},
 			{	text	= "Arial",			value 	= "Fonts\\ARIALN.TTF",			font = "Fonts\\ARIALN.TTF"		},
 			{	text	= "Skurri",			value 	= "Fonts\\skurri.ttf",			font = "Fonts\\skurri.ttf"		},
 			{	text	= "Morpheus",		value 	= "Fonts\\MORPHEUS.ttf",		font = "Fonts\\MORPHEUS.ttf"	}
@@ -2328,8 +2195,8 @@ local function CreateOptionsMenu()
 
 		local EnlargeTimeSlider = BarSetup:CreateSlider(L.Bar_EnlargeTime, 6, 30, 1)
 		EnlargeTimeSlider:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 20, -350)
-		EnlargeTimeSlider:SetScript("OnShow", createDBTOnShowHandler("EnlargeBarsTime"))
-		EnlargeTimeSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("EnlargeBarsTime"))
+		EnlargeTimeSlider:SetScript("OnShow", createDBTOnShowHandler("EnlargeBarTime"))
+		EnlargeTimeSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("EnlargeBarTime"))
 
 		local EnlargePerecntSlider = BarSetup:CreateSlider(L.Bar_EnlargePercent, 0, 50, 0.5)
 		EnlargePerecntSlider:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 20, -390)
@@ -2406,17 +2273,17 @@ local function CreateOptionsMenu()
 		HugeBarOffsetYSlider:SetScript("OnShow", createDBTOnShowHandler("HugeBarYOffset"))
 		HugeBarOffsetYSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("HugeBarYOffset"))
 
-
 		BarSetupPanel:SetMyOwnHeight()
 	end
 
 	do
 		local specPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_SpecWarnFrame, "option")
-		local specArea = specPanel:CreateArea(L.Area_SpecWarn, nil, 750, true)
+		local specArea = specPanel:CreateArea(L.Area_SpecWarn, nil, 770, true)
 		local check1 = specArea:CreateCheckButton(L.SpecWarn_ClassColor, true, nil, "SWarnClassColor")
-		local check2 = specArea:CreateCheckButton(L.SWarnNameInNote, true, nil, "SWarnNameInNote")
-		local check3 = specArea:CreateCheckButton(L.ShowSWarningsInChat, true, nil, "ShowSWarningsInChat")
-		local check4 = specArea:CreateCheckButton(L.SpecWarn_FlashFrame, true, nil, "ShowFlashFrame")
+		local check2 = specArea:CreateCheckButton(L.WarningAlphabetical, true, nil, "SWarningAlphabetical")
+		local check3 = specArea:CreateCheckButton(L.SpecWarn_FlashFrame, true, nil, "ShowFlashFrame")
+		local check4 = specArea:CreateCheckButton(L.ShowSWarningsInChat, true, nil, "ShowSWarningsInChat")
+		local check5 = specArea:CreateCheckButton(L.SWarnNameInNote, true, nil, "SWarnNameInNote")
 
 		local flashSlider = specArea:CreateSlider(L.SpecWarn_FlashFrameRepeat, 1, 3, 1, 100)
 		flashSlider:SetPoint('BOTTOMLEFT', check3, "BOTTOMLEFT", 330, 0)
@@ -2436,7 +2303,7 @@ local function CreateOptionsMenu()
 		movemebutton:SetScript("OnClick", function() DBM:MoveSpecialWarning() end)
 
 		local color0 = specArea:CreateColorSelect(64)
-		color0:SetPoint('TOPLEFT', specArea.frame, "TOPLEFT", 20, -130)
+		color0:SetPoint('TOPLEFT', specArea.frame, "TOPLEFT", 20, -150)
 		local color0text = specArea:CreateText(L.SpecWarn_FontColor, 80)
 		color0text:SetPoint("BOTTOM", color0, "TOP", 5, 4)
 		local color0reset = specArea:CreateButton(L.Reset, 64, 10, nil, GameFontNormalSmall)
@@ -2467,7 +2334,7 @@ local function CreateOptionsMenu()
 		end
 
 		local Fonts = MixinSharedMedia3("font", {
-			{	text	= "Default",		value 	= STANDARD_TEXT_FONT,			font = STANDARD_TEXT_FONT		},
+			{	text	= "Default",		value 	= DBM.STANDARD_TEXT_FONT,		font = DBM.STANDARD_TEXT_FONT	},
 			{	text	= "Arial",			value 	= "Fonts\\ARIALN.TTF",			font = "Fonts\\ARIALN.TTF"		},
 			{	text	= "Skurri",			value 	= "Fonts\\skurri.ttf",			font = "Fonts\\skurri.ttf"		},
 			{	text	= "Morpheus",		value 	= "Fonts\\MORPHEUS.ttf",		font = "Fonts\\MORPHEUS.ttf"	}
@@ -2478,7 +2345,7 @@ local function CreateOptionsMenu()
 			DBM:UpdateSpecialWarningOptions()
 			DBM:ShowTestSpecialWarning(nil, 1)
 		end)
-		FontDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -125)
+		FontDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -148)
 
 		local FontStyles = {
 			{	text	= L.None,					value 	= "None"						},
@@ -2705,7 +2572,7 @@ local function CreateOptionsMenu()
 		local SpecialWarnSoundDropDown = specArea:CreateDropdown(L.SpecialWarnSound, Sounds, "DBM", "SpecialWarningSound", function(value)
 			DBM.Options.SpecialWarningSound = value
 		end)
-		SpecialWarnSoundDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -230)
+		SpecialWarnSoundDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -250)
 		local repeatCheck1 = specArea:CreateCheckButton(L.SpecWarn_FlashRepeat, nil, nil, "SpecialWarningFlashRepeat1")
 		repeatCheck1:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown, "BOTTOMLEFT", 240, 0)
 
@@ -2744,7 +2611,7 @@ local function CreateOptionsMenu()
 		local SpecialWarnSoundDropDown2 = specArea:CreateDropdown(L.SpecialWarnSound2, Sounds, "DBM", "SpecialWarningSound2", function(value)
 			DBM.Options.SpecialWarningSound2 = value
 		end)
-		SpecialWarnSoundDropDown2:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -335)
+		SpecialWarnSoundDropDown2:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -355)
 		local repeatCheck2 = specArea:CreateCheckButton(L.SpecWarn_FlashRepeat, nil, nil, "SpecialWarningFlashRepeat2")
 		repeatCheck2:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown2, "BOTTOMLEFT", 240, 0)
 
@@ -2783,7 +2650,7 @@ local function CreateOptionsMenu()
 		local SpecialWarnSoundDropDown3 = specArea:CreateDropdown(L.SpecialWarnSound3, Sounds, "DBM", "SpecialWarningSound3", function(value)
 			DBM.Options.SpecialWarningSound3 = value
 		end)
-		SpecialWarnSoundDropDown3:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -440)
+		SpecialWarnSoundDropDown3:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -460)
 		local repeatCheck3 = specArea:CreateCheckButton(L.SpecWarn_FlashRepeat, nil, nil, "SpecialWarningFlashRepeat3")
 		repeatCheck3:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown3, "BOTTOMLEFT", 240, 0)
 
@@ -2822,7 +2689,7 @@ local function CreateOptionsMenu()
 		local SpecialWarnSoundDropDown4 = specArea:CreateDropdown(L.SpecialWarnSound4, Sounds, "DBM", "SpecialWarningSound4", function(value)
 			DBM.Options.SpecialWarningSound4 = value
 		end)
-		SpecialWarnSoundDropDown4:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -545)
+		SpecialWarnSoundDropDown4:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -565)
 		local repeatCheck4 = specArea:CreateCheckButton(L.SpecWarn_FlashRepeat, nil, nil, "SpecialWarningFlashRepeat4")
 		repeatCheck4:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown4, "BOTTOMLEFT", 240, 0)
 
@@ -2861,7 +2728,7 @@ local function CreateOptionsMenu()
 		local SpecialWarnSoundDropDown5 = specArea:CreateDropdown(L.SpecialWarnSound5, Sounds, "DBM", "SpecialWarningSound5", function(value)
 			DBM.Options.SpecialWarningSound5 = value
 		end)
-		SpecialWarnSoundDropDown5:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -650)
+		SpecialWarnSoundDropDown5:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -670)
 		local repeatCheck5 = specArea:CreateCheckButton(L.SpecWarn_FlashRepeat, nil, nil, "SpecialWarningFlashRepeat5")
 		repeatCheck5:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown5, "BOTTOMLEFT", 240, 0)
 
@@ -3491,6 +3358,7 @@ local function CreateOptionsMenu()
 		local WorldBossNearAlert	= soundAlertsArea:CreateCheckButton(L.WorldBossNearAlert, true, nil, "WorldBossNearAlert")
 		local RLReadyCheckSound		= soundAlertsArea:CreateCheckButton(L.RLReadyCheckSound, true, nil, "RLReadyCheckSound")
 		local AFKHealthWarning		= soundAlertsArea:CreateCheckButton(L.AFKHealthWarning, true, nil, "AFKHealthWarning")
+		local AutoReplySound		= soundAlertsArea:CreateCheckButton(L.AutoReplySound, true, nil, "AutoReplySound")
 
 		local generaltimeroptions	= extraFeaturesPanel:CreateArea(L.TimerGeneral, nil, 125, true)
 
@@ -3825,14 +3693,16 @@ do
 				local savedVarsName = addon.modId:gsub("-", "").."_AllSavedVars"
 				for charname, charTable in pairs(_G[savedVarsName]) do
 					for bossid, optionTable in pairs(charTable) do
-						for i = 0, 3 do
-							if optionTable[i] then
-								local displayText = (i == 0 and charname.." ("..ALL..")") or charname.." ("..SPECIALIZATION..i.."-"..(charTable["talent"..i] or "")..")"
-								local dropdown = { text = displayText, value = charname.."|"..tostring(i) }
-								tinsert(modProfileDropdown, dropdown)
+						if type(optionTable) == "table" then
+							for i = 0, 3 do
+								if optionTable[i] then
+									local displayText = (i == 0 and charname.." ("..ALL..")") or charname.." ("..SPECIALIZATION..i.."-"..(charTable["talent"..i] or "")..")"
+									local dropdown = { text = displayText, value = charname.."|"..tostring(i) }
+									tinsert(modProfileDropdown, dropdown)
+								end
 							end
+							break
 						end
-						break
 					end
 				end
 			end)
@@ -4594,7 +4464,9 @@ do
 			if not Categories[addon.category] then
 				-- Create a Panel for "Wrath of the Lich King" "Burning Crusade" ...
 				local expLevel = GetExpansionLevel()
-				if expLevel == 5 then--Choose default expanded category based on players current expansion is.
+				if expLevel == 6 then--Choose default expanded category based on players current expansion is.
+					Categories[addon.category] = DBM_GUI:CreateNewPanel(L["TabCategory_"..addon.category:upper()] or L.TabCategory_Other, nil, (addon.category:upper()=="LEG"))
+				elseif expLevel == 5 then--Choose default expanded category based on players current expansion is.
 					Categories[addon.category] = DBM_GUI:CreateNewPanel(L["TabCategory_"..addon.category:upper()] or L.TabCategory_Other, nil, (addon.category:upper()=="WOD"))
 				elseif expLevel == 4 then--Choose default expanded category based on players current expansion is.
 					Categories[addon.category] = DBM_GUI:CreateNewPanel(L["TabCategory_"..addon.category:upper()] or L.TabCategory_Other, nil, (addon.category:upper()=="MOP"))

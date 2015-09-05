@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision: 972 $")
+end, "$Revision: 974 $")
 
 local XPerl_Player_Pet_HighlightCallback
 
@@ -18,7 +18,6 @@ local XPerl_Player_Pet_HighlightCallback
 function XPerl_Player_Pet_OnLoad(self)
 	XPerl_SetChildMembers(self)
 	self.partyid = "pet"
-	self.tutorialPage = 6
 
 	XPerl_BlizzFrameDisable(PetFrame)
 
@@ -60,17 +59,25 @@ function XPerl_Player_Pet_OnLoad(self)
 		end,
 	}
 
-	CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
+	--CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
 
 	XPerl_SecureUnitButton_OnLoad(self, "pet", nil, PetFrameDropDown, XPerl_ShowGenericMenu)			--PetFrame.menu)
 	XPerl_SecureUnitButton_OnLoad(self.nameFrame, "pet", nil, PetFrameDropDown, XPerl_ShowGenericMenu)	--PetFrame.menu)
 
 	--RegisterUnitWatch(self)
 	local events = {
-		"UNIT_HEALTH", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PET", "PET_ATTACK_START", "UNIT_COMBAT", "UNIT_SPELLMISS", "VARIABLES_LOADED", "PLAYER_REGEN_ENABLED", "PLAYER_ENTERING_WORLD", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE", "UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED", "UNIT_TARGET", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
+		"UNIT_HEALTH", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PET", "PET_ATTACK_START", "UNIT_COMBAT", --[["UNIT_SPELLMISS",]] "VARIABLES_LOADED", "PLAYER_REGEN_ENABLED", "PLAYER_ENTERING_WORLD", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE", "UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED", "UNIT_TARGET", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
 	}
 	for i, event in pairs(events) do
-		self:RegisterEvent(event)
+		if string.find(event, "^UNIT_") then
+			if event == "UNIT_THREAT_LIST_UPDATE" then
+				self:RegisterUnitEvent(event, "target")
+			else
+				self:RegisterUnitEvent(event, "pet", "player")
+			end
+		else
+			self:RegisterEvent(event)
+		end
 	end
 
 	self.time = 0
@@ -158,11 +165,22 @@ function XPerl_Player_Pet_UpdateHealth(self)
 	local pethealthmax = UnitHealthMax(self.partyid)
 
 	XPerl_SetHealthBar(self, pethealth, pethealthmax)
-	--XPerl_Player_Pet_UpdateHealPrediction(self)
+
+	XPerl_Player_Pet_UpdateAbsorbPrediction(self)
+	XPerl_Player_Pet_UpdateHealPrediction(self)
 
 	if (UnitIsDead(self.partyid)) then
 		self.statsFrame.healthBar.text:SetText(XPERL_LOC_DEAD)
 		self.statsFrame.manaBar.text:Hide()
+	end
+end
+
+-- XPerl_Player_Pet_UpdateAbsorbPrediction
+function XPerl_Player_Pet_UpdateAbsorbPrediction(self)
+	if pconf.absorbs then
+		XPerl_SetExpectedAbsorbs(self)
+	else
+		self.statsFrame.expectedAbsorbs:Hide()
 	end
 end
 
@@ -199,7 +217,9 @@ end
 
 -- XPerl_Player_Pet_OnUpdate
 function XPerl_Player_Pet_OnUpdate(self, elapsed)
-	CombatFeedback_OnUpdate(self, elapsed)
+	--[[if pconf.hitIndicator and pconf.portrait then
+		CombatFeedback_OnUpdate(self, elapsed)
+	end]]
 	if (self.PlayerFlash) then
 		XPerl_Player_Pet_CombatFlash(self, elapsed, false)
 	end
@@ -270,12 +290,12 @@ end
 -------------------
 function XPerl_Player_Pet_OnEvent(self, event, unitID, ...)
 	local func = XPerl_Player_Pet_Events[event]
-	if (strsub(event, 1, 5) == "UNIT_") then
+	if string.find(event, "^UNIT_") then
 	 	if (unitID == "pet" or unitID == "player") then
-			func(self,unitID,...)
+			func(self, unitID, ...)
 		end
 	else
-		func(self, unitID,...)
+		func(self, unitID, ...)
 	end
 end
 
@@ -297,13 +317,13 @@ function XPerl_Player_Pet_Events:UNIT_PET()
 end
 
 function XPerl_Player_Pet_Events:PET_BATTLE_OPENING_START()
-	if(UnitExists("pet")) then
+	if (UnitExists("pet")) then
 		self:Hide()
 	end
 end
 
 function XPerl_Player_Pet_Events:PET_BATTLE_CLOSE()
-	if(UnitExists("pet")) then
+	if (UnitExists("pet")) then
 		XPerl_ProtectedCall(Show, self);
 	end
 end
@@ -357,13 +377,13 @@ end
 
 -- UNIT_COMBAT
 function XPerl_Player_Pet_Events:UNIT_COMBAT(...)
-	local unitID, action, descriptor, damage, damageType = select(1, ...)
-	
+	local unitID, action, descriptor, damage, damageType = ...
+
 	if (unitID == self.partyid) then
-		if (pconf.hitIndicator and pconf.portrait) then
+		--[[if (pconf.hitIndicator and pconf.portrait) then
 			CombatFeedback_OnCombatEvent(self, ...)
-		end
-	
+		end]]
+
 		if (action == "HEAL") then
 			XPerl_Player_Pet_CombatFlash(XPerl_Player_Pet, 0, true, true)
 		elseif (damage and damage > 0) then
@@ -373,11 +393,11 @@ function XPerl_Player_Pet_Events:UNIT_COMBAT(...)
 end
 
 -- UNIT_SPELLMISS
-function XPerl_Player_Pet_Events:UNIT_SPELLMISS(...)
+--[[function XPerl_Player_Pet_Events:UNIT_SPELLMISS(...)
 	if (pconf.hitIndicator and pconf.portrait) then
 		CombatFeedback_OnSpellMissEvent(self, ...)
 	end
-end
+end]]
 
 -- UNIT_FACTION
 function XPerl_Player_Pet_Events:UNIT_FACTION()
@@ -474,8 +494,14 @@ function XPerl_Player_Pet_Events:PLAYER_REGEN_DISABLED()
 end
 
 function XPerl_Player_Pet_Events:UNIT_HEAL_PREDICTION(unit)
-	if (unit == self.partyid) then
+	if (pconf.healprediction and unit == self.partyid) then
 		XPerl_SetExpectedHealth(self)
+	end
+end
+
+function XPerl_Player_Pet_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
+	if (pconf.absorbs and unit == self.partyid) then
+		XPerl_SetExpectedAbsorbs(self)
 	end
 end
 
@@ -495,16 +521,26 @@ function XPerl_Player_Pet_Virtual(show)
 		if (show) then
 			if (not virtual) then
 				virtual = true
-				XPerl_Player_Pet:RegisterEvent("PLAYER_REGEN_DISABLED")
-				UnregisterUnitWatch(XPerl_Player_Pet)
-				XPerl_Player_Pet:Show()
-				XPerl_Player_Pet.nameFrame.text:SetText(PET)
+				if not UnitExists("pet") then
+					XPerl_Player_Pet:RegisterEvent("PLAYER_REGEN_DISABLED")
+					UnregisterUnitWatch(XPerl_Player_Pet)
+					XPerl_Player_Pet:Show()
+					XPerl_Player_Pet.nameFrame.text:SetText(PET)
+					XPerl_Player_Pet.statsFrame.healthBar.text:SetText("")
+					XPerl_Player_Pet.statsFrame.manaBar.text:SetText("")
+					XPerl_Player_Pet:SetAlpha(0.5)
+				end
 
-				if (XPerl_PetTarget) then
+				if XPerl_PetTarget and not UnitExists("pettarget") then
 					XPerl_PetTarget.virtual = true
 					UnregisterUnitWatch(XPerl_PetTarget)
 					XPerl_PetTarget:Show()
 					XPerl_PetTarget.nameFrame.text:SetText(PET.." "..TARGET)
+					XPerl_PetTarget.statsFrame.healthBar.text:SetText("")
+					XPerl_PetTarget.statsFrame.manaBar.text:SetText("")
+					XPerl_PetTarget.statsFrame.healthBar.percent:SetText("")
+					XPerl_PetTarget.statsFrame.manaBar.percent:SetText("")
+					XPerl_PetTarget:SetAlpha(0.5)
 				end
 			end
 		else
@@ -599,11 +635,17 @@ function XPerl_Player_Pet_Set_Bits(self)
 	pconf.buffs.size = tonumber(pconf.buffs.size) or 20
 	XPerl_SetBuffSize(self)
 
-	--[[if (conf.highlight.enable and conf.highlight.HEAL) then
-		self:RegisterEvent("UNIT_HEAL_PREDICTION")
+	if (pconf.healprediction) then
+		self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "pet", "player")
 	else
 		self:UnregisterEvent("UNIT_HEAL_PREDICTION")
-	end]]
+	end
+
+	if (pconf.absorbs) then
+		self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "pet", "player")
+	else
+		self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+	end
 
 	XPerl_Player_Pet_SetWidth(self)
 

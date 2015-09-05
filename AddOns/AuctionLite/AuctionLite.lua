@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- AuctionLite 1.8.13
+-- AuctionLite 1.8.14
 --
 -- Lightweight addon to determine accurate market prices and to simplify
 -- the process of posting auctions.
@@ -16,7 +16,7 @@ AuctionLite = LibStub("AceAddon-3.0"):NewAddon("AuctionLite",
 local _
 local L = LibStub("AceLocale-3.0"):GetLocale("AuctionLite", false)
 
-local AUCTIONLITE_VERSION = "1.8.13";
+local AUCTIONLITE_VERSION = "1.8.14";
 
 -------------------------------------------------------------------------------
 -- Hooks and boostrap code

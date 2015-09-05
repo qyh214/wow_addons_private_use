@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 972 $")
+XPerl_SetModuleRevision("$Revision: 974 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -2203,7 +2203,7 @@ end
 -- XPerl_Target_ConfigDefault
 local function XPerl_Target_ConfigDefault(default, section)
 	local defaultHD
-	local class = select(2, UnitClass("player"))
+	local _, class = UnitClass("player")
 	if (section == "target" and class == "ROGUE") then
 		defaultHD = 1
 		defaultHDwho = 3
@@ -2225,6 +2225,7 @@ local function XPerl_Target_ConfigDefault(default, section)
 		mobType			= 1,
 		level			= 1,
 		healprediction	= 1,
+		absorbs			= 1,
 		elite			= 1,
 --		eliteGfx		= nil,
 		mana			= 1,
@@ -2291,6 +2292,7 @@ local function XPerl_Party_ConfigDefault(default)
 		},
 		level			= 1,
 		healprediction	= 1,
+		absorbs			= 1,
 		name			= 1,
 		values			= 1,
 		percent			= 1,
@@ -2339,11 +2341,11 @@ local function XPerl_PartyPet_ConfigDefault(default)
 			curable		= 0,
 		},
 		healerMode = {
---			enable		= nil,
+			--enable		= nil,
 			type		= 1,
 		},
---		mana			= nil,			-- 1.9.1
---		level			= nil,			-- 1.9.1
+		mana			= 1,
+		--level			= nil,
 	}
 end
 
@@ -2362,6 +2364,7 @@ local function XPerl_Player_ConfigDefault(default)
 		threatMode		= "portraitFrame",
 		level			= 1,
 		healprediction	= 1,
+		absorbs			= 1,
 		classIcon		= 1,
 --		xpBar			= nil,
 --		repBar			= nil,
@@ -2418,6 +2421,8 @@ local function XPerl_Pet_ConfigDefault(default)
 		threat = 1,
 		threatMode = "portraitFrame",
 		level = 1,
+		healprediction = 1,
+		absorbs = 1,
 		scale = 0.7,
 		name = 1,
 		buffs = {
@@ -2467,6 +2472,8 @@ local function XPerl_TargetTarget_ConfigDefault(default, section)
 		percent			= 1,
 		values			= 1,
 --		level			= nil,
+		healprediction	= 1,
+		absorbs			= 1,
 		mana			= 1,
 		size = {
 			width		= 0,
@@ -2503,6 +2510,7 @@ local function XPerl_Raid_ConfigDefault(default)
 		percent			= 1,
 		precisionPercent = 1,
 		healprediction	= 1,
+		absorbs			= 1,
 		mana			= 1,
 		manaPercent		= 1,
 		precisionManaPercent = 1,
@@ -2535,8 +2543,6 @@ end
 local function XPerl_RaidPet_ConfigDefault(default, section)
 	default.raidpet = {
 		enable			= 1,			-- 2.1.3
-		hunter			= 1,			-- 2.1.3
-		warlock			= 1,			-- 2.1.3
 	}
 end
 
@@ -2558,10 +2564,10 @@ XPerl_RegisterConfigDefault(XPerl_RaidPet_ConfigDefault)
 -- XPerl_DefaultGradientColours
 function XPerl_DefaultGradientColours()
 	return {
-		enable		= 1,
---		horizontal	= nil,
-		s		= {r = 0.25, g = 0.25, b = 0.25, a = 1},
-		e		= {r = 0.1, g = 0.1, b = 0.1, a = 0}
+		enable = 1,
+		--horizontal = nil,
+		s = {r = 0.25, g = 0.25, b = 0.25, a = 1},
+		e = {r = 0.1, g = 0.1, b = 0.1, a = 0}
 	}
 end
 
@@ -3062,7 +3068,7 @@ if (XPerl_UpgradeSettings) then
 			old.pet.castBar = {enable = 1}
 		end
 
-		local playerClass = select(2, UnitClass("player"))
+		local _, playerClass = UnitClass("player")
 
 		if (type(oldVersion) == "string") then
 			for k, v in pairs(flist) do
@@ -3239,6 +3245,30 @@ if (XPerl_UpgradeSettings) then
 			if (oldVersion < "4.0.3") then
 				old.raid.size = { }
 				old.raid.size.width = 0
+			end
+
+			if (oldVersion < "4.0.5") then
+				old.player.healprediction = 1
+				old.pet.healprediction = 1
+				old.target.healprediction = 1
+				old.targettarget.healprediction = 1
+				old.focus.healprediction = 1
+				old.focustarget.healprediction = 1
+				old.party.healprediction = 1
+				old.raid.healprediction = 1
+
+				old.player.absorbs = 1
+				old.pet.absorbs = 1
+				old.target.absorbs = 1
+				old.targettarget.absorbs = 1
+				old.focus.absorbs = 1
+				old.focustarget.absorbs = 1
+				old.party.absorbs = 1
+				old.raid.absorbs = 1
+
+				-- What the hell was this used for?
+				old.raidpet.hunter = nil
+				old.raidpet.warlock = nil
 			end
 		end
 	end

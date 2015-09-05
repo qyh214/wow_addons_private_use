@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(864, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 68 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 74 $"):sub(12, -3))
 mod:SetCreatureID(71466)
 mod:SetEncounterID(1600)
 mod:SetZone()
@@ -48,19 +48,19 @@ local specWarnMortarBarrage		= mod:NewSpecialWarningSpell(144555, nil, nil, nil,
 
 local timerDemolisherCanonCD	= mod:NewCDTimer(8.5, 144154, nil, false)--Spammy. off by default
 --Assault Mode
-local timerAssaultModeCD		= mod:NewNextTimer(62, 141395, nil, nil, "timerAssaultModeCD")--141395 is correct timer text but it's wrong spellid, custom option text for real timer description
+local timerAssaultModeCD		= mod:NewNextTimer(62, 141395, nil, nil, "timerAssaultModeCD", 6)--141395 is correct timer text but it's wrong spellid, custom option text for real timer description
 local timerIgniteArmor			= mod:NewTargetTimer(30, 144467, nil, "Tank|Healer")
-local timerIgniteArmorCD		= mod:NewCDTimer(10, 144467, nil, "Tank")
+local timerIgniteArmorCD		= mod:NewCDTimer(10, 144467, nil, "Tank", nil, 5)
 local timerLaserBurnCD			= mod:NewCDTimer(11.5, 144459, nil, false)--Also off by default(bar spam)
-local timerBorerDrillCD			= mod:NewCDTimer(17, 144218)
-local timerCrawlerMineCD		= mod:NewCDTimer(30, 144673)
-local timerRicochetCD			= mod:NewCDTimer(15, 144356, nil, nil, nil, nil, 144327)
+local timerBorerDrillCD			= mod:NewCDTimer(17, 144218, nil, nil, nil, 3)
+local timerCrawlerMineCD		= mod:NewCDTimer(30, 144673, nil, "Tank", nil, 5)
+local timerRicochetCD			= mod:NewCDTimer(15, 144356, nil, nil, nil, 3, 144327)
 --Siege Mode
-local timerSiegeModeCD			= mod:NewNextTimer(114, 84974, nil, nil, "timerSiegeModeCD")--Wish spell name was a litlte shorter but still better than localizing
+local timerSiegeModeCD			= mod:NewNextTimer(114, 84974, nil, nil, "timerSiegeModeCD", 6)--Wish spell name was a litlte shorter but still better than localizing
 local timerCutterLaser			= mod:NewBuffFadesTimer(10, 146325)--Spell tooltip says 15 but combat log showed 10
-local timerShockPulseCD			= mod:NewNextCountTimer(16.5, 144485)
-local timerExplosiveTarCD		= mod:NewNextTimer(30, 144492)
-local timerMortarBarrageCD		= mod:NewNextTimer(30, 144555)
+local timerShockPulseCD			= mod:NewNextCountTimer(16.5, 144485, nil, nil, nil, 2)
+local timerExplosiveTarCD		= mod:NewNextTimer(30, 144492, nil, nil, nil, 3)
+local timerMortarBarrageCD		= mod:NewNextTimer(30, 144555, nil, nil, nil, 3)
 
 local berserkTimer				= mod:NewBerserkTimer(600)
 

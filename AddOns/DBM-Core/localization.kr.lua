@@ -1,7 +1,7 @@
 ﻿if (GetLocale() == "koKR") then
 
-DBM_CORE_NEED_SUPPORT				= "문의/건의사항은 설정 화면에서 사용자 포럼 버튼을 누른 후, DBM 사용자 포럼에 남겨 주시기 바랍니다. DBM Team은 프로그래밍 또는 외국어에 능통하신 분의 도움을 기다리고 있습니다. 자세한 사항은 everfinale@gmail.com 으로 메일을 보내주세요."
-DBM_CORE_NEED_LOGS					= "DBM이 현재 전투 경고를 원할히 하기 위해서는 Transcriptor(http://www.wowace.com/addons/transcriptor/) 기록이 필요합니다. 가능하시다면, 현재 전투를 Transcriptor로 기록하신 후에 everfinale@gmail.com 으로 메일을 보내주세요."
+DBM_CORE_NEED_SUPPORT				= "문의/건의사항은 설정 화면에서 사용자 포럼 버튼을 누른 후, DBM 사용자 포럼에 남겨 주시기 바랍니다."
+DBM_CORE_NEED_LOGS					= "DBM이 전투 경고를 원할히 하기 위해서는 Transcriptor(http://www.wowace.com/addons/transcriptor/) 기록이 필요합니다. 가능하시다면, 현재 전투를 Transcriptor로 기록하신 후에 everfinale@gmail.com 으로 메일을 보내주세요. 7.0 전투 로그가 필요합니다."
 DBM_HOW_TO_USE_MOD					= "DBM 사용을 환영합니다. 대화창에서 /dbm help를 입력하면 사용 가능한 명령어 목록을 볼 수 있습니다. 설정을 위해서는 /dbm을 입력하면 설정창이 나타납니다. 각 경고는 최초 불러오기시 캐릭터 특성에 맞는 적절한 경고를 선택합니다. 선택된 경고는 설정창에서 언제든지 변경이 가능합니다."
 
 DBM_FORUMS_MESSAGE					= "오류를 발견하셨나요? 일부 전투에서 추가 경고가 있으면 좋을텐데라고 생각하셨나요?\n그렇다면 DBM 사용자 포럼을 방문해 보세요. 주소는 |HDBM:forums|h|cff3588ffhttp://www.inven.co.kr/board/powerbbs.php?come_idx=3716|r 입니다. 클릭하시면 주소를 복사할 수 있습니다."
@@ -13,11 +13,11 @@ DBM_CORE_LOAD_MOD_SUCCESS			= "'%s' 경보를 불러왔습니다! 사용자 정�
 DBM_CORE_LOAD_MOD_COMBAT			= "오류 방지를 위해 전투가 종료 될때까지 '%s' 경보를 불러오지 않습니다."
 DBM_CORE_LOAD_GUI_ERROR				= "설정창을 불러올 수 없습니다: %s"
 DBM_CORE_LOAD_GUI_COMBAT			= "전투 중에는 설정창을 불러올 수 없습니다. 전투가 종료되면 설정창이 열릴 것입니다. 이후에는 전투 중이라도 설정창을 불러 올 수 있습니다."
-DBM_CORE_LOAD_SKIN_COMBAT			= "전투 도중 DBM 바 스킨 설정에 실패했습니다. 바가 정상 작동하지 않을 것이며 다수의 lua 오류가 발생할 수 있습니다. 이 오류는 DBM 바에 스킨을 적용하는 제3의 애드온이 있을 때 주로 발생합니다. 전투 종료 후 /reload 명령어를 입력하여 UI를 재시작 해주시기 바랍니다."
 DBM_CORE_BAD_LOAD					= "DBM이 현재 인스턴스의 경고를 완전히 불러오지 못한 것을 발견했습니다. 전투가 종료된 후에, /console reloadui 명령어를 입력하여 경고를 다시 불러오시기 바랍니다."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "현재 사용중인 DBM 버전은 '%s' 경보에 필요한 기능이 없습니다. 새로운 DBM을 설치하셔야 이 경보를 불러올 수 있습니다."
 
-DBM_CORE_WHATS_NEW					= "이 버전의 새로운 기능: 바가 갖고 있는 정보별로 다른 바 색상을 지정하는 기능이 추가되었습니다. 바 설정에서 색상을 변경 가능합니다."
+DBM_CORE_WHATS_NEW					= "DBM 바 및 경고가 다른 애드온에게 더 많은 정보를 제공하도록 개선되었습니."
+--DBM_CORE_WHATS_NEW_LINK			= "이 버전의 새로운 기능: 바가 갖고 있는 정보별로 다른 바 색상을 지정하는 기능이 추가되었습니다. 바 설정에서 색상을 변경 가능합니다."
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "현재 공격대원 숫자에 맞는 근접판정 정보를 알 수 없기 때문에 DBM이 이 전투에서 거리 창을 비활성화 했습니다."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "현재 공격대원 숫자에 맞는 쫄 소환 정보를 알 수 없기 때문에 DBM이 이 전투에서 소환 횟수 정보를 비활성화 했습니다."
@@ -27,9 +27,7 @@ DBM_CORE_LOOT_SPEC_REMINDER			= "현재 전문화는 %s 입니다. 현재 선택
 
 DBM_CORE_BIGWIGS_ICON_CONFLICT		= "DBM이 BigWigs와 DBM의 전술 목표 아이콘 설정이 모두 활성화 되어 있는 것이 확인했습니다. 아이콘 충돌을 방지하기 위해 두 애드온중 하나의 아이콘 설정을 비활성화 해주시기 바랍니다."
 
-DBM_CORE_PROVINGGROUNDS_AD			= "현재 인스턴스에서 DBM-ProvingGrounds 경고 사용이 가능합니다. deadlybossmods.com 또는 와우 인벤에서 다운로드 받으실 수 있습니다. 이 메세지는 한 번만 표시됩니다."
-
-DBM_CORE_MOLTENCORE_AD				= "현재 인스턴스에서 DBM-MC 경고 사용이 가능합니다. deadlybossmods.com 또는 와우 인벤에서 다운로드 받으실 수 있습니다. 이 메세지는 한 번만 표시됩니다."
+DBM_CORE_MOD_AVAILABLE				= "현재 인스턴스에서 %s 경고 사용이 가능합니다. |HDBM:forums|h|cff3588ffdeadlybossmods.com|r 또는 와우 인벤에서 다운로드 받으실 수 있습니다. 이 메세지는 한 번만 표시됩니다."
 
 DBM_CORE_COMBAT_STARTED				= "%s 작동됨. 행운을 빕니다! :)";
 DBM_CORE_COMBAT_STARTED_IN_PROGRESS	= "%s 전투 진행 도중 참가하였습니다. 행운을 빕니다! :)"
@@ -200,24 +198,35 @@ DBM_CORE_INFOFRAME_SHOW_SELF		= "내 정보 항상 보기"
 DBM_LFG_INVITE						= "던전 입장"
 
 DBM_CORE_SLASHCMD_HELP				= {
-	"명령어 일람:",
-	"/range <number>, /distance <number>: 거리창을 표시, /rrange, /rdistance 는 색상을 반대로 표시",
-	"/dbm version(ver): 공격대원의 DBM 버전 확인",
+	"사용가능 명령어:",
+	"----------------",
 	"/dbm unlock(move): 20초 동안 바 위치 조정 가능 상태가 됨",
-	"* 아래 명령어의 숫자나 글자를 입력할때 < > 는 입력하지 않음 *",
-	"/dbm timer/ctimer/ltimer/cltimer <숫자> <글자>: <글자>에 입력한 대로 <숫자>초 동안 지속되는 바를 생성",
-	"/dbm broadcast timer/ctimer/ltimer/cltimer <숫자> <글자>: <글자>에 입력한 대로 <숫자>초 동안 지속되는 바를 생성 후 모든 공격대원에게 보냄(승급 권한 필요)",
-	" - timer: 평범한 바",
-	" - ctimer: 초세기 글자 및 소리가 추가된 바",
-	" - ltimer: 계속 반복되는 바", 
-	" - cltimer: 계속 반복되며, 초세기 글자 및 숫자가 보이는 바",
-	"/dbm timer endloop: ltimer 또는 cltimer 바의 반복을 멈춤.",
-	"/dbm break <숫자>: <숫자>분 지속되는 휴식 바를 보냄. DBM을 설치한 모든 공격대원이 볼 수 있음(승급 권한 필요)",
-	"/dbm pull <숫자>: <숫자>초 후 전투 예정 바를 보냄. DBM을 설치한 모든 공격대원이 볼 수 있음(승급 권한 필요)",
-	"/dbm arrow: DBM 화살표 도움말을 봄",
-	"/dbm lockout: 현재 공격대원에게 공격대 귀속 정보를 요청(승급 권한 필요)",
-	"/dbm lag: 공격대원의 지연시간을 확인함",
-	"/dbm hud: DBM 범위표시 도움말을 봄"
+	"/range <숫자>, /distance <숫자>: 거리창 표시, /rrange, /rdistance 는 색상을 반대로 표시",
+	"/hudar <number>: 범위정보 기반 거리창 표시",
+	"/dbm timer: 사용자 정의 DBM 바를 시작, 도움말은 '/dbm timer' 참조",
+	"/dbm arrow: DBM 화살표 표시, 도움말은 '/dbm arrow help' 참조",
+	"/dbm hud: DBM 범위정보 표시, 도움말은 '/dbm hud' 참조",
+	"/dbm help2: 공격대 관리에 관련된 명령어 표시"
+}
+DBM_CORE_SLASHCMD_HELP2				= {
+	"사용가능 명령어:",
+	"----------------",
+	"/dbm pull <숫자>: <숫자>초 후 전투 예정 명령을 보냄(승급 권한 필요)",
+	"/dbm break <숫자>: <숫자>분 지속되는 휴식 명령을 보냄(승급 권한 필요)",
+	"/dbm version(ver): 공격대원의 DBM 버전 확인",
+	"/dbm version2(ver2): 공격대원의 DBM 버전 확인 후 구버전 사용자에게 귓속말 알림 보내기",
+	"/dbm lockout(lockouts, ids): 현재 공격대원에게 공격대 귀속 정보를 요청(승급 권한 필요)",
+	"/dbm lag: 공격대원의 지연시간을 확인함"
+}
+DBM_CORE_TIMER_USAGE	= {
+	"DBM 바 명령어:",
+	"--------------",
+	"/dbm timer <sec> <text>: <숫자>초 지속되는 <글자>바 생성",
+	"/dbm ctimer <sec> <text>: 초세기를 포함한 바 생성",
+	"/dbm ltimer <sec> <text>: 계속해서 반복되는 바 생성",
+	"/dbm cltimer <sec> <text>: 계속해서 반복되며, 초세기를 포함한 바 생성",
+	"(타이머 명칭앞에 'broadcast'를 입력하면 바를 공격대에 공유함. 단, 승급 권한 필요)",
+	"/dbm timer endloop: ltimer 또는 cltimer 작동을 멈춤"
 }
 
 DBM_ERROR_NO_PERMISSION				= "해당 명령어를 실행하기 위한 권한을 가지고 있지 않습니다."
@@ -232,6 +241,7 @@ DBM_CORE_MIDDLE						= "가운데"
 DBM_CORE_FRONT						= "앞쪽"
 DBM_CORE_INTERMISSION				= "사잇 단계"
 
+DBM_CORE_BREAK_USAGE				= "쉬는 시간은 60분을 초과할 수 없습니다. 쉬는시간은 초단위가 아니라 분단위로 입력하셔야 합니다."
 DBM_CORE_BREAK_START				= "쉬는시간 시작 -- %s분 남았습니다! (%s|1이;가; 보냄)"
 DBM_CORE_BREAK_MIN					= "%s분 후 쉬는시간이 끝납니다!"
 DBM_CORE_BREAK_SEC					= "%s초 후 쉬는시간이 끝납니다!"
@@ -287,6 +297,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel		= "%s: >%%s< - 해제!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt		= "%s: >%%s< - 차단!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount= "%s: >%%s< - 차단! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you			= "당신에게 %s"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.youcount		= "당신에게 %s (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= ">%%s<에게 %1$s!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.targetcount	= ">%%2$s<에게 %1$s! (%%1$s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt			= ">%%s<에게 %1$s - 도발!"
@@ -300,8 +311,8 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast			= "%s - 주문 시전 중지!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect		= ">%%s<에게 %1$s - 공격 중지!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.count			= "%s! (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack			= "당신에게 %s (%%d 중첩)"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= ">%s< - 대상 전환!"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= ">%s< - 대상 전환! (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= "%s - 대상 전환!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - 대상 전환! (%%d)"
 
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell			= "$spell:%s 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.ends			= "$spell:%s 종료 특수 경고 보기"
@@ -312,6 +323,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dispel			= "$spell:%s 해제 특수 경고 보�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt		= "$spell:%s 차단 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= "$spell:%s 차단 특수 경고 보기(횟수 포함)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you				= "당신이 $spell:%s 대상이 된 경우 특수 경고 보기"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.youcount		= "당신이 $spell:%s 대상이 된 경우 특수 경고 보기(횟수 포함)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target			= "$spell:%s 대상 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount		= "$spell:%s 대상 특수 경고 보기(횟수 포함)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt			= "다른 방어 전담이 $spell:%s 대상이 된 경우 도발 특수 경고 보기"
@@ -372,11 +384,14 @@ DBM_CORE_AUTO_VOICE2_OPTION_TEXT		= "단계 전환시 음성안내 소리 듣기
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "$spell:%s 이전에 초세기 듣기"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2	= "$spell:%s 남은시간 초세기 듣기"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "$spell:%s 진행시간 초세기 듣기"
-DBM_CORE_AUTO_YELL_OPTION_TEXT			= "$spell:%s 대상이 된 경우 대화로 알리기"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.yell		= "$spell:%s 대상이 된 경우 대화로 알리기"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.count	= "$spell:%s 대상이 된 경우 대화로 알리기(횟수 포함)"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.fade		= "$spell:%s 대상이 된 경우 대화로 알리기(초세기 포함)"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.position	= "$spell:%s 대상이 된 경우 대화로 알리기(위치 포함)"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.yell	= UnitName("player").."에게 %s!"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.count	= UnitName("player").."에게 %s! (%%d)"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.fade	= "%s %%d초 후 사라짐!"
-DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.position	= UnitName("player").."에게 %s! (%%s)"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.position	= UnitName("player").."{rt%%3$d}에게 %1$s! (%%1$s - {rt%%2$d})"
 DBM_CORE_AUTO_HUD_OPTION_TEXT			= "$spell:%s 범위 정보를 화면에서 보기"
 DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "다양한 범위 정보를 화면에서 보기"
 DBM_CORE_AUTO_RANGE_OPTION_TEXT			= "$spell:%2$s 관련 거리 창 보기(%1$sm)"
@@ -399,23 +414,25 @@ DBM_CORE_HUD_INVALID_ICON			= "대상에게 전술 목표 아이콘이 설정되
 DBM_CORE_HUD_SUCCESS				= "범위정보를 %s동안 표시합니다. '/dbm hud hide'를 입력하시면 즉시 숨길 수 있습니다."
 DBM_CORE_HUD_USAGE	= {
 	"DBM 범위정보 사용법:",
-	"/dbm hud <형식> <대상> <지속시간> 지정된 형식으로 지정된 대상을 가리키는 범위정보를 만듭니다. <지속시간>초 동안 지속됩니다.",
-	"유효한 형식: red, blue, green, yellow, icon (대상에게 전술 목표 아이콘이 설정되어 있어야 합니다.)",
+	"--------------------",
+	"/dbm hud <형식> <대상> <지속시간>: 지정된 형식으로 지정된 대상을 가리키는 범위정보를 만듬. <지속시간>초 동안 지속됨.",
+	"유효한 형식: arrow, red, blue, green, yellow, icon(대상에게 전술 목표 아이콘이 설정되어 있어야 함)",
 	"유효한 대상: target, focus, <대상이름>",
-	"유효한 시간: 아무 숫자(초단위). 빈칸일 경우, 20분이 사용됩니다.",
-	"/dbm hud hide  범위정보를 숨기고 비활성화 합니다."
+	"유효한 시간: 아무 숫자(초단위). 빈칸일 경우, 20분간 적용됨",
+	"/dbm hud hide: 범위정보를 숨기고 비활성화함"
 }
 
 DBM_ARROW_MOVABLE						= "화살표 움직이기"
 DBM_ARROW_ERROR_USAGE	= {
 	"DBM 화살표 사용법:",
-	"/dbm arrow <x> <y>  지정된 좌표(X/Y) 방향으로 화살표를 만듭니다. 세계지도 좌표 사용",
-	"/dbm arrow map <x> <y>  지정된 좌표(X/Y) 방향으로 화살표를 만듭니다. 지역지도 좌표를 사용합니다.",
-	"/dbm arrow <대상이름>  현재 파티 또는 공격대의 <대상이름> 방향으로 화살표를 만듭니다. 대소문자를 구분합니다.",
-	"/dbm arrow target  현재 대상 방향으로 화살표를 만듭니다.",
-	"/dbm arrow focus  현재 주시대상 방향으로 화살표를 만듭니다.",
-	"/dbm arrow move  화살표가 25초 동안 이동가능 상태가 됩니다.",
-	"/dbm arrow hide  화살표를 화면에서 숨깁니다."
+	"------------------",
+	"/dbm arrow <x> <y>: 지정된 좌표(X/Y) 방향으로 화살표를 만듬. 세계지도 좌표 사용",
+	"/dbm arrow map <x> <y>: 지정된 좌표(X/Y) 방향으로 화살표를 만듬. 지역지도 좌표를 사용",
+	"/dbm arrow <대상>: 현재 파티 또는 공격대의 <대상> 방향으로 화살표를 만듬. 대소문자를 구분함",
+	"/dbm arrow target: 현재 대상 방향으로 화살표를 만듬",
+	"/dbm arrow focus: 현재 주시대상 방향으로 화살표를 만듬",
+	"/dbm arrow move: 화살표가 25초 동안 이동가능 상태가 됨",
+	"/dbm arrow hide: 화살표를 화면에서 숨김"
 }
 
 DBM_SPEED_KILL_TIMER_TEXT	= "최고 기록"

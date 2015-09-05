@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(743, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 33 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(62837)--62847 Dissonance Field, 63591 Kor'thik Reaver, 63589 Set'thik Windblade
 mod:SetEncounterID(1501)
 mod:SetZone()
@@ -53,11 +53,11 @@ local yellHeartOfFear			= mod:NewYell(125638)
 
 local timerScreechCD			= mod:NewNextTimer(7, 123735, nil, false)
 local timerCryOfTerror			= mod:NewTargetTimer(20, 123788, nil, "Healer")
-local timerCryOfTerrorCD		= mod:NewCDTimer(25, 123788, nil, "Ranged")
+local timerCryOfTerrorCD		= mod:NewCDTimer(25, 123788, nil, "Ranged", nil, 3)
 local timerEyes					= mod:NewTargetTimer(30, 123707, nil, "Tank")
-local timerEyesCD				= mod:NewNextTimer(11, 123707, nil, "Tank")
+local timerEyesCD				= mod:NewNextTimer(11, 123707, nil, "Tank", nil, 5)
 local timerDissonanceFieldCD	= mod:NewNextCountTimer(65, 123255)
-local timerPhase1				= mod:NewNextTimer(156.4, 125304)--156.4 til ENGAGE fires and boss is out, 157.4 until "advance" fires though. But 156.4 is more accurate timer
+local timerPhase1				= mod:NewNextTimer(156.4, 125304, nil, nil, nil, 6)--156.4 til ENGAGE fires and boss is out, 157.4 until "advance" fires though. But 156.4 is more accurate timer
 local timerDispatchCD			= mod:NewCDTimer(12, 124077)--Every 12-15 seconds on 25 man. on 10 man i've heard it's every 20ish?
 local timerPhase2				= mod:NewNextTimer(151, 125098)--152 until trigger, but probalby 150 or 151 til adds are targetable.
 local timerCalamityCD			= mod:NewCDTimer(6, 124845, nil, "Healer")

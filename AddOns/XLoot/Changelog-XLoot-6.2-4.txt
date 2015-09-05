@@ -1,0 +1,12 @@
+tag 6.2-4
+54072620a6e108928e580a317ec16e8efa9678c2
+Xuerian <sky.shell@gmail.com>
+2015-08-30 21:04:52 -0400
+
+Fix error on refunding item
+
+
+--------------------
+
+Xuerian:
+	- Monitor-events: Move handler() self callbacks into coin_self and loot_self, fixes #139

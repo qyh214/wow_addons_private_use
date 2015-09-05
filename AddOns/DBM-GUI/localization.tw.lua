@@ -69,8 +69,9 @@ L.ModelSoundShort			= SHORT
 L.ModelSoundLong			= TOAST_DURATION_LONG
 
 L.Button_RangeFrame			= "顯示/隱藏距離監視器"
-L.Button_InfoFrame			= "顯示/隱藏訊息框架"
+L.Button_InfoFrame			= "顯示/隱藏訊息監視器"
 L.Button_TestBars			= "測試計時條"
+L.Button_ResetInfoRange		= "重置訊息/距離監視器"
 
 -- Tab: Raidwarning
 L.Tab_RaidWarning 			= "團隊警告"
@@ -88,6 +89,7 @@ L.ShowFakedRaidWarnings 	= "以偽裝團隊警告資訊的方式顯示警告內�
 L.WarningIconLeft 			= "左側顯示圖示"
 L.WarningIconRight 			= "右側顯示圖示"
 L.WarningIconChat 			= "在聊天視窗顯示圖示"
+L.WarningAlphabetical		= "依字母排序"
 L.Warn_FontType				= "選擇字型"
 L.Warn_FontStyle			= "字型風格"
 L.Warn_FontShadow			= "陰影"
@@ -125,7 +127,7 @@ L.BarSetup   				= "計時條樣式"
 L.BarTexture 				= "計時條材質"
 L.BarStyle					= "計時條風格"
 L.BarDBM					= "DBM"
-L.BarBigWigs				= "BigWigs (沒有動畫)"
+L.BarSimple					= "Simple (沒有動畫)"
 L.BarStartColor				= "開始顏色"
 L.BarEndColor 				= "結束顏色"
 L.Bar_Font					= "計時條使用的字型"
@@ -304,6 +306,7 @@ L.LFDEnhance				= "使用主要或對話聲音頻道播放準備確認音效給�
 L.WorldBossNearAlert		= "當你需要的世界首領在你附近開戰播放準備確認音效(蓋過特定首領選項)"
 L.RLReadyCheckSound			= "從主要或對話音效頻道播放準備確認音效"
 L.AFKHealthWarning			= "播放警告聲音假如你在暫離時被攻擊"
+L.AutoReplySound			= "當接收到DBM自動回覆密語時播放警告聲"
 --
 L.TimerGeneral 				= "計時器選項"
 L.SKT_Enabled				= "顯示目前戰鬥的最佳紀錄勝利計時器"

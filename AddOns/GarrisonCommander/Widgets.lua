@@ -60,11 +60,11 @@ local function GMCList()
 		b:SetCallback("OnClick",action)
 		obj:AddChild(b)
 	end
-	function m:AddMissionButton(mission,party,perc)
+	function m:AddMissionButton(mission,party,perc,source)
 		if not self.missions[mission.missionID] then
 			local obj=self.scroll
 			local b=AceGUI:Create("GMCSlimMissionButton")
-			b:SetMission(mission,party,perc)
+			b:SetMission(mission,party,perc,source)
 			b:SetScale(0.7)
 			b:SetFullWidth(true)
 			self.missions[mission.missionID]=b
@@ -109,7 +109,10 @@ local function GMCList()
 
 	end
 	function m:AddFollower(follower,xp,levelup)
-		print(follower)
+
+--[===[@debug@
+print(follower)
+--@end-debug@]===]
 		local followerID=follower.followerID
 		local followerType=follower.followerTypeID
 		if follower.maxed and not levelup then
@@ -329,6 +332,9 @@ local function GMCMissionButton()
 	local Type2="GMCSlimMissionButton"
 	local Version=1
 	local unique=0
+	local function GarrisonMissionButton_OnEnter(...)
+		addon:ScriptGarrisonMissionButton_OnEnter(...)
+	end
 	local m={} --#GMCMissionButton
 	function m:OnAcquire()
 		local frame=self.frame
@@ -364,17 +370,17 @@ local function GMCMissionButton()
 	function m:SetScale(s)
 		return self.frame:SetScale(s)
 	end
-	function m:SetMission(mission,party,perc)
+	function m:SetMission(mission,party,perc,source)
 		self.frame.info=mission
 		self.frame.fromFollowerPage=true
 		self.frame:EnableMouse(true)
 		self.frame.party=party
 		if self.type==Type1 then
-			addon:DrawSingleButton(false,self.frame,false,false)
+			addon:DrawSingleButton(source,self.frame,false,false)
 			self.frame:SetScript("OnEnter",GarrisonMissionButton_OnEnter)
 			self.frame:SetScript("OnLeave",ns.OnLeave)
 		else
-			addon:DrawSingleSlimButton(false,self.frame,false,false)
+			addon:DrawSlimButton(source,self.frame,false,false)
 			self.frame:SetScript("OnEnter",nil)
 			self.frame:SetScript("OnLeave",nil)
 		end

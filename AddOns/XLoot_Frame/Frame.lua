@@ -60,11 +60,14 @@ local defaults = {
 		loot_texts_bind  = true,
 		loot_texts_lock = true,
 
+		loot_buttons_auto = true,
+
 		font = STANDARD_TEXT_FONT,
 		font_size_loot = 12,
 		font_size_info = 10,
 		font_size_quantity = 10,
 		font_size_bottombuttons = 10,
+		font_size_button_auto = 8,
 		font_flag = "OUTLINE",
 
 		loot_icon_size = 34,
@@ -111,6 +114,7 @@ local defaults = {
 		loot_color_backdrop = { 0, 0, 0, .9 },
 		loot_color_gradient = { .5, .5, .5, .4 },
 		loot_color_info = { .5, .5, .5 },
+		loot_color_button_auto = { .4, .8, .4 }
 	}
 }
 
@@ -149,13 +153,56 @@ function addon:OnEnable()
 	end)
 end
 
-function addon:ApplyOptions()
+local preview_loot = {
+	{ 52722, false, true, true },
+	{ 31304, true, false, false },
+	{ 37254, true, false, false },
+	{ 13262, true, false, false },
+	{ 15487, false, false, false }
+}
+
+function addon:ApplyOptions(in_options)
 	opt, XLootFrame.opt = self.opt, self.opt
 	if XLootFrame.built then
 		XLootFrame:UpdateAppearance()
 		XLootFrame:Update(true)
 	end
 	XLootFrame:ParseAutolootList()
+	-- Update preview frame in options
+	if in_options then
+		local Fake = XLootFakeFrame
+		Fake:UpdateAppearance()
+		Fake.opt = opt
+		local max_width, max_quality = 0, 0
+		for i,v in ipairs(preview_loot) do
+			local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(v[1])
+			local row = Fake.rows[i]
+			row.item = itemLink
+			row.quality = itemRarity
+			Fake.slots[i] = row
+			max_width = math.max(max_width, row:Update(true, itemTexture, itemName, itemLink, 1, itemRarity, v[2], v[3], v[4]))
+			max_quality = math.max(max_quality, itemRarity)
+		end
+		Fake:SizeAndColor(max_width, max_quality)
+	end
+end
+
+function addon:OnOptionsShow(panel)
+	-- Create preview frame
+	local frame = XLootFakeFrame
+	if not frame then
+		frame = CreateFrame('Frame', 'XLootFakeFrame', panel)
+		frame.fake = true
+		frame.opt = XLootFrame.opt
+		self:BuildLootFrame(frame)
+		frame:SetPoint('TOPLEFT', panel, 'TOPRIGHT', 25, 25)
+		self:ApplyOptions(true)
+	end
+	frame:Show()
+end
+
+function addon:OnOptionsHide(panel)
+	XLootFakeFrame:Hide()
 end
 
 -- CLI output
@@ -275,6 +322,7 @@ end
 
 local function GetColor(self, key, mult)
 	local skin, raw, default, t = self.skin, rawget(self.opt, key), defaults.profile[key]
+	assert(default, "No default color specified for key " .. key)
 	-- Use options if different from defaults
 	if raw and (raw[1] ~= default[1] or raw[2] ~= default[2] or raw[3] ~= default[3] or raw[4] ~= default[4]) then
 		t = raw
@@ -381,6 +429,37 @@ do
 			end
 		end
 	end
+
+	function RowPrototype:Auto_OnClick(button)
+		self:Hide()
+		if opt.autoloot_item_list ~= '' then
+			opt.autoloot_item_list = opt.autoloot_item_list .. ',' .. self.parent.item_name
+		else
+			opt.autoloot_item_list = self.parent.item_name
+		end
+		self.parent.owner:ParseAutolootList()
+		self.parent:OnClick(button)
+	end
+
+	function RowPrototype:Auto_OnEnter()
+		GameTooltip:SetOwner(self, 'ANCHOR_TOPLEFT')
+		GameTooltip:SetText(L.button_auto_tooltip)
+		GameTooltip:Show()
+		self.text:SetTextColor(Darken(2, self.parent.owner:GetColor('loot_color_button_auto')))
+	end
+
+	function RowPrototype:Auto_OnLeave()
+		GameTooltip:Hide()
+		self.text:SetTextColor(self.parent.owner:GetColor('loot_color_button_auto'))
+	end
+
+	function RowPrototype:Auto_OnShow()
+		self.parent.text_name:SetPoint('RIGHT', self, 'LEFT')
+	end
+
+	function RowPrototype:Auto_OnHide()
+		self.parent.text_name:SetPoint('RIGHT', self.parent, 'RIGHT', -4, 0)
+	end
 	
 	-- Appearance/skin updates
 	local resize_texts = {'text_name', 'text_info'}
@@ -392,6 +471,7 @@ do
 		self:SetGradientColor(owner:GetColor('loot_color_gradient'))
 		self.frame_item:SetGradientColor(owner:GetColor('loot_color_gradient'))
 		self.text_info:SetTextColor(owner:GetColor('loot_color_info'))
+		self.text_button_auto:SetTextColor(owner:GetColor('loot_color_button_auto'))
 		self:SetAlpha(opt.loot_alpha)
 
 		
@@ -402,6 +482,11 @@ do
 		self.text_bind:SetFont(opt.font, 8, opt.font_flag)
 		self.text_locked:SetFont(opt.font, 9, opt.font_flag)
 		self.text_locked:SetText(LOCKED) -- Can't set text until font is set
+		self.text_button_auto:SetFont(opt.font, opt.font_size_button_auto, opt.font_flag)
+		self.text_button_auto:SetText(L.button_auto)
+		self.button_auto:SetWidth(self.text_button_auto:GetStringWidth()+4)
+		self.button_auto:SetHeight(self.text_button_auto:GetStringHeight()+4)
+		self.text_name:SetPoint('RIGHT', self.text_button_auto, 'LEFT')
 
 		-- Resize fontstrings
 		for i=1,#resize_texts do
@@ -451,6 +536,7 @@ do
 		local owner = self:GetParent()
 		local opt = owner.opt
 		local text_info, text_name, text_bind = '', '', ''
+		self.item_name = name
 		
 		-- Items
 		local layout = 'simple'
@@ -487,6 +573,7 @@ do
 		else
 			self.text_info:SetTextColor(owner:GetColor('loot_color_info'))
 		end
+		local name_width = self.text_name:GetStringWidth()
 
 		-- Icon
 		self.texture_item:SetTexture(icon)
@@ -518,6 +605,14 @@ do
 			self.texture_bang:Hide()
 		end
 		
+		-- Autoloot button
+		if opt.loot_buttons_auto and (self.owner.fake or (opt.autoloots.list ~= 'never' and is_item and not self.owner.auto_items[name])) then
+			self.button_auto:Show()
+			name_width = name_width + self.button_auto:GetWidth() - 6
+		else
+			self.button_auto:Hide()
+		end
+
 		-- Attach
 		if self.i == 1 then
 			self:SetPoint('TOP', 0, -10)
@@ -527,7 +622,7 @@ do
 		
 		self:Show()
 		
-		return max(self.text_info:GetStringWidth() + 2, self.text_name:GetStringWidth())
+		return max(self.text_info:GetStringWidth() + 2, name_width)
 	end
 
 	-- Factory
@@ -536,12 +631,14 @@ do
 		-- Create frames
 		local row = CreateFrame('Button', not fake and frame_name or nil, frame)
 		local item = CreateFrame('Frame', nil, row)
+		local button_auto = CreateFrame('Button', nil, row)
 		local tex = item:CreateTexture(not fake and frame_name..'IconTexture' or nil, 'BACKGROUND')
 		local bang = item:CreateTexture(nil, 'OVERLAY')
 		row.owner = frame
 		row.frame_item = item
 		row.texture_item = tex
 		row.texture_bang = bang
+		row.button_auto = button_auto
 		row.i = i
 
 		-- Skin row
@@ -557,11 +654,13 @@ do
 		local bind = item:CreateFontString()
 		local quantity = item:CreateFontString()
 		local locked = item:CreateFontString()
+		local auto = button_auto:CreateFontString()
 		row.text_name = name
 		row.text_info = info
 		row.text_bind = bind
 		row.text_locked = locked
 		row.text_quantity = quantity
+		row.text_button_auto = auto
 
 		-- Setup fontstrings
 		smalltext(name)
@@ -569,9 +668,10 @@ do
 		smalltext(bind)
 		smalltext(locked)
 		smalltext(quantity)
+		smalltext(auto)
 		name:SetPoint('RIGHT', row, 'RIGHT', -4, 0)
 		info:SetPoint('TOPLEFT', name, 'BOTTOMLEFT', 8, 0)
-		info:SetPoint('TOPRIGHT', name, 'BOTTOMRIGHT')
+		info:SetPoint('RIGHT', row, 'RIGHT', -4, 0)
 		textpoints(name, item, row, 2)
 		textpoints(info, item, row, 8)
 		info:SetPoint('TOP', name, 'BOTTOM')
@@ -580,6 +680,7 @@ do
 		quantity:SetJustifyH('RIGHT')
 		locked:SetPoint('CENTER')
 		locked:SetTextColor(1, .2, .1)
+		auto:SetPoint('CENTER')
 
 		-- Align frames (Dimensions set in UpdateAppearance)
 		row:SetPoint('LEFT', 10, 0)
@@ -595,6 +696,14 @@ do
 		bang:SetTexture([[Interface\Minimap\ObjectIcons.blp]])
 		bang:SetTexCoord(1/8, 2/8, 1/8, 2/8)
 
+		button_auto:SetPoint('TOPRIGHT', -2, -4)
+		button_auto:SetScript('OnEnter', row.Auto_OnEnter)
+		button_auto:SetScript('OnLeave', row.Auto_OnLeave)
+		button_auto:SetScript('OnShow', row.Auto_OnShow)
+		button_auto:SetScript('OnHide', row.Auto_OnHide)
+		button_auto.parent = row
+		button_auto.text = auto
+
 		-- Supplimental events for a configuration instance
 		if fake then
 			row:RegisterForClicks()
@@ -609,6 +718,8 @@ do
 			row:SetScript('OnClick', row.OnClick)
 			row:SetScript('OnEnter', row.OnEnter)
 			row:SetScript('OnLeave', row.OnLeave)
+			button_auto:RegisterForClicks('LeftButtonUp')
+			button_auto:SetScript('OnClick', row.Auto_OnClick)
 		end
 
 		-- Apply appearance
@@ -786,7 +897,7 @@ do
 	end
 
 	-- Factory
-	function XLootFrame.BuildFrame(f)
+	function addon:BuildLootFrame(f)
 		local name = f:GetName()
 		-- Setup frame
 		FramePrototype:New(f)
@@ -894,8 +1005,9 @@ function XLootFrame:Update(in_options)
 
 	-- Construct frame
 	if not self.built then
-		self:BuildFrame()
+		addon:BuildLootFrame(self)
 		self:ParseAutolootList()
+		self.auto_items = auto_items
 	end
 
 	-- References

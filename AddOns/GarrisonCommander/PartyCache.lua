@@ -13,6 +13,7 @@ local type=type
 local pairs=pairs
 local format=format
 -- Temporary party management
+local empty={}
 local parties=setmetatable({},{
 	__index=function(t,k)  rawset(t,k,
 		{
@@ -24,7 +25,8 @@ local parties=setmetatable({},{
 			xpBonus=0,
 			gold=0,
 			goldMultiplier=1,
-			materialMultiplier=1,
+			partyBuffs=empty,
+			materialMultiplier=empty,
 			resources=0,
 			totalTimeString="Not Running",
 			totalTimeSeconds=0
@@ -94,11 +96,13 @@ function party:IsFull()
 end
 
 function party:Dump()
+--[===[@debug@
 	print("Dumping party for mission",ID)
 	for i=1,#members do
 		print(addon:GetFollowerData(members[i],'fullname'),G.GetFollowerStatus(members[i] or 1))
 	end
 	print(G.GetPartyMissionInfo(ID))
+--@end-debug@]===]
 end
 
 function party:AddFollower(followerID)
@@ -141,10 +145,12 @@ local function fsort(a,b)
 	if tonumber(rank1) and tonumber(rank2) then
 		return rank1 < rank2
 	else
+--[===[@debug@
 		print(a,rank1)
 		print(b,rank2)
 		print(G.GetFollowerName(a))
 		print(G.GetFollowerName(b))
+--@end-debug@]===]
 		return 0
 	end
 end
@@ -183,7 +189,7 @@ function party:Close(desttable)
 		if (members[i]) then
 			local rc,code=pcall(G.RemoveFollowerFromMission,ID,members[i])
 --[===[@debug@
-			if (not rc) then ns.xtrace("Unable to pop", G.GetFollowerName(members[i])," from ",ID,code) end
+			if (not rc) then print("Unable to pop", G.GetFollowerName(members[i])," from ",ID,code,debugstack()) end
 --@end-debug@]===]
 
 		else
@@ -199,13 +205,21 @@ end
 function addon:GetParties()
 	return self:GetParty()
 end
+
 function addon:GetParty(missionID,key,default)
 	if not missionID then return parties end
 	local party=parties[missionID]
-	if #party.members==0 and G.GetNumFollowersOnMission(missionID)>0 then
-		--Running Mission, taking followers from mission data
+	party.missionID=missionID
+	if not party then
+--[===[@debug@
+		print(GetTime(),missionID,G.GetMissionName(missionID),"Empty")
+--@end-debug@]===]
+	end
+	if not party then return default end
+	if #party.members==0 and self:GetMissionData(missionID,'inProgress') then
+		party.perc=G.GetMissionSuccessChance(missionID)
+		party.full=true
 		local followers=self:GetMissionData(missionID,'followers')
-		addPartyMissionInfo(party,missionID)
 		if followers then
 			for i=1,#followers do
 				party.members[i]=followers[i]
@@ -213,7 +227,8 @@ function addon:GetParty(missionID,key,default)
 		end
 	end
 	if key then
-		return party[key]
+		if type(default)=="number" and type(party[key])~="number" then return default end
+		return party[key] or default
 	else
 		return party
 	end

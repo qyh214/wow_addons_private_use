@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 938 $")
+XPerl_SetModuleRevision("$Revision: 974 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -634,7 +634,8 @@ local function GetOnlineMembers()
 	local reagentCount = 0
 	for i = 1,GetNumGroupMembers() do
 		if (UnitIsConnected("raid"..i)) then
-			if (reagentClasses[select(2, UnitClass("raid"..i))]) then
+			local _, class = UnitClass("raid"..i)
+			if (reagentClasses[class]) then
 				reagentCount = reagentCount + 1
 			end
 
@@ -957,7 +958,7 @@ function XPerl_Check_MakePlayerList()
 
 		for i = 1,GetNumGroupMembers() do
 			local name = UnitName("raid"..i)
-			local class = select(2, UnitClass("raid"..i))
+			local _, class = UnitClass("raid"..i)
 			local count = 0
 			local noCTRA
 

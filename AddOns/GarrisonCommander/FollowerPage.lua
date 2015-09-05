@@ -20,6 +20,7 @@ local StaticPopupDialogs=StaticPopupDialogs
 local YES=YES
 local NO=NO
 local GARRISON_FOLLOWER_MAX_ITEM_LEVEL=GARRISON_FOLLOWER_MAX_ITEM_LEVEL
+local module=addon:NewSubClass("FollowerPage") --#module
 function addon:ShowImprovements()
 	local scroller=self:GetScroller("Items")
 	scroller:AddRow("Follower Upgrades",C.Orange())
@@ -29,13 +30,18 @@ function addon:ShowImprovements()
 			local b=scroller:AddItem(itemID)
 			b:SetUserData("item",itemID)
 			b:SetCallback("OnEnter",function(this)
-				print("Item:",this:GetUserData("item"))
-				GameTooltip:SetOwner(this.frame,"ANCHOR_CURSOR")
-				GameTooltip:AddLine("Reward")
-				GameTooltip:SetItemByID(this:GetUserData("item"))
-				GameTooltip:Show() end)
+
+--[===[@debug@
+			print("Item:",this:GetUserData("item"))
+--@end-debug@]===]
+			GameTooltip:SetOwner(this.frame,"ANCHOR_CURSOR")
+			GameTooltip:AddLine("Reward")
+			GameTooltip:SetItemByID(this:GetUserData("item"))
+			GameTooltip:Show() end)
 			b:SetCallback("OnLeave",function(this) GameTooltip:Hide() end)
-			b:SetCallback("OnClick",function(this) print("Clicckete") end)
+--[===[@debug@
+			b:SetCallback("OnClick",function(this) print("Click") end)
+--@end-debug@]===]
 		end
 	end
 	scroller:AddRow("Item Tokens",C.Orange())
@@ -85,34 +91,34 @@ local colors={
 	[630]="Rare",
 	[645]="Epic"
 }
+function addon:ApplyUPG(value)
+	self:ShowUpgradeButtons()
+end
+function addon:ApplySWAPBUTTONS(value)
+	self:ShowUpgradeButtons()
+end
 function addon:ShowUpgradeButtons(force)
+	if InCombatLockdown() then
+		self:ScheduleLeaveCombatAction("ShowUpgradeButtons",force)
+		return
+	end
 	local gf=GMF.FollowerTab
-	if (not force and not gf:IsShown()) then return end
-	if (not gf.showUpgrades) then
-		gf.showUpgrades=self:GetFactory():Checkbox(gf.Model,self:GetToggle("UPG"),self:GetVarInfo("UPG"))
-		gf.showUpgrades:SetPoint("TOPLEFT")
-		gf.showUpgrades:Show()
-		gf.showUpgrades:SetScript("OnClick",function(this)
-			addon:SetBoolean("UPG",this:GetChecked())
-			addon:ShowUpgradeButtons()
-		end)
+	if not self:GetBoolean("UPG") then
+		local b=gf.upgradeButtons
+		for i=1,#b	 do
+			b[i]:Hide()
+		end
+		return
 	end
-	if (not gf.noConfirm) then
-		gf.noConfirm=self:GetFactory():Checkbox(gf.Model,self:GetToggle("NOCONFIRM"),self:GetVarInfo("NOCONFIRM"))
-		gf.noConfirm:SetPoint("TOPLEFT",0,-20)
-		gf.noConfirm:Show()
-		gf.noConfirm:SetScript("OnClick",function(this)
-			addon:SetBoolean("NOCONFIRM",this:GetChecked())
-		end)
-	end
+	if (not force and not gf:IsVisible()) then return end
 	if not gf.upgradeButtons then gf.upgradeButtons ={} end
 	--if not gf.upgradeFrame then gf.upgradeFrame=CreateFrame("Frame",nil,gf.model) end
 	local b=gf.upgradeButtons
 	local upgrades=self:GetUpgrades()
-	local axpos=243
-	local wxpos=7
-	local wypos=-135
-	local aypos=-135
+	local axpos=self:GetBoolean("SWAPBUTTONS") and 7 or 243
+	local wxpos=self:GetBoolean("SWAPBUTTONS") and 243 or 7
+	local wypos=-85
+	local aypos=-85
 	local used=1
 	if not gf.followerID then
 		return self:DelayedRefresh(0.1)
@@ -191,8 +197,8 @@ function addon:FollowerPageStartUp()
 	self:RegisterEvent("GARRISON_FOLLOWER_UPGRADED","DelayedRefresh")
 	self:RegisterEvent("CHAT_MSG_LOOT","DelayedRefresh")
 	self:GarrisonTraitCountersFrame_OnLoad(GarrisonTraitCountersFrame, L["%s |4follower:followers with %s"])
-	self:HookScript(GarrisonTraitCountersFrame,"OnEvent","GarrisonTraitCountersFrame_OnEvent")
-	self:HookScript(GarrisonTraitCountersFrame,"OnShow","GarrisonTraitCountersFrame_OnShow")
+	self:SafeHookScript(GarrisonTraitCountersFrame,"OnEvent","GarrisonTraitCountersFrame_OnEvent")
+	self:SafeHookScript(GarrisonTraitCountersFrame,"OnShow","GarrisonTraitCountersFrame_OnShow")
 end
 --[[
 		<Scripts>
@@ -203,15 +209,20 @@ end
 --]]
 
 function addon:GarrisonTraitCountersFrame_OnLoad(this, tooltipString)
-	print("Load")
+
+--[===[@debug@
+print("Load")
+--@end-debug@]===]
 	this:ClearAllPoints()
 	this:SetParent(GarrisonThreatCountersFrame:GetParent())
-	this:SetPoint("BOTTOMLEFT",185,6)
+	this:SetPoint("BOTTOMLEFT",185,0)
 	this:Show()
 	this.tooltipString = tooltipString;
-	this.choice=CreateFrame('Frame',this:GetName()..tostring(GetTime()*1000),this,"UIDropDownMenuTemplate")
-	this.choice.button=_G[this.choice:GetName()..'Button']
-	this.choice:SetPoint("TOPLEFT",-192,0)
+	if not this.choice then
+		this.choice=CreateFrame('Frame',this:GetName()..tostring(GetTime()*1000),this,"UIDropDownMenuTemplate")
+		this.choice.button=_G[this.choice:GetName()..'Button']
+		this.choice:SetPoint("TOPLEFT",-192,0)
+	end
 	addon:FillCounters(this,1)
 	this.TraitsList[1]:SetScript("OnEnter",_G.GarrisonTraitCounter_OnEnter)
 	--this.TraitsList[1]:SetScript("OnEnter",pp)

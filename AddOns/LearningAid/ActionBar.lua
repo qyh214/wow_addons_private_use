@@ -293,6 +293,12 @@ function LA:FindMissingActions()
       spells[globalID] = true
     end
   end
+  if not self.saved.autoAttack then
+    -- Treat Auto Shot, Auto Attack and Shoot (Wand) as though already on an action bar
+    spells[self.autoAttack] = true
+    spells[self.autoShot] = true
+    spells[self.shootWand] = true
+  end
   for tab = 1, 2 do
     local _, _, start, count = GetSpellTabInfo(tab) -- the current spec
     for i = start + 1, start + count do

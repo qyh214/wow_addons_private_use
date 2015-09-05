@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(655, "DBM-Party-MoP", 4, 303)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(56906)
 mod:SetEncounterID(1397)
 mod:SetZone()
@@ -23,7 +23,7 @@ local specWarnSabotage			= mod:NewSpecialWarningYou(107268)
 local specWarnSabotageNear		= mod:NewSpecialWarningClose(107268)
 
 local timerSabotage				= mod:NewTargetTimer(5, 107268)
-local timerSabotageCD			= mod:NewNextTimer(12, 107268)
+local timerSabotageCD			= mod:NewNextTimer(12, 107268, nil, nil, nil, 3)
 --local timerThrowExplosiveCD	= mod:NewNextTimer(22, 102569)
 
 mod:AddBoolOption("IconOnSabotage", true)

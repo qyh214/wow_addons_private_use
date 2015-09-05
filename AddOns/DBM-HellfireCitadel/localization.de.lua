@@ -30,10 +30,6 @@ L= DBM:GetModLocalization(1425)
 ---------------------------
 L= DBM:GetModLocalization(1432)
 
-L:SetMiscLocalization({
-	Jubeideath		=	"Ich bin die ewige Flamme!"
-})
-
 ------------------
 -- Kormrok --
 ------------------
@@ -53,20 +49,16 @@ L:SetMiscLocalization({
 --------------------
 L= DBM:GetModLocalization(1372)
 
-L:SetWarningLocalization({
-	specWarnShadowofDeath	= "Schatten des Todes (%d) auf dir"
-})
-
 L:SetTimerLocalization({
-	SoDDPS		= "Nächste Schatten (%s)",
-	SoDTank		= "Nächste Schatten (%s)",
-	SoDHealer	= "Nächste Schatten (%s)"
+	SoDDPS2		= "Nächste Schatten (%s)",
+	SoDTank2	= "Nächste Schatten (%s)",
+	SoDHealer2	= "Nächste Schatten (%s)"
 })
 
 L:SetOptionLocalization({
-	SoDDPS					= "Zeige Zeit bis nächste $spell:179864 die DDs betreffen",
-	SoDTank					= "Zeige Zeit bis nächste $spell:179864 die Tanks betreffen",
-	SoDHealer				= "Zeige Zeit bis nächste $spell:179864 die Heiler betreffen"
+	SoDDPS2					= "Zeige Zeit bis nächste $spell:179864 die DDs betreffen",
+	SoDTank2				= "Zeige Zeit bis nächste $spell:179864 die Tanks betreffen",
+	SoDHealer2				= "Zeige Zeit bis nächste $spell:179864 die Heiler betreffen"
 })
 
 --------------------------
@@ -96,11 +88,7 @@ L:SetOptionLocalization({
 	Iconed				= "Stern, Kreis, Diamant, Dreieck, Mond (für Strategien mit Weltmarkierungen)",
 	Numbered			= "1, 2, 3, 4, 5 (für Strategien mit nummerierten Positionen)",
 	DirectionLine		= "Links, Mitte Links, Mitte, Mitte Rechts, Rechts (typisch für geradlinige Formationen)", 
-	FreeForAll			= "Nur Standardschrei verwenden (ohne Positionszuweisung)",
-	--Currently these 3 below are unused unless I see anyone want/need them
-	CrossPerception		= "Vorne, Hinten, Links, Rechts, Mitte. (typisch für Strategien mit Kreuzformationen)",
-	CrossCardinal		= "Norden, Süden, Osten, Westen, Mitte. (typisch für Strategien mit Kreuzformationen)",
-	ExCardinal			= "Nordosten, Südosten, Nordwesten, Südwesten, Mitte (typisch für \"Ex\" Strategien)"
+	FreeForAll			= "Nur Standardschrei verwenden (ohne Positionszuweisung)"
 })
 
 L:SetMiscLocalization({

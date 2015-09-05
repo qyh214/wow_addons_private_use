@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(867, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 67 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 74 $"):sub(12, -3))
 mod:SetCreatureID(71734)
 mod:SetEncounterID(1604)
 mod:SetZone()
@@ -57,15 +57,15 @@ local specWarnManifestation		= mod:NewSpecialWarningSwitch("ej8262", "-Healer")-
 local specWarnMockingBlast		= mod:NewSpecialWarningInterrupt(144379)
 
 --Sha of Pride
-local timerGiftOfTitansCD		= mod:NewNextTimer(25.5, 144359, nil, "-Tank")--NOT cast or tied or boss, on it's own. Off for tanks because it can't target tanks, ever
+local timerGiftOfTitansCD		= mod:NewNextTimer(25.5, 144359, nil, "-Tank", nil, 3)--NOT cast or tied or boss, on it's own. Off for tanks because it can't target tanks, ever
 --These abilitie timings are all based on boss1 UNIT_POWER. All timers have a 1 second variance
-local timerMarkCD				= mod:NewNextTimer(20.5, 144351, nil, "Healer")
-local timerSelfReflectionCD		= mod:NewNextTimer(25, 144800)
-local timerWoundedPrideCD		= mod:NewNextTimer(30, 144358, nil, "Tank")--A tricky on that is based off unit power but with variable timings, but easily workable with an 11, 26 rule
-local timerBanishmentCD			= mod:NewNextTimer(37.5, 145215)
-local timerCorruptedPrisonCD	= mod:NewNextTimer(53, 144574)--Technically 51 for Imprison base cast, but this is timer til debuffs go out.
-local timerManifestationCD		= mod:NewNextTimer(60, "ej8262", nil, nil, nil, nil, "Interface\\Icons\\achievement_raid_terraceofendlessspring04")
-local timerSwellingPrideCD		= mod:NewNextCountTimer(75.5, 144400)
+local timerMarkCD				= mod:NewNextTimer(20.5, 144351, nil, "Healer", nil, 5)
+local timerSelfReflectionCD		= mod:NewNextTimer(25, 144800, nil, nil, nil, 1)
+local timerWoundedPrideCD		= mod:NewNextTimer(30, 144358, nil, "Tank", nil, 5)--A tricky on that is based off unit power but with variable timings, but easily workable with an 11, 26 rule
+local timerBanishmentCD			= mod:NewNextTimer(37.5, 145215, nil, nil, nil, 3)
+local timerCorruptedPrisonCD	= mod:NewNextTimer(53, 144574, nil, nil, nil, 3)--Technically 51 for Imprison base cast, but this is timer til debuffs go out.
+local timerManifestationCD		= mod:NewNextTimer(60, "ej8262", nil, nil, nil, 1, "Interface\\Icons\\achievement_raid_terraceofendlessspring04")
+local timerSwellingPrideCD		= mod:NewNextCountTimer(75.5, 144400, nil, nil, nil, 2)
 local timerWeakenedResolve		= mod:NewBuffFadesTimer(60, 147207, nil, false)
 --Pride
 local timerBurstingPride		= mod:NewCastTimer(3, 144911)

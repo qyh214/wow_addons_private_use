@@ -24,7 +24,7 @@ Error when learning warlock talent grimoire of service (extra temp demons)
 
 FIXED, MUST VERIFY "Asphyxiate", a talent override, has the wrong name, "Strangulate" in the LA popup.
 
-FIXED fix remaining instances of .globalID, .specID and .slot to ._gid, ._sid and ._slot respectively
+FIXED change remaining instances of .globalID, .specID and .slot to ._gid, ._sid and ._slot respectively
 
 Flyouts: Tricky cases
 Don't have flyout, do have all flyout spells

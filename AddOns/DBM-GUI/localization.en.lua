@@ -13,6 +13,7 @@ L.OTabBosses	= "Bosses"
 L.OTabOptions	= GAMEOPTIONS_MENU
 
 L.TabCategory_Options	 	= "General Options"
+L.TabCategory_LEG	 		= "Legion"
 L.TabCategory_WOD	 		= EXPANSION_NAME5
 L.TabCategory_MOP	 		= EXPANSION_NAME4
 L.TabCategory_CATA	 		= EXPANSION_NAME3
@@ -71,6 +72,7 @@ L.ModelSoundLong			= TOAST_DURATION_LONG
 L.Button_RangeFrame			= "Show/hide range frame"
 L.Button_InfoFrame			= "Show/hide info frame"
 L.Button_TestBars			= "Start test bars"
+L.Button_ResetInfoRange		= "Reset Info/Range frames"
 
 -- Tab: Raidwarning
 L.Tab_RaidWarning 			= "Raid Warnings"
@@ -88,6 +90,7 @@ L.ShowFakedRaidWarnings 	= "Show warnings as faked raid warning messages"
 L.WarningIconLeft 			= "Show icon on left side"
 L.WarningIconRight 			= "Show icon on right side"
 L.WarningIconChat 			= "Show icons in chat frame"
+L.WarningAlphabetical		= "Sort names alphabetically"
 L.Warn_FontType				= "Select font"
 L.Warn_FontStyle			= "Font flags"
 L.Warn_FontShadow			= "Shadow"
@@ -124,8 +127,8 @@ L.DisableStatusWhisper 		= "Disable status whispers for the entire group (requir
 L.BarSetup					= "Bar Setup"
 L.BarTexture				= "Bar texture"
 L.BarStyle					= "Bar style"
-L.BarDBM					= "DBM"
-L.BarBigWigs				= "BigWigs (no animation)"
+L.BarDBM					= "DBM (animations)"
+L.BarSimple					= "Simple (no animation)"
 L.BarStartColor				= "Start color"
 L.BarEndColor 				= "End color"
 L.Bar_Font					= "Font used for bars"
@@ -304,6 +307,7 @@ L.LFDEnhance				= "Play readycheck sound for role checks &amp; BG/LFG proposals 
 L.WorldBossNearAlert		= "Play readycheck sound when world bosses you are near to are pulled that you need (Overrides boss-specific option)"
 L.RLReadyCheckSound			= "Play readycheck sounds from actual ready checks through Master or Dialog audio channel."
 L.AFKHealthWarning			= "Play alert sound if you are losing health while AFK"
+L.AutoReplySound			= "Play alert sound when recieving DBM auto reply whisper"
 --
 L.TimerGeneral 				= "Timer Options"
 L.SKT_Enabled				= "Show record victory timer for current fight if available"

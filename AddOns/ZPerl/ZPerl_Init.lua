@@ -6,7 +6,7 @@ local init_done, gradient, conf, doneOptions
 local errorCount = 0
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 967 $")
+end, "$Revision: 976 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -46,7 +46,7 @@ local function SetTex(self, num)
 end
 
 -- RegisterHighlight
-local HighlightFrames = {}
+local HighlightFrames = { }
 function XPerl_RegisterHighlight(frame, ratio)
 	HighlightFrames[frame] = ratio
 	if (init_done) then
@@ -56,7 +56,7 @@ end
 
 -- XPerl_SetHighlights
 function XPerl_SetHighlights()
-	for k,v in pairs(HighlightFrames) do
+	for k, v in pairs(HighlightFrames) do
 		SetTex(k, v)
 	end
 end
@@ -68,7 +68,7 @@ function XPerl_DoGradient(self, force)
 			if (not self.gradient) then
 				local w = self:GetWidth()
 				if (w and w > 10) then
-					self.gradient = self:CreateTexture(nil, "BORDER")
+					self.gradient = self:CreateTexture(nil, "ARTWORK")
 					self.gradient:SetTexture("Interface\\ChatFrame\\ChatFrameBackground")
 					self.gradient:SetBlendMode("ADD")
 
@@ -188,23 +188,23 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 	local names
 	local unitName
 
-	local class = select(2, UnitClass("player"))
+	local _, class = UnitClass("player")
 
 	if (not checkExpiring) then
 		local cet = {}
 
 		if (class == "PRIEST" or UnitIsGroupAssistant("player")) then
-			cet[GetSpellInfo(21562)] = 2			-- Sta
-			--cet[GetSpellInfo(27683)] = 2			-- Shadow Prot
+			cet[GetSpellInfo(21562)] = 2			-- Fortitude
+			--cet[GetSpellInfo(27683)] = 2			-- Shadow Protection
 		end
 		
 		if (class == "DRUID" or UnitIsGroupAssistant("player")) then
-			cet[GetSpellInfo(1126)] = 2			-- Mark
+			cet[GetSpellInfo(1126)] = 2				-- Mark of the Wild
 			--cet[GetSpellInfo(467)] = 1			-- Thorns
 		end
 		
 		if (class == "MAGE" or UnitIsGroupAssistant("player")) then
-			cet[GetSpellInfo(1459)] = 2			-- Int
+			cet[GetSpellInfo(1459)] = 2				-- Intellect
 		end
 
 		if (class == "PALADIN" or UnitIsGroupAssistant("player")) then
@@ -344,12 +344,12 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 end
 
 local function UnitFullName(unit)
-    local name, realm = UnitName(unit)
-    if (name) then
+	local name, realm = UnitName(unit)
+	if (name) then
 		if (realm and realm ~= "") then
-	        return name .. "-" .. realm
+			return name .. "-" .. realm
 		else
-    		return name
+			return name
 		end
 	end
 end
@@ -437,12 +437,11 @@ function ZPerl_Init()
 	tx:SetAlpha(0)
 	f:SetAllPoints(tx)
 	f:SetScript("OnSizeChanged", function(self, width, height)
-	local size = format("%.0f%.0f", width, height)
+		local size = format("%.0f%.0f", width, height)
 		if size == "88" then
 			conf.bar.texture[1] = "Perl v2"
 			conf.bar.texture[2] = "Interface\\Addons\\ZPerl\\Images\\XPerl_StatusBar"
 			XPerl_SetBarTextures()
-		else
 		end
 	end)
 	tx:SetTexture(conf.bar.texture[2])
@@ -468,13 +467,21 @@ function ZPerl_Init()
 		-- Fix CTRA lockup issues for WoW 2.1
 		-- Sure it's not my responsibility, but you can bet your ass I'll get blamed for it's lockups...
 		CT_RAMTGroup:UnregisterEvent("UNIT_NAME_UPDATE")
-		if (CT_RAMTTGroup) then	CT_RAMTTGroup:UnregisterEvent("UNIT_NAME_UPDATE")	end
-		if (CT_RAPTGroup) then	CT_RAPTGroup:UnregisterEvent("UNIT_NAME_UPDATE")	end
-		if (CT_RAPTTGroup) then	CT_RAPTTGroup:UnregisterEvent("UNIT_NAME_UPDATE")	end
+		if (CT_RAMTTGroup) then
+			CT_RAMTTGroup:UnregisterEvent("UNIT_NAME_UPDATE")
+		end
+		if (CT_RAPTGroup) then
+			CT_RAPTGroup:UnregisterEvent("UNIT_NAME_UPDATE")
+		end
+		if (CT_RAPTTGroup) then
+			CT_RAPTTGroup:UnregisterEvent("UNIT_NAME_UPDATE")
+		end
 		if (CT_RAGroup1) then
 			for i = 1,8 do
 				local f = _G["CT_RAGroup"..i]
-				if (f) then	f:UnregisterEvent("UNIT_NAME_UPDATE")		end
+				if (f) then
+					f:UnregisterEvent("UNIT_NAME_UPDATE")
+				end
 			end
 		end
 	end
@@ -504,11 +511,7 @@ function ZPerl_Init()
 	end
 
 	if (EarthFeature_AddButton) then
-		EarthFeature_AddButton ({name = XPerl_ProductName,
-					icon = XPerl_ModMenuIcon,
-					subtext = "by "..XPerl_Author,
-					tooltip = XPerl_LongDescription,
-					callback = XPerl_Toggle})
+		EarthFeature_AddButton ({name = XPerl_ProductName, icon = XPerl_ModMenuIcon, subtext = "by "..XPerl_Author, tooltip = XPerl_LongDescription, callback = XPerl_Toggle})
 	end
 
 	if (CT_RegisterMod) then
@@ -543,20 +546,20 @@ function XPerl_StatsFrameSetup(self, others, offset)
 		return
 	end
 
-        local healthBar = StatsFrame.healthBar
-        local healthBarText = healthBar.text
-        local healthBarPercent = healthBar.percent
-        local manaBar = StatsFrame.manaBar
-        local manaBarPercent = manaBar.percent
+	local healthBar = StatsFrame.healthBar
+	local healthBarText = healthBar.text
+	local healthBarPercent = healthBar.percent
+	local manaBar = StatsFrame.manaBar
+	local manaBarPercent = manaBar.percent
 	local otherBars = {}
 	local secondaryBarsShown = 0
-        local percentSize = 0
+	local percentSize = 0
 	if (healthBarPercent:IsShown() or manaBarPercent:IsShown()) then
 		percentSize = 35
 	end
 
 	offset = (offset or 0)
-	
+
 	healthBar:SetWidth(0)
 
 	if (manaBar:IsShown()) then
@@ -581,56 +584,56 @@ function XPerl_StatsFrameSetup(self, others, offset)
 		end
 	end
 	
-	if (conf.bar.fat) then       
+	if (conf.bar.fat) then
 		if (StatsFrame == XPerl_Player_PetstatsFrame) then
 			healthBarText:SetFontObject(GameFontNormalSmall)
 		else
 			healthBarText:SetFontObject(GameFontNormal)
 		end
 
-        	healthBar:ClearAllPoints()
-        	healthBar:SetPoint("TOPLEFT", 5, -5)
-        	healthBar:SetPoint("BOTTOMRIGHT", -(5 + percentSize), 5 + needTicker + (secondaryBarsShown * 10))
+		healthBar:ClearAllPoints()
+		healthBar:SetPoint("TOPLEFT", 5, -5)
+		healthBar:SetPoint("BOTTOMRIGHT", -(5 + percentSize), 5 + needTicker + (secondaryBarsShown * 10))
 
-        	manaBar:ClearAllPoints()
-        	manaBar:SetPoint("BOTTOMLEFT", 5, -5 + needTicker + (secondaryBarsShown * 10))
-        	manaBar:SetPoint("TOPRIGHT", healthBar, "BOTTOMRIGHT", 0, 0)
+		manaBar:ClearAllPoints()
+		manaBar:SetPoint("BOTTOMLEFT", 5, -5 + needTicker + (secondaryBarsShown * 10))
+		manaBar:SetPoint("TOPRIGHT", healthBar, "BOTTOMRIGHT", 0, 0)
 
 		local lastBar = manaBar
 		local tickerSpace = needTicker * 1.5
 		for i,bar in pairs(otherBars) do
 			if (bar:IsShown()) then
-        	        	bar:ClearAllPoints()
+				bar:ClearAllPoints()
 
-        	        	bar:SetPoint("TOPLEFT", lastBar, "BOTTOMLEFT", 0, -tickerSpace)
-        	        	bar:SetPoint("BOTTOMRIGHT", lastBar, "BOTTOMRIGHT", 0, -10 - tickerSpace)
+				bar:SetPoint("TOPLEFT", lastBar, "BOTTOMLEFT", 0, -tickerSpace)
+				bar:SetPoint("BOTTOMRIGHT", lastBar, "BOTTOMRIGHT", 0, -10 - tickerSpace)
 
 				lastBar = bar
 				tickerSpace = 0
 			end
-        	end
+		end
 	else
 		healthBarText:SetFontObject(GameFontNormalSmall)
 
-        	healthBar:ClearAllPoints()
-        	healthBar:SetPoint("TOPLEFT", 8, -9 + offset)
-        	healthBar:SetPoint("BOTTOMRIGHT", StatsFrame, "TOPRIGHT", -(8 + percentSize), -19 + offset)
+		healthBar:ClearAllPoints()
+		healthBar:SetPoint("TOPLEFT", 8, -9 + offset)
+		healthBar:SetPoint("BOTTOMRIGHT", StatsFrame, "TOPRIGHT", -(8 + percentSize), -19 + offset)
 
-        	manaBar:ClearAllPoints()
-        	manaBar:SetPoint("TOPLEFT", healthBar, "BOTTOMLEFT", 0, -2)
-        	manaBar:SetPoint("BOTTOMRIGHT", healthBar, "BOTTOMRIGHT", 0, -12)
+		manaBar:ClearAllPoints()
+		manaBar:SetPoint("TOPLEFT", healthBar, "BOTTOMLEFT", 0, -2)
+		manaBar:SetPoint("BOTTOMRIGHT", healthBar, "BOTTOMRIGHT", 0, -12)
 
 		local lastBar = manaBar
 		for i,bar in pairs(otherBars) do
 			if (bar:IsShown()) then
-        	        	bar:ClearAllPoints()
+				bar:ClearAllPoints()
 
-        	        	bar:SetPoint("TOPLEFT", lastBar, "BOTTOMLEFT", 0, -2)
-        	        	bar:SetPoint("BOTTOMRIGHT", lastBar, "BOTTOMRIGHT", 0, -12)
+				bar:SetPoint("TOPLEFT", lastBar, "BOTTOMLEFT", 0, -2)
+				bar:SetPoint("BOTTOMRIGHT", lastBar, "BOTTOMRIGHT", 0, -12)
 
 				lastBar = bar
 			end
-        	end
+		end
 	end
 end
 
@@ -643,11 +646,19 @@ end
 -- XPerl_SetTextTransparency()
 function XPerl_SetTextTransparency()
 	local t = conf.transparency.text
-	for k,v in pairs(unitText) do
+	for k, v in pairs(unitText) do
 		if (v.GetTextColor) then
 			local r, g, b = v:GetTextColor()
 			v:SetTextColor(r, g, b, t)
 		end
+	end
+	if XPerl_Player_TargettingFrametext then
+		local r, g, b = XPerl_Player_TargettingFrametext:GetTextColor()
+		XPerl_Player_TargettingFrametext:SetTextColor(r, g, b, t)
+	end
+	if XPerl_Target_AssistFrametext then
+		local r, g, b = XPerl_Target_AssistFrametext:GetTextColor()
+		XPerl_Target_AssistFrametext:SetTextColor(r, g, b, t)
 	end
 end
 
@@ -682,7 +693,7 @@ end
 -- XPerl_SetBarTextures
 function XPerl_SetBarTextures()
 	local tex = XPerl_GetBarTexture()
-	for k,v in pairs(XPerlBars) do
+	for k, v in pairs(XPerlBars) do
 		Set1Bar(v, tex)
 	end
 end
@@ -696,7 +707,7 @@ end
 -- XPerl_OptionActions()
 function XPerl_OptionActions(which)
 
-	UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE")			-- IMPORTANT! Stops raid framerate lagging when members join/leave/zone
+	UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE") -- IMPORTANT! Stops raid framerate lagging when members join/leave/zone
 
 	if (InCombatLockdown()) then
 		XPerl_OutOfCombatOptionSet = true

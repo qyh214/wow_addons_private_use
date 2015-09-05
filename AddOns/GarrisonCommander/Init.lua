@@ -15,7 +15,7 @@ local tonumber=tonumber
 local type=type
 --[===[@debug@
 LoadAddOn("Blizzard_DebugTools")
-print(LoadAddOn("LibDebug"))
+LoadAddOn("LibDebug")
 if LibDebug then LibDebug() ns.print=print else ns.print=function() end end
 --@end-debug@]===]
 --@non-debug@
@@ -31,16 +31,20 @@ ns.L=ns.addon:GetLocale()
 ns.G=C_Garrison
 ns.GMF=_G.GarrisonMissionFrame
 if not ns.GMF then
+--[===[@debug@
 	print("GarrisonCommander is being loaded before Blizzard_GarrisonUI is available")
 	print(GetTime())
+--@end-debug@]===]
 	LoadAddOn("Blizzard_GarrisonUI")
+--[===[@debug@
 	print(GetTime())
+--@end-debug@]===]
 	ns.GMF=_G.GarrisonMissionFrame
 end
 if not ns.GMF then error("GarrisonCommander is being loaded before Blizzard_GarrisonUI is available") end
-ns.GMFMissions=_G.GarrisonMissionFrameMissions
 ns.GSF=_G.GarrisonShipyardFrame
-ns.GSFMissions=_G.GarrisonShipyardFrame.MissionTab.MissionList
+ns.GMFMissions=ns.GMF.MissionTab.MissionList
+ns.GSFMissions=ns.GSF.MissionTab.MissionList
 _G.GARRISON_FOLLOWER_MAX_ITEM_LEVEL = _G.GARRISON_FOLLOWER_MAX_ITEM_LEVEL or 675
 do
 	--[===[@debug@
@@ -96,6 +100,47 @@ do
 	end
 	--@end-debug@]===]
 end
+-- Caching iteminfo
+ns.I=LibStub("LibItemUpgradeInfo-1.0")
+ns.GetItemInfo=ns.I:GetCachingGetItemInfo()
+function ns.GarrisonMissionFrame_SetItemRewardDetails(frame,bark)
+	local itemName, _, itemRarity, _, _, _, _, _, _, itemTexture = ns.GetItemInfo(frame.itemID);
+	--[===[@debug@
+	if bark then print(frame.itemID,'rescheduled',itemName) end
+	--@end-debug@]===]
+	if itemName then
+		frame.Icon:SetTexture(itemTexture);
+		if (frame.Name and itemName and itemRarity) then
+			frame.Name:SetText(ITEM_QUALITY_COLORS[itemRarity].hex..itemName..FONT_COLOR_CODE_CLOSE);
+		end
+	else
+		--[===[@debug@
+		print(frame.itemID,'rescheduled')
+		--@end-debug@]===]
+		addon:ScheduleTimer(ns.GarrisonMissionFrame_SetItemRewardDetails,0.2,frame,true)
+	end
+end
+
+local backdrop = {
+		--bgFile="Interface\\TutorialFrame\\TutorialFrameBackground",
+		bgFile="Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+		edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
+		tile=true,
+		tileSize=16,
+		edgeSize=16,
+		insets={bottom=3,left=3,right=3,top=3}
+}
+---@function [parent=#ns] AddBackdrop
+--@param object frame Frame to add backdrop to
+--@param int r,g,b optional color
+function ns.AddBackdrop(frame,r,g,b)
+	r=r or 1
+	g=g or 0
+	b=b or 0
+	frame:SetBackdrop(backdrop)
+	frame:SetBackdropColor(1,1,1,0)
+	frame:SetBackdropBorderColor(r,g,b,1)
+end
 -- my implementation of tonumber which accounts for nan and inf
 ---@function [parent=#ns] tonumber
 
@@ -118,16 +163,17 @@ ns.over={}
 local orig=ns.orig
 local over=ns.over
 -- Blizzard functions override
-function ns.override(blizfunc,...)
+---@function [parent=#ns] Override
+function ns.override(blizfunc,secure)
 	local overrider=blizfunc
-	if select('#',...) > 0 then
-		blizfunc=strjoin('.',blizfunc,...)
-		overrider=strjoin('_',overrider,...)
-	end
 	assert(type(over[overrider])=="function",overrider)
-	if (orig[overrider]) then return end -- already hooked
-	local code="local orig,over,overrider=... orig[overrider]=_G."..blizfunc.." _G."..blizfunc.."=over[overrider]"
-	assert(loadstring(code, "Executing " ..code))(orig,over,overrider)
+	if (orig[blizfunc]) then return end -- already hooked
+	orig[blizfunc]=_G[blizfunc]
+	if (secure) then
+		hooksecurefunc(blizfunc,over[overrider])
+	else
+		_G[blizfunc]=over[overrider]
+	end
 end
 
 local stacklevel=0
@@ -207,9 +253,15 @@ local items={
 }
 local itemcaches={
 [118529]=655,--Cache of Highmaul Treasures,
+[118530]=670,--Cache of Highmaul Treasures,
+[118531]=685,--Cache of Highmaul Treasures,
 [122484]=670, --Blackrock Foundry Spoils,
+[122485]=685, --Blackrock Foundry Spoils,
+[122486]=700, --Blackrock Foundry Spoils,
+[127853]=690,--Iron Fleet Treasure Chest
+[127854]=705,--Iron Fleet Treasure Chest
+[127855]=720,--Iron Fleet Treasure Chest
 [128391]=685,--Iron Fleet Treasure Chest
-[122486]=700, --Blackrock Foundry Spoils
 [120301]=600, -- Folower Generic armor upgrade
 [120302]=600, -- Folower Generic weapon upgrade
 
@@ -377,29 +429,5 @@ function ns.Configure()
 		end
 		setfenv(2, ENV)
 end
--------------------- to be estracted to CountersCache
---
---local G=C_Garrison
---ns.Abilities=setmetatable({},{
---	__index=function(t,k) rawset(t,k,G.GetFollowerAbilityName(k)) return rawget(t,k) end
---})
---
---
---
 
---[[ TtraitTable generator
-local TT=C_Garrison.GetRecruiterAbilityList(true)
-local map={}
-local  keys={}
-for i,v in pairs(C_Garrison.GetRecruiterAbilityCategories()) do
-	keys[v]=i
-end
-for  _,trait in  pairs(TT) do
-	local key=keys[trait.category]
-	if type(map[key])~="table"  then
-			map[key]={}
-	end
-	map[key][trait.id]=trait.name
-end
-ATEINFO['abilities']=map
---]]
+

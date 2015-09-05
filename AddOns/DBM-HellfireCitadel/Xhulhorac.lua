@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(1447, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14101 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14259 $"):sub(12, -3))
 mod:SetCreatureID(93068)
 mod:SetEncounterID(1800)
 mod:SetZone()
---mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
+mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
+mod:SetHotfixNoticeRev(14078)
 mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -65,8 +66,8 @@ local specWarnVoidSurge				= mod:NewSpecialWarningYou(186333, nil, nil, nil, 1, 
 local yellVoidSurge					= mod:NewYell(186333)
 ----Adds
 local specWarnWitheringGaze			= mod:NewSpecialWarningSpell(186783, "Tank")
-local specWarnBlackHole				= mod:NewSpecialWarningSpell(186546, nil, nil, nil, 2)
-local specWarnEmpBlackHole			= mod:NewSpecialWarningSpell(189779, nil, nil, nil, 2)--Mythic
+local specWarnBlackHole				= mod:NewSpecialWarningCount(186546, nil, nil, nil, 2)
+local specWarnEmpBlackHole			= mod:NewSpecialWarningCount(189779, nil, nil, nil, 2)--Mythic
 
 --Fire Phase
 ----Boss
@@ -84,16 +85,16 @@ local timerVoidSurgeCD				= mod:NewCDTimer(30, 186333, nil, nil, nil, 3)
 local timerVoidsCD					= mod:NewNextTimer(30, "ej11714", nil, "Ranged", nil, 1, 697)
 ----Big Add
 local timerWitheringGazeCD			= mod:NewCDTimer(14.5, 186783, nil, "Tank", 2, 5)
-local timerBlackHoleCD				= mod:NewCDTimer(29.5, 186546, nil, nil, nil, 5)
-local timerEmpBlackHoleCD			= mod:NewCDTimer(29.5, 189779, nil, nil, nil, 5)--Merge with timerBlackHoleCD?
+local timerBlackHoleCD				= mod:NewCDCountTimer(29.5, 186546, nil, nil, nil, 5)
+local timerEmpBlackHoleCD			= mod:NewCDCountTimer(29.5, 189779, nil, nil, nil, 5)--Merge with timerBlackHoleCD?
 --End Phase
 local timerOverwhelmingChaosCD		= mod:NewNextCountTimer(10, 187204, nil, nil, nil, 3)
 
 --local berserkTimer					= mod:NewBerserkTimer(360)
 
-local countdownFelSurge				= mod:NewCountdown(30, 186407, "-Tank")
-local countdownVoidSurge			= mod:NewCountdown("Alt30", 186333, "-Tank")
-local countdownImps					= mod:NewCountdown("AltTwo25", "ej11694", "Dps")
+local countdownFelSurge				= mod:NewCountdown(30, 186407, "-Tank", nil, 3)
+local countdownVoidSurge			= mod:NewCountdown("Alt30", 186333, "Ranged", nil, 3)
+local countdownImps					= mod:NewCountdown("AltTwo25", "ej11694", "Dps", nil, 4)
 
 local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 local voiceFelsinged				= mod:NewVoice(186073)	--run away
@@ -106,12 +107,15 @@ local voiceVoidSurge				= mod:NewVoice(186333)	--new voice
 --Applied gives all targets, this is the easier strat for most users, where they wait until everyone has it, then run in different directions.
 --Both, gives users ALL the information for everything so they can decide on their own. This will be default until I can see what becomes more popular. Maybe both will be what everyone ends up preferring.
 mod:AddRangeFrameOption(5, 189775)--Mythic
+mod:AddSetIconOption("SetIconOnImps", "ej11694", true, true)
 mod:AddDropdownOption("ChainsBehavior", {"Cast", "Applied", "Both"}, "Both", "misc")
 
 mod.vb.EmpFelChainCount = 0
 mod.vb.phase = 1
 mod.vb.impCount = 0
+mod.vb.impActive = 0
 mod.vb.voidCount = 0
+mod.vb.blackHoleCount = 0
 local UnitExists, UnitGUID, UnitDetailedThreatSituation = UnitExists, UnitGUID, UnitDetailedThreatSituation
 local AddsSeen = {}
 
@@ -144,10 +148,18 @@ end
 --not to mention their first cast is a good 1.5-2 seconds after spawn, if it isn't prevented
 local function ImpRepeater(self)
 	self.vb.impCount = self.vb.impCount + 1
+	self.vb.impActive = self.vb.impActive + 3
 	specWarnImps:Show(self.vb.impCount)
 	timerImpCD:Start(nil, self.vb.impCount+1)
 	countdownImps:Start()
 	self:Schedule(25, ImpRepeater, self)
+	if self.Options.SetIconOnImps then
+		if self.vb.impActive > 0 then--Last set isn't dead yet, use alternate icons
+			self:ScanForMobs(94231, 0, 5, 3, 0.2, 10, "SetIconOnImps")
+		else
+			self:ScanForMobs(94231, 0, 8, 3, 0.2, 10, "SetIconOnImps")
+		end
+	end
 end
 
 local function VoidsRepeater(self)
@@ -181,7 +193,9 @@ function mod:OnCombatStart(delay)
 	self.vb.EmpFelChainCount = 0
 	self.vb.phase = 1
 	self.vb.impCount = 0
+	self.vb.impActive = 0
 	self.vb.voidCount = 0
+	self.vb.blackHoleCount = 0
 	table.wipe(AddsSeen)
 	timerFelStrikeCD:Start(8-delay)
 	timerFelSurgeCD:Start(21-delay)
@@ -243,11 +257,13 @@ function mod:SPELL_CAST_START(args)
 			end
 		end
 	elseif spellId == 186546 then
-		specWarnBlackHole:Show()
-		timerBlackHoleCD:Start()
+		self.vb.blackHoleCount = self.vb.blackHoleCount + 1
+		specWarnBlackHole:Show(self.vb.blackHoleCount)
+		timerBlackHoleCD:Start(nil, self.vb.blackHoleCount+1)
 	elseif spellId == 189779 then
-		specWarnEmpBlackHole:Show()
-		timerEmpBlackHoleCD:Start()
+		self.vb.blackHoleCount = self.vb.blackHoleCount + 1
+		specWarnEmpBlackHole:Show(self.vb.blackHoleCount)
+		timerEmpBlackHoleCD:Start(nil, self.vb.blackHoleCount+1)
 	elseif spellId == 186490 then
 		if self.Options.ChainsBehavior ~= "Applied" then--Start timer and scanner if method is Both or Cast. Both prefers cast over applied, for the timer.
 			if self:IsNormal() then
@@ -351,7 +367,8 @@ end
 --I just trust INSTANCE_ENCOUNTER_ENGAGE_UNIT more, especially if blizzard screws with hidden events some more
 function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 	for i = 1, 5 do
-		local unitGUID = UnitGUID("boss"..i)
+		local uId = "boss"..i
+		local unitGUID = UnitGUID(uId)
 		if unitGUID and not AddsSeen[unitGUID] then
 			AddsSeen[unitGUID] = true
 			local cid = self:GetCIDFromGUID(unitGUID)
@@ -362,9 +379,15 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 					timerFelChainsCD:Start(12)
 				end
 				timerFelBlazeFlurryCD:Start(5.5)
+				if DBM.BossHealth:IsShown() then
+					DBM.BossHealth:AddBoss(cid, UnitName(uId))
+				end
 			elseif cid == 94239 then--Omnus
 				timerWitheringGazeCD:Start(4)
-				timerBlackHoleCD:Start(18)
+				timerBlackHoleCD:Start(18, 1)
+				if DBM.BossHealth:IsShown() then
+					DBM.BossHealth:AddBoss(cid, UnitName(uId))
+				end
 			end
 		end
 	end
@@ -378,12 +401,20 @@ function mod:UNIT_DIED(args)
 		if self:IsMythic() then
 			timerEmpFelChainsCD:Start(28)
 		end
+		if DBM.BossHealth:IsShown() then
+			DBM.BossHealth:RemoveBoss(cid)
+		end
 	elseif cid == 94239 then--Omnus
 		timerWitheringGazeCD:Cancel()
 		timerBlackHoleCD:Cancel()
 		if self:IsMythic() then
-			timerEmpBlackHoleCD:Start(18)
+			timerEmpBlackHoleCD:Start(18, self.vb.blackHoleCount+1)
 		end
+		if DBM.BossHealth:IsShown() then
+			DBM.BossHealth:RemoveBoss(cid)
+		end
+	elseif cid == 94231 then--Imps
+		self.vb.impActive = self.vb.impActive - 1
 	end
 end
 
@@ -399,9 +430,9 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		voicePhaseChange:Play("phasechange")
 		warnFelPortal:Show()
 		if not self:IsLFR() then
-			timerImpCD:Start(10.5)
-			countdownImps:Start(10.5)
-			self:Schedule(10.5, ImpRepeater, self)
+			timerImpCD:Start(10)
+			countdownImps:Start(10)
+			self:Schedule(10, ImpRepeater, self)
 		end
 	elseif spellId == 187225 then--Phase 2 (Purple Mode)
 		self.vb.phase = 2

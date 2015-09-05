@@ -51,11 +51,15 @@ DESIGN WORK
 
 bottom-up
 
-A Spell is an object with data globalID and getter methods Name(),
+A Spell is an object with slot obj._slot, Global ID obj._gID, 
+spec-specific ID obj._sid and getter methods Name(),
 Slot(), Status(), Link(), Known(), etc
-The metatable contains the actual methods, when attempting to index
-the object, the methods are called on the object
-spell.Name -> meta.Name(spell) -> GetSpellBookItemName(spell.Slot)
+
+As is normal for Lua OOP, the metatable contains the methods. Attempting
+to index an instance object retrieves any missing entries from the metatable.
+The methods are then called on the object.
+spell.Name -> meta.Name(spell) -> GetSpellBookItemName(spell.Slot) ->
+GetSpellBookItemName(
 
 BookID is an object that instantiates a new Spell object whenever a 
 nonexistent index is accessed
@@ -127,6 +131,8 @@ function bookMeta.__index(t, index)
     return spell
   elseif "FLYOUT" == gType then
     return LA.Spell.Flyout[gID]
+  elseif nil == gType then
+    return nil
   else
     error("LearningAid.Spell.Book: Type of spellbook slot #"..tostring(index).." ("..tostring(gType)..") is not known", 2)
   end
@@ -187,9 +193,9 @@ function spellMeta.Known(spell)
   return SpellKnown(spell._gid)
 end
 function spellMeta.Status(spell)
-  local slot = spell.Slot
-  assert(spell.Slot, LA.name..": Spell #"..spell._gid.." slot unknown in Spell.Status.")
-  return SpellBookItemInfo(slot, BOOKTYPE_SPELL)
+  if spell.Slot then 
+    return SpellBookItemInfo(spell.Slot, BOOKTYPE_SPELL)
+  end
 end
 function spellMeta.ID(spell)
   return spell._gid
@@ -197,19 +203,16 @@ end
 function spellMeta.Slot(spell)
   --local name = spell.Name
   --local infoName = spell.Info.name
-  local globalID = spell._gid
+  --local globalID = spell._gid
   -- use rawget because _slot might be nil, which would call metatable._slot as a method and fail
   local oldSlot = rawget(spell, "_slot")
-  local slot = SpellBookSlotBySpellID(globalID)
-  if slot then
-    if slot ~= oldSlot then
-      -- tostring to guard against nil values
-      LA:DebugPrint("Spell ".. globalID.. " slot changed from ".. tostring(oldSlot).. " to ".. tostring(slot))
-    end
-    spell._slot = slot
-    return slot
+  local newSlot = SpellBookSlotBySpellID(spell._gid)
+  spell._slot = newSlot
+  if newSlot ~= oldSlot then
+    -- tostring to guard against nil values
+    LA:DebugPrint("Spell ".. spell._gid .." slot changed from ".. tostring(oldSlot).." to ".. tostring(newSlot))
   end
-  return oldSlot
+  return newSlot
 end
 function spellMeta.Link(spell)
   return SpellLink(spell._gid) or ""
@@ -235,7 +238,7 @@ function spellMeta.Passive(spell)
   return SpellPassive(spell._gid)
 end
 function spellMeta:Pickup()
-  PickupSpell(self._gid)
+  return PickupSpell(self._gid)
 end
 function spellMeta.Texture(spell)
   return GetSpellTexture(spell._gid)

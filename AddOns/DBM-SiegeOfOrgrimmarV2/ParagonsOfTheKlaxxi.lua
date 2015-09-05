@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(853, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 57 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 74 $"):sub(12, -3))
 mod:SetCreatureID(71152, 71153, 71154, 71155, 71156, 71157, 71158, 71160, 71161)
 mod:SetEncounterID(1593)
 mod:DisableESCombatDetection()
@@ -121,35 +121,35 @@ local specWarnRapidFire				= mod:NewSpecialWarningSpell(143243, nil, nil, nil, 2
 
 local timerJumpToCenter				= mod:NewCastTimer(6.5, 143545)
 --Kil'ruk the Wind-Reaver
-local timerGouge					= mod:NewTargetTimer(10, 143939, nil, "Tank")
-local timerReaveCD					= mod:NewCDTimer(33, 148676)
-local timerDFACD					= mod:NewCDTimer(34, 142232)--34-43 variation
+local timerGouge					= mod:NewTargetTimer(10, 143939, nil, "Tank", nil, 5)
+local timerReaveCD					= mod:NewCDTimer(33, 148676, nil, nil, nil, 2)
+local timerDFACD					= mod:NewCDTimer(34, 142232, nil, nil, nil, 3)--34-43 variation
 --Xaril the Poisoned-Mind
-local timerToxicCatalystCD			= mod:NewCDTimer(33, "ej8036")
+local timerToxicCatalystCD			= mod:NewCDTimer(33, "ej8036", nil, nil, nil, 3)
 --Kaz'tik the Manipulator
-local timerMesmerizeCD				= mod:NewCDTimer(34, 142671)
+local timerMesmerizeCD				= mod:NewCDTimer(34, 142671, nil, nil, nil, 3)
 --Korven the Prime
 local timerShieldBash				= mod:NewTargetTimer(6, 143974, nil, "Tank")
-local timerShieldBashCD				= mod:NewCDTimer(17, 143974, nil, "Tank")
+local timerShieldBashCD				= mod:NewCDTimer(17, 143974, nil, "Tank", nil, 5)
 local timerEncaseInAmber			= mod:NewTargetTimer(10, 142564)
-local timerEncaseInAmberCD			= mod:NewCDTimer(30, 142564)--Technically a next timer but we use cd cause it's only cast if someone is low when it comes off 30 second internal cd. VERY important timer for heroic
+local timerEncaseInAmberCD			= mod:NewCDTimer(30, 142564, nil, nil, nil, 5)--Technically a next timer but we use cd cause it's only cast if someone is low when it comes off 30 second internal cd. VERY important timer for heroic
 --Iyyokuk the Lucid
 local timerInsaneCalculation		= mod:NewBuffActiveTimer(15, 142808)
-local timerInsaneCalculationCD		= mod:NewCDTimer(25, 142416)--25 is minimum but variation is wild (25-50 second variation)
+local timerInsaneCalculationCD		= mod:NewCDTimer(25, 142416, nil, nil, nil, 3)--25 is minimum but variation is wild (25-50 second variation)
 --Ka'roz the Locust
-local timerFlashCD					= mod:NewCDTimer(62, 143701)
+local timerFlashCD					= mod:NewCDTimer(62, 143701, nil, nil, nil, 3)
 local timerWhirling					= mod:NewBuffFadesTimer(5, 143701, nil, false)
-local timerHurlAmberCD				= mod:NewCDTimer(62, 143759)--TODO< verify cd on spell itself. in my logs he died after only casting it once every time.
+local timerHurlAmberCD				= mod:NewCDTimer(62, 143759, nil, nil, nil, 3)--TODO< verify cd on spell itself. in my logs he died after only casting it once every time.
 --Skeer the Bloodseeker
-local timerBloodlettingCD			= mod:NewCDTimer(35, 143280)--35-65 variable. most of the time it's around 42 range
+local timerBloodlettingCD			= mod:NewCDTimer(35, 143280, nil, nil, nil, 1)--35-65 variable. most of the time it's around 42 range
 --Rik'kal the Dissector
 local timerMutate					= mod:NewBuffFadesTimer(20, 143337, nil, false)
-local timerMutateCD					= mod:NewCDCountTimer(31.5, 143337)
-local timerInjectionCD				= mod:NewNextTimer(9.5, 143339, nil, "Tank")
+local timerMutateCD					= mod:NewCDCountTimer(31.5, 143337, nil, nil, nil, 3)
+local timerInjectionCD				= mod:NewNextTimer(9.5, 143339, nil, "Tank", nil, 5)
 --Hisek the Swarmkeeper
 --local timerAim						= mod:NewTargetTimer(5, 142948)--or is it 7, conflicting tooltips
-local timerAimCD					= mod:NewCDCountTimer(39.5, 142948)
-local timerRapidFireCD				= mod:NewCDTimer(47, 143243)--Heroic, 47-50 variation
+local timerAimCD					= mod:NewCDCountTimer(39.5, 142948, nil, nil, nil, 3)
+local timerRapidFireCD				= mod:NewCDTimer(47, 143243, nil, nil, nil, 2)--Heroic, 47-50 variation
 
 local berserkTimer					= mod:NewBerserkTimer(720)
 

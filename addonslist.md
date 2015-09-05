@@ -12,7 +12,7 @@ Bartender4 动作条美化
 
 BlizzMove 暴雪系统窗体移动
 
-Castbars 施法条美化
+Castbars 施法条美化（可替换方案：quartz）
 
 ChatBar 聊天频道按钮切换条
 

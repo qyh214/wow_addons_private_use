@@ -167,28 +167,36 @@ do
 		trigger_loot('item', who, what, num or 1)
 	end
 
+	local function loot_self(what, num)
+		trigger_loot('item', player, what, num or 1)
+	end
+
 	local function coin(who, str)
 		trigger_loot('coin', who, ParseCoinString(str), str)
 	end
 
+	local function coin_self(str)
+		trigger_loot('coin', player, ParseCoinString(str), str)
+	end
+
 	-- Add item patterns
-	handler('LOOT_ITEM_PUSHED_SELF_MULTIPLE', function(what, num) loot(player, what, num) end)
-	handler('LOOT_ITEM_PUSHED_SELF', function(what) loot(player, what) end)
-	handler('LOOT_ITEM_SELF_MULTIPLE', function(what, num) loot(player, what, num) end)
+	handler('LOOT_ITEM_PUSHED_SELF_MULTIPLE', loot_self)
+	handler('LOOT_ITEM_PUSHED_SELF', loot_self)
+	handler('LOOT_ITEM_SELF_MULTIPLE', loot_self)
 
 	-- Account for Russian locale using the same string for LOOT_MONEY as LOOT_ITEM_SELF
 	if GetLocale() == "ruRU" then
 		handler('LOOT_ITEM_SELF', function(what)
 			if not what:match("|H") then -- No link, match coins
-				trigger_loot('coin', player, ParseCoinString(what), what)
+				coin_self(what)
 			else
-				loot(player, what)
+				loot_self(what)
 			end
 		end)
 	else
-		handler('LOOT_ITEM_SELF', function(what) loot(player, what) end)
-		handler('YOU_LOOT_MONEY_GUILD', function(str) coin(player, str) end)
-		handler('YOU_LOOT_MONEY', function(str) coin(player, str) end)
+		handler('LOOT_ITEM_SELF', loot_self)
+		handler('YOU_LOOT_MONEY_GUILD', coin_self)
+		handler('YOU_LOOT_MONEY', coin_self)
 	end
 	handler('LOOT_ITEM_MULTIPLE', loot)
 	handler('LOOT_ITEM', loot)
@@ -196,8 +204,8 @@ do
 
 	-- Add coin patterns
 	handler('LOOT_MONEY', coin)
-	handler('LOOT_MONEY_SPLIT_GUILD', function(str) coin(player, str) end)
-	handler('LOOT_MONEY_SPLIT', function(str) coin(player, str) end)
+	handler('LOOT_MONEY_SPLIT_GUILD', coin_self)
+	handler('LOOT_MONEY_SPLIT', coin_self)
 
 	-- Currency patterns
 	local function currency(link, num)
@@ -212,9 +220,9 @@ do
 	end
 	handler('LOOT_ITEM_CREATED_SELF_MULTIPLE', crafted)
 	handler('LOOT_ITEM_CREATED_SELF', crafted)
-	handler('LOOT_ITEM_REFUND_MULTIPLE', function (what, num) loot(player, what) end)
-	handler('LOOT_ITEM_REFUND', function (what, num) loot(player, what, num) end)
-	handler('LOOT_MONEY_REFUND', coin)
+	handler('LOOT_ITEM_REFUND_MULTIPLE', loot_self)
+	handler('LOOT_ITEM_REFUND', loot_self)
+	handler('LOOT_MONEY_REFUND', coin_self)
 	handler('LOOT_ITEM_WHILE_PLAYER_INELIGIBLE', loot)
 
 end

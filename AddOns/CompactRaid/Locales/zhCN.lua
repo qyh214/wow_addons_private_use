@@ -110,4 +110,6 @@ addon.L = {
 	["show privilege icons"] = "显示权限图标",
 	["show friendly npc"] = "显示友善NPC（角色设置）",
 	["show direction arrow"] = "显示方向箭头",
+	["character profiles"] = "角色配置数据",
+	["deleting profile"] = "删除角色配置数据|cff00ff00%s|r，你确定吗？",
 }

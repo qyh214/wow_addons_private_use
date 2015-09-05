@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(683, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
 mod:SetCreatureID(60585, 60586, 60583)--60583 Protector Kaolan, 60585 Elder Regail, 60586 Elder Asani
 mod:SetEncounterID(1409)
 mod:SetZone()
@@ -57,16 +57,16 @@ local specWarnYourGroup				= mod:NewSpecialWarning("specWarnYourGroup", false)
 local specWarnCorruptedEssence		= mod:NewSpecialWarningStack(118191, true, 9)--You cannot get more than 9, if you get 9 you need to GTFO or you do big damage to raid
 
 --Elder Asani
-local timerCleansingWatersCD		= mod:NewCDTimer(32.5, 117309)
-local timerCorruptingWatersCD		= mod:NewNextTimer(42, 117227)
+local timerCleansingWatersCD		= mod:NewCDTimer(32.5, 117309, nil, nil, nil, 3)
+local timerCorruptingWatersCD		= mod:NewNextTimer(42, 117227, nil, nil, nil, 1)
 --Elder Regail
-local timerLightningPrisonCD		= mod:NewCDTimer(25, 111850)
-local timerLightningStormCD			= mod:NewCDTimer(42, 118077)--Shorter Cd in phase 3 32 seconds.
+local timerLightningPrisonCD		= mod:NewCDTimer(25, 111850, nil, nil, nil, 3)
+local timerLightningStormCD			= mod:NewCDTimer(42, 118077, nil, nil, nil, 2)--Shorter Cd in phase 3 32 seconds.
 local timerLightningStorm			= mod:NewBuffActiveTimer(14, 118077)
 --Protector Kaolan
 local timerTouchOfShaCD				= mod:NewCDTimer(29, 117519)--Need new heroic data, timers confirmed for 10 man and 25 man normal as 29 and 12
 local timerDefiledGroundCD			= mod:NewNextTimer(15.5, 117986, nil, "Melee")
-local timerExpelCorruptionCD		= mod:NewNextTimer(38.5, 117975)--It's a next timer, except first cast. that one variates.
+local timerExpelCorruptionCD		= mod:NewNextTimer(38.5, 117975, nil, nil, nil, 2)--It's a next timer, except first cast. that one variates.
 
 local countdownLightningStorm		= mod:NewCountdown(42, 118077, false)
 local countdownExpelCorruption		= mod:NewCountdown(38.5, 117975)

@@ -16,13 +16,13 @@ local percD = "%d"..PERCENT_SYMBOL
 local fullyInitiallized
 local SkipHighlightUpdate
 
-local taintFrames = { }
+--local taintFrames = { }
 
 local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 972 $")
+end, "$Revision: 975 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -94,7 +94,7 @@ local raidHeaders = { }
 -- XPerl_Raid_OnLoad
 function XPerl_Raid_OnLoad(self)
 	local events = {
-		--[["CHAT_MSG_ADDON", ]]"PLAYER_ENTERING_WORLD", "VARIABLES_LOADED", "COMPACT_UNIT_FRAME_PROFILES_LOADED", "GROUP_ROSTER_UPDATE", "UNIT_FLAGS", "UNIT_AURA", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED", "UNIT_COMBAT", "UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_INTERRUPTED", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED", "RAID_TARGET_UPDATE", "PLAYER_LOGIN", "ROLE_CHANGED_INFORM", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE", "UNIT_CONNECTION", "PLAYER_REGEN_ENABLED"
+		--[["CHAT_MSG_ADDON", ]]"PLAYER_ENTERING_WORLD", "VARIABLES_LOADED", "COMPACT_UNIT_FRAME_PROFILES_LOADED", "GROUP_ROSTER_UPDATE", "UNIT_FLAGS", "UNIT_AURA", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED", "UNIT_COMBAT", "UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_INTERRUPTED", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED", "RAID_TARGET_UPDATE", "PLAYER_LOGIN", "ROLE_CHANGED_INFORM", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE", "UNIT_CONNECTION", --[["PLAYER_REGEN_ENABLED"]]
 	}
 
 	for i, event in pairs(events) do
@@ -110,6 +110,43 @@ function XPerl_Raid_OnLoad(self)
 
 	self.time = 0
 	self.Array = { }
+
+	--[[if (rconf.enable) then
+		--CompactRaidFrameManager:SetParent(self)
+		if CompactUnitFrameProfiles then
+			CompactUnitFrameProfiles:UnregisterAllEvents()
+		end
+		if CompactRaidFrameManager then
+			CompactRaidFrameManager:UnregisterAllEvents()
+			CompactRaidFrameContainer:UnregisterAllEvents()
+		end
+	end]]
+
+	--[[if CompactRaidFrameManager then
+		if rconf.enable then
+			local function hideRaid()
+				CompactRaidFrameManager:UnregisterAllEvents()
+				CompactRaidFrameContainer:UnregisterAllEvents()
+				if InCombatLockdown() then
+					return
+				end
+
+				CompactRaidFrameManager:Hide()
+				local shown = CompactRaidFrameManager_GetSetting("IsShown")
+				if shown and shown ~= "0" then
+					CompactRaidFrameManager_SetSetting("IsShown", "0")
+				end
+			end
+			
+			hooksecurefunc("CompactRaidFrameManager_UpdateShown", function()
+				hideRaid()
+			end)
+			
+			hideRaid()
+			CompactRaidFrameContainer:HookScript("OnShow", hideRaid)
+			CompactRaidFrameManager:HookScript("OnShow", hideRaid)
+		end
+	end]]
 
 	XPerl_RegisterOptionChanger(function()
 		if (raidLoaded) then
@@ -396,6 +433,7 @@ function XPerl_Raid_UpdateHealth(self)
 		end
 	end
 
+	XPerl_Raid_UpdateAbsorbPrediction(self)
 	XPerl_Raid_UpdateHealPrediction(self)
 
 	local name = UnitName(partyid)
@@ -483,6 +521,15 @@ function XPerl_Raid_UpdateHealth(self)
 			myRoster.afk = nil
 			myRoster.dnd = nil
 		end
+	end
+end
+
+-- XPerl_Raid_UpdateAbsorbPrediction
+function XPerl_Raid_UpdateAbsorbPrediction(self)
+	if rconf.absorbs then
+		XPerl_SetExpectedAbsorbs(self)
+	else
+		self.statsFrame.expectedAbsorbs:Hide()
 	end
 end
 
@@ -600,7 +647,7 @@ local function XPerl_DropDown_Initialize(self)
 	end
 end]]
 
-local function taintable(self)
+--[[local function taintable(self)
 	if not self or type(self) == "number" then
 		return
 	end
@@ -610,7 +657,7 @@ local function taintable(self)
 	self.nameFrame:SetAttribute("type2", "togglemenu")
 	self:SetAttribute("*type1", "target")
 	self:SetAttribute("type2", "togglemenu")
-end
+end]]
 
 -- XPerl_Raid_Single_OnLoad
 function XPerl_Raid_Single_OnLoad(self)
@@ -632,11 +679,18 @@ function XPerl_Raid_Single_OnLoad(self)
 
 	Setup1RaidFrame(self)
 
-	if (InCombatLockdown()) then
+	self:RegisterForClicks("AnyUp")
+	self.nameFrame:SetAttribute("useparent-unit", true)
+	self.nameFrame:SetAttribute("*type1", "target")
+	self.nameFrame:SetAttribute("type2", "togglemenu")
+	self:SetAttribute("*type1", "target")
+	self:SetAttribute("type2", "togglemenu")
+
+	--[[if (InCombatLockdown()) then
 		tinsert(taintFrames, self)
 	else
 		taintable(self)
-	end
+	end]]
 	--XPerl_SetMenuFunc(self, XPerl_DropDown_Initialize)
 	--tinsert(UnitPopupFrames, self.dropDown:GetName())
 end
@@ -673,7 +727,7 @@ function XPerl_Raid_GetFrameArray()
 end
 
 -- UpdateUnitByName
-local function UpdateUnitByName(name,flagsOnly)
+local function UpdateUnitByName(name, flagsOnly)
 	local id = RaidPositions[name]
 	if (id) then
 		local frame = FrameArray[id]
@@ -688,12 +742,14 @@ local function UpdateUnitByName(name,flagsOnly)
 end
 
 -- XPerl_Raid_HighlightCallback(updateName)
-local function XPerl_Raid_HighlightCallback(self, updateGUID)
-	if not updateGUID then return end
+local function XPerl_Raid_HighlightCallback(self, guid)
+	if not guid then
+		return
+	end
 
-	local f = XPerl_Raid_GetUnitFrameByGUID(updateGUID)
+	local f = XPerl_Raid_GetUnitFrameByGUID(guid)
 	if (f) then
-		XPerl_Highlight:SetHighlight(f, updateGUID)
+		XPerl_Highlight:SetHighlight(f, guid)
 	end
 end
 
@@ -980,7 +1036,7 @@ function XPerl_Raid_OnUpdate(self, elapsed)
 		--someUpdate = true
 		for i, frame in pairs(FrameArray) do
 			if (frame:IsShown()) then
-				if (frame.PlayerFlash) then
+				if (conf.combatFlash and frame.PlayerFlash) then
 					XPerl_Raid_CombatFlash(frame, elapsed, false)
 				end
 
@@ -1006,11 +1062,13 @@ function XPerl_Raid_OnUpdate(self, elapsed)
 						XPerl_UpdateSpellRange(frame, unit, true)
 					end
 				end]]--
-				self.time = self.time + elapsed
-				if (self.time > 0.2) then
-					self.time = 0
-					if (frame.partyid) then
-						XPerl_UpdateSpellRange(frame, frame.partyid, true)
+				if conf.rangeFinder.enabled then
+					self.time = self.time + elapsed
+					if (self.time > 0.2) then
+						self.time = 0
+						if (frame.partyid) then
+							XPerl_UpdateSpellRange(frame, frame.partyid, true)
+						end
 					end
 				end
 			end
@@ -1152,7 +1210,8 @@ function XPerl_Raid_HideShowRaid()
 
 	local enable = rconf.enable
 	if (enable) then
-		if (select(2, IsInInstance()) == "pvp") then
+		local _, instanceType = IsInInstance()
+		if (instanceType == "pvp") then
 			enable = not rconf.notInBG
 		end
 	end
@@ -1167,6 +1226,10 @@ function XPerl_Raid_HideShowRaid()
 				raidHeaders[i]:Hide()
 			end
 		end
+	end
+
+	if (XPerl_RaidPets_Align) then
+		XPerl_ProtectedCall(XPerl_RaidPets_Align)
 	end
 end
 
@@ -1264,7 +1327,7 @@ function XPerl_Raid_Events:PLAYER_ENTERING_WORLDsmall()
 	end
 end
 
-function XPerl_Raid_Events:PLAYER_REGEN_ENABLED()
+--[[function XPerl_Raid_Events:PLAYER_REGEN_ENABLED()
 	-- Update all raid frame that would have tained
 	local tainted
 	if #taintFrames > 0 then
@@ -1283,7 +1346,7 @@ function XPerl_Raid_Events:PLAYER_REGEN_ENABLED()
 			XPerl_RaidPets_OptionActions()
 		end
 	end
-end
+end]]
 
 
 function XPerl_Raid_Events:UNIT_CONNECTION()
@@ -1518,8 +1581,14 @@ XPerl_Raid_Events.UNIT_SPELLCAST_INTERRUPTED = XPerl_Raid_Events.UNIT_SPELLCAST_
 
 
 function XPerl_Raid_Events:UNIT_HEAL_PREDICTION(unit)
-	if (unit == self.partyid) then
+	if (rconf.healprediction and unit == self.partyid) then
 		XPerl_SetExpectedHealth(self)
+	end
+end
+
+function XPerl_Raid_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
+	if (rconf.absorbs and unit == self.partyid) then
+		XPerl_SetExpectedAbsorbs(self)
 	end
 end
 
@@ -1607,7 +1676,8 @@ end
 local function XPerl_ResistsCheck(unitName)
 	local str = ""
 	for i = 2, 6 do
-		str = str.." "..select(2, UnitResistance("player", i))
+		local _, total = UnitResistance("player", i)
+		str = str.." "..total
 	end
 	SendAddonMessage("CTRA", format("RST%s %s", str, unitName), "RAID")
 end
@@ -1762,6 +1832,10 @@ function SetRaidRoster()
 
 	--del(ZPerl_Roster, true)
 	ZPerl_Roster = NewRoster
+
+	if (XPerl_RaidPets_Align) then
+		XPerl_ProtectedCall(XPerl_RaidPets_Align)
+	end
 end
 
 -- XPerl_RaidGroupCounts()
@@ -1852,7 +1926,8 @@ function XPerl_RaidTitles()
 
 		local enable = rconf.enable
 		if (enable) then
-			if (select(2, IsInInstance()) == "pvp") then
+			local _, instanceType = IsInInstance()
+			if (instanceType == "pvp") then
 				enable = not rconf.notInBG
 			end
 		end
@@ -1925,9 +2000,9 @@ function XPerl_RaidTitles()
 
 	XPerl_ProtectedCall(XPerl_EnableRaidMouse)
 
-	if (XPerl_RaidPets_Align) then
+	--[[if (XPerl_RaidPets_Align) then
 		XPerl_ProtectedCall(XPerl_RaidPets_Align)
-	end
+	end]]
 end
 
 -- XPerl_EnableRaidMouse()
@@ -2039,7 +2114,8 @@ local function GetCombatRezzerList()
 	local anyAlive = 0
 	for i = 1, GetNumGroupMembers() do
 		local unit = "raid"..i
-		if (normalRezzers[select(2, UnitClass(unit))]) then
+		local _, class = UnitClass(unit)
+		if (normalRezzers[class]) then
 			if (UnitAffectingCombat(unit)) then
 				anyCombat = anyCombat + 1
 			end
@@ -2389,12 +2465,19 @@ function XPerl_Raid_Set_Bits(self)
 			self:UnregisterEvent(event)
 		end
 	end
+
 	SkipHighlightUpdate = nil
 
 	if (rconf.healprediction) then
 		self:RegisterEvent("UNIT_HEAL_PREDICTION")
 	else
 		self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+	end
+
+	if (rconf.absorbs) then
+		self:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+	else
+		self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 	end
 
 	if (IsInRaid()) then

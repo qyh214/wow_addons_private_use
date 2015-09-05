@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(816, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 60 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(69078, 69132, 69134, 69131)--69078 Sul the Sandcrawler, 69132 High Prestess Mar'li, 69131 Frost King Malakk, 69134 Kazra'jin --Adds: 69548 Shadowed Loa Spirit,
 mod:SetEncounterID(1570)
 mod:SetZone()
@@ -73,22 +73,22 @@ local specWarnDischarge				= mod:NewSpecialWarningCount(137166, nil, nil, nil, 2
 --All
 local timerDarkPowerCD				= mod:NewCDTimer(68, 136507)
 --Kazra'jin
-local timerRecklessChargeCD			= mod:NewCDTimer(6, 137122, nil, false)
+local timerRecklessChargeCD			= mod:NewCDTimer(6, 137122, nil, false, nil, 3)
 --Sul the Sandcrawler
-local timerQuickSandCD				= mod:NewCDTimer(35, 136521)
-local timerSandStormCD				= mod:NewCDTimer(35, 136894)
+local timerQuickSandCD				= mod:NewCDTimer(35, 136521, nil, nil, nil, 3)
+local timerSandStormCD				= mod:NewCDTimer(35, 136894, nil, nil, nil, 2)
 --High Prestess Mar'li
-local timerBlessedLoaSpiritCD		= mod:NewCDTimer(33, 137203)--Every 33-35 seconds.
-local timerShadowedLoaSpiritCD		= mod:NewCDTimer(33, 137350)--Possessed version of above, shared CD
-local timerTwistedFateCD			= mod:NewCDTimer(33, 137891)--On heroic, this replaces shadowed loa spirit
+local timerBlessedLoaSpiritCD		= mod:NewCDTimer(33, 137203, nil, nil, nil, 1)--Every 33-35 seconds.
+local timerShadowedLoaSpiritCD		= mod:NewCDTimer(33, 137350, nil, nil, nil, 1)--Possessed version of above, shared CD
+local timerTwistedFateCD			= mod:NewCDTimer(33, 137891, nil, nil, nil, 3)--On heroic, this replaces shadowed loa spirit
 local timerMarkedSoul				= mod:NewTargetTimer(20, 137359)
 --Frost King Malak
 local timerBitingCold				= mod:NewBuffFadesTimer(30, 136917)
-local timerBitingColdCD				= mod:NewCDTimer(45, 136917)--10 man Cds (and probably LFR), i have no doubt on 25 man this will either have a shorter cd or affect 3 targets with same CD. Watch for timer diffs though
+local timerBitingColdCD				= mod:NewCDTimer(45, 136917, nil, nil, nil, 3)--10 man Cds (and probably LFR), i have no doubt on 25 man this will either have a shorter cd or affect 3 targets with same CD. Watch for timer diffs though
 local timerFrostBite				= mod:NewBuffFadesTimer(30, 136990)
-local timerFrostBiteCD				= mod:NewCDTimer(45, 136990)--^same comment as above
+local timerFrostBiteCD				= mod:NewCDTimer(45, 136990, nil, nil, nil, 3)--^same comment as above
 local timerFrigidAssault			= mod:NewTargetTimer(15, 136903, nil, "Tank|Healer")
-local timerFrigidAssaultCD			= mod:NewCDTimer(30, 136904, nil, "Tank|Healer")--30 seconds after last one ended (maybe even a next timer, i'll change it with more logs.)
+local timerFrigidAssaultCD			= mod:NewCDTimer(30, 136904, nil, "Tank|Healer", nil, 5)--30 seconds after last one ended (maybe even a next timer, i'll change it with more logs.)
 --Kazra'jin
 
 

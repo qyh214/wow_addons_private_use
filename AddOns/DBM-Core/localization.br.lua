@@ -12,7 +12,6 @@ DBM_CORE_LOAD_MOD_SUCCESS			= "Módulo '%s' carregado. Para mais opções, digit
 DBM_CORE_LOAD_MOD_COMBAT			= "Carregamento de '%s' adiado até que você saia de combate"
 DBM_CORE_LOAD_GUI_ERROR				= "Não foi possível carregar interface gráfica: %s"
 DBM_CORE_LOAD_GUI_COMBAT			= "A interface gráfica não pode ser carregada em combate e será assim que você o sair. Quando estiver carregada, você poderá chama-la em combate."
-DBM_CORE_LOAD_SKIN_COMBAT			= "Os DBM temporizadores falharam em aparecer em combate e provavelmente funcionarão incorretamente, além de gerar diversos erros no lua. Isso ocorre geralmente por tentativas de mods de terceiros aplicando skins em combate. Recomendamos que você use o comando /reloadui assim que sair de combate."
 DBM_CORE_BAD_LOAD					= "DBM detectou que a sua mod desta área falhou ao tentar carregar por completo por estar em combate. Use o comando /reloadui assim que sair de combate para corrigir o problema."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s não foi carregado por não cumprir os requerimentos. Uma atualização da mod é necessária. Obrigado."
 
@@ -25,9 +24,7 @@ DBM_CORE_LOOT_SPEC_REMINDER			= "A sua especialização atual é %s. A sua escol
 
 DBM_CORE_BIGWIGS_ICON_CONFLICT		= "DBM detectou que você tem ícones habilitados tanto no BigWigs quanto no DBM. Por favor desabilite um dos dois para evitar conflitos com o líder da raid"
 
-DBM_CORE_PROVINGGROUNDS_AD			= "DBM-ProvingGrounds esta disponível para este conteúdo. Esta disponível em deadlybossmods.com ou no site da curse. Está mensagem só será exibida uma vez."
-
-DBM_CORE_MOLTENCORE_AD				= "DBM-MC esta disponível para este conteúdo. Esta disponível em deadlybossmods.com. Está mensagem só será exibida uma vez."
+DBM_CORE_MOD_AVAILABLE				= "%s esta disponível para este conteúdo. Esta disponível em |HDBM:forums|h|cff3588ffdeadlybossmods.com|r. Está mensagem só será exibida uma vez."
 
 DBM_CORE_COMBAT_STARTED				= "%s na mira. Boa sorte e divirta-se! :)"
 
@@ -189,16 +186,30 @@ DBM_LFG_INVITE						= "Aceitar convite"
 
 DBM_CORE_SLASHCMD_HELP				= {
 	"Comandos disponíveis:",
-	"/dbm version: Realiza uma checagem de versão de toda a raid. (ou: ver).",
---	"/dbm version2: Realiza uma checagem de versão de toda a raid e sussurra para avisando os membros que estão desatualizados (alias: ver2).",
 	"/dbm unlock: Exibe uma barra de cronógrafo móvel. (ou: move).",
-	"/dbm timer <x> <texto>: Inicia um cronógrafo de <x> segundos com o nome <texto>.",
-	"/dbm broadcast timer <x> <texto>: Espalha um cronógrafo de <x> segundos com o nome <texto> para a raid (requer status de líder/guia).",
+	"/range <number> or /distance <number>: Shows range frame. /rrange or /rdistance to reverse colors.",--Translate
+	"/dbm timer: Starts a custom DBM timer, see '/dbm timer' for details.",--Translate
+	"/dbm arrow: Exibe a seta do DBM, veja /dbm arrow help para detalhes.",
+	"/dbm hud: Shows the DBM hud, see '/dbm hud' for details.",--Translate
+	"/dbm help2: Shows raid management slash commands."--Translate
+}
+DBM_CORE_SLASHCMD_HELP2				= {
+	"Comandos disponíveis:",
+	"/dbm version: Realiza uma checagem de versão de toda a raid. (ou: ver).",
+	"/dbm version2: Realiza uma checagem de versão de toda a raid e sussurra para avisando os membros que estão desatualizados (alias: ver2).",
 	"/dbm break <min>: Inicia um cronógrafo de intervalo de <min> minutos. Dá a todos os integrantes da raid um cronógrafo de intervalo (requer status de líder/guia).",
 	"/dbm pull <seg>: Dispara um cronógrafo para iniciar a luta em <seg> segundos. Dá a todos os integrantes da raid um cronógrafo para iniciar a luta (requer status de líder/guia).",
-	"/dbm arrow: Exibe a seta do DBM, veja /dbm arrow help para detalhes.",
-	"/dbm lockout: Pergunta a todos os membros da raid, por seus vínculos de raid (ou: lockouts, ids) (requer status de líder/guia)..",
-	"/dbm help: Exibe essa mensagem."
+	"/dbm lockout: Pergunta a todos os membros da raid, por seus vínculos de raid (ou: lockouts, ids) (requer status de líder/guia).."
+}
+--Translate all of these
+DBM_CORE_TIMER_USAGE	= {
+	"DBM timer commands:",
+	"/dbm timer <time> <text>: Starts a <x> second DBM Timer with the name <text>.",
+	"/dbm ctimer <time> <text>: Starts a timer that also has countdown text.",
+	"/dbm ltimer <time> <text>: Starts a timer that also automatically loops until canceled.",
+	"/dbm cltimer <time> <text>: Starts a timer that also has countdown text and loops until canceled.",
+	"('Broadcast' in front of any timer also shares it with raid if leader/promoted)",
+	"/dbm timer endloop: Stops any looping ltimer or cltimer."
 }
 
 DBM_ERROR_NO_PERMISSION				= "Você não tem as permissões necessárias para fazer isso."
@@ -283,6 +294,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell 		= "Exibir aviso especial para $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dispel 		= "Exibir aviso especial para remover/roubar $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt	= "Exibir aviso especial para interromper $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you 		= "Exibir aviso especial quando você é afetado por $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.youcount 	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you--FIXME, Translate needed
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target 		= "Exibir aviso especial quando alguém é afetador por $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close 		= "Exibir aviso especial quando alguém próximo de você é afetado por $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move 		= "Exibir aviso especial quando você é afetado por $spell:%s"
@@ -299,6 +311,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel	= "%s em >%%s< - remova agora"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt	= "%s - interrompa >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount	= "%s - interrompa >%%s< (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you		= "%s em você"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.youcount	= "%s (%%s) em você"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target	= "%s em >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close		= "%s em >%%s< perto de você"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move		= "%s - saia de perto"
@@ -306,8 +319,8 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.dodge 	= DBM_CORE_AUTO_SPEC_WARN_TEXTS.move--FIXME
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.run		= "%s - corra para longe"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast		= "%s - pare de lançar"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%s (%%d)"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch	= ">%s< - mude de alvo"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= ">%s< - mude de alvo (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch	= "%s - mude de alvo"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - mude de alvo (%%d)"
 
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT		= "Colocar ícones nos alvos de $spell:%s"
@@ -315,7 +328,7 @@ DBM_CORE_AUTO_ICONS_OPTION_TEXT2		= "Set icons on $spell:%s"
 DBM_CORE_AUTO_SOUND_OPTION_TEXT		= "Tocar som \"Fuja garotinha\" para $spell:%s"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT	= "Tocar som de contagem regressiva para $spell:%s"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT	= "Tocar som de contagem regressiva para duração de $spell:%s"
-DBM_CORE_AUTO_YELL_OPTION_TEXT		= "Gritar quando você é afetado por $spell:%s"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.yell		= "Gritar quando você é afetado por $spell:%s"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.yell	= "%s em " .. UnitName("player") .. "!"
 
 

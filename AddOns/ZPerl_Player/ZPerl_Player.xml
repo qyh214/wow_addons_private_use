@@ -209,6 +209,7 @@
 					</BackgroundInsets>
 				</Backdrop>
 				<Frames>
+					<!-- PVP Icon -->
 					<Frame name="$parentpvp" hidden="true">
 						<Scripts>
 							<OnLoad>
@@ -244,37 +245,33 @@
 							</Layer>
 						</Layers>
 					</Frame>
+					<!-- Raid Target Icon -->
+					<Frame name="$parentraidIcon" hidden="true">
+						<Scripts>
+							<OnLoad>
+								self:SetFrameLevel(self:GetParent():GetFrameLevel() + 4)
+							</OnLoad>
+						</Scripts>
+						<Size>
+							<AbsDimension x="20" y="20"/>
+						</Size>
+						<Anchors>
+							<Anchor point="CENTER" relativePoint="TOPLEFT">
+								<Offset>
+									<AbsDimension x="5" y="-4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<Texture name="$parenttexture" file="Interface\TargetingFrame\UI-RaidTargetingIcons" setAllPoints="true"/>
+								<TexCoords left="0" right="0.25" top="0" bottom="0.25"/>
+							</Layer>
+						</Layers>
+					</Frame>
 				</Frames>
 				<Layers>
-					<!-- Layer level="BORDER">
-						<Texture name="$parentpvpIcon" file="Interface\TargetingFrame\UI-PVP-FFA" hidden="true">
-							<Size>
-								<AbsDimension x="44" y="44"/>
-							</Size>
-							<Anchors>
-								<Anchor point="TOPLEFT">
-									<Offset>
-										<AbsDimension x="-5" y="0"/>
-									</Offset>
-								</Anchor>
-							</Anchors>
-						</Texture>
-					</Layer -->
-					<Layer level="ARTWORK">
-						<!-- Raid Target Icon -->
-						<Texture name="$parentraidIcon" file="Interface\TargetingFrame\UI-RaidTargetingIcons" hidden="true">
-							<Size>
-								<AbsDimension x="20" y="20"/>
-							</Size>
-							<Anchors>
-								<Anchor point="CENTER" relativePoint="TOPLEFT">
-									<Offset>
-										<AbsDimension x="5" y="-4"/>
-									</Offset>
-								</Anchor>
-							</Anchors>
-							<TexCoords left="0" right="0.25" top="0" bottom="0.25" />
-						</Texture>
+					<Layer level="OVERLAY">
 						<!-- Leader Icon -->
 						<Texture name="$parentleaderIcon" file="Interface\GroupFrame\UI-Group-LeaderIcon" hidden="true">
 							<Size>
@@ -310,18 +307,21 @@
 									</Offset>
 								</Anchor>
 							</Anchors>
-							<Size><AbsDimension x="16" y="16"/></Size>
+							<Size>
+								<AbsDimension x="16" y="16"/>
+							</Size>
 						</Texture>
 						<!-- Rest/Combat Icon -->
 						<Texture name="$parentcombatIcon" file="Interface\CharacterFrame\UI-StateIcon" hidden="true">
 							<Size>
-								<AbsDimension x="32" y="31"/>
+								<AbsDimension x="32" y="32"/>
 							</Size>
 							<Anchors>
 								<Anchor point="RIGHT"/>
 							</Anchors>
-							<TexCoords left="0.5" right = "1.0" top="0.0" bottom="0.5"/>
+							<TexCoords left="0.49" right="1.0" top="0.0" bottom="0.49"/>
 						</Texture>
+						<!-- Player Name -->
 						<FontString name="$parenttext" inherits="GameFontNormal">
 							<Anchors>
 								<Anchor point="TOPLEFT"/>
@@ -333,6 +333,7 @@
 							</Anchors>
 							<Color r="1" g="1" b="0" />
 						</FontString>
+						<!-- Group Name -->
 						<FontString name="$parentgroup" inherits="GameFontNormalSmall" text="G" hidden="true" justifyH="LEFT">
 							<Anchors>
 								<Anchor point="LEFT">
@@ -466,7 +467,7 @@
 					</OnLoad>
 				</Scripts>
 			</Frame>
-			<Frame name="$parenthitIndicator" frameStrata="HIGH">
+			<!--<Frame name="$parenthitIndicator" frameStrata="HIGH">
 				<Layers>
 					<Layer level="OVERLAY">
 						<FontString name="$parenttext" inherits="NumberFontNormalHuge" hidden="true" text="Error!">
@@ -480,7 +481,7 @@
 						</FontString>
 					</Layer>
 				</Layers>
-			</Frame>
+			</Frame>-->
 			<Frame name="$parenthighlight" inherits="XPerl_HighlightTemplate">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parentportraitFrame"/>

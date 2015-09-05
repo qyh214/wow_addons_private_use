@@ -1,9 +1,9 @@
-## Interface: 60100
+## Interface: 60200
 ## X-Curse-Packaged-Version: Release-r1041
 ## X-Curse-Project-Name: LibInspect
 ## X-Curse-Project-ID: libinspect
 ## X-Curse-Repository-ID: wow/libinspect/mainline
-## X-Curse-Packaged-Version: r35
+## X-Curse-Packaged-Version: r37
 ## X-Curse-Project-Name: LibInspect
 ## X-Curse-Project-ID: libinspect
 ## X-Curse-Repository-ID: wow/libinspect/mainline

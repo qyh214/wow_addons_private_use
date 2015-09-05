@@ -37,6 +37,10 @@ wodrraspisokach25={
 9972,
 9979,
 
+9988,
+9989,
+
+10087,
 
 }
 
@@ -111,6 +115,29 @@ if wodrratimerkromog and GetTime()>wodrratimerkromog then
    wodrracounter1=0
 end
 
+if rsprotossdb1 and #rsprotossdb1>0 and rastartprotosstimer and GetTime()>rastartprotosstimer then
+	rastartprotosstimer=GetTime()+1
+	for i=1,#rsprotossdb1 do
+		if rsprotossdb1[i] then
+			local ltime=GetTime()-rsprotossdb2[i]
+			if ltime>5.5 then
+				ltime=math.ceil(ltime*10)/10
+				if wodrraspisokon[9]==1 and wodrraachdone1 then
+					wodrrafailnoreason(9, rsprotossdb3[i].." (> "..ltime.." sec and STILL THERE)")
+					table.remove(rsprotossdb1,i)
+					table.remove(rsprotossdb2,i)
+					table.remove(rsprotossdb3,i)
+				end
+			end
+		end
+	end
+end
+
+
+
+
+
+
 
 end
 
@@ -139,6 +166,10 @@ ramariotrack=nil
 ramariotableguid=nil
 ratableforgaroshach1=nil
 ratableforgaroshach2=nil
+
+rsprotossdb1=nil
+rsprotossdb2=nil
+rsprotossdb3=nil
 
 
 	if UnitGUID("boss1") and UnitName("boss1")~="" then
@@ -294,6 +325,70 @@ if arg2=="UNIT_DIED" then
      end
   end
 end
+
+--Pro-toss
+if arg2=="SPELL_AURA_APPLIED" and arg10==179202 then
+	if rsprotossdb1==nil then
+		rsprotossdb1={}
+		rsprotossdb2={}
+		rsprotossdb3={}
+	end
+	local bil=0
+	if (#rsprotossdb1>0) then
+		for i=1,#rsprotossdb1 do
+			if rsprotossdb1[i]==arg7 then
+				rsprotossdb2[i]=GetTime()
+				bil=1
+			end
+		end
+	end
+	if (bil==0) then
+		table.insert(rsprotossdb1,arg7)
+		table.insert(rsprotossdb2,GetTime())
+		table.insert(rsprotossdb3,arg8)
+		rastartprotosstimer=GetTime()
+	end
+end
+if arg2=="SPELL_AURA_REMOVED" and arg10==179202 then
+	if rsprotossdb1 and #rsprotossdb1>0 then
+		for i=1,#rsprotossdb1 do
+			if rsprotossdb1[i] then
+				if rsprotossdb1[i]==arg7 then
+					local ltime=GetTime()-rsprotossdb2[i]
+					if ltime>5 then
+						ltime=math.ceil(ltime*10)/10
+						if wodrraspisokon[9]==1 and wodrraachdone1 then
+							wodrrafailnoreason(9, arg8.." ("..ltime.." sec)")
+							table.remove(rsprotossdb1,i)
+							table.remove(rsprotossdb2,i)
+							table.remove(rsprotossdb3,i)
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+if arg2=="UNIT_DIED" then
+  if wodrraspisokon[10]==1 and wodrraachdone1 then
+     local id=raGetUnitID(arg7)
+     if id==90270 and UnitGUID("boss1") then
+          wodrrafailnoreason(10)
+     end
+  end
+end
+
+if (arg2=="SPELL_AURA_APPLIED" and arg10==185656) and arg8 then
+   raunitisplayer(arg7,arg8)
+   if raunitplayertrue then
+      if wodrraspisokon[11]==1 and wodrraachdone1 then
+         wodrrafailnoreason(11,arg8)
+      end
+   end
+end
+
+
 
 end
 --

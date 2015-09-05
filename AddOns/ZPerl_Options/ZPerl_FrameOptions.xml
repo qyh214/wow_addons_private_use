@@ -18,7 +18,7 @@
 					local text = _G[self:GetName().."_Text"]
 					text:SetTextColor(1, 1, 1, 1)
 					text:SetText(XPerl_Version.." "..XPerl_GetRevision())
-					XPerl_DoGradient(self, true)
+					--XPerl_DoGradient(self, true)
 				end
 			</OnLoad>
 			<OnShow>
@@ -3739,7 +3739,7 @@
 										--XPerlDB.highlight.SHIELD = nil
 										--XPerl_Options_EnableCheck(XPerl_Options_GetSibling("HighlightShields", self), false)
 									end
-									if (class ~= "PRIEST") then
+									if (class ~= "PRIEST" and class ~= "MONK") then
 										XPerlDB.highlight.POM = nil
 										XPerl_Options_EnableCheck(XPerl_Options_GetSibling("HighlightMending", self), false)
 									end
@@ -3881,7 +3881,12 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_HIGHLIGHTS_MENDING")
+								local _, class = UnitClass("player")
+								if class == "MONK" then
+									XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_HIGHLIGHTS_RENEWING")
+								else
+									XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_HIGHLIGHTS_MENDING")
+								end
 								self.configBase = "XPerlDB.highlight"
 								self.configIndex = "POM"
 							</OnLoad>
@@ -3932,7 +3937,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT">
 								<Offset>
-									<AbsDimension x="5" y="105"/>
+									<AbsDimension x="5" y="118"/>
 								</Offset>
 							</Anchor>
 							<Anchor point="BOTTOMRIGHT">
@@ -3946,7 +3951,7 @@
 							<OnLoad>
 								self:SetScale(0.9)
 								self.Refresh = function(self)
-									local a = {"Enable", "FadeAmount", "CustomSpell", "CombineWithHealth", "RangeHealthAmount", "DebuffCheck", "InteractNone", "Interact10", "Interact30", "Interact40"}
+									local a = {"Enable", "FadeAmount", "CustomSpell", "CombineWithHealth", "RangeHealthAmount", "DebuffCheck", "InteractNone", "Interact10", "Interact20", "Interact30", "Interact40"}
 									for k, v in pairs(a) do
 										local f = _G[self:GetName().."_"..v]
 										if (f) then
@@ -3964,12 +3969,12 @@
 									<Anchors>
 										<Anchor point="TOPLEFT" relativeTo="XPerl_Options_Area_Tabs" relativePoint="BOTTOMLEFT">
 											<Offset>
-												<AbsDimension x="3" y="107"/>
+												<AbsDimension x="3" y="120"/>
 											</Offset>
 										</Anchor>
 										<Anchor point="BOTTOMRIGHT" relativeTo="XPerl_Options_Area_Tabs">
 											<Offset>
-												<AbsDimension x="-3" y="104"/>
+												<AbsDimension x="-3" y="117"/>
 											</Offset>
 										</Anchor>
 									</Anchors>
@@ -3987,15 +3992,16 @@
 									<OnLoad>
 										XPerl_OptionsSetMyText(self, "XPERL_CONF_RANGEFINDER")
 										self.Validate = function()
-											XPerl_Options_EnableSibling(self,"OnlyInRaid")
-											XPerl_Options_EnableSibling(self,"Main")
-											XPerl_Options_EnableSibling(self,"NameFrame")
-											XPerl_Options_EnableSibling(self,"StatsFrame")
-											XPerl_Options_EnableSibling(self,"Enable")
-											XPerl_Options_EnableSibling(self,"InteractNone")
-											XPerl_Options_EnableSibling(self,"Interact10")
-											XPerl_Options_EnableSibling(self,"Interact30")
-											XPerl_Options_EnableSibling(self,"Interact40")
+											XPerl_Options_EnableSibling(self, "OnlyInRaid")
+											XPerl_Options_EnableSibling(self, "Main")
+											XPerl_Options_EnableSibling(self, "NameFrame")
+											XPerl_Options_EnableSibling(self, "StatsFrame")
+											XPerl_Options_EnableSibling(self, "Enable")
+											XPerl_Options_EnableSibling(self, "InteractNone")
+											XPerl_Options_EnableSibling(self, "Interact10")
+											XPerl_Options_EnableSibling(self, "Interact20")
+											XPerl_Options_EnableSibling(self, "Interact30")
+											XPerl_Options_EnableSibling(self, "Interact40")
 										end
 									</OnLoad>
 									<OnShow>
@@ -4300,7 +4306,7 @@
 									</OnShow>
 									<OnClick>
 										XPerlDB.rangeFinder[XPerl_Options.optRange].interact = nil
-										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact30", "Interact40"})
+										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40"})
 										self:GetParent():Refresh()
 									</OnClick>
 								</Scripts>
@@ -4324,7 +4330,31 @@
 									</OnShow>
 									<OnClick>
 										XPerlDB.rangeFinder[XPerl_Options.optRange].interact = 3
-										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact30", "Interact40"})
+										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40"})
+										self:GetParent():Refresh()
+									</OnClick>
+								</Scripts>
+							</CheckButton>
+
+							<CheckButton name="$parent_Interact20" inherits="XPerlRadioButtonTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_Interact10" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="3"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										self:SetChecked(false)
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_RANGE_INTERACT20")
+									</OnLoad>
+									<OnShow>
+										self:SetChecked(XPerlDB.rangeFinder[XPerl_Options.optRange].interact == 2)
+									</OnShow>
+									<OnClick>
+										XPerlDB.rangeFinder[XPerl_Options.optRange].interact = 2
+										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40"})
 										self:GetParent():Refresh()
 									</OnClick>
 								</Scripts>
@@ -4332,7 +4362,7 @@
 
 							<CheckButton name="$parent_Interact30" inherits="XPerlRadioButtonTemplate">
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_Interact10" relativePoint="BOTTOMLEFT">
+									<Anchor point="TOPLEFT" relativeTo="$parent_Interact20" relativePoint="BOTTOMLEFT">
 										<Offset>
 											<AbsDimension x="0" y="3"/>
 										</Offset>
@@ -4348,7 +4378,7 @@
 									</OnShow>
 									<OnClick>
 										XPerlDB.rangeFinder[XPerl_Options.optRange].interact = 1
-										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact30", "Interact40"})
+										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40"})
 										self:GetParent():Refresh()
 									</OnClick>
 								</Scripts>
@@ -4372,7 +4402,7 @@
 									</OnShow>
 									<OnClick>
 										XPerlDB.rangeFinder[XPerl_Options.optRange].interact = 5
-										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact30", "Interact40"})
+										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40"})
 										self:GetParent():Refresh()
 									</OnClick>
 								</Scripts>
@@ -4920,7 +4950,7 @@
 									XPerl_Options_EnableSibling(self, "Portrait3D")
 									XPerl_Options_EnableSibling(self, "ClassPortrait")
 									XPerl_Options_EnableSibling(self, "Extend")
-									XPerl_Options_EnableSibling(self, "HitIndicator")
+									--XPerl_Options_EnableSibling(self, "HitIndicator")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -4993,7 +5023,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
+					<!--<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
 						<Size>
 							<AbsDimension x="26" y="26"/>
 						</Size>
@@ -5011,13 +5041,13 @@
 								self.configIndex = "hitIndicator"
 							</OnLoad>
 						</Scripts>
-					</CheckButton>
+					</CheckButton>-->
 
 					<CheckButton name="$parent_ShowRunes" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPRIGHT" relativeTo="$parent_HitIndicator" relativePoint="BOTTOM">
+							<Anchor point="TOP" relativeTo="$parent_Portrait" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="6"/>
+									<AbsDimension x="0" y="-55"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -5109,6 +5139,7 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_ARCANE_PRECAST")
 								self.configBase = "XPerlDB.player.castBar"
 								self.configIndex = "precast"
+								self.configClick = XPerl_ArcaneBar_Set
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
@@ -5129,6 +5160,7 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_CAST_TIME")
 								self.configBase = "XPerlDB.player.castBar"
 								self.configIndex = "castTime"
+								self.configClick = XPerl_ArcaneBar_Set
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "CastTimeInside")
 								end
@@ -5152,6 +5184,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_CAST_TIME_INSIDE")
 								self.configBase = "XPerlDB.player.castBar"
 								self.configIndex = "inside"
+								self.configClick = function()
+									XPerl_ArcaneBar_Set()
+									XPerl_Player_Reset()
+								end
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
@@ -5230,6 +5266,25 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_HEAL_PREDICTION")
 								self.configBase = "XPerlDB.player"
 								self.configIndex = "healprediction"
+								self.configClick = XPerl_Player_Reset
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_Absorbs" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parent_HealPrediction" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="85" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_ABSORBS")
+								self.configBase = "XPerlDB.player"
+								self.configIndex = "absorbs"
 								self.configClick = XPerl_Player_Reset
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -6064,7 +6119,7 @@
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "Portrait3D")
 									XPerl_Options_EnableSibling(self, "Extend")
-									XPerl_Options_EnableSibling(self, "HitIndicator")
+									--XPerl_Options_EnableSibling(self, "HitIndicator")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -6115,7 +6170,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
+					<!--<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
 						<Size>
 							<AbsDimension x="26" y="26"/>
 						</Size>
@@ -6133,13 +6188,13 @@
 								self.configIndex = "hitIndicator"
 							</OnLoad>
 						</Scripts>
-					</CheckButton>
+					</CheckButton>-->
 
 					<CheckButton name="$parent_Threat" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
-							<Anchor point="TOP" relativeTo="$parent_HitIndicator" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOP" relativeTo="$parent_Portrait" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="6"/>
+									<AbsDimension x="0" y="-35"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -6254,12 +6309,50 @@
 						</Scripts>
 					</CheckButton>
 
+					<CheckButton name="$parent_HealPrediction" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_Values" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="0" y="6"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_PET_HEAL_PREDICTION")
+								self.configBase = "XPerlDB.pet"
+								self.configIndex = "healprediction"
+								self.configClick = XPerl_Player_Pet_Reset
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_Absorbs" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parent_HealPrediction" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="85" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_PET_ABSORBS")
+								self.configBase = "XPerlDB.pet"
+								self.configIndex = "absorbs"
+								self.configClick = XPerl_Player_Pet_Reset
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
 					<Slider name="$parent_Scale" inherits="XPerlSlider">
 						<Size>
 							<AbsDimension x="160" y="16"/>
 						</Size>
 						<Anchors>
-							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Values">
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_HealPrediction">
 								<Offset>
 									<AbsDimension x="0" y="-8"/>
 								</Offset>
@@ -7031,8 +7124,8 @@
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "Portrait3D")
 									XPerl_Options_EnableSibling(self, "ClassPortrait")
-									XPerl_Options_EnableSibling(self, "HitIndicator")
-									XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator")
+									--XPerl_Options_EnableSibling(self, "HitIndicator")
+									--XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -7083,7 +7176,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
+					<!--<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
 						<Size>
 							<AbsDimension x="26" y="26"/>
 						</Size>
@@ -7124,7 +7217,7 @@
 								self.configIndex = "ownDamageOnly"
 							</OnLoad>
 						</Scripts>
-					</CheckButton>
+					</CheckButton>-->
 
 					<CheckButton name="$parent_Defer" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
@@ -7162,9 +7255,9 @@
 
 					<CheckButton name="$parent_Threat" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPRIGHT" relativeTo="$parent_OnlyMine" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOP" relativeTo="$parent_Portrait" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="6"/>
+									<AbsDimension x="0" y="-35"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -7236,6 +7329,7 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGET_ARCANE_BAR")
 								self.configBase = "XPerlDB.target.castBar"
 								self.configIndex = "enable"
+								self.configClick = XPerl_ArcaneBar_Set
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
@@ -7449,6 +7543,25 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGET_HEAL_PREDICTION")
 								self.configBase = "XPerlDB.target"
 								self.configIndex = "healprediction"
+								self.configClick = XPerl_Target_Reset
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_Absorbs" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parent_HealPrediction" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="85" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGET_ABSORBS")
+								self.configBase = "XPerlDB.target"
+								self.configIndex = "absorbs"
 								self.configClick = XPerl_Target_Reset
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -7859,13 +7972,17 @@
 											XPerl_Options_EnableSibling(self, "Buffs")
 											XPerl_Options_EnableSibling(self, "Debuffs")
 											XPerl_Options_EnableSibling(self, "BigBuffs", "Buffs")
+											XPerl_Options_EnableSibling(self, "BigPet", "BigBuffs", "Buffs")
 											XPerl_Options_EnableSibling(self, "BigDebuffs", "Debuffs")
 											XPerl_Options_EnableSibling(self, "Above")
-											XPerl_Options_EnableSibling(self, "TTTBuffs", "TargetsTargetsTarget")
+											XPerl_Options_EnableSibling(self, "TargetsTargetsTargetBuffs", "TargetsTargetsTarget")
+											XPerl_Options_EnableSibling(self, "TargetsTargetsTargetDebuffs", "TargetsTargetsTarget")
 											XPerl_Options_EnableSibling(self, "Level")
 											XPerl_Options_EnableSibling(self, "Values")
 											XPerl_Options_EnableSibling(self, "Percent")
 											XPerl_Options_EnableSibling(self, "Mana")
+											XPerl_Options_EnableSibling(self, "HealPrediction")
+											XPerl_Options_EnableSibling(self, "Absorbs")
 											XPerl_Options_EnableSibling(self, "ScaleTargetTarget")
 											XPerl_Options_EnableSibling(self, "Width")
 											XPerl_Options_EnableSibling(self, "Healer_Healer")
@@ -7896,68 +8013,24 @@
 								<Scripts>
 									<OnLoad>
 										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGET_BUFFS")
-										self.flashFrame = XPerl_TargetTarget_BuffFrame
+										self.flashFrame = XPerl_TargetTargetbuffFrame
 										self.configBase = "XPerlDB.targettarget.buffs"
 										self.configIndex = "enable"
 										self.configClick = XPerl_TargetTarget_Reset
 										self.Validate = function()
 											XPerl_Options_EnableSibling(self, "BigBuffs")
+											XPerl_Options_EnableSibling(self, "BigPet", "BigBuffs")
 										end
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
-							
-							<CheckButton name="$parent_Debuffs" inherits="XPerlCheckButtonTemplate">
-								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="TOPRIGHT">
-										<Offset>
-											<AbsDimension x="130" y="0"/>
-										</Offset>
-									</Anchor>
-								</Anchors>
-								<Scripts>
-									<OnLoad>
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGET_DEBUFFS")
-										self.flashFrame = XPerl_TargetTarget_BuffFrame
-										self.configBase = "XPerlDB.targettarget.debuffs"
-										self.configIndex = "enable"
-										self.configClick = XPerl_TargetTarget_Reset
-										self.Validate = function()
-											XPerl_Options_EnableSibling(self, "BigDebuffs")
-										end
-									</OnLoad>
-								</Scripts>
-							</CheckButton>
-							
-							<CheckButton name="$parent_BigDebuffs" inherits="XPerlCheckButtonTemplate">
-								<Size><AbsDimension x="26" y="26"/></Size>
-								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_Debuffs" relativePoint="BOTTOM">
-										<Offset>
-											<AbsDimension x="0" y="7"/>
-										</Offset>
-									</Anchor>
-								</Anchors>
-								<Scripts>
-									<OnLoad>
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGET_BIGDEBUFFS")
-										self.flashFrame = {XPerl_TargetTargetbuffFrame, XPerl_TargetTargetdebuffFrame}
-										self.configBase = "XPerlDB.targettarget.debuffs"
-										self.configIndex = "big"
-										self.configClick = function()
-											XPerlDB.targettargettarget.debuffs.big = XPerlDB.targettarget.debuffs.big
-											XPerl_TargetTarget_Reset()
-										end
-									</OnLoad>
-								</Scripts>
-							</CheckButton>
-							
+
 							<CheckButton name="$parent_BigBuffs" inherits="XPerlCheckButtonTemplate">
 								<Size>
 									<AbsDimension x="26" y="26"/>
 								</Size>
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="BOTTOMLEFT">
+									<Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="BOTTOM">
 										<Offset>
 											<AbsDimension x="0" y="7"/>
 										</Offset>
@@ -7971,7 +8044,7 @@
 										self.configIndex = "big"
 										self.configClick = function()
 											XPerlDB.targettargettarget.buffs.big = XPerlDB.targettarget.buffs.big
-											XPerl_TargetTarget_Reset ()
+											XPerl_TargetTarget_Reset()
 										end
 										self.Validate = function()
 											XPerl_Options_EnableSibling(self, "BigPet")
@@ -8004,15 +8077,136 @@
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
+							
+							<CheckButton name="$parent_Debuffs" inherits="XPerlCheckButtonTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="TOPRIGHT">
+										<Offset>
+											<AbsDimension x="130" y="0"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGET_DEBUFFS")
+										self.flashFrame = XPerl_TargetTargetdebuffFrame
+										self.configBase = "XPerlDB.targettarget.debuffs"
+										self.configIndex = "enable"
+										self.configClick = XPerl_TargetTarget_Reset
+										self.Validate = function()
+											XPerl_Options_EnableSibling(self, "BigDebuffs")
+										end
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+							
+							<CheckButton name="$parent_BigDebuffs" inherits="XPerlCheckButtonTemplate">
+								<Size><AbsDimension x="26" y="26"/></Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_Debuffs" relativePoint="BOTTOM">
+										<Offset>
+											<AbsDimension x="0" y="7"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGET_BIGDEBUFFS")
+										self.flashFrame = {XPerl_TargetTargetbuffFrame, XPerl_TargetTargetdebuffFrame}
+										self.configBase = "XPerlDB.targettarget.debuffs"
+										self.configIndex = "big"
+										self.configClick = function()
+											XPerlDB.targettargettarget.debuffs.big = XPerlDB.targettarget.debuffs.big
+											XPerl_TargetTarget_Reset()
+										end
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+
+							<CheckButton name="$parent_TargetsTargetsTarget" inherits="XPerlCheckButtonTemplate">
+								<Size>
+									<AbsDimension x="26" y="26"/>
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="-32"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETS_TARGETS_TARGET")
+										self.Validate = function()
+											XPerl_Options_EnableSibling(self, "TargetsTargetsTargetBuffs")
+											XPerl_Options_EnableSibling(self, "TargetsTargetsTargetDebuffs")
+										end
+										self.flashFrame = XPerl_TargetTargetTarget
+										self.configBase = "XPerlDB.targettargettarget"
+										self.configIndex = "enable"
+										self.configClick = function()
+											XPerlDB.targettargettarget.debuffs.enable = XPerlDB.targettargettarget.buffs.enable
+											XPerl_TargetTarget_Reset()
+										end
+										XPerl_Options_RegisterProtected(self)
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+
+							<CheckButton name="$parent_TargetsTargetsTargetBuffs" inherits="XPerlCheckButtonTemplate">
+								<Size>
+									<AbsDimension x="26" y="26"/>
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_TargetsTargetsTarget" relativePoint="BOTTOM">
+										<Offset>
+											<AbsDimension x="0" y="7"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										_G[self:GetName().."Text"]:SetWidth(160)
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGETTARGET_BUFFS")
+										self.flashFrame = XPerl_TargetTargetTargetbuffFrame
+										self.configBase = "XPerlDB.targettargettarget.buffs"
+										self.configIndex = "enable"
+										self.configClick = XPerl_TargetTarget_Reset
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+
+							<CheckButton name="$parent_TargetsTargetsTargetDebuffs" inherits="XPerlCheckButtonTemplate">
+								<Size>
+									<AbsDimension x="26" y="26"/>
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_TargetsTargetsTargetBuffs" relativePoint="TOPRIGHT">
+										<Offset>
+											<AbsDimension x="150" y="0"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										_G[self:GetName().."Text"]:SetWidth(160)
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGETTARGET_DEBUFFS")
+										self.flashFrame = XPerl_TargetTargetTargetdebuffFrame
+										self.configBase = "XPerlDB.targettargettarget.debuffs"
+										self.configIndex = "enable"
+										self.configClick = XPerl_TargetTarget_Reset
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
 
 							<CheckButton name="$parent_Above" inherits="XPerlCheckButtonTemplate">
 								<Size>
 									<AbsDimension x="26" y="26"/>
 								</Size>
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_BigBuffs" relativePoint="BOTTOMLEFT">
+									<Anchor point="TOPLEFT" relativeTo="$parent_TargetsTargetsTarget" relativePoint="BOTTOMLEFT">
 										<Offset>
-											<AbsDimension x="0" y="-11"/>
+											<AbsDimension x="0" y="-18"/>
 										</Offset>
 									</Anchor>
 								</Anchors>
@@ -8030,64 +8224,12 @@
 								</Scripts>
 							</CheckButton>
 
-							<CheckButton name="$parent_TargetsTargetsTarget" inherits="XPerlCheckButtonTemplate">
-								<Size>
-									<AbsDimension x="26" y="26"/>
-								</Size>
-								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_Above" relativePoint="BOTTOMLEFT">
-										<Offset>
-											<AbsDimension x="0" y="7"/>
-										</Offset>
-									</Anchor>
-								</Anchors>
-								<Scripts>
-									<OnLoad>
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETS_TARGETS_TARGET")
-										self.Validate = function()
-											XPerl_Options_EnableSibling(self, "TTTBuffs")
-										end
-										self.flashFrame = XPerl_TargetTargetTarget
-										self.configBase = "XPerlDB.targettargettarget"
-										self.configIndex = "enable"
-										self.configClick = function()
-											XPerlDB.targettargettarget.debuffs.enable = XPerlDB.targettargettarget.buffs.enable
-											XPerl_TargetTarget_Reset()
-										end
-										XPerl_Options_RegisterProtected(self)
-									</OnLoad>
-								</Scripts>
-							</CheckButton>
-
-							<CheckButton name="$parent_TTTBuffs" inherits="XPerlCheckButtonTemplate">
-								<Size>
-									<AbsDimension x="26" y="26"/>
-								</Size>
-								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_TargetsTargetsTarget" relativePoint="BOTTOM">
-										<Offset>
-											<AbsDimension x="0" y="7"/>
-										</Offset>
-									</Anchor>
-								</Anchors>
-								<Scripts>
-									<OnLoad>
-										_G[self:GetName().."Text"]:SetWidth(160)
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGETTARGET_BUFFS")
-										self.flashFrame = XPerl_TargetTargetTarget_BuffFrame
-										self.configBase = "XPerlDB.targettargettarget.buffs"
-										self.configIndex = "enable"
-										self.configClick = XPerl_TargetTarget_Reset
-									</OnLoad>
-								</Scripts>
-							</CheckButton>
-
 							<CheckButton name="$parent_Level" inherits="XPerlCheckButtonTemplate">
 								<Size>
 									<AbsDimension x="26" y="26"/>
 								</Size>
 								<Anchors>
-									<Anchor point="TOPRIGHT" relativeTo="$parent_TTTBuffs" relativePoint="BOTTOM">
+									<Anchor point="TOP" relativeTo="$parent_Above" relativePoint="BOTTOM">
 										<Offset>
 											<AbsDimension x="0" y="7"/>
 										</Offset>
@@ -8146,6 +8288,25 @@
 										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGET_HEAL_PREDICTION")
 										self.configBase = "XPerlDB.targettarget"
 										self.configIndex = "healprediction"
+										self.configClick = XPerl_TargetTarget_Reset
+										XPerl_Options_RegisterProtected(self)
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+
+							<CheckButton name="$parent_Absorbs" inherits="XPerlCheckButtonTemplate">
+								<Anchors>
+									<Anchor point="TOP" relativeTo="$parent_HealPrediction" relativePoint="BOTTOM">
+										<Offset>
+											<AbsDimension x="0" y="7"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGET_ABSORBS")
+										self.configBase = "XPerlDB.targettarget"
+										self.configIndex = "absorbs"
 										self.configClick = XPerl_TargetTarget_Reset
 										XPerl_Options_RegisterProtected(self)
 									</OnLoad>
@@ -8454,7 +8615,7 @@
 						<Scripts>
 							<OnLoad>
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGET_DEBUFFS_ENABLE")
-								self.flashFrame = XPerl_TargetbuffFrame
+								self.flashFrame = XPerl_TargetdebuffFrame
 								self.configBase = "XPerlDB.target.debuffs"
 								self.configIndex = "enable"
 								self.configClick = XPerl_Target_Reset
@@ -8615,9 +8776,9 @@
 
 					<CheckButton name="$parent_BuffWrap" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parent_BuffSize" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOP" relativeTo="$parent_Buffs" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="-3" y="-6"/>
+									<AbsDimension x="0" y="-135"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -8728,7 +8889,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_DebuffHighlight" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="6"/>
+									<AbsDimension x="0" y="2"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -8830,8 +8991,8 @@
 									XPerl_Options_EnableSibling(self, "Portrait")
 									XPerl_Options_EnableSibling(self, "Portrait3D", "Portrait")
 									XPerl_Options_EnableSibling(self, "ClassPortrait", "Portrait")
-									XPerl_Options_EnableSibling(self, "HitIndicator", "Portrait")
-									XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator", "Enable")
+									--XPerl_Options_EnableSibling(self, "HitIndicator", "Portrait")
+									--XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator", "Enable")
 									XPerl_Options_EnableSibling(self, "Threat")
 									XPerl_Options_EnableSibling(self, "ThreatName", "Threat")
 									XPerl_Options_EnableSibling(self, "ThreatPortrait", "Threat")
@@ -8892,8 +9053,8 @@
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "Portrait3D")
 									XPerl_Options_EnableSibling(self, "ClassPortrait")
-									XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator")
-									XPerl_Options_EnableSibling(self, "HitIndicator")
+									--XPerl_Options_EnableSibling(self, "HitIndicator")
+									--XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -8944,7 +9105,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
+					<!--<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
 						<Size>
 							<AbsDimension x="26" y="26"/>
 						</Size>
@@ -8985,13 +9146,13 @@
 								self.configIndex = "ownDamageOnly"
 							</OnLoad>
 						</Scripts>
-					</CheckButton>
+					</CheckButton>-->
 
 					<CheckButton name="$parent_Threat" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPRIGHT" relativeTo="$parent_OnlyMine" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOP" relativeTo="$parent_Portrait" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="6"/>
+									<AbsDimension x="0" y="-35"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -9063,6 +9224,7 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUS_ARCANE_BAR")
 								self.configBase = "XPerlDB.focus.castBar"
 								self.configIndex = "enable"
+								self.configClick = XPerl_ArcaneBar_Set
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
@@ -9283,6 +9445,25 @@
 						</Scripts>
 					</CheckButton>
 
+					<CheckButton name="$parent_Absorbs" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parent_HealPrediction" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="85" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUS_ABSORBS")
+								self.configBase = "XPerlDB.focus"
+								self.configIndex = "absorbs"
+								self.configClick = XPerl_Target_Reset
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
 					<CheckButton name="$parent_Values" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_HealPrediction" relativePoint="BOTTOMLEFT">
@@ -9467,14 +9648,18 @@
 										XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUS_TARGET")
 										self.Validate = function()
 											XPerl_Options_EnableSibling(self, "Buffs")
+											XPerl_Options_EnableSibling(self, "Debuffs")
 											XPerl_Options_EnableSibling(self, "BigBuffs", "Buffs")
+											XPerl_Options_EnableSibling(self, "BigPet", "BigBuffs", "Buffs")
 											XPerl_Options_EnableSibling(self, "BigDebuffs", "Buffs")
 											XPerl_Options_EnableSibling(self, "BigPet", "Buffs", "BigBuffs")
-											XPerl_Options_EnableSibling(self, "Above", "Buffs")
+											XPerl_Options_EnableSibling(self, "Above")
 											XPerl_Options_EnableSibling(self, "Level")
 											XPerl_Options_EnableSibling(self, "Values")
 											XPerl_Options_EnableSibling(self, "Percent")
 											XPerl_Options_EnableSibling(self, "Mana")
+											XPerl_Options_EnableSibling(self, "HealPrediction")
+											XPerl_Options_EnableSibling(self, "Absorbs")
 											XPerl_Options_EnableSibling(self, "ScaleFocusTarget")
 											XPerl_Options_EnableSibling(self, "Width")
 											XPerl_Options_EnableSibling(self, "Healer_Healer")
@@ -9505,40 +9690,14 @@
 								<Scripts>
 									<OnLoad>
 										XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUSTARGET_BUFFS")
-										self.flashFrame = {XPerl_FocusTargetbuffFrame, XPerl_FocusTargetdebuffFrame}
+										self.flashFrame = XPerl_FocusTargetbuffFrame
 										self.configBase = "XPerlDB.focustarget.buffs"
 										self.configIndex = "enable"
-										self.configClick = function()
-											XPerlDB.focustarget.debuffs.enable = XPerlDB.focustarget.buffs.enable
-											XPerl_TargetTarget_Reset()
-										end
-										self.Validate = function()
-											XPerl_Options_EnableSibling(self, "Above")
-											XPerl_Options_EnableSibling(self, "BigBuffs")
-											XPerl_Options_EnableSibling(self, "BigDebuffs")
-										end
-									</OnLoad>
-								</Scripts>
-							</CheckButton>
-
-							<CheckButton name="$parent_Above" inherits="XPerlCheckButtonTemplate">
-								<Size>
-									<AbsDimension x="26" y="26"/>
-								</Size>
-								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="BOTTOM">
-										<Offset>
-											<AbsDimension x="0" y="7"/>
-										</Offset>
-									</Anchor>
-								</Anchors>
-								<Scripts>
-									<OnLoad>
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUSTARGET_BUFFSABOVE")
-										self.flashFrame = {XPerl_FocusTargetbuffFrame, XPerl_FocusTargetdebuffFrame}
-										self.configBase = "XPerlDB.focustarget.buffs"
-										self.configIndex = "above"
 										self.configClick = XPerl_TargetTarget_Reset
+										self.Validate = function()
+											XPerl_Options_EnableSibling(self, "BigBuffs")
+											XPerl_Options_EnableSibling(self, "BigPet", "BigBuffs")
+										end
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
@@ -9548,7 +9707,7 @@
 									<AbsDimension x="26" y="26"/>
 								</Size>
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_Above" relativePoint="BOTTOMLEFT">
+									<Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="BOTTOM">
 										<Offset>
 											<AbsDimension x="0" y="7"/>
 										</Offset>
@@ -9564,28 +9723,6 @@
 										self.Validate = function()
 											XPerl_Options_EnableSibling(self, "BigPet")
 										end
-									</OnLoad>
-								</Scripts>
-							</CheckButton>
-
-							<CheckButton name="$parent_BigDebuffs" inherits="XPerlCheckButtonTemplate">
-								<Size>
-									<AbsDimension x="26" y="26"/>
-								</Size>
-								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_BigBuffs" relativePoint="TOPRIGHT">
-										<Offset>
-											<AbsDimension x="80" y="0"/>
-										</Offset>
-									</Anchor>
-								</Anchors>
-								<Scripts>
-									<OnLoad>
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUSTARGET_BIGDEBUFFS")
-										self.flashFrame = {XPerl_FocusTargetbuffFrame, XPerl_FocusTargetdebuffFrame}
-										self.configBase = "XPerlDB.pettarget.debuffs"
-										self.configIndex = "big"
-										self.configClick = XPerl_TargetTarget_Reset
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
@@ -9612,12 +9749,81 @@
 								</Scripts>
 							</CheckButton>
 
+							<CheckButton name="$parent_Debuffs" inherits="XPerlCheckButtonTemplate">
+								<Size>
+									<AbsDimension x="26" y="26"/>
+								</Size>
+								<Anchors>
+									<Anchor point="LEFT" relativeTo="$parent_Buffs" relativePoint="RIGHT">
+										<Offset>
+											<AbsDimension x="125" y="0"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUSTARGET_DEBUFFS")
+										self.flashFrame = XPerl_FocusTargetdebuffFrame
+										self.configBase = "XPerlDB.focustarget.debuffs"
+										self.configIndex = "enable"
+										self.configClick = XPerl_TargetTarget_Reset
+										self.Validate = function()
+											XPerl_Options_EnableSibling(self, "BigDebuffs")
+										end
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+
+							<CheckButton name="$parent_BigDebuffs" inherits="XPerlCheckButtonTemplate">
+								<Size>
+									<AbsDimension x="26" y="26"/>
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_Debuffs" relativePoint="BOTTOM">
+										<Offset>
+											<AbsDimension x="0" y="7"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUSTARGET_BIGDEBUFFS")
+										self.flashFrame = {XPerl_FocusTargetbuffFrame, XPerl_FocusTargetdebuffFrame}
+										self.configBase = "XPerlDB.pettarget.debuffs"
+										self.configIndex = "big"
+										self.configClick = XPerl_TargetTarget_Reset
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+
+							<CheckButton name="$parent_Above" inherits="XPerlCheckButtonTemplate">
+								<Size>
+									<AbsDimension x="26" y="26"/>
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="-32"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUSTARGET_BUFFSABOVE")
+										self.flashFrame = {XPerl_FocusTargetbuffFrame, XPerl_FocusTargetdebuffFrame}
+										self.configBase = "XPerlDB.focustarget.buffs"
+										self.configIndex = "above"
+										self.configClick = XPerl_TargetTarget_Reset
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+
 							<CheckButton name="$parent_Level" inherits="XPerlCheckButtonTemplate">
 								<Size>
 									<AbsDimension x="26" y="26"/>
 								</Size>
 								<Anchors>
-									<Anchor point="TOPRIGHT" relativeTo="$parent_BigPet" relativePoint="BOTTOMLEFT">
+									<Anchor point="TOP" relativeTo="$parent_Above" relativePoint="BOTTOM">
 										<Offset>
 											<AbsDimension x="0" y="7"/>
 										</Offset>
@@ -9670,6 +9876,25 @@
 										XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUSTARGET_HEAL_PREDICTION")
 										self.configBase = "XPerlDB.focustarget"
 										self.configIndex = "healprediction"
+										self.configClick = XPerl_TargetTarget_Reset
+										XPerl_Options_RegisterProtected(self)
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+
+							<CheckButton name="$parent_Absorbs" inherits="XPerlCheckButtonTemplate">
+								<Anchors>
+									<Anchor point="TOP" relativeTo="$parent_HealPrediction" relativePoint="BOTTOM">
+										<Offset>
+											<AbsDimension x="0" y="7"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUSTARGET_ABSORBS")
+										self.configBase = "XPerlDB.focustarget"
+										self.configIndex = "absorbs"
 										self.configClick = XPerl_TargetTarget_Reset
 										XPerl_Options_RegisterProtected(self)
 									</OnLoad>
@@ -10107,9 +10332,9 @@
 
 					<CheckButton name="$parent_BuffWrap" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parent_BuffSize" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOP" relativeTo="$parent_Buffs" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="-3" y="-6"/>
+									<AbsDimension x="0" y="-135"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -10217,7 +10442,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_DebuffHighlight" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="6"/>
+									<AbsDimension x="0" y="2"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -10316,13 +10541,14 @@
 									XPerl_Options_EnableSibling(self, "Portrait")
 									XPerl_Options_EnableSibling(self, "Portrait3D")
 									XPerl_Options_EnableSibling(self, "ClassPortrait")
-									XPerl_Options_EnableSibling(self, "HitIndicator")
+									--XPerl_Options_EnableSibling(self, "HitIndicator")
 									XPerl_Options_EnableSibling(self, "Threat")
 									XPerl_Options_EnableSibling(self, "ThreatName")
 									XPerl_Options_EnableSibling(self, "ThreatPortrait")
 									XPerl_Options_EnableSibling(self, "ArcaneBar")
 									XPerl_Options_EnableSibling(self, "Level")
 									XPerl_Options_EnableSibling(self, "HealPrediction")
+									XPerl_Options_EnableSibling(self, "Absorbs")
 									XPerl_Options_EnableSibling(self, "Target")
 									XPerl_Options_EnableSibling(self, "TargetLarge")
 									XPerl_Options_EnableSibling(self, "TargetSize")
@@ -10402,7 +10628,7 @@
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "Portrait3D")
 									XPerl_Options_EnableSibling(self, "ClassPortrait")
-									XPerl_Options_EnableSibling(self, "HitIndicator")
+									--XPerl_Options_EnableSibling(self, "HitIndicator")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -10453,7 +10679,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
+					<!--<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
 						<Size>
 							<AbsDimension x="26" y="26"/>
 						</Size>
@@ -10471,13 +10697,13 @@
 								self.configIndex = "hitIndicator"
 							</OnLoad>
 						</Scripts>
-					</CheckButton>
+					</CheckButton>-->
 
 					<CheckButton name="$parent_Threat" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPRIGHT" relativeTo="$parent_HitIndicator" relativePoint="BOTTOM">
+							<Anchor point="TOP" relativeTo="$parent_Portrait" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="6"/>
+									<AbsDimension x="0" y="-35"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -10549,6 +10775,7 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PARTY_ARCANE_BAR")
 								self.configBase = "XPerlDB.party.castBar"
 								self.configIndex = "enable"
+								self.configClick = XPerl_ArcaneBar_Set
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
@@ -10586,6 +10813,25 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PARTY_HEAL_PREDICTION")
 								self.configBase = "XPerlDB.party"
 								self.configIndex = "healprediction"
+								self.configClick = XPerl_Party_Reset
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_Absorbs" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parent_HealPrediction" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="85" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_PARTY_ABSORBS")
+								self.configBase = "XPerlDB.party"
+								self.configIndex = "absorbs"
 								self.configClick = XPerl_Party_Reset
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -10704,8 +10950,7 @@
 						<Scripts>
 							<OnLoad>
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PARTY_VALUES")
-								self.flashFrame = {XPerl_party1statsFramehealthBartext, XPerl_party2statsFramehealthBartext, XPerl_party3statsFramehealthBartext, XPerl_party4statsFramehealthBartext,
-											XPerl_party1statsFramemanaBartext, XPerl_party2statsFramemanaBartext, XPerl_party3statsFramemanaBartext, XPerl_party4statsFramemanaBartext}
+								self.flashFrame = {XPerl_party1statsFramehealthBartext, XPerl_party2statsFramehealthBartext, XPerl_party3statsFramehealthBartext, XPerl_party4statsFramehealthBartext, XPerl_party1statsFramemanaBartext, XPerl_party2statsFramemanaBartext, XPerl_party3statsFramemanaBartext, XPerl_party4statsFramemanaBartext}
 								self.configBase = "XPerlDB.party"
 								self.configIndex = "values"
 								self.configClick = XPerl_Party_Reset
@@ -10724,8 +10969,7 @@
 						<Scripts>
 							<OnLoad>
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PARTY_PERC")
-								self.flashFrame = {XPerl_party1statsFramehealthBarpercent, XPerl_party2statsFramehealthBarpercent, XPerl_party3statsFramehealthBarpercent, XPerl_party4statsFramehealthBarpercent,
-											XPerl_party1statsFramemanaBarpercent, XPerl_party2statsFramemanaBarpercent, XPerl_party3statsFramemanaBarpercent, XPerl_party4statsFramemanaBarpercent}
+								self.flashFrame = {XPerl_party1statsFramehealthBarpercent, XPerl_party2statsFramehealthBarpercent, XPerl_party3statsFramehealthBarpercent, XPerl_party4statsFramehealthBarpercent, XPerl_party1statsFramemanaBarpercent, XPerl_party2statsFramemanaBarpercent, XPerl_party3statsFramemanaBarpercent, XPerl_party4statsFramemanaBarpercent}
 								self.configBase = "XPerlDB.party"
 								self.configIndex = "percent"
 								self.configClick = XPerl_Party_Reset
@@ -10785,7 +11029,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PARTY_SMALLRAID")
 								self.configBase = "XPerlDB.party"
 								self.configIndex = "smallRaid"
-								self.configClick = XPerl_Party_Reset
+								self.configClick = function()
+									XPerl_Party_Reset()
+									XPerl_Raid_HideShowRaid()
+								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
 						</Scripts>
@@ -11474,14 +11721,13 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_SHOW")
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "NotInBG")
-									XPerl_Options_EnableSibling(self, "RaidPets")
-									XPerl_Options_EnableSibling(self, "AlignToRaid")
 									XPerl_Options_EnableSibling(self, "Titles")
 									XPerl_Options_EnableSibling(self, "Roles")
 									XPerl_Options_EnableSibling(self, "HealthText")
 									XPerl_Options_EnableSibling(self, "Percent", "HealthText")
 									XPerl_Options_EnableSibling(self, "Values", "HealthText")
 									XPerl_Options_EnableSibling(self, "HealPrediction")
+									XPerl_Options_EnableSibling(self, "Absorbs")
 									XPerl_Options_EnableSibling(self, "precisionPercent")
 									XPerl_Options_EnableSibling(self, "Mana")
 									XPerl_Options_EnableSibling(self, "ManaPercent", "Mana")
@@ -11512,6 +11758,10 @@
 									XPerl_Options_EnableSibling(self, "Groups_sortByRole")
 									XPerl_Options_EnableSibling(self, "Groups_Alphabetical")
 									XPerl_Options_EnableSibling(self, "Groups_VSpacing")
+
+									XPerl_Options_EnableSibling(self, "Pets_RaidPets")
+									XPerl_Options_EnableSibling(self, "Pets_AlignToRaid")
+
 									XPerl_Options_EnableSibling(self, "Custom_Enable")
 									XPerl_Options_EnableSibling(self, "Custom_Config")
 									XPerl_Options_EnableSibling(self, "Custom_Alpha")
@@ -11543,48 +11793,7 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_NOTINBG")
 								self.configBase = "XPerlDB.raid"
 								self.configIndex = "notInBG"
-								self.configClick = XPerl_RaidPets_OptionActions
-								XPerl_Options_RegisterProtected(self)
-							</OnLoad>
-						</Scripts>
-					</CheckButton>
-
-					<CheckButton name="$parent_RaidPets" inherits="XPerlCheckButtonTemplate">
-						<Anchors>
-							<Anchor point="TOP" relativeTo="$parent_NotInBG" relativePoint="BOTTOMLEFT">
-								<Offset>
-									<AbsDimension x="0" y="6"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<Scripts>
-							<OnLoad>
-								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_PETS")
-								self.configBase = "XPerlDB.raidpet"
-								self.configIndex = "enable"
-								self.configClick = XPerl_RaidPets_OptionActions
-								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "AlignToRaid")
-								end
-								XPerl_Options_RegisterProtected(self)
-							</OnLoad>
-						</Scripts>
-					</CheckButton>
-
-					<CheckButton name="$parent_AlignToRaid" inherits="XPerlCheckButtonTemplate">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parent_RaidPets" relativePoint="BOTTOM">
-								<Offset>
-									<AbsDimension x="0" y="6"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<Scripts>
-							<OnLoad>
-								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_PETS_ALIGN")
-								self.configBase = "XPerlDB.raidpet"
-								self.configIndex = "alignToRaid"
-								self.configClick = XPerl_RaidPets_OptionActions
+								self.configClick = XPerl_Raid_OptionActions
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
 						</Scripts>
@@ -11592,24 +11801,13 @@
 
 					<CheckButton name="$parent_Titles" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
-							<Anchor point="TOP" relativeTo="$parent_AlignToRaid" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOPLEFT" relativeTo="$parent_Enable" relativePoint="BOTTOMLEFT">
 								<Offset>
-									<AbsDimension x="0" y="0"/>
+									<AbsDimension x="0" y="-15"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
 						<Scripts>
-							<OnShow>
-								if (IsAddOnLoaded("ZPerl_RaidPets")) then
-									XPerl_Options_GetSibling("RaidPets", self):Show()
-									XPerl_Options_GetSibling("AlignToRaid", self):Show()
-									self:SetPoint("TOP", XPerl_Options_GetSibling("AlignToRaid", self), "BOTTOMLEFT", 0, 6)
-								else
-									XPerl_Options_GetSibling("RaidPets", self):Hide()
-									XPerl_Options_GetSibling("AlignToRaid", self):Hide()
-									self:SetPoint("TOP", XPerl_Options_GetSibling("NotInBG", self), "BOTTOMLEFT", 0, 6)
-								end
-							</OnShow>
 							<OnLoad>
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_TITLES")
 								self.configBase = "XPerlDB.raid"
@@ -11743,6 +11941,25 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_HEAL_PREDICTION")
 								self.configBase = "XPerlDB.raid"
 								self.configIndex = "healprediction"
+								self.configClick = XPerl_Raid_OptionActions
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_Absorbs" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parent_HealPrediction" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="85" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_ABSORBS")
+								self.configBase = "XPerlDB.raid"
+								self.configIndex = "absorbs"
 								self.configClick = XPerl_Raid_OptionActions
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -12131,7 +12348,7 @@
 							</Anchor>
 							<Anchor point="BOTTOMRIGHT" relativeTo="XPerl_Options_Area_Tabs">
 								<Offset>
-									<AbsDimension x="-5" y="130"/>
+									<AbsDimension x="-5" y="225"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -12676,6 +12893,90 @@
 						</Frames>
 					</Frame>
 
+					<Frame name="$parent_Pets">
+						<Scripts>
+							<OnLoad>
+								local _, _, _, _, reason = GetAddOnInfo("ZPerl_RaidPets")
+								if (reason == "DISABLED" or reason == "MISSING") then
+									self:Hide()
+								end
+							</OnLoad>
+						</Scripts>
+						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+							<EdgeSize>
+								<AbsValue val="6"/>
+							</EdgeSize>
+						</Backdrop>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Groups">
+								<Offset>
+									<AbsDimension x="0" y="-5"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="BOTTOMRIGHT" relativeTo="XPerl_Options_Area_Tabs">
+								<Offset>
+									<AbsDimension x="-5" y="105"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Frames>
+							<CheckButton name="$parent_RaidPets" inherits="XPerlCheckButtonTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset>
+											<AbsDimension x="4" y="-15"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_PETS")
+										self.configBase = "XPerlDB.raidpet"
+										self.configIndex = "enable"
+										self.configClick = XPerl_RaidPets_OptionActions
+										self.Validate = function()
+											XPerl_Options_EnableSibling(self, "AlignToRaid")
+										end
+										XPerl_Options_RegisterProtected(self)
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+
+							<CheckButton name="$parent_AlignToRaid" inherits="XPerlCheckButtonTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_RaidPets" relativePoint="BOTTOM">
+										<Offset>
+											<AbsDimension x="0" y="6"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_PETS_ALIGN")
+										self.configBase = "XPerlDB.raidpet"
+										self.configIndex = "alignToRaid"
+										self.configClick = XPerl_RaidPets_OptionActions
+										XPerl_Options_RegisterProtected(self)
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+						</Frames>
+						<Layers>
+							<Layer level="BORDER">
+								<FontString inherits="GameFontNormalSmall" text="XPERL_CONF_RAID_PET">
+									<Color r="1" g="1" b="1" a="1"/>
+									<Anchors>
+										<Anchor point="TOPLEFT">
+											<Offset>
+												<AbsDimension x="3" y="-3"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+
 					<Frame name="$parent_Custom">
 						<Scripts>
 							<OnLoad>
@@ -12691,7 +12992,7 @@
 							</EdgeSize>
 						</Backdrop>
 						<Anchors>
-							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Groups">
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Pets">
 								<Offset>
 									<AbsDimension x="0" y="-5"/>
 								</Offset>
@@ -12721,7 +13022,7 @@
 												if (XPerlDB.custom.enable) then
 													ZPerl_Custom:PLAYER_ENTERING_WORLD()
 												else
-													--ZPerl_Custom:ClearAll()
+													ZPerl_Custom:ClearAll()
 												end
 											end
 										end
@@ -12755,6 +13056,7 @@
 									</OnClick>
 								</Scripts>
 							</Button>
+
 							<Slider name="$parent_Alpha" inherits="XPerlSlider">
 								<Size>
 									<AbsDimension x="150" y="20"/>
@@ -12787,6 +13089,7 @@
 									</OnValueChanged>
 								</Scripts>
 							</Slider>
+
 							<CheckButton name="$parent_Add" inherits="XPerlRadioButtonTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="$parent_Alpha" relativePoint="BOTTOMLEFT">
@@ -12804,10 +13107,11 @@
 										if (XPerlDB.custom) then
 											XPerlDB.custom.blend = "ADD"
 										end
-										XPerl_Options_CheckRadio(self,{"Add", "Blend"})
+										XPerl_Options_CheckRadio(self, {"Add", "Blend"})
 									</OnClick>
 								</Scripts>
 							</CheckButton>
+
 							<CheckButton name="$parent_Blend" inherits="XPerlRadioButtonTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="$parent_Add" relativePoint="BOTTOMLEFT">
@@ -12825,7 +13129,7 @@
 										if (XPerlDB.custom) then
 											XPerlDB.custom.blend = "BLEND"
 										end
-										XPerl_Options_CheckRadio(self,{"Add", "Blend"})
+										XPerl_Options_CheckRadio(self, {"Add", "Blend"})
 									</OnClick>
 								</Scripts>
 							</CheckButton>							
@@ -12949,15 +13253,33 @@
 							<OnLoad>
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_ALL_HEAL_PREDICTION")
 								self.configClick = XPerl_OptionActions
-								self.configSelection = {"XPerlDB.player", "XPerlDB.target", "XPerlDB.targettarget", "XPerlDB.focus", "XPerlDB.focustarget", "XPerlDB.party", "XPerlDB.raid"}
+								self.configSelection = {"XPerlDB.player", "XPerlDB.pet", "XPerlDB.target", "XPerlDB.targettarget", "XPerlDB.focus", "XPerlDB.focustarget", "XPerlDB.party", "XPerlDB.raid"}
 								self.configIndex = "healprediction"
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_Absorbs" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_HealPrediction" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="0" y="6"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_ALL_ABSORBS")
+								self.configClick = XPerl_OptionActions
+								self.configSelection = {"XPerlDB.player", "XPerlDB.pet", "XPerlDB.target", "XPerlDB.targettarget", "XPerlDB.focus", "XPerlDB.focustarget", "XPerlDB.party", "XPerlDB.raid"}
+								self.configIndex = "absorbs"
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
 
 					<CheckButton name="$parent_ClassIcon" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parent_HealPrediction" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOPLEFT" relativeTo="$parent_Absorbs" relativePoint="BOTTOMLEFT">
 								<Offset>
 									<AbsDimension x="0" y="6"/>
 								</Offset>
@@ -13648,36 +13970,13 @@
 										self.configBase = "XPerlDB.colour"
 										self.configIndex = "class"
 										self.configClick = XPerl_OptionActions
-										self.Validate = function()
-											XPerl_Options_EnableSibling(self, "ApplyToGuild")
-										end
-									</OnLoad>
-								</Scripts>
-							</CheckButton>
-
-							<CheckButton name="$parent_ApplyToGuild" inherits="XPerlCheckButtonTemplate">
-								<Size>
-									<AbsDimension x="26" y="26"/>
-								</Size>
-								<Anchors>
-									<Anchor point="TOP" relativeTo="$parent_Coloured" relativePoint="BOTTOMRIGHT">
-										<Offset>
-											<AbsDimension x="0" y="6"/>
-										</Offset>
-									</Anchor>
-								</Anchors>
-								<Scripts>
-									<OnLoad>
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_COLOUR_APPLYTOGUILDLIST")
-										self.configBase = "XPerlDB.colour"
-										self.configIndex = "guildList"
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
 
 							<CheckButton name="$parent_ClassBar" inherits="XPerlCheckButtonTemplate">
 								<Anchors>
-									<Anchor point="TOPRIGHT" relativeTo="$parent_ApplyToGuild" relativePoint="BOTTOM">
+									<Anchor point="TOP" relativeTo="$parent_Coloured" relativePoint="BOTTOM">
 										<Offset>
 											<AbsDimension x="0" y="6"/>
 										</Offset>
@@ -15240,7 +15539,7 @@
 											XPerl_Options_EnableSibling(self, "TargetCountersSelf")
 											XPerl_Options_EnableSibling(self, "Enemy")
 											XPerl_Options_EnableSibling(self, "ShowCounters")
-											XPerl_Options_EnableSibling(self, "AggroWarning")
+											XPerl_Options_EnableSibling(self, "AggroWarning", "Enemy")
 											XPerl_Options_EnableSibling(self, "Transparency")
 											XPerl_Options_EnableSibling(self, "BackTransparency")
 										end
@@ -15293,32 +15592,12 @@
 								</Scripts>
 							</CheckButton>
 
-							<CheckButton name="$parent_ShowCounters" inherits="XPerlCheckButtonTemplate">
-								<Size>
-									<AbsDimension x="26" y="26"/>
-								</Size>
-								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_Enemy" relativePoint="BOTTOMLEFT">
-										<Offset>
-											<AbsDimension x="0" y="6"/>
-										</Offset>
-									</Anchor>
-								</Anchors>
-								<Scripts>
-									<OnLoad>
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGET_SHOWCOUNTERS")
-										self.XconfigVar = "ShowTargetCounters"
-										self.configClick = XPerl_UpdateAssists
-									</OnLoad>
-								</Scripts>
-							</CheckButton>
-
 							<CheckButton name="$parent_AggroWarning" inherits="XPerlCheckButtonTemplate">
 								<Size>
 									<AbsDimension x="26" y="26"/>
 								</Size>
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_ShowCounters" relativePoint="BOTTOMLEFT">
+									<Anchor point="TOPLEFT" relativeTo="$parent_Enemy" relativePoint="BOTTOM">
 										<Offset>
 											<AbsDimension x="0" y="6"/>
 										</Offset>
@@ -15332,14 +15611,34 @@
 								</Scripts>
 							</CheckButton>
 
+							<CheckButton name="$parent_ShowCounters" inherits="XPerlCheckButtonTemplate">
+								<Size>
+									<AbsDimension x="26" y="26"/>
+								</Size>
+								<Anchors>
+									<Anchor point="TOP" relativeTo="$parent_Enemy" relativePoint="BOTTOM">
+										<Offset>
+											<AbsDimension x="0" y="-16"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGET_SHOWCOUNTERS")
+										self.XconfigVar = "ShowTargetCounters"
+										self.configClick = XPerl_UpdateAssists
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+
 							<Slider name="$parent_Transparency" inherits="XPerlSlider">
 								<Size>
 									<AbsDimension x="160" y="16"/>
 								</Size>
 								<Anchors>
-									<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_AggroWarning">
+									<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_ShowCounters">
 										<Offset>
-											<AbsDimension x="-14" y="-18"/>
+											<AbsDimension x="0" y="-16"/>
 										</Offset>
 									</Anchor>
 								</Anchors>

@@ -7,7 +7,7 @@
 -- API
 --
 -- module = CompactRaid:FindModule("RaidDebuff") -- Get the "RaidDebuff" module reference
--- valid = module:VerifyExpansion(id) -- Verify the expansion(Major version: 1-Classic, 2-TBC, 3-WotLK, 4-Cataclysm, 5-MoP, 6-?, ...)
+-- valid = module:VerifyExpansion(id) -- Verify the expansion(Major version: 1-Classic, 2-TBC, 3-WotLK, 4-Cataclysm, 5-MoP, 6-WoD, 7-?, ...)
 -- debuff = module:RegisterDebuff(instanceId, bossId, spellId, level) -- Register a debuff
 
 ------------------------------------------------------------
@@ -31,7 +31,6 @@ local EJ_GetInstanceByIndex = EJ_GetInstanceByIndex
 local EJ_GetNumTiers = EJ_GetNumTiers
 local EJ_GetTierInfo = EJ_GetTierInfo
 local EJ_GetCurrentTier = EJ_GetCurrentTier
-local _
 
 local L = CompactRaid:GetLocale("RaidDebuff")
 local module = CompactRaid:FindModule("RaidDebuff")
@@ -283,7 +282,7 @@ function module:ApplyUserLevels()
 end
 
 function module:ClearUserLevels()
-	local tier, instance
+	local _, tier, instance
 	for _, tier in pairs(tierList) do
 		for _, instance in pairs(tier.instances) do
 			local debuff
@@ -300,7 +299,7 @@ function module:GetZoneDebuffs()
 		return
 	end
 
-	local tier
+	local _, tier
 	for _, tier in pairs(tierList) do
 		local id, data
 		for id, data in pairs(tier.instances) do
@@ -353,7 +352,7 @@ function module:ApplyCustomDebuffs()
 end
 
 function module:ClearCustomDebuffs()
-	local tier, instance
+	local _, tier, instance
 	for _, tier in pairs(tierList) do
 		for _, instance in pairs(tier.instances) do
 			local name, debuff
@@ -372,7 +371,7 @@ end
 
 local function FindBoss(bosses, id)
 	local general
-	local data
+	local _, data
 	for _, data in ipairs(bosses) do
 		if data.id == id then
 			return data
@@ -469,7 +468,7 @@ function module:InitAPI()
 	end
 
 	initDone = 1
-	local data
+	local _, data
 	for _, data in pairs(pendingList) do
 		self:RegisterDebuff(data.tierId, data.instanceId, data.bossId, data.spellId, data.level, data.custom)
 	end

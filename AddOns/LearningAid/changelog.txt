@@ -1,3 +1,19 @@
+# 1.12b3
+
+Updated TOC to 60200 for patch 6.2.0.
+Added "Ignore Auto Attack" option.
+Removed more dead Spam Filter code that was causing errors.
+
+# 1.12b2
+
+Updated TOC to 60100 for patch 6.1.0.
+Fixed some global pollution found with Globe (https://www.townlong-yak.com/globe/).
+Added checks for spells like Flying Serpent Kick that change ID on the fly.
+Added initial visible support for action bar copy and paste.
+Added support for flyouts to action bar copy and paste.
+Added support for dynamic shapeshift bar numbering to action bar copy and paste.
+Added named bar clipboards to action bar copy and paste, replacing the single implicit clipboard.
+
 # 1.12b1
 
 Update TOC for Warlords of Draenor pre-patch 6.0.2

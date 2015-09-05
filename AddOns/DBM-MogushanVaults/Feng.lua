@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(689, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 33 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(60009)--60781 Soul Fragment
 mod:SetEncounterID(1390)
 mod:SetZone()
@@ -72,31 +72,31 @@ local specWarnNullBarrier			= mod:NewSpecialWarningSpell(115817) -- Null Barrier
 
 --Nature/Fist
 local timerLightningLash			= mod:NewTargetTimer(20, 131788, nil, "Tank")
-local timerLightningLashCD			= mod:NewCDTimer(9, 131788, nil, "Tank")--9-20 second variation.
+local timerLightningLashCD			= mod:NewCDTimer(9, 131788, nil, "Tank", nil, 5)--9-20 second variation.
 local timerLightningFistsCD			= mod:NewCDTimer(14, 116157)
-local timerEpicenterCD				= mod:NewCDCountTimer(30, 116018)
+local timerEpicenterCD				= mod:NewCDCountTimer(30, 116018, nil, nil, nil, 2)
 local timerEpicenter				= mod:NewBuffActiveTimer(10, 116018)
 --Fire/Spear
 local timerFlamingSpear				= mod:NewTargetTimer(20, 116942, nil, "Tank")
-local timerFlamingSpearCD			= mod:NewCDTimer(9, 116942, nil, "Tank")--8-11second variation, usually 10 though.
+local timerFlamingSpearCD			= mod:NewCDTimer(9, 116942, nil, "Tank", nil, 5)--8-11second variation, usually 10 though.
 local timerWildSpark				= mod:NewTargetTimer(5, 116784)
 local timerDrawFlame				= mod:NewBuffActiveTimer(6, 116711)
-local timerDrawFlameCD				= mod:NewNextCountTimer(30, 116711)--30 seconds after last ended.
+local timerDrawFlameCD				= mod:NewNextCountTimer(30, 116711, nil, nil, nil, 2)--30 seconds after last ended.
 --Arcane/Staff
 local timerArcaneShock				= mod:NewTargetTimer(20, 131790, nil, "Tank")
-local timerArcaneShockCD			= mod:NewCDTimer(9, 131790, nil, "Tank")--not comfirmed
-local timerArcaneResonanceCD		= mod:NewCDTimer(15.5, 116417)
-local timerArcaneVelocityCD			= mod:NewCDCountTimer(18, 116364)--18 seconds after last ended.
+local timerArcaneShockCD			= mod:NewCDTimer(9, 131790, nil, "Tank", nil, 5)--not comfirmed
+local timerArcaneResonanceCD		= mod:NewCDTimer(15.5, 116417, nil, nil, nil, 3)
+local timerArcaneVelocityCD			= mod:NewCDCountTimer(18, 116364, nil, nil, nil, 2)--18 seconds after last ended.
 local timerArcaneVelocity			= mod:NewBuffActiveTimer(8, 116364)
 --Shadow/Shield (Heroic Only)
 local timerShadowBurn				= mod:NewTargetTimer(20, 131792, nil, "Tank")
-local timerShadowBurnCD				= mod:NewCDTimer(9, 131792, nil, "Tank")
+local timerShadowBurnCD				= mod:NewCDTimer(9, 131792, nil, "Tank", nil, 5)
 local timerChainsOfShadowCD			= mod:NewCDTimer(6, 118783, nil, false)--6-10sec variation noted
-local timerSiphoningShieldCD		= mod:NewCDCountTimer(35, 117203)--35-38sec variation noted
+local timerSiphoningShieldCD		= mod:NewCDCountTimer(35, 117203, nil, nil, nil, 1)--35-38sec variation noted
 --Tank Abilities
 local timerReversalLightningFists	= mod:NewBuffFadesTimer(20, 118302)
 local timerNullBarrier				= mod:NewBuffFadesTimer(6, 115817)
-local timerNullBarrierCD			= mod:NewCDTimer(55, 115817)
+local timerNullBarrierCD			= mod:NewCDTimer(55, 115817, nil, nil, nil, 5)
 
 mod:AddBoolOption("SetIconOnWS", true)
 mod:AddBoolOption("SetIconOnAR", true)

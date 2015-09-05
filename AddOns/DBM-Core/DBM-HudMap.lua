@@ -4,7 +4,7 @@
 local ADDON_NAME = ...
 
 DBMHudMap = {}
-DBMHudMap.mainFrame = CreateFrame("Frame", "DBMHudMapFrame")
+local mainFrame = CreateFrame("Frame", "DBMHudMapFrame")
 local mod = DBMHudMap
 
 local wipe, type, pairs, ipairs, tinsert, tremove, tonumber, setmetatable, select, unpack = table.wipe, type, pairs, ipairs, table.insert, table.remove, tonumber, setmetatable, select, unpack
@@ -16,11 +16,17 @@ local updateFrame = CreateFrame("Frame")
 local onUpdate, Point, Edge
 local followedUnits = {}
 local callbacks = CallbackHandler:New(mod)
+local activeMarkers = 0
+local hudarActive = false
+local playerName = UnitName("player")
+local encounterMarkers = {}
 
-local GetNumGroupMembers, GetNumSubgroupMembers = GetNumGroupMembers, GetNumSubgroupMembers
+local GetNumGroupMembers, GetNumSubgroupMembers, IsInRaid = GetNumGroupMembers, GetNumSubgroupMembers, IsInRaid
 local GetTime, UIParent = GetTime, UIParent
-local UnitExists, UnitIsUnit, UnitPosition, GetPlayerFacing = UnitExists, UnitIsUnit, UnitPosition, GetPlayerFacing
+local UnitExists, UnitIsUnit, UnitPosition, UnitDebuff, GetPlayerFacing = UnitExists, UnitIsUnit, UnitPosition, UnitDebuff, GetPlayerFacing
 local GetInstanceInfo = GetInstanceInfo
+
+local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 
 local targetCanvasAlpha
 
@@ -53,6 +59,7 @@ local textureLookup = {
 	fuzzyring	= [[SPELLS\WHITERINGTHIN128.BLP]],
 	fatring		= [[SPELLS\WhiteRingFat128.blp]],
 	swords		= [[SPELLS\Strength_128.blp]],
+	beam1		= [[Textures\SPELLCHAINEFFECTS\Beam_01]]
 }
 
 local textureKeys, textureVals = {}, {}
@@ -154,7 +161,7 @@ end
 local function groupIter(state, index)
 	if index < 0 then return end
 	local raid, party = GetNumGroupMembers(), GetNumSubgroupMembers()
-	local prefix = raid > 0 and "raid" or "party"
+	local prefix = IsInRaid() and "raid" or "party"
 	local unit = prefix .. index
 	if UnitExists(unit) then
 		return index + 1, unit
@@ -172,7 +179,8 @@ mod.group = group
 local pointCache, edgeCache = {}, {}
 local activePointList, activeEdgeList = {}, {}
 
-local zoomScale, targetZoomScale = 45, 40
+local zoomScale, targetZoomScale, fixedZoomScale = 45, 40, nil
+local lastPlayerX, lastPlayerY
 
 do
 	local fine, coarse = 1 / 60, 3
@@ -180,22 +188,19 @@ do
 	local zoomDelay, fadeInDelay, fadeOutDelay = 0.5, 0.25, 0.5
 
 	local function computeNewScale()
+		if fixedZoomScale then return fixedZoomScale end
 		local px, py = mod:GetUnitPosition("player")
+		lastPlayerX, lastPlayerY = px, py
 		local maxDistance = 0
-		local activeObjects = 0
 		for point, _ in pairs(activePointList) do
 			local d = point:Distance(px, py, true)
-			local maxSize = 200
-			if (d > 0 and d < maxSize and not point.persist) or point.alwaysShow then
-				activeObjects = activeObjects + 1
-			end
 
 			if d > 0 and d < 200 and d > maxDistance then
 				maxDistance = d
 			end
 		end
-		if maxDistance < 30 then maxDistance = 30 end
-		return maxDistance, activeObjects
+		if maxDistance < 20 then maxDistance = 20 end
+		return maxDistance
 	end
 
 	function onUpdate(self, t)
@@ -211,9 +216,7 @@ do
 			local elapsed = fine * steps
 			fineTotal = fineTotal - elapsed
 
-			local zoom
-			zoom, mod.activeObjects = computeNewScale()
-			targetZoomScale = zoom
+			targetZoomScale = computeNewScale()
 			local currentAlpha = mod.canvas:GetAlpha()
 			if targetCanvasAlpha and currentAlpha ~= targetCanvasAlpha then
 				local newAlpha
@@ -246,7 +249,6 @@ function mod:OnInitialize()
 	self.canvas = CreateFrame("Frame", "DBMHudMapCanvas", UIParent)
 	self.canvas:SetSize(UIParent:GetWidth(), UIParent:GetHeight())
 	self.canvas:SetPoint("CENTER")
-	self.activeObjects = 0
 	self.HUDEnabled = false
 end
 
@@ -254,9 +256,9 @@ function mod:Enable()
 	if DBM.Options.DontShowHudMap2 or self.HUDEnabled then return end
 	DBM:Debug("HudMap Activating", 2)
 	self.currentMap = select(8, GetInstanceInfo())
-	self.mainFrame:Show()
-	self.mainFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-	self.mainFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
+	mainFrame:Show()
+--	mainFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+	mainFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
 	self.canvas:SetAlpha(1)
 	self:UpdateCanvasPosition()
 
@@ -274,14 +276,26 @@ function mod:Disable()
 	if not self.HUDEnabled then return end
 	DBM:Debug("HudMap Deactivating", 2)
 	self:FreeEncounterMarkers()
+	Edge:ClearAll()
+	if hudarActive then return end--Don't disable if hudar is open
 	--Anything else needed? maybe clear all marks, hide any frames, etc?
-	self.mainFrame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-	self.mainFrame:UnregisterEvent("LOADING_SCREEN_DISABLED")
-	self.mainFrame:Hide()
+--	mainFrame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+	mainFrame:UnregisterEvent("LOADING_SCREEN_DISABLED")
+	mainFrame:Hide()
 	self.HUDEnabled = false
 	if updateFrame.ticker then
 		updateFrame.ticker:Cancel()
 		updateFrame.ticker = nil
+	end
+end
+
+function mod:ToggleHudar(r, hide)
+	if hudarActive or hide then
+		hudarActive = false
+		self:FreeEncounterMarkerByTarget(143430, playerName)
+	else
+		hudarActive = true
+		self:RegisterRangeMarkerOnPartyMember(143430, "timer", playerName, r, nil, 0, 1, 0, 0.3):Appear():RegisterForAlerts("all"):Rotate(360, 9.5)
 	end
 end
 
@@ -290,8 +304,8 @@ do
 		if event == "ADDON_LOADED" and select(1, ...) == ADDON_NAME then
 			mod:OnInitialize()
 			--mod:Enable()
-			mod.mainFrame:UnregisterEvent("ADDON_LOADED")
-		elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
+			mainFrame:UnregisterEvent("ADDON_LOADED")
+--[[		elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
 			local timestamp, clevent, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID = ...
 			if clevent == "UNIT_DIED" then
 				for k, v in pairs(followedUnits) do
@@ -299,14 +313,14 @@ do
 						v:Free()
 					end
 				end
-			end
+			end--]]
 		elseif event == "LOADING_SCREEN_DISABLED" then
 			mod.currentMap = select(8, GetInstanceInfo())
 		end
 	end
 
-	mod.mainFrame:SetScript("OnEvent", onEvent)
-	mod.mainFrame:RegisterEvent("ADDON_LOADED")
+	mainFrame:SetScript("OnEvent", onEvent)
+	mainFrame:RegisterEvent("ADDON_LOADED")
 end
 
 function mod:PointExists(id)
@@ -363,7 +377,7 @@ local animations = {
 	end
 }
 
-local function DrawRouteLineCustom(T, C, sx, sy, ex, ey, w, relPoint)
+local function DrawRouteLineCustom(T, C, sx, sy, ex, ey, w, extend, relPoint)
 	if (not relPoint) then relPoint = "BOTTOMLEFT"; end
 
 	-- Determine dimensions and center point of line
@@ -391,6 +405,9 @@ local function DrawRouteLineCustom(T, C, sx, sy, ex, ey, w, relPoint)
 	local s,c = -dy / l, dx / l;
 	local sc = s * c;
 
+--	if extend then
+--		l = l + 500
+--	end
 	-- Calculate bounding box size and texture coordinates
 	local Bwid, Bhgt, BLx, BLy, TLx, TLy, TRx, TRy, BRx, BRy;
 	if (dy >= 0) then
@@ -515,9 +532,13 @@ Edge = setmetatable({
 		activeEdgeList[self] = nil
 
 		tinsert(edgeCache, self)
+		activeMarkers = activeMarkers - 1
+		if activeMarkers == 0 then--No markers left, disable hud
+			mod:Disable()
+		end
 		return nil
 	end,
-	New = function(self, r, g, b, a, srcPlayer, dstPlayer, sx, sy, dx, dy, lifetime)
+	New = function(self, r, g, b, a, srcPlayer, dstPlayer, sx, sy, dx, dy, lifetime, texfile, w, extend)
 		local t = tremove(edgeCache)
 		if not t then
 			t = setmetatable({}, edge_mt)
@@ -528,9 +549,7 @@ Edge = setmetatable({
 			t.frame:SetFrameStrata("LOW")
 			t.texture = t.frame:CreateTexture()
 			t.texture:SetAllPoints()
-			-- local line = "Interface\\TaxiFrame\\UI-Taxi-Line"
-			local line = "Interface\\AddOns\\DBM-Core\\textures\\line"
-			t.texture:SetTexture(line)
+			t.texture:SetTexture(textureLookup[texfile] or texfile or [[Interface\AddOns\DBM-Core\textures\line]])
 
 			t.fadeOutGroup = t.frame:CreateAnimationGroup()
 			t.fadeOut = t.fadeOutGroup:CreateAnimation("alpha")
@@ -546,8 +565,9 @@ Edge = setmetatable({
 		t.lifetime = type(lifetime) == "number" and GetTime() + lifetime or nil
 		t:SetColor(r, g, b, a)
 		t.srcPlayer, t.dstPlayer = srcPlayer, dstPlayer
-		t.sx, t.sy, t.dx, t.dy = sx, sy, dx, dy
+		t.sx, t.sy, t.dx, t.dy, t.w, t.extend = sx, sy, dx, dy, w, extend
 		activeEdgeList[t] = true
+		activeMarkers = activeMarkers + 1
 		return t
 	end,
 	SetColor = function(self, r, g, b, a)
@@ -587,6 +607,11 @@ Edge = setmetatable({
 		end
 		return self
 	end,
+	ClearAll = function(self)
+		for t, _ in pairs(activeEdgeList) do
+			t:Free()
+		end
+	end,
 	UpdateAll = function(self)
 		if(self ~= Edge) then return end
 		for t, _ in pairs(activeEdgeList) do
@@ -598,7 +623,7 @@ Edge = setmetatable({
 			self:Free()
 			return
 		end
-		local sx, sy, dx, dy
+		local sx, sy, dx, dy, w
 		if self.srcPlayer then
 			sx, sy = mod:GetUnitPosition(self.srcPlayer)
 		elseif self.srcPoint then
@@ -608,11 +633,31 @@ Edge = setmetatable({
 		end
 
 		if self.dstPlayer then
-			dx, dy = mod:GetUnitPosition(self.dstPlayer)
+			if self.extend then
+				local destx, desty = mod:GetUnitPosition(self.dstPlayer)
+				--local dists = mod:DistanceBetweenPoints(sx, sy, lastPlayerX, lastPlayerY)
+				local distd = mod:DistanceBetweenPoints(destx, desty, lastPlayerX, lastPlayerY)
+				--local extendValue = zoomScale * 1.25 - dists - distd
+				local extendValue = zoomScale - distd
+				if extendValue > 0 then
+					--print("Extending line by "..extendValue.." (scale "..zoomScale..")")
+					dx, dy = self:Extend(sx, sy, destx, desty, extendValue)
+				else
+					dx, dy = destx, desty
+				end
+			else
+				dx, dy = mod:GetUnitPosition(self.dstPlayer)
+			end
 		elseif self.dstPoint then
 			dx, dy = self.dstPoint:Location()
 		elseif self.dx and self.dy then
 			dx, dy = self.dx, self.dy
+		end
+		
+		if self.w then
+			w = self.w
+		else
+			w = 100
 		end
 
 		local visible
@@ -636,18 +681,48 @@ Edge = setmetatable({
 			local ax = dx - sx
 			local ay = dy - sy
 			local hyp = pow((ax*ax) + (ay*ay), 0.5)
+			--if self.extend then
+				--print(sx .. " " .. sy .. " " .. dx .. " " .. dy)
+			--	dx, dy = self:Extend(sx, sy, dx, dy, 100)
+				--print(sx .. " " .. sy .. " " .. dx .. " " .. dy)
+			--end
 			if hyp > 15 then
 				self.texture:Show()
-				DrawRouteLineCustom(self.texture, mod.canvas, sx, sy, dx, dy, 100);
+				DrawRouteLineCustom(self.texture, mod.canvas, sx, sy, dx, dy, w, self.extend);
 			else
 				self.texture:Hide()
 			end
 		end
 	end,
+	Extend = function(self, sx, sy, dx, dy, dist)
+		local cx = dx - sx;
+		local cy = dy - sy;
+
+		local len = sqrt(cx * cx + cy * cy);
+
+		local ex = cx / len;
+		local ey = cy / len;
+
+		local nx = ex * dist;
+		local ny = ey * dist;
+
+		local x = nx + dx;
+		local y = ny + dy;
+
+		return x, y;
+	end,
 }, object_mt)
 
-function mod:AddEdge(r, g, b, a, lifetime, srcPlayer, dstPlayer, sx, sy, dx, dy)
-	return Edge:New(r, g, b, a, srcPlayer, dstPlayer, sx, sy, dx, dy, lifetime)
+function mod:AddEdge(r, g, b, a, lifetime, srcPlayer, dstPlayer, sx, sy, dx, dy, w, texfile, extend)
+	if DBM.Options.DontShowHudMap2 then return end
+	if not self.HUDEnabled then
+		self:Enable()
+	end
+	return Edge:New(r, g, b, a, srcPlayer, dstPlayer, sx, sy, dx, dy, lifetime, texfile, w, extend)
+end
+
+function mod:ClearAllEdges()
+	Edge:ClearAll()
 end
 
 do
@@ -827,7 +902,7 @@ do
 			a = bool and self.alert.a or self.normal.a or 1
 			self.texture:SetVertexColor(r, g, b, a)
 			if bool then
-				self:SetLabel(self.alertLabel)
+				self:SetLabel(self.alertLabel, nil, nil, nil, nil, nil, 0.8)
 			end
 			return self
 		end,
@@ -865,7 +940,19 @@ do
 			local x, y = self:Location()
 
 			local alert = false
-			if self.shouldUpdateRange == "all" or (self.follow and UnitIsUnit(self.follow, "player")) then
+			if type(self.shouldUpdateRange) == "string" and self.shouldUpdateRange ~= "all" then--Spellname passed, debuff filter
+				if not UnitDebuff("player", self.shouldUpdateRange) then--Debuff faded from player, auto switch to "all" type
+					self.shouldUpdateRange = true
+					self:UpdateAlerts(self)
+					return
+				end
+				for index, unit in group() do
+					if not UnitDebuff(unit, self.shouldUpdateRange) and not UnitIsDead(unit) then
+						alert = mod:DistanceToPoint(unit, x, y) < self.radius
+						if alert then break end
+					end
+				end
+			elseif self.shouldUpdateRange == "all" or (self.follow and UnitIsUnit(self.follow, "player")) then
 				for index, unit in group() do
 					if not UnitIsUnit(unit, "player") and not UnitIsDead(unit) then
 						alert = mod:DistanceToPoint(unit, x, y) < self.radius
@@ -917,7 +1004,7 @@ do
 			if not r and text then
 				local _, cls = UnitClass(text)
 				if cls and RAID_CLASS_COLORS[cls] then
-					r, g, b, a = unpack(RAID_CLASS_COLORS[cls])
+					r, g, b = RAID_CLASS_COLORS[cls].r, RAID_CLASS_COLORS[cls].g, RAID_CLASS_COLORS[cls].b
 				end
 			end
 			self.text.r = r or self.text.r
@@ -936,7 +1023,7 @@ do
 				self.text:SetTextColor(self.text.r, self.text.g, self.text.b, self.text.a)
 				self.text:Show()
 				local f, s, m = self.text:GetFont()
-				local font = f
+				local font = DBM.STANDARD_TEXT_FONT or f
 				local size = fontSize or 20 or s
 				local outline = outline or "THICKOUTLINE" or m
 				self.text:SetFont(font, size, outline)
@@ -971,7 +1058,7 @@ do
 			return self
 		end,
 
-		EdgeFrom = function(self, point_or_unit_or_x, to_y, lifetime, r, g, b, a)
+		EdgeFrom = function(self, point_or_unit_or_x, to_y, lifetime, r, g, b, a, w, texfile, extend)
 			local fromPlayer = self.follow
 			local unit, x, y
 			if type(point_or_unit_or_x) == "table" then
@@ -983,7 +1070,7 @@ do
 				x = to_y ~= nil and point_or_unit_or_x
 				y = to_y
 			end
-			local edge = Edge:New(r, g, b, a, fromPlayer, unit, self.stickX, self.stickY, x, y, lifetime)
+			local edge = Edge:New(r, g, b, a, fromPlayer, unit, self.stickX, self.stickY, x, y, lifetime, texfile, w, extend)
 			self:AttachEdge(edge)
 			if type(point_or_unit_or_x) == "table" then
 				point_or_unit_or_x:AttachEdge(edge)
@@ -994,7 +1081,7 @@ do
 			return edge
 		end,
 
-		EdgeTo = function(self, point_or_unit_or_x, from_y, lifetime, r, g, b, a)
+		EdgeTo = function(self, point_or_unit_or_x, from_y, lifetime, r, g, b, a, w, texfile, extend)
 			local toPlayer = self.follow
 			local unit, x, y
 			if type(point_or_unit_or_x) == "table" then
@@ -1007,7 +1094,7 @@ do
 				y = from_y
 			end
 
-			local edge = Edge:New(r, g, b, a, unit, toPlayer, x, y, self.stickX, self.stickY, lifetime)
+			local edge = Edge:New(r, g, b, a, unit, toPlayer, x, y, self.stickX, self.stickY, lifetime, texfile, w, extend)
 			self:AttachEdge(edge)
 			if type(point_or_unit_or_x) == "table" then
 				point_or_unit_or_x:AttachEdge(edge)
@@ -1056,7 +1143,7 @@ do
 				t.frame:SetFrameStrata("LOW")
 				t.frame.owner = t
 				t.text = t.frame:CreateFontString()
-				t.text:SetFont(STANDARD_TEXT_FONT, 10, "")
+				t.text:SetFont(DBM.STANDARD_TEXT_FONT, 10, "")
 				t.text:SetDrawLayer("OVERLAY")
 				t.text:SetPoint("BOTTOM", t.frame, "CENTER")
 				t.edges = {}
@@ -1160,9 +1247,6 @@ end
 edge_mt.__index = Edge
 point_mt.__index = Point
 
-function mod:UpdateMode()
-end
-
 function mod:PlaceRangeMarker(texture, x, y, radius, duration, r, g, b, a, blend, priority)
 	local red, green, blue = r, g, b
 	local size, alpha, graphic = radius, a, texture
@@ -1185,6 +1269,15 @@ function mod:PlaceRangeMarker(texture, x, y, radius, duration, r, g, b, a, blend
 end
 
 function mod:PlaceStaticMarkerOnPartyMember(texture, person, radius, duration, r, g, b, a, blend, priority)
+	if not r and person then--Auto generate class color if colors were left nil
+		local _, cls = UnitClass(person)
+		if cls and RAID_CLASS_COLORS[cls] then
+			r, g, b = RAID_CLASS_COLORS[cls].r, RAID_CLASS_COLORS[cls].g, RAID_CLASS_COLORS[cls].b
+		else
+			DBM:Debug("HudMap Marker failed, no color defined and no unit class")
+			return--Should not happen, but prevent error if it does
+		end
+	end
 	local red, green, blue = r, g, b
 	local size, alpha, graphic = radius, a, texture
 	if priority then
@@ -1207,6 +1300,15 @@ function mod:PlaceStaticMarkerOnPartyMember(texture, person, radius, duration, r
 end
 
 function mod:PlaceRangeMarkerOnPartyMember(texture, person, radius, duration, r, g, b, a, blend, priority)
+	if not r and person then--Auto generate class color if colors were left nil
+		local _, cls = UnitClass(person)
+		if cls and RAID_CLASS_COLORS[cls] then
+			r, g, b = RAID_CLASS_COLORS[cls].r, RAID_CLASS_COLORS[cls].g, RAID_CLASS_COLORS[cls].b
+		else
+			DBM:Debug("HudMap Marker failed, no color defined and no unit class")
+			return--Should not happen, but prevent error if it does
+		end
+	end
 	local red, green, blue = r, g, b
 	local size, alpha, graphic = radius, a, texture
 	if priority then
@@ -1227,8 +1329,6 @@ function mod:PlaceRangeMarkerOnPartyMember(texture, person, radius, duration, r,
 	return Point:New(nil, nil, nil, person, duration, graphic, size, blend, red, green, blue, alpha)
 end
 
-local encounterMarkers = {}
-local activeMarkers = 0
 function mod:RegisterEncounterMarker(spellid, name, marker)
 	if DBM.Options.DontShowHudMap2 then return end
 	if not self.HUDEnabled then
@@ -1267,6 +1367,15 @@ end
 
 function mod:RegisterStaticMarkerOnPartyMember(spellid, texture, person, radius, duration, r, g, b, a, blend, canFilterSelf, priority)
 	if DBM.Options.FilterSelfHud and canFilterSelf and UnitIsUnit("player", person) then a = 0 end
+	if not r and person then--Auto generate class color if colors were left nil
+		local _, cls = UnitClass(person)
+		if cls and RAID_CLASS_COLORS[cls] then
+			r, g, b = RAID_CLASS_COLORS[cls].r, RAID_CLASS_COLORS[cls].g, RAID_CLASS_COLORS[cls].b
+		else
+			DBM:Debug("HudMap Marker failed, no color defined and no unit class")
+			return--Should not happen, but prevent error if it does
+		end
+	end
 	local red, green, blue = r, g, b
 	local size, alpha, graphic = radius, a, texture
 	if priority and a ~= 0 then
@@ -1294,6 +1403,15 @@ end
 
 function mod:RegisterRangeMarkerOnPartyMember(spellid, texture, person, radius, duration, r, g, b, a, blend, canFilterSelf, priority)
 	if DBM.Options.FilterSelfHud and canFilterSelf and UnitIsUnit("player", person) then a = 0 end
+	if not r and person then--Auto generate class color if colors were left nil
+		local _, cls = UnitClass(person)
+		if cls and RAID_CLASS_COLORS[cls] then
+			r, g, b = RAID_CLASS_COLORS[cls].r, RAID_CLASS_COLORS[cls].g, RAID_CLASS_COLORS[cls].b
+		else
+			DBM:Debug("HudMap Marker failed, no color defined and no unit class")
+			return--Should not happen, but prevent error if it does
+		end
+	end
 	local red, green, blue = r, g, b
 	local size, alpha, graphic = radius, a, texture
 	if priority and a ~= 0 then
@@ -1340,44 +1458,32 @@ end
 function mod:FreeEncounterMarkers()
 	if not self.HUDEnabled then return end
 	for k, v in pairs(encounterMarkers) do
+		if encounterMarkers[k] == 143430 .. playerName then break end--Don't deactivate Hudar in this call
 		encounterMarkers[k] = v:Free()
 	end
 end
 
-function mod:DistanceToPoint(unit, x, y)
-	local x1, y1 = self:GetUnitPosition(unit)
-	local x2, y2 = x, y
+function mod:DistanceBetweenPoints(x1, y1, x2, y2)
 	local dx = x2 - x1
 	local dy = y2 - y1
-	return abs(pow((dx*dx)+(dy*dy), 0.5))
+	return abs(pow((dx*dx)+(dy*dy), 0.5))	
+end
+
+function mod:DistanceToPoint(unit, x, y)
+	local x1, y1 = self:GetUnitPosition(unit)
+	return self:DistanceBetweenPoints(x1, y1, x, y)
 end
 
 function mod:UnitDistance(unitA, unitB)
 	local x1, y1 = self:GetUnitPosition(unitA)
 	local x2, y2 = self:GetUnitPosition(unitB)
-	local dx = x2 - x1
-	local dy = y2 - y1
-	return abs(pow((dx*dx)+(dy*dy), 0.5))
+	return self:DistanceBetweenPoints(x1, y1, x2, y2)
 end
 
 function mod:GetUnitPosition(unit)
 	if not unit then return nil, nil end
 	local x, y = UnitPosition(unit)
 	return x, y
-end
-
-do
-	local a, b
-	function mod:Measure(restart)
-		local a2, b2 = self:GetUnitPosition("player")
-		if restart or not a then
-			a, b = a2, b2
-		else
-			local c, d = (a2 - a), (b2 - b)
-			print(math.sqrt((c*c)+(d*d)))
-			a, b = nil, nil
-		end
-	end
 end
 
 function mod:SetZoom(zoom, zoomChange)
@@ -1393,6 +1499,10 @@ function mod:SetZoom(zoom, zoomChange)
 	elseif targetZoomScale > 200 then
 		targetZoomScale = 200
 	end
+end
+
+function mod:SetFixedZoom(zoom)
+	fixedZoomScale = zoom
 end
 
 function mod:Update()

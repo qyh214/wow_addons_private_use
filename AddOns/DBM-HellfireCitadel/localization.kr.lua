@@ -30,14 +30,18 @@ L= DBM:GetModLocalization(1425)
 ---------------------------
 L= DBM:GetModLocalization(1432)
 
-L:SetMiscLocalization({
-	Jubeideath		=	"난 영원히 타오른다!"
+L:SetWarningLocalization({
+	reapDelayed =	"악몽의 형상 종료 후 수확"
 })
 
 ------------------
 -- Kormrok --
 ------------------
 L= DBM:GetModLocalization(1392)
+
+L:SetMiscLocalization({
+	ExRTNotice		= "ExRT 애드온으로부터 위치 받음 (%s|1이;가; 보냄). 당신의 위치 - 주황색: %s, 녹색: %s, 보라색: %s"
+})
 
 --------------
 -- Kilrogg Deadeye --
@@ -53,20 +57,17 @@ L:SetMiscLocalization({
 --------------------
 L= DBM:GetModLocalization(1372)
 
-L:SetWarningLocalization({
-	specWarnShadowofDeath	= "당신에게 죽음의 그림자 (%d)"
-})
-
 L:SetTimerLocalization({
-	SoDDPS		= "다음 그림자 (%s)",
-	SoDTank		= "다음 그림자 (%s)",
-	SoDHealer	= "다음 그림자 (%s)"
+	SoDDPS2		= "다음 그림자 (%s)",
+	SoDTank2	= "다음 그림자 (%s)",
+	SoDHealer2	= "다음 그림자 (%s)"
 })
 
 L:SetOptionLocalization({
-	SoDDPS		= "다음 $spell:179864 대상 바 보기(공격 전담)",
-	SoDTank		= "다음 $spell:179864 대상 바 보기(방어 전담)",
-	SoDHealer	= "다음 $spell:179864 대상 바 보기(치유 전담)"
+	SoDDPS2		= "다음 $spell:179864 대상 바 보기(공격 전담)",
+	SoDTank2	= "다음 $spell:179864 대상 바 보기(방어 전담)",
+	SoDHealer2	= "다음 $spell:179864 대상 바 보기(치유 전담)",
+	ShowOnlyPlayer	= "$spell:179909 대상일 경우에만 범위정보 표시"
 })
 
 --------------------------
@@ -96,17 +97,12 @@ L:SetOptionLocalization({
 	Iconed				= "별, 동그라미, 다이아, 역삼각형, 달(기둥 위치를 사용할 경우)",--Default
 	Numbered			= "1, 2, 3, 4, 5(번호로 지정된 위치를 사용할 경우)",
 	DirectionLine		= "왼쪽, 중앙 왼쪽, 중앙, 중앙 오른쪽, 오른쪽.(일직선 진형을 사용할 경우)",
-	FreeForAll			= "위지 지정하지 않음. 기본 대화 알림 사용",
-	--Currently these 3 below are unused unless I see anyone want/need them
-	CrossPerception		= "앞, 뒤, 가운데, 왼쪽, 오른쪽(십자가 진형을 사용할 경우)",--Unsure if viable with 5 targets/will remain
-	CrossCardinal		= "동쪽, 서쪽, 남쪽, 북쪽, 가운데(십자가 진형을 사용할 경우)",--Unsure if viable 5 targets/will remain
-	ExCardinal			= "북동, 남동, 북서, 남북, 가운데(사각형 진형을 사용할 경우)"--Unsure if viable 5 targets/will remain
+	FreeForAll			= "위지 지정하지 않음. 기본 대화 알림 사용"
 })
 
 L:SetMiscLocalization({
 	DBMConfigMsg		= "씨앗 위치 알림 방법이 공격대장 설정과 동일하게 하기 위해 %s로 설정되었습니다.",
 	BWConfigMsg			= "공격대장이 BigWigs를 사용합니다. BigWigs와 동일한 경고를 하기 위해 번호 알림으로 설정됩니다."
-	--TODO, talk to some guilds, maybe trim list above, add finalized directions here
 })
 
 --------------------------
@@ -125,6 +121,14 @@ L:SetOptionLocalization({
 -- Socrethar the Eternal --
 --------------------------
 L= DBM:GetModLocalization(1427)
+
+L:SetOptionLocalization({
+	InterruptBehavior	= "지배권 행사 차단 경고 방식 설정(공객대장 권한 필요)",
+	Count3Resume		= "3명 차단, 보호막 종료 후 차단 횟수 유지",--Default
+	Count3Reset			= "3명 차단, 보호막 종료 후 1번부터 다시 시작",
+	Count4Resume		= "4명 차단, 보호막 종료 후 차단 횟수 유지",
+	Count4Reset			= "4명 차단, 보호막 종료 후 1번부터 다시 시작"
+})
 
 --------------------------
 -- Tyrant Velhari --
@@ -151,6 +155,9 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	specWarnBreakShackle	= "$spell:184964 대상이 된 경우 특수 경고 보기(빠지는 순서가 자동으로 할당됩니다.)",
+	ExtendWroughtHud2		= "$spell:185014 대상에게 범위정보 연장(선모양이 부정확할 수 있습니다.)",
+	AlternateHudLine		= "$spell:185014 대상에게 다른 범위정보 무늬 사용",
+	NamesWroughtHud			= "$spell:185014 대상 이름을 포함한 범위정보 보기",
 	FilterOtherPhase		= "당신과 다른 위상에 있는 주문 경고 숨기기"
 })
 

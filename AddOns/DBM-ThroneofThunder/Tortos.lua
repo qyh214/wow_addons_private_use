@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(825, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 67 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(67977)
 mod:SetEncounterID(1565)
 mod:SetZone()
@@ -30,12 +30,12 @@ local specWarnStoneBreath			= mod:NewSpecialWarningInterrupt(133939, nil, nil, 2
 local specWarnCrystalShell			= mod:NewSpecialWarning("specWarnCrystalShell", false)
 local specWarnSummonBats			= mod:NewSpecialWarningSwitch("ej7140", "Tank")--Dps can turn it on too, but not on by default for dps cause quite frankly dps should NOT switch right away, tank needs to get aggro first and where they spawn is semi random.
 
-local timerBiteCD					= mod:NewCDTimer(8, 135251, nil, "Tank")
-local timerRockfallCD				= mod:NewCDTimer(10, 134476)
-local timerCallTortosCD				= mod:NewNextTimer(60.5, 136294)
-local timerStompCD					= mod:NewCDCountTimer(47, 134920)
-local timerBreathCD					= mod:NewCDTimer(46, 133939)--TODO, adjust timer when Growing Anger is cast, so we can use a Next bar more accurately
-local timerSummonBatsCD				= mod:NewCDTimer(45, "ej7140", nil, nil, nil, nil, 136685)--45-47. This doesn't always sync up to furious stone breath. Longer fight goes on more out of sync they get. So both bars needed I suppose
+local timerBiteCD					= mod:NewCDTimer(8, 135251, nil, "Tank", nil, 5)
+local timerRockfallCD				= mod:NewCDTimer(10, 134476, nil, nil, nil, 3)
+local timerCallTortosCD				= mod:NewNextTimer(60.5, 136294, nil, nil, nil, 1)
+local timerStompCD					= mod:NewCDCountTimer(47, 134920, nil, nil, nil, 2)
+local timerBreathCD					= mod:NewCDTimer(46, 133939, nil, nil, nil, 4)--TODO, adjust timer when Growing Anger is cast, so we can use a Next bar more accurately
+local timerSummonBatsCD				= mod:NewCDTimer(45, "ej7140", nil, nil, nil, 1, 136685)--45-47. This doesn't always sync up to furious stone breath. Longer fight goes on more out of sync they get. So both bars needed I suppose
 local timerStompActive				= mod:NewBuffActiveTimer(10.8, 134920)--Duration of the rapid caveins
 local timerShellConcussion			= mod:NewBuffFadesTimer(20, 136431)
 

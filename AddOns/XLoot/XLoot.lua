@@ -56,7 +56,7 @@ function XLoot:ShowOptionPanel(module)
 	XLootOptions:OpenPanel(module)
 end
 
-function XLoot:ApplyOptions()
+function XLoot:ApplyOptions(in_options)
 	self.opt = self.db.profile
 	-- Update skin
 	XLoot:SetSkin(self.opt.skin)
@@ -69,7 +69,7 @@ function XLoot:ApplyOptions()
 			v.opt = v.db.profile
 		end
 		if v.ApplyOptions then
-			v:ApplyOptions()
+			v:ApplyOptions(in_options)
 		end
 	end
 end

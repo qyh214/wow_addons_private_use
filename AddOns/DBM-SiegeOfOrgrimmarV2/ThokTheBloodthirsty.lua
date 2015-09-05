@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(851, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 60 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 74 $"):sub(12, -3))
 mod:SetCreatureID(71529)
 mod:SetEncounterID(1599)
 mod:SetZone()
@@ -67,24 +67,24 @@ local yellBurningBlood				= mod:NewYell(143783, nil, false)
 
 --Stage 1: A Cry in the Darkness
 local timerFearsomeRoar				= mod:NewTargetTimer(30, 143766, nil, "Tank|Healer")
-local timerFearsomeRoarCD			= mod:NewCDTimer(11, 143766, nil, "Tank")
-local timerDeafeningScreechCD		= mod:NewNextCountTimer(13, 143343)-- (143345 base power regen, 4 every half second)
+local timerFearsomeRoarCD			= mod:NewCDTimer(11, 143766, nil, "Tank", nil, 5)
+local timerDeafeningScreechCD		= mod:NewNextCountTimer(13, 143343, nil, nil, nil, 2)-- (143345 base power regen, 4 every half second)
 --Stage 2: Frenzy for Blood!
 local timerBloodFrenzyCD			= mod:NewNextTimer(5, 143442)
 local timerBloodFrenzyEnd			= mod:NewBuffActiveTimer(13.5, 143442)
 local timerFixate					= mod:NewTargetTimer(12, 143445)
-local timerKey						= mod:NewTargetTimer(60, 146589) 
+local timerKey						= mod:NewTargetTimer(60, 146589, nil, false) 
 --Infusion of Acid
 local timerAcidBreath				= mod:NewTargetTimer(30, 143780, nil, "Tank|Healer")
-local timerAcidBreathCD				= mod:NewCDTimer(11, 143780, nil, "Tank")--Often 12, but sometimes 11
-local timerCorrosiveBloodCD			= mod:NewCDTimer(3.5, 143791, nil, false)--Cast often, so off by default
+local timerAcidBreathCD				= mod:NewCDTimer(11, 143780, nil, "Tank", nil, 5)--Often 12, but sometimes 11
+local timerCorrosiveBloodCD			= mod:NewCDTimer(3.5, 143791, nil, false, nil, 3)--Cast often, so off by default
 --Infusion of Frost
 local timerFrostBreath				= mod:NewTargetTimer(30, 143773, nil, "Tank|Healer")
-local timerFrostBreathCD			= mod:NewCDTimer(9.5, 143773, nil, "Tank")
+local timerFrostBreathCD			= mod:NewCDTimer(9.5, 143773, nil, "Tank", nil, 5)
 --Infusion of Fire
 local timerScorchingBreath			= mod:NewTargetTimer(30, 143767, nil, "Tank|Healer")
-local timerScorchingBreathCD		= mod:NewCDTimer(11, 143767, nil, "Tank")--Often 12, but sometimes 11
-local timerBurningBloodCD			= mod:NewCDTimer(3.5, 143783, nil, false)--cast often, but someone might want to show it
+local timerScorchingBreathCD		= mod:NewCDTimer(11, 143767, nil, "Tank", nil, 5)--Often 12, but sometimes 11
+local timerBurningBloodCD			= mod:NewCDTimer(3.5, 143783, nil, false, nil, 3)--cast often, but someone might want to show it
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 

@@ -19,6 +19,8 @@ local select = select
 local tinsert = tinsert
 local ipairs = ipairs
 local tremove = tremove
+local GetRealmName = GetRealmName
+local UnitName = UnitName
 local GetActiveSpecGroup = GetActiveSpecGroup
 local GetNumGroupMembers = GetNumGroupMembers
 local IsInRaid = IsInRaid
@@ -134,6 +136,14 @@ function addon:GetGroupStats()
 	return group, leadship, num
 end
 
+function addon:GetCurProfileName()
+	local name = UnitName("player")
+	local realm = GetRealmName()
+	if name and realm then
+		return name.." - "..realm
+	end
+end
+
 ------------------------------------------------------------
 -- Internal event process
 ------------------------------------------------------------
@@ -152,6 +162,33 @@ end
 EmbedEventObject(addon)
 addon:RegisterEvent("ADDON_LOADED")
 
+local profileName
+
+local function InitProfile(profiles)
+	profileName = addon:GetCurProfileName()
+	if not profileName then
+		return
+	end
+
+	if type(profiles[profileName]) ~= "table" then
+		if type(CompactRaidCharDB) == "table" then
+			profiles[profileName] = addon:CloneTable(CompactRaidCharDB)
+			CompactRaidCharDB = nil
+		else
+			profiles[profileName] = {}
+		end
+	end
+
+	addon.chardb = profiles[profileName]
+
+	chardbOldVer = tonumber(addon.chardb.version or 0) or 0
+	addon.chardb.version = addon.numericVersion
+
+	if type(addon.chardb.modules) ~= "table" then
+		addon.chardb.modules = {}
+	end
+end
+
 function addon:ADDON_LOADED(arg1)
 	if arg1 ~= addonName then
 		return
@@ -162,28 +199,26 @@ function addon:ADDON_LOADED(arg1)
 	end
 	self.db = CompactRaidDB
 
-	if type(CompactRaidCharDB) ~= "table" then
-		CompactRaidCharDB = {}
+	if type(self.db.profiles) ~= "table" then
+		self.db.profiles = {}
 	end
-	self.chardb = CompactRaidCharDB
+
+	InitProfile(self.db.profiles)
 
 	dbOldVer = tonumber(self.db.version or 0) or 0
-	chardbOldVer = tonumber(self.chardb.version or 0) or 0
 	self.db.version = addon.numericVersion
-	self.chardb.version = addon.numericVersion
 
 	if type(self.db.modules) ~= "table" then
 		self.db.modules = {}
 	end
 
-	if type(self.chardb.modules) ~= "table" then
-		self.chardb.modules = {}
-	end
-
-	initDone = 1
-	self:BroadcastEvent("OnInitialize", self.db, self.chardb)
-
 	self:RegisterEvent("PLAYER_LOGIN")
+
+	-- Sometimes funny things happen that GetRealmName and UnitName aren't accessable until PLAYER_LOGIN fires
+	if profileName then
+		initDone = 1
+		self:BroadcastEvent("OnInitialize", self.db, self.chardb)
+	end
 
 	self:Print(format(L["load prompt"], self.version))
 	if self:IsDebugMode() then
@@ -192,10 +227,21 @@ function addon:ADDON_LOADED(arg1)
 end
 
 function addon:PLAYER_LOGIN()
+	if not profileName then
+		InitProfile(self.db.profiles)
+		initDone = 1
+		self:BroadcastEvent("OnInitialize", self.db, self.chardb)
+	end
+
 	self:BroadcastEvent("OnPlayerLogin", self.db, self.chardb)
 	self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
+	self:RegisterEvent("PLAYER_LOGOUT")
+end
+
+function addon:PLAYER_LOGOUT()
+	self:BroadcastEvent("OnPlayerLogout", self.db, self.chardb)
 end
 
 function addon:ACTIVE_TALENT_GROUP_CHANGED()

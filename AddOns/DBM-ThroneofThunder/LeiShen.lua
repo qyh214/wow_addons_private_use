@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(832, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 60 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(68397)--Diffusion Chain Conduit 68696, Static Shock Conduit 68398, Bouncing Bolt conduit 68698, Overcharge conduit 68697
 mod:SetEncounterID(1579)
 mod:SetZone()
@@ -69,28 +69,28 @@ local specWarnElectricalShockOther		= mod:NewSpecialWarningTaunt(136914)
 local specWarnHelmOfCommand				= mod:NewSpecialWarningYou(139011, nil, nil, nil, 3)
 
 --Conduits (All phases)
-local timerConduitCD					= mod:NewTimer(40, "timerConduitCD", 135695)
+local timerConduitCD					= mod:NewTimer(40, "timerConduitCD", 135695, nil, nil, 6)
 local timerStaticShock					= mod:NewBuffFadesTimer(8, 135695)
-local timerStaticShockCD				= mod:NewCDTimer(40, 135695)
-local timerDiffusionChainCD				= mod:NewCDTimer(40, 135991)
+local timerStaticShockCD				= mod:NewCDTimer(40, 135695, nil, nil, nil, 3)
+local timerDiffusionChainCD				= mod:NewCDTimer(40, 135991, nil, nil, nil, 3)
 local timerOvercharge					= mod:NewCastTimer(6, 136295)
-local timerOverchargeCD					= mod:NewCDTimer(40, 136295)
-local timerBouncingBoltCD				= mod:NewCDTimer(40, 136361)
+local timerOverchargeCD					= mod:NewCDTimer(40, 136295, nil, nil, nil, 3)
+local timerBouncingBoltCD				= mod:NewCDTimer(40, 136361, nil, nil, nil, 5)
 local timerSuperChargedConduits			= mod:NewBuffActiveTimer(47, 137045)--Actually intermission only, but it fits best with conduits
 --Phase 1
-local timerDecapitateCD					= mod:NewCDTimer(50, 134912, nil, "Tank")--Cooldown with some variation. 50-57ish or so.
+local timerDecapitateCD					= mod:NewCDTimer(50, 134912, nil, "Tank", nil, 5)--Cooldown with some variation. 50-57ish or so.
 local timerThunderstruck				= mod:NewCastTimer(4.8, 135095)--4 sec cast. + landing 0.8~1.3 sec.
-local timerThunderstruckCD				= mod:NewNextCountTimer(46, 135095)--Seems like an exact bar
+local timerThunderstruckCD				= mod:NewNextCountTimer(46, 135095, nil, nil, nil, 3)--Seems like an exact bar
 --Phase 2
-local timerFussionSlashCD				= mod:NewCDTimer(42.5, 136478, nil, "Tank")
+local timerFussionSlashCD				= mod:NewCDTimer(42.5, 136478, nil, "Tank", nil, 5)
 local timerLightningWhip				= mod:NewCastTimer(4, 136850)
-local timerLightningWhipCD				= mod:NewNextCountTimer(45.5, 136850)--Also an exact bar
-local timerSummonBallLightningCD		= mod:NewNextCountTimer(45.5, 136543)--Seems exact on live, versus the variable it was on PTR
+local timerLightningWhipCD				= mod:NewNextCountTimer(45.5, 136850, nil, nil, nil, 3)--Also an exact bar
+local timerSummonBallLightningCD		= mod:NewNextCountTimer(45.5, 136543, nil, nil, nil, 1)--Seems exact on live, versus the variable it was on PTR
 --Phase 3
 local timerViolentGaleWinds				= mod:NewBuffActiveTimer(18, 136889)
-local timerViolentGaleWindsCD			= mod:NewNextTimer(30.5, 136889)
+local timerViolentGaleWindsCD			= mod:NewNextTimer(30.5, 136889, nil, nil, nil, 2)
 --Heroic
-local timerHelmOfCommand				= mod:NewCDTimer(14, 139011)
+local timerHelmOfCommand				= mod:NewCDTimer(14, 139011, nil, nil, nil, 3)
 local timerMassSpellReflect				= mod:NewBuffActiveTimer(5, 114028)
 
 local berserkTimer						= mod:NewBerserkTimer(900)--Confirmed in LFR, probably the same in all modes though?

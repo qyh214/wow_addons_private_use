@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(729, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
 mod:SetCreatureID(62983)--62995 Animated Protector
 mod:SetEncounterID(1506)
 
@@ -29,9 +29,9 @@ local specWarnGetAway					= mod:NewSpecialWarningSpell(123461, nil, nil, nil, 2)
 local specWarnSpray						= mod:NewSpecialWarningStack(123121, "Tank", 6)
 local specWarnSprayOther				= mod:NewSpecialWarningTaunt(123121)
 
-local timerSpecialCD					= mod:NewTimer(50, "timerSpecialCD", 123250)--Variable, 49.5-55 seconds
-local timerSpray						= mod:NewTargetTimer(10, 123121, nil, "Tank|Healer")
-local timerGetAway						= mod:NewBuffActiveTimer(30, 123461)
+local timerSpecialCD					= mod:NewTimer(50, "timerSpecialCD", 123250, nil, nil, 6)--Variable, 49.5-55 seconds
+local timerSpray						= mod:NewTargetTimer(10, 123121, nil, "Tank|Healer", nil, 5)
+local timerGetAway						= mod:NewBuffActiveTimer(30, 123461, nil, nil, nil, 6)
 local timerScaryFogCD					= mod:NewNextTimer(10, 123705)
 
 local berserkTimer						= mod:NewBerserkTimer(600)

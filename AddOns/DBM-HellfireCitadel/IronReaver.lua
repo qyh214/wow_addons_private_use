@@ -1,21 +1,25 @@
 local mod	= DBM:NewMod(1425, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14098 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14445 $"):sub(12, -3))
 mod:SetCreatureID(90284)
 mod:SetEncounterID(1785)
 mod:SetZone()
 mod:SetUsedIcons(4, 3, 2)
+mod:SetHotfixNoticeRev(14104)
 mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
-
 mod:RegisterEventsInCombat(
+	"SPELL_CAST_SUCCESS 186684 186666 186660 188293 182523",
 	"SPELL_CAST_START 179889 182066 186449 181999 185282 182055 182668",
 	"SPELL_AURA_APPLIED 182280 182020 182074 182001",
 	"SPELL_AURA_APPLIED_DOSE 182074",
 	"SPELL_AURA_REMOVED 182280",
+	"SPELL_DAMAGE 182523",
+	"SPELL_MISSED 182523",
+	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -48,7 +52,7 @@ local timerFallingSlamCD			= mod:NewNextTimer(54, 182066, nil, nil, nil, 6)
 local timerFuelLeakCD				= mod:NewNextCountTimer(15, 182668, nil, nil, nil, 2)--Fire bombs always immediately after, so no timer needed
 local timerVolatileBombCD			= mod:NewNextCountTimer(15, 182534, nil, nil, nil, 1)
 
---local berserkTimer				= mod:NewBerserkTimer(600)
+local berserkTimer					= mod:NewBerserkTimer(514)
 
 local countdownBarrage				= mod:NewCountdown(15, 185282)
 local countdownArtillery			= mod:NewCountdown("AltTwo15", 182108)--Important to have different voice from fades, because they are happening at same time most of time
@@ -65,6 +69,7 @@ local voiceFirebomb					= mod:NewVoice(181999)--attbomb
 mod:AddRangeFrameOption("8/30")
 mod:AddSetIconOption("SetIconOnArtillery", 182280, true)
 mod:AddHudMapOption("HudMapOnArt", 182108)
+mod:AddInfoFrameOption(181999)
 
 mod.vb.artilleryActive = 0--Number of debuffs count. Room is MASSIVE and combat log range could be an issue. Unsure at this time. DBM didn't seem to miss any artillery debuffs in testing.
 mod.vb.groundPhase = true
@@ -76,6 +81,11 @@ mod.vb.blitzCount = 0
 mod.vb.unstableOrbCount = 0
 mod.vb.firebombCount = 0
 mod.vb.fuelCount = 0
+mod.vb.volatileCount = 0
+mod.vb.quickfuseCount = 0
+mod.vb.reactiveCount = 0
+mod.vb.burningCount = 0
+mod.vb.reinforcedCount = 0
 --All timers are energy based and scripted. boss uses x ability at y energy.
 --These tables establish the cast sequence by ability.
 --If energy rates are different in different modes, then each table will need to be different.
@@ -98,9 +108,54 @@ do
 	end
 end
 
+local updateInfoFrame, sortInfoFrame
+do
+	local lines = {}
+	sortInfoFrame = function(a, b)
+		local a = lines[a]
+		local b = lines[b]
+		if not tonumber(a) then a = -1 end
+		if not tonumber(b) then b = -1 end
+		if a > b then return true else return false end
+	end
+
+	local reactiveName, burningName, quickfuseName, reinforcedName, volatileName = GetSpellInfo(186676), GetSpellInfo(186667), GetSpellInfo(186660), GetSpellInfo(188294), GetSpellInfo(182523)
+	updateInfoFrame = function()
+		table.wipe(lines)
+		local total = mod.vb.burningCount + mod.vb.reactiveCount + mod.vb.quickfuseCount + mod.vb.volatileCount + mod.vb.reinforcedCount
+		if total == 0 then--None found, hide infoframe because all bombs dead
+			DBM.InfoFrame:Hide()
+		end
+		if mod.vb.reactiveCount > 0 then
+			if mod:IsTank() then
+				lines["|cff00ffff"..reactiveName.."|r"] = mod.vb.reactiveCount
+			else
+				lines[reactiveName] = mod.vb.reactiveCount
+			end
+		end
+		if mod.vb.burningCount > 0 then
+			lines[burningName] = mod.vb.burningCount
+		end
+		if mod.vb.quickfuseCount > 0 then
+			if mod:IsDps() then
+				lines["|cff00ffff"..quickfuseName.."|r"] = mod.vb.quickfuseCount
+			else
+				lines[quickfuseName] = mod.vb.quickfuseCount
+			end
+		end
+		if mod.vb.reinforcedCount > 0 then
+			lines[reinforcedName] = mod.vb.reinforcedCount
+		end
+		if mod.vb.volatileCount > 0 then
+			lines[volatileName] = mod.vb.volatileCount
+		end
+		return lines
+	end
+end
+
 local function updateRangeFrame(self)
 	if not self.Options.RangeFrame or not self:IsInCombat() then return end
-	if (self:IsTank() or not self.vb.groundPhase) and self.vb.artilleryActive > 0 then--Artillery
+	if (self:IsMelee() or not self.vb.groundPhase) and self.vb.artilleryActive > 0 then--Artillery
 		if UnitDebuff("player", debuffName) then
 			DBM.RangeCheck:Show(30, nil)
 		else
@@ -115,10 +170,18 @@ end
 
 function mod:OnCombatStart(delay)
 	self.vb.artilleryActive = 0--Only one that should reset on pull
+	self.vb.volatileCount = 0
+	self.vb.quickfuseCount = 0
+	self.vb.reactiveCount = 0
+	self.vb.burningCount = 0
+	self.vb.reinforcedCount = 0
 	updateRangeFrame(self)
 	--berserkTimer:Start(-delay)
 	--Boss uses "Ground Phase" trigger after pull. Do not start timers here
 	--No reason to reset variables here either, they also reset on ground phase trigger 1 second after pull
+	if self:IsMythic() then
+		berserkTimer:Start(-delay)
+	end
 end
 
 function mod:OnCombatEnd()
@@ -128,7 +191,27 @@ function mod:OnCombatEnd()
 	if self.Options.HudMapOnArt then
 		DBMHudMap:Disable()
 	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 end 
+
+--(ability.id = 186684 or ability.id = 186666 or ability.id = 186660 or ability.id = 188293 or ability.id = 182523) and type = "cast"
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	--bombs exploding
+	if spellId == 186684 then--Reactive
+		self.vb.reactiveCount = self.vb.reactiveCount - 1
+	elseif spellId == 186666 then--Burning
+		self.vb.burningCount = self.vb.burningCount - 1
+	elseif spellId == 186660 then--Quick-Fuse
+		self.vb.quickfuseCount = self.vb.quickfuseCount - 1
+	elseif spellId == 188293 then--Reinforced
+		self.vb.reinforcedCount = self.vb.reinforcedCount - 1
+	elseif spellId == 182523 then--Volatile
+		self.vb.volatileCount = self.vb.volatileCount - 1
+	end
+end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
@@ -150,9 +233,26 @@ function mod:SPELL_CAST_START(args)
 		specWarnFirebomb:Show(count)
 		voiceFirebomb:Play("attbomb")
 		if self.vb.groundPhase then--Should only happen on mythic
-			timerVolatileBombCD:Start(count == 1 and 42 or 69, self.vb.firebombCount+1)
+			self.vb.volatileCount = self.vb.volatileCount + 5
+			if count == 1 then
+				timerVolatileBombCD:Start(42, count+1)
+			elseif count == 2 then
+				timerVolatileBombCD:Start(69, count+1)
+			end
 		else
 			timerVolatileBombCD:Start(15, self.vb.firebombCount+1)--Always 2 seconds after fuel streak, seems redundant to have both. Keeping for now.
+			if self:IsMythic() then
+				self.vb.reactiveCount = self.vb.reactiveCount + 3
+				self.vb.burningCount = self.vb.burningCount + 3
+				self.vb.quickfuseCount = self.vb.quickfuseCount + 4
+				self.vb.reinforcedCount = self.vb.reinforcedCount + 1
+			else
+				self.vb.volatileCount = self.vb.volatileCount + 5
+			end
+		end
+		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
+			DBM.InfoFrame:SetHeader(args.spellName)
+			DBM.InfoFrame:Show(5, "function", updateInfoFrame, sortInfoFrame)
 		end
 	elseif spellId == 185282 then
 		self.vb.barrageCount = self.vb.barrageCount + 1
@@ -165,10 +265,18 @@ function mod:SPELL_CAST_START(args)
 		voiceBarrage:Play("185282")
 	elseif spellId == 182055 then
 		self.vb.groundPhase = false
-		specWarnFullCharge:Show()
 		self.vb.fuelCount = 0
 		self.vb.firebombCount = 0
 		self.vb.artilleryCount = 0--Also used in air phase, with it's own air phase counter
+		if not self:IsMythic() then
+			self.vb.volatileCount = 0--Only reset on non mythic, on mythic these are left over from ground phase
+		else
+			self.vb.quickfuseCount = 0
+			self.vb.reactiveCount = 0
+			self.vb.burningCount = 0
+			self.vb.reinforcedCount = 0
+		end
+		specWarnFullCharge:Show()
 		timerFuelLeakCD:Start(9, 1)
 		timerArtilleryCD:Start(9, 1)
 		countdownArtillery:Start(9)
@@ -205,13 +313,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		warnArtillery:CombinedShow(0.3, self.vb.artilleryCount, args.destName)
 		if args:IsPlayer() then
-			specWarnArtillery:Show()
+			specWarnArtillery:Schedule(5)
 			yellArtillery:Schedule(11.5, 1)
 			yellArtillery:Schedule(10.5, 2)
 			yellArtillery:Schedule(9.5, 3)
 			yellArtillery:Schedule(8.5, 4)
 			yellArtillery:Schedule(7.5, 5)
-			voiceArtillery:Play("runout")
+			yellArtillery:Schedule(5.5, 7)
+			voiceArtillery:Schedule(5, "runout")
 			countdownArtilleryFade:Start()
 		end
 		if self.Options.SetIconOnArtillery then
@@ -252,6 +361,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 182280 then
 		self.vb.artilleryActive = self.vb.artilleryActive - 1
 		if args:IsPlayer() then
+			specWarnArtillery:Cancel()
 			countdownArtilleryFade:Cancel()
 			yellArtillery:Cancel()
 		end
@@ -262,6 +372,28 @@ function mod:SPELL_AURA_REMOVED(args)
 			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
 		end
 		updateRangeFrame(self)
+	end
+end
+
+function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId) -- captures spellid 161612, 161576
+	if spellId == 182523 and self:AntiSpam(5, 4) then
+		self.vb.volatileCount = self.vb.volatileCount - 1
+	end
+end
+mod.SPELL_MISSED = mod.SPELL_DAMAGE
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 94326 then--Reactive
+		self.vb.reactiveCount = self.vb.reactiveCount - 1
+	elseif cid == 94322 then--Burning
+		self.vb.burningCount = self.vb.burningCount - 1
+	elseif cid == 94312 then--Quick-Fuse
+		self.vb.quickfuseCount = self.vb.quickfuseCount - 1
+	elseif cid == 94955 then--Reinforced
+		self.vb.reinforcedCount = self.vb.reinforcedCount - 1
+	elseif cid == 93717 then--Volatile
+		self.vb.volatileCount = self.vb.volatileCount - 1
 	end
 end
 
@@ -293,6 +425,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		timerBlitzCD:Start(63, 1)
 		timerFullChargeCD:Start()
 		if self:IsMythic() then
+			self.vb.volatileCount = 0--Only reset here on mythic, because THESE bombs are left over on non mythic when this happens
 			timerVolatileBombCD:Start(9, 1)
 		end
 	end

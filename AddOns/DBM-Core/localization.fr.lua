@@ -10,7 +10,6 @@ DBM_CORE_LOAD_MOD_SUCCESS			= "Modules '%s' chargés. Pour plus d'options, tapez
 DBM_CORE_LOAD_MOD_COMBAT                        = "Chargement de '%s' reporté jusqu'à la fin du combat"
 DBM_CORE_LOAD_GUI_ERROR				= "Impossible de charger l'interface: %s"
 DBM_CORE_LOAD_GUI_COMBAT                        = "GUI ne peut pas se charger initialement en combat. GUI sera chargé après le combat. Une fois le GUI chargé, vous pourrez le charger en combat." --load?reload?change?
-DBM_CORE_LOAD_SKIN_COMBAT                       = "Erreur du chargement des apparances des timers DBM du combat. Vos timers ne fonctionneront probablement pas correctement et vont générer des erreurs lua. Ceci est généralement causé par un add-on tiers essayant de modifier l'apparence des timers en cours de combat. Il est recommandé de recharger l'UI après le combat"
 DBM_CORE_BAD_LOAD                                       = "DBM a détecté une erreur de chargement du mod de l'instance car vous êtes en combat. Dès que vous sortez de combat veuillez entrer /console reloadui le plus vite possible."
  
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP       = "DBM a désactivé la vérification du nombre de joueurs à portée sur ce combat pour cause de manque d'information sur le nombre de joueurs requis regroupés pour votre taille de raid."
@@ -199,6 +198,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel		= "%s on >%%s< - dissipez maintenant"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt		= "%s - interrompez >%%s<!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount= "%s - interrompez >%%s<! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you             = "%s sur vous"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.youcount         = "%s (%%s) sur vous"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= "%s sur >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt           = "%s sur >%%s< - provoquez maintenant"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close		= "%s sur >%%s< près de vous"
@@ -211,8 +211,8 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast			= "%s - arrêtez d'incanter"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect       = "%s sur >%%s< - arrêtez d'attaquer"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.count         = "%s! (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack			= "%s (%%d)"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= ">%s< - Changer de cible"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= ">%s< - Changer de cible (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= "%s - Changer de cible"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - Changer de cible (%%d)"
 
 
 -- Auto-generated Special Warning Localizations
@@ -224,6 +224,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.prewarn         = "Afficher une alerte préventi
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dispel 		= "Afficher une alerte spéciale lorsque $spell:%s doit être dissipé/volé"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt	= "Afficher une alerte spéciale lorsque $spell:%s doit être interrompu"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you 		= "Afficher une alerte spéciale lorsque vous subissez $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.youcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you--Temp, translate correctly (with count_
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target 		= "Afficher une alerte spéciale lorsque quelqu'un subit $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt           = "Afficher une alerte spéciale de provoquer lorsque l'autre tank subit $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close 		= "Afficher une alerte spéciale lorsque quelqu'un proche de vous subit $spell:%s"
@@ -237,8 +238,8 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.reflect         = "Afficher une alerte spéciale
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.count           = "Afficher une alerte spéciale pour $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack 		= "Afficher une alerte spéciale lorsque vous cumulez >=%d stacks de $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch 		= "Afficher une alerte spéciale de changement de cible pour\n $spell:%s"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch--Temp, translate correctly (with count_
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt--Temp, translate correctly (with count_
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS.target		= "%s: >%%s<"
@@ -273,7 +274,7 @@ DBM_CORE_AUTO_SOUND_OPTION_TEXT			= "Jouer le son \"run away\" pour $spell:%s"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Compte à rebours sonore pour $spell:%s"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2		= "Compte à rebours sonore pour lorsque $spell:%s se dissipe"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Compte à rebours sonore pour la durée de $spell:%s"
-DBM_CORE_AUTO_YELL_OPTION_TEXT			= "Cri quand vous subissez $spell:%s"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.yell			= "Cri quand vous subissez $spell:%s"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.yell		= "%s sur " .. UnitName("player") .. " !"
 DBM_CORE_AUTO_RANGE_OPTION_TEXT                 = "Afficher la fênetre des distances (%s) pour $spell:%s"--string used for range so we can use things like "5/2" as a value for that field
 DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT   = "Afficher la fênetre des distances (%s)"--For when a range frame is just used for more than one thing

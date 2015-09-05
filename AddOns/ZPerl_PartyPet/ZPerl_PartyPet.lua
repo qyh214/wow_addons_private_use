@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(New)
 	for k, v in pairs(PartyPetFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 972 $")
+end, "$Revision: 974 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -28,8 +28,6 @@ local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
 
-local XPerl_Player_Pet_HighlightCallback
-
 ----------------------
 -- Loading Function --
 ----------------------
@@ -40,8 +38,12 @@ function XPerl_Party_Pet_OnLoadEvents(self)
 		"UNIT_COMBAT", "UNIT_FACTION", "UNIT_AURA", "UNIT_FLAGS", "UNIT_HEALTH", "UNIT_MAXHEALTH", "PLAYER_ENTERING_WORLD", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"
 	}
 
-	for k, v in pairs(events) do
-		self:RegisterEvent(v)
+	for i, event in pairs(events) do
+		if string.find(event, "^UNIT_") then
+			self:RegisterUnitEvent(event, "party1pet", "party2pet", "party3pet", "party4pet")
+		else
+			self:RegisterEvent(event)
+		end
 	end
 
 	-- Set here to reduce amount of function calls made
@@ -55,35 +57,33 @@ function XPerl_Party_Pet_OnLoadEvents(self)
 	XPerl_Party_Pet_OnLoadEvents = nil
 end
 
-local XPerl_Party_Pet_UpdateGUIDs
-do
-	local guids
-	-- XPerl_Party_Pet_UpdateGUIDs
-	function XPerl_Party_Pet_UpdateGUIDs()
-		--del(guids)
-		--guids = new()
-		guids = { }
-		for i = 1, GetNumSubgroupMembers() do
-			local id = "partypet"..i
-			if (UnitExists(id)) then
-				guids[UnitGUID(id)] = PartyPetFrames[id]
-			end
-		end
-	end
-
-	-- XPerl_Party_Pet_GetUnitFrameByGUID
-	function XPerl_Party_Pet_GetUnitFrameByGUID(guid)
-		return guids and guids[guid]
-	end
-
-	-- XPerl_Party_Pet_HighlightCallback
-	function XPerl_Party_Pet_HighlightCallback(self, updateGUID)
-		local f = guids and guids[updateGUID]
-		if (f) then
-			XPerl_Highlight:SetHighlight(f, updateGUID)
+local guids
+-- XPerl_Party_Pet_UpdateGUIDs
+function XPerl_Party_Pet_UpdateGUIDs()
+	--del(guids)
+	--guids = new()
+	guids = { }
+	for i = 1, GetNumSubgroupMembers() do
+		local id = "partypet"..i
+		if (UnitExists(id)) then
+			guids[UnitGUID(id)] = PartyPetFrames[id]
 		end
 	end
 end
+
+-- XPerl_Party_Pet_GetUnitFrameByGUID
+function XPerl_Party_Pet_GetUnitFrameByGUID(guid)
+	return guids and guids[guid]
+end
+
+-- XPerl_Party_Pet_HighlightCallback
+function XPerl_Party_Pet_HighlightCallback(self, updateGUID)
+	local f = guids and guids[updateGUID]
+	if (f) then
+		XPerl_Highlight:SetHighlight(f, updateGUID)
+	end
+end
+
 
 -- XPerl_Party_Pet_GetUnitFrameByUnit
 function XPerl_Party_Pet_GetUnitFrameByUnit(unitid)
@@ -188,7 +188,6 @@ function XPerl_Party_Pet_OnLoad(self)
 	end)
 
 	self.time = 0
-	self.tutorialPage = 5
 
 	if (XPerlDB) then
 		self.conf = conf.partypet
@@ -221,22 +220,34 @@ function XPerl_Party_Pet_UpdateHealth(self)
 		return
 	end
 
-	local Partypethealth, Partypethealthmax = UnitHealth(self.partyid), UnitHealthMax(self.partyid)
+	local health = UnitHealth(self.partyid)
+	local healthmax = UnitHealthMax(self.partyid)
+
+	-- PTR region fix
+	if not healthmax or healthmax <= 0 then
+		if health > 0 then
+			healthmax = health
+		else
+			healthmax = 1
+		end
+	end
+
 	local healthPct
-	if UnitIsDeadOrGhost(self.partyid) or (Partypethealth == 0 and Partypethealthmax == 0) then -- Probably dead target
+	if UnitIsDeadOrGhost(self.partyid) or (health == 0 and healthmax == 0) then -- Probably dead target
 		healthPct = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
-	elseif Partypethealth > 0 and Partypethealthmax == 0 then -- We have current ho but max hp failed.
-		Partypethealthmax = Partypethealth -- Make max hp at least equal to current health
+	elseif health > 0 and healthmax == 0 then -- We have current ho but max hp failed.
+		healthmax = health -- Make max hp at least equal to current health
 		healthPct = 100 -- And percent 100% cause a number divided by itself is 1, duh.
 	else
-		healthPct = Partypethealth / Partypethealthmax -- Everything is dandy, so just do it right way.
+		healthPct = health / healthmax -- Everything is dandy, so just do it right way.
 	end
 	--local phealthPct = format("%3.0f", healthPct * 100)
 
-	self.statsFrame.healthBar:SetMinMaxValues(0, Partypethealthmax)
-	self.statsFrame.healthBar:SetValue(Partypethealth)
+	self.statsFrame.healthBar:SetMinMaxValues(0, healthmax)
+	self.statsFrame.healthBar:SetValue(health)
 	XPerl_ColourHealthBar(self, healthPct)
 
+	XPerl_Party_Pet_UpdateAbsorbPrediction(self)
 	XPerl_Party_Pet_UpdateHealPrediction(self)
 
 	if (UnitIsDead(self.partyid)) then
@@ -245,12 +256,12 @@ function XPerl_Party_Pet_UpdateHealth(self)
 	else
 		if (pconf.healerMode.enable) then
 			if (pconf.healerMode.type == 1) then
-				self.statsFrame.healthBar.text:SetFormattedText("%d/%d", Partypethealth - Partypethealthmax, Partypethealthmax)
+				self.statsFrame.healthBar.text:SetFormattedText("%d/%d", health - healthmax, healthmax)
 			else
-				self.statsFrame.healthBar.text:SetText(Partypethealth - Partypethealthmax)
+				self.statsFrame.healthBar.text:SetText(health - healthmax)
 			end
 		else
-			self.statsFrame.healthBar.text:SetFormattedText("%.0f%%", (100 * (Partypethealth / Partypethealthmax)))
+			self.statsFrame.healthBar.text:SetFormattedText("%.0f%%", (100 * (health / healthmax)))
 		end
 
 		self.statsFrame.healthBar.text:Show()
@@ -259,6 +270,15 @@ function XPerl_Party_Pet_UpdateHealth(self)
 			self.statsFrame.greyMana = nil
 			XPerl_SetManaBarType(self)
 		end
+	end
+end
+
+-- XPerl_Party_Pet_UpdateAbsorbPrediction
+function XPerl_Party_Pet_UpdateAbsorbPrediction(self)
+	if pconf.absorbs then
+		XPerl_SetExpectedAbsorbs(self)
+	else
+		self.statsFrame.expectedAbsorbs:Hide()
 	end
 end
 
@@ -284,6 +304,15 @@ local function XPerl_Party_Pet_UpdateMana(self)
 	if (self.partyid) then
 		local Partypetmana = UnitPower(self.partyid)
 		local Partypetmanamax = UnitPowerMax(self.partyid)
+
+		-- PTR region fix
+		if not Partypetmanamax or Partypetmanamax <= 0 then
+			if Partypetmanamax > 0 then
+				Partypetmanamax = Partypetmana
+			else
+				Partypetmanamax = 1
+			end
+		end
 
 		self.statsFrame.manaBar:SetMinMaxValues(0, Partypetmanamax)
 		self.statsFrame.manaBar:SetValue(Partypetmana)
@@ -392,13 +421,17 @@ function XPerl_Party_Pet_OnUpdate(self, elapsed)
 				XPerl_Party_Pet_UpdateDisplay(frame)
 				frame.visible = visible
 			end
-			if (frame.PlayerFlash) then
+
+			if (conf.combatFlash and frame.PlayerFlash) then
 				XPerl_Party_Pet_CombatFlash(frame, elapsed, false)
 			end
-			frame.time = frame.time + elapsed
-			if (frame.time > 0.2) then
-				frame.time = 0
-				XPerl_UpdateSpellRange(frame, nil, false)
+
+			if conf.rangeFinder.enabled then
+				frame.time = frame.time + elapsed
+				if (frame.time > 0.2) then
+					frame.time = 0
+					XPerl_UpdateSpellRange(frame, nil, false)
+				end
 			end
 		end
 	end
@@ -415,7 +448,11 @@ function XPerl_Party_Pet_OnEvent(self, event, unit, ...)
 		if (strfind(event, "^UNIT_")) then
 			local f = PartyPetFrames[unit]
 			if (f) then
-				func(f, ...)
+				if event == "UNIT_HEAL_PREDICTION" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
+					func(f, unit, ...)
+				else
+					func(f, ...)
+				end
 			end
 		else
 			func(unit, ...)
@@ -427,7 +464,7 @@ end
 
 -- UNIT_COMBAT
 function XPerl_Party_Pet_Events:UNIT_COMBAT(...)
-	local action, descriptor, damage, damageType = select(1, ...)
+	local action, descriptor, damage, damageType = ...
 	
 	if (action == "HEAL") then
 		XPerl_Party_Pet_CombatFlash(self, 0, true, true)
@@ -437,13 +474,13 @@ function XPerl_Party_Pet_Events:UNIT_COMBAT(...)
 end
 
 function XPerl_Party_Pet_Events:PET_BATTLE_OPENING_START()
-	if(self) then
+	if (self) then
 		self:Hide()
 	end
 end
 
 function XPerl_Party_Pet_Events:PET_BATTLE_CLOSE()
-	if(self) then
+	if (self) then
 		self:Show()
 	end
 end
@@ -452,7 +489,7 @@ end
 function XPerl_Party_Pet_Events:PLAYER_ENTERING_WORLD()
 	XPerl_Party_Pet_UpdateGUIDs()
 end
-XPerl_Party_Pet_Events.GROUP_ROSTER_UPDATE= XPerl_Party_Pet_Events.PLAYER_ENTERING_WORLD
+XPerl_Party_Pet_Events.GROUP_ROSTER_UPDATE = XPerl_Party_Pet_Events.PLAYER_ENTERING_WORLD
 XPerl_Party_Pet_Events.UNIT_PET = XPerl_Party_Pet_Events.PLAYER_ENTERING_WORLD
 
 -- UNIT_FLAGS
@@ -507,8 +544,14 @@ XPerl_Party_Pet_Events.UNIT_POWER_FREQUENT = XPerl_Party_Pet_Events.UNIT_MANA
 XPerl_Party_Pet_Events.UNIT_MAXPOWER = XPerl_Party_Pet_Events.UNIT_MANA
 
 function XPerl_Party_Pet_Events:UNIT_HEAL_PREDICTION(unit)
-	if (unit == self.partyid) then
+	if (pconf.healprediction and unit == self.partyid) then
 		XPerl_SetExpectedHealth(self)
+	end
+end
+
+function XPerl_Party_Pet_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
+	if (pconf.absorbs and unit == self.partyid) then
+		XPerl_SetExpectedAbsorbs(self)
 	end
 end
 
@@ -591,12 +634,6 @@ function XPerl_Party_Pet_Set_Bits1(self)
 		end
 	end
 
-	--[[if (pconf.healprediction) then
-		self:RegisterEvent("UNIT_HEAL_PREDICTION")
-	else
-		self:UnregisterEvent("UNIT_HEAL_PREDICTION")
-	end]]
-
 	SetAllBuffs(self.buffFrame, self.buffFrame.debuff)
 	SetAllBuffs(self.buffFrame, self.buffFrame.buff)
 	local b = self.buffFrame.buff and self.buffFrame.buff[1]
@@ -631,4 +668,16 @@ function XPerl_Party_Pet_Set_Bits()
 	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.mana, {"UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MANA", "UNIT_DISPLAYPOWER"})
 	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.name, {"UNIT_NAME_UPDATE"})
 	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.name and petconf.level, {"UNIT_LEVEL"})
+
+	if (pconf.healprediction) then
+		XPerl_Party_Pet_EventFrame:RegisterEvent("UNIT_HEAL_PREDICTION")
+	else
+		XPerl_Party_Pet_EventFrame:UnregisterEvent("UNIT_HEAL_PREDICTION")
+	end
+
+	if (pconf.absorbs) then
+		XPerl_Party_Pet_EventFrame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+	else
+		XPerl_Party_Pet_EventFrame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+	end
 end

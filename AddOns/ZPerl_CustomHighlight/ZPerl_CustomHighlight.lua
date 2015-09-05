@@ -9,7 +9,7 @@ end
 local conf
 XPerl_RequestConfig(function(new) 
 	conf = new.custom 
-end, "$Revision: 927 $")
+end, "$Revision: 973 $")
 
 local ch = CreateFrame("Frame", "ZPerl_Custom")
 ch.active = {}
@@ -444,6 +444,9 @@ end
 
 -- Clear
 function ch:ClearAll()
+	if not self.usedIcons then
+		return
+	end
 	for frame in pairs(self.usedIcons) do
 		local icon = self.usedIcons[frame]
 		self.usedIcons[frame] = true

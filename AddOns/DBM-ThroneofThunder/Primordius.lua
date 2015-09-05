@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(820, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 67 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(69017)--69070 Viscous Horror, 69069 good ooze, 70579 bad ooze (patched out of game, :\)
 mod:SetEncounterID(1574)
 mod:SetZone()
@@ -39,12 +39,12 @@ local specWarnViscousHorror			= mod:NewSpecialWarningCount("ej6969", "Tank")
 local specWarnEruptingPustules		= mod:NewSpecialWarningTarget(136246, false)
 
 local timerFullyMutated				= mod:NewBuffFadesTimer(120, 140546)
-local timerMalformedBlood			= mod:NewTargetTimer(60, 136050, nil, "Tank|Healer")
+local timerMalformedBlood			= mod:NewTargetTimer(60, 136050, nil, "Tank|Healer", nil, 5)
 local timerPrimordialStrikeCD		= mod:NewCDTimer(24, 136037)
 local timerCausticGasCD				= mod:NewCDTimer(14, 136216)
-local timerVolatilePathogenCD		= mod:NewCDTimer(27, 136228)--Too cute blizzard, too cute. (those who get the 28 reference for pathogen get an A+)
+local timerVolatilePathogenCD		= mod:NewCDTimer(27, 136228)
 local timerBlackBlood				= mod:NewTargetTimer(60, 137000, nil, "Tank|Healer")
-local timerViscousHorrorCD			= mod:NewNextCountTimer(30, "ej6969", nil, nil, nil, nil, 137000)
+local timerViscousHorrorCD			= mod:NewNextCountTimer(30, "ej6969", nil, nil, nil, 1, 137000)
 
 local berserkTimer					= mod:NewBerserkTimer(480)
 

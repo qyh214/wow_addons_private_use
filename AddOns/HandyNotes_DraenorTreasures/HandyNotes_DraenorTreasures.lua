@@ -557,6 +557,9 @@ nodes["NagrandDraenor"] = {
 [82607620]={ "34645", "Warmaster Blugthol", "i600 Strength/Intellect Plate Bracer", "", "rare", "NagrandRares","116805"},
 [70602940]={ "35877", "Windcaller Korast", "i598 Caster Staff", "", "rare", "NagrandRares","116808"},
 [41004400]={ "37226", "Xelganak", "Reputation Item for Steamwheedle Preservation Society", "", "swprare", "NagrandSWP","118661"},
+[26203420]={ "40075", "Rukdug", "Pet", "", "hundredrare", "NagrandRares","129216"},
+[23803790]={ "40074", "Guk", "Pet", "", "hundredrare", "NagrandRares","129218"},
+[28503030]={ "40073", "Pugg", "Pet", "", "hundredrare", "NagrandRares","129217"},
 }
 nodes["TanaanJungle"] = {
 [15005440]={ "38754", "Axe of Weeping Wolf", "i650 Strength 2H Axe", "First floor of north-east tower", "default", "TanaanTreasures","127325"},
@@ -672,6 +675,10 @@ nodes["TanaanJungle"] = {
 [65403660]={ "38700", "Steelsnout", "i655 Agility/Strength Cloak", "", "hundredrare", "TanaanHundred","127357","28344"},
 [52604020]={ "38430", "Argosh the Destroyer", "i655 Crossbow", "", "hundredrare", "TanaanHundred","127326","28722"},
 [41407960]={ "37407", "Keravnos", "unknown", "", "hundredrare", "TanaanHundred",""},
+[88005550]={ "40104", "Smashum Grabb", "Toy", "", "hundredrare", "TanaanHundred","108634"},
+[83504380]={ "40105", "Drakum", "Toy", "", "hundredrare", "TanaanHundred","108631"},
+[80405680]={ "40106", "Gondar", "Toy", "", "hundredrare", "TanaanHundred","108633"},
+[40705630]={ "40107", "Fel Overseer Mudlump", "Dismounting item", "", "hundredrare", "TanaanHundred","129295"},
 
 [15406340]={ "39288", "Terrorfist", "Mounts + Oil", "His spawn will be announced by Frogan: A massive gronnling is heading for Rangari Refuge! We are going to require some assistance!", "hundredrare", "TanaanBoss",""},
 [23204040]={ "39287", "Deathtalon", "Mounts + Oil", "His spawn will be announced by Shadow Lord Iskar: Behind the veil, all you find is death!", "hundredrare", "TanaanBoss",""},

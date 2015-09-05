@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(727, "DBM-Party-MoP", 6, 324)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(62205)
 mod:SetEncounterID(1464)
 mod:SetZone()
@@ -20,7 +20,7 @@ local specWarnGustingWinds	= mod:NewSpecialWarningSpell(121282, nil, nil, nil, 2
 local specWarnResin			= mod:NewSpecialWarningYou(121447)
 local specWarnCausticPitch	= mod:NewSpecialWarningMove(121443)
 
-local timerResinCD			= mod:NewCDTimer(20, 121447)--20-25 sec variation
+local timerResinCD			= mod:NewCDTimer(20, 121447, nil, nil, nil, 3)--20-25 sec variation
 
 local windsActive = false
 

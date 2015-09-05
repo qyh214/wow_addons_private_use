@@ -7,6 +7,7 @@
 
 local _G = _G
 local type = type
+local pairs = pairs
 local _
 
 local addonName, addon = ...
@@ -292,6 +293,52 @@ group:AddButton(L["show buffs"], "showBuffs")
 group:AddButton(L["show debuffs"], "showDebuffs")
 group:AddButton(L["only show dispellable debuffs"], "onlyDispellable")
 group:AddButton(L["show dispels"], "showDispels")
+
+------------------------------------------------------------
+-- Character profiles
+------------------------------------------------------------
+
+local profileCombo = page:CreateComboBox(L["character profiles"])
+profileCombo.text:ClearAllPoints()
+profileCombo.text:SetPoint("TOPLEFT", group[-1], "BOTTOMLEFT", 0, -22)
+profileCombo:SetPoint("TOPLEFT", profileCombo.text, "BOTTOMLEFT", 4, -8)
+profileCombo:SetWidth(240)
+
+local delButton = page:CreatePressButton(DELETE)
+delButton:SetPoint("LEFT", profileCombo, "RIGHT")
+delButton:Disable()
+
+function profileCombo:OnMenuRequest()
+	local db = addon.db.profiles
+	if type(db) ~= "table" then
+		return
+	end
+
+	local profile, _
+	for profile, _ in pairs(db) do
+		self:AddLine(profile, profile)
+	end
+end
+
+function profileCombo:OnComboChanged(value)
+	if value and value ~= addon:GetCurProfileName() then
+		delButton:Enable()
+	else
+		delButton:Disable()
+	end
+end
+
+local function DeleteFrofile(profile)
+	addon.db.profiles[profile] = nil
+	profileCombo:SetSelection(nil)
+end
+
+function delButton:OnClick()
+	local profile = profileCombo:GetSelection()
+	if profile and profile ~= addon:GetCurProfileName() then
+		LibMsgBox:Confirm(format(L["deleting profile"], profile), MB_OKCANCEL, DeleteFrofile, profile)
+	end
+end
 
 ------------------------------------------------------------
 -- Loads addon option data

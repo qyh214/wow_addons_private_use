@@ -13,7 +13,7 @@
 ## Notes-zhTW: 提供團隊管理工具給予領隊以方便地整合人員
 ## SavedVariablesPerCharacter: ZPerl_Admin, ZPerl_CheckItems
 ## RequiredDeps: ZPerl
-## X-Curse-Packaged-Version: r972
+## X-Curse-Packaged-Version: r976
 ## X-Curse-Project-Name: Z-Perl UnitFrames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

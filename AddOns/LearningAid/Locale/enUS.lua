@@ -52,5 +52,8 @@ LA.strings.enUS = {
   trainAllPopup = "Train all available skills for",
   frameStrata = "Frame Strata",
   frameStrataHelp = "Adjust what frames Learning Aid appears above and below.  Only change this if you have problems with frames overlapping each other.",
-  advanced = "Advanced settings"
+  advanced = "Advanced settings",
+  -- Strings added in 1.12
+  findAutoAttack = "Find Auto Attack",
+  findAutoAttackHelp = "If enabled, Find Missing Abilities will search for Auto Attack, Auto Shot and Shoot."
 }

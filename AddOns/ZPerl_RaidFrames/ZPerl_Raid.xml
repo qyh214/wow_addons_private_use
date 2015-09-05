@@ -112,7 +112,7 @@
 									</Offset>
 								</Anchor>
 							</Anchors>
-							<TexCoords left="0.5" right = "1.0" top="0.0" bottom="0.5"/>
+							<TexCoords left="0.49" right="1.0" top="0.0" bottom="0.49"/>
 						</Texture>
 
 						<!-- Warning Icon -->
@@ -167,7 +167,7 @@
 				</Backdrop>
 				<Frames>
 					<!-- Health Bar -->
-					<StatusBar name="$parenthealthBar" drawLayer="BACKGROUND" inherits="XPerlRaidStatusBar">
+					<StatusBar name="$parenthealthBar" drawLayer="ARTWORK" inherits="XPerlRaidStatusBar">
 						<Size>
 							<AbsDimension x="70" y="15"/>
 						</Size>
@@ -186,16 +186,16 @@
 						<BarColor r="0" g="0.8" b="0"/>
 					</StatusBar>
 					<!-- Expected Health Bar -->
-					<StatusBar name="$parentexpectedHealth" drawLayer="BACKGROUND" hidden="true">
+					<StatusBar name="$parentexpectedHealth" drawLayer="BORDER" hidden="true">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parenthealthBar">
 								<Offset>
-									<AbsDimension x="0" y="-2"/>
+									<AbsDimension x="0" y="0"/>
 								</Offset>
 							</Anchor>
 							<Anchor point="BOTTOMRIGHT" relativeTo="$parenthealthBar">
 								<Offset>
-									<AbsDimension x="0" y="2"/>
+									<AbsDimension x="0" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -206,6 +206,29 @@
 								XPerl_SetChildMembers(self)
 								XPerl_RegisterBar(self)
 								self:SetFrameLevel(_G[self:GetParent():GetName().."healthBar"]:GetFrameLevel() - 1)
+							</OnLoad>
+						</Scripts>
+					</StatusBar>
+					<!-- Absorb Health Bar -->
+					<StatusBar name="$parentexpectedAbsorbs" drawLayer="OVERLAY" hidden="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parenthealthBar">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="BOTTOMRIGHT" relativeTo="$parenthealthBar">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<BarTexture name="$parenttex" file="Interface\Buttons\White8x8"/>
+						<BarColor r="0.14" g="0.33" b="0.7" a="0.7"/>
+						<Scripts>
+							<OnLoad>
+								self:SetReverseFill(true)
+								XPerl_SetChildMembers(self)
 							</OnLoad>
 						</Scripts>
 					</StatusBar>

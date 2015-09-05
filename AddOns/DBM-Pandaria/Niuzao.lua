@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(859, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(71954)
 mod:SetReCombatTime(20)
 mod:SetZone()
@@ -22,9 +22,9 @@ local specWarnHeadbutt			= mod:NewSpecialWarningSpell(144610, "Tank")
 local specWarnMassiveQuake		= mod:NewSpecialWarningSpell(144611, nil, nil, nil, 2)
 local specWarnCharge			= mod:NewSpecialWarningDodge(144609, "Melee")--66 and 33%. Maybe add pre warns
 
-local timerHeadbuttCD			= mod:NewCDTimer(47, 144610, nil, "Tank")
+local timerHeadbuttCD			= mod:NewCDTimer(47, 144610, nil, "Tank", nil, 5)
 local timerMassiveQuake			= mod:NewBuffActiveTimer(13, 144611)
-local timerMassiveQuakeCD		= mod:NewCDTimer(48, 144611)
+local timerMassiveQuakeCD		= mod:NewCDTimer(48, 144611, nil, nil, nil, 2)
 
 mod:AddReadyCheckOption(33117, false)
 

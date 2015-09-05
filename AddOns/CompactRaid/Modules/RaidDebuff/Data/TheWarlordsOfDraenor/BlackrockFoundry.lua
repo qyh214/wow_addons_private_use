@@ -47,6 +47,7 @@ module:RegisterDebuff(TIER, INSTANCE, BOSS, 155242)
 -- Kromog
 BOSS = 1162
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 157060)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 156766, 5)
 
 -- The Iron Maidens
 BOSS = 1203

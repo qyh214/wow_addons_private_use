@@ -6,7 +6,7 @@ local conf, pconf
 XPerl_RequestConfig(function(new)
 	conf = new
 	pconf = new.player
-end, "$Revision: 927 $")
+end, "$Revision: 974 $")
 
 --local playerClass
 
@@ -157,7 +157,8 @@ end
 
 
 local function XPerl_Player_Buffs_Set_Bits(self)
-	--playerClass = select(2, UnitClass("player"))
+	--local _, class = UnitClass("player")
+	--playerClass = class
 
 	XPerl_Player_BuffSetup(self)
 

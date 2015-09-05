@@ -47,7 +47,6 @@ local NONE=C(NONE,"Red")
 local DONE=C(DONE,"Green")
 local NEED=C(NEED,"Red")
 local IsQuestFlaggedCompleted=IsQuestFlaggedCompleted
-
 local CAPACITANCE_SHIPMENT_COUNT=CAPACITANCE_SHIPMENT_COUNT -- "%d of %d Work Orders Available";
 local CAPACITANCE_SHIPMENT_READY=CAPACITANCE_SHIPMENT_READY -- "Work Order ready for pickup!";
 local CAPACITANCE_START_WORK_ORDER=CAPACITANCE_START_WORK_ORDER -- "Start Work Order";
@@ -70,7 +69,24 @@ local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
 local dbversion=1
 local frequency=5
 local ldbtimer=nil
-
+local ColorStrings={
+'00FF00', -- 0
+'33FF00', -- 1
+'66FF00', -- 2
+'99FF00', -- 3
+'CCFF00', -- 4
+'FFFF00', -- 5
+'FFCC00', -- 6
+'FF9900', -- 7
+'FF6500', -- 8
+'FF3200', -- 9
+'FF0000' -- 10
+}
+local ColorValues={}
+for i=1,#ColorStrings do
+	local c=ColorStrings[i]
+	ColorValues[i]={tonumber(c:sub(1,2),16)/255,tonumber(c:sub(3,4),16)/255,tonumber(c:sub(5,6),16)/255}
+end
 local spellids={
 	[158754]='herb',
 	[158745]='mine',
@@ -334,6 +350,7 @@ function addon:OnInitialized()
 	self:RegisterEvent("GARRISON_MISSION_STARTED")
 	self:RegisterEvent("GARRISON_MISSION_NPC_OPENED","ldbCleanup")
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+	self:RegisterEvent("SHIPMENT_CRAFTER_CLOSED")
 	self:RegisterEvent("SHIPMENT_CRAFTER_INFO")
 	self:RegisterEvent("SHOW_LOOT_TOAST")
 	--self:RegisterEvent("QUEST_AUTOCOMPLETE",print)
@@ -346,7 +363,7 @@ function addon:OnInitialized()
 	self:AddToggle("SHOWNEXT",false,L["Show next toon"],L["Show the next toon which will complete a mission"])
 	self:AddSlider("FREQUENCY",5,1,60,L["Update frequency"])
 	frequency=self:GetNumber("FREQUENCY",5)
-	self:ScheduleTimer("DelayedInit",5)
+	self:ScheduleTimer("DelayedInit",1)
 end
 function addon:ApplyFREQUENCY(value)
 	frequency=value
@@ -357,7 +374,10 @@ function addon:ApplyFREQUENCY(value)
 end
 function addon:SHIPMENT_CRAFTER_INFO(...)
 	self:WorkUpdate(...)
-
+end
+function addon:SHIPMENT_CRAFTER_CLOSED(...)
+	self:CountEmpty()
+	workobj:Update()
 end
 function addon:SHOW_LOOT_TOAST(event,typeIdentifier, itemLink, quantity, specID, sex, isPersonal, lootSource)
 	if (isPersonal and lootSource==10) then -- GARRISON_CACHE
@@ -367,15 +387,21 @@ function addon:SHOW_LOOT_TOAST(event,typeIdentifier, itemLink, quantity, specID,
 		cacheobj:Update()
 	end
 end
+local init=5
 function addon:DelayedInit()
 	self:CheckDateReset()
 	self:WorkUpdate()
 	self:ZONE_CHANGED_NEW_AREA()
-	ldbtimer=self:ScheduleRepeatingTimer("ldbUpdate",frequency)
 	farmobj:Update()
 	workobj:Update()
 	dataobj:Update()
 	self.db.realm.cachesize[ns.me] = self:GetImprovedCacheSize()
+	if init > 0 then
+		self:ScheduleTimer('DelayedInit',2)
+		init=init-1
+	else
+		ldbtimer=self:ScheduleRepeatingTimer("ldbUpdate",frequency)
+	end
 end
 function addon:GetImprovedCacheSize()
 	if IsQuestFlaggedCompleted(37485) then
@@ -395,16 +421,17 @@ function addon:OnEnabled()
 	self:ScheduleTimer("DelayedInit",5)
 end
 function addon:Gradient(perc)
-	return self:ColorGradient(perc,1,0,0,1,1,0,0,1,0)
+	local rc,r,g,b=pcall(self.ColorGradient,self,perc,1,0,0,1,1,0,0,1,0)
+	if (rc) then
+		return r,g,b
+	else
+		return 0,1,0
+	end
 end
 
 function addon:ColorGradient(perc, ...)
-	if perc >= 1 then
-		local r, g, b = select(select('#', ...) - 2, ...)
-		return r, g, b
-	elseif perc <= 0 then
-		local r, g, b = ...
-		return r, g, b
+	if perc > 1 then perc=1
+	elseif perc < 0 then perc=0
 	end
 	local num = select('#', ...) / 3
 	local segment, relperc = math.modf(perc*(num-1))
@@ -447,17 +474,28 @@ cacheobj=LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("GC-Cache", {
 function farmobj:Update()
 	local n,t=addon:CountMissing()
 	if (t>0) then
-		local c=addon:ColorToString(addon:Gradient(n/t))
-		farmobj.text=format("|cff%s%d|r/|cff%s%d|r",c,t-n,C.Green.c,t)
+		--local c=addon:ColorToString(addon:Gradient(1/t*(t-n)))
+		local c,perc=addon:moreIsGood(n,t)
+		farmobj.text=format("|cff%s%d|r/|cff20ff20%d|r",c,t-n,t)
 	else
 		farmobj.text=NONE
 	end
 end
+function workobj:Update()
+	local n,t=addon:CountEmpty()
+	if (t>0) then
+		local c,perc=addon:moreIsGood(n,t)
+		workobj.text=format("|cff%s%d|r/|cff20ff20%d|r",c,t-n,t)
+	else
+		workobj.text=NONE
+	end
+end
+
 function cacheobj:Update()
 	local n,t=addon:CountCaches()
 	if (t>0) then
-		local c=addon:ColorToString(addon:Gradient(n/t))
-		cacheobj.text=format("|cff%s%d|r/|cff%s%d|r",c,t-n,C.Green.c,t)
+		local c,perc=addon:moreIsGood(n,t)
+		cacheobj.text=format("|cff%s%d|r/|cff20ff20%d|r",c,t-n,t)
 	else
 		cacheobj.text=NONE
 	end
@@ -482,10 +520,9 @@ end
 function cacheobj:OnTooltipShow()
 	self:AddLine(GARRISON_CACHE)
 	for k,v in kpairs(addon.db.realm.caches) do
-		local m=addon.db.realm.cachesize[k] or 500
-		local resources=math.min(m,math.floor((time()-v)*(1/600)))
-		self:AddDoubleLine(k==ns.me and C(k,"green") or C(k,"Orange"),format("%d/%d",resources,m),nil,nil,nil,
-		addon:ColorGradient(resources/m,0,1,0,1,1,0,1,0,0))
+		local t=addon.db.realm.cachesize[k] or 500
+		local n=math.min(t,math.floor((time()-v)*(1/600)))
+		self:AddDoubleLine(k==ns.me and C(k,"green") or C(k,"Orange"),format("%d/%d",n,t),nil,nil,nil,addon:moreIsGood(n,t,true)) -- uses more because n is not the "missing" part
 	end
 	self:AddLine(me,C.Silver())
 end
@@ -494,6 +531,7 @@ function dataobj:OnTooltipShow()
 	self:AddLine(L["Mission awaiting"])
 	local db=addon.db.realm.missions
 	local now=time()
+	local remove=nil
 	for i=1,#db do
 		if db[i] then
 			local t,missionID,pc,followerType=strsplit('.',db[i])
@@ -501,6 +539,11 @@ function dataobj:OnTooltipShow()
 			followerType=tonumber(followerType) or LE_FOLLOWER_TYPE_GARRISON_6_0
 			local name= (followerType==LE_FOLLOWER_TYPE_SHIPYARD_6_2) and C(G.GetMissionName(missionID),"cyan") or G.GetMissionName(missionID)
 			if (name) then
+				if not remove and pc==ns.me then
+					if not G.GetPartyMissionInfo(missionID) then
+						remove=i
+					end
+				end
 				local msg=format("|cff%s%s|r: %s",pc==ns.me and C.Green.c or C.Orange.c,pc,name)
 				if t > now then
 					self:AddDoubleLine(msg,SecondsToTime(t-now),nil,nil,nil,C.Red())
@@ -510,7 +553,9 @@ function dataobj:OnTooltipShow()
 			end
 		end
 	end
-
+	if remove then
+		tremove(db,remove)
+	end
 	self:AddLine(me,C.Silver())
 end
 
@@ -538,16 +583,6 @@ function workobj:OnEnter()
 	GameTooltip:ClearLines()
 	workobj.OnTooltipShow(GameTooltip)
 	GameTooltip:Show()
-end
-function workobj:Update()
-	local n,t=addon:CountEmpty()
-	if (t>0) then
-		local c=addon:ColorToString(addon:Gradient((n)/t))
-		workobj.text=format("|cff%s%d|r/|cff%s%d|r",c,t-n,C.Green.c,t)
-	else
-		workobj.text=NONE
-	end
-
 end
 function workobj:OnTooltipShow()
 	self:AddLine(CAPACITANCE_WORK_ORDERS)
@@ -633,11 +668,11 @@ function dataobj:Update()
 		end
 	end
 	if t>0 then
-		local c=addon:ColorToString(addon:Gradient(n/t))
+		local c,perc=addon:moreIsGood(n,t)
 		if (prox and addon:GetBoolean("SHOWNEXT")) then
-			self.text=format("|cff%s%d|r/|cff%s%d|r (%s)",c,n,C.Green.c,t,prox)
+			self.text=format("|cff%s%d|r/|cff20ff20%d|r (%s)",c,n,t,prox)
 		else
-			self.text=format("|cff%s%d|r/|cff%s%d|r",c,n,C.Green.c,t)
+			self.text=format("|cff%s%d|r/|cff20ff20%d|r",c,n,t)
 		end
 	else
 		self.text=NONE
@@ -665,7 +700,24 @@ function dataobj:OldUpdate()
 	end
 	self.text=format("%s: %s (Tot: |cff00ff00%d|r) %s: %s",READY,ready,completed,NEXT,prox)
 end-- Resources rate: 144 a day
-
+local function convert(perc,numeric)
+	perc=max(0,min(10,perc))
+	if numeric then
+		return unpack(ColorValues[perc+1])
+	else
+		return ColorStrings[perc+1]
+	end
+end
+function addon:lessIsGood(n,t,numeric)
+	-- t = total
+	-- n = counted
+	return convert(math.floor(10/t*(t-n)),numeric)
+end
+function addon:moreIsGood(n,t,numeric)
+	-- t = total
+	-- n = counted
+	return convert(math.floor(10/t*n),numeric)
+end
 --[===[@debug@
 local function highdebug(tb)
 	for k,v in pairs(tb) do

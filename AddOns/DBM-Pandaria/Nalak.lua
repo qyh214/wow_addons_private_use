@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(814, "DBM-Pandaria", nil, 322)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 60 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(69099)
 mod:SetEncounterID(1571)
 mod:SetReCombatTime(20, 10)
@@ -22,9 +22,9 @@ local yellStormcloud				= mod:NewYell(136340)
 local specWarnLightningTether		= mod:NewSpecialWarningYou(136339)--Is this important enough?
 local specWarnArcNova				= mod:NewSpecialWarningRun(136338, "Melee", nil, 2, 4)
 
-local timerStormcloudCD				= mod:NewCDTimer(21.5, 136340)
-local timerLightningTetherCD		= mod:NewCDTimer(30.5, 136339)--Needs more data, they may have tweaked it some.
-local timerArcNovaCD				= mod:NewCDTimer(35.5, 136338)
+local timerStormcloudCD				= mod:NewCDTimer(21.5, 136340, nil, nil, nil, 3)
+local timerLightningTetherCD		= mod:NewCDTimer(30.5, 136339, nil, nil, nil, 3)--Needs more data, they may have tweaked it some.
+local timerArcNovaCD				= mod:NewCDTimer(35.5, 136338, nil, nil, nil, 2)
 
 mod:AddBoolOption("RangeFrame")--For Stormcloud, might tweek to not show all the time with actual better logs than me facepulling it and dying with 20 seconds
 mod:AddReadyCheckOption(32518, false)

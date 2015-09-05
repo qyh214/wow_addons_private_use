@@ -337,7 +337,7 @@ function LA:UpdateButton(button)
 
   iconTexture:SetTexture(texture)
   spellString:SetText(spellName)
-  subSpellString:SetText(spellSubName)
+  subSpellString:SetText(subSpellName)
   if ( spellSubName ~= "" ) then
     spellString:SetPoint("LEFT", button, "RIGHT", 4, 4)
   else

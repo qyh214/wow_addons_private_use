@@ -14,6 +14,7 @@ L.OTabBosses	= "우두머리"
 --L.OTabOptions	= GAMEOPTIONS_MENU
 
 L.TabCategory_Options		= "전역 설정"
+L.TabCategory_LEG	 		= "군단"
 L.TabCategory_PVP	 		= "PvP"
 L.TabCategory_OTHER			= "기타 우두머리 경보"
 
@@ -66,6 +67,7 @@ L.ModelSoundLong			= "긴 음성"
 L.Button_RangeFrame			= "거리 창 보기"
 L.Button_InfoFrame			= "정보 창 보기"
 L.Button_TestBars			= "시험 경보 시작"
+L.Button_ResetInfoRange		= "거리/정보 창 위치 초기화"
 
 -- Tab: Raidwarning
 L.Tab_RaidWarning 			= "알림"
@@ -83,6 +85,7 @@ L.ShowFakedRaidWarnings 	= "대화창 알림 메세지를 공격대 경보처럼
 L.WarningIconLeft 			= "알림 왼쪽에 주문 아이콘 보기"
 L.WarningIconRight 			= "알림 오른쪽에 주문 아이콘 보기"
 L.WarningIconChat 			= "대화창 알림 메세지에 주문 아이콘 보기"
+L.WarningAlphabetical		= "다수 대상 알림을 이름 순으로 정렬"
 L.Warn_FontType				= "글꼴"
 L.Warn_FontStyle			= "글꼴 속성"
 L.Warn_FontShadow			= "그림자"
@@ -120,7 +123,7 @@ L.BarSetup  				= "바"
 L.BarTexture 				= "바 무늬"
 L.BarStyle 					= "바 작동 방식"
 L.BarDBM					= "DBM"
-L.BarBigWigs				= "BigWigs(애니메이션 없음)"
+L.BarSimple					= "Simple(애니메이션 없음)"
 L.BarStartColor	 			= "시작 색상"
 L.BarEndColor 				= "종료 색상"
 L.Bar_Font					= "바 글꼴"
@@ -301,6 +304,7 @@ L.LFDEnhance				= "전장/공격대 찾기 입장, 역할 확인 소리를 주 �
 L.WorldBossNearAlert		= "근처에서 야외 우두머리 전투가 시작된 경우 전투 준비 소리 듣기(우두머리별 설정 무시)"
 L.RLReadyCheckSound			= "전투 준비 소리를 주 음량 또는 대화 음량에 맞추어 듣기"
 L.AFKHealthWarning			= "자리 비움 상태 도중 체력이 줄면 경고음 듣기"
+L.AutoReplySound			= "자동 응답 귓속말을 보낼 때 경고음 듣기"
 --
 L.TimerGeneral 				= "DBM 바 설정"
 L.SKT_Enabled				= "최고 기록 바 보기"

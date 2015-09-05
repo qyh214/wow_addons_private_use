@@ -185,6 +185,7 @@ L["Searching:"] = true
 L["Select a Favorites List"] = true
 L["Selected Stack Size"] = true
 L["Sell Tab"] = true
+L["Shift-click to search for the exact name. Normal click to perform a regular search."] = true
 L["Show auction house value in tooltips."] = true
 L["Show Auction Value"] = true
 L["Show Deals"] = true

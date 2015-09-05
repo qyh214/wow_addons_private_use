@@ -18,19 +18,9 @@
 		if (not XPerl_Options or not XPerl_Options:IsShown()) then
 			if (not InCombatLockdown()) then
 				if (XPerlDB.raidpet.enable) then
-					if (XPerlDB.raidpet.hunter and XPerlDB.raidpet.warlock) then
-						XPerlDB.raidpet.warlock = nil
-						XPerlDB.raidpet.hunter = 1
-					elseif (XPerlDB.raidpet.hunter and not XPerlDB.raidpet.warlock) then
-						XPerlDB.raidpet.warlock = 1
-						XPerlDB.raidpet.hunter = nil
-					else
-						XPerlDB.raidpet.enable = nil
-					end
+					XPerlDB.raidpet.enable = nil
 				else
 					XPerlDB.raidpet.enable = 1
-					XPerlDB.raidpet.warlock = 1
-					XPerlDB.raidpet.hunter = 1
 				end
 				if (XPerl_RaidPets_OptionActions) then
 					XPerl_RaidPets_OptionActions()

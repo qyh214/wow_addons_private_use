@@ -2049,7 +2049,7 @@ local CreateFollowerPortrait do
 		v:SetPoint("TOPLEFT", -4, 2) v:SetPoint("BOTTOMRIGHT", 2, -2)
 		v:SetTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
 		v:SetBlendMode("ADD")
-		v = x:CreateTexture(nil, "ARTWORK", nil, 4)
+		v = x:CreateTexture(nil, "ARTWORK", nil, 5)
 		v:Hide()
 		v:SetTexture("Interface\\Buttons\\IconBorder-GlowRing")
 		v:SetPoint("TOPLEFT", 0,1)
@@ -2486,7 +2486,9 @@ do -- availMissionsHandle
 				EV("MP_FORCE_FOLLOWER_TAB", ifid)
 			elseif button == "RightButton" then
 				G.SaveMissionParty(mi.missionID, g[5], g[6], g[7])
+				assert(G.HasTentativeParty(mi.missionID) > 0)
 				api.roamingParty:DropFollowers(g[5], g[6], g[7])
+				assert(G.HasTentativeParty(mi.missionID) > 0)
 			else
 				OpenToMission(mi, g[5], g[6], g[7])
 			end
@@ -2878,6 +2880,11 @@ do -- interestMissionsHandle
 			end
 			wipe(usefulTraits)
 			usefulTraits[T.EnvironmentCounters[s[5]] or 0] = 1
+			for k,v in pairs(T.EnvironmentBonus) do
+				if v[s[5]] then
+					usefulTraits[k] = 1
+				end
+			end
 			usefulTraits[best.ttrait or 0] = 1
 			usefulTraits[T.TraitStack[s[4]] or 0] = 1
 			usefulTraits[232] = best.dtrait
@@ -3093,8 +3100,9 @@ do -- interestMissionsHandle
 			self.chance:SetTextColor(1, 0.55, 0)
 		end
 		if best and best[4] and nf > 0 then
+			local nf = T.UniqueTraits[T.TraitStack[s[4]]] or nf
 			self.chance:SetPoint("RIGHT", -70, 6)
-			self.fstack:SetText(best[4] .. "/" .. nf)
+			self.fstack:SetText(best[4] .. "/" .. nf .. " |T" .. C_Garrison.GetFollowerAbilityIcon(T.TraitStack[s[4]]) .. ":0:0:0:0:64:64:4:60:4:60|t")
 			local r, g, b = 0.1, 1, 0.1
 			if best[4] < nf then r, g, b = 1, 0.55, 0 end
 			self.fstack:SetTextColor(r,g,b)
@@ -3162,9 +3170,8 @@ do -- interestMissionsHandle
 			end
 			
 			if #ua > 0 then
-				local fi = G.GetFollowerInfo()
 				table.sort(ua, function(a,b)
-					a, b = fi[a], fi[b]
+					a, b = finfo[a], finfo[b]
 					local ac, bc = a.level + a.iLevel, b.level + b.iLevel
 					if ac == bc then
 						ac, bc = a.name, b.name
@@ -3289,21 +3296,32 @@ do -- Ships
 		local tipGroup = GarrisonShipyardMapMissionTooltip:CreateFontString(nil, "ARTWORK", "GameFontHighlightLeft")
 		tipGroup:SetTextColor(0.5, 0.8, 1)
 		hooksecurefunc("GarrisonShipyardMapMission_SetTooltip", function() tipGroup:Hide() end)
+		local function describeGroup(sg, mi)
+			local exp, sp = G.GetMissionGroupXP(sg, mi), sg[1]/100
+			local ex, ce, ct = exp >= 1 and ("; " .. (L"%s XP"):format(BreakUpLargeNumbers(floor(exp)))) or "", sg[3]*sp, sg[9]
+			if ct == 0 and ce > 1e4 then ex = ex .. "; " .. GetMoneyString(ce - ce % 1e4) end
+			return sg[1] .. "%" .. (ex or "")
+		end
 		function ShipMission_OnEnter(self, ...)
 			local mi = self.info
 			GarrisonShipyardMapMission_OnEnter(self, ...)
 			if mi and mi.canStart and GarrisonShipyardMapMissionTooltip:IsShown() then
-				local sg, tf = GetViableSuggestedGroup(self.info), GarrisonShipyardMapMissionTooltip
-				if sg then
-					local exp, sp = G.GetMissionGroupXP(sg, mi), sg[1]/100
-					local ex, ce, ct = exp >= 1 and ("; " .. (L"%s XP"):format(BreakUpLargeNumbers(floor(exp)))), sg[3]*sp, sg[9]
-					if ct == 0 and ce > 1e4 then ex = (ex and ex .. "; " or "") .. GetMoneyString(ce - ce % 1e4) end
-					tipGroup:SetFormattedText("|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:14:12:0:-1:512:512:10:70:330:410|t %s: |cffffffff%d%%%s", L"Suggested group", sg[1], ex or "")
+				local tipText, sg, lg, ld = "", G.GetSuggestedGroupsForMission(mi)
+				sg, lg = sg and sg[1], sg and sg[#sg]
+				if sg and not G.GetMissionGroupDeparture(sg, mi) then
+					tipText = string.format("|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:14:12:0:-1:512:512:10:70:330:410|t %s: |cffffffff%s", L"Suggested group", describeGroup(sg, mi))
+				end
+				ld = lg and G.GetMissionGroupDeparture(lg, mi)
+				if ld then
+					tipText = string.format("|cffb0b0b0%s:|cffffffff %s%s%s", FormatCountdown(ld-time()), describeGroup(lg, mi), tipText ~= "" and "\n|r" or "", tipText)
+				end
+				if tipText ~= "" then
+					tipGroup:SetText(tipText)
 					tipGroup:Show()
 					GarrisonShipyardMapMission_AnchorToBottomWidget(tipGroup, 0, -12)
 					GarrisonShipyardMapMission_SetBottomWidget(tipGroup)
-					tipGroup:SetWidth(math.max(180, (tf:GetWidth() or 16) - 12))
-					tf:SetHeight(tf:GetHeight() + tipGroup:GetHeight()+12)
+					tipGroup:SetWidth(math.max(180, (GarrisonShipyardMapMissionTooltip:GetWidth() or 16) - 12))
+					GarrisonShipyardMapMissionTooltip:SetHeight(GarrisonShipyardMapMissionTooltip:GetHeight() + tipGroup:GetHeight()+12)
 					return
 				end
 			end

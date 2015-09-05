@@ -1,0 +1,20 @@
+subversion:
+	- Omega via svn r14464: Don?\226?\128?\153t trust STANDARD_TEXT_FONT global at all, cause apparently it can be nil or have invalid font information with 3rd party mod taints. Instead hard code our own DBM.STANDARD_TEXT_FONT
+	- Omega via svn r14463: Iskar Update *Auto icon marking of adds during shadow escape phase (off by default) *Smarter Eye of anzu warnings that check whether bomb or winds are currently in progress when eye is thrown to you, in addition to the code that already did this when winds/bombs were initially cast while you had eye.
+	- Omega via svn r14462: Socrethar Update *Fix timer bug with count not showing for first felburst *Added spawn alert/voice for soulstalker spawning, instead of just having a timer. *Added voice alert for felburst *Changed reverberating blow to a cast warning instead of cast finished warning. Iskar Update *Fixed riposte timer/warning from being messed up by Dks using dark Sim on it.
+	- Omega via svn r14461: Try to work around skin mods overwriting STANDARD_TEXT_FONT with invalid fonts
+	- Omega via svn r14460: Kill some redundancy and spam bugs
+	- Omega via svn r14459: Disable bad timer update code that need more debugging. guess I can?\226?\128?\153t trust ?\226?\128?\156it?\226?\128?\153s fine?\226?\128?\157 from others. cause it was totally hosed and all timers were a mess.
+	- Omega via svn r14458: attempt to fix font errors in hudmap reported by user. Can?\226?\128?\153t reproduce so guessed fix
+	- Omega via svn r14457: Tiny micro optimize, cause apparently this can throw a script ran too long under really heavy lag. how is beyond me. blizz code is crap.
+	- Omega via svn r14456: Fix error
+	- Omega via svn r14455: BW rev
+	- TOM_RUS via svn r14454: ruRU update
+	- Omega via svn r14453: Activate ICD code for all. Initial feedback positive.
+	- Omega via svn r14452: Some debug cleanup/tweaks
+	- nbluewiz via svn r14451: # koKR update.
+	- Omega via svn r14450: Move self:IsInCombat() check here
+	- Omega via svn r14449: Add voice warning for specWarnNetherBanishOther
+	- Omega via svn r14448: *Fix bug in core that slipped through to release breaking timer recovery. fortunately it?\226?\128?\153s not causing errors so it?\226?\128?\153s no immediate concern. *CN update *Added experimental timer adjustment code to archimonde that will auto adjust all timers around hidden internal cooldown mechanic archimonde has. This method should make extremely accurate timers. However because it?\226?\128?\153s untested, it?\226?\128?\153s only enabled if debugmode is enabled. Fixed bug where new shackled timers on phase changes were missing count.
+	- Omega via svn r14447: inc alpha
+	- increment version number to 6.2.10

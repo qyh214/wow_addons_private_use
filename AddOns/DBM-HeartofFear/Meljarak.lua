@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(741, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 45 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(62397)
 mod:SetEncounterID(1498)
 mod:SetZone()
@@ -57,19 +57,18 @@ local specWarnWhirlingBladeMove			= mod:NewSpecialWarningMove(121898)
 local yellWindBomb						= mod:NewYell(131830)
 local specWarnReinforcements			= mod:NewSpecialWarningTarget("ej6554", "-Healer", "specWarnReinforcements")--Also important to dps. (Espcially CC classes)
 
-local timerRainOfBladesCD				= mod:NewCDTimer(48, 122406)--48-64 sec variation now. so much for it being a precise timer.
+local timerRainOfBladesCD				= mod:NewCDTimer(48, 122406, nil, nil, nil, 2)--48-64 sec variation now. so much for it being a precise timer.
 local timerRainOfBlades					= mod:NewBuffActiveTimer(7.5, 122406)
-local timerRecklessness					= mod:NewBuffActiveTimer(30, 125873)--Heroic recklessness
-local timerReinforcementsCD				= mod:NewNextCountTimer(50, "ej6554")--EJ says it's 45 seconds after adds die but it's actually 50 in logs. EJ is not updated for current tuning.
+local timerRecklessness					= mod:NewBuffActiveTimer(30, 125873, nil, nil, nil, 6)--Heroic recklessness
+local timerReinforcementsCD				= mod:NewNextCountTimer(50, "ej6554", nil, nil, nil, 1)--EJ says it's 45 seconds after adds die but it's actually 50 in logs. EJ is not updated for current tuning.
 local timerImpalingSpear				= mod:NewTargetTimer(50, 122224)--Filtered to only show your own target, may change to a popup option later that lets you pick whether you show ALL of them or your own (all will be spammy)
-local timerAmberPrisonCD				= mod:NewCDTimer(36, 121876, nil, false)--Reduce bar spam like Zarthik / each add has their own CD. This is on by default since it concerns everyone.
-local timerCorrosiveResinCD				= mod:NewCDTimer(36, 122064, nil, false)--^^
+local timerAmberPrisonCD				= mod:NewCDTimer(36, 121876, nil, false, nil, 5)--Reduce bar spam like Zarthik / each add has their own CD. This is on by default since it concerns everyone.
+local timerCorrosiveResinCD				= mod:NewCDTimer(36, 122064, nil, false, nil, 5)--^^
 local timerResidue						= mod:NewBuffFadesTimer(120, 122055)
-local timerMendingCD					= mod:NewNextTimer(37, 122193, nil, false)--To reduce bar spam, only those dealing with this should turn CD bar on, off by default / 37~37.5 sec
-local timerQuickeningCD					= mod:NewNextTimer(37.3, 122149, nil, false)--^^37.3~37.6sec.
+local timerMendingCD					= mod:NewNextTimer(37, 122193, nil, false, nil, 4)--To reduce bar spam, only those dealing with this should turn CD bar on, off by default / 37~37.5 sec
+local timerQuickeningCD					= mod:NewNextTimer(37.3, 122149, nil, false, nil, 5)--^^37.3~37.6sec.
 local timerKorthikStrikeCD				= mod:NewCDTimer(50, 123963)--^^
-local timerWindBombCD					= mod:NewCDTimer(6, 131830)--^^
-local timerReinforcementsCD				= mod:NewNextCountTimer(50, "ej6554")--EJ says it's 45 seconds after adds die but it's actually 50 in logs. EJ is not updated for current tuning.
+local timerWindBombCD					= mod:NewCDTimer(6, 131830, nil, nil, nil, 3)--^^
 
 local berserkTimer						= mod:NewBerserkTimer(480)
 

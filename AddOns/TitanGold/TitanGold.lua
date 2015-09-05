@@ -710,7 +710,7 @@ function TitanPanelGoldGPH_Toggle()
 		GoldTimer = TitanGold:ScheduleRepeatingTimer(TitanPanelPluginHandle_OnUpdate, 1, updateTable)
 	elseif GoldTimer and not TitanGetVar(TITAN_GOLD_ID, "DisplayGoldPerHour") then
 		TitanGold:CancelTimer(GoldTimer, true)
-		GoldTimer = nil;     
+		GoldTimer = nil;
 	end
 end
 

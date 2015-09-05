@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(666, "DBM-Party-MoP", 7, 246)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 60 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(58722)--58722 is Body, 58791 is soul. Body is engaged first
 mod:SetEncounterID(1429)
 mod:SetReCombatTime(180, 15)
@@ -31,7 +31,7 @@ local specWarnFixateAnger	= mod:NewSpecialWarningRun(115350, nil, nil, 2, 4)
 
 local timerShadowShivCD		= mod:NewCDTimer(12.5, 111775)--every 12.5-15.5 sec
 local timerDeathsGraspCD	= mod:NewCDTimer(34, 111570)
-local timerFixateAngerCD	= mod:NewCDTimer(12, 115350)
+local timerFixateAngerCD	= mod:NewCDTimer(12, 115350, nil, nil, nil, 3)
 local timerFixateAnger		= mod:NewTargetTimer(10, 115350)
 local timerDarkBlaze		= mod:NewBuffActiveTimer(8, 111585)
 

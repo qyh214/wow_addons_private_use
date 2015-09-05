@@ -42,8 +42,12 @@ end
 function addon:MissionScore(mission)
 	if (mission) then
 		local totalTimeString, totalTimeSeconds, isMissionTimeImproved, successChance, partyBuffs, isEnvMechanicCountered, xpBonus, materialMultiplier,goldMultiplier = G.GetPartyMissionInfo(mission.missionID)
-		local x=mission.xp and xpBonus/mission.xp*100 or 0
-		if x~=x then x=0 end -- Nan is the only value which differs from itself
+		local x = tonumber(mission.xp)
+		if x and x >0 then
+			x= xpBonus/mission.xp*100
+		else
+			x=0
+		end
 		local r=0
 		if type(materialMultiplier)=='table' then
 			for _,v in pairs(mission.rewards) do
@@ -107,7 +111,10 @@ local function CreateFilter(missionClass)
 	return filterdata
 	]]
 	code = code:gsub("TEST", " filters." ..missionClass .."(followerID,missionID)")
-	print("Compiling ",missionClass,"filterOut")
+
+--[===[@debug@
+print("Compiling ",missionClass,"filterOut")
+--@end-debug@]===]
 	return assert(loadstring(code, "filterOut for " .. missionClass))(filters,print,pairs)
 end
 
@@ -273,7 +280,10 @@ function addon:MCMatchMaker(missionID,party,skipEpic,cap)
 	if (not party) then party=addon:GetParty(missionID) end
 	useCap=true
 	currentCap=cap
-	print("Using cap data:",useCap,currentCap)
+
+--[===[@debug@
+print("Using cap data:",useCap,currentCap)
+--@end-debug@]===]
 	MatchMaker(self,mission,party,false)
 	if (skipEpic) then
 		if (self:GetMissionData(missionID,'class')=='xp') then

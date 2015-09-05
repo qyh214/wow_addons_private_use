@@ -69,7 +69,7 @@ local LA = {
   titleHeight = 40, -- pixels
   frameWidth = 200, -- pixels
   framePadding = 10, -- pixels
-  verticalSpacing = 5, -- pixels
+  verticalSpacing = 13, -- pixels
   horizontalSpacing = 153, -- pixels
   buttonSize = 37, -- pixels
   width = 1, -- button columns
@@ -92,13 +92,15 @@ local LA = {
     -- add tradeskill learning stuff here
   },
   defaults = { -- default savedvariables contents
-    macros = true,
-    totem = true,
     enabled = true,
     restoreActions = true,
-    filterSpam = 1, -- FILTER_SUMMARIZE
     debugFlags = { },
-    ignore = { }
+    ignore = { },
+    -- Search options
+    macros = true, -- Search inside macro bodies
+    totem = true, -- Search for totem spells (Shaman only)
+    autoAttack = false, -- Search for Auto Attack, Auto Shot and Shoot
+    shapeshift = true -- Search for shapeshifts, stances, auras, presences, etc.
   },
   menuHideDelay = 5, -- seconds
   pendingBuyCount = 0,
@@ -113,6 +115,7 @@ local LA = {
   activateSecondarySpec = 63644, -- global spellID
   autoAttack = 6603, -- global spellID
   autoShot = 75, -- global spellID
+  shootWand = 5019, -- global spellID
   racialSpell = 20549, -- War Stomp (Tauren). Used to determine the subName text for racials.
   racialPassiveSpell = 20550, -- Endurance (Tauren). Used to determine the subName text for racial passives.
   ridingSpells = {
@@ -369,6 +372,15 @@ function LA:Init()
             -- width = "full",
             order = 1
           },
+          autoattack = {
+            name = self:GetText("findAutoAttack"),
+            desc = self:GetText("findAutoAttackHelp"),
+            type = "toggle",
+            set = function(info, val) self.saved.autoAttack = val end,
+            get = function(info) return self.saved.autoAttack end,
+            width = "full",
+            order = 2
+          },
           shapeshift = {
             name = self:GetText("findShapeshift"),
             desc = self:GetText("findShapeshiftHelp"),
@@ -507,12 +519,13 @@ function LA:Init()
                 desc = "The Kitchen Sink",
                 type = "execute",
                 func = function ()
-                  local i = 1
-                  local spellName = GetSpellBookItemName(i, BOOKTYPE_SPELL)
-                  while spellName do
-                    self:AddButton(self.Spell.Book[i])
-                    i = i + 1
-                    spellName = GetSpellBookItemName(i, BOOKTYPE_SPELL)
+                  local spec, icon, first, count = GetSpellTabInfo(2) -- main spec
+                  local spell
+                  for i = 1, first + count do
+                    spell = self.Spell.Book[i]
+                    if spell and ("SPELL" == spell.Status) and spell.Known and (not spell.Passive) then
+                      self:AddButton(spell)
+                    end
                   end
                 end
               }
@@ -563,9 +576,8 @@ function LA:Init()
     self:DebugPrint("ConfirmTalentWipe")
     self:SaveActionBars()
     self.state.untalenting = true
-    --self.spellsUnlearned = {}
     self:RegisterEvent("ACTIONBAR_SLOT_CHANGED", "OnEvent")
-    self:RegisterEvent("PLAYER_TALENT_UPDATE", "OnEvent")
+    --self:RegisterEvent("PLAYER_TALENT_UPDATE", "OnEvent")
     -- self:RegisterEvent("UI_ERROR_MESSAGE", "OnEvent")
   end)
   --[[ PANDARIA
@@ -614,27 +626,19 @@ function LA:Init()
   ]]-- TODO FIXME Rewrite entire talent handling code FIXME TODO --
   self:RegisterChatCommand("la", "AceSlashCommand")
   self:RegisterChatCommand("learningaid", "AceSlashCommand")
-  --self:SetEnabledState(self.saved.enabled)
-  --self.saved.enabled = true
-  --self:DebugPrint("OnEnable()")
   local baseEvents = {
     "ACTIVE_TALENT_GROUP_CHANGED",
     "ADDON_LOADED",
-    -- DRAENOR 6.2 -- "CHAT_MSG_SYSTEM",
-    -- PANDARIA -- "COMPANION_LEARNED",
-    -- PANDARIA -- "COMPANION_UPDATE",
     "PET_TALENT_UPDATE",
     "PLAYER_LEAVING_WORLD",
     "PLAYER_LEVEL_UP",
     "PLAYER_LOGIN",
     "PLAYER_LOGOUT",
--- MOP --    "PLAYER_GUILD_UPDATE",
     "PLAYER_REGEN_DISABLED",
     "PLAYER_REGEN_ENABLED",
 --    "SPELLS_CHANGED", -- wait until PLAYER_LOGIN
     "UNIT_SPELLCAST_START",
     "UI_SCALE_CHANGED",
---    "UPDATE_BINDINGS", -- PANDARIA -- not needed because of companion/mount removal
     "VARIABLES_LOADED"
 --[[
     "CURRENT_SPELL_CAST_CHANGED",
@@ -644,22 +648,13 @@ function LA:Init()
     "UNIT_SPELLCAST_SUCCEEDED"
 --]]
   }
-  --if private.logAllEvents then
-  --  self.frame:RegisterAllEvents()
-  --else
-    for i, event in ipairs(baseEvents) do
-      self:RegisterEvent(event, "OnEvent")
-    end
-  --end
-  --self:UpdateSpellBook()
-  --PANDARIA
-  --self:UpdateCompanions()
+  for i, event in ipairs(baseEvents) do
+    self:RegisterEvent(event, "OnEvent")
+  end
+
   self:DiffActionBars()
   self:SaveActionBars()
-  if self.saved.filterSpam ~= LA.FILTER_SHOW_ALL then
-    self:DebugPrint("Initially adding chat filter for CHAT_MSG_SYSTEM")
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", private.spellSpamFilter)
-  end
+
   if self.saved.locked then
     self.menuTable[1].text = self:GetText("unlockPosition")
   else
@@ -669,43 +664,7 @@ function LA:Init()
     self.frame:SetFrameStrata(self.saved.frameStrata)
   end
 end
---[[ No longer needed as of patch 6.2.0!
 
--- this is a function
-function private.spellSpamFilter(...) return LA:spellSpamFilter(...) end
-
--- this is a method
-function LA:spellSpamFilter(chatFrame, event, message, ...)
-  -- local spell -- unused
-  local patterns = self.patterns
-  if (self.saved.filterSpam ~= self.FILTER_SHOW_ALL) and (
-    --(
-      --self.state.untalenting or
-      --self.state.retalenting or
-     --(self.pendingTalentCount > 0) or
-     --(self.saved.filterSpam == self.FILTER_SHOW_NONE) or
-      --self.state.learning or
---      self.petLearning or
-      --(self.pendingBuyCount > 0)
-    --) and (
-      string.match(message, patterns.learnSpell) or 
-      string.match(message, patterns.learnAbility) or
-      string.match(message, patterns.learnPassive) or
-      string.match(message, patterns.unlearnSpell) or
---    )
-  --) or
-    string.match(message, patterns.petLearnAbility) or
-    string.match(message, patterns.petLearnSpell) or
-    string.match(message, patterns.petUnlearnSpell)
-  ) then
-    self:DebugPrint("Suppressing message")
-    return true -- do not display the message
-  else
-    self:DebugPrint("Allowing message")
-    return false, message, ... -- pass the message along
-  end
-end
---]]
 function LA:GetText(id, ...)
   if not id then
     if self.DebugPrint then

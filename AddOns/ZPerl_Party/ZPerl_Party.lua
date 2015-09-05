@@ -3,7 +3,7 @@
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local XPerl_Party_Events = { }
-local checkRaidNextUpdate
+--local checkRaidNextUpdate
 local PartyFrames = { }
 local startupDone
 local conf, pconf
@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 972 $")
+end, "$Revision: 974 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -42,9 +42,15 @@ local feignDeath = GetSpellInfo(5384)
 ----------------------
 function XPerl_Party_Events_OnLoad(self)
 	local events = {
-		"PLAYER_ENTERING_WORLD", "PARTY_MEMBER_ENABLE", "PARTY_MEMBER_DISABLE", "GROUP_ROSTER_UPDATE", "UNIT_PHASE", "UNIT_COMBAT", "UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PORTRAIT_UPDATE", "UNIT_TARGET", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED", "RAID_TARGET_UPDATE", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED", "PLAYER_LOGIN", "UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED","PARTY_LOOT_METHOD_CHANGED", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
+		"PLAYER_ENTERING_WORLD", "GROUP_ROSTER_UPDATE", "UNIT_CONNECTION", "UNIT_PHASE", "UNIT_COMBAT", --[["UNIT_SPELLMISS",]] "UNIT_FACTION", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PORTRAIT_UPDATE", "UNIT_TARGET", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED", "RAID_TARGET_UPDATE", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED", "PLAYER_LOGIN", "UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED","PARTY_LOOT_METHOD_CHANGED", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
 	}
 	for i, event in pairs(events) do
+		-- Party frames doesn't update properly with this yet
+		--[[if string.find(event, "^UNIT_") then
+			self:RegisterUnitEvent(event, "party1", "party2", "party3", "party4")
+		else
+			self:RegisterEvent(event)
+		end]]
 		self:RegisterEvent(event)
 	end
 
@@ -77,7 +83,7 @@ end
 
 -- SetFrameArray
 local function SetFrameArray(self, value)
-	for k,v in pairs(PartyFrames) do
+	for k, v in pairs(PartyFrames) do
 		if (v == self) then
 			PartyFrames[k] = nil
 			if (XPerl_PartyPetFrames) then
@@ -178,8 +184,7 @@ function ZPerl_Party_OnLoad(self)
 	self.partyid = "party"..self:GetID()
 	PartyFrames[self.partyid] = self
 
-	self.hitIndicator.text:SetPoint("CENTER", self.portraitFrame, "CENTER", 0, 0)
-	CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
+	--CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
 
 	self.nameFrame:SetAttribute("useparent-unit", true)
 	self.nameFrame:SetAttribute("*type1", "target")
@@ -245,6 +250,8 @@ function XPerl_Party_UpdateHealth(self)
 	end]]
 
 	XPerl_SetHealthBar(self, Partyhealth, Partyhealthmax)
+
+	XPerl_Party_UpdateAbsorbPrediction(self)
 	XPerl_Party_UpdateHealPrediction(self)
 
 	if (not UnitIsConnected(partyid)) then
@@ -298,6 +305,15 @@ function XPerl_Party_UpdateHealPrediction(self)
 		XPerl_SetExpectedHealth(self)
 	else
 		self.statsFrame.expectedHealth:Hide()
+	end
+end
+
+-- XPerl_Party_UpdateAbsorbPrediction
+function XPerl_Party_UpdateAbsorbPrediction(self)
+	if pconf.absorbs then
+		XPerl_SetExpectedAbsorbs(self)
+	else
+		self.statsFrame.expectedAbsorbs:Hide()
 	end
 end
 
@@ -529,7 +545,8 @@ local function UpdateAssignedRoles(self)
 	local unit = self.partyid
 	local icon = self.nameFrame.roleIcon
 	local isTank, isHealer, isDamage
-	if (select(2, IsInInstance()) == "party") then
+	local inInstance, instanceType = IsInInstance()
+	if (instanceType == "party") then
 		-- No point getting it otherwise, as they can be wrong. Usually the values you had
 		-- from previous instance if you're running more than one with the same people
 		
@@ -665,7 +682,8 @@ end
 -- XPerl_Party_UpdateClass
 local function XPerl_Party_UpdateClass(self)
 	if (UnitIsPlayer(self.partyid)) then
-		local l, r, t, b = XPerl_ClassPos(select(2, UnitClass(self.partyid)))
+		local _, class = UnitClass(self.partyid)
+		local l, r, t, b = XPerl_ClassPos(class)
 		self.classFrame.tex:SetTexCoord(l, r, t, b)
 	end
 
@@ -825,7 +843,7 @@ local function XPerl_Party_TargetUpdateHealth(self)
 	end
 
 	if (UnitAffectingCombat(self.targetid)) then
-		tf.combatIcon:SetTexCoord(0.5, 1.0, 0.0, 0.5)
+		tf.combatIcon:SetTexCoord(0.49, 1.0, 0.0, 0.49)
 		tf.combatIcon:Show()
 	else
 		tf.combatIcon:Hide()
@@ -867,7 +885,9 @@ function XPerl_Party_OnUpdate(self, elapsed)
 		return
 	end
 
-	CombatFeedback_OnUpdate(self, elapsed)
+	--[[if pconf.hitIndicator and pconf.portrait then
+		CombatFeedback_OnUpdate(self, elapsed)
+	end]]
 
 	if (self.PlayerFlash) then
 		XPerl_Party_CombatFlash(self, elapsed, false)
@@ -900,7 +920,7 @@ function XPerl_Party_OnUpdate(self, elapsed)
 			XPerl_UpdateSpellRange(self.targetFrame, self.targetid)
 		end
 
-		if (checkRaidNextUpdate) then
+		--[=[if (checkRaidNextUpdate) then
 			checkRaidNextUpdate = checkRaidNextUpdate - 1
 			if (checkRaidNextUpdate <= 0) then
 				checkRaidNextUpdate = nil
@@ -915,7 +935,7 @@ function XPerl_Party_OnUpdate(self, elapsed)
 					end
 				end]] -- Do we really need this now?
 			end
-		end
+		end]=]
 	--end
 end
 
@@ -974,8 +994,14 @@ function XPerl_Party_OnEvent(self, event, unit, ...)
 	if (func) then
 		if (strfind(event, "^UNIT_") and event ~= "UNIT_THREAT_LIST_UPDATE") then
 			local f = PartyFrames[unit]
-			if (f) then
-				func(f, ...)
+			if event == "UNIT_CONNECTION" or event == "UNIT_PHASE" or event == "UNIT_HEAL_PREDICTION" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
+				if (f) then
+					func(f, unit, ...)
+				end
+			else
+				if (f) then
+					func(f, ...)
+				end
 			end
 		else
 			func(self, unit, ...)
@@ -997,28 +1023,25 @@ end
 -- end
 
 function XPerl_Party_Events:PARTY_LOOT_METHOD_CHANGED()
-	
 	local lootMethod, pindex,rindex = GetLootMethod()
-	
+
 	if (lootMethod == "master") then
-	
 		for i, frame in pairs(PartyFrames) do
 			if (frame.partyid) then
-			
+
 				if (rindex == nil) then
 					if (frame.partyid == "party"..pindex) then
 						frame.nameFrame.masterIcon:Show()
 					else
 						frame.nameFrame.masterIcon:Hide()
-					end	
+					end
 				else
 					--If we are also in a raid group
 					if (UnitIsUnit("raid"..rindex,frame.partyid)) then
 						frame.nameFrame.masterIcon:Show()
 					else
 						frame.nameFrame.masterIcon:Hide()
-					end	
-					
+					end
 				end
 			end
 		end
@@ -1047,7 +1070,7 @@ function XPerl_Party_Events:RAID_TARGET_UPDATE()
 end
 
 -- READY_CHECK
-function XPerl_Party_Events:READY_CHECK(a, b, c)
+function XPerl_Party_Events:READY_CHECK()
 	for i, frame in pairs(PartyFrames) do
 		if (frame.partyid) then
 			XPerl_Unit_UpdateReadyState(frame)
@@ -1060,11 +1083,11 @@ XPerl_Party_Events.READY_CHECK_FINISHED = XPerl_Party_Events.READY_CHECK
 
 -- UNIT_COMBAT
 function XPerl_Party_Events:UNIT_COMBAT(...)
-	local action, descriptor, damage, damageType = select(1, ...)
+	local action, descriptor, damage, damageType = ...
 	
-	if (pconf.hitIndicator and pconf.portrait) then
+	--[[if (pconf.hitIndicator and pconf.portrait) then
 		CombatFeedback_OnCombatEvent(self, action, descriptor, damage, damageType)
-	end
+	end]]
 
 	XPerl_Party_UpdateCombat(self)
 	if (action == "HEAL") then
@@ -1075,41 +1098,41 @@ function XPerl_Party_Events:UNIT_COMBAT(...)
 end
 
 -- UNIT_SPELLMISS
-function XPerl_Party_Events:UNIT_SPELLMISS(...)
+--[[function XPerl_Party_Events:UNIT_SPELLMISS(...)
 	if (pconf.hitIndicator and pconf.portrait) then
 		CombatFeedback_OnSpellMissEvent(self, ...)
 	end
-end
+end]]
 
--- UNIT_HEALTH, UNIT_MAXHEALTH
+-- UNIT_HEALTH
 function XPerl_Party_Events:UNIT_HEALTH()
 	XPerl_Party_UpdateHealth(self)
 end
-
--- UNIT_HEALTH, UNIT_MAXHEALTH
-function XPerl_Party_Events:UNIT_HEALTH_FREQUENT()
-	XPerl_Party_UpdateHealth(self)
-end
-
--- PARTY_MEMBER_ENABLE
-function XPerl_Party_Events:PARTY_MEMBER_ENABLE()
-	XPerl_Party_UpdateDisplayAll()
-	--fix by Sontix this portion of code was a duplicate of UpdateDisplayAll()
-	--for k, v in pairs(PartyFrames) do
-	--	if (v.partyid) then
-	--		XPerl_Party_UpdateDisplay(v)
-	--	end
-	--end
-end
-
-XPerl_Party_Events.PARTY_MEMBER_DISABLE = XPerl_Party_Events.PARTY_MEMBER_ENABLE
-XPerl_Party_Events.UNIT_PHASE = XPerl_Party_Events.PARTY_MEMBER_ENABLE
 
 -- UNIT_MAXHEALTH
 function XPerl_Party_Events:UNIT_MAXHEALTH()
 	XPerl_Party_UpdateHealth(self)
 	XPerl_Unit_UpdateLevel(self) -- Level not available until we've received maxhealth
 	XPerl_Party_UpdateClass(self)
+end
+
+-- UNIT_HEALTH_FREQUENT
+function XPerl_Party_Events:UNIT_HEALTH_FREQUENT()
+	XPerl_Party_UpdateHealth(self)
+end
+
+-- UNIT_CONNECTION
+function XPerl_Party_Events:UNIT_CONNECTION(unit, online)
+	if (unit == self.partyid) then
+		XPerl_Party_UpdateDisplay(self)
+	end
+end
+
+-- UNIT_PHASE
+function XPerl_Party_Events:UNIT_PHASE(unit)
+	if (unit == self.partyid) then
+		XPerl_Party_UpdateDisplay(self)
+	end
 end
 
 local function updatePartyThreat(immediate)
@@ -1138,8 +1161,6 @@ function XPerl_Party_Events:PLAYER_ENTERING_WORLD()
 		XPerl_ProtectedCall(XPerl_Party_SetInitialAttributes)
 		CheckRaid()
 	end
-	-- The is no need to call a funtion just to call another one it's a waste fo resources...call it directly.
-	--XPerl_Party_Events:PARTY_MEMBER_ENABLE()
 	XPerl_Party_UpdateDisplayAll()
 end
 
@@ -1175,7 +1196,7 @@ end
 
 function XPerl_Party_Events:GROUP_ROSTER_UPDATE()
 	BuildGuidMap()
-	checkRaidNextUpdate = 3
+	--checkRaidNextUpdate = 3
 	CheckRaid()
 	XPerl_SetHighlights()
 	XPerl_Party_UpdateDisplayAll()
@@ -1242,8 +1263,14 @@ function XPerl_Party_Events:UNIT_TARGET()
 end
 
 function XPerl_Party_Events:UNIT_HEAL_PREDICTION(unit)
-	if (unit == self.partyid) then
+	if (pconf.healprediction and unit == self.partyid) then
 		XPerl_SetExpectedHealth(self)
+	end
+end
+
+function XPerl_Party_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
+	if (pconf.absorbs and unit == self.partyid) then
+		XPerl_SetExpectedAbsorbs(self)
 	end
 end
 
@@ -1624,8 +1651,8 @@ function XPerl_Party_Virtual(on)
 			virtual:SetWidth(w * 4 + (pconf.spacing * 3))
 		end
 
-		virtual:SetBackdropColor(0, 0, 0, 1)
-		virtual:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
+		virtual:SetBackdropColor(conf.colour.frame.r, conf.colour.frame.g, conf.colour.frame.b, conf.colour.frame.a)
+		virtual:SetBackdropBorderColor(conf.colour.border.r, conf.colour.border.g, conf.colour.border.b, 1)
 		virtual:Lower()
 		if pconf.enable then
 			virtual:Show()
@@ -1668,10 +1695,16 @@ function XPerl_Party_Set_Bits()
 		end
 	end
 
-	if (pconf.enable) then
-		XPerl_Party_Events_Frame:RegisterEvent("UNIT_HEAL_PREDICTION")
+	if (pconf.healprediction) then
+		XPerl_Party_Events_Frame:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "party1", "party2", "party3", "party4")
 	else
 		XPerl_Party_Events_Frame:UnregisterEvent("UNIT_HEAL_PREDICTION")
+	end
+
+	if (pconf.absorbs) then
+		XPerl_Party_Events_Frame:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "party1", "party2", "party3", "party4")
+	else
+		XPerl_Party_Events_Frame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 	end
 
 	XPerl_Party_SetInitialAttributes()

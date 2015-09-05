@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 955 $")
+XPerl_SetModuleRevision("$Revision: 974 $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -230,7 +230,7 @@ local function UpdateUnit(self,forcedUpdate)
 	else
 		if (XPerlDB and XPerlDB.colour.classbar and UnitIsFriend("player", xunit)) then
 			local bar = self.healthBar
-			local class = select(2, UnitClass(xunit))
+			local _, class = UnitClass(xunit)
 			if (class) then
 				local c = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
 
@@ -341,7 +341,8 @@ end
 local function GetUnitRank(name)
 	local index = GetRaidIDByName(name)
 	if (index) then
-		return select(2, GetRaidRosterInfo(index))
+		local _, rank = GetRaidRosterInfo(index)
+		return rank
 	end
 	return 0
 end
@@ -463,7 +464,8 @@ function XPerl_MTRosterChanged()
 		if (blizzMTanks == 0 and conf.NoAutoList == 0 and not inBattlegrounds()) then
 			for i = 1,GetNumGroupMembers() do
 				local id = "raid"..i
-				if (select(2, UnitClass(id)) == "WARRIOR") then
+				local _, class = UnitClass(id)
+				if (class == "WARRIOR") then
 					tinsert(MainTanks, {i, UnitName(id)})
 				end
 			end
@@ -1334,18 +1336,18 @@ end
 -- SmoothBarColor
 local function SmoothBarColor(bar, barBG)
 	local barmin, barmax = bar:GetMinMaxValues()
-	local percentage = (bar:GetValue()/(barmax-barmin))
+	local percentage = (bar:GetValue() / (barmax - barmin))
 
 	local r, g
 	if (percentage < 0.5) then
-		r = 2*percentage
+		r = 2 * percentage
 		g = 1
 	else
 		r = 1
-		g = 2*(1 - percentage)
+		g = 2 * (1 - percentage)
 	end
 
-	if ((r>=0) and (g>=0) and (r<=1) and (g<=1)) then
+	if ((r >= 0) and (g >= 0) and (r <= 1) and (g <= 1)) then
 		bar:SetStatusBarColor(r, g, 0)
 		barBG:SetVertexColor(r, g, 0, 0.25)
 	end

@@ -6,7 +6,7 @@ local playerClass, playerName, playerGUID
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 946 $")
+end, "$Revision: 973 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -273,7 +273,7 @@ function xpHigh:OnUpdate(elapsed)
 	-- We expire things 1 second early so people can cast in time for buff to expire
 	local now = GetTime() --  + 1
 
-	for guid,list in pairs(self.list) do
+	for guid, list in pairs(self.list) do
 		local any
 		for k, v in pairs(list) do
 			any = true
@@ -825,7 +825,14 @@ function xpHigh:CreateMendingIcon(frame)
 			h.mending = icon
 			icon.tex = icon:CreateTexture(nil, "BACKGROUND")
 			icon.tex:SetAllPoints()
-			icon.tex:SetTexture("Interface\\Icons\\Spell_Holy_PrayerOfMendingtga")
+			local _, class = UnitClass("player")
+			if class == "MONK" then
+				local _, _, texture = GetSpellInfo(115151)
+				icon.tex:SetTexture(texture)
+			else
+				local _, _, texture = GetSpellInfo(33076)
+				icon.tex:SetTexture(texture)
+			end
 			icon.tex:SetTexCoord(0.1, 0.9, 0.1, 0.9)
 
 			icon.shine = self:CreateShine(icon)
@@ -1323,12 +1330,16 @@ function xpHigh.clEvents:SPELL_CAST_SUCCESS(timestamp, event, srcGUID, srcName, 
 				if (conf.highlight.SHIELD) then
 					self:Add(dstGUID, "SHIELD", shieldSpells[spellName])
 				end
-			elseif (pomSpells[spellName]) then
+			end
+			if (pomSpells[spellName]) then
 				if (conf.highlight.POM) then
 					self.expectingPOM = nil
 					self.pomSourceGUID = nil
-					self:ClearAll("POM")
-					self:StopMendingAnimation()
+					local _, class = UnitClass("player")
+					if class == "PRIEST" then
+						self:ClearAll("POM")
+						self:StopMendingAnimation()
+					end
 					self:Add(dstGUID, "POM", pomSpells[spellName])
 					self.expectingPOM = nil
 				end
@@ -1635,7 +1646,7 @@ function xpHigh:UNIT_AURA(unit)
 		return
 	end
 
-	if (playerClass == "PRIEST") then
+	if (playerClass == "PRIEST" or playerClass == "MONK") then
 		-- Check pom movement
 		if (self:HasEffect(guid, "POM")) then
 			if (not self:HasMyPomPom(unit)) then
@@ -1726,7 +1737,7 @@ function xpHigh:OptionChange()
 	_, playerClass = UnitClass("player")
 	playerName = UnitName("player")
 
-	if (conf.highlight.enable and (conf.highlight.HOT or conf.highlight.SHIELD or conf.highlight.HEAL)) then
+	if (conf.highlight.enable and (conf.highlight.HOT or conf.highlight.SHIELD or conf.highlight.HEAL or conf.highlight.POM)) then
 		events = true
 		self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	else
@@ -1735,6 +1746,8 @@ function xpHigh:OptionChange()
 
 	if (not conf.highlight.enable or not conf.highlight.HOT) then
 		self:ClearAll("HOT")
+	end
+	if (not conf.highlight.enable or not conf.highlight.POM) then
 		self:ClearAll("POM")
 	end
 	if (not conf.highlight.enable or not conf.highlight.SHIELD) then
@@ -1749,7 +1762,7 @@ function xpHigh:OptionChange()
 		self:ClearAll("HEAL")
 	end
 
-	if (conf.highlight.enable and (conf.highlight.HOTCOUNT or conf.highlight.HOT or conf.highlight.SHIELD)) then
+	if (conf.highlight.enable and (conf.highlight.HOTCOUNT or conf.highlight.HOT or conf.highlight.SHIELD or conf.highlight.POM)) then
 		events = true
 		self:RegisterEvent("UNIT_AURA")
 		self:RegisterEvent("GROUP_ROSTER_UPDATE")

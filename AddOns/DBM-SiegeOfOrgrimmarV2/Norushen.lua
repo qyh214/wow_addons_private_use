@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(866, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 74 $"):sub(12, -3))
 mod:SetCreatureID(72276)
 --mod:SetEncounterID(1624)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
-mod:SetMinSyncTime(1)
+mod.syncThreshold = 1
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 145216 144482 144654 144628 144649 144657 146707",
@@ -60,20 +60,20 @@ local specWarnPiercingCorruption		= mod:NewSpecialWarningSpell(144657)
 
 --Amalgam of Corruption
 local timerCombatStarts					= mod:NewCombatTimer(25)
-local timerUnleashedAngerCD				= mod:NewCDTimer(11, 145216, nil, "Tank")
-local timerBlindHatred					= mod:NewBuffActiveTimer(30, 145226, nil, "Healer")
-local timerBlindHatredCD				= mod:NewNextTimer(30, 145226)
+local timerUnleashedAngerCD				= mod:NewCDTimer(11, 145216, nil, "Tank", nil, 5)
+local timerBlindHatred					= mod:NewBuffActiveTimer(30, 145226, nil, nil, nil, 6)
+local timerBlindHatredCD				= mod:NewNextTimer(30, 145226, nil, nil, nil, 6)
 --All Tests
-local timerLookWithin					= mod:NewBuffFadesTimer(60, "ej8220")
+local timerLookWithin					= mod:NewBuffFadesTimer(60, "ej8220", nil, nil, nil, 6)
 --Test of Serenity (DPS)
 local timerTearRealityCD				= mod:NewCDTimer(8.5, 144482)--8.5-10sec variation
 --Test of Reliance (Healer)
 local timerDishearteningLaughCD			= mod:NewNextTimer(12, 146707)
-local timerLingeringCorruptionCD		= mod:NewNextTimer(15.5, 144514)
+local timerLingeringCorruptionCD		= mod:NewNextTimer(15.5, 144514, nil, nil, nil, 5)
 --Test of Confidence (tank)
-local timerTitanicSmashCD				= mod:NewCDTimer(14.5, 144628)--14-17sec variation
-local timerPiercingCorruptionCD			= mod:NewCDTimer(14, 144657)--14-17sec variation
-local timerHurlCorruptionCD				= mod:NewNextTimer(20, 144649)
+local timerTitanicSmashCD				= mod:NewCDTimer(14.5, 144628, nil, nil, nil, 3)--14-17sec variation
+local timerPiercingCorruptionCD			= mod:NewCDTimer(14, 144657, nil, nil, nil, 5)--14-17sec variation
+local timerHurlCorruptionCD				= mod:NewNextTimer(20, 144649, nil, nil, nil, 4)
 
 local berserkTimer						= mod:NewBerserkTimer(418)
 

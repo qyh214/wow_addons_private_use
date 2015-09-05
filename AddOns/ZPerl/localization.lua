@@ -6,7 +6,7 @@ XPerl_ProductName		= "|cFFD00000Z-Perl|r UnitFrames"
 XPerl_ShortProductName	= "|cFFD00000Z-Perl|r"
 XPerl_Author			= "|cFFFF8080Resike|r"
 XPerl_Description		= XPerl_ProductName.." by "..XPerl_Author
-XPerl_VersionNumber		= "4.0.4 release"
+XPerl_VersionNumber		= "4.1.2 release"
 XPerl_Version			= XPerl_Description.." - "..XPerl_VersionNumber
 XPerl_LongDescription	= "UnitFrame replacement for new look Player, Pet, Party, Target, Target's Target, Focus, Raid"
 XPerl_ModMenuIcon		= "Interface\\Icons\\INV_Misc_Gem_Pearl_02"
@@ -139,14 +139,14 @@ XPERL_HIGHLIGHT_SPELLS = {
 		[GetSpellInfo(33763)] = 8,			-- Lifebloom
 		[GetSpellInfo(28880)] = 15,			-- Gift of the Naaru (Racial)
 		[GetSpellInfo(61295)] = 15,			-- Riptide
-		[GetSpellInfo(115151)] = 18,		-- Renewing Mist
-		[GetSpellInfo(119611)] = 18,		-- Renewing Mist - furtherst instead of nearest
+		[GetSpellInfo(119611)] = 18,		-- Renewing Mist
 		[GetSpellInfo(115175)] = 8,			-- Soothing Mist
 		[GetSpellInfo(124682)] = 6,			-- Enveloping Mist
 		[GetSpellInfo(114163)] = 30			-- Eternal Flame
 	},
 	pomSpells = {
 		[GetSpellInfo(33076)] = 30,			-- Prayer of Mending
+		[GetSpellInfo(115151)] = 18,		-- Renewing Mist
 	},
 	shieldSpells = {
 		[GetSpellInfo(17)] = 15,			-- Power Word: Shield

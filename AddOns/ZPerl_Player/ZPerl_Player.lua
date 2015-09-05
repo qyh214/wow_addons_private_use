@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 972 $")
+end, "$Revision: 974 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -53,7 +53,7 @@ function XPerl_Player_OnLoad(self)
 
 	XPerl_BlizzFrameDisable(PlayerFrame)
 
-	CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
+	--CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
 
 	self.nameFrame:SetAttribute("*type1", "target")
 	self.nameFrame:SetAttribute("type2", "togglemenu")
@@ -73,8 +73,6 @@ function XPerl_Player_OnLoad(self)
 		HealBot_Options_EnablePlayerFrame = function() end
 	end
 
-	self.EnergyLast = 0
-	self.tutorialPage = 2
 	self:SetScript("OnUpdate", XPerl_Player_OnUpdate)
 	self:SetScript("OnEvent", XPerl_Player_OnEvent)
 	self:SetScript("OnShow", XPerl_Unit_UpdatePortrait)
@@ -101,6 +99,20 @@ function XPerl_Player_OnLoad(self)
 		end
 	end)
 
+	local moving
+	hooksecurefunc(MonkStaggerBar, "SetPoint", function(self)
+		if moving then
+			return
+		end
+		moving = true
+		self:SetMovable(true)
+		--self:SetUserPlaced(true)
+		self:ClearAllPoints()
+		self:SetPoint("TOP", MonkHarmonyBar, "BOTTOM", 0, 21)
+		self:SetMovable(false)
+		moving = nil
+	end)
+
 	XPerl_Player_InitDK(self)
 	XPerl_Player_SetupDK(self)
 	XPerl_Player_InitMoonkin(self)
@@ -112,7 +124,8 @@ function XPerl_Player_OnLoad(self)
 	self.FlashFrames = {self.portraitFrame, self.nameFrame,self.levelFrame, self.statsFrame}
 	-- Only Add deathknight to the flash frame list
 	-- This resolves an issue with the backdrop being added constantly to the other special frames.
-	if (select(2, UnitClass("player")) == "DEATHKNIGHT") then
+	local _, class = UnitClass("player")
+	if (class == "DEATHKNIGHT") then
 		table.insert(self.FlashFrames, self.runes)
 		table.insert(perlframes, self.runes)
 	end
@@ -142,8 +155,7 @@ local function UpdateAssignedRoles(self)
 	local unit = self.partyid
 	local icon = self.nameFrame.roleIcon
 	local isTank, isHealer, isDamage
-	local isInstance = select(2, IsInInstance())
-	if (select(2, IsInInstance()) == "party") then
+	if (instanceType == "party") then
 		-- No point getting it otherwise, as they can be wrong. Usually the values you had
 		-- from previous instance if you're running more than one with the same people
 		
@@ -241,7 +253,7 @@ function XPerl_Player_UpdateLeader(self)
 	UpdateAssignedRoles(self)
 
 	if (pconf and pconf.partyNumber and IsInRaid()) then
-		for i = 1,GetNumGroupMembers() do
+		for i = 1, GetNumGroupMembers() do
 			local name, rank, subgroup = GetRaidRosterInfo(i)
 			if (UnitIsUnit("raid"..i, "player")) then
 				if (pconf.withName) then
@@ -271,8 +283,8 @@ end
 local function XPerl_Player_UpdateCombat(self)
 	local nf = self.nameFrame
 	if (UnitAffectingCombat(self.partyid)) then
-		nf.text:SetTextColor(1,0,0)
-		nf.combatIcon:SetTexCoord(0.5, 1.0, 0.0, 0.5)
+		nf.text:SetTextColor(1, 0, 0)
+		nf.combatIcon:SetTexCoord(0.49, 1, 0, 0.49)
 		nf.combatIcon:Show()
 	else
 		if (self.partyid ~= "player") then
@@ -283,7 +295,7 @@ local function XPerl_Player_UpdateCombat(self)
 		end
 
 		if (IsResting()) then
-			nf.combatIcon:SetTexCoord(0, 0.5, 0.0, 0.5)
+			nf.combatIcon:SetTexCoord(0, 0.49, 0, 0.49)
 			nf.combatIcon:Show()
 		else
 			nf.combatIcon:Hide()
@@ -300,7 +312,8 @@ end
 
 -- XPerl_Player_UpdateClass
 local function XPerl_Player_UpdateClass(self)
-	playerClass = select(2, UnitClass(self.partyid))
+	local _, class = UnitClass(self.partyid)
+	playerClass = class
 	playerName = UnitName(self.partyid)
 	local l, r, t, b = XPerl_ClassPos(playerClass)
 	self.classFrame.tex:SetTexCoord(l, r, t, b)
@@ -420,7 +433,7 @@ local function XPerl_Player_UpdatePVP(self)
 	-- PVP Status settings
 	local nf = self.nameFrame
 	if (UnitAffectingCombat(self.partyid)) then
-		nf.text:SetTextColor(1,0,0)
+		nf.text:SetTextColor(1, 0, 0)
 	else
 		XPerl_ColourFriendlyUnit(nf.text, "player")
 	end
@@ -555,17 +568,17 @@ local function XPerl_Player_UpdateMana(self)
 	mb:SetMinMaxValues(0, playermanamax)
 	mb:SetValue(playermana)
 	
-	--Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
+	-- Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
 	local percent
-	if playermana > 0 and playermanamax == 0 then--We have current mana but max mana failed.
-		playermanamax = playermana--Make max mana at least equal to current health
-		percent = 100--And percent 100% cause a number divided by itself is 1, duh.
-	elseif playermana == 0 and playermanamax == 0 then--Probably doesn't use mana or is oom?
-		percent = 0--So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
+	if playermana > 0 and playermanamax == 0 then -- We have current mana but max mana failed.
+		playermanamax = playermana -- Make max mana at least equal to current health
+		percent = 100 -- And percent 100% cause a number divided by itself is 1, duh.
+	elseif playermana == 0 and playermanamax == 0 then -- Probably doesn't use mana or is oom?
+		percent = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
 	else
-		percent = playermana / playermanamax--Everything is dandy, so just do it right way.
+		percent = playermana / playermanamax -- Everything is dandy, so just do it right way.
 	end
-	--end division by 0 check
+	-- end division by 0 check
 	
 	mb.text:SetFormattedText("%d/%d", playermana, playermanamax)
 
@@ -604,6 +617,7 @@ function XPerl_Player_UpdateHealth(self)
 	self.afk = UnitIsAFK(partyid) and conf.showAFK == 1
 
 	XPerl_SetHealthBar(self, playerhealth, playerhealthmax)
+	XPerl_Player_UpdateAbsorbPrediction(self)
 	XPerl_Player_UpdateHealPrediction(self)
 
 	local greyMsg
@@ -652,13 +666,21 @@ function XPerl_Player_UpdateHealPrediction(self)
 	end
 end
 
--- XPerl_Player_UpdateLevel
-local function XPerl_Player_UpdateLevel(self)
-	self.levelFrame.text:SetText(UnitLevel(self.partyid))
+-- XPerl_Player_UpdateAbsorbPrediction
+function XPerl_Player_UpdateAbsorbPrediction(self)
+	if pconf.absorbs then
+		XPerl_SetExpectedAbsorbs(self)
+	else
+		self.statsFrame.expectedAbsorbs:Hide()
+	end
 end
 
-local function XPerl_Player_UpdateLevel2(self,lvl)
-	self.levelFrame.text:SetText(lvl)
+-- XPerl_Player_UpdateLevel
+local function XPerl_Player_UpdateLevel(self)
+	local color = GetQuestDifficultyColor(UnitLevel(self.partyid))
+	self.levelFrame.text:SetTextColor(color.r, color.g, color.b, conf.transparency.text)
+
+	self.levelFrame.text:SetText(UnitLevel(self.partyid))
 end
 
 
@@ -699,7 +721,9 @@ end
 
 -- XPerl_Player_OnUpdate
 function XPerl_Player_OnUpdate(self, elapsed)
-	CombatFeedback_OnUpdate(self, elapsed)
+	--[[if pconf.hitIndicator and pconf.portrait then
+		CombatFeedback_OnUpdate(self, elapsed)
+	end]]
 
 	local partyid = self.partyid
 	local newAFK = UnitIsAFK(partyid)
@@ -771,9 +795,13 @@ end
 -- Event Handler --
 -------------------
 function XPerl_Player_OnEvent(self, event, unitID, ...)
-	if (strsub(event, 1, 5) == "UNIT_") then
+	if string.find(event, "^UNIT_") then
 		if (unitID == "player" or unitID == "vehicle") then
-			XPerl_Player_Events[event](self, ...)
+			if event == "UNIT_HEAL_PREDICTION" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
+				XPerl_Player_Events[event](self, unitID, ...)
+			else
+				XPerl_Player_Events[event](self, ...)
+			end
 		end
 	else
 		XPerl_Player_Events[event](self, event, unitID, ...)
@@ -817,11 +845,11 @@ end
 
 -- UNIT_COMBAT
 function XPerl_Player_Events:UNIT_COMBAT(action, descriptor, damage, damageType)
-	if (pconf.hitIndicator and pconf.portrait) then
-		if (action ~= "HEAL" or UnitHealth(self.partyid) < UnitHealthMax(self.partyid)) then
+	--[[if (pconf.hitIndicator and pconf.portrait) then
+		--if (action ~= "HEAL" or UnitHealth(self.partyid) < UnitHealthMax(self.partyid)) then
 			CombatFeedback_OnCombatEvent(self, action, descriptor, damage, damageType)
-		end
-	end
+		--end
+	end]]
 
 	if (action == "HEAL") then
 		XPerl_Player_CombatFlash(self, elapsed, true, true)
@@ -831,11 +859,11 @@ function XPerl_Player_Events:UNIT_COMBAT(action, descriptor, damage, damageType)
 end
 
 -- UNIT_SPELLMISS
-function XPerl_Player_Events:UNIT_SPELLMISS(...)
+--[[function XPerl_Player_Events:UNIT_SPELLMISS(...)
 	if (pconf.hitIndicator and pconf.portrait) then
 		CombatFeedback_OnSpellMissEvent(self, ...)
 	end
-end
+end]]
 
 -- UNIT_PORTRAIT_UPDATE
 function XPerl_Player_Events:UNIT_PORTRAIT_UPDATE()
@@ -849,11 +877,11 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 	self:UnregisterEvent("VARIABLES_LOADED")
 
 	local events = {
-		"PLAYER_ENTERING_WORLD", "PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "GROUP_ROSTER_UPDATE", "PLAYER_UPDATE_RESTING", "PLAYER_REGEN_ENABLED", "PLAYER_REGEN_DISABLED", "PLAYER_ENTER_COMBAT", "PLAYER_LEAVE_COMBAT", "PLAYER_DEAD", "UPDATE_FACTION", "UNIT_AURA", "PLAYER_CONTROL_LOST", "PLAYER_CONTROL_GAINED", "UNIT_COMBAT", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "PLAYER_FLAGS_CHANGED", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE", "PLAYER_TALENT_UPDATE", "RAID_TARGET_UPDATE", "UPDATE_SHAPESHIFT_FORM", "RUNE_TYPE_UPDATE", "RUNE_POWER_UPDATE", "PLAYER_LEVEL_UP", "UPDATE_EXHAUSTION", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"
+		"PLAYER_ENTERING_WORLD", "PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "GROUP_ROSTER_UPDATE", "PLAYER_UPDATE_RESTING", "PLAYER_REGEN_ENABLED", "PLAYER_REGEN_DISABLED", "PLAYER_ENTER_COMBAT", "PLAYER_LEAVE_COMBAT", "PLAYER_DEAD", "UPDATE_FACTION", "UNIT_AURA", "PLAYER_CONTROL_LOST", "PLAYER_CONTROL_GAINED", "UNIT_COMBAT", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", --[["UNIT_SPELLMISS",]] "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "PLAYER_FLAGS_CHANGED", "UNIT_ENTERED_VEHICLE", "UNIT_EXITING_VEHICLE", "PLAYER_TALENT_UPDATE", "RAID_TARGET_UPDATE", "UPDATE_SHAPESHIFT_FORM", "RUNE_TYPE_UPDATE", "RUNE_POWER_UPDATE", "UPDATE_EXHAUSTION", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"
 	}
 
 	for i, event in pairs(events) do
-		if string.find(event, "UNIT_") then
+		if string.find(event, "^UNIT_") then
 			self:RegisterUnitEvent(event, "player", "vehicle")
 		else
 			self:RegisterEvent(event)
@@ -922,12 +950,6 @@ function XPerl_Player_Events:UNIT_LEVEL()
 	XPerl_Player_UpdateLevel(self)
 	XPerl_Player_UpdateXP(self)
 end
---XPerl_Player_Events.PLAYER_LEVEL_UP = XPerl_Player_Events.UNIT_LEVEL
-
-function XPerl_Player_Events:PLAYER_LEVEL_UP(arg1,arg2,arg3)
-	XPerl_Player_UpdateLevel2(self,arg2)
-	XPerl_Player_UpdateXP(self)
-end
 
 -- PLAYER_XP_UPDATE
 function XPerl_Player_Events:PLAYER_XP_UPDATE()
@@ -978,6 +1000,14 @@ function XPerl_Player_Events:PLAYER_TALENT_UPDATE()
 		if (XPerl_Player_Buffs_Position) then
 			XPerl_Player_Buffs_Position(self)
 		end
+	elseif (playerClass == "MONK") then
+		--[[if (self.runes) then
+			self.runes:Hide()
+		end]]
+		XPerl_Player_InitMonk(self)
+		if (XPerl_Player_Buffs_Position) then
+			XPerl_Player_Buffs_Position(self)
+		end
 	end
 end
 
@@ -985,7 +1015,7 @@ end
 function XPerl_Player_Events:UPDATE_SHAPESHIFT_FORM()
 	if (playerClass == "DRUID") then
 		XPerl_Player_DruidBarUpdate(self)
-		XPerl_Unit_UpdatePortrait(self) -- Maybe fix portraits not updating when shifting forms?
+		--XPerl_Unit_UpdatePortrait(self) -- Maybe fix portraits not updating when shifting forms? Resike: Nope.
 		if GetSpecialization() == 1 then
 			XPerl_Player_InitMoonkin(self)
 		end
@@ -1020,14 +1050,18 @@ end
 
 function XPerl_Player_Events:UNIT_AURA()
 	XPerl_Player_UpdateBuffs(self)
-	-- Anticipation
-	local name = GetSpellInfo(115189)
-	if UnitBuff("player", name) then
-		if XPerl_Target and XPerl_Target:IsVisible() then
-			XPerl_Target_UpdateCombo(XPerl_Target)
-		end
-		if XPerl_Focus and XPerl_Focus:IsVisible() then
-			XPerl_Target_UpdateCombo(XPerl_Focus)
+
+	if (conf.target.combo.enable) then
+		local _, class = UnitClass(self.partyid)
+		local name = GetSpellInfo(115189)
+		local talented = IsTalentSpell(name)
+		if (class == "ROGUE" and talented) then
+			if XPerl_Target and XPerl_Target:IsVisible() then
+				XPerl_Target_UpdateCombo(XPerl_Target)
+			end
+			if XPerl_Focus and XPerl_Focus:IsVisible() then
+				XPerl_Target_UpdateCombo(XPerl_Focus)
+			end
 		end
 	end
 
@@ -1069,11 +1103,12 @@ function XPerl_Player_Events:UNIT_ENTERED_VEHICLE(showVehicle)
 			self:SetAttribute("unit", "vehicle")
 		end
 		XPerl_Player_UpdateDisplay(self)
+		--XPerl_SetUnitNameColor(self.nameFrame.text, self.partyid)
 	end
 end
 
--- UNIT_EXITED_VEHICLE
-function XPerl_Player_Events:UNIT_EXITED_VEHICLE()
+-- UNIT_EXITING_VEHICLE
+function XPerl_Player_Events:UNIT_EXITING_VEHICLE()
 	if (self.partyid ~= "player") then
 		self.partyid = "player"
 		if (XPerl_ArcaneBar_SetUnit) then
@@ -1087,9 +1122,14 @@ function XPerl_Player_Events:UNIT_EXITED_VEHICLE()
 end
 
 function XPerl_Player_Events:UNIT_HEAL_PREDICTION(unit)
-	-- Seems like unit is nil for the player
-	if (pconf.healprediction and (not unit or unit == self.partyid)) then
+	if (pconf.healprediction and unit == self.partyid) then
 		XPerl_SetExpectedHealth(self)
+	end
+end
+
+function XPerl_Player_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
+	if (pconf.absorbs and unit == self.partyid) then
+		XPerl_SetExpectedAbsorbs(self)
 	end
 end
 
@@ -1131,8 +1171,8 @@ function XPerl_Player_Events:RUNE_TYPE_UPDATE(self, runeIndex)
 	end
 end
 
--- XPerl_Player_Energy_TickWatch
-function XPerl_Player_Energy_OnUpdate(self, elapsed)
+-- XPerl_Player_Energy_OnUpdate
+--[[function XPerl_Player_Energy_OnUpdate(self, elapsed)
 	local sparkPosition
 
 	local val = self:GetValue() + elapsed
@@ -1144,7 +1184,7 @@ function XPerl_Player_Energy_OnUpdate(self, elapsed)
 	end
 
 	self.spark:SetPoint("CENTER", self, "LEFT", sparkPosition, 0)
-end
+end]]
 
 -- XPerl_Player_SetWidth
 function XPerl_Player_SetWidth(self)
@@ -1297,9 +1337,15 @@ function XPerl_Player_Set_Bits(self)
 	end
 
 	if (pconf.healprediction) then
-		self:RegisterEvent("UNIT_HEAL_PREDICTION")
+		self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "player", "vehicle")
 	else
 		self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+	end
+
+	if (pconf.absorbs) then
+		self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "player", "vehicle")
+	else
+		self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 	end
 
 	XPerl_Player_SetWidth(self)
@@ -1431,7 +1477,8 @@ end
 
 -- XPerl_Player_InitWarlock
 function XPerl_Player_InitWarlock(self)
-	if (select(2, UnitClass("player")) == "WARLOCK" ) then
+	local _, class = UnitClass("player")
+	if (class == "WARLOCK" ) then
 
 		if (not WarlockPowerFrame or WarlockPowerFrame:GetParent() ~= PlayerFrame or not WarlockPowerFrame:IsShown() or not pconf.showRunes) then
 			-- Only hijack runes if not already done so by another mod
@@ -1452,7 +1499,8 @@ end
 
 -- XPerl_Player_InitPaladin
 function XPerl_Player_InitPaladin(self)
-	if (select(2, UnitClass("player")) == "PALADIN") then
+	local _, class = UnitClass("player")
+	if (class == "PALADIN") then
 
 		if (not PaladinPowerBar or PaladinPowerBar:GetParent() ~= PlayerFrame or not PaladinPowerBar:IsShown() or not pconf.showRunes) then
 			-- Only hijack runes if not already done so by another mod
@@ -1471,7 +1519,8 @@ end
 
 --XPerl_Player_InitPriest
 function XPerl_Player_InitPriest(self)
-	if (select(2, UnitClass("player")) == "PRIEST") then
+	local _, class = UnitClass("player")
+	if (class == "PRIEST") then
 
 		if (not PriestBarFrame or (PriestBarFrame:GetParent() ~= PlayerFrame and PriestBarFrame:GetParent() ~= self.runes) or not PriestBarFrame:IsShown() or not pconf.showRunes) then
 			-- Only hijack runes if not already done so by another mod
@@ -1491,7 +1540,8 @@ end
 
 -- XPerl_Player_InitMonk
 function XPerl_Player_InitMonk(self)
-	if (select(2, UnitClass("player")) == "MONK") then
+	local _, class = UnitClass("player")
+	if (class == "MONK") then
 
 		if (not MonkHarmonyBar or MonkHarmonyBar:GetParent() ~= PlayerFrame or not MonkHarmonyBar:IsShown() or not pconf.showRunes) then
 			-- Only hijack runes if not already done so by another mod
@@ -1501,15 +1551,22 @@ function XPerl_Player_InitMonk(self)
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
 		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -30)
-		MonkHarmonyBar:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 75, 15)
+		MonkHarmonyBar:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 70, 20)
 		self.runes.unit = "player"
 		MonkHarmonyBar:SetParent(self.runes)--XPerl_Player)
+		MonkHarmonyBar:SetFrameLevel(0)
+
+		MonkStaggerBar:SetPoint("TOP", MonkHarmonyBar, "BOTTOM", 0, 21)
+		MonkStaggerBar:SetParent(self.runes)--XPerl_Player)
+		MonkStaggerBar:SetScript("OnMouseUp", nil)
+
 		--MakeMoveable(self)
 	end
 end
 --XPerl_Player_InitMoonkin
 function XPerl_Player_InitMoonkin(self)
-	if (select(2, UnitClass("player")) == "DRUID") then
+	local _, class = UnitClass("player")
+	if (class == "DRUID") then
 
 		if (not EclipseBarFrame or EclipseBarFrame:GetParent() ~= PlayerFrame or not EclipseBarFrame:IsShown() or not pconf.showRunes) then
 			-- Only hijack runes if not already done so by another mod
@@ -1530,7 +1587,8 @@ end
 
 -- XPerl_Player_InitDK
 function XPerl_Player_InitDK(self)
-	if (select(2, UnitClass("player")) == "DEATHKNIGHT") then
+	local _, class = UnitClass("player")
+	if (class == "DEATHKNIGHT") then
 		--[[if (not RuneFrame or RuneFrame:GetParent() ~= PlayerFrame or not RuneFrame:IsShown()) then
 			-- Only hijack runes if not already done so by another mod
 			return
@@ -1597,7 +1655,8 @@ end
 
 -- XPerl_Player_SetupDK
 function XPerl_Player_SetupDK(self)
-	if (select(2, UnitClass("player")) == "DEATHKNIGHT") then
+	local _, class = UnitClass("player")
+	if (class == "DEATHKNIGHT") then
 		if (self.runes) then
 			if (not pconf or pconf.showRunes) then
 				self.runes:Show()

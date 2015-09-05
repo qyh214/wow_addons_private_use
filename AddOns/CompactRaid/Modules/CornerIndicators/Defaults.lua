@@ -195,7 +195,7 @@ function module:DecodeData(text, db)
 
 	local key, def
 	for key, def in pairs(OPTION_KEYS) do
-		local _, _, value = strfind(text, "%["..key.."%]#("..(key == "aura" and ".-" or "%d+")..")#")
+		local _, _, value = strfind(text, "%["..key.."%]#(.-)#")
 		if value then
 			if key == "aura" then
 				db[key] = value

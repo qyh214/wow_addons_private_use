@@ -44,7 +44,7 @@ local function Button_OnUpdate(self)
 end
 
 local i
-for i = 1, 8 do
+for i = 1, NUM_RAID_ICONS do
 	local data = UnitPopupButtons["RAID_TARGET_"..i]
 
 	local button = menu:AddClickButton(data.text)

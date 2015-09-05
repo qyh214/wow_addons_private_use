@@ -66,19 +66,20 @@ do -- GarrisonFollowerList_SortFollowers
 	end
 	local oldSortFollowers = GarrisonFollowerList_SortFollowers
 	function GarrisonFollowerList_SortFollowers(self)
-	   local followerCounters = GarrisonMissionFrame.followerCounters
-	   local followerTraits = GarrisonMissionFrame.followerTraits
+		local checkIgnore = self == GarrisonMissionFrame.FollowerList
+		local followerCounters = GarrisonMissionFrame.followerCounters
+		local followerTraits = GarrisonMissionFrame.followerTraits
 		for k,v in pairs(self.followers) do
 			local tmid = G.GetFollowerTentativeMission(v.followerID)
 			if tmid and (v.status or "") == "" then
 				v.status = GARRISON_FOLLOWER_IN_PARTY
-			elseif (v.status or "") == "" and T.config.ignore[v.followerID] then
+			elseif checkIgnore and (v.status or "") == "" and T.config.ignore[v.followerID] then
 				v.status = GARRISON_FOLLOWER_WORKING
 			end
 		end
 		toggle:SetShown(GarrisonMissionFrame.MissionTab:IsShown())
 		local mi = MISSION_PAGE_FRAME.missionInfo
-	   if followerCounters and followerTraits and GarrisonMissionFrame.MissionTab:IsVisible() and mi and MasterPlan:GetSortFollowers() then
+		if followerCounters and followerTraits and GarrisonMissionFrame.MissionTab:IsVisible() and mi and MasterPlan:GetSortFollowers() then
 			return missionFollowerSort(self.followersList, self.followers, followerCounters, followerTraits, mi.level)
 		end
 		return oldSortFollowers(self)
@@ -325,6 +326,7 @@ hooksecurefunc("GarrisonFollowerList_Update", function(self)
 	local buttons, fl = self.FollowerList.listScroll.buttons, G.GetFollowerInfo()
 	local mi = MISSION_PAGE_FRAME.missionInfo
 	local mid = mi and mi.missionID
+	local upW, upA = G.GetUpgradeRange()
 	for i=1, #buttons do
 		local fi = fl[buttons[i].id]
 		if fi then
@@ -342,11 +344,16 @@ hooksecurefunc("GarrisonFollowerList_Update", function(self)
 			if ns then
 				buttons[i].Status:SetText(ns)
 			end
-			if (ns or status) == "" and fi.level == 100 then
+			if fi.level == 100 then
 				local _weaponItemID, weaponItemLevel, _armorItemID, armorItemLevel = C_Garrison.GetFollowerItems(fi.followerID)
-				if weaponItemLevel ~= armorItemLevel then
-					buttons[i].ILevel:SetText(ITEM_LEVEL_ABBR .. " " .. fi.iLevel .. " (" .. weaponItemLevel .. "/" .. armorItemLevel .. ")")
+				local itext = ITEM_LEVEL_ABBR .. " " .. fi.iLevel
+				if weaponItemLevel < upW or armorItemLevel < upA then
+					itext = itext .. "|cff20e020+|r"
 				end
+				if (ns or status) == "" and weaponItemLevel ~= armorItemLevel then
+					itext = itext .. " (" .. weaponItemLevel .. "/" .. armorItemLevel .. ")"
+				end
+				buttons[i].ILevel:SetText(itext)
 			end
 			if self == GarrisonMissionFrame then
 				buttons[i]:SetScript("OnEnter", FollowerButton_OnEnter)
@@ -952,9 +959,10 @@ do -- Ship re-fitting
 			for i=1,6 do
 				local b = CreateFrame("Button", nil, sContainer, "SecureActionButtonTemplate", i)
 				b:SetSize(32, 32)
-				local ico = b:CreateTexture()
+				local ico, border = b:CreateTexture(), b:CreateTexture(nil, "OVERLAY")
+				b.icon, b.border = ico, border
 				ico:SetAllPoints()
-				b.icon = ico
+				border:SetAllPoints()
 				ico:SetTexture("Interface/Icons/Temp")
 				b:SetNormalTexture("Interface/Icons/Temp")
 				b:GetNormalTexture():SetTexture(0,0,0,0)
@@ -976,6 +984,27 @@ do -- Ship re-fitting
 			b.icon:SetTexture(GetItemIcon(id))
 			b.icon:SetDesaturated(GetItemCount(id) == 0)
 			b:Show()
+		end
+		local function countTraitThreats(nf, tid)
+			local n, t = 0, 0
+			for i=1,nf do
+				local fi = SHIP_MISSION_PAGE.Followers[i].info
+				for j=1,2 do
+					if fi and C_Garrison.GetFollowerAbilityAtIndex(fi.followerID, j) == tid then
+						n = n + 1
+					end
+				end
+			end
+			for i=1,#SHIP_MISSION_PAGE.Enemies do
+				local e = SHIP_MISSION_PAGE.Enemies[i]
+				for j=1,e:IsShown() and #e.Mechanics or 0 do
+					local m = e.Mechanics[j]
+					if m:IsShown() and T.EquipmentCounters[m.mechanicID] == tid then
+						t = t + 1
+					end
+				end
+			end
+			return n, t
 		end
 		function refit.Sync()
 			if InCombatLockdown() then return end
@@ -1016,12 +1045,20 @@ do -- Ship re-fitting
 						hasEquipmentSlots = true
 						s.traitID = a
 						s.icon:SetTexture(C_Garrison.GetFollowerAbilityIcon(a))
+						local nc, nt = countTraitThreats(mi and mi.numFollowers or 0, a)
+						if nt > 0 then
+							s.border:SetAtlas(nc <= nt and "bags-glow-green" or "bags-glow-heirloom")
+							s.border:Show()
+						else
+							s.border:Hide()
+						end
 						s:Show()
 					else
 						s:Hide()
 					end
 				end
 			end
+			
 			eq[1]:GetParent():SetWidth(math.max(1,ns*28-4))
 			slots[1]:GetParent():SetWidth((mi and mi.numFollowers or 1)*78-10)
 			refit:SyncButtonState()

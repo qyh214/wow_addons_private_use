@@ -26,3 +26,4 @@ BOSS = 1452
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 187664)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 187668)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 187471)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 187667, 5)

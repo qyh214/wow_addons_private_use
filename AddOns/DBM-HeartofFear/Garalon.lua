@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(713, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 45 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(63191)--Also has CID 62164. He has 2 CIDs for a single target, wtf? It seems 63191 is one players attack though so i'll try just it.
 mod:SetEncounterID(1463)
 mod:SetZone()
@@ -43,9 +43,9 @@ local specwarnLeg				= mod:NewSpecialWarningSwitch("ej6270", "Melee")--If no leg
 local specwarnPheromoneTrail	= mod:NewSpecialWarningMove(123120)--Because this starts doing damage BEFORE the visual is there.
 
 local timerCrush				= mod:NewCastTimer(3.5, 122774)--Was 3 second, hotfix went live after my kill log, don't know what new hotfixed cast time is, 3.5, 4? Needs verification.
-local timerCrushCD				= mod:NewNextCountTimer(37, 122774)
-local timerFuriousSwipeCD		= mod:NewCDTimer(8, 122735)
-local timerMendLegCD			= mod:NewCDTimer(30, 123495)
+local timerCrushCD				= mod:NewNextCountTimer(37, 122774, nil, nil, nil, 2)
+local timerFuriousSwipeCD		= mod:NewCDTimer(8, 122735, nil, "Tank", 2, 5)
+local timerMendLegCD			= mod:NewCDTimer(30, 123495, nil, nil, nil, 1)
 local timerFury					= mod:NewBuffActiveTimer(30, 122754)
 local timerPungency				= mod:NewBuffFadesTimer(120, 123081)
 

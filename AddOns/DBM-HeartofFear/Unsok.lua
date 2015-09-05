@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(737, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(62511)
 mod:SetEncounterID(1499)
 mod:SetZone()
@@ -62,19 +62,19 @@ local specwarnFling				= mod:NewSpecialWarningSpell(122413, "Tank")
 local specwarnMassiveStomp		= mod:NewSpecialWarningSpell(122408, "Melee", nil, nil, 2)
 
 --Boss
-local timerReshapeLifeCD		= mod:NewNextCountTimer(50, 122784)--50 second cd in phase 1-2, 15 second in phase 3. if no construct is up, cd is ignored and boss casts it anyways to make sure 1 is always up.
-local timerAmberScalpelCD		= mod:NewNextTimer(40, 121994)--40 seconds after last one ENDED
+local timerReshapeLifeCD		= mod:NewNextCountTimer(50, 122784, nil, nil, nil, 3)--50 second cd in phase 1-2, 15 second in phase 3. if no construct is up, cd is ignored and boss casts it anyways to make sure 1 is always up.
+local timerAmberScalpelCD		= mod:NewNextTimer(40, 121994, nil, nil, nil, 3)--40 seconds after last one ENDED
 local timerAmberScalpel			= mod:NewBuffActiveTimer(10, 121994)
-local timerParasiticGrowthCD	= mod:NewCDTimer(35, 121949, nil, "Healer")--35-50 variation (most of the time 50, rare pulls he decides to use 35 sec cd instead)
+local timerParasiticGrowthCD	= mod:NewCDTimer(35, 121949, nil, "Healer", nil, 5)--35-50 variation (most of the time 50, rare pulls he decides to use 35 sec cd instead)
 local timerParasiticGrowth		= mod:NewTargetTimer(30, 121949, nil, "Healer")
 --Construct
-local timerAmberExplosionCD		= mod:NewNextSourceTimer(13, 122398)--13 second cd on player controled units, 18 seconds on non player controlled constructs
+local timerAmberExplosionCD		= mod:NewNextSourceTimer(13, 122398, nil, nil, nil, 4)--13 second cd on player controled units, 18 seconds on non player controlled constructs
 local timerDestabalize			= mod:NewTimer(15, "timerDestabalize", 123059)--timer Enables for all players. It's very importantant for heroic. (espcially on phase 2)
 local timerStruggleForControl	= mod:NewTargetTimer(5, 122395, nil, false)
 --Amber Monstrosity
-local timerMassiveStompCD		= mod:NewCDTimer(18, 122408, nil, "Melee")--18-25 seconds variation
-local timerFlingCD				= mod:NewCDTimer(25, 122413, nil, "Tank")--25-40sec variation.
-local timerAmberExplosionAMCD	= mod:NewTimer(46, "timerAmberExplosionAMCD", 122402)--Special timer just for amber monstrosity. easier to cancel, easier to tell apart. His bar is the MOST important and needs to be seperate from any other bar option.
+local timerMassiveStompCD		= mod:NewCDTimer(18, 122408, nil, "Melee", nil, 2)--18-25 seconds variation
+local timerFlingCD				= mod:NewCDTimer(25, 122413, nil, "Tank", nil, 5)--25-40sec variation.
+local timerAmberExplosionAMCD	= mod:NewTimer(46, "timerAmberExplosionAMCD", 122402, nil, nil, 4)--Special timer just for amber monstrosity. easier to cancel, easier to tell apart. His bar is the MOST important and needs to be seperate from any other bar option.
 local timerAmberExplosion		= mod:NewCastTimer(2.5, 122402)
 
 local countdownAmberExplosion	= mod:NewCountdown(49, 122398)

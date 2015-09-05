@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 728 $")
+XPerl_SetModuleRevision("$Revision: 774 $")
 
 function XPerl_Message(...)
 	DEFAULT_CHAT_FRAME:AddMessage(XPERL_MSG_PREFIX.."- "..format(...))
@@ -30,10 +30,10 @@ function XPerl_SetupFrames()
 
 	if (ZPerlConfigHelper) then
 		ZPerlConfigHelper.AssistsFrame_Transparency = ValidAlpha(ZPerlConfigHelper.AssistsFrame_Transparency)
-        	XPerl_Assists_Frame:SetAlpha(ZPerlConfigHelper.AssistsFrame_Transparency)
+		XPerl_Assists_Frame:SetAlpha(ZPerlConfigHelper.AssistsFrame_Transparency)
 
 		ZPerlConfigHelper.Targets_Transparency = ValidAlpha(ZPerlConfigHelper.Targets_Transparency)
-        	XPerl_Frame:SetAlpha(ZPerlConfigHelper.Targets_Transparency)
+		XPerl_Frame:SetAlpha(ZPerlConfigHelper.Targets_Transparency)
 
 		--ZPerlConfigHelper.Scale_AssistsFrame = ValidScale(ZPerlConfigHelper.Scale_AssistsFrame)
 		--XPerl_Assists_Frame:SetScale(ZPerlConfigHelper.Scale_AssistsFrame)
@@ -91,7 +91,7 @@ function XPerl_Slash(msg)
 		{"assists",	XPerl_AssistsView_Open,		"Open Assists View"},
 		{"raid",	XPerl_RaidHelp_Show,		"Open Raid Helper"},
 		{"alpha",	setAlpha,			"Set Alpha Level"},
-		{"labels",      XPerl_Toggle_ToggleLabels,	"Toggle Tank Labels"},
+		{"labels",	XPerl_Toggle_ToggleLabels,	"Toggle Tank Labels"},
 		{"ctra",	XPerl_Toggle_UseCTRATargets,	"Toggle Use of CTRA MT Targets"},
 	}
 
@@ -201,8 +201,8 @@ function XPerl_Startup()
 
 	XPerl_SetupFrames()
 
-        XPerlAssistPin:SetButtonTex()
-        XPerl_Frame_Pin:SetButtonTex()
+	XPerlAssistPin:SetButtonTex()
+	XPerl_Frame_Pin:SetButtonTex()
 
 	if (XPerl_RegisterOptionChanger) then
 		XPerl_RegisterOptionChanger(XPerl_SetupFrames)
@@ -242,15 +242,15 @@ end
 
 if (not XPerl_SetUnitNameColor) then
 	XPerl_SetUnitNameColor = function(self, unit)
-
 		local r, g, b = 0.5, 0.5, 1
 
-	        if (UnitPlayerControlled(unit) or not UnitIsVisible(unit)) then
-			r, g, b = XPerl_GetClassColour(select(2, UnitClass(unit)))
+		if (UnitPlayerControlled(unit) or not UnitIsVisible(unit)) then
+			local _, class = UnitClass(unit)
+			r, g, b = XPerl_GetClassColour(class)
 		else
-	                if (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
-	                        r, g, b = 0.5, 0.5, 0.5
-	                else
+			if (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
+				r, g, b = 0.5, 0.5, 0.5
+			else
 				local reaction = UnitReaction(unit, "player")
 
 				if (reaction) then
@@ -264,13 +264,13 @@ if (not XPerl_SetUnitNameColor) then
 						r, g, b = 1, 1, 0
 					end
 				else
-	                        	if (UnitFactionGroup("player") == UnitFactionGroup(unit)) then
+					if (UnitFactionGroup("player") == UnitFactionGroup(unit)) then
 						r, g, b = 0, 1, 0
-	                        	elseif (UnitIsEnemy("player", unit)) then
+					elseif (UnitIsEnemy("player", unit)) then
 						r, g, b = 1, 0, 0
-	                        	else
+					else
 						r, g, b = 1, 1, 0
-	                        	end
+					end
 				end
 			end
 		end
@@ -282,17 +282,18 @@ end
 -- Perl UnitFrame function copies:
 if (not XPerl_ColourFriendlyUnit) then
 	XPerl_ColourFriendlyUnit = function(frame, partyid)
-		if (UnitCanAttack("player", partyid) and UnitIsEnemy("player", partyid)) then	-- For dueling
-	                frame:SetTextColor(1, 0, 0)
+		if (UnitCanAttack("player", partyid) and UnitIsEnemy("player", partyid)) then -- For dueling
+			frame:SetTextColor(1, 0, 0)
 		else
 			if (not XPerlDB or XPerlDB.colour.class) then
-				local color = XPerl_GetClassColour(select(2, UnitClass(partyid)))
+				local _, class = UnitClass(partyid)
+				local color = XPerl_GetClassColour(class)
 				frame:SetTextColor(color.r, color.g, color.b)
 			else
 				if (UnitIsPVP(partyid)) then
-	                	        frame:SetTextColor(0, 1, 0)
+					frame:SetTextColor(0, 1, 0)
 				else
-	                	        frame:SetTextColor(0.5, 0.5, 1)
+					frame:SetTextColor(0.5, 0.5, 1)
 				end
 			end
 		end
@@ -302,7 +303,7 @@ end
 if (not XPerl_GetClassColour) then
 	XPerl_GetClassColour = function(class)
 		if (class) then
-			local color = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class];		-- Now using the WoW class color table
+			local color = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class] -- Now using the WoW class color table
 			if (color) then
 				return color
 			end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(668, "DBM-Party-MoP", 2, 302)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(56637)
 mod:SetEncounterID(1412)
 mod:SetZone()
@@ -20,7 +20,7 @@ local warnBananas			= mod:NewStackAnnounce(106651, 2)
 
 local specWarnGroundPound	= mod:NewSpecialWarningMove(106807, "Tank")
 
-local timerGroundPoundCD	= mod:NewCDTimer(10.5, 106807)
+local timerGroundPoundCD	= mod:NewCDTimer(10.5, 106807, nil, "Melee", 2, 5)
 
 function mod:OnCombatStart(delay)
 --	timerGroundPoundCD:Start(-delay)--No accurate start time yet, i think he does it on engage though instantly so may be irrelevent.

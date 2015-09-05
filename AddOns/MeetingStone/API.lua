@@ -64,7 +64,7 @@ function CodeCommentData(activity)
 end
 
 function GetPlayerFullName()
-    return format('%s-%s', UnitName('player'), GetRealmName())
+    return (format('%s-%s', UnitName('player'), GetRealmName()):gsub('%s+', ''))
 end
 
 function CodeDescriptionData(activity)

@@ -1,6 +1,6 @@
 
-DBM_CORE_NEED_SUPPORT				= "Are you good with programming or languages? If yes, the DBM needs your help in localizing DBM in more languages. Help us out by visiting http://forums.elitistjerks.com/topic/132449-dbm-localizers-needed/"
-DBM_CORE_NEED_LOGS					= "DBM needs Transcriptor (http://www.wowace.com/addons/transcriptor/) logs of these test fights to make best mods possible. If you want to help, log these fights with transcriptor and post them to http://forums.elitistjerks.com/topic/132677-deadly-boss-mods-60-testing/ (zip them up, they can get quite large otherwise). Only interested in 6.0 raid logs. Do not need dungeon logs."
+DBM_CORE_NEED_SUPPORT				= "Are you good with programming or languages? If yes, the DBM needs your help in localizing DBM in more languages. If you can help, visit our forums by |HDBM:localizersneeded|h|cff3588ffclicking here|r"
+DBM_CORE_NEED_LOGS					= "DBM needs Transcriptor (http://www.wowace.com/addons/transcriptor/) logs of these test fights to make best mods possible. If you want to help, log these fights with transcriptor and post them to our forums. Only interested in 7.0 raid & dungeon logs."
 DBM_HOW_TO_USE_MOD					= "Welcome to DBM. Type /dbm help for a list of supported commands. To access options type /dbm in your chat to begin configuration. Load specific zones manually to configure any boss specific settings to your liking as well. DBM tries to do this for you by scanning your spec on first run, but some might want additional options turned on anyways."
 
 DBM_FORUMS_MESSAGE					= "Found a bug or wrong timer? Do you think some mod would need an additional warning, timer or special feature?\nVisit the new Deadly Boss Mods discussion, bug report and feature request forums at |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (you can click the link to copy the URL)"
@@ -12,11 +12,11 @@ DBM_CORE_LOAD_MOD_SUCCESS			= "Loaded '%s' mods. For more options such as custom
 DBM_CORE_LOAD_MOD_COMBAT			= "Loading of '%s' delayed until you leave combat"
 DBM_CORE_LOAD_GUI_ERROR				= "Could not load GUI: %s"
 DBM_CORE_LOAD_GUI_COMBAT			= "GUI cannot be initially loaded in combat. GUI will be loaded out of combat. After GUI loaded, you can load GUI in combat."
-DBM_CORE_LOAD_SKIN_COMBAT			= "DBM timers failed to skin during combat. Your timers will likely not work correctly and generate several lua errors. This is often caused by 3rd party mods trying to apply skin changes in combat. Recommended to reloadui after you leave combat"
 DBM_CORE_BAD_LOAD					= "DBM has detected your mod for this instance failed to fully load correctly because of combat. As soon as you are out of combat, please do /console reloadui as soon as possible."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s could not be loaded because your DBM-Core does not meet requirements. An updated version is required"
 
-DBM_CORE_WHATS_NEW					= "New in this version: DBM timers now support multiple colors based on what type of spell the timer is for. To learn more about this feature you can read about it by |HDBM:forumsnews|h|cff3588ffclicking here|r"
+DBM_CORE_WHATS_NEW					= "New in this version: Improved callbacks to allow 3rd party mods a lot more access to information from DBM events."
+--DBM_CORE_WHATS_NEW_LINK			= "New in this version: DBM timers now support multiple colors based on what type of spell the timer is for. To learn more about this feature you can read about it by |HDBM:forumsnews|h|cff3588ffclicking here|r"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM has disabled dynamic range frame on this fight do to insufficient information about number of players needed to affect clump check for a group of your size."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM has disabled add count warnings on this fight do to insufficient information about number of adds that spawn for a group of your size."
@@ -26,9 +26,7 @@ DBM_CORE_LOOT_SPEC_REMINDER			= "Your current spec is %s. Your current loot choi
 
 DBM_CORE_BIGWIGS_ICON_CONFLICT		= "DBM has detected that you have raid icons turned on in both BigWigs and DBM. Please disable icons in one of them to avoid conflict with your group leader"
 
-DBM_CORE_PROVINGGROUNDS_AD			= "DBM-ProvingGrounds is available for this content. You can find on deadlybossmods.com or on Curse. This message will only display once."
-
-DBM_CORE_MOLTENCORE_AD				= "DBM-MC is available for this content. You can find more information on deadlybossmods.com. This message will only display once."
+DBM_CORE_MOD_AVAILABLE				= "%s is available for this content. You can find on |HDBM:forums|h|cff3588ffdeadlybossmods.com|r or on Curse. This message will only display once."
 
 DBM_CORE_COMBAT_STARTED				= "%s engaged. Good luck and have fun! :)"
 DBM_CORE_COMBAT_STARTED_IN_PROGRESS	= "Engaged an in progress fight against %s. Good luck and have fun! :)"
@@ -198,18 +196,34 @@ DBM_LFG_INVITE						= "LFG Invite"
 
 DBM_CORE_SLASHCMD_HELP				= {
 	"Available slash commands:",
-	"/range <number> or /distance <number>: Shows range frame. /rrange or /rdistance to reverse colors.",
-	"/dbm version: Performs a raid-wide version check (alias: ver).",
+	"-----------------",
 	"/dbm unlock: Shows a movable status bar timer (alias: move).",
-	"/dbm timer/ctimer/ltimer/cltimer <x> <text>: Starts a <x> second DBM Timer with the name <text>.",
-	"/dbm broadcast timer/ctimer/ltimer/cltimer <x> <text>: Broadcasts a <x> second DBM Timer with the name <text> to the raid (requires leader/promoted status).",
-	"/dbm timer endloop: Stops any looping ltimer or cltimer.",
-	"/dbm break <min>: Starts a break timer for <min> minutes. Gives all raid members with DBM a break timer (requires leader/promoted status).",
-	"/dbm pull <sec>: Starts a pull timer for <sec> seconds. Gives all raid members with DBM a pull timer (requires leader/promoted status).",
+	"/range <number> or /distance <number>: Shows range frame. /rrange or /rdistance to reverse colors.",
+	"/hudar <number>: Shows HUD based range finder.",
+	"/dbm timer: Starts a custom DBM timer, see '/dbm timer' for details.",
 	"/dbm arrow: Shows the DBM arrow, see '/dbm arrow help' for details.",
-	"/dbm lockout: Asks raid members for their current raid instance lockouts (aliases: lockouts, ids) (requires leader/promoted status).",
-	"/dbm lag: Performs a raid-wide latency check.",
-	"/dbm hud: Shows the DBM hud, see '/dbm hud' for details."
+	"/dbm hud: Shows the DBM hud, see '/dbm hud' for details.",
+	"/dbm help2: Shows raid management slash commands"
+}
+DBM_CORE_SLASHCMD_HELP2				= {
+	"Available slash commands:",
+	"-----------------",
+	"/dbm pull <sec>: Sends a pull timer for <sec> seconds to the raid (requires leader/promoted).",
+	"/dbm break <min>: Sends a break timer for <min> minutes to the raid (requires leader/promoted).",
+	"/dbm version: Performs a boss mod version check (alias: ver).",
+	"/dbm version2: Performs a boss mod version check that also whispers out of date users (alias: ver2).",
+	"/dbm lockout: Asks raid members for their current raid instance lockouts (aliases: lockouts, ids) (requires leader/promoted).",
+	"/dbm lag: Performs a raid-wide latency check."
+}
+DBM_CORE_TIMER_USAGE	= {
+	"DBM timer commands:",
+	"-----------------",
+	"/dbm timer <sec> <text>: Starts a <sec> second timer with your <text>.",
+	"/dbm ctimer <sec> <text>: Starts a timer that also has countdown text.",
+	"/dbm ltimer <sec> <text>: Starts a timer that also automatically loops until canceled.",
+	"/dbm cltimer <sec> <text>: Starts a timer that also has countdown text and loops until canceled.",
+	"('Broadcast' in front of any timer also shares it with raid if leader/promoted)",
+	"/dbm timer endloop: Stops any looping ltimer or cltimer."
 }
 
 DBM_ERROR_NO_PERMISSION				= "You don't have the required permission to do this."
@@ -224,11 +238,12 @@ DBM_CORE_MIDDLE						= "Middle"
 DBM_CORE_FRONT						= "Front"
 DBM_CORE_INTERMISSION				= "Intermission"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
 
+DBM_CORE_BREAK_USAGE				= "Break timer cannot be longer than 60 minutes. Make sure you're inputting time in minutes and not seconds."
 DBM_CORE_BREAK_START				= "Break starting now -- you have %s minute(s)! (Sent by %s)"
 DBM_CORE_BREAK_MIN					= "Break ends in %s minute(s)!"
 DBM_CORE_BREAK_SEC					= "Break ends in %s seconds!"
 DBM_CORE_TIMER_BREAK				= "Break time!"
-DBM_CORE_ANNOUNCE_BREAK_OVER		= "Break time is over"
+DBM_CORE_ANNOUNCE_BREAK_OVER		= "Break has ended"
 
 DBM_CORE_TIMER_PULL					= "Pull in"
 DBM_CORE_ANNOUNCE_PULL				= "Pull in %d sec. (Sent by %s)"
@@ -286,6 +301,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
 	interrupt		= "%s - interrupt >%%s<!",
 	interruptcount	= "%s - interrupt >%%s<! (%%d)",
 	you				= "%s on you",
+	youcount		= "%s (%%s) on you",
 	target			= "%s on >%%s<",
 	targetcount		= "%s (%%s) on >%%s< ",
 	taunt			= "%s on >%%s< - taunt now",
@@ -299,8 +315,8 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
 	reflect			= "%s on >%%s< - stop attacking",
 	count			= "%s! (%%s)",
 	stack			= "%%d stacks of %s on you",
-	switch			= ">%s< - switch targets",
-	switchcount		= ">%s< - switch targets (%%d)"
+	switch			= "%s - switch targets",
+	switchcount		= "%s - switch targets (%%d)"
 }
 
 -- Auto-generated Special Warning Localizations
@@ -314,6 +330,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
 	interrupt		= "Show special warning to interrupt $spell:%s",
 	interruptcount	= "Show special warning (with count) to interrupt $spell:%s",
 	you 			= "Show special warning when you are affected by $spell:%s",
+	youcount		= "Show special warning (with count) when you are affected by $spell:%s",
 	target 			= "Show special warning when someone is affected by $spell:%s",
 	targetcount 	= "Show special warning (with count) when someone is affected by $spell:%s",
 	taunt 			= "Show special warning to taunt when other tank affected by $spell:%s",
@@ -381,12 +398,17 @@ DBM_CORE_AUTO_VOICE2_OPTION_TEXT		= "Play spoken alerts for phase changes"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Play countdown sound for $spell:%s cooldown"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2	= "Play countdown sound for when $spell:%s fades"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Play countout sound for $spell:%s duration"
-DBM_CORE_AUTO_YELL_OPTION_TEXT			= "Yell when you are affected by $spell:%s"
+DBM_CORE_AUTO_YELL_OPTION_TEXT = {
+	yell		= "Yell when you are affected by $spell:%s",
+	count		= "Yell (with count) when you are affected by $spell:%s",
+	fade		= "Yell (with countdown) when $spell:%s is fading",
+	position	= "Yell (with position) when you are affected by $spell:%s"
+}
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT = {
-	yell	= "%s on " .. UnitName("player") .. "!",
-	count	= "%s on " .. UnitName("player") .. "! (%%d)",
-	fade	= "%s fading in %%d",
-	position = "%s %%s on "..UnitName("player")
+	yell		= "%s on " .. UnitName("player") .. "!",
+	count		= "%s on " .. UnitName("player") .. "! (%%d)",
+	fade		= "%s fading in %%d",
+	position 	= "%s %%s on {rt%%d}"..UnitName("player").."{rt%%d}"
 }
 DBM_CORE_AUTO_HUD_OPTION_TEXT			= "Show HudMap for $spell:%s"
 DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "Show HudMap for various mechanics"
@@ -410,21 +432,23 @@ DBM_CORE_HUD_INVALID_ICON			= "Cannot use icon method for HUD on a target with n
 DBM_CORE_HUD_SUCCESS				= "HUD successful started with your parameters. This will cancel after %s, or by calling '/dbm hud hide'."
 DBM_CORE_HUD_USAGE	= {
 	"DBM-HudMap usage:",
-	"/dbm hud <type> <target> <duration> creates a HUD that points to a player for the desired duration",
-	"Valid types: red, blue, green, yellow, icon (requires a target with raid icon)",
+	"-----------------",
+	"/dbm hud <type> <target> <duration>: Creates a HUD that points to a player for the desired duration",
+	"Valid types: arrow, red, blue, green, yellow, icon (requires a target with raid icon)",
 	"Valid targets: target, focus, <playername>",
 	"Valid durations: any number (in seconds). If left blank, 20min will be used.",
-	"/dbm hud hide  disables and hides the HUD"
+	"/dbm hud hide:  disables and hides the HUD"
 }
 
 DBM_ARROW_MOVABLE					= "Arrow movable"
 DBM_ARROW_ERROR_USAGE	= {
 	"DBM-Arrow usage:",
-	"/dbm arrow <x> <y>  creates an arrow that points to a specific location (using world coordinates)",
-	"/dbm arrow map <x> <y>  creates an arrow that points to a specific location (using zone map coordinates)",
-	"/dbm arrow <player>  creates and arrow that points to a specific player in your party or raid (case sensitive!)",
-	"/dbm arrow hide  hides the arrow",
-	"/dbm arrow move  makes the arrow movable"
+	"-----------------",
+	"/dbm arrow <x> <y>: Creates an arrow that points to a specific location (using world coordinates)",
+	"/dbm arrow map <x> <y>: Creates an arrow that points to a specific location (using zone map coordinates)",
+	"/dbm arrow <player>: Creates and arrow that points to a specific player in your party or raid (case sensitive!)",
+	"/dbm arrow hide: Hides the arrow",
+	"/dbm arrow move: Makes the arrow movable"
 }
 
 DBM_SPEED_KILL_TIMER_TEXT	= "Record Victory"

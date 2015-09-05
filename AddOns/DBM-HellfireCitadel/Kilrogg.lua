@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(1396, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14085 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14339 $"):sub(12, -3))
 mod:SetCreatureID(90378)
 mod:SetEncounterID(1786)
 mod:SetZone()
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
+mod:SetHotfixNoticeRev(14286)
 mod.respawnTime = 15
 
 mod:RegisterCombat("combat")
@@ -31,7 +32,6 @@ local warnHeartseeker				= mod:NewTargetAnnounce(180372, 4)
 local warnVisionofDeath				= mod:NewTargetAnnounce(181488, 2)--The targets that got picked
 --Adds
 local warnBloodthirster				= mod:NewSpellAnnounce("ej11266", 3, 131150)
-local warnSavageStrikes				= mod:NewSpellAnnounce(180163, 3, nil, "Tank")--Need to assess damage amount on special vs non special warning
 
 --Boss
 local specWarnShred					= mod:NewSpecialWarningSpell(180199, nil, nil, nil, 3, 2)--Block, or get debuff
@@ -40,11 +40,12 @@ local yellHeartSeeker				= mod:NewYell(180372)
 local specWarnDeathThroes			= mod:NewSpecialWarningCount(180224, nil, nil, nil, 2, 2)
 local specWarnVisionofDeath			= mod:NewSpecialWarningCount(182428)--Seems everyone goes down at some point, dps healers and off tank. Each getting different abiltiy when succeed
 --Adds
+local specWarnSavageStrikes			= mod:NewSpecialWarningSpell(180163, nil, nil, nil, 1, 2)
 local specWarnBloodGlob				= mod:NewSpecialWarningSwitch(180459, "Dps", nil, nil, 1, 5)
 local specWarnFelBloodGlob			= mod:NewSpecialWarningSwitch(180413, "Dps", nil, nil, 3, 5)
 local specWarnBloodthirster			= mod:NewSpecialWarningSwitch("ej11266", "Dps", nil, 2, 1, 5)--Very frequent, let specwarn be an option
 local specWarnHulkingTerror			= mod:NewSpecialWarningSwitch("ej11269", "Tank", nil, 2, 1, 5)
-local specWarnRendingHowl			= mod:NewSpecialWarningInterruptCount(183917, "-Healer")
+local specWarnRendingHowl			= mod:NewSpecialWarningInterruptCount(183917, "-Healer", nil, nil, 1, 5)
 
 --Boss
 --Next timers that are delayed by other next timers. how annoying
@@ -62,15 +63,18 @@ local timerRendingHowlCD			= mod:NewNextTimer(6, 183917, nil, "-Healer", 2, 4)
 local berserkTimer					= mod:NewBerserkTimer(600)
 
 local countdownVisionofDeathCD		= mod:NewCountdown(75, 181488, "Tank")
+local countdownShred				= mod:NewCountdown("Alt17", 180199, "Tank")
 local countdownVisionofDeath		= mod:NewCountdownFades("Alt60", 181488)
 
 local voiceShred					= mod:NewVoice(180199)--defensive
+local voiceSavageStrikes			= mod:NewVoice(180163)--defensive
 local voiceHeartSeeker				= mod:NewVoice(180372)--runout
 local voiceDeathThroes				= mod:NewVoice(180224)--aesoon
 local voiceBloodGlob				= mod:NewVoice(180459)--180459
 local voiceFelBloodGlob				= mod:NewVoice(180413)--180199 (wrong spellID for voice do to my mistake)
 local voiceBloodthirster			= mod:NewVoice("ej11266", "Dps", nil, 2)--ej11266
 local voiceHulkingTerror			= mod:NewVoice("ej11269", "Tank", nil, 2)--ej11269
+local voiceRendingHowl				= mod:NewVoice(183917, "-Healer")
 
 mod:AddInfoFrameOption("ej11280")
 
@@ -90,6 +94,7 @@ function mod:OnCombatStart(delay)
 	self.vb.visionsCount = 0
 	timerBloodthirsterCD:Start(6-delay, 1)
 	timerShredCD:Start(10-delay)
+	countdownShred:Start(10-delay)
 	timerHeartseekerCD:Start(-delay)
 	timerDeathThroesCD:Start(39-delay, 1)
 	timerVisionofDeathCD:Start(61-delay, 1)
@@ -112,6 +117,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 180199 then
 		timerShredCD:Start()
+		countdownShred:Start()
 		for i = 1, 5 do--Maybe only 1 needed, but don't know if any adds take boss IDs
 			local bossUnitID = "boss"..i
 			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and UnitDetailedThreatSituation("player", bossUnitID) then--We are highest threat target
@@ -131,13 +137,34 @@ function mod:SPELL_CAST_START(args)
 		timerVisionofDeathCD:Start(nil, self.vb.visionsCount+1)
 		countdownVisionofDeathCD:Start()
 	elseif spellId == 180163 then
-		warnSavageStrikes:Show()
 		timerRendingHowlCD:Start(9.8, args.sourceGUID)--Savage strikes, replaces either 2nd or 3rd Howl. When it does, next howl is always 10 seconds later
+		for i = 1, 5 do--Maybe only 1 needed, but don't know if any adds take boss IDs
+			local bossUnitID = "boss"..i
+			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and UnitDetailedThreatSituation("player", bossUnitID) then--We are highest threat target
+				specWarnSavageStrikes:Show()--Show warning only to the tank he's on, not both tanks, avoid confusion
+				voiceSavageStrikes:Play("defensive")
+				break
+			end
+		end
 	elseif spellId == 183917 then
 		if not HowlByGUID[args.sourceGUID] then HowlByGUID[args.sourceGUID] = 0 end
 		HowlByGUID[args.sourceGUID] = HowlByGUID[args.sourceGUID] + 1
+		local count = HowlByGUID[args.sourceGUID]
 		if self:CheckInterruptFilter(args.sourceGUID) then
-			specWarnRendingHowl:Show(args.sourceName, HowlByGUID[args.sourceGUID])
+			specWarnRendingHowl:Show(args.sourceName, count)
+			if count == 1 then
+				voiceRendingHowl:Play("kick1r.ogg")
+			elseif count == 2 then
+				voiceRendingHowl:Play("kick2r.ogg")
+			elseif count == 3 then
+				voiceRendingHowl:Play("kick3r.ogg")
+			elseif count == 4 then
+				voiceRendingHowl:Play("kick4r.ogg")
+			elseif count == 5 then
+				voiceRendingHowl:Play("kick5r.ogg")
+			else
+				voiceRendingHowl:Play("kickcast.ogg")
+			end
 		end
 		timerRendingHowlCD:Start(args.sourceGUID)
 	end
@@ -145,10 +172,10 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 180410 then--Blood Globule
+	if spellId == 180410 and self:AntiSpam(2, 2) then--Blood Globule
 		specWarnBloodGlob:Show()
 		voiceBloodGlob:Play("180459")
-	elseif spellId == 180413 then--Fel Blood Globule
+	elseif spellId == 180413 and self:AntiSpam(2, 3) then--Fel Blood Globule
 		specWarnFelBloodGlob:Show()
 		voiceFelBloodGlob:Play("180199")
 	end
@@ -164,7 +191,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnHeartSeeker:Show()
 			yellHeartSeeker:Yell()
 			voiceHeartSeeker:Play("runout")
-		elseif self:IsMelee() then
+		elseif self:IsMelee() and self:AntiSpam(2, 4) then
 			voiceHeartSeeker:Play("158078")--farawayfromline
 		end
 	elseif spellId == 181488 then
@@ -237,7 +264,7 @@ end
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 90523 then--Hulking Terror
+	if cid == 90523 or cid == 92744 then--Hulking Terror
 		HowlByGUID[args.sourceGUID] = nil
 		timerRendingHowlCD:Cancel(args.destGUID)
 	end

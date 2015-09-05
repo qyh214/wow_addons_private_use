@@ -30,14 +30,18 @@ L= DBM:GetModLocalization(1425)
 ---------------------------
 L= DBM:GetModLocalization(1432)
 
-L:SetMiscLocalization({
-	Jubeideath		=	"Я - вечное пламя!"
+L:SetWarningLocalization({
+	reapDelayed =	"Жатва после Лика закончилась"
 })
 
 ------------------
 -- Kormrok --
 ------------------
 L= DBM:GetModLocalization(1392)
+
+L:SetMiscLocalization({
+	ExRTNotice		= "%s отправил присвоенные позиции ExRT. Ваши позиции: оранж.:%s, зел.:%s, фиол.:%s"
+})
 
 --------------
 -- Kilrogg Deadeye --
@@ -53,20 +57,17 @@ L:SetMiscLocalization({
 --------------------
 L= DBM:GetModLocalization(1372)
 
-L:SetWarningLocalization({
-	specWarnShadowofDeath	= "Тень смерти (%d) на вас"
-})
-
 L:SetTimerLocalization({
-	SoDDPS		= "След. Тени (%s)",
-	SoDTank		= "След. Тени (%s)",
-	SoDHealer	= "След. Тени (%s)"
+	SoDDPS2		= "След. Тени (%s)",
+	SoDTank2	= "След. Тени (%s)",
+	SoDHealer2	= "След. Тени (%s)"
 })
 
 L:SetOptionLocalization({
-	SoDDPS		= "Отсчет времени до след. $spell:179864 (дд)",
-	SoDTank		= "Отсчет времени до след. $spell:179864 (танки)",
-	SoDHealer	= "Отсчет времени до след. $spell:179864 (хилы)"
+	SoDDPS2			= "Отсчет времени до след. $spell:179864 (дд)",
+	SoDTank2		= "Отсчет времени до след. $spell:179864 (танки)",
+	SoDHealer2		= "Отсчет времени до след. $spell:179864 (хилы)",
+	ShowOnlyPlayer	= "Показывать HudMap для $spell:179909 только если вы участник"
 })
 
 --------------------------
@@ -93,20 +94,15 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	SeedsBehavior		= "Поведение крика для Семя разрушения (требуется лидер рейда)",
-	Iconed				= "Звезда, Круг, Ромб, Треугольник, Луна. Применимо для любой стратегии, использующей метки на полу",--Default
-	Numbered			= "1, 2, 3, 4, 5. Применимо для любой стратегии, использующей нумерованные позиции",
+	Iconed				= "Метки на полу: Звезда, Круг, Ромб, Треугольник, Луна",--Default
+	Numbered			= "Нумерованные позиции: 1, 2, 3, 4, 5",
 	DirectionLine		= "Лево, Слева от середины, Середина, Справа от середины, Право. Для стратегии в одну линию",
-	FreeForAll			= "Свободное. Позиция не задается, используется обычный крик",
-	--Currently these 3 below are unused unless I see anyone want/need them
-	CrossPerception		= "Front, Back, Left, Right, Middle. Typical for Cross strat",--Unsure if viable with 5 targets/will remain
-	CrossCardinal		= "North, South, East, West, Middle. Typical for Cross strat",--Unsure if viable 5 targets/will remain
-	ExCardinal			= "NorthEast, Southeast, Northwest, Southwest, Middle. Typical for Ex strat"--Unsure if viable 5 targets/will remain
+	FreeForAll			= "Свободное. Позиция не задается, используется обычный крик"
 })
 
 L:SetMiscLocalization({
 	DBMConfigMsg		= "Конфигурация для Семя разрушения установлена в %s, чтобы соответствовать конфигурации рейд лидера.",
 	BWConfigMsg			= "Рейд лидер использует Bigwigs, DBM автоматически настроен на использование нумерованных позиций"
-	--TODO, talk to some guilds, maybe trim list above, add finalized directions here
 })
 
 --------------------------
@@ -125,6 +121,14 @@ L:SetOptionLocalization({
 -- Socrethar the Eternal --
 --------------------------
 L= DBM:GetModLocalization(1427)
+
+L:SetOptionLocalization({
+	InterruptBehavior	= "Поведение ротации прерывания для рейда (требуется лидер рейда)",
+	Count3Resume		= "Ротация из 3 чел., которая продолжается когда барьер спадает",--Default
+	Count3Reset			= "Ротация из 3 чел., которая начинается заново когда барьер спадает",
+	Count4Resume		= "Ротация из 4 чел., которая продолжается когда барьер спадает",
+	Count4Reset			= "Ротация из 4 чел., которая начинается заново когда барьер спадает"
+})
 
 --------------------------
 -- Tyrant Velhari --
@@ -151,6 +155,9 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	specWarnBreakShackle	= "Спец-предупреждение для $spell:184964. Это предупреждение автоматически назначает последовательность разрывания, чтобы минимизировать урон.",
+	ExtendWroughtHud2		= "Продлять линии HUD за цель $spell:185014 (может уменьшить точность линии)",
+	AlternateHudLine		= "Использовать альтернативную текстуру линии для HUD между целями $spell:185014",
+	NamesWroughtHud			= "Отображать имена игроков для целей $spell:185014",
 	FilterOtherPhase		= "Фильтровать предупреждения для событий из другой фазы"
 })
 

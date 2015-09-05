@@ -181,6 +181,7 @@ L["Searching:"] = "Buscando:" -- Needs review
 L["Select a Favorites List"] = "Seleccionar una lista de favoritos" -- Needs review
 L["Selected Stack Size"] = "Tamaño Seleccionado de Montón" -- Needs review
 L["Sell Tab"] = "Pestaña Venta" -- Needs review
+-- L["Shift-click to search for the exact name. Normal click to perform a regular search."] = ""
 L["Show auction house value in tooltips."] = "Mostrar precio de subasta en los textos de ayuda" -- Needs review
 L["Show Auction Value"] = "Mostrar valor de subasta" -- Needs review
 L["Show Deals"] = "Mostrar oportunidades" -- Needs review

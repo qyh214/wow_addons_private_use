@@ -1,3 +1,73 @@
+**r976**
+* 10 and 30 yards range check should be more accurate.
+* Added 20 yard tracker for range checker.
+* 40 yard tracker should properly work for attackable and assistable targets even outside party/raid.
+* Spell range checker should only work for assistable targets as before. (Spell check for enemy targets are coming soon.)
+* Range checker should no longer fade out targets in vehicle or any other vehicle type encounter mechanic.
+* Fixed some weird layering issues.
+* Toggling cast bar options should update it's status immediately.
+* Some other smaller fixes.
+
+**r975**
+* Range finder should properly work on every type of mobs now.
+* Raid and raid pet fixes and optimisations.
+* Raid pet right click menu will work again.
+* Raid pet GUIDs should update properly.
+* Target defer redraw and 30 yard range indicator should work again.
+
+**r974**
+* Removed all hit indicators.
+* Removed the class colors to guild list option.
+* Hopefully fixed the major FPS degradements over time for good.
+* Drastically increased performance globally.
+* Fixed an issue which caused excessive memory usage for the target frame.
+* Heal prediction and absorbs optimisations and fixes for every frame.
+* Fixed an issue with raid marker icons layering when elite graphic is enabled for the target and focus frame.
+* Party frames should properly update then the party member becomes online/offline.
+* Party and party pet optimisations.
+* Added a stagger bar for brewmaster monks.
+* Reverted the combo bar and combo point changes from the last release.
+* Some combo bar update fixes.
+* Pet frames should align to the raid properly, when the roster changes by any way.
+* Some raid and a lot of raid pet optimisations.
+* The target and focus frame should properly update when you target a group member and you lose visibility with that member.
+* A lot of pettarget, targettarget, targettargettarget, and focustarget optimisations.
+* All the other stuff i missed out.
+
+**r973**
+* Binding fixes, removed some useless saved variables.
+* Hovering the mouse over an unit frames, should instantly update it's reaction color in it's tooltip.
+* Added absorb tracking for each frame.
+* Fixed a layering issue with the expected health bars, which caused them to show up under the frame's health bar.
+* Added Renewing Mist highlight tracking for Monks.
+* Some other highlighting fixes.
+* Fixed an issue which caused the target counter and the assists counter frames not to update their colors and transparency properly.
+* Cast Time Inside option should properly get applied for every frames.
+* Disabling the Custom Highlight option should properly clear all the highlight effects.
+* Automatically enable the heal prediction and absorb bars for every frames. (You can disable them the the All tab, or individually for each frames options.)
+* Virtual party frames color should get updated properly.
+* Fixed an issue with every frame's combat icon which caused some graphical glitches.
+* A lot of party pet optimisations.
+* Party and raid pet's heal prediction should work properly. (Currently inheriting it's settings from the party/raid heal prediction.)
+* Fixed an issue which caused some pet errors if you was in a party/raid with someone from a different game region in the PTR.
+* Added an option to individually disable the target's target and focus target's target debuffs.
+* Disabling the debuffs for every target frames should get applied instantly.
+* Moved the raid pet options to it's own GUI segment.
+* A lot of other GUI fixes.
+* The player level should have it's proper color now.
+* Removed some irrelevant player events.
+* Should gain faster control over your player frame when exiting from a vehicle.
+* Some raid target icon layering fixes.
+* Fixed an issue which caused excessive CPU usage when opened the options without an existing pet frames.
+* Pet and pet target frames should be transparent when opening the options without an existing pet.
+* Removed the Anticipation support from the target's combo bar frame.
+* Created an extra combo bar frame for the Anticipation combo point tracking.
+* Combo points should also support color blind mode.
+* Target and focus debuff highlight option should get disabled instantly.
+* Focus debuff highlight should work properly.
+* Target pvp icon layering fixes.
+* Fixed some target's target target issues.
+
 **r972**
 * More possible FPS issue fixes.
 * Fixed an issue with range finder spells/items.

@@ -1,23 +1,23 @@
 local mod	= DBM:NewMod(1427, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14040 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14462 $"):sub(12, -3))
 mod:SetCreatureID(92330)
 mod:SetEncounterID(1794)
 mod:SetZone()
 mod:SetUsedIcons(1)
-mod:SetHotfixNoticeRev(14032)
+mod:SetHotfixNoticeRev(14397)
 --mod.respawnTime = 20
 
 mod:RegisterCombat("combat")
 
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 181288 182051 183331 183329 184239 182392 188693",
-	"SPELL_CAST_SUCCESS 180008 184124 190776 183023",
-	"SPELL_AURA_APPLIED 182038 182769 182900 184124 188666 189627 190466 184053",
+	"SPELL_CAST_START 180008 181288 182051 183331 183329 184239 182392 188693",
+	"SPELL_CAST_SUCCESS 184124 190776 183023",
+	"SPELL_AURA_APPLIED 182038 182769 182900 184124 188666 189627 190466 184053 183017 180415",
 	"SPELL_AURA_APPLIED_DOSE 182038",
-	"SPELL_AURA_REMOVED 184124 189627 190466 184053",
+	"SPELL_AURA_REMOVED 184124 189627 190466 184053 183017",
 	"UNIT_DIED",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_ABSORBED",
@@ -30,8 +30,7 @@ mod:RegisterEventsInCombat(
 --TODO, first construct timers after a soul phase
 --(ability.id = 183331 or ability.name="Soul Dispersion") and overkill > 0 or ability.id = 190466 or (ability.id = 181288 or ability.id = 182051 or ability.id = 183331 or ability.id = 183329 or ability.id = 188693) and type = "begincast" or (ability.id = 180008 or ability.id = 184124 or ability.id = 190776 or ability.id = 183023) and type = "cast" or (ability.id = 184053 or ability.id = 189627) and (type = "applydebuff" or type = "applybuff")
 --Soulbound Construct
-local warnReverberatingBlow			= mod:NewCountAnnounce(180008, 3)
---local warnFelPrison					= mod:NewTargetAnnounce(181288, 4)
+local warnFelPrison					= mod:NewTargetAnnounce(183017, 3)
 local warnShatteredDefenses			= mod:NewStackAnnounce(182038, 3, nil, "Tank")
 local warnVolatileFelOrb			= mod:NewTargetAnnounce(180221, 4)
 local warnFelCharge					= mod:NewTargetAnnounce(182051, 3)
@@ -51,7 +50,8 @@ local yellVolatileFelOrb			= mod:NewYell(180221)
 local specWarnFelChargeYou			= mod:NewSpecialWarningYou(182051, nil, nil, nil, 1, 2)
 local yellCharge					= mod:NewYell(182051)
 local specWarnFelCharge				= mod:NewSpecialWarningTarget(182051, "Melee", nil, nil, 2, 2)--Boss will often go through melee most of time, so they still need generic warning.
-local specWarnApocalypticFelburst	= mod:NewSpecialWarningCount(188693, nil, nil, nil, 2)--Mythic
+local specWarnApocalypticFelburst	= mod:NewSpecialWarningCount(188693, nil, nil, nil, 2, 2)--Mythic
+local specWarnSoulstalker			= mod:NewSpecialWarningCount("ej11778", nil, nil, nil, 2, 2)
 --Socrethar
 local specWarnExertDominance		= mod:NewSpecialWarningInterruptCount(183331, "-Healer", nil, nil, 1, 2)
 local specWarnApocalypse			= mod:NewSpecialWarningSpell(183329, nil, nil, nil, 2, 2)
@@ -74,12 +74,13 @@ local timerApocalypticFelburstCD	= mod:NewCDCountTimer(30, 188693, nil, nil, nil
 --Socrethar
 local timerExertDominanceCD			= mod:NewCDTimer(5, 183331, nil, "-Healer", nil, 4)
 local timerApocalypseCD				= mod:NewCDTimer(46, 183329, nil, nil, nil, 2)
+local timerPrisonActive				= mod:NewTargetTimer(60, 183017, nil, nil, nil, 5)
 --Adds
 local timerSargereiDominatorCD		= mod:NewNextCountTimer(60, "ej11456", nil, nil, nil, 1, 184053)--CD needs verifying, no log saw 2 of them in a phase. phase always ended or boss died before 2nd add, i know it's at least longer than 60 sec tho
 local timerHauntingSoulCD			= mod:NewCDCountTimer(30, "ej11462", nil, nil, nil, 1, 182769)
 local timerGiftofManariCD			= mod:NewCDTimer(11, 184124, nil, nil, nil, 3)
 --Mythic
-local timerVoraciousSoulstalkerCD	= mod:NewCDCountTimer(60, "ej11778", nil, nil, nil, 1, 190776)
+local timerVoraciousSoulstalkerCD	= mod:NewCDCountTimer(59.5, "ej11778", nil, nil, nil, 1, 190776)
 
 --local berserkTimer				= mod:NewBerserkTimer(360)
 
@@ -90,6 +91,8 @@ local countdownCharge				= mod:NewCountdown("Alt23", 182051)
 local voiceVolatileFelOrb			= mod:NewVoice(180221)--runout/keepmove
 local voiceFelblazeCharge			= mod:NewVoice(182051)--runout/chargemove
 local voiceFelPrison				= mod:NewVoice(182994)--watchstep
+local voiceFelBurst					= mod:NewVoice(188693)--watchstep
+local voiceVoraciousSoulstalker		= mod:NewVoice("ej11778")--watchstep
 --Socrethar
 local timerTransition				= mod:NewPhaseTimer(6.5)
 local voiceExertDominance			= mod:NewVoice(183331, "-Healer")--kickcast
@@ -105,25 +108,19 @@ mod:AddRangeFrameOption(10, 184124)
 mod:AddHudMapOption("HudMapOnOrb", 180221)
 mod:AddHudMapOption("HudMapOnCharge", 182051)
 mod:AddSetIconOption("SetIconOnCharge", 182051, true)
+mod:AddDropdownOption("InterruptBehavior", {"Count3Resume", "Count3Reset", "Count4Resume", "Count4Reset"}, "Count3Resume", "misc")
 
 mod.vb.ReverberatingBlow = 0
 mod.vb.felBurstCount = 0
 mod.vb.ManariTargets = 0
 mod.vb.mythicAddSpawn = 0
 mod.vb.ghostSpawn = 0
-mod.vb.kickCount = 0
+mod.vb.kickCount2 = 0
 mod.vb.barrierUp = false
 mod.vb.dominatorCount = 0
+mod.vb.interruptBehavior = "Count3Resume"
 local playerInConstruct = false
---[[
-Dominator Times Observed on Normal and raid sizes
-10: 2:20
-12: 2:20
-13: 2:34
-14: 2:41
-21: 2:19
---]]
-
+local exertSpellName = GetSpellInfo(183331)
 local debuffName = GetSpellInfo(184124)
 local UnitDebuff = UnitDebuff
 local debuffFilter
@@ -176,24 +173,36 @@ function mod:ChargeTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
+	self.vb.interruptBehavior = "Count3Resume"
 	self.vb.ReverberatingBlow = 0
 	self.vb.ManariTargets = 0
 	self.vb.felBurstCount = 0
 	self.vb.mythicAddSpawn = 0
 	self.vb.ghostSpawn = 0
-	self.vb.kickCount = 0
+	self.vb.kickCount2 = 0
 	self.vb.dominatorCount = 0
 	self.vb.barrierUp = false
 	playerInConstruct = false
-	timerReverberatingBlowCD:Start(6.3-delay, 1)
-	countdownReverberatingBlow:Start(6.3-delay)
+	timerReverberatingBlowCD:Start(4.3-delay, 1)
+	countdownReverberatingBlow:Start(4.3-delay)
 	timerVolatileFelOrbCD:Start(12-delay)
 	timerFelChargeCD:Start(29-delay)
 	countdownCharge:Start(29-delay)
 	timerFelPrisonCD:Start(51-delay)--Seems drastically changed. 51 in all newer logs
 	if self:IsMythic() then
 		timerVoraciousSoulstalkerCD:Start(20-delay, 1)
-		timerApocalypticFelburstCD:Start(33.7-delay)
+		timerApocalypticFelburstCD:Start(33.7-delay, 1)
+	end
+	if UnitIsGroupLeader("player") and not self:IsLFR() then
+		if self.Options.InterruptBehavior == "Count3Resume" then
+			self:SendSync("Count3Resume")
+		elseif self.Options.InterruptBehavior == "Count3Reset" then
+			self:SendSync("Count3Reset")
+		elseif self.Options.InterruptBehavior == "Count4Resume" then
+			self:SendSync("Count4Resume")
+		elseif self.Options.InterruptBehavior == "Count4Reset" then
+			self:SendSync("Count4Reset")
+		end
 	end
 end
 
@@ -208,7 +217,12 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 181288 then
+	if spellId == 180008 then
+		self.vb.ReverberatingBlow = self.vb.ReverberatingBlow + 1
+		timerReverberatingBlowCD:Start(nil, self.vb.ReverberatingBlow+1)
+		countdownReverberatingBlow:Start()
+		specWarnReverberatingBlow:Show(self.vb.ReverberatingBlow)
+	elseif spellId == 181288 then
 		specWarnFelPrison:Show()
 		if self:IsNormal() then
 			timerFelPrisonCD:Start(46.4)
@@ -227,19 +241,23 @@ function mod:SPELL_CAST_START(args)
 		--Must have delay, to avoid same bug as oregorger. Boss has 2 target scans
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "ChargeTarget", 0.1, 10, true)
 	elseif spellId == 183331 then
-		if self.vb.kickCount >= 3 then
-			self.vb.kickCount = 0
+		if (self.vb.interruptBehavior == "Count3Resume" or self.vb.interruptBehavior == "Count3Reset") and self.vb.kickCount2 >= 3 or self.vb.kickCount2 >= 4 then
+			self.vb.kickCount2 = 0
 		end
-		self.vb.kickCount = self.vb.kickCount + 1
-		timerExertDominanceCD:Start(nil, self.vb.kickCount+1)
-		if self:CheckInterruptFilter(args.sourceGUID) and not playerInConstruct and not self.vb.barrierUp then
-			specWarnExertDominance:Show(args.sourceName, self.vb.kickCount)
-			if self.vb.kickCount == 1 then
-				voiceExertDominance:Play("kick1r")
-			elseif self.vb.kickCount == 2 then
-				voiceExertDominance:Play("kick2r")
-			elseif self.vb.kickCount == 3 then
-				voiceExertDominance:Play("kick3r")
+		timerExertDominanceCD:Start(nil, self.vb.kickCount2+1)
+		if not self.vb.barrierUp then
+			self.vb.kickCount2 = self.vb.kickCount2 + 1
+			if self:CheckInterruptFilter(args.sourceGUID) and not playerInConstruct then
+				specWarnExertDominance:Show(args.sourceName, self.vb.kickCount2)
+				if self.vb.kickCount2 == 1 then
+					voiceExertDominance:Play("kick1r")
+				elseif self.vb.kickCount2 == 2 then
+					voiceExertDominance:Play("kick2r")
+				elseif self.vb.kickCount2 == 3 then
+					voiceExertDominance:Play("kick3r")
+				elseif self.vb.kickCount2 == 4 then
+					voiceExertDominance:Play("kick4r")
+				end
 			end
 		end
 	elseif spellId == 183329 then
@@ -260,22 +278,14 @@ function mod:SPELL_CAST_START(args)
 		self.vb.felBurstCount = self.vb.felBurstCount + 1
 		specWarnApocalypticFelburst:Show(self.vb.felBurstCount)
 		timerApocalypticFelburstCD:Start()
+		voiceFelBurst:Play("watchstep")
 	end
 end
 
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 180008 then
-		self.vb.ReverberatingBlow = self.vb.ReverberatingBlow + 1
-		timerReverberatingBlowCD:Start(nil, self.vb.ReverberatingBlow+1)
-		countdownReverberatingBlow:Start()
-		if self.Options.SpecWarn180008count then
-			specWarnReverberatingBlow:Show(self.vb.ReverberatingBlow)
-		else
-			warnReverberatingBlow:Show(self.vb.ReverberatingBlow)
-		end
-	elseif spellId == 184124 then
+	if spellId == 184124 then
 		if self:IsNormal() then
 			timerGiftofManariCD:Start(30, args.sourceGUID)
 		else
@@ -283,11 +293,13 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 190776 then--Voracious Soulstalker Spawning
 		self.vb.mythicAddSpawn = self.vb.mythicAddSpawn + 1
+		specWarnSoulstalker:Show(self.vb.mythicAddSpawn)
+		voiceVoraciousSoulstalker:Play("watchstep")
 		timerVoraciousSoulstalkerCD:Start(60, self.vb.mythicAddSpawn+1)
 	elseif spellId == 183023 then--Eject Soul
 		self.vb.dominatorCount = 0
 		self.vb.ghostSpawn = 0
-		self.vb.kickCount = 0
+		self.vb.kickCount2 = 0
 		warnEjectSoul:Show()
 		timerReverberatingBlowCD:Cancel()
 		countdownReverberatingBlow:Cancel()
@@ -309,7 +321,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 182038 then
 		local uId = DBM:GetRaidUnitId(args.destName)
-		if self:IsTanking(uId, "boss1") then
+		if uId and self:IsTanking(uId, "boss1") then
 			local amount = args.amount or 1
 			warnShatteredDefenses:Cancel()
 			warnShatteredDefenses:Schedule(0.3, args.destName, amount)
@@ -325,7 +337,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self.vb.ghostSpawn = self.vb.ghostSpawn + 1
 			timerHauntingSoulCD:Start(nil, self.vb.ghostSpawn+1)
 		end
-	elseif spellId == 188666 then
+	elseif spellId == 188666 and args:IsDestTypePlayer() then
 		if args:IsPlayer() then
 			specWarnEternalHunger:Show()
 			yellEternalHunger:Yell()
@@ -353,7 +365,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerSargereiDominatorCD:Start(130, self.vb.dominatorCount+1)
 		else
 			if self.vb.dominatorCount % 2 == 0 then--Every portal swap adds 10 seconds to next spawn, so 3, 5, 7 etc
-				timerSargereiDominatorCD:Start(70, self.vb.dominatorCount+1)
+				timerSargereiDominatorCD:Start(68.5, self.vb.dominatorCount+1)
 			else
 				timerSargereiDominatorCD:Start(nil, self.vb.dominatorCount+1)
 			end
@@ -378,6 +390,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 190466 and args.sourceName == UnitName("player") then
 		playerInConstruct = true
+	elseif (spellId == 183017 or spellId == 180415) and self:AntiSpam(5, args.destName) then
+		warnFelPrison:CombinedShow(0.3, args.destName)
+		--Only show target timer for adds
+		if not DBM:GetRaidUnitId(args.destName) then
+			timerPrisonActive:Start(args.destName, args.destGUID)
+		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -395,6 +413,35 @@ function mod:SPELL_AURA_REMOVED(args)
 		playerInConstruct = false
 	elseif spellId == 184053 then
 		self.vb.barrierUp = false
+		if self.vb.interruptBehavior == "Count3Reset" or self.vb.interruptBehavior == "Count4Reset" then
+			local elapsed, total = timerExertDominanceCD:GetTime(nil, self.vb.kickCount2+1)
+			if total > 0 then--Timer exists
+				timerExertDominanceCD:Cancel()
+				timerExertDominanceCD:Update(elapsed, total, 1)--Update timer to show count start over
+			end
+			self.vb.kickCount2 = 0
+		end
+		--Check if there is an interruptable cast in progress when barrier drops
+		local name, _, _, _, _, endTime = UnitCastingInfo("boss1")
+		if not name then return end
+		if name == exertSpellName and GetTime() - endTime > 0.5 then--It's still possible to interrupt it
+			if self.vb.kickCount2 == 0 then self.vb.kickCount2 = 1 end
+			if self:CheckInterruptFilter(args.destGUID) and not playerInConstruct then
+				specWarnExertDominance:Show(args.destName, self.vb.kickCount2)
+				if self.vb.kickCount2 == 1 then
+					voiceExertDominance:Play("kick1r")
+				elseif self.vb.kickCount2 == 2 then
+					voiceExertDominance:Play("kick2r")
+				elseif self.vb.kickCount2 == 3 then
+					voiceExertDominance:Play("kick3r")
+				elseif self.vb.kickCount2 == 4 then
+					voiceExertDominance:Play("kick4r")
+				end
+			end
+			self.vb.kickCount2 = self.vb.kickCount2 + 1
+		end
+	elseif spellId == 183017 then
+		timerPrisonActive:Cancel(args.destName, args.destGUID)
 	end
 end
 
@@ -434,15 +481,28 @@ function mod:UNIT_TARGETABLE_CHANGED(uId)
 		countdownCharge:Start(30.5)
 		timerFelPrisonCD:Start(50)
 		if self:IsMythic() then
-			timerReverberatingBlowCD:Start(13, 1)
-			countdownReverberatingBlow:Start(13)
+			timerReverberatingBlowCD:Start(11, 1)
+			countdownReverberatingBlow:Start(11)
 			timerVoraciousSoulstalkerCD:Start(20, 1)
-			timerApocalypticFelburstCD:Start()
+			timerApocalypticFelburstCD:Start(nil, 1)
 		else
-			timerReverberatingBlowCD:Start(10, 1)
-			countdownReverberatingBlow:Start(10)
+			timerReverberatingBlowCD:Start(8, 1)
+			countdownReverberatingBlow:Start(8)
 		end
 	end
+end
+
+function mod:OnSync(msg)
+	if self:IsLFR() then return end
+	if msg == "Count3Resume" then
+		self.vb.interruptBehavior = "Count3Resume"
+	elseif msg == "Count3Reset" then
+		self.vb.interruptBehavior = "Count3Reset"
+	elseif msg == "Count4Resume" then
+		self.vb.interruptBehavior = "Count4Resume"
+	elseif msg == "Count4Reset" then
+		self.vb.interruptBehavior = "Count4Reset"
+	end	
 end
 
 --[[

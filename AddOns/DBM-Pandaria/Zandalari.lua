@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Zandalari", "DBM-Pandaria")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(69768, 69769, 69841, 69842)
 mod:SetZone()
 mod:DisableWBEngageSync()
@@ -20,8 +20,9 @@ local specwarnHorrificVisage	= mod:NewSpecialWarningSpell(138040, nil, nil, nil,
 local specwarnHorrificVisageInt	= mod:NewSpecialWarningInterrupt(138040)
 local specwarnThunderCrush		= mod:NewSpecialWarningMove(138044)
 local specwarnVengefulSpirit	= mod:NewSpecialWarningRun(138043, "-Tank")--Assume a tank is just going to tank it
-local timerThunderCrushCD		= mod:NewCDTimer(7, 138044)
-local timerHorrificVisageCD		= mod:NewCDTimer(7, 138040)
+
+local timerThunderCrushCD		= mod:NewCDTimer(7, 138044, nil, nil, nil, 3)
+local timerHorrificVisageCD		= mod:NewCDTimer(7, 138040, nil, nil, nil, 4)
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId

@@ -91,7 +91,7 @@
 							<Anchors>
 								<Anchor point="RIGHT"/>
 							</Anchors>
-							<TexCoords left="0.5" right="1.0" top="0.0" bottom="0.5"/>
+							<TexCoords left="0.49" right="1.0" top="0.0" bottom="0.49"/>
 						</Texture>
 						<!-- PVP Icon -->
 						<Texture name="$parentpvpIcon" file="Interface\TargetingFrame\UI-PVP-FFA" hidden="true">
@@ -120,8 +120,6 @@
 							</Anchors>
 							<TexCoords left="0" right="1" top="0" bottom="0.4" />
 						</Texture>
-					</Layer>
-					<Layer level="OVERLAY">
 						<!-- Raid Target Icon -->
 						<Texture name="$parentraidIcon" file="Interface\TargetingFrame\UI-RaidTargetingIcons" hidden="true">
 							<Size>
@@ -394,6 +392,7 @@
 							<Anchors>
 								<Anchor point="TOPRIGHT"/>
 							</Anchors>
+							<TexCoords left="0.49" right="1.0" top="0.0" bottom="0.49"/>
 						</Texture>
 						<!-- PVP Icon -->
 						<Texture name="$parentpvpIcon" file="Interface\TargetingFrame\UI-PVP-FFA" hidden="true">
@@ -466,7 +465,7 @@
 				</Anchors>
 			</Frame>
 			<!-- Hit Indicator Frame -->
-			<Frame name="$parenthitIndicator" frameStrata="HIGH">
+			<!--<Frame name="$parenthitIndicator" frameStrata="HIGH">
 				<Layers>
 					<Layer level="OVERLAY">
 						<FontString name="$parenttext" inherits="NumberFontNormalHuge" hidden="true" text="Error!">
@@ -480,7 +479,7 @@
 						</FontString>
 					</Layer>
 				</Layers>
-			</Frame>
+			</Frame>-->
 		</Frames>
 	</Button>
 	<Frame name="XPerl_Party_Anchor" frameStrata="LOW" parent="UIParent" clampedToScreen="true" movable="true">

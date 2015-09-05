@@ -297,7 +297,7 @@ end
 L=l:NewLocale(me,"deDE")
 if (L) then
 L["Adds a list of other useful followers to tooltip"] = "F\195\188ge dem Tooltip eine Liste anderer n\195\188tzlicher Anh\195\164nger hinzu" -- Needs review
--- L["Allowed Rewards"] = ""
+L["Allowed Rewards"] = "Erlaubte Belohnungen" -- Needs review
 -- L["Allows a lower success percentage for resource missions. Use /gac gui to change percentage. Default is 80%"] = ""
 -- L["Applied when maximise result is enabled. Default is 80%"] = ""
 L["Building Final report"] = "Erstelle Abschlussbericht" -- Needs review
@@ -309,8 +309,8 @@ L["Disables automatic population of mission page screen. You can also press cont
 L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"] = "Durch Deaktivieren dieser Option erh\195\164ltst du das Interface von 1.1.8. Das Interface muss dabei neu geladen werden." -- Needs review
 L["Do not show follower icon on plots"] = "Anh\195\164nger-Icons auf den Fl\195\164chen nicht anzeigen" -- Needs review
 L["Don't ask for confirmation"] = "Nicht nach Best\195\164tigung fragen" -- Needs review
--- L["Duration Time"] = ""
--- L["Enhance tooltip"] = ""
+L["Duration Time"] = "Zeitdauer" -- Needs review
+L["Enhance tooltip"] = "Tooltip verbessern" -- Needs review
 L["Epic followers are NOT sent alone on xp only missions"] = "Epische Anh\195\164nger werden NICHT allein auf XP-Missionen geschickt" -- Needs review
 L["Expiration Time"] = "Ablaufzeit" -- Needs review
 L["Follower"] = "Anh\195\164nger" -- Needs review
@@ -319,7 +319,7 @@ L["Garrison Comander Quick Mission Completion"] = "GC-Schnellmissionsabschluss" 
 L["Garrison Commander Mission Control"] = "GC-Missionssteuerung" -- Needs review
 L["GCMPSWITCH"] = "Wechsle zwischen dem Interface vom Garrison Commander und Master Plan. Funktioniert mit MP >= 0.23" -- Needs review
 L["Global approx. xp reward"] = "Globale ungef\195\164hre XP-Belohnung" -- Needs review
--- L["Global success chance"] = ""
+L["Global success chance"] = "Gesamte Erfolgschance" -- Needs review
 L["Gold incremented!"] = "Gold erh\195\182ht!" -- Needs review
 L["Hide followers"] = "Verstecke Anh\195\164nger" -- Needs review
 L["If checked, clicking an upgrade icon will consume the item and upgrade the follower\
@@ -378,7 +378,7 @@ L["Upgrading to |cff00ff00%d|r"] = "Verbessere auf |cff00ff00%d|r" -- Needs revi
 L["Use big screen"] = "Benutze gro\195\159es Fenster" -- Needs review
 L["Use GC Interface"] = "Benutze GC-Interface" -- Needs review
 L["Use old interface"] = "Benutze das alte Interface" -- Needs review
-L["Uses the old, more intrusive interface"] = "Benutze das alte, aufdringlichere Interface" -- Needs review
+L["Uses the old, more intrusive interface"] = "Benutze das alte aufdringlichere Interface" -- Needs review
 L["When checked, show on each follower button missing xp to next level"] = "Wenn aktiviert, wird auf jedem Anh\195\164nger-Button die fehlende XP bis zur n\195\164chsten Stufe angezeigt" -- Needs review
 L["When checked, show on each follower button weapon and armor level for maxed followers"] = "Wenn aktiviert, wird auf jedem Anh\195\164nger-Button die Waffen- und R\195\188stungsstufe bei maximierten Anh\195\164ngern angezeigt" -- Needs review
 L["Xp incremented!"] = "XP erh\195\182ht!" -- Needs review

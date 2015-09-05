@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(817, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 57 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(68078, 68079, 68080, 68081)--Ro'shak 68079, Quet'zal 68080, Dam'ren 68081, Iron Qon 68078
 mod:SetEncounterID(1559)
 mod:SetMainBossID(68078)
@@ -55,19 +55,19 @@ local specWarnFrozenBlood				= mod:NewSpecialWarningMove(136520)
 local specWarnFistSmash					= mod:NewSpecialWarningCount(136146, nil, nil, nil, 2)
 
 local timerImpale						= mod:NewTargetTimer(40, 134691, nil, "Tank|Healer")
-local timerImpaleCD						= mod:NewCDTimer(20, 134691, nil, "Tank|Healer")
-local timerThrowSpearCD					= mod:NewCDTimer(30, 134926)--30-42 second variation observed
-local timerUnleashedFlameCD				= mod:NewCDTimer(6, 134611, nil, false)--CD for the periodic trigger, not when he'll actually be at 30 energy and use it.
+local timerImpaleCD						= mod:NewCDTimer(20, 134691, nil, "Tank|Healer", nil, 5)
+local timerThrowSpearCD					= mod:NewCDTimer(30, 134926, nil, nil, nil, 3)--30-42 second variation observed
+local timerUnleashedFlameCD				= mod:NewCDTimer(6, 134611, nil, false, nil, 5)--CD for the periodic trigger, not when he'll actually be at 30 energy and use it.
 local timerScorched						= mod:NewBuffFadesTimer(30, 134647)
 local timerMoltenOverload				= mod:NewBuffActiveTimer(10, 137221)
-local timerLightningStormCD				= mod:NewCDTimer(20, 136192)
+local timerLightningStormCD				= mod:NewCDTimer(20, 136192, nil, nil, nil, 2)
 local timerWindStorm					= mod:NewBuffActiveTimer(19.8, 136577)--19.8~21.7sec variables
-local timerWindStormCD					= mod:NewNextTimer(70, 136577)
+local timerWindStormCD					= mod:NewNextTimer(70, 136577, nil, nil, nil, 2)
 local timerFreezeCD						= mod:NewCDTimer(7, 135145, nil, false)
 local timerDeadZoneCD					= mod:NewCDTimer(15, 137229)
 local timerRisingAngerCD				= mod:NewNextTimer(15, 136323, nil, false)
 local timerFistSmash					= mod:NewBuffActiveTimer(8, 136146)
-local timerFistSmashCD					= mod:NewCDCountTimer(20, 136146)
+local timerFistSmashCD					= mod:NewCDCountTimer(20, 136146, nil, nil, nil, 2)
 local timerWhirlingWindsCD				= mod:NewCDTimer(30, 139167)--Heroic Phase 1
 local timerFrostSpikeCD					= mod:NewCDTimer(11, 139180)--Heroic Phase 2
 

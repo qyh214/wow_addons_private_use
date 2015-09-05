@@ -153,7 +153,7 @@ function LA:PLAYER_LEAVING_WORLD()
   self:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 function LA:PLAYER_LEVEL_UP()
-  self:PrintPending()
+  --self:PrintPending()
 end
 function LA:PLAYER_LOGIN()
   self:UpdateSpellBook()
@@ -170,25 +170,27 @@ function LA:PLAYER_REGEN_ENABLED()
   self.closeButton:Enable()
   self:ProcessQueue()
 end
+
 function LA:PLAYER_TALENT_UPDATE()
   if self.state.untalenting then
     self.state.untalenting = false
     self:UnregisterEvent("ACTIONBAR_SLOT_CHANGED")
     self:UnregisterEvent("PLAYER_TALENT_UPDATE")
     self:UnregisterEvent("UI_ERROR_MESSAGE")
-    self:PrintPending()
+    --self:PrintPending()
   elseif self.pendingTalentCount > 0 then
     self.pendingTalentCount = self.pendingTalentCount - 1
     if self.pendingTalentCount <= 0 then
-      self:PrintPending()
+      --self:PrintPending()
       self:UnregisterEvent("PLAYER_TALENT_UPDATE")
     end
   elseif self.state.learning then
     self.state.learning = false
     self:UnregisterEvent("PLAYER_TALENT_UPDATE")
-    self:PrintPending()
+    --self:PrintPending()
   end
 end
+
 function LA:SPELLS_CHANGED()
   self:UpgradeIgnoreList()
   --PANDARIA
@@ -196,14 +198,14 @@ function LA:SPELLS_CHANGED()
   if not self.companionsReady then
     self:UpdateCompanions()
   end
-  ]]
-  if self.numSpells > 0 then
+  --]]
+    if self.numSpells > 0 then
     if self:DiffSpellBook() > 0 then
       if self.pendingBuyCount > 0 then
         self.pendingBuyCount = self.pendingBuyCount - 1
-        if self.pendingBuyCount <= 0 then
-          self:PrintPending()
-        end
+        --if self.pendingBuyCount <= 0 then
+          --self:PrintPending()
+        --end
       end
     end
   end
@@ -293,7 +295,7 @@ function LA:UNIT_SPELLCAST_STOP(unit, spellName, deprecated, counter, globalID)
       end
     end
     ]]
-    self:PrintPending()
+    -- Patch 6.2.0 -- self:PrintPending()
   end
 end
 function LA:UI_ERROR_MESSAGE()

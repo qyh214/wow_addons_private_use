@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(674, "DBM-Party-MoP", 9, 316)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(60040, 99999)--3977 is High Inquisitor Whitemane and 60040 is Commander Durand, we don't really need to add her ID, because we don't ever engage her, and he true death is at same time as her.
 mod:SetEncounterID(1425)
 
@@ -17,10 +17,7 @@ mod:RegisterEventsInCombat(
 --local warnRes					= mod:NewCastAnnounce(111670, 4)--This spell seems to be only found in combatlog. Also, I didn't see any casting bar. (both trashes and bosses). Needs more review for this spell.
 local warnFlashofSteel			= mod:NewSpellAnnounce(115627, 3)
 local warnDashingStrike			= mod:NewSpellAnnounce(115676, 3)
-local warnMassRes				= mod:NewCastAnnounce(113134, 4)
 local warnDeepSleep				= mod:NewSpellAnnounce(9256, 2)
-local warnHeal					= mod:NewCastAnnounce(12039, 3)
-local warnMC					= mod:NewCastAnnounce(130857, 4)--Challenge mode only ability
 
 local specWarnMassRes			= mod:NewSpecialWarningInterrupt(113134, true)
 local specWarnHeal				= mod:NewSpecialWarningInterrupt(12039, true)
@@ -28,9 +25,9 @@ local specWarnMC				= mod:NewSpecialWarningInterrupt(130857, true)
 
 local timerFlashofSteel			= mod:NewCDTimer(26, 115627)--not confirmed.
 local timerDashingStrike		= mod:NewCDTimer(26, 115676)--not confirmed.
-local timerMassResCD			= mod:NewCDTimer(21, 113134)--21-24sec variation. Earlier if phase transitions
-local timerDeepSleep			= mod:NewBuffFadesTimer(10, 9256)
-local timerMCCD					= mod:NewCDTimer(19, 130857)
+local timerMassResCD			= mod:NewCDTimer(21, 113134, nil, nil, nil, 4)--21-24sec variation. Earlier if phase transitions
+local timerDeepSleep			= mod:NewBuffFadesTimer(10, 9256, nil, nil, nil, 6)
+local timerMCCD					= mod:NewCDTimer(19, 130857, nil, nil, nil, 3)
 
 local phase = 1
 
@@ -42,14 +39,11 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 113134 then
-		warnMassRes:Show()
 		specWarnMassRes:Show(args.sourceName)
 		timerMassResCD:Start()
 	elseif args.spellId == 12039 then
-		warnHeal:Show()
 		specWarnHeal:Show(args.sourceName)
 	elseif args.spellId == 130857 then
-		warnMC:Show()
 		specWarnMC:Show(args.sourceName)
 	end
 end

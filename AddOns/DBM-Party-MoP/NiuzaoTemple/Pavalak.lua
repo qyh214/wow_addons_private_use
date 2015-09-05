@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(692, "DBM-Party-MoP", 6, 324)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(61485)
 mod:SetEncounterID(1447)
 mod:SetZone()
@@ -21,7 +21,7 @@ local warnBulwark			= mod:NewSpellAnnounce(119476, 3)
 local specWarnTempest		= mod:NewSpecialWarningSpell(119875, "Healer")
 local specWarnBulwark		= mod:NewSpecialWarningSpell(119476, nil, nil, nil, 2)
 
-local timerBladeRushCD		= mod:NewCDTimer(12, 124283)--12-20sec variation
+local timerBladeRushCD		= mod:NewCDTimer(12, 124283, nil, nil, nil, 3)--12-20sec variation
 local timerTempestCD		= mod:NewCDTimer(43, 119875)--Tempest has a higher cast priority than blade rush, if it's do, it'll delay blade rush.
 
 mod:AddBoolOption("HealthFrame", true)

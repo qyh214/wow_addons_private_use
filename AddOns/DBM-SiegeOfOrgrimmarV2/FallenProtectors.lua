@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(849, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 74 $"):sub(12, -3))
 mod:SetCreatureID(71479, 71475, 71480)--He-Softfoot, Rook Stonetoe, Sun Tenderheart
 mod:SetEncounterID(1598)
 mod:SetZone()
@@ -81,20 +81,20 @@ local specWarnCalamity				= mod:NewSpecialWarning("specWarnCalamity", nil, DBM_C
 local specWarnDarkMeditation		= mod:NewSpecialWarningSpell(143546)
 
 --Rook Stonetoe
-local timerVengefulStrikesCD		= mod:NewCDTimer(21, 144396, nil, "Tank")
-local timerCorruptedBrewCD			= mod:NewCDTimer(11, 143019)--11-27
-local timerClashCD					= mod:NewCDTimer(46, 143027)--46 second next timer IF none of bosses enter a special between casts, otherwise always delayed by specials (and usually cast within 5 seconds after special ends)
+local timerVengefulStrikesCD		= mod:NewCDTimer(21, 144396, nil, "Tank", nil, 5)
+local timerCorruptedBrewCD			= mod:NewCDTimer(11, 143019, nil, nil, nil, 3)--11-27
+local timerClashCD					= mod:NewCDTimer(46, 143027, nil, nil, nil, 3)--46 second next timer IF none of bosses enter a special between casts, otherwise always delayed by specials (and usually cast within 5 seconds after special ends)
 ----Rook Stonetoe's Desperate Measures
-local timerDefiledGroundCD			= mod:NewCDTimer(10.5, 143961, nil, "Tank")
-local timerInfernoStrikeCD			= mod:NewNextTimer(9.5, 143962)
+local timerDefiledGroundCD			= mod:NewCDTimer(10.5, 143961, nil, "Tank", nil, 5)
+local timerInfernoStrikeCD			= mod:NewNextTimer(9.5, 143962, nil, nil, nil, 3)
 local timerInfernoStrike			= mod:NewBuffFadesTimer(7.7, 143962)
 --He Softfoot
-local timerGougeCD					= mod:NewCDTimer(30, 143330, nil, "Tank")--30-41
-local timerGarroteCD				= mod:NewCDTimer(29, 143198, nil, "Healer")--30-46 (heroic 20-26)
+local timerGougeCD					= mod:NewCDTimer(30, 143330, nil, "Tank", nil, 5)--30-41
+local timerGarroteCD				= mod:NewCDTimer(29, 143198, nil, "Healer", nil, 5)--30-46 (heroic 20-26)
 --Sun Tenderheart
-local timerBaneCD					= mod:NewCDTimer(17, 143446, nil, "Healer")--17-25 (heroic 13-20)
+local timerBaneCD					= mod:NewCDTimer(17, 143446, nil, "Healer", nil, 5)--17-25 (heroic 13-20)
 local timerCalamity					= mod:NewCastTimer(5, 143491, nil, "Healer")
-local timerCalamityCD				= mod:NewCDTimer(40, 143491, nil, "Healer")--40-50 (when two can be cast in a row) Also affected by boss specials
+local timerCalamityCD				= mod:NewCDTimer(40, 143491, nil, "Healer", nil, 5)--40-50 (when two can be cast in a row) Also affected by boss specials
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 

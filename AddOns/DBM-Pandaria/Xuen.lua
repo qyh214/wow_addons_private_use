@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(860, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(71953)
 mod:SetReCombatTime(20)
 mod:SetZone()
@@ -29,7 +29,7 @@ local specWarnChiBarrage			= mod:NewSpecialWarningSpell(144642, nil, nil, nil, 2
 
 local timerSpectralSwipe			= mod:NewTargetTimer(60, 144638, nil, "Tank|Healer")
 local timerSpectralSwipeCD			= mod:NewCDTimer(12, 144638)
---local timerAgilityCD				= mod:NewCDTimer(25, 144631)
+--local timerAgilityCD				= mod:NewCDTimer(25, 144631, nil, nil, nil, 5)
 local timerCracklingLightning		= mod:NewBuffActiveTimer(13, 144635)
 local timerCracklingLightningCD		= mod:NewCDTimer(47, 144635)
 local timerChiBarrageCD				= mod:NewCDTimer(20, 144642)

@@ -12,7 +12,9 @@ end
 --@end-debug@]===]
 
 local conf
-XPerl_RequestConfig(function(new) conf = new end, "$Revision: 960 $")
+XPerl_RequestConfig(function(new)
+	conf = new
+end, "$Revision: 976 $")
 
 -- Registers frame to spellcast events.
 
@@ -31,8 +33,8 @@ local events = {
 local function enableToggle(self, value)
 	if (value) then
 		if (not self.Enabled) then
-			for i,event in pairs(events) do
-				self:RegisterEvent(""..event)
+			for i, event in pairs(events) do
+				self:RegisterEvent(event)
 			end
 
 			self:SetScript("OnUpdate", XPerl_ArcaneBar_OnUpdate)
@@ -62,7 +64,7 @@ local function overrideToggle(value)
 	if (pconf) then
 		if (value) then
 			if (pconf.bar.Overrided) then
-				for i,event in pairs(events) do
+				for i, event in pairs(events) do
 					CastingBarFrame:RegisterEvent(event)
 				end
 				pconf.bar.Overrided = nil
@@ -149,7 +151,6 @@ function XPerl_ArcaneBar_OnEvent(self, event, newarg1, newarg2)
 		else
 			self.castTimeText:Hide()
 		end
-
 	elseif ((event == "UNIT_SPELLCAST_STOP" and self.casting) or (event == "UNIT_SPELLCAST_CHANNEL_STOP" and self.channeling)) then
 		if (not ActiveCasting(self)) then
 			self.delaySum = 0
@@ -162,7 +163,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, newarg1, newarg2)
 				self:SetValue(self.maxValue)
 				self:SetStatusBarColor(barColours.success.r, barColours.success.g, barColours.success.b, conf.transparency.frame)
 				self.barSpark:Hide()
-				self.barFlash:SetAlpha(0.0)
+				self.barFlash:SetAlpha(0)
 				self.barFlash:Show()
 				self.casting = nil
 				self.channeling = nil
@@ -173,7 +174,6 @@ function XPerl_ArcaneBar_OnEvent(self, event, newarg1, newarg2)
 				self.holdTime = 0
 			end
 		end
-
 	elseif (event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_INTERRUPTED") then
 		if (not self.fadeOut and self:IsShown() and not ActiveCasting(self)) then
 			if (event == "UNIT_SPELLCAST_FAILED") then
@@ -193,7 +193,6 @@ function XPerl_ArcaneBar_OnEvent(self, event, newarg1, newarg2)
 			self.fadeOut = 1
 			self.holdTime = GetTime() + CASTING_BAR_HOLD_TIME
 		end
-
 	elseif (event == "UNIT_SPELLCAST_DELAYED") then
 		if (self:IsShown()) then
 			local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(self.unit)
@@ -206,7 +205,6 @@ function XPerl_ArcaneBar_OnEvent(self, event, newarg1, newarg2)
 			self.maxValue = endTime / 1000
 			self:SetMinMaxValues(self.startTime, self.maxValue)
 		end
-
 	elseif (event == "UNIT_SPELLCAST_CHANNEL_START") then
 		local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(self.unit)
 		if (not name or (not self.showTradeSkills and isTradeSkill)) then
@@ -263,7 +261,8 @@ end
 local function ShowPrecast(self, side)
 	if (self.precast) then
 	 	if (conf.player.castBar.precast) then
-			local lag = min(1000, select(4, GetNetStats()))
+	 		local _, _, _, latencyWorld = GetNetStats()
+			local lag = min(1000, latencyWorld)
 			if (lag < 10) then
 				self.precast:Hide()
 			else
@@ -399,7 +398,8 @@ function XPerl_ArcaneBar_Set()
 				enableToggle(v.bar, v.optFrame.conf.castBar.enable)
 
 				v.bar.castTimeText:ClearAllPoints()
-				if (v.optFrame.conf.castBar.inside) then
+				--if (v.optFrame.conf.castBar.inside) then
+				if (conf.player.castBar.inside) then
 					v.bar.castTimeText:SetPoint("RIGHT", v.bar, "RIGHT", -2, 0)
 					v.bar.castTimeText:SetJustifyH("RIGHT")
 				else
@@ -415,7 +415,7 @@ end
 
 -- SetArcaneBar
 local function SetArcaneBar(value, new)
-	for k,v in pairs(ArcaneBars) do
+	for k, v in pairs(ArcaneBars) do
 		if (v.bar == new.bar) then
 			ArcaneBars[k] = nil
 		end

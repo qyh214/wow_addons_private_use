@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(826, "DBM-Pandaria", nil, 322)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 53 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(69161)
 mod:SetEncounterID(1587)
 mod:SetReCombatTime(20, 10)
@@ -26,9 +26,9 @@ local specWarnPiercingRoar		= mod:NewSpecialWarningCast(137457, "SpellCaster")
 local specWarnFrillBlast		= mod:NewSpecialWarningSpell(137505, nil, nil, nil, 2)
 
 local timerCrush				= mod:NewTargetTimer(60, 137504, nil, false)
-local timerCrushCD				= mod:NewCDTimer(26, 137504, nil, "Tank")
+local timerCrushCD				= mod:NewCDTimer(26, 137504, nil, "Tank", nil, 5)
 local timerPiercingRoarCD		= mod:NewCDTimer(25, 137457)--25-60sec variation (i'm going to guess like all the rest of the variations, the timers are all types of fucked up when the boss is running around untanked, which delays casts of crush and frill blast, but makes him cast spitfire twice as often)
-local timerFrillBlastCD			= mod:NewCDTimer(25, 137505)--25-30sec variation
+local timerFrillBlastCD			= mod:NewCDTimer(25, 137505, nil, nil, nil, 5)--25-30sec variation
 
 mod:AddBoolOption("RangeFrame", true)
 mod:AddReadyCheckOption(32519, false)
