@@ -167,7 +167,7 @@ local function syncTotals()
 	local di, doubles, cc = G.GetDoubleCounters(), {}, 0
 	for l=1,2 do
 		for k,v in pairs(di) do
-			if k > 0 and #v > 1 then
+			if v.key == k and k > 0 and #v > 1 then
 				if l == 1 then
 					G.sortByFollowerLevels(v, finfo)
 					if finfo[v[2]].status ~= GARRISON_FOLLOWER_INACTIVE then

@@ -6,7 +6,7 @@ local playerClass, playerName, playerGUID
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 973 $")
+end, "$Revision: 978 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -847,8 +847,11 @@ function xpHigh:CreateMendingIcon(frame)
 
 		local x1, y1 = icon:GetCenter()
 		local x2, y2 = frame:GetCenter()
-		frame.lastPomPosX = x1 - x2
-		frame.lastPomPosY = y1 - y2
+
+		if x1 and x2 and y1 and y2 then
+			frame.lastPomPosX = x1 - x2
+			frame.lastPomPosY = y1 - y2
+		end
 
 		icon.shine:Show()
 		icon.shine:SetVertexColor(1, 1, 1, 0)

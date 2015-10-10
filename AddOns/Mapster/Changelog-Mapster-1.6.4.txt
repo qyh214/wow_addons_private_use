@@ -1,0 +1,12 @@
+tag 1.6.4
+8c219460e9aa38bbc45dccda5cd6ff73769efb9c
+Hendrik Leppkes <h.leppkes@gmail.com>
+2015-09-24 11:51:53 +0200
+
+Tag as 1.6.4
+
+
+--------------------
+
+Hendrik Leppkes:
+	- Use WORLDMAP_AZEROTH_ID

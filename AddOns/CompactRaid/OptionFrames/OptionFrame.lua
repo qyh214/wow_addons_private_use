@@ -328,7 +328,7 @@ function profileCombo:OnComboChanged(value)
 	end
 end
 
-local function DeleteFrofile(profile)
+local function DeleteProfile(profile)
 	addon.db.profiles[profile] = nil
 	profileCombo:SetSelection(nil)
 end
@@ -336,7 +336,7 @@ end
 function delButton:OnClick()
 	local profile = profileCombo:GetSelection()
 	if profile and profile ~= addon:GetCurProfileName() then
-		LibMsgBox:Confirm(format(L["deleting profile"], profile), MB_OKCANCEL, DeleteFrofile, profile)
+		LibMsgBox:Confirm(format(L["deleting profile"], profile), MB_OKCANCEL, DeleteProfile, profile)
 	end
 end
 

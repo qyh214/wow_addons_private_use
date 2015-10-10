@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod(1433, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14463 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14575 $"):sub(12, -3))
 mod:SetCreatureID(90316)
 mod:SetEncounterID(1788)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
 mod:SetMinSyncRevision(13887)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--Unknown full spectrum of icons yet. Don't know how many debuffs go out.
-mod:SetHotfixNoticeRev(14372)
+mod:SetHotfixNoticeRev(14463)
 mod.respawnTime = 15
 mod:DisableRegenDetection()--Boss returns true on UnitAffectingCombat when fighting his trash, making boss pre mature pull by REGEN method
 
@@ -71,15 +71,15 @@ local specWarnFelConduit				= mod:NewSpecialWarningInterrupt(181827, nil, nil, n
 
 local timerFelLaserCD					= mod:NewCDTimer(16, 182582, nil, nil, nil, 3)--16-22. Never pauses, used all phases
 local timerChakramCD					= mod:NewCDTimer(33, 182178, nil, nil, nil, 3)
-local timerPhantasmalWindsCD			= mod:NewCDTimer(35, 181957, nil, nil, nil, 3)
+local timerPhantasmalWindsCD			= mod:NewCDTimer(35, 181957, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerPhantasmalWoundsCD			= mod:NewCDTimer(30.5, 182325, nil, "Healer", 2, 5)--30.5-32
 local timerFocusedBlast					= mod:NewCastTimer(11, 181912, nil, nil, nil, 2)--Doesn't realy need a cd timer. he casts it twice back to back, then lands
-local timerShadowRiposteCD				= mod:NewCDTimer(23.5, 185345, nil, nil, nil, 3)
+local timerShadowRiposteCD				= mod:NewCDTimer(23.5, 185345, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 --Adds
-local timerFelBombCD					= mod:NewCDTimer(18.5, 181753, nil, nil, nil, 3)
-local timerFelConduitCD					= mod:NewCDTimer(15, 181827, nil, nil, nil, 4)
+local timerFelBombCD					= mod:NewCDTimer(18.5, 181753, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
+local timerFelConduitCD					= mod:NewCDTimer(15, 181827, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 local timerPhantasmalCorruptionCD		= mod:NewCDTimer(14, 181824, nil, "Tank", nil, 3)--14-18
-local timerDarkBindingsCD				= mod:NewCDTimer(34, 185456, nil, nil, nil, 3)
+local timerDarkBindingsCD				= mod:NewCDTimer(34, 185456, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 
 local countdownPhantasmalWinds			= mod:NewCountdown(35, 181957)
 local countdownFelBomb					= mod:NewCountdown("Alt18", 181753)
@@ -202,10 +202,8 @@ function mod:OnCombatStart(delay)
 			timerShadowRiposteCD:Start(9.5-delay)
 		end
 	end
-	if self:IsNormal() then--Harder berserk on normal vs all other difficulties. Kromog all over again.
+	if self:IsNormal() or self:IsMythic() then
 		berserkTimer:Start(480-delay)
-	elseif self:IsMythic() then
-		berserkTimer:Start(510-delay)
 	else
 		berserkTimer:Start(-delay)
 	end

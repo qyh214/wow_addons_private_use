@@ -12,7 +12,7 @@ local abs, pow, sqrt, sin, cos, atan2, floor, ceil, min, max, pi, pi2 = math.abs
 local error, print = error, print
 
 local CallbackHandler = LibStub:GetLibrary("CallbackHandler-1.0")
-local updateFrame = CreateFrame("Frame")
+local updateFrame = CreateFrame("Frame", "DBMHudMapUpdateFrame")
 local onUpdate, Point, Edge
 local followedUnits = {}
 local callbacks = CallbackHandler:New(mod)
@@ -23,10 +23,25 @@ local encounterMarkers = {}
 
 local GetNumGroupMembers, GetNumSubgroupMembers, IsInRaid = GetNumGroupMembers, GetNumSubgroupMembers, IsInRaid
 local GetTime, UIParent = GetTime, UIParent
-local UnitExists, UnitIsUnit, UnitPosition, UnitDebuff, GetPlayerFacing = UnitExists, UnitIsUnit, UnitPosition, UnitDebuff, GetPlayerFacing
+local UnitExists, UnitIsUnit, UnitPosition, UnitDebuff, UnitIsConnected, GetPlayerFacing = UnitExists, UnitIsUnit, UnitPosition, UnitDebuff, UnitIsConnected, GetPlayerFacing
 local GetInstanceInfo = GetInstanceInfo
 
 local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
+
+--Hard code STANDARD_TEXT_FONT since skinning mods like to taint it (or worse, set it to nil, wtf?)
+--http://forums.elitistjerks.com/topic/133901-bug-report-hudmap/#entry2282069
+local standardFont = STANDARD_TEXT_FONT
+if (LOCALE_koKR) then
+	standardFont = "Fonts\\2002.TTF"
+elseif (LOCALE_zhCN) then
+	standardFont = "Fonts\\ARKai_T.ttf"
+elseif (LOCALE_zhTW) then
+	standardFont = "Fonts\\blei00d.TTF"
+elseif (LOCALE_ruRU) then
+	standardFont = "Fonts\\FRIZQT___CYR.TTF"
+else
+	standardFont = "Fonts\\FRIZQT__.TTF"
+end
 
 local targetCanvasAlpha
 
@@ -249,6 +264,7 @@ function mod:OnInitialize()
 	self.canvas = CreateFrame("Frame", "DBMHudMapCanvas", UIParent)
 	self.canvas:SetSize(UIParent:GetWidth(), UIParent:GetHeight())
 	self.canvas:SetPoint("CENTER")
+	self.canvas:Hide()
 	self.HUDEnabled = false
 end
 
@@ -259,6 +275,7 @@ function mod:Enable()
 	mainFrame:Show()
 --	mainFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	mainFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
+	self.canvas:Show()
 	self.canvas:SetAlpha(1)
 	self:UpdateCanvasPosition()
 
@@ -267,6 +284,7 @@ function mod:Enable()
 	self:SetZoom()
 	self.canvas:SetBackdrop(nil)
 	self.HUDEnabled = true
+	updateFrame:Show()
 	if not updateFrame.ticker then
 		updateFrame.ticker = C_Timer.NewTicker(0.035, function() onUpdate(updateFrame, 0.035) end)
 	end
@@ -281,7 +299,9 @@ function mod:Disable()
 	--Anything else needed? maybe clear all marks, hide any frames, etc?
 --	mainFrame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	mainFrame:UnregisterEvent("LOADING_SCREEN_DISABLED")
+	self.canvas:Hide()
 	mainFrame:Hide()
+	updateFrame:Hide()
 	self.HUDEnabled = false
 	if updateFrame.ticker then
 		updateFrame.ticker:Cancel()
@@ -1023,9 +1043,9 @@ do
 				self.text:SetTextColor(self.text.r, self.text.g, self.text.b, self.text.a)
 				self.text:Show()
 				local f, s, m = self.text:GetFont()
-				local font = DBM.STANDARD_TEXT_FONT or f
-				local size = fontSize or 20 or s
-				local outline = outline or "THICKOUTLINE" or m
+				local font = f or standardFont
+				local size = fontSize or s or 20
+				local outline = outline or m or "THICKOUTLINE"
 				self.text:SetFont(font, size, outline)
 				self.text:SetText(text)
 			end
@@ -1143,7 +1163,7 @@ do
 				t.frame:SetFrameStrata("LOW")
 				t.frame.owner = t
 				t.text = t.frame:CreateFontString()
-				t.text:SetFont(DBM.STANDARD_TEXT_FONT, 10, "")
+				t.text:SetFont(standardFont, 10, "")
 				t.text:SetDrawLayer("OVERLAY")
 				t.text:SetPoint("BOTTOM", t.frame, "CENTER")
 				t.edges = {}

@@ -30,6 +30,10 @@ L= DBM:GetModLocalization(1425)
 ---------------------------
 L= DBM:GetModLocalization(1432)
 
+L:SetWarningLocalization({
+	reapDelayed =	"收割在夢魘幻貌結束之後"
+})
+
 ------------------
 -- Kormrok --
 ------------------
@@ -119,6 +123,14 @@ L:SetOptionLocalization({
 --------------------------
 L= DBM:GetModLocalization(1427)
 
+L:SetOptionLocalization({
+	InterruptBehavior	= "設置團隊的中斷模式(需要團隊隊長)",
+	Count3Resume		= "3人持續計數循環中斷當護盾消失時",--Default
+	Count3Reset			= "3人重置計數循環中斷當護盾消失時",
+	Count4Resume		= "4人持續計數循環中斷當護盾消失時",
+	Count4Reset			= "4人重置計數循環中斷當護盾消失時"
+})
+
 --------------------------
 -- Tyrant Velhari --
 --------------------------
@@ -139,7 +151,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1438)
 
 L:SetWarningLocalization({
-	specWarnBreakShackle	= "束縛折磨：拉斷%s!"
+	specWarnBreakShackle	= "束縛折磨：%s拉斷!"
 })
 
 L:SetOptionLocalization({

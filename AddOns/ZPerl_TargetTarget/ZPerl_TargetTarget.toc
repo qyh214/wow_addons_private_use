@@ -12,7 +12,7 @@
 ## Notes-deDE: Ersetzt das Fenster für Ziel des Ziels.
 ## Notes-zhTW: 顯示目標的目標框架.
 ## RequiredDeps: ZPerl, ZPerl_Target
-## X-Curse-Packaged-Version: r976
+## X-Curse-Packaged-Version: r978
 ## X-Curse-Project-Name: Z-Perl UnitFrames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

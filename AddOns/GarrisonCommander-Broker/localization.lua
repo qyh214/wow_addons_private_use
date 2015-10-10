@@ -325,7 +325,7 @@ L["Hide followers"] = "Verstecke Anh\195\164nger" -- Needs review
 L["If checked, clicking an upgrade icon will consume the item and upgrade the follower\
 |cFFFF0000NO QUESTION ASKED|r"] = "Wenn aktiviert, wird beim Anklicken eines Upgrade-Icons der Gegenstand verbraucht und der Anh\195\164nger verbessert\
 |cFFFF0000OHNE BEST\195\132TIGUNGSABFRAGE|r" -- Needs review
-L["Ignore epic for xp missions."] = "Ignoriere Episches f\195\188r Erfahrungs Missionen" -- Needs review
+L["Ignore epic for xp missions."] = "Ignoriere Episches f\195\188r Erfahrungsmissionen" -- Needs review
 L["Ignore for all missions"] = "Bei allen Missionen ignorieren" -- Needs review
 L["Ignore for this mission"] = "Bei dieser Mission ignorieren" -- Needs review
 L["Ignore \"maxed\""] = "Ignoriere \"maximierte\"" -- Needs review
@@ -360,7 +360,7 @@ L["Right click to open ignore menu"] = "Rechtsklicke hier, um das Ignorieren-Men
 L["%s |4follower:followers with %s"] = "%s |4Anh\195\164nger:Anh\195\164nger mit %s" -- Needs review
 L["Show Garrison Commander menu"] = "Zeige das Men\195\188 vom Garrison Commander" -- Needs review
 L["Show next toon"] = "Zeige die n\195\164chste Animation" -- Needs review
-L["Show the next toon which will complete a mission"] = "Zeige die n\195\164chste Animation, die eine Mission beendet wird" -- Needs review
+L["Show the next toon which will complete a mission"] = "Zeige die n\195\164chste Animation, die eine Mission beenden wird" -- Needs review
 L["Show upgrade options"] = "Zeige Upgrade-Optionen" -- Needs review
 L["Show weapon/armor level"] = "Zeige Waffen/R\195\188stungs-Stufe" -- Needs review
 L["Show xp to next level"] = "Zeige XP bis zur n\195\164chsten Stufe" -- Needs review
@@ -378,7 +378,7 @@ L["Upgrading to |cff00ff00%d|r"] = "Verbessere auf |cff00ff00%d|r" -- Needs revi
 L["Use big screen"] = "Benutze gro\195\159es Fenster" -- Needs review
 L["Use GC Interface"] = "Benutze GC-Interface" -- Needs review
 L["Use old interface"] = "Benutze das alte Interface" -- Needs review
-L["Uses the old, more intrusive interface"] = "Benutze das alte aufdringlichere Interface" -- Needs review
+L["Uses the old, more intrusive interface"] = "Benutzt das alte, aufdringlichere Interface" -- Needs review
 L["When checked, show on each follower button missing xp to next level"] = "Wenn aktiviert, wird auf jedem Anh\195\164nger-Button die fehlende XP bis zur n\195\164chsten Stufe angezeigt" -- Needs review
 L["When checked, show on each follower button weapon and armor level for maxed followers"] = "Wenn aktiviert, wird auf jedem Anh\195\164nger-Button die Waffen- und R\195\188stungsstufe bei maximierten Anh\195\164ngern angezeigt" -- Needs review
 L["Xp incremented!"] = "XP erh\195\182ht!" -- Needs review

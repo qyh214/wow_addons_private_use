@@ -33,6 +33,7 @@ module:RegisterDebuff(TIER, INSTANCE, BOSS, 159463)
 -- Twin Ogron
 BOSS = 1148
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 143834)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 174404)
 
 -- Ko'ragh
 BOSS = 1153

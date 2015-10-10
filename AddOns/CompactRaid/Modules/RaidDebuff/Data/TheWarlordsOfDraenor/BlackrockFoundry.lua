@@ -14,7 +14,8 @@ local BOSS
 
 -- Gruul
 BOSS = 1161
-module:RegisterDebuff(TIER, INSTANCE, BOSS, 155326, 5)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 155326)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 162322, 5)
 
 -- Oregorger
 BOSS = 1202
@@ -56,6 +57,7 @@ module:RegisterDebuff(TIER, INSTANCE, BOSS, 158315)
 -- Blackhand
 BOSS = 959
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 156096)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 156653, 4)
 
 -- Common
 

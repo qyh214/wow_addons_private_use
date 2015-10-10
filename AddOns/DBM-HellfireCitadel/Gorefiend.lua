@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1372, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14450 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14589 $"):sub(12, -3))
 mod:SetCreatureID(90199)
 mod:SetEncounterID(1783)
 mod:SetZone()
-mod:SetUsedIcons(2, 1)
-mod:SetHotfixNoticeRev(14418)
+mod:SetUsedIcons(4, 3, 2, 1)
+mod:SetHotfixNoticeRev(14506)
 mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 179977 182170 181085",
 	"SPELL_AURA_APPLIED 179864 179977 179909 179908 180148 181295 185982 189434 185189",
 	"SPELL_AURA_APPLIED_DOSE 185189",
-	"SPELL_AURA_REMOVED 179909 179908 181295 181973 185982",
+	"SPELL_AURA_REMOVED 179909 179908 181295 181973 185982 179977 189434",
 	"SPELL_PERIODIC_DAMAGE 179995",
 	"SPELL_ABSORBED 179995",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
@@ -26,7 +26,7 @@ mod:RegisterEventsInCombat(
 --TODO, Touch of Doom was 25 seconds in LFR, tested after heroic. changed? VERIFY
 local warnShadowofDeath					= mod:NewTargetCountAnnounce(179864, 3)
 local warnTouchofDoom					= mod:NewTargetAnnounce(179978, 4)
-local warnSharedFate					= mod:NewTargetCountAnnounce(179909, 4)--Announce all 2/3
+local warnSharedFate					= mod:NewTargetCountAnnounce(179909, 4, nil, "-Tank", 2)--Announce all 2/3
 local warnHungerforLife					= mod:NewTargetAnnounce(180148, 3, nil, false)--Knowing who has it not very important, only if it's on you
 local warnGoreboundSpiritSoon			= mod:NewSoonAnnounce("ej11020", 3, 187814)
 local warnRagingCharge					= mod:NewSpellAnnounce(187814, 3, nil, "Melee")
@@ -38,7 +38,7 @@ local specWarnTouchofDoom				= mod:NewSpecialWarningRun(179977, nil, nil, nil, 4
 local yellTouchofDoom					= mod:NewYell(179977)
 local specWarnDoomWell					= mod:NewSpecialWarningMove(179995)
 local specWarnSharedFate				= mod:NewSpecialWarningMoveTo(179908, nil, nil, nil, 3, 2)--Only non rooted player get moveto. rooted player can't do anything.
-local yellSharedFate					= mod:NewYell(179909, 40885)--Only rooted player should yell
+local yellSharedFate					= mod:NewYell(179909, 135484)--Only rooted player should yell
 local specWarnFeastofSouls				= mod:NewSpecialWarningSpell(181973, nil, nil, nil, 2)--Energy based
 local specWarnFeastofSoulsEnded			= mod:NewSpecialWarningEnd(181973)
 local specWarnHungerforLife				= mod:NewSpecialWarningRun(180148, nil, nil, nil, 4, 2)
@@ -52,11 +52,11 @@ local timerShadowofDeathCDDps			= mod:NewTimer(30, "SoDDPS2", 179864, "Dps", nil
 local timerShadowofDeathCDTank			= mod:NewTimer(30, "SoDTank2", 179864, "Tank", nil, 5)
 local timerShadowofDeathCDHealer		= mod:NewTimer(30, "SoDHealer2", 179864, "Healer", nil, 5)
 local timerTouchofDoomCD				= mod:NewCDTimer(18, 179977, nil, nil, nil, 3)--25 seconds in LFR, tested after heroic. changed? VERIFY
-local timerSharedFateCD					= mod:NewNextCountTimer(29, 179909, nil, nil, nil, 3)--29-31
+local timerSharedFateCD					= mod:NewNextCountTimer(29, 179909, nil, "-Tank", 2, 3, nil, DBM_CORE_DEADLY_ICON)--29-31
 local timerCrushingDarknessCD			= mod:NewNextTimer(10, 180017, nil, false, 2, 2)--Actually 16, but i delay start by 6 seconds for reduced spam
 local timerFeastofSouls					= mod:NewNextTimer(123.5, 181973, nil, nil, nil, 6)--Probably next timer too, or close to it, depends how consistent energy gains are, may have small variation, like gruul
 
-local timerDigest						= mod:NewCastTimer(40, 181295)
+local timerDigest						= mod:NewCastTimer(40, 181295, nil, nil, nil, nil, nil, DBM_CORE_DEADLY_ICON)
 local timerCrushingDarkness				= mod:NewCastTimer(6, 180017, nil, false)
 
 --local berserkTimer					= mod:NewBerserkTimer(360)
@@ -72,6 +72,7 @@ local voiceSharedFate					= mod:NewVoice(179909)--linegather, new voice, like Bl
 local voiceBurning						= mod:NewVoice(185189) --changemt
 
 mod:AddSetIconOption("SetIconOnFate", 179909)
+mod:AddSetIconOption("SetIconOnDoom", 179977, false)
 mod:AddHudMapOption("HudMapOnSharedFate", 179909)--Smart hud, distinquishes rooted from non rooted by larger dot/font and lines/arrows
 mod:AddBoolOption("ShowOnlyPlayer", true)
 mod:AddRangeFrameOption(5, 182049)
@@ -163,7 +164,7 @@ function mod:OnCombatStart(delay)
 	end
 	timerCrushingDarknessCD:Start(5-delay)
 	timerTouchofDoomCD:Start(9-delay)
-	if not self:IsLFR() then
+	if not self:IsFaceroll() then
 		timerSharedFateCD:Start(19-delay, 1)
 	end
 	timerFeastofSouls:Start(-delay)
@@ -287,6 +288,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			voiceTouchofDoom:Play("runout")
 			yellTouchofDoom:Yell()
 		end
+		if self.Options.SetIconOnDoom then
+			self:SetAlphaIcon(0.5, args.destName, 2)
+		end
 	elseif spellId == 179909 then--Root version
 		if args:IsPlayer() then
 			playerHasFate = true
@@ -323,8 +327,8 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 181295 then
 		if args:IsPlayer() then
 			if self:IsMythic() then
-				timerDigest:Start(30)
-				countdownDigest:Start(30)
+				timerDigest:Start(35)
+				countdownDigest:Start(35)
 			else
 				timerDigest:Start()
 				countdownDigest:Start()
@@ -414,7 +418,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		timerCrushingDarknessCD:Start(5)
 		timerTouchofDoomCD:Start(9)
-		if not self:IsLFR() then
+		if not self:IsFaceroll() then
 			timerSharedFateCD:Start(19, 1)
 		end
 		timerFeastofSouls:Start()
@@ -423,8 +427,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 185982 and not playerDown then
 		--When it fades, it means it's casting Expel Soul and returning to surface as a Gorebound Spirit
-		--This is cleaner than IEEU and fires at same time
 		specWarnGoreboundSpirit:Show()
+	elseif spellId == 179977 or spellId == 189434 then
+		if self.Options.SetIconOnDoom then
+			self:SetIcon(args.destName, 0)
+		end
 	end
 end
 
@@ -434,8 +441,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnCrushingDarkness:Show()
 		timerCrushingDarkness:Start()
 		timerCrushingDarknessCD:Schedule(6)--Delay timer by 6 seconds, so it doesn't start until after cast timer ends, reduce timer spam
-	--"<39.51 18:23:36> [UNIT_SPELLCAST_SUCCEEDED] Gorefiend(Slootbag) [[boss1:Empower Spirits::0:180192]]", -- [2949]
-	--"<41.98 18:23:38> [INSTANCE_ENCOUNTER_ENGAGE_UNIT] Fake Args:#boss1#true#true#true#Gorefiend#Vehicle-0-2012-1448-7347-90199-0000381EB8#elite#375918859#boss2#true#true#true#Gorebound Spirit
 	elseif spellId == 185753 and playerDown then--Tank Add Exploit Protection (Enraged Spirit Spawn)
 		specWarnEnragedSpirit:Show()
 	end

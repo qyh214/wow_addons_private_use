@@ -37,7 +37,7 @@ wodrraspisokach25={
 9972,
 9979,
 
-9988,
+--9988,
 9989,
 
 10087,
@@ -326,8 +326,8 @@ if arg2=="UNIT_DIED" then
   end
 end
 
---Pro-toss
-if arg2=="SPELL_AURA_APPLIED" and arg10==179202 then
+--Pro-toss // ОТКЛЮЧЕНО
+if arg2=="SPELL_AURA_APPLIED" and arg10==1792029999 then
 	if rsprotossdb1==nil then
 		rsprotossdb1={}
 		rsprotossdb2={}
@@ -349,7 +349,7 @@ if arg2=="SPELL_AURA_APPLIED" and arg10==179202 then
 		rastartprotosstimer=GetTime()
 	end
 end
-if arg2=="SPELL_AURA_REMOVED" and arg10==179202 then
+if arg2=="SPELL_AURA_REMOVED" and arg10==1792029999 then
 	if rsprotossdb1 and #rsprotossdb1>0 then
 		for i=1,#rsprotossdb1 do
 			if rsprotossdb1[i] then
@@ -371,10 +371,10 @@ if arg2=="SPELL_AURA_REMOVED" and arg10==179202 then
 end
 
 if arg2=="UNIT_DIED" then
-  if wodrraspisokon[10]==1 and wodrraachdone1 then
+  if wodrraspisokon[9]==1 and wodrraachdone1 then
      local id=raGetUnitID(arg7)
      if id==90270 and UnitGUID("boss1") then
-          wodrrafailnoreason(10)
+          wodrrafailnoreason(9)
      end
   end
 end
@@ -382,8 +382,8 @@ end
 if (arg2=="SPELL_AURA_APPLIED" and arg10==185656) and arg8 then
    raunitisplayer(arg7,arg8)
    if raunitplayertrue then
-      if wodrraspisokon[11]==1 and wodrraachdone1 then
-         wodrrafailnoreason(11,arg8)
+      if wodrraspisokon[10]==1 and wodrraachdone1 then
+         wodrrafailnoreason(10,arg8)
       end
    end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1396, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14339 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14511 $"):sub(12, -3))
 mod:SetCreatureID(90378)
 mod:SetEncounterID(1786)
 mod:SetZone()
@@ -52,13 +52,13 @@ local specWarnRendingHowl			= mod:NewSpecialWarningInterruptCount(183917, "-Heal
 --CDs used for all of them because of them screwing with eachother.
 --Coding them perfectly is probably possible but VERY ugly, would require tones of calculating on the overlaps and lots of on fly adjusting.
 --Adjusting one timer like blackhand no big deal, checking time remaining on THREE other abilities any time one of these are cast, and on fly adjusting, no
-local timerShredCD					= mod:NewCDTimer(17, 180199, nil, "Tank", nil, 5)
+local timerShredCD					= mod:NewCDTimer(17, 180199, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerHeartseekerCD			= mod:NewCDTimer(25, 180372, nil, nil, nil, 3)
-local timerVisionofDeathCD			= mod:NewCDCountTimer(75, 181488, nil, nil, nil, 5)
+local timerVisionofDeathCD			= mod:NewCDCountTimer(75, 181488, nil, nil, nil, 5, nil, DBM_CORE_DEADLY_ICON)
 local timerDeathThroesCD			= mod:NewCDCountTimer(40, 180224, nil, nil, nil, 2)
 --Adds
-local timerBloodthirsterCD			= mod:NewCDCountTimer(70.3, "ej11266", nil, nil, nil, 1, 131150)
-local timerRendingHowlCD			= mod:NewNextTimer(6, 183917, nil, "-Healer", 2, 4)
+local timerBloodthirsterCD			= mod:NewCDCountTimer(70.3, "ej11266", nil, nil, nil, 1, 131150, DBM_CORE_DAMAGE_ICON)
+local timerRendingHowlCD			= mod:NewNextTimer(6, 183917, nil, "-Healer", 2, 4, nil, DBM_CORE_INTERRUPT_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 
@@ -153,17 +153,17 @@ function mod:SPELL_CAST_START(args)
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnRendingHowl:Show(args.sourceName, count)
 			if count == 1 then
-				voiceRendingHowl:Play("kick1r.ogg")
+				voiceRendingHowl:Play("kick1r")
 			elseif count == 2 then
-				voiceRendingHowl:Play("kick2r.ogg")
+				voiceRendingHowl:Play("kick2r")
 			elseif count == 3 then
-				voiceRendingHowl:Play("kick3r.ogg")
+				voiceRendingHowl:Play("kick3r")
 			elseif count == 4 then
-				voiceRendingHowl:Play("kick4r.ogg")
+				voiceRendingHowl:Play("kick4r")
 			elseif count == 5 then
-				voiceRendingHowl:Play("kick5r.ogg")
+				voiceRendingHowl:Play("kick5r")
 			else
-				voiceRendingHowl:Play("kickcast.ogg")
+				voiceRendingHowl:Play("kickcast")
 			end
 		end
 		timerRendingHowlCD:Start(args.sourceGUID)

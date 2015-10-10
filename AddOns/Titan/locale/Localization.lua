@@ -520,6 +520,8 @@ L["TITAN_GOLD_COIN_LABELS"] = "Show Text Labels";
 L["TITAN_GOLD_COIN_ICONS"] = "Show Icon Labels";
 L["TITAN_GOLD_ONLY"] = "Show Gold Only";
 L["TITAN_GOLD_COLORS"] = "Show Gold Colors";
+L["TITAN_GOLD_MERGE"] = "Merge Servers";
+L["TITAN_GOLD_SEPARATE"] = "Separate Servers";
 
 L["TITAN_VOLUME_TOOLTIP"] = "Volume Info";
 L["TITAN_VOLUME_MASTER_TOOLTIP_VALUE"] = "Master Sound Volume: ";

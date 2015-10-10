@@ -29,7 +29,7 @@
 ## X-Credits-ruRU: Localization: The_DimoK, Sarymian, dartraiden
 ## X-Credits-zhCN: Localization: tss1398383123, zhTW, ananhaid, dh0000
 ## X-Credits-zhTW: Localization: s8095324, pepper_ep, zhTW, alpha2009, BNSSNB, titanium0107
-## Version: 6.2.0.5
+## Version: 6.2.2.1
 ## X-Date: 2015-07-07T01:44:07Z
 ## X-Category: Map
 ## X-License: GPLv3
@@ -39,7 +39,7 @@
 ## X-CompatibleLocales: deDE, enCN, enTW, enUS, esES, esMX, frFR, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
 ## SavedVariables: _NPCScanOverlayOptions, _NPCScanMiniMapIcon, _NPCScanOverlayKeyColors
 ## OptionalDeps: Ace3, _NPCScan, OmegaMap, Carbonite, LibQTip-1.0
-## X-Curse-Packaged-Version: 6.2.0.5
+## X-Curse-Packaged-Version: 6.2.2.1
 ## X-Curse-Project-Name: _NPCScan.Overlay
 ## X-Curse-Project-ID: npcscan-overlay
 ## X-Curse-Repository-ID: wow/npcscan-overlay/mainline

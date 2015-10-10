@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d647", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 60 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 78 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1144)
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 
 --Trash (and somewhat Urtharges)
 local warnStoneRain				= mod:NewSpellAnnounce(142139, 3)--Hit debuff, interrupt or move out of it
-local warnSpellShatter			= mod:NewCastAnnounce("OptionVersion2", 141421, 3, 2, nil, "SpellCaster")--Spell interrupt. Cast time is long enough to /stopcasting this
+local warnSpellShatter			= mod:NewCastAnnounce(141421, 3, 2, nil, "SpellCaster", 2)--Spell interrupt. Cast time is long enough to /stopcasting this
 local warnSummonFieryAnger		= mod:NewCastAnnounce(141488, 3, 2.5)
 local warnDetonate				= mod:NewCastAnnounce(141456, 4, 5)--Can kill or run away from. It's actually more practical to ignore it and let it kill itself to speed up run
 --Urtharges the Destroyer

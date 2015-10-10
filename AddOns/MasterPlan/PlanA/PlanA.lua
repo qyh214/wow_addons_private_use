@@ -56,6 +56,9 @@ local CheckCacheWarning do
 	function CheckCacheWarning()
 		local lct = C_Garrison.IsOnGarrisonMap() and cdata and cdata.lastCacheTime
 		local td, sz = lct and (time()-lct)/UNIT_TIME or 0, tonumber(cdata and (cdata.cacheSizeU or cdata.cacheSize)) or 500
+		if sz == 750 then
+			sz, cdata.cacheSize, cdata.cacheSizeU = 500
+		end
 		if td >= (sz-WARN_BUFFER) then
 			tex:SetVertexColor(1, td >= sz and 0 or 0.35, 0)
 			if not (mute or ag:IsPlaying()) then
@@ -80,7 +83,7 @@ end
 function E:SHOW_LOOT_TOAST(rt, rl, q, _4, _5, _6, source)
 	if rt == "currency" and source == 10 and rl:match("currency:824") then
 		cdata.lastCacheTime = time()
-		cdata.cacheSize = IsQuestFlaggedCompleted(37485) and 1000 or IsQuestFlaggedCompleted(UnitFactionGroup('player') == 'Horde' and 37935 or 38445) and 750 or cdata.cacheSize
+		cdata.cacheSize = (IsQuestFlaggedCompleted(37485) or q > 500) and 1000 or cdata.cacheSize
 		if q and cdata.cacheSizeU and (tonumber(cdata.cacheSizeU) or 0) < q then
 			cdata.cacheSizeU = nil
 		end

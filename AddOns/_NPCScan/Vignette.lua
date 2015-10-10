@@ -66,7 +66,7 @@ function private.VFrame:ZONE_CHANGED_NEW_AREA(event, ...)
 		currentZone = GetCurrentMapAreaID()--Get right info after we set map to right place.
 	end
 
-	if currentZone == TANAAN_ZONE_ID then --tannan 
+	if currentZone == TANAAN_ZONE_ID then
 		self:RegisterEvent("WORLD_MAP_UPDATE")
 	else
 		self:UnregisterEvent("WORLD_MAP_UPDATE")
@@ -88,22 +88,22 @@ end
 
 function private.VFrame:WORLD_MAP_UPDATE()
 	local numLandmarks = GetNumMapLandmarks()
-		for i= 1, numLandmarks do
-			local name, _, textureIndex = GetMapLandmarkInfo(i)
-			
-			if textureIndex == MAP_EVENT_ICON then 
-				local alertText = L.EVENT_ACTIVE:format(name)
+	for i = 1, numLandmarks do
+		local name, _, textureIndex = GetMapLandmarkInfo(i)
 
-				if private.AntiSpam(ANTI_SPAM_DELAY, name) then
-					private.Print(alertText, _G.RED_FONT_COLOR)
-					if private.Options.ShowAlertAsToast and alertText then
-						Toast:Spawn("_NPCScanAlertToast", alertText)
-					end
-					_G.PlaySoundFile(EVENT_WARNING_SOUND, "master")
-					_G.RaidNotice_AddMessage(RaidWarningFrame, alertText, ChatTypeInfo["RAID_WARNING"]);
+		if textureIndex == MAP_EVENT_ICON then
+			local alertText = L.EVENT_ACTIVE:format(name)
+
+			if private.AntiSpam(ANTI_SPAM_DELAY, name) then
+				private.Print(alertText, _G.RED_FONT_COLOR)
+				if private.Options.ShowAlertAsToast and alertText then
+					Toast:Spawn("_NPCScanAlertToast", alertText)
 				end
+				_G.PlaySoundFile(EVENT_WARNING_SOUND, "master")
+				_G.RaidNotice_AddMessage(RaidWarningFrame, alertText, ChatTypeInfo["RAID_WARNING"]);
 			end
 		end
+	end
 end
 
 -- An anti spam function to throttle spammy events
@@ -206,7 +206,7 @@ function private.VFrame:VIGNETTE_ADDED(event, instanceId, ...)
 	local npcId = private.NPC_NAME_TO_ID[name]
 	local alertText = nil
 
-	if not iconId then --Use case for broken or unknown Mob Info 
+	if not iconId then --Use case for broken or unknown Mob Info
 		Debug("Null Mob Data Returned")
 		alertText = L["FOUND_FORMAT"]:format("Vignette Mob")
 		private.Button:SetNPC(29147, "Vignette Mob", "Unknown Vignette")

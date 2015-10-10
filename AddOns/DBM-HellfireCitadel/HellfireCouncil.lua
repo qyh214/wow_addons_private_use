@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1432, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14442 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14511 $"):sub(12, -3))
 mod:SetCreatureID(92142, 92144, 92146)--Blademaster Jubei'thos (92142). Dia Darkwhisper (92144). Gurthogg Bloodboil (92146) 
 mod:SetEncounterID(1778)
 mod:SetZone()
@@ -42,7 +42,7 @@ local warnMarkoftheNecromancer		= mod:NewTargetAnnounce(184449, 4, nil, false)--
 local warnReapDelayed				= mod:NewAnnounce("reapDelayed", 2, 184476)
 local warnReap						= mod:NewSpellAnnounce(184476, 4)--Generic warning if you don't have reap, just to know it's going on
 --Gurtogg Bloodboil
-local warnAcidicWound				= mod:NewStackAnnounce(184847, 2, nil, "Tank")--As of PTR, this required no swaps, just the person with fel rage pulling boss away from tank long enough to clear stacks
+local warnAcidicWound				= mod:NewStackAnnounce(184847, 2, nil, false, 2)--As of PTR, this required no swaps, just the person with fel rage pulling boss away from tank long enough to clear stacks
 local warnFelRage					= mod:NewTargetCountAnnounce(184360, 4)
 
 --Blademaster Jubei'thos
@@ -66,16 +66,16 @@ local timerMirrorImageCD			= mod:NewCDTimer(75, 183885, nil, nil, nil, 1)
 local timerWickedStrikeCD			= mod:NewCDTimer(10.5, 186993, nil, nil, nil, 2)
 mod:AddTimerLine(Dia)
 --Dia Darkwhisper
-local timerMarkofNecroCD			= mod:NewCDTimer(60, 184449, nil, "Healer", nil, 5)
+local timerMarkofNecroCD			= mod:NewCDTimer(60, 184449, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)
 local timerReapCD					= mod:NewCDTimer(54, 184476, nil, nil, nil, 3)--54-71
-local timerNightmareVisageCD		= mod:NewCDTimer(30, 184657, nil, "Tank", nil, 5)
-local timerDarknessCD				= mod:NewCDTimer(75, 184681, nil, nil, nil, 2)
+local timerNightmareVisageCD		= mod:NewCDTimer(30, 184657, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerDarknessCD				= mod:NewCDTimer(75, 184681, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 mod:AddTimerLine(Gurtogg)
 --Gurtogg Bloodboil
 local timerFelRageCD				= mod:NewCDCountTimer(60, 184360, nil, nil, nil, 3)--60-84 (maybe this is HP based, cause this variation is stupid)
 local timerDemoLeapCD				= mod:NewCDTimer(75, 184366, nil, nil, nil, 2)--Most will never see this ability since he's 3rd in the special rotation and he dies first in most strats
 local timerTaintedBloodCD			= mod:NewNextCountTimer(15.8, 184357)
-local timerBloodBoilCD				= mod:NewCDTimer(7.3, 184355, nil, false, nil, 3)
+local timerBloodBoilCD				= mod:NewCDTimer(7.3, 184355, nil, false, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 

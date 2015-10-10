@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1391, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14437 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14511 $"):sub(12, -3))
 mod:SetCreatureID(89890)
 mod:SetEncounterID(1777)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
-mod:SetHotfixNoticeRev(14433)
+mod:SetHotfixNoticeRev(14473)
 mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
@@ -47,13 +47,13 @@ local specWarnSeedPosition				= mod:NewSpecialWarning("specWarnSeedPosition", ni
 local yellSeedsofDestruction			= mod:NewYell(181508)
 
 --Armed
-local timerRumblingFissureCD			= mod:NewCDTimer(39, 179582, nil, nil, nil, 5)
-local timerBefouledCD					= mod:NewCDTimer(38, 179711, nil, nil, nil, 3)
-local timerSoulCleaveCD					= mod:NewCDTimer(40, 179406, nil, nil, nil, 3)
-local timerCavitationCD					= mod:NewCDTimer(40, 181461, nil, nil, nil, 2)
+local timerRumblingFissureCD			= mod:NewNextTimer(39, 179582, nil, nil, nil, 5)
+local timerBefouledCD					= mod:NewNextTimer(38, 179711, nil, nil, nil, 3, nil, DBM_CORE_HEALER_ICON)
+local timerSoulCleaveCD					= mod:NewNextTimer(40, 179406, nil, nil, nil, 3)
+local timerCavitationCD					= mod:NewNextTimer(40, 181461, nil, nil, nil, 2)
 --Disarmed
-local timerDisarmCD						= mod:NewCDTimer(85.8, 179667, nil, nil, nil, 6)
-local timerSeedsofDestructionCD			= mod:NewCDCountTimer(14.5, 181508, nil, nil, nil, 3)--14.5-16
+local timerDisarmCD						= mod:NewNextTimer(85.8, 179667, nil, nil, nil, 6)
+local timerSeedsofDestructionCD			= mod:NewNextCountTimer(14.5, 181508, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--14.5-16
 
 --local berserkTimer					= mod:NewBerserkTimer(360)
 
@@ -149,6 +149,19 @@ local function warnSeeds(self)
 		end
 		if self.Options.SetIconOnSeeds and not self:IsLFR() then
 			self:SetIcon(targetName, i)
+		end
+		if self.Options.HudMapOnSeeds then
+			if i == 1 then--Yellow to match Star
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(181508, "star", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+			elseif i == 2 then--Orange to match Circle
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(181508, "circle", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+			elseif i == 3 then--Purple to match Diamond
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(181508, "diamond", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+			elseif i == 4 then--Green to match Triangle
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(181508, "triangle", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+			else--White to match  Moon
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(181508, "moon", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+			end
 		end
 	end
 end
@@ -282,16 +295,17 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:Schedule(3.5, warnWake, self)
 			countdownSeedsofDestruction:Start()--Everyone, because waves occur.
 		end
-		if self.Options.HudMapOnSeeds then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 13, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
-		end
 		seedsTargets[#seedsTargets+1] = args.destName
 		self:Unschedule(warnSeeds)
 		local expectedCount = self:IsMythic() and 5 or 4--(30 man is still only 4 seeds)
 		if #seedsTargets == expectedCount then--Have all targets, warn immediately
 			warnSeeds(self)
 		else
-			self:Schedule(0.5, warnSeeds, self)--0.5 may be too short, verify
+			if expectedCount == 5 then--Mythic, wait longer. Above all else on mythic we must have all 5 targets
+				self:Schedule(1, warnSeeds, self)
+			else--not mythic, can't wait forever since non mythic doesn't have an immediate warn when expected cap reached.
+				self:Schedule(0.5, warnSeeds, self)
+			end
 		end
 	elseif spellId == 182008 then
 		warnLatentEnergy:CombinedShow(1, args.destName)
@@ -338,9 +352,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		updateRangeFrame(self)
 	elseif spellId == 179407 then
 		warnDisembodied:CombinedShow(0.3, self.vb.SoulCleaveCount, args.destName)
-		countdownDisembodied:Start()
-		if not args:IsPlayer() then
-			specWarnDisembodied:Show(args.destName)
+		if args:IsPlayer() then
+			countdownDisembodied:Start()
+		else
+			local uId = DBM:GetRaidUnitId(args.destName)
+			if self:IsTanking(uId, "boss1") then
+				specWarnDisembodied:Show(args.destName)
+			end
 		end
 	end
 end
@@ -352,10 +370,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		updateRangeFrame(self)
 	elseif spellId == 181508 or spellId == 181515 then
 		if self.Options.SetIconOnSeeds and not self:IsLFR() then
-			self:SetIcon(args.destName, 0)--Number of targets not known yet, probably never will be if it's flexible and not mythic
+			self:SetIcon(args.destName, 0)
 		end
 		if self.Options.HudMapOnSeeds then
-			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+			DBMHudMap:FreeEncounterMarkerByTarget(181508, args.destName)
 		end
 	elseif spellId == 179667 then--Disarmed removed (armed)
 		self.vb.FissureCount = 0

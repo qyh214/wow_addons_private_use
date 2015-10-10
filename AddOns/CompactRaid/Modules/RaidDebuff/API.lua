@@ -8,7 +8,7 @@
 --
 -- module = CompactRaid:FindModule("RaidDebuff") -- Get the "RaidDebuff" module reference
 -- valid = module:VerifyExpansion(id) -- Verify the expansion(Major version: 1-Classic, 2-TBC, 3-WotLK, 4-Cataclysm, 5-MoP, 6-WoD, 7-?, ...)
--- debuff = module:RegisterDebuff(instanceId, bossId, spellId, level) -- Register a debuff
+-- debuff = module:RegisterDebuff(tierId, instanceId, bossId, spellId, level) -- Register a debuff
 
 ------------------------------------------------------------
 
@@ -23,6 +23,9 @@ local floor = floor
 local format = format
 local strmatch = strmatch
 local tonumber = tonumber
+local GetMapContinents = GetMapContinents
+local GetCurrentMapContinent = GetCurrentMapContinent
+local tinsert = tinsert
 local GetInstanceInfo = GetInstanceInfo
 local GetRealZoneText = GetRealZoneText
 local EJ_SelectInstance = EJ_SelectInstance
@@ -37,6 +40,7 @@ local module = CompactRaid:FindModule("RaidDebuff")
 if not module then return end
 
 local tierList = {}
+local continentList = {}
 local pendingList = {}
 local initDone
 
@@ -299,11 +303,14 @@ function module:GetZoneDebuffs()
 		return
 	end
 
+	local continent = continentList[GetCurrentMapContinent()]
+
 	local _, tier
 	for _, tier in pairs(tierList) do
 		local id, data
 		for id, data in pairs(tier.instances) do
-			if data.name == zone then
+			if data.name == zone or data.name == continent then
+				--print("zone debuff: ", data.name)
 				return data.debuffs
 			end
 		end
@@ -465,6 +472,16 @@ function module:InitAPI()
 		BuildInstanceList(i, "raid", tier.instances)
 		BuildInstanceList(i, "party", tier.instances)
 		tinsert(tierList, tier)
+	end
+
+	-- World bosses do not stay in "instances" since 6.0
+	local list = { GetMapContinents() }
+	local i
+	for i = 1, #list do
+		local name = list[i]
+		if type(name) == "string" then
+			tinsert(continentList, name)
+		end
 	end
 
 	initDone = 1

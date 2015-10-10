@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Omen", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14030 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14525 $"):sub(12, -3))
 mod:SetCreatureID(15467)
 mod:SetModelID(15879)
 mod:SetReCombatTime(10)
@@ -9,6 +9,10 @@ mod:SetZone(1)--Kalimdor
 mod:DisableWBEngageSync()
 
 mod:RegisterCombat("combat")
+
+mod:RegisterEvents(
+	"ZONE_CHANGED_NEW_AREA"
+)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 104903 26540",
@@ -29,6 +33,11 @@ function mod:OnCombatStart(delay)
 	timerStarfallCD:Start(11-delay)--^?
 end
 
+function mod:ZONE_CHANGED_NEW_AREA()
+
+end
+
+--[[
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 104903 then
@@ -46,3 +55,4 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+--]]

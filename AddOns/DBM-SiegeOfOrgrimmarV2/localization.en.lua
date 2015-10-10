@@ -167,7 +167,7 @@ L:SetOptionLocalization({
 	warnToxicCatalyst				= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej8036"),
 	specWarnActivatedVulnerable		= "Show special warning when you are vulnerable to activating paragons",
 	specWarnMoreParasites			= "Show special warning when you need more parasites",
-	yellToxicCatalyst				= DBM_CORE_AUTO_YELL_OPTION_TEXT:format("ej8036")
+	yellToxicCatalyst				= DBM_CORE_AUTO_YELL_OPTION_TEXT.yell:format("ej8036")
 })
 
 L:SetMiscLocalization({

@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 976 $")
-XPerl_SetModuleRevision("$Revision: 976 $")
+end, "$Revision: 978 $")
+XPerl_SetModuleRevision("$Revision: 978 $")
 
 -- Upvalus
 local _G = _G
@@ -3770,7 +3770,7 @@ function XPerl_SetExpectedAbsorbs(self)
 			if UnitIsAFK(self.partyid) then
 				bar:SetStatusBarColor(0.2, 0.2, 0.2, 0.7)
 			else
-				bar:SetStatusBarColor(0.14, 0.33, 0.7, 0.7)
+				bar:SetStatusBarColor(conf.colour.bar.absorb.r, conf.colour.bar.absorb.g, conf.colour.bar.absorb.b, conf.colour.bar.absorb.a)
 			end
 
 			bar:Show()
@@ -3812,7 +3812,9 @@ function XPerl_SetExpectedHealth(self)
 		if (amount and amount > 0 and not UnitIsDeadOrGhost(self.partyid)) then
 			local healthMax = UnitHealthMax(self.partyid)
 			local health = UnitHealth(self.partyid)
-			
+
+			bar:SetStatusBarColor(conf.colour.bar.healprediction.r, conf.colour.bar.healprediction.g, conf.colour.bar.healprediction.b, conf.colour.bar.healprediction.a)
+
 			bar:Show()
 			bar:SetMinMaxValues(0, healthMax)
 			bar:SetValue(min(healthMax, health + amount))

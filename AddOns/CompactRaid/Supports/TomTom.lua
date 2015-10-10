@@ -8,6 +8,8 @@
 -- 2013/11/11
 ------------------------------------------------------------
 
+if not select(2, GetAddOnInfo("TomTom")) then return end -- TomTom missing
+
 local GetPlayerMapPosition = GetPlayerMapPosition
 local atan = atan
 local abs = abs
@@ -28,9 +30,8 @@ frame:Hide()
 
 local icon = frame:CreateTexture(frame:GetName().."Icon", "OVERLAY")
 icon:SetAllPoints(frame)
+icon:SetTexture("Interface\\AddOns\\TomTom\\Images\\Arrow.blp") -- TomTom Arrows
 icon:Hide()
-
-if not icon:SetTexture("Interface\\AddOns\\TomTom\\Images\\Arrow.blp") then return end -- TomTom not exists
 
 ------------------------------------------------------------
 -- Calculate direction(0-359, in degrees) of the given unit

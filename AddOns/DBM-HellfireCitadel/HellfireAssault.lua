@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1426, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14442 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14508 $"):sub(12, -3))
 mod:SetCreatureID(90019)--Main ID is door, door death= win. 94515 Siegemaster Mar'tak
 mod:SetEncounterID(1778)
 mod:SetZone()
@@ -13,11 +13,11 @@ mod.respawnTime = 29
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 184394 181155 185816 183452 181968 180945",
+	"SPELL_CAST_START 184394 181155 185816 183452 181968 180945 190748",
 	"SPELL_AURA_APPLIED 180079 184243 180927 184369 180076",
 	"SPELL_AURA_APPLIED_DOSE 184243",
 	"SPELL_AURA_REMOVED 184369 184243",
-	"SPELL_CAST_SUCCESS 184370 190748",
+	"SPELL_CAST_SUCCESS 184370",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_ABSORBED",
 	"UNIT_DIED",
@@ -35,7 +35,7 @@ local warnFelfireMunitions			= mod:NewTargetAnnounce(180079, 1)
 local warnFelCaster					= mod:NewCountAnnounce("ej11411", 3, 181155)
 local warnBerserker					= mod:NewCountAnnounce("ej11425", 3, 184243)
 ----Gorebound Berserker (tank add probably)
-local warnSlam						= mod:NewStackAnnounce("OptionVersion2", 184243, 3, nil, false)--Useful, but optional, only useful if dps is too low
+local warnSlam						= mod:NewStackAnnounce(184243, 3, nil, false, 2)--Useful, but optional, only useful if dps is too low
 ----Grand Corruptor U'rogg
 local warnSiphon					= mod:NewTargetAnnounce(180076, 3, nil, "Healer")--Maybe needs to be special warning, who knows
 ----Grute
@@ -204,14 +204,14 @@ function mod:SPELL_CAST_START(args)
 		specWarnMetamorphosis:Show()
 	elseif spellId == 180945 then
 		warnNova:Show()
+	elseif spellId == 190748 then
+		self:BossTargetScanner(95653, "CannonTarget", 0.2, 10, true, nil, nil, nil, true)
 	end
 end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 184370 then--Axe over
 		updateRangeFrame(self)
-	elseif spellId == 190748 then
-		self:BossTargetScanner(95653, "CannonTarget", 0.2, 10, true, nil, nil, nil, true)
 	end
 end
 

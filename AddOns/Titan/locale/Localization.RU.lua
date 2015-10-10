@@ -522,6 +522,8 @@ L["TITAN_GOLD_COIN_LABELS"] = "Показать метки денег";
 L["TITAN_GOLD_COIN_ICONS"] = "Показать иконки";
 L["TITAN_GOLD_ONLY"] = "Показать только золото";
 L["TITAN_GOLD_COLORS"] = "Показать окраску золота";
+L["TITAN_GOLD_MERGE"] = "Merge Servers";
+L["TITAN_GOLD_SEPARATE"] = "Separate Servers";
 
 L["TITAN_VOLUME_TOOLTIP"] = "Контроль звука";
 L["TITAN_VOLUME_MASTER_TOOLTIP_VALUE"] = "Громкость общего звука: ";

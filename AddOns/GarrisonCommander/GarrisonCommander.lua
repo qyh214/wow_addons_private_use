@@ -1130,12 +1130,11 @@ end
 function addon:GetMain()
 	return GMF
 end
-function addon:CreateHeader(module)
+function addon:CreateHeader(module,PIN)
 	if not module then module=self end
 	-- Main Garrison Commander Header
 	local GCF=CreateFrame("Frame","GCF",UIParent,"GarrisonCommanderTitle")
 	local signature=me .. " " .. self.version
-	local PIN=module and "SHIPPIN" or "PIN"
 	local MOVEPANEL =module and "SHIPMOVEPANEL" or "MOVEPANEL"
 	GCF.Signature:SetText(signature)
 --[===[@alpha@
@@ -1149,7 +1148,6 @@ function addon:CreateHeader(module)
 	local main=module:GetMain()
 	GCF:SetFrameStrata(main:GetFrameStrata())
 	GCF:SetFrameLevel(main:GetFrameLevel()-2)
-	--if (not ns.bigscreen and module == self) then GCF:SetHeight(130) end
 	if module == self then GCF:SetHeight(130) end
 --[===[@debug@
 print(GCF:GetHeight())
@@ -1162,8 +1160,10 @@ print(GCF:GetHeight())
 	GCF:SetPoint("TOP",UIParent,0,-60)
 	if (self:GetBoolean(PIN)) then
 		GCF.Pin:SetChecked(true)
+		GCF:SetHeight(baseHeight)
 	else
 		GCF.Pin:SetChecked(false)
+		GCF:SetHeight(minHeight)
 	end
 
 	do
@@ -1217,6 +1217,7 @@ print(GCF:GetHeight())
 	GCF:RegisterForDrag("LeftButton")
 	GCF:SetScript("OnDragStart",function(frame)if self:GetBoolean(MOVEPANEL) then frame:StartMoving() end end)
 	GCF:SetScript("OnDragStop",function(frame) frame:StopMovingOrSizing() end)
+	GCF:Show()
 	self:Trigger(MOVEPANEL)
 	return GCF
 end
@@ -1497,7 +1498,7 @@ print("Setup")
 	self:CheckMP()
 	if MP then self:AddToggle("CKMP",true,L["Use GC Interface"],L["Switch between Garrison Commander and Master Plan interface for missions"]) end
 	self:CheckGMM()
-	GCF=self:CreateHeader()
+	GCF=self:CreateHeader(self,"PIN")
 	local tabMC=CreateFrame("CheckButton",nil,GMF,"SpellBookSkillLineTabTemplate")
 	GMF.tabMC=tabMC
 	tabMC.tooltip="Open Garrison Commander Mission Control"
@@ -1519,7 +1520,7 @@ print("Setup")
 	tabHP:SetPushedTexture("Interface\\ICONS\\INV_Misc_QuestionMark.blp")
 	tabHP:Show()
 	tabMC:SetScript("OnClick",function(this,...) addon:OpenMissionControlTab() end)
-	tabCF:SetScript("OnClick",function(this,...) addon:Gui() end)
+	tabCF:SetScript("OnClick",function(this,...) GMF:Hide() addon:Gui() end)
 	tabHP:SetScript("OnClick",function(this,button) addon:ShowHelpWindow(this,button) end)
 	tabHP:SetPoint('TOPLEFT',GCF,'TOPRIGHT',0,-10)
 	tabCF:SetPoint('TOPLEFT',GCF,'TOPRIGHT',0,-60)

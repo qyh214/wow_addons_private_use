@@ -1,6 +1,6 @@
 -- HereBeDragons is a data API for the World of Warcraft mapping system
 
-local MAJOR, MINOR = "HereBeDragons-1.0", 10
+local MAJOR, MINOR = "HereBeDragons-1.0", 11
 assert(LibStub, MAJOR .. " requires LibStub")
 
 local HereBeDragons, oldversion = LibStub:NewLibrary(MAJOR, MINOR)
@@ -17,6 +17,9 @@ HereBeDragons.microDungeons    = HereBeDragons.microDungeons or {}
 HereBeDragons.transforms       = HereBeDragons.transforms or {}
 
 HereBeDragons.callbacks        = CBH:New(HereBeDragons, nil, nil, false)
+
+-- constants
+local TERRAIN_MATCH = "_terrain%d+$"
 
 -- Lua upvalues
 local PI2 = math.pi * 2
@@ -148,9 +151,10 @@ if not oldversion or oldversion < 10 then
         end
 
         -- dimensions of the map
-        local instanceID, _, _, left, right, top, bottom = GetAreaMapInfo(id)
+        local originalInstanceID, _, _, left, right, top, bottom = GetAreaMapInfo(id)
+        local instanceID = originalInstanceID
         if (left and top and right and bottom and (left ~= 0 or top ~= 0 or right ~= 0 or bottom ~= 0)) then
-            instanceID, left, right, top, bottom = applyMapTransforms(instanceID, left, right, top, bottom)
+            instanceID, left, right, top, bottom = applyMapTransforms(originalInstanceID, left, right, top, bottom)
             mapData[id] = { left - right, top - bottom, left, top }
         else
             mapData[id] = { 0, 0, 0, 0 }
@@ -162,7 +166,7 @@ if not oldversion or oldversion < 10 then
         local mapFile = GetMapInfo()
         if mapFile then
             -- remove phased terrain from the map names
-            mapFile = mapFile:gsub("_terrain%d+$", "")
+            mapFile = mapFile:gsub(TERRAIN_MATCH, "")
 
             if not mapToID[mapFile] then mapToID[mapFile] = id end
             mapData[id].mapFile = mapFile
@@ -198,6 +202,7 @@ if not oldversion or oldversion < 10 then
                 SetDungeonMapLevel(f)
                 local _, right, bottom, left, top = GetCurrentMapDungeonLevel()
                 if left and top and right and bottom then
+                    instanceID, left, right, top, bottom = applyMapTransforms(originalInstanceID, left, right, top, bottom)
                     mapData[id].floors[f] = { left - right, top - bottom, left, top }
                     mapData[id].floors[f].instance = mapData[id].instance
                 elseif f == 1 and DungeonUsesTerrainMap() then
@@ -327,7 +332,7 @@ end
 local function getMapDataTable(mapID, level)
     if not mapID then return nil end
     if type(mapID) == "string" then
-        mapID = mapID:gsub("_terrain%d+$", "")
+        mapID = mapID:gsub(TERRAIN_MATCH, "")
         mapID = mapToID[mapID]
     end
     local data = mapData[mapID]
@@ -369,7 +374,7 @@ local function UpdateCurrentPosition()
 
     -- we want to ignore any terrain phasings
     if mapFile then
-        mapFile = mapFile:gsub("_terrain%d+$", "")
+        mapFile = mapFile:gsub(TERRAIN_MATCH, "")
     end
 
     -- hack to update the mapfile for the garrison map (as it changes when the player updates his garrison)
@@ -424,7 +429,7 @@ end
 -- @param mapID numeric mapID or mapFile
 function HereBeDragons:GetLocalizedMap(mapID)
     if type(mapID) == "string" then
-        mapID = mapID:gsub("_terrain%d+$", "")
+        mapID = mapID:gsub(TERRAIN_MATCH, "")
         mapID = mapToID[mapID]
     end
     return mapData[mapID] and mapData[mapID].name or nil
@@ -434,7 +439,7 @@ end
 -- @param mapFile Map File
 function HereBeDragons:GetMapIDFromFile(mapFile)
     if mapFile then
-        mapFile = mapFile:gsub("_terrain%d+$", "")
+        mapFile = mapFile:gsub(TERRAIN_MATCH, "")
         return mapToID[mapFile]
     end
     return nil
@@ -481,7 +486,7 @@ end
 function HereBeDragons:GetNumFloors(mapID)
     if not mapID then return 0 end
     if type(mapID) == "string" then
-        mapID = mapID:gsub("_terrain%d+$", "")
+        mapID = mapID:gsub(TERRAIN_MATCH, "")
         mapID = mapToID[mapID]
     end
 

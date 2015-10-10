@@ -15,7 +15,6 @@ local BOSS
 -- Hellfire Assault
 BOSS = 1426
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 184243)
-module:RegisterDebuff(TIER, INSTANCE, BOSS, 184238)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 187052)
 
 -- Iron Reaver
@@ -24,17 +23,19 @@ module:RegisterDebuff(TIER, INSTANCE, BOSS, 182075)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 187172)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 179889)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 182523)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 182280, 5)
 
 -- Kormrok
 BOSS = 1392
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 181321)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 187112, 4)
 
 -- Hellfire High Council
 BOSS = 1432
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 184449, 5)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 184355)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 184847, 4)
-module:RegisterDebuff(TIER, INSTANCE, BOSS, 184357)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 154992)
 
 -- Kilrogg Deadeye
 BOSS = 1396
@@ -49,8 +50,7 @@ module:RegisterDebuff(TIER, INSTANCE, BOSS, 187089)
 
 -- Gorefiend
 BOSS = 1372
-module:RegisterDebuff(TIER, INSTANCE, BOSS, 181295)
-module:RegisterDebuff(TIER, INSTANCE, BOSS, 179867)
+--module:RegisterDebuff(TIER, INSTANCE, BOSS, 181295)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 179864)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 179977)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 179907)
@@ -64,15 +64,18 @@ module:RegisterDebuff(TIER, INSTANCE, BOSS, 185510)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 181824)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 179219)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 181753)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 185239, 4)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 185752, 5)
 
 -- Socrethar the Eternal
 BOSS = 1427
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 182038)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 180415)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 190776)
-module:RegisterDebuff(TIER, INSTANCE, BOSS, 184124)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 184124, 5)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 184239)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 182900)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 182992, 5)
 
 -- Fel Lord Zakuun
 BOSS = 1391
@@ -99,6 +102,7 @@ BOSS = 1394
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 185241)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 180164, 5)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 180000, 4)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 180526, 5)
 
 -- Mannoroth
 BOSS = 1395
@@ -109,6 +113,7 @@ module:RegisterDebuff(TIER, INSTANCE, BOSS, 184252)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 181359)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 181597, 4)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 186350)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 181841)
 
 -- Archimonde
 BOSS = 1438
@@ -119,3 +124,13 @@ module:RegisterDebuff(TIER, INSTANCE, BOSS, 184931)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 186123)
 
 -- Common
+module:RegisterDebuff(TIER, INSTANCE, 0, 190735)
+module:RegisterDebuff(TIER, INSTANCE, 0, 188189)
+module:RegisterDebuff(TIER, INSTANCE, 0, 188282, 4)
+module:RegisterDebuff(TIER, INSTANCE, 0, 188287)
+module:RegisterDebuff(TIER, INSTANCE, 0, 178064)
+module:RegisterDebuff(TIER, INSTANCE, 0, 187130, 4)
+module:RegisterDebuff(TIER, INSTANCE, 0, 176670, 4)
+module:RegisterDebuff(TIER, INSTANCE, 0, 187819)
+module:RegisterDebuff(TIER, INSTANCE, 0, 189533)
+module:RegisterDebuff(TIER, INSTANCE, 0, 189551, 4)

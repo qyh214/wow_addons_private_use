@@ -15,8 +15,8 @@ DBM_CORE_LOAD_GUI_COMBAT			= "GUI cannot be initially loaded in combat. GUI will
 DBM_CORE_BAD_LOAD					= "DBM has detected your mod for this instance failed to fully load correctly because of combat. As soon as you are out of combat, please do /console reloadui as soon as possible."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s could not be loaded because your DBM-Core does not meet requirements. An updated version is required"
 
-DBM_CORE_WHATS_NEW					= "New in this version: Improved callbacks to allow 3rd party mods a lot more access to information from DBM events."
---DBM_CORE_WHATS_NEW_LINK			= "New in this version: DBM timers now support multiple colors based on what type of spell the timer is for. To learn more about this feature you can read about it by |HDBM:forumsnews|h|cff3588ffclicking here|r"
+--DBM_CORE_WHATS_NEW				= "New in this version: New timer options for inline icons and a new bar color option with custom user options."
+DBM_CORE_WHATS_NEW_LINK				= "New in this version: New timer options for inline icons and a new bar color option with custom user options.. To learn more about this feature you can read about it by |HDBM:forumsnews|h|cff3588ffclicking here|r"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM has disabled dynamic range frame on this fight do to insufficient information about number of players needed to affect clump check for a group of your size."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM has disabled add count warnings on this fight do to insufficient information about number of adds that spawn for a group of your size."
@@ -53,7 +53,7 @@ DBM_CORE_TRANSCRIPTOR_LOG_END		= "Transcriptor logging ended."
 
 DBM_CORE_COMBAT_STARTED_AI_TIMER	= "My CPU is a neural net processor; a learning computer. (This fight will use the new timer AI feature to generate timer approximations)"
 
-DBM_CORE_PROFILE_NOT_FOUND			= "<Deadly Boss Mods> Your current profile is corrupted. DBM will load 'Default' profile."
+DBM_CORE_PROFILE_NOT_FOUND			= "<DBM> Your current profile is corrupted. DBM will load 'Default' profile."
 DBM_CORE_PROFILE_CREATED			= "'%s' profile created."
 DBM_CORE_PROFILE_CREATE_ERROR		= "Create profile failed. Invalid profile name."
 DBM_CORE_PROFILE_CREATE_ERROR_D		= "Create profile failed. '%s' profile already exists."
@@ -95,9 +95,9 @@ DBM_CORE_MOD_DEFAULT_LOADED			= "Default options for this fight have been loaded
 DBM_CORE_WORLDBOSS_ENGAGED			= "%s was possibly engaged on your realm at %s percent health. (Sent by %s)"
 DBM_CORE_WORLDBOSS_DEFEATED			= "%s was possibly defeated on your realm (Sent by %s)."
 
-DBM_CORE_TIMER_FORMAT_SECS			= "%d |4second:seconds;"
+DBM_CORE_TIMER_FORMAT_SECS			= "%.2f |4second:seconds;"
 DBM_CORE_TIMER_FORMAT_MINS			= "%d |4minute:minutes;"
-DBM_CORE_TIMER_FORMAT				= "%d |4minute:minutes; and %d |4second:seconds;"
+DBM_CORE_TIMER_FORMAT				= "%d |4minute:minutes; and %.2f |4second:seconds;"
 
 DBM_CORE_MIN						= "min"
 DBM_CORE_MIN_FMT					= "%d min"
@@ -158,7 +158,7 @@ DBM_CORE_UPDATEREMINDER_HOTFIX_ALPHA	= "DBM version you are on has known issues 
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "WARNING: Do to your Deadly Boss Mods being out of date, DBM has been disabled until updated, since this is a major game patch. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow group members. Make sure you download a newer version from deadlybossmods.com or curse as soon as possible."
 DBM_CORE_UPDATEREMINDER_TESTVERSION		= "WARNING: You are using a version of Deadly Boss Mods not intended to be used with this game version. Please make sure you download the appropriate version for your game client from deadlybossmods.com or curse."
 DBM_CORE_VEM							= "WARNING: You are running both Deadly Boss Mods and Voice Encounter Mods. DBM will not run in this configuration and therefore will not be loaded."
-DBM_CORE_3RDPROFILES					= "WARNING: DBM-Profiles not compatible with this version of DBM. It must be removed before DBM can proceed to avoid conflict."
+DBM_CORE_3RDPROFILES					= "WARNING: DBM-Profiles not compatible with this version of DBM. It must be removed before DBM can proceed, to avoid conflict."
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "WARNING: This DBM update will not work correctly if you don't fully restart your game client. This update contains new files or .toc file changes that cannot be loaded via ReloadUI. You may encounter broken functionality or errors if you continue without a client restart."
 DBM_CORE_OUT_OF_DATE_NAG				= "Your version of Deadly Boss Mods is out-of-date. It is recommended you update for this fight so you are not missing an important alert or timer or a yell rest of raid is expecting to see from you."
 DBM_CORE_DISABLED_REMINDER				= "REMINDER: Deadly Boss Mods is loaded but it is currently disabled in options. To enable, do /dbm in your chat and check the 'Enable' box in 'Options/General Options'"
@@ -208,11 +208,11 @@ DBM_CORE_SLASHCMD_HELP				= {
 DBM_CORE_SLASHCMD_HELP2				= {
 	"Available slash commands:",
 	"-----------------",
-	"/dbm pull <sec>: Sends a pull timer for <sec> seconds to the raid (requires leader/promoted).",
-	"/dbm break <min>: Sends a break timer for <min> minutes to the raid (requires leader/promoted).",
+	"/dbm pull <sec>: Sends a pull timer for <sec> seconds to the raid (requires promoted. alias: pull).",
+	"/dbm break <min>: Sends a break timer for <min> minutes to the raid (requires promoted. alias: break).",
 	"/dbm version: Performs a boss mod version check (alias: ver).",
 	"/dbm version2: Performs a boss mod version check that also whispers out of date users (alias: ver2).",
-	"/dbm lockout: Asks raid members for their current raid instance lockouts (aliases: lockouts, ids) (requires leader/promoted).",
+	"/dbm lockout: Asks raid members for their current raid instance lockouts (aliases: lockouts, ids) (requires promoted).",
 	"/dbm lag: Performs a raid-wide latency check."
 }
 DBM_CORE_TIMER_USAGE	= {
@@ -239,7 +239,7 @@ DBM_CORE_FRONT						= "Front"
 DBM_CORE_INTERMISSION				= "Intermission"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
 
 DBM_CORE_BREAK_USAGE				= "Break timer cannot be longer than 60 minutes. Make sure you're inputting time in minutes and not seconds."
-DBM_CORE_BREAK_START				= "Break starting now -- you have %s minute(s)! (Sent by %s)"
+DBM_CORE_BREAK_START				= "Break starting now -- you have %s! (Sent by %s)"
 DBM_CORE_BREAK_MIN					= "Break ends in %s minute(s)!"
 DBM_CORE_BREAK_SEC					= "Break ends in %s seconds!"
 DBM_CORE_TIMER_BREAK				= "Break time!"
@@ -248,6 +248,8 @@ DBM_CORE_ANNOUNCE_BREAK_OVER		= "Break has ended"
 DBM_CORE_TIMER_PULL					= "Pull in"
 DBM_CORE_ANNOUNCE_PULL				= "Pull in %d sec. (Sent by %s)"
 DBM_CORE_ANNOUNCE_PULL_NOW			= "Pull now!"
+DBM_CORE_ANNOUNCE_PULL_TARGET		= "Pulling %s in %d sec. (Sent by %s)"
+DBM_CORE_ANNOUNCE_PULL_NOW_TARGET	= "Pulling %s now!"
 DBM_CORE_GEAR_WARNING				= "Warning: Check gear. Your equipped ilvl is %d lower than bag ilvl"
 DBM_CORE_GEAR_WARNING_WEAPON		= "Warning: Check if your weapon is correctly equipped."
 DBM_CORE_GEAR_FISHING_POLE			= "Fishing Pole"
@@ -256,6 +258,7 @@ DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Achievement"--BATTLE_PET_SOURCE_6
 
 -- Auto-generated Warning Localizations
 DBM_CORE_AUTO_ANNOUNCE_TEXTS = {
+	you			= "%s on YOU",
 	target		= "%s on >%%s<",
 	targetcount	= "%s (%%s) on >%%s<",
 	spell		= "%s",
@@ -274,6 +277,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS = {
 
 local prewarnOption = "Show pre-warning for $spell:%s"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS = {
+	you			= "Announce when $spell:%s on you",
 	target		= "Announce $spell:%s targets",
 	targetcount	= "Announce $spell:%s targets (with count)",
 	spell		= "Show warning for $spell:%s",
@@ -478,7 +482,18 @@ DBM_CORE_LAG_HEADER					= "Deadly Boss Mods - Latency Results"
 DBM_CORE_LAG_ENTRY					= "%s: World delay [%d ms] / Home delay [%d ms]"
 DBM_CORE_LAG_FOOTER					= "No Response: %s"
 
---Globals are fixed to 16 pixel, we use same path but 22 pixel size. This is why not using blizzard globals
-DBM_CORE_TANK_ICON = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES.blp:22:22:0:0:64:64:0:19:22:41|t"
-DBM_CORE_HEALER_ICON = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES.blp:22:22:0:0:64:64:20:39:1:20|t"
-DBM_CORE_DAMAGE_ICON = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES.blp:22:22:0:0:64:64:20:39:22:41|t"
+--Role Icons
+DBM_CORE_TANK_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:6:21:7:27|t"
+DBM_CORE_HEALER_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:70:86:7:27|t"
+DBM_CORE_DAMAGE_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:39:55:7:27|t"
+--Importance Icons
+DBM_CORE_HEROIC_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:22:22:0:0:255:66:102:118:7:27|t"
+DBM_CORE_DEADLY_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:22:22:0:0:255:66:133:153:7:27|t"
+DBM_CORE_IMPORTANT_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:168:182:7:27|t"
+--Type Icons
+DBM_CORE_INTERRUPT_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:198:214:7:27|t"
+DBM_CORE_MAGIC_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:229:247:7:27|t"
+DBM_CORE_POISON_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:39:55:40:58|t"
+DBM_CORE_DISEASE_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:70:86:40:58|t"
+DBM_CORE_CURSE_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:6:21:40:58|t"
+DBM_CORE_ENRAGE_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:102:118:40:58|t"

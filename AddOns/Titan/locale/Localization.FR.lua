@@ -521,6 +521,8 @@ L["TITAN_GOLD_COIN_NONE"] = "Ne rien afficher";
 L["TITAN_GOLD_COIN_LABELS"] = "Afficher le texte des pièces";
 L["TITAN_GOLD_COIN_ICONS"] = "Afficher les images des pièces";
 L["TITAN_GOLD_ONLY"] = "Afficher uniquement les pièces d'or";
+L["TITAN_GOLD_MERGE"] = "Merge Servers";
+L["TITAN_GOLD_SEPARATE"] = "Separate Servers";
 
 L["TITAN_VOLUME_TOOLTIP"] = "Contrôle du volume";
 L["TITAN_VOLUME_MASTER_TOOLTIP_VALUE"] = "Volume global : ";

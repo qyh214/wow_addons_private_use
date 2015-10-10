@@ -524,6 +524,8 @@ L["TITAN_GOLD_COIN_LABELS"] = "显示标签文字";
 L["TITAN_GOLD_COIN_ICONS"] = "显示标签图标";
 L["TITAN_GOLD_ONLY"] = "只显示金";
 L["TITAN_GOLD_COLORS"] = "显示金币颜色";
+L["TITAN_GOLD_MERGE"] = "Merge Servers";
+L["TITAN_GOLD_SEPARATE"] = "Separate Servers";
 
 L["TITAN_VOLUME_TOOLTIP"] = "音量信息";
 L["TITAN_VOLUME_MASTER_TOOLTIP_VALUE"] = "主音量: ";

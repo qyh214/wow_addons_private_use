@@ -98,7 +98,7 @@ local GarrisonFollower_OnDoubleClick do -- Adding followers to missions
 	local old = GarrisonFollowerListButton_OnClick
 	local function resetAndReturn(followerFrame, ...)
 		followerFrame.FollowerList.canExpand = true
-		GarrisonFollowerList_Update(followerFrame)
+		followerFrame.FollowerList:UpdateData()
 		return ...
 	end
 	local function AddToMission(fi)
@@ -523,7 +523,7 @@ hooksecurefunc(GarrisonMissionFrame, "ShowMission", function()
 	end
 	lfgButton:Show()
 end)
-EV.GARRISON_MISSION_NPC_CLOSE = clearSearch
+EV.GARRISON_MISSION_NPC_CLOSED = clearSearch
 
 do -- Save tentative party on minimize
 	local function Minimize_OnClick(self)
@@ -771,9 +771,12 @@ end)
 
 do -- Follower headcounts
 	local mf = GarrisonMissionFrame.MissionTab.MissionList.MaterialFrame
-	local ff, fs = CreateFrame("Frame", nil, mf), mf:CreateFontString(nil, "ARTWORK", "GameFontHighlightLarge")
+	local ff = CreateFrame("Frame", nil, mf)
+	local fs = ff:CreateFontString(nil, "ARTWORK", "GameFontHighlightLarge")
+	ff.Text, mf.MPHeadcount = fs, ff
 	local ni, nw, nx, nm = 0, 0, 0, 0
-	ff:SetWidth(190) ff:SetPoint("TOPLEFT") ff:SetPoint("BOTTOMLEFT")
+	ff:SetPoint("TOPLEFT")
+	ff:SetPoint("BOTTOMRIGHT", mf, "BOTTOMLEFT", 190, 0)
 	fs:SetPoint("LEFT", 16, 0)
 	ff:SetScript("OnEnter", function(self)
 		GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
@@ -819,10 +822,42 @@ do -- Follower headcounts
 		if nw > 0 then t = (t and t .. spacer or "") .. nw .. ico .. "255:208:0|t" end
 		if nm > 0 then t = (t and t .. spacer or "") .. nm .. ico .. "125:230:255|t" end
 		fs:SetText(t or "")
+		local _, nr = GetCurrencyInfo(824)
+		local low = nr and nr < 150 and 0 or 1
+		mf.Materials:SetTextColor(1, low, low)
 	end
 	
 	hooksecurefunc(GarrisonMissionFrame, "UpdateCurrency", sync)
 	EV.GARRISON_MISSION_NPC_OPENED = sync
+	mf:HookScript("OnShow", sync)
+end
+do -- Garrison Resources in shipyard
+	local mf = GarrisonShipyardFrameFollowers.MaterialFrame
+	local ff, fs, fi = CreateFrame("Frame", nil, mf), mf:CreateFontString(nil, "ARTWORK", "GameFontHighlightLarge"), mf:CreateTexture()
+	fi:SetSize(30, 30)
+	fi:SetPoint("LEFT", 8, 0)
+	fi:SetAtlas("GarrMission_CurrencyIcon-Material")
+	ff:SetWidth(190) ff:SetPoint("TOPLEFT") ff:SetPoint("BOTTOMLEFT")
+	fs:SetPoint("LEFT", 40, 0)
+	ff:SetScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_NONE")
+		GameTooltip:SetPoint("BOTTOMLEFT", mf, "TOPRIGHT")
+		GameTooltip:SetCurrencyTokenByID(GARRISON_CURRENCY)
+		GameTooltip:Show()
+	end)
+	ff:SetScript("OnLeave", HideOwnedGameTooltip)
+	for _, s in pairs({mf:GetRegions()}) do
+		if s:IsObjectType("FontString") and s:GetText() == GARRISON_YOUR_MATERIAL then
+			s:Hide()
+		end
+	end
+	local function sync()
+		local _, cur = GetCurrencyInfo(GARRISON_CURRENCY)
+		fs:SetText(BreakUpLargeNumbers(cur or 0))
+	end
+	
+	hooksecurefunc(GarrisonShipyardFrame, "UpdateCurrency", sync)
+	EV.GARRISON_SHIPYARD_NPC_OPENED = sync
 	mf:HookScript("OnShow", sync)
 end
 do -- Scary follower warning
@@ -1071,7 +1106,7 @@ do -- Ship re-fitting
 		function refit.SyncLater()
 			if not refit.dirty then
 				refit.dirty = true
-				C_Timer.After(0, refit.Sync)
+				T.After0(refit.Sync)
 			end
 		end
 	end
@@ -1104,4 +1139,74 @@ do -- Ship re-fitting
 	end)
 	
 	hooksecurefunc(GarrisonShipyardFrame, "UpdateMissionData", refit.SyncLater)
+end
+do
+	local ctlContainer = CreateFrame("Frame", nil, GarrisonShipyardFrame.MissionTab.MissionList) do
+		SHIP_MISSION_PAGE.MPStatContainer = ctlContainer
+		ctlContainer:SetPoint("BOTTOM")
+		ctlContainer:SetSize(108, 43)
+		local t, is, ts = ctlContainer:CreateTexture(nil, "BACKGROUND"), 18, 1/16
+		t:SetAtlas("Garr_Mission_MaterialFrame")
+		t:SetTexCoord(0, ts, 0, 1)
+		t:SetPoint("TOPLEFT")
+		t:SetPoint("BOTTOMRIGHT", ctlContainer, "BOTTOMLEFT", is, 0)
+		t = ctlContainer:CreateTexture(nil, "BACKGROUND")
+		t:SetTexCoord(ts, 1-ts, 0, 1)
+		t:SetAtlas("Garr_Mission_MaterialFrame")
+		t:SetPoint("TOPLEFT", is, 0)
+		t:SetPoint("BOTTOMRIGHT", -is, 0)
+		t = ctlContainer:CreateTexture(nil, "BACKGROUND")
+		t:SetTexCoord(1-ts, 1, 0, 1)
+		t:SetAtlas("Garr_Mission_MaterialFrame")
+		t:SetPoint("TOPRIGHT")
+		t:SetPoint("BOTTOMLEFT", ctlContainer, "BOTTOMRIGHT", -is, 0)
+		t = ctlContainer:CreateTexture(nil, "ARTWORK")
+		t:SetSize(30,30)
+		t:SetPoint("RIGHT", -8, 0)
+		t:SetAtlas("ShipMission_CurrencyIcon-Oil", false)
+		t = ctlContainer:CreateFontString(nil, "ARTWORK", "GameFontHighlightLarge")
+		t:SetPoint("RIGHT", -35, 0)
+		t:SetText("44,444")
+		ctlContainer.MaterialCount = t
+	end
+	local function sync()
+		ctlContainer.MaterialCount:SetText(BreakUpLargeNumbers(select(2, GetCurrencyInfo(1101)) or 0))
+		ctlContainer:SetFrameLevel(GarrisonShipyardFrame.BorderFrame:GetFrameLevel()+1)
+		ctlContainer:SetWidth((ctlContainer.MaterialCount:GetStringWidth() or 50) + 52)
+		if ctlContainer:IsVisible() then
+			C_Garrison.RequestShipmentInfo()
+		end
+	end
+	EV.CURRENCY_DISPLAY_UPDATE = sync
+	ctlContainer:SetScript("OnShow", sync)
+	ctlContainer:SetScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_NONE")
+		GameTooltip:SetPoint("BOTTOM", self, "TOP")
+		GameTooltip:SetText("!")
+		GameTooltipTextLeft1:SetText("")
+		for i=1, 2 do
+			local on, oc, oi = GetCurrencyInfo(i == 1 and 1101 or 824)
+			GameTooltip:AddDoubleLine(("|T%s:0:0:0:0:64:64:6:58:6:58|t %s"):format(oi, on), NORMAL_FONT_COLOR_CODE .. BreakUpLargeNumbers(oc), 1,1,1)
+		end
+		local sid, name = C_Garrison.GetOwnedBuildingInfoAbbrev(98)
+		local ts, _, _, tl = select(5, C_Garrison.GetLandingPageShipmentInfo(sid))
+		local sf, nf = C_Garrison.GetFollowers(2), 0
+		local atCap = (#sf + (ts or 0)) == C_Garrison.GetFollowerSoftCap(2)
+		for i=1,#sf do
+			if sf[i].status == nil then
+				nf = nf + 1
+			end
+		end
+		if tl then
+		elseif ts == 1 then
+			tl = "|cff20c020" .. L"Ready"
+		else
+			tl = (atCap and "|cffc0c0c0" or "|cffc02020") .. L"Idle"
+		end
+		local outof = atCap and "|cffc0c0c0/" or "|cffc02020/"
+		GameTooltip:AddDoubleLine("|TInterface\\Icons\\INV_Garrison_Cargoship:0:0:0:0:64:64:6:58:6:58|t " .. L"Idle ships", nf .. outof .. #sf, 1,1,1)
+		GameTooltip:AddDoubleLine("|TInterface\\Icons\\Garrison_Build:0:0:0:0:64:64:6:58:6:58|t " .. name, tl, 1,1,1)
+		GameTooltip:Show()
+	end)
+	ctlContainer:SetScript("OnLeave", HideOwnedGameTooltip)
 end

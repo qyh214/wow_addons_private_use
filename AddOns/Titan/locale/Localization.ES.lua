@@ -1,4 +1,4 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("Titan","esES")
+﻿local L = LibStub("AceLocale-3.0"):NewLocale("Titan","esES")
 if not L then return end
 
 L["TITAN_DEBUG"] = "<Titan>";
@@ -538,6 +538,8 @@ L["TITAN_GOLD_COIN_LABELS"] = "Mostrar etiquetas en texto";
 L["TITAN_GOLD_COIN_ICONS"] = "Mostrar etiquetas en texto";
 L["TITAN_GOLD_ONLY"] = "Mostrar sólo oro";
 L["TITAN_GOLD_COLORS"] = "Mostrar colores en el oro";
+L["TITAN_GOLD_MERGE"] = "Unificar servidores";
+L["TITAN_GOLD_SEPARATE"] = "Separar servidores";
 
 L["TITAN_VOLUME_TOOLTIP"] = "Control de Volumen";
 L["TITAN_VOLUME_MASTER_TOOLTIP_VALUE"] = "Volumen general: ";

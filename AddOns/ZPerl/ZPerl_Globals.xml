@@ -224,7 +224,7 @@
 					</Anchor>
 				</Anchors>
 				<BarTexture name="$parenttex" file="Interface\TargetingFrame\UI-StatusBar"/>
-				<BarColor r="0" g="1" b="1"/>
+				<BarColor r="0" g="1" b="1" a="1"/>
 				<Scripts>
 					<OnLoad>
 						XPerl_SetChildMembers(self)

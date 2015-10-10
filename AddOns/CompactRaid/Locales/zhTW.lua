@@ -110,7 +110,7 @@ addon.L = {
 	["cannot change groups in combat"] = "無法在戰鬥中開啟換隊模式。",
 	["show privilege icons"] = "顯示權限圖標",
 	["show friendly npc"] = "顯示友善NPC（角色設置）",
-	["show direction arrow"] = "顯示方向箭頭",
+	["show direction arrow"] = "顯示方向箭頭（需要TomTom）",
 	["character profiles"] = "角色配置數據",
 	["deleting profile"] = "刪除角色配置數據|cff00ff00%s|r，你確定嗎？",
 }

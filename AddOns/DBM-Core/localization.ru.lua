@@ -1,7 +1,7 @@
 ﻿if GetLocale() ~= "ruRU" then return end
 
-DBM_CORE_NEED_SUPPORT				= "Вы - программист или хороший переводчик? Нам нужна ваша помощь в локализации DBM на другие языки! Посетите http://forums.elitistjerks.com/topic/132449-dbm-localizers-needed/ для получения дополнительной информации."
-DBM_CORE_NEED_LOGS					= "DBM needs Transcriptor (http://www.wowace.com/addons/transcriptor/) logs of these test fights to make best mods possible. If you want to help, log these fights with transcriptor and post them to http://forums.elitistjerks.com/topic/132677-deadly-boss-mods-60-testing/ (zip them up, they can get quite large otherwise). Only interested in 6.0 raid logs. Do not need dungeon logs."
+DBM_CORE_NEED_SUPPORT				= "Вы - программист или хороший переводчик? Нам нужна ваша помощь в локализации DBM на другие языки! Если вы можете помочь, посетите наш форум |HDBM:localizersneeded|h|cff3588ffнажав здесь|r"
+DBM_CORE_NEED_LOGS					= "DBM needs Transcriptor (http://www.wowace.com/addons/transcriptor/) logs of these test fights to make best mods possible. If you want to help, log these fights with transcriptor and post them to our forums. Only interested in 7.0 raid & dungeon logs."
 DBM_HOW_TO_USE_MOD					= "Добро пожаловать в DBM. Для доступа к настройкам наберите /dbm в чате. При желании, загрузите определенные зоны вручную для изменений специфических настроек для каждого босса. DBM пытается подстраиваться под вас на основе вашей специализации на момент первого запуска, но некоторые могут захотеть включить дополнительные опции."
 
 DBM_FORUMS_MESSAGE					= "Нашли баг или неправильный таймер? Считаете что какому-то модулю требуется дополнительное предупреждение, таймер или особенность?\nПосетите новые форумы Deadly Boss Mods для обсуждений, сообщений об ошибках и запроса новых возможностей на |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (нажмите на ссылку, чтобы скопировать URL)"
@@ -16,8 +16,8 @@ DBM_CORE_LOAD_GUI_COMBAT			= "GUI не может быть изначально 
 DBM_CORE_BAD_LOAD					= "DBM не удалось полностью загрузить модуль для этого подземелья, т.к. вы находитесь в режиме боя. Как только вы выйдите из боя, пожалуйста сделайте /console reloadui как можно скорее."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s не может быть загружен потому что ваш DBM-Core не соответствует требованиям. Требуется обновленная версия."
 
---DBM_CORE_WHATS_NEW					= "Новое в этой версии: таймеры DBM теперь поддерживают несколько цветов в зависимости от типа заклинания, для которого они предназначены. Чтобы узнать больше об этой возможности, вы можете прочитать о ней |HDBM:forumsnews|h|cff3588ffнажав здесь|r"--Uncomment when updated
---DBM_CORE_WHATS_NEW_LINK			= "New in this version: DBM timers now support multiple colors based on what type of spell the timer is for. To learn more about this feature you can read about it by |HDBM:forumsnews|h|cff3588ffclicking here|r"
+--DBM_CORE_WHATS_NEW				= "Новое в этой версии: настройки для встроенных в таймеры иконок и пользовательские настройки цвета индикатора."
+DBM_CORE_WHATS_NEW_LINK				= "Новое в этой версии: настройки для встроенных в таймеры иконок и пользовательские настройки цвета индикатора. Вы можете узнать больше о новых возможностях |HDBM:forumsnews|h|cff3588ffнажав здесь|r"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM отключил динамическое окно проверки дистанции на этом боссе, т.к. нет точной информации о необходимом количестве игроков в одном скоплении для рейда вашего размера."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM отключил предупреждения о появлении помощников на этом боссе, т.к. нет точной информации о количестве помощников, которые появляются в рейде вашего размера."
@@ -54,7 +54,7 @@ DBM_CORE_TRANSCRIPTOR_LOG_END		= "Логирование с помощью Trans
 
 DBM_CORE_COMBAT_STARTED_AI_TIMER	= "My CPU is a neural net processor; a learning computer. (This fight will use the new timer AI feature to generate timer approximations)"
 
-DBM_CORE_PROFILE_NOT_FOUND			= "<Deadly Boss Mods> Ваш текущий профиль поврежден. DBM загрузит профиль 'По умолчанию'."
+DBM_CORE_PROFILE_NOT_FOUND			= "<DBM> Ваш текущий профиль поврежден. DBM загрузит профиль 'По умолчанию'."
 DBM_CORE_PROFILE_CREATED			= "Профиль '%s' создан."
 DBM_CORE_PROFILE_CREATE_ERROR		= "Не удалось создать профиль. Некорректное имя профиля."
 DBM_CORE_PROFILE_CREATE_ERROR_D		= "Не удалось создать профиль. Профиль '%s' уже существует."
@@ -96,9 +96,9 @@ DBM_CORE_MOD_DEFAULT_LOADED			= "Настройки по умолчанию дл
 DBM_CORE_WORLDBOSS_ENGAGED			= "В вашем игровом мире возможно начался бой с %s (%s процентов здоровья, отправил %s)."
 DBM_CORE_WORLDBOSS_DEFEATED			= "%s возможно был побежден в вашем игровом мире (отправил %s)."
 
-DBM_CORE_TIMER_FORMAT_SECS			= "%d сек"
+DBM_CORE_TIMER_FORMAT_SECS			= "%.2f сек"
 DBM_CORE_TIMER_FORMAT_MINS			= "%d мин"
-DBM_CORE_TIMER_FORMAT				= "%d мин %d сек"
+DBM_CORE_TIMER_FORMAT				= "%d мин %.2f сек"
 
 DBM_CORE_MIN						= "мин"
 DBM_CORE_MIN_FMT					= "%d мин"
@@ -239,7 +239,8 @@ DBM_CORE_MIDDLE						= "Середина"
 DBM_CORE_FRONT						= "Вперед"
 DBM_CORE_INTERMISSION				= "Переходная фаза"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
 
-DBM_CORE_BREAK_START				= "Перерыв начинается -- у вас есть %s мин.!"
+DBM_CORE_BREAK_USAGE				= "Перерыв не может быть дольше 60 минут. Убедитесь что вы вводите время в минутах, а не секундах."
+DBM_CORE_BREAK_START				= "Перерыв начинается -- у вас есть %s! (отправил %s)"
 DBM_CORE_BREAK_MIN					= "Перерыв заканчивается через %s мин.!"
 DBM_CORE_BREAK_SEC					= "Перерыв заканчивается через %s сек.!"
 DBM_CORE_TIMER_BREAK				= "Перерыв!"
@@ -248,6 +249,8 @@ DBM_CORE_ANNOUNCE_BREAK_OVER		= "Перерыв закончился"
 DBM_CORE_TIMER_PULL					= "Атака"
 DBM_CORE_ANNOUNCE_PULL				= "Атака через %d сек. (отправил %s)"
 DBM_CORE_ANNOUNCE_PULL_NOW			= "Атака!"
+DBM_CORE_ANNOUNCE_PULL_TARGET		= "Атакуем %s через %d сек. (отправил %s)"
+DBM_CORE_ANNOUNCE_PULL_NOW_TARGET	= "Атакуем %s!"
 DBM_CORE_GEAR_WARNING				= "Внимание: Проверка экипировки. Уровень надетых предметов на %d ниже чем максимальный"
 DBM_CORE_GEAR_WARNING_WEAPON		= "Внимание: Проверьте надето ли у вас корректное оружие."
 DBM_CORE_GEAR_FISHING_POLE			= "Удочка"
@@ -255,6 +258,7 @@ DBM_CORE_GEAR_FISHING_POLE			= "Удочка"
 DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Достижение"
 
 -- Auto-generated Warning Localizations
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.you 			= "%s на тебе"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.target 		= "%s на |3-5(>%%s<)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%s) на |3-5(>%%s<)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell 			= "%s"
@@ -271,6 +275,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.count 			= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack 			= "%s на |3-5(>%%s<) (%%d)"
 
 local prewarnOption = "Предупреждать заранее о $spell:%s"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.you 			= "Объявлять когда $spell:%s на тебе"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target 		= "Объявлять цели заклинания $spell:%s"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.targetcount	= "Объявлять цели заклинания $spell:%s (со счетчиком)"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell 		= "Предупреждение для $spell:%s"

@@ -1,0 +1,27 @@
+subversion:
+	- Omega via svn r14592: Add optional special warning for void fiends so an optional custom sound is available to people. Add a non special warning for imps in case it?\226?\128?\153s desired to only be aware they spawned but not have it stressed by a special warning.
+	- Omega via svn r14591: add redundant taunt check for when xhul casts same strike twice in a row. Adjust delay on void scanner a little, it seemed to be warning previous target instead of current.
+	- Omega via svn r14590: Some test code
+	- Omega via svn r14589: change to rooted instead of ?\226?\128?\156root?\226?\128?\157 because it translates better in non english locals, even though it?\226?\128?\153s kinda worse in english :\.
+	- Omega via svn r14588: Fix a bug where void alerts/warnings kept going after 20%
+	- Omega via svn r14587: Show player dot even if you aren?\226?\128?\153t one of shackles
+	- Omega via svn r14586: While at it, give that a voice pack warning
+	- Omega via svn r14585: Bump HFRev
+	- Omega via svn r14584: More efficient fix. Plus extra failsafe just in case
+	- Omega via svn r14583: Fix void star fixate, which apparently has ALWAYS been broken on mythic (and yet no one reported it until now). guess since everyone uses weak aura?\226?\128?\153s over boss mods anyways. sigh.
+	- Omega via svn r14582: Tweak for mythic
+	- Omega via svn r14581: Fixed one voice pack filter on Koragh Added a Note to Phemos. I think the whirlwind sound should be renamed in 7.0 to ?\226?\128?\156whirlwind?\226?\128?\157. It?\226?\128?\153ll have more uses. This little note will just be a reminder to edit file name in this mod when that happens.
+	- Omega via svn r14580: Apply other half, and do TW which was missed
+	- tandanu via svn r14579: localization: prevent floating point weirdness when printing timers
+	- Omega via svn r14578: Fire a dummy DBM_TimerStart callback for break and pull timers. Most args missing because it?\226?\128?\153d be too hackish to make those args up from nothing. It simply sends ?\226?\128?\156pull?\226?\128?\157 for an ID and timer text and timer value, none of extra stuff like spellid, etc.
+	- Omega via svn r14577: More logic improvement to smart taunt code for xhul. Even if vanguard is dead, doesn?\226?\128?\153t mean the vanguard tank is safe to flip the taunt order whenever they want if omnus is still up on mythic
+	- Omega via svn r14576: Make personal mark of legion warning more apparent(higher priority default)
+	- Omega via svn r14575: Adjust iskar berserk I guess. Logs I had showed 8:30 for mythic, but some claim 8
+	- Omega via svn r14574: Remove useless broken warning it hought i already removed long ago
+	- ultrashining via svn r14573: zhTW update
+	- Omega via svn r14572: tweak
+	- Omega via svn r14571: Put a check here too so that timer doesn?\226?\128?\153t activate in timer correction code
+	- Omega via svn r14570: Apply timer changes related to sept 30th hotfixes Tweak some option defaults for tanks on gorefiend.
+	- Omega via svn r14569: More optionversion hack removals Also try to optimize countdown object some.
+	- Omega via svn r14568: Remove upvalues for PlaySoundFile and PlaySound. hopefully fid script ran too long errors from calling these (wtf?). Calling a blizzard function then having blizz complain function is too slow is silly.
+	- tandanu via svn r14567: increment alpha version

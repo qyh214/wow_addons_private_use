@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1154, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14080 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14569 $"):sub(12, -3))
 mod:SetCreatureID(76809, 76806)--76809 foreman feldspar, 76806 heart of the mountain, 76809 Security Guard, 76810 Furnace Engineer, 76811 Bellows Operator, 76815 Primal Elementalist, 78463 Slag Elemental, 76821 Firecaller
 mod:SetEncounterID(1690)
 mod:SetZone()
@@ -26,8 +26,8 @@ mod:RegisterEventsInCombat(
 
 local warnRegulators			= mod:NewAnnounce("warnRegulators", 2, 156918)
 local warnBlastFrequency		= mod:NewAnnounce("warnBlastFrequency", 1, 155209, "Healer")
-local warnBomb					= mod:NewTargetAnnounce("OptionVersion2", 155192, 4, nil, false)
-local warnDropBombs				= mod:NewSpellAnnounce("OptionVersion2", 174726, 1, nil, "-Tank")
+local warnBomb					= mod:NewTargetAnnounce(155192, 4, nil, false, 2)
+local warnDropBombs				= mod:NewSpellAnnounce(174726, 1, nil, "-Tank", 2)
 local warnEngineer				= mod:NewCountAnnounce("ej9649", 2, 155179)
 local warnRupture				= mod:NewTargetAnnounce(156932, 3)
 local warnInfuriated			= mod:NewTargetAnnounce(155170, 3, nil, "Tank")
@@ -35,7 +35,7 @@ local warnInfuriated			= mod:NewTargetAnnounce(155170, 3, nil, "Tank")
 local warnPhase2				= mod:NewPhaseAnnounce(2)
 local warnElementalists			= mod:NewAddsLeftAnnounce("ej9655", 2, 91751)
 local warnFixate				= mod:NewTargetAnnounce(155196, 4)
-local warnVolatileFire			= mod:NewTargetAnnounce("OptionVersion2", 176121, 4, nil, false)--Spam. disable by default.
+local warnVolatileFire			= mod:NewTargetAnnounce(176121, 4, nil, false, 2)--Spam. disable by default.
 local warnFireCaller			= mod:NewCountAnnounce("ej9659", 3, 156937, "Tank")
 local warnSecurityGuard			= mod:NewCountAnnounce("ej9648", 2, 160379, "Tank")
 --Phase 3
@@ -88,8 +88,8 @@ local timerSecurityGuard		= mod:NewNextCountTimer(40, "ej9648", nil, "Tank", nil
 
 local berserkTimer				= mod:NewBerserkTimer(780)
 
-local countdownBlast			= mod:NewCountdown("OptionVersion2", 30, 155209, false)
-local countdownEngineer			= mod:NewCountdown("OptionVersion2", "AltTwo41", "ej9649", "Tank")
+local countdownBlast			= mod:NewCountdown(30, 155209, false, 2)
+local countdownEngineer			= mod:NewCountdown("AltTwo41", "ej9649", "Tank", 2)
 --Phase 2 countdowns, no conflict with phase 1 countdowns
 local countdownFireCaller		= mod:NewCountdown("AltTwo64", "ej9659", "Tank")
 local countdownSecurityGuard	= mod:NewCountdown("Alt41", "ej9648", "Tank")

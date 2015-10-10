@@ -21,17 +21,17 @@ local summaryTab = CreateFrame("Frame", nil, GarrisonMissionFrame, "GarrisonMiss
 		self.NumFollowers:SetParent(self)
 		GarrisonMissionFrame.FollowerTab:Hide()
 		GarrisonMissionFrame.selectedFollower = nil
-		GarrisonFollowerList_Update(GarrisonMissionFrame)
+		GarrisonMissionFrame.FollowerList:UpdateData()
 		self.matrix:Sync()
 		self.affin:Sync()
 		self.stats:Sync()
-		C_Timer.After(0, syncState)
+		T.After0(syncState)
 	end)
 	GarrisonMissionFrame.FollowerTab:HookScript("OnShow", function(self)
 		self.NumFollowers:SetParent(self)
 		if summaryTab:IsShown() then
 			summaryTab:Hide()
-			C_Timer.After(0, syncState)
+			T.After0(syncState)
 		end
 	end)
 	GarrisonMissionFrame.SummaryTab = summaryTab
@@ -318,17 +318,16 @@ local stats = CreateFrame("Frame", nil, summaryTab) do
 		t:SetJustifyH("LEFT")
 		t:SetPoint("TOPLEFT", 30, 0)
 		t:SetPoint("BOTTOMRIGHT", -6, 0)
+		if i > 1 then
+			b:SetNormalTexture("Interface\\Icons\\Temp")
+			b:GetNormalTexture():SetTexture(0,0,0,0)
+			b:SetPushedTexture("Interface/Buttons/UI-QuickSlot-Depress")
+			b:GetPushedTexture():SetAllPoints(b.Icon)
+			b:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
+			b:GetHighlightTexture():SetAllPoints(b.Icon)
+		end
 		rows[i], b.Text = b, t
 	end
-	local function AddClickTextures(b)
-		b:SetNormalTexture("Interface\\Icons\\Temp")
-		b:GetNormalTexture():SetTexture(0,0,0,0)
-		b:SetPushedTexture("Interface/Buttons/UI-QuickSlot-Depress")
-		b:GetPushedTexture():SetAllPoints(b.Icon)
-		b:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
-		b:GetHighlightTexture():SetAllPoints(b.Icon)
-	end
-	AddClickTextures(rows[2])
 	rows[1].Icon:SetTexture("Interface\\Icons\\INV_Misc_GroupLooking")
 	rows[2].Icon:SetTexture("Interface\\Icons\\Garrison_ArmorUpgrade")
 	rows[3].Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_01")
@@ -337,6 +336,16 @@ local stats = CreateFrame("Frame", nil, summaryTab) do
 		local sb, q = GarrisonMissionFrameFollowers.SearchBox, L"Upgradable gear"
 		sb:SetText(q)
 		sb.clearText = q
+	end)
+	rows[3]:RegisterForClicks("RightButtonUp")
+	rows[3]:SetScript("OnClick", function(self)
+		T.config.goldCollected = 0
+		self.Text:SetText(0)
+	end)
+	rows[4]:RegisterForClicks("RightButtonUp")
+	rows[4]:SetScript("OnClick", function(self)
+		T.config.moC, T.config.moE, T.config.moV, T.config.moN = 0,0,0,0
+		self.Text:SetText("???")
 	end)
 	local function CountUpgradableFollowers()
 		local nuA, nuI, upW, upA = 0,0, G.GetUpgradeRange()
@@ -417,7 +426,7 @@ local accessButton = CreateFrame("CheckButton", nil, GarrisonMissionFrame) do
 		self:GetScript("OnLeave")(self)
 		if not nv then
 			GarrisonMissionFrame.selectedFollower = GarrisonMissionFrame.FollowerTab.followerID
-			GarrisonFollowerList_Update(GarrisonMissionFrame)
+			GarrisonMissionFrame.FollowerList:UpdateData()
 		end
 	end)
 	accessButton:SetScript("OnEnter", function(self)
@@ -435,7 +444,7 @@ local accessButton = CreateFrame("CheckButton", nil, GarrisonMissionFrame) do
 		GarrisonMissionFrame.FollowerTab:Show()
 		if fid and fid ~= GarrisonMissionFrame.selectedFollower then
 			GarrisonMissionFrame.selectedFollower = fid
-			GarrisonFollowerList_Update(GarrisonMissionFrame)
+			GarrisonMissionFrame.FollowerList:UpdateData()
 		end
 	end
 	summaryTab.accessButton = accessButton

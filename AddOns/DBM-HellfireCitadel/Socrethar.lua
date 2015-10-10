@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1427, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14462 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14565 $"):sub(12, -3))
 mod:SetCreatureID(92330)
 mod:SetEncounterID(1794)
 mod:SetZone()
 mod:SetUsedIcons(1)
-mod:SetHotfixNoticeRev(14397)
+mod:SetHotfixNoticeRev(14550)
 --mod.respawnTime = 20
 
 mod:RegisterCombat("combat")
@@ -17,7 +17,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 184124 190776 183023",
 	"SPELL_AURA_APPLIED 182038 182769 182900 184124 188666 189627 190466 184053 183017 180415",
 	"SPELL_AURA_APPLIED_DOSE 182038",
-	"SPELL_AURA_REMOVED 184124 189627 190466 184053 183017",
+	"SPELL_AURA_REMOVED 184124 189627 190466 184053",
 	"UNIT_DIED",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_ABSORBED",
@@ -58,6 +58,7 @@ local specWarnApocalypse			= mod:NewSpecialWarningSpell(183329, nil, nil, nil, 2
 --Adds
 local specWarnShadowWordAgony		= mod:NewSpecialWarningInterrupt(184239, false, nil, nil, 1, 2)
 local specWarnShadowBoltVolley		= mod:NewSpecialWarningInterrupt(182392, "-Healer", nil, nil, 1, 2)
+local specWarnSouls					= mod:NewSpecialWarningCount("ej11462", nil, nil, nil, 1)
 local specWarnGhastlyFixation		= mod:NewSpecialWarningYou(182769, nil, nil, nil, 1)--You don't run out or kite. you position yourself so ghosts go through fire dropped by construct
 local specWarnSargereiDominator		= mod:NewSpecialWarningSwitchCount("ej11456", "-Healer", nil, nil, 3)
 local specWarnGiftoftheManari		= mod:NewSpecialWarningYou(184124, nil, nil, nil, 1, 2)
@@ -66,26 +67,26 @@ local specWarnEternalHunger			= mod:NewSpecialWarningRun(188666, nil, nil, nil, 
 local yellEternalHunger				= mod:NewYell(188666, nil, false)
 
 --Soulbound Construct
-local timerReverberatingBlowCD		= mod:NewCDCountTimer(17, 180008, nil, nil, nil, 5)--Seems changed to 17, formerly 11, review in later tests/live
+local timerReverberatingBlowCD		= mod:NewCDCountTimer(17, 180008, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)--Seems changed to 17, formerly 11, review in later tests/live
 local timerFelPrisonCD				= mod:NewCDTimer(29, 182994, nil, nil, nil, 3)--29-33
 local timerVolatileFelOrbCD			= mod:NewCDTimer(23, 180221, nil, nil, nil, 3)
 local timerFelChargeCD				= mod:NewCDTimer(23, 182051, nil, nil, nil, 3)
-local timerApocalypticFelburstCD	= mod:NewCDCountTimer(30, 188693, nil, nil, nil, 2)
+local timerApocalypticFelburstCD	= mod:NewCDCountTimer(30, 188693, nil, nil, nil, 2, nil, DBM_CORE_HEROIC_ICON)
 --Socrethar
-local timerExertDominanceCD			= mod:NewCDTimer(5, 183331, nil, "-Healer", nil, 4)
+local timerExertDominanceCD			= mod:NewCDCountTimer(5, 183331, nil, "-Healer", nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 local timerApocalypseCD				= mod:NewCDTimer(46, 183329, nil, nil, nil, 2)
-local timerPrisonActive				= mod:NewTargetTimer(60, 183017, nil, nil, nil, 5)
 --Adds
 local timerSargereiDominatorCD		= mod:NewNextCountTimer(60, "ej11456", nil, nil, nil, 1, 184053)--CD needs verifying, no log saw 2 of them in a phase. phase always ended or boss died before 2nd add, i know it's at least longer than 60 sec tho
-local timerHauntingSoulCD			= mod:NewCDCountTimer(30, "ej11462", nil, nil, nil, 1, 182769)
+local timerHauntingSoulCD			= mod:NewCDCountTimer(29, "ej11462", nil, nil, nil, 1, 182769)
 local timerGiftofManariCD			= mod:NewCDTimer(11, 184124, nil, nil, nil, 3)
 --Mythic
-local timerVoraciousSoulstalkerCD	= mod:NewCDCountTimer(59.5, "ej11778", nil, nil, nil, 1, 190776)
+local timerVoraciousSoulstalkerCD	= mod:NewCDCountTimer(59.5, "ej11778", nil, nil, nil, 1, 190776, DBM_CORE_HEROIC_ICON)
 
 --local berserkTimer				= mod:NewBerserkTimer(360)
 
 local countdownReverberatingBlow	= mod:NewCountdown(17, 180008, "Tank", nil, 4)--Every 17 seconds now, so count last 4
 local countdownCharge				= mod:NewCountdown("Alt23", 182051)
+local countdownSouls				= mod:NewCountdown(29, "ej11462")
 
 --Construct
 local voiceVolatileFelOrb			= mod:NewVoice(180221)--runout/keepmove
@@ -119,6 +120,7 @@ mod.vb.kickCount2 = 0
 mod.vb.barrierUp = false
 mod.vb.dominatorCount = 0
 mod.vb.interruptBehavior = "Count3Resume"
+local soulsSeen = {}
 local playerInConstruct = false
 local exertSpellName = GetSpellInfo(183331)
 local debuffName = GetSpellInfo(184124)
@@ -183,6 +185,7 @@ function mod:OnCombatStart(delay)
 	self.vb.dominatorCount = 0
 	self.vb.barrierUp = false
 	playerInConstruct = false
+	table.wipe(soulsSeen)
 	timerReverberatingBlowCD:Start(4.3-delay, 1)
 	countdownReverberatingBlow:Start(4.3-delay)
 	timerVolatileFelOrbCD:Start(12-delay)
@@ -241,10 +244,6 @@ function mod:SPELL_CAST_START(args)
 		--Must have delay, to avoid same bug as oregorger. Boss has 2 target scans
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "ChargeTarget", 0.1, 10, true)
 	elseif spellId == 183331 then
-		if (self.vb.interruptBehavior == "Count3Resume" or self.vb.interruptBehavior == "Count3Reset") and self.vb.kickCount2 >= 3 or self.vb.kickCount2 >= 4 then
-			self.vb.kickCount2 = 0
-		end
-		timerExertDominanceCD:Start(nil, self.vb.kickCount2+1)
 		if not self.vb.barrierUp then
 			self.vb.kickCount2 = self.vb.kickCount2 + 1
 			if self:CheckInterruptFilter(args.sourceGUID) and not playerInConstruct then
@@ -260,6 +259,10 @@ function mod:SPELL_CAST_START(args)
 				end
 			end
 		end
+		if (self.vb.interruptBehavior == "Count3Resume" or self.vb.interruptBehavior == "Count3Reset") and self.vb.kickCount2 >= 3 or self.vb.kickCount2 >= 4 then
+			self.vb.kickCount2 = 0
+		end
+		timerExertDominanceCD:Start(nil, self.vb.kickCount2+1)
 	elseif spellId == 183329 then
 		specWarnApocalypse:Show()
 		voiceApocalypse:Play("aesoon")
@@ -268,10 +271,10 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerApocalypseCD:Start()
 		end
-	elseif spellId == 184239 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 184239 and self:CheckInterruptFilter(args.sourceGUID) and not playerInConstruct then
 		specWarnShadowWordAgony:Show(args.sourceName)
 		voiceShadowWordAgony:Play("kickcast")
-	elseif spellId == 182392 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 182392 and self:CheckInterruptFilter(args.sourceGUID) and not playerInConstruct then
 		specWarnShadowBoltVolley:Show(args.sourceName)
 		voiceShadowBoltVolley:Play("kickcast")
 	elseif spellId == 188693 then
@@ -309,7 +312,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerApocalypticFelburstCD:Cancel()
 		timerTransition:Start()--Time until boss is attackable
 		timerSargereiDominatorCD:Start(23, 1)
-		timerHauntingSoulCD:Start(30)--30-33
+		timerHauntingSoulCD:Start(30, 1)--30-33
+		countdownSouls:Start(30)
 		timerApocalypseCD:Start(53)--53-58
 		self:RegisterShortTermEvents(
 			"UNIT_TARGETABLE_CHANGED"
@@ -333,9 +337,24 @@ function mod:SPELL_AURA_APPLIED(args)
 --			voiceGhastlyFixation:Play("runout")
 --			voiceGhastlyFixation:Schedule(2, "keepmove")
 		end
-		if self:AntiSpam(28, 2) then--Shitty way of doing it, but if a player dies fixate changes and will start false timer any other way
-			self.vb.ghostSpawn = self.vb.ghostSpawn + 1
-			timerHauntingSoulCD:Start(nil, self.vb.ghostSpawn+1)
+		if not soulsSeen[args.sourceGUID] then
+			soulsSeen[args.sourceGUID] = true
+			if self:AntiSpam(10, 2) then--Antispam also needed to filter all but first ghost after a fresh spawn
+				self.vb.ghostSpawn = self.vb.ghostSpawn + 1
+				if self.vb.ghostSpawn % 4 == 0 then--Every portal swap adds 10-11 seconds to next spawn, so 5, 9, 13 etc
+					timerHauntingSoulCD:Start(40, self.vb.ghostSpawn+1)
+					if playerInConstruct then
+						specWarnSouls:Show(self.vb.ghostSpawn)
+						countdownSouls:Start(40)
+					end
+				else
+					timerHauntingSoulCD:Start(nil, self.vb.ghostSpawn+1)
+					if playerInConstruct then
+						specWarnSouls:Show(self.vb.ghostSpawn)
+						countdownSouls:Start(29)
+					end
+				end
+			end
 		end
 	elseif spellId == 188666 and args:IsDestTypePlayer() then
 		if args:IsPlayer() then
@@ -388,14 +407,16 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.HudMapOnOrb then
 			DBMHudMap:RegisterRangeMarkerOnPartyMember(180221, "highlight", args.destName, 5, 20, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 		end
-	elseif spellId == 190466 and args.sourceName == UnitName("player") then
-		playerInConstruct = true
-	elseif (spellId == 183017 or spellId == 180415) and self:AntiSpam(5, args.destName) then
-		warnFelPrison:CombinedShow(0.3, args.destName)
-		--Only show target timer for adds
-		if not DBM:GetRaidUnitId(args.destName) then
-			timerPrisonActive:Start(args.destName, args.destGUID)
+	elseif spellId == 190466 then
+		if args.sourceGUID == UnitGUID("player") then
+			playerInConstruct = true
+		else
+			--At time this starts, don't know who construct will be
+			--So started for all, then canceled for all but player who becomes construct
+			countdownSouls:Cancel()
 		end
+	elseif (spellId == 183017 or spellId == 180415) and self:AntiSpam(5, args.destName) and args:GetDestCreatureID() ~= 91765 then
+		warnFelPrison:CombinedShow(0.3, args.destName)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -409,7 +430,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.HudMapOnOrb then
 			DBMHudMap:FreeEncounterMarkerByTarget(180221, args.destName)
 		end
-	elseif spellId == 190466 and args:IsPlayer() then
+	elseif spellId == 190466 and args.sourceGUID == UnitGUID("player") then
 		playerInConstruct = false
 	elseif spellId == 184053 then
 		self.vb.barrierUp = false
@@ -440,8 +461,6 @@ function mod:SPELL_AURA_REMOVED(args)
 			end
 			self.vb.kickCount2 = self.vb.kickCount2 + 1
 		end
-	elseif spellId == 183017 then
-		timerPrisonActive:Cancel(args.destName, args.destGUID)
 	end
 end
 
@@ -474,6 +493,7 @@ function mod:UNIT_TARGETABLE_CHANGED(uId)
 		timerExertDominanceCD:Cancel()
 		timerSargereiDominatorCD:Cancel()
 		timerHauntingSoulCD:Cancel()
+		countdownSouls:Cancel()
 		timerApocalypseCD:Cancel()
 		self:UnregisterShortTermEvents()
 		timerVolatileFelOrbCD:Start(13)

@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 974 $")
+XPerl_SetModuleRevision("$Revision: 978 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -1620,6 +1620,8 @@ function XPerl_Options_ImportOldConfig(old)
 			bar = {
 				healthEmpty	= old.ColourHealthEmpty		or {r = 1, g = 0, b = 0},
 				healthFull	= old.ColourHealthFull		or {r = 0, g = 1, b = 0},
+				absorb		= {r = 0.14, g = 0.33, b = 0.7, a = 0.7},
+				healprediction = {r = 0, g = 1, b = 1, a = 1},
 				mana		= old.ColourMana		or {r = 0, g = 0, b = 1},
 				energy		= old.ColourEnergy		or {r = 1, g = 1, b = 0},
 				rage		= old.ColourRage		or {r = 1, g = 0, b = 0},
@@ -2588,6 +2590,8 @@ function XPerl_DefaultBarColours()
 	return {
 		healthEmpty	= {r = 1, g = 0, b = 0},
 		healthFull	= {r = 0, g = 1, b = 0},
+		absorb		= {r = 0.14, g = 0.33, b = 0.7, a = 0.7},
+		healprediction = {r = 0, g = 1, b = 1, a = 1},
 		mana		= {r = 0, g = 0, b = 1},
 		energy		= {r = 1, g = 1, b = 0},
 		rage		= {r = 1, g = 0, b = 0},
@@ -3269,6 +3273,19 @@ if (XPerl_UpgradeSettings) then
 				-- What the hell was this used for?
 				old.raidpet.hunter = nil
 				old.raidpet.warlock = nil
+			end
+
+			if (oldVersion < "4.1.3") then
+				old.colour.bar.absorb = { }
+				old.colour.bar.absorb.r = 0.14
+				old.colour.bar.absorb.g = 0.33
+				old.colour.bar.absorb.b = 0.7
+				old.colour.bar.absorb.a = 0.7
+				old.colour.bar.healprediction = { }
+				old.colour.bar.healprediction.r = 0
+				old.colour.bar.healprediction.g = 1
+				old.colour.bar.healprediction.b = 1
+				old.colour.bar.healprediction.a = 1
 			end
 		end
 	end

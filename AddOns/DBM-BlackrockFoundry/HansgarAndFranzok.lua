@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1155, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14008 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14569 $"):sub(12, -3))
 mod:SetCreatureID(76974, 76973)
 mod:SetEncounterID(1693)
 mod:SetZone()
@@ -42,7 +42,7 @@ local timerSmartStamperCD				= mod:NewNextTimer(12, 162124, nil, nil, nil, 6)--A
 --local berserkTimer						= mod:NewBerserkTimer(360)
 
 local countSmartStampers				= mod:NewCountdown(12, 160582)
-local countCripplingSupplex				= mod:NewCountdown("OptionVersion2", "Alt9.5", 156938, "Tank|Healer")
+local countCripplingSupplex				= mod:NewCountdown("Alt9.5", 156938, "Tank|Healer", 2)
 
 local voiceEnvironmentalThreats			= mod:NewVoice("ej10089")
 local voiceDisruptingRoar				= mod:NewVoice(160838, "SpellCaster")

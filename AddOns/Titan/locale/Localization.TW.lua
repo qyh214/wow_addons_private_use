@@ -292,7 +292,6 @@ L["TITAN_CLOCK_MENU_HIDE_GAMETIME"] = "隱藏 時間/日曆 按鈕";
 L["TITAN_CLOCK_MENU_HIDE_MAPTIME"] = "Hide Time Button";
 L["TITAN_CLOCK_MENU_HIDE_CALENDAR"] = "Hide Calendar Button";
 
-
 L["TITAN_LOCATION_FORMAT"] = "(%.d, %.d)";
 L["TITAN_LOCATION_FORMAT2"] = "(%.1f, %.1f)";
 L["TITAN_LOCATION_FORMAT3"] = "(%.2f, %.2f)";
@@ -522,6 +521,8 @@ L["TITAN_GOLD_COIN_LABELS"] = "Show Text Labels";
 L["TITAN_GOLD_COIN_ICONS"] = "Show Icon Labels";
 L["TITAN_GOLD_ONLY"] = "Show Gold Only";
 L["TITAN_GOLD_COLORS"] = "Show Gold Colors";
+L["TITAN_GOLD_MERGE"] = "Merge Servers";
+L["TITAN_GOLD_SEPARATE"] = "Separate Servers";
 
 L["TITAN_VOLUME_TOOLTIP"] = "音量控制";
 L["TITAN_VOLUME_MASTER_TOOLTIP_VALUE"] = "主音量大小: ";

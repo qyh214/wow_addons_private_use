@@ -1,0 +1,13 @@
+tag v2.4.26
+33d5b46f20bda7372828ce66d61fd77f5d41eb50
+funkydude <none>
+2015-10-09 12:44:07 +0100
+
+Tagging as v2.4.26
+
+
+--------------------
+
+funkydude:
+	- bump version
+	- Buttons: add another custom minimap button

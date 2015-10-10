@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1196, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14080 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14581 $"):sub(12, -3))
 mod:SetCreatureID(78491)
 mod:SetEncounterID(1720)
 mod:SetZone()
@@ -55,7 +55,7 @@ local timerSpecialCD				= mod:NewCDSpecialTimer(20)--Mythic Specials. Shared cd,
 local countdownInfestingSpores		= mod:NewCountdown(57, 159996)--The variation on this annoys me, may move countdown to something more reliable if possible
 local countdownFungalFleshEater		= mod:NewCountdown("Alt120", "ej9995", "-Healer")
 
-local voiceInfestingSpores			= mod:NewVoice(159996)
+local voiceInfestingSpores			= mod:NewVoice(159996) --aesoon
 local voiceRot						= mod:NewVoice(163241, nil, nil, 2)
 local voiceLivingMushroom			= mod:NewVoice(160022)
 local voiceRejuvMushroom			= mod:NewVoice(160021)

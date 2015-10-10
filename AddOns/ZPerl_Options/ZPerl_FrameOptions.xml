@@ -2299,9 +2299,18 @@
 						<Scripts>
 							<OnLoad>
 								XPerl_Options_RegisterProtected(_G[self:GetName().."Button"])
-								self.varGet = function() return (XPerlDB and XPerlDB.party.anchor) or "TOP" end
-								self.varSet = function(n) XPerlDB.party.anchor = n end
-								self.setFunc = function() if (XPerl_Party_SetMainAttributes) then XPerl_Party_SetMainAttributes() XPerl_Party_Virtual(true) end end
+								self.varGet = function()
+									return (XPerlDB and XPerlDB.party.anchor) or "TOP"
+								end
+								self.varSet = function(n)
+									XPerlDB.party.anchor = n
+								end
+								self.setFunc = function()
+									if (XPerl_Party_SetMainAttributes) then
+										XPerl_Party_SetMainAttributes()
+										XPerl_Party_Virtual(true)
+									end
+								end
 								--XPerl_Options_Anchor_OnLoad(self)
 							</OnLoad>
 							<OnShow>
@@ -2433,8 +2442,12 @@
 						<Scripts>
 							<OnLoad>
 								XPerl_Options_RegisterProtected(_G[self:GetName().."Button"])
-								self.varGet = function() return (XPerlDB and XPerlDB.raid.anchor) or "TOP" end
-								self.varSet = function(n) XPerlDB.raid.anchor = n end
+								self.varGet = function()
+									return (XPerlDB and XPerlDB.raid.anchor) or "TOP"
+								end
+								self.varSet = function(n)
+									XPerlDB.raid.anchor = n
+								end
 								self.setFunc = XPerl_Raid_ChangeAttributes
 								--XPerl_Options_Anchor_OnLoad(self)
 							</OnLoad>
@@ -14122,9 +14135,77 @@
 								</Scripts>
 							</Button>
 
-							<Button name="$parent_ColourManaBar" inherits="XPerlColorPickerTemplate">
+							<Button name="$parent_ColourAbsorbBar" inherits="XPerlColorPickerTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="$parent_ColourHealthBarFull" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="-2"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_COLOUR_ABSORB")
+									</OnLoad>
+									<OnShow>
+										local f = _G[self:GetName().."_Colour"]
+										f:SetVertexColor(XPerlDB.colour.bar.absorb.r, XPerlDB.colour.bar.absorb.g, XPerlDB.colour.bar.absorb.b)
+									</OnShow>
+									<OnClick>
+										XPerlLocked = 1
+										XPerl_ColourPicker.ParentFrame = XPerl_Options
+										XPerl_ColourPicker.varGet = function()
+											return XPerlDB and XPerlDB.colour.bar.absorb
+										end
+										XPerl_ColourPicker.varSet = function(n)
+											XPerlDB.colour.bar.absorb.r = n.r
+											XPerlDB.colour.bar.absorb.g = n.g
+											XPerlDB.colour.bar.absorb.b = n.b
+											XPerlDB.colour.bar.absorb.a = n.a
+										end
+										XPerl_ColourPicker.alpha = true
+										XPerl_ColourPicker:Show()
+									</OnClick>
+								</Scripts>
+							</Button>
+
+							<Button name="$parent_ColourHealPredictionBar" inherits="XPerlColorPickerTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_ColourAbsorbBar" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="-2"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_COLOUR_HEALPREDICTION")
+									</OnLoad>
+									<OnShow>
+										local f = _G[self:GetName().."_Colour"]
+										f:SetVertexColor(XPerlDB.colour.bar.healprediction.r, XPerlDB.colour.bar.healprediction.g, XPerlDB.colour.bar.healprediction.b)
+									</OnShow>
+									<OnClick>
+										XPerlLocked = 1
+										XPerl_ColourPicker.ParentFrame = XPerl_Options
+										XPerl_ColourPicker.varGet = function()
+											return XPerlDB and XPerlDB.colour.bar.healprediction
+										end
+										XPerl_ColourPicker.varSet = function(n)
+											XPerlDB.colour.bar.healprediction.r = n.r
+											XPerlDB.colour.bar.healprediction.g = n.g
+											XPerlDB.colour.bar.healprediction.b = n.b
+											XPerlDB.colour.bar.healprediction.a = n.a
+										end
+										XPerl_ColourPicker.alpha = true
+										XPerl_ColourPicker:Show()
+									</OnClick>
+								</Scripts>
+							</Button>
+
+							<Button name="$parent_ColourManaBar" inherits="XPerlColorPickerTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_ColourHealPredictionBar" relativePoint="BOTTOMLEFT">
 										<Offset>
 											<AbsDimension x="0" y="-2"/>
 										</Offset>

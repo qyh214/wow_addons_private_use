@@ -1,3 +1,12 @@
+**r978**
+* Highlight fixes.
+* Added an option to customize the Absorb and Heal Prediction bar's color and alpha.
+* Some other smaller fixes.
+
+**r977**
+* Readjust the XPERL_CONF_PLAYER_PET_VALUES_DESC string's position on ZPerl_Options/localization.lua.
+* zhTW updates, no actual code change.
+
 **r976**
 * 10 and 30 yards range check should be more accurate.
 * Added 20 yard tracker for range checker.

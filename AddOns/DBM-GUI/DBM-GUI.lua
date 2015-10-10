@@ -43,7 +43,7 @@
 --
 
 
-local revision =("$Revision: 14464 $"):sub(12, -3)
+local revision =("$Revision: 14547 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -54,6 +54,21 @@ local L = DBM_GUI_Translations
 
 local modelFrameCreated = false
 local soundsRegistered = false
+
+--Hard code STANDARD_TEXT_FONT since skinning mods like to taint it (or worse, set it to nil, wtf?)
+--http://forums.elitistjerks.com/topic/133901-bug-report-hudmap/#entry2282069
+local standardFont = STANDARD_TEXT_FONT
+if (LOCALE_koKR) then
+	standardFont = "Fonts\\2002.TTF"
+elseif (LOCALE_zhCN) then
+	standardFont = "Fonts\\ARKai_T.ttf"
+elseif (LOCALE_zhTW) then
+	standardFont = "Fonts\\blei00d.TTF"
+elseif (LOCALE_ruRU) then
+	standardFont = "Fonts\\FRIZQT___CYR.TTF"
+else
+	standardFont = "Fonts\\FRIZQT__.TTF"
+end
 
 --------------------------------------------------------
 --  Cache frequently used global variables in locals  --
@@ -418,14 +433,16 @@ do
 		{ sound=true, text = "SW 4", value = 4 },
 	})
 	
+	--TODO, this should be localized
 	local tcolors = {
-		{ text = "Generic Color", value = 0 },
-		{ text = "Add Color", value = 1 },
-		{ text = "AOE Color", value = 2 },
-		{ text = "Targeted Color", value = 3 },
-		{ text = "Interrupt Color", value = 4 },
-		{ text = "Role Color", value = 5 },
-		{ text = "Phase Color", value = 6 },
+		{ text = "Generic", value = 0 },
+		{ text = "Add", value = 1 },
+		{ text = "AOE", value = 2 },
+		{ text = "Targeted", value = 3 },
+		{ text = "Interrupt", value = 4 },
+		{ text = "Role", value = 5 },
+		{ text = "Phase", value = 6 },
+		{ text = "Important (User)", value = 7 },
 	}
 
 	function PanelPrototype:CreateCheckButton(name, autoplace, textleft, dbmvar, dbtvar, mod, modvar, globalvar, isTimer)
@@ -1404,18 +1421,13 @@ local function CreateOptionsMenu()
 		-------------------------------------------
 		local generalWarningPanel = DBM_GUI_Frame:CreateNewPanel(L.Tab_GeneralMessages, "option")
 		local generalCoreArea = generalWarningPanel:CreateArea(L.CoreMessages, nil, 120, true)
---		generalCoreArea:CreateCheckButton(L.ShowLoadMessage, true, nil, "ShowLoadMessage")--Only here as a note, this is commented out so inexperienced users don't disable this, but an option for advanced users who want to manually change the value from true to false
 		generalCoreArea:CreateCheckButton(L.ShowPizzaMessage, true, nil, "ShowPizzaMessage")
-		generalCoreArea:CreateCheckButton(L.ShowCombatLogMessage, true, nil, "ShowCombatLogMessage")
-		generalCoreArea:CreateCheckButton(L.ShowTranscriptorMessage, true, nil, "ShowTranscriptorMessage")
 		generalCoreArea:CreateCheckButton(L.ShowAllVersions, true, nil, "ShowAllVersions")
 
 		local generalMessagesArea = generalWarningPanel:CreateArea(L.CombatMessages, nil, 135, true)
 		generalMessagesArea:CreateCheckButton(L.ShowEngageMessage, true, nil, "ShowEngageMessage")
-		generalMessagesArea:CreateCheckButton(L.ShowKillMessage, true, nil, "ShowKillMessage")
-		generalMessagesArea:CreateCheckButton(L.ShowWipeMessage, true, nil, "ShowWipeMessage")
+		generalMessagesArea:CreateCheckButton(L.ShowDefeatMessage, true, nil, "ShowDefeatMessage")
 		generalMessagesArea:CreateCheckButton(L.ShowGuildMessages, true, nil, "ShowGuildMessages")
-		generalMessagesArea:CreateCheckButton(L.ShowRecoveryMessage, true, nil, "ShowRecoveryMessage")
 		local generalWhispersArea = generalWarningPanel:CreateArea(L.WhisperMessages, nil, 135, true)
 		generalWhispersArea:CreateCheckButton(L.AutoRespond, true, nil, "AutoRespond")
 		generalWhispersArea:CreateCheckButton(L.EnableStatus, true, nil, "StatusEnabled")
@@ -1443,7 +1455,7 @@ local function CreateOptionsMenu()
 
 		-- RaidWarn Font
 		local Fonts = MixinSharedMedia3("font", {
-			{	text	= "Default",		value 	= DBM.STANDARD_TEXT_FONT,		font = DBM.STANDARD_TEXT_FONT		},
+			{	text	= "Default",		value 	= standardFont,					font = standardFont		},
 			{	text	= "Arial",			value 	= "Fonts\\ARIALN.TTF",			font = "Fonts\\ARIALN.TTF"		},
 			{	text	= "Skurri",			value 	= "Fonts\\skurri.ttf",			font = "Fonts\\skurri.ttf"		},
 			{	text	= "Morpheus",		value 	= "Fonts\\MORPHEUS.ttf",		font = "Fonts\\MORPHEUS.ttf"	}
@@ -1596,7 +1608,7 @@ local function CreateOptionsMenu()
 		--------------------------------------
 		local BarSetupPanel = DBM_GUI_Frame:CreateNewPanel(L.BarSetup, "option")
 		
-		local BarColors = BarSetupPanel:CreateArea(L.AreaTitle_BarColors, nil, 480, true)
+		local BarColors = BarSetupPanel:CreateArea(L.AreaTitle_BarColors, nil, 635, true)
 		local movemebutton = BarColors:CreateButton(L.MoveMe, 100, 16)
 		movemebutton:SetPoint('BOTTOMRIGHT', BarColors.frame, "TOPRIGHT", 0, -1)
 		movemebutton:SetNormalFontObject(GameFontNormalSmall)
@@ -2011,6 +2023,86 @@ local function CreateOptionsMenu()
 				_G[self.frame:GetName().."Bar"]:SetWidth(183)
 			end
 		end
+
+		--Color Type 7 (Important (User))
+		local color1Type7 = BarColors:CreateColorSelect(64)
+		local color2Type7 = BarColors:CreateColorSelect(64)
+		color1Type7:SetPoint('TOPLEFT', BarColors.frame, "TOPLEFT", 30, -530)
+		color2Type7:SetPoint('TOPLEFT', color1Type7, "TOPRIGHT", 20, 0)
+
+		local color1Type7reset = BarColors:CreateButton(L.Reset, 64, 10, nil, GameFontNormalSmall)
+		local color2Type7reset = BarColors:CreateButton(L.Reset, 64, 10, nil, GameFontNormalSmall)
+		color1Type7reset:SetPoint('TOP', color1Type7, "BOTTOM", 5, -10)
+		color2Type7reset:SetPoint('TOP', color2Type7, "BOTTOM", 5, -10)
+		color1Type7reset:SetScript("OnClick", function(self)
+			color1Type7:SetColorRGB(DBM.Bars:GetDefaultOption("StartColorUIR"), DBM.Bars:GetDefaultOption("StartColorUIG"), DBM.Bars:GetDefaultOption("StartColorUIB"))
+		end)
+		color2Type7reset:SetScript("OnClick", function(self)
+			color2Type7:SetColorRGB(DBM.Bars:GetDefaultOption("EndColorUIR"), DBM.Bars:GetDefaultOption("EndColorUIG"), DBM.Bars:GetDefaultOption("EndColorUIB"))
+		end)
+
+		local color1Type7text = BarColors:CreateText(L.BarStartColorUI, 80)
+		local color2Type7text = BarColors:CreateText(L.BarEndColorUI, 80)
+		color1Type7text:SetPoint("BOTTOM", color1Type7, "TOP", 0, 4)
+		color2Type7text:SetPoint("BOTTOM", color2Type7, "TOP", 0, 4)
+		color1Type7:SetScript("OnShow", function(self) self:SetColorRGB(
+			DBM.Bars:GetOption("StartColorUIR"),
+			DBM.Bars:GetOption("StartColorUIG"),
+			DBM.Bars:GetOption("StartColorUIB"))
+			color1Type7text:SetTextColor(
+			DBM.Bars:GetOption("StartColorUIR"),
+			DBM.Bars:GetOption("StartColorUIG"),
+			DBM.Bars:GetOption("StartColorUIB")
+			)
+		end)
+		color2Type7:SetScript("OnShow", function(self) self:SetColorRGB(
+			DBM.Bars:GetOption("EndColorUIR"),
+			DBM.Bars:GetOption("EndColorUIG"),
+			DBM.Bars:GetOption("EndColorUIB"))
+			color2Type7text:SetTextColor(
+			DBM.Bars:GetOption("EndColorUIR"),
+			DBM.Bars:GetOption("EndColorUIG"),
+			DBM.Bars:GetOption("EndColorUIB")
+			)
+		end)
+		color1Type7:SetScript("OnColorSelect", function(self)
+			DBM.Bars:SetOption("StartColorUIR", select(1, self:GetColorRGB()))
+			DBM.Bars:SetOption("StartColorUIG", select(2, self:GetColorRGB()))
+			DBM.Bars:SetOption("StartColorUIB", select(3, self:GetColorRGB()))
+			color1Type7text:SetTextColor(self:GetColorRGB())
+		end)
+		color2Type7:SetScript("OnColorSelect", function(self)
+			DBM.Bars:SetOption("EndColorUIR", select(1, self:GetColorRGB()))
+			DBM.Bars:SetOption("EndColorUIG", select(2, self:GetColorRGB()))
+			DBM.Bars:SetOption("EndColorUIB", select(3, self:GetColorRGB()))
+			color2Type7text:SetTextColor(self:GetColorRGB())
+		end)
+		
+		local dummybarcolor7 = DBM.Bars:CreateDummyBar(7)
+		dummybarcolor7.frame:SetParent(BarColors.frame)
+		dummybarcolor7.frame:SetPoint("TOP", color2Type7text, "LEFT", 10, 40)
+		dummybarcolor7.frame:SetScript("OnUpdate", function(self, elapsed) dummybarcolor7:Update(elapsed) end)
+		do
+			-- little hook to prevent this bar from changing size/scale
+			local old = dummybarcolor7.ApplyStyle
+			function dummybarcolor7:ApplyStyle(...)
+				old(self, ...)
+				self.frame:SetWidth(183)
+				self.frame:SetScale(0.9)
+				_G[self.frame:GetName().."Bar"]:SetWidth(183)
+			end
+		end
+
+		--Type 7 Extra Options
+		local bar7OptionsText = BarColors:CreateText(L.Bar7Header, 405, nil, nil, "LEFT")
+		bar7OptionsText:SetPoint("TOPLEFT", color2Type7text, "TOPLEFT", 150, 0)
+		local forceLarge = BarColors:CreateCheckButton(L.Bar7ForceLarge, false, nil, nil, "Bar7ForceLarge")
+		forceLarge:SetPoint("TOPLEFT", bar7OptionsText, "BOTTOMLEFT", 0, 0)
+		local customInline = BarColors:CreateCheckButton(L.Bar7CustomInline, false, nil, nil, "Bar7CustomInline")
+		customInline:SetPoint("TOPLEFT", forceLarge, "BOTTOMLEFT", 0, 0)
+		local bar7OptionsText2 = BarColors:CreateText(L.Bar7Footer, 405, nil, nil, "LEFT")
+		bar7OptionsText2:SetPoint("TOPLEFT", customInline, "TOPLEFT", 0, -60)
+
 		--General Options
 		local BarSetup = BarSetupPanel:CreateArea(L.AreaTitle_BarSetup, nil, 430, true)
 
@@ -2106,7 +2198,7 @@ local function CreateOptionsMenu()
 		StyleDropDown:SetPoint("TOPLEFT", TextureDropDown, "BOTTOMLEFT", 0, -10)
 
 		local Fonts = MixinSharedMedia3("font", {
-			{	text	= "Default",		value 	= DBM.STANDARD_TEXT_FONT,		font = DBM.STANDARD_TEXT_FONT	},
+			{	text	= "Default",		value 	= standardFont,					font = standardFont	},
 			{	text	= "Arial",			value 	= "Fonts\\ARIALN.TTF",			font = "Fonts\\ARIALN.TTF"		},
 			{	text	= "Skurri",			value 	= "Fonts\\skurri.ttf",			font = "Fonts\\skurri.ttf"		},
 			{	text	= "Morpheus",		value 	= "Fonts\\MORPHEUS.ttf",		font = "Fonts\\MORPHEUS.ttf"	}
@@ -2151,6 +2243,9 @@ local function CreateOptionsMenu()
 		
 		local ColorBars = BarSetup:CreateCheckButton(L.BarColorByType, false, nil, nil, "ColorByType")
 		ColorBars:SetPoint("TOPLEFT", SortBars, "BOTTOMLEFT", 0, 0)
+		
+		local InlineIcons = BarSetup:CreateCheckButton(L.BarInlineIcons, false, nil, nil, "InlineIcons")
+		InlineIcons:SetPoint("LEFT", ColorBars, "LEFT", 130, 0)
 
 		-- Functions for bar setup
 		local function createDBTOnShowHandler(option)
@@ -2334,7 +2429,7 @@ local function CreateOptionsMenu()
 		end
 
 		local Fonts = MixinSharedMedia3("font", {
-			{	text	= "Default",		value 	= DBM.STANDARD_TEXT_FONT,		font = DBM.STANDARD_TEXT_FONT	},
+			{	text	= "Default",		value 	= standardFont,					font = standardFont	},
 			{	text	= "Arial",			value 	= "Fonts\\ARIALN.TTF",			font = "Fonts\\ARIALN.TTF"		},
 			{	text	= "Skurri",			value 	= "Fonts\\skurri.ttf",			font = "Fonts\\skurri.ttf"		},
 			{	text	= "Morpheus",		value 	= "Fonts\\MORPHEUS.ttf",		font = "Fonts\\MORPHEUS.ttf"	}

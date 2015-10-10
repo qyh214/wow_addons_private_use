@@ -56,7 +56,7 @@ T.TraitCost = {[47]=4, [248]=3, [256]=3, [79]=2, [80]=1, [236]=1, [287]=-5, [290
 
 T.AlwaysTraits = {__index={[221]=1, [201]=1, [202]=1, [47]=1}}
 
-T.XPMissions = {[5]=0, [173]=275000, [215]=0, [336]=0, [364]=0,}
+T.XPMissions = {[5]=0, [173]=275000, [215]=0, [364]=0,}
 
 T.FOLLOWER_ITEM_LEVEL_CAP = 675
 T.ItemLevelUpgrades = {
@@ -64,6 +64,7 @@ T.ItemLevelUpgrades = {
 	ARMOR={114745, 675, 114808, 672, 114822, 669, 114807, 615, 114806, 630, 114746, 645, 128308, 645}
 }
 T.MENTOR_FOLLOWER = ("0x%016X"):format(465)
+T.MinorRewards = {[114128]=1, [114129]=1, [114131]=1, [114616]=1, [114081]=1, [114622]=1, [128307]=1, [120301]=1, [120302]=1, [114745]=1, [114808]=1, [114822]=1, [114807]=1, [114806]=1, [114746]=1, [128308]=1, [122595]=1, [128373]=1, [122594]=1, [122307]=1, [122596]=1, [122590]=1, [122592]=1, [122593]=1, [122502]=1, [122503]=1, [122591]=1, [122487]=1, [122576]=1, [122490]=1, [122501]=1, [122500]=1, [122497]=1, [122491]=1, [122496]=1,}
 
 T.MissionLocationBanners = { [101]="GarrMissionLocation-FrostfireRidge", [102]="GarrMissionLocation-TannanJungle", [103]="GarrMissionLocation-Gorgrond", [104]="GarrMissionLocation-Nagrand", [105]="GarrMissionLocation-Talador", [106]="GarrMissionLocation-ShadowmoonValley", [107]="GarrMissionLocation-SpiresofArak", [164]="_GarrMissionLocation-BlackrockMountain", }
 

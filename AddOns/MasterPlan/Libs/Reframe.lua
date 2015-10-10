@@ -14,6 +14,24 @@ function T.IsDescendantOf(self, ancestor)
 	until (self or ancestor) == ancestor
 	return self == ancestor
 end
+do
+	local f, q, nq = CreateFrame("Frame"), {}, 0
+	function T.After0(func)
+		nq = nq + 1
+		q[nq] = func
+	end
+	f:SetScript("OnUpdate", function()
+		if nq ~= 0 then
+			local i, f = 1, q[1]
+			while f do
+				securecall(f)
+				i, q[i] = i + 1
+				f = q[i]
+			end
+			nq = 0
+		end
+	end)
+end
 
 hooksecurefunc("UIDropDownMenu_StopCounting", function(self)
 	local mf = self and T.GetMouseFocus()

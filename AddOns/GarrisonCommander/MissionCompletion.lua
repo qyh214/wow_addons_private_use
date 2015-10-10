@@ -8,7 +8,7 @@ local GSF=GSF
 local GMFMissions=GarrisonMissionFrameMissions
 local GSFMissions=GarrisonMissionFrameMissions
 local GARRISON_CURRENCY=GARRISON_CURRENCY
-local GARRISON_SHIP_OIL_CURRENCY=_G.GARRISON_SHIP_OIL_CURRENCY or 0
+local GARRISON_SHIP_OIL_CURRENCY=_G.GARRISON_SHIP_OIL_CURRENCY
 local SEAL_CURRENCY=994
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
@@ -43,8 +43,7 @@ end
 --@end-debug@]===]
 local cappedCurrencies={
 	GARRISON_CURRENCY,
-	GARRISON_SHIP_OIL_CURRENCY,
-	SEAL_CURRENCY
+	GARRISON_SHIP_OIL_CURRENCY
 }
 
 local missions={}
@@ -129,7 +128,6 @@ function module:MissionComplete(this,button,skiprescheck)
 			for k,v in pairs(missions[i].rewards) do
 				if v.itemID then GetItemInfo(v.itemID) end -- tickling server
 				if v.currencyID and tContains(cappedCurrencies,v.currencyID) then
-					local currentQT=select(2,GetCurrencyInfo(v.currencyID))
 					wasted[v.currencyID]=(wasted[v.currencyID] or 0) + v.quantity
 				end
 			end

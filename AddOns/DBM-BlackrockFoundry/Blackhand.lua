@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(959, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14333 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14569 $"):sub(12, -3))
 mod:SetCreatureID(77325)--68168
 mod:SetEncounterID(1704)
 mod:SetZone()
@@ -27,7 +27,7 @@ mod:RegisterEventsInCombat(
 local warnPhase						= mod:NewPhaseChangeAnnounce()
 --Stage One: The Blackrock Forge
 local warnMarkedforDeath			= mod:NewTargetCountAnnounce(156096, 4)--If not in combat log, find a RAID_BOSS_WHISPER event.
-local warnMassiveDemolition			= mod:NewCountAnnounce("OptionVersion2", 156479, 3, nil, "Ranged")--As a regular warning, not too spammy and perfectly reasonable for ranged to be on by default.
+local warnMassiveDemolition			= mod:NewCountAnnounce(156479, 3, nil, "Ranged", 2)--As a regular warning, not too spammy and perfectly reasonable for ranged to be on by default.
 --Stage Two: Storage Warehouse
 local warnSiegemaker				= mod:NewCountAnnounce("ej9571", 3, 156667)
 local warnFixate					= mod:NewTargetAnnounce(156653, 4)
@@ -56,29 +56,29 @@ local specWarnSlagEruption			= mod:NewSpecialWarningCount(156928, nil, nil, nil,
 local specWarnAttachSlagBombs		= mod:NewSpecialWarningYou(157000, nil, nil, nil, nil, 2)--May change to sound 3, but I don't want it confused with the even more threatening marked for death, so for now will try 1
 local specWarnAttachSlagBombsOther	= mod:NewSpecialWarningTaunt(157000, nil, nil, nil, nil, 2)
 local specWarnSlagPosition			= mod:NewSpecialWarning("specWarnSlagPosition", nil, false, nil, 1)
-local yellAttachSlagBombs			= mod:NewYell("OptionVersion2", 157000)
+local yellAttachSlagBombs			= mod:NewYell(157000, nil, nil, 2)
 local specWarnMassiveShatteringSmash= mod:NewSpecialWarningCount(158054, nil, nil, 2, 3, 2)
 local specWarnFallingDebris			= mod:NewSpecialWarningCount(162585, nil, nil, nil, 2)--Mythic (like Meteor)
 
 --Stage One: The Blackrock Forge
 mod:AddTimerLine(SCENARIO_STAGE:format(1))
-local timerDemolitionCD				= mod:NewNextCountTimer(45, 156425, nil, nil, nil, 2)
-local timerMassiveDemolitionCD		= mod:NewNextCountTimer(6, 156479, nil, nil, nil, 2)
-local timerMarkedforDeathCD			= mod:NewNextCountTimer(15.5, 156096, nil, nil, nil, 3)
+local timerDemolitionCD				= mod:NewNextCountTimer(45, 156425, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
+local timerMassiveDemolitionCD		= mod:NewNextCountTimer(6, 156479, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerMarkedforDeathCD			= mod:NewNextCountTimer(15.5, 156096, nil, nil, nil, 3)--Deadly icon? DJ doesn't give it an icon so i won't either for now
 local timerThrowSlagBombsCD			= mod:NewCDCountTimer(24.5, 156030, nil, "Melee", nil, 3)--It's a next timer, but sometimes delayed by Shattering Smash
 local timerShatteringSmashCD		= mod:NewCDCountTimer(44.5, 155992, nil, nil, nil, 5)--power based, can variate a little do to blizzard buggy power code.
-local timerImpalingThrow			= mod:NewCastTimer(5, 156111)--How long marked target has to aim throw at Debris Pile or Siegemaker
+local timerImpalingThrow			= mod:NewCastTimer(5, 156111, nil, nil, nil, nil, nil, DBM_CORE_DEADLY_ICON)--How long marked target has to aim throw at Debris Pile or Siegemaker
 --Stage Two: Storage Warehouse
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
 local timerSiegemakerCD				= mod:NewNextCountTimer(50, "ej9571", nil, nil, nil, 1, 156667)
-local timerMassiveExplosion			= mod:NewCastTimer(5, 163008, nil, nil, nil, 2)
+local timerMassiveExplosion			= mod:NewCastTimer(5, 163008, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 --Stage Three: Iron Crucible
 mod:AddTimerLine(SCENARIO_STAGE:format(3))
 local timerSlagEruptionCD			= mod:NewCDCountTimer(32.5, 156928, nil, nil, nil, 2)
 local timerAttachSlagBombsCD		= mod:NewCDCountTimer(25.5, 157000, nil, nil, nil, 3)--26-28. Do to increased cast time vs phase 1 and 2 slag bombs, timer is 1 second longer on CD
 local timerSlagBomb					= mod:NewCastTimer(5, 157015)
 local timerFallingDebris			= mod:NewCastTimer(6, 162585)--Mythic
-local timerFallingDebrisCD			= mod:NewNextCountTimer(40, 162585, nil, nil, nil, 5)--Mythic
+local timerFallingDebrisCD			= mod:NewNextCountTimer(40, 162585, nil, nil, nil, 5, nil, DBM_CORE_HEROIC_ICON)--Mythic
 
 local countdownShatteringSmash		= mod:NewCountdown(45.5, 155992)
 local countdownSlagBombs			= mod:NewCountdown("Alt25", 156030, "Melee")

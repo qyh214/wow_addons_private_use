@@ -8,6 +8,14 @@ local RefreshActiveMissionsView, activeMissionsHandle
 local RefreshAvailMissionsView, availMissionsHandle
 local interestMissionsHandle
 
+local function SetMissionsFrameTab(id)
+	local mainFrame = GarrisonMissionFrame
+	PlaySound("UI_Garrison_Nav_Tabs");
+	PanelTemplates_SetTab(mainFrame, id);
+	mainFrame:SelectTab(id);
+end
+
+
 local function abridge(n)
 	if n < 1e3 then
 		return ("%d"):format(n)
@@ -24,7 +32,7 @@ local function oncePerFrame(f)
 	return function()
 		if not ff then
 			ff = true
-			C_Timer.After(0, cf)
+			T.After0(cf)
 		end
 	end
 end
@@ -165,7 +173,7 @@ local GetAvailableResources do
 				end
 			end
 			numFollowers, garrResources, ctID = n, r, ftID
-			C_Timer.After(0, forget)
+			T.After0(forget)
 		end
 		return numFollowers, garrResources - (dropCost or 0)
 	end
@@ -1051,10 +1059,10 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 	availUI:SetScript("OnShow", function(self)
 		missionList.ctlContainer:Steal(self, ctl)
 		RefreshAvailMissionsView(true)
+		self.notebook:SetShown(GetItemCount(self.notebook.itemID) > 0)
 	end)
-
 	local roamingParty = CreateFrame("Frame", nil, availUI) do
-		roamingParty:SetPoint("BOTTOMRIGHT", availUI, "BOTTOM", 130, -2)
+		roamingParty:SetPoint("BOTTOMRIGHT", availUI, "BOTTOM", 94, -2)
 		local slots = {}
 		function roamingParty:GetFollowers()
 			local a, b, c
@@ -1206,7 +1214,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 			roamingParty:Clear()
 		end
 		function EV:GARRISON_MISSION_NPC_CLOSED()
-			C_Timer.After(0, clearRP)
+			T.After0(clearRP)
 		end
 	end
 	availUI.SendTentative = CreateFrame("Button", "MPPokeTentativeParties", availUI, "UIPanelButtonTemplate") do
@@ -1223,20 +1231,35 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 			if C_Garrison.IsAboveFollowerSoftCap(1) then
 				GameTooltip:AddLine(GARRISON_MAX_FOLLOWERS_MISSION_TOOLTIP, 1, 0, 0, 1)
 			else
-				G.SuppressFollowerEvents()
+				local rewards, rtext = {}, ""
 				for mid, f1, f2, f3 in G.GetReadyTentativeParties(1) do
-					local p1,p2,p3 = f1,f2,f3
-					while p1 do
-						p1,p2,p3 = p2, p3, C_Garrison.AddFollowerToMission(mid, p1) and nil
-					end
-					local sc = select(4,C_Garrison.GetPartyMissionInfo(mid))
-					GameTooltip:AddDoubleLine(C_Garrison.GetMissionName(mid), sc .. "%", 1,1,1,1,1,1)
-					p1,p2,p3 = f1,f2,f3
-					while p1 do
-						p1,p2,p3 = p2, p3, C_Garrison.RemoveFollowerFromMission(mid, p1) and nil
+					local mi = C_Garrison.GetBasicMissionInfo(mid)
+					local g = G.GetBackfillMissionGroups(mi, G.GroupFilter.ACTIVE, G.GroupRank.xp, 1, f1, f2, f3)[1]
+					if not g then
+						G.GetMissionParty(mid)
+					else
+						GameTooltip:AddDoubleLine(HIGHLIGHT_FONT_COLOR_CODE .. mi.name, g[1] .. "%")
+						local sp, ct, cq, _, expectedXP = g[1]/100, g[9] or 0, g[3] or 0, G.GetMissionGroupXP(g, mi)
+						if expectedXP > 0 then
+							rewards.xp = (rewards.xp or 0) + expectedXP
+						elseif g[1] > 0 and cq > 0 then
+							rewards[ct] = (rewards[ct] or 0) + cq*sp
+						end
 					end
 				end
-				G.ReleaseFollowerEvents()
+				if (rewards.xp or 0) > 0 then
+					rtext = L("%s XP"):format(BreakUpLargeNumbers(rewards.xp))
+				end
+				if (rewards[0] or 0) >= 1e4 then
+					rtext = rtext .. "  " .. GetMoneyString(rewards[0] - rewards[0] % 1e4)
+				end
+				rewards.xp, rewards[0] = nil
+				for cid, cq in pairs(rewards) do
+					rtext = rtext .. "  " .. floor(cq) .. " |T" .. (select(3,GetCurrencyInfo(cid)) or "Interface/Icons/Temp") .. ":12:12:0:0:64:64:4:60:4:60|t"
+				end
+				if rtext ~= "" then
+					GameTooltip:AddDoubleLine(L"Expected rewards:", rtext, nil, nil, nil, 1,1,1)
+				end
 			end
 			GameTooltip:AddLine("|n|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:14:12:0:-1:512:512:10:70:330:410|t " .. L"Clear all tentative parties.", 0.5, 0.8, 1)
 			GameTooltip:Show()
@@ -1285,7 +1308,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 			end
 			function syncLater()
 				if synced then
-					C_Timer.After(0, sync)
+					T.After0(sync)
 					synced = false
 				end
 			end
@@ -1298,6 +1321,18 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 		end
 	end
 	api.roamingParty = roamingParty
+	availUI.notebook = T.CreateLazyItemButton(availUI, 122606) do
+		availUI.notebook:SetSize(20, 20)
+		availUI.notebook:SetPoint("LEFT", GarrisonMissionFrame.MissionTab.MissionList.MaterialFrame, "LEFT", 14, 0)
+		availUI.notebook:SetScript("OnShow", function()
+			local f = GarrisonMissionFrame.MissionTab.MissionList.MaterialFrame.MPHeadcount
+			f.Text:SetPoint("LEFT", 40, 0)
+		end)
+		availUI.notebook:SetScript("OnHide", function()
+			local f = GarrisonMissionFrame.MissionTab.MissionList.MaterialFrame.MPHeadcount
+			f.Text:SetPoint("LEFT", 16, 0)
+		end)
+	end
 end
 local interestUI = CreateFrame("Frame", nil, missionList) do
 	interestUI:Hide()
@@ -1475,7 +1510,7 @@ do -- tabs
 		availTab:SetFormattedText(L"Available Missions (%d)", #GarrisonMissionFrameMissions.availableMissions)
 		interestTab:SetText(L"Missions of Interest")
 		ResizeTabs()
-		C_Timer.After(0, ResizeTabs)
+		T.After0(ResizeTabs)
 		if #GarrisonMissionFrameMissions.inProgressMissions == 0 and (cm and #cm or 0) == 0 then
 			SetTabState(activeTab, nil)
 		else
@@ -1510,7 +1545,7 @@ do -- tabs
 			GarrisonMissionFrame.MissionTab.MissionPage.MinimizeButton:Click()
 		end
 		if GarrisonMissionFrame.selectedTab ~= 1 and GarrisonMissionFrame.selectedTab ~= 3 then
-			GarrisonMissionFrame_SelectTab(1)
+			SetMissionsFrameTab(1)
 		end
 		PanelTemplates_SetTab(GarrisonMissionFrame, 3)
 		if not missionList:IsShown() then
@@ -1520,7 +1555,7 @@ do -- tabs
 	end)
 	availTab:SetScript("OnClick", function()
 		PlaySound("UI_Garrison_Nav_Tabs")
-		GarrisonMissionFrame_SelectTab(1)
+		SetMissionsFrameTab(1)
 		if not missionList:IsShown() then
 			GarrisonMissionList_SetTab(GarrisonMissionFrameMissionsTab1)
 		end
@@ -1530,7 +1565,7 @@ do -- tabs
 		if GarrisonMissionFrame.MissionTab.MissionPage:IsShown() then
 			GarrisonMissionFrame.MissionTab.MissionPage.MinimizeButton:Click()
 		end
-		GarrisonMissionFrame_SelectTab(1)
+		SetMissionsFrameTab(1)
 		PanelTemplates_SetTab(GarrisonMissionFrame, 4)
 		api:SetMissionsUI(4)
 	end)
@@ -1824,6 +1859,9 @@ local CreateMissionButton do
 				GameTooltip:AddLine(self.tooltipTitle)
 				GameTooltip:AddLine(self.tooltipText, 1,1,1,1)
 				GameTooltip:Show()
+				if self.tooltipTitle == GARRISON_REWARD_MONEY then
+					G.SetCurrencyTraitTip(GameTooltip, 0)
+				end
 			elseif self.currencyID then
 				GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
 				GameTooltip:SetCurrencyByID(self.currencyID)
@@ -2410,7 +2448,7 @@ do -- activeMissionsHandle
 		activeUI.CompleteAll:SetShown(not activeUI.lootFrame:IsShown() and (hasComplete and activeUI.completionState ~= "RUNNING"))
 		if force then
 			if #am == 0 then
-				GarrisonMissionFrame_SelectTab(1)
+				SetMissionsFrameTab(1)
 			end
 		end
 	end
@@ -2482,7 +2520,7 @@ do -- availMissionsHandle
 				local ifid = G.GetUnderLevelledFollower(ug, mi) or ug[1]
 				GarrisonMissionFrameTab2:Click()
 				GarrisonMissionFrame.selectedFollower = ifid
-				GarrisonFollowerPage_ShowFollower(GarrisonMissionFrame.FollowerTab, ifid)
+				GarrisonMissionFrame.FollowerTab.followerList:ShowFollower(ifid)
 				EV("MP_FORCE_FOLLOWER_TAB", ifid)
 			elseif button == "RightButton" then
 				G.SaveMissionParty(mi.missionID, g[5], g[6], g[7])
@@ -2675,7 +2713,7 @@ do -- availMissionsHandle
 			end
 			return ac > bc
 		end
-		local fields, eg, srv, cw = {threats=1}, {0, [3]=0,[4]=0, [9]=0, [11]=0}, {minor=1, gold=2, [true]=3, resource=4}, {[824]=1e8, [1101]=1e10, [0]=1}
+		local fields, eg, cw = {threats=1}, {0, [3]=0,[4]=0, [9]=0, [11]=0}, {}
 		local function sortMissions(missions, nf, nr)
 			local order, horizon = T.config.availableMissionSort, T.config.timeHorizon
 			local field = fields[order] or 1
@@ -2690,12 +2728,18 @@ do -- availMissionsHandle
 				end
 			end
 			
+			local _, resq = GetCurrencyInfo(824)
+			cw[824] = resq < 3e3 and 10 or (resq < 7e3 and 6 or 3)
+			local _, oilq = GetCurrencyInfo(1101)
+			cw[1101] = oilq < 1e3 and 11 or 2
+			cw[823], cw[0], cw.minor = 4, 5, 1
+			
 			for i=1, #missions do
 				local mi, g = missions[i]
 				local mid, sr = mi.missionID, G.HasSignificantRewards(mi)
 				local sg = groupCache[mid]
 				mi.groups, g = sg, sg[1] and not G.GetMissionGroupDeparture(sg[1], mi) and sg[1] or eg
-				mi.ord0, mi.ord1 = 0, max(g[1]*(g[3]*(cw[g[9]] or 0)), sr == true and g[1]*1e8 or 0, srv[sr] or 0)
+				mi.ord0, mi.ord1 = 0, (cw[g[9]] or cw[sr] or (sr and 8) or 0) * 1e16 + g[1]*g[3]*1e3 + g[1]
 				
 				if order == "duration" then
 					mi.ord = -mi.durationSeconds
@@ -2777,7 +2821,7 @@ do -- availMissionsHandle
 					if not core:IsOwned(availMissionsHandle) then
 						core:SetData(ph, availMissionsHandle)
 					end
-					C_Timer.After(0, DoRefresh)
+					T.After0(DoRefresh)
 				end
 			end
 		end
@@ -2827,7 +2871,7 @@ do -- interestMissionsHandle
 		if self.followerID then
 			local fid = self.followerID
 			GarrisonMissionFrame.selectedFollower = fid
-			GarrisonFollowerPage_ShowFollower(GarrisonMissionFrame.FollowerTab, fid)
+			GarrisonMissionFrame.FollowerTab.followerList:ShowFollower(fid)
 			GarrisonMissionFrameTab2:Click()
 			EV("MP_FORCE_FOLLOWER_TAB", fid)
 			local fl, idx, btn = GarrisonMissionFrameFollowers.followers do
@@ -3326,6 +3370,11 @@ do -- Ships
 				end
 			end
 		end
+		hooksecurefunc("GarrisonShipyardMapMission_UpdateTooltipSize", function(self)
+			if tipGroup:IsVisible() then
+				GarrisonShipyardMapMissionTooltip:SetHeight(self:GetHeight() + tipGroup:GetHeight()+12)
+			end
+		end)
 	end
 	local function UpdateShipMissionMap()
 		local self = GarrisonShipyardFrame.MissionTab.MissionList
@@ -3372,7 +3421,7 @@ do -- Ships
 		local function enqueueUpdate()
 			if not pendingUpdate and GarrisonShipyardFrame.MissionTab.MissionList:IsVisible() then
 				pendingUpdate = true
-				C_Timer.After(0, runUpdate)
+				T.After0(runUpdate)
 			end
 		end
 		hooksecurefunc("GarrisonShipyardMap_UpdateMissions", enqueueUpdate)
@@ -3432,7 +3481,7 @@ do -- RefreshActiveMissionsView
 			isFullRefresh = isFullRefresh or force
 			if not isDirty then
 				isDirty = true
-				C_Timer.After(0, DoRefresh)
+				T.After0(DoRefresh)
 			end
 		end
 	end

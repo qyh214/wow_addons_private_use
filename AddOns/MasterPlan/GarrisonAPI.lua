@@ -16,7 +16,7 @@ local tentativeState, tentativeParties = {}, {} do
 		function notifyChange()
 			if not pending then
 				pending = true
-				C_Timer.After(0, doNotify)
+				T.After0(doNotify)
 			end
 		end
 	end
@@ -460,9 +460,9 @@ function api.GetDoubleCounters(skipInactive)
 			if not T.config.ignore[fid] and (keepInactive or fi.status ~= GARRISON_FOLLOWER_INACTIVE) and fi.followerTypeID == 1 then
 				if fi.quality >= 4 then
 					local c1, c2 = cai(aai(fid, 1)), cai(aai(fid, 2))
-					local k = c1 <= c2 and (c1*100 + c2) or (c2*100 + c1)
-					local tk = rt[k] or {}
-					tk[#tk + 1], rt[k] = fi.followerID, tk
+					local k, k2 = c1*100 + c2, c2*100 + c1
+					local tk = rt[k] or {key=k}
+					tk[#tk + 1], rt[k], rt[k2] = fi.followerID, tk, tk
 				end
 				local sc = T.SpecCounters[fi.classSpec]
 				if sc then
@@ -474,9 +474,9 @@ function api.GetDoubleCounters(skipInactive)
 						local c1 = sc[i] or c1
 						for j=i+1,#sc do
 							local c2 = sc[j]
-							local k = c1 <= c2 and -(c1*100 + c2) or -(c2*100 + c1)
-							local tk = rt[k] or {}
-							tk[#tk + 1], rt[k] = fi.followerID, tk
+							local k, k2 = -(c1*100 + c2), -(c2*100 + c1)
+							local tk = rt[k] or {key=k}
+							tk[#tk + 1], rt[k], rt[k2] = fi.followerID, tk, tk
 						end
 						s1 = s1 or (sc[i] == c1)
 						if i == 1 and s1 then break end
@@ -599,6 +599,9 @@ function api.GetLevelEfficiency(fLevel, mLevel)
 end
 function api.GetFollowerLevelDescription(fid, mlvl, fi, mentor, mid, gi)
 	local fi = fi or api.GetFollowerInfo()[fid]
+	if not fi then
+		return "[??] " .. tostring(fid)
+	end
 	local tooLow, q = api.GetLevelEfficiency(api.GetFMLevel(fi, mentor), mlvl) < 0.5, fi and fi.quality or 0
 	local lc, away = ITEM_QUALITY_COLORS[tooLow and 0 or q].hex, fi.missionEndTime
 	if fi.status == GARRISON_FOLLOWER_INACTIVE then
@@ -908,7 +911,7 @@ do -- PrepareAllMissionGroups/GetMissionGroups {sc xp gr ti p1 p2 p3 xp pb}
 						followers[v] = mmi[i].missionID
 					end
 				end
-				C_Timer.After(0, failsafe)
+				T.After0(failsafe)
 			end
 			level = level + 1
 		end
@@ -1476,7 +1479,7 @@ end
 function api.GetMissionDefaultGroupRank(mi, order)
 	local rew = api.HasSignificantRewards(mi)
 	local key = (rew or "minor") == "minor" and "xp" or (rew == "resource" or rew == "gold") and "resources" or "threats"
-	local key2 = key == "xp" and (mi.followerTypeID == 2 and "shipxp" or order == "xptime" and "xptime") or key
+	local key2 = key == "xp" and (mi.followerTypeID == 2 and (T.config.allowShipXP and "shipxp" or "threats") or order == "xptime" and "xptime") or key
 	return api.GroupRank[key2], key
 end
 function api.GroupFilter.IDLE(res, finfo, minfo)
@@ -1535,7 +1538,7 @@ do -- HasSignificantRewards(minfo)
 					if r.currencyID == 0 then
 						gold = r.quantity
 					elseif not r.followerXP then
-						if api.IsLevelAppropriateToken(r.itemID) == false then
+						if T.MinorRewards[r.itemID] or api.IsLevelAppropriateToken(r.itemID) == false then
 							hasMinor = "minor"
 						else
 							allXP = false
@@ -2335,24 +2338,47 @@ function api.SetClassSpecTooltip(self, specId, specName, ab1, ab2)
 	if not c then return end
 	
 	self:ClearLines()
-	self:AddLine(specName or (ITEM_QUALITY_COLORS[4].hex .. L"Epic Ability"), 1,1,1)
-	if not specName then
-		self:AddLine(L"An additional random ability is unlocked when this follower reaches epic quality." .. "|n ", 1,1,1, 1)
-	end
-	self:AddLine(L"Potential counters:")
-	
+
 	local ci, finfo, dropCounter = api.GetCounterInfo(), api.GetFollowerInfo(), not ab2 and ab1 or nil
-	for i=1,#c do
-		if c[i] == dropCounter then
-			dropCounter = nil
-		else
-			local _, name, ico = api.GetMechanicInfo(c[i])
-			local counters = ci[c[i]]
-			local freeCount, totalCount = api.countFreeFollowers(counters, finfo), counters and #counters or 0
-			local counts = (freeCount > 0 and "|cff20ff20" .. freeCount or "0") .. "|r+|cffccc78f" .. (totalCount - freeCount)
-			self:AddDoubleLine("|TInterface\\Buttons\\UI-Quickslot2:13:2:-1:0:64:64:31:32:31:32|t|T" .. ico .. ":0:0:0:0:64:64:5:59:5:59|t " .. name, counts, 1,1,1, 1,1,1)
+	local dct = api.GetDoubleCounters()
+	if specName then
+		self:AddLine(specName, 1,1,1)
+		self:AddLine(L"Potential counters:")
+		for i=1,#c do
+			local pc, lc, rc = c[i], c[i % #c + 1], c[(i+1) % #c + 1]
+			local _, _, pi = api.GetMechanicInfo(pc)
+			local _, _, li = api.GetMechanicInfo(lc)
+			local _, _, ri = api.GetMechanicInfo(rc)
+			local pt = "|T" .. pi .. ":16:16:0:0:64:64:5:59:5:59|t"
+			local lt = pt .. "|T" .. li .. ":16:16:0:0:64:64:5:59:5:59|t"
+			local rt = pt .. "|T" .. ri .. ":16:16:0:0:64:64:5:59:5:59|t"
+
+			local lct, lpt, rct, rpt = dct[pc*100+lc], dct[-(pc*100+lc)], dct[pc*100+rc], dct[-(pc*100+rc)]
+			local lf, la, lp = api.countFreeFollowers(lct, finfo), lct and #lct or 0, lpt and #lpt or 0
+			local rf, ra, rp = api.countFreeFollowers(rct, finfo), rct and #rct or 0, rpt and #rpt or 0
+			
+			lt = lt .. " " .. (lf == 0 and la == 0 and "0" or "") .. (lf > 0 and "|cff20ff20" .. lf .. "|r" or "") .. (la > lf and (lf > 0 and "+" or "") .. "|cffccc78f" .. (la - lf) .. "|r" or "") .. "|cffa0a0a0/" .. lp
+			rt = (rf == 0 and ra == 0 and "0" or "") .. (rf > 0 and "|cff20ff20" .. rf .. "|r" or "") .. (ra > rf and (rf > 0 and "+" or "") .. "|cffccc78f" .. (ra - rf) .. "|r" or "") .. "|cffa0a0a0/" .. rp .. " " .. rt
+			
+			self:AddDoubleLine(lt, rt, 1,1,1, 1,1,1)
+		end
+	else
+		self:AddLine(ITEM_QUALITY_COLORS[4].hex .. L"Epic Ability")
+		self:AddLine(L"An additional random ability is unlocked when this follower reaches epic quality." .. "|n ", 1,1,1, 1)
+		self:AddLine(L"Potential counters:")
+		for i=1,#c do
+			if c[i] == dropCounter then
+				dropCounter = nil
+			else
+				local _, name, ico = api.GetMechanicInfo(c[i])
+				local counters = ci[c[i]]
+				local freeCount, totalCount = api.countFreeFollowers(counters, finfo), counters and #counters or 0
+				local counts = (freeCount > 0 and "|cff20ff20" .. freeCount or "0") .. "|r+|cffccc78f" .. (totalCount - freeCount)
+				self:AddDoubleLine("|TInterface\\Buttons\\UI-Quickslot2:13:2:-1:0:64:64:31:32:31:32|t|T" .. ico .. ":0:0:0:0:64:64:5:59:5:59|t " .. name, counts, 1,1,1, 1,1,1)
+			end
 		end
 	end
+	
 	self:SetBackdropColor(0,0,0)
 	
 	local novel, inact, _, rerollDesc = api.CountUniqueRerolls(c, fi and fi.followerID)
@@ -2363,7 +2389,7 @@ function api.SetClassSpecTooltip(self, specId, specName, ab1, ab2)
 	if fi and fi.quality >= 4 and fi.isCollected then
 		local a1, a2 = C_Garrison.GetFollowerAbilityAtIndex(fi.followerID, 1), C_Garrison.GetFollowerAbilityAtIndex(fi.followerID, 2)
 		a1, a2 = C_Garrison.GetFollowerAbilityCounterMechanicInfo(a1), C_Garrison.GetFollowerAbilityCounterMechanicInfo(a2)
-		local sd = api.GetDoubleCounters()[a1 < a2 and (a1 * 100 + a2) or (a2 * 100 + a1)]
+		local sd = dct[a1 < a2 and (a1 * 100 + a2) or (a2 * 100 + a1)]
 		if sd and #sd > 1 then
 			self:AddLine(" ")
 			self:AddLine(L"Duplicate counters" .. ":")
@@ -2392,12 +2418,7 @@ function api.SetTraitTooltip(tip, id, info, showInactive, skipDescription)
 		tip:AddLine(nl .. L"Followers with this trait:", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 		addFollowerList(tip, info, finfo, nil, showInactive)
 	else
-		local eq = T.EquipmentTraitQuests[id]
-		if eq and not IsQuestFlaggedCompleted(eq) then
-			tip:AddLine(nl .. L"Required ship equipment is not yet unlocked.", 1,0.25,0, 1)
-		else
-			tip:AddLine(nl .. L"You have no followers with this trait.", 1,0.50,0, 1)
-		end
+		tip:AddLine(nl .. L"You have no followers with this trait.", 1,0.50,0, 1)
 	end
 	info = info and info.affine
 	if not info then
@@ -2424,9 +2445,7 @@ function api.SetThreatTooltip(tip, id, info, missionLevel, showInactive, skipDes
 		addFollowerList(tip, info, finfo, missionLevel, showInactive, id)
 	else
 		local eq = T.EquipmentTraitQuests[T.EquipmentCounters[id]]
-		if eq and not IsQuestFlaggedCompleted(eq) then
-			tip:AddLine((skipDescription and "" or "|n") .. L"Required ship equipment is not yet unlocked.", 1,0.25,0, 1)
-		elseif eq then
+		if eq then
 			tip:AddLine((skipDescription and "" or "|n") .. L"No ships are equipped to handle this mechanic.", 1,0.50,0, 1)
 		else
 			tip:AddLine((skipDescription and "" or "|n") .. L"You have no followers to counter this mechanic.", 1,0.50,0, 1)
@@ -2636,7 +2655,7 @@ function api.SetCounterComboTip(tip, id1, id2)
 	end
 
 	if not hasLines then
-		local di = api.GetDoubleCounters()[id1 <= id2 and -(id1*100 + id2) or -(id2*100 + id1)]
+		local di = api.GetDoubleCounters()[-id1*100 - id2]
 		if di and #di > 0 then
 			tip:AddLine(L"Could be countered by re-rolling:", 1,0.50,0, 1)
 			addFollowerList(tip, di, finfo, nil, true)
