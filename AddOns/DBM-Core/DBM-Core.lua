@@ -40,9 +40,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 14592 $"):sub(12, -3)),
-	DisplayVersion = "6.2.13 alpha", -- the string that is shown as version
-	ReleaseRevision = 14565 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 14610 $"):sub(12, -3)),
+	DisplayVersion = "6.2.14 alpha", -- the string that is shown as version
+	ReleaseRevision = 14606 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -266,6 +266,7 @@ DBM.DefaultOptions = {
 	MCMessageShown = false,
 	BCTWMessageShown = false,
 	WOTLKTWMessageShown = false,
+	CATATWMessageShown = false,
 	AlwaysShowSpeedKillTimer = true,
 	CRT_Enabled = false,
 	ShowRespawn = true,
@@ -408,6 +409,13 @@ local bannedMods = { -- a list of "banned" (meaning they are replaced by another
 	"DBM-ProvingGrounds-MoP",--Renamed to DBM-ProvingGrounds in 6.0 version since blizzard updated content for WoD
 	"DBM-VPKiwiBeta",--Renamed to DBM-VPKiwi in final version.
 }
+
+
+-----------------
+--  Libraries  --
+-----------------
+local LL = LibStub("LibLatency")
+
 
 --------------------------------------------------------
 --  Cache frequently used global variables in locals  --
@@ -1061,6 +1069,7 @@ do
 			self:AddMsg(DBM_CORE_VOICE_COUNT_MISSING:format(3))
 			self.Options.CountdownVoice3v2 = self.DefaultOptions.CountdownVoice3v2
 		end
+		self:BuildVoiceCountdownCache()
 		--Break timer recovery
 		--Try local settings
 		if self.Options.tempBreak2 then
@@ -1866,7 +1875,7 @@ do
 			local timer = tonumber(cmd:sub(5)) or 10
 			Pull(timer)
 		elseif cmd:sub(1, 3) == "lag" then
-			sendSync("L")
+			LL:RequestLatency()
 			DBM:AddMsg(DBM_CORE_LAG_CHECKING)
 			C_TimerAfter(5, function() DBM:ShowLag() end)
 		elseif cmd:sub(1, 3) == "hud" then
@@ -2132,6 +2141,8 @@ do
 	end
 end
 
+
+-- Lag checking
 do
 	local sortLag = {}
 	local nolagResponse = {}
@@ -2166,6 +2177,14 @@ do
 			sortLag[i] = nil
 		end
 	end
+	
+	LL:Register("DBM", function(homelag, worldlag, sender, channel)
+		if sender and raid[sender] then
+			raid[sender].homelag = homelag
+			raid[sender].worldlag = worldlag
+		end
+	end)
+
 end
 
 -------------------
@@ -3517,20 +3536,27 @@ end
 --------------------------------
 do
 	local function checkMods(self)
-		if LastInstanceMapID == 1148 and not self.Options.PGMessageShown and not GetAddOnInfo("DBM-ProvingGrounds") then
-			self.Options.PGMessageShown = true
-			self:AddMsg(DBM_CORE_MOD_AVAILABLE:format("DBM-ProvingGrounds"))
-		elseif LastInstanceMapID == 409 and not self.Options.MCMessageShown and not GetAddOnInfo("DBM-MC") then
-			self.Options.MCMessageShown = true
-			self:AddMsg(DBM_CORE_MOD_AVAILABLE:format("DBM-MC"))
-		--Surely a less shitty way of checking "this is a BC dungeon"?
-		elseif (LastInstanceMapID == 540 or LastInstanceMapID == 558 or LastInstanceMapID == 556 or LastInstanceMapID == 555 or LastInstanceMapID == 542 or LastInstanceMapID == 546 or LastInstanceMapID == 545 or LastInstanceMapID == 547 or LastInstanceMapID == 553 or LastInstanceMapID == 554 or LastInstanceMapID == 552 or LastInstanceMapID == 557 or LastInstanceMapID == 269 or LastInstanceMapID == 560 or LastInstanceMapID == 543 or LastInstanceMapID == 585) and difficultyIndex == 24 and not self.Options.BCTWMessageShown and not GetAddOnInfo("DBM-Party-BC") then
-			self.Options.BCTWMessageShown = true
-			self:AddMsg(DBM_CORE_MOD_AVAILABLE:format("DBM-Party-BC"))
-		--Surely a less shitty way of checking "this is a wrath dungeon"?
-		elseif (LastInstanceMapID == 619 or LastInstanceMapID == 601 or LastInstanceMapID == 595 or LastInstanceMapID == 600 or LastInstanceMapID == 604 or LastInstanceMapID == 602 or LastInstanceMapID == 599 or LastInstanceMapID == 576 or LastInstanceMapID == 578 or LastInstanceMapID == 574 or LastInstanceMapID == 575 or LastInstanceMapID == 608 or LastInstanceMapID == 658 or LastInstanceMapID == 632 or LastInstanceMapID == 668 or LastInstanceMapID == 650) and difficultyIndex == 24 and not self.Options.WOTLKTWMessageShown and not GetAddOnInfo("DBM-Party-WotLK") then
-			self.Options.WOTLKTWMessageShown = true
-			self:AddMsg(DBM_CORE_MOD_AVAILABLE:format("DBM-Party-WotLK"))
+		if difficultyIndex == 24 then
+			--Surely a less shitty way of checking "this is a BC dungeon"?
+			if (LastInstanceMapID == 540 or LastInstanceMapID == 558 or LastInstanceMapID == 556 or LastInstanceMapID == 555 or LastInstanceMapID == 542 or LastInstanceMapID == 546 or LastInstanceMapID == 545 or LastInstanceMapID == 547 or LastInstanceMapID == 553 or LastInstanceMapID == 554 or LastInstanceMapID == 552 or LastInstanceMapID == 557 or LastInstanceMapID == 269 or LastInstanceMapID == 560 or LastInstanceMapID == 543 or LastInstanceMapID == 585) and not self.Options.BCTWMessageShown and not GetAddOnInfo("DBM-Party-BC") then
+				self.Options.BCTWMessageShown = true
+				self:AddMsg(DBM_CORE_MOD_AVAILABLE:format("DBM-Party-BC"))
+			--Surely a less shitty way of checking "this is a wrath dungeon"?
+			elseif (LastInstanceMapID == 619 or LastInstanceMapID == 601 or LastInstanceMapID == 595 or LastInstanceMapID == 600 or LastInstanceMapID == 604 or LastInstanceMapID == 602 or LastInstanceMapID == 599 or LastInstanceMapID == 576 or LastInstanceMapID == 578 or LastInstanceMapID == 574 or LastInstanceMapID == 575 or LastInstanceMapID == 608 or LastInstanceMapID == 658 or LastInstanceMapID == 632 or LastInstanceMapID == 668 or LastInstanceMapID == 650) and not self.Options.WOTLKTWMessageShown and not GetAddOnInfo("DBM-Party-WotLK") then
+				self.Options.WOTLKTWMessageShown = true
+				self:AddMsg(DBM_CORE_MOD_AVAILABLE:format("DBM-Party-WotLK"))
+			elseif (LastInstanceMapID == 755 or LastInstanceMapID == 645 or LastInstanceMapID == 36 or LastInstanceMapID == 670 or LastInstanceMapID == 644 or LastInstanceMapID == 33 or LastInstanceMapID == 643 or LastInstanceMapID == 725 or LastInstanceMapID == 657 or LastInstanceMapID == 309 or LastInstanceMapID == 859 or LastInstanceMapID == 568 or LastInstanceMapID == 938 or LastInstanceMapID == 940 or LastInstanceMapID == 939) and not self.Options.CATATWMessageShown and not GetAddOnInfo("DBM-Party-Cataclysm") then
+				self.Options.CATATWMessageShown = true-- 
+				self:AddMsg(DBM_CORE_MOD_AVAILABLE:format("DBM-Party-Cataclysm"))
+			end
+		else
+			if LastInstanceMapID == 1148 and not self.Options.PGMessageShown and not GetAddOnInfo("DBM-ProvingGrounds") then
+				self.Options.PGMessageShown = true
+				self:AddMsg(DBM_CORE_MOD_AVAILABLE:format("DBM-ProvingGrounds"))
+			elseif LastInstanceMapID == 409 and not self.Options.MCMessageShown and not GetAddOnInfo("DBM-MC") then
+				self.Options.MCMessageShown = true
+				self:AddMsg(DBM_CORE_MOD_AVAILABLE:format("DBM-MC"))
+			end
 		end
 	end
 	local function SecondaryLoadCheck(self)
@@ -3563,8 +3589,8 @@ do
 			end
 		end
 		-- LoadMod
-		checkMods(self)
 		self:LoadModsOnDemand("mapId", mapID)
+		checkMods(self)
 	end
 	--Faster and more accurate loading for instances, but useless outside of them
 	function DBM:LOADING_SCREEN_DISABLED()
@@ -4148,19 +4174,6 @@ do
 			end
 		end
 		DBM:GROUP_ROSTER_UPDATE()
-	end
-
-	syncHandlers["L"] = function(sender)
-		local _, _, home, world = GetNetStats()
-		sendSync("LAG", ("%d\t%d"):format(home, world))
-	end
-
-	syncHandlers["LAG"] = function(sender, homelag, worldlag)
-		homelag, worldlag = tonumber(homelag or ""), tonumber(worldlag or "")
-		if homelag and worldlag and raid[sender] then
-			raid[sender].homelag = homelag
-			raid[sender].worldlag = worldlag
-		end
 	end
 
 	syncHandlers["U"] = function(sender, time, text)
@@ -5216,7 +5229,7 @@ do
 	end
 
 	function DBM:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
-		if IsEncounterInProgress() then
+		if IsEncounterInProgress() or (IsInInstance() and InCombatLockdown()) then--Too many 5 mans/old raids don't properly return encounterinprogress
 			local targetName = target or "nil"
 			self:Debug("CHAT_MSG_MONSTER_YELL from "..npc.." while looking at "..targetName, 2)
 		end
@@ -7048,6 +7061,13 @@ function bossModPrototype:CheckBigWigs(name)
 	end
 end
 
+do
+	local iconStrings = {[1] = RAID_TARGET_1, [2] = RAID_TARGET_2, [3] = RAID_TARGET_3, [4] = RAID_TARGET_4, [5] = RAID_TARGET_5, [6] = RAID_TARGET_6, [7] = RAID_TARGET_7, [8] = RAID_TARGET_8,}
+	function bossModPrototype:IconNumToString(number)
+		return iconStrings[number]
+	end
+end
+
 bossModPrototype.AntiSpam = DBM.AntiSpam
 bossModPrototype.GetUnitCreatureId = DBM.GetUnitCreatureId
 bossModPrototype.GetCIDFromGUID = DBM.GetCIDFromGUID
@@ -7905,6 +7925,18 @@ function bossModPrototype:IsTanking(unit, boss)
 	return false
 end
 
+function bossModPrototype:GetNumAliveTanks()
+	if not IsInGroup() then return 1 end--Solo raid, you're the "tank"
+	local count = 0
+	local uId = (IsInRaid() and "raid") or "party"
+	for i = 1, DBM:GetNumRealGroupMembers() do
+		if UnitGroupRolesAssigned(uId..i) == "TANK" and not UnitIsDeadOrGhost(uId..i) then
+			count = count + 1
+		end
+	end
+	return count
+end
+
 ----------------------------
 --  Boss Health Function  --
 ----------------------------
@@ -8698,8 +8730,34 @@ end
 ----------------------------
 do
 	local countdownProtoType = {}
-	local cachedPath, cachedMax, lastVoice = nil, 5, nil
+	local voice1, voice2, voice3 = nil, nil, nil
+	local voice1max, voice2max, voice3max = 5, 5, 5
+	local path1, path2, path3 = nil, nil, nil
 	local mt = {__index = countdownProtoType}
+	
+	function DBM:BuildVoiceCountdownCache()
+		voice1 = self.Options.CountdownVoice
+		voice2 = self.Options.CountdownVoice2
+		voice3 = self.Options.CountdownVoice3v2
+		local voicesFound = 0
+		for i = 1, #self.Counts do
+			if voicesFound == 3 then return end
+			local curVoice = self.Counts[i]
+			if curVoice.value == voice1 then
+				path1 = curVoice.path
+				voice1max = curVoice.max
+				voicesFound = voicesFound + 1
+			elseif curVoice.value == voice2 then
+				path2 = curVoice.path
+				voice2max = curVoice.max
+				voicesFound = voicesFound + 1
+			elseif curVoice.value == voice3 then
+				path3 = curVoice.path
+				voice3max = curVoice.max
+				voicesFound = voicesFound + 1
+			end
+		end
+	end
 
 	local function showCountdown(timer)
 		TimerTracker_OnEvent(TimerTracker, "START_TIMER", 2, timer, timer)
@@ -8724,30 +8782,23 @@ do
 				end
 			end
 			if DBM.Options.DontPlayCountdowns then return end
-			local voice
-			if self.alternateVoice == 2 then
-				voice = DBM.Options.CountdownVoice2
-			elseif self.alternateVoice == 3 then
-				voice = DBM.Options.CountdownVoice3v2
-			else
-				voice = DBM.Options.CountdownVoice
+			if not path1 then
+				DBM:Debug("Voice cache not built at time of countdownProtoType:Start. On fly caching.")
+				DBM:BuildVoiceCountdownCache()
 			end
-			local path
-			local maxCount = 5
-			if cachedPath and lastVoice == voice then
-				path = cachedPath
-				maxCount = cachedMax or 5
+			local voice, maxCount, path
+			if self.alternateVoice == 2 then
+				voice = voice2
+				maxCount = voice2max
+				path = path2
+			elseif self.alternateVoice == 3 then
+				voice = voice3
+				maxCount = voice3max
+				path = path3
 			else
-				lastVoice = voice
-				for i = 1, #DBM.Counts do
-					if DBM.Counts[i].value == voice then
-						path = DBM.Counts[i].path
-						cachedPath = path
-						maxCount = DBM.Counts[i].max
-						cachedMax = maxCount
-						break
-					end
-				end
+				voice = voice1 or DBM.Options.CountdownVoice
+				maxCount = voice1max
+				path = path1
 			end
 			if self.type == "Countout" then
 				for i = 1, timer do
@@ -9414,6 +9465,10 @@ do
 	
 	function bossModPrototype:NewSpecialWarningYouCount(text, optionDefault, ...)
 		return newSpecialWarning(self, "youcount", text, nil, optionDefault, ...)
+	end
+	
+	function bossModPrototype:NewSpecialWarningYouPos(text, optionDefault, ...)
+		return newSpecialWarning(self, "youpos", text, nil, optionDefault, ...)
 	end
 
 	function bossModPrototype:NewSpecialWarningTarget(text, optionDefault, ...)

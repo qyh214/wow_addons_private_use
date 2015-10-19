@@ -1100,7 +1100,7 @@ local backfillGroupMatch do -- GetBackfillMissionGroups(minfo, filter, cmp, f1, 
 	end
 end
 do -- api.GetBuffsXPMultiplier(buffs)
-	local xpBuffs = {[80]=0.30, [236]=0.35}
+	local xpBuffs = {[80]=0.30, [236]=0.35, [285]=0.5, [291]=0.5, [319]=0.5, [321]=0.5}
 	function api.GetBuffsXPMultiplier(buffs)
 		local mul = 1
 		for i=1,#buffs do
@@ -1287,9 +1287,9 @@ local timeHorizon, computeEquivXP, computeEarliestCompletion, flushGroupAnnotati
 			useFocus = finfo[not (f2 or f3) and f1]
 			useFocus = useFocus and (useFocus.level < 100 or useFocus.quality < 4) and useFocus
 		end
-		function getSuggestedGroups(mi)
+		function getSuggestedGroups(mi, trustValid)
 			local mid, rank, rt = mi.missionID, api.GetMissionDefaultGroupRank(mi, order)
-			local mig, nf, sg, a, a2, b, b2, c = api.GetMissionGroups(mid, true, mi), mi.numFollowers, 0
+			local mig, nf, sg, a, a2, b, b2, c = api.GetMissionGroups(mid, trustValid, mi), mi.numFollowers, 0
 			local irank, rank2 = useFocus and rt == "xp" and setFocusRank(useFocus, mi, rank, order) or rank, rank2
 			if mi.followerTypeID == 2 and rt == "resources" then irank, rank2 = rank2, irank end
 			for i=1,#mig do
@@ -1344,11 +1344,11 @@ local timeHorizon, computeEquivXP, computeEarliestCompletion, flushGroupAnnotati
 
 	function api.GetSuggestedGroupsForAllMissions(mtype, order, f1, f2, f3)
 		prepareRun(order, f1, f2, f3)
-		local missions = api.PrepareAllMissionGroups(mtype)
+		local missions, tv = api.PrepareAllMissionGroups(mtype), false
 		for i=1,#missions do
 			local mi = missions[i]
 			if not groupCache[mi.missionID] then
-				groupCache[mi.missionID] = getSuggestedGroups(mi)
+				groupCache[mi.missionID], tv = getSuggestedGroups(mi, tv), true
 			end
 		end
 		completeRun()
@@ -1357,7 +1357,7 @@ local timeHorizon, computeEquivXP, computeEarliestCompletion, flushGroupAnnotati
 	function api.GetSuggestedGroupsForMission(mi, order, f1, f2, f3)
 		prepareRun(order, f1, f2, f3)
 		if not groupCache[mi.missionID] then
-			groupCache[mi.missionID] = getSuggestedGroups(mi)
+			groupCache[mi.missionID] = getSuggestedGroups(mi, false)
 		end
 		completeRun()
 		return groupCache[mi.missionID]

@@ -1,6 +1,20 @@
 Pack Command:  		zip -vr TP_Release.zip TidyPlates* -x@exclude.lst
 Exclusion List: 	*.svn*   *.DS_Store*   exclude.lst   *.db   *.png   *.gif   *.jpg   *.tif   *.txt   *.psd   *.bmp
 
+---------------------------
+6.17.1
+---------------------------
+- Core: New value: unit.healthmaxCached, which is updated on target and mouseover.  
+	(This uses the UnitHealthMax API function to store real health data.)
+- Core: Where available, uses the healthmaxCached to create real numbers.
+- Core: Figured out what the other statusbar is.. incoming heals.  But you guys already knew that.  Hiding that stuff, for now.
+- Hub: If healthmaxCached doesn't exist, the real health value won't be shown.  (Percent will still work)
+
+---------------------------
+6.17.0
+---------------------------
+- Partially updated the core to the new internal Blizzard nameplate layout.  Seems to fix a bunch of things for me.  ymmv
+- Not sure what some of the new bits and pieces are for... futher investigation is needed.
 
 ---------------------------
 6.16.1

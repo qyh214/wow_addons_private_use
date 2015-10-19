@@ -104,6 +104,7 @@ end
 ns.I=LibStub("LibItemUpgradeInfo-1.0")
 ns.GetItemInfo=ns.I:GetCachingGetItemInfo()
 function ns.GarrisonMissionFrame_SetItemRewardDetails(frame,bark)
+	if not frame.itemID then return end
 	local itemName, _, itemRarity, _, _, _, _, _, _, itemTexture = ns.GetItemInfo(frame.itemID);
 	--[===[@debug@
 	if bark then print(frame.itemID,'rescheduled',itemName) end

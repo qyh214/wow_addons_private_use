@@ -63,6 +63,10 @@ print(event,...)
 	if event=="GARRISON_FOLLOWER_UPGRADED" or event=="GARRISON_FOLLOWER_XP_CHANGED" then
 		local followerID=...
 		if (self.cache[followerID]) then
+			self.cache[followerID]['level']=G.GetFollowerLevel(followerID)
+			self.cache[followerID]['xp']=G.GetFollowerXP(followerID)
+			self.cache[followerID]['levelXP']=G.GetFollowerLevelXP(followerID)
+			self.cache[followerID]['quality']=G.GetFollowerQuality(followerID)
 			self:AddExtraData(self.cache[followerID])
 			if event=="GARRISON_FOLLOWER_UPGRADED" then
 				self:AddAbilities(self.cache[followerID])

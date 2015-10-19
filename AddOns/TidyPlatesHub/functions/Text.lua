@@ -60,6 +60,8 @@ end
 
 
 local function ShortenNumber(number)
+	if not number then return "" end
+
 	if number > 1000000 then
 		return (ceil((number/10000))/100).." M"
 	elseif number > 1000 then
@@ -69,7 +71,10 @@ local function ShortenNumber(number)
 	end
 end
 
-local function SepThousands(n)
+local function SepThousands(number)
+	if not number then return "" end
+	local n = tonumber(number) 
+
 	local left, num, right = string.match(n, '^([^%d]*%d)(%d*)(.-)')
 	return left..(num:reverse():gsub('(%d%d%d)', '%1,'):reverse())..right
 end
@@ -89,6 +94,18 @@ local function TextFunctionMana(unit)
 	end
 end
 
+local function GetHealth(unit)
+	if unit.healthmaxCached then 
+		return unit.health
+	else return nil end
+end
+
+local function GetHealthMax(unit)
+	if unit.healthmaxCached then 
+		return unit.healthmax
+	else return nil end
+end
+
 -- None
 local function HealthFunctionNone() return "" end
 
@@ -106,11 +123,11 @@ end
 
 -- Actual
 local function HealthFunctionExact(unit)
-	return SepThousands(unit.health)
+	return SepThousands(GetHealth(unit))
 end
 -- Approximate
 local function HealthFunctionApprox(unit)
-	return ShortenNumber(unit.health)
+	return ShortenNumber(GetHealth(unit))
 end
 -- Approximate
 local function HealthFunctionApproxAndPercent(unit)
@@ -119,15 +136,15 @@ local function HealthFunctionApproxAndPercent(unit)
 end
 --Deficit
 local function HealthFunctionDeficit(unit)
-	local health, healthmax = unit.health, unit.healthmax
-	if health ~= healthmax then return "-"..SepThousands(healthmax - health) end
+	local health, healthmax = GetHealth(unit), GetHealthMax(unit)
+	if health and healthmax and (health ~= healthmax) then return "-"..SepThousands(healthmax - health) end
 end
 -- Total and Percent
 local function HealthFunctionTotal(unit)
 	local color = ColorFunctionByHealth(unit)
 	--local color = White
-	local health, healthmax = unit.health, unit.healthmax
-	return ShortenNumber(health).."|cffffffff ("..ceil(100*(health/healthmax)).."%)", color.r, color.g, color.b
+	local health, healthmax = GetHealth(unit), GetHealthMax(unit)
+	return ShortenNumber(health).."|cffffffff ("..ceil(100*(unit.health/unit.healthmax)).."%)", color.r, color.g, color.b
 end
 -- TargetOf
 local function HealthFunctionTargetOf(unit)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HellfireCitadelTrash", "DBM-HellfireCitadel")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14410 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14595 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
@@ -50,16 +50,6 @@ mod:RemoveOption("HealthFrame")
 mod:AddRangeFrameOption(15)
 
 local Bloodthirster = EJ_GetSectionInfo(11266)
-
---/run DBM:GetModByName("HellfireCitadelTrash"):DebugYells()
-function mod:DebugYells()
-	yellPhantasmalCorruption:Yell()
-	yellPhantasmalFelBomb:Yell()
-	local Archi = DBM:GetModByName("1438")
-	local Mani = DBM:GetModByName("1395")
-	Archi:DebugYells()
-	Mani:DebugYells()
-end
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end

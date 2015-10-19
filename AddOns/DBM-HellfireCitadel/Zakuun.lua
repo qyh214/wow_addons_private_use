@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1391, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14511 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14595 $"):sub(12, -3))
 mod:SetCreatureID(89890)
 mod:SetEncounterID(1777)
 mod:SetZone()
@@ -43,7 +43,7 @@ local specWarnBefouledOther				= mod:NewSpecialWarningTargetCount(179711, false)
 --Disarmed
 local specWarnDisarmed					= mod:NewSpecialWarningSpell(179667)
 local specWarnSeedofDestruction			= mod:NewSpecialWarningYou(181508, nil, nil, nil, 3, 2)
-local specWarnSeedPosition				= mod:NewSpecialWarning("specWarnSeedPosition", nil, false, nil, 1, 4)--Mythic Position Assignment. No option, connected to specWarnMarkedforDeath
+local specWarnSeedPosition				= mod:NewSpecialWarningYouPos(181508, nil, false, nil, 1, 4)--Mythic Position Assignment. No option, connected to specWarnMarkedforDeath
 local yellSeedsofDestruction			= mod:NewYell(181508)
 
 --Armed

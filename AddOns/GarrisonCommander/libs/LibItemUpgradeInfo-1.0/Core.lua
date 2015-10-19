@@ -264,13 +264,14 @@ local CachedGetItemInfo	--#function
 do
 	local cache,select,unpack=lib.itemcache,select,unpack
 	function CachedGetItemInfo(key,index)
+		if not key then return nil end
 		index=index or 1
 		cache.tot=cache.tot+1
 		local cached=cache[key]
 		if cached and type(cached)=='table' then
 			return select(index,unpack(cached))
 		else
-			rawset(cache,key,nil)
+			rawset(cache,key,nil) -- voiding broken cache entry
 		end
 	end
 end

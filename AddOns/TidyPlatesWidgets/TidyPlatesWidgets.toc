@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: Tidy Plates Widgets
 ## Notes: Library of Widgets
 ## Dependencies: TidyPlates

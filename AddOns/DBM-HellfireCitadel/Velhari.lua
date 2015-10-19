@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1394, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14572 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14600 $"):sub(12, -3))
 mod:SetCreatureID(90269)
 mod:SetEncounterID(1784)
 mod:SetZone()
@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 180260 180004 180533 180608 180300",
-	"SPELL_CAST_SUCCESS 179986 179991 180600 180526",
+	"SPELL_CAST_SUCCESS 179986 179991 180600 180526 182459 185241",
 	"SPELL_AURA_APPLIED 182459 185241 180166 180164 185237 185238 180526 180025 180000",
 	"SPELL_AURA_APPLIED_DOSE 180000",
 	"SPELL_AURA_REMOVED 182459 185241 180526 180300",
@@ -169,6 +169,7 @@ function mod:OnCombatStart(delay)
 	self.vb.interruptCount = 0
 	timerSealofDecayCD:Start(3.5-delay)
 	timerAnnihilatingStrikeCD:Start(10-delay, 1)
+	countdownAnnihilatingStrike:Start(10-delay)
 	timerTouchofHarmCD:Start(16.8-delay, 1)
 	timerEdictofCondemnationCD:Start(57-delay, 1)
 end
@@ -265,15 +266,16 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 180526 then
 		timerFontofCorruptionCD:Start()
+	elseif spellId == 182459 or spellId == 185241 then
+		self.vb.edictCount = self.vb.edictCount + 1
+		timerEdictofCondemnationCD:Start(nil, self.vb.edictCount+1)
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 182459 or spellId == 185241 then--185241 mythic root version
-		self.vb.edictCount = self.vb.edictCount + 1
 		warnEdictofCondemnation:Show(self.vb.edictCount, args.destName)
-		timerEdictofCondemnationCD:Start(nil, self.vb.edictCount+1)
 		if args:IsPlayer() then
 			specWarnEdictofCondemnation:Show(self.vb.edictCount)
 			voiceEdictofCondemnation:Play("runin")

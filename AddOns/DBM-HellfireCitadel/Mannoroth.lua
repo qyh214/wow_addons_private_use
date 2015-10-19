@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1395, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14511 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14599 $"):sub(12, -3))
 mod:SetCreatureID(91349)--91305 Fel Iron Summoner
 mod:SetEncounterID(1795)
 mod:SetZone()
@@ -33,7 +33,7 @@ mod:RegisterEventsInCombat(
 ----Doom Lords
 local warnCurseoftheLegion			= mod:NewTargetCountAnnounce(181275, 3)--Spawn
 local warnMarkofDoom				= mod:NewTargetAnnounce(181099, 4)
-local warnDoomSpike					= mod:NewStackAnnounce(181119, 3, nil, "Tank")
+local warnDoomSpike					= mod:NewStackAnnounce(181119, 3, nil, false, 2)
 ----Fel Imp
 local warnFelImplosion				= mod:NewCountAnnounce(181255, 3)--Spawn
 ----Dread Infernals
@@ -55,7 +55,7 @@ local yellCurseofLegion				= mod:NewFadesYell(181275)--Don't need to know when i
 local specWarnMarkOfDoom			= mod:NewSpecialWarningYou(181099, nil, nil, nil, 1, 2)
 local yellMarkOfDoom				= mod:NewPosYell(181099, 31348)-- This need to know at apply, only player needs to know when it's fading
 local specWarnShadowBoltVolley		= mod:NewSpecialWarningInterrupt(181126, "-Healer", nil, nil, 1, 2)
-local specWarnDoomSpikeOther		= mod:NewSpecialWarningTaunt(181119, nil, nil, nil, 1, 2)
+local specWarnDoomSpikeOther		= mod:NewSpecialWarningTaunt(181119, false, nil, 2, 1, 2)--Optional, most guilds 3 tank and don't swap for this so off by default
 ----Fel Imps
 local specWarnFelBlast				= mod:NewSpecialWarningInterrupt(181132, false, nil, 2, 1, 2)--Can be spammy, but someone may want it
 ----Dread Infernals
@@ -76,9 +76,9 @@ local specWarnShadowForce			= mod:NewSpecialWarningSpell(181799, nil, nil, nil, 
 --Adds
 mod:AddTimerLine(OTHER)
 ----Doom Lords
-local timerCurseofLegionCD			= mod:NewNextCountTimer(65, 181275, nil, nil, nil, 1, nil, DBM_CORE_HEROIC_ICON)--Maybe see one day, in LFR or something when group is terrible or doesn't kill doom lord portal first
+local timerCurseofLegionCD			= mod:NewNextCountTimer(64.8, 181275, nil, nil, nil, 1, nil, DBM_CORE_HEROIC_ICON)--Maybe see one day, in LFR or something when group is terrible or doesn't kill doom lord portal first
 local timerMarkofDoomCD				= mod:NewCDTimer(31.5, 181099, nil, "-Tank", nil, 3)
-local timerShadowBoltVolleyCD		= mod:NewCDTimer(12, 181126, nil, "-Healer", nil, 4)
+--local timerShadowBoltVolleyCD		= mod:NewCDTimer(12, 181126, nil, "-Healer", nil, 4)
 ----Fel Imps
 local timerFelImplosionCD			= mod:NewNextCountTimer(46, 181255, nil, nil, nil, 1)
 ----Infernals
@@ -111,7 +111,7 @@ local voiceMassiveBlast				= mod:NewVoice(181359, "Tank")--changemt
 
 mod:AddRangeFrameOption(20, 181099)
 mod:AddSetIconOption("SetIconOnGaze", 181597, false)
-mod:AddSetIconOption("SetIconOnDoom", 181099, false)
+mod:AddSetIconOption("SetIconOnDoom2", 181099, true)
 mod:AddSetIconOption("SetIconOnWrath", 186348, false)
 mod:AddHudMapOption("HudMapOnGaze2", 181597, false)
 mod:AddInfoFrameOption(181597)
@@ -270,18 +270,18 @@ local function breakDoom(self)
 	for i = 1, #doomTargets do
 		local name = doomTargets[i]
 		if name == playerName then
+			specWarnMarkOfDoom:Show(self:IconNumToString(i))
+			if self:IsMythic() then
+				voiceMarkOfDoom:Play("mm"..i)
+			else
+				voiceMarkOfDoom:Play("runout")
+			end
 			yellMarkOfDoom:Yell(i, i, i)
 		end
-		if self.Options.SetIconOnDoom then
+		if self.Options.SetIconOnDoom2 then
 			self:SetIcon(name, i)
 		end
 	end
-end
-
-function mod:DebugYells()
-	yellMarkOfDoom:Yell(1, 1, 1)
-	yellGaze:Yell(1, 1, 1)
-	yellWrathofGuldan:Yell()
 end
 
 function mod:OnCombatStart(delay)
@@ -302,8 +302,8 @@ function mod:OnCombatStart(delay)
 		--I've seen 1 sec variance on all of these timers.
 		--yes most of time +1 to all of these timers is more accurate
 		--but sometimes, everything does come 1 sec early, so that's why
-		timerCurseofLegionCD:Start(23, 1)
-		timerFelHellfireCD:Start(28)
+		timerCurseofLegionCD:Start(22, 1)
+		timerFelHellfireCD:Start(27.8)
 		timerGlaiveComboCD:Start(42.5)
 		countdownGlaiveCombo:Start(42.5)
 		timerFelImplosionCD:Start(45-delay, 1)
@@ -332,7 +332,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFelHellStorm:Show()
 		timerFelHellfireCD:Start()
 	elseif spellId == 181126 then
-		timerShadowBoltVolleyCD:Start(args.sourceGUID)
+--		timerShadowBoltVolleyCD:Start(args.sourceGUID)
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnShadowBoltVolley:Show(args.sourceName)
 			voiceShadowBoltVolley:Play("kickcast")
@@ -349,6 +349,7 @@ function mod:SPELL_CAST_START(args)
 		if tanking or (status == 3) then--Player is current target
 			specWarnMassiveBlast:Show()
 		else
+			if self:GetNumAliveTanks() >= 3 and not self:CheckNearby(21, targetName) then return end--You are not near current tank, you're probably 3rd tank on Doom Guards that never taunts massive blast
 			specWarnMassiveBlastOther:Schedule(1, targetName)
 		end
 	elseif spellId == 181793 or spellId == 182077 then--Melee (10)
@@ -442,25 +443,27 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 181099 then
 		timerMarkofDoomCD:Start(args.sourceGUID)
-		doomTargets[#doomTargets+1] = args.destName
+		if not tContains(doomTargets, args.destName) then
+			doomTargets[#doomTargets+1] = args.destName
+		end
 		self.vb.DoomTargetCount = self.vb.DoomTargetCount + 1
 		self:Unschedule(breakDoom)
 		if #doomTargets == 3 then
 			breakDoom(self)
 		else
-			self:Schedule(2, breakDoom, self)--3 targets, pretty slowly. I've seen at least 1.2, so make this 1.3, maybe more if needed
+			self:Schedule(2.5, breakDoom, self)--3 targets, pretty slowly. I've seen at least 1.2, so make this 1.3, maybe more if needed
 		end
 		if args:IsPlayer() then
-			specWarnMarkOfDoom:Show()
 			countdownMarkOfDoom:Start()
-			voiceMarkOfDoom:Play("runout")
 		end
 		updateRangeFrame(self)
 	elseif spellId == 181191 and self:CheckInterruptFilter(args.sourceGUID, true) and self:IsMelee() and self:AntiSpam(2, 5) then--No sense in duplicating code, just use CheckInterruptFilter with arg to skip the filter setting check
 		voiceFelHellfire:Play("runaway")
 		specWarnFelHellfire:Show()--warn melee who are targetting infernal to run out if it's exploding
 	elseif spellId == 181597 or spellId == 182006 then
-		gazeTargets[#gazeTargets+1] = args.destName
+		if not tContains(gazeTargets, args.destName) then
+			gazeTargets[#gazeTargets+1] = args.destName
+		end
 		self:Unschedule(warnGazeTargts)
 		if #gazeTargets == 3 then
 			warnGazeTargts(self)
@@ -524,7 +527,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			countdownMarkOfDoom:Cancel()
 		end
 		updateRangeFrame(self)
-		if self.Options.SetIconOnDoom then
+		if self.Options.SetIconOnDoom2 and not self:IsLFR() then
 			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 185147 or spellId == 182212 or spellId == 185175 then--Portals
@@ -557,7 +560,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.HudMapOnGaze2 then
 			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
 		end
-		if self.Options.SetIconOnGaze then
+		if self.Options.SetIconOnGaze and not self:IsLFR() then
 			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 181275 then
@@ -595,7 +598,7 @@ function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 91241 then--Doom Lord
 		timerMarkofDoomCD:Cancel(args.destGUID)
-		timerShadowBoltVolleyCD:Cancel(args.destGUID)
+--		timerShadowBoltVolleyCD:Cancel(args.destGUID)
 	end
 end
 

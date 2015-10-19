@@ -2739,7 +2739,7 @@ do -- availMissionsHandle
 				local mid, sr = mi.missionID, G.HasSignificantRewards(mi)
 				local sg = groupCache[mid]
 				mi.groups, g = sg, sg[1] and not G.GetMissionGroupDeparture(sg[1], mi) and sg[1] or eg
-				mi.ord0, mi.ord1 = 0, (cw[g[9]] or cw[sr] or (sr and 8) or 0) * 1e16 + g[1]*g[3]*1e3 + g[1]
+				mi.ord0, mi.ord1 = 0, (cw[g[9]] or cw[sr] or (sr and 8) or 0) * 1e16 + g[1]*g[3]*1e3 + (sr and g[1] or 0)
 				
 				if order == "duration" then
 					mi.ord = -mi.durationSeconds
@@ -3379,6 +3379,7 @@ do -- Ships
 	local function UpdateShipMissionMap()
 		local self = GarrisonShipyardFrame.MissionTab.MissionList
 		local sg = G.GetSuggestedGroupsForAllMissions(2)
+		local oil = select(2, GetCurrencyInfo(1101)) or 0
 		for i=1, #self.missions do
 			local mission, frame = self.missions[i], self.missionFrames[i]
 			if frame:IsShown() and not mission.inProgress then
@@ -3393,6 +3394,8 @@ do -- Ships
 					r,g,b = 1, 0.2, 0.6
 				elseif nt > 0 then
 					r,g,b = 0.6, 0.2, 1
+				elseif (mission.cost or 0) > oil then
+					r,g,b = 1/4, 1/4, 1/4
 				elseif not s then
 					r,g,b = 0.4, 0.4, 0.4
 				elseif c.ship3 > s then
@@ -3450,21 +3453,31 @@ do -- Ships
 	for i=2,#groups.buttons do
 		groups.buttons[i]:SetPoint("LEFT", groups.buttons[i-1], "RIGHT", 4, 0)
 	end
-	hooksecurefunc(GarrisonShipyardFrame, "ShowMission", function(_self, _mid)
+	local noPendingSync = true
+	local function syncMissionGroups()
 		local Stage, mi = SHIP_MISSION_PAGE.Stage, SHIP_MISSION_PAGE.missionInfo
 		Stage.Title:SetPoint("LEFT", Stage.Header, "LEFT", 98, 10)
 		groups:SetPoint("BOTTOMLEFT", Stage.Header, "BOTTOMLEFT", 88, 4)
 		groups:Show()
-		local sg = G.GetSuggestedGroupsForMission(SHIP_MISSION_PAGE.missionInfo)
-		for i=#sg+1, #groups.buttons do
+		local sg = mi and G.GetSuggestedGroupsForMission(SHIP_MISSION_PAGE.missionInfo)
+		local sgn = sg and #sg or 0
+		for i=sgn+1, #groups.buttons do
 			groups.buttons[i]:Hide()
 		end
-		for i=1,#sg do
+		for i=1,sgn do
 			local b, g = groups.buttons[i], sg[i]
 			GroupButtonBase.SetGroup(b, mi, g, 100, 20, sg.rankType)
 			b.group = g
 		end
-	end)
+		noPendingSync = true
+	end
+	hooksecurefunc(GarrisonShipyardFrame, "ShowMission", syncMissionGroups)
+	function EV.GARRISON_FOLLOWER_LIST_UPDATE()
+		if noPendingSync and SHIP_MISSION_PAGE:IsVisible() then
+			noPendingSync = false
+			T.After0(syncMissionGroups)
+		end
+	end
 end
 do -- RefreshActiveMissionsView
 	local isFullRefresh, isDirty = true

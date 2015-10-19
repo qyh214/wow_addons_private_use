@@ -491,7 +491,7 @@ hooksecurefunc("GarrisonMissionFrame_SetFollowerPortrait", function(port, fi)
 						at.counters[c[i]] = {icon=icon, name=name, description=desc, factor=300}
 					end
 				end
-				table.insert(fi.abilities, (oi or 0) + 1, at)
+				table.insert(fi.abilities, at)
 			end
 		end
 	end

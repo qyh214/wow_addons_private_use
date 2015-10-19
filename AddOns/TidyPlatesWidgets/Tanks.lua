@@ -41,7 +41,7 @@ local EnemyUnitsTargetGUID = {}
 local EnemyUnitsHistoryGUID = {}
 local EnemyUnitsTargetName = {}
 
-local FriendlyUnitsUnitID = {}
+local FriendlyUnitsList = {}
 
 local Debug = false
 
@@ -58,7 +58,7 @@ local function TargetWatcherEvents(frame, event, ...)
 
 	--local widget, plate
 	local target, unitid, guid
-	FriendlyUnitsUnitID = wipe(FriendlyUnitsUnitID)
+	FriendlyUnitsList = wipe(FriendlyUnitsList)
 
 	-- Store target history
 	for guid, target in pairs(EnemyUnitsTargetGUID) do
@@ -67,35 +67,35 @@ local function TargetWatcherEvents(frame, event, ...)
 	end
 
 	-- Reset the Tracking List
-	for guid in pairs(FriendlyUnitsUnitID) do FriendlyUnitsUnitID[guid] = nil end
+	for guid in pairs(FriendlyUnitsList) do FriendlyUnitsList[guid] = nil end
 
 	-- Build a list of Trackable targets (via target, focus, and raid members)
 
 	-- Add Target to Tracked Units List
 	guid = UnitGUID("target")
-	if guid then FriendlyUnitsUnitID[guid] = "target" end
+	if guid then FriendlyUnitsList[guid] = "target" end
 
 	-- Add Focus to Tracked Units List
 	guid = UnitGUID("focus")
-	if guid then FriendlyUnitsUnitID[guid] = "focus" end
+	if guid then FriendlyUnitsList[guid] = "focus" end
 
 	-- Add Pets to Tracked Units List
 	guid = UnitGUID("pet")
-	if guid then FriendlyUnitsUnitID[guid] = "pet" end
+	if guid then FriendlyUnitsList[guid] = "pet" end
 
 	-- Add Raid Members
 	local groupSize = tonumber(GetNumGroupMembers())
 	for index = 1, groupSize do
 		unitid = "raid"..index
 		guid = UnitGUID(unitid)
-		if guid then FriendlyUnitsUnitID[guid] = unitid end
+		if guid then FriendlyUnitsList[guid] = unitid end
 	end
 
 
 	-- Build a list of the target's targets and check for changes
 	local changes = false
 
-	for guid, unitid in pairs(FriendlyUnitsUnitID) do
+	for guid, unitid in pairs(FriendlyUnitsList) do
 		if unitid then
 
 			local targetOfFriendly = unitid.."target"
@@ -159,29 +159,29 @@ end
 
 local function IsTankedByAnotherTank(unit)
 
-	local targetGuid, targetName
-	local guid = unit.guid
+	local guidOfTarget, nameOfTarget
+	local plateguid = unit.guid
 
+	-- Step 1: Determine the ID of the Evaluated Units' Target
+	-- Via Target
 	if unit.isTarget then
-		targetGuid = UnitGUID("targettarget")				-- Nameplate is a target
-		--targetName = UnitName("targettarget")
+		guidOfTarget = UnitGUID("targettarget")
+		nameOfTarget = UnitName("targettarget")
+	-- Via Mouseover
 	elseif unit.isMouseover then
-		targetGuid = UnitGUID("mouseovertarget")		-- Nameplate is a mouseover
-		--targetName = UnitName("mouseovertarget")
-	elseif guid then
-
-		targetGuid = EnemyUnitsTargetGUID[guid] -- or GetRecentDamageTarget(guid)	-- Nameplate is arbitrary (hopefully it's been moused during its life)
-		--targetName = UnitName(
+		guidOfTarget = UnitGUID("mouseovertarget")		
+		nameOfTarget = UnitName("mouseovertarget")
+	-- Via GUID Reference Table
+	elseif plateguid then
+		guidOfTarget = EnemyUnitsTargetGUID[guid] -- or GetRecentDamageTarget(guid)	-- Nameplate is arbitrary (hopefully it's been moused during its life)
+		--meOfTarget = UnitName()
 	end
-	--print("IsTankedByAnotherTank", guid, targetGuid, FriendlyUnitsRole[targetGuid or 0], EnemyUnitsTargetGUID[guid])
 
-	-- ie. If the evaluated unit's target is equal to one of the tanks, then it's tanked
-	if targetGuid and FriendlyUnitsRole[targetGuid] == TANK_ROLE then	-- If the mob is tanked by an actual tank...
+	-- Step 2:  Compare the TargetOf with the list of Tanks
+	-- ie. If the evaluated unit's target is equal to one of the tanks, it's tanked.
+	if guidOfTarget and FriendlyUnitsRole[guidOfTarget] == TANK_ROLE then
 		return true
-
-	-- Experimental...
-	elseif targetGuid and not FriendlyUnitsRole[targetGuid] then		-- If the mob is attacking something outside your group...
-		return true
+	-- Whitelist for Named Tanks/Units 
 	end
 end
 

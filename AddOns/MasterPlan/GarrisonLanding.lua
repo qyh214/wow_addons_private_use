@@ -1,6 +1,6 @@
 local _, T = ...
 if T.Mark ~= 50 then return end
-local G, L = T.Garrison, T.L
+local G, L, E = T.Garrison, T.L, T.Evie
 
 local function Ship_OnEnter(self, ...)
 	if self.buildingID == -1 and self.plotID == -42 then
@@ -69,6 +69,11 @@ hooksecurefunc("GarrisonLandingPageReport_GetShipments", function(self)
 		end
 	end
 end)
+function E:SHOW_LOOT_TOAST(rt, rl, _q, _4, _5, _6, source)
+	if rt == "currency" and source == 10 and rl:match("currency:824") then
+		GarrisonLandingPageReport_GetShipments(GarrisonLandingPageReport)
+	end
+end
 local function addCacheResources(self, id)
 	if id == 824 then
 		local cv, mv = G.GetResourceCacheInfo()
