@@ -2,19 +2,18 @@ TitanPanelSetup-READ_ME_FIRST File
 ==================================
 
 ****************************************************************************************************
-ATTENTION! IMPORTANT INFORMATION FOR UPGRADING FROM VERSION 4.3.9.40000 TO VERSION 5.0.0.40000!
-
--- TitanCoords has been renamed TitanLocation to more accurately reflect the information it
-      provides.  REMOVE THE TitanCoords FOLDER FROM YOUR ADDONS FOLDER.
--- TitanGoldTracker has been renamed TitanGold.  REMOVE THE TitanGoldTracker FOLDER FROM YOUR ADDONS
-      FOLDER.
--- TitanAmmo has been removed from the package due to the elimination of ammo/arrows/bolts from the
-      game.  REMOVE THE TitanAmmo FOLDER FROM YOUR ADDONS FOLDER.
--- TitanRegen has been removed from the package due to lack of interest.  TitanRegen 4.3.9.40000
-      will still work with Titan Panel 5.0, but will no longer be maintained by the Titan
-      Development Team.  Consequently, it may not work with future versions of Titan Panel.  You are
-      free to maintain this plugin if you wish.  IF YOU HAVE NO INTEREST IN MAINTAINING IT, REMOVE
-      THE TitanRegen FOLDER FROM YOUR ADDONS FOLDER.
+ATTENTION! THE FOLLOWING PLUGINS HAVE BEEN REMOVED OR RENAMED. PLEASE REMOVE THESE FROM YOUR FOLDER!
+- TitanCoords has been renamed TitanLocation to more accurately reflect the information it
+   provides.  REMOVE THE TitanCoords FOLDER FROM YOUR ADDONS FOLDER.
+- TitanGoldTracker has been renamed TitanGold.  REMOVE THE TitanGoldTracker FOLDER FROM YOUR ADDONS
+   FOLDER.
+- TitanAmmo has been removed from the package due to the elimination of ammo/arrows/bolts from the
+   game.  REMOVE THE TitanAmmo FOLDER FROM YOUR ADDONS FOLDER.
+- TitanRegen has been removed from the package due to lack of interest.  Consequently, it may not
+   work with future versions of Titan Panel.  You are free to maintain this plugin if you wish.
+   IF YOU HAVE NO INTEREST IN MAINTAINING IT, REMOVE THE TitanRegen FOLDER FROM YOUR ADDONS FOLDER.
+- BonusScanner has been removed from Titan Panel as it is not part of the core functionality.
+- BrokerBonusScanner has been removed from Titan Panel as it is not part of the core functionality.
 ****************************************************************************************************
 
 1. Description
@@ -198,9 +197,9 @@ ATTENTION! IMPORTANT INFORMATION FOR UPGRADING FROM VERSION 4.3.9.40000 TO VERSI
 
 6. Bug Reporting
 
-   If you encounter a bug, open an Issue at our Google Code site:
+   If you encounter a bug, open an Issue at our SourceForge site:
    
-      http://code.google.com/p/titanpanel/issues/
+      https://sourceforge.net/p/titanpanel/tickets/?source=navbar
    
    Please include as many details as possible, including a complete list of addons.  It is helpful
    to use a bug capturing addon, such as !Swatter (part of Gatherer addon); copy and paste the
@@ -209,6 +208,5 @@ ATTENTION! IMPORTANT INFORMATION FOR UPGRADING FROM VERSION 4.3.9.40000 TO VERSI
    has already been reported and fixed.  Also, check the download sites for information on the
    download page, such as:
    
-      http://wowui.incgamers.com/?p=mod&m=1442
-      http://www.wowinterface.com/downloads/info8092-TitanPanel.html
-      http://wow.curse.com/downloads/wow-addons/details/titan-panel.aspx
+      http://www.wowinterface.com/downloads/fileinfo.php?id=8092
+      http://www.curse.com/addons/wow/titan-panel

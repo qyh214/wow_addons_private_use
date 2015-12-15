@@ -79,9 +79,11 @@ function module:AddExtraData(mission)
 			local value=c.func(c,k,v)
 			if value then
 				mission[c.key]=mission[c.key]+value
-				mission.class=c.key
-				mission.maxable=c.maxable
-				mission.mat=c.mat
+				if  not mission.class or mission.class=="xp" then
+					mission.class=c.key
+					mission.maxable=c.maxable
+					mission.mat=c.mat
+				end
 				break
 			end
 		end
@@ -391,11 +393,8 @@ classes={
 function addon:GetRewardClasses()
 	return classes
 end
-function addon:TestMission(id)
-	local rewards=G.GetMissionRewardInfo(id)
-	for id,reward in pairs(rewards) do
-		for _,v in pairs(classes) do
-			print(v.key,v.func(v,id,reward))
-		end
-	end
+function addon:TestMissionExtra(id)
+	local data={missionID=id}
+	module:AddExtraData(data)
+	return data
 end

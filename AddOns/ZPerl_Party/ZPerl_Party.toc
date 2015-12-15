@@ -13,7 +13,7 @@
 ## Notes-zhTW: Z-Perl 隊伍框架 替換內建的隊伍框架
 ## RequiredDeps: ZPerl
 ## OptionalDeps: ZPerl_ArcaneBar
-## X-Curse-Packaged-Version: r978
+## X-Curse-Packaged-Version: r985
 ## X-Curse-Project-Name: Z-Perl UnitFrames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

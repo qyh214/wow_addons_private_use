@@ -84,7 +84,7 @@ do
 			return
 		end
 
-		local current_icon = private.OptionsCharacter.TargetIcon
+		local current_icon = private.CharacterOptions.TargetIcon
 		local info = _G.UIDropDownMenu_CreateInfo()
 
 		info.func = Icon_Entry_OnSelect
@@ -127,7 +127,7 @@ test_button:SetScript("OnClick", function(self)
 
 	local alert_text = L.FOUND_FORMAT:format(L.CONFIG_TEST_NAME)
 
-	if private.Options.ShowAlertAsToast then
+	if private.CharacterOptions.ShowAlertAsToast then
 		Toast:Spawn("_NPCScanAlertToast", alert_text)
 	else
 		private.Print(alert_text, _G.GREEN_FONT_COLOR)
@@ -186,8 +186,25 @@ function screen_edge_flash_checkbox.setFunc(is_enabled)
 	private.SetAlertScreenEdgeFlash(is_enabled == "1")
 end
 
+
+local nameplate_scan_checkbox = _G.CreateFrame("CheckButton", "_NPCScanNameplateScanCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
+nameplate_scan_checkbox:SetPoint("TOPLEFT", screen_edge_flash_checkbox, "BOTTOMLEFT", 0, -8)
+nameplate_scan_checkbox.tooltipText = L.NAMEPLATE_SCAN_DESC
+
+panel.nameplate_scan_checkbox = nameplate_scan_checkbox
+
+local nameplate_scan_label = _G[nameplate_scan_checkbox:GetName() .. "Text"]
+nameplate_scan_label:SetText(L.NAMEPLATE_SCAN)
+nameplate_scan_checkbox:SetHitRectInsets(4, 4 - nameplate_scan_label:GetStringWidth(), 4, 4)
+
+function nameplate_scan_checkbox.setFunc(is_enabled)
+	private.SetNameplateScan(is_enabled == "1")
+end
+
+--
+
 local viginette_scan_checkbox = _G.CreateFrame("CheckButton", "_NPCScanVignetteScanCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
-viginette_scan_checkbox:SetPoint("TOPLEFT", screen_edge_flash_checkbox, "BOTTOMLEFT", 0, -8)
+viginette_scan_checkbox:SetPoint("TOPLEFT", nameplate_scan_checkbox, "BOTTOMLEFT", 0, -8)
 viginette_scan_checkbox.tooltipText = L.VIGNETTE_SCAN_DESC
 
 panel.viginette_scan_checkbox = viginette_scan_checkbox
@@ -214,7 +231,6 @@ function mouseover_scan_checkbox.setFunc(is_enabled)
 	private.SetMouseoverScan(is_enabled == "1")
 end
 
-
 local block_flight_scan_checkbox = _G.CreateFrame("CheckButton", "_NPCScanBlockFlightScanCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
 block_flight_scan_checkbox:SetPoint("TOPLEFT", mouseover_scan_checkbox, "BOTTOMLEFT", 0, -8)
 block_flight_scan_checkbox.tooltipText = L.BLOCKFLIGHTSCAN_DESC
@@ -229,8 +245,22 @@ function block_flight_scan_checkbox.setFunc(is_enabled)
 	private.SetBlockFlightScan(is_enabled == "1")
 end
 
+local hellbane_scan_checkbox = _G.CreateFrame("CheckButton", "_NPCScanHellbaneCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
+hellbane_scan_checkbox:SetPoint("TOPLEFT", block_flight_scan_checkbox, "BOTTOMLEFT", 0, -8)
+hellbane_scan_checkbox.tooltipText = L.HELLBANE_SCAN
+
+panel.hellbane_scan_checkbox = hellbane_scan_checkbox
+
+local hellbane_label = _G[hellbane_scan_checkbox:GetName() .. "Text"]
+hellbane_label:SetText(L.HELLBANE_SCAN)
+hellbane_scan_checkbox:SetHitRectInsets(4, 4 - hellbane_label:GetStringWidth(), 4, 4)
+
+function hellbane_scan_checkbox.setFunc(is_enabled)
+	private.SetHellbaneScan(is_enabled == "1")
+end
+
 local alert_sound_dropdown = _G.CreateFrame("Frame", "_NPCScanConfigSoundDropdown", alert_options_panel, "UIDropDownMenuTemplate")
-alert_sound_dropdown:SetPoint("TOPLEFT", block_flight_scan_checkbox, "BOTTOMLEFT", -12, -18)
+alert_sound_dropdown:SetPoint("TOPLEFT", hellbane_scan_checkbox, "BOTTOMLEFT", -12, -18)
 alert_sound_dropdown:SetPoint("RIGHT", -12, 0)
 alert_sound_dropdown:EnableMouse(true)
 alert_sound_dropdown.tooltipText = L.CONFIG_ALERT_SOUND_DESC
@@ -300,7 +330,7 @@ do
 		if not level then
 			return
 		end
-		local current_sound = private.Options.AlertSound
+		local current_sound = private.GlobalOptions.AlertSound
 		local info = _G.UIDropDownMenu_CreateInfo()
 
 		if level == 1 then
@@ -381,7 +411,7 @@ end
 
 -- Reverts to default options.
 function panel:default()
-	private.Synchronize() -- Resets all
+	private.Ace.db:ResetProfile();
 end
 
 _G.InterfaceOptions_AddCategory(panel)

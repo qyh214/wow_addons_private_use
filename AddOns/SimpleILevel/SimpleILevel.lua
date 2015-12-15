@@ -16,7 +16,7 @@ SIL = LibStub("AceAddon-3.0"):NewAddon(L.core.name, "AceEvent-3.0", "AceConsole-
 SIL.category = GetAddOnMetadata("SimpleILevel", "X-Category");
 SIL.version = GetAddOnMetadata("SimpleILevel", "Version");
 SIL.versionMajor = 3;                    -- Used for cache DB versioning
-SIL.versionRev = 'r229';    -- Used for version information
+SIL.versionRev = 'r235';    -- Used for version information
 SIL.action = {};        -- DB of unitGUID->function to run when a update comes through
 SIL.hooks = {};         -- List of hooks in [type][] = function;
 SIL.autoscan = 0;       -- time() value of last autoscan, must be more then 1sec
@@ -428,7 +428,8 @@ end;
 
 function SIL:AgeToText(age, color)
     if type(color) == 'nil' then color = true; end
-    
+    local hex = "00ff00";
+	
 	if type(age) == 'number' then
 		if age > 86400 then
 			age = self:Round(age / 86400, 2);

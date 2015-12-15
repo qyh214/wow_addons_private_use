@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Goggnathog", "DBM-GarrisonInvasions")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13864 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14647 $"):sub(12, -3))
 mod:SetCreatureID(90995)
 mod:SetZone()
 
@@ -49,7 +49,7 @@ local function updateRangeFrame(self)
 		if UnitDebuff("player", debuffName) then
 			DBM.RangeCheck:Show(10)
 		else
-			DBM.RangeCheck:Show(10, debuffName)
+			DBM.RangeCheck:Show(10, debuffFilter)
 		end
 	else
 		DBM.RangeCheck:Hide()

@@ -40,15 +40,15 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 14610 $"):sub(12, -3)),
-	DisplayVersion = "6.2.14 alpha", -- the string that is shown as version
-	ReleaseRevision = 14606 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 14714 $"):sub(12, -3)),
+	DisplayVersion = "6.2.17 alpha", -- the string that is shown as version
+	ReleaseRevision = 14712 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
 -- support for git svn which doesn't support svn keyword expansion
+-- just use the latest release revision
 if not DBM.Revision then
-	-- just use the latest release revision
 	DBM.Revision = DBM.ReleaseRevision
 end
 
@@ -394,7 +394,7 @@ local statusWhisperDisabled = false
 local wowTOC = select(4, GetBuildInfo())
 local dbmToc = 0
 
-local fakeBWRevision = 13693
+local fakeBWRevision = 13695
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
 local guiRequested = false
@@ -414,7 +414,10 @@ local bannedMods = { -- a list of "banned" (meaning they are replaced by another
 -----------------
 --  Libraries  --
 -----------------
-local LL = LibStub("LibLatency")
+local LL
+if LibStub("LibLatency", true) then
+	LL = LibStub("LibLatency")
+end
 
 
 --------------------------------------------------------
@@ -432,7 +435,7 @@ local floor, mhuge, mmin, mmax = math.floor, math.huge, math.min, math.max
 local GetNumGroupMembers, GetRaidRosterInfo = GetNumGroupMembers, GetRaidRosterInfo
 local UnitName, GetUnitName = UnitName, GetUnitName
 local IsInRaid, IsInGroup, IsInInstance = IsInRaid, IsInGroup, IsInInstance
-local UnitAffectingCombat, InCombatLockdown, IsEncounterInProgress = UnitAffectingCombat, InCombatLockdown, IsEncounterInProgress
+local UnitAffectingCombat, InCombatLockdown, IsEncounterInProgress, UnitPlayerOrPetInRaid, UnitPlayerOrPetInParty = UnitAffectingCombat, InCombatLockdown, IsEncounterInProgress, UnitPlayerOrPetInRaid, UnitPlayerOrPetInParty
 local UnitGUID, UnitHealth, UnitHealthMax, UnitBuff = UnitGUID, UnitHealth, UnitHealthMax, UnitBuff
 local UnitExists, UnitIsDead, UnitIsFriend, UnitIsUnit, UnitIsAFK = UnitExists, UnitIsDead, UnitIsFriend, UnitIsUnit, UnitIsAFK
 local GetSpellInfo, EJ_GetSectionInfo, GetSpellTexture, GetActiveSpecGroup, GetSpellCooldown = GetSpellInfo, EJ_GetSectionInfo, GetSpellTexture, GetActiveSpecGroup, GetSpellCooldown
@@ -1047,13 +1050,14 @@ do
 		end
 		local found1, found2, found3 = false, false, false
 		for i = 1, #self.Counts do
-			if self.Counts[i].value == self.Options.CountdownVoice then
+			local voice = self.Counts[i].value
+			if voice == self.Options.CountdownVoice then
 				found1 = true
 			end
-			if self.Counts[i].value == self.Options.CountdownVoice2 then
+			if voice == self.Options.CountdownVoice2 then
 				found2 = true
 			end
-			if self.Counts[i].value == self.Options.CountdownVoice3v2 then
+			if voice == self.Options.CountdownVoice3v2 then
 				found3 = true
 			end
 		end
@@ -1875,6 +1879,10 @@ do
 			local timer = tonumber(cmd:sub(5)) or 10
 			Pull(timer)
 		elseif cmd:sub(1, 3) == "lag" then
+			if not LL then
+				DBM:AddMsg(DBM_CORE_UPDATE_REQUIRES_RELAUNCH)
+				return
+			end
 			LL:RequestLatency()
 			DBM:AddMsg(DBM_CORE_LAG_CHECKING)
 			C_TimerAfter(5, function() DBM:ShowLag() end)
@@ -1919,6 +1927,11 @@ do
 					local m1 = DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "party", playerName, 0.1, hudDuration, 0, 1, 0, 1, nil, false):Appear()
 					local m2 = DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "party", UnitName(uId), 0.75, hudDuration, color2.r, color2.g, color2.b, 1, nil, false):Appear()
 					m2:EdgeTo(m1, nil, hudDuration, 0, 1, 0, 1)
+					success = true
+				elseif hudType:upper() == "DOT" then
+					local _, targetClass = UnitClass(uId)
+					local color2 = RAID_CLASS_COLORS[targetClass]
+					DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "party", UnitName(uId), 0.75, hudDuration, color2.r, color2.g, color2.b, 1, nil, false):Appear()
 					success = true
 				elseif hudType:upper() == "GREEN" then
 					DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "highlight", UnitName(uId), 3.5, hudDuration, 0, 1, 0, 0.5, nil, false):Pulse(0.5, 0.5)
@@ -2177,13 +2190,16 @@ do
 			sortLag[i] = nil
 		end
 	end
-	
-	LL:Register("DBM", function(homelag, worldlag, sender, channel)
-		if sender and raid[sender] then
-			raid[sender].homelag = homelag
-			raid[sender].worldlag = worldlag
-		end
-	end)
+	if LL then
+		LL:Register("DBM", function(homelag, worldlag, sender, channel)
+			if sender and raid[sender] then
+				raid[sender].homelag = homelag
+				raid[sender].worldlag = worldlag
+			end
+		end)
+	else
+		DBM:AddMsg(DBM_CORE_UPDATE_REQUIRES_RELAUNCH)
+	end
 
 end
 
@@ -2982,7 +2998,7 @@ function DBM:LoadModOptions(modId, inCombat, first)
 	end
 	_G[savedVarsName][fullname] = savedOptions
 	if profileNum > 0 then
-		_G[savedVarsName][fullname]["talent"..profileNum] = profileNum == 3 and gladStance or currentSpecName
+		_G[savedVarsName][fullname]["talent"..profileNum] = profileNum == 3 and (gladStance or "Glad Stance Temp") or currentSpecName
 		self:Debug("LoadModOptions: Finished loading ".._G[savedVarsName][fullname]["talent"..profileNum])
 	end
 	_G[savedStatsName] = savedStats
@@ -3315,6 +3331,7 @@ do
 	local lastLFGAlert = 0
 	function DBM:LFG_ROLE_CHECK_SHOW()
 		if not UnitIsGroupLeader("player") and self.Options.LFDEnhance and GetTime() - lastLFGAlert > 5 then
+			self:FlashClientIcon()
 			self:PlaySoundFile("Sound\\interface\\levelup2.ogg", true)--Because regular sound uses SFX channel which is too low of volume most of time
 			lastLFGAlert = GetTime()
 		end
@@ -3326,6 +3343,7 @@ function DBM:LFG_PROPOSAL_SHOW()
 		self.Bars:CreateBar(40, DBM_LFG_INVITE, "Interface\\Icons\\Spell_Holy_BorrowedTime")
 	end
 	if self.Options.LFDEnhance then
+		self:FlashClientIcon()
 		self:PlaySoundFile("Sound\\interface\\levelup2.ogg", true)--Because regular sound uses SFX channel which is too low of volume most of time
 	end
 end
@@ -3339,8 +3357,11 @@ function DBM:LFG_PROPOSAL_SUCCEEDED()
 end
 
 function DBM:READY_CHECK()
-	if self.Options.RLReadyCheckSound and not BINDING_HEADER_oRA3 then--readycheck sound, if ora3 not installed (bad to have 2 mods do it)
-		self:PlaySoundFile("Sound\\interface\\levelup2.ogg", true)--Because regular sound uses SFX channel which is too low of volume most of time
+	if self.Options.RLReadyCheckSound then--readycheck sound, if ora3 not installed (bad to have 2 mods do it)
+		self:FlashClientIcon()
+		if not BINDING_HEADER_oRA3 then
+			self:PlaySoundFile("Sound\\interface\\levelup2.ogg", true)--Because regular sound uses SFX channel which is too low of volume most of time
+		end
 	end
 end
 
@@ -3497,10 +3518,12 @@ function DBM:CHALLENGE_MODE_START(mapID)
 	self:Debug("CHALLENGE_MODE_START fired for mapID "..mapID)
 	if self.Options.ChallengeBest == "None" then return end
 	if self.Options.DontShowBossTimers then return end
+	RequestChallengeModeMapInfo()
 	local maps = GetChallengeModeMapTable()
 	for i = 1, 8 do
 		local _, mapIDVerify = GetChallengeModeMapInfo(maps[i])--Even though we get mapid from CHALLENGE_MODE_START, we still need CM index since GetChallengeModeMapPlayerStats doesn't take mapID :\
 		if mapID == mapIDVerify then
+			RequestChallengeModeLeaders(mapID)
 			local guildBest, realmBest = GetChallengeBestTime(mapID)
 			local lastTime, bestTime, medal = GetChallengeModeMapPlayerStats(maps[i])
 			if bestTime and self.Options.ChallengeBest == "Personal" then
@@ -3680,10 +3703,6 @@ function DBM:LoadMod(mod, force)
 		self:LoadModOptions(mod.modId, InCombatLockdown(), true)
 		if DBM_GUI then
 			DBM_GUI:UpdateModList()
-		end
-		if difficultyIndex == 8 then
-			RequestChallengeModeMapInfo()
-			RequestChallengeModeLeaders(LastInstanceMapID)
 		end
 		if LastInstanceType ~= "pvp" and #inCombat == 0 and IsInGroup() then--do timer recovery only mod load
 			if not timerRequestInProgress then
@@ -3943,6 +3962,7 @@ do
 		end
 		dummyMod.text:Cancel()
 		if timer == 0 then return end--"/dbm pull 0" will strictly be used to cancel the pull timer (which is why we let above part of code run but not below)
+		DBM:FlashClientIcon()
 		if not DBM.Options.DontShowPT2 then
 			DBM.Bars:CreateBar(timer, DBM_CORE_TIMER_PULL, "Interface\\Icons\\Spell_Holy_BorrowedTime")
 			fireEvent("DBM_TimerStart", "pull", DBM_CORE_TIMER_PULL, timer, "Interface\\Icons\\Spell_Holy_BorrowedTime")--Most args missing because pull timer simply doesn't have them.
@@ -4935,7 +4955,6 @@ end
 ----------------------
 do
 	local targetList = {}
-	local cachedmod, cachedmob = nil, nil
 	local function buildTargetList()
 		local uId = (IsInRaid() and "raid") or "party"
 		for i = 0, GetNumGroupMembers() do
@@ -4953,13 +4972,10 @@ do
 	end
 
 	local function scanForCombat(mod, mob, delay)
-		mod = mod or cachedmod
-		mob = mob or cachedmob
-		delay = delay or 2
-		if not checkEntry(inCombat, cachedmob) then
+		if not checkEntry(inCombat, mob) then
 			buildTargetList()
 			if targetList[mob] then
-				if delay > 0 and UnitAffectingCombat(targetList[mob]) then
+				if delay > 0 and UnitAffectingCombat(targetList[mob]) and not (UnitPlayerOrPetInRaid(targetList[mob]) or UnitPlayerOrPetInParty(targetList[mob])) then
 					DBM:StartCombat(mod, delay, "PLAYER_REGEN_DISABLED")
 				elseif (delay == 0) then
 					DBM:StartCombat(mod, 0, "PLAYER_REGEN_DISABLED_AND_MESSAGE")
@@ -4967,15 +4983,15 @@ do
 			end
 			clearTargetList()
 		end
-		cachedmod, cachedmob = nil, nil
 	end
 
 
 	local function checkForPull(mob, combatInfo)
 		healthCombatInitialized = false
-		cachedmod, cachedmob = combatInfo.mod, mob
---		C_TimerAfter(0.5, scanForCombat, combatInfo.mod, mob, 0.5)
-		C_TimerAfter(2, scanForCombat)
+		--This just can't be avoided, tryig to save cpu by using C_TimerAfter broke this
+		--This needs the redundancy and ability to pass args.
+		DBM:Schedule(0.5, scanForCombat, combatInfo.mod, mob, 0.5)
+		DBM:Schedule(2, scanForCombat, combatInfo.mod, mob, 2)
 		C_TimerAfter(2.1, function()
 			healthCombatInitialized = true
 		end)
@@ -5003,6 +5019,7 @@ do
 			end
 		end
 		if self.Options.AFKHealthWarning and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
+			self:FlashClientIcon()
 			local voice = DBM.Options.ChosenVoicePack
 			local path = "Sound\\Creature\\CThun\\CThunYouWillDIe.ogg"
 			if voice ~= "None" then 
@@ -5211,6 +5228,7 @@ do
 					else--World Boss
 						scanForCombat(v.mod, v.mob, 0)
 						if v.mod.readyCheckQuestId and (self.Options.WorldBossNearAlert or v.mod.Options.ReadyCheck) and not IsQuestFlaggedCompleted(v.mod.readyCheckQuestId) then
+							self:FlashClientIcon()
 							self:PlaySoundFile("Sound\\interface\\levelup2.ogg", true)
 						end
 					end
@@ -5508,6 +5526,7 @@ do
 				end
 			end
 			fireEvent("pull", mod, delay, synced, startHp)
+			self:FlashClientIcon()
 			--serperate timer recovery and normal start.
 			if event ~= "TIMER_RECOVERY" then
 				--add pull count
@@ -5665,7 +5684,7 @@ do
 		end
 		if not health or health < 5 then return end -- no worthy of combat start if health is below 5%
 		if dbmIsEnabled and InCombatLockdown() then
-			if cId ~= 0 and not bossHealth[cId] and bossIds[cId] and UnitAffectingCombat(uId) and healthCombatInitialized then -- StartCombat by UNIT_HEALTH.
+			if cId ~= 0 and not bossHealth[cId] and bossIds[cId] and UnitAffectingCombat(uId) and not (UnitPlayerOrPetInRaid(uId) or UnitPlayerOrPetInParty(uId)) and healthCombatInitialized then -- StartCombat by UNIT_HEALTH.
 				if combatInfo[LastInstanceMapID] then
 					for i, v in ipairs(combatInfo[LastInstanceMapID]) do
 						if v.mod.Options.Enabled and not v.mod.disableHealthCombat and v.type:find("combat") and (v.multiMobPullDetection and checkEntry(v.multiMobPullDetection, cId) or v.mob == cId) then
@@ -5736,7 +5755,7 @@ do
 				if thisTime < 30 then -- Normally, one attempt will last at least 30 sec.
 					totalPulls = totalPulls - 1
 					mod.stats[statVarTable[savedDifficulty].."Pulls"] = totalPulls
-					if self.Options.ShowWipeMessage then
+					if self.Options.ShowDefeatMessage then
 						if scenario then
 							self:AddMsg(DBM_CORE_SCENARIO_ENDED_AT:format(difficultyText..name, strFromTime(thisTime)))
 						else
@@ -5745,7 +5764,7 @@ do
 						end
 					end
 				else
-					if self.Options.ShowWipeMessage then
+					if self.Options.ShowDefeatMessage then
 						if scenario then
 							self:AddMsg(DBM_CORE_SCENARIO_ENDED_AT_LONG:format(difficultyText..name, strFromTime(thisTime), totalPulls - totalKills))
 						else
@@ -6045,7 +6064,7 @@ do
 end
 
 function DBM:SetCurrentSpecInfo()
-	if UnitBuff("player", gladStance) then 
+	if gladStance and UnitBuff("player", gladStance) then 
 		currentSpecGroup = 3 -- give 3rd spec option only for glad stance.
 		currentSpecID = 74 -- temp id for glad warrior, bliz not uses it
 	else
@@ -6140,6 +6159,7 @@ function DBM:UNIT_DIED(args)
 		self:OnMobKill(self:GetCIDFromGUID(GUID))
 	end
 	if self.Options.AFKHealthWarning and GUID == UnitGUID("player") and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
+		self:FlashClientIcon()
 		self:PlaySoundFile("Sound\\Creature\\CThun\\CThunYouWillDIe.ogg")--So fire an alert sound to save yourself from this person's behavior.
 	end
 end
@@ -6678,7 +6698,7 @@ function DBM:RoleCheck(ignoreLoot)
 	local _, _, _, _, _, lootrole = GetSpecializationInfoByID(specID)
 	if not InCombatLockdown() and ((IsPartyLFG() and (difficultyIndex == 14 or difficultyIndex == 15)) or not IsPartyLFG()) then
 		local tempRole--Use temp role because we still want Role to be "tank" for loot check comparison at bottom (gladiators still use tank gear)
-		if role == "TANK" and UnitBuff("player", gladStance) then--Special handling for gladiator stance
+		if gladStance and role == "TANK" and UnitBuff("player", gladStance) then--Special handling for gladiator stance
 			currentSpecGroup = 3 -- give 3rd spec option only for glad stance.
 			currentSpecID = 74 -- temp id for glad warrior, bliz not uses it
 			tempRole = "DAMAGER"
@@ -6707,6 +6727,12 @@ function DBM:AntiSpam(time, id)
 		return true
 	else
 		return false
+	end
+end
+
+function DBM:FlashClientIcon()
+	if self:AntiSpam(5, "FLASH") then
+		FlashClientIcon()
 	end
 end
 
@@ -7708,6 +7734,17 @@ do
 			["RaidCooldown"] = true,--Revival
 			["RemovePoison"] = true,
 			["RemoveDisease"] = true,
+		},
+		[577] = {	--Havok Demon Hunter
+			["Dps"] = true,
+			["Melee"] = true,
+			["MeleeDps"] = true,
+			["Physical"] = true,
+		},
+		[581] = {	--Vengeance Demon Hunter
+			["Tank"] = true,
+			["Melee"] = true,
+			["Physical"] = true,
 		},
 	}
 	specRoleTable[63] = specRoleTable[62]--Frost Mage
@@ -8782,23 +8819,27 @@ do
 				end
 			end
 			if DBM.Options.DontPlayCountdowns then return end
-			if not path1 then
+			if not path1 or not path2 or not path3 then
 				DBM:Debug("Voice cache not built at time of countdownProtoType:Start. On fly caching.")
 				DBM:BuildVoiceCountdownCache()
 			end
 			local voice, maxCount, path
 			if self.alternateVoice == 2 then
-				voice = voice2
-				maxCount = voice2max
-				path = path2
+				voice = voice2 or DBM.DefaultOptions.CountdownVoice2
+				maxCount = voice2max or 10
+				path = path2 or "Interface\\AddOns\\DBM-Core\\Sounds\\Kolt\\"
 			elseif self.alternateVoice == 3 then
-				voice = voice3
-				maxCount = voice3max
-				path = path3
+				voice = voice3 or DBM.DefaultOptions.CountdownVoice3v2
+				maxCount = voice3max or 5
+				path = path3 or "Interface\\AddOns\\DBM-Core\\Sounds\\Heroes\\Necromancer\\"
 			else
-				voice = voice1 or DBM.Options.CountdownVoice
-				maxCount = voice1max
-				path = path1
+				voice = voice1 or DBM.DefaultOptions.CountdownVoice
+				maxCount = voice1max or 10
+				path = path1 or "Interface\\AddOns\\DBM-Core\\Sounds\\Corsica\\"
+			end
+			if not path then--Should not happen but apparently it does somehow
+				DBM:Debug("Voice path failed in countdownProtoType:Start.")
+				return
 			end
 			if self.type == "Countout" then
 				for i = 1, timer do
@@ -9424,9 +9465,9 @@ do
 			elseif announceType == "taunt" or announceType == "dispel" or announceType == "interrupt" or announceType == "interruptcount" then
 				catType = "announcerole"
 			end
-			obj.voiceOptionId = hasVoice and "Voice"..spellId or nil
 			self:AddSpecialWarningOption(obj.option, optionDefault, runSound, catType)
 		end
+		obj.voiceOptionId = hasVoice and "Voice"..spellId or nil
 		tinsert(self.specwarns, obj)
 		return obj
 	end
@@ -10544,6 +10585,10 @@ end
 
 function bossModPrototype:IsInCombat()
 	return self.inCombat
+end
+
+function bossModPrototype:IsAlive()
+	return not UnitIsDeadOrGhost("player")
 end
 
 function bossModPrototype:SetMinCombatTime(t)

@@ -6,7 +6,7 @@ local playerClass, playerName, playerGUID
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 978 $")
+end, "$Revision: 984 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -327,7 +327,7 @@ function xpHigh:SetHighlight(frame, guid)
 			local r1, g1, b1, r2, g2, b2, t1
 			for k, v in pairs(r) do
 				if k == "TARGET" then
-					if frame == XPerl_Player or frame == XPerl_Target or frame == XPerl_TargetTarget or frame == XPerl_TargetTargetTarget or frame == XPerl_Focus or frame == XPerl_FocusTarget then
+					if frame == XPerl_Player or frame == XPerl_Player_Pet or frame == XPerl_Target or frame == XPerl_TargetTarget or frame == XPerl_TargetTargetTarget or frame == XPerl_Focus or frame == XPerl_FocusTarget then
 						return
 					end
 				end
@@ -829,6 +829,9 @@ function xpHigh:CreateMendingIcon(frame)
 			if class == "MONK" then
 				local _, _, texture = GetSpellInfo(115151)
 				icon.tex:SetTexture(texture)
+			elseif class == "PALADIN" then
+				local _, _, texture = GetSpellInfo(157007)
+				icon.tex:SetTexture(texture)
 			else
 				local _, _, texture = GetSpellInfo(33076)
 				icon.tex:SetTexture(texture)
@@ -857,13 +860,12 @@ function xpHigh:CreateMendingIcon(frame)
 		icon.shine:SetVertexColor(1, 1, 1, 0)
 		icon:SetScript("OnUpdate", mendingOnUpdate)
 
-		icon:SetScript("OnShow",
-			function(self)
-				self.shineAngle = 0
-				self.shineAlpha = 0
-				self.shineMode = "in"
-				self:SetAlpha(1)
-			end)
+		icon:SetScript("OnShow", function(self)
+			self.shineAngle = 0
+			self.shineAlpha = 0
+			self.shineMode = "in"
+			self:SetAlpha(1)
+		end)
 	end
 end
 
@@ -986,7 +988,7 @@ function xpHigh:MendingAnimationOnUpdate(elapsed)
 		end
 	end
 
-	for i = 1,ma.shown do
+	for i = 1, ma.shown do
 		local icon = icons[i]
 		icon:ClearAllPoints()
 		if (i == 1) then
@@ -1020,7 +1022,7 @@ function xpHigh:StopMendingAnimation()
 	self.mendingAnimation = del(self.mendingAnimation)
 	local icons = self.mendingAnimationIcons
 	if (icons) then
-		for i = 1,3 do
+		for i = 1, 3 do
 			local icon = icons[i]
 			if (icon) then
 				icon:Hide()
@@ -1339,7 +1341,7 @@ function xpHigh.clEvents:SPELL_CAST_SUCCESS(timestamp, event, srcGUID, srcName, 
 					self.expectingPOM = nil
 					self.pomSourceGUID = nil
 					local _, class = UnitClass("player")
-					if class == "PRIEST" then
+					if (class == "PRIEST" or class == "MONK" or class == "PALADIN") then
 						self:ClearAll("POM")
 						self:StopMendingAnimation()
 					end
@@ -1649,7 +1651,7 @@ function xpHigh:UNIT_AURA(unit)
 		return
 	end
 
-	if (playerClass == "PRIEST" or playerClass == "MONK") then
+	if (playerClass == "PRIEST" or playerClass == "MONK" or playerClass == "PALADIN") then
 		-- Check pom movement
 		if (self:HasEffect(guid, "POM")) then
 			if (not self:HasMyPomPom(unit)) then

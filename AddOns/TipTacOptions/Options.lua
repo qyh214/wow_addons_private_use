@@ -35,7 +35,7 @@ local DROPDOWN_BARTEXTFORMAT = {
 	["Deficit"] = "deficit",
 };
 
--- Options -- The "y" value of a category subtable, will further increase the vertical position of the *next* item
+-- Options -- The "y" value of a category subtable, will further increase the vertical offset position of the *next* item
 local activePage = 1;
 local frames = {};
 local options = {
@@ -55,6 +55,7 @@ local options = {
 	-- Special
 	{
 		[0] = "Special",
+		{ type = "Check", var = "showBattlePetTip", label = "Enable Battle Pet Tips", tip = "Will show a special tip for both wild and companion battle pets. Might need to be disabled for certain non-English clients", y = 8 },
 		{ type = "Slider", var = "gttScale", label = "Tooltip Scale", min = 0.2, max = 4, step = 0.05 },
 		{ type = "Slider", var = "updateFreq", label = "Tip Update Frequency", min = 0, max = 5, step = 0.05, y = 24 },
 		{ type = "Check", var = "enableChatHoverTips", label = "Enable ChatFrame Hover Hyperlinks", tip = "When hovering the mouse over a link in the chatframe, show the tooltip without having to click on it" },

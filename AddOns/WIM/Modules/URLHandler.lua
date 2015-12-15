@@ -44,35 +44,43 @@ armoryLinks = {
 
 -- patterns created by Sylvanaar & used in Prat
 local patterns = {
-	-- X@X.Y url (---> email)
-	"^(www%.[%w_-]+%.%S+[^%p%s])",
-	"%s(www%.[%w_-]+%.%S+[^%p%s])",
-	-- XXX.YYY.ZZZ.WWW:VVVV/UUUUU url
-	"^(%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?:%d%d?%d?%d?%d?/%S+[^%p%s])",
-	"%s(%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?:%d%d?%d?%d?%d?/%S+[^%p%s])",
-	-- XXX.YYY.ZZZ.WWW:VVVV url (IP of ts server for example)
-	"^(%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?:%d%d?%d?%d?%d?)", 
-	"%s(%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?:%d%d?%d?%d?%d?)", 
-	-- XXX.YYY.ZZZ.WWW/VVVVV url (---> IP)
-	"^(%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?/%S+[^%p%s])", 
-	"%s(%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?/%S+[^%p%s])", 
-	-- XXX.YYY.ZZZ.WWW url (---> IP)
-	"^(%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?)", 
-	"%s(%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?)",
-	-- X.Y.Z:WWWW/VVVVV url
-	"^([%w_.-]+[%w_-]%.%a%a+:%d%d?%d?%d?%d?/%S+[^%p%s])", 
-	"%s([%w_.-]+[%w_-]%.%a%a+:%d%d?%d?%d?%d?/%S+[^%p%s])", 
-	-- X.Y.Z:WWWW url  (ts server for example)
-	"^([%w_.-]+[%w_-]%.%a%a+:%d%d?%d?%d?%d?)", 
-	"%s([%w_.-]+[%w_-]%.%a%a+:%d%d?%d?%d?%d?)", 
-	-- X.Y.Z/WWWWW url
-	"^([%w_.-]+[%w_-]%.%a%a+/%S+[^%p%s])", 
-	"%s([%w_.-]+[%w_-]%.%a%a+/%S+[^%p%s])", 
-	-- X.Y.Z url
-	"^([%w_.-]+[%w_-]%.%a%a+)", 
-	"%s([%w_.-]+[%w_-]%.%a%a+)", 
-	-- X://Y url
-	"(%a+://[%d%w_-%.]+[%.%d%w_%-%/%?%%%=%;%:%+%&]*)", 
+      -- X://Y url
+      "^(%a[%w+.-]+://%S+)",
+      "%f[%S](%a[%w+.-]+://%S+)",
+      -- www.X.Y url
+      "^(www%.[-%w_%%]+%.(%a%a+))",
+      "%f[%S](www%.[-%w_%%]+%.(%a%a+))",
+      -- "W X"@Y.Z email (this is seriously a valid email)
+      '^(%"[^%"]+%"@[%w_.-%%]+%.(%a%a+))',
+      '%f[%S](%"[^%"]+%"@[%w_.-%%]+%.(%a%a+))',
+      -- X@Y.Z email
+      "(%S+@[%w_.-%%]+%.(%a%a+))",
+      -- XXX.YYY.ZZZ.WWW:VVVV/UUUUU IPv4 address with port and path
+      "^([0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d:[0-6]?%d?%d?%d?%d/%S+)",
+      "%f[%S]([0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d:[0-6]?%d?%d?%d?%d/%S+)",
+      -- XXX.YYY.ZZZ.WWW:VVVV IPv4 address with port (IP of ts server for example)
+      "^([0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d:[0-6]?%d?%d?%d?%d)%f[%D]",
+      "%f[%S]([0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d:[0-6]?%d?%d?%d?%d)%f[%D]",
+      -- XXX.YYY.ZZZ.WWW/VVVVV IPv4 address with path
+      "^([0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d%/%S+)",
+      "%f[%S]([0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d%/%S+)",
+      -- XXX.YYY.ZZZ.WWW IPv4 address
+      "^([0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d%)%f[%D]",
+      "%f[%S]([0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d%.[0-2]?%d?%d%)%f[%D]",
+      -- X.Y.Z:WWWW/VVVVV url with port and path
+      "^([%w_.-%%]+[%w_-%%]%.(%a%a+):[0-6]?%d?%d?%d?%d/%S+)",
+      "%f[%S]([%w_.-%%]+[%w_-%%]%.(%a%a+):[0-6]?%d?%d?%d?%d/%S+)",
+      -- X.Y.Z:WWWW url with port (ts server for example)
+      "^([%w_.-%%]+[%w_-%%]%.(%a%a+):[0-6]?%d?%d?%d?%d)%f[%D]",
+      "%f[%S]([%w_.-%%]+[%w_-%%]%.(%a%a+):[0-6]?%d?%d?%d?%d)%f[%D]",
+      -- X.Y.Z/WWWWW url with path
+      "^([%w_.-%%]+[%w_-%%]%.(%a%a+)/%S+)",
+      "%f[%S]([%w_.-%%]+[%w_-%%]%.(%a%a+)/%S+)",
+      -- X.Y.Z url
+      "^([-%w_%%]+%.[-%w_%%]+%.(%a%a+))",
+      "%f[%S]([-%w_%%]+%.[-%w_%%]+%.(%a%a+))",
+      "^([-%w_%%]+%.(%a%a+))",
+      "%f[%S]([-%w_%%]+%.(%a%a+))",
 };	
 
 

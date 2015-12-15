@@ -1,0 +1,12 @@
+tag 6.2-6
+304b89993ae4662f8b6c5d0612fce07b9e231e2c
+Xuerian <sky.shell@gmail.com>
+2015-10-27 16:15:50 -0400
+
+Add currency item to preview frame
+
+
+--------------------
+
+Xuerian:
+	- Show a currency item in the preview frame

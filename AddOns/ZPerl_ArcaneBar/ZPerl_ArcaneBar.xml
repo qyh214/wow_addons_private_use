@@ -46,17 +46,17 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension x="-5" y="12"/>
+							<AbsDimension x="-7" y="12"/>
 						</Offset>
 					</Anchor>
 					<Anchor point="BOTTOMRIGHT">
 						<Offset>
-							<AbsDimension x="5" y="-12"/>
+							<AbsDimension x="6" y="-12"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 				<Layers>
-					<Layer level="BACKGROUND">
+					<Layer level="OVERLAY">
 						<Texture name="$parenttex" file="Interface\Addons\ZPerl\Images\XPerl_ArcaneBarFlash" setAllPoints="true" alphaMode="ADD"/>
 					</Layer>
 				</Layers>

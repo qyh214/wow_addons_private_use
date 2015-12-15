@@ -1,13 +1,13 @@
 local modName = ...;
 local ttif = CreateFrame("Frame",modName);
 
--- Options
+-- Options without TipTac. If the basic TipTac addon is used, the global TipTac_Config table is used instead
 local cfg = {
 	if_enable = true,
 	if_infoColor = { 0.2, 0.6, 1 },
 	if_itemQualityBorder = true,
 	if_showAuraCaster = true,
-	if_showItemLevelAndId = true,
+	if_showItemLevelAndId = false,				-- Used to be true, but changed due to the itemLevel issues
 	if_showQuestLevelAndId = true,
 	if_showSpellIdAndRank = false,
 	if_showCurrencyId = true,					-- Az: no option for this added to TipTac/options yet!
@@ -277,7 +277,7 @@ function TipTypeFuncs:item(link,linkToken,id)
 				break;
 			end
 		end
-		self:AddLine(format("ItemLevel: %d, ItemID: %d",itemLevel or 0,id or 0),unpack(cfg.if_infoColor));
+		self:AddLine(format("ItemLevel: %d, ItemID: %d",itemLevel,id),unpack(cfg.if_infoColor));
 		self:Show();
 	end
 end

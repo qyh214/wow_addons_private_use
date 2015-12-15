@@ -1,3 +1,37 @@
+**r985**
+* Version bump.
+
+**r984**
+* Friendly targets will no longer shown as tapped.
+* Player pet will ignore the target highlight option.
+* Player pet will properly be hidden during pet battles.
+* Fixed another taint issue.
+* Some other smaller fixes.
+
+**r983**
+* Fixed an issue with the class portrait.
+* Vehicle combat fix.
+* Fixed a taint with the Raid Helper module.
+* Some other smaller fixes.
+
+**r982**
+* Rune bar width fix.
+* Cast bar flash strata fix.
+* Added some higher resolution textures.
+* Removed some broken unused textures.
+* Some other smaller fixes.
+
+**r981**
+* Tagging as release.
+
+**r980**
+* Added Beacon of Insight to the highlight functions.
+* Fixed an issue with the highlight function.
+* Some other smaller fixes.
+
+**r979**
+* zhTW updates for r978 changes on Option UI.
+
 **r978**
 * Highlight fixes.
 * Added an option to customize the Absorb and Heal Prediction bar's color and alpha.

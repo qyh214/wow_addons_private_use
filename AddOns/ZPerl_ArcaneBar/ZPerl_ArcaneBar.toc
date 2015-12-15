@@ -11,7 +11,7 @@
 ## Notes-zhCN: 在玩家, 宠物, 目标, 焦点和队伍头像上增加施法条.
 ## Notes-zhTW: 給予玩家, 寵物, 目標, 專注(focus) 以及隊伍等框架上的施法條進度顯示
 ## RequiredDeps: ZPerl
-## X-Curse-Packaged-Version: r978
+## X-Curse-Packaged-Version: r985
 ## X-Curse-Project-Name: Z-Perl UnitFrames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

@@ -21,7 +21,7 @@ local YES=YES
 local NO=NO
 local GARRISON_FOLLOWER_MAX_ITEM_LEVEL=GARRISON_FOLLOWER_MAX_ITEM_LEVEL
 local module=addon:NewSubClass("FollowerPage") --#module
-function addon:ShowImprovements()
+function module:ShowImprovements()
 	local scroller=self:GetScroller("Items")
 	scroller:AddRow("Follower Upgrades",C.Orange())
 	for i,v in pairs(self:GetUpgrades()) do
@@ -73,12 +73,12 @@ local function UpgradeFollower(this)
 		losing=(upgrade)-GARRISON_FOLLOWER_MAX_ITEM_LEVEL
 	end
 	if losing then
-		return addon:Popup(format(CONFIRM2,upgrade,losing,name),0,DoUpgradeFollower,true,followerID,true)
+		return module:Popup(format(CONFIRM2,upgrade,losing,name),0,DoUpgradeFollower,true,followerID,true)
 	else
 		if addon:GetToggle("NOCONFIRM") then
 			return G.CastSpellOnFollower(followerID);
 		else
-			return addon:Popup(format(CONFIRM1,upgrade,name),0,DoUpgradeFollower,true,followerID,true)
+			return module:Popup(format(CONFIRM1,upgrade,name),0,DoUpgradeFollower,true,followerID,true)
 		end
 	end
 end
@@ -92,18 +92,37 @@ local colors={
 	[645]="Epic"
 }
 function addon:ApplyUPG(value)
-	self:ShowUpgradeButtons()
+	module:ShowUpgradeButtons()
 end
 function addon:ApplySWAPBUTTONS(value)
-	self:ShowUpgradeButtons()
+	module:ShowUpgradeButtons()
 end
-function addon:ShowUpgradeButtons(force)
+function module:BindingClick(tipo,level)
+	local gf=GMF.FollowerTab
+	if (not gf:IsVisible() or not gf.upgradeButtons) then return end
+	if (not gf.ItemWeapon:IsVisible() or not gf.ItemArmor:IsVisible()) then
+		return
+	end
+	local current=tipo=="w" and gf.ItemWeapon.itemLevel or gf.ItemArmor.itemLevel
+	for _,b in pairs(gf.upgradeButtons) do
+		if b:IsVisible() then
+			print(current,b.tipo,b.Level:GetText(),b.rawLevel)
+			if (tipo==tipo:sub(1,1) and level==b.rawlevel) then
+				b:Click()
+			end
+		else
+			return
+		end
+	end
+end
+function module:ShowUpgradeButtons(force)
 	if InCombatLockdown() then
 		self:ScheduleLeaveCombatAction("ShowUpgradeButtons",force)
 		return
 	end
 	local gf=GMF.FollowerTab
 	if not self:GetBoolean("UPG") then
+		if not gf.upgradeButtons then return end
 		local b=gf.upgradeButtons
 		for i=1,#b	 do
 			b[i]:Hide()
@@ -127,59 +146,76 @@ function addon:ShowUpgradeButtons(force)
 	local followerInfo = followerID and G.GetFollowerInfo(followerID);
 	local overTheTop=(gf.ItemWeapon.itemLevel + gf.ItemArmor.itemLevel) ==(GARRISON_FOLLOWER_MAX_ITEM_LEVEL *2)
 	if (not overTheTop and  followerInfo and followerInfo.isCollected and not followerInfo.status and followerInfo.level == GARRISON_FOLLOWER_MAX_LEVEL ) then
-		for i=1,#upgrades do
-			if not b[used] then
-				b[used]=CreateFrame("Button",nil,gf,"GarrisonCommanderUpgradeButton,SecureActionbuttonTemplate")
-			end
+		ClearOverrideBindings(gf)
+		local binded={}
+		for i=#upgrades,1,-1 do
 			local tipo,itemID,level=strsplit(":",upgrades[i])
+			if not b[used] then
+				b[used]=CreateFrame("Button","GCUPGRADES"..used,gf,"GarrisonCommanderUpgradeButton,SecureActionbuttonTemplate")
+			end
 			level=tonumber(level)
 			local A=b[used]
 			local qt=GetItemCount(itemID)
+			print(tipo,level)
 			repeat
-			if (qt>0) then
-				A:ClearAllPoints()
-				A.tipo=tipo
-				local currentlevel=tipo:sub(1,1)=="w" and gf.ItemWeapon.itemLevel or  gf.ItemArmor.itemLevel
-				if level > 600 and level <= currentlevel then
-					break -- Pointless item for this toon
-				end
-				if level<600 and level + currentlevel > GARRISON_FOLLOWER_MAX_ITEM_LEVEL then
-					break
-				end
-				used=used+1
-				if (tipo:sub(1,1)=="a") then
-					A:SetPoint("TOPLEFT",axpos,aypos)
-					aypos=aypos-45
-				else
-					A:SetPoint("TOPLEFT",wxpos,wypos)
-					wypos=wypos-45
-				end
-				A:SetSize(40,40)
-				A.Icon:SetSize(40,40)
-				A.itemID=itemID
-				GarrisonMissionFrame_SetItemRewardDetails(A)
-				A.rawlevel=level
-				A.Level:SetText(level < 600 and (currentlevel+level) or level)
-				local c=colors[level]
-				A.Level:SetTextColor(C[c]())
-				A.Quantity:SetFormattedText("%d",qt)
-				A.Quantity:SetTextColor(C.Yellow())
-				A:SetFrameLevel(gf.Model:GetFrameLevel()+1)
-				A.Quantity:Show()
-				A.Level:Show()
-				A:EnableMouse(true)
-				A:RegisterForClicks("LeftButtonDown")
-				A:SetAttribute("type","item")
-				A:SetAttribute("item",select(2,GetItemInfo(itemID)))
-				A:Show()
-				if tipo=="at" or tipo =="wt" then
-					A.Level:Hide()
-					A:SetScript("PostClick",nil)
-				else
+				if (qt>0) then
+					A:ClearAllPoints()
+					A.tipo=tipo
+					local currentlevel=tipo:sub(1,1)=="w" and gf.ItemWeapon.itemLevel or  gf.ItemArmor.itemLevel
+					if level > 600 and level <= currentlevel then
+						break -- Pointless item for this toon
+					end
+					if level<600 and level + currentlevel > GARRISON_FOLLOWER_MAX_ITEM_LEVEL then
+						break
+					end
+					print("      ","used")
+					if (not binded[tipo]) then
+						binded[tipo]=true
+						local kb=GetBindingKey("GC" .. tipo:upper())
+						print("Binding",kb,"from","GC" .. tipo:upper(),"to",tipo)
+						if (kb ) then
+							SetOverrideBindingClick(gf,false,kb,A:GetName())
+							A.Shortcut:SetText(GetBindingText(kb,"",true))
+						else
+							A.Shortcut:SetText('')
+						end
+					else
+						A.Shortcut:SetText('')
+					end
+					used=used+1
+					if (tipo:sub(1,1)=="a") then
+						A:SetPoint("TOPLEFT",axpos,aypos)
+						aypos=aypos-45
+					else
+						A:SetPoint("TOPLEFT",wxpos,wypos)
+						wypos=wypos-45
+					end
+					A:SetSize(40,40)
+					A.Icon:SetSize(40,40)
+					A.itemID=itemID
+					GarrisonMissionFrame_SetItemRewardDetails(A)
+					A.rawlevel=level
+					A.Level:SetText(level < 600 and (currentlevel+level) or level)
+					local c=colors[level]
+					A.Level:SetTextColor(C[c]())
+					A.Quantity:SetFormattedText("%d",qt)
+					A.Quantity:SetTextColor(C.Yellow())
+					A:SetFrameLevel(gf.Model:GetFrameLevel()+1)
+					A.Quantity:Show()
 					A.Level:Show()
-					A:SetScript("PostClick",UpgradeFollower)
+					A:EnableMouse(true)
+					A:RegisterForClicks("LeftButtonDown")
+					A:SetAttribute("type","item")
+					A:SetAttribute("item",select(2,GetItemInfo(itemID)))
+					A:Show()
+					if tipo=="at" or tipo =="wt" then
+						A.Level:Hide()
+						A:SetScript("PostClick",nil)
+					else
+						A.Level:Show()
+						A:SetScript("PostClick",UpgradeFollower)
+					end
 				end
-			end
 			until true -- Continue dei poveri
 		end
 	end
@@ -187,18 +223,26 @@ function addon:ShowUpgradeButtons(force)
 		b[i]:Hide()
 	end
 end
-function addon:DelayedRefresh(delay)
+function module:DelayedRefresh(delay)
 	if GMF.FollowerTab:IsShown() then
 		if not tonumber(delay) then delay=0.5 end
-		return C_Timer.After(delay,function() addon:ShowUpgradeButtons() end)
+		return C_Timer.After(delay,function() module:ShowUpgradeButtons() end)
 	end
 end
-function addon:FollowerPageStartUp()
+function module:OnInitialized()
+	self:SafeSecureHookScript("GarrisonMissionFrame","OnShow","Setup")
+
+end
+function module:Setup()
 	self:RegisterEvent("GARRISON_FOLLOWER_UPGRADED","DelayedRefresh")
 	self:RegisterEvent("CHAT_MSG_LOOT","DelayedRefresh")
 	self:GarrisonTraitCountersFrame_OnLoad(GarrisonTraitCountersFrame, L["%s |4follower:followers with %s"])
 	self:SafeHookScript(GarrisonTraitCountersFrame,"OnEvent","GarrisonTraitCountersFrame_OnEvent")
 	self:SafeHookScript(GarrisonTraitCountersFrame,"OnShow","GarrisonTraitCountersFrame_OnShow")
+	self:ShowUpgradeButtons()
+end
+function module:Cleanup()
+	self:UnregisterAllEvents()
 end
 --[[
 		<Scripts>
@@ -208,7 +252,7 @@ end
 		</Scripts>
 --]]
 
-function addon:GarrisonTraitCountersFrame_OnLoad(this, tooltipString)
+function module:GarrisonTraitCountersFrame_OnLoad(this, tooltipString)
 
 --[===[@debug@
 print("Load")
@@ -223,7 +267,7 @@ print("Load")
 		this.choice.button=_G[this.choice:GetName()..'Button']
 		this.choice:SetPoint("TOPLEFT",-192,0)
 	end
-	addon:FillCounters(this,1)
+	module:FillCounters(this,1)
 	this.TraitsList[1]:SetScript("OnEnter",_G.GarrisonTraitCounter_OnEnter)
 	--this.TraitsList[1]:SetScript("OnEnter",pp)
 	do
@@ -257,13 +301,13 @@ print("Load")
 	this:RegisterEvent("GARRISON_FOLLOWER_LIST_UPDATE");
 end
 
-function addon:GarrisonTraitCountersFrame_OnEvent(this, event, ...)
+function module:GarrisonTraitCountersFrame_OnEvent(this, event, ...)
 	if ( this:IsVisible() ) then
 		self:GarrisonTraitCountersFrame_OnShow(this);
 	end
 end
 
-function addon:GarrisonTraitCountersFrame_OnShow(this)
+function module:GarrisonTraitCountersFrame_OnShow(this)
 	for i = 1, #this.TraitsList do
 		local t=addon:GetFollowersWithTrait(this.TraitsList[i].id)
 		local n=t and #t or 0
@@ -277,7 +321,7 @@ function _G.GarrisonTraitCounter_OnEnter(this)
 	GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
 	GameTooltip:SetText(this:GetParent().tooltipString:format(this.Count:GetText(), this.name), nil, nil, nil, nil, true);
 end
-function addon:FillCounters(this,category)
+function module:FillCounters(this,category)
 	local i=0
 	for id,name in pairs(ns.traitTable[category]) do
 		i=i+1
@@ -300,4 +344,25 @@ function addon:FillCounters(this,category)
 		this.TraitsList[j]:Hide()
 	end
 end
+-- Binding descriptions
+_G.BINDING_HEADER_GCFOLLOWER="Garrison Commander - Follower Page"
 
+for _,v in pairs(addon:GetUpgrades()) do
+	local t,_,l=strsplit(':',v)
+	t=t:upper()
+	l=tonumber(l)
+	local keyname="BINDING_NAME_GC"..t..l
+	print(t,l,keyname)
+	if (l<600) then
+			_G[keyname]= format(L["Add %d levels to %s"],l,(t:sub(1,1)=="W" and "weapon" or "armor"))
+	else
+			_G[keyname]=  format(L["Upgrade %s to  %d itemlevel"],(t:sub(1,1)=="W" and "weapon" or "armor"),l)
+	end
+	print(_G[keyname])
+end
+_G.BINDING_NAME_GCWE=L["Applies the best weapon upgrade"]
+_G.BINDING_NAME_GCAE=L["Applies the best armor upgrade"]
+_G.BINDING_NAME_GCWF=L["Applies the best weapon set"]
+_G.BINDING_NAME_GCAF=L["Applies the best armor set"]
+_G.BINDING_NAME_GCWT=L["Uses weapon token"]
+_G.BINDING_NAME_GCAT=L["Uses armor token"]

@@ -1,5 +1,17 @@
 *GarrisonCommander helps you when choosing the right follower for the right mission*
 
+* *2.8.2*
+Fix: ticket #107 FollowerPage.lua error
+
+* *2.8.1*
+Fix: ticket #101 Gold Mission which also rewarded XP were taken as xp only missions
+
+* *2.8.0*
+Feature: Added keybindings for follower equipment upgrade
+Feature: Blocked mission in shipyard have now a black border
+Fix: ticket #105 GarrisonCommander\ShipYard.lua:290: attempt to index local 'menu' (a nil value)
+Fix: when resource over the cap, was showing a negative number in warning message
+
 * *2.7.5*
 Fix: Seal of Tempered Fate were marked as a limited resource. Turned out they are not
 Fix: Header menu status was not remembered between sessions

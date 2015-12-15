@@ -1317,7 +1317,7 @@ print("Click")
 		end
 	if (frame.info.isCollected) then
 		self:ScheduleTimer("HookedGarrisonFollowerButton_UpdateCounters",0.2,GMF,frame,frame.info,false)
-		self:ShowUpgradeButtons()
+		self:GetModule("FollowerPage"):ShowUpgradeButtons()
 	end
 end
 -- Shamelessly stolen from Blizzard Code
@@ -1656,7 +1656,6 @@ function addon:ScriptGarrisonMissionFrame_OnShow(...)
 	self:RefreshFollowerStatus()
 	self:Trigger("MSORT")
 	self:Trigger("CKMP")
-	self:FollowerPageStartUp()
 	return self:RefreshMissions()
 end
 function addon:RaiseCompleteDialog()
@@ -2109,7 +2108,6 @@ function addon:BuildExtraButton(button,bigscreen)
 
 end
 function addon:OnShow_FollowerPage(frame)
-	self:ShowUpgradeButtons()
 	if not GCFMissions then return end
 	if type(GCFMissions.Header.info)=="table" then
 		self:HookedGarrisonFollowerPage_ShowFollower(frame,GCFMissions.Header.info.followerID,true)

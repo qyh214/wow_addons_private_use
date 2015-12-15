@@ -152,7 +152,7 @@ do
 			return
 		end
 
-		if private.OptionsCharacter.AlertSoundUnmute then
+		if private.CharacterOptions.AlertSoundUnmute then
 			if not target_button.SoundEnableAllChanged and not _G.GetCVarBool("Sound_EnableAllSound") then
 				target_button.SoundEnableAllChanged = true
 				_G.SetCVar("Sound_EnableAllSound", 1) -- Restored when alert is closed
@@ -208,9 +208,9 @@ function target_button:SetNPC(ID, Name, Source)
 		private.Overlays.Add(ID)
 		private.Overlays.Found(ID)
 	end
-	self.PlaySound(private.Options.AlertSound)
+	self.PlaySound(private.GlobalOptions.AlertSound)
 
-	if private.OptionsCharacter.AlertScreenEdgeFlash then
+	if private.CharacterOptions.AlertScreenEdgeFlash then
 		self.Flash:Show()
 		self.Flash.Fade:Pause() -- Forces OnPlay to fire again if it was already playing
 		self.Flash.Fade:Play()
@@ -332,8 +332,8 @@ do
 		local ID = self.ID
 
 		if TargetIsFoundRare(ID) then
-			if _G.GetRaidTargetIndex("target") ~= private.OptionsCharacter.TargetIcon and (not _G.IsInRaid() or (_G.UnitIsGroupAssistant("player") or _G.UnitIsGroupLeader("player"))) then
-				_G.SetRaidTarget("target", private.OptionsCharacter.TargetIcon)
+			if _G.GetRaidTargetIndex("target") ~= private.CharacterOptions.TargetIcon and (not _G.IsInRaid() or (_G.UnitIsGroupAssistant("player") or _G.UnitIsGroupLeader("player"))) then
+				_G.SetRaidTarget("target", private.CharacterOptions.TargetIcon)
 			end
 
 			if ID == HaakunID then

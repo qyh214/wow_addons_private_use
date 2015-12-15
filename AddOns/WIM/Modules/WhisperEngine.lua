@@ -332,6 +332,7 @@ function WhisperEngine:CHAT_MSG_WHISPER_INFORM_CONTROLLER(eventItem, arg1, arg2,
     local curState = curState;
     curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
     if(WIM.db.pop_rules.whisper[curState].supress) then
+    	_G.FlashClientIcon()
         eventItem:BlockFromChatFrame();
     end
 end
@@ -366,6 +367,7 @@ function WhisperEngine:CHAT_MSG_BN_WHISPER_INFORM_CONTROLLER(eventItem, arg1, ar
     local curState = curState;
     curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
     if(WIM.db.pop_rules.whisper[curState].supress) then
+    	_G.FlashClientIcon()
         eventItem:BlockFromChatFrame();
     end
 end
@@ -398,6 +400,7 @@ function WhisperEngine:CHAT_MSG_BN_WHISPER_CONTROLLER(eventItem, ...)
     local curState = curState;
     curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
     if(WIM.db.pop_rules.whisper[curState].supress) then
+    	_G.FlashClientIcon()
         eventItem:BlockFromChatFrame();
     end
 end

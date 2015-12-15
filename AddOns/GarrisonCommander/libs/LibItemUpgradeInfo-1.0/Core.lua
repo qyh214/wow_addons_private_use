@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "LibItemUpgradeInfo-1.0", 12
+local MAJOR, MINOR = "LibItemUpgradeInfo-1.0", 13
 local type,tonumber,GetItemInfoFromHyperlink=type,tonumber,GetItemInfoFromHyperlink
 local library,previous = _G.LibStub:NewLibrary(MAJOR, MINOR)
 local lib=library --#lib Needed to keep Eclipse LDT happy
@@ -53,6 +53,10 @@ local upgradeTable = {
 	[505] = { upgrade = 4, max = 4, ilevel = 16 },
 	[506] = { upgrade = 5, max = 6, ilevel = 20 },
 	[507] = { upgrade = 6, max = 6, ilevel = 24 },
+	[529] = { upgrade = 0, max = 2, ilevel = 0 },
+	[530] = { upgrade = 1, max = 2, ilevel = 5 },
+	[531] = { upgrade = 2, max = 2, ilevel = 10 },
+
 }
 do
 	local stub = { ilevel = 0 }

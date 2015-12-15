@@ -1,3 +1,7 @@
+TipTac Changes | 2015 Dec 07
+----------------------------
+- Added an option for battle pet tips, under the "Special" category. If you encounter issues with battle pet tips, disable this.
+
 TipTac Changes | 2015 Jul 02
 ----------------------------
 - TOC version changed to 60200 for the 6.2 patch.

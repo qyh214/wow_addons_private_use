@@ -1043,8 +1043,9 @@ do -- Ship re-fitting
 		end
 		function refit.Sync()
 			if InCombatLockdown() then return end
-			local ns, mi = 1, SHIP_MISSION_PAGE.missionInfo
+			local ns, mi = 2, SHIP_MISSION_PAGE.missionInfo
 			SetItem(eq[1], 127886)
+			SetItem(eq[2], 127894)
 			
 			local hasUncounteredThreats = false
 			for i=1,#SHIP_MISSION_PAGE.Enemies do
@@ -1071,13 +1072,13 @@ do -- Ship re-fitting
 				eq[i]:Hide()
 			end
 
-			local hasEquipmentSlots = false
+			local hasEquipmentSlots, numSlotShips, numFishingNets = false, 0, 0
 			for i=1,3 do
-				local fi = mi and i <= mi.numFollowers and SHIP_MISSION_PAGE.Followers[i].info
+				local fi, numSlots = mi and i <= mi.numFollowers and SHIP_MISSION_PAGE.Followers[i].info, 0
 				for j=1,2 do
 					local s, a = slots[i*2+j-2], fi and C_Garrison.GetFollowerAbilityAtIndex(fi.followerID, j) or 0
 					if a > 0 then
-						hasEquipmentSlots = true
+						numSlots, hasEquipmentSlots = numSlots + 1, true
 						s.traitID = a
 						s.icon:SetTexture(C_Garrison.GetFollowerAbilityIcon(a))
 						local nc, nt = countTraitThreats(mi and mi.numFollowers or 0, a)
@@ -1087,10 +1088,16 @@ do -- Ship re-fitting
 						else
 							s.border:Hide()
 						end
+						if a == 305 then
+							numFishingNets = numFishingNets + 1
+						end
 						s:Show()
 					else
 						s:Hide()
 					end
+				end
+				if numSlots > 0 then
+					numSlotShips = numSlotShips + 1
 				end
 			end
 			
@@ -1098,8 +1105,10 @@ do -- Ship re-fitting
 			slots[1]:GetParent():SetWidth((mi and mi.numFollowers or 1)*78-10)
 			refit:SyncButtonState()
 			refit.dirty = nil
-			refit.trigger:SetShown(hasEquipmentSlots and hasUncounteredThreats)
-			if not (hasEquipmentSlots and hasUncounteredThreats) then
+			
+			local mayRefit = (numFishingNets < numSlotShips) or (hasEquipmentSlots and hasUncounteredThreats)
+			refit.trigger:SetShown(mayRefit)
+			if not mayRefit then
 				refit:Hide()
 			end
 		end

@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 974 $")
+XPerl_SetModuleRevision("$Revision: 984 $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -667,6 +667,10 @@ local old_CT_RA_IsSendingWithVersion
 function Events:VARIABLES_LOADED()
 	self:UnregisterEvent("VARIABLES_LOADED")
 
+	if (InCombatLockdown()) then
+		pendingTankListChange = true
+		return
+	end
 
 	if (CT_RA_IsSendingWithVersion) then
 		old_CT_RA_IsSendingWithVersion = CT_RA_IsSendingWithVersion
@@ -981,6 +985,10 @@ local bNoEdge = {bgFile = "Interface\\AddOns\\ZPerl_RaidHelper\\Images\\XPerl_Fr
 
 -- SetVisibility
 local function SetVisibility()
+	if (InCombatLockdown()) then
+		pendingTankListChange = true
+		return
+	end
 
 	local left = 3 + (conf.MTLabels * 10)
 	XPerl_Frame:ClearAllPoints()

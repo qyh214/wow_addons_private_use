@@ -22,7 +22,7 @@ local playerName = UnitName("player")
 local encounterMarkers = {}
 
 local GetNumGroupMembers, GetNumSubgroupMembers, IsInRaid = GetNumGroupMembers, GetNumSubgroupMembers, IsInRaid
-local GetTime, UIParent = GetTime, UIParent
+local GetTime, WorldFrame = GetTime, WorldFrame
 local UnitExists, UnitIsUnit, UnitPosition, UnitDebuff, UnitIsConnected, GetPlayerFacing = UnitExists, UnitIsUnit, UnitPosition, UnitDebuff, UnitIsConnected, GetPlayerFacing
 local GetInstanceInfo = GetInstanceInfo
 
@@ -261,8 +261,8 @@ do
 end
 
 function mod:OnInitialize()
-	self.canvas = CreateFrame("Frame", "DBMHudMapCanvas", UIParent)
-	self.canvas:SetSize(UIParent:GetWidth(), UIParent:GetHeight())
+	self.canvas = CreateFrame("Frame", "DBMHudMapCanvas", WorldFrame)
+	self.canvas:SetSize(WorldFrame:GetWidth(), WorldFrame:GetHeight())
 	self.canvas:SetPoint("CENTER")
 	self.canvas:Hide()
 	self.HUDEnabled = false
@@ -280,7 +280,7 @@ function mod:Enable()
 	self:UpdateCanvasPosition()
 
 	targetZoomScale = 6
-	self.pixelsPerYard = UIParent:GetHeight() / self:GetMinimapSize()
+	self.pixelsPerYard = WorldFrame:GetHeight() / self:GetMinimapSize()
 	self:SetZoom()
 	self.canvas:SetBackdrop(nil)
 	self.HUDEnabled = true
@@ -315,7 +315,7 @@ function mod:ToggleHudar(r, hide)
 		self:FreeEncounterMarkerByTarget(143430, playerName)
 	else
 		hudarActive = true
-		self:RegisterRangeMarkerOnPartyMember(143430, "timer", playerName, r, nil, 0, 1, 0, 0.3):Appear():RegisterForAlerts("all"):Rotate(360, 9.5)
+		self:RegisterRangeMarkerOnPartyMember(143430, "timer", playerName, r+0.5, nil, 0, 1, 0, 0.3):Appear():RegisterForAlerts("all"):Rotate(360, 9.5)
 	end
 end
 
@@ -354,8 +354,8 @@ end
 
 function mod:UpdateCanvasPosition()
 	self.canvas:ClearAllPoints()
-	self.canvas:SetPoint("CENTER", UIParent, "CENTER")
-	self.canvas:SetSize((UIParent:GetHeight() * 0.48) * 2, (UIParent:GetHeight() * 0.48) * 2)
+	self.canvas:SetPoint("CENTER", WorldFrame, "CENTER")
+	self.canvas:SetSize((WorldFrame:GetHeight() * 0.48) * 2, (WorldFrame:GetHeight() * 0.48) * 2)
 end
 
 -----------------------------------
@@ -574,7 +574,9 @@ Edge = setmetatable({
 			t.fadeOutGroup = t.frame:CreateAnimationGroup()
 			t.fadeOut = t.fadeOutGroup:CreateAnimation("alpha")
 			-- t.fadeOut:SetMaxFramerate(60)
-			t.fadeOut:SetChange(-1)
+			--t.fadeOut:SetChange(-1)
+			t.fadeOut:SetFromAlpha(1)
+			t.fadeOut:SetToAlpha(0)
 			t.fadeOut:SetDuration(0.25)
 			t.fadeOut:SetScript("OnFinished", animations.hideParent)
 		end
@@ -1025,6 +1027,9 @@ do
 				local _, cls = UnitClass(text)
 				if cls and RAID_CLASS_COLORS[cls] then
 					r, g, b = RAID_CLASS_COLORS[cls].r, RAID_CLASS_COLORS[cls].g, RAID_CLASS_COLORS[cls].b
+					if DBM.Options.StripServerName then
+						text = Ambiguate(text, "short")
+					end
 				end
 			end
 			self.text.r = r or self.text.r
@@ -1219,7 +1224,9 @@ do
 				t.fadeOutGroup = t.frame:CreateAnimationGroup()
 				t.fadeOut = t.fadeOutGroup:CreateAnimation("alpha")
 				-- t.fadeOut:SetMaxFramerate(60)
-				t.fadeOut:SetChange(-1)
+--				t.fadeOut:SetChange(-1)
+				t.fadeOut:SetFromAlpha(1)
+				t.fadeOut:SetToAlpha(0)
 				t.fadeOut:SetDuration(0.25)
 				t.fadeOut:SetScript("OnFinished", animations.hideParent)
 				t.fadeOutGroup:SetScript("OnPlay", function() t.fadeInGroup:Stop() end)
@@ -1542,8 +1549,8 @@ do
 		local distance = sqrt((e*e)+(f*f)) + offset
 		local scaleFactor
 		if distance ~= 0 then
-			scaleFactor = 1 - ((UIParent:GetHeight() * 0.48) / distance)
-			if distance > (UIParent:GetHeight() * 0.48) then
+			scaleFactor = 1 - ((WorldFrame:GetHeight() * 0.48) / distance)
+			if distance > (WorldFrame:GetHeight() * 0.48) then
 				dx = dx + (scaleFactor * e)
 				dy = dy + (scaleFactor * f)
 			end
@@ -1554,7 +1561,7 @@ do
 	local function ClipPointToEdges(dx, dy, offset)
 		local nx, ny
 		local px, py = 0, 0
-		local z2 = (UIParent:GetHeight() * 0.48)
+		local z2 = (WorldFrame:GetHeight() * 0.48)
 		dx, dy = ClipPointToRadius(dx, dy, offset)
 		nx = min(max(dx, px - z2 + offset), px + z2 - offset)
 		ny = min(max(dy, py - z2 + offset), py + z2 - offset)
@@ -1566,7 +1573,7 @@ do
 	end
 
 	function mod:LocationToMinimapOffset(x, y, alwaysShow, radiusOffset, pixelOffset)
-		mod.pixelsPerYard = (UIParent:GetHeight() * 0.48) / zoomScale
+		mod.pixelsPerYard = (WorldFrame:GetHeight() * 0.48) / zoomScale
 
 		local px, py = self:GetUnitPosition("player")
 		local dx, dy
@@ -1596,7 +1603,7 @@ do
 	end
 
 	function mod:RangeToPixels(range)
-		mod.pixelsPerYard = (UIParent:GetHeight() * 0.48) / zoomScale
+		mod.pixelsPerYard = (WorldFrame:GetHeight() * 0.48) / zoomScale
 		return mod.pixelsPerYard * range
 	end
 end

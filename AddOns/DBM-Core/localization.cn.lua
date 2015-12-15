@@ -2,7 +2,7 @@
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: Oct 16 2015, 00:46 UTC@14597
+-- Last update: Dec 13 2015, 04:13 UTC@14710
 
 if GetLocale() ~= "zhCN" then return end
 
@@ -314,7 +314,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.you				= "你中了%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.youcount			= "你中了%s (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.youpos			= "你中了%s (位置:%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target			= ">%%s<中了%s"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.targetcount		= ">%%s<中了%s (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.targetcount		= ">%%2$s<中了%s (%%1$s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt				= ">%%s<中了%s - 快嘲讽"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close				= "你附近的>%%s<中了%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move				= "%s - 快躲开"
@@ -437,7 +437,7 @@ DBM_CORE_HUD_USAGE	= {
 	"DBM-HudMap 可用命令：",
 	"-----------------",
 	"/dbm hud <类型> <目标> <持续时间>  新建一个指向玩家的HUD指示器",
-	"变量-类型: arrow, red, blue, green, yellow, icon (请输入英语。如果类型是团队标记需要给目标标记团队标记)",
+	"变量-类型: arrow, dot, red, blue, green, yellow, icon (请输入英语。需要相应的带团队标记的目标。)",
 	"变量-目标: target, focus, <玩家名字> (如果是玩家名字是拉丁字母请区分大小写)",
 	"变量-持续时间: 秒数. 如果这个参数留空, 默认为20分钟",
 	"/dbm hud hide: 清空并关闭HUD"

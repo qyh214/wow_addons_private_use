@@ -161,6 +161,10 @@ local preview_loot = {
 	{ 15487, false, false, false }
 }
 
+for i=1,#preview_loot do
+	GetItemInfo(preview_loot[i][1])
+end
+
 function addon:ApplyOptions(in_options)
 	opt, XLootFrame.opt = self.opt, self.opt
 	if XLootFrame.built then
@@ -182,6 +186,11 @@ function addon:ApplyOptions(in_options)
 			Fake.slots[i] = row
 			max_width = math.max(max_width, row:Update(true, itemTexture, itemName, itemLink, 1, itemRarity, v[2], v[3], v[4]))
 			max_quality = math.max(max_quality, itemRarity)
+		end
+		do
+			name, currentAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered, rarity = GetCurrencyInfo(828)
+			max_width = math.max(max_width, Fake.rows[#preview_loot+1]:Update(false, texture, name, nil, 5, rarity))
+			Fake.slots[#preview_loot+1] = Fake.rows[#preview_loot+1]
 		end
 		Fake:SizeAndColor(max_width, max_quality)
 	end
@@ -458,7 +467,7 @@ do
 	end
 
 	function RowPrototype:Auto_OnHide()
-		self.parent.text_name:SetPoint('RIGHT', self.parent, 'RIGHT', -4, 0)
+		self.parent.text_name:SetPoint('RIGHT', self.parent, 'RIGHT', -6, 0)
 	end
 	
 	-- Appearance/skin updates
@@ -486,7 +495,6 @@ do
 		self.text_button_auto:SetText(L.button_auto)
 		self.button_auto:SetWidth(self.text_button_auto:GetStringWidth()+4)
 		self.button_auto:SetHeight(self.text_button_auto:GetStringHeight()+4)
-		self.text_name:SetPoint('RIGHT', self.text_button_auto, 'LEFT')
 
 		-- Resize fontstrings
 		for i=1,#resize_texts do
@@ -669,7 +677,7 @@ do
 		smalltext(locked)
 		smalltext(quantity)
 		smalltext(auto)
-		name:SetPoint('RIGHT', row, 'RIGHT', -4, 0)
+		name:SetPoint('RIGHT', row, 'RIGHT', -6, 0)
 		info:SetPoint('TOPLEFT', name, 'BOTTOMLEFT', 8, 0)
 		info:SetPoint('RIGHT', row, 'RIGHT', -4, 0)
 		textpoints(name, item, row, 2)

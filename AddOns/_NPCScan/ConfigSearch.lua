@@ -55,8 +55,8 @@ local function UpdateButtonStates()
 	local npc_id = panel.npc_id_editbox:GetNumber()
 	local npc_name = panel.npc_name_editbox:GetText()
 	local world_id = GetWorldID(panel.npc_world_editbox:GetText())
-	local old_npc_name = private.Options.NPCs[npc_id]
-	local old_world_id = private.Options.NPCWorldIDs[npc_id]
+	local old_npc_name = private.GlobalOptions.NPCs[npc_id]
+	local old_world_id = private.GlobalOptions.NPCWorldIDs[npc_id]
 	local can_add = npc_id and npc_id >= 1 and npc_id <= private.NPC_ID_MAX and npc_name ~= "" and (npc_name ~= old_npc_name or world_id ~= old_world_id)
 
 	-- Color world name orange if not a continent
@@ -267,14 +267,14 @@ ach_npc_remove_button:SetScript("OnClick", function(self)
 	local world_id = selected_npc["world"]
 
 	if current_tab == "IGNORE" then
-		private.Options.IgnoreList.NPCs[npc_id] = nil
-		private.Options.IgnoreList.MapName[npc_id] = nil
-		private.Options.IgnoreList.WorldID[npc_id] = nil
+		private.GlobalOptions.IgnoreList.NPCs[npc_id] = nil
+		private.GlobalOptions.IgnoreList.MapName[npc_id] = nil
+		private.GlobalOptions.IgnoreList.WorldID[npc_id] = nil
 		private.ReavtivateIgnoreMob(npc_id, world_id)
 	else
-		private.Options.IgnoreList.NPCs[npc_id] = selected_npc["name"]
-		private.Options.IgnoreList.MapName[npc_id] = selected_npc["zone"]
-		private.Options.IgnoreList.WorldID[npc_id] = world_id
+		private.GlobalOptions.IgnoreList.NPCs[npc_id] = selected_npc["name"]
+		private.GlobalOptions.IgnoreList.MapName[npc_id] = selected_npc["zone"]
+		private.GlobalOptions.IgnoreList.WorldID[npc_id] = world_id
 		private.DeavtivateIgnoreMob(npc_id)
 	end
 	private.Config.Search.UpdateTab(current_tab)
@@ -453,7 +453,7 @@ end
 
 -- Reverts to default options.
 function panel:default()
-	private.Synchronize(private.Options) -- Resets only character settings
+	private.Ace.db:ResetProfile()
 end
 
 
@@ -474,6 +474,7 @@ do
 		RARENPC = "TrackRares",
 	}
 
+
 	local function Tab_OnEnter(tab)
 		local tooltip = _G.GameTooltip
 		tooltip:SetOwner(tab, "ANCHOR_TOPLEFT", 0, -8)
@@ -493,7 +494,7 @@ do
 			end
 			tooltip:AddLine(description, nil, nil, nil, true)
 
-			if not private.OptionsCharacter.Achievements[tab.identifier] then
+			if not private.CharacterOptions.Achievements[tab.identifier] then
 				local red = _G.RED_FONT_COLOR
 				tooltip:AddLine(L.SEARCH_ACHIEVEMENT_DISABLED, red.r, red.g, red.b)
 			end
@@ -544,9 +545,9 @@ do
 		local identifier = checkbox:GetParent().identifier
 		panel.AchievementSetEnabled(identifier, is_enabled)
 		if identifier == "BEASTS" then
-			private.OptionsCharacter.TrackBeasts = (is_enabled == 1)
+			private.CharacterOptions.TrackBeasts = is_enabled
 		elseif identifier == "RARENPC" then
-			private.OptionsCharacter.TrackRares = (is_enabled == 1)
+			private.CharacterOptions.TrackRares = is_enabled
 		end
 		private.RareMobToggle(identifier, is_enabled)
 		private.CacheListPrint(true)
@@ -648,7 +649,8 @@ do
 				local map_name = map_names[npc_id]
 
 				local new_row = panel.table:AddRow(npc_id,
-					private.NPCNameFromCache(npc_id) and TEXTURE_NOT_READY or "",
+					--private.NPCNameFromCache(npc_id) and TEXTURE_NOT_READY or "",
+					private.NPCQuestIsComplete(npc_id) and TEXTURE_READY or "",
 					npc_name,
 					npc_id,
 					world_ids[npc_id] or "",
@@ -663,7 +665,7 @@ do
 
 
 	local function UpdateCustomTab(tab)
-		GeneralNPCUpdate(private.Options.NPCWorldIDs, private.NPC_ID_TO_MAP_NAME, private.Options.NPCs)
+		GeneralNPCUpdate(private.GlobalOptions.NPCWorldIDs, private.NPC_ID_TO_MAP_NAME, private.GlobalOptions.NPCs)
 	end
 
 
@@ -676,23 +678,26 @@ do
 		GeneralNPCUpdate(private.NPC_ID_TO_WORLD_NAME, private.NPC_ID_TO_MAP_NAME, private.TAMABLE_NON_ACHIEVMENT_LIST)
 	end
 
+
 	local function UpdateIgnoreTab(tab)
-		local world_ids= private.Options.IgnoreList.WorldID
-		local map_names = private.Options.IgnoreList.MapName
-		local npc_data = private.Options.IgnoreList.NPCs
+		local world_ids= private.GlobalOptions.IgnoreList.WorldID
+		local map_names = private.GlobalOptions.IgnoreList.MapName
+		local npc_data = private.GlobalOptions.IgnoreList.NPCs
 		UpdateButtonStates()
 
 		for npc_id, npc_name in pairs(npc_data) do
 			local map_name = map_names[npc_id]
 
 			local new_row = panel.table:AddRow(npc_id,
-				private.NPCNameFromCache(npc_id) and TEXTURE_NOT_READY or "",
+				--private.NPCNameFromCache(npc_id) and TEXTURE_NOT_READY or "",
+				private.NPCQuestIsComplete(npc_id) and TEXTURE_READY or "",
 				npc_name,
 				npc_id,
 				world_ids[npc_id] or "",
 				map_name or _G.UNKNOWN)
 		end
 	end
+
 
 	local function UpdateAchievementTab(tab)
 		local achievement = private.ACHIEVEMENTS[tab.identifier]
@@ -703,7 +708,8 @@ do
 					local npc_name, _, is_completed = _G.GetAchievementCriteriaInfoByID(tab.identifier, criteria_id)
 					local map_name = private.NPC_ID_TO_MAP_NAME[npc_id]
 					local new_row = panel.table:AddRow(npc_id,
-						private.NPCNameFromCache(npc_id) and TEXTURE_NOT_READY or "",
+						--private.NPCNameFromCache(npc_id) and TEXTURE_NOT_READY or "",
+						private.NPCQuestIsComplete(npc_id) and TEXTURE_READY or "",
 						npc_name,
 						npc_id,
 						is_completed and TEXTURE_READY or "",
@@ -718,7 +724,7 @@ do
 	end
 
 	local function ActivateNPCTab(tab)
-		panel.table:SetHeader(L.SEARCH_CACHED, L.SEARCH_NAME, L.SEARCH_ID, L.SEARCH_WORLD, L.SEARCH_MAP)
+		panel.table:SetHeader(L.SEARCH_KILLED, L.SEARCH_NAME, L.SEARCH_ID, L.SEARCH_WORLD, L.SEARCH_MAP)
 		panel.table:SetSortHandlers(true, true, true, true, true)
 		panel.table:SetSortColumn(2) -- Default by name
 		panel.table.OnSelect = tab.table_row_on_select
@@ -729,7 +735,7 @@ do
 	end
 
 	local function ActivateCustomTab(tab)
-		panel.table:SetHeader(L.SEARCH_CACHED, L.SEARCH_NAME, L.SEARCH_ID, L.SEARCH_WORLD, L.SEARCH_MAP)
+		panel.table:SetHeader(L.SEARCH_KILLED, L.SEARCH_NAME, L.SEARCH_ID, L.SEARCH_WORLD, L.SEARCH_MAP)
 		panel.table:SetSortHandlers(true, true, true, true, true)
 		panel.table:SetSortColumn(2) -- Default by name
 		panel.table.OnSelect = tab.table_row_on_select
@@ -743,10 +749,10 @@ do
 	end
 
 	local function ActivateAchievementTab(tab)
-		panel.table:SetHeader(L.SEARCH_CACHED, L.SEARCH_NAME, L.SEARCH_ID, L.SEARCH_COMPLETED, L.SEARCH_MAP)
+		panel.table:SetHeader(L.SEARCH_KILLED, L.SEARCH_NAME, L.SEARCH_ID, L.SEARCH_COMPLETED, L.SEARCH_MAP)
 		panel.table:SetSortHandlers(true, true, true, true, true)
 		panel.table:SetSortColumn(2) -- Default by name
-		panel.table.Header:SetAlpha(private.OptionsCharacter.Achievements[tab.identifier] and ALPHA_ACTIVE or ALPHA_INACTIVE)
+		panel.table.Header:SetAlpha(private.CharacterOptions.Achievements[tab.identifier] and ALPHA_ACTIVE or ALPHA_INACTIVE)
 		panel.table.OnSelect = tab.table_row_on_select
 		panel.table_container:SetPoint("BOTTOM", npc_controls, "TOP", 0, 0)
 		ach_npc_controls:Show()
@@ -786,8 +792,8 @@ do
 			return
 		end
 		npc_id_editbox:SetNumber(npc_id)
-		npc_name_editbox:SetText(private.Options.NPCs[npc_id])
-		npc_world_editbox:SetText(private.Options.NPCWorldIDs[npc_id] or "")
+		npc_name_editbox:SetText(private.GlobalOptions.NPCs[npc_id])
+		npc_world_editbox:SetText(private.GlobalOptions.NPCWorldIDs[npc_id] or "")
 		current_tab = "NPC"
 	end
 
@@ -836,7 +842,7 @@ do
 		end
 		return iter
 	end
-
+	
 	for achievement_id in pairsByKeys(private.ACHIEVEMENTS) do
 		local Ach_tab = AddTab(achievement_id, UpdateAchievementTab, ActivateAchievementTab, DeactivateAchievementTab)
 		Ach_tab.table_row_on_select = function(text_table, npc_id)

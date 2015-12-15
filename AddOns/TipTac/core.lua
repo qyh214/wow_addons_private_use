@@ -23,6 +23,7 @@ local TT_DefaultConfig = {
 	showTarget = "last",
 	targetYouText = "<<YOU>>",
 
+	showBattlePetTip = true,
 	gttScale = 1,
 	updateFreq = 0.5,
 	enableChatHoverTips = false,
@@ -143,7 +144,7 @@ local TT_DefaultConfig = {
 	if_infoColor = { 0.2, 0.6, 1 },
 	if_itemQualityBorder = true,
 	if_showAuraCaster = true,
-	if_showItemLevelAndId = true,
+	if_showItemLevelAndId = false,				-- Used to be true, but changed due to the itemLevel issues
 	if_showQuestLevelAndId = true,
 	if_showSpellIdAndRank = false,
 	if_showCurrencyId = true,					-- Az: no option for this added to TipTac/options yet!
@@ -510,7 +511,7 @@ local function ModifyUnitTooltip()
 			lineInfoIndex = (lineInfoIndex + 1);
 		end
 	-- BattlePets
-	elseif (isPetWild or isPetCompanion) then
+	elseif (cfg.showBattlePetTip) and (isPetWild or isPetCompanion) then
 		lineOne[#lineOne + 1] = reaction;
 		lineOne[#lineOne + 1] = name;
 		lineInfo[#lineInfo + 1] = " ";

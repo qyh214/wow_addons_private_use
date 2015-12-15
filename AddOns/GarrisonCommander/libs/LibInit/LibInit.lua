@@ -18,7 +18,7 @@
 -- @name LibInit
 --
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 17
+local MINOR_VERSION = 18
 local nop=function()end
 local pp=print -- Keeping a handy plain print around
 local _G=_G -- Unmodified env
@@ -211,12 +211,25 @@ if not lib.CombatScheduler then
 	end)
 	lib.CombatFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 end
-function lib:OnLeaveCombat(...)
-	lib._OnLeaveCombat(self,"LIBINIT_END_COMBAT",...)
+local tremove=tremove
+local function Run(args) tremove(args,1)(unpack(args)) end
+function lib:OnLeaveCombat(action,...)
+	if type(action)~="string" and type(action)~="function" then
+		error("Usage: OnLeaveCombat (\"action\", ...): 'action' - string or function expected.", 2)
+	end
+	if type(action)=="string" and type(self[action]) ~= "function" then
+		error("Usage: OnLeaveCombat (\"action\", ...): 'action' - method '"..tostring(action).."' not found on self.", 2)
+	end
+	if type(action) =="string" then
+		lib._OnLeaveCombat(self,"LIBINIT_END_COMBAT",Run,{self[action],self,...})
+	else
+		lib._OnLeaveCombat(self,"LIBINIT_END_COMBAT",Run,{action,...})
+	end
 	if (not InCombatLockdown()) then
 		lib.CombatFrame:GetScript("OnEvent")()
 	end
 end
+
 function lib:NewSubModule(name,...)
 	local module=self:NewModule(name,...)
 	module.OnInitialized=function()end -- placeholder
@@ -1553,6 +1566,7 @@ do
 end
 
 function lib:ScheduleLeaveCombatAction(method, ...)
+	if true then return self:OnLeaveCombat(method,...) end
 	local style = type(method)
 	if style == "string" and type(self[method]) ~= "function" then
 		error("Cannot schedule a combat action to method %q, it does not exist", method)
@@ -1631,6 +1645,9 @@ end
 local StaticPopupDialogs=StaticPopupDialogs
 local StaticPopup_Show=StaticPopup_Show
 function lib:Popup(msg,timeout,OnAccept,OnCancel,data,StopCasting)
+	if InCombatLockdown() then
+		return self:ScheduleLeaveCombatAction("Popup",msg,timeout,OnAccept,OnCancel,data,StopCasting)
+	end
 	msg=msg or "Something strange happened"
 	if type(timeout)=="function" then
 		StopCasting=data
@@ -1801,26 +1818,24 @@ end
 function lib:GetFactory()
 	return factory
 end
----@function [parent=#ns] Configure
 local meta={__index=_G,
 __newindex=function(t,k,v)
-	dprint(t,k,v)
 	assert(type(_G[k]) == 'nil',"Attempting to override global " ..k)
 	return rawset(t,k,v)
 end
 }
-function lib.SetCustomEnvironment(ENV)
+function lib:SetCustomEnvironment(new_env)
 	local old_env = getfenv(2)
-	if old_env==ENV then return end
-	if getmetatable(ENV)==meta then return end
-	if not getmetatable(ENV) then
-		if not ENV.print then ENV.print=dprint end
-		setmetatable(ENV,meta)
-		ENV.dprint=dprint
+	if old_env==new_env then return end
+	if getmetatable(new_env)==meta then return end
+	if not getmetatable(new_env) then
+		if not new_env.print then new_env.print=dprint end
+		setmetatable(new_env,meta)
+		new_env.dprint=dprint
 	else
-		assert(false,"ENV already has metatable")
+		assert(false,"new_env already has metatable")
 	end
-	setfenv(2, ENV)
+	setfenv(2, new_env)
 end
 --- reembed routine
 for target,_ in pairs(lib.mixinTargets) do

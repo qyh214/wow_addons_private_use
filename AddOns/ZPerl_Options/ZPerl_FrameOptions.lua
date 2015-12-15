@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 978 $")
+XPerl_SetModuleRevision("$Revision: 983 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -2864,8 +2864,8 @@ end
 -- XPerl_Options_Custom_StartIconDB
 function XPerl_Options_Custom_StartIconDB(self)
 	self:SetScript("OnUpdate", customOnUpdate)
-	local db = XPerl_GetReusableTable()
-	self.iconDB = db
+	--local db = XPerl_GetReusableTable()
+	self.iconDB = { }
 	self.iconIndex = 0
 	self.progress:SetMinMaxValues(0, ICON_STOP_SCAN)
 	self.progress:SetValue(0)
@@ -2883,7 +2883,8 @@ function XPerl_Options_Custom_ScanForIcons(self)
 		search = strlower(search)
 		local dbname = self.iconDB and self.iconDB
 		if (dbname) then
-			local list = XPerl_GetReusableTable()
+			--local list = XPerl_GetReusableTable()
+			local list = { }
 			for name, id in pairs(dbname) do
 				local success, ret = pcall(strfind, name, search)
 				if (success and ret) then
@@ -3286,6 +3287,12 @@ if (XPerl_UpgradeSettings) then
 				old.colour.bar.healprediction.g = 1
 				old.colour.bar.healprediction.b = 1
 				old.colour.bar.healprediction.a = 1
+			end
+
+			if (oldVersion < "4.1.7") then
+				if old.bar.fat == true then
+					old.bar.fat = 1
+				end
 			end
 		end
 	end

@@ -51,11 +51,6 @@ function module:OnInitialize()
 	self:SafeSecureHook("GarrisonShipyardMapMission_OnEnter")
 	self:SafeSecureHook("GarrisonShipyardMapMission_OnLeave")
 	local ref=GSFMissions.CompleteDialog.BorderFrame.ViewButton
-
-
---[===[@debug@
-print(ref)
---@end-debug@]===]
 	local bt = CreateFrame('BUTTON','GCQuickShipMissionCompletionButton', ref, 'UIPanelButtonTemplate')
 	bt.missionType=LE_FOLLOWER_TYPE_SHIPYARD_6_2
 	bt:SetWidth(300)
@@ -116,6 +111,10 @@ function module:HookedGarrisonShipyardMap_SetupBonus(missionList,frame,mission)
 	addendum.chance:SetTextColor(self:GetDifficultyColors(perc))
 	local cost=mission.cost
 	local currency=mission.costCurrencyTypesID
+	if not mission.canStart then
+		addendum:SetBackdropBorderColor(0,0,0)
+		return
+	end
 	if cost and currency then
 		local _,available=GetCurrencyInfo(currency)
 		if cost>available then
@@ -282,6 +281,9 @@ print("Adding Menu",GCS.Menu,GSF.MissionTab:IsVisible(),GSF.FollowerTab:IsVisibl
 	--elseif GSF.MissionControlTab:IsVisible() then
 	--	self.currentmenu=GSF.MissionControlTab
 	--	menu,size=self:CreateOptionsLayer('BIGSCREEN','GCSKIPRARE','GCSKIPEPIC')
+	else
+		self.currentmenu=nil
+		menu,size=self:CreateOptionsLayer('SHIPMOVEPANEL')
 	end
 --[===[@debug@
 	self:AddOptionToOptionsLayer(menu,'DBG')

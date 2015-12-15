@@ -14,7 +14,7 @@ end
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 976 $")
+end, "$Revision: 980 $")
 
 -- Registers frame to spellcast events.
 
@@ -99,16 +99,16 @@ end
 --------------------------------------------------
 
 -- XPerl_ArcaneBar_OnEvent
-function XPerl_ArcaneBar_OnEvent(self, event, newarg1, newarg2)
+function XPerl_ArcaneBar_OnEvent(self, event, unit)
 	if (event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_TARGET_CHANGED" or event == "PLAYER_FOCUS_CHANGED" or event == "PARTY_MEMBER_ENABLE" or event == "PARTY_MEMBER_DISABLE") then
 		local nameChannel = UnitChannelInfo(self.unit)
 		local nameSpell = UnitCastingInfo(self.unit)
 		if (nameChannel) then
 			event = "UNIT_SPELLCAST_CHANNEL_START"
-			newarg1 = self.unit
+			unit = self.unit
 		elseif (nameSpell) then
 			event = "UNIT_SPELLCAST_START"
-			newarg1 = self.unit
+			unit = self.unit
 		else
 			self:Hide()
 			self.castTimeText:Hide()
@@ -118,7 +118,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, newarg1, newarg2)
 		end
 	end
 
-	if (newarg1 ~= self.unit) then
+	if (unit ~= self.unit) then
 		return
 	end
 

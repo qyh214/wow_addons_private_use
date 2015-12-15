@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 974 $")
+end, "$Revision: 983 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -180,7 +180,7 @@ local function UpdateAssignedRoles(self)
 			icon:SetTexture("Interface\\GroupFrame\\UI-Group-MainTankIcon")
 			icon:Show()
 		elseif isHealer then
-			icon:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_RoleHealer_old")
+			icon:SetTexture("Interface\\AddOns\\ZPerl\\Images\\XPerl_RoleHealer_old")
 			icon:Show()
 		elseif isDamage then
 			icon:SetTexture("Interface\\GroupFrame\\UI-Group-MainAssistIcon")
@@ -190,13 +190,13 @@ local function UpdateAssignedRoles(self)
 		end
 	else
 		if isTank then
-			icon:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_RoleTank")
+			icon:SetTexture("Interface\\AddOns\\ZPerl\\Images\\XPerl_RoleTank")
 			icon:Show()
 		elseif isHealer then
-			icon:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_RoleHealer")
+			icon:SetTexture("Interface\\AddOns\\ZPerl\\Images\\XPerl_RoleHealer")
 			icon:Show()
 		elseif isDamage then
-			icon:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_RoleDamage")
+			icon:SetTexture("Interface\\AddOns\\ZPerl\\Images\\XPerl_RoleDamage")
 			icon:Show()
 		else
 			icon:Hide()
@@ -282,7 +282,7 @@ end
 -- XPerl_Player_UpdateCombat
 local function XPerl_Player_UpdateCombat(self)
 	local nf = self.nameFrame
-	if (UnitAffectingCombat(self.partyid)) then
+	if (UnitAffectingCombat("player")) then
 		nf.text:SetTextColor(1, 0, 0)
 		nf.combatIcon:SetTexCoord(0.49, 1, 0, 0.49)
 		nf.combatIcon:Show()
@@ -1607,7 +1607,7 @@ function XPerl_Player_InitDK(self)
 		MakeMoveable(self.runes)
 
 		local bgDef = {
-			bgFile = "Interface\\Addons\\ZPerl\\Images\\XPerl_FrameBack",
+			bgFile = "Interface\\AddOns\\ZPerl\\Images\\XPerl_FrameBack",
 			edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
 			tile = true, tileSize = 32, edgeSize = 12,
 			insets = { left = 3, right = 3, top = 3, bottom = 3 }
@@ -1668,7 +1668,7 @@ function XPerl_Player_SetupDK(self)
 					self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -30)
 				else
 					self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
-					self.runes:SetWidth(214)
+					self.runes:SetWidth(219)
 					self.runes:SetHeight(32)
 					XPerl_RestorePosition(self.runes)
 				end

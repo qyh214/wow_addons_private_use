@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 978 $")
-XPerl_SetModuleRevision("$Revision: 978 $")
+end, "$Revision: 985 $")
+XPerl_SetModuleRevision("$Revision: 985 $")
 
 -- Upvalus
 local _G = _G
@@ -1540,7 +1540,7 @@ function XPerl_ReactionColour(argUnit)
 			end
 		end
 	else
-		if (UnitIsTapped(argUnit) and not UnitIsTappedByPlayer(argUnit)) then
+		if (UnitIsTapped(argUnit) and not UnitIsTappedByPlayer(argUnit)) and not UnitIsFriend("player", argUnit) then
 			return conf.colour.reaction.tapped
 		else
 			local reaction = UnitReaction(argUnit, "player")
@@ -1581,7 +1581,7 @@ function XPerl_SetUnitNameColor(self, unit)
 			color = XPerl_ReactionColour(unit)
 		end
 	else
-		if (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
+		if (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) and not UnitIsFriend("player", unit) then
 			color = conf.colour.reaction.tapped
 		else
 			color = XPerl_ReactionColour(unit)
@@ -3107,7 +3107,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 					-- (except for PW:Shield and HoProtection) that we'll be debuffing friendlies
 				end
 
-				for buffnum = 1,maxDebuffs do
+				for buffnum = 1, maxDebuffs do
 					local filter = (isFriendly and curableOnly == 1) and "RAID" or nil
 					local name, rank, debuff, debuffApplications, debuffType, duration, endTime, isMine, isStealable = XPerl_UnitDebuff(partyid, buffnum, filter)
 					if (not name) then
@@ -3385,8 +3385,8 @@ end
 function XPerl_Unit_UpdatePortrait(self)
 	if (self.conf and self.conf.portrait) then
 		if self.conf.classPortrait then
-			if UnitIsPlayer(self.partyid) then
-				local _, englishClass = UnitClass(self.partyid)
+			local _, englishClass = UnitClass(self.partyid)
+			if UnitIsPlayer(self.partyid) and englishClass then
 				SetPortraitToTexture(self.portraitFrame.portrait, "Interface\\Icons\\ClassIcon_"..englishClass)
 			else
 				SetPortraitTexture(self.portraitFrame.portrait, self.partyid)
@@ -3770,7 +3770,7 @@ function XPerl_SetExpectedAbsorbs(self)
 			if UnitIsAFK(self.partyid) then
 				bar:SetStatusBarColor(0.2, 0.2, 0.2, 0.7)
 			else
-				bar:SetStatusBarColor(conf.colour.bar.absorb.r, conf.colour.bar.absorb.g, conf.colour.bar.absorb.b, conf.colour.bar.absorb.a)
+				bar:SetStatusBarColor(conf.colour.bar.absorb.r or 0.14, conf.colour.bar.absorb.g or 0.33, conf.colour.bar.absorb.b or 0.7, conf.colour.bar.absorb.a or 0.7)
 			end
 
 			bar:Show()
@@ -3813,7 +3813,7 @@ function XPerl_SetExpectedHealth(self)
 			local healthMax = UnitHealthMax(self.partyid)
 			local health = UnitHealth(self.partyid)
 
-			bar:SetStatusBarColor(conf.colour.bar.healprediction.r, conf.colour.bar.healprediction.g, conf.colour.bar.healprediction.b, conf.colour.bar.healprediction.a)
+			bar:SetStatusBarColor(conf.colour.bar.healprediction.r or 0, conf.colour.bar.healprediction.g or 1, conf.colour.bar.healprediction.b or 1, conf.colour.bar.healprediction.a or 1)
 
 			bar:Show()
 			bar:SetMinMaxValues(0, healthMax)

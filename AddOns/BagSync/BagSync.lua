@@ -331,7 +331,7 @@ local function ScanVoidBank()
 		
 		for tab = 1, numTabs do
 			for i = 1, 80 do
-				itemID, textureName, locked, recentDeposit, isFiltered = GetVoidItemInfo(tab, i)
+				local itemID, textureName, locked, recentDeposit, isFiltered = GetVoidItemInfo(tab, i)
 				if (itemID) then
 					index = index + 1
 					slotItems[index] = itemID and tostring(itemID) or nil
@@ -846,7 +846,7 @@ local function AddItemToTooltip(frame, link) --workaround
 					end
 				end
 			end
-			_, link = GetItemInfo(newItemId) -- replace original link with our found link
+			link = select(2, GetItemInfo(newItemId)) -- replace original link with our found link
 		end	
 	end
 	
@@ -864,7 +864,7 @@ local function AddItemToTooltip(frame, link) --workaround
 	end
 	
 	--ignore the hearthstone and blacklisted items
-	if itemLink and tonumber(itemLink) and (tonumber(itemLink) == 6948 or BS_BL[tonumber(itemLink)]) then
+	if itemLink and tonumber(itemLink) and (tonumber(itemLink) == 6948 or tonumber(itemLink) == 110560 or BS_BL[tonumber(itemLink)]) then
 		frame:Show()
 		return
 	end
@@ -888,12 +888,7 @@ local function AddItemToTooltip(frame, link) --workaround
 	--this is so we don't scan the same guild multiple times
 	local previousGuilds = {}
 	local grandTotal = 0
-	
-	--check for seperator
-	if BagSyncOpt.enableTooltipSeperator then
-		frame:AddDoubleLine(" ", " ")
-		table.insert(lastDisplayed, " @ ")
-	end
+	local first = true
 
 	--loop through our characters
 	--k = player, v = stored data for player
@@ -964,6 +959,13 @@ local function AddItemToTooltip(frame, link) --workaround
 			infoString = CountsToInfoString(allowList)
 
 			if infoString and infoString ~= '' then
+				--check for seperator
+				if first and BagSyncOpt.enableTooltipSeperator then
+					first = false
+					frame:AddDoubleLine(" ", " ")
+					table.insert(lastDisplayed, " @ ")
+				end
+
 				frame:AddDoubleLine(getNameColor(k, pClass), infoString)
 				table.insert(lastDisplayed, getNameColor(k or 'Unknown', pClass).."@"..(infoString or 'unknown'))
 			end

@@ -20,7 +20,7 @@
 ## X-DBM-Mod-MapID: 1159, 1331, 1158, 1153, 1152, 1330, 1116, 1160, 1154
 ## X-DBM-Mod-Sort: 151
 ## X-DBM-Mod-MinCoreRevision: 12473
-## X-Curse-Packaged-Version: 6.2.13-3-ge256f4b
+## X-Curse-Packaged-Version: 6.2.16-1-g294da72
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline

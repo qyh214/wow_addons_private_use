@@ -42,6 +42,9 @@ end
 function addon:MissionScore(mission)
 	if (mission) then
 		local totalTimeString, totalTimeSeconds, isMissionTimeImproved, successChance, partyBuffs, isEnvMechanicCountered, xpBonus, materialMultiplier,goldMultiplier = G.GetPartyMissionInfo(mission.missionID)
+		if not totalTimeString then
+			return formatScore(0,1,0,0,false,0)
+		end
 		local x = tonumber(mission.xp)
 		if x and x >0 then
 			x= xpBonus/mission.xp*100

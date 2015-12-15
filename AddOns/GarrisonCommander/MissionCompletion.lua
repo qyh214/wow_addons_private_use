@@ -111,7 +111,7 @@ function module:MissionComplete(this,button,skiprescheck)
 	missions=G.GetCompleteMissions(followerType)
 	shipyard=addon:GetModule("ShipYard")
 	local missionsFrame=followerType==LE_FOLLOWER_TYPE_GARRISON_6_0 and GMFMissions or GSFMissions
-
+	local panel=followerType==LE_FOLLOWER_TYPE_GARRISON_6_0 and GMF or GSF
 	if (missions and #missions > 0) then
 		this:SetEnabled(false)
 		missionsFrame.CompleteDialog.BorderFrame.ViewButton:SetEnabled(false) -- Disabling standard Blizzard Completion
@@ -146,7 +146,7 @@ function module:MissionComplete(this,button,skiprescheck)
 			--@end-debug@]===]
 			current=current+qt
 			if current+qt > cap then
-				message=message.."\n"..format(L["Capped %1$s. Spend at least %2$d of them"],name,current-cap)
+				message=message.."\n"..format(L["Capped %1$s. Spend at least %2$d of them"],name,current+qt-cap)
 				stop =true
 			end
 		end
@@ -157,8 +157,9 @@ function module:MissionComplete(this,button,skiprescheck)
 				end,
 				function()
 					this:SetEnabled(true)
-					missionsFrame:GetParent():Hide()
 					missionsFrame.CompleteDialog.BorderFrame.ViewButton:SetEnabled(true)
+					panel:Hide()
+
 				end
 			)
 			return

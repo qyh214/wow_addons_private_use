@@ -13,7 +13,7 @@
 ## Notes-zhTW: 提供增強的隊員寵物框架
 ## RequiredDeps: ZPerl, ZPerl_Party
 ## OptionalDeps: ZPerl_ArcaneBar
-## X-Curse-Packaged-Version: r978
+## X-Curse-Packaged-Version: r985
 ## X-Curse-Project-Name: Z-Perl UnitFrames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

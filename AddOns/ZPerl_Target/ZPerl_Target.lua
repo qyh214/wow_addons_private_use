@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 975 $")
+end, "$Revision: 984 $")
 
 -- Upvalues
 local _G = _G
@@ -1008,17 +1008,15 @@ local function XPerl_Target_UpdateLeader(self)
 	local partyid = self.partyid
 	if (UnitIsUnit(partyid, "player")) then
 		leader = UnitIsGroupLeader("player")
-
 	elseif (UnitInRaid(partyid)) then
 		local find = UnitName(partyid)
-		for i = 1,GetNumGroupMembers() do
+		for i = 1, GetNumGroupMembers() do
 			local name, rank = GetRaidRosterInfo(i)
 			if (name == find) then
 				leader = (rank == 2)
 				break
 			end
 		end
-
 	elseif (UnitInParty(partyid)) then
 		--local index = GetPartyLeaderIndex()
 		--if (index > 0) then

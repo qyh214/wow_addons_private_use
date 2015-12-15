@@ -388,6 +388,12 @@
 						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon"/>
 					</Anchors>
 				</FontString>
+				<FontString parentKey="Shortcut" inherits="SystemFont_Outline_Small">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Icon"/>
+					</Anchors>
+					<color r="1.0" g="1.0" b="1.0" />
+				</FontString>
 			</Layer>
 		</Layers>
 		<Scripts>

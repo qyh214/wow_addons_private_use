@@ -3752,7 +3752,7 @@
 										--XPerlDB.highlight.SHIELD = nil
 										--XPerl_Options_EnableCheck(XPerl_Options_GetSibling("HighlightShields", self), false)
 									end
-									if (class ~= "PRIEST" and class ~= "MONK") then
+									if (class ~= "PRIEST" and class ~= "MONK" and class ~= "PALADIN") then
 										XPerlDB.highlight.POM = nil
 										XPerl_Options_EnableCheck(XPerl_Options_GetSibling("HighlightMending", self), false)
 									end
@@ -3897,6 +3897,8 @@
 								local _, class = UnitClass("player")
 								if class == "MONK" then
 									XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_HIGHLIGHTS_RENEWING")
+								elseif class == "PALADIN" then
+									XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_HIGHLIGHTS_BEACON")
 								else
 									XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_HIGHLIGHTS_MENDING")
 								end

@@ -28,11 +28,16 @@ _G._NPCScan = private
 
 local debugger -- Only defined if needed.
 
+-- Create a new Add-on object using AceAddon for Profile DB
+private.Ace = LibStub("AceAddon-3.0"):NewAddon(FOLDER_NAME)
+
 private.Frame = _G.CreateFrame("Frame")
 private.Frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 private.Frame:RegisterEvent("PLAYER_LEAVING_WORLD")
 private.Frame:RegisterEvent("PLAYER_UPDATE_RESTING")
 private.Frame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+private.Frame:RegisterEvent("LOOT_CLOSED")
+
 private.Frame:SetScript("OnEvent", function(self, event_name, ...)
 	if self[event_name] then
 		return self[event_name](self, event_name, ...)
@@ -44,28 +49,33 @@ private.Updater.UpdateRate = 0.5
 private.Updater:CreateAnimation("Animation"):SetDuration(private.Updater.UpdateRate)
 private.Updater:SetLooping("REPEAT")
 
+
 -------------------------------------------------------------------------------
 -- Constants.
 -------------------------------------------------------------------------------
 local DB_VERSION = 3
 local ISLE_OF_THUNDER_MAP_ID = 1064
+local DARKMOON_ISLAND_MAP_ID = 947
 local PLAYER_CLASS = _G.select(2, _G.UnitClass("player"))
 local PLAYER_FACTION = _G.UnitFactionGroup("player")
-local MOUSEOVER_TARGET_DELAY = 300
+local ANTI_SPAM_DELAY = 300
+
+--[===[@debug@
+ANTI_SPAM_DELAY  = 30
+--@end-debug@]===]
+private.ANTI_SPAM_DELAY = ANTI_SPAM_DELAY
 
 
 -------------------------------------------------------------------------------
 -- Variables.
 -------------------------------------------------------------------------------
-private.Options = {}
 _NPCScanOptions = {}
+private.CharacterOptions = {}
 
-private.OptionsCharacter = {}
-_NPCScanOptionsCharacter = {}
-
-local OptionsDefault = {
+local GlobalOptionsDefault = {
 	Version = DB_VERSION,
 	AlertSound = nil, -- Default sound
+	ChangeAlertShown = false, -- Has WoD changes alert been shown yet
 	NPCs = {
 		[50409] = private.L.NPCs["50409"], --"Mysterious Camel Figurine",
 		[50410] = private.L.NPCs["50410"], --"Mysterious Camel Figurine",
@@ -83,46 +93,67 @@ local OptionsDefault = {
 		MapName = {},
 		WorldID = {},
 	},
-	CacheWarnings = false,
-	ShowAlertAsToast = false,
-	PersistentToast = false,
+	CacheWarnings = nil,
+	ShowAlertAsToast = nil,
+	PersistentToast = nil,
 }
 
-local OptionsCharacterDefault = {
-	Version = DB_VERSION,
-	Achievements = {
-		[private.ACHIEVEMENT_IDS.BLOODY_RARE] = true,
-		[private.ACHIEVEMENT_IDS.FROSTBITTEN] = true,
-		[private.ACHIEVEMENT_IDS.ONE_MANY_ARMY] = true,
-		[private.ACHIEVEMENT_IDS.GLORIOUS] = true,
-		[private.ACHIEVEMENT_IDS.CHAMPIONS_OF_LEI_SHEN] = true,
-		[private.ACHIEVEMENT_IDS.TIMELESS_CHAMPION] = true,
-		[private.ACHIEVEMENT_IDS.GORGROND_MONSTER_HUNTER] = true,
-		[private.ACHIEVEMENT_IDS.HIGH_VALUE_TARGETS_ASHRAN] = true,
-		[private.ACHIEVEMENT_IDS.CUT_OFF_THE_HEAD] = true,
-		[private.ACHIEVEMENT_IDS.HERALDS_OF_THE_LEGION] = true,
-		[private.ACHIEVEMENT_IDS.FIGHT_THE_POWER] = true,
-		[private.ACHIEVEMENT_IDS.ANCIENT_NO_MORE] = true,
-		[private.ACHIEVEMENT_IDS.HELLBANE] = true,
-		[private.ACHIEVEMENT_IDS.JUNGLE_STALKER] = true,
+
+--Options table for AceConfig
+local ProfileOptions = {
+	["type"] = "group",
+	["handler"] = private.Ace,
+	["args"] = {
+		["Profiles"] = nil,  -- Reserved for profile options
 	},
-	AchievementsAddFound = true,
-	AlertScreenEdgeFlash = true,
-	AlertSoundUnmute = nil,
-	FlightSupress = true,
-	TargetIcon = 8, --Skull
-	TrackBeasts = true,
-	TrackRares = true,
-	TrackVignettes = true,
-	TrackMouseover = true,
+};
+
+--This replaces OptionsCharacterDefault
+local ProfileDefaults = {
+	profile = {
+		Achievements = {
+			[private.ACHIEVEMENT_IDS.BLOODY_RARE] = true,
+			[private.ACHIEVEMENT_IDS.FROSTBITTEN] = true,
+			[private.ACHIEVEMENT_IDS.ONE_MANY_ARMY] = true,
+			[private.ACHIEVEMENT_IDS.GLORIOUS] = true,
+			[private.ACHIEVEMENT_IDS.CHAMPIONS_OF_LEI_SHEN] = true,
+			[private.ACHIEVEMENT_IDS.TIMELESS_CHAMPION] = true,
+			[private.ACHIEVEMENT_IDS.GORGROND_MONSTER_HUNTER] = true,
+			[private.ACHIEVEMENT_IDS.HIGH_VALUE_TARGETS_ASHRAN] = true,
+			[private.ACHIEVEMENT_IDS.CUT_OFF_THE_HEAD] = true,
+			[private.ACHIEVEMENT_IDS.HERALDS_OF_THE_LEGION] = true,
+			[private.ACHIEVEMENT_IDS.FIGHT_THE_POWER] = true,
+			[private.ACHIEVEMENT_IDS.ANCIENT_NO_MORE] = true,
+			[private.ACHIEVEMENT_IDS.HELLBANE] = true,
+			[private.ACHIEVEMENT_IDS.JUNGLE_STALKER] = true,
+		},
+		AchievementsAddFound = true,
+		AlertScreenEdgeFlash = true,
+		AlertSoundUnmute = false,
+		CacheWarnings = false,
+		FlightSupress = true,
+		PersistentToast = false,
+		ShowAlertAsToast = false,
+		TargetIcon = 8, --Skull
+		TrackBeasts = true,
+		TrackRares = true,
+		TrackNameplate = false,
+		TrackVignettes = true,
+		TrackMouseover = false,
+		TrackHellbane = true,
+	}
 }
+
+local antiSpamList = {}
+local lastAntiSpam = 0
+local active_tracking_quest_mobs = {}
 
 
 -------------------------------------------------------------------------------
 -- Dialogs and Toasts.
 -------------------------------------------------------------------------------
 Dialog:Register("NPCSCAN_AUTOADD_WARNING", {
-	text = "You appear to be running _NPCScan.AutoAdd v2.2 or earlier, which may prevent _NPCScan from working properly.\n\nIt is recommended that you disable _NPCScan.AutoAdd until it is updated.",
+	text = "You appear to be running _NPCScan.AutoAdd, which may prevent _NPCScan from working properly.\n\nIt is recommended that you disable _NPCScan.AutoAdd.",
 	text_justify_h = "left",
 	text_justify_v = "bottom",
 	buttons = {
@@ -135,15 +166,6 @@ Dialog:Register("NPCSCAN_AUTOADD_WARNING", {
 	hide_on_escape = true,
 	width = 500,
 })
-
-Toast:Register("_NPCScanAlertToast", function(toast, ...)
-	if private.Options.PersistentToast then
-		toast:MakePersistent()
-	end
-	toast:SetTitle(L.CONFIG_TITLE)
-	toast:SetFormattedText("%s%s|r", _G.GREEN_FONT_COLOR_CODE, ...)
-	toast:SetIconTexture([[Interface\LFGFRAME\BattlenetWorking0]])
-end)
 
 
 Dialog:Register("NPCSCAN_WOD_CHANGES", {
@@ -160,12 +182,25 @@ Dialog:Register("NPCSCAN_WOD_CHANGES", {
 	hide_on_escape = true,
 	width = 500,
 })
+
+
+Toast:Register("_NPCScanAlertToast", function(toast, ...)
+	if private.CharacterOptions.PersistentToast then
+		toast:MakePersistent()
+	end
+	toast:SetTitle(L.CONFIG_TITLE)
+	toast:SetFormattedText("%s%s|r", _G.GREEN_FONT_COLOR_CODE, ...)
+	toast:SetIconTexture([[Interface\LFGFRAME\BattlenetWorking0]])
+end)
+
+
 -------------------------------------------------------------------------------
 -- Debugger.
 -------------------------------------------------------------------------------
 local function CreateDebugFrame()
 	return _G.LibStub("LibTextDump-1.0"):New(("%s Debug Output"):format(FOLDER_NAME), 640, 480)
 end
+
 
 function private.Debug(...)
 	--[===[@debug@
@@ -184,7 +219,7 @@ function private.Print(message, color)
 	if not color then
 		color = _G.NORMAL_FONT_COLOR
 	end
-	_G.DEFAULT_CHAT_FRAME:AddMessage(L.PRINT_FORMAT:format(private.OptionsCharacter.PrintTime and _G.date(_G.CHAT_TIMESTAMP_FORMAT or L.TIME_FORMAT) or "", message), color.r, color.g, color.b)
+	_G.DEFAULT_CHAT_FRAME:AddMessage(L.PRINT_FORMAT:format(private.CharacterOptions.PrintTime and _G.date(_G.CHAT_TIMESTAMP_FORMAT or L.TIME_FORMAT) or "", message), color.r, color.g, color.b)
 end
 
 
@@ -192,8 +227,6 @@ do
 	local tooltip = _G.CreateFrame("GameTooltip", "_NPCScanTooltip")
 	local tooltip_text = tooltip:CreateFontString()
 	tooltip:AddFontStrings(tooltip_text, tooltip:CreateFontString())
-
-
 
 	--For players: Player-[server ID]-[player UID] (Example: "Player-976-0002FD64")
 	--For creatures, pets, objects, and vehicles: [Unit type]-0-[server ID]-[instance ID]-[zone UID]-[ID]-[Spawn UID] (Example: "Creature-0-976-0-11-31146-000136DF91")
@@ -236,7 +269,7 @@ do
 			end
 		end
 		table.wipe(source_data)
-
+ 
 		if #build_list > 0 then
 			table.sort(build_list)
 			return table.concat(build_list, L.CACHELIST_SEPARATOR)
@@ -249,26 +282,26 @@ local CacheList = {}
 do
 	-- Fills a cache list with all added NPCs, active or not.
 	local function CacheListPopulate(self)
-		for npc_id in pairs(private.Options.NPCs) do
+		for npc_id in pairs(private.GlobalOptions.NPCs) do
 			self[npc_id] = private.NPCNameFromCache(npc_id)
 		end
 
-		if private.OptionsCharacter.TrackBeasts then
+		if private.CharacterOptions.TrackBeasts then
 			for npc_id in pairs(private.TAMABLE_ID_TO_NAME) do
 				self[npc_id] = private.NPCNameFromCache(npc_id)
 			end
 		end
 
-		if private.OptionsCharacter.TrackRares then
+		if private.CharacterOptions.TrackRares then
 			for npc_id in pairs(private.UNTAMABLE_ID_TO_NAME) do
 				self[npc_id] = private.NPCNameFromCache(npc_id)
 			end
 		end
 
-		for achievement_id in pairs(private.OptionsCharacter.Achievements) do
+		for achievement_id in pairs(private.CharacterOptions.Achievements) do
 			for criteria_id, npc_id in pairs(private.ACHIEVEMENTS[achievement_id].Criteria) do
 				-- Not completed
-				if private.OptionsCharacter.AchievementsAddFound or not select(3, GetAchievementCriteriaInfoByID(achievement_id, criteria_id)) then
+				if private.CharacterOptions.AchievementsAddFound or not select(3, GetAchievementCriteriaInfoByID(achievement_id, criteria_id)) then
 					self[npc_id] = private.NPCNameFromCache(npc_id)
 				end
 			end
@@ -285,7 +318,7 @@ do
 	-- @param FullListing Adds all cached NPCs before printing, active or not.
 	-- @return True if list printed.
 	function private.CacheListPrint(force_print, full_listing)
-		if force_print or private.Options.CacheWarnings then
+		if force_print or private.CharacterOptions.CacheWarnings then
 			if full_listing then
 				CacheListPopulate(CacheList)
 			end
@@ -303,7 +336,7 @@ do
 end
 
 
-local ScanIDs = {} -- [ NpcID ] = Number of concurrent scans for this ID
+private.ScanIDs = {} -- [ NpcID ] = Number of concurrent scans for this ID
 
 
 -- Begins searching for an NPC.
@@ -313,14 +346,14 @@ local function ScanAdd(npc_id)
 	if name then
 		CacheList[npc_id] = name
 	else
-		if ScanIDs[npc_id] then
-			ScanIDs[npc_id] = ScanIDs[npc_id] + 1
+		if private.ScanIDs[npc_id] then
+			private.ScanIDs[npc_id] = private.ScanIDs[npc_id] + 1
 		else
 			-- First
-			if not next(ScanIDs) then
+			if not next(private.ScanIDs) then
 				private.Updater:Play()
 			end
-			ScanIDs[npc_id] = 1
+			private.ScanIDs[npc_id] = 1
 			private.Overlays.Add(npc_id)
 		end
 		return true
@@ -330,16 +363,16 @@ end
 
 -- Stops searching for an NPC when nothing is searching for it.
 local function ScanRemove(npc_id)
-	local count = assert(ScanIDs[npc_id], "Attempt to remove inactive scan.")
+	local count = assert(private.ScanIDs[npc_id], "Attempt to remove inactive scan. " .. npc_id)
 
 	if count > 1 then
-		ScanIDs[npc_id] = count - 1
+		private.ScanIDs[npc_id] = count - 1
 	else
-		ScanIDs[npc_id] = nil
+		private.ScanIDs[npc_id] = nil
 		private.Overlays.Remove(npc_id)
 
 		-- Last
-		if not next(ScanIDs) then
+		if not next(private.ScanIDs) then
 			private.Updater:Stop()
 		end
 	end
@@ -369,6 +402,7 @@ do
 	-- Ends actual scan for NPC.
 	function NPCDeactivate(npc_id)
 		if not NPCsActive[npc_id] then
+			--private.Debug(npc_id.. " not active")
 			return
 		end
 		NPCsActive[npc_id] = nil
@@ -381,6 +415,11 @@ do
 	function private.NPCIsActive(npc_id)
 		return NPCsActive[npc_id]
 	end
+
+	function private.ClearActiveList()
+		table.wipe(NPCsActive)
+	end
+	
 end
 
 
@@ -390,7 +429,7 @@ end
 -- @param WorldID Number or localized string WorldID to limit this search to.
 -- @return True if custom NPC added.
 function private.NPCAdd(npc_id, npc_name, world_id)
-	local options = private.Options
+	local options = private.GlobalOptions
 	npc_id = assert(tonumber(npc_id), "NpcID must be numeric.")
 
 	if options.NPCs[npc_id] then
@@ -401,10 +440,15 @@ function private.NPCAdd(npc_id, npc_name, world_id)
 	options.NPCs[npc_id] = npc_name
 	options.NPCWorldIDs[npc_id] = world_id
 
+	private.CUSTOM_NPC_ID_TO_NAME[npc_id] = npc_name
+	private.CUSTOM_NPC_ID_TO_WORLD_NAME[npc_id] = world_id
+	private.CUSTOM_NPC_NAME_TO_ID[npc_name] = npc_id
+
 	if not NPCActivate(npc_id, world_id) then
 		-- Didn't activate; Just add row
 		private.Config.Search.UpdateTab("NPC")
 	end
+
 	return true
 end
 
@@ -413,7 +457,7 @@ end
 -- @param NpcID Numeric ID of the NPC.
 -- @return True if custom NPC removed.
 function private.NPCRemove(npc_id)
-	local options = private.Options
+	local options = private.GlobalOptions
 	npc_id = tonumber(npc_id)
 
 	if not options.NPCs[npc_id] then
@@ -421,6 +465,11 @@ function private.NPCRemove(npc_id)
 	end
 	options.NPCs[npc_id] = nil
 	options.NPCWorldIDs[npc_id] = nil
+
+	local npc_name = private.CUSTOM_NPC_ID_TO_NAME[npc_id]
+	private.CUSTOM_NPC_ID_TO_NAME[npc_id] = nil
+	private.CUSTOM_NPC_ID_TO_WORLD_NAME[npc_id] = nil
+	private.CUSTOM_NPC_NAME_TO_ID[npc_name] = nil
 
 	if not NPCDeactivate(npc_id) then
 		private.Config.Search.UpdateTab("NPC")
@@ -432,7 +481,7 @@ end
 -- Starts searching for an achievement's NPC if it meets all settings.
 local function AchievementNPCActivate(achievement, npc_id, criteria_id)
 	if (achievement.Active and not achievement.NPCsActive[npc_id]
-		and (private.OptionsCharacter.AchievementsAddFound or not select(3, GetAchievementCriteriaInfoByID(achievement.ID, criteria_id))) -- Not completed
+		and (private.CharacterOptions.AchievementsAddFound or not select(3, GetAchievementCriteriaInfoByID(achievement.ID, criteria_id))) -- Not completed
 		and ScanAdd(npc_id)) then
 		achievement.NPCsActive[npc_id] = criteria_id
 		private.Config.Search.UpdateTab(achievement.ID)
@@ -461,7 +510,7 @@ local function AchievementActivate(achievement)
 	achievement.Active = true
 
 	for criteria_id, npc_id in pairs(achievement.Criteria) do
-		if not _G._NPCScanOptions.IgnoreList.NPCs[npc_id] then
+		if not _G._NPCScanOptions.IgnoreList.NPCs[npc_id] and not private.NPCQuestIsComplete(npc_id) then
 			AchievementNPCActivate(achievement, npc_id, criteria_id)
 		end
 	end
@@ -490,6 +539,20 @@ function private.AchievementNPCIsActive(achievement, npc_id)
 end
 
 
+-- Checks to see if any associated kill quests have been complted
+-- @param NPC Id of mob .
+-- @return True if the quest has been completed.
+function private.NPCQuestIsComplete(npc_id)
+	local quest_id = private.NPC_ID_TO_QUEST_ID[npc_id]
+
+	if quest_id then
+		return IsQuestFlaggedCompleted(quest_id)
+	else 
+		return false 
+	end
+end
+
+
 -- Adds a kill-related achievement to track.
 -- @param achievement_id Numeric ID of achievement.
 -- @return True if achievement added.
@@ -499,12 +562,12 @@ function private.AchievementAdd(achievement_id)
 
 	if not achievement then return false end
 
-	if not next(private.OptionsCharacter.Achievements) then -- First
+	if not next(private.CharacterOptions.Achievements) then -- First
 	private.Frame:RegisterEvent("ACHIEVEMENT_EARNED")
 	private.Frame:RegisterEvent("CRITERIA_UPDATE")
 	end
 
-	private.OptionsCharacter.Achievements[achievement_id] = true
+	private.CharacterOptions.Achievements[achievement_id] = true
 	private.Config.Search.AchievementSetEnabled(achievement_id, true)
 	AchievementActivate(achievement)
 	return true
@@ -515,13 +578,13 @@ end
 -- @param achievement_id Numeric ID of achievement.
 -- @return True if achievement removed.
 function private.AchievementRemove(achievement_id)
-	if not private.OptionsCharacter.Achievements[achievement_id] then
+	if not private.CharacterOptions.Achievements[achievement_id] then
 		return
 	end
 	AchievementDeactivate(private.ACHIEVEMENTS[achievement_id])
-	private.OptionsCharacter.Achievements[achievement_id] = nil
+	private.CharacterOptions.Achievements[achievement_id] = false
 
-	if not next(private.OptionsCharacter.Achievements) then -- Last
+	if not next(private.CharacterOptions.Achievements) then -- Last
 	private.Frame:UnregisterEvent("ACHIEVEMENT_EARNED")
 	private.Frame:UnregisterEvent("CRITERIA_UPDATE")
 	end
@@ -530,70 +593,71 @@ function private.AchievementRemove(achievement_id)
 end
 
 
--- Adds a kill-related achievement to track.
--- @param AchievementID Numeric ID of achievement.
--- @return True if achievement added.
-function private.SetRareMob(identifier, enable)
-	if identifier == "BEASTS" then
-		private.OptionsCharacter.TrackBeasts = enable
-		private.Config.Search.AchievementSetEnabled(identifier, enable)
-		return true
-	elseif identifier == "RARENPC" then
-		private.OptionsCharacter.TrackRares = enable
-		private.Config.Search.AchievementSetEnabled(identifier, enable)
-		return true
-	end
-end
-
+-- Adds a previously ignored Mob to be tracked.
+-- @param Mob Id & World ID .
 function private.ReavtivateIgnoreMob(npc_id, world_id)
 	NPCActivate(npc_id, world_id)
 end
 
+
+-- Removes an ignored Mob from being tracked.
+-- @param Mob Id 
 function private.DeavtivateIgnoreMob(npc_id)
 	NPCDeactivate(npc_id)
 end
 
 
+-- Toggles a Mob type to track.
+-- @param Identifier of Type and Toggle State.
 function private.RareMobToggle(identifier, enable)
-	local npcs
+	local npc_list
 
 	if identifier == "BEASTS" then
-		npcs = private.TAMABLE_ID_TO_NAME
+		private.CharacterOptions.TrackBeasts = enable
+		private.Config.Search.AchievementSetEnabled(identifier, enable)
+		npc_list = private.TAMABLE_ID_TO_NAME
 	elseif identifier == "RARENPC" then
-		npcs = private.UNTAMABLE_ID_TO_NAME
+		private.CharacterOptions.TrackRares = enable
+		private.Config.Search.AchievementSetEnabled(identifier, enable)
+		npc_list = private.UNTAMABLE_ID_TO_NAME
 	end
 
-	if npcs and enable then
-		for npc_id, _ in pairs(npcs) do
+	if npc_list and enable then
+		for npc_id, _ in pairs(npc_list) do
 			if not _G._NPCScanOptions.IgnoreList.NPCs[npc_id] then
 				NPCActivate(npc_id, private.NPC_ID_TO_WORLD_NAME[npc_id])
 			end
 		end
-	else
-		for npc_id, _ in pairs(npcs) do
-			NPCDeactivate(npc_id)
+	elseif npc_list and not enable then
+		for npc_id, _ in pairs(npc_list) do
+			if private.NPCIsActive(npc_id) then
+				NPCDeactivate(npc_id)
+			end
 		end
 	end
 end
 
 
+-------------------------------------------------------------------------------
+-- Config Menu Toggles.
+-------------------------------------------------------------------------------
 -- Enables printing cache lists on login.
 function private.SetCacheWarnings(enable)
-	private.Options.CacheWarnings = enable
+	private.CharacterOptions.CacheWarnings = enable
 	private.Config.cache_warnings_checkbox:SetChecked(enable)
 end
 
 
 -- Enables adding a timestamp to printed messages.
 function private.SetPrintTime(enable)
-	private.OptionsCharacter.PrintTime = enable
+	private.CharacterOptions.PrintTime = enable
 	private.Config.print_time_checkbox:SetChecked(enable)
 end
 
 
 -- Enables tracking of unneeded achievement NPCs.
 function private.SetAchievementsAddFound(enable)
-	private.OptionsCharacter.AchievementsAddFound = enable
+	private.CharacterOptions.AchievementsAddFound = enable
 	private.Config.Search.add_found_checkbox:SetChecked(enable)
 
 	for _, achievement in pairs(private.ACHIEVEMENTS) do
@@ -605,62 +669,87 @@ function private.SetAchievementsAddFound(enable)
 end
 
 
+-- Enables alerts to be displayed as toast display.
 function private.SetShowAsToast(enable)
-	private.Options.ShowAlertAsToast = enable
+	private.CharacterOptions.ShowAlertAsToast = enable
 	private.Config.show_as_toast_checkbox:SetChecked(enable)
 end
 
+
+-- Enables displayed toasts to be shown untill closed by the user.
 function private.SetPersistentToast(enable)
-	private.Options.PersistentToast = enable
+	private.CharacterOptions.PersistentToast = enable
 	private.Config.persistent_toast_checkbox:SetChecked(enable)
 end
 
+
 -- Enables unmuting sound to play found alerts.
 function private.SetAlertSoundUnmute(enable)
-	private.OptionsCharacter.AlertSoundUnmute = enable
+	private.CharacterOptions.AlertSoundUnmute = enable
 	private.Config.alert_unmute_checkbox:SetChecked(enable)
 end
 
+
 -- Enables screen edge flash to show on found alerts.
 function private.SetAlertScreenEdgeFlash(enable)
-	private.OptionsCharacter.AlertScreenEdgeFlash = enable
+	private.CharacterOptions.AlertScreenEdgeFlash = enable
 	private.Config.screen_edge_flash_checkbox:SetChecked(enable)
 end
+
 
 -- Sets the sound to play when NPCs are found.
 function private.SetAlertSound(alert_sound)
 	assert(alert_sound == nil or type(alert_sound) == "string", "AlertSound must be a string or nil.")
-	private.Options.AlertSound = alert_sound
+	private.GlobalOptions.AlertSound = alert_sound
 	_G.UIDropDownMenu_SetText(private.Config.alert_sound_dropdown, alert_sound == nil and L.CONFIG_ALERT_SOUND_DEFAULT or alert_sound)
 end
+
 
 -- Sets the icon to display over found NPC.
 function private.SetTargetIcon(icon_id)
 	icon_id = icon_id or private.NUM_RAID_ICONS
-	private.OptionsCharacter.TargetIcon = icon_id
+	private.CharacterOptions.TargetIcon = icon_id
 
 	local icon_info = _G.UnitPopupButtons["RAID_TARGET_" .. icon_id]
 	local colorCode = ("|cFF%02x%02x%02x"):format(icon_info.color.r * 255, icon_info.color.g * 255, icon_info.color.b * 255)
 	_G.UIDropDownMenu_SetText(private.Config.alert_icon_dropdown, colorCode .. icon_info.text)
 end
 
+
 -- Enables Blocking alerts while on taxi.
 function private.SetBlockFlightScan(enable)
-	private.OptionsCharacter.FlightSupress = enable
+	private.CharacterOptions.FlightSupress = enable
 	private.Config.block_flight_scan_checkbox:SetChecked(enable)
 	return enable
 end
 
--- Enables Vignette tracking.
+
+-- Enables Hellbane mob tracking when their icons appear on the world map.
+function private.SetHellbaneScan(enable)
+	private.CharacterOptions.TrackHellbane = enable
+	private.Config.hellbane_scan_checkbox:SetChecked(enable)
+	return enable
+end
+
+
+-- Enables tracking of mobs by Nameplate.
+function private.SetNameplateScan(enable)
+	private.CharacterOptions.TrackNameplate = enable
+	private.Config.nameplate_scan_checkbox:SetChecked(enable)
+	return enable
+end
+
+
+-- Enables tracking of mobs by Vignette.
 function private.SetVignetteScan(enable)
-	private.OptionsCharacter.TrackVignettes = enable
+	private.CharacterOptions.TrackVignettes = enable
 	private.Config.viginette_scan_checkbox:SetChecked(enable)
 	return enable
 end
 
 -- Enables Mouseover tracking.
 function private.SetMouseoverScan(enable)
-	private.OptionsCharacter.TrackMouseover = enable
+	private.CharacterOptions.TrackMouseover = enable
 	private.Config.mouseover_scan_checkbox:SetChecked(enable)
 	return enable
 end
@@ -691,34 +780,29 @@ end
 
 -- Resets the scanning list and reloads it from saved settings.
 function private.Synchronize()
-
-	for var, value in pairs(OptionsDefault) do
-		private.Options[var] = private.Options[var] == nil and value or private.Options[var]
+	for var, value in pairs(GlobalOptionsDefault) do
+		private.GlobalOptions[var] = private.GlobalOptions[var] == nil and value or private.GlobalOptions[var]
 	end
 
-	for var, value in pairs(OptionsCharacterDefault) do
-		private.OptionsCharacter[var] = private.OptionsCharacter[var] == nil and value or private.OptionsCharacter[var]
-	end
+	local options = private.GlobalOptions
+	local character_options = private.CharacterOptions
 
-	local options = private.Options
-	local character_options = private.OptionsCharacter
+	assert(not next(private.ScanIDs), "Orphan NpcIDs in scan pool!")
 
-	assert(not next(ScanIDs), "Orphan NpcIDs in scan pool!")
-
-	private.SetCacheWarnings(options.CacheWarnings)
+	private.SetCacheWarnings(character_options.CacheWarnings)
 	private.SetPrintTime(character_options.PrintTime)
 	private.SetAchievementsAddFound(character_options.AchievementsAddFound)
-	private.SetShowAsToast(options.ShowAlertAsToast)
-	private.SetPersistentToast(options.PersistentToast)
+	private.SetShowAsToast(character_options.ShowAlertAsToast)
+	private.SetPersistentToast(character_options.PersistentToast)
 	private.SetAlertSoundUnmute(character_options.AlertSoundUnmute)
 	private.SetAlertScreenEdgeFlash(character_options.AlertScreenEdgeFlash)
 	private.SetTargetIcon(character_options.TargetIcon)
 	private.SetAlertSound(options.AlertSound)
+	private.SetNameplateScan(character_options.TrackNameplate)
 	private.SetVignetteScan(character_options.TrackVignettes)
+	private.SetHellbaneScan(character_options.TrackHellbane)
 	private.SetMouseoverScan(character_options.TrackMouseover)
 	private.SetBlockFlightScan(character_options.FlightSupress)
-	private.SetRareMob("BEASTS", character_options.TrackBeasts)
-	private.SetRareMob("RARENPC", character_options.TrackRares)
 	private.RareMobToggle("BEASTS", character_options.TrackBeasts)
 	private.RareMobToggle("RARENPC", character_options.TrackRares)
 
@@ -726,10 +810,38 @@ function private.Synchronize()
 		-- If defaults, don't enable completed achievements unless explicitly allowed
 		if character_options.Achievements[achievement_id] then
 			private.AchievementAdd(achievement_id)
+		else
+			private.AchievementRemove(achievement_id)
+			private.Config.Search.AchievementSetEnabled(achievement_id, false)
 		end
 	end
 
+	--Builds custom NPC lookup tables
+	for npc_id, npc_name in pairs(private.GlobalOptions.NPCs) do
+		private.CUSTOM_NPC_ID_TO_NAME[npc_id] = npc_name
+		private.CUSTOM_NPC_ID_TO_WORLD_NAME[npc_id] = private.GlobalOptions.NPCWorldIDs[npc_id]
+		private.CUSTOM_NPC_NAME_TO_ID[npc_name] = npc_id
+	end
+
 	private.CacheListPrint(false, true) -- Populates cache list with inactive mobs too before printing
+end
+
+
+-- An anti spam function to throttle spammy events
+-- @param time the time to wait between two events (optional, default 2.5 seconds)
+-- @param id the id to distinguish different events (optional, only necessary if your mod keeps track of two different spam events at the same time)
+function private.AntiSpam(time, id)
+	if _G.GetTime() - (id and (antiSpamList["lastAntiSpam" .. tostring(id)] or 0) or lastAntiSpam or 0) > (time or 2.5) then
+		if id then
+			antiSpamList["lastAntiSpam" .. tostring(id)] = _G.GetTime()
+		else
+			lastAntiSpam = _G.GetTime()
+		end
+		return true
+	else
+		private.Debug("Anti-Spam triggered for: "..tostring(id))
+		return false
+	end
 end
 
 
@@ -742,7 +854,7 @@ do
 			return
 		end
 
-		if private.Options.CacheWarnings then
+		if private.CharacterOptions.CacheWarnings then
 			local ListString = CacheListBuild(PetList)
 			if ListString then
 				private.Print(L.CACHED_PET_RESTING_FORMAT:format(ListString), _G.RED_FONT_COLOR)
@@ -787,38 +899,17 @@ do
 
 
 	local function GetScanSource(npc_id)
-		local custom_name = private.Options.NPCs[npc_id]
+		local custom_name = private.GlobalOptions.NPCs[npc_id]
 
 		if custom_name then
 			return custom_name
 		end
 
-		for achievement_id in pairs(private.OptionsCharacter.Achievements) do
+		for achievement_id in pairs(private.CharacterOptions.Achievements) do
 			if private.ACHIEVEMENTS[achievement_id].NPCsActive[npc_id] then
 				return _G.GetAchievementLink(achievement_id)
 			end
 		end
-	end
-
-	local NPC_RECORDED_TIMES = {}
-
-	--Check to see if enough time has passed from first found instance
-	local function ValidRecordedTime(recorded_time)
-		if not recorded_time then
-			return true
-		end
-		local time_remaining = _G.GetTime() - recorded_time
-		private.Debug(MOUSEOVER_TARGET_DELAY - time_remaining)
-		return time_remaining > MOUSEOVER_TARGET_DELAY
-	end
-
-	--Check to see if a alert is already shown for the mob
-	function private.DuplicateAlertCheck(npc_id)
-		if _NPCScanButton:IsShown() and tonumber(npc_id) == tonumber(_NPCScanButton.ID) then
-			private.Debug("Alert already shown")
-			return false
-		end
-		return true
 	end
 
 	-- Validates found mobs before showing alerts.
@@ -826,7 +917,7 @@ do
 		--[[  No need to deactivate mobs as cache scanning is deactivated. Re-enable if cache scanning works again.
 				NPCDeactivate(npc_id)
 
-				for achievement_id in pairs(private.OptionsCharacter.Achievements) do
+				for achievement_id in pairs(private.CharacterOptions.Achievements) do
 					AchievementNPCDeactivate(private.ACHIEVEMENTS[achievement_id], npc_id)
 				end
 		--]]
@@ -839,7 +930,7 @@ do
 		end
 
 		-- Checks to see if player is on flightpath, this will block possible cross realm alerts
-		if private.OptionsCharacter.FlightSupress and _G.UnitOnTaxi("player") then
+		if private.CharacterOptions.FlightSupress and _G.UnitOnTaxi("player") then
 			is_valid = false
 			_G.SetMapToCurrentZone()
 			_G.PlaySound("TellMessage", "master")
@@ -849,20 +940,12 @@ do
 		end
 
 		-- Checks to see if alert for mob has allready been displayed recently
-		if ValidRecordedTime(NPC_RECORDED_TIMES[npc_id]) then
-			NPC_RECORDED_TIMES[npc_id] = _G.GetTime()
-		else
-			is_valid = false
-		end
-
-		if not private.DuplicateAlertCheck(npc_id) then
-			is_valid = false
-		end
+		is_valid = private.AntiSpam(private.ANTI_SPAM_DELAY, npc_name)
 
 		if is_valid then
 			local alert_text = L[is_tamable and "FOUND_TAMABLE_FORMAT" or "FOUND_FORMAT"]:format(npc_name)
 
-			if private.Options.ShowAlertAsToast then
+			if private.CharacterOptions.ShowAlertAsToast then
 				Toast:Spawn("_NPCScanAlertToast", alert_text)
 			else
 				private.Print(alert_text, _G.GREEN_FONT_COLOR)
@@ -873,19 +956,22 @@ do
 		end
 	end
 
+
 	local criteria_updated_bucket
+
 
 	function private.Frame:CRITERIA_UPDATE()
 		criteria_updated_bucket = true
 	end
+
 
 	-- Scans all NPCs on a timer and alerts if any are found.
 	function private.Updater:OnLoop()
 		if criteria_updated_bucket then
 			criteria_updated_bucket = false
 
-			if not private.OptionsCharacter.AchievementsAddFound then
-				for achievement_id in pairs(private.OptionsCharacter.Achievements) do
+			if not private.CharacterOptions.AchievementsAddFound then
+				for achievement_id in pairs(private.CharacterOptions.Achievements) do
 					local achievement = private.ACHIEVEMENTS[achievement_id]
 
 					for npc_id, criteria_id in pairs(achievement.NPCsActive) do
@@ -899,7 +985,7 @@ do
 			end
 		end
 
-		for npc_id in pairs(ScanIDs) do
+		for npc_id in pairs(private.ScanIDs) do
 			local npc_name = private.NPCNameFromCache(npc_id)
 			if npc_name then
 				private.OnFound(npc_id, npc_name)
@@ -915,13 +1001,13 @@ if PLAYER_CLASS == "HUNTER" then
 
 	-- Stops scans for stabled hunter pets before a bogus alert can fire.
 	function private.Frame:PET_STABLE_UPDATE()
-		for npc_id in pairs(ScanIDs) do
+		for npc_id in pairs(private.ScanIDs) do
 			local npc_name = private.NPCNameFromCache(npc_id)
 			if npc_name then
 				stabled_list[npc_id] = npc_name
 				NPCDeactivate(npc_id)
 
-				for achievement_id in pairs(private.OptionsCharacter.Achievements) do
+				for achievement_id in pairs(private.CharacterOptions.Achievements) do
 					AchievementNPCDeactivate(private.ACHIEVEMENTS[achievement_id], npc_id)
 				end
 			end
@@ -929,11 +1015,12 @@ if PLAYER_CLASS == "HUNTER" then
 		StableUpdater:Show()
 	end
 
+
 	-- Bucket to print cached stabled pets on one line.
 	function StableUpdater:OnUpdate()
 		self:Hide()
 
-		if private.Options.CacheWarnings then
+		if private.CharacterOptions.CacheWarnings then
 			local list_string = CacheListBuild(stabled_list)
 			if list_string then
 				private.Print(L.CACHED_STABLED_FORMAT:format(list_string))
@@ -947,6 +1034,7 @@ if PLAYER_CLASS == "HUNTER" then
 	StableUpdater:SetScript("OnUpdate", StableUpdater.OnUpdate)
 	private.Frame:RegisterEvent("PET_STABLE_UPDATE")
 
+
 	-- Prevents the pet UI from querying (and caching) stabled pets until actually viewing the stables.
 	-- @param is_override Forces a normal query even if the stables aren't open.
 	local Original_GetStablePetInfo = _G.GetStablePetInfo
@@ -957,6 +1045,49 @@ if PLAYER_CLASS == "HUNTER" then
 	end
 end
 
+
+--Initializes Ace Database for profile & adds profile menu to Blizzard menu
+function private.Ace:OnInitialize()
+	self.db = LibStub("AceDB-3.0"):New("_NPCScanProfiles", ProfileDefaults, true)
+	ProfileOptions.args.Profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
+	LibStub("AceConfig-3.0"):RegisterOptionsTable(FOLDER_NAME, ProfileOptions)
+	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(FOLDER_NAME, "Profiles", L.CONFIG_TITLE, "Profiles")
+
+	self.db.RegisterCallback(self, "OnProfileChanged", "RefreshProfile")
+	self.db.RegisterCallback(self, "OnProfileCopied", "RefreshProfile")
+	self.db.RegisterCallback(self, "OnProfileReset", "RefreshProfile")
+
+--Save any old setting to character profile
+	local charName = _G.UnitName("player").." - ".._G.GetRealmName()
+	if _G._NPCScanOptionsCharacter then
+		if not _G._NPCScanProfiles.profiles then _G._NPCScanProfiles.profiles = {} end
+		_G._NPCScanProfiles.profiles[charName] = {}
+		for var, value in pairs(_G._NPCScanOptionsCharacter) do
+			_NPCScanProfiles.profiles[charName][var] = value
+		end
+
+	end
+
+end
+
+
+--Called whenever profile is changed to reload new settings
+function private.Ace:RefreshProfile()
+	for npc_id , _ in pairs(private.ScanIDs) do
+		NPCDeactivate(npc_id)
+	end
+
+	private.CharacterOptions = private.Ace.db.profile
+	private.Frame:PLAYER_LEAVING_WORLD()
+
+	table.wipe(private.ScanIDs)
+	private.ClearActiveList()
+
+	private.Synchronize()
+	private.Frame:PLAYER_ENTERING_WORLD()
+end
+
+
 -- Loads defaults, validates settings, and starts scan.
 -- Used instead of ADDON_LOADED to give overlay mods a chance to load and register for messages.
 function private.Frame:PLAYER_LOGIN(event_name)
@@ -965,16 +1096,17 @@ function private.Frame:PLAYER_LOGIN(event_name)
 			Dialog:Spawn("NPCSCAN_AUTOADD_WARNING")
 		end
 	end
-	private.Options = _G._NPCScanOptions
-	private.OptionsCharacter = _G._NPCScanOptionsCharacter
+
+	private.GlobalOptions = _G._NPCScanOptions
+	private.CharacterOptions = private.Ace.db.profile
 	private.Overlays.Register()
 	private.Synchronize()
 
 	self[event_name] = nil
 
-	if not private.Options.ChangeAlertShown then
+	if not private.GlobalOptions.ChangeAlertShown then
 		Dialog:Spawn("NPCSCAN_WOD_CHANGES")
-		private.Options.ChangeAlertShown = true
+		private.GlobalOptions.ChangeAlertShown = true
 	end
 end
 
@@ -987,42 +1119,59 @@ do
 
 		-- Since real MapIDs aren't available to addons, a "WorldID" is a universal ContinentID or the map's localized name.
 		local map_name, _, _, _, _, _, _, map_id = _G.GetInstanceInfo()
+		local map_continent = _G.GetCurrentMapContinent()
 
-		-- Fix for Isle of Thunder having a diffrent Instance name
-		if map_id == ISLE_OF_THUNDER_MAP_ID then
-			private.WorldID = private.ZONE_NAMES.PANDARIA
-		else
+		-- Fix for Deepholm
+		if map_continent == private.CONTINENT_IDS.THE_MAELSTROM then
+			private.WorldID = private.ZONE_NAMES.DEEPHOLM
+		elseif map_continent == -1 and map_id == DARKMOON_ISLAND_MAP_ID then --Darkmoon Island which doesn't have a continent location
 			private.WorldID = map_name
-		end
 
-		if private.OptionsCharacter.TrackRares then
+		else
+			private.WorldID = private.LOCALIZED_CONTINENT_NAMES[map_continent]
+		end 
+		private.Debug(private.WorldID  or "No World")
+private.Debug(map_name or "no map")
+private.Debug(map_continent or "no cont")
+
+		if private.CharacterOptions.TrackRares then
 			for npc_id, world_name in pairs(private.UNTAMABLE_ID_TO_WORLD_NAME) do
-				if not private.Options.IgnoreList.NPCs[npc_id] then
+				if not private.GlobalOptions.IgnoreList.NPCs[npc_id] then
 					NPCActivate(npc_id, world_name)
 				end
 			end
 		end
 
-		if private.OptionsCharacter.TrackBeasts then
+		if private.CharacterOptions.TrackBeasts then
 			for npc_id, world_name in pairs(private.TAMABLE_ID_TO_WORLD_NAME) do
-				if not private.Options.IgnoreList.NPCs[npc_id] then
+				if not private.GlobalOptions.IgnoreList.NPCs[npc_id] then
 					NPCActivate(npc_id, world_name)
 				end
 			end
 		end
 
-		for achievement_id in pairs(private.OptionsCharacter.Achievements) do
+		for achievement_id, enable in pairs(private.CharacterOptions.Achievements) do
 			local achievement = private.ACHIEVEMENTS[achievement_id]
-			if achievement.WorldID then
+			if achievement.WorldID and enable then
 				AchievementActivate(achievement)
 			end
 		end
 
-		for npc_id, _ in pairs(private.Options.NPCs) do
-			NPCActivate(npc_id, private.Options.NPCWorldIDs[npc_id])
+		--Removes any one time kill / daily kill rares that have been completed
+		for npc_id, quest_id in pairs(private.NPC_ID_TO_QUEST_ID) do
+			if private.NPCQuestIsComplete(npc_id) then 
+				NPCDeactivate(npc_id)
+			else
+				active_tracking_quest_mobs[npc_id] =  quest_id
+			end
 		end
 
-		if not has_initialized or not private.Options.CacheWarnings then
+		--Adds any custom mobs
+		for npc_id, _ in pairs(private.GlobalOptions.NPCs) do
+			NPCActivate(npc_id, private.GlobalOptions.NPCWorldIDs[npc_id])
+		end
+
+		if not has_initialized or not private.CharacterOptions.CacheWarnings then
 			-- Full listing of cached mobs gets printed on login
 			has_initialized = true
 			table.wipe(CacheList)
@@ -1039,11 +1188,25 @@ end
 
 
 function private.Frame:PLAYER_LEAVING_WORLD()
-	for npc_id in pairs(private.Options.NPCWorldIDs) do
-		NPCDeactivate(npc_id)
+	if private.GlobalOptions.NPCWorldIDs then 
+		for npc_id in pairs(private.GlobalOptions.NPCWorldIDs) do
+			NPCDeactivate(npc_id)
+		end
 	end
 
-	for achievement_id in pairs(private.OptionsCharacter.Achievements) do
+	for npc_id, world_id in pairs(private.TAMABLE_ID_TO_WORLD_NAME) do
+		if world_id == private.WorldID then
+			NPCDeactivate(npc_id)
+		end
+	end
+
+	for npc_id, world_id in pairs(private.UNTAMABLE_ID_TO_WORLD_NAME) do
+		if world_id == private.WorldID then
+			NPCDeactivate(npc_id)
+		end
+	end
+
+	for achievement_id in pairs(private.CharacterOptions.Achievements) do
 		local achievement = private.ACHIEVEMENTS[achievement_id]
 		if achievement.WorldID then
 			AchievementDeactivate(achievement)
@@ -1059,8 +1222,20 @@ function private.Frame:ACHIEVEMENT_EARNED(_, achievement_id)
 	end
 	private.ACHIEVEMENTS[achievement_id].is_completed = true
 
-	if not private.OptionsCharacter.AchievementsAddFound then
+	if not private.CharacterOptions.AchievementsAddFound then
 		private.AchievementRemove(achievement_id)
+	end
+end
+
+
+--Using this to check for kill track quests as they only complete after looting
+function private.Frame:LOOT_CLOSED(event_name)
+	--Removes any one time kill / daily kill rares that have been completed
+	for npc_id, quest_id in pairs(active_tracking_quest_mobs) do
+		if private.NPCQuestIsComplete(npc_id) then 
+			NPCDeactivate(npc_id)
+			active_tracking_quest_mobs[npc_id] = nil
+		end
 	end
 end
 
@@ -1071,6 +1246,7 @@ function private.Frame:ZONE_CHANGED_NEW_AREA(event_name)
 
 	private.Updater:SetScript("OnLoop", private.Updater.OnLoop)
 end
+
 
 do
 	local SUBCOMMAND_FUNCS = {
@@ -1091,7 +1267,7 @@ do
 			local id = tonumber(arguments)
 
 			if not id then
-				for npc_id, npc_name in pairs(private.Options.NPCs) do
+				for npc_id, npc_name in pairs(private.GlobalOptions.NPCs) do
 					if npc_name == arguments then
 						id = npc_id
 						break
@@ -1127,6 +1303,7 @@ do
 		--@end-debug@]===]
 	}
 
+
 	_G.SlashCmdList["_NPCSCAN"] = function(input)
 		local subcommand, arguments = input:match("^(%S+)%s*(.-)%s*$")
 		if subcommand then
@@ -1156,11 +1333,12 @@ else
 	private.Frame:ZONE_CHANGED_NEW_AREA("ZONE_CHANGED_NEW_AREA")
 end
 
+
 -------------------------------------------------------------------------------
 -- Mouseover Trigger Functions
 -------------------------------------------------------------------------------
 function private.Frame:UPDATE_MOUSEOVER_UNIT()
-	if not private.OptionsCharacter.TrackMouseover then
+	if not private.CharacterOptions.TrackMouseover then
 		private.Debug("Not Tracking Mobs by Mouseover")
 		return
 	end
@@ -1175,16 +1353,20 @@ function private.Frame:UPDATE_MOUSEOVER_UNIT()
 	local _, _, _, _, _, _, _, mouseover_id = string.find(mouseover_guid, "(%a+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)")
 	local target_guid = _G.UnitGUID("target")
 	local target_id
+	local npc_id = tonumber(mouseover_id)
 
 	if target_guid then
 		_, _, _, _, _, _, _, target_id = string.find(target_guid, "(%a+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)")
 	end
 
-	if (private.NPC_ID_TO_NAME[tonumber(mouseover_id)] or private.Options.NPCs[tonumber(mouseover_id)]) and mouseover_id ~= target_id then
-		private.Debug("Mob Found")
+
+	--if (private.NPC_ID_TO_NAME[tonumber(mouseover_id)] or private.GlobalOptions.NPCs[tonumber(mouseover_id)]) and mouseover_id ~= target_id then
+	if (private.ScanIDs[npc_id]) and mouseover_id ~= target_id then
+		private.Debug("Mob Found via Mouseover")
 		private.OnFound(mouseover_id, _G.UnitName(unit_token))
 	end
 end
+
 
 -------------------------------------------------------------------------------
 -- Dynamic Target Macro Functions
@@ -1210,11 +1392,13 @@ target_button:SetScript("OnEvent", function(self, event_name, ...)
 	private.GenerateTargetMacro()
 end)
 
+
 function private.GenerateTargetMacro(instanceid)
 	if _G.InCombatLockdown() then
 		MacroDelay = true
 		return
 	end
+
 	_G.SetMapToCurrentZone()
 	local map_id = _G.GetCurrentMapAreaID()
 	local zone_name = _G.GetMapNameByID(map_id)
@@ -1224,7 +1408,7 @@ function private.GenerateTargetMacro(instanceid)
 
 	-- Generate target macro with tracked mobs in zone
 	for npc_id, map_zone_name in pairs(private.NPC_ID_TO_MAP_NAME) do
-		if zone_name == map_zone_name and not _G._NPCScanOptions.IgnoreList.NPCs[npc_id] then
+		if zone_name == map_zone_name and not _G._NPCScanOptions.IgnoreList.NPCs[npc_id] and private.ScanIDs[npc_id] then
 			private.macrotext = private.MACRO_FORMAT:format(private.macrotext, private.NPC_ID_TO_NAME[npc_id])
 		end
 	end
@@ -1240,7 +1424,7 @@ function private.GenerateTargetMacro(instanceid)
 
 	--Add Zandalari Warscout & Warbringer due to them appearing in multiple zones but in only one in the data file.
 	--Ignore if not in Pandaria or on the Timeless Isle
-	if continent_id == 6 and map_id ~= private.ZONE_IDS.TIMELESS_ISLE then
+	if continent_id == private.CONTINENT_IDS.PANDARIA and map_id ~= private.ZONE_IDS.TIMELESS_ISLE then
 		for index = 1, #private.MANUAL_PANDARIA_ADDITIONS do
 			if last_vignette_id ~= private.MANUAL_PANDARIA_ADDITIONS[index] then
 				private.macrotext = private.MACRO_FORMAT:format(private.macrotext, private.NPC_ID_TO_NAME[private.MANUAL_PANDARIA_ADDITIONS[index]])
@@ -1258,20 +1442,20 @@ function private.GenerateTargetMacro(instanceid)
 	return true
 end
 
+
 --Checks target found by macro and triggers NPCScan alert for tracked mobs
 function private.CheckMacroTarget()
 	local target_guid = UnitGUID("target")
 	if target_guid then
 		local _, _, _, _, _, _, _, target_id = string.find(target_guid, "(%a+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)")
 		target_id = tonumber(target_id)
-		if (private.NPC_ID_TO_NAME[target_id] or private.Options.NPCs[target_id]) and not UnitIsDeadOrGhost("target") then
+		if (private.NPC_ID_TO_NAME[target_id] or private.GlobalOptions.NPCs[target_id]) and not UnitIsDeadOrGhost("target") then
 			private.Debug("Mob Found Via Macro")
 			private.OnFound(target_id, _G.UnitName("target"))
 
-			if _G.GetRaidTargetIndex("target") ~= private.OptionsCharacter.TargetIcon and (not _G.IsInRaid() or (_G.UnitIsGroupAssistant("player") or _G.UnitIsGroupLeader("player"))) then
-				_G.SetRaidTarget("target", private.OptionsCharacter.TargetIcon)
+			if _G.GetRaidTargetIndex("target") ~= private.CharacterOptions.TargetIcon and (not _G.IsInRaid() or (_G.UnitIsGroupAssistant("player") or _G.UnitIsGroupLeader("player"))) then
+				_G.SetRaidTarget("target", private.CharacterOptions.TargetIcon)
 			end
 		end
 	end
 end
-

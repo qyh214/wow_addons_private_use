@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 975 $")
+end, "$Revision: 984 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -663,7 +663,7 @@ end]]
 function XPerl_Raid_Single_OnLoad(self)
 	XPerl_SetChildMembers(self)
 
-	self.edgeFile = "Interface\\Addons\\ZPerl\\Images\\XPerl_ThinEdge"
+	self.edgeFile = "Interface\\AddOns\\ZPerl\\Images\\XPerl_ThinEdge"
 	self.edgeSize = 10
 	self.edgeInsets = 2
 
@@ -1118,7 +1118,7 @@ local function SetRoleIconTexture(texture, role)
 		if role == "TANK" then
 			texture:SetTexture("Interface\\GroupFrame\\UI-Group-MainTankIcon")
 		elseif role == "HEALER" then
-			texture:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_RoleHealer_old")
+			texture:SetTexture("Interface\\AddOns\\ZPerl\\Images\\XPerl_RoleHealer_old")
 		elseif role == "DAMAGER" then
 			texture:SetTexture("Interface\\GroupFrame\\UI-Group-MainAssistIcon")
 		else
@@ -1126,11 +1126,11 @@ local function SetRoleIconTexture(texture, role)
 		end
 	else
 		if role == "TANK" then
-			texture:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_RoleTank")
+			texture:SetTexture("Interface\\AddOns\\ZPerl\\Images\\XPerl_RoleTank")
 		elseif role == "HEALER" then
-			texture:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_RoleHealer")
+			texture:SetTexture("Interface\\AddOns\\ZPerl\\Images\\XPerl_RoleHealer")
 		elseif role == "DAMAGER" then
-			texture:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_RoleDamage")
+			texture:SetTexture("Interface\\AddOns\\ZPerl\\Images\\XPerl_RoleDamage")
 		else
 			return false
 		end
@@ -2296,6 +2296,11 @@ local function SetMainHeaderAttributes(self)
 	else
 		self:SetAttribute("sortMethod", nil)
 	end
+
+	--self:SetAttribute("showParty", true)
+	--self:SetAttribute("showPlayer", true)
+
+	self:SetAttribute("showRaid", true)
 
 	self:SetAttribute("point", rconf.anchor)
 	self:SetAttribute("minWidth", 80)

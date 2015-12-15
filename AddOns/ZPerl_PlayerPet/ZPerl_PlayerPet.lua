@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision: 974 $")
+end, "$Revision: 984 $")
 
 local XPerl_Player_Pet_HighlightCallback
 
@@ -318,12 +318,16 @@ end
 
 function XPerl_Player_Pet_Events:PET_BATTLE_OPENING_START()
 	if (UnitExists("pet")) then
+		UnregisterUnitWatch(self)
 		self:Hide()
 	end
 end
 
 function XPerl_Player_Pet_Events:PET_BATTLE_CLOSE()
 	if (UnitExists("pet")) then
+		if not InCombatLockdown() then
+			RegisterUnitWatch(self)
+		end
 		XPerl_ProtectedCall(Show, self);
 	end
 end

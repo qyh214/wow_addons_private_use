@@ -1,0 +1,8 @@
+<Bindings>
+<Binding name="GCWE" header="GCFOLLOWER" category="ADDONS"/>
+<Binding name="GCAE" category="ADDONS"/>
+<Binding name="GCWF" category="ADDONS"/>
+<Binding name="GCAF" category="ADDONS"/>
+<Binding name="GCWT" category="ADDONS"/>
+<Binding name="GCAT" category="ADDONS"/>
+</Bindings>

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(825, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(67977)
 mod:SetEncounterID(1565)
 mod:SetZone()
@@ -39,8 +39,8 @@ local timerSummonBatsCD				= mod:NewCDTimer(45, "ej7140", nil, nil, nil, 1, 1366
 local timerStompActive				= mod:NewBuffActiveTimer(10.8, 134920)--Duration of the rapid caveins
 local timerShellConcussion			= mod:NewBuffFadesTimer(20, 136431)
 
-local countdownStomp				= mod:NewCountdown("OptionVersion2", 47, 134920)
-local countdownBreath				= mod:NewCountdown("OptionVersion2", "Alt46", 133939) -- Coundown for the kicker.
+local countdownStomp				= mod:NewCountdown(47, 134920, nil, 2)
+local countdownBreath				= mod:NewCountdown("Alt46", 133939, nil, 2) -- Coundown for the kicker.
 
 local berserkTimer					= mod:NewBerserkTimer(780)
 

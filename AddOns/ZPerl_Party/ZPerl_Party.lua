@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 974 $")
+end, "$Revision: 982 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -581,7 +581,7 @@ local function UpdateAssignedRoles(self)
 			icon:SetTexture("Interface\\GroupFrame\\UI-Group-MainTankIcon")
 			icon:Show()
 		elseif isHealer then
-			icon:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_RoleHealer_old")
+			icon:SetTexture("Interface\\AddOns\\ZPerl\\Images\\XPerl_RoleHealer_old")
 			icon:Show()
 		elseif isDamage then
 			icon:SetTexture("Interface\\GroupFrame\\UI-Group-MainAssistIcon")
@@ -591,13 +591,13 @@ local function UpdateAssignedRoles(self)
 		end
 	else
 		if isTank then
-			icon:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_RoleTank")
+			icon:SetTexture("Interface\\AddOns\\ZPerl\\Images\\XPerl_RoleTank")
 			icon:Show()
 		elseif isHealer then
-			icon:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_RoleHealer")
+			icon:SetTexture("Interface\\AddOns\\ZPerl\\Images\\XPerl_RoleHealer")
 			icon:Show()
 		elseif isDamage then
-			icon:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_RoleDamage")
+			icon:SetTexture("Interface\\AddOns\\ZPerl\\Images\\XPerl_RoleDamage")
 			icon:Show()
 		else
 			icon:Hide()

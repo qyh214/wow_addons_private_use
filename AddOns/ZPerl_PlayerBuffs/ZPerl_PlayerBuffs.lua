@@ -6,7 +6,7 @@ local conf, pconf
 XPerl_RequestConfig(function(new)
 	conf = new
 	pconf = new.player
-end, "$Revision: 974 $")
+end, "$Revision: 984 $")
 
 --local playerClass
 
@@ -309,7 +309,6 @@ function XPerl_PlayerBuffs_OnLeave(self)
 	GameTooltip:Hide()
 end
 
-
 function XPerl_PlayerBuffs_Update(self)
 	local slot = self:GetAttribute("target-slot")
 	if (slot) then
@@ -363,6 +362,7 @@ function XPerl_PlayerBuffs_Update(self)
 			end
 			-- TODO: Variable this
 			self.cooldown:SetDrawEdge(false)
+			self.cooldown:SetDrawBling(false)
 			-- Blizzard Cooldown Text Support
 			if not conf.buffs.blizzard then
 				self.cooldown:SetHideCountdownNumbers(true)

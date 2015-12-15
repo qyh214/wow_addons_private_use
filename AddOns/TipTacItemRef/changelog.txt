@@ -1,3 +1,8 @@
+TipTacItemRef Changes | 2015 Dec 07
+-----------------------------------
+- Due to the issues with showing the correct itemLevel for upgraded and warforged items, the default setting for "Show Item Level & ID" has been changed to FALSE.
+- Updated the "GetUpgradedItemLevel" library. Should fix itemLevel issues with Timewarped items. If you encounter issues with itemLevels, disable the "Show Item Level & ID" setting under the TipTacOptions.
+
 TipTacItemRef Changes | 2015 Jul 02
 -----------------------------------
 - TOC version changed to 60200 for the 6.2 patch.

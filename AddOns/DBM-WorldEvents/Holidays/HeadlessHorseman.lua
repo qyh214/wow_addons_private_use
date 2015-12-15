@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d285", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14030 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14628 $"):sub(12, -3))
 mod:SetCreatureID(23682, 23775)
 --mod:SetModelID(22351)--Model doesn't work/render for some reason.
 mod:SetZone()
@@ -21,14 +21,14 @@ mod:RegisterEventsInCombat(
 )
 
 local warnConflag				= mod:NewTargetAnnounce(42380, 3)
-local warnSquashSoul			= mod:NewTargetAnnounce(42514, 2)
+local warnSquashSoul			= mod:NewTargetAnnounce(42514, 2, nil, false, 2)
 local warnPhase					= mod:NewAnnounce("WarnPhase", 2, "Interface\\Icons\\Spell_Nature_WispSplode")
 local warnHorsemanSoldiers		= mod:NewAnnounce("warnHorsemanSoldiers", 2, 97133)
 local warnHorsemanHead			= mod:NewAnnounce("warnHorsemanHead", 3)
 
 --local timerCombatStart			= mod:NewCombatTimer(17)--rollplay for first pull
 local timerConflag				= mod:NewTargetTimer(4, 42380, nil, "Healer")
-local timerSquashSoul			= mod:NewTargetTimer(15, 42514)
+local timerSquashSoul			= mod:NewTargetTimer(15, 42514, nil, false, 2)
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
@@ -72,7 +72,7 @@ function mod:OnSync(event, arg)
 end
 
 function mod:CHAT_MSG_MONSTER_SAY(msg)
-	if msg == L.HorsemanSoldiers then	-- Warning for adds spawning. No CLEU or UNIT event for it.
+	if msg == L.HorsemanSoldiers and self:AntiSpam(5, 1) then	-- Warning for adds spawning. No CLEU or UNIT event for it.
 		warnHorsemanSoldiers:Show()
 	end
 end

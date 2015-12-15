@@ -75,6 +75,7 @@ function E:ADDON_LOADED(addon)
 	if addon ~= addonName then return end
 	
 	cdata = gett(_G, "MasterPlanAG", GetRealmName(), UnitName("player"))
+	cdata.class, cdata.faction = select(2,UnitClass("player")), UnitFactionGroup("player")
 	setmetatable(api, {__index={data=cdata}})
 	CheckCacheWarning()
 

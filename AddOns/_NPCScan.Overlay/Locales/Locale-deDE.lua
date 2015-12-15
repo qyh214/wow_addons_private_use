@@ -1286,8 +1286,8 @@ private.L["MODULE_RANGERING_DESC"] = "Anmerkung: der Entfernungsradius wird nur 
 private.L["MODULE_RANGERING_FORMAT"] = "%dyd Ring für ungefähren Entdeckungsradius (in Yards)"
 private.L["MODULE_WORLDMAP"] = "Hauptweltkarte"
 private.L["MODULE_WORLDMAP_KEY_FORMAT"] = "• %s"
-private.L["MODULE_WORLDMAP_KEYTOGGLE"] = "Taste"
+private.L["MODULE_WORLDMAP_KEYTOGGLE"] = "Legende ein-/ausschalten"
 private.L["MODULE_WORLDMAP_KEYTOGGLE_DESC"] = "Taste zum An/Ausschalten der Pfade"
-private.L["MODULE_WORLDMAP_TOGGLE"] = "NSCs"
+private.L["MODULE_WORLDMAP_TOGGLE"] = "Markierungen ein-/ausschalten"
 private.L["MODULE_WORLDMAP_TOGGLE_DESC"] = "_|cffCCCC88NPCScan|r.Overlays Pfade für verfolgte NSCs ein-/ausschalten."
 

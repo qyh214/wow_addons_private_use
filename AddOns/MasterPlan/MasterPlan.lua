@@ -29,11 +29,10 @@ local EV, conf, api = T.Evie, setmetatable({}, {__index={
 	timeHorizonMin=300,
 	crateLevelGrace=25,
 	interestMask=0,
-	ship1=100, ship2=80, ship3=50,
+	ship1=100, ship2=90, ship3=80, ship4=50,
 	moC=0, moE=0, moV=0, moN=0, goldCollected=0,
 	allowShipXP=true,
 	ignore={},
-	complete={},
 }})
 T.config, api = conf, setmetatable({}, {__index={GarrisonAPI=T.Garrison}})
 
@@ -42,8 +41,7 @@ function EV:ADDON_LOADED(addon)
 		return
 	end
 	function EV:PLAYER_LOGOUT()
-		local complete = securecall(T._GetMissionSeenTable)
-		MasterPlanPC, conf.ignore, conf.complete = conf, next(conf.ignore) and conf.ignore, complete or conf.complete
+		MasterPlanPC, conf.ignore, conf.complete = conf, next(conf.ignore) and conf.ignore, securecall(T._GetMissionSeenTable)
 	end
 	
 	local pc
