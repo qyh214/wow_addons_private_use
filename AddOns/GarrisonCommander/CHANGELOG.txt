@@ -1,5 +1,21 @@
 *GarrisonCommander helps you when choosing the right follower for the right mission*
 
+* *2.10*
+Feature: Full automation. You can now with a single click have Garrison Commander completing missions, sendng new ones and logout.
+Farming your alts will never be so easy! (Thanks to Vasco90 for the suggestion)
+
+* *2.9.3*
+Fix: broken localization for follower per trait selection ticket #112
+
+* *2.9.2*
+Fix: Blacklisting was not working for per character missions ticket #111
+
+* *2.9.1*
+Fix: Typo
+
+* *2.9.0*
+Feature: Missions can be blacklisted. Blacklisted mission are shown in mission control, but not started, nor use followers
+
 * *2.8.2*
 Fix: ticket #107 FollowerPage.lua error
 

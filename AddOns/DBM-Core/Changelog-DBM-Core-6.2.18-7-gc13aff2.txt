@@ -1,0 +1,8 @@
+subversion:
+	- Omega via svn r14778: CN update
+	- Omega via svn r14777: re-enable voice for that but use these
+	- Omega via svn r14776: disable voice alerts for that, they won?\226?\128?\153t match
+	- Omega via svn r14775: Don?\226?\128?\153t reload options every level, just the level range of learning specs
+	- Omega via svn r14774: add auto assignments to archimonde. On by default but can be disabled. This makes mark of legion all in one solution and no one needs nay WA of any kind now for archimonde
+	- Omega via svn r14773: Fix typo
+	- tandanu via svn r14772: increase alpha version

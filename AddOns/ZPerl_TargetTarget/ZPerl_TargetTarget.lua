@@ -55,7 +55,7 @@ XPerl_RequestConfig(function(new)
 	if XPerl_PetTarget then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 974 $")
+end, "$Revision: 986 $")
 
 local buffSetup
 
@@ -264,12 +264,12 @@ end
 -- XPerl_TargetTarget_UpdateDisplay
 function XPerl_TargetTarget_UpdateDisplay(self, force)
 	local partyid = self.partyid
-	if not UnitExists(partyid) then
+	--[[if not UnitExists(partyid) then
 		self.targethp = UnitHealth(partyid)
 		self.targetmana = UnitPower(partyid)
 		self.guid = UnitGUID(partyid)
 		self.afk = UnitIsAFK(partyid)
-	end
+	end]]
 	if self.conf.enable and UnitExists(self.parentid) and UnitIsConnected(partyid) then
 		self.targetname = UnitName(partyid)
 		if self.targetname then
@@ -283,6 +283,9 @@ function XPerl_TargetTarget_UpdateDisplay(self, force)
 			XPerl_TargetTarget_UpdatePVP(self)
 
 			-- Save these, so we know whether to update the frame later
+			self.targethp = UnitHealth(partyid)
+			self.targetmanatype = UnitPowerType(partyid)
+			self.targetmana = UnitPower(partyid)
 			self.guid = UnitGUID(partyid)
 			self.afk = UnitIsAFK(partyid) and conf.showAFK
 
@@ -367,10 +370,24 @@ end
 -- XPerl_TargetTarget_OnUpdate
 function XPerl_TargetTarget_OnUpdate(self, elapsed)
 	local partyid = self.partyid
+
+	local newGuid = UnitGUID(partyid)
+	local newHP = UnitHealth(partyid)
+	local newManaType = UnitPowerType(partyid)
+	local newMana = UnitPower(partyid)
 	local newAFK = UnitIsAFK(partyid)
 
-	if (conf.showAFK and newAFK ~= self.afk) then
+	if (conf.showAFK and newAFK ~= self.afk) or (newHP ~= self.targethp) then
 		XPerl_Target_UpdateHealth(self)
+	end
+
+	if (newManaType ~= self.targetmanatype) then
+		XPerl_Target_SetManaType(self)
+		XPerl_Target_SetMana(self)
+	end
+
+	if (newMana ~= self.targetmana) then
+		XPerl_Target_SetMana(self)
 	end
 
 	if conf.showFD then
@@ -384,27 +401,44 @@ function XPerl_TargetTarget_OnUpdate(self, elapsed)
 		end
 	end
 
-	self.time = elapsed + self.time
-	if self.time >= 0.2 then
-		XPerl_TargetTarget_Update_Combat(self)
-		XPerl_TargetTarget_Update_Control(self)
-		XPerl_TargetTarget_UpdatePVP(self)
-		XPerl_TargetTarget_Buff_UpdateAll(self)
-		XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
-		XPerl_UpdateSpellRange(self, partyid)
-		XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
-		self.time = 0
+	if (newGuid ~= self.guid) then
+		XPerl_TargetTarget_UpdateDisplay(self)
+	else
+		self.time = elapsed + self.time
+		if self.time >= 0.2 then
+			XPerl_TargetTarget_Update_Combat(self)
+			XPerl_TargetTarget_Update_Control(self)
+			XPerl_TargetTarget_UpdatePVP(self)
+			XPerl_TargetTarget_Buff_UpdateAll(self)
+			XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
+			XPerl_UpdateSpellRange(self, partyid)
+			XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
+			self.time = 0
+		end
 	end
 end
 
 -- XPerl_TargetTargetTarget_OnUpdate
 function XPerl_TargetTargetTarget_OnUpdate(self, elapsed)
 	local partyid = self.partyid
-	local newAFK = UnitIsAFK(partyid)
-	local newGuid = UnitGUID(partyid)
 
-	if (conf.showAFK and newAFK ~= self.afk) then
+	local newGuid = UnitGUID(partyid)
+	local newAFK = UnitIsAFK(partyid)
+	local newManaType = UnitPowerType(partyid)
+	local newMana = UnitPower(partyid)
+	local newAFK = UnitIsAFK(partyid)
+
+	if (conf.showAFK and newAFK ~= self.afk) or (newHP ~= self.targethp) then
 		XPerl_Target_UpdateHealth(self)
+	end
+
+	if (newManaType ~= self.targetmanatype) then
+		XPerl_Target_SetManaType(self)
+		XPerl_Target_SetMana(self)
+	end
+
+	if (newMana ~= self.targetmana) then
+		XPerl_Target_SetMana(self)
 	end
 
 	if conf.showFD then
@@ -418,24 +452,28 @@ function XPerl_TargetTargetTarget_OnUpdate(self, elapsed)
 		end
 	end
 
-	self.time = elapsed + self.time
-	if self.time >= 0.2 then
-		XPerl_TargetTarget_Update_Combat(self)
-		XPerl_TargetTarget_Update_Control(self)
-		XPerl_TargetTarget_UpdatePVP(self)
-		XPerl_TargetTarget_Buff_UpdateAll(self)
-		XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
-		XPerl_UpdateSpellRange(self, partyid)
-		XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
-		self.time = 0
+	if (newGuid ~= self.guid) then
+		XPerl_TargetTarget_UpdateDisplay(self)
+	else
+		self.time = elapsed + self.time
+		if self.time >= 0.2 then
+			XPerl_TargetTarget_Update_Combat(self)
+			XPerl_TargetTarget_Update_Control(self)
+			XPerl_TargetTarget_UpdatePVP(self)
+			XPerl_TargetTarget_Buff_UpdateAll(self)
+			XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
+			XPerl_UpdateSpellRange(self, partyid)
+			XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
+			self.time = 0
+		end
 	end
 
-	if self == XPerl_TargetTargetTarget and newGuid ~= self.guid then
+	--[[if self == XPerl_TargetTargetTarget and newGuid ~= self.guid then
 		XPerl_NoFadeBars(true)
 		XPerl_TargetTarget_UpdateDisplay(self, true)
 		XPerl_NoFadeBars()
 		return
-	end
+	end]]
 
 	--XPerl_TargetTarget_OnUpdate(self, elapsed)
 end

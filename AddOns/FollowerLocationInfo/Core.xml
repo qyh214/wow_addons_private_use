@@ -1,0 +1,116 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+
+	<Script file="libs\LibStub\LibStub.lua" />
+	<Script file="libs\CallbackHandler-1.0\CallbackHandler-1.0.lua" />
+	<Script file="libs\LibDataBroker-1.1\LibDataBroker-1.1.lua" />
+	<Script file="libs\LibDBIcon-1.0\LibDBIcon-1.0.lua" />
+	<Script file="libs\LibColors-1.0\LibColors-1.0.lua" />
+
+	<Script file="MenuGenerator.lua" />
+	<Script file="Data.lua" />
+	<Script file="Core.lua" />
+	<Script file="DataBroker.lua"/>
+	<Script file="ExternalURL.lua"/>
+	<Script file="SlashCommand.lua"/>
+
+	<GameTooltip name="FollowerLocationInfo_Tooltip" inherits="GameTooltipTemplate" alpha="0" />
+
+	<Frame name="FollowerLocationInfo" toplevel="true" enableKeyboard="true" enableMouse="true" frameStrata="DIALOG" hidden="true">
+		<Size x="460" y="320"/>
+		<Anchors>
+			<Anchor point="CENTER" y="40"/>
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Gold-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Gold-Border" tile="true">
+			<BackgroundInsets left="8" right="8" top="8" bottom="8"/>
+			<TileSize val="32"/>
+			<EdgeSize val="32"/>
+		</Backdrop>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="8" y="-8"/>
+						<Anchor point="BOTTOMRIGHT" x="-8" y="8"/>
+					</Anchors>
+					<Color r=".21" g=".17" b=".09" a=".7" />
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Title" text="FollowerLocationInfo" inherits="GameFontHighlightMed2">
+					<Anchors>
+						<Anchor point="BOTTOM" relativeKey="$parent" relativePoint="TOP" y="-14" />
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="-1">
+				<Texture parentKey="TitleBgLeft" file="Interface\DialogFrame\UI-DialogBox-Gold-Header">
+					<Size x="14" y="40"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent.Title" relativePoint="LEFT" x="-18" />
+					</Anchors>
+					<TexCoords left="0.2265625" right="0.28125" top="0.0" bottom="0.625"/>
+				</Texture>
+				<Texture parentKey="TitleBgRight" file="Interface\DialogFrame\UI-DialogBox-Gold-Header">
+					<Size x="14" y="40"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.Title" relativePoint="RIGHT" x="18" />
+					</Anchors>
+					<TexCoords left="0.71484375" right="0.76953125" top="0.0" bottom="0.625"/>
+				</Texture>
+				<Texture parentKey="TitleBgMiddle" file="Interface\DialogFrame\UI-DialogBox-Gold-Header">
+					<Size x="140" y="40"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.TitleBgLeft" relativePoint="RIGHT" />
+						<Anchor point="RIGHT" relativeKey="$parent.TitleBgRight" relativePoint="LEFT" />
+					</Anchors>
+					<TexCoords left="0.28125" right="0.71484375" top="0.0" bottom="0.625"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="-3" y="-3"/>
+				</Anchors>
+			</Button>
+			<ScrollFrame name="$parentScrollBox" parentKey="ScrollBox" inherits="MinimalScrollFrameTemplate">
+				<size x="460" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="18" y="-22"/>
+					<Anchor point="BOTTOMRIGHT" x="-33" y="11"/>
+				</Anchors>
+				<ScrollChild>
+					<SimpleHTML parentKey="html">
+						<Size x="406" y="1" />
+						<Anchors>
+							<Anchor point="TOPLEFT" x="9" y="-9" />
+						</Anchors>
+						<FontString inherits="GameFontNormalSmall" justifyH="LEFT" justifyV="TOP" />
+						<FontStringHeader1 inherits="GameFontNormalHuge" justifyH="LEFT" justifyV="TOP" />
+						<FontStringHeader2 inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP" />
+						<FontStringHeader3 inherits="GameFontHighlight" justifyH="LEFT" justifyV="TOP" />
+						<Scripts>
+							<OnLoad>
+								FollowerLocationInfo.InfoBox = self;
+							</OnLoad>
+						</Scripts>
+					</SimpleHTML>
+				</ScrollChild>
+				<Scripts>
+					<OnLoad>
+						self.ScrollBar.trackBG:Hide();
+						self.ScrollBar:SetPoint("TOPLEFT",self,"TOPRIGHT",2,-21);
+						self.ScrollBar:SetPoint("BOTTOMLEFT",self,"BOTTOMRIGHT",2,14);
+						ScrollFrame_OnLoad(self);
+					</OnLoad>
+				</Scripts>
+			</ScrollFrame>
+		</Frames>
+		<Scripts>
+			<OnLoad function="FollowerLocationInfo_OnLoad" />
+			<OnEvent function="FollowerLocationInfo_OnEvent" />
+			<OnHide function="FollowerLocationInfo_OnHide" />
+		</Scripts>
+	</Frame>
+</Ui>

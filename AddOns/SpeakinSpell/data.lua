@@ -12,8 +12,9 @@ SpeakinSpell:PrintLoading("data.lua")
 
 
 function SpeakinSpell:GetActiveEventTable()
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local toon, toonrealm = UnitName("player")
 	local realm = GetRealmName()
-	local toon = UnitName("player")
 	
 	if SpeakinSpellSavedDataForAll.AllToonsShareSpeeches then
 		-- all toons share the same event table
@@ -316,7 +317,9 @@ function SpeakinSpell:CreateDetectedEvent( DetectedEventStub )
 	local de = self:CopyTable(DetectedEventStub)
 
 	if not de.caster then
-		de.caster = UnitName("player")
+		--NOTE: myrealm result from UnitName("player") is always nil
+		local myname, myrealm = UnitName("player")
+		de.caster = myname
 	end
 	
 	-- validate the target - get a backup target from selection, focus, or assumed self-cast

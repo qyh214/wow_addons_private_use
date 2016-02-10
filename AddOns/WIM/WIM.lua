@@ -14,7 +14,7 @@ setfenv(1, WIM);
 
 -- Core information
 addonTocName = "WIM";
-version = "3.7";
+version = "3.7.1";
 beta = false; -- flags current version as beta.
 debug = false; -- turn debugging on and off.
 useProtocol2 = true; -- test switch for new W2W Protocol. (Dev use only)
@@ -402,7 +402,7 @@ function WIM:BN_FRIEND_LIST_SIZE_CHANGED()
 	end
     end
 	for i=1, _G.BNGetNumFriends() do
-	    local id, name = _G.BNGetFriendInfo(i);--in mop surname is removed and replaced by battletag and name & surname are combined into name
+	    local id, name = _G.BNGetFriendInfo(i);
 	    if(name) then
 		env.cache[env.realm][env.character].friendList[name] = 2; --[set place holder for quick lookup
 			if(windows.active.whisper[name]) then

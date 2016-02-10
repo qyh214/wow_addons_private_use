@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 985 $")
-XPerl_SetModuleRevision("$Revision: 985 $")
+end, "$Revision: 991 $")
+XPerl_SetModuleRevision("$Revision: 991 $")
 
 -- Upvalus
 local _G = _G
@@ -656,7 +656,7 @@ do
 		shortlist = {
 			{"Perl v2", "Interface\\Addons\\ZPerl\\Images\\XPerl_StatusBar"},
 		}
-		for i = 1,9 do
+		for i = 1, 9 do
 			local name = i == 2 and "BantoBar" or "X-Perl "..i
 			tinsert(shortlist, {name, "Interface\\Addons\\ZPerl\\Images\\XPerl_StatusBar"..(i + 1)})
 		end

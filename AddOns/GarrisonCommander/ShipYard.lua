@@ -182,6 +182,10 @@ print("Doing one time initialization for",this:GetName(),...)
 	GSF.FollowerStatusInfo:Show()
 	self:ScriptGarrisonShipyardFrame_OnShow()
 	self:SafeHookScript(GSF,"OnShow")
+	ns.tabCO:ClearAllPoints()
+	ns.tabCO:SetParent(GSF)
+	ns.tabCO:SetPoint('TOPRIGHT',GSF,'TOPLEFT',0,0)
+
 end
 function module:ScriptGarrisonShipyardFrame_OnShow()
 --[===[@debug@

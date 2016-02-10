@@ -1,6 +1,6 @@
 -- HereBeDragons is a data API for the World of Warcraft mapping system
 
-local MAJOR, MINOR = "HereBeDragons-1.0", 11
+local MAJOR, MINOR = "HereBeDragons-1.0", 15
 assert(LibStub, MAJOR .. " requires LibStub")
 
 local HereBeDragons, oldversion = LibStub:NewLibrary(MAJOR, MINOR)
@@ -48,6 +48,7 @@ local instanceIDOverrides = {
     [1158] = 1116, -- Alliance Garrison 1
     [1159] = 1116, -- Alliance Garrison 2
     [1160] = 1116, -- Alliance Garrison 3
+    [1191] = 1116, -- Ashran PvP Zone
     [1464] = 1116, -- Tanaan
     [1465] = 1116, -- Tanaan
 }
@@ -72,7 +73,7 @@ local function RestoreWMU()
 end
 
 -- gather map info, but only if this isn't an upgrade (or the upgrade version forces a re-map)
-if not oldversion or oldversion < 10 then
+if not oldversion or oldversion < 15 then
     -- wipe old data, if required, otherwise the upgrade path isn't triggered
     if oldversion then
         wipe(mapData)
@@ -177,10 +178,6 @@ if not oldversion or oldversion < 10 then
         mapData[id].Z = Z or -100
 
         if mapData[id].C > 0 and mapData[id].Z >= 0 then
-            if not microDungeons[instanceID] then
-                microDungeons[instanceID] = {}
-            end
-
             -- store C/Z lookup table
             if not continentZoneMap[C] then
                 continentZoneMap[C] = {}
@@ -209,6 +206,13 @@ if not oldversion or oldversion < 10 then
                     mapData[id].floors[f] = { mapData[id][1], mapData[id][2], mapData[id][3], mapData[id][4] }
                     mapData[id].floors[f].instance = mapData[id].instance
                 end
+            end
+        end
+
+        -- setup microdungeon storage if the its a zone map or has no floors of its own
+        if (mapData[id].C > 0 and mapData[id].Z > 0) or numFloors == 0 then
+            if not microDungeons[instanceID] then
+                microDungeons[instanceID] = {}
             end
         end
     end
@@ -338,11 +342,11 @@ local function getMapDataTable(mapID, level)
     local data = mapData[mapID]
     if not data then return nil end
 
-    if (level == nil or level == 0) and data.fakefloor then
+    if (type(level) ~= "number" or level == 0) and data.fakefloor then
         level = 1
     end
 
-    if level and level > 0 then
+    if type(level) == "number" and level > 0 then
         if data.floors[level] then
             return data.floors[level]
         elseif microDungeons[data.instance] and microDungeons[data.instance][level] then
@@ -616,6 +620,20 @@ function HereBeDragons:GetWorldVector(instanceID, oX, oY, dX, dY)
     return angle, distance
 end
 
+--- Get the current world position of the specified unit
+-- The position is transformed to the current continent, if applicable
+-- NOTE: The same restrictions as for the UnitPosition() API apply,
+-- which means a very limited set of unit ids will actually work.
+-- @param unitId Unit Id
+-- @return x, y, instanceID
+function HereBeDragons:GetUnitWorldPosition(unitId)
+    -- get the current position
+    local y, x, z, instanceID = UnitPosition(unitId)
+
+    -- return transformed coordinates
+    return applyCoordinateTransforms(x, y, instanceID)
+end
+
 --- Get the current world position of the player
 -- The position is transformed to the current continent, if applicable
 -- @return x, y, instanceID
@@ -636,12 +654,13 @@ end
 
 --- Get the current position of the player on a zone level
 -- The returned values are local point coordinates, 0-1. The mapFile can represent a micro dungeon.
+-- @param allowOutOfBounds Allow coordinates to go beyond the current map (ie. outside of the 0-1 range), otherwise nil will be returned
 -- @return x, y, mapID, level, mapFile, isMicroDungeon
-function HereBeDragons:GetPlayerZonePosition()
+function HereBeDragons:GetPlayerZonePosition(allowOutOfBounds)
     if not currentPlayerZoneMapID then return nil, nil, nil, nil end
     local x, y, instanceID = self:GetPlayerWorldPosition()
 
-    x, y = self:GetZoneCoordinatesFromWorld(x, y, currentPlayerZoneMapID, currentPlayerLevel)
+    x, y = self:GetZoneCoordinatesFromWorld(x, y, currentPlayerZoneMapID, currentPlayerLevel, allowOutOfBounds)
     if x and y then
         return x, y, currentPlayerZoneMapID, currentPlayerLevel, currentMapFile, currentMapIsMicroDungeon
     end

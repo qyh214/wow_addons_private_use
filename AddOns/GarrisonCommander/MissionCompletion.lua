@@ -151,14 +151,17 @@ function module:MissionComplete(this,button,skiprescheck)
 			end
 		end
 		if stop and not skiprescheck then
-			self:Popup(message.."\n" ..L["If you continue, you will loose them"],0,
+			self:Popup(message.."\n" ..format(L["If you %s, you will loose them\nClick on %s to abort"],ACCEPT,CANCEL),0,
 				function()
+					StaticPopup_Hide("LIBINIT_POPUP")				
 					module:MissionComplete(this,button,true)
 				end,
 				function()
+					StaticPopup_Hide("LIBINIT_POPUP")				
 					this:SetEnabled(true)
 					missionsFrame.CompleteDialog.BorderFrame.ViewButton:SetEnabled(true)
 					panel:Hide()
+					ns.quick=false
 
 				end
 			)
@@ -344,7 +347,15 @@ function module:MissionsPrintResults(success)
 	if not followers then
 		report:AddRow(L["No follower gained xp"])
 	end
+	if ns.quick then
+		self:ScheduleTimer("CloseReport",1)
+		local qm=addon:GetModule("Quick")
+		addon.ScheduleTimer(qm,"RunQuick",1.1)
+	end
 end
 function addon:MissionComplete(...)
 	return module:MissionComplete(...)
+end
+function addon:CloseMissionComplete()
+	return module:CloseReport()
 end

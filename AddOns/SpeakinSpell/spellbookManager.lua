@@ -15,7 +15,7 @@ local SSButton ={}
 local SSSpellnames={}
 -- need to create an SS button to attach to each spell in the spellbook.
 
-function createSSButton(name,index,x,y)
+function SpeakinSpell:createSSButton(name,index,x,y)
 	local abutton=CreateFrame("Button", name, _G["SpellButton"..index], "SecureActionButtonTemplate,OptionsButtonTemplate");
 
 	abutton:SetWidth(20);
@@ -29,33 +29,41 @@ function createSSButton(name,index,x,y)
 	abutton:RegisterForClicks("AnyDown");
 	abutton:SetScript("OnClick",
 		function(self, button, down)
-			SSButtonDown(self, button, down)
+			SpeakinSpell:SSButtonDown(self, button, down)
 		end)
 
 	return abutton;
 end
 
-function SSButtonDown(self, button, down)
+function SpeakinSpell:SSButtonDown(self, button, down)
+	local funcname = "SSButtonDown"
 	local index = self.id 
-	--print("found Spell:"..SSSpellnames[index])
-	--TODO: distingish if this should call SpeakinSpell:ShowCreateNew() instead of ShowMessageOptions
-	--      and do we need to call SpeakinSpell:RecordNewEvent() to create the event table keys?
-	--      or maybe we should warn the user to cast it once to make that happen with all the appropriate caveats
-	SpeakinSpell:ShowMessageOptions()
-	SpeakinSpell:CurrentMessagesGUI_OnGetSetEventTextFilter("SET", SSSpellnames[index])
+	local spellname = SSSpellnames[index]
+	SpeakinSpell:DebugMsg(funcname, "clicked Spellbook:"..tostring(spellname))
+
+	-- Treat the Spellbook button like "/ss create" for the following reasons
+	-- 1. the same spell could have multiple triggers
+	--    for start casting vs. failed to cast, etc
+	--    even if an existing trigger exists, 
+	--    we can't tell if the user wants to create a new trigger or edit an existing one
+	-- 2. if the spell has never been cast 
+	--    the "/ss create" interface has language on it about this issue
+	--    with instructions to cast the spell and try again
+	SpeakinSpell:ShowCreateNew()
+	SpeakinSpell:CreateNew_OnGetSetEventTextFilter("SET", spellname)
  end 
  
- function updateSSLinks()
+ function SpeakinSpell:updateSSLinks()
 	--print("POST HOOK updateSSLinks() called")
 	-- make sure each slot shown has a button in it
 	for i=1,SPELLS_PER_PAGE do
-		GetSlotInfoforButton(_G["SpellButton"..i],i)
+		self:GetSlotInfoforButton(_G["SpellButton"..i],i)
 	end -- for
  end
  
  -- test to see if a spellslot has anything in it
  -- using secure call to maintain clean fuctions 
- function SSHasSpell(aSlot)
+ function SpeakinSpell:SSHasSpell(aSlot)
 	local texture
 
 	if (aSlot)  then
@@ -74,10 +82,10 @@ function SSButtonDown(self, button, down)
  --   setup for its spell
  -- using secure call to maintain clean fuctions 
  -- note need to add a check for Pet tab and handle it corectly
- function GetSlotInfoforButton(aButton,index)
+ function SpeakinSpell:GetSlotInfoforButton(aButton,index)
 	-- update each SSButton
-	local  slot, slotType, slotID
-	local  name
+	local slot, slotType, slotID
+	local name
 	local spellString
 
 	if ( SpellBookFrame.bookType ==BOOKTYPE_PROFESSION) then
@@ -89,7 +97,7 @@ function SSButtonDown(self, button, down)
 		name = aButton:GetName();
 		spellString = _G[name.."SpellName"];
 
-		if (SSHasSpell(slot)==true)  then
+		if (self:SSHasSpell(slot)==true)  then
 			SSSpellnames[index]= spellString:GetText();
 			SSButton[index]:Show(); 
 		else
@@ -101,7 +109,7 @@ function SSButtonDown(self, button, down)
 		name = aButton:GetName();
 		spellString = _G[name.."SpellName"];
 
-		if (SSHasSpell(slot))==true  then
+		if (self:SSHasSpell(slot))==true  then
 			SSSpellnames[index]= spellString:GetText();
 			-- check for passive spells and exclude them 
 			if (IsPassiveSpell(SSSpellnames[index])) then
@@ -121,9 +129,9 @@ function SSButtonDown(self, button, down)
  function SpeakinSpell:Init_Spellbook_SSLinks()  
 	-- create an array of button
 	for i=1,SPELLS_PER_PAGE do
-		SSButton[i]=createSSButton("SSButton"..i,i,32,17);
+		SSButton[i]=self:createSSButton("SSButton"..i,i,32,17);
 	end
 
 	-- main hook for spellbook update
-	hooksecurefunc("SpellBookFrame_Update", updateSSLinks)
+	hooksecurefunc("SpellBookFrame_Update", function() self:updateSSLinks() end )
  end

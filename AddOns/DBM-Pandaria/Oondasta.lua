@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(826, "DBM-Pandaria", nil, 322)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 84 $"):sub(12, -3))
 mod:SetCreatureID(69161)
 mod:SetEncounterID(1587)
 mod:SetReCombatTime(20, 10)
@@ -36,8 +36,8 @@ mod:AddReadyCheckOption(32519, false)
 function mod:OnCombatStart(delay, yellTriggered)
 	if yellTriggered then--We know for sure this is an actual pull and not diving into in progress
 --		timerCrushCD:Start(-delay)--There was no tank, so he pretty much never cast this, just ran like a wild animal around area while corpse cannoned
-		timerPiercingRoarCD:Start(20-delay)
-		timerFrillBlastCD:Start(40-delay)
+		timerPiercingRoarCD:Start(15-delay)
+		timerFrillBlastCD:Start(30-delay)
 	end
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(10)--range is guessed. spell tooltip and EJ do not save what range is right now.

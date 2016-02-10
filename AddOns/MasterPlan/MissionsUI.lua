@@ -727,14 +727,6 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 		lf.noBagSlots = t
 		lf:Hide()
 		lf:SetScript("OnShow", function(self)
-			self.noBagSlots:Show()
-			for i = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-				local freeSlots, bagFamily = GetContainerNumFreeSlots(i)
-				if bagFamily == 0 and freeSlots > 0 then
-					self.noBagSlots:Hide()
-					break
-				end
-			end
 			if self.onShowSound then
 				PlaySound(self.onShowSound)
 				self.onShowSound = nil
@@ -913,7 +905,8 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 			end})
 		end
 	end
-	function activeUI:SetCompletionRewards(rewards, followers, numMissions)
+	function activeUI:SetCompletionRewards(rewards, followers, numMissions, overflowLoot)
+		lootFrame.noBagSlots:SetShown(overflowLoot)
 		lootFrame.numMissions:SetFormattedText(GARRISON_NUM_COMPLETED_MISSIONS, numMissions or 1)
 		lootFrame.onShowSound = rewards and next(rewards) and "UI_Garrison_CommandTable_ChestUnlock_Gold_Success" or "UI_Garrison_CommandTable_ChestUnlock"
 		
@@ -1654,7 +1647,7 @@ local GetActiveMissions, StartCompleteAll, CompleteMission, ClearCompletionState
 		if (state == "DONE" or state == "ABORT") and activeUI.completionState == "RUNNING" then
 			activeUI.completionState = state == "DONE" and "DONE" or nil
 			if next(rew) or next(fol) then
-				activeUI:SetCompletionRewards(rew, fol, #stack)
+				activeUI:SetCompletionRewards(rew, fol, #stack, not not substate)
 			elseif state == "DONE" then
 				activeUI.CompleteAll.ShowingHelp = true
 				HelpPlate_TooltipHide()
@@ -1724,7 +1717,7 @@ local core do
 				bar:GetThumbTexture():SetTexCoord(0.20, 0.80, 0.125, 0.875)
 				bar:SetMinMaxValues(0, 100)
 				bar:SetValue(0)
-				local bg = bar:CreateTexture("BACKGROUND")
+				local bg = bar:CreateTexture(nil, "BACKGROUND")
 				bg:SetPoint("TOPLEFT", 0, 16)
 				bg:SetPoint("BOTTOMRIGHT", 0, -14)
 				bg:SetTexture(0,0,0)
@@ -1764,6 +1757,7 @@ local core do
 					up:SetEnabled(v > 0)
 					down:SetEnabled(v < x)
 				end)
+				sf.Bar, bar.Up, bar.Down = bar, up, down
 			end
 			sc = CreateFrame("Frame", nil, sf) do
 				sc:SetSize(w-2, h+10)
@@ -1875,7 +1869,7 @@ local core do
 		end
 		return core, sf
 	end
-	core = api.createScrollList(missionList, 882)
+	core, missionList.List = api.createScrollList(missionList, 882)
 end
 do -- CreateMissionButton
 	local CreateRewards do
@@ -2759,8 +2753,8 @@ do -- availMissionsHandle
 			local _, resq = GetCurrencyInfo(824)
 			cw[824] = resq < 3e3 and 10 or (resq < 7e3 and 6 or 3)
 			local _, oilq = GetCurrencyInfo(1101)
-			cw[1101] = oilq < 1e3 and 11 or 2
-			cw[823], cw[0], cw.minor = 4, 5, 1
+			cw[1101] = C_Garrison.HasShipyard() and (oilq < 1e3 and 11 or 2) or 1
+			cw[823], cw[0], cw.minor = 4, 5, 1.5
 			
 			for i=1, #missions do
 				local mi, g = missions[i]
@@ -3215,6 +3209,7 @@ do -- interestMissionsHandle
 			if missions.imask == mask then
 				return
 			end
+			missions.imask = mask
 			
 			local finfo = G.GetFollowerInfo()
 			local uf, ua, hasUE, hasInactive = {}, unusedEntry.unused, missions[1] == unusedEntry

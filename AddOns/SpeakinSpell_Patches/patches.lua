@@ -118,14 +118,16 @@ SpeakinSpellSavedData.EventTable[de.key] = {
 -- returns a new DetectedEventStub object for 3.1.2.05
 function SpeakinSpell:FixOld_31205_CreateDEStub(oldkey)
 
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local stub = {
 		name = "",
 		rank = "",
 		type = "", --unknown
 		-- in 3.1.2.03, the only detected events were self cast on player
 		-- or equivalent for as much as we cared at the time.
-		caster = UnitName("player"),
-		target = UnitName("player"),
+		caster = myname,
+		target = myname,
 	}
 	
 	-- check for macros using the 3.1.2.03 method of key names
@@ -732,7 +734,8 @@ function SpeakinSpell:FixOld_32217_MoveSavedData()
 	--------------------------
 	-- EventTable
 	local realm = GetRealmName()
-	local toon = UnitName("player")
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local toon, myrealm = UnitName("player")
 	
 	if not SpeakinSpellSavedDataForAll.Toons then
 		SpeakinSpellSavedDataForAll.Toons = {}

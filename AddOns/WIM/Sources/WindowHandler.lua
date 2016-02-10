@@ -435,10 +435,14 @@ local function createFadeAnimation(obj, direction)
 	local fade = anim:CreateAnimation("Alpha")
 	fade:SetDuration(0.25)
 	if direction == "in" then
-		fade:SetChange(1)
+--		fade:SetChange(1)
+		fade:SetFromAlpha(0)
+		fade:SetToAlpha(1)
 		anim:SetScript("OnFinished", function() obj:SetAlpha(1) end)
 	else
-		fade:SetChange(-0.5)
+		--fade:SetChange(-0.5)
+		fade:SetFromAlpha(1)
+		fade:SetToAlpha(0.5)
 		fade:SetStartDelay(1)
 		anim:SetScript("OnFinished", function() obj:SetAlpha(0.5) end)
 	end

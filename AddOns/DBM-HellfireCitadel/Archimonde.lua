@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(1438, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14712 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14777 $"):sub(12, -3))
 mod:SetCreatureID(91331)--Doomfire Spirit (92208), Hellfire Deathcaller (92740), Felborne Overfiend (93615), Dreadstalker (93616), Infernal doombringer (94412)
 mod:SetEncounterID(1799)
 mod:SetMinSyncRevision(13964)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
-mod:SetHotfixNoticeRev(14687)
+mod:SetHotfixNoticeRev(14730)
 mod.respawnTime = 29--roughly
 
 mod:RegisterCombat("combat")
@@ -90,6 +90,7 @@ local specWarnRainofChaos			= mod:NewSpecialWarningCount(189953, nil, nil, nil, 
 local specWarnDarkConduitSoon		= mod:NewSpecialWarningSoon(190394, "Ranged", nil, nil, 1, 2)
 local specWarnSeethingCorruption	= mod:NewSpecialWarningCount(190506, nil, nil, nil, 2, 2)
 local specWarnMarkOfLegion			= mod:NewSpecialWarningYouPos(187050, nil, nil, 2, 3, 5)
+local specWarnMarkOfLegionSoak		= mod:NewSpecialWarningSoakPos(187050, nil, nil, 2, 1, 6)
 local yellDoomFireFades				= mod:NewFadesYell(183586, nil, false)
 local yellMarkOfLegion				= mod:NewFadesYell(187050, 28836)
 local yellMarkOfLegionPoS			= mod:NewPosYell(187050, 28836)
@@ -173,7 +174,6 @@ mod:AddHudMapOption("HudMapOnShackledTorment2", 184964, true)
 mod:AddHudMapOption("HudMapOnWrought", 184265)
 mod:AddHudMapOption("HudMapMarkofLegion2", 187050, true)
 mod:AddBoolOption("ExtendWroughtHud3", true)
---mod:AddBoolOption("AlternateHudLine", false)
 mod:AddBoolOption("NamesWroughtHud", true)
 mod:AddBoolOption("FilterOtherPhase", true)
 mod:AddInfoFrameOption(184964)
@@ -206,7 +206,7 @@ mod.vb.MarkBehavior = "Numbered"
 local legionTimers = {20, 63, 60, 60, 48, 46, 47}--All verified by log
 local darkConduitTimers = {8, 123, 95, 56, 52}-- All verified by log
 local infernalTimers = {35, 62.5, 63, 55, 68, 41}--All verified by log
-local sourceofChaosTimers = {49, 58, 76, 78}--All verified by log
+local sourceofChaosTimers = {49, 58, 75.5, 78}--All verified by log
 local twistedDarknessTimers = {75, 78, 42, 40, 72}--All verified by log
 local seethingCorruptionTimers = {61, 58, 52, 70, 30, 41}--All verified by log
 --Range frame/filter shit
@@ -464,7 +464,35 @@ local function showMarkOfLegion(self, spellName)
 		end
 	end
 	if not playerHasMark then
-		DBMHudMap:RegisterRangeMarkerOnPartyMember(1870502, "party", playerName, 0.9, 12, nil, nil, nil, 1, nil, false):Appear()
+		if UnitIsDeadOrGhost("player") then return end
+		for i = 1, DBM:GetNumRealGroupMembers() do
+			local unitID = 'raid'..i
+			local isPlayer = false
+			local soakers = 0
+			soakers = soakers + 1
+			if UnitIsUnit("player", unitID) then
+				local soak = math.ceil(soakers/4)
+				if (soak == 1) then
+					specWarnMarkOfLegionSoak:Show(MELEE.." "..DBM_CORE_LEFT)
+					voiceMarkOfLegion:Play("frontleft")
+				end
+				if (soak == 2) then
+					specWarnMarkOfLegionSoak:Show(MELEE.." "..DBM_CORE_RIGHT)
+					voiceMarkOfLegion:Play("frontright")
+				end
+				if (soak == 3) then
+					specWarnMarkOfLegionSoak:Show(RANGED.." "..DBM_CORE_LEFT)
+					voiceMarkOfLegion:Play("backleft")
+				end
+				if (soak == 4) then
+					specWarnMarkOfLegionSoak:Show(RANGED.." "..DBM_CORE_RIGHT)
+					voiceMarkOfLegion:Play("backright")                 
+				end
+            end
+		end
+		if self.Options.HudMapMarkofLegion2 then
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(1870502, "party", playerName, 0.9, 12, nil, nil, nil, 1, nil, false):Appear()
+		end
 	end
 end
 
@@ -530,7 +558,11 @@ local function breakShackles(self, spellName)
 			if not name then break end
 			if not DBM:GetRaidUnitId(name) then break end
 			if playerHasShackle then
-				DBMHudMap:RegisterStaticMarkerOnPartyMember(184964, "highlight", name, 26, nil, 0, 1, 0, 0.3):Appear():RegisterForAlerts(spellName, name)
+				if name == playerName then
+					DBMHudMap:RegisterStaticMarkerOnPartyMember(184964, "highlight", name, 25, nil, 0, 1, 0, 0.3):Appear():RegisterForAlerts(spellName, name)
+				else
+					DBMHudMap:RegisterStaticMarkerOnPartyMember(184964, "highlight", name, 26, nil, 0, 1, 0, 0.3):Appear():RegisterForAlerts(spellName, name)
+				end
 			else
 				DBMHudMap:RegisterStaticMarkerOnPartyMember(184964, "highlight", name, 26, nil, 0, 1, 0, 0.3):Appear():RegisterForAlerts(nil, name)
 			end
@@ -865,13 +897,14 @@ function mod:SPELL_CAST_START(args)
 		self.vb.netherBanish2 = self.vb.netherBanish2 + 1
 		timerNetherBanishCD:Start(nil, self.vb.netherBanish2+1)
 --		updateAllTimers(self, 7)--Inconclusive logs. Could not find any data supporting this extention
-	elseif spellId == 190313 then
+	elseif spellId == 190313 then--Nether Ascention
 		playerBanished = true
-		timerAllureofFlamesCD:Cancel()--Done for rest of fight
-		timerDeathbrandCD:Cancel()--Done for rest of fight
-		timerShackledTormentCD:Cancel()--Resets to 55 on non mythic, no longer cast on mythic
+		timerAllureofFlamesCD:Cancel()
+		timerDeathbrandCD:Cancel()
+		timerShackledTormentCD:Cancel()
 		countdownShackledTorment:Cancel()
 		countdownDeathBrand:Cancel()
+		timerWroughtChaosCD:Cancel()
 	end
 end
 
@@ -999,17 +1032,9 @@ function mod:SPELL_AURA_APPLIED(args)
 					end
 					--create line
 					if self.Options.ExtendWroughtHud3 then
-					--	if self.Options.AlternateHudLine then
-					--		DBMHudMap:AddEdge(0, 1, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 25, "beam1", true)
-					--	else
-							DBMHudMap:AddEdge(0, 1, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 135, nil, true)
-					--	end
+						DBMHudMap:AddEdge(0, 1, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 135, nil, true)
 					else
-					--	if self.Options.AlternateHudLine then
-					--		DBMHudMap:AddEdge(0, 1, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 25, "beam1")
-					--	else
-							DBMHudMap:AddEdge(0, 1, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 135)
-					--	end
+						DBMHudMap:AddEdge(0, 1, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 135)
 					end
 				else--red lines for non player lines
 					--Create Points
@@ -1022,11 +1047,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					end
 					--Create Line
 					if self.Options.ExtendWroughtHud3 then
-					--	if self.Options.AlternateHudLine then
-					--		DBMHudMap:AddEdge(1, 0, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 25, "beam1", true)
-					--	else
-							DBMHudMap:AddEdge(1, 0, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 135, nil, true)
-					--	end
+						DBMHudMap:AddEdge(1, 0, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 135, nil, true)
 					else
 						DBMHudMap:AddEdge(1, 0, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 135)
 					end
@@ -1092,8 +1113,6 @@ function mod:SPELL_AURA_APPLIED(args)
 				yellMarkOfLegion:Schedule(remaining-1, 1)
 				yellMarkOfLegion:Schedule(remaining-2, 2)
 				yellMarkOfLegion:Schedule(remaining-3, 3)
-				yellMarkOfLegion:Schedule(remaining-4, 4)
-				yellMarkOfLegion:Schedule(remaining-5, 5)
 			end
 		end
 		updateRangeFrame(self)
@@ -1279,7 +1298,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			countdownShackledTorment:Start(55)
 		else
 			table.wipe(shacklesTargets)--Just to reduce infoframe overhead
-			timerWroughtChaosCD:Cancel()
 			timerDarkConduitCD:Start(8, 1)
 			setDarkConduit(self)
 			timerMarkOfLegionCD:Start(20, 1)

@@ -58,7 +58,7 @@ function SpeakinSpell:RegisterAllEvents()
 	
 	-- chat events, such as receiving a whisper
 	self:RegisterEvent("CHAT_MSG_WHISPER")
-	self:RegisterEvent("CHAT_MSG_BN_WHISPER") --TODONOW: handle like CHAT_MSG_WHISPER
+	self:RegisterEvent("CHAT_MSG_BN_WHISPER")
 	self:RegisterEvent("CHAT_MSG_GUILD")
 	self:RegisterEvent("CHAT_MSG_PARTY")
 
@@ -81,7 +81,7 @@ function SpeakinSpell:RegisterAllEvents()
 	self:RegisterEvent("TAXIMAP_OPENED")
 	self:RegisterEvent("TRAINER_SHOW")
 	
-	-- TODONOW: experimental new summoning support - but how can I tell if I'm casting a summoning effect?
+	-- TODO: experimental new summoning support - but how can I tell if I'm casting a summoning effect?
 	self:RegisterEvent("CONFIRM_SUMMON") -- I received a summon?
 	self:RegisterEvent("CANCEL_SUMMON") -- the summon I received has canceled or timed out?
 	
@@ -437,13 +437,16 @@ function SpeakinSpell:UNIT_THREAT_LIST_UPDATE(_,mob)
 		-- aggro has stayed the same
 		return
 	end
+	local castername, casterrealm = UnitName(mob)
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local DetectedEventStub = {
 		-- event descriptors
 		type = "COMBAT",
 		name = situation,
 		-- event-specific data for substitutions
-		caster = UnitName(mob),
-		target = UnitName("player"),
+		caster = castername,
+		target = myname,
 	}
 	self:OnSpeechEvent( DetectedEventStub )
 end
@@ -495,28 +498,29 @@ function SpeakinSpell:COMPANION_UPDATE(_, CritterOrMount)
 		-- the active companion has not changed
 		-- this must be a notification for another player summoning/dismissing their mounts/critters
 		-- or another player entering/exiting range (40 yards)
-		self:DebugMsg(funcname, "this COMPANION_UPDATE was for a different player than myself")
+		self:DebugMsg(funcname, "COMPANION_UPDATE ignored because NewCompanion == OldCompanion")
 		return
 	end
 	
 	-- remember the new companion for future reference, so we know when it changes
 	self.RuntimeData.ActiveCompanions[CritterOrMount] = NewCompanion
 	
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local DetectedEventStub = {
 		-- event descriptors
 		type = "EVENT",
 		-- name = L["Summon Mount"], -- determined below
 
 		-- treat these special events as cast by the player on himself
-		caster = UnitName("player"),
+		caster = myname,
 		target = (NewCompanion or OldCompanion), -- users may find this value more intuitive than UnitName("player"),
 
 		-- EVENT-SPECIFIC DATA FOR SUBSTITUTIONS
 		-- override the spellname with that of the applicable companion 
 		-- either the one which was summoned (new) or dismissed (old)
 		spellname = (NewCompanion or OldCompanion),
-		-- we're not tracking the OldSpellID so <spelllink> will be unavailable when dismissing (should be OK)
-		spellid   = NewSpellID,
+		spellid = (NewSpellID or self.RuntimeData.LastKnownSpellId),
 		-- the isCOMPANION_UPDATE is used to override the behavior of <DisplayLink>
 		isCOMPANION_UPDATE = true,
 	}
@@ -524,20 +528,33 @@ function SpeakinSpell:COMPANION_UPDATE(_, CritterOrMount)
 	-- figure out which event just happened
 	-- this 'name' will become the event trigger key
 	if "MOUNT" == CritterOrMount then
-		if nil == OldCompanion then
-			-- we didn't have a mount, but now we do
-			DetectedEventStub.name = L["Summon Mount"]
-		else
-			-- we had a mount, but now we don't
+		if nil == NewCompanion then
+			-- the new mount is unknown, must be dismissed
 			DetectedEventStub.name = L["Dismiss Mount"]
+		else
+			-- a mount is known, so we must have summoned it
+			DetectedEventStub.name = L["Summon Mount"]
 		end
 	elseif "CRITTER" == CritterOrMount then
-		if nil == OldCompanion then
-			-- we didn't have a vanity pet, but now we do
-			DetectedEventStub.name = L["Summon Companion Pet"]
-		else
+		if nil == NewCompanion then
 			-- we had a vanity pet, but now we don't
 			DetectedEventStub.name = L["Dismiss Companion Pet"]
+		else
+			if OldCompanion then
+				-- If we're switching from an old mount to a new one
+				-- it comes in a single companion update
+				-- Fire the dismiss event, the the summon event
+				DetectedEventStub.name = L["Dismiss Companion Pet"]
+				DetectedEventStub.target = OldCompanion
+				DetectedEventStub.spellname = OldCompanion
+				self:OnSpeechEvent( DetectedEventStub )
+				-- switch info back to the new companion for the summon event
+				DetectedEventStub.target = NewCompanion
+				DetectedEventStub.spellname = NewCompanion
+				--NOTE: mounts don't have this issue because you must dismount before remounting
+			end
+			-- the new critter is unknown, so it must have been dismissed
+			DetectedEventStub.name = L["Summon Companion Pet"]
 		end
 	else
 		self:DebugMsg(funcname, "Unexpected CritterOrMount="..tostring(CritterOrMount))
@@ -957,13 +974,20 @@ function SpeakinSpell:OnSpellcastEvent(event, caster, spellname, spellrank, spel
 	-- modify values for pet events	
 	-- NOTE: UNIT_SPELLCAST_SUCCEEDED appears to be the only pet event that actually occurs in WoW 3.3.5
 	if caster == "player" then
-		DetectedEventStub.caster = UnitName("player")
+		--NOTE: myrealm result from UnitName("player") is always nil
+		local myname, myrealm = UnitName("player")
+		DetectedEventStub.caster = myname
 	elseif caster == "pet" then --it's not UnitName("pet")
 		DetectedEventStub.type = "PET"..event
-		DetectedEventStub.caster = UnitName("pet")
+		local petname, petrealm = UnitName("pet")
+		DetectedEventStub.caster = petname
 	end
 	
-	-- SPEAK!	
+	-- Remember the last spell ID that we saw
+	-- this assists COMPANION_UPDATE
+	self.RuntimeData.LastKnownSpellId = spellid
+	
+	-- SPEAK!
 	self:OnSpeechEvent( DetectedEventStub )
 end
 
@@ -984,13 +1008,15 @@ function SpeakinSpell:PLAYER_DEAD(event)
 	end
 	self.RuntimeData.dead = true
 	
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local DetectedEventStub = {
 		-- event descriptors
 		type = "COMBAT",
 		name = L["I Died"],
 		-- event-specific data for substitutions
 		--caster = caster,
-		target = UnitName("player"),
+		target = myname,
 	}
 	self:OnSpeechEvent( DetectedEventStub )
 end
@@ -1099,13 +1125,15 @@ function SpeakinSpell:OnZoneChange(minoronly)
 
 	-- Signal the zone change event
 	self:DebugMsg(funcname, "Signal System Event: Zone Changed, minoronly="..tostring(minoronly))
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local DetectedEventStub = {
 		-- event descriptors
 		name = L["Changed Zone"],
 		type = "EVENT",
 		-- treat these special events as cast by the player on himself
-		caster = UnitName("player"),
-		target = UnitName("player"),
+		caster = myname,
+		target = myname,
 		-- event-specific data for substitutions
 		-- None
 	}
@@ -1186,12 +1214,14 @@ function SpeakinSpell:CHAT_MSG_WHISPER(event, msg, author, language, status, id,
 		type(author) == "string"			and
 		not SpeakinSpell:NameIsMe(author)	then
 
+		--NOTE: myrealm result from UnitName("player") is always nil
+		local myname, myrealm = UnitName("player")
 		local DetectedEventStub = {
 			type = "CHAT",
 			name = L["Whispered While In-Combat"],
 			--TODO: remove realm name from author? what if you use <caster> to whisper back, how does that work?
 			caster = author, -- the name of the player who whispered to you
-			target = UnitName("player"), -- the target of the whisper is you, the player
+			target = myname, -- the target of the whisper is you, the player
 			-- event-specific substitution
 			text = msg -- the contents of the message that was whispered to you
 		}
@@ -1205,7 +1235,7 @@ end
 
 
 -- Whispered on Real ID should work the same as regular whispers
--- TODONOW: what happens when we try to auto-reply? needs experimentation/testing
+-- TODO: what happens when we try to auto-reply? needs experimentation/testing
 function SpeakinSpell:CHAT_MSG_BN_WHISPER(event, msg, author, language, status, id, ...)
 	self:CHAT_MSG_WHISPER(event, msg, author, language, status, id, ...)
 end
@@ -1305,6 +1335,8 @@ end
 
 function SpeakinSpell:ACHIEVEMENT_EARNED(event, AchievementID)
 	local IDNumber, Name, Points, Completed, Month, Day, Year, Description, Flags, Image, RewardText = GetAchievementInfo( AchievementID )
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local DetectedEventStub = {
 		type = "ACHIEVEMENT",
 		name = COMBATLOG_FILTER_STRING_ME, -- DisplayName = "Achievement Earned by <name>"
@@ -1315,8 +1347,8 @@ function SpeakinSpell:ACHIEVEMENT_EARNED(event, AchievementID)
 		-- and the achievement link also relays the achievement name, via the standard <spelllink> substitution
 		spelllink = GetAchievementLink( AchievementID ),
 		-- and standard meaning for target and caster OF THE EVENT
-		target = UnitName("player"),
-		caster = UnitName("player"),
+		target = myname,
+		caster = myname,
 		-- and let's include (most of) the rest of the achievement info for substitutions, why not?
 		points = Points,
 		desc = Description,
@@ -1488,7 +1520,7 @@ end
 ---------------------------------------------------------------------------
 -- SUMMONING EFFECTS
 ---------------------------------------------------------------------------
--- TODONOW: this is new/experimental
+-- TODO: new/experimental summoning events
 -- CONFIRM_SUMMON and CANCEL_SUMMON are not triggered when i attempt to summon myself without assistance
 
  -- I received a summon?
@@ -1546,11 +1578,13 @@ arg1
     player name 
 --]]
 function SpeakinSpell:RESURRECT_REQUEST(event, caster)
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local DetectedEventStub = {
 		type = "EVENT",
 		name = L["a player sent me a rez"],
 		caster = self:PlayerNameNoRealm(caster),
-		target = UnitName("player"),
+		target = myname,
 	}
 	self:OnSpeechEvent( DetectedEventStub )
 end

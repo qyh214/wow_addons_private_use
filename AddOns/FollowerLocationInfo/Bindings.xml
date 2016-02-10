@@ -1,5 +1,5 @@
 <Bindings>
 	<Binding name="TOGGLEFOLLOWERLOCATIONINFO" header="FOLLOWERLOCATIONINFO" category="ADDONS">
-		FollowerLocationInfo_Toggle();
+		FollowerLocationInfo_ToggleJournal();
 	</Binding>
 </Bindings>

@@ -9,17 +9,21 @@ local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandi
 	local t = ui:CreateFontString(nil, "ARTWORK", "QuestFont_Enormous")
 	t:SetPoint("LEFT", ui:GetParent().HeaderBar, "LEFT", 26, 0)
 	t:SetText(GARRISON_LANDING_PAGE_TITLE)
-	ui.Title = t
-	
-	t = CreateFrame("Button", "GarrisonLandingPageTab4", GarrisonLandingPage, "GarrisonLandingPageTabTemplate", 4)
+	t, ui.Title = ui:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge2"), t
+	t:SetText(L"No other characters are currently known.")
+	t, ui.NoDataText = ui:CreateFontString(nil, "ARTWORK", "GameFontHighlight"), t
+	t:SetPoint("TOP", ui.NoDataText, "BOTTOM", 0, -2)
+	t:SetText(L"Characters are added to this list when they interact with the Command Table or Garrison Cache.")
+	t:SetWidth(680)
+	t, ui.NoDataText2 = CreateFrame("Button", "GarrisonLandingPageTab4", GarrisonLandingPage, "GarrisonLandingPageTabTemplate", 4), t
 	t:SetPoint("LEFT", GarrisonLandingPageTab3, "RIGHT", -5, 0)
 	t:SetText(L"Other Characters")
 	ui.Tab = t
 	core, ui.List = api.createScrollList(ui, 740, 380)
 	ui.List:ClearAllPoints()
 	ui.List:SetPoint("RIGHT", -40, -30)
+	ui.NoDataText:SetPoint("CENTER", ui.List, "CENTER", -8, 0)
 
-	
 	local _GarrisonLandingPageTab_SetTab = GarrisonLandingPageTab_SetTab
 	function GarrisonLandingPageTab_SetTab(...)
 		_GarrisonLandingPageTab_SetTab(...)
@@ -47,9 +51,30 @@ local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandi
 					HIGHLIGHT_FONT_COLOR_CODE .. G.GetTimeStringFromSeconds(G.stime() - self.lastOffer) .. "|r"))
 				GameTooltip:Show()
 			end
+		elseif self.currencyID == 1101 then
+			GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+			GameTooltip:SetText(C_Garrison.GetMissionName(745))
+			if type(self.inProgress) == "number" then
+				if self.inProgress > time() then
+					GameTooltip:AddLine("|n" .. GARRISON_SHIPYARD_MSSION_INPROGRESS_TOOLTIP .. "; " .. GARRISON_SHIPYARD_MISSION_INPROGRESS_TIMELEFT:format(
+						HIGHLIGHT_FONT_COLOR_CODE .. G.GetTimeStringFromSeconds(self.inProgress - time()) .. "|r"))
+				else
+					GameTooltip:AddLine("|n" .. GREEN_FONT_COLOR_CODE .. GARRISON_MISSION_COMPLETE)
+				end
+			else
+				GameTooltip:AddLine("|n" .. GREEN_FONT_COLOR_CODE .. AVAILABLE)
+			end
+			if type(self.current) == "number" then
+				local cc = HIGHLIGHT_FONT_COLOR_CODE
+				if self.current >= 1e5 then cc = RED_FONT_COLOR_CODE
+				elseif self.current >= 99600 then cc = ORANGE_FONT_COLOR_CODE
+				end
+				GameTooltip:AddLine("|n" .. CURRENCY_TOTAL_CAP:format(cc, self.current, 1e5))
+			end
+			GameTooltip:Show()
 		elseif self.cacheSize then
 			GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-			T.SetCacheTooltip(GameTooltip, false, G.GetResourceCacheInfo(self.cacheTime, self.cacheSize))
+			T.SetCacheTooltip(GameTooltip, self.current, G.GetResourceCacheInfo(self.cacheTime, self.cacheSize))
 		end
 	end
 	local function Timer_OnLeave(self)
@@ -144,7 +169,7 @@ local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandi
 		t:SetPoint("TOPLEFT", f.Name, "BOTTOMLEFT", 0, -1)
 		f.Summary = t
 		
-		for i=1,#T.TrackedMissionSets+1 do
+		for i=1,#T.TrackedMissionSets+2 do
 			t = CreateFrame("Frame", nil, f, "GarrisonLandingPageReportShipmentStatusTemplate")
 			t:SetScale(42/64)
 			t:SetPoint("RIGHT", (40 -55*i)/t:GetScale(), 0)
@@ -164,11 +189,14 @@ local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandi
 		return f
 	end
 	local function SetCharEntry(f, d)
-		local nt, sum, all = 1, d[3], d[4]
+		t.itemID, t.lastOffer, t.cacheTime, t.cacheSize, t.current, t.inProgress = nil
+		
+		local nt, sum, all, snow, lnow = 1, d[3], d[4], G.stime(), time()
 		f.Name:SetText(Char_GetName(d))
+		
 		if all.lastCacheTime then
 			local t = f.Timers[nt]
-			nt, t.cacheTime, t.cacheSize, t.itemID, t.lastOffer = nt + 1, all.lastCacheTime, all.cacheSizeU or all.cacheSize or 500
+			nt, t.cacheTime, t.cacheSize, t.current = nt + 1, all.lastCacheTime, all.cacheSize or 500, all.curRes
 			local cv, mv, st, md = G.GetResourceCacheInfo(t.cacheTime, t.cacheSize)
 			SetPortraitToTexture(t.Icon, "Interface\\Icons\\INV_Garrison_Resource")
 			t.Icon:SetDesaturated(true)
@@ -180,17 +208,29 @@ local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandi
 			t.AltDone:SetShown(cv == mv)
 			t:Show()
 		end
+		if sum.lastOilTime then
+			local t, finTime, fin = f.Timers[nt], sum.inProgress and sum.inProgress[745]
+			nt, t.currencyID, t.current, t.lastOffer, t.inProgress, fin = nt + 1, 1101, all.curOil, sum.lastOilTime, sum.inProgress and sum.inProgress[745], finTime and finTime < lnow
+			SetPortraitToTexture(t.Icon, "Interface\\Icons\\Garrison_Oil")
+			t.Icon:SetDesaturated(not fin)
+			if type(finTime) == "number" and not fin then
+				t.AltDone:Hide()
+				t.Swipe:SetCooldown(GetTime()-lnow+finTime, 64800)
+			else
+				t.AltDone:Show()
+				t.Swipe:SetCooldownUNIX(0,0)
+			end
+		end
 		
-		local now = G.stime()
 		for i=1,#T.TrackedMissionSets do
 			local ls = sum["tt" .. i]
 			if ls then
 				local t = f.Timers[nt]
-				nt, t.itemID, t.lastOffer, t.cacheTime, t.cacheSize = nt + 1, sum["ti" .. i], ls
+				nt, t.itemID, t.lastOffer = nt + 1, sum["ti" .. i], ls
 				SetPortraitToTexture(t.Icon, GetItemIcon(t.itemID))
 				t.Icon:SetDesaturated(ls ~= true)
 				local endTime = ls ~= true and (ls + 1252800)
-				if endTime and endTime > now then
+				if endTime and endTime > snow then
 					t.AltDone:Hide()
 					t.Swipe:SetCooldownUNIX(ls, 1252800)
 				else
@@ -204,10 +244,10 @@ local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandi
 		if not sum.inProgress then
 			f.Summary:SetText(L"No active missions")
 		else
-			local total, complete, now = 0,0, time()
+			local total, complete = 0,0
 			for k,v in pairs(sum.inProgress) do
 				total = total + 1
-				if v <= now then
+				if v <= lnow then
 					complete = complete + 1
 				end
 			end
@@ -237,6 +277,8 @@ local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandi
 			end
 			return a[2] < b[2]
 		end)
+		ui.NoDataText:SetShown(not d[1])
+		ui.NoDataText2:SetShown(not d[1])
 		data = d
 		return data
 	end
@@ -274,7 +316,15 @@ function E:PLAYER_LOGOUT()
 	for k,v in pairs(ip) do
 		r[v.missionID] = v.missionEndTime
 	end
-	if next(r) then t.inProgress = r end
+	if next(r) then
+		if r[745] then
+			t.lastOilTime = r[745] - 64800  + (now - time())
+		else
+			local _, _, _, lastSpawn = G.GetMissionSeen(745)
+			t.lastOilTime = lastSpawn and (now - lastSpawn) or nil
+		end
+		t.inProgress = r
+	end
 	
 	if not next(t) then
 		MasterPlanA.data.summary = nil

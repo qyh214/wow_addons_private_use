@@ -144,13 +144,15 @@ function SpeakinSpell:OnVariablesLoaded()
 	self:ShowWelcomeMessages()
 	
 	-- trigger a Speech Event for loading
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local DetectedEventStub = {
 		-- event descriptors
 		name = L["SpeakinSpell Loaded"],
 		type = "EVENT",
 		-- event-specific data for substitutions
-		caster = UnitName("player"),
-		target = UnitName("player"),
+		caster = myname,
+		target = myname,
 	}
 	self:OnSpeechEvent( DetectedEventStub ) 
 	
@@ -161,10 +163,9 @@ function SpeakinSpell:OnVariablesLoaded()
 	-- this might immediately start wanting to use the speeches
 	self:Rez_Init()
 
-   -- setup custom links in spellbook and hook the OnClick Fuctions for
-   -- page navigation.
-   
-   self:Init_Spellbook_SSLinks()
+	-- setup custom links in spellbook and hook the OnClick Fuctions for
+	-- page navigation.
+	self:Init_Spellbook_SSLinks()
 
 	-- Done
 	self:DebugMsg(funcname, "done")

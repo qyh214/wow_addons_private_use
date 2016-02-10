@@ -676,7 +676,7 @@ function api.GetNumIdleCombatFollowers(followers)
 end
 
 do -- CompleteMissions/AbortCompleteMissions
-	local curStack, curRewards, curFollowers, curCallback
+	local curStack, curRewards, curFollowers, curCallback, curOverflow
 	local curSalvage, curPlayerXP = {[114120]=0, [114119]=0, [114116]=0}, {}
 	local curState, curIndex, completionStep, lastAction, delayIndex, delayMID
 	local function checkSalvage(addRewards)
@@ -721,7 +721,7 @@ do -- CompleteMissions/AbortCompleteMissions
 	local function delayDone()
 		if curState == "ABORT" or curState == "DONE" then
 			checkSalvage(true)
-			securecall(curCallback, curState, curStack, curRewards, curFollowers)
+			securecall(curCallback, curState, curStack, curRewards, curFollowers, curOverflow)
 			curState, curStack, curRewards, curFollowers, curIndex, curCallback, delayMID, delayIndex = nil
 		end
 	end
@@ -835,10 +835,15 @@ do -- CompleteMissions/AbortCompleteMissions
 			curFollowers[fid].xpAward = curFollowers[fid].xpAward + xpAward
 		end
 	end
+	function EV:UI_ERROR_MESSAGE(msg)
+		if curState and msg == ERR_ITEM_INVENTORY_FULL_SATCHEL then
+			curOverflow = true
+		end
+	end
 	EV.GARRISON_MISSION_NPC_OPENED, EV.GARRISON_MISSION_NPC_CLOSED = completionStep, completionStep
 	EV.GARRISON_MISSION_BONUS_ROLL_COMPLETE, EV.GARRISON_MISSION_COMPLETE_RESPONSE = completionStep, completionStep
 	function api.CompleteMissions(stack, callback)
-		curStack, curCallback, curRewards, curFollowers = stack, callback, {}, {}
+		curStack, curCallback, curRewards, curFollowers, curOverflow = stack, callback, {}, {}
 		curState, curIndex = "NEXT", 1, checkSalvage(false)
 		completionStep("GARRISON_MISSION_NPC_OPENED", "IMMEDIATE")
 	end
@@ -846,7 +851,7 @@ do -- CompleteMissions/AbortCompleteMissions
 		completionStep("GARRISON_MISSION_NPC_CLOSED")
 	end
 	function api.GetCompletionState()
-		return curState, curIndex, curStack, curRewards, curFollowers
+		return curState, curIndex, curStack, curRewards, curFollowers, curOverflow
 	end
 end
 
@@ -2851,7 +2856,7 @@ end
 do -- api.GetResourceCacheInfo
 	local STEP_INTERVAL, STEP_SIZE, STORE_FLOOR, STORE_CEIL = 600, 1, 10, 500
 	local function getCacheData()
-		return MasterPlanA.data.lastCacheTime, tonumber(MasterPlanA.data.cacheSizeU or MasterPlanA.data.cacheSize) or STORE_CEIL
+		return MasterPlanA.data.lastCacheTime, tonumber(MasterPlanA.data.cacheSize) or STORE_CEIL
 	end
 	function api.GetResourceCacheInfo(lt, sz)
 		if not lt then

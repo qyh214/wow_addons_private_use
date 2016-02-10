@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(820, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 82 $"):sub(12, -3))
 mod:SetCreatureID(69017)--69070 Viscous Horror, 69069 good ooze, 70579 bad ooze (patched out of game, :\)
 mod:SetEncounterID(1574)
 mod:SetZone()
@@ -216,7 +216,7 @@ function mod:SPELL_AURA_REMOVED(args)
 				DBM.RangeCheck:Hide()
 			end
 		end
-	elseif spellId == 140546 and args:IsPlayer() then
+	elseif spellId == 140546 and args:IsPlayer() and self:IsInCombat() then
 		timerFullyMutated:Cancel()--Can be dispeled
 		specWarnFullyMutatedFaded:Show(args.spellName)
 	end

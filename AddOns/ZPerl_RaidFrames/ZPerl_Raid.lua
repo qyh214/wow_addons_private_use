@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 984 $")
+end, "$Revision: 991 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -277,13 +277,14 @@ local function XPerl_Raid_UpdateName(self)
 	if (not partyid) then
 		partyid = SecureButton_GetUnit(self)
 		if (not partyid) then
-			self.lastName, self.lastID = nil, nil
+			self.lastGUID, self.lastID = nil, nil
 			return
 		end
 	end
 
 	local name = UnitName(partyid)
-	self.lastName, self.lastID = name, partyid -- These stored, so we can at least make a small effort in reducing workload on attribute changes.
+	local guid = UnitGUID(partyid)
+	self.lastGUID, self.lastID = guid, partyid -- These stored, so we can at least make a small effort in reducing workload on attribute changes.
 
 	if (name) then
 		self.nameFrame.text:SetText(name)
@@ -299,7 +300,10 @@ end
 
 -- XPerl_Raid_CheckFlags
 local function XPerl_Raid_CheckFlags(partyid)
-	local unitName = UnitName(partyid)
+	local unitName, realm = UnitName(partyid)
+	if realm and realm ~= "" then
+		unitName = unitName.."-"..realm
+	end
 	local resser
 
 	for i, name in pairs(ResArray) do
@@ -319,27 +323,31 @@ local function XPerl_Raid_CheckFlags(partyid)
 	end
 
 	local unitInfo = ZPerl_Roster[unitName]
-	if (unitInfo) then
-		if (unitInfo.ressed) then
-			if (UnitIsDead(partyid)) then
-				if (unitInfo.ressed == 2) then
-					return {flag = XPERL_LOC_SS_AVAILABLE, bgcolor = {r = 0, g = 1, b = 0.5}}
-				elseif (unitInfo.ressed == 3) then
-					return {flag = XPERL_LOC_ACCEPTEDRES, bgcolor = {r = 0, g = 0.5, b = 1}}
-				else
-					return {flag = XPERL_LOC_RESURRECTED, bgcolor = {r = 0, g = 0.5, b = 1}}
-				end
+	if (unitInfo and unitInfo.ressed) then
+		if (UnitIsDead(partyid)) then
+			if (unitInfo.ressed == 2) then
+				return {flag = XPERL_LOC_SS_AVAILABLE, bgcolor = {r = 0, g = 1, b = 0.5}}
+			elseif (unitInfo.ressed == 3) then
+				return {flag = XPERL_LOC_ACCEPTEDRES, bgcolor = {r = 0, g = 0.5, b = 1}}
 			else
-				unitInfo.ressed = nil
-				XPerl_Raid_UpdateManaType(FrameArray[partyid], true)
+				return {flag = XPERL_LOC_RESURRECTED, bgcolor = {r = 0, g = 0.5, b = 1}}
 			end
-		elseif (unitInfo.afk) then
-			if (UnitIsAFK(partyid)) then
-				if (conf.showAFK) then
-					return {flag = XPERL_RAID_AFK}
-				end
-			else
-				unitInfo.afk = nil
+		else
+			unitInfo.ressed = nil
+			XPerl_Raid_UpdateManaType(FrameArray[partyid], true)
+		end
+	elseif (unitInfo and unitInfo.afk) then
+		if (UnitIsAFK(partyid)) then
+			if (conf.showAFK) then
+				return {flag = XPERL_RAID_AFK}
+			end
+		else
+			unitInfo.afk = nil
+		end
+	else
+		if (UnitIsAFK(partyid)) then
+			if (conf.showAFK) then
+				return {flag = XPERL_RAID_AFK}
 			end
 		end
 	end
@@ -436,7 +444,10 @@ function XPerl_Raid_UpdateHealth(self)
 	XPerl_Raid_UpdateAbsorbPrediction(self)
 	XPerl_Raid_UpdateHealPrediction(self)
 
-	local name = UnitName(partyid)
+	local name, realm = UnitName(partyid)
+	if realm and realm ~= "" then
+		name = name.."-"..realm
+	end
 	local myRoster = ZPerl_Roster[name]
 	if (name and UnitIsConnected(partyid)) then
 		self.disco = nil
@@ -595,14 +606,14 @@ local function onAttrChanged(self, name, value)
 	if (name == "unit") then
 		if (value) then
 			SetFrameArray(self, value)
-			if (self.lastID ~= value or self.lastName ~= UnitName(value)) then
+			if (self.lastID ~= value or self.lastGUID ~= UnitGUID(value)) then
 				XPerl_Raid_UpdateDisplay(self)
 			end
 		else
 			--buffUpdates[self] = nil
 			SetFrameArray(self)
 			self.lastID = nil
-			self.lastName = nil
+			self.lastGUID = nil
 		end
 	end
 end
@@ -919,15 +930,12 @@ local function UpdateBuffs(self)
 	end
 
 	if conf.showFD then
-		local myRoster = ZPerl_Roster[UnitName(partyid)]
-		if myRoster then
-			local _, class = UnitClass(partyid)
-			if class == "HUNTER" then
-				local feigning = UnitBuff(partyid, feignDeath)
-				if feigning ~= self.feigning then
-					self.feigning = feigning
-					XPerl_Raid_UpdateHealth(self)
-				end
+		local _, class = UnitClass(partyid)
+		if class == "HUNTER" then
+			local feigning = UnitBuff(partyid, feignDeath)
+			if feigning ~= self.feigning then
+				self.feigning = feigning
+				XPerl_Raid_UpdateHealth(self)
 			end
 		end
 	end
@@ -962,11 +970,13 @@ local function XPerl_Raid_UpdatePlayerFlags(self, partyid, ...)
 	end
 
 	local f = FrameArray[partyid]
-	if (f) then
-
+	if f then
 		self = f
 
-		local unitName = UnitName(partyid)
+		local unitName, realm = UnitName(partyid)
+		if realm and realm ~= "" then
+			unitName = unitName.."-"..realm
+		end
 		if (unitName) then
 			local unitInfo = ZPerl_Roster[unitName]
 			if (unitInfo) then
@@ -1421,8 +1431,9 @@ function XPerl_Raid_Events:PLAYER_LOGIN()
 end
 
 -- UNIT_FLAGS
-function XPerl_Raid_Events:UNIT_FLAGS()
+function XPerl_Raid_Events:UNIT_FLAGS(unit, ...)
 	XPerl_Raid_UpdateCombat(self)
+	XPerl_Raid_UpdatePlayerFlags(self, unit, ...)
 end
 
 function XPerl_Raid_Events:PLAYER_FLAGS_CHANGED(unit, ...)
@@ -1549,16 +1560,24 @@ end
 
 -- UNIT_SPELLCAST_START
 function XPerl_Raid_Events:UNIT_SPELLCAST_START(unit, spell, rank)
-	if (ResArray[UnitName(unit)]) then
+	local unitName, realm = UnitName(unit)
+	if realm and realm ~= "" then
+		unitName = unitName.."-"..realm
+	end
+	if (ResArray[unitName]) then
 		-- Flagged as ressing, finish their old cast
-		SetResStatus(UnitName(unit))
+		SetResStatus(unitName)
 	end
 
 	local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(unit)
 	if (resSpells[name]) then
 		local u = unit.."target"
+		local unitTargetName, realm = UnitName(u)
+		if realm and realm ~= "" then
+			unitTargetName = unitTargetName.."-"..realm
+		end
 		if (UnitExists(u) and UnitIsDead(u)) then
-			SetResStatus(UnitName(unit), UnitName(u))
+			SetResStatus(unitName, unitTargetName)
 		end
 	end
 end
@@ -1566,14 +1585,22 @@ end
 -- UNIT_SPELLCAST_STOP
 function XPerl_Raid_Events:UNIT_SPELLCAST_STOP(unit)
 	if (unit) then
-		SetResStatus(UnitName(unit))
+		local unitName, realm = UnitName(unit)
+		if realm and realm ~= "" then
+			unitName = unitName.."-"..realm
+		end
+		SetResStatus(unitName)
 	end
 end
 
 -- UNIT_SPELLCAST_FAILED
 function XPerl_Raid_Events:UNIT_SPELLCAST_FAILED(unit)
 	if (unit) then
-		SetResStatus(UnitName(unit), nil, true)
+		local unitName, realm = UnitName(unit)
+		if realm and realm ~= "" then
+			unitName = unitName.."-"..realm
+		end
+		SetResStatus(unitName, nil, true)
 	end
 end
 
@@ -1782,12 +1809,15 @@ end
 
 -- SetRaidRoster
 function SetRaidRoster()
+	--local NewRoster = new()
 	local NewRoster = { }
 
 	--del(RaidPositions)
+	--RaidPositions = new()
 	RaidPositions = { }
 
 	--del(RaidGroupCounts)
+	--RaidGroupCounts = new(0,0,0,0,0,0,0,0,0,0,0)
 	RaidGroupCounts = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
 	for i = 1, GetNumGroupMembers() do
@@ -1819,6 +1849,7 @@ function SetRaidRoster()
 				r.afk = UnitIsAFK(unit) and GetTime() or nil
 				r.dnd = UnitIsDND(unit) and GetTime() or nil
 			else
+				--NewRoster = new()
 				NewRoster[name] = { }
 			end
 		end
@@ -2197,10 +2228,11 @@ end
 
 -- XPerl_RaidTipExtra
 function XPerl_RaidTipExtra(unitid)
-
 	if (UnitInRaid(unitid)) then
-		local unitName = UnitName(unitid)
-		local zone
+		local unitName, realm = UnitName(unitid)
+		if realm and realm ~= "" then
+			unitName = unitName.."-"..realm
+		end
 		local name, rank, subgroup, level, class, fileName, zone, online, isDead
 
 		for i = 1, GetNumGroupMembers() do
@@ -2208,7 +2240,6 @@ function XPerl_RaidTipExtra(unitid)
 			if (name == unitName) then
 				break
 			end
-			zone = ""
 		end
 
 		local stats = ZPerl_Roster[unitName]
@@ -2297,6 +2328,7 @@ local function SetMainHeaderAttributes(self)
 		self:SetAttribute("sortMethod", nil)
 	end
 
+	--self:SetAttribute("showSolo", true)
 	--self:SetAttribute("showParty", true)
 	--self:SetAttribute("showPlayer", true)
 

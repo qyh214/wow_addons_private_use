@@ -40,9 +40,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 14714 $"):sub(12, -3)),
-	DisplayVersion = "6.2.17 alpha", -- the string that is shown as version
-	ReleaseRevision = 14712 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 14778 $"):sub(12, -3)),
+	DisplayVersion = "6.2.19 alpha", -- the string that is shown as version
+	ReleaseRevision = 14770 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -394,7 +394,7 @@ local statusWhisperDisabled = false
 local wowTOC = select(4, GetBuildInfo())
 local dbmToc = 0
 
-local fakeBWRevision = 13695
+local fakeBWRevision = 13712
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
 local guiRequested = false
@@ -1085,10 +1085,6 @@ do
 			else--It must have ended while we were offline, kill variable.
 				self.Options.tempBreak2 = nil
 			end
-		--Try asking top two DBM version in group
-		elseif IsInGroup() and not timerRequestInProgress then
-			self:Schedule(2.5, self.RequestTimers, self, 1)--Break timer recovery doesn't work if outside the zone when reloadui or relogging (no loadmod). Need request timer here.
-			self:Schedule(5, self.RequestTimers, self, 2)--Break timer recovery doesn't work if outside the zone when reloadui or relogging (no loadmod). Need request timer here.
 		end
 	end
 
@@ -2035,6 +2031,11 @@ do
 			local mapID = GetCurrentMapAreaID()
 			local mapx, mapy = GetPlayerMapPosition("player")
 			DBM:AddMsg(("Location Information\nYou are at zone %u (%s): x=%f, y=%f.\nLocal Map ID %u (%s): x=%f, y=%f"):format(map, GetRealZoneText(map), x, y, mapID, GetZoneText(), mapx, mapy))
+		elseif cmd:sub(1, 7) == "request" then
+			DBM:Unschedule(DBM.RequestTimers)
+			DBM:RequestTimers(1)
+			DBM:RequestTimers(2)
+			DBM:RequestTimers(3)
 		else
 			DBM:LoadGUI()
 		end
@@ -3017,7 +3018,9 @@ end
 
 function DBM:PLAYER_LEVEL_UP()
 	playerLevel = UnitLevel("player")
-	self:SpecChanged()
+	if playerLevel < 15 and playerLevel > 9 then
+		self:SpecChanged()
+	end
 end
 
 function DBM:LoadAllModDefaultOption(modId)
@@ -3589,7 +3592,6 @@ do
 			self:Debug("No action taken because mapID hasn't changed since last check")
 			return
 		end--ID hasn't changed, don't waste cpu doing anything else (example situation, porting into garrosh phase 4 is a loading screen)
-		timerRequestInProgress = false
 		LastInstanceMapID = mapID
 		LastGroupSize = instanceGroupSize
 		difficultyIndex = difficulty
@@ -3617,6 +3619,7 @@ do
 	end
 	--Faster and more accurate loading for instances, but useless outside of them
 	function DBM:LOADING_SCREEN_DISABLED()
+		timerRequestInProgress = false
 		self:Debug("LOADING_SCREEN_DISABLED fired")
 		SecondaryLoadCheck(self)
 		self:Unschedule(SecondaryLoadCheck)
@@ -5093,67 +5096,8 @@ do
 		sendSync("EE", encounterID.."\t"..success.."\t"..v.id.."\t"..(v.revision or 0))
 	end
 	
-	local function wipeRecoveryDelay(self)
-		--Wipe Recovery stuff
-		self:Debug("wipeRecoveryDelay running")
-		local ResSpell = GetSpellInfo(95223)--Cannot be mass resurrected
-		local MassResDebuff = 0
-		local playersOutofRange = 0
-		local playersAlive = 0
-		local playersDead = 0
-		local playerIsDead = UnitIsDeadOrGhost("player")--Check if player alive or dead.
-		for i = 1, self:GetNumRealPlayersInZone() do
-			local unitId = "raid"..i
-			if UnitDebuff(unitId, ResSpell) then
-				MassResDebuff = MassResDebuff + 1
-			end
-			if not UnitIsDeadOrGhost(unitId) then
-				playersAlive = playersAlive + 1
-			else
-				playersDead = playersDead + 1
-			end
-			local range = DBM.RangeCheck:GetDistance("player", unitId)
-			if range > 250 then--Very far away, released players probably
-				playersOutofRange = playersOutofRange + 1
-			end
-		end
-		if MassResDebuff > 0 then
-			self:Debug(MassResDebuff.." players in raid are affected by mass resurrection debuff")
-			self:Debug("There are currently "..playersAlive.." players alive and "..playersOutofRange.." players very far from your location (I.E. either they released, or you did)")
-		else
-			if playersAlive > 0 then--Mass resurrection possibly available
-				if playersDead > 0 then
-					if playersOutofRange == 0 then
-						if playerIsDead then
-							self:Debug("No players have debuff, no one has released and there is a living player nearby, wait for mass resurrection!")
-						else
-							if playersDead > 4 then--At least 5 dead
-								self:Debug("No players have debuff, no one has released and you are alive, cast mass resurrection!")
-							else
-								self:Debug("No players have debuff, no one has released and you are alive, but only "..playersDead.." players are dead, consider using single ressurections")
-							end
-						end
-					else
-						if playerIsDead then
-							self:Debug("No players have debuff. However, "..playersOutofRange.." players have already released. Consider releasing as well and holding mass ressurection")
-						else
-							self:Debug("No players have debuff. However, "..playersOutofRange.." players are out of range. Either you already released, or they did and you probably shouldn't use mass resurrection")
-						end
-					end
-				else
-					self:Debug("Everyone is alive, congrats!")
-				end
-			else
-				self:Debug("No players have debuff, but no one is alive. If anyone had a soulstone or battle rez, now is time to pop it. Otherwise run back")
-			end
-		end
-	end
-	
 	function DBM:ENCOUNTER_END(encounterID, name, difficulty, size, success)
 		self:Debug("ENCOUNTER_END event fired: "..encounterID.." "..name.." "..difficulty.." "..size.." "..success)
-		if IsInRaid() and success == 0 then
-			self:Schedule(3, wipeRecoveryDelay, self)
-		end
 		for i = #inCombat, 1, -1 do
 			local v = inCombat[i]
 			if not v.combatInfo then return end
@@ -6169,7 +6113,7 @@ DBM.UNIT_DESTROYED = DBM.UNIT_DIED
 --  Timer recovery  --
 ----------------------
 do
-	local requestedFrom = nil
+	local requestedFrom = {}
 	local requestTime = 0
 	local clientUsed = {}
 	local sortMe = {}
@@ -6209,21 +6153,22 @@ do
 		end
 		if not selectedClient then return end
 		self:Debug("Requesting timer recovery to "..selectedClient.name)
-		requestedFrom = selectedClient.name
+		requestedFrom[selectedClient.name] = true
 		requestTime = GetTime()
 		SendAddonMessage("D4", "RT", "WHISPER", selectedClient.name)
 	end
 
 	function DBM:ReceiveCombatInfo(sender, mod, time)
-		if dbmIsEnabled and sender == requestedFrom and (GetTime() - requestTime) < 5 and #inCombat == 0 then
+		if dbmIsEnabled and requestedFrom[sender] and (GetTime() - requestTime) < 5 and #inCombat == 0 then
 			self:StartCombat(mod, time, "TIMER_RECOVERY")
 			--Recovery successful, someone sent info, abort other recovery requests
 			self:Unschedule(self.RequestTimers)
+			twipe(requestedFrom)
 		end
 	end
 
 	function DBM:ReceiveTimerInfo(sender, mod, timeLeft, totalTime, id, ...)
-		if sender == requestedFrom and (GetTime() - requestTime) < 5 then
+		if requestedFrom[sender] and (GetTime() - requestTime) < 5 then
 			local lag = select(4, GetNetStats()) / 1000
 			for i, v in ipairs(mod.timers) do
 				if v.id == id then
@@ -6235,7 +6180,7 @@ do
 	end
 
 	function DBM:ReceiveVariableInfo(sender, mod, name, value)
-		if sender == requestedFrom and (GetTime() - requestTime) < 5 then
+		if requestedFrom[sender] and (GetTime() - requestTime) < 5 then
 			if value == "true" then
 				mod.vb[name] = true
 			elseif value == "false" then
@@ -6730,6 +6675,10 @@ function DBM:AntiSpam(time, id)
 	end
 end
 
+function DBM:GetTOC()
+	return wowTOC
+end
+
 function DBM:FlashClientIcon()
 	if self:AntiSpam(5, "FLASH") then
 		FlashClientIcon()
@@ -6738,16 +6687,16 @@ end
 
 --To speed up creating new mods.
 function DBM:FindDungeonIDs()
-	for i=1, 1000 do
-		local dungeon = GetDungeonInfo(i)
-		if dungeon then
+	for i=1, 2000 do
+		local dungeon = GetRealZoneText(i)
+		if dungeon and dungeon ~= "" then
 			self:AddMsg(i..": "..dungeon)
 		end
 	end
 end
 
 function DBM:FindInstanceIDs()
-	for i=1, 1000 do
+	for i=1, 2000 do
 		local instance = EJ_GetInstanceInfo(i)
 		if instance then
 			self:AddMsg(i..": "..instance)
@@ -6755,6 +6704,8 @@ function DBM:FindInstanceIDs()
 	end
 end
 
+--/run DBM:FindEncounterIDs(768)--Emerald Nightmare
+--/run DBM:FindEncounterIDs(786)--Suramar Raid
 function DBM:FindEncounterIDs(instanceID, diff)
 	if not instanceID then
 		self:AddMsg("Error: Function requires instanceID be provided")
@@ -6770,6 +6721,9 @@ function DBM:FindEncounterIDs(instanceID, diff)
 		end
 	end
 end
+
+--Taint the script that disables /run /dump, etc
+ScriptsDisallowedForBeta = function() return false end
 
 -------------------
 --  Movie Filter --
@@ -8899,7 +8853,7 @@ do
 		--TODO, maybe make this not use an entire sound object?
 		local sound5 = self:NewSound(5, true, false)
 		timer = timer or 10
-		count = count or 5
+		count = count or 4
 		spellId = spellId or 39505
 		local obj = setmetatable(
 			{
@@ -9511,6 +9465,10 @@ do
 	function bossModPrototype:NewSpecialWarningYouPos(text, optionDefault, ...)
 		return newSpecialWarning(self, "youpos", text, nil, optionDefault, ...)
 	end
+	
+	function bossModPrototype:NewSpecialWarningSoakPos(text, optionDefault, ...)
+		return newSpecialWarning(self, "soakpos", text, nil, optionDefault, ...)
+	end
 
 	function bossModPrototype:NewSpecialWarningTarget(text, optionDefault, ...)
 		return newSpecialWarning(self, "target", text, nil, optionDefault, ...)
@@ -9542,6 +9500,10 @@ do
 	
 	function bossModPrototype:NewSpecialWarningMoveTo(text, optionDefault, ...)
 		return newSpecialWarning(self, "moveto", text, nil, optionDefault, ...)
+	end
+	
+	function bossModPrototype:NewSpecialWarningJump(text, optionDefault, ...)
+		return newSpecialWarning(self, "jump", text, nil, optionDefault, ...)
 	end
 
 	function bossModPrototype:NewSpecialWarningRun(text, optionDefault, ...)

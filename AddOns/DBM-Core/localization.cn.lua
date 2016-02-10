@@ -2,7 +2,7 @@
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: Dec 13 2015, 04:13 UTC@14710
+-- Last update: Feb 02 2016, 08:00 UTC@14774
 
 if GetLocale() ~= "zhCN" then return end
 
@@ -313,6 +313,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount	= "%s - 快打断 (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you				= "你中了%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.youcount			= "你中了%s (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.youpos			= "你中了%s (位置:%%s)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.soakpos			= "%s - 快去%%s吸收"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target			= ">%%s<中了%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.targetcount		= ">%%2$s<中了%s (%%1$s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt				= ">%%s<中了%s - 快嘲讽"
@@ -321,6 +322,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.move				= "%s - 快躲开"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dodge				= "%s - 躲开攻击"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveaway			= "%s - 离开人群"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveto			= "%s - 靠近 >%%s<"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.jump				= "%s - 快跳"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.run				= "%s - 快跑"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast				= "%s - 停止施法"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect			= ">%%s<中了%s - 快停手"
@@ -342,6 +344,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= "特殊警报：需要打断$sp
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you				= "特殊警报：当你受到$spell:%s影响时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.youcount		= "特殊警报：当你受到$spell:%s影响时(带计数)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.youpos			= "特殊警报：当你受到$spell:%s影响时(带位置)"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.soakpos			= "特殊警报：当你需要为受到$spell:%s的玩家分担伤害时(带位置)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target			= "特殊警报：当他人受到$spell:%s影响时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount		= "特殊警报：当他人受到$spell:%s影响时(带计数)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt 			= "特殊警报：当另外一个T中了$spell:%s并需要你嘲讽时"
@@ -350,6 +353,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move			= "特殊警报：当你受到$spell:%s�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dodge			= "特殊警报：当你受到$spell:%s影响并需要躲开攻击"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveaway		= "特殊警报：当你受到$spell:%s影响并需要跑开人群时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveto			= "特殊警报：当他人中了$spell:%s并需要你去靠近时"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.jump			= "特殊警报：当你受到$spell:%s影响并需要跳起来时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run				= "特殊警报：$spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.cast			= "特殊警报：$spell:%s的施放（用于打断玩家的技能）"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.count 			= "特殊警报：$spell:%s"

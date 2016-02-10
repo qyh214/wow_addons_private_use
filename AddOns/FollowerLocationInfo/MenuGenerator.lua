@@ -98,14 +98,14 @@ self.addEntry = function(D,P)
 		return;
 
 	elseif (D.childs) then -- child elements
-		local parent = self.addEntry({ label=D.label, arrow=true, tooltip=D.tooltip },P);
+		local parent = self.addEntry({ label=D.label, arrow=true, tooltip=D.tooltip, disabled=D.disabled },P);
 		for i,v in ipairs(D.childs) do
 			self.addEntry(v,parent);
 		end
 		return;
 
 	elseif (D.dbType=="select") then
-		local parent = self.addEntry({ label=D.label, arrow=true, tooltip=D.tooltip },P);
+		local parent = self.addEntry({ label=D.label, arrow=true, tooltip=D.tooltip, disabled=D.disabled },P);
 		for k,v in pairsByKeys(D.values) do
 			self.addEntry({
 				label = v,
@@ -165,7 +165,8 @@ self.addEntry = function(D,P)
 
 		if (D.tooltip) and (type(D.tooltip)=="table") then
 			entry.tooltipTitle = D.tooltip[1];
-			entry.tooltipText = D.tooltip[2];
+			tremove(D.tooltip,1);
+			entry.tooltipText = table.concat(D.tooltip,"|n");
 			entry.tooltipOnButton=1;
 		end
 
@@ -223,7 +224,7 @@ self.ShowMenu = function(parent, anchorA, anchorB, parentX, parentY)
 	end
 
 	self.addEntry({separator=true});
-	self.addEntry({label=CANCEL.."/"..CLOSE, func=function() self.frame:Hide(); end});
+	self.addEntry({label=CANCEL, func=function() self.frame:Hide(); end});
 
 	UIDropDownMenu_Initialize(self.frame, EasyMenu_Initialize, displayMode, nil, self.menu);
 	ToggleDropDownMenu(1, nil, self.frame, anchor, x, y, self.menu, nil, nil);

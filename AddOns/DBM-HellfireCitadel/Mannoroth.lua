@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod(1395, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14658 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14749 $"):sub(12, -3))
 mod:SetCreatureID(91349)--91305 Fel Iron Summoner
 mod:SetEncounterID(1795)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
-mod:SetHotfixNoticeRev(14612)
+mod:SetHotfixNoticeRev(14732)
+mod:SetMinSyncRevision(14732)
 mod.respawnTime = 30
 mod:RegisterCombat("combat")
 
@@ -61,7 +62,7 @@ local specWarnFelBlast				= mod:NewSpecialWarningInterrupt(181132, false, nil, 2
 ----Dread Infernals
 local specWarnFelHellfire			= mod:NewSpecialWarningDodge(181191, nil, nil, 3, 1, 2)
 ----Gul'dan
-local specWarnWrathofGuldan			= mod:NewSpecialWarningYou(186362, nil, nil, nil, 1)
+local specWarnWrathofGuldan			= mod:NewSpecialWarningYou(186362, nil, nil, nil, 1, 5)
 local yellWrathofGuldan				= mod:NewPosYell(186362, 169826)
 local specWarnFelPillar				= mod:NewSpecialWarningDodge(190070, nil, nil, 3, 1, 2)
 --Mannoroth
@@ -85,7 +86,7 @@ local timerFelImplosionCD			= mod:NewNextCountTimer(46, 181255, nil, nil, nil, 1
 ----Infernals
 local timerInfernoCD				= mod:NewNextCountTimer(107, 181180, nil, nil, nil, 1)
 ----Gul'dan
-local timerWrathofGuldanCD			= mod:NewCDTimer(107, 186348, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
+local timerWrathofGuldanCD			= mod:NewNextTimer(107, 186348, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 --Mannoroth
 mod:AddTimerLine(L.name)
 local timerGlaiveComboCD			= mod:NewCDTimer(30, 181354, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--30 seconds unless delayed by something else
@@ -97,12 +98,12 @@ local timerShadowForceCD			= mod:NewCDTimer(52.2, 181799, nil, nil, nil, 3, nil,
 --local berserkTimer					= mod:NewBerserkTimer(360)
 
 local countdownGlaiveCombo			= mod:NewCountdown("Alt30", 181354, "Tank")
-local countdownMarkOfDoom			= mod:NewCountdownFades("Alt15", 181099)
-local countdownShadowForce			= mod:NewCountdown("AltTwo52", 181799)
+local countdownMarkOfDoom			= mod:NewCountdownFades("AltTwo15", 181099)
+local countdownShadowForce			= mod:NewCountdown(52, 181799)
 
 local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 local voiceGaze						= mod:NewVoice(181597, false) --gather share
-local voiceMarkOfDoom				= mod:NewVoice(181099) --run out
+local voiceMarkOfDoom				= mod:NewVoice(181099) --run out/mm
 local voiceFelHellfire				= mod:NewVoice(181191, nil, nil, 2) --runaway
 local voiceShadowBoltVolley			= mod:NewVoice(181126, "-Healer")
 local voiceFelBlast					= mod:NewVoice(181132, "-Healer")
@@ -111,11 +112,13 @@ local voiceFelHellstorm				= mod:NewVoice(181557)--watchstep
 local voiceGlaiveCombo				= mod:NewVoice(181354, "Tank")--Defensive
 local voiceMassiveBlast				= mod:NewVoice(181359, "Tank")--changemt
 local voiceFelPillar				= mod:NewVoice(190070)--runaway
+local voiceWrath					= mod:NewVoice(186348)--mm
 
 mod:AddRangeFrameOption(20, 181099)
 mod:AddSetIconOption("SetIconOnGaze", 181597, false)
 mod:AddSetIconOption("SetIconOnDoom2", 181099, true)
 mod:AddSetIconOption("SetIconOnWrath", 186348, false)
+mod:AddBoolOption("CustomAssignWrath", false)
 mod:AddHudMapOption("HudMapOnGaze2", 181597, false)
 mod:AddInfoFrameOption(181597)
 
@@ -270,6 +273,63 @@ local function breakDoom(self)
 	warnMarkofDoom:Show(table.concat(doomTargets, "<, >"))
 end
 
+local function setWrathIcons(self)
+	local ranged1, ranged2, melee1, melee2, healer = nil, nil, nil, nil, nil
+	local playerIcon = nil
+	for i = 1, #guldanTargets do
+		local name = guldanTargets[i]
+		local uId = DBM:GetRaidUnitId(name)
+		if not uId then return end--Prevent errors if person leaves group
+		if self:IsMeleeDps(uId) then--Melee
+			if melee1 then
+				melee2 = name
+				if name == playerName then
+					playerIcon = 4
+				end
+			else
+				melee1 = name
+				if name == playerName then
+					playerIcon = 5
+				end
+			end
+			DBM:Debug("Melee wrath found: "..name, 2)
+		elseif self:IsHealer(uId) then--Healer
+			healer = name
+			DBM:Debug("Healer wrath found: "..name, 2)
+			if name == playerName then
+				playerIcon = 8
+			end
+		else--Ranged
+			if ranged1 then
+				ranged2 = name
+				if name == playerName then
+					playerIcon = 6
+				end
+			else
+				ranged1 = name
+				if name == playerName then
+					playerIcon = 7
+				end
+			end
+			DBM:Debug("Ranged wrath found: "..name, 2)
+		end
+	end
+	if ranged1 and ranged2 and melee1 and melee2 and healer then
+		DBM:Debug("All wrath found!", 2)
+		if self.Options.SetIconOnWrath then
+			self:SetIcon(healer, 8)
+			self:SetIcon(melee1, 7)
+			self:SetIcon(melee2, 6)
+			self:SetIcon(ranged1, 5)
+			self:SetIcon(ranged2, 4)
+		end
+		if playerIcon then
+			yellWrathofGuldan:Yell(playerIcon, playerIcon, playerIcon)
+			voiceWrath:Play("mm"..playerIcon)
+		end
+	end
+end
+
 function mod:OnCombatStart(delay)
 	table.wipe(doomTargets)
 	table.wipe(gazeTargets)
@@ -285,6 +345,9 @@ function mod:OnCombatStart(delay)
 	self.vb.DoomTargetCount = 0
 	if self:IsMythic() then
 		self.vb.wrathIcon = 8
+		if UnitIsGroupLeader("player") and self.Options.CustomAssignWrath then
+			self:SendSync("WrathByRole")
+		end
 	else
 		timerCurseofLegionCD:Start(5.2, 1)
 		timerFelImplosionCD:Start(13.5-delay, 1)
@@ -489,12 +552,24 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		warnWrathofGuldan:CombinedShow(0.3, args.destName)
 		local icon = self.vb.wrathIcon
-		if self.Options.SetIconOnWrath then
-			self:SetIcon(args.destName, icon)
+		if not icon then
+			self:Unschedule(setWrathIcons)
+			if #guldanTargets == 5 then
+				setWrathIcons(self)
+			else
+				self:Schedule(1, setWrathIcons, self)
+			end
+		else
+			if self.Options.SetIconOnWrath then
+				self:SetIcon(args.destName, icon)
+			end
 		end
 		if args:IsPlayer() then
 			specWarnWrathofGuldan:Show()
-			yellWrathofGuldan:Yell(icon, icon, icon)
+			if icon then
+				yellWrathofGuldan:Yell(icon, icon, icon)
+				voiceWrath:Play("mm"..icon)
+			end
 		end
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(args.spellName)--Always set header to wrath if wrath is present
@@ -502,7 +577,9 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.InfoFrame:Show(8, "function", updateInfoFrame, sortInfoFrame, true)
 			end
 		end
-		self.vb.wrathIcon = self.vb.wrathIcon - 1--Update icon even if icon option off, for sync accuracy
+		if self.vb.wrathIcon then
+			self.vb.wrathIcon = self.vb.wrathIcon - 1--Update icon even if icon option off, for sync accuracy
+		end
 		updateRangeFrame(self)
 	end
 end
@@ -617,7 +694,9 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc)
 			warnPhase3:Show()
 			voicePhaseChange:Play("pthree")
 			if self:IsMythic() then
-				self.vb.wrathIcon = 8
+				if self.vb.wrathIcon then
+					self.vb.wrathIcon = 8
+				end
 				timerWrathofGuldanCD:Start(10)
 			end
 			--Detect when adds timers will reset (by 181301) before they come off cd, and cancel them early
@@ -639,7 +718,9 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc)
 			countdownGlaiveCombo:Cancel()
 			timerGazeCD:Cancel()
 			timerFelSeekerCD:Cancel()
-			timerInfernoCD:Cancel()
+			if timerInfernoCD:GetRemaining(self.vb.infernalCount+1) > 10 then
+				timerInfernoCD:Cancel()
+			end
 			timerFelHellfireCD:Start(16.9)
 			timerGlaiveComboCD:Start(27.8)
 			countdownGlaiveCombo:Start(27.8)
@@ -650,7 +731,15 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc)
 			warnPhase4:Show()
 			voicePhaseChange:Play("pfour")
 			if self:IsMythic() then
-				self.vb.wrathIcon = 8
+				if timerFelImplosionCD:GetRemaining(self.vb.impCount+1) > 10 then
+					timerFelImplosionCD:Cancel()
+				end
+				if timerCurseofLegionCD:GetRemaining(self.vb.doomlordCount+1) > 10 then
+					timerCurseofLegionCD:Cancel()
+				end
+				if self.vb.wrathIcon then
+					self.vb.wrathIcon = 8
+				end
 				timerWrathofGuldanCD:Start(16.7)
 			end
 		end
@@ -724,17 +813,19 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnPhase3:Show()
 		voicePhaseChange:Play("pthree")
 		if self:IsMythic() then
-			self.vb.wrathIcon = 8
+			if self.vb.wrathIcon then
+				self.vb.wrathIcon = 8
+			end
 			timerWrathofGuldanCD:Start(4.8)
 		end
 		--Detect when adds timers will reset (by 181301) before they come off cd, and cancel them early
-		if timerFelImplosionCD:GetRemaining(self.vb.impCount+1) > 9.5 then
+		if timerFelImplosionCD:GetRemaining(self.vb.impCount+1) > 4.8 then
 			timerFelImplosionCD:Cancel()
 		end
-		if timerInfernoCD:GetRemaining(self.vb.infernalCount+1) > 9.5 then
+		if timerInfernoCD:GetRemaining(self.vb.infernalCount+1) > 4.8 then
 			timerInfernoCD:Cancel()
 		end
-		if timerCurseofLegionCD:GetRemaining(self.vb.doomlordCount+1) > 9.5 then
+		if timerCurseofLegionCD:GetRemaining(self.vb.doomlordCount+1) > 4.8 then
 			timerCurseofLegionCD:Cancel()
 		end
 	elseif spellId == 185690 and self.vb.phase == 3 then--Phase 4
@@ -747,7 +838,9 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		countdownGlaiveCombo:Cancel()
 		timerGazeCD:Cancel()
 		timerFelSeekerCD:Cancel()
-		timerInfernoCD:Cancel()
+		if timerInfernoCD:GetRemaining(self.vb.infernalCount+1) > 4.8 then
+			timerInfernoCD:Cancel()
+		end
 		timerFelHellfireCD:Start(11.4)
 		timerGlaiveComboCD:Start(22.3)
 		countdownGlaiveCombo:Start(22.3)
@@ -758,7 +851,15 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnPhase4:Show()
 		voicePhaseChange:Play("pfour")
 		if self:IsMythic() then
-			self.vb.wrathIcon = 8
+			if timerFelImplosionCD:GetRemaining(self.vb.impCount+1) > 4.8 then
+				timerFelImplosionCD:Cancel()
+			end
+			if timerCurseofLegionCD:GetRemaining(self.vb.doomlordCount+1) > 4.8 then
+				timerCurseofLegionCD:Cancel()
+			end
+			if self.vb.wrathIcon then
+				self.vb.wrathIcon = 8
+			end
 			timerWrathofGuldanCD:Start(11.2)
 		end
 	elseif spellId == 181354 then--183377 or 185831 also usable with SPELL_CAST_START but i like this way more, cleaner than Antispamming the other spellids
@@ -780,3 +881,8 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
+function mod:OnSync(msg)
+	if msg == "WrathByRole" then
+		self.vb.wrathIcon = false
+	end
+end

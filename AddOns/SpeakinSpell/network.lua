@@ -147,7 +147,9 @@ function SpeakinSpell:Network_AutoSync() --TODOLATER: call if AutoSyncOnJoin and
 		LibSmartComm:Send( NID, "SYNC?",data,"PARTY")
 		LibSmartComm:Send( NID, "SYNC?",data,"INSTANCE_CHAT")
 		LibSmartComm:Send( NID, "SYNC?",data,"WHISPER", "nobody")
-		LibSmartComm:Send( NID, "SYNC?",data,"WHISPER", UnitName("player"))
+		--NOTE: myrealm result from UnitName("player") is always nil
+		local myname, myrealm = UnitName("player")
+		LibSmartComm:Send( NID, "SYNC?",data,"WHISPER", myname)
 	end
 end
 
@@ -317,10 +319,12 @@ end
 
 
 function SpeakinSpell:OnPacketQueued(_, packet, packetsize )
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local de = {
 		name = L["Send Data"],
 		target = packet.target or packet.distribution,--target name for whispers, or a channel name
-		caster = UnitName("player"),
+		caster = myname,
 		command = packet.command or GAME_VERSION_LABEL,
 		distribution = packet.distribution,
 		size = packetsize,
@@ -334,9 +338,11 @@ end
 --		(called before routing to your registered command handler for the packet)
 function SpeakinSpell:OnPacketReceive(_, packet, packetsize)
 	-- show comm progress message
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local de = {
 		name = L["Receive Data"],
-		target = UnitName("player"),
+		target = myname,
 		caster = packet.sender,
 		sender = packet.sender,
 		command = packet.command or GAME_VERSION_LABEL,

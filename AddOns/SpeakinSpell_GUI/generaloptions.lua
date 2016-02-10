@@ -280,12 +280,14 @@ function SpeakinSpell:GeneralOptions_OnClickBigRedButton()
 	end
 	
 	-- process substitution variables
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local de = {
 		-- event descriptors
 		name = "Big Red Button",
 		-- event-specific data for substitutions
 		target = self:GetDefaultTarget(false),
-		caster = UnitName("player"),
+		caster = myname,
 		type = "MACRO",
 		linenumber = tostring(self.RuntimeData.BigRedButtonIndex),
 	}

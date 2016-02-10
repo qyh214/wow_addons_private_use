@@ -1,0 +1,680 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+
+	<Script file="libs\SecureTabs-1.0\SecureTabs-1.0.lua" />
+	<Script file="Journal.lua" />
+
+	<Button name="FollowerLocationInfoJournalFollowerList_ButtonTemplate" motionScriptsWhileDisabled="true" virtual="true">
+		<Size x="200" y="32"/>
+		<Anchors><Anchor point="LEFT" x="4" /><Anchor point="RIGHT" X="1" /></Anchors>
+		<Frames>
+			<Button parentKey="zoneToggle">
+				<Size x="16" y="16"/>
+				<Anchors>
+					<Anchor point="LEFT" x="1" y="0"/>
+				</Anchors>
+				<HitRectInsets left="-1" right="-214" top="-8" bottom="-8"/>
+				<NormalTexture file="Interface\Buttons\UI-MinusButton-UP">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="LEFT" x="3" y="0"/>
+					</Anchors>
+				</NormalTexture>
+				<HighlightTexture name="$parentHighlight" file="Interface\Buttons\UI-PlusButton-Hilight" alphaMode="ADD">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="LEFT" x="3" y="0"/>
+					</Anchors>
+				</HighlightTexture>
+				<Scripts>
+					<OnClick>
+						if(self.id)then
+							FollowerLocationInfoJournal_ToggleZone(self.id);
+						end
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="1">
+				<Texture atlas="PetList-ButtonBackground" parentKey="background" alpha=".64">
+					<Anchors>
+						<Anchor point="TOPLEFT" />
+						<Anchor point="BOTTOMRIGHT" />
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="0">
+				<Texture parentKey="quality" alpha=".32">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.background" x="2" y="-2"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.background" x="-2" y="2"/>
+					</Anchors>
+					<Color r="1" g="1" b="1" />
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<Texture parentKey="selected" atlas="PetList-ButtonSelect" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.background"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.background"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+
+			<Layer level="ARTWORK">
+				<FontString parentKey="zone" inherits="GameFontNormal" hidden="true">
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.zoneToggle" relativePoint="RIGHT" x="8" y="0"/>
+					</Anchors>
+				</FontString>
+
+				<FontString parentKey="name" justifyH="LEFT" justifyV="MIDDLE" inherits="GameFontNormal">
+					<Anchors>
+						<Anchor point="LEFT" x="6" y="1" />
+						<Anchor point="RIGHT" x="-1" y="2" />
+					</Anchors>
+				</FontString>
+
+				<Texture parentKey="collected" file="Interface\QuestFrame\ObjectiveTracker" hidden="true">
+					<Size x="14" y="14"/>
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.background" x="-2" y="-2" />
+					</Anchors>
+					<TexCoords left="0.619140625" right="0.654296875" top="0.25390625" bottom="0.32421875" />
+				</Texture>
+
+				<Texture parentKey="notCollectable" file="Interface\QuestFrame\ObjectiveTracker" hidden="true">
+					<Size x="14" y="14"/>
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.collected" />
+					</Anchors>
+					<TexCoords left="0.583984375" right="0.619140625" top="0.25390625" bottom="0.32421875" />
+				</Texture>
+
+				<FontString parentKey="followerID" inherits="GameFontWhiteTiny" alpha="0.3">
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativeKey="$parent.background" x="-2" y="-2" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<HighlightTexture atlas="PetList-ButtonHighlight">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeKey="$parent.background"/>
+				<Anchor point="BOTTOMRIGHT" relativeKey="$parent.background"/>
+			</Anchors>
+		</HighlightTexture>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+			</OnLoad>
+			<OnClick function="FollowerLocationInfoJournal_ShowFollower"/>
+			<OnEnter function="FollowerLocationInfoTooltip_OnEnter" />
+			<OnLeave function="FollowerLocationInfoTooltip_OnLeave" />
+		</Scripts>
+	</Button>
+
+	<Frame name="FollowerLocationInfoFilterTemplate" virtual="TRUE" hidden="false">
+		<Size x="0" y="16" />
+		<Anchors>
+			<Anchor point="LEFT" x="9" />
+			<Anchor point="RIGHT" x="-8" />
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Title" inherits="GameFontNormalSmall">
+					<Anchors>
+						<Anchor point="LEFT" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button parentKey="Menu">
+				<Size x="24" y="24"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.Title" relativePoint="RIGHT" />
+				</Anchors>
+				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up"/>
+				<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down"/>
+				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled"/>
+				<HighlightTexture file="Interface\FriendsFrame\UI-FriendsList-Highlight" alphaMode="ADD"/>
+				<Scripts>
+					<OnClick function="FollowerLocationInfoJournal_FilterMenu" />
+				</Scripts>
+			</Button>
+			<Button parentKey="Remove" hidden="TRUE">
+				<Size x="32" y="32"/>
+				<Anchors> <Anchor point="RIGHT" x="5" /> </Anchors>
+				<HitRectInsets left="9" right="7" top="-7" bottom="10"/>
+				<NormalTexture file="Interface\Buttons\CancelButton-Up"/>
+				<PushedTexture file="Interface\Buttons\CancelButton-Down"/>
+				<HighlightTexture file="Interface\Buttons\CancelButton-Highlight" alphaMode="ADD"/>
+				<Scripts>
+					<OnLoad>
+						self:RegisterForClicks("LeftButtonUp","RightButtonUp");
+					</OnLoad>
+					<OnClick function="FollowerLocationInfoJournal_ClearFilter" />
+				</Scripts>
+			</Button>
+		</Frames>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Text" inherits="GameFontHighlightSmall" justifyH="LEFT">
+					<Size x="145" y="0" />
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.Menu" relativePoint="RIGHT" x="1" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Frame>
+
+	<Frame name="FollowerLocationInfoInsetShadowTemplate" virtual="true">
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture parentKey="OverlayShadowTopLeft" atlas="collections-background-shadow-small" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="4" y="-4"/>
+					</Anchors>
+				</Texture>
+
+				<Texture parentKey="OverlayShadowTop" atlas="collections-background-shadow-small" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="17" y="-4"/>
+						<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="-17" y="-4"/>
+					</Anchors>
+					<TexCoords left="0.9999" right="1" top="0" bottom="1"/>
+				</Texture>
+
+				<Texture parentKey="OverlayShadowTopRight" atlas="collections-background-shadow-small" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="-4" y="-4"/>
+					</Anchors>
+					<TexCoords left="1" right="0" top="0" bottom="1"/>
+				</Texture>
+
+				<Texture parentKey="OverlayShadowLeft" atlas="collections-background-shadow-small" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="4" y="-17"/>
+						<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" x="4" y="17"/>
+					</Anchors>
+					<TexCoords left="0" right="1" top="0.9999" bottom="1"/>
+				</Texture>
+
+				<Texture parentKey="OverlayShadowBottomLeft" atlas="collections-background-shadow-small" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" x="4" y="4"/>
+					</Anchors>
+					<TexCoords left="0" right="1" top="1" bottom="0"/>
+				</Texture>
+
+				<Texture parentKey="OverlayShadowRight" atlas="collections-background-shadow-small" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="-4" y="-17"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-4" y="17"/>
+					</Anchors>
+					<TexCoords left="1" right="0" top="0.9999" bottom="1"/>
+				</Texture>
+
+				<Texture parentKey="OverlayShadowBottomRight" atlas="collections-background-shadow-small" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-4" y="4"/>
+					</Anchors>
+					<TexCoords left="1" right="0" top="1" bottom="0"/>
+				</Texture>
+
+				<Texture parentKey="OverlayShadowBottom" atlas="collections-background-shadow-small" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" x="17" y="4"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-17" y="4"/>
+					</Anchors>
+					<TexCoords left="0.9999" right="1" top="1" bottom="0"/>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+
+	<Frame name="FollowerLocationInfoJournalCounters" hidden="true">
+		<Size x="400" y="64" />
+		<Frames>
+			<Frame parentKey="Collectables" useParentLevel="true" inherits="InsetFrameTemplate3">
+				<Size x="140" y="20"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" />
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Count" inherits="GameFontHighlightSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="RIGHT" x="-10" y="0"/>
+							</Anchors>
+						</FontString>
+						<FontString parentKey="Label" inherits="GameFontNormalSmall" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="LEFT" x="10" y="0"/>
+								<Anchor point="RIGHT" relativeKey="$parent.Count" relativePoint="LEFT" x="-3" y="0"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+
+			<Frame parentKey="Recruitables" useParentLevel="true" inherits="InsetFrameTemplate3">
+				<Size x="140" y="20"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.Collectables" relativePoint="RIGHT" x="10" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Count" inherits="GameFontHighlightSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="RIGHT" x="-10" y="0"/>
+							</Anchors>
+						</FontString>
+						<FontString parentKey="Label" inherits="GameFontNormalSmall" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="LEFT" x="10" y="0"/>
+								<Anchor point="RIGHT" relativeKey="$parent.Count" relativePoint="LEFT" x="-3" y="0"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+	</Frame>
+
+	<Frame name="FollowerLocationInfoJournalFrame" parent="UIParent" enableMouse="true" toplevel="true" hidden="true">
+		<Size x="830" y="638"/>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="-1">
+				<Texture atlas="GarrLanding-MiddleTile" horizTile="true" vertTile="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="25" y="-25"/>
+						<Anchor point="BOTTOMRIGHT" x="-25" y="25"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="2">
+				<Texture parentKey="TL" atlas="GarrLanding-upperleft" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="-2" y="1"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="TR" atlas="GarrLanding-upperright" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="TOPRIGHT" y="1"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BL" atlas="GarrLanding-lowerleft" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" x="-2" y="-2"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BR" atlas="GarrLanding-lowerright" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" y="-2"/>
+					</Anchors>
+				</Texture>
+				<Texture atlas="GarrLanding-Top" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.TL" relativePoint="TOPRIGHT" y="-1"/> 
+						<Anchor point="TOPRIGHT" relativeKey="$parent.TR" relativePoint="TOPLEFT" y="-1"/>
+					</Anchors>
+				</Texture>
+				<Texture atlas="GarLanding-Bottom" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent.BL" relativePoint="BOTTOMRIGHT" y="2"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BR" relativePoint="BOTTOMLEFT" y="2"/>
+					</Anchors>
+				</Texture>
+				<Texture atlas="GarLanding-Left" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.TL" relativePoint="BOTTOMLEFT" x="2"/>
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent.BL" relativePoint="TOPLEFT" x="2"/>
+					</Anchors>
+				</Texture>
+				<Texture atlas="GarLanding-Right" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativeKey="$parent.TR" relativePoint="BOTTOMRIGHT" y="0"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BR" relativePoint="TOPRIGHT" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BORDER">
+				<Texture parentKey="HeaderBar" atlas="GarrLanding-HeaderBar" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="TOP" x="0" y="-36"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString inherits="QuestFont_Enormous" text="FollowerLocationInfo">
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.HeaderBar" x="26"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button parentKey="CloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="-10" y="-10"/>
+				</Anchors>
+				<Scripts>
+					<OnClick function="FollowerLocationInfo_ToggleJournal" />
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<!--
+			<OnLoad function="FollowerLocationInfoJournalUndocked_OnLoad"/>
+			<OnShow function="FollowerLocationInfoJournalUndocked_OnShow"/>
+			<OnHide function="FollowerLocationInfoJournalUndocked_OnHide"/>
+			-->
+		</Scripts>
+	</Frame>
+
+	<Frame name="FollowerLocationInfoJournal" hidden="true">
+		<Frames>
+			<Frame parentKey="TopLeftInset" useParentLevel="true" inherits="InsetFrameTemplate, FollowerLocationInfoInsetShadowTemplate">
+				<Size x="260" y="97"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="4" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="BottomLeftInset" useParentLevel="true" inherits="InsetFrameTemplate, FollowerLocationInfoInsetShadowTemplate">
+				<Size x="260" y="396"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.TopLeftInset" relativePoint="BOTTOMLEFT" x="0" y="-3" />
+					<Anchor point="BOTTOMLEFT" x="4" y="6" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="TopRightInset" useParentLevel="true" inherits="InsetFrameTemplate, FollowerLocationInfoInsetShadowTemplate">
+				<Size x="0" y="200" />
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="-6" y="0" />
+					<Anchor point="LEFT" relativeKey="$parent.TopLeftInset" relativePoint="RIGHT" x="2" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="BottomRightInset" useParentLevel="true" inherits="InsetFrameTemplate, FollowerLocationInfoInsetShadowTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.TopRightInset" relativePoint="BOTTOMLEFT" x="0" y="-3" />
+					<Anchor point="BOTTOMRIGHT" x="-6" y="6"/>
+				</Anchors>
+			</Frame>
+
+			<Button parentKey="Options">
+				<Size x="33" y="33"/>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture name="$parentIconTexture" parentKey="texture" file="Interface\Icons\INV_Gizmo_02" setAllPoints="true"/>
+					</Layer>
+					<Layer level="OVERLAY">
+						<Texture parentKey="BlackCover" setAllPoints="true" hidden="true">
+							<Color r="0" g="0" b="0" a="0.6"/>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY" textureSubLevel="1">
+						<Texture name="$parentBorder" inherits="ActionBarFlyoutButton-IconFrame">
+							<Size x="35" y="35"/>
+							<Anchors>
+								<Anchor point="CENTER"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentLockIcon" parentKey="LockIcon" file="Interface\PetBattles\PetBattle-LockIcon" setAllPoints="true" hidden="true"/>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad function="FollowerLocationInfo_OptionMenu" />
+					<OnEnter function="FollowerLocationInfoTooltip_OnEnter" />
+					<OnLeave function="FollowerLocationInfoTooltip_OnLeave" />
+					<OnClick>
+						FollowerLocationInfo_OptionMenu(self,"TOP","BOTTOM");
+					</OnClick>
+				</Scripts>
+				<PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
+				<HighlightTexture name="$parentHighlight" file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+			</Button>
+
+			<Frame name="$parentFilter" parentKey="Filter">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.TopLeftInset" />
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.TopLeftInset" />
+				</Anchors>
+				<Frames>
+					<EditBox name="$parentSearchBox" inherits="SearchBoxTemplate" parentKey="searchBox" letters="40">
+						<Size x="0" y="20" />
+						<Anchors>
+							<Anchor point="TOPLEFT" x="12" y="-7"/>
+							<Anchor point="RIGHT" x="-8" />
+						</Anchors>
+						<Scripts>
+							<OnTextChanged function="FollowerLocationInfoJournal_SearchText" />
+						</Scripts>
+					</EditBox>
+					<Frame parentKey="Filter1" inherits="FollowerLocationInfoFilterTemplate" id="1">
+						<Anchors>
+							<Anchor point="TOP" relativeKey="$parent.searchBox" relativePoint="BOTTOM" y="-4" />
+						</Anchors>
+					</Frame>
+					<Frame parentKey="Filter2" inherits="FollowerLocationInfoFilterTemplate" id="2">
+						<Anchors>
+							<Anchor point="TOP" relativeKey="$parent.Filter1" relativePoint="BOTTOM" y="-5" />
+						</Anchors>
+					</Frame>
+					<Frame parentKey="Filter3" inherits="FollowerLocationInfoFilterTemplate" id="3">
+						<Anchors>
+							<Anchor point="TOP" relativeKey="$parent.Filter2" relativePoint="BOTTOM" y="-5" />
+						</Anchors>
+					</Frame>
+				</Frames>
+			</Frame>
+
+			<ScrollFrame name="$parentFollowerList" parentKey="FollowerList" inherits="FauxScrollFrameTemplate">
+				<Size y="400" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.BottomLeftInset" x="0" y="-4"/>
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BottomLeftInset" x="-27" y="2"/>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar" parentKey="ScrollBarTop">
+							<Size x="26" y="256"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="0" y="5"/>
+							</Anchors>
+							<TexCoords left="0" right="0.40625" top="0" bottom="1.0"/>
+						</Texture>
+						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar" parentKey="ScrollBarBottom">
+							<Size x="26" y="108"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="0" y="-4"/>
+							</Anchors>
+							<TexCoords left="0.515625" right="0.921875" top="0" bottom="0.421875"/>
+						</Texture>
+						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar" parentKey="ScrollBarMiddle">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeKey="$parent.ScrollBarTop" relativePoint="BOTTOMLEFT" x="0" y="0" />
+								<Anchor point="BOTTOMRIGHT" relativeKey="$parent.ScrollBarBottom" relativePoint="TOPRIGHT" x="0" y="0" />
+							</Anchors>
+							<TexCoords left="0" right="0.40625" top="0.6" bottom="1.0"/>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnVerticalScroll function="FollowerLocationInfoJournalFollowerList_OnVerticalScroll" />
+					<OnLoad function="FollowerLocationInfoJournalFollowerList_OnLoad" />
+				</Scripts>
+			</ScrollFrame>
+
+			<Frame name="$parentFollowerCard" parentKey="FollowerCard">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.TopRightInset" relativePoint="TOPLEFT" x="3" y="-3"/>
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.TopRightInset" relativePoint="BOTTOMRIGHT" x="-3" y="3"/>
+				</Anchors>
+				<Frames>
+					<Frame parentKey="ShadowOverlay" inherits="ShadowOverlayTemplate" useParentLevel="true" setAllPoints="true" hidden="true"/>
+
+					<Frame parentKey="modelBackground" hidden="true" inherits="FollowerLocationInfoInsetShadowTemplate">
+						<Size x="146" y="209" />
+						<Anchors>
+							<Anchor point="LEFT" />
+						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<Texture parentKey="Card" inherits="store-card" desaturated="false">
+									<Anchors>
+										<Anchor point="CENTER" x="0" y="0"/>
+									</Anchors>
+								</Texture>
+							</Layer>
+							<Layer level="BACKGROUND" textureSubLevel="2">
+								<Texture parentKey="Shadows" inherits="store-card-petshadow" hidden="true">
+									<Anchors>
+										<Anchor point="CENTER" x="0" y="0" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnLoad>
+								self:SetScale(0.94);
+							</OnLoad>
+						</Scripts>
+					</Frame>
+
+					<PlayerModel parentKey="model" inherits="ModelTemplate" hidden="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.modelBackground" x="6" y="-6" />
+							<Anchor point="BOTTOMRIGHT" relativeKey="$parent.modelBackground" x="-6" y="6" />
+						</Anchors>
+						<Scripts>
+							<OnHide>
+								self:GetParent().modelBackground:Hide();
+							</OnHide>
+							<OnShow>
+								self:GetParent().modelBackground:Show();
+							</OnShow>
+						</Scripts>
+					</PlayerModel>
+
+					<SimpleHTML parentKey="Data" hidden="true">
+						<Size x="280"/>
+						<Anchors>
+							<Anchor point="LEFT" relativeKey="$parent.modelBackground" relativePoint="RIGHT" x="3" />
+							<Anchor point="TOP" y="-6" />
+							<Anchor point="BOTTOMRIGHT" x="-3" y="6" />
+						</Anchors>
+						<FontString inherits="GameFontNormal" justifyH="LEFT" />
+						<FontStringHeader1 inherits="GameFontHighlightLarge2" justifyH="LEFT" />
+						<FontStringHeader2 inherits="GameFontHighlightLarge" justifyH="LEFT" />
+						<FontStringHeader3 inherits="GameFontHighlightMed2" justifyH="LEFT" />
+						<Scripts>
+							<OnHyperlinkEnter function="FollowerLocationInfoJournal_OnHyperlinkEnter"/>
+							<OnHyperlinkLeave function="FollowerLocationInfoJournal_OnHyperlinkLeave"/>
+							<OnHyperlinkClick function="FollowerLocationInfoJournal_OnHyperlinkClick"/>
+						</Scripts>
+					</SimpleHTML>
+				</Frames>
+			</Frame>
+
+			<ScrollFrame name="$parentDesc" parentKey="FollowerDesc" inherits="MinimalScrollFrameTemplate">
+				<size x="240" y="400" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.BottomRightInset" relativePoint="TOPLEFT" x="6" y="-6"/>
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BottomRightInset" relativePoint="BOTTOMRIGHT" x="-27" y="6"/>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar" parentKey="ScrollBarTop">
+							<Size x="26" y="256"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="0" y="7"/>
+							</Anchors>
+							<TexCoords left="0" right="0.40625" top="0" bottom="1.0"/>
+						</Texture>
+						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar" parentKey="ScrollBarBottom">
+							<Size x="26" y="108"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="0" y="-8"/>
+							</Anchors>
+							<TexCoords left="0.515625" right="0.921875" top="0" bottom="0.421875"/>
+						</Texture>
+						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar" parentKey="ScrollBarMiddle">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeKey="$parent.ScrollBarTop" relativePoint="BOTTOMLEFT" x="0" y="0" />
+								<Anchor point="BOTTOMRIGHT" relativeKey="$parent.ScrollBarBottom" relativePoint="TOPRIGHT" x="0" y="0" />
+							</Anchors>
+							<TexCoords left="0" right="0.40625" top="0.6" bottom="1.0"/>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Frames>
+					<Frame parentKey="Loading" inherits="LoadingSpinnerTemplate" hidden="true">
+						<Anchors>
+							<Anchor point="TOP" y="-16" />
+						</Anchors>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString parentKey="Label" inherits="GameFontNormalLarge" text="LFG_LIST_LOADING">
+									<Anchors>
+										<Anchor point="TOP" relativePoint="BOTTOM"/>
+									</Anchors>
+								</FontString>
+								<FontString parentKey="Info" inherits="GameFontHighlightSmall" justifyH="CENTER">
+									<Anchors>
+										<Anchor point="TOP" relativeKey="$parent.Label" relativePoint="BOTTOM" y="-6"/>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnShow>
+								self.Anim:Play();
+							</OnShow>
+							<OnHide>
+								self.Anim:Stop();
+							</OnHide>
+						</Scripts>
+					</Frame>
+				</Frames>
+				<ScrollChild>
+					<Frame parentKey="htmlanchor">
+						<Size x="398" y="1" />
+						<Frames>
+							<SimpleHTML parentKey="html">
+								<Size x="380" y="1" />
+								<Anchors>
+									<Anchor point="TOPLEFT" x="9" y="-9" />
+								</Anchors>
+								<FontString inherits="GameFontHighlight" justifyH="LEFT" justifyV="TOP" />
+								<FontStringHeader1 inherits="GameFontNormalHuge" justifyH="LEFT" justifyV="TOP" />
+								<FontStringHeader2 inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP" />
+								<FontStringHeader3 inherits="GameFontNormalMed2" justifyH="LEFT" justifyV="TOP" />
+								<Scripts>
+									<OnHyperlinkEnter function="FollowerLocationInfoJournal_OnHyperlinkEnter"/>
+									<OnHyperlinkLeave function="FollowerLocationInfoJournal_OnHyperlinkLeave"/>
+									<OnHyperlinkClick function="FollowerLocationInfoJournal_OnHyperlinkClick"/>
+									<OnLoad>
+										self:GetParent():GetParent().html = self;
+									</OnLoad>
+								</Scripts>
+							</SimpleHTML>
+						</Frames>
+					</Frame>
+				</ScrollChild>
+			</ScrollFrame>
+
+		</Frames>
+		<Scripts>
+			<OnLoad function="FollowerLocationInfoJournal_OnLoad" />
+			<OnShow function="FollowerLocationInfoJournal_OnShow" />
+			<!-- <OnEvent function="FollowerLocationInfoJournal_OnEvent" /> -->
+		</Scripts>
+	</Frame>
+</Ui>

@@ -8,7 +8,7 @@
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: pseashowfailreas,pseashownewvervar,wherereportraidach, wherereportpartyach,raquantrepeatach,raquantrepeatachtm,raoldvern2, raaddoninstalledsins,raminibutshowt,RA_Settings,rasoundtoplay,raenablebg,psdonaspanvar,radonateq1
-## SavedVariablesPerCharacter: thisaddonworkea
+## SavedVariablesPerCharacter: thisaddonworkea, raannouncerun
 Localization\localization-enEN.lua
 Localization\localization-ruRU.lua
 Localization\localization-deDE.lua

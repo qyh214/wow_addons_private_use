@@ -297,9 +297,13 @@ Note that for spells and events that only ever target you, you're name will neve
 							order = 3,
 							type = "toggle",
 							width = "full",
-							name = L["Use Instance Channel if Available"],
+							name = L["Use the Instance Channel when Available"],
 							desc = L[
-[[Enable use of the Instance Channel for this spell if the channel is available. (useful to automatically announce speeches that are already set for party or raid)]]
+[[Useful for Dungeon Finder and Raid Finder groups.
+
+If the Instance Channel is available, use it as a replacement for the /party or /raid channels selected below.
+
+The Instance Channel will only be used as a replacement for /party and /raid channels, otherwise the selected channel will be used, i.e. /say, etc.]]
 							],
 							get = function() return  SpeakinSpell:CurrentMessagesGUI_OnInstanceChannel("GET",nil) end,
 							set = function(_, value) SpeakinSpell:CurrentMessagesGUI_OnInstanceChannel("SET",value) end,
@@ -724,7 +728,6 @@ Non-spell Speech Events also have a <target>. This uses the same target as the <
 								if (nil == EventTableEntry) or (nil == EventTableEntry.RPLanguage) then
 									return "COMMON"
 								else
-									--TODONOW: why is this showing "Common" instead of "COMMON"?
 									return EventTableEntry.RPLanguage
 								end
 							end,
@@ -1066,7 +1069,7 @@ function SpeakinSpell:CurrentMessagesGUI_ValidateSelectedEvent()
 	-- get the selected EventTableEntry
 	local EventTableEntry = self:CurrentMessagesGUI_GetSelectedEventObject()
 	if EventTableEntry then
-		if self:MatchesFilter(EventTableEntry.DetectedEvent,true) then
+		if self:MatchesFilter(EventTableEntry.DetectedEvent) then
 			-- the current selection is valid, so keep it
 			return
 		end
@@ -1075,7 +1078,7 @@ function SpeakinSpell:CurrentMessagesGUI_ValidateSelectedEvent()
 	
 	-- select the first thing in the list, if possible
 	for key,EventTableEntry in pairs( self:GetActiveEventTable() ) do
-		if self:MatchesFilter(EventTableEntry.DetectedEvent,true) then
+		if self:MatchesFilter(EventTableEntry.DetectedEvent) then
 			-- the current selection is valid, so keep it
 			self.RuntimeData.OptionsGUIStates.MessageSettings.SelectedEventKey = key
 			return
@@ -1456,7 +1459,7 @@ function SpeakinSpell:CurrentMessagesGUI_RebuildSpellList()
 			return false
 		end
 		local de = ete.DetectedEvent
-		return SpeakinSpell:MatchesFilter( de, true )
+		return SpeakinSpell:MatchesFilter( de )
 	end
 	
 	local GetDisplayNameFunc = function(key)

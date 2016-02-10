@@ -1,5 +1,6 @@
 local me, ns = ...
-if (not LibStub:GetLibrary("LibDataBroker-1.1",true)) then
+local LDB=LibStub:GetLibrary("LibDataBroker-1.1",true)
+if not LDB then
 	--[===[@debug@
 	print("Missing libdatabroker")
 	--@end-debug@]===]
@@ -442,14 +443,14 @@ function addon:ColorToString(r,g,b)
 	return format("%02X%02X%02X", 255*r, 255*g, 255*b)
 end
 
-dataobj=LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("GC-Missions", {
+dataobj=LDB:NewDataObject("GC-Missions", {
 	type = "data source",
 	label = "GC "  .. GARRISON_NUM_COMPLETED_MISSIONS,
 	text=QUEUED_STATUS_WAITING,
 	category = "Interface",
 	icon = "Interface\\ICONS\\ACHIEVEMENT_GUILDPERK_WORKINGOVERTIME"
 })
-farmobj=LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("GC-Farms", {
+farmobj=LDB:NewDataObject("GC-Farms", {
 	type = "data source",
 	label = "GC " .. "Harvesting",
 	text=QUEUED_STATUS_WAITING,
@@ -457,14 +458,14 @@ farmobj=LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("GC-Farms", {
 	icon = "Interface\\Icons\\Inv_ore_gold_nugget"
 	--icon = "Interface\\Icons\\Trade_Engineering"
 })
-workobj=LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("GC-WorkOrders", {
+workobj=LDB:NewDataObject("GC-WorkOrders", {
 	type = "data source",
 	label = "GC " ..CAPACITANCE_WORK_ORDERS,
 	text=QUEUED_STATUS_WAITING,
 	category = "Interface",
 	icon = "Interface\\Icons\\Trade_Engineering"
 })
-cacheobj=LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("GC-Cache", {
+cacheobj=LDB:NewDataObject("GC-Cache", {
 	type = "data source",
 	label = "GC " .. GARRISON_CACHE,
 	text=QUEUED_STATUS_WAITING,

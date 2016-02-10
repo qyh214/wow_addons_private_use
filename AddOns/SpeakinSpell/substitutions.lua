@@ -216,7 +216,8 @@ SpeakinSpell.SubsToEnglish = {
 
 local SubstitutionFunctions = {	
 ["selected"] = function(de) 
-	return UnitName("target")
+	local name, realm = UnitName("target")
+	return name
 end,
 ["lasttarget"] = function(de)
 	return SpeakinSpell:PlayerNameNoRealm(SpeakinSpell.RuntimeData.LastSpellcastSentTarget)
@@ -237,7 +238,7 @@ end,
 	return GetBindLocation()
 end,
 ["displayname"] = function(de)
-	return SpeakinSpell:FormatDisplayName( de )
+	return SpeakinSpell:FormatDisplayName( de, nil )
 end,
 
 -- auto-substitutions like MS Word would use
@@ -271,7 +272,9 @@ end,
 
 -- default caster and target information
 ["caster"] = function(de)
-	return UnitName("player")
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local name, realm = UnitName("player")
+	return name
 end,
 
 -- race/class info
@@ -518,7 +521,8 @@ local SearchOrder = {
 	end,
 	-- UnitName API Substitutions
 	[3] = function( sk, de, CurrentEvent )
-		return UnitName( sk.key )
+		local name, realm = UnitName( sk.key )
+		return name
 	end,
 	-- Custom Function Table defined above
 	[4] = function( sk, de, CurrentEvent )

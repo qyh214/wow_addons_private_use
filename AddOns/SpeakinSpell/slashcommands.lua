@@ -150,9 +150,10 @@ function SpeakinSpell:OnSlashCommand(input)
 	local funcname = "OnSlashCommand"
 
 	-- format <substutitions> in the input and lowercase it for table lookups
+	local targetname, targetrealm = UnitName("target")
 	local de = {
 		name = input,
-		target = UnitName("target"),
+		target = targetname,
 	}
 	input = self:FormatSubs( string.lower(input), de )
 	self:DebugMsg(funcname,"OnSlashCommand:"..tostring(input))
@@ -212,12 +213,14 @@ function SpeakinSpell:ProcessUserMacro( key, params )
 	
 	self:DebugMsg(funcname, "User Macro input:"..tostring(params))
 	
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local DetectedEventStub = {
 		-- event descriptors
 		name = input, -- use the entire lowercase input = "macro something"
 		type = "MACRO",
 		-- event-specific data for substitutions
-		caster = UnitName("player"),
+		caster = myname,
 	}
 	
 	-- NOTE: do not inherit parent event data here

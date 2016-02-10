@@ -231,12 +231,33 @@ function module:DelayedRefresh(delay)
 end
 function module:OnInitialized()
 	self:SafeSecureHookScript("GarrisonMissionFrame","OnShow","Setup")
+	for catId,list in pairs (ns.traitTable) do
+		for abId,_ in pairs(list) do
+			ns.traitTable[catId][abId]=G.GetFollowerAbilityName(abId)
+		end
+	end
+ns.catTable={
+	[L["Environment Preference"]]=1,
+	[L["Increased Rewards"]]=2,
+	[L["Mission Duration"]]=3,
+	[L["Mission Success"]]=4,
+	[L["Other"]]=5,
+	[L["Profession"]]=6,
+	[L["Racial Preference"]]=7,
+	[L["Slayer"]]=8,
+	[L["Threat Counter"]]=9,
+}
 
 end
 function module:Setup()
 	self:RegisterEvent("GARRISON_FOLLOWER_UPGRADED","DelayedRefresh")
 	self:RegisterEvent("CHAT_MSG_LOOT","DelayedRefresh")
-	self:GarrisonTraitCountersFrame_OnLoad(GarrisonTraitCountersFrame, L["%s |4follower:followers with %s"])
+--[===[@debug@
+	self:GarrisonTraitCountersFrame_OnLoad(GarrisonTraitCountersFrame, L["%s |4follower:followers; with %s"] .. " (%d)")
+--@end-debug@]===]
+--@non-debug@
+	self:GarrisonTraitCountersFrame_OnLoad(GarrisonTraitCountersFrame, L["%s |4follower:followers; with %s"])
+--@end-non-debug@
 	self:SafeHookScript(GarrisonTraitCountersFrame,"OnEvent","GarrisonTraitCountersFrame_OnEvent")
 	self:SafeHookScript(GarrisonTraitCountersFrame,"OnShow","GarrisonTraitCountersFrame_OnShow")
 	self:ShowUpgradeButtons()
@@ -267,19 +288,28 @@ print("Load")
 		this.choice.button=_G[this.choice:GetName()..'Button']
 		this.choice:SetPoint("TOPLEFT",-192,0)
 	end
-	module:FillCounters(this,1)
 	this.TraitsList[1]:SetScript("OnEnter",_G.GarrisonTraitCounter_OnEnter)
 	--this.TraitsList[1]:SetScript("OnEnter",pp)
 	do
 		local frame=this.choice
-		local list=G.GetRecruiterAbilityCategories()
+		local list={}
+		local done
+		for k,v in kpairs(ns.catTable) do
+			if not done then
+				done=true
+				module:FillCounters(this,v)
+			end
+			tinsert(list,k)
+		end
+		done=nil
 		local function sel(this,category,index)
 			UIDropDownMenu_SetSelectedID(frame,index)
 			self:FillCounters(frame:GetParent(),category)
 		end
 		UIDropDownMenu_Initialize(frame, function(...)
 			local i=0
-			for v,k in pairs(list) do
+			for _,k in pairs(list) do
+				local v=ns.catTable[k]
 				if ns.traitTable[v] then
 					i=i+1
 					local info=UIDropDownMenu_CreateInfo()
@@ -319,7 +349,7 @@ end
 -- Need to be a global
 function _G.GarrisonTraitCounter_OnEnter(this)
 	GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-	GameTooltip:SetText(this:GetParent().tooltipString:format(this.Count:GetText(), this.name), nil, nil, nil, nil, true);
+	GameTooltip:SetText(this:GetParent().tooltipString:format(this.Count:GetText(), this.name,this.id) , nil, nil, nil, nil, true);
 end
 function module:FillCounters(this,category)
 	local i=0
@@ -352,13 +382,11 @@ for _,v in pairs(addon:GetUpgrades()) do
 	t=t:upper()
 	l=tonumber(l)
 	local keyname="BINDING_NAME_GC"..t..l
-	print(t,l,keyname)
 	if (l<600) then
-			_G[keyname]= format(L["Add %d levels to %s"],l,(t:sub(1,1)=="W" and "weapon" or "armor"))
+			_G[keyname]= format(L["Add %1$d levels to %2$s"],l,(t:sub(1,1)=="W" and "weapon" or "armor"))
 	else
-			_G[keyname]=  format(L["Upgrade %s to  %d itemlevel"],(t:sub(1,1)=="W" and "weapon" or "armor"),l)
+			_G[keyname]=  format(L["Upgrade %1$s to  %2$d itemlevel"],(t:sub(1,1)=="W" and "weapon" or "armor"),l)
 	end
-	print(_G[keyname])
 end
 _G.BINDING_NAME_GCWE=L["Applies the best weapon upgrade"]
 _G.BINDING_NAME_GCAE=L["Applies the best armor upgrade"]

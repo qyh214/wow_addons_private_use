@@ -1,14 +1,14 @@
-## Interface: 60100
-## Title: Follower Location Info
-## Version: 0.7-beta6
+## Interface: 60200
+## Title: FollowerLocationInfo
+## Version: 0.11-release4
 ## Title-zhTW: 追隨者位置資訊
 ## Notes-zhTW: 追隨者位置資訊
-## Author: Hizuro @ Der Mithrilorden EU
-## SavedVariables: FollowerLocationInfoDB, FLI_tmpDB
-## X-Curse-Packaged-Version: 0.7-beta6
+## Author: Hizuro
+## SavedVariables: FollowerLocationInfoDB
+## X-Min-Data-Version: 0.5
+## X-Curse-Packaged-Version: 0.11-release4
 ## X-Curse-Project-Name: FollowerLocationInfo
 ## X-Curse-Project-ID: followerlocationinfo
 ## X-Curse-Repository-ID: wow/followerlocationinfo/mainline
 
-FollowerLocationInfo.xml
-
+Core.xml

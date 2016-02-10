@@ -1,3 +1,27 @@
+**r991**
+* Fixed a major issue with the raid handling tables.
+* Raid onattribute changes will be changed based on the unit's GUID instead of the unit's name.
+* AFK status should work again on the raid frames for every unit.
+* The texture of the power bar on the raid frames should properly set by the selected profile's texture.
+* Some other smaller fixes.
+
+**r990**
+* Clique functions for the player's pet should be working again.
+
+**r989**
+* Player, pet and vehicle swap fixes.
+
+**r988**
+* Player and pet frame fixes.
+* Player, pet and vehicle frames should properly update their attributes even in combat.
+* Entering and leaving vehicle with summoned pet should be a lot more smoother.
+
+**r987**
+* Version bump.
+
+**r986**
+* Target, focus and pet target update fixes.
+
 **r985**
 * Version bump.
 

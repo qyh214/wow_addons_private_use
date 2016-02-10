@@ -1,6 +1,6 @@
 --[[
 	Copyright (C) 2006-2007 Nymbia
-	Copyright (C) 2010 Hendrik "Nevcairiel" Leppkes < h.leppkes@gmail.com >
+	Copyright (C) 2010-2016 Hendrik "Nevcairiel" Leppkes < h.leppkes@gmail.com >
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -93,6 +93,8 @@ end
 function Player:OnEnable()
 	self.Bar:RegisterEvents()
 	self:ApplySettings()
+
+	self:UpdateChannelingTicks()
 end
 
 function Player:OnDisable()
@@ -200,6 +202,7 @@ local channelingTicks = {
 	[GetSpellInfo(129197)] = 3, -- mind flay: insanity
 	[GetSpellInfo(48045)] = 5, -- mind sear
 	[GetSpellInfo(47540)] = 2, -- penance
+	[GetSpellInfo(179338)] = 5, -- Searing Insanity
 	-- mage
 	[GetSpellInfo(5143)] = 5, -- arcane missiles
 	[GetSpellInfo(10)] = 8, -- blizzard
@@ -215,6 +218,14 @@ local function getChannelingTicks(spell)
 	end
 	
 	return channelingTicks[spell] or 0
+end
+
+function Player:UpdateChannelingTicks()
+	if IsSpellKnown(157223) then
+		-- draenor perk increases mind flay/insanity to 4 ticks
+		channelingTicks[GetSpellInfo(15407)]  = 4
+		channelingTicks[GetSpellInfo(129197)] = 4
+	end
 end
 
 function Player:UNIT_SPELLCAST_START(bar, unit)

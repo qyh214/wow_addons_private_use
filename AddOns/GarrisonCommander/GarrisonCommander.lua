@@ -57,7 +57,7 @@ local function tcopy(obj, seen)
 end
 
 local parties
-
+local missionCompleteOrder=122514
 
 local lastTab
 local new, del, copy =ns.new,ns.del,ns.copy
@@ -388,8 +388,9 @@ print("Initialize")
 		b.Title:SetFont(f,h*scale,s)
 		local f,h,s=b.Summary:GetFont()
 		b.Summary:SetFont(f,h*scale,s)
+		b:RegisterForClicks("LeftButtonUp","RightButtonUp")
 		addon:SafeRawHookScript(b,"OnEnter","ScriptGarrisonMissionButton_OnEnter")
-		addon:SafeSecureHookScript(b,"OnClick","ScriptGarrisonMissionButton_OnClick")
+		addon:SafeRawHookScript(b,"OnClick","ScriptGarrisonMissionButton_OnClick")
 	end
 	self:CreatePrivateDb()
 	db=self.db.global
@@ -406,6 +407,7 @@ print("Initialize")
 		dbGAC.namespaces.missionscache=nil  -- Removed in 2.6.9
 		dbGAC.namespaces=nil
 	end
+	blacklist=chardb.missionControl.blacklist
 	self:AddLabel(L["Garrison Appearance"])
 	self:AddToggle("MOVEPANEL",true,L["Unlock Panel"],L["Makes main mission panel movable"])
 	self:AddToggle("BIGSCREEN",true,L["Big screen"],L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"])
@@ -442,6 +444,7 @@ print("Initialize")
 	end
 	self:AddLabel("Buildings Panel")
 	self:AddToggle("HF",false,L["Hide followers"],L["Do not show follower icon on plots"])
+
 --[===[@debug@
 	self:AddLabel("Developers options")
 	self:AddToggle("DBG",false, "Enable Debug")
@@ -461,6 +464,16 @@ print("Initialize")
 --	assert(pcall(format,"%03d %03d",tonumber(1/0) or 1,tonumber(0/0) or 2))
 --@end-debug@]===]
 	self:SafeSecureHookScript("GarrisonMissionFrame","OnShow","Setup")
+	local tabCO=CreateFrame("Button",nil,UIParent,"GarrisonCommanderUpgradeButton,SecureActionbuttonTemplate")
+	ns.tabCO=tabCO
+	tabCO.tooltip=L["Complete in progress mission"]
+	tabCO:SetNormalTexture("Interface\\ICONS\\Ability_Skyreach_Empowered.blp")
+	tabCO:SetPushedTexture("Interface\\ICONS\\Ability_Skyreach_Empowered.blp")
+	tabCO:Show()
+	tabCO.Quantity:Show()
+	tabCO.Quantity:SetFormattedText("%d",GetItemCount(missionCompleteOrder))
+	tabCO:SetAttribute("type","item")
+	tabCO:SetAttribute("item",select(2,GetItemInfo(missionCompleteOrder)))
 	return true
 end
 function addon:showdata(fullargs,action,missionid)
@@ -793,6 +806,7 @@ function addon:CreatePrivateDb()
 					}
 				},
 				missionControl={
+					blacklist={},
 					version=3,
 					allowedRewards = {
 						['*']=true,
@@ -1369,7 +1383,7 @@ do
 	local ml=nil
 	local mh=nil
 	local tContains=tContains
-	local function MissionOnClick(this,...)
+	local function MissionOnClick(this,method,frame,button)
 		local m=GMF.MissionTab.MissionPage.missionInfo
 		if m and m.missionID then
 			holdEvents()
@@ -1381,14 +1395,15 @@ do
 			end
 			releaseEvents()
 		end
---[===[@debug@
-print(this.frame,this.frame:GetName())
---@end-debug@]===]
-		GMF:OnClickMission(this.frame.info)
+		if button=="RightButton" then
+			return addon:ScriptGarrisonMissionButton_OnClick(this.frame,button)
+		end
+		GMF:OnClickMission(this.frame.info,button)
 		if (PanelTemplates_GetSelectedTab(GMF) ~= 1) then
 			addon:OpenMissionsTab()
 		end
-		addon:ScriptGarrisonMissionButton_OnClick(this.frame,"Leftup")
+		--addon:ScriptGarrisonMissionButton_OnClick(this.frame,button)
+		addon:FillMissionPage(this.frame.info)
 		lastTab=2
 	end
 	function addon:RenderFollowerPageMissionList(dummy,followerID,force)
@@ -1501,32 +1516,44 @@ print("Setup")
 	GCF=self:CreateHeader(self,"PIN")
 	local tabMC=CreateFrame("CheckButton",nil,GMF,"SpellBookSkillLineTabTemplate")
 	GMF.tabMC=tabMC
-	tabMC.tooltip="Open Garrison Commander Mission Control"
+	tabMC.tooltip=L["Open Garrison Commander Mission Control"]
 	tabMC:SetNormalTexture("Interface\\ICONS\\ACHIEVEMENT_GUILDPERK_WORKINGOVERTIME.blp")
 	self:MarkAsNew(tabMC,'MissionControl','New in 2.2.0! Try automatic mission management!')
+	tabMC:SetScript("OnClick",function(this,...) addon:OpenMissionControlTab() end)
 	tabMC:Show()
+	tabMC:SetPoint('TOPLEFT',GCF,'TOPRIGHT',0,-110)
 	GMF.FollowerStatusInfo=GMF:CreateFontString(nil, "BORDER", "GameFontNormal")
 	GMF.FollowerStatusInfo:SetPoint("TOPRIGHT",-30,-5)
 	local tabCF=CreateFrame("Button",nil,GMF,"SpellBookSkillLineTabTemplate")
 	GMF.tabCF=tabCF
-	tabCF.tooltip="Open Garrison Commander Configuration Screen"
+	tabCF.tooltip=L["Open Garrison Commander Configuration Screen"]
 	tabCF:SetNormalTexture("Interface\\ICONS\\Trade_Engineering.blp")
 	tabCF:SetPushedTexture("Interface\\ICONS\\Trade_Engineering.blp")
 	tabCF:Show()
+	tabCF:SetPoint('TOPLEFT',GCF,'TOPRIGHT',0,-60)
+	tabCF:SetScript("OnClick",function(this,...) GMF:Hide() addon:Gui() end)
 	local tabHP=CreateFrame("Button",nil,GMF,"SpellBookSkillLineTabTemplate")
 	GMF.tabHP=tabHP
-	tabHP.tooltip="Open Garrison Commander Help"
+	tabHP.tooltip=L["Open Garrison Commander Help"]
 	tabHP:SetNormalTexture("Interface\\ICONS\\INV_Misc_QuestionMark.blp")
 	tabHP:SetPushedTexture("Interface\\ICONS\\INV_Misc_QuestionMark.blp")
 	tabHP:Show()
-	tabMC:SetScript("OnClick",function(this,...) addon:OpenMissionControlTab() end)
-	tabCF:SetScript("OnClick",function(this,...) GMF:Hide() addon:Gui() end)
-	tabHP:SetScript("OnClick",function(this,button) addon:ShowHelpWindow(this,button) end)
 	tabHP:SetPoint('TOPLEFT',GCF,'TOPRIGHT',0,-10)
-	tabCF:SetPoint('TOPLEFT',GCF,'TOPRIGHT',0,-60)
-	tabMC:SetPoint('TOPLEFT',GCF,'TOPRIGHT',0,-110)
+	tabHP:SetScript("OnClick",function(this,button) addon:ShowHelpWindow(this,button) end)
+	if self.RunQuick then
+		local tabQ=CreateFrame("Button",nil,GMF,"SpellBookSkillLineTabTemplate")
+		GMF.tabQ=tabQ
+		tabQ.tooltip=L["Automatically process completed missions and schedules new ones."].."\n"..
+			format(L["Check %s in mission control in order to be also logged out"],L["Auto Logout"])
+		tabQ:SetNormalTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
+		tabQ:SetPushedTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
+		tabQ:Show()
+		tabQ:SetScript("OnClick",function(this,button) addon:RunQuick() end)
+		tabQ:SetPoint('TOPLEFT',GCF,'TOPRIGHT',0,-210)
+	end
+
 	local ref=GMFMissions.CompleteDialog.BorderFrame.ViewButton
-	local bt = CreateFrame('BUTTON',nil, ref, 'UIPanelButtonTemplate')
+	local bt = CreateFrame('BUTTON','GarrisonCommanderQuickMissionComplete', ref, 'UIPanelButtonTemplate')
 	bt:SetWidth(300)
 	bt:SetText(L["Garrison Comander Quick Mission Completion"])
 	bt:SetPoint("CENTER",0,-50)
@@ -1566,7 +1593,7 @@ function addon:AddMenu()
 	local menu,size
 	if GMF.MissionTab:IsVisible() then
 		self.currentmenu=GMF.MissionTab
-		menu,size=self:CreateOptionsLayer(MP and 'CKMP' or nil,'BIGSCREEN','IGM','IGP','MSORT','MAXRES','MAXRESCHANCE','NOFILL','USEFUL','MOVEPANEL')
+		menu,size=self:CreateOptionsLayer(MP and 'CKMP' or nil,'BIGSCREEN','IGM','IGP','MSORT','MAXRES','MAXRESCHANCE','NOFILL','USEFUL','MOVEPANEL','AUTOLOGOUT')
 	elseif GMF.FollowerTab:IsVisible() then
 		local missionlist=ns.bigscreen or self:GetBoolean("FOLLOWERMISSIONLIST")
 		self.currentmenu=GMF.FollowerTab
@@ -1579,7 +1606,7 @@ function addon:AddMenu()
 		self:RenderFollowerPageMissionList(nil,GMF.FollowerTab.followerID)
 	elseif GMF.MissionControlTab:IsVisible() then
 		self.currentmenu=GMF.MissionControlTab
-		menu,size=self:CreateOptionsLayer('BIGSCREEN','GCMINLEVEL','GCMINUPGRADE','GCSKIPRARE','GCSKIPEPIC','USEFUL')
+		menu,size=self:CreateOptionsLayer('BIGSCREEN','GCMINLEVEL','GCMINUPGRADE','GCSKIPRARE','GCSKIPEPIC','USEFUL','AUTOLOGOUT')
 	else
 		self.currentmenu=nil
 		menu,size=self:CreateOptionsLayer('BIGSCREEN')
@@ -1629,6 +1656,9 @@ function addon:ScriptGarrisonMissionFrame_OnShow(...)
 		GCF:SetHeight(minHeight)
 	end
 	self:PermanentEvents()
+	ns.tabCO:ClearAllPoints()
+	ns.tabCO:SetParent(GMF)
+	ns.tabCO:SetPoint('TOPRIGHT',GMF,'TOPLEFT',0,0)
 	--self:SafeSecureHook("GarrisonMissionButton_AddThreatsToTooltip")
 	self:SafeSecureHook("GarrisonFollowerListButton_OnClick") -- used both to update follower mission list and itemlevel display
 	if (ns.bigscreen) then
@@ -1879,6 +1909,9 @@ function addon:FillMissionPage(missionInfo)
 	holdEvents()
 	local main=missionInfo.followerTypeID==LE_FOLLOWER_TYPE_GARRISON_6_0 and GMF or GSF
 	local missionpage=main.MissionTab.MissionPage
+--[===[@debug@
+	print(missionpage)
+--@end-debug@]===]
 	main:ClearParty()
 	local party=self:GetParty(missionID)
 	if (party) then
@@ -2250,12 +2283,30 @@ function addon:OnClick_GarrisonMissionFrame_MissionComplete_NextMissionButton(th
 	end
 end
 function addon:ScriptGarrisonMissionButton_OnClick(tab,button)
+	--[===[@debug@
+	print(tab,button)
+	--@end-debug@]===]
 	lastTab=1
 	if (GMF.MissionTab.MissionList.showInProgress) then
+		self.hooks[tab].OnClick(tab,button)
+		ns.tabCO.Quantity:SetFormattedText("%d",GetItemCount(missionCompleteOrder))
 		return
 	end
 	if (type(tab.info)~="table") then return end
-	self:FillMissionPage(tab.info)
+	if (button~="RightButton") then
+		self.hooks[tab].OnClick(tab,button)
+		self:FillMissionPage(tab.info)
+	else
+		blacklist[tab.info.missionID]=not blacklist[tab.info.missionID]
+		if blacklist[tab.info.missionID] then
+			tab.Title:SetTextColor(0,0,0)
+		else
+			tab.Title:SetTextColor(1,1,1)
+		end
+		GameTooltip:Hide()
+		addon:ScriptGarrisonMissionButton_OnEnter(tab,button)
+	end
+
 end
 function addon:OnClick_GCMissionButton(frame,button)
 	if (button=="RightButton") then
@@ -2503,6 +2554,13 @@ function addon:ScriptGarrisonMissionButton_OnEnter(this, button)
 		--@end-debug@]===]
 		GameTooltip:AddLine(GARRISON_MISSION_AVAILABILITY);
 		GameTooltip:AddLine(this.info.offerTimeRemaining, 1, 1, 1);
+		if (blacklist[this.info.missionID]) then
+			GameTooltip:AddDoubleLine(L["Blacklisted"],L["Right-Click to remove from blacklist"],1,0.125,0.125,C:Green())
+			GameTooltip:AddLine(L["Blacklisted missions are ignored in Mission Control"])
+		else
+			GameTooltip:AddDoubleLine(L["Not blacklisted"],L["Right-Click to blacklist"],0.125,1.0,0.125,C:Red())
+		end
+		GameTooltip:AddLine(this.info.offerTimeRemaining, 1, 1, 1);
 		addon:AddFollowersToTooltip(this.info.missionID,LE_FOLLOWER_TYPE_GARRISON_6_0 or 0)
 		if not C_Garrison.IsOnGarrisonMap() and not GMF:IsVisible() then
 			GameTooltip:AddLine(" ");
@@ -2551,6 +2609,8 @@ function addon:DrawSingleButton(source,frame,progressing,bigscreen)
 				end
 			end
 		end
+		if (blacklist[missionID]) then frame.Title:SetTextColor(0,0,0) else frame.Title:SetTextColor(1,1,1) end
+
 		frame:Show();
 
 	else

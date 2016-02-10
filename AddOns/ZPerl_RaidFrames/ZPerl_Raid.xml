@@ -252,6 +252,7 @@
 						<BarColor r="0" g="0" b="1"/>
 						<Scripts>
 							<OnLoad>
+								XPerl_RegisterBar(self)
 								self:SetScale(0.7)
 							</OnLoad>
 						</Scripts>

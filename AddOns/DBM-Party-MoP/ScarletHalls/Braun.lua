@@ -29,7 +29,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnPiercingThrow:Show()
 	elseif args.spellId == 114242 then
 		warnDeathBlossom:Show()
-	elseif args.spellId == 114259 then--Call Dog
+	elseif args.spellId == 114259 and self:AntiSpam(3, 1) then--Call Dog
 		warnCallDog:Show()
 	elseif args.spellId == 116140 then--Blood Rage(done calling dogs)
 		warnBloodyRage:Show()

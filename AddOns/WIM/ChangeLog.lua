@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 467 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 472 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,6 +16,9 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.7.1", "01/17/2016", [[
+	*Resolved lua errors in WoW 7.x.
+]]);
 addEntry("3.7", "10/26/2015", [[
 	*Will now support application flash/bounce for whispers that are supressed from chat frame.
 ]]);
@@ -32,12 +35,6 @@ addEntry("3.6.26", "04/20/2015", [[
 ]]);
 addEntry("3.6.25", "03/25/2015", [[
 	*Grabbed new WhoLib for 2 bugfixes related to that lib.
-]]);
-addEntry("3.6.24", "02/01/2015", [[
-	*Grabbed new WhoLib for 2 bugfixes related to that lib.
-]]);
-addEntry("3.6.23", "01/02/2015", [[
-	*Fixed another 3 missing options in 'Window Settings'
 ]]);
 
 

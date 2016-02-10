@@ -1,4 +1,19 @@
 --------------
+6.2.3.01
+--------------
+
+Updated TOC for WoW patch 6.2
+
+Fixed the [SpeakinSpell] tag's clickable link
+
+Spellbook buttons now go to "/ss create" instead of "/ss messages"
+
+Fixed "use instance if available" option
+
+Fixed pet and mount event triggers
+
+
+--------------
 6.1.0.01
 --------------
 

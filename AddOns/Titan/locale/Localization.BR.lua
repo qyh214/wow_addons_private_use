@@ -20,64 +20,76 @@ L["TITAN_KILOBYTES_PER_SECOND"] = "kB/s";
 L["TITAN_KILOBITS_PER_SECOND"] = "kbps"
 L["TITAN_MEGABYTE"] = "MB";
 L["TITAN_NONE"] = "Nenhum";
-L["TITAN_USE_COMMA"] = "Use comma";
-L["TITAN_USE_PERIOD"] = "Use period";
+L["TITAN_USE_COMMA"] = "Use vírgula";
+L["TITAN_USE_PERIOD"] = "Use ponto";
 
 L["TITAN_PANEL_ERROR_PROF_DELCURRENT"] = "Você não pode apagar seu perfil atual.";
 local TITAN_PANEL_WARNING = GREEN_FONT_COLOR_CODE.."Atenção : "..FONT_COLOR_CODE_CLOSE
-local TITAN_PANEL_RELOAD_TEXT = "If you wish to continue with this operation, push 'Accept' (your UI will reload), otherwise push 'Cancel' or the 'Escape' key."
+local TITAN_PANEL_RELOAD_TEXT = "Se você deseja continuar com esta operação, aperte 'Aceitar' (sua IU irá recarregar), de outra forma aperte 'Cancelar'ou a tecla 'Esc'."
 L["TITAN_PANEL_RESET_WARNING"] = TITAN_PANEL_WARNING
-	.."This setting will reset your bar(s) and "..TITAN_PANEL.." settings to default values and will recreate your current profile. "
+	.."Esta configuração irá resetar sua(s) barra(s) e configurações do "..TITAN_PANEL.." para valores padrão e irá recriar seu perfil. "
 	..TITAN_PANEL_RELOAD_TEXT
 L["TITAN_PANEL_RELOAD"] = TITAN_PANEL_WARNING
 	.."This will reload "..TITAN_PANEL..". "
 	..TITAN_PANEL_RELOAD_TEXT
 L["TITAN_PANEL_ATTEMPTS"] = TITAN_PANEL.." Tentativas"
 L["TITAN_PANEL_ATTEMPTS_SHORT"] = "Tentativas"
-L["TITAN_PANEL_ATTEMPTS_DESC"] = "The plugins below requested to be registered with "..TITAN_PANEL..".\n"
-	.. "Please send any issues to the plugin author."
+L["TITAN_PANEL_ATTEMPTS_DESC"] = "O plugin abaixo requisitou ser registrado com o "..TITAN_PANEL..".\n"
+	.. "Por favor mande quaisquer problemas para o autor do plugin."
 L["TITAN_PANEL_ATTEMPTS_TYPE"] = "Tipo"
 L["TITAN_PANEL_ATTEMPTS_CATEGORY"] = "Categoria"
-L["TITAN_PANEL_ATTEMPTS_BUTTON"] = "Nome do botão"
+L["TITAN_PANEL_ATTEMPTS_BUTTON"] = "Nome do Botão"
+L["TITAN_PANEL_ATTEMPTS_STATUS"] = "Status"
+L["TITAN_PANEL_ATTEMPTS_ISSUE"] = "Problema"
 L["TITAN_PANEL_EXTRAS"] = "Extras do " .. TITAN_PANEL
+L["TITAN_PANEL_ATTEMPTS_NOTES"] = "Notas"
+L["TITAN_PANEL_ATTEMPTS_TABLE"] = "Índice de tabela"
 L["TITAN_PANEL_EXTRAS_SHORT"] = "Extras"
-L["TITAN_PANEL_EXTRAS_DESC"] = "These are plugins with configuration data that are not currently loaded.\n"
-	.. "These are safe to delete."
+L["TITAN_PANEL_EXTRAS_DESC"] = "Esss plugins não estão com dados de configuração carregados no momento.\n"
+	.. "Esses são seguros para excluir."
 L["TITAN_PANEL_EXTRAS_DELETE_BUTTON"] = "Apagar dados de configuração"
-L["TITAN_PANEL_EXTRAS_DELETE_MSG"] = "configuration entry for has been removed."
+L["TITAN_PANEL_EXTRAS_DELETE_MSG"] = "Entrada de configuração foi removida."
 L["TITAN_PANEL_CHARS"] = "Personagens"
-L["TITAN_PANEL_CHARS_DESC"] = "These are characters with configuration data."
+L["TITAN_PANEL_CHARS_DESC"] = "Estes são os personagens com dados de configuração."
 L["TITAN_PANEL_REGISTER_START"] = "Registrando plugins do " .. TITAN_PANEL;
 L["TITAN_PANEL_REGISTER_END"] = "Processo de registro feito."
 
 -- slash command help
-L["TITAN_PANEL_SLASH_RESET_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {reset | reset tipfont/tipalpha/panelscale/spacing}";
-L["TITAN_PANEL_SLASH_RESET_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset: |cffffffffResets "..TITAN_PANEL.." to default values/position.";
-L["TITAN_PANEL_SLASH_RESET_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset tipfont: |cffffffffResets "..TITAN_PANEL.." tooltip font scale to default.";
-L["TITAN_PANEL_SLASH_RESET_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset tipalpha: |cffffffffResets "..TITAN_PANEL.." tooltip transparency to default.";
-L["TITAN_PANEL_SLASH_RESET_4"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset panelscale: |cffffffffResets "..TITAN_PANEL.." scale to default.";
-L["TITAN_PANEL_SLASH_RESET_5"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset spacing: |cffffffffResets "..TITAN_PANEL.." button spacing to default.";
+L["TITAN_PANEL_SLASH_RESET_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Uso: |cffffffff/titan {reset | reseta tipfont/tipalpha/panelscale/spacing}";
+L["TITAN_PANEL_SLASH_RESET_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset: |cffffffffReseta o "..TITAN_PANEL.." para os valores/posições padrão.";
+L["TITAN_PANEL_SLASH_RESET_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset tipfont: |cffffffffReseta a escala de fonte de dica do "..TITAN_PANEL.." para o padrão.";
+L["TITAN_PANEL_SLASH_RESET_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset tipalpha: |cffffffffReseta a transparência de dica do "..TITAN_PANEL.." para o padrão.";
+L["TITAN_PANEL_SLASH_RESET_4"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset panelscale: |cffffffffReseta a escala do "..TITAN_PANEL.." para o padrão.";
+L["TITAN_PANEL_SLASH_RESET_5"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."reset spacing: |cffffffffReseta o espaçamento do botão do "..TITAN_PANEL.." para o padrão.";
 L["TITAN_PANEL_SLASH_GUI_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {gui control/trans/skin}";
-L["TITAN_PANEL_SLASH_GUI_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."gui control: |cffffffffOpens the "..TITAN_PANEL.." control GUI.";
-L["TITAN_PANEL_SLASH_GUI_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."gui trans: |cffffffffOpens the Transparency control GUI.";
-L["TITAN_PANEL_SLASH_GUI_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."gui skin: |cffffffffOpens the Skin control GUI.";
+L["TITAN_PANEL_SLASH_GUI_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."gui control: |cffffffffAbre a janela de controle do "..TITAN_PANEL.."";
+L["TITAN_PANEL_SLASH_GUI_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."gui trans: |cffffffffAbre a janela de controle de transparência";
+L["TITAN_PANEL_SLASH_GUI_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."gui skin: |cffffffffAbre a janela de controle de Pele";
 L["TITAN_PANEL_SLASH_PROFILE_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {profile use <profile>}";
-L["TITAN_PANEL_SLASH_PROFILE_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."profile use <name> <server>: |cffffffffSets the profile to the requested saved profile.";
-L["TITAN_PANEL_SLASH_PROFILE_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<name>: |cffffffffcan be either the character name or the custom profile name."
-L["TITAN_PANEL_SLASH_PROFILE_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<server>: |cffffffffcan be either the server name or 'TitanCustomProfile'."
-L["TITAN_PANEL_SLASH_SILENT_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {silent}";
-L["TITAN_PANEL_SLASH_SILENT_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."silent: |cffffffffToggles "..TITAN_PANEL.." to load silently.";
-L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {help | help <topic>}";
+L["TITAN_PANEL_SLASH_PROFILE_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."profile use <name> <server>: |cffffffffConfigura o perfil para o perfil salvo requisitado.";
+L["TITAN_PANEL_SLASH_PROFILE_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<name>: |cffffffffpode ser tanto o nome do personagem quanto o nome do perfil personalizado."
+L["TITAN_PANEL_SLASH_PROFILE_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<server>: |cffffffffpode ser tanto o nome do servidor quanto 'TitanCustomProfile'."
+L["TITAN_PANEL_SLASH_SILENT_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Uso: |cffffffff/titan {silent}";
+L["TITAN_PANEL_SLASH_SILENT_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."silent: |cffffffffAlterna o "..TITAN_PANEL.." para carregar silencioamente.";
+L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Uso: |cffffffff/titan {help | help <topic>}";
 L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/silent/help ";
 L["TITAN_PANEL_SLASH_ALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan <topic>";
 L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/silent/help ";
 
 -- slash command responses
-L["TITAN_PANEL_SLASH_RESP1"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." tooltip font scale has been reset.";
-L["TITAN_PANEL_SLASH_RESP2"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." tooltip transparency has been reset.";
-L["TITAN_PANEL_SLASH_RESP3"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." scale has been reset.";
-L["TITAN_PANEL_SLASH_RESP4"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." button spacing has been reset.";
+L["TITAN_PANEL_SLASH_RESP1"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." escala de fonte de dica resetada.";
+L["TITAN_PANEL_SLASH_RESP2"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." transparência de dica resetada.";
+L["TITAN_PANEL_SLASH_RESP3"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." escala resetada.";
+L["TITAN_PANEL_SLASH_RESP4"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." espaçamento de botão resetado.";
 
+-- global profile locale
+L["TITAN_PANEL_GLOBAL"] = "Global";
+L["TITAN_PANEL_GLOBAL_PROFILE"] = "Perfil Global";
+L["TITAN_PANEL_GLOBAL_USE"] = "Usar Perfil Global";
+L["TITAN_PANEL_GLOBAL_USE_AS"] = "Usar como Perfil Global";
+L["TITAN_PANEL_GLOBAL_USE_DESC"] = "Usar um perfil global para todos os personagens";
+L["TITAN_PANEL_GLOBAL_RESET_PART"] = "resetando opções";
+L["TITAN_PANEL_GLOBAL_ERR_1"] = "Você não pode carregar um perfil quando um perfil global está em uso";
 -- general panel locale
 L["TITAN_PANEL_VERSION_INFO"] = "|cffffd700 pelo Time de Desenvolvimento do |cffff8c00"..TITAN_PANEL;
 L["TITAN_PANEL_MENU_TITLE"] = TITAN_PANEL;
@@ -94,17 +106,19 @@ L["TITAN_PANEL_MENU_DISABLE_PUSH"] = "Desativar Ajuste de Tela";
 L["TITAN_PANEL_MENU_DISABLE_MINIMAP_PUSH"] = "Desativar Ajuste de Mini-mapa";
 L["TITAN_PANEL_MENU_DISABLE_LOGS"] = "Ajuste Automático de Log";
 L["TITAN_PANEL_MENU_DISABLE_BAGS"] = "Ajuste Automático de Mochila";
-L["TITAN_PANEL_MENU_DISABLE_TICKET"] = "Automatic Ticket Frame Adjust";
+L["TITAN_PANEL_MENU_DISABLE_TICKET"] = "Ajuste Automático do Quadro de Ticket";
 L["TITAN_PANEL_MENU_PROFILES"] = "Perfis";
 L["TITAN_PANEL_MENU_PROFILE"] = "Perfil ";
 L["TITAN_PANEL_MENU_PROFILE_CUSTOM"] = "Personalizado";
 L["TITAN_PANEL_MENU_PROFILE_DELETED"] = " foi apagado.";
 L["TITAN_PANEL_MENU_PROFILE_SERVERS"] = "Reino";
 L["TITAN_PANEL_MENU_PROFILE_CHARS"] = "Personagem";
+
+
 L["TITAN_PANEL_MENU_PROFILE_RELOADUI"] = "Sua UI será recarregada quando o botão 'Ok' for apertado, permitindo que seu perfil personalizado seja salvo.";
 L["TITAN_PANEL_MENU_PROFILE_SAVE_CUSTOM_TITLE"] = "Digite um nome para seu perfil personalizado:\n(máximo 20 caracteres, espaços não são permitidos, maíusculas e minúsculas)";
-L["TITAN_PANEL_MENU_PROFILE_SAVE_PENDING"] = "Current settings are to be saved under profile name: ";
-L["TITAN_PANEL_MENU_PROFILE_ALREADY_EXISTS"] = "The profile name entered already exists. Are you sure you want to overwrite it ? Push 'Accept' if yes, otherwise push 'Cancel' or the 'Escape' key.";
+L["TITAN_PANEL_MENU_PROFILE_SAVE_PENDING"] = "Configurações atuais serão salvas no perfil de nome: ";
+L["TITAN_PANEL_MENU_PROFILE_ALREADY_EXISTS"] = "O nome de perfil digitado já existe. Você tem certeza que quer sobrescrevê-lo? Aperte 'Aceitar' se sim, de outra maneira aperte 'Cancelar' ou a tecla 'Esc'.";
 L["TITAN_PANEL_MENU_MANAGE_SETTINGS"] = "Gerenciar";
 L["TITAN_PANEL_MENU_LOAD_SETTINGS"] = "Carregar";
 L["TITAN_PANEL_MENU_DELETE_SETTINGS"] = "Apagar";
@@ -115,25 +129,27 @@ L["TITAN_PANEL_MENU_TOP"] = "Superior"
 L["TITAN_PANEL_MENU_TOP2"] = "Superior 2"
 L["TITAN_PANEL_MENU_BOTTOM"] = "Inferior"
 L["TITAN_PANEL_MENU_BOTTOM2"] = "Interior 2"
-L["TITAN_PANEL_MENU_OPTIONS"] = TITAN_PANEL .." Tooltips e Quandros";
-L["TITAN_PANEL_MENU_OPTIONS_SHORT"] = "Tooltips e Quadros";
+L["TITAN_PANEL_MENU_OPTIONS"] = "Dicas e Quadros do " .. TITAN_PANEL .."";
+L["TITAN_PANEL_MENU_OPTIONS_SHORT"] = "Dicas e Quadros";
 L["TITAN_PANEL_MENU_TOP_BARS"] = "Barras Superiores"
 L["TITAN_PANEL_MENU_BOTTOM_BARS"] = "Barras Inferiores"
 L["TITAN_PANEL_MENU_OPTIONS_BARS"] = "Barras"
 L["TITAN_PANEL_MENU_OPTIONS_MAIN_BARS"] = "Barras Superiores do " .. TITAN_PANEL;
 L["TITAN_PANEL_MENU_OPTIONS_AUX_BARS"] = "Barras Inferiores do " .. TITAN_PANEL;
-L["TITAN_PANEL_MENU_OPTIONS_TOOLTIPS"] = "Tooltips";
+L["TITAN_PANEL_MENU_OPTIONS_TOOLTIPS"] = "Dicas";
 L["TITAN_PANEL_MENU_OPTIONS_FRAMES"] = "Quadros";
 L["TITAN_PANEL_MENU_PLUGINS"] = "Plugins";
 L["TITAN_PANEL_MENU_LOCK_BUTTONS"] = "Trancar Botões";
 L["TITAN_PANEL_MENU_VERSION_SHOWN"] = "Exibir Versões dos Plugins";
-L["TITAN_PANEL_MENU_LDB_SIDE"] = "Right-Side Plugin";
-L["TITAN_PANEL_MENU_LDB_FORCE_LAUNCHER"] = "Force LDB Launchers to Right-Side";
+L["TITAN_PANEL_MENU_LDB_SIDE"] = "Plugin no Lado Direito";
+L["TITAN_PANEL_MENU_LDB_FORCE_LAUNCHER"] = "Força os LDB Launchers para o Lado Direito";
 L["TITAN_PANEL_MENU_CATEGORIES"] = {"Incorporados","Geral","Combate","Informação","Interface","Profissão"}
-L["TITAN_PANEL_MENU_TOOLTIPS_SHOWN"] = "Exibir Tooltips";
-L["TITAN_PANEL_MENU_TOOLTIPS_SHOWN_IN_COMBAT"] = "Ocultar Tooltips em Combate";
+L["TITAN_PANEL_MENU_TOOLTIPS_SHOWN"] = "Exibir Dicas";
+L["TITAN_PANEL_MENU_TOOLTIPS_SHOWN_IN_COMBAT"] = "Ocultar Dicas em Combate";
+
+L["TITAN_PANEL_MENU_AUTOHIDE_IN_COMBAT"] = "Trancar auto-Ocultar barras quando em combate";
 L["TITAN_PANEL_MENU_RESET"] = "Resetar o " .. TITAN_PANEL .. " para os Padrões";
-L["TITAN_PANEL_MENU_TEXTURE_SETTINGS"] = "Skins";     
+L["TITAN_PANEL_MENU_TEXTURE_SETTINGS"] = "Peles";     
 L["TITAN_PANEL_MENU_LSM_FONTS"] = "Painel de Fontes"
 L["TITAN_PANEL_MENU_ENABLED"] = "Ativado";
 L["TITAN_PANEL_MENU_DISABLED"] = "Desativado";
@@ -143,32 +159,39 @@ L["TITAN_PANEL_MENU_SHOW_PLUGIN_TEXT"] = "Exibir Texto do Plugin";
 L["TITAN_PANEL_MENU_BAR_ALWAYS"] = "Sempre Ativado";
 L["TITAN_PANEL_MENU_POSITION"] = "Posição";
 L["TITAN_PANEL_MENU_BAR"] = "Barra";
-L["TITAN_PANEL_MENU_DISPLAY_ON_BAR"] = "Choose which bar the plugin is displayed";
+L["TITAN_PANEL_MENU_DISPLAY_ON_BAR"] = "Escolha em qual barra o plugin é exibido";
 L["TITAN_PANEL_MENU_SHOW"] = "Exibir Plugin";
 L["TITAN_PANEL_MENU_PLUGIN_RESET"] = "Atualizar Plugins";
-L["TITAN_PANEL_MENU_PLUGIN_RESET_DESC"] = "Refresh Plugin Text and Position";
-L["TITAN_PANEL_MENU_SILENT_LOAD"] = "Silent Load";
+L["TITAN_PANEL_MENU_PLUGIN_RESET_DESC"] = "Atualizar Texto e Posição do Plugin";
+L["TITAN_PANEL_MENU_SILENT_LOAD"] = "Carregament Silencioso";
 
 -- localization strings for AceConfigDialog-3.0
-L["TITAN_PANEL_CONFIG_MAIN_LABEL"] = "Information display bar addon. Allows users to add data feed or launcher plugins on a control panel placed on the top and/or bottom of the screen.";
+L["TITAN_ABOUT_VERSION"] = "Versão";
+L["TITAN_ABOUT_AUTHOR"] = "Autor";
+L["TITAN_ABOUT_CREDITS"] = "Créditos";
+L["TITAN_ABOUT_CATEGORY"] = "Categoria";
+L["TITAN_ABOUT_EMAIL"] = "E-mail";
+L["TITAN_ABOUT_WEB"] = "Website";
+L["TITAN_ABOUT_LICENSE"] = "Licença";
+L["TITAN_PANEL_CONFIG_MAIN_LABEL"] = "Addon de barra de exibição de informações. Permite que usuários adicionem alimentação de dados ou lançadores de plugins num painel de controle colocado acima ou abaixo da tela.";
 L["TITAN_TRANS_MENU_TEXT"] = "Transparência do " .. TITAN_PANEL;
 L["TITAN_TRANS_MENU_TEXT_SHORT"] = "Transparência";
-L["TITAN_TRANS_MENU_DESC"] = "Adjust transparency for the "..TITAN_PANEL.." bars and tooltip.";
+L["TITAN_TRANS_MENU_DESC"] = "Ajustar transparência para barras e dicas do "..TITAN_PANEL.." ";
 L["TITAN_TRANS_MAIN_CONTROL_TITLE"] = "Barra Principal";
 L["TITAN_TRANS_AUX_CONTROL_TITLE"] = "Barra Auxiliar";
-L["TITAN_TRANS_CONTROL_TITLE_TOOLTIP"] = "Tooltip";
-L["TITAN_TRANS_TOOLTIP_DESC"] = "Sets transparency for the tooltip of the various plugins.";
+L["TITAN_TRANS_CONTROL_TITLE_TOOLTIP"] = "Dica";
+L["TITAN_TRANS_TOOLTIP_DESC"] = "Configura a transparência para as dicas de diversos plugins.";
 L["TITAN_UISCALE_MENU_TEXT"] = "Escala e Fonte do " .. TITAN_PANEL;
 L["TITAN_UISCALE_MENU_TEXT_SHORT"] = "Escala e Fonte";
 L["TITAN_UISCALE_CONTROL_TITLE_UI"] = "Escala da IU";
 L["TITAN_UISCALE_CONTROL_TITLE_PANEL"] = "Escala do " .. TITAN_PANEL;
 L["TITAN_UISCALE_CONTROL_TITLE_BUTTON"] = "Espaçamento de Botões";
 L["TITAN_UISCALE_CONTROL_TITLE_ICON"] = "Espaçamento de Ícones";
-L["TITAN_UISCALE_CONTROL_TOOLTIP_TOOLTIPFONT"] = "Tooltip Font Scale";
-L["TITAN_UISCALE_TOOLTIP_DISABLE_TEXT"] = "Disable Tooltip Font Scale";
-L["TITAN_UISCALE_MENU_DESC"] = "Controls various aspects of the UI and "..TITAN_PANEL..".";
-L["TITAN_UISCALE_SLIDER_DESC"] = "Sets the scale of your entire UI.";
-L["TITAN_UISCALE_PANEL_SLIDER_DESC"] = "Sets the scale for the various "..TITAN_PANEL.." buttons and icons.";
+L["TITAN_UISCALE_CONTROL_TOOLTIP_TOOLTIPFONT"] = "Escala da Fonte de Dica";
+L["TITAN_UISCALE_TOOLTIP_DISABLE_TEXT"] = "Desativar Escala da Fonte de Dica";
+L["TITAN_UISCALE_MENU_DESC"] = "Controla vários aspectos da IU e "..TITAN_PANEL..".";
+L["TITAN_UISCALE_SLIDER_DESC"] = "Define a escala de toda a sua IU.";
+L["TITAN_UISCALE_PANEL_SLIDER_DESC"] = "Define a escala para os diversos botões e ícones do "..TITAN_PANEL.." ";
 L["TITAN_UISCALE_BUTTON_SLIDER_DESC"] = "Adjusts the space between left-side plugins.";
 L["TITAN_UISCALE_ICON_SLIDER_DESC"] = "Adjusts the space between right-side plugins.";
 L["TITAN_UISCALE_TOOLTIP_SLIDER_DESC"] = "Adjusts the scale for the tooltip of the various plugins.";

@@ -30,7 +30,12 @@ local defaults = {
 		prefix_equippable = "*",
 		prefix_upgrade = "+",
 
-		hook_alert = true,
+		-- If you enable these options, you understand
+		-- that you may miss bonus rolls or other important things.
+		unsafe_hook_alert = false,
+		unsafe_hook_bonus = false,
+
+		hook_alert = false, -- Unsafe, ignored
 		alert_skin = true,
 		alert_alpha = 1,
 		alert_scale = 1,
@@ -38,7 +43,7 @@ local defaults = {
 		alert_background = false,
 		alert_icon_frame = false,
 
-		hook_bonus = true,
+		hook_bonus = false, -- Unsafe, ignored
 		bonus_skin = true,
 
 		roll_button_size = 28,
@@ -166,7 +171,7 @@ function addon:OnEnable()
 	end
 
 	-- Hook alert actions
-	if opt.hook_alert then
+	if opt.unsafe_hook_alert then
 		hooksecurefunc('LootUpgradeFrame_SetUp', self.AlertFrameHook)
 		hooksecurefunc('LootWonAlertFrame_SetUp', self.AlertFrameHook)
 		hooksecurefunc('MoneyWonAlertFrame_SetUp', self.AlertFrameHook)
@@ -187,7 +192,7 @@ function addon:OnEnable()
 	-- hooksecurefunc('BonusRollFrame_StartBonusRoll', self.BonusRollFrame_StartBonusRoll)
 	-- hooksecurefunc('BonusRollFrame_FinishedFading', self.BonusRollFrame_Hide)
 	-- BonusRollFrame._SetPoint, BonusRollFrame.SetPoint = BonusRollFrame.SetPoint, addon.BonusRollFrame_SetPoint
-	if opt.hook_bonus then
+	if opt.unsafe_hook_bonus then
 		hooksecurefunc(BonusRollFrame, 'SetPoint', self.BonusRollFrame_SetPoint)
 		hooksecurefunc(BonusRollFrame, 'Show', self.BonusRollFrame_Show)
 		hooksecurefunc(BonusRollFrame, 'Hide', self.BonusRollFrame_Hide)

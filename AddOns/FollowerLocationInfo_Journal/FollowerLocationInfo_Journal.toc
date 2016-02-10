@@ -1,0 +1,14 @@
+## Interface: 60200
+## Title: FollowerLocationInfo Journal
+## Version: 0.11-release4
+## Title-zhTW: 追隨者位置資訊 Journal
+## Notes-zhTW: 追隨者位置資訊 Journal
+## Author: Hizuro
+## Dependencies: FollowerLocationInfo, FollowerLocationInfo_Data
+## LoadOnDemand: 1
+## X-Curse-Packaged-Version: 0.11-release4
+## X-Curse-Project-Name: FollowerLocationInfo
+## X-Curse-Project-ID: followerlocationinfo
+## X-Curse-Repository-ID: wow/followerlocationinfo/mainline
+
+Journal.xml

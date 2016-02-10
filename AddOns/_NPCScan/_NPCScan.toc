@@ -29,7 +29,7 @@
 ## X-Credits-ruRU: Localization: StingerSoft, Sarymian, KVVV, The_DimoK, ichik, Ant1dotE, tick095, dartraiden
 ## X-Credits-zhCN: Localization: digmouse, tss1398383123, ananhaid, redsaru, dh0000
 ## X-Credits-zhTW: Localization: s8095324, pepper_ep, zhTW, laincat, alpha2009, machihchung
-## Version: 6.2.3.6
+## Version: 6.2.3.7
 ## X-Date: 2015-12-08T02:55:17Z
 ## X-Category: Miscellaneous
 ## X-License: GPLv3
@@ -38,7 +38,7 @@
 ## X-Localizations: deDE, enCN, enTW, enUS, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
 ## X-CompatibleLocales: deDE, enCN, enTW, enUS, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
 ## SavedVariables: _NPCScanOptions, _NPCScanProfiles
-## X-Curse-Packaged-Version: 6.2.3.6
+## X-Curse-Packaged-Version: 6.2.3.7
 ## X-Curse-Project-Name: _NPCScan
 ## X-Curse-Project-ID: npcscan
 ## X-Curse-Repository-ID: wow/npcscan/mainline

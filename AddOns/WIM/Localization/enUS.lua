@@ -5,7 +5,7 @@
 
 WIM.AddLocale("enUS", {
     ["WIM (WoW Instant Messenger)"] = true,
-    ["_Description"] = "WIM is an addon that brings a familiar feel to communicating through chat in The World of Warcraft. On this screen you will be able to customize WIM to tailor it to your needs. If you have any questions, comments or suggestions please go to http://www.WIMAddon.com.",
+    ["_Description"] = "WIM is an addon that brings a familiar feel to communicating through chat in The World of Warcraft. On this screen you will be able to customize WIM to tailor it to your needs.",
 
     ["_DemoText"] = "This is a demonstration window and is not fully functional. Place this window in the location where you want all other windows to spawn. When finished, you may close this window and your settings will be saved.",
 
@@ -32,7 +32,7 @@ WIM.AddLocale("enUS", {
     
     ["<Shift-Click> to close window."] = true,
     
-    ["A new version of WIM is available!\nYou can download the latest version by going to:\n\n http://www.wimaddon.com"] = true,
+    ["A new version of WIM is available!\nYou can download the latest version from curse"] = true,
     
     ["Options"] = true,
     
@@ -284,7 +284,7 @@ WIM.AddLocale("enUS", {
     ["Display Tutorials"] = true,
     ["Reset Tutorials"] = true,
     ["Credits"] = true,
-    ["This is a long message which contains both emoticons and urls 8). WIM's home is www.WIMAddon.com."] = true,
+    ["This is a long message which contains both emoticons and urls 8)."] = true,
     ["Message Formatting"] = true,
     ["Manipulate how WIM displays messages."] = true,
     ["Preview"] = true,

@@ -1,0 +1,26 @@
+﻿## Interface: 70000
+## X-Min-Interface: 70000
+## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Emerald Nightmare|r
+## Author: MysticalOS
+## LoadOnDemand: 1
+## RequiredDeps: DBM-Core
+## SavedVariables: DBMEmeraldNightmare_AllSavedVars
+## SavedVariablesPerCharacter: DBMEmeraldNightmare_SavedStats
+## X-DBM-Mod: 1
+## X-DBM-Mod-Type: RAID
+## X-DBM-Mod-Category: LEG
+## X-DBM-Mod-Has-Mythic : 1
+## X-DBM-Mod-Sort: 055
+## X-DBM-Mod-MapID: 1520
+## X-DBM-Mod-MinCoreRevision: 14737
+## X-Curse-Packaged-Version: 6.2.18-7-gc13aff2
+## X-Curse-Project-Name: Deadly Boss Mods
+## X-Curse-Project-ID: deadly-boss-mods
+## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
+localization.en.lua
+localization.cn.lua
+Nythendra.lua
+Ilgynoth.lua
+Ursok.lua
+NightmareDragons.lua
+Xavius.lua

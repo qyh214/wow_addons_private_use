@@ -2,7 +2,7 @@ local _, T = ...
 if T.Mark ~= 50 then return end
 local G, L, E = T.Garrison, T.L, T.Evie
 
-function T.SetCacheTooltip(GameTooltip, isSelf, cv, mv, st, md)
+function T.SetCacheTooltip(GameTooltip, current, cv, mv, st, md)
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(GARRISON_CACHE)
 	local tl = st+md-time()
@@ -19,13 +19,18 @@ function T.SetCacheTooltip(GameTooltip, isSelf, cv, mv, st, md)
 		GameTooltip:AddLine(tl, 0.25,1,0.15)
 	end
 	GameTooltip:AddLine(" ")
-	if cv > 0 then
+	if cv and cv > 0 then
 		local cc = cv == mv and 0.1 or 1
 		GameTooltip:AddLine(GARRISON_LANDING_COMPLETED:format(cv, mv), cc,1,cc)
-		local _, cur, _, _, _, tmax = GetCurrencyInfo(824)
-		if isSelf and cur and tmax and tmax > 0 then
-			GameTooltip:AddLine("|n" .. CURRENCY_TOTAL_CAP:format(cur == tmax and "|cffff0000" or (cur + cc > tmax) and "|cffffe000" or "|cffffffff", cur, tmax))
+	end
+	if type(current) == "number" then
+		local cc = HIGHLIGHT_FONT_COLOR_CODE
+		if current == 1e4 then
+			cc = RED_FONT_COLOR_CODE
+		elseif current + cv >= 1e4 then
+			cc = ORANGE_FONT_COLOR_CODE
 		end
+		GameTooltip:AddLine("\n" .. CURRENCY_TOTAL_CAP:format(cc, current, 1e4))
 	end
 	GameTooltip:Show()
 end
@@ -33,7 +38,7 @@ end
 local function Ship_OnEnter(self, ...)
 	if self.buildingID == -1 and self.plotID == -42 then
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		T.SetCacheTooltip(GameTooltip, true, G.GetResourceCacheInfo())
+		T.SetCacheTooltip(GameTooltip, select(2, GetCurrencyInfo(824)), G.GetResourceCacheInfo())
 		self.UpdateTooltip = Ship_OnEnter
 	else
 		GarrisonLandingPageReportShipment_OnEnter(self, ...)

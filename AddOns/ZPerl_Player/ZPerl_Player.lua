@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 983 $")
+end, "$Revision: 989 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -61,6 +61,9 @@ function XPerl_Player_OnLoad(self)
 	self:SetAttribute("*type1", "target")
 	self:SetAttribute("type2", "togglemenu")
 	self:SetAttribute("unit", self.partyid)
+
+	--RegisterAttributeDriver(self.nameFrame, "unit", "[vehicleui] vehicle; player")
+	RegisterAttributeDriver(self, "unit", "[vehicleui] vehicle; player")
 
 	XPerl_RegisterClickCastFrame(self.nameFrame)
 	XPerl_RegisterClickCastFrame(self)
@@ -877,7 +880,7 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 	self:UnregisterEvent("VARIABLES_LOADED")
 
 	local events = {
-		"PLAYER_ENTERING_WORLD", "PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "GROUP_ROSTER_UPDATE", "PLAYER_UPDATE_RESTING", "PLAYER_REGEN_ENABLED", "PLAYER_REGEN_DISABLED", "PLAYER_ENTER_COMBAT", "PLAYER_LEAVE_COMBAT", "PLAYER_DEAD", "UPDATE_FACTION", "UNIT_AURA", "PLAYER_CONTROL_LOST", "PLAYER_CONTROL_GAINED", "UNIT_COMBAT", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", --[["UNIT_SPELLMISS",]] "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "PLAYER_FLAGS_CHANGED", "UNIT_ENTERED_VEHICLE", "UNIT_EXITING_VEHICLE", "PLAYER_TALENT_UPDATE", "RAID_TARGET_UPDATE", "UPDATE_SHAPESHIFT_FORM", "RUNE_TYPE_UPDATE", "RUNE_POWER_UPDATE", "UPDATE_EXHAUSTION", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"
+		"PLAYER_ENTERING_WORLD", "PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "GROUP_ROSTER_UPDATE", "PLAYER_UPDATE_RESTING", "PLAYER_REGEN_ENABLED", "PLAYER_REGEN_DISABLED", "PLAYER_ENTER_COMBAT", "PLAYER_LEAVE_COMBAT", "PLAYER_DEAD", "UPDATE_FACTION", "UNIT_AURA", "PLAYER_CONTROL_LOST", "PLAYER_CONTROL_GAINED", "UNIT_COMBAT", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", --[["UNIT_SPELLMISS",]] "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "PLAYER_FLAGS_CHANGED", "UNIT_ENTERED_VEHICLE", "UNIT_EXITING_VEHICLE", --[["UNIT_PET",]] "PLAYER_TALENT_UPDATE", "RAID_TARGET_UPDATE", "UPDATE_SHAPESHIFT_FORM", "RUNE_TYPE_UPDATE", "RUNE_POWER_UPDATE", "UPDATE_EXHAUSTION", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"
 	}
 
 	for i, event in pairs(events) do
@@ -1099,9 +1102,9 @@ function XPerl_Player_Events:UNIT_ENTERED_VEHICLE(showVehicle)
 		if (XPerl_ArcaneBar_SetUnit) then
 			XPerl_ArcaneBar_SetUnit(self.nameFrame, "vehicle")
 		end
-		if (not InCombatLockdown()) then
+		--[[if (not InCombatLockdown()) then
 			self:SetAttribute("unit", "vehicle")
-		end
+		end]]
 		XPerl_Player_UpdateDisplay(self)
 		--XPerl_SetUnitNameColor(self.nameFrame.text, self.partyid)
 	end
@@ -1114,11 +1117,17 @@ function XPerl_Player_Events:UNIT_EXITING_VEHICLE()
 		if (XPerl_ArcaneBar_SetUnit) then
 			XPerl_ArcaneBar_SetUnit(self.nameFrame, "player")
 		end
-		if (not InCombatLockdown()) then
+		--[[if (not InCombatLockdown()) then
 			self:SetAttribute("unit", "player")
-		end
+		end]]
 		XPerl_Player_UpdateDisplay(self)
 	end
+end
+
+-- UNIT_PET
+function XPerl_Player_Events:UNIT_PET()
+	self.partyid = UnitHasVehicleUI("player") and "pet" or "player"
+	XPerl_Player_UpdateDisplay(self)
 end
 
 function XPerl_Player_Events:UNIT_HEAL_PREDICTION(unit)

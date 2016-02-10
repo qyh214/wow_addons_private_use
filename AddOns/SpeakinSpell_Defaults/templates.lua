@@ -437,16 +437,16 @@ function SpeakinSpell:Template_BuildAuto_Random()
 	}
 	
 	-- Query guild and arena team names
-	local guildName, guildRankName, guildRankIndex = GetGuildInfo( UnitName("player") )
+	local guildName, guildRankName, guildRankIndex = GetGuildInfo( "player" )
+	--TODO: verify the above query works on "player" instead of UnitName("player") - changed per review of UnitName API usage
 	local Factions = {
 		-- guildName, guildRankName, guildRankIndex = GetGuildInfo(unit);
 		guildName = guildName,
 		-- rating, seasonPlayed, seasonWon, weeklyPlayed, weeklyWon = GetInspectArenaData(Id);
       -- GetArenaTeam replaced GetInspectArenaData in patch 5.4.0 caused the addon to untimatly break.
 		arena2 = GetInspectArenaData(1),
-      arena3 = GetInspectArenaData(2),
-      arena5 = GetInspectArenaData(3),
-      
+		arena3 = GetInspectArenaData(2),
+		arena5 = GetInspectArenaData(3),
 	}
 	--TODOLATER: these queries on not working on a first time clean install, but they do work on /ss reset ... i think it's a load timing issue
 	--self:DebugMsgDumpTable( Factions, "Affiliations", 2 )
@@ -1035,8 +1035,9 @@ end
 
 function SpeakinSpell:Template_AddAltToonEventTable( realm, toon, EventTable )
 	local funcname = "Template_AddAltToonEventTable"
-	
-	if toon == UnitName("player") and realm == GetRealmName() then
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
+	if toon == myname and realm == GetRealmName() then
 		-- will be 100% redundant and auto-removed, so skip it
 		return
 	end

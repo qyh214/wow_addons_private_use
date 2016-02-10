@@ -1,0 +1,12 @@
+tag 1.6.5
+252ed8e07533bfe6a546c344ea85dbb035ff0229
+Hendrik Leppkes <h.leppkes@gmail.com>
+2016-01-29 12:48:21 +0100
+
+Tag as 1.6.5
+
+
+--------------------
+
+Hendrik Leppkes:
+	- Update copyright to 2016

@@ -177,7 +177,7 @@ function SpeakinSpell:CreateNew_ValidateSelectedEvent()
 
 	-- allow the current selection to remain if it is valid
 	if DetectedEvent then
-		if self:MatchesFilter(DetectedEvent,false) then
+		if self:MatchesFilter(DetectedEvent) then
 			-- the current selection is valid, so keep it
 			--self:DebugMsg(funcname, "valid selection:"..tostring(DetectedEvent.key))
 			return
@@ -273,7 +273,7 @@ function SpeakinSpell:CreateNew_RebuildSpellList()
 		if de and (not SpeakinSpellSavedData.ShowUsedHooks) and self:GetActiveEventTable()[de.key] then
 			return false
 		end
-		return SpeakinSpell:MatchesFilter( de, false )
+		return SpeakinSpell:MatchesFilter( de )
 	end
 	local GetDisplayNameFunc = function(key)
 		local de = SpeakinSpellSavedDataForAll.NewEventsDetected[key]
@@ -338,7 +338,7 @@ function SpeakinSpell:GUI_CreateNew_OnNewEventDetected(de)
 	--self:DebugMsg(funcname, "entry")
 	
 	-- update the GUI to show this newly detected event if it matches the current search filter
-	if self:MatchesFilter(de,false) then
+	if self:MatchesFilter(de) then
 		local values = self.OptionsGUI.args.CreateNew.args.NewSpellNameSelect.values
 		-- add this to the list of values
 		DisplayNameFormat = {

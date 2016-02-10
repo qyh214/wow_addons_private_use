@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision: 984 $")
+end, "$Revision: 990 $")
 
 local XPerl_Player_Pet_HighlightCallback
 
@@ -61,12 +61,25 @@ function XPerl_Player_Pet_OnLoad(self)
 
 	--CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
 
-	XPerl_SecureUnitButton_OnLoad(self, "pet", nil, PetFrameDropDown, XPerl_ShowGenericMenu)			--PetFrame.menu)
-	XPerl_SecureUnitButton_OnLoad(self.nameFrame, "pet", nil, PetFrameDropDown, XPerl_ShowGenericMenu)	--PetFrame.menu)
+	--XPerl_SecureUnitButton_OnLoad(self, "pet", nil, PetFrameDropDown, XPerl_ShowGenericMenu)			--PetFrame.menu)
+	--XPerl_SecureUnitButton_OnLoad(self.nameFrame, "pet", nil, PetFrameDropDown, XPerl_ShowGenericMenu)	--PetFrame.menu)
+
+	self.nameFrame:SetAttribute("*type1", "target")
+	self.nameFrame:SetAttribute("type2", "togglemenu")
+	self.nameFrame:SetAttribute("unit", self.partyid)
+	self:SetAttribute("*type1", "target")
+	self:SetAttribute("type2", "togglemenu")
+	self:SetAttribute("unit", self.partyid)
+
+	--RegisterAttributeDriver(self.nameFrame, "unit", "[vehicleui] player; pet")
+	RegisterAttributeDriver(self, "unit", "[vehicleui] player; pet")
+
+	XPerl_RegisterClickCastFrame(self.nameFrame)
+	XPerl_RegisterClickCastFrame(self)
 
 	--RegisterUnitWatch(self)
 	local events = {
-		"UNIT_HEALTH", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PET", "PET_ATTACK_START", "UNIT_COMBAT", --[["UNIT_SPELLMISS",]] "VARIABLES_LOADED", "PLAYER_REGEN_ENABLED", "PLAYER_ENTERING_WORLD", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE", "UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED", "UNIT_TARGET", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
+		"UNIT_HEALTH", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PET", "PET_ATTACK_START", "UNIT_COMBAT", --[["UNIT_SPELLMISS",]] "VARIABLES_LOADED", --[["PLAYER_REGEN_ENABLED",]] "PLAYER_ENTERING_WORLD", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE", "UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED", "UNIT_TARGET", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
 	}
 	for i, event in pairs(events) do
 		if string.find(event, "^UNIT_") then
@@ -312,7 +325,8 @@ end
 -- UNIT_PET
 function XPerl_Player_Pet_Events:UNIT_PET()
 	if (conf) then		-- DK can issue very early UNIT_PET, long before PEW. We refresh on entering world regardless
-		XPerl_Player_Pet_UpdateDisplay(XPerl_Player_Pet)
+		--self.partyid = UnitHasVehicleUI("player") and "player" or "pet"
+		XPerl_Player_Pet_UpdateDisplay(self)
 	end
 end
 
@@ -436,9 +450,9 @@ function XPerl_Player_Pet_Events:UNIT_ENTERED_VEHICLE(unit, showVehicle)
 		if (XPerl_ArcaneBar_SetUnit) then
 			XPerl_ArcaneBar_SetUnit(self.nameFrame, "player")
 		end
-		if (not InCombatLockdown()) then
+		--[[if (not InCombatLockdown()) then
 			self:SetAttribute("unit", "player")
-		end
+		end]]
 		XPerl_Player_Pet_UpdateDisplay(self)
 	else
 		XPerl_Player_Pet_Events.UNIT_EXITED_VEHICLE(self, unit)
@@ -453,9 +467,9 @@ function XPerl_Player_Pet_Events:UNIT_EXITED_VEHICLE(unit)
 			if (XPerl_ArcaneBar_SetUnit) then
 				XPerl_ArcaneBar_SetUnit(self.nameFrame, "pet")
 			end
-			if (not InCombatLockdown()) then
+			--[[if (not InCombatLockdown()) then
 				self:SetAttribute("unit", "pet")
-			end
+			end]]
 			XPerl_Player_Pet_UpdateDisplay(self)
 		end
 	end

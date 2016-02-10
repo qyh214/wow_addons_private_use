@@ -343,6 +343,8 @@ local function GMCMissionButton()
 		frame:SetAlpha(1)
 		frame:SetScale(1.0)
 		frame:Enable()
+		frame.Overlay:Hide()
+		frame.Overlay.Overlay:SetAlpha(.4)
 		for i=1,#self.scripts do
 			frame:SetScript(self.scripts[i],nil)
 		end
@@ -369,6 +371,39 @@ local function GMCMissionButton()
 	end
 	function m:SetScale(s)
 		return self.frame:SetScale(s)
+	end
+	function m:Blacklist(blacklisted)
+		local mb=self.frame
+		if blacklisted then
+			print("Blacklisting",mb:GetName())
+			mb.Overlay:Show()
+			mb.Overlay.Overlay:SetAlpha(1)
+			for i,v in pairs(mb.gcPANEL.Party) do
+				v.PortraitFrame.Portrait:SetDesaturated(true)
+				v.PortraitFrame.PortraitRingQuality:Hide()
+				v.PortraitFrame.LevelBorder:Hide()
+			end
+			for i,v in pairs(mb.Rewards) do
+				v.Icon:SetDesaturated(true)
+				v.Quantity:Hide()
+			end
+			return true
+		else
+			print("UnBlacklisting",mb:GetName())
+			mb.Overlay:Hide()
+			mb.Overlay.Overlay:SetAlpha(0.4)
+			for i,v in pairs(mb.gcPANEL.Party) do
+				v.PortraitFrame.Portrait:SetDesaturated(false)
+				v.PortraitFrame.PortraitRingQuality:Show()
+				v.PortraitFrame.LevelBorder:Show()
+			end
+			for i,v in pairs(mb.Rewards) do
+				v.Icon:SetDesaturated(false)
+				v.Quantity:Show()
+			end
+			return false
+		end
+
 	end
 	function m:SetMission(mission,party,perc,source)
 		self.frame.info=mission
@@ -397,7 +432,8 @@ local function GMCMissionButton()
 		frame.Summary:SetFontObject("QuestFont_Shadow_Small")
 		frame:SetScript("OnEnter",nil)
 		frame:SetScript("OnLeave",nil)
-		frame:SetScript("OnClick",function(self,button) return self.obj:Fire("OnClick",self,button) end)
+		frame:RegisterForClicks("LeftButtonUp","RightButtonUp")
+		frame:SetScript("OnClick",function(self,button) print(button) return button=="RightButton" and self.obj:Fire("OnRightClick",self,button) or  self.obj:Fire("OnClick",self,button) end)
 		frame.LocBG:SetPoint("LEFT")
 		frame.MissionType:SetPoint("TOPLEFT",5,-2)
 		--[[

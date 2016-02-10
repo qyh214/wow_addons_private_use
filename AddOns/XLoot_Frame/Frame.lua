@@ -103,7 +103,7 @@ local defaults = {
 
 		linkall_threshold = 2, -- Quality from 0 - 6, Poor - Artifact
 		linkall_channel = 'RAID',
-		linkall_show = 'grouped',
+		linkall_show = 'group',
 
 		old_close_button = false,
 
@@ -133,6 +133,7 @@ function addon:OnEnable()
 	XLootFrame:RegisterEvent("LOOT_CLOSED")
 	XLootFrame:RegisterEvent("LOOT_SLOT_CLEARED")
 	XLootFrame:RegisterEvent("MODIFIER_STATE_CHANGED")
+	XLootFrame:RegisterEvent("PARTY_MEMBERS_CHANGED")
 
 	-- Disable default frame
 	LootFrame:UnregisterEvent("LOOT_OPENED")
@@ -189,8 +190,9 @@ function addon:ApplyOptions(in_options)
 		end
 		do
 			name, currentAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered, rarity = GetCurrencyInfo(828)
-			max_width = math.max(max_width, Fake.rows[#preview_loot+1]:Update(false, texture, name, nil, 5, rarity))
-			Fake.slots[#preview_loot+1] = Fake.rows[#preview_loot+1]
+			local row =  Fake.rows[#preview_loot+1]
+			max_width = math.max(max_width, row:Update(false, texture, name, nil, 5, rarity))
+			Fake.slots[#preview_loot+1] = row
 		end
 		Fake:SizeAndColor(max_width, max_quality)
 	end
@@ -217,6 +219,15 @@ end
 -- CLI output
 local print, wprint = print, print
 local function xprint(text) wprint(('%s: %s'):format('|c2244dd22XLoot|r', text)) end
+
+local IsGroupState = {
+	always = function() return true end,
+	never = function() return false end,
+	raid = IsInRaid,
+	group = IsInGroup,
+	party = function() return IsInGroup() and not IsInRaid() end,
+	solo = function() return not IsInGroup() end
+}
 
 -------------------------------------------------------------------------------
 -- Link All
@@ -348,6 +359,7 @@ local function GetColor(self, key, mult)
 	end
 	return unpack(t)
 end
+
 
 -- Build individual loot row
 local mouse_focus
@@ -840,10 +852,8 @@ do
 			then
 				now = true
 			end
-		elseif show == 'always' 
-				or (show == 'solo' and not IsInGroup()) 
-				or (show == 'grouped' and IsInGroup()) then
-			now = true
+		else
+			now = IsGroupState[show]()
 		end
 		if now then
 			self.link:Show()
@@ -1005,6 +1015,22 @@ function XLootFrame:ParseAutolootList()
 	end
 end
 
+local states = {
+	always = true,
+	group = true, -- Secretly "Always" shh
+	never = false,
+	solo = nil,
+	party = nil,
+	raid = nil
+}
+
+function addon:PARTY_MEMBERS_CHANGED()
+	local raid = IsInRaid()
+	states.solo = not IsInGroup()
+	states.party = not raid
+	states.raid = raid
+end
+
 local _bag_slots = {}
 function XLootFrame:Update(in_options)
 	local numloot = GetNumLootItems()
@@ -1016,17 +1042,19 @@ function XLootFrame:Update(in_options)
 		addon:BuildLootFrame(self)
 		self:ParseAutolootList()
 		self.auto_items = auto_items
+		addon:PARTY_MEMBERS_CHANGED()
 	end
 
 	-- References
 	local rows, slots, slots_index = self.rows, wipe(self.slots), wipe(self.slots_index)
+	local bag_slots -- Only assigned if we start autolooting
 	
 	-- Autolooting options
-	local party = IsInGroup()
-	local auto, auto_items, bag_slots = auto, auto_items 
+	local auto, auto_items = auto, auto_items
 	for k,v in pairs(opt.autoloots) do
-		auto[k] = v == 'always' or (v == 'solo' and not party)
+		auto[k] = states[v]
 	end
+
 	-- Update rows
 	local max_quality, max_width, our_slot, slot = 0, 0, 0
 	for slot = 1, numloot do

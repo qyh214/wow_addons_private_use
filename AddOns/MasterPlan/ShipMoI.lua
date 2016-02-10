@@ -26,8 +26,7 @@ local function SyncVariants()
 end
 
 
-local moiContainer, core, loader = CreateFrame("Frame", nil, GarrisonShipyardFrame, "GarrisonBaseInfoBoxTemplate") do
-	local scrollFrame
+local moiContainer, core, loader = CreateFrame("Frame", "MasterPlanShipMoI", GarrisonShipyardFrame, "GarrisonBaseInfoBoxTemplate") do
 	moiContainer:SetPoint("TOPLEFT", 33, -64)
 	moiContainer:SetPoint("BOTTOMRIGHT", -35, 34)
 	moiContainer:Hide() do
@@ -46,11 +45,11 @@ local moiContainer, core, loader = CreateFrame("Frame", nil, GarrisonShipyardFra
 		t:SetTexCoord(1,0, 1,0)
 		t:SetPoint("BOTTOMRIGHT")
 	end
-	core, scrollFrame = api.createScrollList(moiContainer, 882)
+	core, moiContainer.List = api.createScrollList(moiContainer, 882)
 	GarrisonShipyardFrame.InterestTab = moiContainer
 	loader = api.CreateLoader(moiContainer, 20, 30, 20)
 	loader:SetPoint("CENTER")
-	local fadeIn = scrollFrame:CreateAnimationGroup() do
+	local fadeIn = moiContainer.List:CreateAnimationGroup() do
 		fadeIn:SetIgnoreFramerateThrottle(true)
 		local a = fadeIn:CreateAnimation("Alpha")
 		a:SetFromAlpha(0)
@@ -162,10 +161,13 @@ local moiHandle do
 		end
 		local nf = best and s[2] or 0
 		self.chance:SetText(best and ("%d%%"):format(best[5]) or "")
-		if best and best[5] >= 100 then
-			self.chance:SetTextColor(0, 1, 0)
+		local sc = best and best[5] or 0
+		if sc >= 100 then
+			self.chance:SetTextColor(0, 1, 0.25)
+		elseif sc >= 90 then
+			self.chance:SetTextColor(0.95, 1, 0)
 		else
-			self.chance:SetTextColor(1, 0.55, 0)
+			self.chance:SetTextColor(1, 0.45, 0)
 		end
 
 		local ab = best and best[4] and nf > 0 and T.ShipTraitStack[s[4]]

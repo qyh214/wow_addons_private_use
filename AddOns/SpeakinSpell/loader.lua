@@ -384,7 +384,7 @@ SpeakinSpellSavedDataForAll = {} -- account-wide data
 function SpeakinSpell:Print(message)
 	-- Overriding AceConsole-3.0:Print to use localized addon name instead of tostring(self)
 	--local tag = tostring(SpeakinSpell.Colors.SPEAKINSPELL).."SpeakinSpell|r: "
-	local tag = "|HSSLink<SpeakinSpell:ShowOptions_Toggle()>|h" .. tostring(SpeakinSpell.Colors.SPEAKINSPELL) .. "[SpeakinSpell]|r|h|h "
+	local tag = "|HSSLink:{:SpeakinSpell:ShowOptions_Toggle():}:|h" .. tostring(SpeakinSpell.Colors.SPEAKINSPELL) .. "[SpeakinSpell]|r|h|h "
 	local text = tag .. tostring(message)
 	DEFAULT_CHAT_FRAME:AddMessage( text )
 end

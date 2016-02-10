@@ -227,7 +227,9 @@ total segments:<segments>
 							name = L["Sync with Target"],
 							desc = L["Send a data sharing request to your selected target.\n\nSame as \"/ss sync <target>\""],
 							func = function()
-								SpeakinSpell:Network_SyncWithTarget( UnitName("target") )
+								local targetname, targetrealm = UnitName("target")
+								--TODO: check for cross realm issues here
+								SpeakinSpell:Network_SyncWithTarget( targetname )
 							end,
 						},
 					},

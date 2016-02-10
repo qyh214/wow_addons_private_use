@@ -31,12 +31,14 @@ function SpeakinSpell:Advertise(Channel, msgtarget)
 	self.RuntimeData.LastAd = msg
 
 	-- process substitution variables on the randomized advertisements
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local DetectedEventStub = {
 		-- event descriptors
 		name = "ad",
 		-- event-specific data for substitutions
 		target = msgtarget,
-		caster = UnitName("player"),
+		caster = myname,
 		type = "MACRO"
 	}
 	local DetectedEvent = self:CreateDetectedEvent( DetectedEventStub )

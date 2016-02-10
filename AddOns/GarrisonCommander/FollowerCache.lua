@@ -256,3 +256,7 @@ end
 function addon:GetFollowerType(followerID)
 	return followerTypes[followerID] or 0
 end
+function addon:GetFollowerID(followerName)
+	return self.names[followerName]
+
+end

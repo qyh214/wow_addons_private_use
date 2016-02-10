@@ -9,20 +9,20 @@ Only LDB types listed in the LDB 1.1 spec are supported. Custom types are not su
 
 Supported
 - "launcher" become "icon" plugins
-   icon* - always shown
-   OnClick* - 
-   label^ - 
-   right side^ - default
-   tooltip
+	icon* - always shown
+	OnClick* - 
+	label^ - 
+	right side^ - default
+	tooltip
 - "data source" become "combo" plugins with icon; a tooltip/Click; and optional label
-   icon^ - 
-   OnClick - 
-   text*^ - or value & suffix
-   label^ - 
-   OnEnter - 
-   OnLeave - 
-   tooltip
-   OnTooltipShow -
+	icon^ - 
+	OnClick - 
+	text*^ - or value & suffix
+	label^ - 
+	OnEnter - 
+	OnLeave - 
+	tooltip
+	OnTooltipShow -
 
 * required by LDB spec
 ^ user controlled show / hide
@@ -31,9 +31,9 @@ Supported
 
 --[[ doc
 -----------------------------------------------------------------
---   By Titan Dev team
---   Originally by Tristanian aka "TristTitan" as a Titan member
---   Created and initially commited on : July 29th, 2008
+-- By Titan Dev team
+-- Originally by Tristanian aka "TristTitan" as a Titan member
+-- Created and initially commited on : July 29th, 2008
 -----------------------------------------------------------------
 --]]
 local xcategories = {
@@ -146,13 +146,13 @@ OUT:  None
 --]]
 function LDBToTitan:TitanLDBSetTooltip(name, frame, func)
 -- Check to see if we allow tooltips to be shown
-	if not TitanPanelGetVar("ToolTipsShown") 
-	or (TitanPanelGetVar("HideTipsInCombat") and InCombatLockdown()) then 
-		return 
+	if not TitanPanelGetVar("ToolTipsShown")
+	or (TitanPanelGetVar("HideTipsInCombat") and InCombatLockdown()) then
+		return
 	end
 
 	local button = TitanUtils_GetButton(name);
-	local scale = TitanPanelGetVar("Scale");	
+	local scale = TitanPanelGetVar("Scale");
 	local offscreenX, offscreenY;
 	local i = TitanPanel_GetButtonNumber(name);
 	local bar = TITAN_PANEL_DISPLAY_PREFIX..TitanUtils_GetWhichBar(name)
@@ -203,7 +203,7 @@ function LDBToTitan:TitanLDBHandleScripts(event, name, _, func, obj)
 	local TitanPluginframe = _G["TitanPanel"..NAME_PREFIX..name.."Button"];
 
 	-- tooltip
-	if event:find("tooltip") and not event:find("OnTooltipShow") then		
+	if event:find("tooltip") and not event:find("OnTooltipShow") then
 		local pluginframe = _G[obj.tooltip] or obj.tooltip
 		if pluginframe then
 			TitanPluginframe:SetScript("OnEnter", function(self)
@@ -213,7 +213,7 @@ function LDBToTitan:TitanLDBHandleScripts(event, name, _, func, obj)
 				)
 
 			TitanPluginframe:SetScript("OnMouseDown", function(self)
-				pluginframe:Hide();			 		
+				pluginframe:Hide();
 				end
 				)	
 
@@ -239,19 +239,19 @@ function LDBToTitan:TitanLDBHandleScripts(event, name, _, func, obj)
 						end
 						)
 				end
-			end			 		       			        			 	
+			end
 		end
 
 	-- OnTooltipShow
 	elseif event:find("OnTooltipShow") then
 		TitanPluginframe:SetScript("OnEnter", function(self)
-			if TITAN_PANEL_MOVING == 0 and func then				
+			if TITAN_PANEL_MOVING == 0 and func then
 				LDBToTitan:TitanLDBSetTooltip(NAME_PREFIX..name, GameTooltip, func);
 			end
 				TitanPanelButton_OnEnter(self);
 			end
 			)
-		TitanPluginframe:SetScript("OnLeave", function(self) 
+		TitanPluginframe:SetScript("OnLeave", function(self)
 			GameTooltip:Hide();
 			TitanPanelButton_OnLeave(self);
 			end
@@ -262,15 +262,15 @@ function LDBToTitan:TitanLDBHandleScripts(event, name, _, func, obj)
 		TitanPluginframe:SetScript("OnDoubleClick", function(self, button)
 			if TITAN_PANEL_MOVING == 0 then
 				func(self, button) 
-			end	  	
 			end
-			)	
+			end
+			)
 		
 	-- OnClick
 	elseif event:find("OnClick") then
 		TitanPluginframe:SetScript("OnClick", function(self, button)
 			if TITAN_PANEL_MOVING == 0 then
-				func(self, button) 
+				func(self, button)
 			end
 			-- implement a safeguard, since the DO may actually use 
 			-- Blizzy dropdowns !
@@ -280,29 +280,29 @@ function LDBToTitan:TitanLDBHandleScripts(event, name, _, func, obj)
 				TitanUtils_CloseAllControlFrames();
 			end
 			end
-			)	  
+			)
 	-- OnEnter
 	else
 		TitanPluginframe:SetScript("OnEnter", function(self)
 			-- Check for tooltip libs without embedding them 
-			if AceLibrary and AceLibrary:HasInstance("Tablet-2.0") then 
-				Tablet = AceLibrary("Tablet-2.0") 
+			if AceLibrary and AceLibrary:HasInstance("Tablet-2.0") then
+				Tablet = AceLibrary("Tablet-2.0")
 			end
 			LibQTip = LibStub("LibQTip-1.0", true)
 			-- Check to see if we allow tooltips to be shown
-			if not TitanPanelGetVar("ToolTipsShown") 
+			if not TitanPanelGetVar("ToolTipsShown")
 			or (TitanPanelGetVar("HideTipsInCombat") and InCombatLockdown()) then
 				-- if a plugin is using tablet, then detach and close the tooltip
-				if Tablet and Tablet:IsRegistered(TitanPluginframe) 
+				if Tablet and Tablet:IsRegistered(TitanPluginframe)
 				and Tablet:IsAttached(TitanPluginframe) then
 					Tablet:Detach(TitanPluginframe);
 					Tablet:Close(TitanPluginframe);
 				end
 				return;
-			else			
+			else
 				-- if a plugin is using tablet, then re-attach the tooltip 
 				-- (it will auto-open on mouseover)
-				if Tablet and Tablet:IsRegistered(TitanPluginframe) 
+				if Tablet and Tablet:IsRegistered(TitanPluginframe)
 				and not Tablet:IsAttached(TitanPluginframe) then
 					Tablet:Attach(TitanPluginframe);
 				end
@@ -313,10 +313,10 @@ function LDBToTitan:TitanLDBHandleScripts(event, name, _, func, obj)
 				Tablet:SetTransparency(TitanPluginframe, TitanPanelGetVar("TooltipTrans"))
 				if not TitanPanelGetVar("DisableTooltipFont") then
 					Tablet:SetFontSizePercent(TitanPluginframe, TitanPanelGetVar("TooltipFont"))
-				elseif TitanPanelGetVar("DisableTooltipFont") 
+				elseif TitanPanelGetVar("DisableTooltipFont")
 				and Tablet:GetFontSizePercent(TitanPluginframe)~=1 then
 					Tablet:SetFontSizePercent(TitanPluginframe, 1)
-				end				
+				end
 			end
 			-- set original tooltip scale for GameTooltip
 			if not TitanPanelGetVar("DisableTooltipFont") then
@@ -326,7 +326,7 @@ function LDBToTitan:TitanLDBHandleScripts(event, name, _, func, obj)
 			if TITAN_PANEL_MOVING == 0 and func then
 				func(self)
 			end
-			TitanPanelButton_OnEnter(self);			
+			TitanPanelButton_OnEnter(self);
 			-- LibQTip-1.0 support code
 			if LibQTip then
 				local tt = nil
@@ -348,7 +348,7 @@ function LDBToTitan:TitanLDBHandleScripts(event, name, _, func, obj)
 					tt:SetBackdropColor(red,green,blue,
 						TitanPanelGetVar("TooltipTrans"))
 					tt:SetBackdropBorderColor(red2,green2,blue2,
-						TitanPanelGetVar("TooltipTrans"))				
+						TitanPanelGetVar("TooltipTrans"))
 				end
 			end
 			-- /LibQTip-1.0 support code
@@ -357,8 +357,8 @@ function LDBToTitan:TitanLDBHandleScripts(event, name, _, func, obj)
 		
 	-- OnLeave
 		TitanPluginframe:SetScript("OnLeave", function(self)
-			if obj.OnLeave then 
-				obj.OnLeave(self) 
+			if obj.OnLeave then
+				obj.OnLeave(self)
 			end
 			TitanPanelButton_OnLeave(self);
 			end
@@ -437,9 +437,9 @@ function TitanLDBShowText(name)
 
 		-- Check for display text
 		if TitanGetVar(name, "ShowRegularText") then
-			if ldb.suffix and ldb.suffix ~="" then   	
+			if ldb.suffix and ldb.suffix ~="" then
 				val1 = (ldb.value or "").." "..ldb.suffix
-			else    
+			else
 				val1 = (ldb.text or "")
 			end
 		end
@@ -455,7 +455,7 @@ function TitanLDBShowText(name)
 	if val1 == "" then
 		val1 = nil
 	else
-		val1 = TitanGetVar(name, "ShowColoredText") 
+		val1 = TitanGetVar(name, "ShowColoredText")
 			and TitanUtils_GetGreenText(val1) or TitanUtils_GetHighlightText(val1)
 	end
 	return lab1, val1
@@ -495,7 +495,7 @@ function LDBToTitan:TitanLDBIconUpdate(_, name,  attr, value, dataobj)
 		TitanPanelButton_SetButtonIcon(NAME_PREFIX..name, value);
 	end
 
-	if attr == "iconR" or attr == "iconB" or attr == "iconG" then 
+	if attr == "iconR" or attr == "iconB" or attr == "iconG" then
 		TitanPanelButton_SetButtonIcon(NAME_PREFIX..name, nil, 
 			dataobj.iconR, dataobj.iconG, dataobj.iconB);
 	end
@@ -536,10 +536,10 @@ NOTE:
 :NOTE
 --]]
 function LDBToTitan:TitanLDBCreateObject(_, name, obj)
-   --TitanDebug("Attempting to register "..name..".");
+	--TitanDebug("Attempting to register "..name..".");
 	
 	-- couple sanity checks
-   if not obj or not name then
+	if not obj or not name then
 --		TitanDebug(.."LDB request to create Titan plugin was unrecognizable!!!!")
 		return
 	end
@@ -566,7 +566,7 @@ function LDBToTitan:TitanLDBCreateObject(_, name, obj)
 			button = nil,
 			isChild = nil,
 			name = (name or "?"),
-			issue = "Unsupported LDB type '"..obj.type.."'", 
+			issue = "Unsupported LDB type '"..obj.type.."'",
 			notes = "", 
 			status = TITAN_REGISTER_FAILED,
 			category = "",
@@ -666,8 +666,8 @@ function LDBToTitan:TitanLDBCreateObject(_, name, obj)
 		-- per 1.1 spec if .label exists use it else use data object's name
 		menuText = obj.label or name, 
 		buttonTextFunction = "TitanLDBShowText", 
-		icon = ldb__icon,     
-		iconWidth = 16,          
+		icon = ldb__icon,
+		iconWidth = 16,
 		controlVariables = {
 			ShowIcon = true,
 			ShowLabelText = true,
@@ -749,9 +749,9 @@ function LDBToTitan:TitanLDBCreateObject(_, name, obj)
 	-- Use the routines given by the DO in this precedence 
 	-- tooltip > OnEnter > OnTooltipShow > 
 	-- or register a callback in case it is created later. Per the 1.1 LDB spec
-	if obj.tooltip then       
+	if obj.tooltip then
 		self:TitanLDBHandleScripts("tooltip", name, nil, obj.tooltip, obj)
-	elseif obj.OnEnter then       
+	elseif obj.OnEnter then
 		self:TitanLDBHandleScripts("OnEnter", name, nil, obj.OnEnter, obj)
 	elseif obj.OnTooltipShow then
 		self:TitanLDBHandleScripts("OnTooltipShow", name, nil, obj.OnTooltipShow, obj)
@@ -804,7 +804,7 @@ NOTE:
 :NOTE
 --]]
 LDBToTitan:SetScript("OnEvent", function(self, event, ...)
-	if (event == "PLAYER_LOGIN") then	 
+	if (event == "PLAYER_LOGIN") then
 		self:UnregisterEvent("PLAYER_LOGIN")
 		-- In case a LDB plugin is created later...
 		ldb.RegisterCallback(self, 
@@ -817,7 +817,7 @@ LDBToTitan:SetScript("OnEvent", function(self, event, ...)
 		end
 	end
 	
-	if (event == "PLAYER_ENTERING_WORLD") then	 
+	if (event == "PLAYER_ENTERING_WORLD") then
 		self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 		-- Ensure all plugins (for LDB) are refreshed.
 		-- Some LDB plugins may have updated text, icon, etc 

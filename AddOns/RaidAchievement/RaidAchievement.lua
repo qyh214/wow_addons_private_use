@@ -6,7 +6,7 @@ if GetLocale()=="deDE" or GetLocale()=="ruRU" or GetLocale()=="zhTW" or GetLocal
 end
 
 
-	raversion=6.224
+	raversion=6.228
 	local raverstiptext="alpha"
 	if string.len(raversion)==6 then
 		raverstiptext="beta"
@@ -20,6 +20,7 @@ end
 	if wherereportraidach==nil then wherereportraidach="raid" end
 	if wherereportpartyach==nil then wherereportpartyach="party" end
 	if raminibutshowt==nil then raminibutshowt=true end
+	if raannouncerun==nil then raannouncerun=0 end
 	if RA_Settings==nil then RA_Settings = {RAMinimapPos = -176} end
 	rabigmenuchatlisten={"raid", "raid_warning", "officer", "party", "guild", "say", "yell", "sebe"}
 	ralowmenuchatlisten={"party", "officer", "guild", "say", "yell", "sebe"}
@@ -148,7 +149,7 @@ end
 if ramsgwaiting>0 and racurrenttime>ramsgwaiting+1.5 then
   ramsgwaiting=0
   table.sort(racanannouncetable)
-  --тут аннонс и обнуление всех таблиц
+  --тут аннонс and обнуление всех таблиц
 
   local bililine=0
   for i,cc in ipairs(rabigmenuchatlisten) do 
@@ -463,7 +464,7 @@ t4:SetPoint("TOPLEFT",30,-207)
 
 	local atext="|cffff0000Important!|r\n\n|cff00ff00RaidAchievement|r need your help.\n\n|cff00ff00Highlight link and click  Ctrl+C  to copy|r"
   if GetLocale()=="ruRU" then
-    atext="|cffff0000Важно!|r\n\n|cff00ff00RaidAchievement|r нуждается в вашей поддержке.\n\n|cff00ff00Выделите ссылку и нажмите  Ctrl+C  чтобы скопировать|r"
+    atext="|cffff0000Важно!|r\n\n|cff00ff00RaidAchievement|r нуждается в вашей поддержке.\n\n|cff00ff00Выделите ссылку and нажмите  Ctrl+C  чтобы скопировать|r"
   end
   if GetLocale()=="itIT" then
     atext="|cff00ff00Messaggio importante!|r\n\nIl progetto |cff00ff00RaidAchievement|r forse sarà |cffff0000chiuso|r, per sappere cosa si può fare visita il sito\n\n|cff00ff00Evidenzia il link a clicca  Ctrl+C  per copiare|r"
@@ -2242,15 +2243,31 @@ if radonateq1<50 then
 	radonateq1=radonateq1+1
 end
 
+
+--инфо о ДР
+local _, month, day, year = CalendarGetDate()
+if (year==2016 and month==2 and (day==12 or day==13) and raannouncerun==0) then
+	local text=""
+	text="|cff00ff00RaidAchievement|r > Hello. |cff00ff00It's my birthday today! :)|r If you like this addon and would like to see it in the |cff00ff00Legion|r - please help to maintain it. In 2015 I got just 70 euro of donations and I don't play anymore.. More info: http://www.phoenixstyle.com/ (or on curse.com)"
+	
+	out (text)
+	
+	raannouncerun=1
+	psDoNotShowOtherAnnounces=1
+end
+
+
+
+
 if radonateq1==50 then
-if UnitInRaid("player")==nil and UnitInParty("player")==nil then
+if UnitInRaid("player")==nil and UnitInParty("player")==nil and psDoNotShowOtherAnnounces==nil then
   radonateq1=radonateq1+1
   --сообщение
   --local text="|cff00ff00RaidAchievement|r |cffff0000important update:|r to track achieves from Cataclysm and WotLK you have to |cff00ff00download RaidAchievement_OldModules|r (from curse). |cff00ff00AchievementsReminder|r - is now a separate addon and will have new features soon, if you need it - take it from curse too."
-  local text="|cff00ff00RaidAchievement|r > need your help, so addon will be available in |cff00ff00Warlords of Draenor|r too. More info: http://www.phoenixstyle.com/help"
+  local text="|cff00ff00RaidAchievement|r > need your help, so addon will be available in |cff00ff00Legion|r too. More info: http://www.phoenixstyle.com/help"
   if GetLocale()=="ruRU" then
-    --text="|cff00ff00RaidAchievement|r |cffff0000важное обновление:|r для трекера достижений Катаклизма и ЛК требуется |cff00ff00скачать RaidAchievement_OldModules|r (с curse сайта). |cff00ff00AchievementsReminder|r - теперь отдельный независимый аддон, скоро с новыми функциями, если он вам тоже нужен - скачайте его отдельно."
-	text="|cff00ff00RaidAchievement|r > требуется Ваша помощь, чтобы аддон продолжил свое существование в |cff00ff00Warlords of Draenor!|r Детальнее: http://www.phoenixstyle.com/help"
+    --text="|cff00ff00RaidAchievement|r |cffff0000важное обновление:|r для трекера достижений Катаклизма and ЛК требуется |cff00ff00скачать RaidAchievement_OldModules|r (с curse сайта). |cff00ff00AchievementsReminder|r - теперь отдельный независимый аддон, скоро с новыми функциями, если он вам тоже нужен - скачайте его отдельно."
+	text="|cff00ff00RaidAchievement|r > требуется Ваша помощь, чтобы аддон продолжил свое существование в |cff00ff00Легионе!|r Детальнее: http://www.phoenixstyle.com/help"
   end
   
   out(text)
@@ -2258,7 +2275,7 @@ if UnitInRaid("player")==nil and UnitInParty("player")==nil then
   if psdonaspanvar==nil then
     psdonaspanvar=1
   elseif psdonaspanvar and psdonaspanvar==1 then
-    psdonaspanvar=2 --2ка используется для аннонса РА после 20 декабря и после 1 января, только если 1 ВКЛ! иначе же РА сразу прыгает с 1 до 3
+    psdonaspanvar=2 --2ка используется для аннонса РА после 20 декабря and после 1 января, только если 1 ВКЛ! иначе же РА сразу прыгает с 1 до 3
   end
 else
   psnotproched=1

@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 984 $")
+end, "$Revision: 986 $")
 
 -- Upvalues
 local _G = _G
@@ -771,7 +771,7 @@ function XPerl_Target_SetManaType(self)
 		if (self.statsFrame.manaBar:IsShown()) then
 			self.statsFrame.manaBar:Hide()
 
-			if (self == XPerl_Target or self == XPerl_Focus) then
+			if (self == XPerl_Target or self == XPerl_Focus or self == XPerl_TargetTarget or self == XPerl_FocusTarget or self == XPerl_PetTarget or self == XPerl_TargetTargetTarget) then
 				self.statsFrame:SetHeight(28 + ((conf.bar.fat or 0) * 2))
 				XPerl_StatsFrameSetup(self)
 			end
@@ -784,7 +784,7 @@ function XPerl_Target_SetManaType(self)
 	if (not self.statsFrame.manaBar:IsShown()) then
 		self.statsFrame.manaBar:Show()
 		self.statsFrame.manaBar.text:Show()
-		if (self == XPerl_Target or self == XPerl_Focus) then
+		if (self == XPerl_Target or self == XPerl_Focus or self == XPerl_TargetTarget or self == XPerl_FocusTarget or self == XPerl_PetTarget or self == XPerl_TargetTargetTarget) then
 			self.statsFrame:SetHeight(40)
 			XPerl_StatsFrameSetup(self)
 		end

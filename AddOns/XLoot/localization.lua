@@ -41,7 +41,7 @@ local locales = {
 -- Automatically inserted translations
 
 
-locales.deDE["anchor_hide"] = "verstecken" -- Needs review
+locales.deDE["anchor_hide"] = "verstecken"
 locales.deDE["skin_legacy"] = "XLoot: Legacy" -- Needs review
 locales.deDE["skin_smooth"] = "XLoot: Smooth" -- Needs review
 locales.deDE["skin_svelte"] = "XLoot: Svelte" -- Needs review

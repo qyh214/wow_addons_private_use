@@ -115,7 +115,7 @@ end
 
 
 function SpeakinSpell:GetGuildName()
-	local guildName = GetGuildInfo( UnitName("player") )
+	local guildName = GetGuildInfo("player")
 	if guildName then
 		return guildName
 	else
@@ -127,15 +127,17 @@ end
 function SpeakinSpell:GetPlayerFullTitleName()
 	local title = GetTitleName( GetCurrentTitle() )
 	-- if we don't have a title, then self:StartsWith will error on the nil value
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	if not title then
-		return UnitName("player")
+		return myname
 	end
 	-- we have a title, so decide if it comes first or last
 	-- blizzard does this by setting a space at the beginning or end for easier string concatenation
 	if self:StartsWith(title, " ") then
-		return UnitName("player")..tostring(title)
+		return myname..tostring(title)
 	else
-		return title..UnitName("player")
+		return title..myname
 	end
 end
 
@@ -143,7 +145,7 @@ end
 -- NameWithRealm is either "Name" or "Name-Realm"
 -- return "Name" for use in natural speech
 function SpeakinSpell:PlayerNameNoRealm( NameWithRealm )
-
+--TODONOW: PlayerNameNoRealm causes a bug on NPC names with hyphens in them
     -- ignore empty input
     if NameWithRealm == nil or NameWithRealm == "" then
         return NameWithRealm
@@ -165,9 +167,10 @@ end
 -- Return false if this is someone else
 -- for determining if an event applies to myself or not
 function SpeakinSpell:NameIsMe( InputName )
-	local player = UnitName("player")
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local player, myrealm = UnitName("player")
 	local realm = GetRealmName()
-	
+		
 	if InputName == player then
 		return true
 	end
@@ -181,21 +184,21 @@ end
 
 function SpeakinSpell:GetDefaultTarget(ShowDebugMsg)
 	-- try the currently selected target
-	local target = UnitName("target")
+	local target, targetrealm = UnitName("target")
 	if target then
 		if ShowDebugMsg then self:DebugMsg(nil,"<target> is unknown, using <selected>:"..tostring(target)) end
 		return target
 	end
 	
 	-- nobody is selected, try focus
-	target = UnitName("focus")
+	target, targetrealm = UnitName("focus")
 	if target then
 		if ShowDebugMsg then self:DebugMsg(nil,"<target> is unknown, using <focus>:"..tostring(target)) end
 		return target
 	end
 	
 	-- nobody on focus, try mouseover
-	target = UnitName("mouseover")
+	target, targetrealm = UnitName("mouseover")
 	if target then
 		if ShowDebugMsg then self:DebugMsg(nil,"<target> is unknown, using <mouseover>:"..tostring(target)) end
 		return target
@@ -203,10 +206,58 @@ function SpeakinSpell:GetDefaultTarget(ShowDebugMsg)
 	
 	-- assume self-cast ability
 	-- NO this doesn't work out very well in practice (especially battle cries / entering combat)
---	target = UnitName("player")
+	--NOTE: myrealm result from UnitName("player") is always nil
+--	target, myrealm = UnitName("player")
 --	if ShowDebugMsg then self:DebugMsg(nil,"<target> is unknown, using <player>:"..tostring(target)) end
 	
 	return target
+end
+
+
+--FormatDisplayName
+-- create a display name for an event, using options
+-- typonly = a type filter in effect, or nil
+--		if a type filter is in effect, don't include the type in the display name
+--		if a type filter is NOT in effect, include the event type in the display name
+--
+local g_DefaultFormat = {
+	typefilter = "*ALL", 
+	HighlightFilterText = false, 
+	BaseColor = "|r",
+}
+function SpeakinSpell:FormatDisplayName( de, DisplayNameFormat )
+	local funcname = "FormatDisplayName"
+	
+	local Format = self:CopyTable( DisplayNameFormat )
+	self:ValidateObject( Format, g_DefaultFormat )
+
+	local subs = self:CopyTable(de)
+	subs.basecolor = Format.BaseColor
+
+	if Format.HighlightFilterText then
+		subs.colormatchedname = self:ColorFilterText( de.name, Format.BaseColor )
+	else
+		subs.colormatchedname = (Format.BaseColor)..tostring(de.name)
+	end
+
+	if Format.typefilter == "*ALL" then -- show the type in the display name
+		return self:FormatSubs(L["<basecolor><eventtypeprefix><colormatchedname>"],subs)
+	end
+
+	-- when showing macros only, format so we show...
+	-- when I type: /ss macro
+	-- foo, bar, battlecry, whatever
+	if (Format.typefilter == "MACRO") and (de.type == "MACRO") then
+		if self:StartsWith( string.lower( de.name ), strlower(MACRO) ) then
+			subs.colormatchedname = string.sub( de.name, string.len( strlower(MACRO) )+1 )
+			if Format.HighlightFilterText then
+				subs.colormatchedname = self:ColorFilterText( subs.colormatchedname, Format.BaseColor )
+			end
+			return self:FormatSubs(L["<basecolor><colormatchedname>"],subs)
+		end
+	end
+	
+	return subs.colormatchedname
 end
 
 
@@ -355,22 +406,16 @@ end
  -- while your in a party, raid, or BG  you can also be in an instance 
 
 function SpeakinSpell:CheckForInstance()
-
-   local inInstance = select (1,IsInInstance())
-   if inInstance ==1 then 
-      return true
-   else
-      return false
-   end
-
+	local isInstance, instanceType = IsInInstance()
+	return isInstance
 end 
 
 function SpeakinSpell:GetScenarioKey()
 	local funcname = "GetScenarioKey"
 	-- NOTE: the EventTableEntry.Channels table stores channel names that are compatible with SendChatMessage
 	--	see also CurrentMessagesGUI_OnChannelSelect
-	
-	local zoneType = select(2, IsInInstance())	
+	--TODONOW: Ashran new BG in WoW 6.x is reportedly not detected as a BG
+	local isInstance, zoneType = IsInInstance()
 	if zoneType == "arena" then --(IsActiveBattlefieldArena()) is unreliable during prep time
 		return "Arena"
 	elseif zoneType == "pvp" then --(GetNumBattlefieldScores() > 0) is unreliable during prep time
@@ -578,26 +623,46 @@ end
 
 
 -- Search for the summoned companion pet (CritterOrMount="CRITTER") or mount (CritterOrMount="MOUNT")
+-- returns (name, spellID)
 function SpeakinSpell:GetActiveCompanion(CritterOrMount)
 	local funcname = "GetActiveCompanion"
 	
-	-- during login (but not reloadui) 
-	-- we sometimes get a COMPANION_UPDATE with an invalid CritterOrMount value
-	if nil == CritterOrMount then
-		self:DebugMsg(funcname, "CritterOrMount="..tostring(CritterOrMount))
-		return
-	end
-
 	-- I can't find an API that returns the active companion's name directly
 	-- looks like the only way is to iterate through all known critters to find the one that's summoned, if any
-	for i=1,GetNumCompanions(CritterOrMount) do
-		local creatureID, creatureName, creatureSpellID, icon, isSummoned = GetCompanionInfo(CritterOrMount, i);
-		if isSummoned then
-			return creatureName, creatureSpellID
+	self:DebugMsg(funcname, "CritterOrMount="..tostring(CritterOrMount))
+	if "CRITTER" == CritterOrMount then
+		--self:DebugMsg(funcname, "GetNumCompanions="..tostring(GetNumCompanions(CritterOrMount)))
+		local guid = C_PetJournal.GetSummonedPetGUID()
+		self:DebugMsg(funcname, "guid="..tostring(guid))
+		if guid then
+			--local petid = C_PetJournal.GetSummonedPetID()
+			--self:DebugMsg(funcname, "petid="..tostring(petid))
+			local speciesID, customName, level, xp, maxXp, displayID, isFavorite, petName, petIcon, petType, creatureID, sourceText, description, isWild, canBattle, tradable, unique = C_PetJournal.GetPetInfoByPetID(guid)
+			self:DebugMsg(funcname, "customName="..tostring(customName))
+			self:DebugMsg(funcname, "petName="..tostring(petName))
+			--for critter spell IDs, use self.RuntimeData.LastKnownSpellId
+			if customName then
+				return customName, nil
+			else
+				return petName, nil
+			end
 		end
+	elseif "MOUNT" == CritterOrMount then
+		-- search all mounts to find the active one
+		for i=1,C_MountJournal.GetNumMounts() do
+			local creatureName, spellID, icon, active, isUsable, sourceType, isFavorite, isFactionSpecific, faction, hideOnChar, isCollected = C_MountJournal.GetMountInfo(i)
+			if active then
+				return creatureName, spellID
+			end
+		end
+	else
+		-- during login (but not reloadui) 
+		-- we sometimes get a COMPANION_UPDATE with an invalid CritterOrMount value
+		self:DebugMsg(funcname, "error invalid CritterOrMount="..tostring(CritterOrMount))
 	end
-	
+
 	-- none of the known companion pets are currently summoned
+	self:DebugMsg(funcname, "failed")
 	return nil, nil
 end
 

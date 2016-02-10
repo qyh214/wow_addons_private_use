@@ -295,9 +295,11 @@ end
 -- instead of /e "makes strange gestures"
 -- used for whispering emotes
 function SpeakinSpell:EmoteToSay( line )
+	--NOTE: myrealm result from UnitName("player") is always nil
+	local myname, myrealm = UnitName("player")
 	local subs = {
 		emotes = line,
-		player = UnitName("player"),
+		player = myname,
 	}
 	return self:FormatSubs( L["* <player> <emotes> *"], subs ) --TODOFUTURE: make this string format user-configurable
 end
@@ -468,19 +470,6 @@ function SpeakinSpell:SpeakForSpell(DetectedEvent)
 	-- determine which channel we will speak in
 	local channel = self:GetChatChannelForSpell(DetectedEvent.EventTableEntry)
    
-   -- added for instance channel support
-	local EnableInstanceChannel= DetectedEvent.EventTableEntry.InstanceChannel and self:CheckForInstance()==true
-   
-self:DebugMsg(funcname, "Checking Instance Channel Active: "..tostring(EnableInstanceChannel).." Instance Channel toggle is:"..tostring(DetectedEvent.EventTableEntry.InstanceChannel))
-
-   
--- need to check and see if Party, raid, is set <> Silent
-if channel == "PARTY"  or channel == "RAID" then
-   if EnableInstanceChannel and not EnableWhisperTarget then 
-      channel="INSTANCE_CHAT" 
-   end
-end
-   
 	--TODOFUTURE: make it an option to whisper yourself - but be wary of the auto self-cast logic
 	local EnableWhisperTarget = DetectedEvent.EventTableEntry.WhisperTarget and DetectedEvent.target and (DetectedEvent.target ~= "") and (DetectedEvent.target ~= "Unknown") and (not SpeakinSpell:NameIsMe(DetectedEvent.target)) and UnitIsFriend("player",DetectedEvent.target)
 
@@ -490,7 +479,17 @@ end
 		self:ShowWhyNot( DetectedEvent, L["the selected chat channel is \"Silent\" while in <Scenario>"] )
 		return
 	end
-	
+
+	-- check for instance channel override
+	--self:DebugMsg( funcname, "CheckForInstance="..tostring(self:CheckForInstance()) )
+	--self:DebugMsg( funcname, "IsInGroup(LE_PARTY_CATEGORY_INSTANCE)="..tostring(IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) )
+	if DetectedEvent.EventTableEntry.InstanceChannel and -- user option is enabled
+		self:CheckForInstance() and -- currently in an instance
+		IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and -- "INSTANCE_CHAT" only works in dungeon finder groups
+		("PARTY" == channel or "RAID" == channel) then -- selected channel is equivalent
+		channel = "INSTANCE_CHAT"
+	end
+   
 	-- select a random speech
 	local msg = self:GetRandomMessage( DetectedEvent )
 	if not msg then
