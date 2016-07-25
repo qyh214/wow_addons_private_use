@@ -16,7 +16,7 @@ L:SetOptionLocalization{
 	TimerAddsSpawn	= "為第一次小怪重生顯示計時器"
 }
 L:SetMiscLocalization{
-	Phase2Emote	= "失去能量，停止運作!",
+	Phase2Emote	= "在寶珠的控制力消失之前逃走。",
 	YellPull 	= "入侵者闖入孵化室了!警報!不惜一切代價保護蛋!"
 }
 -------------------

@@ -16,7 +16,7 @@ L:SetOptionLocalization{
 	TimerAddsSpawn	= "Zeige Zeit bis die ersten Adds erscheinen"
 }
 L:SetMiscLocalization{
-	Phase2Emote	= "verliert Energie und schaltet sich ab!",
+	Phase2Emote	= "flieht während die kontrollierenden Kräfte der Kugel schwinden.",
 	YellPull 	= "Eindringlinge sind in die Brutstätte vorgestoßen! Schlagt Alarm! Beschützt die Eier um jeden Preis!"
 }
 -------------------

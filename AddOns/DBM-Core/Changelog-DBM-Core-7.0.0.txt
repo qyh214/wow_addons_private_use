@@ -1,0 +1,75 @@
+tag 7.0.0
+7f028c6c53f59c3c2e48b34c1db0f7bb8546ea8b
+subversion <svn@deadlybossmods.com>
+2016-07-19 13:43:28 +0200
+
+Tagging as 7.0.0
+
+
+--------------------
+
+subversion:
+	- increment version number to 7.0.0
+	- Omega via svn r15061: Prune all gladiator warrior hacks
+	- Omega via svn r15060: Bump all TOC files to 70000
+	- Omega via svn r15059: More refactoring since LFR had it?\226?\128?\153s own data. inputted data for 5 sequences of LFR. sadly group didn?\226?\128?\153t suck bad enough to get more data!
+	- Omega via svn r15058: Fixed some bugs that caused most of Trilliax timers not to fire. Mainly that the SPELL_CAST_START event no longer exists because all of his transforms are now instant casts and use SPELL_CAST_SUCCESS only
+	- Omega via svn r15057: A lot more refactoring and updating of anomaly. I need new heroic data though and LFR data. hopefully LFR is same as normal because I am getting tired of the variations :o also hopefully heroic was refactored to be same as normal too. i suspect it was because of how similar they are. That?\226?\128?\153ll make it easier to update/fix it on live which is when we?\226?\128?\153ll see heroic again.
+	- Omega via svn r15056: A lot more to add tomorrow but for now this just sets template for normal mode anomaly timers
+	- Omega via svn r15055: More tweaks to ensure elemental shaman aren?\226?\128?\153t flagged as melee in legion since they no longer use mana
+	- Omega via svn r15054: Begin work on redoing default options to reflect ability pruning in legion. As well as spec changes such as survival ranged?\226?\128?\148->melee Remove features that are no longer relevant in legion (such as gold/silver/bronze timers and realm/personal/guild best times in CMs) I?\226?\128?\153ll remove gladiator warrior hacks night before patch. also still have to figure out how to pull the mythic+ timer via api to still be able to hide watch frame during boss fights. for now. I simply disabled dbms hiding of watch frame in mythic+ dungeons until i can ensure that i?\226?\128?\153ll only do it if I can present a temporary DBM timer for time remaining (like I used to do for live CMs)
+	- Omega via svn r15053: Add some icon options to xavius
+	- Omega via svn r15052: Oh and announce nightmare blades targets. Sorry people. but if you mess it up now people can scroll up in chat and see who did it.
+	- Omega via svn r15051: Xavius Update *Changed a few warnings and timers to include count *Fixed a bug where Corruption horror timer would not start after first spawn. *Added some audio countdowns
+	- Omega via svn r15050: More xavius fixes
+	- Omega via svn r15049: Couple fixes
+	- Omega via svn r15048: #Ton of xavius work. *Moved many timers to UNIT_SPELL events since several cast events were pruned from combat log. *Few tweaks to fix HUD arrows and make them behave better. *Clearer phase announces for people NOT using voice packs *Improved meteor warnings now that it has a targeting debuff. *Updated a few timers with latest data. *Better phase change detection since blizzard added better events for phase transitions
+	- Omega via svn r15047: Some antispam and lua error fix
+	- Omega via svn r15046: Finish up phase 2 stuff on cenarius plus a few minor fixes.
+	- Omega via svn r15045: Dragons and ursok fixes
+	- Omega via svn r15044: A lot of timer fixes and the works to do tomorrow. but for now lets fix Nightmare brambles detection for cenarius for people still raiding tonight, shall we ;)
+	- Omega via svn r15043: Fixed spell name bug on rokmora (Nelth dungeon) Added some more trash warnings to Eye of Azshara tiny timer tweaks
+	- Omega via svn r15042: Change icon in pull timer from spellId to icon path since battle stance is gone in legion and this is better anyways.
+	- Omega via svn r15041: Fix lua error
+	- Omega via svn r15040: Minor update to Levantus
+	- Omega via svn r15039: Filter the stalker NPC for twisted shadows so it doesn?\226?\128?\153t get announced. slow icon setting on nyth a bit since sometimes 3 rots go out slower.
+	- Omega via svn r15038: Come on curse packager
+	- Omega via svn r15037: Add range frame for volatile rot for Nythendra Added antispam to nightmare explosion for Ilgynoth Added syncing to mob deaths to ilgynoth do to combat log range issues that could cause info frame to miscount Fixed spider phase detection for 2nd and later spider phase on Renferal now that I have a valid event that I can use. Fixed spammy warnings for Venom debuff scanner for renferal and tweaked timing some so first warning should be less likely to have missing targets. Fixed some timers that didn?\226?\128?\153t show for 4th cast of each phases debuffs on renferal Fixed missing razorwing timers on renferal Fixed bad Roc phase timer for renferal
+	- Omega via svn r15036: fix bug hopefully
+	- Omega via svn r15035: Trilliax update. Unfortunately since none of mythic mechanics actually worked, this is just bugfixes only. ALso, found another spell pruned from combat log!
+	- Omega via svn r15034: More chronomatic Data!
+	- Omega via svn r15033: Mythic timer updates for chrono
+	- Omega via svn r15032: Disable annihilation for now
+	- Omega via svn r15031: Fix lua error
+	- Omega via svn r15030: Add info frame request to chrono anomaly. Trilliax is going to need a lot of work to fix timers for mythic I?\226?\128?\153m sure. likely source mob filters. I will not even attempt to drycode this since it could make it worse. I?\226?\128?\153ll fix trilliax a lot more post testing.
+	- Omega via svn r15029: *Fix nightmare horror detection since blizzard pruned it from combat log too *Spam reduce timers and warnings some to prevent double timers or double warnings in certain cases.
+	- Omega via svn r15028: Nythendra timer fixes
+	- Omega via svn r15027: *Fix renferal timers for LFR (and all other non mythic difficulties) Timers will probably still break when second spider form since it?\226?\128?\153s no longer in combat log and I haven?\226?\128?\153t found a parallel event yet. *Added raking talons stuff
+	- Omega via svn r15026: Fix lua error in Illynoth
+	- Omega via svn r15025: *Add in timer correction code to mannoroth similar to archimonde, to detect when spells will be delayed by other spells and automatically update the timer/countdowns accordingly. *Changed audio countdowns to start at 3 seconds instead of 4 *Disabled shadowforce countdown for tanks if not final phase.
+	- Omega via svn r15024: Few tweaks on etraeus
+	- Omega via svn r15023: Proppery support boss health reporting on mythic
+	- Omega via svn r15022: It?\226?\128?\153ll work better if i register the spellids though.
+	- Omega via svn r15021: *Redid tel?\226?\128?\153arn phase change stuff to a cleaner method *Added data for the naturalist, archanist, solarist order. *Updated all timers to be correct when 2 are up (shouldn?\226?\128?\153t matter which 2). _TODO_ *Timers for abilities when only 1 is left. *More boss Orders
+	- Omega via svn r15020: krosus update
+	- Omega via svn r15019: This is all I have for telarn really. one boss dead. so 1/3rd of 1/2 of the fight worth of data :\
+	- Omega via svn r15018: Fix lua error
+	- Omega via svn r15017: Disable searing brand for now except for high stack taunt warning. More pull timer tweaks.
+	- Omega via svn r15016: Shorten first felbeam right timer by 1.7 seconds.
+	- Omega via svn r15015: More talarn pre mythic prep
+	- Omega via svn r15014: Emerald Dragons update
+	- Omega via svn r15013: renferal update, no data on bird form though and i?\226?\128?\153m sure second spider form won?\226?\128?\153t work either. blizzard removed the form changes from combat log so I need the new unit event for that too.
+	- Omega via svn r15012: Fix lua error in renferal
+	- Omega via svn r15011: There are a few more things to push that are work in progress for monday but this hsould push a few referal tweaks at least
+	- Omega via svn r15010: Finally fixed
+	- Omega via svn r15009: Some gui progress but it?\226?\128?\153s still royally fucked up for arcway, court of stars and assault violet hold.
+	- Omega via svn r15008: A ton of stats refactoring for legion and some code added to better handle mythic+ (still a lot more work to do, and sadly may not happen until after legion launches. it?\226?\128?\153s very difficult to actually test apis that require doing content that requires substantial gear, and 4 other people.)
+	- Omega via svn r15007: Update all warlords dungeon mods to use proper voice pack filters on special warnings. Fixed a bug where one mod played a voice pack warning in wrong place.
+	- Omega via svn r15006: Fix improper color class for overwhelming chaos, change icon used by it to healer icon. Readded empowered black hole as it?\226?\128?\153s own timer, so it can have it?\226?\128?\153s own deadly icon for it?\226?\128?\153s importance. It?\226?\128?\153ll also use FULL timer text for empowered if short text feature is disabled.
+	- Omega via svn r15005: Reduce edict yell slightly
+	- Omega via svn r15004: Further work on Violet hold. *Boss incoming warnings. *Timer until shield in front of boss breaks. *More trash warnings added *Timers removed from mind flayer, pretty sure everything he does is health based. *Fixes to Anubesset target scanner *target scanner for Betrug still failing about 50% of time so a lot of debug has been added to core to see why.
+	Still keep getting same two bosses over and over again. still missing mods for 3 bosses.
+	- Omega via svn r15003: Improve a few warlords dungeon timers with inline icons
+	- Omega via svn r15002: begin work on portal stuff for VH
+	- Omega via svn r15001: Fix a bug where betrugs target scanner would abort before having fel slash target. Added creature Ids for 3 of the untested bosses. STILL didn?\226?\128?\153t get any of them. keep getting same bosses over and over. I hate VH
+	- tandanu via svn r15000: increment alpha version

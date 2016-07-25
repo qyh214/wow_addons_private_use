@@ -378,8 +378,7 @@ L:SetGeneralLocalization{
 L:SetMiscLocalization{
 	YellPull 			= "Скоро мы сразимся с главарем этих извергов! Обратите гнев и ненависть против его прислужников!",
 	YellPhase2	 		= "Я – это сон наяву.",
-	Sara 				= "Сара",
-	WarningYellSqueeze	= "Выдавливание на мне! Помогите!"
+	Sara 				= "Сара"
 }
 
 L:SetWarningLocalization{
@@ -410,7 +409,6 @@ L:SetOptionLocalization{
 	SetIconOnFearTarget				= "Устанавливать метки на цели заклинания $spell:63881",
 	SpecWarnFervorCast				= "Спец-предупреждение, когда на вас накладывается $spell:63138<br/>(должна быть в цели или фокусе хотя бы у одного члена рейда)",
 	specWarnBrainPortalSoon			= "Спец-предупреждение о следующем Провале Безумия",
-	WarningSqueeze					= "Кричать, когда на вас Выдавливание",
 	NextPortal						= "Отсчет времени до следующего Провала Безумия",
 	SetIconOnFervorTarget			= "Устанавливать метки на цели заклинания $spell:63138",
 	ShowSaraHealth					= "Показывать здоровье Сары в фазе 1 (должна быть в цели или фокусе хотя бы у одного члена рейда)",

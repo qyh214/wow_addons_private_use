@@ -1,4 +1,0 @@
-<Ui>
-	<Script file="../Libs/Evie.lua"/>
-	<Script file="PlanA.lua"/>
-</Ui>

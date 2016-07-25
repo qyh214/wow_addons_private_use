@@ -46,8 +46,8 @@ local locales = {
 locales.deDE["bind_on_equip_short"] = "BoE" -- Needs review
 locales.deDE["bind_on_pickup_short"] = "BoP" -- Needs review
 locales.deDE["bind_on_use_short"] = "BoU" -- Needs review
-locales.deDE["button_close"] = "Schließe" -- Needs review
-locales.deDE["button_link"] = "Sende" -- Needs review
+locales.deDE["button_close"] = "Schließen" -- Needs review
+locales.deDE["button_link"] = "Senden" -- Needs review
 locales.deDE["linkall_threshold_missed"] = "Beute entspricht nicht deinen Qualitätsansprüchen" -- Needs review
 
 locales.koKR["bind_on_equip_short"] = "착귀" -- Needs review

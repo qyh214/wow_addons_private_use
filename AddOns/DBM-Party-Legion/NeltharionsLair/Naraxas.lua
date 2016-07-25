@@ -1,36 +1,44 @@
 local mod	= DBM:NewMod(1673, "DBM-Party-Legion", 5, 767)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14747 $"):sub(12, -3))
---mod:SetCreatureID(99200)
+mod:SetRevision(("$Revision: 15043 $"):sub(12, -3))
+mod:SetCreatureID(91005)
 mod:SetEncounterID(1792)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
---[[
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
-	"SPELL_PERIODIC_DAMAGE",
-	"SPELL_PERIODIC_MISSED",
-	"SPELL_SUMMON",
+	"SPELL_AURA_APPLIED 209906",
+--	"SPELL_AURA_REMOVED 209906",
+	"SPELL_CAST_START 199176 210150 205549",
+--	"SPELL_PERIODIC_DAMAGE 188494",
+--	"SPELL_PERIODIC_MISSED 188494",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---local warnCurtainOfFlame			= mod:NewTargetAnnounce(153396, 4)
+local warnFixate					= mod:NewTargetAnnounce(209906, 2, nil, false)--Could be spammy, optional
 
---local specWarnCurtainOfFlame		= mod:NewSpecialWarningMoveAway(153396)
+local specWarnAdds					= mod:NewSpecialWarningSwitch(199817, "Dps", nil, nil, 1, 2)
+local specWarnFixate				= mod:NewSpecialWarningYou(209906)
+local specWarnSpikedTongue			= mod:NewSpecialWarningRun(199176, nil, nil, nil, 4, 2)
+--local specWarnRancidMaw			= mod:NewSpecialWarningMove(188494)--Needs confirmation this is pool damage and not constant fight aoe damage
 
---local timerCurtainOfFlameCD			= mod:NewNextTimer(20, 153396, nil, nil, nil, 3)
+local timerSpikedTongueCD			= mod:NewNextTimer(55, 199176, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_DEADLY_ICON..DBM_CORE_TANK_ICON)
+local timerAddsCD					= mod:NewCDTimer(65, 199817, nil, nil, nil, 1)
+local timerRancidMawCD				= mod:NewCDTimer(18, 205549, nil, false, nil, 3)--Needed?
+local timerToxicRetchCD				= mod:NewCDTimer(14.3, 210150, nil, false, nil, 3)--Needed?
 
---local voiceCurtainOfFlame			= mod:NewVoice(153392)
+local voiceAdds						= mod:NewVoice(199817, "Dps")--mobsoon
+local voiceSpikedTongue				= mod:NewVoice(199176)--runout/keepmove
 
 --mod:AddRangeFrameOption(5, 153396)
 
 function mod:OnCombatStart(delay)
-
+	timerAddsCD:Start(5.5-delay)
+	timerRancidMawCD:Start(7.3-delay)
+	timerToxicRetchCD:Start(12.4-delay)
+	timerSpikedTongueCD:Start(55-delay)
 end
 
 function mod:OnCombatEnd()
@@ -39,43 +47,47 @@ function mod:OnCombatEnd()
 --	end
 end
 
-function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 153396 then
-
-	end
-end
-
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 153392 then
-
-	end
-end
-
-function mod:SPELL_AURA_REMOVED(args)
-	local spellId = args.spellId
-	if spellId == 153392 then
-
+	if spellId == 209906 then
+		warnFixate:Show(args.destName)
+		if args:IsPlayer() and self:AntiSpam(4, 1) then
+			specWarnFixate:Show()
+		end
 	end
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 153764 then
-
+	if spellId == 199176 then
+		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
+		--Do based on threat, because there is a good chance tank might die and backup melee needs warning too.
+		if tanking or (status == 3) then
+			specWarnSpikedTongue:Show()
+			voiceSpikedTongue:Play("runout")
+			voiceSpikedTongue:Schedule(1.5, "keepmove")
+		end
+		timerSpikedTongueCD:Start()
+	elseif spellId == 205549 then
+		timerRancidMawCD:Start()
+	elseif spellId == 210150 then
+		timerToxicRetchCD:Start()
 	end
 end
-
+--[[
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 153616 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
-
+	if spellId == 188494 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
+		specWarnRancidMaw:Show()
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+--]]
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 153500 then
-
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
+	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+	if spellId == 199817 then--Call Minions
+		specWarnAdds:Show()
+		voiceAdds:Play("mobsoon")
+		timerAddsCD:Start()
 	end
 end
---]]

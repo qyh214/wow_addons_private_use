@@ -19,8 +19,8 @@ local defaults = {
 			visible = true,
 			scale = 1.0,
 			draggable = true,
-			x = UIParent:GetWidth() * .85,
-			y = UIParent:GetHeight() * .2
+			x = UIParent:GetWidth() * .75,
+			y = UIParent:GetHeight() * .15
 		},
 		name_width = 50,
 
@@ -436,7 +436,8 @@ local function queue_update(self, elapsed)
 end
 
 local qactive = false
-XLoot:SetSlashCommand("xlmd", function(msg)
+
+function XLootMonitor.test_settings()
 	local now = GetTime()
 	-- for i=1,15 do
 	-- 	table.insert(queue, { now + i, unpack(tests[random(1, #tests)]) })
@@ -448,4 +449,6 @@ XLoot:SetSlashCommand("xlmd", function(msg)
 	for i,v in ipairs(tests) do
 		table.insert(queue, { now + i * .5, unpack(v) })
 	end
-end)
+end
+
+XLoot:SetSlashCommand("xlmd", XLootMonitor.test_settings)

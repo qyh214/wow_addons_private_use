@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(608, "DBM-Party-WotLK", 15, 278)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 218 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 221 $"):sub(12, -3))
 mod:SetCreatureID(36494)
 mod:SetEncounterID(833, 834)
 mod:SetUsedIcons(8)
@@ -63,7 +63,7 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 	if args.spellId == 68786 then
 		local amount = args.amount or 1
 		if amount >= 9 and args:IsPlayer() and self:AntiSpam(5) then --11 stacks is what's needed for achievement, 9 to give you time to clear/dispel
-			specWarnPermafrost:Show(args.spellName, amount)
+			specWarnPermafrost:Show(amount)
 		end
 		if self.Options.AchievementCheck and not warnedfailed then
 			local channel = IsInGroup(2) and "INSTANCE_CHAT" or "PARTY"

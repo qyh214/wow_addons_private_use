@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(675, "DBM-Party-MoP", 4, 303)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
 mod:SetCreatureID(56589)
 mod:SetEncounterID(1405)
 mod:SetZone()
@@ -26,7 +26,7 @@ local specWarnStafingRunAoe	= mod:NewSpecialWarningMove(116297)
 local specWarnAcidBomb		= mod:NewSpecialWarningMove(115458)
 
 local timerImpalingStrikeCD	= mod:NewNextTimer(30, 107047)
-local timerPreyTime			= mod:NewTargetTimer(5, 106933, nil, "Healer")
+local timerPreyTime			= mod:NewTargetTimer(5, 106933, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)
 local timerPreyTimeCD		= mod:NewNextTimer(14.5, 106933, nil, nil, nil, 3)
 
 function mod:OnCombatStart(delay)

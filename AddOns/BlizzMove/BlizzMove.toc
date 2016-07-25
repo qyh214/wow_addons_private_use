@@ -1,10 +1,10 @@
-## Interface: 60200
+## Interface: 70000
 ## Title: Blizzmove
 ## Notes: Move those blizzard windows
 ## Author: yess
-## Version: v1.4
+## Version: v1.4.1
 ## X-Email: starfire@fantasymail.de
-## X-Curse-Packaged-Version: v1.4
+## X-Curse-Packaged-Version: v1.4.1
 ## X-Curse-Project-Name: BlizzMove
 ## X-Curse-Project-ID: blizzmove
 ## X-Curse-Repository-ID: wow/blizzmove/mainline

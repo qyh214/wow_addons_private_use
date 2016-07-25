@@ -1,0 +1,12 @@
+tag 2.13.3
+b6f5906115960c33eab9a0ba872c1e7e8345cfa2
+Giovanni Gargani <giovanni.gargani@hexkeep.com>
+2016-07-22 18:02:45 +0200
+
+Weekly drop rate update and minor fixes
+
+--------------------
+
+Giovanni Gargani:
+	- Drop rate weekly update
+	- Debug removed

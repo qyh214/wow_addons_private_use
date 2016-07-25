@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(318, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 161 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
 mod:SetCreatureID(53879)
 mod:SetEncounterID(1291)
 mod:SetZone()
@@ -41,7 +41,7 @@ local specWarnSealArmor		= mod:NewSpecialWarningSpell(105847, "Dps")
 local specWarnAmalgamation	= mod:NewSpecialWarningSpell("ej4054", false)
 
 local timerSealArmor		= mod:NewCastTimer(23, 105847, nil, nil, nil, 6)
-local timerBarrelRoll		= mod:NewCastTimer(5, "ej4050", nil, nil, nil, 2)
+local timerBarrelRoll		= mod:NewCastTimer(5, "ej4050", nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 local timerGripCD			= mod:NewNextTimer(32, 105490, nil, nil, nil, 3)
 local timerDeathCD			= mod:NewCDTimer(8.5, 106199, nil, nil, nil, 5)--8.5-10sec variation.
 

@@ -2,7 +2,6 @@
 -- * TitanRepair.lua
 -- *
 -- * By: Adsertor, Archarodim and the Titan Development Team
--- *     http://www.titanpanel.org/index.html
 -- **************************************************************************
 
 -- ******************************** Constants *******************************
@@ -154,7 +153,7 @@ end
 -- **************************************************************************
 -- NAME : TitanPanelRepairButton_ScanAllItems()
 -- DESC : Set all bags and equipment to be scanned
---        and set the 'scan in prgress'
+--        and set the 'scan in progress'
 -- **************************************************************************
 function TitanPanelRepairButton_ScanAllItems()
 -- if (TitanGetVar(TITAN_REPAIR_ID,"ShowInventory") == 1) then

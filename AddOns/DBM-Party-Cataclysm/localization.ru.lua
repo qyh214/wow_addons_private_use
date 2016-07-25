@@ -352,14 +352,6 @@ L:SetOptionLocalization({
 -----------
 L= DBM:GetModLocalization(116)
 
-L:SetOptionLocalization({
-	SpecWarnStaticCling	= "Показывать особое предупреждение для $spell:87618"
-})
-
-L:SetWarningLocalization({
-	SpecWarnStaticCling	= "Хватка природы - ПРЫГАЙ!"	-- does $spell: work here ?
-})
-
 ---------------------------
 --  The Throne of Tides  --
 ---------------------------

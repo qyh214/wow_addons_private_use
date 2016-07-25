@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(167, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 162 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
 mod:SetCreatureID(43324)
 mod:SetEncounterID(1029)
 mod:DisableEEKillDetection()
@@ -48,19 +48,19 @@ local specWarnDepravity				= mod:NewSpecialWarningInterrupt(81713)--On by defaul
 local specwarnFury					= mod:NewSpecialWarningTarget(82524, "Tank")
 local specwarnFlamingDestruction	= mod:NewSpecialWarningSpell(81194, "Tank")
 
-local timerWorshipCD				= mod:NewCDTimer(36, 91303)
-local timerAdherent					= mod:NewCDTimer(92, 81628)
-local timerFesterBlood				= mod:NewNextTimer(40, 82299)--40 seconds after an adherent is summoned
-local timerFlamingDestruction		= mod:NewBuffActiveTimer(10, 81194, nil, "Tank|Healer")
-local timerEmpoweredShadows			= mod:NewBuffActiveTimer(9, 81572, nil, "Healer")
-local timerFuryCD					= mod:NewCDTimer(47, 82524, nil, "Tank|Healer")--47-48 unless a higher priority ability is channeling (such as summoning adds or MC)
-local timerCreationsCD				= mod:NewNextTimer(30, 82414)
+local timerWorshipCD				= mod:NewCDTimer(36, 91303, nil, nil, nil, 3, nil, DBM_CORE_INTERRUPT_ICON)
+local timerAdherent					= mod:NewCDTimer(92, 81628, nil, nil, nil, 1)
+local timerFesterBlood				= mod:NewNextTimer(40, 82299, nil, nil, nil, 1)--40 seconds after an adherent is summoned
+local timerFlamingDestruction		= mod:NewBuffActiveTimer(10, 81194, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerEmpoweredShadows			= mod:NewBuffActiveTimer(9, 81572, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)
+local timerFuryCD					= mod:NewCDTimer(47, 82524, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)--47-48 unless a higher priority ability is channeling (such as summoning adds or MC)
+local timerCreationsCD				= mod:NewNextTimer(30, 82414, nil, nil, nil, 1)
 local timerSickness					= mod:NewBuffFadesTimer(5, 82235)
-local timerFlamesOrders				= mod:NewNextTimer(25, 81171, nil, "Dps")--Orders are when he summons elemental
-local timerShadowsOrders			= mod:NewNextTimer(25, 81556, nil, "Dps")--These are more for dps to switch to them to lower em so useless for normal mode
-local timerFlamingDestructionCD		= mod:NewNextTimer(20, 81194, nil, "Tank|Healer")--Timer for when the special actually goes off (when he absorbs elemental)
-local timerEmpoweredShadowsCD		= mod:NewNextTimer(20, 81572, nil, "Healer")--^^
-local timerDepravityCD				= mod:NewCDTimer(12, 81713, nil, "Melee")
+local timerFlamesOrders				= mod:NewNextTimer(25, 81171, nil, "Dps", nil, 1, nil, DBM_CORE_DAMAGE_ICON)--Orders are when he summons elemental
+local timerShadowsOrders			= mod:NewNextTimer(25, 81556, nil, "Dps", nil, 1, nil, DBM_CORE_DAMAGE_ICON)--These are more for dps to switch to them to lower em so useless for normal mode
+local timerFlamingDestructionCD		= mod:NewNextTimer(20, 81194, nil, "Tank|Healer", nil, 5)--Timer for when the special actually goes off (when he absorbs elemental)
+local timerEmpoweredShadowsCD		= mod:NewNextTimer(20, 81572, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)--^^
+local timerDepravityCD				= mod:NewCDTimer(12, 81713, nil, "HasInterrupt", 2, 4, nil, DBM_CORE_INTERRUPT_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 

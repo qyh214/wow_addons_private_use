@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(196, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 161 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 170 $"):sub(12, -3))
 mod:SetCreatureID(53494)
 mod:SetEncounterID(1200)
 mod:DisableEEKillDetection()
@@ -36,11 +36,11 @@ local specWarnTormented		= mod:NewSpecialWarningYou(99257, "Healer")
 local specWarnDecimation	= mod:NewSpecialWarningSpell(99352, "Tank")
 
 local timerBladeActive		= mod:NewTimer(15, "TimerBladeActive", 99352)
-local timerBladeNext		= mod:NewTimer(30, "TimerBladeNext", 99350, "Tank|Healer", nil, 5)	-- either Decimation Blade or Inferno Blade
-local timerStrikeCD			= mod:NewTimer(5, "timerStrike", 99353, "Tank|Healer", nil, 5)--5 or 2.5 sec. Variations are noted but can be auto corrected after first timer since game follows correction.
+local timerBladeNext		= mod:NewTimer(30, "TimerBladeNext", 99350, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)	-- either Decimation Blade or Inferno Blade
+local timerStrikeCD			= mod:NewTimer(5, "timerStrike", 99353, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)--5 or 2.5 sec. Variations are noted but can be auto corrected after first timer since game follows correction.
 local timerShardsTorment	= mod:NewNextCountTimer(34, 99259, nil, nil, nil, 5)
 local timerCountdown		= mod:NewBuffFadesTimer(8, 99516)
-local timerCountdownCD		= mod:NewNextTimer(45, 99516, nil, nil, nil, 3)
+local timerCountdownCD		= mod:NewNextTimer(45, 99516, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 local timerVitalFlame		= mod:NewBuffFadesTimer(15, 99263)
 local timerTormented		= mod:NewBuffFadesTimer(40, 99257)
 

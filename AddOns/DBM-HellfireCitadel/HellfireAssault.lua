@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1426, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14738 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14990 $"):sub(12, -3))
 mod:SetCreatureID(90019)--Main ID is door, door death= win. 94515 Siegemaster Mar'tak
 mod:SetEncounterID(1778)
 mod:SetZone()
@@ -65,7 +65,7 @@ local specWarnReinforcements		= mod:NewSpecialWarningSwitch("ej11406", false, ni
 ----Gorebound Felcaster
 local specWarnIncinerate			= mod:NewSpecialWarningInterrupt(181155, false)--Seems less important of two spells
 local specWarnMetamorphosis			= mod:NewSpecialWarningSwitch(181968, "Dps")--Switch and get dead if they transform, they do TONS of damage transformed
-local specWarnFelfireVolley			= mod:NewSpecialWarningInterrupt(183452, "-Healer")
+local specWarnFelfireVolley			= mod:NewSpecialWarningInterrupt(183452, "HasInterrupt", nil, 2, 1, 2)
 ----Contracted Engineer
 local specWarnRepair				= mod:NewSpecialWarningInterrupt(185816, "-Healer", nil, nil, 1, 2)
 ----Grute
@@ -99,7 +99,7 @@ local countdownSlam					= mod:NewCountdownFades("Alt11", 184243, false)
 local voiceHowlingAxe				= mod:NewVoice(184369)--runout
 local voiceShockwave				= mod:NewVoice(184394)--shockwave
 local voiceIncinerate				= mod:NewVoice(181155, false)--kick
-local voiceFelfireVolley			= mod:NewVoice(180417, "-Healer")--kick
+local voiceFelfireVolley			= mod:NewVoice(183452, "HasInterrupt")--kick
 local voiceRepair					= mod:NewVoice(185816)--kickcast
 local voiceFelfireSiegeVehicles		= mod:NewVoice("ej11428")--One option for all 5, because less cluttered options better in this case I think.
 
@@ -148,8 +148,8 @@ end
 function mod:CannonTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
-		yellCannon:Yell()
 		specWarnCannon:Show()
+		yellCannon:Yell()
 	elseif self:CheckNearby(5, targetname) then
 		specWarnCannonNear:Show(targetname)
 	else
@@ -290,7 +290,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM:AddMsg("No Vehicle timer information beyond this point. If you have log or video of this pull, please share it")
 			end
 		else
-			timerSiegeVehicleCD:Cancel()--Cancel timer to prevent debug error, if all adds killed fast enough, next vehicle spawns early!
+			timerSiegeVehicleCD:Stop()--Cancel timer to prevent debug error, if all adds killed fast enough, next vehicle spawns early!
 			if self:IsHeroic() then
 				if vehicleTimers[Count] then
 					timerSiegeVehicleCD:Start(vehicleTimers[Count], "")
@@ -380,9 +380,9 @@ function mod:OnSync(msg)
 		if DBM.BossHealth:IsShown() then
 			DBM.BossHealth:RemoveBoss(94515)
 		end
-		timerHowlingAxeCD:Cancel()
+		timerHowlingAxeCD:Stop()
 		countdownHowlingAxe:Cancel()
-		timerShockwaveCD:Cancel()
+		timerShockwaveCD:Stop()
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()
 		end

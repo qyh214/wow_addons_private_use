@@ -1,0 +1,12 @@
+tag v2.4.29
+a6f61c02eabc34d59b3073c8cb0268688eef190c
+funkydude <funkydude@users.noreply.github.com>
+2016-07-21 00:33:41 +0100
+
+Tagging as v2.4.29
+
+
+--------------------
+
+funkydude:
+	- bump version

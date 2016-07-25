@@ -177,9 +177,6 @@ local function getChatWindow(ChatName, chatType)
         if(chatType == "guild") then
             Windows[ChatName].CHAT_listCount = _G.GetNumGuildMembers;
             Windows[ChatName].CHAT_listFun = _G.GetGuildRosterInfo;
-	elseif(chatType == "BN_CONVERSATION") then
-	    Windows[ChatName].CHAT_listCount = function() local l = Windows[ChatName].chatList; return #l; end;
-	    Windows[ChatName].CHAT_listFun = function(i) return Windows[ChatName].chatList[i]; end
 	else
             Windows[ChatName].CHAT_listCount = nil;
             Windows[ChatName].CHAT_listFun = nil;
@@ -217,20 +214,12 @@ RegisterWidgetTrigger("msg_box", "chat", "OnEnterPressed", function(self)
         elseif(obj.chatType == "channel") then
             TARGET = "CHANNEL";
             NUMBER = obj.channelNumber;
-	elseif(obj.chatType == "BN_CONVERSATION") then
-	    TARGET = "BN_CONVERSATION";
-            NUMBER = tonumber(obj.channelNumber);
-	    --BNSendConversationMessage
         else
             return;
         end
         local msgCount = math.ceil(string.len(msg)/255);
         if(msgCount == 1) then
-	    if(TARGET == "BN_CONVERSATION") then
-		    _G.BNSendConversationMessage(NUMBER, msg);
-	    else
-	            _G.ChatThrottleLib:SendChatMessage("ALERT", "WIM", msg, TARGET, nil, NUMBER);
-	    end
+	        _G.ChatThrottleLib:SendChatMessage("ALERT", "WIM", msg, TARGET, nil, NUMBER);
         elseif(msgCount > 1) then
             SendSplitMessage("ALERT", "WIM", msg, TARGET, nil, NUMBER);
         end
@@ -919,167 +908,6 @@ end
 
 
 --------------------------------------
---            BattleNet Convos      --
---------------------------------------
-
---create BNetConvos Module
-local BNC = CreateModule("BNetConvos");
-
--- This Module requires LibChatHandler-1.0
-_G.LibStub:GetLibrary("LibChatHandler-1.0"):Embed(BNC);
-
-function BNC:OnEnable()
-    RegisterWidget("chat_info", createWidget_Chat);
-    self:RegisterChatEvent("CHAT_MSG_BN_CONVERSATION");
-    self:RegisterChatEvent("CHAT_MSG_BN_CONVERSATION_LIST");
-    self:RegisterChatEvent("CHAT_MSG_BN_CONVERSATION_NOTICE");
-    self.frame = self.frame or _G.CreateFrame("Frame");
-    self.frame:Show();
-    self.frame:SetScript("OnUpdate", function(self, elapsed)
-      if _G.BNFeaturesEnabledAndConnected and _G.BNFeaturesEnabledAndConnected() then
-		    for i=1, _G.BNGetMaxNumConversations() do
-				  if(_G.BNGetConversationInfo(i)) then
-					  local winName = _G.format(_G.CONVERSATION_NAME, _G.MAX_WOW_CHAT_CHANNELS + i);
-					  local win = getChatWindow(winName, "BN_CONVERSATION");
-					  win.channelNumber = i;
-					  win.channelIdentifier = winName;
-				  end
-			  end
-        self:Hide();
-      end
-    end);
-end
-
-function BNC:OnDisable()
-    self:UnregisterChatEvent("CHAT_MSG_BN_CONVERSATION");
-    self:UnregisterChatEvent("CHAT_MSG_BN_CONVERSATION_LIST");
-    self:UnregisterChatEvent("CHAT_MSG_BN_CONVERSATION_NOTICE");
-end
-
-function BNC:OnWindowDestroyed(self)
-    if(self.type == "chat" and self.chatType == "BN_CONVERSATION") then
-        local chatName = self.theUser;
-        Windows[chatName].chatType = nil;
-        Windows[chatName].unreadCount = nil;
-        Windows[chatName].chatLoaded = nil;
-        Windows[chatName].channelNumber = nil;
-        Windows[chatName].channelSpecial = nil;
-        cleanChatList(Windows[chatName]);
-        Windows[chatName] = nil;
-    end
-end
-
-
-function BNC:CHAT_MSG_BN_CONVERSATION_CONTROLLER(eventController, ...)
-    if(eventController.ignoredByWIM) then
-        eventController:BlockFromDelegate(self);
-        return;
-    end
-    if(not db.chat.bn.neverSuppress and getRuleSet().supress) then
-        eventController:BlockFromChatFrame(self);
-    end
-end
-
-function BNC:CHAT_MSG_BN_CONVERSATION(...)
-    local filter, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13 = honorChatFrameEventFilter("CHAT_MSG_BN_CONVERSATION", ...);
-    if(filter) then
-        return;
-    end
-    -- arg4 Convo Name
-    -- arg8 Convo Number
-    -- arg13 sender realID Channel Name
-    local win = getChatWindow(_G.format(_G.CONVERSATION_NAME, _G.MAX_WOW_CHAT_CHANNELS + arg8), "BN_CONVERSATION");
-    local color = _G.ChatTypeInfo["BN_CONVERSATION"];
-    win.widgets.char_info:SetText("");
-    win.channelNumber = arg8;
-    win.channelIdentifier = arg4;
-    if(win:IsVisible()) then
-        --win.widgets.chat_info:SetText(GetChannelCount(win.channelNumber));
-    end
-    self.chatLoaded = true;
-    if(arg1 and _G.strlen(arg1) > 0) then
-        win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_CHANNEL", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
-        local neverPop = db.chat["bn"] and db.chat["bn"].neverPop;
-        if(1) then --arg2 ~= _G.UnitName("player")) then
-            win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
-            if(not neverPop) then
-                win:Pop("in");
-            end
-        else
-            if(not neverPop) then
-                win:Pop("out");
-            end
-        end
-        --CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_CHANNEL", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
-    end
-end
-
-function BNC:CHAT_MSG_BN_CONVERSATION_LIST_CONTROLLER(eventController, ...)
-	if(self.requestedList) then
-		eventController:BlockFromChatFrame(self);
-		self.requestedList = nil;
-	end
-end
-
-function BNC:CHAT_MSG_BN_CONVERSATION_LIST(...)
-	local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13 = ...;
-	local winName = _G.format(_G.CONVERSATION_NAME, _G.MAX_WOW_CHAT_CHANNELS + arg8);
-	local win = getChatWindow(winName, "BN_CONVERSATION");
-	cleanChatList(win);
-	SplitToTable(arg1, ", ", win.chatList);
-end
-
-BNC.CHAT_MSG_BN_CONVERSATION_CONTROLLER = BNC.CHAT_MSG_BN_CONVERSATION_CONTROLLER;
-function BNC:CHAT_MSG_BN_CONVERSATION_NOTICE(...)
-	local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13 = ...;
-	--arg1 = notice type
-	--arg8 = BN convo id
-	local channelLink = _G.format(_G.CHAT_BN_CONVERSATION_GET_LINK, arg8, _G.MAX_WOW_CHAT_CHANNELS + arg8);
-	local playerLink = _G.format("|HBNplayer:%s:%s:%s:%s:%s|h[%s]|h", arg2, arg13, arg11, _G.Chat_GetChatCategory("BN_CONVERSATION_NOTICE"), arg8, arg2);
-	local message = _G.format(_G["CHAT_CONVERSATION_"..arg1.."_NOTICE"], channelLink, playerLink)
-	local winName = _G.format(_G.CONVERSATION_NAME, _G.MAX_WOW_CHAT_CHANNELS + arg8);
-	local win = getChatWindow(winName, "BN_CONVERSATION");
-	win.channelNumber = arg8;
-	win.channelIdentifier = arg4;
-	win.widgets.chat_info:SetText(tonumber(_G.BNGetNumConversationMembers(win.channelNumber)));
-	local color = _G.ChatTypeInfo["BN_CONVERSATION"];
-	local neverPop = db.chat["bn"] and db.chat["bn"].neverPop;
-	if(arg1 == "YOU_JOINED_CONVERSATION") then
-		win:Pop(not neverPop);
-	end
-	win:AddEventMessage(color.r, color.g, color.b, "CHAT_BN_CONVERSATION", message);
-	--YOU_LEFT_CONVERSATION
-	--YOU_JOINED_CONVERSATION
-	BNC:UpdateList(win);
-end
-
-function BNC:OnWindowShow(win)
-	if(win.type == "chat" and win.chatType == "BN_CONVERSATION") then
-	    win.widgets.chat_info:SetText(tonumber(_G.BNGetNumConversationMembers(win.channelNumber)));
-	    BNC:UpdateList(win);
-	end
-end
-
-function BNC:UpdateList(win)
-	BNC.requestedList = true;
-	_G.BNListConversation(win.channelNumber);
-end
-
---[[
-local conversationType = BNGetConversationInfo(conversationNum) 
-local num = BNGetNumConversationMembers(conversationNum) 
-BN_CONVERSATION_MAX_CHANNEL_MEMBERS = BNGetMaxPlayersInConversation(); 
-local accountID, toonID, name = BNGetConversationMemberInfo(conversationNum, convMemberIndex); 
-
-BNInviteToConversation(conversationNum, presenceID); 
-BNListConversation(conversationNum); akin to ListChannelByName(name), but for BNet conversations; 
-BNLeaveConversation(conversationNum); akin to LeaveChannelByName(name), but for BNet conversations; 
-
-BNSendConversationMessage(conversationNum, text); akin to SendChatMessage(text, "CHANNEL", nil, channelTarget); 
-]]
-
-
---------------------------------------
 --            Channel Chat          --
 --------------------------------------
 
@@ -1625,11 +1453,6 @@ local function loadChatOptions()
         return f;
     end
     
-    local function createBNChat()
-        local f = createChatTemplate(_G.BN_CONVERSATION, "BNetConvos", "bn");
-        return f;
-    end
-    
     local function createWorldChat()
         local f = createChannelChatTemplate(L["World Chat"], "world", function() return getChannelList(true); end);
         return f;
@@ -1646,7 +1469,6 @@ local function loadChatOptions()
     RegisterOptionFrame(L["Chat"], _G.RAID, createRaidChat);
     RegisterOptionFrame(L["Chat"], _G.INSTANCE_CHAT, createBattlegroundChat);
     RegisterOptionFrame(L["Chat"], _G.SAY, createSayChat);
-    RegisterOptionFrame(L["Chat"], _G.BN_CONVERSATION, createBNChat);
     RegisterOptionFrame(L["Chat"], L["World Chat"], createWorldChat);
     RegisterOptionFrame(L["Chat"], L["Custom Chat"], createCustomChat);
     

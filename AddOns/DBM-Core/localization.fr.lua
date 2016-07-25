@@ -1,10 +1,10 @@
 ﻿if GetLocale() ~= "frFR" then return end
-DBM_CORE_NEED_SUPPORT				= "Vous êtes bon en programmation ou en langues ? Si oui, l'équipe de DBM a besoin de votre aide pour que DBM reste le meilleur boss mod de WoW. Rejoignez l'équipe en visitant http://forums.elitistjerks.com/topic/132449-dbm-localizers-needed/"
+DBM_CORE_NEED_LOCALS				= "Vous êtes bon en programmation ou en langues ? Si oui, l'équipe de DBM a besoin de votre aide pour que DBM reste le meilleur boss mod de WoW. Rejoignez l'équipe en visitant |HDBM:localizersneeded|h|cff3588ffhere|r"
 DBM_CORE_NEED_LOGS					= "DBM a besoin de Transcriptor (http://www.wowace.com/addons/transcriptor/) logs de ces combats de test pour s'améliorer. Si vous voulez aider, enregistrez ces combats avec Transcriptor et postez les sur nos forums. Ceci est valable uniquement pour les raids et donjons 7.0."
 DBM_HOW_TO_USE_MOD					= "Bienvenue sur DBM. Tapez /dbm help pour une liste des commandes supportées. Pour accédez aux options, tapez /dbm dans la fenêtre de discussion pour commencer la configuration. Chargez des zones spécifiques manuellement pour configurer tous les paramètres spécifiques aux boss selon vos envies. DBM essaie de le faire pour vous en analysant votre spécialisation au premier lancement, mais nous savons que de toute façon certaines personnes souhaitant activer d'autres options."
 
 DBM_FORUMS_MESSAGE                  = "Tu as remarqué un bug ou un timer mal réglé? Tu penses que certains combats ont besoin de plus d'alertes, timers ou autres fonctionnalités?\nVisite le nouveau sujet sur DBM, les rapports de bug et propositions sur le forum à l'adresse suivante: |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (you can click the link to copy the URL)"
-DBM_FORUMS_COPY_URL_DIALOG          = "Venez visiter nos nouveau forums de support et discussions\r\n(hosted by Elitist Jerks!)"
+DBM_FORUMS_COPY_URL_DIALOG          = "Venez visiter nos nouveau forums de support et discussions"
 DBM_FORUMS_COPY_URL_DIALOG_NEWS		= "To learn more about this new feature and how it works, visit our forums"
 
 DBM_CORE_LOAD_MOD_ERROR				= "Erreur lors du chargement des modules %s: %s"
@@ -15,7 +15,7 @@ DBM_CORE_LOAD_GUI_COMBAT            = "GUI ne peut pas se charger initialement e
 DBM_CORE_BAD_LOAD                   = "DBM a détecté une erreur de chargement du mod de l'instance car vous êtes en combat. Dès que vous sortez de combat veuillez entrer /console reloadui le plus vite possible."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s n'a pas pu être chargé car votre DBM-Core ne remplit pas les conditions. Il vous faut une version plus récente."
 
-DBM_CORE_WHATS_NEW					= "Nouveau dans cette version: Amélioration de l'accès aux événements DBM par d'autres mods"
+--DBM_CORE_WHATS_NEW					= "Nouveau dans cette version: Amélioration de l'accès aux événements DBM par d'autres mods"
 --DBM_CORE_WHATS_NEW_LINK			= "Nouveau dans cette version: Les timers DBM supportent plusieurs couleurs en fonction du type de sort concerné. Pour en apprendre plus vous pouvez lire |HDBM:forumsnews|h|cff3588ffclicking here|r"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP   = "DBM a désactivé la vérification du nombre de joueurs à portée sur ce combat pour cause de manque d'information sur le nombre de joueurs requis regroupés pour votre taille de raid."
@@ -304,13 +304,14 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.move			= "%s - écartez-vous"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dodge 			= "%s - esquivez" --not sure in which case the message appears but this should work
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveaway    	= "%s - écartez-vous du raid"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveto      	= "%s - dirigez-vous vers >%%s<"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.jump				= "%s - saute"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.run				= "%s - fuyez"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast			= "%s - arrêtez d'incanter"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect     	= "%s sur >%%s< - arrêtez d'attaquer"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.count       	= "%s! (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack			= "%s (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch			= "%s - Changer de cible"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount		= "%s - Changer de cible (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount		= "%s - Changer de cible (%%s)"
 
 -- Auto-generated Special Warning Localizations
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell 			= "Afficher une alerte spéciale pour $spell:%s"

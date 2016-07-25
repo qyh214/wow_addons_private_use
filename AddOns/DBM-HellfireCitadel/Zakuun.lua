@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1391, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14652 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14858 $"):sub(12, -3))
 mod:SetCreatureID(89890)
 mod:SetEncounterID(1777)
 mod:SetZone()
@@ -47,7 +47,7 @@ local specWarnSeedPosition				= mod:NewSpecialWarningYouPos(181508, nil, false, 
 local yellSeedsofDestruction			= mod:NewYell(181508)
 
 --Armed
-local timerRumblingFissureCD			= mod:NewNextTimer(39, 179582, nil, nil, nil, 5)
+local timerRumblingFissureCD			= mod:NewNextTimer(39, 179582, 161600, nil, nil, 5)
 local timerBefouledCD					= mod:NewNextTimer(38, 179711, nil, nil, nil, 3, nil, DBM_CORE_HEALER_ICON)
 local timerSoulCleaveCD					= mod:NewNextTimer(40, 179406, nil, nil, nil, 3)
 local timerCavitationCD					= mod:NewNextTimer(40, 181461, nil, nil, nil, 2)
@@ -320,13 +320,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerSeedsofDestructionCD:Start(8.5, 1)--8.5-10
 		countdownSeedsofDestructionCD:Start(8.5)
 	elseif spellId == 179681 then--Enrage (has both armed and disarmed abilities)
-		timerDisarmCD:Cancel()--Assumed
+		timerDisarmCD:Stop()--Assumed
 		countdownDisarm:Cancel()
-		timerCavitationCD:Cancel()
-		timerSeedsofDestructionCD:Cancel()
+		timerCavitationCD:Stop()
+		timerSeedsofDestructionCD:Stop()
 		countdownSeedsofDestructionCD:Cancel()
-		timerRumblingFissureCD:Cancel()
-		timerSoulCleaveCD:Cancel()
+		timerRumblingFissureCD:Stop()
+		timerSoulCleaveCD:Stop()
 		self.vb.Enraged = true
 		self.vb.CavitationCount = 0
 		self.vb.SeedsCount = 0

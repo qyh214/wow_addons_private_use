@@ -1,16 +1,16 @@
 local mod	= DBM:NewMod(110, "DBM-Party-Cataclysm", 7, 67)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 131 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 167 $"):sub(12, -3))
 mod:SetCreatureID(43438)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_SUCCESS",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"SPELL_AURA_APPLIED 86881",
+	"SPELL_CAST_SUCCESS 82415",
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 local warnCrystalBarrage			= mod:NewTargetAnnounce(81634, 2)
@@ -22,8 +22,8 @@ local specWarnCrystalBarrage		= mod:NewSpecialWarningYou(81634)
 local specWarnCrystalBarrageClose	= mod:NewSpecialWarningClose(81634)
 
 local timerDampening				= mod:NewCDTimer(10, 82415)
-local timerSubmerge					= mod:NewTimer(80, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
-local timerEmerge					= mod:NewTimer(30, "TimerEmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
+local timerSubmerge					= mod:NewTimer(80, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp", nil, nil, 6)
+local timerEmerge					= mod:NewTimer(30, "TimerEmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp", nil, nil, 6)
 
 local crystalTargets = {}
 
@@ -82,15 +82,15 @@ end
 --"<6.5> [INSTANCE_ENCOUNTER_ENGAGE_UNIT] Fake Args:#1#1#Corborus#0xF130A9AE00013D1D#elite#2904790#nil#nil#nil#nil#normal#0#nil#nil#nil#nil#normal#0#nil#nil#nil#nil#normal#0#Real Args:", -- [40]
 --"<36.5> [UNIT_SPELLCAST_SUCCEEDED] Corborus:Possible Target<Omegal>:boss1:ClearAllDebuffs::0:34098", -- [1228]
 --"<65.6> [UNIT_SPELLCAST_SUCCEEDED] Corborus:Possible Target<nil>:boss1:Emerge::0:81948", -- [1830]
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName)
-	if spellName == GetSpellInfo(34098) and self:AntiSpam() then--ClearAllDebuffs, He casts this before borrowing.
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+	if spellId == 34098 then--ClearAllDebuffs, He casts this before borrowing.
 		warnSubmerge:Show()
 		timerEmerge:Start()
 		timerDampening:Cancel()
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()
 		end
-	elseif spellName == GetSpellInfo(81948) and self:AntiSpam() then--Emerge, He casts this before borrowing.
+	elseif spellId == 81948 then--Emerge, He casts this before borrowing.
 		warnEmerge:Show()
 		timerSubmerge:Start()
 		if self.Options.RangeFrame then

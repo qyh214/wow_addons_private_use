@@ -104,7 +104,7 @@ local UISpecialFrames = UISpecialFrames
 local _
 
 local MAJOR_VERSION = 1
-local MINOR_VERSION = 76
+local MINOR_VERSION = 77
 
 -- To prevent older libraries from over-riding newer ones...
 if type(UICreateInterfaceOptionPage_IsNewerVersion) == "function" and not UICreateInterfaceOptionPage_IsNewerVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -475,6 +475,7 @@ local function CreateSlider(self, text, minVal, maxVal, step, valueFormat, disab
 	slider:SetWidth(200)
 	slider:SetMinMaxValues(minVal or 0, maxVal or 1)
 	slider:SetValueStep(step or 1)
+	slider:SetObeyStepOnDrag(true)
 	slider.valueFormat = type(valueFormat) == "string" and valueFormat or "%d"
 
 	if type(textColor) == "table" then

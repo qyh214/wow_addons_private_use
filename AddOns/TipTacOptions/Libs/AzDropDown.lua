@@ -16,9 +16,11 @@
 	- The menu will now hide itself, if any of it's parents was hidden.
 	### Rev 09 ###
 	- DropDown Text Object can no longer be wider than the width of the DropDown itself.
+	### Rev 10 - 7.0.3/Legion ###
+	- Fixed issue related to frame level, making the dropdown appear behind other frames. Thanks vincentSDSH.
 --]]
 
-local REVISION = 9;
+local REVISION = 10;
 if (type(AzDropDown) == "table") and (AzDropDown.vers >= REVISION) then
 	return;
 end
@@ -26,10 +28,12 @@ end
 AzDropDown = AzDropDown or {};
 AzDropDown.vers = REVISION;
 
-local menu;
-local measure;
+local menu;					-- only one menu exists globally that is shared across all created dropdowns
+local measure;				-- fontString used to measure text width
+
 local menuMaxItems = 15;
 local menuItemHeight = 14;
+
 local backDrop = { bgFile = "Interface\\Buttons\\WHITE8X8", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 14, insets = { left = 2.5, right = 2.5, top = 2.5, bottom = 2.5 } };
 local storage = {};
 
@@ -98,7 +102,7 @@ local function CreateMenuItem()
 	return item;
 end
 
--- UpdateList
+-- Updates the dropdown list -- A dropdown menu entry can contain the following table keys: text, value, header, checked, tip
 local function Menu_UpdateList()
 	FauxScrollFrame_Update(menu.scroll,#menu.list,menuMaxItems,menuItemHeight);
 	local item, entry;
@@ -135,12 +139,12 @@ local function CreateMenu()
 	menu:SetBackdrop(backDrop);
 	menu:SetBackdropColor(0.1,0.1,0.1,1);
 	menu:SetBackdropBorderColor(0.4,0.4,0.4,1);
-	menu:SetToplevel(1);
-	menu:SetClampedToScreen(1);
+	menu:SetToplevel(true);
+	menu:SetClampedToScreen(true);
 	menu:SetFrameStrata("FULLSCREEN_DIALOG");
 	menu:SetScript("OnHide",function(self) if (self:IsShown()) then self:Hide(); end end);
 	menu:Hide();
-	
+
 	measure = menu:CreateFontString(nil,"ARTWORK","GameFontHighlightSmall");
 	measure:Hide();
 
@@ -151,7 +155,7 @@ local function CreateMenu()
 	menu.list = setmetatable({},{ __index = function(t,k) t[k] = #storage > 0 and tremove(storage,#storage) or {}; return t[k]; end });
 end
 
--- InitList
+-- InitMenu
 local function InitMenu(parent,initFunc,selectValueFunc,point,parentPoint)
 	if (not initFunc) then
 		return;
@@ -162,6 +166,7 @@ local function InitMenu(parent,initFunc,selectValueFunc,point,parentPoint)
 	-- Anchor to Parent
 	menu:ClearAllPoints();
 	menu:SetPoint(point or "TOPRIGHT",parent,parentPoint or "BOTTOMRIGHT");
+	menu:SetFrameLevel(parent:GetFrameLevel() + 2);
 	-- Clear Old List & Init the New
 	for index, tbl in ipairs(menu.list) do
 		wipe(tbl);
@@ -173,7 +178,7 @@ local function InitMenu(parent,initFunc,selectValueFunc,point,parentPoint)
 	initFunc(parent,menu.list);
 	-- Show "No items" for empty lists & Update List
 	if (#menu.list == 0) then
-		menu.list[1].text = "No items"; menu.list[1].header = 1;
+		menu.list[1].text = "No items"; menu.list[1].header = true;
 	end
 	Menu_UpdateList();
 	-- Set Width
@@ -222,14 +227,14 @@ end
 --                                        "Exported" Functions                                        --
 --------------------------------------------------------------------------------------------------------
 
--- ToggleMenu
+-- Hides the menu
 function AzDropDown.HideMenu()
 	if (menu) then
 		menu:Hide();
 	end
 end
 
--- ToggleMenu
+-- Toggles menu visibility
 function AzDropDown.ToggleMenu(parent,initFunc,selectValueFunc,point,parentPoint)
 	if (not parent or not initFunc or not selectValueFunc) then
 		return;
@@ -246,7 +251,7 @@ function AzDropDown.ToggleMenu(parent,initFunc,selectValueFunc,point,parentPoint
 	end
 end
 
--- Create DropDown
+-- Creates a dropdown menu
 function AzDropDown.CreateDropDown(parent,width,isAutoSelect,initFunc,selectValueFunc)
 	if (not parent or not width) then
 		return;

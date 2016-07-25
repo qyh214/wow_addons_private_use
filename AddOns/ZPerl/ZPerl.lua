@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 991 $")
-XPerl_SetModuleRevision("$Revision: 991 $")
+end, "$Revision: 1002 $")
+XPerl_SetModuleRevision("$Revision: 1002 $")
 
 -- Upvalus
 local _G = _G
@@ -98,8 +98,6 @@ local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitIsEnemy = UnitIsEnemy
 local UnitIsPlayer = UnitIsPlayer
 local UnitIsPVP = UnitIsPVP
-local UnitIsTapped = UnitIsTapped
-local UnitIsTappedByPlayer = UnitIsTappedByPlayer
 local UnitIsUnit = UnitIsUnit
 local UnitIsVisible = UnitIsVisible
 local UnitLevel = UnitLevel
@@ -959,7 +957,7 @@ end
 --	return unpack(ClassPos[class] or ClassPos.none)
 --end
 
-local ClassPos = CLASS_BUTTONS
+local ClassPos = CLASS_ICON_TCOORDS
 function XPerl_ClassPos(class)
 	local b = ClassPos[class]		-- Now using the Blizzard supplied from FrameXML/WorldStateFrame.lua
 	if (b) then
@@ -995,11 +993,11 @@ function XPerl_UnlockFrames()
 		XPerl_AggroAnchor:Enable()
 	end
 
-	if (XPerl_Player) then
+	--[[if (XPerl_Player) then
 		if (XPerl_Player.runes and not InCombatLockdown()) then
 			XPerl_Player.runes:EnableMouse(true)
 		end
-	end
+	end]]
 
 	if (XPerl_Options) then
 		XPerl_Options:Show()
@@ -1034,11 +1032,11 @@ function XPerl_LockFrames()
 		XPerl_AggroAnchor:Disable()
 	end
 
-	if (XPerl_Player) then
+	--[[if (XPerl_Player) then
 		if (XPerl_Player.runes and not InCombatLockdown()) then
 			XPerl_Player.runes:EnableMouse(false)
 		end
-	end
+	end]]
 
 	if (XPerl_RaidTitles) then
 		XPerl_RaidTitles()
@@ -1402,6 +1400,9 @@ local ManaColours = {
 	[SPELL_POWER_ENERGY] = "energy",
 	[SPELL_POWER_RUNES] = "runes",
 	[SPELL_POWER_RUNIC_POWER] = "runic_power",
+	[SPELL_POWER_FURY] = "fury",
+	[SPELL_POWER_INSANITY] = "insanity",
+	[SPELL_POWER_MAELSTROM] = "maelstrom",
 	[SPELL_POWER_ALTERNATE_POWER] = "energy", -- used by some bosses, show it as energy bar
 }
 
@@ -1540,7 +1541,7 @@ function XPerl_ReactionColour(argUnit)
 			end
 		end
 	else
-		if (UnitIsTapped(argUnit) and not UnitIsTappedByPlayer(argUnit)) and not UnitIsFriend("player", argUnit) then
+		if UnitIsTapDenied(argUnit) and not UnitIsFriend("player", argUnit) then
 			return conf.colour.reaction.tapped
 		else
 			local reaction = UnitReaction(argUnit, "player")
@@ -1581,7 +1582,7 @@ function XPerl_SetUnitNameColor(self, unit)
 			color = XPerl_ReactionColour(unit)
 		end
 	else
-		if (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) and not UnitIsFriend("player", unit) then
+		if UnitIsTapDenied(unit) and not UnitIsFriend("player", unit) then
 			color = conf.colour.reaction.tapped
 		else
 			color = XPerl_ReactionColour(unit)
@@ -1979,7 +1980,7 @@ function XPerl_RestoreAllPositions()
 	local table = XPerl_GetSavePositionTable()
 	if (table) then
 		for k, v in pairs(table) do
-			if (k == "XPerl_Frame" or k == "XPerl_RaidMonitor_Frame" or k == "XPerl_Check" or k == "XPerl_AdminFrame" or k == "XPerl_Assists_Frame") then
+			if (k == "XPerl_Runes" or k == "XPerl_Frame" or k == "XPerl_RaidMonitor_Frame" or k == "XPerl_Check" or k == "XPerl_AdminFrame" or k == "XPerl_Assists_Frame") then
 				-- Fix for a wrong name with versions 2.3.2 and 2.3.2a
 				-- It was using XPerl_Frame instead of XPerl_MTList_Anchor
 				-- and XPerl_RaidMonitor_Frame instead of XPerl_RaidMonitor_Anchor
@@ -1988,9 +1989,9 @@ function XPerl_RestoreAllPositions()
 			else
 				local frame = _G[k]
 				if (frame) then
-					if k == "XPerl_Runes" and conf.player.dockRunes then
+					--[[if k == "XPerl_Runes" and conf.player.dockRunes then
 						break
-					end
+					end]]
 					if (v.left and v.top) then
 						frame:ClearAllPoints()
 						frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", v.left / frame:GetScale(), v.top / frame:GetScale())
@@ -2002,16 +2003,16 @@ function XPerl_RestoreAllPositions()
 								v.height, v.width = nil, nil
 							end
 						end
-						if (k == "XPerl_Runes") then
+						--[[if (k == "XPerl_Runes") then
 							frame:SetMovable(true)
 							frame:EnableMouse(true)
 							frame:RegisterForDrag("LeftButton")
 							frame:SetScript("OnDragStart", frame.StartMoving)
 							frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
 							frame:SetUserPlaced(true)
-						else
+						else]]
 							frame:SetUserPlaced(true)
-						end
+						--end
 					end
 				end
 			end
@@ -2033,11 +2034,11 @@ local BuffExceptions = {
 	},
 	HUNTER = {
 		--[GetSpellInfo(13165)] = true,				-- Aspect of the Hawk
-		[GetSpellInfo(5118)] = true,				-- Aspect of the Cheetah
-		[GetSpellInfo(13159)] = true,				-- Aspect of the Pack
+		--[GetSpellInfo(5118)] = true,				-- Aspect of the Cheetah
+		--[GetSpellInfo(13159)] = true,				-- Aspect of the Pack
 		[GetSpellInfo(61648)] = true,				-- Aspect of the Beast
 		-- [GetSpellInfo(13163)] = true,			-- Aspect of the Monkey
-		[GetSpellInfo(19506)] = true,				-- Trueshot Aura
+		--[GetSpellInfo(19506)] = true,				-- Trueshot Aura
 		[GetSpellInfo(5384)] = true,				-- Feign Death
 	},
 	ROGUE = {
@@ -2048,10 +2049,10 @@ local BuffExceptions = {
 		[GetSpellInfo(13877)] = true,				-- Blade Flurry
 	},
 	PALADIN = {
-		[GetSpellInfo(20154)] = true,				-- Seal of Righteousness
-		[GetSpellInfo(20165)] = true,				-- Seal of Insight
-		[GetSpellInfo(20164)] = true,				-- Seal of Justice
-		[GetSpellInfo(31801)] = true,				-- Seal of Truth
+		--[GetSpellInfo(20154)] = true,				-- Seal of Righteousness
+		--[GetSpellInfo(20165)] = true,				-- Seal of Insight
+		--[GetSpellInfo(20164)] = true,				-- Seal of Justice
+		--[GetSpellInfo(31801)] = true,				-- Seal of Truth
 		--[GetSpellInfo(20375)] = true,				-- Seal of Command
 		--[GetSpellInfo(20166)] = true,				-- Seal of Wisdom
 		--[GetSpellInfo(20165)] = true,				-- Seal of Light
@@ -2059,7 +2060,7 @@ local BuffExceptions = {
 		--[GetSpellInfo(31892)] = true,				-- Seal of Blood
 		--[GetSpellInfo(31801)] = true,				-- Seal of Vengeance
 		[GetSpellInfo(25780)] = true,				-- Righteous Fury
-		[GetSpellInfo(20925)] = true,				-- Holy Shield
+		--[GetSpellInfo(20925)] = true,				-- Holy Shield
 		--[GetSpellInfo(54428)] = true,				-- Divine Plea
 	},
 }
@@ -3220,7 +3221,7 @@ function XPerl_Update_RaidIcon(self, unit)
 	local index = GetRaidTargetIndex(unit)
 	if (index) then
 		local mark
-		if unit == "player" or unit == "target" or unit == "focus" then
+		if unit == "player" or unit == "vehicle" or unit == "target" or unit == "focus" then
 			mark = self.texture
 		else
 			mark = self
@@ -3382,7 +3383,7 @@ function XPerl_NextMember(_, last)
 end
 
 -- XPerl_Unit_UpdatePortrait
-function XPerl_Unit_UpdatePortrait(self)
+function XPerl_Unit_UpdatePortrait(self, force)
 	if (self.conf and self.conf.portrait) then
 		if self.conf.classPortrait then
 			local _, englishClass = UnitClass(self.partyid)
@@ -3397,10 +3398,14 @@ function XPerl_Unit_UpdatePortrait(self)
 		-- If a player moves out of range for a 3D portrait, it will show their proper 2D one
 		if (self.conf.portrait3D and UnitIsVisible(self.partyid)) then
 			self.portraitFrame.portrait:Hide()
-			self.portraitFrame.portrait3D:Show()
-			self.portraitFrame.portrait3D:ClearModel()
-			self.portraitFrame.portrait3D:SetUnit(self.partyid)
-			self.portraitFrame.portrait3D:SetPortraitZoom(1)
+			local guid = UnitGUID(self.partyid)
+			if force or guid ~= self.portraitFrame.portrait3D.guid or not self.portraitFrame.portrait3D:IsShown() then
+				self.portraitFrame.portrait3D:Show()
+				self.portraitFrame.portrait3D:ClearModel()
+				self.portraitFrame.portrait3D:SetUnit(self.partyid)
+				self.portraitFrame.portrait3D:SetPortraitZoom(1)
+				self.portraitFrame.portrait3D.guid = guid
+			end
 		else
 			self.portraitFrame.portrait:Show()
 			self.portraitFrame.portrait3D:Hide()
@@ -3770,7 +3775,15 @@ function XPerl_SetExpectedAbsorbs(self)
 			if UnitIsAFK(self.partyid) then
 				bar:SetStatusBarColor(0.2, 0.2, 0.2, 0.7)
 			else
-				bar:SetStatusBarColor(conf.colour.bar.absorb.r or 0.14, conf.colour.bar.absorb.g or 0.33, conf.colour.bar.absorb.b or 0.7, conf.colour.bar.absorb.a or 0.7)
+				if not conf.colour.bar.absorb then
+					conf.colour.bar.absorb = { }
+					conf.colour.bar.absorb.r = 0.14
+					conf.colour.bar.absorb.g = 0.33
+					conf.colour.bar.absorb.b = 0.7
+					conf.colour.bar.absorb.a = 0.7
+				end
+
+				bar:SetStatusBarColor(conf.colour.bar.absorb.r, conf.colour.bar.absorb.g, conf.colour.bar.absorb.b, conf.colour.bar.absorb.a)
 			end
 
 			bar:Show()
@@ -3812,8 +3825,15 @@ function XPerl_SetExpectedHealth(self)
 		if (amount and amount > 0 and not UnitIsDeadOrGhost(self.partyid)) then
 			local healthMax = UnitHealthMax(self.partyid)
 			local health = UnitHealth(self.partyid)
+			if not conf.colour.bar.healprediction then
+				conf.colour.bar.healprediction = { }
+				conf.colour.bar.healprediction.r = 0
+				conf.colour.bar.healprediction.g = 1
+				conf.colour.bar.healprediction.b = 1
+				conf.colour.bar.healprediction.a = 1
+			end
 
-			bar:SetStatusBarColor(conf.colour.bar.healprediction.r or 0, conf.colour.bar.healprediction.g or 1, conf.colour.bar.healprediction.b or 1, conf.colour.bar.healprediction.a or 1)
+			bar:SetStatusBarColor(conf.colour.bar.healprediction.r, conf.colour.bar.healprediction.g, conf.colour.bar.healprediction.b, conf.colour.bar.healprediction.a)
 
 			bar:Show()
 			bar:SetMinMaxValues(0, healthMax)

@@ -30,12 +30,7 @@ local defaults = {
 		prefix_equippable = "*",
 		prefix_upgrade = "+",
 
-		-- If you enable these options, you understand
-		-- that you may miss bonus rolls or other important things.
-		unsafe_hook_alert = false,
-		unsafe_hook_bonus = false,
-
-		hook_alert = false, -- Unsafe, ignored
+		hook_alert = false,
 		alert_skin = true,
 		alert_alpha = 1,
 		alert_scale = 1,
@@ -43,7 +38,7 @@ local defaults = {
 		alert_background = false,
 		alert_icon_frame = false,
 
-		hook_bonus = false, -- Unsafe, ignored
+		hook_bonus = false,
 		bonus_skin = true,
 
 		roll_button_size = 28,
@@ -51,11 +46,13 @@ local defaults = {
 
 		roll_anchor = {
 			direction = 'up',
+			spacing = 2,
+			offset = 0,
 			visible = true,
 			draggable = true,
 			scale = 1.0,
-			x = UIParent:GetWidth() * .85,
-			y = UIParent:GetHeight() * .6
+			x = UIParent:GetWidth() * .75,
+			y = UIParent:GetHeight() * .4
 		},
 
 		alert_anchor = {
@@ -73,7 +70,8 @@ local defaults = {
 		track_threshold = 3,
 
 		expire_won = 20,
-		expire_lost = 10
+		expire_lost = 10,
+		shown_hook_warning = false
 	}
 }
 
@@ -123,6 +121,9 @@ function addon:OnEnable()
 	alert_anchor = XLoot.Stack:CreateAnchor(L.alert_anchor, opt.alert_anchor)
 	alert_anchor:SetFrameLevel(7)
 	addon.alert_anchor = alert_anchor
+	--  DISABLED-PATCH: LEGION PRE-PATCH
+	alert_anchor.Show = alert_anchor.Hide
+	alert_anchor:Hide()
 
 	-- Skin anchor
 	Skinner:Skin(anchor, XLoot.opt.skin_anchors and 'anchor_pretty' or 'anchor')
@@ -170,8 +171,9 @@ function addon:OnEnable()
 		end
 	end
 
+	--[[ DISABLED-PATCH: LEGION PRE-PATCH
 	-- Hook alert actions
-	if opt.unsafe_hook_alert then
+	if opt.hook_alert then
 		hooksecurefunc('LootUpgradeFrame_SetUp', self.AlertFrameHook)
 		hooksecurefunc('LootWonAlertFrame_SetUp', self.AlertFrameHook)
 		hooksecurefunc('MoneyWonAlertFrame_SetUp', self.AlertFrameHook)
@@ -192,11 +194,20 @@ function addon:OnEnable()
 	-- hooksecurefunc('BonusRollFrame_StartBonusRoll', self.BonusRollFrame_StartBonusRoll)
 	-- hooksecurefunc('BonusRollFrame_FinishedFading', self.BonusRollFrame_Hide)
 	-- BonusRollFrame._SetPoint, BonusRollFrame.SetPoint = BonusRollFrame.SetPoint, addon.BonusRollFrame_SetPoint
-	if opt.unsafe_hook_bonus then
+	if opt.hook_bonus then
 		hooksecurefunc(BonusRollFrame, 'SetPoint', self.BonusRollFrame_SetPoint)
 		hooksecurefunc(BonusRollFrame, 'Show', self.BonusRollFrame_Show)
 		hooksecurefunc(BonusRollFrame, 'Hide', self.BonusRollFrame_Hide)
 	end
+
+	if (opt.hook_alert or opt.hook_bonus) and not opt.shown_hook_warning then
+		local function gprint(text) print(('%s: %s'):format('|c2244dd22XLoot Group|r', text)) end
+		gprint("The 'Modify bonus rolls' or 'Modify loot alerts' options are currently enabled, but are now disabled by default.")
+		gprint("I cannot guarantee that you will not experience any issues with bonus rolls with these options enabled.")
+		gprint("If you do not accept that risk, please disable those options or XLoot Group entirely. You should only see this message once.")
+		opt.shown_hook_warning = true
+	end
+	]]
 end
 
 -------------------------------------------------------------------------------
@@ -592,11 +603,9 @@ function addon.BonusRollFrame_Show()
 		end
 	end
 
-	-- GroupLootContainer_RemoveFrame(GroupLootContainer, frame) -- Prevent GLC from restacking
 	if anchor.children[1] ~= BonusRollFrame then
 		table.insert(anchor.children, 1, frame) -- Force in first position
 	end
-	--frame:Show()
 	anchor:Restack()
 end
 
@@ -605,7 +614,6 @@ function addon.BonusRollFrame_Hide()
 		table.remove(anchor.children, 1)
 		anchor:Restack()
 	end
-	--BonusRollFrame:Hide()
 end
 
 function addon.SlashHandler(msg)

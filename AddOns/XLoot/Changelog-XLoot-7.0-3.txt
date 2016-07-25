@@ -1,0 +1,13 @@
+tag 7.0-3
+1f77260d37bd6afdbe15736ab40ff14b50606011
+Xuerian <sky.shell@gmail.com>
+2016-07-24 12:15:56 -0400
+
+Avoid issues with XLoot's autoloot and select BoP item/situations
+
+
+--------------------
+
+Xuerian:
+	- helpers: Improve GetItemBindType
+	- frame: Don't automatically clear autolooted slots that are BoP

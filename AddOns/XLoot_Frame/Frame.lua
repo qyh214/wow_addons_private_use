@@ -114,7 +114,7 @@ local defaults = {
 		loot_color_backdrop = { 0, 0, 0, .9 },
 		loot_color_gradient = { .5, .5, .5, .4 },
 		loot_color_info = { .5, .5, .5 },
-		loot_color_button_auto = { .4, .8, .4 }
+		loot_color_button_auto = { .4, .8, .4, .6 }
 	}
 }
 
@@ -1015,7 +1015,7 @@ function XLootFrame:ParseAutolootList()
 	end
 end
 
-local states = {
+local auto_states = {
 	always = true,
 	group = true, -- Secretly "Always" shh
 	never = false,
@@ -1024,11 +1024,19 @@ local states = {
 	raid = nil
 }
 
+
 function addon:PARTY_MEMBERS_CHANGED()
-	local raid = IsInRaid()
-	states.solo = not IsInGroup()
-	states.party = not raid
-	states.raid = raid
+	auto_states.solo = not IsInGroup()
+	auto_states.raid = IsInRaid()
+	auto_states.party = not auto_states.raid
+end
+
+local function AutoLootSlot(slot, link)
+	LootSlot(slot)
+	if link and GetItemBindType(link) == 'pickup' then
+		return false
+	end
+	return true
 end
 
 local _bag_slots = {}
@@ -1052,7 +1060,7 @@ function XLootFrame:Update(in_options)
 	-- Autolooting options
 	local auto, auto_items = auto, auto_items
 	for k,v in pairs(opt.autoloots) do
-		auto[k] = states[v]
+		auto[k] = auto_states[v]
 	end
 
 	-- Update rows
@@ -1071,14 +1079,13 @@ function XLootFrame:Update(in_options)
 
 			-- Autolooting currency
 			if (auto.all or auto.currency) and (type == LOOT_SLOT_MONEY or type == LOOT_SLOT_CURRENCY) then
-				LootSlot(slot)
-				looted = true
+				looted = AutoLootSlot(slot, link)
 				
 			-- Autolooting items
 			else
 				-- TODO: Pass on to row update
 				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(link or name)
-				if auto.all or (auto.quest and isQuestItem) or (auto.list and auto_items[name]) or (auto.tradegoods and itemType == 'Trade Goods') then
+				if auto.all or (auto.quest and isQuestItem) or (auto.list and auto_items[name]) or (auto.tradegoods and itemType == 'Tradeskill') then
 
 					-- Cache available space
 					--  Specific bag types make this a bit more annoying
@@ -1095,14 +1102,12 @@ function XLootFrame:Update(in_options)
 					-- Simple quest item
 					local family = GetItemFamily(link)
 					if not family and isQuestItem then
-						LootSlot(slot)
-						looted = true
+						looted = AutoLootSlot(slot, link)
 					else
 						-- We have room
 						family = (family and family <= 4096) and family or 0
 						if bag_slots[0] > 0 or (bag_slots[family] and bag_slots[family] > 0) then
-							LootSlot(slot)
-							looted = true
+							looted = AutoLootSlot(slot, link)
 							-- Update remaining space
 							family = bag_slots[family] and family or 0 
 							bag_slots[family] = bag_slots[family] - 1
@@ -1111,14 +1116,13 @@ function XLootFrame:Update(in_options)
 						else
 							local partial = GetItemCount(link) % itemStackCount
 							if partial > 0 and (partial + quantity < itemStackCount) then
-								LootSlot(slot)
-								looted = true
+								looted = AutoLootSlot(slot, link)
 							end
 						end
 
 						-- Try to loot all remaining quest items anyway
 						if not looted and isQuestItem then
-							LootSlot(slot)
+							AutoLootSlot(slot, link)
 						end
 					end
 				end

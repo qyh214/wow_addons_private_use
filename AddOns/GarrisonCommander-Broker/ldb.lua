@@ -1,4 +1,5 @@
 local me, ns = ...
+local toc=select(4,GetBuildInfo())
 local LDB=LibStub:GetLibrary("LibDataBroker-1.1",true)
 if not LDB then
 	--[===[@debug@
@@ -60,13 +61,17 @@ local GARRISON_SHIPMENT_READY=GARRISON_SHIPMENT_READY -- "Work Order Ready";
 local QUEUED_STATUS_WAITING=QUEUED_STATUS_WAITING -- "Waiting"
 local CAPACITANCE_ALL_COMPLETE=format(CAPACITANCE_ALL_COMPLETE,'') -- "All work orders will be completed in: %s";
 local GARRISON_NUM_COMPLETED_MISSIONS=format(GARRISON_NUM_COMPLETED_MISSIONS,'999'):gsub('999','') -- "%d Completed |4Mission:Missions;";
-local KEY_BUTTON1="Shift " .. KEY_BUTTON1
-local KEY_BUTTON2="Shift " .. KEY_BUTTON2
+local KEY_BUTTON1 = "\124TInterface\\TutorialFrame\\UI-Tutorial-Frame:12:12:0:0:512:512:10:65:228:283\124t" -- left mouse button
+local KEY_BUTTON2 = "\124TInterface\\TutorialFrame\\UI-Tutorial-Frame:12:12:0:0:512:512:10:65:330:385\124t" -- right mouse button
+KEY_BUTTON1="Shift " .. KEY_BUTTON1
+KEY_BUTTON2="Shift " .. KEY_BUTTON2
 local EMPTY=EMPTY -- "Empty"
 local GARRISON_CACHE=GARRISON_CACHE
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
-
+local LE_GARRISON_TYPE_6_0=_G.LE_GARRISON_TYPE_6_0
+local LE_GARRISON_TYPE_6_2=_G.LE_GARRISON_TYPE_6_2
+local LE_GARRISON_TYPE_7_0=_G.LE_GARRISON_TYPE_7_0
 local dbversion=1
 local frequency=5
 local ldbtimer=nil
@@ -123,7 +128,10 @@ function addon:ldbUpdate()
 	dataobj:Update()
 	cacheobj:Update()
 end
-function addon:GARRISON_MISSION_STARTED(event,missionID)
+function addon:GARRISON_MISSION_STARTED(event,missionType,missionID)
+	if toc<70000 then
+		missionID=missionType
+	end
 	local duration=select(2,G.GetPartyMissionInfo(missionID)) or 0
 	local followerType=self.db.global.missionType[missionID]
 	if not followerType then
@@ -255,7 +263,7 @@ function addon:CountEmpty()
 end
 function addon:WorkUpdate(event,success,shipments_running,shipmentCapacity,plotID)
 
-	local buildings = G.GetBuildings();
+	local buildings = G.GetBuildings(LE_GARRISON_TYPE_6_0);
 	for i = 1, #buildings do
 		if plotID == buildings[i].plotID then
 			local buildingID,name=G.GetBuildingInfo(buildings[i].buildingID)
@@ -272,7 +280,7 @@ function addon:WorkUpdate(event,success,shipments_running,shipmentCapacity,plotI
 	end
 end
 function addon:DiscoverFarms()
-	local buildings = G.GetBuildings();
+	local buildings = G.GetBuildings(LE_GARRISON_TYPE_6_0);
 	for i = 1, #buildings do
 		local buildingID = buildings[i].buildingID;
 		if ( buildingID) then
@@ -362,9 +370,11 @@ function addon:OnInitialized()
 	self:AddLabel(GARRISON_NUM_COMPLETED_MISSIONS)
 	self:AddToggle("OLDINT",false,L["Use old interface"],L["Uses the old, more intrusive interface"])
 	self:AddToggle("SHOWNEXT",false,L["Show next toon"],L["Show the next toon which will complete a mission"])
+	self:AddToggle("SUMMARY",false,L["Only summary"],"Only show summary in tooltip")
 	self:AddSlider("FREQUENCY",5,1,60,L["Update frequency"])
 	frequency=self:GetNumber("FREQUENCY",5)
 	self:ScheduleTimer("DelayedInit",1)
+	return self:ResBuyer()
 end
 function addon:ApplyFREQUENCY(value)
 	frequency=value
@@ -533,29 +543,67 @@ function dataobj:OnTooltipShow()
 	local db=addon.db.realm.missions
 	local now=time()
 	local remove=nil
-	for i=1,#db do
-		if db[i] then
-			local t,missionID,pc,followerType=strsplit('.',db[i])
-			t=tonumber(t) or 0
-			followerType=tonumber(followerType) or LE_FOLLOWER_TYPE_GARRISON_6_0
-			local name= (followerType==LE_FOLLOWER_TYPE_SHIPYARD_6_2) and C(G.GetMissionName(missionID),"cyan") or G.GetMissionName(missionID)
-			if (name) then
-				if not remove and pc==ns.me then
-					if not G.GetPartyMissionInfo(missionID) then
-						remove=i
+	local last
+	if #db > 0 then
+		if addon:GetBoolean("SUMMARY") then
+			local sorted=addon:NewTable()
+			local now=time()
+			for i=1,#db do
+				if db[i] then
+					local t,missionID,pc,followerType=strsplit('.',db[i])
+					t=tonumber(t) or 0
+					if not sorted[pc] then
+						sorted[pc]=t
+					else
+						if t > now then
+							if sorted[pc]<now then
+								sorted[pc]=t
+							else
+								sorted[pc]=math.min(sorted[pc],t)
+							end
+						end
 					end
 				end
-				local msg=format("|cff%s%s|r: %s",pc==ns.me and C.Green.c or C.Orange.c,pc,name)
-				if t > now then
-					self:AddDoubleLine(msg,SecondsToTime(t-now),nil,nil,nil,C.Red())
+			end
+			for pc,t in pairs(sorted) do
+				local msg=format("|cff%s%s|r",pc==ns.me and C.Green.c or C.Orange.c,pc)
+				t=t-now
+				if t > 0 then
+					self:AddDoubleLine(msg,SecondsToTime(t),nil,nil,nil,C:Red())
 				else
-					self:AddDoubleLine(msg,DONE)
+					self:AddDoubleLine(msg,DONE,nil,nil,nil,C:Green())
+				end
+			end
+			addon:DelTable(sorted)
+		--[===[@debug@
+		addon:CacheStats()
+		--@end-debug@]===]
+		else
+			for i=1,#db do
+				if db[i] then
+					local t,missionID,pc,followerType=strsplit('.',db[i])
+					t=tonumber(t) or 0
+					followerType=tonumber(followerType) or LE_FOLLOWER_TYPE_GARRISON_6_0
+					local name= (followerType==LE_FOLLOWER_TYPE_SHIPYARD_6_2) and C(G.GetMissionName(missionID),"cyan") or G.GetMissionName(missionID)
+					if name then
+						if not remove and pc==ns.me then
+							if not G.GetPartyMissionInfo(missionID) then
+								remove=i
+							end
+						end
+						local msg=format("|cff%s%s|r: %s",pc==ns.me and C.Green.c or C.Orange.c,pc,name)
+						if t > now then
+							self:AddDoubleLine(msg,SecondsToTime(t-now),nil,nil,nil,C.Red())
+						else
+							self:AddDoubleLine(msg,DONE)
+						end
+					end
 				end
 			end
 		end
-	end
-	if remove then
-		tremove(db,remove)
+		if remove then
+			tremove(db,remove)
+		end
 	end
 	self:AddLine(me,C.Silver())
 end
@@ -701,6 +749,69 @@ function dataobj:OldUpdate()
 	end
 	self.text=format("%s: %s (Tot: |cff00ff00%d|r) %s: %s",READY,ready,completed,NEXT,prox)
 end-- Resources rate: 144 a day
+local satchel_id=120146
+local satchel_name
+local satchel_link
+local satchel_index
+local button
+function addon:ResBuyer()
+	button=CreateFrame("Button",nil,UIParent,"SecureActionButtonTemplate")
+	button:SetAttribute("type1","item")
+	satchel_name,satchel_link=GetItemInfo(satchel_id)
+	button:SetAttribute("item",satchel_name)
+	self:AddChatCmd("Buygold","buygold",L["Use at trade merchant to buy multiple gold with resource"])
+
+end
+function addon:Buygold(args,...)
+	print(args,...)
+	if not args  or args=="" then
+		self:Print("Use /buygold <resource to use>")
+		self:Print("Example: /buygold 1000 will consume 1000 resourcesm i.e. acquire 20 " .. satchel_link)
+		return
+	end
+	local resources=math.floor((tonumber(strsplit(" ",args)) or 50)/50)
+	if not satchel_link then
+		satchel_name,satchel_link=GetItemInfo(satchel_id)
+		button:SetAttribute("item",satchel_name)
+	end
+	if not MerchantFrame:IsVisible() then
+		self:Print("Please open trader frame to buy " .. satchel_link)
+		return
+	end
+	satchel_index=nil
+	if IsMapGarrisonMap(GetCurrentMapAreaID()) then
+		for i=1,GetMerchantNumItems() do
+			local l=GetMerchantItemLink(i)
+			local id=self:GetItemID(l)
+			if id==satchel_id then
+				satchel_index=i
+				break
+			end
+		end
+	end
+	if not satchel_index then
+		self:Print("This trader is not the right one for " .. satchel_link)
+		return
+	end
+	self:Print("Buying " .. resources .. ' '  .. satchel_link)
+	local gold=GetMoney()
+	local buyer=function()
+		for i=1,resources do
+			BuyMerchantItem(satchel_index,1)
+			coroutine.yield(true)
+			coroutine.yield(true)
+			button:Click()
+			coroutine.yield(true)
+		end
+		while GetItemCount(satchel_id) > 0 do
+			button:Click()
+			coroutine.yield(true)
+			coroutine.yield(true)
+		end
+		addon:Print("You earned " .. GetMoneyString(GetMoney()-gold))
+	end
+	self:coroutineExecute(0.2,buyer)
+end
 local function convert(perc,numeric)
 	perc=max(0,min(10,perc))
 	if numeric then

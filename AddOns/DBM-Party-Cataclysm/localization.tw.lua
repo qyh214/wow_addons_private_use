@@ -342,14 +342,6 @@ L= DBM:GetModLocalization(115)
 -----------
 L= DBM:GetModLocalization(116)
 
-L:SetOptionLocalization({
-	SpecWarnStaticCling	= "顯示$spell:87618的特別警告"
-})
-
-L:SetWarningLocalization({
-	SpecWarnStaticCling	= "跳!"
-})
-
 ---------------------------
 --  The Throne of Tides  --
 ---------------------------

@@ -464,8 +464,7 @@ L:SetGeneralLocalization{
 L:SetMiscLocalization{
 	YellPull 			= "攻击这头野兽要害的时刻即将来临！将你们的愤怒和仇恨倾泻到它的爪牙身上！",
 	YellPhase2			= "我是清醒的梦境。",
-	Sara 				= "萨拉",
-	WarningYellSqueeze		= "我被触须抓住了 - 快救我"
+	Sara 				= "萨拉"
 }
 
 L:SetWarningLocalization{
@@ -497,7 +496,6 @@ L:SetOptionLocalization{
 	SetIconOnFearTarget		= "为心灵疾病的目标设置标记 (骷髅)",
 	SpecWarnFervorCast		= "当萨拉的热情正在对你施放时显示特别警报 (必须至少有一名团队成员设置首领为焦点目标)",
 	specWarnBrainPortalSoon		= "为下一次脑部传送门显示特别警报",
-	WarningSqueeze			= "当你中了挤压(触须绑人)时大喊",
 	NextPortal			= "为下一次传送门显示计时条",
 	SetIconOnFervorTarget		= "为萨拉的热情的目标设置标记",
 	ShowSaraHealth			= "显示萨拉在第1阶段的血量 (必须至少有一名团队成员设置首领为焦点目标)",

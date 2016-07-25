@@ -4,41 +4,53 @@ wow_addons_private_use
 
 !MoncaiCompare 装备比较
 
-AdiBags 背包整合、整理
+ACP插件管理
 
-AuctionLite 拍卖助手
+AdiBags 背包整合、整理
 
 Bartender4 动作条美化
 
 BlizzMove 暴雪系统窗体移动
 
-Castbars 施法条美化（可替换方案：quartz）
-
-ChatBar 聊天频道按钮切换条
-
 Chatter 聊天增强
 
 ClearFont 字体修正
 
+CompactRaid团队框架
+
 DBM 首领报警
-
-EventAlertMod buff提示
-
-ExtraCD 技能内置cd提醒（饰品）
 
 Fizzle 装备耐久与品质显示
 
-FollowerLocationInfo 追随者位置信息
-
-FriendsMenuXP 玩家菜单加强
-
 GarrisonCommander 要塞功能增强（任务指派、含船坞与配置系统）
 
-GemPlus 宝石增强（AH面板强化）
+MBB小地图图标整合
 
-GladiatorlosSA 竞技场、战场语音播报
+merchantEx自动售卖垃圾、修理装备（若npc该功能可用）
 
-HandyNotes 地图宝箱、稀有数据
+MikScrollingBattleText（MSBT战斗浮动信息，parrot替代品）
 
-Malkorok 马尔考罗克助手（SOO团队本，配合DBM）
+omniCC冷却计时
+
+quartz施法条美化（castbar替代品）
+
+sexymap小地图美化
+
+skada伤害统计
+
+RL /rl
+
+tidyplates血条美化
+
+TipTac tooltip美化
+
+titan 泰坦信息条
+
+TradeSkillMaster物品商业信息
+
+WIM聊天窗口美化
+
+XLoot掉落美化
+
+ZPerl姓名版美化
 

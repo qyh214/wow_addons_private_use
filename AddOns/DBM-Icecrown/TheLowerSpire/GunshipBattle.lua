@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GunshipBattle", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 213 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 227 $"):sub(12, -3))
 local addsIcon
 local bossID
 --mod:SetEncounterID(1099)--No ES fires this combat
@@ -47,7 +47,7 @@ local warnBladestorm		= mod:NewSpellAnnounce(69652, 3, nil, "Melee")
 local warnWoundingStrike	= mod:NewTargetAnnounce(69651, 2)
 local warnAddsSoon			= mod:NewAnnounce("WarnAddsSoon", 2, addsIcon)
 
-local timerCombatStart		= mod:NewCombatTimer(45)
+local timerCombatStart		= mod:NewCombatTimer(42)
 local timerBelowZeroCD		= mod:NewNextTimer(33.5, 69705, nil, nil, nil, 5)
 local timerBattleFuryActive	= mod:NewBuffFadesTimer(17, 69638, nil, "Tank|Healer")
 local timerAdds				= mod:NewTimer(60, "TimerAdds", addsIcon, nil, nil, 1)
@@ -118,6 +118,8 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg:find(L.PullAlliance) or msg:find(L.PullHorde) then
 		timerCombatStart:Start()
 	elseif (msg:find(L.AddsAlliance) or msg:find(L.AddsHorde)) and self:IsInCombat() then
+		self:UnscheduleMethod("Adds")
+		timerAdds:Stop()
 		self:Adds()
 	elseif (msg:find(L.MageAlliance) or msg:find(L.MageHorde)) and self:IsInCombat() then
 		if not firstMage then

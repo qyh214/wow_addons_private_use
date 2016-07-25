@@ -1,5 +1,7 @@
 -- Tidy Plates - SMILE! :-D
 
+
+
 TidyPlatesDebug = false
 DebugCount = 1
 ---------------------------------------------------------------------------------------------------------------------
@@ -12,18 +14,32 @@ local _
 local select, pairs, tostring  = select, pairs, tostring 			    -- Local function copy
 local CreateTidyPlatesStatusbar = CreateTidyPlatesStatusbar			    -- Local function copy
 local WorldFrame, UIParent = WorldFrame, UIParent
+local GetNamePlateForUnit = C_NamePlate.GetNamePlateForUnit
 
 -- Internal Data
 local Plates, PlatesVisible, PlatesFading, GUID = {}, {}, {}, {}	            	-- Plate Lists
-local nameplate, extended, bars, regions, visual, carrier				    		-- Temp/Local References
+local PlatesByUnit = {}
+local nameplate, extended, bars, regions, visual, carrier, plateid			    	-- Temp/Local References
 local unit, unitcache, style, stylename, unitchanged				    			-- Temp/Local References
 local numChildren = -1                                                              -- Cache the current number of plates
 local activetheme = {}                                                              -- Table Placeholder
-local InCombat, HasTarget = false, false					                        -- Player State Data
+local InCombat, HasTarget, HasMouseover = false, false, false					    -- Player State Data
 local EnableFadeIn = true                                                           -- Enables Alpha Effects
 local EMPTY_TEXTURE = "Interface\\Addons\\TidyPlates\\Media\\Empty"
 local ResetPlates, UpdateAll = false, false
 local CompatibilityMode = false
+
+-- Raid Icon Reference
+local RaidIconCoordinate = {
+		["STAR"] = { x = 0, y =0 },
+		["CIRCLE"] = { x = 0.25, y = 0 },
+		["DIAMOND"] = { x = 0.5, y = 0 },
+		["TRIANGLE"] = { x = 0.75, y = 0},
+		["MOON"] = { x = 0, y = 0.25}, 
+		["SQUARE"] = { x = .25, y = 0.25},
+		["CROSS"] = { x = .5, y = 0.25},
+		["SKULL"] = { x = .75, y = 0.25}, 
+}
 
 ---------------------------------------------------------------------------------------------------------------------
 -- Core Function Declaration
@@ -45,7 +61,7 @@ local UpdateIndicator_CustomScaleText, UpdateIndicator_Standard, UpdateIndicator
 local UpdateIndicator_Level, UpdateIndicator_ThreatGlow, UpdateIndicator_RaidIcon
 local UpdateIndicator_EliteIcon, UpdateIndicator_UnitColor, UpdateIndicator_Name
 local UpdateIndicator_HealthBar, UpdateIndicator_Target
-local OnUpdateCastbar, OnShowCastbar, OnHideCastbar
+local OnUpdateCasting, OnStartCasting, OnStopCasting, OnUpdateCastMidway
 
 -- Event Functions
 local OnShowNameplate, OnHideNameplate, OnUpdateNameplate, OnResetNameplate
@@ -58,18 +74,6 @@ local OnNewNameplate
 local OnUpdate
 local OnNewNameplate
 local ForEachPlate
-
--- Context
-local function isHighlighted(plate)
-	--local r,g,b = plate.extended.regions.name:GetTextColor()
-	return (plate.extended.regions.highlight:IsShown())		-- 5.x Mouseover; Not valid in 6.0
-	--return ((b < .1) and (g > .8)) --or (plate.extended.unit.guid == UnitGUID("mouseover"))
-	-- ceil(select(3, plate.extended.regions.name:GetTextColor())) == 0	-- 6.0 Mouseover; Check name color
-	--[[
-		if you're in combat with something, the name goes red.
-		if you've got it highlighted, the name goes yellow, but not if it's red.
-	--]]
-end
 
 -- UpdateReferences
 local function UpdateReferences(plate)
@@ -93,19 +97,6 @@ do
 	-- Local References
 	local WorldGetNumChildren, WorldGetChildren = WorldFrame.GetNumChildren, WorldFrame.GetChildren
 
-	-- IsNameplate
-	local function IsNameplate(frame)
-		if frame:GetName() and strfind(frame:GetName(), '^NamePlate%d') then
-			local textureChild, nameTextChild =frame:GetChildren()
-			--local nameTextChild = select(2, frame:GetChildren())
-			if nameTextChild then
-				local nameTextRegion, otherRegion, anotherRegion = nameTextChild:GetRegions()
-				--print(nameTextRegion:GetObjectType(), otherRegion, anotherRegion)
-				return (nameTextRegion and nameTextRegion:GetObjectType() == 'FontString')
-			end
-		end
-	end
-
 	-- ForEachPlate
 	function ForEachPlate(functionToRun, ...)
 		for plate in pairs(PlatesVisible) do
@@ -119,11 +110,15 @@ do
 	function OnUpdate(self, e)
 		-- Poll Loop
         local plate, curChildren
+        
 
-
-			DebugCount = DebugCount + 1
-			if DebugCount > 200 then DebugCount = 1 end
-
+        -- Detect when cursor leaves the mouseover unit
+		if HasMouseover and not UnitExists("mouseover") then 
+			--local plate = GetNamePlateForUnit("mouseover")
+			--if plate then OnUpdateNameplate(plate) end
+			HasMouseover = false
+			SetUpdateAll() 
+		end
 
 		for plate in pairs(PlatesVisible) do
 			local UpdateMe = UpdateAll or plate.UpdateMe
@@ -131,37 +126,8 @@ do
 			local carrier = plate.carrier
 			local extended = plate.extended
 
-			-- Hide Carrier; FPS Improvement while changing position, etc.
-			carrier:Hide()
-
-			-- Get Parent Alpha (Target Detection)
-			if HasTarget then
-				plate.alpha = plate:GetAlpha()
-			end
-
-			-- Positioning
-			if CompatibilityMode then
-				plate:SetAlpha(1)
-			else
-				--local _,_,_,x,y = extended.bars.group:GetPoint()
-				--carrier:SetPoint("CENTER", WorldFrame, "BOTTOMLEFT", floor(x), floor(y+16))
-				local x,y = plate:GetCenter()
-				carrier:SetPoint("CENTER", WorldFrame, "BOTTOMLEFT", floor(x), floor(y))
-			end
-
-			-- Get Highlight (Mouseover Detection)
-			if isHighlighted(plate) then
-				if not plate.isMouseover then
-					plate.isMouseover = true
-					UpdateMe = true
-				end
-
-			elseif plate.isMouseover then
-				plate.isMouseover = false
-				UpdateMe = true
-			else
-
-			end
+			-- Hide Carrier; Possible FPS Improvement while changing position, etc.
+			--carrier:Hide()
 
 
 			-- Check for an Update Request
@@ -173,12 +139,27 @@ do
 				end
 				plate.UpdateMe = false
 				plate.UpdateHealth = false
-			end
 
-			-- Scaling Animation
+				extended:SetAlpha(extended.requestedAlpha)
+
+				--[[  Repositioning
+				if CompatibilityMode then
+					plate:SetAlpha(1)
+				else
+					--local _,_,_,x,y = extended.bars.group:GetPoint()
+					--carrier:SetPoint("CENTER", WorldFrame, "BOTTOMLEFT", floor(x), floor(y+16))
+					local x,y = plate.anchorReference:GetCenter()
+					carrier:SetPoint("CENTER", WorldFrame, "BOTTOMLEFT", floor(x), floor(y))
+				end
+				--]]
+
+
+
+			end
 
 			-- Alpha Animation
 			--EnableFadeIn
+			--[[
 			local increment = e * 7
 			if extended.visibleAlpha ~= extended.requestedAlpha then
 
@@ -192,30 +173,20 @@ do
 
 				extended:SetAlpha(extended.visibleAlpha)
 			end
+			--]]
+
+			
 
 			-- Restore Carrier
-			carrier:Show()
+			--carrier:Show()
 		end
 
 		-- Reset Mass-Update Flag
 		UpdateAll = false
 
-		-- Detect New Nameplates
-		curChildren = select('#', WorldFrame:GetChildren())
-		if numChildren ~= curChildren then
-			local i, f
-			for i = 1, curChildren do
-			    f = select(i, WorldFrame:GetChildren())
-
-				   if not Plates[f] and IsNameplate(f) then
-						 OnNewNameplate(f)
-				   end
-
-			end
-			numChildren = curChildren
-		end
-
 	end
+
+	
 end
 
 ---------------------------------------------------------------------------------------------------------------------
@@ -223,92 +194,33 @@ end
 ---------------------------------------------------------------------------------------------------------------------
 do
 
+	local function SetAlphaOverride() end
+
 	-- ApplyPlateExtesion
-	function OnNewNameplate(plate)
-		Plates[plate] = true
-
-		-- Blizzard References
-		--------------------------------
-		local bars, regions = {}, {}
-		local bargroup, namegroup = plate:GetChildren()
-		local health, absorb, cast = bargroup:GetChildren()
-
-		bars.health = health
-		bars.cast = cast
-		bars.absorb = absorb
-		bars.group = bargroup
-
-		health.parentPlate = plate		-- Needed for OnHealthUpdate Hook
-		cast.parentPlate = plate		-- Needed for UpdateCastBar Hook
-
-
-		-- Region References
-		regions.threatglow,
-		regions.healthborder,
-		regions.highlight,
-		regions.level,
-		regions.skullicon,
-		regions.raidicon,
-		regions.eliteicon
-			= bargroup:GetRegions()	
-
-		regions.name
-			= namegroup:GetRegions()	
-
-		regions.castborder,
-		regions.castnostop,
-		regions.spellicon,
-		regions.spelltext,
-		regions.spellshadow
-			= select(2, cast:GetRegions())
-
-
-		regions.absorbfill,
-		regions.absorboverlay
-			= absorb:GetRegions()
-
-
-		-- Make Blizzard Plate invisible
-		health:SetStatusBarTexture(EMPTY_TEXTURE)
-		cast:SetStatusBarTexture(EMPTY_TEXTURE)
-		absorb:SetStatusBarTexture(EMPTY_TEXTURE)
-
-		health:Hide()
-		namegroup:Hide()
-
-		regions.threatglow:SetTexture(nil)
-		regions.healthborder:Hide()
-		regions.highlight:SetTexture(nil)
-		regions.level:SetWidth( 000.1 )
-		regions.level:Hide()
-		regions.skullicon:SetTexture(nil)
-		--regions.skullicon:SetAlpha(0)
-		regions.raidicon:SetAlpha( 0 )
-		--regions.eliteicon:SetTexture(nil)
-		regions.eliteicon:SetAlpha(0)
-
-		regions.name:Hide()
-
-		regions.castborder:SetTexture(nil)
-		regions.castnostop:SetTexture(nil)
-		regions.spellicon:SetTexCoord( 0, 0, 0, 0 )
-		regions.spellicon:SetWidth(.001)
-		regions.spellshadow:SetTexture(nil)
-		regions.spellshadow:Hide()
-		regions.spelltext:Hide()
-
-		regions.absorbfill:SetTexture(nil)
-		regions.absorboverlay:SetTexture(nil)
+	function OnNewNameplate(plate, plateid)
 
         -- Tidy Plates Frame
         --------------------------------
+        local bars, regions = {}, {}
 		local carrier
 		local frameName = "TidyPlatesCarrier"..numChildren
 
-		if CompatibilityMode then carrier = CreateFrame("Frame", frameName, plate)
-			else carrier = CreateFrame("Frame", frameName, WorldFrame) end
+		--
+		carrier = CreateFrame("Frame", frameName, WorldFrame)
+
+		--[[
+		if CompatibilityMode then 
+			carrier = CreateFrame("Frame", frameName, plate)
+		else 
+			plate.anchorReference = CreateFrame("Frame", frameName, plate)
+			plate.anchorReference:SetAllPoints()
+			carrier = CreateFrame("Frame", frameName, WorldFrame) 
+		end
+		--]]
+
 
 		local extended = CreateFrame("Frame", nil, carrier)
+
 
 		plate.carrier = carrier
 		plate.extended = extended
@@ -318,8 +230,12 @@ do
 		-- Status Bars
 		local healthbar = CreateTidyPlatesStatusbar(extended)
 		local castbar = CreateTidyPlatesStatusbar(extended)
+		local textFrame = CreateFrame("Frame", nil, healthbar)
+
 		healthbar:SetFrameStrata("BACKGROUND")
 		castbar:SetFrameStrata("BACKGROUND")
+		textFrame:SetAllPoints()
+
 		visual.healthbar = healthbar
 		visual.castbar = castbar
 		bars.healthbar = healthbar		-- For Threat Plates Compatibility
@@ -329,13 +245,14 @@ do
 		visual.threatborder = healthbar:CreateTexture(nil, "ARTWORK")
 		visual.highlight = healthbar:CreateTexture(nil, "OVERLAY")
 		-- Parented to Extended - Middle Frame
-		visual.raidicon = extended:CreateTexture(nil, "ARTWORK")
-		visual.eliteicon = extended:CreateTexture(nil, "OVERLAY")
-		visual.skullicon = extended:CreateTexture(nil, "OVERLAY")
-		visual.target = extended:CreateTexture(nil, "BACKGROUND")
-		visual.customtext = extended:CreateFontString(nil, "OVERLAY")
-		visual.name  = extended:CreateFontString(nil, "OVERLAY")
-		visual.level = extended:CreateFontString(nil, "OVERLAY")
+		visual.raidicon = textFrame:CreateTexture(nil, "ARTWORK")
+		visual.eliteicon = textFrame:CreateTexture(nil, "OVERLAY")
+		visual.skullicon = textFrame:CreateTexture(nil, "OVERLAY")
+		visual.target = textFrame:CreateTexture(nil, "BACKGROUND")
+		-- TextFrame
+		visual.customtext = textFrame:CreateFontString(nil, "OVERLAY")
+		visual.name  = textFrame:CreateFontString(nil, "OVERLAY")
+		visual.level = textFrame:CreateFontString(nil, "OVERLAY")
 		-- Cast Bar Frame - Highest Frame
 		visual.castborder = castbar:CreateTexture(nil, "ARTWORK")
 		visual.castnostop = castbar:CreateTexture(nil, "ARTWORK")
@@ -373,24 +290,15 @@ do
 
 		extended.stylename = ""
 
-   		-- Hook for Updates
-		plate:HookScript("OnShow", OnShowNameplate )
-		plate:HookScript("OnHide", OnHideNameplate )
+		-- Hide the Blizzard Nameplates
+		plate:SetAlpha(0)
+		plate.SetAlpha = SetAlphaOverride
 
-		health:HookScript("OnValueChanged", SetUpdateHealth)
-		health:HookScript("OnMinMaxChanged", SetUpdateHealth)
+		blizzFrame = plate:GetChildren()
+		blizzFrame:SetAlpha(0)
+		blizzFrame.SetAlpha = SetAlphaOverride
 
-		cast:HookScript("OnShow", OnShowCastbar)
-		cast:HookScript("OnHide", OnHideCastbar)
-		cast:HookScript("OnValueChanged", OnUpdateCastbar)
-
-		-- In 6.9.9, the 'health' object was hooked for OnShow and OnHide
-		-- In 6.10, this has been changed to plate, to allow us to hide 'health' to gain some FPS
-		if CompatibilityMode then
-			carrier:SetPoint("CENTER", bargroup, "CENTER")
-		end
-
-		OnShowNameplate(plate)
+		carrier:SetPoint("CENTER", plate, "CENTER")
 	end
 
 end
@@ -454,22 +362,31 @@ do
 	---------------------------------------------------------------------------------------------------------------------
 
 	-- OnShowNameplate
-	function OnShowNameplate(plate)
+	function OnShowNameplate(plate, unitid)
+
 		UpdateReferences(plate)
 
 		carrier:Show()
+		extended:Show()
+		extended:SetAlpha(1)
 
-		PlatesVisible[plate] = true
-		wipe(extended.unit)
-		wipe(extended.unitcache)
+		PlatesVisible[plate] = unitid
+		PlatesByUnit[unitid] = plate
 
 		unit.frame = extended
 		unit.alpha = 0
 		unit.isTarget = false
 		unit.isMouseover = false
+		unit.unitid = plateid
 		extended.unitcache = ClearIndices(extended.unitcache)
 		extended.stylename = ""
 		extended.Active = true
+
+		visual.highlight:Hide()
+
+		wipe(extended.unit)
+		wipe(extended.unitcache)
+
 
 		-- For Fading In
 		PlatesFading[plate] = EnableFadeIn
@@ -482,23 +399,26 @@ do
 		unit.isCasting = false
 		visual.castbar:Hide()
 		visual.highlight:Hide()
-		regions.highlight:Hide()
+
 
 		-- Widgets/Extensions
 		if activetheme.OnInitialize then activetheme.OnInitialize(extended, activetheme) end
 
 		-- Initial Data Gather
 		-- 6.12.Beta3: Disabled initial Data Gather because certain units are showing up with Target Alpha on the first cycle.
-		--UpdateUnitIdentity()
-		--UpdateUnitContext(plate)
-		--ProcessUnitChanges()
+		UpdateUnitIdentity(unitid)
+		UpdateUnitContext(plate, unitid)
+		ProcessUnitChanges()
+
+		OnUpdateCastMidway(plate, unitid)
 
 		plate.UpdateMe = true
+
 	end
 
 
 	-- OnHideNameplate
-	function OnHideNameplate(plate)
+	function OnHideNameplate(plate, unitid)
 		plate.extended:Hide()
 		plate.carrier:Hide()
 
@@ -507,7 +427,7 @@ do
 		extended.Active = false
 
 		PlatesVisible[plate] = nil
-		if unit.guid then GUID[unit.guid] = nil end
+		PlatesByUnit[unitid] = nil
 
 		visual.castbar:Hide()
 		visual.castbar:SetScript("OnUpdate", nil)
@@ -522,19 +442,20 @@ do
 	-- OnUpdateNameplate
 	function OnUpdateNameplate(plate)
 		-- Gather Information
+		unitid = PlatesVisible[plate]
 		UpdateReferences(plate)
-		UpdateUnitIdentity()
-		UpdateUnitContext(plate)
+
+		UpdateUnitIdentity(unitid)
+		UpdateUnitContext(plate, unitid)
 
 		ProcessUnitChanges()
-
-		-- Keep Regions Hidden
-		regions.level:Hide()
 	end
 
 	-- OnHealthUpdate
 	function OnHealthUpdate(plate)
-		UpdateUnitCondition(plate)
+		unitid = PlatesVisible[plate]
+
+		UpdateUnitCondition(plate, unitid)
 		ProcessUnitChanges()
 		UpdateIndicator_HealthBar()		-- Just to be on the safe side
 	end
@@ -545,7 +466,9 @@ do
 		plate.UpdateMe = true
 		extended.unitcache = ClearIndices(extended.unitcache)
 		extended.stylename = ""
-		OnShowNameplate(plate)
+		unitid = PlatesVisible[plate]
+
+		OnShowNameplate(plate, unitid)
 	end
 
 end
@@ -556,29 +479,19 @@ end
 ---------------------------------------------------------------------------------------------------------------------
 do
 	-- Raid Icon Lookup table
+	--[[
 	local RaidIconCoordinate = { --from GetTexCoord. input is ULx and ULy (first 2 values).
 		[0]		= { [0]		= "STAR", [0.25]	= "MOON", },
 		[0.25]	= { [0]		= "CIRCLE", [0.25]	= "SQUARE",	},
 		[0.5]	= { [0]		= "DIAMOND", [0.25]	= "CROSS", },
 		[0.75]	= { [0]		= "TRIANGLE", [0.25]	= "SKULL", }, }
+		--]]
 
-	-- ColorToString: Converts a color to a string with a C- prefix (For Color Lookup)
-	local function ColorToString(r,g,b) return "C"..math.floor((100*r) + 0.5)..math.floor((100*g) + 0.5)..math.floor((100*b) + 0.5) end
+	
 
 
-	-- Class Color Lookup Table
-	local ClassReference = {}
-	do
-		for classname, color in pairs(RAID_CLASS_COLORS) do
-			local r, g, b = color.r, color.g, color.b
-			local colorstring = ColorToString(r, g, b)
-			ClassReference[colorstring] = classname
-		end
-		ClassReference["C010060"] = "MONK"
-	end
 
-	-- GetUnitCombatStatus: Determines if a unit is in combat by checking the name text color
-	local function GetUnitCombatStatus(r, g, b) return (r > .5 and g < .5) end
+	local RaidIconList = { "STAR", "CIRCLE", "DIAMOND", "TRIANGLE", "MOON", "SQUARE", "CROSS", "SKULL" }
 
 	-- GetUnitAggroStatus: Determines if a unit is attacking, by looking at aggro glow region
 	local function GetUnitAggroStatus( threatRegion )
@@ -587,15 +500,9 @@ do
 		local red, green, blue, alpha = threatRegion:GetVertexColor()
 		local opacity = threatRegion:GetVertexColor()
 
-
 		if threatRegion:IsShown() and (alpha < .9 or opacity < .9) then
-		--if threatRegion:IsShown() and alpha > .9 then
-			--print(unit.name, alpha, opacity)
-
 			-- Unfinished
-
 		end
-
 
 		if red > 0 then
 			if green > 0 then
@@ -621,125 +528,107 @@ do
 		end
 		return "HOSTILE", "PLAYER"
 	end
+		
+	local EliteReference = {
+		["elite"] = true,
+		["rareelite"] = true,
+		["worldboss"] = true,
+	}
+
+	local RareReference = {
+		["rare"] = true,
+		["rareelite"] = true,
+	}
+
+	local ThreatReference = {
+		[0] = "LOW",
+		[1] = "MEDIUM",
+		[2] = "MEDIUM",
+		[3] = "HIGH",
+	}
 
 	-- UpdateUnitIdentity: Updates Low-volatility Unit Data
-	function UpdateUnitIdentity()
-		unit.name = regions.name:GetText()
-		unit.rawName = gsub(unit.name, " %(%*%)", "")
+	-- (This is essentially static data)
+	--------------------------------------------------------
+	function UpdateUnitIdentity(unitid)
 
-		unit.isBoss = regions.skullicon:IsShown()
+		unit.name = UnitName(unitid)
+		unit.rawName = unit.name  -- gsub(unit.name, " %(%*%)", "")
+
+		local classification = UnitClassification(unitid)
+
+		unit.isBoss = UnitLevel(unitid) == -1
 		unit.isDangerous = unit.isBoss
 
-		unit.isElite = regions.eliteicon:IsShown()						-- 6.0
+		unit.isElite = EliteReference[classification]
+		unit.isRare = RareReference[classification]
+		unit.isTrivial = UnitIsTrivial(unitid)
 
-		if bars.group:GetScale() > .9 then
-			unit.platetype = 1
-			unit.isTrivial = false; unit.isMini = false
+		unit.level = UnitEffectiveLevel(unitid) 
 
-		else
-			unit.platetype = 2
-			unit.isTrivial = true; unit.isMini = true
-
-		end
-
-		if unit.isBoss then
-			unit.level = "??"
-			unit.levelcolorRed, unit.levelcolorGreen, unit.levelcolorBlue = 1, 0, 0
-		else
-			unit.level = regions.level:GetText()
-			unit.levelcolorRed, unit.levelcolorGreen, unit.levelcolorBlue = regions.level:GetTextColor()
-		end
 	end
 
 
         -- UpdateUnitContext: Updates Target/Mouseover
-	function UpdateUnitContext(plate)
+	function UpdateUnitContext(plate, unitid)
 		local guid
 
 		UpdateReferences(plate)
 
-		unit.isMouseover = plate.isMouseover
+		unit.isMouseover = UnitIsUnit("mouseover", unitid)
+		unit.isTarget = UnitIsUnit("target", unitid)
+		
+		unit.guid = UnitGUID(unitid)
 
-		if HasTarget then
-			unit.alpha = plate.alpha
-		else
-			unit.alpha = 1
-		end
-
-		unit.isMouseover = isHighlighted(plate)
-
-		unit.isTarget = HasTarget and unit.alpha == 1
-
-		if unit.isMouseover then
-			visual.highlight:Show()
-			guid = UnitGUID("mouseover")
-
-				-- Cache Health Data  (Hopefully Temporary!)  		-- 6.2.2 Mess
-				unit.healthmaxCached = UnitHealthMax("mouseover")
-		else visual.highlight:Hide() end
-
-		if unit.isTarget then
-			guid = UnitGUID("target")
-
-			-- Cache Health Data  (Hopefully Temporary!)		 	-- 6.2.2 Mess
-			unit.healthmaxCached = UnitHealthMax("target")
-		end
-
-		-- Update and verify guid
-		if unit.guid then
-			if guid and (unit.guid ~= guid) then
-				GUID[unit.guid] = nil		-- Clear out old GUID
-				GUID[guid] = plate			-- Update new GUID
-				unit.guid = guid
-			end
-		else
-			if guid then
-				unit.guid = guid
-				GUID[guid] = plate
-			end
-		end
-
-		UpdateUnitCondition(plate)	-- This updates a bunch of properties
+		UpdateUnitCondition(plate, unitid)	-- This updates a bunch of properties
 		if activetheme.OnContextUpdate then activetheme.OnContextUpdate(extended, unit) end
 		if activetheme.OnUpdate then activetheme.OnUpdate(extended, unit) end
 	end
 
 	-- UpdateUnitCondition: High volatility data
-	function UpdateUnitCondition(plate)
+	function UpdateUnitCondition(plate, unitid)
 		UpdateReferences(plate)
 
-		if InCombat then unit.threatSituation, unit.threatValue = GetUnitAggroStatus(regions.threatglow)
-		else unit.threatSituation = "LOW"; unit.threatValue = 0 end
+		unit.red, unit.green, unit.blue = UnitSelectionColor(unitid)
 
-		unit.red, unit.green, unit.blue = bars.health:GetStatusBarColor()
+		--- Working on this...  there's a better way to do it.
+		unit.reaction = GetUnitReaction(unit.red, unit.green, unit.blue)
+		-- UnitCanAttack("unit", "unit")
 
-		unit.reaction, unit.type = GetUnitReaction(unit.red, unit.green, unit.blue)
-		unit.isInCombat = GetUnitCombatStatus(regions.name:GetTextColor())
-		unit.class = ClassReference[ColorToString(unit.red, unit.green, unit.blue)] or "UNKNOWN"
-
-
-		-- Pre-6.2 Method...
-		--unit.health = tonumber(bars.health:GetValue()) or 0
-		--unit.healthmax = select(2, bars.health:GetMinMaxValues())
-
-		-- Post 6.2 Method...
-		local health = tonumber(bars.health:GetValue()) or 0
-
-		if unit.healthmaxCached then
-			unit.health = health * unit.healthmaxCached
-			unit.healthmax = unit.healthmaxCached
-		else
-			unit.health = health * 100
-			unit.healthmax = 100
+		unit.isInCombat = false
+		
+		if UnitIsPlayer(unitid) then
+			_, unit.class = UnitClass(unitid)
+			unit.type = "PLAYER"
+		else 
+			unit.class = "" 
+			unit.type = "NPC"
 		end
 
-		unit.isMarked = regions.raidicon:IsShown() or false
+		unit.health = UnitHealth(unitid)
+		unit.healthmax = UnitHealthMax(unitid)
 
-		if unit.isMarked then
-			local ux, uy = regions.raidicon:GetTexCoord()
-			unit.raidIcon = RaidIconCoordinate[ux][uy]
-		else unit.raidIcon = nil end
+		unit.threatValue = UnitThreatSituation("player", unitid) or 0
+		unit.threatSituation = ThreatReference[unit.threatValue]
+		unit.isInCombat = UnitAffectingCombat(unitid)
+		
+		local c = GetCreatureDifficultyColor(unit.level)
+		unit.levelcolorRed, unit.levelcolorGreen, unit.levelcolorBlue = c.r, c.g, c.b
 
+		local raidIconIndex = GetRaidTargetIndex(unitid)
+
+		if raidIconIndex then 
+			unit.raidIcon = RaidIconList[raidIconIndex] 
+			unit.isMarked = true
+		else
+			unit.isMarked = false
+		end
+		
+		-- Unfinished....
+		unit.isTapped = false		--not UnitIsTappedByPlayer(unitid)
+		--unit.isInCombat = false
+		--unit.platetype = 2 -- trivial mini mob
+		
 	end
 
 	-- OnRequestWidgetUpdate: Calls Update on just the Widgets
@@ -772,8 +661,8 @@ do
 
 	-- UpdateIndicator_HealthBar: Updates the value on the health bar
 	function UpdateIndicator_HealthBar()
-		visual.healthbar:SetMinMaxValues(bars.health:GetMinMaxValues())
-		visual.healthbar:SetValue(bars.health:GetValue())
+		visual.healthbar:SetMinMaxValues(0, unit.healthmax)
+		visual.healthbar:SetValue(unit.health)
 	end
 
 
@@ -785,15 +674,13 @@ do
 		if activetheme.SetNameColor then
 			visual.name:SetTextColor(activetheme.SetNameColor(unit))
 		else visual.name:SetTextColor(1,1,1,1) end
-		--if activetheme.SetStatusbarWidthMatching then MatchTextWidth() end
 	end
 
 
 	-- UpdateIndicator_Level:
 	function UpdateIndicator_Level()
 		visual.level:SetText(unit.level)
-		local tr, tg, tb = regions.level:GetTextColor()
-		visual.level:SetTextColor(tr, tg, tb)
+		--visual.level:SetTextColor(tr, tg, tb)
 	end
 
 
@@ -817,6 +704,7 @@ do
 	-- UpdateIndicator_Target
 	function UpdateIndicator_Target()
 		if unit.isTarget and style.target.show then visual.target:Show() else visual.target:Hide() end
+		if unit.isMouseover and not unit.isTarget then visual.highlight:Show() else visual.highlight:Hide() end
 	end
 
 
@@ -824,7 +712,8 @@ do
 	function UpdateIndicator_RaidIcon()
 		if unit.isMarked and style.raidicon.show then
 			visual.raidicon:Show()
-			visual.raidicon:SetTexCoord(regions.raidicon:GetTexCoord())
+			local iconCoord = RaidIconCoordinate[unit.raidIcon]
+			visual.raidicon:SetTexCoord(iconCoord.x, iconCoord.x + 0.25, iconCoord.y,  iconCoord.y + 0.25)
 		else visual.raidicon:Hide() end
 	end
 
@@ -841,7 +730,9 @@ do
 		-- Set Health Bar
 		if activetheme.SetHealthbarColor then
 			visual.healthbar:SetAllColors(activetheme.SetHealthbarColor(unit))
-		else visual.healthbar:SetStatusBarColor(bars.health:GetStatusBarColor()) end
+
+		else visual.healthbar:SetStatusBarColor(unit.red, unit.green, unit.blue) end
+
 		-- Name Color
 		if activetheme.SetNameColor then
 			visual.name:SetTextColor(activetheme.SetNameColor(unit))
@@ -911,65 +802,103 @@ do
 	end
 
 
-    -- OnUpdateCastbar
-	function OnUpdateCastbar(bar)
-		UpdateReferences(bar.parentPlate)
-		local castbar = visual.castbar
-		local r, g, b, a = 1, .8, 0, 1
+	local function OnUpdateCastBarForward(self)
+		local currentTime = GetTime() * 1000
+		--local startTime, endTime = self:GetMinMaxValues()
+
+		--if currentTime > endTime then OnStopCasting(self)
+		--else self:SetValue(currentTime) end
+
+		self:SetValue(currentTime)
+	end
+
+
+	local function OnUpdateCastBarReverse(self)
+		local currentTime = GetTime() * 1000
+		local startTime, endTime = self:GetMinMaxValues()
+
+		--if currentTime > endTime then OnStopCasting(self)
+		--else self:SetValue((endTime + startTime) - currentTime) end
+
+		self:SetValue((endTime + startTime) - currentTime)
+	end
+
+	
+
+	-- OnShowCastbar
+	function OnStartCasting(plate, unitid, channeled)
+		UpdateReferences(plate)
+		local castBar = extended.visual.castbar
+
+		local name, subText, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible
+		
+		if channeled then
+			name, subText, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(unitid)
+			castBar:SetScript("OnUpdate", OnUpdateCastBarReverse)
+		else
+			name, subText, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(unitid)
+			castBar:SetScript("OnUpdate", OnUpdateCastBarForward)
+		end
 
 		unit.isCasting = true
-		if regions.spelltext then unit.spellName = regions.spelltext:GetText() end
-		unit.spellIsShielded = regions.castnostop:IsShown()
+		unit.spellIsShielded = notInterruptible
 		unit.spellInterruptible = not unit.spellIsShielded
+
+		visual.spelltext:SetText(text)
+		visual.spellicon:SetTexture(texture)
+		castBar:SetMinMaxValues( startTime, endTime )
+
 
 		if activetheme.SetCastbarColor then
 			r, g, b, a = activetheme.SetCastbarColor(unit)
 			if not (r and g and b and a) then return end
 		end
 
-		castbar:SetValue( bar:GetValue())
-		castbar:SetMinMaxValues(bar:GetMinMaxValues())
-		castbar:SetStatusBarColor( r, g, b)
-		castbar:SetAlpha(a or 1)
-
-		visual.spelltext:SetText(unit.spellName)
-
-		visual.spellicon:SetTexture(regions.spellicon:GetTexture())
+		castBar:SetStatusBarColor( r, g, b)
+		--castBar:SetAlpha(a or 1)
 
 		if unit.spellIsShielded then
 			   visual.castnostop:Show(); visual.castborder:Hide()
 		else visual.castnostop:Hide(); visual.castborder:Show() end
-	end
-
-
-	-- OnShowCastbar
-	function OnShowCastbar(bar)
-		UpdateReferences(bar.parentPlate)
-		local castbar = extended.visual.castbar
-
-		if not unit.health then return end
-
-		OnUpdateCastbar(bar)
-		castbar:Show()
-		regions.spellshadow:Hide()
+		
 		UpdateIndicator_CustomScaleText()
 		UpdateIndicator_CustomAlpha()
+
+		castBar:Show()
+
 	end
 
 
 	-- OnHideCastbar
-	function OnHideCastbar(bar)
-		UpdateReferences(bar.parentPlate)
+	function OnStopCasting(plate)
 
-		if not unit.health then return end
+		UpdateReferences(plate)
+		local castBar = extended.visual.castbar
 
-		local castbar = extended.visual.castbar
+		castBar:Hide()
+		--castBar:SetAlpha(.5)
+		castBar:SetScript("OnUpdate", nil)
 
-		castbar:Hide()
 		unit.isCasting = false
 		UpdateIndicator_CustomScaleText()
 		UpdateIndicator_CustomAlpha()
 	end
+
+
+
+	function OnUpdateCastMidway(plate, unitid)
+
+		local currentTime = GetTime() * 1000
+		local name, subText, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible
+
+		-- Check to see if there's a spell being cast
+		if UnitCastingInfo(unitid) then OnStartCasting(plate, unitid, false)
+		else
+		-- See if one is being channeled...
+			if UnitCastingInfo(unitid) then OnStartCasting(plate, unitid, true) end
+		end
+	end
+
 
 end -- End Indicator section
 
@@ -988,23 +917,148 @@ do
 	TidyPlatesCore:SetScript("OnEvent", EventHandler)
 
 	-- Events
-	function events:PLAYER_ENTERING_WORLD() TidyPlatesCore:SetScript("OnUpdate", OnUpdate); end
-	function events:PLAYER_REGEN_ENABLED() InCombat = false; SetUpdateAll() end
-	function events:PLAYER_REGEN_DISABLED() InCombat = true; SetUpdateAll() end
+	function events:PLAYER_ENTERING_WORLD() 
+		TidyPlatesCore:SetScript("OnUpdate", OnUpdate);
+	end
 
-	-- 6.0
-	function events:PLAYER_TARGET_CHANGED() HasTarget = UnitExists("target") == true; 	SetUpdateAll() 	end
+	function events:NAME_PLATE_CREATED(...)
+		local plate = ...
 
-	function events:RAID_TARGET_UPDATE() SetUpdateAll() end
-	function events:UNIT_THREAT_SITUATION_UPDATE() SetUpdateAll() end  -- Only fired when a target changes
+		OnNewNameplate(plate)
+	 end
+
+	function events:NAME_PLATE_UNIT_ADDED(...) 
+		local unitid = ...
+		local plate = GetNamePlateForUnit(unitid);
+
+		OnShowNameplate(plate, unitid)
+	end
+	
+	function events:NAME_PLATE_UNIT_REMOVED(...) 
+		local unitid = ...
+		local plate = GetNamePlateForUnit(unitid);
+
+		OnHideNameplate(plate, unitid)
+	end
+
+	function events:PLAYER_TARGET_CHANGED() 
+		HasTarget = UnitExists("target") == true; 
+		SetUpdateAll() 
+
+	end	
+
+	function events:UNIT_HEALTH_FREQUENT(...)
+		local unitid = ...
+		local plate = PlatesByUnit[unitid]
+
+		if plate then OnHealthUpdate(plate) end
+	end
+
+	function events:PLAYER_REGEN_ENABLED() 
+		InCombat = false
+		SetUpdateAll() 
+	end
+
+	function events:PLAYER_REGEN_DISABLED() 
+		InCombat = true
+		SetUpdateAll() 
+	end
+
+	function events:UPDATE_MOUSEOVER_UNIT(...) 
+		if UnitExists("mouseover") then 
+			HasMouseover = true
+			SetUpdateAll() 
+		end
+	end
+
 	function events:UNIT_LEVEL() SetUpdateAll() end
+	function events:RAID_TARGET_UPDATE() SetUpdateAll() end
+	function events:UNIT_THREAT_SITUATION_UPDATE() SetUpdateAll() end  -- Fired when target changes?
+
+
+	-- Spell Casting Function
+
+
+
+	local function UNIT_CAST_EVENT_START(...)
+		local unitid = ...
+
+		local plate = GetNamePlateForUnit(unitid);
+
+		if plate then 
+			OnUpdateCastMidway(plate, unitid)
+		end
+	 end
+
+	 --events.UNIT_SPELLCAST_START = UNIT_CAST_EVENT_START
+	 events.UNIT_SPELLCAST_DELAYED = UNIT_CAST_EVENT_START
+	 --events.UNIT_SPELLCAST_CHANNEL_START = UNIT_CAST_EVENT_START
+	 events.UNIT_SPELLCAST_CHANNEL_UPDATE = UNIT_CAST_EVENT_START
+	 --events.UNIT_SPELLCAST_SUCCEEDED = UNIT_CAST_EVENT_START
+	 events.UNIT_SPELLCAST_INTERRUPTIBLE = UNIT_CAST_EVENT_START
+	 events.UNIT_SPELLCAST_NOT_INTERRUPTIBLE = UNIT_CAST_EVENT_START
+
+
+	function events:UNIT_SPELLCAST_START(...)
+		local unitid = ...
+
+		local plate = GetNamePlateForUnit(unitid);
+		if plate then 
+			OnStartCasting(plate, unitid, false)
+		end
+	end
+
+
+	 function events:UNIT_SPELLCAST_STOP(...)
+		local unitid = ...
+
+		local plate = GetNamePlateForUnit(unitid);
+
+		if plate then 
+			OnStopCasting(plate, unitid, false)
+		end
+	 	
+
+	 end
+
+	 
+
+	function events:UNIT_SPELLCAST_CHANNEL_START(...)
+		local unitid = ...
+
+		local plate = GetNamePlateForUnit(unitid);
+		if plate then 
+			OnStartCasting(plate, unitid, true)
+		end
+	end
+	
+
+
+
+	function events:UNIT_SPELLCAST_CHANNEL_STOP(...)
+		local unitid = ...
+
+		local plate = GetNamePlateForUnit(unitid);
+
+		if plate then 
+			OnStopCasting(plate, unitid, true)
+		end
+	end
+
+
+
+	--events.UNIT_SPELLCAST_SUCCEEDED = events.UNIT_SPELLCAST_STOP
+
+	--[[
+
 	function events:PLAYER_CONTROL_LOST() SetUpdateAll() end
 	events.PLAYER_CONTROL_GAINED = events.PLAYER_CONTROL_LOST
 	events.UNIT_FACTION = events.PLAYER_CONTROL_LOST
 
+	--]]
+
 	-- Registration of Blizzard Events
 	for eventname in pairs(events) do TidyPlatesCore:RegisterEvent(eventname) end
-	--TidyPlates.TidyPlatesCore = TidyPlatesCore
 end
 
 

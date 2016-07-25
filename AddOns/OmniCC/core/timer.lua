@@ -9,6 +9,7 @@ local Timer = OmniCC:New('Timer')
 local IconSize = 36
 local Padding = 0
 
+local L = OMNICC_LOCALS
 local Day, Hour, Minute = 86400, 3600, 60
 local Dayish, Hourish, Minuteish, Soonish = 3600 * 23.5, 60 * 59.5, 59.5, 5.5
 local HalfDayish, HalfHourish, HalfMinuteish = Day/2 + 0.5, Hour/2 + 0.5, Minute/2 + 0.5
@@ -35,7 +36,7 @@ end
 
 --[[ Controls ]]--
 
-function Timer:Start(start, duration)
+function Timer:Start(start, duration, charge)
 	self.start, self.duration = start, duration
 	self.controlled = self.cooldown.currentCooldownType == COOLDOWN_TYPE_LOSS_OF_CONTROL
 	self.charging = self.cooldown:GetDrawEdge()
@@ -43,6 +44,14 @@ function Timer:Start(start, duration)
 	self.finish = start + duration
 	self.textStyle = nil
 	self.enabled = true
+
+	-- hotfix for ChargeCooldowns
+	local parent = self.cooldown:GetParent()
+	local charge = parent and parent.chargeCooldown
+	local chargeTimer = charge and charge.omnicc 
+	if chargeTimer and chargeTimer ~= self then
+		chargeTimer:Stop()
+	end
 
 	self:UpdateShown()
 end
@@ -221,19 +230,19 @@ function Timer:GetTimeText(remain)
 	local sets = self:GetSettings()
 
 	if remain < sets.tenthsDuration then
-		return '%.1f', remain
+		return L.TenthsFormat, remain
 	elseif remain < Minuteish then
 		local seconds = round(remain)
 		return seconds ~= 0 and seconds or ''
 	elseif remain < sets.mmSSDuration then
 		local seconds = round(remain)
-		return '%d:%02d', seconds/Minute, seconds%Minute
+		return L.MMSSFormat, seconds/Minute, seconds%Minute
 	elseif remain < Hourish then
-		return '%dm', round(remain/Minute)
+		return L.MinuteFormat, round(remain/Minute)
 	elseif remain < Dayish then
-		return '%dh', round(remain/Hour)
+		return L.HourFormat, round(remain/Hour)
 	else
-		return '%dd', round(remain/Day)
+		return L.DayFormat, round(remain/Day)
 	end
 end
 

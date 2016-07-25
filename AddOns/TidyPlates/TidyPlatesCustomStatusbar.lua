@@ -70,6 +70,11 @@ local function SetOrientation(self, orientation)
 	UpdateSize(self)
 end
 
+local function GetMinMaxValues(self)
+	return self.MinVal, self.MaxVal
+end
+
+
 local function SetMinMaxValues(self, minval, maxval)
 	if not (minval or maxval) then return end
 	
@@ -116,6 +121,7 @@ function CreateTidyPlatesStatusbar(parent)
 	
 	frame.SetValue = SetValue
 	frame.SetMinMaxValues = SetMinMaxValues
+	frame.GetMinMaxValues = GetMinMaxValues
 	frame.SetOrientation = SetOrientation
 	frame.SetStatusBarColor = SetStatusBarColor
 	frame.SetStatusBarGradient = SetStatusBarGradient

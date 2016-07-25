@@ -28,6 +28,8 @@ local Player = Quartz3:NewModule(MODNAME)
 local unpack = unpack
 local UnitChannelInfo = UnitChannelInfo
 
+local IsLegion = select(4, GetBuildInfo()) >= 70000
+
 local db, getOptions, castBar
 
 local defaults = {
@@ -188,7 +190,9 @@ local function setBarTicks(ticknum, duration, ticks)
 	end
 end
 
-local channelingTicks = {
+local channelingTicks
+if not IsLegion then
+	channelingTicks = {
 	-- warlock
 	[GetSpellInfo(689)] = 6, -- drain life
 	[GetSpellInfo(103103)] = 4, -- drain soul
@@ -211,6 +215,29 @@ local channelingTicks = {
 	[GetSpellInfo(125953)] = 9, -- soothing mist
 	[GetSpellInfo(117952)] = 4, -- crackling jade lightning
 }
+else
+	channelingTicks = {
+	-- warlock
+	[GetSpellInfo(689)] = 6, -- drain life
+	[GetSpellInfo(193440)] = 3, -- demonwrath
+	[GetSpellInfo(198590)] = 6, -- drain soul
+	-- druid
+	[GetSpellInfo(740)] = 4, -- tranquility
+	-- priest
+	[GetSpellInfo(64843)] = 4, -- divine hymn
+	[GetSpellInfo(15407)] = 4, -- mind flay
+	[GetSpellInfo(48045)] = 5, -- mind sear
+	[GetSpellInfo(47540)] = 2, -- penance
+	[GetSpellInfo(205065)] = 4, -- void torrent
+	-- mage
+	[GetSpellInfo(5143)] = 5, -- arcane missiles
+	[GetSpellInfo(12051)] = 3, -- evocation
+	[GetSpellInfo(205021)] = 10, -- ray of frost
+	-- monk
+	[GetSpellInfo(117952)] = 4, -- crackling jade lightning
+	[GetSpellInfo(191837)] = 3, -- essence font
+	}
+end
 
 local function getChannelingTicks(spell)
 	if not db.showticks then
@@ -221,7 +248,7 @@ local function getChannelingTicks(spell)
 end
 
 function Player:UpdateChannelingTicks()
-	if IsSpellKnown(157223) then
+	if not IsLegion and IsSpellKnown(157223) then
 		-- draenor perk increases mind flay/insanity to 4 ticks
 		channelingTicks[GetSpellInfo(15407)]  = 4
 		channelingTicks[GetSpellInfo(129197)] = 4

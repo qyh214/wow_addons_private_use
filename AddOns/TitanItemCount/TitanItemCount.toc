@@ -1,0 +1,16 @@
+## Interface: 70000
+## Author: Solage of Greymane
+## Title: Titan Panel [|cffeda55fItem Count|r] |cff00aa0070000-1.2.3|r
+## Version: 70000-1.2.3
+## Notes: Titan Panel plugin that shows Quantity on Hand for a specified item.
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## Dependencies: Titan
+## SavedVariables: TitanItemCountDB
+## X-Curse-Packaged-Version: 1.2.3
+## X-Curse-Project-Name: Titan Panel [Item Count]
+## X-Curse-Project-ID: titan-item-count
+## X-Curse-Repository-ID: wow/titan-item-count/mainline
+
+AceConsole-3.0/AceConsole-3.0.xml
+TitanItemCount.xml

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(600, "DBM-Party-WotLK", 6, 275)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 229 $"):sub(12, -3))
 mod:SetCreatureID(28923)
 mod:SetEncounterID(561, 562)
 mod:SetZone()
@@ -13,6 +13,7 @@ mod:RegisterEventsInCombat(
 )
 
 local warningNova	= mod:NewSpellAnnounce(52960, 3)
+
 local timerNovaCD	= mod:NewCDTimer(30, 52960)
 local timerAchieve	= mod:NewAchievementTimer(120, 1867, "TimerSpeedKill") 
 

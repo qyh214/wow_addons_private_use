@@ -2,6 +2,71 @@ Pack Command:  		zip -vr TP_Release.zip TidyPlates* -x@exclude.lst
 Exclusion List: 	*.svn*   *.DS_Store*   exclude.lst   *.db   *.png   *.gif   *.jpg   *.tif   *.txt   *.psd   *.bmp
 
 ---------------------------
+6.18.Beta5
+---------------------------
+Raid Icons should be working
+
+Flickering is still a bit of a problem.
+
+Frame rates are lower than desired.
+
+I need to work on the widgets (auras, healer tracking, tank tracking, etc.)
+
+Dual spec?
+
+
+---------------------------
+6.18.Beta4
+---------------------------
+Class colors working better?
+The new Cast Bars have been written.  Hopefully they work.  I've only been testing near the target dummies.
+
+
+---------------------------
+6.18.Beta3
+---------------------------
+Class Colors should be working.  On health bars, at least.  I briefly tested them.
+Nameplates are not (and can not be) generated for enemies who are not in pvp conditions.  (This has been the case for years)
+
+Cast bars..  Early next week, I hope.  
+
+Calm down, take a deep breath.  It's Friday, July 22nd!  It's time for beverages!
+
+
+---------------------------
+6.18.Beta2
+---------------------------
+More things are working!
+
+Notably absent...
+Cast Bars
+and more
+
+I have not tested the aura widget... although it MIGHT work.
+
+
+
+---------------------------
+6.18.Beta1
+---------------------------
+Nameplate-pocalypse!!!!!!!
+
+99% of the previous nameplate system has been replaced by Blizzard for Legion.
+
+Rebuilding has been slow, since I'm (apparently) a grown-up, now. ;-)  
+
+BUT, progress is indeed being made!  
+
+The internal widgets are disabled, which means the Aura timers are not working.  I'm rewriting the entire bloody system because we now have a good way to capture that data without all the trickery that was previously required.  (Blizzard does love us!)
+
+Again, progress is being made!  
+
+Many things are broken, so I expect that many of you might want to check back with Tidy Plates in a week or so.
+
+Happy questing!
+
+
+---------------------------
 6.17.1
 ---------------------------
 - Core: New value: unit.healthmaxCached, which is updated on target and mouseover.  

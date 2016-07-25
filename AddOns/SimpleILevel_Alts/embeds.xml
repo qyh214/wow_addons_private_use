@@ -1,7 +1,0 @@
-<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-	<!-- Embedded libraries -->
-	<!--@no-lib-strip@-->
-	<!-- <Include file="Lib\AceEvent-3.0\AceEvent-3.0.xml"/> -->
-	<Include file="libs\LibQTip-1.0\LibQTip-1.0.lua"/>
-	<!--@end-no-lib-strip@-->
-</Ui>

@@ -118,7 +118,9 @@
 			<OnDragStart/>
 			<OnDragStop />
 			<OnReceiveDrag/>
-			<OnEnter function="GarrisonMissionPageFollowerFrame_OnEnter"/>
+			<OnEnter>
+				GarrisonCommander:GarrisonMissionPageFollowerFrame_OnEnter(self)
+			</OnEnter>
 			<OnLeave function="GarrisonMissionPageFollowerFrame_OnLeave"/>
 			<OnMouseUp />
 		</Scripts>

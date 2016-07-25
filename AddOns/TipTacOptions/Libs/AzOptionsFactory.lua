@@ -1,4 +1,11 @@
-local REVISION = 9;
+--[[
+	### Rev 09 ###
+	- Fixed GetChecked() now returning a boolean instead of nil/1
+	### Rev 10 - 7.0.3/Legion ###
+	- Changed SetTexture(r,g,b,a) -> SetColorTexture(r,g,b,a)
+--]]
+
+local REVISION = 10;
 if (type(AzOptionsFactory) == "table") and (AzOptionsFactory.vers >= REVISION) then
 	return;
 end
@@ -206,7 +213,7 @@ local function ColorButton_OnClick(self,button)
 		newColors = {};
 	end
 	local opacity = (1 - (a or 1));
-	
+
 	CPF.frame = self;
 	CPF.option = self.option;
 
@@ -259,7 +266,7 @@ function AzOptionsFactory.makers:Color()
 	f.border = f:CreateTexture(nil,"BACKGROUND");
 	f.border:SetPoint("TOPLEFT");
 	f.border:SetPoint("BOTTOMRIGHT");
-	f.border:SetTexture(1,1,1,1);
+	f.border:SetColorTexture(1,1,1,1);
 
 	f.text = f:CreateFontString(nil,"ARTWORK","GameFontNormalSmall");
 	f.text:SetPoint("LEFT",f,"RIGHT",4,1);

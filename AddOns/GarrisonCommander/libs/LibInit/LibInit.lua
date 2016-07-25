@@ -1,55 +1,56 @@
-local __FILE__=tostring(debugstack(1,2,0):match("(.*):1:")) -- MUST BE LINE 1
---- **LibInit** should make using Ace3 even more easier and pleasant
--- LibInit pulls Ace 3 for you if you use the curse packager and set it this way:
---
--- Inside your .pkgmeta
--- externals:
--- 		libs/LibInit:
---			url: git://git.curseforge.net/wow/libinit/mainline.git/Libs/LibInit
---
--- Inside your toc
--- libs/LibInit/LibInit.xml
---
--- @usage
--- me,ns=...
--- local myAddon=LibStub("LibInit):NewAddon(me,true) to pull all Ace3 embeddable
--- local myAddon=LibStub("LibInit):NewAddon(me,"AceHook-3.0","Someotherembeddablelibrary",...) to specify your needede embed
--- local myAddon=LibStub("LibInit):NewAddon(me,true,"Someotherembeddablelibrary",...) to pull all Ace3 embeddable and adding more libraries
--- @class file
+--- **LibInit** should make using Ace3 even more easier and pleasant.
+-- An embeddable library which offer clean methods to build a configuration table
+-- instead of directly fiddling wit an Ace options table
 -- @name LibInit
+-- @class module
+-- @author Alar of Daggerspine
+-- @release 29
 --
+local __FILE__=tostring(debugstack(1,2,0):match("(.*):9:")) -- Always check line number in regexp and file
+
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 19
+local MINOR_VERSION = 30
+local off=(_G.RED_FONT_COLOR_CODE or '|cffff0000') .. _G.VIDEO_OPTIONS_DISABLED ..  _G.FONT_COLOR_CODE_CLOSE or '|r'
+local on=(_G.GREEN_FONT_COLOR_CODE or '|cff00ff00') .. _G.VIDEO_OPTIONS_ENABLED ..  _G.FONT_COLOR_CODE_CLOSE or '|r'
 local nop=function()end
 local pp=print -- Keeping a handy plain print around
 local _G=_G -- Unmodified env
 local dprint=function() end
+--[===[@debug@
+LoadAddOn("LibDebug")
+LoadAddOn("Blizzard_DebugTools")
 if LibDebug then
 	--pulling libdebug print in without pulling also the whole _G management and without changing loading addon env
 	LibDebug()
 	dprint=print
 	setfenv(1,_G)
 end
+--@end-debug@]===]
 --GAME_LOCALE="itIT"
 local me, ns = ...
 local LibStub=LibStub
-local module,old=LibStub:NewLibrary(MAJOR_VERSION,MINOR_VERSION)
-if module then
+local obj,old=LibStub:NewLibrary(MAJOR_VERSION,MINOR_VERSION)
+local upgrading
+if obj then
+	upgrading=old
+--[===[@debug@
 	if old then
-		dprint("Upgrading ",MAJOR_VERSION,old,'to',MINOR_VERSION,'from',__FILE__)
+		dprint(strconcat("Upgrading ",MAJOR_VERSION,'.',old,' to',MINOR_VERSION,' from ',__FILE__))
 	else
-		dprint("Loading ",MAJOR_VERSION,MINOR_VERSION,'from',__FILE__)
+		dprint(strconcat("Loading ",MAJOR_VERSION,'.',MINOR_VERSION,' from ',__FILE__))
 	end
+--@end-debug@]===]
 else
-	dprint("Equal or newer",MAJOR_VERSION,'already loaded','from',__FILE__)
+--[===[@debug@
+	dprint(strconcat("Equal or newer ",MAJOR_VERSION,' already loaded from ',__FILE__))
+--@end-debug@]===]
 	return
 end
-local lib=module --#Lib
+local lib=obj --#Lib
 local L
 local C=LibStub("LibInit-Colorize")()
 -- Upvalues
 local _G=_G
-dprint("Local _G",_G)
 local floor=floor
 local abs=abs
 local wipe=wipe
@@ -84,6 +85,8 @@ local strsplit=strsplit
 local select=select
 local coroutine=coroutine
 local cachedGetItemInfo
+local toc=select(4,GetBuildInfo())
+
 --]]
 -- Help sections
 local titles
@@ -92,27 +95,42 @@ local LIBRARIES
 local PROFILE
 local HELPSECTIONS
 local AceConfig = LibStub("AceConfig-3.0",true)
+assert(AceConfig,"LibInit needs AceConfig-3.0")
 local AceRegistry = LibStub("AceConfigRegistry-3.0",true)
 local AceDBOptions=LibStub("AceDBOptions-3.0",true)
 local AceConfigDialog=LibStub("AceConfigDialog-3.0",true)
 local AceGUI=LibStub("AceGUI-3.0",true)
 local Ace=LibStub("AceAddon-3.0")
-local AceLocale=LibStub("AceLocale-3.0")
+local AceLocale=LibStub("AceLocale-3.0",true)
 local AceDB  = LibStub("AceDB-3.0",true)
 
+
+-- Persistent tables
+lib.mixinTargets=lib.mixinTargets or {}
+lib.toggles=lib.toggles or {}
+lib.addon=lib.addon or {}
+lib.chats=lib.chats or {}
+lib.options=lib.options or {}
+lib.pool=lib.pool or setmetatable({},{__mode="k"})
 -- Recycling function from ACE3
-----newcount, delcount,createdcount,cached = 0,0,0
-local new, del, copy
+local new, del, copy, cached, stats
 do
-	local pool = setmetatable({},{__mode="k"})
+	local pool = lib.pool
+--[===[@debug@
+	local newcount, delcount,createdcount,cached = 0,0,0
+--@end-debug@]===]
 	function new()
-		--newcount = newcount + 1
+--[===[@debug@
+		newcount = newcount + 1
+--@end-debug@]===]
 		local t = next(pool)
 		if t then
 			pool[t] = nil
 			return t
 		else
-			--createdcount = createdcount + 1
+--[===[@debug@
+			createdcount = createdcount + 1
+--@end-debug@]===]
 			return {}
 		end
 	end
@@ -124,70 +142,137 @@ do
 		return c
 	end
 	function del(t)
-		--delcount = delcount + 1
+--[===[@debug@
+		delcount = delcount + 1
+--@end-debug@]===]
 		wipe(t)
 		pool[t] = true
 	end
---	function cached()
---		local n = 0
---		for k in pairs(pool) do
---			n = n + 1
---		end
---		return n
---	end
-end
---- This storage must survive a library update
-lib.mixinTargets=lib.mixinTargets or {}
-lib.combatSchedules = lib.combatSchedules or {}
-lib.frame=lib.frame or CreateFrame("Frame") -- This frame is needed for scheduleleavecombat
-lib.debugs=lib.debugs or {}
-lib.toggles=lib.toggles or {}
-lib.addon=lib.addon or {}
-lib.chats=lib.chats or {}
-function lib:NewAddon(name,full,...)
-	if (not Ace) then
-		error("Could not find Ace3 Library")
+	function cached()
+		local n = 0
+		for k in pairs(pool) do
+			n = n + 1
+		end
+		return n
+	end
+--[===[@debug@
+	function stats()
+		print("Created:",createdcount)
+		print("Aquired:",newcount)
+		print("Released:",delcount)
+		print("Cached:",cached())
+	end
+--@end-debug@]===]
+--@non-debug@
+	function stats()
 		return
 	end
-	local mixins=new()
-	if (type(full)=='boolean') then
-		for i,k in  LibStub:IterateLibraries() do
-			if (i:match("Ace%w*-3%.0") and k.Embed) then tinsert(mixins,i) end
-		end
+--@end-non-debug@
+end
+--- Create a new AceAddon-3.0 addon.
+-- Any library you specified will be embeded, and the addon will be scheduled for
+-- its OnInitializee and OnEnabled callbacks.
+-- The final addon object, with all libraries embeded, will be returned.
+-- Options table format:
+-- 	*profile: choose the initial profile (if omittete, uses a per character one)
+--		*noswitch: disables Ace profile managemente, user will not be able to change it
+--		*nogui: do not generate a gui for configuration
+--		*nohelp: do not generate help (actually, help generation is not yet implemented)
+--		*enhancedProfile: adds "Switch all profiles to default" and "Remove unused profiles" do Ace profile gui
+--
+-- @tparam[opt] table target to use as a base for the addon (optional)
+-- @tparam string name Name of the addon object to create
+-- @tparam[opt] table options options list
+-- @tparam[opt] bool full If true, all available and embeddable Ace3 library are embedded
+-- @tparam[opt] string ... List of libraries to embed into the addon
+-- @treturn table new addon
+--
+-- @usage
+-- --Create a simple addon object
+-- MyAddon = LibStub("LibInit"):NewAddon("MyAddon", "AceEvent-3.0")
+--
+-- -- Create a Addon object based on the table of a frame
+-- local MyFrame = CreateFrame("Frame")
+-- MyAddon = LibStub("LibInit"):NewAddon(MyFrame, "MyAddon", "AceEvent-3.0")
+-- -- Create an Addon based on the private table provided by Blizzard Code:
+-- local myname,addon = ...
+-- LibStub("LibInit"):NewAddon(addon,myname)
+--
+---
+function lib:NewAddon(target,...)
+	local name
+	local customOptions
+	local start=1
+	if type(target) ~= "table" then
+		name=target
+		target={}
 	else
-		tinsert(mixins,full)
+		name=(select(1,...))
+		start=2
 	end
-	tinsert(mixins,MAJOR_VERSION)
-	tinsert(mixins,"AceConsole-3.0")
-	for i=1,select('#',...) do
+	assert(Ace,"Could not find Ace3 Library")
+	assert(type(name)=="string","Name is mandatory")
+	local appo={}
+	appo[MAJOR_VERSION]=true
+	appo["AceConsole-3.0"]=true
+	for i=start,select('#',...) do
 		local mix=select(i,...)
-		if (mix ~="AceConsole-3.0") then
-			tinsert(mixins,mix)
+		if type(mix)=="boolean" and mix then
+			for n,k in  LibStub:IterateLibraries() do
+				if (n:match("Ace%w*-3%.0") and k.Embed) then appo[n]=true end
+			end
+		elseif type(mix)=="string" then
+			appo[mix]=true
+		elseif type(mix)=="table" then
+			customOptions=mix
 		end
 	end
-	local target=Ace:NewAddon(name,unpack(mixins))
+	local mixins=new()
+	for i,_ in pairs(appo) do
+		tinsert(mixins,i)
+	end
+	local target=Ace:NewAddon(target,name,unpack(mixins))
 	del(mixins)
-	target.interface=select(4,GetBuildInfo())
-	target.version=GetAddOnMetadata(name,'Version') or "Internal"
-	if (target.version:sub(1,1)=='@') then
-		target.version=GetAddOnMetadata(name,'X-Version') or "Internal"
+	appo=nil
+	local options={}
+	options.name=name
+	options.version=GetAddOnMetadata(name,'Version') or "Internal"
+	if (options.version:sub(1,1)=='@') then
+		options.version=GetAddOnMetadata(name,'X-Version') or "Internal"
 	end
-	local b,e=target.version:find(" ")
+	local b,e=options.version:find(" ")
 	if b and b>1 then
-			target.version=target.version:sub(1,b-1)
+			options.version=options.version:sub(1,b-1)
 	end
-	target.revision=GetAddOnMetadata(name,'X-revision') or "Alpha"
-	if (target.revision:sub(1,1)=='@') then
-		target.revision='Development'
+	options.revision=GetAddOnMetadata(name,'X-revision') or "Alpha"
+	if (options.revision:sub(1,1)=='@') then
+		options.revision='Development'
 	end
-	target.prettyversion=format("%s (Revision: %s)",tostringall(target.version,target.revision))
-	target.title=GetAddOnMetadata(name,"title") or 'No title'
-	target.notes=GetAddOnMetadata(name,"notes") or 'No notes'
+	options.prettyversion=format("%s (Revision: %s)",tostringall(options.version,options.revision))
+	options.title=GetAddOnMetadata(name,"title") or 'No title'
+	options.notes=GetAddOnMetadata(name,"notes") or 'No notes'
 	-- Setting sensible default for mandatory fields
-	target.ID=GetAddOnMetadata(name,"X-ID") or (target.name:gsub("[^%u%d]","") .. "XXXX"):sub(1,3)
-	target.DATABASE=GetAddOnMetadata(name,"X-Database") or "db" .. target.ID
+	options.ID=GetAddOnMetadata(name,"X-ID") or name
+	options.DATABASE=GetAddOnMetadata(name,"X-Database") or "db" .. options.ID
 	lib.addon[target]=name
 	lib.toggles[target]={}
+	if customOptions then
+		for k,v in pairs(customOptions) do
+			local key=strlower(k)
+			if key=="enhnceprofile" then key = "enhancedprofile" end
+			if 	key=="profile"
+				or key=="noswitch"
+				or key=="nogui"
+				or key=="nohelp"
+				or key=="enhancedprofile"
+					then
+				options[key]=v
+			else
+				error("Invalid options: " .. k)
+			end
+		end
+	end
+	lib.options[target]=options
 	RELNOTES=L["Release Notes"]
 	PROFILE=L["Profile"]
 	HELPSECTIONS={PROFILE,RELNOTES}
@@ -198,6 +283,7 @@ function lib:NewAddon(name,full,...)
 	return target
 end
 -- Combat scheduler done with LibCallbackHandler
+--- @todo Remove old scheduler
 local CallbackHandler = LibStub:GetLibrary("CallbackHandler-1.0")
 if not lib.CombatScheduler then
 	lib.CombatScheduler = CallbackHandler:New(lib,"_OnLeaveCombat","_CancelCombatAction")
@@ -214,6 +300,11 @@ if not lib.CombatScheduler then
 end
 local tremove=tremove
 local function Run(args) tremove(args,1)(unpack(args)) end
+--- Executes an action as soon as combat restrictions lift
+-- Action can be executed immediately if toon is out of combat
+-- @tparam string|function action To be executed, Can be a function or a method name
+-- @tparam[opt] mixed ... More parameters will be directly passed to action
+--
 function lib:OnLeaveCombat(action,...)
 	if type(action)~="string" and type(action)~="function" then
 		error("Usage: OnLeaveCombat (\"action\", ...): 'action' - string or function expected.", 2)
@@ -232,16 +323,28 @@ function lib:OnLeaveCombat(action,...)
 end
 
 function lib:NewSubModule(name,...)
-	local module=self:NewModule(name,...)
-	module.OnInitialized=function()end -- placeholder
-	module.OnInitialize=function(self,...) return  self:OnInitialized(...) end
-	module.OnEnable=nil
-	module.OnDisable=nil
-	return module
+	local obj=self:NewModule(name,...)
+	obj.OnInitialized=function()end -- placeholder
+	obj.OnInitialize=function(self,...) return  self:OnInitialized(...) end
+	obj.OnEnable=nil
+	obj.OnDisable=nil
+	return obj
 end
 function lib:NewSubClass(name)
 	return self:NewSubModule(name,self)
 	-- To avoid strange interactions
+end
+function lib:NewTable()
+	return new()
+end
+function lib:DelTable(t)
+	return del(t)
+end
+function lib:CachedTableCount()
+	return cached()
+end
+function lib:CacheStats()
+	return stats()
 end
 --- Returns a closure to call a method as simple local function
 --@usage local print=lib:Wrap("print")
@@ -280,7 +383,6 @@ function lib:ColorGradient(perc, ...)
 	local r1, g1, b1, r2, g2, b2 = select((segment*3)+1, ...)
 	return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
 end
-local combatSchedules = lib.combatSchedules
 -- Gestione variabili
 local varmeta={}
 do
@@ -320,9 +422,9 @@ end
 
 local Myclass
 ---
--- Check if the unit in target hast the requested clas
--- @param #string class Requested Class
--- @param #string target Requested Unit (default 'player')
+-- Check if the unit in target hast the requested class
+-- @tparam #string class Requested Class
+-- @tparam #string target Requested Unit (default 'player')
 -- @return #boolean true if target has the requeste class
 function lib:Is(class,target)
 	target=target or "player"
@@ -343,8 +445,9 @@ end
 ---
 -- Parses a command from chat or from an table options handjer command
 -- Internally calls AceConsole-3.0:GetArgs
--- @param #mixed msg Can be a string (chat command) or a table (called by Ace3 Options Table Handler)
--- @return command,subcommand,arg,ffull string after command
+-- @tparam mixed msg Can be a string (chat command) or a table (called by Ace3 Options Table Handler)
+-- @tparam number n index in command list
+-- @return command,subcommand,arg,full string after command
 function lib:Parse(msg,n)
 	if (not msg) then
 		return nil
@@ -355,9 +458,8 @@ function lib:Parse(msg,n)
 end
 ---
 -- Parses an itemlink and returns itemId without calling API again
--- @param #Lib self
--- @param #string itemlink
--- @return #number itemId or 0
+-- @tparam string itemlink A standard wow itemlink
+-- @treturn number itemId or 0
 function lib:GetItemID(itemlink)
 	if (type(itemlink)=="string") then
 			local itemid,context=GetItemInfoFromHyperlink(itemlink)
@@ -371,12 +473,12 @@ end
 -- Scans Bags for an item based on different criteria
 --
 -- All parameters are optional.
--- With no params ScanBags returns the first empty slot
+-- With no parameters ScanBags returns the first empty slot
 --
--- @param index is index in GetItemInfo result. 0 is a special case to match just itemid
--- @param value is the value against to match. 0 is a special case for empty slot
--- @param startbag and starslot are used to restart scan from the last item found
--- @param startslot
+-- @tparam[opt] number index is index in GetItemInfo result. 0 is a special case to match just itemid
+-- @tparam[opt] number value is the value against to match. 0 is a special case for empty slot
+-- @tparam[opt] number startbag and startslot are used to restart scan from the last item found
+-- @tparam[opt] number startslot
 -- @return Found ItemId,bag,slot,full GetItemInfo result
 function lib:ScanBags(index,value,startbag,startslot)
 	index=index or 0
@@ -397,14 +499,17 @@ function lib:ScanBags(index,value,startbag,startslot)
 						return itemlink,bag,slot
 					end
 				end
+			elseif value==0 then
+				return bag,slot
+
 			end
 		end
 	end
 	return false
 end
---- Returns unit's heatl as a normalized percentual value
--- @param #string unit A standard unit name
--- @return #number health as percent value
+--- Returns unit's health as a normalized percent value
+-- @tparam string unit A standard unit name
+-- @treturn number health as percent value
 
 function lib:Health(unit)
 		local totale=UnitHealthMax(unit) or 1
@@ -484,7 +589,7 @@ function lib:NumericVersion()
 	end
 end
 function lib:OnInitialized()
-	print("|cff33ff99"..tostring( self ).."|r:",L["You should at least override this function to make a working addon"])
+	print("|cff33ff99"..tostring( self ).."|r:",format(ITEM_MISSING,"OnInitialized"))
 end
 function lib:LoadHelp()
 end
@@ -492,17 +597,18 @@ function lib:SetDbDefaults()
 end
 function lib:SetOptionsTable()
 end
-local function LoadDefaults(self)
+local function loadOptionsTable(self)
+	local options=lib.options[self]
 	self.OptionsTable={
 		handler=self,
 		type="group",
 		childGroups="tab",
-		name=self.title,
-		desc=self.notes,
+		name=options.title,
+		desc=options.notes,
 		args={
 			gui = {
 				name="GUI",
-				desc="Activates gui",
+				desc=_G.CHAT_CONFIGURATION,
 				type="execute",
 				func="Gui",
 				guiHidden=true,
@@ -515,7 +621,6 @@ local function LoadDefaults(self)
 				func="Help",
 				guiHidden=true,
 			},
---@end-debug@]===]
 			debug = {
 				name="DBG",
 				desc="Enable debug",
@@ -524,6 +629,7 @@ local function LoadDefaults(self)
 				guiHidden=true,
 				cmdHidden=true,
 			},
+--@end-debug@]===]
 			silent = {
 				name="SILENT",
 				desc="Eliminates startup messages",
@@ -535,15 +641,15 @@ local function LoadDefaults(self)
 				guiHidden=true,
 			},
 			on = {
-				name="On",
-				desc="Activates " .. self.title,
+				name=strlower(_G.ENABLE),
+				desc=_G.ENABLE .. ' ' .. options.title,
 				type="execute",
 				func="Enable",
 				guiHidden=true,
 			},
 			off = {
-				name="Off",
-				desc="Deactivates " .. self.title,
+				name=strlower(_G.DISABLE),
+				desc=_G.DISABLE .. ' ' .. options.title,
 				type="execute",
 				func="Disable",
 				guiHidden=true,
@@ -551,6 +657,8 @@ local function LoadDefaults(self)
 			},
 		}
 	}
+end
+local function loadDbDefaults(self)
 	self.DbDefaults={
 		char={
 			firstrun=true,
@@ -559,7 +667,7 @@ local function LoadDefaults(self)
 		global={
 			firstrun=true,
 			lastversion=0,
-			lastinterface=60000
+			lastinterface=60200
 		},
 		profile={
 			toggles={
@@ -598,25 +706,97 @@ end
 function lib:RegisterDatabase(dbname,defaults,profile)
 	return AceDB:New(dbname,defaults,profile)
 end
-function lib:OnInitialize(...)
+local function SetCommonProfile(info,...)
+	local db=info.handler.db
+	for k,v in pairs(db.sv.profileKeys) do
+		db.sv.profileKeys[k]="Default"
+	end
+	db:SetProfile("Default")
+end
+local function PurgeProfiles(info,...)
+	local profiles=new()
+	local used=new()
+	local db=info.handler.db
+	db:GetProfiles(profiles)
+	for k,v in pairs(db.sv.profileKeys) do
+		used[v]=true
+	end
 --[===[@debug@
-	dprint("OnInitialize",...)
-	LoadAddOn("Blizzard_DebugTools")
+	DevTools_Dump(profiles)
+	DevTools_Dump(used)
 --@end-debug@]===]
+	for _,v in ipairs(profiles) do
+		if not used[v] then
+			db:DeleteProfile(v)
+		end
+	end
+	del(used)
+	del(profiles)
+
+end
+local function SetupProfileSwitcher(tbl,addon)
+	local profiles=tbl.handler:ListProfiles({args="both"})
+	local default=profiles.Default or "Default"
+	wipe(profiles)
+	tbl.args.UseDefault_Desc={
+		order=900,
+		type='description',
+		name="\n"..format(L['UseDefault_Desc'],default)
+	}
+	tbl.args.UseDefault={
+		order=910,
+		type='execute',
+		func=SetCommonProfile,
+		name=format(L['UseDefault1'],default),
+		desc=format(L['UseDefault2'],default),
+		width="double",
+	}
+	tbl.args.Purge_Desc={
+		order=920,
+		type='description',
+		--name="forcedescname",
+		name="\n"..L['Purge_Desc'],
+	}
+	tbl.args.Purge={
+		order=930,
+		type='execute',
+		func=PurgeProfiles,
+		name=L['Purge1'],
+		desc=L['Purge2'],
+		width="double",
+	}
+end
+function lib:OnInitialize(...)
 	self.numericversion=self:NumericVersion() -- Initialized now becaus NumericVersion could be overrided
 	--CachedGetItemInfo=self:GetCachingGetItemInfo()
-	LoadDefaults(self)
-	local defaultProfile=self:SetDbDefaults(self.DbDefaults)
-	self:SetOptionsTable(self.OptionsTable)
+	loadOptionsTable(self)
+	loadDbDefaults(self)
+	self:SetOptionsTable(self.OptionsTable) --hook
+	self:SetDbDefaults(self.DbDefaults) -- hook
+	local options=lib.options[self]
+	self.version=self.version or options.version
+	self.prettyversion=self.prettyversion or options.prettyversion
+	self.revision=self.revision or options.revision
 	if (AceDB and not self.db) then
-		self.db=AceDB:New(self.DATABASE,nil,defaultProfile)
+		self.db=AceDB:New(options.DATABASE,nil,options.profile)
+		dprint(self.db:GetCurrentProfile())
 	end
-	self.db:RegisterDefaults(self.DbDefaults)
-	if (not self.db.global.silent) then
-		self:Print(format("Version %s %s loaded",self:Colorize(self.version,'green'),self:Colorize(format("(Revision: %s)",self.revision),"silver")))
-		self:Print("You can disable this message with /" .. strlower(self.ID) .. " silent")
+	if self.db then
+		self.db:RegisterDefaults(self.DbDefaults)
+		if (not self.db.global.silent) then
+			self:Print(format("Version %s %s loaded",self:Colorize(options.version,'green'),self:Colorize(format("(Revision: %s)",options.revision),"silver")))
+			self:Print("You can disable this message with /" .. strlower(options.ID) .. " silent")
+		end
+		self:SetEnabledState(self:GetBoolean("Active"))
+	else
+		self.db=setmetatable({},{
+			__index=function(t,l)
+				assert(false,"You need AceDB-3.0 in order to use database")
+			end
+			}
+		)
+		self:SetEnabledState(true)
 	end
-	self:SetEnabledState(self:GetBoolean("Active"))
 	-- I have for sure some library that needs to be intialized Before the addon
 	for _,library in self:IterateEmbeds(self) do
 		local lib=LibStub(library)
@@ -643,24 +823,44 @@ function lib:OnInitialize(...)
 		self.OptionsTable.args.standby=nil
 	end
 	if (type(self.LoadHelp)=="function") then self:LoadHelp() end
-	local main=self.name
+	local main=options.name
 	BuildHelp(self)
-	AceConfig:RegisterOptionsTable(main,self.OptionsTable,{main,strlower(self.ID)})
-	self.CfgDlg=AceConfigDialog:AddToBlizOptions(main,main )
-	if (not ignoreProfile) then
-		if (AceDBOptions) then
-			self.ProfileOpts=AceDBOptions:GetOptionsTable(self.db)
-			titles.PROFILE=self.ProfileOpts.name
-			self.ProfileOpts.name=self.name
-			local profile=main..PROFILE
+	if AceConfig and not options.nogui then
+		AceConfig:RegisterOptionsTable(main,self.OptionsTable,{main,strlower(options.ID)})
+		self.CfgDlg=AceConfigDialog:AddToBlizOptions(main,main )
+		if (not ignoreProfile and not options.noswitch) then
+			if (AceDBOptions) then
+				local profileOpts=AceDBOptions:GetOptionsTable(self.db)
+				self.ProfileOpts={} -- We dont want to propagate this change to all ace3 addons
+				for k,v in pairs(profileOpts) do
+					if k=='args' then
+						self.ProfileOpts.args={}
+						for k2,v2 in pairs(v) do
+							self.ProfileOpts.args[k2]=v2
+						end
+					else
+						self.ProfileOpts[k]=v
+					end
+				end
+				titles.PROFILE=self.ProfileOpts.name
+				self.ProfileOpts.name=self.name
+				if options.enhancedprofile then
+					SetupProfileSwitcher(self.ProfileOpts,self)
+				end
+				local profile=main..PROFILE
+			end
+			AceConfig:RegisterOptionsTable(main .. PROFILE,self.ProfileOpts)
+			AceConfigDialog:AddToBlizOptions(main .. PROFILE,titles.PROFILE,main)
 		end
-		AceConfig:RegisterOptionsTable(main .. PROFILE,self.ProfileOpts)
-		AceConfigDialog:AddToBlizOptions(main .. PROFILE,titles.PROFILE,main)
+	else
+		self.OptionsTable.args.gui=nil
 	end
 	if (self.help[RELNOTES]~='') then
 		self.CfgRel=AceConfigDialog:AddToBlizOptions(main..RELNOTES,titles.RELNOTES,main)
 	end
-	self:UpdateVersion()
+	if AceDB then
+		self:UpdateVersion()
+	end
 end
 function lib:UpdateVersion()
 	if (type(self.db.char) == "table") then
@@ -707,7 +907,7 @@ do
 end
 
 function lib:HF_Toggle(flag,description)
-	flag=C(format("/%s toggle %s: ",strlower(self.ID),flag),'orange') ..C(description,'white')
+	flag=C(format("/%s toggle %s: ",strlower(lib.options[self].ID),flag),'orange') ..C(description,'white')
 	self:HF_Push(TOGGLES,"\n" .. C(flag,'orange'))
 end
 
@@ -726,7 +926,7 @@ function lib:HF_CmdA(command,description,tooltip)
 	C('/' .. command,'orange') .. ' : ' .. (description or '') .. '\n' .. C(tooltip or '','yellow'))
 end
 function lib:HF_Cmd(command,description,tooltip)
-	command=self.ID .. ' ' .. command
+	command=lib.options[self].ID .. ' ' .. command
 	self:HF_CmdA(command,description,tooltip)
 end
 function lib:HF_Pre(testo,section)
@@ -819,7 +1019,7 @@ function lib:HF_Load(section,optionname,versione)
 	--debug(self.title)
 	if (testo ~= '') then
 		AceConfig:RegisterOptionsTable(optionname, {
-			name = self.title .. (versione or ""),
+			name = lib.options[self].title .. (versione or ""),
 			type = "group",
 			args = {
 				help = {
@@ -961,6 +1161,7 @@ function lib:AddSelect(flag,defaultvalue,values,name,description)
 end
 
 --self:AddSlider("RESTIMER",5,1,10,"Enable res timer","Shows a timer for battlefield resser",1)
+function lib:AddRange(...) return self:AddSlider(...) end
 function lib:AddSlider(flag,defaultvalue,min,max,name,description,step)
 	description=description or name
 	min=min or 0
@@ -971,7 +1172,7 @@ function lib:AddSlider(flag,defaultvalue,min,max,name,description,step)
 		isPercent=step
 		step=nil
 	else
-		step=tonumber(step)
+		step=tonumber(step) or 1
 	end
 	local t={
 		name=name,
@@ -1064,7 +1265,6 @@ function lib:AddTable(flag,table)
 	lib.toggles[self][flag]=table
 end
 local function OpenCmd(self,info,args)
-	print("libinit",info.arg,self,args,strsplit(' ',args))
 	return self[info.arg](self,args,strsplit(' ',args))
 end
 function lib:AddOpenCmd(command,method,description,arguments,private)
@@ -1072,7 +1272,7 @@ function lib:AddOpenCmd(command,method,description,arguments,private)
 	description=description or command
 	local group=getgroup(self)
 	if (not private) then
-		local command=C('/' .. self.ID .. ' ' .. command .. " (" .. description .. ")" ,'orange')
+		local command=C('/' .. lib.options[self].ID .. ' ' .. command .. " (" .. description .. ")" ,'orange')
 		local t={
 			name=command,
 			type="description",
@@ -1135,7 +1335,7 @@ end
 
 
 
---self:AddCmd(flag,method,name,description)
+--self:AddChatCmd(method,label,description)
 function lib:AddChatCmd(method,label,description)
 	if (not self.RegisterChatCommand) then
 		LibStub("AceConsole-3.0"):Embed(self)
@@ -1233,7 +1433,7 @@ function lib:Notify(...)
 end
 function lib:Debug()
 	self.DebugOn=not self.DebugOn
-	pp(self.name,"debug:",self.DebugOn and "On" or "Off")
+	self:Print("Debug:",self.DebugOn and on or off)
 	if self.DebugOn then
 		self.Dprint=dprint
 	else
@@ -1280,9 +1480,7 @@ end
 function lib:GetString(flag,default)
 	return tostring(self:GetSet(flag) or default or '')
 end
-local CLOSE=_G.FONT_COLOR_CODE_CLOSE or '|r'
-local off=(_G.RED_FONT_COLOR_CODE or '|cffff0000') .. 'Off' ..  CLOSE
-local on=(_G.GREEN_FONT_COLOR_CODE or '|cff00ff00') .. 'On' ..  CLOSE
+
 function lib:PrintBoolean(flag)
 	if (type(flag) == "string") then
 		flag=self:GetBoolean(flag)
@@ -1307,6 +1505,10 @@ end
 function lib:SetVar(flag,value)
 	return self:GetSet(flag,value)
 end
+--- Simulates a configuration  variable change.
+--
+-- Generates Apply* events if needed
+-- @tparam string flag Variable name
 function lib:Trigger(flag)
 	local info=self:GetVarInfo(flag)
 	if (info) then
@@ -1370,6 +1572,7 @@ function lib:Help(info)
 		self:Print("No GUI available")
 	end
 end
+--[[
 function lib:IsEventScheduled(flag)
 	lib.timerhandles=lib.timerhandles or {}
 	return lib.timerhandles[flag]
@@ -1398,6 +1601,7 @@ function lib:_Trace(skip,...)
 		format(" in %s:%s%s",C(file,'azure'),C(line,'red'),C(func,'orange'))
 	)
 end
+--]]
 function lib:Long(msg) C:OnScreen('Yellow',msg,20) end
 function lib:Onscreen_Orange(msg) C:OnScreen('Orange',msg,2) end
 function lib:Onscreen_Purple(msg) C:OnScreen('Purple',msg,8) end
@@ -1437,17 +1641,29 @@ end
 -- This function get called on addon creation
 -- Anything I define here is immediately available to addon code
 function lib:Embed(target)
-	-- Standard libins
-	for name,method in pairs(lib) do
-			if (name~="NewAddon" and name~="GetAddon" and name:sub(1,1)~="_") then
-				target[name] = method
-			end
-	end
+	-- All methods are pulled in via metatable in order to not pullete addon table
+	local mt=getmetatable(target)
+	if not mt then mt={__tostring=function(me) return me.name end} end
+	mt.__index=lib.mixins
+	setmetatable(target,mt)
 	target._Apply=target._Apply or {}
 	target._Apply._handler=target
 	setmetatable(target._Apply,varmeta)
-	target.registry=target.registry or {}
 	lib.mixinTargets[target] = true
+	local addon=lib.addon
+	if type(addon[self])=="string" then
+		addon[self]={
+			name=self.name,
+			version=self.version,
+			revision=self.revision,
+			title=self.title,
+			notes=self.notes,
+			ID=self.ID,
+			DATABASE=self.DATABASE,
+			libMINOR=MINOR_VERSION,
+			libMAJOR=MAJOR_VERSION,
+		}
+	end
 end
 
 local function kpairs(t,f)
@@ -1519,105 +1735,16 @@ function lib:GetSortedProxy(table)
 	return proxy
 end
 
--------------------------------------------------------------------------------
--- ScheduleLeaveCombatAction Port
--- Shamelessly stolen from Ace2
--------------------------------------------------------------------------------
-function lib:CancelAllCombatSchedules()
-	local i = 0
-	while true do
-		i = i + 1
-		if not combatSchedules[i] then
-			break
-		end
-		local v = combatSchedules[i]
-		if v.self == self then
-			v = del(v)
-			table.remove(combatSchedules, i)
-			i = i - 1
-		end
-	end
-end
-do
-	local tmp = {}
-	local doaftercombataction
-	function doaftercombataction()
-		for i, v in ipairs(combatSchedules) do
-			tmp[i] = v
-			combatSchedules[i] = nil
-		end
-		for i, v in ipairs(tmp) do
-			local func = v.func
-			if func then
-				local success, err = pcall(func, unpack(v, 1, v.n))
-				if not success then geterrorhandler()(err:find("%.lua:%d+:") and err or (debugstack():match("(.-: )in.-\n") or "") .. err) end
-			else
-				local obj = v.obj or v.self
-				local method = v.method
-				local obj_method = obj[method]
-				if obj_method then
-					local success, err = pcall(obj_method, obj, unpack(v, 1, v.n))
-					if not success then geterrorhandler()(err:find("%.lua:%d+:") and err or (debugstack():match("(.-: )in.-\n") or "") .. err) end
-				end
-			end
-			tmp[i] = del(v)
-		end
-	end
-	lib.frame:SetScript("OnEvent",nil)
-	lib.frame:RegisterEvent("PLAYER_REGEN_ENABLED")
-	lib.frame:SetScript("OnEvent",doaftercombataction)
-end
-
 function lib:ScheduleLeaveCombatAction(method, ...)
-	if true then return self:OnLeaveCombat(method,...) end
-	local style = type(method)
-	if style == "string" and type(self[method]) ~= "function" then
-		error("Cannot schedule a combat action to method %q, it does not exist", method)
-	elseif style == "table" then
-		local func = (...)
-		if type(method[func]) ~= "function" then
-			error("Cannot schedule a combat action to method %q, it does not exist", func)
-		end
-	end
-
-	if not InCombatLockdown() then
-		local success, err
-		if type(method) == "function" then
-			success, err = pcall(method, ...)
-		elseif type(method) == "table" then
-			local func = (...)
-			success, err = pcall(method[func], method, select(2, ...))
-		else
-			success, err = pcall(self[method], self, ...)
-		end
-		if not success then print(method,err) end
-		return
-	end
-	local t
-	local n = select('#', ...)
-	if style == "table" then
-		t = new(select(2, ...))
-		t.obj = method
-		t.method = (...)
-		t.n = n-1
-	else
-		t = new(...)
-		t.n = n
-		if style == "function" then
-			t.func = method
-		else
-			t.method = method
-		end
-	end
-	t.self = self
-	table.insert(combatSchedules, t)
+	return self:OnLeaveCombat(method,...)
 end
 function lib:coroutineExecute(interval,func)
 	local co=coroutine.wrap(func)
 	local interval=interval
 	local repeater
 	repeater=function()
-		if (co()) then
+		local rc,res=pcall(co)
+		if rc and res then
 			C_Timer.After(interval,repeater)
 		else
 			repeater=nil
@@ -1647,6 +1774,15 @@ local function StopSpellCastingCleanup(this)
 end
 local StaticPopupDialogs=StaticPopupDialogs
 local StaticPopup_Show=StaticPopup_Show
+--- Show a popup
+-- Display a popup message with Accept and optionally Cance button
+-- @tparam string msg Message to be shown
+-- @tparam[opt] number timeout In seconds, if omitted assumes 60
+-- @tparam[opt] func OnAccept Executed when clicked on Accept
+-- @tparam[opt] func OnCancel Executed when clicked on Cancel (if nill, Cancel button is not shown)
+-- @tparam[opt] mixed data Passed to the callbacl function
+-- @tparam[opt] bool StopCasting If true, when the popup appear will stop any running casting.
+-- Useful to ask confirmation before performing a programmatic initiated spellcasting
 function lib:Popup(msg,timeout,OnAccept,OnCancel,data,StopCasting)
 	if InCombatLockdown() then
 		return self:ScheduleLeaveCombatAction("Popup",msg,timeout,OnAccept,OnCancel,data,StopCasting)
@@ -1661,7 +1797,6 @@ function lib:Popup(msg,timeout,OnAccept,OnCancel,data,StopCasting)
 	StaticPopupDialogs["LIBINIT_POPUP"] = StaticPopupDialogs["LIBINIT_POPUP"] or
 	{
 	text = msg,
-	button1 = ACCEPT,
 	showAlert = true,
 	timeout = timeout or 60,
 	exclusive = true,
@@ -1679,15 +1814,19 @@ function lib:Popup(msg,timeout,OnAccept,OnCancel,data,StopCasting)
 	popup.text=msg
 	popup.OnCancel=nil
 	popup.OnAccept=OnAccept
+	popup.button1=ACCEPT
 	popup.button2=nil
 	if (OnCancel) then
 		if (type(OnCancel)=="function") then
 			popup.OnCancel=OnCancel
 		end
 		popup.button2 = CANCEL
+	else
+		popup.button1=OKAY
 	end
 	StaticPopup_Show("LIBINIT_POPUP",nil,nil,data);
 end
+-- Interface widgets
 local factory={} --#factory
 do
 	local nonce=0
@@ -1798,7 +1937,7 @@ do
 		local name=tostring(GetTime()*1000) ..nonce
 		nonce=nonce+1
 		dd.dropdown=CreateFrame('Frame',name,father,"UIDropDownMenuTemplate")
-		UIDropDownMenu_Initialize(frame, function(...)
+		UIDropDownMenu_Initialize(dd, function(...)
 			local i=0
 			for k,v in pairs(dd.list) do
 				i=i+1
@@ -1811,10 +1950,10 @@ do
 				UIDropDownMenu_AddButton(info,1)
 			end
 		end)
-		UIDropDownMenu_SetWidth(frame, 100);
-		UIDropDownMenu_SetButtonWidth(frame, 124)
-		UIDropDownMenu_SetSelectedID(frame, 1)
-		UIDropDownMenu_JustifyText(frame, "LEFT")
+		UIDropDownMenu_SetWidth(dd, 100);
+		UIDropDownMenu_SetButtonWidth(dd, 124)
+		UIDropDownMenu_SetSelectedID(dd, 1)
+		UIDropDownMenu_JustifyText(dd, "LEFT")
 		end
 	end
 end
@@ -1841,10 +1980,24 @@ function lib:SetCustomEnvironment(new_env)
 	setfenv(2, new_env)
 end
 --- reembed routine
+-- Prepares the mixins table
+lib.mixins=lib.mixins or {}
+wipe(lib.mixins)
+for name,method in pairs(lib) do
+	if type(method)=="function" and name~="NewAddon" and name~="GetAddon" and name:sub(1,1)~="_" then
+		lib.mixins[name] = method
+	end
+end
 for target,_ in pairs(lib.mixinTargets) do
 	lib:Embed(target)
 end
-local l=LibStub("AceLocale-3.0")
+local l=AceLocale
+if not l then
+	L=setmetatable({},{
+		__index=function(t,k) return k end
+	})
+	return
+end
 -- To avoid clash between versions, localization is versioned on major and minor
 -- Lua strings are immutable so having more copies of the same string does not waist a noticeable slice of memory
 local me=MAJOR_VERSION .. MINOR_VERSION
@@ -1854,25 +2007,46 @@ do
 	L["Configuration"] = true
 L["Description"] = true
 L["Libraries"] = true
+L["Profile"] = true
+L["Purge1"] = "Delete unused profiles"
+L["Purge2"] = "Deletes all profiles that are not used by a character"
+L["Purge_Desc"] = "You can delete all unused profiles with just one click"
 L["Release Notes"] = true
 L["Toggles"] = true
+L["UseDefault1"] = "Switch all characters to \"%s\" profile"
+L["UseDefault2"] = "Uses the \"%s\" profiles for all your toons"
+L["UseDefault_Desc"] = "You can force all your  characters to use the \"%s\" profile in order to manage a single configuration"
 
 	L=l:NewLocale(me,"ptBR")
 	if (L) then
-	L["Configuration"] = "configura\195\167\195\163o"
-L["Description"] = "Descri\195\167\195\163o"
-L["Libraries"] = "bibliotecas"
-L["Release Notes"] = "Notas de Lan\195\167amento"
-L["Toggles"] = "Alterna"
+	L["Configuration"] = "configura\195\167\195\163o" -- Needs review
+L["Description"] = "Descri\195\167\195\163o" -- Needs review
+L["Libraries"] = "bibliotecas" -- Needs review
+L["Profile"] = "Perfil" -- Needs review
+L["Purge1"] = "Excluir perfis n\195\163o utilizados" -- Needs review
+L["Purge2"] = "Exclui todos os perfis que n\195\163o s\195\163o utilizados por um personagem" -- Needs review
+L["Purge_Desc"] = "Voc\195\170 pode apagar todos os perfis n\195\163o utilizados com apenas um clique" -- Needs review
+L["Release Notes"] = "Notas de Lan\195\167amento" -- Needs review
+L["Toggles"] = "Alterna" -- Needs review
+L["UseDefault1"] = "Mudar todos os caracteres para \"% s\" perfil" -- Needs review
+L["UseDefault2"] = "Usa a \"% s\" perfis para todos os seus personagens" -- Needs review
+L["UseDefault_Desc"] = "Voc\195\170 pode for\195\167ar todos os seus personagens para usar a \"% s\" perfil a fim de gerir uma \195\186nica configura\195\167\195\163o" -- Needs review
 
 	end
 	L=l:NewLocale(me,"frFR")
 	if (L) then
-	L["Configuration"] = "configuration"
-L["Description"] = "description"
-L["Libraries"] = "biblioth\195\168ques"
-L["Release Notes"] = "notes de version"
-L["Toggles"] = "Bascule"
+	L["Configuration"] = "configuration" -- Needs review
+L["Description"] = "description" -- Needs review
+L["Libraries"] = "biblioth\195\168ques" -- Needs review
+L["Profile"] = "Profil" -- Needs review
+L["Purge1"] = "Supprimer les profils inutilis\195\169s" -- Needs review
+L["Purge2"] = "Supprime tous les profils qui ne sont pas utilis\195\169s par un caract\195\168re" -- Needs review
+L["Purge_Desc"] = "Vous pouvez supprimer tous les profils inutilis\195\169s en un seul clic" -- Needs review
+L["Release Notes"] = "notes de version" -- Needs review
+L["Toggles"] = "Bascule" -- Needs review
+L["UseDefault1"] = "Mettez tous les caract\195\168res au profil \"%s\"" -- Needs review
+L["UseDefault2"] = "Utilise les profils du \"%s\" pour tous vos personnages" -- Needs review
+L["UseDefault_Desc"] = "Vous pouvez forcer tous vos personnages \195\160 utiliser le profil du \"%s\" dans le but de g\195\169rer une configuration unique" -- Needs review
 
 	end
 	L=l:NewLocale(me,"deDE")
@@ -1880,8 +2054,15 @@ L["Toggles"] = "Bascule"
 	L["Configuration"] = "Konfiguration"
 L["Description"] = "Beschreibung"
 L["Libraries"] = "Bibliotheken"
-L["Release Notes"] = true
-L["Toggles"] = "Schaltet"
+L["Profile"] = "Profil"
+L["Purge1"] = "L\195\182schen Sie nicht ben\195\182tigte Profile"
+L["Purge2"] = "L\195\182scht alle Profile, die nicht von einem Charakter benutzt werden"
+L["Purge_Desc"] = "Sie k\195\182nnen mit nur einem Klick alle nicht verwendeten Profile l\195\182schen"
+L["Release Notes"] = "Versionshinweise"
+L["Toggles"] = "Schaltet" -- Needs review
+L["UseDefault1"] = "Alle Charaktere auf das Profil \"%s\" umschalten"
+L["UseDefault2"] = "Verwendet die Profile \"%s\" f\195\188r alle Toons"
+L["UseDefault_Desc"] = "Sie k\195\182nnen alle Ihre Charaktere dazu zwingen, das Profil \"%s\" zu verwenden, um eine einzelne Konfiguration zu verwalten"
 
 	end
 	L=l:NewLocale(me,"itIT")
@@ -1889,62 +2070,111 @@ L["Toggles"] = "Schaltet"
 	L["Configuration"] = "Configurazione"
 L["Description"] = "Descrizione"
 L["Libraries"] = "Librerie"
+L["Profile"] = "Profilo"
+L["Purge1"] = "Cancella i profili inutilizzati"
+L["Purge2"] = "Cancella tutti i profili che non sono usati da un personaggio"
+L["Purge_Desc"] = "Puoi cancellare tutti i profili inutilizzati con un singolo click"
 L["Release Notes"] = "Note di rilascio"
 L["Toggles"] = "Interruttori"
+L["UseDefault1"] = "Imposta il profilo \"%s\" su tutti i personaggi"
+L["UseDefault2"] = "Usa il profilo '%s\" per tutti i personaggi"
+L["UseDefault_Desc"] = "Puoi far usare a tutti i tuoi personaggi il profilo \"%s\""
 
 	end
 	L=l:NewLocale(me,"koKR")
 	if (L) then
-	L["Configuration"] = "\234\181\172\236\132\177"
-L["Description"] = "\236\132\164\235\170\133"
-L["Libraries"] = "\235\157\188\236\157\180\235\184\140\235\159\172\235\166\172"
-L["Release Notes"] = "\235\166\180\235\166\172\236\138\164 \235\133\184\237\138\184"
-L["Toggles"] = "\236\160\132\237\153\152"
+	L["Configuration"] = "\234\181\172\236\132\177" -- Needs review
+L["Description"] = "\236\132\164\235\170\133" -- Needs review
+L["Libraries"] = "\235\157\188\236\157\180\235\184\140\235\159\172\235\166\172" -- Needs review
+L["Profile"] = "\236\156\164\234\179\189" -- Needs review
+L["Purge1"] = "\236\130\172\236\154\169\237\149\152\236\167\128 \236\149\138\235\138\148 \237\148\132\235\161\156\237\149\132\236\157\132 \236\130\173\236\160\156" -- Needs review
+L["Purge2"] = "\235\172\184\236\158\144\234\176\128 \236\130\172\236\154\169\235\144\152\236\167\128 \236\149\138\236\157\128 \235\170\168\235\147\160 \237\148\132\235\161\156\237\140\140\236\157\188\236\157\132 \236\130\173\236\160\156\237\149\169\235\139\136\235\139\164" -- Needs review
+L["Purge_Desc"] = "\235\139\185\236\139\160\236\157\128 \237\149\156 \235\178\136\236\157\152 \237\129\180\235\166\173\236\156\188\235\161\156 \235\170\168\235\147\160 \236\130\172\236\154\169\235\144\152\236\167\128 \236\149\138\236\157\128 \237\148\132\235\161\156\237\149\132\236\157\132 \236\130\173\236\160\156\237\149\160 \236\136\152 \236\158\136\236\138\181\235\139\136\235\139\164" -- Needs review
+L["Release Notes"] = "\235\166\180\235\166\172\236\138\164 \235\133\184\237\138\184" -- Needs review
+L["Toggles"] = "\236\160\132\237\153\152" -- Needs review
+L["UseDefault1"] = "\"%s\"\237\148\132\235\161\156\237\149\132\236\151\144 \235\170\168\235\147\160 \235\172\184\236\158\144\235\165\188 \236\160\132\237\153\152" -- Needs review
+L["UseDefault2"] = "\235\170\168\235\147\160 \235\172\184\236\158\144\236\151\144 \235\140\128\237\149\180 \"%s\"\237\148\132\235\161\156\237\140\140\236\157\188\236\157\132 \236\130\172\236\154\169\237\149\152\236\151\172" -- Needs review
+L["UseDefault_Desc"] = "\235\139\168\236\157\188 \234\181\172\236\132\177\236\157\132 \234\180\128\235\166\172\237\149\152\234\184\176 \236\156\132\237\149\180 \"% s\"\237\148\132\235\161\156\237\140\140\236\157\188\236\157\132 \236\130\172\236\154\169\237\149\152\236\151\172 \235\170\168\235\147\160 \235\172\184\236\158\144\235\165\188 \234\176\149\236\160\156" -- Needs review
 
 	end
 	L=l:NewLocale(me,"esMX")
 	if (L) then
-	L["Configuration"] = "Configuraci\195\179n"
-L["Description"] = "Descripci\195\179n"
-L["Libraries"] = "Bibliotecas"
-L["Release Notes"] = "Notas de la versi\195\179n"
-L["Toggles"] = "Alterna"
+	L["Configuration"] = "Configuraci\195\179n," -- Needs review
+L["Description"] = "Descripci\195\179n," -- Needs review
+L["Libraries"] = "bibliotecas," -- Needs review
+L["Profile"] = "Perfil," -- Needs review
+L["Purge1"] = "Eliminar los perfiles no utilizados" -- Needs review
+L["Purge2"] = "Elimina todos los perfiles que no sean utilizadas por un personaje" -- Needs review
+L["Purge_Desc"] = "Puede eliminar todos los perfiles utilizados con s\195\179lo un clic" -- Needs review
+L["Release Notes"] = "Notas de la versi\195\179n" -- Needs review
+L["Toggles"] = "Alterna" -- Needs review
+L["UseDefault1"] = "Cambiar todos los caracteres de perfil \"%s\"" -- Needs review
+L["UseDefault2"] = "Utiliza los perfiles de la \"%s\" para todos sus caracteres" -- Needs review
+L["UseDefault_Desc"] = "Puede forzar a todos tus personajes para usar el perfil \"%s\" con el fin de administrar una sola configuraci\195\179n" -- Needs review
 
 	end
 	L=l:NewLocale(me,"ruRU")
 	if (L) then
-	L["Configuration"] = "\208\154\208\190\208\189\209\132\208\184\208\179\209\131\209\128\208\176\209\134\208\184\209\143"
-L["Description"] = "\208\158\208\191\208\184\209\129\208\176\208\189\208\184\208\181"
-L["Libraries"] = "\208\145\208\184\208\177\208\187\208\184\208\190\209\130\208\181\208\186\208\184"
-L["Release Notes"] = "\208\159\209\128\208\184\208\188\208\181\209\135\208\176\208\189\208\184\209\143 \208\186 \208\178\209\139\208\191\209\131\209\129\208\186\209\131"
-L["Toggles"] = "\208\159\208\181\209\128\208\181\208\186\208\187\209\142\209\135\208\181\208\189\208\184\208\181"
+	L["Configuration"] = "\208\154\208\190\208\189\209\132\208\184\208\179\209\131\209\128\208\176\209\134\208\184\209\143," -- Needs review
+L["Description"] = "\208\158\208\191\208\184\209\129\208\176\208\189\208\184\208\181," -- Needs review
+L["Libraries"] = "\208\145\208\184\208\177\208\187\208\184\208\190\209\130\208\181\208\186\208\184," -- Needs review
+L["Profile"] = "\208\159\209\128\208\190\209\132\208\184\208\187\209\140," -- Needs review
+L["Purge1"] = "\208\163\208\180\208\176\208\187\208\181\208\189\208\184\208\181 \208\189\208\181\208\184\209\129\208\191\208\190\208\187\209\140\208\183\209\131\208\181\208\188\209\139\209\133 \208\191\209\128\208\190\209\132\208\184\208\187\208\181\208\185" -- Needs review
+L["Purge2"] = "\208\163\208\180\208\176\208\187\209\143\208\181\209\130 \208\178\209\129\208\181 \208\191\209\128\208\190\209\132\208\184\208\187\208\184, \208\186\208\190\209\130\208\190\209\128\209\139\208\181 \208\189\208\181 \208\184\209\129\208\191\208\190\208\187\209\140\208\183\209\131\209\142\209\130\209\129\209\143 \208\191\208\181\209\128\209\129\208\190\208\189\208\176\208\182\208\181\208\188" -- Needs review
+L["Purge_Desc"] = "\208\156\208\190\208\182\208\189\208\190 \209\131\208\180\208\176\208\187\208\184\209\130\209\140 \208\178\209\129\208\181 \208\189\208\181\208\184\209\129\208\191\208\190\208\187\209\140\208\183\209\131\208\181\208\188\209\139\208\181 \208\191\209\128\208\190\209\132\208\184\208\187\208\184 \209\129 \208\191\208\190\208\188\208\190\209\137\209\140\209\142 \208\178\209\129\208\181\208\179\208\190 \208\190\208\180\208\189\208\190\208\179\208\190 \208\186\208\187\208\184\208\186\208\176" -- Needs review
+L["Release Notes"] = "\208\159\209\128\208\184\208\188\208\181\209\135\208\176\208\189\208\184\209\143 \208\186 \208\178\209\139\208\191\209\131\209\129\208\186\209\131" -- Needs review
+L["Toggles"] = "\208\146\208\186\208\187\209\142\209\135\208\181\208\189\208\184\208\181 \208\184\208\187\208\184 \208\178\209\139\208\186\208\187\209\142\209\135\208\181\208\189\208\184\208\181" -- Needs review
+L["UseDefault1"] = "\208\146\208\186\208\187\209\142\209\135\208\184\209\130\208\181 \208\178\209\129\208\181 \209\129\208\184\208\188\208\178\208\190\208\187\209\139 \"%s\" \208\191\209\128\208\190\209\132\208\184\208\187\209\140" -- Needs review
+L["UseDefault2"] = "\208\152\209\129\208\191\208\190\208\187\209\140\208\183\209\131\208\181\209\130 \"%s\" \208\191\209\128\208\190\209\132\208\184\208\187\208\184 \208\180\208\187\209\143 \208\178\209\129\208\181\209\133 \208\178\208\176\209\136\208\184\209\133 \208\191\208\181\209\128\209\129\208\190\208\189\208\176\208\182\208\181\208\185" -- Needs review
+L["UseDefault_Desc"] = "\208\146\209\139 \208\188\208\190\208\182\208\181\209\130\208\181 \208\183\208\176\209\129\209\130\208\176\208\178\208\184\209\130\209\140 \208\178\209\129\208\181 \209\129\208\184\208\188\208\178\208\190\208\187\209\139 \208\184\209\129\208\191\208\190\208\187\209\140\208\183\208\190\208\178\208\176\209\130\209\140 \"%s\" \208\191\209\128\208\190\209\132\208\184\208\187\209\140 \208\180\208\187\209\143 \209\130\208\190\208\179\208\190, \209\135\209\130\208\190\208\177\209\139 \209\131\208\191\209\128\208\176\208\178\208\187\209\143\209\130\209\140 \208\190\208\180\208\189\208\190\208\185 \208\186\208\190\208\189\209\132\208\184\208\179\209\131\209\128\208\176\209\134\208\184\208\184" -- Needs review
 
 	end
 	L=l:NewLocale(me,"zhCN")
 	if (L) then
-	L["Configuration"] = "\233\133\141\231\189\174"
-L["Description"] = "\232\175\180\230\152\142"
-L["Libraries"] = "\229\155\190\228\185\166\233\166\134"
-L["Release Notes"] = "\229\143\145\232\161\140\232\175\180\230\152\142"
-L["Toggles"] = "\229\136\135\230\141\162"
+	L["Configuration"] = "\231\187\132\230\128\129\239\188\140" -- Needs review
+L["Description"] = "\230\143\143\232\191\176\239\188\140" -- Needs review
+L["Libraries"] = "\229\155\190\228\185\166\233\166\134\239\188\140" -- Needs review
+L["Profile"] = "\228\184\170\228\186\186\232\181\132\230\150\153\239\188\140" -- Needs review
+L["Purge1"] = "\229\136\160\233\153\164\230\156\170\228\189\191\231\148\168\231\154\132\233\133\141\231\189\174\230\150\135\228\187\182" -- Needs review
+L["Purge2"] = "\229\136\160\233\153\164\230\156\170\228\189\191\231\148\168\231\154\132\229\173\151\231\172\166\230\137\128\230\156\137\233\133\141\231\189\174\230\150\135\228\187\182" -- Needs review
+L["Purge_Desc"] = "\230\130\168\229\143\175\228\187\165\229\136\160\233\153\164\230\137\128\230\156\137\230\156\170\228\189\191\231\148\168\231\154\132\233\133\141\231\189\174\230\150\135\228\187\182\239\188\140\229\143\170\233\156\128\231\130\185\229\135\187\228\184\128\228\184\139" -- Needs review
+L["Release Notes"] = "\229\143\145\232\161\140\232\175\180\230\152\142" -- Needs review
+L["Toggles"] = "\229\136\135\230\141\162" -- Needs review
+L["UseDefault1"] = "\228\186\164\230\141\162\230\156\186\231\154\132\230\137\128\230\156\137\229\173\151\231\172\166\226\128\156\239\188\133s\226\128\157\231\154\132\228\184\170\228\186\186\232\181\132\230\150\153" -- Needs review
+L["UseDefault2"] = "\228\189\191\231\148\168\226\128\156\239\188\133s\226\128\157\230\155\178\231\186\191\231\154\132\230\137\128\230\156\137\232\167\146\232\137\178" -- Needs review
+L["UseDefault_Desc"] = "\230\130\168\229\143\175\228\187\165\229\188\186\229\136\182\230\137\128\230\156\137\232\167\146\232\137\178\228\189\191\231\148\168\226\128\156\239\188\133s\226\128\157\231\154\132\228\184\170\228\186\186\232\181\132\230\150\153\239\188\140\228\187\165\231\174\161\231\144\134\228\184\128\228\184\170\229\141\149\228\184\128\231\154\132\233\133\141\231\189\174" -- Needs review
 
 	end
 	L=l:NewLocale(me,"esES")
 	if (L) then
-	L["Configuration"] = "Configuraci\195\179n"
-L["Description"] = "Descripci\195\179n"
-L["Libraries"] = "Bibliotecas"
-L["Release Notes"] = "Notas de la versi\195\179n"
-L["Toggles"] = "Alterna"
+	L["Configuration"] = "Configuraci\195\179n," -- Needs review
+L["Description"] = "Descripci\195\179n," -- Needs review
+L["Libraries"] = "bibliotecas," -- Needs review
+L["Profile"] = "Perfil," -- Needs review
+L["Purge1"] = "Eliminar los perfiles no utilizados" -- Needs review
+L["Purge2"] = "Elimina todos los perfiles que no sean utilizadas por un personaje" -- Needs review
+L["Purge_Desc"] = "Puede eliminar todos los perfiles utilizados con s\195\179lo un clic" -- Needs review
+L["Release Notes"] = "Notas de la versi\195\179n" -- Needs review
+L["Toggles"] = "Alterna" -- Needs review
+L["UseDefault1"] = "Cambiar todos los caracteres de perfil \"%s\"" -- Needs review
+L["UseDefault2"] = "Utiliza los perfiles de la \"%s\" para todos sus caracteres" -- Needs review
+L["UseDefault_Desc"] = "Puede forzar a todos tus personajes para usar el perfil \"%s\" con el fin de administrar una sola configuraci\195\179n" -- Needs review
 
 	end
 	L=l:NewLocale(me,"zhTW")
 	if (L) then
-	L["Configuration"] = "\233\133\141\231\189\174"
-L["Description"] = "\232\175\180\230\152\142"
-L["Libraries"] = "\229\155\190\228\185\166\233\166\134"
-L["Release Notes"] = "\229\143\145\232\161\140\232\175\180\230\152\142"
-L["Toggles"] = "\229\136\135\230\141\162"
+	L["Configuration"] = "\231\181\132\230\133\139\239\188\140" -- Needs review
+L["Description"] = "\230\143\143\232\191\176\239\188\140" -- Needs review
+L["Libraries"] = "\229\156\150\230\155\184\233\164\168\239\188\140" -- Needs review
+L["Profile"] = "\229\128\139\228\186\186\232\179\135\230\150\153\239\188\140" -- Needs review
+L["Purge1"] = "\229\136\170\233\153\164\230\156\170\228\189\191\231\148\168\231\154\132\233\133\141\231\189\174\230\150\135\228\187\182" -- Needs review
+L["Purge2"] = "\229\136\170\233\153\164\230\156\170\228\189\191\231\148\168\231\154\132\229\173\151\231\172\166\230\137\128\230\156\137\233\133\141\231\189\174\230\150\135\228\187\182" -- Needs review
+L["Purge_Desc"] = "\230\130\168\229\143\175\228\187\165\229\136\170\233\153\164\230\137\128\230\156\137\230\156\170\228\189\191\231\148\168\231\154\132\233\133\141\231\189\174\230\150\135\228\187\182\239\188\140\229\143\170\233\156\128\233\187\158\230\147\138\228\184\128\228\184\139" -- Needs review
+L["Release Notes"] = "\231\153\188\232\161\140\232\170\170\230\152\142" -- Needs review
+L["Toggles"] = "\229\136\135\230\143\155" -- Needs review
+L["UseDefault1"] = "\228\186\164\230\143\155\230\169\159\231\154\132\230\137\128\230\156\137\229\173\151\231\172\166\226\128\156\239\188\133s\226\128\157\231\154\132\229\128\139\228\186\186\232\179\135\230\150\153" -- Needs review
+L["UseDefault2"] = "\228\189\191\231\148\168\226\128\156\239\188\133s\226\128\157\230\155\178\231\183\154\231\154\132\230\137\128\230\156\137\232\167\146\232\137\178" -- Needs review
+L["UseDefault_Desc"] = "\230\130\168\229\143\175\228\187\165\229\188\183\229\136\182\230\137\128\230\156\137\232\167\146\232\137\178\228\189\191\231\148\168\226\128\156\239\188\133s\226\128\157\231\154\132\229\128\139\228\186\186\232\179\135\230\150\153\239\188\140\228\187\165\231\174\161\231\144\134\228\184\128\229\128\139\229\150\174\228\184\128\231\154\132\233\133\141\231\189\174" -- Needs review
 
 	end
 end

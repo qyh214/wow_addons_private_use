@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision: 990 $")
+end, "$Revision: 998 $")
 
 local XPerl_Player_Pet_HighlightCallback
 
@@ -98,14 +98,15 @@ function XPerl_Player_Pet_OnLoad(self)
 	-- Set here to reduce amount of function calls made
 	self:SetScript("OnEvent", XPerl_Player_Pet_OnEvent)
 	self:SetScript("OnUpdate", XPerl_Player_Pet_OnUpdate)
-	if (FOM_FeedButton) then
+	--[[if (FOM_FeedButton) then
 		self:SetScript("OnShow", function(self)
 			XPerl_Unit_UpdatePortrait(self)
 			XPerl_ProtectedCall(Set_FOM_FeedButton)
 		end)
 	else
 		self:SetScript("OnShow", XPerl_Unit_UpdatePortrait)
-	end
+	end]]
+	self:SetScript("OnShow", XPerl_Unit_UpdatePortrait)
 
 	if (XPerl_ArcaneBar_RegisterFrame) then
 		XPerl_ArcaneBar_RegisterFrame(self.nameFrame, UnitHasVehicleUI("player") and "player" or "pet")
@@ -355,7 +356,7 @@ end
 
 -- UNIT_PORTRAIT_UPDATE
 function XPerl_Player_Pet_Events:UNIT_PORTRAIT_UPDATE()
-	XPerl_Unit_UpdatePortrait(self)
+	XPerl_Unit_UpdatePortrait(self, true)
 end
 
 -- UNIT_HEALTH, UNIT_MAXHEALTH

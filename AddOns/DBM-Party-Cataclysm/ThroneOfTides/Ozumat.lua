@@ -1,16 +1,17 @@
 local mod	= DBM:NewMod(104, "DBM-Party-Cataclysm", 9, 65)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
-mod:SetCreatureID(40792)--42172 is Ozumat, but we need Neptulon for engage trigger.
---mod:SetModelID(35100)--32911Looks like crap, definitely doesn't scale well. so just use one of his tenticles instead
+mod:SetRevision(("$Revision: 171 $"):sub(12, -3))
+mod:SetCreatureID(40792)
+mod:SetEncounterID(1047)
+mod:SetMainBossID(42172)--42172 is Ozumat, but we need Neptulon for engage trigger.
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_AURA_APPLIED 83463 76133",
+	"SPELL_CAST_SUCCESS 83985 83986",
 	"UNIT_SPELLCAST_SUCCEEDED"
 )
 
@@ -18,7 +19,7 @@ local warnPhase2		= mod:NewPhaseAnnounce(2)
 local warnPhase3		= mod:NewPhaseAnnounce(3)
 local warnBlightSpray	= mod:NewSpellAnnounce(83985, 2)
 
-local timerPhase		= mod:NewTimer(95, "TimerPhase")
+local timerPhase		= mod:NewTimer(95, "TimerPhase", nil, nil, nil, 6)
 local timerBlightSpray	= mod:NewBuffActiveTimer(4, 83985)
 
 local warnedPhase2 = false

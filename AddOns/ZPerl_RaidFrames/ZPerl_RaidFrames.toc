@@ -1,4 +1,4 @@
-﻿## Interface: 60200
+﻿## Interface: 70000
 ## Author: Resike
 ## Title: Z-Perl |cffeda55fRaid Frames|r
 ## Title-itIT: Z-Perl |cffeda55fIncursione|r
@@ -13,8 +13,8 @@
 ## Notes-zhTW: Z-Perl 團隊框架
 ## Dependencies: ZPerl
 ## SavedVariablesPerCharacter: ZPerl_Roster
-## X-Curse-Packaged-Version: r991
-## X-Curse-Project-Name: Z-Perl UnitFrames
+## X-Curse-Packaged-Version: r1002
+## X-Curse-Project-Name: Z-Perl Unit Frames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline
 

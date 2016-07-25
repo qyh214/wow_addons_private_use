@@ -1,2 +1,0 @@
---Intentionally blank
---Now as a standalone library

@@ -16,7 +16,14 @@ local monkOffset = 10
 
 local WidgetList = {}
 
-local Anticipation =  GetSpellInfo(115190)
+--local Anticipation =  GetSpellInfo(115190)
+local Anticipation =  GetSpellInfo(114015)
+
+local function GetDruidPoints()
+	local points = GetComboPoints("player", "target")
+
+	return points
+end
 
 local function GetRoguePoints()
 	local points = GetComboPoints("player", "target")
@@ -62,8 +69,10 @@ end
 local GetPoints
 local PlayerClass = select(2,UnitClassBase("player"))
 
-if PlayerClass == "ROGUE" or PlayerClass == "DRUID" then
+if PlayerClass == "ROGUE" then
 	GetPoints = GetRoguePoints
+elseif PlayerClass == "DRUID" then
+	GetPoints = GetDruidPoints
 elseif PlayerClass == "MONK" then
 	GetPoints = GetMonkPoints
 elseif PlayerClass == "PALADIN" then

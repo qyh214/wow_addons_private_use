@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 991 $")
+end, "$Revision: 1000 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -68,10 +68,10 @@ ZPerl_Roster = { }
 -- MEMBERS_PER_RAID_GROUP = 5
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
-local WoWclassCount = 0
-for k, v in pairs(localGroups) do
+local WoWclassCount = 11
+--[[for k, v in pairs(localGroups) do
 	WoWclassCount = WoWclassCount + 1
-end
+end]]
 
 local resSpells = {
 	[GetSpellInfo(2006)] = true,			-- Resurrection
@@ -79,7 +79,7 @@ local resSpells = {
 	[GetSpellInfo(20484)] = true,			-- Rebirth
 	[GetSpellInfo(7328)] = true,			-- Redemption
 	[GetSpellInfo(50769)] = true,			-- Revive
-	[GetSpellInfo(83968)] = true,			-- Mass Resurrection
+	--[GetSpellInfo(83968)] = true,			-- Mass Resurrection
 	[GetSpellInfo(115178)] = true,			-- Resuscitate
 }
 
@@ -107,6 +107,55 @@ function XPerl_Raid_OnLoad(self)
 		--_G["XPerl_Raid_Grp"..i]:UnregisterEvent("UNIT_NAME_UPDATE")
 		tinsert(raidHeaders, _G[XPERL_RAIDGRP_PREFIX..i])
 	end
+
+	self.state = CreateFrame("Frame", nil, nil, "SecureHandlerStateTemplate")
+	self.state:SetFrameRef("ZPerlRaidHeader1", _G[XPERL_RAIDGRP_PREFIX..1])
+	self.state:SetFrameRef("ZPerlRaidHeader2", _G[XPERL_RAIDGRP_PREFIX..2])
+	self.state:SetFrameRef("ZPerlRaidHeader3", _G[XPERL_RAIDGRP_PREFIX..3])
+	self.state:SetFrameRef("ZPerlRaidHeader4", _G[XPERL_RAIDGRP_PREFIX..4])
+	self.state:SetFrameRef("ZPerlRaidHeader5", _G[XPERL_RAIDGRP_PREFIX..5])
+	self.state:SetFrameRef("ZPerlRaidHeader6", _G[XPERL_RAIDGRP_PREFIX..6])
+	self.state:SetFrameRef("ZPerlRaidHeader7", _G[XPERL_RAIDGRP_PREFIX..7])
+	self.state:SetFrameRef("ZPerlRaidHeader8", _G[XPERL_RAIDGRP_PREFIX..8])
+	self.state:SetFrameRef("ZPerlRaidHeader9", _G[XPERL_RAIDGRP_PREFIX..9])
+	self.state:SetFrameRef("ZPerlRaidHeader10", _G[XPERL_RAIDGRP_PREFIX..10])
+	self.state:SetFrameRef("ZPerlRaidHeader11", _G[XPERL_RAIDGRP_PREFIX..11])
+
+	self.state:SetAttribute("partySmallRaid", XPerlDB.party.smallRaid)
+	self.state:SetAttribute("raidEnabled", XPerlDB.raid.enable)
+
+	self.state:SetAttribute("_onstate-groupupdate", [[
+		--print(newstate)
+
+		if newstate == "hide" then
+			self:GetFrameRef("ZPerlRaidHeader1"):Hide()
+			self:GetFrameRef("ZPerlRaidHeader2"):Hide()
+			self:GetFrameRef("ZPerlRaidHeader3"):Hide()
+			self:GetFrameRef("ZPerlRaidHeader4"):Hide()
+			self:GetFrameRef("ZPerlRaidHeader5"):Hide()
+			self:GetFrameRef("ZPerlRaidHeader6"):Hide()
+			self:GetFrameRef("ZPerlRaidHeader7"):Hide()
+			self:GetFrameRef("ZPerlRaidHeader8"):Hide()
+			self:GetFrameRef("ZPerlRaidHeader9"):Hide()
+			self:GetFrameRef("ZPerlRaidHeader10"):Hide()
+			self:GetFrameRef("ZPerlRaidHeader11"):Hide()
+		elseif self:GetAttribute('partySmallRaid') or not self:GetAttribute('raidEnabled') then
+			return
+		else
+			self:GetFrameRef("ZPerlRaidHeader1"):Show()
+			self:GetFrameRef("ZPerlRaidHeader2"):Show()
+			self:GetFrameRef("ZPerlRaidHeader3"):Show()
+			self:GetFrameRef("ZPerlRaidHeader4"):Show()
+			self:GetFrameRef("ZPerlRaidHeader5"):Show()
+			self:GetFrameRef("ZPerlRaidHeader6"):Show()
+			self:GetFrameRef("ZPerlRaidHeader7"):Show()
+			self:GetFrameRef("ZPerlRaidHeader8"):Show()
+			self:GetFrameRef("ZPerlRaidHeader9"):Show()
+			self:GetFrameRef("ZPerlRaidHeader10"):Show()
+			self:GetFrameRef("ZPerlRaidHeader11"):Show()
+		end
+	]])
+	RegisterStateDriver(self.state, "groupupdate", "[petbattle] hide; show")
 
 	self.time = 0
 	self.Array = { }
@@ -1228,8 +1277,14 @@ function XPerl_Raid_HideShowRaid()
 
 	for i = 1, WoWclassCount do
 		if (rconf.group[i] and enable and (i < 11 or rconf.sortByClass) and not singleGroup) then
-			if (not raidHeaders[i]:IsShown()) then
-				raidHeaders[i]:Show()
+			if not C_PetBattles.IsInBattle() then
+				if (not raidHeaders[i]:IsShown()) then
+					raidHeaders[i]:Show()
+				end
+			else
+				if (raidHeaders[i]:IsShown()) then
+					raidHeaders[i]:Hide()
+				end
 			end
 		else
 			if (raidHeaders[i]:IsShown()) then
@@ -1314,13 +1369,13 @@ function XPerl_Raid_Events:VARIABLES_LOADED()
 end
 
 function XPerl_Raid_Events:PET_BATTLE_OPENING_START()
-	if(self) then
+	if (self) then
 		XPerl_Raid_HideShowRaid()
 	end
 end
 
 function XPerl_Raid_Events:PET_BATTLE_CLOSE()
-	if(self) then
+	if (self) then
 		XPerl_Raid_HideShowRaid()
 	end
 end

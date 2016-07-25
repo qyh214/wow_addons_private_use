@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(870, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 74 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
 mod:SetCreatureID(73720, 71512)
 mod:SetEncounterID(1594)
 mod:DisableESCombatDetection()
@@ -72,12 +72,12 @@ local specWarnGustingCraneKick	= mod:NewSpecialWarningSpell(146180, nil, nil, ni
 local timerCombatStarts			= mod:NewCombatTimer(18)
 --Massive Crate of Goods
 local timerReturnToStoneCD		= mod:NewNextTimer(12, 145489)
-local timerSetToBlowCD			= mod:NewNextTimer(9.6, 145996, nil, nil, nil, 3)
+local timerSetToBlowCD			= mod:NewNextTimer(9.6, 145996, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerSetToBlow			= mod:NewBuffFadesTimer(30, 145996)
 --Stout Crate of Goods
 local timerMatterScramble		= mod:NewCastTimer(7, 145288, nil, "-Tank")
 local timerMatterScrambleCD		= mod:NewCDTimer(18, 145288, nil, nil, nil, 5)--18-22 sec variation. most of time it's 20 exactly, unsure what causes the +-2 variations
-local timerCrimsonReconCD		= mod:NewNextTimer(15, 142947, nil, "Tank", nil, 5)
+local timerCrimsonReconCD		= mod:NewNextTimer(15, 142947, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerMantidSwarmCD		= mod:NewCDTimer(35, 142539, nil, nil, nil, 1)
 local timerResidueCD			= mod:NewCDTimer(18, 145786, nil, "MagicDispeller", nil, 5)
 local timerWindstormCD			= mod:NewCDTimer(34, 145286, nil, false)--Spammy but might be useful to some, if they aren't releasing a ton of these at once.

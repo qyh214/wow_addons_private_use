@@ -1,0 +1,10 @@
+## Interface: 70000
+## Title: Titan Panel [|cffeda55fReputation|r]
+## Notes: Titan Panel plugin that shows your Reputations.
+## Author: Eliote
+## Version: 1.3
+## Dependencies: Titan
+Locales.lua
+Elib-2.3.lua
+TitanReputations.lua
+

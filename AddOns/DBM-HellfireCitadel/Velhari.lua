@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1394, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14619 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15005 $"):sub(12, -3))
 mod:SetCreatureID(90269)
 mod:SetEncounterID(1784)
 mod:SetZone()
@@ -60,7 +60,7 @@ local specWarnFontofCorruptionOver			= mod:NewSpecialWarningEnd(180526)
 local yellFontofCorruption					= mod:NewYell(180526)
 ----Ancient Harbinger
 local specWarnAncientHarbinger				= mod:NewSpecialWarningSwitch("ej11163", "-Healer", nil, nil, 1, 2)
-local specWarnHarbingersMending				= mod:NewSpecialWarningInterruptCount(180025, "-Healer", nil, nil, 1, 2)
+local specWarnHarbingersMending				= mod:NewSpecialWarningInterruptCount(180025, "HasInterrupt", nil, 2, 1, 2)
 local specWarnHarbingersMendingDispel		= mod:NewSpecialWarningDispel(180025, "MagicDispeller", nil, nil, 1, 2)--if interrupt is missed (likely at some point, cast gets faster each time). Then it MUST be dispelled
 --Stage Three: Malice
 local specWarnDespoiledGround				= mod:NewSpecialWarningMove(180604, nil, nil, nil, 1, 1)
@@ -70,21 +70,21 @@ local specWarnAncientSovereign				= mod:NewSpecialWarningSwitch("ej11170", "-Hea
 
 mod:AddTimerLine(ALL)--All
 local timerSealofDecayCD					= mod:NewCDTimer(6, 180000, nil, false, nil, 5, nil, DBM_CORE_TANK_ICON)--I don't think it's really needed, but at least make it an option
-local timerEdictofCondemnationCD			= mod:NewNextCountTimer(60, 182459, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerEdictofCondemnationCD			= mod:NewNextCountTimer(60, 182459, 57377, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--"condemnation" short name
 local timerTouchofHarmCD					= mod:NewNextCountTimer(45, 180166, nil, "Healer", nil, 3, nil, DBM_CORE_HEALER_ICON)
 mod:AddTimerLine(SCENARIO_STAGE:format(1))--Stage One: Oppression
-local timerAnnihilatingStrikeCD				= mod:NewNextCountTimer(10, 180260, nil, nil, nil, 3)
+local timerAnnihilatingStrikeCD				= mod:NewNextCountTimer(10, 180260, 92214, nil, nil, 3)--"Flame Strike" short name
 local timerInfernalTempestCD				= mod:NewNextCountTimer(10, 180300, nil, nil, nil, 2)
 ----Ancient Enforcer
 local timerEnforcersOnslaughtCD				= mod:NewCDTimer(18, 180004, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 mod:AddTimerLine(SCENARIO_STAGE:format(2))--Stage Two: Contempt
 local timerTaintedShadowsCD					= mod:NewNextTimer(5, 180533, nil, "Tank", nil, 5)
-local timerFontofCorruptionCD				= mod:NewNextTimer(19.6, 180526, nil, nil, nil, 3)
+local timerFontofCorruptionCD				= mod:NewNextTimer(19.6, 180526, 156842, nil, nil, 3)--156842 "Corruption" for short name?
 ----Ancient Harbinger
-local timerHarbingersMendingCD				= mod:NewCDTimer(10.5, 180025, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerHarbingersMendingCD				= mod:NewCDTimer(10.5, 180025, 36968, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 mod:AddTimerLine(SCENARIO_STAGE:format(3))--Stage Three: Malice
-local timerBulwarkoftheTyrantCD				= mod:NewNextCountTimer(10, 180600, nil, nil, nil, 3)
-local timerGaveloftheTyrantCD				= mod:NewNextCountTimer(10, 180608, nil, nil, nil, 2)
+local timerBulwarkoftheTyrantCD				= mod:NewNextCountTimer(10, 180600, 160533, nil, nil, 3)
+local timerGaveloftheTyrantCD				= mod:NewNextCountTimer(10, 180608, 148800, nil, nil, 2)--Dat Hammer (alternative, "Hammer" 175798)
 
 --local berserkTimer						= mod:NewBerserkTimer(360)
 
@@ -100,7 +100,7 @@ local voiceHarbinger						= mod:NewVoice("ej11163", "-Healer")--bigmob
 local voiceSovereign						= mod:NewVoice("ej11170", "-Healer")--bigmob
 local voiceInfernalTempest					= mod:NewVoice(180300)--watchstep
 local voiceEdictofCondemnation				= mod:NewVoice(182459)--runin or gather
-local voiceHarbingersMending				= mod:NewVoice(180025)--kickcast/dispelboss
+local voiceHarbingersMending				= mod:NewVoice(180025, "HasInterrupt|MagicDispeller")--kickcast/dispelboss
 local voiceGaveloftheTyrant					= mod:NewVoice(180608)--carefly
 local voiceEnforcerOnslaught				= mod:NewVoice(180004, "Tank", nil, 2)--watchorb
 local voiceSealofDecay						= mod:NewVoice(180000)--tauntboss
@@ -231,9 +231,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.phase = 2
 		warnAuraofContempt:Show()
 		--Cancel phase 1 abilities
-		timerAnnihilatingStrikeCD:Cancel()
+		timerAnnihilatingStrikeCD:Stop()
 		countdownAnnihilatingStrike:Cancel()
-		timerInfernalTempestCD:Cancel()
+		timerInfernalTempestCD:Stop()
 		timerTaintedShadowsCD:Start()
 		timerFontofCorruptionCD:Start(22)
 		voicePhaseChange:Play("ptwo")
@@ -243,7 +243,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 179991 then--Aura of Malice (phase 3)
 		self.vb.phase = 3
 		warnAuraofMalice:Show()
-		timerFontofCorruptionCD:Cancel()
+		timerFontofCorruptionCD:Stop()
 		timerBulwarkoftheTyrantCD:Start(nil, 1)
 		countdownBulwarkofTyrant:Start()
 		voicePhaseChange:Play("pthree")
@@ -279,7 +279,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnEdictofCondemnation:Show(self.vb.edictCount)
 			voiceEdictofCondemnation:Play("runin")
 			yellEdictofCondemnation:Schedule(8, 1)
-			yellEdictofCondemnation:Schedule(7, 2)
 			yellEdictofCondemnation:Schedule(6, 3)
 			yellEdictofCondemnation:Schedule(5, 4)
 			yellEdictofCondemnation:Schedule(4, 5)
@@ -434,12 +433,12 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 91304 or cid == 90270 then--Ancient Enforcer
-		timerEnforcersOnslaughtCD:Cancel()
+		timerEnforcersOnslaughtCD:Stop()
 		if DBM.BossHealth:IsShown() then
 			DBM.BossHealth:RemoveBoss(cid)
 		end
 	elseif cid == 91302 or cid == 90271 then--Ancient Harbinger
-		timerHarbingersMendingCD:Cancel()
+		timerHarbingersMendingCD:Stop()
 		if DBM.BossHealth:IsShown() then
 			DBM.BossHealth:RemoveBoss(cid)
 		end

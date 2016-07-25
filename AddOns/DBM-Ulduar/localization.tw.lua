@@ -374,8 +374,7 @@ L:SetGeneralLocalization{
 L:SetMiscLocalization{
 	YellPull 			= "我們即將有機會打擊怪物的首腦!現在將你的憤怒與仇恨貫注在他的爪牙上!",
 	YellPhase2			= "我是清醒的夢境。",
-	Sara 				= "薩拉",
-	WarningYellSqueeze	= "我被觸手抓住了 - 快救我"
+	Sara 				= "薩拉"
 }
 
 L:SetWarningLocalization{
@@ -405,7 +404,6 @@ L:SetOptionLocalization{
 	SpecWarnMadnessOutNow			= "為瘋狂誘陷結束前顯示特別警告",
 	SpecWarnFervorCast				= "當薩拉的熱誠正在對你施放時顯示特別警告(必須有最少一名團隊成員設置目標或專注目標)",
 	specWarnBrainPortalSoon			= "為下一次腦部傳送門顯示特別警告",
-	WarningSqueeze					= "當你中了壓榨 (觸手綁人)時大喊",
 	NextPortal						= "為下一次傳送門顯示計時器",
 	ShowSaraHealth					= "顯示薩拉在第1階段的血量(必須有最少一名團隊成員設置目標或專注目標)",
 	MaladyArrow						= "當你附近的人中了$spell:63881時顯示DBM箭頭"

@@ -200,7 +200,7 @@ function mod:Copy(frame)
 end
 
 local function fixName(misc, id, moreMisc, fakeName, tag, colon)
-	local _, charName, _, _, _, _, _, englishClass = BNGetToonInfo(id)
+	local _, charName, _, _, _, _, _, englishClass = BNGetGameAccountInfo(id)
 	if charName then 
 		return charName..colon
 	else 

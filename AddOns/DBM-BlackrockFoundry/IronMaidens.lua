@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1203, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14508 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14994 $"):sub(12, -3))
 mod:SetCreatureID(77557, 77231, 77477)
 mod:SetEncounterID(1695)
 mod:SetZone()
@@ -94,7 +94,7 @@ local yellHeartseeker					= mod:NewYell(158010, nil, false)
 --Ship
 mod:AddTimerLine(Ship)
 local timerShipCD						= mod:NewNextCountTimer(198, "ej10019", nil, nil, nil, 6, 76204)
-local timerBombardmentAlphaCD			= mod:NewNextTimer(18, 157854, nil, nil, nil, 2)
+local timerBombardmentAlphaCD			= mod:NewNextTimer(18, 157854, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 local timerWarmingUp					= mod:NewCastTimer(90, 158849, nil, nil, nil, 6)
 --Ground
 ----Admiral Gar'an
@@ -102,14 +102,14 @@ mod:AddTimerLine(Garan)
 local timerRapidFireCD					= mod:NewCDTimer(30, 156626, nil, nil, nil, 3)
 local timerDarkHuntCD					= mod:NewCDCountTimer(13.5, 158315, nil, false, nil, 3)--Important to know you have it, not very important to know it's coming soon.
 local timerPenetratingShotCD			= mod:NewCDCountTimer(28.8, 164271, nil, nil, nil, 3)--22-30 at least. maybe larger variation.
-local timerDeployTurretCD				= mod:NewCDCountTimer(20.2, 158599, nil, nil, nil, 1)--20.2-23.5
+local timerDeployTurretCD				= mod:NewCDCountTimer(20.2, 158599, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)--20.2-23.5
 ----Enforcer Sorka
 mod:AddTimerLine(Sorka)
-local timerBladeDashCD					= mod:NewCDCountTimer(20, 155794, nil, "Ranged|Tank", nil, 5)
+local timerBladeDashCD					= mod:NewCDCountTimer(20, 155794, nil, "Ranged|Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerConvulsiveShadowsCD			= mod:NewNextCountTimer(56, 156214, nil, nil, nil, 3)--Timer only enabled on mythicOn non mythic, it's just an unimportant dot. On mythic, MUCH more important because user has to run out of raid and get dispelled.
 ----Marak the Blooded
 mod:AddTimerLine(Marak)
-local timerBloodRitualCD				= mod:NewCDCountTimer(20, 158078, nil, nil, nil, 5)
+local timerBloodRitualCD				= mod:NewCDCountTimer(20, 158078, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerHeartSeekerCD				= mod:NewCDCountTimer(70, 158010, nil, "Ranged", nil, 3)
 
 local countdownShip						= mod:NewCountdown(198, "ej10019")
@@ -119,11 +119,11 @@ local countdownBladeDash				= mod:NewCountdown("AltTwo20", 155794, "Tank")
 local countdownDarkHunt					= mod:NewCountdownFades("AltTwo8", 158315)
 
 local voiceRapidFire					= mod:NewVoice(156631) --runout
-local voiceBloodRitual					= mod:NewVoice(158078, "MeleeDps", nil, 2) --158078.ogg, farawayfromline
+local voiceBloodRitual					= mod:NewVoice(158078, "MeleeDps", nil, 2) --farfromline
 local voiceHeartSeeker					= mod:NewVoice(158010) --spread
 local voiceShip							= mod:NewVoice("ej10019") --1695uktar, 1695gorak, 1695ukurogg
 local voiceEarthenbarrier				= mod:NewVoice(158708)  --int
-local voiceDeployTurret					= mod:NewVoice(158599, "RangedDps", nil, 2) --158599.ogg attack turret
+local voiceDeployTurret					= mod:NewVoice(158599, "RangedDps", nil, 2) --158599 attack turret
 local voiceConvulsiveShadows			= mod:NewVoice(156214) --runaway, target
 local voiceDarkHunt						= mod:NewVoice(158315) --defensive, target
 local voicePenetratingShot				= mod:NewVoice(164271) --stack
@@ -184,8 +184,8 @@ local function checkBoatPlayer(self, npc)
 	DBM:Debug("checkBoatPlayer finished")
 	boatMissionDone = false
 	self:Unschedule(boatReturnWarning)
-	timerBombardmentAlphaCD:Cancel()
-	timerWarmingUp:Cancel()
+	timerBombardmentAlphaCD:Stop()
+	timerWarmingUp:Stop()
 	countdownWarmingUp:Cancel()
 	if playerOnBoat then -- leave boat
 		playerOnBoat = false
@@ -196,25 +196,25 @@ local function checkBoatPlayer(self, npc)
 	self.vb.bloodRitual = 0
 	local bossPower = UnitPower("boss1")--All bosses have same power, doesn't matter which one checked
 	--These abilites resume after boat phase ends on mythic, on other difficulties, they still reset
-	timerBladeDashCD:Cancel()
+	timerBladeDashCD:Stop()
 	timerBladeDashCD:Start(5, 1)--5-6
 	countdownBladeDash:Cancel()
 	countdownBladeDash:Start(5)
-	timerBloodRitualCD:Cancel()
+	timerBloodRitualCD:Stop()
 	timerBloodRitualCD:Start(8.5, 1)--Variation on this may be same as penetrating shot variation. when it's marak returning from boat may be when it's 9.7
 	--These are altered by boar ending, even though boss continues casting it during boat phases.
-	timerRapidFireCD:Cancel()
+	timerRapidFireCD:Stop()
 	timerRapidFireCD:Start(13, self.vb.rapidfire+1)
 	if bossPower >= 30 then
 		if npc == Garan then--When garan returning, penetrating is always 27-28
 			timerPenetratingShotCD:Start(27, self.vb.penetratingShot+1)
 		else--When not garan returning, it's 24
-			timerPenetratingShotCD:Cancel()
+			timerPenetratingShotCD:Stop()
 			timerPenetratingShotCD:Start(24, self.vb.penetratingShot+1)
 		end
-		timerConvulsiveShadowsCD:Cancel()
+		timerConvulsiveShadowsCD:Stop()
 		timerConvulsiveShadowsCD:Start(36.5, self.vb.convulsiveShadows+1)--36.5-38
-		timerHeartSeekerCD:Cancel()
+		timerHeartSeekerCD:Stop()
 		timerHeartSeekerCD:Start(57, self.vb.heartseeker+1)
 	end
 end
@@ -222,14 +222,14 @@ end
 local function checkBoatOn(self, count)
 	if isPlayerOnBoat() then
 		playerOnBoat = true
-		timerBloodRitualCD:Cancel()
-		timerRapidFireCD:Cancel()
-		timerBladeDashCD:Cancel()
+		timerBloodRitualCD:Stop()
+		timerRapidFireCD:Stop()
+		timerBladeDashCD:Stop()
 		countdownBladeDash:Cancel()
-		timerHeartSeekerCD:Cancel()
-		timerConvulsiveShadowsCD:Cancel()
-		timerPenetratingShotCD:Cancel()
-		timerBombardmentAlphaCD:Cancel()
+		timerHeartSeekerCD:Stop()
+		timerConvulsiveShadowsCD:Stop()
+		timerPenetratingShotCD:Stop()
+		timerBombardmentAlphaCD:Stop()
 		DBM:Debug("Player Entering Boat")
 	elseif count < 20 then
 		self:Schedule(1, checkBoatOn, self, count + 1)
@@ -330,7 +330,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 155794 then
 		if noFilter or not isPlayerOnBoat() then
 			self:ScheduleMethod(0.1, "BossTargetScanner", 77231, "BladeDashTarget", 0.1, 16)
-			timerBladeDashCD:Cancel()
+			timerBladeDashCD:Stop()
 			timerBladeDashCD:Start(nil, self.vb.bladeDash+1)
 			if self:IsMythic() then
 				countdownBladeDash:Cancel()
@@ -446,11 +446,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if (noFilter or not isPlayerOnBoat()) then
 			countdownBloodRitual:Start()
-			if self.Options.SpecWarn158078targetcount then
-				specWarnBloodRitualOther:Show(self.vb.bloodRitual, args.destName)
-			else
-				warnBloodRitual:Show(self.vb.bloodRitual, args.destName)
-			end
 			if self.Options.HudMapOnBloodRitual then
 				DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 7, 1, 0, 0, 0.5, nil, true, 2):Pulse(0.5, 0.5)
 			end
@@ -458,9 +453,14 @@ function mod:SPELL_AURA_APPLIED(args)
 				yellBloodRitual:Yell()
 				if UnitDebuff("player", GetSpellInfo(170405)) and self.Options.filterBloodRitual3 then return end
 				specWarnBloodRitual:Show()
-				--voiceBloodRitual:Play("???")--Player needs a different warning than "far away from lines". player IS the line so they can't be far away from lines
+				voiceBloodRitual:Play("targetyou")
 			else
-				voiceBloodRitual:Play("158078")--Good sound fit for everyone ELSE
+				if self.Options.SpecWarn158078targetcount then
+					specWarnBloodRitualOther:Show(self.vb.bloodRitual, args.destName)
+				else
+					warnBloodRitual:Show(self.vb.bloodRitual, args.destName)
+				end
+				voiceBloodRitual:Play("farfromline")--Good sound fit for everyone ELSE
 			end
 		end
 	elseif spellId == 156631 then
@@ -516,17 +516,17 @@ mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 77477 then--Marak
-		timerBloodRitualCD:Cancel()
-		timerHeartSeekerCD:Cancel()
+		timerBloodRitualCD:Stop()
+		timerHeartSeekerCD:Stop()
 	elseif cid == 77557 then--Gar'an
-		timerRapidFireCD:Cancel()
-		timerPenetratingShotCD:Cancel()
-		timerDeployTurretCD:Cancel()
+		timerRapidFireCD:Stop()
+		timerPenetratingShotCD:Stop()
+		timerDeployTurretCD:Stop()
 	elseif cid == 77231 then--Sorka
-		timerBladeDashCD:Cancel()
+		timerBladeDashCD:Stop()
 		countdownBladeDash:Cancel()
-		timerConvulsiveShadowsCD:Cancel()
-		timerDarkHuntCD:Cancel()
+		timerConvulsiveShadowsCD:Stop()
+		timerDarkHuntCD:Stop()
 	elseif cid == 78351 or cid == 78341 or cid == 78343 then--boat bosses
 		self:Schedule(1, function()--wait 1s boat player ready to return.
 			boatMissionDone = true
@@ -556,36 +556,36 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc)
 		--Timers that always cancel on mythic, regardless of boss going up
 		if self:IsMythic() then
 			self:Schedule(3, function()
-				timerBladeDashCD:Cancel()
+				timerBladeDashCD:Stop()
 				countdownBladeDash:Cancel()
-				timerBloodRitualCD:Cancel()
-				timerHeartSeekerCD:Cancel()
+				timerBloodRitualCD:Stop()
+				timerHeartSeekerCD:Stop()
 			end)
 		else--This cancels in all modes
 			self:Schedule(3, function()
-				timerHeartSeekerCD:Cancel()
+				timerHeartSeekerCD:Stop()
 			end)
 		end
 		--Timers that always cancel on mythic, regardless of boss going up
 		timerBombardmentAlphaCD:Start(14.5)
 		if npc == Marak then
 			self:Schedule(3, function()
-				timerBloodRitualCD:Cancel()
+				timerBloodRitualCD:Stop()
 			end)
 			voiceShip:Play("1695ukurogg")
 		elseif npc == Sorka then
 			self:Schedule(3, function()
-				timerBladeDashCD:Cancel()
+				timerBladeDashCD:Stop()
 				countdownBladeDash:Cancel()
-				timerConvulsiveShadowsCD:Cancel()
-				timerDarkHuntCD:Cancel()
+				timerConvulsiveShadowsCD:Stop()
+				timerDarkHuntCD:Stop()
 			end)
 			voiceShip:Play("1695gorak")
 		elseif npc == Garan then
 			self:Schedule(3, function()
-				timerRapidFireCD:Cancel()
-				timerPenetratingShotCD:Cancel()
-				timerDeployTurretCD:Cancel()
+				timerRapidFireCD:Stop()
+				timerPenetratingShotCD:Stop()
+				timerDeployTurretCD:Stop()
 			end)
 			voiceShip:Play("1695uktar")
 		end
@@ -647,7 +647,7 @@ end
 function mod:UNIT_HEALTH_FREQUENT(uId)
 	local hp = UnitHealth(uId) / UnitHealthMax(uId)
 	if hp < 0.20 and self.vb.phase ~= 2 then
-		timerShipCD:Cancel()
+		timerShipCD:Stop()
 		countdownShip:Cancel()
 		self.vb.phase = 2
 		warnPhase2:Show()

@@ -107,7 +107,7 @@ function TitanPanelLocationButton_GetButtonText(id)
 		locationText = "";
 	end
 
-	if (TitanGetVar(TITAN_LOCATION_ID, "ShowZoneText")) then     
+	if (TitanGetVar(TITAN_LOCATION_ID, "ShowZoneText")) then
 		if (TitanUtils_ToString(button.subZoneText) == '') then
 			locationText = TitanUtils_ToString(button.zoneText)..' '..locationText;
 		else
@@ -164,7 +164,7 @@ function TitanPanelLocationButton_GetTooltipText()
 
 	return ""..
 		L["TITAN_LOCATION_TOOLTIP_ZONE"].."\t"..TitanUtils_GetHighlightText(TitanPanelLocationButton.zoneText).."\n"..
-		TitanUtils_Ternary((TitanPanelLocationButton.subZoneText == ""), "", L["TITAN_LOCATION_TOOLTIP_SUBZONE"].."\t"..TitanUtils_GetHighlightText(TitanPanelLocationButton.subZoneText).."\n")..          
+		TitanUtils_Ternary((TitanPanelLocationButton.subZoneText == ""), "", L["TITAN_LOCATION_TOOLTIP_SUBZONE"].."\t"..TitanUtils_GetHighlightText(TitanPanelLocationButton.subZoneText).."\n")..
 		TitanUtils_Ternary((pvpInfoRichText == ""), "", L["TITAN_LOCATION_TOOLTIP_PVPINFO"].."\t"..pvpInfoRichText.."\n")..
 		"\n"..
 		TitanUtils_GetHighlightText(L["TITAN_LOCATION_TOOLTIP_HOMELOCATION"]).."\n"..

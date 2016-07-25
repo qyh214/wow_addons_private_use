@@ -263,10 +263,10 @@ tt:SetHeight(24);
 tt:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = true, tileSize = 8, edgeSize = 12, insets = { left = 2, right = 2, top = 2, bottom = 2 } });
 tt:SetBackdropColor(0.1,0.1,0.2,1);
 tt:SetBackdropBorderColor(0.1,0.1,0.1,1);
-tt:SetMovable(1);
-tt:EnableMouse(1);
-tt:SetToplevel(1);
-tt:SetClampedToScreen(1);
+tt:SetMovable(true);
+tt:EnableMouse(true);
+tt:SetToplevel(true);
+tt:SetClampedToScreen(true);
 tt:SetPoint("CENTER");
 tt:Hide();
 
@@ -400,8 +400,8 @@ local function GetUnitReactionIndex(unit)
 		else
 			return 6;
 		end
-	-- Tapped -- The UNIT_FACTION event is fired when this changes (not for mouseover however)
-	elseif (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) and not UnitIsTappedByAllThreatList(unit)) then
+	-- Tapped -- The UNIT_FACTION event is fired when this changes (not for mouseover however) -- [7.0.3] API change: Tap functions has been condensed into a single function
+	elseif (UnitIsTapDenied(unit)) and not (UnitPlayerControlled(unit)) then
 		return 1;
 	-- Others
 	else
@@ -628,7 +628,7 @@ for i = 1, 2 do
 	bar:SetHeight(0);
 
 	bar.bg = bar:CreateTexture(nil,"BACKGROUND");
-	bar.bg:SetTexture(0.3,0.3,0.3,0.6);
+	bar.bg:SetColorTexture(0.3,0.3,0.3,0.6);
 	bar.bg:SetAllPoints();
 
 	bar.text = bar:CreateFontString(nil,"ARTWORK");
@@ -641,7 +641,7 @@ end
 -- Configures the Health and Power Bars
 local function SetupHealthAndPowerBar()
 	u.powerType = UnitPowerType(u.token);
-	-- Visibility
+	-- Bar One: Health
 	if (cfg.healthBar) then
 		bars[1]:Show();
 		if (u.isPlayer) and (cfg.healthBarClassColor) then
@@ -653,7 +653,8 @@ local function SetupHealthAndPowerBar()
 	else
 		bars[1]:Hide();
 	end
-	if (UnitPowerMax(u.token) ~= 0) and (cfg.manaBar and u.powerType == 0 or cfg.powerBar and u.powerType ~= 0) then
+	-- Bar Two: Power
+	if (UnitPowerMax(u.token,u.powerType) ~= 0) and (cfg.manaBar and u.powerType == 0 or cfg.powerBar and u.powerType ~= 0) then
 		if (u.powerType == 0) then
 			bars[2]:SetStatusBarColor(unpack(cfg.manaBarColor));
 		else
@@ -739,7 +740,7 @@ local function UpdateHealthAndPowerBar()
 	end
 	-- Power
 	if (bars[2]:IsShown()) then
-		local val, max = UnitPower(u.token), UnitPowerMax(u.token);
+		local val, max = UnitPower(u.token,u.powerType), UnitPowerMax(u.token,u.powerType);
 		bars[2]:SetMinMaxValues(0,max);
 		bars[2]:SetValue(val);
 		local barText = (u.powerType == 0 and cfg.manaBarText or cfg.powerBarText);
@@ -1114,7 +1115,7 @@ local function SetupGradientTip(tip)
 		return;
 	elseif (not g) then
 		g = tip:CreateTexture();
-		g:SetTexture(1,1,1,1);
+		g:SetColorTexture(1,1,1,1);
 		tip.ttGradient = g;
 	end
 	g:SetGradientAlpha("VERTICAL",0,0,0,0,unpack(cfg.gradientColor));

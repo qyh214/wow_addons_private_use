@@ -396,7 +396,6 @@ L:SetOptionLocalization{
 	SpecWarnMadnessOutNow			= "$spell:64059이 끝나기 전 특수 경고 보기",
 	SpecWarnFervorCast				= "$spell:63138을 대상이 된 경우 특수 경고 보기<br/>(공격대원 중 최소 한명이 사라를 대상 또는 주시대상으로 설정해야 함)",
 	specWarnBrainPortalSoon			= "차원문 이전에 특수 경고 보기",
-	WarningSqueeze					= "압착의 촉수의 대상 되었을 경우 대화로 알리기",
 	NextPortal						= "다음 차원문 바 보기",
 	ShowSaraHealth					= "우두머리 체력 바 사용시 사라의 체력 바도 함께 보기<br/>(공격대원 중 최소 한명이 사라를 대상 또는 주시대상으로 설정해야 함)",
 	MaladyArrow						= "$spell:63881 대상이 가까이 있을 경우 DBM 화살표 보기"
@@ -405,6 +404,5 @@ L:SetOptionLocalization{
 L:SetMiscLocalization{
 	YellPull 				= "짐승의 대장을 칠 때가 곧 다가올 거예요! 놈의 졸개들에게 노여움과 미움을 쏟아부으세요!",
 	YellPhase2 				= "나는, 살아 있는 꿈이다.",
-	Sara 					= "사라",
-	WarningYellSqueeze		= "압착의 촉수에 붙잡혔어요! 살려주세요!"
+	Sara 					= "사라"
 }

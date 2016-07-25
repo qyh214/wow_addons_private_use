@@ -274,7 +274,7 @@ function mod:OnEnable()
 		storedName = {}
 		local _, n = BNGetNumFriends()
 		for i=1, n do
-			local _, _, _, toon, id = BNGetFriendInfo(i)
+			local _, _, _, _, toon, id = BNGetFriendInfo(i)
 			storedName[id] = toon
 		end
 	end
@@ -421,7 +421,7 @@ end
 	Taken from Basic Chat Mods since funkeh already did the work
 --]]
 local function changeBNetName(misc, id, moreMisc, fakeName, tag, colon)
-	local _, charName, _, _, _, _, _, localizedClass = BNGetToonInfo(id)
+	local _, charName, _, _, _, _, _, localizedClass = BNGetGameAccountInfo(id)
 	if charName ~= "" then
 		if storedName then storedName[id] = charName end --Store name for logoff events, if enabled
 		--Replace real name with charname if enabled

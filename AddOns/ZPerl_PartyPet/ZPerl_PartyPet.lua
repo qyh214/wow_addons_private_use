@@ -2,9 +2,9 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-local XPerl_Party_Pet_Events = {}
+local XPerl_Party_Pet_Events = { }
 local conf, pconf, petconf
-XPerl_PartyPetFrames = {}
+XPerl_PartyPetFrames = { }
 local PartyPetFrames = XPerl_PartyPetFrames
 XPerl_RequestConfig(function(New)
 	conf = New
@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(New)
 	for k, v in pairs(PartyPetFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 974 $")
+end, "$Revision: 997 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -39,11 +39,7 @@ function XPerl_Party_Pet_OnLoadEvents(self)
 	}
 
 	for i, event in pairs(events) do
-		if string.find(event, "^UNIT_") then
-			self:RegisterUnitEvent(event, "party1pet", "party2pet", "party3pet", "party4pet")
-		else
-			self:RegisterEvent(event)
-		end
+		self:RegisterEvent(event)
 	end
 
 	-- Set here to reduce amount of function calls made

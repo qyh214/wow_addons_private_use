@@ -1749,7 +1749,8 @@ function TitanUtils_GetPlayer()
 
 	if (playerName == nil
 	or serverName == nil
-	or playerName == UNKNOWNOBJECT
+--	Removed the following because people are using "Unknown" as a character name.
+--	or playerName == UNKNOWNOBJECT
 	or playerName == UKNOWNBEING) then
 		-- Do nothing if player name is not available
 	else

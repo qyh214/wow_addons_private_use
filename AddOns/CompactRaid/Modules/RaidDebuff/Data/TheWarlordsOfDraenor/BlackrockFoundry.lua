@@ -16,6 +16,7 @@ local BOSS
 BOSS = 1161
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 155326)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 162322, 5)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 155506)
 
 -- Oregorger
 BOSS = 1202

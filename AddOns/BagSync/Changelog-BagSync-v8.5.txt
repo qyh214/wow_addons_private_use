@@ -1,0 +1,16 @@
+tag v8.5
+d40c4ce3ac102680c41061379fb9043689023915
+Xruptor <xruptor@manaflux.com>
+2016-07-24 09:52:36 -0400
+
+
+
+--------------------
+
+Xruptor:
+	- Updated for Legion Updating TOC and Merging all fixes for Legion.
+	- LFGDungeon Frame Fix Small change to prevent error on LFGDungeon Frame when hovering over a Savage Satchel of Cooperation.  (Thanks to @jsutan from GitHub)
+Hendrik Leppkes:
+	- Update TradeSkill API
+	- Ignore Dalaran Hearthstone
+	- Don't error out when no item id could be parsed

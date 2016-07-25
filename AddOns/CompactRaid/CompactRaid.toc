@@ -1,13 +1,13 @@
-## Interface: 60200
+## Interface: 70000
 ## Title: CompactRaid
-## Version: 4.13
+## Version: 4.15
 ## Author: Abin
 ## SavedVariables: CompactRaidDB
 ## SavedVariablesPerCharacter: CompactRaidCharDB
 ## OptionalDeps: Clique, TomTom
 ## X-Category: UnitFrame
 ## X-eMail: abinn32@yahoo.com
-## X-Curse-Packaged-Version: v4.13
+## X-Curse-Packaged-Version: v4.15
 ## X-Curse-Project-Name: CompactRaid
 ## X-Curse-Project-ID: compactraid
 ## X-Curse-Repository-ID: wow/compactraid/mainline

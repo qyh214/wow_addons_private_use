@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KaelThas", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 585 $"):sub(12, -3))
 mod:SetCreatureID(19622)
 mod:SetModelID(20023)
 mod:SetZone()
@@ -57,6 +57,8 @@ local timerShieldCD		= mod:NewCDTimer(60, 36815, nil, nil, nil, 4)
 local timerGravityCD	= mod:NewNextTimer(92, 35941, nil, nil, nil, 6)
 local timerGravity		= mod:NewBuffActiveTimer(32, 35941, nil, nil, nil, 6)
 
+local countdownPhase	= mod:NewCountdown(105, 190978)
+
 mod:AddBoolOption("HealthFrame", true)
 mod:AddBoolOption("MCIcon", true)
 mod:AddBoolOption("GazeIcon", false)
@@ -86,6 +88,7 @@ function mod:OnCombatStart(delay)
 	shieldDown = false
 	phase5 = false
 	timerPhase1mob:Start(32, L.Thaladred)
+	countdownPhase:Start(32)
 	if DBM.BossHealth:IsShown() then
 		DBM.BossHealth:Clear()
 		DBM.BossHealth:Show(L.name)
@@ -243,18 +246,22 @@ end
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.YellSang or msg:find(L.YellSang) then
 		timerPhase1mob:Start(12.5, L.Sanguinar)
+		countdownPhase:Start(12.5)
 		DBM.BossHealth:AddBoss(20060, L.Sanguinar)
 	elseif msg == L.YellCaper or msg:find(L.YellCaper) then
 		timerPhase1mob:Start(7, L.Capernian)
+		countdownPhase:Start(7)
 		DBM.BossHealth:AddBoss(20062, L.Capernian)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show()
 		end
 	elseif msg == L.YellTelo or msg:find(L.YellTelo) then
 		timerPhase1mob:Start(8.4, L.Telonicus)
+		countdownPhase:Start(8.4)
 		DBM.BossHealth:AddBoss(20063, L.Telonicus)
 	elseif msg == L.YellPhase2 or msg:find(L.YellPhase2) then
 		timerPhase:Start(105)
+		countdownPhase:Start()
 		warnPhase2:Show()
 		warnPhase3:Schedule(105)
 		DBM.BossHealth:AddBoss(21268, L.Bow)
@@ -274,11 +281,13 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 			DBM.BossHealth:AddBoss(20062, L.Capernian)
 			DBM.BossHealth:AddBoss(20063, L.Telonicus)
 			timerPhase:Start(173)
+			countdownPhase:Start(173)
 		end)
 	elseif msg == L.YellPhase4 or msg:find(L.YellPhase4) then
 		DBM.BossHealth:AddBoss(19622, L.name)
 		warnPhase4:Show()
 		timerPhase:Cancel()
+		countdownPhase:Cancel()
 		timerPhoenixCD:Start(50)
 		timerShieldCD:Start(60)
 	elseif msg == L.YellPhase5 or msg:find(L.YellPhase5) then
@@ -286,6 +295,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerPhoenixCD:Cancel()
 		timerShieldCD:Cancel()
 		timerPhase:Start(45)
+		countdownPhase:Start(45)
 		warnPhase5:Schedule(45)
 		timerGravityCD:Start(60)
 		timerPhoenixCD:Start(137)

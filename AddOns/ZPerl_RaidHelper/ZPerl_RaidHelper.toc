@@ -1,4 +1,4 @@
-﻿## Interface: 60200
+﻿## Interface: 70000
 ## Author: Resike
 ## Title: Z-Perl |cffeda55fRaid Helper|r
 ## Title-itIT: Z-Perl |cffeda55fAiutante Incursione|r
@@ -13,8 +13,8 @@
 ## Notes-zhTW: 整合 CTRA MT目標視窗另增加額外功能, 以及提供協助框架
 ## SavedVariablesPerCharacter: ZPerlConfigHelper, ZPerl_MainTanks
 ## RequiredDeps: ZPerl
-## X-Curse-Packaged-Version: r991
-## X-Curse-Project-Name: Z-Perl UnitFrames
+## X-Curse-Packaged-Version: r1002
+## X-Curse-Project-Name: Z-Perl Unit Frames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline
 

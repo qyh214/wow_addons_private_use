@@ -1,0 +1,8 @@
+2016-07-23  sylvanaar  <sylvanaar@mindspring.com>
+
+[0413c95a9800] [3.4.28]
+* ACP.lua:
+
+Undo the scaling change which is unpopular with some folks
+
+

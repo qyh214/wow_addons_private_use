@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(139, "DBM-BaradinHold", nil, 74)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
 mod:SetCreatureID(47120)
 mod:SetEncounterID(1033)
 mod:DisableEEKillDetection()
@@ -28,11 +28,11 @@ local specWarnMeteorSlash	= mod:NewSpecialWarningSpell(88942, "Tank")
 local specWarnFirestormCast	= mod:NewSpecialWarningSpell(88972, nil, nil, nil, true)
 local specWarnFirestorm		= mod:NewSpecialWarningMove(89000)
 
-local timerConsuming		= mod:NewBuffFadesTimer(15, 88954)
-local timerConsumingCD		= mod:NewCDTimer(24, 88954)
-local timerMeteorSlash		= mod:NewNextTimer(15, 88942)
-local timerFirestorm		= mod:NewBuffActiveTimer(15, 88972)
-local timerFirestormCast	= mod:NewCastTimer(3, 88972)
+local timerConsuming		= mod:NewBuffFadesTimer(15, 88954, nil, "Healer", 2, 5, nil, DBM_CORE_HEALER_ICON..DBM_CORE_MAGIC_ICON)
+local timerConsumingCD		= mod:NewCDTimer(24, 88954, nil, "Healer", 2, 5, nil, DBM_CORE_HEALER_ICON)
+local timerMeteorSlash		= mod:NewNextTimer(15, 88942, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerFirestorm		= mod:NewBuffActiveTimer(15, 88972, nil, nil, nil, 6)
+local timerFirestormCast	= mod:NewCastTimer(3, 88972, nil, nil, nil, 2)
 
 local berserkTimer			= mod:NewBerserkTimer(300)
 

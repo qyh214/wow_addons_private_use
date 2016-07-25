@@ -2,13 +2,13 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 983 $")
+XPerl_SetModuleRevision("$Revision: 1002 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
-local WoWclassCount = 0
-for k, v in pairs(localGroups) do
+local WoWclassCount = 11
+--[[for k, v in pairs(localGroups) do
 	WoWclassCount = WoWclassCount + 1
-end
+end]]
 
 
 function XPerl_OptionsFrame_DisableSlider(slider)
@@ -1040,7 +1040,7 @@ local function SetClassNames(self)
 	ValidateClassNames(XPerlDB.raid)
 
 	local prefix = self:GetParent():GetParent():GetName().."_"
-	for i = 1,WoWclassCount do
+	for i = 1, WoWclassCount do
 		local f = _G[prefix.."ClassSel"..i.."_EnableText"]
 		if (f) then
 			local class = XPerlDB.raid.class[i].name
@@ -2597,6 +2597,9 @@ function XPerl_DefaultBarColours()
 		rage		= {r = 1, g = 0, b = 0},
 		focus		= {r = 1, g = 0.5, b = 0.25},
 		runic_power	= {r = 0, g = 0.82, b = 1},
+		fury		= {r = 0.788, g = 0.259, b = 0.992},
+		insanity	= {r = 0.4, g = 0, b = 0.8},
+		maelstrom	= {r = 0, g = 0.5, b = 1},
 	}
 end
 
@@ -3091,11 +3094,43 @@ if (XPerl_UpgradeSettings) then
 				end
 			end
 
+			if (not old.colour.bar.absorb or old.colour.bar.absorb[1]) then
+				old.colour.bar.absorbs = {r = 0.14, g = 0.33, b = 0.7, a = 0.7}
+			end
+
+			if (not old.colour.bar.healprediction or old.colour.bar.healprediction[1]) then
+				old.colour.bar.healprediction = {r = 0, g = 1, b = 1, a = 1}
+			end
+
 			if (not old.colour.bar.runic_power or old.colour.bar.runic_power[1]) then
 				if (PowerBarColor) then
-					old.colour.bar.runic_power	= {r = PowerBarColor["RUNIC_POWER"].r, g = PowerBarColor["RUNIC_POWER"].g, b = PowerBarColor["RUNIC_POWER"].b}
+					old.colour.bar.runic_power = {r = PowerBarColor["RUNIC_POWER"].r, g = PowerBarColor["RUNIC_POWER"].g, b = PowerBarColor["RUNIC_POWER"].b}
 				else
-					old.colour.bar.runic_power	= {r = 1, g = 0.25, b = 1}
+					old.colour.bar.runic_power = {r = 1, g = 0.25, b = 1}
+				end
+			end
+
+			if (not old.colour.bar.insanity or old.colour.bar.insanity[1]) then
+				if (PowerBarColor) then
+					old.colour.bar.insanity = {r = PowerBarColor["INSANITY"].r, g = PowerBarColor["INSANITY"].g, b = PowerBarColor["INSANITY"].b}
+				else
+					old.colour.bar.insanity = {r = 0.4, g = 0, b = 0.8}
+				end
+			end
+
+			if (not old.colour.bar.fury or old.colour.bar.fury[1]) then
+				if (PowerBarColor) then
+					old.colour.bar.fury = {r = PowerBarColor["FURY"].r, g = PowerBarColor["FURY"].g, b = PowerBarColor["FURY"].b}
+				else
+					old.colour.bar.fury = {r = 0.788, g = 0.259, b = 0.992}
+				end
+			end
+
+			if (not old.colour.bar.maelstrom or old.colour.bar.maelstrom[1]) then
+				if (PowerBarColor) then
+					old.colour.bar.maelstrom = {r = PowerBarColor["MAELSTROM"].r, g = PowerBarColor["MAELSTROM"].g, b = PowerBarColor["MAELSTROM"].b}
+				else
+					old.colour.bar.maelstrom = {r = 0, g = 0.5, b = 1}
 				end
 			end
 
@@ -3276,22 +3311,15 @@ if (XPerl_UpgradeSettings) then
 				old.raidpet.warlock = nil
 			end
 
-			if (oldVersion < "4.1.3") then
-				old.colour.bar.absorb = { }
-				old.colour.bar.absorb.r = 0.14
-				old.colour.bar.absorb.g = 0.33
-				old.colour.bar.absorb.b = 0.7
-				old.colour.bar.absorb.a = 0.7
-				old.colour.bar.healprediction = { }
-				old.colour.bar.healprediction.r = 0
-				old.colour.bar.healprediction.g = 1
-				old.colour.bar.healprediction.b = 1
-				old.colour.bar.healprediction.a = 1
-			end
-
 			if (oldVersion < "4.1.7") then
 				if old.bar.fat == true then
 					old.bar.fat = 1
+				end
+			end
+
+			if (oldVersion < "4.3.2") then
+				if old.party.name == true then
+					old.party.name = 1
 				end
 			end
 		end

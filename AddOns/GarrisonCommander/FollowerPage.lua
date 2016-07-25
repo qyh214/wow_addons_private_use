@@ -144,10 +144,15 @@ function module:ShowUpgradeButtons(force)
 	end
 	local followerID=gf.followerID
 	local followerInfo = followerID and G.GetFollowerInfo(followerID);
-	local overTheTop=(gf.ItemWeapon.itemLevel + gf.ItemArmor.itemLevel) ==(GARRISON_FOLLOWER_MAX_ITEM_LEVEL *2)
+--	gf.ItemWeapon.itemLevel=674
+--	gf.ItemArmor.itemLevel=674
+	local overTheTop=(gf.ItemWeapon.itemLevel + gf.ItemArmor.itemLevel) >=(GARRISON_FOLLOWER_MAX_ITEM_LEVEL *2)
 	if (not overTheTop and  followerInfo and followerInfo.isCollected and not followerInfo.status and followerInfo.level == GARRISON_FOLLOWER_MAX_LEVEL ) then
 		ClearOverrideBindings(gf)
 		local binded={}
+		local currentType=""
+		local shown
+		local reuse
 		for i=#upgrades,1,-1 do
 			local tipo,itemID,level=strsplit(":",upgrades[i])
 			if not b[used] then
@@ -156,23 +161,32 @@ function module:ShowUpgradeButtons(force)
 			level=tonumber(level)
 			local A=b[used]
 			local qt=GetItemCount(itemID)
+--[===[@debug@
 			print(tipo,level)
+--@end-debug@]===]
 			repeat
 				if (qt>0) then
 					A:ClearAllPoints()
 					A.tipo=tipo
+					if tipo ~=currentType then
+						shown=false
+						currentType=tipo
+					end
 					local currentlevel=tipo:sub(1,1)=="w" and gf.ItemWeapon.itemLevel or  gf.ItemArmor.itemLevel
+					if currentlevel == GARRISON_FOLLOWER_MAX_ITEM_LEVEL then
+						break
+					end
 					if level > 600 and level <= currentlevel then
 						break -- Pointless item for this toon
 					end
 					if level<600 and level + currentlevel > GARRISON_FOLLOWER_MAX_ITEM_LEVEL then
-						break
+						if shown then
+							reuse=true
+						end
 					end
-					print("      ","used")
 					if (not binded[tipo]) then
 						binded[tipo]=true
 						local kb=GetBindingKey("GC" .. tipo:upper())
-						print("Binding",kb,"from","GC" .. tipo:upper(),"to",tipo)
 						if (kb ) then
 							SetOverrideBindingClick(gf,false,kb,A:GetName())
 							A.Shortcut:SetText(GetBindingText(kb,"",true))
@@ -182,13 +196,19 @@ function module:ShowUpgradeButtons(force)
 					else
 						A.Shortcut:SetText('')
 					end
-					used=used+1
-					if (tipo:sub(1,1)=="a") then
-						A:SetPoint("TOPLEFT",axpos,aypos)
-						aypos=aypos-45
+					shown=true
+					if reuse then
+						A=b[used-1]
+						reuse=false
 					else
-						A:SetPoint("TOPLEFT",wxpos,wypos)
-						wypos=wypos-45
+						used=used+1
+						if (tipo:sub(1,1)=="a") then
+							A:SetPoint("TOPLEFT",axpos,aypos)
+							aypos=aypos-45
+						else
+							A:SetPoint("TOPLEFT",wxpos,wypos)
+							wypos=wypos-45
+						end
 					end
 					A:SetSize(40,40)
 					A.Icon:SetSize(40,40)
@@ -200,7 +220,11 @@ function module:ShowUpgradeButtons(force)
 					A.Level:SetTextColor(C[c]())
 					A.Quantity:SetFormattedText("%d",qt)
 					A.Quantity:SetTextColor(C.Yellow())
-					A:SetFrameLevel(gf.Model:GetFrameLevel()+1)
+					if toc <70000 then
+						A:SetFrameLevel(gf.Model:GetFrameLevel()+1)
+					else
+						A:SetFrameLevel(20)
+					end
 					A.Quantity:Show()
 					A.Level:Show()
 					A:EnableMouse(true)

@@ -427,8 +427,7 @@ L:SetGeneralLocalization{
 L:SetMiscLocalization{
 	YellPull 			= "¡Pronto llegará la hora de golpear la cabeza del monstruo! ¡Centrad vuestra ira y odio en sus esbirros!",
 	YellPhase2	 		= "Soy un sueño lúcido.",
-	Sara 				= "Sara",
-	WarningYellSqueeze	= "¡Exprimir en mi! ¡Ayudadme!"
+	Sara 				= "Sara"
 }
 
 L:SetWarningLocalization{
@@ -459,7 +458,6 @@ L:SetOptionLocalization{
 	SetIconOnFearTarget				= "Poner iconos en los objetivos de $spell:63881",
 	SpecWarnFervorCast				= "Mostrar aviso especial cuando $spell:63138 esté siendo casteado en ti/n(Tiene que ser el objetivo o el foco de al menos un personaje de la banda)",
 	specWarnBrainPortalSoon			= "Mostrar aviso especial para siguiente Portal cerebral",
-	WarningSqueeze					= "Gritar si te afecta Exprimir",
 	NextPortal						= "Mostrar tiempo para siguiente Portal cerebral",
 	SetIconOnFervorTarget			= "Poner iconos en los objetivos de $spell:63138",
 	ShowSaraHealth					= "Mostrar barra de vida de Sara en Fase 1",

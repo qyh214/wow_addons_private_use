@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ToTTrash", "DBM-ThroneofThunder")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 63 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 87 $"):sub(12, -3))
 mod:SetModelID(47785)
 mod:SetZone()
 
@@ -16,38 +16,23 @@ mod:RegisterEvents(
 
 local warnStormEnergy			= mod:NewTargetAnnounce(139322, 4)
 local warnSpiritFire			= mod:NewTargetAnnounce(139895, 3)--This is morchok entryway trash that throws rocks at random poeple.
-local warnShadowNova			= mod:NewCastAnnounce(139899, 4)
 local warnStormCloud			= mod:NewTargetAnnounce(139900, 4)
 local warnFixated				= mod:NewSpellAnnounce(140306, 3)
-local warnConductiveShield		= mod:NewTargetAnnounce(140296, 4)
 
 local specWarnStormEnergy		= mod:NewSpecialWarningYou(139322)
-local specWarnShadowNova		= mod:NewSpecialWarningRun(139899, "Melee", nil, nil, 3)--This hurls you pretty damn far. If you aren't careful you're as good as gone.
+local specWarnShadowNova		= mod:NewSpecialWarningRun(139899, nil, nil, 2, 4)--This hurls you pretty damn far. If you aren't careful you're as good as gone.
 local specWarnStormCloud		= mod:NewSpecialWarningYou(139900)
 local specWarnSonicScreech		= mod:NewSpecialWarningInterrupt(136751)
 local specWarnConductiveShield	= mod:NewSpecialWarningTarget(140296)
 
-local timerSpiritfireCD			= mod:NewCDTimer(12, 139895)
-local timerShadowNovaCD			= mod:NewCDTimer(12, 139899)
-local timerFixatedCD			= mod:NewNextTimer(15, 140306)
+local timerSpiritfireCD			= mod:NewCDTimer(12, 139895, nil, nil, nil, 3)
+local timerShadowNovaCD			= mod:NewCDTimer(12, 139899, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerFixatedCD			= mod:NewNextTimer(15, 140306, nil, nil, nil, 3)
 local timerConductiveShield		= mod:NewTargetTimer(10, 140296)
-local timerConductiveShieldCD	= mod:NewCDSourceTimer(20, 140296)--On 25 man, it always 20, But 10 man, it variables.
+local timerConductiveShieldCD	= mod:NewCDSourceTimer(20, 140296, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)--On 25 man, it always 20, But 10 man, it variables.
 
 mod:RemoveOption("HealthFrame")
 mod:AddBoolOption("RangeFrame")
-
-local stormEnergyTargets = {}
-local stormCloudTargets = {}
-
-local function warnStormEnergyTargets()
-	warnStormEnergy:Show(table.concat(stormEnergyTargets, "<, >"))
-	table.wipe(stormEnergyTargets)
-end
-
-local function warnStormCloudTargets()
-	warnStormCloud:Show(table.concat(stormCloudTargets, "<, >"))
-	table.wipe(stormCloudTargets)
-end
 
 local function hideRangeFrame()
 	DBM.RangeCheck:Hide()
@@ -78,7 +63,6 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 136751 and (args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus")) then
 		specWarnSonicScreech:Show(args.sourceName)
 	elseif spellId == 139899 then
-		warnShadowNova:Show()
 		specWarnShadowNova:Show()
 		timerShadowNovaCD:Start()
 	end
@@ -88,27 +72,22 @@ function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 139322 then--Or 139559, not sure which
-		stormEnergyTargets[#stormEnergyTargets + 1] = args.destName
+		warnStormEnergy:CombinedShow(1.5, args.destName)
 		if args:IsPlayer() then
 			specWarnStormEnergy:Show()
 		end
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(10)
 		end
-		self:Unschedule(warnStormEnergyTargets)
-		self:Schedule(1.5, warnStormEnergyTargets)--For some reason debuffs can go out as slow as 1.2, set to 1.5 in case it can get even worse then that
 	elseif spellId == 139900 then
-		stormCloudTargets[#stormCloudTargets + 1] = args.destName
+		warnStormCloud:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnStormCloud:Show()
 		end
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(10)
 		end
-		self:Unschedule(warnStormCloudTargets)
-		self:Schedule(0.5, warnStormCloudTargets)
 	elseif spellId == 140296 then
-		warnConductiveShield:Show(args.destName)
 		timerConductiveShield:Start(nil, args.destName)
 		timerConductiveShieldCD:Start(20, args.destName, args.sourceGUID)
 		if self:AntiSpam(3, 2) then

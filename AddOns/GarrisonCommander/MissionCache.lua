@@ -22,15 +22,79 @@ local newcache=true
 local rushOrders="interface\\icons\\inv_scroll_12.blp"
 local rawget=rawget
 local time=time
+local tostring,GetSpecializationInfo,GetSpecialization=tostring,GetSpecializationInfo,GetSpecialization
 local empty={}
 local index={}
 local classes
 -- Mission caching is a bit different fron follower caching mission appears and disappears on a regular basis
 local module=addon:NewSubClass('MissionCache') --#module
+
+function addon:GetContainedItems(itemID,spec)
+	spec=spec or GetSpecializationInfo(GetSpecialization())
+	itemID=tostring(itemID)
+	local rc,data=false,allRewards[itemID]
+	if type(data)=="string" then
+		rc,data=self:Deserialize(data) -- Deserialize wants a string
+		if rc then
+			allRewards[itemID]=data
+		else
+			data=false
+		end
+	end
+	if type(data)=="table" then
+		data=data[tostring(spec)] or data['*'] or false
+	end
+	return data
+end
 function module:OnInitialized()
 --[===[@debug@
 	print("OnInitialized")
 --@end-debug@]===]
+	--Building price function
+	--> has auction addons installed?
+	local appraisers={}
+	local trash={}
+	if _G.AucAdvanced then
+		appraisers.AUC=_G.AucAdvanced.API.GetMarketValue
+	end
+	if _G.Atr_GetAuctionBuyout then
+		appraisers.ATR=Atr_GetAuctionBuyout
+	end
+	if _G.TSMAPI then
+		appraisers.TSM=function(itemlink) return TSMAPI:GetItemValue(itemlink,"DBMarket") end
+	end
+	if _G.TUJMarketInfo then
+		appraisers.TUY=function(itemlink) TUJMarketInfo(itemlink,trash) return trash['market'] end
+	end
+	if _G.GetAuctionBuyout then
+		appraisers.AH=GetAuctionBuyout
+	end
+	local function GetMarketValue(self,itemId)
+		local rc,price,source=true,0,"Unk"
+		local itemlink=select(2,GetItemInfo(itemId))
+		if itemlink then
+			if not I:IsBop(itemlink) then
+				for i,k in pairs(appraisers) do
+					addon.AuctionPrices=true
+					rc,price=pcall(k,itemId)
+					if rc and price and price >0 then
+						source=i
+						break
+					end
+					price=0
+				end
+			end
+			local vendorprice=tonumber(select(11,GetItemInfo(itemId))) or 0
+			if price >vendorprice then
+				return price,source
+			else
+				return vendorprice,'Vendor'
+			end
+		else
+			return price,source
+		end
+	end
+	addon.GetMarketValue=GetMarketValue
 end
 local function scan(t,s)
 	if type(t)=="table" then
@@ -63,6 +127,8 @@ function module:GetMission(id,noretry)
 	return self:GetMission(id,true)
 end
 function module:AddExtraData(mission)
+	--print(mission.missionID,mission.creates)
+	if mission.class then return end
 	local rewards=mission.rewards
 	if not rewards then
 		rewards=G.GetMissionRewardInfo(mission.missionID)
@@ -70,126 +136,86 @@ function module:AddExtraData(mission)
 	for i=1,#classes do
 		mission[classes[i].key]=0
 	end
+	local spec=GetSpecializationInfo(GetSpecialization())
 	mission.numrewards=0
 	mission.xpBonus=0
+	mission.moreClasses=mission.moreClasses or {}
+	wipe(mission.moreClasses)
+	mission.class=nil
+--[===[@debug@
+	local dbg=461
+--@end-debug@]===]
+	if mission.missionID == dbg then print("Extradata loading for ",mission.name) end
 	for k,v in pairs(rewards) do
 		if k==615 and v.followerXP then mission.xpBonus=mission.xpBonus+v.followerXP end
 		mission.numrewards=mission.numrewards+1
+		if mission.missionID == dbg then DevTools_Dump(v) end
 		for i,c in ipairs(classes) do
+			--[===[@debug@
+			if mission.missionID == dbg then print("Checking for class",c.key) end
+			--@end-debug@]===]
 			local value=c.func(c,k,v)
+			--[===[@debug@
+			if mission.missionID == dbg then print("Returned:",value) end
+			--@end-debug@]===]
 			if value then
-				mission[c.key]=mission[c.key]+value
-				if  not mission.class or mission.class=="xp" then
+				if not mission.class  then
+					mission[c.key]=mission[c.key]+value
 					mission.class=c.key
 					mission.maxable=c.maxable
 					mission.mat=c.mat
+				elseif mission.class ~= c.key  and c.key ~= "other" then
+					mission.moreClasses[c.key]=tonumber(mission.moreClasses[c.key] or 0) + value
 				end
+				if spec and v.itemID then
+					local sellvalue=0
+					local data=self:GetContainedItems(v.itemID,spec)
+					if data then
+						mission.bestItemID=v.itemID
+						local count=0
+						for i=1,#data do
+							local c,k,l=strsplit('@',data[i])
+							c=tonumber(c) or 1
+							k=tonumber(k)
+							if (tonumber(c) or 1) >= count then
+								local val,auction=self:GetMarketValue(k)
+								if count<c or (val and val > sellvalue) then
+									count=c
+									sellvalue=val
+									mission.bestItemID=k
+									mission.bestItemIDAuction=auction
+								end
+							end
+						end
+					else
+						sellvalue=self:GetMarketValue(v.itemID)
+					end
+					--[===[@debug@
+					if mission.missionID == dbg then print("Market value",sellvalue) end
+					--@end-debug@]===]
+					if not tonumber(sellvalue) then
+						print(mission.missionID,"sellvalue for",v.itemID,"was non numeric:",sellvalue)
+						sellvalue=0
+					end
+					if sellvalue > 0 then
+						mission.moreClasses.gold=(mission.moreClasses.gold or 0) + sellvalue * (v.quantity)
+					end
+				end
+				--[===[@debug@
+				if mission.missionID == dbg then print("Current gold",mission.gold,"moreclass gold",mission.moreClasses.gold) end
+				--@end-debug@]===]
 				break
 			end
 		end
 	end
-end
-function module:AddExtraDataOld(mission)
-	mission.rank=mission.level < GARRISON_FOLLOWER_MAX_LEVEL and mission.level or mission.iLevel
-	mission.resources=0
-	mission.oil=0
-	mission.apexis=0
-	mission.seal=0
-	mission.gold=0
-	mission.followerUpgrade=0
-	mission.itemLevel=0
-	mission.xpBonus=0
-	mission.others=0
-	mission.xp=mission.xp or 0
-	mission.rush=0
-	mission.chanceCap=100
-	mission.primalspirit=0
-	local numrewards=0
-	local rewards=mission.rewards
-	if not rewards then
-		rewards=G.GetMissionRewardInfo(mission.missionID)
+	for k,v in pairs(mission.moreClasses) do
+		if not mission.class then mission.class=k end
+		mission[k]=mission[k]+v
 	end
-	for k,v in pairs(rewards) do
-		numrewards=numrewards+1
-		if k==615 and v.followerXP then mission.xpBonus=mission.xpBonus+v.followerXP end
-		if v.currencyID and v.currencyID==GARRISON_CURRENCY then mission.resources=v.quantity end
-		if v.currencyID and v.currencyID==GARRISON_SHIP_OIL_CURRENCY then mission.oil=v.quantity end
-		if v.currencyID and v.currencyID==823 then mission.apexis =mission.apexis+v.quantity end
-		if v.currencyID and v.currencyID==994 then mission.seal =mission.seal+v.quantity end
-		if v.currencyID and v.currencyID==0 then mission.gold =mission.gold+v.quantity/10000 end
-		if v.icon=="Interface\\Icons\\XPBonus_Icon" and v.followerXP then
-			mission.xpBonus=mission.xpBonus+v.followerXP
-		elseif (v.itemID) then
-			if v.itemID==120205 then -- xp item
-			elseif v.itemID==120945 then -- Primal Spirit
-					mission.primalspirit=v.quantity
-			else
-				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(v.itemID)
-				if (not itemName or not itemTexture) then
-					mission.class="retry"
-					return
-				end
-				if itemTexture:lower()==rushOrders then
-					mission.rush=mission.rush+v.quantity
-				elseif itemName and (not v.quantity or v.quantity==1) and not v.followerXP then
-					itemLevel=addon:GetTrueLevel(v.itemID,itemLevel)
-					if (addon:IsFollowerUpgrade(v.itemID)) then
-						mission.followerUpgrade=itemRarity
-					elseif itemLevel > 500 and itemMinLevel >=90 then
-						mission.itemLevel=itemLevel
-					elseif itemLevel >=655 then
-						mission.itemLevel=itemLevel
-					else
-						mission.others=mission.others+v.quantity
-					end
-				else
-					mission.others=mission.others+v.quantity
-				end
-			end
-		end
-	end
-	mission.xpOnly=false
-	if mission.resources > 0 then
-		mission.class='resources'
-		mission.maxable=true
-		mission.mat=true
-	elseif mission.oil > 0 then
-		mission.class='oil'
-		mission.maxable=true
-		mission.mat=true
-	elseif mission.apexis > 0 then
-		mission.class='apexis'
-		mission.maxable=true
-		mission.mat=true
-	elseif mission.primalspirit > 0 then
-		mission.class='primalspirit'
-		mission.maxable=false
-		mission.mat=false
-	elseif mission.seal > 0 then
-		mission.class='seal'
-		mission.maxable=fase
-		mission.mat=false
-	elseif mission.gold >0 then
-		mission.class='gold'
-		mission.maxable=true
-		mission.mat=true
-	elseif mission.itemLevel >0 then
-		mission.class='itemLevel'
-	elseif mission.followerUpgrade>0 then
-		mission.class='followerUpgrade'
-	elseif mission.rush>0 then
-		mission.class='rush'
-	elseif mission.others >0 or numrewards > 1 then
-		mission.class='other'
-	else
-		mission.class='xp'
-		mission.xpOnly=true
-	end
-	if (mission.numFollowers) then
-		local partyXP=tonumber(addon:GetParty(mission.missionID,'xpBonus',0))
-		mission.globalXp=(mission.xp+mission.xpBonus+partyXP)*mission.numFollowers
-	end
-
+--[===[@debug@
+	if mission.missionID == dbg then print("Final gold",mission.gold) DevTools_Dump(mission.moreClasses)end
+--@end-debug@]===]
+	if not mission.class then mission.class="other" end
 end
 function module:GetMissionIterator(followerType)
 	local list
@@ -211,11 +237,17 @@ print("Iterator called, list is",list)
 end
 function module:OnAllGarrisonMissions(func,inProgress,missionType)
 	local list=inProgress and GMFMissions.inProgressMissions or GMFMissions.availableMissions
+	local tmp=addon:NewTable()
 	if type(list)=='table' then
 		for i=1,#list do
-			func(list[i].missionID)
+			tinsert(tmp,list[i].missionID)
+		end
+		list=nil --we no longer need this reference
+		for i=1,#tmp do
+			func(tmp[i])
 		end
 	end
+	addon:DelTable(tmp)
 end
 
 -- Old cache to be removed
@@ -255,7 +287,15 @@ function addon:GetMissionData(missionID,key,default)
 			self:AddExtraData(mission)
 	end
 	if not mission then
-		mission=self:GetModule("MissionCompletion"):GetMission(missionID)
+		local good,mc=pcall(self.GetModule,self,"MissionCompletion")
+		if good then
+			mission=mc:GetMission(missionID)
+--[===[@debug@
+		else
+			print(missionID,mc)
+
+--@end-debug@]===]
+		end
 		if mission then
 			if type(mission.improvedDurationSeconds)~='number' then
 				mission.improvedDurationSeconds=mission.durationSeconds
@@ -346,6 +386,19 @@ local function inList(self,id,reward)
 	end
 	return false
 end
+local function isOilMission(self,id,reward)
+	if reward.currencyID and reward.currencyID==GARRISON_SHIP_OIL_CURRENCY then
+		return reward.quantity or 1
+	elseif reward.itemID and tContains(self.list,reward.itemID) then
+		if reward.itemID==128316 then
+			return (reward.quantity or 1) * 250 -- barrel oil
+		else
+			return reward.quantity or 1
+		end
+	else
+		return false
+	end
+end
 local function isGearToken(self,id,reward)
 end
 local function isValid(self)
@@ -375,7 +428,7 @@ end
 classes={
 	newMissionType('xp',L['Follower experience'],'XPBonus_icon',false,false,nil,0),
 	newMissionType('resources',GetCurrencyInfo(GARRISON_CURRENCY),'inv_garrison_resource',true,true,nil,-GARRISON_CURRENCY),
-	newMissionType('oil',GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY),'garrison_oil',true,true,nil,-GARRISON_SHIP_OIL_CURRENCY),
+	newMissionType('oil',GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY),'garrison_oil',true,true,isOilMission,128316),
 	newMissionType('rush',L['Rush orders'],'INV_Scroll_12',false,false,nil,122595,122594,122596,122592,122590,122593,122591,122576),
 	newMissionType('apexis',GetCurrencyInfo(823),'inv_apexis_draenor',false,false,nil,-823),
 	newMissionType('seal',GetCurrencyInfo(994),'ability_animusorbs',false,false,nil,-994),

@@ -39,7 +39,7 @@ local locales = {
 
 
 locales.deDE["alert_anchor"] = "Beute Popups" -- Needs review
-locales.deDE["anchor"] = "Gruppen Würfe" -- Needs review
+locales.deDE["anchor"] = "Gruppenwürfe" -- Needs review
 locales.deDE["undecided"] = "Unentschlossen" -- Needs review
 
 

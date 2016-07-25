@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(332, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 161 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
 mod:SetCreatureID(56598)--56427 is Boss, but engage trigger needs the ship which is 56598
 --mod:SetEncounterID(1298)--Fires when ship get actual engage. need to adjust timer.
 mod:SetMainBossID(56427)
@@ -56,22 +56,22 @@ local specWarnSunderOther			= mod:NewSpecialWarningTarget(108043, "Tank")
 
 local timerCombatStart				= mod:NewCombatTimer(20.5)
 local timerAdd						= mod:NewTimer(61, "TimerAdd", 107752, nil, nil, 1)
-local timerHarpoonCD				= mod:NewCDTimer(6.5, 108038, nil, "Dps", nil, 5)--If you fail to kill drake until next drake spawning, timer do not match. So better to use cd timer for now.
-local timerHarpoonActive			= mod:NewBuffActiveTimer(20, 108038, nil, "Dps")--Seems to always hold at least 20 seconds, beyond that, RNG, but you always get at least 20 seconds before they "snap" free.
-local timerReloadingCast			= mod:NewCastTimer(10, 108039, nil, "Dps")
+local timerHarpoonCD				= mod:NewCDTimer(6.5, 108038, nil, "Dps", nil, 5, nil, DBM_CORE_DAMAGE_ICON)--If you fail to kill drake until next drake spawning, timer do not match. So better to use cd timer for now.
+local timerHarpoonActive			= mod:NewBuffActiveTimer(20, 108038, nil, "Dps", nil, 5, nil, DBM_CORE_DAMAGE_ICON)--Seems to always hold at least 20 seconds, beyond that, RNG, but you always get at least 20 seconds before they "snap" free.
+local timerReloadingCast			= mod:NewCastTimer(10, 108039, nil, "Dps", nil, 5, nil, DBM_CORE_DAMAGE_ICON)
 local timerTwilightOnslaught		= mod:NewCastTimer(7, 107588, nil, nil, nil, 5)
 local timerTwilightOnslaughtCD		= mod:NewNextCountTimer(35, 107588, nil, nil, nil, 5)
-local timerSapperCD					= mod:NewNextTimer(40, "ej4200", nil, nil, nil, 1, 107752)
-local timerDegenerationCD			= mod:NewCDTimer(8.5, 107558, nil, "Tank", nil, 5)--8.5-9.5 variation.
+local timerSapperCD					= mod:NewNextTimer(40, "ej4200", nil, nil, nil, 1, 107752, DBM_CORE_HEROIC_ICON)
+local timerDegenerationCD			= mod:NewCDTimer(8.5, 107558, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--8.5-9.5 variation.
 local timerBladeRushCD				= mod:NewCDTimer(15.5, 107595, nil, nil, nil, 3)
-local timerBroadsideCD				= mod:NewNextTimer(90, 110153)
+local timerBroadsideCD				= mod:NewNextTimer(90, 110153, nil, nil, nil, nil, nil, DBM_CORE_HEROIC_ICON)
 local timerRoarCD					= mod:NewCDTimer(18.5, 108044, nil, nil, nil, 2)--18.5~24 variables
 local timerTwilightFlamesCD			= mod:NewNextTimer(8, 108051, nil, nil, nil, 3)
 local timerShockwaveCD				= mod:NewCDTimer(23, 108046, nil, nil, nil, 3)
-local timerDevastateCD				= mod:NewCDTimer(8.5, 108042, nil, "Tank", nil, 5)
-local timerSunder					= mod:NewTargetTimer(30, 108043, nil, "Tank|Healer")
+local timerDevastateCD				= mod:NewCDTimer(8.5, 108042, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerSunder					= mod:NewTargetTimer(30, 108043, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerConsumingShroud			= mod:NewCDTimer(30, 110214, nil, nil, nil, 3)
-local timerTwilightBreath			= mod:NewCDTimer(20.5, 110212, nil, "Tank|Healer", nil, 5)
+local timerTwilightBreath			= mod:NewCDTimer(20.5, 110212, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
 
 local countdownTwilightOnslaught	= mod:NewCountdown(35, 107588)
 local countdownSapper				= mod:NewCountdown("Alt40", "ej4200")

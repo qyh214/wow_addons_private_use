@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(643, "DBM-Party-WotLK", 11, 286)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 197 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 229 $"):sub(12, -3))
 mod:SetCreatureID(26693)
 mod:SetEncounterID(581, 582)
 mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
@@ -20,11 +20,11 @@ mod:RegisterEventsInCombat(
 local warnPhase2		= mod:NewPhaseAnnounce(2)
 local warningPoison		= mod:NewTargetAnnounce(59331, 2)
 local warningWhirlwind	= mod:NewSpellAnnounce(59322, 3)
-local timerPoison		= mod:NewTargetTimer(12, 59331)
-local timerWhirlwindCD	= mod:NewCDTimer(23, 59322)
 
 local specWarnWhirlwind	= mod:NewSpecialWarningRun(59322, nil, nil, 2, 4)
 
+local timerPoison		= mod:NewTargetTimer(12, 59331)
+local timerWhirlwindCD	= mod:NewCDTimer(23, 59322)
 local timerAchieve		= mod:NewAchievementTimer(180, 1873, "TimerSpeedKill")
 
 function mod:SPELL_AURA_APPLIED(args)

@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(1438, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14777 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14971 $"):sub(12, -3))
 mod:SetCreatureID(91331)--Doomfire Spirit (92208), Hellfire Deathcaller (92740), Felborne Overfiend (93615), Dreadstalker (93616), Infernal doombringer (94412)
 mod:SetEncounterID(1799)
 mod:SetMinSyncRevision(13964)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
-mod:SetHotfixNoticeRev(14730)
+mod:SetHotfixNoticeRev(14830)
 mod.respawnTime = 29--roughly
 
 mod:RegisterCombat("combat")
@@ -28,8 +28,6 @@ mod:RegisterEventsInCombat(
 
 --(ability.id = 183254 or ability.id = 182225 or ability.id = 189897 or ability.id = 183817 or ability.id = 183828 or ability.id = 185590 or ability.id = 184265 or ability.id = 190506 or ability.id = 184931 or ability.id = 187180) and type = "begincast" or (ability.id = 183865) and type = "cast" or (ability.id = 186662 or ability.id = 186961) and (type = "applydebuff" or type = "applybuff")
 --(ability.id = 190394 or ability.id = 190686 or ability.id = 190821 or ability.id = 190506 or ability.id = 187108) and type = "begincast" or (ability.id = 188514) and type = "cast" or ability.id = 187108
---TODO, failsafes are at work for transitions i still don't have enough data for. for example, something seems to always cause the 2nd or 3rd fel burst to delay by a HUGE amount (20-30 seconds sometimes) but don't know what it is. Probalby phase transitions but it's not as simple as resetting timer. probably something more zon ozz
---TODO, figure out what to do with touch of the legion (190400)
 --Phase 1: The Defiler
 local warnDoomfireFixate			= mod:NewTargetAnnounce(182879, 3)
 local warnAllureofFlames			= mod:NewCastAnnounce(183254, 2)
@@ -60,10 +58,10 @@ local yellDoomfireFixate			= mod:NewYell(182826)--Use short name for yell
 local specWarnAllureofFlames		= mod:NewSpecialWarningDodge(183254, nil, nil, nil, 2, 2)
 local specWarnDeathCaller			= mod:NewSpecialWarningSwitchCount("ej11582", "Dps", nil, nil, 1, 2)--Tanks don't need switch, they have death brand special warning 2 seconds earlier
 local specWarnFelBurst				= mod:NewSpecialWarningYou(183817)
-local yellFelBurst					= mod:NewPosYell(183817)--Change yell to countdown mayeb when better understood
+local yellFelBurst					= mod:NewPosYell(183817)
 local specWarnFelBurstNear			= mod:NewSpecialWarningMoveTo(183817, nil, nil, nil, 1, 2)--Anyone near by should run in to help soak, should be mostly ranged but if it's close to melee, melee soaking too doesn't hurt
 local specWarnDesecrate				= mod:NewSpecialWarningDodge(185590, "Melee", nil, nil, 1, 2)
-local specWarnDeathBrand			= mod:NewSpecialWarningCount(183828, "Tank", nil, nil, 1, 2)
+local specWarnDeathBrand			= mod:NewSpecialWarningCount(183828, "Tank", nil, 2, 1, 2)
 --Phase 2: Hand of the Legion
 local specWarnBreakShackle			= mod:NewSpecialWarning("specWarnBreakShackle", nil, nil, nil, 1, 5)
 local yellShackledTorment			= mod:NewPosYell(184964)
@@ -72,7 +70,7 @@ local yellWroughtChaos				= mod:NewYell(186123)
 local specWarnFocusedChaos			= mod:NewSpecialWarningYou(185014, nil, nil, nil, 3, 5)
 local yellFocusedChaos				= mod:NewFadesYell(185014)
 local specWarnDreadFixate			= mod:NewSpecialWarningYou(186574, false)--In case it matters on mythic, it was spammy on heroic and unimportant
-local specWarnFlamesOfArgus			= mod:NewSpecialWarningInterrupt(186663, "-Healer", nil, nil, 1, 2)
+local specWarnFlamesOfArgus			= mod:NewSpecialWarningInterrupt(186663, "HasInterrupt", nil, 2, 1, 2)
 --Phase 3: The Twisting Nether
 local specWarnDemonicFeedbackSoon	= mod:NewSpecialWarningSoon(187180, nil, nil, nil, 1, 2)
 local specWarnDemonicFeedback		= mod:NewSpecialWarningCount(187180, nil, nil, nil, 3, 2)
@@ -121,16 +119,16 @@ mod:AddTimerLine(SCENARIO_STAGE:format(3))
 local timerDemonicFeedbackCD		= mod:NewCDCountTimer(35, 187180, nil, nil, nil, 2)
 local timerNetherBanishCD			= mod:NewCDCountTimer(61.9, 186961, nil, nil, nil, 5)
 --Phase 3.5:
-local timerRainofChaosCD			= mod:NewCDCountTimer(62, 182225, nil, nil, nil, 2)
+local timerRainofChaosCD			= mod:NewCDCountTimer(62, 182225, 23426, nil, nil, 2)
 ----The Nether
 --Mythic
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
-local timerDarkConduitCD			= mod:NewCDCountTimer(107, 190394, nil, "-Melee", 2, 3)
-local timerMarkOfLegionCD			= mod:NewCDCountTimer(107, 187050, nil, nil, nil, 3)
-local timerInfernalsCD				= mod:NewCDCountTimer(107, 187111, nil, nil, nil, 1, 1122)
-local timerSourceofChaosCD			= mod:NewCDCountTimer(107, 190703, nil, nil, 2, 1)
-local timerTwistedDarknessCD		= mod:NewCDCountTimer(107, 190821, nil, nil, nil, 1)
-local timerSeethingCorruptionCD		= mod:NewCDCountTimer(107, 190506, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerDarkConduitCD			= mod:NewNextCountTimer(107, 190394, nil, "-Melee", 2, 3)
+local timerMarkOfLegionCD			= mod:NewNextCountTimer(107, 187050, 28836, nil, nil, 3)
+local timerInfernalsCD				= mod:NewNextCountTimer(107, 187111, 23426, nil, nil, 1, 1122)
+local timerSourceofChaosCD			= mod:NewNextCountTimer(107, 190703, nil, nil, 2, 1)
+local timerTwistedDarknessCD		= mod:NewNextCountTimer(107, 190821, 189894, nil, nil, 1)
+local timerSeethingCorruptionCD		= mod:NewNextCountTimer(107, 190506, 66911, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 
 --local berserkTimer				= mod:NewBerserkTimer(360)
 
@@ -153,7 +151,7 @@ local voiceDoomfire					= mod:NewVoice(189897, "Dps")--189897
 local voiceDeathCaller				= mod:NewVoice("ej11582", "Dps")--ej11582
 local voiceWroughtChaos				= mod:NewVoice(186123) --new voice
 local voiceFocusedChaos				= mod:NewVoice(185014) --new voice
-local voiceFlamesofArgus			= mod:NewVoice(186663, "-Healer") --kickcast
+local voiceFlamesofArgus			= mod:NewVoice(186663, "HasInterrupt") --kickcast
 local voiceDemonicFeedback			= mod:NewVoice(186961) --spread/scatter
 local voiceAllureofFlames			= mod:NewVoice(183254) --watch step
 local voiceDesecrate				= mod:NewVoice(185590) --watch step
@@ -176,6 +174,7 @@ mod:AddHudMapOption("HudMapMarkofLegion2", 187050, true)
 mod:AddBoolOption("ExtendWroughtHud3", true)
 mod:AddBoolOption("NamesWroughtHud", true)
 mod:AddBoolOption("FilterOtherPhase", true)
+mod:AddBoolOption("overrideMarkOfLegion", false)
 mod:AddInfoFrameOption(184964)
 mod:AddDropdownOption("MarkBehavior", {"Numbered", "LocSmallFront", "LocSmallBack", "NoAssignment"}, "Numbered", "misc")
 
@@ -202,6 +201,7 @@ mod.vb.twistedDarknessCast = 0
 mod.vb.seethingCorruptionCount = 0
 mod.vb.darkConduit = false
 mod.vb.MarkBehavior = "Numbered"
+local localMarkBehavior = "Numbered"
 --Mythic sequence timers for phase 3 (Made by video, subject to inaccuracies until logs available)
 local legionTimers = {20, 63, 60, 60, 48, 46, 47}--All verified by log
 local darkConduitTimers = {8, 123, 95, 56, 52}-- All verified by log
@@ -317,7 +317,6 @@ local function setDemonicFeedback(self)
 	end
 end
 
-local iconedAssignments = {RAID_TARGET_1, RAID_TARGET_2, RAID_TARGET_3, RAID_TARGET_4}
 local function showMarkOfLegion(self, spellName)
 	--5,7,9,11 seconds. Sorted lowest to highest
 	--5, 7 on melee, 9, 11 on ranged (if enough alive anyways)
@@ -326,7 +325,7 @@ local function showMarkOfLegion(self, spellName)
 	--MELEE, RANGED, DBM_CORE_LEFT, DBM_CORE_RIGHT (http://puu.sh/jsyr5/7014c50cb3.jpg)
 	--Melee/ranged left/right is now the default since too many users felt weak aura's were required because running to icons by icon assignments was hard.
 	warnMarkOfLegion:Show(self.vb.markOfLegionCast, table.concat(legionTargets, "<, >"))
-	if self.vb.MarkBehavior == "NoAssignment" then return end
+	if localMarkBehavior == "NoAssignment" then return end
 	local playerHasMark = UnitDebuff("player", spellName)
 	for i = 1, #legionTargets do
 		local name = legionTargets[i]
@@ -335,12 +334,12 @@ local function showMarkOfLegion(self, spellName)
 		if not uId then break end
 		if i == 1 then
 			local number, position = i, MELEE
-			if self.vb.MarkBehavior == "LocSmallBack" then
+			if localMarkBehavior == "LocSmallBack" then
 				number, position = 3, RANGED
 			end
 			local message = position.."-"..DBM_CORE_LEFT
-			if self.vb.MarkBehavior == "Numbered" then
-				message = iconedAssignments[number]
+			if localMarkBehavior == "Numbered" then
+				message = self:IconNumToString(number)
 			end
 			if self.Options.SetIconOnMarkOfLegion2 then
 				self:SetIcon(name, number)
@@ -367,12 +366,12 @@ local function showMarkOfLegion(self, spellName)
 			end
 		elseif i == 2 then
 			local number, position = i, MELEE
-			if self.vb.MarkBehavior == "LocSmallBack" then
+			if localMarkBehavior == "LocSmallBack" then
 				number, position = 4, RANGED
 			end
 			local message = position.."-"..DBM_CORE_RIGHT
-			if self.vb.MarkBehavior == "Numbered" then
-				message = iconedAssignments[number]
+			if localMarkBehavior == "Numbered" then
+				message = self:IconNumToString(number)
 			end
 			if self.Options.SetIconOnMarkOfLegion2 then
 				self:SetIcon(name, number)
@@ -399,12 +398,12 @@ local function showMarkOfLegion(self, spellName)
 			end
 		elseif i == 3 then
 			local number, position = i, RANGED
-			if self.vb.MarkBehavior == "LocSmallBack" then
+			if localMarkBehavior == "LocSmallBack" then
 				number, position = 1, MELEE
 			end
 			local message = position.."-"..DBM_CORE_LEFT
-			if self.vb.MarkBehavior == "Numbered" then
-				message = iconedAssignments[number]
+			if localMarkBehavior == "Numbered" then
+				message = self:IconNumToString(number)
 			end
 			if self.Options.SetIconOnMarkOfLegion2 then
 				self:SetIcon(name, number)
@@ -431,12 +430,12 @@ local function showMarkOfLegion(self, spellName)
 			end
 		else
 			local number, position = i, RANGED
-			if self.vb.MarkBehavior == "LocSmallBack" then
+			if localMarkBehavior == "LocSmallBack" then
 				number, position = 2, MELEE
 			end
 			local message = position.."-"..DBM_CORE_RIGHT
-			if self.vb.MarkBehavior == "Numbered" then
-				message = iconedAssignments[number]
+			if localMarkBehavior == "Numbered" then
+				message = self:IconNumToString(number)
 			end
 			if self.Options.SetIconOnMarkOfLegion2 then
 				self:SetIcon(name, number)
@@ -465,13 +464,16 @@ local function showMarkOfLegion(self, spellName)
 	end
 	if not playerHasMark then
 		if UnitIsDeadOrGhost("player") then return end
+		local soakers = 0
+		local marks = #legionTargets or 4
 		for i = 1, DBM:GetNumRealGroupMembers() do
 			local unitID = 'raid'..i
-			local isPlayer = false
-			local soakers = 0
-			soakers = soakers + 1
+			if not UnitDebuff(unitID, spellName) then
+				soakers = soakers + 1
+			end
 			if UnitIsUnit("player", unitID) then
-				local soak = math.ceil(soakers/4)
+				DBM:Debug(soakers..", "..marks, 2)
+				local soak = math.ceil(soakers/marks)
 				if (soak == 1) then
 					specWarnMarkOfLegionSoak:Show(MELEE.." "..DBM_CORE_LEFT)
 					voiceMarkOfLegion:Play("frontleft")
@@ -600,14 +602,14 @@ local function updateAllTimers(self, ICD, AllureSpecial)
 			local elapsed, total = timerDoomfireCD:GetTime()
 			local extend = ICD - (total-elapsed)
 			DBM:Debug("timerDoomfireCD extended by: "..extend, 2)
-			timerDoomfireCD:Cancel()
+			timerDoomfireCD:Stop()
 			timerDoomfireCD:Update(elapsed, total+extend)
 		end
 		if not AllureSpecial and timerAllureofFlamesCD:GetRemaining() < ICD then
 			local elapsed, total = timerAllureofFlamesCD:GetTime()
 			local extend = ICD - (total-elapsed)
 			DBM:Debug("timerAllureofFlamesCD extended by: "..extend, 2)
-			timerAllureofFlamesCD:Cancel()
+			timerAllureofFlamesCD:Stop()
 			timerAllureofFlamesCD:Update(elapsed, total+extend)
 		end
 		if timerFelBurstCD:GetRemaining() < ICD then
@@ -615,14 +617,14 @@ local function updateAllTimers(self, ICD, AllureSpecial)
 			local extend = ICD - (total-elapsed)
 			DBM:Debug("timerFelBurstCD extended by: "..extend, 2)
 			warnFelBurstSoon:Cancel()
-			timerFelBurstCD:Cancel()
+			timerFelBurstCD:Stop()
 			timerFelBurstCD:Update(elapsed, total+extend)
 		end
 		if timerDeathbrandCD:GetRemaining(self.vb.deathBrandCount+1) < ICD then
 			local elapsed, total = timerDeathbrandCD:GetTime(self.vb.deathBrandCount+1)
 			local extend = ICD - (total-elapsed)
 			DBM:Debug("timerDeathbrandCD extended by: "..extend, 2)
-			timerDeathbrandCD:Cancel()
+			timerDeathbrandCD:Stop()
 			timerDeathbrandCD:Update(elapsed, total+extend, self.vb.deathBrandCount+1)
 			countdownDeathBrand:Cancel()
 			countdownDeathBrand:Start(ICD)
@@ -632,7 +634,7 @@ local function updateAllTimers(self, ICD, AllureSpecial)
 				local elapsed, total = timerDesecrateCD:GetTime()
 				local extend = ICD - (total-elapsed)
 				DBM:Debug("timerDesecrateCD extended by: "..extend, 2)
-				timerDesecrateCD:Cancel()
+				timerDesecrateCD:Stop()
 				timerDesecrateCD:Update(elapsed, total+extend)
 			end
 		end
@@ -641,14 +643,14 @@ local function updateAllTimers(self, ICD, AllureSpecial)
 			local elapsed, total = timerAllureofFlamesCD:GetTime()
 			local extend = ICD - (total-elapsed)
 			DBM:Debug("timerAllureofFlamesCD extended by: "..extend, 2)
-			timerAllureofFlamesCD:Cancel()
+			timerAllureofFlamesCD:Stop()
 			timerAllureofFlamesCD:Update(elapsed, total+extend)
 		end
 		if not AllureSpecial and timerShackledTormentCD:GetRemaining(self.vb.tormentCast+1) < ICD then
 			local elapsed, total = timerShackledTormentCD:GetTime(self.vb.tormentCast+1)
 			local extend = ICD - (total-elapsed)
 			DBM:Debug("timerShackledTormentCD extended by: "..extend, 2)
-			timerShackledTormentCD:Cancel()
+			timerShackledTormentCD:Stop()
 			timerShackledTormentCD:Update(elapsed, total+extend, self.vb.tormentCast+1)
 			countdownShackledTorment:Cancel()
 			countdownShackledTorment:Start(ICD)
@@ -657,14 +659,14 @@ local function updateAllTimers(self, ICD, AllureSpecial)
 			local elapsed, total = timerWroughtChaosCD:GetTime()
 			local extend = ICD - (total-elapsed)
 			DBM:Debug("timerWroughtChaosCD extended by: "..extend, 2)
-			timerWroughtChaosCD:Cancel()
+			timerWroughtChaosCD:Stop()
 			timerWroughtChaosCD:Update(elapsed, total+extend)
 		end
 		if timerDeathbrandCD:GetRemaining(self.vb.deathBrandCount+1) < ICD then
 			local elapsed, total = timerDeathbrandCD:GetTime(self.vb.deathBrandCount+1)
 			local extend = ICD - (total-elapsed)
 			DBM:Debug("timerDeathbrandCD extended by: "..extend, 2)
-			timerDeathbrandCD:Cancel()
+			timerDeathbrandCD:Stop()
 			timerDeathbrandCD:Update(elapsed, total+extend, self.vb.deathBrandCount+1)
 			countdownDeathBrand:Cancel()
 			countdownDeathBrand:Start(ICD)
@@ -674,7 +676,7 @@ local function updateAllTimers(self, ICD, AllureSpecial)
 			local elapsed, total = timerShackledTormentCD:GetTime(self.vb.tormentCast+1)
 			local extend = ICD - (total-elapsed)
 			DBM:Debug("timerShackledTormentCD extended by: "..extend, 2)
-			timerShackledTormentCD:Cancel()
+			timerShackledTormentCD:Stop()
 			timerShackledTormentCD:Update(elapsed, total+extend, self.vb.tormentCast+1)
 			countdownShackledTorment:Cancel()
 			countdownShackledTorment:Start(ICD)
@@ -683,7 +685,7 @@ local function updateAllTimers(self, ICD, AllureSpecial)
 			local elapsed, total = timerWroughtChaosCD:GetTime()
 			local extend = ICD - (total-elapsed)
 			DBM:Debug("timerWroughtChaosCD extended by: "..extend, 2)
-			timerWroughtChaosCD:Cancel()
+			timerWroughtChaosCD:Stop()
 			timerWroughtChaosCD:Update(elapsed, total+extend)
 		end
 		if timerDemonicFeedbackCD:GetRemaining(self.vb.demonicCount+1) < ICD then
@@ -691,7 +693,7 @@ local function updateAllTimers(self, ICD, AllureSpecial)
 			local extend = ICD - (total-elapsed)
 			DBM:Debug("timerDemonicFeedbackCD extended by: "..extend, 2)
 			specWarnDemonicFeedbackSoon:Cancel()
-			timerDemonicFeedbackCD:Cancel()
+			timerDemonicFeedbackCD:Stop()
 			timerDemonicFeedbackCD:Update(elapsed, total+extend, self.vb.demonicCount+1)
 			countdownDemonicFeedback:Cancel()
 			countdownDemonicFeedback:Start(ICD)
@@ -700,7 +702,7 @@ local function updateAllTimers(self, ICD, AllureSpecial)
 			local elapsed, total = timerNetherBanishCD:GetTime(self.vb.netherBanish2+1)
 			local extend = ICD - (total-elapsed)
 			DBM:Debug("timerNetherBanishCD extended by: "..extend, 2)
-			timerNetherBanishCD:Cancel()
+			timerNetherBanishCD:Stop()
 			timerNetherBanishCD:Update(elapsed, total+extend, self.vb.netherBanish2+1)
 			countdownNetherBanish:Cancel()
 			countdownNetherBanish:Start(ICD)
@@ -777,7 +779,7 @@ function mod:SPELL_CAST_START(args)
 			self.vb.deathBrandCount = self.vb.deathBrandCount + 1
 		end
 		specWarnDeathBrand:Show(self.vb.deathBrandCount)
-		timerDeathbrandCD:Cancel()
+		timerDeathbrandCD:Stop()
 		timerDeathbrandCD:Start(nil, self.vb.deathBrandCount+1)
 		countdownDeathBrand:Cancel()
 		countdownDeathBrand:Start()
@@ -899,12 +901,12 @@ function mod:SPELL_CAST_START(args)
 --		updateAllTimers(self, 7)--Inconclusive logs. Could not find any data supporting this extention
 	elseif spellId == 190313 then--Nether Ascention
 		playerBanished = true
-		timerAllureofFlamesCD:Cancel()
-		timerDeathbrandCD:Cancel()
-		timerShackledTormentCD:Cancel()
+		timerAllureofFlamesCD:Stop()
+		timerDeathbrandCD:Stop()
+		timerShackledTormentCD:Stop()
 		countdownShackledTorment:Cancel()
 		countdownDeathBrand:Cancel()
-		timerWroughtChaosCD:Cancel()
+		timerWroughtChaosCD:Stop()
 	end
 end
 
@@ -990,7 +992,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			if not self:IsMythic() then
 				specWarnFocusedChaos:Show()
 				voiceFocusedChaos:Play("185014")
-				yellFocusedChaos:Yell(5)
 				yellFocusedChaos:Schedule(3, 2)
 				yellFocusedChaos:Schedule(2, 3)
 				yellFocusedChaos:Schedule(1, 4)
@@ -1006,35 +1007,33 @@ function mod:SPELL_AURA_APPLIED(args)
 			else
 				time = 6
 			end
-			if self.Options.HudMapOnWrought then
+			if self.Options.HudMapOnWrought and args.sourceName and args.destName then
 				local sourceUId, destUId = DBM:GetRaidUnitId(args.sourceName), DBM:GetRaidUnitId(args.destName)
 				if not sourceUId or not destUId then return end--They left raid? prevent nil error. this will probably only happen in LFR
-				if UnitIsUnit("player", sourceUId) or UnitIsUnit("player", destUId) then--Player is in connection, green line
+				if UnitIsUnit("player", sourceUId) or UnitIsUnit("player", destUId) then--Player is in connection, yellow line
 					--create points for your own line
 					warnWroughtChaos:CombinedShow(0.1, self.vb.wroughtWarned, args.sourceName)
 					warnWroughtChaos:CombinedShow(0.1, self.vb.wroughtWarned, args.destName)
 					if UnitIsUnit("player", sourceUId) then
+						DBMHudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.7, time, nil, nil, nil, 1, nil, false):Appear()--Players own dot bigger (no label on player dot)
 						if self.Options.NamesWroughtHud then
-							DBMHudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.7, time, nil, nil, nil, 1, nil, false):Appear()--Players own dot bigger (no label on player dot)
 							DBMHudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.35, time, nil, nil, nil, 0.5, nil, false):Appear():SetLabel(args.destName, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
 						else
-							DBMHudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.7, time, nil, nil, nil, 1, nil, false):Appear()--Players own dot bigger
 							DBMHudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.35, time, nil, nil, nil, 0.5, nil, false):Appear()
 						end
 					else
+						DBMHudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.7, time, nil, nil, nil, 1, nil, false):Appear()--Players own dot bigger (no label on player dot)
 						if self.Options.NamesWroughtHud then
 							DBMHudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.35, time, nil, nil, nil, 0.5, nil, false):Appear():SetLabel(args.sourceName, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
-							DBMHudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.7, time, nil, nil, nil, 1, nil, false):Appear()--Players own dot bigger (no label on player dot)
 						else
 							DBMHudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.35, time, nil, nil, nil, 0.5, nil, false):Appear()
-							DBMHudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.7, time, nil, nil, nil, 1, nil, false):Appear()--Players own dot bigger
 						end
 					end
 					--create line
 					if self.Options.ExtendWroughtHud3 then
-						DBMHudMap:AddEdge(0, 1, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 135, nil, true)
+						DBMHudMap:AddEdge(1, 1, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 135, nil, true)
 					else
-						DBMHudMap:AddEdge(0, 1, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 135)
+						DBMHudMap:AddEdge(1, 1, 0, 0.5, time, args.sourceName, args.destName, nil, nil, nil, nil, 135)
 					end
 				else--red lines for non player lines
 					--Create Points
@@ -1257,12 +1256,13 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		table.wipe(felburstTargets)--Just to reduce infoframe overhead
 		--Cancel stuff only used in phase 1
 		warnFelBurstSoon:Cancel()
-		timerFelBurstCD:Cancel()
-		timerDesecrateCD:Cancel()
-		timerDoomfireCD:Cancel()
+		timerFelBurstCD:Stop()
+		timerDesecrateCD:Stop()
+		timerDoomfireCD:Stop()
 		--Cancel stuff that resets in phase 2
-		timerAllureofFlamesCD:Cancel()
-		timerDeathbrandCD:Cancel()
+		timerAllureofFlamesCD:Stop()
+		timerDeathbrandCD:Stop()
+		timerLightCD:Stop()
 		countdownDeathBrand:Cancel()
 		--Begin phase 2
 		warnPhase2:Show()
@@ -1280,13 +1280,13 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 --	"<301.70 23:49:52> [CHAT_MSG_MONSTER_YELL] CHAT_MSG_MONSTER_YELL#Lok'tar ogar! They are pushed back! To the portal! Gul'dan is mine!#Grommash Hellscream###Grommash H
 	elseif spellId == 190118 or spellId == 190310 then--Phase 3 trigger
 		self.vb.phase = 3
-		timerFelborneOverfiendCD:Cancel()
+		timerFelborneOverfiendCD:Stop()
 		warnPhase3:Show()
 		voicePhaseChange:Play("pthree")
 		if not self:IsMythic() then
-			timerAllureofFlamesCD:Cancel()--Done for rest of fight
-			timerDeathbrandCD:Cancel()--Done for rest of fight
-			timerShackledTormentCD:Cancel()--Resets to 55 on non mythic, no longer cast on mythic
+			timerAllureofFlamesCD:Stop()--Done for rest of fight
+			timerDeathbrandCD:Stop()--Done for rest of fight
+			timerShackledTormentCD:Stop()--Resets to 55 on non mythic, no longer cast on mythic
 			countdownShackledTorment:Cancel()
 			countdownDeathBrand:Cancel()
 			timerNetherBanishCD:Start(10.9, 1)
@@ -1328,12 +1328,20 @@ function mod:OnSync(msg)
 		self.vb.phase = 2.5
 	elseif msg == "Numbered" then
 		self.vb.MarkBehavior = "Numbered"
+		localMarkBehavior = self.Options.overrideMarkOfLegion and self.Options.MarkBehavior or self.vb.MarkBehavior
+		DBM:Debug("Numbered sync sent, using"..localMarkBehavior.." based on settings", 2)
 	elseif msg == "LocSmallFront" then
 		self.vb.MarkBehavior = "LocSmallFront"
+		localMarkBehavior = self.Options.overrideMarkOfLegion and self.Options.MarkBehavior or self.vb.MarkBehavior
+		DBM:Debug("LocSmallFront sync sent, using"..localMarkBehavior.." based on settings", 2)
 	elseif msg == "LocSmallBack" then
 		self.vb.MarkBehavior = "LocSmallBack"
+		localMarkBehavior = self.Options.overrideMarkOfLegion and self.Options.MarkBehavior or self.vb.MarkBehavior
+		DBM:Debug("LocSmallBack sync sent, using"..localMarkBehavior.." based on settings", 2)
 	elseif msg == "NoAssignment" then
 		self.vb.MarkBehavior = "NoAssignment"
+		localMarkBehavior = self.Options.overrideMarkOfLegion and self.Options.MarkBehavior or self.vb.MarkBehavior
+		DBM:Debug("NoAssignment sync sent, using"..localMarkBehavior.." based on settings", 2)
 	end
 end
 

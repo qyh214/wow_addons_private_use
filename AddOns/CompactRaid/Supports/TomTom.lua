@@ -8,11 +8,27 @@
 -- 2013/11/11
 ------------------------------------------------------------
 
-if not select(2, GetAddOnInfo("TomTom")) then return end -- TomTom missing
+-- TomTom is NOT the only addon that has Arrow.blp included...
+local TOMTOM_ARROW_ADDONS = {
+	["DBM-Core"] = "\\textures\\arrows\\Arrow.blp",
+	["TomTom"] = "\\Images\\Arrow.blp",
+}
+
+local arrowFilePath
+
+do
+	local name, path
+	for name, path in pairs(TOMTOM_ARROW_ADDONS) do
+		if not arrowFilePath and select(2, GetAddOnInfo(name)) then
+			arrowFilePath = "Interface\\AddOns\\"..name..path
+		end
+	end
+end
+
+if not arrowFilePath then return end
 
 local GetPlayerMapPosition = GetPlayerMapPosition
 local atan = atan
-local abs = abs
 local floor = floor
 local UnitIsPlayer = UnitIsPlayer
 local UnitIsUnit = UnitIsUnit
@@ -30,7 +46,7 @@ frame:Hide()
 
 local icon = frame:CreateTexture(frame:GetName().."Icon", "OVERLAY")
 icon:SetAllPoints(frame)
-icon:SetTexture("Interface\\AddOns\\TomTom\\Images\\Arrow.blp") -- TomTom Arrows
+icon:SetTexture(arrowFilePath) -- TomTom Arrows
 icon:Hide()
 
 ------------------------------------------------------------

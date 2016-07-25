@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(818, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 88 $"):sub(12, -3))
 mod:SetCreatureID(68036)--Crimson Fog 69050
 mod:SetEncounterID(1572)
 mod:SetZone()
@@ -46,7 +46,7 @@ local specWarnBlueBeam				= mod:NewSpecialWarning("specWarnBlueBeam", nil, nil, 
 local specWarnBlueBeamLFR			= mod:NewSpecialWarningYou(139202, true, false)
 local specWarnRedBeam				= mod:NewSpecialWarningYou(139204, nil, nil, nil, 3)
 local specWarnYellowBeam			= mod:NewSpecialWarningYou(133738, nil, nil, nil, 3)
-local specWarnFogRevealed			= mod:NewSpecialWarning("specWarnFogRevealed", nil, nil, nil, 2)--Use another "Be Aware!" sound because Lingering Gaze comes on Spectrum phase.
+local specWarnFogRevealed			= mod:NewSpecialWarning("specWarnFogRevealed", nil, nil, nil, 1)--Use another "Be Aware!" sound because Lingering Gaze comes on Spectrum phase.
 local specWarnDisintegrationBeam	= mod:NewSpecialWarningSpell("ej6882", nil, nil, nil, 2)
 local specWarnEyeSore				= mod:NewSpecialWarningMove(140502)
 local specWarnLifeDrain				= mod:NewSpecialWarningTarget(133795, "Tank")
@@ -55,7 +55,7 @@ local yellLifeDrain					= mod:NewYell(133795, L.LifeYell)
 local timerHardStareCD				= mod:NewCDTimer(12, 133765, nil, "Tank|Healer", nil, 5)
 local timerSeriousWound				= mod:NewTargetTimer(60, 133767, nil, "Tank|Healer")
 local timerLingeringGazeCD			= mod:NewCDTimer(46, 138467, nil, nil, nil, 3)
-local timerForceOfWillCD			= mod:NewCDTimer(20, 136413, nil, nil, nil, 3)--Actually has a 20 second cd but rarely cast more than once per phase because of how short the phases are (both beams phases cancel this ability)
+local timerForceOfWillCD			= mod:NewCDTimer(20, 136413, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--Actually has a 20 second cd but rarely cast more than once per phase because of how short the phases are (both beams phases cancel this ability)
 local timerLightSpectrumCD			= mod:NewNextTimer(60, "ej6891", nil, nil, nil, 6)
 local timerDisintegrationBeam		= mod:NewBuffActiveTimer(55, "ej6882", nil, nil, nil, 6)
 local timerDisintegrationBeamCD		= mod:NewNextTimer(136, "ej6882", nil, nil, nil, 6)

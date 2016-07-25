@@ -1,36 +1,27 @@
-local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 2
---- A minimal Crayon like implementation
--- C.Azure.c returns a string "rrggbb"
--- tostring(C.Azure) returns a string "rrggbb"
--- "aa" .. C.Azure can be done and returns "aarrggbb"
--- C.Azure() returns r,g,b as float list
--- C.Azure.r returns r as float
--- C("testo","azure") returns "|cff" .. >color code for azure> .. "test" .. "|r"
---
--- @usage local C=LibStub("LibInit"):GetColorTable()
--- For a list of available color check Colors
--- Each color became the name of a metod
--- @name C.Azure()
--- @return r,g,b
---
--- @name C.Azure.r
--- @return red value
--- @name C.Azure.g
--- @return green value
--- @name C.Azure.b
--- @return blue value
--- @name C.Azure.c
--- @return hex string "rrggbb"
--- @name tostring(C.Azure)
--- @return hex string "rrggbb"
--- @name C(testo,colore)
--- @return "|cff" .. >color code for azure> .. "test" .. "|r"
+---------------------------------------------------------------------------------------------------------------------
+-- A minimal Crayon like implementation for managing color.
+-- @name Colorize
+-- @class module
+-- @author Alar of Daggerspine
+-- @release 2
+-- @usage
+-- local C=LibStub("LibInit"):GetColorTable()
+-- C.Azure.c --returns a string "rrggbb"
+-- C.Azure.r --returns red value as a number
+-- C.Azure.g --returns green value as a number
+-- C.Azure.b --returns blue value as a number
+-- tostring(C.Azure) -- returns a string "rrggbb"
+-- "aa" .. C.Azure -- returns "aarrggbb"
+-- C.Azure() -- returns r,g,b as float list
+-- C.Azure.r -- returns r as float
+-- C("testo","azure") -- returns "|cff" .. >color code for azure> .. "test" .. "|r"
+-- -- For a list of available color check Colors
+-- -- Each color became the name of a method
 --
 
--- Color system related function
 local C
-local lib=LibStub:NewLibrary("LibInit-Colorize",2)
+-- Color system related function
+local lib=LibStub:NewLibrary("LibInit-Colorize",4)
 if (not lib) then return end
 local setmetatable=setmetatable
 local tonumber=tonumber
@@ -46,9 +37,6 @@ local _G=_G
 local UIERRORS_HOLD_TIME=UIERRORS_HOLD_TIME or 1
 local UIErrorsFrame=UIErrorsFrame
 local ChatTypeInfo=ChatTypeInfo
---- Available colors
--- @class table
--- @name Colors
 lib.colors={
 azure                   ="0c92dc"
 ,aqua					="00ffff"
@@ -107,14 +95,15 @@ if (_G.RAID_CLASS_COLORS) then
 	end
 end
 local GetItemQualityColor=GetItemQualityColor
-if (_G.NUM_ITEM_QUALITIES) then
-	for i=1,_G.NUM_ITEM_QUALITIES do
-		local _,_,_,hex=GetItemQualityColor(i)
-		local c=strlower(_G["ITEM_QUALITY"..i.."_DESC"])
-		lib.colors[tostring(i)]=hex:sub(3)
-		if (c) then
-			lib.colors[c]=hex:sub(3)
-		end
+local numqualities=_G.NUM_ITEM_QUALITIES or 8
+print("Loading qualities")
+for i=1,numqualities do
+	local _,_,_,hex=GetItemQualityColor(i)
+	local c=strlower(_G["ITEM_QUALITY"..i.."_DESC"])
+	lib.colors[tostring(i)]=hex:sub(3)
+	print(c,"=",hex)
+	if (c) then
+		lib.colors[c]=hex:sub(3)
 	end
 end
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(676, "DBM-Party-MoP", 4, 303)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
 mod:SetCreatureID(56636)
 mod:SetEncounterID(1406)
 mod:SetZone()
@@ -21,7 +21,7 @@ local specWarnFrenziedAssault	= mod:NewSpecialWarningSpell(107120, "Tank")
 local specWarnViscousFluid		= mod:NewSpecialWarningMove(107122)
 
 local timerFrenziedAssault		= mod:NewBuffActiveTimer(6, 107120)
-local timerFrenziedAssaultCD	= mod:NewNextTimer(17, 107120)
+local timerFrenziedAssaultCD	= mod:NewNextTimer(17, 107120, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 
 function mod:OnCombatStart(delay)
 	timerFrenziedAssaultCD:Start(6-delay)

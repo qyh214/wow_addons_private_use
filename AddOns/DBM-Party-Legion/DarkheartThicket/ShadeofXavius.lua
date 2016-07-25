@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1657, "DBM-Party-Legion", 2, 762)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14752 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14984 $"):sub(12, -3))
 mod:SetCreatureID(99192)
 mod:SetEncounterID(1839)
 mod:SetZone()
@@ -22,16 +22,18 @@ mod:RegisterEventsInCombat(
 --TODO, feed on the weak have any significance?
 local warnNightmare					= mod:NewTargetAnnounce(200243, 3)
 local warnParanoia					= mod:NewTargetAnnounce(200289, 3)
+local warnApocNightmare				= mod:NewSpellAnnounce(200050, 3)
 
-local specWarnFesteringRip			= mod:NewSpecialWarningDispel(200182, "RemoveDisease")--No disease dispeller in group? have fun wiping
+local specWarnFesteringRip			= mod:NewSpecialWarningDispel(200182, "Healer")--No disease dispeller in group? have fun wiping
 local specWarnNightmare				= mod:NewSpecialWarningYou(200243)
 local yellNightmare					= mod:NewYell(200243)
 local specWarnParanoia				= mod:NewSpecialWarningMoveAway(200289)
 local yellParanoia					= mod:NewYell(200289)
 
-local timerFesteringRipCD			= mod:NewCDTimer(17, 200182, nil, "Tank|Healer|RemoveDisease", nil, 5, nil, DBM_CORE_DISEASE_ICON)--17-21
+local timerFesteringRipCD			= mod:NewCDTimer(17, 200182, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_MAGIC_ICON)--17-21
 local timerNightmareCD				= mod:NewCDTimer(17, 200243, nil, nil, nil, 3)--17-23
 local timerParanoiaCD				= mod:NewCDTimer(18, 200359, nil, nil, nil, 3)--18-28
+--local timerApocNightmareCD			= mod:NewCDTimer(18, 200050, nil, nil, nil, 2)
 
 local voiceNightmare				= mod:NewVoice(200243)--Gathershare
 local voiceParanoia					= mod:NewVoice(200243)--scatter
@@ -42,24 +44,19 @@ mod.vb.nightmareIcon = 1
 
 function mod:OnCombatStart(delay)
 	self.vb.nightmareIcon = 1
-	timerFesteringRipCD:Start(3.7-delay)
+	timerFesteringRipCD:Start(3.4-delay)
 	timerNightmareCD:Start(6-delay)
+	--Feed on weak, 15
 	timerParanoiaCD:Start(19-delay)
+--	timerApocNightmareCD:Start(37)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 200359 then
 		timerParanoiaCD:Start()
-	elseif spellId == 199837 then--Phase 2
-		timerParanoiaCD:Cancel()
-		timerParanoiaCD:Start(39)
-		timerNightmareCD:Cancel()
-		timerNightmareCD:Start(40)
-		timerFesteringRipCD:Cancel()
-		timerFesteringRipCD:Start(41)
 	elseif spellId == 200182 then
-		timerFesteringRipCD:Start(17)
+		timerFesteringRipCD:Start()
 	end
 end
 
@@ -68,11 +65,12 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 200182 then
 		specWarnFesteringRip:Show(args.destName)
 	elseif spellId == 200243 then
-		warnNightmare:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnNightmare:Show()
 			voiceNightmare:Play("gathershare")
 			yellNightmare:Yell()
+		else
+			warnNightmare:Show(args.destName)
 		end
 		if self.Options.SetIconOnNightmare then
 			self:SetIcon(args.destName, self.vb.nightmareIcon)
@@ -84,11 +82,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			self.vb.nightmareIcon = 1
 		end
 	elseif spellId == 200289 then
-		warnParanoia:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnParanoia:Show()
 			voiceParanoia:Play("scatter")
 			yellParanoia:Yell()
+		else
+			warnParanoia:Show(args.destName)
 		end		
 	end
 end
@@ -103,8 +102,11 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 204808 then--Because cast is hidden from combat log, and debuff may miss (AMS)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
+	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+	if spellId == 204808 then--Because cast is hidden from combat log, and debuff may miss (AMS or the like)
 		timerNightmareCD:Start()
+	elseif spellId == 200050 then--Apocalyptic Nightmare
+		warnApocNightmare:Show()
 	end
 end

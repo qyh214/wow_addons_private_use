@@ -1,5 +1,8 @@
 local me, ns = ...
+local p=print
 ns.Configure()
+local print=p
+p=nil
 local addon=addon --#addon
 local _G=_G
 -- Courtesy of Motig
@@ -9,8 +12,8 @@ local _G=_G
 local factory=addon:GetFactory()
 --GMC_G.frame = CreateFrame('FRAME')
 local aMissions={}
-local chardb
-local db
+local choosenby={}
+local priority={}
 local GMF=GarrisonMissionFrame
 local GMCUsedFollowers={}
 local wipe=wipe
@@ -38,27 +41,78 @@ for _,data in ipairs(addon:GetRewardClasses()) do
 end
 local classlist={} ---#table local reference to settings.rewardList
 local class2order={} ---#table maps a classname to its priority
-local settings
+local settings ---#table Pointer to settings in saved var
 local module=addon:NewSubClass("MissionControl") --#module
-function module:GMCBusy(followerID)
+function module:Busy(followerID)
 	return GMCUsedFollowers[followerID]
 end
-addon.GMCBusy=module.GMCBusy
+addon.GMCBusy=module.Busy
+local function chooseBestClass(class,moreClasses)
+	local i=class2order[class] or 999
+	local class=class
+	if type(moreClasses)=="table" then
+		for k,v in pairs(moreClasses) do
+			if class2order[k] < i then
+				class=k
+				i=class2order[class]
+			end
+		end
+	end
+
+end
+function module:AcceptMission(missionID,class,value,name,choosenby)
+	local ar=settings.allowedRewards
+	value=tonumber(value)
+	if not value then
+		value=tonumber(self:GetMissionData(missionID,class)) or 0
+	end
+	if class=='gold' then
+		value=math.floor(value/10000)
+		if self:GetMissionData(missionID,"class")~= 'gold' then
+			if value<self:GetNumber("MINGOLD") then return false end
+		end
+	elseif class=="xp" then
+		if self:GetMissionData(missionID,"level")<self:GetNumber("MINXPLEVEL") then return false end
+	elseif class=="itemLevel" then
+		if self:GetMissionData(missionID,'itemLevel') < settings.minLevel then
+			--[===[@debug@
+			print("  ",missionID,"discarded due to ilevel == ", self:GetMissionData(missionID,'itemLevel'))
+			--@end-debug@]===]
+			return false
+		end
+	elseif class=="followerUpgrade" then
+		if self:GetMissionData(missionID,'followerUpgrade') < settings.minUpgrade and
+			self:GetMissionData(missionID,'followerUpgrade') > 600 then
+			--[===[@debug@
+			print("  ",missionID,"discarded due to followerUpgrade == ", self:GetMissionData(missionID,'followerUpgrade'))
+			--@end-debug@]===]
+			return false
+		end
+	end
+	tinsert(choosenby,format("%05d@%010d@%d@%s@%s",class2order[class],99999999-value,missionID,class,name))
+	return true
+end
 ---
 -- Builds a mission list based on user preferences
 -- @param #module self self
 -- @param #table workList table to be filled with mission list
-function module:GMCCreateMissionList(workList)
-	--First get rid of unwanted rewards and missions that are too long
-	local settings=self.privatedb.profile.missionControl
+function module:CreateMissionList(workList)
 	local ar=settings.allowedRewards
+	wipe(priority)
+	for class,enabled in pairs(ar) do
+		if enabled then tinsert(priority,class) end
+	end
+	table.sort(priority,function(a,b) return class2order[a] < class2order[b] end)
 	wipe(workList)
+	wipe(choosenby)
 	for _,missionID in self:GetMissionIterator() do
 		local discarded=false
 		local class=self:GetMissionData(missionID,"class")
+		local moreClasses=self:GetMissionData(missionID,"moreClasses")
+		local name=self:GetMissionData(missionID,"name")
 		repeat
 			--[===[@debug@
-			print("|cffff0000",'Examining',missionID,self:GetMissionData(missionID,"name"),class,"|r")
+			print("|cffff0000Examining|r",missionID,name,class,self:GetMissionData(missionID,class))
 			--@end-debug@]===]
 			local durationSeconds=self:GetMissionData(missionID,'durationSeconds')
 			if (durationSeconds > settings.maxDuration * 3600 or durationSeconds <  settings.minDuration * 3600) then
@@ -73,53 +127,40 @@ function module:GMCCreateMissionList(workList)
 				--@end-debug@]===]
 				break
 			end
-			if (not ar[class]) then
+			for _,testclass in ipairs(priority) do
+				if class==testclass or moreClasses[testclass] then
+					if self:AcceptMission(missionID,testclass,self:GetMissionData(missionID,testclass),name,choosenby) then
 				--[===[@debug@
-				print("  ",missionID,"discarded due to class == ", class)
+						print("  ",missionID,"accepted for",testclass)
 				--@end-debug@]===]
-				discarded=true
-				break
-			end
-			if class=="itemLevel" then
-				if self:GetMissionData(missionID,'itemLevel') < settings.minLevel then
-					--[===[@debug@
-					print("  ",missionID,"discarded due to ilevel == ", self:GetMissionData(missionID,'itemLevel'))
-					--@end-debug@]===]
-					discarded=true
-					break
+						break
+				--[===[@debug@
+					else
+						print("  ",missionID,"refused for",testclass)
+				--@end-debug@]===]
+					end
+
 				end
-			elseif class=="followerUpgrade" then
-				if self:GetMissionData(missionID,'followerUpgrade') < settings.minUpgrade and
-					self:GetMissionData(missionID,'followerUpgrade') > 600 then
-					--[===[@debug@
-					print("  ",missionID,"discarded due to followerUpgrade == ", self:GetMissionData(missionID,'followerUpgrade'))
-					--@end-debug@]===]
-					discarded=true
-					break
-				end
-			end
-			if (not discarded) then
-				tinsert(workList,missionID)
 			end
 		until true
 	end
 	local parties=self:GetParty()
-	local function msort(i1,i2)
-		local c1=addon:GetMissionData(i1,'class','other')
-		local c2=addon:GetMissionData(i2,'class','other')
-		if (c1==c2) then
-			return addon:GetMissionData(i1,c1,0) > addon:GetMissionData(i2,c2,0)
-		else
-			return (class2order[c1] or i1)<(class2order[c2] or i2)
+	table.sort(choosenby)
+	--[===[@debug@
+	print("Final worklist")
+	--@end-debug@]===]
+	local used=self:NewTable()
+	for i=1,#choosenby do
+		local _1,_2,missionId,_=strsplit('@',choosenby[i])
+		if not used[missionId] then
+			tinsert(workList,tonumber(missionId))
+			used[missionId]=true
+			--[===[@debug@
+				print(missionId,_1,99999999-tonumber(_2))
+			--@end-debug@]===]
 		end
 	end
-	table.sort(workList,msort)
-	--[===[@debug@
-	for i=1,#workList do
-		local id=workList[i]
-		print(self:GetMissionData(id,'name'),self:GetMissionData(id,'class'),self:GetMissionData(id,self:GetMissionData(id,'class')))
-	end
-	--@end-debug@]===]
+	self:DelTable(used)
 end
 ---
 -- This routine can be called both as coroutin and as a standard one
@@ -127,7 +168,7 @@ end
 -- @param #module self
 -- @param #number missionID Optional, to run a single mission
 -- @param #boolean start Optional, tells that follower already are on mission and that we need just to start it
-function module:GMCRunMission(missionID,start)
+function module:RunMission(missionID,start)
 	--[===[@debug@
 	print("Asked to start mission",missionID)
 	--@end-debug@]===]
@@ -156,7 +197,7 @@ function module:GMCRunMission(missionID,start)
 					PlaySound("UI_Garrison_CommandTable_MissionStart")
 					coroutine.yield(true)
 				else
-					self:ScheduleTimer("GMCRunMission",0.25,party.missionID,true)
+					self:ScheduleTimer("RunMission",0.25,party.missionID,true)
 					return
 				end
 			else
@@ -171,7 +212,7 @@ do
 		print("leftclick")
 		local missionID=this.frame.info.missionID
 		if (blacklist[missionID]) then return end
-		module:GMCRunMission(missionID)
+		module:RunMission(missionID)
 		GMF.MissionControlTab.list.widget:RemoveChild(missionID)
 	end
 	local function rightclick(this)
@@ -183,9 +224,9 @@ do
 	local timeElapsed=0
 	local currentMission=0
 	local x=0
-	function module:GMCCalculateMissions(this,elapsed)
+	function module:CalculateMissions(this,elapsed)
 		local GMC=GMF.MissionControlTab
-		db.news.MissionControl=true
+		addon.db.global.news.MissionControl=true
 
 		timeElapsed = timeElapsed + elapsed
 		if (#aMissions == 0 ) then
@@ -223,13 +264,13 @@ do
 					minimumChance=tonumber(settings.rewardChance[class]) or 100
 				end
 				local party={members={},perc=0}
-				self:MCMatchMaker(missionID,party,settings.skipEpic,minimumChance)
 				--[===[@debug@
-				print(missionID,"  Requested",class,";",minimumChance,"Mission",party.perc,party.full,settings)
+				print(self:GetMissionData(missionID,"name"),missionID,"  Requested",class,minimumChance,party.perc,party.full)
 				--@end-debug@]===]
+				self:MCMatchMaker(missionID,party,settings.skipEpic,minimumChance)
 				if ( party.full and party.perc >= minimumChance) then
 					--[===[@debug@
-					print(missionID,"  Accepted",party)
+					print(missionID,"  Accepted",party.perc,minimumChance)
 					--@end-debug@]===]
 					local mb=AceGUI:Create("GMCMissionButton")
 					if not blacklist[missionID] then
@@ -252,13 +293,14 @@ do
 	end
 end
 
-function module:GMC_OnClick_Run(this,button)
+function module:OnClick_Run(this,button)
 	local GMC=GMF.MissionControlTab
 	this:Disable()
 	GMC.logoutButton:Disable()
 	do
 		local elapsed=0
-		local co=coroutine.wrap(self.GMCRunMission)
+		local co=coroutine.wrap(self.RunMission)
+		self:Unhook(GMC.runButton,'OnUpdate')
 		self:RawHookScript(GMC.runButton,'OnUpdate',function(this,ts)
 			elapsed=elapsed+ts
 			if (elapsed>0.25) then
@@ -277,7 +319,7 @@ function module:GMC_OnClick_Run(this,button)
 		)
 	end
 end
-function module:GMC_OnClick_Start(this,button)
+function module:OnClick_Start(this,button)
 	local GMC=GMF.MissionControlTab
 	--[===[@debug@
 	print(C("-------------------------------------------------","Yellow"))
@@ -295,7 +337,7 @@ function module:GMC_OnClick_Start(this,button)
 	end
 	this:Disable()
 	GMC.list.widget:SetTitleColor(C.Green())
-	self:GMCCreateMissionList(aMissions)
+	self:CreateMissionList(aMissions)
 	wipe(GMCUsedFollowers)
 	wipe(GMC.list.Parties)
 	self:RefreshFollowerStatus()
@@ -305,8 +347,7 @@ function module:GMC_OnClick_Start(this,button)
 		GMC.list.widget:SetTitle("No mission matches your criteria")
 		GMC.list.widget:SetTitleColor(C.Red())
 	end
-	self:RawHookScript(GMC.startButton,'OnUpdate',"GMCCalculateMissions")
-
+	self:RawHookScript(GMC.startButton,'OnUpdate',"CalculateMissions")
 end
 local chestTexture
 local function buildDragging(frame,drawItemButtons)
@@ -374,7 +415,7 @@ local function buildDragging(frame,drawItemButtons)
 				--@end-debug@]===]
 			end
 			drawItemButtons()
-			--module:Refresh()
+			module:Refresh()
 	end)
 	frame:SetScript('OnLeave', function() GameTooltip:Hide() end)
 
@@ -388,7 +429,7 @@ local function drawItemButtons(frame)
 	local single=settings.useOneChance
 	--for j = 1, #tItems do
 	--local i=tOrder[j]
-	local wrap=#classlist/2 +1
+	local wrap=math.ceil(#classlist/2 +1)
 	for frameIndex,i in ipairs(classlist) do
 		local row = GMC.ignoreFrames[frameIndex]
 		if not row then
@@ -552,22 +593,16 @@ local function toggleEpicWarning()
 end
 function module:OnInitialized()
 	local bigscreen=ns.bigscreen
-	db=addon.db.global
-	chardb=addon.privatedb.profile
 	chestTexture='GarrMission-'..UnitFactionGroup('player').. 'Chest'
 	local GMC = CreateFrame('FRAME', nil, GMF)
 	GMF.MissionControlTab=GMC
-	settings=chardb.missionControl
+	settings=addon.privatedb.profile.missionControl
+	self:RefreshConfig("Init")
 	if settings.version < 2 then
 		dbfixV1()
 	end
 	if settings.version < 3 or type(settings.rewardOrder)=='table' or #settings.rewardList==0 then
 		dbfixV2()
-	end
-	wipe(class2order)
-	classlist=settings.rewardList
-	for index,key in ipairs(classlist) do
-		class2order[key]=index
 	end
 	if settings.itemPrio then
 		settings.itemPrio=nil
@@ -576,11 +611,11 @@ function module:OnInitialized()
 	--GMC:SetPoint('LEFT')
 	--GMC:SetSize(GMF:GetWidth(), GMF:GetHeight())
 	GMC:Hide()
-	GMC.chance=self:GMCBuildChance()
-	GMC.duration=self:GMCBuildDuration()
-	GMC.rewards=self:GMCBuildRewards()
-	GMC.list=self:GMCBuildMissionList()
-	GMC.flags=self:GMCBuildFlags()
+	GMC.chance=self:BuildChance()
+	GMC.duration=self:BuildDuration()
+	GMC.rewards=self:BuildRewards()
+	GMC.list=self:BuildMissionList()
+	GMC.flags=self:BuildFlags()
 	local chance=GMC.chance
 	local duration=GMC.duration
 	local rewards=GMC.rewards
@@ -607,13 +642,60 @@ function module:OnInitialized()
 	GMC.Credits:SetFormattedText(C(L["Original concept and interface by %s"],'Yellow'),C("Motig","Red") )
 	GMC.Credits:SetJustifyH("RIGHT")
 	GMC.Credits:SetPoint("BOTTOMRIGHT",-50,5)
+	addon.db.RegisterCallback(self, "OnNewProfile", "RefreshConfig")
+	--addon.db.RegisterCallback(self,"OnProfileShutdown","ShowList")
+	addon.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig")
+	addon.db.RegisterCallback(self, "OnProfileCopied", "RefreshConfig")
+	addon.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig")
 	return GMC
+end
+function module:ShowList()
+	self:Print("Rewards list for profile",addon.db:GetCurrentProfile())
+	DevTools_Dump(settings.rewardList)
+end
+local function clone(from,to)
+	for k,v in pairs(from) do
+		if type(v)~="table" then
+			to[k]=v
+		else
+			to[k]=to[k] or {}
+			clone(v,to[k])
+		end
+	end
+end
+function module:RefreshConfig(event)
+	settings=addon.db.profile.missionControl
+	local oldsettings=addon.privatedb.profile.missionControl
+	if #settings.rewardList==0 and oldsettings and #oldsettings.rewardList>0 then
+		clone(oldsettings,settings)
+	end
+	--self:ShowList()
+	blacklist=settings.blacklist
+	classlist=settings.rewardList
+	wipe(class2order)
+	for index,key in ipairs(classlist) do
+		class2order[key]=index
+	end
+	if #classlist < #addon:GetRewardClasses() then
+		for _,v in ipairs(addon:GetRewardClasses()) do
+			if not class2order[v.key] then
+				tinsert(classlist,v.key)
+			end
+		end
+		wipe(class2order)
+		for index,key in ipairs(classlist) do
+			class2order[key]=index
+		end
+	end
+	if event ~="Init" then -- Initialization routine, we cant design yet
+		drawItemButtons()
+	end
 end
 local refreshTimer
 function module:Refresh()
 	if not GMF.MissionControlTab.startButton then return end
 	if GMF.MissionControlTab.startButton:IsEnabled() and not IsMouseButtonDown("LeftButton") then
-		self:GMC_OnClick_Start(GMF.MissionControlTab.startButton,"LeftUp")
+		self:OnClick_Start(GMF.MissionControlTab.startButton,"LeftUp")
 	else
 		if refreshTimer then
 			self:CancelTimer(refreshTimer)
@@ -622,7 +704,7 @@ function module:Refresh()
 		refreshTimer=self:ScheduleTimer("Refresh",0.5)
 	end
 end
-function module:GMCBuildChance()
+function module:BuildChance()
 	local GMC=GMF.MissionControlTab
 	--Chance
 	local frame= CreateFrame('FRAME', nil, GMC)
@@ -702,7 +784,13 @@ function addon:ApplyGCSKIPRARE(value)
 	settings.skipRare=value
 	module:Refresh()
 end
-function module:GMCBuildFlags()
+function addon:ApplyMINXPLEVEL(value)
+	module:Refresh()
+end
+function addon:ApplyMINGOLD(value)
+	module:Refresh()
+end
+function module:BuildFlags()
 	local GMC=GMF.MissionControlTab
 	local warning=GMC:CreateFontString(nil,"ARTWORK",ns.bigscreen and "GameFontNormalHuge" or "GameFontNormal")
 	warning:SetText(L["Epic followers are NOT sent alone on xp only missions"])
@@ -714,11 +802,13 @@ function module:GMCBuildFlags()
 	addon:AddLabel(L["Mission Control"])
 	addon:AddSlider("GCMINLEVEL",settings.minLevel,535,715,L["Item minimum level"],L['Minimum requested level for equipment rewards'],15)
 	addon:AddSlider("GCMINUPGRADE",settings.minUpgrade,600,675,L["Follower set minimum upgrade"],L['Minimum requested upgrade for followers set (Enhancements are always included)'],15)
+	addon:AddSlider("MINXPLEVEL",90,90,100,L["Minimum XP missions level"],L["Ignore XP missions under this level"])
+	addon:AddSlider("MINGOLD",50,1,1000,L["Minimum Gold Value"],L["Gold missions wich returns less than this amount are ignored"])
 	addon:AddToggle("GCSKIPEPIC",settings.skipEpic,L["Ignore epic for xp missions."],L["IF you have a Salvage Yard you probably dont want to have this one checked"])
 	addon:AddToggle("GCSKIPRARE",settings.skipRare,L["Ignore rare missions"],L["Rare missions will not be considered"])
 	addon:AddToggle("AUTOLOGOUT",false,L["Auto Logout"],L["Automatically logout after sending missions"])
 end
-function module:GMCBuildDuration()
+function module:BuildDuration()
 	-- Duration
 	local GMC=GMF.MissionControlTab
 	local frame= CreateFrame('FRAME', 'PIPPO', GMC) -- Dutation frame
@@ -756,7 +846,7 @@ function module:GMCBuildDuration()
 	timeslidechange(GMC.ms2,settings.maxDuration)
 	return frame
 end
-function module:GMCBuildRewards()
+function module:BuildRewards()
 	--Allowed rewards
 	local GMC=GMF.MissionControlTab
 	local frame = CreateFrame('FRAME', nil, GMC)
@@ -771,7 +861,7 @@ function module:GMCBuildRewards()
 	return frame
 end
 
-function module:GMCBuildMissionList()
+function module:BuildMissionList()
 	local ml={widget=AceGUI:Create("GMCLayer"),Parties={}}
 	local GMC=GMF.MissionControlTab
 	ml.widget:SetTitle(READY)
@@ -783,7 +873,7 @@ function module:GMCBuildMissionList()
 	GMC.startButton:SetText('Calculate')
 	GMC.startButton:SetWidth(148)
 	GMC.startButton:SetPoint('TOPLEFT',10,25)
-	GMC.startButton:SetScript('OnClick', function(this,button) self:GMC_OnClick_Start(this,button) end)
+	GMC.startButton:SetScript('OnClick', function(this,button) self:OnClick_Start(this,button) end)
 	GMC.startButton:SetScript('OnEnter', function() GameTooltip:SetOwner(GMC.startButton, 'ANCHOR_TOPRIGHT') GameTooltip:AddLine('Assign your followers to missions.') GameTooltip:Show() end)
 	GMC.startButton:SetScript('OnLeave', function() GameTooltip:Hide() end)
 	GMC.runButton = CreateFrame('BUTTON', nil,ml.widget.frame, 'GameMenuButtonTemplate')
@@ -796,7 +886,7 @@ function module:GMCBuildMissionList()
 	end)
 	GMC.runButton:SetScript('OnLeave', function() GameTooltip:Hide() end)
 	GMC.runButton:SetWidth(148)
-	GMC.runButton:SetScript('OnClick',function(this,button) self:GMC_OnClick_Run(this,button) end)
+	GMC.runButton:SetScript('OnClick',function(this,button) self:OnClick_Run(this,button) end)
 	GMC.runButton:Disable()
 	GMC.runButton:SetPoint('TOPRIGHT',-10,25)
 	GMC.logoutButton=CreateFrame('BUTTON', nil,ml.widget.frame, 'GameMenuButtonTemplate')

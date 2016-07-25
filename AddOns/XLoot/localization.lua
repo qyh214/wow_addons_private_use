@@ -51,6 +51,7 @@ locales.koKR["skin_smooth"] = "XLoot: Smooth" -- Needs review
 locales.koKR["skin_svelte"] = "XLoot: Svelte" -- Needs review
 
 
+locales.ruRU["anchor_hide"] = "Скрыть" -- Needs review
 locales.ruRU["skin_legacy"] = "XLoot: Legacy"
 locales.ruRU["skin_smooth"] = "XLoot: Smooth"
 locales.ruRU["skin_svelte"] = "XLoot: Svelte"

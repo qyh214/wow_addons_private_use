@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1122, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14500 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14994 $"):sub(12, -3))
 mod:SetCreatureID(76865)--No need to add beasts to this. It's always main boss that's engaged first and dies last.
 mod:SetEncounterID(1694)
 mod:SetZone()
@@ -67,17 +67,17 @@ local yellInfernoBreath				= mod:NewYell(154989)
 --Boss basic attacks
 mod:AddTimerLine(CORE_ABILITIES)--Core Abilities
 local timerPinDownCD				= mod:NewCDTimer(19.7, 155365, nil, "Ranged", 2)--Every 19.7 seconds unless delayed by other things. CD timer used for this reason
-local timerCallthePackCD			= mod:NewCDTimer(31.5, 154975, nil, "Tank", 2, 1)--almost always 31, but cd resets to 11 whenever boss dismounts a beast (causing some calls to be less or greater than 31 seconds apart. In rare cases, boss still interrupts his own cast/delays cast even when not caused by gaining beast buff
+local timerCallthePackCD			= mod:NewCDTimer(31.5, 154975, nil, "Tank", 2, 1, nil, DBM_CORE_TANK_ICON)--almost always 31, but cd resets to 11 whenever boss dismounts a beast (causing some calls to be less or greater than 31 seconds apart. In rare cases, boss still interrupts his own cast/delays cast even when not caused by gaining beast buff
 --Boss gained abilities (beast deaths grant boss new abilities)
 mod:AddTimerLine(SPELL_BUCKET_ABILITIES_UNLOCKED)--Abilities Unlocked
 local timerRendandTearCD			= mod:NewCDTimer(12, 155385, nil, nil, nil, 3)
 local timerSuperheatedShrapnelCD	= mod:NewCDTimer(14.2, 155499, nil, nil, nil, 3)
-local timerTantrumCD				= mod:NewNextCountTimer(29.5, 162275, nil, nil, nil, 2)
+local timerTantrumCD				= mod:NewNextCountTimer(29.5, 162275, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
 local timerEpicenterCD				= mod:NewCDCountTimer(19.5, 159043, nil, "Melee")
 --Beast abilities (living)
 mod:AddTimerLine(BATTLE_PET_DAMAGE_NAME_8)--Beast
-local timerSavageHowlCD				= mod:NewCDTimer(25, 155198, nil, "Healer|Tank|RemoveEnrage", 2, 5)
-local timerConflagCD				= mod:NewCDTimer(20, 155399, nil, "Healer", 2, 5)
+local timerSavageHowlCD				= mod:NewCDTimer(25, 155198, nil, "Healer|Tank|RemoveEnrage", 2, 5, nil, DBM_CORE_ENRAGE_ICON)
+local timerConflagCD				= mod:NewCDTimer(20, 155399, nil, "Healer", 2, 5, nil, DBM_CORE_HEALER_ICON)
 local timerStampedeCD				= mod:NewCDTimer(20, 155247, nil, nil, nil, 3)--20-30 as usual
 local timerInfernoBreathCD			= mod:NewNextTimer(20, 154989, nil, nil, nil, 3)
 
@@ -129,7 +129,7 @@ local function updateBeastTimers(self, all, spellId, adjust)
 	local dismountAdjust = 0--default of 0, so -0 doesn't affect timers unless mythic and UNIT_TARGETABLE is trigger
 	if adjust then dismountAdjust = 2 end--Dismount event is a little slow, fires 2 seconds after true dismount, so must adjust all timers for dismounts
 	if self.vb.WolfAbilities and (self:IsMythic() and spellId == 155458 or all) then--Cruelfang
-			timerRendandTearCD:Cancel()
+			timerRendandTearCD:Stop()
 		if self.vb.RylakAbilities then--If he also has rylak abilities, first rend and tear is 12 seconds, not 6
 			timerRendandTearCD:Start(12-dismountAdjust)
 		else
@@ -137,15 +137,15 @@ local function updateBeastTimers(self, all, spellId, adjust)
 		end
 	end
 	if self.vb.RylakAbilities and (self:IsMythic() and spellId == 155459 or all) then--Dreadwing
-		timerSuperheatedShrapnelCD:Cancel()
+		timerSuperheatedShrapnelCD:Stop()
 		timerSuperheatedShrapnelCD:Start(7.3-dismountAdjust)
 	end
 	if self.vb.ElekkAbilities and (self:IsMythic() and spellId == 163247 or all) then--Ironcrusher
-		timerTantrumCD:Cancel()
+		timerTantrumCD:Stop()
 		timerTantrumCD:Start(17-dismountAdjust, self.vb.tantrumCount+1)
 	end
 	if self.vb.FaultlineAbilites and (self:IsMythic() and spellId == 155462 or all) then--Faultline
-		timerEpicenterCD:Cancel()
+		timerEpicenterCD:Stop()
 		timerEpicenterCD:Start(24, self.vb.epicenterCount+1)
 		countdownEpicenter:Start(24)
 	end
@@ -153,8 +153,8 @@ local function updateBeastTimers(self, all, spellId, adjust)
 	if adjust then return end--adjust true means triggered by boss dismounted on mythic, this doesn't reset pin down or call of the pack
 	if self.vb.RylakAbilities then--Rylak delays call of the pack and pin down as well. (Well, that or whatever beast you do 3rd. Still need to determine if rylak, or third beast)
 		if self.vb.ElekkAbilities and self.vb.WolfAbilities then--Wolf, elekk AND rylak
-			timerCallthePackCD:Cancel()--Just to not repeatedly see timer update before expires
-			timerPinDownCD:Cancel()--Just to not repeatedly see timer update before expires
+			timerCallthePackCD:Stop()--Just to not repeatedly see timer update before expires
+			timerPinDownCD:Stop()--Just to not repeatedly see timer update before expires
 			countdownPinDown:Cancel()
 			countdownCallPack:Cancel()
 			if self:IsDifficulty("lfr") then--Todo, see if normal also does this, since the 41 second timer is both normal and LFR
@@ -167,8 +167,8 @@ local function updateBeastTimers(self, all, spellId, adjust)
 			timerPinDownCD:Start(23)
 			countdownPinDown:Start(23)
 		else--TODO, i need data on rylak with wolf (2) or rylak with elekk (2).
-			timerCallthePackCD:Cancel()--Just to not repeatedly see timer update before expires
-			timerPinDownCD:Cancel()--Just to not repeatedly see timer update before expires
+			timerCallthePackCD:Stop()--Just to not repeatedly see timer update before expires
+			timerPinDownCD:Stop()--Just to not repeatedly see timer update before expires
 			countdownCallPack:Cancel()
 			countdownPinDown:Cancel()
 			--This can't actually happen in LFR so doesn't need anything special
@@ -178,8 +178,8 @@ local function updateBeastTimers(self, all, spellId, adjust)
 			countdownPinDown:Start(13.5)
 		end
 	else--Elekk alone verified, wolf alone verified. Wolf AND Elekk together verified. These timers only alter once rylak abilities activated.
-		timerCallthePackCD:Cancel()--Just to not repeatedly see timer update before expires
-		timerPinDownCD:Cancel()--Just to not repeatedly see timer update before expires
+		timerCallthePackCD:Stop()--Just to not repeatedly see timer update before expires
+		timerPinDownCD:Stop()--Just to not repeatedly see timer update before expires
 		countdownCallPack:Cancel()
 		countdownPinDown:Cancel()
 		if self:IsDifficulty("lfr") then--Todo, see if normal also does this, since the 41 second timer is both normal and LFR
@@ -419,8 +419,8 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 						DBM.RangeCheck:Show(7)--Upgrade range frame to 7 now that he has rend and tear.
 					end
 					--Cancel timers for abilities he can't use from other dead beasts
-					timerSuperheatedShrapnelCD:Cancel()
-					timerTantrumCD:Cancel()
+					timerSuperheatedShrapnelCD:Stop()
+					timerTantrumCD:Stop()
 				elseif cid == 76874 then--Dreadwing
 					timerInfernoBreathCD:Start(6)
 					timerConflagCD:Start(12)
@@ -428,30 +428,30 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 						DBM.RangeCheck:Show(8)--Update range frame to 8 for Scrapnal. TODO, again, see if melee affected by this or not
 					end
 					--Cancel timers for abilities he can't use from other dead beasts
-					timerRendandTearCD:Cancel()
-					timerTantrumCD:Cancel()
+					timerRendandTearCD:Stop()
+					timerTantrumCD:Stop()
 				elseif cid == 76945 then--Ironcrusher
 					timerStampedeCD:Start(15)
 					timerTantrumCD:Start(25, self.vb.tantrumCount+1)
 					--Cancel timers for abilities he can't use from other dead beasts
-					timerRendandTearCD:Cancel()
-					timerSuperheatedShrapnelCD:Cancel()
+					timerRendandTearCD:Stop()
+					timerSuperheatedShrapnelCD:Stop()
 				elseif cid == 76946 then--Faultline
 					self.vb.epicenterCount = 0
 					self:UnregisterShortTermEvents()--UNIT_TARGETABLE_CHANGED no longer used, and in fact unregistered to prevent bug with how it fires when faultline dies
 					timerEpicenterCD:Start(10, 1)
 					countdownEpicenter:Start(10)
 					--Cancel timers for abilities he can't use from other dead beasts
-					timerRendandTearCD:Cancel()
-					timerSuperheatedShrapnelCD:Cancel()
-					timerTantrumCD:Cancel()
+					timerRendandTearCD:Stop()
+					timerSuperheatedShrapnelCD:Stop()
+					timerTantrumCD:Stop()
 				end
 				if self:IsDifficulty("lfr") then--ONLY LFR does this
 					local remaining = timerCallthePackCD:GetRemaining()
 					if remaining < 20 then--if less than 20, it's changed to 20, else, current timer finishes if > 20
 						DBM:Debug("Call timer less than 20 remaining, CD reset to 20 by blizzard failsafe")
 						countdownCallPack:Cancel()
-						timerCallthePackCD:Cancel()
+						timerCallthePackCD:Stop()
 						timerCallthePackCD:Start(20)
 						countdownCallPack:Start(20)
 					end
@@ -477,17 +477,17 @@ function mod:UNIT_DIED(args)
 		--Split timer cancels up by CID. if for SOME REASON someone is stupid enough to have two beasts at once on mythic
 		--when one dies, don't want to cancel wrong timers
 		if cid == 76884 then
-			timerSavageHowlCD:Cancel()
-			timerRendandTearCD:Cancel()
+			timerSavageHowlCD:Stop()
+			timerRendandTearCD:Stop()
 		elseif cid == 76874 then
-			timerConflagCD:Cancel()
-			timerInfernoBreathCD:Cancel()
+			timerConflagCD:Stop()
+			timerInfernoBreathCD:Stop()
 			self:BossUnitTargetScannerAbort()
 		elseif cid == 76945 then
-			timerStampedeCD:Cancel()
-			timerTantrumCD:Cancel()
+			timerStampedeCD:Stop()
+			timerTantrumCD:Stop()
 		elseif cid == 76946 then
-			timerEpicenterCD:Cancel()
+			timerEpicenterCD:Stop()
 			countdownEpicenter:Cancel()
 		end
 		if self:IsMythic() then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1396, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14511 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14902 $"):sub(12, -3))
 mod:SetCreatureID(90378)
 mod:SetEncounterID(1786)
 mod:SetZone()
@@ -34,7 +34,7 @@ local warnVisionofDeath				= mod:NewTargetAnnounce(181488, 2)--The targets that 
 local warnBloodthirster				= mod:NewSpellAnnounce("ej11266", 3, 131150)
 
 --Boss
-local specWarnShred					= mod:NewSpecialWarningSpell(180199, nil, nil, nil, 3, 2)--Block, or get debuff
+local specWarnShred					= mod:NewSpecialWarningDefensive(180199, nil, nil, nil, 3, 2)--Block, or get debuff
 local specWarnHeartSeeker			= mod:NewSpecialWarningRun(180372, nil, nil, nil, 4, 2)--Must run as far from boss as possible
 local yellHeartSeeker				= mod:NewYell(180372)
 local specWarnDeathThroes			= mod:NewSpecialWarningCount(180224, nil, nil, nil, 2, 2)
@@ -45,7 +45,7 @@ local specWarnBloodGlob				= mod:NewSpecialWarningSwitch(180459, "Dps", nil, nil
 local specWarnFelBloodGlob			= mod:NewSpecialWarningSwitch(180413, "Dps", nil, nil, 3, 5)
 local specWarnBloodthirster			= mod:NewSpecialWarningSwitch("ej11266", "Dps", nil, 2, 1, 5)--Very frequent, let specwarn be an option
 local specWarnHulkingTerror			= mod:NewSpecialWarningSwitch("ej11269", "Tank", nil, 2, 1, 5)
-local specWarnRendingHowl			= mod:NewSpecialWarningInterruptCount(183917, "-Healer", nil, nil, 1, 5)
+local specWarnRendingHowl			= mod:NewSpecialWarningInterruptCount(183917, "HasInterrupt", nil, 2, 1, 5)
 
 --Boss
 --Next timers that are delayed by other next timers. how annoying
@@ -57,8 +57,8 @@ local timerHeartseekerCD			= mod:NewCDTimer(25, 180372, nil, nil, nil, 3)
 local timerVisionofDeathCD			= mod:NewCDCountTimer(75, 181488, nil, nil, nil, 5, nil, DBM_CORE_DEADLY_ICON)
 local timerDeathThroesCD			= mod:NewCDCountTimer(40, 180224, nil, nil, nil, 2)
 --Adds
-local timerBloodthirsterCD			= mod:NewCDCountTimer(70.3, "ej11266", nil, nil, nil, 1, 131150, DBM_CORE_DAMAGE_ICON)
-local timerRendingHowlCD			= mod:NewNextTimer(6, 183917, nil, "-Healer", 2, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerBloodthirsterCD			= mod:NewCDCountTimer(70.3, "ej11266", nil, nil, nil, 1, 131150, DBM_CORE_DAMAGE_ICON)--55969 is an iffy short name for bloodthirster since "bloodthirst" is all I could find that was close
+local timerRendingHowlCD			= mod:NewNextTimer(6, 183917, nil, "HasInterrupt", 2, 4, nil, DBM_CORE_INTERRUPT_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 
@@ -74,7 +74,7 @@ local voiceBloodGlob				= mod:NewVoice(180459)--180459
 local voiceFelBloodGlob				= mod:NewVoice(180413)--180199 (wrong spellID for voice do to my mistake)
 local voiceBloodthirster			= mod:NewVoice("ej11266", "Dps", nil, 2)--ej11266
 local voiceHulkingTerror			= mod:NewVoice("ej11269", "Tank", nil, 2)--ej11269
-local voiceRendingHowl				= mod:NewVoice(183917, "-Healer")
+local voiceRendingHowl				= mod:NewVoice(183917, "HasInterrupt")
 
 mod:AddInfoFrameOption("ej11280")
 
@@ -185,14 +185,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 188929 and args:IsDestTypePlayer() then
 		warnHeartseeker:CombinedShow(0.3, args.destName)--Multiple targets on mythic
-		timerHeartseekerCD:Cancel()
+		timerHeartseekerCD:Stop()
 		timerHeartseekerCD:Start()
 		if args:IsPlayer() then
 			specWarnHeartSeeker:Show()
 			yellHeartSeeker:Yell()
 			voiceHeartSeeker:Play("runout")
 		elseif self:IsMelee() and self:AntiSpam(2, 4) then
-			voiceHeartSeeker:Play("158078")--farawayfromline
+			voiceHeartSeeker:Play("farfromline")
 		end
 	elseif spellId == 181488 then
 		warnVisionofDeath:CombinedShow(0.5, args.destName)

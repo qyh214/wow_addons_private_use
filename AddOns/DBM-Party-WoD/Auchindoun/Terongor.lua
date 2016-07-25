@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1225, "DBM-Party-WoD", 1, 547)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14508 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15007 $"):sub(12, -3))
 mod:SetCreatureID(77734)
 mod:SetEncounterID(1714)
 mod:SetZone()
@@ -33,18 +33,18 @@ local warnDoom					= mod:NewTargetAnnounce(156965, 3, nil, "Healer")
 
 --Basic Abilities
 local specWarnDrainLife			= mod:NewSpecialWarningInterrupt(156854, "-Healer")
-local specWarnCorruption		= mod:NewSpecialWarningDispel(156842, "Healer")
+local specWarnCorruption		= mod:NewSpecialWarningDispel(156842, "Healer", nil, nil, 1, 2)
 local specWarnRainOfFire		= mod:NewSpecialWarningSpell(156857, nil, nil, nil, 2)--156856 fires SUCCESS but do not use, it fires for any player walking in or out of it
 local specWarnRainOfFireMove	= mod:NewSpecialWarningMove(156857)
 --Unknown Abilities
 local specWarnFixate			= mod:NewSpecialWarningRun(157168, nil, nil, 2, 4)
 --Affliction Abilities
 --TODO : Maybe need shit warning.
-local specWarnSeedOfMelevolence	= mod:NewSpecialWarningMoveAway(156921)
-local specWarnExhaustion		= mod:NewSpecialWarningDispel(164841, "RemoveCurse")
+local specWarnSeedOfMelevolence	= mod:NewSpecialWarningMoveAway(156921, nil, nil, nil, 1, 2)
+local specWarnExhaustion		= mod:NewSpecialWarningDispel(164841, "RemoveCurse", nil, nil, 1, 2)
 --Destruction Abilities
-local specWarnChaosBolt			= mod:NewSpecialWarningInterrupt(156975, "-Healer", nil, nil, 3)
-local specWarnImmolate			= mod:NewSpecialWarningDispel(156964, "Healer")
+local specWarnChaosBolt			= mod:NewSpecialWarningInterrupt(156975, "-Healer", nil, nil, 3, 2)
+local specWarnImmolate			= mod:NewSpecialWarningDispel(156964, "Healer", nil, nil, 1, 2)
 --Demonic Abilities
 local specWarnDemonicLeap		= mod:NewSpecialWarningYou(157039)
 local yellDemonicLeap			= mod:NewYell(157039)
@@ -53,12 +53,12 @@ local yellWarnChaosWave			= mod:NewYell(157001)
 local specWarnDoom				= mod:NewSpecialWarningTarget(156965, false)
 
 --Basic Abilities
-local timerDrainLifeCD			= mod:NewCDTimer(15, 156854, nil, nil, nil, 4)--15~18 variation
+local timerDrainLifeCD			= mod:NewCDTimer(15, 156854, nil, nil, nil, 4, nil, DBM_CORE_IMPORTANT_ICON)--15~18 variation
 local timerFixate				= mod:NewTargetTimer(12, 157168, nil, "-Tank", 3, 3)
-local timerRainOfFireCD			= mod:NewCDTimer(12, 156857, nil, nil, nil, 4)--12-22sec variation phase 2. Unknown Phase 1 repeat timer
+local timerRainOfFireCD			= mod:NewCDTimer(12, 156857, nil, nil, nil, 4, nil, DBM_CORE_IMPORTANT_ICON)--12-22sec variation phase 2. Unknown Phase 1 repeat timer
 --Destruction Abilities
-local timerChaosBoltCD			= mod:NewCDTimer(20.5, 156975, nil, nil, nil, 4)--20-25 variation.
-local timerImmolateCD			= mod:NewCDTimer(12, 156964, nil, "Healer", nil, 5)--Only timer that's probably not variable
+local timerChaosBoltCD			= mod:NewCDTimer(20.5, 156975, nil, nil, nil, 4, nil, DBM_CORE_IMPORTANT_ICON)--20-25 variation.
+local timerImmolateCD			= mod:NewCDTimer(12, 156964, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)--Only timer that's probably not variable
 --Affliction Abilities
 local timerSeedOfMelevolence	= mod:NewTargetTimer(18, 156921, nil, "-Tank")
 local timerSeedOfMelevolenceCD	= mod:NewCDTimer(22, 156921, nil, nil, nil, 3)--22-25

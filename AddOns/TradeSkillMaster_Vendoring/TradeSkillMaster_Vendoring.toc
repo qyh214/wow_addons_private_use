@@ -1,0 +1,31 @@
+## Interface: 70000
+## Title: |cff00ff00TradeSkillMaster_Vendoring|r
+## Notes: Provides Auto-Selling of items to a vendor
+## Author: Sapu94, PsyTech
+## Version: v3.0.3
+## SavedVariables: TradeSkillMaster_VendoringDB
+## Dependency: TradeSkillMaster
+## X-Curse-Packaged-Version: v3.0.3
+## X-Curse-Project-Name: TradeSkillMaster_Vendoring
+## X-Curse-Project-ID: tradeskillmaster_vendoring
+## X-Curse-Repository-ID: wow/tradeskillmaster_vendoring/mainline
+
+Locale\enUS.lua
+Locale\frFR.lua
+Locale\deDE.lua
+Locale\koKR.lua
+Locale\esMX.lua
+Locale\ruRU.lua
+Locale\zhCN.lua
+Locale\esES.lua
+Locale\zhTW.lua
+Locale\ptBR.lua
+
+TradeSkillMaster_Vendoring.lua
+Modules\MerchantTab.lua
+Modules\QuickSell.lua
+Modules\Buy.lua
+Modules\Groups.lua
+Modules\Buyback.lua
+Modules\Options.lua
+Modules\Util.lua

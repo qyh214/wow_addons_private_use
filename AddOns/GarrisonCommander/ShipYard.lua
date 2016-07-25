@@ -91,8 +91,10 @@ function module:HookedGarrisonShipyardMap_SetupBonus(missionList,frame,mission)
 		if mission.inProgress then return end
 		i=i+1
 		addendum=CreateFrame("Frame",nil,frame)
-		addendum:SetFrameStrata("MEDIUM")
-		addendum:SetFrameLevel(GSF:GetFrameLevel()+5)
+		if toc < 70000 then
+			addendum:SetFrameStrata("MEDIUM")
+			addendum:SetFrameLevel(GSF:GetFrameLevel()+5)
+		end
 		addendum:SetPoint("TOPLEFT",frame,"TOPRIGHT",-10,-15)
 
 		AddBackdrop(addendum)
@@ -253,7 +255,10 @@ function module:RefrreshCurrency()
 		end
 	end
 end
-function module:EventGARRISON_MISSION_STARTED(event,missionID,...)
+function module:EventGARRISON_MISSION_STARTED(event,missionType,missionID,...)
+	if toc<70000 then
+		missionID=missionType
+	end
 	--[===[@debug@
 	pp(event,missionID)
 	--@end-debug@]===]
@@ -384,7 +389,12 @@ do
 		end
 	end
 	function module:GetTotFollowers(status)
-		return s[status] or 0
+		if not status then
+			return s[AVAILABLE]+
+				s[GARRISON_FOLLOWER_ON_MISSION]
+		else
+			return s[status] or 0
+		end
 	end
 end
 --[[ Follower

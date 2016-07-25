@@ -1,7 +1,0 @@
-## Interface: 60200
-## Title: Master Plan A
-## Notes: A vital part of any Master Plan.|n|n|cff36e5ff"Stay cool; the alphabet has 28 more letters."
-## SavedVariables: MasterPlanAG
-## Globe-Main: MasterPlan
-## Version: A
-..\MasterPlan\PlanA\PlanA.xml

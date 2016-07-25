@@ -31,6 +31,9 @@ local playerRealm = GetRealmName()
 -- set name space
 setfenv(1, WIM);
 
+--Quick and dirty fix for renames in legion to deal with renamed globals
+local BNet_GetPresenceID = _G.BNet_GetBNetIDAccount or _G.BNet_GetPresenceID
+
 -- create WIM Module
 local WhisperEngine = CreateModule("WhisperEngine", true);
 
@@ -247,11 +250,7 @@ function SendSplitMessage(PRIORITY, HEADER, theMsg, CHANNEL, EXTRA, to)
 			if(Windows[to] and Windows[to].isBN) then
 				_G.BNSendWhisper(Windows[to].bn.id, chunk);
 			else
-				if(CHANNEL == "BN_CONVERSATION") then
-					_G.BNSendConversationMessage(to, chunk);
-				else
 					_G.ChatThrottleLib:SendChatMessage(PRIORITY, HEADER, chunk, CHANNEL, EXTRA, to);
-				end
                         end
 			chunk = (splitMessage[i] or "").." ";
                 end
@@ -551,7 +550,7 @@ local function replyTellTarget(TellNotTold)
     local bNetID;
     if (lastTell:find("^|K")) then
       lastTell = _G.BNTokenFindName(lastTell);
-      bNetID = _G.BNet_GetPresenceID(lastTell);
+      bNetID = BNet_GetPresenceID(lastTell);
     end
 
     if (lastTell ~= "" and db.pop_rules.whisper.intercept) then
@@ -577,7 +576,7 @@ function CF_ExtractTellTarget(editBox, msg)
 	--_G.DEFAULT_CHAT_FRAME:AddMessage("Raw: "..msg:gsub("|", ":")); -- debugging
 	if (target:find("^|K")) then
 		target, msg = _G.BNTokenFindName(target);
-		bNetID = _G.BNet_GetPresenceID(target);
+		bNetID = BNet_GetPresenceID(target);
 	else
 		--If we haven't even finished one word, we aren't done.
 		if (not target or not string.find(target, "%s") or (string.sub(target, 1, 1) == "|")) then

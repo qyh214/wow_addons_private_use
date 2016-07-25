@@ -43,10 +43,10 @@
 						TitanPanelClockControlSlider_OnShow(self);
 					</OnShow>
 					<OnValueChanged>
-					  TitanPanelClockControlSlider_OnValueChanged(self, value);	
+						TitanPanelClockControlSlider_OnValueChanged(self, value);
 					</OnValueChanged>
 					<OnMouseWheel>
-					  TitanPanelClockControlSlider_OnValueChangedWheel(self, delta);
+						TitanPanelClockControlSlider_OnValueChangedWheel(self, delta);
 					</OnMouseWheel>
 					<OnEnter>
 						TitanPanelClockControlSlider_OnEnter(self);
@@ -105,8 +105,8 @@
 					<OnLoad>
 						TitanPanelClockButton_OnLoad(self);
 						TitanPanelButton_OnLoad(self);
-		      </OnLoad>
-		      <OnShow>
+					</OnLoad>
+					<OnShow>
 						TitanPanelClockButton_OnShow();
 						TitanPanelButton_OnShow(self);
 					</OnShow>
@@ -117,7 +117,7 @@
 						TitanPanelClockButton_OnEvent(self, event, ...);
 					</OnEvent>
 					<OnClick>
-					TitanPanelClockButton_OnClick(self, button);					
+					TitanPanelClockButton_OnClick(self, button);
 					</OnClick>
 				</Scripts>
 			</Button>

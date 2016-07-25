@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod("Chromaggus", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 502 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 584 $"):sub(12, -3))
 mod:SetCreatureID(14020)
 mod:SetModelID(14367)
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 --	"SPELL_AURA_REFRESH",
@@ -38,7 +38,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(23309, 23313, 23189, 23316) or args.spellId == 23312 then
+	if args:IsSpellID(23309, 23313, 23189, 23316, 23312) then
 		warnBreath:Show(args.spellName)
 		timerBreathCD:Start(args.spellName)
 	end

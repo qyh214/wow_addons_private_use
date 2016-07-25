@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 986 $")
+end, "$Revision: 1002 $")
 
 -- Upvalues
 local _G = _G
@@ -114,7 +114,7 @@ function XPerl_Target_OnLoad(self, partyid)
 	--self.hitIndicator.text:SetPoint("CENTER", self.portraitFrame, "CENTER", 0, 0)
 
 	local events = {
-		"UNIT_COMBAT", "PLAYER_FLAGS_CHANGED", "UNIT_CONNECTION", "UNIT_PHASE", "RAID_TARGET_UPDATE", "GROUP_ROSTER_UPDATE", "PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "UNIT_THREAT_LIST_UPDATE", --[["UNIT_SPELLMISS",]] "UNIT_FACTION", "UNIT_FLAGS", "UNIT_CLASSIFICATION_CHANGED", "UNIT_PORTRAIT_UPDATE", "UNIT_AURA", "UNIT_HEALTH_FREQUENT", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE"--[[, "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"]]
+		"UNIT_COMBAT", "PLAYER_FLAGS_CHANGED", "UNIT_CONNECTION", "UNIT_PHASE", "RAID_TARGET_UPDATE", "GROUP_ROSTER_UPDATE", "PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "UNIT_THREAT_LIST_UPDATE", --[["UNIT_SPELLMISS",]] "UNIT_FACTION", "UNIT_FLAGS", "UNIT_CLASSIFICATION_CHANGED", "UNIT_PORTRAIT_UPDATE", "UNIT_AURA", "UNIT_HEALTH_FREQUENT", "PET_BATTLE_HEALTH_CHANGED", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE"--[[, "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"]]
 	}
 
 	for i, event in pairs(events) do
@@ -149,7 +149,7 @@ function XPerl_Target_OnLoad(self, partyid)
 		--self:SetScript("OnShow", XPerl_Target_UpdateDisplay)
 		self.combatMask = 0x00020000
 	end
-	self:RegisterEvent("UNIT_COMBO_POINTS") -- Not a standard unit event, becuase we want events for "player" even tho it's "target" or "focus" unit frame
+	--self:RegisterEvent("UNIT_COMBO_POINTS") -- Not a standard unit event, becuase we want events for "player" even tho it's "target" or "focus" unit frame
 	self:RegisterEvent("PLAYER_REGEN_ENABLED")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
 
@@ -301,20 +301,17 @@ end
 ---------------
 function XPerl_Target_UpdateCombo(self)
 	-- Anticipation
-	local name = GetSpellInfo(115189)
+	--[[local name = GetSpellInfo(114015)
 	local _, _, _, count = UnitAura("player", name)
 	if not count then
 		count = 0
-	end
-	local combopoints = GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player", self.partyid) + count
+	end]]
+	local combopoints = UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", SPELL_POWER_COMBO_POINTS)
+	--local combopoints = GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player", self.partyid) + count
 	local r, g, b = GetComboColour(combopoints)
 	if (tconf.combo.enable) then
 		--self.cpFrame:Hide()
-		if combopoints > 5 then
-			self.nameFrame.cpMeter:SetValue(count)
-		else
-			self.nameFrame.cpMeter:SetValue(combopoints)
-		end
+		self.nameFrame.cpMeter:SetValue(combopoints)
 		self.nameFrame.cpMeter:Show()
 		if r and g and b then
 			self.nameFrame.cpMeter:SetStatusBarColor(r, g, b, 0.7)
@@ -324,9 +321,9 @@ function XPerl_Target_UpdateCombo(self)
 	else
 		self.nameFrame.cpMeter:Hide()
 	end
-	if (tconf.combo.blizzard) then
+	--[[if (tconf.combo.blizzard) then
 		self.cpFrame:Hide()
-	else
+	else]]
 		--self.nameFrame.cpMeter:Hide()
 		self.cpFrame:Show()
 		self.cpFrame.text:SetText(combopoints)
@@ -335,7 +332,7 @@ function XPerl_Target_UpdateCombo(self)
 		else
 			self.cpFrame:Hide()
 		end
-	end
+	--end
 end
 
 -- XPerl_UnitDebuffInformation
@@ -987,7 +984,7 @@ end
 
 -- XPerl_Target_CombatFlash
 local function XPerl_Target_CombatFlash(self, elapsed, argNew, argGreen)
-	if (XPerl_CombatFlashSet (self, elapsed, argNew, argGreen)) then
+	if (XPerl_CombatFlashSet(self, elapsed, argNew, argGreen)) then
 		XPerl_CombatFlashSetFrames(self)
 	end
 end
@@ -1433,6 +1430,7 @@ function XPerl_Target_Events:UNIT_HEALTH_FREQUENT()
 	XPerl_Target_UpdateHealth(self)
 end
 XPerl_Target_Events.UNIT_MAXHEALTH = XPerl_Target_Events.UNIT_HEALTH_FREQUENT
+XPerl_Target_Events.PET_BATTLE_HEALTH_CHANGED = XPerl_Target_Events.UNIT_HEALTH_FREQUENT
 
 -- UNIT_FLAGS
 function XPerl_Target_Events:UNIT_FLAGS()
@@ -1462,7 +1460,7 @@ end
 
 -- UNIT_PORTRAIT_UPDATE
 function XPerl_Target_Events:UNIT_PORTRAIT_UPDATE()
-	XPerl_Unit_UpdatePortrait(self)
+	XPerl_Unit_UpdatePortrait(self, true)
 end
 
 -- UNIT_NAME_UPDATE
@@ -1484,11 +1482,11 @@ function XPerl_Target_Events:UNIT_CLASSIFICATION_CHANGED()
 end
 
 -- UNIT_COMBO_POINTS
-function XPerl_Target_Events:UNIT_COMBO_POINTS(unit)
+--[[function XPerl_Target_Events:UNIT_COMBO_POINTS(unit)
 	if (unit == "player") or (unit == "vehicle") then
 		XPerl_Target_UpdateCombo(self)
 	end
-end
+end]]
 
 -- UNIT_AURA
 function XPerl_Target_Events:UNIT_AURA()
@@ -1691,9 +1689,9 @@ function XPerl_Target_Set_Bits(self)
 		end
 	end
 
-	if (self == XPerl_Target) then
+	--[[if (self == XPerl_Target) then
 		XPerl_Target_Set_BlizzCPFrame(self)
-	end
+	end]]
 
 	XPerl_StatsFrameSetup(self)
 
@@ -1716,7 +1714,7 @@ function XPerl_Target_Set_Bits(self)
 	end
 end
 
-function ComboFrame_Update()
+--[[function ComboFrame_Update()
 	local comboPoints = GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player")
 	local comboPoint, comboPointHighlight, comboPointShine
 	if (comboPoints > 0) then
@@ -1824,4 +1822,4 @@ function XPerl_Target_Set_BlizzCPFrame(self)
 		ComboFrame:UnregisterEvent("PLAYER_TARGET_CHANGED")
 		ComboFrame:UnregisterEvent("UNIT_COMBO_POINTS")
 	end
-end
+end]]

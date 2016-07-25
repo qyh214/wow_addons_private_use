@@ -6,7 +6,7 @@ local init_done, gradient, conf, doneOptions
 local errorCount = 0
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 976 $")
+end, "$Revision: 1001 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -40,7 +40,9 @@ local function SetTex(self, num)
 			self.tex:SetTexture("Interface\\Addons\\ZPerl\\Images\\XPerl_Highlight", "ADD")
 			self.tex:SetTexCoord(unpack(p))
 			self.tex:SetVertexColor(0.86, 0.82, 0.41)
-			XPerl_Highlight:SetHighlight(self:GetParent())
+			if XPerl_Highlight then
+				XPerl_Highlight:SetHighlight(self:GetParent())
+			end
 		end
 	end
 end
@@ -165,16 +167,16 @@ function XPerl_pcall(...)
 end
 
 -- GetNamesWithoutBuff
-local matches = {
-	{GetSpellInfo(21562)},				-- Fortitude
-	{GetSpellInfo(1459)},				-- Intellect
-	{GetSpellInfo(1126)},				-- Mark of the Wild
+--[[local matches = {
+	--{GetSpellInfo(21562)},				-- Fortitude
+	--{GetSpellInfo(1459)},				-- Intellect
+	--{GetSpellInfo(1126)},				-- Mark of the Wild
 	--{GetSpellInfo(27683)},			-- Shadow Protection
-	{GetSpellInfo(19740)},				-- Blessing of Might
-	{GetSpellInfo(20217)},				-- Blessing of Kings
-}
+	--{GetSpellInfo(19740)},				-- Blessing of Might
+	--{GetSpellInfo(20217)},				-- Blessing of Kings
+}]]
 
-local checkExpiring
+--local checkExpiring
 local lastNamesList
 local lastName
 local lastWith
@@ -188,32 +190,32 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 	local names
 	local unitName
 
-	local _, class = UnitClass("player")
+	--[[local _, class = UnitClass("player")
 
 	if (not checkExpiring) then
 		local cet = {}
 
 		if (class == "PRIEST" or UnitIsGroupAssistant("player")) then
-			cet[GetSpellInfo(21562)] = 2			-- Fortitude
+			--cet[GetSpellInfo(21562)] = 2			-- Fortitudeh
 			--cet[GetSpellInfo(27683)] = 2			-- Shadow Protection
 		end
 		
 		if (class == "DRUID" or UnitIsGroupAssistant("player")) then
-			cet[GetSpellInfo(1126)] = 2				-- Mark of the Wild
+			--cet[GetSpellInfo(1126)] = 2				-- Mark of the Wild
 			--cet[GetSpellInfo(467)] = 1			-- Thorns
 		end
 		
 		if (class == "MAGE" or UnitIsGroupAssistant("player")) then
-			cet[GetSpellInfo(1459)] = 2				-- Intellect
+			--cet[GetSpellInfo(1459)] = 2				-- Intellect
 		end
 
 		if (class == "PALADIN" or UnitIsGroupAssistant("player")) then
-			cet[GetSpellInfo(19740)] = 2			-- Blessing of Might
-			cet[GetSpellInfo(20217)] = 2			-- Blessing of Kings
+			--cet[GetSpellInfo(19740)] = 2			-- Blessing of Might
+			--cet[GetSpellInfo(20217)] = 2			-- Blessing of Kings
 		end
 
 		checkExpiring = cet
-	end
+	end]]
 
 	--local withList = XPerl_GetReusableTable()
 	local withList = { }
@@ -242,15 +244,15 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 
 				if (name == spellName) then
 					hasBuff = true
-				else
-					for dups,pair in pairs(matches) do
+				--[[else
+					for dups, pair in pairs(matches) do
 						if (name == pair[1] or name == pair[2]) then
 							if (spellName == pair[1] or spellName == pair[2]) then
 								hasBuff = true
 								break
 							end
 						end
-					end
+					end]]
 				end
 				if (hasBuff) then
 					if (without and checkExpiring) then
@@ -438,9 +440,9 @@ function ZPerl_Init()
 	f:SetAllPoints(tx)
 	f:SetScript("OnSizeChanged", function(self, width, height)
 		local size = format("%.0f%.0f", width, height)
-		if size == "88" then
+		if size == "11" then
 			conf.bar.texture[1] = "Perl v2"
-			conf.bar.texture[2] = "Interface\\Addons\\ZPerl\\Images\\XPerl_StatusBar"
+			conf.bar.texture[2] = "Interface\\AddOns\\ZPerl\\Images\\XPerl_StatusBar"
 			XPerl_SetBarTextures()
 		end
 	end)

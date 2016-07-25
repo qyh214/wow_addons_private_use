@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(593, "DBM-Party-WotLK", 5, 274)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 207 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 229 $"):sub(12, -3))
 mod:SetCreatureID(29307)
 mod:SetEncounterID(385, 386)
 --mod:SetZone()
@@ -13,10 +13,10 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_DAMAGE 59451"
 )
 
-local warningElemental	= mod:NewSpellAnnounce("ej6421", 3, 54850)
-local warningStone		= mod:NewSpellAnnounce("ej6418", 3, 54878)
+local warningElemental		= mod:NewSpellAnnounce("ej6421", 3, 54850)
+local warningStone			= mod:NewSpellAnnounce("ej6418", 3, 54878)
 
-local specWarnPurpleShit= mod:NewSpecialWarningMove(59451)
+local specWarnPurpleShit	= mod:NewSpecialWarningMove(59451)
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 54850 then

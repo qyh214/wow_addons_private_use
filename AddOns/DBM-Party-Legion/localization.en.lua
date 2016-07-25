@@ -24,6 +24,15 @@ L= DBM:GetModLocalization(1664)
 L= DBM:GetModLocalization(1672)
 
 -----------------------
+--Black Rook Hold Trash
+-----------------------
+L = DBM:GetModLocalization("BRHTrash")
+
+L:SetGeneralLocalization({
+	name =	"Black Rook Hold Trash"
+})
+
+-----------------------
 -- <<<Darkheart Thicket>>> --
 -----------------------
 -----------------------
@@ -45,6 +54,16 @@ L= DBM:GetModLocalization(1656)
 -- Shade of Xavius --
 -----------------------
 L= DBM:GetModLocalization(1657)
+
+-----------------------
+--Darkheart Thicket Trash
+-----------------------
+L = DBM:GetModLocalization("DHTTrash")
+
+L:SetGeneralLocalization({
+	name =	"Darkheart Thicket Trash"
+})
+
 
 -----------------------
 -- <<<Eye of Azshara>>> --
@@ -75,6 +94,15 @@ L= DBM:GetModLocalization(1479)
 L= DBM:GetModLocalization(1492)
 
 -----------------------
+--Eye of Azshara Trash
+-----------------------
+L = DBM:GetModLocalization("EoATrash")
+
+L:SetGeneralLocalization({
+	name =	"Eye of Azshara Trash"
+})
+
+-----------------------
 -- <<<Halls of Valor>>> --
 -----------------------
 -----------------------
@@ -103,6 +131,15 @@ L= DBM:GetModLocalization(1488)
 L= DBM:GetModLocalization(1489)
 
 -----------------------
+--Halls of Valor Trash
+-----------------------
+L = DBM:GetModLocalization("HoVTrash")
+
+L:SetGeneralLocalization({
+	name =	"Halls of Valor Trash"
+})
+
+-----------------------
 -- <<<Neltharion's Lair>>> --
 -----------------------
 -----------------------
@@ -126,7 +163,16 @@ L= DBM:GetModLocalization(1673)
 L= DBM:GetModLocalization(1687)
 
 -----------------------
--- <<<Suramar Catacombs>>> --
+--Neltharion's Lair Trash
+-----------------------
+L = DBM:GetModLocalization("NLTrash")
+
+L:SetGeneralLocalization({
+	name =	"Neltharion's Lair Trash"
+})
+
+-----------------------
+-- <<<The Arcway>>> --
 -----------------------
 -----------------------
 -- Ivanyr --
@@ -143,6 +189,10 @@ L= DBM:GetModLocalization(1498)
 -----------------------
 L= DBM:GetModLocalization(1499)
 
+L:SetMiscLocalization({
+	batSpawn		=	"Reinforcements to me! NOW!"
+})
+
 -----------------------
 -- Nal'tira --
 -----------------------
@@ -154,22 +204,40 @@ L= DBM:GetModLocalization(1500)
 L= DBM:GetModLocalization(1501)
 
 -----------------------
--- <<<Suramar Noble District>>> --
+--The Arcway Trash
+-----------------------
+L = DBM:GetModLocalization("ArcwayTrash")
+
+L:SetGeneralLocalization({
+	name =	"The Arcway Trash"
+})
+
+-----------------------
+-- <<<Court of Stars>>> --
 -----------------------
 -----------------------
--- Patrol Captain Volendis --
+-- Patrol Captain Gerdo --
 -----------------------
 L= DBM:GetModLocalization(1718)
 
 -----------------------
--- Talixae --
+-- Talixae Flamewreath --
 -----------------------
 L= DBM:GetModLocalization(1719)
 
 -----------------------
--- High Councillor Gerdo --
+-- Advisor Melandrus --
 -----------------------
 L= DBM:GetModLocalization(1720)
+
+-----------------------
+--Court of Stars Trash
+-----------------------
+L = DBM:GetModLocalization("CoSTrash")
+
+L:SetGeneralLocalization({
+	name =	"Court of Stars Trash"
+})
 
 -----------------------
 -- <<<The Maw of Souls>>> --
@@ -190,7 +258,16 @@ L= DBM:GetModLocalization(1512)
 L= DBM:GetModLocalization(1663)
 
 -----------------------
--- <<<The Violet Hold>>> --
+--Maw of Souls Trash
+-----------------------
+L = DBM:GetModLocalization("MawTrash")
+
+L:SetGeneralLocalization({
+	name =	"Maw of Souls Trash"
+})
+
+-----------------------
+-- <<<Assault Violet Hold>>> --
 -----------------------
 -----------------------
 -- Mindflayer Kaahrj --
@@ -231,6 +308,36 @@ L= DBM:GetModLocalization(1697)
 -- Fel Lord Betrug --
 -----------------------
 L= DBM:GetModLocalization(1711)
+
+-----------------------
+--Assault Violet Hold Trash
+-----------------------
+L = DBM:GetModLocalization("AVHTrash")
+
+L:SetGeneralLocalization({
+	name =	"Assault Violet Hold Trash"
+})
+
+L:SetWarningLocalization({
+	WarningPortalSoon	= "New portal soon",
+	WarningPortalNow	= "Portal #%d",
+	WarningBossNow		= "Boss incoming"
+})
+
+L:SetTimerLocalization({
+	TimerPortal			= "Portal CD"
+})
+
+L:SetOptionLocalization({
+	WarningPortalNow		= "Show warning for new portal",
+	WarningPortalSoon		= "Show pre-warning for new portal",
+	WarningBossNow			= "Show warning for boss incoming",
+	TimerPortal				= "Show timer for next portal (after Boss)"
+})
+
+L:SetMiscLocalization({
+	Malgath		=	"Lord Malgath"
+})
 
 -----------------------
 -- <<<Vault of the Wardens>>> --

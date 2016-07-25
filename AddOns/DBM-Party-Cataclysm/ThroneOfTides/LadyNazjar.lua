@@ -1,33 +1,31 @@
 local mod	= DBM:NewMod(101, "DBM-Party-Cataclysm", 9, 65)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 167 $"):sub(12, -3))
 mod:SetCreatureID(40586)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"UNIT_HEALTH"
+	"SPELL_AURA_APPLIED 80564",
+	"SPELL_AURA_REMOVED 75690 80564",
+	"SPELL_CAST_START 75863 76008",
+	"SPELL_CAST_SUCCESS 75700 75722",
+	"UNIT_HEALTH boss1"
 )
 
 local warnWaterspout		= mod:NewSpellAnnounce(75863, 3)
 local warnWaterspoutSoon	= mod:NewSoonAnnounce(75863, 2)
-local warnShockBlast		= mod:NewSpellAnnounce(76008, 1, nil, false)
 local warnGeyser			= mod:NewSpellAnnounce(75722, 3)
 local warnFungalSpores		= mod:NewTargetAnnounce(80564, 3)
 
-local timerWaterspout		= mod:NewBuffActiveTimer(60, 75863)
-local timerShockBlast		= mod:NewCastTimer(3, 76008)
-local timerShockBlastCD		= mod:NewCDTimer(13, 76008)
+local specWarnShockBlast	= mod:NewSpecialWarningInterrupt(76008)
+
+local timerWaterspout		= mod:NewBuffActiveTimer(60, 75863, nil, nil, nil, 6)
+local timerShockBlastCD		= mod:NewCDTimer(13, 76008, nil, "HasInterrupt", 2, 4, nil, DBM_CORE_INTERRUPT_ICON)
 local timerGeyser			= mod:NewCastTimer(5, 75722)
 local timerFungalSpores		= mod:NewBuffFadesTimer(15, 80564)
-
-local specWarnShockBlast	= mod:NewSpecialWarningInterrupt(76008)
 
 local sporeTargets = {}
 local sporeCount = 0
@@ -72,14 +70,8 @@ function mod:SPELL_CAST_START(args)
 		timerWaterspout:Start()
 		timerShockBlastCD:Cancel()
 	elseif args.spellId == 76008 then
-		warnShockBlast:Show()
 		specWarnShockBlast:Show(args.sourceName)
 		timerShockBlastCD:Start()
-		if self:IsDifficulty("heroic5") then
-			timerShockBlast:Start(2)
-		else
-			timerShockBlast:Start()
-		end
 	end
 end
 
@@ -91,13 +83,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:UNIT_HEALTH(uId)
-	if UnitName(uId) == L.name then
-		local h = UnitHealth(uId) / UnitHealthMax(uId) * 100
-		if (h > 80) or (h > 45 and h < 60) then
-			preWarnedWaterspout = false
-		elseif (h < 75 and h > 72 or h < 41 and h > 38) and not preWarnedWaterspout then
-			preWarnedWaterspout = true
-			warnWaterspoutSoon:Show()
-		end
+	local h = UnitHealth(uId) / UnitHealthMax(uId) * 100
+	if (h > 80) or (h > 45 and h < 60) then
+		preWarnedWaterspout = false
+	elseif (h < 75 and h > 72 or h < 41 and h > 38) and not preWarnedWaterspout then
+		preWarnedWaterspout = true
+		warnWaterspoutSoon:Show()
 	end
 end

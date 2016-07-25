@@ -30,16 +30,27 @@ end
 local tooltip = CreateFrame('GameTooltip', 'XLootTooltip', UIParent, 'GameTooltipTemplate')
 tooltip:SetOwner(UIParent, "ANCHOR_NONE")
 
+local bind_types = {
+	[ITEM_BIND_ON_PICKUP] = 'pickup',
+	[ITEM_BIND_ON_EQUIP] = 'equip',
+	[ITEM_BIND_ON_USE] = 'use'
+}
+
+local tooltip_lines = {
+	XLootTooltipTextLeft2,
+	XLootTooltipTextLeft3,
+	XLootTooltipTextLeft4,
+	XLootTooltipTextLeft5
+}
+
 function XLoot.GetItemBindType(link)
 	tooltip:ClearLines()
 	tooltip:SetHyperlink(link)
-	local value = (GetCVar('colorblindMode') == '1' and XLootTooltipTextLeft4 or XLootTooltipTextLeft3):GetText()
-	if value == ITEM_BIND_ON_PICKUP then
-		return 'pickup'
-	elseif value == ITEM_BIND_ON_EQUIP then
-		return 'equip'
-	elseif value == ITEM_BIND_ON_USE then
-		return 'use'
+	for i,line in ipairs(tooltip_lines) do
+		local value = bind_types[line:GetText()]
+		if value then
+			return value
+		end
 	end
 end
 

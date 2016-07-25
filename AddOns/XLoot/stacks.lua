@@ -52,14 +52,16 @@ do
 
 	function AnchorPrototype:AnchorChild(child, to)
 		local d = self.data.direction
-		if to then
-			local a, b, x, y = 'BOTTOMLEFT', 'TOPLEFT', 0, 2
+		local spacing = self.data.spacing or 2
+		local offset = self.data.offset or 0
+		if to and to ~= self then
+			local a, b, x, y = 'BOTTOMLEFT', 'TOPLEFT', offset, spacing
 			if d == 'down' then
-				a, b, x, y = 'TOPLEFT', 'BOTTOMLEFT', 0, -2
+				a, b, x, y = 'TOPLEFT', 'BOTTOMLEFT', offset, -spacing
 			elseif d == 'left' then
-				a, b, x, y = 'RIGHT', 'LEFT', 2, 0
+				a, b, x, y = 'RIGHT', 'LEFT', spacing, offset
 			elseif d == 'right' then
-				a, b, x, y = 'LEFT', 'RIGHT', -2, 0
+				a, b, x, y = 'LEFT', 'RIGHT', -spacing, -offset
 			end
 			child:SetPoint(a, to, b, x, y)
 		else

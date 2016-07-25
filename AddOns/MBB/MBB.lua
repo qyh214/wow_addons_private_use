@@ -70,9 +70,11 @@ v2.01 - Update for 6.1.
 
 v2.02 - Update for 6.2.
 
+v3.00 - Update for 7.03.
+
 --]]
 
-MBB_Version = "2.02";
+MBB_Version = "3.00";
 
 -- Setup some variable for debugging.
 MBB_DebugFlag = 0;
@@ -140,7 +142,9 @@ MBB_Ignore = {
 	[36] = "GatherArchNote",
 	[37] = "ZGVMarker",
 	[38] = "QuestPointerPOI",	-- QuestPointer
-	[39] = "poiMinimap"	-- QuestPointer
+	[39] = "poiMinimap",	-- QuestPointer
+	[40] = "MiniMapLFGFrame",    -- LFG
+	[41] = "PremadeFilter_MinimapButton"    -- PreMadeFilter
 };
 
 MBB_IgnoreSize = {

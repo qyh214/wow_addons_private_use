@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(158, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
 mod:SetCreatureID(43686, 43687, 43688, 43689, 43735)
 --mod:SetEncounterID(1028)--ES probably doesn't fire until final phase, verify this
 mod:SetZone()
@@ -23,6 +23,12 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4",
 	"UNIT_HEALTH boss1 boss2 boss3 boss4"
 )
+
+local Ignacious = EJ_GetSectionInfo(3118)
+local Feludius = EJ_GetSectionInfo(3110)
+local Arion = EJ_GetSectionInfo(3128)
+local Terrastra = EJ_GetSectionInfo(3135)
+local Monstrosity = EJ_GetSectionInfo(3145)
 
 --Feludius
 local warnHeartIce			= mod:NewTargetAnnounce(82665, 3, nil, false)
@@ -83,37 +89,43 @@ local yellScrewed			= mod:NewYell(92307, L.blizzHatesMe, true, "yellScrewed", "Y
 local specWarnBossLow		= mod:NewSpecialWarning("specWarnBossLow")
 
 --Feludius
+mod:AddTimerLine(Feludius)
 local timerHeartIce			= mod:NewTargetTimer(60, 82665, nil, false)
 local timerHeartIceCD		= mod:NewCDTimer(22, 82665, nil, false)--22-24 seconds
-local timerGlaciate			= mod:NewCDTimer(33, 82746, nil, "Melee")--33-35 seconds
-local timerWaterBomb		= mod:NewCDTimer(33, 82699)--33-35 seconds
-local timerFrozen			= mod:NewBuffFadesTimer(10, 82772, nil, "Healer")
-local timerHydroLanceCD		= mod:NewCDTimer(12, 82752, nil, false)--12 second cd but lowest cast priority
+local timerGlaciate			= mod:NewCDTimer(33, 82746, nil, "Melee", nil, 2, nil, DBM_CORE_DEADLY_ICON)--33-35 seconds
+local timerWaterBomb		= mod:NewCDTimer(33, 82699, nil, nil, nil, 3)--33-35 seconds
+local timerFrozen			= mod:NewBuffFadesTimer(10, 82772, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)
+local timerHydroLanceCD		= mod:NewCDTimer(12, 82752, nil, "HasInterrupt", 2, 4, nil, DBM_CORE_INTERRUPT_ICON)--12 second cd but lowest cast priority
 --Ignacious
+mod:AddTimerLine(Ignacious)
 local timerBurningBlood		= mod:NewTargetTimer(60, 82660, nil, false)
 local timerBurningBloodCD	= mod:NewCDTimer(22, 82660, nil, false)--22-33 seconds, even worth having a timer?
-local timerAegisFlame		= mod:NewNextTimer(60, 82631)
+local timerAegisFlame		= mod:NewNextTimer(60, 82631, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
 --Terrastra
-local timerEruptionCD		= mod:NewNextTimer(15, 83675, nil, "Melee")
-local timerHardenSkinCD		= mod:NewCDTimer(42, 83718, nil, "Melee")--This one is iffy, it isn't as consistent as other ability timers
-local timerQuakeCD			= mod:NewNextTimer(33, 83565)
+mod:AddTimerLine(Terrastra)
+local timerEruptionCD		= mod:NewNextTimer(15, 83675, nil, "Melee", nil, 3)
+local timerHardenSkinCD		= mod:NewCDTimer(42, 83718, nil, "HasInterrupt", 2, 4, nil, DBM_CORE_INTERRUPT_ICON)--This one is iffy, it isn't as consistent as other ability timers
+local timerQuakeCD			= mod:NewNextTimer(33, 83565, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 local timerQuakeCast		= mod:NewCastTimer(3, 83565)
 --Arion
+mod:AddTimerLine(Arion)
 local timerLightningRod		= mod:NewBuffFadesTimer(15, 83099)
-local timerDisperse			= mod:NewCDTimer(30, 83087)
+local timerDisperse			= mod:NewCDTimer(30, 83087, nil, nil, nil, 6)
 local timerLightningBlast	= mod:NewCastTimer(4, 83070, nil, false)
-local timerThundershockCD	= mod:NewNextTimer(33, 83067)
+local timerThundershockCD	= mod:NewNextTimer(33, 83067, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 local timerThundershockCast	= mod:NewCastTimer(3, 83067)
 --Elementium Monstrosity
-local timerTransition		= mod:NewTimer(16.7, "timerTransition", 84918)
-local timerLavaSeedCD		= mod:NewCDTimer(23, 84913)
+mod:AddTimerLine(Monstrosity)
+local timerTransition		= mod:NewTimer(16.7, "timerTransition", 84918, nil, nil, 6)
+local timerLavaSeedCD		= mod:NewCDTimer(23, 84913, nil, nil, nil, 2)
 local timerGravityCrush		= mod:NewBuffActiveTimer(10, 84948)
-local timerGravityCrushCD	= mod:NewCDTimer(24, 84948)--24-28sec cd, decent varation
+local timerGravityCrushCD	= mod:NewCDTimer(24, 84948, nil, nil, nil, 3)--24-28sec cd, decent varation
 --Heroic
-local timerGravityCoreCD	= mod:NewNextTimer(20, 92075)--Heroic Phase 1 ablity
-local timerStaticOverloadCD	= mod:NewNextTimer(20, 92067)--Heroic Phase 1 ablity
-local timerFlameStrikeCD	= mod:NewNextTimer(20, 92212)--Heroic Phase 2 ablity
-local timerFrostBeaconCD	= mod:NewNextTimer(20, 92307)--Heroic Phase 2 ablity
+mod:AddTimerLine(PLAYER_DIFFICULTY2)
+local timerGravityCoreCD	= mod:NewNextTimer(20, 92075, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--Heroic Phase 1 ablity
+local timerStaticOverloadCD	= mod:NewNextTimer(20, 92067, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--Heroic Phase 1 ablity
+local timerFlameStrikeCD	= mod:NewNextTimer(20, 92212, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--Heroic Phase 2 ablity
+local timerFrostBeaconCD	= mod:NewNextTimer(20, 92307, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--Heroic Phase 2 ablity
 
 mod:AddBoolOption("HealthFrame", true)
 mod:AddBoolOption("HeartIceIcon")
@@ -140,11 +152,6 @@ local infoFrameUpdated = false
 local phase = 1
 local groundedName = GetSpellInfo(83581)
 local searingName = GetSpellInfo(83500)
-local Ignacious = EJ_GetSectionInfo(3118)
-local Feludius = EJ_GetSectionInfo(3110)
-local Arion = EJ_GetSectionInfo(3128)
-local Terrastra = EJ_GetSectionInfo(3135)
-local Monstrosity = EJ_GetSectionInfo(3145)
 
 local shieldHealth = {
 	["heroic25"] = 2000000,

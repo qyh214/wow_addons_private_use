@@ -1,15 +1,15 @@
 local mod	= DBM:NewMod(529, "DBM-Party-BC", 1, 248)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 526 $"):sub(12, -3))
-mod:SetCreatureID(17537, 17536)
+mod:SetRevision(("$Revision: 583 $"):sub(12, -3))
+mod:SetCreatureID(17537, 17307)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"UNIT_DIED"
+	"SPELL_AURA_REMOVED"
+--	"UNIT_DIED"
 )
 
 local warnMark      = mod:NewTargetAnnounce(30689)
@@ -33,9 +33,9 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerMark:Cancel(args.destName)
 	end
 end
-
+--[[
 function mod:UNIT_DIED(args)
 	if self:GetCIDFromGUID(args.destGUID) == 17537 then
 		DBM:EndCombat(self)
 	end
-end
+end--]]

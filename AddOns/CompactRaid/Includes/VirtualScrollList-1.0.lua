@@ -11,7 +11,7 @@
 -- API Documentation:
 -----------------------------------------------------------
 
--- frame = UICreateVirtualScrollList("name", parent, maxButtons [, selectable [, checkable [, "listType" [, "buttonTemplate"]]]) -- Create a virtual scroll list frame, if "listType" is specified "ITEM", "SPELL", "SPELL_ITEM", "ITEM_SPELL", the list will automatically display icons, names and tooltips for spell/item info
+-- frame = UICreateVirtualScrollList("name", parent, pageSize [, selectable [, checkable [, "listType" [, "buttonTemplate"]]]) -- Create a virtual scroll list frame, if "listType" is specified "ITEM", "SPELL", "", the list will automatically display icons, names and tooltips for spell/item info
 
 -- frame:CreateBorder(hasBkgnd) -- Decorate the list frame with a tooltip border and an optional background
 -- frame:EnableDrag(enable) -- Enable drag-drop
@@ -22,6 +22,12 @@
 -- frame:EnsureVisible([position]) -- Ensure a position being visible, scroll the list if needed, "position" defaults to current selection
 -- frame:RefreshContents() -- Refresh the entire list, call only when necessary!
 -- frame:ScheduleRefresh() -- Schedule a contents refreshing on next "OnUpdate" call
+-- frame:SetScrollBarScale(scale) -- Set scale of the scroll-bar, 1.0 maximum
+-- frame:TextureButton("textureName", button) -- Set the specified texture onto a button, textureName can be "highlightTexture" or "checkedTexture"
+-- frame:SetPageSize(size) -- Set the maximum items displayed in one page, 1-256
+-- frame:GetPageSize() -- Returns the maximum items displayed in one page, 1-256
+-- frame:ShowHeader(show) -- Show/hide the header frame
+-- frame:AddHeaderText("text", width [, "justifyH"]) -- Add a header text, width 0 means it's the last text
 
 -- frame:SetSelection(position) -- Select a data
 -- frame:GetSelection() -- Get current selection
@@ -30,7 +36,7 @@
 -- frame:GetDataCount() -- Return number of data in the list
 -- frame:GetData(position) -- Retrieve a particular data
 -- frame:SetData(position, data) -- Modify an existing data
--- frame:FindData(data [, compareFunc]) == Search for the first match of a particular data
+-- frame:FindData(data [, compareFunc]) == Search for the first match of a particular data, return index, data
 -- frame:InsertData(data [, position]) -- Insert a new data to the list, by default the data is inserted at the end of list
 -- frame:RemoveData(position) -- Remove an existing data, by default it removes the last data from the list
 -- frame:ShiftData(position1, position2) -- Shift a data from position1 to position2
@@ -38,6 +44,14 @@
 -- frame:MoveData(position, "direction") -- Move a data towards the specified direction ("UP", "DOWN", "TOP", "BOTTOM")
 -- frame:UpdateData(position) -- Call frame:OnButtonUpdate(button, data) if the list button reflects to position is visible at the moment
 -- frame:Clear() -- Clear the list, all data are deleted
+
+-----------------------------------------------------------
+-- List button methods
+-----------------------------------------------------------
+
+-- button:CreateText(["justifyH" [, r, g, b]]) -- Create a font-string object on a list button, "justifyH" must be either "CENTER" or "RIGHT", anything else are taken as "LEFT"
+-- button:CreateIcon(["texture" [, ...]) -- Create a texture, ... can be form of "left, right, top, bottom" or "ULx, ULy, LLx, LLy, URx, URy, LRx, LRy"
+-- button:GetDataIndex() -- Retrieve index of the data which this button represents
 
 -----------------------------------------------------------
 -- Callback Methods:
@@ -78,11 +92,12 @@ local GetItemQualityColor = GetItemQualityColor
 local pcall = pcall
 local HandleModifiedItemClick = HandleModifiedItemClick
 local GameTooltip = GameTooltip
+local STANDARD_TEXT_FONT = STANDARD_TEXT_FONT
 
 local NIL = "!2BFF-1B787839!"
 
 local MAJOR_VERSION = 1
-local MINOR_VERSION = 36
+local MINOR_VERSION = 42
 
 -- To prevent older libraries from over-riding newer ones...
 if type(UICreateVirtualScrollList_IsNewerVersion) == "function" and not UICreateVirtualScrollList_IsNewerVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -217,6 +232,93 @@ local function Frame_OnSelectionChanged(self)
 	SafeCall(self.OnSelectionChanged, self, selection, data)
 end
 
+local function ListButton_CreateText(self, justifyH, r, g, b)
+	local text = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLeft")
+	text:SetFont(STANDARD_TEXT_FONT, 13)
+	text:SetWordWrap(false)
+
+	if justifyH == "CENTER" or justifyH == "RIGHT" then
+		text:SetJustifyH(justifyH)
+	end
+
+	if r and g and b then
+		text:SetTextColor(r, g, b)
+	end
+
+	return text
+end
+
+local function ListButton_CreateIcon(self, texture, ...)
+	local icon = self:CreateTexture(nil, "ARTWORK")
+	icon:SetSize(16, 16)
+
+	if texture then
+		icon:SetTexture(texture)
+	end
+
+	local l, r, t, b = ...
+	if l and r and t and b then
+		icon:SetTexCoord(...)
+	end
+
+	return icon
+end
+
+local function HeaderFrame_AdjustFirstButton(self)
+	local button = self._firstButton
+	if not button then
+		return
+	end
+
+	if self:IsShown() then
+		button:SetPoint("TOPLEFT", self, "BOTTOMLEFT")
+		button:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT")
+	else
+		button:SetPoint("TOPLEFT", self, "TOPLEFT")
+		button:SetPoint("TOPRIGHT", self, "TOPRIGHT")
+	end
+end
+
+local function HeaderFrame_Show(self)
+	self:_OrigShow()
+	HeaderFrame_AdjustFirstButton(self)
+end
+
+local function HeaderFrame_Hide(self)
+	self:_OrigHide()
+	HeaderFrame_AdjustFirstButton(self)
+end
+
+local function Frame_ShowHeader(self, show)
+	if show then
+		self.headerFrame:_OrigShow()
+	else
+		self.headerFrame:_OrigHide()
+	end
+	HeaderFrame_AdjustFirstButton(self.headerFrame)
+end
+
+local function Frame_AddHeaderText(self, text, width, justifyH)
+	local fontString = ListButton_CreateText(self.headerFrame, justifyH)
+	fontString:SetText(text)
+
+	local prev = self.headerTexts[#self.headerTexts]
+	if prev then
+		fontString:SetPoint("LEFT", prev, "RIGHT", 2, 0)
+	else
+		fontString:SetPoint("LEFT", 4, 0)
+	end
+
+	if type(width) == "number" and width > 0 then
+		fontString:SetWidth(width)
+	else
+		fontString:SetPoint("RIGHT", -4, 0)
+	end
+
+	tinsert(self.headerTexts, fontString)
+	return fontString
+end
+
 local function ListButton_OnEnter(self, motion)
 	local parent = self:GetParent()
 	if not parent.selectable or parent.checkedTexture:GetParent() ~= self then
@@ -233,6 +335,10 @@ local function ListButton_OnLeave(self, motion)
 	SafeCall(parent.OnButtonLeave, parent, self, self.data, motion)
 end
 
+local function ListButton_GetDataIndex(self)
+	return self:GetID() + Frame_GetScrollOffset(self:GetParent())
+end
+
 local function ListButton_OnClick(self, flag, down)
 	local parent = self:GetParent()
 	if flag == "LeftButton" then
@@ -241,7 +347,7 @@ local function ListButton_OnClick(self, flag, down)
 		end
 
 		if parent.selectable then
-			local dataIndex = self:GetID() + Frame_GetScrollOffset(parent)
+			local dataIndex = ListButton_GetDataIndex(self)
 			if parent.selection ~= dataIndex then
 				Frame_TextureButton(self:GetParent(), "checkedTexture", self)
 				Frame_TextureButton(self:GetParent(), "highlightTexture")
@@ -293,6 +399,10 @@ local function Frame_CreateListButton(self, id)
 	local button = CreateFrame("Button", self:GetName().."Button"..id, self, self.buttonTemplate)
 	button:SetID(id)
 
+	button.CreateText = ListButton_CreateText
+	button.CreateIcon = ListButton_CreateIcon
+	button.GetDataIndex = ListButton_GetDataIndex
+
 	if type(self.buttonHeight) == "number" then
 		button:SetHeight(self.buttonHeight)
 	else
@@ -304,8 +414,9 @@ local function Frame_CreateListButton(self, id)
 		button:SetPoint("TOPLEFT", prev, "BOTTOMLEFT")
 		button:SetPoint("TOPRIGHT", prev, "BOTTOMRIGHT")
 	else
-		button:SetPoint("TOPLEFT")
-		button:SetPoint("TOPRIGHT", self.scrollBar, "TOPLEFT")
+		local headerFrame = self.headerFrame
+		headerFrame._firstButton = button
+		HeaderFrame_AdjustFirstButton(headerFrame)
 	end
 
 	tinsert(self.listButtons, button)
@@ -318,15 +429,14 @@ local function Frame_CreateListButton(self, id)
 	end
 
 	if self.listType then
-		button.icon = button:CreateTexture(button:GetName().."Icon", "BORDER")
-		button.icon:SetSize(16, 16)
-		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+		button.icon = ListButton_CreateIcon(button, nil, 0.08, 0.92, 0.08, 0.92)
 		if button.check then
 			button.icon:SetPoint("LEFT", button.check, "RIGHT", 4, 0)
 		else
 			button.icon:SetPoint("LEFT", 4, 0)
 		end
-		button.text = button:CreateFontString(button:GetName().."Text", "BORDER", "GameFontHighlightLeft")
+
+		button.text = ListButton_CreateText(button, "LEFT", 1, 1, 1)
 		button.text:SetPoint("LEFT", button.icon, "RIGHT", 4, 0)
 	end
 
@@ -375,11 +485,16 @@ end
 -- Update list buttons' contents, gives the user a chance to re-paint buttons
 local function Frame_UpdateList(self)
 	local offset = self.scrollBar:GetValue()
+	local pageSize = self.maxButtons
+	local listButtons = self.listButtons
+	local listData = self.listData
+
 	local i, checkedButton
-	for i = 1, self.maxButtons do
-		local button = self.listButtons[i]
+	for i = 1, pageSize do
+		local button = listButtons[i]
 		local dataIndex = i + offset
-		local data = self.listData[dataIndex]
+		local data = listData[dataIndex]
+
 		if data ~= nil then
 			if not button then
 				button = Frame_CreateListButton(self, i)
@@ -398,6 +513,11 @@ local function Frame_UpdateList(self)
 			button:Hide()
 		end
 	end
+
+	for i = pageSize + 1, #listButtons do
+		listButtons[i]:Hide()
+	end
+
 	Frame_TextureButton(self, "checkedTexture", checkedButton)
 end
 
@@ -405,9 +525,9 @@ end
 local function Frame_RefreshContents(self)
 	self.needRefresh = nil
 	local scrollBar = self.scrollBar
-	local maxButtons = self.maxButtons
+	local pageSize = self.maxButtons
 	local dataCount = #(self.listData)
-	local range = max(0, dataCount - maxButtons)
+	local range = max(0, dataCount - pageSize)
 
 	if range > 0 then
 		scrollBar:SetWidth(16)
@@ -420,9 +540,9 @@ local function Frame_RefreshContents(self)
 	scrollBar:SetMinMaxValues(0, range)
 	if scrollBar:GetValue() > range then
 		scrollBar:SetValue(range)
-	else
-		Frame_UpdateList(self)
 	end
+
+	Frame_UpdateList(self)
 end
 
 local function ScrollBar_OnValueChanged(self, value)
@@ -440,11 +560,11 @@ local function Frame_FindData(self, data, compareFunc)
 		local d = DecodeData(stored)
 		if compareFunc then
 			if compareFunc(d, data) then
-				return i
+				return i, d
 			end
 		else
 			if d == data then
-				return i
+				return i, d
 			end
 		end
 	end
@@ -730,6 +850,10 @@ local function Frame_CreateBorder(self, hasBkgnd)
 	return frame
 end
 
+local function Frame_SetScrollBarScale(self, scale)
+	self.scrollBar:SetScale(scale)
+end
+
 local function ItemEventFrame_OnShow(self)
 	self:RegisterEvent("GET_ITEM_INFO_RECEIVED")
 end
@@ -738,8 +862,32 @@ local function ItemEventFrame_OnEvent(self)
 	Frame_ScheduleRefresh(self:GetParent())
 end
 
+local function Frame_SetPageSize(self, size)
+	 if type(size) ~= "number" then
+		size = 1
+	end
+
+	size = floor(size)
+	if size < 1 then
+		size = 1
+	end
+
+	if size > 256 then
+		size = 256
+	end
+
+	if self.maxButtons ~= size then
+		self.maxButtons = size
+		Frame_ScheduleRefresh(self)
+	end
+end
+
+local function Frame_GetPageSize(self)
+	return self.maxButtons
+end
+
 -- Create the scroll list frame
-function UICreateVirtualScrollList(name, parent, maxButtons, selectable, checkbox, listType, buttonTemplate)
+function UICreateVirtualScrollList(name, parent, pageSize, selectable, checkbox, listType, buttonTemplate)
 	if type(name) ~= "string" then
 		error(format("bad argument #1 to 'UICreateVirtualScrollList' (string expected, got %s)", type(name)))
 		return
@@ -752,11 +900,12 @@ function UICreateVirtualScrollList(name, parent, maxButtons, selectable, checkbo
 	end
 
 	frame:EnableMouseWheel(true)
-	frame.maxButtons = type(maxButtons) == "number" and max(1, floor(maxButtons)) or 1
+	Frame_SetPageSize(frame, pageSize)
 	frame.selectable = selectable
 	frame.checkbox = checkbox
 	frame.listButtons = {}
 	frame.listData = {}
+	frame.headerTexts = {}
 
 	if type(listType) == "string" then
 		frame.listType = listType
@@ -775,7 +924,7 @@ function UICreateVirtualScrollList(name, parent, maxButtons, selectable, checkbo
 		ief:SetScript("OnEvent", ItemEventFrame_OnEvent)
 	end
 
-	local scrollBar = CreateFrame("Slider", frame:GetName().."ScrollBar", frame, "UIPanelScrollBarTemplate")
+	local scrollBar = CreateFrame("Slider", name.."ScrollBar", frame, "UIPanelScrollBarTemplate")
 	frame.scrollBar = scrollBar
 	scrollBar:SetScript("OnValueChanged", ScrollBar_OnValueChanged)
 	scrollBar:SetPoint("TOPRIGHT", 0, -16)
@@ -783,8 +932,22 @@ function UICreateVirtualScrollList(name, parent, maxButtons, selectable, checkbo
 	scrollBar:Hide()
 	scrollBar:SetWidth(1)
 	scrollBar:SetValueStep(1)
-	scrollBar:SetMinMaxValues(0, 0)
+	scrollBar:SetStepsPerPage(pageSize)
+	scrollBar:SetObeyStepOnDrag(true)
+	scrollBar:SetMinMaxValues(0, 1)
 	scrollBar:SetValue(0)
+
+	local headerFrame = CreateFrame("Frame", name.."HeaderFrame", frame)
+	frame.headerFrame = headerFrame
+	headerFrame:SetPoint("TOPLEFT")
+	headerFrame:SetPoint("TOPRIGHT", scrollBar, "TOPLEFT")
+	headerFrame:SetHeight(20)
+	headerFrame:SetBackdrop({ bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", tile = true, tileSize = 16 })
+	headerFrame:Hide()
+	headerFrame._OrigShow = headerFrame.Show
+	headerFrame._OrigHide = headerFrame.Hide
+	headerFrame.Show = HeaderFrame_Show
+	headerFrame.Hide = HeaderFrame_Hide
 
 	frame.highlightTexture = frame:CreateTexture(name.."HighlightTexture", "BORDER")
 	frame.highlightTexture:Hide()
@@ -831,6 +994,13 @@ function UICreateVirtualScrollList(name, parent, maxButtons, selectable, checkbo
 	frame.BindDataList = Frame_BindDataList
 	frame.MoveData = Frame_MoveData
 	frame.ScheduleRefresh = Frame_ScheduleRefresh
+	frame.SetScrollBarScale = Frame_SetScrollBarScale
+	frame.TextureButton = Frame_TextureButton
+	frame.SetPageSize = Frame_SetPageSize
+	frame.GetPageSize = Frame_GetPageSize
+	frame.ShowHeader = Frame_ShowHeader
+	frame.AddHeaderText = Frame_AddHeaderText
+
 	return frame
 end
 

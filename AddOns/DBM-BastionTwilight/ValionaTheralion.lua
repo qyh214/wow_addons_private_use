@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(157, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
 mod:SetCreatureID(45992, 45993)
 mod:SetEncounterID(1032)
 mod:DisableEEKillDetection()
@@ -60,19 +60,19 @@ local yellEngulfingMagic			= mod:NewYell(86622)
 local specWarnTwilightZone			= mod:NewSpecialWarningStack(86214, nil, 20)
 
 --Valiona Ground Phase
-local timerBlackout					= mod:NewTargetTimer(15, 86788)
-local timerBlackoutCD				= mod:NewCDTimer(45.5, 86788)
-local timerDevouringFlamesCD		= mod:NewCDTimer(40, 86840)
-local timerNextDazzlingDestruction	= mod:NewNextTimer(132, 86408)
+local timerBlackout					= mod:NewTargetTimer(15, 86788, nil, nil, nil, 5, nil, DBM_CORE_MAGIC_ICON..DBM_CORE_HEALER_ICON)
+local timerBlackoutCD				= mod:NewCDTimer(45.5, 86788, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON..DBM_CORE_DEADLY_ICON)
+local timerDevouringFlamesCD		= mod:NewCDTimer(40, 86840, nil, nil, nil, 3)
+local timerNextDazzlingDestruction	= mod:NewNextTimer(132, 86408, nil, nil, nil, 3)
 --Theralion Ground Phase
 local timerTwilightMeteorite		= mod:NewCastTimer(6, 86013)		
 local timerEngulfingMagic			= mod:NewBuffFadesTimer(20, 86622)
-local timerEngulfingMagicNext		= mod:NewCDTimer(35, 86622)--30-40 second variations.
-local timerNextFabFlames			= mod:NewNextTimer(15, 86505)
-local timerNextDeepBreath			= mod:NewNextTimer(98, 86059)
+local timerEngulfingMagicNext		= mod:NewCDTimer(35, 86622, nil, nil, nil, 3)--30-40 second variations.
+local timerNextFabFlames			= mod:NewNextTimer(15, 86505, nil, nil, nil, 3)
+local timerNextDeepBreath			= mod:NewNextTimer(98, 86059, nil, nil, nil, 3)
 
-local timerTwilightShift			= mod:NewTargetTimer(100, 93051)
-local timerTwilightShiftCD			= mod:NewCDTimer(20, 93051)
+local timerTwilightShift			= mod:NewTargetTimer(100, 93051, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
+local timerTwilightShiftCD			= mod:NewCDTimer(20, 93051, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 

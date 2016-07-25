@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1197, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14769 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14994 $"):sub(12, -3))
 mod:SetCreatureID(77428, 78623)
 mod:SetEncounterID(1705)
 mod:SetZone()
@@ -107,20 +107,20 @@ local specWarnDarkStar							= mod:NewSpecialWarningSpell(178607, nil, nil, nil,
 local timerArcaneWrathCD						= mod:NewCDTimer(50, 156238, nil, "-Tank", nil, 3)--Pretty much a next timer, HOWEVER can get delayed by other abilities so only reason it's CD timer anyways
 local timerDestructiveResonanceCD				= mod:NewCDTimer(15, 156467, nil, "-Melee", nil, 3)--16-30sec variation noted. I don't like it
 local timerMarkOfChaos							= mod:NewTargetTimer(8, 158605, nil, "Tank")
-local timerMarkOfChaosCD						= mod:NewCDTimer(50.5, 158605, nil, "Tank", nil, 5)
+local timerMarkOfChaosCD						= mod:NewCDTimer(50.5, 158605, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerForceNovaCD							= mod:NewCDCountTimer(45, 157349, nil, nil, nil, 2)--45-52
 local timerForceNovaFortification				= mod:NewNextTimer(9, 157349, nil, nil, nil, 2)--For repeating nova
-local timerSummonArcaneAberrationCD				= mod:NewCDCountTimer(45, "ej9945", nil, "-Healer", nil, 1, 156471)--45-52 Variation Noted
+local timerSummonArcaneAberrationCD				= mod:NewCDCountTimer(45, "ej9945", nil, "-Healer", nil, 1, 156471, DBM_CORE_DAMAGE_ICON)--45-52 Variation Noted
 --Intermission: Lineage of Power
 mod:AddTimerLine(DBM_CORE_INTERMISSION)
 local timerTransition							= mod:NewPhaseTimer(74)
-local timerCrushArmorCD							= mod:NewNextTimer(6, 158553, nil, "Tank", nil, 5)
-local timerKickToFaceCD							= mod:NewCDTimer(17, 158563, nil, "Tank", nil, 5)
+local timerCrushArmorCD							= mod:NewNextTimer(6, 158553, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerKickToFaceCD							= mod:NewCDTimer(17, 158563, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 --Mythic
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerGaze									= mod:NewBuffFadesTimer(15, 165595, nil, nil, nil, 3)
 local timerGlimpseOfMadnessCD					= mod:NewNextCountTimer(27, 165243, nil, nil, nil, 1)
-local timerInfiniteDarknessCD					= mod:NewNextTimer(62, 165102, nil, "Healer", 2, 5)
+local timerInfiniteDarknessCD					= mod:NewNextTimer(62, 165102, nil, "Healer", 2, 5, nil, DBM_CORE_HEALER_ICON)
 local timerEnvelopingNightCD					= mod:NewNextCountTimer(63, 165876, nil, nil, nil, 2)--60 seconds plus 3 second cast
 local timerDarkStarCD							= mod:NewCDTimer(61, 178607, nil, nil, nil, 3)--61-65 Variations noticed
 local timerNightTwistedCD						= mod:NewTimer(30, "timerNightTwistedCD", 172138, nil, nil, 1)
@@ -280,16 +280,16 @@ local function delayedRangeUpdate(self)
 end
 
 local function stopP3Timers()
-	timerArcaneWrathCD:Cancel()
+	timerArcaneWrathCD:Stop()
 	countdownArcaneWrath:Cancel()
-	timerDestructiveResonanceCD:Cancel()
-	timerSummonArcaneAberrationCD:Cancel()
-	timerMarkOfChaosCD:Cancel()
+	timerDestructiveResonanceCD:Stop()
+	timerSummonArcaneAberrationCD:Stop()
+	timerMarkOfChaosCD:Stop()
 	countdownMarkofChaos:Cancel()
-	timerForceNovaCD:Cancel()
+	timerForceNovaCD:Stop()
 	voiceForceNova:Cancel()
 	countdownForceNova:Cancel()
-	timerForceNovaFortification:Cancel()
+	timerForceNovaFortification:Stop()
 	countdownForceNova:Cancel()
 	specWarnForceNova:Cancel()
 end
@@ -752,7 +752,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellGaze:Cancel()
 			local amount = args.amount or 1
 			specWarnGaze:Show(amount)
-			timerGaze:Cancel()
+			timerGaze:Stop()
 			countdownGaze:Cancel()
 			timerGaze:Start()
 			countdownGaze:Start()
@@ -824,7 +824,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self:SetIcon(args.destName, 0)
 	elseif spellId == 165595 then
 		if args:IsPlayer() then
-			timerGaze:Cancel()
+			timerGaze:Stop()
 			countdownGaze:Cancel()
 		end
 		updateRangeFrame(self)
@@ -842,24 +842,24 @@ mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 78549 then--Reaver
-		timerCrushArmorCD:Cancel()
-		timerKickToFaceCD:Cancel()
+		timerCrushArmorCD:Stop()
+		timerKickToFaceCD:Stop()
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 164751 or spellId == 164810 then--Teleport to Fortification/Teleport to Replication.
 		self.vb.isTransition = true
-		timerArcaneWrathCD:Cancel()
+		timerArcaneWrathCD:Stop()
 		countdownArcaneWrath:Cancel()
-		timerDestructiveResonanceCD:Cancel()
-		timerSummonArcaneAberrationCD:Cancel()
-		timerMarkOfChaosCD:Cancel()
+		timerDestructiveResonanceCD:Stop()
+		timerSummonArcaneAberrationCD:Stop()
+		timerMarkOfChaosCD:Stop()
 		countdownMarkofChaos:Cancel()
-		timerForceNovaCD:Cancel()
+		timerForceNovaCD:Stop()
 		countdownForceNova:Cancel()
 		voiceForceNova:Cancel()
-		timerForceNovaFortification:Cancel()
+		timerForceNovaFortification:Stop()
 		countdownForceNova:Cancel()
 		specWarnForceNova:Cancel()
 		timerTransition:Start()

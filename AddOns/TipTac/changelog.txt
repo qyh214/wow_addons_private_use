@@ -1,6 +1,17 @@
+TipTac Changes | 2016 Jul 23
+----------------------------
+- Fixed a few more API changes related to SetTexture -> SetColorTexture. Thanks vincentSDSH.
+- Options: Fixed menu dropdowns appearing behind other frames. Thanks again vincentSDSH.
+
+TipTac Changes | 2016 Jul 21
+----------------------------
+- TOC version updated to 70000 for the Legion 7.0.3 pre-patch.
+- Updated the API usage to fit with the changes in the 7.0.3 patch.
+
 TipTac Changes | 2015 Dec 07
 ----------------------------
 - Added an option for battle pet tips, under the "Special" category. If you encounter issues with battle pet tips, disable this.
+- The TipTacItemRef addon has been updated to fix the itemLevel issues with Timewarped items. If you still encounter issues with itemLevels, disable the "Show Item Level & ID" setting under the TipTacOptions.
 
 TipTac Changes | 2015 Jul 02
 ----------------------------

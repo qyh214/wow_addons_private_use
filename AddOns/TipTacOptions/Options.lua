@@ -264,11 +264,11 @@ f:SetHeight(378);	-- "18" per category entry
 f:SetBackdrop({ bgFile = "Interface\\ChatFrame\\ChatFrameBackground", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = 1, tileSize = 16, edgeSize = 16, insets = { left = 3, right = 3, top = 3, bottom = 3 } });
 f:SetBackdropColor(0.1,0.22,0.35,1);
 f:SetBackdropBorderColor(0.1,0.1,0.1,1);
-f:EnableMouse(1);
-f:SetMovable(1);
+f:EnableMouse(true);
+f:SetMovable(true);
 f:SetFrameStrata("DIALOG");
-f:SetToplevel(1);
-f:SetClampedToScreen(1);
+f:SetToplevel(true);
+f:SetClampedToScreen(true);
 f:SetScript("OnShow",function() f:BuildCategoryPage(); end);
 f:Hide();
 

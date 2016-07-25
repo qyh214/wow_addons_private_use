@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1123, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14569 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14994 $"):sub(12, -3))
 mod:SetCreatureID(76814)--76794 Cinder Wolf, 80590 Aknor Steelbringer
 mod:SetEncounterID(1689)
 mod:SetZone()
@@ -45,7 +45,7 @@ local specWarnBlazinRadiance			= mod:NewSpecialWarningMoveAway(155277, nil, nil,
 local yellBlazinRadiance				= mod:NewYell(155277, nil, false)
 local specWarnFireStorm					= mod:NewSpecialWarningCount(155493, nil, nil, nil, 2, 2)
 local specWarnFireStormEnded			= mod:NewSpecialWarningEnd(155493, nil, nil, nil, nil, 2)
-local specWarnRisingFlames				= mod:NewSpecialWarningStack(163284, nil, 6)--stack guessed
+local specWarnRisingFlames				= mod:NewSpecialWarningStack(163284, nil, 6)
 local specWarnRisingFlamesOther			= mod:NewSpecialWarningTaunt(163284, nil, nil, nil, nil, 2)
 local specWarnCharringBreath			= mod:NewSpecialWarningStack(155074, nil, 2)--Assumed based on timing and casts, that you swap every breath.
 local specWarnCharringBreathOther		= mod:NewSpecialWarningTaunt(155074)
@@ -55,11 +55,11 @@ local timerLavaSlashCD					= mod:NewCDTimer(14.5, 155318, nil, false, nil, 3)
 local timerMoltenTorrentCD				= mod:NewCDTimer(14, 154932, nil, "Ranged", 2, 3)
 local timerSummonEnchantedArmamentsCD	= mod:NewCDTimer(45, 156724, nil, "Ranged", 2, 3)--45-47sec variation
 local timerSummonCinderWolvesCD			= mod:NewNextTimer(76, 155776, nil, nil, nil, 1)
-local timerOverheated					= mod:NewTargetTimer(14, 154950, nil, "Tank", nil, 5)
-local timerCharringBreathCD				= mod:NewNextTimer(5, 155074, nil, "Tank", nil, 5)
+local timerOverheated					= mod:NewTargetTimer(14, 154950, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerCharringBreathCD				= mod:NewNextTimer(5, 155074, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerFixate						= mod:NewBuffFadesTimer(9.6, 154952)
 local timerBlazingRadianceCD			= mod:NewCDTimer(12, 155277, nil, false, nil, 3)--somewhat important but not important enough. there is just too much going on to be distracted by this timer
-local timerFireStormCD					= mod:NewNextCountTimer(61, 155493, nil, nil, nil, 2)
+local timerFireStormCD					= mod:NewNextCountTimer(61, 155493, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
 local timerFireStorm					= mod:NewBuffActiveTimer(14, 155493, nil, nil, nil, 6)
 
 local berserkTimer						= mod:NewBerserkTimer(420)
@@ -262,7 +262,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		countdownOverheated:Cancel()
 	elseif spellId == 154952 then
 		if args:IsPlayer() then
-			timerFixate:Cancel()
+			timerFixate:Stop()
 			specWarnFixate:Cancel()
 			voiceFixate:Cancel()
 			if GetTime() - (fixateTagets[args.destName] or 0) > 1 then
@@ -330,7 +330,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	elseif spellId == 155564 then--Firestorm (2 seconds faster than spell cast start
 		self.vb.firestorm = self.vb.firestorm + 1
 		specWarnFireStorm:Show(self.vb.firestorm)
-		timerBlazingRadianceCD:Cancel()
+		timerBlazingRadianceCD:Stop()
 		timerFireStorm:Start()
 		timerMoltenTorrentCD:Start(42.5)
 		timerSummonCinderWolvesCD:Start()

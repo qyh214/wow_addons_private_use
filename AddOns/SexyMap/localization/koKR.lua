@@ -70,6 +70,7 @@ L["Font"] = "글꼴" -- Needs review
 L["Font Color"] = "글꼴 색상" -- Needs review
 L["Font Size"] = "글꼴 크기" -- Needs review
 L["Force a square texture. Fixed distortion on square textures."] = "사각형 무늬를 강제로 적용합니다. 사각형 무늬로 왜곡을 수정합니다." -- Needs review
+L["Garrison Button (When Available)"] = "주둔지 버튼 (가능하다면)" -- Needs review
 L["Guild Dungeon Difficulty Indicator (When Available)"] = "길드 던전 난이도 표시기 (가능하다면)" -- Needs review
 L["Heart"] = "하트" -- Needs review
 L["Height"] = "높이" -- Needs review

@@ -281,13 +281,10 @@ function addon:MCMatchMaker(missionID,party,skipEpic,cap)
 	local mission=type(missionID)=="table" and missionID or self:GetMissionData(missionID)
 	missionID=mission.missionID
 	if (not party) then party=addon:GetParty(missionID) end
-	useCap=true
-	currentCap=cap
-
 --[===[@debug@
-print("Using cap data:",useCap,currentCap)
+	print("Using cap data:",cap)
 --@end-debug@]===]
-	MatchMaker(self,mission,party,false)
+	MatchMaker(self,mission,party,false,true,cap)
 	if (skipEpic) then
 		if (self:GetMissionData(missionID,'class')=='xp') then
 			for i=1,#party.members do
@@ -301,12 +298,13 @@ print("Using cap data:",useCap,currentCap)
 	end
 	return party.perc
 end
-function addon:MatchMaker(missionID,party,includeBusy)
+function addon:MatchMaker(missionID,party,includeBusy,useCap,currentCap)
 	local mission=type(missionID)=="table" and missionID or self:GetMissionData(missionID)
+	if not mission then return 0 end
 	missionID=mission.missionID
 	if (not party) then party=addon:GetParty(missionID) end
-	useCap=self:GetBoolean("MAXRES")
-	currentCap= self:GetNumber("MAXRESCHANCE")
+	useCap=useCap or self:GetBoolean("MAXRES")
+	currentCap=currentCap or self:GetNumber("MAXRESCHANCE")
 	MatchMaker(self,mission,party,includeBusy)
 	return party.perc
 end

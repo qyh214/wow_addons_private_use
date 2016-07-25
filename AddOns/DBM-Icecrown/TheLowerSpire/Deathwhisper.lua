@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Deathwhisper", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 208 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 226 $"):sub(12, -3))
 mod:SetCreatureID(36855)
 mod:SetEncounterID(1100)
 mod:SetModelID(30893)
@@ -39,7 +39,7 @@ local timerAdds						= mod:NewTimer(60, "TimerAdds", 61131, nil, nil, 1)
 local timerDominateMind				= mod:NewBuffActiveTimer(12, 71289)
 local timerDominateMindCD			= mod:NewCDTimer(40, 71289, nil, nil, nil, 3)
 local timerSummonSpiritCD			= mod:NewCDTimer(10, 71426, nil, false)
-local timerFrostboltCast			= mod:NewCastTimer(4, 71420, nil, false)
+local timerFrostboltCast			= mod:NewCastTimer(4, 71420, nil, false, nil, 4)
 local timerTouchInsignificance		= mod:NewTargetTimer(30, 71204, nil, "Tank|Healer", nil, 5)
 
 local berserkTimer					= mod:NewBerserkTimer(600)

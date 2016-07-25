@@ -1,11 +1,3 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="..\GarrisonCommander\libs\Ace3\LibStub\LibStub.lua"/>
-	<Include file="..\GarrisonCommander\libs\Ace3\CallbackHandler-1.0\CallbackHandler-1.0.xml"/>
-	<Include file="..\GarrisonCommander\libs\Ace3\AceAddon-3.0\AceAddon-3.0.xml"/>
-	<Include file="..\GarrisonCommander\libs\Ace3\AceHook-3.0\AceHook-3.0.xml"/>
-	<Include file="..\GarrisonCommander\libs\Ace3\AceEvent-3.0\AceEvent-3.0.xml"/>
-	<Include file="..\GarrisonCommander\libs\Ace3\AceTimer-3.0\AceTimer-3.0.xml"/>
-	<Include file="..\GarrisonCommander\libs\Ace3\AceLocale-3.0\AceLocale-3.0.xml"/>
-	<Include file="..\GarrisonCommander\libs\Ace3\AceDB-3.0\AceDB-3.0.xml"/>
 	<Include file="..\GarrisonCommander\libs\LibInit\LibInit.xml"/>
 </Ui>

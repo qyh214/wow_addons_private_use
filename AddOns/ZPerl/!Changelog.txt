@@ -1,3 +1,61 @@
+**r1002**
+* Various special bar fixes for every class.
+* Added fury for Demon Hunters.
+* Druid max mana fix.
+* Target combo indicator should work properly again.
+* Fixed some more leaks.
+* Some cleanups.
+
+**r1001**
+* Fixed a major leak.
+* Maelstrom bar should be colored properly.
+* Added secondary manabar for Shamans and Priests.
+* Some coloring safeguards.
+* Bar texture safeguard fix.
+* Buff tooltip helper fixes.
+* Mages and Rogues have access to the Player/Show special bar features too.
+
+**r1000**
+* Updated for 7.0.3.
+* Fixed a major issue with channel spells.
+* Health changes in pet battle for the target and focus frame will trigger properly.
+
+**r999**
+* Fixed a potential error.
+
+**r998**
+* Portrait frames won't get updated unnecessary.
+* Party target health update fixes.
+* Removed some old pet functions.
+* Toc version fix.
+
+**r997**
+* Fixed an issue which potentially could cause lag spikes when players joining/leaving your group.
+* Fixed an issue with castbars, where a castbar could fail for no reason, while using a macro with multiple spells.
+* Some other smaller fixes.
+
+**r996**
+* Removed some old workarounds.
+* Party attribute fixes.
+
+**r995**
+* Wake the repo server up.
+
+**r994**
+* Party attribute fixes.
+* Party incoming heals and absorbs should get updated properly.
+
+**r993**
+* Raid markers should properly work on vehicles.
+* The threat checks in the options should get validated properly.
+* Fixes with the balance druid bar.
+
+**r992**
+* Securely showing/hiding party frames.
+* Properly hiding party frames while in a pet battle.
+* Properly hiding raid frames while in a pet battle.
+* Party attribute function refactoring.
+
 **r991**
 * Fixed a major issue with the raid handling tables.
 * Raid onattribute changes will be changed based on the unit's GUID instead of the unit's name.

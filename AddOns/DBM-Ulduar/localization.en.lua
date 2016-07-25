@@ -415,7 +415,6 @@ L:SetOptionLocalization{
 	SetIconOnFearTarget				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63881),
 	SpecWarnFervorCast				= "Show special warning when $spell:63138 is being cast on you (must be targeted or focused by at least one raid member)",
 	specWarnBrainPortalSoon			= "Show special warning for next Brain Portal",
-	WarningSqueeze					= "Yell on Squeeze",
 	NextPortal						= "Show timer for next Brain Portal",
 	SetIconOnFervorTarget			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63138),
 	ShowSaraHealth					= "Show health frame for Sara in Phase 1 (must be targeted or focused by at least one raid member)",
@@ -426,6 +425,5 @@ L:SetOptionLocalization{
 L:SetMiscLocalization{
 	YellPull 			= "The time to strike at the head of the beast will soon be upon us! Focus your anger and hatred on his minions!",
 	YellPhase2	 		= "I am the lucid dream.",
-	Sara 				= "Sara",
-	WarningYellSqueeze	= "Squeeze on me! Help me!"
+	Sara 				= "Sara"
 }

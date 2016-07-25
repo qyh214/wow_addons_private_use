@@ -1,4 +1,4 @@
-## Interface: 60200
+## Interface: 70000
 ## Title: MinimapButtonBag
 ## Author: karlsnyder
 ## X-Category: Map
@@ -13,10 +13,11 @@
 ## X-Curse-Project-Name: MBB
 ## X-Curse-Project-ID: mbb
 ## X-Curse-Repository-ID: wow/mbb/mainline
-## X-Curse-Packaged-Version: v2.02
+## X-Curse-Packaged-Version: v3.00
 ## X-Curse-Project-Name: MBB
 ## X-Curse-Project-ID: mbb
 ## X-Curse-Repository-ID: wow/mbb/mainline
+
 localization-enGB.lua
 localization-frFR.lua
 localization-deDE.lua

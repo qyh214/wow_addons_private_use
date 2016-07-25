@@ -1,7 +1,7 @@
 wow_addons_private_use
 ======================
 
-魔兽世界（6.x）自用插件
+魔兽世界（7.x）自用插件
 
 效果图：
 ![screen](screen1.jpg)。

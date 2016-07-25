@@ -1,7 +1,29 @@
 *GarrisonCommander helps you when choosing the right follower for the right mission*
 
+* *2.12.0*
+Feature: Item appraising: GC uses any possible source for auction prices (or, as a last resort, vendor values) in order to appraise gold value also for non gold mission
+Feature: GC knows what toke or containers will creates and shows the one with the highest drop rate. Hovering on the container will show the full list with drop rate (from wowhead)
+Fix: Maximize resource switch was not working (#119)
+
+
+* *2.11.2*
+Fix: Almost maxed follower were not able to use upgrades (#113)
+Feature: Mission tooltip can now be totally hidden (#123)
+GarrisonCommander Broker
+Feature: You can now only show a summary report for missions
+
+* *2.11.1*
+Fix: "loose" was used instead of "lose" in resource lost message
+Feature: Added more localization
+
+* *2.10.2*
+Fix: Missing AceBucket Library was keeping addon from loading with some configurations
+
+* *2.10.1*
+Fix: Big screen reload popup had no button.
+
 * *2.10*
-Feature: Full automation. You can now with a single click have Garrison Commander completing missions, sendng new ones and logout.
+Feature: Full automation. You can now with a single click have Garrison Commander completing missions, sending new ones and logout.
 Farming your alts will never be so easy! (Thanks to Vasco90 for the suggestion)
 
 * *2.9.3*

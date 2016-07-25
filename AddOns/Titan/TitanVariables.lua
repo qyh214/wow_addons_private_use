@@ -68,7 +68,7 @@ TITAN_PANEL_CONSTANTS = {
 	FONT_NAME = "Friz Quadrata TT"
 }
 if (GetLocale() == "ruRU") then
-    -- Special fix for Russian - "Friz Quadrata TT" does not seem to work
+	-- Special fix for Russian - "Friz Quadrata TT" does not seem to work
 	TITAN_PANEL_CONSTANTS.FONT_NAME = "Arial Narrow"
 end
 local TPC = TITAN_PANEL_CONSTANTS -- shortcut
@@ -342,7 +342,7 @@ local function TitanRegisterExtra(id)
 	TitanPluginExtrasNum = TitanPluginExtrasNum + 1
 	TitanPluginExtras[TitanPluginExtrasNum] = 
 		{num=TitanPluginExtrasNum, 
-		id     = (id or "?"), 
+		id = (id or "?"), 
 		}
 end
 
@@ -567,7 +567,7 @@ function TitanVariables_SyncPluginSettings() -- one plugin uses this
 			
 			-- Synchronize registered and saved variables
 			TitanVariables_SyncRegisterSavedVariables(
-				plugin.savedVariables, TitanPluginSettings[id]);			
+				plugin.savedVariables, TitanPluginSettings[id]);
 		else
 			-- Remove plugin savedVariables table if there's one
 			if (TitanPluginSettings[id]) then
@@ -749,7 +749,7 @@ NOTE:
 :NOTE
 --]]
 function TitanGetVar(id, var)
-	if (id and var and TitanPluginSettings and TitanPluginSettings[id]) then		
+	if (id and var and TitanPluginSettings and TitanPluginSettings[id]) then
 		-- compatibility check
 		if TitanPluginSettings[id][var] == "Titan Nil" then 
 			TitanPluginSettings[id][var] = false 
@@ -774,7 +774,7 @@ function TitanVarExists(id, var)
 	-- If the value is nil then it will not exist...
 	if (id and var and TitanPluginSettings and TitanPluginSettings[id] 
 	and (TitanPluginSettings[id][var] 
-		or TitanPluginSettings[id][var] == false) ) 
+		or TitanPluginSettings[id][var] == false) )
 	then
 		return true
 	else
@@ -794,8 +794,8 @@ NOTE:
 :NOTE
 --]]
 function TitanSetVar(id, var, value)
-	if (id and var and TitanPluginSettings and TitanPluginSettings[id]) then		
-		TitanPluginSettings[id][var] = TitanUtils_Ternary(value, value, false);		
+	if (id and var and TitanPluginSettings and TitanPluginSettings[id]) then
+		TitanPluginSettings[id][var] = TitanUtils_Ternary(value, value, false);
 	end
 end
 
@@ -1044,7 +1044,7 @@ end
 --[[
 
 function TitanGetVarTable(id, var, position)
-	if (id and var and TitanPluginSettings and TitanPluginSettings[id]) then		
+	if (id and var and TitanPluginSettings and TitanPluginSettings[id]) then
 		-- compatibility check
 		if TitanPluginSettings[id][var][position] == "Titan Nil" then TitanPluginSettings[id][var][position] = false end
 		return TitanUtils_Ternary(TitanPluginSettings[id][var][position] == false, nil, TitanPluginSettings[id][var][position]);
@@ -1052,7 +1052,7 @@ function TitanGetVarTable(id, var, position)
 end
 
 function TitanSetVarTable(id, var, position, value)
-	if (id and var and TitanPluginSettings and TitanPluginSettings[id]) then		
+	if (id and var and TitanPluginSettings and TitanPluginSettings[id]) then
 		TitanPluginSettings[id][var][position] = TitanUtils_Ternary(value, value, false);
 	end
 end

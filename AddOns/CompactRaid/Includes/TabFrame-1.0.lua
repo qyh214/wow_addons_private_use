@@ -20,14 +20,15 @@
 -- frame:TabEnabled(index) -- Return whether a tab is enabled
 -- frame:EnableTab(index) -- Enable a tab
 -- frame:DisableTab(index) -- Disable a tab
+-- frame:SetTabText(index, text) -- Set text for a tab button
 
 -----------------------------------------------------------
 -- Callback Methods:
 -----------------------------------------------------------
 
--- frame:OnTabSelected(id, data) -- Called when a tab is selected
--- frame:OnTabDeselected(id, data) -- Called when a tab is deselected
--- frame:OnTabTooltip(id, data) -- Called when mouse hovers over a tab button
+-- frame:OnTabSelected(index, data) -- Called when a tab is selected
+-- frame:OnTabDeselected(index, data) -- Called when a tab is deselected
+-- frame:OnTabTooltip(index, data) -- Called when mouse hovers over a tab button
 
 -----------------------------------------------------------
 
@@ -36,11 +37,12 @@ local type = type
 local tinsert = tinsert
 local CreateFrame = CreateFrame
 local pcall = pcall
+local PanelTemplates_TabResize = PanelTemplates_TabResize
 local GameTooltip = GameTooltip
 local _G = _G
 
 local MAJOR_VERSION = 1
-local MINOR_VERSION = 6
+local MINOR_VERSION = 7
 
 -- To prevent older libraries from over-riding newer ones...
 if type(UICreateTabFrame_IsNewerVersion) == "function" and not UICreateTabFrame_IsNewerVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -123,19 +125,19 @@ local function TabButton_Deselect(self, internal)
 	end
 end
 
-local function Frame_SelectTab(self, id)
-	if self.selectedTab == id then
-		return id
+local function Frame_SelectTab(self, index)
+	if self.selectedTab == index then
+		return index
 	end
 
-	local button = self.tabButtons[id]
+	local button = self.tabButtons[index]
 	if not button then
 		return
 	end
 
 	local old = self.selectedTab
 	local oldButton = self.tabButtons[old]
-	self.selectedTab = id
+	self.selectedTab = index
 
 	self.spacer1:ClearAllPoints()
 	self.spacer1:SetPoint("LEFT", self.topLeft, "TOPRIGHT", 0, -1)
@@ -151,7 +153,7 @@ local function Frame_SelectTab(self, id)
 	end
 
 	TabButton_Select(button)
-	return id
+	return index
 end
 
 local function Frame_DeselectTab(self)
@@ -174,15 +176,15 @@ local function Frame_GetSelection(self)
 	return self.selectedTab, tab and tab.data
 end
 
-local function Frame_TabEnabled(self, id)
-	local button = self.tabButtons[id]
+local function Frame_TabEnabled(self, index)
+	local button = self.tabButtons[index]
 	if button then
 		return button:IsEnabled()
 	end
 end
 
-local function Frame_EnableTab(self, id)
-	local button = self.tabButtons[id]
+local function Frame_EnableTab(self, index)
+	local button = self.tabButtons[index]
 	if button then
 		button:Enable()
 		button._tabDisabled = nil
@@ -190,8 +192,8 @@ local function Frame_EnableTab(self, id)
 	end
 end
 
-local function Frame_DisableTab(self, id)
-	local button = self.tabButtons[id]
+local function Frame_DisableTab(self, index)
+	local button = self.tabButtons[index]
 	if button then
 		button:Disable()
 		button._tabDisabled = 1
@@ -231,18 +233,19 @@ local function TabButton_OnLeave(self)
 end
 
 local function Frame_AddTab(self, text, data, tooltipText)
-	local id = self.numTabs + 1
-	local name = self:GetName().."Tab"..id
+	local index = self.numTabs + 1
+	local name = self:GetName().."Tab"..index
 
-	self.numTabs = id
+	self.numTabs = index
 	local button = CreateFrame("Button", name, self, "OptionsFrameTabButtonTemplate")
 	button.text = _G[name.."Text"]
 	button.data = data
 	button.tooltipText = tooltipText
-	button:SetID(id)
-	button.text:SetFont(STANDARD_TEXT_FONT, 12)
+	button:SetID(index)
+	button.text:SetFont(STANDARD_TEXT_FONT, 13)
 	button:SetFontString(button.text)
 	button:SetText(text)
+
 	button:SetMotionScriptsWhileDisabled(true)
 	button:SetHitRectInsets(10, 10, 5, 0)
 
@@ -269,15 +272,27 @@ local function Frame_AddTab(self, text, data, tooltipText)
 	button:SetScript("OnLeave", TabButton_OnLeave)
 	TabButton_Deselect(button, 1)
 
-	return id, button
+	return index, button
 end
 
-local function Frame_GetTabButton(self, id)
-	return self.tabButtons[id]
+local function Frame_GetTabButton(self, index)
+	return self.tabButtons[index]
 end
 
 local function Frame_NumTabs(self)
 	return self.numTabs
+end
+
+local function Frame_SetTabText(self, index, text)
+	local tab = self.tabButtons[index]
+	if not tab then
+		return
+	end
+
+	tab:SetText(text)
+	if tab:IsVisible() then
+		PanelTemplates_TabResize(tab, 0)
+	end
 end
 
 function UICreateTabFrame(name, parent)
@@ -316,6 +331,7 @@ function UICreateTabFrame(name, parent)
 	frame.TabEnabled = Frame_TabEnabled
 	frame.EnableTab = Frame_EnableTab
 	frame.DisableTab = Frame_DisableTab
+	frame.SetTabText = Frame_SetTabText
 	return frame
 end
 

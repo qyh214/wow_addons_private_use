@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 982 $")
+end, "$Revision: 998 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -42,7 +42,37 @@ local feignDeath = GetSpellInfo(5384)
 ----------------------
 function XPerl_Party_Events_OnLoad(self)
 	local events = {
-		"PLAYER_ENTERING_WORLD", "GROUP_ROSTER_UPDATE", "UNIT_CONNECTION", "UNIT_PHASE", "UNIT_COMBAT", --[["UNIT_SPELLMISS",]] "UNIT_FACTION", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PORTRAIT_UPDATE", "UNIT_TARGET", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED", "RAID_TARGET_UPDATE", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED", "PLAYER_LOGIN", "UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED","PARTY_LOOT_METHOD_CHANGED", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
+		"PLAYER_ENTERING_WORLD",
+		"GROUP_ROSTER_UPDATE",
+		"UNIT_CONNECTION",
+		"UNIT_PHASE",
+		"UNIT_COMBAT",
+		--"UNIT_SPELLMISS",
+		"UNIT_FACTION",
+		"UNIT_FLAGS",
+		"UNIT_AURA",
+		"UNIT_PORTRAIT_UPDATE",
+		"UNIT_TARGET",
+		"UNIT_HEAL_PREDICTION",
+		"UNIT_ABSORB_AMOUNT_CHANGED",
+		"UNIT_POWER_FREQUENT",
+		"UNIT_MAXPOWER",
+		"UNIT_HEALTH_FREQUENT",
+		"UNIT_MAXHEALTH",
+		"UNIT_LEVEL",
+		"UNIT_DISPLAYPOWER",
+		"UNIT_NAME_UPDATE",
+		"PLAYER_FLAGS_CHANGED",
+		"RAID_TARGET_UPDATE",
+		"READY_CHECK",
+		"READY_CHECK_CONFIRM",
+		"READY_CHECK_FINISHED",
+		"PLAYER_LOGIN",
+		"UNIT_THREAT_LIST_UPDATE",
+		"PLAYER_TARGET_CHANGED",
+		"PARTY_LOOT_METHOD_CHANGED",
+		"PET_BATTLE_OPENING_START", 
+		"PET_BATTLE_CLOSE",
 	}
 	for i, event in pairs(events) do
 		-- Party frames doesn't update properly with this yet
@@ -54,7 +84,7 @@ function XPerl_Party_Events_OnLoad(self)
 		self:RegisterEvent(event)
 	end
 
-	partyHeader:UnregisterEvent("UNIT_NAME_UPDATE") -- IMPORTANT! Fix for WoW 2.1 UNIT_NAME_UPDATE lockup issues
+	--partyHeader:UnregisterEvent("UNIT_NAME_UPDATE") -- IMPORTANT! Fix for WoW 2.1 UNIT_NAME_UPDATE lockup issues
 
 	UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE") -- IMPORTANT! Stops raid framerate lagging when members join/leave/zone
 	
@@ -115,13 +145,13 @@ local function onAttrChanged(self, name, value)
 	if (name == "unit") then
 		if (value and value ~= "party0") then
 			SetFrameArray(self, value)
-			if (self.partyid ~= value or self.lastName ~= UnitName(value)) then
+			if (self.partyid ~= value or self.lastName ~= UnitName(value) or self.lastGUID ~= UnitGUID(value)) then
 				if (conf) then
 					XPerl_Party_UpdateDisplay(self, true)
 				end
-				if (XPerl_ArcaneBar_RegisterFrame) then
+				--[[if (XPerl_ArcaneBar_RegisterFrame) then
 					XPerl_ArcaneBar_RegisterFrame(self.nameFrame, value)
-				end
+				end]]
 			end
 		else
 			SetFrameArray(self)
@@ -209,6 +239,10 @@ function ZPerl_Party_OnLoad(self)
 	self:SetScript("OnShow", XPerl_Party_UpdateDisplay) -- XPerl_Unit_UpdatePortrait)
 
 	self.targetFrame:SetScript("OnUpdate", XPerl_Party_Target_OnUpdate)
+
+	if (XPerl_ArcaneBar_RegisterFrame) then
+		XPerl_ArcaneBar_RegisterFrame(self.nameFrame, self.partyid)
+	end
 
 	if (XPerlDB) then
 		self.conf = XPerlDB.party
@@ -528,6 +562,7 @@ end
 local function XPerl_Party_UpdateName(self)
 	local Partyname = UnitName(self.partyid)
 	self.lastName = Partyname
+	self.lastGUID = UnitGUID(self.partyid)
 	if (Partyname) then
 		self.nameFrame.text:SetFontObject(GameFontNormal)
 		self.nameFrame.text:SetText(Partyname)
@@ -724,7 +759,7 @@ local function XPerl_Party_UpdateMana(self)
 	self.statsFrame.manaBar:SetMinMaxValues(0, Partymanamax)
 	self.statsFrame.manaBar:SetValue(Partymana)
 
-	if (XPerl_GetDisplayedPowerType(self.partyid)>=1) then
+	if (XPerl_GetDisplayedPowerType(self.partyid) >= 1) then
 		self.statsFrame.manaBar.percent:SetText(Partymana)
 	else
 		self.statsFrame.manaBar.percent:SetFormattedText(percD, 100 * percent)
@@ -795,8 +830,14 @@ local function CheckRaid()
 		local singleGroup = XPerl_Party_SingleGroup()
 		
 		if (not pconf or ((pconf.inRaid and IsInRaid()) or (pconf.smallRaid and singleGroup) or (GetNumGroupMembers() > 0 and not IsInRaid()))) then -- or GetNumGroupMembers() > 0
-			if (not partyHeader:IsShown()) then
-				partyHeader:Show()
+			if not C_PetBattles.IsInBattle() then
+				if (not partyHeader:IsShown()) then
+					partyHeader:Show()
+				end
+			else
+				if (partyHeader:IsShown()) then
+					partyHeader:Hide()
+				end
 			end
 		else
 			if (partyHeader:IsShown()) then
@@ -813,11 +854,11 @@ local function XPerl_Party_TargetUpdateHealth(self)
 	tf.lastHP, tf.lastHPMax = hp, hpMax
 	tf.lastUpdate = GetTime()
 
-	tf.healthBar:SetMinMaxValues(0, hpMax)
-	tf.healthBar:SetValue(hp)
+	--tf.healthBar:SetMinMaxValues(0, hpMax)
+	--tf.healthBar:SetValue(hp)
 	-- Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
 	local percent
-	if UnitIsDeadOrGhost(self.targetid) or (hp == 0 and hpMax == 0) then -- Probably dead target
+	if UnitIsDeadOrGhost(self.targetid) then -- Probably dead target
 		percent = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
 	elseif hp > 0 and hpMax == 0 then -- We have current ho but max hp failed.
 		hpMax = hp -- Make max hp at least equal to current health
@@ -826,7 +867,11 @@ local function XPerl_Party_TargetUpdateHealth(self)
 		percent = hp / hpMax--Everything is dandy, so just do it right way.
 	end
 	-- end division by 0 check
-	tf.healthBar.text:SetFormattedText(percD, 100 * percent)	-- XPerl_Percent[floor(100 * hp / hpMax)])
+	if (hpMax > 0) then 
+		tf.healthBar.text:SetFormattedText(percD, 100 * percent)	-- XPerl_Percent[floor(100 * hp / hpMax)])
+		tf.healthBar:SetMinMaxValues(0, hpMax)
+		tf.healthBar:SetValue(hp)
+	end
 	tf.healthBar.text:Show()
 
 	if (UnitIsDeadOrGhost(self.targetid)) then
@@ -1049,15 +1094,11 @@ function XPerl_Party_Events:PARTY_LOOT_METHOD_CHANGED()
 end
 
 function XPerl_Party_Events:PET_BATTLE_OPENING_START()
-	for k, v in pairs(PartyFrames) do
-		v:Hide()
-	end
+	CheckRaid()
 end
 
 function XPerl_Party_Events:PET_BATTLE_CLOSE()
-	for k, v in pairs(PartyFrames) do
-		v:Show()
-	end
+	CheckRaid()
 end
 
 -- RAID_TARGET_UPDATE
@@ -1206,7 +1247,7 @@ XPerl_Party_Events.PLAYER_LOGIN = XPerl_Party_Events.GROUP_ROSTER_UPDATE
 
 -- UNIT_PORTRAIT_UPDATE
 function XPerl_Party_Events:UNIT_PORTRAIT_UPDATE()
-	XPerl_Unit_UpdatePortrait(self)
+	XPerl_Unit_UpdatePortrait(self, true)
 end
 
 -- UNIT_POWER_FREQUENT / UNIT_MAXPOWER
@@ -1260,6 +1301,18 @@ XPerl_Party_Events.UNIT_FLAGS = XPerl_Party_Events.UNIT_FACTION
 function XPerl_Party_Events:UNIT_TARGET()
 	XPerl_Party_UpdateTarget(self)
 	updatePartyThreat(true)
+end
+
+function XPerl_Party_Events:UNIT_HEAL_PREDICTION(unit)
+	if (pconf.healprediction and unit == self.partyid) then
+		XPerl_SetExpectedHealth(self)
+	end
+end
+
+function XPerl_Party_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
+	if (pconf.absorbs and unit == self.partyid) then
+		XPerl_SetExpectedAbsorbs(self)
+	end
 end
 
 function XPerl_Party_Events:UNIT_HEAL_PREDICTION(unit)
@@ -1695,15 +1748,11 @@ function XPerl_Party_Set_Bits()
 		end
 	end
 
-	if (pconf.healprediction) then
-		XPerl_Party_Events_Frame:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "party1", "party2", "party3", "party4")
-	else
+	if (not pconf.healprediction) then
 		XPerl_Party_Events_Frame:UnregisterEvent("UNIT_HEAL_PREDICTION")
 	end
 
-	if (pconf.absorbs) then
-		XPerl_Party_Events_Frame:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "party1", "party2", "party3", "party4")
-	else
+	if (not pconf.absorbs) then
 		XPerl_Party_Events_Frame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 	end
 

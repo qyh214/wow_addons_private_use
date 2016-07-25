@@ -244,7 +244,7 @@ local function Stats_UpdateAddonsList(self, watchingCPU)
 			end
 		end
 	end
-	
+
 	GameTooltip:AddLine(' ')
 
 	if (total > 0) then
@@ -261,7 +261,7 @@ local function Stats_UpdateAddonsList(self, watchingCPU)
 				GameTooltip:AddDoubleLine(LIGHTYELLOW_FONT_COLOR_CODE..L["TITAN_PERFORMANCE_ADDON_NAME_LABEL"],LIGHTYELLOW_FONT_COLOR_CODE..L["TITAN_PERFORMANCE_ADDON_USAGE_LABEL"]..":")
 			end
 		end
-		
+
 		if watchingCPU then
 			GameTooltip:AddDoubleLine(LIGHTYELLOW_FONT_COLOR_CODE..L["TITAN_PERFORMANCE_ADDON_NAME_LABEL"],LIGHTYELLOW_FONT_COLOR_CODE..L["TITAN_PERFORMANCE_ADDON_USAGE_LABEL"]..":")
 		end
@@ -308,9 +308,9 @@ local function Stats_UpdateAddonsList(self, watchingCPU)
 				end
 			end
 		end
-		
+
 		GameTooltip:AddLine(' ')
-		
+
 		if(watchingCPU) then
 			GameTooltip:AddDoubleLine(LIGHTYELLOW_FONT_COLOR_CODE..L["TITAN_PERFORMANCE_ADDON_TOTAL_CPU_USAGE_LABEL"], format("%.3f",total)..L["TITAN_MILLISECOND"])
 		else
@@ -384,10 +384,10 @@ function TitanPanelPerformanceButton_SetTooltip()
 			rate = (button.memory - button.initialMemory) / sessionTime;
 			color = TitanUtils_GetThresholdColor(TITAN_MEMORY_RATE_THRESHOLD_TABLE, rate);
 			rateRichText = TitanUtils_GetColoredText(format(L["TITAN_MEMORY_RATE_FORMAT"], rate), color);
-		end     
+		end
 		if ( button.memory == button.initialMemory ) then
 			timeToGCRichText = TitanUtils_GetHighlightText("N/A");
-		end     
+		end
 
 		GameTooltip:AddLine("\n");
 		GameTooltip:AddLine(TitanUtils_GetHighlightText(L["TITAN_MEMORY_TOOLTIP"]));
@@ -399,7 +399,7 @@ function TitanPanelPerformanceButton_SetTooltip()
 	if ( showAddonMemory == 1 ) then
 		for _,i in pairs(topAddOns) do
 			i.name = '';
-			i.value = 0;	
+			i.value = 0;
 		end
 		Stats_UpdateAddonsList(self, GetCVar('scriptProfile') == '1' and not IsModifierKeyDown())
 	end
@@ -544,28 +544,28 @@ function TitanPanelRightClickMenu_PreparePerformanceMenu()
 	info.notCheckable = true
 	info.text = L["TITAN_PANEL_OPTIONS"];
 	info.value = "Options"
-	info.hasArrow = 1;	 
+	info.hasArrow = 1;
 	UIDropDownMenu_AddButton(info);
 
 	info = {};
 	info.notCheckable = true
 	info.text = L["TITAN_PERFORMANCE_ADDONS"];
 	info.value = "AddonUsage"
-	info.hasArrow = 1;	 
+	info.hasArrow = 1;
 	UIDropDownMenu_AddButton(info);
 
 	info = {};
 	info.notCheckable = true
 	info.text = L["TITAN_PERFORMANCE_ADDON_MEM_FORMAT_LABEL"];
 	info.value = "AddonMemoryFormat"
-	info.hasArrow = 1;	 
+	info.hasArrow = 1;
 	UIDropDownMenu_AddButton(info);
 
 	info = {};
 	info.notCheckable = true
 	info.text = L["TITAN_PERFORMANCE_MENU_CPUPROF_LABEL"];
 	info.value = "CPUProfiling"
-	info.hasArrow = 1;	 
+	info.hasArrow = 1;
 	UIDropDownMenu_AddButton(info);
 
 	TitanPanelRightClickMenu_AddSpacer();
@@ -647,10 +647,10 @@ end
 -- DESC : Reset the memory monitoring values
 -- **************************************************************************
 --function TitanPanelPerformanceButton_ResetMemory()
-    -- local button = _G["TitanPanelPerformanceButton"];
-     --button.memory, button.gcThreshold = gcinfo();
-     --button.initialMemory = button.memory;
-     --button.startSessionTime = time();
+	-- local button = _G["TitanPanelPerformanceButton"];
+	--button.memory, button.gcThreshold = gcinfo();
+	--button.initialMemory = button.memory;
+	--button.startSessionTime = time();
 --end
 
 

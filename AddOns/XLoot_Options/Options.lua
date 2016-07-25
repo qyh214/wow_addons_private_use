@@ -148,6 +148,9 @@ function addon:OnEnable() -- Construct addon option tables here
 		if meta.module_data.OnChanged then
 			meta.module_data.OnChanged(k, v, v2, v3, v4, ...)
 		end
+		if meta.must_reload_ui then
+			print((L.message_reloadui_warning):format(meta.module_data.name, info.option.name))
+		end
 	end
 
 	-- Anchor toggles
@@ -329,6 +332,12 @@ function addon:OnEnable() -- Construct addon option tables here
 				meta.requires, meta.requires_inverse = opts.requires, opts.requires_inverse
 				opts.disabled = requires
 				opts.requires, opts.requires_inverse = nil, nil
+			end
+
+			-- Reload UI warning
+			if opts.must_reload_ui then
+				meta.must_reload_ui = true
+				opts.must_reload_ui = nil
 			end
 
 			-- Sorted select
@@ -552,20 +561,27 @@ function addon:OnEnable() -- Construct addon option tables here
 		addon:RegisterOptions({ name = "Group", addon =  XLootGroup }, {
 			{ "anchors", "group", {
 				{ "roll_anchor_visible", "toggle", "roll_anchor", "visible", set = set_anchor },
+				--[[ DISABLED-PATCH: LEGION PRE-PATCH
 				{ "alert_anchor_visible", "toggle", "alert_anchor", "visible", set = set_anchor, width = "double" },
+				]]
 			}},
-			-- { "other_frames", "group", {
-			-- 	{ "hook_bonus" },
-			-- 	{ "bonus_skin", requires = "hook_bonus", width = "double" },
-			-- 	{ "hook_alert" },
-			-- 	{ "alert_skin", requires = "hook_alert", width = "double" },
-			-- }},
+			--[[ DISABLED-PATCH: LEGION PRE-PATCH
+			{ "other_frames", "group", {
+				{ "hook_warning_text", "description" },
+				{ "hook_bonus", must_reload_ui = true },
+				{ "bonus_skin", requires = "hook_bonus", width = "double" },
+				{ "hook_alert", must_reload_ui = true },
+				{ "alert_skin", requires = "hook_alert", width = "double" },
+			}},
+			]]
 			{ "rolls", "group", {
 				{ "roll_direction", "select", directions, "roll_anchor", "direction" , name = L.growth_direction },
 				{ "text_outline", "toggle" },
 				{ "text_time", "toggle" },
 				{ "roll_scale", "scale", "roll_anchor", "scale" },
 				{ "roll_width", "range", 150, 700, 1, 150, 400, 10, name = L.width },
+				{ "roll_spacing", "range", 0, 25, 1, name = L.spacing, subtable = "roll_anchor", subkey = "spacing" },
+				{ "roll_offset", "range", 0, 25, 1, name = L.offset, subtable = "roll_anchor", subkey = "offset" },
 				{ "roll_button_size", "range", 16, 48, 1 },
 			}},
 			{ "extra_info", "group", {
@@ -585,6 +601,7 @@ function addon:OnEnable() -- Construct addon option tables here
 				{ "expire_won", "range", 5, 30, 1 },
 				{ "expire_lost", "range", 5, 30, 1 },
 			}},
+			--[[ DISABLED-PATCH: LEGION PRE-PATCH
 			{ "alerts", "group", {
 					{ "alert_scale", "scale" },
 					{ "alert_offset", "range", -5, 20, 0.1 },
@@ -595,12 +612,16 @@ function addon:OnEnable() -- Construct addon option tables here
 				},
 				defaults = { requires = "hook_alert" }
 			}
+			]]
 		})
 	end
 
 	-- XLoot Monitor
 	if XLoot:GetModule("Monitor", true) then
 		addon:RegisterOptions({ name = "Monitor", addon =  XLootMonitor.addon }, {
+			{ "testing", "group", {
+				{ "test_settings", "execute", func = XLootMonitor.test_settings }
+			}},
 			{ "anchor", "group", {
 				{ "visible", "toggle", set = set_anchor },
 				{ "direction", "select", directions, name = L.growth_direction },

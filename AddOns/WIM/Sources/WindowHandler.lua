@@ -31,6 +31,11 @@ local time = time;
 -- set namespace
 setfenv(1, WIM);
 
+--Quick and dirty fix for renames in legion to deal with renamed globals
+local BNet_GetBNetIDAccount = _G.BNet_GetPresenceID or _G.BNet_GetBNetIDAccount
+local BNGetGameAccountInfo = _G.BNGetToonInfo or _G.BNGetGameAccountInfo
+
+
 -- load message window related default settings.
 db_defaults.displayColors = {
 		sysMsg = {
@@ -901,29 +906,45 @@ local function instantiateWindow(obj)
         else
                 local classTag = obj.class;
                 icon:SetGradient("VERTICAL", 1, 1, 1, 1, 1, 1);
-                icon:SetTexture(GetSelectedSkin().message_window.widgets.class_icon.texture);
                 if(self.bn and self.bn.client == _G.BNET_CLIENT_SC2) then
                                 classTag = "sc2";--"Interface\\FriendsFrame\\Battlenet-Sc2icon"
+                                icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
+                                icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
                 elseif(self.bn and self.bn.client == _G.BNET_CLIENT_D3) then
                                 classTag = "d3";--"Interface\\FriendsFrame\\Battlenet-D3icon"
+                                icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
+                                icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
                 --(Out of room in class textures file. maybe it's time to skin only class icons and use blizzard provided textures for game clients)
                 elseif(self.bn and self.bn.client == _G.BNET_CLIENT_WTCG) then
-                                classTag = "bnd";--"Interface\\FriendsFrame\\Battlenet-WTCGicon"
-                elseif(self.bn and self.bn.client == "Hero") then--_G.BNET_CLIENT_HEROES
-                                classTag = "bnd";--"Interface\\FriendsFrame\\Battlenet-HotSicon"
-                elseif(self.bn and self.bn.client == "App") then--Battle.net Desktop App
+                                classTag = "hs";--"Interface\\FriendsFrame\\Battlenet-WTCGicon"
+                                icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
+                                icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
+                elseif(self.bn and self.bn.client == _G.BNET_CLIENT_HEROES) then
+                                classTag = "hots";--"Interface\\FriendsFrame\\Battlenet-HotSicon"
+                                icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
+                                icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
+                elseif(self.bn and self.bn.client == _G.BNET_CLIENT_OVERWATCH) then
+                                classTag = "ow";--"Interface\\FriendsFrame\\Battlenet-Overwatchicon"
+                                icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
+                                icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
+                elseif(self.bn and (self.bn.client == _G.BNET_CLIENT_APP or self.bn.client == _G.BNET_CLIENT_CLNT)) then--Battle.net Desktop App
                                 classTag = "bnd";--"Interface\\FriendsFrame\\Battlenet-Battleneticon"
+                                icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
+                                icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
                 elseif(self.class == "") then
                 	classTag = "blank"
+                	icon:SetTexture(GetSelectedSkin().message_window.widgets.class_icon.texture);
+                	icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.class_icon[classTag]));
                 else
                 	if(constants.classes[self.class]) then
                 		classTag = string.lower(constants.classes[self.class].tag);
-                                classTag = string.gsub(classTag, "f$", "");
+                        classTag = string.gsub(classTag, "f$", "");
                 	else
                 		classTag = "blank";
                 	end
+                	icon:SetTexture(GetSelectedSkin().message_window.widgets.class_icon.texture);
+                	icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.class_icon[classTag]));
                 end
-                icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.class_icon[classTag]));
                 if(constants.classes[self.class]) then
                         self.classColor = constants.classes[self.class].color;
                         if(GetSelectedSkin().message_window.widgets.from.use_class_color) then
@@ -965,19 +986,20 @@ local function instantiateWindow(obj)
                 });
         elseif(self.isBN) then
                 -- get information of BN user from friends data.
-                local id = self.theUser and _G.BNet_GetPresenceID(self.theUser) or nil;
+                local id = self.theUser and BNet_GetBNetIDAccount(self.theUser) or nil;
                 if(id) then
-                                local hasFocus, toonName, client, realmName, realmID, faction, race, class, guild, zoneName, level, gameText, broadcastText, broadcastTime = _G.BNGetToonInfo(id);
+                				local _, _, _, _, _, toonID = _G.BNGetFriendInfoByID(id)
+                                local hasFocus, toonName, client, realmName, realmID, faction, race, class, guild, zoneName, level, gameText, broadcastText, broadcastTime = BNGetGameAccountInfo(toonID or 0);
                                 self.class = class or "";
                                 self.level = level or "";
                                 self.race = race or "";
                                 self.guild = guild or "";
-                                self.location = zoneName;
+                                self.location = client == _G.BNET_CLIENT_WOW and zoneName or gameText;
                                 self.bn.class = class;
                                 self.bn.level = level;
                                 self.bn.race = race;
                                 self.bn.guild = guild;
-                                self.bn.location = zoneName;
+                                self.bn.location = client == _G.BNET_CLIENT_WOW and zoneName or gameText;
                                 self.bn.gameText = gameText;
                                 self.bn.toonName = toonName;
                                 self.bn.client = client;
@@ -1964,7 +1986,7 @@ RegisterMessageFormatting(L["Default"], function(smf, event, ...)
                         return _G.format(L["%s does not wish to be disturbed: %s"], applyBracket().."|Hplayer:"..arg2..":"..arg11.."|h"..arg2.."|h"..applyBracket(2), arg1);
                 elseif(event == "CHAT_MSG_GUILD" or event == "CHAT_MSG_OFFICER" or event == "CHAT_MSG_PARTY" or
                                 event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" or event == "CHAT_MSG_SAY" or event == "CHAT_MSG_PARTY_LEADER" or
-                                event == "CHAT_MSG_CHANNEL" or event == "CHAT_MSG_INSTANCE_CHAT" or event == "CHAT_MSG_INSTANCE_CHAT_LEADER" or event == "CHAT_MSG_BN_CONVERSATION") then
+                                event == "CHAT_MSG_CHANNEL" or event == "CHAT_MSG_INSTANCE_CHAT" or event == "CHAT_MSG_INSTANCE_CHAT_LEADER") then
                         return applyBracket().."|Hplayer:"..arg2..":"..arg11.."|h"..(db.coloredNames and doColoredNames(event, ...) or arg2).."|h"..applyBracket(2)..": "..arg1;
                 elseif(event == "CHAT_MSG_RAID_WARNING") then
                         return _G.RAID_WARNING.." "..applyBracket().."|Hplayer:"..arg2..":"..arg11.."|h"..(db.coloredNames and doColoredNames(event, ...) or arg2).."|h"..applyBracket(2)..": "..arg1;
@@ -1983,8 +2005,6 @@ RegisterMessageFormatting(L["Default"], function(smf, event, ...)
 			end
 		elseif(event == "CHAT_MSG_CHANNEL_NOTICE") then
                         return _G.format(_G["CHAT_"..arg1.."_NOTICE"], arg8, arg4);
-                elseif(event == "CHAT_BN_CONVERSATION") then
-                        return arg1;
                 else
 			return "Unknown event received...";
 		end

@@ -1,4 +1,0 @@
-subversion:
-	- tandanu via svn r14610: use liblatency for /dbm lag
-	- tandanu via svn r14609: add liblatency
-	- tandanu via svn r14608: increment alpha version

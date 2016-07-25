@@ -63,6 +63,7 @@ module.DEFAULT_SPELLS = {
 		51886, -- Cleanse Spirit
 		546, -- Water Walking
 		131, -- Water Breathing
+		73685, -- Unleash Life
 	},
 
 	PALADIN = {
@@ -83,7 +84,7 @@ module.DEFAULT_SPELLS = {
 	},
 
 	WARRIOR = {
-		50720, -- Vigilance
+		114030, -- Vigilance
 		3411, -- Intervene
 	},
 
@@ -94,7 +95,7 @@ module.DEFAULT_SPELLS = {
 	},
 
 	WARLOCK = {
-		80398, -- Dark Indent
+		20707, -- Soul Stone
 		5697, -- Unending Breath
 	},
 

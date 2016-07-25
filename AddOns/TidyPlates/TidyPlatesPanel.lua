@@ -411,6 +411,10 @@ local function CreateTidyPlatesInterfacePanel(panel)
 	panel.SecondaryThemeLabel:SetJustifyH("LEFT")
 	panel.SecondaryThemeLabel:SetText("Secondary Specialization:")
 
+	panel.SecondaryThemeDropdown:Hide()
+	panel.SecondaryThemeLabel:Hide()
+
+
 	panel.ThemeLabel = panel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
 	panel.ThemeLabel:SetFont(font, 22)
 	panel.ThemeLabel:SetText("Theme")
@@ -473,6 +477,9 @@ local function CreateTidyPlatesInterfacePanel(panel)
 	panel.EditSecondaryProfile:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight")
 	panel.EditSecondaryProfile:SetScript("OnClick", function() ShowTidyPlatesHubPanel(TidyPlatesOptions.SecondaryProfile) end)
 
+	panel.SecondaryProfileDropdown:Hide()
+	panel.SecondaryProfileLabel:Hide()
+	panel.EditSecondaryProfile:Hide()
 
 
 	----------------------
@@ -551,10 +558,10 @@ local function CreateTidyPlatesInterfacePanel(panel)
 
 	-- Reset Button
 	ResetButton:SetScript("OnClick", function()
-		SetCVar("ShowClassColorInNameplate", 1)		-- Required for Class Detection
+		--SetCVar("ShowClassColorInNameplate", 1)		-- Required for Class Detection
 		SetCVar("nameplateShowEnemies", 1)
 		SetCVar("threatWarning", 3)		-- Required for threat/aggro detection
-		_G["InterfaceOptionsNamesPanelUnitNameplatesFriends"]:SetChecked(false)
+		--_G["InterfaceOptionsNamesPanelUnitNameplatesFriends"]:SetChecked(false)
 
 		if IsShiftKeyDown() then
 			TidyPlatesOptions = wipe(TidyPlatesOptions)
@@ -599,7 +606,7 @@ function panelevents:PLAYER_ENTERING_WORLD()
 
 	ApplyThemeSettings()
 	ApplyAutomationSettings()
-	SetCVar("repositionfrequency", 0)
+	--SetCVar("repositionfrequency", 0)
 end
 
 function panelevents:PLAYER_REGEN_ENABLED()
@@ -618,7 +625,7 @@ function panelevents:PLAYER_LOGIN()
 	InterfaceOptions_AddCategory(TidyPlatesInterfacePanel);
 
 	if not TidyPlatesOptions.WelcomeShown then
-		SetCVar("ShowClassColorInNameplate", 1)		-- Required for Class Detection
+		--SetCVar("ShowClassColorInNameplate", 1)		-- Required for Class Detection
 		SetCVar("nameplateShowEnemies", 1)
 		SetCVar("nameplateShowFriends", 0)
 		SetCVar("threatWarning", 3)		-- Required for threat/aggro detection
@@ -646,9 +653,6 @@ function slash_TidyPlates(arg)
 		TidyPlatesSlashCommands[arg]()
 		TidyPlates:ForceUpdate()
 	else
-		--InterfaceOptionsFrame_OpenToCategory("Tidy Plates")
-		--InterfaceOptionsFrame_OpenToCategory(panel)
-		--InterfaceOptionsFrame_OpenToCategory_Fix(panel)
 		TidyPlatesUtility.OpenInterfacePanel(TidyPlatesInterfacePanel)
 	end
 end

@@ -1,21 +1,21 @@
 local mod	= DBM:NewMod(114, "DBM-Party-Cataclysm", 8, 68)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 167 $"):sub(12, -3))
 mod:SetCreatureID(43878)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
+	"SPELL_CAST_START 86340",
 	"RAID_BOSS_EMOTE"
 )
 
 local warnSummonTempest		= mod:NewSpellAnnounce(86340, 2)
 
-local timerSummonTempest	= mod:NewCDTimer(17, 86340)
-local timerShield			= mod:NewNextTimer(31.5, 86292)
+local timerSummonTempest	= mod:NewCDTimer(16.8, 86340, nil, nil, nil, 1)
+local timerShield			= mod:NewNextTimer(30.5, 86292, nil, nil, nil, 6)
 
 function mod:OnCombatStart(delay)
 	timerShield:Start(24-delay)

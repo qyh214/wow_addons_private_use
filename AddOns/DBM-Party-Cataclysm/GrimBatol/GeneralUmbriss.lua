@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(131, "DBM-Party-Cataclysm", 3, 71)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 163 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 170 $"):sub(12, -3))
 mod:SetCreatureID(39625)
 mod:SetZone()
 
@@ -30,7 +30,7 @@ local yellBlitz				= mod:NewYell(74670)
 local specWarnBlitzNear		= mod:NewSpecialWarningClose(74670)
 local specWarnSummonSkardyn	= mod:NewSpecialWarningSwitch("ej3358", "Dps")--Seems health based, pull,and 50%?
 
-local timerBleedingWoundCD	= mod:NewCDTimer(20.5, 74846, nil, "Tank|Healer", nil, 5)
+local timerBleedingWoundCD	= mod:NewCDTimer(20.5, 74846, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerBlitz			= mod:NewCDTimer(21.8, 74670, nil, nil, nil, 3)
 local timerMalice			= mod:NewBuffActiveTimer(20, 90170, nil, "Tank|Healer", 2, 5)
 

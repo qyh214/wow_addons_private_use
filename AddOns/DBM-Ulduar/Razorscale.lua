@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Razorscale", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 224 $"):sub(12, -3))
 mod:SetCreatureID(33186)
 mod:SetEncounterID(1139)
 mod:SetModelID(28787)
@@ -25,13 +25,13 @@ local warnTurretsReady				= mod:NewAnnounce("warnTurretsReady", 3, 48642)
 local specWarnDevouringFlame		= mod:NewSpecialWarningMove(64733)
 
 local enrageTimer					= mod:NewBerserkTimer(900)
-local timerDeepBreathCooldown		= mod:NewCDTimer(21, 64021)
+local timerDeepBreathCooldown		= mod:NewCDTimer(21, 64021, nil, nil, nil, 5)
 local timerDeepBreathCast			= mod:NewCastTimer(2.5, 64021)
-local timerTurret1					= mod:NewTimer(53, "timerTurret1", 48642)
-local timerTurret2					= mod:NewTimer(73, "timerTurret2", 48642)
-local timerTurret3					= mod:NewTimer(93, "timerTurret3", 48642)
-local timerTurret4					= mod:NewTimer(113, "timerTurret4", 48642)
-local timerGrounded                 = mod:NewTimer(45, "timerGrounded")
+local timerTurret1					= mod:NewTimer(53, "timerTurret1", 48642, nil, nil, 5)
+local timerTurret2					= mod:NewTimer(73, "timerTurret2", 48642, nil, nil, 5)
+local timerTurret3					= mod:NewTimer(93, "timerTurret3", 48642, nil, nil, 5)
+local timerTurret4					= mod:NewTimer(113, "timerTurret4", 48642, nil, nil, 5)
+local timerGrounded                 = mod:NewTimer(45, "timerGrounded", nil, nil, nil, 6)
 
 local combattime = 0
 
@@ -54,7 +54,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if (spellId == 64733 or spellId == 64704) and destGUID == UnitGUID("player") and self:AntiSpam() then
+	if (spellId == 64733 or spellId == 64704) and destGUID == UnitGUID("player") and self:AntiSpam() and not self:IsTrivial(100) then
 		specWarnDevouringFlame:Show()
 	end
 end

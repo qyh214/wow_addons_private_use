@@ -8,8 +8,8 @@
 					<OnLoad>
 						TitanPanelGoldButton_OnLoad(self);
 						TitanPanelButton_OnLoad(self);
-		      </OnLoad>
-		      <OnShow>
+					</OnLoad>
+					<OnShow>
 						TitanPanelGoldButton_OnShow();
 						TitanPanelButton_OnShow(self);
 					</OnShow>

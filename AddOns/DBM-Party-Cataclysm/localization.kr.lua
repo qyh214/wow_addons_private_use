@@ -343,14 +343,6 @@ L= DBM:GetModLocalization(115)
 -----------
 L= DBM:GetModLocalization(116)
 
-L:SetOptionLocalization({
-	SpecWarnStaticCling	= "$spell:87618 특수 경고 보기"
-})
-
-L:SetWarningLocalization({
-	SpecWarnStaticCling	= "전하 응집 - 점프!"
-})
-
 ---------------------------
 --  The Throne of Tides  --
 ---------------------------

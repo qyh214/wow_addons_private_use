@@ -28,8 +28,10 @@ local GetInstanceInfo = GetInstanceInfo
 
 local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 
+--TAXIROUTE_LINEFACTOR_2 global is removed in legion, but TAXIROUTE_LINEFACTOR still exists, so we create our own
+local TAXIROUTE_LINEFACTOR_2 = TAXIROUTE_LINEFACTOR_2 or TAXIROUTE_LINEFACTOR / 2
+
 --Hard code STANDARD_TEXT_FONT since skinning mods like to taint it (or worse, set it to nil, wtf?)
---http://forums.elitistjerks.com/topic/133901-bug-report-hudmap/#entry2282069
 local standardFont = STANDARD_TEXT_FONT
 if (LOCALE_koKR) then
 	standardFont = "Fonts\\2002.TTF"
@@ -67,6 +69,15 @@ local textureLookup = {
 	rune2		= [[SPELLS\AURARUNE9.BLP]],
 	rune3		= [[SPELLS\AURARUNE_A.BLP]],
 	rune4		= [[SPELLS\AURARUNE_B.BLP]],
+	odunblue	= [[Interface\Icons\Boss_OdunRunes_Blue.blp]],--Blue fishies
+	odungreen	= [[Interface\Icons\Boss_OdunRunes_Green.blp]],--Green cube
+	odunorange	= [[Interface\Icons\Boss_OdunRunes_Orange.blp]],--Orange N
+	odunpurple	= [[Interface\Icons\Boss_OdunRunes_Purple.blp]],--Purple K
+	odunyellow	= [[Interface\Icons\Boss_OdunRunes_Yellow.blp]],--Yellow H
+	astrored	= [[Interface\Icons\icon_7fx_nightborn_astromancer_red.blp]],--Wolf
+	astroyellow	= [[Interface\Icons\icon_7fx_nightborn_astromancer_yellow.blp]],--Crab
+	astroblue	= [[Interface\Icons\icon_7fx_nightborn_astromancer_blue.blp]],--Dragon
+	astrogreen	= [[Interface\Icons\icon_7fx_nightborn_astromancer_green.blp]],--Hunter
 	paw			= [[SPELLS\Agility_128.blp]],
 	cyanstar	= [[SPELLS\CYANSTARFLASH.BLP]],
 	summon		= [[SPELLS\DarkSummon.blp]],
@@ -89,6 +100,15 @@ local texBlending = {
 	rune2		= "ADD",
 	rune3		= "ADD",
 	rune4		= "ADD",
+	odunblue	= "ADD",
+	odungreen	= "ADD",
+	odunorange	= "ADD",
+	odunpurple	= "ADD",
+	odunyellow	= "ADD",
+	astrored	= "ADD",
+	astroyellow	= "ADD",
+	astroblue	= "ADD",
+	astrogreen	= "ADD",
 	paw			= "ADD",
 	reticle		= "ADD",
 	cyanstar	= "ADD",
@@ -574,7 +594,6 @@ Edge = setmetatable({
 			t.fadeOutGroup = t.frame:CreateAnimationGroup()
 			t.fadeOut = t.fadeOutGroup:CreateAnimation("alpha")
 			-- t.fadeOut:SetMaxFramerate(60)
-			--t.fadeOut:SetChange(-1)
 			t.fadeOut:SetFromAlpha(1)
 			t.fadeOut:SetToAlpha(0)
 			t.fadeOut:SetDuration(0.25)
@@ -923,7 +942,7 @@ do
 			b = bool and self.alert.b or self.normal.b or 1
 			a = bool and self.alert.a or self.normal.a or 1
 			self.texture:SetVertexColor(r, g, b, a)
-			if self.alertLabel then
+			if bool then
 				self:SetLabel(self.alertLabel, nil, nil, nil, nil, nil, 0.8)
 			end
 			return self
@@ -1224,7 +1243,6 @@ do
 				t.fadeOutGroup = t.frame:CreateAnimationGroup()
 				t.fadeOut = t.fadeOutGroup:CreateAnimation("alpha")
 				-- t.fadeOut:SetMaxFramerate(60)
---				t.fadeOut:SetChange(-1)
 				t.fadeOut:SetFromAlpha(1)
 				t.fadeOut:SetToAlpha(0)
 				t.fadeOut:SetDuration(0.25)

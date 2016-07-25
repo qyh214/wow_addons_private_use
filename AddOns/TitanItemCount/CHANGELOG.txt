@@ -1,0 +1,73 @@
+**Titan Item Count v1.2.3**
+*Bump TOC for 7.0
+\\\\
+----
+**Titan Item Count v1.2.2.1**
+*Bump TOC for 6.2
+\\\\
+----
+**Titan Item Count v1.2.2**
+*Bump TOC for pre-patch 6.1
+\\\\
+----
+**Titan Item Count v1.2.1**
+*Bump TOC for pre-patch 6.0.2
+\\\\
+----
+**Titan Item Count v1.1**
+*New Feature: context menu includes drop-down for selecting alert sounds
+\\\\
+----
+**Titan Item Count v1.04**
+Update for MoP 5.3
+\\\\
+----
+**Titan Item Count v1.03.4**
+*Included a library not loaded by dependency
+\\\\
+----
+**Titan Item Count v1.03.3a**
+*Added more sounds
+\\\\
+----
+**Titan Item Count v1.03.3**
+*Added choice of alert sounds
+*Moved alert code out of button_onupdate
+*Tweaked alert triggers... 
+
+PLEASE REPORT ANY WEIRDNESS WITH ALERTS using
+http://wow.curseforge.com/addons/titan-item-count/tickets/
+\\\\
+----
+**Titan Item Count v1.03.2.a1**
+*Fixed string color in tooltip "hint."
+*Removed commented-out junk from .xml
+
+**To Do (Maybe)**
+*Auto select item string when user clicks in the textbox^^†^^
+*Auto open bags on open Options Panel^^†^^
+
+^^†^^ Not sure these can even be done (wihtout tearing hair out) using Ace libconfig 3.
+\\\\
+----
+**Titan Item Count v1.03.2**
+*Goal quantity alert with bell
+*Using Ace libconfig-3.0 for slash command handling
+\\\\
+----
+**Titan Item Count v1.03.1beta**
+*Added 'Show Item Name' to right-click menu and Option Panel
+\\\\
+----
+**Titan Item Count v1.03**
+*Changed a few output strings
+*Added Alt-Click to select tracked item
+*Changed Titan button tooltip string
+*Renamed count variables to be identified by QoH
+*Removed unused variables
+\\\\
+----
+**Titan Item Count v1.02.2** (first Release version)
+*Removed "Item Count:" string that duplicated button label text
+*Changed package folder name from titan-item-count to TitanItemCount
+*Removed some ugly square brackets in a tooltip string 

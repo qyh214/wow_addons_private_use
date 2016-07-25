@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1447, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14724 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15006 $"):sub(12, -3))
 mod:SetCreatureID(93068)
 mod:SetEncounterID(1800)
 mod:SetZone()
@@ -56,7 +56,7 @@ local specWarnFelSurge				= mod:NewSpecialWarningYou(186407, nil, nil, nil, 1, 2
 local yellFelSurge					= mod:NewYell(186407)
 local specWarnImps					= mod:NewSpecialWarningSwitchCount("ej11694", "Dps")
 ----Adds
-local specWarnFelBlazeFlurry		= mod:NewSpecialWarningSpell(186453, "Tank", nil, nil, 3, 2)
+local specWarnFelBlazeFlurry		= mod:NewSpecialWarningDefensive(186453, "Tank", nil, nil, 3, 2)
 local specWarnFelChains				= mod:NewSpecialWarningYou(186490)
 local specWarnEmpoweredFelChains	= mod:NewSpecialWarningYou(189775)
 local yellFelChains					= mod:NewYell(186490)
@@ -67,7 +67,7 @@ local specWarnVoidSurge				= mod:NewSpecialWarningYou(186333, nil, nil, nil, 1, 
 local yellVoidSurge					= mod:NewYell(186333)
 local specWarnVoids					= mod:NewSpecialWarningCount("ej11714", "Ranged")
 ----Adds
-local specWarnWitheringGaze			= mod:NewSpecialWarningSpell(186783, "Tank", nil, nil, 1, 2)
+local specWarnWitheringGaze			= mod:NewSpecialWarningDefensive(186783, "Tank", nil, nil, 1, 2)
 local specWarnBlackHole				= mod:NewSpecialWarningCount(186546, nil, nil, nil, 2)
 local specWarnEmpBlackHole			= mod:NewSpecialWarningCount(189779, nil, nil, nil, 2)--Mythic
 
@@ -79,7 +79,6 @@ local timerImpCD					= mod:NewNextTimer(25, "ej11694", nil, nil, nil, 1, 112866)
 ----Big Add
 local timerFelBlazeFlurryCD			= mod:NewCDTimer(12.9, 186453, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerFelChainsCD				= mod:NewCDTimer(30, 186490, nil, "-Tank", nil, 3)--30-34. Often 34 but it can and will be 30 sometimes.
-local timerEmpFelChainsCD			= mod:NewCDTimer(30, 189775, nil, "-Tank", nil, 3, nil, DBM_CORE_HEROIC_ICON)--Merge with timerFelChainsCD?
 --Void Phase
 ----Boss
 local timerVoidStrikeCD				= mod:NewCDTimer(15, 186292, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
@@ -88,9 +87,9 @@ local timerVoidsCD					= mod:NewNextTimer(30, "ej11714", nil, "Ranged", nil, 1, 
 ----Big Add
 local timerWitheringGazeCD			= mod:NewCDTimer(22, 186783, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
 local timerBlackHoleCD				= mod:NewCDCountTimer(29.5, 186546, nil, "-Tank", 2, 5)
-local timerEmpBlackHoleCD			= mod:NewCDCountTimer(29.5, 189779, nil, "-Tank", 2, 5, nil, DBM_CORE_HEROIC_ICON)--Merge with timerBlackHoleCD?
+local timerEmpBlackHoleCD			= mod:NewCDCountTimer(29.5, 189779, 186546, "-Tank", 2, 5, nil, DBM_CORE_DEADLY_ICON)
 --End Phase
-local timerOverwhelmingChaosCD		= mod:NewNextCountTimer(10, 187204, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerOverwhelmingChaosCD		= mod:NewNextCountTimer(10, 187204, nil, nil, 2, 2, nil, DBM_CORE_HEALER_ICON)
 
 --local berserkTimer					= mod:NewBerserkTimer(360)
 
@@ -339,9 +338,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 189775 then
 		if self.Options.ChainsBehavior == "Applied" then--Start timer here if method is set to only applied
-			timerEmpFelChainsCD:Start()
+			timerFelChainsCD:Start()
 		else
-			timerEmpFelChainsCD:Start(27)--30-3
+			timerFelChainsCD:Start(27)--30-3
 		end
 	elseif spellId == 186453 then
 		timerFelBlazeFlurryCD:Start()
@@ -493,10 +492,10 @@ function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 94185 then--Vanguard Akkelion
 		self.vb.bothDead = self.vb.bothDead + 1
-		timerFelBlazeFlurryCD:Cancel()
-		timerFelChainsCD:Cancel()
+		timerFelBlazeFlurryCD:Stop()
+		timerFelChainsCD:Stop()
 		if self:IsMythic() then
-			timerEmpFelChainsCD:Start(28)
+			timerFelChainsCD:Start(28)
 		else
 			if playerTanking == 1 then
 				playerTanking = 0--Vanguard died, set player tanking to 0
@@ -507,8 +506,8 @@ function mod:UNIT_DIED(args)
 		end
 	elseif cid == 94239 then--Omnus
 		self.vb.bothDead = self.vb.bothDead + 1
-		timerWitheringGazeCD:Cancel()
-		timerBlackHoleCD:Cancel()
+		timerWitheringGazeCD:Stop()
+		timerBlackHoleCD:Stop()
 		if self:IsMythic() then
 			timerEmpBlackHoleCD:Start(18, self.vb.blackHoleCount+1)
 		else
@@ -536,8 +535,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	elseif spellId == 187006 then--Activate Void Portal
 		voicePhaseChange:Play("phasechange")
 		warnVoidPortal:Show()
-		timerFelStrikeCD:Cancel()
-		timerFelSurgeCD:Cancel()
+		timerFelStrikeCD:Stop()
+		timerFelSurgeCD:Stop()
 		countdownFelSurge:Cancel()
 		if not self:IsLFR() then
 			timerVoidsCD:Start(10.5)
@@ -555,9 +554,9 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		self.vb.phase = 3
 		voicePhaseChange:Play("phasechange")
 		if not self:IsMythic() then
-			timerVoidStrikeCD:Cancel()--Regardless of what was left on timer, he will use it immediately after shadowfel phasing
+			timerVoidStrikeCD:Stop()--Regardless of what was left on timer, he will use it immediately after shadowfel phasing
 		end
-		timerVoidSurgeCD:Cancel()
+		timerVoidSurgeCD:Stop()
 		countdownVoidSurge:Cancel()
 		timerFelSurgeCD:Start(7)
 		countdownFelSurge:Start(7)
@@ -566,8 +565,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		countdownVoidSurge:Start(16)
 	elseif spellId == 187209 then--Overwhelming Chaos (Activation)
 		self.vb.phase = 4
-		timerImpCD:Cancel()
-		timerVoidsCD:Cancel()
+		timerImpCD:Stop()
+		timerVoidsCD:Stop()
 		countdownImps:Cancel()
 		self:Unschedule(ImpRepeater)
 		self:Unschedule(VoidsRepeater)

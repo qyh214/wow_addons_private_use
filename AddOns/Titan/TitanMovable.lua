@@ -115,7 +115,7 @@ VAR: bool - true (addon will adjust) or false (Titan will use its settings)
 OUT:  None
 --]]
 function TitanMovable_AddonAdjust(frame, bool)
-	for index, value in pairs(TitanMovableData) do						
+	for index, value in pairs(TitanMovableData) do
 		frameData = value
 		if frameData then
 			frameName = frameData.frameName;
@@ -199,8 +199,8 @@ local function TitanMovableFrame_GetXOffset(frame, point)
 		elseif point == "BOTTOM" and frame:GetBottom() and UIParent:GetBottom() then
 			ret = frame:GetBottom() - UIParent:GetBottom();
 		elseif point == "CENTER" and frame:GetLeft() and frame:GetRight() 
-		and UIParent:GetLeft() and UIParent:GetRight() then
-		   local framescale = frame.GetScale and frame:GetScale() or 1;
+				and UIParent:GetLeft() and UIParent:GetRight() then
+			local framescale = frame.GetScale and frame:GetScale() or 1;
 			ret = (frame:GetLeft()* framescale + frame:GetRight()
 				* framescale - UIParent:GetLeft() - UIParent:GetRight()) / 2;
 		end
@@ -226,7 +226,7 @@ function TitanMovableFrame_CheckFrames(position)
 		TitanMovableFrame_CheckThisFrame(PlayerFrame:GetName())
 			
 		-- Move TargetFrame		
-		TitanMovableFrame_CheckThisFrame(TargetFrame:GetName())		
+		TitanMovableFrame_CheckThisFrame(TargetFrame:GetName())
 
 		-- Move PartyMemberFrame		
 		TitanMovableFrame_CheckThisFrame(PartyMemberFrame1:GetName())
@@ -245,7 +245,7 @@ function TitanMovableFrame_CheckFrames(position)
 		-- Move BuffFrame
 		TitanMovableFrame_CheckThisFrame(BuffFrame:GetName())
 
-		-- Move WorldStateAlwaysUpFrame				
+		-- Move WorldStateAlwaysUpFrame
 		TitanMovableFrame_CheckThisFrame(WorldStateAlwaysUpFrame:GetName());
 	end
 	
@@ -256,10 +256,10 @@ function TitanMovableFrame_CheckFrames(position)
 		-- Move MainMenuBar		
 		TitanMovableFrame_CheckThisFrame(MainMenuBar:GetName());
 	
-		-- Move OverrideActionBar		
+		-- Move OverrideActionBar
 		TitanMovableFrame_CheckThisFrame(OverrideActionBar:GetName());
 		
-		-- Move BonusActionBarFrame		
+		-- Move BonusActionBarFrame
 --		TitanMovableFrame_CheckThisFrame(BonusActionBarFrame:GetName());
 	end
 end
@@ -281,7 +281,7 @@ function TitanMovableFrame_MoveFrames(position)
 	-- move them...
 	if not InCombatLockdown() then
 		local adj_frame = true
-		for index, value in pairs(TitanMovable) do						
+		for index, value in pairs(TitanMovable) do
 			adj_frame = true -- assume the frame is to be adjusted
 			frameData = TitanMovableData[value];
 			if frameData then
@@ -290,7 +290,7 @@ function TitanMovableFrame_MoveFrames(position)
 				frameArchor = frameData.frameArchor;
 			end
 
-			if (frame and (frame:IsUserPlaced())) 
+			if (frame and (frame:IsUserPlaced()))
 			then
 				-- The user has positioned the frame
 				adj_frame = false
@@ -323,14 +323,14 @@ function TitanMovableFrame_MoveFrames(position)
 				-- properly adjust MinimapCluster if its border is hidden
 				if frameName == "MinimapCluster" 
 				and MinimapBorderTop 
-				and not MinimapBorderTop:IsShown() then					
+				and not MinimapBorderTop:IsShown() then
 					yOffset = yOffset + (MinimapBorderTop:GetHeight() * 3/5) - 5
 				end
 				
 				-- adjust the MainMenuBar according to its scale
-				if  frameName == "MainMenuBar" and MainMenuBar:IsVisible() then
+				if frameName == "MainMenuBar" and MainMenuBar:IsVisible() then
 					local framescale = MainMenuBar:GetScale() or 1;
-				    yOffset =  yOffset / framescale;
+					yOffset =  yOffset / framescale;
 				end
 				
 				-- account for Reputation Status Bar (doh)
@@ -605,7 +605,7 @@ function Titan_GetFrameOrigPositions()
 	local frameData
 	local point, relTo, relPoint, xOff, yOff = "", {}, "", 0, 0
 	local relFrame = ""
-	for index, value in pairs(TitanMovableData) do						
+	for index, value in pairs(TitanMovableData) do
 		frameData = TitanMovableData[index];
 		if frameData then
 			point, relTo, relPoint, xOff, yOff = "", {}, "", 0, 0

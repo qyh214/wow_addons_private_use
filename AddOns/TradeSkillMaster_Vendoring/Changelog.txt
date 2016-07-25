@@ -1,0 +1,11 @@
+v3.0.3
+*Using new APIs added to core TSM addon to workaround Blizzard's item caching issues.
+
+v3.0.2
+*No change.
+
+v3.0.1
+*Bumped TOC version for patch 7.0.3.
+
+v3.0
+*Initial release version!

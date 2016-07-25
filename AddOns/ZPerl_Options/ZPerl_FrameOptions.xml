@@ -3897,8 +3897,8 @@
 								local _, class = UnitClass("player")
 								if class == "MONK" then
 									XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_HIGHLIGHTS_RENEWING")
-								elseif class == "PALADIN" then
-									XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_HIGHLIGHTS_BEACON")
+								--[[elseif class == "PALADIN" then
+									XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_HIGHLIGHTS_BEACON")]]
 								else
 									XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_HIGHLIGHTS_MENDING")
 								end
@@ -5069,7 +5069,7 @@
 						<Scripts>
 							<OnLoad>
 								local _, class = UnitClass("player")
-								if (class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK" and class ~= "PALADIN" and class ~= "PRIEST" and class ~= "MONK") then
+								if (class ~= "ROGUE" and class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK" and class ~= "PALADIN" and class ~= "MONK" and class ~= "MAGE") then
 									self:Hide()
 								end
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_SHOW_RUNES")
@@ -5098,7 +5098,7 @@
 						<Scripts>
 							<OnLoad>
 								local _, class = UnitClass("player")
-								if (class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK" and class ~= "PALADIN" and class ~= "PRIEST" and class ~= "MONK") then
+								if (class ~= "ROGUE" and class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK" and class ~= "PALADIN" and class ~= "MONK" and class ~= "MAGE") then
 									self:Hide()
 								end
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_DOCKRUNES")
@@ -5121,7 +5121,7 @@
 						<Scripts>
 							<OnLoad>
 								local _, class = UnitClass("player")
-								if (class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK" and class ~= "PALADIN" and class ~= "PRIEST" and class ~= "MONK") then
+								if (class ~= "ROGUE" and class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK" and class ~= "PALADIN" and class ~= "MONK" and class ~= "MAGE") then
 									self:ClearAllPoints()
 									self:SetPoint("TOPLEFT", XPerl_Options_Player_Options_ShowRunes, "TOPLEFT")
 								end
@@ -6218,6 +6218,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_PET_THREAT")
 								self.configBase = "XPerlDB.pet"
 								self.configIndex = "threat"
+								self.Validate = function()
+									XPerl_Options_EnableSibling(self, "ThreatName")
+									XPerl_Options_EnableSibling(self, "ThreatPortrait")
+								end
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
@@ -7281,6 +7285,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGET_THREAT")
 								self.configBase = "XPerlDB.target"
 								self.configIndex = "threat"
+								self.Validate = function()
+									XPerl_Options_EnableSibling(self, "ThreatName")
+									XPerl_Options_EnableSibling(self, "ThreatPortrait")
+								end
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
@@ -7302,7 +7310,7 @@
 							</OnShow>
 							<OnClick>
 								XPerlDB.target.threatMode = "nameFrame"
-								XPerl_Options_CheckRadio(self,{"ThreatName", "ThreatPortrait"})
+								XPerl_Options_CheckRadio(self, {"ThreatName", "ThreatPortrait"})
 								XPerl_Target_UpdateDisplay(XPerl_Target)
 							</OnClick>
 						</Scripts>
@@ -7325,7 +7333,7 @@
 							</OnShow>
 							<OnClick>
 								XPerlDB.target.threatMode = "portraitFrame"
-								XPerl_Options_CheckRadio(self,{"ThreatName", "ThreatPortrait"})
+								XPerl_Options_CheckRadio(self, {"ThreatName", "ThreatPortrait"})
 								XPerl_Target_UpdateDisplay(XPerl_Target)
 							</OnClick>
 						</Scripts>
@@ -7685,7 +7693,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<CheckButton name="$parent_CPBlizzard" inherits="XPerlCheckButtonTemplate">
+					<!--<CheckButton name="$parent_CPBlizzard" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_PVPIcon" relativePoint="BOTTOMLEFT">
 								<Offset>
@@ -7800,11 +7808,11 @@
 								XPerl_Target_Reset()
 							</OnClick>
 						</Scripts>
-					</CheckButton>
+					</CheckButton>-->
 
 					<CheckButton name="$parent_CPMeter" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPRIGHT" relativeTo="$parent_Left" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOPLEFT" relativeTo="$parent_PVPIcon" relativePoint="BOTTOMLEFT">
 								<Offset>
 									<AbsDimension x="0" y="6"/>
 								</Offset>
@@ -9176,6 +9184,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_FOCUS_THREAT")
 								self.configBase = "XPerlDB.focus"
 								self.configIndex = "threat"
+								self.Validate = function()
+									XPerl_Options_EnableSibling(self, "ThreatName")
+									XPerl_Options_EnableSibling(self, "ThreatPortrait")
+								end
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
@@ -10727,6 +10739,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PARTY_THREAT")
 								self.configBase = "XPerlDB.party"
 								self.configIndex = "threat"
+								self.Validate = function()
+									XPerl_Options_EnableSibling(self, "ThreatName")
+									XPerl_Options_EnableSibling(self, "ThreatPortrait")
+								end
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
@@ -11729,10 +11745,10 @@
 						<Scripts>
 							<OnLoad>
 								local localGroups = LOCALIZED_CLASS_NAMES_MALE
-								local WoWclassCount = 0
-								for k, v in pairs(localGroups) do
+								local WoWclassCount = 11
+								--[[for k, v in pairs(localGroups) do
 									WoWclassCount = WoWclassCount + 1
-								end
+								end]]
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_SHOW")
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "NotInBG")
@@ -14363,6 +14379,105 @@
 											XPerlDB.colour.bar.runic_power.r = n.r
 											XPerlDB.colour.bar.runic_power.g = n.g
 											XPerlDB.colour.bar.runic_power.b = n.b
+										end
+										XPerl_ColourPicker.alpha = nil
+										XPerl_ColourPicker:Show()
+									</OnClick>
+								</Scripts>
+							</Button>
+
+							<Button name="$parent_ColourFury" inherits="XPerlColorPickerTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_ColourRunicBar" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="-2"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_COLOUR_FURY")
+									</OnLoad>
+									<OnShow>
+										local f = _G[self:GetName().."_Colour"]
+										f:SetVertexColor(XPerlDB.colour.bar.fury.r, XPerlDB.colour.bar.fury.g, XPerlDB.colour.bar.fury.b)
+									</OnShow>
+									<OnClick>
+										XPerlLocked = 1
+										XPerl_ColourPicker.ParentFrame = XPerl_Options
+										XPerl_ColourPicker.varGet = function()
+											return XPerlDB and XPerlDB.colour.bar.fury
+										end
+										XPerl_ColourPicker.varSet = function(n)
+											XPerlDB.colour.bar.fury.r = n.r
+											XPerlDB.colour.bar.fury.g = n.g
+											XPerlDB.colour.bar.fury.b = n.b
+										end
+										XPerl_ColourPicker.alpha = nil
+										XPerl_ColourPicker:Show()
+									</OnClick>
+								</Scripts>
+							</Button>
+
+							<Button name="$parent_ColourInsanity" inherits="XPerlColorPickerTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_ColourFury" relativePoint="TOPRIGHT">
+										<Offset>
+											<AbsDimension x="50" y="0"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_COLOUR_INSANITY")
+									</OnLoad>
+									<OnShow>
+										local f = _G[self:GetName().."_Colour"]
+										f:SetVertexColor(XPerlDB.colour.bar.insanity.r, XPerlDB.colour.bar.insanity.g, XPerlDB.colour.bar.insanity.b)
+									</OnShow>
+									<OnClick>
+										XPerlLocked = 1
+										XPerl_ColourPicker.ParentFrame = XPerl_Options
+										XPerl_ColourPicker.varGet = function()
+											return XPerlDB and XPerlDB.colour.bar.insanity
+										end
+										XPerl_ColourPicker.varSet = function(n)
+											XPerlDB.colour.bar.insanity.r = n.r
+											XPerlDB.colour.bar.insanity.g = n.g
+											XPerlDB.colour.bar.insanity.b = n.b
+										end
+										XPerl_ColourPicker.alpha = nil
+										XPerl_ColourPicker:Show()
+									</OnClick>
+								</Scripts>
+							</Button>
+
+							<Button name="$parent_ColourMaelstrom" inherits="XPerlColorPickerTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_ColourInsanity" relativePoint="TOPRIGHT">
+										<Offset>
+											<AbsDimension x="50" y="0"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_COLOUR_MAELSTROM")
+									</OnLoad>
+									<OnShow>
+										local f = _G[self:GetName().."_Colour"]
+										f:SetVertexColor(XPerlDB.colour.bar.maelstrom.r, XPerlDB.colour.bar.maelstrom.g, XPerlDB.colour.bar.maelstrom.b)
+									</OnShow>
+									<OnClick>
+										XPerlLocked = 1
+										XPerl_ColourPicker.ParentFrame = XPerl_Options
+										XPerl_ColourPicker.varGet = function()
+											return XPerlDB and XPerlDB.colour.bar.maelstrom
+										end
+										XPerl_ColourPicker.varSet = function(n)
+											XPerlDB.colour.bar.maelstrom.r = n.r
+											XPerlDB.colour.bar.maelstrom.g = n.g
+											XPerlDB.colour.bar.maelstrom.b = n.b
 										end
 										XPerl_ColourPicker.alpha = nil
 										XPerl_ColourPicker:Show()

@@ -21,6 +21,7 @@ local tostring=tostring
 local GetItemInfo=GetItemInfo
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
+local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0 or 4
 local maxrank=GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY*1000+GARRISON_FOLLOWER_MAX_LEVEL
 local module=addon:NewSubClass('FollowerCache')
 local cache={} --#cache
@@ -34,9 +35,18 @@ function module:OnInitialized()
 	self:RegisterEvent("GARRISON_FOLLOWER_XP_CHANGED","OnEvent")
 	self.followerCache=cache:new(LE_FOLLOWER_TYPE_GARRISON_6_0)
 	self.shipCache=cache:new(LE_FOLLOWER_TYPE_SHIPYARD_6_2)
+	if toc==70000 then
+		self.hallCache=cache:new(LE_FOLLOWER_TYPE_GARRISON_7_0)
+	end
 end
 function module:OnEvent(event,...)
-	local followerID=...
+--[===[@debug@
+print(event,...)
+--@end-debug@]===]
+	local followerType,followerID=...
+	if toc < 70000 then
+		followerID=followerType
+	end
 	if self.shipCache.cache[followerID].followerID then
 		self.shipCache:OnEvent(event,...)
 	elseif self.followerCache.cache[followerID].followerID then
@@ -46,9 +56,6 @@ function module:OnEvent(event,...)
 		self.shipCache:Wipe()
 	end
 
---[===[@debug@
-print(event,...)
---@end-debug@]===]
 end
 function cache:new(type)
 	local rc=setmetatable({type=type,names={},sorted={},threats={},traits={},cache={}},{__index=self})
@@ -61,7 +68,10 @@ function cache:OnEvent(event,...)
 print(event,...)
 --@end-debug@]===]
 	if event=="GARRISON_FOLLOWER_UPGRADED" or event=="GARRISON_FOLLOWER_XP_CHANGED" then
-		local followerID=...
+		local followerType,followerID=...
+		if toc < 70000 then
+			followerID=followerType
+		end
 		if (self.cache[followerID]) then
 			self.cache[followerID]['level']=G.GetFollowerLevel(followerID)
 			self.cache[followerID]['xp']=G.GetFollowerXP(followerID)

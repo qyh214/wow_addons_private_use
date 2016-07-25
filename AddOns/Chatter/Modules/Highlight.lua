@@ -121,7 +121,6 @@ function mod:OnEnable()
 	self:RegisterEvent("CHAT_MSG_RAID_WARNING", "ParseChat")
 	self:RegisterEvent("CHAT_MSG_WHISPER", "ParseChat")
 	self:RegisterEvent("CHAT_MSG_BN_WHISPER", "ParseChat")
-	self:RegisterEvent("CHAT_MSG_BN_CONVERSATION", "ParseChat")
 	self:RegisterEvent("CHAT_MSG_YELL", "ParseChat")
 	self:RegisterEvent("CHAT_MSG_CHANNEL", "ParseChat")
 	self:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE")
@@ -139,7 +138,6 @@ function mod:OnEnable()
 		"RAID_WARNING", CHAT_MSG_RAID_WARNING,
 		"WHISPER", CHAT_MSG_WHISPER,
 		"BN_WHISPER", CHAT_MSG_BN_WHISPER,
-		"BN_CONVERSATION", CHAT_MSG_BN_CONVERSATION,
 		"YELL", CHAT_MSG_YELL
 	)
 	self.urlcopy = Chatter:GetModule("URL Copy")

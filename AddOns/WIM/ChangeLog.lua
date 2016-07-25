@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 472 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 503 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,25 +16,27 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.7.7", "06/04/2016", [[
+	*Whisper window will now report location correctly for non WoW clients.
+]]);
+addEntry("3.7.6", "05/24/2016", [[
+	*Whisper window will now report location correctly for non WoW clients.
+]]);
+addEntry("3.7.5", "05/04/2016", [[
+	*I didn't like the Overwatch icon quality, so I made it better.
+]]);
+addEntry("3.7.4", "05/02/2016", [[
+	*Added chat icon support for Heroes of Storm, Hearthstone, Overwatch, and Demon Hunters
+]]);
+addEntry("3.7.3", "03/24/2016", [[
+	*Resolved lua error when ToonID is nil
+]]);
+addEntry("3.7.2", "03/22/2016", [[
+	*WIM is now compatible with RealID/battle.net whispers on WoW 7.0 and 6.2.4
+	*Removed RealID multi person chat related features since they no longer exist in 6.2.4+.
+]]);
 addEntry("3.7.1", "01/17/2016", [[
 	*Resolved lua errors in WoW 7.x.
-]]);
-addEntry("3.7", "10/26/2015", [[
-	*Will now support application flash/bounce for whispers that are supressed from chat frame.
-]]);
-addEntry("3.6.28", "10/23/2015", [[
-	*Updated URL handler patterns to parse URLs better.
-]]);
-addEntry("3.6.27", "06/23/2015", [[
-	*Tabs should no longer incorrectly cascade.
-	*Updated Interface version to 6.2.
-]]);
-addEntry("3.6.26", "04/20/2015", [[
-	*Fixed lua error in IsInraid filter function.
-	*Updated profile links.
-]]);
-addEntry("3.6.25", "03/25/2015", [[
-	*Grabbed new WhoLib for 2 bugfixes related to that lib.
 ]]);
 
 

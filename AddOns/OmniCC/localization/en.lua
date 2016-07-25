@@ -1,17 +1,23 @@
 OMNICC_LOCALS = {} -- should be done in the US locale file, only
 local L = OMNICC_LOCALS
 
+-- timer formats
+L.TenthsFormat = '%.1f'
+L.MMSSFormat = '%d:%02d'
+L.MinuteFormat = '%dm'
+L.HourFormat = '%dh'
+L.DayFormat = '%dd'
+
 -- effect names
 L.None = NONE
-L.Pulse = "Pulse"
-L.Shine = "Shine"
-L.Alert = "Alert"
-L.Activate = "Activate"
-L.Flare = "Flare"
+L.Pulse = 'Pulse'
+L.Shine = 'Shine'
+L.Alert = 'Alert'
+L.Activate = 'Activate'
+L.Flare = 'Flare'
 
 -- effect tooltips
-L.ActivateTip = [[Mimics the default effect that shows on
-action buttons when an ability "procs".]]
+L.ActivateTip = [[Applies the ability triggering effect to the cooldown icon.]]
 L.AlertTip = [[Pulses the finished cooldown icon
 at the center of the screen.]]
 L.PulseTip = [[Pulses the cooldown icon.]]

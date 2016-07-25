@@ -10,6 +10,7 @@ Plot=framde del piedistallino
 Icon e IconRing contenuto e nordo dell'iconcina
 --]]
 local me,ns=...
+local pp=print
 ns.Configure()
 local addon=addon
 local GBF=GarrisonBuildingFrame
@@ -53,7 +54,7 @@ function module:AddFollowerToPlot(plot)
 		return frame:Hide()
 	end
 	if plot.followerTooltip then
-		local followerName, level, quality, displayID, followerID, garrFollowerID, status, portraitIconID = G.GetFollowerInfoForBuilding(plot.plotID)
+		local followerName, level, quality, followerID, garrFollowerID, status, portraitIconID = G.GetFollowerInfoForBuilding(plot.plotID)
 		if followerName then
 			if (level == GARRISON_FOLLOWER_MAX_LEVEL) then
 				level=G.GetFollowerItemLevelAverage(followerID)
@@ -68,7 +69,8 @@ function module:AddFollowerToPlot(plot)
 			info.level=level
 			info.portraitIconID=portraitIconID
 			info.displayID=portraitIconID
-			GarrisonMissionFrame_SetFollowerPortrait(frame.PortraitFrame, info, false);
+			info.followerTypeID=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
+			GMF:SetFollowerPortrait(frame.PortraitFrame, info, false)
 			frame.PortraitFrame.Empty:Hide()
 			del(info)
 		else

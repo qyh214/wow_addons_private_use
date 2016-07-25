@@ -36,7 +36,7 @@ local locales = {
 -- Automatically inserted translations
 
 
-locales.deDE["anchor"] = "Beute Monitor" -- Needs review
+locales.deDE["anchor"] = "Beutemonitor" -- Needs review
 
 
 

@@ -1,0 +1,12 @@
+tag v3.0.3
+76476f2378c01f3db9f73dbc0ee37d540dbdc597
+TSMBot <admin@tradeskillmaster.com>
+2016-07-23 23:13:49 +0000
+
+
+
+--------------------
+
+Sapu94:
+	- Updated changelog.
+	- Completely rewrote item info APIs and removed pre-7.0.x code.

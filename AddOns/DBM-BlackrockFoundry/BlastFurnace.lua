@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1154, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14569 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14994 $"):sub(12, -3))
 mod:SetCreatureID(76809, 76806)--76809 foreman feldspar, 76806 heart of the mountain, 76809 Security Guard, 76810 Furnace Engineer, 76811 Bellows Operator, 76815 Primal Elementalist, 78463 Slag Elemental, 76821 Firecaller
 mod:SetEncounterID(1690)
 mod:SetZone()
@@ -81,10 +81,10 @@ local timerBellowsOperator		= mod:NewCDCountTimer(59, "ej9650", nil, nil, nil, 1
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
 local timerVolatileFireCD		= mod:NewCDTimer(20, 176121, nil, false, nil, 3)--Very useful, but off by default since it can be spammy if > 2 adds up at once.
 local timerVolatileFire			= mod:NewBuffFadesTimer(8, 176121)
-local timerShieldsDown			= mod:NewBuffActiveTimer(30, 158345, nil, "Dps", nil, 6)
+local timerShieldsDown			= mod:NewBuffActiveTimer(30, 158345, nil, "Dps", nil, 6, nil, DBM_CORE_DAMAGE_ICON)
 local timerSlagElemental		= mod:NewNextCountTimer(55, "ej9657", nil, "-Tank", nil, 1, 155196)--Definitely 55 seconds, although current detection method may make it appear 1-2 seconds if slag has to run across room before casting first fixate
 local timerFireCaller			= mod:NewNextCountTimer(45, "ej9659", nil, "Tank", nil, 1, 156937)
-local timerSecurityGuard		= mod:NewNextCountTimer(40, "ej9648", nil, "Tank", nil, 1, 160379)
+local timerSecurityGuard		= mod:NewNextCountTimer(40, "ej9648", nil, "Tank", nil, 1, 160379, DBM_CORE_TANK_ICON)
 
 local berserkTimer				= mod:NewBerserkTimer(780)
 
@@ -580,7 +580,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			DBMHudMap:FreeEncounterMarkerByTarget(155192, args.destName)
 		end
 		if args:IsPlayer() then
-			timerBomb:Cancel()
+			timerBomb:Stop()
 			updateRangeFrame(self)
 		end
 	elseif spellId == 176121 then
@@ -623,10 +623,10 @@ function mod:UNIT_DIED(args)
 		if self.vb.elementalistsRemaining > 0 then
 			warnElementalists:Show(self.vb.elementalistsRemaining)
 		else
-			timerFireCaller:Cancel()
-			timerSecurityGuard:Cancel()
+			timerFireCaller:Stop()
+			timerSecurityGuard:Stop()
 			countdownSecurityGuard:Cancel()
-			timerSlagElemental:Cancel()
+			timerSlagElemental:Stop()
 			self:Unschedule(SecurityGuard)
 			self:Unschedule(FireCaller)
 			self.vb.phase = 3
@@ -654,10 +654,10 @@ function mod:UNIT_DIED(args)
 			prevHealth = 100
 			warnPhase2:Show()
 			self:Unschedule(Engineers)
-			timerEngineer:Cancel()
+			timerEngineer:Stop()
 			countdownEngineer:Cancel()
-			timerBellowsOperator:Cancel()
-			timerSecurityGuard:Cancel()
+			timerBellowsOperator:Stop()
+			timerSecurityGuard:Stop()
 			countdownSecurityGuard:Cancel()
 			self:Unschedule(SecurityGuard)
 			voicePhaseChange:Play("ptwo")
@@ -684,7 +684,7 @@ function mod:UNIT_DIED(args)
 			warnRegulators:Show(2 - self.vb.machinesDead)
 		end
 	elseif cid == 76809 then
-		timerRuptureCD:Cancel()
+		timerRuptureCD:Stop()
 	elseif cid == 76821 then--Firecaller
 		timerVolatileFireCD:Cancel(args.destGUID)
 	end

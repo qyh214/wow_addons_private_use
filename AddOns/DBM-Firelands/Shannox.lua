@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 local Riplimb	= EJ_GetSectionInfo(2581)
 local Rageface	= EJ_GetSectionInfo(2583)
 
-mod:SetRevision(("$Revision: 161 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 170 $"):sub(12, -3))
 mod:SetCreatureID(53691)
 mod:SetEncounterID(1205)
 mod:DisableEEKillDetection()
@@ -56,7 +56,7 @@ local specWarnTears				= mod:NewSpecialWarningStack(99937, "Tank", 8)
 
 local timerRage					= mod:NewTargetTimer(15, 100415)
 local timerWary					= mod:NewTargetTimer(25, 100167, nil, false)
-local timerTears				= mod:NewTargetTimer(26, 99937, nil, "Tank|Healer", nil, 5)
+local timerTears				= mod:NewTargetTimer(26, 99937, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerCrystalPrison		= mod:NewTargetTimer(10, 99837)--Dogs Only
 local timerCrystalPrisonCD		= mod:NewCDTimer(25.5, 99836, nil, nil, nil, 3)--Seems consistent timing, other trap is not.
 local timerSpearCD				= mod:NewCDTimer(42, 100002, nil, nil, nil, 3)--Before riplimb dies

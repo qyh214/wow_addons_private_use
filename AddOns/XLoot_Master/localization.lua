@@ -46,11 +46,11 @@ local locales = {
 
 locales.deDE["BINDING_BANKER"] = "Setze Bankier" -- Needs review
 locales.deDE["BINDING_DISENCHANTER"] = "Setze Entzauberer" -- Needs review
-locales.deDE["ITEM_AWARDED"] = "%s erhalten: %s" -- Needs review
+locales.deDE["ITEM_AWARDED"] = "%s erhielt: %s" -- Needs review
 locales.deDE["ML_BANKER"] = "Bankier" -- Needs review
 locales.deDE["ML_DISENCHANTER"] = "Entzauberer" -- Needs review
-locales.deDE["ML_RANDOM"] = "Schlachtzugs Wurf" -- Needs review
-locales.deDE["ML_SELF"] = "Eigenständiges plündern" -- Needs review
+locales.deDE["ML_RANDOM"] = "Schlachtzugswurf" -- Needs review
+locales.deDE["ML_SELF"] = "Eigenständiges Plündern" -- Needs review
 locales.deDE["RECIPIENTS"] = "Spezieller Empfänger" -- Needs review
 locales.deDE["SPECIALROLLS"] = "Spezielle Würfe" -- Needs review
 

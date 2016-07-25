@@ -396,7 +396,6 @@ L:SetOptionLocalization{
 	SpecWarnMadnessOutNow			= "Spezialwarnung kurz bevor $spell:64059 zu Ende gewirkt wird",
 	SpecWarnFervorCast				= "Spezialwarnung, wenn $spell:63138 auf dich gewirkt wird (muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
 	specWarnBrainPortalSoon			= "Spezialwarnung für nächste Gehirnportale",
-	WarningSqueeze					= "Schreie bei Quetschen auf dir",
 	NextPortal						= "Zeige Zeit bis nächste Gehirnportale",
 	ShowSaraHealth					= "Zeige Lebensanzeige für Sara in Phase 1 (muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
 	MaladyArrow						= "Zeige DBM-Pfeil, wenn $spell:63881 in deiner Nähe ist"
@@ -405,6 +404,5 @@ L:SetOptionLocalization{
 L:SetMiscLocalization{
 	YellPull 			= "Bald ist die Zeit gekommen, dem Untier den Kopf abzuschlagen! Konzentriert Euren Zorn und Euren Hass auf seine Diener!",
 	YellPhase2	 		= "Ich bin der strahlende Traum.",
-	Sara 				= "Sara",
-	WarningYellSqueeze	= "Quetschen auf mir! Hilfe!"
+	Sara 				= "Sara"
 }

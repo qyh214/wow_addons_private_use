@@ -16,7 +16,7 @@ assert(LibStub, "LibWho-2.0 requires LibStub")
 
 
 local major_version = 'LibWho-2.0'
-local minor_version = tonumber("145") or 99999
+local minor_version = tonumber("154") or 99999
 
 local lib = LibStub:NewLibrary(major_version, minor_version)
 
@@ -173,7 +173,7 @@ local function ignoreRealm(name)
  	 		if realm == connectedServers[i] then return false end
 		end
  	end
-    return true
+    return SelectedRealmName() ~= realm
 end
 
 function lib.UserInfo(defhandler, name, opts)
@@ -181,6 +181,7 @@ function lib.UserInfo(defhandler, name, opts)
 	local now = time()
 	
     name = self:CheckArgument(usage, 'name', 'string', name)
+--    name = Ambiguate(name, "None")
     if name:len() == 0 then return end
     
     --There is no api to tell connected realms from cross realm by name. As such, we check known connections table before excluding who inquiry
@@ -909,6 +910,8 @@ function lib:WHO_LIST_UPDATE()
 end
 
 function lib:ProcessWhoResults()
+	self.Result = self.Result and {}
+
 	local num
 	self.Total, num = GetNumWhoResults()
 	for i=1, num do

@@ -52,9 +52,6 @@ function mod:OnEnable()
 			end
 		end
 	end)
-
-	InterfaceOptionsSocialPanelChatMouseScroll_SetScrolling("0")
-	InterfaceOptionsSocialPanelChatMouseScroll_SetScrolling("1")
 end
 
 function mod:Info()

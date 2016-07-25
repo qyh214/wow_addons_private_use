@@ -514,8 +514,7 @@ L:SetMiscLocalization{
 	YellPull 						= "Il sera bientôt temps de frapper la tête de la bête ! Concentrez votre rage et votre haine sur ses laquais !",
 	YellPhase2 						= "Je suis le rêve éveillé",
 	Sara 							= "Sara",
-	WhisperBrainLink 				= "Votre cerveau est lié ! Courez vers %s !",
-	WarningYellSqueeze				= "Ecrasement sur moi ! Aidez-moi !"
+	WhisperBrainLink 				= "Votre cerveau est lié ! Courez vers %s !"
 }
 
 L:SetWarningLocalization{
@@ -553,7 +552,6 @@ L:SetOptionLocalization{
 	SpecWarnFervor					= "Montre une alerte spéciale pour la ferveur de Sara",
 	SpecWarnFervorCast				= "Montre une alerte spéciale quand la Ferveur de Sara commence a cast sur vous (Il faut avoir Sara en Target/Focus)",
 	specWarnBrainPortalSoon			= "Annonce l'arrivée d'un portail",
-	WarningSqueeze					= "Annonce la cible d'Ecrasement",
 	NextPortal						= "Montre un timer avant le prochain portail",
 	WhisperBrainLink				= "Envoie un whisp aux Cerveaux liés",
 	SetIconOnFervorTarget			= "Met une icône sur les cible de la ferveur de Sara",

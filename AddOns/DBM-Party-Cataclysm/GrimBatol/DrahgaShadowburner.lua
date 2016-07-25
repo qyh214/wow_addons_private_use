@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(133, "DBM-Party-Cataclysm", 3, 71)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 163 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 170 $"):sub(12, -3))
 mod:SetCreatureID(40319)
 mod:SetZone()
 
@@ -24,7 +24,7 @@ local specWarnFlamingFixate		= mod:NewSpecialWarningRun(82850, nil, nil, nil, 4)
 local specWarnDevouring 		= mod:NewSpecialWarningDodge(90950, nil, nil, nil, 2)
 local specWarnSeepingTwilight	= mod:NewSpecialWarningMove(75317)
 
-local timerAddCD				= mod:NewCDTimer(22, 90949, nil, nil, nil, 1)--22-27. 24 is the average
+local timerAddCD				= mod:NewCDTimer(22, 90949, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)--22-27. 24 is the average
 local timerDevouringCD			= mod:NewCDTimer(40, 90950, nil, nil, nil, 3)
 local timerDevouring			= mod:NewBuffActiveTimer(5, 90950)
 --local timerShredding			= mod:NewBuffActiveTimer(20, 75271)

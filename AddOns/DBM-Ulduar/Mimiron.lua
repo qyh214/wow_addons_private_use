@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 228 $"):sub(12, -3))
 mod:SetCreatureID(33432)
 mod:SetEncounterID(1138)
 mod:DisableESCombatDetection()
@@ -55,14 +55,14 @@ local timerNextFrostBomb		= mod:NewNextTimer(30, 64623, nil, nil, nil, 3)
 local timerBombExplosion		= mod:NewCastTimer(15, 65333)
 
 mod:AddBoolOption("HealthFramePhase4", true)
-mod:AddBoolOption("AutoChangeLootToFFA", true)
+--mod:AddBoolOption("AutoChangeLootToFFA", true)
 mod:AddBoolOption("SetIconOnNapalm", false)
 mod:AddBoolOption("SetIconOnPlasmaBlast", false)
 mod:AddBoolOption("RangeFrame")
 
 local hardmode = false
 local phase						= 0 
-local lootmethod, masterlooterRaidID
+--local lootmethod, masterlooterRaidID
 
 local spinningUp				= GetSpellInfo(63414)
 local lastSpinUp				= 0
@@ -85,9 +85,9 @@ function mod:OnCombatStart(delay)
 	table.wipe(napalmShellTargets)
 	self:NextPhase()
 	timerPlasmaBlastCD:Start(20-delay)
-	if DBM:GetRaidRank() == 2 then
-		lootmethod, _, masterlooterRaidID = GetLootMethod()
-	end
+--	if DBM:GetRaidRank() == 2 then
+--		lootmethod, _, masterlooterRaidID = GetLootMethod()
+--	end
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(6)
 	end
@@ -97,13 +97,13 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
-	if self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
-		if masterlooterRaidID then
-			SetLootMethod(lootmethod, "raid"..masterlooterRaidID)
-		else
-			SetLootMethod(lootmethod)
-		end
-	end
+--	if self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
+--		if masterlooterRaidID then
+--			SetLootMethod(lootmethod, "raid"..masterlooterRaidID)
+--		else
+--			SetLootMethod(lootmethod)
+--		end
+--	end
 end
 
 function mod:SPELL_SUMMON(args)
@@ -212,12 +212,12 @@ function mod:NextPhase()
 			DBM.RangeCheck:Hide()
 		end
 		if hardmode then
-			timerNextFrostBomb:Start(51)
+			timerNextFrostBomb:Start(42)
 		end
 	elseif phase == 3 then
-		if self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
-			SetLootMethod("freeforall")
-		end
+--		if self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
+--			SetLootMethod("freeforall")
+--		end
 		timerDarkGlareCast:Cancel()
 		timerNextDarkGlare:Cancel()
 		timerNextFrostBomb:Cancel()
@@ -228,13 +228,13 @@ function mod:NextPhase()
 		end
 
 	elseif phase == 4 then
-		if self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
-			if masterlooterRaidID then
-				SetLootMethod(lootmethod, "raid"..masterlooterRaidID)
-			else
-				SetLootMethod(lootmethod)
-			end
-		end
+--		if self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
+--			if masterlooterRaidID then
+--				SetLootMethod(lootmethod, "raid"..masterlooterRaidID)
+--			else
+--				SetLootMethod(lootmethod)
+--			end
+--		end
 		timerP3toP4:Start()
 		if self.Options.HealthFramePhase4 or DBM.BossHealth:IsShown() then
 			DBM.BossHealth:Clear()
@@ -243,9 +243,9 @@ function mod:NextPhase()
 			DBM.BossHealth:AddBoss(33651, L.MobPhase2)
 			DBM.BossHealth:AddBoss(33432, L.MobPhase1)
 		end
-		if hardmode then
-            timerNextFrostBomb:Start(73)
-        end
+--		if hardmode then
+--			timerNextFrostBomb:Start(73)
+--		end
 	end
 end
 

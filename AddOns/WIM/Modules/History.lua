@@ -12,6 +12,9 @@ local select = select;
 --set namespace
 setfenv(1, WIM);
 
+--Quick and dirty fix for renames in legion to deal with renamed globals
+local BNet_GetPresenceID = _G.BNet_GetBNetIDAccount or _G.BNet_GetPresenceID
+
 local History = CreateModule("History", true);
 
 -- default history settings.
@@ -131,7 +134,7 @@ local function recordWhisper(inbound, ...)
         win.widgets.history:SetHistory(true);
         --If realid/btag whisper, we save them under btag to avoid caching issues
         --(ie NAME is encoded and changes every session, we can't use that to save whispers, plus if user dumps cache, they all return unknown)
-        local pid = _G.BNet_GetPresenceID(from)
+        local pid = BNet_GetPresenceID(from)
         if pid then
         	local _, _, btag, _, toonName = _G.BNGetFriendInfoByID(pid)
 			from = btag or toonName or from
@@ -610,7 +613,7 @@ local function createHistoryViewer()
                         local user, gmTag = string.match(original, "([^*]+)(*?)$");
                         color = gmTag == "*" and constants.classes[L["Game Master"]].color or "ffffff";
                         if(string.match(original, "^*")) then
-                            extra = " |TInterface\\AddOns\\WIM\\Skins\\Default\\minimap.tga:20:20:0:0|t";
+                            extra = " |TInterface\\AddOns\\WIM\\Skins\\Default\\minimap.blp:20:20:0:0|t";
                             color = "fff569";
                         end
                         if not user then

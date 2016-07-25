@@ -6,7 +6,7 @@ XPerl_ProductName		= "|cFFD00000Z-Perl|r UnitFrames"
 XPerl_ShortProductName	= "|cFFD00000Z-Perl|r"
 XPerl_Author			= "|cFFFF8080Resike|r"
 XPerl_Description		= XPerl_ProductName.." by "..XPerl_Author
-XPerl_VersionNumber		= "4.2.4 release"
+XPerl_VersionNumber		= "5.0.2 release"
 XPerl_Version			= XPerl_Description.." - "..XPerl_VersionNumber
 XPerl_LongDescription	= "UnitFrame replacement for new look Player, Pet, Party, Target, Target's Target, Focus, Raid"
 XPerl_ModMenuIcon		= "Interface\\Icons\\INV_Misc_Gem_Pearl_02"
@@ -147,12 +147,12 @@ XPERL_HIGHLIGHT_SPELLS = {
 	pomSpells = {
 		[GetSpellInfo(33076)] = 30,			-- Prayer of Mending
 		[GetSpellInfo(115151)] = 18,		-- Renewing Mist
-		[GetSpellInfo(157007)] = 60,		-- Beacon of Insight
+		--[GetSpellInfo(157007)] = 60,		-- Beacon of Insight
 	},
 	shieldSpells = {
 		[GetSpellInfo(17)] = 15,			-- Power Word: Shield
-		[GetSpellInfo(76669)] = 15,			-- Illuminated Healing
-		[GetSpellInfo(974)] = 600			-- Earth Shield	(old id 32594)
+		--[GetSpellInfo(76669)] = 15,			-- Illuminated Healing
+		--[GetSpellInfo(974)] = 600			-- Earth Shield	(old id 32594)
 	},
 }
 

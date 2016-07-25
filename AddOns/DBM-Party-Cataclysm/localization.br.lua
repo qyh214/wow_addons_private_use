@@ -352,14 +352,6 @@ L:SetOptionLocalization({
 -----------
 L= DBM:GetModLocalization(116)
 
-L:SetOptionLocalization({
-	SpecWarnStaticCling	= "Exibir aviso especial para $spell:87618"
-})
-
-L:SetWarningLocalization({
-	SpecWarnStaticCling	= "SALTE!"
-})
-
 ---------------------------
 --  The Throne of Tides  --
 ---------------------------

@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod(1395, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14749 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15037 $"):sub(12, -3))
 mod:SetCreatureID(91349)--91305 Fel Iron Summoner
 mod:SetEncounterID(1795)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
-mod:SetHotfixNoticeRev(14732)
+mod:SetHotfixNoticeRev(14801)
 mod:SetMinSyncRevision(14732)
-mod.respawnTime = 30
+mod.respawnTime = 29
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
@@ -55,7 +55,7 @@ local specWarnCurseofLegion			= mod:NewSpecialWarningYou(181275)
 local yellCurseofLegion				= mod:NewFadesYell(181275)--Don't need to know when it's applied, only when it's fading does it do aoe/add spawn
 local specWarnMarkOfDoom			= mod:NewSpecialWarningYou(181099, nil, nil, nil, 1, 2)
 local yellMarkOfDoom				= mod:NewPosYell(181099, 31348)-- This need to know at apply, only player needs to know when it's fading
-local specWarnShadowBoltVolley		= mod:NewSpecialWarningInterrupt(181126, "-Healer", nil, nil, 1, 2)
+local specWarnShadowBoltVolley		= mod:NewSpecialWarningInterrupt(181126, "HasInterrupt", nil, 2, 1, 2)
 local specWarnDoomSpikeOther		= mod:NewSpecialWarningTaunt(181119, false, nil, 2, 1, 2)--Optional, most guilds 3 tank and don't swap for this so off by default
 ----Fel Imps
 local specWarnFelBlast				= mod:NewSpecialWarningInterrupt(181132, false, nil, 2, 1, 2)--Can be spammy, but someone may want it
@@ -66,8 +66,7 @@ local specWarnWrathofGuldan			= mod:NewSpecialWarningYou(186362, nil, nil, nil, 
 local yellWrathofGuldan				= mod:NewPosYell(186362, 169826)
 local specWarnFelPillar				= mod:NewSpecialWarningDodge(190070, nil, nil, 3, 1, 2)
 --Mannoroth
-local specWarnGlaiveCombo			= mod:NewSpecialWarningSpell(181354, "Tank", nil, nil, 3, 2)--Active mitigation or die mechanic
-local specWarnMassiveBlast			= mod:NewSpecialWarningSpell(181359, nil, nil, nil, 1, 2)
+local specWarnGlaiveCombo			= mod:NewSpecialWarningDefensive(181354, "Tank", nil, nil, 3, 2)--Active mitigation or die mechanic
 local specWarnMassiveBlastOther		= mod:NewSpecialWarningTaunt(181359, nil, nil, nil, 1, 2)
 local specWarnFelHellStorm			= mod:NewSpecialWarningSpell(181557, nil, nil, nil, 2, 2)
 local specWarnGaze					= mod:NewSpecialWarningYou(181597)
@@ -86,31 +85,31 @@ local timerFelImplosionCD			= mod:NewNextCountTimer(46, 181255, nil, nil, nil, 1
 ----Infernals
 local timerInfernoCD				= mod:NewNextCountTimer(107, 181180, nil, nil, nil, 1)
 ----Gul'dan
-local timerWrathofGuldanCD			= mod:NewNextTimer(107, 186348, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
+local timerWrathofGuldanCD			= mod:NewNextTimer(107, 186348, 169826, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 --Mannoroth
 mod:AddTimerLine(L.name)
 local timerGlaiveComboCD			= mod:NewCDTimer(30, 181354, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--30 seconds unless delayed by something else
 local timerFelHellfireCD			= mod:NewCDTimer(35, 181557, nil, nil, nil, 2)--35, unless delayed by other things.
-local timerGazeCD					= mod:NewCDTimer(47.1, 181597, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--As usual, some variation do to other abilities
-local timerFelSeekerCD				= mod:NewCDTimer(50, 181735, nil, nil, nil, 2)--Small sample size, confirm it's not shorter if not delayed by things.
+local timerGazeCD					= mod:NewCDTimer(47.1, 181597, 134029, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--As usual, some variation do to other abilities
+local timerFelSeekerCD				= mod:NewCDTimer(49.5, 181735, nil, nil, nil, 2)--Small sample size, confirm it's not shorter if not delayed by things.
 local timerShadowForceCD			= mod:NewCDTimer(52.2, 181799, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 
 --local berserkTimer					= mod:NewBerserkTimer(360)
 
-local countdownGlaiveCombo			= mod:NewCountdown("Alt30", 181354, "Tank")
-local countdownMarkOfDoom			= mod:NewCountdownFades("AltTwo15", 181099)
-local countdownShadowForce			= mod:NewCountdown(52, 181799)
+local countdownGlaiveCombo			= mod:NewCountdown("Alt30", 181354, "Tank", nil, 3)
+local countdownMarkOfDoom			= mod:NewCountdownFades("AltTwo15", 181099, nil, nil, 3)
+local countdownShadowForce			= mod:NewCountdown(52, 181799, nil, nil, 3)
 
 local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 local voiceGaze						= mod:NewVoice(181597, false) --gather share
 local voiceMarkOfDoom				= mod:NewVoice(181099) --run out/mm
 local voiceFelHellfire				= mod:NewVoice(181191, nil, nil, 2) --runaway
-local voiceShadowBoltVolley			= mod:NewVoice(181126, "-Healer")
-local voiceFelBlast					= mod:NewVoice(181132, "-Healer")
+local voiceShadowBoltVolley			= mod:NewVoice(181126, "HasInterrupt")
+local voiceFelBlast					= mod:NewVoice(181132, false)
 local voiceFelSeeker				= mod:NewVoice(181735)--watchstep
 local voiceFelHellstorm				= mod:NewVoice(181557)--watchstep
-local voiceGlaiveCombo				= mod:NewVoice(181354, "Tank")--Defensive
-local voiceMassiveBlast				= mod:NewVoice(181359, "Tank")--changemt
+local voiceGlaiveCombo				= mod:NewVoice(181354, "Tank")--defensive
+local voiceMassiveBlast				= mod:NewVoice(181359, "Tank")--tauntboss
 local voiceFelPillar				= mod:NewVoice(190070)--runaway
 local voiceWrath					= mod:NewVoice(186348)--mm
 
@@ -221,8 +220,7 @@ do
 	end
 	updateInfoFrame = function()
 		table.wipe(lines)
-		local total = 0
-		local total2 = 0
+		local total, total2 = 0, 0
 		for i = 1, #gazeTargets do
 			local name = gazeTargets[i]
 			local uId = DBM:GetRaidUnitId(name)
@@ -284,12 +282,12 @@ local function setWrathIcons(self)
 			if melee1 then
 				melee2 = name
 				if name == playerName then
-					playerIcon = 4
+					playerIcon = 6
 				end
 			else
 				melee1 = name
 				if name == playerName then
-					playerIcon = 5
+					playerIcon = 7
 				end
 			end
 			DBM:Debug("Melee wrath found: "..name, 2)
@@ -303,12 +301,12 @@ local function setWrathIcons(self)
 			if ranged1 then
 				ranged2 = name
 				if name == playerName then
-					playerIcon = 6
+					playerIcon = 4
 				end
 			else
 				ranged1 = name
 				if name == playerName then
-					playerIcon = 7
+					playerIcon = 5
 				end
 			end
 			DBM:Debug("Ranged wrath found: "..name, 2)
@@ -326,6 +324,55 @@ local function setWrathIcons(self)
 		if playerIcon then
 			yellWrathofGuldan:Yell(playerIcon, playerIcon, playerIcon)
 			voiceWrath:Play("mm"..playerIcon)
+		end
+	end
+end
+
+--Felseeker delay: 6 seconds
+--Glaive Combo delay: 4 seconds
+--Fel Hellstorm delay: 1.5 seconds
+--Shadowforce delay: 8 seconds
+local function updateAllTimers(self, delay)
+	DBM:Debug("updateAllTimers running", 3)
+	if timerFelHellfireCD:GetRemaining() < delay then
+		local elapsed, total = timerFelHellfireCD:GetTime()
+		local extend = delay - (total-elapsed)
+		DBM:Debug("timerFelHellfireCD extended by: "..extend, 2)
+		timerFelHellfireCD:Stop()
+		timerFelHellfireCD:Update(elapsed, total+extend)
+	end
+	if timerGlaiveComboCD:GetRemaining() < delay then
+		local elapsed, total = timerGlaiveComboCD:GetTime()
+		local extend = delay - (total-elapsed)
+		DBM:Debug("timerGlaiveComboCD extended by: "..extend, 2)
+		timerGlaiveComboCD:Stop()
+		countdownGlaiveCombo:Cancel()
+		timerGlaiveComboCD:Update(elapsed, total+extend)
+		countdownGlaiveCombo:Start(delay)
+	end
+	if timerFelSeekerCD:GetRemaining() < delay then
+		local elapsed, total = timerFelSeekerCD:GetTime()
+		local extend = delay - (total-elapsed)
+		DBM:Debug("timerFelSeekerCD extended by: "..extend, 2)
+		timerFelSeekerCD:Stop()
+		timerFelSeekerCD:Update(elapsed, total+extend)
+	end
+	if timerGazeCD:GetRemaining() < delay then
+		local elapsed, total = timerGazeCD:GetTime()
+		local extend = delay - (total-elapsed)
+		DBM:Debug("timerGazeCD extended by: "..extend, 2)
+		timerGazeCD:Stop()
+		timerGazeCD:Update(elapsed, total+extend)
+	end
+	if self.vb.phase >= 3 then--Check shadowforce timer
+		if timerShadowForceCD:GetRemaining() < delay then
+			local elapsed, total = timerShadowForceCD:GetTime()
+			local extend = delay - (total-elapsed)
+			DBM:Debug("timerShadowForceCD extended by: "..extend, 2)
+			timerShadowForceCD:Stop()
+			countdownShadowForce:Cancel()
+			timerShadowForceCD:Update(elapsed, total+extend)
+			countdownShadowForce:Start(delay)
 		end
 	end
 end
@@ -370,6 +417,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFelHellStorm:Show()
 		voiceFelHellstorm:Play("watchstep")
 		timerFelHellfireCD:Start()
+		--updateAllTimers(self, 1.5)
 	elseif spellId == 181126 then
 --		timerShadowBoltVolleyCD:Start(args.sourceGUID)
 		if self:CheckInterruptFilter(args.sourceGUID) then
@@ -382,14 +430,13 @@ function mod:SPELL_CAST_START(args)
 			voiceFelBlast:Play("kickcast")
 		end
 	elseif spellId == 183376 or spellId == 185830 then
-		voiceMassiveBlast:Schedule(1, "changemt")
 		local targetName, uId, bossuid = self:GetBossTarget(91349, true)
 		local tanking, status = UnitDetailedThreatSituation("player", bossuid)
 		if tanking or (status == 3) then--Player is current target
-			specWarnMassiveBlast:Show()
 		else
 			if self:GetNumAliveTanks() >= 3 and not self:CheckNearby(21, targetName) then return end--You are not near current tank, you're probably 3rd tank on Doom Guards that never taunts massive blast
 			specWarnMassiveBlastOther:Schedule(1, targetName)
+			voiceMassiveBlast:Schedule(1, "tauntboss")
 		end
 	elseif spellId == 181793 or spellId == 182077 then--Melee (10)
 		warnFelseeker:Show(10)
@@ -399,9 +446,10 @@ function mod:SPELL_CAST_START(args)
 		warnFelseeker:Show(30)
 	elseif spellId == 181799 or spellId == 182084 then
 		timerShadowForceCD:Start()
-		countdownShadowForce:Start(52.5)
 		if self:IsTank() and self.vb.phase == 3 then return end--Doesn't target tanks in phase 3, ever.
+		countdownShadowForce:Start(52.5)
 		specWarnShadowForce:Show()
+		updateAllTimers(self, 8)
 	elseif spellId == 181099 then
 		table.wipe(doomTargets)
 	elseif spellId == 181597 or spellId == 182006 then
@@ -492,7 +540,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if count == 3 then
 			breakDoom(self)
 		else
-			self:Schedule(2, breakDoom, self)--3 targets, pretty slowly. I've seen at least 1.2, so make this 1.3, maybe more if needed
+			self:Schedule(2, breakDoom, self)--3 targets, pretty slowly. I've seen at least 1.2, so make this 2
 		end
 		if args:IsPlayer() then
 			specWarnMarkOfDoom:Show(self:IconNumToString(count))
@@ -599,13 +647,13 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 185147 or spellId == 182212 or spellId == 185175 then--Portals
 		self.vb.portalsLeft = self.vb.portalsLeft - 1
 		if spellId == 185147 and not self:IsMythic() then--Doom Lords Portal
-			timerCurseofLegionCD:Cancel()
+			timerCurseofLegionCD:Stop()
 			--I'd add a cancel for the Doom Lords here, but since everyone killed this portal first
 			--no one ever actually learned what the cooldown was, so no timer to cancel yet!
 		elseif spellId == 182212 and not self:IsMythic() then--Infernals Portal
-			timerInfernoCD:Cancel()
+			timerInfernoCD:Stop()
 		elseif spellId == 185175 and not self:IsMythic() then--Imps Portal
-			timerFelImplosionCD:Cancel()
+			timerFelImplosionCD:Stop()
 		end
 		if self.vb.portalsLeft == 0 and self:AntiSpam(10, 4) and self:IsInCombat() then
 			self.vb.phase = 2
@@ -675,13 +723,13 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc)
 		self.vb.phase = self.vb.phase + 1
 		if self.vb.phase == 3 then
 			self.vb.ignoreAdds = true
-			timerFelHellfireCD:Cancel()
-			timerShadowForceCD:Cancel()
+			timerFelHellfireCD:Stop()
+			timerShadowForceCD:Stop()
 			countdownShadowForce:Cancel()
-			timerGlaiveComboCD:Cancel()
+			timerGlaiveComboCD:Stop()
 			countdownGlaiveCombo:Cancel()
-			timerGazeCD:Cancel()
-			timerFelSeekerCD:Cancel()
+			timerGazeCD:Stop()
+			timerFelSeekerCD:Stop()
 			timerFelHellfireCD:Start(27.8)
 			timerShadowForceCD:Start(32.6)
 			countdownShadowForce:Start(32.6)
@@ -701,25 +749,25 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc)
 			end
 			--Detect when adds timers will reset (by 181301) before they come off cd, and cancel them early
 			if timerFelImplosionCD:GetRemaining(self.vb.impCount+1) > 10 then
-				timerFelImplosionCD:Cancel()
+				timerFelImplosionCD:Stop()
 			end
 			if timerInfernoCD:GetRemaining(self.vb.infernalCount+1) > 10 then
-				timerInfernoCD:Cancel()
+				timerInfernoCD:Stop()
 			end
 			if timerCurseofLegionCD:GetRemaining(self.vb.doomlordCount+1) > 10 then
-				timerCurseofLegionCD:Cancel()
+				timerCurseofLegionCD:Stop()
 			end
 		elseif self.vb.phase == 4 then
 			self.vb.ignoreAdds = true
-			timerFelHellfireCD:Cancel()
-			timerShadowForceCD:Cancel()
+			timerFelHellfireCD:Stop()
+			timerShadowForceCD:Stop()
 			countdownShadowForce:Cancel()
-			timerGlaiveComboCD:Cancel()
+			timerGlaiveComboCD:Stop()
 			countdownGlaiveCombo:Cancel()
-			timerGazeCD:Cancel()
-			timerFelSeekerCD:Cancel()
-			if timerInfernoCD:GetRemaining(self.vb.infernalCount+1) > 10 then
-				timerInfernoCD:Cancel()
+			timerGazeCD:Stop()
+			timerFelSeekerCD:Stop()
+			if timerInfernoCD:GetRemaining(self.vb.infernalCount+1) > 9 then
+				timerInfernoCD:Stop()
 			end
 			timerFelHellfireCD:Start(16.9)
 			timerGlaiveComboCD:Start(27.8)
@@ -731,11 +779,11 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc)
 			warnPhase4:Show()
 			voicePhaseChange:Play("pfour")
 			if self:IsMythic() then
-				if timerFelImplosionCD:GetRemaining(self.vb.impCount+1) > 10 then
-					timerFelImplosionCD:Cancel()
+				if timerFelImplosionCD:GetRemaining(self.vb.impCount+1) > 9 then
+					timerFelImplosionCD:Stop()
 				end
-				if timerCurseofLegionCD:GetRemaining(self.vb.doomlordCount+1) > 10 then
-					timerCurseofLegionCD:Cancel()
+				if timerCurseofLegionCD:GetRemaining(self.vb.doomlordCount+1) > 9 then
+					timerCurseofLegionCD:Stop()
 				end
 				if self.vb.wrathIcon then
 					self.vb.wrathIcon = 8
@@ -751,33 +799,34 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		specWarnFelSeeker:Show()
 		timerFelSeekerCD:Start()
 		voiceFelSeeker:Play("watchstep")
+		updateAllTimers(self, 6)
 	elseif spellId == 181301 then--Summon Adds (phase 2 start/Mythic Phase 3)
 		DBM:Debug("Summon adds 181301 fired", 2)
 		self.vb.ignoreAdds = false
 		self.vb.impCount = 0
-		timerFelImplosionCD:Cancel()
-		timerInfernoCD:Cancel()
+		timerFelImplosionCD:Stop()
+		timerInfernoCD:Stop()
 		timerFelImplosionCD:Start(22, 1)--Seems same for all difficulties on this one
 		if not self:IsMythic() then
 			self.vb.infernalCount = 0
 			timerInfernoCD:Start(47.5, 1)
 		else
 			self.vb.doomlordCount = 0
-			timerCurseofLegionCD:Cancel()
+			timerCurseofLegionCD:Stop()
 			timerCurseofLegionCD:Start(45, 1)
 		end
 	elseif spellId == 182262 then--Summon Adds (phase 3 start/Mythic Phase 4)
 		DBM:Debug("Summon adds 182262 fired", 2)
 		self.vb.ignoreAdds = false
-		timerFelImplosionCD:Cancel()
+		timerFelImplosionCD:Stop()
 		if not self:IsMythic() then
 			self.vb.infernalCount = 0
-			timerInfernoCD:Cancel()
+			timerInfernoCD:Stop()
 			timerInfernoCD:Start(28, 1)
-			timerFelImplosionCD:Start(22, 1)
+			--timerFelImplosionCD:Start(22, 1)--Seems incorret
 		else
 			self.vb.impCount = 0
-			timerCurseofLegionCD:Cancel()--Done for rest of fight
+			timerCurseofLegionCD:Stop()--Done for rest of fight
 			timerFelImplosionCD:Start(7, 1)
 		end
 	elseif spellId == 181156 then--Summon Adds, Phase 2 mythic (about 18 seconds into fight)
@@ -790,19 +839,19 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		countdownGlaiveCombo:Start(25.2)
 		timerFelImplosionCD:Start(27.4, 1)
 		timerFelSeekerCD:Start(40.2)
-		timerGazeCD:Start(50.7)--50.8-53
+		timerGazeCD:Start(49.5)--49.5-53
 		timerInfernoCD:Start(53, 1)
 	--Backup phase detection. a bit slower than CHAT_MSG_RAID_BOSS_EMOTE (5.5 seconds slower)
 	elseif spellId == 182263 and self.vb.phase == 2 then--Phase 3
 		self.vb.phase = 3
 		self.vb.ignoreAdds = true
-		timerFelHellfireCD:Cancel()
-		timerShadowForceCD:Cancel()
+		timerFelHellfireCD:Stop()
+		timerShadowForceCD:Stop()
 		countdownShadowForce:Cancel()
-		timerGlaiveComboCD:Cancel()
+		timerGlaiveComboCD:Stop()
 		countdownGlaiveCombo:Cancel()
-		timerGazeCD:Cancel()
-		timerFelSeekerCD:Cancel()
+		timerGazeCD:Stop()
+		timerFelSeekerCD:Stop()
 		timerFelHellfireCD:Start(22.3)
 		timerShadowForceCD:Start(27.1)
 		countdownShadowForce:Start(27.1)
@@ -820,26 +869,26 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		end
 		--Detect when adds timers will reset (by 181301) before they come off cd, and cancel them early
 		if timerFelImplosionCD:GetRemaining(self.vb.impCount+1) > 4.8 then
-			timerFelImplosionCD:Cancel()
+			timerFelImplosionCD:Stop()
 		end
 		if timerInfernoCD:GetRemaining(self.vb.infernalCount+1) > 4.8 then
-			timerInfernoCD:Cancel()
+			timerInfernoCD:Stop()
 		end
 		if timerCurseofLegionCD:GetRemaining(self.vb.doomlordCount+1) > 4.8 then
-			timerCurseofLegionCD:Cancel()
+			timerCurseofLegionCD:Stop()
 		end
 	elseif spellId == 185690 and self.vb.phase == 3 then--Phase 4
 		self.vb.phase = 4
 		self.vb.ignoreAdds = true
-		timerFelHellfireCD:Cancel()
-		timerShadowForceCD:Cancel()
+		timerFelHellfireCD:Stop()
+		timerShadowForceCD:Stop()
 		countdownShadowForce:Cancel()
-		timerGlaiveComboCD:Cancel()
+		timerGlaiveComboCD:Stop()
 		countdownGlaiveCombo:Cancel()
-		timerGazeCD:Cancel()
-		timerFelSeekerCD:Cancel()
-		if timerInfernoCD:GetRemaining(self.vb.infernalCount+1) > 4.8 then
-			timerInfernoCD:Cancel()
+		timerGazeCD:Stop()
+		timerFelSeekerCD:Stop()
+		if timerInfernoCD:GetRemaining(self.vb.infernalCount+1) > 3.8 then
+			timerInfernoCD:Stop()
 		end
 		timerFelHellfireCD:Start(11.4)
 		timerGlaiveComboCD:Start(22.3)
@@ -851,11 +900,11 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnPhase4:Show()
 		voicePhaseChange:Play("pfour")
 		if self:IsMythic() then
-			if timerFelImplosionCD:GetRemaining(self.vb.impCount+1) > 4.8 then
-				timerFelImplosionCD:Cancel()
+			if timerFelImplosionCD:GetRemaining(self.vb.impCount+1) > 3.8 then
+				timerFelImplosionCD:Stop()
 			end
-			if timerCurseofLegionCD:GetRemaining(self.vb.doomlordCount+1) > 4.8 then
-				timerCurseofLegionCD:Cancel()
+			if timerCurseofLegionCD:GetRemaining(self.vb.doomlordCount+1) > 3.8 then
+				timerCurseofLegionCD:Stop()
 			end
 			if self.vb.wrathIcon then
 				self.vb.wrathIcon = 8
@@ -867,6 +916,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		timerGlaiveComboCD:Start()
 		countdownGlaiveCombo:Start()
 		voiceGlaiveCombo:Play("defensive")
+		updateAllTimers(self, 4)
 	end
 end
 

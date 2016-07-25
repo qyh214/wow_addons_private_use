@@ -14,7 +14,7 @@ end
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 980 $")
+end, "$Revision: 1000 $")
 
 -- Registers frame to spellcast events.
 
@@ -99,7 +99,7 @@ end
 --------------------------------------------------
 
 -- XPerl_ArcaneBar_OnEvent
-function XPerl_ArcaneBar_OnEvent(self, event, unit)
+function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 	if (event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_TARGET_CHANGED" or event == "PLAYER_FOCUS_CHANGED" or event == "PARTY_MEMBER_ENABLE" or event == "PARTY_MEMBER_DISABLE") then
 		local nameChannel = UnitChannelInfo(self.unit)
 		local nameSpell = UnitCastingInfo(self.unit)
@@ -124,7 +124,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit)
 
 	if (event == "UNIT_SPELLCAST_START") then
 		local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(self.unit)
-		if ( not name or (not self.showTradeSkills and isTradeSkill)) then
+		if (not name or (not self.showTradeSkills and isTradeSkill)) then
 			self:Hide()
 			return
 		end
@@ -135,6 +135,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit)
 		else
 			self.spellText:SetText(name:gsub(" %- No Text", ""))
 		end
+		self.castID = castID
 		self.barParentName:Hide()
 		self.barSpark:Show()
 		self.startTime = startTime / 1000
@@ -152,6 +153,10 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit)
 			self.castTimeText:Hide()
 		end
 	elseif ((event == "UNIT_SPELLCAST_STOP" and self.casting) or (event == "UNIT_SPELLCAST_CHANNEL_STOP" and self.channeling)) then
+		local spell, rank, lineID, spellID = ...
+		if event == "UNIT_SPELLCAST_STOP" and self.castID ~= 0 and self.castID ~= lineID then
+			return
+		end
 		if (not ActiveCasting(self)) then
 			self.delaySum = 0
 			self.sign = "+"
@@ -175,6 +180,10 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit)
 			end
 		end
 	elseif (event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_INTERRUPTED") then
+		local spell, rank, lineID, spellID = ...
+		if self.castID ~= 0 and self.castID ~= lineID then
+			return
+		end
 		if (not self.fadeOut and self:IsShown() and not ActiveCasting(self)) then
 			if (event == "UNIT_SPELLCAST_FAILED") then
 				self.spellText:SetText(FAILED)
@@ -267,6 +276,9 @@ local function ShowPrecast(self, side)
 				self.precast:Hide()
 			else
 				local total = self.maxValue - self.startTime
+				if total == 0 then
+					total = 1.5
+				end
 				local width = self:GetWidth() / ((total * 1000) / lag)
 
 				self.precast:ClearAllPoints()

@@ -1,15 +1,18 @@
 local mod	= DBM:NewMod("Broodlord", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 436 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 584 $"):sub(12, -3))
 mod:SetCreatureID(12017)
 mod:SetModelID(14308)
 mod:RegisterCombat("combat")--Leave this combat, so pull still works for non localized if user manages to leave combat before pull
 
 mod:RegisterEvents(
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED",
 	"CHAT_MSG_MONSTER_YELL"
+)
+
+mod:RegisterEventsInCombat(
+	"SPELL_CAST_SUCCESS",
+	"SPELL_AURA_APPLIED"
 )
 
 local warnBlastWave	= mod:NewSpellAnnounce(23331)

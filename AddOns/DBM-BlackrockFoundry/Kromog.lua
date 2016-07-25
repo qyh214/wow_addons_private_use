@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1162, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14333 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14994 $"):sub(12, -3))
 mod:SetCreatureID(77692)
 mod:SetEncounterID(1713)
 mod:SetZone()
@@ -46,14 +46,14 @@ local specWarnTremblingEarth		= mod:NewSpecialWarningCount(173917, nil, nil, nil
 local specWarnCalloftheMountain		= mod:NewSpecialWarningCount(158217, nil, nil, nil, 3, 2)
 
 local timerGraspingEarthCD			= mod:NewCDTimer(114, 157060, nil, nil, nil, 6)--Unless see new logs on normal showing it can still be 111, raising to 115, average i saw was 116-119
-local timerThunderingBlowsCD		= mod:NewNextTimer(12, 157054, nil, nil, nil, 2)
+local timerThunderingBlowsCD		= mod:NewNextTimer(12, 157054, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 local timerRipplingSmashCD			= mod:NewCDTimer(21, 157592, nil, nil, nil, 3)--If it comes off CD early enough into ThunderingBlows/Grasping Earth, he skips a cast. Else, he'll cast it very soon after.
-local timerStoneBreathCD			= mod:NewCDCountTimer(22, 156852, nil, nil, nil, 2)
-local timerSlamCD					= mod:NewCDTimer(23, 156704, nil, "Tank", nil, 5)
-local timerWarpedArmorCD			= mod:NewCDTimer(14, 156766, nil, "Tank", nil, 5)
+local timerStoneBreathCD			= mod:NewCDCountTimer(22, 156852, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
+local timerSlamCD					= mod:NewCDTimer(23, 156704, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerWarpedArmorCD			= mod:NewCDTimer(14, 156766, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerTremblingEarthCD			= mod:NewCDTimer(153.5, 173917, nil, nil, nil, 6)
 local timerTremblingEarth			= mod:NewBuffActiveTimer(25, 173917, nil, nil, nil, 6)
-local timerCalloftheMountain		= mod:NewCastTimer(5, 158217, nil, nil, nil, 2)
+local timerCalloftheMountain		= mod:NewCastTimer(5, 158217, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(540)
 
@@ -124,7 +124,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 157060 then
 		specWarnGraspingEarth:Show(RUNES)
-		timerStoneBreathCD:Cancel()
+		timerStoneBreathCD:Stop()
 		if self:IsLFR() then
 			timerThunderingBlowsCD:Start(20.5)
 			countdownThunderingBlows:Start(20.5)
@@ -134,9 +134,9 @@ function mod:SPELL_CAST_START(args)
 			countdownThunderingBlows:Start()
 			timerStoneBreathCD:Start(31, self.vb.stoneBreath+1)--Verified it happens on mythic, if rune of trembling earth doesn't come first
 		end
-		timerSlamCD:Cancel()
-		timerRipplingSmashCD:Cancel()
-		timerWarpedArmorCD:Cancel()
+		timerSlamCD:Stop()
+		timerRipplingSmashCD:Stop()
+		timerWarpedArmorCD:Stop()
 		voiceGraspingEarth:Play("157060")
 		self:RuneStart()
 		if self:IsMythic() then
@@ -144,7 +144,7 @@ function mod:SPELL_CAST_START(args)
 			local remaining = timerTremblingEarthCD:GetRemaining()
 			if remaining < 32 then
 				DBM:Debug("Trembling earth CD extended by Grasping Earth")
-				timerTremblingEarthCD:Cancel()
+				timerTremblingEarthCD:Stop()
 				timerTremblingEarthCD:Start(32)
 			end
 		else
@@ -221,15 +221,15 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnTremblingEarth:Show(self.vb.tremblingCast)
 		timerTremblingEarth:Start()
 		countdownTremblingEarth:Start()
-		timerSlamCD:Cancel()
-		timerRipplingSmashCD:Cancel()
-		timerWarpedArmorCD:Cancel()
-		timerStoneBreathCD:Cancel()
+		timerSlamCD:Stop()
+		timerRipplingSmashCD:Stop()
+		timerWarpedArmorCD:Stop()
+		timerStoneBreathCD:Stop()
 		timerTremblingEarthCD:Schedule(25)
 		local remaining = timerGraspingEarthCD:GetRemaining()
 		if remaining < 50 then--Will come off cd during mythic phase, update timer because mythic phase is coded to prevent this from happening and will push ability to about 12-17 seconds after mythic phase ended
 			DBM:Debug("Grasping earth CD extended by Trembling Earth")
-			timerGraspingEarthCD:Cancel()--Prevent timer debug from complaining
+			timerGraspingEarthCD:Stop()--Prevent timer debug from complaining
 			timerGraspingEarthCD:Start(62)
 		end
 	elseif spellId == 156852 then

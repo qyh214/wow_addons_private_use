@@ -1,30 +1,29 @@
 local mod	= DBM:NewMod(111, "DBM-Party-Cataclysm", 7, 67)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 123 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 167 $"):sub(12, -3))
 mod:SetCreatureID(43214)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"SPELL_CAST_START 92265",
+	"SPELL_CAST_SUCCESS 92265",
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 local warnGroundphase		= mod:NewAnnounce("WarnGroundphase", 2, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
 local warnAirphase			= mod:NewAnnounce("WarnAirphase", 2, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
 local warnFissure			= mod:NewSpellAnnounce(80803, 3)
-local warnCrystalStorm		= mod:NewSpellAnnounce(92265, 4)
 
 local specWarnEruption 		= mod:NewSpecialWarningMove(80801)
 local specWarnCrystalStorm 	= mod:NewSpecialWarning("specWarnCrystalStorm")
 
-local timerFissureCD		= mod:NewCDTimer(6.2, 80803)
-local timerCrystalStorm		= mod:NewBuffActiveTimer(8.5, 92265)
-local timerAirphase			= mod:NewTimer(50, "TimerAirphase", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
-local timerGroundphase		= mod:NewTimer(10, "TimerGroundphase", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
+local timerFissureCD		= mod:NewCDTimer(6.2, 80803, nil, nil, nil, 3)
+local timerCrystalStorm		= mod:NewBuffActiveTimer(8.5, 92265, nil, nil, nil, 2)
+local timerAirphase			= mod:NewTimer(50, "TimerAirphase", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp", nil, nil, 6)
+local timerGroundphase		= mod:NewTimer(10, "TimerGroundphase", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp", nil, nil, 6)
 
 function mod:groundphase()
 	warnGroundphase:Show()
@@ -46,8 +45,8 @@ function mod:OnCombatStart(delay)
 	self:ScheduleMethod(12.5-delay, "airphase")
 	if not self:IsTrivial(90) then
 		self:RegisterShortTermEvents(
-			"SPELL_DAMAGE",
-			"SPELL_MISSED"
+			"SPELL_DAMAGE 80800 80801",
+			"SPELL_MISSED 80800 80801"
 		)
 	end
 end
@@ -57,11 +56,10 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		specWarnEruption:Show()
 	end
 end
-mod.SPELL_MISSED = mod.SPELL_DAMAGE--Because we still want people to move out of stuff before they eat up an entire PWS in it.
+mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 92265 then
-		warnCrystalStorm:Show()
 		specWarnCrystalStorm:Show()
 	end
 end
@@ -73,7 +71,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName)
-	if spellName == GetSpellInfo(80803) and self:AntiSpam() then--Lava Fissure
+	if spellName == GetSpellInfo(80803) then--Lava Fissure
 		warnFissure:Show()
 		timerFissureCD:Start()
 	end

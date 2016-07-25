@@ -1,15 +1,18 @@
 local mod	= DBM:NewMod("Vaelastrasz", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 501 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 586 $"):sub(12, -3))
 mod:SetCreatureID(13020)
 mod:SetModelID(13992)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
 	"CHAT_MSG_MONSTER_YELL"
+)
+
+mod:RegisterEventsInCombat(
+	"SPELL_CAST_START",
+	"SPELL_AURA_APPLIED"
 )
 
 local warnBreath			= mod:NewCastAnnounce(23461)

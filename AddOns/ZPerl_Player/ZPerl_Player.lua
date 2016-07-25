@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 989 $")
+end, "$Revision: 1002 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -35,10 +35,14 @@ local UnitName = UnitName
 local UnitPower = UnitPower
 local UnitHealth = UnitHealth
 
+local XPerl_Player_InitCP
+
 local XPerl_Player_InitDK
+local XPerl_Player_InitMage
 local XPerl_Player_InitWarlock
 local XPerl_Player_InitPaladin
-local XPerl_Player_InitMoonkin
+local XPerl_Player_InitMonk
+--local XPerl_Player_InitMoonkin
 
 local XPerl_PlayerStatus_OnUpdate
 local XPerl_Player_HighlightCallback
@@ -111,14 +115,20 @@ function XPerl_Player_OnLoad(self)
 		self:SetMovable(true)
 		--self:SetUserPlaced(true)
 		self:ClearAllPoints()
-		self:SetPoint("TOP", MonkHarmonyBar, "BOTTOM", 0, 21)
+		self:SetPoint("TOPLEFT", XPerl_Player.runes, "CENTER", -28, 17)
 		self:SetMovable(false)
 		moving = nil
 	end)
 
+	XPerl_Player_InitCP(self)
+	if (playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST") then
+		XPerl_Player_DruidBarUpdate(self)
+	end
+
 	XPerl_Player_InitDK(self)
-	XPerl_Player_SetupDK(self)
-	XPerl_Player_InitMoonkin(self)
+	XPerl_Player_InitMage(self)
+	XPerl_Player_InitPaladin(self)
+	XPerl_Player_InitMonk(self)
 	XPerl_Player_InitWarlock(self)
 
 	XPerl_RegisterHighlight(self.highlight, 3)
@@ -127,11 +137,11 @@ function XPerl_Player_OnLoad(self)
 	self.FlashFrames = {self.portraitFrame, self.nameFrame,self.levelFrame, self.statsFrame}
 	-- Only Add deathknight to the flash frame list
 	-- This resolves an issue with the backdrop being added constantly to the other special frames.
-	local _, class = UnitClass("player")
+	--[[local _, class = UnitClass("player")
 	if (class == "DEATHKNIGHT") then
 		table.insert(self.FlashFrames, self.runes)
 		table.insert(perlframes, self.runes)
-	end
+	end]]
 
 	XPerl_RegisterPerlFrames(self, perlframes)--, self.runes
 		
@@ -158,7 +168,7 @@ local function UpdateAssignedRoles(self)
 	local unit = self.partyid
 	local icon = self.nameFrame.roleIcon
 	local isTank, isHealer, isDamage
-	if (instanceType == "party") then
+	--[[if (instanceType == "party") then
 		-- No point getting it otherwise, as they can be wrong. Usually the values you had
 		-- from previous instance if you're running more than one with the same people
 		
@@ -175,7 +185,7 @@ local function UpdateAssignedRoles(self)
 		elseif role == "DAMAGER" then
 			isDamage = true
 		end
-	end
+	end]]
 	
 	-- role icons option check by playerlin
 	if (conf and conf.xperlOldroleicons) then
@@ -383,8 +393,9 @@ local function XPerl_Player_UpdateXP(self)
 			restBar:SetMinMaxValues(0, playerxpmax)
 			xpBar:SetValue(playerxp)
 
+			local color
 			local w = xpBar:GetRight() - xpBar:GetLeft()
-			for mode = 1,3 do
+			for mode = 1, 3 do
 				local suffix
 				if (playerxprest > 0) then
 					if (mode == 1) then
@@ -488,9 +499,10 @@ local function XPerl_Player_DruidBarUpdate(self)
 		end
 	end
 
-	local manaPct
-
 	local maxMana = UnitPowerMax("player", 0)
+	if maxMana == 0 then
+		maxMana = nil
+	end
 	local currMana = UnitPower("player", 0)
 
 	druidBar:SetMinMaxValues(0, maxMana or 1)
@@ -521,6 +533,12 @@ local function XPerl_Player_DruidBarUpdate(self)
 		druidBarExtra = 0
 	end
 
+	if druidBarExtra == 1 then
+		ComboPointPlayerFrame:SetPoint("TOPLEFT", self.runes, "CENTER", -35, 18 - 5)
+	else
+		ComboPointPlayerFrame:SetPoint("TOPLEFT", self.runes, "CENTER", -35, 18)
+	end
+
 	-- Highlight update
 	--[[if (druidBarExtra) then
 		self.highlight:SetPoint("TOPLEFT", self.levelFrame, "TOPLEFT", 0, 0)
@@ -529,15 +547,6 @@ local function XPerl_Player_DruidBarUpdate(self)
 		self.highlight:SetPoint("BOTTOMLEFT", self.classFrame, "BOTTOMLEFT", -2, -2)
 		self.highlight:SetPoint("TOPRIGHT", self.nameFrame, "TOPRIGHT", 0, 0)
 	end]]
-
-	local form = GetShapeshiftFormID()
-	if (self.runes and not InCombatLockdown()) then
-		if (form and form ~= MOONKIN_FORM) or GetSpecialization() ~= 1 or (not pconf or not pconf.showRunes) then
-			self.runes:Hide()
-		else
-			self.runes:Show()
-		end
-	end
 
 	local h = 40 + ((druidBarExtra + (pconf.repBar and 1 or 0) + (pconf.xpBar and 1 or 0)) * 10)
 	if InCombatLockdown() then
@@ -549,7 +558,7 @@ local function XPerl_Player_DruidBarUpdate(self)
 			self.portraitFrame:SetHeight(62)
 		end
 	end
-	if (InCombatLockdown() and GetSpecialization() == 1 and pconf.showRunes) then
+	if (InCombatLockdown() and pconf.showRunes) then
 		XPerl_ProtectedCall(XPerl_Player_DruidBarUpdate, self)
 	else
 		self.statsFrame:SetHeight(h)
@@ -602,7 +611,7 @@ local function XPerl_Player_UpdateMana(self)
 		end
 	end
 
-	if (playerClass == "DRUID") then
+	if (playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST") then
 		XPerl_Player_DruidBarUpdate(self)
 	end
 end
@@ -835,15 +844,6 @@ function XPerl_Player_Events:PLAYER_ENTERING_WORLD()
 	end
 
 	XPerl_Player_UpdateDisplay(self)
-
-	-- Fix runes on player load
-	if self.runes and self.runes.list then
-		for i = 1, 6 do
-			if self.runes.list[rune] then 
-				RuneButton_Update(self.runes.list[rune], rune, true)
-			end
-		end
-	end
 end
 
 -- UNIT_COMBAT
@@ -855,9 +855,9 @@ function XPerl_Player_Events:UNIT_COMBAT(action, descriptor, damage, damageType)
 	end]]
 
 	if (action == "HEAL") then
-		XPerl_Player_CombatFlash(self, elapsed, true, true)
+		XPerl_Player_CombatFlash(self, 0, true, true)
 	elseif (damage and damage > 0) then
-		XPerl_Player_CombatFlash(self, elapsed, true)
+		XPerl_Player_CombatFlash(self, 0, true)
 	end
 end
 
@@ -870,7 +870,7 @@ end]]
 
 -- UNIT_PORTRAIT_UPDATE
 function XPerl_Player_Events:UNIT_PORTRAIT_UPDATE()
-	XPerl_Unit_UpdatePortrait(self)
+	XPerl_Unit_UpdatePortrait(self, true)
 end
 
 -- VARIABLES_LOADED
@@ -880,7 +880,42 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 	self:UnregisterEvent("VARIABLES_LOADED")
 
 	local events = {
-		"PLAYER_ENTERING_WORLD", "PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "GROUP_ROSTER_UPDATE", "PLAYER_UPDATE_RESTING", "PLAYER_REGEN_ENABLED", "PLAYER_REGEN_DISABLED", "PLAYER_ENTER_COMBAT", "PLAYER_LEAVE_COMBAT", "PLAYER_DEAD", "UPDATE_FACTION", "UNIT_AURA", "PLAYER_CONTROL_LOST", "PLAYER_CONTROL_GAINED", "UNIT_COMBAT", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", --[["UNIT_SPELLMISS",]] "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "PLAYER_FLAGS_CHANGED", "UNIT_ENTERED_VEHICLE", "UNIT_EXITING_VEHICLE", --[["UNIT_PET",]] "PLAYER_TALENT_UPDATE", "RAID_TARGET_UPDATE", "UPDATE_SHAPESHIFT_FORM", "RUNE_TYPE_UPDATE", "RUNE_POWER_UPDATE", "UPDATE_EXHAUSTION", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"
+		"PLAYER_ENTERING_WORLD",
+		"PARTY_LEADER_CHANGED",
+		"PARTY_LOOT_METHOD_CHANGED",
+		"GROUP_ROSTER_UPDATE",
+		"PLAYER_UPDATE_RESTING",
+		"PLAYER_REGEN_ENABLED",
+		"PLAYER_REGEN_DISABLED",
+		"PLAYER_ENTER_COMBAT",
+		"PLAYER_LEAVE_COMBAT",
+		"PLAYER_DEAD",
+		"UPDATE_FACTION",
+		"UNIT_AURA",
+		"PLAYER_CONTROL_LOST",
+		"PLAYER_CONTROL_GAINED",
+		"UNIT_COMBAT",
+		"UNIT_POWER_FREQUENT",
+		"UNIT_MAXPOWER",
+		"UNIT_HEALTH_FREQUENT",
+		"UNIT_MAXHEALTH",
+		"UNIT_LEVEL",
+		"UNIT_DISPLAYPOWER",
+		"UNIT_NAME_UPDATE",
+		--[["UNIT_SPELLMISS",]]
+		"UNIT_FACTION",
+		"UNIT_PORTRAIT_UPDATE",
+		"UNIT_FLAGS",
+		"PLAYER_FLAGS_CHANGED",
+		"UNIT_ENTERED_VEHICLE",
+		"UNIT_EXITING_VEHICLE",
+		--[["UNIT_PET",]]
+		"PLAYER_TALENT_UPDATE",
+		"RAID_TARGET_UPDATE",
+		"UPDATE_SHAPESHIFT_FORM",
+		"UPDATE_EXHAUSTION",
+		"PET_BATTLE_OPENING_START",
+		"PET_BATTLE_CLOSE",
 	}
 
 	for i, event in pairs(events) do
@@ -928,8 +963,12 @@ XPerl_Player_Events.UNIT_MAXHEALTH = XPerl_Player_Events.UNIT_HEALTH_FREQUENT
 XPerl_Player_Events.PLAYER_DEAD = XPerl_Player_Events.UNIT_HEALTH_FREQUENT
 
 -- UNIT_POWER_FREQUENT
-function XPerl_Player_Events:UNIT_POWER_FREQUENT()
+function XPerl_Player_Events:UNIT_POWER_FREQUENT(powerType)
 	XPerl_Player_UpdateMana(self)
+
+	if powerType == "COMBO_POINTS" then
+		XPerl_Target_UpdateCombo(XPerl_Target)
+	end
 end
 
 -- UNIT_MAXPOWER
@@ -994,20 +1033,8 @@ end
 -- PLAYER_TALENT_UPDATE
 function XPerl_Player_Events:PLAYER_TALENT_UPDATE()
 	XPerl_Player_UpdateMana(self)
-	
-	if (playerClass == "PRIEST") then
-		--[[if (self.runes) then
-			self.runes:Hide()
-		end]]
-		XPerl_Player_InitPriest(self)
-		if (XPerl_Player_Buffs_Position) then
-			XPerl_Player_Buffs_Position(self)
-		end
-	elseif (playerClass == "MONK") then
-		--[[if (self.runes) then
-			self.runes:Hide()
-		end]]
-		XPerl_Player_InitMonk(self)
+
+	if (playerClass == "MONK") then
 		if (XPerl_Player_Buffs_Position) then
 			XPerl_Player_Buffs_Position(self)
 		end
@@ -1018,10 +1045,6 @@ end
 function XPerl_Player_Events:UPDATE_SHAPESHIFT_FORM()
 	if (playerClass == "DRUID") then
 		XPerl_Player_DruidBarUpdate(self)
-		--XPerl_Unit_UpdatePortrait(self) -- Maybe fix portraits not updating when shifting forms? Resike: Nope.
-		if GetSpecialization() == 1 then
-			XPerl_Player_InitMoonkin(self)
-		end
 	end
 end
 
@@ -1053,20 +1076,6 @@ end
 
 function XPerl_Player_Events:UNIT_AURA()
 	XPerl_Player_UpdateBuffs(self)
-
-	if (conf.target.combo.enable) then
-		local _, class = UnitClass(self.partyid)
-		local name = GetSpellInfo(115189)
-		local talented = IsTalentSpell(name)
-		if (class == "ROGUE" and talented) then
-			if XPerl_Target and XPerl_Target:IsVisible() then
-				XPerl_Target_UpdateCombo(XPerl_Target)
-			end
-			if XPerl_Focus and XPerl_Focus:IsVisible() then
-				XPerl_Target_UpdateCombo(XPerl_Focus)
-			end
-		end
-	end
 
 	if conf.showFD then
 		local _, class = UnitClass(self.partyid)
@@ -1141,59 +1150,6 @@ function XPerl_Player_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
 		XPerl_SetExpectedAbsorbs(self)
 	end
 end
-
--- RUNE_POWER_UPDATE
-function XPerl_Player_Events:RUNE_POWER_UPDATE(event, runeIndex, isEnergize)
-	if runeIndex and runeIndex >= 1 and runeIndex <= 6 then
-		local runeButton = _G['XPerl_RuneButtonIndividual' .. runeIndex]
-		if (runeButton) then
-			local cooldown = _G['XPerl_RuneButtonIndividual' .. runeIndex .. 'Cooldown']
-			cooldown:SetSwipeTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMaskSmall")
-			cooldown:SetSwipeColor(0, 0, 0, 0.7)
-			cooldown:SetHideCountdownNumbers(true)
-			local start, duration, isReady = GetRuneCooldown(runeIndex)
-			if not isReady then
-				if start and cooldown then
-					CooldownFrame_SetTimer(cooldown, start, duration, 1)
-				end
-				runeButton.energize:Stop()
-			else
-				if cooldown then
-					cooldown:Hide()
-				end
-				runeButton.shine:SetVertexColor(1, 1, 1)
-				RuneButton_ShineFadeIn(runeButton.shine)
-			end
-			if isEnergize then
-				runeButton.energize:Play()
-			end
-		end
-	else
-		assert(false, 'Bad rune index')
-	end
-end
-
--- RUNE_TYPE_UPDATE
-function XPerl_Player_Events:RUNE_TYPE_UPDATE(self, runeIndex)
-	if runeIndex and runeIndex >= 1 and runeIndex <= 6 then
-		RuneButton_Update(_G["XPerl_RuneButtonIndividual"..runeIndex], runeIndex)
-	end
-end
-
--- XPerl_Player_Energy_OnUpdate
---[[function XPerl_Player_Energy_OnUpdate(self, elapsed)
-	local sparkPosition
-
-	local val = self:GetValue() + elapsed
-	if (val > 5) then
-		self:Hide()
-	else
-		self:SetValue(val)
-		sparkPosition = self:GetWidth() * (val / 5)
-	end
-
-	self.spark:SetPoint("CENTER", self, "LEFT", sparkPosition, 0)
-end]]
 
 -- XPerl_Player_SetWidth
 function XPerl_Player_SetWidth(self)
@@ -1369,7 +1325,11 @@ function XPerl_Player_Set_Bits(self)
 	else
 		self.portraitFrame:SetHeight(62)
 	end
-	
+
+	if (playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST") then
+		XPerl_Player_DruidBarUpdate(self)
+	end
+
 	if (self.runes) then
 		if (pconf.showRunes) then
 			self.runes:Show()
@@ -1377,13 +1337,6 @@ function XPerl_Player_Set_Bits(self)
 			self.runes:Hide()
 		end
 	end
-
-	XPerl_Player_SetupDK(self)
-	XPerl_Player_InitPaladin(self)
-	XPerl_Player_InitPriest(self)
-	XPerl_Player_InitMonk(self)
-	XPerl_Player_InitMoonkin(self)
-	XPerl_Player_InitWarlock(self)
 
 	--[[self.highlight:ClearAllPoints()
 	if (not pconf.level and not pconf.classIcon and (not ZPerlConfigHelper or ZPerlConfigHelper.ShowTargetCounters == 0)) then
@@ -1393,7 +1346,7 @@ function XPerl_Player_Set_Bits(self)
 	end
 	self.highlight:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)]]
 
-	if (playerClass == "SHAMAN" or playerClass == "DRUID" or playerClass == "MAGE" or playerClass == "MONK" or playerClass == "PRIEST" or playerClass == "WARRIOR") then
+	if (playerClass == "SHAMAN" or playerClass == "DRUID" or playerClass == "MAGE" or playerClass == "MONK" or playerClass == "PRIEST" or playerClass == "WARRIOR" or playerClass == "WARLOCK") then
 		if (not pconf.totems) then
 			pconf.totems = {
 				enable = true,
@@ -1403,8 +1356,8 @@ function XPerl_Player_Set_Bits(self)
 		end
 
 		if (not self.totemHooked) then
-			self.totemHooked = true
 			hooksecurefunc("TotemFrame_Update", XPerl_Player_SetTotems)
+			self.totemHooked = true
 		end
 	end
 	
@@ -1427,287 +1380,128 @@ function XPerl_Player_Set_Bits(self)
 	UpdateAssignedRoles(self)
 end
 
-
--- XPerl_Player_SetupWarlock
-function XPerl_Player_SetupWarlock(self)
-	--[[if (self.shards) then
-		if (pconf and not pconf.showRunes) then 
-			self.shards:Hide()
-		else
-			self.shards:Show()
-
-			self.shards:ClearAllPoints()
-
-			if (not pconf or pconf.dockRunes) then
-				self.shards:SetPoint("TOPLEFT", XPerl_Player, "TOPLEFT", 9, -5)
-				--self.shards:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 5, 2)
-				--self.shards:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -20) 
-			else
-				self.shards:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
-				XPerl_RestorePosition(self.shards)
-			end
-		end
-	end]]--
-end
-
--- PALADIN
-
-local MAX_HOLY_POWER = _G.MAX_HOLY_POWER
-local PALADINPOWERBAR_SHOW_LEVEL = _G.PALADINPOWERBAR_SHOW_LEVEL
-local SPELL_POWER_HOLY_POWER = _G.SPELL_POWER_HOLY_POWER
-
-local specialframe
-
 local function MakeMoveable(frame)
-	--self.runes:SetMovable(true)
-	
 	frame:SetMovable(true)
-	--self.runes:RegisterForDrag("LeftButton")
+	frame:SetUserPlaced(true)
 	frame:RegisterForDrag("LeftButton")
-	--specialframe:SetMovable(true)
 	
 	frame:SetScript("OnDragStart", function(self)
 		if (not pconf.dockRunes) then
-			--specialframe:StartMoving()
 			self:StartMoving()
 		end
 	end)
-	--self.runes
 	frame:SetScript("OnDragStop", function(self)
 		if (not pconf.dockRunes) then
-			--specialframe:StopMovingOrSizing()
 			self:StopMovingOrSizing()
 			XPerl_SavePosition(self)
 		end
 	end)
 end
 
+-- XPerl_Player_InitCP
+function XPerl_Player_InitCP(self)
+	local _, class = UnitClass("player")
+	if (class == "DRUID") or (class == "ROGUE") then
+		if not ComboPointPlayerFrame then
+			return
+		end
 
+		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
+		self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
+		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -30)
+		ComboPointPlayerFrame:SetPoint("TOPLEFT", self.runes, "CENTER", -35, 18)
+		self.runes.unit = "player"
+		ComboPointPlayerFrame:SetParent(self.runes)
+	end
+end
 
 -- XPerl_Player_InitWarlock
 function XPerl_Player_InitWarlock(self)
 	local _, class = UnitClass("player")
 	if (class == "WARLOCK" ) then
 
-		if (not WarlockPowerFrame or WarlockPowerFrame:GetParent() ~= PlayerFrame or not WarlockPowerFrame:IsShown() or not pconf.showRunes) then
-			-- Only hijack runes if not already done so by another mod
+		if not WarlockPowerFrame then
 			return
 		end
 	
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
 		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -30)
-		WarlockPowerFrame:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 20, 1)
+		WarlockPowerFrame:SetPoint("TOPLEFT", self.runes, "CENTER", -28, 15.5)
 		self.runes.unit = "player"
 		WarlockPowerFrame:SetParent(self.runes)
-		--MakeMoveable(self)
 	end
-	--XPerl_Player_InitWarlock = nil
 end
-
 
 -- XPerl_Player_InitPaladin
 function XPerl_Player_InitPaladin(self)
 	local _, class = UnitClass("player")
 	if (class == "PALADIN") then
 
-		if (not PaladinPowerBar or PaladinPowerBar:GetParent() ~= PlayerFrame or not PaladinPowerBar:IsShown() or not pconf.showRunes) then
-			-- Only hijack runes if not already done so by another mod
+		if not PaladinPowerBarFrame then
 			return
 		end
 
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
 		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -30)
-		PaladinPowerBar:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 0, 6)
+		PaladinPowerBarFrame:SetPoint("TOPLEFT", self.runes, "CENTER", -38, 22)
 		self.runes.unit = "player"
-		PaladinPowerBar:SetParent(self.runes)--XPerl_Player)
-		--MakeMoveable(self)
+		PaladinPowerBarFrame:SetParent(self.runes)
 	end
 end
-
---XPerl_Player_InitPriest
-function XPerl_Player_InitPriest(self)
-	local _, class = UnitClass("player")
-	if (class == "PRIEST") then
-
-		if (not PriestBarFrame or (PriestBarFrame:GetParent() ~= PlayerFrame and PriestBarFrame:GetParent() ~= self.runes) or not PriestBarFrame:IsShown() or not pconf.showRunes) then
-			-- Only hijack runes if not already done so by another mod
-			return
-		end
-		
-		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
-		self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
-		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -30)
-		PriestBarFrame:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 0,5)
-		self.runes.unit = "player"
-		PriestBarFrame:SetParent(self.runes)--XPerl_Player)
-		--MakeMoveable(self)
-	end
-end
-
 
 -- XPerl_Player_InitMonk
 function XPerl_Player_InitMonk(self)
 	local _, class = UnitClass("player")
 	if (class == "MONK") then
-
-		if (not MonkHarmonyBar or MonkHarmonyBar:GetParent() ~= PlayerFrame or not MonkHarmonyBar:IsShown() or not pconf.showRunes) then
-			-- Only hijack runes if not already done so by another mod
-			return
-		end
 		
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
 		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -30)
-		MonkHarmonyBar:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 70, 20)
+		MonkHarmonyBarFrame:SetPoint("TOPLEFT", self.runes, "CENTER", 25, 35)
 		self.runes.unit = "player"
-		MonkHarmonyBar:SetParent(self.runes)--XPerl_Player)
-		MonkHarmonyBar:SetFrameLevel(0)
+		MonkHarmonyBarFrame:SetParent(self.runes)
+		MonkHarmonyBarFrame:SetFrameLevel(0)
 
-		MonkStaggerBar:SetPoint("TOP", MonkHarmonyBar, "BOTTOM", 0, 21)
-		MonkStaggerBar:SetParent(self.runes)--XPerl_Player)
+		MonkStaggerBar:SetPoint("TOPLEFT", self.runes, "CENTER", -28, 17)
+		MonkStaggerBar:SetParent(self.runes)
 		MonkStaggerBar:SetScript("OnMouseUp", nil)
-
-		--MakeMoveable(self)
 	end
 end
---XPerl_Player_InitMoonkin
-function XPerl_Player_InitMoonkin(self)
-	local _, class = UnitClass("player")
-	if (class == "DRUID") then
 
-		if (not EclipseBarFrame or EclipseBarFrame:GetParent() ~= PlayerFrame or not EclipseBarFrame:IsShown() or not pconf.showRunes) then
-			-- Only hijack runes if not already done so by another mod
+--XPerl_Player_InitMage
+function XPerl_Player_InitMage(self)
+	local _, class = UnitClass("player")
+	if (class == "MAGE") then
+
+		if not MageArcaneChargesFrame then
 			return
 		end
 	
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
 		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -30)
-		EclipseBarFrame:SetPoint("TOPLEFT", self.runes, "CENTER", -60, 18)
+		MageArcaneChargesFrame:SetPoint("TOPLEFT", self.runes, "CENTER", -35, 17)
 		self.runes.unit = "player"
-		--specialframe = EclipseBarFrame
-		EclipseBarFrame:SetParent(self.runes)
-		
+		MageArcaneChargesFrame:SetParent(self.runes)
 	end
 end
 
-
--- XPerl_Player_InitDK
+--XPerl_Player_InitDK
 function XPerl_Player_InitDK(self)
 	local _, class = UnitClass("player")
 	if (class == "DEATHKNIGHT") then
-		--[[if (not RuneFrame or RuneFrame:GetParent() ~= PlayerFrame or not RuneFrame:IsShown()) then
-			-- Only hijack runes if not already done so by another mod
+
+		if not RuneFrame then
 			return
 		end
-
-		local p, f, r, x, y = RuneFrame:GetPoint(1)
-		if (f ~= PlayerFrame or p ~= "TOP" or r ~= "BOTTOM") then
-			-- More safety checking before we fudge it
-			return
-		end]]
-
+	
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
 		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -30)
-
-		MakeMoveable(self.runes)
-
-		local bgDef = {
-			bgFile = "Interface\\AddOns\\ZPerl\\Images\\XPerl_FrameBack",
-			edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-			tile = true, tileSize = 32, edgeSize = 12,
-			insets = { left = 3, right = 3, top = 3, bottom = 3 }
-		}
-
-		self.runes:SetBackdrop(bgDef)
-		self.runes:SetBackdropColor(0, 0, 0, 0.8)
-		self.runes:SetBackdropBorderColor(1, 1, 1, 1)
-		self.runes.list = { }
-
-		--Let's not do anything drastic to the original runeframe, let's just hide it
-		--RuneFrame:SetParent(self.runes)
-		RuneFrame:ClearAllPoints()
-		RuneFrame:SetPoint("TOPLEFT", 5, -5)
-		RuneFrame:SetPoint("BOTTOMRIGHT", -5, 5)
-
-		RuneButtonIndividual1:Hide()
-		RuneButtonIndividual2:Hide()
-		RuneButtonIndividual3:Hide()
-		RuneButtonIndividual4:Hide()
-		RuneButtonIndividual5:Hide()
-		RuneButtonIndividual6:Hide()
-
-		local prev
-		local idSwitch = {1, 2, 5, 6, 3, 4}	-- Non sequential rune IDs.. gg
-		for i = 1, 6 do
-			local rune = CreateFrame("Button", "XPerl_RuneButtonIndividual"..i, self.runes, "XPerl_RuneButtonIndividualTemplate")
-			self.runes.list[idSwitch[i]] = rune
-			rune:EnableMouse(false)
-
-			-- God only knows why blizzard did this...
-			rune:SetID(i)
-
-			if (i > 1) then
-				rune:SetPoint("LEFT", prev, "RIGHT", 4 + ((i % 2) * 16), 0)
-			else
-				rune:SetPoint("LEFT", 10, 0)
-			end
-		
-			prev = rune
-		end
-	end
-	XPerl_Player_InitDK = nil
-end
-
--- XPerl_Player_SetupDK
-function XPerl_Player_SetupDK(self)
-	local _, class = UnitClass("player")
-	if (class == "DEATHKNIGHT") then
-		if (self.runes) then
-			if (not pconf or pconf.showRunes) then
-				self.runes:Show()
-
-				self.runes:ClearAllPoints()
-
-				if (not pconf or pconf.dockRunes) then
-					self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
-					self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -30)
-				else
-					self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
-					self.runes:SetWidth(219)
-					self.runes:SetHeight(32)
-					XPerl_RestorePosition(self.runes)
-				end
-
-				for i = 1, 6 do
-					local rune = self.runes.list[i]
-					rune:ClearAllPoints()
-					rune:SetWidth(22)
-					rune:SetHeight(22)
-
-					if (self.runes:GetWidth() >= 200) then	-- pconf.portrait) then
-						if (i > 1) then
-							rune:SetPoint("LEFT", prev, "RIGHT", 4 + ((i % 2) * 16), 0)
-						else
-							rune:SetPoint("LEFT", 10, 0)
-						end
-					else
-						if (i > 1) then
-							rune:SetPoint("LEFT", prev, "RIGHT", 1 + ((i % 2) * 5), 0)
-						else
-							rune:SetPoint("LEFT", 1, 0)
-						end
-					end
-					RuneButton_Update(rune, rune:GetID(), true)
-					prev = rune
-				end
-				XPerl_DoGradient(self.runes)
-			else
-				self.runes:Hide()
-			end
-		end
+		RuneFrame:SetPoint("TOPLEFT", self.runes, "CENTER", -35, 13)
+		self.runes.unit = "player"
+		RuneFrame:SetParent(self.runes)
 	end
 end

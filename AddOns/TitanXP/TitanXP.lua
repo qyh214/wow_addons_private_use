@@ -85,7 +85,9 @@ function TitanPanelXPButton_OnShow()
 	TitanPanelXPButton_SetIcon();
 	found = nil;
 	if not TitanPanelXPButton_ButtonAdded then
-		RequestTimePlayed();
+		if not TitanAllGetVar("Silenced") then
+			RequestTimePlayed();
+		end
 		TitanPanelXPButton_ButtonAdded = true;
 	end
 end
@@ -199,7 +201,7 @@ function TitanPanelXPButton_GetButtonText(id)
 			timeToLevelText = TitanUtils_GetEstTimeText(timeToLevel);
 
 			return L["TITAN_XP_BUTTON_LABEL_XPHR_SESSION"], TitanUtils_GetHighlightText(xpPerHourText),
-				L["TITAN_XP_BUTTON_LABEL_TOLEVEL_TIME_LEVEL"], TitanUtils_GetHighlightText(timeToLevelText);          
+				L["TITAN_XP_BUTTON_LABEL_TOLEVEL_TIME_LEVEL"], TitanUtils_GetHighlightText(timeToLevelText);
 		elseif (TitanGetVar(TITAN_XP_ID,"DisplayType") == "ShowXPPerHourLevel") then
 			xpPerHour = currentXP / levelTime * 3600;
 --			timeToLevel = TitanUtils_Ternary((currentXP == 0), -1, toLevelXP / currentXP * levelTime);
@@ -284,7 +286,7 @@ function TitanPanelXPButton_GetTooltipText()
 		"\n"..
 		L["TITAN_XP_TOOLTIP_TOTAL_XP"].."\t"..TitanUtils_GetHighlightText(comma_value(totalXP)).."\n".. 
 		L["TITAN_XP_TOTAL_RESTED"].."\t"..TitanUtils_GetHighlightText(comma_value(GetXPExhaustion()==nil and "0" or GetXPExhaustion())).."\n".. 
-		L["TITAN_XP_TOOLTIP_LEVEL_XP"].."\t"..TitanUtils_GetHighlightText(comma_value(currentXP).." "..format(L["TITAN_XP_PERCENT_FORMAT"], currentXPPercent)).."\n"..           
+		L["TITAN_XP_TOOLTIP_LEVEL_XP"].."\t"..TitanUtils_GetHighlightText(comma_value(currentXP).." "..format(L["TITAN_XP_PERCENT_FORMAT"], currentXPPercent)).."\n"..
 		L["TITAN_XP_TOOLTIP_TOLEVEL_XP"].."\t"..TitanUtils_GetHighlightText(comma_value(toLevelXP).." "..format(L["TITAN_XP_PERCENT_FORMAT"], toLevelXPPercent)).."\n"..
 		L["TITAN_XP_TOOLTIP_SESSION_XP"].."\t"..TitanUtils_GetHighlightText(comma_value(TitanPanelXPButton.sessionXP)).."\n"..
 		format(L["TITAN_XP_KILLS_LABEL"], comma_value(lastMobXP)).."\t"..TitanUtils_GetHighlightText(comma_value(numofkills)).."\n"..

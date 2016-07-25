@@ -1,4 +1,4 @@
-﻿## Interface: 60200
+﻿## Interface: 70000
 ## Author: Resike
 ## Title: Z-Perl |cffeda55fParty|r
 ## Title-itIT: Z-Perl |cffeda55fGruppo|r
@@ -13,8 +13,8 @@
 ## Notes-zhTW: Z-Perl 隊伍框架 替換內建的隊伍框架
 ## RequiredDeps: ZPerl
 ## OptionalDeps: ZPerl_ArcaneBar
-## X-Curse-Packaged-Version: r991
-## X-Curse-Project-Name: Z-Perl UnitFrames
+## X-Curse-Packaged-Version: r1002
+## X-Curse-Project-Name: Z-Perl Unit Frames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline
 

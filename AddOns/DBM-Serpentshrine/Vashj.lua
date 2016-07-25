@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Vashj", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 582 $"):sub(12, -3))
 mod:SetCreatureID(21212)
 mod:SetModelID(20748)
 mod:SetZone()
@@ -41,13 +41,13 @@ local timerNaga			= mod:NewTimer(47.5, "TimerNaga", 2120, nil, nil, 1)
 
 mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("ChargeIcon", false)
-mod:AddBoolOption("AutoChangeLootToFFA", true)
+--mod:AddBoolOption("AutoChangeLootToFFA", true)
 
 local shieldLeft = 4
 local nagaCount = 1
 local striderCount = 1
 local elementalCount = 1
-local lootmethod, masterlooterRaidID
+--local lootmethod, masterlooterRaidID
 local elementals = {}
 
 function mod:StriderSpawn()
@@ -73,22 +73,22 @@ function mod:OnCombatStart(delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show()
 	end
-	if IsInGroup() and DBM:GetRaidRank() == 2 then
-		lootmethod, _, masterlooterRaidID = GetLootMethod()
-	end
+--	if IsInGroup() and DBM:GetRaidRank() == 2 then
+--		lootmethod, _, masterlooterRaidID = GetLootMethod()
+--	end
 end
 
 function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
-	if IsInGroup() and self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
-		if masterlooterRaidID then
-			SetLootMethod(lootmethod, "raid"..masterlooterRaidID)
-		else
-			SetLootMethod(lootmethod)
-		end
-	end
+--	if IsInGroup() and self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
+--		if masterlooterRaidID then
+--			SetLootMethod(lootmethod, "raid"..masterlooterRaidID)
+--		else
+--			SetLootMethod(lootmethod)
+--		end
+--	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
@@ -160,9 +160,9 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerStrider:Start(nil, tostring(striderCount))
 		warnStrider:Schedule(57, tostring(striderCount))
 		self:ScheduleMethod(63, "StriderSpawn")
-		if IsInGroup() and self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
-			SetLootMethod("freeforall")
-		end
+--		if IsInGroup() and self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
+--			SetLootMethod("freeforall")
+--		end
 	elseif msg == L.DBM_VASHJ_YELL_PHASE3 or msg:find(L.DBM_VASHJ_YELL_PHASE3) then
 		warnPhase3:Show()
 		timerNaga:Cancel()
@@ -173,13 +173,13 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		warnStrider:Cancel()
 		self:UnscheduleMethod("NagaSpawn")
 		self:UnscheduleMethod("StriderSpawn")
-		if IsInGroup() and self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
-			if masterlooterRaidID then
-				SetLootMethod(lootmethod, "raid"..masterlooterRaidID)
-			else
-				SetLootMethod(lootmethod)
-			end
-		end
+--		if IsInGroup() and self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
+--			if masterlooterRaidID then
+--				SetLootMethod(lootmethod, "raid"..masterlooterRaidID)
+--			else
+--				SetLootMethod(lootmethod)
+--			end
+--		end
 	end
 end
 

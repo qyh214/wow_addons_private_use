@@ -1,3 +1,11 @@
+TipTacItemRef Changes | 2016 Jul 23
+-----------------------------------
+- Small update of the "GetUpgradedItemLevel" library to support itemStrings with omitted zeros.
+
+TipTacItemRef Changes | 2016 Jul 21
+-----------------------------------
+- TOC version updated to 70000 for the Legion 7.0.3 pre-patch.
+
 TipTacItemRef Changes | 2015 Dec 07
 -----------------------------------
 - Due to the issues with showing the correct itemLevel for upgraded and warforged items, the default setting for "Show Item Level & ID" has been changed to FALSE.

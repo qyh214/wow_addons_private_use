@@ -77,6 +77,11 @@ classes[L["Monk"]]		= {
                               tag = "MONK",
                               talent = {L["Brewmaster"], L["Windwalker"], L["Mistweaver"]}
                          };
+classes[L["Demon Hunter"]]	= {
+                              color = "a330c9",
+                              tag = "DEMONHUNTER",
+                              talent = {L["Havok"], L["Vengeance"]}
+                         };
 classes[L["Game Master"]] = {
                               color = "00c0ff",
                               tag = "GM",

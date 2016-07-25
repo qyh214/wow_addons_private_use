@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(333, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 161 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
 mod:SetCreatureID(56173)
 mod:SetEncounterID(1299)
 mod:SetZone()
@@ -54,13 +54,13 @@ local specWarnTetanus				= mod:NewSpecialWarningStack(106730, "Tank", 4)
 local specWarnTetanusOther			= mod:NewSpecialWarningTarget(106730, "Tank")
 
 local timerMutated					= mod:NewNextTimer(17, "ej4112", nil, nil, nil, 1, 61618)
-local timerImpale					= mod:NewTargetTimer(49.5, 106400, nil, "Tank|Healer")--45 plus 4 second cast plus .5 delay between debuff ID swap.
-local timerImpaleCD					= mod:NewCDTimer(35, 106400, nil, "Tank|Healer", nil, 5)
+local timerImpale					= mod:NewTargetTimer(49.5, 106400, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)--45 plus 4 second cast plus .5 delay between debuff ID swap.
+local timerImpaleCD					= mod:NewCDTimer(35, 106400, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerElementiumCast			= mod:NewCastTimer(7.5, 105651, nil, nil, nil, 1)
 local timerElementiumBlast			= mod:NewCastTimer(8, 105723, nil, nil, nil, 2)--8-10 variation depending on where it's actually going to land. Use the min time.
 local timerElementiumBoltCD			= mod:NewNextTimer(55.5, 105651, nil, nil, nil, 1)
 local timerHemorrhageCD				= mod:NewCDTimer(100.5, 105863, nil, nil, nil, 1)
-local timerCataclysm				= mod:NewCastTimer(60, 106523, nil, nil, nil, 2)
+local timerCataclysm				= mod:NewCastTimer(60, 106523, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 local timerCataclysmCD				= mod:NewCDTimer(130.5, 106523, nil, nil, nil, 2)--130.5-131.5 variations
 local timerFragmentsCD				= mod:NewNextTimer(90, "ej4115", nil, nil, nil, 1, 106708)--Gear icon for now til i find something more suitable
 local timerTerrorCD					= mod:NewNextTimer(90, "ej4117", nil, nil, nil, 1, 106765)--^
@@ -69,7 +69,7 @@ local timerParasite					= mod:NewTargetTimer(10, 108649, nil, nil, nil, 1)
 local timerParasiteCD				= mod:NewCDTimer(60, 108649, nil, nil, nil, 3)
 local timerUnstableCorruption		= mod:NewCastTimer(10, 108813, nil, nil, nil, 2)
 local timerTetanus					= mod:NewTargetTimer(6, 106730, nil, "Healer")
-local timerTetanusCD				= mod:NewCDTimer(3.5, 106730, nil, "Tank", nil, 5)
+local timerTetanusCD				= mod:NewCDTimer(3.5, 106730, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(900)
 

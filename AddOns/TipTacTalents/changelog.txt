@@ -1,3 +1,7 @@
+TipTacTalents Changes | 2016 Jul 21
+-----------------------------------
+- TOC version updated to 70000 for the Legion 7.0.3 pre-patch.
+
 TipTacTalents Changes | 2015 Jul 02
 -----------------------------------
 - TOC version changed to 60200 for the 6.2 patch.

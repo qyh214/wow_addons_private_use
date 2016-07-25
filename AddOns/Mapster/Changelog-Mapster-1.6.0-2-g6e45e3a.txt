@@ -1,3 +1,0 @@
-Hendrik Leppkes:
-	- Add an extra check that the data is present
-	- Use the same order for discovered map segment as Blizzard to avoid flickering

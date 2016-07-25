@@ -29,7 +29,7 @@ function XPerl_SetModuleRevision(rev)
 end
 local AddRevision = XPerl_SetModuleRevision
 
-XPerl_SetModuleRevision("$Revision: 974 $")
+XPerl_SetModuleRevision("$Revision: 1001 $")
 
 function XPerl_Notice(...)
 	if (DEFAULT_CHAT_FRAME) then
@@ -53,7 +53,7 @@ do
 	DisableOther("PerlButton")		-- PerlButton was made for Nymbia's Perl UnitFrames. We have our own minimap button
 	DisableOther("WT_ZoningTimeFix", true)
 
-	local name,_,_,enabled,loadable = GetAddOnInfo("XPerl_Party")
+	local name, _, _, enabled, loadable = GetAddOnInfo("XPerl_Party")
 	if (enabled) then
 		DisableOther("CT_PartyBuffs", true)
 	end

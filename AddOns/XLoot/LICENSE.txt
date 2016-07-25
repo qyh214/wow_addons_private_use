@@ -1,5 +1,5 @@
 -- XLoot (and modules) license
-Copyright (c) 2012 Xuerian (sky.shell@gmail.com)
+Copyright (c) 2012 Xuerian (xuerian@gmail.com)
 
 All Rights Reserved unless otherwise explicitly stated.
 
