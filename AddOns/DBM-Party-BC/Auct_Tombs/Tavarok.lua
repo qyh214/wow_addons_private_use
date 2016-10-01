@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(535, "DBM-Party-BC", 8, 250)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 577 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
 mod:SetCreatureID(18343)
+mod:SetEncounterID(1901)
 
 mod:RegisterCombat("combat")
 
@@ -36,6 +37,6 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 32361 then
-		timerPrison:Cancel(args.destName)
+		timerPrison:Stop(args.destName)
 	end
 end

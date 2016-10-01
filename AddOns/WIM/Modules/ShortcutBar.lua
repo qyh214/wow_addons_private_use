@@ -74,7 +74,7 @@ local function createShortCutBar()
     
     -- test texture so you can see the frame to be placed.
     --frame.test = frame:CreateTexture(nil, "BACKGROUND");
-    --frame.test:SetTexture(1,1,1,.5);
+    --frame.test:SetColorTexture(1,1,1,.5);
     --frame.test:SetAllPoints();
     frame.visibleCount = 0;
     frame.buttons = {};

@@ -71,13 +71,13 @@ local exposeFrame = _G.CreateFrame("Frame", "WIM_UIParent_Expose", _G.UIParent);
 exposeFrame:SetFrameStrata("BACKGROUND");
 exposeFrame:SetAllPoints();
 exposeFrame.top = exposeFrame:CreateTexture("BACKGROUND");
-exposeFrame.top:SetTexture(0, 0, 0, .5);
+exposeFrame.top:SetColorTexture(0, 0, 0, .5);
 exposeFrame.bottom = exposeFrame:CreateTexture("BACKGROUND");
-exposeFrame.bottom:SetTexture(0, 0, 0, .5);
+exposeFrame.bottom:SetColorTexture(0, 0, 0, .5);
 exposeFrame.left = exposeFrame:CreateTexture("BACKGROUND");
-exposeFrame.left:SetTexture(0, 0, 0, .5);
+exposeFrame.left:SetColorTexture(0, 0, 0, .5);
 exposeFrame.right = exposeFrame:CreateTexture("BACKGROUND");
-exposeFrame.right:SetTexture(0, 0, 0, .5);
+exposeFrame.right:SetColorTexture(0, 0, 0, .5);
 exposeFrame:SetAlpha(0);
 
 local function AnimAlpha(self, fraction)

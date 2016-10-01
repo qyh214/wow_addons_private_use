@@ -1,3 +1,61 @@
+**r1014**
+* Wake the repo server up.
+
+**r1013**
+* Health text fixes.
+* Healer mode text fixes.
+
+**r1012**
+* Clear up all locales of ZPerl\localization*.lua for recently health text/value changes.
+* Update zhTW/zhCN locale files for the new health text/value strings.
+
+**r1011**
+* Fixed a typo with health text.
+
+**r1010**
+* Health text updates.
+* Securely handing pet battle visibility for player and player pet frames.
+* Fixed a nasty taint with player buffs.
+
+**r1009**
+* Option UI's zhTW locale file updates.
+
+**r1008**
+* Added an option to enable/disable the lock position for the player's special bar.
+* Fixed an issue with the buff location for druids and rogues.
+* Some other smaller fixes.
+
+**r1007**
+* Readded hit indicators on player, player pet, target, focus and party frames.
+* Hit indicator should properly work on party frames.
+* Some other hit indicator related fixes.
+* Combo points are back on target.
+* Combo points on target now support up to 8 combo points.
+* Combo points scale fixes.
+* Special bars should stay at one point, and properly follow it's frames width changes.
+* Player buff position should get updated properly on talent changes based on if the current specialization has a specal bar.
+* Removed ZPerl Usage entirely until i can properly rewrite it.
+
+**r1006**
+* Added Demon Hunters to the raid and monitor functions.
+* Fixed some issues with raid group saved variables.
+* Fixed a GUI bug with the player's level.
+* Offline party member health fix.
+* Fixed a bug with reset settings.
+* Removed the Usage functions.
+
+**r1005**
+* Fixed an issue with saved variables.
+* Toc version bump.
+
+**r1004**
+* Added Astral Power and Pain as power types.
+* Added a safeguard option to reset colors if needed to prevent bigger issues.
+* Added an option to disable the combo point indicator on the target tab.
+
+**r1003**
+* deDE locale updates for Option UI, thanks CanRanBan@Curse. 
+
 **r1002**
 * Various special bar fixes for every class.
 * Added fury for Demon Hunters.

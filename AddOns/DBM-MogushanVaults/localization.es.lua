@@ -1,74 +1,85 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
-------------
--- The Stone Guard --
-------------
+--------------------------
+-- La guardia de piedra --
+--------------------------
 L= DBM:GetModLocalization(679)
 
 L:SetWarningLocalization({
-	SpecWarnOverloadSoon		= "¡%s casteable en 7s!",
-	specWarnBreakJasperChains	= "¡Rompe las cadenas de jade!"
+	SpecWarnOverloadSoon		= "¡%s en breve!", -- prepare survival ablility or move boss. need more specific message.
+	specWarnBreakJasperChains	= "¡Rompe las cadenas de jaspe!"
 })
 
 L:SetOptionLocalization({
-	SpecWarnOverloadSoon		= "Mostrar aviso especial antes de sobrecarga",
-	specWarnBreakJasperChains	= "Mostrar un aviso especial cuando sea seguro romper break $spell:130395",
-	ArrowOnJasperChains			= "Mostrar flecha cuando te afecten $spell:130395",
-	InfoFrame					= "Mostrar información para poder del boss, petrificación de jugador y que boss está canalizando petrificación"
+	SpecWarnOverloadSoon		= "Mostrar aviso especial antes de Sobrecarga", -- need to change this, i can not translate this with good grammer. please help.
+	specWarnBreakJasperChains	= "Mostrar aviso especial cuando sea seguro romper $spell:130395",
+	ArrowOnJasperChains			= "Mostrar flecha cuando estés afectado por $spell:130395",
+	InfoFrame					= "Mostrar marco de información con la energía de los jefes, petrificación de los jugadores y qué jefe está lanzando la petrificación"
 })
 
 L:SetMiscLocalization({
 	Overload	= "¡%s se empieza a sobrecargar!"
 })
 
-
-------------
--- Feng the Accursed --
-------------
+------------------------
+-- Feng el Detestable --
+------------------------
 L= DBM:GetModLocalization(689)
 
 L:SetWarningLocalization({
-	WarnPhase	= "Fase %d"
+	WarnPhase			= "Fase %d",
+	specWarnBarrierNow	= "¡Usa Barrera anuladora ahora!"
 })
 
 L:SetOptionLocalization({
-	WarnPhase	= "Anunciar transición de fase",
-	RangeFrame	= "Mostrar distancia (6) durante la fase arcana"
+	WarnPhase			= "Anunciar cambios de fase",
+	specWarnBarrierNow	= "Mostrar aviso especial cuando debas usar $spell:115817 (buscador de bandas)",
+	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("6") .. " durante la fase Arcana",
+	SetIconOnWS	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(116784),
+	SetIconOnAR	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(116417)
 })
 
 L:SetMiscLocalization({
 	Fire		= "¡Oh, exaltado! ¡Soy tu herramienta para desgarrar la carne de los huesos!",
 	Arcane		= "¡Oh, sabio eterno! ¡Transmíteme tu sapiencia Arcana!",
-	Nature		= "¡Oh, gran espíritu! ¡Otórgame el poder de la tierra!",
-	Shadow		= "Great soul of champions past! Bear to me your shield!"--translate
+	Nature		= "¡Oh, gran espíritu! ¡Otórgame el poder de la tierra!",--I did not log this one, text is probably not right
+	Shadow		= "¡Almas de campeones antiguos! ¡Concededme vuestro escudo!"
 })
 
-
--------------------------------
--- Gara'jal the Spiritbinder --
--------------------------------
+--------------
+-- Gara'jal --
+--------------
 L= DBM:GetModLocalization(682)
+
+L:SetOptionLocalization({
+	SetIconOnVoodoo		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122151)
+})
 
 L:SetMiscLocalization({
 	Pull		= "¡Ya es hora de morir!"
 })
 
-
-----------------------
--- The Spirit Kings --
-----------------------
+------------------------
+-- Los Reyes Espíritu --
+------------------------
 L = DBM:GetModLocalization(687)
 
 L:SetWarningLocalization({
-	DarknessSoon		= "Escudo de la oscuridad en %ds"
+	DarknessSoon		= "Escudo de la oscuridad en %d s"
+})
+
+L:SetTimerLocalization({
+	timerUSRevive		= "Sombra imperecedera se reforma",
+	timerRainOfArrowsCD	= "%s"
 })
 
 L:SetOptionLocalization({
-	DarknessSoon		= "Mostrar pre-aviso con contador para for $spell:117697 (5s antes)",
-	RangeFrame			= "Mostrar distancia (8)"
+	DarknessSoon		= "Mostrar aviso previo con cuenta atrás de 5 s para $spell:117697",
+	timerUSRevive		= "Mostrar temporizador para cuando $spell:117506 se reforme",
+	timerRainOfArrowsCD = DBM_CORE_AUTO_TIMER_OPTIONS.cd:format(118122),
+	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("8")
 })
-
 
 ------------
 -- Elegon --
@@ -76,35 +87,34 @@ L:SetOptionLocalization({
 L = DBM:GetModLocalization(726)
 
 L:SetWarningLocalization({
-	specWarnDespawnFloor		= "¡Evacúen la Pista!"
+	specWarnDespawnFloor	= "¡La plataforma desaparecerá en 6 s!"
 })
 
 L:SetTimerLocalization({
-	timerDespawnFloor			= "¡Evacúen la Pista!"
+	timerDespawnFloor		= "La plataforma desaparece"
 })
 
 L:SetOptionLocalization({
-	specWarnDespawnFloor		= "Mostrar aviso especial antes de que el suelo se desaparezca",
-	timerDespawnFloor			= "Mostrar tiempo para que el suelo desaparezca"
+	specWarnDespawnFloor	= "Mostrar aviso especial antes de que desaparezca la plataforma",
+	timerDespawnFloor		= "Mostrar temporizador para la desaparición de la plataforma",
+	SetIconOnDestabilized	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(132222)
 })
 
-
-------------
--- Will of the Emperor --
-------------
+----------------------------
+-- Voluntad del Emperador --
+----------------------------
 L= DBM:GetModLocalization(677)
 
 L:SetOptionLocalization({
-	InfoFrame		= "Mostrar información de jugadores a los que les afecta $spell:116525",
-	CountOutCombo	= "Cuenta lanzamientos de $journal:5673<br/>NOTA: Solo en la versión de voz femenina.",
-	ArrowOnCombo	= "Mostrar flecha durante $journal:5673<br/>NOTA: Esto asume que el tanque está delante del boss y todos los demás detrás."
+	InfoFrame		= "Mostrar marco de información de jugadores afectados por $spell:116525",
+	CountOutCombo	= "Contar lanzamientos de $journal:5673",
+	ArrowOnCombo	= "Mostrar flecha durante $journal:5673 (asumiendo que el jefe tiene al tanque delante y el resto de la banda a sus espaldas)"
 })
 
 L:SetMiscLocalization({
-	Pull		= "¡La máquina vuelve a la vida! ¡Baja el nivel inferior!",
-	Rage		= "La ira del Emperador resuena por las colinas.",
-	Strength	= "¡La fuerza del Emperador aparece en la habitación!",
-	Courage		= "¡El coraje del Emperador aparece en la habitación!",
-	Boss		= "¡Aparecen dos construcciones titánicas en las enormes habitaciones!"
+	Pull		= "¡La máquina vuelve a la vida! ¡Baja el nivel inferior!",--Emote
+	Rage		= "La ira del Emperador resuena por las colinas.",--Yell
+	Strength	= "¡La fuerza del Emperador aparece en la habitación!",--Emote
+	Courage		= "¡El coraje del Emperador aparece en la habitación!",--Emote
+	Boss		= "¡Aparecen dos construcciones titánicas en las enormes habitaciones!"--Emote
 })
-

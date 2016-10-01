@@ -74,24 +74,6 @@ local function _pcall(func, ...)
 	end
 end
 
-local pageCount = 0
-function templates:CreateOptionFrame(name, title, desc, dualTalents)
-	if type(name) ~= "string" then
-		pageCount = pageCount + 1
-		name = "CompactRaidOptionPage_UnnamedPage"..pageCount
-	end
-
-	local frame = UICreateInterfaceOptionPage(name, title, desc, nil, addon.optionFrame.pageContainer)
-
-	if dualTalents then
-		local dualTalentText = frame:CreateFontString(frame:GetName().."DualTalentText", "ARTWORK", "GameFontGreenSmall")
-		frame.dualTalentText = dualTalentText
-		dualTalentText:SetPoint("LEFT", frame.title, "RIGHT", 8, 0)
-	end
-
-	return frame
-end
-
 local function DefaultsButton_OnClick(self)
 	addon:RestoreModuleDefaults(self.module)
 end
@@ -137,16 +119,16 @@ addon:RegisterEventCallback("OnModuleDisable", function(module)
 end)
 
 addon:RegisterEventCallback("OnModuleSync", function(module)
-	local text = module.optionPage and module.optionPage.dualTalentText
-	if text then
-		text:Hide()
+	local page = module.optionPage
+	if page then
+		page:SetSpecSymbol(0)
 	end
 end)
 
 addon:RegisterEventCallback("OnModuleUnsync", function(module)
-	local text = module.optionPage and module.optionPage.dualTalentText
-	if text then
-		text:Show()
+	local page = module.optionPage
+	if page then
+		page:SetSpecSymbol()
 	end
 end)
 
@@ -158,18 +140,52 @@ addon:RegisterEventCallback("OnModuleRestoreDefaults", function(module)
 	end
 end)
 
+local function ModulePage_SetSpecSymbol(self, spec)
+	local frame = self.specSymbolFrame
+	if not frame then
+		return
+	end
+
+	frame:Hide()
+	if spec == 0 or type(LibPlayerSpells) ~= "table" or not LibPlayerSpells.GetSpecialization then
+		return
+	end
+
+	local _, _, name, _, icon = LibPlayerSpells:GetSpecialization()
+	if not name then
+		return
+	end
+
+	frame.icon:SetTexture(icon)
+	frame.text:SetText(name)
+	frame:Show()
+end
+
 function templates:CreateModulePage(module, page)
-	local dualTalent = module:HasFlag("talent")
+	local dualTalents = module:HasFlag("talent")
 	local secure = module:HasFlag("secure")
 
 	if dualTalents then
-		local dualTalentText = frame:CreateFontString(frame:GetName().."DualTalentText", "ARTWORK", "GameFontGreenSmall")
-		frame.dualTalentText = dualTalentText
-		dualTalentText:SetPoint("LEFT", frame.title, "RIGHT", 8, 0)
+		local frame = CreateFrame("Frame", nil, page)
+		page.specSymbolFrame = frame
+		frame:SetSize(16, 16)
+		frame:SetPoint("LEFT", page.title, "RIGHT", 8, 0)
+		frame:Hide()
+
+		local icon = frame:CreateTexture(nil, "ARTWORK")
+		frame.icon = icon
+		icon:SetSize(16, 16)
+		icon:SetPoint("LEFT")
+		icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+
+		local text = frame:CreateFontString(nil, "ARTWORK", "GameFontGreenSmall")
+		frame.text = text
+		text:SetPoint("LEFT", icon, "RIGHT", 2, 0)
 	end
 
 	page.module = module
 	module.optionPage = page
+	page.SetSpecSymbol = ModulePage_SetSpecSymbol
 
 	local defaults = page:CreatePressButton(DEFAULTS, secure)
 	page.buttonDefaults = defaults
@@ -191,7 +207,7 @@ function templates:CreateModulePage(module, page)
 		enable:SetPoint("TOPLEFT", addon.optionFrame.rightPanel, "BOTTOMLEFT", 0, -5)
 		enable.tooltipText = format(L["enable module tooltip"], module.title)
 
-		if dualTalent then
+		if dualTalents then
 			local sync = group:AddButton(L["sync dual-talent settings"], "sync", secure)
 			page.buttonSync = sync
 			sync.tooltipText = format(L["sync dual-talent tooltip"], module.title)
@@ -463,16 +479,18 @@ function templates:CreateColorSwatch(name, parent)
 	colorSwatch.bg = colorSwatch:CreateTexture(nil, "BORDER")
 	colorSwatch.bg:SetPoint("TOPLEFT", 1, -1)
 	colorSwatch.bg:SetPoint("BOTTOMRIGHT", -1, 1)
-	colorSwatch.bg:SetTexture(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
+	colorSwatch.bg:SetTexture("Interface\\BUTTONS\\WHITE8X8.BLP")
+	colorSwatch.bg:SetVertexColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
 
 	colorSwatch.swatch = colorSwatch:CreateTexture(nil, "ARTWORK")
 	colorSwatch.swatch:SetPoint("TOPLEFT", 2, -2)
 	colorSwatch.swatch:SetPoint("BOTTOMRIGHT", -2, 2)
-	colorSwatch.swatch:SetTexture(0, 1, 0)
+	colorSwatch.swatch:SetTexture("Interface\\BUTTONS\\WHITE8X8.BLP")
+	colorSwatch.swatch:SetVertexColor(0, 1, 0)
 
 	colorSwatch._Enable = colorSwatch.Enable
 	colorSwatch.Enable = function(self)
-		self.swatch:SetTexture(self.r, self.g, self.b)
+		self.swatch:SetVertexColor(self.r, self.g, self.b)
 		self:_Enable()
 		_pcall(self.OnEnable, self)
 	end
@@ -483,7 +501,7 @@ function templates:CreateColorSwatch(name, parent)
 			templates.selectedColorSwatch = nil
 			ColorPickerFrame:Hide()
 		end
-		self.swatch:SetTexture(0.25, 0.25, 0.25)
+		self.swatch:SetVertexColor(0.25, 0.25, 0.25)
 		self:_Disable()
 		_pcall(self.OnDisable, self)
 	end
@@ -491,7 +509,7 @@ function templates:CreateColorSwatch(name, parent)
 	colorSwatch.SetColor = function(self, r, g, b)
 		self.r, self.g, self.b = r, g, b
 		if self:IsEnabled() then
-			self.swatch:SetTexture(r, g, b)
+			self.swatch:SetVertexColor(r, g, b)
 		end
 	end
 
@@ -500,7 +518,7 @@ function templates:CreateColorSwatch(name, parent)
 	end
 
 	colorSwatch:SetScript("OnEnter", function(self)
-		self.bg:SetTexture(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+		self.bg:SetVertexColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 		GameTooltip:ClearLines()
 		GameTooltip:AddLine(L["click to change color"], nil, nil, nil, 1)
@@ -509,7 +527,7 @@ function templates:CreateColorSwatch(name, parent)
 
 	colorSwatch:SetScript("OnLeave", function(self)
 		GameTooltip:Hide()
-		self.bg:SetTexture(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
+		self.bg:SetVertexColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
 	end)
 
 	colorSwatch:SetScript("OnClick", function(self)
@@ -527,8 +545,13 @@ function templates:CreateColorSwatch(name, parent)
 	colorSwatch:SetScript("OnShow", function(self)
 		local r, g, b = _pcall(self.OnColorRequest, self)
 		if not r then
-			r, g, b = 0, 1, 0
+			if self.r then
+				r, g, b = self.r, self.g, self.b
+			else
+				r, g, b = 0, 1, 0
+			end
 		end
+
 		self:SetColor(r, g, b)
 	end)
 

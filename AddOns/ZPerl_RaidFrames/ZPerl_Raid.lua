@@ -3,7 +3,7 @@
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local XPerl_Raid_Events = { }
-local RaidGroupCounts = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+local RaidGroupCounts = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 local myGroup
 local FrameArray = { }		-- List of raid frames indexed by raid ID
 local RaidPositions = { }	-- Back-matching of unit names to raid ID
@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 1000 $")
+end, "$Revision: 1006 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -68,10 +68,10 @@ ZPerl_Roster = { }
 -- MEMBERS_PER_RAID_GROUP = 5
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
-local WoWclassCount = 11
---[[for k, v in pairs(localGroups) do
+local WoWclassCount = 0
+for k, v in pairs(localGroups) do
 	WoWclassCount = WoWclassCount + 1
-end]]
+end
 
 local resSpells = {
 	[GetSpellInfo(2006)] = true,			-- Resurrection
@@ -120,6 +120,7 @@ function XPerl_Raid_OnLoad(self)
 	self.state:SetFrameRef("ZPerlRaidHeader9", _G[XPERL_RAIDGRP_PREFIX..9])
 	self.state:SetFrameRef("ZPerlRaidHeader10", _G[XPERL_RAIDGRP_PREFIX..10])
 	self.state:SetFrameRef("ZPerlRaidHeader11", _G[XPERL_RAIDGRP_PREFIX..11])
+	self.state:SetFrameRef("ZPerlRaidHeader12", _G[XPERL_RAIDGRP_PREFIX..12])
 
 	self.state:SetAttribute("partySmallRaid", XPerlDB.party.smallRaid)
 	self.state:SetAttribute("raidEnabled", XPerlDB.raid.enable)
@@ -139,6 +140,7 @@ function XPerl_Raid_OnLoad(self)
 			self:GetFrameRef("ZPerlRaidHeader9"):Hide()
 			self:GetFrameRef("ZPerlRaidHeader10"):Hide()
 			self:GetFrameRef("ZPerlRaidHeader11"):Hide()
+			self:GetFrameRef("ZPerlRaidHeader12"):Hide()
 		elseif self:GetAttribute('partySmallRaid') or not self:GetAttribute('raidEnabled') then
 			return
 		else
@@ -153,6 +155,7 @@ function XPerl_Raid_OnLoad(self)
 			self:GetFrameRef("ZPerlRaidHeader9"):Show()
 			self:GetFrameRef("ZPerlRaidHeader10"):Show()
 			self:GetFrameRef("ZPerlRaidHeader11"):Show()
+			self:GetFrameRef("ZPerlRaidHeader12"):Show()
 		end
 	]])
 	RegisterStateDriver(self.state, "groupupdate", "[petbattle] hide; show")
@@ -1873,7 +1876,7 @@ function SetRaidRoster()
 
 	--del(RaidGroupCounts)
 	--RaidGroupCounts = new(0,0,0,0,0,0,0,0,0,0,0)
-	RaidGroupCounts = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	RaidGroupCounts = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
 	for i = 1, GetNumGroupMembers() do
 		local name, rank, group, level, class, fileName = GetRaidRosterInfo(i)
@@ -2425,7 +2428,8 @@ local function DefaultRaidClasses()
 		{enable = true, name = "DRUID"},
 		{enable = true, name = "SHAMAN"},
 		{enable = true, name = "PALADIN"},
-		{enable = true, name = "MONK"}
+		{enable = true, name = "MONK"},
+		{enable = true, name = "DEMONHUNTER"},
 	}
 end
 
@@ -2476,7 +2480,7 @@ function XPerl_Raid_ChangeAttributes()
 
 	rconf.anchor = (rconf and rconf.anchor) or "TOP"
 
-	for i = 1, rconf.sortByClass and WoWclassCount or 11 do
+	for i = 1, rconf.sortByClass and WoWclassCount or 12 do
 		local groupHeader = raidHeaders[i]
 
 		-- Hide this when we change attributes, so the whole re-calc is only done once, instead of for every attribute change

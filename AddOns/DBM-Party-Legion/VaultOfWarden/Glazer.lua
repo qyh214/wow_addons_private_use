@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1469, "DBM-Party-Legion", 10, 707)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14993 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15190 $"):sub(12, -3))
 mod:SetCreatureID(95887)
 mod:SetEncounterID(1817)
 mod:SetZone()
@@ -9,7 +9,7 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 194289 194942",
+	"SPELL_CAST_START 193443 194942",
 	"SPELL_PERIODIC_DAMAGE 194945",
 	"SPELL_PERIODIC_MISSED 194945"
 )

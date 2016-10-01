@@ -437,7 +437,7 @@ end
 
 local qactive = false
 
-function XLootMonitor.test_settings()
+function XLootMonitor.TestSettings()
 	local now = GetTime()
 	-- for i=1,15 do
 	-- 	table.insert(queue, { now + i, unpack(tests[random(1, #tests)]) })
@@ -451,4 +451,4 @@ function XLootMonitor.test_settings()
 	end
 end
 
-XLoot:SetSlashCommand("xlmd", XLootMonitor.test_settings)
+XLoot:SetSlashCommand("xlmd", XLootMonitor.TestSettings)

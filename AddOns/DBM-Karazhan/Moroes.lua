@@ -1,18 +1,16 @@
 local mod	= DBM:NewMod("Moroes", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
-mod:SetCreatureID(15687, 19875, 19874, 19872, 17007, 19876, 19873)--Moroes
+mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
+mod:SetCreatureID(15687)--Moroes
+mod:SetEncounterID(653)
 mod:SetModelID(16540)
---19875, 19874, 19872, 17007, 19876, 19873--all the adds, for future use, when pull/kill handling by diff tables work right.
 mod:RegisterCombat("combat")
---mod:RegisterCombat("yell", L.DBM_MOROES_YELL_START)
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"UNIT_DIED"
+	"SPELL_CAST_START 29405 35096 29562",
+	"SPELL_AURA_APPLIED 29448 29425 34694 29572 37023 37066",
+	"SPELL_AURA_REMOVED 34694 29425"
 )
 
 local warningVanish			= mod:NewSpellAnnounce(29448, 4)
@@ -30,11 +28,8 @@ local timerGouge			= mod:NewTargetTimer(6, 29425)
 local timerBlind			= mod:NewTargetTimer(10, 34694)
 local timerMortalStrike		= mod:NewTargetTimer(5, 29572)
 
-local lastVanish = 0
-
 function mod:OnCombatStart(delay)
 	timerVanishCD:Start(-delay)
-	lastVanish = 0
 end
 
 function mod:SPELL_CAST_START(args)
@@ -50,7 +45,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 29448 then
 		warningVanish:Show()
-		lastVanish = GetTime()
+		self:AntiSpam(20, 1)
 	elseif args.spellId == 29425 then
 		warningGouge:Show(args.destName)
 		timerGouge:Show(args.destName)
@@ -65,7 +60,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerVanishCD:Cancel()
 	elseif args.spellId == 37066 then
 		warningGarrote:Show(args.destName)
-		if (GetTime() - lastVanish) < 20 then--firing this event here instead, since he does garrote as soon as he comes out of vanish.
+		if self:AntiSpam(20, 1) then--firing this event here instead, since he does garrote as soon as he comes out of vanish.
 			timerVanishCD:Start()
 		end
 	end
@@ -73,15 +68,8 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 34694 then
-		timerBlind:Cancel(args.destName)
+		timerBlind:Stop(args.destName)
 	elseif args.spellId == 29425 then
-		timerGouge:Cancel(args.destName)
-	end
-end
-
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 15687 then
-		DBM:EndCombat(self)
+		timerGouge:Stop(args.destName)
 	end
 end

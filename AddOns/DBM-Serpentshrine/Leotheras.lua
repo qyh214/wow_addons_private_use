@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Leotheras", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
-mod:SetCreatureID(21215, 21806)
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetCreatureID(21215)
+mod:SetEncounterID(625)
 mod:SetModelID(20514)
 mod:SetZone()
 mod:SetUsedIcons(5, 6, 7, 8)
@@ -11,7 +12,7 @@ mod:RegisterCombat("combat")
 
 --Not using RegisterEventsInCombat on purpose because it uses weird combat rules
 mod:RegisterEvents(
-	"SPELL_AURA_APPLIED",
+	"SPELL_AURA_APPLIED 37640 37676 37749",
 	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_DIED"
 )
@@ -136,7 +137,5 @@ function mod:UNIT_DIED(args)
 			timerPhase:Start(nil, L.Demon)
 			berserkTimer:Start()
 		end
-	elseif cId == 21215 and self:IsInCombat() then
-		DBM:EndCombat(self)
 	end
 end

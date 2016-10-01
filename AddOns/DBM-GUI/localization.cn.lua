@@ -2,7 +2,7 @@
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: May 12 2015, 07:29 UTC@14943
+-- Last update: Aug 30 2016, 03:25 UTC@15178
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
@@ -13,21 +13,13 @@ L.MainFrame 				= "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "翻译:"
 L.TranslationBy 			= "Mini_Dragon(Brilla@金色平原) 原翻译：Diablohu & yleaf & sunlcy"
-L.Website					= "拜访我们的论坛|cFF73C2FBwww.deadlybossmods.com|r.在Twitter上关注首席程序员 @MysticalOS"
+L.Website					= "拜访我们的论坛|cFF73C2FBwww.deadlybossmods.com|r. 在Twitter上关注 @deadlybossmods 或 @MysticalOS"
 L.WebsiteButton				= "论坛"
 
 L.OTabBosses				= "模块"
 L.OTabOptions				= "选项"
 
 L.TabCategory_Options 		= "综合设置"
-L.TabCategory_LEG	 		= "军团再临"
-L.TabCategory_WOD	 		= "德拉诺之王"
-L.TabCategory_MOP	 		= "熊猫人之谜"
-L.TabCategory_CATA	 		= "大地的裂变"
-L.TabCategory_WOTLK 		= "巫妖王之怒"
-L.TabCategory_BC 			= "燃烧的远征"
-L.TabCategory_CLASSIC 		= "经典旧世"
---L.TabCategory_PVP 			Same as English
 L.TabCategory_OTHER    		= "其它"
 
 L.BossModLoaded 			= "%s状态"
@@ -62,7 +54,6 @@ L.Statistic_BestKill		= "最好成绩:"
 
 -- Tab: General Options
 L.General 					= "DBM核心综合设置"
-L.EnableDBM 				= "启用DBM"
 L.EnableMiniMapIcon			= "显示小地图按钮"
 L.UseSoundChannel			= "设置DBM使用的声道"
 L.UseMasterChannel			= "主声道"
@@ -93,7 +84,6 @@ L.InfoRaidWarning			= [[你可以对团队警报的文本颜色及其位置进�
 在这里会显示诸如“玩家X受到了Y效果的影响”之类的信息。]]
 L.ColorResetted 			= "该颜色设置已重置"
 L.ShowWarningsInChat 		= "在聊天窗口中显示警报"
-L.ShowFakedRaidWarnings 	= "以伪装团队警报信息的方式显示警报内容"
 L.WarningIconLeft 			= "左侧显示图标"
 L.WarningIconRight 			= "右侧显示图标"
 L.WarningIconChat 			= "在聊天窗口中显示图标"
@@ -298,13 +288,13 @@ L.HideGarrisonUpdates		= "Boss战斗中隐藏要塞队列完成提示"
 L.HideGuildChallengeUpdates	= "Boss战斗中隐藏工会挑战成功信息"
 L.HideTooltips				= "Boss战斗中隐藏鼠标提示窗体 （tooltips）"
 L.DisableSFX				= "Boss战斗中关闭音效"
-L.HideApplicantAlerts		= "屏蔽预创建队伍邀请信息"
-L.HideApplicantAlertsFull	= "当团队已满时"
-L.HideApplicantAlertsNotL	= "当我不是团长时 （团长别选）"
 L.SpamBlockSayYell			= "隐藏聊天窗口中的使用聊天泡泡的警报信息"
 L.DisableCinematics			= "自动跳过游戏内过场动画"
 L.AfterFirst				= "仅第一次播放"
 L.Always					= "总是跳过"
+L.DisableTalkingHead		= "隐藏抬头对话窗"
+L.CombatOnly				= "在任何战斗中隐藏"
+L.RaidCombat				= "只在Boss战斗中隐藏"
 
 L.Panel_ExtraFeatures		= "其他功能"
 --
@@ -325,10 +315,6 @@ L.SKT_Enabled				= "总是显示最速胜利计时条(覆盖单独BOSS设置)"
 L.CRT_Enabled				= "显示下一次可战复CD"
 L.ShowRespawn				= "Boss战斗未完成时显示Boss刷新计时条"
 L.ShowQueuePop				= "显示随机小队/团队查找器确认计时条"
-L.ChallengeTimerOptions		= "设置挑战模式最佳记录计时条"
-L.ChallengeTimerPersonal	= "个人"
-L.ChallengeTimerGuild		= "公会"
-L.ChallengeTimerRealm		= "服务器"
 --
 L.Area_AutoLogging			= "自动日志记录选项"
 L.AutologBosses				= "自动采用官方格式记录日志。 (使用 /dbm pull 可提前记录并使得记录更准确，如提前偷药水或是召唤大军。)"

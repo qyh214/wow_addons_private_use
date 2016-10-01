@@ -1,15 +1,17 @@
 local mod = DBM:NewMod(542, "DBM-Party-BC", 9, 252)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
 
 mod:SetCreatureID(23035)
+mod:SetEncounterID(1904)
+
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
+	"SPELL_CAST_START 40184",
+	"SPELL_AURA_APPLIED 40321 40184 40303",
+	"SPELL_AURA_REMOVED 40303",
 	"UNIT_HEALTH target focus" ,
 	"CHAT_MSG_MONSTER_EMOTE"
 )
@@ -61,7 +63,7 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 40303 then
-		timerSpellBomb:Cancel(args.destName)
+		timerSpellBomb:Stop(args.destName)
 	end
 end
 

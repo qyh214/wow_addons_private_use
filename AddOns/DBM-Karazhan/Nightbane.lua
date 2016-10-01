@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Nightbane", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
 mod:SetCreatureID(17225)
+mod:SetEncounterID(662)
 mod:SetModelID(18062)
 mod:RegisterCombat("combat")
 
@@ -11,9 +12,9 @@ mod:RegisterEvents(
 )
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED",
+	"SPELL_CAST_START 36922",
+	"SPELL_CAST_SUCCESS 37098",
+	"SPELL_AURA_APPLIED 30129 30130",
 	"CHAT_MSG_MONSTER_YELL"
 )
 

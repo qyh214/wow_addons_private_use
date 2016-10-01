@@ -14,7 +14,7 @@
 ## SavedVariablesPerCharacter: ZPerlRaidMonConfig
 ## RequiredDeps: ZPerl
 ## DefaultState: Disabled
-## X-Curse-Packaged-Version: r1002
+## X-Curse-Packaged-Version: r1014
 ## X-Curse-Project-Name: Z-Perl Unit Frames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

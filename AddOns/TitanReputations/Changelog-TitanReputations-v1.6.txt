@@ -1,0 +1,17 @@
+tag v1.6
+632c2e0ae223b5659e4bf672dc1fdc05fd82339d
+Eliote <>
+2016-09-27 20:28:06 -0300
+
+TitanReputations v1.6
+
+
+--------------------
+
+Eliote:
+	- Fix tooltip
+	* Conjurer Margoss should now be visible in the tooltip if he is selected as XP bar
+	* Reimplement iteration of factions (should fix some minor bugs)
+	- Fix friends reputation
+	* Fix values for friends reputation
+	* Add friend standing text

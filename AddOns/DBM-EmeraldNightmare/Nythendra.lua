@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1703, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15039 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15286 $"):sub(12, -3))
 mod:SetCreatureID(102672)
 mod:SetEncounterID(1853)
 mod:SetZone()
 mod:SetUsedIcons(4, 3, 2, 1)
---mod:SetHotfixNoticeRev(12324)
+mod:SetHotfixNoticeRev(15124)
 mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
@@ -15,20 +15,23 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 203552 202977 205070",
 	"SPELL_CAST_SUCCESS 204463",
 	"SPELL_AURA_APPLIED 204463 203096 205043",
+	"SPELL_AURA_APPLIED_DOSE 204504",
 	"SPELL_AURA_REMOVED 204463 203096 203552",
+	"SPELL_DAMAGE 203646",
+	"SPELL_MISSED 203646",
 	"SPELL_PERIODIC_DAMAGE 203045",
 	"SPELL_PERIODIC_MISSED 203045",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO, maybe improve timers by on fly corrections off breaths 1 and 2 to fix their accuracy a little do to variations
---TODO, Fix yellsi if they are still 1 second off for volatile rot in later tests.
+--TODO, maybe improve timers with on fly correcting by checking boss energy since blizzards code can't count properly and it's inconsistent and variable.
+--TODO, Fix yells if they are still 1 second off for volatile rot in later tests.
 --TODO, figure out wtf on the timers. they were completely different on mythic and again on LFR. Assume LFR are most current but recheck all others
---TODO, redo pull timers when boss is starting at 100 energy again
 --consider countdowns if timers made more accurate.
 local warnVolatileRot				= mod:NewTargetAnnounce(204463, 4)
 local warnRot						= mod:NewTargetAnnounce(203096, 3)
 local warnHeartofSwarm				= mod:NewSpellAnnounce(203552, 2)
+local warnHeartofSwarmEnd			= mod:NewEndAnnounce(203552, 2)
 local warnInfestedMind				= mod:NewTargetAnnounce(205043, 4)
 
 local specWarnBreath				= mod:NewSpecialWarningDodge(202977, nil, nil, nil, 2, 2)
@@ -38,24 +41,30 @@ local yellVolatileRot				= mod:NewFadesYell(204463)
 local specWarnRot					= mod:NewSpecialWarningRun(203096, nil, nil, nil, 1, 2)
 local yellRot						= mod:NewFadesYell(203096)
 local specWarnInfestedGround		= mod:NewSpecialWarningMove(203045, nil, nil, nil, 1, 2)
+local specWarnBurst					= mod:NewSpecialWarningMove(203646, nil, nil, nil, 1, 2)
 local specWarnInfestedMind			= mod:NewSpecialWarningSwitch(205043, "Dps", nil, nil, 1, 2)
 local specWarnSpreadInfestation		= mod:NewSpecialWarningInterrupt(205070, "HasInterrupt", nil, nil, 1, 2)
+local specWarnInfestedStack			= mod:NewSpecialWarningStack(204504, nil, 7, nil, 1, 6)
 
-local timerBreathCD					= mod:NewCDCountTimer(37.5, 202977, nil, nil, nil, 3)--37-39
+local timerBreathCD					= mod:NewCDCountTimer(36, 202977, nil, nil, nil, 3)--36-42
 local timerVolatileRotCD			= mod:NewCDCountTimer(20.5, 204463, nil, "Tank", nil, 5)--20.5-24 variation
 local timerRotCD					= mod:NewCDCountTimer(15, 203096, nil, nil, nil, 3)
 local timerSwarm					= mod:NewBuffActiveTimer(23, 203552, nil, nil, nil, 6)
 local timerSwarmCD					= mod:NewCDCountTimer(98, 203552, nil, nil, nil, 6)--Needs new sample size
 
-local countdownBreath				= mod:NewCountdown(37.5, 202977)
+local berserkTimer					= mod:NewBerserkTimer(600)
+
+local countdownBreath				= mod:NewCountdown(36, 202977, false)--Can't in good concious have a countdown on by default for something with a 6 second variation
 local countdownVolatileRot			= mod:NewCountdown("Alt20.5", 204463, "Tank")
 
 local voiceBreath					= mod:NewVoice(202977)--breathsoon
 local voiceRot						= mod:NewVoice(203096)--runout
 local voiceVolatileRot				= mod:NewVoice(204463)--runout/TauntBoss
 local voiceInfestedGround			= mod:NewVoice(203045)--runaway
+local voiceBurst					= mod:NewVoice(203646)--runaway
 local voiceInfestedMind				= mod:NewVoice(205043, "Dps")--findmc
 local voiceSpreadInfestation		= mod:NewVoice(205070, "HasInterrupt")--kickcast
+local voiceInfestedStack			= mod:NewVoice(204504)--stackhigh
 
 mod:AddSetIconOption("SetIconOnRot", 203096)--Of course I'll probably be forced to change method when BW does their own thing, for compat.
 mod:AddRangeFrameOption(30, 204463)--Range not actually known, 30 used for now
@@ -82,15 +91,15 @@ function mod:OnCombatStart(delay)
 	self.vb.volatileRotCast = 0
 	self.vb.swarmCast = 0
 	--Only start timers if boss isn't starting at 0 energy
-	if UnitExists("boss1") and UnitPower("boss1") > 80 then
-		timerRotCD:Start(6, 1)
-		timerVolatileRotCD:Start(20, 1)--20-25.8 (22)
-		timerBreathCD:Start(35-delay, 1)--35-40 variable (38)
-		countdownBreath:Start(35-delay)
-		timerSwarmCD:Start(86-delay, 1)--86-100 (91)
-		DBM:AddMsg("Note, pull timers are subject to inaccuracies since they were changed after heroic was tested BUT didn't work right during mythic testing do to energy bug")
-	else--Boss started at 0 energy and will go right into swarm phase after about 5 seconds
-		timerSwarmCD:Start(5-delay, 1)
+	timerRotCD:Start(5.2, 1)
+	timerVolatileRotCD:Start(20, 1)--20-25.8
+	timerBreathCD:Start(35-delay, 1)--35-40
+	countdownBreath:Start(35-delay)
+	timerSwarmCD:Start(86-delay, 1)--86-91
+	if self:IsEasy() then
+		berserkTimer:Start(-delay)
+	else
+		berserkTimer:Start(480-delay)
 	end
 	if self.Options.InfoFrame and self:IsMythic() then
 		DBM.InfoFrame:SetHeader(GetSpellInfo(204506))
@@ -120,13 +129,7 @@ function mod:SPELL_CAST_START(args)
 		warnHeartofSwarm:Show(self.vb.swarmCast)
 		timerSwarm:Start()
 	elseif spellId == 202977 then
-		self.vb.breathCount = self.vb.breathCount + 1
-		specWarnBreath:Show(self.vb.breathCount)
-		voiceBreath:Play("breathsoon")
-		if self.vb.breathCount < 2 then
-			timerBreathCD:Start(nil, self.vb.breathCount+1)
-			countdownBreath:Start()
-		end
+		DBM:Debug("CLEU event for breath, pruned. If you see this message it was unpruned!")
 	elseif spellId == 205070 and self:CheckInterruptFilter(args.sourceGUID) then
 		specWarnSpreadInfestation:Show(args.sourceName)
 		voiceSpreadInfestation:Play("kickcast")
@@ -190,13 +193,27 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		if self.Options.SetIconOnRot then
-			self:SetAlphaIcon(0.8, args.destName, 1)--Number of icons variable by raid size and duration of fight
+			self:SetAlphaIcon(0.8, args.destName)--Number of icons variable by raid size and duration of fight
 		end
 	elseif spellId == 205043 then
 		warnInfestedMind:CombinedShow(0.5, args.destName)
 		if self:AntiSpam(5, 2) then
 			specWarnInfestedMind:Show()
 			voiceInfestedMind:Play("findmc")
+		end
+	end
+end
+
+function mod:SPELL_AURA_APPLIED_DOSE(args)
+	local spellId = args.spellId
+	if spellId == 204504 and args:IsPlayer() then
+		local amount = args.amount or 1
+		if amount >= 7 and amount < 11 then
+			specWarnInfestedStack:Cancel()
+			specWarnInfestedStack:Schedule(0.5, amount)
+			if self:AntiSpam(2, 4) then
+				voiceInfestedStack:Play("stackhigh")
+			end
 		end
 	end
 end
@@ -218,16 +235,25 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 203552 then--Heart of swarm ending
+		warnHeartofSwarmEnd:Show()
 		self.vb.breathCount = 0
 		self.vb.rotCast = 0
 		self.vb.volatileRotCast = 0
-		timerRotCD:Start(13, 1)--Needs new samples
-		timerVolatileRotCD:Start(30, 1)--Needs new samples
-		timerBreathCD:Start(44, 1)--Needs new samples
-		countdownBreath:Start(44)
+		timerRotCD:Start(12, 1)
+		timerVolatileRotCD:Start(28, 1)--28-31
+		timerBreathCD:Start(43, 1)
+		countdownBreath:Start(43)
 		timerSwarmCD:Start(nil, self.vb.swarmCast+1)
 	end
 end
+
+function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+	if spellId == 203646 and destGUID == UnitGUID("player") and self:AntiSpam(2, 3) then
+		specWarnBurst:Show()
+		voiceBurst:Play("runaway")
+	end
+end
+mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 203045 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
@@ -244,15 +270,13 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		if self.vb.rotCast < 5 then
 			timerRotCD:Start(nil, self.vb.rotCast+1)
 		end
-		--Assumed obsolete
---[[		if self.vb.rotCast == 1 then
---			if self:IsMythic() then
-				timerRotCD:Start(45, 2)
---			else
---				timerRotCD:Start(33, 2)--33-36
---			end
-		elseif not self:IsMythic() and self.vb.rotCast == 2 then
-			timerRotCD:Start(18.5, 3)--18.5-22
-		end--]]
+	elseif spellId == 202968 then--Infested Breath (CAST_SUCCESS and CAST_START pruned from combat log)
+		self.vb.breathCount = self.vb.breathCount + 1
+		specWarnBreath:Show(self.vb.breathCount)
+		voiceBreath:Play("breathsoon")
+		if self.vb.breathCount < 2 then
+			timerBreathCD:Start(nil, self.vb.breathCount+1)
+			countdownBreath:Start()
+		end
 	end
 end

@@ -87,7 +87,7 @@ local function createOptionsFrame()
     -- create navigation menu
     win.nav = CreateFrame("Frame", win:GetName().."Nav", win);
     win.nav.bg = win.nav:CreateTexture(win.nav:GetName().."BG", "BACKGROUND");
-    win.nav.bg:SetTexture(1, 1, 1, .25);
+    win.nav.bg:SetColorTexture(1, 1, 1, .25);
     win.nav.bg:SetPoint("TOPRIGHT");
     win.nav.bg:SetPoint("BOTTOMRIGHT");
     win.nav.bg:SetWidth(1);
@@ -105,7 +105,7 @@ local function createOptionsFrame()
     win.container = CreateFrame("Frame", win:GetName().."Container", win);
     win.container.bg = win.container:CreateTexture(win.container:GetName().."BG", "BACKGROUND");
     win.container.bg:SetAllPoints();
-    -- win.container.bg:SetTexture(1, 1, 1, .25); -- for testing only to see bounds.
+    -- win.container.bg:SetColorTexture(1, 1, 1, .25); -- for testing only to see bounds.
     win.container:SetPoint("TOPLEFT", win.nav, "TOPRIGHT", 10, -2);
     win.container:SetPoint("BOTTOMLEFT", win.nav, "BOTTOMRIGHT", 10, 2);
     win.container:SetPoint("RIGHT", win, -25, 0);
@@ -149,7 +149,7 @@ local function createCategory(index)
     cat.catIndex = index;
     cat.bg = cat:CreateTexture(nil, "BACKGROUND");
     cat.bg:SetAllPoints();
-    cat.bg:SetTexture(1, 1, 1);
+    cat.bg:SetColorTexture(1, 1, 1);
     cat.bg:SetGradient("VERTICAL", getGradientFromColor("658daa"));
     cat.text = _G.getglobal(cat:GetName().."Text");
     local font, _, _ = _G.ChatFontNormal:GetFont();

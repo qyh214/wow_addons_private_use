@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod("IronCouncil", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 234 $"):sub(12, -3))
 mod:SetCreatureID(32867, 32927, 32857)
 mod:SetEncounterID(1140)
+mod:DisableEEKillDetection()--Fires for first one dying not last
 mod:SetModelID(28344)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 

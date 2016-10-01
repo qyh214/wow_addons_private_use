@@ -8,8 +8,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_ATH_YELL_1		= "Come Midnight, let's disperse this petty rabble!",
-	KillAttumen			= "Always knew... someday I would become... the hunted."
+	DBM_ATH_YELL_1		= "Come Midnight, let's disperse this petty rabble!"
 }
 
 
@@ -26,10 +25,6 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	DBM_MOROES_VANISH_FADED	= "Show vanish fade warning"
-}
-
-L:SetMiscLocalization{
-	DBM_MOROES_YELL_START	= "Hm, unannounced visitors. Preparations must be made..."
 }
 
 
@@ -135,10 +130,6 @@ L:SetOptionLocalization{
 	RangeFrame			= "Show range frame (10)"
 }
 
-L:SetMiscLocalization{
-	DBM_CURA_YELL_PULL		= "The Menagerie is for guests only."
-}
-
 
 -- Terestian Illhoof
 L = DBM:GetModLocalization("TerestianIllhoof")
@@ -148,7 +139,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_TI_YELL_PULL		= "Ah, you're just in time. The rituals are about to begin!",
 	Kilrek					= "Kil'rek",
 	DChains					= "Demon Chains"
 }
@@ -231,7 +221,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_PRINCE_YELL_PULL	= "Madness has brought you here to me. I shall be your undoing!",
 	DBM_PRINCE_YELL_P2		= "Simple fools! Time is the fire in which you'll burn!",
 	DBM_PRINCE_YELL_P3		= "How can you hope to stand against such overwhelming power?",
 	DBM_PRINCE_YELL_INF1	= "All realities, all dimensions are open to me!",
@@ -261,7 +250,6 @@ L:SetOptionLocalization{
 
 L:SetMiscLocalization{
 	DBM_NB_EMOTE_PULL		= "An ancient being awakens in the distance...",
-	DBM_NB_YELL_PULL		= "What fools! I shall bring a quick end to your suffering!",
 	DBM_NB_YELL_AIR			= "Miserable vermin. I shall exterminate you from the air!",
 	DBM_NB_YELL_GROUND		= "Enough! I shall land and crush you myself!",
 	DBM_NB_YELL_GROUND2		= "Insects! Let me show you my strength up close!"

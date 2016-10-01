@@ -1,5 +1,5 @@
 ## Interface: 70000
-## Version: 16.07.23
+## Version: 16.08.30
 ## Title: TipTacOptions
 ## Author: Aezay (Earthen Ring EU)
 ## Notes: Option Dialog for TipTac

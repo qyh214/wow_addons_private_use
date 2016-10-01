@@ -70,10 +70,12 @@ L["TITAN_PANEL_SLASH_PROFILE_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<name>: 
 L["TITAN_PANEL_SLASH_PROFILE_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<server>: |cffffffffcan be either the server name or 'TitanCustomProfile'."
 L["TITAN_PANEL_SLASH_SILENT_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {silent}";
 L["TITAN_PANEL_SLASH_SILENT_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."silent: |cffffffffToggles "..TITAN_PANEL.." to load silently.";
+L["TITAN_PANEL_SLASH_ORDERHALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {orderhall}";
+L["TITAN_PANEL_SLASH_ORDERHALL_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."orderhall: |cffffffffToggles "..TITAN_PANEL.." to hide Order Hall Command Bar.";
 L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {help | help <topic>}";
-L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/silent/help ";
+L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/silent/orderhall/help ";
 L["TITAN_PANEL_SLASH_ALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan <topic>";
-L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/silent/help ";
+L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/silent/orderhall/help ";
 
 -- slash command responses
 L["TITAN_PANEL_SLASH_RESP1"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." tooltip font scale has been reset.";
@@ -161,6 +163,7 @@ L["TITAN_PANEL_MENU_SHOW"] = "Show Plugin";
 L["TITAN_PANEL_MENU_PLUGIN_RESET"] = "Refresh Plugins";
 L["TITAN_PANEL_MENU_PLUGIN_RESET_DESC"] = "Refresh Plugin Text and Position";
 L["TITAN_PANEL_MENU_SILENT_LOAD"] = "Silent Load";
+L["TITAN_PANEL_MENU_HIDE_ORDERHALL"] = "Hide Order Hall Command Bar";
 
 -- localization strings for AceConfigDialog-3.0
 L["TITAN_ABOUT_VERSION"] = "Version";

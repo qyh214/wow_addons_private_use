@@ -1,7 +1,10 @@
 ﻿## Interface: 70000
 ## X-Min-Interface: 70000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0The Nighthold|r
-## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Nachtfestung|r
+## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Die Nachtfestung|r
+## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0暗夜要塞|r
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0暗夜堡|r
+## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Bastión Nocturno|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -11,15 +14,18 @@
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: LEG
 ## X-DBM-Mod-Has-Mythic : 1
-## X-DBM-Mod-Sort: 054
+## X-DBM-Mod-Sort: 053
 ## X-DBM-Mod-MapID: 1530
 ## X-DBM-Mod-MinCoreRevision: 14737
-## X-Curse-Packaged-Version: 7.0.0
+## X-Curse-Packaged-Version: 7.0.10
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
 localization.en.lua
 localization.cn.lua
+localization.de.lua
+localization.tw.lua
+localization.es.lua
 Skorpyron.lua
 ChronoAnomaly.lua
 Trilliax.lua

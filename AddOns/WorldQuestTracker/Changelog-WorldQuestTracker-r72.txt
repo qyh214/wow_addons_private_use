@@ -1,0 +1,212 @@
+2016-09-13  Tercio  <Tercio>
+
+[42bc789f367a] [tip]
+* WorldQuestTracker.lua:
+
+- fix for elvui bar anchoring.
+
+
+2016-09-12  Tercio  <Tercio>
+
+[813927363491]
+* WorldQuestTracker.lua:
+
+- libwindow warning if not found.
+- fixed the header not showing on the custom positioning.
+
+
+[c616d8f1b719]
+* WorldQuestTracker.lua:
+
+- fixed the problem with the fly map icons not hiding all textures.
+- added a tutorial bubble pointing out the options on the fly map.
+
+
+[80b258393c57]
+* libs/LibWindow-1.1/LibWindow-1.1.lua, libs/libs.xml:
+
+- added libwindow-1.1
+
+
+[8b330564b3c6]
+* WorldQuestTracker.lua:
+
+- add option to unlock the tracker position.
+
+
+2016-09-09  Tercio  <Tercio>
+
+[e746eb069178]
+* libs/LG/LibGraph-2.0.lua:
+
+- fixing the green chart graph at summary panel.
+
+
+[53b5f6ef181c]
+* WorldQuestTracker.lua:
+
+- added back the auto world map option.
+
+
+2016-09-08  Tercio  <Tercio>
+
+[8cc959f37ad7]
+* WorldQuestTracker.lua, media/icon_party_shared_badT.blp:
+
+- fixed a bug with the statusbar where sometimes it won't show on zone maps.
+
+
+2016-09-07  Tercio  <Tercio>
+
+[3a462fa9dbe9]
+* WorldQuestTracker.lua:
+
+- check if 'relativeTo' is valid before trying to get its name.
+- the reward icon on quests shown on the quest tracker now works as any other icon on the blizz objectibe tracker.
+
+
+2016-09-06  Tercio  <Tercio>
+
+[0bc17f743068]
+* WorldQuestTracker.lua:
+
+- added an option to disable our quest tracker.
+
+
+[eb5531cdf631]
+* WorldQuestTracker.lua:
+
+- double check if the tooltip scan text is valid.
+
+
+[7492a2a49acb]
+* WorldQuestTracker.lua:
+
+- added time priorities for sort order.
+
+
+[9fd1a56e71ca]
+* WorldQuestTracker.lua:
+
+- check if elvui has its saved variables loaded before check.
+- removed a debug print 'zi' when clicking on a quest.
+
+
+2016-09-05  Tercio  <Tercio>
+
+[c23ac7f1f03b]
+* WorldQuestTracker.lua:
+
+- possible fix for the quest sharer.
+
+
+[75172cd49fc3]
+* WorldQuestTracker.lua:
+
+- possible fix for the quest sharer.
+
+
+[8b3f2efb3d73]
+* WorldQuestTracker.lua, libs/AceSerializer-3.0/AceSerializer-3.0.lua, libs/AceSerializer-3.0/AceSerializer-3.0.xml, libs/libs.xml, media/icon_party_sharedT.blp:
+
+- fixed some lag involving startup.
+
+
+[7a314427b5b9]
+* WorldQuestTracker.lua:
+
+- fix for artifact power in some cases not being counted.
+
+
+[58b5715c3cc1]
+* WorldQuestTracker.lua:
+
+- added support to TomTom.
+- added 'refresh' option.
+
+
+[eb8810101cad]
+* WorldQuestTracker.lua:
+
+- check if move anything is loadded.
+
+
+2016-09-04  Tercio  <Tercio>
+
+[5a15d712976a]
+* WorldQuestTracker.lua:
+
+- fix for taxymap fps drop issue.
+
+
+[3829d6d8a4e7]
+* WorldQuestTracker.lua:
+
+- filtering quests on zone maps.
+The filter shall respect the option to show faction objectives.
+
+
+[a0919818d52b]
+* WorldQuestTracker.lua:
+
+- added option to set the arrow update speed.
+
+
+[4c92fca22d6d]
+* libs/DF/fw.lua:
+
+- framework revision up.
+
+
+2016-09-03  Tercio  <Tercio>
+
+[6db137adc05f]
+* WorldQuestTracker.lua:
+
+- trying a MoveAnything compatibility fix.
+
+
+2016-09-02  Tercio  <Tercio>
+
+[06669b9bb591]
+* WorldQuestTracker.lua:
+
+- fly map quests are show only being tracked by default.
+- fixed a lua error when opening the zone map.
+
+
+2016-08-29  Tercio  <Tercio>
+
+[c5daf93f3633]
+* WorldQuestTracker.lua, libs/DF/cooltip.lua, libs/DF/fw.lua:
+
+- updating the framework to v44.
+
+
+[e408570cc270]
+* WorldQuestTracker.lua:
+
+- reduce the oartifact power font size on artifact power resource available.
+
+
+[e11285e42b03]
+* WorldQuestTracker.lua:
+
+- Check if ElvUI and its savedvariables is loaded.
+
+
+2016-08-28  Tercio  <Tercio>
+
+[6ed4c673a15c]
+* WorldQuestTracker.lua, libs/DF/fw.lua, libs/DF/panel.lua, libs/LG/1-1.tga, libs/LG/1-128.tga, libs/LG/1-16.tga, libs/LG/1-2.tga, libs/LG/1-32.tga, libs/LG/1-4.tga, libs/LG/1-64.tga, libs/LG/1-8.tga, libs/LG/LibGraph-2.0.lua, libs/LG/balls.tga, libs/LG/line.tga, libs/LG/sline.tga, libs/LG/smallline.tga, libs/LG/thinline.tga, libs/LG/triangle.tga, libs/libs.xml:
+
+- added Lib-Graph-2.0
+- fixed an issue when adding all gold quests to the tracker.
+
+
+[d0653930c280]
+* WorldQuestTracker.lua, libs/DF/fw.lua:
+
+- some more fixes.
+
+

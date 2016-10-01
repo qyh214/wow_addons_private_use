@@ -40,10 +40,6 @@ L:SetGeneralLocalization{
 	name	= "幼龍領主勒西雷爾"
 }
 
-L:SetMiscLocalization{
-	Pull	= "你怎麼進來的?你們這種生物不能進來!我要毀滅你們!"
-}
-
 ---------------
 --  Firemaw  --
 ---------------
@@ -115,7 +111,6 @@ L:SetOptionLocalization{
 	WarnPhase			= "提示轉換階段"
 }
 L:SetMiscLocalization{
-	YellPull	= "讓賽事開始吧!",
 	YellP2		= "幹得好，我的手下。凡人的勇氣開始消退!現在，現在讓我們看看他們如何應對黑石之王的力量!!!",
 	YellP3		= "不可能!出現吧，我的僕人!再次為我的主人服務!",
 	YellShaman	= "薩滿，讓我看看",

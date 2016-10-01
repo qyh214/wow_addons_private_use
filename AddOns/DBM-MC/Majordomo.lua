@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod("Majordomo", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 597 $"):sub(12, -3))
 mod:SetCreatureID(12018, 11663, 11664)
---mod:SetEncounterID(671)
+mod:SetEncounterID(671)
 mod:SetModelID(12029)
 mod:RegisterCombat("combat")
-mod:RegisterKill("yell", L.Kill)
+--mod:RegisterKill("yell", L.Kill)
 
 mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS 20619 21075 20534"

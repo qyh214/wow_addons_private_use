@@ -50,10 +50,11 @@ locales.deDE["button_close"] = "Schließen" -- Needs review
 locales.deDE["button_link"] = "Senden" -- Needs review
 locales.deDE["linkall_threshold_missed"] = "Beute entspricht nicht deinen Qualitätsansprüchen" -- Needs review
 
-locales.koKR["bind_on_equip_short"] = "착귀" -- Needs review
-locales.koKR["bind_on_pickup_short"] = "획귀" -- Needs review
-locales.koKR["button_close"] = "닫기" -- Needs review
-locales.koKR["button_link"] = "링크" -- Needs review
+locales.koKR["bind_on_equip_short"] = "착귀"
+locales.koKR["bind_on_pickup_short"] = "획귀"
+locales.koKR["bind_on_use_short"] = "사귀"
+locales.koKR["button_close"] = "닫기"
+locales.koKR["button_link"] = "링크"
 locales.koKR["linkall_threshold_missed"] = "당신의 품질 기준을 충족하는 전리품이 없습니다." -- Needs review
 
 

@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1750, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14741 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15279 $"):sub(12, -3))
 mod:SetCreatureID(104636)
 mod:SetEncounterID(1877)
 mod:SetZone()
 --mod:SetUsedIcons(8, 7, 6, 3, 2, 1)
---mod:SetHotfixNoticeRev(12324)
+mod:SetHotfixNoticeRev(15125)
 mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
@@ -27,22 +27,20 @@ mod:RegisterEventsInCombat(
 --TODO, see if destructive Nightmares has a fixate of sorts to warn one being chased by bad whisps
 --TODO, evaluate stomp and need of timer/etc
 --TODO, Further assess thorns. it doesn't need warnings at all if adds never tanked near boss in first place
---TODO, figure out good voice for specWarnCreepingNightmares. "clear stacks"?
 --Cenarius
 local warnNightmareBrambles			= mod:NewTargetAnnounce(210290, 2)
 local warnBeastsOfNightmare			= mod:NewSpellAnnounce(214876, 2)--Generic for now, figure out what to do with later.
 local warnPhase2					= mod:NewPhaseAnnounce(2, 2)
 ----Forces of Nightmare
-local warnDesiccatingStomp			= mod:NewCastAnnounce(211073, 3, nil, nil, "Melee")--Basic warning for now, will change to special if needed
+local warnDesiccatingStomp			= mod:NewCastAnnounce(211073, 3, nil, nil, true, 2)--Basic warning for now, will change to special if needed
 local warnRottenBreath				= mod:NewTargetAnnounce(211192, 2)
 local warnScornedTouch				= mod:NewTargetAnnounce(211471, 3)
 --Malfurion Stormrage
 local warnCleansingGround			= mod:NewCastAnnounce(212630, 1)
 
 --Cenarius
-local specWarnCreepingNightmares	= mod:NewSpecialWarningStack(210279, nil, 20, nil, 1)--Stack warning subject to tuning
-local specWarnNightmareBrambles		= mod:NewSpecialWarningRun(210290, nil, nil, nil, 1, 2)
-local yellNightmareBrambles			= mod:NewYell(210290)
+local specWarnCreepingNightmares	= mod:NewSpecialWarningStack(210279, nil, 20, nil, 1, 6)--Stack warning subject to tuning
+local yellNightmareBrambles			= mod:NewYell(210290, L.BrambleYell)
 local specWarnNightmareBramblesNear	= mod:NewSpecialWarningClose(210290, nil, nil, nil, 1, 2)
 --local specWarnDreadThorns			= mod:NewSpecialWarningMoveAway(210346, "Tank", nil, nil, 1, 2)--Move away warning? Have to move away from other adds
 local specWarnNightmareBlast		= mod:NewSpecialWarningDefensive(213162, nil, nil, nil, 1, 2)
@@ -62,14 +60,15 @@ local yellScornedTouch				= mod:NewYell(211471)
 local timerNightmareBramblesCD		= mod:NewCDTimer(30, 210290, nil, nil, nil, 3)--On for all, for now. Doesn't target melee but melee still have to be aware. Just not AS aware.
 local timerDreadThornsCD			= mod:NewCDTimer(34, 210346, nil, false, nil, 5, nil, DBM_CORE_TANK_ICON)--Optional but off by default
 local timerNightmareBlastCD			= mod:NewNextTimer(32.8, 213162, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerForcesOfNightmareCD		= mod:NewCDCountTimer(77.8, 212726, nil, nil, nil, 1)
-local timerSpearOfNightmaresCD		= mod:NewCDTimer(18.3, 214529, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerForcesOfNightmareCD		= mod:NewCDCountTimer(77.8, 212726, nil, nil, nil, 1)--77.8-80
+local timerSpearOfNightmaresCD		= mod:NewCDTimer(18.2, 214529, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerBeastsOfNightmareCD		= mod:NewAITimer(16, 214876, nil, nil, nil, 1)
 local timerEntanglingNightmareCD	= mod:NewNextTimer(51, 214505, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
 ----Malfurion
 local timerCleansingGroundCD		= mod:NewNextTimer(77, 214249, nil, nil, nil, 3)--Phase 2 version only for now. Not sure if cast more than once though?
 ----Forces of Nightmare
-local timerTouchofLifeCD			= mod:NewCDTimer(12, 211368, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerTouchofLifeCD			= mod:NewCDTimer(15, 211368, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerRottenBreathCD			= mod:NewCDTimer(25, 211192, nil, nil, nil, 3)
 
 --Cenarius
 local countdownForcesOfNightmare	= mod:NewCountdown(78.8, 212726)
@@ -77,6 +76,7 @@ local countdownNightmareBrambles	= mod:NewCountdown("Alt30", 210290, "Ranged")--
 ----Forces of Nightmare
 
 --Cenarius
+local voiceCreepingNightmares		= mod:NewVoice(210279)--stackhigh
 local voiceNightmareBrambles		= mod:NewVoice(210290)--runout/watchstep
 local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 --local voiceDreadThorns				= mod:NewVoice(210346, "Tank")--bossout
@@ -111,17 +111,16 @@ function mod:OnCombatStart(delay)
 	scornedWarned = false
 	self.vb.phase = 1
 	self.vb.addsCount = 0
-	timerForcesOfNightmareCD:Start(7.2-delay, 1)
+	timerForcesOfNightmareCD:Start(7.2-delay, 1)--7.2-8.6
 	countdownForcesOfNightmare:Start(7.2-delay)
 	timerDreadThornsCD:Start(14-delay)
-	timerNightmareBramblesCD:Start(25.5-delay)
-	countdownNightmareBrambles:Start(25.5-delay)
+	timerNightmareBramblesCD:Start(27.5-delay)--Cast finish. Cast start is actually a yell and not worth using anyways since DBM doesn't warn spawn point until cast finish
+	countdownNightmareBrambles:Start(27.5-delay)
 	if self:IsMythic() then
 		timerNightmareBlastCD:Start(31.2-delay)
 	end
 	if not self.Options.AlertedBramble then
-		DBM:AddMsg("Note: DBM cannot detect who is actually fixated by Bramble (no mod can, Blizzard has assured this). It does, however, detect who the initial target is for the SPAWN. Boss picks player, throws it at that player (dbm does detect correct player for this and notifies them and those near them to move away from spawn point at least). After this, it picks someone that may or may not be the target he threw it at (likely by proximity)")
-		self.Options.AlertedBramble = true
+		DBM:AddMsg(L.BrambleMessage)
 	end
 end
 
@@ -131,6 +130,10 @@ function mod:OnCombatEnd()
 	end
 	if self.Options.HudMapOnBreath then
 		DBMHudMap:Disable()
+	end
+	if not self.Options.AlertedBramble then
+		DBM:AddMsg(L.BrambleMessage)
+		self.Options.AlertedBramble = true
 	end
 end
 
@@ -146,10 +149,16 @@ function mod:SPELL_CAST_START(args)
 		warnCleansingGround:Show()
 	elseif spellId == 211073 then
 		warnDesiccatingStomp:Show()
-	elseif spellId == 211368 and self:CheckInterruptFilter(args.sourceGUID) then
-		specWarnTouchofLife:Show(args.sourceName)
-		voiceTouchOfLife:Play("kickcast")
-		timerTouchofLifeCD:Start(12, args.sourceGUID)
+	elseif spellId == 211368 then
+		if self:CheckInterruptFilter(args.sourceGUID) then
+			specWarnTouchofLife:Show(args.sourceName)
+			voiceTouchOfLife:Play("kickcast")
+		end
+		if self:IsEasy() then
+			timerTouchofLifeCD:Start(15, args.sourceGUID)
+		else
+			timerTouchofLifeCD:Start(12, args.sourceGUID)
+		end
 	elseif spellId == 214529 then
 		timerSpearOfNightmaresCD:Start()
 		local targetName, uId, bossuid = self:GetBossTarget(104636, true)
@@ -178,7 +187,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 214876 then
 		warnBeastsOfNightmare:Show()
 		timerBeastsOfNightmareCD:Start()
-	elseif spellId == 214529 then
+	elseif spellId == 214529 and not args:IsPlayer() then
 		if self:GetNumAliveTanks() >= 3 and not self:CheckNearby(21, args.destName) then return end--You are not near current tank, you're probably 3rd tank on Doom Guards that never taunts massive blast
 		specWarnSpearOfNightmaresOther:Show(args.destName)
 		voiceSpearOfNightmares:Play("tauntboss")
@@ -192,7 +201,9 @@ function mod:SPELL_AURA_APPLIED(args)
 --		voiceDreadThorns:Play("bossout")
 	elseif spellId == 211368 then
 		specWarnTouchofLifeDispel:Show(args.destName)
-		voiceTouchOfLife:Play("dispelnow")
+		if self.Options.specwarn211368dispel then
+			voiceTouchOfLife:Play("dispelnow")
+		end
 	elseif spellId == 211471 then--Original casts only. Jumps can't be warned this way as of 04-01-16 Testing
 		warnScornedTouch:CombinedShow(0.5, args.destName)
 	end
@@ -205,6 +216,7 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 		if amount % 5 == 0 then--Every 5
 			if amount >= 20 then--Starting at 20
 				specWarnCreepingNightmares:Show(amount)
+				voiceCreepingNightmares:Play("stackhigh")
 			end
 		end
 	end
@@ -220,10 +232,11 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 105495 then--Scorned Sister
-		timerTouchofLifeCD:Cancel(args.destGUID)
+		timerTouchofLifeCD:Stop(args.destGUID)
 	elseif cid == 105494 then--Rotten Drake
 		--This is safer method to cancel it but if more than 1 drake is up it may in rare cases break scan for 2nd drake
 		self:BossUnitTargetScannerAbort()
+		timerRottenBreathCD:Stop(args.destGUID)
 	end
 end
 
@@ -231,11 +244,12 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
 	if spellId == 211189 then--Rotten Breath precast. Best method for fastest and most accurate target scanning
 		self:BossUnitTargetScanner(uId, "BreathTarget")
+		timerRottenBreathCD:Start(nil, UnitGUID(uId))
 	elseif spellId == 210290 then--Bramble cast finish (only thing not hidden, probably be hidden too by live, if so will STILL find a way to warn this, even if it means scanning boss 24/7)
 		if not UnitExists(uId.."target") then return end--Blizzard decided to go even further out of way to break this detection, if this happens we don't want nil errors for users.
-		local targetName = DBM:GetUnitFullName(uId)
+		local targetName = DBM:GetUnitFullName(uId.."target")
 		if UnitIsUnit("player", uId.."target") then
-			specWarnNightmareBrambles:Show()
+			specWarnNightmareBramblesNear:Show(YOU)
 			yellNightmareBrambles:Yell()
 			voiceNightmareBrambles:Play("runout")
 		elseif self:CheckNearby(8, targetName) then
@@ -244,6 +258,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		else
 			warnNightmareBrambles:Show(targetName)
 		end
+		timerNightmareBramblesCD:Start()
 	elseif spellId == 217368 then--Overwhelming Nightmare (Phase 2)
 		self.vb.phase = 2
 		warnPhase2:Show()

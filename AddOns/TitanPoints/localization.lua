@@ -2,82 +2,19 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Titan", true)
 
 -- default (EN)
 
-TITAN_POINTS_SOTF = "Seal of Tempered Fate";
-TITAN_POINTS_MENU_SOTF = "Seal of Tempered Fate";
-TITAN_POINTS_LABEL_SOTF = "Seals of Tempered Fate: %s ";
-TITAN_POINTS_LABEL_SOTF_SHORT = "STF: %s ";
-
-TITAN_POINTS_SOIF = "Seal of Inevitable Fate";
-TITAN_POINTS_MENU_SOIF = "Seal of Inevitable Fate";
-TITAN_POINTS_LABEL_SOIF = "Seals of Inevitable Fate: %s ";
-TITAN_POINTS_LABEL_SOIF_SHORT = "SIF: %s ";
-
-TITAN_POINTS_ARTIFACT = "Artifact Fragment";
-TITAN_POINTS_MENU_ARTIFACT = "Artifact Fragment";
-TITAN_POINTS_LABEL_ARTIFACT = "Artifact Fragments: %s ";
-TITAN_POINTS_LABEL_ARTIFACT_SHORT = "AF: %s ";
-
-TITAN_POINTS_DIC = "Dingy Iron Coin";
-TITAN_POINTS_MENU_DIC = "Dingy Iron Coin";
-TITAN_POINTS_LABEL_DIC = "Dingy Iron Coins: %s ";
-TITAN_POINTS_LABEL_DIC_SHORT = "DIC: %s ";
-
-TITAN_POINTS_OIL = "Oil";
-TITAN_POINTS_MENU_OIL = "Oil";
-TITAN_POINTS_LABEL_OIL = "Oil: %s ";
-TITAN_POINTS_LABEL_OIL_SHORT = "OIL: %s ";
-
-TITAN_POINTS_VALOR = "Valor";
-TITAN_POINTS_MENU_VALOR = "Valor";
-TITAN_POINTS_LABEL_VALOR = "Valor: %s ";
-TITAN_POINTS_LABEL_VALOR_SHORT = "VP: %s ";
-
-TITAN_POINTS_TIMEWARPED = "Timewarped Badge";
-TITAN_POINTS_MENU_TIMEWARPED = "Timewarped Badges";
-TITAN_POINTS_LABEL_TIMEWARPED = "Timewarped Badges: %s ";
-TITAN_POINTS_LABEL_TIMEWARPED_SHORT = "TB: %s ";
-
-TITAN_POINTS_MENU_CONQUEST = "Conquest Points";
-TITAN_POINTS_MENU_HIDE = "Hide";
+TITAN_POINTS_MENU_LABEL = "Show Addon Label";
 TITAN_POINTS_MENU_HKS = "Honor Kills";
-TITAN_POINTS_MENU_HONOR = "Honor Points";
 TITAN_POINTS_MENU_ICONS = "Show Point Icons";
-TITAN_POINTS_MENU_TIMELESS = "Timeless Coins";
 TITAN_POINTS_MENU_LABELS = "Show Point Labels";
-TITAN_POINTS_MENU_MEM = "Show Memory Usage";
 TITAN_POINTS_MENU_SHORT_LABELS = "Use Short Labels";
 TITAN_POINTS_MENU_TEXT = "TitanPoints";
-TITAN_POINTS_MENU_APEXIS = "Apexis Crystals";
-TITAN_POINTS_MENU_GARRISON = "Garrison Resources";
 
 TITAN_POINTS_BUTTON_LABEL = "Points: ";
-
-TITAN_POINTS_LABEL_APEXIS = "Apexis Crystals: %s ";
-TITAN_POINTS_LABEL_APEXIS_SHORT = "AC: %s ";
-TITAN_POINTS_LABEL_GARRISON = "Garrison Resources: %s ";
-TITAN_POINTS_LABEL_GARRISON_SHORT = "GR: %s ";
-TITAN_POINTS_LABEL_JUSTICE = "Justice Points: %s ";
-TITAN_POINTS_LABEL_JUSTICE_SHORT = "JP: %s ";
-TITAN_POINTS_LABEL_TIMELESS = "Timeless Coins: %s ";
-TITAN_POINTS_LABEL_TIMELESS_SHORT = "TC: %s ";
-TITAN_POINTS_LABEL_CONQUEST = "Conquest Points: %s ";
-TITAN_POINTS_LABEL_CONQUEST_SHORT = "CP: %s ";
-TITAN_POINTS_LABEL_HONOR = "Honor Points: %s ";
-TITAN_POINTS_LABEL_HONOR_SHORT = "HP: %s ";
-TITAN_POINTS_LABEL_HKS = "Honor Kills: %s ";
-TITAN_POINTS_LABEL_HKS_SHORT = "HKs: %s ";
 TITAN_POINTS_LABEL_SPACER = " %s ";
 
-TITAN_POINTS_APEXIS = "Apexis Crystal";
-TITAN_POINTS_GARRISON = "Garrison Resources";
-TITAN_POINTS_TIMELESS = "Timeless Coin";
-TITAN_POINTS_CONQUEST = "Conquest Points";
-TITAN_POINTS_HONOR = "Honor Points";
 TITAN_POINTS_HKS = "Honor Kills";
 
 TITAN_POINTS_TOOLTIP = "Currency Points";
-TITAN_POINTS_TOOLTIP_MEM = "Memory Utilization:";
-TITAN_POINTS_TOOLTIP_MEM_UNIT = "Kb";
 
 -- frFR
 

@@ -53,7 +53,6 @@ L.Statistic_BestKill		= "Melhor tempo:"
 
 -- Tab: General Core Options
 L.General 					= "Opções gerais do DBM"
-L.EnableDBM 				= "Habilitar DBM"
 L.EnableMiniMapIcon			= "Exibir botão no mini-mapa"
 L.UseMasterVolume			= "Utilizar canal principal de áudio para reproduzir arquivos de som."
 L.Latency_Text				= "Definir latência máxima de sincronização: %d"
@@ -88,7 +87,6 @@ L.InfoRaidWarning			= [[Você pode especificar a cor e posição do quadro de av
 Esse quadro é utilizado para mensagens como "Jogador X está sob efeito de Y".]]
 L.ColorResetted 			= "As opções de cor desse campo foram resetadas."
 L.ShowWarningsInChat 		= "Exibir avisos na janela de chat."
-L.ShowFakedRaidWarnings 	= "Exibir avisos como mensagens falsas de aviso de raid."
 L.WarningIconLeft 			= "Mostrar ícone do lado esquerdo."
 L.WarningIconRight 			= "Mostrar ícone do lado direito."
 L.WarningIconChat 			= "Mostrar ícones no chat"
@@ -257,9 +255,6 @@ L.HideGuildChallengeUpdates	= "Esconde o quadro de desafio de guilda durante a l
 L.HideTooltips				= "Esconder as dicas durante as lutas contra os chefes"
 
 L.DisableSFX				= "Desativa o canal de efeitos sonoros durante lutas contra chefes"
-L.HideApplicantAlerts		= "Suprime alerta de candidatos em grupo pré-definidos"
-L.HideApplicantAlertsFull	= "se o grupo estiver cheio"
-L.HideApplicantAlertsNotL	= "se não for o líder do grupo (aplica filtro de grupo cheio caso seja o líder)"
 L.SpamBlockSayYell			= "Esconder os anúncios de balões de chat do quadro de chat"
 L.DisableCinematics			= "Esconder as cinematics in-game"
 L.AfterFirst				= "Depois que o vídeo for assistido uma vez"

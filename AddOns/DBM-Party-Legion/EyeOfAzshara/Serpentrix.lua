@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1479, "DBM-Party-Legion", 3, 716)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15043 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15188 $"):sub(12, -3))
 mod:SetCreatureID(91808)
 mod:SetEncounterID(1813)
 mod:SetZone(1456)
@@ -33,7 +33,7 @@ local specWarnArcaneBlast			= mod:NewSpecialWarningInterrupt(192005, false, nil,
 local specWarnRampage				= mod:NewSpecialWarningInterrupt(191848, "HasInterrupt", nil, nil, 1, 2)
 
 --Next timers always, unless rampage is not interrupted (Boss will not cast anything else during rampages)
-local timerToxicWoundCD				= mod:NewCDTimer(25, 191855, nil, nil, nil, 3)
+local timerToxicWoundCD				= mod:NewCDTimer(15, 191855, nil, nil, nil, 3)
 local timerWindsCD					= mod:NewNextTimer(30, 191798, nil, nil, nil, 2)
 
 local voiceToxicWound				= mod:NewVoice(191855)--justrun/keepmove
@@ -49,7 +49,7 @@ function mod:UpdateWinds()
 end
 
 function mod:OnCombatStart(delay)
-	timerToxicWoundCD:Start(6-delay)
+	timerToxicWoundCD:Start(5-delay)
 	timerWindsCD:Stop()
 	timerWindsCD:Start(33-delay)
 end

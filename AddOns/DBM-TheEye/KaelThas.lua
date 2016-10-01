@@ -1,21 +1,21 @@
 local mod	= DBM:NewMod("KaelThas", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 585 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
 mod:SetCreatureID(19622)
+mod:SetEncounterID(733)
 mod:SetModelID(20023)
 mod:SetZone()
 
-mod:RegisterCombat("yell", L.YellPull1, L.YellPull2)
+mod:RegisterCombat("combat")
 mod:SetUsedIcons(1, 6, 7, 8)
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_MISSED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_CAST_START 44863 36819 35941",
+	"SPELL_AURA_APPLIED 37018 36797 37027 36815 35859",
+	"SPELL_AURA_APPLIED_DOSE 35859",
+	"SPELL_AURA_REMOVED 36815 36797 37027",
+	"SPELL_CAST_SUCCESS 36723 36834 34341",
 	"CHAT_MSG_MONSTER_EMOTE",
 	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_DIED",
@@ -59,7 +59,7 @@ local timerGravity		= mod:NewBuffActiveTimer(32, 35941, nil, nil, nil, 6)
 
 local countdownPhase	= mod:NewCountdown(105, 190978)
 
-mod:AddBoolOption("HealthFrame", true)
+mod:AddBoolOption("HealthFrame", false)
 mod:AddBoolOption("MCIcon", true)
 mod:AddBoolOption("GazeIcon", false)
 mod:AddBoolOption("RangeFrame", true)
@@ -135,7 +135,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnVapor:Show(args.amount)
 	end
 end
-
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)

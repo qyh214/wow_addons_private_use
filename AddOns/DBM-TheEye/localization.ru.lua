@@ -109,7 +109,6 @@ L:SetOptionLocalization{--Translate
 }
 
 L:SetMiscLocalization{
-	YellPull1	= "Energy. Power. My people are addicted to it... a dependence made manifest after the Sunwell was destroyed. Welcome... to the future. A pity you are too late to stop it. No one can stop me now! Selama ashal'anore!",--Translate
 	YellPhase2	= "As you see, I have many weapons in my arsenal....",--Translate
 	YellPhase3	= "Perhaps I underestimated you. It would be unfair to make you fight all four advisors at once, but... fair treatment was never shown to my people. I'm just returning the favor.",--Translate
 	YellPhase4	= "Alas, sometimes one must take matters into one's own hands. Balamore shanal!",--Translate

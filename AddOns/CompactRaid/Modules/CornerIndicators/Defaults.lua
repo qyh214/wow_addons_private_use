@@ -11,18 +11,20 @@ local wipe = wipe
 local strfind = strfind
 local tonumber = tonumber
 local GetSpellInfo = GetSpellInfo
-local _
 
 local module = CompactRaid:FindModule("CornerIndicators")
 if not module then return end
 
 module.DEFAULT_SPELLS = {
+	HUNTER = {
+		34477, -- Misdirection
+		136, -- Heal pet
+	},
+
 	PRIEST = {
 		139, -- Renew
 		17, -- Power Word: Shield
 		33076, -- Prayer of Mending
-		21562,-- Power Word: Fortitude
-		6346, -- Fear Ward
 	},
 
 	DRUID = {
@@ -31,7 +33,6 @@ module.DEFAULT_SPELLS = {
 		33763, -- Lifebloom
 		48438, -- Wild Growth
 		29166, -- Innervate
-		1126, -- Mark of the Wild
 	},
 
 	SHAMAN = {
@@ -41,8 +42,9 @@ module.DEFAULT_SPELLS = {
 
 	PALADIN = {
 		53563, -- Beacon of Light
-		19740, -- Blessing of Might
-		20217, -- Blessing of Kings
+		203539, -- Blessing of wisdom
+		203528, -- Blessing of might
+		203538, -- Blessing of Kings
 		1038, -- Hand of Salvation
 		1044, -- Hand of Freedom
 		1022, -- Hand of Protection
@@ -51,38 +53,41 @@ module.DEFAULT_SPELLS = {
 
 	WARRIOR = {
 		114030, -- Vigilance
-		6673, -- Battle Shout
-		469, -- Commanding Shout
 	},
 
 	MAGE = {
-		1459, -- Arcane Brilliance
+		130, -- Slow Fall
 	},
 
 	WARLOCK = {
-		80398, -- Dark Indent
 		5697, -- Unending Breath
 		20707, -- Soulstone Resurrection
 	},
 
 	DEATHKNIGHT = {
-		57330, -- Horn of Winter
 	},
 
 	MONK = {
-		115921, -- Legacy of the Emperor
 		115151, -- Renewing Mist
 		124682, -- Enveloping Mist
 		116849, -- Life Cocoon
 	},
+
+	DEMONHUNTER = {
+	},
 }
 
 local CLASS_DEFAULTS = {
+	HUNTER = {
+		TOPLEFT = { spell = 136, numeric = 1 }, -- Heal pet
+		TOPRIGHT = { spell = 34477, other = 1 }, -- Misdirection
+	},
+
 	PRIEST = {
 		TOPLEFT = { spell = 139, numeric = 1 }, -- Renew
 		BOTTOMLEFT = { spell = 33076, other = 1 }, -- Prayer of Mending
 		TOPRIGHT = { spell = 17, other = 1 }, -- Power Word: Shield
-		BOTTOMRIGHT = { spell = 21562, other = 1, lacks = 1 }, -- Power Word: Fortitude
+		--BOTTOMRIGHT = { spell = 21562, other = 1, lacks = 1 }, -- Power Word: Fortitude
 	},
 
 	DRUID = {
@@ -99,34 +104,34 @@ local CLASS_DEFAULTS = {
 
 	PALADIN = {
 		TOPLEFT = { spell = 53563, numeric = 1 }, -- Beacon of Light
-		TOPRIGHT = { spell = 20217, other = 1, lacks = 1 }, -- Blessing of Kings
-		BOTTOMRIGHT = { spell = 19740, other = 1, lacks = 1 }, -- Blessing of Might
+		TOPRIGHT = { spell = 203538, other = 1, lacks = 1 }, -- Blessing of Kings
+		BOTTOMLEFT = { spell = 203528, other = 1, lacks = 1 }, -- Blessing of Might
+		BOTTOMRIGHT = { spell = 203539, other = 1, lacks = 1 }, -- Blessing of wisdom
 	},
 
 	WARRIOR = {
-		TOPLEFT = { spell = 469, other = 1 }, -- Commanding Shout
-		TOPRIGHT = { spell = 6673, other = 1, ignoreMagical = 1 }, -- Battle Shout
-		BOTTOMRIGHT = { spell = 50720, other = 1 }, -- Vigilance
+		TOPLEFT = { spell = 50720, other = 1 }, -- Vigilance
 	},
 
 	MAGE = {
-		TOPLEFT = { spell = 54646, other = 1, ignorePhysical = 1 }, -- Focus Magic
-		BOTTOMRIGHT = { spell = 1459, other = 1, lacks = 1, ignorePhysical = 1 }, -- Arcane Brilliance
+		TOPLEFT = { spell = 130, other = 1 }, -- Slow fall
 	},
 
 	WARLOCK = {
-		TOPLEFT = { spell = 80398, other = 1, ignorePhysical = 1 }, -- Dark Indent
-		TOPRIGHT = { spell = 20707, other = 1 }, -- Soulstone Resurrection
+		TOPLEFT = { spell = 20707, other = 1 }, -- Soulstone Resurrection
+		TOPRIGHT = { spell = 5697, other = 1 }, -- Unending Breath
 	},
 
 	DEATHKNIGHT = {
-		TOPLEFT = { spell = 57330, other = 1, ignoreMagical = 1 }, -- Horn of Winter
 	},
 
 	MONK = {
 		TOPLEFT = { spell = 115151, numeric = 1 }, -- Renewing Mist
 		TOPRIGHT = { spell = 124682, numeric = 1 }, -- Enveloping Mist
-		BOTTOMRIGHT = { spell = 115921, other = 1, lacks = 1 }, -- Legacy of the Emperor
+		BOTTOMLEFT = { spell = 116849, other = 1 }, -- Life Cocoon
+	},
+
+	DEMONHUNTER = {
 	},
 }
 
@@ -170,6 +175,11 @@ function module:EncodeData(db)
 	local key, def, text
 	for key, def in pairs(OPTION_KEYS) do
 		local value = db[key]
+		local isColor = type(value) == "number" and strlen(key) == 2 and strfind(key, "(.+)(%d+)")
+		if isColor then
+			value = format("%.1f", value)
+		end
+
 		if value and value ~= def then
 			if text then
 				text = text.."["..key.."]#"..value.."#"
@@ -222,7 +232,7 @@ end
 
 local defaultdb = {}
 
-local key
+local _, key
 for _, key in ipairs(module.INDICATOR_KEYS) do
 	local data = {}
 	module:CloneTable(DEFAULTS_INDICATOR, data)

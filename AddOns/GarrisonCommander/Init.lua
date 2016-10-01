@@ -429,5 +429,16 @@ function ns.Configure()
 		end
 		setfenv(2, ENV)
 end
-
+function addon:EventADDON_LOADED(event,AddOn)
+--[===[@debug@
+	print(event,AddOn)
+--@end-debug@]===]
+	if AddOn~="Blizzard_OrderHallUI" then return end
+	self:UnregisterEvent("ADDON_LOADED")
+	ns.GHF=_G.OrderHallMissionFrame
+	ns.GHFMissions=ns.GHF.MissionTab.MissionList
+	ENV.GHF=ns.GHF
+	ENV.GHFMissions=ns.GHFMissions
+	self:GetModule("OrderHall"):OnInitialize()
+end
 

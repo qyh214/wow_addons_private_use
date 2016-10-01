@@ -9,8 +9,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_ATH_YELL_1		= "來吧午夜，讓我們驅散這一群小規模的烏合之眾!",
-	KillAttumen			= "我一直都知道...總有一天我會變成...被獵殺的人。"
+	DBM_ATH_YELL_1		= "來吧午夜，讓我們驅散這一群小規模的烏合之眾!"
 }
 
 
@@ -27,10 +26,6 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	DBM_MOROES_VANISH_FADED	= "為消失退去顯示警告"
-}
-
-L:SetMiscLocalization{
-	DBM_MOROES_YELL_START	= "嗯，突然上門的訪客。一定要做好準備..."
 }
 
 
@@ -124,10 +119,6 @@ L:SetOptionLocalization{
 	RangeFrame	= "顯示距離框架(10碼)"
 }
 
-L:SetMiscLocalization{
-	DBM_CURA_YELL_PULL	= "展示廳是賓客專屬的。"
-}
-
 
 -- Terestian Illhoof
 L = DBM:GetModLocalization("TerestianIllhoof")
@@ -137,7 +128,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_TI_YELL_PULL	= "啊，你來的正好。儀式正要開始!",
 	Kilrek	= "基瑞克",
 	DChains	= "惡魔鍊"
 }
@@ -221,7 +211,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_PRINCE_YELL_PULL	= "瘋狂把你帶到我的面前。我會成為你失敗的原因!",
 	DBM_PRINCE_YELL_P2		= "頭腦簡單的笨蛋!你在燃燒的是時間的火焰!",
 	DBM_PRINCE_YELL_P3		= "你怎能期望抵抗這樣勢不可擋的力量?",
 	DBM_PRINCE_YELL_INF1	= "所有的實體，所有的空間對我來說都是開放的!",
@@ -251,7 +240,6 @@ L:SetOptionLocalization{
 
 L:SetMiscLocalization{
 	DBM_NB_EMOTE_PULL 		= "一個古老的生物在遠處甦醒過來...",
-	DBM_NB_YELL_PULL 		= "真是蠢蛋!我會快點結束你的痛苦!",
 	DBM_NB_YELL_AIR 		= "悲慘的害蟲。我將讓你消失在空氣中!",
 	DBM_NB_YELL_GROUND 		= "夠了!我要親自挑戰你!",
 	DBM_NB_YELL_GROUND2 	= "昆蟲!給你們近距離嚐嚐我的厲害!"

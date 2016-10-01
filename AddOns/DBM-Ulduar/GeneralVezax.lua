@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GeneralVezax", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 212 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 234 $"):sub(12, -3))
 mod:SetCreatureID(33271)
 mod:SetEncounterID(1134)
 mod:SetModelID(28548)
@@ -33,7 +33,7 @@ local timerSurgeofDarkness		= mod:NewBuffActiveTimer(10, 62662, nil, "Tank")
 local timerNextSurgeofDarkness	= mod:NewCDTimer(62, 62662, nil, "Tank", nil, 5)
 local timerSaroniteVapors		= mod:NewNextTimer(30, 63322, nil, nil, nil, 5)
 local timerLifeLeech			= mod:NewTargetTimer(10, 63276)
-local timerHardmode				= mod:NewTimer(189, "hardmodeSpawn", nil, nil, nil, 6)
+local timerHardmode				= mod:NewTimer(189, "hardmodeSpawn", nil, nil, nil, 1)
 
 local yellLifeLeech				= mod:NewYell(63276)
 local yellShadowCrash			= mod:NewYell(62660)

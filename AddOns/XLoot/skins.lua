@@ -163,9 +163,9 @@ do
 	local g_color = { .5, .5, .5, .6 }
 
 	-- Frame methods
-	local function SetBorderColor(self, r, g, b)
+	local function SetBorderColor(self, r, g, b, a)
 		for i, x in pairs(self._skin_borders) do
-			x:SetVertexColor(r, g, b, 1)
+			x:SetVertexColor(r, g, b, a or 1)
 		end
 	end
 

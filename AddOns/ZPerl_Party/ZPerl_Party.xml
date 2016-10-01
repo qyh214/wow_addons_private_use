@@ -465,7 +465,7 @@
 				</Anchors>
 			</Frame>
 			<!-- Hit Indicator Frame -->
-			<!--<Frame name="$parenthitIndicator" frameStrata="HIGH">
+			<Frame name="$parenthitIndicator" frameStrata="HIGH">
 				<Layers>
 					<Layer level="OVERLAY">
 						<FontString name="$parenttext" inherits="NumberFontNormalHuge" hidden="true" text="Error!">
@@ -473,13 +473,10 @@
 								<AbsValue val="30"/>
 							</FontHeight>
 							<Color r="1.0" g="1.0" b="1.0"/>
-							<Anchors>
-								<Anchor point="CENTER" relativePoint="CENTER"/>
-							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
-			</Frame>-->
+			</Frame>
 		</Frames>
 	</Button>
 	<Frame name="XPerl_Party_Anchor" frameStrata="LOW" parent="UIParent" clampedToScreen="true" movable="true">

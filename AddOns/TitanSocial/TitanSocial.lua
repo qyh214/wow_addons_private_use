@@ -397,6 +397,9 @@ local function collectGuildRosterInfo(split, sortKey, sortAscending)
 				return ternary(sortAscending, aclass < bclass, aclass > bclass)
 			end
 			if sortKey == "zone" and azone ~= bzone then
+				-- zones are sometimes nil when enough players are online
+				if azone == nil then azone = "" end
+				if bzone == nil then bzone = "" end
 				return ternary(sortAscending, azone < bzone, azone > bzone)
 			end
 			if sortKey == "note" and anote ~= bnote then

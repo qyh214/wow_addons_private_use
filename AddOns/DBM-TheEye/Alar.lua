@@ -1,17 +1,18 @@
 local mod	= DBM:NewMod("Alar", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 575 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
 mod:SetCreatureID(19514)
+mod:SetEncounterID(730)
 mod:SetModelID(18945)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_HEAL"
+	"SPELL_AURA_APPLIED 34229 35383 35410",
+	"SPELL_AURA_REMOVED 35410",
+	"SPELL_HEAL 34342"
 )
 
 local warnPhase1		= mod:NewPhaseAnnounce(1)

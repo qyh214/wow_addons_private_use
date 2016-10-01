@@ -190,7 +190,7 @@
 				</Anchors>
 			</Frame>
 
-			<!--<Frame name="$parenthitIndicator" frameStrata="HIGH">
+			<Frame name="$parenthitIndicator" frameStrata="HIGH">
 				<Layers>
 					<Layer level="OVERLAY">
 						<FontString name="$parenttext" inherits="NumberFontNormalHuge" hidden="true">
@@ -204,7 +204,7 @@
 						</FontString>
 					</Layer>
 				</Layers>
-			</Frame>-->
+			</Frame>
 		</Frames>
 	</Button>
 </Ui>

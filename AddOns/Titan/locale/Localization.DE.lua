@@ -71,10 +71,12 @@ L["TITAN_PANEL_SLASH_PROFILE_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<name>: 
 L["TITAN_PANEL_SLASH_PROFILE_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<server>: |cffffffffkann entweder ser Servername oder 'TitanCustomProfile' sein."
 L["TITAN_PANEL_SLASH_SILENT_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Benutzen: |cffffffff/titan {silent}";
 L["TITAN_PANEL_SLASH_SILENT_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."silent: |cffffffffSchaltet "..TITAN_PANEL.." so um, dass es still geladen wird.";
+L["TITAN_PANEL_SLASH_ORDERHALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Benutzen: |cffffffff/titan {Ordenshalle}";
+L["TITAN_PANEL_SLASH_ORDERHALL_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."Ordenshalle: |cffffffffSchaltet die "..TITAN_PANEL.." Ordenshalle Befehlsleiste um.";
 L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Benutzen: |cffffffff/titan {help | help <topic>}";
-L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/silent/help ";
+L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<Punkt>: reset/gui/profile/silent/orderhall/help ";
 L["TITAN_PANEL_SLASH_ALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Benutzen: |cffffffff/titan <topic>";
-L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/silent/help ";
+L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<Punkt>: |cffffffffreset/gui/profile/silent/orderhall/help ";
 
 -- slash command responses
 L["TITAN_PANEL_SLASH_RESP1"] = LIGHTYELLOW_FONT_COLOR_CODE.."Titan Panel Tooltip-Schriftgr\195\182sse wurde zur\195\188ckgesetzt.";
@@ -162,6 +164,7 @@ L["TITAN_PANEL_MENU_SHOW"] = "Zeige Plugin";
 L["TITAN_PANEL_MENU_PLUGIN_RESET"] = "Aktualisiere Plugins";
 L["TITAN_PANEL_MENU_PLUGIN_RESET_DESC"] = "Aktualisiere Plugin-Text und Position";
 L["TITAN_PANEL_MENU_SILENT_LOAD"] = "Stilles Laden";
+L["TITAN_PANEL_MENU_HIDE_ORDERHALL"] = "Ordenshalle Befehlsleiste verstecken";
 
 -- localization strings for AceConfigDialog-3.0
 L["TITAN_ABOUT_VERSION"] = "Version";

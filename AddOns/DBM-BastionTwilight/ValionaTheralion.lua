@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(157, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(45992, 45993)
 mod:SetEncounterID(1032)
-mod:DisableEEKillDetection()
 mod:SetZone()
 mod:SetUsedIcons(6, 7, 8)
 mod:SetModelSound("Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent10.ogg", "Sound\\Creature\\Valiona\\VO_BT_Valiona_Event06.ogg")

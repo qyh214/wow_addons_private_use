@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(846, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 92 $"):sub(12, -3))
 mod:SetCreatureID(71454)
 mod:SetEncounterID(1595)
 mod:SetZone()
@@ -201,6 +201,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnFatalStrike:Show(args.destName, amount)
 		end
 		timerFatalStrike:Start(args.destName)
+		if self:IsTrivial(100) then return end
 		if amount % 3 == 0 and amount >= 12 then
 			if args:IsPlayer() then--At this point the other tank SHOULD be clear.
 				specWarnFatalStrike:Show(amount)

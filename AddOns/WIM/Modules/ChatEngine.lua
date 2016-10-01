@@ -1255,7 +1255,7 @@ local function loadChatOptions()
             --button:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD");
             button.bg = button:CreateTexture(nil, "BACKGROUND");
             button.bg:SetAllPoints();
-            button.bg:SetTexture(1,1,1, ((#self.buttons+1) % 2)*.1);
+            button.bg:SetColorTexture(1,1,1, ((#self.buttons+1) % 2)*.1);
             button.bg:SetGradientAlpha("HORIZONTAL", 1,1,1,1, 0,0,0,0);
             button.border = {};
             
@@ -1263,7 +1263,7 @@ local function loadChatOptions()
             button.border.left:SetPoint("TOPLEFT");
             button.border.left:SetPoint("BOTTOMLEFT");
             button.border.left:SetWidth(4);
-            button.border.left:SetTexture(1,1,1,.5);
+            button.border.left:SetColorTexture(1,1,1,.5);
             
             button.title = button:CreateFontString(nil, "OVERLAY", "ChatFontNormal");
             button.title:SetPoint("TOPLEFT", 35, -8);

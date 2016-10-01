@@ -46,9 +46,10 @@ locales.deDE["skin_legacy"] = "XLoot: Legacy" -- Needs review
 locales.deDE["skin_smooth"] = "XLoot: Smooth" -- Needs review
 locales.deDE["skin_svelte"] = "XLoot: Svelte" -- Needs review
 
-locales.koKR["skin_legacy"] = "XLoot: Legacy" -- Needs review
-locales.koKR["skin_smooth"] = "XLoot: Smooth" -- Needs review
-locales.koKR["skin_svelte"] = "XLoot: Svelte" -- Needs review
+locales.koKR["anchor_hide"] = "감추기"
+locales.koKR["skin_legacy"] = "XLoot: Legacy"
+locales.koKR["skin_smooth"] = "XLoot: Smooth"
+locales.koKR["skin_svelte"] = "XLoot: Svelte"
 
 
 locales.ruRU["anchor_hide"] = "Скрыть" -- Needs review
@@ -56,10 +57,10 @@ locales.ruRU["skin_legacy"] = "XLoot: Legacy"
 locales.ruRU["skin_smooth"] = "XLoot: Smooth"
 locales.ruRU["skin_svelte"] = "XLoot: Svelte"
 
-locales.zhCN["anchor_hide"] = "隐藏" -- Needs review
+locales.zhCN["anchor_hide"] = "隐藏"
 locales.zhCN["anchor_hide_desc"] = [=[在此位置锁定此模块
 这将隐藏锚点
-但可通过选项重新显示]=] -- Needs review
+但可通过选项重新显示]=]
 locales.zhCN["skin_legacy"] = "XLoot: Legacy"
 locales.zhCN["skin_smooth"] = "XLoot: Smooth"
 locales.zhCN["skin_svelte"] = "XLoot: Svelte"

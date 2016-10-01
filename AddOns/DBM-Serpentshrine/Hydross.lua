@@ -1,16 +1,17 @@
 local mod	= DBM:NewMod("Hydross", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
 mod:SetCreatureID(21216)
+mod:SetEncounterID(623)
 mod:SetModelID(20162)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_SUCCESS"
+	"SPELL_AURA_APPLIED 38235 38246",
+	"SPELL_CAST_SUCCESS 38215 38216 38217 38219 38220 38221 38218 38231 40584 38222 38230 40583 25035 22035 22036"
 )
 
 local warnMark		= mod:NewAnnounce("WarnMark", 3, 38215)

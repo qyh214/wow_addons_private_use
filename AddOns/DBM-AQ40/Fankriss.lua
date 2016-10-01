@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod("Fankriss", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 503 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 596 $"):sub(12, -3))
 mod:SetCreatureID(15510)
+mod:SetEncounterID(712)
 mod:SetModelID(15743)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
-	"SPELL_SUMMON"
+	"SPELL_SUMMON 518 25832 25831"
 )
 
 local warnWound			= mod:NewStackAnnounce(25646, 3)
@@ -20,9 +21,9 @@ local specWarnWound		= mod:NewSpecialWarningStack(25646, nil, 5)
 function mod:OnCombatStart(delay)
 	if not self:IsTrivial(85) then
 		self:RegisterShortTermEvents(
-			"SPELL_AURA_APPLIED",
-			"SPELL_AURA_APPLIED_DOSE",
-			"SPELL_AURA_REMOVED"
+			"SPELL_AURA_APPLIED 25646",
+			"SPELL_AURA_APPLIED_DOSE 25646",
+			"SPELL_AURA_REMOVED 25646"
 		)
 	end
 end

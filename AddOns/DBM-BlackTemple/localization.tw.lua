@@ -109,7 +109,6 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	Pull			= "等待你們的只有痛苦與折磨﹗",
 	Suffering		= "受難精華",
 	Desire			= "慾望精華",
 	Anger			= "憤怒精華"
@@ -175,8 +174,7 @@ L:SetWarningLocalization{
 
 L:SetTimerLocalization{
 	TimerNextHuman		= "人形階段",
-	TimerNextDemon		= "惡魔階段",
-	TimerPhase4			= "階段轉換"
+	TimerNextDemon		= "惡魔階段"
 }
 
 L:SetOptionLocalization{
@@ -184,7 +182,6 @@ L:SetOptionLocalization{
 	WarnDemon		= "為惡魔階段顯示計時器",
 	TimerNextHuman	= "為下一次人形階段顯示計時器",
 	TimerNextDemon	= "為下一次惡魔階段顯示計時器",
-	TimerPhase4		= "為第4階段轉換顯示計時器",
 	RangeFrame		= "為第3和第4階段顯示距離框架(10碼)"
 }
 

@@ -1,0 +1,24 @@
+tag 2.14.0
+a106e7366426f1600736d16ea82220a1ae09e91e
+Alar of Runetotem <alar@aspide.it>
+2016-08-30 14:26:56 +0200
+
+Introduces support for Class Halls
+
+Class missions are now managed by Garrison Commander
+
+
+--------------------
+
+Alar of Runetotem:
+	- Shipyard now ignore skipMaxed
+	- Removed call to refreshcurrency
+	- Uses methods to choose specific module
+	- Refactored specific module retrieval
+	- Various fixes in order to support Order Hall
+	- Order Hall support
+	Quick mission completion and missions autofill now available for order
+	hall, too
+	- Fixed to work with OrderHall Missions
+	- Removed 6.0.0 only code
+	- Hall mission are now Orange

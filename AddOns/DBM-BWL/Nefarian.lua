@@ -1,16 +1,17 @@
 local mod	= DBM:NewMod("Nefarian-Classic", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 584 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 597 $"):sub(12, -3))
 mod:SetCreatureID(11583)
+mod:SetEncounterID(617)
 mod:SetModelID(11380)
-mod:RegisterCombat("yell", L.YellPull)
+mod:RegisterCombat("combat")
 mod:SetWipeTime(25)--guesswork
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
+	"SPELL_CAST_START 22539 22686",
+	"SPELL_AURA_APPLIED 22687 22667",
+	"SPELL_AURA_REMOVED 22687",
 	"UNIT_HEALTH target focus mouseover",
 	"CHAT_MSG_MONSTER_YELL"
 )
@@ -38,10 +39,10 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 22539 and self:IsInCombat() then
+	if args.spellId == 22539 then
 		warnShadowFlame:Show()
 		timerShadowFlame:Start()
-	elseif args.spellId == 22686 and self:IsInCombat() then
+	elseif args.spellId == 22686 then
 		warnFear:Show()
 		timerFearNext:Start()
 	end

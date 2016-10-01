@@ -611,10 +611,5 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	ACombatStart	= "Seine Macht ist zu groß. Wir müssen diesen Ort sofort verlassen! Meine Magie kann ihn nur kurze Zeit halten. Beeilt Euch, Helden!",
-	HCombatStart	= "Er ist... zu mächtig. Schnell, Helden... kommt! Wir müssen fliehen. Ich werde mein Möglichstes tun, um ihn solange es geht an Ort und Stelle zu halten.",
-	Wave1			= "Es gibt kein Entkommen!",
-	Wave2			= "Ergebt Euch der Grabeskälte!",
-	Wave3			= "Eine weitere Sackgasse!",
-	Wave4			= "Wie lange könnt Ihr Euch noch wehren?",
-	YellCombatEnd	= "FEUER... FREI!"
+	HCombatStart	= "Er ist... zu mächtig. Schnell, Helden... kommt! Wir müssen fliehen. Ich werde mein Möglichstes tun, um ihn solange es geht an Ort und Stelle zu halten."
 })

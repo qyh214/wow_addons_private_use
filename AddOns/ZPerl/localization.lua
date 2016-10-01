@@ -6,7 +6,7 @@ XPerl_ProductName		= "|cFFD00000Z-Perl|r UnitFrames"
 XPerl_ShortProductName	= "|cFFD00000Z-Perl|r"
 XPerl_Author			= "|cFFFF8080Resike|r"
 XPerl_Description		= XPerl_ProductName.." by "..XPerl_Author
-XPerl_VersionNumber		= "5.0.2 release"
+XPerl_VersionNumber		= "5.1.1 release"
 XPerl_Version			= XPerl_Description.." - "..XPerl_VersionNumber
 XPerl_LongDescription	= "UnitFrame replacement for new look Player, Pet, Party, Target, Target's Target, Focus, Raid"
 XPerl_ModMenuIcon		= "Interface\\Icons\\INV_Misc_Gem_Pearl_02"
@@ -78,10 +78,9 @@ XPERL_LOC_STATUSTIPLIST = {
 XPERL_OK		= "OK"
 XPERL_CANCEL	= "Cancel"
 
-XPERL_LOC_LARGENUMDIV	= 1000
-XPERL_LOC_LARGENUMTAG	= "K"
-XPERL_LOC_HUGENUMDIV	= 1000000
-XPERL_LOC_HUGENUMTAG	= "M"
+XPERL_LOC_LARGENUMTAG		= "K"
+XPERL_LOC_HUGENUMTAG		= "M"
+XPERL_LOC_VERYHUGENUMTAG	= "G"
 
 BINDING_HEADER_ZPERL = XPerl_ProductName
 BINDING_NAME_ZPERL_TOGGLERAID = "Toggle Raid Windows"
@@ -160,10 +159,11 @@ XPERL_HIGHLIGHT_SPELLS = {
 -- Default spells for range checking in the healer visual out-of-range cues.
 XPerl_DefaultRangeSpells = {
 	DRUID	= {spell = GetSpellInfo(5185)},				-- Healing Touch
-	PALADIN = {spell = GetSpellInfo(635)},				-- Holy Light
+	PALADIN = {spell = GetSpellInfo(19750)},			-- Flash of Light
 	PRIEST	= {spell = GetSpellInfo(2061)},				-- Flash Heal
-	SHAMAN	= {spell = GetSpellInfo(331)},				-- Healing Wave
-	MAGE	= {spell = GetSpellInfo(475)},				-- Remove Lesser Curse
+	SHAMAN	= {spell = GetSpellInfo(8004)},				-- Healing Surge
+	--MAGE	= {spell = GetSpellInfo(475)},				-- Remove Lesser Curse
+	ROGUE	= {spell = GetSpellInfo(57934)},			-- Trick of the Trade
 	WARLOCK	= {spell = GetSpellInfo(5697)},				-- Unending Breath
 	ANY		= {item = GetItemInfo(111603)}				-- Antiseptic Bandage
 }

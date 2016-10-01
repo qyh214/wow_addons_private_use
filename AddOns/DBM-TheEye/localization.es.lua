@@ -1,5 +1,4 @@
 if GetLocale() ~= "esES" then return end
-
 local L
 
 -----------
@@ -12,11 +11,11 @@ L:SetGeneralLocalization{
 }
 
 L:SetTimerLocalization{
-	NextPlatform	= "Next Platform"
+	NextPlatform	= "Siguiente plataforma (max.)"
 }
 
 L:SetOptionLocalization{
-	NextPlatform	= "Show timer for when Al'ar changes platforms"
+	NextPlatform	= "Mostrar temporizador para el tiempo máximo que Al'ar puede permanecer en una plataforma"
 }
 
 ------------------
@@ -38,35 +37,34 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-	WarnSplit		= "*** Salen adds ***",
-	WarnSplitSoon	= "*** División en 5 seg ***",
-	WarnAgent		= "*** Salen Agentes ***",
-	WarnPriest		= "*** Sacerdotes y Solarian salen ***"
+	WarnSplit		= "Separación de banda",
+	WarnSplitSoon	= "Separación de banda en 5 s",
+	WarnAgent		= "Agentes",
+	WarnPriest		= "Sacerdotes y Solarian"
 
 }
 
 L:SetTimerLocalization{
-	TimerSplit		= "Salen",
-	TimerAgent		= "Agentes",
+	TimerSplit		= "Siguiente separación",
+	TimerAgent		= "Siguientes agentes",
 	TimerPriest		= "Sacerdotes y Solarian"
 }
 
-L:SetOptionLocalization{--Translate
-	WarnSplit		= "Show warning for Split",
-	WarnSplitSoon	= "Show pre-warning for Split",
-	WarnAgent		= "Show warning for Agents spawn",
-	WarnPriest		= "Show warning for Priests and Solarian spawn",
-	TimerSplit		= "Show timer for Split",
-	TimerAgent		= "Show timer for Agents spawn",
-	TimerPriest		= "Show timer for Priests and Solarian spawn",
-	WrathWhisper	= "Enviar susurro a los objetivos de Cólera"
+L:SetOptionLocalization{
+	WarnSplit		= "Mostrar aviso para la separación de banda",
+	WarnSplitSoon	= "Mostrar aviso previo para la separación de banda",
+	WarnAgent		= "Mostrar aviso cuando aparezcan Agentes Solarium",
+	WarnPriest		= "Mostrar aviso cuando aparezcan los Sacerdotes Solarium y la Gran astromante Solarian",
+	TimerSplit		= "Mostrar temporizador para la separación de banda",
+	TimerAgent		= "Mostrar temporizador para los siguientes Agentes Solarium",
+	TimerPriest		= "Mostrar temporizador para cuando vuelva a aparecer la Gran astromante Solarian con los Sacerdotes Solarium",
+	WrathIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(42783)
 }
 
 L:SetMiscLocalization{
-	WrathWhisper	= "¡Cólera en tí!",
-	YellSplit1		= "I will crush your delusions of grandeur!",--Translate
-	YellSplit2		= "You are hopelessly outmatched!",--Translate
-	YellPhase2		= "I become"--Translate
+	YellSplit1		= "¡Aplastaré vuestros delirios de grandeza!",
+	YellSplit2		= "¡Os superamos con creces!",
+	YellPhase2		= "Me FUNDO... ¡con el VACÍO!"
 }
 
 ---------------------------
@@ -79,38 +77,36 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-	WarnGaze		= "*** Thaladred mira a >%s< ***",
-	WarnMobDead		= "%s down",--Translate
-	WarnEgg			= "*** Fénix muerto - salió huevo ***",
-	SpecWarnGaze	= "¡Corre!",
-	SpecWarnEgg		= "*** Fénix muerto - salió huevo ***"
+	WarnGaze		= "Mirada en >%s<",
+	WarnMobDead		= "%s muerto",
+	WarnEgg			= "Huevo de fénix",
+	SpecWarnGaze	= "Mirada en ti - ¡huye!",
+	SpecWarnEgg		= "Huevo de Fénix - ¡cambia de objetivo!"
 }
 
-L:SetTimerLocalization{--Translate
-	TimerPhase		= "Next Phase",
+L:SetTimerLocalization{
+	TimerPhase		= "Siguiente fase",
 	TimerPhase1mob	= "%s",
-	TimerNextGaze	= "New Gaze target",
-	TimerRebirth	= "Phoenix Rebirth"
+	TimerNextGaze	= "Mirada: Cambio de objetivo",
+	TimerRebirth	= "Fénix: Renacimiento"
 }
 
-L:SetOptionLocalization{--Translate
-	WarnGaze		= "Show warning for Thaladred's Gaze target",
-	WarnMobDead		= "Show warning for Phase 2 mob down",
-	WarnEgg			= "Show warning when Phoenix Egg spawn",
-	SpecWarnGaze	= "Show special warning when Gaze on you",
-	SpecWarnEgg		= "Show special warning when Phoenix Egg spawn",
-	TimerPhase		= "Show time for next phase",
-	TimerPhase1mob	= "Show time for Phase 1 mob active",
+L:SetOptionLocalization{
+	WarnGaze		= "Anunciar objetivos de la Mirada de Thaladred",
+	WarnMobDead		= "Mostrar aviso cuando muera un esbirro en Fase 2",
+	WarnEgg			= "Mostrar aviso cuando aparezca un Huevo de fénix",
+	SpecWarnGaze	= "Mostrar aviso especial cuando te afecte Mirada",
+	SpecWarnEgg		= "Mostrar aviso especial cuando aparezca un Huevo de fénix",
+	TimerPhase		= "Mostrar temporizador para la siguiente faseShow time for next phase",
+	TimerPhase1mob	= "Mostrar temporizador para cuando se active cada jefe de Fase 1",
 	TimerNextGaze	= "Show timer for Thaladred's Gaze target changes",
-	TimerRebirth	= "Show timer for Phoenix Egg rebirth remaining",
-	RangeFrame		= "Mostrar distancia",
-	GazeWhisper		= "Enviar susurro al objetivo de Thaladred",
-	GazeIcon		= "Poner icono en el objetivo de Thaladred"
+	TimerRebirth	= "Mostrar temporizador para el renacimiento de los Huevos de fénix",
+	GazeIcon		= "Poner icono en el objetivo de la Mirada de Thaladred",
+	MCIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(36797),
+	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 37018)
 }
 
 L:SetMiscLocalization{
-	YellPull1 	= "Energía. Poder. Mi gente es adicta a ellos... una dependencia que se puso de manifiesto cuando La Fuente del Sol fue destruida. Bienvenidos... al futuro. Es una pena que sea demasiado tarde para que os interpongáis. ¡Ya nadie me puede parar! ¡Selama ashal’anore!",
-	YellPull2	= "Energía. Poder. Mi gente es adicta a ellos... una dependencia que se puso de manifiesto cuando La Fuente del Sol fue destruida. Bienvenidos al futuro. Es una pena que sea demasiado tarde para que os interpongáis. ¡Ya nadie me puede parar! ¡Selama ashal'anore!",
 	YellPhase2	= "Como veis, dispongo de un amplio arsenal...",
 	YellPhase3	= "Quizás os subestimé. Sería injusto que os enfrentarais a los cuatro consejeros al mismo tiempo, pero... nunca se le ha brindado un trato justo a mi gente. Así que os devuelvo el favor.",
 	YellPhase4	= "Desafortunadamente hay veces en las que tienes que hacer las cosas con tus propias manos. ¡Balamore shanal!",
@@ -118,8 +114,7 @@ L:SetMiscLocalization{
 	YellSang	= "Habéis sobrevivido a algunos de mis mejores consejeros... pero nadie puede resistir el poder del Martillo de Sangre. ¡He aquí Lord Sanguinar!",
 	YellCaper	= "Capernian se encargará de que vuestra visita sea breve.",
 	YellTelo	= "Bien hecho. Parecéis dignos de probar vuestras habilidades con mi maestro ingeniero Telonicus.",
-	EmoteGaze	= "sets eyes on ([^%s]+)!",--Translate?
-	GazeWhisper	= "¡Thaladred te mira! ¡Corre!",
+	EmoteGaze	= "mira a ([^%s]+)!",
 	Thaladred	= "Thaladred el Ensombrecedor",
 	Sanguinar	= "Lord Sanguinar",
 	Capernian	= "Gran astromante Capernian",

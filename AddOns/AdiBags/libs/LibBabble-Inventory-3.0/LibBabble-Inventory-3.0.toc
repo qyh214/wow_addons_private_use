@@ -7,7 +7,7 @@
 ## X-eMail: ckknight@gmail.com
 ## X-Category: Library
 ## X-License: MIT
-## X-Curse-Packaged-Version: 7.0-release1
+## X-Curse-Packaged-Version: 7.0-release4
 ## X-Curse-Project-Name: LibBabble-Inventory-3.0
 ## X-Curse-Project-ID: libbabble-inventory-3-0
 ## X-Curse-Repository-ID: wow/libbabble-inventory-3-0/mainline

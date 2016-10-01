@@ -40,10 +40,6 @@ L:SetGeneralLocalization{
 	name = "용기대장 래쉬레이어"
 }
 
-L:SetMiscLocalization{
-	Pull	= "너희 같은 놈들이 올 곳은 아닌데... 죽음을 자초했구나!"
-}
-
 ---------------
 --  Firemaw  --
 ---------------
@@ -115,7 +111,6 @@ L:SetOptionLocalization{
 	WarnPhase			= "단계 전환 알림 보기"
 }
 L:SetMiscLocalization{
-	YellPull		= "흐흐흐흐... 게임을 시작하자!",
 	YellP2			= "잘했다! 적들의 사기가 떨어지고 있다! 검은바위 첨탑의 군주에게 도전한 대가를 치르게 해주자!",
 	YellP3			= "말도 안 돼! 일어나라! 다시 한 번 너희 주인을 섬겨라!",
 	YellShaman		= "주술사",

@@ -1,0 +1,12 @@
+tag 3.3.1
+8ff7bac77a96d663d65a270a5fd295b6c77d68cb
+Hendrik Leppkes <h.leppkes@gmail.com>
+2016-09-20 08:33:41 +0200
+
+Tag as 3.3.1
+
+
+--------------------
+
+Hendrik Leppkes:
+	- Use CURRENT_SPELL_CAST_CHANGED to measure cast latency

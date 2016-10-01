@@ -7,15 +7,28 @@ local LocalVars = TidyPlatesHubDefaults
 ------------------------------------------------------------------------------
 
 local InCombatLockdown = InCombatLockdown
-local GetAggroCondition = TidyPlatesWidgets.GetThreatCondition
-local IsTankedByAnotherTank = HubData.Functions.IsTankedByAnotherTank
-local IsTankingAuraActive = HubData.Functions.IsTankingAuraActive
+local GetFriendlyThreat = TidyPlatesUtility.GetFriendlyThreat
+local IsOffTanked = TidyPlatesHubFunctions.IsOffTanked
+local IsTankingAuraActive = TidyPlatesWidgets.IsPlayerTank
 local IsHealer = TidyPlatesUtility.IsHealer
 local IsAuraShown = TidyPlatesWidgets.IsAuraShown
 
 
 local function IsUnitActive(unit)
-	return (unit.health < unit.healthmax) or (unit.threatValue > 1) or unit.isInCombat or unit.isMarked
+	local unitid = unit.unitid
+
+	if unit.type == "NPC" then
+		--(unit.threatValue > 1)
+		--if ((not unit.isTapped) and UnitExists(unitid.."target")) or unit.isMarked then
+		if ((not unit.isTapped) and unit.isInCombat) or unit.isMarked then
+			return true
+		end
+	else	-- unit.type == "PLAYER"
+		if (unit.health < unit.healthmax) then
+			return true
+		end
+	end
+
 end
 
 
@@ -44,7 +57,7 @@ end
 
 -- Bars when unit is active or damaged
 local function StyleBarsOnActive(unit)
-	if (unit.health < unit.healthmax) or (unit.threatValue > 1) or unit.isInCombat or unit.isMarked then
+	if (unit.health < unit.healthmax) or (unit.threatValue > 1) or unit.isMarked then 	--or unit.isInCombat
 		return BARMODE
 	end
 	return HEADLINEMODE
@@ -60,7 +73,7 @@ end
 
 -- Current Target
 local function StyleBarsOnTarget(unit)
-	if unit.isTarget == true then
+	if (unit.isTarget or (LocalVars.FocusAsTarget and unit.isFocus)) == true then
 		return BARMODE
 	else return HEADLINEMODE end
 end
@@ -68,10 +81,10 @@ end
 -- low threat
 local function StyleBarsOnLowThreat(unit)
 	if InCombatLockdown() and unit.reaction ~= "FRIENDLY" then
-		if IsTankedByAnotherTank(unit) then return HEADLINEMODE end
+		if IsOffTanked(unit) then return HEADLINEMODE end
 		if unit.threatValue < 2 and unit.health > 0 then return BARMODE end
 	elseif LocalVars.ColorShowPartyAggro and unit.reaction == "FRIENDLY" then
-		if GetAggroCondition(unit.rawName) == true then return BARMODE end
+		if GetFriendlyThreat(unit.unitid) == true then return BARMODE end
 	end
 	return HEADLINEMODE
 end
@@ -113,10 +126,10 @@ end
 	--[[
 	-- Low Threat
 	if InCombatLockdown() and unit.reaction ~= "FRIENDLY" then
-		if IsTankedByAnotherTank(unit) then return "NameOnly" end
+		if IsOffTanked(unit) then return "NameOnly" end
 		if unit.threatValue < 2 and unit.health > 0 then return "Default" end
 	elseif LocalVars.ColorShowPartyAggro and unit.reaction == "FRIENDLY" then
-		if GetAggroCondition(unit.rawName) == true then return "Default" end
+		if GetFriendlyThreat(unit.unitid) == true then return "Default" end
 	end
 	return "NameOnly"
 	--]]
@@ -133,11 +146,9 @@ Threat Value
 
 local function StyleNameDelegate(unit)
 
-	-- Bars on Targets
-	if LocalVars.StyleForceBarsOnTargets and unit.isTarget then return "Default" end
-
-	-- Out-of-Combat Units
+	if LocalVars.StyleForceBarsOnTargets and (unit.isTarget or (LocalVars.FocusAsTarget and unit.isFocus)) then return "Default" end
 	if LocalVars.StyleHeadlineOutOfCombat and (not InCombatLockdown()) then return "NameOnly" end
+	if LocalVars.StyleHeadlineMiniMobs and unit.isMini then return "NameOnly" end
 
 	-- Friendly and Hostile
 	if unit.reaction == "FRIENDLY" then

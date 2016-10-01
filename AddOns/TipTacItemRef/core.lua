@@ -1,3 +1,6 @@
+local format = string.format;
+
+-- Addon
 local modName = ...;
 local ttif = CreateFrame("Frame",modName);
 
@@ -19,7 +22,7 @@ local cfg = {
 	if_iconSize = 42,
 };
 
--- Tooltips to Hook into
+-- Tooltips to Hook into -- MUST be a GameTooltip widget -- If the main TipTac is installed, the TT_TipsToModify is used instead
 local tipsToModify = {
 	"GameTooltip",
 	"ItemRefTooltip",
@@ -31,11 +34,11 @@ local tipsToAddIcon = {
 };
 
 -- Tables
-local TipTypeFuncs = {};
+local LinkTypeFuncs = {};
 local criteriaList = {};	-- Used for Achievement criterias
 local tipDataAdded = {};	-- Sometimes, OnTooltipSetItem/Spell is called before the tip has been filled using SetHyperlink, we use the array to test if the tooltip has had data added
 
--- Colors
+-- Colors for achivements
 local COLOR_COMPLETE = { 0.25, 0.75, 0.25 };
 local COLOR_INCOMPLETE = { 0.5, 0.5, 0.5 };
 
@@ -77,7 +80,7 @@ ttif:RegisterEvent("VARIABLES_LOADED");
 
 -- OnEvent
 ttif:SetScript("OnEvent",function(self,event,...)
-	-- What tipsToModify to use?
+	-- What tipsToModify to use, TipTac's main addon, or our own?
 	if (TipTac and TipTac.tipsToModify) then
 		tipsToModify = TipTac.tipsToModify;
 	else
@@ -137,24 +140,36 @@ end
 --------------------------------------------------------------------------------------------------------
 
 -- HOOK: ItemRefTooltip + GameTooltip: SetHyperlink
-local function SetHyperlink_Hook(self,refString)
+local function SetHyperlink_Hook(self,hyperLink)
 	if (cfg.if_enable) and (not tipDataAdded[self]) then
-		local rawLink = refString:match("|H([^|]+)|h") or refString;
-		local linkToken = rawLink:match("^[^:]+");
+		local refString = hyperLink:match("|H([^|]+)|h") or hyperLink;
+		local linkType = refString:match("^[^:]+");
 		-- Call Tip Type Func
-		if (TipTypeFuncs[linkToken]) and (self:NumLines() > 0) then
+		if (LinkTypeFuncs[linkType]) and (self:NumLines() > 0) then
 			tipDataAdded[self] = "hyperlink";
-			TipTypeFuncs[linkToken](self,rawLink,(":"):split(rawLink));
+			LinkTypeFuncs[linkType](self,refString,(":"):split(refString));
 		end
 	end
 end
 
--- HOOK: SetUnitAura
+-- HOOK: SetUnitAura -- Adds both name of "Caster" and "SpellID"
 local function SetUnitAura_Hook(self,unit,index,filter)
-	if (cfg.if_enable) and (cfg.if_showAuraCaster) then
-		local _, _, _, _, _, _, _, casterUnit = UnitAura(unit,index,filter);
-		if (UnitExists(casterUnit)) then
-			self:AddLine(format("<Applied by %s>",UnitName(casterUnit) or UNKNOWNOBJECT),unpack(cfg.if_infoColor));
+	if (cfg.if_enable) and (cfg.if_showSpellIdAndRank or cfg.if_showAuraCaster) then
+		local _, _, _, _, _, _, _, casterUnit, _, _, spellId = UnitAura(unit,index,filter);
+		-- format the info line for spellID and caster -- pre-16.08.25 only caster was formatted as this: "<Applied by %s>"
+		local tipInfoLine = "";
+		if (cfg.if_showAuraCaster) and (UnitExists(casterUnit)) then
+			tipInfoLine = tipInfoLine..format("Caster: %s",UnitName(casterUnit) or UNKNOWNOBJECT);
+		end
+		if (cfg.if_showSpellIdAndRank) and (spellId) and (spellId ~= 0) then
+			if (tipInfoLine ~= "") then
+				tipInfoLine = tipInfoLine..", ";
+			end
+			tipInfoLine = tipInfoLine..format("SpellID: %d",spellId);
+		end
+		-- add line to tooltip if it contains info
+		if (tipInfoLine ~= "") then
+			self:AddLine(tipInfoLine,unpack(cfg.if_infoColor));
 			self:Show();
 		end
 	end
@@ -165,10 +180,10 @@ local function OnTooltipSetItem(self,...)
 	if (cfg.if_enable) and (not tipDataAdded[self]) then
 		local _, link = self:GetItem();
 		if (link) then
-			local id = link:match("item:(%d+)");
+			local linkType, id = link:match("(%a+):(%d+)");
 			if (id) then
-				tipDataAdded[self] = "item";
-				TipTypeFuncs.item(self,link,"item",id);
+				tipDataAdded[self] = linkType;
+				LinkTypeFuncs.item(self,link,linkType,id);
 			end
 		end
 	end
@@ -180,7 +195,7 @@ local function OnTooltipSetSpell(self,...)
 		local _, _, id = self:GetSpell();
 		if (id) then
 			tipDataAdded[self] = "spell";
-			TipTypeFuncs.spell(self,nil,"spell",id);
+			LinkTypeFuncs.spell(self,nil,"spell",id);
 		end
 	end
 end
@@ -193,10 +208,10 @@ local function OnTooltipCleared(self)
 	end
 end
 
--- HOOK: SetHyperlink
+-- HOOK: Apply hooks for all the tooltips to modify -- Only hook GameTooltips
 function ttif:DoHooks()
 	for index, tip in ipairs(tipsToModify) do
-		if (type(tip) == "table") then
+		if (type(tip) == "table") and (type(tip.GetObjectType) == "function") and (tip:GetObjectType() == "GameTooltip") then
 			if (tipsToAddIcon[tip:GetName()]) then
 				self:CreateTooltipIcon(tip);
 			end
@@ -215,18 +230,19 @@ end
 --                                        Smart Icon Evaluation                                       --
 --------------------------------------------------------------------------------------------------------
 
-local function SmartIconEvaluation(tip,linkToken)
+-- returns true if an icon should be displayed
+local function SmartIconEvaluation(tip,linkType)
 	local owner = tip:GetOwner();
 	-- No Owner?
 	if (not owner) then
 		return false;
 	-- Item
-	elseif (linkToken == "item") then
+	elseif (linkType == "item") then
 		if (owner.hasItem or owner.action or owner.icon or owner.texture) then
 			return false;
 		end
 	-- Spell
-	elseif (linkToken == "spell") then
+	elseif (linkType == "spell") then
 		if (owner.action or owner.icon) then
 			return false;
 		end
@@ -243,11 +259,11 @@ local function SmartIconEvaluation(tip,linkToken)
 end
 
 --------------------------------------------------------------------------------------------------------
---                                         Tip Type Functions                                         --
+--                                       Tip LinkType Functions                                       --
 --------------------------------------------------------------------------------------------------------
 
 -- instancelock
-function TipTypeFuncs:instancelock(link,linkToken,guid,mapId,difficulty,encounterBits)
+function LinkTypeFuncs:instancelock(link,linkType,guid,mapId,difficulty,encounterBits)
 	--AzDump(guid,mapId,difficulty,encounterBits)
   	-- TipType Border Color -- Disable these 3 lines to color border. Az: Work into options?
 --	if (cfg.if_itemQualityBorder) then
@@ -256,11 +272,11 @@ function TipTypeFuncs:instancelock(link,linkToken,guid,mapId,difficulty,encounte
 end
 
 -- item
-function TipTypeFuncs:item(link,linkToken,id)
+function LinkTypeFuncs:item(link,linkType,id)
 	local _, _, itemRarity, itemLevel, _, _, _, itemStackCount, _, itemTexture = GetItemInfo(link);
-	itemLevel = GetUpgradedItemLevelFromItemLink(link);
+	itemLevel = LibItemString:GetTrueItemLevel(link);
 	-- Icon
-	if (self.SetIconTextureAndText) and (not cfg.if_smartIcons or SmartIconEvaluation(self,linkToken)) then
+	if (self.SetIconTextureAndText) and (not cfg.if_smartIcons or SmartIconEvaluation(self,linkType)) then
 		local count = (itemStackCount and itemStackCount > 1 and (itemStackCount == 0x7FFFFFFF and "#" or itemStackCount) or "");
 		self:SetIconTextureAndText(itemTexture,count);
 	end
@@ -268,11 +284,11 @@ function TipTypeFuncs:item(link,linkToken,id)
 	if (cfg.if_itemQualityBorder) then
 		self:SetBackdropBorderColor(GetItemQualityColor(itemRarity or 0));
 	end
-	-- level + id -- Do not alter the tip, if we failed to get a valid "itemLevel" or "id"
+	-- level + id -- Do not alter the tip if we failed to get a valid "itemLevel" or "id"
 	if (cfg.if_showItemLevelAndId) and (itemLevel) and (id) then
-		for i = 2, self:NumLines() do
+		for i = 2, min(self:NumLines(),LibItemString.TOOLTIP_MAXLINE_LEVEL) do
 			local line = _G[self:GetName().."TextLeft"..i];
-			if (line and (line:GetText() or ""):match(ITEM_LEVEL.."+")) then
+			if (line and (line:GetText() or ""):match(ITEM_LEVEL_PLUS)) then
 				line:SetText(nil);
 				break;
 			end
@@ -283,15 +299,16 @@ function TipTypeFuncs:item(link,linkToken,id)
 end
 
 -- spell
-function TipTypeFuncs:spell(link,linkToken,id)
+function LinkTypeFuncs:spell(link,linkType,id)
 	local name, rank, icon = GetSpellInfo(id);
 	-- Icon
-	if (self.SetIconTextureAndText) and (not cfg.if_smartIcons or SmartIconEvaluation(self,linkToken)) then
+	if (self.SetIconTextureAndText) and (not cfg.if_smartIcons or SmartIconEvaluation(self,linkType)) then
 		self:SetIconTextureAndText(icon);
 	end
 	-- Id + Rank
 	if (cfg.if_showSpellIdAndRank) then
-		self:AddLine("SpellID: "..id..(rank and rank ~= "" and ", "..rank or ""),unpack(cfg.if_infoColor));
+		rank = (rank and rank ~= "" and ", "..rank or "");
+		self:AddLine("SpellID: "..id..rank,unpack(cfg.if_infoColor));
 		self:Show();
 	end
   	-- TipType Border Color -- Disable these 3 lines to color border. Az: Work into options?
@@ -301,7 +318,7 @@ function TipTypeFuncs:spell(link,linkToken,id)
 end
 
 -- quest
-function TipTypeFuncs:quest(link,linkToken,id,level)
+function LinkTypeFuncs:quest(link,linkType,id,level)
 	if (cfg.if_showQuestLevelAndId) then
 		self:AddLine(format("QuestLevel: %d, QuestID: %d",level or 0,id or 0),unpack(cfg.if_infoColor));
 		self:Show();
@@ -313,7 +330,7 @@ function TipTypeFuncs:quest(link,linkToken,id,level)
 end
 
 -- currency -- Thanks to Vladinator for adding this!
-function TipTypeFuncs:currency(link,linkToken,id)
+function LinkTypeFuncs:currency(link,linkType,id)
 	local _, currencyCount, currencyTexture = GetCurrencyInfo(id);
 	if (self.SetIconTextureAndText) then
 		self:SetIconTextureAndText(currencyTexture,currencyCount);	-- As of 5.2 GetCurrencyInfo() now returns full texture path. Previously you had to prefix it with "Interface\\Icons\\"
@@ -330,7 +347,7 @@ function TipTypeFuncs:currency(link,linkToken,id)
 end
 
 -- achievement
-function TipTypeFuncs:achievement(link,linkToken,id,guid,completed,month,day,year,unknown1,unknown2,unknown3,unknown4)
+function LinkTypeFuncs:achievement(link,linkType,id,guid,completed,month,day,year,unknown1,unknown2,unknown3,unknown4)
 	if (cfg.if_modifyAchievementTips) then
 		completed = (tonumber(completed) == 1);
 		local tipName = self:GetName();
@@ -393,7 +410,7 @@ function TipTypeFuncs:achievement(link,linkToken,id,guid,completed,month,day,yea
 					--myDone1 = select(3,GetAchievementCriteriaInfo(id,i));
 					if (i + 1 <= #criteriaList) then
 						local success, _, _, completed = pcall(GetAchievementCriteriaInfo,id,i + 1);
-						myDone2 = (success and completed); 
+						myDone2 = (success and completed);
 						--myDone2 = select(3,GetAchievementCriteriaInfo(id,i + 1));
 					end
 				end

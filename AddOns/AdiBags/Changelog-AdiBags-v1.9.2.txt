@@ -1,0 +1,13 @@
+tag v1.9.2
+ba054776fb2a5f2bac573942b0be544d5f58b5c4
+Talyrius <contact@talyrius.net>
+2016-09-01 11:40:37 -0700
+
+Bugfix for ItemLevel module.
+
+
+--------------------
+
+Talyrius:
+	- ItemLevel: added item level range for level 110 characters.
+	Fixes #106.

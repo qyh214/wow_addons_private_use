@@ -40,10 +40,6 @@ L:SetGeneralLocalization{
 	name	= "勒什雷尔"
 }
 
-L:SetMiscLocalization{
-	Pull	= "你怎么进来的?你们这种生物不能进来!我要毁灭你们!"
-}
-
 ---------------
 --  Firemaw  --
 ---------------
@@ -115,7 +111,6 @@ L:SetOptionLocalization{
 	WarnPhase			= "提示转换阶段"
 }
 L:SetMiscLocalization{
-	YellPull	= "让赛事开始吧!",
 	YellP2		= "干得好，我的手下。凡人的勇气开始消退!现在，现在让我们看看他们如何应对黑石之王的力量!!!",
 	YellP3		= "不可能!出现吧，我的仆人!再次为我的主人服务!",
 	YellShaman	= "萨满，让我看看",

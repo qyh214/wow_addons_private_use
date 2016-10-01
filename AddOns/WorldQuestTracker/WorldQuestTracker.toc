@@ -1,0 +1,28 @@
+## Interface: 70000
+## Title: World Quest Tracker
+## Notes: Make more easy to see world quests
+## SavedVariables: WQTrackerDB
+## SavedVariablesPerCharacter: WQTrackerDBChr
+## X-Curse-Packaged-Version: r72
+## X-Curse-Project-Name: World Quest Tracker
+## X-Curse-Project-ID: world-quest-tracker
+## X-Curse-Repository-ID: wow/world-quest-tracker/mainline
+
+
+#@no-lib-strip@
+libs\libs.xml
+#@end-no-lib-strip@
+
+locales\enUS.lua
+locales\deDE.lua
+locales\esES.lua
+locales\esMX.lua
+locales\frFR.lua
+locales\itIT.lua
+locales\koKR.lua
+locales\ptBR.lua
+locales\ruRU.lua
+locales\zhCN.lua
+locales\zhTW.lua
+
+WorldQuestTracker.lua

@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Azgalor", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
 mod:SetCreatureID(17842)
+mod:SetEncounterID(621)
 mod:SetModelID(18526)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -10,9 +11,9 @@ mod:SetUsedIcons(8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_SUCCESS"
+	"SPELL_AURA_APPLIED 31340 31347",
+	"SPELL_AURA_REMOVED 31347",
+	"SPELL_CAST_SUCCESS 31344"
 )
 
 local warnSilence		= mod:NewSpellAnnounce(31344, 3)

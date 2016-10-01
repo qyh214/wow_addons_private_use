@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1002 $")
-XPerl_SetModuleRevision("$Revision: 1002 $")
+end, "$Revision: 1014 $")
+XPerl_SetModuleRevision("$Revision: 1014 $")
 
 -- Upvalus
 local _G = _G
@@ -123,12 +123,9 @@ local UIParent = UIParent
 
 local ArcaneExclusions = XPerl_ArcaneExclusions
 
-local largeNumDiv = XPERL_LOC_LARGENUMDIV
-local largeNumDiv100 = largeNumDiv * 100
 local largeNumTag = XPERL_LOC_LARGENUMTAG
-local hugeNumDiv = XPERL_LOC_HUGENUMDIV
-local hugeNumDiv10 = hugeNumDiv * 10
 local hugeNumTag = XPERL_LOC_HUGENUMTAG
+local veryhugeNumTag = XPERL_LOC_VERYHUGENUMTAG
 
 --[==[@debug@
 local function d(...)
@@ -845,33 +842,60 @@ end
 --local XPerl_ColourHealthBar = XPerl_ColourHealthBar
 
 -- XPerl_SetValuedText
-function XPerl_SetValuedText(self, current, Max, suffix)
-	if (Max >= hugeNumDiv) then
-		if (abs(current) < largeNumDiv100) then
-			-- 12345/12.3M
-			self:SetFormattedText("%d/%.1f%s%s", current, Max / hugeNumDiv, hugeNumTag, suffix or "")
+function XPerl_SetValuedText(self, unitHealth, unitHealthMax, suffix)
+	if unitHealthMax >= 1000000000 then
+		if abs(unitHealth) >= 1000000000 then
+			-- 1.23G/1.23G
+			self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 1000000000, veryhugeNumTag, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
+		elseif abs(unitHealth) >= 10000000 then
+			-- 12.3M/1.23G
+			self:SetFormattedText("%.1f%s/%.2f%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
+		elseif abs(unitHealth) >= 1000000 then
+			-- 1.23M/1.23G
+			self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
+		elseif abs(unitHealth) >= 100000 then
+			-- 123.4K/1.23G
+			self:SetFormattedText("%.1f%s/%.1f%s", unitHealth / 1000, largeNumTag, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
 		else
-			if (abs(current) >= hugeNumDiv) then
-				-- 1.2M/12.3M
-				self:SetFormattedText("%.1f%s/%.1f%s%s", current / hugeNumDiv, hugeNumTag, Max / hugeNumDiv, hugeNumTag, suffix or "")
-			else
-				-- 12.3K/12.3M
-				self:SetFormattedText("%.1f%s/%.1f%s%s", current / largeNumDiv, largeNumTag, Max / hugeNumDiv, hugeNumTag, suffix or "")
-			end
+			-- 12345/1.23G
+			self:SetFormattedText("%d/%.2f%s", unitHealth, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
+		end
+	elseif unitHealthMax >= 10000000 then
+		if abs(unitHealth) >= 10000000 then
+			-- 12.3M/12.3M
+			self:SetFormattedText("%.1f%s/%.1f%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+		elseif abs(unitHealth) >= 1000000 then
+			-- 1.23M/12.3M
+			self:SetFormattedText("%.2f%s/%.1f%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+		elseif abs(unitHealth) >= 100000 then
+			-- 123.4K/12.3M
+			self:SetFormattedText("%.1f%s/%.1f%s", unitHealth / 1000, largeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+		else
+			-- 12345/12.3M
+			self:SetFormattedText("%d/%.1f%s", unitHealth, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+		end
+	elseif unitHealthMax >= 1000000 then
+		if abs(unitHealth) >= 1000000 then
+			-- 1.23M/1.23M
+			self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+		elseif abs(unitHealth) >= 100000 then
+			-- 123.4K/1.23M
+			self:SetFormattedText("%.1f%s/%.2f%s", unitHealth / 1000, largeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+		else
+			-- 12345/1.23M
+			self:SetFormattedText("%d/%.2f%s", unitHealth, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+		end
+	elseif unitHealthMax >= 100000 then
+		if abs(unitHealth) >= 100000 then
+			-- 123.4K/123.4K
+			self:SetFormattedText("%.1f%s/%.1f%s", unitHealth / 1000, largeNumTag, unitHealthMax / 1000, largeNumTag, suffix or "")
+		else
+			-- 12345/123.4K
+			self:SetFormattedText("%d/%.1f%s", unitHealth, unitHealthMax / 1000, largeNumTag, suffix or "")
 		end
 	else
-		if (Max > largeNumDiv100) then
-			if (abs(current) < largeNumDiv100) then
-				-- 12345/123.4K
-				self:SetFormattedText("%d/%.1f%s%s", current, Max / largeNumDiv, largeNumTag, suffix or "")
-			else
-				-- 12.3K/123.4K
-				self:SetFormattedText("%.1f%s/%.1f%s%s", current / largeNumDiv, largeNumTag, Max / largeNumDiv, largeNumTag, suffix or "")
-			end
-		else
-			-- 12345/12345
-			self:SetFormattedText("%d/%d%s", current, Max, suffix or "")
-		end
+		-- 12345/12345
+		self:SetFormattedText("%d/%d", unitHealth, unitHealthMax, suffix or "")
 	end
 end
 local SetValuedText = XPerl_SetValuedText
@@ -905,7 +929,21 @@ function XPerl_SetHealthBar(self, hp, Max)
 	XPerl_ColourHealthBar(self, percent)
 	if (bar.percent) then
 		if (self.conf.healerMode and self.conf.healerMode.enable and self.conf.healerMode.type == 2) then
-			bar.percent:SetText(hp - Max)
+			--bar.percent:SetText(hp - Max)
+			local health = hp - Max
+			if (abs(health) >= 10000000000) then
+				bar.percent:SetFormattedText("%.0f%s", health / 1000000000, veryhugeNumTag)
+			elseif (abs(health) >= 1000000000) then
+				bar.percent:SetFormattedText("%.1f%s", health / 1000000000, veryhugeNumTag)
+			elseif (abs(health) >= 10000000) then
+				bar.percent:SetFormattedText("%.0f%s", health / 1000000, hugeNumTag)
+			elseif (abs(health) >= 1000000) then
+				bar.percent:SetFormattedText("%.1f%s", health / 1000000, hugeNumTag)
+			elseif (abs(health) >= 1000) then
+				bar.percent:SetFormattedText("%.0f%s", health / 1000, largeNumTag)
+			else
+				bar.percent:SetFormattedText("%d", health)
+			end
 		else
 			local show = percent * 100
 			if (show < 10) then
@@ -923,10 +961,14 @@ function XPerl_SetHealthBar(self, hp, Max)
 			if (self.conf.healerMode.type == 1) then
 				SetValuedText(hbt, health, Max)
 			else
-				if (abs(health) >= hugeNumDiv10) then
-					hbt:SetFormattedText("%d%s", health / hugeNumDiv, hugeNumTag)
-				elseif (abs(health) >= largeNumDiv100) then
-					hbt:SetFormattedText("%d%s", health / largeNumDiv, largeNumTag)
+				if (abs(health) >= 1000000000) then
+					hbt:SetFormattedText("%.2f%s", health / 1000000000, veryhugeNumTag)
+				elseif (abs(health) >= 10000000) then
+					hbt:SetFormattedText("%.1f%s", health / 1000000, hugeNumTag)
+				elseif (abs(health) >= 1000000) then
+					hbt:SetFormattedText("%.2f%s", health / 1000000, hugeNumTag)
+				elseif (abs(health) >= 100000) then
+					hbt:SetFormattedText("%.1f%s", health / 1000, largeNumTag)
 				else
 					hbt:SetFormattedText("%d", health)
 				end
@@ -1400,9 +1442,11 @@ local ManaColours = {
 	[SPELL_POWER_ENERGY] = "energy",
 	[SPELL_POWER_RUNES] = "runes",
 	[SPELL_POWER_RUNIC_POWER] = "runic_power",
-	[SPELL_POWER_FURY] = "fury",
 	[SPELL_POWER_INSANITY] = "insanity",
+	[SPELL_POWER_LUNAR_POWER] = "lunar",
 	[SPELL_POWER_MAELSTROM] = "maelstrom",
+	[SPELL_POWER_FURY] = "fury",
+	[SPELL_POWER_PAIN] = "pain",
 	[SPELL_POWER_ALTERNATE_POWER] = "energy", -- used by some bosses, show it as energy bar
 }
 

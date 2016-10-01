@@ -106,7 +106,6 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	YellPull	= "Achtung, Wachen! Wir haben Besuch...",
 	Caribdis	= "Tiefenwächterin Caribdis",
 	Tidalvess	= "Tiefenwächter Flutvess",
 	Sharkkis	= "Tiefenwächter Haikis"

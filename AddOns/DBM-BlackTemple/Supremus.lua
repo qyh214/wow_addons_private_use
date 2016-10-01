@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Supremus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
 mod:SetCreatureID(22898)
+mod:SetEncounterID(602)
 mod:SetModelID(21145)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -10,8 +11,6 @@ mod:SetUsedIcons(8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
 	"RAID_BOSS_EMOTE"
 )
 
@@ -48,9 +47,16 @@ function mod:OnCombatStart(delay)
 	timerPhase:Start(-delay, L.Kite)
 	phase2 = false
 	lastTarget = false
+	if not self:IsTrivial(85) then--Only warning that uses these events is remorseless winter and that warning is completely useless spam for level 90s.
+		self:RegisterShortTermEvents(
+			"SPELL_DAMAGE 40265 42052",
+			"SPELL_MISSED 40265 42052"
+		)
+	end
 end
 
 function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
 	if lastTarget then
 		self:SetIcon(lastTarget, 0)
 	end

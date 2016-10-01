@@ -1,3 +1,11 @@
+TipTac Changes | 2016 Aug 30
+----------------------------
+- TipTacItemRef: Fixed issue with incorrect itemLevel showing for items that have been upgraded.
+
+TipTac Changes | 2016 Aug 24
+----------------------------
+- TipTacItemRef: Fixed certain items with upgrades not displaying their upgraded ID.
+
 TipTac Changes | 2016 Jul 23
 ----------------------------
 - Fixed a few more API changes related to SetTexture -> SetColorTexture. Thanks vincentSDSH.

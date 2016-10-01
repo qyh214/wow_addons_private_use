@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision: 998 $")
+end, "$Revision: 1010 $")
 
 local XPerl_Player_Pet_HighlightCallback
 
@@ -59,7 +59,7 @@ function XPerl_Player_Pet_OnLoad(self)
 		end,
 	}
 
-	--CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
+	CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
 
 	--XPerl_SecureUnitButton_OnLoad(self, "pet", nil, PetFrameDropDown, XPerl_ShowGenericMenu)			--PetFrame.menu)
 	--XPerl_SecureUnitButton_OnLoad(self.nameFrame, "pet", nil, PetFrameDropDown, XPerl_ShowGenericMenu)	--PetFrame.menu)
@@ -71,6 +71,24 @@ function XPerl_Player_Pet_OnLoad(self)
 	self:SetAttribute("type2", "togglemenu")
 	self:SetAttribute("unit", self.partyid)
 
+	self.state = CreateFrame("Frame", nil, nil, "SecureHandlerStateTemplate")
+
+	self.state:SetFrameRef("ZPerlPlayerPet", self)
+
+	self.state:Execute([[
+		frame = self:GetFrameRef("ZPerlPlayerPet")
+	]])
+
+	self.state:SetAttribute("_onstate-petbattleupdate", [[
+		if newstate == "inpetbattle" then
+			frame:Hide()
+		else
+			frame:Show()
+		end
+	]])
+
+	RegisterStateDriver(self.state, "petbattleupdate", "[petbattle] inpetbattle; none")
+
 	--RegisterAttributeDriver(self.nameFrame, "unit", "[vehicleui] player; pet")
 	RegisterAttributeDriver(self, "unit", "[vehicleui] player; pet")
 
@@ -79,7 +97,31 @@ function XPerl_Player_Pet_OnLoad(self)
 
 	--RegisterUnitWatch(self)
 	local events = {
-		"UNIT_HEALTH", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PET", "PET_ATTACK_START", "UNIT_COMBAT", --[["UNIT_SPELLMISS",]] "VARIABLES_LOADED", --[["PLAYER_REGEN_ENABLED",]] "PLAYER_ENTERING_WORLD", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE", "UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED", "UNIT_TARGET", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"
+		"UNIT_HEALTH",
+		"UNIT_MAXHEALTH",
+		"UNIT_LEVEL",
+		"UNIT_POWER_FREQUENT",
+		"UNIT_MAXPOWER",
+		"UNIT_DISPLAYPOWER",
+		"UNIT_NAME_UPDATE",
+		"UNIT_FACTION",
+		"UNIT_PORTRAIT_UPDATE",
+		"UNIT_FLAGS",
+		"UNIT_AURA",
+		"UNIT_PET",
+		"PET_ATTACK_START",
+		"UNIT_COMBAT",
+		"UNIT_SPELLMISS",
+		"VARIABLES_LOADED",
+		--[["PLAYER_REGEN_ENABLED",]]
+		"PLAYER_ENTERING_WORLD",
+		"UNIT_ENTERED_VEHICLE",
+		"UNIT_EXITED_VEHICLE",
+		"UNIT_THREAT_LIST_UPDATE",
+		"PLAYER_TARGET_CHANGED",
+		"UNIT_TARGET",
+		--"PET_BATTLE_OPENING_START",
+		--"PET_BATTLE_CLOSE"
 	}
 	for i, event in pairs(events) do
 		if string.find(event, "^UNIT_") then
@@ -231,9 +273,9 @@ end
 
 -- XPerl_Player_Pet_OnUpdate
 function XPerl_Player_Pet_OnUpdate(self, elapsed)
-	--[[if pconf.hitIndicator and pconf.portrait then
+	if pconf.hitIndicator and pconf.portrait then
 		CombatFeedback_OnUpdate(self, elapsed)
-	end]]
+	end
 	if (self.PlayerFlash) then
 		XPerl_Player_Pet_CombatFlash(self, elapsed, false)
 	end
@@ -331,7 +373,7 @@ function XPerl_Player_Pet_Events:UNIT_PET()
 	end
 end
 
-function XPerl_Player_Pet_Events:PET_BATTLE_OPENING_START()
+--[[function XPerl_Player_Pet_Events:PET_BATTLE_OPENING_START()
 	if (UnitExists("pet")) then
 		UnregisterUnitWatch(self)
 		self:Hide()
@@ -345,7 +387,7 @@ function XPerl_Player_Pet_Events:PET_BATTLE_CLOSE()
 		end
 		XPerl_ProtectedCall(Show, self);
 	end
-end
+end]]
 
 XPerl_Player_Pet_Events.PET_STABLE_SHOW = XPerl_Player_Pet_Events.UNIT_PET
 
@@ -399,9 +441,9 @@ function XPerl_Player_Pet_Events:UNIT_COMBAT(...)
 	local unitID, action, descriptor, damage, damageType = ...
 
 	if (unitID == self.partyid) then
-		--[[if (pconf.hitIndicator and pconf.portrait) then
+		if (pconf.hitIndicator and pconf.portrait) then
 			CombatFeedback_OnCombatEvent(self, ...)
-		end]]
+		end
 
 		if (action == "HEAL") then
 			XPerl_Player_Pet_CombatFlash(XPerl_Player_Pet, 0, true, true)
@@ -412,11 +454,11 @@ function XPerl_Player_Pet_Events:UNIT_COMBAT(...)
 end
 
 -- UNIT_SPELLMISS
---[[function XPerl_Player_Pet_Events:UNIT_SPELLMISS(...)
+function XPerl_Player_Pet_Events:UNIT_SPELLMISS(...)
 	if (pconf.hitIndicator and pconf.portrait) then
 		CombatFeedback_OnSpellMissEvent(self, ...)
 	end
-end]]
+end
 
 -- UNIT_FACTION
 function XPerl_Player_Pet_Events:UNIT_FACTION()

@@ -764,7 +764,7 @@ local function createFilterFrame()
     win.border:SetHeight(1);
     win.border:SetWidth(win:GetWidth() - 60);
     win.border:SetPoint("BOTTOM", 0, 55);
-    win.border:SetTexture(1, 1, 1, .25);
+    win.border:SetColorTexture(1, 1, 1, .25);
     win.save = CreateFrame("Button", win:GetName().."Save", win, "UIPanelButtonTemplate");
     win.save:SetPoint("TOPRIGHT", win.border, "BOTTOMRIGHT", 0, -5);
     win.save.text = _G[win.save:GetName().."Text"];

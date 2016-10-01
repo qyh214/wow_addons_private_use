@@ -107,7 +107,6 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	YellPull	= "Guards, attention! We have visitors....",
 	Caribdis	= "Fathom-Guard Caribdis",
 	Tidalvess	= "Fathom-Guard Tidalvess",
 	Sharkkis	= "Fathom-Guard Sharkkis"

@@ -1,14 +1,15 @@
 local mod = DBM:NewMod(560, "DBM-Party-BC", 14, 257)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 572 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
 
 mod:SetCreatureID(17978)
+mod:SetEncounterID(1928)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED"
+	"SPELL_AURA_APPLIED 34661",
+	"SPELL_AURA_REMOVED 34661"
 )
 
 local warnSacrifice       = mod:NewTargetAnnounce(34661)
@@ -24,6 +25,6 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 34661 then
-		timerSacrifice:Cancel(args.destName)
+		timerSacrifice:Stop(args.destName)
 	end
 end

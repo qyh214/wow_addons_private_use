@@ -1,5 +1,4 @@
 ﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
-
 local L
 
 --Maulgar
@@ -37,11 +36,11 @@ L:SetWarningLocalization{
 }
 
 L:SetTimerLocalization{
-	timerP2	= "Phase 2"
+	timerP2	= "Fase 2"
 }
 
 L:SetOptionLocalization{
-	timerP2	= "Mostrar tiempo para el inicio de Fase 2"
+	timerP2	= "Mostrar temporizador para el cambio a Fase 2"
 }
 
 L:SetMiscLocalization{
@@ -65,7 +64,7 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_KAZZAK_EMOTE_ENRAGE		= "%s becomes enraged!"--Probalby won't be used, at least not long. Once spellid replaces it
+	DBM_KAZZAK_EMOTE_ENRAGE		= "¡%s se enfurece!"--Probalby won't be used, at least not long. Once spellid replaces it
 }
 
 -- Doomwalker
@@ -85,5 +84,5 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_DOOMW_EMOTE_ENRAGE	= "%s becomes enraged!"--Probalby won't be used, at least not long. Once spellid replaces it
+	DBM_DOOMW_EMOTE_ENRAGE	= "¡%s se enfurece!"--Probalby won't be used, at least not long. Once spellid replaces it
 }

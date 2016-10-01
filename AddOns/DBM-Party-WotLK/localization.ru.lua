@@ -617,10 +617,5 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	ACombatStart	= "Он слишком силен. Мы должны выбраться отсюда как можно скорее. Моя магия задержит его, но не надолго. Быстрее, герои!",
-	HCombatStart	= "He's... too powerful. Heroes, quickly... come to me! We must leave this place at once! I will do what I can to hold him in place while we flee.",
-	Wave1			= "^Бежать некуда.$",
-	Wave2			= "Покоритесь леденящей смерти!",
-	Wave3			= "Вы в ловушке!",
-	Wave4			= "Как долго вы сможете сопротивляться?",
-	YellCombatEnd	= "ОГОНЬ! ОГОНЬ!"
+	HCombatStart	= "He's... too powerful. Heroes, quickly... come to me! We must leave this place at once! I will do what I can to hold him in place while we flee."
 })

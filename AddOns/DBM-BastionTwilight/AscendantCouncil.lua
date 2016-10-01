@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod(158, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(43686, 43687, 43688, 43689, 43735)
---mod:SetEncounterID(1028)--ES probably doesn't fire until final phase, verify this
+mod:SetEncounterID(1028)
 mod:SetZone()
 mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
 mod:SetModelSound("Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent14.ogg", "Sound\\Creature\\Terrastra\\VO_BT_Terrastra_Event02.ogg")

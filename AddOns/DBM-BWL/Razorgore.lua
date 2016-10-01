@@ -1,12 +1,14 @@
 local mod	= DBM:NewMod("Razorgore", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 584 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 599 $"):sub(12, -3))
 mod:SetCreatureID(12435, 99999)--Bogus detection to prevent invalid kill detection if razorgore happens to die in phase 1
+mod:SetEncounterID(610)--BOSS_KILL is valid, but ENCOUNTER_END is not
+mod:DisableEEKillDetection()--So disable only EE
 mod:SetModelID(10115)
 mod:SetMinSyncRevision(168)
 mod:RegisterCombat("yell", L.YellPull)
-mod:SetWipeTime(45)--guesswork
+mod:SetWipeTime(180)--guesswork
 
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",

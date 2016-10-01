@@ -1,8 +1,5 @@
 local me, ns = ...
-local p=print
 ns.Configure()
-local print=p
-p=nil
 local addon=addon --#addon
 local _G=_G
 -- Courtesy of Motig

@@ -15,6 +15,11 @@ copytable = function(original)
 	return duplicate
 end
 
+
+TidyPlatesUtility.IsFriend = function(...) end
+--TidyPlatesUtility.IsHealer =
+TidyPlatesUtility.IsGuildmate = function(...) end
+
 local function RaidMemberCount()
 	if UnitInRaid("player") then
 		return GetNumGroupMembers()
@@ -100,6 +105,130 @@ TidyPlatesUtility.abbrevNumber = valueToString
 TidyPlatesUtility.copyTable = copytable
 TidyPlatesUtility.mergeTable = mergetable
 TidyPlatesUtility.updateTable = updatetable
+
+------------------------------------------
+-- GameTooltipScanner
+------------------------------------------
+local ScannerName = "TidyPlatesScanningTooltip"
+local TooltipScanner = CreateFrame( "GameTooltip", ScannerName , nil, "GameTooltipTemplate" ); -- Tooltip name cannot be nil
+TooltipScanner:SetOwner( WorldFrame, "ANCHOR_NONE" );
+
+------------------------------------------
+-- Unit Subtitles/NPC Roles
+------------------------------------------
+local UnitSubtitles = {}
+local function GetUnitSubtitle(unit)
+	local unitid = unit.unitid
+
+	-- Bypass caching while in an instance
+	--if inInstance or (not UnitExists(unitid)) then return end
+	if ( UnitIsPlayer(unitid) or UnitPlayerControlled(unitid) or (not UnitExists(unitid))) then return end
+
+	--local guid = UnitGUID(unitid)
+	local name = unit.name
+	local subTitle = UnitSubtitles[name]
+
+	if not subTitle then
+		TooltipScanner:ClearLines()
+ 		TooltipScanner:SetUnit(unitid)
+
+ 		local TooltipTextLeft1 = _G[ScannerName.."TextLeft1"]
+ 		local TooltipTextLeft2 = _G[ScannerName.."TextLeft2"]
+ 		local TooltipTextLeft3 = _G[ScannerName.."TextLeft3"]
+ 		local TooltipTextLeft4 = _G[ScannerName.."TextLeft4"]
+
+ 		name = TooltipTextLeft1:GetText()
+
+		if name then name = gsub( gsub( (name), "|c........", "" ), "|r", "" ) else return end	-- Strip color escape sequences: "|c"
+		if name ~= UnitName(unitid) then return end	-- Avoid caching information for the wrong unit
+
+
+		-- Tooltip Format Priority:  Faction, Description, Level
+		local toolTipText = TooltipTextLeft2:GetText() or "UNKNOWN"
+
+		if string.match(toolTipText, UNIT_LEVEL_TEMPLATE) then
+			subTitle = ""
+		else
+			subTitle = toolTipText
+		end
+
+		UnitSubtitles[name] = subTitle
+	end
+
+	-- Maintaining a cache allows us to avoid the hit
+	if subTitle == "" then return nil
+	else return subTitle end
+
+end
+
+TidyPlatesUtility.GetUnitSubtitle = GetUnitSubtitle
+
+------------------------------------------
+-- Quest Info
+------------------------------------------
+local function GetTooltipLineText(lineNumber)
+        local tooltipLine = _G[ScannerName .. "TextLeft" .. lineNumber]
+        local tooltipText = tooltipLine:GetText()
+        local r, g, b = tooltipLine:GetTextColor()
+
+        return tooltipText, r, g, b
+end
+
+local function GetUnitQuestInfo(unit)
+    local unitid = unit.unitid
+    local questName
+    local questProgress
+
+    -- Tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
+    TooltipScanner:ClearLines()
+    TooltipScanner:SetUnit(unitid)
+
+    for line = 3, TooltipScanner:NumLines() do
+        local tooltipText, r, g, b = GetTooltipLineText( line )
+
+        -- If the Quest Name exists, the following tooltip lines list quest progress
+        if questName then
+            -- Strip out the name of the player that is on the quest.
+            local playerName, questNote = string.match(tooltipText, "(%g*) ?%- (.*)")
+
+            if (playerName == "") or (playerName == UnitName("player")) then
+                questProgress = questNote
+                break
+            end
+
+        elseif b == 0 and r > 0.99 and g > 0.82 then
+            -- Note: Quest Name Heading is colored Yellow
+            questName = tooltipText
+        end
+    end
+
+    return questName, questProgress
+end
+
+
+TidyPlatesUtility.GetUnitQuestInfo = GetUnitQuestInfo
+
+------------------------
+-- Threat Function
+------------------------
+
+-- /run print(UnitThreatSituation("party1"), UnitAffectingCombat("party1"))
+--local function GetThreatCondition(name)
+local function GetFriendlyThreat(unitid)
+
+	if unitid then
+		local isUnitInParty = UnitPlayerOrPetInParty(unit)
+		local isUnitInRaid = UnitInRaid(unit)
+		local isUnitPet = (unit == "pet")
+
+		--if isUnitInParty then
+			local unitaggro = UnitThreatSituation(unitid)
+			if unitaggro and unitaggro > 1 then return true end
+		--end
+	end
+end
+
+TidyPlatesUtility.GetFriendlyThreat = GetFriendlyThreat
 
 ------------------------
 -- Threat Function

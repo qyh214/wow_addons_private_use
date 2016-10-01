@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(197, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 161 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(52571)
 mod:SetEncounterID(1185)
-mod:DisableEEKillDetection()
 mod:SetZone()
 mod:SetUsedIcons(8)
 mod:SetModelSound("Sound\\Creature\\FandralFlameDruid\\VO_FL_FANDRAL_GATE_INTRO_01.ogg", "Sound\\Creature\\FandralFlameDruid\\VO_FL_FANDRAL_KILL_05.ogg")

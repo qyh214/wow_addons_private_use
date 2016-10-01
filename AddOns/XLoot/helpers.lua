@@ -1,5 +1,6 @@
 local XLoot = select(2, ...)
 local buffer, print = {}, print
+local _G = _G
 
 local table_insert, table_concat, string_format = table.insert, table.concat, string.format
 
@@ -87,7 +88,14 @@ local dimensions = {
 	TANK = '32:48'
 }
 function XLoot.FancyPlayerName(name, class, opt)
-	local c = RAID_CLASS_COLORS[class] or white
+	local c
+	if _G.CUSTOM_CLASS_COLORS then
+		c = _G.CUSTOM_CLASS_COLORS[class]
+	elseif _G.RAID_CLASS_COLORS[class] then
+		c = _G.RAID_CLASS_COLORS[class]
+	else
+		c = white
+	end
 	local role = UnitGroupRolesAssigned(name)
 	local short, realm = UnitName(name)
 	if short then

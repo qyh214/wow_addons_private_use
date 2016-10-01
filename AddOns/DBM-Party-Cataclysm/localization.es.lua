@@ -1,30 +1,30 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
-
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
 -------------------------
---  Blackrock Caverns  --
+-- Cavernas Roca Negra --
+-------------------------
 --------------------------
--- Rom'ogg Bonecrusher --
+-- MachacahuesosRom'ogg --
 --------------------------
 L= DBM:GetModLocalization(105)
 
--------------------------------
--- Corla, Herald of Twilight --
--------------------------------
+-----------------------------------
+-- Corla, Heraldo del Crepúsculo --
+-----------------------------------
 L= DBM:GetModLocalization(106)
 
 L:SetWarningLocalization({
-	WarnAdd		= "Se ha liberado un add"
+	WarnAdd		= "Zelote evolucionado"
 })
 
 L:SetOptionLocalization({
-	WarnAdd		= "Avisar cuando un add pierde el bufo de $spell:75608"
+	WarnAdd		= "Mostrar aviso cuando un zelote pierda el beneficio de $spell:75608"
 })
 
------------------------
--- Karsh SteelBender --
------------------------
+---------------------
+-- Karsh Doblacero --
+---------------------
 L= DBM:GetModLocalization(107)
 
 L:SetTimerLocalization({
@@ -32,52 +32,53 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	TimerSuperheated	= "Mostrar tiempo de duracion de $spell:75846"
+	TimerSuperheated	= "Mostrar temporizador para la duración de $spell:75846"
 })
 
-------------
--- Beauty --
-------------
+-----------
+-- Bella --
+-----------
 L= DBM:GetModLocalization(108)
 
------------------------------
--- Ascendant Lord Obsidius --
------------------------------
+--------------------------------
+-- Señor ascendiente Obsidius --
+--------------------------------
 L= DBM:GetModLocalization(109)
 
 L:SetOptionLocalization({
-	SetIconOnBoss	= "Poner un icono en el boss después de $spell:76200"
+	SetIconOnBoss	= "Poner icono en el jefe tras $spell:76200 "
 })
 
----------------------
---  The Deadmines  --
----------------------
+------------------------
+-- Minas de la Muerte --
+------------------------
+-------------
 -- Glubtok --
 -------------
 L= DBM:GetModLocalization(89)
 
------------------------
--- Helix Gearbreaker --
------------------------
+--------------------------
+-- Helix Rompengranajes --
+--------------------------
 L= DBM:GetModLocalization(90)
 
----------------------
--- Foe Reaper 5000 --
----------------------
+------------------------
+-- Siegaenemigos 5000 --
+------------------------
 L= DBM:GetModLocalization(91)
 
 L:SetOptionLocalization{
 	HarvestIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(88495)
 }
 
-----------------------
--- Admiral Ripsnarl --
-----------------------
+----------------------------
+-- Almirante Rasgagruñido --
+----------------------------
 L= DBM:GetModLocalization(92)
 
-----------------------
--- "Captain" Cookie --
-----------------------
+-------------------------
+-- "Capitán" Cocinitas --
+-------------------------
 L= DBM:GetModLocalization(93)
 
 ----------------------
@@ -86,49 +87,50 @@ L= DBM:GetModLocalization(93)
 L= DBM:GetModLocalization(95)
 
 L:SetTimerLocalization({
-	achievementGauntlet	= "Vigorosa venganza VanCleef"
+	achievementGauntlet	= "Logro: Vigorosa venganza VanCleef"
 })
 
-------------------
---  Grim Batol  --
+----------------
+-- Grim Batol --
+----------------
 ---------------------
 -- General Umbriss --
 ---------------------
 L= DBM:GetModLocalization(131)
 
 L:SetOptionLocalization{
-	PingBlitz	= "Marcar en el minimapa cuando el General Umbriss vaya a atacarte con Ataque relámpago"
+	PingBlitz	= "Marcar en el minimapa cuando el General Umbriss vaya a usar $spell:74670 en ti"
 }
 
---------------------------
--- Forgemaster Throngus --
---------------------------
+-------------------------------
+-- Maestro de forja Throngus --
+-------------------------------
 L= DBM:GetModLocalization(132)
 
 -------------------------
--- Drahga Shadowburner --
+-- Drahga Quemasombras --
 -------------------------
 L= DBM:GetModLocalization(133)
 
-------------
--- Erudax --
-------------
+-------------------------------------------
+-- Erudax, el Duque de las profundidades --
+-------------------------------------------
 L= DBM:GetModLocalization(134)
 
-----------------------------
---  Halls of Origination  --
-----------------------------
--- Temple Guardian Anhuur --
-----------------------------
+-------------------------------
+--  Cámaras de los Orígenes  --
+--------------------------------
+-- Guardián del templo Anhuur --
+--------------------------------
 L= DBM:GetModLocalization(124)
 
 ---------------------
--- Earthrager Ptah --
+-- Terracundo Ptah --
 ---------------------
 L= DBM:GetModLocalization(125)
 
 L:SetMiscLocalization{
-	Kill		= "Se... acabó... Ptah..."
+	Kill		= "Se... acabaó... Ptah..."
 }
 
 --------------
@@ -137,55 +139,56 @@ L:SetMiscLocalization{
 L= DBM:GetModLocalization(126)
 
 L:SetTimerLocalization({
-	achievementGauntlet	= "Velocidad de la luz"
+	achievementGauntlet	= "Logro: Más rápido que la velocidad de la luz"
 })
 
 L:SetMiscLocalization({
-	Brann		= "¡Bien, vamos! Tan solo me falta introducir la secuencia final en el mecanismo de la puerta... y..."
+	Brann				= "¡Bien, vamos! Tan solo me falta introducir la secuencia final en el mecanismo de la puerta... y..."
 })
 
-------------
--- Isiset --
-------------
+---------------------------------
+-- Isiset, Ensamblaje de magia --
+---------------------------------
 L= DBM:GetModLocalization(127)
 
 L:SetWarningLocalization({
-	WarnSplitSoon	= "División pronto"
+	WarnSplitSoon	= "Reflejos en breve"
 })
 
 L:SetOptionLocalization({
-	WarnSplitSoon	= "Mostrar pre aviso para división"
+	WarnSplitSoon	= "Mostrar aviso previo para Reflejos"
 })
 
--------------
--- Ammunae --
-------------- 
+---------------------------------
+-- Ammunae, Ensamblaje de vida --
+---------------------------------
 L= DBM:GetModLocalization(128)
 
--------------
--- Setesh  --
-------------- 
+----------------------------------------
+-- Setesh, Ensamblaje de destrucción  --
+----------------------------------------
 L= DBM:GetModLocalization(129)
 
-----------
--- Rajh --
-----------
+------------------------------
+-- Rajh, Ensamblaje del Sol --
+------------------------------
 L= DBM:GetModLocalization(130)
 
---------------------------------
---  Lost City of the Tol'vir  --
---------------------------------
+-----------------------------------
+-- Ciudad Perdida de los Tol'vir --
+-----------------------------------
+-------------------
 -- General Husam --
 -------------------
 L= DBM:GetModLocalization(117)
 
---------------
--- Lockmaw --
---------------
+-----------------
+-- Cierrafauce --
+-----------------
 L= DBM:GetModLocalization(118)
 
 L:SetOptionLocalization{
-	RangeFrame	= "Mostrar distancia (6 yardas)"
+	RangeFrame	= "Mostrar marco de distancia (5 m)"
 }
 
 ----------
@@ -194,58 +197,59 @@ L:SetOptionLocalization{
 L = DBM:GetModLocalization("Augh")
 
 L:SetGeneralLocalization({
-	name = "Augh"
+	name = "Augh"		-- he is fightable after Lockmaw :o
 })
 
 ------------------------
--- High Prophet Barim --
+-- Sumo profeta Barim --
 ------------------------
 L= DBM:GetModLocalization(119)
 
 L:SetOptionLocalization{
-	BossHealthAdds	= "Mostrar barra de vida de los adds"
+	BossHealthAdds	= "Mostrar salud de los esbirros en el marco de salud del jefe"
 }
 
-------------------------------------
--- Siamat, Lord of the South Wind --
-------------------------------------
+------------
+-- Siamat --
+------------
 L= DBM:GetModLocalization(122)
 
 L:SetWarningLocalization{
-	specWarnPhase2Soon	= "Fase 2 en 5 segundos"
+	specWarnPhase2Soon	= "Fase 2 en 5 s"
 }
 
 L:SetOptionLocalization{
-	specWarnPhase2Soon	= "Mostrar aviso epecial para fase 2 en breve (5 segundos)"
+	specWarnPhase2Soon	= "Mostrar aviso especial 5 s antes de la fase 2"
 }
 
------------------------
---  Shadowfang Keep  --
------------------------
--- Baron Ashbury --
+---------------------------------
+-- Castillo de Colmillo Oscuro --
+---------------------------------
+-------------------
+-- Barón Ashbury --
 -------------------
 L= DBM:GetModLocalization(96)
 
------------------------
--- Baron Silverlaine --
------------------------
+----------------------
+-- Barón Filargenta --
+----------------------
 L= DBM:GetModLocalization(97)
 
 --------------------------
--- Commander Springvale --
+-- Comandante Vallefont --
 --------------------------
 L= DBM:GetModLocalization(98)
 
 L:SetTimerLocalization({
-	TimerAdds		= "Siguientes Adds"
+	TimerAdds		= "Siguientes esbirros"
 })
 
 L:SetOptionLocalization{
-	TimerAdds		= "Mostrar tiempo para adds"
+	TimerAdds		= "Mostrar temporizador para los siguientes esbirros"
 }
 
 L:SetMiscLocalization{
-	YellAdds		= "¡Repeled a los intrusos!"
+	YellAdds		= "¡Repeled a los instrusos!"
 }
 
 -----------------
@@ -254,12 +258,12 @@ L:SetMiscLocalization{
 L= DBM:GetModLocalization(99)
 
 L:SetWarningLocalization{
-	specWarnCoagulant	= "Mezcla verde. ¡Muévete!",	-- Green light
-	specWarnRedMix		= "Mezcla roja. ¡No te muevas!"		-- Red light
+	specWarnCoagulant	= "Mezcla verde - ¡no te quedes quieto!",	-- Green light
+	specWarnRedMix		= "Mezcla roja - ¡quédate quieto!"		-- Red light
 }
 
 L:SetOptionLocalization{
-	RedLightGreenLight	= "Mostrar aviso especial para mezclas rojas/verdes"
+	RedLightGreenLight	= "Mostrar aviso especial para los requisitos de movimiento de las mezclas"
 }
 
 ------------------
@@ -267,54 +271,55 @@ L:SetOptionLocalization{
 ------------------
 L= DBM:GetModLocalization(100)
 
----------------------
---  The Stonecore  --
----------------------
+----------------------
+-- El Núcleo Pétreo --
+----------------------
+--------------
 -- Corborus --
 -------------- 
 L= DBM:GetModLocalization(110)
 
 L:SetWarningLocalization({
-	WarnEmerge	= "Emerge",
-	WarnSubmerge	= "Se sumerge"
+	WarnEmerge		= "Corborus ha regresado",
+	WarnSubmerge	= "Corborus se sumerge"
 })
 
 L:SetTimerLocalization({
-	TimerEmerge	= "Siguiente Emerger",
-	TimerSubmerge	= "Siguiente Sumergirse"
+	TimerEmerge		= "Emersión",
+	TimerSubmerge	= "Sumersión"
 })
 
 L:SetOptionLocalization({
-	WarnEmerge	= "Mostrar aviso cuando emerge",
-	WarnSubmerge	= "Mostrar aviso cuando se sumerge",
-	TimerEmerge	= "Mostrar tiempo para que emerja",
-	TimerSubmerge	= "Mostrar tiempo para que se sumerja",
-	CrystalArrow	= "Mostrar una flecha cuando $spell:81634 esté cerca de ti",
-	RangeFrame		= "Mostrar distancia (5 yardas)"
+	WarnEmerge		= "Mostrar aviso cuando Corborus regrese a la superficie",
+	WarnSubmerge	= "Mostrar aviso cuando Corborus se sumerja en la tierra",
+	TimerEmerge		= "Mostrar temporizador para cuando Corborus regrese a la superficie",
+	TimerSubmerge	= "Mostrar temporizador para cuando Corborus se sumerja en la tierra",
+	CrystalArrow	= "Mostrar flecha cuando $spell:81634 ocurra cerca de ti",
+	RangeFrame		= "Mostrar marco de distancia (5 m)"
 })
 
---------------
--- Slabhide --
--------------- 
+----------------
+-- Pielpétrea --
+----------------
 L= DBM:GetModLocalization(111)
 
 L:SetWarningLocalization({
-	WarnAirphase			= "Fase aerea",
+	WarnAirphase			= "Fase aérea",
 	WarnGroundphase			= "Fase en tierra",
-	specWarnCrystalStorm		= "Tormenta de Cristales - Protégete"
+	specWarnCrystalStorm	= "Tormenta de cristales - ¡ponte a cubierto!"
 })
 
 L:SetTimerLocalization({
-	TimerAirphase			= "Siguiente Fase aerea",
-	TimerGroundphase		= "Siguiente Fase en tierra"
+	TimerAirphase			= "Siguiente fase aérea",
+	TimerGroundphase		= "Siguiente fase en tierra"
 })
 
 L:SetOptionLocalization({
-	WarnAirphase			= "Mostrar aviso cuando Pielpétrea despega",
-	WarnGroundphase			= "Mostrar aviso cuando Pielpétrea aterriza",
-	TimerAirphase			= "Mostrar tiempo para siguiente Fase aerea",
-	TimerGroundphase		= "Mostrar tiempo para siguiente Fase en tierra",
-	specWarnCrystalStorm		= "Mostrar aviso especial para $spell:92265"
+	WarnAirphase			= "Mostrar aviso cuando Pielpétrea se eleve",
+	WarnGroundphase			= "Mostrar aviso cuando Pielpétrea aterrice",
+	TimerAirphase			= "Mostrar temporizador para la siguiente fase aérea",
+	TimerGroundphase		= "Mostrar temporizador para la siguiente fase en tierra",
+	specWarnCrystalStorm	= "Mostrar aviso especial para $spell:92265"
 })
 
 -----------
@@ -323,15 +328,16 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(112)
 
 -------------------------
--- High Priestess Azil --
+-- Suma sacerdotisa Azil --
 ------------------------
 L= DBM:GetModLocalization(113)
 
 ---------------------------
---  The Vortex Pinnacle  --
+-- La Cumbre del Vórtice --
 ---------------------------
--- Grand Vizier Ertan --
-------------------------
+----------------------
+-- Gran visir Ertan --
+----------------------
 L= DBM:GetModLocalization(114)
 
 L:SetMiscLocalization{
@@ -347,26 +353,26 @@ L:SetOptionLocalization({
 	BreathIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(88308)
 })
 
------------
--- Asaad --
------------
+----------------------------------
+-- Asaad, califa de los Céfiros --
+----------------------------------
 L= DBM:GetModLocalization(116)
 
 ---------------------------
---  The Throne of Tides  --
+--  Trono de las Mareas  --
 ---------------------------
 -- Lady Naz'jar --
 ------------------ 
 L= DBM:GetModLocalization(101)
 
------======-----------
--- Commander Ulthok --
----------------------- 
+-----------------------
+-- Comandante Ulthok --
+----------------------- 
 L= DBM:GetModLocalization(102)
 
--------------------------
--- Erunak Stonespeaker --
--------------------------
+---------------------------
+-- Dominamentes Ghur'sha --
+---------------------------
 L= DBM:GetModLocalization(103)
 
 ------------
@@ -379,59 +385,59 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	TimerPhase		= "Mostrar tiempo para fase 2"
+	TimerPhase		= "Mostrar temporizador para fase 2"
 }
 
-
-----------------
---  Zul'Aman  --
-----------------
---  Akil'zon --
----------------
+--------------
+-- Zul'Aman --
+--------------
+--------------
+-- Akil'zon --
+--------------
 L= DBM:GetModLocalization(186)
 
 L:SetOptionLocalization{
 	StormIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(43648),
-	RangeFrame	= "Mostrar distancia",
+	RangeFrame	= "Mostrar marco de distancia (10 m)",
 	StormArrow	= "Mostrar flecha para $spell:43648"
 }
 
----------------
---  Nalorakk --
----------------
+--------------
+-- Nalorakk --
+--------------
 L= DBM:GetModLocalization(187)
 
 L:SetWarningLocalization{
 	WarnBear		= "Forma de oso",
-	WarnBearSoon	= "Forma de oso en 5 seg",
+	WarnBearSoon	= "Forma de oso en 5 s",
 	WarnNormal		= "Forma normal",
-	WarnNormalSoon	= "Forma normal en 5 seg"
+	WarnNormalSoon	= "Forma normal en 5 s"
 }
 
 L:SetTimerLocalization{
-	TimerBear		= "Oso",
-	TimerNormal		= "Forma Normal"
+	TimerBear		= "Forma de oso",
+	TimerNormal		= "Forma normal"
 }
 
 L:SetOptionLocalization{
-	WarnBear		= "Mostrar aviso para forma de Oso",
-	WarnBearSoon	= "Mostrar pre-aviso para forma de Oso",
-	WarnNormal		= "Mostrar aviso para forma de Normal",
-	WarnNormalSoon	= "Mostrar preaviso para forma de Normal",
-	TimerBear		= "Mostrar tiempo para forma de Oso",
-	TimerNormal		= "Mostrar tiempo para forma Normal",
-	InfoFrame		= "Mostrar información para jugadores a los que les afecta $spell:42402"
+	WarnBear		= "Mostrar aviso para forma de oso",
+	WarnBearSoon	= "Mostrar aviso previo para forma de oso",
+	WarnNormal		= "Mostrar aviso para forma normal",
+	WarnNormalSoon	= "Mostrar aviso previo para forma normal",
+	TimerBear		= "Mostrar temporizador para forma de oso",
+	TimerNormal		= "Mostrar temporizador para forma normal",
+	InfoFrame		= "Mostrar marco de información de jugadores afectados por $spell:42402"
 }
 
 L:SetMiscLocalization{
-	YellBear 	= "¡Si llamáis a la beh'tia, vais a recibir más de lo que eh'peráis!",
-	YellNormal	= "¡Dejad paso al Nalorakk!",
-	PlayerDebuffs	= "Debuff de Oleada"
+	YellBear 		= "¡Si llamáis a la beh'tia, vais a recibir más de lo que eh'peráis!",
+	YellNormal		= "¡Dejad paso al Nalorakk!",
+	PlayerDebuffs	= "Perjuicio de Oleada"
 }
 
----------------
---  Jan'alai --
----------------
+--------------
+-- Jan'alai --
+--------------
 L= DBM:GetModLocalization(188)
 
 L:SetOptionLocalization{
@@ -444,29 +450,29 @@ L:SetMiscLocalization{
 	YellAdds	= "¿Dónde está mi criador? ¡A por los huevos!"
 }
 
---------------
---  Halazzi --
---------------
+-------------
+-- Halazzi --
+-------------
 L= DBM:GetModLocalization(189)
 
 L:SetWarningLocalization{
-	WarnSpirit	= "Fase de Espíritu",
-	WarnNormal	= "Fase Normal"
+	WarnSpirit	= "Fase de espíritu",
+	WarnNormal	= "Fase normal"
 }
 
 L:SetOptionLocalization{
-	WarnSpirit	= "Mostrar aviso para fase de Espíritu",
-	WarnNormal	= "Mostrar aviso para fase Normal"
+	WarnSpirit	= "Mostrar aviso para fase de espíritu",
+	WarnNormal	= "Mostrar aviso para fase normal"
 }
 
 L:SetMiscLocalization{
-	YellSpirit	= "Lucho con libertad de espíritu...",
-	YellNormal	= "¡Espíritu, vuelve a mí!"
+	YellSpirit	= "Lucho con libertad de eh'píritu...",
+	YellNormal	= "¡Eh'píritu, vuelve a mí!"
 }
 
------------------------
--- Hexlord Malacrass --
------------------------
+-----------------------------
+-- Señor aojador Malacrass --
+-----------------------------
 L= DBM:GetModLocalization(190)
 
 L:SetTimerLocalization{
@@ -474,7 +480,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	TimerSiphon	= "Mostrar tiempo para $spell:43501"
+	TimerSiphon	= "Mostrar temporizador para $spell:43501"
 }
 
 L:SetMiscLocalization{
@@ -491,46 +497,47 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	timerNextForm	= "Mostrar tiempo para los cambios de forma.",
-	InfoFrame		= "Mostrar información para jugadores a los que les afecta $spell:42402",
-	ThrowIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(97639),
-	ClawRageIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(97672)
+	timerNextForm	= "Mostrar temporizador para cambio de forma",
+	InfoFrame		= "Mostrar marco de información de jugadores afectados por $spell:42402",
+	ThrowIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(43093),
+	ClawRageIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(43150)
 }
 
 L:SetMiscLocalization{
-	PlayerDebuffs	= "Debuff de Oleada"
+	PlayerDebuffs	= "Perjuicio de Oleada"
 }
 
------------------
---  Zul'Gurub  --
------------------
--- High Priest Venoxis --
--------------------------
+---------------
+-- Zul'Gurub --
+---------------
+----------------------------
+-- Sumo sacerdote Venoxis --
+----------------------------
 L= DBM:GetModLocalization(175)
 
 L:SetOptionLocalization{
 	SetIconOnToxicLink	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(96477),
-	LinkArrow		= "Mostrar una flecha cuando te afecte $spell:96477"
+	LinkArrow			= "Mostrar flecha cuando te afecte $spell:96477"
 }
 
-------------------------
--- Bloodlord Mandokir --
-------------------------
+-------------------------------
+-- Señor sangriento Mandokir --
+-------------------------------
 L= DBM:GetModLocalization(176)
 
 L:SetWarningLocalization{
-	WarnRevive		= "%d fantasmas restantes",
-	SpecWarnOhgan	= "¡Ohgan ha resucitado! ¡Ataca ahora!"
+	WarnRevive		= "Espíritus restantes: %d",
+	SpecWarnOhgan	= "¡Ohgan ha resucitado! ¡Atacad ahora!" -- check this, i'm not good at English
 }
 
 L:SetOptionLocalization{
-	WarnRevive	= "Anunciar cuantas resurrecciones de fantasmas quedan",
-	SpecWarnOhgan	= "Mostrar aviso cuando Ohgan es resucitado" 
+	WarnRevive		= "Anunciar el número de espíritus restantes",
+	SpecWarnOhgan	= "Mostrar aviso cuando Ohgan resucite" -- check this, i'm not good at English
 }
 
-----------------------
--- Cache of Madness --
-----------------------
+--------------------------
+-- Extremo de la Locura --
+--------------------------
 -------------
 -- Gri'lek --
 -------------
@@ -551,9 +558,9 @@ L= DBM:GetModLocalization(179)
 ---------------
 L= DBM:GetModLocalization(180)
 
-----------------------------
--- High Priestess Kilnara --
-----------------------------
+------------------------------
+-- Suma sacerdotisa Kilnara --
+------------------------------
 L= DBM:GetModLocalization(181)
 
 ------------
@@ -562,12 +569,12 @@ L= DBM:GetModLocalization(181)
 L= DBM:GetModLocalization(184)
 
 L:SetWarningLocalization{
-	SpecWarnToxic	= "Coge Tormento tóxico"
+	SpecWarnToxic	= "Bebe Tormento tóxico"
 }
 
 L:SetOptionLocalization{
-	SpecWarnToxic	= "Mostrar aviso especial cuando pierdas el debufo de $spell:96328",
-	InfoFrame		= "Mostrar información de jugadores sin $spell:96328",
+	SpecWarnToxic	= "Mostrar aviso especial cuando no te afecte el perjuicio de $spell:96328",
+	InfoFrame		= "Mostrar marco de información de jugadores no afectados por $spell:96328",
 	SetIconOnGaze	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(96342)
 }
 
@@ -575,52 +582,53 @@ L:SetMiscLocalization{
 	PlayerDebuffs	= "Sin Tormento tóxico"
 }
 
-----------------------------
--- Jindo --
-----------------------------
+-----------------------------
+-- Jin'do el Sojuzgadioses --
+-----------------------------
 L= DBM:GetModLocalization(185)
 
 L:SetWarningLocalization{
-	WarnBarrierDown	= "Barrera de las cadenas de Hakkar eliminada - %d/3 restantes"
+	WarnBarrierDown	= "Cadenas de Hakkar restantes: %d"
 }
 
 L:SetOptionLocalization{
-	WarnBarrierDown	= "Anunciar cuando se elimine una barrera de cadenas",
+	WarnBarrierDown	= "Anunciar el número de cadenas de Hakkar restantes",
 	BodySlamIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(97198)
 }
 
 L:SetMiscLocalization{
-	Kill	= "Te has pasado de la raya, Jin'do. Juegas con poderes que van más allá de ti. ¿Acaso has olvidado quién soy? ¡¿Es que has olvidado lo que puedo hacer?!"
+	Kill			= "Te has pasado de la raya, Jin'do. Juegas con poderes que van más allá de ti. ¿Acaso has olvidado quién soy? ¡¿Es que has olvidado lo que puedo hacer?!"
 }
 
-----------------
---  End Time  --
--------------------
--- Echo of Baine --
--------------------
+---------------------
+-- Fin de los Días --
+---------------------
+------------------
+-- Eco de Baine --
+------------------
 L= DBM:GetModLocalization(340)
 
--------------------
--- Echo of Jaina --
--------------------
+------------------
+-- Eco de Jaina --
+------------------
 L= DBM:GetModLocalization(285)
 
 L:SetTimerLocalization{
-	TimerFlarecoreDetonate	= "Detonación de Bengala del Núcleo"
+	TimerFlarecoreDetonate	= "Bengala del Núcleo explota"
 }
 
 L:SetOptionLocalization{
-	TimerFlarecoreDetonate	= "Mostrar tiempo para detonación de $spell:101927"
+	TimerFlarecoreDetonate	= "Mostrar temporizador para cuando explote $spell:101927"
 }
 
-----------------------
--- Echo of Sylvanas --
-----------------------
+---------------------
+-- Eco de Sylvanas --
+---------------------
 L= DBM:GetModLocalization(323)
 
----------------------
--- Echo of Tyrande --
----------------------
+--------------------
+-- Eco de Tyrande --
+--------------------
 L= DBM:GetModLocalization(283)
 
 --------------
@@ -632,9 +640,10 @@ L:SetMiscLocalization{
 	Kill		= "No tenéis ni idea de lo que habéis hecho. Aman'Thul... Lo que... he... visto..."
 }
 
-------------------------
---  Well of Eternity  --
-------------------------
+--------------------------
+-- Pozo de la Eternidad --
+--------------------------
+----------------
 -- Peroth'arn --
 ----------------
 L= DBM:GetModLocalization(290)
@@ -643,31 +652,31 @@ L:SetMiscLocalization{
 	Pull		= "¡Ningún mortal que se enfrente a mí saldrá con vida!"
 }
 
--------------
--- Azshara --
--------------
+-------------------
+-- Reina Azshara --
+-------------------
 L= DBM:GetModLocalization(291)
 
 L:SetWarningLocalization{
-	WarnAdds	= "Siguientes adds pronto"
+	WarnAdds	= "Siguientes magos en breve"
 }
 
 L:SetTimerLocalization{
-	TimerAdds	= "Siguientes adds"
+	TimerAdds	= "Siguientes magos"
 }
 
 L:SetOptionLocalization{
-	WarnAdds	= "Anunciar cuando \"salgan\" nuevos adds",
-	TimerAdds	= "Mostrar tiempo para que \"salgan\" nuevos adds"
+	WarnAdds	= "Anunciar cuando los siguientes magos se unan al combate",
+	TimerAdds	= "Mostrar temporizador para los siguientes magos"
 }
 
 L:SetMiscLocalization{
 	Kill		= "Ya basta. Por mucho que me guste hacer de anfitriona, debo atender asuntos más urgentes."
 }
 
------------------------------
--- Mannoroth and Varo'then --
------------------------------
+---------------------------
+-- Mannoroth y Varo'then --
+---------------------------
 L= DBM:GetModLocalization(292)
 
 L:SetTimerLocalization{
@@ -675,26 +684,27 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	TimerTyrandeHelp	= "Mostrar tiempo para que Tyrande necesite ayuda"
+	TimerTyrandeHelp	= "Mostrar temporizador para cuando Tyrande necesite ayude"
 }
 
 L:SetMiscLocalization{
 	Kill		= "¡Malfurion... lo ha logrado! ¡El portal se desmorona!"
 }
 
-------------------------
---  Hour of Twilight  --
-------------------------
+-------------------------
+-- Hora del Crepúsculo --
+-------------------------
+--------------
 -- Arcurion --
 --------------
 L= DBM:GetModLocalization(322)
 
 L:SetTimerLocalization{
-	TimerCombatStart	= "Empieza el combate"
+	TimerCombatStart	= "Comienza el encuentro"
 }
 
 L:SetOptionLocalization{
-	TimerCombatStart	= "Mostrar tiempo para el inicio del combate"
+	TimerCombatStart	= "Mostrar temporizador para el inicio del encuentro"
 }
 
 L:SetMiscLocalization{
@@ -702,26 +712,26 @@ L:SetMiscLocalization{
 	Pull		= "Las fuerzas Crepusculares comienzan a aparecer en los bordes de los cañones."
 }
 
-----------------------
--- Asira Dawnslayer --
-----------------------
+--------------------------
+-- Asira Puñal del Alba --
+--------------------------
 L= DBM:GetModLocalization(342)
 
 L:SetMiscLocalization{
 	Pull		= "... una vez liquidado eso, tú y ese rebaño de torpes amigos tuyos sois los siguientes en mi lista. ¡Mmm, creí que nunca llegarías!"
 }
 
----------------------------
--- Archbishop Benedictus --
----------------------------
+--------------------------
+-- Arzobispo Benedictus --
+--------------------------
 L= DBM:GetModLocalization(341)
 
 L:SetTimerLocalization{
-	TimerCombatStart	= "Empieza el combate"
+	TimerCombatStart	= "Comienza el encuentro"
 }
 
 L:SetOptionLocalization{
-	TimerCombatStart	= "Mostrar tiempo para el inicio del combate"
+	TimerCombatStart	= "Mostrar temporizador para el inicio del encuentro"
 }
 
 L:SetMiscLocalization{
@@ -729,28 +739,29 @@ L:SetMiscLocalization{
 }
 
 --------------------
---  World Bosses  --
--------------------------
+-- Jefes de mundo --
+--------------------
+--------------
 -- Akma'hat --
--------------------------
+--------------
 L = DBM:GetModLocalization("Akmahat")
 
 L:SetGeneralLocalization{
 	name = "Akma'hat"
 }
 
------------
+----------
 -- Garr --
 ----------
 L = DBM:GetModLocalization("Garr")
 
 L:SetGeneralLocalization{
-	name = "Garr (Cata)"
+	name = "Garr"
 }
 
-----------------
--- Julak-Doom --
-----------------
+---------------------
+-- Julak Fatalidad --
+---------------------
 L = DBM:GetModLocalization("JulakDoom")
 
 L:SetGeneralLocalization{
@@ -770,9 +781,9 @@ L:SetGeneralLocalization{
 	name = "Mobus"
 }
 
------------
+-------------
 -- Xariona --
------------
+-------------
 L = DBM:GetModLocalization("Xariona")
 
 L:SetGeneralLocalization{

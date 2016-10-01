@@ -360,7 +360,7 @@
 					</OnLoad>
 				</Scripts>
 			</Frame>
-			<!--<Frame name="$parenthitIndicator" frameStrata="HIGH">
+			<Frame name="$parenthitIndicator" frameStrata="HIGH">
 				<Layers>
 					<Layer level="OVERLAY">
 						<FontString name="$parenttext" inherits="NumberFontNormalHuge" hidden="true" text="Error!">
@@ -374,7 +374,7 @@
 						</FontString>
 					</Layer>
 				</Layers>
-			</Frame>-->
+			</Frame>
 			<Frame name="$parenthighlight" inherits="XPerl_HighlightTemplate">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parentportraitFrame"/>

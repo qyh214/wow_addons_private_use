@@ -55,6 +55,9 @@ locales.deDE["RECIPIENTS"] = "Spezieller Empfänger" -- Needs review
 locales.deDE["SPECIALROLLS"] = "Spezielle Würfe" -- Needs review
 
 locales.koKR["ITEM_AWARDED"] = "%s 아이템을 획득했습니다: %s" -- Needs review
+locales.koKR["ML_RANDOM"] = "공격대 주사위"
+locales.koKR["RECIPIENTS"] = "특별 수령인"
+locales.koKR["SPECIALROLLS"] = "특별 주사위"
 
 
 locales.ruRU["BINDING_BANKER"] = "Назначить банкира"

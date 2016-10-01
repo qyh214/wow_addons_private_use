@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(194, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 170 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(52530)
 mod:SetEncounterID(1206)
-mod:DisableEEKillDetection()
 mod:SetZone()
 mod:SetModelSound("Sound\\Creature\\ALYSRAZOR\\VO_FL_ALYSRAZOR_AGGRO.ogg", "Sound\\Creature\\ALYSRAZOR\\VO_FL_ALYSRAZOR_TRANSITION_02.ogg")
 --Long: I serve a new master now, mortals!

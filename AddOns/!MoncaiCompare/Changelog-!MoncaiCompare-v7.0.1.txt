@@ -1,0 +1,14 @@
+------------------------------------------------------------------------
+r48 | moncai | 2016-09-05 13:44:11 +0000 (Mon, 05 Sep 2016) | 1 line
+Changed paths:
+   A /tags/v7.0.1 (from /trunk:47)
+
+Tagging as v7.0.1
+------------------------------------------------------------------------
+r47 | moncai | 2016-09-05 13:43:35 +0000 (Mon, 05 Sep 2016) | 1 line
+Changed paths:
+   M /trunk/!MoncaiCompare.toc
+   A /trunk/LootJournal.lua
+
+Added support for Loot Journal tab of the Adventure Guide
+------------------------------------------------------------------------

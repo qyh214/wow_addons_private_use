@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(134, "DBM-Party-Cataclysm", 3, 71)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 170 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 175 $"):sub(12, -3))
 mod:SetCreatureID(40484)
+mod:SetEncounterID(1049)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -54,7 +55,7 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
---Sometimes boss fails to cast gale so no SPELL_CAST_START event. This ensures we still detect cast and start tiemers
+--Sometimes boss fails to cast gale so no SPELL_CAST_START event. This ensures we still detect cast and start timers
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 75656 then
 		specWarnGale:Show()

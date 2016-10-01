@@ -6,22 +6,13 @@ local L = DBM_GUI_Translations
 L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Traducido por "
-L.TranslationBy 	= "Orden"
+L.TranslationBy 	= "Orden (ordentradus@gmail.com)"
 L.Website					= "Visita nuestros foros de debate y asistencia técnica en |cFF73C2FBwww.deadlybossmods.com|r."
 L.WebsiteButton				= "Foro"
 
 L.OTabBosses	= "Jefes"
-L.OTabOptions	= GAMEOPTIONS_MENU
 
 L.TabCategory_Options	 	= "Opciones generales"
-L.TabCategory_LEG	 		= "Legion"
-L.TabCategory_WOD	 		= EXPANSION_NAME5
-L.TabCategory_MOP	 		= EXPANSION_NAME4
-L.TabCategory_CATA	 		= EXPANSION_NAME3
-L.TabCategory_WOTLK 		= EXPANSION_NAME2
-L.TabCategory_BC 			= EXPANSION_NAME1
-L.TabCategory_CLASSIC		= EXPANSION_NAME0
-L.TabCategory_PVP 			= PVP
 L.TabCategory_OTHER    		= "Otros módulos"
 
 L.BossModLoaded 	= "Estadísticas de %s"
@@ -40,9 +31,6 @@ L.Mod_Enabled		= "Habilitar módulo"
 L.Mod_Reset		= "Cargar opciones por defecto"
 L.Reset 		= "Restaurar"
 
-L.Enable  		= ENABLE
-L.Disable		= DISABLE
-
 L.NoSound		= "Sin sonido"
 
 L.IconsInUse	= "Iconos usados por este módulo"
@@ -53,10 +41,10 @@ L.Statistic_Kills	= "Victorias:"
 L.Statistic_Wipes	= "Derrotas:"
 L.Statistic_Incompletes		= "Inacabados:"--For scenarios, TODO, figure out a clean way to replace any Statistic_Wipes with Statistic_Incompletes for scenario mods
 L.Statistic_BestKill	= "Mejor victoria:"
+L.Statistic_BestRank		= "Mejor nivel:"--Maybe not get used, not sure yet, localize anyways
 
 -- Tab: General Core Options
 L.General 					= "Opciones generales de DBM"
-L.EnableDBM 				= "Habilitar DBM"
 L.EnableMiniMapIcon			= "Mostrar botón junto al minimapa"
 L.UseSoundChannel			= "Canal de audio para alertas"
 L.UseMasterChannel			= "Canal de audio principal"
@@ -67,8 +55,6 @@ L.Latency_Text				= "Latencia máxima para sincronización: %d"
 L.ModelOptions				= "Opciones del visualizador de modelos 3D"
 L.EnableModels				= "Mostrar modelos 3D en opciones de jefe"
 L.ModelSoundOptions			= "Sonido"
-L.ModelSoundShort			= SHORT
-L.ModelSoundLong			= TOAST_DURATION_LONG
 
 L.Button_RangeFrame			= "Mostrar/ocultar\nmarco de distancia"
 L.Button_InfoFrame			= "Mostrar/ocultar\nmarco de información"
@@ -84,10 +70,9 @@ L.RaidWarnColor_2 			= "Color 2"
 L.RaidWarnColor_3		 	= "Color 3"
 L.RaidWarnColor_4 			= "Color 4"
 L.InfoRaidWarning			= [[Puedes especificar la posición y colores del marco de avisos de banda. 
-Este marco se usa para mensajes como "Jugador X está afectado por Y".]]
+Este marco se usa para mensajes como "Jugador X afectado por Y".]]
 L.ColorResetted 			= "Se ha reiniciado la configuración de colores de este campo."
 L.ShowWarningsInChat 		= "Mostrar avisos en el chat"
-L.ShowFakedRaidWarnings 	= "Mostrar avisos como avisos de banda"
 L.WarningIconLeft 			= "Mostrar iconos a la izquierda"
 L.WarningIconRight 			= "Mostrar iconos a la derecha"
 L.WarningIconChat 			= "Mostrar iconos en el chat"
@@ -295,13 +280,13 @@ L.HideGarrisonUpdates		= "Deshabilitar botón de ciudadela en encuentros"
 L.HideGuildChallengeUpdates	= "Deshabilitar botón de desafíos de hermandad en encuentros"
 L.HideTooltips				= "Deshabilitar descripciones en encuentros"
 L.DisableSFX				= "Deshabilitar el canal de efectos de sonido en encuentros"
-L.HideApplicantAlerts		= "Deshabilitar alertas de candidatos en grupos ya formados"
-L.HideApplicantAlertsFull	= "Si el grupo está completo"
-L.HideApplicantAlertsNotL	= "Si no eres el líder del grupo (aplica el filtro de grupo completo si eres el líder)"
 L.SpamBlockSayYell			= "Deshabilitar bocadillos de chat"
 L.DisableCinematics			= "Deshabilitar cinemáticas"
 L.AfterFirst				= "Tras ver la cinemática por primera vez"
 L.Always					= ALWAYS
+L.DisableTalkingHead		= "Desactivar cabeza parlante"
+L.CombatOnly				= "En combate"
+L.RaidCombat				= "En combate (solo en jefes)"
 
 -- Tab: Extra Features
 L.Panel_ExtraFeatures		= "Funciones adicionales"
@@ -319,19 +304,15 @@ L.AFKHealthWarning			= "Reproducir sonido de alerta e iluminar el icono del jueg
 L.AutoReplySound			= "Reproducir sonido de alerta e iluminar el icono del juego al recibir respuestas automáticas de DBM por susurro"
 --
 L.TimerGeneral 				= "Opciones de temporizadores"
-L.SKT_Enabled				= "Mostrar temporizador de récord de victoria del encuentro actual si está disponible"
-L.CRT_Enabled				= "Mostrar temporizador de siguiente resurrección en combate"
-L.ShowRespawn				= "Mostrar temporizador de reaparición de jefe tras cada derrota"
-L.ShowQueuePop				= "Mostrar tiempo restante para aceptar avisos del buscador"
-L.ChallengeTimerOptions		= "Temporizador de récord de modo desafío"
-L.ChallengeTimerPersonal	= "Personal"
-L.ChallengeTimerGuild		= GUILD
-L.ChallengeTimerRealm		= "Reino"
+L.SKT_Enabled				= "Mostrar temporizador para batir el récord de victoria del encuentro actual"
+L.CRT_Enabled				= "Mostrar temporizador para la siguiente resurrección en combate"
+L.ShowRespawn				= "Mostrar temporizador para la reaparición de jefe tras cada derrota"
+L.ShowQueuePop				= "Mostrar temporizador para eltiempo restante para aceptar avisos del buscador"
 --
 L.Area_AutoLogging			= "Opciones del registro automático"
-L.AutologBosses				= "Grabar encuentros automáticamente con el registro de combate de Blizzard (usa '/dbm pull' antes de iniciar un encuentro para comenzar a grabar antes, de forma que tenga en cuenta la toma de pociones y otras acciones)"
-L.AdvancedAutologBosses		= "Grabar encuentros automáticamente con Transcriptor"
-L.LogOnlyRaidBosses			= "Grabar solo encuentros de jefe de banda (excluye el buscador de bandas)"
+L.AutologBosses				= "Registrar encuentros automáticamente con el registro de combate de Blizzard (usa '/dbm pull' antes de iniciar un encuentro para comenzar a grabar antes, de forma que tenga en cuenta la toma de pociones y otras acciones)"
+L.AdvancedAutologBosses		= "Registrar encuentros automáticamente con Transcriptor"
+L.LogOnlyRaidBosses			= "Registrar solo encuentros de jefe de banda de la expansión actual (excluye el buscador de bandas)"
 --
 L.Area_3rdParty				= "Opciones de addons de terceros"
 L.ShowBBOnCombatStart		= "Realizar comprobación de beneficios de Big Brother al iniciar un encuentro"

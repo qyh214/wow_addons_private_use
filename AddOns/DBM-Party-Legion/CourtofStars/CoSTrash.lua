@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("CoSTrash", "DBM-Party-Legion", 7, 800)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14931 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15251 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -21,7 +21,7 @@ local specWarnDrainMagic			= mod:NewSpecialWarningInterrupt(209485, "HasInterrup
 local specWarnNightfallOrb			= mod:NewSpecialWarningInterrupt(209410, "HasInterrupt", nil, nil, 1, 2)
 local specWarnSuppress				= mod:NewSpecialWarningInterrupt(209413, "HasInterrupt", nil, nil, 1, 2)
 local specWarnBewitch				= mod:NewSpecialWarningInterrupt(211470, "HasInterrupt", nil, nil, 1, 2)
-local specWarnFelDetonation			= mod:NewSpecialWarningInterrupt(211464, "HasInterrupt", nil, nil, 1, 2)
+local specWarnFelDetonation			= mod:NewSpecialWarningSpell(211464, false, nil, 2, 2, 2)
 local specWarnSealMagic				= mod:NewSpecialWarningRun(209404, "Melee", nil, nil, 4, 2)
 local specWarnDisruptingEnergy		= mod:NewSpecialWarningMove(209512, nil, nil, nil, 1, 2)
 
@@ -33,7 +33,7 @@ local voiceDrainMagic				= mod:NewVoice(209485, "HasInterrupt")--kickcast
 local voiceNightfallOrb				= mod:NewVoice(209410, "HasInterrupt")--kickcast
 local voiceSuppress					= mod:NewVoice(209413, "HasInterrupt")--kickcast
 local voiceBewitch					= mod:NewVoice(211470, "HasInterrupt")--kickcast
-local voiceFelDetonation			= mod:NewVoice(211464, "HasInterrupt")--kickcast
+local voiceFelDetonation			= mod:NewVoice(211464, false, nil, 2)--aesoon
 local voiceSealMagic				= mod:NewVoice(209404, "Melee")--runout
 local voiceDisruptingEnergy			= mod:NewVoice(209512)--runaway
 
@@ -60,9 +60,9 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 211470 and self:CheckInterruptFilter(args.sourceGUID) then
 		specWarnBewitch:Show(args.sourceName)
 		voiceBewitch:Play("kickcast")
-	elseif spellId == 211464 and self:CheckInterruptFilter(args.sourceGUID) then
-		specWarnFelDetonation:Show(args.sourceName)
-		voiceFelDetonation:Play("kickcast")
+	elseif spellId == 211464 then
+		specWarnFelDetonation:Show()
+		voiceFelDetonation:Play("aesoon")
 	elseif spellId == 209404 then
 		specWarnSealMagic:Show()
 		voiceSealMagic:Play("runout")
@@ -76,7 +76,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 209033 then
+	if spellId == 209033 and not args:IsDestTypePlayer() then
 		specWarnFortification:Show(args.destName)
 		voiceFortification:Play("dispelnow")
 	elseif spellId == 209512 and args:IsPlayer() then

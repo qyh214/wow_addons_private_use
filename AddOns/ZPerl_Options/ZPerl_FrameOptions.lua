@@ -2,13 +2,13 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1002 $")
+XPerl_SetModuleRevision("$Revision: 1008 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
-local WoWclassCount = 11
---[[for k, v in pairs(localGroups) do
+local WoWclassCount = 0
+for k, v in pairs(localGroups) do
 	WoWclassCount = WoWclassCount + 1
-end]]
+end
 
 
 function XPerl_OptionsFrame_DisableSlider(slider)
@@ -977,20 +977,20 @@ end
 
 -- DefaultRaidClasses
 local function DefaultRaidClasses()
-	
-		return {
-			{enable = true, name = "WARRIOR"},
-			{enable = true, name = "DEATHKNIGHT"},
-			{enable = true, name = "ROGUE"},
-			{enable = true, name = "HUNTER"},
-			{enable = true, name = "MAGE"},
-			{enable = true, name = "WARLOCK"},
-			{enable = true, name = "PRIEST"},
-			{enable = true, name = "DRUID"},
-			{enable = true, name = "SHAMAN"},
-			{enable = true, name = "PALADIN"},
-			{enable = true, name = "MONK"},
-		}
+	return {
+		{enable = true, name = "WARRIOR"},
+		{enable = true, name = "DEATHKNIGHT"},
+		{enable = true, name = "ROGUE"},
+		{enable = true, name = "HUNTER"},
+		{enable = true, name = "MAGE"},
+		{enable = true, name = "WARLOCK"},
+		{enable = true, name = "PRIEST"},
+		{enable = true, name = "DRUID"},
+		{enable = true, name = "SHAMAN"},
+		{enable = true, name = "PALADIN"},
+		{enable = true, name = "MONK"},
+		{enable = true, name = "DEMONHUNTER"},
+	}
 end
 
 -- ValidateClassNames
@@ -1000,7 +1000,7 @@ local function ValidateClassNames(part)
 	end
 	-- This should never happen, but I'm sure someone will find a way to break it
 
-	local list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false, HUNTER = false, SHAMAN = false, PRIEST = false,	WARLOCK = false, PALADIN = false, DEATHKNIGHT = false, MONK = false}
+	local list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false, HUNTER = false, SHAMAN = false, PRIEST = false,	WARLOCK = false, PALADIN = false, DEATHKNIGHT = false, MONK = false, DEMONHUNTER = false}
 	local valid
 	if (part.class) then
 		local classCount = 0
@@ -1701,6 +1701,7 @@ function XPerl_Options_ImportOldConfig(old)
 			withName		= Convert(old.ShowPartyNumberWithName),
 			showRunes		= 1,
 			dockRunes		= 1,
+			lockRunes		= 1,
 
 
 			fullScreen = {
@@ -2054,6 +2055,7 @@ function XPerl_Options_ImportOldConfig(old)
 				{enable = Convert(old.RaidClass9Enable), name = old.RaidClass9 or "PALADIN"},
 				{enable = true, name = "DEATHKNIGHT"},
 				{enable = true, name = "MONK"},
+				{enable = true, name = "DEMONHUNTER"},
 			},
 			titles			= Convert(old.ShowRaidTitles),
 			percent			= Convert(old.ShowRaidPercents),
@@ -2238,6 +2240,9 @@ local function XPerl_Target_ConfigDefault(default, section)
 			blizzard	= 1,
 			pos		= "top",
 		},
+		comboindicator = {
+			enable		= 1,			-- 5.0.4
+		},
 		pvpIcon			= 1,			-- 1.8.3
 		scale			= 0.8,
 		raidIconAlternate	= 1,
@@ -2253,9 +2258,9 @@ local function XPerl_Target_ConfigDefault(default, section)
 			enable		= 1,
 			size		= 29,
 			curable		= 0,
-			big		= 1,			-- 2.3.6
+			big			= 1,			-- 2.3.6
 		},
---		reactionHighlight	= nil,			-- 1.8.6
+--		reactionHighlight	= nil,		-- 1.8.6
 		healerMode = {
 --			enable		= nil,			-- 1.9.1
 			type		= 1,			-- 1.9.1
@@ -2378,6 +2383,7 @@ local function XPerl_Player_ConfigDefault(default)
 --		withName		= nil,
 		showRunes		= 1,
 		dockRunes		= 1,
+		lockRunes		= 1,
 
 		fullScreen = {
 			enable		= 1,
@@ -2494,7 +2500,7 @@ local function XPerl_Raid_ConfigDefault(default)
 --		sortByClass		= nil,
 		sortByRole 		= nil,
 --		sortAlpha		= nil,
-		group = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		group = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		class = {
 			{enable = 1, name = "WARRIOR"},
 			{enable = 1, name = "ROGUE"},
@@ -2507,6 +2513,7 @@ local function XPerl_Raid_ConfigDefault(default)
 			{enable = 1, name = "PALADIN"},
 			{enable = 1, name = "DEATHKNIGHT"},
 			{enable = 1, name = "MONK"},
+			{enable = 1, name = "DEMONHUNTER"},
 		},
 		titles			= 1,
 		percent			= 1,
@@ -2597,9 +2604,11 @@ function XPerl_DefaultBarColours()
 		rage		= {r = 1, g = 0, b = 0},
 		focus		= {r = 1, g = 0.5, b = 0.25},
 		runic_power	= {r = 0, g = 0.82, b = 1},
-		fury		= {r = 0.788, g = 0.259, b = 0.992},
 		insanity	= {r = 0.4, g = 0, b = 0.8},
+		lunar		= {r = 0.3, g = 0.52, b = 0.9},
 		maelstrom	= {r = 0, g = 0.5, b = 1},
+		fury		= {r = 0.788, g = 0.259, b = 0.992},
+		pain		= {r = 1, g = 0.611, b = 0},
 	}
 end
 
@@ -3118,11 +3127,11 @@ if (XPerl_UpgradeSettings) then
 				end
 			end
 
-			if (not old.colour.bar.fury or old.colour.bar.fury[1]) then
+			if (not old.colour.bar.lunar or old.colour.bar.lunar[1]) then
 				if (PowerBarColor) then
-					old.colour.bar.fury = {r = PowerBarColor["FURY"].r, g = PowerBarColor["FURY"].g, b = PowerBarColor["FURY"].b}
+					old.colour.bar.lunar = {r = PowerBarColor["LUNAR_POWER"].r, g = PowerBarColor["LUNAR_POWER"].g, b = PowerBarColor["LUNAR_POWER"].b}
 				else
-					old.colour.bar.fury = {r = 0.788, g = 0.259, b = 0.992}
+					old.colour.bar.lunar = {r = 0.3, g = 0.52, b = 0.9}
 				end
 			end
 
@@ -3131,6 +3140,22 @@ if (XPerl_UpgradeSettings) then
 					old.colour.bar.maelstrom = {r = PowerBarColor["MAELSTROM"].r, g = PowerBarColor["MAELSTROM"].g, b = PowerBarColor["MAELSTROM"].b}
 				else
 					old.colour.bar.maelstrom = {r = 0, g = 0.5, b = 1}
+				end
+			end
+
+			if (not old.colour.bar.fury or old.colour.bar.fury[1]) then
+				if (PowerBarColor) then
+					old.colour.bar.fury = {r = PowerBarColor["FURY"].r, g = PowerBarColor["FURY"].g, b = PowerBarColor["FURY"].b}
+				else
+					old.colour.bar.fury = {r = 0.788, g = 0.259, b = 0.992}
+				end
+			end
+
+			if (not old.colour.bar.pain or old.colour.bar.pain[1]) then
+				if (PowerBarColor) then
+					old.colour.bar.pain = {r = PowerBarColor["PAIN"].r, g = PowerBarColor["PAIN"].g, b = PowerBarColor["PAIN"].b}
+				else
+					old.colour.bar.pain = {r = 1, g = 0.611, b = 0}
 				end
 			end
 
@@ -3321,6 +3346,28 @@ if (XPerl_UpgradeSettings) then
 				if old.party.name == true then
 					old.party.name = 1
 				end
+			end
+
+			if (oldVersion < "5.0.4") then
+				old.target.comboindicator = { }
+				old.target.comboindicator.enable = 1
+			end
+
+			if (oldVersion < "5.0.5") then
+				old.target.comboindicator = { }
+				old.target.comboindicator.enable = 1
+			end
+
+			if (oldVersion < "5.0.6") then
+				for i = 1, WoWclassCount do
+					if not old.raid.group[i] then
+						old.raid.group[i] = 1
+					end
+				end
+			end
+
+			if (oldVersion < "5.0.8") then
+				old.player.lockRunes = 1
 			end
 		end
 	end

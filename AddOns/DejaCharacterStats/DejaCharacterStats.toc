@@ -1,0 +1,17 @@
+## Interface: 70000
+## Version: 7.0.3 r12
+## Title: DejaCharacterStats
+## Authors: Dejablue
+## Notes: Dejablue's improved character stats panel view.
+## SavedVariables: DejaCharacterStatsDB
+## SavedVariablesPerCharacter: DejaCharacterStatsDBPC
+
+localization.core.lua
+localization.de.lua
+
+DejaCharacterStats.lua
+DCSExpand.lua
+DCSScrollframe.lua
+DCSDecimals.lua
+DCSDuraRepair.lua
+DCSItemLevel.lua

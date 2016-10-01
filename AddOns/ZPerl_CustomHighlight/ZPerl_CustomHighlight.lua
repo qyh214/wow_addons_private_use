@@ -9,7 +9,7 @@ end
 local conf
 XPerl_RequestConfig(function(new) 
 	conf = new.custom 
-end, "$Revision: 973 $")
+end, "$Revision: 1006 $")
 
 local ch = CreateFrame("Frame", "ZPerl_Custom")
 ch.active = {}
@@ -466,7 +466,7 @@ end
 
 -- ch:Check
 function ch:Check(frame, unit)
-	if (not conf.enable) then
+	if conf and (not conf.enable) then
 		return
 	end
 

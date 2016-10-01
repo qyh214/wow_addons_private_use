@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Tidewalker", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
 mod:SetCreatureID(21213)
+mod:SetEncounterID(627)
 mod:SetModelID(20739)
 mod:SetZone()
 mod:SetUsedIcons(5, 6, 7, 8)
@@ -10,10 +11,10 @@ mod:SetUsedIcons(5, 6, 7, 8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_SUMMON"
+	"SPELL_AURA_APPLIED 37850 38023 38024 38025 38049",
+	"SPELL_CAST_START 37730",
+	"SPELL_CAST_SUCCESS 37764",
+	"SPELL_SUMMON 37854"
 )
 
 local warnTidal			= mod:NewSpellAnnounce(37730, 3)

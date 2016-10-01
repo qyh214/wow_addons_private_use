@@ -1,16 +1,17 @@
 local mod	= DBM:NewMod("Huhuran", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 500 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 596 $"):sub(12, -3))
 mod:SetCreatureID(15509)
+mod:SetEncounterID(714)
 mod:SetModelID(15739)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_AURA_APPLIED 26180 26053 26051 26068 26050",
+	"SPELL_AURA_APPLIED_DOSE 26050",
+	"SPELL_AURA_REMOVED 26180 26053 26050",
+	"SPELL_CAST_SUCCESS 26053",
 	"UNIT_HEALTH target focus mouseover"
 )
 

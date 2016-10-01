@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod("Attumen", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
 mod:SetCreatureID(16151, 16152)--15550
+mod:SetEncounterID(652)
 mod:SetModelID(16416)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_SUCCESS",
+	"SPELL_CAST_SUCCESS 29711 29833",
 	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_DIED"
 )

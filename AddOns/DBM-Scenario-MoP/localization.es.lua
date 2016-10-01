@@ -1,17 +1,17 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
----------------------
--- A Brewing Storm --
----------------------
+------------------------
+-- Cervezas y Truenos --
+------------------------
 L= DBM:GetModLocalization("d517")
 
 L:SetTimerLocalization{
-	timerEvent			= "Fermentación (Aprox)"
+	timerEvent			= "Cerveza fermentada (aprox.)"
 }
 
 L:SetOptionLocalization{
-   timerEvent			= "Mostrar temporizador para la fermentación (aproximada)"
+	timerEvent			= "Mostrar temporizador para cuando termine aproximadamente la fermentación de la cerveza"
 }
 
 L:SetMiscLocalization{
@@ -20,45 +20,46 @@ L:SetMiscLocalization{
 	BorokhulaAdds		= "solicita refuerzos!"--In case useful/important on heroic. On normal just zerg boss and ignore these unless you want achievement.
 }
 
------------------------
--- A Little Patience --
------------------------
+---------------
+-- Templanza --
+---------------
 L= DBM:GetModLocalization("d589")
 
 L:SetMiscLocalization{
-	ScargashPull		= "Your Alliance is WEAK!"--Not yet in use but could be with more logs and combat start timers, TODO needs translation
+	ScargashPull		= "¡Vuestra Alianza es DÉBIL!"--Not yet in use but could be with more logs and combat start timers
 }
----------------------------
--- Arena Of Annihilation --
----------------------------
+
+-----------------------------
+-- Arena de la Aniquilación --
+-----------------------------
 L= DBM:GetModLocalization("d511")
 
--------------------------
--- Assault of Zan'vess --
--------------------------
+-----------------------
+-- Asalto a Zan'vess --
+-----------------------
 L= DBM:GetModLocalization("d593")
 
 L:SetMiscLocalization{
-	TelvrakPull			= "Zan'vess will never fall!" -- TODO needs translation
+	TelvrakPull			= "¡Zan'vess no caerá nunca!"
 }
 
-------------------------------
--- Battle on the High Seas ---
-------------------------------
+--------------------------
+-- Batalla en Alta Mar ---
+--------------------------
 L= DBM:GetModLocalization("d652")
 
------------------------
--- Blood in the Snow --
------------------------
+------------------------
+-- Sangre en la Nieve --
+------------------------
 L= DBM:GetModLocalization("d646")
 
------------------------
--- Brewmoon Festival --
------------------------
+----------------------------------
+-- Festival de la Cerveza Lunar --
+----------------------------------
 L= DBM:GetModLocalization("d539")
 
 L:SetTimerLocalization{
-	timerBossCD		= "%s llegando"
+	timerBossCD		= "%s"
 }
 
 L:SetOptionLocalization{
@@ -66,79 +67,90 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	RatEngage	= "It's the Den Mother! Look out", -- TODO needs translation
-	BeginAttack	= "We must defend the villagers!", -- TODO needs translation
-	Yeti		= "Bataari War Yeti", -- TODO needs translation
-	Qobi		= "Warbringer Qobi" -- TODO needs translation
+	RatEngage	= "¡Es la madre del cubil! ¡Cuidado,",
+	BeginAttack	= "¡Hay que defender a los aldeanos!",
+	Yeti		= "Yeti de guerra Bataari",
+	Qobi		= "Belisario Qobi"
 }
 
-------------------------------
--- Crypt of Forgotten Kings --
-------------------------------
+-----------------------------------
+-- Cripta de los Reyes Olvidados --
+-----------------------------------
 L= DBM:GetModLocalization("d504")
 
------------------------
--- Dagger in the Dark --
------------------------
+------------------------------
+-- Una Daga en la Oscuridad --
+------------------------------
 L= DBM:GetModLocalization("d616")
 
 L:SetTimerLocalization{
-	timerAddsCD		= "Invocar adds"
+	timerAddsCD		= "Invocar esbirros TdR"
 }
 
 L:SetOptionLocalization{
-	timerAddsCD		= "Mostrar temporizador para la invocación de adds"
+	timerAddsCD		= "Mostrar temporizador para el tiempo de reutilización de la invocación de esbirros del Señor lagarto"
 }
 
 L:SetMiscLocalization{
-	LizardLord		= "Dem Saurok be guardin de cave.  Let's take care of 'em." -- TODO needs translation
+	LizardLord		= "Esos saurok vigilan la cueva. Ocupémonos de ellos."
 }
 
-----------------------------
--- Dark Heart of Pandaria --
-----------------------------
+--------------------------------
+-- Corazón Oscuro de Pandaria --
+--------------------------------
 L= DBM:GetModLocalization("d647")
 
 L:SetMiscLocalization{
-	summonElemental		= "Minions, destroy these insects!" --TODO, needs translation
+	summonElemental		= "¡Esbirros, acabad con estos insectos!"
 }
 
-------------------------
--- Greenstone Village --
-------------------------
+--------------------
+-- Aldea Verdemar --
+--------------------
 L= DBM:GetModLocalization("d492")
 
---------------
--- Landfall --
---------------
+----------------------
+-- Punto de Dominio --
+----------------------
 L = DBM:GetModLocalization("Landfall")
 
+local landfall
+if UnitFactionGroup("player") == "Alliance" then
+	landfall = GetDungeonInfo(590)
+else
+	landfall = GetDungeonInfo(595)
+end
+
+L:SetGeneralLocalization{
+	name = landfall
+}
+
 L:SetWarningLocalization{
-	WarnAchFiveAlive	= "Logro fallado: \"Los cinco en el Desembarco del León\""
+	WarnAchFiveAlive	= "Logro 'Los cinco en el Punto de Dominio' fallado"
 }
 
 L:SetOptionLocalization{
-	WarnAchFiveAlive	= "Mostrar aviso si se ha fallado el logro \"Los cinco en el Desembarco del León\""
+	WarnAchFiveAlive	= "Mostrar aviso si se falla el logro 'Los cinco en el Punto de Dominio'"
 }
 
-----------------------------
--- The Secret of Ragefire --
-----------------------------
+--------------------------------
+-- Los Secretos de Sima Ígnea --
+--------------------------------
 L= DBM:GetModLocalization("d649")
 
 L:SetMiscLocalization{
-	XorenthPull		= "All lesser races are enemies of the true Horde!", -- TODO needs translation
-	ElagloPull		= "Fools! The true horde cannot be stopped by the likes of you." -- TODO needs translation
+	XorenthPull		= "¡Todas las razas inferiores son enemigas de la Horda auténtica!",
+	ElagloPull		= "¡Estúpidos! ¡Los de vuestra especie no pueden detener a la auténtica Horda!"
 }
 
-----------------------
--- Theramore's Fall --
-----------------------
+------------------------
+-- Caída de Theramore --
+------------------------
 L= DBM:GetModLocalization("d566")
 
---------------------------------
--- Troves of the Thunder King --
---------------------------------
+------------------------------------
+-- Los Tesoros del Rey del Trueno --
+------------------------------------
 L= DBM:GetModLocalization("d620")
 
 ----------------
@@ -146,35 +158,35 @@ L= DBM:GetModLocalization("d620")
 ----------------
 L= DBM:GetModLocalization("d499")
 
-------------------------
--- Warlock Green Fire --
-------------------------
+---------------------------
+-- Fuego verde del brujo --
+---------------------------
 L= DBM:GetModLocalization("d594")
 
 L:SetWarningLocalization{
-	specWarnLostSouls		= "Almas perdidas!",
-	specWarnEnslavePitLord	= "Señor del foso - ¡Esclavízalo ahora!"
+	specWarnLostSouls		= "¡Almas perdidas!",
+	specWarnEnslavePitLord	= "Señor del foso - ¡esclavízalo ahora!"
 }
 
 L:SetTimerLocalization{
-	timerLostSoulsCD		= "Siguientes Almas perdidas"
+	timerLostSoulsCD		= "Almas perdidas TdR"
 }
 
 L:SetOptionLocalization{
-	specWarnLostSouls		= "Mostrar aviso especial cuando aparezcan Almas Perdidas",
-	specWarnEnslavePitLord	= "Mostrar aviso especial para escalvizar a los Señores del foso cuando se activen o se liberen",
+	specWarnLostSouls		= "Mostrar aviso especial cuando aparezcan Almas perdidas",
+	specWarnEnslavePitLord	= "Mostrar aviso especial para usar Esclavizar demonio cuando aparezca el Señor del foso",
 	timerLostSoulsCD		= "Mostrar temporizador para las siguientes Almas perdidas"
 }
 
 L:SetMiscLocalization{
-	LostSouls				= "Face the souls of those your kind doomed to perish, Warlock!" -- TODO needs translation
+	LostSouls				= "¡Enfréntate a las almas condenadas por los de tu calaña!"
 }
 
--------------------------------
--- Finding Secret Ingredient --
--------------------------------
+-----------------------------
+-- El Ingrediente Secreto --
+-----------------------------
 L= DBM:GetModLocalization("d745")
 
 L:SetMiscLocalization{
-	Clear		= "Well done!" -- TODO needs translation
+	Clear		= "¡Bien hecho!"
 }

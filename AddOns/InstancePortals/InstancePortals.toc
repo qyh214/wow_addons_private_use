@@ -1,0 +1,9 @@
+## Interface: 70000
+## X-Min-Interface: 60100
+## Version: 8
+## Title: Instance Portals
+## Notes: Displays dungeon & raid portals on the world map
+
+ipPinDB.lua
+ipCore.lua
+InstancePortals.xml

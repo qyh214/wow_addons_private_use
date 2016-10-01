@@ -191,8 +191,8 @@ The table holds:
 AutoHideData = { -- This has to follow the convention for plugins...
 	[AUTOHIDE_PREFIX.."Bar"..AUTOHIDE_SUFFIX] = {name = "Bar", vert = TITAN_TOP},
 	[AUTOHIDE_PREFIX.."Bar2"..AUTOHIDE_SUFFIX] = {name = "Bar2", vert = TITAN_TOP},
-	[AUTOHIDE_PREFIX.."AuxBar2"..AUTOHIDE_SUFFIX] = {name = "AuxBar2",  vert = TITAN_BOTTOM},
-	[AUTOHIDE_PREFIX.."AuxBar"..AUTOHIDE_SUFFIX] = {name = "AuxBar",  vert = TITAN_BOTTOM},
+	[AUTOHIDE_PREFIX.."AuxBar2"..AUTOHIDE_SUFFIX] = {name = "AuxBar2", vert = TITAN_BOTTOM},
+	[AUTOHIDE_PREFIX.."AuxBar"..AUTOHIDE_SUFFIX] = {name = "AuxBar", vert = TITAN_BOTTOM},
 	}
 
 --[[ Titan
@@ -293,6 +293,8 @@ TITAN_ALL_SAVED_VARIABLES = {
 	GlobalProfileName = TITAN_PROFILE_NONE,
 	-- Silent Load
 	Silenced = false,
+	-- OrderHallCommandBar Status
+	OrderHall = false,
 };
 
 -- The skins released with Titan
@@ -754,7 +756,8 @@ function TitanGetVar(id, var)
 		if TitanPluginSettings[id][var] == "Titan Nil" then 
 			TitanPluginSettings[id][var] = false 
 		end
-		return TitanUtils_Ternary(TitanPluginSettings[id][var] == false, nil, TitanPluginSettings[id][var]);
+		return TitanPluginSettings[id][var];
+		--return TitanUtils_Ternary(TitanPluginSettings[id][var] == false, nil, TitanPluginSettings[id][var]);
 	end
 end
 

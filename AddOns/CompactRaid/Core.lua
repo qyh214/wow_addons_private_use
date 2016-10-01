@@ -21,12 +21,11 @@ local ipairs = ipairs
 local tremove = tremove
 local GetRealmName = GetRealmName
 local UnitName = UnitName
-local GetActiveSpecGroup = GetActiveSpecGroup
 local GetNumGroupMembers = GetNumGroupMembers
 local IsInRaid = IsInRaid
 local UnitIsGroupLeader = UnitIsGroupLeader
 local UnitIsRaidOfficer = UnitIsRaidOfficer
-local _
+local GetSpecialization = GetSpecialization
 
 local addonName, addon = ...
 _G["CompactRaid"] = addon
@@ -245,7 +244,7 @@ function addon:PLAYER_LOGOUT()
 end
 
 function addon:ACTIVE_TALENT_GROUP_CHANGED()
-	self:BroadcastEvent("OnTalentSwitch", GetActiveSpecGroup())
+	self:BroadcastEvent("OnTalentSwitch", GetSpecialization())
 end
 
 function addon:PLAYER_REGEN_ENABLED()

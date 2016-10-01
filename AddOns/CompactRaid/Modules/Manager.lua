@@ -14,10 +14,7 @@ local strlower = strlower
 local CreateFrame = CreateFrame
 local format = format
 local pairs = pairs
-local GetActiveSpecGroup = GetActiveSpecGroup
-local GetNumSpecGroups = GetNumSpecGroups
-local TALENT_SPEC_PRIMARY = TALENT_SPEC_PRIMARY
-local TALENT_SPEC_SECONDARY = TALENT_SPEC_SECONDARY
+local GetSpecialization = GetSpecialization
 
 local _, addon = ...
 local L = addon.L
@@ -183,19 +180,14 @@ local function EnumModuleProc_OnTalentSwitch(name, module, spec, init)
 		return
 	end
 
-	local talentName = spec == 2 and TALENT_SPEC_SECONDARY or TALENT_SPEC_PRIMARY
-	local label = module.optionPage and module.optionPage.dualTalentText
-	if label then
-		label:SetText("["..talentName.."]")
-	end
-
 	if Module_IsDualTalentsSynced(module) then
 		if init then
-			if label then
-				label:Hide()
-			end
 			module.talentdb = module.chardb.talent_Synced
 			module:pcall(module.OnTalentGroupChange, module, "sync", module.talentdb)
+		end
+
+		if module.optionPage then
+			module.optionPage:SetSpecSymbol(0)
 		end
 	else
 		local key = "talent"..spec
@@ -209,6 +201,10 @@ local function EnumModuleProc_OnTalentSwitch(name, module, spec, init)
 		end
 		module.talentdb = talentdb
 		module:pcall(module.OnTalentGroupChange, module, spec, talentdb, firstTime)
+
+		if module.optionPage then
+			module.optionPage:SetSpecSymbol()
+		end
 	end
 end
 
@@ -246,7 +242,7 @@ local function OnEnableModule(module)
 
 	module._moduleEnabled = 1
 	addon:CallModuleFunc(module, "OnEnable")
-	EnumModuleProc_OnTalentSwitch(module.name, module, GetActiveSpecGroup(), 1)
+	EnumModuleProc_OnTalentSwitch(module.name, module, GetSpecialization(), 1)
 	addon:EnumUnitFrames(OnUpdateNotifyEnumProc, module)
 end
 
@@ -300,25 +296,24 @@ addon:RegisterEventCallback("SyncDaulTalents", function(module, enable)
 	end
 
 	if enable then
-		module.chardb.talent_Synced = module.talentdb
-		module.chardb.talent1 = nil
-		module.chardb.talent2 = nil
+		local syncdb = module.chardb.talent_Synced
+		if type(syncdb) ~= "table" then
+			syncdb = addon:CloneTable(module.talentdb)
+			module.chardb.talent_Synced = syncdb
+		end
+
+		module.talentdb = syncdb
 		module:Print(L["sync dual-talent enabled"])
 		addon:BroadcastEvent("OnModuleSync", module)
 	else
-		local commondb = module.chardb.talent_Synced
-		if not commondb or not module.talentdb or module.talentdb ~= module.talentdb then
-			return
+		local spec = GetSpecialization()
+		local specdb = module.chardb["talent"..spec]
+		if type(specdb) ~= "table" then
+			specdb = addon:CloneTable(module.talentdb)
+			module.chardb["talent"..spec] = specdb
 		end
 
-		module.chardb.talent1 = addon:CloneTable(commondb)
-		if GetNumSpecGroups() == 2 then
-			module.chardb.talent2 = addon:CloneTable(commondb)
-			module.talentdb = GetActiveSpecGroup() == 2 and module.chardb.talent2 or module.chardb.talent1
-		else
-			module.talentdb = module.chardb.talent1
-		end
-
+		module.talentdb = specdb
 		module.chardb.talent_Synced = nil
 		module:Print(L["sync dual-talent disabled"])
 		addon:BroadcastEvent("OnModuleUnsync", module)
@@ -415,7 +410,7 @@ local function OnConfirmRestore(module)
 		if module:HasFlag("talent") and module.talentdb then
 			talentKey = module:IsDualTalentsSynced(module)
 			if not talentKey then
-				talentKey = "talent"..(GetActiveSpecGroup() or 1)
+				talentKey = "talent"..(GetSpecialization() or 1)
 			end
 			talentdb = module.talentdb
 			CopyDefaultDB(module, "talent", talentdb)

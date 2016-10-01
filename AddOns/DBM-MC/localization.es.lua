@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
 ----------------
@@ -34,7 +34,7 @@ L:SetGeneralLocalization{
 L = DBM:GetModLocalization("Garr-Classic")
 
 L:SetGeneralLocalization{
-	name = "Garr (Classic)"
+	name = "Garr"
 }
 
 --------------
@@ -61,7 +61,7 @@ L:SetGeneralLocalization{
 L = DBM:GetModLocalization("Sulfuron")
 
 L:SetGeneralLocalization{
-	name = "Sulfuron Presagista"
+	name = "Presagista Sulfuron"
 }
 
 ----------------
@@ -82,37 +82,27 @@ L:SetGeneralLocalization{
 	name = "Mayordomo Executus"
 }
 
-L:SetMiscLocalization{
-	Kill	= "¡Imposible! Deponed el ataque mortales... ¡Me rindo! ¡Me rindo!"
-}
-
 ----------------
 --  Ragnaros  --
 ----------------
 L = DBM:GetModLocalization("Ragnaros-Classic")
 
 L:SetGeneralLocalization{
-	name = "Ragnaros (Classic)"
+	name = "Ragnaros"
 }
 L:SetWarningLocalization{
-	WarnSubmerge		= "Sumersión",
-	WarnSubmergeSoon	= "Sumersión pronto",
-	WarnEmerge			= "Emerge",
-	WarnEmergeSoon		= "Emerge pronto"
+	WarnSubmerge		= "Ragnaros se sumerge",
+	WarnEmerge			= "Ragnaros ha regresado"
 }
 L:SetTimerLocalization{
-	TimerCombatStart	= "Empieza el combate",
 	TimerSubmerge		= "Sumersión",
-	TimerEmerge			= "Emerge"
+	TimerEmerge			= "Emersión"
 }
 L:SetOptionLocalization{
-	TimerCombatStart	= "Mostrar tiempo para inicio del combate",
-	WarnSubmerge		= "Mostrar aviso para sumersión",
-	WarnSubmergeSoon	= "Mostrar pre-aviso para sumersión",
-	TimerSubmerge		= "Mostrar tiempo para sumersión",
-	WarnEmerge			= "Mostrar aviso para emersión",
-	WarnEmergeSoon		= "Mostrar pre-aviso para emersión",
-	TimerEmerge			= "Mostrar tiempo para emersión"
+	WarnSubmerge		= "Mostrar aviso cuando Ragnaros se sumerja",
+	TimerSubmerge		= "Mostrar temporizador para cuando Ragnaros se sumerja",
+	WarnEmerge			= "Mostrar aviso cuando Ragnaros regrese a la superficie",
+	TimerEmerge			= "Mostrar temporizador para cuando Ragnaros regrese a la superficie"
 }
 L:SetMiscLocalization{
 	Submerge	= "¡AVANZAD, MIS SIRVIENTES! ¡DEFENDED A VUESTRO MAESTRO!",

@@ -1,12 +1,12 @@
 ﻿## Interface: 70000
 ## Title: XLoot
 ## Notes: Core module for Loot and Looting-related UI improvements
-## Version: 7.0-3
+## Version: 7.0-11
 ## Author: Xuerian
 ## X-Category: Inventory
 ## X-eMail xuerian @ gmail DOT com
 ## X-Name: XLoot
-## X-Curse-Packaged-Version: 7.0-3
+## X-Curse-Packaged-Version: 7.0-11
 ## X-Curse-Project-Name: XLoot
 ## X-Curse-Project-ID: xloot
 ## X-Curse-Repository-ID: wow/xloot/mainline

@@ -21,6 +21,11 @@ local YES=YES
 local NO=NO
 local GARRISON_FOLLOWER_MAX_ITEM_LEVEL=GARRISON_FOLLOWER_MAX_ITEM_LEVEL
 local module=addon:NewSubClass("FollowerPage") --#module
+local UIDropDownMenu_SetSelectedID,	UIDropDownMenu_Initialize,	UIDropDownMenu_CreateInfo,UIDropDownMenu_AddButton
+=UIDropDownMenu_SetSelectedID,UIDropDownMenu_Initialize,	UIDropDownMenu_CreateInfo,UIDropDownMenu_AddButton
+local UIDropDownMenu_SetWidth,UIDropDownMenu_SetButtonWidth,UIDropDownMenu_JustifyText=UIDropDownMenu_SetWidth,UIDropDownMenu_SetButtonWidth,UIDropDownMenu_JustifyText
+local UIDropDownMenu_SetText=UIDropDownMenu_SetText
+
 function module:ShowImprovements()
 	local scroller=self:GetScroller("Items")
 	scroller:AddRow("Follower Upgrades",C.Orange())
@@ -296,65 +301,55 @@ end
 			<OnShow function="GarrisonTraitCountersFrame_Update"/>
 		</Scripts>
 --]]
-
+local list={}
+local chooser
+local function sel(this,category,categoryId)
+	--UIDropDownMenu_SetSelectedID(chooser,index)
+	module:FillCounters(chooser:GetParent(),categoryId)
+	UIDropDownMenu_SetText(chooser,category)
+end
 function module:GarrisonTraitCountersFrame_OnLoad(this, tooltipString)
 
---[===[@debug@
-print("Load")
---@end-debug@]===]
 	this:ClearAllPoints()
 	this:SetParent(GarrisonThreatCountersFrame:GetParent())
 	this:SetPoint("BOTTOMLEFT",185,0)
 	this:Show()
 	this.tooltipString = tooltipString;
 	if not this.choice then
-		this.choice=CreateFrame('Frame',this:GetName()..tostring(GetTime()*1000),this,"UIDropDownMenuTemplate")
+		this.choice=CreateFrame('Frame',this:GetName()..'Choice',this,"UIDropDownMenuTemplate")
 		this.choice.button=_G[this.choice:GetName()..'Button']
+		chooser=this.choice
 		this.choice:SetPoint("TOPLEFT",-192,0)
 	end
 	this.TraitsList[1]:SetScript("OnEnter",_G.GarrisonTraitCounter_OnEnter)
 	--this.TraitsList[1]:SetScript("OnEnter",pp)
+	local startcat=""
 	do
 		local frame=this.choice
-		local list={}
+		if #list > 0 then wipe(list) end
 		local done
+		local i=0
 		for k,v in kpairs(ns.catTable) do
 			if not done then
 				done=true
 				module:FillCounters(this,v)
+				startcat=k
 			end
-			tinsert(list,k)
+			if ns.traitTable[v] then
+				i=i+1
+				tinsert(list,{text=k,value=v,func=sel,arg1=k,arg2=v,notCheckable=true})
+			end
 		end
 		done=nil
-		local function sel(this,category,index)
-			UIDropDownMenu_SetSelectedID(frame,index)
-			self:FillCounters(frame:GetParent(),category)
-		end
-		UIDropDownMenu_Initialize(frame, function(...)
-			local i=0
-			for _,k in pairs(list) do
-				local v=ns.catTable[k]
-				if ns.traitTable[v] then
-					i=i+1
-					local info=UIDropDownMenu_CreateInfo()
-					info.text=k
-					info.value=v
-					info.func=sel
-					info.arg1=v
-					info.arg2=i
-					UIDropDownMenu_AddButton(info,1)
-				end
-			end
-		end)
+		frame.button:SetScript("OnClick",function() EasyMenu(list,frame,this,-180,-7,nil,5) end )
+		--EasyMenu(list,frame,this,0,0,nil,5)
 		UIDropDownMenu_SetWidth(frame, 150);
 		UIDropDownMenu_SetButtonWidth(frame, 174)
-		UIDropDownMenu_SetSelectedID(frame, 1)
+		UIDropDownMenu_SetText(frame,startcat)
 		UIDropDownMenu_JustifyText(frame, "LEFT")
-		--EasyMenu(list,frame,frame,0,0,nil,5)
 	end
 	this:RegisterEvent("GARRISON_FOLLOWER_LIST_UPDATE");
 end
-
 function module:GarrisonTraitCountersFrame_OnEvent(this, event, ...)
 	if ( this:IsVisible() ) then
 		self:GarrisonTraitCountersFrame_OnShow(this);

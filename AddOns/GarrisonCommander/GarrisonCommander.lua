@@ -1,5 +1,6 @@
 local me, ns = ...
 local toc=select(4,GetBuildInfo())
+local pp=print
 ns.Configure()
 local _G=_G
 local HD=false
@@ -14,7 +15,7 @@ local format=format
 local tostring=tostring
 local collectgarbage=collectgarbage
 --[===[@debug@
-local collectgarbage=function() end
+--local collectgarbage=function() end
 --@end-debug@]===]
 local GMM=false
 local MP=false
@@ -28,6 +29,7 @@ local minHeight
 local addon=addon --#addon
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
+local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0
 local LE_GARRISON_TYPE_6_0=_G.LE_GARRISON_TYPE_6_0
 local LE_GARRISON_TYPE_6_2=_G.LE_GARRISON_TYPE_6_2
 local LE_GARRISON_TYPE_7_0=_G.LE_GARRISON_TYPE_7_0
@@ -392,14 +394,33 @@ function addon:ApplyMSORT(value)
 	end
 	self:RefreshMissions()
 end
-
+function addon:GetMain()
+	return GMF
+end
+function addon:GetMissions()
+	return GMFMissions
+end
+function addon:GetBigScreen()
+	return ns.bigscreen
+end
+function addon:GetMissionModule(followertype)
+	return ns.custom[followertype]
+end
 function addon:OnInitialized()
 	--[===[@debug@
 	print("Initialize")
 	--@end-debug@]===]
+	--
+	ns.custom={
+		[LE_FOLLOWER_TYPE_GARRISON_6_0]=addon,
+		[LE_FOLLOWER_TYPE_SHIPYARD_6_2]=self:GetModule("ShipYard"),
+		[LE_FOLLOWER_TYPE_GARRISON_7_0]=self:GetModule("OrderHall"),
+
+	}
 	self:SafeRegisterEvent("GARRISON_MISSION_COMPLETE_RESPONSE")
 	self:SafeRegisterEvent("GARRISON_MISSION_NPC_CLOSED")
 	self:SafeRegisterEvent("GARRISON_MISSION_STARTED")
+	self:SafeRegisterEvent("ADDON_LOADED")
 	for _,b in ipairs(GMF.MissionTab.MissionList.listScroll.buttons) do
 		local scale=0.8
 		local f,h,s=b.Title:GetFont()
@@ -407,7 +428,7 @@ function addon:OnInitialized()
 		local f,h,s=b.Summary:GetFont()
 		b.Summary:SetFont(f,h*scale,s)
 		b:RegisterForClicks("LeftButtonUp","RightButtonUp")
-		addon:SafeRawHookScript(b,"OnEnter","ScriptGarrisonMissionButton_OnEnter")
+		addon:SafeSecureHookScript(b,"OnEnter","ScriptGarrisonMissionButton_OnEnter")
 		addon:SafeRawHookScript(b,"OnClick","ScriptGarrisonMissionButton_OnClick")
 	end
 	self:CreatePrivateDb()
@@ -641,6 +662,7 @@ function addon:AddLine(name,status)
 	GameTooltip:AddDoubleLine(name, status,nil,nil,nil,r2,g2,b2)
 end
 function addon:SetThreatColor(obj,threat)
+	print(threat)
 	if type(threat)=="string" then
 		local _,_,bias,follower,name=strsplit(":",threat)
 		local color=self:GetBiasColor(tonumber(bias) or -1,nil,"Green")
@@ -1337,7 +1359,6 @@ function addon:HookedGarrisonFollowerButton_UpdateCounters(...)
 	return self:RenderFollowerPageFollowerButton(select(2,...))
 end
 function addon:RenderFollowerPageFollowerButton(frame,follower,showCounters)
-	print(follower.name,frame)
 	if not frame.GCWep then
 		frame.GCWep=frame:CreateFontString(nil,"ARTWORK","GameFontHighlightSmall")
 		frame.GCWep:SetPoint("BOTTOMLEFT",frame.Name,"TOPLEFT",0,2)
@@ -1345,7 +1366,7 @@ function addon:RenderFollowerPageFollowerButton(frame,follower,showCounters)
 		frame.GCArm:SetPoint("TOPLEFT",frame.GCWep,"TOPRIGHT")
 		frame.GCXp=frame:CreateFontString(nil,"ARTWORK","GameFontHighlightSmall")
 	end
-	if not frame.isCollected or type(frame.id)=="number" then
+	if not follower.isCollected or type(follower.followerID)=="number" or follower.isTroop then
 		frame.GCXp:Hide()
 		frame.GCWep:Hide()
 		frame.GCArm:Hide()
@@ -1365,10 +1386,10 @@ function addon:RenderFollowerPageFollowerButton(frame,follower,showCounters)
 			--[===[@debug@
 			print(follower.followerID)
 			--@end-debug@]===]
-			local c1=ITEM_QUALITY_COLORS[self:GetFollowerData(follower.followerID,"weaponQuality" ,1)]
-			local c2=ITEM_QUALITY_COLORS[self:GetFollowerData(follower.followerID,"armorQuality" ,1)]
-			frame.GCWep:SetFormattedText("W:%3d",self:GetFollowerData(follower.followerID,"weaponItemLevel",600))
-			frame.GCArm:SetFormattedText("A:%3d",self:GetFollowerData(follower.followerID,"armorItemLevel",600))
+			local c1=ITEM_QUALITY_COLORS[self:GetAnyData(follower.followerTypeID,follower.followerID,"weaponQuality" ,1)]
+			local c2=ITEM_QUALITY_COLORS[self:GetAnyData(follower.followerTypeID,follower.followerID,"armorQuality" ,1)]
+			frame.GCWep:SetFormattedText("W:%3d",self:GetAnyData(follower.followerTypeID,follower.followerID,"weaponItemLevel",600))
+			frame.GCArm:SetFormattedText("A:%3d",self:GetAnyData(follower.followerTypeID,follower.followerID,"armorItemLevel",600))
 			frame.GCWep:SetTextColor(c1.r,c1.g,c1.b)
 			frame.GCArm:SetTextColor(c2.r,c2.g,c2.b)
 			frame.GCWep:Show()
@@ -1402,6 +1423,9 @@ end
 -- Shamelessly stolen from Blizzard Code
 -- Appears when hovering on menaces in mission button
 function addon.ClonedGarrisonMissionMechanic_OnEnter(this)
+--[===[@debug@
+print(this)
+--@end-debug@]===]
 	local tip=GameTooltip
 	local button=this:GetParent()
 	tip:SetOwner(button, "ANCHOR_CURSOR_RIGHT");
@@ -1576,7 +1600,13 @@ print("Setup")
 --@end-debug@]===]
 	SIZEV=GMF:GetHeight()
 	self:CheckMP()
-	if MP then self:AddToggle("CKMP",true,L["Use GC Interface"],L["Switch between Garrison Commander and Master Plan interface for missions"]) end
+	if MP then
+		self:AddToggle("CKMP",true,L["Use GC Interface"],L["Switch between Garrison Commander and Master Plan interface for missions"])
+		local t= G.GetCompleteMissions(LE_FOLLOWER_TYPE_GARRISON_6_0)
+		if #t > 0 then
+			C_Timer.After(0.4,function() GarrisonMissionFrameMissions.CompleteDialog:Show() end)
+		end
+	end
 	self:CheckGMM()
 	GCF=self:CreateHeader(self,"PIN")
 	local tabMC=CreateFrame("CheckButton",nil,GMF,"SpellBookSkillLineTabTemplate")
@@ -1776,7 +1806,7 @@ function addon:PermanentEvents()
 	self:SafeSecureHook("GarrisonFollowerButton_UpdateCounters")
 end
 function addon:checkHandler(handler)
-	assert (type(handler)=='function' or type(self[handler])=='function',format("Unable to validate hander '%s'",tostring(handler)))
+	assert (type(handler)=='function' or type(self[handler])=='function',format("Unable to validate handler '%s'",tostring(handler)))
 end
 function addon:SafeRegisterEvent(event,handler)
 	handler=handler or "Event"..event
@@ -1934,20 +1964,27 @@ local GARRISON_MISSION_AVAILABILITY2=GARRISON_MISSION_ENVIRONMENT:sub(1,10)..GAR
 local GARRISON_MISSION_ID=GARRISON_MISSION_ENVIRONMENT:sub(1,10)..'MissionID:|r |cffffffff%s|r'
 local fakeinfo={followerID=false}
 local fakeframe={}
+local mainframes={
+	[LE_FOLLOWER_TYPE_GARRISON_6_0]="GarrisonMissionFrame",
+	[LE_FOLLOWER_TYPE_SHIPYARD_6_2]="GarrisonShipyardFrame",
+	[LE_FOLLOWER_TYPE_GARRISON_7_0]="OrderHallMissionFrame",
 
+}
 function addon:FillMissionPage(missionInfo)
 
-	--[===[@debug@
-	print("FillMissionPage",missionInfo)
-	--@end-debug@]===]
 	if type(missionInfo)=="number" then missionInfo=self:GetMissionData(missionInfo) end
 	if not missionInfo then return end
 	local missionType=missionInfo.followerTypeID
-	if missionType==LE_FOLLOWER_TYPE_SHIPYARD_6_2 and not missionInfo.canStart then return end
-	local stage=missionType==LE_FOLLOWER_TYPE_GARRISON_6_0 and  GMF.MissionTab.MissionPage.Stage or GSF.MissionTab.MissionPage.Stage
-	local missionenv=stage.MissionEnv
-	if toc >=70000 then
-		missionenv=stage.MissionInfo.MissionEnv
+	if missionType==LE_FOLLOWER_TYPE_SHIPYARD_6_2 or missionType==LE_FOLLOWER_TYPE_GARRISON_7_0 then
+		if not missionInfo.canStart then return end
+	end
+	local main=_G[mainframes[missionType]]
+	if not main then return end
+	local missionpage=main.MissionTab.MissionPage
+	local stage=main.MissionTab.MissionPage.Stage
+	local missionenv=stage.MissionInfo.MissionEnv
+	if missionType==LE_FOLLOWER_TYPE_GARRISON_7_0 then
+		missionenv=stage.MissionInfo.MissionTime
 	end
 	if not stage.MissionSeen then
 		if not stage.expires then
@@ -1970,18 +2007,10 @@ function addon:FillMissionPage(missionInfo)
 	end
 	stage.missionid:SetFormattedText(GARRISON_MISSION_ID,missionInfo.missionID)
 --@end-debug@]===]
-	if( IsControlKeyDown()) then self:Print("Shift key, ignoring mission prefill") return end
+	if( IsControlKeyDown()) then self:Print("Ctrl key, ignoring mission prefill") return end
 	if (self:GetBoolean("NOFILL")) then return end
 	local missionID=missionInfo.missionID
---[===[@debug@
-	print("UpdateMissionPage for",missionID,missionInfo.name,missionInfo.numFollowers)
---@end-debug@]===]
 	holdEvents()
-	local main=missionInfo.followerTypeID==LE_FOLLOWER_TYPE_GARRISON_6_0 and GMF or GSF
-	local missionpage=main.MissionTab.MissionPage
---[===[@debug@
-	print(missionpage)
---@end-debug@]===]
 	main:ClearParty()
 	local party=self:GetParty(missionID)
 	if (party) then
@@ -2096,13 +2125,12 @@ function addon:RenderFollowerButton(frame,followerID,missionID,b,t)
 	frame:EnableMouse(true)
 	frame.PortraitFrame.Level:SetTextColor(1,1,1,1)
 	frame.PortraitFrame.Portrait:Show()
-	local info=self:GetFollowerData(followerID)
+	local info=self:GetAnyData(0,followerID)
 	if (not info) then
-
---[===[@debug@
-print("Unable to find follower",followerID)
---@end-debug@]===]
-	return
+	--[===[@debug@
+	print("Unable to find follower",followerID)
+	--@end-debug@]===]
+		return
 	end
 	frame.info=info
 	frame.missionID=missionID
@@ -2323,6 +2351,10 @@ function addon:OpenFollowersTab()
 end
 function addon:OpenMissionsTab()
 	lastTab=1
+	return self:OpenLastTab()
+end
+function addon:OpenProgressTab()
+	lastTab=3
 	return self:OpenLastTab()
 end
 function addon:OpenMissionControlTab()
@@ -2700,38 +2732,31 @@ function addon:ScriptGarrisonMissionButton_OnEnter(this, button)
 	end
 	if (addon:IsRewardPage()) then return end
 	collectgarbage("step",100)
-	if (this.info == nil) then
-		return;
-	end
-
-	GameTooltip:SetOwner(this, "ANCHOR_CURSOR_RIGHT");
-
 	if(this.info.inProgress) then
-		GarrisonMissionButton_SetInProgressTooltip(this.info);
+		--GarrisonMissionButton_SetInProgressTooltip(this.info);
 	else
-		GameTooltip:SetText(this.info.name);
-		GameTooltip:AddLine(string.format(GARRISON_MISSION_TOOLTIP_NUM_REQUIRED_FOLLOWERS, this.info.numFollowers), 1, 1, 1);
-		local followertype=toc==70000 and LE_FOLLOWER_TYPE_GARRISON_6_0 or GarrisonMissionFrame:GetFollowerType()
-		local rc,message=pcall(GarrisonMissionButton_AddThreatsToTooltip,this.info.missionID, followertype);
-		--[===[@debug@
-		if not rc then GameTooltip:AddLine(message) end
-		--@end-debug@]===]
-		GameTooltip:AddLine(GARRISON_MISSION_AVAILABILITY);
-		GameTooltip:AddLine(this.info.offerTimeRemaining, 1, 1, 1);
-		if (blacklist[this.info.missionID]) then
-			GameTooltip:AddDoubleLine(L["Blacklisted"],L["Right-Click to remove from blacklist"],1,0.125,0.125,C:Green())
-			GameTooltip:AddLine(L["Blacklisted missions are ignored in Mission Control"])
-		else
-			GameTooltip:AddDoubleLine(L["Not blacklisted"],L["Right-Click to blacklist"],0.125,1.0,0.125,C:Red())
+		if not this.info.isRare then
+			GameTooltip:AddLine(GARRISON_MISSION_AVAILABILITY);
+			GameTooltip:AddLine(this.info.offerTimeRemaining, 1, 1, 1);
 		end
-		GameTooltip:AddLine(this.info.offerTimeRemaining, 1, 1, 1);
-		addon:AddFollowersToTooltip(this.info.missionID,LE_FOLLOWER_TYPE_GARRISON_6_0  or 0)
-		if not C_Garrison.IsOnGarrisonMap() and not GMF:IsVisible() then
-			GameTooltip:AddLine(" ");
-			GameTooltip:AddLine(GARRISON_MISSION_TOOLTIP_RETURN_TO_START, nil, nil, nil, 1);
+		if not this.hall then
+			if (blacklist[this.info.missionID]) then
+				GameTooltip:AddDoubleLine(L["Blacklisted"],L["Right-Click to remove from blacklist"],1,0.125,0.125,C:Green())
+				GameTooltip:AddLine(L["Blacklisted missions are ignored in Mission Control"])
+			else
+				GameTooltip:AddDoubleLine(L["Not blacklisted"],L["Right-Click to blacklist"],0.125,1.0,0.125,C:Red())
+			end
+		end
+		addon:AddFollowersToTooltip(this.info.missionID,this.hall and LE_FOLLOWER_TYPE_GARRISON_7_0 or LE_FOLLOWER_TYPE_GARRISON_6_0)
+		if not this.hall then
+			if not C_Garrison.IsOnGarrisonMap() and not GMF:IsVisible() then
+				GameTooltip:AddLine(" ");
+				GameTooltip:AddLine(GARRISON_MISSION_TOOLTIP_RETURN_TO_START, nil, nil, nil, 1);
+			end
 		end
 	end
 --[===[@debug@
+	GameTooltip:AddLine("----------------------------------------------")
 	GameTooltip:AddDoubleLine("MissionID",this.info.missionID)
 	GameTooltip:AddDoubleLine("Class",this.info.class)
 	GameTooltip:AddDoubleLine(this.info.class,this.info[this.info.class])
@@ -2847,8 +2872,8 @@ function addon:AddStandardDataToButton(source,button,mission,missionID,bigscreen
 	else
 		button.LocBG:Hide();
 	end
-	self:AddLevel(source,button,mission,missionID,bigscreen)
-	button:Enable();
+	self:GetMissionModule(mission.followerTypeID):AddLevel(source,button,mission,missionID,bigscreen)
+	button:Enable()
 	button.MissionType:SetPoint("TOPLEFT",5,-2)
 	-- From here on, I am in my own buttons context
 	-- Mission Control wide is 832, left for buttons is 305 source = "Control"
@@ -2887,6 +2912,7 @@ function addon:AddStandardDataToButton(source,button,mission,missionID,bigscreen
 
 end
 function addon:AddLevel(source,button,mission,missionID,bigscreen)
+	print("base")
 	button.Level:SetPoint("CENTER", button, "TOPLEFT", 40, -36);
 	local level= (mission.level == GARRISON_FOLLOWER_MAX_LEVEL and mission.iLevel > 0) and mission.iLevel or mission.level
 	local quality=1
@@ -2900,7 +2926,6 @@ function addon:AddLevel(source,button,mission,missionID,bigscreen)
 	button.Level:SetText(level)
 	button.Level:SetTextColor(self:GetQualityColor(quality))
 	button.ItemLevel:Hide();
-
 end
 function addon:AddThreatsToButton(button,mission,missionID,bigscreen)
 	local threatIndex=1
@@ -2922,8 +2947,8 @@ function addon:AddThreatsToButton(button,mission,missionID,bigscreen)
 			button.Env:Show()
 			button.Env.Icon:SetTexture(mission.typeIcon)
 			button.Env.texture=mission.typeIcon
-			button.Env.countered=party.isEnvMechanicCountered
-			if (party.isEnvMechanicCountered) then
+			button.Env.countered=party.isEnvMechanicCountered.environmentMechanicCountered
+			if (party.isEnvMechanicCountered.environmentMechanicCountered) then
 				button.Env.Border:SetVertexColor(C.Green())
 			else
 				button.Env.Border:SetVertexColor(C.Red())
@@ -2983,8 +3008,8 @@ function addon:AddIndicatorToButton(button,mission,missionID,bigscreen)
 		button.gcINDICATOR=indicators
 	end
 	local panel=button.gcINDICATOR
-	local perc=select(4,G.GetPartyMissionInfo(missionID))
-	if button.party and button.party.perc > perc then perc=button.party.perc end
+	local perc=select(4,G.GetPartyMissionInfo(missionID)) or 0
+	if button.party and type(button.party.perc)=="number" and button.party.perc > perc then perc=button.party.perc end
 	if button.party.full then
 		panel.Percent:SetFormattedText(GARRISON_MISSION_PERCENT_CHANCE,perc)
 		panel.Percent:SetTextColor(self:GetDifficultyColors(perc))
@@ -3130,14 +3155,19 @@ function addon:GarrisonMissionFrame_SelectTab(frame,tab)
 end
 function addon:HookedGarrisonMissionButton_SetRewards(frame,rewards,numRewards)
 	collectgarbage("step",300)
-	if not GMF:IsVisible() then return end
+	local mission=frame.info
+	local module=self:GetMissionModule(mission.followerTypeID)
+	local main=module:GetMain()
+	if not main or not main:IsVisible() then return end
+	local Missions=module:GetMissions()
+	local bigscreen=module:GetBigScreen()
 	if frame.info then
-		if GMFMissions.showInProgress then
+		if Missions.showInProgress then
 			frame.Title:SetPoint("TOPLEFT",frame,"TOPLEFT",160,-25)
 		else
 			local extra=80*(numRewards-1)
-			if not ns.bigscreen then extra = extra + 70 * (frame.info.numFollowers-1) end
-			local allowed=ns.bigscreen and 350- extra or 480 - extra
+			if not bigscreen then extra = extra + 70 * (frame.info.numFollowers-1) end
+			local allowed=bigscreen and 350- extra or 480 - extra
 			local needed=frame.Title:GetStringWidth()+5+frame.Summary:GetStringWidth()
 			if (needed > allowed) then
 				frame.Title:SetPoint("TOPLEFT",frame,"TOPLEFT",160,-5)
@@ -3149,20 +3179,20 @@ function addon:HookedGarrisonMissionButton_SetRewards(frame,rewards,numRewards)
 		end
 		frame.MissionType:SetPoint("TOPLEFT",5,-2)
 		frame.MissionType:SetAlpha(0.5)
-		self:AddLevel(GMF,frame,frame.info,frame.info.missionID,ns.bigscreen)
-		if GMFMissions.showInProgress and frame.lastID and frame.lastID == frame.info.missionID and frame.lastProgress then
+		module:AddLevel(GMF,frame,frame.info,frame.info.missionID,bigscreen)
+		if Missions.showInProgress and frame.lastID and frame.lastID == frame.info.missionID and frame.lastProgress then
 			return
 		end
 		frame.lastID = frame.info.missionID
 		frame.lastProgress = frame.info.inProgress
 		frame.party=self:GetParty(frame.info.missionID)
-		if not GMFMissions.showInProgress then
+		if not Missions.showInProgress then
 			self:MatchMaker(frame.info.missionID,frame.party)
 		end
 		--[===[@debug@
-		if not GMF:IsVisible() then print(debugstack()) end
+		if not main:IsVisible() then pp(debugstack()) end
 		--@end-debug@]===]
-		self:DrawSingleButton(GMF,frame,GMFMissions.showInProgress,ns.bigscreen)
+		self:DrawSingleButton(GMF,frame,GMFMissions.showInProgress,bigscreen)
 	end
 end
 
@@ -3192,6 +3222,9 @@ function addon:GarrisonMissionPageFollowerFrame_OnEnter(this)
 end
 do local lasttime=0
 function addon:HookedGarrisonMissionList_Update(t,...)
+--[===[@debug@
+	print(self,t,...)
+--@end-debug@]===]
 	collectgarbage('step',200)
 	if not GMFMissions.showInProgress then
 		addon.hooks.GarrisonMissionList_Update(self,t,...)
@@ -3222,20 +3255,13 @@ end
 end
 --addon:SafeRawHook(GMF.MissionTab.MissionList.listScroll,"update","HookedGMFMissionsListScroll_update")
 addon.hooks=addon.hooks or {}
-if toc==70000 then
-	addon.hooks.GarrisonMissionList_Update=GMF.MissionTab.MissionList.Update
-	GMF.MissionTab.MissionList.Update=addon.HookedGarrisonMissionList_Update
-	addon.hooks.GarrisonMissionList_SetTab=GMF.MissionTab.MissionList.SetTab
-	GMF.MissionTab.MissionList.SetTav=addon.HookedGarrisonMissionList_SetTab
-else
-	addon:SafeRawHook("GarrisonMissionList_Update")
-	addon:SafeSecureHook("GarrisonMissionList_SetTab")
-end
+addon.hooks.GarrisonMissionList_Update=GMF.MissionTab.MissionList.Update
+GMF.MissionTab.MissionList.Update=addon.HookedGarrisonMissionList_Update
+addon.hooks.GarrisonMissionList_SetTab=GMF.MissionTab.MissionList.SetTab
+GMF.MissionTab.MissionList.SetTab=addon.HookedGarrisonMissionList_SetTab
 addon:SafeSecureHook("GarrisonMissionButton_SetRewards")
-addon:SafeRawHook("GarrisonMissionButton_OnEnter","ScriptGarrisonMissionButton_OnEnter")
-if toc <70000 then
-	addon:SafeRawHook("GarrisonMissionPageFollowerFrame_OnEnter")
-end
+--addon:SafeSecureHook("GarrisonMissionButton_OnEnter","ScriptGarrisonMissionButton_OnEnter")
+--addon:SecureHook("GarrisonMissionButton_OnEnter","ScriptGarrisonMissionButton_OnEnter")
 addon:SafeSecureHook(GMF,"SelectTab","GarrisonMissionFrame_SelectTab")
 addon:SafeRawHookScript(GMF.MissionTab.MissionPage.CloseButton,"OnClick","GarrisonMissionPageOnClose")
 _G.GarrisonCommander=addon

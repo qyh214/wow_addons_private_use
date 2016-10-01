@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 998 $")
+end, "$Revision: 1010 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -47,7 +47,7 @@ function XPerl_Party_Events_OnLoad(self)
 		"UNIT_CONNECTION",
 		"UNIT_PHASE",
 		"UNIT_COMBAT",
-		--"UNIT_SPELLMISS",
+		"UNIT_SPELLMISS",
 		"UNIT_FACTION",
 		"UNIT_FLAGS",
 		"UNIT_AURA",
@@ -71,16 +71,10 @@ function XPerl_Party_Events_OnLoad(self)
 		"UNIT_THREAT_LIST_UPDATE",
 		"PLAYER_TARGET_CHANGED",
 		"PARTY_LOOT_METHOD_CHANGED",
-		"PET_BATTLE_OPENING_START", 
-		"PET_BATTLE_CLOSE",
+		--"PET_BATTLE_OPENING_START",
+		--"PET_BATTLE_CLOSE",
 	}
 	for i, event in pairs(events) do
-		-- Party frames doesn't update properly with this yet
-		--[[if string.find(event, "^UNIT_") then
-			self:RegisterUnitEvent(event, "party1", "party2", "party3", "party4")
-		else
-			self:RegisterEvent(event)
-		end]]
 		self:RegisterEvent(event)
 	end
 
@@ -214,7 +208,9 @@ function ZPerl_Party_OnLoad(self)
 	self.partyid = "party"..self:GetID()
 	PartyFrames[self.partyid] = self
 
-	--CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
+	CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
+
+	self.hitIndicator.text:SetPoint("CENTER", self.portraitFrame, "CENTER", 0, 0)
 
 	self.nameFrame:SetAttribute("useparent-unit", true)
 	self.nameFrame:SetAttribute("*type1", "target")
@@ -864,7 +860,9 @@ local function XPerl_Party_TargetUpdateHealth(self)
 		hpMax = hp -- Make max hp at least equal to current health
 		percent = 100 -- And percent 100% cause a number divided by itself is 1, duh.
 	else
-		percent = hp / hpMax--Everything is dandy, so just do it right way.
+		if hpMax > 0 then
+			percent = hp / hpMax--Everything is dandy, so just do it right way.
+		end
 	end
 	-- end division by 0 check
 	if (hpMax > 0) then 
@@ -884,7 +882,9 @@ local function XPerl_Party_TargetUpdateHealth(self)
 		end
 	else
 		--XPerl_ColourHealthBar(self.targetFrame, hp / hpMax, self.targetid)
-		XPerl_SetSmoothBarColor(self.targetFrame.healthBar, percent)
+		if hpMax > 0 then
+			XPerl_SetSmoothBarColor(self.targetFrame.healthBar, percent)
+		end
 	end
 
 	if (UnitAffectingCombat(self.targetid)) then
@@ -930,9 +930,9 @@ function XPerl_Party_OnUpdate(self, elapsed)
 		return
 	end
 
-	--[[if pconf.hitIndicator and pconf.portrait then
+	if pconf.hitIndicator and pconf.portrait then
 		CombatFeedback_OnUpdate(self, elapsed)
-	end]]
+	end
 
 	if (self.PlayerFlash) then
 		XPerl_Party_CombatFlash(self, elapsed, false)
@@ -1093,13 +1093,13 @@ function XPerl_Party_Events:PARTY_LOOT_METHOD_CHANGED()
 	end
 end
 
-function XPerl_Party_Events:PET_BATTLE_OPENING_START()
+--[[function XPerl_Party_Events:PET_BATTLE_OPENING_START()
 	CheckRaid()
 end
 
 function XPerl_Party_Events:PET_BATTLE_CLOSE()
 	CheckRaid()
-end
+end]]
 
 -- RAID_TARGET_UPDATE
 function XPerl_Party_Events:RAID_TARGET_UPDATE()
@@ -1126,9 +1126,9 @@ XPerl_Party_Events.READY_CHECK_FINISHED = XPerl_Party_Events.READY_CHECK
 function XPerl_Party_Events:UNIT_COMBAT(...)
 	local action, descriptor, damage, damageType = ...
 	
-	--[[if (pconf.hitIndicator and pconf.portrait) then
+	if (pconf.hitIndicator and pconf.portrait) then
 		CombatFeedback_OnCombatEvent(self, action, descriptor, damage, damageType)
-	end]]
+	end
 
 	XPerl_Party_UpdateCombat(self)
 	if (action == "HEAL") then
@@ -1139,11 +1139,11 @@ function XPerl_Party_Events:UNIT_COMBAT(...)
 end
 
 -- UNIT_SPELLMISS
---[[function XPerl_Party_Events:UNIT_SPELLMISS(...)
+function XPerl_Party_Events:UNIT_SPELLMISS(...)
 	if (pconf.hitIndicator and pconf.portrait) then
 		CombatFeedback_OnSpellMissEvent(self, ...)
 	end
-end]]
+end
 
 -- UNIT_HEALTH
 function XPerl_Party_Events:UNIT_HEALTH()

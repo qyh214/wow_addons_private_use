@@ -107,13 +107,13 @@ local defaults = {
 
 		old_close_button = false,
 
-		frame_color_border = { .5, .5, .5 },
+		frame_color_border = { .5, .5, .5, 1 },
 		frame_color_backdrop = { 0, 0, 0, .7 },
 		frame_color_gradient = { .5, .5, .5, .3 },
-		loot_color_border = { .5, .5, .5 },
+		loot_color_border = { .5, .5, .5, 1 },
 		loot_color_backdrop = { 0, 0, 0, .9 },
 		loot_color_gradient = { .5, .5, .5, .4 },
-		loot_color_info = { .5, .5, .5 },
+		loot_color_info = { .5, .5, .5, 1 },
 		loot_color_button_auto = { .4, .8, .4, .6 }
 	}
 }
@@ -561,7 +561,7 @@ do
 		-- Items
 		local layout = 'simple'
 		if is_item then
-			r, g, b, hex = GetItemQualityColor(quality)
+			r, g, b, hex = GetItemQualityColor(quality or 0)
 			
 			text_name = ('|c%s%s|r'):format(hex, name)
 			
@@ -1034,13 +1034,17 @@ end
 local function AutoLootSlot(slot, link)
 	LootSlot(slot)
 	if link and GetItemBindType(link) == 'pickup' then
-		return false
+		return false, true
 	end
-	return true
+	return true, true
+end
+
+local function BoPRefresh()
+	XLootFrame:Update(false, true)
 end
 
 local _bag_slots = {}
-function XLootFrame:Update(in_options)
+function XLootFrame:Update(no_snap, no_hide)
 	local numloot = GetNumLootItems()
 	if numloot == 0 then return nil end
 	local max = math.max
@@ -1064,12 +1068,12 @@ function XLootFrame:Update(in_options)
 	end
 
 	-- Update rows
-	local max_quality, max_width, our_slot, slot = 0, 0, 0
+	local max_quality, max_width, our_slot, slot, need_refresh = 0, 0, 0
 	for slot = 1, numloot do
 		local _, icon, name, quantity, quality, locked, isQuestItem, questId, isActive = pcall(GetLootSlotInfo, slot)
 		-- local texture, item, quantity, quality, locked, isQuestItem, questId, isActive = GetLootSlotInfo(slot)
 		if icon then -- Occasionally WoW will open loot with empty or invalid slots
-			local looted = false
+			local looted, tried = false, false
 			-- Row data
 			local type = GetLootSlotType(slot)
 			local is_item, link = (type == LOOT_SLOT_ITEM)
@@ -1079,7 +1083,7 @@ function XLootFrame:Update(in_options)
 
 			-- Autolooting currency
 			if (auto.all or auto.currency) and (type == LOOT_SLOT_MONEY or type == LOOT_SLOT_CURRENCY) then
-				looted = AutoLootSlot(slot, link)
+				looted, tried = AutoLootSlot(slot, link)
 				
 			-- Autolooting items
 			else
@@ -1102,12 +1106,12 @@ function XLootFrame:Update(in_options)
 					-- Simple quest item
 					local family = GetItemFamily(link)
 					if not family and isQuestItem then
-						looted = AutoLootSlot(slot, link)
+						looted, tried = AutoLootSlot(slot, link)
 					else
 						-- We have room
 						family = (family and family <= 4096) and family or 0
 						if bag_slots[0] > 0 or (bag_slots[family] and bag_slots[family] > 0) then
-							looted = AutoLootSlot(slot, link)
+							looted, tried = AutoLootSlot(slot, link)
 							-- Update remaining space
 							family = bag_slots[family] and family or 0 
 							bag_slots[family] = bag_slots[family] - 1
@@ -1116,7 +1120,7 @@ function XLootFrame:Update(in_options)
 						else
 							local partial = GetItemCount(link) % itemStackCount
 							if partial > 0 and (partial + quantity < itemStackCount) then
-								looted = AutoLootSlot(slot, link)
+								looted, tried = AutoLootSlot(slot, link)
 							end
 						end
 
@@ -1129,7 +1133,7 @@ function XLootFrame:Update(in_options)
 			end
 				
 			-- Initialize slot
-			if not looted then
+			if not tried or no_hide then
 				our_slot = our_slot + 1 -- Incriment visible slots
 				local row = rows[our_slot] -- Acquire row
 				slots[our_slot] = row -- Place in active list
@@ -1149,9 +1153,16 @@ function XLootFrame:Update(in_options)
 				max_width = max(width, max_width)
 				max_quality = max(quality, max_quality)
 			end
+			if tried then
+				need_refresh = true
+			end
 		end
 	end
-	
+
+	if not no_hide and need_refresh then
+		C_Timer.After(0.8, BoPRefresh)
+	end
+
 	-- Exit if we autolooted everything
 	if our_slot == 0 then
 		CloseLoot()
@@ -1161,7 +1172,7 @@ function XLootFrame:Update(in_options)
 	self:SizeAndColor(max_width, max_quality)
 
 	-- Show
-	if not in_options then
+	if not no_snap and not no_hide then
 		self:SnapToCursor()
 	end
 	self:Show()

@@ -624,10 +624,5 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	ACombatStart	= "他太強大了!我們必須立刻離開這裡!我的魔法只能困住他一小段時間。快來吧，英雄們!",
-	HCombatStart	= "他...太強大了。英雄們，快點...到我這裡來!我們要立刻離開這裡!我會盡可能地在我們逃走時把他困住。",
-	Wave1			= "無處可逃!",
-	Wave2			= "屈服於墓地的酷寒之下吧!",
-	Wave3			= "又是死路一條!",
-	Wave4			= "你還能支持多久?",
-	YellCombatEnd	= "開火!開火!"
+	HCombatStart	= "他...太強大了。英雄們，快點...到我這裡來!我們要立刻離開這裡!我會盡可能地在我們逃走時把他困住。"
 })

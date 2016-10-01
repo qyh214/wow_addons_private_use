@@ -12,8 +12,8 @@
 ## Notes-zhTW: 发送所有的追随者与点击多任务
 ## Notes-zhCN: 發送所有的追隨者與點擊多任務
 ## Author: Alar of Daggerspine
-## Version: 2.13.3 6.2.4
-## X-Revision: 5f3fb2a
+## Version: 2.14.0 6.2.4
+## X-Revision: d5c7b76
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
 ## OptionalDeps: Ace3,LibInit
@@ -28,9 +28,9 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2016-07-22T15:01:38Z
-## X-Embeds:
-## X-Curse-Packaged-Version: 2.13.3
+## X-Date: 2016-08-28T17:52:02Z
+## X-Embeds: LibInit
+## X-Curse-Packaged-Version: 2.14.0
 ## X-Curse-Project-Name: GarrisonCommander
 ## X-Curse-Project-ID: garrisoncommander
 ## X-Curse-Repository-ID: wow/garrisoncommander/mainline
@@ -50,6 +50,7 @@ MatchMaker.lua
 FollowerRecruiting.lua
 BuildingPage.lua
 ShipYard.lua
+OrderHall.lua
 quick.lua
 RelNotes.lua
 

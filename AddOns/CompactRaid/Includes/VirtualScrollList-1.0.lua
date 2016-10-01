@@ -21,6 +21,7 @@
 -- frame:CheckVisible([position]) -- Check whether a position is visible in the list (nil-invalid, 0-visible, other-invisible), "position" defaults to current selection
 -- frame:EnsureVisible([position]) -- Ensure a position being visible, scroll the list if needed, "position" defaults to current selection
 -- frame:RefreshContents() -- Refresh the entire list, call only when necessary!
+-- frame:UpdateList() -- Repaint the list contents
 -- frame:ScheduleRefresh() -- Schedule a contents refreshing on next "OnUpdate" call
 -- frame:SetScrollBarScale(scale) -- Set scale of the scroll-bar, 1.0 maximum
 -- frame:TextureButton("textureName", button) -- Set the specified texture onto a button, textureName can be "highlightTexture" or "checkedTexture"
@@ -97,7 +98,7 @@ local STANDARD_TEXT_FONT = STANDARD_TEXT_FONT
 local NIL = "!2BFF-1B787839!"
 
 local MAJOR_VERSION = 1
-local MINOR_VERSION = 42
+local MINOR_VERSION = 47
 
 -- To prevent older libraries from over-riding newer ones...
 if type(UICreateVirtualScrollList_IsNewerVersion) == "function" and not UICreateVirtualScrollList_IsNewerVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -146,8 +147,10 @@ end
 
 local function GetItemData(id)
 	local name, link, quality, _, _, _, _, _, _, icon = GetItemInfo(id)
-	local r, g, b = GetItemQualityColor(quality)
-	return name, icon, link, r, g, b
+	if name and quality then
+		local r, g, b = GetItemQualityColor(quality)
+		return name, icon, link, r, g, b
+	end
 end
 
 local function GetDataInfo(listType, id)
@@ -821,7 +824,7 @@ end
 local function Frame_BindDataList(self, list)
 	if type(list) == "table" then
 		self.listData = list
-		Frame_UpdateList(self)
+		Frame_RefreshContents(self)
 	else
 		Frame_Clear(self)
 	end
@@ -856,6 +859,10 @@ end
 
 local function ItemEventFrame_OnShow(self)
 	self:RegisterEvent("GET_ITEM_INFO_RECEIVED")
+end
+
+local function ItemEventFrame_OnHide(self)
+	self:UnregisterAllEvents()
 end
 
 local function ItemEventFrame_OnEvent(self)
@@ -920,7 +927,7 @@ function UICreateVirtualScrollList(name, parent, pageSize, selectable, checkbox,
 	if listType == "ITEM" then
 		local ief = CreateFrame("Frame", nil, frame)
 		ief:SetScript("OnShow", ItemEventFrame_OnShow)
-		ief:SetScript("OnHide", itemEventFrame.UnregisterAllEvents)
+		ief:SetScript("OnHide", ItemEventFrame_OnHide)
 		ief:SetScript("OnEvent", ItemEventFrame_OnEvent)
 	end
 
@@ -989,6 +996,7 @@ function UICreateVirtualScrollList(name, parent, pageSize, selectable, checkbox,
 	frame.UpdateData = Frame_UpdateData
 	frame.Clear = Frame_Clear
 	frame.RefreshContents = Frame_RefreshContents
+	frame.UpdateList = Frame_UpdateList
 	frame.EnableDrag = Frame_EnableDrag
 	frame.IsDragEnabled = Frame_IsDragEnabled
 	frame.BindDataList = Frame_BindDataList

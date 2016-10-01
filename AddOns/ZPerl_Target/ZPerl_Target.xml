@@ -415,7 +415,7 @@
 					<Anchor point="BOTTOMRIGHT" relativeTo="$parentportraitFrame"/>
 				</Anchors>
 			</Frame>
-			<!--<Frame name="$parenthitIndicator" frameStrata="HIGH">
+			<Frame name="$parenthitIndicator" frameStrata="HIGH">
 				<Layers>
 					<Layer level="OVERLAY">
 						<FontString name="$parenttext" inherits="NumberFontNormalHuge" hidden="true" text="Error!">
@@ -426,7 +426,7 @@
 						</FontString>
 					</Layer>
 				</Layers>
-			</Frame>-->
+			</Frame>
 			<!-- Buffs Frame -->
 			<Frame name="$parentbuffFrame">
 				<Size>

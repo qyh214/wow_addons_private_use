@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(851, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 92 $"):sub(12, -3))
 mod:SetCreatureID(71529)
 mod:SetEncounterID(1599)
 mod:SetZone()
@@ -16,8 +16,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 143766 143780 143773 143767 146589 143440 143445",
 	"SPELL_DAMAGE 143783",
 	"SPELL_MISSED 143783",
-	"SPELL_PERIODIC_DAMAGE 143784",
-	"SPELL_PERIODIC_MISSED 143784",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -127,18 +125,16 @@ function mod:OnCombatStart(delay)
 	end
 	berserkTimer:Start(-delay)
 	DBM:AddMsg(DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP)
---	if self.Options.RangeFrame then
---		if self:IsMythic() then
---			DBM.RangeCheck:Show(10, nil, nil, 11)--All difficulties are dynamic with no data. Will only be able to fix mythic really.
---		else
---		end
---	end
+	if not self:IsTrivial(100) then
+		self:RegisterShortTermEvents(
+			"SPELL_PERIODIC_DAMAGE 143784",
+			"SPELL_PERIODIC_MISSED 143784"
+		)
+	end
 end
 
 function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
+	self:UnregisterShortTermEvents()
 end
 
 function mod:SPELL_CAST_SUCCESS(args)

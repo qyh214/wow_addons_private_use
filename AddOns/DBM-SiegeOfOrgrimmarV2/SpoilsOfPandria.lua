@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(870, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 92 $"):sub(12, -3))
 mod:SetCreatureID(73720, 71512)
 mod:SetEncounterID(1594)
 mod:DisableESCombatDetection()
@@ -18,8 +18,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 142947 145712 146253 145230 145786 145812",
 	"SPELL_AURA_APPLIED 145987 145692 145998",
 	"SPELL_AURA_REMOVED 145987 145692",
-	"SPELL_DAMAGE 145716 145748 146257",
-	"SPELL_MISSED 145716 145748 146257",
 	"UNIT_DIED",
 	"RAID_BOSS_WHISPER",
 	"UPDATE_WORLD_STATES"
@@ -52,7 +50,7 @@ local specWarnSetToBlowYou		= mod:NewSpecialWarningYou(145987)
 local specWarnSetToBlow			= mod:NewSpecialWarningPreWarn(145996, nil, 4, nil, 3)
 --Stout Crate of Goods
 ----Mogu
-local specWarnForbiddenMagic	= mod:NewSpecialWarningInterrupt(145230, "Melee")
+local specWarnForbiddenMagic	= mod:NewSpecialWarningInterrupt(145230, "HasInterrupt")
 local specWarnMatterScramble	= mod:NewSpecialWarningSpell(145288, nil, nil, nil, 2)
 local specWarnCrimsonRecon		= mod:NewSpecialWarningMove(142947, "Tank", nil, nil, 3)
 local specWarnTorment			= mod:NewSpecialWarningSpell(142934, false)
@@ -140,6 +138,12 @@ function mod:OnCombatStart(delay)
 		DBM.InfoFrame:SetHeader(L.name)
 		DBM.InfoFrame:Show(2, "enemypower", 2, ALTERNATE_POWER_INDEX)
 	end
+	if not self:IsTrivial(100) then
+		self:RegisterShortTermEvents(
+			"SPELL_DAMAGE 145716 145748 146257",
+			"SPELL_MISSED 145716 145748 146257"
+		)
+	end
 end
 
 function mod:OnCombatEnd()
@@ -196,8 +200,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerPathOfBlossomsCD:Start(args.sourceGUID)
 	elseif spellId == 145230 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
 		local source = args.sourceName
-		warnForbiddenMagic:Show(args.destName)
-		if source == UnitName("target") or source == UnitName("focus") then 
+		if self:AntiSpam(5, args.destName) then
+			warnForbiddenMagic:CombinedShow(1, args.destName)
+		end
+		if (source == UnitName("target") or source == UnitName("focus")) and self:AntiSpam(3, 6) then 
 			specWarnForbiddenMagic:Show(source)
 		end
 	elseif spellId == 145786 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
@@ -293,7 +299,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function mod:UPDATE_WORLD_STATES()
-	local text = select(4, GetWorldStateUIInfo(6))
+	local text = select(4, GetWorldStateUIInfo(1))
 	local time = tonumber(string.match(text or "", "%d+"))
 	if not time then return end
 	if time > worldTimer then

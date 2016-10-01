@@ -2,8 +2,12 @@
 ## Title: Titan Panel [|cffeda55fReputation|r]
 ## Notes: Titan Panel plugin that shows your Reputations.
 ## Author: Eliote
-## Version: 1.3
+## Version: v1.6
 ## Dependencies: Titan
+## X-Curse-Packaged-Version: v1.6
+## X-Curse-Project-Name: Titan Panel [Reputation]
+## X-Curse-Project-ID: titan-panel-reputation
+## X-Curse-Repository-ID: wow/titan-panel-reputation/mainline
 Locales.lua
 Elib-2.3.lua
 TitanReputations.lua

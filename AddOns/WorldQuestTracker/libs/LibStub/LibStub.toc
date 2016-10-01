@@ -1,0 +1,17 @@
+## Interface: 40200
+## Title: Lib: LibStub
+## Notes: Universal Library Stub
+## Credits: Kaelten, Cladhaire, ckknight, Mikk, Ammo, Nevcairiel
+## X-Website: http://www.wowace.com/addons/libstub/
+## X-Category: Library
+## X-License: Public Domain	
+## X-Curse-Packaged-Version: r95
+## X-Curse-Project-Name: LibStub
+## X-Curse-Project-ID: libstub
+## X-Curse-Repository-ID: wow/libstub/mainline
+## X-Curse-Packaged-Version: r72
+## X-Curse-Project-Name: World Quest Tracker
+## X-Curse-Project-ID: world-quest-tracker
+## X-Curse-Repository-ID: wow/world-quest-tracker/mainline
+
+LibStub.lua

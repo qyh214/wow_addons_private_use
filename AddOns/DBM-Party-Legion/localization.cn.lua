@@ -1,8 +1,7 @@
 -- Mini Dragon(projecteurs@gmail.com)
+-- 夏一可
 -- Blizzard Entertainment
--- Last update: June 1 2016, 03:13 UTC@14988
--- 副本正式名称需要等待资料片正式发行，以正式发行为准
--- 夏一可还没有搞到触发字符串的翻译
+-- Last update: Sep 20 2016, 00:55 UTC@15226
 
 if GetLocale() ~= "zhCN" then return end
 local L
@@ -84,6 +83,11 @@ L= DBM:GetModLocalization(1480)
 -----------------------
 L= DBM:GetModLocalization(1490)
 
+L:SetWarningLocalization({
+	specWarnStaticNova			= "静电新星 - 快站沙丘",
+	specWarnFocusedLightning	= "凝聚闪电 - 快进水域"
+})
+
 -----------------------
 -- King Deepbeard --
 -----------------------
@@ -135,6 +139,10 @@ L= DBM:GetModLocalization(1488)
 -- Odyn --
 -----------------------
 L= DBM:GetModLocalization(1489)
+
+L:SetMiscLocalization({
+	tempestModeMessage		=	"非明光风暴序列: %s. 8秒后再检查."
+})
 
 -----------------------
 --Halls of Valor Trash
@@ -196,7 +204,7 @@ L= DBM:GetModLocalization(1498)
 L= DBM:GetModLocalization(1499)
 
 L:SetMiscLocalization({
-	batSpawn		=	"支援我！现在！"--Reinforcements to me! NOW!
+	batSpawn		=	"援助我！快！" --offical
 })
 
 -----------------------
@@ -215,7 +223,7 @@ L= DBM:GetModLocalization(1501)
 L = DBM:GetModLocalization("ArcwayTrash")
 
 L:SetGeneralLocalization({
-	name =	"苏拉玛墓穴小怪"
+	name =	"魔法回廊小怪"
 })
 
 -----------------------
@@ -242,7 +250,7 @@ L= DBM:GetModLocalization(1720)
 L = DBM:GetModLocalization("CoSTrash")
 
 L:SetGeneralLocalization({
-	name =	"群星议会小怪"
+	name =	"群星庭院小怪"
 })
 
 -----------------------
@@ -269,7 +277,7 @@ L= DBM:GetModLocalization(1663)
 L = DBM:GetModLocalization("MawTrash")
 
 L:SetGeneralLocalization({
-	name =	"冥狱深渊小怪"
+	name =	"噬魂之喉小怪"
 })
 
 -----------------------
@@ -321,7 +329,28 @@ L= DBM:GetModLocalization(1711)
 L = DBM:GetModLocalization("AVHTrash")
 
 L:SetGeneralLocalization({
-	name =	"新紫罗兰监狱小怪"
+	name =	"突袭紫罗兰监狱小怪"
+})
+
+L:SetWarningLocalization({
+	WarningPortalSoon	= "准备开门",
+	WarningPortalNow	= "第%d个传送门",
+	WarningBossNow		= "Boss来了"
+})
+
+L:SetTimerLocalization({
+	TimerPortal			= "传送门CD"
+})
+
+L:SetOptionLocalization({
+	WarningPortalNow		= "警报：新的传送门",
+	WarningPortalSoon		= "警报：准备开门",
+	WarningBossNow			= "警报：Boss来了",
+	TimerPortal				= "计时条：Boss后的下一个门"
+})
+
+L:SetMiscLocalization({
+	Malgath		=	"督军马尔加斯" --offical
 })
 
 -----------------------
@@ -355,8 +384,70 @@ L= DBM:GetModLocalization(1470)
 -----------------------
 --Vault of the Wardens Trash
 -----------------------
---L = DBM:GetModLocalization("")
+L = DBM:GetModLocalization("")
 
---L:SetGeneralLocalization({
---	name =	"守望者地窟小怪"
---})
+L:SetGeneralLocalization({
+	name =	"守望者地窟小怪"
+})
+
+-----------------------
+-- <<<Return To Karazhan>>> --
+-----------------------
+-----------------------
+-- Maiden of Virtue --
+-----------------------
+L= DBM:GetModLocalization(1825)
+
+-----------------------
+-- Opera Hall: Wikket  --
+-----------------------
+L= DBM:GetModLocalization(1820)
+
+-----------------------
+-- Opera Hall: Westfall Story --
+-----------------------
+L= DBM:GetModLocalization(1826)
+
+-----------------------
+-- Opera Hall: Beautiful Beast  --
+-----------------------
+L= DBM:GetModLocalization(1827)
+
+-----------------------
+-- Attumen the Huntsman --
+-----------------------
+L= DBM:GetModLocalization(1835)
+
+-----------------------
+-- Moroes --
+-----------------------
+L= DBM:GetModLocalization(1837)
+
+-----------------------
+-- The Curator --
+-----------------------
+L= DBM:GetModLocalization(1836)
+
+-----------------------
+-- Shade of Medivh --
+-----------------------
+L= DBM:GetModLocalization(1817)
+
+-----------------------
+-- Mana Devourer --
+-----------------------
+L= DBM:GetModLocalization(1818)
+
+-----------------------
+-- Viz'aduum the Watcher --
+-----------------------
+L= DBM:GetModLocalization(1838)
+
+-----------------------
+--Return To Karazhan Trash
+-----------------------
+L = DBM:GetModLocalization("RTKTrash")
+
+L:SetGeneralLocalization({
+	name =	"重返卡拉赞小怪"
+})

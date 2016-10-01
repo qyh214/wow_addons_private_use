@@ -12,12 +12,19 @@ DBM_CORE_LOAD_MOD_ERROR				= "載入%s模組時發生錯誤：%s"
 DBM_CORE_LOAD_MOD_SUCCESS			= "成功載入%s模組。輸入/dbm 可自訂警告音效和個人化註記。"
 DBM_CORE_LOAD_MOD_COMBAT			= "延遲載入'%s'直到離開戰鬥"
 DBM_CORE_LOAD_GUI_ERROR				= "無法載入圖形介面：%s"
-DBM_CORE_LOAD_GUI_COMBAT			= "圖形介面不能在戰鬥中初始化。圖形介面將在脫離戰鬥後自動讀取，這樣就能夠再次在戰鬥中使用。"
+DBM_CORE_LOAD_GUI_COMBAT			= "圖形介面不能在戰鬥中初始化。圖形介面將在脫離戰鬥後自動開啟，這樣就能夠再次在戰鬥中使用。"
 DBM_CORE_BAD_LOAD					= "DBM偵測到你的此副本的模組在戰鬥中讀取失敗。一旦脫離戰鬥，請立即輸入/consoel reloadui重新載入。"
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s不能被讀取因為你的DBM核心未達需求，請更新版本。"
 
---DBM_CORE_WHATS_NEW					= "此版本新功能：計時條選項加入嵌入圖示和自訂可計時條顏色選項。"
---DBM_CORE_WHATS_NEW_LINK			= "此版本新功能： 計時條選項加入嵌入圖示和自訂可計時條顏色選項。想知道此功能的詳細資訊請至|HDBM:forumsnews|h|cff3588ffclicking here|r"
+DBM_CORE_WHATS_NEW					= "版本更新：修正一個DBM版本更新的問題。DBM不再會不顧使用者的設定去過濾破碎群島的片段動畫。加入惡魔入侵模組。"
+DBM_CORE_WHATS_NEW_LINK				= "在接下來的DBM版本，因為暴雪將在7.1版本將移除副本中的單位位置的API，許多與單位位置的功能如：距離雷達將被刪除。想了解為什麼：|HDBM:forumsnews|h|cff3588ff點擊這裡|r"
+
+--Pre Patch 7.1 Notice
+DBM_CORE_NO_RANGE_SOON				= "注意：在7.1版後，距離雷達將不能在副本中使用。"
+--Post Patch 7.1
+DBM_CORE_NO_RANGE					= "距離雷達不能在副本中使用，使用傳統文字距離框架取代"
+DBM_CORE_NO_ARROW					= "箭頭不能在副本中使用"
+DBM_CORE_NO_HUD						= "HUDMap 不能在副本中使用"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM已中禁用動態距離框架，你目前的團隊人數在這場戰鬥中的機制資訊不足。"
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM已中禁用小怪計數警告，你目前的團隊人數在這場戰鬥中的機制資訊不足。"
@@ -148,7 +155,7 @@ DBM_CORE_VOICE_MISSING				= "DBM找不到你所選取的語音包。你的語音
 DBM_CORE_VOICE_COUNT_MISSING		= "所選取的語音/倒數語音包%d找不到倒數語音。設定已被重置回預設值。"
 
 DBM_CORE_UPDATEREMINDER_HEADER			= "你的Deadly Boss Mod已經過期。\n你可以在Curse網站或是wowinterface網站以及此網址下載到新版本%s(r%d)："
-DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "你的alpha版本Deadly Boss Mods已經過期。\n 你至少落後%d個測試版本。建議DBM使用者使用最新的alpha或最新的穩定版本。過期的alpha版本可能會有效能低落或未完成的功能。"
+DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "你的ALPHA版本Deadly Boss Mods已經過期。\n 你至少落後%d個測試版本。建議DBM使用者使用最新的ALPHA或最新的穩定版本。過期的alpha版本可能會有效能低落或未完成的功能。"
 DBM_CORE_UPDATEREMINDER_FOOTER			= "按下" .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "：複製下載網址到剪貼簿。"
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "按下" .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "：複製網址到剪貼簿。"
 DBM_CORE_UPDATEREMINDER_DISABLE			= "警告: 你的DBM版本已過期太多版本(至少過期%d個版本)，DBM已被強制禁用了而不能啟用除非更新至最新版本。這是為了確保舊而不相容的程式碼不會對你而團隊夥伴造成低落的遊戲體驗。"
@@ -161,7 +168,6 @@ DBM_CORE_3RDPROFILES					= "警告:DBM-Profiles不相容此版本DBM。請移除
 DBM_CORE_DPMCORE						= "警告:Deadly PvP 模組已經停止更新而且不相容此版本的DBM。請移除避免衝突。"
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "警告:如果你沒有重啟你的遊戲，這次DBM更新可能無法正確運作。這次更新包含了新的檔案或是.toc檔更新而不能使用ReloadUI載入。如果沒有將遊戲完全重啟可能會導致錯誤或功能不完整。"
 DBM_CORE_OUT_OF_DATE_NAG				= "你的DBM版本已經過期你設定忽略彈出更新提示。還是建議你更新避免缺少一些重要的警告或是計時器，而其他人也看不到從你發出的大喊警告。"
-DBM_CORE_DISABLED_REMINDER				= "提醒：Deadly Boss Mods已載入但選項功能被停用。在頻道上輸入/dbm 然後至'選項/綜合設置'中選取啟用DBM去啟用DBM"
 
 DBM_CORE_MOVABLE_BAR				= "拖動我!"
 
@@ -431,6 +437,8 @@ DBM_CORE_HUD_USAGE	= {
 }
 
 DBM_ARROW_MOVABLE					= "可移動箭頭"
+DBM_ARROW_WAY_USAGE					= "/dway <x> <y>: 建立一個箭頭來指向特定位置(使用區域地圖坐標)"
+DBM_ARROW_WAY_SUCCESS				= "要隱藏箭頭, 輸入 '/dbm arrow hide' 或是抵達箭頭"
 DBM_ARROW_ERROR_USAGE	= {
 	"DBM-Arrow 用法:",
 	"/dbm arrow <x> <y>  建立一個箭頭在特定的位置(使用世界地圖座標)",

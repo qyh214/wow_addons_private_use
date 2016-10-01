@@ -1,0 +1,12 @@
+## Interface: 70000
+## Title: LibItemSearch
+## Notes: An item search library
+## OptionalDeps: LibStub, Unfit-1.0, CustomSearch-1.0, ItemRack, Wardrobe
+## Author: Jaliborc (João Cardoso), Tuller, Yewbacca
+## LoadOnDemand: 1
+## X-Curse-Packaged-Version: v10.4
+## X-Curse-Project-Name: BagSync
+## X-Curse-Project-ID: bagsync
+## X-Curse-Repository-ID: wow/bagsync/mainline
+
+LibItemSearch-1.2.lua

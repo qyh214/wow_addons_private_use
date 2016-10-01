@@ -6,21 +6,13 @@ L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Übersetzt von "
 L.TranslationBy 			= "Ebmor@EU-Malorne"
-L.Website					= "Besuche die Diskussions- und Support-Foren: |cFF73C2FBwww.deadlybossmods.com|r. Folge dem Hauptentwickler auf Twitter: @MysticalOS"
+L.Website					= "Besuche die Diskussions-/Support-Foren: |cFF73C2FBwww.deadlybossmods.com|r. Folge auf Twitter: @deadlybossmods oder @MysticalOS"
 L.WebsiteButton				= "Foren"
 
 L.OTabBosses	= "Bosse"
 L.OTabOptions	= GAMEOPTIONS_MENU
 
 L.TabCategory_Options	 	= "Allgemeine Einstellungen"
-L.TabCategory_LEG	 		= "Legion"
-L.TabCategory_WOD	 		= EXPANSION_NAME5
-L.TabCategory_MOP	 		= EXPANSION_NAME4
-L.TabCategory_CATA	 		= EXPANSION_NAME3
-L.TabCategory_WOTLK 		= EXPANSION_NAME2
-L.TabCategory_BC 			= EXPANSION_NAME1
-L.TabCategory_CLASSIC		= EXPANSION_NAME0
-L.TabCategory_PVP 			= PVP
 L.TabCategory_OTHER    		= "Sonstige Boss Mods"
 
 L.BossModLoaded 			= "Statistiken von %s"
@@ -52,10 +44,10 @@ L.Statistic_Kills			= "Siege:"
 L.Statistic_Wipes			= "Niederlagen:"
 L.Statistic_Incompletes		= "Abgebrochen:"
 L.Statistic_BestKill		= "Rekordzeit:"
+L.Statistic_BestRank		= "Höchste Stufe:"
 
 -- Tab: General Core Options
 L.General 					= "Allgemeine Grundeinstellungen"
-L.EnableDBM 				= "Aktiviere DBM"
 L.EnableMiniMapIcon			= "Aktiviere Minimap-Symbol"
 L.UseSoundChannel			= "Audiokanal um DBM-Sounddateien abzuspielen"
 L.UseMasterChannel			= "Master Audiokanal"
@@ -86,7 +78,6 @@ L.InfoRaidWarning			= [[Hier werden Position und Farben des Fensters für Schlac
 
 L.ColorResetted 			= "Diese Farbeinstellung wurde zurückgesetzt."
 L.ShowWarningsInChat 		= "Zeige Warnungen im Chatfenster"
-L.ShowFakedRaidWarnings 	= "Zeige Warnungen als künstliche Schlachtzugwarnungen"
 L.WarningIconLeft 			= "Zeige Symbol links an"
 L.WarningIconRight 			= "Zeige Symbol rechts an"
 L.WarningIconChat 			= "Zeige Symbole im Chatfenster"
@@ -281,7 +272,7 @@ L.DontShowPT				= "Zeige keinen Timerbalken für Pull-/Pausen-Timer"
 L.DontShowPTText			= "Zeige keine Mitteilungen für Pull-/Pausen-Timer im Chatfenster"
 L.DontPlayPTCountdown		= "Spiele keinen akustischen Countdown für Pull-, Pausen-, Kampf- und benutzerdefinierte Timer"
 L.DontShowPTCountdownText	= "Zeige keinen optischen Countdown für Pull-, Pausen-, Kampf- und benutzerdefinierte Timer"
-L.PT_Threshold				= "Zeige keinen opt. Countd. f. Pull-/Pausen-/Kampf-/Nutzer-Timer über: %d"
+L.PT_Threshold				= "Zeige keinen opt. Countd. für Pausen-/Kampf-/Nutzer-Timer über: %d"
 
 L.Panel_HideBlizzard		= "Deaktivierung von Spielelementen"
 L.Area_HideBlizzard			= "Einstellungen zum Deaktivieren und Verbergen von Spielelementen"
@@ -291,13 +282,13 @@ L.HideGarrisonUpdates		= "Verberge Garnisonsmeldungen während Bosskämpfen"
 L.HideGuildChallengeUpdates	= "Verberge Gildenerfolgsmeldungen während Bosskämpfen"
 L.HideTooltips				= "Verberge Tooltips während Bosskämpfen"
 L.DisableSFX				= "Deaktiviere Soundeffekte während Bosskämpfen"
-L.HideApplicantAlerts		= "Unterdrücke Anwärteralarme in organisierten Gruppen"
-L.HideApplicantAlertsFull	= "falls Gruppe voll ist"
-L.HideApplicantAlertsNotL	= "falls du nicht der Gruppenleiter bist (\"Gruppe ist voll\"-Filter, falls du der Leiter bist)"
 L.SpamBlockSayYell			= "Sprechblasen-Ansagen im Chatfenster ausblenden"
 L.DisableCinematics			= "Verberge Videosequenzen"
 L.AfterFirst				= "Nach jeweils einmaligem Abspielen"
 L.Always					= ALWAYS
+L.DisableTalkingHead		= "Blockiere \"Sprechenden Kopf\""
+L.CombatOnly				= "im Kampf deaktivieren (alle)"
+L.RaidCombat				= "im Kampf deaktivieren (nur Bosse)"
 
 L.Panel_ExtraFeatures		= "Sonstige Funktionen"
 --
@@ -318,15 +309,11 @@ L.SKT_Enabled				= "Zeige Timer für Rekordzeit für aktuellen Kampf (falls verf
 L.CRT_Enabled				= "Zeige Zeit bis zur nächsten Wiederbelebungsaufladung im Kampf"
 L.ShowRespawn				= "Zeige Zeit bis zum Wiedererscheinen des Bosses nach einer Niederlage"
 L.ShowQueuePop				= "Zeige verbleibende Zeit zur Annahme einer Warteschlangeneinladung (Gruppensuche, Schlachtfelder, etc.)"
-L.ChallengeTimerOptions		= "Timer für den schnellsten Abschluss im Herausforderungsmodus"
-L.ChallengeTimerPersonal	= "Persönliche Bestzeit"
-L.ChallengeTimerGuild		= "Bestzeit der Gilde"
-L.ChallengeTimerRealm		= "Bestzeit des Realms"
 --
 L.Area_AutoLogging			= "Automatische Aufzeichnungen"
 L.AutologBosses				= "Automatische Aufzeichnung von Bosskämpfen im spieleigenen Kampflog (/dbm pull vor Bossen wird benötigt um die Aufzeichnung rechtzeitig für \"Pre-Pots\" und andere Ereignisse zu starten)"
 L.AdvancedAutologBosses		= "Automatische Aufzeichnung von Bosskämpfen mit Addon \"Transcriptor\""
-L.LogOnlyRaidBosses			= "Nur Schlachtzugbosskämpfe aufzeichnen\n(ohne Schlachtzugsbrowser-/Dungeon-/Szenarienbosskämpfe)"
+L.LogOnlyRaidBosses			= "Nur Schlachtzugbosskämpfe der aktuellen Erweiterung aufzeichnen\n(ohne Schlachtzugsbrowser-/Dungeon-/Szenarienbosskämpfe/alte Spielinhalte)"
 --
 L.Area_3rdParty				= "Einstellungen für Addons von Drittanbietern"
 L.ShowBBOnCombatStart		= "Führe bei Kampfbeginn eine \"BigBrother\"-Buffprüfung durch"

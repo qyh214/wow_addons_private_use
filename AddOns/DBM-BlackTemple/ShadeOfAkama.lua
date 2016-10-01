@@ -1,17 +1,18 @@
 local mod	= DBM:NewMod("Akama", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 585 $"):sub(12, -3))
-mod:SetCreatureID(23421, 22841, 23215, 23216)
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetCreatureID(22841)
+mod:SetEncounterID(603)
 mod:SetModelID(21357)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 mod:SetWipeTime(30)
 
-mod:RegisterEvents(
-	"SPELL_AURA_REMOVED 34189"
-)
+--mod:RegisterEvents(
+--	"SPELL_AURA_REMOVED 34189"
+--)
 
 mod:RegisterEventsInCombat(
 	"UNIT_DIED"
@@ -39,12 +40,14 @@ function mod:OnCombatEnd()
 	self:UnregisterShortTermEvents()
 end
 
+--[[
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 34189 and args:GetDestCreatureID() == 23191 then--Coming out of stealth (he's been activated)
 		DBM:StartCombat(self, 0)
 	end
 end
+--]]
 
 function mod:SWING_DAMAGE(_, sourceName)
 	if sourceName == L.name and self.vb.phase == 1 then

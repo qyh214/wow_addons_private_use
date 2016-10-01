@@ -1,66 +1,59 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
-
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
-----------------
---  Archavon  --
-----------------
-
+---------------------------------
+-- Archavon el Vigía de Piedra --
+---------------------------------
 L = DBM:GetModLocalization("Archavon")
 
 L:SetGeneralLocalization({
-	name = "Archavon el Vigía de piedra"
+	name = "Archavon el Vigía de Piedra"
 })
 
 L:SetWarningLocalization({
-	WarningGrab	= "Archavon agarró >%s<"
+	WarningGrab	= "Archavon agarra a >%s<"
 })
 
 L:SetTimerLocalization({
-	ArchavonEnrage	= "Enrage"
+	ArchavonEnrage	= "Rabia (Archavon)"
 })
 
 L:SetMiscLocalization({
-	TankSwitch	 = "%%s se abalanza sobre (%S+)!"
+	TankSwitch	= "%%s se abalanza sobre (%S+)"
 })
 
 L:SetOptionLocalization({
-	WarningGrab 	= "Mostrar aviso para cambiar tank",
-	ArchavonEnrage	= "Mostrar tiempo para $spell:26662"
+	WarningGrab		= "Anunciar objetivo de $spell:58666",
+	ArchavonEnrage	= "Mostrar temporizador para $spell:26662"
 })
 
---------------
---  Emalon  --
---------------
-
+------------------------------------
+-- Emalon el Vigía de la Tormenta --
+------------------------------------
 L = DBM:GetModLocalization("Emalon")
 
 L:SetGeneralLocalization{
-	name = "Emalon"
-}
-
-L:SetWarningLocalization{
+	name = "Emalon el Vigía de la Tormenta"
 }
 
 L:SetTimerLocalization{
-	timerMobOvercharge	= "Sobrecarga",
-	EmalonEnrage		= "Enrage"
+	timerMobOvercharge	= "Explosión de Sobrecarga",
+	EmalonEnrage		= "Rabia (Emalon)"
 }
 
 L:SetOptionLocalization{
-	timerMobOvercharge	= "Mostrar tiempo para que un Mob se haga grande.",
-	EmalonEnrage		= "Mostrar tiempo para $spell:26662",
-	RangeFrame			= "Mostrar distancia"
+	timerMobOvercharge	= "Mostrar temporizador para la explosión del Esbirro tempestuoso afectado por Sobrecarga",
+	EmalonEnrage		= "Mostrar temporizador para $spell:26662",
+	RangeFrame			= "Mostrar marco de distancia (10 m)"
 }
 
----------------
---  Koralon  --
----------------
-
+------------------------------------
+-- Koralon el Vigía de las Llamas --
+------------------------------------
 L = DBM:GetModLocalization("Koralon")
 
 L:SetGeneralLocalization{
-	name = "Koralon"
+	name = "Koralon el Vigía de las Llamas"
 }
 
 L:SetWarningLocalization{
@@ -68,12 +61,12 @@ L:SetWarningLocalization{
 }
 
 L:SetTimerLocalization{
-	KoralonEnrage	= "Enrage"
+	KoralonEnrage	= "Rabia (Koralon)"
 }
 
 L:SetOptionLocalization{
 	BurningFury			= "Mostrar aviso para $spell:66721",
-	KoralonEnrage		= "Mostrar tiempo para $spell:26662"
+	KoralonEnrage		= "Mostrar temporizador para $spell:26662"
 }
 
 L:SetMiscLocalization{
@@ -81,26 +74,26 @@ L:SetMiscLocalization{
 }
 
 -------------------------------
---  Toravon the Ice Watcher  --
+-- Toravon el Vigía de Hielo --
 -------------------------------
 L = DBM:GetModLocalization("Toravon")
 
 L:SetGeneralLocalization{
-	name = "Toravon"
+	name = "Toravon el Vigía de Hielo"
 }
 
 L:SetWarningLocalization{
-	Frostbite	= "Mordedura de Escarcha en >%s< (%d)"
+	Frostbite	= "Congelamiento en >%s< (%d)"
 }
 
 L:SetTimerLocalization{
-	ToravonEnrage	= "Enrage"
+	ToravonEnrage	= "Rabia (Toravon)"
 }
 
 L:SetOptionLocalization{
-	Frostbite	= "Mostrar aviso para $spell:72098"
+	Frostbite	= "Mostrar aviso para $spell:72004"
 }
 
 L:SetMiscLocalization{
-	ToravonEnrage	= "Mostrar tiempo para enrage"
+	ToravonEnrage	= "Mostrar temporizador para $spell:26662"
 }

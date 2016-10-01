@@ -14,7 +14,6 @@ L.OTabBosses	= "우두머리"
 --L.OTabOptions	= GAMEOPTIONS_MENU
 
 L.TabCategory_Options		= "전역 설정"
-L.TabCategory_LEG	 		= "군단"
 L.TabCategory_PVP	 		= "PvP"
 L.TabCategory_OTHER			= "기타 우두머리 경보"
 
@@ -50,7 +49,6 @@ L.Statistic_BestKill		= "최고 기록:"
 
 -- Tab: General Core Options
 L.General 					= "기본 DBM 설정"
-L.EnableDBM 				= "DBM 사용"
 L.EnableMiniMapIcon			= "미니맵 버튼 사용"
 L.UseSoundChannel			= "DBM 소리 출력 채널 선택"
 L.UseMasterChannel			= "주 음량"
@@ -81,7 +79,6 @@ L.InfoRaidWarning			= [[알림 창 위치와 알림 색상을 수정할 수 있�
 DBM은 별도 알림 창에 알림을 표시합니다.]]
 L.ColorResetted 			= "현재 색상 설정을 초기화 합니다."
 L.ShowWarningsInChat 		= "알림을 대화창에서도 보기"
-L.ShowFakedRaidWarnings 	= "대화창 알림 메세지를 공격대 경보처럼 보기"
 L.WarningIconLeft 			= "알림 왼쪽에 주문 아이콘 보기"
 L.WarningIconRight 			= "알림 오른쪽에 주문 아이콘 보기"
 L.WarningIconChat 			= "대화창 알림 메세지에 주문 아이콘 보기"
@@ -287,9 +284,6 @@ L.HideGarrisonUpdates		= "전투 중 주둔지 알림창(임무, 건물 완료 �
 L.HideGuildChallengeUpdates	= "전투 중 길드 도전 과제 알림창 숨기기"
 L.HideTooltips				= "전투 중 게임 툴팁 끄기"
 L.DisableSFX				= "전투 중 효과음 끄기"
-L.HideApplicantAlerts		= "파티 구성하기 알림 끄기"
-L.HideApplicantAlertsFull	= "파티원이 가득 찼을 경우"
-L.HideApplicantAlertsNotL	= "파티장이 아닌 경우 (또는 파티원이 가득 차고 파티장인 경우)"
 L.SpamBlockSayYell			= "전투 중 대화 말풍선 숨기기"
 L.DisableCinematics			= "게임 내 동영상 끄기"
 L.AfterFirst				= "1회 이상 본 동영상"

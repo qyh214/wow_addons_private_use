@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("Titan","esES")
+local L = LibStub("AceLocale-3.0"):NewLocale("Titan","esES")
 if not L then return end
 
 L["TITAN_DEBUG"] = "<Titan>";
@@ -76,10 +76,12 @@ L["TITAN_PANEL_SLASH_PROFILE_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<nombre>
 L["TITAN_PANEL_SLASH_PROFILE_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<servidor>: |cffffffffpuede ser el nombre del servidor o 'TitanCustomProfile'."
 L["TITAN_PANEL_SLASH_SILENT_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Uso: |cffffffff/titan {silent}";
 L["TITAN_PANEL_SLASH_SILENT_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."silent: |cffffffffOrdena a "..TITAN_PANEL.." que cargue silenciosamente.";
+L["TITAN_PANEL_SLASH_ORDERHALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Uso: |cffffffff/titan {orderhall}";
+L["TITAN_PANEL_SLASH_ORDERHALL_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."orderhall: |cffffffffOrdena a "..TITAN_PANEL.." que oculte la barra de comandos de la Sala de Orden.";
 L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Uso: |cffffffff/titan {help | help <topic>}";
-L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/silent/help ";
+L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/silent/orderhall/help ";
 L["TITAN_PANEL_SLASH_ALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Uso: |cffffffff/titan <topic>";
-L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/silent/help ";
+L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/silent/orderhall/help ";
 
 -- slash command responses
 L["TITAN_PANEL_SLASH_RESP1"] = LIGHTYELLOW_FONT_COLOR_CODE.."La escala de la fuente en los tooltips de Titan Panel ha sido reseteada.";
@@ -178,6 +180,7 @@ L["TITAN_PANEL_MENU_SHOW"] = "Mostrar plugin";
 L["TITAN_PANEL_MENU_PLUGIN_RESET"] = "Actualizar plugins";
 L["TITAN_PANEL_MENU_PLUGIN_RESET_DESC"] = "Actualizar texto y posición de plugin";
 L["TITAN_PANEL_MENU_SILENT_LOAD"] = "Carga silenciosa";
+L["TITAN_PANEL_MENU_HIDE_ORDERHALL"] = "Ocultar la barra de comandos de la Sala de Orden";
 
 -- localization strings for AceConfigDialog-3.0     
 L["TITAN_ABOUT_VERSION"] = "Versión";

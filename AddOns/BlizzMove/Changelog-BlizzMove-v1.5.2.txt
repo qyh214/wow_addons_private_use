@@ -1,0 +1,12 @@
+tag v1.5.2
+1c0741c6c7e0194dee8c3f8d39d833c743373a89
+yess <yess@xan.at>
+2016-08-19 20:13:59 +0200
+
+Tagging as v1.5.2
+
+
+--------------------
+
+yess:
+	- Readded scaling with ctrl + scroll

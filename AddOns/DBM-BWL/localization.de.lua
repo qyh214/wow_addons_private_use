@@ -40,10 +40,6 @@ L:SetGeneralLocalization{
 	name	= "Brutwächter Dreschbringer"
 }
 
-L:SetMiscLocalization{
-	Pull	= "Euresgleichen sollte nicht hier sein! Ich werde Euch vernichten!"
-}
-
 ---------------
 --  Firemaw  --
 ---------------
@@ -115,7 +111,6 @@ L:SetOptionLocalization{
 	WarnPhase			= "Verkünde Phasenwechsel"
 }
 L:SetMiscLocalization{
-	YellPull	= "Lasst die Spiele beginnen!",
 	YellP2		= "Sehr gut, meine Diener. Der Mut der Sterblichen scheint zu schwinden! Nun lasst uns sehen, wie sie sich gegen den wahren Herrscher des Schwarzfels behaupten werden!",
 	YellP3		= "Unmöglich! Erhebt Euch, meine Diener! Kämpft erneut für Euren Meister!",
 	YellShaman	= "Schamane, zeigt mir was eure Totems können!",

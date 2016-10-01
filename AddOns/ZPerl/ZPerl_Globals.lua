@@ -29,7 +29,7 @@ function XPerl_SetModuleRevision(rev)
 end
 local AddRevision = XPerl_SetModuleRevision
 
-XPerl_SetModuleRevision("$Revision: 1001 $")
+XPerl_SetModuleRevision("$Revision: 1004 $")
 
 function XPerl_Notice(...)
 	if (DEFAULT_CHAT_FRAME) then
@@ -582,6 +582,62 @@ function XPerl_ValidateSettings()
 			s = {r = 0.25, g = 0.25, b = 0.25, a = 1},
 			e = {r = 0.1, g = 0.1, b = 0.1, a = 0}
 		}
+	end
+
+	if (not conf.colour.bar.absorb or conf.colour.bar.absorb[1]) then
+		conf.colour.bar.absorbs = {r = 0.14, g = 0.33, b = 0.7, a = 0.7}
+	end
+
+	if (not conf.colour.bar.healprediction or conf.colour.bar.healprediction[1]) then
+		conf.colour.bar.healprediction = {r = 0, g = 1, b = 1, a = 1}
+	end
+
+	if (not conf.colour.bar.runic_power or conf.colour.bar.runic_power[1]) then
+		if (PowerBarColor) then
+			conf.colour.bar.runic_power = {r = PowerBarColor["RUNIC_POWER"].r, g = PowerBarColor["RUNIC_POWER"].g, b = PowerBarColor["RUNIC_POWER"].b}
+		else
+			conf.colour.bar.runic_power = {r = 1, g = 0.25, b = 1}
+		end
+	end
+
+	if (not conf.colour.bar.insanity or conf.colour.bar.insanity[1]) then
+		if (PowerBarColor) then
+			conf.colour.bar.insanity = {r = PowerBarColor["INSANITY"].r, g = PowerBarColor["INSANITY"].g, b = PowerBarColor["INSANITY"].b}
+		else
+			conf.colour.bar.insanity = {r = 0.4, g = 0, b = 0.8}
+		end
+	end
+
+	if (not conf.colour.bar.lunar or conf.colour.bar.lunar[1]) then
+		if (PowerBarColor) then
+			conf.colour.bar.lunar = {r = PowerBarColor["LUNAR_POWER"].r, g = PowerBarColor["LUNAR_POWER"].g, b = PowerBarColor["LUNAR_POWER"].b}
+		else
+			conf.colour.bar.lunar = {r = 0.3, g = 0.52, b = 0.9}
+		end
+	end
+
+	if (not conf.colour.bar.maelstrom or conf.colour.bar.maelstrom[1]) then
+		if (PowerBarColor) then
+			conf.colour.bar.maelstrom = {r = PowerBarColor["MAELSTROM"].r, g = PowerBarColor["MAELSTROM"].g, b = PowerBarColor["MAELSTROM"].b}
+		else
+			conf.colour.bar.maelstrom = {r = 0, g = 0.5, b = 1}
+		end
+	end
+
+	if (not conf.colour.bar.fury or conf.colour.bar.fury[1]) then
+		if (PowerBarColor) then
+			conf.colour.bar.fury = {r = PowerBarColor["FURY"].r, g = PowerBarColor["FURY"].g, b = PowerBarColor["FURY"].b}
+		else
+			conf.colour.bar.fury = {r = 0.788, g = 0.259, b = 0.992}
+		end
+	end
+
+	if (not conf.colour.bar.pain or conf.colour.bar.pain[1]) then
+		if (PowerBarColor) then
+			conf.colour.bar.pain = {r = PowerBarColor["PAIN"].r, g = PowerBarColor["PAIN"].g, b = PowerBarColor["PAIN"].b}
+		else
+			conf.colour.bar.pain = {r = 1, g = 0.611, b = 0}
+		end
 	end
 
 	XPerl_ValidateSettings = nil

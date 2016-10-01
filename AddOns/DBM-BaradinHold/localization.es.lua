@@ -1,32 +1,29 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
-
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
-----------------
---  Argaloth  --
-----------------
+--------------
+-- Argaloth --
+--------------
 L= DBM:GetModLocalization(139)
 
 L:SetOptionLocalization({
 	SetIconOnConsuming		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(88954)
 })
 
------------------
---  Occu'thar  --
------------------
+---------------
+-- Occu'thar --
+---------------
 L= DBM:GetModLocalization(140)
 
-----------------------------------
---  Alizabal, Mistress of Hate  --
-----------------------------------
+-------------------------------
+-- Alizabal, Señora del odio --
+-------------------------------
 L= DBM:GetModLocalization(339)
 
 L:SetTimerLocalization({
-	TimerFirstSpecial		= "Primer especial"
+	TimerFirstSpecial		= "Primera facultad especial"
 })
 
 L:SetOptionLocalization({
-	TimerFirstSpecial		= "Mostrar tiempo para el primer especial después de $spell:105738<br/>(El primer especial es aleatorio. Puede ser $spell:105067 o $spell:104936)"
+	TimerFirstSpecial		= "Mostrar temporizador para la primera facultad especial ($spell:105067 o $spell:104936) tras $spell:105738"
 })
-
-

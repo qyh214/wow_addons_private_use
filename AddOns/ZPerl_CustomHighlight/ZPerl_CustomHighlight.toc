@@ -11,7 +11,7 @@
 ## Notes-zhTW: 自定義減益高亮監視模組可讓您逐個框架地自定義高亮顯示重要的 debuffs(減益效果)
 ## RequiredDeps: ZPerl
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: r1002
+## X-Curse-Packaged-Version: r1014
 ## X-Curse-Project-Name: Z-Perl Unit Frames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

@@ -1,7 +1,10 @@
 ﻿## Interface: 70000
 ## X-Min-Interface: 70000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Emerald Nightmare|r
-## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Smaragdgrüner Alptraum|r
+## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Der Smaragdgrüne Alptraum|r
+## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0翡翠梦魇|r
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0翡翠夢魘|r
+## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Pesadilla Esmeralda|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -14,12 +17,15 @@
 ## X-DBM-Mod-Sort: 055
 ## X-DBM-Mod-MapID: 1520
 ## X-DBM-Mod-MinCoreRevision: 14737
-## X-Curse-Packaged-Version: 7.0.0
+## X-Curse-Packaged-Version: 7.0.10
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
 localization.en.lua
 localization.cn.lua
+localization.de.lua
+localization.tw.lua
+localization.es.lua
 Nythendra.lua
 Ilgynoth.lua
 Renferal.lua

@@ -1,0 +1,14 @@
+tag 7.0.10
+0df53afd76754b2442a76ed7dea4e58f7ade6565
+subversion <svn@deadlybossmods.com>
+2016-09-28 20:45:58 +0200
+
+Tagging as 7.0.10
+
+
+--------------------
+
+subversion:
+	- increment version number to 7.0.10
+	- Omega via svn r15286: Fix lua error
+	- tandanu via svn r15285: increment alpha version

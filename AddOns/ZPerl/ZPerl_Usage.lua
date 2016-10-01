@@ -5,7 +5,7 @@
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 949 $")
+end, "$Revision: 1006 $")
 
 local XPerl_Usage = { }
 
@@ -42,10 +42,10 @@ local UnitName = UnitName
 local UNKNOWN = UNKNOWN
 
 local mod = CreateFrame("Frame")
-mod:RegisterEvent("CHAT_MSG_ADDON")
-mod:RegisterEvent("GROUP_ROSTER_UPDATE")
+--mod:RegisterEvent("CHAT_MSG_ADDON")
+--mod:RegisterEvent("GROUP_ROSTER_UPDATE")
 
-RegisterAddonMessagePrefix("X-Perl")
+--RegisterAddonMessagePrefix("X-Perl")
 
 local function modOnEvent(self, event, ...)
 	local f = mod[event]
@@ -54,15 +54,15 @@ local function modOnEvent(self, event, ...)
 	end
 end
 
-mod:SetScript("OnEvent", modOnEvent)
+--mod:SetScript("OnEvent", modOnEvent)
 
-GameTooltip:HookScript("OnTooltipSetUnit", function(self)
+--[[GameTooltip:HookScript("OnTooltipSetUnit", function(self)
 	local name, unitid = self:GetUnit()
 	if (not unitid) then
 		unitid = "mouseover"
 	end
 	mod:TooltipInfo(self, unitid)
-end)
+end)]]
 
 local function UnitFullName(unit)
 	local n, s = UnitName(unit)

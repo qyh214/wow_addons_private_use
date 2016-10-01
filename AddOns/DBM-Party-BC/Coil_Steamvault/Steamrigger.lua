@@ -1,18 +1,19 @@
 local mod	= DBM:NewMod(574, "DBM-Party-BC", 6, 261)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 572 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
 mod:SetCreatureID(17796)
+mod:SetEncounterID(1943)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
+	"SPELL_AURA_APPLIED 35107",
+	"SPELL_AURA_REMOVED 35107",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
 local WarnNet		= mod:NewTargetAnnounce(35107, 2)
-local WarnSummon	= mod:NewSpellAnnounce("ej5999", 3)
 
 local specWarnSummon= mod:NewSpecialWarningSwitch("ej5999", "-Healer")
 
@@ -33,9 +34,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 
+function mod:SPELL_AURA_REMOVED(args)
+	if args.spellId == 35107 then
+		timerNet:Stop(args.destName)
+	end
+end
+
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.Mechs then		-- Adds
-		WarnSummon:Show()
 		specWarnSummon:Show()
 	end
 end

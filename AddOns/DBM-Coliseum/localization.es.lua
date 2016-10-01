@@ -1,47 +1,44 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
-
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
-------------------------
---  Northrend Beasts  --
-------------------------
+-------------------------------
+-- Las bestias de Rasganorte --
+-------------------------------
 L = DBM:GetModLocalization("NorthrendBeasts")
 
 L:SetGeneralLocalization{
-	name = "Bestias de Rasganorte"
-}
-
-L:SetMiscLocalization{
-	--¡%s mira a (%S+) y emite un bramido!
-	Charge			= "¡Aullahielo mira a (%S+) y emite un bramido!",
-	CombatStart		= "Desde las cavernas más oscuras y profundas de Las Cumbres Tormentosas: ¡Gormok el Empalador! ¡A luchar, héroes!",
-	Phase2			= "Preparaos, héroes, para los temibles gemelos: ¡Fauceácida y Aterraescama! ¡A la arena!",
-	Phase3			= "El propio aire se congela al presentar a nuestro siguiente combatiente: ¡Aullahielo! ¡Matad o morid, campeones!",
-	Gormok			= "Gormok el Empalador",
-	Acidmaw			= "Fauceácida",
-	Dreadscale		= "Aterraescama",
-	Icehowl			= "Aullahielo"
-}
-
-L:SetOptionLocalization{
-	WarningSnobold				= "Mostrar aviso cuando salen Vasallos snóbold",
-	PingCharge					= "Pulsar en el Minimapa si Aullahielo va a por Ti",
-	ClearIconsOnIceHowl			= "Limpiar iconos despues de cargar",
-	TimerNextBoss				= "Mostrar tiempo para el proximo boss",
-	TimerEmerge					= "Mostrar tiempo para emerger",
-	TimerSubmerge				= "Mostrar tiempo para sumergir",
-	IcehowlArrow				= "Mostrar flecha cuando Aullahielo está a punto de cargar cerca de ti"
-}
-
-L:SetTimerLocalization{
-	TimerNextBoss				= "Proximo boss en",
-	TimerEmerge					= "Emergen",
-	TimerSubmerge				= "Se sumergen"
-
+	name = "Las bestias de Rasganorte"
 }
 
 L:SetWarningLocalization{
-	WarningSnobold				= "Sale Vasallo snóbold"
+	WarningSnobold		= "Vasallo snóbold en >%s<"
+}
+
+L:SetTimerLocalization{
+	TimerNextBoss		= "Siguiente jefe",
+	TimerEmerge			= "Emersión",
+	TimerSubmerge		= "Sumersión"
+}
+
+L:SetOptionLocalization{
+	WarningSnobold		= "Mostrar aviso cuando aparezca un Vasallo snóbold",
+	PingCharge			= "Marcar en el minimapa cuando Aullahielo vaya a cargar hacia ti",
+	ClearIconsOnIceHowl	= "Quitar todos los iconos antes de cada carga",
+	TimerNextBoss		= "Mostrar temporizador para el siguiente jefe",
+	TimerEmerge			= "Mostrar temporizador para cuando Fauceácida y Aterraescama regresen a la superficie",
+	TimerSubmerge		= "Mostrar temporizador para cuando Fauceácida y Aterraescama se sumerjan en la tierra",
+	IcehowlArrow		= "Mostrar flecha cuando Aullahielo vaya a cargar hacia ti"
+}
+
+L:SetMiscLocalization{
+	Charge		= "¡Aullahielo mira a (%S+) y emite un bramido!",
+	CombatStart	= "Desde las cavernas más oscuras y profundas de Las Cumbres Tormentosas: ¡Gormok el Empalador! ¡A luchar, héroes!",
+	Phase2		= "Preparaos, héroes, para los temibles gemelos: ¡Fauceácida y Aterraescama! ¡A la arena!",
+	Phase3		= "El propio aire se congela al presentar a nuestro siguiente combatiente: ¡Aullahielo! ¡Matad o morid, campeones!",
+	Gormok		= "Gormok el Empalador",
+	Acidmaw		= "Fauceácida",
+	Dreadscale	= "Aterraescama",
+	Icehowl		= "Aullahielo"
 }
 
 -------------------
@@ -54,74 +51,79 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	IncinerateShieldFrame	= "Mostrar la vida del boss con la barra de incinerar carne"
+	IncinerateShieldFrame		= "Mostrar salud del jefe en una barra de vida durante Incinerar carne"
 }
 
 L:SetMiscLocalization{
-	IncinerateTarget		= "Incinerar carne en: %s",
+	IncinerateTarget	= "Incinerar carne: %s",
 	FirstPull	= "El gran brujo Wilfred Chispobang invocará al siguiente contrincante. Esperad a que aparezca."
 }
 
------------------------
--- Faction Champions --
------------------------
+-----------------------------
+-- Campeones de la facción --
+-----------------------------
 L = DBM:GetModLocalization("Champions")
 
+local champions = "Campeones de la facción"
+if UnitFactionGroup("player") == "Alliance" then
+	champions = "Campeones de la Horda"
+elseif UnitFactionGroup("player") == "Horde" then
+	champions = "Campeones de la Alianza"
+end
+
 L:SetGeneralLocalization{
-	name = "Campeones de Facción"
+	name = champions
 }
 
 L:SetMiscLocalization{
 	AllianceVictory    = "¡GLORIA A LA ALIANZA!",
-	HordeVictory       = "That was just a taste of what the future brings. FOR THE HORDE!",--translate
-	YellKill	= "Una victoria trágica y fútil. Hoy somos menos por las pérdidas que hemos sufrido. ¿Quién podría beneficiarse de tal insensatez además del Rey Exánime? Grandes guerreros han perdido la vida. ¿Y para qué? La verdad"
+	HordeVictory       = "Eso solo ha sido una muestra de lo que os depara el futuro. ¡POR LA HORDA!"
 }
 
-------------------
--- Valkyr Twins --
-------------------
+---------------------
+-- Gemelas Val'kyr --
+---------------------
 L = DBM:GetModLocalization("ValkTwins")
 
 L:SetGeneralLocalization{
-	name = "Gemelas Val’kyrs"
+	name = "Gemelas Val'kyr"
 }
 
 L:SetTimerLocalization{
-	TimerSpecialSpell	= "Siguiente Habilidad especial"	
+	TimerSpecialSpell	= "Siguiente facultad especial"	
 }
 
 L:SetWarningLocalization{
-	WarnSpecialSpellSoon	= "Habilidad especial pronto!",
-	SpecWarnSpecial		= "Cambia color!",
-	SpecWarnSwitchTarget		= "Cambio!",
-	SpecWarnKickNow				= "Cortar ahora!",
-	WarningTouchDebuff			= "Debuff en >%s<",
-	WarningPoweroftheTwins		= "Pacto de las Gemelas - curar mas a >%s<",
-	SpecWarnPoweroftheTwins		= "Pacto de las Gemelas!"
+	WarnSpecialSpellSoon		= "Facultad especial en breve",
+	SpecWarnSpecial				= "Cambia de color",
+	SpecWarnSwitchTarget		= "Cambia de objetivo",
+	SpecWarnKickNow				= "Interrumpe ahora",
+	WarningTouchDebuff			= "Perjuicio en >%s<",
+	WarningPoweroftheTwins		= "Poder de las Gemelas - ¡más sanación en >%s<!",
+	SpecWarnPoweroftheTwins		= "Poder de las Gemelas"
 }
 
 L:SetMiscLocalization{
-	Fjola 		= "Fjola Penívea",
-	Eydis		= "Eydis Penalumbra"
+	Fjola		= "Fjola Penívea",
+	Eydis		= "Eydis Penaumbra"
 }
 
 L:SetOptionLocalization{
-	TimerSpecialSpell	= "Mostrar tiempo para la siguiente habilidad especial",
-	WarnSpecialSpellSoon	= "Pre-aviso para la siguiente habilidad especial",
-	SpecWarnSpecial		= "Mostrar aviso especial si tienes que cambiar de color",
-	SpecWarnSwitchTarget		= "Mostrar aviso especial si hay que ir al otro boss",
-	SpecWarnKickNow				= "Mostrar aviso especial cuando tienes que cortar el hechizo",
-	SpecialWarnOnDebuff			= "Mostrar aviso especial cuando tienes que cambiar de debuff",
-	SetIconOnDebuffTarget		= "Poner iconos a los objetivos con debuff ( solo heroico )",
-	WarningTouchDebuff			= "Anunciar objetivos del debuff de Toque de Luz/Oscuridad",
-	WarningPoweroftheTwins		= "Anunciar objetivo de Pacto de las Gemelas",
-	SpecWarnPoweroftheTwins		= "Mostrar aviso especial si eres el tank y estas en una gemela con el pacto de las gemelas"
+	TimerSpecialSpell			= "Mostrar temporizador para la siguiente facultad especial",
+	WarnSpecialSpellSoon		= "Mostrar aviso previo para la siguiente facultad especial",
+	SpecWarnSpecial				= "Mostrar aviso especial cuando debas cambiar de color",
+	SpecWarnSwitchTarget		= "Mostrar aviso especial cuando la otra gemela esté lanzando un hechizo",
+	SpecWarnKickNow				= "Mostrar aviso especial cuando debas interrumpir",
+	SpecialWarnOnDebuff			= "Mostrar aviso especial cuando estés afectado por un perjuicio (para cambiarlo por otro)",
+	SetIconOnDebuffTarget		= "Poner iconos en los objetivos de los perjuicios de $spell:65950 y $spell:66001 (dificultad heroica)",
+	WarningTouchDebuff			= "Anunciar objetivos de los perjuicios de $spell:65950 y $spell:66001",
+	WarningPoweroftheTwins		= "Anunciar la gemela afectada por $spell:65916",
+	SpecWarnPoweroftheTwins		= "Mostrar aviso especial cuando estés tanqueando una gemela afectada por $spell:65916"
 }
 
-
-------------------
+---------------
 -- Anub'arak --
-------------------
+---------------
 L = DBM:GetModLocalization("Anub'arak_Coliseum")
 
 L:SetGeneralLocalization{
@@ -129,37 +131,38 @@ L:SetGeneralLocalization{
 }
 
 L:SetTimerLocalization{
-	TimerEmerge				= "Emerger en",
-	TimerSubmerge			= "Sumersion en",
-	timerAdds				= "Nuevos adds"
+	TimerEmerge				= "Emersión",
+	TimerSubmerge			= "Sumersión",
+	timerAdds				= "Siguientes esbirros"
 }
 
 L:SetWarningLocalization{
-	WarnEmerge				= "Anub'arak emerge",
-	WarnEmergeSoon			= "Emerger en 10 seg",
-	WarnSubmerge			= "Anub'arak se sumerge",
-	WarnSubmergeSoon		= "Sumersion en 10 seg",
-	specWarnSubmergeSoon	= "Sumersion en 10 segundos!",
-	warnAdds				= "Nuevos adds"
+	WarnEmerge				= "Anub'arak regresa a la superficie",
+	WarnEmergeSoon			= "Emersión en 10 s",
+	WarnSubmerge			= "Anub'arak se entierra en el suelo",
+	WarnSubmergeSoon		= "Sumersión en 10 s",
+	specWarnSubmergeSoon	= "¡Sumersión en 10 s!",
+	warnAdds				= "Siguientes esbirros"
 }
 
 L:SetMiscLocalization{
-	Emerge					= "emerge",
-	Burrow					= "entierra",
-	PcoldIconSet			= "Icono FrioP {rt%d} puesto en %s",
-	PcoldIconRemoved		= "Icono FrioP eliminado de %s"
+	Emerge				= "emerge de la tierra!",
+	Burrow				= "se entierra en el suelo!",
+	PcoldIconSet		= "Icono {rt%d} colocado en %s",
+	PcoldIconRemoved	= "Icono quitado en %s"
 }
 
 L:SetOptionLocalization{
-	WarnEmerge				= "Mostrar aviso para Emerger",
-	WarnEmergeSoon			= "Mostrar pre-aviso para Emerger",
-	WarnSubmerge			= "Mostrar aviso para Sumersion",
-	WarnSubmergeSoon		= "Mostrar pre-aviso para Sumersion",
-	specWarnSubmergeSoon	= "Mostrar pre-aviso especial Sumersion",
-	warnAdds				= "Mostrar aviso para nuevos adds",
-	timerAdds				= "Mostrar tiempo para nuevos adds",
-	TimerEmerge				= "Mostrar tiempo para Emerger",
-	TimerSubmerge			= "Mostrar tiempo para Sumerger",
-	AnnouncePColdIcons		= "Anunciar iconos para los ojetivos de $spell:68510 en el chat de banda<br/>(Requiere líder de banda)",
-	AnnouncePColdIconsRemoved	= "También anunciar cuando se eliminen los iconos de los objetivos $spell:68510<br/>(Necesita la opción anterior)"
+	WarnEmerge				= "Mostrar aviso cuando Anub'arak regrese a la superficie",
+	WarnEmergeSoon			= "Mostrar aviso previo para cuando Anub'arak regrese a la superficie",
+	WarnSubmerge			= "Mostrar aviso cuando Anub'arak se entierre en el suelo",
+	WarnSubmergeSoon		= "Mostrar aviso previo para cuando Anub'arak se entierre en el suelo",
+	specWarnSubmergeSoon	= "Mostrar aviso especial cuando falte poco para que Anub'arak se entierre en el suelo",
+	warnAdds				= "Anunciar cuando aparezcan esbirros",
+	timerAdds				= "Mostrar temporizador para los siguientes esbirros",
+	TimerEmerge				= "Mostrar temporizador para cuando Anub'arak regrese a la superficie",
+	TimerSubmerge			= "Mostrar temporizador para cuando Anub'arak se entierre en el suelo",
+	AnnouncePColdIcons		= "Anunciar iconos de los objetivos de $spell:66013 en el chat de banda (requiere líder o ayudante)",
+	AnnouncePColdIconsRemoved	= "Anunciar iconos quitados de los objetivos de $spell:66013 (requiere que la opción anterior esté habilitada)"
 }
+

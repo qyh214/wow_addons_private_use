@@ -1,14 +1,15 @@
 local mod = DBM:NewMod(563, "DBM-Party-BC", 13, 258)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 572 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
 
 mod:SetCreatureID(19219)
+mod:SetEncounterID(1932)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_START"
+	"SPELL_AURA_APPLIED 35158 35159",
+	"SPELL_CAST_START 39096"
 )
 
 local warnPolarity          = mod:NewCastAnnounce(39096)
@@ -18,7 +19,7 @@ local warnDamageShield      = mod:NewSpellAnnounce(35159)
 local timerMagicShield      = mod:NewBuffActiveTimer(10, 35158)
 local timerDamageShield     = mod:NewBuffActiveTimer(10, 35159)
 
-local enrageTimer	= mod:NewBerserkTimer(180)
+local enrageTimer			= mod:NewBerserkTimer(180)
 
 function mod:OnCombatStart(delay)
 	if self:IsDifficulty("heroic5") then

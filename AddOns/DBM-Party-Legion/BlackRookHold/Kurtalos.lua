@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1672, "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14985 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15186 $"):sub(12, -3))
 mod:SetCreatureID(98965, 98970)
 mod:SetEncounterID(1835)
 mod:SetZone()
@@ -42,8 +42,8 @@ mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
 	self.vb.phase = 1
-	timerUnerringShearCD:Start(5.7-delay)
-	countdownShear:Start(5.7-delay)
+	timerUnerringShearCD:Start(5.5-delay)
+	countdownShear:Start(5.5-delay)
 	timerDarkBlastCD:Start(10-delay)
 end
 

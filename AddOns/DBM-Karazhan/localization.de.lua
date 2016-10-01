@@ -9,8 +9,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_ATH_YELL_1		= "Komm Mittnacht, lass' uns dieses Gesindel auseinander treiben!",
-	KillAttumen			= "Ich habe es immer gewusst... eines Tages würde ich... der Gejagte sein."
+	DBM_ATH_YELL_1		= "Komm Mittnacht, lass' uns dieses Gesindel auseinander treiben!"
 }
 
 
@@ -27,10 +26,6 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	DBM_MOROES_VANISH_FADED	= "Zeige Warnung für Ende von Verschwinden"
-}
-
-L:SetMiscLocalization{
-	DBM_MOROES_YELL_START	= "Hm, unangekündigte Besucher. Es müssen Vorbereitungen getroffen werden..."
 }
 
 
@@ -125,10 +120,6 @@ L:SetOptionLocalization{
 	RangeFrame			= "Zeige Abstandsfenster (10m)"
 }
 
-L:SetMiscLocalization{
-	DBM_CURA_YELL_PULL		= "Die Menagerie ist nur für Gäste."
-}
-
 
 -- Terestian Illhoof
 L = DBM:GetModLocalization("TerestianIllhoof")
@@ -138,7 +129,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_TI_YELL_PULL		= "Ah, Ihr kommt genau richtig. Die Rituale fangen gleich an!",
 	Kilrek					= "Kil'rek",
 	DChains					= "Dämonenketten"
 }
@@ -220,7 +210,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_PRINCE_YELL_PULL	= "Der Wahnsinn führte Euch zu mir. Ich werde Euch das Genick brechen!",
 	DBM_PRINCE_YELL_P2		= "Dummköpfe! Zeit ist das Feuer, in dem Ihr brennen werdet!",
 	DBM_PRINCE_YELL_P3		= "Wie könnt Ihr hoffen, einer so überwältigenden Macht gewachsen zu sein?",
 	DBM_PRINCE_YELL_INF1	= "Alle Realitäten, alle Dimensionen stehen mir offen!",
@@ -250,7 +239,6 @@ L:SetOptionLocalization{
 
 L:SetMiscLocalization{
 	DBM_NB_EMOTE_PULL		= "Etwas Uraltes erwacht in der Ferne...",
-	DBM_NB_YELL_PULL		= "Narren! Ich werde Eurem Leiden ein schnelles Ende setzen!",
 	DBM_NB_YELL_AIR			= "Abscheuliches Gewürm! Ich werde euch aus der Luft vernichten!",
 	DBM_NB_YELL_GROUND		= "Genug! Ich werde landen und mich höchst persönlich um Euch kümmern!",
 	DBM_NB_YELL_GROUND2		= "Insekten! Lasst mich Euch meine Kraft aus nächster Nähe demonstrieren!"

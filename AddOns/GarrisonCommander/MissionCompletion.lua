@@ -5,14 +5,16 @@ local shipyard
 local _G=_G
 local GMF=GMF
 local GSF=GSF
+local GHF=GHF
 local GMFMissions=GarrisonMissionFrameMissions
 local GSFMissions=GarrisonMissionFrameMissions
+local GHFMissions=GarrisonMissionFrameMissions
 local GARRISON_CURRENCY=GARRISON_CURRENCY
 local GARRISON_SHIP_OIL_CURRENCY=_G.GARRISON_SHIP_OIL_CURRENCY
 local SEAL_CURRENCY=994
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0 -- 1
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2 -- 2
-local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0 or 4
+local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0 -- 4
 local pairs=pairs
 local format=format
 local strsplit=strsplit
@@ -50,6 +52,8 @@ local cappedCurrencies={
 
 local missions={}
 local followerType=LE_FOLLOWER_TYPE_GARRISON_6_0
+local missionsFrame
+local panel
 local states={}
 local rewards={
 	items={},
@@ -76,9 +80,9 @@ local function startTimer(delay,event,...)
 	--@end-debug@]===]
 end
 function module:MissionsCleanup()
-	local f=followerType==LE_FOLLOWER_TYPE_GARRISON_6_0 and GMF or GSF
-	local fmissions=followerType==LE_FOLLOWER_TYPE_GARRISON_6_0 and GMFMissions or GSFMissions
-	local module=followerType==LE_FOLLOWER_TYPE_GARRISON_6_0 and addon or addon:GetModule("ShipYard")
+	local f=panel
+	local fmissions=missionsFrame
+	local module=followerType==LE_FOLLOWER_TYPE_GARRISON_6_0 and addon or addon:GetModule(LE_FOLLOWER_TYPE_SHIPYARD_6_2 and "ShipYard" or "OrderHall")
 	self:Events(false)
 	stopTimer()
 	f.MissionTab.MissionList.CompleteDialog:Hide()
@@ -89,6 +93,7 @@ function module:MissionsCleanup()
 	-- Re-enable "view" button
 	fmissions.CompleteDialog.BorderFrame.ViewButton:SetEnabled(true)
 	module:OpenLastTab()
+	if panel==GHF then return end
 	f:UpdateMissions()
 	f:CheckCompleteMissions()
 end
@@ -105,17 +110,23 @@ function module:Events(on)
 end
 function module:CloseReport()
 	if report then pcall(report.Close,report) report=nil end
-	if GSF:IsVisible() then
+	if GSF and GSF:IsVisible() then
 	--[===[@debug@
 		print "Ship close mission"
 	--@end-debug@]===]
 		GSF:CloseMissionComplete()
-	elseif GMF:IsVisible() then
+	elseif GMF and GMF:IsVisible() then
 	--[===[@debug@
 		print "Garr close mission"
 	--@end-debug@]===]
 		GMF:CloseMissionComplete()
+	elseif GHF and GHF:IsVisible() then
+	--[===[@debug@
+		print "Hall close mission"
+	--@end-debug@]===]
+		GHF:CloseMissionComplete()
 	end
+	addon:OpenMissionsTab()
 	addon:RefreshParties()
 	addon:RefreshMissions()
 end
@@ -124,20 +135,9 @@ function module:MissionComplete(this,button,skiprescheck)
 	missions=G.GetCompleteMissions(followerType)
 	shipyard=addon:GetModule("ShipYard")
 	shipsnumber=shipyard:GetTotFollowers()
-	local missionsFrame
-	local panel
-	if followerType == LE_FOLLOWER_TYPE_GARRISON_6_0 then
-		missionsFrame=GMFMissions
-		panel=GMF
-	elseif followerType == LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
-		missionsFrame=GSFMissions
-		panel=GSF
-	elseif followerType == LE_FOLLOWER_TYPE_GARRISON_7_0 then
-		missionsFrame=GHFMissions
-		panel=GHF
-	else
-		return
-	end
+	local module=self:GetMissionModule(followerType)
+	missionsFrame=module:GetMissions()
+	panel=module:GetMain()
 	if (missions and #missions > 0) then
 		this:SetEnabled(false)
 		missionsFrame.CompleteDialog.BorderFrame.ViewButton:SetEnabled(false) -- Disabling standard Blizzard Completion
@@ -194,7 +194,7 @@ function module:MissionComplete(this,button,skiprescheck)
 			)
 			return
 		end
-		report=self:GenerateMissionCompleteList("Missions' results",followerType==LE_FOLLOWER_TYPE_GARRISON_6_0 and GMF or GSF)
+		report=self:GenerateMissionCompleteList("Missions' results",panel)
 		report:SetUserData('missions',missions)
 		report:SetUserData('current',1)
 		self:Events(true)
@@ -229,10 +229,8 @@ function module:MissionAutoComplete(event,ID,arg1,arg2,arg3,arg4,...)
 	local missionID=currentMission and currentMission.missionID or 0
 	-- GARRISON_FOLLOWER_XP_CHANGED: followerID, xpGained, actualXp, newLevel, quality
 	if (event=="GARRISON_FOLLOWER_XP_CHANGED") then
-		if toc>=70000 then
-			ID=arg1
-			arg1=arg2
-		end
+		ID=arg1
+		arg1=arg2
 		if tonumber(arg1,0) then
 			--report:AddFollower(ID,arg1,arg2)
 			rewards.followerXP[ID]=rewards.followerXP[ID]+tonumber(arg1) or 0
@@ -394,16 +392,14 @@ function module:MissionsPrintResults(success)
 			fogFrames[j]:Hide()
 		end
 		GarrisonShipyardMap_UpdateMissions()
+		addon:ScheduleTimer(GarrisonShipyardMap_UpdateMissions,0.1)
 	end
+	report:AddRow(DONE)
 	if ns.quick then
-		self:ScheduleTimer("CloseReport",1)
+		self:ScheduleTimer("CloseReport",0.1)
 		local qm=addon:GetModule("Quick")
-		addon.ScheduleTimer(qm,"RunQuick",1.1)
+		addon.ScheduleTimer(qm,"RunQuick",0.2)
 	end
-
-
-
-GarrisonShipyardMap_UpdateMissions()
 end
 function addon:MissionComplete(...)
 	return module:MissionComplete(...)

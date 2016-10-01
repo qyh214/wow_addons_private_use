@@ -1,39 +1,38 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
-
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
-------------------------
---  Conclave of Wind  --
-------------------------
+----------------------------
+-- El Cónclave del Viento --
+----------------------------
 L = DBM:GetModLocalization(154)
 
 L:SetWarningLocalization({
-	warnSpecial			= "Huracan/Céfiro/Tormenta de granizo activados",
-	specWarnSpecial		= "¡Habilidades especiales activas!",
-	warnSpecialSoon		= "Habilidades especiales en 10 segundos!"
+	warnSpecial			= "Céfiro, Huracán y Tormenta de granizo activados",--Special abilities hurricane, sleet storm, zephyr(which are on shared cast/CD)
+	specWarnSpecial		= "¡Facultades especiales activas!",
+	warnSpecialSoon		= "¡Facultades especiales en 10 s!"
 })
 
 L:SetTimerLocalization({
-	timerSpecial			= "Habilidades especiales CD",
-	timerSpecialActive		= "Habilidades especiales activas"
+	timerSpecial		= "Facultades especiales TdR",
+	timerSpecialActive	= "Facultades especiales activas"
 })
 
 L:SetOptionLocalization({
-	warnSpecial			= "Mostrar aviso cuando Huracan/Céfiro/Tormenta de granizo sean lanzados",
-	specWarnSpecial		= "Mostrar aviso especial cuando se lanzan habilidades especiales",
-	timerSpecial		= "Mostrar cooldown de habilidades especiales",
-	timerSpecialActive	= "Mostrar tiempo de duración de habilidades especiales",
-	warnSpecialSoon		= "Mostrar pre-aviso 10 segundos antes de las habilidades especiales",
-	OnlyWarnforMyTarget	= "Solo mostrar avisos/tiempos para el objetivo y foco actual<br/>(Oculta el resto. ¡ESTO INCLUYE AL PULLEAR!)"
+	warnSpecial			= "Mostrar aviso cuando se lancen $spell:84638, $spell:84643 y $spell:84644",--Special abilities hurricane, sleet storm, zephyr(which are on shared cast/CD)
+	specWarnSpecial		= "Mostrar aviso especial cuando se lancen las facultades especiales",
+	timerSpecial		= "Mostrar temporizador para el tiempo de reutilización de las facultades especiales",
+	timerSpecialActive	= "Mostrar temporizador para la duración de las facultades especiales",
+	warnSpecialSoon		= "Mostrar aviso previo 10 s antes de las facultades especiales",
+	OnlyWarnforMyTarget	= "Mostrar solo avisos y temporizadores para el objetivo y foco actuales (oculta el resto, incluso el de inicio de encuentro)"
 })
 
 L:SetMiscLocalization({
-	gatherstrength			= "empieza a extraer fuerza"
+	gatherstrength	= "empieza a extraer fuerza"
 })
 
----------------
---  Al'Akir  --
----------------
+-------------
+-- Al'Akir --
+-------------
 L = DBM:GetModLocalization(155)
 
 L:SetTimerLocalization({
@@ -42,6 +41,6 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	LightningRodIcon= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(89668),
-	TimerFeedback	= "Mostrar tiempo para la duración de $spell:87904",
-	RangeFrame		= "Mostrar distancia (20) cuando te afecte $spell:89668"
+	TimerFeedback	= "Mostrar temporizador para la duración de $spell:87904",
+	RangeFrame		= "Mostrar marco de distancia (20 m) cuando estés afectado por $spell:89668"
 })

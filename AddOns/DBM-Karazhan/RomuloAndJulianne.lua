@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("RomuloAndJulianne", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
 mod:SetCreatureID(17534, 17533, 99999)--99999 bogus screature id to keep mod from pre mature combat end.
+--mod:SetEncounterID(655)--used by all 3 of them, so not usuable
 mod:SetModelID(17068)
 mod:RegisterCombat("yell", L.RJ_Pull)
 mod:SetWipeTime(25)--guesswork

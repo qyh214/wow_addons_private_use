@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Vashj", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 582 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
 mod:SetCreatureID(21212)
+mod:SetEncounterID(628)
 mod:SetModelID(20748)
 mod:SetZone()
 mod:SetUsedIcons(1)
@@ -10,10 +11,10 @@ mod:SetUsedIcons(1)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_AURA_APPLIED 38280 38575",
+	"SPELL_AURA_REMOVED 38280 38132",
+	"SPELL_CAST_START 38253",
+	"SPELL_CAST_SUCCESS 38316",
 	"UNIT_DIED",
 	"CHAT_MSG_MONSTER_YELL",
 	"CHAT_MSG_LOOT"

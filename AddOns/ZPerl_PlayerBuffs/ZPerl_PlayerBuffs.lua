@@ -6,7 +6,7 @@ local conf, pconf
 XPerl_RequestConfig(function(new)
 	conf = new
 	pconf = new.player
-end, "$Revision: 984 $")
+end, "$Revision: 1010 $")
 
 --local playerClass
 
@@ -66,8 +66,8 @@ function XPerl_Player_Buffs_Position(self)
 		if (pconf.buffs.above) then
 			self.buffFrame:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 3, 0)
 		else
-			if (self.runes and self.runes:IsShown() and pconf.dockRunes) then
-				self.buffFrame:SetPoint("TOPLEFT", self.runes, "BOTTOMLEFT", 3, 0)
+			if (self.runes and self.runes:IsShown() and ((self.runes.child and self.runes.child:IsShown()) or (self.runes.child2 and self.runes.child2:IsShown())) and pconf.dockRunes) then
+				self.buffFrame:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 3, -28)
 			elseif ((pconf.xpBar or pconf.repBar) and not pconf.extendPortrait) then
 				local diff = self.statsFrame:GetBottom() - self.portraitFrame:GetBottom()
 				self.buffFrame:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 3, diff - 5)
@@ -157,6 +157,11 @@ end
 
 
 local function XPerl_Player_Buffs_Set_Bits(self)
+	if (InCombatLockdown()) then
+		XPerl_OutOfCombatQueue[XPerl_Player_Buffs_Set_Bits] = self
+		return
+	end
+
 	--local _, class = UnitClass("player")
 	--playerClass = class
 

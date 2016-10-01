@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1731, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15058 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15140 $"):sub(12, -3))
 mod:SetCreatureID(104327)
 mod:SetEncounterID(1867)
 mod:SetZone()
@@ -99,9 +99,6 @@ function mod:OnCombatEnd()
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
-	end
-	if self.Options.HudMapOnAnnihilation then
-		DBMHudMap:Disable()
 	end
 end
 

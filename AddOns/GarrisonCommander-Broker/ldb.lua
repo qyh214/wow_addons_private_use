@@ -69,6 +69,7 @@ local EMPTY=EMPTY -- "Empty"
 local GARRISON_CACHE=GARRISON_CACHE
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
+local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0
 local LE_GARRISON_TYPE_6_0=_G.LE_GARRISON_TYPE_6_0
 local LE_GARRISON_TYPE_6_2=_G.LE_GARRISON_TYPE_6_2
 local LE_GARRISON_TYPE_7_0=_G.LE_GARRISON_TYPE_7_0
@@ -584,7 +585,9 @@ function dataobj:OnTooltipShow()
 					local t,missionID,pc,followerType=strsplit('.',db[i])
 					t=tonumber(t) or 0
 					followerType=tonumber(followerType) or LE_FOLLOWER_TYPE_GARRISON_6_0
-					local name= (followerType==LE_FOLLOWER_TYPE_SHIPYARD_6_2) and C(G.GetMissionName(missionID),"cyan") or G.GetMissionName(missionID)
+					local name= (followerType==LE_FOLLOWER_TYPE_SHIPYARD_6_2) and C(G.GetMissionName(missionID),"cyan") or
+									(followerType==LE_FOLLOWER_TYPE_GARRISON_7_0) and C(G.GetMissionName(missionID),"orange") or
+									G.GetMissionName(missionID)
 					if name then
 						if not remove and pc==ns.me then
 							if not G.GetPartyMissionInfo(missionID) then

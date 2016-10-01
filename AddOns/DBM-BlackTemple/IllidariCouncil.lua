@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Council", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 535 $"):sub(12, -3))
-mod:SetCreatureID(22949, 22950, 22951, 22592, 23426)
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetCreatureID(22949, 22950, 22951, 22952)
+mod:SetEncounterID(608)
 mod:SetModelID(21416)
 mod:SetUsedIcons(8)
 mod:SetZone()
@@ -10,13 +11,11 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_HEAL",
+	"SPELL_CAST_START 41455",
+	"SPELL_HEAL 41455",
 	"SPELL_INTERRUPT",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
-	"UNIT_DIED"
+	"SPELL_AURA_APPLIED 41485 41481 41482 41541 41476 41475 41452 41453 41450 41451",
+	"SPELL_AURA_REMOVED 41479 41485"
 )
 
 mod:SetBossHealthInfo(
@@ -95,8 +94,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
-
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 41479 then
 		warnVanishEnd:Show()
@@ -127,11 +124,5 @@ function mod:SPELL_INTERRUPT(args)
 	if type(args.extraSpellId) == "number" and args.extraSpellId == 41455 then
 		timerCoH:Cancel()
 		timerNextCoH:Start()
-	end
-end
-
-function mod:UNIT_DIED(args)
-	if self:GetCIDFromGUID(args.destGUID) == 23426 and self:IsInCombat() then
-		DBM:EndCombat(self)
 	end
 end

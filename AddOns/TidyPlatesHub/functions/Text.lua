@@ -3,24 +3,28 @@ local AddonName, HubData = ...;
 local LocalVars = TidyPlatesHubDefaults
 
 
--- CachedUnitDescription, CachedUnitGuild, GetLevelDescription
-
 ------------------------------------------------------------------
 -- References
 ------------------------------------------------------------------
-local GetAggroCondition = TidyPlatesWidgets.GetThreatCondition
+local RaidClassColors = RAID_CLASS_COLORS
+
+local GetFriendlyThreat = TidyPlatesUtility.GetFriendlyThreat
+
 local IsFriend = TidyPlatesUtility.IsFriend
 local IsGuildmate = TidyPlatesUtility.IsGuildmate
-local IsTankedByAnotherTank = HubData.Functions.IsTankedByAnotherTank
-local IsTankingAuraActive = HubData.Functions.IsTankingAuraActive
+
+local IsOffTanked = TidyPlatesHubFunctions.IsOffTanked
+local IsTankingAuraActive = TidyPlatesWidgets.IsPlayerTank
 local InCombatLockdown = InCombatLockdown
 local GetFriendlyClass = HubData.Functions.GetFriendlyClass
 local GetEnemyClass = HubData.Functions.GetEnemyClass
 local StyleDelegate = TidyPlatesHubFunctions.SetStyleNamed
 local ColorFunctionByHealth = HubData.Functions.ColorFunctionByHealth
 local CachedUnitDescription = TidyPlatesUtility.CachedUnitDescription
-local CachedUnitGuild = TidyPlatesUtility.CachedUnitGuild
-local CachedUnitClass = TidyPlatesUtility.CachedUnitClass
+
+local GetUnitSubtitle = TidyPlatesUtility.GetUnitSubtitle
+local GetUnitQuestInfo = TidyPlatesUtility.GetUnitQuestInfo
+
 
 local AddHubFunction = TidyPlatesHubHelpers.AddHubFunction
 
@@ -63,9 +67,9 @@ local function ShortenNumber(number)
 	if not number then return "" end
 
 	if number > 1000000 then
-		return (ceil((number/10000))/100).." M"
+		return (ceil((number/100000))/10).." M"
 	elseif number > 1000 then
-		return (ceil((number/10))/100).." k"
+		return (ceil((number/100))/10).." K"
 	else
 		return number
 	end
@@ -73,7 +77,7 @@ end
 
 local function SepThousands(number)
 	if not number then return "" end
-	local n = tonumber(number) 
+	local n = tonumber(number)
 
 	local left, num, right = string.match(n, '^([^%d]*%d)(%d*)(.-)')
 	return left..(num:reverse():gsub('(%d%d%d)', '%1,'):reverse())..right
@@ -81,7 +85,7 @@ end
 
 
 local function TextFunctionMana(unit)
-	if unit.isTarget then
+	if (unit.isTarget or (LocalVars.FocusAsTarget and unit.isFocus)) then
 		local power = ceil((UnitPower("target") / UnitPowerMax("target"))*100)
 		--local r, g, b = UnitPowerType("target")
 		--local powername = getglobal(select(2, UnitPowerType("target")))
@@ -95,15 +99,15 @@ local function TextFunctionMana(unit)
 end
 
 local function GetHealth(unit)
-	if unit.healthmaxCached then 
+	--if unit.healthmaxCached then
 		return unit.health
-	else return nil end
+	--else return nil end
 end
 
 local function GetHealthMax(unit)
-	if unit.healthmaxCached then 
+	--if unit.healthmaxCached then
 		return unit.healthmax
-	else return nil end
+	--else return nil end
 end
 
 -- None
@@ -148,9 +152,14 @@ local function HealthFunctionTotal(unit)
 end
 -- TargetOf
 local function HealthFunctionTargetOf(unit)
-	if unit.isTarget then return UnitName("targettarget")
+	if unit.reaction ~= "FRIENDLY" and unit.isInCombat then
+		return UnitName(unitid.."target")
+	end
+	--[[
+	if (unit.isTarget or (LocalVars.FocusAsTarget and unit.isFocus)) then return UnitName("targettarget")
 	elseif unit.isMouseover then return UnitName("mouseovertarget")
 	else return "" end
+	--]]
 end
 -- Level
 local function HealthFunctionLevel(unit)
@@ -184,7 +193,7 @@ local function HealthFunctionArenaID(unit)
 		end
 
 
-		if unit.isTarget then localid = "target"
+		if (unit.isTarget or (LocalVars.FocusAsTarget and unit.isFocus)) then localid = "target"
 		elseif unit.isMouseover then localid = "mouseover"
 		end
 
@@ -202,7 +211,8 @@ local function HealthFunctionArenaID(unit)
 		end
 	end
 
-	local healthstring = "|cffffffff"..tostring(ceil(unit.health/1000)).."k|cff0088ff"
+	local health = ShortenNumber(GetHealth(unit))
+	local healthstring = "|cffffffff"..health.."|cff0088ff"
 
 --[[
 -- Test Strings
@@ -325,7 +335,7 @@ local function HealthTextDelegate(unit)
 	func = HealthTextModeFunctions[mode] or DummyFunction
 
 	if LocalVars.TextShowOnlyOnTargets then
-		if (unit.isTarget or unit.isMouseover or unit.isMarked) then showText = true end
+		if ((unit.isTarget or (LocalVars.FocusAsTarget and unit.isFocus)) or unit.isMouseover or unit.isMarked) then showText = true end
 	end
 
 	if LocalVars.TextShowOnlyOnActive then
@@ -342,7 +352,7 @@ end
 ------------------------------------------------------------------------------------
 local function RoleOrGuildText(unit)
 	if unit.type == "NPC" then
-		return (CachedUnitDescription(unit.name) or GetLevelDescription(unit) or "") , 1, 1, 1, .70
+		return (GetUnitSubtitle(unit) or GetLevelDescription(unit) or "") , 1, 1, 1, .70
 	end
 end
 
@@ -352,43 +362,87 @@ local function TextRoleGuildLevel(unit)
 	local r, g, b = 1,1,1
 
 	if unit.type == "NPC" then
-		description = CachedUnitDescription(unit.name)
+		description = GetUnitSubtitle(unit)
 
 		if not description then --  and unit.reaction ~= "FRIENDLY" then
 			description =  GetLevelDescription(unit)
-			r, g, b = unit.levelcolorRed, unit.levelcolorGreen, unit.levelcolorBlue
+			r, g, b = .7, .7, .9
+			--r, g, b = unit.levelcolorRed, unit.levelcolorGreen, unit.levelcolorBlue
 		end
 
 	elseif unit.type == "PLAYER" then
-		description = CachedUnitGuild(unit.name)
-		r, g, b = .5, .5, .7
+		description = GetGuildInfo(unit.unitid)
+		r, g, b = .7, .7, .9
 	end
 
 	return description, r, g, b, .70
 end
 
--- Role or Guild
+
+
 local function TextRoleGuild(unit)
 	local description
 	local r, g, b = 1,1,1
 
 	if unit.type == "NPC" then
-		description = CachedUnitDescription(unit.name)
+		description = GetUnitSubtitle(unit)
 
 	elseif unit.type == "PLAYER" then
-		description = CachedUnitGuild(unit.name)
-		r, g, b = .5, .5, .7
+		description = GetGuildInfo(unit.unitid)
+		--description = CachedUnitGuild(unit.name)
+		r, g, b = .7, .7, .9
 	end
 
 	return description, r, g, b, .70
 end
 
+local function TextRoleClass(unit)
+	local description, faction
+	local r, g, b = 1,1,1
+
+	if unit.type == "NPC" then
+		description = GetUnitSubtitle(unit)
+		if not description then
+			faction, description = UnitFactionGroup(unit.unitid)
+		end
+
+	elseif unit.type == "PLAYER" then
+		description = UnitClassBase(unit.unitid)
+		local classColor = RaidClassColors[unit.class]
+		r, g, b = classColor.r, classColor.g, classColor.b
+	end
+
+	return description, r, g, b, .70
+end
+
+
 -- NPC Role
 local function TextNPCRole(unit)
 	if unit.type == "NPC" then
-		return CachedUnitDescription(unit.name)
+		-- Prototype for displaying quest information on Nameplates
+		--local questName, questObjective = GetUnitQuestInfo(unit)
+		--return questObjective
+
+		return GetUnitSubtitle(unit)
 	end
 end
+
+
+local function TextQuest(unit)
+	if unit.type == "NPC" then
+
+		-- Prototype for displaying quest information on Nameplates
+		local questName, questObjective = GetUnitQuestInfo(unit)
+		return questObjective
+	end
+end
+
+-- Role or Guild
+local function TextRoleGuildQuest(unit)
+	local r, g, b = 1, .9, .7
+	return TextQuest(unit) or TextRoleGuild(unit), r, g, b, .70
+end
+
 
 -- Level
 local function TextLevelColored(unit)
@@ -404,7 +458,7 @@ function TextAll(unit)
 		return ceil(100*(unit.health/unit.healthmax)).."%", color.r, color.g, color.b, .7
 	else
 		--return GetLevelDescription(unit) , unit.levelcolorRed, unit.levelcolorGreen, unit.levelcolorBlue, .7
-		return TextRoleGuildLevel(unit)
+		return TextQuest(unit) or TextRoleGuildLevel(unit)
 	end
 end
 
@@ -415,11 +469,14 @@ TidyPlatesHubDefaults.HeadlineEnemySubtext = "RoleGuildLevel"
 TidyPlatesHubDefaults.HeadlineFriendlySubtext = "RoleGuildLevel"
 AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, DummyFunction, "None", "None")
 AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextHealthPercentColored, "Percent Health", "PercentHealth")
-AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextRoleGuildLevel, "Role, Guild or Level", "RoleGuildLevel")
-AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextRoleGuild, "Role or Guild", "RoleGuild")
+AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextRoleGuildLevel, "NPC Role, Guild, or Level", "RoleGuildLevel")
+AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextRoleGuildQuest, "NPC Role, Guild, or Quest", "RoleGuildQuest")
+AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextRoleGuild, "NPC Role, Guild", "RoleGuild")
+--AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextRoleClass, "Role or Class", "RoleClass")
 AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextNPCRole, "NPC Role", "Role")
 AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextLevelColored, "Level", "Level")
-AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextAll, "Role, Guild, Level or Health Percent", "RoleGuildLevelHealth")
+AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextQuest, "Quest", "Quest")
+AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextAll, "Everything", "RoleGuildLevelHealth")
 
 --[[
 local FriendlyNameSubtextFunctions = {}

@@ -1,7 +1,7 @@
 local mod		= DBM:NewMod("z529", "DBM-PvP", 2)
 local L			= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 48 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 59 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -149,7 +149,7 @@ do
 			)
 			update_gametime()
 			for i=1, GetNumMapLandmarks(), 1 do
-				local name, _, textureIndex = GetMapLandmarkInfo(i)
+				local _, name, _, textureIndex = GetMapLandmarkInfo(i)
 				if name and textureIndex then
 					local type = getObjectiveType(textureIndex)
 					if type then
@@ -187,7 +187,7 @@ do
 	local function check_for_updates()
 		if not bgzone then return end
 		for i=1, GetNumMapLandmarks(), 1 do
-			local name, _, textureIndex = GetMapLandmarkInfo(i)
+			local _, name, _, textureIndex = GetMapLandmarkInfo(i)
 			if name and textureIndex then
 				local type = getObjectiveType(textureIndex)		-- name of the objective without spaces
 				local state = getObjectiveState(textureIndex)	-- state of the objective

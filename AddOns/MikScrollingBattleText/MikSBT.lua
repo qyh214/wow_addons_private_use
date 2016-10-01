@@ -133,9 +133,9 @@ end
 -- ****************************************************************************
 local function GetSkillName(skillID)
  local skillName = GetSpellInfo(skillID)
- --[[if (not skillName) then 
+ if (not skillName) then 
   Print("Skill ID " .. tostring(skillID) .. " has been removed by Blizzard.")
- end]]
+ end
  return skillName or UNKNOWN
 end
 

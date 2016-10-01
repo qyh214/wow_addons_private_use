@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("TeronGorefiend", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
 mod:SetCreatureID(22871)
+mod:SetEncounterID(604)
 mod:SetModelID(21254)
 mod:SetZone()
 mod:SetUsedIcons(4, 5, 6, 7, 8)
@@ -10,10 +11,9 @@ mod:SetUsedIcons(4, 5, 6, 7, 8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_SUCCESS"
+	"SPELL_AURA_APPLIED 40243 40251",
+	"SPELL_AURA_REMOVED 40243 40251",
+	"SPELL_CAST_SUCCESS 40239"
 )
 
 local warnCrushed			= mod:NewTargetAnnounce(40243, 3)
@@ -64,13 +64,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	end
 end
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 40243 then
 		if self.Options.CrushIcon then
 			self:SetIcon(args.destName, 0)
 		end
+	elseif args.spellId == 40251 then
+		timerVengefulSpirit:Cancel(args.destName)
 	end
 end
 

@@ -21,7 +21,7 @@
 
 local C
 -- Color system related function
-local lib=LibStub:NewLibrary("LibInit-Colorize",4)
+local lib=LibStub:NewLibrary("LibInit-Colorize",5)
 if (not lib) then return end
 local setmetatable=setmetatable
 local tonumber=tonumber
@@ -96,12 +96,10 @@ if (_G.RAID_CLASS_COLORS) then
 end
 local GetItemQualityColor=GetItemQualityColor
 local numqualities=_G.NUM_ITEM_QUALITIES or 8
-print("Loading qualities")
 for i=1,numqualities do
 	local _,_,_,hex=GetItemQualityColor(i)
 	local c=strlower(_G["ITEM_QUALITY"..i.."_DESC"])
 	lib.colors[tostring(i)]=hex:sub(3)
-	print(c,"=",hex)
 	if (c) then
 		lib.colors[c]=hex:sub(3)
 	end

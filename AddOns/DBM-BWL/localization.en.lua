@@ -39,10 +39,6 @@ L:SetGeneralLocalization{
 	name	= "Broodlord Lashlayer"
 }
 
-L:SetMiscLocalization{
-	Pull	= "None of your kind should be here!  You've doomed only yourselves!"
-}
-
 ---------------
 --  Firemaw  --
 ---------------
@@ -114,7 +110,6 @@ L:SetOptionLocalization{
 	WarnPhase			= "Announce phase change"
 }
 L:SetMiscLocalization{
-	YellPull	= "Let the games begin!",
 	YellP2		= "Well done, my minions. The mortals' courage begins to wane! Now, let's see how they contend with the true Lord of Blackrock Spire!!!",
 	YellP3		= "Impossible! Rise my minions!  Serve your master once more!",
 	YellShaman	= "Shamans, show me",

@@ -1,72 +1,87 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
-
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
------------------------
--- <<<Temple of the Jade Serpent>>> --
------------------------
------------------------
--- Wise Mari --
------------------------
+-------------------------------
+-- Templo del Dragón de Jade --
+-------------------------------
+----------------
+-- Sabio Maro --
+----------------
 L= DBM:GetModLocalization(672)
 
------------------------
--- Lorewalker Stonestep --
------------------------
+L:SetOptionLocalization({
+	SetIconOnAdds	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej5616")
+})
+
+--------------------------
+-- Eremita Senda Pétrea --
+--------------------------
 L= DBM:GetModLocalization(664)
 
 L:SetWarningLocalization({
 	SpecWarnIntensity	= "%s en %s (%d)"
 })
 
------------------------
--- Liu Flameheart --
------------------------
+L:SetOptionLocalization({
+	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
+})
+
+---------------------------
+-- Liu Corazón Llameante --
+---------------------------
 L= DBM:GetModLocalization(658)
 
------------------------
--- Sha of Doubt --
------------------------
+--------------------
+-- Sha de la duda --
+--------------------
 L= DBM:GetModLocalization(335)
 
------------------------
--- <<<Stormstout Brewery>>> --
------------------------
------------------------
+---------------------------
+-- Cervecería del Trueno --
+---------------------------
+-------------
 -- Ook-Ook --
------------------------
+-------------
 L= DBM:GetModLocalization(668)
 
------------------------
--- Hoptallus --
------------------------
+---------------
+-- Saltadizo --
+---------------
 L= DBM:GetModLocalization(669)
 
 -----------------------
--- Yan Zhu the Uncasked --
+-- Yan-Zhu el Peleón --
 -----------------------
 L= DBM:GetModLocalization(670)
 
 L:SetWarningLocalization({
-	SpecWarnFizzyBubbles	= "Obtén Burbuja gaseosa y vuela"
+	SpecWarnFizzyBubbles	= "Obtén Pompa burbujeante y vuela"
 })
 
 L:SetOptionLocalization({
-	SpecWarnFizzyBubbles	= "Mostrar aviso especial cuando te falta $spell:114459",
-	RangeFrame				= "Mostrar distancia (10) para $spell:106546"
+	SpecWarnFizzyBubbles	= "Mostrar aviso especial cuando no estés afectado por el perjuicio de $spell:114459",
+	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 106546)
 })
 
------------------------
--- <<<Shado-Pan Monastery>>> --
------------------------
------------------------
--- Gu Cloudstrike --
------------------------
+-----------------------------
+-- Monasterio del Shadopan --
+-----------------------------
+----------------------
+-- Gu Golpe Celeste --
+----------------------
 L= DBM:GetModLocalization(673)
 
------------------------
--- Snowdrift --
------------------------
+L:SetWarningLocalization({
+	warnStaticField	= "%s"
+})
+
+L:SetOptionLocalization({
+	warnStaticField	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(106923)
+})
+
+------------------------------
+-- Maestro Ventisca Algente --
+------------------------------
 L= DBM:GetModLocalization(657)
 
 L:SetWarningLocalization({
@@ -74,45 +89,48 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnRemainingNovice	= "Anunciar cuantos novicios quedan"
+	warnRemainingNovice	= "Anunciar el número de novicios restantes"
 })
 
 L:SetMiscLocalization({
 	NovicesPulled	= "¡Vosotros habéis permitido que los sha despierten, después de todos estos años!",
 	NovicesDefeated = "Habéis superado a mis pupilos más inexpertos. Ahora os las veréis con dos de los más veteranos.",
---	Defeat			= "I am bested.  Give me a moment and we will venture forth together to face the Sha."--translate
+--	Defeat			= "I am bested.  Give me a moment and we will venture forth together to face the Sha."
 })
 
-
------------------------
--- Sha of Violence --
------------------------
+-------------------------
+-- Sha de la violencia --
+-------------------------
 L= DBM:GetModLocalization(685)
 
 L:SetMiscLocalization({
 	Kill		= "Siempre que la violencia anide en vuestros corazones... volveré..."
 })
 
------------------------
+---------------
 -- Taran Zhu --
------------------------
+---------------
 L= DBM:GetModLocalization(686)
 
 L:SetOptionLocalization({
-	InfoFrame			= "Mostrar información para $journal:5827"
+	InfoFrame			= "Mostrar marco de información para $journal:5827"
 })
 
------------------------
--- <<<The Gate of the Setting Sun>>> --
------------------------
----------------------
--- Kiptilak --
----------------------
+-----------------------------
+-- Puerta del Sol Poniente --
+-----------------------------
+--------------------------
+-- Saboteador Kip'tilak --
+--------------------------
 L= DBM:GetModLocalization(655)
 
--------------
--- Gadok --
--------------
+L:SetOptionLocalization({
+	IconOnSabotage	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(107268)
+})
+
+----------------------
+-- Asediador Ga'dok --
+----------------------
 L= DBM:GetModLocalization(675)
 
 L:SetMiscLocalization({
@@ -120,21 +138,21 @@ L:SetMiscLocalization({
 })
 
 -----------------------
--- Rimok --
+-- Comandante Ri'mok --
 -----------------------
 L= DBM:GetModLocalization(676)
 
------------------------------
+-------------
 -- Raigonn --
------------------------------
+-------------
 L= DBM:GetModLocalization(649)
 
 -----------------------
--- <<<Mogu'Shan Palace>>> --
+-- Palacio Mogu'shan --
 -----------------------
------------------------
--- Trial of Kings --
------------------------
+--------------------
+-- Prueba del Rey --
+--------------------
 L= DBM:GetModLocalization(708)
 
 L:SetMiscLocalization({
@@ -145,137 +163,139 @@ L:SetMiscLocalization({
 	Defeat		= "¿Quién ha dejado entrar a los forasteros? ¡Solo los clanes Harthak o Kargesh se rebajarían a cometer tal traición!"
 })
 
------------------------
+------------
 -- Gekkan --
------------------------
+------------
 L= DBM:GetModLocalization(690)
 
------------------------
--- Weaponmaster Xin --
------------------------
+------------------------------
+-- Xin, el Maestro de armas --
+------------------------------
 L= DBM:GetModLocalization(698)
 
------------------------
--- <<<Siege of Niuzao Temple>>> --
------------------------
------------------------
--- Jinbak --
------------------------
+---------------------------------
+-- Asedio del Templo de Niuzao --
+---------------------------------
+-------------------
+-- Visir Jin'bak --
+-------------------
 L= DBM:GetModLocalization(693)
 
 -----------------------
--- Vo'jak --
+-- Comandante Vo'jak --
 -----------------------
 L= DBM:GetModLocalization(738)
 
 L:SetTimerLocalization({
-	TimerWave	= "Empieza a enviar: %s"
+	TimerWave	= "Siguiente oleada: %s"
 })
 
 L:SetOptionLocalization({
-	TimerWave	= "Mostrar tiempo para la siguiente oleada de adds"
+	TimerWave	= "Mostrar temporizador para la siguiente oleada de esbirros"
 })
 
 L:SetMiscLocalization({
 	WaveStart	= "¡Necios! ¿Atacáis frontalmente al ejército mántide? ¡Vuestras muertes serán rápidas!"
 })
 
------------------------
--- Pavalak --
------------------------
+----------------------
+-- General Pa'valak --
+----------------------
 L= DBM:GetModLocalization(692)
 
------------------------
--- Neronok --
------------------------
+---------------------------------
+-- Líder de escuadrón Ner'onok --
+---------------------------------
 L= DBM:GetModLocalization(727)
 
------------------------
--- <<<Scholomance>>> --
------------------------
------------------------
--- Instructor Chillheart --
------------------------
+-----------------
+-- Scholomance --
+-----------------
+--------------------------------
+-- Instructora Corazón Álgido --
+--------------------------------
 L= DBM:GetModLocalization(659)
 
------------------------
+-------------------
 -- Jandice Barov --
------------------------
+-------------------
 L= DBM:GetModLocalization(663)
 
------------------------
--- Rattlegore --
------------------------
+------------------
+-- Traquesangre --
+------------------
 L= DBM:GetModLocalization(665)
 
 L:SetWarningLocalization({
-	SpecWarnGetBoned	= "Obtén Armadura ósea"
+	SpecWarnGetBoned	= "Obtén Armadura ósea",
+	SpecWarnDoctor		= "¡El doctor ha llegado!"
 })
 
 L:SetOptionLocalization({
-	SpecWarnGetBoned	= "Mostrar aviso especial cuando te falta $spell:113996",
-	InfoFrame			= "Mostrar información con jugadores sin $spell:113996"
+	SpecWarnGetBoned	= "Mostrar aviso especial cuando no estés afectado por el perjuicio de $spell:113996",
+	SpecWarnDoctor		= "Mostrar aviso especial si aparece el Doctor Theolen Krastinov",
+	InfoFrame			= "Mostrar marco de información de jugadores no afectados por $spell:113996"
 })
 
 L:SetMiscLocalization({
-	PlayerDebuffs	= "Sin Armadura ósea"
+	PlayerDebuffs	= "Sin Armadura ósea",
+	TheolenSpawn	= "¡El doctor ha llegado!"
 })
 
------------------------
+------------------
 -- Lillian Voss --
------------------------
+------------------
 L= DBM:GetModLocalization(666)
 
 L:SetMiscLocalization({
-	Kill	= "What?!"--translates
+	Kill	= "¡MUERE, NIGROMANTE!"
 })
 
------------------------
--- Darkmaster Gandling --
------------------------
+-----------------------------
+-- Maestro oscuro Gandling --
+-----------------------------
 L= DBM:GetModLocalization(684)
 
 -----------------------
--- <<<Scarlet Halls>>> --
+-- Cámaras Escarlata --
 -----------------------
------------------------
--- Braun --
------------------------
+----------------------------
+-- Maestro de canes Braun --
+----------------------------
 L= DBM:GetModLocalization(660)
 
------------------------
--- Harlan --
------------------------
+-----------------------------
+-- Maestor de armas Harlan --
+-----------------------------
 L= DBM:GetModLocalization(654)
 
 L:SetMiscLocalization({
-	Call		= "¡El maestro de armas Harlan llama a dos de sus aliados para que se unan al combate!"--translate?
+	Call		= "¡El maestro de armas Harlan llama a dos de sus aliados para que se unan al combate!"
 })
 
------------------------
--- Flameweaver Koegler --
------------------------
+------------------------------
+-- Tejedor de fuego Koegler --
+------------------------------
 L= DBM:GetModLocalization(656)
 
------------------------
--- <<<Scarlet Cathedral>>> --
------------------------
------------------------
--- Thalnos Soulrender --
------------------------
+--------------------------
+-- Monasterio Escarlata --
+--------------------------
+-------------
+-- Thalnos --
+-------------
 L= DBM:GetModLocalization(688)
 
------------------------
--- Korlof --
------------------------
+--------------------
+-- Hermano Korlof --
+--------------------
 L= DBM:GetModLocalization(671)
 
 L:SetOptionLocalization({
-	KickArrow	= "Mostrar flecha cuando $spell:114487 está cerca de ti"
+	KickArrow	= "Mostrar flecha cuando $spell:114487 ocurra cerca de ti"
 })
 
------------------------
--- Durand/High Inquisitor Whitemane --
------------------------
+------------------
+-- Melenablanca --
+------------------
 L= DBM:GetModLocalization(674)
-

@@ -6,21 +6,13 @@ L.MainFrame	= "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "翻譯:"
 L.TranslationBy 			= "Imbav@聖光之願"
-L.Website					= "拜訪我們的討論與支援論壇:|cFF73C2FBwww.deadlybossmods.com|r 在推特上關注主要開發者@MysticalOS"
+L.Website					= "拜訪討論/支援論壇:|cFF73C2FBwww.deadlybossmods.com|r 請在推特上關注@deadlybossmods或@MysticalOS"
 L.WebsiteButton				= "論壇"
 
 L.OTabBosses	= "首領模組"
 L.OTabOptions	= GAMEOPTIONS_MENU
 
 L.TabCategory_Options		= "綜合設置"
-L.TabCategory_LEG	 		= "軍臨天下"
-L.TabCategory_WoD	 		= EXPANSION_NAME5
-L.TabCategory_MOP	 		= EXPANSION_NAME4
-L.TabCategory_CATA	 		= EXPANSION_NAME3
-L.TabCategory_WOTLK 		= EXPANSION_NAME2
-L.TabCategory_BC 			= EXPANSION_NAME1
-L.TabCategory_CLASSIC		= EXPANSION_NAME0
-L.TabCategory_PVP 			= PVP
 L.TabCategory_OTHER			= "其它首領模組"
 
 L.BossModLoaded				= "%s狀態"
@@ -52,10 +44,10 @@ L.Statistic_Kills			= "勝利："
 L.Statistic_Wipes			= "失敗："
 L.Statistic_Incompletes		= "未完成："
 L.Statistic_BestKill		= "最快記錄："
+L.Statistic_BestRank		= "最佳等級："
 
 -- Tab: General Core Options
 L.General 					= "DBM綜合設置"
-L.EnableDBM 				= "啟用DBM"
 L.EnableMiniMapIcon			= "顯示小地圖圖示"
 L.UseSoundChannel			= "設置DBM警告的音效頻道"
 L.UseMasterChannel			= "主聲道"
@@ -86,7 +78,6 @@ L.InfoRaidWarning			= [[你可以對團隊警告的顏色及其位置進行設�
 在這裡會顯示例如“玩家X中了Y效果”之類的資訊。]]
 L.ColorResetted 			= "該顏色設置已重置"
 L.ShowWarningsInChat 		= "在聊天視窗中顯示警告"
-L.ShowFakedRaidWarnings 	= "以偽裝團隊警告資訊的方式顯示警告內容"
 L.WarningIconLeft 			= "左側顯示圖示"
 L.WarningIconRight 			= "右側顯示圖示"
 L.WarningIconChat 			= "在聊天視窗顯示圖示"
@@ -182,6 +173,7 @@ L.Area_SpecWarn				= "特別警告選項"
 L.SpecWarn_ClassColor		= "為特別警告套用職業顏色"
 L.ShowSWarningsInChat 		= "在聊天視窗中顯示特別警告"
 L.SWarnNameInNote			= "使用特別警告5選項如果自訂註記有包含你的名字"
+L.SpecialWarningIcon		= "在特別警告上顯示圖示"
 L.SpecWarn_FlashFrame		= "為特別警告閃爍螢幕"
 L.SpecWarn_FlashFrameRepeat	= "反覆%d次(如果啟用)"
 L.SpecWarn_Font				= "特別警告使用的字型"
@@ -277,11 +269,11 @@ L.FilterSelfHud				= "從HudMap過濾你自己(排除Hud的距離功能)"
 
 L.Area_PullTimer			= "開怪計時器過濾選項"
 L.DontShowPTNoID			= "阻擋與你不同區域ID送出的開怪倒數計時條"
-L.DontShowPT				= "不要顯示開怪倒數計時條"
-L.DontShowPTText			= "不要顯示開怪提示文字"
-L.DontPlayPTCountdown		= "不要使用開怪/開戰計時器倒數音效"
-L.DontShowPTCountdownText	= "不要顯示開怪/開戰計時器倒數文字"
-L.PT_Threshold				= "不要顯示高於%d秒以上的開怪/開戰倒數計時器文字"
+L.DontShowPT				= "不要顯示開怪/休息倒數計時條"
+L.DontShowPTText			= "不要顯示開怪/休息提示文字"
+L.DontPlayPTCountdown		= "不要使用開怪/休息/開戰/自訂計時器倒數音效"
+L.DontShowPTCountdownText	= "不要顯示開怪/休息/開戰/自訂計時器倒數文字"
+L.PT_Threshold				= "不要顯示高於%d秒以上的休息/開戰/自訂倒數計時器文字"
 
 L.Panel_HideBlizzard		= "禁用及隱藏暴雪功能"
 L.Area_HideBlizzard			= "禁用及隱藏暴雪功能選項"
@@ -291,13 +283,13 @@ L.HideGarrisonUpdates		= "首領戰鬥時隱藏要塞任務完成提示"
 L.HideGuildChallengeUpdates	= "首領戰鬥時隱藏公會挑戰完成提示"
 L.HideTooltips				= "首領戰鬥時隱藏滑鼠提示"
 L.DisableSFX				= "首領戰鬥時禁用音效頻道"
-L.HideApplicantAlerts		= "在預組隊伍停止報名的訊息"
-L.HideApplicantAlertsFull	= "如果隊伍已滿"
-L.HideApplicantAlertsNotL	= "就算不是隊伍隊長(如果你是隊伍隊長則啟用隊伍已滿選項)"
 L.SpamBlockSayYell			= "從聊天頻道隱藏聊天泡泡提示"
 L.DisableCinematics			= "禁用遊戲中的過場動畫"
 L.AfterFirst				= "在每次動畫播放一次之後"
 L.Always					= ALWAYS
+L.DisableTalkingHead		= "停用NPC講話視窗"
+L.CombatOnly				= "在任何戰鬥中停用"
+L.RaidCombat				= "只在首領戰鬥中停用"
 
 L.Panel_ExtraFeatures		= "額外功能"
 --
@@ -318,15 +310,11 @@ L.SKT_Enabled				= "顯示目前戰鬥的最佳紀錄勝利計時器"
 L.CRT_Enabled				= "為下一次戰復充能顯示計時器"
 L.ShowRespawn				= "在一個滅團之後顯示首領重生計時器"
 L.ShowQueuePop				= "為佇列(隨機,戰場,其他)接受時間顯示計時器"
-L.ChallengeTimerOptions		= "為挑戰模式設定最佳紀錄計時器"
-L.ChallengeTimerPersonal	= "個人"
-L.ChallengeTimerGuild		= GUILD
-L.ChallengeTimerRealm		= "伺服器"
 --
 L.Area_AutoLogging			= "自動記錄選項"
 L.AutologBosses				= "自動使用暴雪戰鬥日誌記錄首領戰鬥(為了紀錄藥水事件等其他事件請於開打前使用/dbm pull)"
 L.AdvancedAutologBosses		= "自動使用Transcriptor紀錄首領戰鬥"
-L.LogOnlyRaidBosses			= "只記錄團隊首領的戰鬥(除了隨機團隊/隨機隊伍/隨機事件)"
+L.LogOnlyRaidBosses			= "只記錄當前資料片團隊首領的戰鬥(除了隨機團隊/隨機隊伍/隨機事件/舊副本團隊)"
 --
 L.Area_3rdParty				= "協力插件選項"
 L.ShowBBOnCombatStart		= "戰鬥開始時顯示BigBrother(檢查團隊 增益/精煉UI)"

@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod("Augh", "DBM-Party-Cataclysm", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 164 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(49045)
-mod:SetModelID(37339)--Needs hardcode because he's in EJ as a separate boss even though he is.
+mod:SetModelID(37339)--Needs hardcode because he's not in EJ as a separate boss even though he is.
 mod:SetZone()
 
 mod:RegisterCombat("combat")

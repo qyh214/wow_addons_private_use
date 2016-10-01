@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1751, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14949 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15236 $"):sub(12, -3))
 mod:SetCreatureID(104881)
 mod:SetEncounterID(1871)
 mod:SetZone()
@@ -12,8 +12,8 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 213853 213567 213564 213852 212735 213275 213390 213083 212492",
-	"SPELL_AURA_APPLIED 213864 216389 213867 213869 212531 213148 213569",
-	"SPELL_AURA_REMOVED 213569 212531 213148",
+	"SPELL_AURA_APPLIED 213864 216389 213867 213869 212531 213148 213569 212587 230951",
+	"SPELL_AURA_REMOVED 213569 212531 213148 230951",
 	"SPELL_PERIODIC_DAMAGE 212736 213278 213504",
 	"SPELL_PERIODIC_MISSED 212736 213278 213504",
 	"SPELL_DAMAGE 213520",
@@ -24,6 +24,8 @@ mod:RegisterEventsInCombat(
 
 --TODO, possibly dump UNIT_AURA unless that proves to actualy be better way to manage range frame
 --TODO, Tank strategies varied a bit and blizz will probably adjust behavior on annihilate so review this again later date
+--TODO, add fixate on mythic. No debuff. Player sees eyes but no debuff. Might have to do nameplate/accro target scanning to warn who has it
+--TODO, probably fix more timers. Especially mythic fire and arcane.
 --Phases
 local warnFrostPhase				= mod:NewSpellAnnounce(213864, 2)
 local warnFirePhase					= mod:NewSpellAnnounce(213867, 2)
@@ -34,11 +36,14 @@ local warnSearingBrandChosen		= mod:NewTargetAnnounce(213148, 3)
 --Animate Specials Temp, to avoid spam
 local warnFrozenTempest				= mod:NewCastAnnounce(213083, 4)
 local warnArmageddon				= mod:NewAddsLeftAnnounce(213568, 2)
+--Mythic
+local warnFelSoul					= mod:NewSpellAnnounce(230951, 3)
 
 local specWarnAnnihilate			= mod:NewSpecialWarningCount(212492, "Tank", nil, nil, 3, 2)
 local specWarnAnnihilateOther		= mod:NewSpecialWarningTaunt(212492, nil, nil, nil, 1, 2)
 --Debuffs
-local specWarnMarkOfFrost			= mod:NewSpecialWarningMoveAway(212531, nil, nil, nil, 1, 2)
+local specWarnMarkOfFrost			= mod:NewSpecialWarningYou(212531, nil, nil, nil, 1, 2)
+local yellMarkofFrost				= mod:NewYell(212531)
 local specWarnSearingBrand			= mod:NewSpecialWarningMoveAway(213148, nil, nil, nil, 1, 2)
 local specWarnSearingBrandDodge		= mod:NewSpecialWarningDodge(213148, nil, nil, nil, 2, 6)
 local specWarnArcaneOrb				= mod:NewSpecialWarningDodge(213519, nil, nil, nil, 2, 2)
@@ -80,6 +85,10 @@ local timerAnimateFireCD			= mod:NewNextTimer(16, 213567, 124338, nil, nil, 1, n
 local timerAnimateArcaneCD			= mod:NewNextTimer(16, 213564, 124338, nil, nil, 1, nil, DBM_CORE_DEADLY_ICON..DBM_CORE_DAMAGE_ICON..DBM_CORE_TANK_ICON)--"Animated" short name. Wrong tense but only short spell I can use
 --Animate Specials
 local timerArmageddon				= mod:NewCastTimer(33, 213568, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+--Mythic
+local timerFelSoul					= mod:NewBuffActiveTimer(60, 230951, nil, nil, nil, 6)
+
+local berserkTimer					= mod:NewBerserkTimer(600)
 
 local countdownMarkOfFrost			= mod:NewCountdown("Alt30", 212531, nil, nil, 3)
 local countdownSearingBrand			= mod:NewCountdown("Alt30", 213148, nil, nil, 3)
@@ -107,7 +116,6 @@ local voiceAnimateArcane			= mod:NewVoice(213564)--mobsoon
 --Animate Specials
 
 mod:AddRangeFrameOption("8")
---mod:AddSetIconOption("SetIconOnMC", 163472, false)
 mod:AddHudMapOption("HudMapOnBrandCharge", 213166)
 
 mod.vb.annihilateCount = 0
@@ -116,7 +124,7 @@ local MarkOfFrostDebuff = GetSpellInfo(212587)
 local SearingBrandDebuff = GetSpellInfo(213166)
 local rangeShowAll = false
 local chargeTable = {}
-local annihilateTimers = {8, 45, 40, 44, 20, 18, 47, 20, 13}--Need longer pulls/more data. However this pattern did prove to always be same
+local annihilateTimers = {8.0, 45.0, 40.2, 43.8, 38.2, 36.8, 33.2, 46.8, 41.1, 43.9, 38.1}--Need longer pulls/more data. However this pattern did prove to always be same
 
 local debuffFilter
 local UnitDebuff = UnitDebuff
@@ -154,7 +162,8 @@ function mod:OnCombatStart(delay)
 	countdownAnnihilate:Start(8-delay)
 	--Rest of timers are triggered by frost buff 0.1 seconds into pull
 	table.wipe(chargeTable)
-	local rangeShowAll = false
+	rangeShowAll = false
+	berserkTimer:Start(-delay)
 end
 
 function mod:OnCombatEnd()
@@ -171,7 +180,6 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 213853 then--Mark of Frost (Animate)
 		specWarnAnimateFrost:Show()
 		voiceAnimateFrost:Play("mobsoon")--using this trigger, mobsoon
-		DBM:AddMsg("If you see this message it means blizzard fixed Animate frost combat log trigger. Report this to DBM authors to improve mod. You may recieve double warnings on this spell until mod is updated.")
 	elseif spellId == 213567 then--Animate: Searing Brand
 		specWarnAnimateFire:Show()
 		voiceAnimateFire:Play("mobsoon")
@@ -222,6 +230,8 @@ function mod:SPELL_CAST_START(args)
 			--Better place to start arcane orb timer since it's cast 1.5 seconds after arcane phase begins and this is last annihilate in fire phase
 			timerArcaneOrbCD:Start()
 		end
+	elseif spellId == 230951 then
+		warnFelSoul:Show()
 	end
 end
 
@@ -230,14 +240,22 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 213864 or spellId == 216389 then--Icy enchantment (Two versions for some reason, probably normal/lfr version and heroic/mythic)
 		warnFrostPhase:Show()
 		voicePhaseChange:Play("phasechange")
-		timerMarkOfFrostCD:Start(18)
-		timerMarkOfFrostRepCD:Start(28)
-		timerMarkOfFrostDetonateCD:Start(48)
-		timerAnimateFrostCD:Start(65)--Timer is for cast start, which is hidden at moment, so DBM will trigger warning 3 seconds after timer ends (cast finish) right now
+		if self:IsMythic() then
+			timerMarkOfFrostCD:Start(18)
+			timerMarkOfFrostRepCD:Start(28)
+			timerMarkOfFrostDetonateCD:Start(48)
+			timerAnimateFrostCD:Start(65)--Timer is for cast start, which is hidden at moment, so DBM will trigger warning 3 seconds after timer ends (cast finish) right now
+			timerFirePhaseCD:Start(75)
+		else
+			timerMarkOfFrostCD:Start(18)
+			timerMarkOfFrostRepCD:Start(38)
+			timerMarkOfFrostDetonateCD:Start(68)
+			timerAnimateFrostCD:Start(75)--Timer is for cast start, which is hidden at moment, so DBM will trigger warning 3 seconds after timer ends (cast finish) right now
+			timerFirePhaseCD:Start(85)
+		end
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(8, debuffFilter)
 		end
-		timerFirePhaseCD:Start(85)
 	elseif spellId == 213867 then--Fiery Enchantment
 		warnFirePhase:Show()
 		voicePhaseChange:Play("phasechange")
@@ -250,22 +268,30 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnArcanePhase:Show()
 		voicePhaseChange:Play("phasechange")
 		--Arcane orb not started here, started somewhere else so timer is actually useful
-		timerArcaneOrbRepCD:Start(25)
-		timerArcaneOrbDetonateCD:Start(47.9)
-		timerAnimateArcaneCD:Start(61.9)
+		timerArcaneOrbRepCD:Start(15)
+		timerArcaneOrbDetonateCD:Start(35)
+		specWarnArcanedetonate:Schedule(35)
+		voiceArcaneDetonate:Schedule(35, "watchorb")
+		timerAnimateArcaneCD:Start(51.9)
 		if self.Options.RangeFrame and self:IsRanged() then
 			DBM.RangeCheck:Show(8)--Show everyone for better arcane orb spread
 		else--Melee, kill range frame this phase
 			DBM.RangeCheck:Hide()
 		end
-		timerFrostPhaseCD:Start(80)
+		timerFrostPhaseCD:Start(70)
 	elseif spellId == 212531 then--Mark of Frost (5sec Targetting Debuff)
 		warnMarkOfFrostChosen:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnMarkOfFrost:Show()
-			voiceMarkOfFrost:Play("scatter")
+			voiceMarkOfFrost:Play("targetyou")
 			countdownMarkOfFrost:Start(5)
+			self:AntiSpam(7, args.destName)
+			yellMarkofFrost:Yell()
 		end
+	elseif spellId == 212587 and args:IsPlayer() and self:AntiSpam(7, args.destName) then
+		specWarnMarkOfFrost:Show()
+		voiceMarkOfFrost:Play("targetyou")
+		yellMarkofFrost:Yell()
 	elseif spellId == 213148 then--Searing Brand (5sec Targetting Debuff)
 		warnSearingBrandChosen:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
@@ -273,7 +299,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			voiceSearingBrand:Play("scatter")
 			countdownSearingBrand:Start()
 		end
-		if self.Options.HudMapOnBrandCharge then
+		if self.Options.HudMapOnBrandCharge and not self:HasMapRestrictions() then
 			self:Unschedule(hudDelay)
 			if not tContains(args.destName, args.destName) then
 				chargeTable[#chargeTable+1] = args.destName
@@ -282,6 +308,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 213569 then--Armageddon Applied to mobs
 		self.vb.armageddonAdds = self.vb.armageddonAdds + 1
+	elseif spellId == 230951 then
+		timerFelSoul:Start()
 	end
 end
 
@@ -301,6 +329,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		countdownMarkOfFrost:Cancel()
 	elseif spellId == 213148 and args:IsPlayer() then--Searing Brand (5sec Targetting Debuff)
 		countdownSearingBrand:Cancel()
+	elseif spellId == 230951 then
+		timerFelSoul:Stop()
 	end
 end
 	
@@ -319,6 +349,7 @@ do
 		end
 	end
 	mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+	
 	function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		if spellId == 213520 and destGUID == playerGUID and self:AntiSpam(2, 1) then
 			specWarnArcaneFog:Show()
@@ -346,15 +377,15 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
-	if spellId == 213853 then--Animate Mark of Frost. Not currently incombat log
-		specWarnAnimateFrost:Show()
-		voiceAnimateFrost:Play("mobkill")--using this trigger, mobkill
+	if spellId == 213853 then--Animate Mark of Frost. (wasn't in combat log but is now, but here just in case they break again)
+--		specWarnAnimateFrost:Show()
+--		voiceAnimateFrost:Play("mobkill")--using this trigger, mobkill
 --		timerAnimateFrostCD:Start()
 	elseif spellId == 215455 then--Arcane Orb
 		specWarnArcaneOrb:Show()
 		voiceArcaneOrb:Play("watchorb")
-	elseif spellId == 213390 then--Detonate: Arcane Orb
-		specWarnArcanedetonate:Show()
-		voiceArcaneDetonate:Play("watchorb")
+	elseif spellId == 213390 then--Detonate: Arcane Orb (still missing from combat log, although this event is 3 seconds slower than scheduling or using yell)
+--		specWarnArcanedetonate:Show()
+--		voiceArcaneDetonate:Play("watchorb")
 	end
 end

@@ -16,7 +16,6 @@ local strfind = strfind
 local tinsert = tinsert
 local UnitBuff = UnitBuff
 local UnitDebuff = UnitDebuff
-local _
 
 local module = CompactRaid:FindModule("CornerIndicators")
 if not module then return end
@@ -27,7 +26,7 @@ local auraGroups = _G["LibBuffGroups-1.0"]
 
 local function FindAura(unit, aura, selfcast, lacks, similar)
 	local filter = selfcast and "PLAYER" or ""
-	local name, icon, count, dispelType, duration, expires, caster, harmful
+	local name, _, icon, count, dispelType, duration, expires, caster, harmful
 
 	if similar then
 		name, icon, count, dispelType, duration, expires, caster, harmful = auraGroups:UnitAura(unit, aura)
@@ -145,11 +144,12 @@ local function Indicator_UpdateAura(self)
 		end
 
 		if duration > 0 and expires > 0 then
+			self.cooldown:Clear()
 			self.cooldown:SetCooldown(expires - duration, duration)
 			self.cooldown:Show()
 		end
 	else
-		self.icon:SetTexture(1, 1, 1)
+		self.icon:SetVertexColor(1, 1, 1)
 		self:SetScript("OnUpdate", Indicator_OnUpdate)
 		Indicator_UpdateStatus(self)
 	end
@@ -175,6 +175,7 @@ local function Indicator_SetStyle(self)
 			if db.style == 1 then
 				-- Cube
 				self:SetSize(8, 8)
+				self.icon:SetTexture("Interface\\BUTTONS\\WHITE8X8.BLP")
 			else
 				-- icon
 				self:SetSize(12, 12)
@@ -219,7 +220,7 @@ local function Indicator_UpdateOffset(self)
 end
 
 local function Frame_UpdateAura(self)
-	local indicator
+	local _, indicator
 	for _, indicator in pairs(self.cornerIndicators) do
 		Indicator_UpdateAura(indicator)
 	end
@@ -254,7 +255,7 @@ end
 function module:OnCreateVisual(visual, unitFrame, dynamic)
 	visual:SetAllPoints(unitFrame)
 	visual.cornerIndicators = {}
-	local key
+	local _, key
 	for _, key in ipairs(module.INDICATOR_KEYS) do
 		local indicator = module:CreateIndicator(visual, key)
 		visual.cornerIndicators[key] = indicator
@@ -279,13 +280,14 @@ function module:CreateIndicator(parent, key)
 
 	frame.bkgnd = frame:CreateTexture(nil, "BACKGROUND")
 	frame.bkgnd:SetAllPoints(frame)
-	frame.bkgnd:SetTexture(0, 0, 0, 1)
+	frame.bkgnd:SetTexture("Interface\\BUTTONS\\WHITE8X8.BLP")
+	frame.bkgnd:SetVertexColor(0, 0, 0, 1)
 
 	frame.icon = frame:CreateTexture(nil, "BORDER")
 	frame.icon:SetPoint("TOPLEFT", frame.bkgnd, "TOPLEFT", 1, -1)
 	frame.icon:SetPoint("BOTTOMRIGHT", frame.bkgnd, "BOTTOMRIGHT", -1, 1)
 	frame.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-	frame.icon:SetTexture(1, 1, 1)
+	frame.icon:SetTexture("Interface\\BUTTONS\\WHITE8X8.BLP")
 
 	frame.countText = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 	frame.countText:SetFont(STANDARD_TEXT_FONT, 9, "OUTLINE")
@@ -297,8 +299,7 @@ function module:CreateIndicator(parent, key)
 	frame.text:SetFont(STANDARD_TEXT_FONT, 9)
 	frame.text:SetPoint(key, frame.icon, key)
 
-	frame.cooldown = CreateFrame("Cooldown", nil, frame)
-	frame.cooldown:SetAllPoints(frame.icon)
+	frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate")
 	frame.cooldown:Raise()
 	frame.cooldown:SetReverse(true)
 
@@ -343,7 +344,7 @@ function module:UpdateIndicator(indicator, style, aura, scale, offset)
 end
 
 function module:UpdateAllIndicators(key, style, aura, scale, offset)
-	local indicator
+	local _, indicator
 	for _, indicator in ipairs(self.indicators) do
 		if not key or indicator.key == key then
 			self:UpdateIndicator(indicator, style, aura, scale, offset)

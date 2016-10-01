@@ -1,7 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 
 	<Script file="ZPerl.lua"/>
-	<Script file="ZPerl_Usage.lua"/>
+	<!--<Script file="ZPerl_Usage.lua"/>-->
 	<Script file="ZPerl_Highlight.lua"/>
 
 	<Button name="XPerl_MinimapButton_Frame" frameStrata="MEDIUM" parent="Minimap" enableMouse="true" movable="true">

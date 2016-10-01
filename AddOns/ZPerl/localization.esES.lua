@@ -68,8 +68,9 @@ if (GetLocale() == "esES" or GetLocale() == "esMX") then
 	XPERL_OK	= "Vale"
 	XPERL_CANCEL	= "Cancelar"
 
-	XPERL_LOC_LARGENUMDIV	= 1000
-	XPERL_LOC_LARGENUMTAG	= "K"
+	XPERL_LOC_LARGENUMTAG		= "K"
+	XPERL_LOC_HUGENUMTAG		= "M"
+	XPERL_LOC_VERYHUGENUMTAG	= "G"
 
 	BINDING_HEADER_ZPERL = "Z-Perl enlaces de teclas"
 	BINDING_NAME_ZPERL_TOGGLERAID = "Mostrar ventanas de bandas"

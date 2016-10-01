@@ -1,15 +1,16 @@
 local mod	= DBM:NewMod("Ebonroc", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 584 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 597 $"):sub(12, -3))
 mod:SetCreatureID(14601)
+mod:SetEncounterID(614)
 mod:SetModelID(6377)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED"
+	"SPELL_CAST_START 23339 22539",
+	"SPELL_AURA_APPLIED 23340",
+	"SPELL_AURA_REMOVED 23340"
 )
 
 local warnWingBuffet	= mod:NewCastAnnounce(23339)
@@ -25,10 +26,10 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)--did not see ebon use any of these abilities
-	if args.spellId == 23339 and self:IsInCombat() then
+	if args.spellId == 23339 then
 		warnWingBuffet:Show()
 		timerWingBuffet:Start()
-	elseif args.spellId == 22539 and self:IsInCombat() then
+	elseif args.spellId == 22539 then
 		timerShadowFlame:Start()
 		warnShadowFlame:Show()
 	end

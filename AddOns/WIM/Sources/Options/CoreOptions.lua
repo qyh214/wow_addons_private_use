@@ -215,7 +215,7 @@ local function createPopRuleFrame(winType)
             button:SetWidth(55);
             button.bg = button:CreateTexture(nil, "BACKGROUND");
             button.bg:SetAllPoints();
-            button.bg:SetTexture(1,1,1,.25);
+            button.bg:SetColorTexture(1,1,1,.25);
             button:SetScript("OnClick", function(self)
                     frame.main.selectedState = self.state;
                     frame.main.options:Hide();

@@ -1,5 +1,4 @@
 TidyPlatesWidgets = {}
-TidyPlatesWidgetData = {}
 
 ----------------------
 -- HideIn() - Registers a callback, which hides the specified frame in X seconds
@@ -10,7 +9,7 @@ do
 	local WatcherframeActive = false
 	local select = select
 	local timeToUpdate = 0
-	
+
 	local function CheckFramelist(self)
 		local curTime = GetTime()
 		if curTime < timeToUpdate then return end
@@ -24,17 +23,17 @@ do
 		-- If no more frames to watch, unregister the OnUpdate script
 		if framecount == 0 then Watcherframe:SetScript("OnUpdate", nil) end
 	end
-	
+
 	function TidyPlatesWidgets:HideIn(frame, expiration)
 		-- Register Frame
 		Framelist[ frame] = expiration
 		-- Init Watchframe
-		if not WatcherframeActive then 
+		if not WatcherframeActive then
 			Watcherframe:SetScript("OnUpdate", CheckFramelist)
 			WatcherframeActive = true
 		end
 	end
-	
+
 end
 
 ----------------------
@@ -42,14 +41,14 @@ end
 ----------------------
 
 do
-	local updateInterval = 1
+	local updateInterval = .5
 	local PolledHideIn
 	local Framelist = {}			-- Key = Frame, Value = Expiration Time
 	local Watcherframe = CreateFrame("Frame")
 	local WatcherframeActive = false
 	local select = select
 	local timeToUpdate = 0
-	
+
 	local function CheckFramelist(self)
 		local curTime = GetTime()
 		if curTime < timeToUpdate then return end
@@ -58,74 +57,56 @@ do
 		-- Cycle through the watchlist, hiding frames which are timed-out
 		for frame, expiration in pairs(Framelist) do
 			-- If expired...
-			if expiration < curTime then 
+			if expiration < curTime then
 				if frame.Expire then frame:Expire() end
-				
+
 				frame:Hide()
 				Framelist[frame] = nil
 				--TidyPlates:RequestDelegateUpdate()		-- Request an Update on Delegate functions, so we can catch when auras fall off
 			-- If still active...
-			else 
+			else
 				-- Update the frame
 				if frame.Poll then frame:Poll(expiration) end
-				framecount = framecount + 1 
+				framecount = framecount + 1
 			end
 		end
 		-- If no more frames to watch, unregister the OnUpdate script
 		if framecount == 0 then Watcherframe:SetScript("OnUpdate", nil); WatcherframeActive = false end
 	end
-	
+
 	function PolledHideIn(frame, expiration)
-	
-		if expiration == 0 then 
-			
+
+		if expiration == 0 then
+
 			frame:Hide()
 			Framelist[frame] = nil
 		else
 			--print("Hiding in", expiration - GetTime())
 			Framelist[frame] = expiration
 			frame:Show()
-			
-			if not WatcherframeActive then 
+
+			if not WatcherframeActive then
 				Watcherframe:SetScript("OnUpdate", CheckFramelist)
 				WatcherframeActive = true
 			end
 		end
 	end
-	
+
 	TidyPlatesWidgets.PolledHideIn = PolledHideIn
 end
 
----------------------
--- Reset/Nil Tidy Plates Widget Frames
----------------------
-do
-	local Plate, plateIndex, WorldFrameChildren, WidgetChildren, widgetIndex
-	local function ResetWidgets()
-		WorldFrameChildren = {WorldFrame:GetChildren()}
-		for plateIndex = 1, #WorldFrameChildren do
-			Plate = WorldFrameChildren[plateIndex]
-			if Plate.extended and Plate.extended.widgets then
-				for widgetIndex, widget in pairs(Plate.extended.widgets) do
-					widget:Hide()
-					Plate.extended.widgets[widgetIndex] = nil
-				end
-			end
-		end
-	end
-	TidyPlatesWidgets.ResetWidgets = ResetWidgets
-end
-		
----------------------
--- Reset/Nil Tidy Plates Widget Frames
----------------------	
-local function GetCombatEventResults(...)
-	local timestamp, combatevent, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlag, spellid, spellname  = ...
-	local auraType, stackCount = select(15, ...)
-	return timestamp, combatevent, sourceGUID, destGUID, destName, destFlags, destRaidFlag, auraType, spellid, spellname, stackCount
-end
 
---if (tonumber((select(2, GetBuildInfo()))) >= 14299) then else end
-TidyPlatesUtility.GetCombatEventResults = GetCombatEventResults
+
+
+-- For compatibility:
+local DummyFunction = function() end
+TidyPlatesWidgets.ResetWidgets = TidyPlates.ResetWidgets
+TidyPlatesWidgets.EnableTankWatch = DummyFunction
+TidyPlatesWidgets.DisableTankWatch = DummyFunction
+TidyPlatesWidgets.EnableAggroWatch = DummyFunction
+
+
+
+
 
 

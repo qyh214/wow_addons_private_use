@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1711, "DBM-Party-Legion", 9, 777)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15008 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15197 $"):sub(12, -3))
 mod:SetCreatureID(102446)
 mod:SetEncounterID(1856)
 mod:SetZone()
@@ -75,7 +75,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			voiceSeedsofDestruction:Play("runout")
 		end
 		if self.Options.SetIconOnSeeds then
-			self:SetAlphaIcon(0.5, args.destName, 2)
+			self:SetAlphaIcon(0.5, args.destName)
 		end
 	elseif spellId == 205233 then
 		warnExecute:Show(args.destName)

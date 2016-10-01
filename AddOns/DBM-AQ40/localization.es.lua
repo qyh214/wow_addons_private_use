@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
 ------------
@@ -20,7 +20,7 @@ L:SetOptionLocalization{
 L = DBM:GetModLocalization("ThreeBugs")
 
 L:SetGeneralLocalization{
-	name = "Los tres bichos"
+	name = "Realeza silítida"
 }
 L:SetMiscLocalization{
 	Yauj = "Princesa Yauj",
@@ -45,6 +45,7 @@ L = DBM:GetModLocalization("Fankriss")
 L:SetGeneralLocalization{
 	name = "Fankriss el Implacable"
 }
+
 --------------
 -- Viscidus --
 --------------
@@ -54,17 +55,20 @@ L:SetGeneralLocalization{
 	name = "Viscidus"
 }
 L:SetWarningLocalization{
-	WarnFreeze	= "Congelación: %d/3",
-	WarnShatter	= "Roto: %d/3"
+	WarnFreeze	= "Freeze: %d/3",
+	WarnShatter	= "Shatter: %d/3"
 }
 L:SetOptionLocalization{
-	WarnFreeze	= "Anunciar el estado de Congelación",
-	WarnShatter	= "Anunciar el estado de rotura"
+	WarnFreeze	= "Announce Freeze status",
+	WarnShatter	= "Announce Shatter status"
 }
 L:SetMiscLocalization{
-	Phase4 	= "empieza a agrietarse",
-	Phase5 	= "parece listo para romper",
-	Phase6 	= "explota"
+	Slow	= "comienza a ir más despacio!",
+	Freezing= "se está congelando!",
+	Frozen	= "no se puede mover!",
+	Phase4 	= "comienza a desmoronarse!",
+	Phase5 	= "parece a punto de hacerse añicos!",
+	Phase6 	= "explota"--Might want to double check this, since no further messages appeared after the previous one.
 }
 -------------
 -- Huhuran --
@@ -80,11 +84,11 @@ L:SetGeneralLocalization{
 L = DBM:GetModLocalization("TwinEmpsAQ")
 
 L:SetGeneralLocalization{
-	name = "Gemelos emperadores"
+	name = "Los Emperadores Gemelos"
 }
 L:SetMiscLocalization{
-	Veklor = "Emperador Vek'lor",
-	Veknil = "Emperador Vek'nilash"
+	Veklor = "Emperor Vek'lor",
+	Veknil = "Emperor Vek'nilash"
 }
 
 ------------
@@ -95,8 +99,26 @@ L = DBM:GetModLocalization("CThun")
 L:SetGeneralLocalization{
 	name = "C'Thun"
 }
+L:SetWarningLocalization{
+	WarnEyeTentacle			= "Tentáculo ocular",
+	WarnWeakened			= "C'Thun vulnerable",
+	SpecWarnWeakened		= "¡C'Thun vulnerable!"
+}
+L:SetTimerLocalization{
+	TimerEyeTentacle		= "Siguiente Tentáculo ocular",
+	TimerWeakened			= "Vulnerabilidad termina"
+}
 L:SetOptionLocalization{
-	RangeFrame	= "Mostrar distancia"
+	WarnEyeTentacle			= "Mostrar aviso cuando aparezca un Tentáculo ocular",
+	WarnWeakened			= "Mostrar aviso cuando C'Thun se vuelva vulnerable",
+	SpecWarnWeakened		= "Mostrar aviso especial cuando C'Thun se vuelva vulnerable",
+	TimerEyeTentacle		= "Mostrar temporizador para el siguiente Tentáculo ocular",
+	TimerWeakened			= "Mostrar temporizador para la duración de la vulnerabilidad de C'Thun",
+	RangeFrame				= "Mostrar marco de distancia (10 m)"
+}
+L:SetMiscLocalization{
+	Eye			= "Ojo de C'Thun",
+	Weakened 	= "está débil!"
 }
 ----------------
 -- Ouro --
@@ -107,20 +129,16 @@ L:SetGeneralLocalization{
 	name = "Ouro"
 }
 L:SetWarningLocalization{
-	WarnSubmerge		= "Se Sumerge",
-	WarnEmerge			= "Emerge",
-	WarnSubmergeSoon	= "Se Sumerge pronto",
-	WarnEmergeSoon		= "Emerge pronto"
+	WarnSubmerge		= "Ouro ha regresado",
+	WarnEmerge			= "Ouro se sumerge"
 }
 L:SetTimerLocalization{
-	TimerSubmerge		= "Se Sumerge",
-	TimerEmerge			= "Emerge"
+	TimerSubmerge		= "Sumersión",
+	TimerEmerge			= "Emersión"
 }
 L:SetOptionLocalization{
-	WarnSubmerge		= "Mostrar aviso para sumersión",
-	WarnSubmergeSoon	= "Mostrar pre-aviso para sumersión",
-	TimerSubmerge		= "Mostrar tiempo para sumersión",
-	WarnEmerge			= "Mostrar aviso para emersión",
-	WarnEmergeSoon		= "Mostrar pre-aviso para emersión",
-	TimerEmerge			= "Mostrar tiempo para emersión"
+	WarnSubmerge		= "Mostrar aviso cuando Ouro se sumerja",
+	TimerSubmerge		= "Mostrar temporizador para cuando Ouro se sumerja",
+	WarnEmerge			= "Mostrar aviso cuando Ouro regrese a la superficie",
+	TimerEmerge			= "Mostrar temporizador para cuando Ouro regrese a la superficie"
 }

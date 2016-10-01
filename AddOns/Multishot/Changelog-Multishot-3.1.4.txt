@@ -1,0 +1,12 @@
+tag 3.1.4
+4be4dce5052680790d6cd88eb5ec90a737e3ca06
+Dridzt <dridzt.addons@hotmail.com>
+2015-01-04 15:10:18 +0200
+
+tag as 3.1.4
+
+
+--------------------
+
+Dridzt:
+	- - Change the garisson building screenshot method to improve screenshot timing.

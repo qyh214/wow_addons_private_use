@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1720, "DBM-Party-Legion", 7, 800)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15008 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15207 $"):sub(12, -3))
 mod:SetCreatureID(104218)
 mod:SetEncounterID(1870)
 mod:SetZone()
@@ -44,7 +44,7 @@ function mod:SurgeTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
-	timerGaleCD:start(5.7-delay)
+	timerGaleCD:Start(5.7-delay)
 	timerMaelstromCD:Start(11.8-delay)
 	timerSurgeCD:Start(19-delay)
 end

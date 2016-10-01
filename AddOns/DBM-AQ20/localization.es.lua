@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
 ---------------
@@ -9,12 +9,6 @@ L = DBM:GetModLocalization("Kurinnaxx")
 L:SetGeneralLocalization{
 	name 		= "Kurinnaxx"
 }
-L:SetWarningLocalization{
-	WarnWound	= "%s en >%s< (%s)"
-}
-L:SetOptionLocalization{
-	WarnWound	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(25646)
-}
 ------------
 -- Rajaxx --
 ------------
@@ -24,21 +18,19 @@ L:SetGeneralLocalization{
 	name 		= "General Rajaxx"
 }
 L:SetWarningLocalization{
-	WarnWave	= "Oleada %s",
-	WarnBoss	= "Sale Boss"
+	WarnWave	= "Oleada %s"
 }
 L:SetOptionLocalization{
-	WarnWave	= "Mostrar aviso para oleada siguiente"
+	WarnWave	= "Mostrar aviso previo para la siguiente oleada"
 }
 L:SetMiscLocalization{
-	NpcPull		= "They come now. Try not to get yourself killed, young blood.", --translate
-	Wave1		= "Remember, Rajaxx, when I said I'd kill you last?", --translate
-	Wave3		= "The time of our retribution is at hand! Let darkness reign in the hearts of our enemies!", --translate
-	Wave4		= "No longer will we wait behind barred doors and walls of stone! No longer will our vengeance be denied! The dragons themselves will tremble before our wrath!", --translate
-	Wave5		= "Fear is for the enemy! Fear and death!", --translate
-	Wave6		= "Staghelm will whimper and beg for his life, just as his whelp of a son did! One thousand years of injustice will end this day!", --translate
-	Wave7		= "Fandral! Your time has come! Go and hide in the Emerald Dream and pray we never find you!", --translate
-	Wave8		= "Impudent fool! I will kill you myself!" --translate
+	Wave12		= "Ahí vienen. Intenta que no te maten,",--Followed by 'chico' or 'chica'
+	Wave3		= "¡La hora de las recompensas está próxima! ¡Que la oscuridad gobierne el corazón de nuestros enemigos!",
+	Wave4		= "¡No volveremos a esperar detrás de rejas y paredes de piedra! ¡Nunca más podrán negarnos nuestra venganza! ¡Hasta los dragones temblarán frente a nuestra ira!",
+	Wave5		= "¡El miedo es para el enemigo! ¡Miedo y muerte!",
+	Wave6		= "¡Corzocelada lloriqueará y rogará por su vida, igual que hizo su débil hijo! ¡Hoy acabará un milenio de injusticia!",
+	Wave7		= "¡Fandral! ¡Ha llegado tu hora! ¡Ve y escóndete en el Sueño Esmeralda y reza para que nunca te encontremos!",
+	Wave8		= "¡Loco imprudente! ¡Acabaré contigo yo mismo!"
 }
 
 ----------
@@ -59,17 +51,17 @@ L:SetGeneralLocalization{
 	name 		= "Buru el Manducador"
 }
 L:SetWarningLocalization{
-	WarnPursue		= "Persigue a >%s<",
-	SpecWarnPursue	= "Te persigue a ti",
+	WarnPursue		= "Persiguiendo a >%s<",
+	SpecWarnPursue	= "Buru te está persiguiendo",
 	WarnDismember	= "%s en >%s< (%s)"
 }
 L:SetOptionLocalization{
-	WarnPursue		= "Anunciar los objetivos perseguidos",
-	SpecWarnPursue	= "Mostrar aviso especial cuando te persigan",
+	WarnPursue		= "Anunciar objetivos de la persecución de Buru",
+	SpecWarnPursue	= "Mostrar aviso especial cuando te persiga el jefe",
 	WarnDismember	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(96)
 }
 L:SetMiscLocalization{
-	PursueEmote 	= "%s fija su mirada en %s!"
+	PursueEmote 	= "¡%s fija su mirada en %s!"
 }
 
 -------------
@@ -96,6 +88,6 @@ L:SetTimerLocalization{
 	TimerVulnerable	= "%s"
 }
 L:SetOptionLocalization{
-	WarnVulnerable	= "Anunciar Debilidad",
-	TimerVulnerable	= "Mostrar tiempo para Debilidad"
+	WarnVulnerable	= "Anunciar debilidades",
+	TimerVulnerable	= "Mostrar temporizador para la duración de las debilidades"
 }

@@ -8,7 +8,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod:RemoveOption("HealthFrame")
 
-mod:SetRevision(("$Revision: 48 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 59 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -124,7 +124,7 @@ do
 			)
 			updateGametime()
 			for i=1, GetNumMapLandmarks(), 1 do
-				local name, _, textureIndex = GetMapLandmarkInfo(i)
+				local _, name, _, textureIndex = GetMapLandmarkInfo(i)
 				if name and textureIndex then
 					if isTower(textureIndex) or isFlag(textureIndex) then
 						objectives[i] = textureIndex
@@ -155,7 +155,7 @@ do
 			return
 		end
 		for i = 1, GetNumMapLandmarks() do
-			local name, _, textureIndex = GetMapLandmarkInfo(i)
+			local _, name, _, textureIndex = GetMapLandmarkInfo(i)
 			if name and textureIndex then
 				if isTower(textureIndex) or isFlag(textureIndex) then
 					objectives[i] = textureIndex

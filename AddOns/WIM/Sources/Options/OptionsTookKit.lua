@@ -80,7 +80,7 @@ local function CreateColorPicker(parent, title, dbTree, varName, valChanged)
     frame.swatch.bg = frame.swatch:CreateTexture(frame.swatch:GetName().."Bg", "BACKGROUND");
     frame.swatch.bg:SetWidth(18); frame.swatch.bg:SetHeight(18);
     frame.swatch.bg:SetPoint("CENTER");
-    frame.swatch.bg:SetTexture(1, 1, 1);
+    frame.swatch.bg:SetColorTexture(1, 1, 1);
     frame.swatch:SetNormalTexture("Interface\\ChatFrame\\ChatFrameColorSwatch");
     frame.swatch:SetScript("OnEnter", function(self)
             self.bg:SetVertexColor(_G.NORMAL_FONT_COLOR.r, _G.NORMAL_FONT_COLOR.g, _G.NORMAL_FONT_COLOR.b);
@@ -418,27 +418,27 @@ end
 function options.AddFramedBackdrop(obj)
     obj.backdrop = {};
     obj.backdrop.top = obj:CreateTexture(nil, "BACKGROUND");
-    obj.backdrop.top:SetTexture(1, 1, 1, .25);
+    obj.backdrop.top:SetColorTexture(1, 1, 1, .25);
     obj.backdrop.top:SetPoint("TOPLEFT",-1 , 1);
     obj.backdrop.top:SetPoint("TOPRIGHT",1 , 1);
     obj.backdrop.top:SetHeight(1);
     obj.backdrop.bottom = obj:CreateTexture(nil, "BACKGROUND");
-    obj.backdrop.bottom:SetTexture(1, 1, 1, .25);
+    obj.backdrop.bottom:SetColorTexture(1, 1, 1, .25);
     obj.backdrop.bottom:SetPoint("BOTTOMLEFT",-1 , -1);
     obj.backdrop.bottom:SetPoint("BOTTOMRIGHT",1 , -1);
     obj.backdrop.bottom:SetHeight(1);
     obj.backdrop.left = obj:CreateTexture(nil, "BACKGROUND");
-    obj.backdrop.left:SetTexture(1, 1, 1, .25);
+    obj.backdrop.left:SetColorTexture(1, 1, 1, .25);
     obj.backdrop.left:SetPoint("TOPLEFT", obj.backdrop.top, "BOTTOMLEFT" ,0 , 0);
     obj.backdrop.left:SetPoint("BOTTOMLEFT", obj.backdrop.bottom, "TOPLEFT" ,0 , 0);
     obj.backdrop.left:SetWidth(1);
     obj.backdrop.right = obj:CreateTexture(nil, "BACKGROUND");
-    obj.backdrop.right:SetTexture(1, 1, 1, .25);
+    obj.backdrop.right:SetColorTexture(1, 1, 1, .25);
     obj.backdrop.right:SetPoint("TOPRIGHT", obj.backdrop.top, "BOTTOMRIGHT" ,0 , 0);
     obj.backdrop.right:SetPoint("BOTTOMRIGHT", obj.backdrop.bottom, "TOPRIGHT" ,0 , 0);
     obj.backdrop.right:SetWidth(1);
     obj.backdrop.bg = obj:CreateTexture(nil, "BACKGROUND");
-    obj.backdrop.bg:SetTexture(0, 0, 0, .25);
+    obj.backdrop.bg:SetColorTexture(0, 0, 0, .25);
     obj.backdrop.bg:SetAllPoints();
 end
 
@@ -591,7 +591,7 @@ function options.createDropDownFrame()
     f.scroll.bg:SetPoint("TOP", 0, -15);
     f.scroll.bg:SetPoint("BOTTOM", 0, 15);
     f.scroll.bg:SetWidth(2);
-    f.scroll.bg:SetTexture(1, 1, 1, .10);
+    f.scroll.bg:SetColorTexture(1, 1, 1, .10);
     f.scroll:SetOrientation("VERTICAL");
     f.scroll:SetPoint("TOPRIGHT", -8, 0);
     f.scroll:SetPoint("BOTTOM", 0 ,0);

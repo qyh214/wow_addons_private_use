@@ -19,6 +19,13 @@ DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s kann nicht geladen werden, da dein DBM-Cor
 --DBM_CORE_WHATS_NEW--translate
 --DBM_CORE_WHATS_NEW_LINK
 
+--Pre Patch 7.1 Notice
+DBM_CORE_NO_RANGE_SOON				= "Hinweis: Das Abstandsradar wird in Instanzen in Patch 7.1 nicht mehr zur Verfügung stehen."
+--Post Patch 7.1
+DBM_CORE_NO_RANGE					= "Das Abstandsradar kann in Instanzen nicht genutzt werden. Es wird stattdessen die alte textbasierte Abstandsanzeige verwendet."
+DBM_CORE_NO_ARROW					= "Der Pfeil kann in Instanzen nicht genutzt werden."
+DBM_CORE_NO_HUD						= "Die HudMap kann in Instanzen nicht genutzt werden."
+
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM hat das dynamische Abstandsfenster für diesen Kampf deaktiviert, da nicht genügend Informationen vorliegen, auf wieviel versammelte Spieler bei deiner Gruppengröße geprüft werden muss."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM hat Warnungen bezüglich der Anzahl der Gegner für diesen Kampf deaktiviert, da nicht genügend Informationen vorliegen, wieviel Gegner bei deiner Gruppengröße erscheinen."
 DBM_CORE_DYNAMIC_MULTIPLE			= "DBM hat mehrere Funktionalitäten für diesen Kampf deaktiviert, da für deine Gruppengröße nicht genügend Informationen über bestimmte Kampfmechaniken vorliegen."
@@ -51,6 +58,8 @@ DBM_CORE_SCENARIO_ENDED_AT_LONG		= "%s abgebrochen nach %s. Das war dein %d. Abb
 DBM_CORE_COMBAT_STATE_RECOVERED		= "Kampf gegen %s hat vor %s begonnen, Neukalibrierung der Timer erfolgt..."
 DBM_CORE_TRANSCRIPTOR_LOG_START		= "\"Transcriptor\"-Aufzeichnung gestartet."
 DBM_CORE_TRANSCRIPTOR_LOG_END		= "\"Transcriptor\"-Aufzeichnung beendet."
+
+DBM_CORE_MOVIE_SKIPPED				= "Eine Videosequenz wurde automatisch übersprungen."
 
 DBM_CORE_COMBAT_STARTED_AI_TIMER	= "Meine CPU ist ein neuronaler Prozessor, ein lernender Computer. (Dieser Kampf wird die neuen KI-Funktionen zur Erzeugung von Timernäherungen verwenden.)"
 
@@ -137,8 +146,8 @@ DBM_CORE_WHISPER_SCENARIO_END_WIPE			= "%s hat %s abgebrochen."
 DBM_CORE_WHISPER_SCENARIO_END_WIPE_STATS	= "%s hat %s abgebrochen. Das war der %d. Abbruch auf diesem Schwierigkeitsgrad."
 
 DBM_CORE_VERSIONCHECK_HEADER		= "Boss Mod - Versionen"
-DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (r%d) %s"
-DBM_CORE_VERSIONCHECK_ENTRY_TWO		= "%s: %s (r%d) und %s (r%d)"
+DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (%s) %s"--One Boss mod
+DBM_CORE_VERSIONCHECK_ENTRY_TWO		= "%s: %s (%s) und %s (%s)"--Two Boss mods
 DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: Kein Boss Mod installiert."
 DBM_CORE_VERSIONCHECK_FOOTER		= "%d Spieler mit DBM und %d Spieler mit BigWigs gefunden."
 DBM_CORE_VERSIONCHECK_OUTDATED		= "Folgende %d Spieler haben veraltete DBM Versionen: %s"
@@ -147,7 +156,6 @@ DBM_CORE_VOICE_PACK_OUTDATED		= "In deinem DBM Sprachpack fehlen möglicherweise
 DBM_CORE_VOICE_MISSING				= "Du hast einen DBM Sprachpack ausgewählt, der nicht gefunden werden konnte. Deine Auswahl wurde auf 'Kein Sprachpack' zurückgesetzt. Bitte stelle sicher, dass der Sprachpack korrekt installiert und in der Addon-Liste aktiviert wurde, falls dies ein Fehler ist."
 DBM_CORE_VOICE_COUNT_MISSING		= "Für die Countdown-Stimme %d ist ein Sprach-/Zählpack ausgewählt, der nicht gefunden werden konnte. Die Stimme wurde auf die Standardeinstellung zurückgesetzt."
 --DBM_BIG_WIGS
---DBM_BIG_WIGS_ALPHA
 
 DBM_CORE_UPDATEREMINDER_HEADER			= "Deine Version von Deadly Boss Mods ist veraltet.\n Version %s (r%d) ist über Curse, WoWI oder hier zum Download verfügbar:"
 DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "Deine ALPHA-Version von Deadly Boss Mods ist veraltet.\nDu liegst mindestens %d Revisionen zurück. Es wird empfohlen bei einer Entscheidung für ALPHA-Versionen immer die neueste ALPHA-Version zu nutzen. Ansonsten sollte die neueste RELEASE-Version genutzt werden. ALPHA-Versionen haben eine strengere Versionsprüfung, da diese Entwicklungsversionen von DBM sind."
@@ -163,7 +171,6 @@ DBM_CORE_3RDPROFILES					= "WARNUNG: DBM-Profiles ist mit dieser Version von DBM
 DBM_CORE_DPMCORE						= "WARNUNG: Deadly Pvp Mods (DPM) wird nicht mehr gepflegt und ist mit dieser Version von DBM nicht kompatibel. Es muss entfernt werden bevor DBM genutzt werden kann um Konflikte zu vermeiden."
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "WARNUNG: Dieses Update von DBM arbeitet erst nach einem vollständigem Neustart des Spielclients korrekt. Das Update enthält neue Dateien oder Änderungen an .toc-Dateien, die nicht mit \"/reload\" geladen werden können. Die Funktionsfähigkeit von DBM kann beeinträchtigt sein und es können Fehler auftreten, bis du den Spielclient neu startest."
 DBM_CORE_OUT_OF_DATE_NAG				= "Deine Version von Deadly Boss Mods ist veraltet. Du solltest eine Aktualisierung für diesen Kampf durchführen, da du sonst wichtige Warnungen oder Timer verpassen könntest oder automatische \"Schreie\" fehlen, die der Rest deines Schlachtzuges von dir erwartet."
-DBM_CORE_DISABLED_REMINDER				= "ERINNERUNG: Deadly Boss Mods ist geladen aber derzeit in den Einstellungen deaktiviert. Gebe /dbm im Chatfenster ein und kreuze das Feld für 'Aktiviere DBM' unter 'Optionen/Allgemeine Einstellungen' an."
 
 DBM_CORE_MOVABLE_BAR				= "Zieh mich!"
 
@@ -442,6 +449,8 @@ DBM_CORE_HUD_USAGE	= {
 }
 
 DBM_ARROW_MOVABLE					= "Pfeil (bewegbar)"
+DBM_ARROW_WAY_USAGE					= "/dway <x> <y>: Erzeugt einen Pfeil, der auf einen bestimmten Ort zeigt (benutzt lokale Kartenkoordinaten der Zone)"
+DBM_ARROW_WAY_SUCCESS				= "Um den Pfeil zu verstecken '/dbm arrow hide' eingeben oder das Pfeilziel erreichen"
 DBM_ARROW_ERROR_USAGE	= {
 	"Benutzung des DBM-Pfeils:",
 	"-----------------",

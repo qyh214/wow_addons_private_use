@@ -71,10 +71,12 @@ L["TITAN_PANEL_SLASH_PROFILE_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<name>: 
 L["TITAN_PANEL_SLASH_PROFILE_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<server>: |cffffffff현재 서버이름 또는 'TitanCustomProfile'로 프로필을 변경할 수 있습니다."
 L["TITAN_PANEL_SLASH_SILENT_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {silent}";
 L["TITAN_PANEL_SLASH_SILENT_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."silent: |cffffffffToggles "..TITAN_PANEL.." to load silently.";
+L["TITAN_PANEL_SLASH_ORDERHALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {orderhall}";
+L["TITAN_PANEL_SLASH_ORDERHALL_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."orderhall: |cffffffffToggles "..TITAN_PANEL.." to hide Order Hall Command Bar.";
 L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."사용법: |cffffffff/titan {help | 도움말 <topic>}";
-L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/silent/help ";
+L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: reset/gui/profile/silent/orderhall/help ";
 L["TITAN_PANEL_SLASH_ALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."사용법: |cffffffff/titan <topic>";
-L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/silent/help ";
+L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<topic>: |cffffffffreset/gui/profile/silent/orderhall/help ";
 
 -- slash command responses
 L["TITAN_PANEL_SLASH_RESP1"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.." 툴팁 글꼴 크기가 초기화 되었습니다.";
@@ -162,6 +164,7 @@ L["TITAN_PANEL_MENU_SHOW"] = "플러그인 표시";
 L["TITAN_PANEL_MENU_PLUGIN_RESET"] = "플러그인 갱신";
 L["TITAN_PANEL_MENU_PLUGIN_RESET_DESC"] = "플러그인 글자와 위치를 갱신합니다.";
 L["TITAN_PANEL_MENU_SILENT_LOAD"] = "Silent Load";
+L["TITAN_PANEL_MENU_HIDE_ORDERHALL"] = "Hide Order Hall Command Bar";
 
 -- localization strings for AceConfigDialog-3.0
 L["TITAN_ABOUT_VERSION"] = "버전";

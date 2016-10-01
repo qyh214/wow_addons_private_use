@@ -40,9 +40,9 @@ local function RaidDebuffFrame_UpdateDebuff(self)
 	end
 
 	if color then
-		self.bkgnd:SetTexture(color.r, color.g, color.b, 1)
+		self.bkgnd:SetVertexColor(color.r, color.g, color.b, 1)
 	else
-		self.bkgnd:SetTexture(0, 0, 0, 0.75)
+		self.bkgnd:SetVertexColor(0, 0, 0, 0.75)
 	end
 
 	self.icon:SetTexture(icon)
@@ -86,6 +86,7 @@ function module:OnCreateVisual(visual, unitFrame, dynamic)
 
 	visual.bkgnd = visual:CreateTexture(nil, "BORDER")
 	visual.bkgnd:SetAllPoints(visual)
+	visual.bkgnd:SetTexture("Interface\\BUTTONS\\WHITE8X8.BLP")
 
 	visual.icon = visual:CreateTexture(nil, "ARTWORK")
 	visual.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)

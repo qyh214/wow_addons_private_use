@@ -4,7 +4,7 @@
 local mod	= DBM:NewMod("z30", "DBM-PvP", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 48 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 59 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:AddBoolOption("AutoTurnIn")
@@ -75,7 +75,7 @@ do
 			)
 			bgzone = true
 			for i = 1, GetNumMapLandmarks(), 1 do
-				local name, _, textureIndex = GetMapLandmarkInfo(i)
+				local _, name, _, textureIndex = GetMapLandmarkInfo(i)
 				-- work-around for a bug in the german localization of WoW: the graveyard seems to change its name depending on the state
 				if name == "Friedhof des Sturmlanzen" then
 					name = "Friedhof der Sturmlanzen"
@@ -103,7 +103,7 @@ do
 	local function check_for_updates()
 		if not bgzone then return end
 		for i = 1, GetNumMapLandmarks(), 1 do
-			local name, _, textureIndex = GetMapLandmarkInfo(i)
+			local _, name, _, textureIndex = GetMapLandmarkInfo(i)
 			if name and textureIndex then
 				if is_graveyard(textureIndex) then
 					local curState = gy_state(textureIndex)

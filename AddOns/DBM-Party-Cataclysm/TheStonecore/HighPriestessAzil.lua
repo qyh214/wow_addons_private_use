@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(113, "DBM-Party-Cataclysm", 7, 67)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 167 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(42333)
+mod:SetEncounterID(1057)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -19,7 +20,7 @@ local warnWell		= mod:NewSpellAnnounce(79340, 2)
 local warnShard		= mod:NewSpellAnnounce(79002, 2)
 
 local specWarnGrip	= mod:NewSpecialWarningInterrupt(79351, "HasInterrupt")
-local specWarnCurse	= mod:NewSpecialWarningDispel(79345, "RemoveCurse")
+local specWarnCurse	= mod:NewSpecialWarningDispel(79345, "RemoveCurse", nil, 2)
 
 local timerGrip		= mod:NewTargetTimer(5, 79351)
 

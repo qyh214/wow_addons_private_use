@@ -4,10 +4,11 @@
 --  3.0 WotLK update/russian localization by Mikhailo
 --  4.0 Cataclysm updated by Mikhailo. Special Thanks for Naenyn and yunohu.
 --  5.0 MoP versioning
---  6.0 WoD update by Mikhalo
+--  6.0 WoD updated by Mikhalo
+--  7.0 Legion updated by Mikhailo / testing
 
 -- Version information
-local TITAN_MAIL_VERSION = "6.02";
+local TITAN_MAIL_VERSION = "7.01";
 -- Constants
 TITAN_MAIL_ID = "Mail";
 TITAN_MAIL_ID_RIGHT = "MailRight";

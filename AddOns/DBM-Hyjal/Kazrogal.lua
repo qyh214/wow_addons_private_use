@@ -1,16 +1,17 @@
 local mod	= DBM:NewMod("Kazrogal", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 532 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
 mod:SetCreatureID(17888)
+mod:SetEncounterID(620)
 mod:SetModelID(17886)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS"
+	"SPELL_CAST_START 31447",
+	"SPELL_CAST_SUCCESS 31480"
 )
 
 local warnMark		= mod:NewCountAnnounce(31447, 3)
@@ -19,24 +20,24 @@ local warnStomp		= mod:NewSpellAnnounce(31480, 2)
 local timerMark		= mod:NewBuffFadesTimer(6.2, 31447)
 local timerMarkCD	= mod:NewNextCountTimer(45, 31447)
 
-local count = 0
-local time = 45
+mod.vb.count = 0
+mod.vb.time = 45
 
 function mod:OnCombatStart(delay)
-	time = 45
-	count = 0 
-	timerMark:Start(time-delay)
+	self.vb.time = 45
+	self.vb.count = 0 
+	timerMark:Start(45-delay)
 end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 31447 then
-		count = count + 1
-		if time > 10 then
-			time = time - 5
+		self.vb.count = self.vb.count + 1
+		if self.vb.time > 10 then
+			self.vb.time = self.vb.time - 5
 		end
-		warnMark:Show(count)
+		warnMark:Show(self.vb.count)
 		timerMark:Start()
-		timerMarkCD:Start(nil, time)
+		timerMarkCD:Start(nil, self.vb.time)
 	end
 end
 

@@ -6,14 +6,14 @@ L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Translated by "
 L.TranslationBy 			= nil -- your name here, localizers!
-L.Website					= "Visit our discussion and support forums at |cFF73C2FBwww.deadlybossmods.com|r. Follow main dev on twitter @MysticalOS"
+L.Website					= "Visit discussion/support forums at |cFF73C2FBwww.deadlybossmods.com|r. Follow on twitter @deadlybossmods or @MysticalOS"
 L.WebsiteButton				= "Forums"
 
 L.OTabBosses	= "Bosses"
 L.OTabOptions	= GAMEOPTIONS_MENU
 
 L.TabCategory_Options	 	= "General Options"
-L.TabCategory_LEG	 		= "Legion"
+L.TabCategory_LEG	 		= EXPANSION_NAME6
 L.TabCategory_WOD	 		= EXPANSION_NAME5
 L.TabCategory_MOP	 		= EXPANSION_NAME4
 L.TabCategory_CATA	 		= EXPANSION_NAME3
@@ -56,7 +56,6 @@ L.Statistic_BestRank		= "Best Rank:"--Maybe not get used, not sure yet, localize
 
 -- Tab: General Core Options
 L.General 					= "General DBM Core Options"
-L.EnableDBM 				= "Enable DBM"
 L.EnableMiniMapIcon			= "Show minimap button"
 L.UseSoundChannel			= "Set audio channel used by DBM to play alert sounds"
 L.UseMasterChannel			= "Master audio channel."
@@ -87,7 +86,6 @@ L.InfoRaidWarning			= [[You can specify the position and colors of the raid warn
 This frame is used for messages like "Player X is affected by Y".]]
 L.ColorResetted 			= "The color settings of this field have been reset."
 L.ShowWarningsInChat 		= "Show warnings in chat frame"
-L.ShowFakedRaidWarnings 	= "Show warnings as faked raid warning messages"
 L.WarningIconLeft 			= "Show icon on left side"
 L.WarningIconRight 			= "Show icon on right side"
 L.WarningIconChat 			= "Show icons in chat frame"
@@ -183,6 +181,7 @@ L.Area_SpecWarn				= "Special Warning Options"
 L.SpecWarn_ClassColor		= "Use class coloring for special warnings"
 L.ShowSWarningsInChat 		= "Show special warnings in chat frame"
 L.SWarnNameInNote			= "Use SW5 options if a custom note contains your name"
+L.SpecialWarningIcon		= "Show icons on special warnings"
 L.SpecWarn_FlashFrame		= "Show screen flash for special warnings"
 L.SpecWarn_FlashFrameRepeat	= "Repeat %d times (if enabled)"
 L.SpecWarn_Font				= "Font used for special warnings"
@@ -282,7 +281,7 @@ L.DontShowPT				= "Do not show Pull/Break Timer bar"
 L.DontShowPTText			= "Do not show announce text for Pull/Break Timer"
 L.DontPlayPTCountdown		= "Do not play Pull/Break/Combat/Custom Timer countdown audio"
 L.DontShowPTCountdownText	= "Do not show Pull/Break/Combat/Custom Timer countdown text"
-L.PT_Threshold				= "Do not show Pull/Break/Combat/Custom Timer countdown text above: %d"
+L.PT_Threshold				= "Do not show Break/Combat/Custom Timer countdown text above: %d"
 
 L.Panel_HideBlizzard		= "Blizzard Disable & Hide"
 L.Area_HideBlizzard			= "Blizzard Disable & Hide Options"
@@ -292,13 +291,13 @@ L.HideGarrisonUpdates		= "Hide garrison toasts during boss fights"
 L.HideGuildChallengeUpdates	= "Hide guild challenge toasts during boss fights"
 L.HideTooltips				= "Hide tooltips during boss fights"
 L.DisableSFX				= "Disable sound effects channel during boss fights"
-L.HideApplicantAlerts		= "Supress applicant alerts in premade groups"
-L.HideApplicantAlertsFull	= "If group is full"
-L.HideApplicantAlertsNotL	= "if not the group leader (applies group is full filter if you are the leader)"
 L.SpamBlockSayYell			= "Hide chat bubbles announces from the chat frame"
 L.DisableCinematics			= "Hide in-game cinematics"
 L.AfterFirst				= "After each movie has played once"
 L.Always					= ALWAYS
+L.DisableTalkingHead		= "Block Talking Head"
+L.CombatOnly				= "Disable in combat (any)"
+L.RaidCombat				= "Disable in combat (bosses only)"
 
 L.Panel_ExtraFeatures		= "Extra Features"
 --
@@ -323,7 +322,7 @@ L.ShowQueuePop				= "Show time remaining to accept a queue pop (LFG,BG,etc)"
 L.Area_AutoLogging			= "Auto Logging Options"
 L.AutologBosses				= "Automatically record boss encounters using blizzard combat log (Use /dbm pull before bosses to start logging early for pre pots and other events.)"
 L.AdvancedAutologBosses		= "Automatically record boss encounters with Transcriptor"
-L.LogOnlyRaidBosses			= "Only record raid boss encounters (exclude Raid Finder/party/scenario)"
+L.LogOnlyRaidBosses			= "Only record raid boss encounters from current expansion (exclude Raid Finder/party/scenario/old content)"
 --
 L.Area_3rdParty				= "3rd Party Addon Options"
 L.ShowBBOnCombatStart		= "Perform Big Brother buff check on combat start"

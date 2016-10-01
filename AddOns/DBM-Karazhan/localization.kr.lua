@@ -9,8 +9,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_ATH_YELL_1		= "이랴! 이 오합지졸을 데리고 실컷 놀아보자!",
-	KillAttumen			= "아아! 언젠간 나도... 당할 날이 올 줄... 알았다..."
+	DBM_ATH_YELL_1		= "이랴! 이 오합지졸을 데리고 실컷 놀아보자!"
 }
 
 
@@ -27,10 +26,6 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	DBM_MOROES_VANISH_FADED	= "등장 알림 보기"
-}
-
-L:SetMiscLocalization{
-	DBM_MOROES_YELL_START	= "음, 예상치 못한 손님들이군. 준비를 해야겠어..."
 }
 
 
@@ -125,10 +120,6 @@ L:SetOptionLocalization{
 	RangeFrame			= "거리 창 보기(10m)"
 }
 
-L:SetMiscLocalization{
-	DBM_CURA_YELL_PULL		= "박물관에는 초대받은 손님만 입장하실 수 있습니다."
-}
-
 
 -- Terestian Illhoof
 L = DBM:GetModLocalization("TerestianIllhoof")
@@ -138,7 +129,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_TI_YELL_PULL		= "아, 때맞춰 와줬군. 막 의식을 시작하려던 참이었다!",
 	Kilrek					= "킬렉",
 	DChains					= "악마의 사슬"
 }
@@ -220,7 +210,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	DBM_PRINCE_YELL_PULL	= "여기까지 오다니 정신이 나간 놈들이 분명하구나. 소원이라면 파멸을 시켜주마!",
 	DBM_PRINCE_YELL_P2		= "바보 같으니! 시간은 너의 몸을 태우는 불길이 되리라!",
 	DBM_PRINCE_YELL_P3		= "어찌 감히 이렇게 압도적인 힘에 맞서기를 꿈꾸느냐?",
 	DBM_PRINCE_YELL_INF1	= "모든 차원과 실체가 나를 향해 열려 있노라!",
@@ -250,7 +239,6 @@ L:SetOptionLocalization{
 
 L:SetMiscLocalization{
 	DBM_NB_EMOTE_PULL		= "멀리에서 고대의 존재가 깨어납니다...",
-	DBM_NB_YELL_PULL		= "정말 멍청하군! 고통 없이 빨리 끝내주마!",
 	DBM_NB_YELL_AIR			= "이 더러운 기생충들, 내가 하늘에서 너희의 씨를 말리리라!",
 	DBM_NB_YELL_GROUND		= "그만! 내 친히 내려가서 너희를 짓이겨주마!",
 	DBM_NB_YELL_GROUND2		= "하루살이 같은 놈들! 나의 힘을 똑똑히 보여주겠다!"

@@ -4,10 +4,9 @@ local Anshal	= EJ_GetSectionInfo(3166)
 local Nezir	= EJ_GetSectionInfo(3178)
 local Rohash	= EJ_GetSectionInfo(3172)
 
-mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(45870, 45871, 45872)
 mod:SetEncounterID(1035)
-mod:DisableEEKillDetection()
 mod:SetZone()
 mod:SetBossHPInfoToHighest()
 

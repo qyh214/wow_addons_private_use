@@ -1,18 +1,13 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
-
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
-
-----------------------
---  FlameLeviathan  --
-----------------------
+------------------------
+-- Leviatán de llamas --
+------------------------
 L = DBM:GetModLocalization("FlameLeviathan")
 
 L:SetGeneralLocalization{
-	name = "Leviatán de llamas"
-}
-
-L:SetTimerLocalization{
+	name = "Flame Leviathan"
 }
 	
 L:SetMiscLocalization{
@@ -21,94 +16,98 @@ L:SetMiscLocalization{
 }
 
 L:SetWarningLocalization{
-	PursueWarn	    = "Persigue a >%s<!",
-	warnNextPursueSoon	    = "Cambiara de objetivo en 5 seg",
-	SpecialPursueWarnYou	= "¡Te persigue a ti!",
-	warnWardofLife			= "Sale un Guarda de Vida"
+	PursueWarn				= "Persiguiendo a >%s<",
+	warnNextPursueSoon		= "Cambio de objetivo en 5 s",
+	SpecialPursueWarnYou	= "El leviatán te persigue - ¡huye!",
+	warnWardofLife			= "Guarda de vida"
 }
 
 L:SetOptionLocalization{
-	SpecialPursueWarnYou	= "Mostrar aviso especial cuando seas $spell:62374.",
-	PursueWarn				= "Anunciar los objetivos de $spell:62374",
-	warnNextPursueSoon		= "Mostrar cuando va cambiar de objetivo $spell:62374.",
-	warnWardofLife			= "Mostrar aviso cuando salga un Guarda de Vida"
+	SpecialPursueWarnYou	= "Mostrar aviso especial cuando te afecte $spell:62374",
+	PursueWarn				= "Anunciar objetivos de $spell:62374",
+	warnNextPursueSoon		= "Mostrar aviso previo para el siguiente $spell:62374",
+	warnWardofLife			= "Mostrar aviso especial cuando aparezcan Guardas de vida"
 }
 
-
--------------
---  Ignis  --
--------------
+------------------------------------
+-- Ignis el Maestro de la Caldera --
+------------------------------------
 L = DBM:GetModLocalization("Ignis")
 
 L:SetGeneralLocalization{
-	name = "Ignis el Maestro de la Caldera"
+	name = "Ignis the Furnace Master"
 }
 
-------------------
---  Razorscale  --
-------------------
+L:SetOptionLocalization{
+	SlagPotIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63477)
+}
+
+----------------
+-- Tajoescama --
+----------------
 L = DBM:GetModLocalization("Razorscale")
 
 L:SetGeneralLocalization{
-	name = "Tajoescama"
+	name = "Razorscale"
 }
 
 L:SetWarningLocalization{	
-	warnTurretsReadySoon		= "La torreta estara lista en 20 segundos",
-	warnTurretsReady		    = "La torreta esta LISTA"
+	warnTurretsReadySoon		= "Última torreta lista en 20 s",
+	warnTurretsReady			= "Última torreta lista"
 }
+
 L:SetTimerLocalization{
-	timerTurret1			    = "Torreta 1",
-	timerTurret2			    = "Torreta 2",
-	timerTurret3			    = "Torreta 3",
-	timerTurret4			    = "Torreta 4",
-	timerGrounded		    = "En el suelo"
+	timerTurret1	= "Torreta 1",
+	timerTurret2	= "Torreta 2",
+	timerTurret3	= "Torreta 3",
+	timerTurret4	= "Torreta 4",
+	timerGrounded	= "En tierra"
 }
+
 L:SetOptionLocalization{
-	warnTurretsReadySoon		= "Mostrar aviso antes de que las torretas esten listas",
-	warnTurretsReady		    = "Mostrar aviso si estan listas las torretas.",
-	timerTurret1			    = "Mostrar aviso para Torreta 1",
-	timerTurret2			    = "Mostrar aviso para Torreta 2",
-	timerTurret3			    = "Mostrar aviso para Torreta 3 ( solo en banda 25 ).",
-	timerTurret4			    = "Mostrar aviso para Torreta 4 ( solo en banda 25 ).",
-	timerGrounded		    = "Mostrar cuanto durara en el suelo."
+	warnTurretsReadySoon		= "Mostrar aviso previo para cuando las torretas estén listas",
+	warnTurretsReady			= "Mostrar aviso cuando las torretas estén listas",
+	timerTurret1				= "Mostrar temporizador para la primera torreta",
+	timerTurret2				= "Mostrar temporizador para la segunda torreta",
+	timerTurret3				= "Mostrar temporizador para la tercera torreta (25 jugadores)",
+	timerTurret4				= "Mostrar temporizador para la cuarta torreta (25 jugadores)",
+	timerGrounded			    = "Mostrar temporizador para la duración de la fase en tierra"
 }
 
 L:SetMiscLocalization{
 	YellAir				        = "Danos un momento para que nos preparemos para construir las torretas.",
-	YellAir2			        = "Listos para salir, ¡impedid que esos enanos se peguen a nuestra espalda!!",
-	YellGround			    = "¡Moveros! ¡No seguira mucho mas en el suelo!",
+	YellAir2			        = "Listos para salir, ¡impedid que esos enanos se peguen a nuestra espalda!",
+	YellGround				    = "¡Moveos! ¡No seguirá mucho más en el suelo!",
 	EmotePhase2			        = "¡%%s ha aterrizado permanentemente!",
-	FlamecastUnknown		    = DBM_CORE_UNKNOWN
 }
 
-
--------------
---  XT002  --
--------------
+-----------------------
+-- Desarmador XA-002 --
+-----------------------
 L = DBM:GetModLocalization("XT002")
 
 L:SetGeneralLocalization{
 	name = "Desarmador XA-002"
 }
 
--------------------
---  IronCouncil  --
--------------------
+L:SetOptionLocalization{
+	SetIconOnLightBombTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(65121),
+	SetIconOnGravityBombTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(64234)
+}
+
+---------------------------
+-- La Asamblea de Hierro --
+---------------------------
 L = DBM:GetModLocalization("IronCouncil")
 
 L:SetGeneralLocalization{
 	name = "La Asamblea de Hierro"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
 L:SetOptionLocalization{
-	AlwaysWarnOnOverload			= "Siempre avisar de $spell:63481 (Sino solo se avisara cuando sea objetivo)"
+	SetIconOnOverwhelmingPower	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(61888),
+	SetIconOnStaticDisruption	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(61912),
+	AlwaysWarnOnOverload		= "Mostrar siempre aviso para $spell:63481 (de lo contrario, solo se muestra cuando eres el objetivo)"
 }
 
 L:SetMiscLocalization{
@@ -117,10 +116,9 @@ L:SetMiscLocalization{
 	StormcallerBrundir 	= "Clamatormentas Brundir"
 }
 
-
----------------
---  Algalon  --
----------------
+---------------------------
+-- Algalon el Observador --
+---------------------------
 L = DBM:GetModLocalization("Algalon")
 
 L:SetGeneralLocalization{
@@ -129,21 +127,20 @@ L:SetGeneralLocalization{
 
 L:SetTimerLocalization{
 	NextCollapsingStar		= "Siguiente Estrella en colapso",
-	TimerCombatStart		= "Empieza el combate"
+	TimerCombatStart		= "Comienza el encuentro"
 }
 
 L:SetWarningLocalization{
-	WarningPhasePunch		= "Cambiar de fase en >%s< - Stack %d",
-	WarnPhase2Soon			= "Fase 2 pronto",
-	warnStarLow				= "Estrella en colapso a punto de morir"
+	WarnPhase2Soon			= "Fase 2 en breve",
+	warnStarLow				= "Estrella en colapso a poca salud"
 }
 
 L:SetOptionLocalization{
-	WarningPhasePunch		= "Anunciar objetivos de Cambiar de fase",
-	NextCollapsingStar		= "Mostrar tiempo para siguiente Estrella en colapso",
-	TimerCombatStart		= "Mostrar tiempo para el inicio del combate",
-	WarnPhase2Soon			= "Mostrar pre-aviso para Fase 2 (al ~23%)",
-	warnStarLow				= "Mostrar aviso especial cuando una Estrella en colapso esté a punto de morir (al ~25%)"
+	WarningPhasePunch		= "Anunciar objetivos de $spell:64412",
+	NextCollapsingStar		= "Mostrar temporizador para la siguiente Estrella en colapso",
+	TimerCombatStart		= "Mostrar temporizador para el inicio del encuentro",
+	WarnPhase2Soon			= "Mostrar aviso previo para el cambio a Fase 2 (cuando el jefe llegue al 23% de salud)",
+	warnStarLow				= "Mostrar aviso especial cuando una Estrella en colapso tenga la salud baja (25%)"
 }
 
 L:SetMiscLocalization{
@@ -151,39 +148,35 @@ L:SetMiscLocalization{
 	YellKill				= "He visto mundos hundirse en las llamas de los Creadores, como se desvanecían sus habitantes sin apenas un gemido. He visto sistemas planetarios enteros crearse y ser arrasados en lo que vuestros mortales corazones laten una sola vez. Y mi corazón permaneció desprovisto de emoción... de empatía. Yo... no... sentí... nada. Millones de vidas malgastadas ¿Acaso compartían vuestra tenacidad? ¿Amaban la vida como vosotros?",
 	Emote_CollapsingStar	= "¡%s comienza a invocar estrellas en colapso!",
 	Phase2					= "¡Observad las herramientas de la creación!",
-	FirstPull				= "Mirad vuestro mundo a través de mis ojos: un universo tan vasto que es inconmensurable, incompresible incluso para vuestras grandes mentes.",
-	PullCheck				= "Tiempo hasta que Algalon transmita la señal de auxilio= (%d+) min."
+	FirstPull				= "Mirad vuestro mundo a través de mis ojos: un universo tan vasto que es inconmensurable, incompresible incluso para vuestras grandes mentes."
 }
 
-
-----------------
---  Kologarn  --
-----------------
+--------------
+-- Kologarn --
+--------------
 L = DBM:GetModLocalization("Kologarn")
 
 L:SetGeneralLocalization{
 	name = "Kologarn"
 }
 
-L:SetWarningLocalization{
-}
-
 L:SetTimerLocalization{
-	timerLeftArm			= "Reaparición del brazo izquierdo",
-	timerRightArm			= "Reaparición del brazo derecho",
-	achievementDisarmed		= "Tiempo para desarmar"
+	timerLeftArm		= "Brazo izquierdo reaparece",
+	timerRightArm		= "Brazo derecho reaparece",
+	achievementDisarmed	= "Logro: Desarmado"
 }
 
 L:SetOptionLocalization{
-	timerLeftArm			= "Mostrar tiempo para Brazo izquierdo",
-	timerRightArm			= "Mostrar tiempo para Brazo derecho",
-	achievementDisarmed		= "Mostrar tiempo para el logro Desarmar",
-	YellOnBeam				= "Gritar cuando tengas $spell:63346"
+	timerLeftArm			= "Mostrar temporizador para la regeneración del Brazo izquierdo",
+	timerRightArm			= "Mostrar temporizador para la regeneración del Brazo derecho",
+	achievementDisarmed		= "Mostrar temporizador para el logro 'Desarmado'",
+	SetIconOnGripTarget		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(64292),
+	SetIconOnEyebeamTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63346)
 }
 
 L:SetMiscLocalization{
 	Yell_Trigger_arm_left	= "¡No es más que un arañazo!",
-	Yell_Trigger_arm_right	= "¡No es más que un arañazo!",
+	Yell_Trigger_arm_right	= "¡Una herida superficial!",
 	Health_Body				= "Kologarn",
 	Health_Right_Arm		= "Brazo derecho",
 	Health_Left_Arm			= "Brazo izquierdo",
@@ -191,9 +184,9 @@ L:SetMiscLocalization{
 	YellBeam				= "¡Haz ocular enfocado en mi!"
 }
 
----------------
---  Auriaya  --
----------------
+-------------
+-- Auriaya --
+-------------
 L = DBM:GetModLocalization("Auriaya")
 
 L:SetGeneralLocalization{
@@ -206,79 +199,68 @@ L:SetMiscLocalization{
 }
 
 L:SetTimerLocalization{
-	timerDefender	= "Se activa Defensor feral"
+	timerDefender	= "Defensor feral activo"
 }
 
 L:SetWarningLocalization{
-	WarnCatDied 		= "Defensor feral muerto (Le quedan %d vidas)",
-	WarnCatDiedOne 		= "Defensor feral muerto (Le queda 1 vida)"
+	WarnCatDied		= "Defensor feral muerto (%d vidas restantes)",
+	WarnCatDiedOne	= "Defensor feral muerto (1 vida restante)"
 }
 
 L:SetOptionLocalization{
-	WarnCatDied			= "Mostrar aviso cuando Defensor Feral muere",
-	WarnCatDiedOne		= "Mostrar aviso cuando Defensor Feral muere",
-	timerDefender		= "Mostrar tiempo para activación de Defensor feral"
+	WarnCatDied		= "Mostrar aviso cuando muera el Defensor feral",
+	WarnCatDiedOne	= "Mostrar aviso cuando el Defensor feral solo tenga una vida restante",
+	timerDefender	= "Mostrar temporizador para cuando aparezca o reviva el Defensor feral"
 }
 
-
--------------
---  Hodir  --
--------------
+-----------
+-- Hodir --
+-----------
 L = DBM:GetModLocalization("Hodir")
 
 L:SetGeneralLocalization{
 	name = "Hodir"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
 L:SetOptionLocalization{
-	YellOnStormCloud		= "Gritar cuando tengas $spell:65133",
-	SetIconOnStormCloud		= "Poner iconos en los objetivos de $spell:65133"
+	SetIconOnStormCloud		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(65133)
 }
 
 L:SetMiscLocalization{
-	YellKill	= "Estoy... estoy libre de sus garras... al fin.",
-	YellCloud	= "Nube tormentosa en mi!"
+	Pull		= "¡Sufriréis por esta intromisión!",
+	YellKill	= "Estoy... estoy libre de sus garras... al fin."
 }
 
---------------
---  Thorim  --
---------------
+------------
+-- Thorim --
+------------
 L = DBM:GetModLocalization("Thorim")
 
 L:SetGeneralLocalization{
 	name = "Thorim"
 }
 
-L:SetWarningLocalization{
-}
-
 L:SetTimerLocalization{
-	TimerHardmode	= "Modo heroico"
+	TimerHardmode	= "Modo difícil"
 }
 
 L:SetOptionLocalization{
-	TimerHardmode	= "Mostrar tiempo para modo heroico",
-	RangeFrame		= "Mostrar distancia",
-	AnnounceFails	= "Anunciar los fallos de $spell:62017 en el chat de banda<br/>(require 'anunciar' habilitado y líder o ayudante de banda)"
+	TimerHardmode	= "Mostrar temporizador para el modo difícil",
+	RangeFrame		= "Mostrar marco de distancia",
+	AnnounceFails	= "Anunciar jugadores que reciban daño de $spell:62017 en el chat de banda (requiere líder o ayudante)"
 }
 
 L:SetMiscLocalization{
-	YellPhase1	= "¡Intrusos! Vosotros, mortales que osáis interferir en mi diversión, pagareis... Un momento...",
+	YellPhase1	= "¡Intrusos! Vosotros, mortales que osáis interferir en mi diversión, pagaréis... Un momento...",
 	YellPhase2	= "Gusanos impertinentes, ¿cómo osáis desafiarme en mi pedestal? ¡Os machacaré con mis propias manos!",
 	YellKill	= "¡Guardad las armas! ¡Me rindo!",
-	ChargeOn	= "Cargar relámpago: %s",
-	Charge		= "Fallos de Cargar relámpago (este try): %s" 
+	ChargeOn	= "Carga relámpago: %s",
+	Charge		= "Fallos en Carga relámpago (en este intento): %s" 
 }
 
--------------
---  Freya  --
--------------
+-----------
+-- Freya --
+-----------
 L = DBM:GetModLocalization("Freya")
 
 L:SetGeneralLocalization{
@@ -286,52 +268,38 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	SpawnYell	= "¡Hijos, ayudadme!",
-	WaterSpirit	= "Espíritu de agua antiguo",
-	Snaplasher	= "Quiebrazotador",
-	StormLasher	= "Azotador de tormenta",
-	YellKill	= "Su control sobre mí se disipa. Vuelvo a ver con claridad. Gracias, héroes.",
-	TrashRespawnTimer	= "Reaparicion de Adds de Freya"
+	SpawnYell		= "¡Hijos, ayudadme!",
+	WaterSpirit		= "Espíritu de agua antiguo",
+	Snaplasher		= "Quiebrazotador",
+	StormLasher		= "Azotador de tormenta",
+	YellKill		= "Su control sobre mí se disipa. Vuelvo a ver con claridad. Gracias, héroes.",
 }
 
 L:SetWarningLocalization{
-	WarnSimulKill	= "Primer add muerto - Resurrección en ~12 seg"
+	WarnSimulKill	= "Primer esbirro muerto - Resurrección en ~12 segundos"
 }
 
 L:SetTimerLocalization{
-	TimerSimulKill		= "Resurrección"
+	TimerSimulKill	= "Resurrección"
 }
 
 L:SetOptionLocalization{
-	WarnSimulKill		= "Anunciar primer mob muerto",
-	TimerSimulKill		= "Mostrar resureccion de los mobs"
+	WarnSimulKill	= "Anunciar primer esbirro muerto",
+	TimerSimulKill	= "Mostrar temporizador para la resurrección de esbirros"
 }
 
-----------------------
---  Freya's Elders  --
-----------------------
-
+------------------------
+-- Ancestros de Freya --
+------------------------
 L = DBM:GetModLocalization("Freya_Elders")
 
 L:SetGeneralLocalization{
 	name = "Ancestros de Freya"
 }
 
-L:SetMiscLocalization{
-	TrashRespawnTimer	= "Reaparicion de Adds de Freya"
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
-	TrashRespawnTimer	= "Mostrar tiempo para reaparición de adds"
-}
-
-
--------------------
---  Mimiron  --
--------------------
+-------------
+-- Mimiron --
+-------------
 L = DBM:GetModLocalization("Mimiron")
 
 L:SetGeneralLocalization{
@@ -340,29 +308,31 @@ L:SetGeneralLocalization{
 
 L:SetWarningLocalization{
 	MagneticCore		= ">%s< tiene Núcleo magnético",
-	WarningShockBlast	= "¡Explosión de choque! ¡Muévete!",
-	WarnBombSpawn		= "Robot bum sale"
+	WarningShockBlast	= "Explosión de choque - ¡aléjate!",
+	WarnBombSpawn		= "Bombabot"
 }
 
 L:SetTimerLocalization{
-	TimerHardmode		= "Modo Difícil - Autodestrucción",
-	TimeToPhase2		= "Fase 2",
-	TimeToPhase3		= "Fase 3",
-	TimeToPhase4		= "Fase 4"
+	TimerHardmode	= "Autodestrucción",
+	TimeToPhase2	= "Fase 2",
+	TimeToPhase3	= "Fase 3",
+	TimeToPhase4	= "Fase 4"
 }
 
 L:SetOptionLocalization{
-	TimeToPhase2			= "Mostrar tiempo para Fase 2",
-	TimeToPhase3			= "Mostrar tiempo para Fase 3",
-	TimeToPhase4			= "Mostrar tiempo para Fase 4",
-	MagneticCore			= "Anunciar quen lootea Núcleo magnético",
-	HealthFramePhase4		= "Mostrar barra de vida en la fase 4",
-	AutoChangeLootToFFA		= "Canviar el loot a Botín Libre en la fase 3",
-	WarnBombSpawn			= "Mostrar aviso para Robot bum",
-	TimerHardmode			= "Mostrar tiempo para Modo Difícil",
+	TimeToPhase2			= "Mostrar temporizador para el cambio a Fase 2",
+	TimeToPhase3			= "Mostrar temporizador para el cambio a Fase 3",
+	TimeToPhase4			= "Mostrar temporizador para el cambio a Fase 4",
+	MagneticCore			= "Anunciar jugadores que despojen Núcleos magnéticos",
+	HealthFramePhase4		= "Mostrar marco de salud en Fase 4",
+	AutoChangeLootToFFA		= "Cambiar botín a libre en Fase 3 (requiere líder)",
+	WarnBombSpawn			= "Mostrar aviso cuando aparezcan Bombabots",
+	TimerHardmode			= "Mostrar temporizador para la autodestrucción del modo difícil",
 	ShockBlastWarningInP1	= "Mostrar aviso especial para $spell:63631 en Fase 1",
 	ShockBlastWarningInP4	= "Mostrar aviso especial para $spell:63631 en Fase 4",
-	RangeFrame				= "Mostrar distancia en Fase 1 (6 yardas)"
+	RangeFrame				= "Mostrar marco de distancia (6 m) en Fase 1",
+	SetIconOnNapalm			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(65026),
+	SetIconOnPlasmaBlast	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(62997)
 }
 
 L:SetMiscLocalization{
@@ -377,9 +347,9 @@ L:SetMiscLocalization{
 	LootMsg			= "([^%s]+).*Hitem:(%d+)"
 }
 
----------------------
---  General Vezax  --
----------------------
+-------------------
+-- General Vezax --
+-------------------
 L = DBM:GetModLocalization("GeneralVezax")
 
 L:SetGeneralLocalization{
@@ -387,41 +357,73 @@ L:SetGeneralLocalization{
 }
 
 L:SetTimerLocalization{
-	hardmodeSpawn = "Animus de saronita sale"
+	hardmodeSpawn = "Animus de saronita"
 }
 
 L:SetWarningLocalization{
-	SpecialWarningShadowCrash		= "¡Fragor de sombra en ti! ¡Muévete!",
-	SpecialWarningShadowCrashNear	= "Fragor de sombra cerca de ti!",
-	SpecialWarningLLNear			= "Drenar vida en %s cerca de ti"
+	SpecialWarningShadowCrash		= "Fragor de sombra en ti - ¡aléjate de los demás!",
+	SpecialWarningShadowCrashNear	= "Fragot de sombra cerca de ti - ¡apártate!",
+	SpecialWarningLLNear			= "Marca de los Ignotos en %s cerca de ti"
 }
 
 L:SetOptionLocalization{
-	SetIconOnShadowCrash			= "Poner iconos en los objetivos de $spell:62660 (calavera)",
-	SetIconOnLifeLeach				= "Poner iconos en los objetivos de $spell:63276 (cruz)",
-	SpecialWarningShadowCrash		= "Mostrar aviso especial para $spell:62660/n(Tiene que ser el objetivo o el foco de al menos un personaje de la banda)",
-	SpecialWarningShadowCrashNear	= "Mostrar aviso especial para $spell:62660 cerca de ti",
-	SpecialWarningLLNear			= "Mostrar aviso especial para $spell:63276 cerca de ti",
-	YellOnLifeLeech					= "Gritar si tienes $spell:63276",
-	YellOnShadowCrash				= "Gritar si eres objetivo de $spell:62660",
-	hardmodeSpawn					= "Mostrar tiempo para salida de Animus de saronita (Modo Difícil)",
-	CrashArrow						= "Mostrar una flecha cuando $spell:62660 va a caer cerca de ti",
-	BypassLatencyCheck				= "No usar la comprobación de sincronización basada en latencia para $spell:62660<br/>(sólo usar esta opción si tienes problemas de otro modo)"
+	SetIconOnShadowCrash			= "Poner icono (calavera) en objetivos de $spell:62660",
+	SetIconOnLifeLeach				= "Poner icono (cruz) en objetivos de $spell:63276",
+	SpecialWarningShadowCrash		= "Mostrar aviso especial para $spell:62660",
+	SpecialWarningShadowCrashNear	= "Mostrar aviso especial cuando $spell:62660 ocurra cerca de ti",
+	SpecialWarningLLNear			= "Mostrar aviso especial cuando $spell:63276 ocurra cerca de ti",
+	hardmodeSpawn					= "Mostrar temporizador para cuando aparezca el Animus de saronita (modo difícil)",
+	CrashArrow						= "Mostrar flecha cuando $spell:62660 ocurra cerca de ti"
 }
 
 L:SetMiscLocalization{
 	EmoteSaroniteVapors	= "¡Cerca se forma una nube de vapores de saronita!",
-	YellLeech			= "¡Drenar vida en mi!",
-	YellCrash			= "¡Fragor de sombra en mi!"
+	YellLeech			= "¡Drenar vida en mí!",
+	YellCrash			= "¡Fragor de sombra en mí!"
 }
 
-------------------
---  Yogg-Saron  --
-------------------
+----------------
+-- Yogg-Saron --
+----------------
 L = DBM:GetModLocalization("YoggSaron")
 
 L:SetGeneralLocalization{
 	name = "Yogg-Saron"
+}
+
+L:SetWarningLocalization{
+	WarningGuardianSpawned 			= "Guardián (%d)",
+	WarningCrusherTentacleSpawned	= "Tentáculo triturador",
+	WarningSanity 					= "%d de Cordura restante",
+	SpecWarnSanity 					= "%d de Cordura restante",
+	SpecWarnGuardianLow				= "Guardián a poca salud - ¡deja de atacar!",
+	SpecWarnMadnessOutNow			= "Inducir a la locura en breve - ¡sal ya!",
+	WarnBrainPortalSoon				= "Portales en 3 s",	
+	SpecWarnFervor					= "Fervor de Sara en ti",
+	SpecWarnFervorCast				= "Fervor de Sara se está lanzando en ti",
+	specWarnBrainPortalSoon			= "Portal en breve"
+}
+
+L:SetTimerLocalization{
+	NextPortal	= "Siguientes portales"
+}
+
+L:SetOptionLocalization{
+	WarningGuardianSpawned			= "Mostrar aviso cuando aparezca un Guardián de Yogg-Saron",
+	WarningCrusherTentacleSpawned	= "Mostrar aviso cuando aparezca un Tentáculo triturador",
+	WarningSanity					= "Mostrar aviso cuando te quede poca $spell:63050",
+	SpecWarnSanity					= "Mostrar aviso especial cuando te quede muy poca $spell:63050",
+	SpecWarnGuardianLow				= "Mostrar aviso especial cuando a un Guardián de Yogg-Saron le quede poca vida (solo para DPS)",
+	WarnBrainPortalSoon				= "Mostrar aviso previo para los siguientes portales",
+	SpecWarnMadnessOutNow			= "Mostrar aviso especial cuando $spell:64059 esté a punto de lanzarse",
+	SetIconOnFearTarget				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63881),
+	SpecWarnFervorCast				= "Mostrar aviso especial cuando te estén lanzando $spell:63138",
+	specWarnBrainPortalSoon			= "Mostrar aviso especial para los siguientes portales",
+	NextPortal						= "Mostrar temporizador para los siguientes portales",
+	SetIconOnFervorTarget			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63138),
+	ShowSaraHealth					= "Mostrar marco de salud de Sara en Fase 1",
+	SetIconOnBrainLinkTarget		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63802),
+	MaladyArrow						= "Mostrar flecha cuando $spell:63881 ocurra cerca de ti"
 }
 
 L:SetMiscLocalization{
@@ -429,39 +431,3 @@ L:SetMiscLocalization{
 	YellPhase2	 		= "Soy un sueño lúcido.",
 	Sara 				= "Sara"
 }
-
-L:SetWarningLocalization{
-	WarningGuardianSpawned 			= "Guardián %d sale",
-	WarningCrusherTentacleSpawned	= "Tentáculo triturador sale",
-	WarningSanity 					= "%d Cordura restante",
-	SpecWarnSanity 					= "%d Cordura restante",
-	SpecWarnGuardianLow				= "Deja de atacar a este Guardián",
-	SpecWarnMadnessOutNow			= "Inducir a la locura terminando. Muévete!",
-	WarnBrainPortalSoon				= "Portal cerebral en 3 segundos",
-	SpecWarnFervor					= "Fervor de Sara en ti",
-	SpecWarnFervorCast				= "Fervor de Sara esta siendo casteado en ti",
-	specWarnBrainPortalSoon			= "Portal cerebral pronto"
-}
-
-L:SetTimerLocalization{
-	NextPortal	= "Portal cerebral"
-}
-
-L:SetOptionLocalization{
-	WarningGuardianSpawned			= "Mostrar aviso cuando salga Guardián",
-	WarningCrusherTentacleSpawned	= "Mostrar aviso cuando salga Tentáculo triturador",
-	WarningSanity					= "Mostrar aviso cuando tengas poca $spell:63050",
-	SpecWarnSanity					= "Mostrar aviso especial cuando tengas muy poca $spell:63050",
-	SpecWarnGuardianLow				= "Mostrar aviso especial cuando el Guardián esté a punto de morir (Fase 1)",
-	WarnBrainPortalSoon				= "Mostrar pre-aviso para Portal cerebral",
-	SpecWarnMadnessOutNow			= "Mostrar aviso especial poco antes de que $spell:64059 termine",
-	SetIconOnFearTarget				= "Poner iconos en los objetivos de $spell:63881",
-	SpecWarnFervorCast				= "Mostrar aviso especial cuando $spell:63138 esté siendo casteado en ti/n(Tiene que ser el objetivo o el foco de al menos un personaje de la banda)",
-	specWarnBrainPortalSoon			= "Mostrar aviso especial para siguiente Portal cerebral",
-	NextPortal						= "Mostrar tiempo para siguiente Portal cerebral",
-	SetIconOnFervorTarget			= "Poner iconos en los objetivos de $spell:63138",
-	ShowSaraHealth					= "Mostrar barra de vida de Sara en Fase 1",
-	SetIconOnBrainLinkTarget		= "Poner iconos en los objetivos de $spell:63802",
-	MaladyArrow						= "Mostrar flecha cuando $spell:63881 está cerca de ti"
-}
-

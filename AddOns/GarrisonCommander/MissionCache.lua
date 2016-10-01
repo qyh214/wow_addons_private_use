@@ -14,6 +14,7 @@ local GARRISON_SHIP_OIL_CURRENCY=GARRISON_SHIP_OIL_CURRENCY
 local GARRISON_FOLLOWER_MAX_LEVEL=GARRISON_FOLLOWER_MAX_LEVEL
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
+local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0
 local GMF=GMF
 local GSF=GSF
 local GMFMissions=GMFMissions
@@ -26,6 +27,7 @@ local tostring,GetSpecializationInfo,GetSpecialization=tostring,GetSpecializatio
 local empty={}
 local index={}
 local classes
+local _G=_G
 -- Mission caching is a bit different fron follower caching mission appears and disappears on a regular basis
 local module=addon:NewSubClass('MissionCache') --#module
 
@@ -114,6 +116,12 @@ function module:GetMission(id,noretry)
 		elseif type=="p" then
 			mission=GMFMissions.inProgressMissions[ix]
 			if mission and mission.missionID==id then return mission end
+		elseif type=="ha" then
+			mission=GHFMissions.availableMissions[ix]
+			if mission and mission.missionID==id then return mission end
+		elseif type=="hp" then
+			mission=GHFMissions.inProgressMissions[ix]
+			if mission and mission.missionID==id then return mission end
 		elseif type=="s" then
 			mission=GSFMissions.missions[ix]
 			if mission and mission.missionID==id then return mission end
@@ -124,10 +132,13 @@ function module:GetMission(id,noretry)
 	scan(GMFMissions.availableMissions,'a')
 	scan(GMFMissions.inProgressMissions,'p')
 	scan(GSFMissions.missions,'s')
+	if GHFMissions then
+		scan(GHFMissions.availableMissions,'ha')
+		scan(GHFMissions.inProgressMissions,'hp')
+	end
 	return self:GetMission(id,true)
 end
 function module:AddExtraData(mission)
-	--print(mission.missionID,mission.creates)
 	if mission.class then return end
 	local rewards=mission.rewards
 	if not rewards then
@@ -236,7 +247,8 @@ print("Iterator called, list is",list)
 	end,list,0
 end
 function module:OnAllGarrisonMissions(func,inProgress,missionType)
-	local list=inProgress and GMFMissions.inProgressMissions or GMFMissions.availableMissions
+	local m=(missionType and missionType==LE_FOLLOWER_TYPE_GARRISON_7_0) and GHFMissions or GMFMissions
+	local list=inProgress and m.inProgressMissions or m.availableMissions
 	local tmp=addon:NewTable()
 	if type(list)=='table' then
 		for i=1,#list do
@@ -290,11 +302,6 @@ function addon:GetMissionData(missionID,key,default)
 		local good,mc=pcall(self.GetModule,self,"MissionCompletion")
 		if good then
 			mission=mc:GetMission(missionID)
---[===[@debug@
-		else
-			print(missionID,mc)
-
---@end-debug@]===]
 		end
 		if mission then
 			if type(mission.improvedDurationSeconds)~='number' then
@@ -304,13 +311,9 @@ function addon:GetMissionData(missionID,key,default)
 		end
 	end
 	if not mission then
-		mission=G.GetMissionInfo(missionID)
-	end
-	if not mission then
-
---[===[@debug@
-print("Could not find info for mission",missionID,G.GetMissionName(missionID))
---@end-debug@]===]
+		--[===[@debug@
+		print("Could not find info for mission",missionID,G.GetMissionName(missionID))
+		--@end-debug@]===]
 		return default
 	end
 	if (key==nil) then

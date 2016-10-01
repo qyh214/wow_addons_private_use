@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod(624, "DBM-Party-WotLK", 9, 282)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 236 $"):sub(12, -3))
 mod:SetCreatureID(27655)
-mod:SetEncounterID(532, 533)
+mod:SetEncounterID(532, 533, 2014)
 mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
 
 mod:RegisterCombat("yell", L.CombatStart)--Why using yell instead of "Combat". I do not remember.

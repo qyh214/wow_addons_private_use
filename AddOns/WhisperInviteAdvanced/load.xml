@@ -1,0 +1,11 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+    <!--@no-lib-strip@-->
+    <Include file="..\WhisperInvite\libs\AceTimer-3.0\AceTimer-3.0.xml" />
+    <Include file="..\WhisperInvite\libs\AceBucket-3.0\AceBucket-3.0.xml" />
+    <Script file="..\WhisperInvite\libs\UTF8\utf8.lua" />
+    <Script file="..\WhisperInvite\libs\UTF8\utf8data.lua" />    
+    <Script file="..\WhisperInvite\libs\LibWho-2.0\LibWho-2.0.lua" />
+    <!--@end-no-lib-strip@-->
+
+    <Script file="..\WhisperInvite\WhisperInviteAdvanced.lua"/>
+</Ui>

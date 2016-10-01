@@ -1,15 +1,16 @@
 local mod	= DBM:NewMod(528, "DBM-Party-BC", 1, 248)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 526 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
 mod:SetCreatureID(17308)
+mod:SetEncounterID(1891)
 mod:SetUsedIcons(8)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED"
+	"SPELL_AURA_APPLIED 37566",
+	"SPELL_AURA_REMOVED 37566"
 )
 
 local warnBane      = mod:NewTargetAnnounce(37566)
@@ -47,7 +48,7 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 37566 then
-		timerBane:Cancel(args.destName)
+		timerBane:Stop(args.destName)
 		if self.Options.SetIconOnBaneTarget then
 			self:SetIcon(args.destName, 0)
 		end

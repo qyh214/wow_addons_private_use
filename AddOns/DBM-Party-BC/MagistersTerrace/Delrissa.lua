@@ -1,17 +1,16 @@
 local mod = DBM:NewMod(532, "DBM-Party-BC", 16, 249)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 579 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
 
-mod:SetCreatureID(24560, 24557, 24558, 24554, 24561, 24559, 24555, 24553, 24556)--24560 is main boss.
+mod:SetCreatureID(24560)--24560 is main boss.
+mod:SetEncounterID(1895)
 mod:RegisterCombat("combat")--UNIT_HEALTH combat should work now
-mod:RegisterKill("yell", L.DelrissaEnd)--Leave as a backup since it's already localized but UNIT_DIED should catch it now for main bossID
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 17843 44256 46181",
 	"SPELL_CAST_SUCCESS 27621 44178 46195",
-	"SPELL_AURA_APPLIED 13323 44141 44175 44291 46193 44174 46192",
-	"UNIT_DIED"
+	"SPELL_AURA_APPLIED 13323 44141 44175 44291 46193 44174 46192"
 )
 
 --TODO, maybe more anti spam or tweaks and some timers?
@@ -56,11 +55,5 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnPWS:Show(args.destName)
 	elseif args:IsSpellID(44174, 46192) and not args:IsDestTypePlayer() then           -- Delrissa's Renew
 		warnRenew:Show(args.destName)
-	end
-end
-
-function mod:UNIT_DIED(args)
-	if self:GetCIDFromGUID(args.destGUID) == 24560 then
-		DBM:EndCombat(self)
 	end
 end

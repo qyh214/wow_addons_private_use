@@ -42,6 +42,9 @@ locales.deDE["alert_anchor"] = "Beute Popups" -- Needs review
 locales.deDE["anchor"] = "Gruppenwürfe" -- Needs review
 locales.deDE["undecided"] = "Unentschlossen" -- Needs review
 
+locales.koKR["alert_anchor"] = "전리품 팝업"
+locales.koKR["anchor"] = "그룹 주사위"
+locales.koKR["undecided"] = "미결정"
 
 
 locales.ruRU["alert_anchor"] = "Всплывающие фреймы добычи"

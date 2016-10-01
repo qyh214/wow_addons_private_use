@@ -156,7 +156,8 @@ local TT_DefaultConfig = {
 	if_iconSize = 42,
 };
 
--- Tips modified by TipTac in appearance and scale, you can add to this list if you want to modify more tips
+-- Tips modified by TipTac in appearance and scale, you can add to this list if you want to modify more tips.
+-- Other addons can use TipTac:AddModifiedTip(tip,noHooks) to register their own tooltips if desired.
 local TT_TipsToModify = {
 	"GameTooltip",
 	"ShoppingTooltip1",
@@ -1244,7 +1245,7 @@ function tt:AddModifiedTip(tip,noHooks)
 	if (type(tip) == "table") and (type(tip.GetObjectType) == "function") then
 		for index, tipEntry in ipairs(TT_TipsToModify) do
 			if (tip == tipEntry) then
-				return;
+				return;		-- if this tooltip is already modified, abort
 			end
 		end
 		TT_TipsToModify[#TT_TipsToModify + 1] = tip;

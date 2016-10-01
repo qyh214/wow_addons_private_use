@@ -1,166 +1,180 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
--------------------------
---  Hellfire Ramparts  --
------------------------------
---  Watchkeeper Gargolmar  --
------------------------------
+---------------------------------
+-- Murallas del Fuego Infernal --
+---------------------------------
+------------------------------
+-- Guardián vigía Gargolmar --
+------------------------------
 L = DBM:GetModLocalization(527)
 
---------------------------
---  Omor the Unscarred  --
---------------------------
+-----------------------
+-- Omor el Sinmarcas --
+-----------------------
 L = DBM:GetModLocalization(528)
 
-------------------------
---  Nazan & Vazruden  --
-------------------------
+L:SetOptionLocalization({
+	SetIconOnBaneTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(37566),
+	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(15, 37566)
+})
+
+-------------------------
+-- Vazruden el Heraldo --
+-------------------------
 L = DBM:GetModLocalization(529)
 
--------------------------
---  The Blood Furnace  --
--------------------------
---  The Maker  --
------------------
+------------------------
+-- El Horno de Sangre --
+------------------------
+----------------
+-- El Hacedor --
+----------------
 L = DBM:GetModLocalization(555)
 
----------------
---  Broggok  --
----------------
+-------------
+-- Broggok --
+-------------
 L = DBM:GetModLocalization(556)
 
 ----------------------------
---  Keli'dan the Breaker  --
+-- Keli'dan el Ultrajador --
 ----------------------------
 L = DBM:GetModLocalization(557)
 
----------------------------
---  The Shattered Halls  --
---------------------------------
---  Grand Warlock Nethekurse  --
---------------------------------
+-------------------------
+-- Las Salas Arrasadas --
+-------------------------
+----------------------------
+-- Brujo supremo Malbisal --
+----------------------------
 L = DBM:GetModLocalization(566)
 
---------------------------
---  Blood Guard Porung  --
---------------------------
+------------------------------
+-- Guardia de sangre Porung --
+------------------------------
 L = DBM:GetModLocalization(728)
 
---------------------------
---  Warbringer O'mrogg  --
---------------------------
+-----------------------
+-- Belisario O'mrogg --
+-----------------------
 L = DBM:GetModLocalization(568)
 
-----------------------------------
---  Warchief Kargath Bladefist  --
-----------------------------------
+-------------------------
+-- Kargath Garrafilada --
+-------------------------
 L = DBM:GetModLocalization(569)
 
-------------------
---  Slave Pens  --
---------------------------
---  Mennu the Betrayer  --
---------------------------
+-----------------------------
+-- Recinto de los Esclavos --
+-----------------------------
+----------------------
+-- Mennu el Traidor --
+----------------------
 L = DBM:GetModLocalization(570)
 
----------------------------
---  Rokmar the Crackler  --
----------------------------
+------------------------
+-- Rokmar el Crujidor --
+------------------------
 L = DBM:GetModLocalization(571)
 
-------------------
---  Quagmirran  --
-------------------
+----------------
+-- Quagmirran --
+----------------
 L = DBM:GetModLocalization(572)
 
---------------------
---  The Underbog  --
---------------------
---  Hungarfen  --
------------------
+------------------
+-- La Sotiénaga --
+------------------
+----------------
+-- Panthambre --
+----------------
 L = DBM:GetModLocalization(576)
 
----------------
---  Ghaz'an  --
----------------
+-------------
+-- Ghaz'an --
+-------------
 L = DBM:GetModLocalization(577)
 
---------------------------
---  Swamplord Musel'ek  --
---------------------------
+--------------
+-- Musel'ek --
+--------------
 L = DBM:GetModLocalization(578)
 
 -------------------------
---  The Black Stalker  --
+-- La Acechadora Negra --
 -------------------------
 L = DBM:GetModLocalization(579)
 
-----------------------
---  The Steamvault  --
----------------------------
---  Hydromancer Thespia  --
----------------------------
+------------------------
+-- La Cámara de Vapor --
+------------------------
+--------------------------
+-- Hidromántica Thespia --
+--------------------------
 L = DBM:GetModLocalization(573)
 
------------------------------
---  Mekgineer Steamrigger  --
------------------------------
+--------------------------
+-- Mekigeniero Vaporino --
+--------------------------
 L = DBM:GetModLocalization(574)
 
 L:SetMiscLocalization({
 	Mechs	= "¡Dadles bien, chicos!"
 })
 
---------------------------
---  Warlord Kalithresh  --
---------------------------
+----------------
+-- Kalithresh --
+----------------
 L = DBM:GetModLocalization(575)
 
------------------------
---  Auchenai Crypts  --
---------------------------------
---  Shirrak the Dead Watcher  --
---------------------------------
+----------------------
+-- Criptas Auchenai --
+----------------------
+-------------
+-- Shirrak --
+-------------
 L = DBM:GetModLocalization(523)
 
------------------------
---  Exarch Maladaar  --
------------------------
+---------------------
+-- Exarca Maladaar --
+---------------------
 L = DBM:GetModLocalization(524)
 
-------------------
---  Mana-Tombs  --
--------------------
---  Pandemonius  --
--------------------
+--------------------
+-- Tumbas de Maná --
+--------------------
+-----------------
+-- Pandemonius --
+-----------------
 L = DBM:GetModLocalization(534)
 
----------------
---  Tavarok  --
----------------
+-------------
+-- Tavarok --
+-------------
 L = DBM:GetModLocalization(535)
 
-----------------------------
---  Nexus-Prince Shaffar  --
-----------------------------
+---------------------------
+-- Príncipe-nexo Shaffar --
+---------------------------
 L = DBM:GetModLocalization(537)
 
------------
---  Yor  --
------------
+---------
+-- Yor --
+---------
 L = DBM:GetModLocalization(536)
 
+-------------------
+-- Salas Sethekk --
+-------------------
 ---------------------
---  Sethekk Halls  --
------------------------
---  Darkweaver Syth  --
------------------------
+-- Tejeoscuro Syth --
+---------------------
 L = DBM:GetModLocalization(541)
 
-------------
---  Anzu  --
-------------
+----------
+-- Anzu --
+----------
 L = DBM:GetModLocalization(542)
 
 L:SetWarningLocalization({
@@ -168,91 +182,98 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnStoned	= "Mostrar aviso para espiritus volviendo a la piedra"
+	warnStoned	= "Mostrar aviso cuando los espíritus vuelvan a la piedra"
 })
 
 L:SetMiscLocalization({
-    BirdStone	= "%s se vuelve de piedra."
+    BirdStone	= "%s ha vuelto a la piedra."
 })
 
-------------------------
---  Talon King Ikiss  --
-------------------------
+---------------------
+-- Rey Garra Ikiss --
+---------------------
 L = DBM:GetModLocalization(543)
 
-------------------------
---  Shadow Labyrinth  --
---------------------------
---  Ambassador Hellmaw  --
---------------------------
+------------------------------
+-- Laberinto de las Sombras --
+------------------------------
+---------------------------
+-- Embajador Faucinferno --
+---------------------------
 L = DBM:GetModLocalization(544)
 
-------------------------------
---  Blackheart the Inciter  --
-------------------------------
+---------------------------
+-- Negrozón el Incitador --
+---------------------------
 L = DBM:GetModLocalization(545)
 
 --------------------------
---  Grandmaster Vorpil  --
+-- Maestro mayor Vorpil --
 --------------------------
 L = DBM:GetModLocalization(546)
 
---------------
---  Murmur  --
---------------
+------------
+-- Murmur --
+------------
 L = DBM:GetModLocalization(547)
 
--------------------------------
---  Old Hillsbrad Foothills  --
--------------------------------
---  Lieutenant Drake  --
-------------------------
+L:SetOptionLocalization({
+	SetIconOnTouchTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(33711)
+})
+
+------------------------------------
+-- Antiguas Laderas de Trabalomas --
+------------------------------------
+--------------------
+-- Teniente Drake --
+--------------------
 L = DBM:GetModLocalization(538)
 
------------------------
---  Captain Skarloc  --
------------------------
+---------------------
+-- Capitán Skarloc --
+---------------------
 L = DBM:GetModLocalization(539)
 
---------------------
---  Epoch Hunter  --
---------------------
+----------------------
+-- Cazador de Época --
+----------------------
 L = DBM:GetModLocalization(540)
 
-------------------------
---  The Black Morass  --
-------------------------
---  Chrono Lord Deja  --
-------------------------
+----------------------
+-- La Ciénaga Negra --
+----------------------
+--------------------
+-- Cronolord Deja --
+--------------------
 L = DBM:GetModLocalization(552)
 
-----------------
---  Temporus  --
-----------------
+--------------
+-- Temporus --
+--------------
 L = DBM:GetModLocalization(553)
 
---------------
---  Aeonus  --
---------------
+------------
+-- Aeonus --
+------------
 L = DBM:GetModLocalization(554)
 
 L:SetMiscLocalization({
-    AeonusFrenzy	= "%s entra en Frenesí!"
+    AeonusFrenzy	= "¡%s entra en Frenesí!"
 })
 
----------------------
---  Portal Timers  --
----------------------
+--------------------------------
+-- Temporizadores de portales --
+--------------------------------
 L = DBM:GetModLocalization("PT")
 
 L:SetGeneralLocalization({
-	name = "Tiempo de portales (CoT)"
+	name = "Temporizadores de portales"
 })
 
 L:SetWarningLocalization({
-    WarnWavePortalSoon	= "Nuevo portal pronto",
+    WarnWavePortalSoon	= "Siguiente portal en breve",
     WarnWavePortal		= "Portal %d",
-    WarnBossPortal		= "Sale Boss"
+    WarnBossPortal		= "Jefe en breve"
 })
 
 L:SetTimerLocalization({
@@ -260,144 +281,140 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-    WarnWavePortalSoon	= "Mostrar pre-aviso para nuevo portal",
-    WarnWavePortal		= "Mostrar aviso para nuevo portal",
-    WarnBossPortal		= "Mostrar aviso cuando sale Boss",
-	TimerNextPortal		= "Mostrar tiempo para siguiente portal (después del Boss)",
-	ShowAllPortalTimers	= "Mostrar tiempo para todos los portales (poco acurado)"
+    WarnWavePortalSoon	= "Mostrar aviso previo para el siguiente portal",
+    WarnWavePortal		= "Mostrar aviso cuando aparezca un portal",
+    WarnBossPortal		= "Mostrar aviso previo para el siguiente jefe",
+	TimerNextPortal		= "Mostrar temporizador para el siguiente portal (después de jefe)",
+	ShowAllPortalTimers	= "Mostrar temporizadores para todos los portales (impreciso)"
 })
 
 L:SetMiscLocalization({
 	PortalCheck			= "Grietas en el Tiempo abiertas: (%d+)/18",
-	Shielddown			= "No! Damn this feeble, mortal coil!" --translate
+	Shielddown			= "¡No...malditos sean estos débiles mortales...!"
 })
 
---------------------
---  The Mechanar  --
------------------------------
---  Gatewatcher Gyro-Kill  --
------------------------------
-L = DBM:GetModLocalization("Gyrokill")
+-----------------
+-- El Mechanar --
+-----------------
+-----------------------------------
+-- Vigía de las puertas Giromata --
+-----------------------------------
+L = DBM:GetModLocalization("Gyrokill")--Not in EJ
 
 L:SetGeneralLocalization({
 	name = "Vigía de las puertas Giromata"
 })
 
------------------------------
---  Gatewatcher Iron-Hand  --
------------------------------
-L = DBM:GetModLocalization("Ironhand")
+------------------------------------
+-- Vigía de las puertas Manoyerro --
+------------------------------------
+L = DBM:GetModLocalization("Ironhand")--Not in EJ
 
 L:SetGeneralLocalization({
 	name = "Vigía de las puertas Manoyerro"
 })
 
 L:SetMiscLocalization({
-	JackHammer	= "%s levanta su martillo amenazador..."
+	JackHammer	= "%s alza su martillo amenazadoramente..."
 })
 
-------------------------------
---  Mechano-Lord Capacitus  --
-------------------------------
+---------------------------
+-- Mecano-lord Capacitus --
+---------------------------
 L = DBM:GetModLocalization(563)
 
-------------------------------
---  Nethermancer Sepethrea  --
-------------------------------
+-------------------------
+-- Abisálica Sepethrea --
+-------------------------
 L = DBM:GetModLocalization(564)
 
---------------------------------
---  Pathaleon the Calculator  --
---------------------------------
+-----------------------------
+-- Pathaleon el Calculador --
+-----------------------------
 L = DBM:GetModLocalization(565)
 
 --------------------
---  The Botanica  --
---------------------------
---  Commander Sarannis  --
---------------------------
+-- El Invernáculo --
+--------------------
+-------------------------
+-- Comandante Sarannis --
+-------------------------
 L = DBM:GetModLocalization(558)
 
-------------------------------
---  High Botanist Freywinn  --
-------------------------------
+----------------------------
+-- Gran botánico Freywinn --
+----------------------------
 L = DBM:GetModLocalization(559)
 
------------------------------
---  Thorngrin the Tender  --
------------------------------
+---------------------------
+-- Thorngrin el Cuidador --
+---------------------------
 L = DBM:GetModLocalization(560)
 
------------
---  Laj  --
------------
+---------
+-- Laj --
+---------
 L = DBM:GetModLocalization(561)
 
----------------------
---  Warp Splinter  --
----------------------
+-----------------------------
+-- Disidente de distorsión --
+-----------------------------
 L = DBM:GetModLocalization(562)
 
---------------------
---  The Arcatraz  --
-----------------------------
---  Zereketh the Unbound  --
-----------------------------
+-----------------
+-- El Arcatraz --
+-----------------
+--------------------------
+-- Zereketh el Desatado --
+--------------------------
 L = DBM:GetModLocalization(548)
 
------------------------------
---  Dalliah the Doomsayer  --
------------------------------
+---------------------------------
+-- Dalliah la Oradora del Sino --
+---------------------------------
 L = DBM:GetModLocalization(549)
 
----------------------------------
---  Wrath-Scryer Soccothrates  --
----------------------------------
+------------------
+-- Soccothrates --
+------------------
 L = DBM:GetModLocalization(550)
 
--------------------------
---  Harbinger Skyriss  --
--------------------------
+------------------------
+-- Presagista Cieloriss --
+------------------------
 L = DBM:GetModLocalization(551)
 
 L:SetMiscLocalization({
-	Split	= "We span the universe, as countless as the stars!" --translate
+	Split	= "¡Abarcamos el universo, somos tantos como las estrellas!"
 })
 
---------------------------
---  Magisters' Terrace  --
---------------------------
---  Selin Fireheart  --
------------------------
+-------------------------
+-- Bancal del Magister --
+-------------------------
+----------------------------
+-- Selin Corazón de Fuego --
+----------------------------
 L = DBM:GetModLocalization(530)
 
-----------------
---  Vexallus  --
-----------------
+--------------
+-- Vexallus --
+--------------
 L = DBM:GetModLocalization(531)
 
-L:SetMiscLocalization({
-	Discharge	= "In... contenible."
-})
-
 --------------------------
---  Priestess Delrissa  --
+-- Sacerdotisa Delrissa --
 --------------------------
 L = DBM:GetModLocalization(532)
 
 L:SetMiscLocalization({
---	DelrissaPull	= "Aniquiladlos.",
+	DelrissaPull	= "Aniquiladlos.",
 	DelrissaEnd		= "Esto no lo había planeado."
 })
 
-------------------------------------
---  Kael'thas Sunstrider (Party)  --
-------------------------------------
-L = DBM:GetModLocalization("Kael")
-
-L:SetGeneralLocalization({
-	name = "Kael'thas Caminante del Sol (Party)"
-})
+---------------
+-- Kael'thas --
+---------------
+L = DBM:GetModLocalization(533)
 
 L:SetMiscLocalization({
 	KaelP2	= "Pondré vuestro mundo... cabeza... abajo."

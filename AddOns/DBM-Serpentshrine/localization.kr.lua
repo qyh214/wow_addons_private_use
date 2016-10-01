@@ -97,7 +97,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	YellPull	= "경비병! 여기 침입자들이 있다...",
 	Caribdis	= "심연의 경비병 카리브디스",
 	Tidalvess	= "심연의 경비병 타이달베스",
 	Sharkkis	= "심연의 경비병 샤르키스"

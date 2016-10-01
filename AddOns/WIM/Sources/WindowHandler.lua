@@ -146,7 +146,7 @@ WindowParent = _G.CreateFrame("Frame", "WIM_UIParent", _G.UIParent);
                                 WindowParent:SetHeight(_G.UIParent:GetHeight());
                 end);
                 -- WindowParent.test = WindowParent:CreateTexture("BACKGROUND");
-                -- WindowParent.test:SetTexture(1,1,1,.5)
+                -- WindowParent.test:SetColorTexture(1,1,1,.5)
                 -- WindowParent.test:SetAllPoints();
                 WindowParent:Hide();
 

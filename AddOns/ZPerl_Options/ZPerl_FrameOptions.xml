@@ -1332,7 +1332,7 @@
 					<OnLoad>
 						self:SetID(self:GetParent():GetID())
 						self.tooltipText = XPERL_CONF_RAID_CLASS_DOWN
-						if (self:GetID() == 11) then
+						if (self:GetID() == 12) then
 							self:Hide()
 						end
 					</OnLoad>
@@ -4671,7 +4671,7 @@
 						</Scripts>
 					</Slider>
 
-					<CheckButton name="$parent_XPerlTooltips" inherits="XPerlCheckButtonTemplate">
+					<!--<CheckButton name="$parent_XPerlTooltips" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
 								<Offset>
@@ -4686,13 +4686,13 @@
 								self.configIndex = "xperlInfo"
 							</OnLoad>
 						</Scripts>
-					</CheckButton>
+					</CheckButton>-->
 
 					<CheckButton name="$parent_Minimap" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parent_XPerlTooltips" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
 								<Offset>
-									<AbsDimension x="0" y="6"/>
+									<AbsDimension x="-160" y="-6"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -4965,7 +4965,7 @@
 									XPerl_Options_EnableSibling(self, "Portrait3D")
 									XPerl_Options_EnableSibling(self, "ClassPortrait")
 									XPerl_Options_EnableSibling(self, "Extend")
-									--XPerl_Options_EnableSibling(self, "HitIndicator")
+									XPerl_Options_EnableSibling(self, "HitIndicator")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -5038,7 +5038,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<!--<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
 						<Size>
 							<AbsDimension x="26" y="26"/>
 						</Size>
@@ -5056,13 +5056,13 @@
 								self.configIndex = "hitIndicator"
 							</OnLoad>
 						</Scripts>
-					</CheckButton>-->
+					</CheckButton>
 
 					<CheckButton name="$parent_ShowRunes" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOP" relativeTo="$parent_Portrait" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="-55"/>
+									<AbsDimension x="0" y="-75"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -5091,7 +5091,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_ShowRunes" relativePoint="TOPRIGHT">
 								<Offset>
-									<AbsDimension x="85" y="0"/>
+									<AbsDimension x="95" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -5105,6 +5105,32 @@
 								self.configBase = "XPerlDB.player"
 								self.flashFrame = XPerl_Player and XPerl_Player.runes
 								self.configIndex = "dockRunes"
+								self.configClick = XPerl_Player_Reset
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_LockRunes" inherits="XPerlCheckButtonTemplate">
+						<Size>
+							<AbsDimension x="26" y="26"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_DockRunes" relativePoint="TOPRIGHT">
+								<Offset>
+									<AbsDimension x="105" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								local _, class = UnitClass("player")
+								if (class ~= "ROGUE" and class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK" and class ~= "PALADIN" and class ~= "MONK" and class ~= "MAGE") then
+									self:Hide()
+								end
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_LOCKRUNES")
+								self.configBase = "XPerlDB.player"
+								self.flashFrame = XPerl_Player and XPerl_Player.runes
+								self.configIndex = "lockRunes"
 								self.configClick = XPerl_Player_Reset
 							</OnLoad>
 						</Scripts>
@@ -6134,7 +6160,7 @@
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "Portrait3D")
 									XPerl_Options_EnableSibling(self, "Extend")
-									--XPerl_Options_EnableSibling(self, "HitIndicator")
+									XPerl_Options_EnableSibling(self, "HitIndicator")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -6185,7 +6211,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<!--<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
 						<Size>
 							<AbsDimension x="26" y="26"/>
 						</Size>
@@ -6203,13 +6229,13 @@
 								self.configIndex = "hitIndicator"
 							</OnLoad>
 						</Scripts>
-					</CheckButton>-->
+					</CheckButton>
 
 					<CheckButton name="$parent_Threat" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOP" relativeTo="$parent_Portrait" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="-35"/>
+									<AbsDimension x="0" y="-55"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -7143,8 +7169,8 @@
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "Portrait3D")
 									XPerl_Options_EnableSibling(self, "ClassPortrait")
-									--XPerl_Options_EnableSibling(self, "HitIndicator")
-									--XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator")
+									XPerl_Options_EnableSibling(self, "HitIndicator")
+									XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -7195,7 +7221,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<!--<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
 						<Size>
 							<AbsDimension x="26" y="26"/>
 						</Size>
@@ -7236,7 +7262,7 @@
 								self.configIndex = "ownDamageOnly"
 							</OnLoad>
 						</Scripts>
-					</CheckButton>-->
+					</CheckButton>
 
 					<CheckButton name="$parent_Defer" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
@@ -7276,7 +7302,7 @@
 						<Anchors>
 							<Anchor point="TOP" relativeTo="$parent_Portrait" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="-35"/>
+									<AbsDimension x="0" y="-75"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -7693,7 +7719,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<!--<CheckButton name="$parent_CPBlizzard" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_CPBlizzard" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_PVPIcon" relativePoint="BOTTOMLEFT">
 								<Offset>
@@ -7808,13 +7834,13 @@
 								XPerl_Target_Reset()
 							</OnClick>
 						</Scripts>
-					</CheckButton>-->
+					</CheckButton>
 
 					<CheckButton name="$parent_CPMeter" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_PVPIcon" relativePoint="BOTTOMLEFT">
 								<Offset>
-									<AbsDimension x="0" y="6"/>
+									<AbsDimension x="0" y="-50"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -7829,9 +7855,27 @@
 						</Scripts>
 					</CheckButton>
 
-					<CheckButton name="$parent_RaidIconAlt" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_CPIndicator" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_CPMeter" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="0" y="6"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGET_CP_INDICATOR")
+								self.configBase = "XPerlDB.target.comboindicator"
+								self.configIndex = "enable"
+								self.configClick = XPerl_Target_Reset
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_RaidIconAlt" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_CPIndicator" relativePoint="BOTTOMLEFT">
 								<Offset>
 									<AbsDimension x="0" y="6"/>
 								</Offset>
@@ -7895,9 +7939,9 @@
 							<AbsDimension x="150" y="16"/>
 						</Size>
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parent_Healer" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOPLEFT" relativeTo="$parent_Healer" relativePoint="TOPRIGHT">
 								<Offset>
-									<AbsDimension x="5" y="-10"/>
+									<AbsDimension x="-25" y="-45"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -9014,8 +9058,8 @@
 									XPerl_Options_EnableSibling(self, "Portrait")
 									XPerl_Options_EnableSibling(self, "Portrait3D", "Portrait")
 									XPerl_Options_EnableSibling(self, "ClassPortrait", "Portrait")
-									--XPerl_Options_EnableSibling(self, "HitIndicator", "Portrait")
-									--XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator", "Enable")
+									XPerl_Options_EnableSibling(self, "HitIndicator", "Portrait")
+									XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator", "Enable")
 									XPerl_Options_EnableSibling(self, "Threat")
 									XPerl_Options_EnableSibling(self, "ThreatName", "Threat")
 									XPerl_Options_EnableSibling(self, "ThreatPortrait", "Threat")
@@ -9076,8 +9120,8 @@
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "Portrait3D")
 									XPerl_Options_EnableSibling(self, "ClassPortrait")
-									--XPerl_Options_EnableSibling(self, "HitIndicator")
-									--XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator")
+									XPerl_Options_EnableSibling(self, "HitIndicator")
+									XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -9128,7 +9172,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<!--<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
 						<Size>
 							<AbsDimension x="26" y="26"/>
 						</Size>
@@ -9169,13 +9213,13 @@
 								self.configIndex = "ownDamageOnly"
 							</OnLoad>
 						</Scripts>
-					</CheckButton>-->
+					</CheckButton>
 
 					<CheckButton name="$parent_Threat" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOP" relativeTo="$parent_Portrait" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="-35"/>
+									<AbsDimension x="0" y="-75"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -10568,7 +10612,7 @@
 									XPerl_Options_EnableSibling(self, "Portrait")
 									XPerl_Options_EnableSibling(self, "Portrait3D")
 									XPerl_Options_EnableSibling(self, "ClassPortrait")
-									--XPerl_Options_EnableSibling(self, "HitIndicator")
+									XPerl_Options_EnableSibling(self, "HitIndicator")
 									XPerl_Options_EnableSibling(self, "Threat")
 									XPerl_Options_EnableSibling(self, "ThreatName")
 									XPerl_Options_EnableSibling(self, "ThreatPortrait")
@@ -10655,7 +10699,7 @@
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "Portrait3D")
 									XPerl_Options_EnableSibling(self, "ClassPortrait")
-									--XPerl_Options_EnableSibling(self, "HitIndicator")
+									XPerl_Options_EnableSibling(self, "HitIndicator")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -10706,7 +10750,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<!--<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_HitIndicator" inherits="XPerlCheckButtonTemplate">
 						<Size>
 							<AbsDimension x="26" y="26"/>
 						</Size>
@@ -10724,13 +10768,13 @@
 								self.configIndex = "hitIndicator"
 							</OnLoad>
 						</Scripts>
-					</CheckButton>-->
+					</CheckButton>
 
 					<CheckButton name="$parent_Threat" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOP" relativeTo="$parent_Portrait" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="-35"/>
+									<AbsDimension x="0" y="-55"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -11745,10 +11789,10 @@
 						<Scripts>
 							<OnLoad>
 								local localGroups = LOCALIZED_CLASS_NAMES_MALE
-								local WoWclassCount = 11
-								--[[for k, v in pairs(localGroups) do
+								local WoWclassCount = 0
+								for k, v in pairs(localGroups) do
 									WoWclassCount = WoWclassCount + 1
-								end]]
+								end
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_SHOW")
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "NotInBG")
@@ -12379,7 +12423,7 @@
 							</Anchor>
 							<Anchor point="BOTTOMRIGHT" relativeTo="XPerl_Options_Area_Tabs">
 								<Offset>
-									<AbsDimension x="-5" y="225"/>
+									<AbsDimension x="-5" y="205"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -12651,6 +12695,29 @@
 								</Scripts>
 							</CheckButton>
 
+							<CheckButton name="$parent_Grp12" inherits="XPerlCheckButtonTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_Grp11" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="6"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										_G[self:GetName().."Text"]:SetText("12")
+										self.tooltipText = XPERL_CONF_RAID_GROUP_DESC
+										self.configBase = "XPerlDB.raid.group"
+										self.configIndex = 12
+										self.configClick = function()
+											XPerl_Raid_ChangeAttributes()
+											XPerl_Raid_OptionActions()
+										end
+										XPerl_Options_RegisterProtected(self)
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+
 							<Frame name="$parent_Title2">
 								<Size>
 									<AbsDimension x="60" y="10"/>
@@ -12773,13 +12840,23 @@
 									</Anchor>
 								</Anchors>
 							</Frame>
+
+							<Frame name="$parent_ClassSel12" inherits="XPerl_OptClassSelTemplate" id="12">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_ClassSel11" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="2"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+							</Frame>
 							
 							<Button name="$parent_All" inherits="XPerlButtonTemplate">
 								<Size>
 									<AbsDimension x="70" y="24"/>
 								</Size>
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_Grp10" relativePoint="BOTTOMLEFT">
+									<Anchor point="TOPLEFT" relativeTo="$parent_Grp11" relativePoint="BOTTOMLEFT">
 										<Offset>
 											<AbsDimension x="3" y="-22"/>
 										</Offset>
@@ -13959,7 +14036,7 @@
 							</Anchor>
 							<Anchor point="BOTTOMRIGHT" relativePoint="RIGHT" relativeTo="XPerl_Options_Area_Tabs">
 								<Offset>
-									<AbsDimension x="-5" y="-5"/>
+									<AbsDimension x="-5" y="-75"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -14386,9 +14463,108 @@
 								</Scripts>
 							</Button>
 
-							<Button name="$parent_ColourFury" inherits="XPerlColorPickerTemplate">
+							<Button name="$parent_ColourInsanity" inherits="XPerlColorPickerTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="$parent_ColourRunicBar" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="-2"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_COLOUR_INSANITY")
+									</OnLoad>
+									<OnShow>
+										local f = _G[self:GetName().."_Colour"]
+										f:SetVertexColor(XPerlDB.colour.bar.insanity.r, XPerlDB.colour.bar.insanity.g, XPerlDB.colour.bar.insanity.b)
+									</OnShow>
+									<OnClick>
+										XPerlLocked = 1
+										XPerl_ColourPicker.ParentFrame = XPerl_Options
+										XPerl_ColourPicker.varGet = function()
+											return XPerlDB and XPerlDB.colour.bar.insanity
+										end
+										XPerl_ColourPicker.varSet = function(n)
+											XPerlDB.colour.bar.insanity.r = n.r
+											XPerlDB.colour.bar.insanity.g = n.g
+											XPerlDB.colour.bar.insanity.b = n.b
+										end
+										XPerl_ColourPicker.alpha = nil
+										XPerl_ColourPicker:Show()
+									</OnClick>
+								</Scripts>
+							</Button>
+
+							<Button name="$parent_ColourAstralPower" inherits="XPerlColorPickerTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_ColourInsanity" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="-2"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_COLOUR_LUNAR_POWER")
+									</OnLoad>
+									<OnShow>
+										local f = _G[self:GetName().."_Colour"]
+										f:SetVertexColor(XPerlDB.colour.bar.lunar.r, XPerlDB.colour.bar.lunar.g, XPerlDB.colour.bar.lunar.b)
+									</OnShow>
+									<OnClick>
+										XPerlLocked = 1
+										XPerl_ColourPicker.ParentFrame = XPerl_Options
+										XPerl_ColourPicker.varGet = function()
+											return XPerlDB and XPerlDB.colour.bar.lunar
+										end
+										XPerl_ColourPicker.varSet = function(n)
+											XPerlDB.colour.bar.lunar.r = n.r
+											XPerlDB.colour.bar.lunar.g = n.g
+											XPerlDB.colour.bar.lunar.b = n.b
+										end
+										XPerl_ColourPicker.alpha = nil
+										XPerl_ColourPicker:Show()
+									</OnClick>
+								</Scripts>
+							</Button>
+
+							<Button name="$parent_ColourMaelstrom" inherits="XPerlColorPickerTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_ColourAstralPower" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="-2"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_COLOUR_MAELSTROM")
+									</OnLoad>
+									<OnShow>
+										local f = _G[self:GetName().."_Colour"]
+										f:SetVertexColor(XPerlDB.colour.bar.maelstrom.r, XPerlDB.colour.bar.maelstrom.g, XPerlDB.colour.bar.maelstrom.b)
+									</OnShow>
+									<OnClick>
+										XPerlLocked = 1
+										XPerl_ColourPicker.ParentFrame = XPerl_Options
+										XPerl_ColourPicker.varGet = function()
+											return XPerlDB and XPerlDB.colour.bar.maelstrom
+										end
+										XPerl_ColourPicker.varSet = function(n)
+											XPerlDB.colour.bar.maelstrom.r = n.r
+											XPerlDB.colour.bar.maelstrom.g = n.g
+											XPerlDB.colour.bar.maelstrom.b = n.b
+										end
+										XPerl_ColourPicker.alpha = nil
+										XPerl_ColourPicker:Show()
+									</OnClick>
+								</Scripts>
+							</Button>
+
+							<Button name="$parent_ColourFury" inherits="XPerlColorPickerTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_ColourMaelstrom" relativePoint="BOTTOMLEFT">
 										<Offset>
 											<AbsDimension x="0" y="-2"/>
 										</Offset>
@@ -14419,65 +14595,32 @@
 								</Scripts>
 							</Button>
 
-							<Button name="$parent_ColourInsanity" inherits="XPerlColorPickerTemplate">
+							<Button name="$parent_ColourPain" inherits="XPerlColorPickerTemplate">
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_ColourFury" relativePoint="TOPRIGHT">
+									<Anchor point="TOPLEFT" relativeTo="$parent_ColourFury" relativePoint="BOTTOMLEFT">
 										<Offset>
-											<AbsDimension x="50" y="0"/>
+											<AbsDimension x="0" y="-2"/>
 										</Offset>
 									</Anchor>
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_COLOUR_INSANITY")
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_COLOUR_PAIN")
 									</OnLoad>
 									<OnShow>
 										local f = _G[self:GetName().."_Colour"]
-										f:SetVertexColor(XPerlDB.colour.bar.insanity.r, XPerlDB.colour.bar.insanity.g, XPerlDB.colour.bar.insanity.b)
+										f:SetVertexColor(XPerlDB.colour.bar.pain.r, XPerlDB.colour.bar.pain.g, XPerlDB.colour.bar.pain.b)
 									</OnShow>
 									<OnClick>
 										XPerlLocked = 1
 										XPerl_ColourPicker.ParentFrame = XPerl_Options
 										XPerl_ColourPicker.varGet = function()
-											return XPerlDB and XPerlDB.colour.bar.insanity
+											return XPerlDB and XPerlDB.colour.bar.pain
 										end
 										XPerl_ColourPicker.varSet = function(n)
-											XPerlDB.colour.bar.insanity.r = n.r
-											XPerlDB.colour.bar.insanity.g = n.g
-											XPerlDB.colour.bar.insanity.b = n.b
-										end
-										XPerl_ColourPicker.alpha = nil
-										XPerl_ColourPicker:Show()
-									</OnClick>
-								</Scripts>
-							</Button>
-
-							<Button name="$parent_ColourMaelstrom" inherits="XPerlColorPickerTemplate">
-								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_ColourInsanity" relativePoint="TOPRIGHT">
-										<Offset>
-											<AbsDimension x="50" y="0"/>
-										</Offset>
-									</Anchor>
-								</Anchors>
-								<Scripts>
-									<OnLoad>
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_COLOUR_MAELSTROM")
-									</OnLoad>
-									<OnShow>
-										local f = _G[self:GetName().."_Colour"]
-										f:SetVertexColor(XPerlDB.colour.bar.maelstrom.r, XPerlDB.colour.bar.maelstrom.g, XPerlDB.colour.bar.maelstrom.b)
-									</OnShow>
-									<OnClick>
-										XPerlLocked = 1
-										XPerl_ColourPicker.ParentFrame = XPerl_Options
-										XPerl_ColourPicker.varGet = function()
-											return XPerlDB and XPerlDB.colour.bar.maelstrom
-										end
-										XPerl_ColourPicker.varSet = function(n)
-											XPerlDB.colour.bar.maelstrom.r = n.r
-											XPerlDB.colour.bar.maelstrom.g = n.g
-											XPerlDB.colour.bar.maelstrom.b = n.b
+											XPerlDB.colour.bar.pain.r = n.r
+											XPerlDB.colour.bar.pain.g = n.g
+											XPerlDB.colour.bar.pain.b = n.b
 										end
 										XPerl_ColourPicker.alpha = nil
 										XPerl_ColourPicker:Show()
@@ -15936,6 +16079,7 @@
 									XPerl_Options_EnableSibling(self, "Warrior")
 									XPerl_Options_EnableSibling(self, "DeathKnight")
 									XPerl_Options_EnableSibling(self, "Monk")
+									XPerl_Options_EnableSibling(self, "DemonHunter")
 									XPerl_Options_EnableSibling(self, "LowMana")
 									XPerl_Options_EnableSibling(self, "HighMana")
 									XPerl_Options_EnableSibling(self, "UnitWidth")
@@ -16226,12 +16370,37 @@
 						</Scripts>
 					</CheckButton>
 
+					<CheckButton name="$parent_DemonHunter" inherits="XPerlCheckButtonTemplate">
+						<Size>
+							<AbsDimension x="26" y="26"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_Monk" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="0" y="6"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_DEMONHUNTER")
+							</OnLoad>
+							<OnShow>
+								self:SetChecked(XPerlRaidMonConfig.classes.DEMONHUNTER)
+							</OnShow>
+							<OnClick>
+								XPerlRaidMonConfig.classes.DEMONHUNTER = not XPerlRaidMonConfig.classes.DEMONHUNTER
+								XPerl_RaidMonitor_Frame:Init()
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+
 					<Slider name="$parent_LowMana" inherits="XPerlSlider">
 						<Size>
 							<AbsDimension x="75" y="16"/>
 						</Size>
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parent_Monk" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOPLEFT" relativeTo="$parent_DemonHunter" relativePoint="BOTTOMLEFT">
 								<Offset>
 									<AbsDimension x="0" y="-10"/>
 								</Offset>

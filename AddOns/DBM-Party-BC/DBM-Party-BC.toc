@@ -3,7 +3,7 @@
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Party-BC|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Gruppe-BC|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Групповые подземелья-BC|r
-## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mazmorras TBC|r
+## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mazmorras (TBC)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf05인던전-불타는 성전|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0隊伍首領-燃燒的遠征|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0队伍首领-燃烧的远征|r
@@ -26,7 +26,7 @@
 ## X-DBM-Mod-Name: Party-BC
 ## X-DBM-Mod-Name-deDE: Gruppe (BC)
 ## X-DBM-Mod-Name-ruRU: Групповые подземелья-BC
-## X-DBM-Mod-Name-esES: Mazmorras TBC
+## X-DBM-Mod-Name-esES: Mazmorras (TBC)
 ## X-DBM-Mod-Name-koKR: 5인 던전(불타는 성전)
 ## X-DBM-Mod-Name-zhTW: 隊伍首領 (燃燒的遠征)
 ## X-DBM-Mod-Name-zhCN: 队伍首领 (燃烧的远征)

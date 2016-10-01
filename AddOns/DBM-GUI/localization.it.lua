@@ -47,7 +47,6 @@ L.Statistic_BestKill		= "Miglior Kill:"
 
 -- Tab: General Options
 L.General 					= "DBM - Opzioni Generali"
-L.EnableDBM 				= "Abilita DBM"
 L.EnableMiniMapIcon			= "Visualizza il bottone della minimappa"
 L.UseMasterVolume			= "Usa il canale audio Principale per eseguire i suoni."
 L.DisableCinematics			= "Disabilita tutti i video e le cinematiche"
@@ -85,7 +84,6 @@ L.InfoRaidWarning			= [[Puoi specificare la posizione e i colori degli Avvisi di
 Questi messaggi sono usati ad esempio per "Giocatore X e' afflitto da Y".]]
 L.ColorResetted 			= "L'opzione dei colori di questo frame e' stato resettato."
 L.ShowWarningsInChat 		= "Visualizza gli Avvisi anche in Chat"
-L.ShowFakedRaidWarnings 	= "VIsualizza gli Avvisi come finti Avvisi di Incursione"
 L.WarningIconLeft 			= "Visualizza Icona a Sinistra"
 L.WarningIconRight 			= "Visualizza Icona a Destra"
 L.RaidWarnMessage 			= "Grazie per usare Deadly Boss Mods"

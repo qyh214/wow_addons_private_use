@@ -1,17 +1,18 @@
 local mod	= DBM:NewMod("Aran", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 575 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
 mod:SetCreatureID(16524)
+mod:SetEncounterID(658)
 mod:SetModelID(16621)
 mod:RegisterCombat("combat")
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_SUMMON"
+	"SPELL_CAST_START 30004 29973 29969",
+	"SPELL_AURA_APPLIED 29991 29946",
+	"SPELL_AURA_REMOVED 29991 29946",
+	"SPELL_SUMMON 29962 37051 37052 37053"
 )
 
 local warningFlameCast		= mod:NewCastAnnounce(30004, 4)
@@ -53,8 +54,8 @@ function mod:OnCombatStart(delay)
 	table.wipe(WreathTargets)
 	if not self:IsTrivial(85) then
 		self:RegisterShortTermEvents(
-			"SPELL_PERIODIC_DAMAGE",
-			"SPELL_PERIODIC_MISSED"
+			"SPELL_PERIODIC_DAMAGE 29951",
+			"SPELL_PERIODIC_MISSED 29951"
 		)
 	end
 end

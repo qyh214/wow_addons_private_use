@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Brew", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14533 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15084 $"):sub(12, -3))
 --mod:SetCreatureID(15467)
 --mod:SetModelID(15879)
 mod:SetReCombatTime(10)
@@ -66,13 +66,8 @@ end
 
 function mod:ZONE_CHANGED_NEW_AREA()
 	if setActive then
-		local set_Z = GetCurrentMapAreaID()
-		SetMapToCurrentZone()
-		local true_Z = GetCurrentMapAreaID()
-		if WorldMapFrame:IsVisible() then
-			SetMapByID(set_Z)
-		end
-		if true_Z == 27 or true_Z == 4 then--Dun Morogh, Durotar
+		local mapID = GetPlayerMapAreaID("player")
+		if mapID == 27 or mapID == 4 then--Dun Morogh, Durotar
 			setDialog(self, true)
 		else
 			setDialog(self)

@@ -1,6 +1,6 @@
 --[[
 Name: LibBabble-Inventory-3.0
-Revision: $Rev: 195 $
+Revision: $Rev: 197 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-inventory-3-0/
 Dependencies: None
@@ -8,7 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Inventory-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 195 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 197 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -187,6 +187,7 @@ lib:SetBaseTranslations {
 	Waist = "Waist",
 	Wand = "Wand",
 	Wands = "Wands",
+	Warglaives = "Warglaives",
 	Warlock = "Warlock",
 	Warrior = "Warrior",
 	Weapon = "Weapon",
@@ -370,6 +371,7 @@ elseif GAME_LOCALE == "deDE" then
 	Waist = "Taille",
 	Wand = "Zauberstab",
 	Wands = "Zauberstäbe",
+	-- Warglaives = "",
 	Warlock = "Hexenmeister",
 	Warrior = "Krieger",
 	Weapon = "Waffe",
@@ -549,6 +551,7 @@ elseif GAME_LOCALE == "frFR" then
 	Waist = "Taille",
 	Wand = "Baguette",
 	Wands = "Baguettes",
+	-- Warglaives = "",
 	Warlock = "Démoniste",
 	Warrior = "Guerrier",
 	Weapon = "Arme",
@@ -728,6 +731,7 @@ elseif GAME_LOCALE == "koKR" then
 	Waist = "허리",
 	Wand = "마법봉",
 	Wands = "마법봉류",
+	-- Warglaives = "",
 	Warlock = "흑마법사",
 	Warrior = "전사",
 	Weapon = "무기",
@@ -908,6 +912,7 @@ elseif GAME_LOCALE == "esES" then
 	Waist = "Cintura",
 	Wand = "Varita",
 	Wands = "Varitas",
+	-- Warglaives = "",
 	Warlock = "Brujo",
 	Warrior = "Guerrero",
 	Weapon = "Arma",
@@ -1087,6 +1092,7 @@ elseif GAME_LOCALE == "esMX" then
 	Waist = "Cintura",
 	Wand = "Varita",
 	Wands = "Varitas",
+	-- Warglaives = "",
 	Warlock = "Brujo",
 	Warrior = "Guerrero",
 	Weapon = "Arma",
@@ -1266,6 +1272,7 @@ elseif GAME_LOCALE == "ptBR" then
 	Waist = "Cintura",
 	Wand = "Varinha",
 	Wands = "Varinhas",
+	-- Warglaives = "",
 	Warlock = "Bruxo",
 	Warrior = "Guerreiro",
 	Weapon = "Arma",
@@ -1445,6 +1452,7 @@ elseif GAME_LOCALE == "itIT" then
 	Waist = "Cintura",
 	Wand = "Bacchetta",
 	Wands = "Bacchette",
+	-- Warglaives = "",
 	Warlock = "Stregone",
 	Warrior = "Guerriero",
 	Weapon = "Arma",
@@ -1624,6 +1632,7 @@ elseif GAME_LOCALE == "ruRU" then
 	Waist = "Пояс",
 	Wand = "Жезл",
 	Wands = "Жезлы",
+	-- Warglaives = "",
 	Warlock = "Чернокнижник",
 	Warrior = "Воин",
 	Weapon = "Оружие",
@@ -1803,6 +1812,7 @@ elseif GAME_LOCALE == "zhCN" then
 	Waist = "腰部",
 	Wand = "魔杖",
 	Wands = "魔杖",
+	-- Warglaives = "",
 	Warlock = "术士",
 	Warrior = "战士",
 	Weapon = "武器",
@@ -1982,6 +1992,7 @@ elseif GAME_LOCALE == "zhTW" then
 	Waist = "腰部",
 	Wand = "魔杖",
 	Wands = "魔杖",
+	-- Warglaives = "",
 	Warlock = "術士",
 	Warrior = "戰士",
 	Weapon = "武器",

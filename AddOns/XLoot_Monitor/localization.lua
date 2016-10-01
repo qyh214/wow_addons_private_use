@@ -38,6 +38,7 @@ local locales = {
 
 locales.deDE["anchor"] = "Beutemonitor" -- Needs review
 
+locales.koKR["anchor"] = "전리품 모니터"
 
 
 locales.ruRU["anchor"] = "Монитор добычи"

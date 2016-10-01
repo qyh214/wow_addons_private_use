@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1467, "DBM-Party-Legion", 10, 707)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14993 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15190 $"):sub(12, -3))
 mod:SetCreatureID(95885)
 mod:SetEncounterID(1815)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -20,10 +20,8 @@ mod:RegisterEventsInCombat(
 --TODO, timers possibly. Right now it's up in hair and possibly all health based. No timer matched between multiple pulls
 --[[
 			["SPELL_CAST_START"] = {
-				["197250-Turn Kick"] = "pull:8.8, 35.2, 24.3, 24.3",
-				["197251-Knockdown Kick"] = "pull:8.3, 35.3, 24.1, 24.3",
-				["213583-Deepening Shadows"] = "pull:10.7, 35.2, 31.5",
-				["206459-Shadow Strike"] = "pull:21.6, 1.1, 0.7, 1.7",
+				["191941-Darkstrikes"] = "pull:21.6",
+				["204151-Darkstrikes"] = "pull:47.0, 23.2",
 			},
 --]]
 local specWarnDarkStrikes			= mod:NewSpecialWarningDefensive(204151, "Tank", nil, nil, 3, 2)

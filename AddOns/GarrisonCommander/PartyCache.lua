@@ -1,4 +1,5 @@
 local me,ns=...
+local pp=print
 ns.Configure()
 local addon=addon --#addon
 --upvalue
@@ -59,11 +60,11 @@ local ID,maxFollowers,members,ignored,threats=0,1,{},{},{}
 function party:Open(missionID,followers)
 	maxFollowers=followers
 	ID=missionID
-	local mechanics=G.GetMissionUncounteredMechanics(ID)
-	if (type(mechanics)=="table") then
-		for enemy,menaces in pairs(mechanics) do
-			for i=1,#menaces do
-				tinsert(threats,format("%d:%d",enemy,menaces[i]))
+	local enemies=select(8,G.GetMissionInfo(ID))
+	if (type(enemies)=="table") then
+		for enemy,data in pairs(enemies) do
+			for menace,more in pairs(data.mechanics) do
+				tinsert(threats,format("%d:%d",enemy,menace))
 			end
 		end
 	end

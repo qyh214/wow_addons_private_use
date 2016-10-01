@@ -3,12 +3,13 @@ local L		= mod:GetLocalizedStrings()
 
 mod:SetRevision(("$Revision: 164 $"):sub(12, -3))
 mod:SetCreatureID(17257)
+mod:SetEncounterID(651)
 mod:SetModelID(18527)
 mod:RegisterCombat("emote", L.DBM_MAG_EMOTE_PULL)
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_CAST_START 30528 30616",
+	"SPELL_CAST_SUCCESS 30511",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
@@ -18,10 +19,10 @@ local warnPhase2			= mod:NewPhaseAnnounce(2)
 local warningBlastNova		= mod:NewSpellAnnounce(30616, 4)
 local warnPhase3			= mod:NewPhaseAnnounce(3)
 
-local specWarnBlastNova		= mod:NewSpecialWarningSpell(30616)
-local specWarnHeal			= mod:NewSpecialWarningInterrupt(30528)
+local specWarnBlastNova		= mod:NewSpecialWarningInterrupt(30616)
+local specWarnHeal			= mod:NewSpecialWarningInterrupt(30528, "HasInterrupt")
 
-local timerHeal				= mod:NewCastTimer(2, 30528)
+local timerHeal				= mod:NewCastTimer(2, 30528, nil, nil, nil, 4)
 local timerPhase2			= mod:NewTimer(120, "timerP2", "Interface\\Icons\\INV_Weapon_Halberd16", nil, nil, 6)
 local timerBlastNovaCD		= mod:NewCDTimer(54, 30616, nil, nil, nil, 2)
 local timerDebris			= mod:NewNextTimer(15, 36449, nil, nil, nil, 2)--Only happens once per fight, after the phase 3 yell.
@@ -38,7 +39,7 @@ function mod:SPELL_CAST_START(args)
 			timerHeal:Start()
 		end
 	elseif args.spellId == 30616 then
-		warningBlastNova:Show()
+		warningBlastNova:Show(L.name)
 		timerBlastNovaCD:Start()
 	end
 end

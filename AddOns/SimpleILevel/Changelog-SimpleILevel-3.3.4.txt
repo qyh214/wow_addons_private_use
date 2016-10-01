@@ -1,0 +1,14 @@
+------------------------------------------------------------------------
+r252 | scotepi | 2016-08-31 00:30:37 +0000 (Wed, 31 Aug 2016) | 1 line
+Changed paths:
+   A /tags/3.3.4 (from /trunk:251)
+
+Tagging as 3.3.4
+------------------------------------------------------------------------
+r251 | scotepi | 2016-08-31 00:29:00 +0000 (Wed, 31 Aug 2016) | 2 lines
+Changed paths:
+   M /trunk/settings.lua
+
+Removed expansionID check and is now just using the values
+- Trial account is still reporting GetExpansionLevel() as 5, not 6
+------------------------------------------------------------------------

@@ -4,12 +4,12 @@
 -- @name LibInit
 -- @class module
 -- @author Alar of Daggerspine
--- @release 29
+-- @release 31
 --
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):9:")) -- Always check line number in regexp and file
 
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 30
+local MINOR_VERSION = 31
 local off=(_G.RED_FONT_COLOR_CODE or '|cffff0000') .. _G.VIDEO_OPTIONS_DISABLED ..  _G.FONT_COLOR_CODE_CLOSE or '|r'
 local on=(_G.GREEN_FONT_COLOR_CODE or '|cff00ff00') .. _G.VIDEO_OPTIONS_ENABLED ..  _G.FONT_COLOR_CODE_CLOSE or '|r'
 local nop=function()end
@@ -1607,7 +1607,7 @@ function lib:Onscreen_Orange(msg) C:OnScreen('Orange',msg,2) end
 function lib:Onscreen_Purple(msg) C:OnScreen('Purple',msg,8) end
 function lib:Onscreen_Yellow(msg) C:OnScreen('Yellow',msg,1) end
 function lib:Onscreen_Azure(msg) C:OnScreen('Azure',msg,1) end
-function lib:Onscreen_Red(msg) print("calling C") C:OnScreen('Red',msg,1) end
+function lib:Onscreen_Red(msg) C:OnScreen('Red',msg,1) end
 function lib:Onscreen_Green(msg) C:OnScreen('Green',msg,1) end
 function lib:OnScreen(color,...) C:OnScreen(color,strjoin(' ',tostringall(...))) end
 function lib:TimeToStr(time) -- Converts time data to a string format
@@ -1695,7 +1695,6 @@ end
 lib.mt={__metatable=true,__version=MINOR_VERSION}
 local mt=lib.mt
 function mt:__index(k)
-	print(self,self.__source)
 	if k=="n" then
 		return #mt.keys[self.__source]
 	end
@@ -1925,7 +1924,6 @@ do
 		end
 		function dd:OnChange() end
 		function dd:OnValueChanged(this,index,value)
-			print(this:GetName(),value,index)
 			value=value or index
 			UIDropDownMenu_SetSelectedID(dd,index)
 			return self:OnChange(value)
@@ -2015,7 +2013,7 @@ L["Release Notes"] = true
 L["Toggles"] = true
 L["UseDefault1"] = "Switch all characters to \"%s\" profile"
 L["UseDefault2"] = "Uses the \"%s\" profiles for all your toons"
-L["UseDefault_Desc"] = "You can force all your  characters to use the \"%s\" profile in order to manage a single configuration"
+L["UseDefault_Desc"] = "You can force all your characters to use the \"%s\" profile in order to manage a single configuration"
 
 	L=l:NewLocale(me,"ptBR")
 	if (L) then

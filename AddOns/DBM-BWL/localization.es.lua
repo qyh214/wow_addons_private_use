@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 local L
 
 -----------------
@@ -10,14 +10,14 @@ L:SetGeneralLocalization{
 	name = "Sangrevaja el Indomable"
 }
 L:SetTimerLocalization{
-	TimerAddsSpawn	= "Salen adds"
+	TimerAddsSpawn	= "Primeros esbirros"
 }
 L:SetOptionLocalization{
-	TimerAddsSpawn	= "Mostrar tiempo para que salgan los primeros adds"
+	TimerAddsSpawn	= "Mostrar temporizador para cuando aparezcan los primeros esbirros"
 }
 L:SetMiscLocalization{
-	Phase2Emote	= "Orbe de dominación pierde potencia y se apaga.",
-	YellPull = "¡Los invasores han penetrado en El Criadero! ¡Activad la alarma! ¡Hay que proteger los huevos a toda costa!"
+	Phase2Emote	= "huyen mientras se consume el poder del orbe.",
+	YellPull 	= "¡Los invasores han penetrado en El Criadero! ¡Activad la alarma! ¡Hay que proteger los huevos a toda costa!"
 }
 -------------------
 --  Vaelastrasz  --
@@ -25,14 +25,7 @@ L:SetMiscLocalization{
 L = DBM:GetModLocalization("Vaelastrasz")
 
 L:SetGeneralLocalization{
-	name = "Vaelastrasz el Corrupto"
-}
-L:SetTimerLocalization{
-	TimerCombatStart	= "Empieza el combate"
-}
-
-L:SetOptionLocalization{
-	TimerCombatStart	= "Mostrar tiempo para el inicio del combate"
+	name				= "Vaelastrasz el Corrupto"
 }
 
 L:SetMiscLocalization{
@@ -44,7 +37,7 @@ L:SetMiscLocalization{
 L = DBM:GetModLocalization("Broodlord")
 
 L:SetGeneralLocalization{
-	name = "Señor de linaje Capazote"
+	name	= "Señor de linaje Capazote"
 }
 
 ---------------
@@ -62,7 +55,7 @@ L:SetGeneralLocalization{
 L = DBM:GetModLocalization("Ebonroc")
 
 L:SetGeneralLocalization{
-	name = "Ebanorroca"
+	name = "Ebonorroca"
 }
 
 ----------------
@@ -83,18 +76,18 @@ L:SetGeneralLocalization{
 	name = "Chromaggus"
 }
 L:SetWarningLocalization{
-	WarnBreathSoon	= "Aliento pronto",
-	WarnBreath		= "%s",
-	WarnPhase2Soon	= "Fase 2 pronto"
+	WarnBreath		= "%s"
 }
 L:SetTimerLocalization{
-	TimerBreathCD	= "%s CD"
+	TimerBreathCD	= "%s TdR"
 }
 L:SetOptionLocalization{
-	WarnBreathSoon	= "Mostrar pre-aviso para los Alientos",
-	WarnBreath		= "Mostrar aviso cuando castea Aliento",
-	TimerBreathCD	= "Mostrar tiempo para siguiente Aliento",
-	WarnPhase2Soon	= "Mostrar pre-aviso para la fase 2"
+	WarnBreath		= "Mostrar aviso cuando Chromaggus lance uno de sus alientos",
+	TimerBreathCD	= "Mostrar temporizador para el tiempo de reutilización de los alientos"
+}
+L:SetMiscLocalization{
+	Breath1	= "Primer aliento",
+	Breath2	= "Segundo aliento"
 }
 
 ----------------
@@ -106,33 +99,30 @@ L:SetGeneralLocalization{
 	name = "Nefarian"
 }
 L:SetWarningLocalization{
-	WarnClassCallSoon	= "Debuff de clase pronto",
-	WarnClassCall		= "Debuff de %s",
-	WarnPhaseSoon		= "Fase %s pronto",
+	WarnClassCall		= "Llamada: %s",
 	WarnPhase			= "Fase %s"
 }
 L:SetTimerLocalization{
-	TimerClassCall		= "%s Debuff de clase"
+	TimerClassCall		= "Llamada: %s"
 }
 L:SetOptionLocalization{
-	TimerClassCall		= "Mostrar duración de debuff de clase",
-	WarnClassCallSoon	= "Mostrar pre-aviso para debuff de clase",
-	WarnClassCall		= "Mostrar aviso para debuff de clase",
-	WarnPhaseSoon		= "Mostrar pre-aviso para cambio de fase",
-	WarnPhase			= "Mostrar aviso al cambiar de fase"
+	TimerClassCall		= "Mostrar temporizador para la duración de las llamadas en cada clase",
+	WarnClassCall		= "Mostrar aviso para las llamadas de clase",
+	WarnPhase			= "Anunciar cambios de fase"
 }
 L:SetMiscLocalization{
-	YellPull	= "¡Que comiencen los juegos!",
 	YellP2		= "Bien hecho, mis esbirros. El coraje de los mortales empieza a mermar. ¡Veamos ahora cómo se enfrentan al verdadero Señor de la Cubre de Roca Negra!",
 	YellP3		= "¡Imposible! ¡Erguíos, mis esbirros! ¡Servid a vuestro maestro una vez más!",
 	YellShaman	= "¡Chamanes, mostradme lo que pueden hacer vuestros tótems!",
 	YellPaladin	= "Paladines... He oído que tenéis muchas vidas. Demostrádmelo.",
 	YellDruid	= "Los druidas y vuestro estúpido poder de cambiar de forma. ¡Veámoslo en acción!",
-	YellPriest	= "¡Sacerdotes! Si vais a seguir curando de esa forma, ¡podíamos hacerlo más interesante!",
+	YellPriest	= "¡Sacerdotes! Si vais a seguir curando de esa forma, ¡podríamos hacerlo más interesante!",
 	YellWarrior	= "¡Vamos guerreros, sé que podéis golpear más fuerte que eso! ¡Veámoslo!",
-	YellRogue	= "Rogues? Stop hiding and face me!",--translate
-	YellWarlock	= "Warlocks, you shouldn't be playing with magic you don't understand. See what happens?",--translate
-	YellHunter	= "Hunters and your annoying pea-shooters!",--translate
-	YellMage	= "¿Magos también? Deberíais tener más cuidado cuando jugáis con la magia...",
-	YellDK		= "Caballero de la muerte"--translate
+	YellRogue	= "¿Pícaros? ¡Dejad de esconderos y enfrentaos a mí!",
+	YellWarlock	= "Brujos... No deberíais estar jugando con magia que no comprendéis. ¿Veis lo que pasa?",
+	YellHunter	= "¡Cazadores y vuestras molestas cerbatanas!",
+	YellMage	= "¡Magos también? Deberíais tener más cuidado cuando jugáis con la magia...",
+	YellDK		= "¡Caballeros de la Muerte... venid aquí!",
+	YellMonk	= "Monjes, ¿no os mareáis con tanta vuelta?",
+	YellDH		= "¿Cazadores de demonios? Qué raro eso de taparos los ojos así. ¿No os cuesta ver lo que tenéis alrededor?"--Demon Hunter call; I know this hasn't been implemented yet in DBM, but I added it just in case.
 }

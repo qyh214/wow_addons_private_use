@@ -3,14 +3,15 @@ local L		= mod:GetLocalizedStrings()
 
 mod:SetRevision(("$Revision: 204 $"):sub(12, -3))
 mod:SetCreatureID(19044)
+mod:SetEncounterID(650)
 mod:SetModelID(18698)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE"
+	"SPELL_CAST_START 33525 33654",
+	"SPELL_CAST_SUCCESS 36297",
+	"SPELL_AURA_APPLIED 36300 36240",
+	"SPELL_AURA_APPLIED_DOSE 36300"
 )
 
 local warnGrowth		= mod:NewStackAnnounce(36300, 2, 36300)

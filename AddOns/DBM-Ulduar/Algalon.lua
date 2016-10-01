@@ -1,20 +1,15 @@
 local mod	= DBM:NewMod("Algalon", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 234 $"):sub(12, -3))
 mod:SetCreatureID(32871)
 mod:SetEncounterID(1130)
-mod:DisableESCombatDetection()
-mod:SetMinSyncRevision(135)
+mod:SetMinSyncRevision(234)
 mod:SetModelID(28641)
 mod:SetModelSound("Sound\\Creature\\AlgalonTheObserver\\UR_Algalon_Aggro01.ogg", "Sound\\Creature\\AlgalonTheObserver\\UR_Algalon_Slay02.ogg")
-mod:RegisterCombat("yell", L.YellPull)
+mod:RegisterCombat("combat")
 mod:RegisterKill("yell", L.YellKill)
 mod:SetWipeTime(60)
-
-mod:RegisterEvents(
-	"CHAT_MSG_MONSTER_YELL"
-)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 64584 64443",
@@ -23,6 +18,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED_DOSE 64412",
 	"SPELL_AURA_REMOVED 64412",
 	"RAID_BOSS_EMOTE",
+	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_HEALTH target focus mouseover"
 )
 
@@ -39,11 +35,10 @@ local specWarnPhasePunch		= mod:NewSpecialWarningStack(64412, nil, 4)
 local specWarnBigBang			= mod:NewSpecialWarningSpell(64584)
 local specWarnCosmicSmash		= mod:NewSpecialWarningSpell(64596)
 
-local timerCombatStart			= mod:NewTimer(7, "TimerCombatStart", 2457)
 local enrageTimer				= mod:NewBerserkTimer(360)
 local timerNextBigBang			= mod:NewNextTimer(90.5, 64584, nil, nil, nil, 2)
 local timerBigBangCast			= mod:NewCastTimer(8, 64584, nil, nil, nil, 2)
-local timerNextCollapsingStar	= mod:NewTimer(15, "NextCollapsingStar", 50288)
+local timerNextCollapsingStar	= mod:NewTimer(15, "NextCollapsingStar", 227161)
 local timerCDCosmicSmash		= mod:NewCDTimer(25, 64596, nil, nil, nil, 3)
 local timerCastCosmicSmash		= mod:NewCastTimer(4.5, 64596)
 local timerPhasePunch			= mod:NewTargetTimer(45, 64412, nil, "Tank", 2, 5)
@@ -57,12 +52,11 @@ local warned_star = false
 function mod:OnCombatStart(delay)
 	warned_preP2 = false
 	warned_star = false
-	enrageTimer:Start(368-delay)--All timers +8 for combat start RP
-	timerNextBigBang:Start(98-delay)
-	announcePreBigBang:Schedule(88-delay)
-	timerCDCosmicSmash:Start(33-delay)
-	timerNextCollapsingStar:Start(23-delay)
-	timerCombatStart:Start(-delay)
+	enrageTimer:Start(360-delay)--All timers +8 for combat start RP
+	timerNextBigBang:Start(90-delay)
+	announcePreBigBang:Schedule(80-delay)
+	timerCDCosmicSmash:Start(25-delay)
+	timerNextCollapsingStar:Start(15-delay)
 	table.wipe(sentLowHP)
 	table.wipe(warnedLowHP)
 end
@@ -115,14 +109,7 @@ function mod:RAID_BOSS_EMOTE(msg)
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.FirstPull or msg:find(L.FirstPull) then--Additional pull yell on first pull 11 seconds before actual combat, all timers +11, auto correct timers.
-		enrageTimer:Start(371)
-		timerNextBigBang:Start(101)
-		announcePreBigBang:Schedule(91)
-		timerCDCosmicSmash:Start(36)
-		timerNextCollapsingStar:Start(26)
-		timerCombatStart:Start(11)
-	elseif msg == L.Phase2 or msg:find(L.Phase2) then
+	if msg == L.Phase2 or msg:find(L.Phase2) then
 		timerNextCollapsingStar:Cancel()
 		warnPhase2:Show()
 	end

@@ -23,6 +23,9 @@ local hearthStoneProTrait=236 -- all followers +36
 local scavengerTrait=79 -- More resources
 local GARRISON_CURRENCY=GARRISON_CURRENCY
 local GARRISON_SHIP_OIL_CURRENCY=GARRISON_SHIP_OIL_CURRENCY
+local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0 -- 1
+local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2 -- 2
+local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0 -- 4
 local dbg
 local useCap=false
 local currentCap=100
@@ -73,14 +76,14 @@ end
 
 function addon:FollowerScore(mission,followerID)
 	local score,chance=self:MissionScore(mission)
-	return format("%s %04d",score,followerID and math.min(1000-self:GetFollowerData(followerID,'rank',90),999)),chance
+	return format("%s %04d",score,followerID and math.min(1000-self:GetAnyData(0,followerID,'rank',90),999)),chance
 end
 local filters={skipMaxed=false,skipBusy=false}
 function filters.nop(followerID)
 	return true
 end
 function filters.maxed(followerID,missionID)
-	return filters.skipMaxed and addon:GetFollowerData(followerID,'maxed') or false
+	return filters.skipMaxed and addon:GetAnyData(0,followerID,'maxed') or false
 end
 function filters.busy(followerID,missionID)
 	return not addon:IsFollowerAvailableForMission(followerID,filters.skipBusy)
@@ -95,7 +98,20 @@ function filters.xp(followerID,missionID)
 	return filters.maxed(followerID,missionID) or filters.other(followerID,missionID)
 end
 --alias
-
+--[[
+local filters={skipMaxed=false,skipBusy=true,skipTroops=false,skipIgnored=true}
+setmetatable(filters,{
+	__call=function(t,followerID,missionID)
+		local follower=addon:GetAnyData(0,followerID)
+		if t.skipMaxed then return follower.maxed end
+		if t.skipTroops then return follower.isTroop end
+		if t.skipBusy then return addon:IsFollowerAvailableForMission(followerID,t.skipBusy) end
+		if t.skipIgnored then return addon:IsIgnored(followerID,missionID) end
+	end,
+	__index=function(t,key) return t end
+}
+)
+--]]
 local nop={addRow=function() end}
 local scroller=nop
 local function CreateFilter(missionClass)
@@ -148,7 +164,7 @@ local function AddMoreFollowers(self,mission,scores,justdo)
 						c1="red"
 						c2="green"
 					end
-					scroller:AddRow(addon:GetFollowerData(followerID,'fullname') .." changes score from " .. C(candidateScore,c1).." to "..C(newScore,c2))
+					scroller:AddRow(addon:GetAnyData(0,followerID,'fullname') .." changes score from " .. C(candidateScore,c1).." to "..C(newScore,c2))
 				end
 				if (newScore > candidateScore or justdo) then
 					candidate=followerID
@@ -160,7 +176,7 @@ local function AddMoreFollowers(self,mission,scores,justdo)
 		if candidate then
 			local slot=P:CurrentSlot()
 			if P:AddFollower(candidate) and dbg then
-				scroller:addRow(C("Slot " .. slot..":","Green").. " " .. addon:GetFollowerData(candidate,'fullname'))
+				scroller:addRow(C("Slot " .. slot..":","Green").. " " .. addon:GetAnyData(0,candidate,'fullname'))
 			end
 			candidate=nil
 		end
@@ -171,6 +187,9 @@ local function MatchMaker(self,mission,party,includeBusy,onlyBest)
 	local missionID=mission.missionID
 	local filterOut=filters[class] or filters.other
 	filters.skipMaxed=self:GetBoolean("IGP")
+	if mission.followerTypeID==LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
+		filters.skipMaxed=false
+	end
 	if (includeBusy==nil) then
 		filters.skipBusy=self:GetBoolean("IGM")
 	else
@@ -234,7 +253,7 @@ local function MatchMaker(self,mission,party,includeBusy,onlyBest)
 		end
 		if firstmember then
 			if P:AddFollower(firstmember) and dbg then
-				scroller:AddRow(C("Slot 1:","Green").. " " .. addon:GetFollowerData(firstmember,'fullname'))
+				scroller:AddRow(C("Slot 1:","Green").. " " .. addon:GetAnyData(0,firstmember,'fullname'))
 			end
 			if mission.numFollowers > 1 then
 				AddMoreFollowers(self,mission,scores)
@@ -288,7 +307,7 @@ function addon:MCMatchMaker(missionID,party,skipEpic,cap)
 	if (skipEpic) then
 		if (self:GetMissionData(missionID,'class')=='xp') then
 			for i=1,#party.members do
-				if not self:GetFollowerData(party.members[i],'maxed') then
+				if not self:GetAnyData(0,party.members[i],'maxed') then
 					return
 				end
 			end

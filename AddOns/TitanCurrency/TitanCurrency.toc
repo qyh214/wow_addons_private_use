@@ -1,7 +1,7 @@
-## Interface: 70003
+## Interface: 70000
 ## Title: Titan Panel [|cffeda55fCurrency|r] |cff00aa006.2|r
 ## Author: Greenhorns@Vek'Nilash
-## Version: 7.0.3
+## Version: 7.0.3a
 ## Notes: This mod will display all the Currency you have on the current toon in a tool tip.  It shows the current Toons Gold amount on the Titan Panel bar.
 ## eMail: greenhorns.veknilash@gmail.com
 ## RequiredDeps: Titan

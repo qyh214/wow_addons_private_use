@@ -1,14 +1,14 @@
 ## Interface: 70000
 ## Title: Advanced Interface Options
 ## Author: Stanzilla, Semlar
-## Version: 1.0.2
+## Version: 1.0.5
 ## Notes: Restores access to removed interface options in Legion
 ## X-Category: Interface Enhancements
 ## X-Website: http://www.curse.com/addons/wow/advancedinterfaceoptions
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: AdvancedInterfaceOptionsSaved
-## X-Curse-Packaged-Version: 1.0.2
+## X-Curse-Packaged-Version: 1.0.5
 ## X-Curse-Project-Name: AdvancedInterfaceOptions
 ## X-Curse-Project-ID: advancedinterfaceoptions
 ## X-Curse-Repository-ID: wow/advancedinterfaceoptions/mainline
@@ -17,3 +17,5 @@ semlib\semlib.xml
 cvars.lua
 basicOptions.lua
 browser.lua
+
+tempfix.lua

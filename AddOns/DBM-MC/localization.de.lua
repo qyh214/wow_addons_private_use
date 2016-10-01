@@ -82,10 +82,6 @@ L:SetGeneralLocalization{
 	name = "Majordomus Exekutus"
 }
 
-L:SetMiscLocalization{
-	Kill	= "Unmöglich! Haltet ein, Sterbliche... Ich gebe auf! Ich gebe auf!"
-}
-
 ----------------
 --  Ragnaros  --
 ----------------

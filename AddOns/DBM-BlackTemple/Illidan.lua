@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Illidan", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
 mod:SetCreatureID(22917)
+mod:SetEncounterID(609)
 mod:SetModelID(21135)
 mod:SetUsedIcons(8)
 mod:SetZone()
@@ -14,11 +15,11 @@ mod:RegisterEvents(
 )
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
+	"SPELL_AURA_APPLIED 41917 41914 40585 40932 41083 40683 40695",
+	"SPELL_CAST_START 40904",
+	"SPELL_CAST_SUCCESS 39855",
+	"SPELL_DAMAGE 41131",
+	"SPELL_MISSED 41131",
 	"UNIT_HEALTH target focus mouseover",
 	"UNIT_DIED"
 )
@@ -50,12 +51,12 @@ local timerNextBarrage		= mod:NewCDTimer(44, 40585)
 local timerFlame			= mod:NewTargetTimer(60, 40932)
 local timerNextFlameBurst	= mod:NewCDTimer(20, 41131)
 local timerShadowDemon		= mod:NewCDTimer(34, 41117)
-local timerNextHuman		= mod:NewTimer(74, "TimerNextHuman", 2457, nil, nil, 6)
-local timerNextDemon		= mod:NewTimer(60, "TimerNextDemon", 2457, nil, nil, 6)
+local timerNextHuman		= mod:NewTimer(74, "TimerNextHuman", "Interface\\Icons\\ability_warrior_offensivestance", nil, nil, 6)
+local timerNextDemon		= mod:NewTimer(60, "TimerNextDemon", "Interface\\Icons\\ability_warrior_offensivestance", nil, nil, 6)
 local timerEnrage			= mod:NewBuffActiveTimer(10, 40683)
 local timerNextEnrage		= mod:NewCDTimer(40, 40683)
 local timerCaged			= mod:NewBuffActiveTimer(15, 40695)
-local timerPhase4			= mod:NewTimer(30, "TimerPhase4", 2457, nil, nil, 6)
+local timerPhase4			= mod:NewPhaseTimer(30)
 
 local timerCombatStart		= mod:NewCombatTimer(36)
 local berserkTimer			= mod:NewBerserkTimer(1500)

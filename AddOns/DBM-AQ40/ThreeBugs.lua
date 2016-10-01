@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod("ThreeBugs", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 436 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 596 $"):sub(12, -3))
 mod:SetCreatureID(15544, 15511, 15543)
+mod:SetEncounterID(710)
 mod:SetModelID(15657)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_START"
+	"SPELL_AURA_APPLIED 26580",
+	"SPELL_CAST_START 25807"
 )
 mod:SetBossHealthInfo(
 	15543, L.Yauj,

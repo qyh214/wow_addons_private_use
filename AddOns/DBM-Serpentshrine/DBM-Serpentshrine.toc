@@ -3,6 +3,7 @@
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Serpentshrine Cavern|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0불뱀 제단|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Höhle des Schlangenschreins|r
+## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Caverna Santuario Serpiente|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0毒蛇神殿洞穴|r
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -18,6 +19,7 @@
 localization.en.lua
 localization.cn.lua
 localization.de.lua
+localization.es.lua
 localization.kr.lua
 localization.ru.lua
 localization.tw.lua

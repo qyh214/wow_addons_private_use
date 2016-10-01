@@ -10,14 +10,6 @@ L.OTabBosses	= "Boss"
 L.OTabOptions	= "Options"
 
 L.TabCategory_Options		= "Options générales"
-L.TabCategory_LEG	 		= "Légion"
-L.TabCategory_WoD	 		= "Warlords of Draenor"
-L.TabCategory_MOP	 		= "Mists of Pandaria"
-L.TabCategory_CATA			= "Cataclysme"
-L.TabCategory_WOTLK			= "Wrath of the Lich King"
-L.TabCategory_BC			= "The Burning Crusade"
-L.TabCategory_CLASSIC		= "WoW classique"
-L.TabCategory_PVP 			= "PVP"
 L.TabCategory_OTHER			= "Autres modules"
 
 L.BossModLoaded 			= "Statistiques |2 %s"
@@ -52,7 +44,6 @@ L.Statistic_BestKill		= "Meilleur temps:"
 
 -- Tab: General Core Options
 L.General 					= "Options générales de DBM"
-L.EnableDBM 				= "Activer DBM"
 L.EnableMiniMapIcon			= "Afficher l'icône de la minicarte"
 L.UseSoundChannel			= "Configurer le canal audio utilisé par DBM pour jouer les sons d'alerte"
 L.UseMasterChannel			= "Canal audio principal"
@@ -83,7 +74,6 @@ L.InfoRaidWarning			= [[Vous pouvez préciser la position et les couleurs de la 
 Cette fenêtre est utilisée pour les messages de type "Le joueur X est affecté par Y".]]
 L.ColorResetted 			= "Les paramètres de couleur de ce champ ont été réinitialisés"
 L.ShowWarningsInChat 		= "Afficher les alertes raid dans la fenêtre de chat"
-L.ShowFakedRaidWarnings 	= "Afficher les alertes comme de fausses alertes raid"
 L.WarningIconLeft 			= "Afficher l'icône du côté gauche"
 L.WarningIconRight 			= "Afficher l'icône du côté droit"
 L.WarningIconChat 			= "Afficher les icônes dans la fenêtre de chat"
@@ -284,9 +274,6 @@ L.HideGarrisonUpdates		= "Masque les notifications de fief pendant les combats d
 L.HideGuildChallengeUpdates	= "Masque les notifications de défis de guilde pendant les combats de boss"
 L.HideTooltips				= "Masquer le cadre d'information pendant les combats contre un boss"
 L.DisableSFX				= "Désactive le canal des effets sonores pendant les boss" --was missing
-L.HideApplicantAlerts		= "Supprime les alertes de candidats dans les groupes pré-définis"
-L.HideApplicantAlertsFull	= "Si le groupe est complet"
-L.HideApplicantAlertsNotL	= "Si vous n'êtes pas responsable du groupe (Agit si le groupe est complet lorsque vous êtes le responsable)"
 L.SpamBlockSayYell			= "Masquer les annonces des onglets de chat de la fenêtre de discussion pendant les combats contre un boss"
 L.DisableCinematics			= "Désactiver les cinématiques en jeu"
 L.AfterFirst				= "Après que la cinématique ait été jouée une fois"

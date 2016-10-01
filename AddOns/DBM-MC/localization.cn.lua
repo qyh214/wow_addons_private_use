@@ -82,10 +82,6 @@ L:SetGeneralLocalization{
 	name = "管理者埃克索图斯"
 }
 
-L:SetMiscLocalization{
-	Kill	= "不...不可能!等一下...我投降!我投降!"
-}
-
 ----------------
 --  Ragnaros  --
 ----------------

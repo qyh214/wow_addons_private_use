@@ -370,6 +370,18 @@ function TitanPanel_PlayerEnteringWorld()
 		elseif TitanGetVar(TITAN_CLOCK_ID, "Format") then
 			ServerHourFormat[realmName] = TitanGetVar(TITAN_CLOCK_ID, "Format")
 		end
+		
+		-- Kill off the OrderHallCommandBar
+		local TitanPanelAce = LibStub("AceAddon-3.0"):NewAddon("TitanPanelOHCB", "AceHook-3.0")
+		TitanPanelAce:SecureHook("OrderHall_CheckCommandBar",
+			function()
+				if OrderHallCommandBar then
+					OrderHallCommandBar:Hide()
+					OrderHallCommandBar:UnregisterAllEvents()
+					OrderHallCommandBar.Show = function () end
+				end
+			end
+		)
 	end
 	local _ = nil
 	TitanSettings.Player,_,_ = TitanUtils_GetPlayer()

@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod("Prince", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
 mod:SetCreatureID(15690)
+mod:SetEncounterID(661)
 mod:SetModelID(19274)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
+	"SPELL_CAST_START 30852",
+	"SPELL_AURA_APPLIED 30854 30898 39095 30843",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
@@ -38,6 +39,15 @@ local function showEnfeebleWarning()
 	table.wipe(enfeebleTargets)
 end
 
+local function Infernals()
+	warningInfernal:Show()
+	if phase == 3 then
+		timerNextInfernal:Start(22.5)
+	else
+		timerNextInfernal:Start()
+	end
+end
+
 function mod:OnCombatStart(delay)
 	phase = 1
 	timerNextInfernal:Start(40-delay)
@@ -50,15 +60,6 @@ function mod:SPELL_CAST_START(args)
 		warningNovaCast:Show()
 		specWarnNova:Show()--Trivial damage, but because of enfeeble, don't want to do a blind level check here
 		timerNovaCD:Start()
-	end
-end
-
-function mod:Infernals()
-	warningInfernal:Show()
-	if phase == 3 then
-		timerNextInfernal:Start(22.5)
-	else
-		timerNextInfernal:Start()
 	end
 end
 
@@ -80,7 +81,7 @@ end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.DBM_PRINCE_YELL_INF1 or msg == L.DBM_PRINCE_YELL_INF2 then
-		self:ScheduleMethod(18.5, "Infernals")--Infernal actually spawns 18.5sec after yell.
+		self:Schedule(18.5, Infernals, self)--Infernal actually spawns 18.5sec after yell.
 		if not firstInfernal then
 			timerNextInfernal:Start(18.5)
 			firstInfernal = true

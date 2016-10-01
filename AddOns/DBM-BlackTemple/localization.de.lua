@@ -109,7 +109,6 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	Pull			= "Auf Euch warten nur Schmerz und Leid!",
 	Suffering		= "Essenz des Leidens",
 	Desire			= "Essenz der Begierde",
 	Anger			= "Essenz des Zorns"
@@ -174,8 +173,7 @@ L:SetWarningLocalization{
 
 L:SetTimerLocalization{
 	TimerNextHuman		= "Normalform",
-	TimerNextDemon		= "Dämonenform",
-	TimerPhase4			= "Phasenübergang"
+	TimerNextDemon		= "Dämonenform"
 }
 
 L:SetOptionLocalization{
@@ -183,7 +181,6 @@ L:SetOptionLocalization{
 	WarnDemon		= "Zeige Warnung für Dämonenform",
 	TimerNextHuman	= "Zeige Zeit bis nächste Normalform",
 	TimerNextDemon	= "Zeige Zeit bis nächste Dämonenform",
-	TimerPhase4		= "Dauer des Übergangs in Phase 4 anzeigen",
 	RangeFrame		= "Zeige Abstandsfenster (10m) in Phase 3 und 4"
 }
 

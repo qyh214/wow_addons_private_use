@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1002 $")
+end, "$Revision: 1004 $")
 
 -- Upvalues
 local _G = _G
@@ -39,7 +39,6 @@ local unpack = unpack
 
 local CanInspect = CanInspect
 local CheckInteractDistance = CheckInteractDistance
-local GetComboPoints = GetComboPoints
 local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
 local GetInspectSpecialization = GetInspectSpecialization
 local GetLootMethod = GetLootMethod
@@ -109,12 +108,36 @@ function XPerl_Target_OnLoad(self, partyid)
 	self:RegisterForDrag("LeftButton")
 	XPerl_SetChildMembers(self)
 
-	--CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
+	CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
 
-	--self.hitIndicator.text:SetPoint("CENTER", self.portraitFrame, "CENTER", 0, 0)
+	self.hitIndicator.text:SetPoint("CENTER", self.portraitFrame, "CENTER", 0, 0)
 
 	local events = {
-		"UNIT_COMBAT", "PLAYER_FLAGS_CHANGED", "UNIT_CONNECTION", "UNIT_PHASE", "RAID_TARGET_UPDATE", "GROUP_ROSTER_UPDATE", "PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "UNIT_THREAT_LIST_UPDATE", --[["UNIT_SPELLMISS",]] "UNIT_FACTION", "UNIT_FLAGS", "UNIT_CLASSIFICATION_CHANGED", "UNIT_PORTRAIT_UPDATE", "UNIT_AURA", "UNIT_HEALTH_FREQUENT", "PET_BATTLE_HEALTH_CHANGED", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE"--[[, "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"]]
+		"UNIT_COMBAT",
+		"PLAYER_FLAGS_CHANGED",
+		"UNIT_CONNECTION",
+		"UNIT_PHASE",
+		"RAID_TARGET_UPDATE",
+		"GROUP_ROSTER_UPDATE",
+		"PARTY_LEADER_CHANGED",
+		"PARTY_LOOT_METHOD_CHANGED",
+		"UNIT_THREAT_LIST_UPDATE",
+		"UNIT_SPELLMISS",
+		"UNIT_FACTION",
+		"UNIT_FLAGS",
+		"UNIT_CLASSIFICATION_CHANGED",
+		"UNIT_PORTRAIT_UPDATE",
+		"UNIT_AURA",
+		"UNIT_HEALTH_FREQUENT",
+		"PET_BATTLE_HEALTH_CHANGED",
+		"UNIT_POWER_FREQUENT",
+		"UNIT_MAXPOWER",
+		"UNIT_MAXHEALTH",
+		"UNIT_LEVEL",
+		"UNIT_DISPLAYPOWER",
+		"UNIT_NAME_UPDATE",
+		--"PET_BATTLE_OPENING_START"
+		--"PET_BATTLE_CLOSE",
 	}
 
 	for i, event in pairs(events) do
@@ -323,8 +346,9 @@ function XPerl_Target_UpdateCombo(self)
 	end
 	--[[if (tconf.combo.blizzard) then
 		self.cpFrame:Hide()
-	else]]
-		--self.nameFrame.cpMeter:Hide()
+	else
+		--self.nameFrame.cpMeter:Hide()]]
+	if tconf.comboindicator.enable then
 		self.cpFrame:Show()
 		self.cpFrame.text:SetText(combopoints)
 		if r and g and b then
@@ -332,7 +356,9 @@ function XPerl_Target_UpdateCombo(self)
 		else
 			self.cpFrame:Hide()
 		end
-	--end
+	else
+		self.cpFrame:Hide()
+	end
 end
 
 -- XPerl_UnitDebuffInformation
@@ -1160,7 +1186,9 @@ end
 
 -- XPerl_Target_OnUpdate
 function XPerl_Target_OnUpdate(self, elapsed)
-	--CombatFeedback_OnUpdate(self, elapsed)
+	if (tconf.hitIndicator and tconf.portrait) or (fconf.hitIndicator and fconf.portrait) then
+		CombatFeedback_OnUpdate(self, elapsed)
+	end
 
 	local partyid = self.partyid
 	local newAFK = UnitIsAFK(partyid)
@@ -1259,7 +1287,7 @@ function XPerl_Target_Events:PLAYER_ENTERING_WORLD()
 	end
 end
 
---[[local amountIndex = {
+local amountIndex = {
 	SWING_DAMAGE = 1,
 	RANGE_DAMAGE = 4,
 	SPELL_DAMAGE = 4,
@@ -1273,10 +1301,10 @@ local missIndex = {
 	RANGE_MISSED = 4,
 	SPELL_MISSED = 4,
 	SPELL_PERIODIC_MISSED = 4,
-}]]
+}
 
 -- DoEvent
---[[local function DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
+local function DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 	local feedbackText = self.feedbackText
 	local fontHeight = self.feedbackFontHeight
 	local text
@@ -1326,27 +1354,27 @@ local missIndex = {
 		feedbackText:SetAlpha(0)
 		feedbackText:Show()
 	end
-end]]
+end
 
 -- COMBAT_LOG_EVENT_UNFILTERED
---[[function XPerl_Target_Events:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
+function XPerl_Target_Events:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
 	if (self.conf.hitIndicator and self.conf.portrait) then
 		if (bit_band(dstFlags, self.combatMask) ~= 0 and bit_band(srcFlags, 0x00000001) ~= 0) then
 			DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 		end
 	end
-end]]
+end
 
 -- UNIT_COMBAT
 function XPerl_Target_Events:UNIT_COMBAT(unitID, action, descriptor, damage, damageType)
 	if (unitID == self.partyid) then
 		XPerl_Target_Update_Combat(self)
 	
-		--[[if (not self.conf.ownDamageOnly) then
+		if (not self.conf.ownDamageOnly) then
 			if (self.conf.hitIndicator and self.conf.portrait) then
 				CombatFeedback_OnCombatEvent(self, action, descriptor, damage, damageType)
 			end
-		end]]
+		end
 	
 		if (action == "HEAL") then
 			XPerl_Target_CombatFlash(self, 0, true, true)
@@ -1357,11 +1385,11 @@ function XPerl_Target_Events:UNIT_COMBAT(unitID, action, descriptor, damage, dam
 end
 
 -- UNIT_SPELLMISS
---[[function XPerl_Target_Events:UNIT_SPELLMISS(...)
+function XPerl_Target_Events:UNIT_SPELLMISS(...)
 	if (self.conf.hitIndicator and self.conf.portrait) then
 		CombatFeedback_OnSpellMissEvent(self, ...)
 	end
-end]]
+end
 
 -- PLAYER_TARGET_CHANGED
 function XPerl_Target_Events:PLAYER_TARGET_CHANGED()
@@ -1689,17 +1717,17 @@ function XPerl_Target_Set_Bits(self)
 		end
 	end
 
-	--[[if (self == XPerl_Target) then
+	if (self == XPerl_Target) then
 		XPerl_Target_Set_BlizzCPFrame(self)
-	end]]
+	end
 
 	XPerl_StatsFrameSetup(self)
 
-	--[[if (self.conf.ownDamageOnly and (self.conf.hitIndicator and self.conf.portrait)) then
+	if (self.conf.ownDamageOnly and (self.conf.hitIndicator and self.conf.portrait)) then
 		self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	else
 		self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-	end]]
+	end
 
 	self.buffFrame:ClearAllPoints()
 	if (self.conf.buffs.above) then
@@ -1714,112 +1742,139 @@ function XPerl_Target_Set_Bits(self)
 	end
 end
 
---[[function ComboFrame_Update()
-	local comboPoints = GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player")
-	local comboPoint, comboPointHighlight, comboPointShine
-	if (comboPoints > 0) then
-		if (not ComboFrame:IsShown()) then
+function XPerl_Target_ComboFrame_Update()
+	--local comboPoints = GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player")
+	local comboPoints = UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", SPELL_POWER_COMBO_POINTS)
+	if comboPoints > 0 and UnitCanAttack(UnitHasVehicleUI("player") and "vehicle" or "player", "target") then
+		if not ComboFrame:IsShown() then
 			ComboFrame:Show()
 			UIFrameFadeIn(ComboFrame, COMBOFRAME_FADE_IN)
 		end
 
 		local fadeInfo = { }
-		for i = 1, MAX_COMBO_POINTS do
-			comboPoint = _G["ComboPoint" .. i]
-			comboPoint:Show()
-			comboPointHighlight = _G["ComboPoint"..i.."Highlight"]
-			comboPointShine = _G["ComboPoint"..i.."Shine"]
-			if (i <= comboPoints) then
-				if (i > COMBO_FRAME_LAST_NUM_POINTS) then
+		for i = 1, 8 do
+			local comboPoint = _G["ComboPoint"..i]
+			if i < 6 then
+				comboPoint:Show()
+			else
+				if comboPoints >= i then
+					comboPoint:Show()
+				else
+					comboPoint:Hide()
+				end
+			end
+			if i <= comboPoints then
+				if i > ComboFrame.lastPoints then
 					-- Fade in the highlight and set a function that triggers when it is done fading
 					fadeInfo.mode = "IN"
 					fadeInfo.timeToFade = COMBOFRAME_HIGHLIGHT_FADE_IN
 					fadeInfo.finishedFunc = ComboPointShineFadeIn
-					fadeInfo.finishedArg1 = comboPointShine
-					UIFrameFade(comboPointHighlight, fadeInfo)
+					fadeInfo.finishedArg1 = comboPoint.Shine
+					UIFrameFade(comboPoint.Highlight, fadeInfo)
 				end
 			else
-				if (ENABLE_COLORBLIND_MODE == "1") then
+				--[[if ENABLE_COLORBLIND_MODE == "1" then
 					comboPoint:Hide()
-				end
-				comboPointHighlight:SetAlpha(0)
-				comboPointShine:SetAlpha(0)
+				end]]
+				comboPoint.Highlight:SetAlpha(0)
+				comboPoint.Shine:SetAlpha(0)
 			end
 		end
+		ComboPoint1.Highlight:SetAlpha(1)
 	else
-		ComboPoint1Highlight:SetAlpha(0)
-		ComboPoint1Shine:SetAlpha(0)
+		--ComboPoint1.Highlight:SetAlpha(0)
+		--ComboPoint1.Shine:SetAlpha(0)
 		ComboFrame:Hide()
 	end
-	COMBO_FRAME_LAST_NUM_POINTS = comboPoints
+	ComboFrame.lastPoints = comboPoints
 end
 
 function XPerl_Target_ComboFrame_OnEvent(self, event, ...)
 	if (event == "PLAYER_TARGET_CHANGED") then
-		ComboFrame_Update()
-	elseif (event == "UNIT_COMBO_POINTS") then
-		local unit = ...
-		if (unit == "player" or unit == "vehicle") then
-			ComboFrame_Update()
-		end
+		XPerl_Target_ComboFrame_Update()
 	end
 end
 
 -- Using the Blizzard Combo Point frame, but we move the buttons around a little
 function XPerl_Target_Set_BlizzCPFrame(self)
-	ComboFrame:ClearAllPoints()
-	ComboPoint1:ClearAllPoints()
-	ComboPoint2:ClearAllPoints()
-	ComboPoint3:ClearAllPoints()
-	ComboPoint4:ClearAllPoints()
-	ComboPoint5:ClearAllPoints()
-	-- Fix for ComboPoint5
-	ComboPoint5:SetSize(12, 12)
+	if tconf.combo.blizzard then
+		ComboFrame:ClearAllPoints()
+		for i = 1, 9 do
+			local combo = _G["ComboPoint"..i]
+			if i < 9 then
+				combo:ClearAllPoints()
 
-	if (tconf.combo.blizzard) then
-		-- This setup will put the buttons along the top of the portrait frame
+				if i < 6 then
+					combo:SetAlpha(1)
+				else
+					combo:SetAlpha(0.5)
+				end
+			else
+				combo:ClearAllPoints()
+				combo:Hide()
+			end
+		end
 
-		ComboFrame:SetScale(self.conf.scale)
-
-		if (tconf.combo.pos == "top") then
-			ComboFrame:SetPoint("TOPLEFT", self.portraitFrame, "TOPLEFT", -1, 4)
+		if tconf.combo.pos == "top" then
+			ComboFrame:SetPoint("TOP", self.portraitFrame, "TOP", 98, 4)
 			ComboPoint1:SetPoint("TOPLEFT", 0, 0)
 			ComboPoint2:SetPoint("LEFT", ComboPoint1, "RIGHT", 0, 1)
 			ComboPoint3:SetPoint("LEFT", ComboPoint2, "RIGHT", 0, 1)
 			ComboPoint4:SetPoint("LEFT", ComboPoint3, "RIGHT", 0, -1)
 			ComboPoint5:SetPoint("LEFT", ComboPoint4, "RIGHT", 0, -1)
-		elseif (tconf.combo.pos == "bottom") then
-			ComboFrame:SetPoint("BOTTOMLEFT", self.portraitFrame, "BOTTOMLEFT", -1, -4)
+			ComboPoint6:SetPoint("TOPLEFT", ComboPoint2, "BOTTOMLEFT", 0, 0)
+			ComboPoint7:SetPoint("TOPLEFT", ComboPoint3, "BOTTOMLEFT", 0, 0)
+			ComboPoint8:SetPoint("TOPLEFT", ComboPoint4, "BOTTOMLEFT", 0, 0)
+		elseif tconf.combo.pos == "bottom" then
+			ComboFrame:SetPoint("BOTTOM", self.portraitFrame, "BOTTOM", 98, -4)
 			ComboPoint1:SetPoint("BOTTOMLEFT", 0, 0)
 			ComboPoint2:SetPoint("LEFT", ComboPoint1, "RIGHT", 0, -1)
 			ComboPoint3:SetPoint("LEFT", ComboPoint2, "RIGHT", 0, -1)
 			ComboPoint4:SetPoint("LEFT", ComboPoint3, "RIGHT", 0, 1)
 			ComboPoint5:SetPoint("LEFT", ComboPoint4, "RIGHT", 0, 1)
-		elseif (tconf.combo.pos == "left") then
+			ComboPoint6:SetPoint("BOTTOMLEFT", ComboPoint2, "TOPLEFT", 0, 0)
+			ComboPoint7:SetPoint("BOTTOMLEFT", ComboPoint3, "TOPLEFT", 0, 0)
+			ComboPoint8:SetPoint("BOTTOMLEFT", ComboPoint4, "TOPLEFT", 0, 0)
+		elseif tconf.combo.pos == "left" then
 			ComboFrame:SetPoint("BOTTOMLEFT", self.portraitFrame, "BOTTOMLEFT", -1, 0)
 			ComboPoint1:SetPoint("BOTTOMLEFT", 0, 0)
 			ComboPoint2:SetPoint("BOTTOM", ComboPoint1, "TOP", -1, 0)
 			ComboPoint3:SetPoint("BOTTOM", ComboPoint2, "TOP", -1, 0)
 			ComboPoint4:SetPoint("BOTTOM", ComboPoint3, "TOP", 1, 0)
 			ComboPoint5:SetPoint("BOTTOM", ComboPoint4, "TOP", 1, 0)
-		elseif (tconf.combo.pos == "right") then
+			ComboPoint6:SetPoint("TOPLEFT", ComboPoint2, "TOPRIGHT", 0, 0)
+			ComboPoint7:SetPoint("TOPLEFT", ComboPoint3, "TOPRIGHT", 0, 0)
+			ComboPoint8:SetPoint("TOPLEFT", ComboPoint4, "TOPRIGHT", 0, 0)
+		elseif tconf.combo.pos == "right" then
 			ComboFrame:SetPoint("BOTTOMRIGHT", self.portraitFrame, "BOTTOMRIGHT", 2, 0)
 			ComboPoint1:SetPoint("BOTTOMRIGHT", 0, 0)
 			ComboPoint2:SetPoint("BOTTOM", ComboPoint1, "TOP", 1, 0)
 			ComboPoint3:SetPoint("BOTTOM", ComboPoint2, "TOP", 1, 0)
 			ComboPoint4:SetPoint("BOTTOM", ComboPoint3, "TOP", -1, 0)
 			ComboPoint5:SetPoint("BOTTOM", ComboPoint4, "TOP", -1, 0)
+			ComboPoint6:SetPoint("TOPRIGHT", ComboPoint2, "TOPLEFT", 0, 0)
+			ComboPoint7:SetPoint("TOPRIGHT", ComboPoint3, "TOPLEFT", 0, 0)
+			ComboPoint8:SetPoint("TOPRIGHT", ComboPoint4, "TOPLEFT", 0, 0)
+		else
+			ComboFrame:SetPoint("TOP", self.portraitFrame, "TOP", 98, 4)
+			ComboPoint1:SetPoint("TOPLEFT", 0, 0)
+			ComboPoint2:SetPoint("LEFT", ComboPoint1, "RIGHT", 0, 1)
+			ComboPoint3:SetPoint("LEFT", ComboPoint2, "RIGHT", 0, 1)
+			ComboPoint4:SetPoint("LEFT", ComboPoint3, "RIGHT", 0, -1)
+			ComboPoint5:SetPoint("LEFT", ComboPoint4, "RIGHT", 0, -1)
+			ComboPoint6:SetPoint("TOPLEFT", ComboPoint2, "BOTTOMLEFT", 0, 0)
+			ComboPoint7:SetPoint("TOPLEFT", ComboPoint3, "BOTTOMLEFT", 0, 0)
+			ComboPoint8:SetPoint("TOPLEFT", ComboPoint4, "BOTTOMLEFT", 0, 0)
 		end
 
 		ComboFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
-		ComboFrame:RegisterEvent("UNIT_COMBO_POINTS")
-		ComboFrame:SetScript("OnEvent", XPerl_Target_ComboFrame_OnEvent)
 
-		ComboFrame:Show()
-		ComboFrame_Update()
+		ComboFrame:SetScript("OnEvent", XPerl_Target_ComboFrame_OnEvent)
+		ComboFrame:SetParent(XPerl_Target)
+
+		XPerl_Target_ComboFrame_Update()
 	else
 		ComboFrame:Hide()
 		ComboFrame:UnregisterEvent("PLAYER_TARGET_CHANGED")
-		ComboFrame:UnregisterEvent("UNIT_COMBO_POINTS")
 	end
-end]]
+end

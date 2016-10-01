@@ -1,0 +1,20 @@
+tag 1.0.5
+66a94f1cc07541db65d0c72199f70deb97eaf74a
+Benjamin Staneck <staneck@gmail.com>
+2016-08-15 03:36:10 +0200
+
+
+
+--------------------
+
+semlar:
+	- Disabled saved variables, removed showChatIcons
+Ketho:
+	- Also update the floatingCombatTextFloatMode uvar
+	- Refresh uvars and Combat Text events on FCT SetValue
+semlar:
+	- Apparently you can't do that
+	- Changed max nameplate distance to 120 yards
+Benjamin Staneck:
+	- showGameTips was removed
+	- change min value of the camera distance slider and the description text, thanks Ketho!

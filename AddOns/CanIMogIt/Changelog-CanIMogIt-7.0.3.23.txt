@@ -1,0 +1,12 @@
+tag 7.0.3.23
+d402900ef77ef3b9c24ab0aeca0fa067294d4797
+Salvatore Lopiparo <toreltwiddler@gmail.com>
+2016-08-31 20:55:25 -0700
+
+Fixed #86: lag/overlay not working in main bank frame on cannot learn (yellow) items.
+
+
+--------------------
+
+Salvatore Lopiparo:
+	- Fixed #86: lag/overlay not working in main bank frame on cannot learn (yellow) items.

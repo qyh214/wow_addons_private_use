@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 503 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 508 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,6 +16,12 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.7.9", "07/29/2016", [[
+	*Fixed a few green texture issues.
+]]);
+addEntry("3.7.8", "07/19/2016", [[
+	*Set TOC version to 70000
+]]);
 addEntry("3.7.7", "06/04/2016", [[
 	*Whisper window will now report location correctly for non WoW clients.
 ]]);
@@ -30,13 +36,6 @@ addEntry("3.7.4", "05/02/2016", [[
 ]]);
 addEntry("3.7.3", "03/24/2016", [[
 	*Resolved lua error when ToonID is nil
-]]);
-addEntry("3.7.2", "03/22/2016", [[
-	*WIM is now compatible with RealID/battle.net whispers on WoW 7.0 and 6.2.4
-	*Removed RealID multi person chat related features since they no longer exist in 6.2.4+.
-]]);
-addEntry("3.7.1", "01/17/2016", [[
-	*Resolved lua errors in WoW 7.x.
 ]]);
 
 

@@ -14,8 +14,6 @@ local UnitIsPlayer = UnitIsPlayer
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 local select = select
 local UnitClass = UnitClass
-local UnitIsTapped = UnitIsTapped
-local UnitIsTappedByPlayer = UnitIsTappedByPlayer
 local UnitPlayerControlled = UnitPlayerControlled
 local UnitCanAttack = UnitCanAttack
 local UnitReaction = UnitReaction
@@ -58,6 +56,7 @@ local tonumber = tonumber
 local GetRaidRosterInfo = GetRaidRosterInfo
 local UnitIsGroupLeader = UnitIsGroupLeader
 local GetLootMethod = GetLootMethod
+local UnitIsTapDenied = UnitIsTapDenied
 
 local _, addon = ...
 
@@ -116,7 +115,7 @@ local function GetUnitColor(unit, isName)
 		else
 			return 1, 1, 1
 		end
-	elseif not isName and (dead or (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit))) then
+	elseif not isName and (dead or UnitIsTapDenied(unit)) then
 		return 0.5, 0.5, 0.5
 	elseif UnitPlayerControlled(unit) then
 		if UnitCanAttack(unit, "player") then
@@ -565,7 +564,7 @@ end
 
 local function UnitFrame_FinishReadyCheck(self)
 	if self.readyCheckStatus == "waiting" then
-		self.readyCheckIcon:SetTexture(READY_CHECK_NOT_READY_TEXTURE)
+		self.readyCheckIcon:SetTexture(READYCHECK_STATUS.notready)
 	end
 	self.readyCheckHideTime = GetTime() + 6
 end
@@ -755,7 +754,7 @@ local function UnitFrame_UpdateStatusBarTexture(self)
 end
 
 local function UnitFrame_UpdateBkgndColor(self)
-	self.background:SetTexture(bkgndColor.r, bkgndColor.g, bkgndColor.b, 1)
+	self.background:SetVertexColor(bkgndColor.r, bkgndColor.g, bkgndColor.b, 1)
 end
 
 local function UnitFrame_UpdateAll(self)
@@ -1194,7 +1193,8 @@ function addon._UnitButton_OnLoad(frame)
 	local background = artFrame:CreateTexture(name.."Background", "BACKGROUND")
 	frame.background = background
 	background:SetAllPoints(artFrame)
-	background:SetTexture(bkgndColor.r, bkgndColor.g, bkgndColor.b, 1)
+	background:SetTexture("Interface\\BUTTONS\\WHITE8X8.BLP")
+	background:SetVertexColor(bkgndColor.r, bkgndColor.g, bkgndColor.b, 1)
 
 	-- Health bar
 	local healthBar = CreateFrame("StatusBar", name.."HealthBar", artFrame)

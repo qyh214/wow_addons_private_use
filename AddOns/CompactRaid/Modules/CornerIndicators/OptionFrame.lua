@@ -93,7 +93,7 @@ function styleGroup:OnSelectionChanged(value)
 end
 
 local function CreateStageOption(text, key)
-	local colorSwatch = templates:CreateColorSwatch(nil, page)
+	local colorSwatch = templates:CreateColorSwatch(page:GetName().."Swatch"..key, page)
 	colorSwatch.key = key
 
 	local label = page:CreateFontString(nil, "ARTWORK", "GameFontHighlightLeft")
@@ -337,6 +337,8 @@ colorLabel:SetText(L["stage colors"])
 page.stages = {}
 page.stages[1] = CreateStageOption(L["normal stage"], 1)
 page.stages[1]:SetPoint("TOPLEFT", colorLabel, "BOTTOMLEFT", 8, -10)
+
+--hooksecurefunc(page.stages[1], "SetColor", function(self, r, g, b) print("setcolor", r, g, b) end)
 
 page.stages[2] = CreateStageOption(L["remaining time"], 2)
 page.stages[2]:SetPoint("TOPLEFT", page.stages[1], "BOTTOMLEFT", 0, -8)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1485, "DBM-Party-Legion", 4, 721)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14975 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15186 $"):sub(12, -3))
 mod:SetCreatureID(94960)
 mod:SetEncounterID(1805)
 mod:SetZone()
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 )
 
 --Honestly I think all his stuff is health based. timers are useless
-local warnDancingBlade				= mod:NewTargetAnnounce(193235, 3)
+local warnDancingBlade				= mod:NewSpellAnnounce(193235, 3)
 local warnSweep						= mod:NewSpellAnnounce(193092, 2, nil, "Tank")
 
 local specWarnHornOfValor			= mod:NewSpecialWarningSoon(188404, nil, nil, nil, 2, 2)
@@ -29,6 +29,7 @@ local yellDancingBlade				= mod:NewYell(193235)
 local voiceDancingBlade				= mod:NewVoice(193235)--runaway
 local voiceBreath					= mod:NewVoice(188404)--watchstep? or breathsoon?
 
+--[[
 function mod:BladeTarget(targetname, uId)
 	if not targetname then
 		warnDancingBlade:Show(DBM_CORE_UNKNOWN)
@@ -42,6 +43,7 @@ function mod:BladeTarget(targetname, uId)
 		warnDancingBlade:Show(targetname)
 	end
 end
+--]]
 
 function mod:OnCombatStart(delay)
 --	timerHornCD:Start(5.5-delay)
@@ -55,10 +57,11 @@ function mod:SPELL_CAST_START(args)
 		voiceBreath:Play("breathsoon")
 --		timerHornCD:Start()
 	elseif spellId == 193235 then
-		self:BossTargetScanner(94960, "BladeTarget", 0.1, 20, true, nil, nil, nil, true)
+		--self:BossTargetScanner(94960, "BladeTarget", 0.1, 20, true, nil, nil, nil, true)
 --		timerDancingBladeCD:Start()
-	elseif spellId == 188404 then
-		voiceBreath:Play("breathsoon")
+		warnDancingBlade:Show()
+	elseif spellId == 188404 and self:AntiSpam(5, 2) then
+		voiceBreath:Play("watchstep")
 	end
 end
 

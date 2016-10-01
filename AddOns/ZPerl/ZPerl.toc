@@ -1,5 +1,5 @@
 ﻿## Interface: 70000
-## Version: 5.0.2
+## Version: 5.1.1
 ## Author: Resike
 ## Title: Z-Perl UnitFrames
 ## Title-itIT: Z-Perl UnitFrames
@@ -15,7 +15,7 @@
 ## Notes-zhCN: 玩家头像增强插件，附带团队助手功能
 ## Notes-zhTW: 提供玩家單位、隊伍、目標、寵物、目標的目標頭像增強以及團隊框架顯示、團隊助手等等功能
 ## SavedVariables: ZPerlConfig, ZPerlConfig_Global, ZPerlConfigNew, ZPerlConfigSavePerCharacter, ZPerlImportDone
-## X-Curse-Packaged-Version: r1002
+## X-Curse-Packaged-Version: r1014
 ## X-Curse-Project-Name: Z-Perl Unit Frames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

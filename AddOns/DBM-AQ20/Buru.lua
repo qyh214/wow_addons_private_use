@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Buru", "DBM-AQ20", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 513 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 596 $"):sub(12, -3))
 mod:SetCreatureID(15370)
+mod:SetEncounterID(721)
 mod:SetModelID(15654)
 mod:RegisterCombat("combat")
 
@@ -21,8 +22,8 @@ local timerDismember	= mod:NewTargetTimer(10, 96)
 function mod:OnCombatStart(delay)
 	if not self:IsTrivial(80) then
 		self:RegisterShortTermEvents(
-			"SPELL_AURA_APPLIED",
-			"SPELL_AURA_APPLIED_DOSE"
+			"SPELL_AURA_APPLIED 96",
+			"SPELL_AURA_APPLIED_DOSE 96"
 		)
 	end
 end

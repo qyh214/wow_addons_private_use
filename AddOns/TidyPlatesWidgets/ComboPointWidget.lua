@@ -10,93 +10,77 @@
 --]]
 local comboWidgetPath = "Interface\\Addons\\TidyPlatesWidgets\\ComboWidget\\"
 local artpath = "Interface\\Addons\\TidyPlatesWidgets\\ComboWidget\\"
-local artfile = artpath.."PointArt.tga"
+local artfile = artpath.."RogueLegion.tga"
 local grid = .0625
-local monkOffset = 10
 
 local WidgetList = {}
 
---local Anticipation =  GetSpellInfo(115190)
-local Anticipation =  GetSpellInfo(114015)
 
-local function GetDruidPoints()
-	local points = GetComboPoints("player", "target")
 
-	return points
-end
+-- Placeholder for function
 
-local function GetRoguePoints()
-	local points = GetComboPoints("player", "target")
 
-	if points and points > 0 then
+local function GetComboPointTarget()
+	if UnitCanAttack("player", "target") then
+		local points = GetComboPoints("player", "target")
+		local maxPoints = UnitPowerMax("player", 4)
 
-		-- Anticipation
-		if points > 4 then
-			local name, _, _, count = UnitAura("player", Anticipation)
-
-			if name and count > 0 then
-				points = points + count
-			end
-		end
+		return points, maxPoints
 	end
-
-	return points
 end
 
-local function GetPaladinPoints()
-	local points = UnitPower("player", SPELL_POWER_HOLY_POWER)
+local function GetChiTarget()
+	if UnitCanAttack("player", "target") then
 
-	if points > 0 then points = points + monkOffset end
-	return points
-end
+		if SPEC_MONK_BREWMASTER == GetSpecialization() then return end
 
-local function GetMonkPoints()		-- 0 to 4
-	local points = UnitPower("player", SPELL_POWER_CHI)
-	local maxPoints = UnitPowerMax("player", SPELL_POWER_CHI)
+		local points = UnitPower("player", SPELL_POWER_CHI)
+		local maxPoints = UnitPowerMax("player", SPELL_POWER_CHI)
 
-	if points > 0 and maxPoints == 4 then
-		points = points + monkOffset
+		return points, maxPoints
+
 	end
-
-	return points
-end
-
-local function DummyFunction()
-	return nil
 end
 
 
-local GetPoints
-local PlayerClass = select(2,UnitClassBase("player"))
 
-if PlayerClass == "ROGUE" then
-	GetPoints = GetRoguePoints
+local GetResourceOnTarget
+local LocalName, PlayerClass = UnitClass("player")
+
+if PlayerClass == "MONK" then
+	GetResourceOnTarget = GetChiTarget
+elseif PlayerClass == "ROGUE" then
+	GetResourceOnTarget = GetComboPointTarget
 elseif PlayerClass == "DRUID" then
-	GetPoints = GetDruidPoints
-elseif PlayerClass == "MONK" then
-	GetPoints = GetMonkPoints
-elseif PlayerClass == "PALADIN" then
-	--GetPoints = GetPaladinPoints
-	GetPoints = DummyFunction
+	GetResourceOnTarget = GetComboPointTarget
 else
-	GetPoints = DummyFunction
+	GetResourceOnTarget = function() end
 end
+
+
 
 -- Update Graphics
 local function UpdateWidgetFrame(frame)
-		local points
-		if UnitExists("target") then
-			points = GetPoints()
+	local points, maxPoints = GetResourceOnTarget()
+
+	if points and points > 0 then
+		-- At some point, custom art will be made for each class.  Hopefully!
+		--UpdateWidgetArt(frame)
+		--frame.Icon:SetTexture(comboWidgetPath..tostring(points))
+
+		-- SetTexCoord:  First two values define the range of the Horizontal
+		if maxPoints == 6 then
+			frame.Icon:SetTexCoord(0, 1, grid*(points+9), grid *(points+10))
+		else
+			frame.Icon:SetTexCoord(0, 1, grid*(points-1), grid *(points))
 		end
 
-		if points and points > 0 then
-			--frame.Icon:SetTexture(comboWidgetPath..tostring(points))
-			frame.Icon:SetTexCoord(0, 1, grid*(points-1), grid *(points))
+		frame:Show()
 
-			--object:SetTexCoord(objectstyle.left or 0, objectstyle.right or 1, objectstyle.top or 0, objectstyle.bottom or 1)
+		return
+	end
 
-			frame:Show()
-		else frame:_Hide() end
+	frame:_Hide()
 end
 
 -- Context
@@ -130,6 +114,8 @@ end
 local WatcherFrame = CreateFrame("Frame", nil, WorldFrame )
 local isEnabled = false
 WatcherFrame:RegisterEvent("UNIT_COMBO_POINTS")
+WatcherFrame:RegisterEvent("UNIT_POWER")
+WatcherFrame:RegisterEvent("UNIT_DISPLAYPOWER")
 WatcherFrame:RegisterEvent("UNIT_AURA")
 WatcherFrame:RegisterEvent("UNIT_FLAGS")
 
@@ -149,7 +135,6 @@ end
 
 -- Widget Creation
 local function CreateWidgetFrame(parent)
-
 	-- Required Widget Code
 	local frame = CreateFrame("Frame", nil, parent)
 	frame:Hide()

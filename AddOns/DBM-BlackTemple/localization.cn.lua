@@ -167,7 +167,6 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	Pull			= "等待你们的只有痛苦与折磨！",
 	Enrage			= "%s变得愤怒了！",
 	SpiteWhisper	= "敌意于你!",
 	Suffering		= "Essence of Suffering",--Translate
@@ -260,8 +259,7 @@ L:SetWarningLocalization{
 L:SetTimerLocalization{
 	TimerCombatStart	= "Combat starts",--Translate
 	TimerNextHuman		= "普通形态",
-	TimerNextDemon		= "恶魔形态",
-	TimerPhase4			= "Phase transition"--Translate
+	TimerNextDemon		= "恶魔形态"
 }
 
 L:SetOptionLocalization{
@@ -274,7 +272,6 @@ L:SetOptionLocalization{
 	TimerCombatStart= "Show time for start of combat",--Translate
 	TimerNextHuman	= "Show time for Next Human Phase",--Translate
 	TimerNextDemon	= "Show time for Demon Human Phase",--Translate
-	TimerPhase4		= "Show time for Phase 4 transition",--Translate
 	ParasiteIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41917),
 	ParasiteWhisper	= "Send whisper to $spell:41917 targets (requires Raid Leader)",--Translate
 	RangeFrame		= "Show range frame (10 yards) in Phase 3 and 4"--Translate

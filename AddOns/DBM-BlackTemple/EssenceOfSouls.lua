@@ -1,22 +1,22 @@
 local mod	= DBM:NewMod("Souls", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 585 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
 mod:SetCreatureID(23420)
+mod:SetEncounterID(606)
 mod:SetModelID(21483)
 mod:SetZone()
 mod:SetUsedIcons(4, 5, 6, 7, 8)
 
-mod:RegisterCombat("yell", L.Pull)
+mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
+	"SPELL_AURA_APPLIED 41305 41431 41376 41303 41294 41410",
+	"SPELL_AURA_REMOVED 41305",
+	"SPELL_CAST_START 41410 41426",
+	"SPELL_CAST_SUCCESS 41350 41337",
+	"SPELL_DAMAGE 41545",
+	"SPELL_MISSED 41545",
 	"UNIT_SPELLCAST_SUCCEEDED"
 )
 
@@ -118,7 +118,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerDeaden:Start(args.destName)
 	end
 end
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 41305 then

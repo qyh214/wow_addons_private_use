@@ -43,7 +43,7 @@ Features/BetterOptions:
 --  { "key", "group", inline }  ->  key = { type = "group", inline = true }
 --  { "key", "execute", func }  ->  key = { type = "execute", func = func }
 --  { "key", "select", items }
---  { "key", "color", hasAlpha }
+--  { "key", "color", hasAlpha (defaults to true) }
 --  { "key", "range", min, max, step, softMin, softMax, bigStep }
 -- Automatic types:
 --  Entry is just a "key":  "toggle"
@@ -270,8 +270,10 @@ function addon:OnEnable() -- Construct addon option tables here
 	end
 
 	function BetterOptionsTypes.color(t)
-		if t.hasAlpha == nil then
+		if t.hasAlpha == nil and t[1] ~= nil then
 			t.hasAlpha = t[1]
+		else
+			t.hasAlpha = true
 		end
 	end
 
@@ -546,12 +548,12 @@ function addon:OnEnable() -- Construct addon option tables here
 				{ "quality_color_slot", "toggle", width = "full" },
 				{ "frame_color_border", "color", width = "double", requires_inverse = "quality_color_frame" },
 				{ "loot_color_border", "color", requires_inverse = "quality_color_slot" },
-				{ "frame_color_backdrop", "color", true, width = "double" },
-				{ "loot_color_backdrop", "color", true },
-				{ "frame_color_gradient", "color", true, width = "double" },
-				{ "loot_color_gradient", "color", true },
-				{ "loot_color_info", "color", true, width = "double", requires = "loot_texts_info" },
-				{ "loot_color_button_auto", "color", true, requires = "loot_buttons_auto", name = L.Frame.loot_buttons_auto},
+				{ "frame_color_backdrop", "color", width = "double" },
+				{ "loot_color_backdrop", "color" },
+				{ "frame_color_gradient", "color", width = "double" },
+				{ "loot_color_gradient", "color" },
+				{ "loot_color_info", "color", width = "double", requires = "loot_texts_info" },
+				{ "loot_color_button_auto", "color", requires = "loot_buttons_auto", name = L.Frame.loot_buttons_auto},
 			}}
 		})
 	end
@@ -561,36 +563,28 @@ function addon:OnEnable() -- Construct addon option tables here
 		addon:RegisterOptions({ name = "Group", addon =  XLootGroup }, {
 			{ "anchors", "group", {
 				{ "roll_anchor_visible", "toggle", "roll_anchor", "visible", set = set_anchor },
-				--[[ DISABLED-PATCH: LEGION PRE-PATCH
-				{ "alert_anchor_visible", "toggle", "alert_anchor", "visible", set = set_anchor, width = "double" },
-				]]
 			}},
-			--[[ DISABLED-PATCH: LEGION PRE-PATCH
-			{ "other_frames", "group", {
-				{ "hook_warning_text", "description" },
-				{ "hook_bonus", must_reload_ui = true },
-				{ "bonus_skin", requires = "hook_bonus", width = "double" },
-				{ "hook_alert", must_reload_ui = true },
-				{ "alert_skin", requires = "hook_alert", width = "double" },
-			}},
-			]]
 			{ "rolls", "group", {
 				{ "roll_direction", "select", directions, "roll_anchor", "direction" , name = L.growth_direction },
-				{ "text_outline", "toggle" },
-				{ "text_time", "toggle" },
 				{ "roll_scale", "scale", "roll_anchor", "scale" },
 				{ "roll_width", "range", 150, 700, 1, 150, 400, 10, name = L.width },
-				{ "roll_spacing", "range", 0, 25, 1, name = L.spacing, subtable = "roll_anchor", subkey = "spacing" },
-				{ "roll_offset", "range", 0, 25, 1, name = L.offset, subtable = "roll_anchor", subkey = "offset" },
+				{ "roll_spacing", "range", -25, 25, 1, name = L.spacing, subtable = "roll_anchor", subkey = "spacing" },
+				{ "roll_offset", "range", -25, 25, 1, name = L.offset, subtable = "roll_anchor", subkey = "offset" },
 				{ "roll_button_size", "range", 16, 48, 1 },
+
 			}},
 			{ "extra_info", "group", {
 				{ "equip_prefix", "toggle" },
-				{ "prefix_equippable", "input" },
+				{ "prefix_equippable", "input", requires = "equip_prefix" },
 				{ "prefix_upgrade", "input" },
+				{ "show_time_remaining", "toggle", name = L.Group.text_time },
 				{ "show_undecided", "toggle" },
 				{ "role_icon", "toggle" },
-				{ "win_icon", "toggle" },
+				{ "win_icon", "toggle", width = "double" },
+			}},
+			{ "font", "group", {
+				{ "font", fonts },
+				{ "font_flag", font_flag },
 			}},
 			{ "roll_tracking", "group", {
 				{ "track_all", "toggle", width = "double" },
@@ -601,18 +595,6 @@ function addon:OnEnable() -- Construct addon option tables here
 				{ "expire_won", "range", 5, 30, 1 },
 				{ "expire_lost", "range", 5, 30, 1 },
 			}},
-			--[[ DISABLED-PATCH: LEGION PRE-PATCH
-			{ "alerts", "group", {
-					{ "alert_scale", "scale" },
-					{ "alert_offset", "range", -5, 20, 0.1 },
-					{ "alert_alpha", "alpha" },
-					{ "alert_direction", "select", directions, "alert_anchor", "direction", name = L.growth_direction },
-					{ "alert_background" },
-					{ "alert_icon_frame" },
-				},
-				defaults = { requires = "hook_alert" }
-			}
-			]]
 		})
 	end
 
@@ -620,7 +602,7 @@ function addon:OnEnable() -- Construct addon option tables here
 	if XLoot:GetModule("Monitor", true) then
 		addon:RegisterOptions({ name = "Monitor", addon =  XLootMonitor.addon }, {
 			{ "testing", "group", {
-				{ "test_settings", "execute", func = XLootMonitor.test_settings }
+				{ "test_settings", "execute", func = XLootMonitor.TestSettings }
 			}},
 			{ "anchor", "group", {
 				{ "visible", "toggle", set = set_anchor },

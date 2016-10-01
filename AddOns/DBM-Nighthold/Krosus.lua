@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1713, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15020 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15140 $"):sub(12, -3))
 mod:SetCreatureID(101002)
 mod:SetEncounterID(1842)
 mod:SetZone()
@@ -19,6 +19,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_DIED"
 )
 
+--(ability.id = 205368 or ability.id = 205370 or ability.id = 205420 or ability.id = 205361) and type = "begincast"
 --TODO, improve info frame to show active mob count on top of burning pitch on player true/false? instead of just being burning pitch list for entire raid?
 local warnExpelOrbDestro			= mod:NewTargetCountAnnounce(205344, 4)
 local warnSlam						= mod:NewCountAnnounce(205862, 2)--Regular slams don't need special warn, only bridge smashing ones
@@ -34,7 +35,7 @@ local specWarnFelBlast				= mod:NewSpecialWarningInterrupt(209017, "HasInterrupt
 local specWarnFelBurst				= mod:NewSpecialWarningInterrupt(206352, "HasInterrupt", nil, nil, 1, 2)
 
 local timerSearingBrand				= mod:NewTargetTimer(20, 206677, nil, "Tank", nil, 5)
-local timerFelBeamCD				= mod:NewNextSourceTimer(16, 205368, nil, nil, nil, 3)
+local timerFelBeamCD				= mod:NewNextCountTimer(16, 205368, nil, nil, nil, 3)
 local timerOrbDestroCD				= mod:NewNextCountTimer(16, 205344, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--Not that deadly on non mythic but on mythic it is
 local timerBurningPitchCD			= mod:NewNextCountTimer(16, 205420, nil, "-Tank", nil, 5)
 local timerSlamCD					= mod:NewNextCountTimer(30, 205862, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
@@ -54,26 +55,26 @@ local voiceFelBurst					= mod:NewVoice(206352, "HasInterrupt")--kickcast
 
 mod:AddRangeFrameOption(5, 206352)
 --mod:AddSetIconOption("SetIconOnMC", 163472, false)
---mod:AddHudMapOption("HudMapOnMC", 163472)
 mod:AddInfoFrameOption(215944, false)
 mod:AddArrowOption("ArrowOnBeam", 205368, true)
 
 local burningPitchDebuff = GetSpellInfo(215944)
 local mobGUIDs = {}
---non mythic beams
-local leftBeamTimers = {37, 75, 32, 30, 82, 31, 26, 24, 18}--205370
-local rightBeamTimers = {8, 59, 61, 30, 43, 81, 26, 17, 17}--205368
---Mythic beams (combined, the side it's on during mythic is random)
-local beamMythicTimers = {6, 16, 16, 16, 14, 16, 27, 55, 26, 5, 21.3, 4.7, 12.2, 12, 4.8, 13.2, 19, 4.8, 25.2, 4.8}--205370/205368 Combined (up to 5:18, missing 42 seconds)
---Other stuff
-local orbTimers = {22, 58, 23, 63, 26, 25, 15, 15, 15, 30, 55}--
-local orbMythicTimers = {13, 62, 27, 25, 14.9, 15, 15, 30, 55.1, 38}
-local burningPitchTimers = {52, 84, 90, 93}
-local burningPitchMythicTimers = {45.0, 90, 93.9, 78}
+--Beams (205370/205368 Combined)
+local lolBeamTimers = {5, 15, 30, 30, 23, 27, 30, 44, 14, 16, 14, 16, 22, 60}--LFR & Normal
+local heroicBeamTimers = {7, 29, 30, 42, 16, 16, 14, 16, 28, 54, 26, 5, 5, 16, 5, 12, 12, 5, 13}--Complete up to berserk
+local mythicBeamTimers = {6, 16, 16, 16, 14, 16, 27, 55, 26, 5, 21.3, 4.7, 12.2, 12, 4.8, 13.2, 19, 4.8, 25.2, 4.8}--(up to 5:18, missing 42 seconds)
+--Orbs
+local lolOrbTimers = {70.0, 40.0, 60.0, 25.0, 60.0, 37.0, 15.0, 15.0, 30.0}--LFR and Normal
+local heroicOrbTimers = {19.9, 60.0, 23.0, 62.0, 27.0, 25.0, 15.0, 15.4, 14.6, 30, 55}--Complete up to berserk
+local mythicOrbTimers = {13, 62, 27, 25, 14.9, 15, 15, 30, 55.1, 38}--(up to 5:18, missing 42 seconds)
+--Pitch
+local lolBurningPitchTimers = {38.0, 102.0, 85.0, 90.0}--LFR and Normal
+local heroicBurningPitchTimers = {49.8, 85.0, 90.0, 94}
+local mythicBurningPitchTimers = {45.0, 90, 93.9, 78}--38.0, 102.0, 85.0, 90.0 (OLD)
 mod.vb.burningEmbers = 0
 mod.vb.slamCount = 0
-mod.vb.leftBeamCount = 0
-mod.vb.rightBeamCount = 0
+mod.vb.beamCount = 0
 mod.vb.orbCount = 0
 mod.vb.pitchCount = 0
 
@@ -81,8 +82,7 @@ function mod:OnCombatStart(delay)
 	table.wipe(mobGUIDs)
 	self.vb.burningEmbers = 0
 	self.vb.slamCount = 0
-	self.vb.leftBeamCount = 0
-	self.vb.rightBeamCount = 0
+	self.vb.beamCount = 0
 	self.vb.orbCount = 0
 	self.vb.pitchCount = 0
 	if self:IsMythic() then
@@ -92,12 +92,18 @@ function mod:OnCombatStart(delay)
 		timerSlamCD:Start(-delay, 1)
 		countdownBigSlam:Start(-delay)
 		berserkTimer:Start(-delay)
-	else
-		timerFelBeamCD:Start(8-delay, DBM_CORE_RIGHT)
+	elseif self:IsHeroic() then
+		timerFelBeamCD:Start(5-delay, 1)
 		timerOrbDestroCD:Start(22-delay, 1)
-		timerFelBeamCD:Start(37-delay, DBM_CORE_LEFT)
 		timerBurningPitchCD:Start(52-delay, 1)
 		timerSlamCD:Start(-delay, 1)
+		countdownBigSlam:Start(-delay)
+		berserkTimer:Start(-delay)
+	else
+		timerFelBeamCD:Start(5-delay, 1)
+		timerSlamCD:Start(-delay, 1)
+		timerBurningPitchCD:Start(38-delay, 1)
+		timerOrbDestroCD:Start(70-delay, 1)
 		countdownBigSlam:Start(-delay)
 		berserkTimer:Start(-delay)
 	end
@@ -122,37 +128,22 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 205368 or spellId == 205370 then--205370 left, 205368 right
-		specWarnFelBeam:Show()
+		self.vb.beamCount = self.vb.beamCount + 1
+		specWarnFelBeam:Show(self.vb.beamCount)
+		local nextCount = self.vb.beamCount + 1
+		local timers = self:IsMythic() and mythicBeamTimers[nextCount] or self:IsHeroic() and heroicBeamTimers[nextCount] or lolBeamTimers[nextCount]
+		if timers then
+			timerFelBeamCD:Start(timers, nextCount)
+		end
 		if spellId == 205368 then--Coming from right
-			self.vb.rightBeamCount = self.vb.rightBeamCount + 1
-			if not self:IsMythic() then
-				local timers = rightBeamTimers[self.vb.rightBeamCount+1]
-				if timers then
-					timerFelBeamCD:Start(timers, DBM_CORE_RIGHT)
-				end
-			end
 			voiceFelBeam:Play("moveleft")
 			if self.Options.ArrowOnBeam then
 				DBM.Arrow:ShowStatic(90, 4)
 			end
 		else--coming from left
-			self.vb.leftBeamCount = self.vb.leftBeamCount + 1
-			if not self:IsMythic() then
-				local timers = leftBeamTimers[self.vb.leftBeamCount+1]
-				if timers then
-					timerFelBeamCD:Start(timers, DBM_CORE_LEFT)
-				end
-			end
 			voiceFelBeam:Play("moveright")
 			if self.Options.ArrowOnBeam then
 				DBM.Arrow:ShowStatic(270, 4)
-			end
-		end
-		if self:IsMythic() then
-			local nextBeam = self.vb.leftBeamCount + self.vb.rightBeamCount + 1
-			local timers = beamMythicTimers[self.vb.leftBeamCount+self.vb.rightBeamCount+1]
-			if timers then
-				timerFelBeamCD:Start(timers, nextBeam)
 			end
 		end
 	elseif spellId == 205420 then
@@ -163,9 +154,10 @@ function mod:SPELL_CAST_START(args)
 		else
 			voiceBurningPitch:Play("helpsoak")
 		end
-		local timers = self:IsMythic() and burningPitchMythicTimers[self.vb.pitchCount+1] or burningPitchTimers[self.vb.pitchCount+1]
+		local nextCount = self.vb.pitchCount + 1
+		local timers = self:IsMythic() and mythicBurningPitchTimers[nextCount] or self:IsHeroic() and heroicBurningPitchTimers[nextCount] or lolBurningPitchTimers[nextCount]
 		if timers then
-			timerBurningPitchCD:Start()
+			timerBurningPitchCD:Start(nil, nextCount)
 		end
 	elseif spellId == 209017 and self:CheckInterruptFilter(args.sourceGUID) then
 		specWarnFelBlast:Show(args.sourceName)
@@ -194,9 +186,10 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 205361 then
 		self.vb.orbCount = self.vb.orbCount + 1
-		local timers = self:IsMythic() and orbMythicTimers[self.vb.orbCount+1] or orbTimers[self.vb.orbCount+1]
+		local nextCount = self.vb.orbCount+1
+		local timers = self:IsMythic() and mythicOrbTimers[nextCount] or self:IsHeroic() and heroicOrbTimers[nextCount] or lolOrbTimers[nextCount]
 		if timers then
-			timerOrbDestroCD:Start(timers, self.vb.orbCount+1)
+			timerOrbDestroCD:Start(timers, nextCount)
 		end
 	end
 end

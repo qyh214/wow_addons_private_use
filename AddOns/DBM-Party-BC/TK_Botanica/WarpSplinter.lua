@@ -1,14 +1,15 @@
 local mod = DBM:NewMod(562, "DBM-Party-BC", 14, 257)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 572 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
 
 mod:SetCreatureID(17977)
+mod:SetEncounterID(1929)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_SUCCESS",
-	"SPELL_SUMMON"
+	"SPELL_CAST_SUCCESS 34716",
+	"SPELL_SUMMON 34727"
 )
 
 local warnTreants    = mod:NewSpellAnnounce(34727)

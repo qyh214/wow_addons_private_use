@@ -82,10 +82,6 @@ L:SetGeneralLocalization{
 	name = "청지기 이그젝큐투스"
 }
 
-L:SetMiscLocalization{
-	Kill	= "이럴 수가! 그만! 제발 그만! 내가 졌다! 내가 졌어!"
-}
-
 ----------------
 --  Ragnaros  --
 ----------------

@@ -329,7 +329,7 @@ function barListPrototype:AddButton(title, description, normaltex, highlighttex,
 	btn:Show()
 
 	-- Add to our list of buttons.
-	table.insert(self.buttons, btn)
+	tinsert(self.buttons, btn)
 
 	self:AdjustButtons()
 end
@@ -821,15 +821,8 @@ end
 function barListPrototype:UpdateOrientationLayout()
 	local length, thickness = self.length, self.thickness
 	barListPrototype.super.SetWidth(self, length)
---		barListPrototype.super.SetHeight(self, thickness)
 	self.button:SetWidth(length)
---	self.button:SetHeight(thickness)
-
---	self.button:SetText(self.name)
 	self:ReverseGrowth(self.growup)
-	-- self.button:SetWidth(vertical and 15 or length)
-	-- self.button:SetHeight(vertical and length or 15)
-	-- self:SortBars()
 end
 
 function barListPrototype:SetLength(length)
@@ -921,11 +914,16 @@ do
 	function barListPrototype:SortBars()
 		local lastBar = self
 		local ct = 0
+        local has_fixed = false
+        
 		if not bars[self] then return end
 		for k, v in pairs(bars[self]) do
 			ct = ct + 1
 			values[ct] = v
 			v:Hide()
+            if v.fixed then
+                has_fixed = true
+            end
 		end
 		for i = ct + 1, #values do
 			values[i] = nil
@@ -958,6 +956,16 @@ do
 			stop = math.min(maxbars + offset, #values)
 			step = 1
 		end
+        
+        -- Fixed bar replaces the last bar
+        if has_fixed and stop < #values then
+            for i = stop + 1, #values, 1 do
+                if values[i].fixed then
+                    tinsert(values, stop, values[i])
+                    break
+                end
+            end
+        end
 
 		local shown = 0
 		local last_icon = false
@@ -979,7 +987,11 @@ do
 
 			-- Silly hack to fix icon positions. I should just rewrite the whole thing, really. WTB energy.
 			if showIcon and lastBar == self then
-				x1 = thickness
+                if orientation == 1 then
+                    x1 = thickness
+                else
+                    x2 = -thickness
+                end
 			end
 
 			if shown <= maxbars then
@@ -1024,7 +1036,7 @@ do
 	end
 
 
-	local DEFAULT_ICON = [[Interface\ICONS\INV_Misc_QuestionMark]]
+	local DEFAULT_ICON = 134400
 	function barPrototype:Create(text, value, maxVal, icon, orientation, length, thickness)
 
 		self.callbacks = self.callbacks or CallbackHandler:New(self)
@@ -1159,9 +1171,6 @@ end
 
 function barPrototype:SetIconWithCoord(icon, coord)
 	if icon then
-		if type(icon) == "number" then
-			icon = select(3, GetSpellInfo(icon))
-		end
 		self.icon:SetTexture(icon)
 		self.icon:SetTexCoord(unpack(coord))
 		if self.showIcon then
@@ -1175,9 +1184,6 @@ end
 
 function barPrototype:SetIcon(icon)
 	if icon then
-		if type(icon) == "number" then
-			icon = select(3, GetSpellInfo(icon))
-		end
 		self.icon:SetTexture(icon)
 		if self.showIcon then
 			self.icon:Show()
