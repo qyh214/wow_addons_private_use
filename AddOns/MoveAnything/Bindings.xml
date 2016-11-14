@@ -1,0 +1,35 @@
+<Bindings>
+	<Binding name="Toggle MA window" header="MOVEANYTHING" category="ADDONS">
+		MovAny:ToggleGUI()
+	</Binding>
+	<Binding name="Move frame - Safe" category="ADDONS">
+		MovAny:SafeMoveFrameAtCursor()
+	</Binding>
+	<Binding name="Edit frame - Safe" category="ADDONS">
+		MovAny:SafeMAFEFrameAtCursor()
+	</Binding>
+	<Binding name="Hide frame - Safe" category="ADDONS">
+		MovAny:SafeHideFrameAtCursor()
+	</Binding>
+	<Binding name="Reset frame - Safe" category="ADDONS">
+		MovAny:SafeResetFrameAtCursor()
+	</Binding>
+	<Binding name="Move frame - Exact" category="ADDONS">
+		MovAny:MoveFrameAtCursor()
+	</Binding>
+	<Binding name="Edit frame - Exact" category="ADDONS">
+		MovAny:MAFEFrameAtCursor()
+	</Binding>
+	<Binding name="Hide frame - Exact" category="ADDONS">
+		MovAny:HideFrameAtCursor()
+	</Binding>
+	<Binding name="Reset frame - Exact" category="ADDONS">
+		MovAny:ResetFrameAtCursor()
+	</Binding>
+	<Binding name="Synchronize all elements" category="ADDONS">
+		MovAny:SyncAllFrames()
+	</Binding>
+	<Binding name="Show frame info" category="ADDONS">
+		MovAny:DebugFrameAtCursor()
+	</Binding>
+</Bindings>

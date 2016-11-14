@@ -1,5 +1,5 @@
 -------------------------------------------------------
--- fyhcslb, 2016/08/24
+-- fyhcslb, 2016/10/27
 -- Special Thanks: q3fuba
 -- Translators: Sexnonstop(ruRU), Durcc(esES), pas06(deDE)
 -------------------------------------------------------
@@ -17,6 +17,16 @@ UnitPopupButtons["ENHANCED_MENU"] = { -- Subsection by q3fuba!
   isTitle = true,
   isUninteractable = true,
   isSubsectionTitle = true
+}
+
+UnitPopupButtons["SUBSECTION_SEPARATOR"] = { -- removed in 7.1 ---> UIDropDownMenu_AddSeparator
+	dist = 0,
+	isTitle = true,
+	isUninteractable = true,
+	iconOnly = true,
+	icon = "Interface\\Common\\UI-TooltipDivider-Transparent",
+	tCoordLeft = 0, tCoordRight = 1, tCoordTop = 0, tCoordBottom = 1,
+	tSizeX = 0, tFitDropDownSizeX = true, tSizeY = 8, 
 }
 
 UnitPopupButtons["GUILD_INVITE"] = {
@@ -257,6 +267,7 @@ end)
 Original_UnitPopup_OnClick = _G["UnitPopup_OnClick"]
 
 function UnitPopup_OnClick(self)
+	-- texplore("UnitPopupButton", self)
 	local pName, pServer = CURRENT_NAME, CURRENT_SERVER
 	if pServer and pServer ~= "" then pName = pName .. "-" .. pServer end	-- no server, no concat
 	

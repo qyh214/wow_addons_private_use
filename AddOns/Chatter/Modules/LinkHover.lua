@@ -48,19 +48,21 @@ function mod:OnDisable()
 	end
 end
 
+local showingTooltip = false
 function mod:OnHyperlinkEnter(f, link)
 	local t = strmatch(link, "^(.-):")
 	if linkTypes[t] then
+		showingTooltip = true
 		ShowUIPanel(GameTooltip)
 		GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
 		GameTooltip:SetHyperlink(link)
 		GameTooltip:Show()
-	end			
+	end
 end
 
 function mod:OnHyperlinkLeave(f, link)
-	local t = strmatch(link, "^(.-):")
-	if linkTypes[t] then
+	if showingTooltip then
+		showingTooltip = false
 		HideUIPanel(GameTooltip)
 	end
 end

@@ -14,7 +14,7 @@ setfenv(1, WIM);
 
 -- Core information
 addonTocName = "WIM";
-version = "3.7.9";
+version = "3.7.10";
 beta = false; -- flags current version as beta.
 debug = false; -- turn debugging on and off.
 useProtocol2 = true; -- test switch for new W2W Protocol. (Dev use only)
@@ -375,6 +375,7 @@ function WIM:VARIABLES_LOADED()
     
     SetEnabled(db.enabled);
     initialize();
+     --_G.print("WIM Notice: Since 7.0 there is a new bug where first whisper is not visible until you get a 2nd whisper, or you scroll up and then back down. That's work around. Scroll up, then scroll down.")
 end
 
 function WIM:FRIENDLIST_UPDATE()

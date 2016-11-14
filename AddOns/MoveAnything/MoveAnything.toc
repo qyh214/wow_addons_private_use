@@ -1,0 +1,41 @@
+## Interface: 70100
+## Title: MoveAnything
+## Version: 16.1.1
+## Author: Wagthaa
+## Notes: Move, scale, hide and adjust transparency of just about any screen element in the game.
+## DefaultState: Enabled
+## SavedVariables: MADB
+
+Libs\!NoTaint\!NoTaint.xml
+Libs\!NoTaint\!NoTaint.lua
+
+Localizations\Localization.br.lua
+Localizations\Localization.cn.lua
+Localizations\Localization.de.lua
+Localizations\Localization.en.lua
+Localizations\Localization.es.lua
+Localizations\Localization.fr.lua
+Localizations\Localization.it.lua
+Localizations\Localization.kr.lua
+Localizations\Localization.ru.lua
+Localizations\Localization.tw.lua
+
+MoveAnything.lua
+Profile.lua
+API.lua
+FrameEditor.lua
+PortDialog.lua
+VirtualMovers.lua
+
+Modules\Alpha.lua
+Modules\Backdrop.lua
+Modules\Layers.lua
+Modules\Misc.lua
+Modules\Position.lua
+Modules\Scale.lua
+Modules\Visibility.lua
+
+FrameList.lua
+
+MoveAnything.xml
+BlizzardOptions.xml

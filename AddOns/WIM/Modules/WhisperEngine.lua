@@ -190,8 +190,8 @@ local function getWhisperWindowByUser(user, isBN)
     else
         -- otherwise, create a new one.
         Windows[user] = CreateWhisperWindow(user);
-	Windows[user].isBN = isBN;
-	Windows[user].bn = Windows[user].bn or {};
+		Windows[user].isBN = isBN;
+		Windows[user].bn = Windows[user].bn or {};
         if(db.whoLookups or lists.gm[user] or Windows[user].isBN) then
             Windows[user]:SendWho(); -- send who request
         end

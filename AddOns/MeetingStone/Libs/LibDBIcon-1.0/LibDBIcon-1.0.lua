@@ -358,3 +358,4 @@ function lib:DisableLibrary()
 		object:Hide()
 	end
 end
+

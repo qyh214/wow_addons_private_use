@@ -4,7 +4,6 @@ local XLootMonitor = CreateFrame("Frame", "XLootMonitor", UIParent)
 XLootMonitor.addon = addon
 -- Grab locals
 local print, opt, eframe, anchor = print
-local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or _G.RAID_CLASS_COLORS
 local CopperToString, FancyPlayerName = XLoot.CopperToString, XLoot.FancyPlayerName
 local table_insert, table_remove = table.insert, table.remove
 local me = UnitName("player")

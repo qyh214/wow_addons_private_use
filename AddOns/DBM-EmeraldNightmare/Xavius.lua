@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1726, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15283 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15369 $"):sub(12, -3))
 mod:SetCreatureID(103769)
 mod:SetEncounterID(1864)
 mod:SetZone()
@@ -235,8 +235,13 @@ function mod:SPELL_CAST_START(args)
 		specWarnCorruptingNova:Show(args.sourceName)
 		voiceCorruptingNova:Play("aesoon")
 	elseif spellId == 209443 then
-		timerNightmareInfusionCD:Start()
-		countdownNightmareInfusion:Start()
+		if self.vb.phase == 3 then
+			timerNightmareInfusionCD:Start(31.5)
+			countdownNightmareInfusion:Start(31.5)
+		else
+			timerNightmareInfusionCD:Start()
+			countdownNightmareInfusion:Start()
+		end
 		local targetName, uId = self:GetBossTarget(args.sourceGUID, true)
 		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
 		if tanking or (status == 3) then
@@ -270,7 +275,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 210264 then
 		self.vb.corruptionHorror = self.vb.corruptionHorror + 1
 		specWarnCorruptionHorror:Show(self.vb.corruptionHorror)
-		voiceCorruptionHorror:Play("bigadd")
+		voiceCorruptionHorror:Play("bigmob")
 		timerCorruptionHorrorCD:Start(nil, self.vb.corruptionHorror+1)
 		countdownCorruptionHorror:Start()
 	end
@@ -290,9 +295,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnDescentIntoMadness:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnDescentIntoMadness:Show()
-			yellDescentIntoMadness:Schedule(19, 1)
-			yellDescentIntoMadness:Schedule(18, 2)
-			yellDescentIntoMadness:Schedule(17, 3)
+			if not playerHasDream then
+				yellDescentIntoMadness:Schedule(19, 1)
+				yellDescentIntoMadness:Schedule(18, 2)
+				yellDescentIntoMadness:Schedule(17, 3)
+			end
 		end
 	elseif spellId == 206651 then
 		local amount = args.amount or 1
@@ -346,7 +353,7 @@ function mod:SPELL_AURA_APPLIED(args)
 						end
 					end
 				end
-				if not filterWarning then
+				if not filterWarning and not UnitDebuff("player", GetSpellInfo(205612)) then
 					specWarnBlackeningSoulOther:Show(args.destName)
 					voiceBlackeningSoul:Play("tauntboss")
 				end
@@ -549,11 +556,12 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		timerNightmareInfusionCD:Stop()
 		countdownNightmareInfusion:Cancel()
 		timerBlackeningSoulCD:Stop()
+		timerNightmareInfusionCD:Start(11)
+		countdownNightmareInfusion:Start(11)
 		timerBlackeningSoulCD:Start(15)
-		timerCorruptionMeteorCD:Start(21, 1)
-		countdownMeteor:Start(21)
-		timerNightmareBladesCD:Start(31)
-		timerNightmareInfusionCD:Start(36)
+		timerCorruptionMeteorCD:Start(20.5, 1)
+		countdownMeteor:Start(20.5)
+		timerNightmareBladesCD:Start(30)
 		self:UnregisterShortTermEvents()
 	elseif spellId == 226194 then--Writhing Deep
 		warnNightmareTentacles:Show()

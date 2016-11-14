@@ -23,6 +23,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1738)
 
 L:SetOptionLocalization({
+	SetIconOnlyOnce		= "Set icon only once per ooze scan then disable until at least one blows up (experimental)",
 	InfoFrameBehavior	= "Set information InfoFrame shows during encounter",
 	Fixates				= "Show players affected by Fixate",
 	Adds				= "Show add counts for all add types"
@@ -32,6 +33,25 @@ L:SetOptionLocalization({
 -- Elerethe Renferal --
 ---------------------------
 L= DBM:GetModLocalization(1744)
+
+L:SetWarningLocalization({
+	warnWebOfPain		= ">%s< is linked to >%s<",--Only this needs localizing
+	specWarnWebofPain	= "You are linked to >%s<"--Only this needs localizing
+})
+
+L:SetOptionLocalization({
+	warnWebOfPain		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(215307),--No need to copy to other locals
+	specWarnWebofPain	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you:format(215307),--No need to copy to other locals
+	WebConfiguration	= "Set HUD/Arrow options for Web of Pain",
+	Disabled			= "Disabled",
+	Arrow				= "Show only traditional Arrow if you're affected",
+	HudSelf				= "Show HUD line only if you're affected",
+	HudAll				= "Show HUD line for all affected targets"
+})
+
+L:SetMiscLocalization({
+	MapMessage			= "Note: This mod uses arrow/HUD options that can be configured in GUI. These options will also break in 7.1"
+})
 
 ---------------------------
 -- Ursoc --

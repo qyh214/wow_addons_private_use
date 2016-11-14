@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+﻿## Interface: 70100
 ## Author: Resike
 ## Title: Z-Perl |cffeda55fPlayer|r
 ## Title-itIT: Z-Perl |cffeda55fGiocatore|r
@@ -13,7 +13,7 @@
 ## Notes-zhTW: 替換並增強的玩家單位頭像框架
 ## RequiredDeps: ZPerl
 ## OptionalDeps: ZPerl_ArcaneBar
-## X-Curse-Packaged-Version: r1014
+## X-Curse-Packaged-Version: r1019
 ## X-Curse-Project-Name: Z-Perl Unit Frames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

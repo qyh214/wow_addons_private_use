@@ -1,0 +1,13 @@
+tag 3.3.2
+94aced132b8335df98707a3e7ba7867a146a977b
+Hendrik Leppkes <h.leppkes@gmail.com>
+2016-10-26 09:50:17 +0200
+
+Tag as 3.3.2
+
+
+--------------------
+
+Hendrik Leppkes:
+	- Update TOC for 7.1
+	- Replace the title region with manual drag handlers, as title regions are removed in 7.1

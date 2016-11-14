@@ -1,3 +1,28 @@
+**r1018**
+* Fixed an another issue with the Raid Helper.
+
+**r1017**
+* Securely Hiding raid pets in pet battles.
+* Fixed a health issue for raid pets.
+* Raid pets now can be enabled/disabled independently from raid frames.
+* Dead raid pets should have their health bar colored properly.
+* Raid pets should properly update after loading screens.
+* Raid pets now use frequent health updates.
+* Party pets should properly update after loading screens.
+* Target and focus frames should get properly updated when using a leveling stone on a battle pet while targeting/focusing it.
+* Healer mode health text fixes.
+* Added Atonement for the pom spells.
+* Warrior's portrait should properly get updated after using Sky Jump.
+* Fixed an issue with the Raid Helper.
+* Loads of other smaller fixes.
+
+**r1016**
+* Wake the repo server up.
+
+**r1015**
+* Workaround for proper power type bars for the Xavius fight.
+* Reverted health text values and prefixes back to the original Chinese system.
+
 **r1014**
 * Wake the repo server up.
 

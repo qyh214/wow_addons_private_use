@@ -1,0 +1,24 @@
+tag 1.0.6
+79103bc0425dd59d0cd047c09fd59441e1a7232f
+Benjamin Staneck <staneck@gmail.com>
+2016-10-24 21:12:39 +0200
+
+
+
+--------------------
+
+Benjamin Staneck:
+	- TOC update for Patch 7.1
+	- add synchronizeConfig/Macros
+	- changes for patch 7.1
+Ketho:
+	- HookScript instead of overwriting the default scripts
+	- remove old Sound_EnableSoftwareHRTF cvar
+	- fix Lag Tolerance option
+Benjamin Staneck:
+	- better description
+	- add nameplateMotion
+	- advancedWorldMap is gone
+	- list some more globals
+Ketho:
+	- add ShowQuestUnitCircles and some unit name cvars

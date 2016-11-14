@@ -1,5 +1,5 @@
-## Interface: 70000
-## Version: 2.1.5
+## Interface: 70100
+## Version: 2.1.7
 ## Title: WhisperInvite Advanced
 ## Notes: Advanced invite module
 ## Title-deDE: WhisperInvite Advanced
@@ -13,7 +13,7 @@
 ## RequiredDeps: WhisperInvite
 ## OptionalDeps: UTF8, LibWho-2.0
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: 2.1.5
+## X-Curse-Packaged-Version: 2.1.7
 ## X-Curse-Project-Name: WhisperInvite
 ## X-Curse-Project-ID: whisperinvite
 ## X-Curse-Repository-ID: wow/whisperinvite/mainline

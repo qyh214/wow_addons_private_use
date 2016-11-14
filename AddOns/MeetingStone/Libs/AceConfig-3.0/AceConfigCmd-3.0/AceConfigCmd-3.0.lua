@@ -84,6 +84,7 @@ end
 
 local function usererr(info,inputpos,msg )
 	local cmdstr=strsub(info.input, 1, inputpos-1);
+	print("/" ..info[0] .. " "..cmdstr ..": "..(msg or "malformed options table"))
 end
 
 
@@ -203,6 +204,7 @@ end
 
 local function showhelp(info, inputpos, tab, depth, noHead)
 	if not noHead then
+		print("|cff33ff99"..info.appName.."|r: Arguments to |cffffff78/"..info[0].."|r "..strsub(info.input,1,inputpos-1)..":")
 	end
 	
 	local sortTbl = {}	-- [1..n]=name
@@ -253,11 +255,13 @@ local function showhelp(info, inputpos, tab, depth, noHead)
 					desc = callfunction(info, v, 'desc')
 				end
 				if v.type == "group" and pickfirstset(v.cmdInline, v.inline, false) then
+					print("  "..(desc or name)..":")
 					local oldhandler,oldhandler_at = getparam(info, inputpos, v, depth, "handler", handlertypes, handlermsg)
 					showhelp(info, inputpos, v, depth, true)
 					info.handler,info.handler_at = oldhandler,oldhandler_at
 				else
 					local key = k:gsub(" ", "_")
+					print("  |cffffff78"..key.."|r - "..(desc or name or ""))
 				end
 			end
 		end
@@ -496,9 +500,12 @@ local function handle(info, inputpos, tab, depth, retfalse)
 			local b = callmethod(info, inputpos, tab, "get")
 			local fmt = "|cffffff78- [%s]|r %s"
 			local fmt_sel = "|cffffff78- [%s]|r %s |cffff0000*|r"
+			print(L["Options for |cffffff78"..info[#info].."|r:"])
 			for k, v in pairs(values) do
 				if b == k then
+					print(fmt_sel:format(k, v))
 				else
+					print(fmt:format(k, v))
 				end
 			end
 			return
@@ -533,9 +540,12 @@ local function handle(info, inputpos, tab, depth, retfalse)
 		if str == "" then
 			local fmt = "|cffffff78- [%s]|r %s"
 			local fmt_sel = "|cffffff78- [%s]|r %s |cffff0000*|r"
+			print(L["Options for |cffffff78"..info[#info].."|r (multiple possible):"])
 			for k, v in pairs(values) do
 				if callmethod(info, inputpos, tab, "get", k) then
+					print(fmt_sel:format(k, v))
 				else
+					print(fmt:format(k, v))
 				end
 			end
 			return

@@ -57,18 +57,23 @@ function module:OnInitialized()
 	local appraisers={}
 	local trash={}
 	if _G.AucAdvanced then
+		addon.AuctionPrices=true
 		appraisers.AUC=_G.AucAdvanced.API.GetMarketValue
 	end
 	if _G.Atr_GetAuctionBuyout then
+		addon.AuctionPrices=true
 		appraisers.ATR=Atr_GetAuctionBuyout
 	end
 	if _G.TSMAPI then
+		addon.AuctionPrices=true
 		appraisers.TSM=function(itemlink) return TSMAPI:GetItemValue(itemlink,"DBMarket") end
 	end
 	if _G.TUJMarketInfo then
+		addon.AuctionPrices=true
 		appraisers.TUY=function(itemlink) TUJMarketInfo(itemlink,trash) return trash['market'] end
 	end
 	if _G.GetAuctionBuyout then
+		addon.AuctionPrices=true
 		appraisers.AH=GetAuctionBuyout
 	end
 	local function GetMarketValue(self,itemId)
@@ -77,7 +82,6 @@ function module:OnInitialized()
 		if itemlink then
 			if not I:IsBop(itemlink) then
 				for i,k in pairs(appraisers) do
-					addon.AuctionPrices=true
 					rc,price=pcall(k,itemId)
 					if rc and price and price >0 then
 						source=i
@@ -227,6 +231,9 @@ function module:AddExtraData(mission)
 	if mission.missionID == dbg then print("Final gold",mission.gold) DevTools_Dump(mission.moreClasses)end
 --@end-debug@]===]
 	if not mission.class then mission.class="other" end
+	local xp=select(2,G.GetMissionInfo(mission.missionID))
+	if not mission.xp or mission.xp==0 then mission.xp=xp end
+	mission.globalXp=tonumber(mission.xp) or 0 + tonumber(mission.xpBonus) or 0
 end
 function module:GetMissionIterator(followerType)
 	local list

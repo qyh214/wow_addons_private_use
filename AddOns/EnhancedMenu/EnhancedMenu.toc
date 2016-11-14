@@ -1,8 +1,8 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: EnhancedMenu
 ## Notes: Extends popup menus.
 ## Notes-zhCN: 右键菜单增强
-## Version: 1.8.2
+## Version: 1.8.3
 ## Author: fyhcslb
 
 Libs\LibCurrentRegion.lua

@@ -1,0 +1,12 @@
+tag 2.1.7
+512d9bdef68724be058ae9c773566e8ef487318c
+Areko <areko@hoherratallerias.ch>
+2016-10-26 17:34:15 +0200
+
+Tagging as 2.1.7
+
+
+--------------------
+
+Areko:
+	- TOC Bump

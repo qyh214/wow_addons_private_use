@@ -201,7 +201,7 @@ group:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -16)
 group:AddButton(L["show privilege icons"], "showPrivIcons")
 group:AddButton(L["show role icon"], "showRoleIcon")
 group:AddButton(L["show raid target icon"], "showRaidIcon")
-group:AddButton(L["show direction arrow"], "showDirectionArrow")
+--group:AddButton(L["show direction arrow"], "showDirectionArrow") -- Feature disabled since 70100
 group:AddButton(L["invert bar color"], "invertColor")
 group:AddButton(L["show bar background"], "showbarbkgnd")
 
@@ -268,13 +268,20 @@ nameXOffSlider:SetPoint("TOPLEFT", nameLenSlider, "BOTTOMLEFT", 0, -34)
 local nameYOffSlider = templates:CreateOptionSlider(page, "nameYOffset", L["y-offset"], -20, 20)
 nameYOffSlider:SetPoint("LEFT", nameXOffSlider, "RIGHT", 20, 0)
 
+local nameColorSwatch = group.colorSwatch
+group = templates:CreateOptionMultiSelectionGroup(page)
+
+local nameOutlineCheck = group:AddButton(L["font outline"], "nameFontOutline")
+nameOutlineCheck:ClearAllPoints()
+nameOutlineCheck:SetPoint("LEFT", nameColorSwatch, "RIGHT", 14, 0)
+
 ------------------------------------------------------------
 -- Container options
 ------------------------------------------------------------
 
 group = templates:CreateOptionMultiSelectionGroup(page, L["frame container options"])
 group:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -176)
-group:AddButton(L["show tool buttons"], "hideToolboxes", 1)
+group:AddButton(L["show tool buttons"], "showToolboxes", 1)
 
 anchor = group
 
@@ -371,11 +378,8 @@ local function LoadOptionColor(option, defaultR, defaultG, defaultB)
 end
 
 local function ReverseShowHide(db, name)
-	if db["hide"..name] then
-		db["hide"..name] = nil
-	else
-		db["show"..name] = 1
-	end
+	db["hide"..name] = nil
+	db["show"..name] = 1
 end
 
 local function InitOptionData(db, chardb)
@@ -419,14 +423,14 @@ local function InitOptionData(db, chardb)
 	LoadOption("outrangeAlpha", 40, 0, 100)
 	LoadOptionColor("unitBkColor", 0, 0, 0)
 
-	LoadOption("hidePrivIcons")
-	LoadOption("hideRoleIcon")
-	LoadOption("hideRaidIcon")
-	LoadOption("hideDirectionArrow")
+	LoadOption("showPrivIcons")
+	LoadOption("showRoleIcon")
+	LoadOption("showRaidIcon")
+	--LoadOption("showDirectionArrow")
 	LoadOption("tooltipPosition", 1, 0, 1)
-	LoadOption("hideToolboxes")
+	LoadOption("showToolboxes")
 
-	LoadOption("hidebarbkgnd")
+	LoadOption("showbarbkgnd")
 	LoadOption("showSolo")
 	LoadOption("showParty")
 	LoadOption("showPartyPets", nil, nil, nil, 1)
@@ -442,6 +446,7 @@ local function InitOptionData(db, chardb)
 	LoadOption("nameHeight", 12, 4, 20)
 	LoadOption("nameXOffset", 0, -20, 20)
 	LoadOption("nameYOffset", 0, -20, 20)
+	LoadOption("nameFontOutline")
 
 	LoadOption("forceNameColor")
 	LoadOptionColor("nameColor", 1, 1, 1)
@@ -469,14 +474,11 @@ addon:RegisterEventCallback("OnInitialize", InitOptionData)
 
 function module:OnRestoreDefaults()
 	local modules = addon.db.modules
+	local profiles = addon.db.profiles
 	wipe(addon.db)
 	addon.db.modules = modules
-
-	modules = addon.chardb.modules
-	wipe(addon.chardb)
-	addon.chardb.modules = modules
-
-	addon:InitializeUserData(addon.db, addon.chardb)
+	addon.db.profiles = profiles
+	InitOptionData(addon.db, addon.chardb)
 end
 
 ------------------------------------------------------------

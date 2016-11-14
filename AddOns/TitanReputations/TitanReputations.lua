@@ -125,6 +125,13 @@ local function GetTooltipText(self, id)
 		local name, _, standingId, bottomValue, topValue, earnedValue, atWarWith, _, isHeader, _, hasRep, isWatched, _, factionId = GetFactionInfo(factionIndex)
 
 		if name then
+			if isWatched then
+				local value, max, color, standing = GetValueAndMaximum(standingId, earnedValue, bottomValue, topValue, factionId)
+				local nameColor = (atWarWith and Color.RED) or ""
+
+				topText = nameColor .. name .. "\t" .. color .. value .. "/" .. max .. standing .. "|r\n\n"
+			end
+
 			if isHeader then
 				-- if the previous header has child
 				if (headerText and childText ~= "") then
@@ -146,25 +153,19 @@ local function GetTooltipText(self, id)
 				local hideExalted = TitanGetVar(id, "HideExalted")
 				local show = true
 
-				if not isWatched then
-					if IsFactionInactive(factionIndex) then
-						show = false
-					elseif hideNeutral and IsNeutral(factionId, standingId) then
-						show = false
-					elseif hideExalted and IsMaxed(factionId, standingId) then
-						show = false
-					end
+				if IsFactionInactive(factionIndex) then
+					show = false
+				elseif hideNeutral and IsNeutral(factionId, standingId) then
+					show = false
+				elseif hideExalted and IsMaxed(factionId, standingId) then
+					show = false
 				end
 
 				if show then
 					local value, max, color, standing = GetValueAndMaximum(standingId, earnedValue, bottomValue, topValue, factionId)
 					local nameColor = (atWarWith and Color.RED) or ""
 
-					if isWatched then
-						topText = nameColor .. name .. "\t" .. color .. value .. "/" .. max .. standing .. "|r\n\n"
-					else
-						childText = childText .. "-" .. nameColor .. name .. "\t" .. color .. value .. "/" .. max .. standing .. "|r\n"
-					end
+					childText = childText .. "-" .. nameColor .. name .. "\t" .. color .. value .. "/" .. max .. standing .. "|r\n"
 				end
 			end
 		end

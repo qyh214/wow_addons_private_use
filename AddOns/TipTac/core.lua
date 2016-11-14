@@ -896,7 +896,7 @@ end
 -- Checking "mouseover" here isn't ideal due to actionbars, it will sometimes return true because of selfcast.
 local function GetAnchorPosition()
 	local mouseFocus = GetMouseFocus();
-	local isUnit = UnitExists("mouseover") or (mouseFocus and mouseFocus:GetAttribute("unit"));	-- Az: GetAttribute("unit") here is bad, as that will find things like buff frames too
+	local isUnit = UnitExists("mouseover") or (mouseFocus and mouseFocus.GetAttribute and mouseFocus:GetAttribute("unit"));	-- Az: GetAttribute("unit") here is bad, as that will find things like buff frames too
 	local var = "anchor"..(mouseFocus == WorldFrame and "World" or "Frame")..(isUnit and "Unit" or "Tip");
 	return cfg[var.."Type"], cfg[var.."Point"];
 end
@@ -1001,8 +1001,8 @@ local function GTTHook_OnTooltipSetUnit(self,...)
 	-- Concated unit tokens such as "targettarget" cannot be returned as the unit by GTT:GetUnit() and it will return as "mouseover", but the "mouseover" unit is still invalid at this point for those unitframes!
 	-- To overcome this problem, we look if the mouse is over a unitframe, and if that unitframe has a unit attribute set?
 	if (not unit) then
-		local mFocus = GetMouseFocus();
-		unit = mFocus and mFocus:GetAttribute("unit");
+		local mouseFocus = GetMouseFocus();
+		unit = mouseFocus and mouseFocus.GetAttribute and mouseFocus:GetAttribute("unit");
 	end
 	-- A mage's mirror images sometimes doesn't return a unit, this would fix it
 	if (not unit) and (UnitExists("mouseover")) then
@@ -1063,7 +1063,7 @@ function tt:HookTips()
 	gtt:HookScript("OnTooltipCleared",GTTHook_OnTooltipCleared);
 	-- HOOK: OnHide & OnTooltipSetItem Scripts
 	for index, tipName in ipairs(TT_TipsToModify) do
-		local tip = (_G[tipName] or false);	-- don't want to nil out an entry
+		local tip = (_G[tipName] or false);	-- use false, as we don't want to nil out an entry
 		-- Here we make sure not to add duplicate items. This can happen for thing like AtlasLoot, which sets AtlasLootTooltip = GameTooltip
 		if (tip) then
 			for i = 1, index - 1 do
@@ -1073,7 +1073,7 @@ function tt:HookTips()
 				end
 			end
 		end
-		-- Set string index to table or false
+		-- Set string index to table, or false if not part of the UI
 		TT_TipsToModify[index] = tip;
 		if (type(tip) == "table") and (type(tip.GetObjectType) == "function") then
 			tip:HookScript("OnHide",TipHook_OnHide);
@@ -1158,6 +1158,12 @@ function tt:ApplySettings()
 	-- Set Scale, Backdrop, Gradient
 	for _, tip in ipairs(TT_TipsToModify) do
 		if (type(tip) == "table") and (type(tip.GetObjectType) == "function") then
+			if (tip == WorldMapTooltip) and (WorldMapTooltip.BackdropFrame) then
+				tip:SetScale(cfg.gttScale);
+				tip = WorldMapTooltip.BackdropFrame;	-- workaround for the worldmap faux tip
+			elseif (tip == QuestScrollFrame) and (QuestScrollFrame.StoryTooltip) then
+				tip = QuestScrollFrame.StoryTooltip;
+			end
 			SetupGradientTip(tip);
 			tip:SetScale(cfg.gttScale);
 			tip:SetBackdrop(tipBackdrop);

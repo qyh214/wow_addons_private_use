@@ -1,6 +1,7 @@
 local translations = {
 	["Adds tooltips to items showing if you have learned a transmog appearance."] = "Aggiunge un suggerimento, sull'oggetto che stai osservando, se è stato memorizzato nella tua collezione di aspetti.",
 	["Another class can learn this item."] = "Un'altra classe può apprendere questo oggetto.",
+	-- ["Appearances updated: "] = "",
 	["Can be learned by:"] = "Può essere imparato da:",
 	["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Can I Mog It? Messaggio Importante: Per favore, effettua l'accesso con tutti i tuoi personaggi per ottenere informazioni riguardo la tua collezione di aspetti.",
 	["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions non trovato, carico le impostazioni predefinite!",
@@ -12,6 +13,7 @@ local translations = {
 	["Debug Tooltip"] = "Tooltip per il debug",
 	["Detailed information for debug purposes. Use this when sending bug reports."] = "Informazioni dettagliate per scopi di debug. Utilizza questo per inviare rapporti contenenti bug.",
 	["Equippable Items Only"] = "Solo oggetti equipaggiabili",
+	-- ["Items updated: "] = "",
 	["Learned."] = "Imparato.",
 	["Learned but cannot transmog yet."] = "Imparato, ma non si può ancora trasmogrificare.",
 	["Learned for a different class."] = "Imparato per una classe differente.",
@@ -19,6 +21,7 @@ local translations = {
 	["Learned from another item."] = "Imparato da un altro oggetto.",
 	["Learned from another item but cannot transmog yet."] = "Imparato da un altro oggetto, ma non si può ancora trasmogrificare.",
 	["Not learned."] = "Non appreso.",
+	-- ["Okay, I'll go log onto all of my toons!"] = "",
 	["Only show on items that can be equipped."] = "Mostra solamente su oggetti che possono essere equipaggiati.",
 	["Only show on items that can be transmoggrified."] = "Mostra solamente su oggetti che possono essere trasmogrificati.",
 	["Only show on items that you haven't learned."] = "Mostra solamente su oggetti che non hai appreso.",
@@ -27,6 +30,7 @@ local translations = {
 	["Shows the icon directly on the item in your bag."] = "Mostra direttamente l'icona sull'oggetto nella tua borsa.",
 	["Transmoggable Items Only"] = "Solo oggetti trasmogrificabili",
 	["Unknown Items Only"] = "Solo oggetti sconosciuti",
+	-- ["Updating appearances database."] = "",
 	["Verbose Text"] = "Testo Dettagliato",
 }
 

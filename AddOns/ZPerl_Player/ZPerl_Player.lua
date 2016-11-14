@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 1010 $")
+end, "$Revision: 1017 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -440,7 +440,7 @@ local function XPerl_Player_UpdateXP(self)
 			restBar:SetValue(playerxp + playerxprest)
 			restBar:SetStatusBarColor(color.r, color.g, color.b, 0.5)
 			restBar.tex:SetTexCoord(0, (playerxp * 100 / playerxpmax), 0, 1)
-			restBar.bg:SetVertexColor(color.r, color.g, color.b, 0.5)
+			restBar.bg:SetVertexColor(color.r, color.g, color.b, 0.25)
 			xpBar.percent:SetFormattedText(percD, (playerxp * 100) / playerxpmax)
 		end
 	end
@@ -911,6 +911,7 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 		"UNIT_FACTION",
 		"UNIT_PORTRAIT_UPDATE",
 		"UNIT_FLAGS",
+		"UNIT_SPELLCAST_SUCCEEDED", 
 		"PLAYER_FLAGS_CHANGED",
 		"UNIT_ENTERED_VEHICLE",
 		"UNIT_EXITING_VEHICLE",
@@ -1034,7 +1035,13 @@ function XPerl_Player_Events:UNIT_FACTION()
 end
 XPerl_Player_Events.UNIT_FLAGS = XPerl_Player_Events.UNIT_FACTION
 
-function XPerl_Player_Events:PLAYER_FLAGS_CHANGED(unit)
+function XPerl_Player_Events:UNIT_SPELLCAST_SUCCEEDED(spell, rank, lineID, spellID)
+	if spellID == 191477 then
+		XPerl_Unit_UpdatePortrait(self, true)
+	end
+end
+
+function XPerl_Player_Events:PLAYER_FLAGS_CHANGED()
 	XPerl_Player_UpdateHealth(self)
 end
 
@@ -1059,6 +1066,8 @@ function XPerl_Player_Events:UPDATE_SHAPESHIFT_FORM()
 	if (playerClass == "DRUID") then
 		XPerl_Player_DruidBarUpdate(self)
 	end
+
+	XPerl_Unit_UpdatePortrait(self, true)
 end
 
 -- PLAYER_ENTER_COMBAT, PLAYER_LEAVE_COMBAT

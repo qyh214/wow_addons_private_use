@@ -248,6 +248,10 @@ L:SetGeneralLocalization({
 	name =	"Court of Stars Trash"
 })
 
+L:SetOptionLocalization({
+	SpyHelper	= "Help identify the spy"
+})
+
 -----------------------
 -- <<<The Maw of Souls>>> --
 -----------------------
@@ -439,6 +443,15 @@ L= DBM:GetModLocalization(1818)
 L= DBM:GetModLocalization(1838)
 
 -----------------------
+--Nightbane
+-----------------------
+L = DBM:GetModLocalization("Nightbane")
+
+L:SetGeneralLocalization({
+	name =	"Nightbane"
+})
+
+-----------------------
 --Return To Karazhan Trash
 -----------------------
 L = DBM:GetModLocalization("RTKTrash")
@@ -446,3 +459,8 @@ L = DBM:GetModLocalization("RTKTrash")
 L:SetGeneralLocalization({
 	name =	"Return To Karazhan Trash"
 })
+
+L:SetMiscLocalization({
+	speedRun		=	"The strange chill of a dark presence winds through the air..."
+})
+

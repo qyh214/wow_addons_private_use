@@ -172,5 +172,3 @@ L["You can set a background and edge file for the minimap like you would with an
 L["Zone Text"] = "Текст игровой зоны" -- Needs review
 L["Zoom In Button"] = "кнопку приближения" -- Needs review
 L["Zoom Out Button"] = "кнопку отдаления" -- Needs review
-
-

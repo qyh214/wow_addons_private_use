@@ -26,6 +26,7 @@ local maxrank=GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY*1000+GARRISON_FOLLOWER_MAX_L
 local module=addon:NewSubClass('FollowerCache') --#module
 local cache={} --#cache
 local followerTypes={}
+local cacheTypes={LE_FOLLOWER_TYPE_GARRISON_6_0,LE_FOLLOWER_TYPE_SHIPYARD_6_2,LE_FOLLOWER_TYPE_GARRISON_7_0}
 local EMPTY={}
 function module:OnInitialized()
 	self:RegisterEvent("GARRISON_FOLLOWER_REMOVED","OnEvent")
@@ -33,25 +34,26 @@ function module:OnInitialized()
 	self:RegisterEvent("GARRISON_FOLLOWER_LIST_UPDATE","OnEvent")
 	self:RegisterEvent("GARRISON_FOLLOWER_UPGRADED","OnEvent")
 	self:RegisterEvent("GARRISON_FOLLOWER_XP_CHANGED","OnEvent")
-	self.followerCache=cache:new(LE_FOLLOWER_TYPE_GARRISON_6_0)
-	self.shipCache=cache:new(LE_FOLLOWER_TYPE_SHIPYARD_6_2)
-	self.heroCache=cache:new(LE_FOLLOWER_TYPE_GARRISON_7_0)
+	self.caches={}
+	for _,f in ipairs(cacheTypes) do
+		self.caches[f]=cache:new(f)
+	end
 end
 function module:OnEvent(event,...)
 --[===[@debug@
 print(event,...)
 --@end-debug@]===]
 	local followerType,followerID=...
-	if self.shipCache.cache[followerID].followerID then
-		self.shipCache:OnEvent(event,...)
-	elseif self.followerCache.cache[followerID].followerID then
-		self.followerCache:OnEvent(event,...)
-	elseif self.heroCache.cache[followerID].followerID then
-		self.heroCache:OnEvent(event,...)
+	if self.caches[LE_FOLLOWER_TYPE_SHIPYARD_6_2].cache[followerID].followerID then
+		self.caches[LE_FOLLOWER_TYPE_SHIPYARD_6_2]:OnEvent(event,...)
+	elseif self.caches[LE_FOLLOWER_TYPE_GARRISON_6_0].cache[followerID].followerID then
+		self.caches[LE_FOLLOWER_TYPE_GARRISON_6_0]:OnEvent(event,...)
+	elseif self.caches[LE_FOLLOWER_TYPE_GARRISON_7_0].cache[followerID].followerID then
+		self.caches[LE_FOLLOWER_TYPE_GARRISON_7_0]:OnEvent(event,...)
 	else
-		self.followerCache:Wipe()
-		self.shipCache:Wipe()
-		self.heroCache:Wipe()
+		self.caches[LE_FOLLOWER_TYPE_GARRISON_6_0]:Wipe()
+		self.caches[LE_FOLLOWER_TYPE_SHIPYARD_6_2]:Wipe()
+		self.caches[LE_FOLLOWER_TYPE_GARRISON_7_0]:Wipe()
 	end
 
 end
@@ -91,7 +93,6 @@ end
 function cache:Refresh()
 	if next(self.cache) then return end
 	self:Wipe()
-	print(self.type)
 	local list=G.GetFollowers(self.type)
 	if type(list) ~="table" then
 		print("Requested",self.type, " no follower found")
@@ -244,42 +245,38 @@ function addon:GetAnyData(followerType,...)
 	end
 end
 function addon:GetHeroData(followerID,key,default)
-	return module.heroCache:GetFollowerData(followerID,key,default)
+	return module.caches[LE_FOLLOWER_TYPE_GARRISON_7_0]:GetFollowerData(followerID,key,default)
 end
 function addon:GetFollowerData(followerID,key,default)
-	return module.followerCache:GetFollowerData(followerID,key,default)
+	return module.caches[LE_FOLLOWER_TYPE_GARRISON_6_0]:GetFollowerData(followerID,key,default)
 end
 function addon:GetShipData(followerID,key,default)
-	return module.shipCache:GetFollowerData(followerID,key,default)
+	return module.caches[LE_FOLLOWER_TYPE_SHIPYARD_6_2]:GetFollowerData(followerID,key,default)
 end
 function addon:GetFollowersWithTrait(trait)
-	return module.followerCache:GetFollowersWithTrait(trait)
+	return module.caches[LE_FOLLOWER_TYPE_GARRISON_6_0]:GetFollowersWithTrait(trait)
 end
 function addon:GetFollowersWithCounterFor(threat)
-	return module.followerCache:GetFollowersWithCounterFor(threat)
+	return module.caches[LE_FOLLOWER_TYPE_GARRISON_6_0]:GetFollowersWithCounterFor(threat)
 end
 function addon:GetFollowersIterator(func)
-	return module.followerCache:GetFollowersIterator(func)
+	return module.caches[LE_FOLLOWER_TYPE_GARRISON_6_0]:GetFollowersIterator(func)
 end
 function addon:GetShipsIterator(func)
-	return module.shipCache:GetFollowersIterator(func)
+	return module.caches[LE_FOLLOWER_TYPE_SHIPYARD_6_2]:GetFollowersIterator(func)
 end
 function addon:GetHeroesIterator(func)
-	return module.heroCache:GetFollowersIterator(func)
+	return module.caches[LE_FOLLOWER_TYPE_GARRISON_7_0]:GetFollowersIterator(func)
 end
-function addon:GetAnyIterator(followerType,func)
-	if followerType==LE_FOLLOWER_TYPE_GARRISON_6_0 then
-		return self:GetFollowersIterator(func)
-	elseif followerType==LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
-		return self:GetShipsIterator(func)
-	else
-		return self:GetHeroesIterator(func)
-	end
+function addon:GetAnyIterator(followerTypeID,func)
+	return module.caches[followerTypeID]:GetFollowersIterator(func)
 end
 function addon:GetFollowerType(followerID)
 	return followerTypes[followerID] or 0
 end
 function addon:GetFollowerID(followerName)
 	return self.names[followerName]
-
+end
+function addon:GetCache(followerTypeID)
+	return module.caches[followerTypeID]
 end

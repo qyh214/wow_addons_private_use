@@ -16,4 +16,5 @@
   <Script file="OptionPanel.lua" />
   <Script file="Misc.lua" />
   <Script file="PlayerInfoDialog.lua" />
+  <Script file="WorldQuest.lua" />
 </Ui>

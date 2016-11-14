@@ -1,6 +1,6 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: HandyNotes_DraenorTreasures
-## Version: 1.20
+## Version: 1.20a
 ## Notes: Shows location of treasures and rares in Draenor
 ## Author: Katjes (Coronet - Dun Morogh(EU))
 ## OptionalDeps: Ace3

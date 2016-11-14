@@ -14,7 +14,6 @@ local UnitName = _G.UnitName
 local gsub = _G.string.gsub
 
 function mod:OnEnable()
-	-- self:SecureHook("ChatEdit_ParseText")
 	for i = 1, NUM_CHAT_WINDOWS do
 		self:HookScript(_G["ChatFrame" .. i .. "EditBox"], "OnTextChanged")
 	end
@@ -31,10 +30,10 @@ function mod:OnTextChanged(obj)
 	end
 	self.hooks[obj].OnTextChanged(obj)
 end
-	
-function mod:TellTarget(frame, msg)	
+
+function mod:TellTarget(frame, msg)
 	local unitname, realm
-	if UnitIsPlayer("target") and (UnitIsFriend("player", "target") or UnitIsCharmed("target"))  then
+	if UnitIsPlayer("target") then
 		unitname, realm = UnitName("target")
 		if unitname then unitname = gsub(unitname, " ", "") end
 		if realm then

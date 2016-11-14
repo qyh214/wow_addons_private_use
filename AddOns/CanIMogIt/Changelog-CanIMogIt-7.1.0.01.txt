@@ -1,0 +1,49 @@
+tag 7.1.0.01
+3f896d73d2c06f0489002d244dd8b10a735d30dc
+Salvatore Lopiparo <toreltwiddler@gmail.com>
+2016-10-22 13:12:49 -0700
+
+Overlay code rewrite for significant performance improvements.
+Database added for knowing if you have an appearance even if it was learned from another item!
+Adventure Guide overlay disabled.
+
+
+--------------------
+
+Salvatore Lopiparo:
+	- Prevented nil error on removing an item from the database.
+	- Added tooltip to World Quests, prevented errors with other addons.
+	- Prevent errors from icon overlay in other addons. Avoiding 132 crash. Added tooltip to World Quest tooltip. (reverted from commit 09b4752c0f8bd86621da1eda2e1a5d8ca270aab5)
+	- Added a timer between bag open and close to help prevent crash. (reverted from commit 95c0cf1c0f683dabbe9b8d06216281b0c76891b5)
+	- Added a timer between bag open and close to help prevent crash.
+	- Prevent errors from icon overlay in other addons. Avoiding 132 crash. Added tooltip to World Quest tooltip.
+	- Added merchant frame mouse wheel to update the icon overlay.
+	- Updated comments for database scan speed values, added test prints.
+	- Added links to Curse pages in readme.
+	- Removes stale appearances, added event handling for 7.1.
+	- Fixed Merchant frames, main bank frame and hopefully stack overflow.
+	- Added item overlay to Void Storage and Guild Bank frames.
+	- Added Mail and Merchant frame overlays.
+	- Added check to prevent recursive stack overflow.
+	- Modified the item overlay to use a custom frame instead of using bag item frame.
+	- Re-enabled database.
+	- Converted overlay icon to a Texture instead of a FontString.
+	- Now works on loot frames.
+	- Now works on bankframes.
+	- Item overlay is now event based, and only on bags.
+	- Speed optimizations for data population.
+	- More code structuring to get the database population to work.
+	- Fixed not displaying on Tabards.
+	- Typo.
+	- Fixed database population. Now fills the database over time.
+	- Fixed bug when modifying constants.
+	- Updated exceptions.
+	- Throttled populating the database to avoid crashes.
+	- Removed unused embeds.
+	- Added CallbackHandler-1.0 to the embeds (though I don't know why it's needed).
+	- Added .3 second delay between each update. Added placeholder addons.lua file.
+	- Added it to pkg meta also.
+	- Added AceDB to embeds
+	- Added DB reset command and first-time notification.
+	- New database structure in place, not yet working with class restrictions.
+	- Added embeds for using Ace for the options menu.

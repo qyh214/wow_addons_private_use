@@ -226,6 +226,10 @@ function MainPanel:OnInitialize()
     self.GameTooltip = GUI:GetClass('Tooltip'):New(self)
 end
 
+function MainPanel:OnEnable()
+    C_LFGList.RequestAvailableActivities()
+end
+
 function MainPanel:MEETINGSTONE_NEW_VERSION(_, version)
     self.newVersion = version
     self.newVersionReaded = nil
@@ -327,6 +331,7 @@ function MainPanel:OpenActivityTooltip(activity, tooltip)
     if version then
         tooltip:AddDoubleLine(' ', GetFullVersion(version), 1, 1, 1, 0.5, 0.5, 0.5)
     end
+
 
 
     tooltip:Show()

@@ -96,8 +96,8 @@ function mod:OnEnable()
 			self:RawHook(cf, "AddMessage", true)
 		end
 	end
-	self:RawHook(_G.ItemRefTooltip, "SetHyperlink", true)	
 	self:RawHook("ChatFrame_MessageEventHandler", true)
+	self:RawHook("ChatFrame_OnHyperlinkShow", true)
 end
 
 local style = "|cffffffff|Hinvite:%s|h[%s]|h|r"
@@ -111,28 +111,30 @@ local function addLinks(m, t, p)
 end
 
 function mod:AddMessage(frame, text, ...)
-	if not text then 
+	if not text then
 		return self.hooks[frame].AddMessage(frame, text, ...)
 	end
 	if valid_events[chatEvent] and type(chatEventTarget) == "string" then
 		text = gsub(text, "((%w+)(.?))", addLinks)
 	end
-		
+
 	return self.hooks[frame].AddMessage(frame, text, ...)
 end
 
-function mod:SetHyperlink(frame, link, ...)
-	local linkType = sub(link, 1, 6)
+function mod:ChatFrame_OnHyperlinkShow(frame, linkData, link, button)
+	local linkType = sub(linkData, 1, 6)
+
 	if IsAltKeyDown() and linkType == "player" and self.db.profile.altClickToInvite then
-		local name = match(link, "player:([^:]+)")
+		local name = match(linkData, "player:([^:]+)")
 		InviteUnit(name)
 		return nil
 	elseif linkType == "invite" then
-		local name = sub(link, 8)
+		local name = sub(linkData, 8)
 		InviteUnit(name)
 		return nil
+	else
+		return self.hooks["ChatFrame_OnHyperlinkShow"](frame, linkData, link, button)
 	end
-	return self.hooks[frame].SetHyperlink(frame, link, text, button, ...) 
 end
 
 function mod:Info()

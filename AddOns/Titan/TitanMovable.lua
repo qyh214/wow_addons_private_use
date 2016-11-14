@@ -13,7 +13,7 @@ In addition the user can select to turn off / on adjusting of select top frames 
 
 -- Locals
 local _G = getfenv(0);
-local InCombatLockdown	= _G.InCombatLockdown;
+local InCombatLockdown = _G.InCombatLockdown;
 
 --[[ Titan
 Declare the Ace routines
@@ -72,9 +72,7 @@ local TitanMovableData = {
 	MultiBarRight = {frameName = "MultiBarRight", frameArchor = "BOTTOMRIGHT", xArchor = "RIGHT", y = 98, 
 		position = TITAN_PANEL_PLACE_BOTTOM, addonAdj = false},
 	OverrideActionBar = {frameName = "OverrideActionBar", frameArchor = "BOTTOM", xArchor = "CENTER", y = 0, 
-		position = TITAN_PANEL_PLACE_BOTTOM, addonAdj = false},	
---	BonusActionBarFrame = {frameName = "BonusActionBarFrame", frameArchor = "BOTTOM", xArchor = "CENTER", y = 0, 
---		position = TITAN_PANEL_PLACE_BOTTOM, addonAdj = false},
+		position = TITAN_PANEL_PLACE_BOTTOM, addonAdj = false},
 }
 
 --[[ local
@@ -222,20 +220,20 @@ function TitanMovableFrame_CheckFrames(position)
 	-- check top as requested
 	if (position == TITAN_PANEL_PLACE_TOP) 
 	or position == TITAN_PANEL_PLACE_BOTH then
-		-- Move PlayerFrame		
+		-- Move PlayerFrame
 		TitanMovableFrame_CheckThisFrame(PlayerFrame:GetName())
-			
-		-- Move TargetFrame		
+
+		-- Move TargetFrame
 		TitanMovableFrame_CheckThisFrame(TargetFrame:GetName())
 
-		-- Move PartyMemberFrame		
+		-- Move PartyMemberFrame
 		TitanMovableFrame_CheckThisFrame(PartyMemberFrame1:GetName())
 
 		-- Move TicketStatusFrame
 		if TitanPanelGetVar("TicketAdjust") then
 			TitanMovableFrame_CheckThisFrame(TicketStatusFrame:GetName())
 		end
-		
+
 		-- Move MinimapCluster
 		if not CleanMinimap then
 			if not TitanPanelGetVar("MinimapAdjust") then
@@ -247,8 +245,13 @@ function TitanMovableFrame_CheckFrames(position)
 
 		-- Move WorldStateAlwaysUpFrame
 		TitanMovableFrame_CheckThisFrame(WorldStateAlwaysUpFrame:GetName());
+
+--[[		-- Move OrderHallCommandBar
+		if OrderHallCommandBar then
+			TitanMovableFrame_CheckThisFrame(OrderHallCommandBar:GetName());
+		end]]--
 	end
-	
+
 	-- check bottom as requested
 	if (position == TITAN_PANEL_PLACE_BOTTOM) 
 	or position == TITAN_PANEL_PLACE_BOTH then
@@ -258,9 +261,6 @@ function TitanMovableFrame_CheckFrames(position)
 	
 		-- Move OverrideActionBar
 		TitanMovableFrame_CheckThisFrame(OverrideActionBar:GetName());
-		
-		-- Move BonusActionBarFrame
---		TitanMovableFrame_CheckThisFrame(BonusActionBarFrame:GetName());
 	end
 end
 
@@ -670,35 +670,35 @@ TitanDebug("... OverrideActionBar "
 ..(left or "?").." "
 )
 
-if false then
-	left = MultiBarRight:GetLeft()
-	MultiBarRight:ClearAllPoints()
-	MultiBarRight:SetPoint("BOTTOMLEFT", TitanPanelBottomAnchor, "TOP", left, 98)
-
-	left = TargetFrame:GetLeft()
-	TargetFrame:ClearAllPoints()
-	TargetFrame:SetPoint("TOPLEFT", TitanPanelTopAnchor, "BOTTOM", left, -4)
+	if false then
+		left = MultiBarRight:GetLeft()
+		MultiBarRight:ClearAllPoints()
+		MultiBarRight:SetPoint("BOTTOMLEFT", TitanPanelBottomAnchor, "TOP", left, 98)
 	
-	left = PlayerFrame:GetLeft()
-	PlayerFrame:ClearAllPoints()
-	PlayerFrame:SetPoint("TOPLEFT", TitanPanelTopAnchor, "BOTTOM", left, -4)
-	
-	left = PartyMemberFrame1:GetLeft()
-	PartyMemberFrame1:ClearAllPoints()
-	PartyMemberFrame1:SetPoint("TOPLEFT", TitanPanelTopAnchor, "BOTTOM", left, -128)
-	
-	left = TicketStatusFrame:GetLeft()
-	TicketStatusFrame:ClearAllPoints()
-	TicketStatusFrame:SetPoint("TOPLEFT", TitanPanelTopAnchor, "BOTTOM", left, 0)
-	
-	left = BuffFrame:GetLeft()
-	BuffFrame:ClearAllPoints()
-	BuffFrame:SetPoint("TOPLEFT", TitanPanelTopAnchor, "BOTTOM", left, -13)
-	
-	left = MinimapCluster:GetLeft()
-	MinimapCluster:ClearAllPoints()
-	MinimapCluster:SetPoint("TOPLEFT", TitanPanelTopAnchor, "BOTTOM", left, 0)
-end
+		left = TargetFrame:GetLeft()
+		TargetFrame:ClearAllPoints()
+		TargetFrame:SetPoint("TOPLEFT", TitanPanelTopAnchor, "BOTTOM", left, -4)
+		
+		left = PlayerFrame:GetLeft()
+		PlayerFrame:ClearAllPoints()
+		PlayerFrame:SetPoint("TOPLEFT", TitanPanelTopAnchor, "BOTTOM", left, -4)
+		
+		left = PartyMemberFrame1:GetLeft()
+		PartyMemberFrame1:ClearAllPoints()
+		PartyMemberFrame1:SetPoint("TOPLEFT", TitanPanelTopAnchor, "BOTTOM", left, -128)
+		
+		left = TicketStatusFrame:GetLeft()
+		TicketStatusFrame:ClearAllPoints()
+		TicketStatusFrame:SetPoint("TOPLEFT", TitanPanelTopAnchor, "BOTTOM", left, 0)
+		
+		left = BuffFrame:GetLeft()
+		BuffFrame:ClearAllPoints()
+		BuffFrame:SetPoint("TOPLEFT", TitanPanelTopAnchor, "BOTTOM", left, -13)
+		
+		left = MinimapCluster:GetLeft()
+		MinimapCluster:ClearAllPoints()
+		MinimapCluster:SetPoint("TOPLEFT", TitanPanelTopAnchor, "BOTTOM", left, 0)
+	end
 end
 
 --[[ Titan

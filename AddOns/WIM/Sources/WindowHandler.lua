@@ -851,6 +851,7 @@ local function instantiateWindow(obj)
     
     widgets.chat_display = CreateFrame("ScrollingMessageFrame", fName.."ScrollingMessageFrame", obj);
     -- widgets.chat_display:RegisterForDrag("LeftButton");
+    widgets.chat_display:SetHyperlinksEnabled(true)
     widgets.chat_display:SetFading(false);
     widgets.chat_display:SetMaxLines(128);
     widgets.chat_display:SetMovable(true);
@@ -1117,7 +1118,7 @@ local function instantiateWindow(obj)
 	self.widgets.Backdrop:SetAlpha(db.windowAlpha/100);
 	local Path,_,Flags = self.widgets.chat_display:GetFont();
         self:SetClampedToScreen(not WindowParent.animUp and db.clampToScreen);
-	self.widgets.chat_display:SetFont(Path,db.fontSize+2,Flags);
+	self.widgets.chat_display:SetFont(Path or [[Fonts\FRIZQT__.TTF]],db.fontSize+2,Flags);
 	self.widgets.chat_display:SetAlpha(1);
 	self.widgets.chat_display:SetIndentedWordWrap(db.wordwrap_indent);
 	self.widgets.msg_box:SetAlpha(1);
@@ -1844,14 +1845,16 @@ RegisterWidgetTrigger("chat_display", "whisper,chat,w2w,demo", "OnMouseUp", func
 	end);
 
 RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkClick", function(self, link, text, button) _G.SetItemRef(link, text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""), button, self); end);
-RegisterWidgetTrigger("chat_display", "whisper,chat,w2w","OnMessageScrollChanged", function(self) updateScrollBars(self:GetParent()); end);
+--RegisterWidgetTrigger("chat_display", "whisper,chat,w2w","OnMessageScrollChanged", function(self) updateScrollBars(self:GetParent()); end);
 
+local lastTTlink
 RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkEnter", function(self, link)
 			local obj = self.parentWindow;
 			obj.isOnHyperLink = true;
                         if(db.hoverLinks) then
                                 local t = string.match(link, "^(.-):")
                                 if(t == "item" or t == "enchant" or t == "spell" or t == "quest") then
+                                	lastTTlink = t
                                 	_G.ShowUIPanel(_G.GameTooltip);
                                 	_G.GameTooltip:SetOwner(_G.UIParent, "ANCHOR_CURSOR");
                                 	_G.GameTooltip:SetHyperlink(link);
@@ -1864,9 +1867,10 @@ RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkLeave", fu
 			local obj = self.parentWindow;
 			obj.isOnHyperLink = false;
                         if(db.hoverLinks) then
-                                local t = string.match(link, "^(.-):")
+                                local t = lastTTlink	--string.match(link, "^(.-):")
                                 if(t == "item" or t == "enchant" or t == "spell" or t == "quest") then
                                         _G.HideUIPanel(_G.GameTooltip);
+                                	lastTTlink = nil
                                 end
                         end
 		end)

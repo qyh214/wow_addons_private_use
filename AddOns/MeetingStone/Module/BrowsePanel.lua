@@ -288,15 +288,15 @@ function BrowsePanel:OnInitialize()
         ActivityDropdown:SetDefaultValue(0)
         ActivityDropdown:SetDefaultText(L['请选择活动类型'])
         ActivityDropdown:SetCallback('OnSelectChanged', function(_, data, ...)
-            self:ClearSearchProfile()
             self:UpdateModeDropdown(data.categoryId)
             self:UpdateBossFilter(data.activityId, data.customId)
+            self:ClearSearchProfile()
             self:DoSearch()
         end)
     end
 
     local function RefreshFilter()
-        self.ActivityList:SetFilterText(self.SearchInput:GetText():lower(), self.bossFilter, Profile:GetSpamWordStatus())
+        self.ActivityList:SetFilterText(self.SearchInput:GetText():lower(), self.bossFilter, Profile:GetSetting('spamWord'))
     end
 
     local ModeLabel = self:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight') do
@@ -445,9 +445,7 @@ function BrowsePanel:OnInitialize()
         SearchProfileDropdown:SetCallback('OnSelectChanged', function(_, data)
             self.lockProfile = true
             self.DeleteButton:Enable()
-            self.ActivityDropdown:SetValue(data.code)
-            self.ModeDropdown:SetValue(data.mode)
-            self.LootDropdown:SetValue(data.loot)
+            self:QuickSearch(data.code, data.mode, data.loot)
             self.lockProfile = nil
         end)
 
@@ -570,7 +568,7 @@ function BrowsePanel:OnInitialize()
         SpamWord:SetPoint('BOTTOMRIGHT', MainPanel, -230, 5)
         SpamWord:SetText(L['关键字过滤'])
         SpamWord:SetScript('OnClick', function(SpamWord)
-            Profile:SetSpamWordEnabled(SpamWord:GetChecked())
+            Profile:SetSetting('spamWord', not not SpamWord:GetChecked())
             RefreshFilter()
         end)
     end
@@ -601,7 +599,7 @@ function BrowsePanel:OnInitialize()
             HighLightBox = { x = 5, y = -397, width = 220, height = 28 },
             ToolTipDir = 'UP',
             ToolTipText = L.BrowseHelpMisc,
-        },  -- 
+        },  --
         {
             ButtonPos = { x = 300,  y = -389 },
             HighLightBox = { x = 300, y = -397, width = 200, height = 28 },
@@ -667,7 +665,9 @@ function BrowsePanel:OnInitialize()
     self:RegisterEvent('LFG_LIST_APPLICATION_STATUS_UPDATED', 'LFG_LIST_SEARCH_RESULT_UPDATED')
     self:RegisterMessage('LFG_LIST_SEARCH_RESULT_REMOVED')
     self:RegisterMessage('MEETINGSTONE_SEARCH_PROFILE_UPDATE')
-    
+
+    self:RegisterMessage('MEETINGSTONE_SETTING_CHANGED_packedPvp', 'LFG_LIST_AVAILABILITY_UPDATE')
+
     self:RegisterMessage('MEETINGSTONE_SPAMWORD_STATUS_UPDATE', 'OnToggleSpamWord')
     self:RegisterMessage('MEETINGSTONE_SPAMWORD_UPDATE', RefreshFilter)
 
@@ -847,25 +847,26 @@ function BrowsePanel:DoSearch()
 end
 
 function BrowsePanel:Search()
+    if self:InSet() then
+        return
+    end
     local activityItem = self.ActivityDropdown:GetItem()
     if not activityItem then
         return
     end
-    
+
     local categoryId = activityItem.categoryId
     local fullName = activityItem.fullName
     local filters= activityItem.filters
     local baseFilter = activityItem.baseFilter
     local searchValue = activityItem.value
-    
+
     if not categoryId or not self:IsVisible() then
         return
     end
-    -- if not self.RefreshButton:IsEnabled() then
-    --     return
-    -- end
 
     local searchText = self:GetSearchCode(fullName, self.ModeDropdown:GetValue(), self.LootDropdown:GetValue(), activityItem.customId)
+    
 
     Profile:SetLastSearchValue(searchValue)
     C_LFGList.Search(categoryId, searchText, filters, baseFilter)
@@ -1114,4 +1115,27 @@ function BrowsePanel:ClearSearchProfile()
         self.SearchProfileDropdown:SetValue(nil)
         self.DeleteButton:Disable()
     end
+end
+
+function BrowsePanel:StartSet()
+    self.inSet = true
+end
+
+function BrowsePanel:EndSet()
+    self.inSet = nil
+    self:DoSearch()
+end
+
+function BrowsePanel:InSet()
+    return self.inSet
+end
+
+function BrowsePanel:QuickSearch(activityCode, mode, loot, searchText)
+    self:StartSet()
+    Profile:SetLastSearchValue(activityCode)
+    self.ActivityDropdown:SetValue(activityCode)
+    self.ModeDropdown:SetValue(mode or nil)
+    self.LootDropdown:SetValue(loot or nil)
+    self.SearchInput:SetText(searchText or '')
+    self:EndSet()
 end

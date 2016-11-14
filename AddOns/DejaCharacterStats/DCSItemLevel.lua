@@ -1,3 +1,6 @@
+local ADDON_NAME, namespace = ... 	--localization
+local L = namespace.L 				--localization
+
 -- Item Level Check
 
 	local _, gdbprivate = ...
@@ -14,17 +17,24 @@ local function DCS_ItemLevelShow(self)
 		end
 
 		local avgItemLevel, avgItemLevelEquipped = GetAverageItemLevel();
-
 		if gdbprivate.gdb.gdbdefaults.dejacharacterstatsItemLevelChecked.ItemLevelDecimalsSetChecked == true then
-			-- print(avgItemLevel, avgItemLevelEquipped)
+			avgItemLevel = floor(100*avgItemLevel)/100;
+			avgItemLevelEquipped = floor(100*avgItemLevelEquipped)/100;
+			--avgItemLevel = 0; --test to see the formating of whole number
+			--avgItemLevel = 0.995; --with floor(100*x)/100 won't round up, without it will 
+			--avgItemLevelEquipped = 0; --test to see the formating of whole number
+			--print(avgItemLevel, avgItemLevelEquipped)
 			if ( avgItemLevelEquipped == avgItemLevel ) then
 				PaperDollFrame_SetLabelAndText(statFrame, STAT_AVERAGE_ITEM_LEVEL, format("%.2f", avgItemLevelEquipped), false, avgItemLevelEquipped);
 			else
 				PaperDollFrame_SetLabelAndText(statFrame, STAT_AVERAGE_ITEM_LEVEL, (format("%.2f", avgItemLevelEquipped).."/"..format("%.2f", avgItemLevel)), false, avgItemLevelEquipped);
 			end
-			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_AVERAGE_ITEM_LEVEL).." "..avgItemLevel;
+			--statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_AVERAGE_ITEM_LEVEL).." "..avgItemLevel;
+			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_AVERAGE_ITEM_LEVEL).." "..format("%.2f", avgItemLevel);
 			if ( avgItemLevelEquipped ~= avgItemLevel ) then
-				statFrame.tooltip = statFrame.tooltip .. "  " .. format(STAT_AVERAGE_ITEM_LEVEL_EQUIPPED, avgItemLevelEquipped);
+				local format_for_avg_equipped = gsub(STAT_AVERAGE_ITEM_LEVEL_EQUIPPED, "d%)", ".2f%)",  1)
+				statFrame.tooltip = statFrame.tooltip .. "  " .. format(format_for_avg_equipped, avgItemLevelEquipped);
+				--statFrame.tooltip = statFrame.tooltip .. "  " .. format(STAT_AVERAGE_ITEM_LEVEL_EQUIPPED, avgItemLevelEquipped);
 			end
 			statFrame.tooltip = statFrame.tooltip .. FONT_COLOR_CODE_CLOSE;
 			statFrame.tooltip2 = STAT_AVERAGE_ITEM_LEVEL_TOOLTIP;
@@ -73,8 +83,8 @@ local DCS_ItemLevelCheck = CreateFrame("CheckButton", "DCS_ItemLevelCheck", Deja
 	DCS_ItemLevelCheck:ClearAllPoints()
 	DCS_ItemLevelCheck:SetPoint("TOPLEFT", 25, -35)
 	DCS_ItemLevelCheck:SetScale(1.25)
-	DCS_ItemLevelCheck.tooltipText = 'Displays Equipped/Available item levels unless equal.' --Creates a tooltip on mouseover.
-	_G[DCS_ItemLevelCheck:GetName() .. "Text"]:SetText("Equipped/Available")
+	DCS_ItemLevelCheck.tooltipText = L['Displays Equipped/Available item levels unless equal.'] --Creates a tooltip on mouseover.
+	_G[DCS_ItemLevelCheck:GetName() .. "Text"]:SetText(L["Equipped/Available"])
 	
 	DCS_ItemLevelCheck:SetScript("OnEvent", function(self, event, arg1)
 		if event == "PLAYER_LOGIN" then
@@ -106,8 +116,8 @@ local DCS_ItemLevelDecimalCheck = CreateFrame("CheckButton", "DCS_ItemLevelDecim
 	DCS_ItemLevelDecimalCheck:ClearAllPoints()
 	DCS_ItemLevelDecimalCheck:SetPoint("TOPLEFT", 65, -100)
 	DCS_ItemLevelDecimalCheck:SetScale(1.00)
-	DCS_ItemLevelDecimalCheck.tooltipText = 'Displays average item level to two decimal places.' --Creates a tooltip on mouseover.
-	_G[DCS_ItemLevelDecimalCheck:GetName() .. "Text"]:SetText("Ilvl Decimals")
+	DCS_ItemLevelDecimalCheck.tooltipText = L['Displays average item level to two decimal places.'] --Creates a tooltip on mouseover.
+	_G[DCS_ItemLevelDecimalCheck:GetName() .. "Text"]:SetText(L["Ilvl Decimals"])
 	
 	DCS_ItemLevelDecimalCheck:SetScript("OnEvent", function(self, event, arg1)
 		if event == "PLAYER_LOGIN" then

@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'EditBox', 1
+local WIDGET, VERSION = 'EditBox', 2
 
 local GUI = LibStub('NetEaseGUI-2.0')
 local EditBox = GUI:NewClass(WIDGET, 'Frame', VERSION)
@@ -8,183 +8,133 @@ if not EditBox then
 end
 
 function EditBox:Constructor(parent)
-    local tTopLeft = self:CreateTexture(nil, 'BACKGROUND')
-    tTopLeft:SetTexture([[Interface\Common\Common-Input-Border-TL]])
-    tTopLeft:SetSize(8, 8)
-    tTopLeft:SetPoint('TOPLEFT')
-    local tTopRight = self:CreateTexture(nil, 'BACKGROUND')
-    tTopRight:SetTexture([[Interface\Common\Common-Input-Border-TR]])
-    tTopRight:SetSize(8, 8)
-    tTopRight:SetPoint('TOPRIGHT')
-    local tTop = self:CreateTexture(nil, 'BACKGROUND')
-    tTop:SetTexture([[Interface\Common\Common-Input-Border-T]])
-    tTop:SetPoint('TOPLEFT', tTopLeft, 'TOPRIGHT')
-    tTop:SetPoint('BOTTOMRIGHT', tTopRight, 'BOTTOMLEFT')
-    local tBottomLeft = self:CreateTexture(nil, 'BACKGROUND')
-    tBottomLeft:SetTexture([[Interface\Common\Common-Input-Border-BL]])
-    tBottomLeft:SetSize(8, 8)
-    tBottomLeft:SetPoint('BOTTOMLEFT')
-    local tBottomLeft = self:CreateTexture(nil, 'BACKGROUND')
-    tBottomLeft:SetTexture([[Interface\Common\Common-Input-Border-BL]])
-    tBottomLeft:SetSize(8, 8)
-    tBottomLeft:SetPoint('BOTTOMLEFT')
-    local tBottomRight = self:CreateTexture(nil, 'BACKGROUND')
-    tBottomRight:SetTexture([[Interface\Common\Common-Input-Border-BR]])
-    tBottomRight:SetSize(8, 8)
-    tBottomRight:SetPoint('BOTTOMRIGHT')
-    local tBottom = self:CreateTexture(nil, 'BACKGROUND')
-    tBottom:SetTexture([[Interface\Common\Common-Input-Border-B]])
-    tBottom:SetPoint('TOPLEFT', tBottomLeft, 'TOPRIGHT')
-    tBottom:SetPoint('BOTTOMRIGHT', tBottomRight, 'BOTTOMLEFT')
-    local tLeft = self:CreateTexture(nil, 'BACKGROUND')
-    tLeft:SetTexture([[Interface\Common\Common-Input-Border-L]])
-    tLeft:SetPoint('TOPLEFT', tTopLeft, 'BOTTOMLEFT')
-    tLeft:SetPoint('BOTTOMRIGHT', tBottomLeft, 'TOPRIGHT')
-    local tRight = self:CreateTexture(nil, 'BACKGROUND')
-    tRight:SetTexture([[Interface\Common\Common-Input-Border-R]])
-    tRight:SetPoint('TOPLEFT', tTopRight, 'BOTTOMLEFT')
-    tRight:SetPoint('BOTTOMRIGHT', tBottomRight, 'TOPRIGHT')
-    local tMiddle = self:CreateTexture(nil, 'BACKGROUND')
-    tMiddle:SetTexture([[Interface\Common\Common-Input-Border-M]])
-    tMiddle:SetPoint('TOPLEFT', tLeft, 'TOPRIGHT')
-    tMiddle:SetPoint('BOTTOMRIGHT', tRight, 'BOTTOMLEFT')
+    local TL = self:CreateTexture(nil, 'BACKGROUND') do
+        TL:SetPoint('TOPLEFT')
+        TL:SetSize(8, 8)
+        TL:SetTexture([[Interface\COMMON\Common-Input-Border-TL]])
+    end
 
-    local scrollFrame = CreateFrame('ScrollFrame', nil, self)
-    scrollFrame:SetPoint('TOPLEFT', 6, -6)
-    scrollFrame:SetPoint('BOTTOMRIGHT', -6, 6)
+    local TR = self:CreateTexture(nil, 'BACKGROUND') do
+        TR:SetPoint('TOPRIGHT')
+        TR:SetSize(8, 8)
+        TR:SetTexture([[Interface\COMMON\Common-Input-Border-TR]])
+    end
 
-    local scrollBar = CreateFrame('Slider', nil, scrollFrame, 'UIPanelScrollBarTemplate')
-    scrollBar:SetFrameLevel(self:GetFrameLevel() + 2)
-    scrollBar:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -3, -16)
-    scrollBar:SetPoint('BOTTOMRIGHT', self, 'BOTTOMRIGHT', -3, 14)
-    scrollBar.ScrollDownButton:SetPoint('TOP', scrollBar, 'BOTTOM', 0, 4)
-    scrollBar.ScrollUpButton:SetPoint('BOTTOM', scrollBar, 'TOP', 0, -4)
-    scrollBar:SetMinMaxValues(0, 0)
-    scrollBar:SetValue(0)
-    scrollBar:SetScript('OnShow', function(self)
-        scrollFrame:SetPoint('BOTTOMRIGHT', -(self:GetWidth() + 5), 6)
-    end)
-    scrollBar:SetScript('OnHide', function(self)
-        scrollFrame:SetPoint('BOTTOMRIGHT', -6, 6)
-    end)
+    local BL = self:CreateTexture(nil, 'BACKGROUND') do
+        BL:SetPoint('BOTTOMLEFT')
+        BL:SetSize(8, 8)
+        BL:SetTexture([[Interface\COMMON\Common-Input-Border-BL]])
+    end
 
-    local editBox = CreateFrame('EditBox', nil, scrollFrame)
-    editBox:SetAutoFocus(false)
-    editBox:SetCountInvisibleLetters(true)
-    editBox:SetMaxLetters(140)
-    editBox:SetMultiLine(true)
-    editBox:SetScript('OnTextChanged', self.OnTextChanged)
-    editBox:SetScript('OnCursorChanged', function(self, x, y, w, h)
-        self.cursorOffset = y
-        self.cursorHeight = h
-        self.handleCursorChange = true
-    end)
-    editBox:SetScript('OnTabPressed', editBox.SetFocus)
-    editBox:SetScript('OnUpdate', self.OnEditUpdate)
-    editBox:SetScript('OnEscapePressed', editBox.ClearFocus)
-    editBox:SetFontObject('GameFontHighlightSmall')
+    local BR = self:CreateTexture(nil, 'BACKGROUND') do
+        BR:SetPoint('BOTTOMRIGHT')
+        BR:SetSize(8, 8)
+        BR:SetTexture([[Interface\COMMON\Common-Input-Border-BR]])
+    end
 
-    local prompt = editBox:CreateFontString(nil, 'BACKGROUND', 'GameFontNormalSmallLeft')
-    prompt:SetPoint('TOPLEFT', 3, 0)
-    prompt:SetTextColor(0.35, 0.35, 0.35)
-    prompt:SetJustifyV('TOP')
-    prompt:Hide()
+    local T = self:CreateTexture(nil, 'BACKGROUND') do
+        T:SetPoint('TOPLEFT', TL, 'TOPRIGHT')
+        T:SetPoint('BOTTOMRIGHT', TR, 'BOTTOMLEFT')
+        T:SetTexture([[Interface\COMMON\Common-Input-Border-T]])
+    end
 
-    local focusButton = CreateFrame('Button', nil, scrollFrame)
-    focusButton:SetAllPoints(true)
-    focusButton:SetScript('OnClick', function(self)
-        if editBox:IsEnabled() then
-            editBox:SetFocus()
-        end
-    end)
-    focusButton:SetScript('OnDoubleClick', function(self, button)
-        if not editBox:IsEnabled() and button == 'LeftButton' then
-            local msg = editBox:GetText()
-            if msg ~= '' then
-                ChatEdit_ActivateChat(ChatEdit_GetLastActiveWindow())
-                ChatEdit_InsertLink(editBox:GetText())
-                ChatEdit_GetActiveWindow():HighlightText()
-            end
-        end
-    end)
+    local B = self:CreateTexture(nil, 'BACKGROUND') do
+        B:SetPoint('TOPLEFT', BL, 'TOPRIGHT')
+        B:SetPoint('BOTTOMRIGHT', BR, 'BOTTOMLEFT')
+        B:SetTexture([[Interface\COMMON\Common-Input-Border-B]])
+    end
 
-    scrollFrame:SetScrollChild(editBox)
-    scrollFrame:SetScript('OnScrollRangeChanged', self.OnScrollRangeChanged)
-    scrollFrame:SetScript('OnVerticalScroll', self.OnVerticalScroll)
-    scrollFrame:SetScript('OnMouseWheel', self.OnMouseWheel)
-    
-    scrollFrame:SetScript('OnSizeChanged', function(self, width, height)
-        editBox:SetSize(width, height)
-        prompt:SetSize(width - 6, height)
+    local L = self:CreateTexture(nil, 'BACKGROUND') do
+        L:SetPoint('TOPLEFT', TL, 'BOTTOMLEFT')
+        L:SetPoint('BOTTOMRIGHT', BL, 'TOPRIGHT')
+        L:SetTexture([[Interface\COMMON\Common-Input-Border-L]])
+    end
+
+    local R = self:CreateTexture(nil, 'BACKGROUND') do
+        R:SetPoint('TOPLEFT', TR, 'BOTTOMLEFT')
+        R:SetPoint('BOTTOMRIGHT', BR, 'TOPRIGHT')
+        R:SetTexture([[Interface\COMMON\Common-Input-Border-R]])
+    end
+
+    local M = self:CreateTexture(nil, 'BACKGROUND') do
+        M:SetPoint('TOPLEFT', TL, 'BOTTOMRIGHT')
+        M:SetPoint('BOTTOMRIGHT', BR, 'TOPLEFT')
+        M:SetTexture([[Interface\COMMON\Common-Input-Border-M]])
+    end
+
+    local ScrollFrame = CreateFrame('ScrollFrame', nil, self, 'UIPanelScrollFrameTemplate') do
+        ScrollFrame:SetPoint('TOPLEFT', 5, -5)
+        ScrollFrame:SetPoint('BOTTOMRIGHT', -26, 5)
+    end
+
+    local EditBox = CreateFrame('EditBox', nil, ScrollFrame) do
+        EditBox:SetFontObject('GameFontHighlightSmall')
+        EditBox:SetPoint('TOPLEFT')
+        EditBox:SetSize(64, 64)
+        EditBox:SetAutoFocus(false)
+        EditBox:SetMultiLine(true)
+        EditBox:SetFontObject('ChatFontNormal')
+        EditBox:SetScript('OnCursorChanged', ScrollingEdit_OnCursorChanged)
+        EditBox:SetScript('OnTextChanged', function(EditBox, ...)
+            ScrollingEdit_OnTextChanged(EditBox, EditBox:GetParent())
+            self.Prompt:SetShown(EditBox:GetText() == '')
+            self:Fire('OnTextChanged', ...)
+        end)
+        EditBox:SetScript('OnUpdate', ScrollingEdit_OnUpdate)
+        EditBox:SetScript('OnEscapePressed', EditBox.ClearFocus)
+        EditBox:SetScript('OnEditFocusGained', function()
+            self.FocusGrabber:Hide()
+            self:Fire('OnEditFocusGained')
+        end)
+        EditBox:SetScript('OnEditFocusLost', function()
+            self.FocusGrabber:Show()
+            self:Fire('OnEditFocusLost')
+        end)
+    end
+
+    local Prompt = EditBox:CreateFontString(nil, 'BACKGROUND', 'GameFontNormalSmallLeft') do
+        Prompt:SetPoint('TOPLEFT', 3, 0)
+        Prompt:SetTextColor(0.35, 0.35, 0.35)
+        Prompt:SetJustifyV('TOP')
+        Prompt:Hide()
+    end
+
+    local FocusGrabber = CreateFrame('Button', nil, self) do
+        FocusGrabber:SetAllPoints(ScrollFrame)
+        FocusGrabber:SetFrameLevel(EditBox:GetFrameLevel() + 5)
+        FocusGrabber:SetScript('OnClick', function()
+            self.EditBox:SetCursorPosition(self.EditBox:GetText():len())
+            self.EditBox:SetFocus()
+        end)
+    end
+
+    ScrollFrame:SetScrollChild(EditBox)
+
+    ScrollFrame:SetScript('OnSizeChanged', function(self, width, height)
+        EditBox:SetSize(width, height)
+        Prompt:SetSize(width - 6, height)
     end)
 
-    self.Prompt = prompt
-    self.ScrollBar = scrollBar
-    self.ScrollFrame = scrollFrame
-    self.EditBox = editBox
-    self.FocusButton = focusButton
+    self.Prompt = Prompt
+    self.ScrollFrame = ScrollFrame
+    self.EditBox = EditBox
+    self.FocusGrabber = FocusGrabber
 
     self:SetAutoHide(true)
     self:SetTop(true)
 end
 
 function EditBox:SetPrompt(text)
-    local prompt = self.Prompt
     if text then
-        prompt:SetText(text)
-        -- prompt:SetSize(prompt:GetTextWidth(), prompt:GetTextHeight())
-        prompt:Show()
+        self.Prompt:SetText(text)
+        self.Prompt:Show()
     else
-        prompt:Hide()
+        self.Prompt:Hide()
     end
-end
-
-function EditBox:OnEditUpdate(elapsed)
-    if self.handleCursorChange then
-        local scrollFrame = self:GetParent()
-        local height = scrollFrame:GetHeight()
-        local range = scrollFrame:GetVerticalScrollRange()
-        local scroll = scrollFrame:GetVerticalScroll()
-        local size = height + range
-        local cursorOffset = -self.cursorOffset or 0
-        
-        if math.floor(height) <= 0 or math.floor(range) <= 0 then
-            return
-        end
-
-        while cursorOffset < scroll do
-            scroll = scroll - (height / 2)
-            if scroll < 0 then
-                scroll = 0
-            end
-            scrollFrame:SetVerticalScroll(scroll)
-        end
-
-        while cursorOffset + self.cursorHeight > scroll + height and scroll < range do
-            scroll = scroll + (height / 2)
-            if scroll > range then
-                scroll = range
-            end
-            scrollFrame:SetVerticalScroll(scroll)
-        end
-        
-        self.handleCursorChange = false
-    end
-end
-
-function EditBox:OnTextChanged(userinput)
-    local parent = self:GetParent():GetParent()
-    parent.OnEditUpdate(self)
-    parent.Prompt:SetShown(not (self:GetText() ~= ''))
-
-    if parent.ScrollFrame.isTop and not self:HasFocus() then
-        parent.ScrollFrame:SetVerticalScroll(0)
-    end
-    parent:Fire('OnTextChanged', userinput)
 end
 
 function EditBox:SetAutoHide(auto)
-    local scrollBar = self.ScrollBar
+    local scrollBar = self.ScrollFrame.ScrollBar
     scrollBar.scrollBarHideable = auto
     scrollBar.ScrollDownButton:Disable()
     scrollBar.ScrollUpButton:Disable()
@@ -196,55 +146,7 @@ function EditBox:SetAutoHide(auto)
 end
 
 function EditBox:GetAutoHide()
-    return self.ScrollBar.scrollBarHideable
-end
-
-function EditBox:OnScrollRangeChanged(xOffset, yOffset)
-    local scrollBar = self:GetChildren()
-    yOffset = yOffset or self:GetVerticalScrollRange()
-    local value = self.isTop and 0 or scrollBar:GetValue() > yOffset and yOffset or scrollBar:GetValue()
-    scrollBar:SetMinMaxValues(0, yOffset)
-    scrollBar:SetValue(value)
-    if floor(yOffset) == 0 then
-        if self:GetParent():GetAutoHide() then
-            scrollBar:Hide()
-        else
-            scrollBar:Show()
-            scrollBar.ScrollDownButton:Disable()
-            scrollBar.ScrollUpButton:Disable()
-        end
-    else
-        scrollBar:Show()
-        if yOffset - value > 0.005 then
-            scrollBar.ScrollDownButton:Enable()
-        else
-            scrollBar.ScrollDownButton:Disable()
-        end
-    end
-end
-
-function EditBox:OnVerticalScroll(offset)
-    local scrollBar = self:GetChildren()
-    scrollBar:SetValue(offset)
-    local min, max = scrollBar:GetMinMaxValues()
-
-    if offset == 0 then
-        scrollBar.ScrollUpButton:Disable()
-    else
-        scrollBar.ScrollUpButton:Enable()
-    end
-
-    if offset - max == 0 then
-        scrollBar.ScrollDownButton:Disable()
-    else
-        scrollBar.ScrollDownButton:Enable()
-    end
-end
-
-function EditBox:OnMouseWheel(delta)
-    local scrollBar = self:GetChildren()
-    local scrollStep = scrollBar.scrollStep or scrollBar:GetHeight() / 2
-    scrollBar:SetValue(scrollBar:GetValue() - scrollStep * delta)
+    return self.ScrollFrame.ScrollBar.scrollBarHideable
 end
 
 function EditBox:GetText()
@@ -256,10 +158,8 @@ function EditBox:SetText(text)
 end
 
 function EditBox:SetReadOnly(readonly)
-    local editBox = self.EditBox
-    local focusButton = self.FocusButton
-    editBox[readonly and 'Disable' or 'Enable'](editBox)
-    focusButton:SetFrameLevel(editBox:GetFrameLevel() + (readonly and 2 or 0))
+    self.EditBox:SetEnabled(readonly)
+    self.FocusGrabber:SetFrameLevel(self.EditBox:GetFrameLevel() + (readonly and 2 or 0))
 end
 
 function EditBox:GetEditBox()
@@ -270,8 +170,12 @@ function EditBox:SetTop(isTop)
     self.ScrollFrame.isTop = isTop
 end
 
-function EditBox:SetFocus(is)
-    self.EditBox[is and 'SetFocus' or 'ClearFocus'](self.EditBox)
+function EditBox:SetFocus(flag)
+    if flag then
+        self.EditBox:SetFocus()
+    else
+        self.EditBox:ClearFocus()
+    end
 end
 
 function EditBox:SetTabPressed(func)
@@ -287,7 +191,7 @@ function EditBox:ClearFocus()
 end
 
 function EditBox:ClearCopy()
-    self.FocusButton:SetScript('OnDoubleClick', nil)
+    self.FocusGrabber:SetScript('OnDoubleClick', nil)
 end
 
 function EditBox:SetMaxLetters(maxLetters)
@@ -299,7 +203,7 @@ function EditBox:SetMaxBytes(maxBytes)
 end
 
 function EditBox:SetSinglelLine()
-    self.Prompt:SetJustifyH('CENTER') 
+    self.Prompt:SetJustifyH('CENTER')
     self.Prompt:SetJustifyV('MIDDLE')
     self.Prompt:SetAllPoints(true)
     self.EditBox:SetAllPoints(true)

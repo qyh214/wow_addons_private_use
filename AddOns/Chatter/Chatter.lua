@@ -1,5 +1,5 @@
 local addon, private = ...
-local Chatter = LibStub("AceAddon-3.0"):NewAddon(addon, "AceConsole-3.0", "AceHook-3.0", "AceTimer-3.0") 
+local Chatter = LibStub("AceAddon-3.0"):NewAddon(addon, "AceConsole-3.0", "AceHook-3.0", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale(addon)
 local AceConfig = LibStub("AceConfig-3.0")
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
@@ -38,7 +38,7 @@ local options = {
 			name = L["Modules"],
 			desc = L["Modules"],
 			args = {}
-		}		
+		}
 	}
 }
 
@@ -76,7 +76,7 @@ function Chatter:OnInitialize()
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Chatter", options)
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("ChatterModules", options.args.modules)
 	optFrame = ACD3:AddToBlizOptions("Chatter", nil, nil, "defaultArgs")
-	
+
 	for k, v in self:IterateModules() do
 		options.args.modules.args[k:gsub(" ", "_")] = {
 			type = "group",
@@ -90,14 +90,14 @@ function Chatter:OnInitialize()
 				type = "header",
 				name = L["Settings"],
 				order = 12
-			}		
+			}
 		end
 		t = t or {}
 		t.toggle = {
-			type = "toggle", 
-			name = v.toggleLabel or (L["Enable "] .. (v.modName or k)), 
+			type = "toggle",
+			name = v.toggleLabel or (L["Enable "] .. (v.modName or k)),
 			width = "double",
-			desc = v.Info and v:Info() or (L["Enable "] .. (v.modName or k)), 
+			desc = v.Info and v:Info() or (L["Enable "] .. (v.modName or k)),
 			order = 11,
 			get = function()
 				return Chatter.db.profile.modules[k] ~= false or false
@@ -127,8 +127,8 @@ function Chatter:OnInitialize()
 			}
 		end
 		options.args.modules.args[k:gsub(" ", "_")].args = t
-	end	
-	
+	end
+
 	local moduleList = {}
 	local moduleNames = {}
 	for k, v in pairs(options.args.modules.args) do
@@ -139,13 +139,13 @@ function Chatter:OnInitialize()
 	for _, name in ipairs(moduleNames) do
 		ACD3:AddToBlizOptions("ChatterModules", name, "Chatter", moduleList[name])
 	end
-	
+
 	self:RegisterChatCommand("chatter", "OpenConfig")
-	
+
 	self.db.RegisterCallback(self, "OnProfileChanged", "SetUpdateConfig")
 	self.db.RegisterCallback(self, "OnProfileCopied", "SetUpdateConfig")
 	self.db.RegisterCallback(self, "OnProfileReset", "SetUpdateConfig")
-	
+
 	self:AddMenuHook(self, {
 		text = L["Chatter Settings"],
 		func = Chatter.OpenConfig,
@@ -161,11 +161,11 @@ do
 	function Chatter:AddMenuHook(module, hook)
 		menuHooks[module] = hook
 	end
-	
+
 	function Chatter:RemoveMenuHook(module)
 		menuHooks[module] = nil
 	end
-	
+
 	function Chatter:FCF_Tab_OnClick(...)
 		self.hooks.FCF_Tab_OnClick(...)
 		for module, v in pairs(menuHooks) do
@@ -249,7 +249,7 @@ function Chatter:OnEnable()
 			v:Enable()
 		end
 	end
-	
+
 	if not options.args.Profiles then
  		options.args.Profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 		self.lastConfig = ACD3:AddToBlizOptions("Chatter", L["Profiles"], "Chatter", "Profiles")

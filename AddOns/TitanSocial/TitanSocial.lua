@@ -71,7 +71,7 @@ local bDebugMode = false
 
 -- Required Titan variables
 local TITAN_SOCIAL_ID = "Social"
-local TITAN_SOCIAL_VERSION = "6.2.4"
+local TITAN_SOCIAL_VERSION = "7.1.0"
 local TITAN_SOCIAL_TOOLTIP_KEY = "TitanSocialTooltip"
 
 local MOBILE_HERE_ICON = "|TInterface\\ChatFrame\\UI-ChatIcon-ArmoryChat:0:0:0:0:16:16:0:16:0:16:73:177:73|t"
@@ -327,23 +327,6 @@ local function ternary(cond, a, b)
 		return b
 	end
 end
-
--- GUILD_ROSTER_UPDATE recursion protection
-local guildRosterIgnoreFrame = CreateFrame("frame")
-local frameOver = true
-guildRosterIgnoreFrame:SetScript("OnUpdate", function(self)
-	frameOver = true
-	self:Hide()
-end)
-local function isFreshFrame()
-	if frameOver then
-		frameOver = false
-		guildRosterIgnoreFrame:Show()
-		return true
-	end
-	return false
-end
-
 
 -- collectGuildRosterInfo(split, sortKey, sortAscending)
 -- collects and sorts the guild roster
@@ -1075,7 +1058,6 @@ local function processGuildMember(i, isRemote, tooltip)
 end
 
 local function addGuild(tooltip, collapseGuildVar, collapseRemoteChatVar)
-	isFreshFrame() -- don't trigger GUILD_ROSTER_UPDATE events due to offline toggling
 	local wasOffline = GetGuildRosterShowOffline()
 	if wasOffline then
 		-- SetGuildRosterShowOffline() seems to sometimes trigger GUILD_ROSTER_UPDATE
@@ -1230,6 +1212,22 @@ function _G.TitanPanelSocialButton_OnLoad(self)
 	self:RegisterEvent("GUILD_ROSTER_UPDATE")
 end
 
+local function updateUI()
+	-- Update button label
+	TitanPanelButton_UpdateButton(TITAN_SOCIAL_ID)
+
+	-- Update tooltip if shown
+	if tooltip:IsVisible() then
+		updateTooltip(tooltip)
+	end
+end
+
+local updateFrame = CreateFrame("frame")
+updateFrame:SetScript("OnUpdate", function(self)
+	updateUI()
+	self:Hide()
+end)
+
 function _G.TitanPanelSocialButton_OnEvent(self, event, ...)
 	-- Debugging. Pay no attention to the man behind the curtain.
 	if bDebugMode then
@@ -1240,19 +1238,7 @@ function _G.TitanPanelSocialButton_OnEvent(self, event, ...)
 		_G.DEFAULT_CHAT_FRAME:AddMessage("Social: Caught Event "..event)
 	end
 
-	if event == "GUILD_ROSTER_UPDATE" and not isFreshFrame() then
-		-- We only want to process one GUILD_ROSTER_UPDATE per frame, to avoid getting into endless loops
-		-- with other addson that toggle the offline state of the guild
-		return
-	end
-
-	-- Update button label
-	TitanPanelButton_UpdateButton(TITAN_SOCIAL_ID)
-
-	-- Update tooltip if shown
-	if tooltip:IsVisible() then
-		updateTooltip(tooltip)
-	end
+	updateFrame:Show()
 end
 
 function _G.TitanPanelSocialButton_OnEnter(self)

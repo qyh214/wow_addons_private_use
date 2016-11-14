@@ -1,0 +1,12 @@
+tag 4.7.4
+9b720d0da2191629af68b40cdac757ce1d32a9f5
+Hendrik Leppkes <h.leppkes@gmail.com>
+2016-10-25 10:08:24 +0200
+
+Tag as 4.7.4
+
+
+--------------------
+
+Hendrik Leppkes:
+	- Update TOC for 7.1

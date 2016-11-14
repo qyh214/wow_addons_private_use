@@ -781,79 +781,61 @@ NOTE:
 - The text routine is called in protected mode (pcall) to ensure the Titan main routines still run.
 :NOTE
 --]]
-local function TitanPanelButton_SetButtonText(id) 
-	if (id and TitanUtils_IsPluginRegistered(id)) then
-		local button = TitanUtils_GetButton(id);
-		local buttonText = _G[button:GetName()..TITAN_PANEL_TEXT];
-		local buttonTextFunction = _G[TitanUtils_GetPlugin(id).buttonTextFunction];
-		if (buttonTextFunction) then
-			-- We'll be paranoid here and call the button text in protected mode.
-			-- In case the button text fails it will not take Titan with it...
-			local call_success, -- for pcall
-				label1, value1, label2, value2, label3, value3, label4, value4 = 
-					pcall (buttonTextFunction, id);
-			if call_success then
-				local text = "";
-				if ( label1 and 
-				not (label2 or label3 or label4 
-					or value1 or value2 or value3 or value4) ) then
-					text = label1;
-				elseif (TitanGetVar(id, "ShowLabelText")) then
-					if (label1 or value1) then
-						text = TitanUtils_ToString(label1)
-							..TitanUtils_ToString(value1);
-						if (label2 or value2) then
-							text = text..TITAN_PANEL_LABEL_SEPARATOR
-								..TitanUtils_ToString(label2)
-								..TitanUtils_ToString(value2);
-							if (label3 or value3) then
-								text = text..TITAN_PANEL_LABEL_SEPARATOR
-									..TitanUtils_ToString(label3)
-									..TitanUtils_ToString(value3);
-								if (label4 or value4) then
-									text = text..TITAN_PANEL_LABEL_SEPARATOR
-										..TitanUtils_ToString(label4)
-										..TitanUtils_ToString(value4);
-								end
-							end
-						end
-					end
-				else
-					if (value1) then
-						text = TitanUtils_ToString(value1);
-						if (value2) then
-							text = text..TITAN_PANEL_LABEL_SEPARATOR
-								..TitanUtils_ToString(value2);
-							if (value3) then
-								text = text..TITAN_PANEL_LABEL_SEPARATOR
-									..TitanUtils_ToString(value3);
-								if (value4) then
-									text = text..TITAN_PANEL_LABEL_SEPARATOR
-										..TitanUtils_ToString(value4);
-								end
-							end
-						end
-					end
-				end
-				buttonText:SetText(text);
-			else
-				-- Output something...
-				buttonText:SetText("<?>");
---[[
-				-- This could generate a lot of output...
-				TitanDebug("Set button text error "
-				..(id or "?").." "
-				.."| "..label1 -- the error
-				)
---]]
-			end
-				local isfontvalid = media:IsValid("font", TitanPanelGetVar("FontName"))
-				if isfontvalid then
-					local newfont = media:Fetch("font", TitanPanelGetVar("FontName"))
-					buttonText:SetFont(newfont, TitanPanelGetVar("FontSize"))
-				end
-		end	
+local format_with_label = { [0] = "" }
+for idx = 1, 4 do format_with_label[idx] = "%s%s" .. (TITAN_PANEL_LABEL_SEPARATOR .. "%s%s"):rep(idx - 1) end
+local function TitanPanelButton_SetButtonText(id)
+	if not (id and TitanUtils_IsPluginRegistered(id)) then return end
+
+	local buttonTextFunction = _G[TitanUtils_GetPlugin(id).buttonTextFunction];
+	if not buttonTextFunction then return end
+	local button = TitanUtils_GetButton(id);
+	local buttonText = _G[button:GetName()..TITAN_PANEL_TEXT];
+
+	local newfont = media:Fetch("font", TitanPanelGetVar("FontName"))
+	if newfont then
+		buttonText:SetFont(newfont, TitanPanelGetVar("FontSize"))
 	end
+
+	-- We'll be paranoid here and call the button text in protected mode.
+	-- In case the button text fails it will not take Titan with it...
+	local call_success, -- for pcall
+		label1, value1, label2, value2, label3, value3, label4, value4 =
+			pcall(buttonTextFunction, id)
+
+	if not call_success then buttonText:SetText("<?>") return end
+
+	if label1 and
+		not (label2 or label3 or label4
+		or value1 or value2 or value3 or value4) then
+		buttonText:SetText(label1)
+		return
+	end
+
+	local show_label = TitanGetVar(id, "ShowLabelText")
+	local values = 0
+	if label1 or value1 then
+		values = 1
+		if not show_label then label1 = "" end
+		if label2 or value2 then
+			values = 2
+			if not show_label then label2 = "" end
+			if label3 or value3 then
+				values = 3
+				if not show_label then label3 = "" end
+				if label4 or value4 then
+					values = 4
+					if not show_label then label4 = "" end
+				end
+			end
+		end
+	end
+
+	buttonText:SetFormattedText(format_with_label[values],
+		label1 or "", value1 or "",
+		label2 or "", value2 or "",
+		label3 or "", value3 or "",
+		label4 or "", value4 or ""
+	)
 end
 
 --[[ local

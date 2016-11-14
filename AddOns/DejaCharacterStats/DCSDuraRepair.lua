@@ -1,3 +1,6 @@
+local ADDON_NAME, namespace = ... 	--localization
+local L = namespace.L 				--localization
+
 -- ---------------------------
 -- -- DCS Durability Frames --
 -- ---------------------------
@@ -217,8 +220,8 @@ local DCS_ShowDuraCheck = CreateFrame("CheckButton", "DCS_ShowDuraCheck", DejaCh
 	DCS_ShowDuraCheck:ClearAllPoints()
 	DCS_ShowDuraCheck:SetPoint("LEFT", 25, -75)
 	DCS_ShowDuraCheck:SetScale(1.25)
-	DCS_ShowDuraCheck.tooltipText = "Displays each equipped item's durability." --Creates a tooltip on mouseover.
-	_G[DCS_ShowDuraCheck:GetName() .. "Text"]:SetText("Item Durability")
+	DCS_ShowDuraCheck.tooltipText = L["Displays each equipped item's durability."] --Creates a tooltip on mouseover.
+	_G[DCS_ShowDuraCheck:GetName() .. "Text"]:SetText(L["Item Durability"])
 	
 DCS_ShowDuraCheck:SetScript("OnEvent", function(self, event, ...)
 	local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDuraChecked
@@ -298,8 +301,8 @@ local DCS_ShowDuraTextureCheck = CreateFrame("CheckButton", "DCS_ShowDuraTexture
 	DCS_ShowDuraTextureCheck:ClearAllPoints()
 	DCS_ShowDuraTextureCheck:SetPoint("LEFT", 25, -25)
 	DCS_ShowDuraTextureCheck:SetScale(1.25)
-	DCS_ShowDuraTextureCheck.tooltipText = "Displays a durability bar next to each item." --Creates a tooltip on mouseover.
-	_G[DCS_ShowDuraTextureCheck:GetName() .. "Text"]:SetText("Durability Bars")
+	DCS_ShowDuraTextureCheck.tooltipText = L["Displays a durability bar next to each item."] --Creates a tooltip on mouseover.
+	_G[DCS_ShowDuraTextureCheck:GetName() .. "Text"]:SetText(L["Durability Bars"])
 	
 DCS_ShowDuraTextureCheck:SetScript("OnEvent", function(self, event, ...)
 	local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDuraTextureChecked
@@ -348,9 +351,9 @@ function PaperDollFrame_SetDurability(statFrame, unit)
 
 	local displayDura = format("%.2f%%", duraMean);
 
-	PaperDollFrame_SetLabelAndText(statFrame, ("Durability"), displayDura, false, duraMean);
-	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, format("Durability %s", displayDura));
-	statFrame.tooltip2 = ("Average equipped item durability percentage.");
+	PaperDollFrame_SetLabelAndText(statFrame, (L["Durability"]), displayDura, false, duraMean);
+	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, format(L["Durability %s"], displayDura));
+	statFrame.tooltip2 = (L["Average equipped item durability percentage."]);
 
 	local duraFinite = 0
 	statFrame:Show();
@@ -367,8 +370,8 @@ local DCS_ShowAverageDuraCheck = CreateFrame("CheckButton", "DCS_ShowAverageDura
 	DCS_ShowAverageDuraCheck:ClearAllPoints()
 	DCS_ShowAverageDuraCheck:SetPoint("LEFT", 25, -50)
 	DCS_ShowAverageDuraCheck:SetScale(1.25)
-	DCS_ShowAverageDuraCheck.tooltipText = "Displays average item durability on the character shirt slot and durability frames." --Creates a tooltip on mouseover.
-	_G[DCS_ShowAverageDuraCheck:GetName() .. "Text"]:SetText("Average Durability")
+	DCS_ShowAverageDuraCheck.tooltipText = L["Displays average item durability on the character shirt slot and durability frames."] --Creates a tooltip on mouseover.
+	_G[DCS_ShowAverageDuraCheck:GetName() .. "Text"]:SetText(L["Average Durability"])
 	
 	DCS_ShowAverageDuraCheck:SetScript("OnEvent", function(self, event, ...)
 		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowAverageRepairChecked
@@ -469,9 +472,9 @@ function PaperDollFrame_SetRepairTotal(statFrame, unit)
 	--STAT_FORMAT
 	-- PaperDollFrame_SetLabelAndText(statFrame, label, text, isPercentage, numericValue) -- Formatting
 
-	PaperDollFrame_SetLabelAndText(statFrame, ("Repair Total"), displayRepairTotal, false, repairitemCostTotal);
-	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, format("Repair Total %s", displayRepairTotal));
-	statFrame.tooltip2 = ("Total equipped item repair cost before discounts.");
+	PaperDollFrame_SetLabelAndText(statFrame, (L["Repair Total"]), displayRepairTotal, false, repairitemCostTotal);
+	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, format(L["Repair Total %s"], displayRepairTotal));
+	statFrame.tooltip2 = (L["Total equipped item repair cost before discounts."]);
 
 	statFrame:Show();
 	repairitemCostTotal = 0
@@ -488,8 +491,8 @@ local DCS_ShowItemRepairCheck = CreateFrame("CheckButton", "DCS_ShowItemRepairCh
 	DCS_ShowItemRepairCheck:ClearAllPoints()
 	DCS_ShowItemRepairCheck:SetPoint("LEFT", 25, -100)
 	DCS_ShowItemRepairCheck:SetScale(1.25)
-	DCS_ShowItemRepairCheck.tooltipText = "Displays each equipped item's repair cost." --Creates a tooltip on mouseover.
-	_G[DCS_ShowItemRepairCheck:GetName() .. "Text"]:SetText("Item Repair Cost")
+	DCS_ShowItemRepairCheck.tooltipText = L["Displays each equipped item's repair cost."] --Creates a tooltip on mouseover.
+	_G[DCS_ShowItemRepairCheck:GetName() .. "Text"]:SetText(L["Item Repair Cost"])
 	
 DCS_ShowItemRepairCheck:SetScript("OnEvent", function(self, event, ...)
 	local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowItemRepairChecked

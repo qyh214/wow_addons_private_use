@@ -1,3 +1,9 @@
+TipTac Changes | 2016 Oct 27
+----------------------------
+- Updated the TOC version to 70100 for the 7.1 patch.
+- Fixed errors caused by calling "GetAttribute" on widgets that does not have this method. Thanks oppizippy.
+- Added a workaround that should help with making the WorldMapTooltip and the QuestScrollFrame appear as other tooltips configured by TipTac.
+
 TipTac Changes | 2016 Aug 30
 ----------------------------
 - TipTacItemRef: Fixed issue with incorrect itemLevel showing for items that have been upgraded.

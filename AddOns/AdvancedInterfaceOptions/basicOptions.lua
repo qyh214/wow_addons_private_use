@@ -2,8 +2,6 @@ local addonName, addon = ...
 local E = addon:Eve()
 local _G = _G
 
-CameraPanelOptions.cameraDistanceMaxFactor.maxValue = 2.6
-
 -- Saved settings
 AdvancedInterfaceOptionsSaved = {
 	AccountVars = {}, -- account-wide cvars to be re-applied on login, [cvar] = value
@@ -50,7 +48,8 @@ end
 -- GLOBALS: GameTooltip InterfaceOptionsFrame_OpenToCategory
 -- GLOBALS: GetSortBagsRightToLeft SetSortBagsRightToLeft GetInsertItemsLeftToRight SetInsertItemsLeftToRight
 -- GLOBALS: UIDropDownMenu_AddButton UIDropDownMenu_CreateInfo UIDropDownMenu_SetSelectedValue
--- GLOBALS: SLASH_AIO1 InterfaceOptionsFrame DEFAULT_CHAT_FRAME AdvancedInterfaceOptionsSaved
+-- GLOBALS: SLASH_AIO1 InterfaceOptionsFrame DEFAULT_CHAT_FRAME AdvancedInterfaceOptionsSaved COMBAT_TEXT_FLOAT_MODE
+-- GLOBALS: BlizzardOptionsPanel_UpdateCombatText
 
 local AIO = CreateFrame('Frame', nil, InterfaceOptionsFramePanelContainer)
 AIO:Hide()
@@ -244,7 +243,7 @@ actionCamModeDropdown.initialize = function(dropdown)
 end
 actionCamModeDropdown:HookScript("OnShow", actionCamModeDropdown.initialize)
 
-local cameraFactor = newSlider(AIO, 'cameraDistanceMaxFactor', 1, 2.6, 0.1)
+local cameraFactor = newSlider(AIO, 'cameraDistanceMaxZoomFactor', 1, 2.6, 0.1)
 cameraFactor:SetPoint('TOPLEFT', actionCamModeDropdown, 'BOTTOMLEFT', 20, -20)
 
 playerTitles:SetPoint("TOPLEFT", subText, "BOTTOMLEFT", 0, -8)
@@ -468,24 +467,24 @@ attackOnAssist:SetPoint("TOPLEFT", stopAutoAttack, "BOTTOMLEFT", 0, -4)
 local castOnKeyDown = newCheckbox(AIO_C, 'ActionButtonUseKeyDown')
 castOnKeyDown:SetPoint("TOPLEFT", attackOnAssist, "BOTTOMLEFT", 0, -4)
 
-local spellStartRecovery = newSlider(AIO_C, 'MaxSpellStartRecoveryOffset', 0, 400)
-spellStartRecovery:SetPoint('TOPLEFT', castOnKeyDown, 'BOTTOMLEFT', 0, -20)
-spellStartRecovery:Disable()
-
 local reducedLagTolerance = newCheckbox(AIO_C, 'reducedLagTolerance')
-reducedLagTolerance:SetPoint("TOPLEFT", spellStartRecovery, "BOTTOMLEFT", 0, -16)
-reducedLagTolerance:SetScript('OnClick', function(self)
-	local checked = self:GetChecked()
-	PlaySound(checked and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
-	if checked then
+reducedLagTolerance:SetPoint("TOPLEFT", castOnKeyDown, "BOTTOMLEFT", 0, -4)
+
+local spellStartRecovery = newSlider(AIO_C, 'MaxSpellStartRecoveryOffset', 0, 400)
+spellStartRecovery:SetPoint('TOPLEFT', reducedLagTolerance, 'BOTTOMLEFT', 24, -8)
+spellStartRecovery.minMaxValues = {spellStartRecovery:GetMinMaxValues()}
+spellStartRecovery.minText:SetFormattedText("%d %s", spellStartRecovery.minMaxValues[1], MILLISECONDS_ABBR)
+spellStartRecovery.maxText:SetFormattedText("%d %s", spellStartRecovery.minMaxValues[2], MILLISECONDS_ABBR)
+
+reducedLagTolerance:HookScript('OnClick', function(self)
+	if self:GetChecked() then
 		spellStartRecovery:Enable()
 	else
 		spellStartRecovery:Disable()
 	end
 end)
-reducedLagTolerance:SetScript('OnShow', function(self)
-	local checked = self:GetChecked()
-	if checked then
+reducedLagTolerance:HookScript('OnShow', function(self)
+	if self:GetChecked() then
 		spellStartRecovery:Enable()
 	else
 		spellStartRecovery:Disable()
@@ -503,7 +502,6 @@ InterfaceOptions_AddCategory(AIO_NP, addonName)
 
 function E:PLAYER_REGEN_DISABLED()
 	if AIO:IsVisible() then
-		--InterfaceOptionsFrame_Show()
 		InterfaceOptionsFrame:Hide()
 	end
 end

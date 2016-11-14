@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1720, "DBM-Party-Legion", 7, 800)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15207 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15404 $"):sub(12, -3))
 mod:SetCreatureID(104218)
 mod:SetEncounterID(1870)
 mod:SetZone()
@@ -19,15 +19,17 @@ local warnSurge						= mod:NewTargetAnnounce(209602, 4)
 local specWarnSurge					= mod:NewSpecialWarningYou(209602, nil, nil, nil, 1, 2)
 local yellSurge						= mod:NewYell(209602)
 local specWarnSlicingMaelstrom		= mod:NewSpecialWarningSpell(209676, nil, nil, nil, 2, 2)
-local specWarnGale					= mod:NewSpecialWarningDodge(209676, nil, nil, nil, 2, 2)
+local specWarnGale					= mod:NewSpecialWarningDodge(209628, nil, nil, nil, 2, 2)
 
-local timerSurgeCD					= mod:NewNextTimer(19.3, 153396, nil, nil, nil, 3)
-local timerMaelstromCD				= mod:NewNextTimer(19.3, 209676, nil, nil, nil, 3)
-local timerGaleCD					= mod:NewNextTimer(19.3, 209628, nil, nil, nil, 2)
+local timerSurgeCD					= mod:NewCDTimer(17, 153396, nil, nil, nil, 3)
+local timerMaelstromCD				= mod:NewCDTimer(17, 209676, nil, nil, nil, 3)
+local timerGaleCD					= mod:NewCDTimer(17, 209628, nil, nil, nil, 2)
 
 local voiceSurge					= mod:NewVoice(209602)--targetyou
 local voiceMaelstrom				= mod:NewVoice(209676)--aesoon
 local voiceGale						= mod:NewVoice(209676)--watchstep
+
+local trashmod = DBM:GetModByName("CoSTrash")
 
 function mod:SurgeTarget(targetname, uId)
 	if not targetname then
@@ -45,8 +47,15 @@ end
 
 function mod:OnCombatStart(delay)
 	timerGaleCD:Start(5.7-delay)
-	timerMaelstromCD:Start(11.8-delay)
-	timerSurgeCD:Start(19-delay)
+	timerMaelstromCD:Start(10.9-delay)
+	timerSurgeCD:Start(17-delay)
+	--Not ideal to do every pull, but cleanest way to ensure it's done
+	if not trashmod then
+		trashmod = DBM:GetModByName("CoSTrash")
+	end
+	if trashmod and trashmod.Options.SpyHelper then
+		trashmod:ResetGossipState()
+	end
 end
 
 function mod:SPELL_CAST_START(args)

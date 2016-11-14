@@ -3,6 +3,22 @@ Exclusion List: 	*.svn*   *.DS_Store*   exclude.lst   *.db   *.png   *.gif   *.j
 
 
 ---------------------------
+6.18.11
+---------------------------
+* I got injured a few weeks ago, halting my progress, so I may have broken some things, and then forgot to fix them...
+
+* Core: Different hiding method for Blizzard nameplates.  Might be a unreliable?  Changed to fix tainting issues.
+* Core: Updated the TOC versions.
+
+* Threat Line: The widget will auto update with no fading.
+* Core: Increased the Target & Mouseover FrameLevels
+* Hub: Filter: "Filter Players" will now filter players full-time.
+* Core: unit.reaction will default to "HOSTILE" if it can't be determined  (Should mitigate color.lua reaction color error)
+
+* Off-Tank Aggro: Party/Raid Threat  IsTank()  (unitid.."target") somethingerother?
+
+
+---------------------------
 6.18.10
 ---------------------------
 * Core: RAID_TARGET_UPDATE, Full update

@@ -11,6 +11,8 @@ local max = _G.max
 local pairs = _G.pairs
 local select = _G.select
 
+-- GLOBALS: NUM_CHAT_WINDOWS ChatEdit_DeactivateChat
+
 local VALID_ATTACH_POINTS = {
 	TOP = L["Top"],
 	BOTTOM = L["Bottom"],
@@ -254,7 +256,7 @@ end
 function mod:OnInitialize()
 	self.db = Chatter.db:RegisterNamespace("EditBox", defaults)
 	Media.RegisterCallback(mod, "LibSharedMedia_Registered")
-	self.frames = {}	
+	self.frames = {}
 	self:LibSharedMedia_Registered()
 	for i = 1, NUM_CHAT_WINDOWS do
 		local parent = _G["ChatFrame"..i.."EditBox"]
@@ -325,7 +327,7 @@ function mod:OnEnable()
 		f:Hide()
 		self.frames[i]:Show()
 		local font, s, m = f:GetFont()
-		f:SetFont(Media:Fetch("font", self.db.profile.font), s, m)					
+		f:SetFont(Media:Fetch("font", self.db.profile.font), s, m)
 		self:SetAttach(nil, self.db.profile.editX, self.db.profile.editY, self.db.profile.editW)
 	end
 	for index,name in ipairs(self.TempChatFrames) do
@@ -426,7 +428,7 @@ function mod:SetBackdrop()
 		})
 		local c = self.db.profile.backgroundColor
 		frame:SetBackdropColor(c.r, c.g, c.b, c.a)
-		
+
 		local c = self.db.profile.borderColor
 		frame:SetBackdropBorderColor(c.r, c.g, c.b, c.a)
 	end
@@ -442,7 +444,7 @@ function mod:SetBorderByChannel(...)
 			if chan == 0 then
 				local c = self.db.profile.borderColor
 				frame:SetBackdropBorderColor(c.r, c.g, c.b, c.a)
-			else	
+			else
 				local r, g, b = GetMessageTypeColor("CHANNEL" .. chan)
 				frame:SetBackdropBorderColor(r, g, b, 1)
 			end
@@ -469,13 +471,13 @@ do
 	local function constrainHeight(self)
 		self:GetParent():SetHeight(cfHeight)
 	end
-	
+
 	local function startDragging(self)
 		cfHeight = self:GetParent():GetHeight()
 		self:GetParent():StartSizing(not self.left and "TOPRIGHT" or "TOPLEFT")
 		self:SetScript("OnUpdate", constrainHeight)
 	end
-	
+
 	local function stopDragging(self)
 		local parent = self:GetParent()
 		parent:StopMovingOrSizing()
@@ -486,7 +488,7 @@ do
 	end
 
 	function mod:SetAttach(val, x, y, w)
-		for i = 1, NUM_CHAT_WINDOWS do 
+		for i = 1, NUM_CHAT_WINDOWS do
 			local frame = _G["ChatFrame" .. i .. "EditBox"]
 			local val = val or self.db.profile.attach
 			if not x and val == "FREE" then
@@ -506,18 +508,18 @@ do
 				frame:SetScript("OnMouseDown", nil)
 				frame:SetScript("OnMouseUp", nil)
 				frame.lDrag:EnableMouse(false)
-				frame.rDrag:EnableMouse(false)			
+				frame.rDrag:EnableMouse(false)
 				frame.lDrag:SetScript("OnMouseDown", nil)
 				frame.rDrag:SetScript("OnMouseDown", nil)
 				frame.lDrag:SetScript("OnMouseUp", nil)
 				frame.rDrag:SetScript("OnMouseUp", nil)
 			end
-			
+
 			if val == "TOP" then
 				-- When on top we need to prevent left clicking from activating the edit box.
 				frame:SetPoint("BOTTOMLEFT", frame.chatFrame, "TOPLEFT", 0, 3)
 				frame:SetPoint("BOTTOMRIGHT", frame.chatFrame, "TOPRIGHT", 0, 3)
-			elseif val == "BOTTOM" then			
+			elseif val == "BOTTOM" then
 				frame:SetPoint("TOPLEFT", frame.chatFrame, "BOTTOMLEFT", 0, -8)
 				frame:SetPoint("TOPRIGHT", frame.chatFrame, "BOTTOMRIGHT", 0, -8)
 			elseif val == "FREE" then
@@ -532,10 +534,10 @@ do
 				frame:SetWidth(w)
 				frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x, y)
 				frame:SetMinResize(40, 1)
-				
+
 				frame.lDrag:EnableMouse(true)
 				frame.rDrag:EnableMouse(true)
-				
+
 				frame.lDrag:SetScript("OnMouseDown", startDragging)
 				frame.rDrag:SetScript("OnMouseDown", startDragging)
 

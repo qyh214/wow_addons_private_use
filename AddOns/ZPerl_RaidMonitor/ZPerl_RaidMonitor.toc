@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+﻿## Interface: 70100
 ## Author: Resike
 ## Title: Z-Perl |cffeda55fRaid Monitor|r
 ## Title-itIT: Z-Perl |cffeda55fMonitor Incursione|r
@@ -14,7 +14,7 @@
 ## SavedVariablesPerCharacter: ZPerlRaidMonConfig
 ## RequiredDeps: ZPerl
 ## DefaultState: Disabled
-## X-Curse-Packaged-Version: r1014
+## X-Curse-Packaged-Version: r1019
 ## X-Curse-Project-Name: Z-Perl Unit Frames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

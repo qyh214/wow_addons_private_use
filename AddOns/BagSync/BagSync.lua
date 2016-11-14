@@ -13,12 +13,6 @@ local BSYC = select(2, ...) --grab the addon namespace
 BSYC = LibStub("AceAddon-3.0"):NewAddon(BSYC, "BagSync", "AceEvent-3.0", "AceConsole-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("BagSync", true)
 
-local strsub, strsplit, strlower, strmatch, strtrim, gsub, strrep = string.sub, string.split, string.lower, string.match, string.trim, string.gsub, string.rep
-local format, tonumber, tostring, tostringall = string.format, tonumber, tostring, tostringall
-local tsort, tinsert, unpack = table.sort, table.insert, unpack
-local select, pairs, next, type = select, pairs, next, type
-local error, assert = error, assert
-
 local debugf = tekDebug and tekDebug:GetFrame("BagSync")
 
 function BSYC:Debug(...)
@@ -187,7 +181,10 @@ function BSYC:StartupDB()
 	if self.options.enableBNetAccountItems == nil then self.options.enableBNetAccountItems = false end
 	if self.options.enableTooltipItemID == nil then self.options.enableTooltipItemID = false end
 	if self.options.enableTooltipGreenCheck == nil then self.options.enableTooltipGreenCheck = true end
-
+	if self.options.enableRealmIDTags == nil then self.options.enableRealmIDTags = true end
+	if self.options.enableRealmAstrickName == nil then self.options.enableRealmAstrickName = false end
+	if self.options.enableRealmShortName == nil then self.options.enableRealmShortName = false end
+	
 	--setup the default colors
 	if self.options.colors == nil then self.options.colors = {} end
 	if self.options.colors.first == nil then self.options.colors.first = { r = 128/255, g = 1, b = 0 }  end
@@ -228,6 +225,7 @@ function BSYC:StartupDB()
 	
 	BagSync_REALMKEY = BagSync_REALMKEY or {}
 	BagSync_REALMKEY[self.currentRealm] = GetRealmName()
+	BagSync_REALMKEY[0] = BagSync_REALMKEY[0] or {} --this will maintain a list of connected realms
 	self.db.realmkey = BagSync_REALMKEY
 	
 end
@@ -441,12 +439,9 @@ function BSYC:GetRealmTags(srcName, srcRealm, isGuild)
 	
 	local fullRealmName = srcRealm --default to shortened realm first
 	
+	if self.db.realmkey[srcRealm] then fullRealmName = self.db.realmkey[srcRealm] end --second, if we have a realmkey with a true realm name then use it
+	
 	if not isGuild then
-		--check just in case!  we only want the name not the realm
-		local yName, yRealm  = strsplit("^", srcName)
-
-		srcName = yName
-		
 		local ReadyCheck = [[|TInterface\RaidFrame\ReadyCheck-Ready:0|t]]
 		--local NotReadyCheck = [[|TInterface\RaidFrame\ReadyCheck-NotReady:0|t]]
 		
@@ -454,22 +449,45 @@ function BSYC:GetRealmTags(srcName, srcRealm, isGuild)
 		if srcName == self.currentPlayer and self.options.enableTooltipGreenCheck then
 			srcName = srcName.." "..ReadyCheck
 		end
+	else
+		--sometimes a person has characters on multiple connected servers joined to the same guild.
+		--the guild information is saved twice because although the guild is on the connected server, the characters themselves are on different servers.
+		--too compensate for this, lets check the connected server and return only the guild name.  So it doesn't get processed twice.
+		for k, v in pairs(self.crossRealmNames) do
+			--check to see if the guild exists already on a connected realm and not the current realm
+			if k ~= srcRealm and self.db.guild[k] and self.db.guild[k][srcName] then
+				--return non-modified guild name, we only want the guild listed once for the cross-realm
+				return srcName
+			end
+		end
 	end
 	
-	if self.db.realmkey[srcRealm] then fullRealmName = self.db.realmkey[srcRealm] end --second, if we have a realmkey with a true realm name then use it
-	
 	--add Cross-Realm and BNet identifiers to Characters not on same realm
+	local crossString = ""
+	local bnetString = ""
+	
+	if self.options.enableRealmIDTags then
+		crossString = "XR-"
+		bnetString = "BNet-"
+	end
+	
+	if self.options.enableRealmAstrickName then
+		fullRealmName = "*"
+	elseif self.options.enableRealmShortName then
+		fullRealmName = string.sub(fullRealmName, 1, 5) --only use 5 characters of the server name
+	end
+	
 	if self.options.enableBNetAccountItems then
 		if srcRealm and srcRealm ~= self.currentRealm then
 			if not self.crossRealmNames[srcRealm] then
-				srcName = srcName.." "..rgbhex(self.options.colors.bnet).."[BNet-"..fullRealmName.."]|r"
+				srcName = srcName.." "..rgbhex(self.options.colors.bnet).."["..bnetString..fullRealmName.."]|r"
 			else
-				srcName = srcName.." "..rgbhex(self.options.colors.cross).."[XR-"..fullRealmName.."]|r"
+				srcName = srcName.." "..rgbhex(self.options.colors.cross).."["..crossString..fullRealmName.."]|r"
 			end
 		end
 	elseif self.options.enableCrossRealmsItems then
 		if srcRealm and srcRealm ~= self.currentRealm then
-			srcName = srcName.." "..rgbhex(self.options.colors.cross).."[XR-"..fullRealmName.."]|r"
+			srcName = srcName.." "..rgbhex(self.options.colors.cross).."["..crossString..fullRealmName.."]|r"
 		end
 	end
 		
@@ -769,9 +787,12 @@ function BSYC:ShowMoneyTooltip(objTooltip)
 	local xDB = self:FilterDB()
 
 	for k, v in pairs(xDB) do
+		local yName, yRealm  = strsplit("^", k)
+		local playerName = BSYC:GetRealmTags(yName, yRealm)
+		
 		if v.gold then
-			k = self:GetRealmTags(k, v.realm)
-			table.insert(usrData, { name=k, gold=v.gold } )
+			playerName = self:GetClassColor(playerName or "Unknown", v.class)
+			table.insert(usrData, { name=playerName, gold=v.gold } )
 		end
 	end
 	table.sort(usrData, function(a,b) return (a.name < b.name) end)
@@ -996,6 +1017,7 @@ function BSYC:AddItemToTooltip(frame, link) --workaround
 	
 	--this is so we don't scan the same guild multiple times
 	local previousGuilds = {}
+	local previousGuildsXRList = {}
 	local grandTotal = 0
 	local first = true
 	
@@ -1052,7 +1074,17 @@ function BSYC:AddItemToTooltip(frame, link) --workaround
 					--check for XR/B.Net support, you can have multiple guilds with same names on different servers
 					local gName = self:GetRealmTags(guildN, v.realm, true)
 					
-					if not previousGuilds[gName] then
+					--check to make sure we didn't already add a guild from a connected-realm
+					local trueRealmList = self.db.realmkey[0][v.realm] --get the connected realms
+					if trueRealmList then
+						table.sort(trueRealmList, function(a,b) return (a < b) end) --sort them alphabetically
+						trueRealmList = table.concat(trueRealmList, "|") --concat them together
+					else
+						trueRealmList = v.realm
+					end
+					trueRealmList = guildN.."-"..trueRealmList --add the guild name in front of concat realm list
+
+					if not previousGuilds[gName] and not previousGuildsXRList[trueRealmList] then
 						--we only really need to see this information once per guild
 						local tmpCount = 0
 						for q, r in pairs(self.db.guild[v.realm][guildN]) do
@@ -1067,17 +1099,18 @@ function BSYC:AddItemToTooltip(frame, link) --workaround
 							end
 						end
 						previousGuilds[gName] = tmpCount
+						previousGuildsXRList[trueRealmList] = true
 					end
 				end
 			end
 			
 			--get class for the unit if there is one
-			local pClass = v.class or nil
 			infoString = self:CreateItemTotals(allowList)
 
 			if infoString then
-				k = self:GetRealmTags(k, v.realm)
-				table.insert(self.PreviousItemTotals, self:GetClassColor(k or "Unknown", pClass).."@"..(infoString or "unknown"))
+				local yName, yRealm  = strsplit("^", k)
+				local playerName = self:GetRealmTags(yName, yRealm)
+				table.insert(self.PreviousItemTotals, self:GetClassColor(playerName or "Unknown", v.class).."@"..(infoString or "unknown"))
 			end
 			
 		end
@@ -1383,12 +1416,16 @@ function BSYC:OnEnable()
 	--strip realm of whitespace and special characters, alternative to UnitFullName, since UnitFullName does not work on OnInitialize()
 	--BSYC:Debug(gsub(GetRealmName(),"[%s%-]",""))
 	
+	local realmList = {} --we are going to use this to store a list of connected realms, including the current realm
 	local autoCompleteRealms = GetAutoCompleteRealms() or { self.currentRealm }
-
+	
+	table.insert(realmList, self.currentRealm)
+	
 	self.crossRealmNames = {}
 	for k, v in pairs(autoCompleteRealms) do
 		if v ~= self.currentRealm then
 			self.crossRealmNames[v] = true
+			table.insert(realmList, v)
 		end
 	end
 	
@@ -1400,7 +1437,10 @@ function BSYC:OnEnable()
 		self:FixDB()
 		self.options.dbversion = ver
 	end
-	
+
+	--save the connected realm list, if there is any
+	self.db.realmkey[0][self.currentRealm] = realmList
+
 	--save the current user money (before bag update)
 	self.db.player.gold = GetMoney()
 

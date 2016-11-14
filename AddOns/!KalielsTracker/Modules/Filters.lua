@@ -54,7 +54,7 @@ local function SetHooks()
 	OTF:SetScript("OnEvent", function(self, event, ...)
 		if event == "QUEST_ACCEPTED" then
 			local _, questID = ...
-			if not IsQuestTask(questID) and db.filterAuto[1] then
+			if not IsQuestBounty(questID) and not IsQuestTask(questID) and db.filterAuto[1] then
 				return
 			end
 		end
@@ -179,11 +179,12 @@ end
 local function Filter_Quests(self, spec, idx)
 	if not spec then return end
 	local numEntries, _ = GetNumQuestLogEntries()
-	
+
+	KT.stopUpdate = true
 	if GetNumQuestWatches() > 0 then
 		for i=1, numEntries do
-			local _, _, _, isHeader = GetQuestLogTitle(i)
-			if not isHeader then
+			local _, _, _, isHeader, _, _, _, _, _, _, _, _, isTask, isBounty = GetQuestLogTitle(i)
+			if not isHeader and not isTask and not isBounty then
 				RemoveQuestWatch(i)
 			end
 		end
@@ -191,15 +192,15 @@ local function Filter_Quests(self, spec, idx)
 
 	if spec == "All" then
 		for i=numEntries, 1, -1 do
-			local _, _, _, isHeader, _, _, _, _, _, _, _, _, isTask = GetQuestLogTitle(i)
-			if not isHeader and not isTask then
+			local _, _, _, isHeader, _, _, _, _, _, _, _, _, isTask, isBounty = GetQuestLogTitle(i)
+			if not isHeader and not isTask and not isBounty then
 				AddQuestWatch(i, true)
 			end
 		end
 	elseif spec == "Group" then
 		for i=idx, 1, -1 do
-			local _, _, _, isHeader, _, _, _, _, _, _, _, _, isTask = GetQuestLogTitle(i)
-			if not isHeader and not isTask then
+			local _, _, _, isHeader, _, _, _, _, _, _, _, _, isTask, isBounty = GetQuestLogTitle(i)
+			if not isHeader and not isTask and not isBounty then
 				AddQuestWatch(i, true)
 			else
 				break
@@ -213,8 +214,8 @@ local function Filter_Quests(self, spec, idx)
 			SetDungeonMapLevel(1)
 		end
 		for i=numEntries, 1, -1 do
-			local _, _, _, isHeader, _, _, _, questID, _, _, isOnMap, _, isTask = GetQuestLogTitle(i)
-			if not isHeader and not isTask and isOnMap then
+			local _, _, _, isHeader, _, _, _, questID, _, _, isOnMap, _, isTask, isBounty = GetQuestLogTitle(i)
+			if not isHeader and not isTask and not isBounty and isOnMap then
 				if KT.inInstance then
 					if GetQuestWorldMapAreaID(questID) == GetCurrentMapAreaID() then
 						if IsInstanceQuest(questID) then
@@ -228,15 +229,15 @@ local function Filter_Quests(self, spec, idx)
 		end
 	elseif spec == "Daily" then
 		for i=numEntries, 1, -1 do
-			local _, _, _, isHeader, _, _, frequency, _, _, _, _, _, isTask = GetQuestLogTitle(i)
-			if not isHeader and not isTask and frequency >= 2 then
+			local _, _, _, isHeader, _, _, frequency, _, _, _, _, _, isTask, isBounty = GetQuestLogTitle(i)
+			if not isHeader and not isTask and not isBounty and frequency >= 2 then
 				AddQuestWatch(i, true)
 			end
 		end
 	elseif spec == "Instance" then
 		for i=numEntries, 1, -1 do
-			local _, _, _, isHeader, _, _, _, questID, _, _, _, _, isTask = GetQuestLogTitle(i)
-			if not isHeader and not isTask then
+			local _, _, _, isHeader, _, _, _, questID, _, _, _, _, isTask, isBounty = GetQuestLogTitle(i)
+			if not isHeader and not isTask and not isBounty then
 				local tagID, _ = GetQuestTagInfo(questID)
 				if tagID == QUEST_TAG_DUNGEON or
 					tagID == QUEST_TAG_HEROIC or
@@ -249,12 +250,13 @@ local function Filter_Quests(self, spec, idx)
 		end
 	elseif spec == "Complete" then
 		for i=numEntries, 1, -1 do
-			local _, _, _, isHeader, _, _, _, questID, _, _, _, _, isTask = GetQuestLogTitle(i)
-			if not isHeader and not isTask and IsQuestComplete(questID) then
+			local _, _, _, isHeader, _, _, _, questID, _, _, _, _, isTask, isBounty = GetQuestLogTitle(i)
+			if not isHeader and not isTask and not isBounty and IsQuestComplete(questID) then
 				AddQuestWatch(i, true)
 			end
 		end
 	end
+	KT.stopUpdate = false
 
 	ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_QUEST)
 	QuestSuperTracking_ChooseClosestQuest()
@@ -263,7 +265,8 @@ end
 local function Filter_Achievements(self, spec)
 	if not spec then return end
 	local trackedAchievements = { GetTrackedAchievements() }
-	
+
+	KT.stopUpdate = true
 	if GetNumTrackedAchievements() > 0 then
 		for i=1, #trackedAchievements do
 			RemoveTrackedAchievement(trackedAchievements[i])
@@ -274,6 +277,7 @@ local function Filter_Achievements(self, spec)
 		SetMapToCurrentZone()
 		local continentName = (GetCurrentMapContinent() <= 0) and "" or continents[2*GetCurrentMapContinent()]
 		local zoneName = IsMapGarrisonMap(GetCurrentMapAreaID()) and GARRISON_LOCATION_TOOLTIP or (GetRealZoneText() or "")
+		local categoryName = (continentName == continents[2*8]) and EXPANSION_NAME6 or continentName
 		local instance = KT.inInstance and 168 or nil
 		_DBG(zoneName.." ... "..GetCurrentMapAreaID(), true)
 		
@@ -300,8 +304,8 @@ local function Filter_Achievements(self, spec)
 
 			if db.filterAchievCat[parentID] then
 				if (parentID == 92) or	-- General
-					(parentID == 96 and name == continentName) or	-- Quests
-					(parentID == 97 and name == continentName) or	-- Exploration
+					(parentID == 96 and name == categoryName) or	-- Quests
+					(parentID == 97 and name == categoryName) or	-- Exploration
 					(parentID == 95 and strfind(zoneName, name)) or	-- Player vs. Player
 					(category == instance or parentID == instance) or	-- Dungeons & Raids
 					(parentID == 169) or	-- Professions
@@ -393,6 +397,7 @@ local function Filter_Achievements(self, spec)
 			KT:Pour("World Event - "..eventName, 1, 1, 0)
 		end
 	end
+	KT.stopUpdate = false
 	
 	if AchievementFrame then
 		AchievementFrameAchievements_ForceUpdate()
@@ -590,18 +595,28 @@ local function DropDown_Initialize(self, level)
 			info.func = Filter_Quests
 
 			if numEntries > 0 then
+				local headerTitle, headerOnMap, headerShown
 				for i=1, numEntries do
-					local title, _, _, isHeader, _, _, _, _, _, _, isOnMap = GetQuestLogTitle(i)
+					local title, _, _, isHeader, _, _, _, _, _, _, isOnMap, _, isTask, isBounty = GetQuestLogTitle(i)
 					if isHeader then
-						if i > 1 then
+						if headerShown and i > 1 then
 							info.arg2 = i - 1
 							UIDropDownMenu_AddButton(info, level)
 						end
-						info.text = (isOnMap and "|cff00ff00" or "")..title
+						headerTitle = title
+						headerOnMap = isOnMap
+						headerShown = false
+					elseif not isTask and not isBounty then
+						if not headerShown then
+							info.text = (headerOnMap and "|cff00ff00" or "")..headerTitle
+							headerShown = true
+						end
 					end
 				end
-				info.arg2 = numEntries
-				UIDropDownMenu_AddButton(info, level)
+				if headerShown then
+					info.arg2 = numEntries
+					UIDropDownMenu_AddButton(info, level)
+				end
 			end
 		elseif UIDROPDOWNMENU_MENU_VALUE == 2 then
 			info.func = Filter_AchievCat_CheckAll
@@ -643,15 +658,18 @@ local function SetFrames()
 	-- Event frame
 	if not eventFrame then
 		eventFrame = CreateFrame("Frame")
-		eventFrame:SetScript("OnEvent", function(_, event, arg1, ...)
+		eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
 			_DBG("Event - "..event.." - "..(arg1 or ""), true)
 			if event == "ADDON_LOADED" and arg1 == "Blizzard_AchievementUI" then
 				SetHooks_AchievementUI()
-				eventFrame:UnregisterEvent(event)
-			elseif event == "QUEST_POI_UPDATE" then
+				self:UnregisterEvent(event)
+			elseif event == "QUEST_ACCEPTED" then
 				if db.filterAuto[1] == "Zone" then
-					Filter_Quests(_, "Zone")
+					self:RegisterEvent("QUEST_POI_UPDATE")
 				end
+			elseif event == "QUEST_POI_UPDATE" then
+				Filter_Quests(_, "Zone")
+				self:UnregisterEvent(event)
 			elseif event == "ZONE_CHANGED_NEW_AREA" then
 				if db.filterAuto[1] == "Zone" then
 					Filter_Quests(_, "Zone")
@@ -663,7 +681,7 @@ local function SetFrames()
 		end)
 	end
 	eventFrame:RegisterEvent("ADDON_LOADED")
-	eventFrame:RegisterEvent("QUEST_POI_UPDATE")
+	eventFrame:RegisterEvent("QUEST_ACCEPTED")
 	eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	
 	-- Filter button

@@ -1,5 +1,5 @@
-## Interface: 70000
-## Version: 2.1.5
+## Interface: 70100
+## Version: 2.1.7
 ## Title: WhisperInvite Basic
 ## Notes: Basic invite module
 ## Title-deDE: WhisperInvite Basic
@@ -14,7 +14,7 @@
 ## RequiredDeps: WhisperInvite
 ## OptionalDeps: UTF-8
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: 2.1.5
+## X-Curse-Packaged-Version: 2.1.7
 ## X-Curse-Project-Name: WhisperInvite
 ## X-Curse-Project-ID: whisperinvite
 ## X-Curse-Repository-ID: wow/whisperinvite/mainline

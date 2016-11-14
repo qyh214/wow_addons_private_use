@@ -253,7 +253,9 @@ end
 function TitanPanelGoldButton_GetTooltipText()
 
 	local currentMoneyRichText = "";
-	if realmNames == nil or TitanGetVar(TITAN_GOLD_ID, "SeparateServers") then
+	local countelements = 0;
+	for _ in pairs (realmNames) do countelements = countelements + 1 end
+	if countelements == 0 or TitanGetVar(TITAN_GOLD_ID, "SeparateServers") then
 		-- Parse the database and display all characters from the same faction and server
 		local server = realmName.."::"..UnitFactionGroup("Player");
 		GoldSave[GOLD_INDEX].gold = GetMoney("player")
@@ -441,7 +443,9 @@ end
 -- *******************************************************************************************
 function TitanPanelGoldButton_TotalGold()
 	local ttlgold = 0;
-	if realmNames == nil or TitanGetVar(TITAN_GOLD_ID, "SeparateServers") then
+	local countelements = 0;
+	for _ in pairs (realmNames) do countelements = countelements + 1 end
+	if countelements == 0 or TitanGetVar(TITAN_GOLD_ID, "SeparateServers") then
 		local server = realmName.."::"..UnitFactionGroup("Player");
 		GoldSave[GOLD_INDEX].gold = GetMoney("player")
 

@@ -1,6 +1,7 @@
 local translations = {
 	["Adds tooltips to items showing if you have learned a transmog appearance."] = "아이템의 형상변환 등록 여부를 툴팁에 표시",
 	["Another class can learn this item."] = "다른 직업이 형상변환 등록할 수 있음",
+	["Appearances updated: "] = "형상 변환 자료 갱신: ",
 	["Can be learned by:"] = "형상변환 등록 가능:",
 	["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "중요한 안내: 형상변환이 가능한지 확인하려면 모든 캐릭터에 접속하여 현재 형상변환 가능한 자료를 수집하여 주십시오.",
 	["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions 을 찾을 수 없습니다. 기본값으로 불러옵니다.",
@@ -12,6 +13,7 @@ local translations = {
 	["Debug Tooltip"] = "디버그 툴팁",
 	["Detailed information for debug purposes. Use this when sending bug reports."] = "아이템의 상세 정보를 툴팁에 표시합니다. 버그를 제보할 때 이것을 같이 보내주세요.",
 	["Equippable Items Only"] = "착용 가능한 아이템만 표시",
+	["Items updated: "] = "아이템 갱신: ",
 	["Learned."] = "형상변환 등록 완료!",
 	["Learned but cannot transmog yet."] = "형상변환 등록 완료. 레벨이 낮아 사용불가",
 	["Learned for a different class."] = "형상변환 등록 완료! - 다른 직업으로 등록",
@@ -19,6 +21,7 @@ local translations = {
 	["Learned from another item."] = "형상변환 등록 완료! - 동일 형상",
 	["Learned from another item but cannot transmog yet."] = "형상변환 등록 완료. 레벨이 낮아 사용불가 - 동일 형상",
 	["Not learned."] = "형상변환 미등록",
+	["Okay, I'll go log onto all of my toons!"] = "알겠습니다. 모든 캐릭터에 접속하여 형상변환 목록을 확인하겠습니다.",
 	["Only show on items that can be equipped."] = "착용 가능한 아이템만 표시합니다.",
 	["Only show on items that can be transmoggrified."] = "형상변환이 가능한 아이템만 표시합니다.",
 	["Only show on items that you haven't learned."] = "아직 형상변환을 배우지 않은 아이템만 표시합니다.",
@@ -27,6 +30,7 @@ local translations = {
 	["Shows the icon directly on the item in your bag."] = "가방에 있는 아이템에 형상변환 가능 여부를 아이콘으로 표시합니다.",
 	["Transmoggable Items Only"] = "형상변환 가능한 아이템만 표시",
 	["Unknown Items Only"] = "형상변환 미등록 아이템만 표시",
+	["Updating appearances database."] = "형상 변환 자료를 갱신중입니다.",
 	["Verbose Text"] = "부가적인 설명",
 }
 

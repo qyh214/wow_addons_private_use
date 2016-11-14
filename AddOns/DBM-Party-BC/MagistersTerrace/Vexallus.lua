@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(531, "DBM-Party-BC", 16, 249)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 602 $"):sub(12, -3))
 
 mod:SetCreatureID(24744)
 mod:SetEncounterID(1898)
@@ -23,5 +23,7 @@ local specWarnEnergy	= mod:NewSpecialWarningSwitch("ej5085", "-Healer", nil, 3)
 --]]
 --Should be good enough,no translation. He doesn't emote anything else
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
-	specWarnEnergy:Show()
+	if self:AntiSpam(4, 1) then
+		specWarnEnergy:Show()
+	end
 end

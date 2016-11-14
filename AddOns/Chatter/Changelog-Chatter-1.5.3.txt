@@ -1,0 +1,19 @@
+tag 1.5.3
+b6ea9f917081a78f32eb1aa509538cf45996c412
+Chris Heald <cheald@gmail.com>
+2016-10-28 16:01:12 -0700
+
+Release 1.5.3
+
+
+--------------------
+
+Chris Heald:
+	- Add a toggle for coloring player names that invokes the Blizzard settings on all available channels
+	- Pare down the AutoPopup to just toggling the Blizzard cvars
+	- Remove the Color Player Names option
+	- Minor trailing whitespace and old commented code cleanup
+	- Hide the Social button via the Buttons module
+	- Fix the ClickInvite module
+	- Relax the criteria for attempting a TellTarget - it occassionally fails cross-realm when it shouldn't
+	- Fix alt-click to invite. Remove our name coloring - Blizzard integrated that at some point

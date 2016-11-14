@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+﻿## Interface: 70100
 ## Author: Resike
 ## Title: Z-Perl |cffeda55fOptions|r |cFF40FF40(LoadOnDemand)|r
 ## Title-itIT: Z-Perl |cffeda55fOpzioni|r |cFF40FF40(Caricabile su richiesta)|r
@@ -12,7 +12,7 @@
 ## Notes-zhTW: Z-Perl 單位框架功能設定 GUI
 ## RequiredDeps: ZPerl
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: r1014
+## X-Curse-Packaged-Version: r1019
 ## X-Curse-Project-Name: Z-Perl Unit Frames
 ## X-Curse-Project-ID: zperl
 ## X-Curse-Repository-ID: wow/zperl/mainline

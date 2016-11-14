@@ -1,0 +1,44 @@
+------------------------------------------------------------------------
+r522 | mysticalos | 2016-11-12 20:14:42 +0000 (Sat, 12 Nov 2016) | 1 line
+Changed paths:
+   A /tags/3.7.10 (from /trunk:521)
+
+Tagging as 3.7.10
+------------------------------------------------------------------------
+r521 | mysticalos | 2016-11-12 19:57:21 +0000 (Sat, 12 Nov 2016) | 1 line
+Changed paths:
+   M /trunk/ChangeLog.lua
+   M /trunk/WIM.lua
+
+version
+------------------------------------------------------------------------
+r520 | mysticalos | 2016-11-12 19:38:21 +0000 (Sat, 12 Nov 2016) | 1 line
+Changed paths:
+   M /trunk/Sources/WindowHandler.lua
+
+Another link fix
+------------------------------------------------------------------------
+r519 | mysticalos | 2016-11-12 19:34:57 +0000 (Sat, 12 Nov 2016) | 1 line
+Changed paths:
+   M /trunk/Sources/WindowHandler.lua
+
+enable hyperlinks
+------------------------------------------------------------------------
+r518 | mysticalos | 2016-10-26 19:03:12 +0000 (Wed, 26 Oct 2016) | 1 line
+Changed paths:
+   M /trunk/WIM.toc
+
+bump because curse client still can’t see it.
+------------------------------------------------------------------------
+r517 | mysticalos | 2016-10-26 17:47:10 +0000 (Wed, 26 Oct 2016) | 1 line
+Changed paths:
+   M /trunk/Sources/WindowHandler.lua
+
+Push dirty fix that by no means should be a perm solution
+------------------------------------------------------------------------
+r516 | mysticalos | 2016-08-25 21:52:38 +0000 (Thu, 25 Aug 2016) | 1 line
+Changed paths:
+   M /trunk/WIM.lua
+
+Remove print
+------------------------------------------------------------------------

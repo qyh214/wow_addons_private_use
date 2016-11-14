@@ -1,0 +1,14 @@
+tag 2.15.3
+0c9dc503170b262bb24d14596faeef32aff3d1a4
+Alar of Runetotem <alar@aspide.it>
+2016-10-26 19:39:23 +0200
+
+https://wow.curseforge.com/addons/garrisoncommander/tickets/158-log-in-error/
+
+Fixes lua error on login
+
+
+--------------------
+
+Alar of Runetotem:
+	- Fixes  attempt to call method 'loadHelp' (a nil value)

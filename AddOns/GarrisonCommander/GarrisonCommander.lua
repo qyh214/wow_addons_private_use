@@ -61,7 +61,7 @@ local function tcopy(obj, seen)
 	for k, v in pairs(obj) do res[tcopy(k, s)] = tcopy(v, s) end
 	return res
 end
-
+local widgetsForKey={}
 local parties
 local missionCompleteOrder=122514
 
@@ -113,10 +113,7 @@ local GMFRewardSplash=								GMF.MissionTab.MissionList.CompleteDialog
 local GMFMissionsListScrollFrame=					GMF.MissionTab.MissionList.listScroll
 local GMFMissionListButtons=						GMF.MissionTab.MissionList.listScroll.buttons
 local GMFMissionsListScrollFrameScrollChild=		GMF.MissionTab.MissionList.listScroll.scrollChild
-local GMFFollowers=									GMF.FollowerTab.followerList
-if toc==70000 then
-	GMFFollowers=									GMF.FollowerList
-end
+local GMFFollowers=									GMF.FollowerList
 local GMFMissionFrameFollowers=						GMFFollowers
 local GMFFollowersListScrollFrame=					GMFFollowers.listScroll
 local GMFFollowersListScrollFrameScrollChild=		GMFFollowers.listScroll.scrollChild
@@ -167,6 +164,12 @@ local function ShowTT(this)
 	GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
 	GameTooltip:SetText(this.tooltip)
 	GameTooltip:Show()
+end
+local function FadeTT(this)
+	GameTooltip:Fade()
+end
+local function HideTT(this)
+	GameTooltip:Hide()
 end
 
 local GARRISON_DURATION_DAY,GARRISON_DURATION_DAYS=splitFormat(GARRISON_DURATION_DAYS) -- "%d |4day:days;";
@@ -352,12 +355,16 @@ sorters.Xp=function (mission1, mission2)
 		return p2 < p1
 	end
 end
-addon.Garrison_SortMissions_Original=_G.Garrison_SortMissions
-local Garrison_SortMissions=_G.Garrison_SortMissions
+local MyGarrison_SortMissions=_G.Garrison_SortMissions
+--[[
 _G.Garrison_SortMissions= function(missionsList)
 	if GMF:IsVisible() then
 		Garrison_SortMissions(missionsList)
 	end
+end
+--]]
+function addon:SortMissions(missionsList)
+	MyGarrison_SortMissions(missionsList)
 end
 function addon.Garrison_SortMissions_Chance(missionsList)
 	addon:RefreshParties()
@@ -386,7 +393,7 @@ end
 function addon:ApplyMSORT(value)
 	local func=self[value]
 	if (type(func)=="function") then
-		Garrison_SortMissions=self[value]
+		MyGarrison_SortMissions=self[value]
 	else
 --[===[@debug@
 		print("Could not found ",value," in addon")
@@ -394,6 +401,7 @@ function addon:ApplyMSORT(value)
 	end
 	self:RefreshMissions()
 end
+
 function addon:GetMain()
 	return GMF
 end
@@ -406,6 +414,7 @@ end
 function addon:GetMissionModule(followertype)
 	return ns.custom[followertype]
 end
+
 function addon:OnInitialized()
 	--[===[@debug@
 	print("Initialize")
@@ -491,7 +500,29 @@ function addon:OnInitialized()
 	self:AddOpenCmd("show","showdata","Prints a mission score")
 --@end-debug@]===]
 	self:Trigger("MSORT")
-	LoadAddOn("GarrisonCommander-Broker")
+	if (not IsAddOnLoaded("GarrisonCommander-Broker")) then
+		GarrisonLandingPageMinimapButton:HookScript("OnEnter",function(this)
+				if this.description==MINIMAP_ORDER_HALL_LANDING_PAGE_TOOLTIP then
+					GameTooltip:AddLine(WARDROBE_NEXT_VISUAL_KEY .. " " .. MINIMAP_GARRISON_LANDING_PAGE_TOOLTIP)
+				end
+				GameTooltip:Show()
+		end
+		)
+		GarrisonLandingPageMinimapButton:RegisterForClicks("LEFTBUTTONUP","RIGHTBUTTONUP")
+		GarrisonLandingPageMinimapButton:SetScript("OnClick",
+			function (this,button)
+					if (_G.GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
+						HideUIPanel(GarrisonLandingPage);
+					else
+						if button=="RightButton" then
+								ShowGarrisonLandingPage(2)
+						else
+								ShowGarrisonLandingPage(C_Garrison.GetLandingPageGarrisonType());
+						end
+					end
+			end
+		)
+	end
 --[===[@debug@
 --	assert(self:GetAgeColor(1/0))
 --	assert(self:GetAgeColor(0/0))
@@ -513,6 +544,9 @@ function addon:OnInitialized()
 	tabCO.Quantity:SetFormattedText("%d",GetItemCount(missionCompleteOrder))
 	tabCO:SetAttribute("type","item")
 	tabCO:SetAttribute("item",select(2,GetItemInfo(missionCompleteOrder)))
+	self:loadHelp()
+	self:SecureHook("Garrison_SortMissions","SortMissions")
+
 	--return true
 end
 function addon:showdata(fullargs,action,missionid)
@@ -578,8 +612,16 @@ function addon:ApplyBIGSCREEN(value)
 		end
 		self:Popup(L["Must reload interface to apply"],0,
 			function(this)
+				pp("BIGSCREEN",value,this)
+				print("BIGSCREEN",value,this)
 				addon:SetBoolean("BIGSCREEN",value)
 				ReloadUI()
+			end,
+			function(this)
+				pp("BIGSCREEN",value,this)
+				print("BIGSCREEN",value,this)
+				addon:SetBoolean("BIGSCREEN",not value)
+				widgetsForKey['BIGSCREEN']:SetValue(not value)
 			end
 		)
 end
@@ -662,7 +704,6 @@ function addon:AddLine(name,status)
 	GameTooltip:AddDoubleLine(name, status,nil,nil,nil,r2,g2,b2)
 end
 function addon:SetThreatColor(obj,threat)
-	print(threat)
 	if type(threat)=="string" then
 		local _,_,bias,follower,name=strsplit(":",threat)
 		local color=self:GetBiasColor(tonumber(bias) or -1,nil,"Green")
@@ -802,13 +843,7 @@ function addon:RefreshParties()
 	end
 end
 function addon:RefreshMissions(missionID)
-	if (GMF:IsVisible()) then
-		if toc==70000 then
-			GMF.MissionTab.MissionList:UpdateMissions()
-		else
-			GarrisonMissionList_UpdateMissions()
-		end
-	end
+	self:GetMissions():UpdateMissions()
 end
 
 --[[
@@ -1000,9 +1035,9 @@ function addon:ActivateButton(button,OnClick,Tooltiptext,persistent)
 		button.tooltip=Tooltiptext
 		button:SetScript("OnEnter",ShowTT)
 		if persistent then
-			button:SetScript("OnLeave",ns.OnLeave)
+			button:SetScript("OnLeave",HideTT)
 		else
-			button:SetScript("OnLeave",ns.OnLeave)
+			button:SetScript("OnLeave",HideTT)
 		end
 	else
 		button:SetScript("OnEnter",nil)
@@ -1157,12 +1192,12 @@ function addon:Toggle(button)
 		button:SetChecked(f:IsShown())
 	end
 end
-
 function addon:CreateOptionsLayer(...)
 	local o=AceGUI:Create("SimpleGroup") -- a transparent frame
 	o:SetLayout("Flow")
 	o:SetCallback("OnClose",function(widget) widget:Release() end)
 	local totsize=0
+	wipe(widgetsForKey)
 	for i=1,select('#',...) do
 		totsize=totsize+self:AddOptionToOptionsLayer(o,select(i,...))
 	end
@@ -1227,6 +1262,7 @@ function addon:AddOptionToOptionsLayer(o,flag,maxsize)
 			GameTooltip:FadeOut()
 		end)
 		o:AddChildren(widget)
+		widgetsForKey[flag]=widget
 	end
 	return maxsize
 end
@@ -1496,7 +1532,7 @@ do
 		lastTab=2
 	end
 	function addon:RenderFollowerPageMissionList(dummy,followerID,force)
-		--print(ns.bigscreen,GMFFollowers:IsVisible())
+		print(ns.bigscreen,GMFFollowers:IsVisible())
 		--if not ns.bigscreen then return end
 		if not ns.bigscreen and not self:GetBoolean("FOLLOWERMISSIONLIST") then
 			if mh then mh:Hide() end
@@ -1788,7 +1824,7 @@ function addon:RaiseCompleteDialog()
 	if f:GetFrameLevel() < 80 then
 		f:SetFrameLevel(80)
 	end
-	--print("Dialog:",GMFMissions.CompleteDialog:GetFrameLevel())
+	print("Dialog:",GMFMissions.CompleteDialog:GetFrameLevel())
 	--C_Timer.After(0.1,function() local f=GMFMissions.CompleteDialog print("Dialog:",f:GetFrameLevel()) if f:GetFrameLevel() < 45 then f:SetFrameLevel(45) end print("Dialog:",f:GetFrameLevel()) end)
 end
 
@@ -2256,6 +2292,7 @@ do
 	{ text=CLOSE, notClickable=true,notCheckable=true,isTitle=true },
 	}
 	function addon:OnClick_PartyMember(frame,button,down,...)
+		--if not GMF:IsVisible() then return end
 		local followerID=frame.info and frame.info.followerID or nil
 		local missionID=frame.missionID
 		if (not followerID) then return end
@@ -2816,7 +2853,9 @@ function addon:DrawSlimButton(source,frame,progressing,bigscreen)
 		local numRewards=self:AddRewards(frame, mission.rewards, mission.numRewards);
 		if mission.followerTypeID==LE_FOLLOWER_TYPE_GARRISON_6_0 then
 			self:AddFollowersToButton(frame,mission,missionID,bigscreen,numRewards)
-		else
+		elseif mission.followerTypeID==LE_FOLLOWER_TYPE_GARRISON_7_0 then
+			self:AddFollowersToButton(frame,mission,missionID,false,numRewards)
+		elseif  mission.followerTypeID==LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
 			self:AddShipsToButton(frame,mission,missionID,bigscreen,numRewards)
 		end
 		frame.Title:SetPoint("TOPLEFT",frame.Indicators,"TOPRIGHT",0,-5)
@@ -2912,7 +2951,6 @@ function addon:AddStandardDataToButton(source,button,mission,missionID,bigscreen
 
 end
 function addon:AddLevel(source,button,mission,missionID,bigscreen)
-	print("base")
 	button.Level:SetPoint("CENTER", button, "TOPLEFT", 40, -36);
 	local level= (mission.level == GARRISON_FOLLOWER_MAX_LEVEL and mission.iLevel > 0) and mission.iLevel or mission.level
 	local quality=1
@@ -2947,8 +2985,8 @@ function addon:AddThreatsToButton(button,mission,missionID,bigscreen)
 			button.Env:Show()
 			button.Env.Icon:SetTexture(mission.typeIcon)
 			button.Env.texture=mission.typeIcon
-			button.Env.countered=party.isEnvMechanicCountered.environmentMechanicCountered
-			if (party.isEnvMechanicCountered.environmentMechanicCountered) then
+			button.Env.countered=type(party.isEnvMechanicCountered)=="table" and party.isEnvMechanicCountered.environmentMechanicCountered or false
+			if (button.Env.countered) then
 				button.Env.Border:SetVertexColor(C.Green())
 			else
 				button.Env.Border:SetVertexColor(C.Red())
@@ -3070,7 +3108,7 @@ function addon:AddFollowersToButton(button,mission,missionID,bigscreen,numReward
 		local bg=CreateFrame("Button",nil,button,"GarrisonCommanderMissionButton")
 		bg:SetPoint("RIGHT")
 		bg.button=button
-		bg:SetScript("OnEnter",function(this) GarrisonMissionButton_OnEnter(this.button) end)
+		bg:SetScript("OnEnter",function(this) pcall(GarrisonMissionButton_OnEnter,this.button) end)
 		bg:SetScript("OnLeave",function() GameTooltip:FadeOut() end)
 		bg:RegisterForClicks("AnyUp")
 		bg:SetScript("OnClick",function(...) self:OnClick_GCMissionButton(...) end)
@@ -3220,17 +3258,28 @@ function addon:GarrisonMissionPageFollowerFrame_OnEnter(this)
 	end
 --@end-debug@]===]
 end
+function addon:HallSort()
+	self:AddSelect("MHSORT","Garrison_SortMissions_Original",
+	{
+		Garrison_SortMissions_Original=L["Original method"],
+		Garrison_SortMissions_Chance=L["Success Chance"],
+		Garrison_SortMissions_Followers=L["Number of followers"],
+		Garrison_SortMissions_Age=L["Expiration Time"],
+		Garrison_SortMissions_Xp=L["Global approx. xp reward"],
+		Garrison_SortMissions_Duration=L["Duration Time"],
+		Garrison_SortMissions_Class=L["Reward type"],
+	},
+	L["Sort missions by:"],L["Original sort restores original sorting method, whatever it was (If you have another addon sorting mission, it should kick in again)"])
+end
 do local lasttime=0
 function addon:HookedGarrisonMissionList_Update(t,...)
---[===[@debug@
-	print(self,t,...)
---@end-debug@]===]
 	collectgarbage('step',200)
-	if not GMFMissions.showInProgress then
-		addon.hooks.GarrisonMissionList_Update(self,t,...)
+	local this=self
+	if not this.showInProgress then
+		addon.hooks.GarrisonMissionList_Update(this,t,...)
 		lasttime=0
 	else
-		local missions=GMFMissions.inProgressMissions
+		local missions=this.inProgressMissions
 		local now=time()
 		local delay=120
 		table.sort(missions,sorters.EndTime)
@@ -3247,7 +3296,7 @@ function addon:HookedGarrisonMissionList_Update(t,...)
 --[===[@debug@
 			print("Aggiornamento",now,lasttime,delay,now-lasttime)
 --@end-debug@]===]
-			addon.hooks.GarrisonMissionList_Update(self,t,...)
+			addon.hooks.GarrisonMissionList_Update(this,t,...)
 			lasttime=now
 		end
 	end

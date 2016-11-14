@@ -11834,7 +11834,7 @@
 									XPerl_Options_EnableSibling(self, "Groups_Alphabetical")
 									XPerl_Options_EnableSibling(self, "Groups_VSpacing")
 
-									XPerl_Options_EnableSibling(self, "Pets_RaidPets")
+									--XPerl_Options_EnableSibling(self, "Pets_RaidPets")
 									XPerl_Options_EnableSibling(self, "Pets_AlignToRaid")
 
 									XPerl_Options_EnableSibling(self, "Custom_Enable")

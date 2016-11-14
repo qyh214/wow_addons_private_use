@@ -72,9 +72,11 @@ v2.02 - Update for 6.2.
 
 v3.00 - Update for 7.03.
 
+v3.01 - Update for 7.1.
+
 --]]
 
-MBB_Version = "3.00";
+MBB_Version = "3.01";
 
 -- Setup some variable for debugging.
 MBB_DebugFlag = 0;
@@ -144,7 +146,8 @@ MBB_Ignore = {
 	[38] = "QuestPointerPOI",	-- QuestPointer
 	[39] = "poiMinimap",	-- QuestPointer
 	[40] = "MiniMapLFGFrame",    -- LFG
-	[41] = "PremadeFilter_MinimapButton"    -- PreMadeFilter
+	[41] = "PremadeFilter_MinimapButton",    -- PreMadeFilter
+	[42] = "GarrisonMinimapButton"
 };
 
 MBB_IgnoreSize = {

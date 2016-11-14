@@ -79,14 +79,13 @@ local defaults = {
 		qiActiveButton = true,
 		
 		tooltipShow = true,
+		tooltipShowRewards = true,
 		tooltipShowID = true,
 		hideEmptyTracker = false,
 		collapseInInstance = false,
 		
 		sink20OutputSink = "UIErrorsFrame",
 		sink20Sticky = false,
-
-		specialLegionInvasion = true,
 
 		addonMasque = false,
 		addonPetTracker = false,
@@ -469,6 +468,9 @@ local options = {
 							set = function()
 								db.textWordWrap = not db.textWordWrap
 								KT:SetText()
+								ObjectiveTrackerFrame.BlocksFrame:Hide()
+								ObjectiveTracker_Update()
+								ObjectiveTrackerFrame.BlocksFrame:Show()
 								ObjectiveTracker_Update()
 								if PetTracker then
 									PetTracker.Objectives:TrackingChanged()
@@ -855,9 +857,21 @@ local options = {
 							end,
 							order = 6.1,
 						},
+						tooltipShowRewards = {
+							name = "Show Rewards in tooltips",
+							desc = "Show Quest Rewards inside tooltips.",
+							type = "toggle",
+							disabled = function()
+								return not db.tooltipShow
+							end,
+							set = function()
+								db.tooltipShowRewards = not db.tooltipShowRewards
+							end,
+							order = 6.2,
+						},
 						tooltipShowID = {
 							name = "Show ID in tooltips",
-							desc = "Show Quest or Achievement ID in tooltips.",
+							desc = "Show Quest or Achievement ID inside tooltips.",
 							type = "toggle",
 							disabled = function()
 								return not db.tooltipShow
@@ -865,7 +879,7 @@ local options = {
 							set = function()
 								db.tooltipShowID = not db.tooltipShowID
 							end,
-							order = 6.2,
+							order = 6.3,
 						},
 						hideEmptyTracker = {
 							name = "Hide empty tracker",
@@ -874,7 +888,7 @@ local options = {
 								db.hideEmptyTracker = not db.hideEmptyTracker
 								KT:ToggleEmptyTracker()
 							end,
-							order = 6.3,
+							order = 6.4,
 						},
 						collapseInInstance = {
 							name = "Collapse in instance",
@@ -889,41 +903,6 @@ local options = {
 				},
 				sec7 = {
 					-- LibSink
-				},
-				sec8 = {
-					name = "Special",
-					type = "group",
-					inline = true,
-					order = 0.5,
-					args = {
-						specialLegionInvasionImg = {
-							name = "",
-							type = "description",
-							width = "half",
-							image = "Interface\\Scenarios\\LegionInvasion",
-							imageCoords = { 0.61328125, 0.728515625, 0.28125, 0.40234375 },
-							imageWidth = 39,
-							imageHeight = 42,
-							order = 8.1,
-						},
-						specialLegionInvasion = {
-							name = "Legion Invasion Monitor",
-							desc = "Show zones under invasion inside the tracker.",
-							descStyle = "inline",
-							type = "toggle",
-							width = "normal+half",
-							confirm = true,
-							confirmText = warning,
-							set = function()
-								db.specialLegionInvasion = not db.specialLegionInvasion
-								if db.specialLegionInvasion then
-									db.collapsed = false
-								end
-								ReloadUI()
-							end,
-							order = 8.2,
-						},
-					},
 				},
 			},
 		},

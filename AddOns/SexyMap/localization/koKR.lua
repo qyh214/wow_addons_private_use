@@ -49,6 +49,7 @@ L["Delete a Profile"] = "프로필 삭제" -- Needs review
 L["Diamond"] = "다이아몬드" -- Needs review
 L["Disable (opaque)"] = "사용안함(불투명)" -- Needs review
 L["Disable Rotation"] = "바꾸기 금지"
+-- L["Disabling the movers will make them reset next time you relog, are you sure?"] = "Disabling the movers will make them reset next time you relog, are you sure?"
 L["Drag Radius"] = "미니맵 접근 간격" -- Needs review
 L["Dungeon Difficulty Indicator (When Available)"] = "던전 난이도 표시기(가능하다면)" -- Needs review
 L["Dynamic Buttons"] = "추가 활성화 버튼" -- Needs review
@@ -81,6 +82,7 @@ L["Horizontal Nudge"] = "좌우로 이동"
 L["Horizontal Position"] = "가로 위치" -- Needs review
 L["Hover Opacity"] = "올려놓을 때 투명도" -- Needs review
 L["HUD Color"] = "HUD 색상" -- Needs review
+-- L["If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds). Using a value of 0 will disable Auto Zoom-Out."] = "If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds). Using a value of 0 will disable Auto Zoom-Out."
 L["Keybinding"] = "단축키" -- Needs review
 L["Layer"] = "프레임 높이" -- Needs review
 L["Let SexyMap control button visibility"] = "SexyMap 애드온의 버튼 표시 강제 사용" -- Needs review
@@ -170,5 +172,3 @@ L["You can set a background and edge file for the minimap like you would with an
 L["Zone Text"] = "지역 글자" -- Needs review
 L["Zoom In Button"] = "축소 버튼" -- Needs review
 L["Zoom Out Button"] = "확대 버튼" -- Needs review
-
-

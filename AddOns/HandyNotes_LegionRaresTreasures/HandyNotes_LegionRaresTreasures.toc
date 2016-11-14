@@ -1,6 +1,6 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: HandyNotes_Legion R & T
-## Version: 1.01a
+## Version: 1.01b
 ## Notes: Shows location of treasures and rares in Legion
 ## Author: Katjes (Coronet - Dun Morogh(EU))
 ## OptionalDeps: Ace3

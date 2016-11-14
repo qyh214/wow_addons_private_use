@@ -1,10 +1,10 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: Titan Panel [|cffeda55fReputation|r]
 ## Notes: Titan Panel plugin that shows your Reputations.
 ## Author: Eliote
-## Version: v1.6
+## Version: v1.7
 ## Dependencies: Titan
-## X-Curse-Packaged-Version: v1.6
+## X-Curse-Packaged-Version: v1.7
 ## X-Curse-Project-Name: Titan Panel [Reputation]
 ## X-Curse-Project-ID: titan-panel-reputation
 ## X-Curse-Repository-ID: wow/titan-panel-reputation/mainline

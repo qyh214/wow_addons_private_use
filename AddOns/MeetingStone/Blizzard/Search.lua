@@ -22,11 +22,11 @@ end
 function LFGSearchOptimize:LFGListSearchPanel_UpdateResultList(frame)
     local total, results = C_LFGList.GetSearchResults()
 
-    local spanWord = Profile:GetSpamWordStatus()
+    local spamWord = Profile:GetSetting('spamWord')
     local searchText = LFGListFrame.SearchPanel.SearchBox:GetText()
-    
+
     for i = #results, 1, -1 do
-        if self:FilterResult(results[i], spanWord, searchText) then
+        if self:FilterResult(results[i], spamWord, searchText) then
             tremove(results, i)
             total = total - 1
         end
@@ -39,12 +39,12 @@ function LFGSearchOptimize:LFGListSearchPanel_UpdateResultList(frame)
     end)
 end
 
-function LFGSearchOptimize:FilterResult(id, spanWord, searchText)
+function LFGSearchOptimize:FilterResult(id, spamWord, searchText)
     local activity = Activity:Get(id)
     if activity:IsSoloActivity() and searchText ~= activity:GetName() then
         return true
     end
-    if spanWord and activity:CheckSpamWord() then
+    if spamWord and activity:CheckSpamWord() then
         return true
     end
     if searchText:trim() ~= '' then

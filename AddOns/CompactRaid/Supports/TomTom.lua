@@ -8,6 +8,10 @@
 -- 2013/11/11
 ------------------------------------------------------------
 
+-- This feature is disabled by Blizzard since 70100, farewell
+-- I just leave the code here in case it's re-enabled someday, you never know...
+if 1 then return end
+
 -- TomTom is NOT the only addon that has Arrow.blp included...
 local TOMTOM_ARROW_ADDONS = {
 	["DBM-Core"] = "\\textures\\arrows\\Arrow.blp",

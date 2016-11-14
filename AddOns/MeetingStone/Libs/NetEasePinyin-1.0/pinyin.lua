@@ -11,7 +11,10 @@ BuildModule('NetEasePinyin-1.0')
 local function getpinyin(value)
     local index = (value - 0x4e00) * 2 + 1
     local shengmu, yunmu = strbyte(PINYIN_DATA, index), strbyte(PINYIN_DATA, index + 1)
-    
+
+    if not shengmu or not yunmu then
+        return ''
+    end
     if shengmu == 0 and yunmu == 0 then
         return ''
     end

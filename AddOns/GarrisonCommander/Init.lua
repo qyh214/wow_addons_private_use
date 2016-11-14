@@ -430,9 +430,6 @@ function ns.Configure()
 		setfenv(2, ENV)
 end
 function addon:EventADDON_LOADED(event,AddOn)
---[===[@debug@
-	print(event,AddOn)
---@end-debug@]===]
 	if AddOn~="Blizzard_OrderHallUI" then return end
 	self:UnregisterEvent("ADDON_LOADED")
 	ns.GHF=_G.OrderHallMissionFrame

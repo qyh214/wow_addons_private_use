@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1667, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15283 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15412 $"):sub(12, -3))
 mod:SetCreatureID(100497)
 mod:SetEncounterID(1841)
 mod:SetZone()
 mod:SetUsedIcons(6, 4)
-mod:SetHotfixNoticeRev(15275)
+mod:SetHotfixNoticeRev(15296)
 mod.respawnTime = 40
 
 mod:RegisterCombat("combat")
@@ -14,7 +14,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 197942 197969",
 	"SPELL_CAST_SUCCESS 197943",
-	"SPELL_AURA_APPLIED 198006 197943 205611",
+	"SPELL_AURA_APPLIED 198006 197943 205611 204859",
 	"SPELL_AURA_APPLIED_DOSE 197943",
 	"SPELL_AURA_REMOVED 198006",
 	"SPELL_DAMAGE 205611",
@@ -23,8 +23,11 @@ mod:RegisterEventsInCombat(
 
 --TODO, find a good voice for roaring. Maybe watch step? move away?
 --TODO, multiple auto assignments. Assign by group regardless of debuff status. Assign by smart mode (current default). Maybe other options?
+--(ability.id = 197942 or ability.id = 197969) and type = "begincast" or ability.id = 197943 and type = "cast" or ability.id = 198006 and type = "applydebuff"
+--(ability.id = 197969) and type = "begincast"
 local warnFocusedGaze				= mod:NewTargetCountAnnounce(198006, 3)
 local warnBloodFrenzy				= mod:NewSpellAnnounce(198388, 4)
+local warnOverwhelm					= mod:NewStackAnnounce(197943, 2, nil, "Tank|Healer")
 
 local specWarnFocusedGaze			= mod:NewSpecialWarningYou(198006, nil, nil, nil, 1, 2)
 local specWarnFocusedGazeOther		= mod:NewSpecialWarningMoveTo(198006, nil, nil, nil, 1, 6)
@@ -36,7 +39,7 @@ local specWarnRendFleshOther		= mod:NewSpecialWarningTaunt(197942, nil, nil, nil
 local specWarnOverwhelmOther		= mod:NewSpecialWarningTaunt(197943, nil, nil, nil, 1, 2)
 
 local timerFocusedGazeCD			= mod:NewNextCountTimer(40, 198006, nil, nil, nil, 3)
-local timerRendFleshCD				= mod:NewNextTimer(20, 197942, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerRendFleshCD				= mod:NewNextCountTimer(20, 197942, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerOverwhelmCD				= mod:NewNextTimer(10, 197943, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerRoaringCacophonyCD		= mod:NewNextCountTimer(30, 197969, nil, nil, nil, 2)
 
@@ -44,7 +47,8 @@ local berserkTimer					= mod:NewBerserkTimer(300)
 
 local countdownFocusedGazeCD		= mod:NewCountdown(40, 198006)
 local countdownRendFlesh			= mod:NewCountdown("Alt20", 198006, "Tank")
-local countdownFocusedGaze			= mod:NewCountdownFades("AltTwo6", 198006)
+local countdownOverwhelm			= mod:NewCountdown("AltTwo10", 197943, "Tank", nil, 3)
+local countdownFocusedGaze			= mod:NewCountdownFades(6, 198006)
 
 local voiceFocusedGaze				= mod:NewVoice(198006, "-Tank")--targetyou/share
 local voiceRendFlesh				= mod:NewVoice(197942)--defensive/tauntboss
@@ -61,6 +65,7 @@ mod:AddBoolOption("NoAutoSoaking2", true)
 mod.vb.roarCount = 0
 mod.vb.chargeCount = 0
 mod.vb.tankCount = 2
+mod.vb.rendCount = 0
 
 --Doesn't assign a soaker who'll die from it.
 --Doesn't assign tanks or the targeted player themselves.
@@ -116,13 +121,19 @@ end
 function mod:OnCombatStart(delay)
 	self.vb.roarCount = 0
 	self.vb.chargeCount = 0
+	self.vb.rendCount = 0
 	self.vb.tankCount = self:GetNumAliveTanks() or 2
 	timerOverwhelmCD:Start(-delay)
-	timerRendFleshCD:Start(13-delay)
+	countdownOverwhelm:Start(-delay)
+	timerRendFleshCD:Start(13-delay, 1)
 	countdownRendFlesh:Start(13-delay)
 	timerFocusedGazeCD:Start(19-delay, 1)
 	countdownFocusedGazeCD:Start(19-delay)
-	timerRoaringCacophonyCD:Start(37-delay)
+	if self:IsMythic() then
+		timerRoaringCacophonyCD:Start(18-delay, 1)
+	else
+		timerRoaringCacophonyCD:Start(37-delay, 1)
+	end
 	berserkTimer:Start(-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(GetSpellInfo(198108))
@@ -142,7 +153,8 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 197942 then
-		timerRendFleshCD:Start()
+		self.vb.rendCount = self.vb.rendCount + 1
+		timerRendFleshCD:Start(nil, self.vb.rendCount+1)
 		countdownRendFlesh:Start()
 		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
 		if tanking or (status == 3) then
@@ -150,7 +162,7 @@ function mod:SPELL_CAST_START(args)
 			voiceRendFlesh:Play("defensive")
 		else
 			--Other tank has overwhelm stacks and is about to die to rend flesh, TAUNT NOW!
-			if UnitExists("boss1target") then
+			if UnitExists("boss1target") and not UnitIsUnit("player", "boss1target") then
 				local _, _, _, _, _, _, expireTimeTarget = UnitDebuff("boss1target", GetSpellInfo(197943)) -- Overwhelm
 				if expireTimeTarget and expireTimeTarget-GetTime() >= 2 then
 					specWarnRendFleshOther:Show(UnitName("boss1target"))
@@ -166,10 +178,22 @@ function mod:SPELL_CAST_START(args)
 			--No echos, just every 40 seconds
 			timerRoaringCacophonyCD:Start(40, self.vb.roarCount + 1)
 		else
-			if self.vb.roarCount % 2 == 0 then
-				timerRoaringCacophonyCD:Start(30, self.vb.roarCount + 1)
+			if self:IsMythic() then
+				--17, 20, 10, 30, 10, 30, 10, 30, 10, 30, 10
+				if self.vb.roarCount == 1 then--Second one is 20
+					timerRoaringCacophonyCD:Start(20, self.vb.roarCount + 1)
+				--Because of odd 2nd one, these rules are reversed
+				elseif self.vb.roarCount % 2 == 0 then
+					timerRoaringCacophonyCD:Start(10, self.vb.roarCount + 1)
+				else
+					timerRoaringCacophonyCD:Start(30, self.vb.roarCount + 1)
+				end
 			else
-				timerRoaringCacophonyCD:Start(10, self.vb.roarCount + 1)
+				if self.vb.roarCount % 2 == 0 then
+					timerRoaringCacophonyCD:Start(30, self.vb.roarCount + 1)
+				else
+					timerRoaringCacophonyCD:Start(10, self.vb.roarCount + 1)
+				end
 			end
 		end
 	end
@@ -179,6 +203,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 197943 then
 		timerOverwhelmCD:Start()
+		countdownOverwhelm:Start()
 	end
 end
 
@@ -219,6 +244,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			GenerateSoakAssignment(self, secondCount, args.destName)
 		end
 	elseif spellId == 197943 then
+		warnOverwhelm:Show(args.destName, args.amount or 1)
 		if not args:IsPlayer() then--Overwhelm Applied to someone that isn't you
 			--Taunting is safe now because your rend flesh will vanish (or is already gone), and not be cast again, before next overwhelm
 			local rendCooldown = timerRendFleshCD:GetRemaining() or 0
@@ -231,9 +257,12 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 198388 then
 		warnBloodFrenzy:Show()
 		voiceBloodFrenzy:Play("frenzy")
-	elseif spellId == 205611 and self:AntiSpam(2, 1) then
+	elseif spellId == 205611 and args:IsPlayer() and self:AntiSpam(2, 1) then
 		specWarnMiasma:Show()
 		voiceMiasma:Play("runaway")
+	elseif spellId == 204859 and not args:IsPlayer() then
+		specWarnRendFleshOther:Show(args.destName)
+		voiceRendFlesh:Play("tauntboss")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -251,7 +280,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId)
-	if spellId == 205611 and destGUID == UnitGUID("player") and destName == UnitName("player") and self:AntiSpam(2, 1) then
+	if spellId == 205611 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
 		specWarnMiasma:Show()
 		voiceMiasma:Play("runaway")
 	end

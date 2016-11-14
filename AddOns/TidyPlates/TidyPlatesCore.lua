@@ -9,6 +9,7 @@ TidyPlates = {}
 
 -- Local References
 local _
+local max = math.max
 local select, pairs, tostring  = select, pairs, tostring 			    -- Local function copy
 local CreateTidyPlatesStatusbar = CreateTidyPlatesStatusbar			    -- Local function copy
 local WorldFrame, UIParent = WorldFrame, UIParent
@@ -135,6 +136,8 @@ do
 				end
 				plate.UpdateMe = false
 				plate.UpdateHealth = false
+
+				plate:GetChildren():Hide()
 
 			end
 
@@ -329,6 +332,7 @@ do
 
 	-- OnShowNameplate
 	function OnShowNameplate(plate, unitid)
+
 		-- or unitid = plate.namePlateUnitToken
 		UpdateReferences(plate)
 
@@ -461,61 +465,14 @@ do
 		end
 	end
 
-	local function GetReactionFail(unitid)
-		--[[
-		UnitReaction("player", unitid)
-
-		1 - Hated
-		2 - Hostile
-		3 - Unfriendly
-		4 - Neutral
-		5 - Friendly
-		6 - Honored
-		7 - Revered
-		8 - Exalted
-
-		-- This doesn't work as expected.
-		--]]
-
-		local reactionNumber = UnitReaction("player", unitid)
-
-		if reactionNumber > 4 then return "FRIENDLY"
-		elseif reactionNumber < 4 then return "HOSTILE"
-		else return "NEUTRAL" end
-
-		-- UnitCanAttack("unit", "unit")
-		-- UnitFactionGroup("name")
-		--UnitCanAttack("player", unit)
-		--isFriends = UnitIsFriend("unit", "unit")
-
-		--[[
-				if UnitCanAttack("player", unitid) then
-					unit.reaction = "HOSTILE"
-				else
-					unit.reaction = "FRIENDLY"
-				end
-		--]]
-
-	end
-
-
-	-- GetUnitReaction: Determines the reaction, and type of unit from the health bar color
+		-- GetUnitReaction: Determines the reaction, and type of unit from the health bar color
 	local function GetReactionByColor(red, green, blue)
-
-		if red < .01 then 	-- Friendly
-			if blue < .01 and green > .99 then return "FRIENDLY", "NPC"
-			elseif blue > .99 and green < .01 then return "FRIENDLY", "PLAYER"
-			end
-		elseif red > .99 then
-			if blue < .01 and green > .99 then return "NEUTRAL", "NPC"
-			elseif blue < .01 and green < .01 then return "HOSTILE", "NPC"
-			end
-		elseif red > .5 and red < .6 then
-			if green > .5 and green < .6 and blue > .5 and blue < .6 then return "HOSTILE", "NPC" end 	-- .533, .533, .99	-- Tapped Mob
-		else
-			return "HOSTILE", "PLAYER"
+		if red < .1 then 	-- Friendly
+			return "FRIENDLY"
+		elseif red > .5 then
+			if green > .9 then return "NEUTRAL"
+			else return "HOSTILE" end
 		end
-
 	end
 
 
@@ -567,7 +524,7 @@ do
 	end
 
 
-    -- UpdateUnitContext: Updates Target/Mouseover
+        -- UpdateUnitContext: Updates Target/Mouseover
 	function UpdateUnitContext(plate, unitid)
 		local guid
 
@@ -595,9 +552,7 @@ do
 		unit.levelcolorRed, unit.levelcolorGreen, unit.levelcolorBlue = c.r, c.g, c.b
 
 		unit.red, unit.green, unit.blue = UnitSelectionColor(unitid)
-
-		--unit.reaction = GetUnitReaction(unitid)
-		unit.reaction = GetReactionByColor(unit.red, unit.green, unit.blue)
+		unit.reaction = GetReactionByColor(unit.red, unit.green, unit.blue) or "HOSTILE"
 
 		unit.health = UnitHealth(unitid) or 0
 		unit.healthmax = UnitHealthMax(unitid) or 1
@@ -765,9 +720,9 @@ do
 
 		-- Better Layering
 		if unit.isTarget then
-			extended:SetFrameLevel(100)
+			extended:SetFrameLevel(3000)
 		elseif unit.isMouseover then
-			extended:SetFrameLevel(101)
+			extended:SetFrameLevel(3200)
 		else
 			extended:SetFrameLevel(extended.defaultLevel)
 		end
@@ -957,7 +912,6 @@ do
 	----------------------------------------
 	function CoreEvents:PLAYER_ENTERING_WORLD()
 		TidyPlatesCore:SetScript("OnUpdate", OnUpdate);
-		--NamePlateDriverFrame:SetBaseNamePlateSize( 160, 50 )
 	end
 
 	function CoreEvents:NAME_PLATE_CREATED(...)
@@ -966,8 +920,9 @@ do
 
 		-- hooksecurefunc([table,] "function", hookfunc)
 
-		BlizzardFrame._Show = BlizzardFrame.Show	-- Store this for later
-		BlizzardFrame.Show = BypassFunction			-- Try this to keep the plate from showing up
+		--BlizzardFrame._Show = BlizzardFrame.Show	-- Store this for later
+		--BlizzardFrame.Show = BlizzardFrame.Hide			-- Try this to keep the plate from showing up
+		-- --BlizzardFrame.Show = BypassFunction			-- Try this to keep the plate from showing up
 		OnNewNameplate(plate)
 	 end
 
@@ -977,7 +932,7 @@ do
 
 		-- Personal Display
 		if UnitIsUnit("player", unitid) then
-			plate:GetChildren():_Show()
+			-- plate:GetChildren():_Show()
 		-- Normal Plates
 		else
 			plate:GetChildren():Hide()

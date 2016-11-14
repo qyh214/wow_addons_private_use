@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1796, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14967 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15316 $"):sub(12, -3))
 mod:SetCreatureID(112350)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
@@ -10,6 +10,7 @@ mod:SetZone()
 
 mod:RegisterCombat("combat")
 
+--[[
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 223689",
 	"SPELL_AURA_APPLIED 223623 223614"
@@ -42,8 +43,8 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 223689 then
-		warnNightstableEnergy:Show()
-		timerNightstableEnergyCD:Start()
+		--warnNightstableEnergy:Show()
+		--timerNightstableEnergyCD:Start()
 	end
 end
 
@@ -58,3 +59,4 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerResonanceCD:Start()
 	end
 end
+--]]

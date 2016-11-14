@@ -31,6 +31,4 @@
 	<Script file="Modules\ServerStorage.lua" />
 	<Script file="Modules\AllResize.lua" />
 	<Include file="Modules\ChatFrameBorders.xml" />
-	<!-- <Include file="Modules\SplitText.lua" /> //-->
-	<!-- <Script file="Modules\ChannelBindings.lua" /> //-->
 </Ui>

@@ -20,12 +20,12 @@ local StaticPopupDialogs=StaticPopupDialogs
 local YES=YES
 local NO=NO
 local GARRISON_FOLLOWER_MAX_ITEM_LEVEL=GARRISON_FOLLOWER_MAX_ITEM_LEVEL
+local ORDER_HALL_MAC_ITEM_LEVEL=900
 local module=addon:NewSubClass("FollowerPage") --#module
 local UIDropDownMenu_SetSelectedID,	UIDropDownMenu_Initialize,	UIDropDownMenu_CreateInfo,UIDropDownMenu_AddButton
 =UIDropDownMenu_SetSelectedID,UIDropDownMenu_Initialize,	UIDropDownMenu_CreateInfo,UIDropDownMenu_AddButton
 local UIDropDownMenu_SetWidth,UIDropDownMenu_SetButtonWidth,UIDropDownMenu_JustifyText=UIDropDownMenu_SetWidth,UIDropDownMenu_SetButtonWidth,UIDropDownMenu_JustifyText
 local UIDropDownMenu_SetText=UIDropDownMenu_SetText
-
 function module:ShowImprovements()
 	local scroller=self:GetScroller("Items")
 	scroller:AddRow("Follower Upgrades",C.Orange())
@@ -120,6 +120,7 @@ function module:BindingClick(tipo,level)
 		end
 	end
 end
+local upgradeButtons
 function module:ShowUpgradeButtons(force)
 	if InCombatLockdown() then
 		self:ScheduleLeaveCombatAction("ShowUpgradeButtons",force)
@@ -127,17 +128,17 @@ function module:ShowUpgradeButtons(force)
 	end
 	local gf=GMF.FollowerTab
 	if not self:GetBoolean("UPG") then
-		if not gf.upgradeButtons then return end
-		local b=gf.upgradeButtons
+		if not upgradeButtons then return end
+		local b=upgradeButtons
 		for i=1,#b	 do
 			b[i]:Hide()
 		end
 		return
 	end
 	if (not force and not gf:IsVisible()) then return end
-	if not gf.upgradeButtons then gf.upgradeButtons ={} end
+	if not upgradeButtons then upgradeButtons ={} end
 	--if not gf.upgradeFrame then gf.upgradeFrame=CreateFrame("Frame",nil,gf.model) end
-	local b=gf.upgradeButtons
+	local b=upgradeButtons
 	local upgrades=self:GetUpgrades()
 	local axpos=self:GetBoolean("SWAPBUTTONS") and 7 or 243
 	local wxpos=self:GetBoolean("SWAPBUTTONS") and 243 or 7
@@ -225,11 +226,7 @@ function module:ShowUpgradeButtons(force)
 					A.Level:SetTextColor(C[c]())
 					A.Quantity:SetFormattedText("%d",qt)
 					A.Quantity:SetTextColor(C.Yellow())
-					if toc <70000 then
-						A:SetFrameLevel(gf.Model:GetFrameLevel()+1)
-					else
-						A:SetFrameLevel(20)
-					end
+					A:SetFrameLevel(20)
 					A.Quantity:Show()
 					A.Level:Show()
 					A:EnableMouse(true)

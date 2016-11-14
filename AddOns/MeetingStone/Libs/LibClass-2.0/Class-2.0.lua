@@ -1,5 +1,5 @@
 
-local MAJOR, MINOR = 'LibClass-2.0', 4
+local MAJOR, MINOR = 'LibClass-2.0', 7
 local Class = LibStub:NewLibrary(MAJOR, MINOR)
 if not Class then
     return
@@ -21,7 +21,7 @@ local format, wipe, select = string.format, wipe, select
 
 ---- WOW APIS
 
-local CreateFrame = CreateFrame 
+local CreateFrame = CreateFrame
 
 
 --[[
@@ -37,17 +37,17 @@ local function CreateDispatcher(argCount)
         local xpcall, eh = ...
         local method, ARGS
         local function call() return method(ARGS) end
-    
+
         local function dispatch(func, ...)
             method = func
             if not method then return end
             ARGS = ...
             return xpcall(call, eh)
         end
-    
+
         return dispatch
     ]]
-    
+
     local ARGS = {}
     for i = 1, argCount do ARGS[i] = "arg"..i end
     code = code:gsub("ARGS", tconcat(ARGS, ", "))
@@ -62,7 +62,7 @@ end})
 Dispatchers[0] = function(func)
     return xpcall(func, errorhandler)
 end
- 
+
 local function safecall(func, ...)
     return Dispatchers[select("#", ...)](func, ...)
 end
@@ -122,6 +122,10 @@ function Object:GetType()
     return self._Meta.__type
 end
 
+function Object:GetInherit()
+    return self._Meta.__inherit
+end
+
 function Object:IsType(class)
     if not self.GetType then
         return false
@@ -134,6 +138,10 @@ function Object:IsType(class)
     end
     local super = self:GetSuper()
     return super and super:IsType(class) or false
+end
+
+function Object:IsInstance(object)
+    return Class:IsObject(object) and object:IsType(self._Meta.__type)
 end
 
 function Object:SetCallback(name, func)
@@ -180,7 +188,7 @@ local _UIBaseClass = setmetatable(Class._UIBaseClass, {__index = function(t, k)
         class._Meta = {
             __index = class,
             __type  = class,
-            __ui    = class:GetObjectType(),
+            __ui    = k,
         }
         class:Hide()
         class.Constructor = class.SetParent
@@ -196,7 +204,7 @@ local _UIBaseClass = setmetatable(Class._UIBaseClass, {__index = function(t, k)
     return t[k]
 end})
 
-local function SuperHelper(super)
+function Class:SuperHelper(super)
     if type(super) == 'string' then
         local objType, inherit = super:match('^(%a+)%.?([%w_]*)$')
         local baseSuper = _UIBaseClass[objType:lower()]
@@ -243,7 +251,7 @@ function Class:New(super)
         error([[Usage: Class:New(name[, super])]], 2)
     end
 
-    local super, inherit = SuperHelper(super)
+    local super, inherit = self:SuperHelper(super)
     local class = {}
 
     class._Meta = CloneMeta(super)
@@ -286,10 +294,10 @@ function Class:IsObject(value)
     if type(value) ~= 'table' then
         return false
     end
-    if rawget(self, '_Meta') then
+    if rawget(value, '_Meta') then
         return false
     end
-    local _Meta = self._Meta
+    local _Meta = value._Meta
     if not _Meta then
         return false
     end

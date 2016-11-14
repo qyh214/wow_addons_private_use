@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 508 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 521 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,6 +16,10 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.7.10", "11/12/2016", [[
+	*Fixed Links on 7.1
+	*Fixed lua errors on 7.1 (Caveate now there are font issues do to less than ideal fix)
+]]);
 addEntry("3.7.9", "07/29/2016", [[
 	*Fixed a few green texture issues.
 ]]);
@@ -33,9 +37,6 @@ addEntry("3.7.5", "05/04/2016", [[
 ]]);
 addEntry("3.7.4", "05/02/2016", [[
 	*Added chat icon support for Heroes of Storm, Hearthstone, Overwatch, and Demon Hunters
-]]);
-addEntry("3.7.3", "03/24/2016", [[
-	*Resolved lua error when ToonID is nil
 ]]);
 
 

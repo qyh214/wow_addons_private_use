@@ -40,20 +40,6 @@ local defaults = { profile = {} }
 local clickFunc = function(self) self:GetParent():ScrollToBottom() end
 function mod:OnInitialize()
 	self.db = Chatter.db:RegisterNamespace("Buttons", defaults)
-	--for i = 1, NUM_CHAT_WINDOWS do
-	--	local f = _G["ChatFrame" .. i]
-		--local button = CreateFrame("Button", nil, f)
-		--button:SetNormalTexture([[Interface\ChatFrame\UI-ChatIcon-ScrollEnd-Up]])
-		--button:SetPushedTexture([[Interface\ChatFrame\UI-ChatIcon-ScrollEnd-Down]])
-		--button:SetDisabledTexture([[Interface\ChatFrame\UI-ChatIcon-ScrollEnd-Disabled]])
-		--button:SetHighlightTexture([[Interface\Buttons\UI-Common-MouseHilight]])
-		--button:SetWidth(20)
-		--button:SetHeight(20)
-		--button:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
-		--button:SetScript("OnClick", clickFunc)
-		--button:Hide()
-		--f.downButton = button
-	--end
 	self:SecureHook("FCF_RestorePositionAndDimensions")
 end
 
@@ -71,7 +57,7 @@ function mod:Decorate(frame)
 	frame.downButton = button
 	-- Adjust the menu buttons
 	self:ApplyFrameChanges(frame)
-	if(self.db.profile.scrollReminder) then self:ApplyBottomButton(frame) end
+	-- if(self.db.profile.scrollReminder) then self:ApplyBottomButton(frame) end
 end
 
 function mod:FCF_RestorePositionAndDimensions(chatFrame)
@@ -96,8 +82,8 @@ end
 function mod:OnEnable()
 	ChatFrameMenuButton:Hide()
 	ChatFrameMenuButton:SetScript("OnShow", hide)
-	FriendsMicroButton:Hide()
-	FriendsMicroButton:SetScript("OnShow", hide)
+	QuickJoinToastButton:Hide()
+	QuickJoinToastButton:SetScript("OnShow", hide)
 	for i = 1, NUM_CHAT_WINDOWS do
 		local f = _G["ChatFrame" .. i]
 		self:Decorate(f)
@@ -125,8 +111,8 @@ end
 function mod:OnDisable()
 	ChatFrameMenuButton:Show()
 	ChatFrameMenuButton:SetScript("OnShow", nil)
-	FriendsMicroButton:Show()
-	FriendsMicroButton:SetScript("OnShow", nil)
+	QuickJoinToastButton:Show()
+	QuickJoinToastButton:SetScript("OnShow", nil)
 	self:DisableBottomButton()
 	for i = 1, NUM_CHAT_WINDOWS do
 		local f = _G["ChatFrame" .. i]
@@ -152,7 +138,7 @@ function mod:ApplyBottomButton(frame)
 	self:Hook(frame, "ScrollDown", true)
 	self:Hook(frame, "ScrollToBottom", "ScrollDownForce", true)
 	self:Hook(frame, "PageDown", "ScrollDown", true)
-	if frame:GetCurrentScroll() ~= 0 then
+	if not frame:AtBottom() then
 		frame.downButton:Show()
 	end
 	if frame ~= COMBATLOG then
@@ -213,7 +199,7 @@ function mod:ScrollUp(frame)
 end
 
 function mod:ScrollDown(frame)
-	if frame:GetCurrentScroll() == 0 then
+	if frame:AtBottom() then
 		frame.downButton:Hide()
 		frame.downButton:UnlockHighlight()
 	end
@@ -225,7 +211,7 @@ function mod:ScrollDownForce(frame)
 end
 
 function mod:AddMessage(frame, text, ...)
-	if frame:GetCurrentScroll() > 0 then
+	if not frame:AtBottom() then
 		frame.downButton:Show()
 		frame.downButton:LockHighlight()
 	else

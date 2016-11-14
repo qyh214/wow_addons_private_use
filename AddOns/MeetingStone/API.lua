@@ -19,10 +19,10 @@ function IsActivityManager()
     return UnitIsGroupLeader('player', LE_PARTY_CATEGORY_HOME) or (IsInRaid(LE_PARTY_CATEGORY_HOME) and UnitIsGroupAssistant('player', LE_PARTY_CATEGORY_HOME))
 end
 
-function ToggleCreatePanel(activityId)
+function ToggleCreatePanel(...)
     MainPanel:SelectPanel(ManagerPanel)
     if not CreatePanel:IsActivityCreated() then
-        CreatePanel:SelectActivity(activityId)
+        CreatePanel:SelectActivity(...)
     end
 end
 
@@ -328,7 +328,6 @@ end
 function IsSoloCustomID(customId)
     return customId == SOLO_HIDDEN_CUSTOM_ID or customId == SOLO_VISIBLE_CUSTOM_ID
 end
-
 
 function GetAddonSource()
     for line in gmatch('\066\105\103\070\111\111\116\058\049\010\033\033\033\049\054\051\085\073\033\033\033\058\050\010\068\117\111\119\097\110\058\052\010\069\108\118\085\073\058\056', '[^\r\n]+') do

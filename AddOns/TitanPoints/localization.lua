@@ -4,8 +4,9 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Titan", true)
 
 TITAN_POINTS_MENU_LABEL = "Show Addon Label";
 TITAN_POINTS_MENU_HKS = "Honor Kills";
-TITAN_POINTS_MENU_ICONS = "Show Point Icons";
-TITAN_POINTS_MENU_LABELS = "Show Point Labels";
+TITAN_POINTS_MENU_ICONS = "Show Currency Icons";
+TITAN_POINTS_MENU_LABELS = "Show Currency Labels";
+TITAN_POINTS_MENU_CURRENCY_LIMIT = "Show Currency Limits";
 TITAN_POINTS_MENU_SHORT_LABELS = "Use Short Labels";
 TITAN_POINTS_MENU_TEXT = "TitanPoints";
 

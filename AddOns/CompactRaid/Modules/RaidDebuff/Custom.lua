@@ -15,6 +15,8 @@ local GetSpellInfo = GetSpellInfo
 local GameTooltip = GameTooltip
 local _
 
+local MAX_SPELL_ID = 240000 -- for legion
+
 local L = CompactRaid:GetLocale("RaidDebuff")
 local module = CompactRaid:FindModule("RaidDebuff")
 if not module then return end
@@ -127,8 +129,7 @@ local function ProcessInput(text)
 			list:InsertData({ id = id, name = name, icon = icon, link = "|cff71d5ff|Hspell:"..id.."|h["..name.."]|h|r" })
 		end
 	else
-		local count = 150000
-		for id = 1, count do
+		for id = 1, MAX_SPELL_ID do
 			name, _, icon = GetSpellInfo(id)
 			if name == text then
 				list:InsertData({ id = id, name = name, icon = icon, link = "|cff71d5ff|Hspell:"..id.."|h["..name.."]|h|r" })

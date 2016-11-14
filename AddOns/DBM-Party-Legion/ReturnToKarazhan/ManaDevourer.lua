@@ -1,8 +1,8 @@
 local mod	= DBM:NewMod(1818, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15217 $"):sub(12, -3))
---mod:SetCreatureID(100497)
+mod:SetRevision(("$Revision: 15410 $"):sub(12, -3))
+mod:SetCreatureID(114252)
 mod:SetEncounterID(1959)
 mod:SetZone()
 --mod:SetUsedIcons(1)
@@ -11,89 +11,68 @@ mod:SetZone()
 
 mod:RegisterCombat("combat")
 
---[[
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_PERIODIC_DAMAGE",
-	"SPELL_PERIODIC_MISSED"
+	"SPELL_CAST_START 227507",
+	"SPELL_CAST_SUCCESS 227618 227523",
+	"SPELL_AURA_APPLIED 227297"
 )
 
-local warnBloodFrenzy				= mod:NewSpellAnnounce(198388, 4)
+local warnEnergyVoid				= mod:NewSpellAnnounce(227523, 1)
+local warnArcaneBomb				= mod:NewSpellAnnounce(227618, 3)
 
-local specWarnFocusedGaze			= mod:NewSpecialWarningYou(198006, nil, nil, nil, 1, 2)
-local yellFocusedGaze				= mod:NewPosYell(198006)
+local specWarnDecimatingEssence		= mod:NewSpecialWarningSpell(227507, nil, nil, nil, 3, 2)
+local specWarnCoalescePower			= mod:NewSpecialWarningMoveTo(227297, nil, nil, nil, 1, 2)
 
-local timerFocusedGazeCD			= mod:NewNextCountTimer(40, 198006, nil, nil, nil, 3)
+local timerEnergyVoidCD				= mod:NewCDTimer(21.7, 227523, nil, nil, nil, 3)
+local timerCoalescePowerCD			= mod:NewNextTimer(30, 227297, nil, nil, nil, 1)
 
-local berserkTimer					= mod:NewBerserkTimer(300)
+local countdownCoalescePower		= mod:NewCountdown(30, 227297)
 
-local countdownFocusedGazeCD		= mod:NewCountdown(40, 198006)
+local voiceDecimatingEssence		= mod:NewVoice(227507)--aesoon (is there a voice file for "you fucked up and are going to die"?)
+local voiceColaescePower			= mod:NewVoice(227297)--helpsoak
 
-local voiceFocusedGaze				= mod:NewVoice(198006, "-Tank")--targetyou/share
-
---mod:AddSetIconOption("SetIconOnCharge", 198006, true)
---mod:AddInfoFrameOption(198108, false)
+mod:AddInfoFrameOption(227502, true)
 
 function mod:OnCombatStart(delay)
-
+	timerEnergyVoidCD:Start(14.5-delay)
+	timerCoalescePowerCD:Start(30-delay)
+	countdownCoalescePower:Start(30-delay)
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:SetHeader(GetSpellInfo(227502))
+		DBM.InfoFrame:Show(5, "playerdebuffstacks", 227502)
+	end
 end
 
 function mod:OnCombatEnd()
---	if self.Options.InfoFrame then
---		DBM.InfoFrame:Hide()
---	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 197942 then
-
+	if spellId == 227507 then
+		specWarnDecimatingEssence:Show()
+		voiceDecimatingEssence:Play("aesoon")
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 197943 then
-
+	if spellId == 227618 then
+		warnArcaneBomb:Show()
+	elseif spellId == 227523 then
+		warnEnergyVoid:Show()
+		timerEnergyVoidCD:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 198006 then
-
+	if spellId == 227297 then
+		specWarnCoalescePower:Show(GetSpellInfo(227296))
+		voiceColaescePower:Play("helpsoak")
+		timerCoalescePowerCD:Start()
+		countdownCoalescePower:Start()
 	end
 end
-
-function mod:SPELL_AURA_REMOVED(args)
-	local spellId = args.spellId
-	if spellId == 198006 then
-
-	end
-end
-
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 205611 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
---		specWarnMiasma:Show()
---		voiceMiasma:Play("runaway")
-	end
-end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
-
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 103695 then
-
-	end
-end
-
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
-	if spellId == 206341 then
-	
-	end
-end
---]]

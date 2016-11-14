@@ -1,5 +1,5 @@
-## Interface: 70000
-## Version: v7.0.0
+## Interface: 70100
+## Version: v7.1.1
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
 ## Notes-deDE: Spice up your minimap with some sexy options.
@@ -30,7 +30,6 @@ localization\enUS.lua
 localization\deDE.lua
 localization\ruRU.lua
 localization\esES.lua
-localization\esMX.lua
 localization\frFR.lua
 localization\itIT.lua
 localization\koKR.lua

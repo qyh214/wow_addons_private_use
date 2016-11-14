@@ -1,3 +1,6 @@
+local ADDON_NAME, namespace = ... 	--localization
+local L = namespace.L 				--localization
+
 -- Scroll Frame	
 
 -- Scrollframe Parent Frame
@@ -68,8 +71,8 @@ local DCS_ScrollbarCheck = CreateFrame("CheckButton", "DCS_ScrollbarCheck", Deja
 	DCS_ScrollbarCheck:ClearAllPoints()
 	DCS_ScrollbarCheck:SetPoint("LEFT", 25, -175)
 	DCS_ScrollbarCheck:SetScale(1.25)
-	DCS_ScrollbarCheck.tooltipText = 'Displays the DCS scrollbar.' --Creates a tooltip on mouseover.
-	_G[DCS_ScrollbarCheck:GetName() .. "Text"]:SetText("Scrollbar")
+	DCS_ScrollbarCheck.tooltipText = L['Displays the DCS scrollbar.'] --Creates a tooltip on mouseover.
+	_G[DCS_ScrollbarCheck:GetName() .. "Text"]:SetText(L["Scrollbar"])
 	
 	DCS_ScrollbarCheck:SetScript("OnEvent", function(self, event, arg1)
 		if event == "PLAYER_LOGIN" then

@@ -229,16 +229,16 @@ local function SetHooks()
 	
 	local bck_GetQuestWatchInfo = GetQuestWatchInfo
 	GetQuestWatchInfo = function(idx)
-		local questID, title, questLogIndex, numObjectives, requiredMoney, isComplete, startEvent, isAutoComplete, failureTime, timeElapsed, questType, isTask, isBounty, isStory, isOnMap, hasLocalPOI = bck_GetQuestWatchInfo(idx)
+		local questID, title, questLogIndex, numObjectives, requiredMoney, isComplete, startEvent, isAutoComplete, failureTime, timeElapsed, questType, isTask, isBounty, isStory, isOnMap, hasLocalPOI, isHidden = bck_GetQuestWatchInfo(idx)
 		if not hasLocalPOI then
 			hasLocalPOI = (questWaypoints[questID])
 		end
-		return questID, title, questLogIndex, numObjectives, requiredMoney, isComplete, startEvent, isAutoComplete, failureTime, timeElapsed, questType, isTask, isBounty, isStory, isOnMap, hasLocalPOI
+		return questID, title, questLogIndex, numObjectives, requiredMoney, isComplete, startEvent, isAutoComplete, failureTime, timeElapsed, questType, isTask, isBounty, isStory, isOnMap, hasLocalPOI, isHidden
 	end
 	
 	local bck_QuestPOI_GetButton = QuestPOI_GetButton
-	QuestPOI_GetButton = function(parent, questID, style, index, storyQuest)
-		local poiButton = bck_QuestPOI_GetButton(parent, questID, style, index, storyQuest)
+	QuestPOI_GetButton = function(parent, questID, style, index)
+		local poiButton = bck_QuestPOI_GetButton(parent, questID, style, index)
 		local tex = (questWaypoints[questID] and mediaPath or "Interface\\WorldMap\\").."UI-QuestPoi-NumberIcons"
 		poiButton:SetNormalTexture(tex)
 		poiButton:SetPushedTexture(tex)

@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'DropMenu', 9
+local WIDGET, VERSION = 'DropMenu', 10
 
 local GUI = LibStub('NetEaseGUI-2.0')
 local DropMenu = GUI:NewClass(WIDGET, GUI:GetClass('GridView'), VERSION, 'Owner')
@@ -62,7 +62,7 @@ function DropMenu:Constructor(_, style, withOtherMenu, menuList, level)
     self:SetCallback('OnItemLeave', self.OnItemLeave)
     self:SetScript('OnHide', self.OnHide)
     self.withOtherMenu = withOtherMenu
-    
+
     if level == 1 then
         tinsert(self._Objects, self)
         self.menuList[1] = self
@@ -195,7 +195,7 @@ function DropMenu:OnItemClick(button, data)
     if not data.keepShownOnClick then
         self:Hide()
     end
-    
+
     local owner = self:GetOwner()
     if type(data.func) == 'function' then
         if data.confirm then
@@ -264,7 +264,7 @@ function DropMenu:OnItemEnter(button, data)
         if data.tooltipOnButton then
             tip:SetOwner(button, button:GetLeft() < GetScreenWidth() / 2 and 'ANCHOR_RIGHT' or 'ANCHOR_LEFT')
         else
-            tip_SetDefaultAnchor(tip, button)
+            GameTooltip_SetDefaultAnchor(tip, button)
         end
         if data.tooltipTitle then
             tip:SetText(data.tooltipTitle, 1, 1, 1)

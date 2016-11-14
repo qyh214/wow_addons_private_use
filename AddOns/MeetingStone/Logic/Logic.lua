@@ -85,18 +85,22 @@ end
 
 function Logic:MallPurchase(id, price, confirm)
     if not id then
+        
         return
     end
 
     self:SendServer('MALLPURCHASE', id, UnitGUID('player'), ADDON_VERSION_SHORT, confirm, price)
+    
 end
 
 function Logic:Exchange(text)
     if not text or text == '' then
+        
         return
     end
 
     self:SendServer('EXCHANGE', text, UnitGUID('player'), ADDON_VERSION_SHORT)
+    
 end
 
 function Logic:SEI(activity)

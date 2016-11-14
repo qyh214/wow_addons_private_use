@@ -4,7 +4,7 @@ if not L then return end
 
 L.core = {
 	ageDays = "%s dias",
-	ageHours = "%s horas", -- Needs review
+	ageHours = "%s horas",
 	ageMinutes = "%s minutos",
 	ageSeconds = "%s segundos",
 	desc = "Incluir iLevel Medio (AiL) na dica de infrmação dos players",

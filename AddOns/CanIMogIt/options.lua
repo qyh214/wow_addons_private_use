@@ -9,7 +9,7 @@ local CREATE_DATABASE_TEXT = L["Can I Mog It? Important Message: Please log into
 
 StaticPopupDialogs["CANIMOGIT_NEW_DATABASE"] = {
   text = CREATE_DATABASE_TEXT,
-  button1 = "Okay, I'll go log onto all of my toons!",
+  button1 = L["Okay, I'll go log onto all of my toons!"],
   timeout = 0,
   whileDead = true,
   hideOnEscape = true,
@@ -67,11 +67,27 @@ InterfaceOptions_AddCategory(CanIMogIt.frame);
 local EVENTS = {
     "ADDON_LOADED",
     "TRANSMOG_COLLECTION_UPDATED",
-    -- "PLAYER_LOGIN",
+    "PLAYER_LOGIN",
     -- "GET_ITEM_INFO_RECEIVED",
     "AUCTION_HOUSE_SHOW",
     "GUILDBANKFRAME_OPENED",
     "VOID_STORAGE_OPEN",
+    "UNIT_INVENTORY_CHANGED",
+    "PLAYER_SPECIALIZATION_CHANGED",
+    "BAG_UPDATE",
+    "BAG_NEW_ITEMS_UPDATED",
+    "QUEST_ACCEPTED",
+    "BAG_SLOT_FLAGS_UPDATED",
+    "BANK_BAG_SLOT_FLAGS_UPDATED",
+    "UNIT_AURA",
+    "PLAYERBANKSLOTS_CHANGED",
+    "BANKFRAME_OPENED",
+    "START_LOOT_ROLL",
+    "MERCHANT_SHOW",
+    "VOID_STORAGE_CONTENTS_UPDATE",
+    "GUILDBANKBAGSLOTS_CHANGED",
+    "TRANSMOG_COLLECTION_SOURCE_ADDED",
+    "TRANSMOG_COLLECTION_SOURCE_REMOVED",
 }
 
 for i, event in pairs(EVENTS) do
@@ -79,35 +95,18 @@ for i, event in pairs(EVENTS) do
 end
 
 
-CanIMogIt.frame:SetScript("OnEvent", function(self, event, ...)
+CanIMogIt.frame:HookScript("OnEvent", function(self, event, ...)
     -- Add functions you want to catch events here
     self:AddonLoaded(event, ...)
-    self:OnEncounterJournalLoaded(event, ...)
+    self:HookItemOverlay(event, ...)
+    -- self:OnEncounterJournalLoaded(event, ...)
     self:TransmogCollectionUpdated(event, ...)
     -- self:OnAuctionHouseShow(event, ...)
     self:OnGuildBankOpened(event, ...)
     self:OnVoidStorageOpened(event, ...)
+    self:GetAppearancesEvent(event, ...)
+    self:ItemOverlayEvents(event, ...)
 end)
-
-
---[[
-    Resets the cache every RESET_TIME seconds. This prevents invalid
-    data from being stuck in the cache. It appears to not be a
-    significant enough slowdown even with the bags open.
-]]
-
-local RESET_TIME = 5
-
-local timer = 0
-local function onUpdate(self, elapsed)
-    timer = timer + elapsed
-    -- Unregister if appearances are ready, or 30 seconds have passed.
-    if timer >= RESET_TIME then
-        CanIMogIt.cache = {}
-        timer = 0
-    end
-end
-CanIMogIt.frame:SetScript("OnUpdate", onUpdate)
 
 
 function CanIMogIt.frame:AddonLoaded(event, addonName)
@@ -122,7 +121,7 @@ local function checkboxOnClick(self)
     PlaySound(checked and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
     self:SetValue(checked)
     -- Reset the cache when an option changes.
-    CanIMogIt.cache = {}
+    CanIMogIt:ResetCache()
 end
 
 
@@ -176,11 +175,6 @@ function CanIMogIt.frame.Loaded()
         CanIMogItOptions = CanIMogItOptions_Defaults.options
         print(L["CanIMogItOptions not found, loading defaults!"])
     end
-    -- if (not CanIMogItDatabase) then
-    --     CanIMogItDatabase = {}
-    --     StaticPopup_Show("CANIMOGIT_NEW_DATABASE")
-    -- end
-    CanIMogItDatabase = nil
     -- Set missing options from the defaults if the version is out of date.
     if (CanIMogItOptions["version"] < CanIMogIt_OptionsVersion) then
         CanIMogItOptions_temp = CanIMogItOptions_Defaults.options;
@@ -195,8 +189,19 @@ function CanIMogIt.frame.Loaded()
     createOptionsMenu()
 end
 
-CanIMogIt:RegisterChatCommand("cimi", "OpenOptionsMenu")
-CanIMogIt:RegisterChatCommand("canimogit", "OpenOptionsMenu")
+CanIMogIt:RegisterChatCommand("cimi", "SlashCommands")
+CanIMogIt:RegisterChatCommand("canimogit", "SlashCommands")
+
+function CanIMogIt:SlashCommands(input)
+    -- Slash command router.
+    if input == "" then
+        self:OpenOptionsMenu()
+    elseif input == 'PleaseDeleteMyDB' then
+        self:DBReset()
+    else
+        self:Print("Unknown command!")
+    end
+end
 
 function CanIMogIt:OpenOptionsMenu()
     -- Run it twice, because the first one only opens

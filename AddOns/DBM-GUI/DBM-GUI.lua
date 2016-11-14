@@ -43,7 +43,7 @@
 --
 
 
-local revision =("$Revision: 15271 $"):sub(12, -3)
+local revision =("$Revision: 15322 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -3409,11 +3409,12 @@ local function CreateOptionsMenu()
 
 	do
 		local hideBlizzPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_HideBlizzard, "option")
-		local hideBlizzArea = hideBlizzPanel:CreateArea(L.Area_HideBlizzard, nil, 305, true)
+		local hideBlizzArea = hideBlizzPanel:CreateArea(L.Area_HideBlizzard, nil, 335, true)
 		hideBlizzArea:CreateCheckButton(L.HideBossEmoteFrame, true, nil, "HideBossEmoteFrame")
 		hideBlizzArea:CreateCheckButton(L.HideWatchFrame, true, nil, "HideObjectivesFrame")
 		hideBlizzArea:CreateCheckButton(L.HideGarrisonUpdates, true, nil, "HideGarrisonToasts")
 		hideBlizzArea:CreateCheckButton(L.HideGuildChallengeUpdates, true, nil, "HideGuildChallengeUpdates")
+		hideBlizzArea:CreateCheckButton(L.HideQuestTooltips, true, nil, "HideQuestTooltips")
 		hideBlizzArea:CreateCheckButton(L.HideTooltips, true, nil, "HideTooltips")
 		hideBlizzArea:CreateCheckButton(L.DisableSFX, true, nil, "DisableSFX")
 		local filterYell	= hideBlizzArea:CreateCheckButton(L.SpamBlockSayYell, true, nil, "FilterSayAndYell")
@@ -3441,31 +3442,37 @@ local function CreateOptionsMenu()
 				if value == "Always" and not disabled then
 					TalkingHeadFrame:UnregisterAllEvents()
 					--TalkingHeadFrame_CloseImmediately()
+					DBM:SetTalkingHeadState(true)
 				else
 					if value == "Never" and disabled then
 						TalkingHeadFrame:RegisterEvent("TALKINGHEAD_REQUESTED")
 						TalkingHeadFrame:RegisterEvent("TALKINGHEAD_CLOSE")
 						TalkingHeadFrame:RegisterEvent("SOUNDKIT_FINISHED")
 						TalkingHeadFrame:RegisterEvent("LOADING_SCREEN_ENABLED")
+						DBM:SetTalkingHeadState(false)
 					elseif value == "CombatOnly" then
 						if InCombatLockdown() and not disabled then
 							TalkingHeadFrame:UnregisterAllEvents()
 							--TalkingHeadFrame_CloseImmediately()
+							DBM:SetTalkingHeadState(true)
 						else
 							TalkingHeadFrame:RegisterEvent("TALKINGHEAD_REQUESTED")
 							TalkingHeadFrame:RegisterEvent("TALKINGHEAD_CLOSE")
 							TalkingHeadFrame:RegisterEvent("SOUNDKIT_FINISHED")
 							TalkingHeadFrame:RegisterEvent("LOADING_SCREEN_ENABLED")
+							DBM:SetTalkingHeadState(false)
 						end
 					elseif value == "BossCombatOnly" then
 						if IsEncounterInProgress() and not disabled then
 							TalkingHeadFrame:UnregisterAllEvents()
 							--TalkingHeadFrame_CloseImmediately()
+							DBM:SetTalkingHeadState(true)
 						else
 							TalkingHeadFrame:RegisterEvent("TALKINGHEAD_REQUESTED")
 							TalkingHeadFrame:RegisterEvent("TALKINGHEAD_CLOSE")
 							TalkingHeadFrame:RegisterEvent("SOUNDKIT_FINISHED")
 							TalkingHeadFrame:RegisterEvent("LOADING_SCREEN_ENABLED")
+							DBM:SetTalkingHeadState(false)
 						end
 					end
 				end

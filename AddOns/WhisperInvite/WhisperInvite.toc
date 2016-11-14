@@ -1,5 +1,5 @@
-## Interface: 70000
-## Version: 2.1.5
+## Interface: 70100
+## Version: 2.1.7
 ## Title: WhisperInvite
 ## Notes: Auto-invite with keywords
 ## Title-deDE: WhisperInvite
@@ -12,7 +12,7 @@
 ## Author: Areko
 ## SavedVariables: WhisperInviteCoreDB
 ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3
-## X-Curse-Packaged-Version: 2.1.5
+## X-Curse-Packaged-Version: 2.1.7
 ## X-Curse-Project-Name: WhisperInvite
 ## X-Curse-Project-ID: whisperinvite
 ## X-Curse-Repository-ID: wow/whisperinvite/mainline

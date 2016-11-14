@@ -110,4 +110,5 @@ addon.L = {
 	["show direction arrow"] = "Show direction arrow (Requires TomTom)",
 	["character profiles"] = "Character profiles",
 	["deleting profile"] = "Deleting profile data |cff00ff00%s|r, are you sure?",
+	["font outline"] = "Font outline",
 }

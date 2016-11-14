@@ -17,17 +17,37 @@ local cachedAura = false
 local cachedRole = false
 
 local function IsEnemyTanked(unit)
-	local enemyUnitid = unit.unitid
-	if enemyUnitid and tostring(enemyUnitid) then
-		local enemyTargetGUID = UnitGUID(enemyUnitid.."target")
+	local unitid = unit.unitid
+	local targetOf = unitid.."target"
+	-- GetPartyAssignment("MAINTANK", raidid)
+	local targetIsTank = UnitIsUnit(targetOf, "pet") or ("TANK" ==  UnitGroupRolesAssigned(targetOf))
 
-		if enemyTargetGUID then
-			return RaidTankList[enemyTargetGUID]
-		end
-	end
+	return targetIsTank
 end
 
 local function IsPlayerTank()
+--[[
+	-- Look at the Player's Specialization
+	local specializationIndex = tonumber(GetSpecialization())
+
+	if specializationIndex and GetSpecializationRole(specializationIndex) == "TANK" then
+		playerTankRole = true
+	else
+		playerTankRole = false
+	end
+
+	-- Check Stances
+	local tankForms = { ["18"] = true, ["23"] = true, }
+	if GetShapeshiftFormID() == 18 then -- Defensive Stance (Warrior)
+		playerTankAura = true
+	elseif GetShapeshiftFormID() == 23 then
+	end
+
+
+	UnitBuff("player", "name")
+	--]]
+
+
 	return (playerTankRole or playerTankAura)
 end
 

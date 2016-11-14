@@ -1,0 +1,239 @@
+2016-11-06  Tercio  <Tercio>
+
+[78d169328545] [tip]
+* WorldQuestTracker.lua:
+
+- hardcoded a framework function to avoid issues with old non updated addon using very old framework versions.
+
+
+2016-10-25  Tercio  <Tercio>
+
+[8dd5eb0d5401]
+* WorldQuestTracker.lua, WorldQuestTracker.toc, libs/DF/fw.lua, libs/DF/panel.lua:
+
+- toc 7.1.0
+
+
+2016-10-18  Tercio  <Tercio>
+
+[d73c45b589c5]
+* WorldQuestTracker.lua:
+
+- epic quests should now always be shown even if not pass filters.
+
+
+2016-10-14  Tercio  <Tercio>
+
+[065f885ad92a]
+* WorldQuestTracker.lua:
+
+- China and Taiwan 1K (1000) abbreviate icon fix.
+
+
+[93fdf9b55bbf]
+* WorldQuestTracker.lua:
+
+- fixed the fly map tooltip scale.
+
+
+[6ed89d33224c]
+* WorldQuestTracker.lua:
+
+- quests on suramar won't show it elite/rare quest border.
+
+
+2016-10-03  Tercio  <Tercio>
+
+[ce24ee0ef092]
+* WorldQuestTracker.lua:
+
+- when the action button is on cooldown, set its alpha to 0.2
+- when using fullscreen quest summary, set the action button point to be on the left side of the bounty board.
+
+
+2016-10-01  Tercio  <Tercio>
+
+[83c6cd0a92d4]
+* WorldQuestTracker.lua:
+
+- warning that there's a artifact research ready.
+
+
+2016-09-30  Tercio  <Tercio>
+
+[f951fa2a2c48]
+* WorldQuestTracker.lua, media/icon_artifactpower_blue_roundT.blp:
+
+- added blue icons for zone quests as well.
+
+
+[e270e01f6ad5]
+* WorldQuestTracker.lua:
+
+- change the artifact power icon if the quest has more time than the artifact knowledge research time left.
+
+
+2016-09-29  Tercio  <Tercio>
+
+[b407d59aa07c]
+* WorldQuestTracker.lua:
+
+- added icons on the options menu.
+
+
+[9d0bdb9ed6ee]
+* WorldQuestTracker.lua:
+
+- fix for the tracker string comparison issue.
+- fix for taxy map in rare cases was showing wrong icons.
+- fix for the resources tooltip not being shown when the map is on fullscreen.
+- changed the relic icon.
+
+
+2016-09-28  Tercio  <Tercio>
+
+[7502e9f69ad4]
+* WorldQuestTracker.lua:
+
+- fixed an issue when adding a quest with rare or epic item reward.
+
+
+[fceb6db49c68]
+* WorldQuestTracker.lua:
+
+- added sort by time option.
+
+
+[6a8c084f3b6d]
+* WorldQuestTracker.lua:
+
+- added an option to show the time left on the tracker.
+
+
+[675552266123]
+* WorldQuestTracker.lua:
+
+- added tracker scale option.
+
+
+[9d0b76362d25]
+* WorldQuestTracker.lua:
+
+- fix for super tracker quests being changed by the blizz obj tracker.
+
+
+[c855d1656810]
+* WorldQuestTracker.lua:
+
+- fixed dungeon filtering.
+- added a dungeon icon on dungeon quests.
+
+
+2016-09-27  Tercio  <Tercio>
+
+[f15bb2315474]
+* WorldQuestTracker.lua:
+
+- removed the time left priority from the sort panel and made a standalone one.
+
+
+2016-09-25  Tercio  <Tercio>
+
+[1170c98dc619]
+* WorldQuestTracker.lua:
+
+- fix lua error introduced on r80.
+
+
+2016-09-24  Tercio  <Tercio>
+
+[4e0ae63f84ef]
+* WorldQuestTracker.lua:
+
+- small code cleanup.
+- disabling animation and sound for testing.
+
+
+[62854a6bd546]
+* WorldQuestTracker.lua:
+
+- fixed a rare but on entering a dungeon with a quest on the tracker.
+- fix for french client artifact power detection.
+
+
+2016-09-22  Tercio  <Tercio>
+
+[5929600be0c2]
+* WorldQuestTracker.lua:
+
+- fade out quests that not match the time left priority (optional, default enabled).
+- added time priority for 16 and 24 hours left.
+- show the raw time left when the time priority option is enabled.
+- option to anchor the statusbar on the top side.
+- trying to show dalaran quests (experimental).
+
+
+2016-09-20  Tercio  <Tercio>
+
+[6023507b989a]
+* WorldQuestTracker.lua, media/background_blackgradientT.blp, media/background_summaryzoneT.blp, media/border_pixel_whiteT.blp, media/bordersT.blp, media/close_summary_button.blp, media/close_summary_button_pushed.blp, media/icon_flagT.blp, media/icon_flag_commonT.blp, media/icon_flag_criteriamatchT.blp, media/icons_resourcesT.blp, media/new.blp, media/world_quest_button.blp, media/world_quest_button_pushed.blp:
+
+- fix for some textures.
+
+
+2016-09-19  Tercio  <Tercio>
+
+[18ef7af3b137]
+* WorldQuestTracker.lua, media/background_summaryzoneT.blp, media/border_pixel_whiteT.blp, media/icon_flag_criteriamatchT.blp, media/rare_dragon_TrackingT.blp:
+
+- added missing textures.
+- fixed a lag on the taxy map added on the previous alpha.
+- tracker frame now lies on the low strata.
+
+
+[2fa5a5bd2807]
+* WorldQuestTracker.lua:
+
+- fixed issue for elvui with the stuff which has been removed on latest version.
+
+
+2016-09-18  Tercio  <Tercio>
+
+[35106947aef5]
+* WorldQuestTracker.lua:
+
+- fix for trying to hide frames that has been removed on previous version.
+- delay on map check for each .5 seconds instead ontick.
+
+
+[c1b9ece78781]
+* WorldQuestTracker.lua:
+
+- added options for zonemap icons Scale.
+- added options for worldmap icons Scale and text size.
+- added option for only show quests on the current map on the quest tracker.
+- trying to solve the 21:9 aspect ratio issue, maybe will have more bugs than before.
+- equipment icons now have only one icon for each equip slot.
+- added a simple quest summary on zone map when the map is in fullscreen mode (won't be added to window mode since there are list mods like AngryWorldQuest or WorldQuestList which do a great job doing that).
+- the time texture had its size increased from 12 to 14 pixels.
+- fixed the item level detection also added a rarity color to the item level.
+- fixed some issues where world quest squares were shown when the map wan't in the broken isles map.
+
+
+2016-09-13  Tercio  <Tercio>
+
+[42bc789f367a]
+* WorldQuestTracker.lua:
+
+- fix for elvui bar anchoring.
+
+
+2016-09-12  Tercio  <Tercio>
+
+[813927363491]
+* WorldQuestTracker.lua:
+
+- libwindow warning if not found.
+- fixed the header not showing on the custom positioning.
+
+

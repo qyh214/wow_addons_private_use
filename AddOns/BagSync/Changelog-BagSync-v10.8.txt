@@ -1,0 +1,11 @@
+tag v10.8
+86ebe51b5acce626b484623391953fdd7b226f73
+Xruptor <xruptor@manaflux.com>
+2016-10-26 22:03:16 -0400
+
+
+
+--------------------
+
+Xruptor:
+	- Apparently there was some sort of odd packager issues at Curse.  I'm updating the Library and pushing a new version to check again.

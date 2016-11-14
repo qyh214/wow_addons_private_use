@@ -1,10 +1,10 @@
-﻿## Interface: 70000
+﻿## Interface: 70100
 ## Title: XLoot Frame
 ## Notes: A customizable, skinnable loot frame.
-## Version: 7.0-11
+## Version: 7.1-2
 ## Author: Xuerian
 ## X-Category: Inventory
-## X-Curse-Packaged-Version: 7.0-11
+## X-Curse-Packaged-Version: 7.1-2
 ## X-Curse-Project-Name: XLoot
 ## X-Curse-Project-ID: xloot
 ## X-Curse-Repository-ID: wow/xloot/mainline

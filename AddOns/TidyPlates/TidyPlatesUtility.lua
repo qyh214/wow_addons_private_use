@@ -179,6 +179,8 @@ local function GetUnitQuestInfo(unit)
     local questName
     local questProgress
 
+    if not unitid then return end
+
     -- Tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
     TooltipScanner:ClearLines()
     TooltipScanner:SetUnit(unitid)

@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 984 $")
+XPerl_SetModuleRevision("$Revision: 1018 $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -779,12 +779,16 @@ function Events:GROUP_ROSTER_UPDATE()
 end
 
 -- UNIT_HEALTH
-function Events:UNIT_HEALTH(u)
-	if (strfind(u, "^raid%d")) then
-		for k,unit in pairs(XUnits) do
-			local partyid = SecureButton_GetUnit(unit)
-			if (partyid and UnitIsUnit(partyid, u)) then
-				UpdateUnit(unit)
+function Events:UNIT_HEALTH(unit)
+	if not unit then
+		return
+	end
+
+	if (strfind(unit, "^raid%d")) then
+		for k, frame in pairs(XUnits) do
+			local partyid = SecureButton_GetUnit(frame)
+			if (partyid and UnitIsUnit(partyid, unit)) then
+				UpdateUnit(frame)
 			end
 		end
 	end
@@ -793,22 +797,26 @@ end
 Events.UNIT_MAXHEALTH = Events.UNIT_HEALTH
 
 -- UNIT_FACTION
-function Events:UNIT_FACTION(u)
-	if (strfind(u, "^raid%d")) then
-		for k,unit in pairs(XUnits) do
-			if (unit.type == "MT") then
-				local partyid = unit:GetAttribute("unit")
-				if (partyid and partyid == u) then
+function Events:UNIT_FACTION(unit)
+	if not unit then
+		return
+	end
+
+	if (strfind(unit, "^raid%d")) then
+		for k, frame in pairs(XUnits) do
+			if (frame.type == "MT") then
+				local partyid = frame:GetAttribute("unit")
+				if (partyid and partyid == unit) then
 					if (UnitAffectingCombat(partyid)) then
-						unit.combatIcon:Show()
+						frame.combatIcon:Show()
 					else
-						unit.combatIcon:Hide()
+						frame.combatIcon:Hide()
 					end
 
 					if (UnitIsCharmed(partyid)) then
-						unit.warningIcon:Show()
+						frame.warningIcon:Show()
 					else
-						unit.warningIcon:Hide()
+						frame.warningIcon:Hide()
 					end
 				end
 			end

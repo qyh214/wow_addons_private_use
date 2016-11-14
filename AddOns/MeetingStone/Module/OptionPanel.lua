@@ -23,12 +23,10 @@ function SettingPanel:OnInitialize()
         type = 'group',
         name = L['设置'],
         get = function(item)
-            return self.db.profile.settings[item[#item]]
+            return Profile:GetSetting(item[#item])
         end,
         set = function(item, value)
-            local key = item[#item]
-            self.db.profile.settings[key] = value
-            self:SendMessage('MEETINGSTONE_SETTING_CHANGED', key, value, true)
+            Profile:SetSetting(item[#item], value)
         end,
         args = {
             minimap = {
@@ -66,6 +64,12 @@ function SettingPanel:OnInitialize()
             sound = {
                 type = 'toggle',
                 name = L['启用活动申请提示音'],
+                width = 'full',
+                order = order(),
+            },
+            packedPvp = {
+                type = 'toggle',
+                name = L['活动类型过滤器整合PvP活动'],
                 width = 'full',
                 order = order(),
             },

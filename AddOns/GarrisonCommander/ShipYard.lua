@@ -62,10 +62,7 @@ function module:OnInitialize()
 		self:SafeSecureHook("GarrisonShipyardMap_UpdateMissions") -- low efficiency, but survives MasterPlan
 	end
 	self:SafeSecureHook("GarrisonShipyardMap_SetupBonus")
-	self:SafeHookScript(GSF,"OnShow","Setup",true)
-	self:SafeHookScript(GSF.MissionTab.MissionList.CompleteDialog,"OnShow",true)
-	self:SafeHookScript(GSF.MissionTab,"OnShow",true)
-	self:SafeHookScript(GSF.FollowerTab,"OnShow",true)
+	self:SafeSecureHookScript(GSF,"OnShow","Setup",true)
 	self:SafeRegisterEvent("GARRISON_SHIPYARD_NPC_CLOSED")
 	self:SafeRegisterEvent("GARRISON_MISSION_STARTED")
 	--GarrisonShipyardFrameFollowersListScrollFrameButton1
@@ -164,7 +161,7 @@ function module:HookedGarrisonFollowerButton_UpdateCounters(gsf,frame,follower,s
 		frame.GCXp:Hide()
 	end
 --[===[@debug@
-	--print(follower)
+	print(follower)
 --@end-debug@]===]
 end
 
@@ -331,24 +328,22 @@ end
 function module:FollowerOnShow()
 	self:ShowEnhancements()
 end
+local upgrades
 function module:ShowEnhancements()
-	local f=GarrisonShipyardFrame.FollowerTab
-	local u
-	if not f.upgrades then
-		f.upgrades=CreateFrame("Frame","UPG",f)
-		f.upgrades.items={}
-		u=f.upgrades
-		u:ClearAllPoints()
-		u:SetPoint("TOPLEFT",10,-100)
-		u:SetPoint("BOTTOMLEFT",0,0)
-		u:SetWidth(50)
+	if not upgrades then
+		upgrades=CreateFrame("Frame","UPG",GarrisonShipyardFrame.FollowerTab)
+		upgrades.items={}
+
+		upgrades:ClearAllPoints()
+		upgrades:SetPoint("TOPLEFT",10,-100)
+		upgrades:SetPoint("BOTTOMLEFT",0,0)
+		upgrades:SetWidth(50)
 	end
-	u=f.upgrades
 	for i,itemID in pairs(shipEnhancement) do
 		local e
-		if  not  u.items[i] then
-			u.items[i]=CreateFrame("Button","But"..i,u,"GarrisonCommanderUpgradeButton,SecureActionButtonTemplate")
-			e=u.items[i]
+		if  not  upgrades.items[i] then
+			upgrades.items[i]=CreateFrame("Button","But"..i,u,"GarrisonCommanderUpgradeButton,SecureActionButtonTemplate")
+			e=upgrades.items[i]
 			e.itemID=itemID
 			e.Icon:SetSize(40,40)
 			e:SetPoint("TOPLEFT",0,-45*(i-1))
@@ -357,15 +352,16 @@ function module:ShowEnhancements()
 			e:RegisterForClicks("LeftButtonDown")
 			e:SetAttribute("type","item")
 			e:SetAttribute("item",select(2,GetItemInfo(itemID)))
+		else
+			e=upgrades.items[i]
 		end
-		e=u.items[i]
 		local qt=GetItemCount(itemID)
 		e.Quantity:SetText(qt)
 		e.Quantity:Show()
 		e.Icon:SetDesaturated(qt==0)
 		e:Show()
 	end
-	u:Show()
+	upgrades:Show()
 end
 do
 	local s=setmetatable({},{__index=function(t,k) return 0 end})

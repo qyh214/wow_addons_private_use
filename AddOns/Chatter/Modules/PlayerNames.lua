@@ -1,6 +1,6 @@
 local addon, private = ...
 local Chatter = LibStub("AceAddon-3.0"):GetAddon(addon)
-local mod = Chatter:NewModule("Player Class Colors", "AceHook-3.0", "AceEvent-3.0")
+local mod = Chatter:NewModule("Player Name Polish", "AceHook-3.0", "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale(addon)
 local AceTab = LibStub("AceTab-3.0")
 
@@ -64,7 +64,7 @@ local defaults = {
 	},
 	profile = {
 		saveData = false,
-		nameColoring = "CLASS",
+		blizzardNameColoring = true,
 		leftBracket = "[",
 		rightBracket = "]",
 		bnetBrackets = true,
@@ -107,91 +107,6 @@ do
 				end
 			end
 		end
-		return t
-	end
-end
-
-local getNameColor
-do
-	local sq2 = sqrt(2)
-	local cos = _G.math.cos
-	local floor = _G.math.floor
-	local fmod = _G.math.fmod
-	local pi = _G.math.pi
-	local strbyte = _G.strbyte
-	local t = {}
-
-	-- http://www.tecgraf.puc-rio.br/~mgattass/color/HSVtoRGB.htm
-
-	local function HSVtoRGB(h, s, v)
-	   if s == 0 then
-		  --achromatic=fail
-		  t.r = v
-		  t.g = v
-		  t.b = v
-		  if not t.r then t.r = 0 end
-		  if not t.g then t.g = 0 end
-		  if not t.b then t.b = 0 end
-		  return t.r, t.g, t.b
-	   end
-	   h = h/60
-	   local i = floor(h)
-	   local i1 = v * (1 - s)
-	   local i2 = v * (1 - s * (h - i))
-	   local i3 = v * (1 - s * (1 - (h - i)))
-	   if i == 0 then
-		  --	return v, i3, i1
-		  t.r = v
-		  t.g = i3
-		  t.b = i1
-	   elseif i == 1 then
-		  --	return i2, v, i1
-		  t.r = i2
-		  t.g = v
-		  t.b = i1
-	   elseif i == 2 then
-		  --	return i1, v, i3
-		  t.r = i1
-		  t.g = v
-		  t.b = i3
-	   elseif i == 3 then
-		  --	return i3, i2, v
-		  t.r = i3
-		  t.g = i2
-		  t.b = v
-	   elseif i == 4 then
-		  --	return i3, i1, v
-		  t.r = i3
-		  t.g = i1
-		  t.b = v
-	   elseif i == 5 then
-		  --	return v, i1, i2
-		  t.r = v
-		  t.g = i1
-		  t.b = i2
-	   else
-		  DEFAULT_CHAT_FRAME:AddMessage("Chatter HSVtoRGB failed")
-	   end
-	   if not t.r then t.r = 0 end
-	   if not t.g then t.g = 0 end
-	   if not t.b then t.b = 0 end
-	   return t.r, t.g, t.b
-	end
-
-	function getNameColor(name)
-		local seed = 5381 --old seed: 5124
-		local h, s, v = 1, 1, 1
-		local r, g, b
-		for i = 1, #name do
-			seed = 33 * seed + strbyte(name, i) --used to use 29 here
-		end
-		-- h = fmod(seed, 255) / 255
-		h = fmod(seed, 360) --changed the HSVtoRGB to acompany this change
-		if (h > 220) and (h < 270) then
-		   h = h + 60
-		end
-		t.r, t.g, t.b = HSVtoRGB(h, s, v)
-
 		return t
 	end
 end
@@ -251,7 +166,7 @@ function mod:OnEnable()
 	self:AddPlayer(player, (select(2, UnitClass("player"))), UnitLevel("player"))
 
 	self:GROUP_ROSTER_UPDATE()
-	
+
 	for i = 1, NUM_CHAT_WINDOWS do
 		local cf = _G["ChatFrame" .. i]
 		if cf ~= COMBATLOG then
@@ -278,6 +193,8 @@ function mod:OnEnable()
 			storedName[id] = toon
 		end
 	end
+
+	self:TogglePlayerColors(self.db.profile.blizzardNameColoring)
 end
 
 function mod:OnDisable()
@@ -295,7 +212,6 @@ function mod:AddPlayer(name, class, level, save)
 	if name and class and class ~= UNKNOWN then
 		if save or self.db.realm.names[name] then	-- if we already have an entry saved from elsewhere, we update it regardless of the requested "save" type - nothing else makes sense
 			self.db.realm.names[name] = self.db.realm.names[name] or {}
-			self.db.realm.names[name].class = class
 			if level and level ~= 0 then
 				self.db.realm.names[name].level = level
 			end
@@ -345,7 +261,7 @@ function mod:GROUP_ROSTER_UPDATE(evt) -- WoW5 only
 		end
 	elseif IsInGroup() then
 		-- Bug fix for MoP, GetNumGroupMembers includes yourself
-		local max = GetNumGroupMembers() -1
+		local max = GetNumGroupMembers() - 1
 		for i = 1, max do
 			local u = "party" .. i
 			local n = UnitName(u)
@@ -403,7 +319,6 @@ function mod:GetColor(className, isLocal)
 	return format("%02x%02x%02x", tbl.r*255, tbl.g*255, tbl.b*255)
 end
 
-
 local function fixLogin(head,id,misc,who,xtra,colon)
 	local bleftBracket, brightBracket = "",""
 	if mod.db.profile.bnetBrackets then
@@ -436,9 +351,9 @@ local function changeBNetName(misc, id, moreMisc, fakeName, tag, colon)
 
 	local bleftBracket = ""
 	local brightBracket = ""
-	
+
 	local waslogin = false
-	
+
 	if strmatch(moreMisc,"BN_INLINE_TOAST_ALERT") then
 		-- We got an alert strip the colon out of the misc its the last char
 		misc = strsub(misc, 1, -2)
@@ -469,7 +384,7 @@ local function changeBNetName(misc, id, moreMisc, fakeName, tag, colon)
 	end
 end
 
-local function changeName(msgHeader, name, extra, msgCnt,displayName, msgBody)
+local function changeName(msgHeader, name, extra, msgCnt, displayName, msgBody)
 	if name ~= player then
 		if emphasizeSelfInText then
 			msgBody = gsub(gsub(msgBody, "("..player..")" , "|cffffff00>|r%1|cffffff00<|r"), "("..player:lower()..")" , "|cffffff00>|r%1|cffffff00<|r")
@@ -478,12 +393,6 @@ local function changeName(msgHeader, name, extra, msgCnt,displayName, msgBody)
 			msgBody = gsub(gsub(msgBody, "("..player..")" , "|cffff0000%1|r"), "("..player:lower()..")" , "|cffff0000%1|r")
 		end
 	end
-
-	if not strmatch(displayName, "|cff") then
-		displayName = mod:ColorName(name)
-	end
-
-	cache[name] = displayName
 
 	local level
 	local tab = mod.db.realm.names[name] or local_names[name]
@@ -540,7 +449,6 @@ end
 
 function mod:AddMessage(frame, text, ...)
 	if text and type(text) == "string" then
-		text = gsub(text, "(|Hplayer:([^|:]+)([:%d+]*)([^|]*)|h%[([^%]]+)%]|h)(.-)$", changeName)
 		text = gsub(text, "(|HBNplayer:%S-|k:)(%d-)(:%S-|h)%[(%S-)%](|?h?)(:?)", changeBNetName)
 		text = gsub(text, "(|HBNplayer:%S-|k:)(%d-)(:%S-BN_INLINE_TOAST_ALERT%S-|h)%[(%S-)%](|?h?)(:?)",fixLogin)
 	end
@@ -549,6 +457,35 @@ end
 
 function mod:Info()
 	return L["Provides options to color player names, add player levels, and add tab completion of player names."]
+end
+
+function mod:TogglePlayerColors(val)
+	ToggleChatColorNamesByClassGroup(val, "SAY")
+	ToggleChatColorNamesByClassGroup(val, "EMOTE")
+	ToggleChatColorNamesByClassGroup(val, "YELL")
+	ToggleChatColorNamesByClassGroup(val, "GUILD")
+	ToggleChatColorNamesByClassGroup(val, "OFFICER")
+	ToggleChatColorNamesByClassGroup(val, "GUILD_ACHIEVEMENT")
+	ToggleChatColorNamesByClassGroup(val, "ACHIEVEMENT")
+	ToggleChatColorNamesByClassGroup(val, "WHISPER")
+	ToggleChatColorNamesByClassGroup(val, "PARTY")
+	ToggleChatColorNamesByClassGroup(val, "PARTY_LEADER")
+	ToggleChatColorNamesByClassGroup(val, "RAID")
+	ToggleChatColorNamesByClassGroup(val, "RAID_LEADER")
+	ToggleChatColorNamesByClassGroup(val, "RAID_WARNING")
+	ToggleChatColorNamesByClassGroup(val, "CHANNEL1")
+	ToggleChatColorNamesByClassGroup(val, "CHANNEL2")
+	ToggleChatColorNamesByClassGroup(val, "CHANNEL3")
+	ToggleChatColorNamesByClassGroup(val, "CHANNEL4")
+	ToggleChatColorNamesByClassGroup(val, "CHANNEL5")
+	ToggleChatColorNamesByClassGroup(val, "CHANNEL6")
+	ToggleChatColorNamesByClassGroup(val, "CHANNEL7")
+	ToggleChatColorNamesByClassGroup(val, "CHANNEL8")
+	ToggleChatColorNamesByClassGroup(val, "CHANNEL9")
+	ToggleChatColorNamesByClassGroup(val, "CHANNEL10")
+	ToggleChatColorNamesByClassGroup(val, "CHANNEL11")
+	ToggleChatColorNamesByClassGroup(val, "INSTANCE_CHAT")
+	ToggleChatColorNamesByClassGroup(val, "INSTANCE_CHAT_LEADER")
 end
 
 local options
@@ -770,14 +707,13 @@ function mod:GetOptions()
 				hidden = function() return not mod.db.profile.includeLevel end
 			},
 			colorBy = {
-				type = "select",
-				name = L["Color Player Names By..."],
-				desc = L["Select a method for coloring player names"],
-				values = colorMethods,
-				get = function() return mod.db.profile.nameColoring end,
+				type = "toggle",
+				name = L["Color Player Names By Class"],
+				desc = L["Color Player Names By Class"],
+				get = function() return mod.db.profile.blizzardNameColoring end,
 				set = function(info, val)
-					mod.db.profile.nameColoring = val
-					wipeCache()
+					mod.db.profile.blizzardNameColoring = val
+					mod:TogglePlayerColors(val)
 				end
 			}
 		}

@@ -3,26 +3,26 @@ BuildEnv(...)
 
 L = LibStub('AceLocale-3.0'):GetLocale('MeetingStone')
 
-ADDON_NAME = ...
-ADDON_LOGO = [[Interface\AddOns\]] .. ADDON_NAME .. [[\Media\Logo]]
-ADDON_VERSION = GetAddOnMetadata(ADDON_NAME, 'Version')
+ADDON_NAME          = ...
+ADDON_LOGO          = [[Interface\AddOns\]] .. ADDON_NAME .. [[\Media\Logo]]
+ADDON_VERSION       = GetAddOnMetadata(ADDON_NAME, 'Version')
 ADDON_VERSION_SHORT = ADDON_VERSION:gsub('(%d)%d(%d)%d%d%.(%d%d)','%1%2%3')
 ADDON_REGIONSUPPORT = GetCurrentRegion() == 5
-ADDON_SERVER = 'S1' .. UnitFactionGroup('player')
-SERVER_TIMEOUT = 120
+ADDON_SERVER        = 'S1' .. UnitFactionGroup('player')
+SERVER_TIMEOUT      = 120
 
 _G.BINDING_NAME_MEETINGSTONE_TOGGLE = L['打开/关闭集合石']
-_G.BINDING_HEADER_NETEASE = '网易插件'
-_G.BINDING_HEADER_MEETINGSTONE = ADDON_TITLE
+_G.BINDING_HEADER_NETEASE           = '网易插件'
+_G.BINDING_HEADER_MEETINGSTONE      = ADDON_TITLE
 
-SOLO_HIDDEN_CUSTOM_ID = 999
-SOLO_VISIBLE_CUSTOM_ID = 998
-MAX_PLAYER_LEVEL = MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
+SOLO_HIDDEN_CUSTOM_ID       = 999
+SOLO_VISIBLE_CUSTOM_ID      = 998
+MAX_PLAYER_LEVEL            = MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
 MAX_SEARCHBOX_HISTORY_LINES = 5
 
 ACTIVITY_BG_COUNT = 3
 MAX_LOTTERY_COUNT = 8
-LOTTERY_ORDER = [[10101010102102021031203210432034105340251062345601234567]]
+LOTTERY_ORDER     = [[10101010102102021031203210432034105340251062345601234567]]
 
 MAX_SUMMARY_LETTERS = 255
 MIN_PLAYER_LEVEL = 10
@@ -39,8 +39,13 @@ DEFAULT_LOOT_LIST = {
 }
 
 DEFAULT_MODE_LIST = {
-    [1] = 9,
-    ['8-0-15-999'] = 12
+    [1]             = 9,
+    ['8-0-15-999']  = 12,
+    ['1-124-419-0'] = 14,
+    ['1-124-420-0'] = 14,
+    ['1-124-421-0'] = 14,
+    ['1-124-422-0'] = 14,
+    ['1-124-423-0'] = 14,
 }
 
 INVITE_STATUS_NAMES = {
@@ -240,8 +245,12 @@ CATEGORY = {
             [122] = true,
             [123] = true,
             [124] = true,
+            [125] = true,
+            [126] = true,
         },
-        activities = {},
+        activities = {
+            [458] = true,
+        },
     }
 }
 
@@ -282,26 +291,26 @@ CUSTOM_PROGRESSION_LIST = {
 }
 
 RAID_PROGRESSION_LIST = {
-    -- 
+    --
     [413] = {
         { id = 10912, name = '尼珊德拉' },
         { id = 10921, name = '艾乐瑞瑟·雷弗拉尔' },
-        { id = 10925, name = '伊格诺斯' },
+        { id = 10925, name = '伊格诺斯，腐蚀之心' },
         { id = 10916, name = '乌索克' },
         { id = 10929, name = '梦魇之龙' },
         { id = 10933, name = '塞纳留斯' },
         { id = 10937, name = '萨维斯' },
-        { id = 10941, name = '斯考匹隆' },
+        -- { id = 10941, name = '斯考匹隆' },
     },  -- 翡翠梦魇（普通）
     [414] = {
         { id = 10913, name = '尼珊德拉' },
         { id = 10922, name = '艾乐瑞瑟·雷弗拉尔' },
-        { id = 10926, name = '伊格诺斯' },
+        { id = 10926, name = '伊格诺斯，腐蚀之心' },
         { id = 10917, name = '乌索克' },
         { id = 10930, name = '梦魇之龙' },
         { id = 10934, name = '塞纳留斯' },
         { id = 10938, name = '萨维斯' },
-        { id = 10942, name = '斯考匹隆' },
+        -- { id = 10942, name = '斯考匹隆' },
     },  -- 翡翠梦魇（英雄）
     [415] = {
         { id = 10945, name = '时空畸体' },
@@ -434,7 +443,7 @@ RAID_PROGRESSION_LIST = {
         { id = 9361, name = '钢铁女武神' },
         { id = 9365, name = '黑手' },
     },  -- 黑石铸造厂（史诗）
-    
+
     -- MOP
     [004] = {
         { id = 8550, name = '伊墨苏斯' },
@@ -648,3 +657,14 @@ DEFAULT_SPAMWORD = [[
 平台
 门票
 ]]
+
+ZONE_ACTIVITY_MAP = {
+    -- [1014] = true,  -- 达拉然
+    [1033] = '1-124-423-0',  -- 苏拉玛
+    [1017] = '1-124-422-0',  -- 风暴峡湾
+    [1024] = '1-124-421-0',  -- 至高岭
+    [1018] = '1-124-420-0',  -- 瓦尔莎拉
+    [1015] = '1-124-419-0',  -- 阿苏纳
+
+    -- [1096] = true,  -- 艾萨拉之眼
+}

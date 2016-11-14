@@ -56,7 +56,7 @@ local function SetHooks()
 	function PetTracker.Objectives:GetUsedHeight()
 		local mod = KT:IsTrackerEmpty(true) and 0 or paddingBottom + 1
 		-- Bonus objectives - problem with order of events
-		if KT.animTask or KT.activeTask > 0 then
+		if KT.animTask or KT.activeTask then
 			mod = mod + BONUS_OBJECTIVE_TRACKER_MODULE.blockPadding
 		end
 		return OTF.BlocksFrame.contentsHeight + mod
@@ -222,7 +222,7 @@ end
 function M:OnInitialize()
 	_DBG("|cffffff00Init|r - "..self:GetName(), true)
 	db = KT.db.profile
-	self.isLoaded = (KT:CheckAddOn("PetTracker", "7.0.1") and db.addonPetTracker)
+	self.isLoaded = (KT:CheckAddOn("PetTracker", "7.0.3") and db.addonPetTracker)
 	SetHooks_DisabledPetTracker()
 	SetFrames()
 end

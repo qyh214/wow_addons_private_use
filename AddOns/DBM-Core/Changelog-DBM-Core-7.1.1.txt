@@ -1,0 +1,25 @@
+tag 7.1.1
+f0d6a160f3e8a7562178b809d990d147690ed5ad
+subversion <svn@deadlybossmods.com>
+2016-10-27 11:54:26 +0200
+
+Tagging as 7.1.1
+
+
+--------------------
+
+subversion:
+	- increment version number to 7.1.1
+	- Omega via svn r15418: Correct message, event was right
+	- Omega via svn r15417: Use unitbuff not unitdebuff.
+	- Omega via svn r15416: Drycode kara speed run timer. it?\226?\128?\153s not perfect until horde stop camping instance
+	- Omega via svn r15415: Update Nightmare Horror timers. they are actually longer on both mythic and non mythic than they were in beta. Fixed a bug where the corruptor tentacle announces always said 1 instead of actual set number. Fixed a bug where deathglare tentacle timers could get messed up if dominator tentacles were up too long do to an antispam bug. Added an optional filter option for ooze helper (off by default, it?\226?\128?\153s untested and may not work as desired)
+	- Omega via svn r15414: Add countdown to eye of fate Change countdown for horror to standard countdown voice
+	- Omega via svn r15413: moroes and maiden update.
+	- Omega via svn r15412: Push rend counter request
+	- Omega via svn r15411: Force hide arrow/hud when entering a dungeon in case they are in persistent use (such as by a treasure mod)
+	- Omega via svn r15410: Update all bosses in karazhan except moroes (didn?\226?\128?\153t get a log do to a bad pull) Maiden also needs a longer log to fix more timers.
+	- Omega via svn r15409: Additional tweaks to last
+	- Omega via svn r15408: Update ilgynoth
+	- Omega via svn r15407: Refactor infoframe a little, simplfy it
+	- tandanu via svn r15406: increment alpha version

@@ -16,21 +16,21 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with AdiBags.  If not, see <http://www.gnu.org/licenses/>.
-## X-Curse-Packaged-Version: v1.9.2
+## X-Curse-Packaged-Version: v1.9.4
 ## X-Curse-Project-Name: AdiBags
 ## X-Curse-Project-ID: adibags
 ## X-Curse-Repository-ID: wow/adibags/mainline
 
-## Interface: 70000
+## Interface: 70100
 
 ## Title: AdiBags
 ## Notes: Adirelle's bag addon.
 ## Author: Adirelle
-## Version: v1.9.2
+## Version: v1.9.4
 ## SavedVariables: AdiBagsDB
-## X-Date: 2016-09-01T18:25:49Z
+## X-Date: 2016-10-29T16:43:15Z
 ## X-License: GPL v3
-## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3, LibBabble-Inventory-3.0, LibSharedMedia-3.0, LibItemUpgradeInfo-1.0, Scrap, BrainDead, !BugGrabber, SyLevel
+## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3, LibSharedMedia-3.0, LibItemUpgradeInfo-1.0, Scrap, BrainDead, !BugGrabber, SyLevel
 #@alpha@
 # ## OptionalDeps: AdiDebug, BugSack, Swatter
 #@end-alpha@
@@ -43,7 +43,6 @@ libs\AceAddon-3.0\AceAddon-3.0.xml
 libs\AceDB-3.0\AceDB-3.0.xml
 libs\AceHook-3.0\AceHook-3.0.xml
 libs\AceConsole-3.0\AceConsole-3.0.xml
-libs\LibBabble-Inventory-3.0\lib.xml
 libs\LibSharedMedia-3.0\lib.xml
 libs\LibItemUpgradeInfo-1.0\LibItemUpgradeInfo-1.0.xml
 #@end-no-lib-strip@

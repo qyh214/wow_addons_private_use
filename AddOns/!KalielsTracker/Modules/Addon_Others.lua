@@ -54,13 +54,13 @@ end
 
 -- ElvUI
 local function ElvUI_SetSupport()
-    if KT:CheckAddOn("ElvUI", "10.15", true) then
+    if KT:CheckAddOn("ElvUI", "10.24", true) then
         local E = unpack(_G.ElvUI)
         E.Blizzard.MoveObjectiveFrame = function() end
         hooksecurefunc(E, "ToggleConfig", function(self)
             local ACD = LibStub("AceConfigDialog-3.0-ElvUI")
             if ACD.OpenFrames[self.name] then
-                local options = self.Options.args.general.args.general.args
+                local options = self.Options.args.general.args.objectiveFrameGroup.args
                 options.objectiveFrameHeight.disabled = true
                 options.bonusObjectivePosition.disabled = true
                 options[addonName.."Warning"] = {
@@ -76,7 +76,7 @@ end
 
 -- Tukui
 local function Tukui_SetSupport()
-    if KT:CheckAddOn("Tukui", "17.03", true) then
+    if KT:CheckAddOn("Tukui", "17.06", true) then
         local T = unpack(_G.Tukui)
         T.Miscellaneous.ObjectiveTracker.Enable = function() end
     end
@@ -84,7 +84,7 @@ end
 
 -- RealUI
 local function RealUI_SetSupport()
-    if KT:CheckAddOn("nibRealUI", "8.1 r18c", true) then
+    if KT:CheckAddOn("nibRealUI", "8.1_r18g", true) then
         local R = _G.RealUI
         R:SetModuleEnabled("Objectives Adv.", false)
         -- Fade
@@ -106,7 +106,7 @@ end
 
 -- SyncUI
 local function SyncUI_SetSupport()
-    if KT:CheckAddOn("SyncUI", "0.9.9.6", true) then
+    if KT:CheckAddOn("SyncUI", "1.0.4", true) then
         SyncUI_ObjTracker.Show = function() end
         SyncUI_ObjTracker:Hide()
         SyncUI_ObjTracker:SetScript("OnLoad", nil)
@@ -138,7 +138,7 @@ end
 
 -- SuperVillain UI
 local function SVUI_SetSupport()
-    if KT:CheckAddOn("SVUI_!Core", "1.3.3", true) then
+    if KT:CheckAddOn("SVUI_!Core", "1.3.7", true) then
         if IsAddOnLoaded("SVUI_QuestTracker") then
             DisableAddOn("SVUI_QuestTracker")
             StaticPopup_Show(addonName.."_ReloadUI")
@@ -153,7 +153,7 @@ end
 function M:OnInitialize()
     _DBG("|cffffff00Init|r - "..self:GetName(), true)
     db = KT.db.profile
-    KT:CheckAddOn("Masque", "7.0.1")
+    KT:CheckAddOn("Masque", "7.1.0")
 end
 
 function M:OnEnable()

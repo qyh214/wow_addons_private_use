@@ -1,21 +1,22 @@
 local mod	= DBM:NewMod(1704, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15280 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15407 $"):sub(12, -3))
 mod:SetCreatureID(102679)--Ysondre, 102683 (Emeriss), 102682 (Lethon), 102681 (Taerar)
 mod:SetEncounterID(1854)
 mod:SetZone()
---mod:SetUsedIcons(8, 7, 6, 3, 2, 1)
+mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
 --mod:SetHotfixNoticeRev(12324)
+mod.respawnTime = 39
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 203028 204767 205300 203817 203888 204100 204078",
+	"SPELL_CAST_START 203028 204767 205300 203817 203888 204100 204078 214540",
 	"SPELL_CAST_SUCCESS 203787 205298 205329",
 	"SPELL_AURA_APPLIED 203102 203125 203124 203121 203110 203770 203787 204040",
 	"SPELL_AURA_APPLIED_DOSE 203102 203125 203124 203121",
-	"SPELL_AURA_REMOVED 203102 203125 203124 203121 203787 204040",
+	"SPELL_AURA_REMOVED 203787 204040 203787",
 --	"SPELL_DAMAGE",
 --	"SPELL_MISSED",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
@@ -28,10 +29,8 @@ local Lethon = EJ_GetSectionInfo(12772)
 local Taerar = EJ_GetSectionInfo(12774)
 
 --(type = "begincast" or type = "cast" or type = "applybuff") and (source.name = "Taerar" or source.name = "Ysondre" or source.name = "Emeriss" or source.name = "Lethon")
---TODO, promote breath warning to special if it's impactful enough. FIgure out if timers are reasonable too
 --TODO, if only one volatile infection goes out at a time, hide general alert if player affected
 --TODO, remove combined show from any warnings that are only one target
---TODO, verify phase change stuff and timers. Get all remaining data from remaining two dragons since they were never seen during test.
 --TODO, when timers are more finalized add countdowns to more things.
 --All
 local warnSlumberingNightmare		= mod:NewTargetAnnounce(203110, 4, nil, false)--An option to announce fuckups
@@ -48,16 +47,15 @@ local warnShadowBurst				= mod:NewTargetAnnounce(204040, 3)
 --Taerar
 
 --All
-local specWarnYsondreMark			= mod:NewSpecialWarningStack(203102, nil, 7)
-local specWarnEmerissMark			= mod:NewSpecialWarningStack(203125, nil, 7)
-local specWarnLethonMark			= mod:NewSpecialWarningStack(203124, nil, 7)
-local specWarnTaerarMark			= mod:NewSpecialWarningStack(203121, nil, 7)
+local specWarnMark					= mod:NewSpecialWarningStack("ej12809", nil, 7, nil, 1, 6)
+local specWarnDragon				= mod:NewSpecialWarningTarget(204720, "Tank", nil, nil, 1, 2)
 --Ysondre
 --local specWarnNightmareBlast		= mod:NewSpecialWarningSpell(203153, nil, nil, nil, 2)
 local specWarnDefiledSpirit			= mod:NewSpecialWarningYou(207573)
 local yellSpirit					= mod:NewYell(207573)
 local specWarnDefiledVines			= mod:NewSpecialWarningDispel(207573, "Healer", nil, nil, 1, 2)
-local specWarnLumberingMindgorger	= mod:NewSpecialWarningSwitch("ej13460", "-Healer", nil, nil, 1, 2)
+local specWarnLumberingMindgorger	= mod:NewSpecialWarningSwitch("ej13460", "-Dps", nil, nil, 1, 2)
+local specWarnCollapsingNightmare	= mod:NewSpecialWarningInterrupt(214540, "HasInterrupt", nil, nil, 1, 2)
 --Emeriss
 local specWarnVolatileInfection		= mod:NewSpecialWarningMoveAway(203787, nil, nil, nil, 1, 2)
 local yellVolatileInfection			= mod:NewYell(203787)
@@ -66,30 +64,31 @@ local specWarnCorruption			= mod:NewSpecialWarningInterrupt(205300, "HasInterrup
 --Lethon
 local specWarnSiphonSpirit			= mod:NewSpecialWarningSwitch(203888, "Dps", nil, nil, 3, 2)
 local specWarnShadowBurst			= mod:NewSpecialWarningYou(204040, nil, nil, nil, 1, 2)
-local yellShadowBurst				= mod:NewFadesYell(204040)
+local yellShadowBurst				= mod:NewFadesYell(204040, nil, false, 2)
 --Taerar
 local specWarnShadesOfTaerar		= mod:NewSpecialWarningSwitch(204100, "Tank", nil, nil, 1, 2)
 local specWarnBellowingRoar			= mod:NewSpecialWarningSpell(204078, nil, nil, nil, 2, 6)
 
 --All
-local timerBreathCD					= mod:NewCDSourceTimer(27, 203028, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--27-34 for Ysondre, Cohorts 27-29.
+local timerMarkCD					= mod:NewNextTimer(7, "ej12809", 28836, nil, nil, 3, 203102)
+local timerBreathCD					= mod:NewCDSourceTimer(27, 203028, 21131, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--27-34 for Ysondre, Cohorts 27-29.
 --Ysondre
 mod:AddTimerLine(Ysondre)
 local timerNightmareBlastCD			= mod:NewCDTimer(15, 203153, nil, "-Tank", nil, 3)--15-20
 local timerDefiledSpiritCD			= mod:NewCDTimer(33.2, 207573, nil, nil, nil, 3)
 --Emeriss
 mod:AddTimerLine(Emeriss)
-local timerVolatileInfectionCD		= mod:NewCDTimer(46, 203787, nil, nil, nil, 3)
+local timerVolatileInfectionCD		= mod:NewCDTimer(45.4, 203787, nil, nil, nil, 3)
 local timerEssenceOfCorruptionCD	= mod:NewNextTimer(30, 205298, nil, nil, nil, 1)
 --Lethon
 mod:AddTimerLine(Lethon)
 local timerSiphonSpiritCD			= mod:NewNextTimer(49.9, 203888, nil, nil, nil, 1)
-local timerShadowBurstCD			= mod:NewNextTimer(15, 204040, nil, nil, nil, 3)--Air
+local timerShadowBurstCD			= mod:NewNextTimer(14.7, 204040, nil, nil, nil, 3)--Air
 --Taerar
 mod:AddTimerLine(Taerar)
 local timerShadesOfTaerarCD			= mod:NewNextTimer(48.5, 204100, nil, "-Healer", nil, 1)
 local timerSeepingFogCD				= mod:NewCDTimer(15.5, 205341, nil, nil, nil, 3, 24814)
-local timerBellowingRoarCD			= mod:NewCDTimer(44.5, 204078, nil, nil, nil, 2)--Air
+local timerBellowingRoarCD			= mod:NewCDTimer(44.5, 204078, 118699, nil, nil, 2)--Air
 
 --Ysondre
 --local countdownMagicFire			= mod:NewCountdownFades(11.5, 162185)
@@ -98,11 +97,14 @@ local timerBellowingRoarCD			= mod:NewCDTimer(44.5, 204078, nil, nil, nil, 2)--A
 --Taerar
 local countdownShadesOfTaerar		= mod:NewCountdown(48.5, 204100, "Tank")
 
+--All
+local voiceMark						= mod:NewVoice("ej12809")--stackhigh
 --Ysondre
 --local voiceNightmareBlast			= mod:NewVoice(203153)--169613 (run over theh flower?)
 --local voiceDefiledSpirit			= mod:NewVoice(207573)--watchstep
 local voiceDefiledVines				= mod:NewVoice(207573, "Healer")--helpdispel
-local voiceLumberingMindgorger		= mod:NewVoice("ej13460", "-Healer")--bigmob
+local voiceLumberingMindgorger		= mod:NewVoice("ej13460", "-Dps")--bigmob
+local voiceCollapsingNightmare		= mod:NewVoice(214540, "HasInterrupt")--kickcast
 --Emeriss
 local voiceVolatileInfection		= mod:NewVoice(203787)--scatter
 local voiceCorruption				= mod:NewVoice(205300, "HasInterrupt")--kickcast
@@ -114,8 +116,12 @@ local voiceShadesOfTaerar			= mod:NewVoice(203817, "Tank")--mobsoon
 local voiceBellowingRoar			= mod:NewVoice(204078)--fearsoon
 
 mod:AddRangeFrameOption(10, 203787)
---mod:AddSetIconOption("SetIconOnMC", 163472, false)
+mod:AddSetIconOption("SetIconOnInfection", 203787, false)
+mod:AddSetIconOption("SetIconOnOozes", 205298, false, true)
+mod:AddInfoFrameOption("ej12809")
 
+mod.vb.volatileInfectionIcon = 1
+mod.vb.alternateOozes = false
 local activeBossGUIDS = {}
 
 local function whoDatUpThere(self)
@@ -140,19 +146,71 @@ local function whoDatUpThere(self)
 
 	end
 	if not lethonFound then -- Lethon
-		timerShadowBurstCD:Start(18)
+		timerShadowBurstCD:Start(15)
 	end
 	if not taerarFound then -- Taerar
 		timerBellowingRoarCD:Start(43)
 	end
 end
 
+local updateInfoFrame
+do
+--	local playerName = UnitName("player")
+	local lines = {}
+	local spellName1, spellName2, spellName3, spellName4 = GetSpellInfo(203102), GetSpellInfo(203125), GetSpellInfo(203124), GetSpellInfo(203121)
+	local UnitDebuff, floor = UnitDebuff, math.floor
+	updateInfoFrame = function()
+		table.wipe(lines)
+		local playersWithTwo = false
+		for uId in DBM:GetGroupMembers() do
+			local debuffCount = 0
+			local text = ""
+			if UnitDebuff(uId, spellName1) then
+				debuffCount = debuffCount + 1
+				local _, _, _, stackCount, _, _, expires = UnitDebuff(uId, spellName1)
+				local debuffTime = expires - GetTime()
+				text = floor(debuffTime)
+			end
+			if UnitDebuff(uId, spellName2) then
+				debuffCount = debuffCount + 1
+				local _, _, _, stackCount, _, _, expires = UnitDebuff(uId, spellName2)
+				local debuffTime = expires - GetTime()
+				text = text..", "..floor(debuffTime)
+			end
+			if UnitDebuff(uId, spellName3) then
+				debuffCount = debuffCount + 1
+				local _, _, _, stackCount, _, _, expires = UnitDebuff(uId, spellName3)
+				local debuffTime = expires - GetTime()
+				text = text..", "..floor(debuffTime)
+			end
+			if UnitDebuff(uId, spellName4) then
+				debuffCount = debuffCount + 1
+				local _, _, _, stackCount, _, _, expires = UnitDebuff(uId, spellName4)
+				local debuffTime = expires - GetTime()
+				text = text..", "..floor(debuffTime)
+			end
+			if debuffCount > 1 then
+				playersWithTwo = true
+				lines[UnitName(uId)] = text
+			end
+		end
+		if not playersWithTwo then
+			--No players with two, show generic stats
+			--Do stuff
+			lines[ALL] = OKAY
+		end
+		return lines
+	end
+end
+
 function mod:OnCombatStart(delay)
+	self.vb.volatileInfectionIcon = 1
+	self.vb.alternateOozes = false
 	table.wipe(activeBossGUIDS)
 	self:RegisterShortTermEvents(
 		"INSTANCE_ENCOUNTER_ENGAGE_UNIT"--We register here to make sure we wipe vb.on pull
 	)
-	timerBreathCD:Start(16.5, Ysondre)
+	timerBreathCD:Start(15.5, Ysondre)
 	timerDefiledSpiritCD:Start(30-delay)
 	timerNightmareBlastCD:Start(40-delay)--40 on mythic, it changing on heroic too is assumed. Was 22.5 before
 	if DBM.BossHealth:IsShown() then
@@ -163,12 +221,19 @@ function mod:OnCombatStart(delay)
 		--On non mythic one dragon is missing from encounter and we have no way of knowing what one currently :\
 		self:Schedule(2, whoDatUpThere, self)
 	end
+	if self.Options.InfoFrame and not self:IsLFR() then
+		DBM.InfoFrame:SetHeader(EJ_GetSectionInfo(12809))
+		DBM.InfoFrame:Show(5, "function", updateInfoFrame)
+	end
 end
 
 function mod:OnCombatEnd()
 	self:UnregisterShortTermEvents()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
+	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
 	end
 end
 
@@ -184,39 +249,53 @@ function mod:SPELL_CAST_START(args)
 		if tanking or (status == 3) then--Player is current target
 			warnBreath:Show()
 		end
-		timerBreathCD:Start(27, args.sourceName)
+		if args:GetSrcCreatureID() ~= 103145 then--Filter shades
+			timerBreathCD:Start(27, args.sourceName)
+		end
 	elseif spellId == 207573 then
 		warnCallDefiledSpirit:Show()
-		timerDefiledSpiritCD:Start()
+		self:SendSync("DefiledSpirit")
 	elseif spellId == 205300 and self:CheckInterruptFilter(args.sourceGUID) then
 		specWarnCorruption:Show(args.sourceName)
 		voiceCorruption:Play("kickcast")
-	elseif spellId == 203817 then
+	elseif spellId == 214540 and self:CheckInterruptFilter(args.sourceGUID) then
+		specWarnCollapsingNightmare:Show(args.sourceName)
+		voiceCollapsingNightmare:Play("kickcast")
+	elseif spellId == 203817 and self:AntiSpam(5, 6) then
 		specWarnCorruptedBurst:Show()
 		voiceCorruptedBurst:Play("watchstep")
 	elseif spellId == 203888 then
 		specWarnSiphonSpirit:Show()
 		voiceSiphonSpirit:Play("killspirit")
-		timerSiphonSpiritCD:Start()
+		self:SendSync("SiphonSpirit")
 	elseif spellId == 204100 then
 		specWarnShadesOfTaerar:Show()
 		voiceShadesOfTaerar:Play("mobsoon")
-		timerShadesOfTaerarCD:Start()
-		countdownShadesOfTaerar:Start()
+		self:SendSync("Shades")
 	elseif spellId == 204078 then
 		specWarnBellowingRoar:Show()
 		voiceBellowingRoar:Play("fearsoon")
-		timerBellowingRoarCD:Start()
+		self:SendSync("Fear")
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 203787 then
-		timerVolatileInfectionCD:Start()
+		self:SendSync("Infection")
 	elseif spellId == 205298 then
 		warnEssenceOfCorruption:Show()
 		timerEssenceOfCorruptionCD:Start()
+		if self.Options.SetIconOnOozes then
+			if self.vb.alternateOozes then
+				--6 and 5 used
+				self:ScanForMobs(103691, 0, 6, 2, 0.1, 10, "SetIconOnOozes")
+			else
+				--8 and 7 used
+				self:ScanForMobs(103691, 0, 8, 2, 0.1, 10, "SetIconOnOozes")
+			end
+		end
+		self.vb.alternateOozes = not self.vb.alternateOozes
 	elseif spellId == 205329 then
 		warnGloom:Show()
 	end
@@ -224,25 +303,22 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 203102 and args:IsPlayer() then
+	if (spellId == 203102 or spellId == 203125 or spellId == 203124 or spellId == 203121) and args:IsPlayer() then
 		local amount = args.amount or 1
 		if amount >= 7 then
-			specWarnYsondreMark:Show(amount)
+			specWarnMark:Show(amount)
+			voiceMark:Play("stackhigh")
 		end
-	elseif spellId == 203125 and args:IsPlayer() then
-		local amount = args.amount or 1
-		if amount >= 7 then
-			specWarnEmerissMark:Show(amount)
-		end
-	elseif spellId == 203124 and args:IsPlayer() then
-		local amount = args.amount or 1
-		if amount >= 7 then
-			specWarnLethonMark:Show(amount)
-		end
-	elseif spellId == 203121 and args:IsPlayer() then
-		local amount = args.amount or 1
-		if amount >= 7 then
-			specWarnTaerarMark:Show(amount)
+		if self:AntiSpam(4, 2) then
+			if self:IsMythic() then
+				timerMarkCD:Start()
+			elseif self:IsHeroic() then
+				timerMarkCD:Start(8)
+			elseif self:IsNormal() then
+				timerMarkCD:Start(10)
+			else
+				timerMarkCD:Start(12)
+			end
 		end
 	elseif spellId == 203110 then
 		warnSlumberingNightmare:CombinedShow(0.5, args.destName)
@@ -261,9 +337,16 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.RangeCheck:Show(10)
 			end
 		end
+		if self.Options.SetIconOnInfection then
+			self:SetIcon(args.destName, self.vb.volatileInfectionIcon)
+		end
+		self.vb.volatileInfectionIcon = self.vb.volatileInfectionIcon + 1
+		if self.vb.volatileInfectionIcon > 4 then
+			self.vb.volatileInfectionIcon = 1
+		end
 	elseif spellId == 204040 then
-		warnShadowBurst:CombinedShow(0.5, args.destName)
-		if self:AntiSpam(2, 5) then
+		warnShadowBurst:CombinedShow(1, args.destName)
+		if self:AntiSpam(5, 5) then
 			timerShadowBurstCD:Start()
 		end
 		if args:IsPlayer() then
@@ -282,6 +365,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		DBM.RangeCheck:Hide()
 	elseif spellId == 204040 and args:IsPlayer() then
 		yellShadowBurst:Cancel()
+	elseif spellId == 203787 and self.Options.SetIconOnInfection then
+		self:SetIcon(args.destName, 0)
 	end
 end
 
@@ -292,11 +377,11 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 		local unitGUID = UnitGUID(unitID)
 		if UnitExists(unitID) and not activeBossGUIDS[unitGUID] then
 			activeBossGUIDS[unitGUID] = true
-			local cid = self:GetUnitCreatureId(unitID)
 			local bossName = UnitName(unitID)
+			local cid = self:GetUnitCreatureId(unitID)
 			--Subtracking .5 from all timers do to slight delay in IEEU vs ENCOUNTER_START
 			if cid == 102683 then -- Emeriss
-				--timerBreathCD:Start(17, bossName)
+				timerBreathCD:Start(16, bossName)
 				timerVolatileInfectionCD:Start(19.5)
 				timerEssenceOfCorruptionCD:Start(29.5)
 				if DBM.BossHealth:IsShown() then
@@ -319,6 +404,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 					DBM.BossHealth:AddBoss(cid, Taerar)
 				end
 			end
+			self:SendSync("IEEU", bossName, unitGUID)
 		end
 	end
 end
@@ -343,11 +429,29 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	elseif spellId == 205331 then--Seeping Fog
 		timerSeepingFogCD:Start()
 	elseif spellId == 204720 then--Aeriel
-		local cid = self:GetUnitCreatureId(uId)
 		local unitGUID = UnitGUID(uId)
 		local bossName = UnitName(uId)
-		self:Schedule(10, delayedClear, self, unitGUID)
-		timerBreathCD:Stop(bossName)
+		self:SendSync("Aeriel", bossName, unitGUID)
+	end
+end
+
+--[[
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+	if spellId == 205611 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
+--		specWarnMiasma:Show()
+--		voiceMiasma:Play("runaway")
+	end
+end
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
+--]]
+
+function mod:OnSync(msg, targetName, guid)
+	if not self:IsInCombat() then return end
+	if guid and msg == "Aeriel" then
+		local cid = self:GetCIDFromGUID(guid)
+		specWarnDragon:Show(targetName)
+		self:Schedule(10, delayedClear, self, guid)
+		timerBreathCD:Stop(targetName)
 		if cid == 102683 then--Emeriss
 			timerVolatileInfectionCD:Stop()
 			timerEssenceOfCorruptionCD:Stop()
@@ -373,28 +477,44 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				DBM.BossHealth:RemoveBoss(cid)
 			end
 		end
+	elseif guid and msg == "IEEU" and not activeBossGUIDS[guid] then
+		activeBossGUIDS[guid] = true
+		local cid = self:GetCIDFromGUID(guid)
+		--Subtracking .5 from all timers do to slight delay in IEEU vs ENCOUNTER_START
+		if cid == 102683 then -- Emeriss
+			timerBreathCD:Start(17, targetName)
+			timerVolatileInfectionCD:Start(19.5)
+			timerEssenceOfCorruptionCD:Start(29.5)
+			if DBM.BossHealth:IsShown() then
+				DBM.BossHealth:AddBoss(cid, Emeriss)
+			end
+		elseif cid == 102682 then -- Lethon
+			timerShadowBurstCD:Stop()
+			timerBreathCD:Start(13, targetName)
+			timerSiphonSpiritCD:Start(20.5)
+			if DBM.BossHealth:IsShown() then
+				DBM.BossHealth:AddBoss(cid, Lethon)
+			end
+		elseif cid == 102681 then -- Taerar
+			timerBellowingRoarCD:Stop()
+			timerBreathCD:Start(17, targetName)
+			timerShadesOfTaerarCD:Start(19.5)--19.5-21
+			countdownShadesOfTaerar:Start(19.5)
+			timerSeepingFogCD:Start(25)
+			if DBM.BossHealth:IsShown() then
+				DBM.BossHealth:AddBoss(cid, Taerar)
+			end
+		end
+	elseif msg == "Shades" then
+		timerShadesOfTaerarCD:Start()
+		countdownShadesOfTaerar:Start()
+	elseif msg == "Fear" then
+		timerBellowingRoarCD:Start()
+	elseif msg == "SiphonSpirit" then
+		timerSiphonSpiritCD:Start()
+	elseif msg == "DefiledSpirit" then
+		timerDefiledSpiritCD:Start()
+	elseif msg == "Infection" then
+		timerVolatileInfectionCD:Start()
 	end
 end
-
---[[
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 205611 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
---		specWarnMiasma:Show()
---		voiceMiasma:Play("runaway")
-	end
-end
-mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
-
-function mod:CHAT_MSG_MONSTER_YELL(msg, _, _, _, target)
-	if msg:find(L.supressionTarget1) then
---		self:SendSync("ChargeTo", target)
-	end
-end
-
-function mod:OnSync(msg, targetname)
-	if not self:IsInCombat() then return end
-	if msg == "ChargeTo" then
-		
-	end
-end
---]]

@@ -7,13 +7,13 @@ function Profile:OnInitialize()
     local gdb = {
         global = {
             ActivityProfiles = {
-                Voice = nil,
+                Voice     = nil,
                 VoiceSoft = nil,
             },
-            annData = {},
-            serverDatas = {},
-            ignoreHash = {},
-            spamWord = {},
+            annData        = {},
+            serverDatas    = {},
+            ignoreHash     = {},
+            spamWord       = {},
             searchProfiles = {},
         },
     }
@@ -21,12 +21,13 @@ function Profile:OnInitialize()
     local cdb = {
         profile = {
             settings = {
-                storage = { point = 'TOP', x = 0, y = -20},
-                panel = true,
+                storage   = { point = 'TOP', x = 0, y = -20},
+                panel     = true,
                 panelLock = false,
-                sound = true,
-                ignore = true,
-                spamWord = true,
+                sound     = true,
+                ignore    = true,
+                spamWord  = true,
+                packedPvp = true,
             },
             minimap = {
                 minimapPos = 192.68,
@@ -51,26 +52,39 @@ function Profile:OnEnable()
         'sound',
         'ignore',
         'spamWord',
+        'packedPvp',
     }
 
     for _, key in ipairs(settings) do
-        self:SendMessage('MEETINGSTONE_SETTING_CHANGED', key, self.cdb.profile.settings[key])
+        self:SetSetting(key, self:GetSetting(key), true)
     end
 
     self:RefreshIgnoreCache()
     self:ImportDefaultSpamWord()
 end
 
+function Profile:GetSetting(key)
+    return self.cdb.profile.settings[key]
+end
+
+function Profile:SetSetting(key, value, force)
+    if force or self.cdb.profile.settings[key] ~= value then
+        self.cdb.profile.settings[key] = value
+        self:SendMessage('MEETINGSTONE_SETTING_CHANGED', key, value, true)
+        self:SendMessage('MEETINGSTONE_SETTING_CHANGED_' .. key, value, true)
+    end
+end
+
 function Profile:SaveActivityProfile(activity)
     self.gdb.global.ActivityProfiles.Voice = activity:GetVoiceChat()
 
     self.gdb.global.ActivityProfiles[activity:GetName()] = {
-        ItemLevel   = activity:GetItemLevel(),
-        Summary     = activity:GetSummary(),
-        MinLevel    = activity:GetMinLevel(),
-        MaxLevel    = activity:GetMaxLevel(),
-        PvPRating   = activity:GetPvPRating(),
-        HonorLevel  = activity:GetHonorLevel(),
+        ItemLevel  = activity:GetItemLevel(),
+        Summary    = activity:GetSummary(),
+        MinLevel   = activity:GetMinLevel(),
+        MaxLevel   = activity:GetMaxLevel(),
+        PvPRating  = activity:GetPvPRating(),
+        HonorLevel = activity:GetHonorLevel(),
     }
 end
 
@@ -191,10 +205,6 @@ function Profile:GetIgnoreName(index)
     return self.ignoreCache[index]
 end
 
--- function Profile:IsOnlyMeetingStoneActivity()
---     return self.cdb.profile.settings.onlyms
--- end
-
 function Profile:GetSpamWordIndex(word)
     for i, v in ipairs(self.gdb.global.spamWord) do
         if v.text == word.text and v.pain == word.pain then
@@ -253,17 +263,6 @@ end
 
 function Profile:GetSpamWords()
     return self.gdb.global.spamWord
-end
-
-function Profile:GetSpamWordStatus()
-    return self.cdb.profile.settings.spamWord
-end
-
-function Profile:SetSpamWordEnabled(enable)
-    if self.cdb.profile.settings.spamWord ~= enable then
-        self.cdb.profile.settings.spamWord = enable
-        self:SendMessage('MEETINGSTONE_SETTING_CHANGED', 'spamWord', enable)
-    end
 end
 
 function Profile:SaveImportSpamWord(text)
@@ -348,4 +347,12 @@ end
 
 function Profile:ClearAdvShine()
     self.cdb.profile.advShine = ADDON_VERSION
+end
+
+function Profile:NeedWorldQuestHelp()
+    return not self.cdb.profile.worldQuestHelp
+end
+
+function Profile:ClearWorldQuestHelp()
+    self.cdb.profile.worldQuestHelp = true
 end

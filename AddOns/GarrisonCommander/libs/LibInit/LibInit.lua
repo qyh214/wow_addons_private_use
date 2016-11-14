@@ -9,11 +9,14 @@
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):9:")) -- Always check line number in regexp and file
 
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 31
+local MINOR_VERSION = 33
 local off=(_G.RED_FONT_COLOR_CODE or '|cffff0000') .. _G.VIDEO_OPTIONS_DISABLED ..  _G.FONT_COLOR_CODE_CLOSE or '|r'
 local on=(_G.GREEN_FONT_COLOR_CODE or '|cff00ff00') .. _G.VIDEO_OPTIONS_ENABLED ..  _G.FONT_COLOR_CODE_CLOSE or '|r'
 local nop=function()end
 local pp=print -- Keeping a handy plain print around
+local assert=assert
+local strconcat=strconcat
+local tostring=tostring
 local _G=_G -- Unmodified env
 local dprint=function() end
 --[===[@debug@
@@ -108,10 +111,10 @@ local AceDB  = LibStub("AceDB-3.0",true)
 -- Persistent tables
 lib.mixinTargets=lib.mixinTargets or {}
 lib.toggles=lib.toggles or {}
-lib.addon=lib.addon or {}
 lib.chats=lib.chats or {}
 lib.options=lib.options or {}
 lib.pool=lib.pool or setmetatable({},{__mode="k"})
+lib.coroutines=lib.coroutines or setmetatable({},{__index=function(t,k) rawset(t,k,{}) return t[k] end})
 -- Recycling function from ACE3
 local new, del, copy, cached, stats
 do
@@ -236,13 +239,15 @@ function lib:NewAddon(target,...)
 	appo=nil
 	local options={}
 	options.name=name
+	options.first=true
+	options.libstub=__FILE__
 	options.version=GetAddOnMetadata(name,'Version') or "Internal"
 	if (options.version:sub(1,1)=='@') then
 		options.version=GetAddOnMetadata(name,'X-Version') or "Internal"
 	end
 	local b,e=options.version:find(" ")
 	if b and b>1 then
-			options.version=options.version:sub(1,b-1)
+		options.version=options.version:sub(1,b-1)
 	end
 	options.revision=GetAddOnMetadata(name,'X-revision') or "Alpha"
 	if (options.revision:sub(1,1)=='@') then
@@ -254,12 +259,11 @@ function lib:NewAddon(target,...)
 	-- Setting sensible default for mandatory fields
 	options.ID=GetAddOnMetadata(name,"X-ID") or name
 	options.DATABASE=GetAddOnMetadata(name,"X-Database") or "db" .. options.ID
-	lib.addon[target]=name
 	lib.toggles[target]={}
 	if customOptions then
 		for k,v in pairs(customOptions) do
 			local key=strlower(k)
-			if key=="enhnceprofile" then key = "enhancedprofile" end
+			if key=="enhanceprofile" then key = "enhancedprofile" end
 			if 	key=="profile"
 				or key=="noswitch"
 				or key=="nogui"
@@ -283,7 +287,6 @@ function lib:NewAddon(target,...)
 	return target
 end
 -- Combat scheduler done with LibCallbackHandler
---- @todo Remove old scheduler
 local CallbackHandler = LibStub:GetLibrary("CallbackHandler-1.0")
 if not lib.CombatScheduler then
 	lib.CombatScheduler = CallbackHandler:New(lib,"_OnLeaveCombat","_CancelCombatAction")
@@ -295,6 +298,12 @@ if not lib.CombatScheduler then
 		end
 		wipe(lib.CombatScheduler.events)
 		lib.CombatScheduler.recurse=0
+		for _,co in pairs(lib.coroutines) do
+			if co.waiting then
+				co.waiting=false
+				co.repeater()
+			end
+		end
 	end)
 	lib.CombatFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 end
@@ -324,6 +333,7 @@ end
 
 function lib:NewSubModule(name,...)
 	local obj=self:NewModule(name,...)
+	-- To avoid strange interactions
 	obj.OnInitialized=function()end -- placeholder
 	obj.OnInitialize=function(self,...) return  self:OnInitialized(...) end
 	obj.OnEnable=nil
@@ -332,7 +342,6 @@ function lib:NewSubModule(name,...)
 end
 function lib:NewSubClass(name)
 	return self:NewSubModule(name,self)
-	-- To avoid strange interactions
 end
 function lib:NewTable()
 	return new()
@@ -470,6 +479,15 @@ function lib:GetItemID(itemlink)
 	end
 end
 ---
+-- Return the toal numner of bag slots
+function lib:GetTotalBagSlots()
+	local i=0
+	for bag=0,NUM_BAG_SLOTS do
+		i=i+GetContainerNumSlots(bag)
+	end
+	return i
+end
+---
 -- Scans Bags for an item based on different criteria
 --
 -- All parameters are optional.
@@ -485,7 +503,7 @@ function lib:ScanBags(index,value,startbag,startslot)
 	value=value or 0
 	startbag=startbag or 0
 	startslot=startslot or 1
-	for bag=startbag,NUM_BAG_SLOTS,1 do
+	for bag=startbag,NUM_BAG_SLOTS do
 		for slot=startslot,GetContainerNumSlots(bag),1 do
 			local itemlink=GetContainerItemLink(bag,slot)
 			if (itemlink) then
@@ -784,8 +802,11 @@ function lib:OnInitialize(...)
 	if self.db then
 		self.db:RegisterDefaults(self.DbDefaults)
 		if (not self.db.global.silent) then
-			self:Print(format("Version %s %s loaded",self:Colorize(options.version,'green'),self:Colorize(format("(Revision: %s)",options.revision),"silver")))
-			self:Print("You can disable this message with /" .. strlower(options.ID) .. " silent")
+			self:Print(format("Version %s %s loaded (%s)",
+				self:Colorize(options.version,'green'),
+				self:Colorize(format("(Revision: %s)",options.revision),"silver"),
+				"Disable message with /" .. strlower(options.ID) .. " silent")
+			)
 		end
 		self:SetEnabledState(self:GetBoolean("Active"))
 	else
@@ -876,9 +897,10 @@ end
 
 -- help related functions
 function lib:HF_Push(section,text)
-		section=section or self.lastsection or RELNOTES
-		self.lastsection=section
-		self.help[section]=self.help[section]  .. '\n' .. text
+	if section then section=titles[section] end
+	section=section or self.lastsection or RELNOTES
+	self.lastsection=section
+	self.help[section]=self.help[section]  .. '\n' .. text
 end
 local getlibs
 do
@@ -1131,7 +1153,7 @@ function lib:AddToggle(flag,defaultvalue,name,description,icon)
 	lib.toggles[self][flag]=t
 	group.args[flag]=t
 	if (self.db.profile.toggles[flag]== nil) then
-			self.db.profile.toggles[flag]=defaultvalue
+		self.db.profile.toggles[flag]=defaultvalue
 	end
 	return t
 end
@@ -1154,12 +1176,23 @@ function lib:AddSelect(flag,defaultvalue,values,name,description)
 	}
 	group.args[flag]=t
 	if (self.db.profile.toggles[flag]== nil) then
-			self.db.profile.toggles[flag]=defaultvalue
+		self.db.profile.toggles[flag]=defaultvalue
 	end
 	lib.toggles[self][flag]=t
 	return t
 end
-
+function lib:AddMultiSelect(flag,defaultvalue,...)
+	local t=self:AddSelect(flag,defaultvalue,...)
+	t.type="multiselect"
+	if type(self.db.profile.toggles[flag])~="table" then
+		self.db.profile.toggles[flag]={}
+	end
+	if type(self.db.profile.toggles[flag]._default)=="nil" then
+		self.db.profile.toggles[flag]=defaultvalue
+		self.db.profile.toggles[flag]._default=true
+	end
+	return t
+end
 --self:AddSlider("RESTIMER",5,1,10,"Enable res timer","Shows a timer for battlefield resser",1)
 function lib:AddRange(...) return self:AddSlider(...) end
 function lib:AddSlider(flag,defaultvalue,min,max,name,description,step)
@@ -1379,18 +1412,19 @@ function lib:OnEmbedDisable()
 end
 
 
-function lib:OnEnable(first,...)
+function lib:OnEnable()
 	if (self.OnEnabled) then
 		if (not self.db.global.silent) then
-			self:Print(C("enabled","green"))
+			self:Print(C(VIDEO_OPTIONS_ENABLED,"green"))
 		end
-		pcall(self.OnEnabled,self)
+		pcall(self.OnEnabled,self,lib.options[self].first)
+		lib.options[self].first=nil
 	end
 end
 function lib:OnDisable(...)
 	if (self.OnDisabled) then
 		if (not self.db.global.silent) then
-			self.print(C("disabled",'red'))
+			self.print(C(VIDEO_OPTIONS_DISABLED,'red'))
 		end
 		pcall(self.OnDisabled,self,...)
 	end
@@ -1499,6 +1533,15 @@ function lib:GetSet(...)
 		return self.db.profile.toggles[flag]
 	end
 end
+function lib:GetIndexedVar(flag,index)
+	local rc=GetVar(flag)
+	if index and type(rc)=="table" then
+		return rc[index]
+	else
+		return rc
+	end
+
+end
 function lib:GetVar(flag)
 	return self:GetSet(flag)
 end
@@ -1517,12 +1560,14 @@ function lib:Trigger(flag)
 	end
 
 end
-function lib:OptToggleSet(info,value)
+function lib:OptToggleSet(info,value,extra)
 	local flag=info.option.arg
 	local tipo=info.option.type
 
 	if (tipo=="toggle") then
 		self:SetBoolean(flag,value)
+	elseif (tipo=="multiselect") then
+		self.db.profile.toggles[flag][value]=extra
 	else
 		self:GetSet(flag,value)
 	end
@@ -1530,11 +1575,16 @@ function lib:OptToggleSet(info,value)
 		self._Apply[flag](self,flag,value)
 	end
 end
-function lib:OptToggleGet(info)
+function lib:OptToggleGet(info,extra)
 	local flag=info.option.arg
 	local tipo=info.option.type
 	if (tipo=="toggle") then
 		return self:GetBoolean(flag)
+	elseif (tipo=="multiselect") then
+		if type(self.db.profile.toggles[flag])~="table" then
+			self.db.profile.toggles[flag]={}
+		end
+		return self.db.profile.toggles[flag][extra]
 	else
 		return self:GetSet(flag)
 	end
@@ -1572,36 +1622,6 @@ function lib:Help(info)
 		self:Print("No GUI available")
 	end
 end
---[[
-function lib:IsEventScheduled(flag)
-	lib.timerhandles=lib.timerhandles or {}
-	return lib.timerhandles[flag]
-end
-function lib:ScheduleRepeatingEvent(flag,...)
-	lib.timerhandles=lib.timerhandles or {}
-	lib.timerhandles[flag]=self:ScheduleRepeatingTimer(...)
-end
-function lib:CancelScheduledEvent(flag)
-	lib.timerhandles=lib.timerhandles or {}
-	local h=lib.timerhandles[flag]
-	self:CancelTimer(h)
-end
-function lib:Trace(...)
-	lib._Trace(self,0,...)
-end
-function lib:_Trace(skip,...)
-	--pp(...)
-	local stack={strsplit("\n",debugstack(3,5,0))}
-	local info=stack[1 + skip or 0]
-	--pp(info)
-	--local file,line,func=info:match("(%s%.lua):(%d+) in function (.*)")
-	--pp(file,line,func)
-	local file,line,func=tostringall(strsplit(":",info))
-	pp(strjoin(" ",tostringall(...)),
-		format(" in %s:%s%s",C(file,'azure'),C(line,'red'),C(func,'orange'))
-	)
-end
---]]
 function lib:Long(msg) C:OnScreen('Yellow',msg,20) end
 function lib:Onscreen_Orange(msg) C:OnScreen('Orange',msg,2) end
 function lib:Onscreen_Purple(msg) C:OnScreen('Purple',msg,8) end
@@ -1641,29 +1661,18 @@ end
 -- This function get called on addon creation
 -- Anything I define here is immediately available to addon code
 function lib:Embed(target)
-	-- All methods are pulled in via metatable in order to not pullete addon table
+	-- All methods are pulled in via metatable in order to not pollute addon table
 	local mt=getmetatable(target)
 	if not mt then mt={__tostring=function(me) return me.name end} end
 	mt.__index=lib.mixins
 	setmetatable(target,mt)
 	target._Apply=target._Apply or {}
 	target._Apply._handler=target
+	for k,v in pairs(self) do
+		if type(v)=="string" or type(v)=="number" then pp (self,k,v) end
+	end
 	setmetatable(target._Apply,varmeta)
 	lib.mixinTargets[target] = true
-	local addon=lib.addon
-	if type(addon[self])=="string" then
-		addon[self]={
-			name=self.name,
-			version=self.version,
-			revision=self.revision,
-			title=self.title,
-			notes=self.notes,
-			ID=self.ID,
-			DATABASE=self.DATABASE,
-			libMINOR=MINOR_VERSION,
-			libMAJOR=MAJOR_VERSION,
-		}
-	end
 end
 
 local function kpairs(t,f)
@@ -1737,19 +1746,59 @@ end
 function lib:ScheduleLeaveCombatAction(method, ...)
 	return self:OnLeaveCombat(method,...)
 end
-function lib:coroutineExecute(interval,func)
-	local co=coroutine.wrap(func)
-	local interval=interval
-	local repeater
-	repeater=function()
-		local rc,res=pcall(co)
+
+--- Generates and executes a coroutine with configurable interval and combat status
+-- If called for already running coroutine changes the interval and the combat status
+-- @tparam number interval between steps
+-- @tparam string|function action To be executed, Can be a function or a method name
+-- @tparam[opt] bool
+--
+function lib:coroutineExecute(interval,func,safeForCombat)
+	if type(func)=="string" then
+		func=self[func]
+	end
+	assert(type(func) =="function","coroutineExecute arg1 was not convertible to a function " .. tostring(func))
+	local c=lib.coroutines[func]
+	c.combatSafe=safeForCombat
+	c.interval=interval
+	c.obj=self
+	if type(c.co)=="thread" and coroutine.status(c.co)=="suspended" then print("Already running",func) return end
+	c.co=coroutine.create(func)
+	c.paused=false
+	c.repeater=function()
+		if not c.combatSafe and InCombatLockdown() then
+			c.waiting=true
+			return
+		end
+		if c.paused then return end
+		local rc,res=pcall(coroutine.resume,c.co,c.obj)
 		if rc and res then
-			C_Timer.After(interval,repeater)
+			C_Timer.After(c.interval,c.repeater)
 		else
-			repeater=nil
+			c=nil
 		end
 	end
-	return repeater()
+	c.repeater()
+	return c
+end
+function lib:coroutinePause(func)
+	if type(func)=="string" then
+		func=self[func]
+	end
+	local co=rawget(lib.coroutines,func)
+	if co then
+		co.paused=true
+	end
+end
+function lib:coroutineRestart(func)
+	if type(func)=="string" then
+		func=self[func]
+	end
+	local co=rawget(lib.coroutines,func)
+	if co then
+		co.paused=false
+		pcall(co.repeater)
+	end
 end
 if not lib.secureframe then
 	lib.secureframe=CreateFrame("Button",nil,nil,"StaticPopupButtonTemplate,SecureActionButtonTemplate")

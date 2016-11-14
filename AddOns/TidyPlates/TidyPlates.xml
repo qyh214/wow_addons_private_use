@@ -261,5 +261,4 @@
 	<Script file="TidyPlatesTemplate.lua"/>
 	<Script file="TidyPlatesParser.lua"/>
 	<Script file="TidyPlatesPanel.lua"/>
-	<Script file="TidyPlatesMinimapButton.lua"/>
 </Ui>

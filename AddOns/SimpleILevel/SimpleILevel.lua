@@ -16,7 +16,7 @@ SIL = LibStub("AceAddon-3.0"):NewAddon(L.core.name, "AceEvent-3.0", "AceConsole-
 SIL.category = GetAddOnMetadata("SimpleILevel", "X-Category");
 SIL.version = GetAddOnMetadata("SimpleILevel", "Version");
 SIL.versionMajor = 3;                    -- Used for cache DB versioning
-SIL.versionRev = 'r251';    -- Used for version information
+SIL.versionRev = 'r270';    -- Used for version information
 SIL.action = {};        -- DB of unitGUID->function to run when a update comes through
 SIL.hooks = {};         -- List of hooks in [type][] = function;
 SIL.autoscan = 0;       -- time() value of last autoscan, must be more then 1sec
@@ -598,27 +598,82 @@ function SIL:GearSum(items, level)
     if items and level and type(items) == 'table' then
         local totalItems = 0;
         local totalScore = 0;
-        
+        local artifactLevel = 750;
+		
+		-- Determine totalItems first
+		for i,itemLink in pairs(items) do
+            if itemLink and not ( i == INVSLOT_BODY or i == INVSLOT_RANGED or i == INVSLOT_TABARD ) then
+				totalItems = totalItems + 1;
+			end
+		end
+		
+		-- Artifact fix for offhand not registering correct ilevel
+		local mainHandArtifact = false;
+		local mainHandItemLevel = false;
+		local offHandArtifact = false;
+		local offHandItemLevel = false;
+		
         for i,itemLink in pairs(items) do
             if itemLink and not ( i == INVSLOT_BODY or i == INVSLOT_RANGED or i == INVSLOT_TABARD ) then
-                -- local name, link, itemRarity , itemLevel = GetItemInfo(itemLink);
+                local name, link, itemRarity, itemLevelBlizz, _, _, subclass = GetItemInfo(itemLink);
                 local itemLevel = self.itemUpgrade:GetUpgradedItemLevel(itemLink);
-
-                --- print(i, itemLevel, itemLink);
                 
+				
+				--[[
+					subclass is localized string, not an id
+					INVTYPE_2HWEAPON == Two-Hand
+					INVTYPE_WEAPON == One-Hand
+				]]
+				
+				
                 if itemLevel then
-                    
-                    -- Fix for heirlooms
-                    if itemRarity == 7 then
+					
+					-- Correct itemLevel bassed on itemRarity
+					-- Artifact
+					if itemRarity == 6 then
+						self:Debug('Artifact!', itemLink, itemLevel, itemLevelBlizz);
+						
+						-- Bypass caching in LibItemUpgradeInfo-1 if need be
+						if itemLevelBlizz > itemLevel then itemLevel = itemLevelBlizz; end
+						
+						-- Log that the main or offhand is an artifact
+						if i == INVSLOT_MAINHAND then mainHandArtifact = true;end
+						if i == INVSLOT_OFFHAND then offHandArtifact = true; end
+					
+					-- Heirlooms
+					elseif itemRarity == 7 then
                         itemLevel = self:Heirloom(level, itemLink);
-                    end
-                    
-                    totalItems = totalItems + 1;
-                    totalScore = totalScore + itemLevel;
-                end
-            end
-        end
+					end
+					
+					
+					-- Log the main hand and offhand item level
+					if i == INVSLOT_MAINHAND then mainHandItemLevel = itemLevel;
+					elseif i == INVSLOT_OFFHAND then offHandItemLevel = itemLevel;
+					end
+					
+					
+					totalScore = totalScore + itemLevel;
+                end -- End if itemLevel
+            end -- End if itemLink
+        end -- End items loop
         
+		if not offHandItemLevel and mainHandItemLevel then 
+			totalScore = totalScore + mainHandItemLevel;
+			totalItems = totalItems + 1;
+			
+			self:Debug("There is NO offhand, using mainhand", mainHandItemLevel);
+		end
+		
+		if offHandArtifact and offHandArtifact and mainHandItemLevel > offHandItemLevel then
+			local scoreDiff = mainHandItemLevel - offHandItemLevel;
+			self:Debug('mainHandItemLevel > offHandItemLevel, using score from mainHand, adding', scoreDiff, 'to the totalScore');
+			totalScore = totalScore + scoreDiff;
+		elseif offHandArtifact and offHandArtifact and mainHandItemLevel < offHandItemLevel then
+			local scoreDiff = offHandItemLevel - mainHandItemLevel;
+			self:Debug('mainHandItemLevel < offHandItemLevel, using score from mainHand, adding', scoreDiff, 'to the totalScore');
+			totalScore = totalScore + scoreDiff;
+		end
+		
         return totalScore, totalItems;
     else
         return false;
@@ -773,6 +828,7 @@ end
 
 -- Format the score for color and round it to xxx.x
 function SIL:FormatScore(score, items, color)
+	if not score then score = 0; end
     if not items then items = self.grayScore + 1; end
     if type(color) == 'nil' then color = true; end
     if score < 0 then score = 0; end	-- Ticket #29, thanks Torsin
@@ -940,7 +996,8 @@ end
 
 function SIL:UpdatePaperDollFrame(statFrame, unit)
     local score, age, items = self:GetScoreTarget(unit, true);
-    local formated = self:FormatScore(score, items, false);
+	local formated = score and self:FormatScore(score, items, false) or "n/a";
+
     
     PaperDollFrame_SetLabelAndText(statFrame, L.core.name, formated, false);
     statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..L.core.name..FONT_COLOR_CODE_CLOSE;

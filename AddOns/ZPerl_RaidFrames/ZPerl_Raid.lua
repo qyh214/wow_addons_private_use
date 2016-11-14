@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 1006 $")
+end, "$Revision: 1017 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -94,7 +94,34 @@ local raidHeaders = { }
 -- XPerl_Raid_OnLoad
 function XPerl_Raid_OnLoad(self)
 	local events = {
-		--[["CHAT_MSG_ADDON", ]]"PLAYER_ENTERING_WORLD", "VARIABLES_LOADED", "COMPACT_UNIT_FRAME_PROFILES_LOADED", "GROUP_ROSTER_UPDATE", "UNIT_FLAGS", "UNIT_AURA", "UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED", "UNIT_COMBAT", "UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_INTERRUPTED", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED", "RAID_TARGET_UPDATE", "PLAYER_LOGIN", "ROLE_CHANGED_INFORM", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE", "UNIT_CONNECTION", --[["PLAYER_REGEN_ENABLED"]]
+		--"CHAT_MSG_ADDON",
+		"PLAYER_ENTERING_WORLD",
+		"VARIABLES_LOADED",
+		"COMPACT_UNIT_FRAME_PROFILES_LOADED",
+		"GROUP_ROSTER_UPDATE",
+		"UNIT_FLAGS",
+		"UNIT_AURA",
+		"UNIT_POWER_FREQUENT",
+		"UNIT_MAXPOWER",
+		"UNIT_HEALTH_FREQUENT",
+		"UNIT_MAXHEALTH",
+		"UNIT_NAME_UPDATE",
+		"PLAYER_FLAGS_CHANGED",
+		"UNIT_COMBAT",
+		"UNIT_SPELLCAST_START",
+		"UNIT_SPELLCAST_STOP",
+		"UNIT_SPELLCAST_FAILED",
+		"UNIT_SPELLCAST_INTERRUPTED",
+		"READY_CHECK",
+		"READY_CHECK_CONFIRM",
+		"READY_CHECK_FINISHED",
+		"RAID_TARGET_UPDATE",
+		"PLAYER_LOGIN",
+		"ROLE_CHANGED_INFORM",
+		"PET_BATTLE_OPENING_START",
+		"PET_BATTLE_CLOSE",
+		"UNIT_CONNECTION",
+		--"PLAYER_REGEN_ENABLED",
 	}
 
 	for i, event in pairs(events) do
@@ -1228,9 +1255,9 @@ end
 -- The Update Function --
 -------------------------
 function XPerl_Raid_UpdateDisplayAll()
-	for k, v in pairs(FrameArray) do
-		if (v:IsShown()) then
-			XPerl_Raid_UpdateDisplay(v)
+	for k, frame in pairs(FrameArray) do
+		if (frame:IsShown()) then
+			XPerl_Raid_UpdateDisplay(frame)
 		end
 	end
 end

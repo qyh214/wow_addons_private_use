@@ -179,8 +179,8 @@ function CreatePanel:OnInitialize()
         ActivityType:SetMaxItem(20)
         ActivityType:SetCallback('OnSelectChanged', function(_, item)
             self.ActivityMode:SetMenuTable(ACTIVITY_MODE_MENUTABLES[item.categoryId])
-            self.ActivityMode:SetValue(DEFAULT_MODE_LIST[item.categoryId] or DEFAULT_MODE_LIST[item.value])
-            self.ActivityLoot:SetValue(DEFAULT_LOOT_LIST[item.categoryId] or DEFAULT_LOOT_LIST[item.value])
+            self.ActivityMode:SetValue(DEFAULT_MODE_LIST[item.value] or DEFAULT_MODE_LIST[item.categoryId])
+            self.ActivityLoot:SetValue(DEFAULT_LOOT_LIST[item.value] or DEFAULT_LOOT_LIST[item.categoryId])
             self:InitProfile()
             self:UpdateControlState()
         end)
@@ -218,6 +218,7 @@ function CreatePanel:OnInitialize()
         ItemLevel:SetSize(108, 23)
         ItemLevel:SetLabel(L['最低装等'])
         ItemLevel:SetValueStep(10)
+        ItemLevel:SetMinMaxValues(0, 2000)
         self:RegisterInputBox(ItemLevel)
     end
 
@@ -226,6 +227,7 @@ function CreatePanel:OnInitialize()
         HonorLevel:SetSize(108, 23)
         HonorLevel:SetLabel(L['荣誉等级'])
         HonorLevel:SetValueStep(1)
+        HonorLevel:SetMinMaxValues(0, 2000)
         self:RegisterInputBox(HonorLevel)
     end
 
@@ -261,6 +263,7 @@ function CreatePanel:OnInitialize()
         MaxLevel:SetPoint('TOPRIGHT', VoiceBox, 'BOTTOMRIGHT', 0, -1)
         MaxLevel:SetSize(48, 23)
         MaxLevel:SetLabel('-', nil, 1)
+        MaxLevel:SetMinMaxValues(0, MAX_PLAYER_LEVEL)
         self:RegisterInputBox(MaxLevel)
     end
 
@@ -301,7 +304,7 @@ function CreatePanel:OnInitialize()
         end)
         MagicButton_OnLoad(CreateButton)
     end
-    
+
     local CreateHelpPlate do
         CreateHelpPlate = {
             FramePos = { x = -10,          y = 55 },
@@ -402,6 +405,8 @@ function CreatePanel:OnInitialize()
     self:RegisterEvent('LFG_LIST_ENTRY_CREATION_FAILED')
     self:RegisterEvent('PARTY_LEADER_CHANGED')
     self:RegisterMessage('MEETINGSTONE_PERMISSION_UPDATE', 'ChooseWidget')
+
+    self:RegisterMessage('MEETINGSTONE_SETTING_CHANGED_packedPvp', 'LFG_LIST_AVAILABILITY_UPDATE')
 
     self:SetScript('OnShow', self.ChooseWidget)
 end
@@ -691,8 +696,12 @@ function CreatePanel:DisbandActivity()
     C_LFGList.RemoveListing()
 end
 
-function CreatePanel:SelectActivity(value)
+function CreatePanel:SelectActivity(value, summary)
     if not self:IsActivityCreated() then
         self.ActivityType:SetValue(value)
+
+        if summary then
+            self.SummaryBox:SetText(summary)
+        end
     end
 end

@@ -10,8 +10,12 @@ KT.ActiveButton = M
 
 local _DBG = function(...) if _DBG then _DBG("KT", ...) end end
 
+-- WoW API
+local InCombatLockdown = InCombatLockdown
+
 local db
 local KTF = KT.frame
+local bar = ExtraActionBarFrame
 
 local eventFrame
 
@@ -62,7 +66,7 @@ local function SetFrames()
 	-- Button frame
 	if not KTF.ActiveButton then
 		local name = addonName.."ActiveButton"
-		local button = CreateFrame("Button", name, ExtraActionBarFrame, "SecureActionButtonTemplate")
+		local button = CreateFrame("Button", name, bar, "SecureActionButtonTemplate")
 		button:SetSize(52, 52)
 		button:SetPoint("CENTER", 0, 0.5)
 		
@@ -127,9 +131,7 @@ end
 
 hooksecurefunc("ExtraActionBar_Update", function()
 	if db.qiActiveButton and KTF.ActiveButton.questID then
-		local bar = ExtraActionBarFrame
-		bar.outro:Stop()
-		bar:SetAlpha(1)
+		M:Update()
 	end
 end)
 
@@ -155,7 +157,6 @@ end
 function M:OnDisable()
 	_DBG("|cffff0000Disable|r - "..self:GetName(), true)
 	eventFrame:UnregisterAllEvents()
-	local bar = ExtraActionBarFrame
 	bar.button:SetAlpha(1)
 	if not HasExtraActionBar() then
 		bar.intro:Stop()
@@ -167,9 +168,7 @@ function M:OnDisable()
 end
 
 function M:Update(id)
-	if not db.qiActiveButton then
-		return
-	end
+	if not db.qiActiveButton then return end
 
 	local button
 	local abutton = KTF.ActiveButton
@@ -189,13 +188,10 @@ function M:Update(id)
 		return
 	end
 
-	if InCombatLockdown() then
-		return
-	end
+	if InCombatLockdown() then return end
 
 	local closestQuestID
 	local minDistSqr = 22500
-	local bar = ExtraActionBarFrame
 
 	if not db.collapsed then
 		for questID, button in pairs(KT.fixedButtons) do
@@ -209,9 +205,9 @@ function M:Update(id)
 		end
 	end
 
-	if closestQuestID then
+	if closestQuestID and not HasExtraActionBar() then
 		button = KT:GetFixedButton(closestQuestID)
-		if abutton.questID ~= closestQuestID or not bar:IsShown() then
+		if abutton.questID ~= closestQuestID or not bar:IsShown() or not HasExtraActionBar() then
 			if GameTooltip:IsShown() and GameTooltip:GetOwner() == abutton then
 				QuestObjectiveItem_OnLeave(abutton)
 				autoShowTooltip = true
@@ -219,6 +215,7 @@ function M:Update(id)
 
 			bar:Show()
 			bar.button:SetAlpha(0)
+			bar.button:Hide()
 
 			abutton:Show()
 			abutton.block = button.block
@@ -242,8 +239,12 @@ function M:Update(id)
 		end
 		abutton.text:SetText(button.num)
 	elseif bar:IsShown() then
-		bar.button:SetAlpha(1)
-		if not HasExtraActionBar() then
+		bar.intro:Stop()
+		bar:SetAlpha(1)
+		if HasExtraActionBar() then
+			bar.button:SetAlpha(1)
+			bar.button:Show()
+		else
 			bar.intro:Stop()
 			bar:SetAlpha(0)
 			bar:Hide()

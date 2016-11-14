@@ -27,7 +27,7 @@
 				</FontString>
 			</Layer>
 			<Layer level="BACKGROUND">
-				<Texture name="$parentbg" file="Interface\TargetingFrame\UI-TargetingFrame-BarFill" setAllPoints="true"/>
+				<Texture name="$parentbg" parentKey="bg" file="Interface\TargetingFrame\UI-TargetingFrame-BarFill" setAllPoints="true"/>
 			</Layer>
 		</Layers>
 		<Scripts>

@@ -249,6 +249,10 @@ L:SetGeneralLocalization({
 	name =	"眾星之廷小怪"
 })
 
+L:SetOptionLocalization({
+	SpyHelper	= "幫忙辨識間諜"
+})
+
 -----------------------
 -- <<<The Maw of Souls>>> --
 -----------------------
@@ -445,5 +449,5 @@ L= DBM:GetModLocalization(1838)
 L = DBM:GetModLocalization("RTKTrash")
 
 L:SetGeneralLocalization({
-	name =	"Return To Karazhan Trash"
+	name =	"重返卡拉贊小怪"
 })

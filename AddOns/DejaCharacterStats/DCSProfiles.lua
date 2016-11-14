@@ -1,3 +1,6 @@
+local ADDON_NAME, namespace = ... 	--localization
+local L = namespace.L 				--localization
+
 -- DCS, DejaView Child Panel
 	DejaCharacterStatsPanel.DejaCharacterStatsProfilesPanel = CreateFrame( "Frame", "DejaCharacterStatsProfilesPanel", DejaCharacterStatsPanel);
 	DejaCharacterStatsPanel.DejaCharacterStatsProfilesPanel.name = "Profiles";

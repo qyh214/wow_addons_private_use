@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "LibItemUpgradeInfo-1.0", 24
+local MAJOR, MINOR = "LibItemUpgradeInfo-1.0", 25
 local type,tonumber,select,strsplit,GetItemInfoFromHyperlink=type,tonumber,select,strsplit,GetItemInfoFromHyperlink
 local library,previous = _G.LibStub:NewLibrary(MAJOR, MINOR)
 local lib=library --#lib Needed to keep Eclipse LDT happy
@@ -85,13 +85,12 @@ local scanningTooltip
 local itemCache = setmetatable({},{__index=function(table,key) return {} end})
 local heirloomcolor
 local emptytable={}
-local function ScanTip(itemLink,itemLevel)
-	if not heirloomcolor then heirloomcolor =_G.ITEM_QUALITY_COLORS[_G.LE_ITEM_QUALITY_HEIRLOOM].hex end
+function _G.ScanTip(itemLink,itemLevel,show)
 	if type(itemLink)=="number" then
 		itemLink=select(2,GetItemInfo(itemLink))
 		if not itemLink then return emptytable end
 	end
-	if type(itemCache[itemLink].ilevel)=="nil" then
+	if true or type(itemCache[itemLink].ilevel)=="nil" then
 		if not scanningTooltip then
 			scanningTooltip = _G.CreateFrame("GameTooltip", "LibItemUpgradeInfoTooltip", nil, "GameTooltipTemplate")
 			scanningTooltip:SetOwner(_G.WorldFrame, "ANCHOR_NONE")
@@ -101,7 +100,8 @@ local function ScanTip(itemLink,itemLevel)
 		if (not rc) then
 			return emptytable
 		end
-		-- line 1 is the item name
+		local quality=select(3,GetItemInfo(itemLink))
+				-- line 1 is the item name
 		-- line 2 may be the item level, or it may be a modifier like "Heroic"
 		-- check up to line 6 just in case
 		local ilevel,soulbound,bop,boe,boa,heirloom
@@ -117,10 +117,7 @@ local function ScanTip(itemLink,itemLevel)
 				if boa==nil then boa = text:find(boaPattern2) end
 			end
 		end
-		if (itemLink:find(heirloomcolor)) then
-			heirloom=true
-		end
-		itemCache[itemLink]={ilevel=ilevel or itemLevel,soulbound=soulbound,bop=bop,boe=boe,heirloom=heirloom}
+		itemCache[itemLink]={ilevel=ilevel or itemLevel,soulbound=soulbound,bop=bop,boe=boe,quality=quality}
 	end
 	return itemCache[itemLink]
 end
@@ -310,7 +307,7 @@ function lib:IsBoa(itemString)
 	return rc.boa
 end
 
--- IsHeirloom(itemString)
+-- IsArtifact(itemString)
 --
 -- Check an item for  Heirloom
 --
@@ -318,7 +315,14 @@ end
 --   itemString - String - An itemLink or itemString denoting the item
 --
 -- Returns:
---   Boolean - True if Heirloom
+--   Boolean - True if Artifact
+
+function lib:IsArtifact(itemString)
+	local rc=ScanTip(itemString)
+	return rc.quality==LE_ITEM_QUALITY_ARTIFACT
+end
+
+
 
 -- IsHeirloom(itemString)
 --
@@ -332,7 +336,7 @@ end
 
 function lib:IsHeirloom(itemString)
 	local rc=ScanTip(itemString)
-	return rc.heirloom
+	return rc.quality==LE_ITEM_QUALITY_HEIRLOOM
 end
 
 

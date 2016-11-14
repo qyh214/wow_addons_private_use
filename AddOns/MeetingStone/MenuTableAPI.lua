@@ -5,7 +5,22 @@ local searchHistoryMenuTable = {}
 local createHistoryMenuTable = {}
 local searchActivityCodeCache = {}
 local createActivityCodeCache = {}
+local makedCategorys = {}
+local validCategorys = {}
 local currentCodeCache
+
+local function initValidCategorys()
+    wipe(validCategorys)
+    for i, baseFilter in ipairs({LE_LFG_LIST_FILTER_PVE, LE_LFG_LIST_FILTER_PVP}) do
+        for _, categoryId in ipairs(C_LFGList.GetAvailableCategories(baseFilter)) do
+            validCategorys[categoryId] = true
+        end
+    end
+end
+
+local function isCategoryValid(categoryId)
+    return validCategorys[categoryId]
+end
 
 local function MakeActivityMenuTable(activityId, baseFilter, customId, ...)
     local fullName, _, categoryId, groupId, _, filters = C_LFGList.GetActivityInfo(activityId)
@@ -60,17 +75,22 @@ local function MakeGroupMenuTable(categoryId, groupId, baseFilter, isCreator)
     if data.value then
         currentCodeCache[data.value] = data
     end
-    
+
     local menuTable = {}
+    local shownActivities = {}
 
     for _, activityId in ipairs(C_LFGList.GetAvailableActivities(categoryId, groupId)) do
         tinsert(menuTable, MakeCustomActivityMenuTable(activityId, baseFilter))
+        shownActivities[activityId] = true
     end
 
     local customData = ACTIVITY_CUSTOM_DATA.G[groupId]
     if customData then
         for _, id in ipairs(customData) do
-            tinsert(menuTable, MakeActivityMenuTable(ACTIVITY_CUSTOM_IDS[id], baseFilter, id))
+            local activityId = ACTIVITY_CUSTOM_IDS[id]
+            if activityId and shownActivities[activityId] then
+                tinsert(menuTable, MakeActivityMenuTable(activityId, baseFilter, id))
+            end
         end
     end
 
@@ -123,6 +143,7 @@ local function MakeCategoryMenuTable(categoryId, baseFilter, isCreator)
     end
 
     local menuTable = {}
+    makedCategorys[categoryId] = true
 
     if categoryId == 2 or categoryId == 3 then
         for i = #MAX_PLAYER_LEVEL_TABLE, 0, -1 do
@@ -134,8 +155,13 @@ local function MakeCategoryMenuTable(categoryId, baseFilter, isCreator)
     elseif autoChoose and categoryId ~= 6 then
         return MakeCustomActivityMenuTable(C_LFGList.GetAvailableActivities(categoryId)[1], baseFilter)
     else
-        for _, groupId in ipairs(C_LFGList.GetAvailableActivityGroups(categoryId)) do
-            tinsert(menuTable, MakeGroupMenuTable(categoryId, groupId, baseFilter, isCreator))
+        local list = C_LFGList.GetAvailableActivityGroups(categoryId)
+        local s, e, step = 1, #list, 1
+        if categoryId == 1 then
+            s, e, step = e, s, -1
+        end
+        for i = s, e, step do
+            tinsert(menuTable, MakeGroupMenuTable(categoryId, list[i], baseFilter, isCreator))
         end
         for _, activityId in ipairs(C_LFGList.GetAvailableActivities(categoryId)) do
             if select(4, C_LFGList.GetActivityInfo(activityId)) == 0 then
@@ -148,15 +174,59 @@ local function MakeCategoryMenuTable(categoryId, baseFilter, isCreator)
         data.menuTable = menuTable
         data.hasArrow = true
     end
+
     return data
+end
+
+local PACKED_CATEGORYS = {
+    ['PvP'] = {
+        4, 7, 8, 9, 10,
+        key = 'packedPvp',
+    }
+}
+
+local function FindPacked(categoryId)
+    for key, v in pairs(PACKED_CATEGORYS) do
+        if Profile:GetSetting(v.key) then
+            for _, c in ipairs(v) do
+                if c == categoryId then
+                    return key
+                end
+            end
+        end
+    end
+end
+
+local function MakePackedCategoryMenuTable(key, baseFilter, isCreator)
+    local menuTable = {
+        text = key,
+        hasArrow = true,
+        notClickable = true,
+        menuTable = {}
+    }
+
+    for _, categoryId in ipairs(PACKED_CATEGORYS[key]) do
+        if isCategoryValid(categoryId) then
+            tinsert(menuTable.menuTable, MakeCategoryMenuTable(categoryId, baseFilter, isCreator))
+        end
+    end
+
+    return menuTable
 end
 
 local function MakeMenuTable(list, baseFilter, isCreator)
     list = list or {}
 
     for _, categoryId in ipairs(C_LFGList.GetAvailableCategories(baseFilter)) do
-        if categoryId ~= 6 or baseFilter ~= LE_LFG_LIST_FILTER_PVE then
-            tinsert(list, MakeCategoryMenuTable(categoryId, baseFilter, isCreator))
+        if makedCategorys[categoryId] then
+
+        else
+            local packed = FindPacked(categoryId)
+            if packed then
+                tinsert(list, MakePackedCategoryMenuTable(packed, baseFilter, isCreator))
+            elseif categoryId ~= 6 or baseFilter ~= LE_LFG_LIST_FILTER_PVE then
+                tinsert(list, MakeCategoryMenuTable(categoryId, baseFilter, isCreator))
+            end
         end
     end
 
@@ -165,6 +235,9 @@ end
 
 function GetActivitesMenuTable(isCreator)
     currentCodeCache = wipe(isCreator and createActivityCodeCache or searchActivityCodeCache)
+    wipe(makedCategorys)
+    initValidCategorys()
+
     local list = {}
     MakeMenuTable(list, LE_LFG_LIST_FILTER_PVE, isCreator)
     MakeMenuTable(list, LE_LFG_LIST_FILTER_PVP, isCreator)
@@ -221,21 +294,21 @@ function RefreshHistoryMenuTable(isCreator)
         if data then
             tinsert(menuTable, {
                 categoryId = data.categoryId,
-                groupId = data.groupId,
+                groupId    = data.groupId,
                 activityId = data.activityId,
-                customId = data.customId,
-                filters = data.filters,
+                customId   = data.customId,
+                filters    = data.filters,
                 baseFilter = data.baseFilter,
-                value = data.value,
-                text = data.text,
-                fullName = data.fullName,
+                value      = data.value,
+                text       = data.text,
+                fullName   = data.fullName,
             })
         end
     end
 
     if #menuTable == 0 then
         tinsert(menuTable, {
-            text = L['暂无'],
+            text     = L['暂无'],
             disabled = true,
         })
     end

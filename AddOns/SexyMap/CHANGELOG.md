@@ -1,8 +1,6 @@
 # SexyMap
 
-## [v7.0.0](https://github.com/funkydude/SexyMap/tree/v7.0.0) (2016-09-25) [](#top)
-[Full Changelog](https://github.com/funkydude/SexyMap/compare/v2.4.29...v7.0.0)
+## [v7.1.1](https://github.com/funkydude/SexyMap/tree/v7.1.1) (2016-10-25) [](#top)
+[Full Changelog](https://github.com/funkydude/SexyMap/compare/v7.1.0...v7.1.1)
 
--   add travis file  
--   update metadata  
--   Use texture IDs instead of texture paths.  
+-   Coordinates: Fix coords error in dungeons.  

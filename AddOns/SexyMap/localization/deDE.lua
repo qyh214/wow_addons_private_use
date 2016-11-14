@@ -172,5 +172,3 @@ L["You can set a background and edge file for the minimap like you would with an
 L["Zone Text"] = "Zonentext"
 L["Zoom In Button"] = "Heranzoom-Knopf"
 L["Zoom Out Button"] = "Herauszoom-Knopf"
-
-

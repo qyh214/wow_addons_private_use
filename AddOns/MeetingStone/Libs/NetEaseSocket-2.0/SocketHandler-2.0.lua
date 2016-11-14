@@ -5,7 +5,7 @@ local BroadMiddleware = LibStub('NetEaseBroadMiddleware-2.0')
 local AceTimer = LibStub('AceTimer-3.0')
 local AceEvent = LibStub('AceEvent-3.0')
 
-local MAJOR, MINOR = 'SocketHandler-2.0', 17
+local MAJOR, MINOR = 'SocketHandler-2.0', 18
 local SocketHandler,oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not SocketHandler then return end
 
@@ -45,9 +45,22 @@ local function OnUsed(registry, target, cmd)
     target:RegisterCallback(cmd, 'OnSocket')
 end
 
+local _server
+local function getServer()
+    if not _server then
+        local realms = GetAutoCompleteRealms()
+        if not realms or not realms[1] then
+            _server = GetRealmName():gsub('%s+', '')
+        else
+            _server = realms[1]
+        end
+    end
+    return _server
+end
+
 local function formatTarget(target)
     if target then
-        return Ambiguate(target .. '-' .. (GetAutoCompleteRealms() or {GetRealmName():gsub('%s+', '')})[1], 'none')
+        return Ambiguate(target .. '-' .. getServer(), 'none')
     end
 end
 
@@ -392,7 +405,7 @@ if not SocketHandler.hooked then
         end
         return name, header, collapsed, channelNumber, count, active, category, voiceEnabled, voiceActive
     end
-    
+
     hooksecurefunc('CreateChatChannelList', function()
         for i = #CHAT_CONFIG_CHANNEL_LIST, 1, -1 do
             local v = CHAT_CONFIG_CHANNEL_LIST[i]

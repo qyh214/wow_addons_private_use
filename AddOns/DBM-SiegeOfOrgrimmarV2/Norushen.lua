@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(866, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 94 $"):sub(12, -3))
 mod:SetCreatureID(72276)
 --mod:SetEncounterID(1624)
 mod:SetZone()
@@ -17,8 +17,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_DAMAGE 145073",
 	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5",--This boss can change boss ID any time you jump into one of tests, because he gets unregistered as boss1 then registered as boss2 when you leave, etc
-	"CHAT_MSG_ADDON",
-	"GROUP_ROSTER_UPDATE"
+	"CHAT_MSG_ADDON"
 )
 
 mod:RegisterEvents(
@@ -114,13 +113,6 @@ local function addSync(guid)
 	end
 end
 
-local function delayPowerSync()
-	mod:RegisterShortTermEvents(
-		"UNIT_POWER player"
-	)
-	SendAddonMessage("BigWigs", "T:".."BWPower "..UnitPower("player", 10), IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
-end
-
 function mod:OnCombatStart(delay)
 	playerInside = false
 	previousPower = nil
@@ -134,7 +126,6 @@ function mod:OnCombatStart(delay)
 	else
 		berserkTimer:Start(-delay)
 	end
-	self:Schedule(1, delayPowerSync)
 end
 
 function mod:OnCombatEnd()
@@ -284,23 +275,9 @@ function mod:CHAT_MSG_ADDON(prefix, message, channel, sender)
 	if prefix == "BigWigs" and message then
 		sender = Ambiguate(sender, "none")
 		local _, bwMsg = message:match("^(%u-):(.+)")
-		local _, rest = message:match("(%S+)%s*(.*)$")--Not tested, may not work. I have a hard time understanding BW sync code.
+		local _, rest = message:match("(%S+)%s*(.*)$")--May not work with 7.1 BW core, I am not really going out of way to fix norushen
 		if bwMsg == "InsideBigAddDeath" and not playerInside and rest then
 			addSync(rest)
 		end
 	end
-end
-
---Make sure we send Bigwigs altPower syncs so DBM users aren't yelled at by raid leaders for not installing BW
-function mod:UNIT_POWER(uId)
-	local currentPower = UnitPower("player", 10)
-	if not previousPower or (previousPower ~= currentPower) then
-		previousPower = currentPower
-		SendAddonMessage("BigWigs", "T:".."BWPower "..currentPower, IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
-	end
-end
-
-function mod:GROUP_ROSTER_UPDATE(uId)
-	local currentPower = UnitPower("player", 10)
-	SendAddonMessage("BigWigs", "T:".."BWPower "..currentPower, IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
 end

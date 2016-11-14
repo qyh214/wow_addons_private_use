@@ -4,37 +4,7 @@ local Search = BSYC:NewModule("Search")
 
 local L = LibStub("AceLocale-3.0"):GetLocale("BagSync", true)
 local AceGUI = LibStub("AceGUI-3.0")
-local customSearch = LibStub('CustomSearch-1.0')
-local ItemSearch = LibStub("LibItemSearch-1.2")
-
-local scanner = LibItemSearchTooltipScanner or CreateFrame('GameTooltip', 'LibItemSearchTooltipScanner', UIParent, 'GameTooltipTemplate')
-
---add classes to the LibItemSearch-1.2
-ItemSearch.Filters.class = {
-	tags = {'c', 'class'},
-
-	canSearch = function(self, _, search)
-		return search
-	end,
-
-	match = function(self, link, _, search)
-		if link:find('item:') then
-			scanner:SetOwner(UIParent, 'ANCHOR_NONE')
-			scanner:SetHyperlink(link)
-			
-			local pattern = string.gsub(ITEM_CLASSES_ALLOWED:lower(), "%%s", "(.+)")
-			
-			for i = 1, scanner:NumLines() do
-				local text =  _G[scanner:GetName() .. 'TextLeft' .. i]:GetText():lower()
-				local textChk = string.find(text, pattern)
-				
-				if textChk and customSearch:Find(search, _G[scanner:GetName() .. 'TextLeft' .. i]:GetText()) then
-					return true
-				end
-			end
-		end
-	end
-}
+local ItemSearch = LibStub('LibItemSearchGrid-1.0')
 
 function Search:OnEnable()
 
@@ -157,11 +127,12 @@ end
 
 function Search:DoSearch(searchStr)
 	local searchStr = searchStr or self.searchbar:GetText()
-	searchStr = searchStr:lower()
+	searchStr = searchStr:lower() --always make sure everything is lowercase when doing searches
 
 	local searchTable = {}
 	local tempList = {}
 	local previousGuilds = {}
+	local previousGuildsXRList = {}
 	local count = 0
 	local playerSearch = false
 	local countWarning = 0
@@ -215,7 +186,7 @@ function Search:DoSearch(searchStr)
 												tempList[dblink] = dName
 												count = count + 1
 											--we found a match
-											elseif not playerSearch and not tempList[dblink] and ItemSearch:Matches(dItemLink, searchStr) then
+											elseif not playerSearch and not tempList[dblink] and ItemSearch:Find(dItemLink, searchStr) then
 												table.insert(searchTable, { name=dName, link=dItemLink, rarity=dRarity, texture=dTexture } )
 												tempList[dblink] = dName
 												count = count + 1
@@ -239,7 +210,17 @@ function Search:DoSearch(searchStr)
 						--check for XR/B.Net support
 						local gName = BSYC:GetRealmTags(guildN, v.realm, true)
 					
-						if not previousGuilds[gName] then
+						--check to make sure we didn't already add a guild from a connected-realm
+						local trueRealmList = BSYC.db.realmkey[0][v.realm] --get the connected realms
+						if trueRealmList then
+							table.sort(trueRealmList, function(a,b) return (a < b) end) --sort them alphabetically
+							trueRealmList = table.concat(trueRealmList, "|") --concat them together
+						else
+							trueRealmList = v.realm
+						end
+						trueRealmList = guildN.."-"..trueRealmList --add the guild name in front of concat realm list
+					
+						if not previousGuilds[gName] and not previousGuildsXRList[trueRealmList] then
 							--we only really need to see this information once per guild
 							for q, r in pairs(BSYC.db.guild[v.realm][guildN]) do
 								local dblink, dbcount = strsplit(",", r)
@@ -251,7 +232,7 @@ function Search:DoSearch(searchStr)
 											tempList[dblink] = dName
 											count = count + 1
 										--we found a match
-										elseif not playerSearch and not tempList[dblink] and ItemSearch:Matches(dItemLink, searchStr) then
+										elseif not playerSearch and not tempList[dblink] and ItemSearch:Find(dItemLink, searchStr) then
 											table.insert(searchTable, { name=dName, link=dItemLink, rarity=dRarity, texture=dTexture } )
 											tempList[dblink] = dName
 											count = count + 1
@@ -262,6 +243,7 @@ function Search:DoSearch(searchStr)
 								end
 							end
 							previousGuilds[gName] = true
+							previousGuildsXRList[trueRealmList] = true
 						end
 						
 					end

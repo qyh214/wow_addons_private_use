@@ -1039,7 +1039,18 @@ local function AutoLootSlot(slot, link)
 	return true, true
 end
 
+local function clear(slot)
+	if not slot then return nil end
+	slot.slot = nil
+	slot.item = nil
+	slot.quality = nil
+	slot:Hide()
+end
+
 local function BoPRefresh()
+	for i, row in pairs(XLootFrame.rows) do
+		clear(row)
+	end
 	XLootFrame:Update(false, true)
 end
 
@@ -1089,7 +1100,10 @@ function XLootFrame:Update(no_snap, no_hide)
 			else
 				-- TODO: Pass on to row update
 				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(link or name)
-				if auto.all or (auto.quest and isQuestItem) or (auto.list and auto_items[name]) or (auto.tradegoods and itemType == 'Tradeskill') then
+				if auto.all
+				or (auto.quest and isQuestItem)
+				or (auto.list and auto_items[name])
+				or (auto.tradegoods and select(17, GetItemInfo(link or name))) then
 
 					-- Cache available space
 					--  Specific bag types make this a bit more annoying
@@ -1176,14 +1190,6 @@ function XLootFrame:Update(no_snap, no_hide)
 		self:SnapToCursor()
 	end
 	self:Show()
-end
-
-local function clear(slot)
-	if not slot then return nil end
-	slot.slot = nil
-	slot.item = nil
-	slot.quality = nil
-	slot:Hide()
 end
 
 function addon:LOOT_CLOSED()

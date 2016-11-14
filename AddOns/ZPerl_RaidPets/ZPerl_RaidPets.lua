@@ -9,7 +9,7 @@ XPerl_RequestConfig(function(New)
 	conf = New
 	raidconf = New.raid
 	rconf = New.raidpet
-end, "$Revision: 975 $")
+end, "$Revision: 1017 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -108,6 +108,20 @@ end
 
 -- XPerl_RaidPets_OnLoad
 function XPerl_RaidPets_OnLoad(self)
+	self.state = CreateFrame("Frame", nil, nil, "SecureHandlerStateTemplate")
+	self.state:SetFrameRef("ZPerlRaidPetsHeader", XPerl_Raid_GrpPets)
+
+	self.state:SetAttribute("_onstate-groupupdate", [[
+		--print(newstate)
+
+		if newstate == "hide" then
+			self:GetFrameRef("ZPerlRaidPetsHeader"):Hide()
+		else
+			self:GetFrameRef("ZPerlRaidPetsHeader"):Show()
+		end
+	]])
+	RegisterStateDriver(self.state, "groupupdate", "[petbattle] hide; show")
+
 	self.time = 0
 	self.Array = { }
 
@@ -138,6 +152,7 @@ local function XPerl_RaidPets_UpdateName(self)
 		end
 	end
 
+	--self.lastID = partyid
 	self.lastName = name
 	self:SetAlpha(conf.transparency.frame)
 
@@ -165,7 +180,7 @@ local function XPerl_RaidPets_UpdateHealth(self)
 	-- PTR region fix
 	if not healthmax or healthmax <= 0 then
 		if healthmax > 0 then
-			healthmax = Partypethealth
+			healthmax = health
 		else
 			healthmax = 1
 		end
@@ -190,6 +205,8 @@ local function XPerl_RaidPets_UpdateHealth(self)
 
 	if (UnitIsDead(partyid)) then
 		self.healthBar.text:SetText(XPERL_LOC_DEAD)
+		self.healthBar:SetStatusBarColor(0.5, 0.5, 0.5, 1)
+		self.healthBar.bg:SetVertexColor(0.5, 0.5, 0.5, 0.5)
 	else
 		if (healthmax == 0) then
 			self.healthBar.text:SetText("")
@@ -242,6 +259,15 @@ local function XPerl_RaidPets_RaidTargetUpdate(self)
 		SetRaidTargetIconTexture(icon, raidIcon)
 	elseif (icon) then
 		icon:Hide()
+	end
+end
+
+-- XPerl_RaidPets_UpdateDisplay
+function XPerl_RaidPets_UpdateDisplayAll()
+	for k, frame in pairs(RaidPetFrameArray) do
+		if (frame:IsShown()) then
+			XPerl_RaidPets_UpdateDisplay(frame )
+		end
 	end
 end
 
@@ -305,6 +331,7 @@ end
 -- PLAYER_ENTERING_WORLD
 function XPerl_RaidPets_Events:PLAYER_ENTERING_WORLD()
 	XPerl_RaidPet_UpdateGUIDs()
+	XPerl_RaidPets_UpdateDisplayAll()
 	--TitlesUpdateFrame:Show()
 end
 
@@ -374,13 +401,13 @@ function XPerl_RaidPets_Events:GROUP_ROSTER_UPDATE()
 	XPerl_RaidPet_UpdateGUIDs()
 end
 
--- UNIT_HEALTH
-function XPerl_RaidPets_Events:UNIT_HEALTH()
+-- UNIT_HEALTH_FREQUENT
+function XPerl_RaidPets_Events:UNIT_HEALTH_FREQUENT()
 	XPerl_RaidPets_UpdateHealth(self)
 end
 
 -- UNIT_HEALTHMAX
-XPerl_RaidPets_Events.UNIT_MAXHEALTH = XPerl_RaidPets_Events.UNIT_HEALTH
+XPerl_RaidPets_Events.UNIT_MAXHEALTH = XPerl_RaidPets_Events.UNIT_HEALTH_FREQUENT
 
 -- UNIT_NAME_UPDATE
 function XPerl_RaidPets_Events:UNIT_NAME_UPDATE()
@@ -535,7 +562,13 @@ function XPerl_RaidPets_HideShow()
 
 	local on = (IsInRaid() and rconf.enable)
 
-	local events = {"UNIT_HEALTH", "UNIT_MAXHEALTH", "UNIT_NAME_UPDATE", "UNIT_AURA"}
+	local events = {
+		"UNIT_HEALTH_FREQUENT",
+		"UNIT_MAXHEALTH",
+		"UNIT_NAME_UPDATE",
+		"UNIT_AURA",
+	}
+
 	for i, event in pairs(events) do
 		if (on) then
 			XPerl_RaidPets_Frame:RegisterEvent(event)
@@ -607,7 +640,16 @@ function XPerl_RaidPets_OptionActions()
 	SetMainHeaderAttributes(XPerl_Raid_GrpPets)
 
 	local events = {
-		"PLAYER_ENTERING_WORLD", --[["PLAYER_REGEN_ENABLED",]] "RAID_TARGET_UPDATE", "VARIABLES_LOADED", "GROUP_ROSTER_UPDATE", "UNIT_PET", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"
+		"PLAYER_ENTERING_WORLD",
+		--"PLAYER_REGEN_ENABLED",
+		"RAID_TARGET_UPDATE",
+		"VARIABLES_LOADED",
+		"GROUP_ROSTER_UPDATE",
+		"UNIT_PET",
+		"UNIT_ENTERED_VEHICLE",
+		"UNIT_EXITED_VEHICLE",
+		"PET_BATTLE_OPENING_START",
+		"PET_BATTLE_CLOSE",
 	}
 
 	for i, event in pairs(events) do

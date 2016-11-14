@@ -1,0 +1,512 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Frame name="MoveAnythingOptions" parent="UIParent">
+		<Scripts>
+			<OnLoad function="MovAny_OptionsOnLoad"/>
+			<OnShow function="MovAny_OptionsOnShow"/>
+		</Scripts>
+		
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="MAOptFrameListRows" inherits="GameFontNormal" text="List rows:">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="MoveAnythingOptions" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="15" y="-30"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="MAOptProfile" inherits="GameFontNormal" text="Profile:">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="MoveAnythingOptions" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="15" y="-63"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="MAOptVersion" inherits="GameFontNormal" text="">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" relativeTo="MoveAnythingOptions" relativePoint="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="-19" y="20"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		
+		<Frames>
+			<Slider name="MAOptRowsSlider" inherits="OptionsSliderTemplate">
+				<Size>
+					<AbsDimension x="220" y="16"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MoveAnythingOptions" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="95" y="-25"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText("# of rows")
+						_G[self:GetName().."High"]:SetText("100")
+						_G[self:GetName().."Low"]:SetText("2")
+						self:SetMinMaxValues(2, 100)
+						self:SetValueStep(1)
+					</OnLoad>
+					<OnValueChanged>
+						MovAny:SetNumRows(self:GetValue())
+					</OnValueChanged>
+				</Scripts>
+			</Slider>
+			
+			<Button name="MAOptProfileDropDown" inherits="UIDropDownMenuTemplate" id="1">
+				<Size>
+					<AbsDimension x="220" y="16"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptRowsSlider" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="-22" y="-15"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnShow>
+						UIDropDownMenu_SetWidth(self, 150)
+					</OnShow>
+					<OnClick>
+						ToggleDropDownMenu(self:GetID(), nil, self, self, 6, 7, nil, self)
+					</OnClick>
+				</Scripts>
+			</Button>
+			
+			<Button name="MAOptProfileRename" inherits="MAButtonTemplate" text="R">
+				<Size>
+					<AbsDimension x="20" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptProfileDropDown" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="0" y="-2"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Rename"
+					</OnLoad>
+					<OnClick>
+						MovAny:ProfileRenameClicked(self)
+					</OnClick>
+				</Scripts>
+			</Button>
+			
+			<Button name="MAOptProfileSaveAs" inherits="MAButtonTemplate" text="S">
+				<Size>
+					<AbsDimension x="20" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptProfileRename" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Save as"
+					</OnLoad>
+					<OnClick>
+						MovAny:ProfileSaveAsClicked(self)
+					</OnClick>
+				</Scripts>
+			</Button>
+			
+			<Button name="MAOptProfileAdd" inherits="MAButtonTemplate" text="+">
+				<Size>
+					<AbsDimension x="20" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptProfileSaveAs" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Add new"
+					</OnLoad>
+					<OnClick>
+						MovAny:ProfileAddClicked(self)
+					</OnClick>
+				</Scripts>
+			</Button>
+			
+			<Button name="MAOptProfileDelete" inherits="MAButtonTemplate" text="-">
+				<Size>
+					<AbsDimension x="20" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptProfileAdd" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Delete"
+					</OnLoad>
+					<OnClick>
+						MovAny:ProfileDeleteClicked(self)
+					</OnClick>
+				</Scripts>
+			</Button>
+
+	
+			<CheckButton name="MAOptAlwaysShowNudger" inherits="MACheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptProfileDropDown" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="-5" y="-15"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Enable to show the nudger with the main window\n\nBy default the Nudger is only shown when interacting with frames."
+						_G[self:GetName().."Text"]:SetText("Show Nudger with main window")
+					</OnLoad>
+					<OnClick>
+						local reshowGUI = nil
+						if MAOptions:IsShown() and MADB.alwaysShowNudger ~= MAOptAlwaysShowNudger:GetChecked() then
+							reshowGUI = true
+						end
+						MovAny:OptionCheckboxChecked(self, "alwaysShowNudger")
+						if reshowGUI then
+							MAOptions:Hide()
+							MAOptions:Show()
+						end
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			<CheckButton name="MAOptShowTooltips" inherits="MACheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptAlwaysShowNudger" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Toggles display of tooltips on/off\n\nPressing Shift when mousing over elements will reverse tooltip display behavior."
+						_G[self:GetName().."Text"]:SetText("Show tooltips")
+					</OnLoad>
+					<OnClick>
+						MovAny:OptionCheckboxChecked(self, "tooltips")
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			<CheckButton name="MAOptPlaySound" inherits="MACheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptShowTooltips" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Toggles if MoveAnything should play a sound when opening and closing the main window."
+						_G[self:GetName().."Text"]:SetText("Play sound")
+					</OnLoad>
+					<OnClick>
+						MovAny:OptionCheckboxChecked(self, "playSound")
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			<CheckButton name="MAOptCloseGUIOnEscape" inherits="MACheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptPlaySound" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText("Escape key closes main window")
+					</OnLoad>
+					<OnClick>
+						MovAny:OptionCheckboxChecked(self, "closeGUIOnEscape")
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			<CheckButton name="MAOptDontSearchFrameNames" inherits="MACheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptCloseGUIOnEscape" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Disables searching of actual frame names."
+						_G[self:GetName().."Text"]:SetText("Dont search frame names")
+					</OnLoad>
+					<OnClick>
+						MovAny:OptionCheckboxChecked(self, "dontSearchFrameNames")
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			<CheckButton name="MAOptNoBags" inherits="MACheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptDontSearchFrameNames" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Toggles if MoveAnything will hook containers.\n\nThis should be checked if you use another addon to move your bags."
+						_G[self:GetName().."Text"]:SetText("Disable bag container hook")
+					</OnLoad>
+					<OnClick>
+						MovAny:OptionCheckboxChecked(self, "noBags")
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			<CheckButton name="MAOptDontHookCreateFrame" inherits="MACheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptNoBags" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Toggles if MoveAnything will hook CreateFrame.\n\nRequires reload to take effect."
+						_G[self:GetName().."Text"]:SetText("Disable frame creation hook")
+					</OnLoad>
+					<OnClick>
+						MovAny:OptionCheckboxChecked(self, "dontHookCreateFrame")
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			<CheckButton name="MAOptDontSyncWhenLeavingCombat" inherits="MACheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptDontHookCreateFrame" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Toggles if MoveAnything will synchronize pending frames when leaving combat.\n\nDisabling this may result in protected frames requiring a manual sync when leaving combat."
+						_G[self:GetName().."Text"]:SetText("Disable sync when leaving combat")
+					</OnLoad>
+					<OnClick>
+						MovAny:OptionCheckboxChecked(self, "dontSyncWhenLeavingCombat")
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			<CheckButton name="MAOptSquareMM" inherits="MACheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptDontSyncWhenLeavingCombat" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Toggles square MiniMap on/off.\n\nHide \"Round Border\" in the \"Minimap\" category to get rid of the overlaying border."
+						_G[self:GetName().."Text"]:SetText("Enable square Minimap")
+					</OnLoad>
+					<OnClick>
+						MovAny:OptionCheckboxChecked(self, "squareMM")
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			<CheckButton name="MAOptNoMMMW" inherits="MACheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptSquareMM" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Toggles Minimap mousewheel zoom on/off.\n\nRequires reload to take effect."
+						_G[self:GetName().."Text"]:SetText("Disable Minimap mousewheel zoom")
+					</OnLoad>
+					<OnClick>
+						MovAny:OptionCheckboxChecked(self, "noMMMW")
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			<CheckButton name="MAOptDisableErrorMessages" inherits="MACheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MAOptNoMMMW" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.alwaysShowTooltip = true
+						self.tooltipText = "Toggles printing of error messages on/off."
+						_G[self:GetName().."Text"]:SetText("Disable error messages")
+					</OnLoad>
+					<OnClick>
+						MovAny:OptionCheckboxChecked(self, "disableErrorMessages")
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			<Button name="MAOptResetProfile" inherits="MAButtonTemplate" text="Reset Profile">
+				<Size>
+					<AbsDimension x="120" y="22"/>
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="MoveAnythingOptions"  relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="10" y="15"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.tooltipText = "Reset profile\n\nResets the profile, deleting all stored frame settings for this profile."
+						self.alwaysShowTooltip = true
+					</OnLoad>
+					<OnEnter function="MovAny_TooltipShow"/>
+					<OnLeave function="MovAny_TooltipHide"/>
+					<OnClick>
+						if MADB.playSound then
+							PlaySound("igMainMenuOption")
+						end
+						StaticPopup_Show("MOVEANYTHING_PROFILE_RESET_CONFIRM")
+					</OnClick>
+				</Scripts>
+			</Button>
+			
+			<Button name="MAOptExportProfile" inherits="MAButtonTemplate" text="Export Profile">
+				<Size>
+					<AbsDimension x="120" y="22"/>
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="MAOptResetProfile"  relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="0" y="5"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						--self.tooltipText = ""
+						--self.alwaysShowTooltip = true
+					</OnLoad>
+					<OnEnter function="MovAny_TooltipShow"/>
+					<OnLeave function="MovAny_TooltipHide"/>
+					<OnClick>
+						if MADB.playSound then
+							PlaySound("igMainMenuOption")
+						end
+						MovAny:PortDialog(2)
+					</OnClick>
+				</Scripts>
+			</Button>
+			
+			<Button name="MAOptImportProfile" inherits="MAButtonTemplate" text="Import Profile">
+				<Size>
+					<AbsDimension x="120" y="22"/>
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="MAOptExportProfile"  relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="1" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						--self.tooltipText = ""
+						--self.alwaysShowTooltip = true
+					</OnLoad>
+					<OnEnter function="MovAny_TooltipShow"/>
+					<OnLeave function="MovAny_TooltipHide"/>
+					<OnClick>
+						if MADB.playSound then
+							PlaySound("igMainMenuOption")
+						end
+						MovAny:PortDialog(1)
+					</OnClick>
+				</Scripts>
+			</Button>
+			
+			<Button name="MAOptResetAll" inherits="MAButtonTemplate" text="Reset All">
+				<Size>
+					<AbsDimension x="120" y="22"/>
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="MAOptResetProfile"  relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="1" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.tooltipText = "Reset all\n\nReset MoveAnything to default settings. Deletes all frame settings, as well as the custom frame list"
+						self.alwaysShowTooltip = true
+					</OnLoad>
+					<OnEnter function="MovAny_TooltipShow"/>
+					<OnLeave function="MovAny_TooltipHide"/>
+					<OnClick>
+						if MADB.playSound then
+							PlaySound("igMainMenuOption")
+						end
+						StaticPopup_Show("MOVEANYTHING_RESET_ALL_CONFIRM")
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame>
+</Ui>

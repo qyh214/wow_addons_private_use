@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1004 $")
+end, "$Revision: 1017 $")
 
 -- Upvalues
 local _G = _G
@@ -130,6 +130,7 @@ function XPerl_Target_OnLoad(self, partyid)
 		"UNIT_AURA",
 		"UNIT_HEALTH_FREQUENT",
 		"PET_BATTLE_HEALTH_CHANGED",
+		"UPDATE_SUMMONPETS_ACTION",
 		"UNIT_POWER_FREQUENT",
 		"UNIT_MAXPOWER",
 		"UNIT_MAXHEALTH",
@@ -1459,6 +1460,17 @@ function XPerl_Target_Events:UNIT_HEALTH_FREQUENT()
 end
 XPerl_Target_Events.UNIT_MAXHEALTH = XPerl_Target_Events.UNIT_HEALTH_FREQUENT
 XPerl_Target_Events.PET_BATTLE_HEALTH_CHANGED = XPerl_Target_Events.UNIT_HEALTH_FREQUENT
+
+-- UPDATE_SUMMONPETS_ACTION
+function XPerl_Target_Events:UPDATE_SUMMONPETS_ACTION()
+	if UnitIsBattlePet("target") then
+		XPerl_Target_UpdateHealth(XPerl_Target)
+	end
+
+	if UnitIsBattlePet("focus") then
+		XPerl_Target_UpdateHealth(XPerl_Focus)
+	end
+end
 
 -- UNIT_FLAGS
 function XPerl_Target_Events:UNIT_FLAGS()

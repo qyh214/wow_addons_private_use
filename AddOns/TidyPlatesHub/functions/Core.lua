@@ -40,8 +40,16 @@ local InstanceStatus = TidyPlatesUtility.InstanceStatus
 local IsEnemyTanked = TidyPlatesWidgets.IsEnemyTanked
 
 local function IsOffTanked(unit)
-	if LocalVars.EnableOffTankHighlight and IsEnemyTanked(unit) then
-		return true
+
+	local unitid = unit.unitid
+	if unitid then
+		local targetOf = unitid.."target"
+		local targetIsTank = UnitIsUnit(targetOf, "pet") or ("TANK" ==  UnitGroupRolesAssigned(targetOf))
+
+		--if LocalVars.EnableOffTankHighlight and IsEnemyTanked(unit) then
+		if LocalVars.EnableOffTankHighlight and targetIsTank then
+			return true
+		end
 	end
 end
 

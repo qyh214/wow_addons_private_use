@@ -24,6 +24,8 @@ local wipe = wipe
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitGetIncomingHeals = UnitGetIncomingHeals
+local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
+local UnitGetTotalHealAbsorbs = UnitGetTotalHealAbsorbs
 local UnitHasVehicleUI = UnitHasVehicleUI
 local strmatch = strmatch
 local UnitPowerType = UnitPowerType
@@ -57,6 +59,8 @@ local GetRaidRosterInfo = GetRaidRosterInfo
 local UnitIsGroupLeader = UnitIsGroupLeader
 local GetLootMethod = GetLootMethod
 local UnitIsTapDenied = UnitIsTapDenied
+local max = max
+local min = min
 
 local _, addon = ...
 
@@ -311,35 +315,71 @@ local function UnitFrame_UpdateRole(self)
 	end
 end
 
-local function UnitFrame_UpdateHealthPrediction(self)
-	local incomingHeal = self.incomingHeal
+local UNIT_PREDICTION_THRESHOLD = 0.02
+
+local function UnitFrame_UpdatePredictionBar(self, func, bar)
 	local unit = self.displayedUnit
 	if not unit or self.unitFlag then
-		incomingHeal:Hide()
-		return
+		bar:Hide()
+		return 0, 0, 0
 	end
 
 	local width = 0
 	local healthBar = self.healthBar
-	local _, maxValue = healthBar:GetMinMaxValues()
-	local value = healthBar:GetValue()
-	local lacks = maxValue - value
-	local incoming
-	if lacks > 1 then
-		incoming = UnitGetIncomingHeals(unit)
-		if incoming and incoming > 0 then
-			if incoming > lacks then
-				incoming = lacks
-			end
-			width = incoming / maxValue * healthBar:GetWidth()
-		end
+	local health = healthBar:GetValue()
+	local _, maxHealth = healthBar:GetMinMaxValues()
+	local value = func(unit) or 0
+	if value / maxHealth < UNIT_PREDICTION_THRESHOLD then
+		value = 0
+	end
+
+	local lacks = maxHealth - health
+	if lacks > 1 and value > 1 then
+		width = min(value, lacks) / maxHealth * healthBar:GetWidth()
 	end
 
 	if width > 1 then
-		incomingHeal:SetWidth(width)
-		incomingHeal:Show()
+		bar:SetWidth(width)
+		bar:Show()
 	else
-		incomingHeal:Hide()
+		bar:Hide()
+	end
+
+	return value, health, maxHealth
+end
+
+local function UnitFrame_UpdateHealthPrediction(self)
+	UnitFrame_UpdatePredictionBar(self, UnitGetIncomingHeals, self.incomingHeal)
+end
+
+local function UnitFrame_UpdateShieldAbsorbs(self)
+	local value, health, maxHealth = UnitFrame_UpdatePredictionBar(self, UnitGetTotalAbsorbs, self.shieldBar)
+	if value > 1 and value + health >= maxHealth then
+		self.overShieldGlow:Show()
+	else
+		self.overShieldGlow:Hide()
+	end
+end
+
+local function UnitFrame_UpdateHealthAbsorbs(self)
+	local absorbsBar = self.absorbsBar
+	local unit = self.displayedUnit
+	if not unit or self.unitFlag then
+		absorbsBar:Hide()
+		return
+	end
+
+	local _, healthMax = absorbsBar:GetMinMaxValues()
+	local absorbs = UnitGetTotalHealAbsorbs(unit) or 0
+	if absorbs > healthMax then
+		absorbs = healthMax
+	end
+
+	if absorbs / healthMax > UNIT_PREDICTION_THRESHOLD then
+		absorbsBar:SetValue(absorbs)
+		absorbsBar:Show()
+	else
+		absorbsBar:Hide()
 	end
 end
 
@@ -363,7 +403,10 @@ end
 local function UnitFrame_UpdateHealthMax(self)
 	local unit = self.displayedUnit
 	if not unit then return end
-	self.healthBar:SetMinMaxValues(0, UnitHealthMax(unit))
+
+	local healthMax = UnitHealthMax(unit)
+	self.healthBar:SetMinMaxValues(0, healthMax)
+	self.absorbsBar:SetMinMaxValues(0, healthMax)
 end
 
 local function UnitFrame_UpdateHealth(self)
@@ -387,6 +430,8 @@ local function UnitFrame_UpdateHealthColor(self)
 	end
 
 	self.incomingHeal:SetVertexColor(r * 0.5, g * 0.5, b * 0.5)
+	self.shieldBar:SetVertexColor(r * 0.5, g * 0.5, b * 0.5)
+
 	local dr, dg, db = r * 0.25, g * 0.25, b * 0.25
 	if addon.db.invertColor then
 		self.healthBarBackground:SetVertexColor(dr, dg, db)
@@ -456,7 +501,8 @@ local function UnitFrame_UpdateNameColor(self)
 	if addon.db.forceNameColor then
 		self.nameText:SetTextColor(nameTextColor.r, nameTextColor.g, nameTextColor.b)
 	else
-		self.nameText:SetTextColor(GetUnitColor(unit, 1))
+		local r, g, b = GetUnitColor(unit, 1)
+		self.nameText:SetTextColor(r, g, b)
 	end
 end
 
@@ -739,7 +785,7 @@ end
 
 local function UnitFrame_UpdateFont(self)
 	local font = addon:GetMedia("font")
-	self.nameText:SetFont(font, addon.db.nameHeight)
+	self.nameText:SetFont(font, addon.db.nameHeight, addon.db.nameFontOutline and "OUTLINE" or nil)
 	self.statusText:SetFont(font, addon.db.nameHeight * 0.84)
 	UnitFrame_UpdateNameSize(self)
 end
@@ -750,7 +796,9 @@ local function UnitFrame_UpdateStatusBarTexture(self)
 	self.healthBarBackground:SetTexture(texture)
 	self.powerBar:SetStatusBarTexture(texture)
 	self.powerBarBackground:SetTexture(texture)
+	self.absorbsBar:SetStatusBarTexture(texture)
 	self.incomingHeal:SetTexture(texture)
+	self.shieldBar:SetTexture(texture)
 end
 
 local function UnitFrame_UpdateBkgndColor(self)
@@ -773,6 +821,8 @@ local function UnitFrame_UpdateAll(self)
 	UnitFrame_UpdateHealthMax(self)
 	UnitFrame_UpdateHealth(self)
 	UnitFrame_UpdateHealthPrediction(self)
+	UnitFrame_UpdateShieldAbsorbs(self)
+	UnitFrame_UpdateHealthAbsorbs(self)
 	UnitFrame_UpdatePowerType(self)
 	UnitFrame_UpdatePowerMax(self)
 	UnitFrame_UpdatePower(self)
@@ -815,6 +865,8 @@ local function UnitFrame_RegisterEvents(self)
 	self:RegisterEvent("RAID_TARGET_UPDATE")
 	self:RegisterEvent("UNIT_FLAGS")
 	self:RegisterEvent("UNIT_OTHER_PARTY_CHANGED")
+	self:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+	self:RegisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
 	UnitFrame_UpdateAll(self)
 end
 
@@ -945,13 +997,20 @@ local function UnitFrame_OnEvent(self, event, unit)
 			UnitFrame_UpdateHealthMax(self)
 			UnitFrame_UpdateHealth(self)
 			UnitFrame_UpdateHealthPrediction(self)
+			UnitFrame_UpdateShieldAbsorbs(self)
+			UnitFrame_UpdateHealthAbsorbs(self)
 			UnitFrame_UpdateHealthText(self)
 		elseif event == "UNIT_HEALTH" or event == "UNIT_HEALTH_FREQUENT" then
 			UnitFrame_UpdateHealth(self)
 			UnitFrame_UpdateHealthPrediction(self)
+			UnitFrame_UpdateShieldAbsorbs(self)
 			UnitFrame_UpdateHealthText(self)
 		elseif event == "UNIT_HEAL_PREDICTION" then
 			UnitFrame_UpdateHealthPrediction(self)
+		elseif event == "UNIT_ABSORB_AMOUNT_CHANGED" then
+			UnitFrame_UpdateShieldAbsorbs(self)
+		elseif event == "UNIT_HEAL_ABSORB_AMOUNT_CHANGED" then
+			UnitFrame_UpdateHealthAbsorbs(self)
 		elseif event == "UNIT_MAXPOWER" then
 			UnitFrame_UpdatePowerMax(self)
 			UnitFrame_UpdatePower(self)
@@ -1034,7 +1093,7 @@ local optionTable = {
 		local healthBar = frame.healthBar
 		healthBar:ClearAllPoints()
 		healthBar:SetPoint("TOPLEFT", 1, -1)
-		healthBar:SetPoint("BOTTOMRIGHT", -1, value + 1)
+		healthBar:SetPoint("BOTTOMRIGHT", -1, value + 2)
 	end,
 
 	nameWidthLimit = function(frame, value)
@@ -1084,6 +1143,10 @@ local optionTable = {
 	nameColor = function(frame, r, g, b)
 		nameTextColor.r, nameTextColor.g, nameTextColor.b = r, g, b
 		UnitFrame_UpdateNameColor(frame)
+	end,
+
+	nameFontOutline = function(frame, value)
+		frame.nameText:SetFont(addon:GetMedia("font"), addon.db.nameHeight, value and "OUTLINE" or nil)
 	end,
 
 	nameXOffset = function(frame, value)
@@ -1210,13 +1273,31 @@ function addon._UnitButton_OnLoad(frame)
 	-- Power bar
 	local powerBar = CreateFrame("StatusBar", name.."PowerBar", artFrame)
 	frame.powerBar = powerBar
-	powerBar:SetPoint("TOPLEFT", healthBar, "BOTTOMLEFT")
+	powerBar:SetPoint("TOPLEFT", healthBar, "BOTTOMLEFT", 0, -1)
 	powerBar:SetPoint("BOTTOMRIGHT", -1, 1)
 	powerBar:SetStatusBarTexture(addon:GetMedia("statusbar"))
 	background = artFrame:CreateTexture(name.."PowerBarBackground", "BORDER")
 	frame.powerBarBackground = background
 	background:SetTexture(addon:GetMedia("statusbar"))
 	background:SetAllPoints(powerBar)
+
+	-- Absorbs bar
+	local absorbsBar = CreateFrame("StatusBar", name.."AbsorbsBar", healthBar)
+	frame.absorbsBar = absorbsBar
+	absorbsBar:SetPoint("BOTTOMLEFT")
+	absorbsBar:SetPoint("BOTTOMRIGHT")
+	absorbsBar:SetHeight(4)
+	absorbsBar:SetStatusBarTexture(addon:GetMedia("statusbar"))
+	absorbsBar:SetStatusBarColor(1, 0, 0)
+
+	-- Shield bar
+	local shieldBar = healthBar:CreateTexture(name.."ShieldBar", "ARTWORK")
+	frame.shieldBar = shieldBar
+	shieldBar:SetPoint("TOPLEFT", healthBar:GetStatusBarTexture(), "TOPRIGHT")
+	shieldBar:SetPoint("BOTTOMLEFT", healthBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+	shieldBar:SetTexture(addon:GetMedia("statusbar"))
+	shieldBar:SetAlpha(0.5)
+	shieldBar:Hide()
 
 	-- Incoming healing bar
 	local incomingHeal = healthBar:CreateTexture(name.."IncomingHealBar", "ARTWORK")
@@ -1231,6 +1312,16 @@ function addon._UnitButton_OnLoad(frame)
 	frame.layerFrame = layerFrame
 	layerFrame:SetAllPoints(artFrame)
 	layerFrame:SetFrameLevel(50)
+
+	-- Over-shield glow
+	local overShieldGlow = layerFrame:CreateTexture(name.."overShieldGlow", "ARTWORK")
+	frame.overShieldGlow = overShieldGlow
+	overShieldGlow:SetTexture("Interface\\RaidFrame\\Shield-Overshield")
+	overShieldGlow:SetBlendMode("ADD")
+	overShieldGlow:SetPoint("BOTTOMLEFT", healthBar, "BOTTOMRIGHT", -4, 0)
+	overShieldGlow:SetPoint("TOPLEFT", healthBar, "TOPRIGHT", -4, 0)
+	overShieldGlow:SetWidth(8)
+	overShieldGlow:Hide()
 
 	-- Highlight texture
 	local highlight = layerFrame:CreateTexture(name.."Highlight", "BACKGROUND")
@@ -1316,7 +1407,7 @@ function addon._UnitButton_OnLoad(frame)
 	lootIcon:Hide()
 
 	-- Aggro highlight
-	local aggroHighlight = layerFrame:CreateTexture(name.."AggroHighlight", "BORDER")
+	local aggroHighlight = layerFrame:CreateTexture(name.."AggroHighlight", "BACKGROUND")
 	frame.aggroHighlight = aggroHighlight
 	aggroHighlight:SetAllPoints(frame)
 	aggroHighlight:SetTexture("Interface\\RaidFrame\\Raid-FrameHighlights")
@@ -1324,7 +1415,7 @@ function addon._UnitButton_OnLoad(frame)
 	aggroHighlight:Hide()
 
 	-- Selection highlight
-	local selectionHighlight = layerFrame:CreateTexture(name.."SelectionHighlight", "ARTWORK")
+	local selectionHighlight = layerFrame:CreateTexture(name.."SelectionHighlight", "BORDER")
 	frame.selectionHighlight = selectionHighlight
 	selectionHighlight:SetAllPoints(frame)
 	selectionHighlight:SetTexture("Interface\\RaidFrame\\Raid-FrameHighlights")
@@ -1388,6 +1479,8 @@ function addon._UnitButton_OnLoad(frame)
 	frame.UpdateDispels = UnitFrame_UpdateDispels
 	frame.UpdateRole = UnitFrame_UpdateRole
 	frame.UpdateHealthPrediction = UnitFrame_UpdateHealthPrediction
+	frame.UpdateShieldAbsorbs = UnitFrame_UpdateShieldAbsorbs
+	frame.UpdateHealthAbsorbs = UnitFrame_UpdateHealthAbsorbs
 	frame.UpdateVehicleStatus = UnitFrame_UpdateVehicleStatus
 	frame.UpdateHealthMax = UnitFrame_UpdateHealthMax
 	frame.UpdateHealth = UnitFrame_UpdateHealth

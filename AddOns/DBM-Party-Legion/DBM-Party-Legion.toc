@@ -1,5 +1,5 @@
-﻿## Interface: 70000
-## X-Min-Interface: 70000
+﻿## Interface: 70100
+## X-Min-Interface: 70100
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Party-Legion|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Gruppe-Legion|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Groupe-Legion|r
@@ -7,6 +7,7 @@
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0隊伍首領-軍臨天下|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0队伍首领(军团再临)|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mazmorras (Legion)|r
+## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf05인던전-군단|r
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMPartyLegion_AllSavedVars
@@ -26,10 +27,11 @@
 ## X-DBM-Mod-Name-frFR: Groupe (Legion)
 ## X-DBM-Mod-Name-zhTW: 隊伍首領 (軍臨天下)
 ## X-DBM-Mod-Name-zhCN: 队伍首领(军团再临)
+## X-DBM-Mod-Name-koKR: 5인 던전 (군단)
 ## X-DBM-Mod-Sort: 060
 ## X-DBM-Mod-MapID: 1501, 1466, 1456, 1477, 1458, 1516, 1571, 1492, 1544, 1493, 1651
 ## X-DBM-Mod-MinCoreRevision: 14737
-## X-Curse-Packaged-Version: 7.0.10
+## X-Curse-Packaged-Version: 7.1.1
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
@@ -38,6 +40,7 @@ localization.cn.lua
 localization.de.lua
 localization.tw.lua
 localization.es.lua
+localization.kr.lua
 BlackRookHold\AmalgamSouls.lua
 BlackRookHold\Illysanna.lua
 BlackRookHold\Smashspite.lua
@@ -104,4 +107,5 @@ ReturnToKarazhan\Curator.lua
 ReturnToKarazhan\Medivh.lua
 ReturnToKarazhan\ManaDevourer.lua
 ReturnToKarazhan\Vizaduum.lua
+ReturnToKarazhan\Nightbane.lua
 ReturnToKarazhan\RTKTrash.lua

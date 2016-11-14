@@ -1,13 +1,24 @@
-## Interface: 70000
-## Version: 7.0.3 r12
+## Interface: 70100
+## Version: 7.1.0 r1
 ## Title: DejaCharacterStats
 ## Authors: Dejablue
 ## Notes: Dejablue's improved character stats panel view.
 ## SavedVariables: DejaCharacterStatsDB
 ## SavedVariablesPerCharacter: DejaCharacterStatsDBPC
 
-localization.core.lua
-localization.de.lua
+Localization\localization.core.lua
+Localization\localization.deDE.lua
+Localization\localization.enGB.lua
+Localization\localization.enUS.lua
+Localization\localization.esES.lua
+Localization\localization.esMX.lua
+Localization\localization.frFR.lua
+Localization\localization.itIT.lua
+Localization\localization.koKR.lua
+Localization\localization.ptBR.lua
+Localization\localization.ruRU.lua
+Localization\localization.zhCN.lua
+Localization\localization.zhTW.lua
 
 DejaCharacterStats.lua
 DCSExpand.lua

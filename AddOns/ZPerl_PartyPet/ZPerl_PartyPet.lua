@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(New)
 	for k, v in pairs(PartyPetFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 997 $")
+end, "$Revision: 1017 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -353,7 +353,7 @@ end
 
 -- XPerl_Party_Pet_UpdateDisplayAll
 function XPerl_Party_Pet_UpdateDisplayAll()
-	for i, frame in pairs(PartyPetFrames) do
+	for k, frame in pairs(PartyPetFrames) do
 		if (frame:IsShown()) then
 			XPerl_Party_Pet_UpdateDisplay(frame)
 		end
@@ -484,6 +484,7 @@ end
 -- PLAYER_ENTERING_WORLD
 function XPerl_Party_Pet_Events:PLAYER_ENTERING_WORLD()
 	XPerl_Party_Pet_UpdateGUIDs()
+	XPerl_Party_Pet_UpdateDisplayAll()
 end
 XPerl_Party_Pet_Events.GROUP_ROSTER_UPDATE = XPerl_Party_Pet_Events.PLAYER_ENTERING_WORLD
 XPerl_Party_Pet_Events.UNIT_PET = XPerl_Party_Pet_Events.PLAYER_ENTERING_WORLD

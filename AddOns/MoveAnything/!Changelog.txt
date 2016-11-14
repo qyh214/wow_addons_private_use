@@ -1,0 +1,589 @@
+**Issues**
+* Toggling the modified Raid Frame Manager in combat causing taints.
+* Reseting bags while the bag is not opened won't reset it's scale to default.
+
+
+**16.1.1**
+Updated for 7.1.0.
+* Fixed Frames:
+	* Challenge Keystone
+
+**16.1.0**
+* Added Frames:
+	* World Quest Complete Alert
+	* Prestige Banner
+	* Challange Keystone
+	* Order Hall Talent Alert
+
+**16.0.9**
+* Added Frames:
+	* Order Hall Command Bar
+	* Order Hall Missions
+	* Order Hall Talents
+	* Artifact Frame
+	* Flight Map
+	* Vehicle Experience Bar
+
+**16.0.8**
+* Added Frames:
+	* Artifact Bar
+
+**16.0.7**
+* Various fixes with tooltips.
+
+**16.0.6**
+* Fixed a type which caused major performance issues with tooltips.
+* Fixed Frames:
+	* Talking Head Frame
+
+**16.0.5**
+Tooltips can be properly hidden.
+* Added Frames:
+	* Honor Bar
+	* Talking Head Frame
+* Fixed Frames:
+	* Tooltip - Bag Item.
+
+**16.0.4**
+* Fixed Frames:
+	* Extra Action Bar
+
+**16.0.3**
+* Auto-removed some potentionally broken frames.
+* Fixed Frames:
+	* Player Buffs Default
+	* Player Buffs From Right to Left
+* Removed Frames:
+	* Loot Won Alert Frame 1-10
+	* Money Won Frame 1-5
+
+**16.0.2**
+* Added Frames:
+	* Combo Point Frame
+	* Mage Arcane Charges Power Frame
+* Fixed Frames:
+	* TargetFrame
+	* Paladin Power Frame
+	* Monk Chi Frame
+	* Stance Buttons
+	* Stance Buttons - Vertical
+* Removed Frames:
+	* Target Combo Points
+
+**16.0.1**
+* Fixed Frames:
+	* Player Buffs Default
+	* Player Buffs From Right to Left
+	* Player Debuffs Default
+	* Player Debuffs From Right to Left
+* Removed Frames:
+	* Consolidated Buffs
+	* Player Buffs - Consolidated Buffs Tooltip
+
+**16.0.0**
+* Updated for 7.0.3.
+* Every frame can be hidden without creating the mover anchor.
+
+**15.3.6**
+* Legion preparation fixes.
+
+**15.3.5**
+* Should no longer unanchor protected frames.
+* Some other smaller fixes.
+
+**15.3.4**
+* Some minor fixes.
+* Fixed Frames:
+	* Money Won Frame3-5
+
+**15.3.3**
+* Fixed some issues with reseting frames.
+* General code cleanup.
+* Added Frames:
+	* Loot Won Alert Frame1-10
+	* Money Won Frame1-5
+
+**15.3.2**
+* Fixed two taint errors.
+
+**15.3.1**
+* Reverted the latest hasty changes releated the target buffs and debuffs.
+
+**15.3.0**
+* Fixed Frames:
+	* Target Buffs
+	* Target Debuffs
+
+**15.2.9**
+* Added Frames:
+	* Report Player Name
+	* Report Player Cheating
+
+**15.2.8**
+* Added Frames:
+	* Quest Choice Frame
+
+**15.2.7**
+* Added Frames:
+	* Store Model Preview
+
+**15.2.6**
+* Fixed Frames:
+	* Bags Mover
+
+**15.2.5**
+* Added Frames:
+	* Bag Item Search
+	* Clean Up Bags
+
+**15.2.4**
+* Added Frames:
+	* Garrions Monuments
+
+**15.2.3**
+* Fixed Frames:
+	* Player Alternative Power Bar (For real this time!)
+	* Right Action Bar
+	* Right Action Bar - Horizontal
+
+**15.2.2**
+* Fixed Frames:
+	* Framerate
+	* Objectives Window
+	* Objectives Window Scale
+
+**15.2.1**
+* Added Frames:
+	* Shipyard Follower Alert
+
+**15.2.0**
+* Fixed Frames:
+	* Player Alternative Power Bar
+* Removed Frames:
+	* Player Alternative Power Counter Bar
+
+**15.1.9**
+* Fixed Frames:
+	* Player Alternative Power Bar
+	* Player Alternative Power Counter Bar
+
+**15.1.8**
+* Added Frames:
+	* Pet Casting Bar
+
+**15.1.7**
+* Added Categories:
+	* Shipyard
+* Added Frames:
+	* Shipyard Mission Alert
+
+**15.1.6**
+* Updated for 6.2.0.
+* Bindings fixes.
+* Added Frames:
+	* Naval Operations
+
+**15.1.5**
+* Fixed Frames:
+	* Bank Bag Slots
+	* Bank Bag 1
+	* Bank Bag 2
+	* Bank Bag 3
+	* Bank Bag 4
+	* Bank Bag 5
+	* Bank Bag 6
+	* Bank Bag 7
+* Added Frames:
+	* Tooltip - Guild Bank Item
+
+**15.1.4**
+* Fixed Frames:
+	* Player Buffs From Right to Left 
+
+**15.1.3**
+* Fixed some smaller issues.
+* Fixed Frames:
+	* Player Buffs From Right to Left 
+
+**15.1.2**
+* Fixed a smaller issue.
+
+**15.1.1**
+* Fixed an issue with the microbuttons when entering/leaving pet battles.
+* Some other smaller fixes.
+* Added Frames:
+	* Boss Banner
+
+**15.1.0**
+* Fixed Frames:
+	* Mounts / Pets (Now renamed to Collections)
+	* Micro Menu
+	* Micro Menu - Split
+	* Micro Menu - Vertical
+
+
+**15.0.9**
+* Updated to 6.1.0.
+* Some other smaller fixes.
+
+**15.0.8**
+* Smaller fixes with showing frames.
+
+**15.0.7**
+* Fixed an issue with enabling/disable frames.
+* Added Categories:
+	* Garrison
+	* Store
+* Added Frames:
+	* Draenor Zone Ability
+	* Player Alternative Power Counter Bar
+	* Garrison Report
+	* Garrison Minimap Button
+	* Garrison Architecht
+	* Garrison Missions
+	* Garrison Misson Alert
+	* Garrison Building Alert
+	* Garrison Follower Alert
+	* Garrison Work Order
+	* Store Purchase Alert
+
+**15.0.6**
+* More taint fixes with the "ObjectiveTrackerFrame".
+* Fixed some leaks.
+* Added some upvalues.
+* Some other smaller fixes.
+* Fixed Frames:
+	* MiniMap
+
+**15.0.5**
+* More taint fixes with the "ObjectiveTrackerFrame".
+
+**15.0.4**
+* More taint fixes with the "ObjectiveTrackerFrame".
+* Some other minor fixes.
+* Removed frames:
+	* Loot Won Alert Frame (Addons can't access this frame anymore.)
+
+**15.0.3**
+* Fixed the protected taint issues with the "ObjectiveTrackerFrame".
+
+**15.0.2**
+* MicroButton fixes.
+
+**15.0.1**
+* WorldMapFrame will sync when toggling it's size down.
+* Boss frames can be properly hidden. (To reshow them you need to reload your UI after you reset the frames.)
+* Added frames:
+	* QuestLogPopupDetailFrame
+
+**15.0.0**
+* Updated for 6.0.2.
+* WatchFrame and Arena frame fixes.
+* Quest related frame fixes.
+* Minimap and World Map fixes.
+* Some other smaller fixes.
+* Removed frames:
+	* Map Level
+	* Map Options
+	* Map Track Quest
+	* Map Coordinates
+	* Quest Log
+	* Quest Details
+
+**14.0.9**
+* Quick update for 6.0.2 for the US guys out there.
+
+**14.0.8**
+* Fixed a nasty taint.
+* Added frames:
+	* ArchaeologyFrame
+	* ReforgingFrame
+
+**14.0.7**
+* Fixed the issue with saved variables loss.
+* The interface options should properly update on show.
+* Added some extra taint protection.
+* Some other smaller fixes.
+
+**14.0.6**
+* Player buff and debuff frames are now properly scaleable.
+* Consolidate buff fixes.
+* Fixed frames:
+	* Player Buffs Default
+	* Player Buffs From Right to Left
+	* Player Debuffs Default
+	* Player Debuffs From Right to Left
+
+**14.0.5**
+* Force locked buff/debuff frames on unitframes.
+* Fixed frames:
+	* TargetBuffsMover
+	* TargetDebuffsMover
+	* FocusBuffsMover
+	* FocusDebuffsMover
+
+**14.0.4**
+* Fixed an issue which caused massive errors when you hidden your "AchievementMicroButton" by any way.
+* Added frames:
+	* Trainer Frame
+* Fixed frames:
+	* TargetBuffsMover
+	* TargetDebuffsMover
+	* TargetFrameToTDebuffsMover
+	* FocusBuffsMover
+	* FocusDebuffsMover
+	* FocusFrameToTDebuffsMover
+
+**14.0.3**
+* Reverted disabled frames from the last version. (Sorry for the inconvenience.)
+* Fixed a major issue whcih caued scale locking not working properly. (This will fix a lot of frame jumping issues.)
+* Some other smaller fixes.
+
+**14.0.2**
+* Some minor fixes.
+* Disabled frames:
+	* Boss1TargetFrame
+	* Boss2TargetFrame
+	* Boss3TargetFrame
+	* Boss4TargetFrame
+	* Boss5TargetFrame
+
+**14.0.1**
+* Fixed an issue which caused hidden frames to reappear on profile change and on some other events.
+* Added a function to auto-reset the "LFRParentFrame" if modified on load. This will fix the broken "Other Raid Panel".
+* Fixed a random SetPoint error, specially with scaling.
+* Fixed an error when reseting textures.
+* Some other minor fixes.
+
+**14.0.0**
+* Fixed frames:
+	* TargetBuffsMover
+	* TargetDebuffsMover
+	* TargetFrameToTDebuffsMover
+	* FocusBuffsMover
+	* FocusDebuffsMover
+	* FocusFrameToTDebuffsMover
+* Some other smaller fixes.
+
+**13.9.9**
+* Added frames:
+	* Zone Minimap
+
+**13.9.8**
+* Fixed an issue when you deattached "Texture" and "FontString" type elements.
+* Scaling the "Action Bar Vertical" will properly scale, the "ActionBarDownButton" and "ActionBarDownButton" frames too.
+* Some other minor fixes.
+* Added frames:
+	* Player PVP Icon
+	* Player Rest Icon
+	* Player Rest Icon's Glow
+	* Player Attack Icon
+	* Player Attack Icon's Glow
+	* Player Attack Icon's Background
+	* Player Status Texture
+	* Player Leader Icon
+	* Player Master Icon
+	* Target PVP Icon
+	* Focus PVP Icon
+
+**13.9.7**
+* Scaling the "Action Bar" will properly scale, the "ActionBarDownButton" and "ActionBarDownButton" frames too.
+* Added more upvalues.
+* Some other minor fixes.
+
+**13.9.6**
+* Added upvalues.
+* Fixed an issue which caused hidden frames to reapper sometimes.
+* Fixed an issue with "Close GUI on escape" options.
+* Fixed an issue with the "List Row" slider.
+* Added SetCVar safety options.
+* Some performance upgradements.
+* Some other minor fixes.
+
+**13.9.5**
+* Some minor fixes.
+* Added frames:
+	* Bank Bag Slot 1
+	* Bank Bag Slot 2
+	* Bank Bag Slot 3
+	* Bank Bag Slot 4
+	* Bank Bag Slot 5
+	* Bank Bag Slot 6
+	* Bank Bag Slot 7
+	* Guild Bank Tab 1
+	* Guild Bank Tab 2
+	* Guild Bank Tab 3
+	* Guild Bank Tab 4
+	* Guild Bank Tab 5
+	* Guild Bank Tab 6
+	* Guild Bank Tab 7
+	* Guild Bank Tab 8
+
+**13.9.4**
+* Minor minimap related fixes.
+* Some other fixes.
+
+**13.9.3**
+* Fixed an issue from the last release.
+* Fixed frames:
+	* Player Buffs from Right to Left
+
+**13.9.2**
+* Fixed frames:
+	* Arena Enemy Pet 1
+	* Arena Enemy Pet 2
+	* Arena Enemy Pet 3
+	* Arena Enemy Pet 4
+	* Arena Enemy Pet 5
+	* Arena Enemy Casting Bar 1
+	* Arena Enemy Casting Bar 2
+	* Arena Enemy Casting Bar 3
+	* Arena Enemy Casting Bar 4
+	* Arena Enemy Casting Bar 5
+
+**13.9.1**
+* Added frames:
+	* Chat Edit Window Length
+* Fixed frames:
+	* Chat Edit Window
+	* Player Buffs Default
+
+
+**13.9.0**
+* Fixed an issue with profile handling.
+* Some global cleanups.
+* Some other smaller fixes.
+* Added frames:
+	* Raid Frame Buff Tooltips
+	* Raid Frame Debuff Tooltips
+	* Consolidated Buffs
+	* Ally Pet Buffs
+	* Ally Pet Debuffs
+	* Ally Pet Pad Buffs
+	* Ally Pet Pad Debuffs
+	* Enemy Pet Buffs
+	* Enemy Pet Debuffs
+	* Enemy Pet Pad Buffs
+	* Enemy Pet Pad Debuffs
+* Fixed frames:
+	* Objectives Window
+	* Objectives Window Scale
+	* Focus Buffs
+	* Player Buffs Default
+	* Player Buffs From Right to Left
+	* Player Debuffs Default
+	* Player Debuffs From Right to Left
+
+**13.8.9**
+* Workaround to set Micro Menu buttons to the default postion in pet battles, and vehicle frames.
+* Xml fixes.
+* Added frames:
+	* Other Raids
+	* WorldMapTrackQuest
+* Fixed frames:
+	* Micro Menu
+	* Micro Menu - Split
+	* Micro Menu - Vertical
+	* Ally Pet 2
+
+**13.8.8**
+* Fixed an issue which caused frames children's alpha not to reset properly.
+* Added frames:
+	* Micro Menu - Split
+	* Bank Money
+	* Bank Money Gold
+	* Bank Money Silver
+	* Bank Money Copper
+	* Bank Money Border
+	* Bank Money Inset
+	* Top Left Center
+	* Ally Pet 2
+	* Ally Pet 3
+	* Enemy Pet 2
+	* Enemy Pet 3
+* Fixed frames:
+	* Top Right Art
+	* Top Left Art
+	* Weather
+	* Player Pet Frame
+	* Enemy Pet Frame
+	* Bottom Frame
+	* Pet Selection Frame
+	* Pass Button
+	* Bottom Frame
+	* Pet Selection Frame
+
+**13.8.7**
+* Workaround for HideRaidFrame addon's "Hard Disable" function.
+* Readded !NoTaint, seems like it was too early to remove it.
+* Fixed an issue with hiding frames.
+* Fixed incorrent bag order with "Bag Buttons".
+* Some other smaller fixes.
+* Fixed frames:
+	* Round Border
+	* North Indicator
+
+**13.8.6**
+* Fixed an issue with scaling.
+* Fixed a taint with AlwaysUpFrames.
+* Fixed an issue with force locked frames.
+* Added frames:
+	* WorldMapLevelDropDown (Experimental)
+
+**13.8.5**
+* Hiding a frame not automatically gonna detach it's mover.
+* Hided frames can't be reattached untill you show the frame again.
+* Fixed a major scaling issue.
+* Fixed an issue with groups.
+* Fixed an issue with Always Protected frames.
+* Fixed a taint with PetJourname, when you opened Mounts and Pets info panel while in combat.
+* Removed an unnecessary MicroButton taint fix.
+* Removed NoTaint lib.
+* Fixed a taint issue with: AlwaysUpFrame1, AlwaysUpFrame2, AlwaysUpFrame3, WorldStateAlwaysUpFrame.
+* Fixed the position of ArenaEnemyFrames and ArenaPrepFrames.
+* CompactRaidFrameManager's toggle button is going to work properly, when you moved the frame. You can also properly hide the frame.
+* The addon automatically going to unregister and reregister event for PaladinPowerBar frame when it hidden/shown/reset. (More powerbar frames will be added later.)
+* Xml validation fixes.
+* Added Categories:
+	* Map (Experimental)
+* Fixed frames:
+	* PlayerPowerBarAltMover
+	* CompactRaidFrameManager
+	* CompactRaidFrameManagerToggleButton
+	* MicroButtons
+	* MicroButtonsVertical
+	* BagButtons
+	* WorldStateAlwaysUpFrame
+* Added frames:
+	* AlwaysUpFrame3
+	* MainMenuBarBackpackButton
+	* TargetFramePowerBarAltMover
+	* BankBagItems
+	* BankBagSlots
+	* BankItemSearchBox
+	* GuildItemSearchBox
+	* GuildBankInfoSaveButton
+	* GuildBankFrameWithdrawButton
+	* GuildBankFrameDepositButton
+	* GuildBankWithdrawMoneyFrame
+	* GuildBankWithdrawMoneyFrameGoldButton
+	* GuildBankWithdrawMoneyFrameSilverButton
+	* GuildBankWithdrawMoneyFrameCopperButton
+	* GuildBankMoneyFrame
+	* GuildBankMoneyFrameGoldButton
+	* GuildBankMoneyFrameSilverButton
+	* GuildBankMoneyFrameCopperButton
+	* WorldMapFrame (Experimental)
+	* WorldMapShowDropDown (Experimental)
+	* WorldMapPositioningGuide (Experimental)
+* Removed frames:
+	* PVPTeamDetails
+* Fixed a lot of other smaller issues.
+
+**13.8.4**
+* Fixed a major issue, which caued some frames and it's movers to change positions.
+* Fixed a taint caused by "AlwaysUpFrame" most likely in battlegrounds.
+* Code cleanup round one.
+
+**13.8.3**
+* Localization updates.

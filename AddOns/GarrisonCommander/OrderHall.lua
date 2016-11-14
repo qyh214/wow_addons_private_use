@@ -25,10 +25,11 @@ local GCS
 local GHF
 local GHFMissions
 function module:OnInitialize(...)
---[===[@debug@
-	print("OrderHall Init",GHF,ns.GHF)
---@end-debug@]===]
 	if not ns.GHF then return end -- Waiting to be late initialized by init routine
+	if GetAddOnEnableState(UnitName("player"),"OrderHallCommander") > 0 then
+		self:Print("Delegating hall management to OrderHallCommander")
+		return
+	end
 	GHF=ns.GHF
 	GHFMissions=ns.GHFMissions
 	--GARRISON_SHIPYARD_NPC_OPEN
@@ -41,18 +42,16 @@ function module:OnInitialize(...)
 	bt:SetText(L["Garrison Comander Quick Mission Completion"])
 	bt:SetPoint("CENTER",0,-50)
 	addon:ActivateButton(bt,"MissionComplete",L["Complete all missions without confirmation"])
-	self:SafeHookScript(GHF,"OnShow","Setup",true)
-	self:SafeHookScript(GHF.MissionTab.MissionList.CompleteDialog,"OnShow",true)
-	self:SafeHookScript(GHF.MissionTab,"OnShow",true)
-	self:SafeHookScript(GHF.FollowerTab,"OnShow",true)
+	self:SafeSecureHookScript(GHF,"OnShow","Setup",true)
 	self:SafeRegisterEvent("ADVENTURE_MAP_CLOSE")
 	self:SafeRegisterEvent("GARRISON_MISSION_STARTED")
 	--GarrisonShipyardFrameFollowersListScrollFrameButton1
 	--GarrisonShipyardMapMission1
 	addon:AddLabel(L["OrderHall Appearance"])
-	addon:AddToggle("HALLMOVEPANEL",true,L["Unlock Panel"],L["Makes shipyard panel movable"])
+	addon:AddToggle("HALLMOVEPANEL",true,L["Unlock Panel"],L["Makes Order Hall Mission panel movable"])
 	--addon:AddToggle("BIGSCREEN",true,L["Use big screen"],L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"])
 	addon:AddToggle("HALLPIN",true,L["Show Garrison Commander menu"],L["Disable if you dont want the full Garrison Commander Header."])
+	--addon:HallSort()
 	for _,b in ipairs(GHF.MissionTab.MissionList.listScroll.buttons) do
 		local scale=0.8
 		local f,h,s=b.Title:GetFont()
@@ -66,9 +65,21 @@ function module:OnInitialize(...)
 	end
 	GHF.MissionTab.MissionList.Update=addon.HookedGarrisonMissionList_Update
 	GHF.MissionTab.MissionList.SetTab=addon.HookedGarrisonMissionList_SetTab
+	addon:AddLabel("Order Hall")
+	addon:AddSelect("MSORTH","Garrison_SortMissions_Original",
+	{
+		Garrison_SortMissions_Original=L["Original method"],
+		Garrison_SortMissions_Chance=L["Success Chance"],
+		Garrison_SortMissions_Followers=L["Number of followers"],
+		Garrison_SortMissions_Age=L["Expiration Time"],
+		Garrison_SortMissions_Xp=L["Global approx. xp reward"],
+		Garrison_SortMissions_Duration=L["Duration Time"],
+		Garrison_SortMissions_Class=L["Reward type"],
+	},
+	L["Sort missions by:"],L["Original sort restores original sorting method, whatever it was (If you have another addon sorting mission, it should kick in again)"])
+
 end
 function module:AddLevel(source,button,mission,missionID,bigscreen)
-	print("Hall")
 	button.Level:SetPoint("CENTER", button, "TOPLEFT", 40, -36);
 	local quality=math.min(math.max(mission.level-UnitLevel("player")+3,0),6)
 	button.Level:SetText(mission.level)
@@ -107,6 +118,7 @@ print("Doing one time initialization for",this:GetName(),...)
 	GHF.FollowerStatusInfo:Show()
 	self:ScriptOrderHallMissionFrame_OnShow()
 	self:RefreshParties()
+	self:FollowerSetup()
 end
 function module:ScriptOrderHallMissionFrame_OnShow()
 --[===[@debug@
@@ -134,6 +146,10 @@ print("NPC CLOSED")
 		self:RemoveMenu()
 		GCS:Hide()
 	end
+end
+function addon:ApplyMSORTH(value)
+	self:ApplyMSORT(value)
+	self:RefreshMissions()
 end
 
 function module:EventGARRISON_MISSION_STARTED(event,missionType,missionID,...)
@@ -170,7 +186,7 @@ print("Adding Menu",GCS.Menu,GHF.MissionTab:IsVisible(),GHF.FollowerTab:IsVisibl
 
 	if GHF.MissionTab:IsVisible() then
 		self.currentmenu=GHF.MissionTab
-		menu,size=self:CreateOptionsLayer('HALLMOVEPANEL')
+		menu,size=self:CreateOptionsLayer('HALLMOVEPANEL','MSORTH')
 	elseif GHF.FollowerTab:IsVisible() then
 		self.currentmenu=GHF.FollowerTab
 		menu,size=self:CreateOptionsLayer('HALLMOVEPANEL')
@@ -248,6 +264,150 @@ do
 		end
 	end
 end
+function module:DelayedRefresh(delay)
+	if GHF.FollowerTab:IsShown() then
+		if not tonumber(delay) then delay=0.5 end
+		return C_Timer.After(delay,function() module:ShowUpgradeButtons() end)
+	end
+end
+function module:FollowerSetup()
+	self:RegisterEvent("GARRISON_FOLLOWER_UPGRADED","DelayedRefresh")
+	self:RegisterEvent("CHAT_MSG_LOOT","DelayedRefresh")
+	self:ShowUpgradeButtons()
+end
+function module:ShowUpgradeButtons(force)
+	if InCombatLockdown() then
+		self:ScheduleLeaveCombatAction("ShowUpgradeButtons",force)
+		return
+	end
+	local gf=GHF.FollowerTab
+	if not self:GetBoolean("UPG") then
+		if not gf.upgradeButtons then return end
+		local b=gf.upgradeButtons
+		for i=1,#b	 do
+			b[i]:Hide()
+		end
+		return
+	end
+	if (not force and not gf:IsVisible()) then return end
+	if not gf.upgradeButtons then gf.upgradeButtons ={} end
+	--if not gf.upgradeFrame then gf.upgradeFrame=CreateFrame("Frame",nil,gf.model) end
+	local b=gf.upgradeButtons
+	local upgrades=self:GetUpgrades(LE_FOLLOWER_TYPE_GARRISON_7_0)
+	local axpos=self:GetBoolean("SWAPBUTTONS") and 7 or 243
+	local wxpos=self:GetBoolean("SWAPBUTTONS") and 243 or 7
+	local wypos=-85
+	local aypos=-85
+	local used=1
+	if not gf.followerID then
+		return self:DelayedRefresh(0.1)
+	end
+	local followerID=gf.followerID
+	local followerInfo = followerID and G.GetFollowerInfo(followerID);
+--	gf.ItemWeapon.itemLevel=674
+--	gf.ItemArmor.itemLevel=674
+	local overTheTop=false
+	if (not overTheTop and  followerInfo and followerInfo.isCollected and not followerInfo.status and followerInfo.level == GARRISON_FOLLOWER_MAX_LEVEL ) then
+		ClearOverrideBindings(gf)
+		local binded={}
+		local currentType=""
+		local shown
+		local reuse
+		for i=#upgrades,1,-1 do
+			local tipo,itemID,level=strsplit(":",upgrades[i])
+			if not b[used] then
+				b[used]=CreateFrame("Button","GCUPGRADES"..used,gf,"GarrisonCommanderUpgradeButton,SecureActionbuttonTemplate")
+			end
+			level=tonumber(level)
+			local A=b[used]
+			local qt=GetItemCount(itemID)
+--[===[@debug@
+			print(tipo,level)
+--@end-debug@]===]
+			repeat
+				if (qt>0) then
+					A:ClearAllPoints()
+					A.tipo=tipo
+					if tipo ~=currentType then
+						shown=false
+						currentType=tipo
+					end
+					local currentlevel=tipo:sub(1,1)=="w" and gf.ItemWeapon.itemLevel or  gf.ItemArmor.itemLevel
+					if currentlevel == GARRISON_FOLLOWER_MAX_ITEM_LEVEL then
+						break
+					end
+					if level > 600 and level <= currentlevel then
+						break -- Pointless item for this toon
+					end
+					if level<600 and level + currentlevel > GARRISON_FOLLOWER_MAX_ITEM_LEVEL then
+						if shown then
+							reuse=true
+						end
+					end
+					if (not binded[tipo]) then
+						binded[tipo]=true
+						local kb=GetBindingKey("GC" .. tipo:upper())
+						if (kb ) then
+							SetOverrideBindingClick(gf,false,kb,A:GetName())
+							A.Shortcut:SetText(GetBindingText(kb,"",true))
+						else
+							A.Shortcut:SetText('')
+						end
+					else
+						A.Shortcut:SetText('')
+					end
+					shown=true
+					if reuse then
+						A=b[used-1]
+						reuse=false
+					else
+						used=used+1
+						if (tipo:sub(1,1)=="a") then
+							A:SetPoint("TOPLEFT",axpos,aypos)
+							aypos=aypos-45
+						else
+							A:SetPoint("TOPLEFT",wxpos,wypos)
+							wypos=wypos-45
+						end
+					end
+					A:SetSize(40,40)
+					A.Icon:SetSize(40,40)
+					A.itemID=itemID
+					GarrisonMissionFrame_SetItemRewardDetails(A)
+					A.rawlevel=level
+					A.Level:SetText(level < 600 and (currentlevel+level) or level)
+					local c=colors[level]
+					A.Level:SetTextColor(C[c]())
+					A.Quantity:SetFormattedText("%d",qt)
+					A.Quantity:SetTextColor(C.Yellow())
+					if toc <70000 then
+						A:SetFrameLevel(gf.Model:GetFrameLevel()+1)
+					else
+						A:SetFrameLevel(20)
+					end
+					A.Quantity:Show()
+					A.Level:Show()
+					A:EnableMouse(true)
+					A:RegisterForClicks("LeftButtonDown")
+					A:SetAttribute("type","item")
+					A:SetAttribute("item",select(2,GetItemInfo(itemID)))
+					A:Show()
+					if tipo=="at" or tipo =="wt" then
+						A.Level:Hide()
+						A:SetScript("PostClick",nil)
+					else
+						A.Level:Show()
+						A:SetScript("PostClick",UpgradeFollower)
+					end
+				end
+			until true -- Continue dei poveri
+		end
+	end
+	for i=used,#b do
+		b[i]:Hide()
+	end
+end
+
 
 --[[ Follower
 displayHeight = 0.25

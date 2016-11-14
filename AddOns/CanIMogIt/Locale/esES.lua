@@ -1,6 +1,7 @@
 local translations = {
 	["Adds tooltips to items showing if you have learned a transmog appearance."] = "Añade a la descripción del objeto si se conoce la apariencia.",
 	["Another class can learn this item."] = "Otra clase puede aprenderlo.",
+	-- ["Appearances updated: "] = "",
 	["Can be learned by:"] = "Puede aprenderse con:",
 	["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Can I Mog It? IMPORTANTE: inicie sesión con todos sus personajes para compilar sus datos transfiguración.",
 	["CanIMogItOptions not found, loading defaults!"] = "Las opciones de CanIMogIt? no se encuentran, ¡recarguelas por defecto!",
@@ -12,6 +13,7 @@ local translations = {
 	["Debug Tooltip"] = "Depuración del Tooltip",
 	["Detailed information for debug purposes. Use this when sending bug reports."] = "Información detallada de depuración. Utilice esta opción para el envío de informes de errores.",
 	["Equippable Items Only"] = "Sólo objetos equipables",
+	-- ["Items updated: "] = "",
 	["Learned."] = "Conocido",
 	["Learned but cannot transmog yet."] = "Conocido pero no se puede transfigurar todavía.",
 	["Learned for a different class."] = "Conocido de otra clase.",
@@ -19,6 +21,7 @@ local translations = {
 	["Learned from another item."] = "Conocido de otro objeto.",
 	["Learned from another item but cannot transmog yet."] = "Conocido de otro objeto pero no se puede transfigurar todavía.",
 	["Not learned."] = "Desconocido",
+	["Okay, I'll go log onto all of my toons!"] = "Vale, ¡Me meteré en todos mis personajes!",
 	["Only show on items that can be equipped."] = "Sólo mostrar objetos que puedan set equipados.",
 	["Only show on items that can be transmoggrified."] = "Sólo mostrar en los objetos que se pueden transfigurar.",
 	["Only show on items that you haven't learned."] = "Sólo mostrar en los objetos que no ha aprendido.",
@@ -27,6 +30,7 @@ local translations = {
 	["Shows the icon directly on the item in your bag."] = "Muestra directamente el icono en el objeto de tu bolsa.",
 	["Transmoggable Items Only"] = "Solo objetos transfigurables",
 	["Unknown Items Only"] = "Sólo objetos desconocidos",
+	-- ["Updating appearances database."] = "",
 	["Verbose Text"] = "Texto detallado",
 }
 

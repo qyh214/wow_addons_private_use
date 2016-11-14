@@ -1,3 +1,7 @@
+TipTacItemRef Changes | 2016 Oct 27
+-----------------------------------
+- Updated the TOC version to 70100 for the 7.1 patch.
+
 TipTacItemRef Changes | 2016 Aug 30
 -----------------------------------
 - GetUpgradedItemLevel: This library has been renamed into LibItemString. It has a few more features as well as using tooltip scanning to get the true itemLevel.

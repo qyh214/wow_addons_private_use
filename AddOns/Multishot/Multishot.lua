@@ -60,10 +60,10 @@ end
 
 function Multishot:CHALLENGE_MODE_COMPLETED(strEvent)
 	if not MultishotConfig.challengemode then return end
-	local mapID, medal, completionTime, moneyAmount, numRewards = GetChallengeModeCompletionInfo()
-	if (medal) and CHALLENGE_MEDAL_TEXTURES[medal] then -- only take screenshot for bronze and up for now
+	--local mapID, medal, completionTime, moneyAmount, numRewards = GetChallengeModeCompletionInfo()
+	--if (medal) and CHALLENGE_MEDAL_TEXTURES[medal] then -- only take screenshot for bronze and up for now
 		self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
-	end
+	--end
 end
 
 function Multishot:UPDATE_BATTLEFIELD_STATUS(strEvent)
@@ -125,7 +125,8 @@ end
 
 function Multishot:COMBAT_LOG_EVENT_UNFILTERED(strEvent, ...)
   local strType, _, sourceGuid, _, _, _, destGuid = select(2, ...) -- 4.1 compat, 4.2 compat
-  local currentId = destGuid and tonumber(destGuid:sub(-16, -12)) -- 6.x
+  --local currentId = destGuid and tonumber(destGuid:sub(-16, -12)) -- 6.x
+  local currentId = tonumber((select(6, strsplit("-", destGuid))))  -- 7.x
   if strType == "UNIT_DIED" or strType == "PARTY_KILL" then
     local solo, inParty, inRaid
     if IsInRaid() then inRaid = true elseif IsInGroup() then inParty = true else solo = true end
@@ -136,7 +137,7 @@ function Multishot:COMBAT_LOG_EVENT_UNFILTERED(strEvent, ...)
     if not (Multishot_dbWhitelist[currentId] or Multishot.BossID[currentId] or Multishot.RareID[currentId]) or Multishot_dbBlacklist[currentId] then return end
     if MultishotConfig.firstkill and MultishotConfig.history[UnitName("player") .. currentId] then return end
     MultishotConfig.history[player .. currentId] = true
-    isDelayed = currentId
+    isDelayed = currentId  --FLAG
     if UnitIsDead("player") then
       self:PLAYER_REGEN_ENABLED(strType)
     end

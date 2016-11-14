@@ -371,17 +371,22 @@ function TitanPanel_PlayerEnteringWorld()
 			ServerHourFormat[realmName] = TitanGetVar(TITAN_CLOCK_ID, "Format")
 		end
 		
-		-- Kill off the OrderHallCommandBar
-		local TitanPanelAce = LibStub("AceAddon-3.0"):NewAddon("TitanPanelOHCB", "AceHook-3.0")
-		TitanPanelAce:SecureHook("OrderHall_CheckCommandBar",
-			function()
-				if OrderHallCommandBar then
-					OrderHallCommandBar:Hide()
-					OrderHallCommandBar:UnregisterAllEvents()
-					OrderHallCommandBar.Show = function () end
+		-- Check to see if we should kill off the OrderHallCommandBar
+		if not TitanAllGetVar("OrderHall") then
+			local TitanPanelAce = LibStub("AceAddon-3.0"):NewAddon("TitanPanelOHCB", "AceHook-3.0")
+			TitanPanelAce:SecureHook("OrderHall_CheckCommandBar",
+				function()
+					if OrderHallCommandBar then
+						OrderHallCommandBar:Hide()
+						OrderHallCommandBar:UnregisterAllEvents()
+						OrderHallCommandBar.Show = function () end
+					end
 				end
-			end
-		)
+			)
+		else
+			local TitanPanelAce = LibStub("AceAddon-3.0"):NewAddon("TitanPanelOHCB", "AceHook-3.0")
+			TitanPanelAce:Unhook("OrderHall_CheckCommandBar")
+		end
 	end
 	local _ = nil
 	TitanSettings.Player,_,_ = TitanUtils_GetPlayer()
@@ -639,6 +644,10 @@ local function handle_slash_help(cmd)
 		TitanPrint(L["TITAN_PANEL_SLASH_SILENT_0"], "plain")
 		TitanPrint(L["TITAN_PANEL_SLASH_SILENT_1"], "plain")
 	end
+	if cmd == "orderhall" then
+		TitanPrint(L["TITAN_PANEL_SLASH_ORDERHALL_0"], "plain")
+		TitanPrint(L["TITAN_PANEL_SLASH_ORDERHALL_1"], "plain")
+	end
 	if cmd == "help" then
 		TitanPrint(L["TITAN_PANEL_SLASH_HELP_0"], "plain")
 		TitanPrint(L["TITAN_PANEL_SLASH_HELP_1"], "plain")
@@ -772,6 +781,29 @@ local function handle_silent_cmds(cmd_list)
 end
 
 --[[ local
+NAME: handle_orderhall_cmds
+DESC: Helper to execute the orderhall commands from the user.
+VAR: cmd_list - A table containing the list of 'words' the user typed in
+OUT: None
+--]]
+local function handle_orderhall_cmds(cmd_list)
+	local cmd = cmd_list[1]
+	local p1 = cmd_list[2] or nil
+	-- sanity check
+	if (not cmd == "orderhall") then
+		return
+	end
+
+	if TitanAllGetVar("OrderHall") then
+		TitanAllSetVar("OrderHall", false);
+		TitanPrint(L["TITAN_PANEL_MENU_HIDE_ORDERHALL"].." ".. L["TITAN_PANEL_MENU_DISABLED"], "info")
+	else
+		TitanAllSetVar("OrderHall", true);
+		TitanPrint(L["TITAN_PANEL_MENU_HIDE_ORDERHALL"].." ".. L["TITAN_PANEL_MENU_ENABLED"], "info")
+	end
+end
+
+--[[ local
 NAME: handle_help_cmds
 DESC: Helper to execute the help commands from the user.
 VAR: cmd_list - A table containing the list of 'words' the user typed in
@@ -813,6 +845,8 @@ local function TitanPanel_RegisterSlashCmd(cmd_str)
 		handle_profile_cmds(cmd_list)
 	elseif (cmd == "silent") then
 		handle_silent_cmds(p1)
+	elseif (cmd == "orderhall") then
+		handle_orderhall_cmds(p1)
 	elseif (cmd == "help") then
 		handle_slash_help(p1)
 	else

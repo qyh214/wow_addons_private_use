@@ -1,3 +1,6 @@
+local ADDON_NAME, namespace = ... 	--localization
+local L = namespace.L 				--localization
+
 -- ------------------------------------------------
 -- -- DCS Character Frame Expand/Collapse Button --
 -- ------------------------------------------------
@@ -45,14 +48,14 @@ DCS_ExpandCheck:SetScript("OnMouseUp", function (self, button, up)
 		CharacterFrame_Collapse()
 		DCS_ExpandCheck:SetNormalTexture("Interface\\BUTTONS\\UI-SpellbookIcon-NextPage-Up")
 		gdbprivate.gdb.gdbdefaults.dejacharacterstatsExpandChecked.ExpandSetChecked = false
-		DCS_tooltipText = 'Show Character Stats' --Creates a tooltip on mouseover.
+		DCS_tooltipText = L['Show Character Stats'] --Creates a tooltip on mouseover.
 	else
 	--	print(checked)
 		CharacterFrame_Expand()
 		DCS_Scrollbar:SetMinMaxValues(0, 0)
 		DCS_ExpandCheck:SetNormalTexture("Interface\\BUTTONS\\UI-SpellbookIcon-PrevPage-Up")
 		gdbprivate.gdb.gdbdefaults.dejacharacterstatsExpandChecked.ExpandSetChecked = true
-		DCS_tooltipText = 'Hide Character Stats' --Creates a tooltip on mouseover.
+		DCS_tooltipText = L['Hide Character Stats'] --Creates a tooltip on mouseover.
 	end
 	DCS_ExpandCheck_OnEnter()
 end)
@@ -76,12 +79,12 @@ PaperDollFrame:SetScript("OnShow", function(self, event, arg1)
 	--	print(checked)
 		CharacterFrame_Expand()
 		DCS_Scrollbar:SetMinMaxValues(0, 0)
-		DCS_tooltipText = 'Hide Character Stats' --Creates a tooltip on mouseover.
+		DCS_tooltipText = L['Hide Character Stats'] --Creates a tooltip on mouseover.
 		DCS_ExpandCheck:SetNormalTexture("Interface\\BUTTONS\\UI-SpellbookIcon-PrevPage-Up")
 	else
 	--	print(checked)
 		CharacterFrame_Collapse()
-		DCS_tooltipText = 'Show Character Stats' --Creates a tooltip on mouseover.
+		DCS_tooltipText = L['Show Character Stats'] --Creates a tooltip on mouseover.
 		DCS_ExpandCheck:SetNormalTexture("Interface\\BUTTONS\\UI-SpellbookIcon-NextPage-Up")
 	end
 end)
@@ -95,8 +98,8 @@ local DCS_ExpandButtonCheck = CreateFrame("CheckButton", "DCS_ExpandButtonCheck"
 	DCS_ExpandButtonCheck:ClearAllPoints()
 	DCS_ExpandButtonCheck:SetPoint("LEFT", 25, -150)
 	DCS_ExpandButtonCheck:SetScale(1.25)
-	DCS_ExpandButtonCheck.tooltipText = 'Displays the Expand button for the character stats frame.' --Creates a tooltip on mouseover.
-	_G[DCS_ExpandButtonCheck:GetName() .. "Text"]:SetText("Expand")
+	DCS_ExpandButtonCheck.tooltipText = L['Displays the Expand button for the character stats frame.'] --Creates a tooltip on mouseover.
+	_G[DCS_ExpandButtonCheck:GetName() .. "Text"]:SetText(L["Expand"])
 	
 	DCS_ExpandButtonCheck:SetScript("OnEvent", function(self, event, arg1)
 		if event == "PLAYER_LOGIN" then

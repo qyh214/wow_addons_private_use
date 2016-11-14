@@ -19,18 +19,18 @@ local gmatch = _G.string.gmatch
 
 local leftBracket, rightBracket
 
-local defaults = { 
-	realm = {}, 
+local defaults = {
+	realm = {},
 	profile = {
 		leftBracket = "[",
 		rightBracket = "]",
-		colorMode = "COLOR_MOD", 
+		colorMode = "COLOR_MOD",
 		color = {0.6, 0.6, 0.6},
 		guildNotes=true,
 		guildprefix = "",
 		guildsuffix = "",
 		guildranks = {}
-	} 
+	}
 }
 local colorModes = {
 	COLOR_MOD = L["Use PlayerNames coloring"],
@@ -56,7 +56,7 @@ function mod:GetOptions()
 			order = 100,
 		},
 		leftbracket = {
-			order = 101, 
+			order = 101,
 			type = "input",
 			name = L["Left Bracket"],
 			desc = L["Character to use for the left bracket"],
@@ -133,11 +133,11 @@ function mod:GetOptions()
 			desc = L["Enter the starting character for guild note delimiters, or leave blank for none."],
 			disabled = function() return not mod.db.profile.guildNotes end,
 			get = function() return mod.db.profile.guildprefix end,
-			set = function(info,v) 
-				mod.db.profile.guildprefix = v 
+			set = function(info,v)
+				mod.db.profile.guildprefix = v
 				mod:ScanGuildNotes()
 			end,
-		},	
+		},
 		guildsuffix = {
 			order = 202,
 			type = "input",
@@ -145,11 +145,11 @@ function mod:GetOptions()
 			desc = L["Enter the ending character for guild note delimiters, or leave blank for none."],
 			disabled = function() return not mod.db.profile.guildNotes end,
 			get = function() return mod.db.profile.guildsuffix end,
-			set = function(info,v) 
-				mod.db.profile.guildsuffix = v 
+			set = function(info,v)
+				mod.db.profile.guildsuffix = v
 				mod:ScanGuildNotes()
 			end,
-		},	
+		},
 		rankHeader = {
 			order = 204,
 			type = "header",
@@ -161,7 +161,7 @@ end
 
 local function escape(s)
 	return (s:gsub('%%', '%%%%')
-	     	:gsub('%^', '%%%^')
+		:gsub('%^', '%%%^')
 		:gsub('%$', '%%%$')
 		:gsub('%(', '%%%(')
 		:gsub('%)', '%%%)')
@@ -210,7 +210,7 @@ StaticPopupDialogs['MENUITEM_SET_MAIN'] = {
 	timeout = 0,
 	whileDead = 1,
 	hideOnEscape = 1
-}	
+}
 
 UnitPopupButtons["SET_MAIN"] = {
 	text = L["Set Main"],
@@ -249,14 +249,14 @@ function mod:OnEnable()
 		LA:SetAlt(v,k,nil)
 	end
 	UnitPopupButtons["SET_MAIN"].func = self.GetMainName
-	tinsert(UnitPopupMenus["SELF"], 	#UnitPopupMenus["SELF"] - 1,	"SET_MAIN")
-	tinsert(UnitPopupMenus["PLAYER"], 	#UnitPopupMenus["PLAYER"] - 1,	"SET_MAIN")
-	tinsert(UnitPopupMenus["FRIEND"],	#UnitPopupMenus["FRIEND"] - 1,	"SET_MAIN")
-	tinsert(UnitPopupMenus["PARTY"], 	#UnitPopupMenus["PARTY"] - 1,	"SET_MAIN")
+	tinsert(UnitPopupMenus["SELF"],   #UnitPopupMenus["SELF"] - 1,   "SET_MAIN")
+	tinsert(UnitPopupMenus["PLAYER"], #UnitPopupMenus["PLAYER"] - 1, "SET_MAIN")
+	tinsert(UnitPopupMenus["FRIEND"], #UnitPopupMenus["FRIEND"] - 1, "SET_MAIN")
+	tinsert(UnitPopupMenus["PARTY"],  #UnitPopupMenus["PARTY"] - 1,  "SET_MAIN")
 	self:SecureHook("UnitPopup_ShowMenu")
 
 	leftBracket, rightBracket = self.db.profile.leftBracket, self.db.profile.rightBracket
-	
+
 	for i = 1, NUM_CHAT_WINDOWS do
 		local cf = _G["ChatFrame" .. i]
 		if cf ~= COMBATLOG then
@@ -270,7 +270,7 @@ function mod:OnEnable()
 			self:RawHook(cf, "AddMessage", true)
 		end
 	end
-	self.colorMod = Chatter:GetModule("Player Class Colors")
+	self.colorMod = Chatter:GetModule("Player Name Polish")
 	mod:EnableGuildNotes(mod.db.profile.guildNotes)
 end
 
@@ -292,8 +292,8 @@ end
 function mod.GetMainName()
 	local alt = UIDROPDOWNMENU_INIT_MENU.name
 	local popup = StaticPopup_Show("MENUITEM_SET_MAIN", alt)
-	if popup then 
-		popup.data = alt 
+	if popup then
+		popup.data = alt
 		local editbox = _G[popup:GetName().."EditBox"]
 		editbox:SetText(NAMES[alt] or GUILDNOTES[alt] or "")
 		editbox:HighlightText()
@@ -310,13 +310,13 @@ function mod:UnitPopup_ShowMenu(dropdownMenu, which, unit, name, userData, ...)
 end
 
 function mod:AddAlt(alt, main)
-	if #main == 0 then 
+	if #main == 0 then
 		if GUILDNOTES[alt] then
 			-- let the user store an empty note, meaning "dont show me this main"
 		else
 			NAMES[alt] = nil
 			LA:DeleteAlt(NAMES[alt],alt,nil)
-			main = nil 
+			main = nil
 		end
 	end
 	if main then
@@ -329,7 +329,7 @@ local function pName(msg, name)
 		local alt = NAMES[name] or GUILDNOTES[name]
 		if alt and alt ~= "" then		-- empty notes can be stored to override guildnote data
 			local mode = mod.db.profile.colorMode
-			if mode == "CUSTOM" then				
+			if mode == "CUSTOM" then
 				alt = customColorNames[alt]
 			elseif mode == "COLOR_MOD" and mod.colorMod and mod.colorMod:IsEnabled() then
 				alt = mod.colorMod:ColorName(alt)
@@ -341,8 +341,7 @@ local function pName(msg, name)
 end
 
 function mod:AddMessage(frame, text, ...)
-	if text and type(text) == "string" then 
-		--text = text:gsub("(|Hplayer:([^:]+)[:%d+]*|h.-|h)", pName)
+	if text and type(text) == "string" then
 		text = text:gsub("(|Hplayer:([^:]+).-|h.-|h)", pName)
 	end
 	return self.hooks[frame].AddMessage(frame, text, ...)
@@ -396,7 +395,7 @@ function mod:GUILD_ROSTER_UPDATE(event,arg1)
 			guild_available=true
 		end
 	end
-	
+
 	-- arg1 gets set for SOME changes to the guild, but notably not for player notes.. doh  (unless you're the one editing them yourself)
 	-- we force a scan when the guild frame is actually visible (i.e. when we know the player is actually interested in seeing changes)
 	-- i'd like to be able to not have the guildframe check there, but there's plenty of stupid-ass addons that spam GuildRoster() every 10/15/20 seconds, so ... no.
@@ -404,10 +403,10 @@ function mod:GUILD_ROSTER_UPDATE(event,arg1)
 		doscan=false
 		mod:ScanGuildNotes()
 	end
-	
+
 	if arg1 then
 		-- but it appears that when arg1 is set, the player note change isn't available yet; that happens on the next arg1=nil update (about 0.1s later), so catch that one too. ghod this is messy.
-		doscan=true	
+		doscan=true
 	end
 end
 
@@ -420,20 +419,18 @@ function mod:ScanGuildNotes()
 	if not gName then
 		return
 	end
-	--DBG print("Scanning guildnotes!")
-	--DBG local n,nFallback=0,0
 	local names = {}  -- ["playername"]="Playername"   (note lowercase = uppercase) (yes, this works for 'foreign' letters too in WoW, even though it does not in standard Lua)
 	GUILDNOTES = {} -- Yes, we do want to zap it, otherwise we end up storing notes for people being promoted/demoted through alt ranks and stuff
-	
+
 	-- #1: find all names
-	for i=1,GetNumGuildMembers(true) do
+	for i=1, GetNumGuildMembers(true) do
 		local name = (GetGuildRosterInfo(i))
 		names[strlower(name or "?")] = name
 	end
-	
+
 	-- #2: scan all words in all guild notes, see if a name is mentioned
-	for i=1,GetNumGuildMembers(true) do
-		local name, rank, rankIndex, level, class, zone, note, officernote, online, status = GetGuildRosterInfo(i);
+	for i=1, GetNumGuildMembers(true) do
+		local name, rank, rankIndex, level, class, zone, note, officernote, online, status = GetGuildRosterInfo(i)
 		local success
 		if self.db.profile.guildranks[rankIndex] then
 			for word in gmatch(strlower(note), self.db.profile.guildprefix.."[%a\128-\255]+"..self.db.profile.guildsuffix) do
@@ -441,13 +438,11 @@ function mod:ScanGuildNotes()
 				word = gsub(word, (escape(self.db.profile.guildsuffix)).."$", "")
 				if names[word] then
 					GUILDNOTES[name] = names[word]
-					LA:SetAlt(name,names[word],LA.GUILD_PREFIX..gName)
+					LA:SetAlt(name, names[word], LA.GUILD_PREFIX..gName)
 					success = true
-					--DBG n=n+1
 					break
 				end
 			end
 		end
 	end
-	--DBG print("Mapped",n,"names and",nFallback,"fallbacks!")
 end
