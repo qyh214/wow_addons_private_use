@@ -1,13 +1,16 @@
-wow_addons_private_use
+# wow_addons_private_use
+# wow_addons
 ======================
 
-魔兽世界（7.x）自用插件
-
-效果图：
-![screen](screen1.jpg)。
-
+## 魔兽世界（7.x）自用插件
 
 仅整理单体，非整合插件。
+
+
+## 效果图：
+![screen](./Screenshots/sample.jpg)。
+
+更多效果图可以查看Screenshots文件夹。
 
 
 如果有人有兴趣使用完整版插件或需要绝大多数插件的话，可以下载选择性使用，
