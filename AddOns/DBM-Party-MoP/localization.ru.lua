@@ -250,10 +250,6 @@ L= DBM:GetModLocalization(660)
 -----------------------
 L= DBM:GetModLocalization(654)
 
-L:SetMiscLocalization({
-	Call		= "Воитель Гарлан призывает себе на помощь двух своих союзников!"
-})
-
 -----------------------
 -- Flameweaver Koegler --
 -----------------------

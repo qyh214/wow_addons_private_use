@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1750, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15394 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15449 $"):sub(12, -3))
 mod:SetCreatureID(104636)
 mod:SetEncounterID(1877)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4)
-mod:SetHotfixNoticeRev(15125)
+mod:SetHotfixNoticeRev(15364)
 mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
@@ -76,6 +76,7 @@ local timerDisiccatingStompCD		= mod:NewCDTimer(32, 211073, nil, nil, nil, 2)
 local countdownForcesOfNightmare	= mod:NewCountdown(78.8, 212726)
 local countdownNightmareBrambles	= mod:NewCountdown("Alt30", 210290, "Ranged")--Never once saw this target melee
 local countdownNightmareBlast		= mod:NewCountdown("Alt32", 213162, "Tank")
+local countdownSpearOfNightmares	= mod:NewCountdown("Alt18", 214529, "Tank")
 ----Forces of Nightmare
 
 --Cenarius
@@ -182,6 +183,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 214529 then
 		timerSpearOfNightmaresCD:Start()
+		countdownSpearOfNightmares:Start(18.2)
 		local targetName, uId, bossuid = self:GetBossTarget(104636, true)
 		local tanking, status = UnitDetailedThreatSituation("player", bossuid)
 		if tanking or (status == 3) then--Player is current target
@@ -331,6 +333,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		countdownForcesOfNightmare:Cancel()
 		timerNightmareBramblesCD:Start(13)
 		timerSpearOfNightmaresCD:Start(20)
+		countdownSpearOfNightmares:Start(20)
 		timerCleansingGroundCD:Start(30.5)
 		timerEntanglingNightmareCD:Start(35)
 		if self:IsMythic() then

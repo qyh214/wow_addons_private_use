@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Deathbringer", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 227 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 240 $"):sub(12, -3))
 mod:SetCreatureID(37813)
 mod:SetEncounterID(1096)
 mod:SetModelID(30790)
@@ -19,8 +19,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_SUMMON",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
-	"UNIT_HEALTH target focus mouseover",
-	"UNIT_POWER target focus mouseover"
+	"UNIT_HEALTH boss1",
+	"UNIT_POWER boss1"
 )
 
 local warnFrenzySoon		= mod:NewSoonAnnounce(72737, 2, nil, "Tank|Healer")

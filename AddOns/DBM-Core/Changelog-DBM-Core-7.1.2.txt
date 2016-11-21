@@ -1,0 +1,47 @@
+tag 7.1.2
+6f902dc4c2b125f23eca535440448c66ad895c74
+subversion <svn@deadlybossmods.com>
+2016-11-15 13:25:48 +0100
+
+Tagging as 7.1.2
+
+
+--------------------
+
+subversion:
+	- increment version number to 7.1.2
+	- Omega via svn r15454: Bump HFR
+	- Omega via svn r15453: Another helya update
+	- Omega via svn r15452: Fix some heroic helya timers from WCL, need transcriptor to fix phase changes
+	- Omega via svn r15451: Sharthos update
+	- Omega via svn r15450: finally add interrupt helper for Viza. closes another ticket
+	- Omega via svn r15449: Add spear of nightmares countdown. #57
+	- Omega via svn r15448: Another guarm update
+	- Omega via svn r15447: Fix auto logger not working in trial of valor if ?\226?\128?\156current content only?\226?\128?\157 filter is enabled
+	- Omega via svn r15446: update guarms CID
+	- Omega via svn r15445: Fix another normal helya timer Kr Update
+	- Omega via svn r15444: small adjustment
+	- Omega via svn r15443: Helya normal update
+	- Omega via svn r15442: Guarm update. behaviors on normal now match LFR so update to use that code. still need to see heroic logs to fix that.
+	- Omega via svn r15441: Another odyn update, this time for normal.
+	- Omega via svn r15440: fix regression
+	- Omega via svn r15439: Forgot this timer
+	- Omega via svn r15438: Oh guess I should commit this. got distracted by twitters Odyn update CN update
+	- ultrashining via svn r15437: zhTW update
+	- ultrashining via svn r15436: zhTW update
+	- Omega via svn r15435: Update hash
+	- Omega via svn r15434: Push the 7.1 restriction reminder again. at least once a day someone is opening a ticket about radar/hud/arrow not working in instances. Fixed defiled spirit warning/timer not working beyond pull timer.
+	- Omega via svn r15433: This should probably fix issues with Mythic+ Timer not hiding. I realize now what?\226?\128?\153s happening is players already have a mod hiding objectives frame or replacing it, so frame is already returning false for visible, but dbm only canceled mythic+ if DBM is the mod that was hiding watch frame. This change should solve that, hopefully
+	- Omega via svn r15432: Add brackwater barrage. Closes #48
+	- TOM_RUS via svn r15431: ruRU update
+	- Omega via svn r15430: Add interrupt warning helper to nightbane
+	- Omega via svn r15429: Fix missing SPELL_AURA_APPLIED_DOSE in nightbane speed timer. now it?\226?\128?\153ll work for stacks
+	- Omega via svn r15428: Remove all of talkinghead disable code. Use Ketho?\226?\128?\153s HideTalkingHead instead.
+	- Omega via svn r15427: Bump a few more HF revisions so people with really out of date mods start getting more nags
+	- Omega via svn r15426: set HF
+	- Omega via svn r15425: Forgot to register UNIT_DIED
+	- Omega via svn r15424: Add nightbane warnings/timers. This should cover all the important stuff. minor tweaks will come later.
+	- Omega via svn r15423: KR and ES update
+	- Omega via svn r15422: Make the improved behavior new default, but keep it optional in case people preferred it other way
+	- Omega via svn r15421: Check debuff time on ilgyoth and warn to taunt earlier if it?\226?\128?\153ll fall off before next cast. Add timer correction when horror is delayed by flowers. Remove some redundancy in core
+	- tandanu via svn r15420: increment alpha version

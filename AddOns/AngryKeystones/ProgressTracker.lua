@@ -145,9 +145,9 @@ local function OnTooltipSetUnit(tooltip)
 						local matcher = format(forcesFormat, "%d+%%")
 						for i=2, tooltip:NumLines() do
 							local tiptext = _G["GameTooltipTextLeft"..i]
-							local linetext = tiptext:GetText()
+							local linetext = tiptext and tiptext:GetText()
 
-							if linetext:match(matcher) then
+							if linetext and linetext:match(matcher) then
 								tiptext:SetText(text)
 								tooltip:Show()
 							end

@@ -3,7 +3,7 @@
 ## Notes: Make more easy to see world quests
 ## SavedVariables: WQTrackerDB
 ## SavedVariablesPerCharacter: WQTrackerDBChr
-## X-Curse-Packaged-Version: r100
+## X-Curse-Packaged-Version: r101
 ## X-Curse-Project-Name: World Quest Tracker
 ## X-Curse-Project-ID: world-quest-tracker
 ## X-Curse-Repository-ID: wow/world-quest-tracker/mainline

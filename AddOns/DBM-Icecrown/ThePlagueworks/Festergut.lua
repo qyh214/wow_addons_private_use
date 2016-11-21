@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Festergut", "DBM-Icecrown", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 208 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 241 $"):sub(12, -3))
 mod:SetCreatureID(36626)
 mod:SetEncounterID(1097)
 mod:SetModelID(31006)
@@ -12,7 +12,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",
-	"UNIT_SPELLCAST_SUCCEEDED target focus"
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 local warnInhaledBlight		= mod:NewStackAnnounce(69166, 3)
@@ -114,20 +114,12 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName)
-	if spellName == GetSpellInfo(72299) and self:LatencyCheck() then -- Malleable Goo Summon Trigger (10 player normal) (the other 3 spell ids are not needed here since all spells have the same name)
-		self:SendSync("Goo")
-	end
-end
-
-function mod:OnSync(event, arg)
-	if event == "Goo" then
-		if self:AntiSpam(5, 2) then
-			specWarnGoo:Show()
-			if self:IsDifficulty("heroic25") then
-				timerGooCD:Start()
-			else
-				timerGooCD:Start(15)--30 seconds in between goos on 10 man heroic
-			end
+	if spellName == GetSpellInfo(72299) then -- Malleable Goo Summon Trigger (10 player normal) (the other 3 spell ids are not needed here since all spells have the same name)
+		specWarnGoo:Show()
+		if self:IsDifficulty("heroic25") then
+			timerGooCD:Start()
+		else
+			timerGooCD:Start(15)--30 seconds in between goos on 10 man heroic
 		end
 	end
 end

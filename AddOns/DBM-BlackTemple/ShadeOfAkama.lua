@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Akama", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 605 $"):sub(12, -3))
 mod:SetCreatureID(22841)
 mod:SetEncounterID(603)
 mod:SetModelID(21357)
@@ -27,7 +27,7 @@ function mod:OnCombatStart(delay)
 	self:RegisterShortTermEvents(
 		"SWING_DAMAGE",
 		"SWING_MISSED",
-		"UNIT_SPELLCAST_SUCCEEDED"
+		"UNIT_SPELLCAST_SUCCEEDED boss1 boss2"
 	)
 	if DBM.BossHealth:IsShown() then
 		DBM.BossHealth:Clear()

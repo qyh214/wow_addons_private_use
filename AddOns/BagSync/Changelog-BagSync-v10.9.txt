@@ -1,0 +1,11 @@
+tag v10.9
+3803c215f9f271e397d292ae018c885535c0fe87
+Xruptor <xruptor@manaflux.com>
+2016-11-14 12:24:17 -0500
+
+
+
+--------------------
+
+Xruptor:
+	- Added option to disable the BagSync version information at login.

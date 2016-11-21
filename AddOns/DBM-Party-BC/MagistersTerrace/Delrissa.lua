@@ -1,11 +1,11 @@
 local mod = DBM:NewMod(532, "DBM-Party-BC", 16, 249)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 604 $"):sub(12, -3))
 
 mod:SetCreatureID(24560)--24560 is main boss.
 mod:SetEncounterID(1895)
-mod:RegisterCombat("combat")--UNIT_HEALTH combat should work now
+mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 17843 44256 46181",

@@ -1,7 +1,7 @@
 local translations = {
 	["Adds tooltips to items showing if you have learned a transmog appearance."] = "Ajoute une infobulle aux objets, indiquant si vous en avez appris l'apparence de transmogrification.",
 	["Another class can learn this item."] = "Une autre classe peut débloquer cette apparence.",
-	-- ["Appearances updated: "] = "",
+	["Appearances updated: "] = "Apparences mises à jour :",
 	["Can be learned by:"] = "Peut être débloquée par :",
 	["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Message important de Can I Mog It? : Merci de vous connecter sur tous vos personnages, afin d'assembler les données d'apparences de transmogrification.",
 	["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions introuvable, paramètres par défaut chargés !",
@@ -13,7 +13,7 @@ local translations = {
 	["Debug Tooltip"] = "Infobulle de débug",
 	["Detailed information for debug purposes. Use this when sending bug reports."] = "Informations détaillées à des fins de debug. À utiliser lors de l'envoi de rapports de bugs.",
 	["Equippable Items Only"] = "Objets pouvant être équipés uniquement",
-	-- ["Items updated: "] = "",
+	["Items updated: "] = "Objets mis à jour :",
 	["Learned."] = "Débloquée.",
 	["Learned but cannot transmog yet."] = "Débloquée mais impossible à transmogrifier pour le moment.",
 	["Learned for a different class."] = "Débloquée pour une autre classe.",
@@ -30,7 +30,7 @@ local translations = {
 	["Shows the icon directly on the item in your bag."] = "Affiche l'icône sur l'objet contenu dans votre inventaire.",
 	["Transmoggable Items Only"] = "Objets pouvant être transmogrifiés uniquement",
 	["Unknown Items Only"] = "Objets inconnus uniquement",
-	-- ["Updating appearances database."] = "",
+	["Updating appearances database."] = "Mise à jour de la base de données d'apparences.",
 	["Verbose Text"] = "Texte détaillé",
 }
 

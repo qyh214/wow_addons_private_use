@@ -251,10 +251,6 @@ L= DBM:GetModLocalization(660)
 -----------------------
 L= DBM:GetModLocalization(654)
 
-L:SetMiscLocalization({
-	Call		= "무기전문가 할란"
-})
-
 -----------------------
 -- Flameweaver Koegler --
 -----------------------

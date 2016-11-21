@@ -269,10 +269,6 @@ L= DBM:GetModLocalization(660)
 -----------------------------
 L= DBM:GetModLocalization(654)
 
-L:SetMiscLocalization({
-	Call		= "¡El maestro de armas Harlan llama a dos de sus aliados para que se unan al combate!"
-})
-
 ------------------------------
 -- Tejedor de fuego Koegler --
 ------------------------------

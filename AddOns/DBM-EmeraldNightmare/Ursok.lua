@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1667, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15412 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15440 $"):sub(12, -3))
 mod:SetCreatureID(100497)
 mod:SetEncounterID(1841)
 mod:SetZone()
 mod:SetUsedIcons(6, 4)
-mod:SetHotfixNoticeRev(15296)
+mod:SetHotfixNoticeRev(15348)
 mod.respawnTime = 40
 
 mod:RegisterCombat("combat")
@@ -247,7 +247,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnOverwhelm:Show(args.destName, args.amount or 1)
 		if not args:IsPlayer() then--Overwhelm Applied to someone that isn't you
 			--Taunting is safe now because your rend flesh will vanish (or is already gone), and not be cast again, before next overwhelm
-			local rendCooldown = timerRendFleshCD:GetRemaining() or 0
+			local rendCooldown = timerRendFleshCD:GetRemaining(self.vb.rendCount+1) or 0
 			local _, _, _, _, _, _, expireTime = UnitDebuff("player", GetSpellInfo(204859))
 			if rendCooldown > 10 and (not expireTime or expireTime and expireTime-GetTime() < 10) then
 				specWarnOverwhelmOther:Show(args.destName)

@@ -99,7 +99,7 @@ CanIMogIt.frame:HookScript("OnEvent", function(self, event, ...)
     -- Add functions you want to catch events here
     self:AddonLoaded(event, ...)
     self:HookItemOverlay(event, ...)
-    -- self:OnEncounterJournalLoaded(event, ...)
+    self:OnEncounterJournalLoaded(event, ...)
     self:TransmogCollectionUpdated(event, ...)
     -- self:OnAuctionHouseShow(event, ...)
     self:OnGuildBankOpened(event, ...)
@@ -177,7 +177,7 @@ function CanIMogIt.frame.Loaded()
     end
     -- Set missing options from the defaults if the version is out of date.
     if (CanIMogItOptions["version"] < CanIMogIt_OptionsVersion) then
-        CanIMogItOptions_temp = CanIMogItOptions_Defaults.options;
+        local CanIMogItOptions_temp = CanIMogItOptions_Defaults.options;
         for k,v in pairs(CanIMogItOptions) do
             if (CanIMogItOptions_Defaults.options[k]) then
                 CanIMogItOptions_temp[k] = v;

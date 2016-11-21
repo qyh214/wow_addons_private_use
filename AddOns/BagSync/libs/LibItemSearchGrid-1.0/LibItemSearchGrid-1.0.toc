@@ -4,7 +4,7 @@
 ## OptionalDeps: LibStub, ItemRack, Wardrobe
 ## Author: Xruptor, Jaliborc (João Libório), Tuller, Yewbacca (Equipment Set Searching)
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: v10.8
+## X-Curse-Packaged-Version: v10.9
 ## X-Curse-Project-Name: BagSync
 ## X-Curse-Project-ID: bagsync
 ## X-Curse-Repository-ID: wow/bagsync/mainline

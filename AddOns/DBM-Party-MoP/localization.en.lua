@@ -269,10 +269,6 @@ L= DBM:GetModLocalization(660)
 -----------------------
 L= DBM:GetModLocalization(654)
 
-L:SetMiscLocalization({
-	Call		= "Armsmaster Harlan calls on two of his allies to join the fight!"
-})
-
 -----------------------
 -- Flameweaver Koegler --
 -----------------------

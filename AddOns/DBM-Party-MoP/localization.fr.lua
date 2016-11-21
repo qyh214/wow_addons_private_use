@@ -253,10 +253,6 @@ L= DBM:GetModLocalization(660)
 -----------------------
 L= DBM:GetModLocalization(654)
 
-L:SetMiscLocalization({
-	Call		= "Le maître d'armes Harlan appelle deux alliés pour l'aider au combat !"
-})
-
 -----------------------
 -- Flameweaver Koegler --
 -----------------------

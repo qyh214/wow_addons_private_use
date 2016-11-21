@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(708, "DBM-Party-MoP", 5, 321)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(61442, 61444, 61445)--61442 (Kuai the Brute), 61453 (Mu'Shiba, Kuai's Add), 61444 (Ming the Cunning), 61445 (Haiyan the Unstoppable)
 mod:SetEncounterID(1442)
 mod:SetZone()
@@ -12,13 +12,14 @@ mod:RegisterKill("yell", L.Defeat)--Defeat off first line said after all are def
 mod:SetWipeTime(30)--Based on data, phase transitions are 10-16 seconds, 20 should be enough, but can raise if needed.
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
+	"SPELL_AURA_APPLIED 119946 123655 120201",
+	"SPELL_AURA_REMOVED 119946",
+	"SPELL_CAST_START 119922 119981 123654",
 	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_DIED"
 )
 
+--TODO, rework phase changes with UNIT events?
 local warnRavage			= mod:NewTargetAnnounce(119946, 3)--Mu'Shiba's Fixate attack
 local warnShockwave			= mod:NewSpellAnnounce(119922, 4)--Kuai's Attack
 local warnWhirlingDervish	= mod:NewSpellAnnounce(119981, 3)--Ming's Attack

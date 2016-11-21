@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(584, "DBM-Party-WotLK", 1, 271)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 236 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 241 $"):sub(12, -3))
 mod:SetCreatureID(29311)
 mod:SetEncounterID(215, 263, 1968)
 mod:SetZone()
@@ -13,7 +13,7 @@ mod:RegisterEvents(
 )
 
 mod:RegisterEventsInCombat(
-	"UNIT_SPELLCAST_START target focus"
+	"UNIT_SPELLCAST_START boss1"
 )
 
 local warnShadowCrash			= mod:NewTargetAnnounce(60848, 4)
@@ -59,13 +59,7 @@ end
 
 function mod:UNIT_SPELLCAST_START(uId, spellName)
    if spellName == GetSpellInfo(57496) then -- Insanity
-   		self:SendSync("Insanity")
-   end
-end
-
-function mod:OnSync(event, arg)
-	if event == "Insanity" then
 		warningInsanity:Show()
 		timerInsanity:Start()
-	end
+   end
 end

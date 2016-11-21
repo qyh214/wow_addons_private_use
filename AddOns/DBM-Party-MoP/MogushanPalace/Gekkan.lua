@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(690, "DBM-Party-MoP", 5, 321)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(61243, 61337, 61338, 61339, 61340)--61243 (Gekkan), 61337 (Glintrok Ironhide), 61338 (Glintrok Skulker), 61339 (Glintrok Oracle), 61340 (Glintrok Hexxer)
 mod:SetEncounterID(1509, 1510)
 mod:SetZone()
@@ -9,10 +9,10 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
+	"SPELL_AURA_APPLIED 118988 129262 118958 118903",
+	"SPELL_AURA_APPLIED_DOSE 129262",
+	"SPELL_AURA_REMOVED 118988 129262 118903 118958",
+	"SPELL_CAST_START 118903 118963 118940",
 	"UNIT_DIED"
 )
 

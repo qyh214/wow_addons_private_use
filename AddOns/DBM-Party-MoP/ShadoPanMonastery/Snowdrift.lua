@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(657, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(56541)
 mod:SetEncounterID(1304)
 mod:SetZone()
@@ -13,9 +13,9 @@ mod:SetReCombatTime(60)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
+	"SPELL_AURA_APPLIED 118961",
+	"SPELL_AURA_REMOVED 118961",
+	"SPELL_CAST_START 106853 106434",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -35,11 +35,10 @@ local timerTornadoKickCD	= mod:NewCDTimer(32, 106434)--Or this
 --local timerChaseDownCD		= mod:NewCDTimer(22, 118961)--Unknown
 local timerChaseDown		= mod:NewTargetTimer(11, 118961)
 
-local phase = 1
-local remainingNovice = 20
+mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
-	phase = 1
+	self.vb.phase = 1
 end
 
 function mod:SPELL_AURA_APPLIED(args)
@@ -72,10 +71,10 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 110324 then
-		phase = phase + 1
-		if phase == 2 then
+		self.vb.phase = self.vb.phase + 1
+		if self.vb.phase == 2 then
 			warnPhase2:Show()
-		elseif phase == 3 then
+		elseif self.vb.phase == 3 then
 			warnPhase3:Show()
 		end
 		timerFistsOfFuryCD:Cancel()

@@ -16,7 +16,7 @@
 ## X-DBM-Mod-Sort: 054
 ## X-DBM-Mod-MapID: 1648
 ## X-DBM-Mod-MinCoreRevision: 14737
-## X-Curse-Packaged-Version: 7.1.1
+## X-Curse-Packaged-Version: 7.1.2
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
@@ -24,6 +24,7 @@ localization.en.lua
 localization.de.lua
 localization.kr.lua
 localization.tw.lua
+localization.cn.lua
 Odyn.lua
 Guarm.lua
 Helya.lua

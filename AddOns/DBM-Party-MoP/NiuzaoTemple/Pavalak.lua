@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(692, "DBM-Party-MoP", 6, 324)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(61485)
 mod:SetEncounterID(1447)
 mod:SetZone()
@@ -9,9 +9,9 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START"
+	"SPELL_AURA_APPLIED 119476",
+	"SPELL_AURA_REMOVED 119476",
+	"SPELL_CAST_START 124283 119875"
 )
 
 local warnBladeRush			= mod:NewSpellAnnounce(124283, 3)
@@ -26,17 +26,17 @@ local timerTempestCD		= mod:NewCDTimer(43, 119875)--Tempest has a higher cast pr
 
 mod:AddBoolOption("HealthFrame", true)
 
-local phase = 1
+mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
-	phase = 1
+	self.vb.phase = 1
 	timerBladeRushCD:Start(-delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 119476 then
 		self:ShowShieldHealthBar(args.destGUID, args.spellName, 1500000)
-		phase = phase + 1
+		self.vb.phase = 2
 		warnBulwark:Show()
 		specWarnBulwark:Show()
 		timerBladeRushCD:Cancel()
@@ -58,7 +58,7 @@ function mod:SPELL_CAST_START(args)
 		warnTempest:Show()
 		specWarnTempest:Show()
 		timerBladeRushCD:Start(7)--always 7-7.5 seconds after tempest.
-		if phase == 2 then
+		if self.vb.phase == 2 then
 			timerTempestCD:Start(33)--seems to be cast more often between 66-33% health. (might be 100-33 but didn't get 2 casts before first bulwark)
 		else
 			timerTempestCD:Start()

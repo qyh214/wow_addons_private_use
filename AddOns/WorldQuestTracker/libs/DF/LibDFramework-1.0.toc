@@ -1,7 +1,7 @@
 ## Interface: 60200
 ## Title: Lib: LibDFramework-1.0
 ## Notes: Base Framework for many Addons
-## X-Curse-Packaged-Version: r100
+## X-Curse-Packaged-Version: r101
 ## X-Curse-Project-Name: World Quest Tracker
 ## X-Curse-Project-ID: world-quest-tracker
 ## X-Curse-Repository-ID: wow/world-quest-tracker/mainline

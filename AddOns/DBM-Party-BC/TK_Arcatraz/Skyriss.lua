@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(551, "DBM-Party-BC", 15, 254)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 604 $"):sub(12, -3))
 
 mod:SetCreatureID(20912)
 mod:SetEncounterID(1914)
@@ -11,7 +11,7 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_YELL",
 	"SPELL_AURA_APPLIED 39019 37162 39017",
 	"SPELL_AURA_REMOVED 39019 37162 39017",
-	"UNIT_HEALTH target focus mouseover"
+	"UNIT_HEALTH boss1"
 )
 
 local warnSplitSoon     = mod:NewSoonAnnounce("ej5335", 2)

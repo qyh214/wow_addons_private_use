@@ -1,16 +1,16 @@
 local mod	= DBM:NewMod(654, "DBM-Party-MoP", 8, 311)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(58632)
 mod:SetEncounterID(1421)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_REMOVED",
+	"SPELL_CAST_START 111216",
+	"SPELL_CAST_SUCCESS 111217",
+	"SPELL_AURA_REMOVED 111216",
 	"RAID_BOSS_EMOTE"
 )
 
@@ -59,7 +59,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:RAID_BOSS_EMOTE(msg)
-	if msg == L.Call or msg:find(L.Call) then
+	if msg:find("ability_warrior_battleshout.blp") then
 		warnCallReinforcements:Show()
 		timerCallReinforcementsCD:Start()
 	end

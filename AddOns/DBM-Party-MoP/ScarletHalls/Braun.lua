@@ -8,7 +8,7 @@ mod:SetEncounterID(1422)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_SUCCESS",
+	"SPELL_CAST_SUCCESS 114021 114242 114259 116140",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 

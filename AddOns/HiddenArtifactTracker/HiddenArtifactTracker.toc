@@ -1,0 +1,5 @@
+## Interface: 70100
+## Title: Hidden Artifact Tracker
+## SavedVariables: HiddenArtifactTracker
+HiddenArtifactTracker_artifacts.lua
+HiddenArtifactTracker.lua

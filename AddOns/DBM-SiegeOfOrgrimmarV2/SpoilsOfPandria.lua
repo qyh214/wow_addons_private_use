@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(870, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 92 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 97 $"):sub(12, -3))
 mod:SetCreatureID(73720, 71512)
 mod:SetEncounterID(1594)
 mod:DisableESCombatDetection()
@@ -106,25 +106,6 @@ local select, tonumber, UnitPosition, GetWorldStateUIInfo = select, tonumber, Un
 local worldTimer = 0
 local maxTimer = 0
 
-local function isPlayerInMantid()
-	local x, y = UnitPosition("player")
-	local p1 = {1666, -4982}--top point, clockwise
-	local p2 = {1711, -5070}
-	local p3 = {1552, -5179}
-	local p4 = {1493, -5102}
-
-	local m1 = (p2[2]-p1[2])/(p2[1]-p1[1])
-	if (y > m1*x-m1*p1[1]+p1[2]) then return false end
-	local m2 = (p3[2]-p2[2])/(p3[1]-p2[1])
-	if (y < m2*x-m2*p2[1]+p2[2]) then return false end
-	local m3 = (p4[2]-p3[2])/(p4[1]-p3[1])
-	if (y < m3*x-m3*p3[1]+p3[2]) then return false end
-	local m4 = (p1[2]-p4[2])/(p1[1]-p4[1])
-	if (y > m4*x-m4*p4[1]+p4[2]) then return false end
-
-	return true
-end
-
 local function hideRangeFrame()
 	if mod.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
@@ -158,19 +139,19 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 145996 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	if spellId == 145996 then
 		timerSetToBlowCD:Start(args.sourceGUID)
-	elseif spellId == 145288 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
+	elseif spellId == 145288 then
 		specWarnMatterScramble:Show()
 		timerMatterScramble:Start(args.sourceGUID)
 		timerMatterScrambleCD:Start(args.sourceGUID)
-	elseif spellId == 142934 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
+	elseif spellId == 142934 then
 		warnTorment:Show()
 		specWarnTorment:Show()
-	elseif spellId == 142539 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	elseif spellId == 142539 then
 		specWarnMantidSwarm:Show()
 		timerMantidSwarmCD:Start(args.sourceGUID)
-	elseif spellId == 145286 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) and self:AntiSpam(5, args.sourceGUID) then
+	elseif spellId == 145286 and self:AntiSpam(5, args.sourceGUID) then
 		warnWindStorm:Show()
 		timerWindstormCD:Start(args.sourceGUID)
 	elseif spellId == 146222 and self:CheckTankDistance(args.sourceGUID) then--Relics can be either side, must use CheckTank Distance
@@ -179,12 +160,12 @@ function mod:SPELL_CAST_START(args)
 		warnGustingCraneKick:Show()
 		specWarnGustingCraneKick:Show()
 		timerGustingCraneKickCD:Start(args.sourceGUID)
-	elseif spellId == 145489 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
+	elseif spellId == 145489 then
 		warnReturnToStone:Show()
 		timerReturnToStoneCD:Start(args.sourceGUID)
-	elseif spellId == 142947 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then--Pre warn more or less
+	elseif spellId == 142947 then--Pre warn more or less
 		specWarnCrimsonRecon:Show()
-	elseif spellId == 146815 and self:AntiSpam(2, 4)  then--Will do more work on this later, not enough time before raid, but i have an idea for it
+	elseif spellId == 146815 and self:AntiSpam(2, 4)then--Will do more work on this later, not enough time before raid, but i have an idea for it
 		warnSuperNova:Show()
 		specWarnSuperNova:Show()
 	end
@@ -192,13 +173,13 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 142947 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
+	if spellId == 142947 then
 		timerCrimsonReconCD:Start(args.sourceGUID)
-	elseif spellId == 145712 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	elseif spellId == 145712 then
 		timerBlazingChargeCD:Start(args.sourceGUID)
-	elseif spellId == 146253 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	elseif spellId == 146253 then
 		timerPathOfBlossomsCD:Start(args.sourceGUID)
-	elseif spellId == 145230 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
+	elseif spellId == 145230 then
 		local source = args.sourceName
 		if self:AntiSpam(5, args.destName) then
 			warnForbiddenMagic:CombinedShow(1, args.destName)
@@ -206,10 +187,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if (source == UnitName("target") or source == UnitName("focus")) and self:AntiSpam(3, 6) then 
 			specWarnForbiddenMagic:Show(source)
 		end
-	elseif spellId == 145786 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	elseif spellId == 145786 then
 		timerResidueCD:Start(args.sourceGUID)
 		specWarnResidue:Show()
-	elseif spellId == 145812 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	elseif spellId == 145812 then
 		specWarnRageoftheEmpress:Show()
 		timerRageoftheEmpressCD:Start(args.sourceGUID)
 	end
@@ -217,7 +198,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 145987 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	if spellId == 145987 then
 		warnSetToBlow:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			local _, _, _, _, _, _, expires = UnitDebuff("player", args.spellName)
@@ -226,11 +207,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerSetToBlow:Start(buffTime)
 			specWarnSetToBlow:Schedule(buffTime)
 		end
-	elseif spellId == 145692 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	elseif spellId == 145692 then
 		warnEnrage:Show(args.destName)
 		specWarnEnrage:Show(args.destName)
 		timerEnrage:Start(args.destName)
-	elseif spellId == 145998 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then--This is a massive crate mogu spawning
+	elseif spellId == 145998 then--This is a massive crate mogu spawning
 		timerReturnToStoneCD:Start(6)
 	end
 end

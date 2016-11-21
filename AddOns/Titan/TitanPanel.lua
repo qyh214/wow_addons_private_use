@@ -796,10 +796,38 @@ local function handle_orderhall_cmds(cmd_list)
 
 	if TitanAllGetVar("OrderHall") then
 		TitanAllSetVar("OrderHall", false);
-		TitanPrint(L["TITAN_PANEL_MENU_HIDE_ORDERHALL"].." ".. L["TITAN_PANEL_MENU_DISABLED"], "info")
+		TitanPrint(L["TITAN_PANEL_MENU_HIDE_ORDERHALL"].." ".. L["TITAN_PANEL_MENU_ENABLED"], "info")
+		StaticPopupDialogs["TITAN_RELOAD"] = {
+			text = TitanUtils_GetNormalText(L["TITAN_PANEL_MENU_TITLE"]).."\n\n"
+				..L["TITAN_PANEL_RELOAD"],
+			button1 = ACCEPT,
+			button2 = CANCEL,
+			OnAccept = function(self)
+				ReloadUI();
+				end,	
+			showAlert = 1,
+			timeout = 0,
+			whileDead = 1,
+			hideOnEscape = 1
+		};
+		StaticPopup_Show("TITAN_RELOAD");
 	else
 		TitanAllSetVar("OrderHall", true);
-		TitanPrint(L["TITAN_PANEL_MENU_HIDE_ORDERHALL"].." ".. L["TITAN_PANEL_MENU_ENABLED"], "info")
+		TitanPrint(L["TITAN_PANEL_MENU_HIDE_ORDERHALL"].." ".. L["TITAN_PANEL_MENU_DISABLED"], "info")
+		StaticPopupDialogs["TITAN_RELOAD"] = {
+			text = TitanUtils_GetNormalText(L["TITAN_PANEL_MENU_TITLE"]).."\n\n"
+				..L["TITAN_PANEL_RELOAD"],
+			button1 = ACCEPT,
+			button2 = CANCEL,
+			OnAccept = function(self)
+				ReloadUI();
+				end,	
+			showAlert = 1,
+			timeout = 0,
+			whileDead = 1,
+			hideOnEscape = 1
+		};
+		StaticPopup_Show("TITAN_RELOAD");
 	end
 end
 

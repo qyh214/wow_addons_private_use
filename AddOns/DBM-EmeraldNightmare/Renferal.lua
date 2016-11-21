@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1744, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15372 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15452 $"):sub(12, -3))
 mod:SetCreatureID(106087)
 mod:SetEncounterID(1876)
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5)
-mod:SetHotfixNoticeRev(15278)
+mod:SetHotfixNoticeRev(15357)
 
 mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
@@ -297,7 +297,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				marker1:EdgeTo(marker2, nil, 10, 1, 0, 0, 0.5)--Red Line
 			end
 		end
-		if self.Options.SetIconOnWeb then
+		if self.Options.SetIconOnWeb and self:IsInCombat() then
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if self:IsTanking(uId) then--Tank Group
 				self:SetIcon(args.sourceName, 1)

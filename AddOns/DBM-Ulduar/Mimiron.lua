@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 228 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 241 $"):sub(12, -3))
 mod:SetCreatureID(33432)
 mod:SetEncounterID(1138)
 mod:DisableESCombatDetection()
@@ -20,7 +20,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
-	"UNIT_SPELLCAST_CHANNEL_STOP target focus",
+	"UNIT_SPELLCAST_CHANNEL_STOP boss1",
 	"CHAT_MSG_LOOT",
 	"SPELL_SUMMON"
 )

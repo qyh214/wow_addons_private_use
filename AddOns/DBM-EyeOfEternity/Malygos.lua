@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Malygos", "DBM-EyeOfEternity")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 241 $"):sub(12, -3))
 mod:SetCreatureID(28859)
 mod:SetEncounterID(1094)
 mod:SetModelID(26752)
@@ -18,7 +18,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"RAID_BOSS_EMOTE",
-	"UNIT_SPELLCAST_SUCCEEDED target focus"
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 local warnSpark					= mod:NewSpellAnnounce(56140, 2, 59381)
@@ -156,15 +156,13 @@ end
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName)
 --	"<39.8> [UNIT_SPELLCAST_SUCCEEDED] Malygos:Possible Target<Omegal>:target:Summon Power Spark::0:56140", -- [998]
 	if spellName == GetSpellInfo(56140) then
-		self:SendSync("Spark")
+		warnSpark:Show()
+		timerSpark:Start()
 	end
 end
 
 function mod:OnSync(event, arg)
-	if event == "Spark" then
-		warnSpark:Show()
-		timerSpark:Start()
-	elseif event == "Phase2" then
+	if event == "Phase2" then
 		timerSpark:Cancel()
 		timerVortexCD:Cancel()
 		warnVortexSoon:Cancel()

@@ -253,10 +253,6 @@ L= DBM:GetModLocalization(660)
 -----------------------
 L= DBM:GetModLocalization(654)
 
-L:SetMiscLocalization({
-	Call		= "武器大师哈兰召唤了两名同伴加入战斗！"
-})
-
 -----------------------
 -- Flameweaver Koegler --
 -----------------------

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(672, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(56448)
 mod:SetEncounterID(1418)
 mod:SetZone()
@@ -10,11 +10,10 @@ mod:SetUsedIcons(8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
---	"SPELL_CAST_SUCCESS",
-	"SPELL_CAST_START",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
+	"SPELL_AURA_APPLIED 106653",
+	"SPELL_CAST_START 106526 106612",
+	"SPELL_DAMAGE 115167",
+	"SPELL_MISSED 115167",
 	"UNIT_DIED",
 	"UNIT_TARGET"
 )
@@ -32,7 +31,7 @@ local timerWashAway				= mod:NewNextTimer(8, 106334)
 
 mod:AddBoolOption("SetIconOnAdds", false)
 
-local addsRemaining = 4--Also 4 on heroic?
+mod.vb.addsRemaining = 4--Also 4 on heroic?
 local addsName = EJ_GetSectionInfo(5616)
 
 function mod:UNIT_TARGET()
@@ -42,7 +41,7 @@ function mod:UNIT_TARGET()
 end
 
 function mod:OnCombatStart(delay)
-	addsRemaining = 4
+	self.vb.addsRemaining = 4
 	timerLivingWaterCD:Start(13-delay)
 end
 
@@ -72,7 +71,7 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 56511 then--Corrupt Living Water
-		addsRemaining = addsRemaining - 1
-		warnAddsLeft:Show(addsRemaining)
+		self.vb.addsRemaining = self.vb.addsRemaining - 1
+		warnAddsLeft:Show(self.vb.addsRemaining)
 	end
 end
