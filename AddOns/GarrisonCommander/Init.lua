@@ -281,34 +281,17 @@ end
 function addon:GetItems()
 	return items
 end
--- to be moved in LibInit
---[[
-function addon:coroutineExecute(interval,func)
-	local co=coroutine.wrap(func)
-	local interval=interval
-	local repeater
-	repeater=function()
-		if (co()) then
-			C_Timer.After(interval,repeater)
-		else
-			repeater=nil
-		end
+local function tickleItems()
+	for itemID,_ in pairs(followerItems) do
+		GetItemInfo(itemID)
+		coroutine.yield(true)
 	end
-	return repeater()
+	for i,v in pairs(items) do
+		GetItemInfo(i)
+		coroutine.yield(true)
+	end
 end
---]]
-addon:coroutineExecute(0.1,
-	function ()
-		for itemID,_ in pairs(followerItems) do
-			GetItemInfo(itemID)
-			coroutine.yield(true)
-		end
-		for i,v in pairs(items) do
-			GetItemInfo(i)
-			coroutine.yield(true)
-		end
-	end
-)
+addon:coroutineExecute(0.1,tickleItems)
 function addon:GetType(itemID)
 	if (items[itemID]) then return "equip" end
 	if (followerItems[itemID]) then return "followerEquip" end
@@ -438,4 +421,119 @@ function addon:EventADDON_LOADED(event,AddOn)
 	ENV.GHFMissions=ns.GHFMissions
 	self:GetModule("OrderHall"):OnInitialize()
 end
+-- Order Hall data
+local fake={}
+local data={
+	Upgrades={
+		136412,
+		137207,
+		137208,
+		
+	},
+	Xp={
+		141028
+	},
+	Equipment={
+		'Success Chance Increase',
+		139816,
+		139801,
+		139802,
+		140572,
+		140571,
+		140573,
+		140581,
+		140582,
+		140583,
+		'Mission Time Reduction',
+		139813,
+		139814,
+		139799,
+		'Combat Ally Bonus',
+		139792,
+		139808,
+		139809,
+		139795,
+		139811,
+		139812,
+		'Troop Affinity',
+		139875,
+		139876,
+		139877,
+		139878,
+		139835,
+		139836,
+		139837,
+		139838,
+		139863,
+		139864,
+		139865,
+		139866,
+		139847,
+		139848,
+		139849,
+		139850,
+		139843,
+		139844,
+		139845,
+		139846,
+		139859,
+		139860,
+		139861,
+		139862,
+		139867,
+		139868,
+		139869,
+		139870,
+		139871,
+		139872,
+		139873,
+		139874,
+		139831,
+		139832,
+		139833,
+		139834,
+		139839,
+		139840,
+		139841,
+		139842,
+		139855,
+		139856,
+		139857,
+		139858,
+		139851,
+		139852,
+		139853,
+		139854,
+		'Legendary Equipment',
+		139830,
+		139828,
+		139829,
+		139827,
+		139825,
+		139826,
+		139821,
+		139804,
+		139819,
+		139824,
+		139823,
+		139822,
+		'Consumables',
+		140749,
+		139419,
+		140760,
+		139428,
+		139177,
+		139420,
+		138883,
+		139376,
+		138418,
+		138412,
+		139670
+	},
+}
+function addon:GetData(key)
+	key=key or "none"
+	return data[key] or fake
+end
+
 

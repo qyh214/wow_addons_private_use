@@ -62,13 +62,14 @@ function cache:new(type)
 	setmetatable(rc.cache,{__index=function(t,k) return EMPTY end})
 	return rc
 end
-function cache:OnEvent(event,...)
-
+function cache:OnEvent(event,followerType,followerID)
 --[===[@debug@
-print(event,...)
+	if followerType==LE_FOLLOWER_TYPE_GARRISON_7_0  and ns.ignoreHall then
+		return
+	end
+print(event,followerType,followerID)
 --@end-debug@]===]
 	if event=="GARRISON_FOLLOWER_UPGRADED" or event=="GARRISON_FOLLOWER_XP_CHANGED" then
-		local followerType,followerID=...
 		if (self.cache[followerID]) then
 			self.cache[followerID]['level']=G.GetFollowerLevel(followerID)
 			self.cache[followerID]['xp']=G.GetFollowerXP(followerID)

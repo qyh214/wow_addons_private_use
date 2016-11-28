@@ -211,7 +211,7 @@ end
 
 local _, gdbprivate = ...
 gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowDuraChecked = {
-	ShowDuraSetChecked = false,
+	ShowDuraSetChecked = true,
 }	
 
 local DCS_ShowDuraCheck = CreateFrame("CheckButton", "DCS_ShowDuraCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
@@ -292,7 +292,7 @@ end
 
 local _, gdbprivate = ...
 gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowDuraTextureChecked = {
-	ShowDuraTextureSetChecked = false,
+	ShowDuraTextureSetChecked = true,
 }	
 
 local DCS_ShowDuraTextureCheck = CreateFrame("CheckButton", "DCS_ShowDuraTextureCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
@@ -361,7 +361,7 @@ end
 
 local _, gdbprivate = ...
 gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowAverageRepairChecked = {
-	ShowAverageRepairSetChecked = false,
+	ShowAverageRepairSetChecked = true,
 }	
 
 local DCS_ShowAverageDuraCheck = CreateFrame("CheckButton", "DCS_ShowAverageDuraCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
@@ -482,7 +482,7 @@ end
 
 local _, gdbprivate = ...
 gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowItemRepairChecked = {
-	ShowItemRepairSetChecked = false,
+	ShowItemRepairSetChecked = true,
 }	
 
 local DCS_ShowItemRepairCheck = CreateFrame("CheckButton", "DCS_ShowItemRepairCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")

@@ -18,8 +18,6 @@ DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s could not be loaded because your DBM-Core 
 DBM_CORE_WHATS_NEW					= "New in this version: Fixed a bug that caused 'Major Patch' force update/disable to trigger wrongfully for non major patch updates. DBM will no longer filter Broken Shore cut scenes regardless of user settings. Added Demonic Invasions mod. Minor Text Fixes"
 DBM_CORE_WHATS_NEW_LINK				= "Reminder: Many features that relied on unit positions have been limited. You can read more about why by |HDBM:forumsnews|h|cff3588ffclicking here|r"
 
---Pre Patch 7.1 Notice
-DBM_CORE_NO_RANGE_SOON				= "Note: range radar will no longer be available within instances in patch 7.1"
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "Range Radar can not be used in instances. Legacy text range frame used instead"
 DBM_CORE_NO_ARROW					= "Arrow can not be used in instances"
@@ -59,6 +57,8 @@ DBM_CORE_TRANSCRIPTOR_LOG_START		= "Transcriptor logging started."
 DBM_CORE_TRANSCRIPTOR_LOG_END		= "Transcriptor logging ended."
 
 DBM_CORE_MOVIE_SKIPPED				= "A cut scene has automatically been skipped."
+
+DBM_CORE_AFK_WARNING				= "You are AFK and in combat (%d percent health remaining), firing sound alert. If you are not AFK, clear your AFK flag or disable this option in 'extra features'."
 
 DBM_CORE_COMBAT_STARTED_AI_TIMER	= "My CPU is a neural net processor; a learning computer. (This fight will use the new timer AI feature to generate timer approximations)"
 
@@ -241,6 +241,7 @@ DBM_ERROR_NO_PERMISSION				= "You don't have the required permission to do this.
 
 DBM_CORE_BOSSHEALTH_HIDE_FRAME		= "Close health frame"
 
+--Common Locals
 DBM_CORE_UNKNOWN					= "unknown"--UNKNOWN which is "Unknown" (does u vs U matter?)
 DBM_CORE_LEFT						= "Left"
 DBM_CORE_RIGHT						= "Right"
@@ -248,6 +249,9 @@ DBM_CORE_BACK						= "Back"--BACK
 DBM_CORE_MIDDLE						= "Middle"
 DBM_CORE_FRONT						= "Front"
 DBM_CORE_INTERMISSION				= "Intermission"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
+DBM_CORE_ORB						= "Orb"
+DBM_CHEST							= "Chest"--As in Treasure 'Chest'. Not Chest as in body part.
+--Common Locals end
 
 DBM_CORE_BREAK_USAGE				= "Break timer cannot be longer than 60 minutes. Make sure you're inputting time in minutes and not seconds."
 DBM_CORE_BREAK_START				= "Break starting now -- you have %s! (Sent by %s)"
@@ -375,6 +379,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
 DBM_CORE_AUTO_TIMER_TEXTS = {
 	target		= "%s: %%s",
 	cast		= "%s",
+	castsource	= "%s: %%s",
 	active		= "%s ends",--Buff/Debuff/event on boss
 	fades		= "%s fades",--Buff/Debuff on players
 	ai			= "%s AI",
@@ -394,6 +399,7 @@ DBM_CORE_AUTO_TIMER_TEXTS = {
 DBM_CORE_AUTO_TIMER_OPTIONS = {
 	target		= "Show timer for $spell:%s debuff",
 	cast		= "Show timer for $spell:%s cast",
+	castsource	= "Show timer (with source) for $spell:%s cast",
 	active		= "Show timer for $spell:%s duration",
 	fades		= "Show timer for when $spell:%s fades from players",
 	ai			= "Show AI timer for $spell:%s cooldown",
@@ -479,7 +485,7 @@ DBM_ARROW_ERROR_USAGE	= {
 DBM_SPEED_KILL_TIMER_TEXT	= "Record Victory"
 DBM_SPEED_CLEAR_TIMER_TEXT	= "Best Clear"
 DBM_COMBAT_RES_TIMER_TEXT	= "Next CR Charge"
-DBM_CORE_TIMER_RESPAWN		= "Respawn"
+DBM_CORE_TIMER_RESPAWN		= "%s Respawn"
 
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s requested to see your current instance IDs and progress.\nDo you want to send this information to %s? He or she will be able to request this information during your current session (i. e. until you relog)."

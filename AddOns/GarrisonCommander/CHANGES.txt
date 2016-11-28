@@ -1,0 +1,21 @@
+tag af3a8fc051a3f17bd33181efce67c5acbb2c7aca 2.15.7.8
+Author:	Alar of Runetotem <alar@aspide.it>
+Date:	Sun Nov 27 18:44:14 2016 +0100
+
+Fix: Lua error on table opening
+
+commit 658ba0432e77bc05a7ad0e146672634743a08d7c
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Sun Nov 27 18:37:48 2016 +0100
+
+    Notes
+
+commit bcd719aff5d1b74137fdc1e74135a6b79e3b13ad
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Sun Nov 27 18:36:36 2016 +0100
+
+    Fix: Lua error
+    
+    Message: ..\AddOns\GarrisonCommander\FollowerPage.lua line 329:
+       attempt to call global 'kpairs' (a nil value)
+

@@ -1,10 +1,6 @@
 local ADDON, Addon = ...
 local Mod = Addon:NewModule('Gossip')
 
-local staticPopupNPCs = {
-	-- [95676] = true, -- Odyn
-	-- [103860] = true, -- Vault of the Wardens Zone Out NPC
-}
 local npcBlacklist = {
 	[107435] = true, [112697] = true, [112699] = true, -- Suspicous Noble
 	[101462] = true, -- Reaves
@@ -67,7 +63,7 @@ function Mod:GOSSIP_SHOW()
 				local popupWasShown = IsStaticPopupShown()
 				SelectGossipOption(i)
 				local popupIsShown = IsStaticPopupShown()
-				if popupIsShown or (npcId and staticPopupNPCs[npcId]) then
+				if popupIsShown then
 					if not popupWasShown then
 						StaticPopup1Button1:Click()
 						CloseGossip()

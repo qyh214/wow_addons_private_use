@@ -8,7 +8,7 @@ local langs = {}
 langs.enUS = {
 	config_characterConfig = "Per-character configuration",
 	config_progressTooltip = "Show progress each enemy gives on their tooltip",
-	config_progressFormat = "Enemies Forces Format",
+	config_progressFormat = "Enemy Forces Format",
 	config_progressFormat_1 = "24.19%",
 	config_progressFormat_2 = "90/372",
 	config_progressFormat_3 = "24.19% - 90/372",
@@ -30,6 +30,13 @@ langs.enUS = {
 	timeLost = "Time Lost",
 	config_smallAffixes = "Reduce the size of affix icons on timer frame",
 	config_deathTracker = "Show death tracker on timer frame",
+	config_persistTracker = "Continue showing objective tracker after Mythic Keystone completion (requires Reload UI to take effect)",
+	scheduleTitle = "Schedule",
+	scheduleWeek1 = "This week",
+	scheduleWeek2 = "Next week",
+	scheduleWeek3 = "In two weeks",
+	scheduleWeek4 = "In three weeks",
+	config_exclusiveTracker = "Hide quest and achievement trackers during Mythic Keystone dungeon (requires Reload UI to take effect)",
 }
 langs.enGB = langs.enUS
 
@@ -87,9 +94,16 @@ langs.koKR = {
 	completion1 = "%s|1을;를; %s에 완료했습니다. 제한 시간은 %s 남았으며 %s|1이;가; 모자라 2상자를 놓쳤습니다.",
 	completion2 = "%s 2상자를 %s에 완료했습니다. 2상자 제한 시간은 %s 남았으며 %s|1이;가; 모자라 3상자를 놓쳤습니다.",
 	completion3 = "%s 3상자를 %s에 완료했습니다. 3상자 제한 시간이 %s 남았습니다.",
+	completionSplits = "분할된 시점: %s.",
 	timeLost = "줄어든 시간",
 	config_smallAffixes = "타이머 프레임에 속성 아이콘 크기 축소",
 	config_deathTracker = "타이머 프레임에 사망 내역 표시",
+	config_persistTracker = "신화 쐐기돌을 완료한 뒤에도 타이머 프레임 표시",
+	scheduleTitle = "예정된 조합",
+	scheduleWeek1 = "이번주",
+	scheduleWeek2 = "다음주",
+	scheduleWeek3 = "2주 뒤",
+	scheduleWeek4 = "3주 뒤",
 }
 
 langs.zhCN = {

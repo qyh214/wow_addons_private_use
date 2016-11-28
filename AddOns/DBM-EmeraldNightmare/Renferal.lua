@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1744, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15452 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15495 $"):sub(12, -3))
 mod:SetCreatureID(106087)
 mod:SetEncounterID(1876)
 mod:SetZone()
@@ -87,7 +87,7 @@ local voiceVenomousPool				= mod:NewVoice(213124)--runaway
 --Roc Form
 local voiceTwistingShadows			= mod:NewVoice(210864)--runout/runaway
 local voiceGatheringClouds			= mod:NewVoice(212707)--aesoon
-local voiceDarkStorm				= mod:NewVoice(212707)--findshelter
+local voiceDarkStorm				= mod:NewVoice(210948)--findshelter
 local voiceRazorWing				= mod:NewVoice(210547)--carefly
 local voiceViolentWinds				= mod:NewVoice(218124)--justrun/keepmove/tauntboss
 local voiceRakingTalon				= mod:NewVoice(215582)--defensive/tauntboss
@@ -365,7 +365,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		self.vb.razorWingCast = 0
 		self.vb.windsCast = 0
 		warnRocForm:Show()
-		timerTwistingShadowsCD:Start(7, 1)
+		timerTwistingShadowsCD:Start(6.6, 1)
 		timerGatheringCloudsCD:Start()--15.8-16
 		timerDarkStormCD:Start()--26
 		timerSpiderFormCD:Start()

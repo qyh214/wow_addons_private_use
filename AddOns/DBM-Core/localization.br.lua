@@ -1,4 +1,4 @@
-﻿-- Last update by GlitterStorm @ Azralon on Feb,28th,2015
+-- Last update by GlitterStorm @ Azralon on Feb,28th,2015
 if GetLocale() ~= "ptBR" then return end
 
 DBM_CORE_NEED_LOCALS				= "Are you good with programming or languages? If yes, the DBM team needs your help to keep DBM the best boss mod for WoW. Join the team by visiting |HDBM:localizersneeded|h|cff3588ffhere|r"

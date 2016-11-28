@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 15454 $"):sub(12, -3)),
-	DisplayVersion = "7.1.2", -- the string that is shown as version
-	ReleaseRevision = 15454 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 15512 $"):sub(12, -3)),
+	DisplayVersion = "7.1.4", -- the string that is shown as version
+	ReleaseRevision = 15512 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -417,8 +417,9 @@ local targetMonitor = nil
 local statusWhisperDisabled = false
 local wowVersionString, _, _, wowTOC = GetBuildInfo()
 local dbmToc = 0
+local UpdateChestTimer
 
-local fakeBWVersion, fakeBWHash = 23, "96b60fc"
+local fakeBWVersion, fakeBWHash = 25, "3df7123"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -1270,9 +1271,6 @@ do
 				"UPDATE_BATTLEFIELD_STATUS",
 				"CINEMATIC_START",
 				"PLAYER_LEVEL_UP",
-				"CHALLENGE_MODE_START",
-				"CHALLENGE_MODE_RESET",
-				"CHALLENGE_MODE_COMPLETED",
 				"PLAYER_SPECIALIZATION_CHANGED",
 				"PARTY_INVITE_REQUEST",
 				"LOADING_SCREEN_DISABLED",
@@ -3567,22 +3565,6 @@ function DBM:SCENARIO_CRITERIA_UPDATE()
 	end
 end
 
---REFACTOR IN LEGION
-function DBM:CHALLENGE_MODE_START(mapID)
-	self:Debug("CHALLENGE_MODE_START fired for mapID "..mapID)
-end
-
-function DBM:CHALLENGE_MODE_RESET()
-	self.Bars:CancelBar(PLAYER_DIFFICULTY6.."+")
-	self:Debug("CHALLENGE_MODE_RESET fired")
-end
-
-function DBM:CHALLENGE_MODE_COMPLETED()
-	self.Bars:CancelBar(PLAYER_DIFFICULTY6.."+")
-	self:Debug("CHALLENGE_MODE_COMPLETED fired for mapID "..LastInstanceMapID)
-end
---REFACTOR IN LEGION
-
 --------------------------------
 --  Load Boss Mods on Demand  --
 --------------------------------
@@ -5080,6 +5062,10 @@ do
 				path = "Interface\\AddOns\\DBM-VP"..voice.."\\checkhp.ogg"
 			end
 			self:PlaySoundFile(path)
+			if UnitHealthMax("player") ~= 0 then
+				local health = UnitHealth("player") / UnitHealthMax("player") * 100
+				self:AddMsg(DBM_CORE_AFK_WARNING:format(health))
+			end
 		end
 	end
 
@@ -5149,7 +5135,7 @@ do
 			if not v.combatInfo then return end
 			if v.noEEDetection then return end
 			if v.respawnTime and success == 0 and self.Options.ShowRespawn and not self.Options.DontShowBossTimers then--No special hacks needed for bad wrath ENCOUNTER_END. Only mods that define respawnTime have a timer, since variable per boss.
-				self.Bars:CreateBar(v.respawnTime, DBM_CORE_TIMER_RESPAWN, "Interface\\Icons\\Spell_Holy_BorrowedTime")
+				self.Bars:CreateBar(v.respawnTime, DBM_CORE_TIMER_RESPAWN:format(name), "Interface\\Icons\\Spell_Holy_BorrowedTime")
 			end
 			if v.multiEncounterPullDetection then
 				for _, eId in ipairs(v.multiEncounterPullDetection) do
@@ -5486,22 +5472,10 @@ do
 			--process global options
 			self:HideBlizzardEvents(1)
 			self:StartLogging(0, nil)
-			if self.Options.HideObjectivesFrame and mod.addon.type ~= "SCENARIO" and GetNumTrackedAchievements() == 0 then
+			if self.Options.HideObjectivesFrame and mod.addon.type ~= "SCENARIO" and GetNumTrackedAchievements() == 0 and difficultyIndex ~= 8 then
 				if ObjectiveTrackerFrame:IsVisible() then
 					ObjectiveTrackerFrame:Hide()
 					watchFrameRestore = true
-				end
-				--When hiding objectives frame in Mythic+, start our own timer to show time remaining during boss fight
-				if difficultyIndex == 8 then
-					local _, elapsedTime = GetWorldElapsedTime(1)--Should always be 1, with only one world state timer active.
-					local _, _, maxTime = C_ChallengeMode.GetMapInfo(LastInstanceMapID);
-					local remaining = (maxTime or 0) - (elapsedTime or 0)
-					if remaining and remaining > 0 then--No remaining, already failed timer, do nothing
-						self.Bars:CreateBar(remaining, PLAYER_DIFFICULTY6.."+")
-					end
-					--Maybe do more with this later
-					--local threeChests = maxTime * 0.6
-					--local twoChests = maxTime * 0.8;
 				end
 			end
 			fireEvent("pull", mod, delay, synced, startHp)
@@ -5676,6 +5650,7 @@ do
 			end
 			if self.Options.AFKHealthWarning and UnitIsUnit(uId, "player") and (health < 85) and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
 				self:PlaySoundFile("Sound\\Creature\\CThun\\CThunYouWillDIe.ogg")--So fire an alert sound to save yourself from this person's behavior.
+				self:AddMsg(DBM_CORE_AFK_WARNING:format(health))
 			end
 		end
 	end
@@ -5925,7 +5900,6 @@ do
 					ObjectiveTrackerFrame:Show()
 					watchFrameRestore = false
 				end
-				self.Bars:CancelBar(PLAYER_DIFFICULTY6.."+")
 				if tooltipsHidden then
 					--Better or cleaner way?
 					tooltipsHidden = false
@@ -6163,6 +6137,7 @@ function DBM:UNIT_DIED(args)
 	if self.Options.AFKHealthWarning and GUID == UnitGUID("player") and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
 		self:FlashClientIcon()
 		self:PlaySoundFile("Sound\\Creature\\CThun\\CThunYouWillDIe.ogg")--So fire an alert sound to save yourself from this person's behavior.
+		self:AddMsg(DBM_CORE_AFK_WARNING:format(0))
 	end
 end
 DBM.UNIT_DESTROYED = DBM.UNIT_DIED
@@ -6371,7 +6346,7 @@ do
 		if month == 4 and day == 1 then--April 1st
 			self:Schedule(180 + math.random(0, 300) , self.AprilFools, self)
 		end
-		if GetLocale() == "ptBR" or GetLocale() == "frFR" or GetLocale() == "itIT" then
+		if GetLocale() == "ptBR" or GetLocale() == "frFR" or GetLocale() == "itIT" or GetLocale() == "esES" or GetLocale() == "ruRU" then
 			C_TimerAfter(10, function() if self.Options.HelpMessageVersion < 4 then self.Options.HelpMessageVersion = 4 self:AddMsg(DBM_CORE_NEED_LOCALS) end end)
 		end
 		C_TimerAfter(20, function() if not self.Options.ForumsMessageShown then self.Options.ForumsMessageShown = self.ReleaseRevision self:AddMsg(DBM_FORUMS_MESSAGE) end end)
@@ -10227,6 +10202,17 @@ do
 			return self:NewCastTimer(timer / 1000, spellId, ...)
 		end
 		return newTimer(self, "cast", timer, ...)
+	end
+	
+	function bossModPrototype:NewCastSourceTimer(timer, ...)
+		if tonumber(timer) and timer > 1000 then -- hehe :) best hack in DBM. This makes the first argument optional, so we can omit it to use the cast time from the spell id ;)
+			local spellId = timer
+			timer = select(4, GetSpellInfo(spellId)) or 1000 -- GetSpellInfo takes YOUR spell haste into account...WTF?
+			local spellHaste = select(4, GetSpellInfo(53142)) / 10000 -- 53142 = Dalaran Portal, should have 10000 ms cast time
+			timer = timer / spellHaste -- calculate the real cast time of the spell...
+			return self:NewCastSourceTimer(timer / 1000, spellId, ...)
+		end
+		return newTimer(self, "castsource", timer, ...)
 	end
 
 	function bossModPrototype:NewCDTimer(...)

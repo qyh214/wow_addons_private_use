@@ -178,7 +178,7 @@ function module:MissionComplete(this,button,skiprescheck)
 			end
 		end
 		if stop and not skiprescheck then
-			self:Popup(message.."\n" ..format(L["If you %s, you will loose them\nClick on %s to abort"],ACCEPT,CANCEL),0,
+			self:Popup(message.."\n" ..format(L["If you %s, you will lose them\nClick on %s to abort"],ACCEPT,CANCEL),0,
 				function()
 					StaticPopup_Hide("LIBINIT_POPUP")
 					module:MissionComplete(this,button,true)

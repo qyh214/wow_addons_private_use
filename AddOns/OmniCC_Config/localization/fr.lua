@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 	OmniCC configuration localization - French
 --]]
 

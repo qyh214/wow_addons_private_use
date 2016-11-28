@@ -27,6 +27,7 @@ addon.L = {
 	["edit prompt multiline"] = "Press Enter to apply typed text, press Esc to discard changes, press Shift+Enter to input a new line.",
 	["mana height"] = "Mana bar height",
 	["restore defaults text"] = "This will restore defaults to |cff00ff00%s|r, all existing settings will be permenantly overwritten. Are you sure?",
+	["restore defaults text reloadui"] = "This will restore defaults to |cff00ff00%s|r, all existing settings will be permenantly overwritten, and the game UI will be reloaded. Are you sure?",
 	["defaults restored"] = "All settings have been restored to their defaults.",
 	["frame scale"] = "Frame scale",
 	["show tooltips"] = "Show Tooltips",

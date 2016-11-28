@@ -1,4 +1,4 @@
-﻿------------------------------------------------------------
+------------------------------------------------------------
 -- PartyDungeons.lua
 --
 -- Abin
@@ -151,5 +151,4 @@ module:RegisterDebuff(TIER, 860, 0, 228796, 5)
 module:RegisterDebuff(TIER, 860, 0, 228526)
 module:RegisterDebuff(TIER, 860, 0, 228576)
 module:RegisterDebuff(TIER, 860, 0, 228280)
-
-
+module:RegisterDebuff(TIER, 860, 0, 228829)

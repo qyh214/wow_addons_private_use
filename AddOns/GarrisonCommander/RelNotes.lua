@@ -22,6 +22,20 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(2,15,8,[[
+Fix: Lua error: FollowerPage.lua line 329:    attempt to call global 'kpairs' (a nil value)
+]])
+self:RelNotes(2,15,7,[[
+Fix: 2.15.6 zip was corrupted, repackaged
+Fix: Pushed a new version hoping to trigger Curse packager
+Fix: Shipyard equipment buitton were appearing out of follower panel frame and not disappearing with follower panel
+Fix: Whem mission were filled, followers were not marked "In party"
+Feature: Added equipment button in OrderHall as a workaround for "ACTION BLOCKED". You no longer need drag and drop
+Fix: In broker, OrderHall mission are now purple
+]])
+self:RelNotes(2,15,3,[[
+Fix: Lua error on startup
+]])
 self:RelNotes(2,15,2,[[
 Fix: Quick mission button was disappearing if not clicked before moving mouse out of it
 ]])

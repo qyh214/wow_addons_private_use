@@ -1,4 +1,4 @@
-﻿## Interface: 70100
+## Interface: 70100
 ## X-Min-Interface: 60000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff0055FFOptions GUI|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff0055FFGUI für Einstellungen|r
@@ -25,10 +25,6 @@
 ## DefaultState: enabled
 ## Author: Nitram and Tandanu
 ## URL: http://www.deadlybossmods.com
-## X-Curse-Packaged-Version: 7.1.2
-## X-Curse-Project-Name: Deadly Boss Mods
-## X-Curse-Project-ID: deadly-boss-mods
-## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
 localization.en.lua
 localization.de.lua
 localization.cn.lua

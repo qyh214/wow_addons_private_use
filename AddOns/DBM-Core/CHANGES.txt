@@ -1,0 +1,173 @@
+tag 00311ebbcb0aa59ce206d6b7307ef8a6eecddec5 7.1.4
+Author:	subversion <svn@deadlybossmods.com>
+Date:	Sat Nov 26 23:39:31 2016 +0100
+
+Tagging as 7.1.4
+
+commit 956894465112abf252901acc33ad3954315084fc
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 23:39:31 2016 +0100
+
+    increment version number to 7.1.4
+
+commit 7bff9a3772578cc004497c68e72540ca4005b8d3
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 23:33:19 2016 +0100
+
+    Omega via svn r15512:
+    The final taint timer confirmed and one minor adjust on final orbs from a fresh berserk log
+
+commit a1c63bbe2ef8d3152df0e0dead97e9a7e6c6e71e
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 23:17:35 2016 +0100
+
+    Omega via svn r15511:
+    Completely scrap chest timers for mythic+ dungeons. it?\226?\128?\153s buggy and clearly blizzard doesn?\226?\128?\153t provide adequate and non buggy events to really do it efficiently and I?\226?\128?\153m not going to ugly up dbms code to work around that. Use https://wow.curseforge.com/projects/mythicplustimer instead.
+    Also, the objectives frame will no longer ever be hidden in mythic+ dungeons because the mythic+ temp timer has also been deleted from DBM. For same reasons as above. It?\226?\128?\153s buggy and hard to make work properly without proper detailed non buggy apis to work with. Besides this second thing was really me trying to fix bad design but often times fixing bad blizzard design often gives them an out for fixing it themselves.
+
+commit 68a5cc06cd25bce607b1ad2b18f7ce92eb697754
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 22:28:49 2016 +0100
+
+    Omega via svn r15510:
+    More minor fixes to mythic+ timer nonsense. probably still doesn?\226?\128?\153t cancel properly and will probably still get removed as a feature soon if blizzards game wants to keep being buggy about it.
+
+commit dfca76eab67d724cf473def6c44d091b7de4af63
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 22:06:45 2016 +0100
+
+    Omega via svn r15509:
+    Give odyn a phase 3 announce as well, he only had a 2 announce
+
+commit b9ec3957ec4715d458593627016651f938da98ed
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 22:05:09 2016 +0100
+
+    Omega via svn r15508:
+    Add general phase announces as well
+
+commit 92971e67cbe1a6e22041aa15f1e719646d834eec
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 22:03:20 2016 +0100
+
+    Omega via svn r15507:
+    watch all boss unit IDs instead of just 1, apparently helya boss Id can change to not boss1?
+
+commit e5afc3732509cf490b4c420719ec44f32131f769
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 21:40:36 2016 +0100
+
+    Omega via svn r15506:
+    Boss name in respawn timer
+
+commit 21928cfbf9995c4d18dfa0716601726ab897c4e6
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 21:14:12 2016 +0100
+
+    Omega via svn r15505:
+    minor coding tweak
+
+commit a22dd75c7a9eb8edf8da889b4226e71045c0ee43
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 07:42:18 2016 +0100
+
+    Omega via svn r15504:
+    minor coding tweak
+
+commit d8685bd04dfa6e0a6fe49305c702ccaa6c3a82e4
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 06:17:12 2016 +0100
+
+    Omega via svn r15503:
+    RU update
+
+commit 647e4d63d109cc7b95cee8657048b253e9b82824
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 04:00:15 2016 +0100
+
+    Omega via svn r15502:
+    Add LFR berserk to guarm
+
+commit 73c359df27d6844876d2143e40ca22170b3c9c45
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Nov 26 00:34:46 2016 +0100
+
+    Omega via svn r15501:
+    Apparently have to add the 10 seconds onto timer because it starts but doesn?\226?\128?\153t really start at the start event. go figure
+
+commit 0e02a7bb0f67596bd1d87e308babf0049fae718b
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Nov 25 19:38:58 2016 +0100
+
+    Omega via svn r15500:
+    Another timer fix.
+
+commit 6660bbd8612ffeaf5c99bd958e05f4361113223c
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Nov 25 19:05:29 2016 +0100
+
+    Omega via svn r15499:
+    Fix bug with orb text.
+
+commit d8b423ad25986ceae86e297b10be597f1d623ad4
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Nov 25 10:31:35 2016 +0100
+
+    ultrashining via svn r15498:
+    zhTW update
+
+commit f290c7052284f457f5200742810b182cff59fbde
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Nov 25 09:45:34 2016 +0100
+
+    Omega via svn r15497:
+    Clarify, for translators
+
+commit aa0f08c66d2107a25b549b2e5c2659ca0b13b2fc
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Nov 25 09:44:40 2016 +0100
+
+    Omega via svn r15496:
+    Localize ?\226?\128?\156Chest?\226?\128?\157
+    Add failsafes against maxTime and elapsed time being nil
+
+commit fb5dee51b92b19a0196590390462516725afffc6
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Nov 25 06:49:13 2016 +0100
+
+    Omega via svn r15495:
+    #Helya
+    *Improved tentacle strike code so warning is slightly faster and less antispam is needed.
+    *Cancel cast bar for infusion when interrupted
+    *Update fury of maw timer if infusion isn?\226?\128?\153t interrupted
+    *Fixed fury of maw phase 3 mythic timer. Accidentally pasted phase 2 mythic timer into phase 3 somehow.
+    *Fixed phase 3 taint of sea timers not showing, the unit event doesn?\226?\128?\153t show in phase 3.
+    #Guarm
+    *Added optional off by default yells to the other 2 licks on guarm. I still think they are pointless but the other mod does it so i figure someone will ask for them eventually so make it an option.
+    
+    #random nightmare fixes
+    *Fixed a voice pack bug where dark storm voice option had wrong spell id in it, causing special warning sound to still play on top of voice sound, as well as the voice option to not appear in UI.
+    *Changed mark timer to be off by default on dragons since most don?\226?\128?\153t use that either. more clutter reduction. Further, there is a bug where the two dragons can sometimes desync as much as 2 seconds on applying this buff. when this happens timer ends up getting screwed up anyways.
+
+commit 2e91776afb00a9d24a12b8213ebf6fcf4d663785
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Nov 24 19:40:30 2016 +0100
+
+    Omega via svn r15494:
+    KR update
+
+commit 0f395c07a9c8520d836029c8364bed6e0795d8b9
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Nov 23 02:52:55 2016 +0100
+
+    Omega via svn r15493:
+    Fix infoframe bug on guarm where it only showed two of 3 debuffs (showed one of them twice)
+    Fixed warnings so they also fire for JUMPed debuffs as well on guarm
+
+commit 58de5d41d7f703c0833907069976b3fd1689a2a7
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Nov 23 01:18:52 2016 +0100
+
+    tandanu via svn r15492:
+    increment alpha version
+

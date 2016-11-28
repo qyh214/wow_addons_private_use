@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1704, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15438 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15495 $"):sub(12, -3))
 mod:SetCreatureID(102679)--Ysondre, 102683 (Emeriss), 102682 (Lethon), 102681 (Taerar)
 mod:SetEncounterID(1854)
 mod:SetZone()
@@ -70,7 +70,7 @@ local specWarnShadesOfTaerar		= mod:NewSpecialWarningSwitch(204100, "Tank", nil,
 local specWarnBellowingRoar			= mod:NewSpecialWarningSpell(204078, nil, nil, nil, 2, 6)
 
 --All
-local timerMarkCD					= mod:NewNextTimer(7, "ej12809", 28836, nil, nil, 3, 203102)
+local timerMarkCD					= mod:NewNextTimer(7, "ej12809", 28836, false, 2, 3, 203102)--Now off by default, to further reduce timer clutter, plus sometimes it's wrong because in rare cases the dragons desync for some reason
 local timerBreathCD					= mod:NewCDSourceTimer(27, 203028, 21131, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--27-34 for Ysondre, Cohorts 27-29.
 --Ysondre
 mod:AddTimerLine(Ysondre)
@@ -78,7 +78,7 @@ local timerNightmareBlastCD			= mod:NewCDTimer(15, 203153, nil, "-Tank", nil, 3)
 local timerDefiledSpiritCD			= mod:NewCDTimer(33.2, 207573, nil, nil, nil, 3)
 --Emeriss
 mod:AddTimerLine(Emeriss)
-local timerVolatileInfectionCD		= mod:NewCDTimer(45.4, 203787, nil, nil, nil, 3)
+local timerVolatileInfectionCD		= mod:NewCDTimer(45.4, 203787, nil, "-Tank", 2, 3)
 local timerEssenceOfCorruptionCD	= mod:NewNextTimer(30, 205298, nil, nil, nil, 1)
 --Lethon
 mod:AddTimerLine(Lethon)
@@ -87,7 +87,7 @@ local timerShadowBurstCD			= mod:NewNextTimer(14.7, 204040, nil, nil, nil, 3)--A
 --Taerar
 mod:AddTimerLine(Taerar)
 local timerShadesOfTaerarCD			= mod:NewNextTimer(48.5, 204100, nil, "-Healer", nil, 1)
-local timerSeepingFogCD				= mod:NewCDTimer(15.5, 205341, nil, nil, nil, 3, 24814)
+local timerSeepingFogCD				= mod:NewCDTimer(15.5, 205341, nil, false, 2, 3, 24814)--Spawn pretty often, and timers don't help dodge, so now off by default
 local timerBellowingRoarCD			= mod:NewCDTimer(44.5, 204078, 118699, nil, nil, 2)--Air
 
 --Ysondre
@@ -146,7 +146,7 @@ local function whoDatUpThere(self)
 
 	end
 	if not lethonFound then -- Lethon
-		timerShadowBurstCD:Start(15)
+		timerShadowBurstCD:Start(13.8)
 	end
 	if not taerarFound then -- Taerar
 		timerBellowingRoarCD:Start(43)
@@ -325,7 +325,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnMark:Show(amount)
 			voiceMark:Play("stackhigh")
 		end
-		if self:AntiSpam(4, 2) then
+		if self:AntiSpam(5, 2) then
 			if self:IsMythic() then
 				timerMarkCD:Start()
 			elseif self:IsHeroic() then
@@ -397,7 +397,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 			local cid = self:GetUnitCreatureId(unitID)
 			--Subtracking .5 from all timers do to slight delay in IEEU vs ENCOUNTER_START
 			if cid == 102683 then -- Emeriss
-				timerBreathCD:Start(16, bossName)
+				timerBreathCD:Start(15.5, bossName)
 				timerVolatileInfectionCD:Start(19.5)
 				timerEssenceOfCorruptionCD:Start(29.5)
 				if DBM.BossHealth:IsShown() then

@@ -30,6 +30,7 @@ addon.L = {
 	["edit prompt multiline"] = "按Enter使輸入的內容立即生效，按Esc取消變更，按Shift+Enter換行輸入。",
 	["mana height"] = "法力條高度",
 	["restore defaults text"] = "這將恢復|cff00ff00%s|r到初始狀態，現有的一切設置都將被永久覆蓋。你確定嗎？",
+	["restore defaults text reloadui"] = "這將恢復|cff00ff00%s|r到初始狀態，現有的一切設置都將被永久覆蓋，並且需要重載遊戲界面。你確定嗎？",
 	["defaults restored"] = "所有設置已被恢復到初始狀態。",
 	["frame scale"] = "框架縮放",
 	["show tooltips"] = "遊標提示信息",

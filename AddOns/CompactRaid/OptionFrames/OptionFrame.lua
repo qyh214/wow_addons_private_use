@@ -64,6 +64,7 @@ local module = {}
 module.title = L["core module"]
 module.desc = L["desc"]
 module.Print = addon.Print
+module.requestReload = 1
 
 function addon:GetCoreModule()
 	return module
@@ -431,6 +432,7 @@ local function InitOptionData(db, chardb)
 	LoadOption("showToolboxes")
 
 	LoadOption("showbarbkgnd")
+	LoadOption("lock")
 	LoadOption("showSolo")
 	LoadOption("showParty")
 	LoadOption("showPartyPets", nil, nil, nil, 1)
@@ -473,12 +475,52 @@ end
 addon:RegisterEventCallback("OnInitialize", InitOptionData)
 
 function module:OnRestoreDefaults()
-	local modules = addon.db.modules
-	local profiles = addon.db.profiles
-	wipe(addon.db)
-	addon.db.modules = modules
-	addon.db.profiles = profiles
-	InitOptionData(addon.db, addon.chardb)
+	addon.db.lock = nil
+	addon.db.grouphoriz = nil
+	addon.db.keepgroupstogether = 1
+	addon.db.raidFilter = "CLASS"
+	addon.db.clickDownMode = 1
+	addon.db.showtooltip = 1
+	addon.db.tooltipPosition = 0
+	addon.db.showPrivIcons = 1
+	addon.db.showRoleIcon = 1
+	addon.db.showRaidIcon = 1
+	addon.db.invertColor = nil
+	addon.db.showbarbkgnd = 1
+	addon.db.unitBkColor = nil
+	addon.db.scale = nil
+	addon.db.spacing = nil
+	addon.db.width = nil
+	addon.db.height = nil
+	addon.db.powerBarHeight = nil
+	addon.db.outrangeAlpha = nil
+	addon.db.forceHealthColor = nil
+	addon.db.healthColor = nil
+	addon.db.healthtextmode = nil
+	addon.db.forcePowerColor = nil
+	addon.db.powerColor = nil
+	addon.db.forceNameColor = nil
+	addon.db.nameColor = nil
+	addon.db.nameWidthLimit = 75
+	addon.db.nameHeight = nil
+	addon.db.nameXOffset = nil
+	addon.db.nameYOffset = nil
+	addon.db.nameFontOutline = nil
+	addon.db.showToolboxes = 1
+	addon.db.containerAlpha = nil
+	addon.db.containerBorderSize = nil
+	addon.db.showBuffs = 1
+	addon.db.showDebuffs = 1
+	addon.db.onlyDispellable = 1
+	addon.db.showDispels = 1
+	addon.db.groupSwapNoNotify = nil
+
+	local _, profile
+	for _, profile in pairs(addon.db.profiles) do
+		profile.showPartyPets = 1
+		profile.showRaidPets = nil
+		profile.showFriendlyNpc = 1
+	end
 end
 
 ------------------------------------------------------------

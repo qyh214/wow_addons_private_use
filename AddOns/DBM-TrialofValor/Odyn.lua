@@ -1,23 +1,23 @@
 local mod	= DBM:NewMod(1819, "DBM-TrialofValor", nil, 861)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15441 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15509 $"):sub(12, -3))
 mod:SetCreatureID(114263, 114361, 114360)--114263 Odyn, 114361 Hymdall, 114360 Hyrja 
 mod:SetEncounterID(1958)
 mod:SetZone()
 mod:SetBossHPInfoToHighest()
 mod:SetUsedIcons(1)
-mod:SetHotfixNoticeRev(15441)
+mod:SetHotfixNoticeRev(15481)
 mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 228003 228012 228171 231013",
-	"SPELL_CAST_SUCCESS 228012 228028 228162",
-	"SPELL_AURA_APPLIED 228029 227807 227959 227626 228918 227490 227491 227498 227499 227500",
+	"SPELL_CAST_SUCCESS 228012 228028 228162 231350",
+	"SPELL_AURA_APPLIED 228029 227807 227959 227626 228918 227490 227491 227498 227499 227500 231311 231342 231344 231345 231346",
 	"SPELL_AURA_APPLIED_DOSE 227626",
-	"SPELL_AURA_REMOVED 228029 227807 227959 227490 227491 227498 227499 227500",
+	"SPELL_AURA_REMOVED 228029 227807 227959 227490 227491 227498 227499 227500 231311 231342 231344 231345 231346",
 	"SPELL_PERIODIC_DAMAGE 228007 228683",
 	"SPELL_PERIODIC_MISSED 228007 228683",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
@@ -27,6 +27,9 @@ mod:RegisterEventsInCombat(
 --TODO, phase 3 storms (area of affect). not in combat log or even transcriptor. appears every 30 seconds give or take. verify in more attempts and add scheduler for it
 --TODO, Cleansing flame timers/target announces?
 --Stage 1: Halls of Valor was merely a set back
+local hymdall = EJ_GetSectionInfo(14005)
+local hyrja = EJ_GetSectionInfo(14006)
+
 local warnDancingBlade				= mod:NewCountAnnounce(228003, 3)--Change if target scanning works, but considering it doesn't in 5 man version of this spell, omitting for now
 local warnRevivify					= mod:NewCastAnnounce(228171, 4)
 local warnExpelLight				= mod:NewTargetAnnounce(228028, 3)
@@ -34,6 +37,7 @@ local warnShieldofLight				= mod:NewTargetAnnounce(228270, 3)
 --Stage 2: Stuff
 local warnPhase2					= mod:NewPhaseAnnounce(2, 2)
 --Stage 3: Odyn immitates lei shen
+local warnPhase3					= mod:NewPhaseAnnounce(3, 2)
 local warnStormofJustice			= mod:NewTargetAnnounce(227807, 3)
 
 --Stage 1: Halls of Valor was merely a set back
@@ -45,10 +49,13 @@ local yellExpelLight				= mod:NewYell(228028)
 local specWarnShieldofLight			= mod:NewSpecialWarningYou(228270, nil, nil, nil, 1, 2)
 local yellShieldofLightFades		= mod:NewFadesYell(228270)
 local specWarnDrawPower				= mod:NewSpecialWarningMoveTo(227503, nil, nil, nil, 2, 6)
+local yellDrawPower					= mod:NewPosYell(227503, L.BrandYell)
 --Stage 2: Odyn immitates margok
 local specWarnOdynsTest				= mod:NewSpecialWarningCount(227626, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(5, 159515))
 local specWarnOdynsTestOther		= mod:NewSpecialWarningTaunt(227626, nil, nil, nil, 1, 2)
 local specWarnShatterSpears			= mod:NewSpecialWarningDodge(231013, false, nil, 2, 2, 2)--Every 8 seconds, so off by default
+local specWarnHyrja					= mod:NewSpecialWarningSwitch("ej14006", nil, nil, nil, 1, 2)
+local specWarnHymall				= mod:NewSpecialWarningSwitch("ej14005", nil, nil, nil, 1, 2)
 
 --Stage 3: Odyn immitates lei shen
 local specWarnStormofJustice		= mod:NewSpecialWarningMoveAway(227807, nil, nil, nil, 1, 2)
@@ -56,20 +63,31 @@ local yellStormofJustice			= mod:NewYell(227807)
 local specWarnStormforgedSpear		= mod:NewSpecialWarningRun(228918, nil, nil, nil, 4, 2)
 local specWarnStormforgedSpearOther	= mod:NewSpecialWarningTaunt(228918, nil, nil, nil, 1, 2)
 local specWarnCleansingFlame		= mod:NewSpecialWarningMove(228683, nil, nil, nil, 1, 2)
+--Mythic
+local specWarnRunicBrand			= mod:NewSpecialWarningYouPos(231297, nil, nil, nil, 1)
+local yellRunicBrand				= mod:NewPosYell(231297, L.BrandYell)
 
---Stage 1: Halls of Valor was merely a set back
+--Adds (stage 1 and 2)
+mod:AddTimerLine(hymdall)
 local timerDancingBladeCD			= mod:NewCDTimer(31, 228003, nil, nil, nil, 3)--Alternating two times
 local timerHornOfValorCD			= mod:NewCDTimer(32, 228012, nil, nil, nil, 2)--Alternating two times
+mod:AddTimerLine(hyrja)
 local timerExpelLightCD				= mod:NewCDTimer(32, 228028, nil, nil, nil, 3)--Alternating two times
 local timerShieldofLightCD			= mod:NewCDTimer(32, 228270, nil, nil, nil, 3)--Alternating two times
+--Stage 1: Halls of Valor was merely a set back
+mod:AddTimerLine(SCENARIO_STAGE:format(1))
 local timerDrawPowerCD				= mod:NewNextTimer(70, 227503, nil, nil, nil, 6)
 local timerDrawPower				= mod:NewCastTimer(30, 227629, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 --Stage 2: Odyn immitates margok
+mod:AddTimerLine(SCENARIO_STAGE:format(2))
 local timerSpearCD					= mod:NewNextTimer(8, 227697, nil, nil, nil, 3)
-local timerAddsCD					= mod:NewNextTimer(70, "ej14404", nil, nil, nil, 1)
 --Stage 3: Odyn immitates lei shen
+mod:AddTimerLine(SCENARIO_STAGE:format(3))
 local timerStormOfJusticeCD			= mod:NewNextTimer(10.9, 227807, nil, nil, nil, 3)
 local timerStormforgedSpearCD		= mod:NewNextTimer(10.9, 228918, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_DEADLY_ICON)
+--Mythic
+local timerRunicBrandCD				= mod:NewNextTimer(35, 231297, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
+local timerRadiantSmite				= mod:NewCastTimer(7.5, 231350, nil, nil, nil, 2, nil, DBM_CORE_HEROIC_ICON)
 
 --local berserkTimer				= mod:NewBerserkTimer(300)
 
@@ -79,6 +97,8 @@ local countdownHorn					= mod:NewCountdown("Alt32", 228012)
 local countdownShield				= mod:NewCountdown("AltTwo32", 228270)
 --Stage 3: Odyn immitates lei shen
 local countdownStormforgedSpear		= mod:NewCountdown("Alt11", 228918, "Tank")
+--Mythic
+local countdownRunicBrand			= mod:NewCountdown(35, 231297)
 
 --Stage 1: Halls of Valor was merely a set back
 local voiceDancingBlade				= mod:NewVoice(228003)--runaway
@@ -89,6 +109,8 @@ local voiceDrawPower				= mod:NewVoice(227503)--locations
 --Stage 2: Odyn immitates margok
 local voiceOdynsTest				= mod:NewVoice(227626)--changemt
 local voiceShatterSpears			= mod:NewVoice(231013)--watchorb (on by default unlike screen warning since it's not as spammy)
+local voiceHyrja					= mod:NewVoice("ej14006")--bigmob
+local voiceHymdall					= mod:NewVoice("ej14005")--bigmob
 --Stage 3: Odyn immitates lei shen
 local voiceStormofJustice			= mod:NewVoice(227807)--runout
 local voiceStormforgedSpear			= mod:NewVoice(228918)--justrun
@@ -96,7 +118,7 @@ local voiceCleansingFlame			= mod:NewVoice(228683)--runaway
 
 mod:AddSetIconOption("SetIconOnShield", 228270, true)
 mod:AddInfoFrameOption(227629, true)
-mod:AddRangeFrameOption("5/8")
+mod:AddRangeFrameOption("5/8/15")
 
 mod.vb.phase = 1
 mod.vb.hornCasting = false
@@ -104,12 +126,33 @@ mod.vb.hornCast = 0
 mod.vb.shieldCast = 0
 mod.vb.expelLightCast = 0
 mod.vb.dancingBladeCast = 0
+mod.vb.brandActive = false
 local drawTable = {}
+--Mythic Timers
+local dancingBladeTimers = {15.0, 20.1, 19.9, 25.0, 20.0}
+local hornTimers = {8.1, 22.0, 20.0, 35.0}
+local shieldTimers = {20.0, 20.0, 33.0, 22.0, 20.0}
+local expelLightTimers = {25.0, 20.0, 15.0, 30.0, 20.0}
+
+local debuffFilter
+local UnitDebuff = UnitDebuff
+local playerDebuff = nil
+do
+	local spellName = GetSpellInfo(231311)
+	debuffFilter = function(uId)
+		if not playerDebuff then return true end
+		if not select(11, UnitDebuff(uId, spellName)) == playerDebuff then
+			return true
+		end
+	end
+end
 
 local expelLight, stormOfJustice = GetSpellInfo(228028), GetSpellInfo(227807)
 local function updateRangeFrame(self)
 	if not self.Options.RangeFrame then return end
-	if UnitDebuff("player", expelLight) or UnitDebuff("player", stormOfJustice) then
+	if self.vb.brandActive then
+		DBM.RangeCheck:Show(15, debuffFilter)--There are no 15 yard items that are actually 15 yard, this will round to 18 :\
+	elseif UnitDebuff("player", expelLight) or UnitDebuff("player", stormOfJustice) then
 		DBM.RangeCheck:Show(8)
 	elseif self.vb.hornCasting then--Spread for Horn of Valor
 		DBM.RangeCheck:Show(5)
@@ -126,23 +169,23 @@ do
 		table.wipe(lines)
 		if drawTable[227490] then--Purple K (NE)
 			total = total + 1
-			lines[drawTable[227490]] = "|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|tNE|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|tNE"
+			lines[drawTable[227490]] = "|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|tNE|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|t"
 		end
 		if drawTable[227491] then--Orange N (SE)
 			total = total + 1
-			lines[drawTable[227491]] = "|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|tNE|TInterface\\Icons\\Boss_OdunRunes_Orange.blp:12:12|tSE"
+			lines[drawTable[227491]] = "|TInterface\\Icons\\Boss_OdunRunes_Orange.blp:12:12|tSE|TInterface\\Icons\\Boss_OdunRunes_Orange.blp:12:12|t"
 		end
 		if drawTable[227498] then--Yellow H (SW)
 			total = total + 1
-			lines[drawTable[227498]] = "|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|tNE|TInterface\\Icons\\Boss_OdunRunes_Yellow.blp:12:12|tSW"
+			lines[drawTable[227498]] = "|TInterface\\Icons\\Boss_OdunRunes_Yellow.blp:12:12|tSW|TInterface\\Icons\\Boss_OdunRunes_Yellow.blp:12:12|t"
 		end
 		if drawTable[227499] then--Blue fishies (NW)
 			total = total + 1
-			lines[drawTable[227499]] = "|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|tNE|TInterface\\Icons\\Boss_OdunRunes_Blue.blp:12:12|tNW"
+			lines[drawTable[227499]] = "|TInterface\\Icons\\Boss_OdunRunes_Blue.blp:12:12|tNW|TInterface\\Icons\\Boss_OdunRunes_Blue.blp:12:12|t"
 		end
 		if drawTable[227500] then--Green box (N)
 			total = total + 1
-			lines[drawTable[227500]] = "|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|tNE|TInterface\\Icons\\Boss_OdunRunes_Green.blp:12:12|tN"
+			lines[drawTable[227500]] = "|TInterface\\Icons\\Boss_OdunRunes_Green.blp:12:12|tN|TInterface\\Icons\\Boss_OdunRunes_Green.blp:12:12|t"
 		end
 		if total == 0 then
 			DBM.InfoFrame:Hide()
@@ -158,8 +201,18 @@ function mod:OnCombatStart(delay)
 	self.vb.shieldCast = 0
 	self.vb.expelLightCast = 0
 	self.vb.dancingBladeCast = 0
+	self.vb.brandActive = false
 	table.wipe(drawTable)
-	if not self:IsEasy() then
+	playerDebuff = nil
+	if self:IsMythic() then
+		timerHornOfValorCD:Start(8-delay)
+		countdownHorn:Start(8-delay)
+		timerDancingBladeCD:Start(15-delay)
+		timerShieldofLightCD:Start(20-delay)
+		timerExpelLightCD:Start(25-delay)
+		timerDrawPowerCD:Start(35-delay)
+		countdownDrawPower:Start(35-delay)
+	elseif not self:IsEasy() then
 		timerHornOfValorCD:Start(8-delay)
 		countdownHorn:Start(8-delay)
 		timerDancingBladeCD:Start(16-delay)
@@ -168,7 +221,7 @@ function mod:OnCombatStart(delay)
 		timerExpelLightCD:Start(32-delay)
 		timerDrawPowerCD:Start(40-delay)
 		countdownDrawPower:Start(40-delay)
-	else
+	else--LFR/Normal
 		timerHornOfValorCD:Start(10-delay)
 		countdownHorn:Start(10-delay)
 		timerDancingBladeCD:Start(20-delay)
@@ -183,6 +236,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
@@ -197,7 +251,12 @@ function mod:SPELL_CAST_START(args)
 		self.vb.dancingBladeCast = self.vb.dancingBladeCast + 1
 		warnDancingBlade:Show(self.vb.dancingBladeCast)
 		if self.vb.phase == 1 then
-			if self:IsEasy() then
+			if self:IsMythic() then
+				local timer = dancingBladeTimers[self.vb.dancingBladeCast+1]
+				if timer then
+					timerDancingBladeCD:Start(timer)
+				end
+			elseif self:IsEasy() then
 				if self.vb.dancingBladeCast == 1 or self.vb.dancingBladeCast == 5 or self.vb.dancingBladeCast == 9 then
 					timerDancingBladeCD:Start(30)
 				else
@@ -219,7 +278,13 @@ function mod:SPELL_CAST_START(args)
 		specWarnHornOfValor:Show()
 		voiceHornOfValor:Play("scatter")
 		if self.vb.phase == 1 then
-			if self:IsEasy() then
+			if self:IsMythic() then
+				local timer = hornTimers[self.vb.hornCast+1]
+				if timer then
+					timerHornOfValorCD:Start(timer)
+					countdownHorn:Start(timer)
+				end
+			elseif self:IsEasy() then
 				if self.vb.hornCast % 2 == 0 then
 					--timerHornOfValorCD:Start(43)--More data needed. Probably has an alternation
 				else
@@ -256,7 +321,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 228028 then
 		self.vb.expelLightCast = self.vb.expelLightCast + 1
 		if self.vb.phase == 1 then
-			if self:IsEasy() then
+			if self:IsMythic() then
+				local timer = expelLightTimers[self.vb.expelLightCast+1]
+				if timer then
+					timerExpelLightCD:Start(timer)
+				end
+			elseif self:IsEasy() then
 				if self.vb.expelLightCast % 2 == 0 then
 					timerExpelLightCD:Start(50)
 				else
@@ -276,6 +346,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.Options.SetIconOnShield then
 			self:SetIcon(args.destName, 0)
 		end
+	elseif spellId == 231350 then
+		self.vb.brandActive = false
+		updateRangeFrame(self)
 	end
 end
 
@@ -323,22 +396,53 @@ function mod:SPELL_AURA_APPLIED(args)
 		if spellId == 227490 and args:IsPlayer() then--Purple K (NE)
 			specWarnDrawPower:Show("|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|tNE|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|t")
 			voiceDrawPower:Play("frontright")
+			yellDrawPower:Yell(3, args.spellName, 3)
 		elseif spellId == 227491 and args:IsPlayer() then--Orange N (SE)
 			specWarnDrawPower:Show("|TInterface\\Icons\\Boss_OdunRunes_Orange.blp:12:12|tSE|TInterface\\Icons\\Boss_OdunRunes_Orange.blp:12:12|t")
 			voiceDrawPower:Play("backright")
+			yellDrawPower:Yell(2, args.spellName, 2)
 		elseif spellId == 227498 and args:IsPlayer() then--Yellow H (SW)
 			specWarnDrawPower:Show("|TInterface\\Icons\\Boss_OdunRunes_Yellow.blp:12:12|tSW|TInterface\\Icons\\Boss_OdunRunes_Yellow.blp:12:12|t")
 			voiceDrawPower:Play("backleft")
+			yellDrawPower:Yell(1, args.spellName, 1)
 		elseif spellId == 227499 and args:IsPlayer() then--Blue fishies (NW)
 			specWarnDrawPower:Show("|TInterface\\Icons\\Boss_OdunRunes_Blue.blp:12:12|tNW|TInterface\\Icons\\Boss_OdunRunes_Blue.blp:12:12|t")
 			voiceDrawPower:Play("frontleft")
+			yellDrawPower:Yell(6, args.spellName, 6)
 		elseif spellId == 227500 and args:IsPlayer() then--Green box (N)
 			specWarnDrawPower:Show("|TInterface\\Icons\\Boss_OdunRunes_Green.blp:12:12|tN|TInterface\\Icons\\Boss_OdunRunes_Green.blp:12:12|t")
 			voiceDrawPower:Play("frontcenter")
+			yellDrawPower:Yell(4, args.spellName, 4)
 		end
 		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
 			DBM.InfoFrame:SetHeader(args.spellName)
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
+		end
+	elseif spellId == 231311 or spellId == 231342 or spellId == 231344 or spellId == 231345 or spellId == 231346 then--Branded (Draw Power Runes)
+		if args:IsPlayer() then
+			playerDebuff = spellId
+			if spellId == 231311 then--Purple K (NE)
+				specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Purple.blp:12:12|t")
+--				voiceDrawPower:Play("frontright")
+				yellRunicBrand:Yell(3, args.spellName, 3)
+			elseif spellId == 231342 then--Orange N (SE)
+				specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Orange.blp:12:12|t")
+--				voiceDrawPower:Play("backright")
+				yellRunicBrand:Yell(2, args.spellName, 2)
+			elseif spellId == 231344 then--Yellow H (SW)
+				specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Yellow.blp:12:12|t")
+--				voiceDrawPower:Play("backleft")
+				yellRunicBrand:Yell(1, args.spellName, 1)
+			elseif spellId == 231345 then--Blue fishies (NW)
+				specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Blue.blp:12:12|t")
+--				voiceDrawPower:Play("frontleft")
+				yellRunicBrand:Yell(6, args.spellName, 6)
+			elseif spellId == 231346 then--Green box (N)
+				specWarnRunicBrand:Show("|TInterface\\Icons\\Boss_OdunRunes_Green.blp:12:12|t")
+--				voiceDrawPower:Play("frontcenter")
+				yellRunicBrand:Yell(4, args.spellName, 4)
+			end
+			updateRangeFrame(self)
 		end
 	end
 end
@@ -359,6 +463,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		countdownDrawPower:Cancel()
 	elseif spellId == 227490 or spellId == 227491 or spellId == 227498 or spellId == 227499 or spellId == 227500 then--Branded (Draw Power Runes)
 		drawTable[spellId] = nil
+	elseif spellId == 231311 or spellId == 231342 or spellId == 231344 or spellId == 231345 or spellId == 231346 then--Branded (Draw Power Runes)
+		if args:IsPlayer() then
+			playerDebuff = nil
+		end
 	end
 end
 
@@ -374,25 +482,49 @@ end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 --[[
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 114363 or cid == 114996 then--Valarjar Runebearer
-
+--Only if better chat message way doesn't work. This way is still bleh and needs a little filtering
+function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
+	for i = 1, 5 do
+		local uId = "boss"..i
+		if UnitExists(uId) then
+			local cid = self:GetUnitCreatureId(uId)
+			if cid == 114361 then--Hymdall
+				specWarnHymall:Show()
+				voiceHymdall:Play("bigmob")
+				timerDancingBladeCD:Start(6)
+				timerHornOfValorCD:Start(12)
+				countdownHorn:Start(12)
+			elseif cid == 114360 then--Hyrja
+				specWarnHyrja:Show()
+				voiceHyrja:Play("bigmob")
+				timerExpelLightCD:Start(4.7)
+				timerShieldofLightCD:Start(9.7)
+				countdownShield:Start(9.7)
+			end
+		end
 	end
 end
 --]]
 
 --"<35.57 16:56:12> [CHAT_MSG_RAID_BOSS_EMOTE] |TInterface\\Icons\\ABILITY_PRIEST_FLASHOFLIGHT.BLP:20|t Hyrja targets |cFFFF0000Wakmagic|r with |cFFFF0404|Hspell:228162|h[Shield of Light]|h|r!#Hyrja###Wakmagic##0#0##0#476#nil#0#false#false#false#false", -- [241]
-function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
+function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 	if msg:find("spell:228162") then
 		self.vb.shieldCast = self.vb.shieldCast + 1
 		if self.vb.phase == 1 then
-			if self.vb.shieldCast % 2 == 0 then
-				timerShieldofLightCD:Start(38)
-				countdownShield:Start(38)
+			if self:IsMythic() then
+				local timer = shieldTimers[self.vb.shieldCast+1]
+				if timer then
+					timerShieldofLightCD:Start(timer)
+					countdownShield:Start(timer)
+				end
 			else
-				timerShieldofLightCD:Start(32)
-				countdownShield:Start(32)
+				if self.vb.shieldCast % 2 == 0 then
+					timerShieldofLightCD:Start(38)
+					countdownShield:Start(38)
+				else
+					timerShieldofLightCD:Start(32)
+					countdownShield:Start(32)
+				end
 			end
 		else
 			timerShieldofLightCD:Start(25)
@@ -413,29 +545,52 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 				self:SetIcon(targetname, 1)
 			end
 		end
+	--"<269.72 17:21:06> [CHAT_MSG_RAID_BOSS_EMOTE] |cFFFF0000Hyrja|r leaps back into battle!#Hyrja###Odyn##0#0##0#344#nil#0#false#false#false#false", -- [1538]
+	elseif npc and target and target == L.name then--Odyn only target when it's a leap into battle.
+		if npc == hyrja then
+			specWarnHyrja:Show()
+			voiceHyrja:Play("bigmob")
+			timerExpelLightCD:Start(4.7)
+			timerShieldofLightCD:Start(9.7)
+			countdownShield:Start(9.7)
+		elseif npc == hymdall then
+			specWarnHymall:Show()
+			voiceHymdall:Play("bigmob")
+			timerDancingBladeCD:Start(6)
+			timerHornOfValorCD:Start(12)
+			countdownHorn:Start(12)
+		end
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
 	--"<51.36 16:56:28> [UNIT_SPELLCAST_SUCCEEDED] Odyn(??) [[boss1:Draw Power::3-3198-1648-10280-227503-000A6050FC:227503]]", -- [376]
-	if spellId == 227503 then--Draw Power
+	if spellId == 227503 or spellId == 229576 then--Draw Power
 		timerDrawPower:Start()
 		countdownDrawPower:Start()
 		if self:IsEasy() then
 			timerDrawPowerCD:Start(75)--LFR phase 2 verified. Might still be 70 in heroic though. no logs long enough for phase 2
 			countdownDrawPower:Start(75)
+		elseif self:IsMythic() then
+			timerDrawPowerCD:Start(65)--65 in phase 1, 66 in phase 2 but i'm ok with using 65 for both for now
+			countdownDrawPower:Start(65)
 		else
 			timerDrawPowerCD:Start()
 			countdownDrawPower:Start(70)
 		end
-		if self.vb.phase == 2 then
-			timerSpearCD:Stop()
-			timerSpearCD:Start(35)
-		end
+		--if self.vb.phase == 2 then
+		--	timerSpearCD:Stop()
+		--	timerSpearCD:Start(35)
+		--end
 	--"<150.12 16:58:07> [UNIT_SPELLCAST_SUCCEEDED] Odyn(??) [[boss1:Test for Players::3-3198-1648-10280-229168-000660515F:229168]]", -- [1347]
 	--"<156.10 16:58:13> [UNIT_SPELLCAST_SUCCEEDED] Odyn(??) [[boss1:Leap into Battle::3-3198-1648-10280-227882-0001605165:227882]]", -- [1382]
 	--"<159.34 16:58:16> [UNIT_SPELLCAST_SUCCEEDED] Odyn(??) [[boss1:Spear Transition - Holy::3-3198-1648-10280-228734-0004E05168:228734]]", -- [1395]
+	elseif spellId == 231297 then--Phase 3 mythic runic Brand
+		self.vb.brandActive = true
+		timerRadiantSmite:Start()
+		timerRunicBrandCD:Start()
+		countdownRunicBrand:Start()
 	elseif spellId == 229168 then--Test for Players (Phase 1 end)
 		warnPhase2:Show()
 		self.vb.hornCast = 0--Verify
@@ -455,6 +610,9 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		if self:IsEasy() then
 			timerDrawPowerCD:Start(53)
 			countdownDrawPower:Start(53)
+		elseif self:IsMythic() then
+			timerDrawPowerCD:Start(45)
+			countdownDrawPower:Start(45)
 		else
 			timerDrawPowerCD:Start(48)
 			countdownDrawPower:Start(48)
@@ -463,32 +621,36 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		--Timer started at jump though has to be delayed to avoid phase 1 ClearAllDebuffs events
 	elseif spellId == 227882 then--Jump into Battle (phase 2 begin)
 		self.vb.phase = 2
-		if self:IsHard() then
-			timerAddsCD:Start(17.6)
-		end
-	elseif spellId == 229469 and self.vb.phase == 2 then--Valarjar's Bond (any of 3 bosses jumping down)
+	--"<143.76 09:43:49> [INSTANCE_ENCOUNTER_ENGAGE_UNIT] Fake Args:#boss1#true#true#true#Odyn#Creature-0-1461-1648-2
+	--"<145.25 09:43:50> [UNIT_SPELLCAST_SUCCEEDED] Hyrja(??) [[boss2:Valarjar's Bond::3-1461-1648-2401-229469-00062C1C49:229469]]", -- [1792]
+--		self:RegisterShortTermEvents(
+--			"INSTANCE_ENCOUNTER_ENGAGE_UNIT"
+--		)
+--[[	elseif spellId == 229469 and self.vb.phase == 2 then--Valarjar's Bond (any of 3 bosses jumping down)
 		local cid = self:GetUnitCreatureId(uId)
 		if cid == 114361 then--Hymdall
+			specWarnHymall:Show()
+			voiceHymdall:Play("bigmob")
 			timerDancingBladeCD:Start(4.6)
 			timerHornOfValorCD:Start(10.6)
 			countdownHorn:Start(10.6)
 		elseif cid == 114360 then--Hyrja
-			timerExpelLightCD:Start(3.5)
-			timerShieldofLightCD:Start(8.5)
-			countdownShield:Start(8.5)
-		end
+			specWarnHyrja:Show()
+			voiceHyrja:Play("bigmob")
+			timerExpelLightCD:Start(3.3)
+			timerShieldofLightCD:Start(8.3)
+			countdownShield:Start(8.3)
+		end--]]
 	elseif spellId == 34098 and self.vb.phase == 2 then--ClearAllDebuffs (any of bosses leaving)
 		local cid = self:GetUnitCreatureId(uId)
 		if cid == 114361 then--Hymdall
 			timerDancingBladeCD:Stop()
 			timerHornOfValorCD:Stop()
 			countdownHorn:Cancel()
-			timerAddsCD:Start(72)
 		elseif cid == 114360 then--Hyrja
 			timerExpelLightCD:Stop()
 			timerShieldofLightCD:Stop()
 			countdownShield:Cancel()
-			timerAddsCD:Start(67.8)
 		end
 	elseif spellId == 227697 then--Spear of Light
 		timerSpearCD:Start()
@@ -499,12 +661,17 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	--"<489.60 21:38:04> [UNIT_SPELLCAST_SUCCEEDED] Odyn(??) [[boss1:Arcing Storm::3-2012-1648-3815-229254-00060AC2FC:229254]]", -- [2941]
 	elseif spellId == 228740 then--Spear Transition - Thunder (Phase 3 begin)
 		self.vb.phase = 3
-		timerAddsCD:Stop()
+		--self:UnregisterShortTermEvents()
 		timerDrawPower:Stop()
 		countdownDrawPower:Cancel()
 		timerDrawPowerCD:Stop()
+		warnPhase3:Show()
 		timerStormOfJusticeCD:Start(4)
 		timerStormforgedSpearCD:Start(9)
 		countdownStormforgedSpear:Start(9)
+		if self:IsMythic() then
+			timerRunicBrandCD:Start(21)
+			countdownRunicBrand:Start(21)
+		end
 	end
 end

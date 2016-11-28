@@ -1,5 +1,5 @@
-local pp=print
 local me, ns = ...
+local pp=print
 ns.Configure()
 local GarrisonMissionFrame_SetItemRewardDetails=GarrisonMissionFrame_SetItemRewardDetails
 local GetItemCount=GetItemCount
@@ -37,7 +37,7 @@ local shipEnhancement={
 	127894,
 	127886
 }
-
+local lastTab=1
 function module:Test()
 
 --[===[@debug@
@@ -51,6 +51,7 @@ function module:OnInitialize()
 	self:SafeSecureHook(GSF,"OnClickMission","HookedGSF_OnClickMission")
 	self:SafeSecureHook("GarrisonShipyardMapMission_OnEnter")
 	self:SafeSecureHook("GarrisonShipyardMapMission_OnLeave")
+  self:SafeSecureHook(GSF,"SelectTab","AddMenu")	
 	local ref=GSFMissions.CompleteDialog.BorderFrame.ViewButton
 	local bt = CreateFrame('BUTTON','GCQuickShipMissionCompletionButton', ref, 'UIPanelButtonTemplate')
 	bt.missionType=LE_FOLLOWER_TYPE_SHIPYARD_6_2
@@ -71,6 +72,7 @@ function module:OnInitialize()
 	addon:AddToggle("SHIPMOVEPANEL",true,L["Unlock Panel"],L["Makes shipyard panel movable"])
 	--addon:AddToggle("BIGSCREEN",true,L["Use big screen"],L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"])
 	addon:AddToggle("SHIPPIN",true,L["Show Garrison Commander menu"],L["Disable if you dont want the full Garrison Commander Header."])
+  addon:AddToggle("SHIPENHA",true,L["Show Enhancement buttons"],L["Disable if you dont want the equipment buttons in ship view."])
 end
 function module:GetMain()
 	return GSF
@@ -277,20 +279,8 @@ print("Adding Menu",GCS.Menu,GSF.MissionTab:IsVisible(),GSF.FollowerTab:IsVisibl
 		return
 	end
 	local menu,size
-
-	if GSF.MissionTab:IsVisible() then
-		self.currentmenu=GSF.MissionTab
-		menu,size=self:CreateOptionsLayer('SHIPMOVEPANEL')
-	elseif GSF.FollowerTab:IsVisible() then
-		self.currentmenu=GSF.FollowerTab
-		menu,size=self:CreateOptionsLayer('SHIPMOVEPANEL')
-	--elseif GSF.MissionControlTab:IsVisible() then
-	--	self.currentmenu=GSF.MissionControlTab
-	--	menu,size=self:CreateOptionsLayer('BIGSCREEN','GCSKIPRARE','GCSKIPEPIC')
-	else
-		self.currentmenu=nil
-		menu,size=self:CreateOptionsLayer('SHIPMOVEPANEL')
-	end
+	self.currentmenu=GSF.FollowerTab
+	menu,size=self:CreateOptionsLayer('SHIPMOVEPANEL','SHIPENHA')
 --[===[@debug@
 	self:AddOptionToOptionsLayer(menu,'DBG')
 	self:AddOptionToOptionsLayer(menu,'TRC')
@@ -321,14 +311,23 @@ print("Removing menu")
 end
 
 function module:OpenLastTab()
---[===[@debug@
-print("Should restore tab")
---@end-debug@]===]
 end
 function module:FollowerOnShow()
-	self:ShowEnhancements()
+  if addon:GetBoolean("SHIPENHA") then
+  	self:ShowEnhancements()
+  end
 end
 local upgrades
+function addon:ApplySHIPENHA(value)
+  if value then
+    if GSF.FollowerTab:IsVisible() then    
+      module:ShowEnhancements()
+    end
+  else
+    if upgrades then upgrades:Hide() end
+  end
+    
+end
 function module:ShowEnhancements()
 	if not upgrades then
 		upgrades=CreateFrame("Frame","UPG",GarrisonShipyardFrame.FollowerTab)
@@ -342,7 +341,7 @@ function module:ShowEnhancements()
 	for i,itemID in pairs(shipEnhancement) do
 		local e
 		if  not  upgrades.items[i] then
-			upgrades.items[i]=CreateFrame("Button","But"..i,u,"GarrisonCommanderUpgradeButton,SecureActionButtonTemplate")
+			upgrades.items[i]=CreateFrame("Button","But"..i,upgrades,"GarrisonCommanderUpgradeButton,SecureActionButtonTemplate")
 			e=upgrades.items[i]
 			e.itemID=itemID
 			e.Icon:SetSize(40,40)

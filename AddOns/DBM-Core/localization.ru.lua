@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "ruRU" then return end
+if GetLocale() ~= "ruRU" then return end
 
 DBM_CORE_NEED_LOCALS				= "Вы - программист или хороший переводчик? Нам нужна ваша помощь в локализации DBM на другие языки! Если вы можете помочь, посетите наш форум |HDBM:localizersneeded|h|cff3588ffнажав здесь|r"
 DBM_CORE_NEED_LOGS					= "DBM needs Transcriptor (http://www.wowace.com/addons/transcriptor/) logs of these test fights to make best mods possible. If you want to help, log these fights with transcriptor and post them to our forums. Only interested in 7.0 raid & dungeon logs."
@@ -246,6 +246,8 @@ DBM_CORE_BACK						= "Назад"
 DBM_CORE_MIDDLE						= "Середина"
 DBM_CORE_FRONT						= "Вперед"
 DBM_CORE_INTERMISSION				= "Переходная фаза"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
+DBM_CORE_ORB						= "Orb"--FIXME
+DBM_CHEST							= "сундука"--As in Treasure 'Chest'. Not Chest as in body part.
 
 DBM_CORE_BREAK_USAGE				= "Перерыв не может быть дольше 60 минут. Убедитесь что вы вводите время в минутах, а не секундах."
 DBM_CORE_BREAK_START				= "Перерыв начинается -- у вас есть %s! (отправил %s)"
@@ -458,7 +460,7 @@ DBM_ARROW_ERROR_USAGE	= {
 DBM_SPEED_KILL_TIMER_TEXT	= "Рекордная победа"
 DBM_SPEED_CLEAR_TIMER_TEXT	= "Лучшее прохождение"
 DBM_COMBAT_RES_TIMER_TEXT	= "След. заряд БР"
-DBM_CORE_TIMER_RESPAWN		= "Появление босса"
+DBM_CORE_TIMER_RESPAWN		= "%s босса"
 
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s запрашивает разрешение на просмотр ваших текущих сохранений подземелий.\nВы хотите предоставить %s такое право? Этот игрок получит возможность запрашивать эту информацию без уведомления в течение вашей текущей игровой сессии."

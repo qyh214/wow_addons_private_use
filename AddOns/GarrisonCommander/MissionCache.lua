@@ -136,7 +136,7 @@ function module:GetMission(id,noretry)
 	scan(GMFMissions.availableMissions,'a')
 	scan(GMFMissions.inProgressMissions,'p')
 	scan(GSFMissions.missions,'s')
-	if GHFMissions then
+	if GHFMissions and not ns.ignoreHall then
 		scan(GHFMissions.availableMissions,'ha')
 		scan(GHFMissions.inProgressMissions,'hp')
 	end

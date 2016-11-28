@@ -1,4 +1,4 @@
-﻿## Interface: 70100
+## Interface: 70100
 ## X-Min-Interface: 70000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Broken Isles|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Verheerten Inseln|r
@@ -20,10 +20,6 @@
 ## X-DBM-Mod-MapID: 1220
 ## X-DBM-Mod-LoadCID: 107023, 106981, 106984, 106982, 109943, 109331, 110378, 99929, 108879, 110321, 108678, 112350
 ## X-DBM-Mod-MinCoreRevision: 14737
-## X-Curse-Packaged-Version: 7.1.2
-## X-Curse-Project-Name: Deadly Boss Mods
-## X-Curse-Project-ID: deadly-boss-mods
-## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
 localization.en.lua
 localization.de.lua
 localization.tw.lua

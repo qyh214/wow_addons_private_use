@@ -15,6 +15,7 @@ local CreateFrame = CreateFrame
 local format = format
 local pairs = pairs
 local GetSpecialization = GetSpecialization
+local ReloadUI = ReloadUI
 
 local _, addon = ...
 local L = addon.L
@@ -395,6 +396,10 @@ end)
 -- For modules' "Restore Defaults" features, new feature added in 0.2 beta
 ------------------------------------------------------------
 
+------------------------------------------------------------
+-- For modules' "Restore Defaults" features, new feature added in 0.2 beta
+------------------------------------------------------------
+
 local function OnConfirmRestore(module)
 	if InCombatLockdown() and module:HasFlag("secure") then
 		module:Print(L["cannot cange these settings while in combat"], 1, 0, 0)
@@ -426,13 +431,17 @@ local function OnConfirmRestore(module)
 		module:OnRestoreDefaults()
 	end
 
-	module:Print(L["defaults restored"])
-	addon:BroadcastEvent("OnModuleRestoreDefaults", module)
+	if module.requestReload then
+		ReloadUI()
+	else
+		module:Print(L["defaults restored"])
+		addon:BroadcastEvent("OnModuleRestoreDefaults", module)
+	end
 end
 
 function addon:RestoreModuleDefaults(module)
 	if type(module) == "table" then
-		local text = format(L["restore defaults text"], module.title or module.name or UNKNOWN)
+		local text = format(module.requestReload and L["restore defaults text reloadui"] or L["restore defaults text"], module.title or module.name or UNKNOWN)
 		LibMsgBox:Confirm(text, "MB_OKCANCEL", OnConfirmRestore, module)
 	end
 end

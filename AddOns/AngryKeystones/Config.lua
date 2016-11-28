@@ -12,6 +12,10 @@ local configDefaults = {
 	completionMessage = false,
 	smallAffixes = true,
 	deathTracker = true,
+	recordSplits = false,
+	showLevelModifier = false,
+	persistTracker = false,
+	exclusiveTracker = false,
 }
 local callbacks = {}
 
@@ -245,7 +249,7 @@ Panel_OnRefresh = function(self)
 		checkboxes = {}
 		dropdowns = {}
 
-		local checkboxes_order = { "silverGoldTimer", "smallAffixes", "deathTracker", "autoGossip", "progressTooltip", "completionMessage" }
+		local checkboxes_order = { "silverGoldTimer", "smallAffixes", "deathTracker", "autoGossip", "progressTooltip", "completionMessage", "persistTracker", "exclusiveTracker" }
 		if Addon.Locale:HasRumors() then table.insert(checkboxes_order, 5, "cosRumors") end
 
 		for i,key in ipairs(checkboxes_order) do
@@ -301,7 +305,7 @@ function Config:CreatePanel()
 	return panel
 end
 
-function Config:Startup()
+function Config:BeforeStartup()
 	if AngryKeystones_Config == nil then AngryKeystones_Config = {} end
 	if AngryKeystones_CharacterConfig == nil then AngryKeystones_CharacterConfig = {} end
 

@@ -783,7 +783,7 @@ local satchel_name
 local satchel_link
 local satchel_index
 local button
-
+--@end-do-not-package@
 local function convert(perc,numeric)
 	perc=max(0,min(10,perc))
 	if numeric then

@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "frFR" then return end
+if GetLocale() ~= "frFR" then return end
 DBM_CORE_NEED_LOCALS				= "Vous êtes bon en programmation ou en langues ? Si oui, l'équipe de DBM a besoin de votre aide pour que DBM reste le meilleur boss mod de WoW. Rejoignez l'équipe en visitant |HDBM:localizersneeded|h|cff3588ffhere|r"
 DBM_CORE_NEED_LOGS					= "DBM a besoin de Transcriptor (http://www.wowace.com/addons/transcriptor/) logs de ces combats de test pour s'améliorer. Si vous voulez aider, enregistrez ces combats avec Transcriptor et postez les sur nos forums. Ceci est valable uniquement pour les raids et donjons 7.0."
 DBM_HOW_TO_USE_MOD					= "Bienvenue sur DBM. Tapez /dbm help pour une liste des commandes supportées. Pour accédez aux options, tapez /dbm dans la fenêtre de discussion pour commencer la configuration. Chargez des zones spécifiques manuellement pour configurer tous les paramètres spécifiques aux boss selon vos envies. DBM essaie de le faire pour vous en analysant votre spécialisation au premier lancement, mais nous savons que de toute façon certaines personnes souhaitant activer d'autres options."
@@ -436,7 +436,7 @@ DBM_ARROW_ERROR_USAGE	= {
 DBM_SPEED_KILL_TIMER_TEXT	= "Record à battre"
 DBM_SPEED_CLEAR_TIMER_TEXT  = "Meilleur clean"
 DBM_COMBAT_RES_TIMER_TEXT	= "Prochaine charge de rez en combat"
-DBM_CORE_TIMER_RESPAWN		= "Réapparition"
+DBM_CORE_TIMER_RESPAWN		= "%s Réapparition"
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s a demandé à voir vos IDs d'instance actuels ainsi que leurs progressions.\nSouhaitez-vous envoyer cette information à %s ? Il ou elle pourra demander cette information pendant toute votre session actuelle (c'est-à-dire jusqu'à ce que vous vous reconnectez)."
 DBM_ERROR_NO_RAID					= "Vous devez être dans un groupe de raid pour utiliser cette fonctionnalité."

@@ -15,6 +15,7 @@ local function timeFormat(seconds)
 		return format("%d:%.2d:%.2d", hours, minutes, seconds)
 	end
 end
+Mod.timeFormat = timeFormat
 
 local function timeFormatMS(timeAmount)
 	local seconds = floor(timeAmount / 1000)
@@ -26,9 +27,10 @@ local function timeFormatMS(timeAmount)
 	if hours == 0 then
 		return format("%d:%.2d.%.3d", minutes, seconds, ms)
 	else
-		return format("%d:%.2d:%.2d.%.3d", hours, minutes, seconds. ms)
+		return format("%d:%.2d:%.2d.%.3d", hours, minutes, seconds, ms)
 	end
 end
+Mod.timeFormatMS = timeFormatMS
 
 local function Deaths_OnEnter(self)
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -92,16 +94,16 @@ local function GetTimerFrame(block)
 		TimerFrame.DeathsFrame:SetScript("OnLeave", Deaths_OnLeave)
 		TimerFrame.DeathsFrame:SetPoint("BOTTOMRIGHT", TimerFrame, "BOTTOMRIGHT", -27, 27)
 
-		TimerFrame.DeathsText = TimerFrame.DeathsFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-		TimerFrame.DeathsText:SetPoint("RIGHT", TimerFrame.DeathsFrame, "RIGHT", 0, 0)
-		TimerFrame.DeathsText:Show()
+		TimerFrame.DeathsFrame.Text = TimerFrame.DeathsFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+		TimerFrame.DeathsFrame.Text:SetPoint("RIGHT", TimerFrame.DeathsFrame, "RIGHT", 0, 0)
+		TimerFrame.DeathsFrame.Text:Show()
 
-		TimerFrame.DeathsIcon = TimerFrame.DeathsFrame:CreateTexture(nil, "OVERLAY")
-		TimerFrame.DeathsIcon:SetPoint("RIGHT", TimerFrame.DeathsText, "LEFT", 0, 0)
-		TimerFrame.DeathsIcon:SetSize(16, 16)
-		TimerFrame.DeathsIcon:SetTexture("Interface\\Minimap\\POIIcons")
-		TimerFrame.DeathsIcon:SetTexCoord( GetPOITextureCoords(8) )
-		TimerFrame.DeathsIcon:Show()
+		TimerFrame.DeathsFrame.Icon = TimerFrame.DeathsFrame:CreateTexture(nil, "OVERLAY")
+		TimerFrame.DeathsFrame.Icon:SetPoint("RIGHT", TimerFrame.DeathsFrame.Text, "LEFT", 0, 0)
+		TimerFrame.DeathsFrame.Icon:SetSize(16, 16)
+		TimerFrame.DeathsFrame.Icon:SetTexture("Interface\\Minimap\\POIIcons")
+		TimerFrame.DeathsFrame.Icon:SetTexCoord( GetPOITextureCoords(8) )
+		TimerFrame.DeathsFrame.Icon:Show()
 
 		TimerFrame:Show()
 
@@ -110,7 +112,7 @@ local function GetTimerFrame(block)
 	return block.TimerFrame
 end
 
-function UpdatePlayerDeaths(block)
+local function UpdatePlayerDeaths(block)
 	local TimerFrame = GetTimerFrame(block)
 
 	local deathsCount = 0
@@ -119,7 +121,7 @@ function UpdatePlayerDeaths(block)
 	end
 	if Addon.Config.deathTracker and deathsCount > 0 then
 		TimerFrame.DeathsFrame:Show()
-		TimerFrame.DeathsText:SetText(deathsCount)
+		TimerFrame.DeathsFrame.Text:SetText(deathsCount)
 	else
 		TimerFrame.DeathsFrame:Hide()
 	end
@@ -134,7 +136,7 @@ local function UpdateTime(block, elapsedTime)
 	TimerFrame.Bar3:SetShown(elapsedTime < time3)
 	TimerFrame.Bar2:SetShown(elapsedTime < time2)
 
-	if elapsedTime <= time3 then
+	if elapsedTime < time3 then
 		TimerFrame.Text:SetText( timeFormat(time3 - elapsedTime) )
 		TimerFrame.Text:SetTextColor(1, 0.843, 0)
 		TimerFrame.Text:Show()
@@ -145,7 +147,7 @@ local function UpdateTime(block, elapsedTime)
 		else
 			TimerFrame.Text2:Hide()
 		end
-	elseif elapsedTime <= time2 then
+	elseif elapsedTime < time2 then
 		TimerFrame.Text:SetText( timeFormat(time2 - elapsedTime) )
 		TimerFrame.Text:SetTextColor(0.78, 0.78, 0.812)
 		TimerFrame.Text:Show()
@@ -179,8 +181,21 @@ local function SetUpAffixes(block, affixes)
 	end
 end
 
+local function ShowBlock(timerID, elapsedTime, timeLimit)
+	local block = ScenarioChallengeModeBlock
+	local level, affixes, wasEnergized = C_ChallengeMode.GetActiveKeystoneInfo()
+	local dmgPct, healthPct = C_ChallengeMode.GetPowerLevelDamageHealthMod(level)
+	if Addon.Config.showLevelModifier then
+		block.Level:SetText( format("%s, +%d%%", CHALLENGE_MODE_POWER_LEVEL:format(level), dmgPct) )
+	else
+		block.Level:SetText(CHALLENGE_MODE_POWER_LEVEL:format(level))
+	end
+end
+
 hooksecurefunc("Scenario_ChallengeMode_UpdateTime", UpdateTime)
 hooksecurefunc("Scenario_ChallengeMode_SetUpAffixes", SetUpAffixes)
+hooksecurefunc("Scenario_ChallengeMode_ShowBlock", ShowBlock)
+
 
 function Mod:UpdatePlayerDeaths()
 	UpdatePlayerDeaths(ScenarioChallengeModeBlock)
@@ -190,10 +205,7 @@ function Mod:CHALLENGE_MODE_COMPLETED()
 	if not Addon.Config.completionMessage then return end
 
 	local mapID, level, time, onTime, keystoneUpgradeLevels = C_ChallengeMode.GetCompletionInfo()
-	-- mapID = 1458
 	local name, _, timeLimit = C_ChallengeMode.GetMapInfo(mapID)
-	-- time = timeLimit * 0.95
-	-- onTime = time <= timeLimit
 
 	timeLimit = timeLimit * 1000
 	local timeLimit2 = timeLimit * TIME_FOR_2
