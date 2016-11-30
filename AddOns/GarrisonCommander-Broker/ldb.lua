@@ -76,6 +76,7 @@ local LE_GARRISON_TYPE_7_0=_G.LE_GARRISON_TYPE_7_0
 local dbversion=1
 local frequency=5
 local ldbtimer=nil
+local kpairs=addon:GetKpairs()
 local ColorStrings={
 '00FF00', -- 0
 '33FF00', -- 1

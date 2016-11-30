@@ -132,5 +132,23 @@ if LOCALE == "deDE" then
 	L["Dodge"] = "Ausweichen"
 	L["Parry"] = "Parieren"
 	L["Block"] = "Blocken"
+	
+-- ## Patch 7.1.0 r2 additions ##
+	L["Global Cooldown"] = "Globale Abklingzeit"
+	L["Global Cooldown %.2fs"] = "Globale Abklingzeit %.2fs"
+--	L["General global cooldown for casters. Individual spells, set bonuses, talents, etc. not considered. Not suitable for melee. Improvements coming Soon(TM)."] = ""
+	L["Unlock DCS"] = "DCS freischalten"
+	L["Lock DCS"] = "DCS sperren"
+	L["Item Level 1 Decimal Place"] = "Gegenstandsstufe mit 1 Nachkommastelle"
+	L["Displays average item level to one decimal place."] = "Zeigt die durchschnittliche Gegenstandsstufe mit einer Nachkommastelle an."
+	L["Item Level 2 Decimal Places"] = "Gegenstandsstufe mit 2 Nachkommastellen"
+	L["Displays average item level to two decimal places."] = "Zeigt die durchschnittliche Gegenstandsstufe mit zwei Nachkommastellen an."
+	L["Main Hand"] = "Waffenhand"
+	L["/Off Hand"] = "/Schildhand"
+	L[" weapon auto attack (white) DPS."] = ' Schaden pro Sekunde der automatischen (weißen) Waffenangriffe.'
+	L["Weapon DPS"] = "Waffen-SPS"
+	L["Weapon DPS %s"] = "Waffen-SPS %s"
+--	L["Class Crest Background"] = ""
+--	L["Displays the class crest background."] = ""
 
 return end

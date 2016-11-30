@@ -3,6 +3,14 @@
 * Reseting bags while the bag is not opened won't reset it's scale to default.
 
 
+**16.1.2**
+* Fixed the dragging issues with the options.
+* Added Frames:
+	* Quick Join Toast
+	* Quick Join Toast 2
+* Fixed Frames:
+	* Target Alternative Power Bar
+
 **16.1.1**
 Updated for 7.1.0.
 * Fixed Frames:

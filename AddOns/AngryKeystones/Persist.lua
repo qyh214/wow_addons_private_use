@@ -1,6 +1,6 @@
+if GetBuildInfo() ~= "7.1.0" then return end
 local ADDON, Addon = ...
 local Mod = Addon:NewModule('Persist')
-if GetBuildInfo() ~= "7.1.0" then return end
 
 local function LoadPersist()
 	local function IsInCompletedInstance()
@@ -209,17 +209,16 @@ local function LoadPersist()
 		end
 	end
 
-	function Mod:CHALLENGE_MODE_COMPLETED()
-		ScenarioTimer_CheckTimers(GetWorldElapsedTimers())
-		ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_SCENARIO)
-	end
-
 end
 
-local function LoadExclusion()
+local function LoadExclusive()
+	local function IsInActiveInstance()
+		return select(10, C_Scenario.GetInfo()) == LE_SCENARIO_TYPE_CHALLENGE_MODE and select(3, C_Scenario.GetInfo()) ~= 0
+	end
+
 	ObjectiveTracker_Update_Old = ObjectiveTracker_Update
 	function ObjectiveTracker_Update(reason, id)
-		if select(3, GetInstanceInfo()) == 8 then
+		if IsInActiveInstance() then
 			local tracker = ObjectiveTrackerFrame;
 			local modules_old = tracker.MODULES;
 			local modules_ui_old = tracker.MODULES_UI_ORDER;
@@ -233,6 +232,10 @@ local function LoadExclusion()
 					module:BeginLayout()
 					module:EndLayout()
 					module.Header:Hide()
+					if module.Header.animating then
+						module.Header.animating = nil
+						module.Header.HeaderOpenAnim:Stop()
+					end
 				end
 			end
 
@@ -247,31 +250,38 @@ local function LoadExclusion()
 
 	ObjectiveTracker_ReorderModules_Old = ObjectiveTracker_ReorderModules
 	function ObjectiveTracker_ReorderModules()
-		if select(3, GetInstanceInfo()) == 8 then
+		if IsInActiveInstance() then
 			local modules = ObjectiveTrackerFrame.MODULES;
 			local modulesUIOrder = ObjectiveTrackerFrame.MODULES_UI_ORDER;
 		else
 			ObjectiveTracker_ReorderModules_Old()
 		end
 	end
+
 end
 
 function Mod:Startup()
 	if Addon.Config.persistTracker and LoadPersist then
+		LoadPersist()
+		LoadPersist = nil
 		self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
 		Addon.Config:RegisterCallback('persistTracker', function()
 			ScenarioTimer_CheckTimers(GetWorldElapsedTimers())
 		end)
-		LoadPersist()
-		LoadPersist = nil
 	end
-	if Addon.Config.exclusiveTracker and LoadExclusion then
+	if Addon.Config.exclusiveTracker and LoadExclusive then
+		LoadExclusive()
+		LoadExclusive = nil
+		self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
 		Addon.Config:RegisterCallback('exclusiveTracker', function()
 			ObjectiveTracker_Update()
 		end)
-		LoadExclusion()
-		LoadExclusion = nil
 	end
+end
+
+function Mod:CHALLENGE_MODE_COMPLETED()
+	ScenarioTimer_CheckTimers(GetWorldElapsedTimers())
+	ObjectiveTracker_Update()
 end
 
 function Mod:AfterStartup()

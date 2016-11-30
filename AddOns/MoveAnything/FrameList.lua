@@ -546,6 +546,8 @@ local m = {
 		API:AddElement({name = "AuctionProgressFrame", displayName = "Auction Creation Progress"}, c)
 		API:AddElement({name = "BarberShopFrame", displayName = "Barber Shop"}, c)
 		API:AddElement({name = "BNToastFrame", displayName = "Battle.Net Popup Message"}, c)
+		API:AddElement({name = "QuickJoinToastMover", displayName = "Quick Join Toast"}, c)
+		API:AddElement({name = "QuickJoinToast2Mover", displayName = "Quick Join Toast 2"}, c)
 		API:AddElement({name = "MirrorTimer1", displayName = "BreathFatigue Bar"}, c)
 		API:AddElement({name = "CalendarFrame", displayName = "Calendar"}, c)
 		API:AddElement({name = "CalendarViewEventFrame", displayName = "Calendar Event"}, c)

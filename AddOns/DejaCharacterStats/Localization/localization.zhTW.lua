@@ -133,4 +133,22 @@ if LOCALE == "zhTW" then
 	L["Parry"] = "招架"
 	L["Block"] = "格擋"
 
+	-- ## Patch 7.1.0 r2 additions ##
+	L["Global Cooldown"] = "通用冷卻"
+	L["Global Cooldown %.2fs"] = "通用冷卻 %.2fs"
+--	L["General global cooldown for casters. Individual spells, set bonuses, talents, etc. not considered. Not suitable for melee. Improvements coming Soon(TM)."] = ""
+	L["Unlock DCS"] = "解鎖DCS"
+	L["Lock DCS"] = "鎖定DCS"
+	L["Item Level 1 Decimal Place"] = "物品等級1小數點位數"
+	L["Displays average item level to one decimal place."] = "顯示平均物品等級到小數點一位。"
+	L["Item Level 2 Decimal Places"] = "物品等級2小數點位數"
+	L["Displays average item level to two decimal places."] = "顯示平均物品等級到兩個小數點。"
+	L["Main Hand"] = "主手"
+	L["/Off Hand"] = "/副手"
+	L[" weapon auto attack (white) DPS."] = ' 武器自動攻擊(白字)每秒傷害。'
+	L["Weapon DPS"] = "武器每秒傷害"
+	L["Weapon DPS %s"] = "武器每秒傷害 %s"
+--	L["Class Crest Background"] = ""
+--	L["Displays the class crest background."] = ""
+
 return end

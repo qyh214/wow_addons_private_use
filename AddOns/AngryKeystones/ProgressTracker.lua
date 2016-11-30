@@ -113,7 +113,8 @@ local function OnTooltipSetUnit(tooltip)
 			local type, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid = strsplit("-", guid)
 			npc_id = tonumber(npc_id)
 			local info = AngryKeystones_Data.progress[npc_id]
-			if info then
+			local preset = progressPresets[npc_id]
+			if info or preset then
 				local numCriteria = select(3, C_Scenario.GetStepInfo())
 				local total
 				local progressName
@@ -126,14 +127,16 @@ local function OnTooltipSetUnit(tooltip)
 				end
 
 				local value, valueCount
-				for amount, count in pairs(info) do
-					if not valueCount or count > valueCount or (count == valueCount and amount < value) then
-						value = amount
-						valueCount = count
+				if info then
+					for amount, count in pairs(info) do
+						if not valueCount or count > valueCount or (count == valueCount and amount < value) then
+							value = amount
+							valueCount = count
+						end
 					end
 				end
-				if progressPresets[npc_id] and (not value or valueCount == 1) then
-					value = progressPresets[npc_id]
+				if preset and (not value or valueCount == 1) then
+					value = preset
 				end
 				if value and total then
 					local forcesFormat = format(" - %s: %%s", progressName)
@@ -186,6 +189,22 @@ function Mod:WORLD_STATE_TIMER_STOP(...) local timerID = ...; StopTime(timerID) 
 function Mod:CHALLENGE_MODE_START(...) CheckTime(GetWorldElapsedTimers()) end
 function Mod:CHALLENGE_MODE_RESET(...) wipe(Mod.playerDeaths) end
 
+local function ProgressBar_SetValue(self, percent)
+	if self.criteriaIndex then
+		local _, _, _, _, totalQuantity, _, _, quantityString, _, _, _, _, _ = C_Scenario.GetCriteriaInfo(self.criteriaIndex)
+		local currentQuantity = quantityString and tonumber( strsub(quantityString, 1, -2) )
+		if currentQuantity and totalQuantity then
+			if Addon.Config.progressFormat == 1 then
+				self.Bar.Label:SetFormattedText("%.2f%%", currentQuantity/totalQuantity*100)
+			elseif Addon.Config.progressFormat == 2 then
+				self.Bar.Label:SetFormattedText("%d/%d", currentQuantity, totalQuantity)
+			elseif Addon.Config.progressFormat == 3 then
+				self.Bar.Label:SetFormattedText("%.2f%% - %d/%d", currentQuantity/totalQuantity*100, currentQuantity, totalQuantity)
+			end
+		end
+	end
+end
+
 function Mod:Startup()
 	if not AngryKeystones_Data then
 		AngryKeystones_Data = {}
@@ -210,22 +229,12 @@ function Mod:Startup()
 	self:RegisterEvent("CHALLENGE_MODE_RESET")
 	CheckTime(GetWorldElapsedTimers())
 	GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
-end
 
-local function ProgressBar_SetValue(self, percent)
-	if self.criteriaIndex then
-		local _, _, _, _, totalQuantity, _, _, quantityString, _, _, _, _, _ = C_Scenario.GetCriteriaInfo(self.criteriaIndex)
-		local currentQuantity = quantityString and tonumber( strsub(quantityString, 1, -2) )
-		if currentQuantity and totalQuantity then
-			if Addon.Config.progressFormat == 1 then
-				self.Bar.Label:SetFormattedText("%.2f%%", currentQuantity/totalQuantity*100)
-			elseif Addon.Config.progressFormat == 2 then
-				self.Bar.Label:SetFormattedText("%d/%d", currentQuantity, totalQuantity)
-			elseif Addon.Config.progressFormat == 3 then
-				self.Bar.Label:SetFormattedText("%.2f%% - %d/%d", currentQuantity/totalQuantity*100, currentQuantity, totalQuantity)
-			end
+	Addon.Config:RegisterCallback('progressFormat', function()
+		for _, bar in pairs(SCENARIO_TRACKER_MODULE.usedProgressBars[ScenarioObjectiveBlock]) do
+			ProgressBar_SetValue(bar)
 		end
-	end
+	end)
 end
 
 hooksecurefunc("ScenarioTrackerProgressBar_SetValue", ProgressBar_SetValue)

@@ -40,7 +40,7 @@ if LOCALE == "ruRU" then
 	L['Displays Equipped/Available item levels unless equal.'] = "Отображает уровень Надетых/Доступных предметов, если значения не равны."
 
 	L["Decimals"] = "Десятичные числа"
-	L['Displays "Enhancements" category stats to two decimal places.'] = 'Отображает "Усиления" характеристики персонажа используя десятичные числа.'
+	L['Displays "Enhancements" category stats to two decimal places.'] = 'Отображает "расширенные" характеристики персонажа используя десятичные числа.'
 
 	L["Ilvl Decimals"] = "Десятичные числа для ilvl"
 	L['Displays average item level to two decimal places.'] = "Отображает средний уровень предметов используя десятичные числа."
@@ -72,7 +72,7 @@ if LOCALE == "ruRU" then
 	L['Show Character Stats'] = "Показать характеристики персонажа"
 	L['Hide Character Stats'] = "Скрыть характеристики персонажа"
 
-	L["Scrollbar"] = "Полоса прокрутки"
+	L["Scrollbar"] = "Скроллбар"
 	L['Displays the DCS scrollbar.'] = "Отображать DCS полосу прокрутки."
 
 -- ################################
@@ -93,7 +93,7 @@ if LOCALE == "ruRU" then
 	L["Durability %s"] = "Прочность %s" -- ## --> %s MUST be included <-- ## 
 	L["Average equipped item durability percentage."] = "Средняя прочность экипированных предметов в процентах."
 
-	L["Repair Total"] = "Стоимость ремонта" -- Be sure to include the colon ":" or it will conflict wih the options checkbox.
+	L["Repair Total"] = "Pемонт" -- Be sure to include the colon ":" or it will conflict wih the options checkbox.
 	L["Repair Total %s"] = "Стоимость ремонта %s" -- ## --> %s MUST be included <-- ## 
 	L["Total equipped item repair cost before discounts."] = "Общая стоимость ремонта без учёта скидок."
 
@@ -117,7 +117,7 @@ if LOCALE == "ruRU" then
 	L["Focus Regen"] = "Восст. концентрации"
 	L["Movement Speed"] = "Скорость движения"
 	L["Durability"] = "Прочность"
-	L["Repair Total"] = "Стоимость ремонта"
+	--L["Repair Total"] = "Стоимость ремонта"
 
 -- ## Enhancements ##
 
@@ -130,5 +130,23 @@ if LOCALE == "ruRU" then
 	L["Dodge"] = "Уклонение"
 	L["Parry"] = "Парирование"
 	L["Block"] = "Блок"
+
+-- ## Patch 7.1.0 r2 additions ##
+	L["Global Cooldown"] = "Общее время восст."
+	L["Global Cooldown %.2fs"] = "Общее время восст. %.2fs"
+	L["General global cooldown for casters. Individual spells, set bonuses, talents, etc. not considered. Not suitable for melee. Improvements coming Soon(TM)."] = "Общее время восстановления(GCD) для кастеров. Индивидуальные заклинания, бонусы комплектов, таланты и т.д., не рассматриваются. Не подходит для ближнего боя. Улучшения в ближайшее время(TM)."
+	L["Unlock DCS"] = "Разблокировать DCS"
+	L["Lock DCS"] = "Заблокировать DCS"
+	L["Item Level 1 Decimal Place"] = "Уровень предметов с десятичными"
+	L["Displays average item level to one decimal place."] = "Отображать средний уровень предметов используя одно число после точки."
+	L["Item Level 2 Decimal Places"] = "Уровень предметов с сотыми"
+	L["Displays average item level to two decimal places."] = "Отображать средний уровень предметов используя два числа после точки."
+	L["Main Hand"] = "Правая рука"
+	L["/Off Hand"] = "/Левая рука"
+	L[" weapon auto attack (white) DPS."] = ' Автоматическая атака оружием. "Белый" урон.'
+	L["Weapon DPS"] = "Урон оружия"
+	L["Weapon DPS %s"] = "Урон оружия %s"
+--	L["Class Crest Background"] = ""
+--	L["Displays the class crest background."] = ""
 
 return end

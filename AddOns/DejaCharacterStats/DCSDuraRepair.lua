@@ -1,6 +1,11 @@
 local ADDON_NAME, namespace = ... 	--localization
 local L = namespace.L 				--localization
 
+local name,addon = ...
+addon.duraMean = 0
+
+local _, gdbprivate = ...
+
 -- ---------------------------
 -- -- DCS Durability Frames --
 -- ---------------------------
@@ -18,7 +23,7 @@ local DCSITEM_SLOT_FRAMES_LEFT = {
 	CharacterHandsSlot,CharacterWaistSlot,CharacterLegsSlot,CharacterFeetSlot,CharacterMainHandSlot,
 }
 
-local duraMean
+--local duraMean
 local duraTotal
 local duraMaxTotal
 local duraFinite = 0
@@ -89,8 +94,8 @@ end
 ---------------------------------
 -- Durability Mean Calculation --
 ---------------------------------
-local function DCS_Mean_DurabilityCalc()
-	duraMean = 0
+function DCS_Mean_DurabilityCalc()
+	addon.duraMean = 0
 	duraTotal = 0
 	duraMaxTotal = 0
 	for k, v in ipairs(DCSITEM_SLOT_FRAMES) do
@@ -103,12 +108,12 @@ local function DCS_Mean_DurabilityCalc()
 		if durMax == nil then durMax = 0 end
 		if duraTotal == nil then duraTotal = 0 end
 		if duraMaxTotal == nil then duraMaxTotal = 0 end
-		if duraMean == nil then duraMean = 0 end
+		if addon.duraMean == nil then addon.duraMean = 0 end
 		
 		duraTotal = duraTotal + durCur
 		duraMaxTotal = duraMaxTotal + durMax
 		if duraMaxTotal == 0 then duraMaxTotal = 1 	end
-		duraMean = ((duraTotal/duraMaxTotal)*100)
+		addon.duraMean = ((duraTotal/duraMaxTotal)*100)
 	end
 end		
 
@@ -117,18 +122,18 @@ end
 -----------------------------------
 local function DCS_Durability_Frame_Mean_Display()
 	DCS_Mean_DurabilityCalc()
-	duraDurabilityFrameFS:SetFormattedText("%.0f%%", duraMean)
+	duraDurabilityFrameFS:SetFormattedText("%.0f%%", addon.duraMean)
 	duraDurabilityFrameFS:Show()
---	print(duraMean)
-	if duraMean == 100 then 
+--	print(addon.duraMean)
+	if addon.duraMean == 100 then 
 		duraDurabilityFrameFS:Hide()
-	elseif duraMean >= 80 then
+	elseif addon.duraMean >= 80 then
 		duraDurabilityFrameFS:SetTextColor(0.753, 0.753, 0.753)
-	elseif duraMean > 66 then
+	elseif addon.duraMean > 66 then
 		duraDurabilityFrameFS:SetTextColor(0, 1, 0)
-	elseif duraMean > 33 then
+	elseif addon.duraMean > 33 then
 		duraDurabilityFrameFS:SetTextColor(1, 1, 0)
-	elseif duraMean >= 0 then
+	elseif addon.duraMean >= 0 then
 		duraDurabilityFrameFS:SetTextColor(1, 0, 0)
 	end
 end
@@ -139,29 +144,29 @@ end
 local function DCS_Mean_Durability()
 	DCS_Mean_DurabilityCalc()
 	for k, v in ipairs(DCSITEM_SLOT_FRAMES) do
-		duraMeanTexture:SetSize(4, (31*(duraMean/100)))
-		if duraMean == 100 then 
+		duraMeanTexture:SetSize(4, (31*(addon.duraMean/100)))
+		if addon.duraMean == 100 then 
 			duraMeanTexture:SetColorTexture(0, 0, 0, 0)
-		elseif duraMean < 10 then
+		elseif addon.duraMean < 10 then
 			duraMeanTexture:SetColorTexture(1, 0, 0)
 			duraMeanFS:SetTextColor(1, 0, 0)
-		elseif duraMean < 33 then
+		elseif addon.duraMean < 33 then
 			duraMeanTexture:SetColorTexture(1, 0, 0)
 			duraMeanFS:SetTextColor(1, 0, 0)
-		elseif duraMean < 66 then
+		elseif addon.duraMean < 66 then
 			duraMeanTexture:SetColorTexture(1, 1, 0)
 			duraMeanFS:SetTextColor(1, 1, 0)
-		elseif duraMean < 80 then
+		elseif addon.duraMean < 80 then
 			duraMeanTexture:SetColorTexture(0, 1, 0)
 			duraMeanFS:SetTextColor(0, 1, 0)
-		elseif duraMean < 100 then
+		elseif addon.duraMean < 100 then
 			duraMeanTexture:SetColorTexture(0.753, 0.753, 0.753)
 			duraMeanFS:SetTextColor(0.753, 0.753, 0.753)
 		end
-		if duraMean > 10 then 
+		if addon.duraMean > 10 then 
 			duraMeanTexture:ClearAllPoints()
 			duraMeanTexture:SetPoint("BOTTOMLEFT",CharacterShirtSlot,"BOTTOMRIGHT",1,3)
-		elseif duraMean <= 10 then 
+		elseif addon.duraMean <= 10 then 
 			duraMeanTexture:ClearAllPoints()
 			duraMeanTexture:SetAllPoints(CharacterShirtSlot)
 			duraMeanTexture:SetColorTexture(1, 0, 0, 0.15)
@@ -209,9 +214,8 @@ local function DCS_Item_DurabilityTop()
 	end
 end
 
-local _, gdbprivate = ...
 gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowDuraChecked = {
-	ShowDuraSetChecked = true,
+	ShowDuraSetChecked = false,
 }	
 
 local DCS_ShowDuraCheck = CreateFrame("CheckButton", "DCS_ShowDuraCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
@@ -290,7 +294,7 @@ local function DCS_Durability_Bar_Textures()
 	end
 end
 
-local _, gdbprivate = ...
+
 gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowDuraTextureChecked = {
 	ShowDuraTextureSetChecked = true,
 }	
@@ -338,30 +342,12 @@ DCS_ShowDuraTextureCheck:SetScript("OnClick", function(self,event,arg1)
 	end
 end)
 
------------------------
--- Durability "Stat" --
------------------------
-function PaperDollFrame_SetDurability(statFrame, unit)
-	DCS_Mean_DurabilityCalc()
+------------------------
+-- Average Durability --
+------------------------
 
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
-	end
-
-	local displayDura = format("%.2f%%", duraMean);
-
-	PaperDollFrame_SetLabelAndText(statFrame, (L["Durability"]), displayDura, false, duraMean);
-	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, format(L["Durability %s"], displayDura));
-	statFrame.tooltip2 = (L["Average equipped item durability percentage."]);
-
-	local duraFinite = 0
-	statFrame:Show();
-end
-
-local _, gdbprivate = ...
 gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowAverageRepairChecked = {
-	ShowAverageRepairSetChecked = true,
+	ShowAverageRepairSetChecked = false,
 }	
 
 local DCS_ShowAverageDuraCheck = CreateFrame("CheckButton", "DCS_ShowAverageDuraCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
@@ -378,14 +364,14 @@ local DCS_ShowAverageDuraCheck = CreateFrame("CheckButton", "DCS_ShowAverageDura
 		self:SetChecked(checked.ShowAverageRepairSetChecked)
 		if self:GetChecked(true) then
 			DCS_Mean_Durability()
-			duraMeanFS:SetFormattedText("%.0f%%", duraMean)
+			duraMeanFS:SetFormattedText("%.0f%%", addon.duraMean)
 			gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowAverageRepairChecked.ShowAverageRepairSetChecked = true
 		else
 			duraMeanFS:SetFormattedText("")
 			duraDurabilityFrameFS:Hide()
 			gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowAverageRepairChecked.ShowAverageRepairSetChecked = false
 		end
-		if duraMean == 100 then 
+		if addon.duraMean == 100 then 
 			duraMeanFS:SetFormattedText("")
 		end
 	end)
@@ -394,14 +380,14 @@ local DCS_ShowAverageDuraCheck = CreateFrame("CheckButton", "DCS_ShowAverageDura
 		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowAverageRepairChecked
 		if self:GetChecked(true) then
 			DCS_Mean_Durability()
-			duraMeanFS:SetFormattedText("%.0f%%", duraMean)
+			duraMeanFS:SetFormattedText("%.0f%%", addon.duraMean)
 			gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowAverageRepairChecked.ShowAverageRepairSetChecked = true
 		else
 			duraMeanFS:SetFormattedText("")
 			duraDurabilityFrameFS:Hide()
 			gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowAverageRepairChecked.ShowAverageRepairSetChecked = false
 		end
-		if duraMean == 100 then 
+		if addon.duraMean == 100 then 
 			duraMeanFS:SetFormattedText("")
 		end
 	end)
@@ -421,13 +407,13 @@ local function DCS_Item_RepairCostBottom()
 		elseif (repairitemCost>9999999) then
 			v.itemrepair:SetTextColor(1, 0.843, 0)
 			v.itemrepair:SetFormattedText("%.0fg", (repairitemCost/10000))
-		elseif (repairitemCost<10000000) then
+		elseif (repairitemCost>99999) then --  9g 99s 99c
 			v.itemrepair:SetTextColor(1, 0.843, 0)
 			v.itemrepair:SetFormattedText("%.2fg", (repairitemCost/10000))
-		elseif (repairitemCost<10000) then
+		elseif (repairitemCost>99) then
 			v.itemrepair:SetTextColor(0.753, 0.753, 0.753)
 			v.itemrepair:SetFormattedText("%.2fs", (repairitemCost/100))
-		elseif (repairitemCost<100) then
+		else
 			v.itemrepair:SetTextColor(0.722, 0.451, 0.200)
 			v.itemrepair:SetFormattedText("%.0fc", repairitemCost)
 		end
@@ -480,9 +466,9 @@ function PaperDollFrame_SetRepairTotal(statFrame, unit)
 	repairitemCostTotal = 0
 end
 
-local _, gdbprivate = ...
+
 gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowItemRepairChecked = {
-	ShowItemRepairSetChecked = true,
+	ShowItemRepairSetChecked = false,
 }	
 
 local DCS_ShowItemRepairCheck = CreateFrame("CheckButton", "DCS_ShowItemRepairCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")

@@ -1,4 +1,4 @@
-﻿local _G = _G
+local _G = _G
 local hooksecurefunc = hooksecurefunc
 local pairs = pairs
 local string = string
@@ -1046,7 +1046,7 @@ MovAny.lVirtualMovers = {
 	TargetFramePowerBarAltMover = {
 		w = 128,
 		h = 32,
-		point = {"LEFT", "TargetFrame", "RIGHT", - 25, 5},
+		point = {"LEFT", "TargetFrame", "RIGHT", -25, 5},
 		OnMAHook = function(self)
 			local b = TargetFramePowerBarAlt
 			MovAny:UnlockPoint(b)
@@ -1069,14 +1069,86 @@ MovAny.lVirtualMovers = {
 			if type(scale) ~= "number" then
 				return
 			end
-			local b = PlayerPowerBarAlt
+			local b = TargetFramePowerBarAlt
 			b:SetScale(scale)
 		end,
 		OnMAPostReset = function(self)
 			local b = TargetFramePowerBarAlt
 			MovAny:UnlockPoint(b)
 			b:ClearAllPoints()
-			b:SetPoint("LEFT", "TargetFrame", "RIGHT", - 25, 5)
+			b:SetPoint("LEFT", "TargetFrame", "RIGHT", -25, 5)
+		end
+	},
+	QuickJoinToastMover = {
+		w = 301,
+		h = 32,
+		point = {"LEFT", "QuickJoinToastButton", "RIGHT", -13, -1},
+		OnMAHook = function(self)
+			local b = QuickJoinToastButton.Toast
+			MovAny:UnlockPoint(b)
+			b:ClearAllPoints()
+			b:SetPoint("CENTER", QuickJoinToastMover, "CENTER")
+			MovAny:LockPoint(b)
+			--b.ignoreFramePositionManager = true
+			--b:SetMovable(true)
+			--b:SetUserPlaced(true)
+			self.sbf = b
+		end,
+		OnMAHide = function(self, hidden)
+			if hidden then
+				MovAny:LockVisibility(self.sbf)
+			else
+				MovAny:UnlockVisibility(self.sbf)
+			end
+		end,
+		OnMAScale = function(self, scale)
+			if type(scale) ~= "number" then
+				return
+			end
+			local b = QuickJoinToastButton.Toast
+			b:SetScale(scale)
+		end,
+		OnMAPostReset = function(self)
+			local b = QuickJoinToastButton.Toast
+			MovAny:UnlockPoint(b)
+			b:ClearAllPoints()
+			b:SetPoint("LEFT", "QuickJoinToastButton", "RIGHT", -13, -1)
+		end
+	},
+	QuickJoinToast2Mover = {
+		w = 301,
+		h = 32,
+		point = {"LEFT", "QuickJoinToastButton", "RIGHT", -13, -1},
+		OnMAHook = function(self)
+			local b = QuickJoinToastButton.Toast2
+			MovAny:UnlockPoint(b)
+			b:ClearAllPoints()
+			b:SetPoint("CENTER", QuickJoinToastMover, "CENTER")
+			MovAny:LockPoint(b)
+			--b.ignoreFramePositionManager = true
+			--b:SetMovable(true)
+			--b:SetUserPlaced(true)
+			self.sbf = b
+		end,
+		OnMAHide = function(self, hidden)
+			if hidden then
+				MovAny:LockVisibility(self.sbf)
+			else
+				MovAny:UnlockVisibility(self.sbf)
+			end
+		end,
+		OnMAScale = function(self, scale)
+			if type(scale) ~= "number" then
+				return
+			end
+			local b = QuickJoinToastButton.Toast2
+			b:SetScale(scale)
+		end,
+		OnMAPostReset = function(self)
+			local b = QuickJoinToastButton.Toast2
+			MovAny:UnlockPoint(b)
+			b:ClearAllPoints()
+			b:SetPoint("LEFT", "QuickJoinToastButton", "RIGHT", -13, -1)
 		end
 	},
 	BagItemTooltipMover = {
@@ -1110,7 +1182,7 @@ MovAny.lVirtualMovers = {
 	BagButtonsMover = {
 		w = 158,
 		h = 30,
-		relPoint = {"BOTTOMRIGHT", "MainMenuBarArtFrame", "BOTTOMRIGHT", - 4, 6},
+		relPoint = {"BOTTOMRIGHT", "MainMenuBarArtFrame", "BOTTOMRIGHT", -4, 6},
 		excludes = "BagButtonsVerticalMover",
 		children = {
 			"MainMenuBarBackpackButton",
