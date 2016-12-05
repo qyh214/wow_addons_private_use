@@ -42,6 +42,8 @@ GarrisonCommander 要塞功能增强（任务指派、含船坞与配置系统�
 
 HandyNotes
 
+HiddenArtifactTracker
+
 MBB 小地图图标整合
 
 MeetingStone 
@@ -61,6 +63,8 @@ OmniCC冷却计时
 Postal
 
 Quartz施法条美化（castbar替代品）
+
+RelicInspector
 
 SexyMap小地图美化
 
