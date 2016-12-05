@@ -260,6 +260,11 @@ local function LoadExclusive()
 
 end
 
+function Mod:CHALLENGE_MODE_COMPLETED()
+	ScenarioTimer_CheckTimers(GetWorldElapsedTimers())
+	ObjectiveTracker_Update()
+end
+
 function Mod:Startup()
 	if Addon.Config.persistTracker and LoadPersist then
 		LoadPersist()
@@ -277,11 +282,6 @@ function Mod:Startup()
 			ObjectiveTracker_Update()
 		end)
 	end
-end
-
-function Mod:CHALLENGE_MODE_COMPLETED()
-	ScenarioTimer_CheckTimers(GetWorldElapsedTimers())
-	ObjectiveTracker_Update()
 end
 
 function Mod:AfterStartup()

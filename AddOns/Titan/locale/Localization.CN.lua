@@ -1,4 +1,4 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("Titan","zhCN")
+﻿local L = LibStub("AceLocale-3.0"):NewLocale("Titan","zhCN")
 if not L then return end
 
 L["TITAN_PANEL"] = "Titan Panel";

@@ -54,12 +54,7 @@ local function UpdateSplits(self, numCriteria, objectiveBlock, addObjectives)
 		else
 			local line = objectiveBlock.lines[criteriaIndex]
 			if line then
-				local height
-				if completed then
-					height = SCENARIO_TRACKER_MODULE:SetStringText(line.Text, criteriaString, nil, OBJECTIVE_TRACKER_COLOR["Complete"], objectiveBlock.isHighlighted)
-				else
-					height = SCENARIO_TRACKER_MODULE:SetStringText(line.Text, criteriaString, nil, nil, objectiveBlock.isHighlighted)
-				end
+				local height = SCENARIO_TRACKER_MODULE:SetStringText(line.Text, criteriaString, nil, completed and OBJECTIVE_TRACKER_COLOR["Complete"], objectiveBlock.isHighlighted)
 				line:SetHeight(height)
 			end
 		end

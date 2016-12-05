@@ -141,11 +141,11 @@ local function OnTooltipSetUnit(tooltip)
 				if value and total then
 					local forcesFormat = format(" - %s: %%s", progressName)
 					local text
-					if Addon.Config.progressFormat == 1 then
+					if Addon.Config.progressFormat == 1 or Addon.Config.progressFormat == 4 then
 						text = format( format(forcesFormat, "+%.2f%%"), value/total*100)
-					elseif Addon.Config.progressFormat == 2 then
+					elseif Addon.Config.progressFormat == 2 or Addon.Config.progressFormat == 5 then
 						text = format( format(forcesFormat, "+%d"), value)
-					elseif Addon.Config.progressFormat == 3 then
+					elseif Addon.Config.progressFormat == 3 or Addon.Config.progressFormat == 6 then
 						text = format( format(forcesFormat, "+%.2f%% - +%d"), value/total*100, value)
 					end
 
@@ -200,6 +200,12 @@ local function ProgressBar_SetValue(self, percent)
 				self.Bar.Label:SetFormattedText("%d/%d", currentQuantity, totalQuantity)
 			elseif Addon.Config.progressFormat == 3 then
 				self.Bar.Label:SetFormattedText("%.2f%% - %d/%d", currentQuantity/totalQuantity*100, currentQuantity, totalQuantity)
+			elseif Addon.Config.progressFormat == 4 then
+				self.Bar.Label:SetFormattedText("%.2f%% (%.2f%%)", currentQuantity/totalQuantity*100, (totalQuantity-currentQuantity)/totalQuantity*100)
+			elseif Addon.Config.progressFormat == 5 then
+				self.Bar.Label:SetFormattedText("%d/%d (%d)", currentQuantity, totalQuantity, totalQuantity - currentQuantity)
+			elseif Addon.Config.progressFormat == 6 then
+				self.Bar.Label:SetFormattedText("%.2f%% (%.2f%%) - %d/%d (%d)", currentQuantity/totalQuantity*100, (totalQuantity-currentQuantity)/totalQuantity*100, currentQuantity, totalQuantity, totalQuantity - currentQuantity)
 			end
 		end
 	end
@@ -231,7 +237,8 @@ function Mod:Startup()
 	GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
 
 	Addon.Config:RegisterCallback('progressFormat', function()
-		for _, bar in pairs(SCENARIO_TRACKER_MODULE.usedProgressBars[ScenarioObjectiveBlock]) do
+		local usedBars = SCENARIO_TRACKER_MODULE.usedProgressBars[ScenarioObjectiveBlock] or {}
+		for _, bar in pairs(usedBars) do
 			ProgressBar_SetValue(bar)
 		end
 	end)

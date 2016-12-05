@@ -12,6 +12,9 @@ langs.enUS = {
 	config_progressFormat_1 = "24.19%",
 	config_progressFormat_2 = "90/372",
 	config_progressFormat_3 = "24.19% - 90/372",
+	config_progressFormat_4 = "24.19% (75.81%)",
+	config_progressFormat_5 = "90/372 (282)",
+	config_progressFormat_6 = "24.19% (75.81%) - 90/372 (282)",
 	config_splitsFormat = "Objective Splits Display",
 	config_splitsFormat_1 = "Disabled",
 	config_splitsFormat_2 = "Time from start",
@@ -37,6 +40,7 @@ langs.enUS = {
 	scheduleWeek3 = "In two weeks",
 	scheduleWeek4 = "In three weeks",
 	config_exclusiveTracker = "Hide quest and achievement trackers during Mythic Keystone dungeon (requires Reload UI to take effect)",
+	config_hideTalkingHead = "Hide Talking Head dialog during a Mythic Keystone dungeon",
 }
 langs.enGB = langs.enUS
 
@@ -132,8 +136,8 @@ langs.zhCN = {
 	scheduleTitle = "日程表",
 	scheduleWeek1 = "本周",
 	scheduleWeek2 = "下周",
-	scheduleWeek3 = "两周内",
-	scheduleWeek4 = "三周内",
+	scheduleWeek3 = "两周后",
+	scheduleWeek4 = "三周后",
 	config_exclusiveTracker = "在副本中隐藏任务和成就追踪（重载插件后生效）",
 }
 langs.zhTW = {
@@ -162,8 +166,8 @@ langs.zhTW = {
 	scheduleTitle = "日程表",
 	scheduleWeek1 = "本周",
 	scheduleWeek2 = "下周",
-	scheduleWeek3 = "兩周內",
-	scheduleWeek4 = "三周內",
+	scheduleWeek3 = "兩周後",
+	scheduleWeek4 = "三周後",
 	config_exclusiveTracker = "在副本中隱藏成就和任務追蹤（重裝插件後生效）",
 }
 

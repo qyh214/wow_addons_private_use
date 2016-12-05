@@ -9,17 +9,18 @@ local configDefaults = {
 	cosRumors = false,
 	silverGoldTimer = false,
 	splitsFormat = 1,
-	completionMessage = false,
+	completionMessage = true,
 	smallAffixes = true,
 	deathTracker = true,
 	recordSplits = false,
 	showLevelModifier = false,
 	persistTracker = false,
 	exclusiveTracker = false,
+	hideTalkingHead = true,
 }
 local callbacks = {}
 
-local progressFormatValues = { 1, 2, 3 }
+local progressFormatValues = { 1, 2, 3, 4, 5, 6 }
 local splitsFormatValues = { 0, 1, 2 }
 
 setmetatable(Config, {
@@ -249,7 +250,7 @@ Panel_OnRefresh = function(self)
 		checkboxes = {}
 		dropdowns = {}
 
-		local checkboxes_order = { "silverGoldTimer", "smallAffixes", "deathTracker", "autoGossip", "progressTooltip", "completionMessage", "persistTracker", "exclusiveTracker" }
+		local checkboxes_order = { "silverGoldTimer", "smallAffixes", "deathTracker", "autoGossip", "progressTooltip", "completionMessage", "hideTalkingHead", "persistTracker", "exclusiveTracker" }
 		if Addon.Locale:HasRumors() then table.insert(checkboxes_order, 5, "cosRumors") end
 
 		for i,key in ipairs(checkboxes_order) do

@@ -221,10 +221,10 @@ function Mod:CHALLENGE_MODE_COMPLETED()
 		print( format("|cff33ff99<%s>|r |cffff2020%s|r", ADDON, format(Addon.Locale.completion0, name, timeFormatMS(time), timeFormatMS(time - timeLimit))) )
 	end
 
-	local splitMsg = Addon.Splits:SplitOutput()
-	if splitMsg then
-		print(  format("%s%s|r", LIGHTYELLOW_FONT_COLOR_CODE, format(Addon.Locale.completionSplits, splitMsg)) )
-	end
+	-- local splitMsg = Addon.Splits:SplitOutput()
+	-- if splitMsg then
+	-- 	print(  format("%s%s|r", LIGHTYELLOW_FONT_COLOR_CODE, format(Addon.Locale.completionSplits, splitMsg)) )
+	-- end
 end
 
 function Mod:Startup()

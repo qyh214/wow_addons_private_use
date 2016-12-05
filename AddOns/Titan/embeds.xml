@@ -12,4 +12,5 @@
 <Include file="libs\LibSharedMedia-3.0\lib.xml"/>
 <Include file="libs\AceGUI-3.0-SharedMediaWidgets\widget.xml"/>
 <Include file="libs\LibQTip-1.0\lib.xml"/>
+<Include file="libs\NoTaint_UIDropDownMenu\UIDropDownMenuTemplates.xml"/>
 </Ui>

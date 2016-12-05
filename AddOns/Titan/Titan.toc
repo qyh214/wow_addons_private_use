@@ -1,11 +1,11 @@
 ## Interface: 70100
-## Title: Titan Panel |cff00aa005.9.6.70100|r
+## Title: Titan Panel |cff00aa005.9.7.70100|r
 ## Author: Titan Development Team
-## Version: 5.9.6.70100
+## Version: 5.9.7.70100
 ## SavedVariables: TitanAll, TitanSettings, TitanSkins, ServerTimeOffsets, ServerHourFormat
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibQTip-1.0
 ## Notes: Adds a display bar on the top and/or bottom of the screen. Allows users to show and control information/launcher plugins.
-## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibQTip-1.0
+## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibQTip-1.0, NoTaint_UIDropDownMenu
 ## X-Credits: TitanMod, Dark Imakuni, Adsertor, Titan Dev Team
 ## X-Category: Interface Enhancements
 ## X-Website: http://www.titanpanel.org
