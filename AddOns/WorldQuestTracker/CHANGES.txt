@@ -1,0 +1,607 @@
+changeset:   104:4cc9d974fcce
+tag:         tip
+user:        Tercio
+date:        Fri Dec 09 16:39:18 2016 -0200
+summary:     - ticked #240: "Blizzard arrow keeps switching rapidly between WQ and log quest".
+
+
+changeset:   103:2bac07d5c7b6
+user:        Tercio
+date:        Mon Nov 28 15:22:34 2016 -0200
+summary:     - attempt to fix an issue with quest coordinates.
+
+
+changeset:   102:a20ce6cc845b
+user:        Tercio
+date:        Mon Nov 28 15:15:07 2016 -0200
+summary:     -several localization updates.
+
+
+changeset:   101:96c800fdab66
+user:        Tercio
+date:        Wed Nov 16 15:16:07 2016 -0200
+summary:     - added an option to use the real gear icons.
+
+
+changeset:   100:78d169328545
+user:        Tercio
+date:        Sun Nov 06 14:32:42 2016 -0200
+summary:     - hardcoded a framework function to avoid issues with old non updated addon using very old framework versions.
+
+
+changeset:   99:8dd5eb0d5401
+user:        Tercio
+date:        Tue Oct 25 15:08:15 2016 -0200
+summary:     - toc 7.1.0
+
+
+changeset:   98:d73c45b589c5
+user:        Tercio
+date:        Tue Oct 18 13:20:22 2016 -0200
+summary:     - epic quests should now always be shown even if not pass filters.
+
+
+changeset:   97:065f885ad92a
+user:        Tercio
+date:        Fri Oct 14 15:14:33 2016 -0300
+summary:     - China and Taiwan 1K (1000) abbreviate icon fix.
+
+
+changeset:   96:93fdf9b55bbf
+user:        Tercio
+date:        Fri Oct 14 14:52:25 2016 -0300
+summary:     - fixed the fly map tooltip scale.
+
+
+changeset:   95:6ed89d33224c
+user:        Tercio
+date:        Fri Oct 14 14:37:04 2016 -0300
+summary:     - quests on suramar won't show it elite/rare quest border.
+
+
+changeset:   94:ce24ee0ef092
+user:        Tercio
+date:        Mon Oct 03 15:32:39 2016 -0300
+summary:     - when the action button is on cooldown, set its alpha to 0.2
+
+
+changeset:   93:83c6cd0a92d4
+user:        Tercio
+date:        Sat Oct 01 00:33:28 2016 -0300
+summary:     - warning that there's a artifact research ready.
+
+
+changeset:   92:f951fa2a2c48
+user:        Tercio
+date:        Fri Sep 30 19:33:32 2016 -0300
+summary:     - added blue icons for zone quests as well.
+
+
+changeset:   91:e270e01f6ad5
+user:        Tercio
+date:        Fri Sep 30 18:34:28 2016 -0300
+summary:     - change the artifact power icon if the quest has more time than the artifact knowledge research time left.
+
+
+changeset:   90:b407d59aa07c
+user:        Tercio
+date:        Thu Sep 29 15:28:26 2016 -0300
+summary:     - added icons on the options menu.
+
+
+changeset:   89:9d0bdb9ed6ee
+user:        Tercio
+date:        Thu Sep 29 14:11:48 2016 -0300
+summary:     - fix for the tracker string comparison issue.
+
+
+changeset:   88:7502e9f69ad4
+user:        Tercio
+date:        Wed Sep 28 16:08:58 2016 -0300
+summary:     - fixed an issue when adding a quest with rare or epic item reward.
+
+
+changeset:   87:fceb6db49c68
+user:        Tercio
+date:        Wed Sep 28 15:46:14 2016 -0300
+summary:     - added sort by time option.
+
+
+changeset:   86:6a8c084f3b6d
+user:        Tercio
+date:        Wed Sep 28 15:27:59 2016 -0300
+summary:     - added an option to show the time left on the tracker.
+
+
+changeset:   85:675552266123
+user:        Tercio
+date:        Wed Sep 28 14:20:05 2016 -0300
+summary:     - added tracker scale option.
+
+
+changeset:   84:9d0b76362d25
+user:        Tercio
+date:        Wed Sep 28 13:45:12 2016 -0300
+summary:     - fix for super tracker quests being changed by the blizz obj tracker.
+
+
+changeset:   83:c855d1656810
+user:        Tercio
+date:        Wed Sep 28 12:55:55 2016 -0300
+summary:     - fixed dungeon filtering.
+
+
+changeset:   82:f15bb2315474
+user:        Tercio
+date:        Tue Sep 27 21:11:38 2016 -0300
+summary:     - removed the time left priority from the sort panel and made a standalone one.
+
+
+changeset:   81:1170c98dc619
+user:        Tercio
+date:        Sun Sep 25 13:07:04 2016 -0300
+summary:     - fix lua error introduced on r80.
+
+
+changeset:   80:4e0ae63f84ef
+user:        Tercio
+date:        Sat Sep 24 18:34:27 2016 -0300
+summary:     - small code cleanup.
+
+
+changeset:   79:62854a6bd546
+user:        Tercio
+date:        Sat Sep 24 17:13:50 2016 -0300
+summary:     - fixed a rare but on entering a dungeon with a quest on the tracker.
+
+
+changeset:   78:5929600be0c2
+user:        Tercio
+date:        Thu Sep 22 19:28:53 2016 -0300
+summary:     - fade out quests that not match the time left priority (optional, default enabled).
+
+
+changeset:   77:6023507b989a
+user:        Tercio
+date:        Tue Sep 20 21:20:13 2016 -0300
+summary:     - fix for some textures.
+
+
+changeset:   76:18ef7af3b137
+user:        Tercio
+date:        Mon Sep 19 13:41:36 2016 -0300
+summary:     - added missing textures.
+
+
+changeset:   75:2fa5a5bd2807
+user:        Tercio
+date:        Mon Sep 19 00:57:38 2016 -0300
+summary:     - fixed issue for elvui with the stuff which has been removed on latest version.
+
+
+changeset:   74:35106947aef5
+user:        Tercio
+date:        Sun Sep 18 22:26:35 2016 -0300
+summary:     - fix for trying to hide frames that has been removed on previous version.
+
+
+changeset:   73:c1b9ece78781
+user:        Tercio
+date:        Sun Sep 18 18:55:52 2016 -0300
+summary:     - added options for zonemap icons Scale.
+
+
+changeset:   72:42bc789f367a
+user:        Tercio
+date:        Tue Sep 13 11:32:03 2016 -0300
+summary:     - fix for elvui bar anchoring.
+
+
+changeset:   71:813927363491
+user:        Tercio
+date:        Mon Sep 12 16:24:07 2016 -0300
+summary:     - libwindow warning if not found.
+
+
+changeset:   70:c616d8f1b719
+user:        Tercio
+date:        Mon Sep 12 16:10:49 2016 -0300
+summary:     - fixed the problem with the fly map icons not hiding all textures.
+
+
+changeset:   69:80b258393c57
+user:        Tercio
+date:        Mon Sep 12 14:28:31 2016 -0300
+summary:     - added libwindow-1.1
+
+
+changeset:   68:8b330564b3c6
+user:        Tercio
+date:        Mon Sep 12 14:27:50 2016 -0300
+summary:     - add option to unlock the tracker position.
+
+
+changeset:   67:e746eb069178
+user:        Tercio
+date:        Fri Sep 09 15:27:55 2016 -0300
+summary:     - fixing the green chart graph at summary panel.
+
+
+changeset:   66:53b5f6ef181c
+user:        Tercio
+date:        Fri Sep 09 13:04:32 2016 -0300
+summary:     - added back the auto world map option.
+
+
+changeset:   65:8cc959f37ad7
+user:        Tercio
+date:        Thu Sep 08 21:06:27 2016 -0300
+summary:     - fixed a bug with the statusbar where sometimes it won't show on zone maps.
+
+
+changeset:   64:3a462fa9dbe9
+user:        Tercio
+date:        Wed Sep 07 08:47:47 2016 -0300
+summary:     - check if 'relativeTo' is valid before trying to get its name.
+
+
+changeset:   63:0bc17f743068
+user:        Tercio
+date:        Tue Sep 06 17:52:22 2016 -0300
+summary:     - added an option to disable our quest tracker.
+
+
+changeset:   62:eb5531cdf631
+user:        Tercio
+date:        Tue Sep 06 15:17:05 2016 -0300
+summary:     - double check if the tooltip scan text is valid.
+
+
+changeset:   61:7492a2a49acb
+user:        Tercio
+date:        Tue Sep 06 14:42:54 2016 -0300
+summary:     - added time priorities for sort order.
+
+
+changeset:   60:9fd1a56e71ca
+user:        Tercio
+date:        Tue Sep 06 12:35:39 2016 -0300
+summary:     - check if elvui has its saved variables loaded before check.
+
+
+changeset:   59:c23ac7f1f03b
+user:        Tercio
+date:        Mon Sep 05 22:53:48 2016 -0300
+summary:     - possible fix for the quest sharer.
+
+
+changeset:   58:75172cd49fc3
+user:        Tercio
+date:        Mon Sep 05 22:29:06 2016 -0300
+summary:     - possible fix for the quest sharer.
+
+
+changeset:   57:8b3f2efb3d73
+user:        Tercio
+date:        Mon Sep 05 17:18:55 2016 -0300
+summary:     - fixed some lag involving startup.
+
+
+changeset:   56:7a314427b5b9
+user:        Tercio
+date:        Mon Sep 05 13:37:43 2016 -0300
+summary:     - fix for artifact power in some cases not being counted.
+
+
+changeset:   55:58b5715c3cc1
+user:        Tercio
+date:        Mon Sep 05 13:21:39 2016 -0300
+summary:     - added support to TomTom.
+
+
+changeset:   54:eb8810101cad
+user:        Tercio
+date:        Mon Sep 05 09:46:37 2016 -0300
+summary:     - check if move anything is loadded.
+
+
+changeset:   53:5a15d712976a
+user:        Tercio
+date:        Sun Sep 04 19:32:56 2016 -0300
+summary:     - fix for taxymap fps drop issue.
+
+
+changeset:   52:3829d6d8a4e7
+user:        Tercio
+date:        Sun Sep 04 18:14:26 2016 -0300
+summary:     - filtering quests on zone maps.
+
+
+changeset:   51:a0919818d52b
+user:        Tercio
+date:        Sun Sep 04 15:19:46 2016 -0300
+summary:     - added option to set the arrow update speed.
+
+
+changeset:   50:4c92fca22d6d
+user:        Tercio
+date:        Sun Sep 04 11:59:51 2016 -0300
+summary:     - framework revision up.
+
+
+changeset:   49:6db137adc05f
+user:        Tercio
+date:        Sat Sep 03 11:13:07 2016 -0300
+summary:     - trying a MoveAnything compatibility fix.
+
+
+changeset:   48:06669b9bb591
+user:        Tercio
+date:        Fri Sep 02 10:43:25 2016 -0300
+summary:     - fly map quests are show only being tracked by default.
+
+
+changeset:   47:c5daf93f3633
+user:        Tercio
+date:        Mon Aug 29 16:49:06 2016 -0300
+summary:     - updating the framework to v44.
+
+
+changeset:   46:e408570cc270
+user:        Tercio
+date:        Mon Aug 29 15:24:59 2016 -0300
+summary:     - reduce the oartifact power font size on artifact power resource available.
+
+
+changeset:   45:e11285e42b03
+user:        Tercio
+date:        Mon Aug 29 11:12:39 2016 -0300
+summary:     - Check if ElvUI and its savedvariables is loaded.
+
+
+changeset:   44:6ed4c673a15c
+user:        Tercio
+date:        Sun Aug 28 21:37:06 2016 -0300
+summary:     - added Lib-Graph-2.0
+
+
+changeset:   43:d0653930c280
+user:        Tercio
+date:        Sun Aug 28 17:39:33 2016 -0300
+summary:     - some more fixes.
+
+
+changeset:   42:a986e044d0f4
+user:        Tercio
+date:        Sat Aug 27 14:17:58 2016 -0300
+summary:     - framework upgrade to v41.
+
+
+changeset:   41:898dc9ceafae
+user:        Tercio
+date:        Thu Aug 18 14:47:52 2016 -0300
+summary:     - zones without quests won't show their lines and faction circle.
+
+
+changeset:   40:83d066d3637d
+user:        Tercio
+date:        Wed Aug 17 23:32:54 2016 -0300
+summary:     - more bug fixes.
+
+
+changeset:   39:4ccad3c5bb06
+user:        Tercio
+date:        Tue Aug 16 13:50:33 2016 -0300
+summary:     - eye of azshara does exists.
+
+
+changeset:   38:a97d243528f4
+user:        Tercio
+date:        Tue Aug 16 01:40:00 2016 -0300
+summary:     - added east asia numeric system.
+
+
+changeset:   37:41fe9002ffd1
+user:        Tercio
+date:        Sun Aug 14 21:20:40 2016 -0300
+summary:     - taint fix.
+
+
+changeset:   36:38e06dac545a
+user:        Tercio
+date:        Sun Aug 14 21:03:21 2016 -0300
+summary:     - taint fix.
+
+
+changeset:   35:b78c00d94a73
+user:        Tercio
+date:        Sun Aug 14 20:51:48 2016 -0300
+summary:     - taint fix.
+
+
+changeset:   34:5d70c884b1cd
+user:        Tercio
+date:        Sun Aug 14 14:26:52 2016 -0300
+summary:     - update translations.
+
+
+changeset:   33:ae23c592dfe5
+user:        Tercio
+date:        Sat Aug 13 13:41:25 2016 -0300
+summary:     - added localizations.
+
+
+changeset:   32:8dd0d38752fd
+user:        Tercio
+date:        Fri Aug 12 23:49:03 2016 -0300
+summary:     - added history graphic for rewards of the last 15 days of questing.
+
+
+changeset:   31:965451824736
+user:        Tercio
+date:        Thu Aug 11 23:35:48 2016 -0300
+summary:     - ElvUI Compatibility.
+
+
+changeset:   30:edd81874ac4e
+user:        Tercio
+date:        Thu Aug 11 23:32:36 2016 -0300
+summary:     - ElvUI Compatibility.
+
+
+changeset:   29:c448bed926a9
+user:        Tercio
+date:        Wed Aug 10 14:35:59 2016 -0300
+summary:     - show faction quests even if they are filtered out.
+
+
+changeset:   28:88a4acc35ac1
+user:        Tercio
+date:        Tue Aug 09 14:23:30 2016 -0300
+summary:     - 6th wave of polish.
+
+
+changeset:   27:8713c3e2bb1b
+user:        Tercio
+date:        Mon Aug 08 18:24:05 2016 -0300
+summary:     - polish wave 5.
+
+
+changeset:   26:2be3f5d08f0f
+user:        Tercio
+date:        Thu Aug 04 17:29:32 2016 -0300
+summary:     - bug fix.
+
+
+changeset:   25:b020baa17b81
+user:        Tercio
+date:        Thu Aug 04 15:10:15 2016 -0300
+summary:     - continue development.
+
+
+changeset:   24:6796c20545e5
+user:        Tercio
+date:        Wed Aug 03 18:02:27 2016 -0300
+summary:     - more development.
+
+
+changeset:   23:c7c0e7f38796
+user:        Tercio
+date:        Tue Aug 02 20:02:01 2016 -0300
+summary:     updates.
+
+
+changeset:   22:61ee22beb637
+user:        Tercio
+date:        Sun Jul 31 17:20:12 2016 -0300
+summary:     - fixed issue with old world taxy maps.
+
+
+changeset:   21:a514a3a48751
+user:        Tercio
+date:        Sun Jul 31 00:04:55 2016 -0300
+summary:     - fixed bug when leaving a dungeon the tracker won't show again.
+
+
+changeset:   20:91943d032ce9
+user:        Tercio
+date:        Sat Jul 30 00:44:37 2016 -0300
+summary:     - 3rd pass of polish.
+
+
+changeset:   19:9a0a56ce1c91
+user:        Tercio
+date:        Fri Jul 29 14:18:14 2016 -0300
+summary:     - do not keep reseting the loading animation.
+
+
+changeset:   18:52b45acdfb11
+user:        Tercio
+date:        Fri Jul 29 00:34:53 2016 -0300
+summary:     - more updates
+
+
+changeset:   17:740e6cec4bb3
+user:        Tercio
+date:        Wed Jul 27 13:50:40 2016 -0300
+summary:     - updates
+
+
+changeset:   16:a4002db25a28
+user:        Tercio
+date:        Mon Jul 25 00:04:58 2016 -0300
+summary:     - many small fixes.
+
+
+changeset:   15:e0cf755ac85b
+user:        Tercio
+date:        Sat Jul 16 18:50:58 2016 -0300
+summary:     - first polish pass.
+
+
+changeset:   14:7dce41b511f4
+user:        Tercio
+date:        Sat Jul 16 01:16:00 2016 -0300
+summary:     - updates
+
+
+changeset:   13:e515c381ad21
+user:        Tercio
+date:        Sat Jul 16 01:13:45 2016 -0300
+summary:     - updates.
+
+
+changeset:   12:b9e4a0395971
+user:        Tercio
+date:        Thu Jul 14 14:25:11 2016 -0300
+summary:     updates.
+
+
+changeset:   11:294f506fb9f4
+user:        Tercio
+date:        Thu Jul 14 02:06:51 2016 -0300
+summary:     -updates
+
+
+changeset:   10:d73fcbea2b72
+user:        Tercio
+date:        Thu Jul 14 01:58:34 2016 -0300
+summary:     - updates.
+
+
+changeset:   9:92f7315fd32c
+user:        Tercio
+date:        Wed Jul 13 00:22:08 2016 -0300
+summary:     - stability fixes.
+
+
+changeset:   8:ae8bdda31f3e
+user:        Tercio
+date:        Mon Jul 11 00:46:30 2016 -0300
+summary:     - weakup.
+
+
+changeset:   7:bd07eb220918
+user:        Tercio
+date:        Mon Jul 11 00:39:45 2016 -0300
+summary:     - big framework update.
+
+
+changeset:   6:98bb2d329d26
+user:        Tercio
+date:        Wed Jul 06 19:15:39 2016 -0300
+summary:     - fixed an issue with artifact power above 1.000.
+
+
+changeset:   5:cf4f19ee4c77
+user:        Tercio
+date:        Mon Jun 27 03:44:08 2016 -0300
+summary:     - bug fixes.
+
+
+changeset:   4:f51603a190e7
+user:        Tercio
+date:        Sun Jun 26 03:16:24 2016 -0300
+summary:     - another round of updates.
+
+

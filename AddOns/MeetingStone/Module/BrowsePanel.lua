@@ -288,6 +288,7 @@ function BrowsePanel:OnInitialize()
         ActivityDropdown:SetDefaultValue(0)
         ActivityDropdown:SetDefaultText(L['请选择活动类型'])
         ActivityDropdown:SetCallback('OnSelectChanged', function(_, data, ...)
+            
             self:UpdateModeDropdown(data.categoryId)
             self:UpdateBossFilter(data.activityId, data.customId)
             self:ClearSearchProfile()
@@ -702,7 +703,7 @@ function BrowsePanel:OnEnable()
 end
 
 function BrowsePanel:LFG_LIST_AVAILABILITY_UPDATE()
-    self.ActivityDropdown:SetMenuTable(GetActivitesMenuTable())
+    self.ActivityDropdown:SetMenuTable(GetActivitesMenuTable(ACTIVITY_FILTER_BROWSE))
     self.ActivityDropdown:SetValue(Profile:GetLastSearchValue())
     self:Refresh()
 end
@@ -736,6 +737,10 @@ function BrowsePanel:UpdateActivity(id)
     end
 end
 
+function BrowsePanel:IterateActivities()
+    return pairs(self.activityList)
+end
+
 function BrowsePanel:CacheActivity(id)
     local _id, activityId, title, comment = C_LFGList.GetSearchResultInfo(id)
     if not _id then
@@ -748,6 +753,7 @@ function BrowsePanel:CacheActivity(id)
 
     local activityItem = self.ActivityDropdown:GetItem()
     local activity = Activity:New(id)
+
     if activityItem then
         if activityItem.activityId and not ACTIVITY_CUSTOM_DATA.A[activityItem.activityId] then
             if activityItem.activityId ~= activity:GetActivityID() or activityItem.customId ~= activity:GetCustomID() then
@@ -759,6 +765,9 @@ function BrowsePanel:CacheActivity(id)
         end
     end
     if activity:HasInvalidContent() then
+        return
+    end
+    if not activity:IsValidCustomActivity() then
         return
     end
 
@@ -795,7 +804,7 @@ function BrowsePanel:LFG_LIST_SEARCH_RESULTS_RECEIVED(event)
     self.ActivityList:Refresh()
 end
 
-function BrowsePanel:CheckSignUpStatus(activity)
+function BrowsePanel:CheckSignUpStatus(activity, noCheckActivity)
     local numApplications, numActiveApplications = C_LFGList.GetNumApplications()
     local messageApply = LFGListUtil_GetActiveQueueMessage(true)
     local availTank, availHealer, availDPS = C_LFGList.GetAvailableRoles()
@@ -813,7 +822,7 @@ function BrowsePanel:CheckSignUpStatus(activity)
         return false, LFG_LIST_MUST_CHOOSE_SPEC
     elseif GroupHasOfflineMember(LE_PARTY_CATEGORY_HOME) then
         return false, LFG_LIST_OFFLINE_MEMBER
-    elseif activity then
+    elseif activity or noCheckActivity then
         return true, nil
     else
         return false, LFG_LIST_SELECT_A_SEARCH_RESULT
@@ -866,10 +875,9 @@ function BrowsePanel:Search()
     end
 
     local searchText = self:GetSearchCode(fullName, self.ModeDropdown:GetValue(), self.LootDropdown:GetValue(), activityItem.customId)
-    
 
     Profile:SetLastSearchValue(searchValue)
-    C_LFGList.Search(categoryId, searchText, filters, baseFilter)
+    C_LFGList.Search(categoryId, searchText, 0, baseFilter)
 
     self.searchTimer = nil
 end

@@ -31,6 +31,7 @@ addon.hiddenOptions = {
 	["nameplateShowFriendlyPets"] = { prettyName = UNIT_NAMEPLATES_SHOW_FRIENDLY_PETS, description = OPTION_TOOLTIP_UNIT_NAMEPLATES_SHOW_FRIENDLY_PETS, type = "boolean" },
 	["nameplateShowFriendlyGuardians"] = { prettyName = UNIT_NAMEPLATES_SHOW_FRIENDLY_GUARDIANS, description = OPTION_TOOLTIP_UNIT_NAMEPLATES_SHOW_FRIENDLY_GUARDIANS, type = "boolean" },
 	["nameplateShowFriendlyTotems"] = { prettyName = UNIT_NAMEPLATES_SHOW_FRIENDLY_TOTEMS, description = OPTION_TOOLTIP_UNIT_NAMEPLATES_SHOW_FRIENDLY_TOTEMS, type = "boolean" },
+	["nameplateShowFriendlyNPCs"] = { prettyName = "Friendly NPCs", description = "Always show friendly NPC's nameplates", type = "boolean" },
 	["nameplateShowEnemies"] = { prettyName = UNIT_NAMEPLATES_SHOW_ENEMIES, description = OPTION_TOOLTIP_UNIT_NAMEPLATES_SHOW_ENEMIES, type = "boolean" },
 	["nameplateShowEnemyPets"] = { prettyName = UNIT_NAMEPLATES_SHOW_ENEMY_PETS, description = OPTION_TOOLTIP_UNIT_NAMEPLATES_SHOW_ENEMY_PETS, type = "boolean" },
 	["nameplateShowEnemyGuardians"] = { prettyName = UNIT_NAMEPLATES_SHOW_ENEMY_GUARDIANS, description = OPTION_TOOLTIP_UNIT_NAMEPLATES_SHOW_ENEMY_GUARDIANS, type = "boolean" },
@@ -73,6 +74,10 @@ addon.hiddenOptions = {
 	["namePlateSelfClickThrough"] = { prettyName = "", description = "", type = "number"},
 	["namePlateFriendlyClickThrough"] = { prettyName = "", description = "", type = "number"},
 	["namePlateEnemyClickThrough"] = { prettyName = "", description = "", type = "number"},
+	["nameplatePersonalShowAlways"] = { prettyName = "", description = "Always show personal nameplate", type = "boolean" },
+	["nameplatePersonalShowInCombat"] = { prettyName = "", description = "Always show personal nameplate while in combat", type = "boolean" },
+	["nameplatePersonalShowWithTarget"] = { prettyName = "", description = "Always show personal nameplate with a hostile target", type = "boolean" },
+	["nameplatePersonalHideDelaySeconds"] = { prettyName = "", description = "The delay to wait before hiding the personal nameplate", type = "boolean" },
 	["ShowNamePlateLoseAggroFlash"] = { prettyName = nil, description = "When enabled, if you are a tank role and lose aggro, the nameplate with briefly flash.", type = "boolean"},
 	["ShowClassColorInNameplate"] = { prettyName = SHOW_CLASS_COLOR_IN_V_KEY, description = OPTION_TOOLTIP_SHOW_CLASS_COLOR_IN_V_KEY, type = "boolean" },
 
@@ -315,4 +320,5 @@ addon.hiddenOptions = {
 	["lossOfControlRoot"] = { prettyName = "Loss of Control: Root", description = "Sets the type of the Loss of Control alert. (0 = Off, 1 = Only Alert, 2 = Show Full Duration)", type = "number"},
 	["synchronizeMacros"] = { prettyName = "Synchronize Macros", description = "Toggles synchronizing Macros with the server on/off", type = "boolean"},
 	["synchronizeConfig"] = { prettyName = "Synchronize Config", description = "Toggles synchronizing settings with the server on/off", type = "boolean"},
+	["cursorsizepreferred"] = { prettyName = "Cursor Size", description = "0 = 32x32, 1 = 48x48, 2 = 64x64, -1 = autodetect", type = "number"},
 }

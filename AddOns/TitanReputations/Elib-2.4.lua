@@ -14,28 +14,28 @@ local function defaultMenu(self, id, menus)
 	if menus then
 		for k, v in ipairs(menus) do
 			if v.type == "toggle" then
-				local info = UIDropDownMenu_CreateInfo();
+				local info = Lib_UIDropDownMenu_CreateInfo();
 				info.text = v.text;
 				info.func = v.func or function() TitanToggleVar(id, v.var); TitanPanelButton_UpdateButton(id); end
 				info.checked = TitanGetVar(id, v.var);
 				info.keepShownOnClick = v.keepShown
-				UIDropDownMenu_AddButton(info);
+				Lib_UIDropDownMenu_AddButton(info);
 			elseif v.type == "rightSideToggle" then
-				local info = UIDropDownMenu_CreateInfo();
+				local info = Lib_UIDropDownMenu_CreateInfo();
 				info.text = ACE["TITAN_CLOCK_MENU_DISPLAY_ON_RIGHT_SIDE"];
 				info.func = function() TitanToggleVar(id, "DisplayOnRightSide"); TitanPanel_InitPanelButtons(); end
 				info.checked = TitanGetVar(id, "DisplayOnRightSide");
-				UIDropDownMenu_AddButton(info);
+				Lib_UIDropDownMenu_AddButton(info);
 			elseif v.type == "space" then
 				TitanPanelRightClickMenu_AddSpacer()
 			elseif v.type == "button" then
-				local info = UIDropDownMenu_CreateInfo();
+				local info = Lib_UIDropDownMenu_CreateInfo();
 				info.text = v.text;
 				info.func = v.func;
 				info.notCheckable = true;
 				info.arg1 = v.arg1;
 				info.arg2 = v.arg2;
-				UIDropDownMenu_AddButton(info);
+				Lib_UIDropDownMenu_AddButton(info);
 			end
 		end
 	end

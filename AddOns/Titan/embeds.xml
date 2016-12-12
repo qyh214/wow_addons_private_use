@@ -13,4 +13,6 @@
 <Include file="libs\AceGUI-3.0-SharedMediaWidgets\widget.xml"/>
 <Include file="libs\LibQTip-1.0\lib.xml"/>
 <Include file="libs\NoTaint_UIDropDownMenu\UIDropDownMenuTemplates.xml"/>
+<Script file="libs\NoTaint_UIDropDownMenu\EasyMenu.lua"/>
+<Script file="libs\NoTaint_UIDropDownMenu\UIDropDownMenu.lua"/>
 </Ui>

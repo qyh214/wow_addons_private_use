@@ -13,6 +13,7 @@
   <Script file="ActivitiesSummary.lua" />
   <Script file="ActivitiesMall.lua" />
   <Script file="ActivitiesLottery.lua" />
+  <Script file="RecentPanel.lua" />
   <Script file="OptionPanel.lua" />
   <Script file="Misc.lua" />
   <Script file="PlayerInfoDialog.lua" />

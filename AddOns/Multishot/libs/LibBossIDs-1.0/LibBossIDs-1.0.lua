@@ -1812,6 +1812,36 @@ local BossIDs = {
 	[52258]	= true,	-- Gri'lek
 	[52271]	= true,	-- Hazza'rah
 	[52286]	= true,	-- Wushoolay
+	
+	-------------------------------------------------------------------------------
+	-- Return to Karazhan
+	-------------------------------------------------------------------------------
+	[114262] = true, -- Attumen the Huntsman
+	[114329] = true, -- Luminore <Keeper of Candles>
+	[114330] = true, -- Babblet <Head Maid>
+	[114328] = true, -- Coggleston <Loyal Majordomo>
+	[114522] = true, -- Mrs. Cauldrons <Sous Chef>
+	[114261] = true, -- Toe Knee <Defias Brotherhood>
+	[114260] = true, -- Mrrgria <The Fins>
+	[114284] = true, -- Elfyra
+	[114251] = true, -- Galindre
+	[113971] = true, -- Maiden of Virtue
+	[114312] = true, -- Moroes <Tower Steward>
+	[114462] = true, -- The Curator
+	[114350] = true, -- Shade of Medivh
+	[114252] = true, -- Mana Devourer
+	[114790] = true, -- Viz'aduum the Watcher
+	[114895] = true, -- Nightbane
+	
+	-------------------------------------------------------------------------------
+	-- Trial of Valor
+	-------------------------------------------------------------------------------
+	[114263] = true, -- Odyn
+	[114361] = true, -- Hymdall <The Guardian>
+	[114360] = true, -- Hyrja <Chosen of Eyir>
+	[114323] = true, -- Guarm
+	[114537] = true, -- Helya
+
 }
 
 lib.BossIDs = BossIDs

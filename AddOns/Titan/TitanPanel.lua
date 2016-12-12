@@ -1685,7 +1685,7 @@ local function TitanPanel_MainMenu()
 	-----------------
 	-- Menu title 
 	TitanPanelRightClickMenu_AddTitle(L["TITAN_PANEL_MENU_TITLE"]);
-	TitanPanelRightClickMenu_AddSpacer(UIDROPDOWNMENU_MENU_LEVEL);
+	TitanPanelRightClickMenu_AddSpacer(LIB_UIDROPDOWNMENU_MENU_LEVEL);
 	
 	TitanPanelRightClickMenu_AddTitle(L["TITAN_PANEL_MENU_PLUGINS"]);
 
@@ -1697,7 +1697,7 @@ local function TitanPanel_MainMenu()
 		info.text = L["TITAN_PANEL_MENU_CATEGORIES"][index];
 		info.value = "Addons_" .. TITAN_PANEL_BUTTONS_PLUGIN_CATEGORY[index];
 		info.hasArrow = 1;
-		UIDropDownMenu_AddButton(info);
+		Lib_UIDropDownMenu_AddButton(info);
 	end
 
 	TitanPanelRightClickMenu_AddSpacer();
@@ -1711,7 +1711,7 @@ local function TitanPanel_MainMenu()
 	info.func = function() 
 		InterfaceOptionsFrame_OpenToCategory(L["TITAN_PANEL_MENU_TOP_BARS"])
 	end
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	TitanPanelRightClickMenu_AddSpacer();
 	
@@ -1734,7 +1734,7 @@ local function TitanPanel_MainMenu()
 			.._G["GREEN_FONT_COLOR_CODE"]
 			..L["TITAN_PANEL_MENU_IN_COMBAT_LOCKDOWN"];
 		end
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 	
 	-----------------
 	-- Save
@@ -1750,7 +1750,7 @@ local function TitanPanel_MainMenu()
 			.._G["GREEN_FONT_COLOR_CODE"]
 			..L["TITAN_PANEL_MENU_IN_COMBAT_LOCKDOWN"];
 		end
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	local glob, name, player, server = TitanUtils_GetGlobalProfile()
 	info = {};
@@ -1762,20 +1762,20 @@ local function TitanPanel_MainMenu()
 	end;
 	info.checked = glob --TitanAllGetVar("GlobalProfileUse")
 	info.keepShownOnClick = nil
-	UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+	Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 	
 	--local player, server = TitanUtils_ParseName(TitanAllGetVar("GlobalProfileName"))
 	info = {};
 	info.notCheckable = true
 	info.text = "   "..TitanUtils_GetGreenText(server)
 	info.value = "server";
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	info = {};
 	info.notCheckable = true
 	info.text = "      "..TitanUtils_GetGreenText(player)
 	info.value = "player";
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 end
 
@@ -1793,9 +1793,9 @@ local function TitanPanel_ServerSettingsMenu()
 	local s, e, ident;
 	local setonce = 0;
 
-	if ( UIDROPDOWNMENU_MENU_VALUE == "Settings" ) then
+	if ( LIB_UIDROPDOWNMENU_MENU_VALUE == "Settings" ) then
 		TitanPanelRightClickMenu_AddTitle(L["TITAN_PANEL_MENU_PROFILE_SERVERS"],
-			UIDROPDOWNMENU_MENU_LEVEL);
+			LIB_UIDROPDOWNMENU_MENU_LEVEL);
 		-- Normal profile per toon
 		for index, id in pairs(TitanSettings.Players) do
 			player, server = TitanUtils_ParseName(index)
@@ -1808,7 +1808,7 @@ local function TitanPanel_ServerSettingsMenu()
 					info.text = server;
 					info.value = server;
 					info.hasArrow = 1;
-					UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+					Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 				end
 			end
 		end
@@ -1819,8 +1819,8 @@ local function TitanPanel_ServerSettingsMenu()
 			if TitanUtils_GetCurrentIndex(servers, server) == nil then
 				if server == TITAN_CUSTOM_PROFILE_POSTFIX then
 					if setonce and setonce == 0 then
-						TitanPanelRightClickMenu_AddTitle("", UIDROPDOWNMENU_MENU_LEVEL);
-						TitanPanelRightClickMenu_AddTitle(L["TITAN_PANEL_MENU_PROFILE_CUSTOM"], UIDROPDOWNMENU_MENU_LEVEL);
+						TitanPanelRightClickMenu_AddTitle("", LIB_UIDROPDOWNMENU_MENU_LEVEL);
+						TitanPanelRightClickMenu_AddTitle(L["TITAN_PANEL_MENU_PROFILE_CUSTOM"], LIB_UIDROPDOWNMENU_MENU_LEVEL);
 					setonce = 1;
 					end
 					info = {};
@@ -1828,7 +1828,7 @@ local function TitanPanel_ServerSettingsMenu()
 					info.text = player;
 					info.value = player;
 					info.hasArrow = 1;
-					UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+					Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 				end
 			end
 		end
@@ -1866,7 +1866,7 @@ local function TitanPanel_PlayerSettingsMenu()
 
 		-- handle custom profiles here
 		if server == TITAN_CUSTOM_PROFILE_POSTFIX 
-		and player == UIDROPDOWNMENU_MENU_VALUE then
+		and player == LIB_UIDROPDOWNMENU_MENU_VALUE then
 			info = {};
 			info.notCheckable = true
 			info.disabled = TitanAllGetVar("GlobalProfileUse")
@@ -1875,7 +1875,7 @@ local function TitanPanel_PlayerSettingsMenu()
 			info.func = function() 
 				TitanVariables_UseSettings(index, TITAN_PROFILE_USE)
 			end
-			UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+			Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 			
 			info = {};
 			info.notCheckable = true
@@ -1894,14 +1894,14 @@ local function TitanPanel_PlayerSettingsMenu()
 					TitanPanelRightClickMenu_Close();
 				end
 			end
-			UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+			Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 		end -- if server and player
 
 		-- handle regular profiles here
-		if server == UIDROPDOWNMENU_MENU_VALUE then
+		if server == LIB_UIDROPDOWNMENU_MENU_VALUE then
 			-- Set the label once
 			if setonce and setonce == 0 then
-				TitanPanelRightClickMenu_AddTitle(L["TITAN_PANEL_MENU_PROFILE_CHARS"], UIDROPDOWNMENU_MENU_LEVEL);
+				TitanPanelRightClickMenu_AddTitle(L["TITAN_PANEL_MENU_PROFILE_CHARS"], LIB_UIDROPDOWNMENU_MENU_LEVEL);
 				setonce = 1;
 			end
 			info = {};
@@ -1909,7 +1909,7 @@ local function TitanPanel_PlayerSettingsMenu()
 			info.text = player;
 			info.value = index;
 			info.hasArrow = 1;
-			UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+			Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 		end		
 	end -- for players
 
@@ -1917,14 +1917,14 @@ local function TitanPanel_PlayerSettingsMenu()
 
 	for index, id in pairs(TitanPluginsIndex) do
 		plugin = TitanUtils_GetPlugin(id);
-		if plugin.id and plugin.id == UIDROPDOWNMENU_MENU_VALUE then
+		if plugin.id and plugin.id == LIB_UIDROPDOWNMENU_MENU_VALUE then
 			--title
 			info = {};
 			info.text = TitanPlugins[plugin.id].menuText;
 			info.notCheckable = true
 			info.notClickable = 1;
 			info.isTitle = 1;
-			UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+			Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 
 			--ShowIcon
 			if plugin.controlVariables.ShowIcon then
@@ -1937,7 +1937,7 @@ local function TitanPanel_PlayerSettingsMenu()
 				info.keepShownOnClick = 1;
 				info.checked = TitanGetVar(id, "ShowIcon");
 				info.disabled = nil;
-				UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+				Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 			end
 
 			--ShowLabel
@@ -1951,7 +1951,7 @@ local function TitanPanel_PlayerSettingsMenu()
 				info.keepShownOnClick = 1;
 				info.checked = TitanGetVar(id, "ShowLabelText");
 				info.disabled = nil;
-				UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+				Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 			end
 
 			--ShowRegularText (LDB data sources only atm)
@@ -1965,7 +1965,7 @@ local function TitanPanel_PlayerSettingsMenu()
 				info.keepShownOnClick = 1;
 				info.checked = TitanGetVar(id, "ShowRegularText");
 				info.disabled = nil;
-				UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+				Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 			end
 
 			--ShowColoredText
@@ -1979,7 +1979,7 @@ local function TitanPanel_PlayerSettingsMenu()
 				info.keepShownOnClick = 1;
 				info.checked = TitanGetVar(id, "ShowColoredText");
 				info.disabled = nil;
-				UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+				Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 			end
 
 			-- Right-side plugin
@@ -1994,7 +1994,7 @@ local function TitanPanel_PlayerSettingsMenu()
 				end
 				info.checked = TitanGetVar(id, "DisplayOnRightSide");
 				info.disabled = nil;
-				UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+				Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 			end
 		end
 	end	
@@ -2013,19 +2013,19 @@ local function TitanPanel_SettingsSelectionMenu()
 	info.notCheckable = true
 	info.disabled = TitanAllGetVar("GlobalProfileUse")
 	info.text = L["TITAN_PANEL_MENU_LOAD_SETTINGS"];
-	info.value = UIDROPDOWNMENU_MENU_VALUE;
+	info.value = LIB_UIDROPDOWNMENU_MENU_VALUE;
 	info.func = function() 
-		TitanVariables_UseSettings(UIDROPDOWNMENU_MENU_VALUE, TITAN_PROFILE_USE)
+		TitanVariables_UseSettings(LIB_UIDROPDOWNMENU_MENU_VALUE, TITAN_PROFILE_USE)
 	end
-	UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+	Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 
 	info = {};
 	info.notCheckable = true
-	info.disabled = (UIDROPDOWNMENU_MENU_VALUE == TitanSettings.Player)
-		or ((UIDROPDOWNMENU_MENU_VALUE == TitanAllGetVar("GlobalProfileName")) 
+	info.disabled = (LIB_UIDROPDOWNMENU_MENU_VALUE == TitanSettings.Player)
+		or ((LIB_UIDROPDOWNMENU_MENU_VALUE == TitanAllGetVar("GlobalProfileName")) 
 			and (TitanAllGetVar("GlobalProfileUse")))
 	info.text = L["TITAN_PANEL_MENU_DELETE_SETTINGS"];
-	info.value = UIDROPDOWNMENU_MENU_VALUE;
+	info.value = LIB_UIDROPDOWNMENU_MENU_VALUE;
 	info.func = function()
 		-- do not delete if current profile - .disabled
 --[[
@@ -2046,7 +2046,7 @@ local function TitanPanel_SettingsSelectionMenu()
 			TitanPanelRightClickMenu_Close();
 		end
 	end
-	UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+	Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 end
 
 --[[ Titan
@@ -2064,7 +2064,7 @@ local function TitanPanel_BuildOtherPluginsMenu(frame)
 		if not plugin.category then
 			plugin.category = "General";
 		end
-		if ( UIDROPDOWNMENU_MENU_VALUE == "Addons_" .. plugin.category ) then
+		if ( LIB_UIDROPDOWNMENU_MENU_VALUE == "Addons_" .. plugin.category ) then
 			if not TitanGetVar(id, "ForceBar") 
 				or (TitanGetVar(id, "ForceBar") == TitanBarData[frame].name) then
 				info = {};
@@ -2084,7 +2084,7 @@ local function TitanPanel_BuildOtherPluginsMenu(frame)
 					end;
 				info.checked = TitanPanel_IsPluginShown(id) or nil
 				info.keepShownOnClick = 1;
-				UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
+				Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
 			end
 		end
 	end
@@ -2103,20 +2103,20 @@ function TitanPanelRightClickMenu_PrepareBarMenu(self)
 	local s, e, frame = string.find(self:GetName(), "(.*)RightClickMenu");
 
 	-- Level 2
-	if ( UIDROPDOWNMENU_MENU_LEVEL == 2 ) then
+	if ( LIB_UIDROPDOWNMENU_MENU_LEVEL == 2 ) then
 		TitanPanel_BuildOtherPluginsMenu(frame);
 		TitanPanel_ServerSettingsMenu();
 		return;
 	end
 
 	-- Level 3
-	if ( UIDROPDOWNMENU_MENU_LEVEL == 3 ) then
+	if ( LIB_UIDROPDOWNMENU_MENU_LEVEL == 3 ) then
 		TitanPanel_PlayerSettingsMenu();
 		return;
 	end
 
 	-- Level 4
-	if ( UIDROPDOWNMENU_MENU_LEVEL == 4 ) then
+	if ( LIB_UIDROPDOWNMENU_MENU_LEVEL == 4 ) then
 		TitanPanel_SettingsSelectionMenu();
 		return;
 	end

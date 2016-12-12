@@ -24,6 +24,11 @@ function MainPanel:OnInitialize()
     end)
 
     self:RegisterMessage('MEETINGSTONE_NEW_VERSION')
+    self:RegisterEvent('AJ_PVE_LFG_ACTION')
+    self:RegisterEvent('AJ_PVP_LFG_ACTION', 'AJ_PVE_LFG_ACTION')
+
+    PVEFrame:UnregisterEvent('AJ_PVE_LFG_ACTION')
+    PVEFrame:UnregisterEvent('AJ_PVP_LFG_ACTION')
 
     local AnnBlocker = self:NewBlocker('AnnBlocker', 1) do
         AnnBlocker:SetCallback('OnCheck', function()
@@ -230,6 +235,11 @@ function MainPanel:OnEnable()
     C_LFGList.RequestAvailableActivities()
 end
 
+function MainPanel:AJ_PVE_LFG_ACTION()
+    Addon:ShowModule('MainPanel')
+    MainPanel:SelectPanel(BrowsePanel)
+end
+
 function MainPanel:MEETINGSTONE_NEW_VERSION(_, version)
     self.newVersion = version
     self.newVersionReaded = nil
@@ -395,7 +405,7 @@ function MainPanel:OpenApplicantTooltip(applicant)
     local activityID = applicant:GetActivityID()
     local progressions = RAID_PROGRESSION_LIST[activityID]
     local progressionValue = applicant:GetProgression()
-    local activity = CreatePanel.Activity or CreatePanel:GetCurrentActivity()
+    local activity = CreatePanel:GetCurrentActivity()
     if progressions and progressionValue then
         GameTooltip:AddSepatator()
         GameTooltip:AddDoubleLine(L['副本经验：'], activity:GetName())
@@ -408,4 +418,16 @@ end
 
 function MainPanel:CloseTooltip()
     self.GameTooltip:Hide()
+end
+
+function MainPanel:OpenRecentPlayerTooltip(player)
+    local manager = player:GetManager()
+    local tooltip = self.GameTooltip
+    tooltip:SetOwner(self, 'ANCHOR_NONE')
+    tooltip:SetPoint('TOPLEFT', self, 'TOPRIGHT', 1, -10)
+
+    tooltip:SetText(manager:GetName())
+    tooltip:AddLine(player:GetNameText())
+    tooltip:AddLine(player:GetNotes(), 1, 1, 1, true)
+    tooltip:Show()
 end

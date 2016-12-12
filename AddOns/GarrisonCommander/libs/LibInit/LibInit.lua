@@ -4,12 +4,12 @@
 -- @name LibInit
 -- @class module
 -- @author Alar of Runetotem
--- @release 36
+-- @release 37
 --
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):9:")) -- Always check line number in regexp and file
 
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 36
+local MINOR_VERSION = 37
 local off=(_G.RED_FONT_COLOR_CODE or '|cffff0000') .. _G.VIDEO_OPTIONS_DISABLED ..  _G.FONT_COLOR_CODE_CLOSE or '|r'
 local on=(_G.GREEN_FONT_COLOR_CODE or '|cff00ff00') .. _G.VIDEO_OPTIONS_ENABLED ..  _G.FONT_COLOR_CODE_CLOSE or '|r'
 local nop=function()end
@@ -20,15 +20,18 @@ local tostring=tostring
 local _G=_G -- Unmodified env
 local dprint=function() end
 --@debug@
---LoadAddOn("LibDebug")
---LoadAddOn("Blizzard_DebugTools")
---if LibDebug then
-	--pulling libdebug print in without pulling also the whole _G management and without changing loading addon env
---	LibDebug()
---	dprint=print
---	setfenv(1,_G)
---end
+-- Checking packager behaviour
 --@end-debug@
+--[===[@debug@
+LoadAddOn("LibDebug")
+LoadAddOn("Blizzard_DebugTools")
+if LibDebug then
+	--pulling libdebug print in without pulling also the whole _G management and without changing loading addon env
+	LibDebug()
+	dprint=print
+	setfenv(1,_G)
+end
+--@end-debug@]===]
 --GAME_LOCALE="itIT"
 local me, ns = ...
 local LibStub=LibStub
@@ -36,17 +39,17 @@ local obj,old=LibStub:NewLibrary(MAJOR_VERSION,MINOR_VERSION)
 local upgrading
 if obj then
 	upgrading=old
---@debug@
+--[===[@debug@
 	if old then
 		dprint(strconcat("Upgrading ",MAJOR_VERSION,'.',old,' to',MINOR_VERSION,' from ',__FILE__))
 	else
 		dprint(strconcat("Loading ",MAJOR_VERSION,'.',MINOR_VERSION,' from ',__FILE__))
 	end
---@end-debug@
+--@end-debug@]===]
 else
---@debug@
+--[===[@debug@
 	dprint(strconcat("Equal or newer ",MAJOR_VERSION,' already loaded from ',__FILE__))
---@end-debug@
+--@end-debug@]===]
 	return
 end
 local lib=obj --#Lib
@@ -119,21 +122,21 @@ lib.pool=lib.pool or setmetatable({},{__mode="k"})
 local new, del, recursivedel,copy, cached, stats
 do
 	local pool = lib.pool
---@debug@
+--[===[@debug@
 	local newcount, delcount,createdcount,cached = 0,0,0
---@end-debug@
+--@end-debug@]===]
 	function new()
---@debug@
+--[===[@debug@
 		newcount = newcount + 1
---@end-debug@
+--@end-debug@]===]
 		local t = next(pool)
 		if t then
 			pool[t] = nil
 			return t
 		else
---@debug@
+--[===[@debug@
 			createdcount = createdcount + 1
---@end-debug@
+--@end-debug@]===]
 			return {}
 		end
 	end
@@ -145,16 +148,16 @@ do
 		return c
 	end
 	function del(t)
---@debug@
+--[===[@debug@
 		delcount = delcount + 1
---@end-debug@
+--@end-debug@]===]
 		wipe(t)
 		pool[t] = true
 	end
 	function recursivedel(t)
---@debug@
+--[===[@debug@
 		delcount = delcount + 1
---@end-debug@
+--@end-debug@]===]
 		for k,v in pairs(t) do
 			if type(v)=="table" then
 				recursivedel(v)
@@ -170,19 +173,19 @@ do
 		end
 		return n
 	end
---@debug@
+--[===[@debug@
 	function stats()
 		print("Created:",createdcount)
 		print("Aquired:",newcount)
 		print("Released:",delcount)
 		print("Cached:",cached())
 	end
---@end-debug@
---[===[@non-debug@
+--@end-debug@]===]
+--@non-debug@
 	function stats()
 		return
 	end
---@end-non-debug@]===]
+--@end-non-debug@
 end
 function lib.NewTable()
 	return new()
@@ -330,7 +333,6 @@ function lib:NewAddon(target,...)
 	return target
 end
 -- Combat scheduler done with LibCallbackHandler
-local CallbackHandler = LibStub:GetLibrary("CallbackHandler-1.0")
 if not lib.CombatScheduler then
 	lib.CombatScheduler = CallbackHandler:New(lib,"_OnLeaveCombat","_CancelCombatAction")
 	lib.CombatFrame=CreateFrame("Frame")
@@ -341,10 +343,10 @@ if not lib.CombatScheduler then
 		end
 		wipe(lib.CombatScheduler.events)
 		lib.CombatScheduler.recurse=0
-		for _,co in pairs(lib.coroutines) do
-			if co.waiting then
-				co.waiting=false
-				co.repeater()
+		for _,c in pairs(lib.coroutines) do
+			if c.waiting then
+				c.waiting=false
+				C_Timer.After(c.interval,c.repeater) -- to avoid hammering client with a shitload of corooutines starting together				
 			end
 		end
 	end)
@@ -388,7 +390,9 @@ function lib:NewSubClass(name)
 end
 
 --- Returns a closure to call a method as simple local function
---@usage local print=lib:Wrap("print")
+-- @tparam string name Method name
+-- @usage local print=self:Wrap("print") ; print("Hello") same as self:print("Hello") 
+-- @return function Wrapper
 function lib:Wrap(nome)
 	if (nome=="Trace") then
 		return function(...) lib._Trace(self,1,...) end
@@ -448,6 +452,10 @@ do
 		end
 	}
 end
+---
+-- Return a named chatframe or the default one if no parameter passed
+-- @tparam[opt] chat string Chat name
+-- @return frame requested chat frame, can be nil if "chat" does not exist 
 function lib:GetChatFrame(chat)
 	if (chat) then
 		if (lib.chats[chat]) then return lib.chats[chat] end
@@ -663,7 +671,7 @@ local function loadOptionsTable(self)
 				func="Gui",
 				guiHidden=true,
 			},
---@debug@
+--[===[@debug@
 			help = {
 				name="HELP",
 				desc="Show help",
@@ -679,7 +687,7 @@ local function loadOptionsTable(self)
 				guiHidden=true,
 				cmdHidden=true,
 			},
---@end-debug@
+--@end-debug@]===]
 			silent = {
 				name="SILENT",
 				desc="Eliminates startup messages",
@@ -771,10 +779,10 @@ local function PurgeProfiles(info,...)
 	for k,v in pairs(db.sv.profileKeys) do
 		used[v]=true
 	end
---@debug@
+--[===[@debug@
 	DevTools_Dump(profiles)
 	DevTools_Dump(used)
---@end-debug@
+--@end-debug@]===]
 	for _,v in ipairs(profiles) do
 		if not used[v] then
 			db:DeleteProfile(v)
@@ -1824,7 +1832,7 @@ end
 -- @tparam[opt] bool keep running in combat
 -- @tparam[opt] mixed more parameter are passed to function
 function lib:coroutineExecute(interval,func,combatSafe,...)
-	local signature=strjoin(':',tostringall(func,...))
+	local signature=strjoin(':',tostringall(self,func,...))
 	if type(func)=="string" then
 		func=self[func]
 	end
@@ -1834,9 +1842,9 @@ function lib:coroutineExecute(interval,func,combatSafe,...)
 	c.interval=interval
 	c.combatSafe=combatSafe
 	if c.running then
-	--@debug@
+	--[===[@debug@
 		print("")
-	--@end-debug@ 
+	--@end-debug@]===] 
 		return 
 	end
 	if type(c.co)=="thread" and coroutine.status(c.co)=="suspended" then return signature end
@@ -1845,7 +1853,7 @@ function lib:coroutineExecute(interval,func,combatSafe,...)
 	c.paused=false
 	do 
 		local args={...}
-		local obj=obj
+		local obj=self
 		local c=c
 		c.repeater=function()
 			if not c.combatSafe and InCombatLockdown() then
@@ -1857,15 +1865,16 @@ function lib:coroutineExecute(interval,func,combatSafe,...)
 			if rc and res then
 				C_Timer.After(c.interval,c.repeater)
 			else
+				if not rc then error(res,2) end
 				lib.coroutines[signature]=nil
 				lib.CoroutineScheduler:Fire(c.signature)
-				if not rc then error(res,2) end
 			end
 		end
 	end
 	c.repeater()
 	return signature
 end
+lib.coroutineStart=lib.coroutineExecute -- alias
 function lib:coroutineGet(signature)
 	return coroutines[signature]
 end
@@ -1876,10 +1885,13 @@ function lib:coroutinePause(signature)
 	end
 end
 function lib:coroutineRestart(signature)
-	local co=coroutines[signature]
-	if co then
-		co.paused=false
-		pcall(co.repeater)
+	local c=coroutines[signature]
+	if c then
+		if c.paused then 
+			c.paused=false
+			local rc,res=pcall(c.repeater)
+			if not rc then error(res,2) end
+		end
 	end
 end
 if not lib.secureframe then
@@ -1905,12 +1917,12 @@ end
 local StaticPopupDialogs=StaticPopupDialogs
 local StaticPopup_Show=StaticPopup_Show
 --- Show a popup
--- Display a popup message with Accept and optionally Cance button
+-- Display a popup message with Accept and optionally Cancel button
 -- @tparam string msg Message to be shown
 -- @tparam[opt] number timeout In seconds, if omitted assumes 60
 -- @tparam[opt] func OnAccept Executed when clicked on Accept
 -- @tparam[opt] func OnCancel Executed when clicked on Cancel (if nill, Cancel button is not shown)
--- @tparam[opt] mixed data Passed to the callbacl function
+-- @tparam[opt] mixed data Passed to the callback function
 -- @tparam[opt] bool StopCasting If true, when the popup appear will stop any running casting.
 -- Useful to ask confirmation before performing a programmatic initiated spellcasting
 function lib:Popup(msg,timeout,OnAccept,OnCancel,data,StopCasting)
@@ -2284,4 +2296,6 @@ do
 	end
 end
 L=LibStub("AceLocale-3.0"):GetLocale(me,true)
-
+--@do-not-package@
+-- Packager stil not honoring this tag
+--@end-do-not-package@

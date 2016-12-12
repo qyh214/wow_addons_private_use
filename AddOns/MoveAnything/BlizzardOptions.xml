@@ -64,7 +64,7 @@
 				</Scripts>
 			</Slider>
 			
-			<Button name="MAOptProfileDropDown" inherits="UIDropDownMenuTemplate" id="1">
+			<Button name="MAOptProfileDropDown" inherits="Lib_UIDropDownMenuTemplate" id="1">
 				<Size>
 					<AbsDimension x="220" y="16"/>
 				</Size>
@@ -77,7 +77,7 @@
 				</Anchors>
 				<Scripts>
 					<OnShow>
-						UIDropDownMenu_SetWidth(self, 150)
+						Lib_UIDropDownMenu_SetWidth(self, 150)
 					</OnShow>
 					<OnClick>
 						ToggleDropDownMenu(self:GetID(), nil, self, self, 6, 7, nil, self)

@@ -12,6 +12,7 @@
   <Script file="Profile.lua" />
   <Include file="Logic\Logic.xml" />
   <Include file="Cache\Cache.xml" />
+  <Include file="Class\Class.xml" />
   <Include file="Widget\Widget.xml" />
   <Include file="Module\Module.xml" />
   <Script file="System.lua" />

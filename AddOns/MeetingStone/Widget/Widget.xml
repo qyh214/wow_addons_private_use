@@ -18,4 +18,5 @@
   <Script file="InputDialog.lua" />
   <Script file="SpamWordItem.lua" />
   <Script file="EditDialog.lua" />
+  <Script file="RecentItem.lua" />
 </Ui>

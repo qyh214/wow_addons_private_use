@@ -36,15 +36,29 @@ function WorldQuest:OnInitialize()
     end
 
     self.HelpBox = HelpBox
+
+    self.hookedBlockes = {}
 end
 
 function WorldQuest:OnEnable()
     self:SecureHook('TaskPOI_OnClick')
-    self:SecureHook('ObjectiveTracker_ToggleDropDown')
+    self:SecureHook('BonusObjectiveTracker_ShowRewardsTooltip', 'HookObjectiveBlock')
 
     if Profile:NeedWorldQuestHelp() then
         self:RegisterEvent('WORLD_MAP_UPDATE')
     end
+end
+
+local function OnObjectiveBlockClick(block, mouse)
+    return WorldQuest:OnObjectiveBlockClick(block, mouse)
+end
+
+function WorldQuest:HookObjectiveBlock(block)
+    if self.hookedBlockes[block] then
+        return
+    end
+    self.hookedBlockes[block] = true
+    block:HookScript('OnMouseUp', OnObjectiveBlockClick)
 end
 
 function WorldQuest:CloseHelp()
@@ -92,21 +106,22 @@ function WorldQuest:WORLD_MAP_UPDATE()
     self.HelpBox:Show()
 end
 
-function WorldQuest:TaskPOI_OnClick(button, click)
-    if not button.worldQuest or click ~= 'RightButton' or IsModifierKeyDown() then
+function WorldQuest:TaskPOI_OnClick(button, mouse)
+    if not button.worldQuest or mouse ~= 'RightButton' or IsModifierKeyDown() then
         return
     end
-    if not HaveQuestData(button.questID) then
+    local questID = button.questID
+    if not HaveQuestData(questID) then
         return
     end
 
-    local _, zoneId = C_TaskQuest.GetQuestZoneID(button.questID)
+    local _, zoneId = C_TaskQuest.GetQuestZoneID(questID)
     local activityCode = ZONE_ACTIVITY_MAP[zoneId]
     if not activityCode then
         return
     end
 
-    local title = C_TaskQuest.GetQuestInfoByQuestID(button.questID)
+    local title = C_TaskQuest.GetQuestInfoByQuestID(questID)
 
     GUI:ToggleMenu(button, {
         {
@@ -132,16 +147,27 @@ function WorldQuest:TaskPOI_OnClick(button, click)
                 BrowsePanel:QuickSearch(activityCode, nil, nil, title)
             end
         },
+        {
+            text = L['快速申请活动'],
+            func = function()
+                self:AutoApply(questID, activityCode, title)
+            end
+        }
     })
 end
 
-function WorldQuest:ObjectiveTracker_ToggleDropDown(block, init)
-    if not block.module.ShowWorldQuests or init ~= BonusObjectiveTracker_OnOpenDropDown then
+function WorldQuest:OnObjectiveBlockClick(block, mouse)
+    if mouse ~= 'RightButton' then
+        return
+    end
+    if not block.module.ShowWorldQuests then
         return
     end
 
     local questID = block.TrackedQuest.questID
     local _, zoneId = C_TaskQuest.GetQuestZoneID(questID)
+
+
     local activityCode = ZONE_ACTIVITY_MAP[zoneId]
     if not activityCode then
         return
@@ -149,18 +175,10 @@ function WorldQuest:ObjectiveTracker_ToggleDropDown(block, init)
 
     local title = C_TaskQuest.GetQuestInfoByQuestID(questID)
 
-    CloseDropDownMenus()
-
-    GUI:ToggleMenu(block, {
+    local menuTable = {
         {
             text = title,
             isTitle = true,
-        },
-        {
-            text = OBJECTIVES_STOP_TRACKING,
-            func = function()
-                BonusObjectiveTracker_UntrackWorldQuest(questID)
-            end
         },
         {
             text = L['创建集合石活动'],
@@ -179,5 +197,34 @@ function WorldQuest:ObjectiveTracker_ToggleDropDown(block, init)
                 BrowsePanel:QuickSearch(activityCode, nil, nil, title)
             end
         },
-    }, 'cursor')
+        {
+            text = L['快速申请活动'],
+            func = function()
+                self:AutoApply(questID, activityCode, title)
+            end
+        }
+    }
+
+    if IsWorldQuestWatched(questID) then
+        tinsert(menuTable, 2, {
+            text = OBJECTIVES_STOP_TRACKING,
+            func = function()
+                BonusObjectiveTracker_UntrackWorldQuest(questID)
+            end
+        })
+    end
+
+    CloseDropDownMenus()
+    GUI:ToggleMenu(block, menuTable, 'cursor')
+end
+
+function WorldQuest:AutoApply(questID, activityCode, title)
+    local _, _, activityId, customId = strsplit('-', activityCode)
+    local apply = Addon:GetClass('WorldQuestApply'):New(tonumber(activityId), tonumber(customId))
+
+    apply:SetQuestID(questID)
+    apply:SetSearch(title)
+
+    AutoApply:Add(apply)
+    AutoApply:Start()
 end

@@ -1,12 +1,24 @@
-tag 080b546ccc5f39924dbb385daf471e7938dbba4d 2.15.8
+tag 309910f0a99304962171e07f5177419fbb496261 2.15.9
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Tue Nov 29 00:09:11 2016 +0100
+Date:	Mon Dec 5 22:17:03 2016 +0100
 
-Fix: error in GarrisonComander Broker
+Fixed non latin localization
 
-commit 18d3844b72195a89e2089b2af9b7db9c74245447
+commit 99845c90e118e529c438951e522653831316cc6a
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Tue Nov 29 00:07:45 2016 +0100
+Date:   Mon Dec 5 00:34:46 2016 +0100
 
-    Kpairs lua error
+    Bump notes
+
+commit eebb80c18fc3aebd7c1d3761da81c5b72098dfca
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Mon Dec 5 00:34:00 2016 +0100
+
+    Drop rates updated
+
+commit 614c2fec686c81720ec0e814f36c331b93707ffd
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Mon Dec 5 00:33:53 2016 +0100
+
+    Fix: Non latin languages localization should now work
 

@@ -6,7 +6,7 @@
 
 local addonName, KT = ...
 
-local ACD = LibStub("AceConfigDialog-3.0-KT")
+local ACD = LibStub("MSA-AceConfigDialog-3.0")
 local WidgetLists = AceGUIWidgetLSMlists
 local _DBG = function(...) if _DBG then _DBG("KT", ...) end end
 
@@ -486,7 +486,7 @@ local options = {
 							type = "toggle",
 							width = "double",
 							disabled = function()
-								return IsSpecialLocale()
+								return not IsSpecialLocale()
 							end,
 							set = function()
 								db.objNumSwitch = not db.objNumSwitch
@@ -1090,8 +1090,8 @@ function KT:SetupOptions()
 	self.db.RegisterCallback(self, "OnProfileCopied", "InitProfile")
 	self.db.RegisterCallback(self, "OnProfileReset", "InitProfile")
 
-	-- Disabled Options
-	if IsSpecialLocale() then
+	-- Disable some options
+	if not IsSpecialLocale() then
 		db.objNumSwitch = false
 	end
 end
@@ -1105,10 +1105,10 @@ function SetSharedColor(color)
 end
 
 function IsSpecialLocale()
-	return (KT.locale ~= "deDE" and
-			KT.locale ~= "esES" and
-			KT.locale ~= "frFR" and
-			KT.locale ~= "ruRU")
+	return (KT.locale == "deDE" or
+			KT.locale == "esES" or
+			KT.locale == "frFR" or
+			KT.locale == "ruRU")
 end
 
 function DecToHex(num)

@@ -5252,8 +5252,8 @@ function MovAny_OptionsOnShow()
 	end
 	if type(MADB.characters) == "table" then
 		local profile = MovAny:GetProfileName()
-		UIDropDownMenu_Initialize(MAOptProfileDropDown, MovAny.ProfileDropDownInit)
-		UIDropDownMenu_SetSelectedValue(MAOptProfileDropDown, profile)
+		Lib_UIDropDownMenu_Initialize(MAOptProfileDropDown, MovAny.ProfileDropDownInit)
+		Lib_UIDropDownMenu_SetSelectedValue(MAOptProfileDropDown, profile)
 		if "default" == profile then
 			MAOptProfileRename:Disable()
 			MAOptProfileDelete:Disable()
@@ -5313,14 +5313,14 @@ end
 function MovAny.ProfileDropDownInit()
 	local sel = MovAny:GetProfileName()
 	local info
-	info = UIDropDownMenu_CreateInfo()
+	info = Lib_UIDropDownMenu_CreateInfo()
 	info.text = "default"
 	info.value = "default"
 	info.func = MovAny.ProfileDropDownClicked
 	if "default" == sel then
 		info.checked = true
 	end
-	UIDropDownMenu_AddButton(info)
+	Lib_UIDropDownMenu_AddButton(info)
 	local names = { }
 	for name, _ in pairs(MADB.profiles) do
 		tinsert(names, name)
@@ -5330,14 +5330,14 @@ function MovAny.ProfileDropDownInit()
 	end)
 	for _, name in pairs(names) do
 		if "default" ~= name then
-			info = UIDropDownMenu_CreateInfo()
+			info = Lib_UIDropDownMenu_CreateInfo()
 			info.text = name
 			info.value = name
 			info.func = MovAny.ProfileDropDownClicked
 			if name == sel then
 				info.checked = true
 			end
-			UIDropDownMenu_AddButton(info)
+			Lib_UIDropDownMenu_AddButton(info)
 		end
 	end
 end

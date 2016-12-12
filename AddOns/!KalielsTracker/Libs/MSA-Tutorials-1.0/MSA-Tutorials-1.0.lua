@@ -1,6 +1,7 @@
---[[
-Tutorials from Kaliel based on CustomTutorials from João Cardoso.
+--- MSA-Tutorials-1.0
+--- Tutorials from Marouan Sabbagh based on CustomTutorials from João Cardoso.
 
+--[[
 Copyright 2010-2015 João Cardoso
 CustomTutorials is distributed under the terms of the GNU General Public License (or the Lesser GPL).
 
@@ -55,7 +56,7 @@ local format = string.format
 local strfind = string.find
 local round = function(n) return floor(n + 0.5) end
 
-local Lib = LibStub:NewLibrary('Tutorials-1.0', 1)
+local Lib = LibStub:NewLibrary('MSA-Tutorials-1.0', 2)
 if Lib then
 	Lib.NewFrame, Lib.NewButton, Lib.UpdateFrame = nil
 	Lib.numFrames = Lib.numFrames or 1

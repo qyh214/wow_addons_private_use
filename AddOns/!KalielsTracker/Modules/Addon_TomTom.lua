@@ -8,7 +8,7 @@ local addonName, KT = ...
 local M = KT:NewModule(addonName.."_AddonTomTom")
 KT.AddonTomTom = M
 
-local ACD = LibStub("AceConfigDialog-3.0-KT")
+local ACD = LibStub("MSA-AceConfigDialog-3.0")
 local _DBG = function(...) if _DBG then _DBG("KT", ...) end end
 
 local db
@@ -172,7 +172,7 @@ local function SetHooks()
 	-- Blizzard	
 	hooksecurefunc("QuestObjectiveTracker_OnOpenDropDown", function(self)
 		local block = self.activeFrame
-		local info = UIDropDownMenu_CreateInfo()
+		local info = MSA_DropDownMenu_CreateInfo()
 		local text = "|cff33ff99TomTom|r - %s Waypoint"
 		
 		info.notCheckable = true
@@ -190,13 +190,13 @@ local function SetHooks()
 			end
 		end
 		info.arg1 = block.id
-		UIDropDownMenu_AddButton(info, UIDROPDOWN_MENU_LEVEL)
+		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL)
 	end)
 	
 	local bck_QUEST_TRACKER_MODULE_OnBlockHeaderClick = QUEST_TRACKER_MODULE.OnBlockHeaderClick
 	function QUEST_TRACKER_MODULE:OnBlockHeaderClick(block, mouseButton)
 		if mouseButton ~= "RightButton" and IsModifiedClick(db.tomtomModifier) then
-			CloseDropDownMenus()
+			MSA_CloseDropDownMenus()
 			if questWaypoints[block.id] then
 				RemoveWaypoint(block.id)
 			else
@@ -253,7 +253,7 @@ end
 function M:OnInitialize()
 	_DBG("|cffffff00Init|r - "..self:GetName(), true)
 	db = KT.db.profile
-	self.isLoaded = (KT:CheckAddOn("TomTom", "v70000-1.1.0") and db.addonTomTom)
+	self.isLoaded = (KT:CheckAddOn("TomTom", "v70100-1.0.0") and db.addonTomTom)
 	
 	local defaults = {
 		profile = KT:MergeTables({

@@ -1,0 +1,12 @@
+lightweight tag 3690a0399c61869c200ed94a1408f97d29e1a112 v1.8
+Author:	Eliote <>
+Date:	Sun Dec 11 22:52:48 2016 -0200
+
+commit 3690a0399c61869c200ed94a1408f97d29e1a112
+Author: Eliote <>
+Date:   Sat Dec 10 14:10:23 2016 -0200
+
+    Fix options
+    
+    * Update Elib-2.4
+

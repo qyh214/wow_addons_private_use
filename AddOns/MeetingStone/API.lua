@@ -15,6 +15,21 @@ function IsGroupLeader()
     return  not IsInGroup(LE_PARTY_CATEGORY_HOME) or UnitIsGroupLeader('player', LE_PARTY_CATEGORY_HOME)
 end
 
+function GetFullName(name, realm)
+    if not name then
+        return
+    end
+    if not realm or realm == '' then
+        name, realm = strsplit('-', name)
+        realm = realm or GetRealmName()
+    end
+    return format('%s-%s', name, realm)
+end
+
+function UnitFullName(unit)
+    return GetFullName(UnitName(unit))
+end
+
 function IsActivityManager()
     return UnitIsGroupLeader('player', LE_PARTY_CATEGORY_HOME) or (IsInRaid(LE_PARTY_CATEGORY_HOME) and UnitIsGroupAssistant('player', LE_PARTY_CATEGORY_HOME))
 end
@@ -212,7 +227,7 @@ function GetPlayerSavedInstance(customId)
             local result = 0
             for bossIndex = 1, numEncounters do
                 if select(3, GetSavedInstanceEncounterInfo(i, bossIndex)) then
-                    result = bit.bor(result, bit.lshift(1, bossIndex - 1)) 
+                    result = bit.bor(result, bit.lshift(1, bossIndex - 1))
                 end
             end
             return result ~= 0 and result or nil
@@ -327,6 +342,29 @@ end
 
 function IsSoloCustomID(customId)
     return customId == SOLO_HIDDEN_CUSTOM_ID or customId == SOLO_VISIBLE_CUSTOM_ID
+end
+
+local RAID_UNITS = {} do
+    for i = 1, 40 do
+        tinsert(RAID_UNITS, 'raid' .. i)
+    end
+end
+
+local PARTY_UNITS = {} do
+    for i = 1, 4 do
+        tinsert(PARTY_UNITS, 'party' .. i)
+    end
+    tinsert(PARTY_UNITS, 'player')
+end
+
+function IterateGroupUnits()
+    if not IsInGroup(LE_PARTY_CATEGORY_HOME) then
+        return nop
+    elseif IsInRaid(LE_PARTY_CATEGORY_HOME) then
+        return ipairs(RAID_UNITS)
+    else
+        return ipairs(PARTY_UNITS)
+    end
 end
 
 function GetAddonSource()

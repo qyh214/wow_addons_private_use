@@ -42,6 +42,7 @@ function Activity:Update()
         numBNetFriends, numCharFriends, numGuildMates, isDelisted, leader, numMembers = C_LFGList.GetSearchResultInfo(self:GetID())
 
     if not activityId then
+        self:SetIsDelisted(true)
         AceEvent:SendMessage('LFG_LIST_SEARCH_RESULT_REMOVED', self:GetID())
         return
     end
@@ -128,7 +129,7 @@ function Activity:UpdateSortValue()
                             self:IsAnyFriend() and 2 or
                             self:IsSelf() and 3 or
                             self:IsInActivity() and 4 or 7
-    
+
     self._baseSortValue = format('%d%s%02x%02x%08x',
         self._statusSortValue,
         self:GetTypeSortValue(),

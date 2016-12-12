@@ -439,19 +439,19 @@ function TitanPanelRightClickMenu_PrepareClockMenu()
 	info.text = L["TITAN_CLOCK_MENU_LOCAL_TIME"];
 	info.func = function() TitanSetVar(TITAN_CLOCK_ID, "TimeMode", "Local") TitanPanelButton_UpdateButton(TITAN_CLOCK_ID) end
 	info.checked = function() return TitanGetVar(TITAN_CLOCK_ID, "TimeMode") == "Local" end
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	info = {};
 	info.text = L["TITAN_CLOCK_MENU_SERVER_TIME"];
 	info.func = function() TitanSetVar(TITAN_CLOCK_ID, "TimeMode", "Server") TitanPanelButton_UpdateButton(TITAN_CLOCK_ID) end
 	info.checked = function() return TitanGetVar(TITAN_CLOCK_ID, "TimeMode") == "Server" end
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	info = {};
 	info.text = L["TITAN_CLOCK_MENU_SERVER_ADJUSTED_TIME"];
 	info.func = function() TitanSetVar(TITAN_CLOCK_ID, "TimeMode", "ServerAdjusted") TitanPanelButton_UpdateButton(TITAN_CLOCK_ID) end
 	info.checked = function() return TitanGetVar(TITAN_CLOCK_ID, "TimeMode") == "ServerAdjusted" end
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	TitanPanelRightClickMenu_AddSpacer();
 
@@ -460,20 +460,20 @@ function TitanPanelRightClickMenu_PrepareClockMenu()
 	info.func = TitanPanelClockButton_ToggleMapTime;
 	info.checked = TitanGetVar(TITAN_CLOCK_ID, "HideMapTime");
 	info.keepShownOnClick = 1;
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	info = {};
 	info.text = L["TITAN_CLOCK_MENU_HIDE_CALENDAR"];
 	info.func = TitanPanelClockButton_ToggleGameTimeFrameShown;
 	info.checked = TitanGetVar(TITAN_CLOCK_ID, "HideGameTimeMinimap");
 	info.keepShownOnClick = 1;
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	info = {};
 	info.text = L["TITAN_CLOCK_MENU_DISPLAY_ON_RIGHT_SIDE"];
 	info.func = TitanPanelClockButton_ToggleRightSideDisplay;
 	info.checked = TitanGetVar(TITAN_CLOCK_ID, "DisplayOnRightSide");
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	TitanPanelRightClickMenu_AddToggleLabelText(TITAN_CLOCK_ID);
 	TitanPanelRightClickMenu_AddToggleColoredText(TITAN_CLOCK_ID);

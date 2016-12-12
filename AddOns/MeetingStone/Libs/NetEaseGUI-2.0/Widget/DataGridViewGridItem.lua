@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'DataGridViewGridItem', 2
+local WIDGET, VERSION = 'DataGridViewGridItem', 3
 
 local GUI = LibStub('NetEaseGUI-2.0')
 local DataGridViewGridItem = GUI:NewClass(WIDGET, 'Button', VERSION)
@@ -90,9 +90,9 @@ function DataGridViewGridItem:Constructor(_, style)
 
     self.Text = Text
     self.Icon = Icon
-    
+
     StyleHelper(self, strsplit(':', style or 'NORMAL'))
-    
+
     self:SetScript('OnSizeChanged', self.OnSizeChanged)
     self:SetScript('OnClick', self.OnClick)
     self:SetScript('OnEnter', self.OnEnter)
@@ -101,32 +101,45 @@ function DataGridViewGridItem:Constructor(_, style)
     self:RegisterForClicks('anyUp')
 end
 
-function DataGridViewGridItem:OnClick(...)
-    if self:GetParent():IsEnabled() then
-        self:GetParent():Click(...)
+function DataGridViewGridItem:FireHandler(handler)
+    local parent = self:GetParent()
+    local view   = parent:GetOwner()
+    local item   = view:GetItem(parent:GetID())
+    local key    = self.key
+
+    view:Fire(handler, self, item, key)
+    view:Fire(handler .. '_' .. key, self, item, key)
+end
+
+function DataGridViewGridItem:OnClick(click, ...)
+    local parent = self:GetParent()
+    local view = parent:GetOwner()
+    if parent:IsEnabled() then
+        parent:Click(click, ...)
+
+        if click == 'LeftButton' then
+            self:FireHandler('OnGridClick')
+        end
     end
 end
 
 function DataGridViewGridItem:OnEnter()
     local parent = self:GetParent()
-    local view = parent:GetOwner()
-
     if not parent:IsEnabled() then
         parent:UnlockHighlight()
     else
         parent:LockHighlight()
     end
     parent:OnEnter()
-    view:Fire('OnGridEnter', self, view:GetItem(parent:GetID()), self.key)
+    self:FireHandler('OnGridEnter')
 end
 
 function DataGridViewGridItem:OnLeave()
     local parent = self:GetParent()
-    local view = parent:GetOwner()
 
     parent:UnlockHighlight()
     parent:OnLeave()
-    view:Fire('OnGridLeave', self, view:GetItem(parent:GetID()), self.key)
+    self:FireHandler('OnGridLeave')
 end
 
 function DataGridViewGridItem:SetIcon(icon, left, right, top, bottom, width, height)

@@ -15,7 +15,7 @@ end
 
 function CurrentActivity:FromSystem(...)
     local obj = CurrentActivity:New()
-    obj:_FromSystem(...)
+    obj:UpdateBySystem(...)
     return obj
 end
 
@@ -28,7 +28,7 @@ function CurrentActivity:_FromAddon(data)
     end
 end
 
-function CurrentActivity:_FromSystem(activityId, ilvl, honorLevel, title, comment, voiceChat)
+function CurrentActivity:UpdateBySystem(activityId, ilvl, honorLevel, title, comment, voiceChat)
     self:SetActivityID(activityId)
     self:SetItemLevel(ilvl)
     self:SetHonorLevel(honorLevel)

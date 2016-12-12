@@ -43,7 +43,6 @@ local instanceQuestDifficulty = {
 }
 
 local eventFrame
-local DropDown
 
 --------------
 -- Internal --
@@ -71,7 +70,7 @@ local function SetHooks()
 	
 	hooksecurefunc("QuestObjectiveTracker_OnOpenDropDown", function(self)
 		if db.filterAuto[1] then
-			UIDropDownMenu_DisableButton(1, 3)
+			MSA_DropDownMenu_DisableButton(1, 3)
 		end
 	end)
 	
@@ -92,7 +91,7 @@ local function SetHooks()
 	
 	hooksecurefunc("AchievementObjectiveTracker_OnOpenDropDown", function(self)
 		if db.filterAuto[2] then
-			UIDropDownMenu_DisableButton(1, 3)
+			MSA_DropDownMenu_DisableButton(1, 3)
 		end
 	end)
 	
@@ -206,7 +205,7 @@ local function Filter_Quests(self, spec, idx)
 				break
 			end
 		end
-		CloseDropDownMenus()
+		MSA_CloseDropDownMenus()
 	elseif spec == "Zone" then
 		SetMapToCurrentZone()
 		local levels = { GetNumDungeonMapLevels() }
@@ -405,10 +404,18 @@ local function Filter_Achievements(self, spec)
 	ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_ACHIEVEMENT)
 end
 
-local function DropDown_OnClick(level, button)
-	ToggleDropDownMenu(level or 1, button and UIDROPDOWNMENU_MENU_VALUE or nil, DropDown, KTF.FilterButton, -15, -1, nil, button or nil, UIDROPDOWNMENU_SHOW_TIME)
+local DropDown_Initialize	-- function
+
+local function DropDown_Toggle(level, button)
+	local dropDown = KT.DropDown
+	if dropDown.activeFrame ~= KTF.FilterButton then
+		MSA_CloseDropDownMenus()
+	end
+	dropDown.activeFrame = KTF.FilterButton
+	dropDown.initialize = DropDown_Initialize
+	MSA_ToggleDropDownMenu(level or 1, button and MSA_DROPDOWNMENU_MENU_VALUE or nil, dropDown, KTF.FilterButton, -15, -1, nil, button or nil, MSA_DROPDOWNMENU_SHOW_TIME)
 	if button then
-		_G["DropDownList"..UIDROPDOWNMENU_MENU_LEVEL].showTimer = nil
+		_G["MSA_DropDownList"..MSA_DROPDOWNMENU_MENU_LEVEL].showTimer = nil
 	end
 end
 
@@ -431,7 +438,7 @@ local function Filter_AutoTrack(self, id, spec)
 			KTF.FilterButton:GetNormalTexture():SetVertexColor(KT.hdrBtnColor.r, KT.hdrBtnColor.g, KT.hdrBtnColor.b)
 		end
 	end
-	DropDown_OnClick()
+	DropDown_Toggle()
 end
 
 local function Filter_AchievCat_CheckAll(self, state)
@@ -440,26 +447,26 @@ local function Filter_AchievCat_CheckAll(self, state)
 	end
 	if db.filterAuto[2] then
 		Filter_Achievements(_, db.filterAuto[2])
-		CloseDropDownMenus()
+		MSA_CloseDropDownMenus()
 	else
-		local listFrame = _G["DropDownList"..UIDROPDOWNMENU_MENU_LEVEL]
-		DropDown_OnClick(UIDROPDOWNMENU_MENU_LEVEL, _G["DropDownList"..listFrame.parentLevel.."Button"..listFrame.parentID])
+		local listFrame = _G["MSA_DropDownList"..MSA_DROPDOWNMENU_MENU_LEVEL]
+		DropDown_Toggle(MSA_DROPDOWNMENU_MENU_LEVEL, _G["MSA_DropDownList"..listFrame.parentLevel.."Button"..listFrame.parentID])
 	end
 end
 
-local function DropDown_Initialize(self, level)
+function DropDown_Initialize(self, level)
 	local numEntries, numQuests = GetNumQuestLogEntries()
-	local info = UIDropDownMenu_CreateInfo()
+	local info = MSA_DropDownMenu_CreateInfo()
 	info.isNotRadio = true
-	
+
 	if level == 1 then
 		info.notCheckable = true
-		
+
 		-- Quests
 		info.text = TRACKER_HEADER_QUESTS
 		info.isTitle = true
-		UIDropDownMenu_AddButton(info)
-		
+		MSA_DropDownMenu_AddButton(info)
+
 		info.isTitle = false
 		info.disabled = (db.filterAuto[1] or numQuests == 0)
 		info.func = Filter_Quests
@@ -468,31 +475,31 @@ local function DropDown_Initialize(self, level)
 		info.hasArrow = not (db.filterAuto[1] or numQuests == 0)
 		info.value = 1
 		info.arg1 = "All"
-		UIDropDownMenu_AddButton(info)
+		MSA_DropDownMenu_AddButton(info)
 
 		info.hasArrow = false
 
 		info.text = "Zone"
 		info.arg1 = "Zone"
-		UIDropDownMenu_AddButton(info)
+		MSA_DropDownMenu_AddButton(info)
 
 		info.text = "Daily"
 		info.arg1 = "Daily"
-		UIDropDownMenu_AddButton(info)
-		
+		MSA_DropDownMenu_AddButton(info)
+
 		info.text = "Instance"
 		info.arg1 = "Instance"
-		UIDropDownMenu_AddButton(info)
-		
+		MSA_DropDownMenu_AddButton(info)
+
 		info.text = "Complete"
 		info.arg1 = "Complete"
-		UIDropDownMenu_AddButton(info)
-		
+		MSA_DropDownMenu_AddButton(info)
+
 		info.text = "Untrack All"
 		info.disabled = (db.filterAuto[1] or GetNumQuestWatches() == 0)
 		info.arg1 = ""
-		UIDropDownMenu_AddButton(info)
-		
+		MSA_DropDownMenu_AddButton(info)
+
 		info.text = "|cff00ff00Auto|r Zone"
 		info.notCheckable = false
 		info.disabled = false
@@ -501,47 +508,47 @@ local function DropDown_Initialize(self, level)
 		info.arg2 = "Zone"
 		info.checked = (db.filterAuto[info.arg1] == info.arg2)
 		info.func = Filter_AutoTrack
-		UIDropDownMenu_AddButton(info)
-		
+		MSA_DropDownMenu_AddButton(info)
+
 		info.text = ""
 		info.notCheckable = true
 		info.leftPadding = nil
 		info.disabled = true
-		UIDropDownMenu_AddButton(info)
-		
+		MSA_DropDownMenu_AddButton(info)
+
 		-- Achievements
 		info.text = TRACKER_HEADER_ACHIEVEMENTS
 		info.isTitle = true
-		UIDropDownMenu_AddButton(info)
-		
+		MSA_DropDownMenu_AddButton(info)
+
 		info.isTitle = false
 		info.disabled = false
-				
+
 		info.text = "Categories"
 		info.keepShownOnClick = true
 		info.hasArrow = true
 		info.value = 2
 		info.func = nil
-		UIDropDownMenu_AddButton(info)
+		MSA_DropDownMenu_AddButton(info)
 
 		info.keepShownOnClick = false
 		info.hasArrow = false
 		info.disabled = (db.filterAuto[2])
 		info.func = Filter_Achievements
-		
+
 		info.text = "Zone"
 		info.arg1 = "Zone"
-		UIDropDownMenu_AddButton(info)
-		
+		MSA_DropDownMenu_AddButton(info)
+
 		info.text = "World Event"
 		info.arg1 = "WEvent"
-		UIDropDownMenu_AddButton(info)
-		
+		MSA_DropDownMenu_AddButton(info)
+
 		info.text = "Untrack All"
 		info.disabled = (db.filterAuto[2] or GetNumTrackedAchievements() == 0)
 		info.arg1 = ""
-		UIDropDownMenu_AddButton(info)
-		
+		MSA_DropDownMenu_AddButton(info)
+
 		info.text = "|cff00ff00Auto|r Zone"
 		info.notCheckable = false
 		info.disabled = false
@@ -550,25 +557,25 @@ local function DropDown_Initialize(self, level)
 		info.arg2 = "Zone"
 		info.checked = (db.filterAuto[info.arg1] == info.arg2)
 		info.func = Filter_AutoTrack
-		UIDropDownMenu_AddButton(info)
-		
+		MSA_DropDownMenu_AddButton(info)
+
 		-- Addon - PetTracker
 		if KT.AddonPetTracker.isLoaded then
 			info.text = ""
 			info.notCheckable = true
 			info.leftPadding = nil
 			info.disabled = true
-			UIDropDownMenu_AddButton(info)
-			
+			MSA_DropDownMenu_AddButton(info)
+
 			info.text = PETS
 			info.isTitle = true
-			UIDropDownMenu_AddButton(info)
-			
+			MSA_DropDownMenu_AddButton(info)
+
 			info.isTitle = false
 			info.disabled = false
 			info.notCheckable = false
 			info.leftPadding = 3
-			
+
 			info.text = PetTracker.Locals.TrackPets
 			info.checked = (not PetTracker.Sets.HideTracker)
 			info.func = function()
@@ -577,36 +584,36 @@ local function DropDown_Initialize(self, level)
 					ObjectiveTracker_MinimizeButton_OnClick()
 				end
 			end
-			UIDropDownMenu_AddButton(info)
-			
+			MSA_DropDownMenu_AddButton(info)
+
 			info.text = PetTracker.Locals.CapturedPets
 			info.checked = (PetTracker.Sets.CapturedPets)
 			info.func = function()
 				PetTracker.Sets.CapturedPets = not PetTracker.Sets.CapturedPets
 				PetTracker:ForAllModules("TrackingChanged")
 			end
-			UIDropDownMenu_AddButton(info)
+			MSA_DropDownMenu_AddButton(info)
 		end
 	elseif level == 2 then
 		info.notCheckable = true
 
-		if UIDROPDOWNMENU_MENU_VALUE == 1 then
+		if MSA_DROPDOWNMENU_MENU_VALUE == 1 then
 			info.arg1 = "Group"
 			info.func = Filter_Quests
 
 			if numEntries > 0 then
 				local headerTitle, headerOnMap, headerShown
 				for i=1, numEntries do
-					local title, _, _, isHeader, _, _, _, _, _, _, isOnMap, _, isTask, isBounty = GetQuestLogTitle(i)
+					local title, _, _, isHeader, _, _, _, _, _, _, isOnMap, _, isTask, isBounty, _, isHidden = GetQuestLogTitle(i)
 					if isHeader then
 						if headerShown and i > 1 then
 							info.arg2 = i - 1
-							UIDropDownMenu_AddButton(info, level)
+							MSA_DropDownMenu_AddButton(info, level)
 						end
 						headerTitle = title
 						headerOnMap = isOnMap
 						headerShown = false
-					elseif not isTask and not isBounty then
+					elseif not isTask and not isBounty and not isHidden then
 						if not headerShown then
 							info.text = (headerOnMap and "|cff00ff00" or "")..headerTitle
 							headerShown = true
@@ -615,19 +622,19 @@ local function DropDown_Initialize(self, level)
 				end
 				if headerShown then
 					info.arg2 = numEntries
-					UIDropDownMenu_AddButton(info, level)
+					MSA_DropDownMenu_AddButton(info, level)
 				end
 			end
-		elseif UIDROPDOWNMENU_MENU_VALUE == 2 then
+		elseif MSA_DROPDOWNMENU_MENU_VALUE == 2 then
 			info.func = Filter_AchievCat_CheckAll
 
 			info.text = "Check All"
 			info.arg1 = true
-			UIDropDownMenu_AddButton(info, level)
+			MSA_DropDownMenu_AddButton(info, level)
 
 			info.text = "Uncheck All"
 			info.arg1 = false
-			UIDropDownMenu_AddButton(info, level)
+			MSA_DropDownMenu_AddButton(info, level)
 
 			info.keepShownOnClick = true
 			info.notCheckable = false
@@ -644,10 +651,10 @@ local function DropDown_Initialize(self, level)
 						db.filterAchievCat[arg] = not db.filterAchievCat[arg]
 						if db.filterAuto[2] then
 							Filter_Achievements(_, db.filterAuto[2])
-							CloseDropDownMenus()
+							MSA_CloseDropDownMenus()
 						end
 					end
-					UIDropDownMenu_AddButton(info, level)
+					MSA_DropDownMenu_AddButton(info, level)
 				end
 			end
 		end
@@ -687,14 +694,14 @@ local function SetFrames()
 	-- Filter button
 	local button = CreateFrame("Button", addonName.."FilterButton", KTF)
 	button:SetSize(16, 16)
-	button:SetPoint("TOPRIGHT", -30, -8)
+	button:SetPoint("TOPRIGHT", KTF.MinimizeButton, "TOPLEFT", -4, 0)
 	button:SetFrameLevel(KTF:GetFrameLevel() + 10)
 	button:SetNormalTexture(mediaPath.."UI-KT-HeaderButtons")
 	button:GetNormalTexture():SetTexCoord(0.5, 1, 0.5, 0.75)
 	
 	button:RegisterForClicks("AnyDown")
 	button:SetScript("OnClick", function(self, btn)
-		DropDown_OnClick()
+		DropDown_Toggle()
 	end)
 	button:SetScript("OnEnter", function(self)
 		self:GetNormalTexture():SetVertexColor(1, 1, 1)
@@ -713,10 +720,10 @@ local function SetFrames()
 		GameTooltip:Hide()
 	end)
 	KTF.FilterButton = button
-	
-	-- Filter dropdown
-	DropDown = CreateFrame("Frame", addonName.."FilterDropDown", KTF, "UIDropDownMenuTemplate")
-	UIDropDownMenu_Initialize(DropDown, DropDown_Initialize, "MENU")
+
+	-- Move other buttons
+	local point, _, relativePoint, xOfs, yOfs = KTF.AchievementsButton:GetPoint()
+	KTF.AchievementsButton:SetPoint(point, KTF.FilterButton, relativePoint, xOfs, yOfs)
 end
 
 --------------
@@ -757,7 +764,4 @@ function M:OnEnable()
 	_DBG("|cff00ff00Enable|r - "..self:GetName(), true)
 	SetHooks()
 	SetFrames()
-		
-	Filter_Quests(_, db.filterAuto[1])
-	Filter_Achievements(_, db.filterAuto[2])
 end

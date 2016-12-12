@@ -8,7 +8,7 @@ local addonName, KT = ...
 local M = KT:NewModule(addonName.."_Help")
 KT.Help = M
 
-local T = LibStub("Tutorials-1.0")
+local T = LibStub("MSA-Tutorials-1.0")
 local _DBG = function(...) if _DBG then _DBG("KT", ...) end end
 
 local db
@@ -77,10 +77,10 @@ local function SetupTutorials()
 				"You can set "..cKey.."[key bind]|r for Minimize button.\n"..
 				cKey.."Alt+Click|r on Minimize button opens "..KT.title.." Options.",
 			textY = 16,
-			shine = KTF.FilterButton,
+			shine = KTF.MinimizeButton,
 			shineTop = 13,
 			shineBottom = -14,
-			shineRight = 36,
+			shineRight = 16,
 		},
 		{	-- 3
 			image = helpPath.."help_quest-title-tags",
@@ -189,7 +189,7 @@ local function SetupTutorials()
 				ObjectiveTracker_MinimizeButton_OnClick()
 			end
 			if i == 2 then
-				self[i].shineLeft = db.hdrOtherButtons and -55 or -15
+				self[i].shineLeft = db.hdrOtherButtons and -75 or -35
 			elseif i == 3 then
 				local questID, _ = GetQuestWatchInfo(1)
 				local block = QUEST_TRACKER_MODULE.usedBlocks[questID]

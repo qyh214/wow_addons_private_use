@@ -3,7 +3,7 @@
 	<Script file="TitanPanelTemplate.lua" />
 	<Button name="TitanPanelButtonTemplate" hidden="true" movable="true" virtual="true">
 		<Frames>
-			<Frame name="$parentRightClickMenu" inherits="UIDropDownMenuTemplate" id="1" hidden="true">
+			<Frame name="$parentRightClickMenu" inherits="Lib_UIDropDownMenuTemplate" id="1" hidden="true">
 			</Frame>
 		</Frames>
 		<Scripts>
@@ -26,7 +26,7 @@
 	</Button>
 	<Button name="TitanPanelChildButtonTemplate" hidden="true" virtual="true">
 		<Frames>
-			<Frame name="$parentRightClickMenu" inherits="UIDropDownMenuTemplate" id="1" hidden="true">
+			<Frame name="$parentRightClickMenu" inherits="Lib_UIDropDownMenuTemplate" id="1" hidden="true">
 			</Frame>
 		</Frames>
 		<Scripts>

@@ -1,13 +1,25 @@
 
 BuildEnv(...)
 
-local searchHistoryMenuTable = {}
-local createHistoryMenuTable = {}
-local searchActivityCodeCache = {}
-local createActivityCodeCache = {}
 local makedCategorys = {}
 local validCategorys = {}
 local currentCodeCache
+
+local historyMenuTables
+local activityCodeCaches
+
+do
+    local function f()
+        return {
+            [ACTIVITY_FILTER_BROWSE] = {},
+            [ACTIVITY_FILTER_CREATE] = {},
+            [ACTIVITY_FILTER_OTHER]  = {},
+        }
+    end
+
+    historyMenuTables = f()
+    activityCodeCaches = f()
+end
 
 local function initValidCategorys()
     wipe(validCategorys)
@@ -62,14 +74,22 @@ local function MakeCustomActivityMenuTable(activityId, baseFilter, customId)
     return data
 end
 
-local function MakeGroupMenuTable(categoryId, groupId, baseFilter, isCreator)
+local function isClickable(menuType)
+    if menuType == ACTIVITY_FILTER_BROWSE then
+        return true
+    elseif menuType == ACTIVITY_FILTER_OTHER then
+        return true
+    end
+end
+
+local function MakeGroupMenuTable(categoryId, groupId, baseFilter, menuType)
     local data = {}
     data.text = C_LFGList.GetActivityGroupInfo(groupId)
     data.fullName = data.text
     data.categoryId = categoryId
     data.groupId = groupId
     data.baseFilter = baseFilter
-    data.notClickable = categoryId == 1 or isCreator
+    data.notClickable = categoryId == 1 or not isClickable(menuType)
     data.value = not data.notClickable and GetActivityCode(nil, nil, categoryId, groupId)
 
     if data.value then
@@ -101,7 +121,7 @@ local function MakeGroupMenuTable(categoryId, groupId, baseFilter, isCreator)
     return data
 end
 
-local function MakeVersionMenuTable(categoryId, versionId, baseFilter, isCreator)
+local function MakeVersionMenuTable(categoryId, versionId, baseFilter, menuType)
     local data = {}
     data.text = _G['EXPANSION_NAME'..versionId]
     data.notClickable = true
@@ -110,7 +130,7 @@ local function MakeVersionMenuTable(categoryId, versionId, baseFilter, isCreator
 
     for _, groupId in ipairs(C_LFGList.GetAvailableActivityGroups(categoryId)) do
         if CATEGORY[versionId].groups[groupId] then
-            tinsert(menuTable, MakeGroupMenuTable(categoryId, groupId, baseFilter, isCreator))
+            tinsert(menuTable, MakeGroupMenuTable(categoryId, groupId, baseFilter, menuType))
         end
     end
 
@@ -129,13 +149,13 @@ local function MakeVersionMenuTable(categoryId, versionId, baseFilter, isCreator
     return data
 end
 
-local function MakeCategoryMenuTable(categoryId, baseFilter, isCreator)
+local function MakeCategoryMenuTable(categoryId, baseFilter, menuType)
     local name, _, autoChoose = C_LFGList.GetCategoryInfo(categoryId)
     local data = {}
     data.text = name
     data.categoryId = categoryId
     data.baseFilter = baseFilter
-    data.notClickable = isCreator
+    data.notClickable = not isClickable(menuType)
     data.value = not data.notClickable and GetActivityCode(nil, nil, categoryId)
 
     if data.value then
@@ -147,7 +167,7 @@ local function MakeCategoryMenuTable(categoryId, baseFilter, isCreator)
 
     if categoryId == 2 or categoryId == 3 then
         for i = #MAX_PLAYER_LEVEL_TABLE, 0, -1 do
-            local versionMenu = MakeVersionMenuTable(categoryId, i, baseFilter, isCreator)
+            local versionMenu = MakeVersionMenuTable(categoryId, i, baseFilter, menuType)
             if versionMenu then
                 tinsert(menuTable, versionMenu)
             end
@@ -161,7 +181,7 @@ local function MakeCategoryMenuTable(categoryId, baseFilter, isCreator)
             s, e, step = e, s, -1
         end
         for i = s, e, step do
-            tinsert(menuTable, MakeGroupMenuTable(categoryId, list[i], baseFilter, isCreator))
+            tinsert(menuTable, MakeGroupMenuTable(categoryId, list[i], baseFilter, menuType))
         end
         for _, activityId in ipairs(C_LFGList.GetAvailableActivities(categoryId)) do
             if select(4, C_LFGList.GetActivityInfo(activityId)) == 0 then
@@ -197,7 +217,7 @@ local function FindPacked(categoryId)
     end
 end
 
-local function MakePackedCategoryMenuTable(key, baseFilter, isCreator)
+local function MakePackedCategoryMenuTable(key, baseFilter, menuType)
     local menuTable = {
         text = key,
         hasArrow = true,
@@ -207,14 +227,14 @@ local function MakePackedCategoryMenuTable(key, baseFilter, isCreator)
 
     for _, categoryId in ipairs(PACKED_CATEGORYS[key]) do
         if isCategoryValid(categoryId) then
-            tinsert(menuTable.menuTable, MakeCategoryMenuTable(categoryId, baseFilter, isCreator))
+            tinsert(menuTable.menuTable, MakeCategoryMenuTable(categoryId, baseFilter, menuType))
         end
     end
 
     return menuTable
 end
 
-local function MakeMenuTable(list, baseFilter, isCreator)
+local function MakeMenuTable(list, baseFilter, menuType)
     list = list or {}
 
     for _, categoryId in ipairs(C_LFGList.GetAvailableCategories(baseFilter)) do
@@ -223,9 +243,9 @@ local function MakeMenuTable(list, baseFilter, isCreator)
         else
             local packed = FindPacked(categoryId)
             if packed then
-                tinsert(list, MakePackedCategoryMenuTable(packed, baseFilter, isCreator))
+                tinsert(list, MakePackedCategoryMenuTable(packed, baseFilter, menuType))
             elseif categoryId ~= 6 or baseFilter ~= LE_LFG_LIST_FILTER_PVE then
-                tinsert(list, MakeCategoryMenuTable(categoryId, baseFilter, isCreator))
+                tinsert(list, MakeCategoryMenuTable(categoryId, baseFilter, menuType))
             end
         end
     end
@@ -233,24 +253,26 @@ local function MakeMenuTable(list, baseFilter, isCreator)
     return list
 end
 
-function GetActivitesMenuTable(isCreator)
-    currentCodeCache = wipe(isCreator and createActivityCodeCache or searchActivityCodeCache)
+function GetActivitesMenuTable(menuType)
+    currentCodeCache = wipe(activityCodeCaches[menuType])
     wipe(makedCategorys)
     initValidCategorys()
 
     local list = {}
-    MakeMenuTable(list, LE_LFG_LIST_FILTER_PVE, isCreator)
-    MakeMenuTable(list, LE_LFG_LIST_FILTER_PVP, isCreator)
+    MakeMenuTable(list, LE_LFG_LIST_FILTER_PVE, menuType)
+    MakeMenuTable(list, LE_LFG_LIST_FILTER_PVP, menuType)
 
-    tinsert(list, 1, {
-        text = isCreator and L['|cff00ff00最近创建|r'] or L['|cff00ff00最近搜索|r'],
-        notClickable = true,
-        hasArrow = true,
-        menuTable = RefreshHistoryMenuTable(isCreator),
-    })
+    if menuType == ACTIVITY_FILTER_BROWSE or menuType == ACTIVITY_FILTER_CREATE then
+        tinsert(list, 1, {
+            text = menuType == ACTIVITY_FILTER_CREATE and L['|cff00ff00最近创建|r'] or L['|cff00ff00最近搜索|r'],
+            notClickable = true,
+            hasArrow = true,
+            menuTable = RefreshHistoryMenuTable(menuType),
+        })
+    end
 
     if UnitLevel('player') >= 70 then
-        if isCreator then
+        if menuType == ACTIVITY_FILTER_CREATE then
             tinsert(list, {
                 text = L['单刷'],
                 notClickable = true,
@@ -272,7 +294,7 @@ function GetActivitesMenuTable(isCreator)
                     )
                 }
             })
-        else
+        elseif menuType == ACTIVITY_FILTER_BROWSE then
             tinsert(list, MakeActivityMenuTable(
                 ACTIVITY_CUSTOM_IDS[SOLO_VISIBLE_CUSTOM_ID],
                 LE_LFG_LIST_FILTER_PVP,
@@ -284,10 +306,10 @@ function GetActivitesMenuTable(isCreator)
     return list
 end
 
-function RefreshHistoryMenuTable(isCreator)
-    local menuTable = wipe(isCreator and createHistoryMenuTable or searchHistoryMenuTable)
-    local currentCodeCache = isCreator and createActivityCodeCache or searchActivityCodeCache
-    local list = Profile:GetHistoryList(isCreator)
+function RefreshHistoryMenuTable(menuType)
+    local menuTable = wipe(historyMenuTables[menuType])
+    local currentCodeCache = activityCodeCaches[menuType]
+    local list = Profile:GetHistoryList(menuType == ACTIVITY_FILTER_CREATE)
 
     for _, value in ipairs(list) do
         local data = currentCodeCache[value]

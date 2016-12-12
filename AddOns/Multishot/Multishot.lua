@@ -60,10 +60,9 @@ end
 
 function Multishot:CHALLENGE_MODE_COMPLETED(strEvent)
 	if not MultishotConfig.challengemode then return end
-	--local mapID, medal, completionTime, moneyAmount, numRewards = GetChallengeModeCompletionInfo()
-	--if (medal) and CHALLENGE_MEDAL_TEXTURES[medal] then -- only take screenshot for bronze and up for now
+	hooksecurefunc(ChallengeModeCompleteBanner,"PlayBanner",function()
 		self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
-	--end
+	end)
 end
 
 function Multishot:UPDATE_BATTLEFIELD_STATUS(strEvent)

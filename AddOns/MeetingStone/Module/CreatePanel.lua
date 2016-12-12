@@ -686,7 +686,7 @@ function CreatePanel:LFG_LIST_ENTRY_CREATION_FAILED()
 end
 
 function CreatePanel:UpdateMenu()
-    self.ActivityType:SetMenuTable(GetActivitesMenuTable(true))
+    self.ActivityType:SetMenuTable(GetActivitesMenuTable(ACTIVITY_FILTER_CREATE))
 end
 
 function CreatePanel:DisbandActivity()

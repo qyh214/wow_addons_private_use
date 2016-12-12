@@ -11,6 +11,7 @@
 	<Include file="Libs\AceGUI-3.0-SharedMediaWidgets\widget.xml"/>
 	<Include file="Libs\LibSink-2.0\lib.xml"/>
 
-	<Include file="Libs\Ace-3.0-KT\Ace-3.0-KT.xml"/>
-	<Include file="Libs\Tutorials-1.0\Tutorials-1.0.xml"/>
+	<Include file="Libs\MSA-Ace-3.0\MSA-Ace-3.0.xml"/>
+	<Include file="Libs\MSA-DropDownMenu-1.0\MSA-DropDownMenu-1.0.xml"/>
+	<Include file="Libs\MSA-Tutorials-1.0\MSA-Tutorials-1.0.xml"/>
 </Ui>

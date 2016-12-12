@@ -22,6 +22,9 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(2,15,9,[[
+Fix: Non latin languages localization should now work
+]])
 self:RelNotes(2,15,8,[[
 Fix: Lua error: FollowerPage.lua line 329:    attempt to call global 'kpairs' (a nil value)
 ]])

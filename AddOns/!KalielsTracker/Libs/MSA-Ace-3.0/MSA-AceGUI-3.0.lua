@@ -1,8 +1,8 @@
---- AceGUI-3.0-KT - Kaliel's Tracker own GUI layout
---- Based on AceGUI "Flow" layout. Used by AceConfigDialog-3.0-KT.
+--- MSA-AceGUI-3.0 - modified GUI layout
+--- Based on AceGUI "Flow" layout with some modifications. Used by MSA-AceConfigDialog-3.0.
 --- Because I hate stupid basic containers without margin!
 ---
---- This file is part of addon Kaliel's Tracker.
+--- Marouan Sabbagh <mar.sabbagh@gmail.com>
 
 local AceGUI = LibStub("AceGUI-3.0")
 

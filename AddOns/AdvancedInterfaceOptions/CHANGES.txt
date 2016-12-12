@@ -1,0 +1,16 @@
+tag 6d463cbaef455d98d855c417bf9829ce6517143c 1.0.8
+Author:	Benjamin Staneck <staneck@gmail.com>
+Date:	Thu Dec 8 20:33:12 2016 +0100
+
+commit bc4ea0346dccf65f145617aa019ff4450f72d8a1
+Author: kesava-wow <kesava-wow@users.noreply.github.com>
+Date:   Thu Dec 8 19:05:30 2016 +0000
+
+    add some 7.1 nameplate cvars
+
+commit bc4ea0346dccf65f145617aa019ff4450f72d8a1
+Author: kesava-wow <kesava-wow@users.noreply.github.com>
+Date:   Thu Dec 8 19:05:30 2016 +0000
+
+    add some 7.1 nameplate cvars
+

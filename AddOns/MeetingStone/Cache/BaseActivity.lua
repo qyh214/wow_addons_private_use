@@ -139,3 +139,8 @@ end
 function BaseActivity:IsSoloActivity()
     return IsSoloCustomID(self:GetCustomID())
 end
+
+function BaseActivity:IsValidCustomActivity()
+    local customId = self:GetCustomID()
+    return not customId or ACTIVITY_CUSTOM_IDS[customId]
+end

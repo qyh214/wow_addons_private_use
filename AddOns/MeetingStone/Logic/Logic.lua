@@ -135,7 +135,7 @@ function Logic:SEJ(activity, comment, tank, healer, damager)
         comment,
         tank,
         healer,
-        dammager)
+        damager)
 end
 
 function Logic:AddIgnore(name, msg)

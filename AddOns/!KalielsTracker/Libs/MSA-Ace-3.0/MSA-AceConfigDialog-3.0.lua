@@ -1,10 +1,10 @@
---- AceConfigDialog-3.0-KT - generator which uses own Kaliel's Tracker GUI layout
---- Based on default AceConfigDialog-3.0. This lib used only for addon Kaliel's Tracker.
+--- MSA-AceConfigDialog-3.0 - generator which uses modified GUI layout
+--- Based on default AceConfigDialog-3.0 with some modifications.
 ---
---- This file is part of addon Kaliel's Tracker.
+--- Marouan Sabbagh <mar.sabbagh@gmail.com>
 
 local LibStub = LibStub
-local MAJOR, MINOR = "AceConfigDialog-3.0-KT", 61	-- MSA
+local MAJOR, MINOR = "MSA-AceConfigDialog-3.0", 61	-- MSA
 local AceConfigDialog, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not AceConfigDialog then return end

@@ -15,6 +15,7 @@
   <Include file="AceConfig-3.0\AceConfig-3.0.xml" />
   <Script file="Env\Env.lua" />
   <Include file="LibClass-2.0\LibClass-2.0.xml" />
+  <Include file="LibInvoke-1.0\LibInvoke-1.0.xml" />
   <Include file="LibModule-1.0\LibModule-1.0.xml" />
   <Include file="NetEaseBase64-1.0\NetEaseBase64-1.0.xml" />
   <Include file="NetEaseSocketMiddleware-2.0\NetEaseSocketMiddleware-2.0.xml" />

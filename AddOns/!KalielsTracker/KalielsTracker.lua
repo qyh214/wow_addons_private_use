@@ -263,6 +263,10 @@ local function SetFrames()
 	KTF:RegisterEvent("ZONE_CHANGED")
 	KTF:RegisterEvent("UPDATE_BINDINGS")
 
+	-- DropDown frame
+	KT.DropDown = CreateFrame("Frame", addonName.."DropDown", KTF, "MSA_DropDownMenuTemplate")
+	MSA_DropDownMenu_Initialize(KT.DropDown, nil, "MENU")
+
 	-- Minimize button
 	OTFHeader.MinimizeButton:Hide()
 	local button = CreateFrame("Button", addonName.."MinimizeButton", KTF)
@@ -316,7 +320,7 @@ local function SetFrames()
 				SetScrollbarPosition()
 			end
 			if self.value > 0 and self.value < OTF.height-db.maxHeight then
-				CloseDropDownMenus()
+				MSA_CloseDropDownMenus()
 			end
 			_DBG("SCROLL ... "..self.value.." ... "..OTF.height.." - "..db.maxHeight)
 		end
@@ -598,6 +602,7 @@ local function SetHooks()
 		local blockAdded = bck_ObjectiveTracker_AddBlock(block, forceAdd)
 		if blockAdded then
 			if block.module == QUEST_TRACKER_MODULE or block.module == ACHIEVEMENT_TRACKER_MODULE then
+				block.HeaderButton:EnableMouse(false)
 				local button = block.button
 				if not button then
 					button = CreateFrame("Button", nil, block)
@@ -635,7 +640,7 @@ local function SetHooks()
 		end
 	end)
 
-	local function CreateFixedTag(block)
+	local function CreateFixedTag(block, x, y)
 		block.itemButton:Hide()
 
 		local tag = block.fixedTag
@@ -653,7 +658,7 @@ local function SetHooks()
 				tag.text:SetFont(LSM:Fetch("font", "Arial Narrow"), 14, "None")
 				tag.text:SetPoint("CENTER", -0.5, 0)
 			end
-			tag:SetPoint("TOPRIGHT", block, 3, 3)
+			tag:SetPoint("TOPRIGHT", block, x, y)
 			tag:Show()
 			block.fixedTag = tag
 		end
@@ -743,11 +748,12 @@ local function SetHooks()
 	end
 
 	local bck_QUEST_TRACKER_MODULE_SetBlockHeader = QUEST_TRACKER_MODULE.SetBlockHeader
-	function QUEST_TRACKER_MODULE:SetBlockHeader(block, text, questLogIndex, isQuestComplete)
+	function QUEST_TRACKER_MODULE:SetBlockHeader(block, text, questLogIndex, isQuestComplete, questID)
+		-- TODO: Change in patch 7.1.5
 		local _, level, _, _, _, _, frequency, questID = GetQuestLogTitle(questLogIndex)
 		local tagID, _ = GetQuestTagInfo(questID)
 		text = KT:CreateQuestTag(level, tagID, frequency)..text
-		bck_QUEST_TRACKER_MODULE_SetBlockHeader(self, block, text, questLogIndex, isQuestComplete)
+		bck_QUEST_TRACKER_MODULE_SetBlockHeader(self, block, text, questLogIndex, isQuestComplete, questID)
 		block.level = level
 		block.title = text
 
@@ -755,7 +761,7 @@ local function SetHooks()
 		if item and (not isQuestComplete or showItemWhenComplete) then
 			KTF.Buttons.num = KTF.Buttons.num + 1
 			numQuestItems = numQuestItems + 1
-			CreateFixedTag(block)
+			CreateFixedTag(block, 3, 3)
 			local button = CreateFixedButton(block)
 			if not InCombatLockdown() then
 				button:SetID(questLogIndex)
@@ -862,7 +868,7 @@ local function SetHooks()
 		if item and (not isQuestComplete or showItemWhenComplete) then
 			KTF.Buttons.num = KTF.Buttons.num + 1
 			numWorldQuestItems = numWorldQuestItems + 1
-			CreateFixedTag(block)
+			CreateFixedTag(block, 0, 2)
 			local button = CreateFixedButton(block)
 			if not InCombatLockdown() then
 				button:SetID(questLogIndex)
@@ -996,7 +1002,7 @@ local function SetHooks()
 		OTF.BlocksFrame:Hide()
 		KTF.MinimizeButton:GetNormalTexture():SetTexCoord(0, 0.5, 0, 0.25)
 		OTFHeader.Title:Show()
-		CloseDropDownMenus()
+		MSA_CloseDropDownMenus()
 		KT.animTask = false
 	end
 
@@ -1008,7 +1014,7 @@ local function SetHooks()
 		OTF.BlocksFrame:Show()
 		KTF.MinimizeButton:GetNormalTexture():SetTexCoord(0, 0.5, 0.25, 0.5)
 		OTFHeader.Title:Hide()
-		CloseDropDownMenus()
+		MSA_CloseDropDownMenus()
 	end
 
 	hooksecurefunc("BonusObjectiveTracker_OnBlockAnimOutFinished", function(self)
@@ -1060,29 +1066,151 @@ local function SetHooks()
 		bck_UIErrorsFrame_OnEvent(self, event, ...)
 	end)
 
-	-- Legion World Map fix - TODO: test collisions in Legion
-	local bck_WorldMapFrame_UIElementsFrame_ActionButton_Refresh = WorldMapFrame.UIElementsFrame.ActionButton.Refresh
-	function WorldMapFrame.UIElementsFrame.ActionButton:Refresh()
-		if InCombatLockdown() then return end
-		bck_WorldMapFrame_UIElementsFrame_ActionButton_Refresh(self)
+	-- DropDown
+	function ObjectiveTracker_ToggleDropDown(frame, handlerFunc)	-- replacement
+		local dropDown = KT.DropDown;
+		if ( dropDown.activeFrame ~= frame ) then
+			MSA_CloseDropDownMenus();
+		end
+		dropDown.activeFrame = frame;
+		dropDown.initialize = handlerFunc;
+		MSA_ToggleDropDownMenu(1, nil, dropDown, "cursor", 3, -3, nil, nil, MSA_DROPDOWNMENU_SHOW_TIME);
 	end
 
-	local bck_WorldMapFrame_UIElementsFrame_BountyBoard_Refresh = WorldMapFrame.UIElementsFrame.BountyBoard.Refresh
-	function WorldMapFrame.UIElementsFrame.BountyBoard:Refresh()
-		if InCombatLockdown() then return end
-		bck_WorldMapFrame_UIElementsFrame_BountyBoard_Refresh(self)
+	function QUEST_TRACKER_MODULE:OnBlockHeaderClick(block, mouseButton)	-- replacement
+		if ( ChatEdit_TryInsertQuestLinkForQuestID(block.id) ) then
+			return;
+		end
+
+		if ( mouseButton ~= "RightButton" ) then
+			MSA_CloseDropDownMenus();
+			if ( IsModifiedClick("QUESTWATCHTOGGLE") ) then
+				QuestObjectiveTracker_UntrackQuest(nil, block.id);
+			else
+				local questLogIndex = GetQuestLogIndexByID(block.id);
+				if ( IsQuestComplete(block.id) and GetQuestLogIsAutoComplete(questLogIndex) ) then
+					AutoQuestPopupTracker_RemovePopUp(block.id);
+					ShowQuestComplete(questLogIndex);
+				else
+					QuestLogPopupDetailFrame_Show(questLogIndex);
+				end
+			end
+			return;
+		else
+			ObjectiveTracker_ToggleDropDown(block, QuestObjectiveTracker_OnOpenDropDown);
+		end
 	end
 
-	local bck_WorldMapFrame_UpdateOverlayLocations = WorldMapFrame_UpdateOverlayLocations
-	WorldMapFrame_UpdateOverlayLocations = function()
-		if InCombatLockdown() then return end
-		bck_WorldMapFrame_UpdateOverlayLocations()
+	function QuestObjectiveTracker_OnOpenDropDown(self)		-- replacement
+		local block = self.activeFrame;
+		local questLogIndex = GetQuestLogIndexByID(block.id);
+
+		local info = MSA_DropDownMenu_CreateInfo();
+		info.text = GetQuestLogTitle(questLogIndex);
+		info.isTitle = 1;
+		info.notCheckable = 1;
+		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+
+		info = MSA_DropDownMenu_CreateInfo();
+		info.notCheckable = 1;
+
+		info.text = OBJECTIVES_VIEW_IN_QUESTLOG;
+		info.func = QuestObjectiveTracker_OpenQuestDetails;
+		info.arg1 = block.id;
+		info.noClickSound = 1;
+		info.checked = false;
+		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+
+		info.text = OBJECTIVES_STOP_TRACKING;
+		info.func = QuestObjectiveTracker_UntrackQuest;
+		info.arg1 = block.id;
+		info.checked = false;
+		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+
+		if ( GetQuestLogPushable(questLogIndex) and IsInGroup() ) then
+			info.text = SHARE_QUEST;
+			info.func = QuestObjectiveTracker_ShareQuest;
+			info.arg1 = block.id;
+			info.checked = false;
+			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+		end
+
+		info.text = OBJECTIVES_SHOW_QUEST_MAP;
+		info.func = QuestObjectiveTracker_OpenQuestMap;
+		info.arg1 = block.id;
+		info.checked = false;
+		info.noClickSound = 1;
+		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
 	end
 
-	local bck_WorldMapScrollFrame_ResetZoom = WorldMapScrollFrame_ResetZoom
-	WorldMapScrollFrame_ResetZoom = function()
-		if InCombatLockdown() then return end
-		bck_WorldMapScrollFrame_ResetZoom()
+	function ACHIEVEMENT_TRACKER_MODULE:OnBlockHeaderClick(block, mouseButton)	-- replacement
+		if ( IsModifiedClick("CHATLINK") and ChatEdit_GetActiveWindow() ) then
+			local achievementLink = GetAchievementLink(block.id);
+			if ( achievementLink ) then
+				ChatEdit_InsertLink(achievementLink);
+			end
+		elseif ( mouseButton ~= "RightButton" ) then
+			MSA_CloseDropDownMenus();
+			if ( not AchievementFrame ) then
+				AchievementFrame_LoadUI();
+			end
+			if ( IsModifiedClick("QUESTWATCHTOGGLE") ) then
+				AchievementObjectiveTracker_UntrackAchievement(_, block.id);
+			elseif ( not AchievementFrame:IsShown() ) then
+				AchievementFrame_ToggleAchievementFrame();
+				AchievementFrame_SelectAchievement(block.id);
+			else
+				if ( AchievementFrameAchievements.selection ~= block.id ) then
+					AchievementFrame_SelectAchievement(block.id);
+				else
+					AchievementFrame_ToggleAchievementFrame();
+				end
+			end
+		else
+			ObjectiveTracker_ToggleDropDown(block, AchievementObjectiveTracker_OnOpenDropDown);
+		end
+	end
+
+	function AchievementObjectiveTracker_OnOpenDropDown(self)	-- replacement
+		local block = self.activeFrame;
+		local _, achievementName, _, completed, _, _, _, _, _, icon = GetAchievementInfo(block.id);
+
+		local info = MSA_DropDownMenu_CreateInfo();
+		info.text = achievementName;
+		info.isTitle = 1;
+		info.notCheckable = 1;
+		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+
+		info = MSA_DropDownMenu_CreateInfo();
+		info.notCheckable = 1;
+
+		info.text = OBJECTIVES_VIEW_ACHIEVEMENT;
+		info.func = AchievementObjectiveTracker_OpenAchievement;
+		info.arg1 = block.id;
+		info.checked = false;
+		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+
+		info.text = OBJECTIVES_STOP_TRACKING;
+		info.func = AchievementObjectiveTracker_UntrackAchievement;
+		info.arg1 = block.id;
+		info.checked = false;
+		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+	end
+
+	function BonusObjectiveTracker_OnOpenDropDown(self)		-- replacement
+		local block = self.activeFrame;
+		local questID = block.TrackedQuest.questID;
+
+		local info = MSA_DropDownMenu_CreateInfo();
+		info.notCheckable = true;
+
+		info.text = OBJECTIVES_STOP_TRACKING;
+		info.func = function()
+			BonusObjectiveTracker_UntrackWorldQuest(questID);
+		end;
+
+		info.checked = false;
+		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
 	end
 end
 
@@ -1359,34 +1487,10 @@ function KT:ToggleOtherButtons()
 		KTF.AchievementsButton:Show()
 	else
 		local button
-		-- Quest Log button
-		button = CreateFrame("Button", addonName.."QuestLogButton", KTF)
-		button:SetSize(16, 16)
-		button:SetPoint("TOPRIGHT", -(self.Filters:IsEnabled() and 70 or 50), -8)
-		button:SetFrameLevel(KTF:GetFrameLevel() + 10)
-		button:SetNormalTexture(mediaPath.."UI-KT-HeaderButtons")
-		button:GetNormalTexture():SetTexCoord(0.5, 1, 0, 0.25)
-
-		button:RegisterForClicks("AnyDown")
-		button:SetScript("OnClick", function(self, btn)
-			ToggleQuestLog()
-		end)
-		button:SetScript("OnEnter", function(self)
-			self:GetNormalTexture():SetVertexColor(1, 1, 1)
-			GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-			GameTooltip:AddLine(QuestLogMicroButton.tooltipText, 1, 1, 1)
-			GameTooltip:Show()
-		end)
-		button:SetScript("OnLeave", function(self)
-			self:GetNormalTexture():SetVertexColor(KT.hdrBtnColor.r, KT.hdrBtnColor.g, KT.hdrBtnColor.b)
-			GameTooltip:Hide()
-		end)
-		KTF.QuestLogButton = button
-
 		-- Achievements button
 		button = CreateFrame("Button", addonName.."AchievementsButton", KTF)
 		button:SetSize(16, 16)
-		button:SetPoint("TOPRIGHT", -(self.Filters:IsEnabled() and 50 or 30), -8)
+		button:SetPoint("TOPRIGHT", (self.Filters:IsEnabled() and KTF.FilterButton or KTF.MinimizeButton), "TOPLEFT", -4, 0)
 		button:SetFrameLevel(KTF:GetFrameLevel() + 10)
 		button:SetNormalTexture(mediaPath.."UI-KT-HeaderButtons")
 		button:GetNormalTexture():SetTexCoord(0.5, 1, 0.25, 0.5)
@@ -1406,6 +1510,30 @@ function KT:ToggleOtherButtons()
 			GameTooltip:Hide()
 		end)
 		KTF.AchievementsButton = button
+
+		-- Quest Log button
+		button = CreateFrame("Button", addonName.."QuestLogButton", KTF)
+		button:SetSize(16, 16)
+		button:SetPoint("TOPRIGHT", KTF.AchievementsButton, "TOPLEFT", -4, 0)
+		button:SetFrameLevel(KTF:GetFrameLevel() + 10)
+		button:SetNormalTexture(mediaPath.."UI-KT-HeaderButtons")
+		button:GetNormalTexture():SetTexCoord(0.5, 1, 0, 0.25)
+
+		button:RegisterForClicks("AnyDown")
+		button:SetScript("OnClick", function(self, btn)
+			ToggleQuestLog()
+		end)
+		button:SetScript("OnEnter", function(self)
+			self:GetNormalTexture():SetVertexColor(1, 1, 1)
+			GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+			GameTooltip:AddLine(QuestLogMicroButton.tooltipText, 1, 1, 1)
+			GameTooltip:Show()
+		end)
+		button:SetScript("OnLeave", function(self)
+			self:GetNormalTexture():SetVertexColor(KT.hdrBtnColor.r, KT.hdrBtnColor.g, KT.hdrBtnColor.b)
+			GameTooltip:Hide()
+		end)
+		KTF.QuestLogButton = button
 	end
 end
 
@@ -1652,23 +1780,25 @@ end
 
 function KT:OnEnable()
 	_DBG("|cff00ff00Enable|r - "..self:GetName(), true)
-	-- Modules
-	self.Filters:Enable()
-	self.QuestLog:Enable()
-	if db.qiActiveButton then self.ActiveButton:Enable() end
-	if self.AddonPetTracker.isLoaded then self.AddonPetTracker:Enable() end
-	if self.AddonTomTom.isLoaded then self.AddonTomTom:Enable() end
-	self.AddonOthers:Enable()
-	self.Help:Enable()
-
 	self.screenWidth = round(GetScreenWidth())
 	self.screenHeight = round(GetScreenHeight())
 
 	KTF:SetScript("OnEvent", function()
 		SetHooks()
 		SetFrames()
+
+		-- Modules
+		self.QuestLog:Enable()
+		self.WorldMap:Enable()
+		self.Filters:Enable()
+		if db.qiActiveButton then self.ActiveButton:Enable() end
+		if self.AddonPetTracker.isLoaded then self.AddonPetTracker:Enable() end
+		if self.AddonTomTom.isLoaded then self.AddonTomTom:Enable() end
+		self.AddonOthers:Enable()
+		self.Help:Enable()
+
 		Init()
-		KT.initialized = true
+		self.initialized = true
 	end)
 	KTF:RegisterEvent("PLAYER_ENTERING_WORLD")
 end

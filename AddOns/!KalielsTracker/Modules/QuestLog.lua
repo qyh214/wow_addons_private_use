@@ -12,6 +12,8 @@ local _DBG = function(...) if _DBG then _DBG("KT", ...) end end
 
 local db
 
+local dropDownFrame
+
 --------------
 -- Internal --
 --------------
@@ -77,23 +79,74 @@ local function SetHooks()
 			self.Text:SetTextColor(colorStyle.r, colorStyle.g, colorStyle.b)
 		end
 	end)
-	
-	local bck_QuestMapLogTitleButton_OnClick = QuestMapLogTitleButton_OnClick
-	QuestMapLogTitleButton_OnClick = function(self, button)
-		QuestMapQuestOptionsDropDown.initialize = QuestMapQuestOptionsDropDown_Initialize
-		bck_QuestMapLogTitleButton_OnClick(self, button)
+
+	-- DropDown
+	function QuestMapQuestOptionsDropDown_Initialize(self)	-- replacement
+		local questLogIndex = GetQuestLogIndexByID(self.questID);
+		local info = MSA_DropDownMenu_CreateInfo();
+		info.isNotRadio = true;
+		info.notCheckable = true;
+
+		info.text = TRACK_QUEST;
+		if ( IsQuestWatched(questLogIndex) ) then
+			info.text = UNTRACK_QUEST;
+		end
+		info.disabled = (db.filterAuto[1])
+		info.func =function(_, questID) QuestMapQuestOptions_TrackQuest(questID) end;
+		info.arg1 = self.questID;
+		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWNMENU_MENU_LEVEL);
+
+		info.text = SHARE_QUEST;
+		info.func = function(_, questID) QuestMapQuestOptions_ShareQuest(questID) end;
+		info.arg1 = self.questID;
+		if ( not GetQuestLogPushable(questLogIndex) or not IsInGroup() ) then
+			info.disabled = 1;
+		end
+		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWNMENU_MENU_LEVEL);
+
+		if CanAbandonQuest(self.questID) then
+			info.text = ABANDON_QUEST;
+			info.func = function(_, questID) QuestMapQuestOptions_AbandonQuest(questID) end;
+			info.arg1 = self.questID;
+			info.disabled = nil;
+			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWNMENU_MENU_LEVEL);
+		end
 	end
-	
+
+	function QuestMapLogTitleButton_OnClick(self, button)	-- replacement
+		if ( ChatEdit_TryInsertQuestLinkForQuestID(self.questID) ) then
+			return;
+		end
+
+		PlaySound("igMainMenuOptionCheckBoxOn");
+
+		if ( IsShiftKeyDown() ) then
+			QuestMapQuestOptions_TrackQuest(self.questID);
+		else
+			if ( button == "RightButton" ) then
+				if ( self.questID ~= dropDownFrame.questID ) then
+					MSA_CloseDropDownMenus();
+				end
+				dropDownFrame.questID = self.questID;
+				MSA_ToggleDropDownMenu(1, nil, dropDownFrame, "cursor", 6, -6, nil, nil, MSA_DROPDOWNMENU_SHOW_TIME);
+			else
+				QuestMapFrame_ShowQuestDetails(self.questID);
+			end
+		end
+	end
+
+	-- Set scripts for 1st button
 	local firstButton = QuestLogQuests_GetTitleButton(1)
 	firstButton:SetScript("OnEnter", QuestMapLogTitleButton_OnEnter)
 	firstButton:SetScript("OnLeave", QuestMapLogTitleButton_OnLeave)
 	firstButton:SetScript("OnClick", QuestMapLogTitleButton_OnClick)
-	
-	hooksecurefunc("QuestMapQuestOptionsDropDown_Initialize", function(self)
-		if db.filterAuto[1] then
-			UIDropDownMenu_DisableButton(1, 1)
-		end
-	end)
+end
+
+local function SetFrames()
+	-- DropDown frame
+	dropDownFrame = CreateFrame("Frame", addonName.."QuestLogDropDown", QuestMapFrame, "MSA_DropDownMenuTemplate")
+	dropDownFrame.questID = 0	-- for QuestMapQuestOptionsDropDown_Initialize
+	MSA_DropDownMenu_Initialize(dropDownFrame, QuestMapQuestOptionsDropDown_Initialize, "MENU")
 end
 
 --------------
@@ -108,4 +161,5 @@ end
 function M:OnEnable()
 	_DBG("|cff00ff00Enable|r - "..self:GetName(), true)
 	SetHooks()
+	SetFrames()
 end

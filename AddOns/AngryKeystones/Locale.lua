@@ -39,7 +39,7 @@ langs.enUS = {
 	scheduleWeek2 = "Next week",
 	scheduleWeek3 = "In two weeks",
 	scheduleWeek4 = "In three weeks",
-	config_exclusiveTracker = "Hide quest and achievement trackers during Mythic Keystone dungeon (requires Reload UI to take effect)",
+	config_exclusiveTracker = "Hide quest and achievement trackers during Mythic Keystone dungeons (requires Reload UI to take effect)",
 	config_hideTalkingHead = "Hide Talking Head dialog during a Mythic Keystone dungeon",
 }
 langs.enGB = langs.enUS
@@ -139,6 +139,7 @@ langs.zhCN = {
 	scheduleWeek3 = "两周后",
 	scheduleWeek4 = "三周后",
 	config_exclusiveTracker = "在副本中隐藏任务和成就追踪（重载插件后生效）",
+	config_hideTalkingHead = "在史诗钥石副本中隐藏NPC情景对话窗口",
 }
 langs.zhTW = {
 	config_characterConfig = "為角色進行獨立的配置",
@@ -169,6 +170,7 @@ langs.zhTW = {
 	scheduleWeek3 = "兩周後",
 	scheduleWeek4 = "三周後",
 	config_exclusiveTracker = "在副本中隱藏成就和任務追蹤（重裝插件後生效）",
+	config_hideTalkingHead = "在傳奇鑰石副本中隱藏NPC情景對話窗口",
 }
 
 function Locale:Get(key)
@@ -190,6 +192,8 @@ end
 setmetatable(Locale, {__index = Locale.Get})
 
 local clues = {}
+
+local rumors = {}
 clues.enUS = {
 	male = MALE,
 	female = FEMALE,
@@ -208,7 +212,6 @@ clues.enUS = {
 }
 clues.enGB = clues.enUS
 
-local rumors = {}
 rumors.enUS = {
 	["I heard somewhere that the spy isn't female."]="male",
 	["I heard the spy is here and he's very good looking."]="male",
@@ -272,6 +275,69 @@ rumors.enUS = {
 	["I heard the spy carries a magical pouch around at all times."]="coinpurse",
 }
 rumors.enGB = rumors.enUS
+
+clues.zhCN = {
+	lightVest = "浅色上衣",
+	darkVest = "深色上衣",
+	shortSleeves = "短袖",
+	longSleeves = "长袖",
+	cloak = "有斗篷",
+	noCloak = "无斗篷",
+	gloves = "有手套",
+	noGloves = "无手套",
+	noPotion = "无药水",
+	book = "有书",
+	coinpurse = "有钱袋",
+	potion = "有药水",
+}
+
+rumors.zhCN = {
+	["我在别处听说那个密探不是女性。"]="male",
+	["我听说那个密探已经来了，而且他很英俊。"]="male",
+	["有个客人说她看见他和大魔导师一起走进了庄园。"]="male",
+	["有个乐师说，他一直在打听这一带的消息。"]="male",
+	["有人说我们的新客人不是男性。"]="female",
+	["他们说那个密探已经来了，而且她是个大美人。"]="female",
+	["我听说有个女人一直打听贵族区的情况……"]="female",
+	["那个间谍肯定更喜欢浅色的上衣。"]="lightVest",
+	["我听说那个密探穿着一件浅色上衣来参加今晚的聚会。"]="lightVest",
+	["大家都在说那个密探今晚没有穿深色的上衣。"]="lightVest",
+	["那个间谍肯定更喜欢深色的服装。"]="darkVest",
+	["我听说那个密探今晚所穿的外衣是浓密的暗深色。"]="darkVest",
+	["那个密探喜欢深色的上衣……就像夜空一样深沉。"]="darkVest",
+	["传说那个密探会避免穿浅色的服装，以便更好地混入人群。"]="darkVest",
+	["有人告诉我那个密探讨厌长袖的衣服。"]="shortSleeves",
+	["我听说密探喜欢穿短袖服装，以免妨碍双臂的活动。"]="shortSleeves",
+	["我听说那个密探喜欢清凉的空气，所以今晚没有穿长袖衣服。"]="shortSleeves",
+	["我的一个朋友说，她看到了密探穿的衣服，是一件短袖上衣。"]="shortSleeves",
+	["我听说那个密探今天穿着长袖外套。"]="longSleeves",
+	["我的一个朋友说那个密探穿着长袖衣服。"]="longSleeves",
+	["有人说，那个密探今晚穿了一件长袖的衣服。"]="longSleeves",
+	["上半夜的时候，我正巧瞥见那个密探穿着长袖衣服。"]="longSleeves",
+	["有人提到那个密探之前是穿着斗篷来的。"]="cloak",
+	["我听说那个密探喜欢穿斗篷。"]="cloak",
+	["我听说那个密探在来这里之前，把斗篷忘在王宫里了。"]="noCloak",
+	["我听说那个密探讨厌斗篷，所以没有穿。"]="noCloak",
+	["有传言说那个密探总是带着手套。"]="gloves",
+	["我听说密探都会小心隐藏自己的双手。"]="gloves",
+	["有人说那个密探带着手套，以掩盖手上明显的疤痕。"]="gloves",
+	["我听说那个密探总是带着手套。"]="gloves",
+	["你知道吗……我在后头的房间里发现了一双多余的手套。那个密探现在可能就赤着双手在这附近转悠呢。"]="noGloves",
+	["有传言说那个密探从来不戴手套。"]="noGloves",
+	["我听说那个密探会尽量不戴手套，以防在快速行动时受到阻碍。"]="noGloves",
+	["我听说那个密探不喜欢戴手套。"]="noGloves",
+	["据说那个密探喜欢读书，而且总是随身携带至少一本书。"]="book",
+	["我听说那个密探的腰带上，总是挂着一本写满机密的书。"]="book",
+	["有个乐师告诉我，她看到那个密探扔掉了身上的最后一瓶药水，已经没有药水了。"]="noPotion",
+	["我听说那个密探根本没带任何药水。"]="noPotion",
+	["我敢肯定，那个密探的腰带上挂着药水。"]="potion",
+	["我听说那个密探随身带着药水，这是为什么呢？"]="potion",
+	["可别说是我告诉你的……那个密探伪装成了炼金师，腰带上挂着药水。"]="potion",
+	["我听说那个密探的腰包上绣着精美的丝线。"]="coinpurse",
+	["一个朋友说，那个密探喜欢黄金，所以在腰包里装满了金币。"]="coinpurse",
+	["我听说那个密探的腰包里装满了摆阔用的金币。"]="coinpurse",
+	["我听说那个密探总是带着一个魔法袋。"]="coinpurse",
+}
 
 function Locale:HasRumors()
 	return rumors[current_locale] ~= nil and clues[current_locale] ~= nil

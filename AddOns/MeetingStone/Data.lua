@@ -27,6 +27,10 @@ LOTTERY_ORDER     = [[10101010102102021031203210432034105340251062345601234567]]
 MAX_SUMMARY_LETTERS = 255
 MIN_PLAYER_LEVEL = 10
 
+ACTIVITY_FILTER_BROWSE = 1
+ACTIVITY_FILTER_CREATE = 2
+ACTIVITY_FILTER_OTHER  = 3
+
 DEFAULT_LOOT_LIST = {
     [4] = 4,
     [7] = 4,
@@ -255,12 +259,17 @@ CATEGORY = {
 }
 
 RAID_CLASS_COLORS = {}
+CLASS_ICON_TCOORDS = {}
 for i = 1, GetNumClasses() do
     local classLocale, class, id = GetClassInfo(i)
 
-    RAID_CLASS_COLORS[id] = _G.RAID_CLASS_COLORS[class]
-    RAID_CLASS_COLORS[class] = _G.RAID_CLASS_COLORS[class]
+    RAID_CLASS_COLORS[id]          = _G.RAID_CLASS_COLORS[class]
+    RAID_CLASS_COLORS[class]       = _G.RAID_CLASS_COLORS[class]
     RAID_CLASS_COLORS[classLocale] = _G.RAID_CLASS_COLORS[class]
+
+    CLASS_ICON_TCOORDS[id]          = _G.CLASS_ICON_TCOORDS[class]
+    CLASS_ICON_TCOORDS[class]       = _G.CLASS_ICON_TCOORDS[class]
+    CLASS_ICON_TCOORDS[classLocale] = _G.CLASS_ICON_TCOORDS[class]
 end
 
 local defaultMeta = {__index = function(o) return rawget(o, 0xFF) end}
@@ -667,4 +676,17 @@ ZONE_ACTIVITY_MAP = {
     [1015] = '1-124-419-0',  -- 阿苏纳
 
     -- [1096] = true,  -- 艾萨拉之眼
+}
+
+CATEGORY_BASEFILTERS = {
+    [1]  = LE_LFG_LIST_FILTER_PVE,
+    [2]  = LE_LFG_LIST_FILTER_PVE,
+    [3]  = LE_LFG_LIST_FILTER_PVE,
+    [4]  = LE_LFG_LIST_FILTER_PVP,
+    [5]  = LE_LFG_LIST_FILTER_PVE,
+    [6]  = LE_LFG_LIST_FILTER_PVE,
+    [7]  = LE_LFG_LIST_FILTER_PVP,
+    [8]  = LE_LFG_LIST_FILTER_PVP,
+    [9]  = LE_LFG_LIST_FILTER_PVP,
+    [10] = LE_LFG_LIST_FILTER_PVP,
 }

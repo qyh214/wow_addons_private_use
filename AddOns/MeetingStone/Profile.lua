@@ -35,6 +35,7 @@ function Profile:OnInitialize()
             searchHistoryList = {},
             createHistoryList = {},
             searchInputHistory = {},
+            recent = {},
         }
     }
 
@@ -43,6 +44,8 @@ function Profile:OnInitialize()
     self.cdb = LibStub('AceDB-3.0'):New('MEETINGSTONE_CHARACTER_DB', cdb)
 
     self.cdb.profile.settings.onlyms = nil
+
+    self.cdb.RegisterCallback(self, 'OnDatabaseShutdown')
 end
 
 function Profile:OnEnable()
@@ -127,7 +130,7 @@ function Profile:SaveSearchHistory(searchValue)
     tDeleteItem(list, searchValue)
     tinsert(list, 1, searchValue)
 
-    RefreshHistoryMenuTable()
+    RefreshHistoryMenuTable(ACTIVITY_FILTER_BROWSE)
 end
 
 function Profile:SaveCreateHistory(searchValue)
@@ -136,7 +139,7 @@ function Profile:SaveCreateHistory(searchValue)
     tDeleteItem(list, searchValue)
     tinsert(list, 1, searchValue)
 
-    RefreshHistoryMenuTable(true)
+    RefreshHistoryMenuTable(ACTIVITY_FILTER_CREATE)
 end
 
 function Profile:GetHistoryList(isCreator)
@@ -152,8 +155,8 @@ function Profile:ClearHistory()
     wipe(self.cdb.profile.searchHistoryList)
     wipe(self.cdb.profile.searchInputHistory)
 
-    RefreshHistoryMenuTable(true)
-    RefreshHistoryMenuTable(false)
+    RefreshHistoryMenuTable(ACTIVITY_FILTER_BROWSE)
+    RefreshHistoryMenuTable(ACTIVITY_FILTER_CREATE)
 end
 
 function Profile:GetSearchInputHistory(searchValue)
@@ -355,4 +358,23 @@ end
 
 function Profile:ClearWorldQuestHelp()
     self.cdb.profile.worldQuestHelp = true
+end
+
+function Profile:GetRecentDB(activityCode)
+    if not self.cdb.profile.recent[activityCode] then
+        self.cdb.profile.recent[activityCode] = {}
+    end
+    return self.cdb.profile.recent[activityCode]
+end
+
+function Profile:SetRecentDB(activityCode, db)
+    self.cdb.profile.recent[activityCode] = db
+end
+
+function Profile:IterateRecentDB()
+    return pairs(self.cdb.profile.recent)
+end
+
+function Profile:OnDatabaseShutdown()
+    self:SendMessage('MEETINGSTONE_DB_SHUTDOWN')
 end

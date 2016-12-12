@@ -27,8 +27,10 @@ local eventFrame
 
 local function SetHooks()
 	PetTracker.Objectives.Header:SetParent(OTF.BlocksFrame)
+	PetTracker.Objectives.Header:EnableMouse(false)
 	PetTracker.Objectives.Anchor:SetParent(OTF.BlocksFrame)
 	PetTracker.Objectives.Anchor:SetPoint("TOPLEFT", PetTracker.Objectives.Header, "BOTTOMLEFT", -1, -10)
+	PetTracker.Objectives.Anchor:EnableMouse(false)
 
 	local LPJ = LibStub("LibPetJournal-2.0")
 	LPJ.RegisterCallback(PetTracker.Objectives, "PetListUpdated", function()
@@ -111,35 +113,37 @@ local function SetHooks()
 	-- Sushi Lib - hack - revert back DropDownMenu
 	-- Replace original functions!
 	if SushiDropFrame then
-		local Drop = CreateFrame("Frame", "SushiDropDownFrameFix", nil, "UIDropDownMenuTemplate")
-		function Drop:AddLine(data)
-			UIDropDownMenu_AddButton(data)
+		local dropDownFrame = CreateFrame("Frame", "SushiDropDownFrameFix", nil, "MSA_DropDownMenuTemplate")
+		function dropDownFrame:AddLine(data)
+			MSA_DropDownMenu_AddButton(data)
 		end
 		function SushiDropFrame:Toggle(...)
 			local n = select("#", ...)
 			if n < 4 then
-				Drop.relativeTo = ...
+				dropDownFrame.relativeTo = ...
 			else
-				Drop.point, Drop.relativeTo, Drop.relativePoint, Drop.xOffset, Drop.yOffset = ...
-				if Drop.yOffset < 0 then
-					Drop.yOffset = Drop.yOffset + 10
+				dropDownFrame.point, dropDownFrame.relativeTo, dropDownFrame.relativePoint, dropDownFrame.xOffset, dropDownFrame.yOffset = ...
+				if dropDownFrame.yOffset < 0 then
+					dropDownFrame.yOffset = dropDownFrame.yOffset + 10
 				else
-					Drop.yOffset = Drop.yOffset - 10
+					dropDownFrame.yOffset = dropDownFrame.yOffset - 10
 				end
 			end
-			Drop.initialize = select(n, ...)
-			Drop.displayMode = "MENU"
-			if self.target ~= Drop.relativeTo then
-				CloseDropDownMenus()
+			dropDownFrame.initialize = select(n, ...)
+			dropDownFrame.displayMode = "MENU"
+			if self.target ~= dropDownFrame.relativeTo then
+				MSA_CloseDropDownMenus()
 			end
-			self.target = Drop.relativeTo
-			ToggleDropDownMenu(1, nil, Drop)
+			self.target = dropDownFrame.relativeTo
+			MSA_ToggleDropDownMenu(1, nil, dropDownFrame)
 		end
 		function SushiDropFrame:Display(...)
 			self.target = nil
 			self:Toggle(...)
 		end
-		SushiDropFrame.CloseAll = function() end
+		function SushiDropFrame:CloseAll()
+			MSA_CloseDropDownMenus()
+		end
 	end
 end
 
@@ -191,11 +195,6 @@ local function SetFrames()
 			if event == "ADDON_LOADED" and arg1 == "PetTracker_Journal" then
 				SetHooks_PetTracker_Journal()
 				self:UnregisterEvent(event)
-			elseif event == "PLAYER_ENTERING_WORLD" then
-				SetHooks()
-				KT:SaveHeader(PetTracker.Objectives)
-				self:RegisterEvent("PET_JOURNAL_LIST_UPDATE")
-				self:UnregisterEvent(event)
 			elseif event == "PET_JOURNAL_LIST_UPDATE" then
 				M:SetPetsHeaderText()
 			end
@@ -222,14 +221,16 @@ end
 function M:OnInitialize()
 	_DBG("|cffffff00Init|r - "..self:GetName(), true)
 	db = KT.db.profile
-	self.isLoaded = (KT:CheckAddOn("PetTracker", "7.0.3") and db.addonPetTracker)
+	self.isLoaded = (KT:CheckAddOn("PetTracker", "7.1.3") and db.addonPetTracker)
 	SetHooks_DisabledPetTracker()
 	SetFrames()
 end
 
 function M:OnEnable()
 	_DBG("|cff00ff00Enable|r - "..self:GetName(), true)
-	eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+	SetHooks()
+	KT:SaveHeader(PetTracker.Objectives)
+	eventFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE")
 end
 
 function M:IsShown()
