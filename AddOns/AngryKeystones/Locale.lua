@@ -2,7 +2,7 @@ local ADDON, Addon = ...
 local Locale = Addon:NewModule('Locale')
 
 local default_locale = "enUS"
-local current_locale
+local current_locale = GetLocale()
 
 local langs = {}
 langs.enUS = {
@@ -94,12 +94,12 @@ langs.koKR = {
 	config_completionMessage = "신화 쐐기돌 던전 완료시 소요 시간 메시지 표시",
 	config_showSplits = "던전 목표에서 각 목표당 소요 시간 표시",
 	keystoneFormat = "[쐐기돌: %s - %d 레벨]",
-	completion0 = "%s|1이;가; %s에 끝났습니다. 제한 시간을 %s 초과했습니다.",
-	completion1 = "%s|1을;를; %s에 완료했습니다. 제한 시간은 %s 남았으며 %s|1이;가; 모자라 2상자를 놓쳤습니다.",
-	completion2 = "%s 2상자를 %s에 완료했습니다. 2상자 제한 시간은 %s 남았으며 %s|1이;가; 모자라 3상자를 놓쳤습니다.",
-	completion3 = "%s 3상자를 %s에 완료했습니다. 3상자 제한 시간이 %s 남았습니다.",
+	completion0 = "%s|1이;가; %s만에 끝났습니다. 제한 시간을 %s 초과했습니다.",
+	completion1 = "%s|1을;를; %s만에 완료했습니다. 제한 시간은 %s 남았으며 %s|1이;가; 모자라 2상자를 놓쳤습니다.",
+	completion2 = "%s 2상자를 %s만에 완료했습니다. 2상자 제한 시간은 %s 남았으며 %s|1이;가; 모자라 3상자를 놓쳤습니다.",
+	completion3 = "%s 3상자를 %s만에 완료했습니다. 3상자 제한 시간이 %s 남았습니다.",
 	completionSplits = "분할된 시점: %s.",
-	timeLost = "줄어든 시간",
+	timeLost = "깎인 시간",
 	config_smallAffixes = "타이머 프레임에 속성 아이콘 크기 축소",
 	config_deathTracker = "타이머 프레임에 사망 내역 표시",
 	config_persistTracker = "신화 쐐기돌을 완료한 뒤에도 타이머 프레임 표시",
@@ -108,6 +108,8 @@ langs.koKR = {
 	scheduleWeek2 = "다음주",
 	scheduleWeek3 = "2주 뒤",
 	scheduleWeek4 = "3주 뒤",
+	config_exclusiveTracker = "신화 쐐기돌 던전에서 퀘스트와 업적 추적창 숨김 (UI 재시작 필요)",
+	config_hideTalkingHead = "신화 쐐기돌 던전에서 팝업 대화창 숨김",
 }
 
 langs.zhCN = {
@@ -119,6 +121,7 @@ langs.zhCN = {
 	config_splitsFormat_2 = "从头计时",
 	config_splitsFormat_3 = "与之前关联",
 	config_autoGossip = "在史诗钥石副本中自动对话交互（如奥丁）",
+	config_cosRumors = "群星庭院密探线索发送到队伍频道",
 	config_cosRumors = "群星庭院造谣者线索发送到队伍频道",
 	config_silverGoldTimer = "同时显示2箱和3箱的计时",
 	config_completionMessage = "副本完成时在聊天窗口显示总耗时",
@@ -192,8 +195,8 @@ end
 setmetatable(Locale, {__index = Locale.Get})
 
 local clues = {}
-
 local rumors = {}
+
 clues.enUS = {
 	male = MALE,
 	female = FEMALE,
@@ -339,6 +342,73 @@ rumors.zhCN = {
 	["我听说那个密探总是带着一个魔法袋。"]="coinpurse",
 }
 
+clues.koKR = {
+	male = MALE,
+	female = FEMALE,
+	lightVest = "밝은색 조끼",
+	darkVest = "어두운색 조끼",
+	shortSleeves = "짧은 소매",
+	longSleeves = "긴 소매",
+	cloak = "망토 있음",
+	noCloak = "망토 없음",
+	gloves = "장갑 있음",
+	noGloves = "장갑 없음",
+	noPotion = "물약 없음",
+	book = "책",
+	coinpurse = "금화 주머니",
+	potion = "물약",
+}
+
+rumors.koKR = {
+	["첩자가 여성이 아니라는 얘기를 들었습니다."]="male",
+	["첩자가 나타났다고 합니다. 그 남자는 대단히 호감형이라고도 하더군요."]="male",
+	["한 남자가 대마법학자와 나란히 저택에 들어오는 걸 봤다는 얘기가 있더군요."]="male",
+	["한 연주자가 말하길, 그 남자가 끊임없이 그 지구에 관한 질문을 늘어놨다고 합니다."]="male",
+	["그 불청객은 남자가 아니라는 말을 들었습니다."]="female",
+	["아까 한 방문객이 그녀와 엘리산드가 함께 도착하는 걸 보았답니다."]="female",
+	["첩자가 나타났다고 합니다. 그 여자는 아주 미인이라고도 하더군요."]="female",
+	["어떤 여자가 귀족 지구에 관해 계속 묻고 다닌다고 하던데..."]="female",
+	["그자는 첩자인데도 밝은색 조끼를 즐겨 입는다고 합니다."]="lightVest",
+	["오늘 밤 파티에 그 첩자는 밝은색 조끼를 입고 올 거라는 말을 들었습니다."]="lightVest",
+	["사람들이 그러는데, 오늘 밤 그 첩자는 어두운 색 조끼를 입지 않았다고 합니다."]="lightVest",
+	["그 첩자는 분명 어두운 옷을 선호합니다."]="darkVest",
+	["오늘 밤 그 첩자는 어둡고 짙은 색의 조끼를 입었다고 합니다."]="darkVest",
+	["그 첩자는 어두운 색 조끼를 즐겨 입어요... 밤과 같은 색이죠."]="darkVest",
+	["소문에 그 첩자는 눈에 띄지 않으려고 밝은색 옷은 피한다더군요."]="darkVest",
+	["그 첩자는 소매가 긴 옷을 입는 걸 정말 싫어한다고 합니다."]="shortSleeves",
+	["그 첩자는 팔을 빠르게 움직이려고 짧은 소매 옷만 고집한다고 합니다."]="shortSleeves",
+	["그 첩자는 시원한 걸 좋아해서 오늘 밤 짧은 소매를 입고 왔다고 들었습니다."]="shortSleeves",
+	["제 친구가 그 첩자가 입은 옷을 봤는데, 긴 소매는 아니었다는군요!"]="shortSleeves",
+	["오늘 밤 첩자는 긴 소매 옷을 입었다고 하더군요."]="longSleeves",
+	["제 친구 말로는, 첩자가 긴 소매 옷을 입었다고 합니다."]="longSleeves",
+	["오늘 밤 그 첩자는 소매가 긴 옷을 입었다고 들었어요."]="longSleeves",
+	["초저녁에 첩자를 언뜻 보았는데... 긴 소매 옷을 입었던 것 같습니다."]="longSleeves",
+	["그 첩자가 망토를 걸친 모습을 봤다는 사람이 있었습니다."]="cloak",
+	["그 첩자는 망토를 즐겨 입는다고 들었습니다."]="cloak",
+	["제가 듣기로는 그 첩자가 궁전에 망토를 벗어두고 여기 왔다고 합니다."]="noCloak",
+	["그 첩자는 망토를 싫어해서 절대로 입지 않는다고 합니다."]="noCloak",
+	["그 첩자는 항상 장갑을 낀다고 하더군요."]="gloves",
+	["제가 듣기로는, 그 첩자는 항상 신경 써서 손을 가린다고 합니다."]="gloves",
+	["그 첩자는 손에 있는 선명한 흉터를 가리려고 장갑을 낀다고 합니다."]="gloves",
+	["그 첩자는 항상 장갑을 낀다고 들었습니다."]="gloves",
+	["안쪽 방에서 장갑 한 켤레를 발견했습니다. 첩자는 분명히 이 주변에 장갑을 끼지 않은 사람중 하나일 거에요."]="noGloves",
+	["그 첩자는 장갑을 끼는 일이 없다고 하더군요."]="noGloves",
+	["그 첩자는 장갑을 끼지 않는답니다. 위급한 순간에 걸리적거려서 그렇겠지요."]="noGloves",
+	["그 첩자는 장갑을 끼는 걸 싫어한다고 들었습니다."]="noGloves",
+	["소문을 들어 보니, 그 첩자는 독서를 좋아해서 항상 책을 가지고 다닌다고 합니다."]="book",
+	["그 첩자의 허리띠 주머니에는 비밀이 잔뜩 적힌 책이 담겨 있다고 합니다."]="book",
+	["한 연주자가 그 첩자가 마지막 물약을 버리는 걸 봤다고 합니다. 그러니 더는 물약이 없겠죠."]="noPotion",
+	["그 첩자는 물약을 가지고 다니지 않는다고 합니다."]="noPotion",
+	["그 첩자는 허리띠에 물약을 매달고 있을 게 분명합니다. 있는 게 분명해요."]="potion",
+	["그 첩자는 물약을 가지고 다닌데요. 이유가 뭘까요?"]="potion",
+	["I heard the spy brought along some potions... just in case."]="potion",
+	["이 얘기를 깜빡할 뻔했네요... 그 첩자는 연금술사로 가장해 허리띠에 물약을 달고 다닌다고 합니다."]="potion",
+	["그 첩자는 허리띠 주머니도 휘황찬란한 자수로 꾸며져 있다고 합니다."]="coinpurse",
+	["제 친구가 말하길, 그 첩자는 금을 너무 좋아해서 허리띠 주머니에도 금이 가득 들어 있다고 합니다."]="coinpurse",
+	["그 첩자는 어찌나 사치스러운지 허리띠에 달린 주머니에 금화를 잔뜩 넣어서 다닌다고 합니다."]="coinpurse",
+	["그 첩자는 마법의 주머니를 항상 가지고 다닌다고 들었습니다."]="coinpurse",
+}
+
 function Locale:HasRumors()
 	return rumors[current_locale] ~= nil and clues[current_locale] ~= nil
 end
@@ -348,5 +418,3 @@ function Locale:Rumor(gossip)
 		return clues[current_locale] and clues[current_locale][rumors[current_locale][gossip]]
 	end
 end
-
-current_locale = GetLocale()
