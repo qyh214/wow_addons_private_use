@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1761, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15156 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15561 $"):sub(12, -3))
 mod:SetCreatureID(104528)--109042
 mod:SetEncounterID(1886)
 mod:SetZone()
@@ -77,9 +77,10 @@ mod:AddTimerLine(SCENARIO_STAGE:format(2))
 local timerPlasmaSpheresCD			= mod:NewNextTimer(55, 218774, 104923, nil, nil, 1)--"Summon Balls" short text
 --Stage 3: Pure Forms
 mod:AddTimerLine(SCENARIO_STAGE:format(3))
-local timerToxicSporesCD			= mod:NewNextTimer(8, 219049, nil, nil, nil, 3)--Exception to 35, 55, 70 rule
+local timerToxicSporesCD			= mod:NewNextTimer(8.5, 219049, nil, nil, nil, 3)--Exception to 35, 55, 70 rule
 local timerGraceOfNatureCD			= mod:NewNextTimer(70, 218927, nil, "Tank", nil, 5)
 local timerCoNCD					= mod:NewNextTimer(70, 218809, nil, nil, nil, 3)
+mod:AddTimerLine(PLAYER_DIFFICULTY6)
 local timerChaotiSpheresofNatureCD	= mod:NewAITimer(35, 223219, nil, nil, nil, 1, nil, DBM_CORE_HEROIC_ICON)
 
 local countdownControlledChaos		= mod:NewCountdown(35, 218438)
@@ -273,8 +274,8 @@ function mod:SPELL_CAST_START(args)
 		countdownParasiticFetter:Cancel()
 		timerSolarCollapseCD:Stop()
 		timerSolarCollapseCD:Start(12)
-		timerParasiticFetterCD:Start(23.5)
-		countdownParasiticFetter:Start(23.5)
+		timerParasiticFetterCD:Start(23.5)--SUCCESS
+		countdownParasiticFetter:Start(23.5)--SUCCESS
 		timerPlasmaSpheresCD:Start(37)
 		timerControlledChaosCD:Start(57)
 		countdownControlledChaos:Start(57)
@@ -288,15 +289,15 @@ function mod:SPELL_CAST_START(args)
 		countdownParasiticFetter:Cancel()
 		timerSolarCollapseCD:Stop()
 		timerPlasmaSpheresCD:Stop()
-		timerToxicSporesCD:Start(8.5)
+		timerToxicSporesCD:Start(8)
 		timerSolarCollapseCD:Start(17)
-		timerParasiticFetterCD:Start(28)
-		countdownParasiticFetter:Start(28)
+		timerParasiticFetterCD:Start(27.5)
+		countdownParasiticFetter:Start(27.5)
 		timerControlledChaosCD:Start(37)
 		countdownControlledChaos:Start(37)
 		timerPlasmaSpheresCD:Start(52)
-		timerCoNCD:Start(64)--Probably will be changed
-		countdownCoN:Start(64)
+		timerCoNCD:Start(62)
+		countdownCoN:Start(62)
 		timerGraceOfNatureCD:Start(72)--Might change
 		countdownGraceOfNature:Start(72)
 	elseif spellId == 223437 then

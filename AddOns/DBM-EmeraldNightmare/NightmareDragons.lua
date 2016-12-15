@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1704, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15495 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15557 $"):sub(12, -3))
 mod:SetCreatureID(102679)--Ysondre, 102683 (Emeriss), 102682 (Lethon), 102681 (Taerar)
 mod:SetEncounterID(1854)
 mod:SetZone()
@@ -47,7 +47,7 @@ local warnShadowBurst				= mod:NewTargetAnnounce(204040, 3)
 --Taerar
 
 --All
-local specWarnMark					= mod:NewSpecialWarningStack("ej12809", nil, 7, nil, 1, 6)
+local specWarnMark					= mod:NewSpecialWarningStack("ej12809", nil, 7, nil, 2, 1, 6)
 local specWarnDragon				= mod:NewSpecialWarningTarget(204720, "Tank", nil, nil, 1, 2)
 --Ysondre
 --local specWarnNightmareBlast		= mod:NewSpecialWarningSpell(203153, nil, nil, nil, 2)
@@ -82,8 +82,8 @@ local timerVolatileInfectionCD		= mod:NewCDTimer(45.4, 203787, nil, "-Tank", 2, 
 local timerEssenceOfCorruptionCD	= mod:NewNextTimer(30, 205298, nil, nil, nil, 1)
 --Lethon
 mod:AddTimerLine(Lethon)
-local timerSiphonSpiritCD			= mod:NewNextTimer(49.9, 203888, nil, nil, nil, 1)
-local timerShadowBurstCD			= mod:NewNextTimer(14.7, 204040, nil, nil, nil, 3)--Air
+local timerSiphonSpiritCD			= mod:NewNextTimer(49.9, 203888, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerShadowBurstCD			= mod:NewNextTimer(14.5, 204040, nil, nil, nil, 3)--Air
 --Taerar
 mod:AddTimerLine(Taerar)
 local timerShadesOfTaerarCD			= mod:NewNextTimer(48.5, 204100, nil, "-Healer", nil, 1)
@@ -146,7 +146,7 @@ local function whoDatUpThere(self)
 
 	end
 	if not lethonFound then -- Lethon
-		timerShadowBurstCD:Start(13.8)
+		timerShadowBurstCD:Start(12.6)
 	end
 	if not taerarFound then -- Taerar
 		timerBellowingRoarCD:Start(43)

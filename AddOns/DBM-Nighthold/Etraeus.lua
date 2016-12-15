@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1732, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15224 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15562 $"):sub(12, -3))
 mod:SetCreatureID(103758)
 mod:SetEncounterID(1863)
 mod:SetZone()
@@ -20,12 +20,14 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_DAMAGE 206398",
 	"SPELL_PERIODIC_MISSED 206398",
 	"UNIT_DIED",
-	"UNIT_SPELLCAST_SUCCEEDED boss1"
+	"UNIT_SPELLCAST_SUCCEEDED boss1",
+	"UNIT_AURA player"
 )
 
 --TODO, evalulate hud size for conjunction for range check/hud. 5 yards guessed.
 --TODO, felburst stacks/swapping?
 --TODO, does void nova even merit a special warning, or regular?
+--TODO, void ejection gone?
 --Base abilities
 local warnStarSignCrab				= mod:NewTargetAnnounce(205429, 2)--Yellow (looks orange but icon text is yellow)
 local warnStarSignDragon			= mod:NewTargetAnnounce(216344, 2)--Blue
@@ -39,10 +41,8 @@ local warnIcyEjection				= mod:NewTargetAnnounce(206936, 2)
 --Stage Three: A Shattered World
 local warnFelEjection				= mod:NewTargetAnnounce(205649, 2)
 --Stage Four: Inevitable Fate
-local warnVoidEjection				= mod:NewTargetAnnounce(207143, 2)
+--local warnVoidEjection				= mod:NewTargetAnnounce(207143, 2)
 
-local specWarnConjunction			= mod:NewSpecialWarningMoveAway(205408, nil, nil, nil, 3, 2)
-local specWarnConjunctionSign		= mod:NewSpecialWarningYouPos(205408, nil, nil, nil, 1, 6)
 local specWarnGravitationalPull		= mod:NewSpecialWarningYou(205984, nil, nil, nil, 3, 2)
 local specWarnGravitationalPullOther= mod:NewSpecialWarningTaunt(205984, nil, nil, nil, 1, 2)
 local yellGravitationalPull			= mod:NewFadesYell(205984)
@@ -62,10 +62,12 @@ local specWarnWitnessVoid			= mod:NewSpecialWarningSpell(207720, nil, nil, nil, 
 local specWarnVoidEjection			= mod:NewSpecialWarningMoveAway(207143, nil, nil, nil, 1, 2)--Should this be a move away, does void burst do any damage?
 local specWarnVoidNova				= mod:NewSpecialWarningSpell(207439, nil, nil, nil, 2, 2)
 local specWarnWorldDevouringForce	= mod:NewSpecialWarningDodge(216909, nil, nil, nil, 3, 2)
+--Mythic
+local specWarnConjunction			= mod:NewSpecialWarningMoveAway(205408, nil, nil, nil, 3, 2)
+local specWarnConjunctionSign		= mod:NewSpecialWarningYouPos(205408, nil, nil, nil, 1, 6)
 
 
 --Base abilities
-local timerConjunctionCD			= mod:NewCDTimer(16, 205408, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 local timerGravPullCD				= mod:NewCDTimer(29, 205984, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 --Stage One: The Dome of Observation
 mod:AddTimerLine(SCENARIO_STAGE:format(1))
@@ -77,16 +79,18 @@ local timerFrigidNovaCD				= mod:NewCDTimer(61.5, 206949, nil, nil, nil, 2, nil,
 --Stage Three: A Shattered World
 mod:AddTimerLine(SCENARIO_STAGE:format(3))
 local timerFelEjectionCD			= mod:NewCDCountTimer(16, 205649, nil, nil, nil, 3)
-local timerFelNovaCD				= mod:NewCDCountTimer(29.3, 206517, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerFelNovaCD				= mod:NewCDCountTimer(25, 206517, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)--47.1, 45.0, 25.1
 --Stage Four: Inevitable Fate
 mod:AddTimerLine(SCENARIO_STAGE:format(4))
-local timerWitnessVoidCD			= mod:NewCDTimer(13.4, 207720, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)--14.5 on normal
-local timerVoidEjectionCD			= mod:NewCDCountTimer(16, 207143, nil, nil, nil, 3)
-local timerVoidNovaCD				= mod:NewCDTimer(65, 207439, nil, nil, nil, 2)--Only saw a single pull it was cast twice, so CD needs more verification
+local timerWitnessVoidCD			= mod:NewCDTimer(14.2, 207720, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
+--local timerVoidEjectionCD			= mod:NewCDCountTimer(16, 207143, nil, nil, nil, 3)--Where did it go? wasn't on normal test and wasn't on heroic retest
+local timerVoidNovaCD				= mod:NewCDTimer(74, 207439, nil, nil, nil, 2)--Only saw a single pull it was cast twice, so CD needs more verification
 local timerWorldDevouringForceCD	= mod:NewCDTimer(16, 216909, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON..DBM_CORE_HEROIC_ICON)
 local timerThingCD					= mod:NewCDTimer(63, "ej13057", 207813, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
+local timerConjunctionCD			= mod:NewCDTimer(16, 205408, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 
-local berserkTimer					= mod:NewBerserkTimer(463)
+--local berserkTimer					= mod:NewBerserkTimer(463)
 
 --Base abilities
 local countdownConjunction			= mod:NewCountdownFades("AltTwo15", 205408)
@@ -126,7 +130,7 @@ mod.vb.phase = 1
 mod.vb.icyEjectionCount = 0
 mod.vb.felEjectionCount = 0
 mod.vb.felNovaCount = 0
-mod.vb.voidEjectionCount = 0
+--mod.vb.voidEjectionCount = 0
 --These timers are self corrective, which is annoying when all inclusive but better if scrubbing short timers
 --For example Icy will always be 35.2, 64.5, 24.7 if you scrub the short timers or within 0.3. However including short timers and you get more variation.
 --For time being, i'll be all inclusive, particuarlly with void since some of the shorter auto correcting ones are over 10 seconds.
@@ -135,15 +139,16 @@ mod.vb.voidEjectionCount = 0
 --"207143-Void Ejection" = "pull:328.7, 5.7, 14.1, 20.7, 2.8, 6.1, 25.7, 4.9",
 --"207143-Void Ejection" = "pull:326.8, 4.4, 17.5, 17.4, 4.6, 4.7, 26.3, 4.8",
 --For all inclusive, i'll simply use lowest observed time for each count, which will give close approx cd timer but imprecise to be a "next" timer.
-local icyEjectionTimers = {24.5, 34.4, 6.5, 5.3, 50.7}
-local felEjectionTimers = {22.5, 4.8, 3.7, 0.4, 10.9, 3.6, 3.7, 33.6, 2.5, 2.8, 4.5, 2.8, 24.0}--10 after 4,  32 after 7, 24 after 12
+local icyEjectionTimers = {24.5, 34.4, 6.5, 5.3, 50.7, 1.2, 2.4}--43.3, 35.6, 8.1, 4.1, 52.2, 1.2, 2.4
+local felEjectionTimers = {22.5, 3.6, 3.2, 2.4, 10.2, 4.4, 2.8, 32.8, 4.0, 1.6, 4.0, 4.5, 22.3, 6.9, 17.0, 1.6, 1.2, 2.0, 18.3, 0.4}--10 after 4, 32 after 7, 22 after 12, 17 after 14, 18 after 18
 local voidEjectionTimers = {24, 3.2, 14.1, 17.4, 0.8, 4.7, 25.7, 2.3}
---local felNovaTImers = {34.8, 31.3, 29.3}--Currently unused. for now just doing 34.8 or 29.3
+--local felNovaTImers = {34.8, 31.3, 29.3}--Latest is 47.1, 45.0, 25.1. Currently unused. for now just doing 45 or 25
 local abZeroTargets = {}
 local abZeroDebuff, chilledDebuff, gravPullDebuff = GetSpellInfo(206585), GetSpellInfo(206589), GetSpellInfo(205984)
 local icyEjectionDebuff, coronalEjectionDebuff, voidEjectionDebuff = GetSpellInfo(206936), GetSpellInfo(206464), GetSpellInfo(207143)
 local crabDebuff, dragonDebuff, hunterDebuff, wolfDebuff = GetSpellInfo(205429), GetSpellInfo(216344), GetSpellInfo(216345), GetSpellInfo(205445)
 local UnitDebuff = UnitDebuff
+local voidWarned = false
 local chilledFilter, tankFilter
 do
 	chilledFilter = function(uId)
@@ -257,6 +262,7 @@ local function cancelNotMine(self)
 end
 
 function mod:OnCombatStart(delay)
+	voidWarned = false
 	table.wipe(abZeroTargets)
 	self.vb.StarSigns = 0
 	self.vb.phase = 1
@@ -264,9 +270,9 @@ function mod:OnCombatStart(delay)
 		timerCoronalEjectionCD:Start(12-delay)--Still could be health based
 		timerConjunctionCD:Start(15-delay)
 	else
-		timerCoronalEjectionCD:Start(17.5-delay)--Still could be health based
+		timerCoronalEjectionCD:Start(12.9-delay)--Still could be health based
 	end
-	berserkTimer:Start(-delay)
+	--berserkTimer:Start(-delay)
 end
 
 function mod:OnCombatEnd()
@@ -295,8 +301,8 @@ function mod:SPELL_CAST_START(args)
 		self.vb.felNovaCount = self.vb.felNovaCount + 1
 		specWarnFelNova:Show()
 		voiceFelnova:Play("justrun")
-		if self.vb.felNovaCount == 1 then
-			timerFelNovaCD:Start(34.8, self.vb.felNovaCount+1)
+		if self.vb.felNovaCount < 3 then
+			timerFelNovaCD:Start(45, self.vb.felNovaCount+1)
 		else
 			timerFelNovaCD:Start(nil, self.vb.felNovaCount+1)
 		end
@@ -331,24 +337,29 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 205649 and not self:IsMythic() then--Disabled on mythic, shits basically spammed there and doesn't match timers table.
 		self.vb.felEjectionCount = self.vb.felEjectionCount + 1
-		--10 after 4,  32 after 7, 24 after 12
+		--10 after 4, 32 after 7, 22 after 12, 17 after 14, 18 after 18
 		--The rest are like sub 5 second timers with variations to boot so not worth timers
 		if self.vb.felEjectionCount == 4 then
 			timerFelEjectionCD:Start(10, self.vb.felEjectionCount+1)
 		elseif self.vb.felEjectionCount == 7 then
 			timerFelEjectionCD:Start(32, self.vb.felEjectionCount+1)
 		elseif self.vb.felEjectionCount == 12 then
-			timerFelEjectionCD:Start(24, self.vb.felEjectionCount+1)
+			timerFelEjectionCD:Start(22, self.vb.felEjectionCount+1)
+		elseif self.vb.felEjectionCount == 14 then
+			timerFelEjectionCD:Start(17, self.vb.felEjectionCount+1)
+		elseif self.vb.felEjectionCount == 18 then
+			timerFelEjectionCD:Start(18, self.vb.felEjectionCount+1)
 		end
 	elseif spellId == 207143 then
-		self.vb.voidEjectionCount = self.vb.voidEjectionCount + 1
+		DBM:Debug("Void Ejection is back", 2)
+--[[		self.vb.voidEjectionCount = self.vb.voidEjectionCount + 1
 		local timer = voidEjectionTimers[self.vb.voidEjectionCount+1]
 		if timer and timer >= 4 then--No sense in starting timers for the sub 4 second casts
 			timerVoidEjectionCD:Start(timer, self.vb.voidEjectionCount+1)
-		end
+		end--]]
 	elseif spellId == 205984 or spellId == 214335 or spellId == 214167 then--205984 Frost, 214167 Fel, 214335 Void
 		if spellId == 214335 then
-			timerGravPullCD:Start(39)
+			timerGravPullCD:Start(65)
 		else--29
 			timerGravPullCD:Start()
 		end
@@ -473,7 +484,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			voiceFelEjection:Schedule(1, "keepmove")
 		end
 	elseif spellId == 207143 then
-		warnVoidEjection:CombinedShow(0.5, args.destName)
+		--warnVoidEjection:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnVoidEjection:Show()
 			voiceVoidEjection:Play("runout")
@@ -537,6 +548,14 @@ function mod:UNIT_DIED(args)
 	end
 end
 
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+	if spellId == 206398 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
+		specWarnFelFlame:Show()
+		voiceFelFlame:Play("runaway")
+	end
+end
+mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+
 --Phases can also be done with Nether Traversal (221875) with same timing.
 --However, this is more robust since unique spellids for each phase is better than same used for all 3
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
@@ -546,8 +565,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		self.vb.icyEjectionCount = 0
 		timerCoronalEjectionCD:Stop()
 		timerConjunctionCD:Stop()
-		timerIcyEjectionCD:Start(24.5, 1)
-		timerGravPullCD:Start(29)
+		timerIcyEjectionCD:Start(23.3, 1)
+		timerGravPullCD:Start(30)
 		if not self:IsEasy() then
 			timerFrigidNovaCD:Start(49)
 		end
@@ -562,26 +581,26 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		timerFrigidNovaCD:Stop()
 		timerGravPullCD:Stop()
 		timerConjunctionCD:Stop()
-		timerFelEjectionCD:Start(19, 1)
-		timerGravPullCD:Start(28)
+		timerFelEjectionCD:Start(18.2, 1)
+		timerGravPullCD:Start(29)
 		if not self:IsEasy() then
-			timerFelNovaCD:Start(61, 1)
+			timerFelNovaCD:Start(57.7, 1)
 		end
 		if self:IsMythic() then
 			timerConjunctionCD:Start(48)
 		end
 	elseif spellId == 222134 then--Phase 4 Conversation
 		self.vb.phase = 4
-		self.vb.voidEjectionCount = 0
+		--self.vb.voidEjectionCount = 0
 		timerFelEjectionCD:Stop()
 		timerFelNovaCD:Stop()
 		timerGravPullCD:Stop()
 		timerConjunctionCD:Stop()
-		timerGravPullCD:Start(20.5)
-		timerThingCD:Start(31.5)
+		timerGravPullCD:Start(19.6)
+		timerThingCD:Start(31)
 		if not self:IsEasy() then--Was never used on normal, probably not LFR either then
-			timerVoidEjectionCD:Start(24, 1)
-			timerVoidNovaCD:Start(40)
+			--timerVoidEjectionCD:Start(24, 1)
+			timerVoidNovaCD:Start(41)
 		end
 		if self:IsMythic() then
 			timerWorldDevouringForceCD:Start(22)
@@ -590,10 +609,25 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	end
 end
 
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 206398 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
-		specWarnFelFlame:Show()
-		voiceFelFlame:Play("runaway")
+do
+	local debuffName = GetSpellInfo(207143)
+	--Jumps didn't show in combat log during testing, only original casts. However, jumps need warnings too
+	--Check at later time if jumps are in combat log
+	function mod:UNIT_AURA(uId)
+		local hasDebuff = UnitDebuff("player", debuffName)
+		if hasDebuff and not voidWarned then
+			voidWarned = true
+			specWarnVoidEjection:Show()
+			voiceVoidEjection:Play("runout")
+			--yellScornedTouch:Yell()
+			--if self.Options.RangeFrame then
+			--	DBM.RangeCheck:Show(8)
+			--end
+		elseif not hasDebuff and voidWarned then
+			voidWarned = false
+			--if self.Options.RangeFrame then
+			--	DBM.RangeCheck:Hide()
+			--end
+		end
 	end
 end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

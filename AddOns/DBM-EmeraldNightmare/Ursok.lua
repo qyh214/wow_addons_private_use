@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(1667, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15543 $"):sub(12, -3))
 mod:SetCreatureID(100497)
 mod:SetEncounterID(1841)
 mod:SetZone()
 mod:SetUsedIcons(6, 4)
 mod:SetHotfixNoticeRev(15348)
-mod.respawnTime = 40
+mod.respawnTime = 39
 
 mod:RegisterCombat("combat")
 
@@ -41,7 +41,7 @@ local specWarnOverwhelmOther		= mod:NewSpecialWarningTaunt(197943, nil, nil, nil
 local timerFocusedGazeCD			= mod:NewNextCountTimer(40, 198006, nil, nil, nil, 3)
 local timerRendFleshCD				= mod:NewNextCountTimer(20, 197942, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerOverwhelmCD				= mod:NewNextTimer(10, 197943, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerRoaringCacophonyCD		= mod:NewNextCountTimer(30, 197969, nil, nil, nil, 2)
+local timerRoaringCacophonyCD		= mod:NewNextCountTimer(30, 197969, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(300)
 

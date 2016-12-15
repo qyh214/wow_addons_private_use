@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1783, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14967 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15535 $"):sub(12, -3))
 mod:SetCreatureID(110321)
 mod:SetEncounterID(1950)
 mod:SetReCombatTime(20)
@@ -22,9 +22,9 @@ local warnWebWrap				= mod:NewTargetAnnounce(219865, 2)
 local specWarnFoundation		= mod:NewSpecialWarningSpell(219591)
 local specWarnWebWrap			= mod:NewSpecialWarningSwitch(219865, "Dps")--Overkill? maybe just melee or just ranged or off by default
 
-local timerCorrodingSprayCD		= mod:NewAITimer(16, 219349, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerCorrodingSprayCD		= mod:NewCDTimer(23.2, 219349, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerFoundatoinCD			= mod:NewAITimer(90, 219591, nil, nil, nil, 6)
-local timerWebWrapCD			= mod:NewAITimer(90, 219865, nil, nil, nil, 3)
+local timerWebWrapCD			= mod:NewCDTimer(36.9, 219865, nil, nil, nil, 3)
 
 --local voiceFoundation			= mod:NewVoice(219591)--no voice ideas at all. Maybe needs new one
 --local voiceWebWrap				= mod:NewVoice(219865, "Dps")--Maybe time for a "freeallies" or "freeplayers" voice?

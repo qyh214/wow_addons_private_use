@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 15512 $"):sub(12, -3)),
-	DisplayVersion = "7.1.4", -- the string that is shown as version
-	ReleaseRevision = 15512 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 15569 $"):sub(12, -3)),
+	DisplayVersion = "7.1.5", -- the string that is shown as version
+	ReleaseRevision = 15569 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -418,8 +418,9 @@ local statusWhisperDisabled = false
 local wowVersionString, _, _, wowTOC = GetBuildInfo()
 local dbmToc = 0
 local UpdateChestTimer
+local breakTimerStart
 
-local fakeBWVersion, fakeBWHash = 25, "3df7123"
+local fakeBWVersion, fakeBWHash = 29, "d5c4347"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -1110,7 +1111,7 @@ do
 			local elapsed = time() - tonumber(startTime)
 			local remaining = timer - elapsed
 			if remaining > 0 then
-				SendAddonMessage("D4", "BTR3\t"..remaining, "WHISPER", playerName)
+				breakTimerStart(DBM, remaining, playerName)
 			else--It must have ended while we were offline, kill variable.
 				self.Options.tempBreak2 = nil
 			end
@@ -3783,7 +3784,7 @@ do
 			self:Debug(uId.." changed targets to "..targetName)
 		end
 		--Active BossUnitTargetScanner
-		if targetMonitor and UnitExists(uId.."target") then
+		if targetMonitor and UnitExists(uId.."target") and UnitPlayerOrPetInRaid(uId.."target") then
 			self:Debug("targetMonitor exists, target exists", 2)
 			local modId, unitId, returnFunc = string.split("\t", targetMonitor)
 			self:Debug("targetMonitor: "..modId..", "..unitId..", "..returnFunc, 2)
@@ -4026,41 +4027,7 @@ do
 		end
 	end
 
-	local function breakTimerStart(self, timer, sender)
-		self.Options.tempBreak2 = timer.."/"..time()
-		if not self.Options.DontShowPT2 then
-			self.Bars:CreateBar(timer, DBM_CORE_TIMER_BREAK, "Interface\\Icons\\Spell_Holy_BorrowedTime")
-			fireEvent("DBM_TimerStart", "break", DBM_CORE_TIMER_BREAK, timer, "Interface\\Icons\\Spell_Holy_BorrowedTime")
-		end
-		if not self.Options.DontPlayPTCountdown then
-			dummyMod2.countdown:Start(timer)
-		end
-		if not self.Options.DontShowPTCountdownText then
-			local threshold = DBM.Options.PTCountThreshold
-			if timer > threshold then
-				self:Schedule(timer-threshold, countDownTextDelay, threshold)
-			else
-				TimerTracker_OnEvent(TimerTracker, "START_TIMER", 2, timer, timer)
-			end
-		end
-		if not self.Options.DontShowPTText then
-			dummyMod2.text:Show(DBM_CORE_BREAK_START:format(strFromTime(timer), sender))
-			if timer/60 > 10 then dummyMod2.text:Schedule(timer - 10*60, DBM_CORE_BREAK_MIN:format(10)) end
-			if timer/60 > 5 then dummyMod2.text:Schedule(timer - 5*60, DBM_CORE_BREAK_MIN:format(5)) end
-			if timer/60 > 2 then dummyMod2.text:Schedule(timer - 2*60, DBM_CORE_BREAK_MIN:format(2)) end
-			if timer/60 > 1 then dummyMod2.text:Schedule(timer - 1*60, DBM_CORE_BREAK_MIN:format(1)) end
-			dummyMod2.text:Schedule(timer, DBM_CORE_ANNOUNCE_BREAK_OVER)
-		end
-		C_TimerAfter(timer, function() self.Options.tempBreak2 = nil end)
-	end
-
-	syncHandlers["BT"] = function(sender, timer)
-		if DBM.Options.DontShowUserTimers then return end
-		timer = tonumber(timer or 0)
-		if timer > 3600 then return end
-		if (DBM:GetRaidRank(sender) == 0 and IsInGroup()) or select(2, IsInInstance()) == "pvp" or IsEncounterInProgress() then
-			return
-		end
+	function breakTimerStart(self, timer, sender)
 		if not dummyMod2 then
 			local threshold = DBM.Options.PTCountThreshold
 			local adjustedThreshold = 5
@@ -4081,13 +4048,45 @@ do
 		if not DBM.Options.DontPlayPTCountdown then
 			dummyMod2.countdown:Cancel()
 		end
-		if not DBM.Options.DontShowPTCountdownText then
-			DBM:Unschedule(countDownTextDelay)
-			TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")--easiest way to nil out timers on TimerTracker frame. This frame just has no actual star/stop functions
-		end
 		dummyMod2.text:Cancel()
 		DBM.Options.tempBreak2 = nil
 		if timer == 0 then return end--"/dbm break 0" will strictly be used to cancel the break timer (which is why we let above part of code run but not below)
+		self.Options.tempBreak2 = timer.."/"..time()
+		if not self.Options.DontShowPT2 then
+			self.Bars:CreateBar(timer, DBM_CORE_TIMER_BREAK, "Interface\\Icons\\Spell_Holy_BorrowedTime")
+			fireEvent("DBM_TimerStart", "break", DBM_CORE_TIMER_BREAK, timer, "Interface\\Icons\\Spell_Holy_BorrowedTime")
+		end
+		if not self.Options.DontPlayPTCountdown then
+			dummyMod2.countdown:Start(timer)
+		end
+		if not self.Options.DontShowPTText then
+			local hour, minute = GetGameTime()
+			minute = minute+(timer/60)
+			if minute >= 60 then
+				hour = hour + 1
+				minute = minute - 60
+			end
+			minute = floor(minute)
+			if minute < 10 then
+				minute = tostring(0 .. minute)
+			end
+			dummyMod2.text:Show(DBM_CORE_BREAK_START:format(strFromTime(timer).." ("..hour..":"..minute..")", sender))
+			if timer/60 > 10 then dummyMod2.text:Schedule(timer - 10*60, DBM_CORE_BREAK_MIN:format(10)) end
+			if timer/60 > 5 then dummyMod2.text:Schedule(timer - 5*60, DBM_CORE_BREAK_MIN:format(5)) end
+			if timer/60 > 2 then dummyMod2.text:Schedule(timer - 2*60, DBM_CORE_BREAK_MIN:format(2)) end
+			if timer/60 > 1 then dummyMod2.text:Schedule(timer - 1*60, DBM_CORE_BREAK_MIN:format(1)) end
+			dummyMod2.text:Schedule(timer, DBM_CORE_ANNOUNCE_BREAK_OVER:format(hour..":"..minute))
+		end
+		C_TimerAfter(timer, function() self.Options.tempBreak2 = nil end)
+	end
+
+	syncHandlers["BT"] = function(sender, timer)
+		if DBM.Options.DontShowUserTimers then return end
+		timer = tonumber(timer or 0)
+		if timer > 3600 then return end
+		if (DBM:GetRaidRank(sender) == 0 and IsInGroup()) or select(2, IsInInstance()) == "pvp" or IsEncounterInProgress() then
+			return
+		end
 		breakTimerStart(DBM, timer, sender)
 	end
 	
@@ -4098,12 +4097,6 @@ do
 		DBM:Unschedule(DBM.RequestTimers)--IF we got BTR3 sync, then we know immediately RequestTimers was successful, so abort others
 		if #inCombat >= 1 then return end
 		if DBM.Bars:GetBar(DBM_CORE_TIMER_BREAK) then return end--Already recovered. Prevent duplicate recovery
-		if not dummyMod2 then
-			dummyMod2 = DBM:NewMod("BreakTimerCountdownDummy")
-			DBM:GetModLocalization("BreakTimerCountdownDummy"):SetGeneralLocalization{ name = DBM_CORE_MINIMAP_TOOLTIP_HEADER }
-			dummyMod2.countdown = dummyMod2:NewCountdown(0, 0, nil, nil, nil, true)
-			dummyMod2.text = dummyMod2:NewAnnounce("%s", 1, "Interface\\Icons\\Spell_Holy_BorrowedTime")
-		end
 		breakTimerStart(DBM, timer, sender)
 	end
 
@@ -5135,6 +5128,7 @@ do
 			if not v.combatInfo then return end
 			if v.noEEDetection then return end
 			if v.respawnTime and success == 0 and self.Options.ShowRespawn and not self.Options.DontShowBossTimers then--No special hacks needed for bad wrath ENCOUNTER_END. Only mods that define respawnTime have a timer, since variable per boss.
+				local name = string.split(",", name)
 				self.Bars:CreateBar(v.respawnTime, DBM_CORE_TIMER_RESPAWN:format(name), "Interface\\Icons\\Spell_Holy_BorrowedTime")
 			end
 			if v.multiEncounterPullDetection then

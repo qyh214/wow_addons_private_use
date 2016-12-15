@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1726, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15495 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15559 $"):sub(12, -3))
 mod:SetCreatureID(103769)
 mod:SetEncounterID(1864)
 mod:SetZone()
@@ -46,11 +46,12 @@ local warnNightmareTentacles			= mod:NewSpellAnnounce("ej12977", 3, 93708)
 
 local specWarnDescentIntoMadness		= mod:NewSpecialWarningYou(208431)
 local yellDescentIntoMadness			= mod:NewFadesYell(208431)
+local specWarnDreaming					= mod:NewSpecialWarningCount(205843, nil, nil, nil, 1, 2)--Mythic
 --Stage One: The Decent Into Madness
 local specWarnNightmareBlades			= mod:NewSpecialWarningMoveAway(206656, nil, nil, nil, 1, 2)
 local specWarnCorruptionHorror			= mod:NewSpecialWarningSwitchCount("ej12973", "-Healer", nil, nil, 1, 2)
 local specWarnCorruptingNova			= mod:NewSpecialWarningSpell(207830, nil, nil, nil, 2, 2)
-local specWarnDarkeningSoulYou			= mod:NewSpecialWarningStack(206651, nil, 3, nil, 1, 6)
+local specWarnDarkeningSoulYou			= mod:NewSpecialWarningStack(206651, nil, 3, nil, 2, 1, 6)
 local specWarnDarkeningSoulOther		= mod:NewSpecialWarningTaunt(206651, nil, nil, nil, 1, 2)
 local specWarnTormentingFixation		= mod:NewSpecialWarningMoveAway(205771, nil, nil, nil, 1, 2)
 local specWarnNightmareInfusionOther	= mod:NewSpecialWarningTaunt(209443, nil, nil, nil, 1, 2)
@@ -60,7 +61,7 @@ local specWarnCorruptionMeteorYou		= mod:NewSpecialWarningYou(206308, nil, nil, 
 local yellMeteor						= mod:NewFadesYell(206308)
 local specWarnCorruptionMeteorAway		= mod:NewSpecialWarningDodge(206308, "-Tank", nil, nil, 2, 2)--No dream, high corruption, dodge it. Subjective and defaults may be altered to off.
 local specWarnCorruptionMeteorTo		= mod:NewSpecialWarningMoveTo(206308, "-Tank", nil, nil, 1, 2)--Has dream, definitely should help
-local specWarnBlackeningSoulYou			= mod:NewSpecialWarningStack(209158, nil, 3, nil, 1, 6)
+local specWarnBlackeningSoulYou			= mod:NewSpecialWarningStack(209158, nil, 3, nil, 2, 1, 6)
 local specWarnBlackeningSoulOther		= mod:NewSpecialWarningTaunt(209158, nil, nil, nil, 1, 2)
 local specWarnInconHorror				= mod:NewSpecialWarningSwitch("ej13162", "-Healer", nil, nil, 1, 2)
 
@@ -69,16 +70,16 @@ mod:AddTimerLine(SCENARIO_STAGE:format(1))
 local timerDarkeningSoulCD				= mod:NewCDTimer(7, 206651, nil, "Healer|Tank", nil, 5, nil, DBM_CORE_MAGIC_ICON..DBM_CORE_TANK_ICON)
 local timerNightmareBladesCD			= mod:NewNextTimer(15.7, 206656, nil, nil, nil, 3)
 local timerLurkingEruptionCD			= mod:NewCDCountTimer(20.5, 208322, nil, nil, nil, 3)
-local timerCorruptionHorrorCD			= mod:NewNextCountTimer(82.5, 210264, nil, nil, nil, 1)
+local timerCorruptionHorrorCD			= mod:NewNextCountTimer(82.5, 210264, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
 local timerCorruptingNovaCD				= mod:NewNextTimer(20, 207830, nil, nil, nil, 2)
-local timerTormentingSwipeCD			= mod:NewCDTimer(10, 224649, nil, "Tank", nil, 5)
+local timerTormentingSwipeCD			= mod:NewCDTimer(10, 224649, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 --Stage Two: From the Shadows
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
 local timerBondsOfTerrorCD				= mod:NewCDTimer(14.1, 209034, nil, nil, nil, 3)
 local timerCorruptionMeteorCD			= mod:NewCDCountTimer(28, 206308, 57467, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--Short text "meteor"
 local timerBlackeningSoulCD				= mod:NewCDTimer(7.2, 209158, nil, "Healer|Tank", nil, 5, nil, DBM_CORE_MAGIC_ICON..DBM_CORE_TANK_ICON)
 local timerNightmareInfusionCD			= mod:NewCDTimer(61.5, 209443, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--61.5-62.5
-local timerCallOfNightmaresCD			= mod:NewCDTimer(40, 205588, nil, nil, nil, 1)
+local timerCallOfNightmaresCD			= mod:NewCDTimer(40, 205588, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
 --Stage Three: Darkness and stuff
 mod:AddTimerLine(SCENARIO_STAGE:format(3))
 local timerNightmareTentacleCD			= mod:NewCDTimer(20, "ej12977", nil, nil, nil, 1, 93708)--226194 is an icon consideration now
@@ -93,6 +94,7 @@ local countdownMeteor					= mod:NewCountdown("AltTwo28", 206308, "-Tank")
 local voicePhaseChange					= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 --Nightmare Corruption
 --local voiceDescentIntoMadness			= mod:NewVoice(208431)
+local voiceDreaming						= mod:NewVoice(205843)--stepring
 --Stage One: The Decent Into Madness
 local voiceNightmareBlades				= mod:NewVoice(206656)--runout
 local voiceCorruptionHorror				= mod:NewVoice("ej12973", "-Healer")--bigmob
@@ -129,6 +131,7 @@ mod.vb.corruptionHorror = 0
 mod.vb.inconHorror = 0
 mod.vb.meteorCount = 0
 mod.vb.lastBonds = nil
+mod.vb.dreamCount = 0
 
 local function updateRangeFrame(self)
 	if not self.Options.RangeFrame then return end
@@ -196,6 +199,7 @@ function mod:OnCombatStart(delay)
 	self.vb.corruptionHorror = 0
 	self.vb.inconHorror = 0
 	self.vb.meteorCount = 0
+	self.vb.dreamCount = 0
 	self.vb.lastBonds = nil
 	table.wipe(bladesTarget)
 	table.wipe(gatherTarget)
@@ -311,7 +315,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			updateRangeFrame(self)
 		else
-			if amount >= 3 then
+			if amount >= 4 then
 				local filterWarning = false
 				if self:GetNumAliveTanks() >= 3 then
 					--Three (or more) Tank Strat AND at least 3 alive
@@ -340,7 +344,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			updateRangeFrame(self)
 		else
-			if amount >= 3 then
+			if amount >= 4 then
 				local filterWarning = false
 				if self:GetNumAliveTanks() >= 3 then
 					--Three (or more) Tank Strat AND at least 3 alive
@@ -566,5 +570,11 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	elseif spellId == 226194 then--Writhing Deep
 		warnNightmareTentacles:Show()
 		timerNightmareTentacleCD:Start()
+	elseif spellId == 205843 then
+		self.vb.dreamCount = self.vb.dreamCount + 1
+		local count = self.vb.dreamCount
+		specWarnDreaming:Show(count)
+		voiceDreaming:Play(nil, "Interface\\AddOns\\DBM-VP"..DBM.Options.ChosenVoicePack.."\\count\\"..count..".ogg")
+		voiceDreaming:Schedule(1, "stepring")
 	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1751, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15236 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15553 $"):sub(12, -3))
 mod:SetCreatureID(104881)
 mod:SetEncounterID(1871)
 mod:SetZone()
@@ -52,7 +52,7 @@ local specWarnFrostdetonate			= mod:NewSpecialWarningMoveAway(212735, nil, nil, 
 local yellFrostDetonate				= mod:NewYell(212735, 29870)--29870 "Detonate" short name
 local specWarnFireDetonate			= mod:NewSpecialWarningMoveAway(213275, nil, nil, nil, 3, 2)
 local yellFireDetonate				= mod:NewYell(213275, 29870)--29870 "Detonate" short name
-local specWarnArcanedetonate		= mod:NewSpecialWarningDodge(213390, nil, nil, nil, 3, 2)
+local specWarnArcaneDetonate		= mod:NewSpecialWarningDodge(213390, nil, nil, nil, 3, 2)
 --GTFOs
 local specWarnPoolOfFrost			= mod:NewSpecialWarningMove(212736, nil, nil, nil, 1, 2)
 local specWarnBurningGround			= mod:NewSpecialWarningMove(213278, nil, nil, nil, 1, 2)
@@ -86,9 +86,10 @@ local timerAnimateArcaneCD			= mod:NewNextTimer(16, 213564, 124338, nil, nil, 1,
 --Animate Specials
 local timerArmageddon				= mod:NewCastTimer(33, 213568, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 --Mythic
+mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerFelSoul					= mod:NewBuffActiveTimer(60, 230951, nil, nil, nil, 6)
 
-local berserkTimer					= mod:NewBerserkTimer(600)
+local berserkTimer					= mod:NewBerserkTimer(600)--480
 
 local countdownMarkOfFrost			= mod:NewCountdown("Alt30", 212531, nil, nil, 3)
 local countdownSearingBrand			= mod:NewCountdown("Alt30", 213148, nil, nil, 3)
@@ -124,7 +125,7 @@ local MarkOfFrostDebuff = GetSpellInfo(212587)
 local SearingBrandDebuff = GetSpellInfo(213166)
 local rangeShowAll = false
 local chargeTable = {}
-local annihilateTimers = {8.0, 45.0, 40.2, 43.8, 38.2, 36.8, 33.2, 46.8, 41.1, 43.9, 38.1}--Need longer pulls/more data. However this pattern did prove to always be same
+local annihilateTimers = {8.0, 45.0, 40.0, 44.0, 38.0, 37.0, 33.0, 47.0, 41.0, 44.0, 38.0, 37.0, 33.0}--Need longer pulls/more data. However this pattern did prove to always be same
 
 local debuffFilter
 local UnitDebuff = UnitDebuff
@@ -163,7 +164,11 @@ function mod:OnCombatStart(delay)
 	--Rest of timers are triggered by frost buff 0.1 seconds into pull
 	table.wipe(chargeTable)
 	rangeShowAll = false
-	berserkTimer:Start(-delay)
+	if self:IsEasy() then
+		berserkTimer:Start(-delay)--600 confirmed on normal
+	else
+		berserkTimer:Start(480-delay)--480 confirmed on heroic
+	end
 end
 
 function mod:OnCombatEnd()
@@ -204,8 +209,8 @@ function mod:SPELL_CAST_START(args)
 			yellFireDetonate:Yell()
 		end
 	elseif spellId == 213390 then--Detonate: Arcane Orb
-		specWarnArcanedetonate:Show()
-		voiceArcaneDetonate:Play("watchorb")
+		--specWarnArcaneDetonate:Show()
+		--voiceArcaneDetonate:Play("watchorb")
 		DBM:AddMsg("If you see this message it means blizzard fixed Detonate: Arcane Orb combat log trigger. Report this to DBM authors to improve mod. You may recieve double warnings on this spell until mod is updated.")
 	elseif spellId == 213083 then--Frozen Tempest
 		warnFrozenTempest:Show()
@@ -244,13 +249,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerMarkOfFrostCD:Start(18)
 			timerMarkOfFrostRepCD:Start(28)
 			timerMarkOfFrostDetonateCD:Start(48)
-			timerAnimateFrostCD:Start(65)--Timer is for cast start, which is hidden at moment, so DBM will trigger warning 3 seconds after timer ends (cast finish) right now
+			timerAnimateFrostCD:Start(65)
 			timerFirePhaseCD:Start(75)
 		else
 			timerMarkOfFrostCD:Start(18)
 			timerMarkOfFrostRepCD:Start(38)
 			timerMarkOfFrostDetonateCD:Start(68)
-			timerAnimateFrostCD:Start(75)--Timer is for cast start, which is hidden at moment, so DBM will trigger warning 3 seconds after timer ends (cast finish) right now
+			timerAnimateFrostCD:Start(75)
 			timerFirePhaseCD:Start(85)
 		end
 		if self.Options.RangeFrame then
@@ -260,7 +265,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnFirePhase:Show()
 		voicePhaseChange:Play("phasechange")
 		timerSearingBrandCD:Start(17.8)
-		timerSearingBrandRepCD:Start(25)
+		timerSearingBrandRepCD:Start(27)--was 25, but 27 makes more sense
 		timerSearingBrandDetonateCD:Start(45)
 		timerAnimateFireCD:Start(62)
 		timerArcanePhaseCD:Start(85)
@@ -269,8 +274,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		voicePhaseChange:Play("phasechange")
 		--Arcane orb not started here, started somewhere else so timer is actually useful
 		timerArcaneOrbRepCD:Start(15)
-		timerArcaneOrbDetonateCD:Start(35)
-		specWarnArcanedetonate:Schedule(35)
+		timerArcaneOrbDetonateCD:Start(35)--Not in combat log, but this is when yell occurs
+		specWarnArcaneDetonate:Schedule(35)
 		voiceArcaneDetonate:Schedule(35, "watchorb")
 		timerAnimateArcaneCD:Start(51.9)
 		if self.Options.RangeFrame and self:IsRanged() then
@@ -377,15 +382,11 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
-	if spellId == 213853 then--Animate Mark of Frost. (wasn't in combat log but is now, but here just in case they break again)
---		specWarnAnimateFrost:Show()
---		voiceAnimateFrost:Play("mobkill")--using this trigger, mobkill
---		timerAnimateFrostCD:Start()
-	elseif spellId == 215455 then--Arcane Orb
+	if spellId == 215455 then--Arcane Orb
 		specWarnArcaneOrb:Show()
 		voiceArcaneOrb:Play("watchorb")
 	elseif spellId == 213390 then--Detonate: Arcane Orb (still missing from combat log, although this event is 3 seconds slower than scheduling or using yell)
---		specWarnArcanedetonate:Show()
+--		specWarnArcaneDetonate:Show()
 --		voiceArcaneDetonate:Play("watchorb")
 	end
 end

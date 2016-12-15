@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1738, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15472 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15543 $"):sub(12, -3))
 mod:SetCreatureID(105393)
 mod:SetEncounterID(1873)
 mod:SetZone()
@@ -70,9 +70,10 @@ mod:AddTimerLine(SCENARIO_STAGE:format(1))
 local timerDeathGlareCD				= mod:NewCDTimer(220, "ej13190", nil, nil, nil, 1, 208697)
 local timerCorruptorTentacleCD		= mod:NewCDTimer(220, "ej13191", nil, nil, nil, 1, 208929)
 local timerNightmareHorrorCD		= mod:NewCDTimer(280, "ej13188", nil, nil, nil, 1, 210289)
-local timerEyeOfFateCD				= mod:NewCDTimer(10, 210984, nil, "Tank", nil, 5)
-local timerNightmareishFuryCD		= mod:NewNextTimer(10.9, 215234, nil, "Tank", nil, 5)
+local timerEyeOfFateCD				= mod:NewCDTimer(10, 210984, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerNightmareishFuryCD		= mod:NewNextTimer(10.9, 215234, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerGroundSlamCD				= mod:NewNextTimer(20.5, 208689, nil, nil, nil, 3)
+mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerDeathBlossomCD			= mod:NewNextTimer(105, 218415, nil, nil, nil, 2, nil, DBM_CORE_HEROIC_ICON)
 local timerDeathBlossom				= mod:NewCastTimer(15, 218415, nil, nil, nil, 5, nil, DBM_CORE_DEADLY_ICON)
 --Stage Two: The Heart of Corruption
@@ -106,6 +107,7 @@ mod:AddInfoFrameOption(210099)
 mod:AddDropdownOption("InfoFrameBehavior", {"Fixates", "Adds"}, "Fixates", "misc")
 
 mod.vb.phase = 1
+mod.vb.insideActive = false
 mod.vb.DominatorCount = 0
 mod.vb.CorruptorCount = 0
 mod.vb.DeathglareCount = 0
@@ -248,6 +250,7 @@ end
 function mod:OnCombatStart(delay)
 	table.wipe(addsTable)
 	self.vb.phase = 1
+	self.vb.insideActive = false
 	self.vb.DominatorCount = 0
 	self.vb.CorruptorCount = 0
 	self.vb.DeathglareCount = 0
@@ -316,7 +319,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnMindFlay:Show(args.sourceName)
 			voiceMindFlay:Play("kickcast")
 		end
-		if not addsTable[args.sourceGUID] then
+		if not addsTable[args.sourceGUID] and not self.vb.insideActive then
 			addsTable[args.sourceGUID] = true
 			self.vb.DeathglareCount = self.vb.DeathglareCount + 1
 			if self:AntiSpam(10, 16) then
@@ -419,9 +422,10 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 209915 then--Stuff of Nightmares
+		self.vb.insideActive = false
 		timerCursedBloodCD:Stop()
-		timerNightmareishFuryCD:Start(7)
-		timerGroundSlamCD:Start(13)
+		timerNightmareishFuryCD:Start(6.1)
+		timerGroundSlamCD:Start(12.1)
 		if self:IsMythic() then
 			self.vb.deathBlossomCount = 0
 			timerDeathBlossomCD:Start(80)
@@ -503,6 +507,7 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 209915 then--Stuff of Nightmares
+		self.vb.insideActive = true
 		specWarnHeartPhaseBegin:Show()
 		timerDeathGlareCD:Stop()
 		timerCorruptorTentacleCD:Stop()

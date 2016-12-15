@@ -258,7 +258,7 @@ DBM_CORE_BREAK_START				= "Break starting now -- you have %s! (Sent by %s)"
 DBM_CORE_BREAK_MIN					= "Break ends in %s minute(s)!"
 DBM_CORE_BREAK_SEC					= "Break ends in %s seconds!"
 DBM_CORE_TIMER_BREAK				= "Break time!"
-DBM_CORE_ANNOUNCE_BREAK_OVER		= "Break has ended"
+DBM_CORE_ANNOUNCE_BREAK_OVER		= "Break has ended at %s"
 
 DBM_CORE_TIMER_PULL					= "Pull in"
 DBM_CORE_ANNOUNCE_PULL				= "Pull in %d sec. (Sent by %s)"
@@ -439,6 +439,7 @@ DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT = {
 	fade		= "%s fading in %%d",
 	position 	= "%s %%s on {rt%%d}"..UnitName("player").."{rt%%d}"
 }
+DBM_CORE_AUTO_YELL_CUSTOM_POSITION		= "{rt%d} %s {rt%d}"--Doesn't need translating. Has no strings
 DBM_CORE_AUTO_HUD_OPTION_TEXT			= "Show HudMap for $spell:%s"
 DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "Show HudMap for various mechanics"
 DBM_CORE_AUTO_RANGE_OPTION_TEXT			= "Show range frame (%s) for $spell:%s"--string used for range so we can use things like "5/2" as a value for that field

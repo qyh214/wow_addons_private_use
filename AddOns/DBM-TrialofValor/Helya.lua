@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1829, "DBM-TrialofValor", nil, 861)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15512 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15566 $"):sub(12, -3))
 mod:SetCreatureID(114537)
 mod:SetEncounterID(2008)
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
-mod:SetHotfixNoticeRev(15486)
+mod:SetHotfixNoticeRev(15515)
 mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
@@ -41,6 +41,7 @@ local warnOrbOfCorruption			= mod:NewTargetAnnounce(229119, 3)
 local warnTaintOfSea				= mod:NewTargetAnnounce(228054, 2)
 --Stage Two: From the Mists (65%)
 local warnPhase2					= mod:NewPhaseAnnounce(2, 2)
+local warnTentaclesRemaining		= mod:NewAddsLeftAnnounce("ej14309", 2, 228797)
 ----Grimelord
 local warnOrbOfCorruption			= mod:NewTargetAnnounce(229119, 3)
 local warnFetidRot					= mod:NewTargetAnnounce(193367, 3)
@@ -82,7 +83,7 @@ mod:AddTimerLine(SCENARIO_STAGE:format(1))
 local timerOrbOfCorruptionCD		= mod:NewNextTimer(25, 229119, "OrbsTimerText", nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerTaintOfSeaCD				= mod:NewCDTimer(14.5, 228088, nil, nil, nil, 3, nil, DBM_CORE_HEALER_ICON)
 local timerBilewaterBreathCD		= mod:NewNextTimer(40, 227967, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)--On for everyone though so others avoid it too
-local timerTentacleStrikeCD			= mod:NewNextCountTimer(30, 228730, nil, nil, nil, 2)
+local timerTentacleStrikeCD			= mod:NewNextCountTimer(30, 228730, nil, nil, nil, 5)
 local timerTentacleStrike			= mod:NewCastSourceTimer(6, 228730, nil, nil, nil, 5)
 local timerExplodingOozes			= mod:NewCastTimer(20.5, 227992, nil, nil, nil, 2, nil, DBM_CORE_DAMAGE_ICON)
 --Stage Two: From the Mists (65%)
@@ -164,6 +165,7 @@ mod.vb.orbCount = 0
 mod.vb.furyOfMawCount = 0
 mod.vb.tentacleCount = 0
 mod.vb.taintCount = 0
+mod.vb.lastTentacles = 9
 
 function mod:OnCombatStart(delay)
 	table.wipe(seenMobs)
@@ -174,12 +176,14 @@ function mod:OnCombatStart(delay)
 	self.vb.tentacleCount = 0
 	self.vb.taintCount = 0
 	if self:IsEasy() then
+		self.vb.lastTentacles = 9
 		timerTaintOfSeaCD:Start(12.4-delay)
 		timerBilewaterBreathCD:Start(13.3-delay)
 		timerOrbOfCorruptionCD:Start(18-delay, 1, RANGED)--START
 		countdownOrbs:Start(18-delay)
 		timerTentacleStrikeCD:Start(53-delay, 1)
 	elseif self:IsMythic() then
+		self.vb.lastTentacles = 8
 		timerBilewaterBreathCD:Start(11-delay)
 		timerOrbOfCorruptionCD:Start(14-delay, 1, RANGED)--START
 		countdownOrbs:Start(14-delay)
@@ -187,6 +191,7 @@ function mod:OnCombatStart(delay)
 		timerTentacleStrikeCD:Start(35-delay, 1)
 		berserkTimer:Start(-delay)--11 Min confirmed
 	else
+		self.vb.lastTentacles = 9
 		timerBilewaterBreathCD:Start(12-delay)
 		timerTaintOfSeaCD:Start(19-delay)
 		timerOrbOfCorruptionCD:Start(29-delay, 1, RANGED)--START
@@ -343,20 +348,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnOrbOfCorrosion:CombinedShow(0.3, args.destName)
 		if self.Options.SetIconOnOrbs then
 			local uId = DBM:GetRaidUnitId(args.destName)
-			if self:IsMythic() then
-				if self:IsHealer(uId) then--On mythic, a tank isn't chosen, just 1 healer and 2 dps
-					self:SetIcon(args.destName, 1)--Star
-				else
-					self:SetSortedIcon(1, args.destName, 2, 2)--Circle and Diamond
-				end
+			if self:IsHealer(uId) then--On All difficulties as of Dec 6th, a tank isn't chosen, just 1 healer and 2 dps
+				self:SetIcon(args.destName, 1)--Star
 			else
-				if self:IsTanking(uId) then
-					self:SetIcon(args.destName, 2)--Circle
-				elseif self:IsHealer(uId) then--LFR/Normal doesn't choose a healer, just tank/damage
-					self:SetIcon(args.destName, 1)--Star
-				else
-					self:SetIcon(args.destName, 3)--Diamond
-				end
+				self:SetSortedIcon(1, args.destName, 2, 2)--Circle and Diamond
 			end
 		end
 	elseif spellId == 227982 then
@@ -489,7 +484,7 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:SPELL_INTERRUPT(args)
 	if type(args.extraSpellId) == "number" and args.extraSpellId == 228854 then
-		timerMistInfusion:Stop(args.dest.GUID)
+		timerMistInfusion:Stop(args.destGUID)
 	end
 end
 
@@ -498,6 +493,7 @@ function mod:UNIT_DIED(args)
 	if cid == 114709 then--GrimeLord
 		timerSludgeNovaCD:Stop(args.destGUID)
 		timerAnchorSlamCD:Stop(args.destGUID)
+		timerFetidRotCD:Stop(args.destGUID)
 	elseif cid == 114809 then--Night Watch Mariner
 		timerLanternofDarknessCD:Stop(args.destGUID)
 		timerGiveNoQuarterCD:Stop(args.destGUID)
@@ -546,22 +542,40 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 end
 
 function mod:RAID_BOSS_EMOTE(msg)
-	if msg:find(L.near) then
-		if not self:IsMythic() then
-			specWarnTentacleStrike:Show(DBM_CORE_FRONT)
+	if msg:find("inv_misc_monsterhorn_03") then
+		if self:AntiSpam(20, 2) then
+			self.vb.tentacleCount = self.vb.tentacleCount + 1
+			if self:IsEasy() then
+				timerTentacleStrikeCD:Start(40, self.vb.tentacleCount+1)
+			elseif self:IsMythic() then
+				timerTentacleStrikeCD:Start(35, self.vb.tentacleCount+1)
+				local text = mythicTentacleSpawns[self.vb.tentacleCount]
+				if text then
+					specWarnTentacleStrike:Show(text)
+				else
+					specWarnTentacleStrike:Show(DBM_CORE_UNKNOWN)
+				end
+			else
+				timerTentacleStrikeCD:Start(42.5, self.vb.tentacleCount+1)
+			end
 		end
-		timerTentacleStrike:Start(DBM_CORE_FRONT)
-	elseif msg:find(L.far) then
-		if not self:IsMythic() then
-			specWarnTentacleStrike:Show(DBM_CORE_BACK)
-		end
+		if msg:find(L.near) then
+			if not self:IsMythic() then
+				specWarnTentacleStrike:Show(DBM_CORE_FRONT)
+			end
+			timerTentacleStrike:Start(DBM_CORE_FRONT)
+		elseif msg:find(L.far) then
+			if not self:IsMythic() then
+				specWarnTentacleStrike:Show(DBM_CORE_BACK)
+			end
 		timerTentacleStrike:Start(DBM_CORE_BACK)
-	--Backup for the like 8 languages dbm doesn't have translators for
-	elseif msg:find("inv_misc_monsterhorn_03") then
-		if not self:IsMythic() then
-			specWarnTentacleStrike:Show(DBM_CORE_UNKNOWN)
+		--Backup for the like 8 languages dbm doesn't have translators for
+		else
+			if not self:IsMythic() then
+				specWarnTentacleStrike:Show(DBM_CORE_UNKNOWN)
+			end
+			timerTentacleStrike:Start(DBM_CORE_UNKNOWN)
 		end
-		timerTentacleStrike:Start(DBM_CORE_UNKNOWN)
 	end
 end
 
@@ -589,6 +603,23 @@ function mod:RAID_BOSS_WHISPER(msg)
 	end
 end
 
+function mod:UNIT_HEALTH_FREQUENT(uId)
+	if not self.vb.phase == 2 then
+		self:UnregisterShortTermEvents()
+		return
+	end
+	local cid = self:GetUnitCreatureId(uId)
+	if cid ~= 114537 then return end--Helya
+	local health = UnitHealth(uId) / UnitHealthMax(uId) * 100
+	local tentaclesRemaining = self:IsMythic() and floor((health-45)/2.5) or floor((health-40)/2.77)
+	if tentaclesRemaining < self.vb.lastTentacles then
+		self.vb.lastTentacles = tentaclesRemaining
+		if self.vb.lastTentacles >= 0 then
+			warnTentaclesRemaining:Show(self.vb.lastTentacles)
+		end
+	end
+end
+
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
 	if spellId == 228372 then--Mists of Helheim (Phase 2)
@@ -603,7 +634,11 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			timerAddsCD:Start(14)
 			timerFuryofMawCD:Start(36.5, 1)
 		end
+		self:RegisterShortTermEvents(
+			"UNIT_HEALTH_FREQUENT boss1 boss2 boss3 boss4 boss5"
+		)
 	elseif spellId == 228546 then--Helya (Phase 3, 6 seconds slower than yell)
+		self:UnregisterShortTermEvents()
 		self.vb.phase = 3
 		self.vb.taintCount = 0--TODO, make sure helya happens before first taint goes out
 		self.vb.orbCount = 1
@@ -640,19 +675,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			timerFetidRotCD:Start(12, UnitGUID(uId))
 		end
 	elseif spellId == 228728 then--Tentacle strike activating
-		self.vb.tentacleCount = self.vb.tentacleCount + 1
-		if self:IsEasy() then
-			timerTentacleStrikeCD:Start(40, self.vb.tentacleCount+1)
-		elseif self:IsMythic() then
-			timerTentacleStrikeCD:Start(35, self.vb.tentacleCount+1)
-			local text = mythicTentacleSpawns[self.vb.tentacleCount]
-			if text then
-				specWarnTentacleStrike:Show(text)
-			else
-				specWarnTentacleStrike:Show(DBM_CORE_UNKNOWN)
-			end
-		else
-			timerTentacleStrikeCD:Start(42.5, self.vb.tentacleCount+1)
-		end
+		DBM:Debug("Tentacle Strike Activating", 2)
 	end
 end
