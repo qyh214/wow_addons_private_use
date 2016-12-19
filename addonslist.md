@@ -22,6 +22,8 @@ Bartender4 动作条美化
 
 BlizzMove 暴雪系统窗体移动
 
+BuyEmAll
+
 CanIMogIt
 
 Chatter 聊天增强

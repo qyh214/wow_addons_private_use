@@ -722,8 +722,10 @@ local function SetFrames()
 	KTF.FilterButton = button
 
 	-- Move other buttons
-	local point, _, relativePoint, xOfs, yOfs = KTF.AchievementsButton:GetPoint()
-	KTF.AchievementsButton:SetPoint(point, KTF.FilterButton, relativePoint, xOfs, yOfs)
+	if db.hdrOtherButtons then
+		local point, _, relativePoint, xOfs, yOfs = KTF.AchievementsButton:GetPoint()
+		KTF.AchievementsButton:SetPoint(point, KTF.FilterButton, relativePoint, xOfs, yOfs)
+	end
 end
 
 --------------

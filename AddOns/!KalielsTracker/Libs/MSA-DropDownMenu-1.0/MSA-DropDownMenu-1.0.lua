@@ -1,21 +1,29 @@
---- MSA-DropDownMenu-1.0 - DropDownMenu for non-Blizzard addons
---- Default Blizzard UIDropDownMenu functions are sometimes used by protected frames
---- and in combination with non-Blizzard addons causes taints.
-
+--- MSA-DropDownMenu-1.0 - Drop down menu for non-Blizzard addons
+--- Marouan Sabbagh <mar.sabbagh@gmail.com>
+---
+--- Default Blizzard UIDropDownMenu functions are sometimes used inside protected frames
+--- and therefore usage UIDropDownMenu in non-Blizzard addons then causes taints.
+---
 --- Extracted from Blizzard code, with some modifications.
---- Usage is the same as the default Blizzard UIDropDownMenu, but functions and constants have changed prefix.
+--- Usage is the same as the default Blizzard UIDropDownMenu. Constants, functions and templates
+--- are prefixed " MSA_" and was removed original prefix "UI", if it contained.
+---
+--- https://mods.curse.com/addons/wow/254936-msa-dropdownmenu-1-0
 
-local name, version = "MSA-DropDownMenu-1.0", 703222671
+local name, minor = "MSA-DropDownMenu-1.0", 0	-- 7.0.3.22267
 
-local Lib, minor = LibStub:GetLibrary(name, true)
-if Lib then
-	if minor < version then
-		error("Update library to latest version "..version)
+local lib, oldMinor = LibStub:GetLibrary(name, true)
+if lib then
+	if oldMinor < minor then
+		error("|cffff0000Update library to latest version 1.0."..minor.."|r")
 	end
 	return
 else
-	Lib = LibStub:NewLibrary(name, version)
+	lib = LibStub:NewLibrary(name, minor)
 end
+
+-- WoW API
+local _G = _G
 
 MSA_DROPDOWNMENU_MINBUTTONS = 8;
 MSA_DROPDOWNMENU_MAXBUTTONS = 8;
@@ -845,7 +853,7 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
 		
 		-- Hide the listframe anyways since it is redrawn OnShow() 
 		listFrame:Hide();
-		if ( listFrameBlizz:IsShown() ) then
+		if ( listFrameBlizz and listFrameBlizz:IsShown() ) then
 			listFrameBlizz:Hide();
 		end
 		
@@ -1035,12 +1043,14 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
 	end
 end
 
-hooksecurefunc("ToggleDropDownMenu", function(level, value, dropDownFrame, anchorName, xOffset, yOffset, menuList, button, autoHideDelay)
-	local listFrameMSA = _G["MSA_DropDownList1"];
-	if ( listFrameMSA:IsShown() ) then
-		listFrameMSA:Hide();
-	end
-end)
+if ToggleDropDownMenu then
+	hooksecurefunc("ToggleDropDownMenu", function(level, value, dropDownFrame, anchorName, xOffset, yOffset, menuList, button, autoHideDelay)
+		local listFrameMSA = _G["MSA_DropDownList1"];
+		if ( listFrameMSA:IsShown() ) then
+			listFrameMSA:Hide();
+		end
+	end)
+end
 
 function MSA_CloseDropDownMenus(level)
 	if ( not level ) then
