@@ -1,4 +1,4 @@
-﻿-- Local stuff
+-- Local stuff
 if (GetLocale() == "itIT") then
 
 XPERL_RAID_MONITOR_TITLE		= "Monitor Lancio |c00A04040(BETA)|r"

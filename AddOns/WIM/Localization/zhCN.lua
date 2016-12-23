@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Language Localization: zhCN
     Translated by: Junxian <junxian1121@hotmail.com>
 ]]

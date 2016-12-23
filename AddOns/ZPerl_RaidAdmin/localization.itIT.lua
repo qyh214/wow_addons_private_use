@@ -1,4 +1,4 @@
-﻿
+
 if (GetLocale() == "itIT") then
 
 XPERL_ADMIN_TITLE	= XPerl_ShortProductName.." Amministrazione Raid"

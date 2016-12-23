@@ -1,4 +1,4 @@
-﻿-- Local stuff
+-- Local stuff
 
 if (GetLocale() == "zhCN") then
 	XPERL_RAID_MONITOR_TITLE		= "施法监视"

@@ -1,7 +1,15 @@
-**r1018**
+**r1021**
+* Added an option to show the raid frames while in a party.
+* Localization fixes.
+* Other smaller fixes.
+
+**r1020**
+* Localization updates.
+
+**r1019**
 * Fixed an another issue with the Raid Helper.
 
-**r1017**
+**r1018**
 * Securely Hiding raid pets in pet battles.
 * Fixed a health issue for raid pets.
 * Raid pets now can be enabled/disabled independently from raid frames.
@@ -15,6 +23,9 @@
 * Warrior's portrait should properly get updated after using Sky Jump.
 * Fixed an issue with the Raid Helper.
 * Loads of other smaller fixes.
+
+**r1017**
+* zhCN update for r1015 change, mainland China use Simplified Chinese so I changed for them. But again, zhCN still needed to do other locale updates since 2009, someone who played CN realm should helps please. :)
 
 **r1016**
 * Wake the repo server up.

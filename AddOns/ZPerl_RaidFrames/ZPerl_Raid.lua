@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 1017 $")
+end, "$Revision: 1021 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -1108,7 +1108,7 @@ function XPerl_Raid_OnUpdate(self, elapsed)
 		if (ZPerl_Custom) then
 			ZPerl_Custom:UpdateUnits()
 		end
-		if (not IsInRaid()) then
+		if (not IsInRaid() or (not IsInGroup() and rconf.inParty)) then
 			ResArray = { }
 			ZPerl_Roster = { }
 			--buffUpdates = { }
@@ -1383,7 +1383,7 @@ end
 function XPerl_Raid_Events:VARIABLES_LOADED()
 	self:UnregisterEvent("VARIABLES_LOADED")
 
-	if (not IsInRaid()) then
+	if (not IsInRaid() or (not IsInGroup() and rconf.inParty)) then
 		ResArray = { }
 		ZPerl_Roster = { }
 	else
@@ -1459,7 +1459,7 @@ function XPerl_Raid_Events:PLAYER_ENTERING_WORLD()
 	raidLoaded = true
 	rosterUpdated = nil
 
-	if (IsInRaid()) then
+	if (IsInRaid() or (IsInGroup() and rconf.inParty)) then
 		XPerl_Raid_Frame:Show()
 	end
 
@@ -1489,6 +1489,18 @@ local function BuildGuidMap()
 				rosterGuids[guid] = "raid"..i
 			end
 		end
+	elseif (IsInGroup()) then
+		rosterGuids = { }
+		for i = 1, GetNumGroupMembers() do
+			local guid = UnitGUID("player")
+			if (guid) then
+				rosterGuids[guid] = "player"
+			end
+			local guid = UnitGUID("party"..i - 1)
+			if (guid) then
+				rosterGuids[guid] = "party"..i - 1
+			end
+		end
 	else
 		rosterGuids = { }
 	end
@@ -1498,7 +1510,7 @@ end
 function XPerl_Raid_Events:GROUP_ROSTER_UPDATE()
 	rosterUpdated = true -- Many roster updates can occur during 1 video frame, so we'll check everything at end of last one
 	BuildGuidMap()
-	if (IsInRaid()) then
+	if (IsInRaid() or (IsInGroup() and rconf.inParty)) then
 		XPerl_Raid_Frame:Show()
 		if (rconf.raid_role) then
 			for i, frame in pairs(FrameArray) do
@@ -1940,7 +1952,7 @@ function SetRaidRoster()
 		end
 	end
 
-	if (IsInRaid()) then
+	if (IsInRaid() or (IsInGroup() and rconf.inParty)) then
 		XPerl_Raid_Frame:Show()
 	else
 		XPerl_Raid_Frame:Hide()
@@ -2414,8 +2426,8 @@ local function SetMainHeaderAttributes(self)
 	end
 
 	--self:SetAttribute("showSolo", true)
-	--self:SetAttribute("showParty", true)
-	--self:SetAttribute("showPlayer", true)
+	self:SetAttribute("showParty", rconf.inParty)
+	self:SetAttribute("showPlayer", rconf.inParty)
 
 	self:SetAttribute("showRaid", true)
 
@@ -2603,7 +2615,7 @@ function XPerl_Raid_Set_Bits(self)
 		self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 	end
 
-	if (IsInRaid()) then
+	if (IsInRaid() or (IsInGroup() and rconf.inParty)) then
 		XPerl_Raid_Frame:Show()
 	end
 end

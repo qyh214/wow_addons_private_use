@@ -1,4 +1,4 @@
-﻿-- X-Perl UnitFrames
+-- X-Perl UnitFrames
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 if (GetLocale() == "itIT") then

@@ -1038,6 +1038,8 @@ XPerl_Player_Events.UNIT_FLAGS = XPerl_Player_Events.UNIT_FACTION
 function XPerl_Player_Events:UNIT_SPELLCAST_SUCCEEDED(spell, rank, lineID, spellID)
 	if spellID == 191477 then
 		XPerl_Unit_UpdatePortrait(self, true)
+
+		--C_Timer.After(1, XPerl_Unit_UpdatePortrait(self, true))
 	end
 end
 

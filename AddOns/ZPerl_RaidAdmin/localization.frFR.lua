@@ -1,4 +1,4 @@
-﻿if (GetLocale() == "frFR") then
+if (GetLocale() == "frFR") then
 
         XPERL_ADMIN_TITLE			= "X-Perl Raid Admin"
 

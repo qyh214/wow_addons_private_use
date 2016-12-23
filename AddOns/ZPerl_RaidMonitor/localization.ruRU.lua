@@ -1,4 +1,4 @@
-﻿-- Local stuff
+-- Local stuff
 --Russian localization file
 --Translated by StingerSoft
 if (GetLocale() == "ruRU") then

@@ -1,4 +1,4 @@
-﻿if (GetLocale() == "zhCN") then
+if (GetLocale() == "zhCN") then
 
 XPERL_ADMIN_TITLE		= "X-Perl 团队管理"
 

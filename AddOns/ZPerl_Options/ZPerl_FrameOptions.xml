@@ -12106,9 +12106,31 @@
 						</Scripts>
 					</CheckButton>
 
-					<CheckButton name="$parent_Buffs" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_ShowParty" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeTo="$parent_ManaPercent" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="6"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_SHOWPARTY")
+								self.configBase = "XPerlDB.raid"
+								self.configIndex = "inParty"
+								self.configClick = function()
+									XPerl_Raid_ChangeAttributes()
+									XPerl_Raid_OptionActions()
+								end
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_Buffs" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_ShowParty" relativePoint="BOTTOMLEFT">
 								<Offset>
 									<AbsDimension x="0" y="6"/>
 								</Offset>

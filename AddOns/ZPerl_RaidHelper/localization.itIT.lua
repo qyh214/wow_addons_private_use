@@ -1,4 +1,4 @@
-﻿
+
 if ( GetLocale() == "itIT" ) then
 XPERL_MSG_PREFIX	= "|c00C05050X-Perl|r "
 

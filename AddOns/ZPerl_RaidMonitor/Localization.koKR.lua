@@ -1,4 +1,4 @@
-﻿-- Local stuff
+-- Local stuff
 
 if (GetLocale() == "koKR") then
 	XPERL_RAID_MONITOR_TITLE		= "시전 현황 |c00A04040(BETA)|r"

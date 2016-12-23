@@ -1,4 +1,4 @@
-﻿if (GetLocale() == "deDE") then
+if (GetLocale() == "deDE") then
 	XPERL_ADMIN_TITLE	= XPerl_ShortProductName.." Schlachtzugsadmin"
 
 -- Raid Admin

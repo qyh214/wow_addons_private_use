@@ -1,4 +1,4 @@
-﻿-- Local stuff
+-- Local stuff
 
 if (GetLocale() == "esES") then
 	XPERL_RAID_MONITOR_TITLE		= "Monitor Casteo |c00A04040(BETA)|r"

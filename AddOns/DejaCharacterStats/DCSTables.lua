@@ -104,7 +104,7 @@ local DCS_ItemLevelTwoDecimalsCheck = CreateFrame("CheckButton", "DCS_ItemLevelT
 function DCS_TableData:CopyTable(tab)
 	local copy = {}
 	for k, v in pairs(tab) do
-		if k == "RUNE_REGEN" or k == "ATTACK_ATTACKSPEED" then
+		if k == "RUNE_REGEN" or k == "ATTACK_ATTACKSPEED" or k == "POWER" or k == "ALTERNATEMANA" then
 			tab [k] = nil
 		else
 			copy[k] = (type(v) == "table") and DCS_TableData:CopyTable(v) or v
@@ -197,6 +197,43 @@ DCS_TableData.StatData.EnhancementsCategory = {
     updateFunc = function() end
 }
 
+DCS_TableData.StatData.DCS_POWER = {
+	updateFunc = function(statFrame, unit)
+		powerToken = SPELL_POWER_MANA
+		local power = UnitPowerMax(unit,powerToken);
+		local powerText = BreakUpLargeNumbers(power);
+		if power > 0 then
+			PaperDollFrame_SetLabelAndText(statFrame, MANA, powerText, false, power);
+			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, MANA).." "..powerText..FONT_COLOR_CODE_CLOSE;
+			statFrame.tooltip2 = _G["STAT_MANA_TOOLTIP"];
+			statFrame:Show();
+		else
+			statFrame:Hide();
+		end
+	end
+}
+
+DCS_TableData.StatData.DCS_ALTERNATEMANA = {
+	updateFunc = function(statFrame, unit)
+		local powerType, powerToken = UnitPowerType(unit);
+		if (powerToken == "MANA") then
+			statFrame:Hide();
+			return;
+		end
+		local power = UnitPowerMax(unit,powerToken);
+		local powerText = BreakUpLargeNumbers(power);
+		
+		if (powerToken and _G[powerToken]) then
+			PaperDollFrame_SetLabelAndText(statFrame, _G[powerToken], powerText, false, power);
+			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, _G[powerToken]).." "..powerText..FONT_COLOR_CODE_CLOSE;
+			statFrame.tooltip2 = _G["STAT_"..powerToken.."_TOOLTIP"];
+			statFrame:Show();
+		else
+			statFrame:Hide();
+		end
+	end
+}
+
 DCS_TableData.StatData.DCS_ATTACK_ATTACKSPEED = {
 	updateFunc = function(statFrame, unit)
 		local meleeHaste = GetMeleeHaste();
@@ -281,6 +318,12 @@ DCS_TableData.StatData.WEAPON_DPS = {
 	end
 }
 
+local function casterGCD()
+	local haste = GetHaste()
+	gcd = max(0.75, 1.5 * 100 / (100+haste))
+	return gcd
+end
+
 DCS_TableData.StatData.GCD = {
     updateFunc = function(statFrame, unit)
 		local spec = GetSpecialization();
@@ -292,21 +335,23 @@ DCS_TableData.StatData.GCD = {
 			local id = GetShapeshiftFormID()
 			if (id == 1) then --cat form
 				gcd = 1
-			else -- strangely, bear form seems to have the same formula for gcd as casters
-				local haste = GetHaste()
-				gcd = max(1, 1.5 * 100 / (100+haste))
+			else 
+				-- strangely, bear form seems to have the same formula for gcd as casters
+				gcd = casterGCD()
 			end
 		else
-			if (primaryStat == LE_UNIT_STAT_INTELLECT) or (classfilename == "HUNTER") then -- tested with Cobra shot and Multi-shot for hunter. Have troll hunter but don't have pet with Ancient Hysteria //Kakjens
-				local haste = GetHaste()
-				gcd = max(1, 1.5 * 100 / (100+haste))
+			if (primaryStat == LE_UNIT_STAT_INTELLECT) or (classfilename == "HUNTER") or (classfilename == "DEATHKNIGHT") then 
+				-- would be interesting to write "or (primaryStat == LE_UNIT_STAT_STRENGTH)" but needs tests on wariors, paladins
+				-- tested with Cobra shot and Multi-shot for hunter. Have troll hunter but don't have pet with Ancient Hysteria //Kakjens
+				-- adding DK-s as reported by Mpstark
+				gcd = casterGCD()
 			else
 				gcd = 1 -- tested with mutilate for assasination rogues.
 			end
 		end
 		PaperDollFrame_SetLabelAndText(statFrame, L["Global Cooldown"], format("%.2fs",gcd), false, gcd)
 		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, format(L["Global Cooldown"], gcd)).." "..format("%.2fs", gcd)..FONT_COLOR_CODE_CLOSE;
-		statFrame.tooltip2 = (L["General global cooldown for casters. Individual spells, set bonuses, talents, etc. not considered. Not suitable for melee. Improvements coming Soon(TM)."]);
+		statFrame.tooltip2 = (L["General global cooldown refresh time."]);
 	end
 }
 
@@ -355,14 +400,14 @@ DCS_TableData.StatData.REPAIR_COST = {
 
 DCS_TableData.StatData.DURABILITY_STAT = {
     updateFunc = function(statFrame, unit)
-		DCS_Mean_DurabilityCalc()
-		--print(addon.duraMean)
-		
 		if ( unit ~= "player" ) then
 			statFrame:Hide();
 			return;
 		end
 
+		DCS_Mean_DurabilityCalc()
+		--print(addon.duraMean)
+		
 		local displayDura = format("%.2f%%", addon.duraMean);
 
 		PaperDollFrame_SetLabelAndText(statFrame, (L["Durability"]), displayDura, false, addon.duraMean);
@@ -371,5 +416,139 @@ DCS_TableData.StatData.DURABILITY_STAT = {
 
 		local duraFinite = 0
 		statFrame:Show();
+	end
+}
+
+local rating_and_percentage = "%s of %s increases %s by %.2f%%"
+
+local statnames = {
+ [CR_HASTE_MELEE] = {name1 = "Haste Rating", name2 = "haste"},
+ [CR_LIFESTEAL] = {name1 = "Leech Rating", name2 = "leech"},
+ [CR_AVOIDANCE] = {name1 = "Avoidance Rating", name2 = "avoidance"},
+ [CR_DODGE] = {name1 = "Dodge Rating", name2 = "dodge"},
+ [CR_PARRY] = {name1 = "Parry Rating", name2 = "parry"},
+}
+
+local function statframeratings(statFrame, unit, stat)
+	--outliers crit, versatility, mastery
+	if ( unit ~= "player" ) then
+		statFrame:Hide();
+		return;
+	end
+	local rating = GetCombatRating(stat)
+	local percentage = GetCombatRatingBonus(stat)
+	local ratingname = statnames [stat].name1
+	local name = statnames [stat].name2
+	PaperDollFrame_SetLabelAndText(statFrame, ratingname, rating, false, rating);
+	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..ratingname.." "..rating..FONT_COLOR_CODE_CLOSE;
+	statFrame.tooltip2 = format(rating_and_percentage, ratingname, BreakUpLargeNumbers(rating), name, percentage);
+	statFrame:Show();
+end
+
+DCS_TableData.StatData.CRITCHANCE_RATING = { -- maybe add 3 different stats - melee, ranged and spell crit ratings?
+	updateFunc = function(statFrame, unit)
+		if ( unit ~= "player" ) then
+			statFrame:Hide();
+			return;
+		end
+		local stat;
+		local spellCrit, rangedCrit, meleeCrit;
+		-- Start at 2 to skip physical damage
+		local holySchool = 2;
+		local minCrit = GetSpellCritChance(holySchool);
+		statFrame.spellCrit = {};
+		statFrame.spellCrit[holySchool] = minCrit;
+		local spellCrit;
+		for i=(holySchool+1), MAX_SPELL_SCHOOLS do
+			spellCrit = GetSpellCritChance(i);
+			minCrit = min(minCrit, spellCrit);
+			statFrame.spellCrit[i] = spellCrit;
+		end
+		spellCrit = minCrit
+		rangedCrit = GetRangedCritChance();
+		meleeCrit = GetCritChance();
+
+		if (spellCrit >= rangedCrit and spellCrit >= meleeCrit) then
+			stat = CR_CRIT_SPELL;
+		elseif (rangedCrit >= meleeCrit) then
+			stat = CR_CRIT_RANGED;
+		else
+			stat = CR_CRIT_MELEE;
+		end
+		local rating = GetCombatRating(stat);
+		local percentage = format("%.2f",GetCombatRatingBonus(stat));
+		PaperDollFrame_SetLabelAndText(statFrame, "Critical Strike Rating", rating, false, rating);
+		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE.."Critical Strike Rating".." "..percentage..FONT_COLOR_CODE_CLOSE;
+		--statFrame.tooltip2 = format("Critical Strike Rating of %s increases chance to crit by %.2f%%", BreakUpLargeNumbers(rating), percentage);
+		statFrame.tooltip2 = format(rating_and_percentage, "Critical Strike", BreakUpLargeNumbers(rating), "crit", percentage);
+		statFrame:Show();
+	end
+}
+
+DCS_TableData.StatData.VERSATILITY_RATING = {
+	updateFunc = function(statFrame, unit)
+		if ( unit ~= "player" ) then
+			statFrame:Hide();
+			return;
+		end
+		local versatility = GetCombatRating(CR_VERSATILITY_DAMAGE_DONE);
+		local versatilityDamageBonus = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_DONE);
+		local versatilityDamageTakenReduction = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_TAKEN) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_TAKEN);
+		PaperDollFrame_SetLabelAndText(statFrame, "Versatility Rating", versatility, false, versatility);
+		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE.."Versatility Rating".." "..versatility..FONT_COLOR_CODE_CLOSE;
+		statFrame.tooltip2 = format("Versatility Rating of %s increases damage and healing done by %.2f%% and reduces damage taken by %.2f%%", BreakUpLargeNumbers(versatility), versatilityDamageBonus, versatilityDamageTakenReduction);
+		statFrame:Show();
+	end
+}
+
+DCS_TableData.StatData.MASTERY_RATING = {
+	updateFunc = function(statFrame, unit)
+		if ( unit ~= "player" ) then
+			statFrame:Hide();
+			return;
+		end
+		if (UnitLevel("player") < SHOW_MASTERY_LEVEL) then
+			statFrame.numericValue = 0;
+			statFrame:Hide();
+			return;
+		end
+		local _, bonuscoeff = GetMasteryEffect();
+		local stat = CR_MASTERY
+		local rating = GetCombatRating(stat)
+		local percentage = format("%.2f",GetCombatRatingBonus(stat)*bonuscoeff)
+		PaperDollFrame_SetLabelAndText(statFrame, "Mastery Rating", rating, false, rating);
+		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE.."Mastery Rating".." "..rating..FONT_COLOR_CODE_CLOSE;
+		statFrame.tooltip2 = format("Mastery Rating of %s increases mastery by %.2f%%", BreakUpLargeNumbers(rating), percentage);
+		statFrame:Show();
+	end
+}
+
+DCS_TableData.StatData.HASTE_RATING = {
+	updateFunc = function(statFrame, unit)
+		statframeratings(statFrame, unit, CR_HASTE_MELEE)
+	end
+}
+
+DCS_TableData.StatData.LIFESTEAL_RATING = {
+	updateFunc = function(statFrame, unit)
+		statframeratings(statFrame, unit, CR_LIFESTEAL)
+	end
+}
+
+DCS_TableData.StatData.AVOIDANCE_RATING = {
+	updateFunc = function(statFrame, unit)
+		statframeratings(statFrame, unit, CR_AVOIDANCE)
+	end
+}
+
+DCS_TableData.StatData.DODGE_RATING = {
+	updateFunc = function(statFrame, unit)
+		statframeratings(statFrame, unit, CR_DODGE)
+	end
+}
+
+DCS_TableData.StatData.PARRY_RATING = {
+	updateFunc = function(statFrame, unit)
+		statframeratings(statFrame, unit, CR_PARRY)
 	end
 }

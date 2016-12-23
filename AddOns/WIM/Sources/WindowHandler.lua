@@ -1118,7 +1118,7 @@ local function instantiateWindow(obj)
 	self.widgets.Backdrop:SetAlpha(db.windowAlpha/100);
 	local Path,_,Flags = self.widgets.chat_display:GetFont();
         self:SetClampedToScreen(not WindowParent.animUp and db.clampToScreen);
-	self.widgets.chat_display:SetFont(Path or [[Fonts\FRIZQT__.TTF]],db.fontSize+2,Flags);
+	self.widgets.chat_display:SetFont(Path or _G["ChatFontNormal"]:GetFont(),db.fontSize+2,Flags);
 	self.widgets.chat_display:SetAlpha(1);
 	self.widgets.chat_display:SetIndentedWordWrap(db.wordwrap_indent);
 	self.widgets.msg_box:SetAlpha(1);

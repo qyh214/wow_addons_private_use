@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 Localisation file
 ]]
 if (GetLocale() == "zhTW") then

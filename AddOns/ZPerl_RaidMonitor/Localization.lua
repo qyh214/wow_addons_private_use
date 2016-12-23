@@ -1,4 +1,4 @@
-﻿-- Local stuff
+-- Local stuff
 
 XPERL_RAID_MONITOR_TITLE		= "Casting Monitor"
 XPERL_RAID_MONITOR_TOTALS		= "Toggle display of Totals and Statistics"

@@ -1,0 +1,15 @@
+------------------------------------------------------------------------
+r524 | mysticalos | 2016-12-19 16:07:52 -0600 (Mon, 19 Dec 2016) | 1 line
+Changed paths:
+   M /trunk/ChangeLog.lua
+   M /trunk/WIM.lua
+
+prep to tag last alpha to avoid so many duplicate CYR font issue complaints.
+------------------------------------------------------------------------
+r523 | (no author) | 2016-11-18 01:23:27 -0600 (Fri, 18 Nov 2016) | 1 line
+Changed paths:
+   M /trunk/Sources/WindowHandler.lua
+
+Better way to avoid font issues
+------------------------------------------------------------------------
+

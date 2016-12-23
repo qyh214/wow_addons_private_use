@@ -1,4 +1,4 @@
-﻿-- Local stuff
+-- Local stuff
 
 if (GetLocale() == "frFR") then
         XPERL_RAID_MONITOR_TITLE	= "Moniteur de lancement de sort |c00A04040(BETA)|r"

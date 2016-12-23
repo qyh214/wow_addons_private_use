@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 Korean Localisation file By 地獄天使(kohalbae), Modified By DroArc, Fenlis
 ]]
 

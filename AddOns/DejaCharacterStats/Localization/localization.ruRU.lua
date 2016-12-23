@@ -149,4 +149,7 @@ if LOCALE == "ruRU" then
 --	L["Class Crest Background"] = ""
 --	L["Displays the class crest background."] = ""
 
+-- ## Patch 7.1.0 r5 additions ##
+--	L["General global cooldown refresh time."] = ""
+
 return end

@@ -1,4 +1,4 @@
-﻿## Interface: 70100
+## Interface: 70100
 ## Author: Resike
 ## Title: Z-Perl |cffeda55fRaid Pets|r
 ## Title-itIT: Z-Perl |cffeda55fFamigli Incursione|r
@@ -12,9 +12,5 @@
 ## Notes-deDE: Z-Perl Schlachtzugsbegleiter
 ## Notes-zhTW: Z-Perl 團隊寵物框架
 ## Dependencies: ZPerl_RaidFrames
-## X-Curse-Packaged-Version: r1019
-## X-Curse-Project-Name: Z-Perl Unit Frames
-## X-Curse-Project-ID: zperl
-## X-Curse-Repository-ID: wow/zperl/mainline
 
 ZPerl_RaidPets.xml

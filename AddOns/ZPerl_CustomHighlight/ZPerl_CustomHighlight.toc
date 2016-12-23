@@ -1,4 +1,4 @@
-﻿## Interface: 70100
+## Interface: 70100
 ## Author: Resike
 ## Title: Z-Perl |cffeda55fCustom Highlight|r
 ## Title-itIT: Z-Perl |cffeda55fEvidenziazioni Personalizzate|r
@@ -11,9 +11,5 @@
 ## Notes-zhTW: 自定義減益高亮監視模組可讓您逐個框架地自定義高亮顯示重要的 debuffs(減益效果)
 ## RequiredDeps: ZPerl
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: r1019
-## X-Curse-Project-Name: Z-Perl Unit Frames
-## X-Curse-Project-ID: zperl
-## X-Curse-Repository-ID: wow/zperl/mainline
 
 ZPerl_CustomHighlight.lua

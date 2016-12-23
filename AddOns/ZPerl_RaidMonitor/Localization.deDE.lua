@@ -1,4 +1,4 @@
-﻿if (GetLocale() == "deDE") then
+if (GetLocale() == "deDE") then
 
 	XPERL_RAID_MONITOR_TITLE				= "Casting-Monitor |c00A04040(BETA)|r"
 	XPERL_RAID_MONITOR_TOTALS				= "Anzeige zwischen Gesamt und Statistik umschalten"

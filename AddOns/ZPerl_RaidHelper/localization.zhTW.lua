@@ -1,4 +1,4 @@
-﻿if (GetLocale() == "zhTW") then
+if (GetLocale() == "zhTW") then
 
 XPERL_MSG_PREFIX	= "|c00C05050Z-Perl|r "
 

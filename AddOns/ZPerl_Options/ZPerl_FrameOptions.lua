@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1008 $")
+XPerl_SetModuleRevision("$Revision: 1021 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -2525,6 +2525,7 @@ local function XPerl_Raid_ConfigDefault(default)
 		precisionManaPercent = 1,
 		scale			= 0.8,
 		spacing			= 0,
+		inParty			= 1,
 		buffs = {
 --			enable		= nil,
 			castable	= 0,

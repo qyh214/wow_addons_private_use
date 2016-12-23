@@ -1,4 +1,4 @@
-﻿if ( GetLocale() == "deDE") then
+if ( GetLocale() == "deDE") then
 
 	XPERL_TOOLTIP_ASSISTING		= "Spieler, die mir assistieren:"
 	XPERL_TOOLTIP_HEALERS		= "Heiler, die mich als Ziel haben:"

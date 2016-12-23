@@ -1,4 +1,4 @@
-﻿if ( GetLocale() == "koKR") then
+if ( GetLocale() == "koKR") then
 
 
 	XPERL_TOOLTIP_ASSISTING	= "플레이어 지원:"

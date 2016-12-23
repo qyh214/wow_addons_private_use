@@ -6,7 +6,7 @@ local playerClass, playerName, playerGUID
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 984 $")
+end, "$Revision: 1021 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -283,7 +283,6 @@ function xpHigh:OnUpdate(elapsed)
 						self.flashers[guid] = nil
 						list[k] = nil
 						self:Send(guid)
-
 					elseif (v <= now + 5 and colours[k] and colours[k].canFlash) then
 						if (not self.flashers[guid]) then
 							self.flashers[guid] = k

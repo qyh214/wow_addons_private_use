@@ -1,5 +1,11 @@
-changeset:   104:4cc9d974fcce
+changeset:   105:7a6b68adb172
 tag:         tip
+user:        Tercio
+date:        Mon Dec 19 12:58:08 2016 -0200
+summary:     - Ticket #252: "Add negative scale options to Tracker".
+
+
+changeset:   104:4cc9d974fcce
 user:        Tercio
 date:        Fri Dec 09 16:39:18 2016 -0200
 summary:     - ticked #240: "Blizzard arrow keeps switching rapidly between WQ and log quest".
@@ -597,11 +603,5 @@ changeset:   5:cf4f19ee4c77
 user:        Tercio
 date:        Mon Jun 27 03:44:08 2016 -0300
 summary:     - bug fixes.
-
-
-changeset:   4:f51603a190e7
-user:        Tercio
-date:        Sun Jun 26 03:16:24 2016 -0300
-summary:     - another round of updates.
 
 

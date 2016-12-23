@@ -1,4 +1,4 @@
-﻿## Interface: 70100
+## Interface: 70100
 ## Author: Resike
 ## Title: Z-Perl |cffeda55fRaid Admin|r
 ## Title-itIT: Z-Perl |cffeda55fAmministrazione Incursione|r
@@ -13,10 +13,6 @@
 ## Notes-zhTW: 提供團隊管理工具給予領隊以方便地整合人員
 ## SavedVariablesPerCharacter: ZPerl_Admin, ZPerl_CheckItems
 ## RequiredDeps: ZPerl
-## X-Curse-Packaged-Version: r1019
-## X-Curse-Project-Name: Z-Perl Unit Frames
-## X-Curse-Project-ID: zperl
-## X-Curse-Repository-ID: wow/zperl/mainline
 
 ZPerl_RaidAdmin.xml
 ZPerl_Check.xml

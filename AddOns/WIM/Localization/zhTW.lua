@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Update:2010/07/04
     Language Localization: zhTW 
     Translated by: Junxian <junxian1121@hotmail.com>

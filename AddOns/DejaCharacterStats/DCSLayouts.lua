@@ -12,6 +12,12 @@ local _, gdbprivate = ...
 	gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsClassBackgroundChecked = {
 		ClassBackgroundChecked = true,
 	}
+	gdbprivate.gdbdefaults.gdbdefaults.DCS_TableRelevantStatsChecked = {
+		RelevantStatsSetChecked = false,
+	}
+
+local ShowAllStats = false
+
 local StatScrollFrame = CreateFrame("ScrollFrame", nil, CharacterFrameInsetRight, "UIPanelScrollFrameTemplate")
 	StatScrollFrame:ClearAllPoints()
 	StatScrollFrame:SetPoint("TOPLEFT", CharacterFrameInsetRight, "TOPLEFT", 5, -6)
@@ -22,7 +28,7 @@ local StatScrollFrame = CreateFrame("ScrollFrame", nil, CharacterFrameInsetRight
 	StatScrollFrame.ScrollBar:Hide()
 	
 	StatScrollFrame:HookScript("OnScrollRangeChanged", function(self, xrange, yrange)
-		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsClassBackgroundChecked
+		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked
 		if checked.ScrollbarSetChecked == true then
 			self.ScrollBar:SetShown(floor(yrange) ~= 0)
 		elseif not checked.ScrollbarSetChecked == true then
@@ -52,23 +58,12 @@ local StatScrollFrame = CreateFrame("ScrollFrame", nil, CharacterFrameInsetRight
 	CharacterStatsPane.EnhancementsCategory:SetHeight(28)
 	CharacterStatsPane.EnhancementsCategory.Background:SetHeight(28)
 
-for k, v in pairs(DCS_TableData.StatData) do
-	if (not v.frame) then
-		if (v.category) then
-			v.frame = CreateFrame("FRAME", nil, StatFrame, "CharacterStatFrameCategoryTemplate")
-		else
-			v.frame = CreateFrame("FRAME", nil, StatFrame, "CharacterStatFrameTemplate")
-		end
-	end
-	v.frame.statKey = k
-end
-
 local DefaultData = DCS_TableData:MergeTable({
     { statKey = "ItemLevelFrame" },
     { statKey = "AttributesCategory" },
         { statKey = "HEALTH" },
-        { statKey = "POWER" },
-        { statKey = "ALTERNATEMANA" },
+        { statKey = "DCS_POWER" },
+        { statKey = "DCS_ALTERNATEMANA" },
         { statKey = "ARMOR" },
         { statKey = "STRENGTH" },
         { statKey = "AGILITY" },
@@ -89,7 +84,7 @@ local DefaultData = DCS_TableData:MergeTable({
         { statKey = "REPAIR_COST" },
     { statKey = "EnhancementsCategory" },
         { statKey = "CRITCHANCE", hideAt = 0 },
-        { statKey = "HASTE", hideAt = 0 },
+		{ statKey = "HASTE", hideAt = 0 },
         { statKey = "VERSATILITY", hideAt = 0 },
         { statKey = "MASTERY", hideAt = 0 },
         { statKey = "LIFESTEAL", hideAt = 0 },
@@ -97,10 +92,29 @@ local DefaultData = DCS_TableData:MergeTable({
         { statKey = "DODGE", hideAt = 0 },
         { statKey = "PARRY", hideAt = 0 },
         { statKey = "BLOCK", hideAt = 0 },
+		{ statKey = "CRITCHANCE_RATING", hideAt = 0 },
+		{ statKey = "HASTE_RATING", hideAt = 0 },
+		{ statKey = "VERSATILITY_RATING", hideAt = 0 },
+		{ statKey = "MASTERY_RATING", hideAt = 0 },
+		{ statKey = "LIFESTEAL_RATING", hideAt = 0 },
+		{ statKey = "AVOIDANCE_RATING", hideAt = 0 },
+		{ statKey = "DODGE_RATING", hideAt = 0 },
+		{ statKey = "PARRY_RATING", hideAt = 0 },
         { statKey = "ITEMLEVEL", hidden = true },
 })
 
 local ShownData = DefaultData
+
+for k, v in pairs(DCS_TableData.StatData) do
+	if (not v.frame) then
+		if (v.category) then
+			v.frame = CreateFrame("FRAME", nil, StatFrame, "CharacterStatFrameCategoryTemplate")
+		else
+			v.frame = CreateFrame("FRAME", nil, StatFrame, "CharacterStatFrameTemplate")
+		end
+	end
+	v.frame.statKey = k
+end
 
 local function UpdateStatFrameWidth(width)
 	local stat
@@ -124,79 +138,120 @@ local configMode = false
 
 local function ShowCharacterStats(unit)
     local stat
-    local count, height = 0, 4
+    local count, backgroundcount, height = 0, 0, 4
     for _, v in ipairs(ShownData) do
         stat = DCS_TableData.StatData[v.statKey]
-        stat.updateFunc(stat.frame, unit)
-        if (configMode) then
-			if v.hideAt then
-				local hide = false -- the value can change during playing session, se needs to reset each time it's accessed
-				if v.hideAt == stat.frame.numericValue then
-					hide = true
+		if stat then -- if some stat gets removed or if experimenting with adding stats
+			stat.updateFunc(stat.frame, unit)
+			if (configMode) then
+				stat.frame:Show()
+				stat.frame.checkButton:Show()
+				stat.frame.checkButton:SetChecked(not v.hidden)
+				if (v.hidden) then
+					stat.frame:SetAlpha(0.32)
 				end
-				if not v.hidden then -- if player doesn't want to see non-zero stat then let it remain so
-					v.hidden = hide
+				if (not v.hidden) then
+					stat.frame:SetAlpha(1)
+				end
+			else
+				local hideatzero = true --placeholder for the checkbox hideatzero
+				local butshowstatifchecked = false --placeholder for the checkbox butshowstatifchecked
+				if hideatzero and not butshowstatifchecked then
+					if v.hideAt then
+						if v.hideAt == stat.frame.numericValue then
+							stat.frame:Hide()
+						end
+					end
+				end
+				if (v.hidden) then
+					stat.frame:Hide()
+				else
+					if (stat.frame.checkButton) then
+						stat.frame.checkButton:Hide()
+					end
 				end
 			end
-            stat.frame:Show()
-            stat.frame.checkButton:Show()
-            stat.frame.checkButton:SetChecked(not v.hidden)
-            if (v.hidden) then
-                stat.frame:SetAlpha(0.32)
+			if (stat.frame:IsShown()) then
+				stat.frame:ClearAllPoints()
+				stat.frame:SetPoint("TOPLEFT", StatFrame.AnchorFrame, "TOPLEFT", 0, -height)
+				if (stat.category) then
+					count = count + 2
+				else
+					count = count + 1
+				end
+				if (stat.category) then
+					backgroundcount = 0
+				else
+					stat.frame.Background:SetShown((backgroundcount%2) ~= 0)
+					backgroundcount = backgroundcount + 1
+				end
+				if not (configMode) then
+					stat.frame:SetAlpha(1)
+				end
+				height = height + stat.frame:GetHeight()
 			end
-			if (not v.hidden) then
-                stat.frame:SetAlpha(1)
-			end
-        elseif (v.hidden) then
-            stat.frame:Hide()
-        elseif (stat.frame.checkButton) then
-            stat.frame.checkButton:Hide()
+			--print(count)
 		end
-        if (stat.frame:IsShown()) then
-            stat.frame:ClearAllPoints()
-            stat.frame:SetPoint("TOPLEFT", StatFrame.AnchorFrame, "TOPLEFT", 0, -height)
-			if (stat.category) then
-                count = 0
-            else
-                stat.frame.Background:SetShown((count%2) ~= 0)
-                count = count + 1
-            end
-			if not (configMode) then
-				stat.frame:SetAlpha(1)
-			end
-            height = height + stat.frame:GetHeight()
-        end
-    end
-    height = floor(height)
-    StatFrame:SetHeight(height)
-	local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked
-	if checked.ScrollbarSetChecked == true then
-		UpdateStatFrameWidth(height > 353 and 180 or 191)
-	else
-		UpdateStatFrameWidth(191)
+		height = floor(height)
+		StatFrame:SetHeight(height)
+		local statheight = StatFrame:GetHeight()
+		local baseheight = CharacterFrameInsetRight:GetHeight()
+		--print(statheight, baseheight)
+		if count <= 24 then
+			UpdateStatFrameWidth(191)
+			StatScrollFrame.ScrollBar:Hide()
+		elseif count > 24 then
+			local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked
+			if checked.ScrollbarSetChecked == true then
+				UpdateStatFrameWidth(180)
+				StatScrollFrame.ScrollBar:Show()
+			else
+				UpdateStatFrameWidth(191)
+				StatScrollFrame.ScrollBar:Hide()
+			end			
+		end
 	end
+end
+
+
+local function DCS_Table_ShowAllStats()
+	for _, v in ipairs(ShownData) do
+		if v.hidden == true then v.hidden = false end
+	end
+	ShowCharacterStats("player")
 end
 
 local function DCS_Table_Relevant()
 	local uniqueKey = UnitName("player") .. ":" .. GetRealmName() .. ":" .. GetSpecialization()
 	--print(uniqueKey)
 	--print("Select only relevant stats")
-	ShownData = DCS_TableData:CopyTable(DefaultData)
+	--ShownData = DCS_TableData:CopyTable(DefaultData)
+
+	for _, v in ipairs(ShownData) do
+		if v.hidden == true then v.hidden = false end
+	end 
+
 	local spec = GetSpecialization();
+		--print(spec)
 	local role = GetSpecializationRole(spec)
+		--print(role)
 	local primaryStat = select(7, GetSpecializationInfo(spec, nil, nil, nil, UnitSex("player")));
+		--print(primaryStat)
     for _, v in ipairs(ShownData) do
 		--print (v.statKey, " ", v.hidden)
-		if v.statKey == 0 then v.hidden = true end
+		--if v.statKey == 0 then v.hidden = true end
 		if primaryStat ~= LE_UNIT_STAT_STRENGTH then
+				--print("Not Strength")
 			if v.statKey == "STRENGTH" then v.hidden = true end
 			if v.statKey == "DCS_RUNEREGEN" then v.hidden = true end
 		end
 		if primaryStat ~= LE_UNIT_STAT_AGILITY then
+				--print("Not Agility")
 			if v.statKey == "AGILITY" then v.hidden = true end
-			if v.statKey == "ENERGY_REGEN" then v.hidden = true end
+			--if v.statKey == "ENERGY_REGEN" then v.hidden = true end
 		end
 		if primaryStat ~= LE_UNIT_STAT_INTELLECT then
+				--print("Not intellect")
 			if v.statKey == "INTELLECT" then v.hidden = true end
 			if v.statKey == "SPELLPOWER" then v.hidden = true end
 			if v.statKey == "MANAREGEN" then v.hidden = true end
@@ -206,36 +261,49 @@ local function DCS_Table_Relevant()
 			if v.statKey == "ATTACK_DAMAGE" then v.hidden = true end
 			if v.statKey == "ATTACK_AP" then v.hidden = true end
 			if v.statKey == "DCS_ATTACK_ATTACKSPEED" then v.hidden = true end
+			if v.statKey == "WEAPON_DPS" then v.hidden = true end
 		--end
 		end
 		if role ~= "TANK" then
+				--print("Not Tank")
 			if v.statKey == "DODGE" then v.hidden = true end
 			if v.statKey == "PARRY" then v.hidden = true end
 			if v.statKey == "BLOCK" then v.hidden = true end
 		end
+		--visibility of ratings is off by default
+		if v.statKey == "CRITCHANCE_RATING" then v.hidden = true end
+		if v.statKey == "HASTE_RATING" then v.hidden = true end
+		if v.statKey == "VERSATILITY_RATING" then v.hidden = true end
+		if v.statKey == "MASTERY_RATING" then v.hidden = true end
+		if v.statKey == "LIFESTEAL_RATING" then v.hidden = true end
+		if v.statKey == "AVOIDANCE_RATING" then v.hidden = true end
+		if v.statKey == "DODGE_RATING" then v.hidden = true end
+		if v.statKey == "PARRY_RATING" then v.hidden = true end
+		if v.statKey == "ITEMLEVEL" then v.hidden = true end
 	end
+	gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = false
 	ShownData.uniqueKey = uniqueKey
 	DCS_ClassSpecDB[uniqueKey] = ShownData
 	ShowCharacterStats("player")
 end
 
-local DCS_TALENT_UPDATE_Frame = CreateFrame("Frame", nil, UIParent)
-	DCS_TALENT_UPDATE_Frame:RegisterEvent("PLAYER_TALENT_UPDATE")
-	DCS_TALENT_UPDATE_Frame:SetScript("OnEvent", function(self, event, ...)
-		local uniqueKey = UnitName("player") .. ":" .. GetRealmName() .. ":" .. GetSpecialization()
-		--print(uniqueKey)
-		if (DCS_ClassSpecDB[uniqueKey]) then
-			if (ShownData.uniqueKey ~= uniqueKey) then
-			ShownData = DCS_TableData:MergeTable(DCS_ClassSpecDB[uniqueKey])
-			--print("Set saved variables.")
-			end
-		else
-			--print("Set default initialization")
-			DCS_Table_Relevant()
+local function DCS_Login_Initialization()
+	ShownData = DCS_TableData:CopyTable(DefaultData)
+
+	local uniqueKey = UnitName("player") .. ":" .. GetRealmName() .. ":" .. GetSpecialization()
+	--print(uniqueKey)
+	if (DCS_ClassSpecDB[uniqueKey]) then
+		if (ShownData.uniqueKey ~= uniqueKey) then
+		ShownData = DCS_TableData:MergeTable(DCS_ClassSpecDB[uniqueKey])
+		--print("Set saved variables.")
 		end
-		ShowCharacterStats("player")
-	end)
-	
+	else
+		--print("Set default initialization")
+		DCS_Table_Relevant()
+	end
+	ShowCharacterStats("player")
+end
+
 local function DCS_Table_Reset()
 	local uniqueKey = UnitName("player") .. ":" .. GetRealmName() .. ":" .. GetSpecialization()
 	--print(uniqueKey)
@@ -243,7 +311,7 @@ local function DCS_Table_Reset()
 	ShownData = DCS_TableData:CopyTable(DefaultData)
 	ShownData.uniqueKey = uniqueKey
 	DCS_ClassSpecDB[uniqueKey] = ShownData
-	ShowCharacterStats("player")
+	DCS_Table_ShowAllStats()
 end
 
 
@@ -361,13 +429,27 @@ end)
 -- Relevant Stats Button --
 ------------------------
 
+local DCS_TableRelevantStatstooltipText
+
+local function DCS_TableRelevantStats_OnEnter(self)
+	GameTooltip:SetOwner(DCS_TableRelevantStats, "ANCHOR_RIGHT");
+	GameTooltip:SetText(DCS_TableRelevantStatstooltipText, 1, 1, 1, 1, true)
+	GameTooltip:Show()
+end
+
+local function DCS_TableRelevantStats_OnLeave(self)
+	GameTooltip_Hide()
+ end
+ 
 local DCS_TableRelevantStats = CreateFrame("Button", "DCS_TableRelevantStats", CharacterFrameInsetRight, "UIPanelButtonTemplate")
+	DCS_TableRelevantStats:RegisterEvent("ADDON_LOADED")
+	DCS_TableRelevantStats:RegisterEvent("PLAYER_TALENT_UPDATE")
 	DCS_TableRelevantStats:ClearAllPoints()
 	DCS_TableRelevantStats:SetPoint("BOTTOMRIGHT", -130,-36)
 	DCS_TableRelevantStats:SetScale(0.80)
 	DCS_TableRelevantStats:Hide()
 
---local LOCALE = GetLocale()
+--local LOCALE = GetLocale() --Debugging code
 --print (LOCALE)
 	--if (LOCALE == "ptBR" or LOCALE == "frFR" or LOCALE == "deDE") then
 		--print ("ptBR, frFR, deDE = 175")
@@ -381,11 +463,56 @@ local DCS_TableRelevantStats = CreateFrame("Button", "DCS_TableRelevantStats", C
 
 	DCS_TableRelevantStats:SetWidth(125)
 	DCS_TableRelevantStats:SetHeight(30)
-	_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["Relevant Stats"])
-	DCS_TableRelevantStats:SetScript("OnClick", function(self, button, down)
-		DCS_Table_Relevant()
+
+	DCS_TableRelevantStats:SetScript("OnEnter", DCS_TableRelevantStats_OnEnter)
+	DCS_TableRelevantStats:SetScript("OnLeave", DCS_TableRelevantStats_OnLeave)
+
+	DCS_TableRelevantStats:SetScript("OnClick", function(self, button, up)
+		local checked = gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked
+		if checked == true then
+			--print(checked)
+			DCS_Table_Relevant()
+			--print("Show All Button")
+			DCS_TableRelevantStatstooltipText = L["Show all stats."] --Creates a tooltip on mouseover.
+			_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["All Stats"])
+			gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = false
+		return
+		end
+		if checked == false then
+			--print(checked)
+			DCS_Table_ShowAllStats()
+			--print("Show Relevant Button")
+			DCS_TableRelevantStatstooltipText = L["Show only stats relevant to your class spec."] --Creates a tooltip on mouseover.
+			_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["Relevant Stats"])
+			gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = true
+		return
+		end
+		DCS_TableRelevantStats_OnEnter()
 	end)
 
+	DCS_TableRelevantStats:SetScript("OnEvent", function(self, event, ...)
+
+		if event == "ADDON_LOADED" or event == "PLAYER_TALENT_UPDATE" then
+			if IsLoggedIn() then
+				DCS_Login_Initialization()
+				local checked = gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked
+				if checked == true then
+					--print(checked)
+					--print("Show Relevant Button")
+					DCS_TableRelevantStatstooltipText = L["Show only stats relevant to your class spec."] --Creates a tooltip on mouseover.
+					_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["Relevant Stats"])
+					return
+				end
+				if checked == false then
+					--print(checked)
+					--print("Show All Button")
+					DCS_TableRelevantStatstooltipText = L["Show all stats."] --Creates a tooltip on mouseover.
+					_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["All Stats"])
+					return
+				end
+			end
+		end
+	end)
 
 ------------------------
 -- Reset Stats Button --
@@ -409,9 +536,16 @@ local DCS_TableResetCheck = CreateFrame("Button", "DCS_TableResetButton", Charac
 	--DCS_TableResetCheck:SetWidth(LOCALE)
 	DCS_TableResetCheck:SetWidth(125)
 	DCS_TableResetCheck:SetHeight(30)
+	DCS_TableResetCheck.tooltipText = L["Reset and enable all stats."] --Creates a tooltip on mouseover.
 	_G[DCS_TableResetCheck:GetName() .. "Text"]:SetText(L["Reset Stats"])
+
 	DCS_TableResetCheck:SetScript("OnClick", function(self, button, down)
 		DCS_Table_Reset()
+		--print("Show Relevant Button")
+		DCS_TableRelevantStatstooltipText = L["Show only stats relevant to your class spec."] --Creates a tooltip on mouseover.
+		_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["Relevant Stats"])
+		gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = true
+		--print("true")
 	end)
 
 
@@ -451,8 +585,101 @@ local function configButtonOnClose()
 	ShowCharacterStats("player")
 end
 	
-CharacterFrameInsetRight:HookScript("OnHide", function(self)
+local function DCS_DefaultStatsAnchors()
+	StatScrollFrame:ClearAllPoints()
+	StatScrollFrame:SetParent(CharacterFrameInsetRight)
+	StatScrollFrame:SetPoint("TOPLEFT", CharacterFrameInsetRight, "TOPLEFT", 5, -6)
+	StatScrollFrame:SetPoint("BOTTOMRIGHT", CharacterFrameInsetRight, "BOTTOMRIGHT", 0, 3)
+
+	StatScrollFrame.ScrollBar:ClearAllPoints()
+	StatScrollFrame.ScrollBar:SetParent(StatScrollFrame)
+	StatScrollFrame.ScrollBar:SetPoint("TOPLEFT", StatScrollFrame, "TOPRIGHT", -16, -16)
+	StatScrollFrame.ScrollBar:SetPoint("BOTTOMLEFT", StatScrollFrame, "BOTTOMRIGHT", -16, 16)
+	StatScrollFrame.ScrollBar:Hide()
+
+	DCS_TableRelevantStats:ClearAllPoints()
+	DCS_TableRelevantStats:SetParent(CharacterFrameInsetRight)
+	DCS_TableRelevantStats:SetPoint("BOTTOMRIGHT", -130,-36)
+
+	DCS_TableResetCheck:ClearAllPoints()
+	DCS_TableResetCheck:SetParent(CharacterFrameInsetRight)
+	DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", 5, -36)
+
+	CharacterStatsPane.ClassBackground:ClearAllPoints()
+	CharacterStatsPane.ClassBackground:SetParent(StatScrollFrame)
+	CharacterStatsPane.ClassBackground:SetPoint("TOP", StatScrollFrame, "TOP", -2.50, 3)
+	
 	configButtonOnClose()
+	ShowCharacterStats("player")
+end
+
+local function DCS_InterfaceOptionsStatsAnchors()
+	if (DejaCharacterStatsPanel~=nil) then
+		StatScrollFrame:ClearAllPoints()
+		StatScrollFrame:SetParent(DejaCharacterStatsPanel)
+		StatScrollFrame:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 380, -6)
+		StatScrollFrame:SetPoint("BOTTOMRIGHT", DejaCharacterStatsPanel, "BOTTOMRIGHT", -50, 3)
+		StatScrollFrame:Show()
+
+		StatScrollFrame.ScrollBar:ClearAllPoints()
+		StatScrollFrame.ScrollBar:SetParent(StatScrollFrame)
+		StatScrollFrame.ScrollBar:SetPoint("TOPLEFT", StatScrollFrame, "TOPRIGHT", -16, -16)
+		StatScrollFrame.ScrollBar:SetPoint("BOTTOMLEFT", StatScrollFrame, "BOTTOMRIGHT", -16, 16)
+		StatScrollFrame.ScrollBar:Hide()
+
+		DCS_TableRelevantStats:ClearAllPoints()
+		DCS_TableRelevantStats:SetParent(StatScrollFrame)
+		DCS_TableRelevantStats:SetPoint("BOTTOMLEFT", -134, 35)
+
+		DCS_TableResetCheck:ClearAllPoints()
+		DCS_TableResetCheck:SetParent(StatScrollFrame)
+		DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", -250, 5)
+
+		CharacterStatsPane.ClassBackground:ClearAllPoints()
+		CharacterStatsPane.ClassBackground:SetParent(DejaCharacterStatsPanel)
+		CharacterStatsPane.ClassBackground:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 377, -6)
+		CharacterStatsPane.ClassBackground:Show()
+
+		ShowCharacterStats("player")
+	end
+end	
+	
+CharacterFrameInsetRight:HookScript("OnShow", function(self)
+	DCS_DefaultStatsAnchors()
+end)
+
+CharacterFrameInsetRight:HookScript("OnHide", function(self)
+	if InterfaceOptionsFrame:IsShown() then
+		DCS_InterfaceOptionsStatsAnchors()
+	else
+		StatScrollFrame:ClearAllPoints()
+		StatScrollFrame:SetParent(UIParent)
+		StatScrollFrame:SetPoint("BOTTOMRIGHT", UIParent, "TOPLEFT", -100, 100)
+		StatScrollFrame:Hide()
+
+		StatScrollFrame.ScrollBar:ClearAllPoints()
+		StatScrollFrame.ScrollBar:SetParent(UIParent)
+		StatScrollFrame.ScrollBar:SetPoint("TOPLEFT", UIParent, "TOPLEFT", -160, 160)
+		StatScrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", UIParent, "TOPLEFT", -160, 160)
+		StatScrollFrame.ScrollBar:Hide()
+
+		DCS_TableRelevantStats:ClearAllPoints()
+		DCS_TableRelevantStats:SetParent(CharacterFrameInsetRight)
+		DCS_TableRelevantStats:SetPoint("BOTTOMRIGHT", -130,-36)
+		DCS_TableRelevantStats:Hide()
+
+		DCS_TableResetCheck:ClearAllPoints()
+		DCS_TableResetCheck:SetParent(CharacterFrameInsetRight)
+		DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", 5, -36)
+		DCS_TableResetCheck:Hide()
+
+		CharacterStatsPane.ClassBackground:ClearAllPoints()
+		CharacterStatsPane.ClassBackground:SetParent(UIParent)
+		CharacterStatsPane.ClassBackground:SetPoint("BOTTOMRIGHT", UIParent, "TOPLEFT", 0, 0)
+		CharacterStatsPane.ClassBackground:Show()
+
+		configButtonOnClose()
+	end
 end)
 
 	DCS_configButton:SetScript("OnMouseUp", function(self, button, up)
@@ -515,9 +742,9 @@ local function DCS_InterfaceOptConfigButton_OnLeave(self)
 	end)
 
 
----------------------
--- Scrollbar Check --
----------------------
+----------------------------
+-- Scrollbar Check Button --
+----------------------------
 
 local DCS_ScrollbarCheck = CreateFrame("CheckButton", "DCS_ScrollbarCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
 	DCS_ScrollbarCheck:RegisterEvent("PLAYER_LOGIN")
@@ -529,15 +756,9 @@ local DCS_ScrollbarCheck = CreateFrame("CheckButton", "DCS_ScrollbarCheck", Deja
 	
 	DCS_ScrollbarCheck:SetScript("OnEvent", function(self, event, arg1)
 		if event == "PLAYER_LOGIN" then
-		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked
+			local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked
 			self:SetChecked(checked.ScrollbarSetChecked)
-			if self:GetChecked(true) then
-				StatScrollFrame.ScrollBar:Show() 
-				gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked.ScrollbarSetChecked = true
-			else
-				StatScrollFrame.ScrollBar:Hide() 
-				gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked.ScrollbarSetChecked = false
-			end
+			--Logic is built into ShowCharacterStats("player")
 		end
 		DCS_ScrollbarCheck:UnregisterAllEvents();
         ShowCharacterStats("player")
@@ -546,19 +767,18 @@ local DCS_ScrollbarCheck = CreateFrame("CheckButton", "DCS_ScrollbarCheck", Deja
 	DCS_ScrollbarCheck:SetScript("OnClick", function(self,event,arg1) 
 		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked
 		if self:GetChecked(true) then
-			StatScrollFrame.ScrollBar:Show() 
+			--Show/Hide Logic is built into ShowCharacterStats("player")
 			gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked.ScrollbarSetChecked = true
 		else
-			StatScrollFrame.ScrollBar:Hide() 
 			gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked.ScrollbarSetChecked = false
 		end		
         ShowCharacterStats("player")
 	end)
 
 
-----------------------------
--- Class Background Check --
-----------------------------
+-----------------------------------
+-- Class Background Check Button --
+-----------------------------------
 
 local DCS_ClassBackgroundCheck = CreateFrame("CheckButton", "DCS_ClassBackgroundCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
 	DCS_ClassBackgroundCheck:RegisterEvent("PLAYER_LOGIN")
@@ -594,47 +814,11 @@ local DCS_ClassBackgroundCheck = CreateFrame("CheckButton", "DCS_ClassBackground
 		end		
         ShowCharacterStats("player")
 	end)
-	
-	
+
 InterfaceOptionsFrame:HookScript("OnShow", function(self)
-	StatScrollFrame:SetParent(DejaCharacterStatsPanel)
-	StatScrollFrame:ClearAllPoints()
-	StatScrollFrame:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 380, -6)
-	StatScrollFrame:SetPoint("BOTTOMRIGHT", DejaCharacterStatsPanel, "BOTTOMRIGHT", -50, 3)
-	
-	DCS_TableRelevantStats:SetParent(StatScrollFrame)
-	DCS_TableRelevantStats:ClearAllPoints()
-	DCS_TableRelevantStats:SetPoint("BOTTOMLEFT", -6, 0)
-
-	DCS_TableResetCheck:SetParent(StatScrollFrame)
-	DCS_TableResetCheck:ClearAllPoints()
-	DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", 6, 0)
-
-	CharacterStatsPane.ClassBackground:SetParent(DejaCharacterStatsPanel)
-	CharacterStatsPane.ClassBackground:ClearAllPoints()
-	CharacterStatsPane.ClassBackground:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 380, -6)
-	
-	ShowCharacterStats("player")
+	DCS_InterfaceOptionsStatsAnchors()
 end)
 
 InterfaceOptionsFrame:HookScript("OnHide", function(self)
-	StatScrollFrame:SetParent(CharacterFrameInsetRight)
-	StatScrollFrame:ClearAllPoints()
-	StatScrollFrame:SetPoint("TOPLEFT", CharacterFrameInsetRight, "TOPLEFT", 5, -6)
-	StatScrollFrame:SetPoint("BOTTOMRIGHT", CharacterFrameInsetRight, "BOTTOMRIGHT", 0, 3)
-
-	DCS_TableRelevantStats:SetParent(CharacterFrameInsetRight)
-	DCS_TableRelevantStats:ClearAllPoints()
-	DCS_TableRelevantStats:SetPoint("BOTTOMRIGHT", -130,-36)
-
-	DCS_TableResetCheck:SetParent(CharacterFrameInsetRight)
-	DCS_TableResetCheck:ClearAllPoints()
-	DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", 5, -36)
-
-	CharacterStatsPane.ClassBackground:SetParent(StatScrollFrame)
-	CharacterStatsPane.ClassBackground:ClearAllPoints()
-	CharacterStatsPane.ClassBackground:SetPoint("TOP", StatScrollFrame, "TOP", -2.50, 3)
-	
-	configButtonOnClose()
-	ShowCharacterStats("player")
+	DCS_DefaultStatsAnchors()
 end)

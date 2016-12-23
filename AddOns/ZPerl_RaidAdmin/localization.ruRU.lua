@@ -1,4 +1,4 @@
-﻿--Russian localization file
+--Russian localization file
 --Translated by StingerSoft
 if (GetLocale() == "ruRU") then
 XPERL_ADMIN_TITLE	= XPerl_ShortProductName.." Рейд Админ"
