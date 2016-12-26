@@ -315,7 +315,7 @@ function barListPrototype:AddButton(title, description, normaltex, highlighttex,
 	btn:SetWidth(12)
 	btn:SetNormalTexture(normaltex)
 	btn:SetHighlightTexture(highlighttex, 1.0)
-	btn:SetAlpha(0.5)
+	btn:SetAlpha(0.25)
 	btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 	btn:SetScript("OnClick", clickfunc)
 	btn:SetScript("OnEnter",
@@ -332,6 +332,12 @@ function barListPrototype:AddButton(title, description, normaltex, highlighttex,
 	tinsert(self.buttons, btn)
 
 	self:AdjustButtons()
+end
+
+function barListPrototype:SetButtonsOpacity(alpha)
+	for i, btn in ipairs(self.buttons) do
+        btn:SetAlpha(alpha)
+	end
 end
 
 function barListPrototype:AdjustButtons()
@@ -1080,12 +1086,6 @@ do
 
 		self:SetScale(1)
 		self:SetAlpha(1)
-		--[[
-		self.texture:SetAlpha(1)
-		self.bgtexture:SetAlpha(0.6)
-		self.icon:SetAlpha(1)
-		]]--
-
 
 		self.length = length or 200
 		self.thickness = thickness or 15

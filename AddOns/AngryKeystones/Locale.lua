@@ -39,6 +39,7 @@ langs.enUS = {
 	scheduleWeek2 = "Next week",
 	scheduleWeek3 = "In two weeks",
 	scheduleWeek4 = "In three weeks",
+	scheduleMissingKeystone = "Requires a level 7+ Mythic Keystone in your inventory to display.",
 	config_exclusiveTracker = "Hide quest and achievement trackers during Mythic Keystone dungeons (requires Reload UI to take effect)",
 	config_hideTalkingHead = "Hide Talking Head dialog during a Mythic Keystone dungeon",
 }
@@ -401,7 +402,6 @@ rumors.koKR = {
 	["그 첩자는 물약을 가지고 다니지 않는다고 합니다."]="noPotion",
 	["그 첩자는 허리띠에 물약을 매달고 있을 게 분명합니다. 있는 게 분명해요."]="potion",
 	["그 첩자는 물약을 가지고 다닌데요. 이유가 뭘까요?"]="potion",
-	["I heard the spy brought along some potions... just in case."]="potion",
 	["이 얘기를 깜빡할 뻔했네요... 그 첩자는 연금술사로 가장해 허리띠에 물약을 달고 다닌다고 합니다."]="potion",
 	["그 첩자는 허리띠 주머니도 휘황찬란한 자수로 꾸며져 있다고 합니다."]="coinpurse",
 	["제 친구가 말하길, 그 첩자는 금을 너무 좋아해서 허리띠 주머니에도 금이 가득 들어 있다고 합니다."]="coinpurse",

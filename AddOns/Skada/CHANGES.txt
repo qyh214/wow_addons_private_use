@@ -1,0 +1,36 @@
+------------------------------------------------------------------------
+r706 | zarnivoop | 2016-12-25 12:48:24 -0600 (Sun, 25 Dec 2016) | 1 line
+Changed paths:
+   M /trunk/BarDisplay.lua
+   M /trunk/Options.lua
+   M /trunk/Skada.lua
+   M /trunk/locale/enUS.lua
+   M /trunk/modules/Damage.lua
+   M /trunk/modules/DamageTaken.lua
+
+added spell school colors and tooltip info
+------------------------------------------------------------------------
+r705 | zarnivoop | 2016-12-25 08:36:27 -0600 (Sun, 25 Dec 2016) | 1 line
+Changed paths:
+   M /trunk/BarDisplay.lua
+   M /trunk/Options.lua
+   M /trunk/lib/SpecializedLibBars-1.0/SpecializedLibBars-1.0.lua
+
+slight cosmetic tweaks
+------------------------------------------------------------------------
+r704 | zarnivoop | 2016-12-25 07:50:22 -0600 (Sun, 25 Dec 2016) | 1 line
+Changed paths:
+   M /trunk/Skada.lua
+
+slightly less obnoxious non-boss icon for segments
+------------------------------------------------------------------------
+r703 | zarnivoop | 2016-12-25 07:31:40 -0600 (Sun, 25 Dec 2016) | 1 line
+Changed paths:
+   M /trunk
+   M /trunk/.pkgmeta
+   M /trunk/embeds.xml
+   A /trunk/lib/LibBossIDs-1.0.lua
+
+fixed references; temporarily including libbossids directly
+------------------------------------------------------------------------
+

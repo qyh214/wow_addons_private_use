@@ -29,7 +29,7 @@ LDB Plugin Recognition:
 LDB enabled addons only need to adhere to the LDB (Lib Data Broker) 1.1 spec.
 Titan uses the callback feature ("LibDataBroker_DataObjectCreated") to recognize LDB addons. 
 At player_login Titan registers the call back. 
-It then loops through the the LDB objects using :DataObjectIterator().
+It then loops through the LDB objects using :DataObjectIterator().
 When any LDB object is found Titan will attempt to create a Titan native plugin for display.
 
 Registration Steps:

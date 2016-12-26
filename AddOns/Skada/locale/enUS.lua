@@ -486,3 +486,6 @@ L["Focus gain sources"] = true
 L["Minimum"] = true
 L["Maximum"] = true
 L["Average"] = true
+
+L["Spell school colors"] = true
+L["Use spell school colors where applicable."] = true

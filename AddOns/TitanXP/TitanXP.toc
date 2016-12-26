@@ -1,10 +1,10 @@
 ## Interface: 70100
-## Title: Titan Panel [|cffeda55fXP|r] |cff00aa005.10.1.70100|r
+## Title: Titan Panel [|cffeda55fXP|r] |cff00aa005.10.2.70100|r
 ## Notes: Adds information to Titan Panel about XP earned and time to level
 ## Author: Titan Development Team (http://www.titanpanel.org)
 ## SavedVariables: 
 ## OptionalDeps: 
 ## Dependencies: Titan
-## Version: 5.10.1.70100
+## Version: 5.10.2.70100
 ## X-Child-Of: Titan
 TitanXP.xml

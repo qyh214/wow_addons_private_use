@@ -455,7 +455,7 @@ local function Titan_ContainerFrames_Relocate()
 
 	for index, frameName in ipairs(ContainerFrame1.bags) do
 		frame = _G[frameName];
-		bottom_y = frame:GetBottom()
+		if frame:GetBottom() then bottom_y = frame:GetBottom() end
 		if ( bottom_y < off_y ) then
 			-- Start a new column
 			right_x = frame:GetRight()

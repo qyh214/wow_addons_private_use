@@ -23,9 +23,6 @@ local function UpdateAffixes()
 		Mod:CheckInventoryKeystone()
 	end
 	if currentWeek then
-		ChallengesFrame.GuildBest:ClearAllPoints()
-		ChallengesFrame.GuildBest:SetPoint("TOPLEFT", ChallengesFrame.WeeklyBest.Child.Star, "BOTTOMRIGHT", 9, 0)
-		Mod.Frame:Show()
 		for i = 1, rowCount do
 			local entry = Mod.Frame.Entries[i]
 
@@ -36,10 +33,12 @@ local function UpdateAffixes()
 				affix:SetUp(affixes[j])
 			end
 		end
+		Mod.Frame.Label:Hide()
 	else
-		ChallengesFrame.GuildBest:ClearAllPoints()
-		ChallengesFrame.GuildBest:SetPoint("TOPLEFT", ChallengesFrame.WeeklyBest.Child.Star, "BOTTOMRIGHT", -16, 10)
-		Mod.Frame:Hide()
+		for i = 1, rowCount do
+			Mod.Frame.Entries[i]:Hide()
+		end
+		Mod.Frame.Label:Show()
 	end
 end
 
@@ -64,7 +63,9 @@ local function makeAffix(parent)
 	return frame
 end
 
-local function setupFrame()
+function Mod:Blizzard_ChallengesUI()
+	ChallengesFrame.GuildBest:ClearAllPoints()
+	ChallengesFrame.GuildBest:SetPoint("TOPLEFT", ChallengesFrame.WeeklyBest.Child.Star, "BOTTOMRIGHT", 9, 0)
 
 	local frame = CreateFrame("Frame", nil, ChallengesFrame)
 	frame:SetSize(206, 110)
@@ -108,7 +109,6 @@ local function setupFrame()
 			else
 				affix:SetPoint("RIGHT")
 			end
-			affix:Hide()
 			prevAffix = affix
 			affixes[j] = affix
 		end
@@ -124,16 +124,20 @@ local function setupFrame()
 	end
 	frame.Entries = entries
 
-	hooksecurefunc("ChallengesFrame_Update", UpdateAffixes)
-end
+	local label = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	label:SetPoint("TOPLEFT", line, "BOTTOMLEFT", 10, 0)
+	label:SetPoint("TOPRIGHT", line, "BOTTOMRIGHT", -10, 0)
+	label:SetJustifyH("CENTER")
+	label:SetJustifyV("MIDDLE")
+	label:SetHeight(72)
+	label:SetWordWrap(true)
+	label:SetText(Addon.Locale.scheduleMissingKeystone)
+	frame.Label = label
 
-function Mod:ADDON_LOADED(name)
-	if name == 'Blizzard_ChallengesUI' then
-		if setupFrame then
-			setupFrame()
-			setupFrame = nil
-		end
-	end
+	ChallengesFrame.GuildBest:ClearAllPoints()
+	ChallengesFrame.GuildBest:SetPoint("TOPLEFT", ChallengesFrame.WeeklyBest.Child.Star, "BOTTOMRIGHT", 9, 0)
+
+	hooksecurefunc("ChallengesFrame_Update", UpdateAffixes)
 end
 
 function Mod:CheckInventoryKeystone()
@@ -165,11 +169,7 @@ function Mod:BAG_UPDATE()
 end
 
 function Mod:Startup()
-	if ChallengesFrame then
-		self:ADDON_LOADED("Blizzard_ChallengesUI")
-	else
-		self:RegisterEvent('ADDON_LOADED')
-	end
-	self:RegisterEvent('BAG_UPDATE')
+	self:RegisterAddOnLoaded("Blizzard_ChallengesUI")
+	self:RegisterEvent("BAG_UPDATE")
 	requestKeystoneCheck = true
 end

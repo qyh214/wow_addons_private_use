@@ -88,14 +88,8 @@ local function PlayCurrent()
 	end
 end
 
-local function TalkingHeadUI_Tweaks()
+function Mod:Blizzard_TalkingHeadUI()
 	hooksecurefunc("TalkingHeadFrame_PlayCurrent", PlayCurrent)
-end
-
-function Mod:ADDON_LOADED(name)
-	if name == 'Blizzard_TalkingHeadUI' then
-		TalkingHeadUI_Tweaks()
-	end
 end
 
 function Mod:Startup()
@@ -105,9 +99,5 @@ function Mod:Startup()
 
 	self:RegisterEvent("GOSSIP_SHOW")
 
-	if TalkingHeadFrame then
-		TalkingHeadUI_Tweaks()
-	else
-		self:RegisterEvent('ADDON_LOADED')
-	end
+	self:RegisterAddOnLoaded("Blizzard_TalkingHeadUI")
 end

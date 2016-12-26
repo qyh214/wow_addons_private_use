@@ -217,11 +217,11 @@ local function LoadExclusive()
 	end
 
 	ObjectiveTracker_Update_Old = ObjectiveTracker_Update
-	function ObjectiveTracker_Update(reason, id)
+	function ObjectiveTracker_Update(...)
 		if IsInActiveInstance() then
-			local tracker = ObjectiveTrackerFrame;
-			local modules_old = tracker.MODULES;
-			local modules_ui_old = tracker.MODULES_UI_ORDER;
+			local tracker = ObjectiveTrackerFrame
+			local modules_old = tracker.MODULES
+			local modules_ui_old = tracker.MODULES_UI_ORDER
 
 			tracker.MODULES = { SCENARIO_CONTENT_TRACKER_MODULE }
 			tracker.MODULES_UI_ORDER = { SCENARIO_CONTENT_TRACKER_MODULE }
@@ -239,12 +239,12 @@ local function LoadExclusive()
 				end
 			end
 
-			ObjectiveTracker_Update_Old(reason, id)
+			ObjectiveTracker_Update_Old(...)
 
 			tracker.MODULES = modules_old
 			tracker.MODULES_UI_ORDER = modules_ui_old
 		else
-			ObjectiveTracker_Update_Old(reason, id)
+			ObjectiveTracker_Update_Old(...)
 		end
 	end
 
@@ -270,17 +270,11 @@ function Mod:Startup()
 		LoadPersist()
 		LoadPersist = nil
 		self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
-		Addon.Config:RegisterCallback('persistTracker', function()
-			ScenarioTimer_CheckTimers(GetWorldElapsedTimers())
-		end)
 	end
 	if Addon.Config.exclusiveTracker and LoadExclusive then
 		LoadExclusive()
 		LoadExclusive = nil
 		self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
-		Addon.Config:RegisterCallback('exclusiveTracker', function()
-			ObjectiveTracker_Update()
-		end)
 	end
 end
 

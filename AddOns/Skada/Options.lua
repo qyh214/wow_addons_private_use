@@ -19,6 +19,7 @@ Skada.windowdefaults = {
 	barslocked=false,
 	clickthrough=false,
 
+    spellschoolcolors=true,
 	classcolorbars = true,
 	classcolortext = false,
 	classicons = true,
@@ -33,7 +34,7 @@ Skada.windowdefaults = {
         texture="Solid",
         bordercolor = {r=0,g=0,b=0,a=1}, 
         bordertexture="Blizzard Party", 
-        borderthickness=2, 
+        borderthickness=1,
         color = {r=0,g=0,b=0,a=0.4}, 
         tile = false, 
         tilesize = 0, 
