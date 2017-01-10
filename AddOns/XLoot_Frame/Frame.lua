@@ -1266,4 +1266,3 @@ LootSlotIsCoin(slot) etc are replaced by GetLootSlotType(slot) == LOOT_SLOT_* ch
 ]]
 
 
-

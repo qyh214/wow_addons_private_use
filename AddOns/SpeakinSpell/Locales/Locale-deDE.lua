@@ -1,4 +1,4 @@
-﻿-- Deutsche Lokalisierungsdatei für -locale deDE-
+-- Deutsche Lokalisierungsdatei für -locale deDE-
 -- Übersetzt vom Englischen ins Deutsche von Lexin
 
 

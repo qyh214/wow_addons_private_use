@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1827, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15398 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15607 $"):sub(12, -3))
 mod:SetCreatureID(114329, 114522, 114330, 114328)
 mod:SetEncounterID(1957)--Shared (so not used for encounter START since it'd fire 3 mods)
 mod:DisableESCombatDetection()--However, with ES disabled, EncounterID can be used for BOSS_KILL/ENCOUNTER_END
@@ -11,10 +11,12 @@ mod:SetUsedIcons(1)
 mod:SetBossHPInfoToHighest()
 --mod.respawnTime = 30
 
+mod.noNormal = true
+
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 228193 228025 228019 227987 232153",
+	"SPELL_CAST_START 228025 228019 227987 232153",
 	"SPELL_AURA_APPLIED 228013 228221 228225 227985",
 	"SPELL_AURA_REMOVED 232156 228221",
 	"SPELL_PERIODIC_DAMAGE 228200",
@@ -22,10 +24,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_DIED"
 )
 
---TODO: Verify Burning Blaze Target
 --TODO: Timers
---Luminore
-local warnBurningBlaze				= mod:NewTargetAnnounce(228193, 2)
 --Babblet
 local warnSevereDusting				= mod:NewTargetAnnounce(228221, 3)
 --Cogglestone
@@ -33,8 +32,6 @@ local warnKaraKazham				= mod:NewSpellAnnounce(232153, 2)
 
 --Luminore
 local specWarnBurningBlaze			= mod:NewSpecialWarningMove(228193, nil, nil, nil, 1, 2)
-local specWarnBurningBlazeNear		= mod:NewSpecialWarningClose(228193, nil, nil, nil, 1, 2)
-local yellBurningBlaze				= mod:NewYell(228193)
 local specWarnHeatWave				= mod:NewSpecialWarningInterrupt(228025, "HasInterrupt", nil, nil, 1, 2)
 --Mrs.Cauldrons
 local specWarnDrenched				= mod:NewSpecialWarningMoveTo(228013, nil, nil, nil, 1)--Voice?
@@ -47,14 +44,14 @@ local specWarnDentArmor				= mod:NewSpecialWarningDefensive(227985, nil, nil, ni
 local specWarnDinnerBell			= mod:NewSpecialWarningInterrupt(227987, "HasInterrupt", nil, nil, 1, 2)
 
 --Luminore
-local timerHeatWaveCD				= mod:NewAITimer(40, 228025, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerHeatWaveCD				= mod:NewCDTimer(26, 228025, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 --Mrs.Cauldrons
-local timerLeftoversCD				= mod:NewAITimer(40, 228019, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerLeftoversCD				= mod:NewCDTimer(17, 228019, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 --Babblet
-local timerSevereDustingCD			= mod:NewAITimer(40, 228221, nil, nil, nil, 3)
+local timerSevereDustingCD			= mod:NewCDTimer(12, 228221, nil, nil, nil, 3)
 --Coggleston
-local timerDentArmorCD				= mod:NewAITimer(40, 227985, nil, "Tank|Healer", nil, 5)
-local timerDinnerBellCD				= mod:NewAITimer(40, 227987, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerDentArmorCD				= mod:NewCDTimer(20, 227985, nil, "Tank|Healer", nil, 5)
+local timerDinnerBellCD				= mod:NewCDTimer(10.9, 227987, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 
 
 --local berserkTimer				= mod:NewBerserkTimer(300)
@@ -79,25 +76,10 @@ mod:AddSetIconOption("SetIconOnDusting", 228221, true)
 
 mod.vb.phase = 1
 
-function mod:BlazeTarget(targetname, uId)
-	if not targetname then
-		warnBurningBlaze:Show(DBM_CORE_UNKNOWN)
-		return
-	end
-	if targetname == UnitName("player") then
-		specWarnBurningBlaze:Show()
-		voiceBurningBlaze:Play("runaway")
-		yellBurningBlaze:Yell()
-	elseif self:CheckNearby(5, targetname) then
-		specWarnBurningBlazeNear:Show(targetname)
-		voiceBurningBlaze:Play("runaway")
-	else
-		warnBurningBlaze:Show(targetname)
-	end
-end
-
 function mod:OnCombatStart(delay)
 	self.vb.phase = 1
+	timerLeftoversCD:Start(7.3-delay)
+	timerHeatWaveCD:Start(31.6-delay)
 end
 
 function mod:OnCombatEnd()
@@ -106,9 +88,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 228193 then
-		self:BossTargetScanner(args.sourceGUID, "BlazeTarget", 0.1, 12)
-	elseif spellId == 228025 then
+	if spellId == 228025 then
 		timerHeatWaveCD:Start()
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnHeatWave:Show(args.sourceName)
@@ -165,6 +145,8 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 232156 then--Spectral Service
 		self.vb.phase = 2
+		timerDinnerBellCD:Start(8)
+		timerDentArmorCD:Start(15.5)
 	elseif spellId == 228221 and self.Options.SetIconOnDusting then
 		self:SetIcon(args.destName, 0)
 	end

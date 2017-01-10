@@ -1,4 +1,4 @@
-﻿-- See: http://wow.curseforge.com/addons/xloot/localization/ to create or fix translations
+-- See: http://wow.curseforge.com/addons/xloot/localization/ to create or fix translations
 local locales = {
 	enUS = {
 		ML_RANDOM = "Raid Roll",
@@ -42,24 +42,19 @@ local locales = {
 }
 
 -- Automatically inserted translations
-
-
-locales.deDE["BINDING_BANKER"] = "Setze Bankier" -- Needs review
-locales.deDE["BINDING_DISENCHANTER"] = "Setze Entzauberer" -- Needs review
-locales.deDE["ITEM_AWARDED"] = "%s erhielt: %s" -- Needs review
-locales.deDE["ML_BANKER"] = "Bankier" -- Needs review
-locales.deDE["ML_DISENCHANTER"] = "Entzauberer" -- Needs review
-locales.deDE["ML_RANDOM"] = "Schlachtzugswurf" -- Needs review
-locales.deDE["ML_SELF"] = "Eigenständiges Plündern" -- Needs review
-locales.deDE["RECIPIENTS"] = "Spezieller Empfänger" -- Needs review
-locales.deDE["SPECIALROLLS"] = "Spezielle Würfe" -- Needs review
-
-locales.koKR["ITEM_AWARDED"] = "%s 아이템을 획득했습니다: %s" -- Needs review
+locales.deDE["BINDING_BANKER"] = "Setze Bankier"
+locales.deDE["BINDING_DISENCHANTER"] = "Setze Entzauberer"
+locales.deDE["ITEM_AWARDED"] = "%s erhielt: %s"
+locales.deDE["ML_BANKER"] = "Bankier"
+locales.deDE["ML_DISENCHANTER"] = "Entzauberer"
+locales.deDE["ML_RANDOM"] = "Schlachtzugswurf"
+locales.deDE["ML_SELF"] = "Eigenständiges Plündern"
+locales.deDE["RECIPIENTS"] = "Spezieller Empfänger"
+locales.deDE["SPECIALROLLS"] = "Spezielle Würfe"
+locales.koKR["ITEM_AWARDED"] = "%s 아이템을 획득했습니다: %s"
 locales.koKR["ML_RANDOM"] = "공격대 주사위"
 locales.koKR["RECIPIENTS"] = "특별 수령인"
 locales.koKR["SPECIALROLLS"] = "특별 주사위"
-
-
 locales.ruRU["BINDING_BANKER"] = "Назначить банкира"
 locales.ruRU["BINDING_DISENCHANTER"] = "Назначить дизенчантера"
 locales.ruRU["ITEM_AWARDED"] = "%s получает: %s"
@@ -69,7 +64,6 @@ locales.ruRU["ML_RANDOM"] = "Raid Roll"
 locales.ruRU["ML_SELF"] = "Своя добыча"
 locales.ruRU["RECIPIENTS"] = "Особые получатели"
 locales.ruRU["SPECIALROLLS"] = "Особые броски"
-
 locales.zhCN["BINDING_BANKER"] = "设置银行存放者"
 locales.zhCN["BINDING_DISENCHANTER"] = "设置附魔分解者"
 locales.zhCN["ITEM_AWARDED"] = "%s 获得了： %s"
@@ -79,8 +73,6 @@ locales.zhCN["ML_RANDOM"] = "团队掷骰"
 locales.zhCN["ML_SELF"] = "自己掷骰"
 locales.zhCN["RECIPIENTS"] = "特殊接收者"
 locales.zhCN["SPECIALROLLS"] = "特殊掷骰"
-
-
 locales.zhTW["BINDING_BANKER"] = "設定存放銀行者"
 locales.zhTW["BINDING_DISENCHANTER"] = "設定附魔分解者"
 locales.zhTW["ITEM_AWARDED"] = "%s 給與: %s"
@@ -90,6 +82,5 @@ locales.zhTW["ML_RANDOM"] = "團隊擲骰"
 locales.zhTW["ML_SELF"] = "自己拾取"
 locales.zhTW["RECIPIENTS"] = "特殊接受者"
 locales.zhTW["SPECIALROLLS"] = "特殊擲骰"
-
 
 XLoot:Localize("Master", locales)

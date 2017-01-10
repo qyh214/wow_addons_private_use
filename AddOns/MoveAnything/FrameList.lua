@@ -83,7 +83,7 @@ local m = {
 			end)
 		end}, c)
 		API:AddElement({name = "QuestChoiceFrame", displayName = "Quest Choice Frame"}, c)
-		API:AddElement({name = "WorldQuestCompleeteAlertFrame", displayName = "World Quest Complete Alert"}, c)
+		API:AddElement({name = "WorldQuestCompleteAlertFrame", displayName = "World Quest Complete Alert"}, c)
 		API:AddElement({name = "TalkingHeadFrame", displayName = "Quest Talking Head Frame", runOnce = TalkingHead_LoadUI}, c)
 		--API:AddElement({name = "QuestTimerFrame", displayName = "Quest Timer"}, c)
 		c = API:GetCategory("Arena")

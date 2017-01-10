@@ -1,4 +1,4 @@
-﻿-- Author      : RisM
+-- Author      : RisM
 -- Create Date : 12/6/2009 2:12:49 AM
 
 -- English localization file for enUS and enGB.

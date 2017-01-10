@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(619, "DBM-Party-WotLK", 8, 281)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 239 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 242 $"):sub(12, -3))
 mod:SetCreatureID(26763)
 mod:SetEncounterID(522, 523, 2009)
 mod:SetZone()
@@ -28,14 +28,14 @@ function mod:SPELL_SUMMON(args)
 	end
 end
 
-function mod:UNIT_HEALTH(arg1)
-	if UnitName(arg1) == L.name then
-		local h = UnitHealth(arg1)
-		if (h > 80) or (h < 70 and h > 55) or (h < 45 and h > 30) then
+function mod:UNIT_HEALTH(uId)
+	if UnitName(uId) == L.name then
+		local h = UnitHealth(uId) / UnitHealthMax(uId)
+		if (h > 0.80) or (h < 0.70 and h > 0.55) or (h < 0.45 and h > 0.30) then
 			warnedRift = false
 		end
 		if not warnedRift then
-			if (h < 80 and h > 77) or (h < 55 and h > 52) or (h < 30 and h > 27) then
+			if (h < 0.80 and h > 0.77) or (h < 0.55 and h > 0.52) or (h < 0.30 and h > 0.27) then
 				warningRiftSoon:Show()
 				warnedRift = true
 			end

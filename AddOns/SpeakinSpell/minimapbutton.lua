@@ -1,4 +1,4 @@
-﻿-- Author      : RisM
+-- Author      : RisM
 -- Create Date : 9/21/2009 11:52:56 PM
 --This was moved into the main Speakinspell directory because we want there to be a button
 --to enable the GUI if it's not enabled.

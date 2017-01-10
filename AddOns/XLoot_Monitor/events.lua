@@ -275,4 +275,3 @@ do
 	handler('LOOT_ROLL_WON', function(who, item) trigger_group('won', item, who == YOU and player or who) end)
 end
 
-

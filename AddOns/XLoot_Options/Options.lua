@@ -1,4 +1,4 @@
-﻿--[=[ This addon provides options for all modules.
+--[=[ This addon provides options for all modules.
 Options are preferrably defined as "BetterOptions" tables, which functionally resemble AceOptionsTables but are much more concise.
 
 The point of this abstraction layer is that I (Xuerian) wanted to use AceDB/AceConfig to present a more standard configuration dialog to users. I am, however, not satisfied with the conventions and limitations of it, so this is a attempt to provide both a more concise format (BetterOptions), and a more featureful intermediate options format (Finalize(...)) to support it. 
@@ -623,7 +623,8 @@ function addon:OnEnable() -- Construct addon option tables here
 				{ "fade_other", "range", 1, 30, 1, name = L.items_others }
 			}},
 			{ "details", "group", {
-				{ "show_totals", "toggle", width = "double" }
+				{ "show_totals", "toggle", width = "double" },
+				{ "name_width", "range", 25, 200, 5 },
 			}},
 			{ "font", "group", {
 				{ "font", fonts },
@@ -766,5 +767,4 @@ function addon:OpenPanel(module)
 	-- Open panel
 	InterfaceOptionsFrame_OpenToCategory(XLoot.option_panel)
 end
-
 

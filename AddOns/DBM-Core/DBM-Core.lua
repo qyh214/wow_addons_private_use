@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 15569 $"):sub(12, -3)),
-	DisplayVersion = "7.1.5", -- the string that is shown as version
-	ReleaseRevision = 15569 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 15610 $"):sub(12, -3)),
+	DisplayVersion = "7.1.6", -- the string that is shown as version
+	ReleaseRevision = 15610 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -420,7 +420,7 @@ local dbmToc = 0
 local UpdateChestTimer
 local breakTimerStart
 
-local fakeBWVersion, fakeBWHash = 29, "d5c4347"
+local fakeBWVersion, fakeBWHash = 30, "3fd1ebb"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -1059,9 +1059,16 @@ do
 		noDelay = false
 		--Check if voice pack missing
 		local activeVP = self.Options.ChosenVoicePack
-		if (activeVP ~= "None" and not self.VoiceVersions[activeVP]) or (self.VoiceVersions[activeVP] and self.VoiceVersions[activeVP] == 0) then--A voice pack is selected that does not belong
-			self.Options.ChosenVoicePack = "None"--Set ChosenVoicePack back to None
-			self:AddMsg(DBM_CORE_VOICE_MISSING)
+		if activeVP ~= "None" then
+			if not self.VoiceVersions[activeVP] or (self.VoiceVersions[activeVP] and self.VoiceVersions[activeVP] == 0) then--A voice pack is selected that does not belong
+				self.Options.ChosenVoicePack = "None"--Set ChosenVoicePack back to None
+				self:AddMsg(DBM_CORE_VOICE_MISSING)
+			end
+		else
+			if #self.Voices > 1 then
+				--At least one voice pack installed but activeVP set to "None"
+				self:AddMsg(DBM_CORE_VOICE_DISABLED)
+			end
 		end
 		--Check if any of countdown sounds are using missing voice pack
 		local voice1 = self.Options.CountdownVoice
@@ -1070,13 +1077,6 @@ do
 		if voice1 == "None" then--Migrate to new setting
 			self.Options.CountdownVoice = self.DefaultOptions.CountdownVoice
 			self.Options.DontPlayCountdowns = true
-		end
-		if voice1 == "Yike" then--Migration for CN Users
-			if self.VoiceVersions["Yike"] then
-				self.Options.CountdownVoice = "VP:Yike"
-			else
-				self.Options.CountdownVoice = self.DefaultOptions.CountdownVoice--Defaults
-			end
 		end
 		local found1, found2, found3 = false, false, false
 		for i = 1, #self.Counts do
@@ -5765,9 +5765,9 @@ do
 					else
 						if difficultyIndex == 8 then--Mythic+/Challenge Mode
 							--TODO, figure out how to get current mythic plus rank, compare to our best rank.
-							local currentMPRank = 0--0 is temp, until know api to call to get actual rank
+							local currentMPRank = C_ChallengeMode.GetActiveKeystoneInfo() or 0
 							local bestMPRank = mod.stats.challengeBestRank or 0
-							if mod.stats.challengeBestRank > currentMPRank then--Don't save stats at all
+							if mod.stats.challengeBestRank > currentMPRank then--Don't save time stats at all
 								--DO nothing
 							elseif mod.stats.challengeBestRank < currentMPRank then--Update best time and best rank, even if best time is lower (for a lower rank)
 								mod.stats.challengeBestRank = currentMPRank--Update best rank

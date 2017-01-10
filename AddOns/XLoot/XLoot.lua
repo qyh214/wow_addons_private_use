@@ -1,4 +1,4 @@
-﻿local XLoot = LibStub("AceAddon-3.0"):NewAddon(select(2, ...), "XLoot")
+local XLoot = LibStub("AceAddon-3.0"):NewAddon(select(2, ...), "XLoot")
 _G.XLoot = XLoot
 local L = XLoot.L
 local print, wprint = print, print
@@ -145,5 +145,4 @@ function XLoot:OnEnable()
 	stub:SetScript("OnShow", function() self:ShowOptionPanel(self) end)
 	self:SetSlashCommand("xloot", function() self:ShowOptionPanel(self) end)
 end
-
 

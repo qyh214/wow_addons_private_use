@@ -1,4 +1,4 @@
-﻿-- Author      : RisM
+-- Author      : RisM
 -- Create Date : 11/28/2009 11:13:26 PM
 
 

@@ -1,9 +1,9 @@
 ###############################################################################
-## Interface: 70000
+## Interface: 70100
 ## Title: SpeakinSpell_GUI
 ## Title-deDE: SpeakinSpell_GUI
 ## Author: Stonarius of Antonidas
-## Version: 7.0.3.01
+## Version: 7.1.0.02
 ## Notes: GUI module for SpeakinSpell, loads on demand
 ## X-Credits: Created by Stonarius and Duerma
 ## X-Category: Chat
@@ -12,10 +12,6 @@
 ## DefaultState: Enabled
 ## LoadOnDemand: 1
 ###############################################################################
-## X-Curse-Packaged-Version: v7.0.3.01-release
-## X-Curse-Project-Name: SpeakinSpell
-## X-Curse-Project-ID: speakinspell
-## X-Curse-Repository-ID: wow/speakinspell/mainline
 
 
 ###############################################################################

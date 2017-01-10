@@ -1,4 +1,4 @@
-﻿-- See: http://wow.curseforge.com/addons/xloot/localization/ to create or fix translations
+-- See: http://wow.curseforge.com/addons/xloot/localization/ to create or fix translations
 local locales = {
 	enUS = {
 		anchor = "Loot Monitor",
@@ -34,19 +34,10 @@ local locales = {
 }
 
 -- Automatically inserted translations
-
-
-locales.deDE["anchor"] = "Beutemonitor" -- Needs review
-
+locales.deDE["anchor"] = "Beutemonitor"
 locales.koKR["anchor"] = "전리품 모니터"
-
-
 locales.ruRU["anchor"] = "Монитор добычи"
-
 locales.zhCN["anchor"] = "掷骰监控"
-
-
 locales.zhTW["anchor"] = "拾取監控"
-
 
 XLoot:Localize("Monitor", locales)

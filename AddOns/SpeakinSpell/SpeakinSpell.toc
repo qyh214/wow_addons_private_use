@@ -1,10 +1,10 @@
 ###############################################################################
-## Interface: 70000
+## Interface: 70100
 ## Title: SpeakinSpell
 ## Title-deDE: SpeakinSpell
 ## Author: Stonarius of Antonidas
 ## Author: Groguz
-## Version: 7.0.3.01
+## Version: 7.1.0.02
 ## Notes: Says random things in chat when casting any spell or ability. Type "/ss help" for the user's manual.
 ## Notes-deDE: Sendet zufällige oder selbstkreierte Sprüche in den Chat, wenn Zauber oder Fähigkeiten benutzt werden. Tippe "/SpeakinSpell hilfe" für mehr Informationen.
 ## X-Credits: Created by Stonarius. German translation by Lexin. Korean by troth75. See in-game help for full credits.
@@ -15,10 +15,6 @@
 ## SavedVariables: SpeakinSpellSavedDataForAll
 ## SavedVariablesPerCharacter: SpeakinSpellSavedData
 ###############################################################################
-## X-Curse-Packaged-Version: v7.0.3.01-release
-## X-Curse-Project-Name: SpeakinSpell
-## X-Curse-Project-ID: speakinspell
-## X-Curse-Repository-ID: wow/speakinspell/mainline
 
 
 ###############################################################################

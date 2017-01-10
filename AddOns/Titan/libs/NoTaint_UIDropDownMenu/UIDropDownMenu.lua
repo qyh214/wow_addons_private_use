@@ -283,8 +283,13 @@ function Lib_UIDropDownMenu_AddButton(info, level)
 		level = 1;
 	end
 	
+	local index;
 	local listFrame = _G["Lib_DropDownList"..level];
-	local index = listFrame and (listFrame.numButtons + 1) or 1;
+	if (listFrame and listFrame.numButtons) then
+		index = listFrame.numButtons + 1;
+	else
+		index = 1;
+	end
 	local width;
 
 	Lib_UIDropDownMenuDelegate:SetAttribute("createframes-level", level);
@@ -542,7 +547,10 @@ function Lib_UIDropDownMenu_AddButton(info, level)
 
 	width = max(Lib_UIDropDownMenu_GetButtonWidth(button), info.minWidth or 0);
 	--Set maximum button width
-	if ( width > listFrame.maxWidth ) then
+	--if (not listFrame.maxWidth) then 
+	--	listFrame.maxWidth = 0;
+	--end
+	if ( listFrame.maxWidth and width > listFrame.maxWidth ) then
 		listFrame.maxWidth = width;
 	end
 
@@ -1178,11 +1186,11 @@ function Lib_UIDropDownMenu_SetButtonText(level, id, text, colorCode)
 end
 
 function Lib_UIDropDownMenu_SetButtonNotClickable(level, id)
-	_G["DropDownList"..level.."Button"..id]:SetDisabledFontObject(GameFontHighlightSmallLeft);
+	_G["Lib_DropDownList"..level.."Button"..id]:SetDisabledFontObject(GameFontHighlightSmallLeft);
 end
 
 function Lib_UIDropDownMenu_SetButtonClickable(level, id)
-	_G["DropDownList"..level.."Button"..id]:SetDisabledFontObject(GameFontDisableSmallLeft);
+	_G["Lib_DropDownList"..level.."Button"..id]:SetDisabledFontObject(GameFontDisableSmallLeft);
 end
 
 function Lib_UIDropDownMenu_DisableDropDown(dropDown)
@@ -1211,9 +1219,9 @@ end
 
 function Lib_UIDropDownMenu_GetValue(id)
 	--Only works if the dropdown has just been initialized, lame, I know =(
-	local button = _G["DropDownList1Button"..id];
+	local button = _G["Lib_DropDownList1Button"..id];
 	if ( button ) then
-		return _G["DropDownList1Button"..id].value;
+		return _G["Lib_DropDownList1Button"..id].value;
 	else
 		return nil;
 	end

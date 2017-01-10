@@ -1,4 +1,4 @@
-﻿-- Author      : Ris
+-- Author      : Ris
 -- Create Date : 11/20/2010 3:42:55 PM
 
 -- English localization file for enUS and enGB.

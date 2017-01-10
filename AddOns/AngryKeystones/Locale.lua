@@ -62,23 +62,35 @@ langs.ruRU = {
 
 langs.deDE = {
 	config_characterConfig = "Charakterspezifische Konfiguration",
-	config_progressTooltip = "Zeige Fortschritt für \"Feindliche Streitkräfte\" in ihrem Tooltip",
+	config_progressTooltip = "Fortschritt für \"Feindliche Streitkräfte\" im Tooltip von Feinden zeigen",
 	config_progressFormat = "Format für \"Feindliche Streitkräfte\"",
-	config_splitsFormat = "Ziel Zwischenzeitsanzeige",
+	config_splitsFormat = "Zwischenzeitsanzeige der Ziele",
 	config_splitsFormat_1 = "Deaktiviert",
 	config_splitsFormat_2 = "Zeit ab Start",
 	config_splitsFormat_3 = "Relativ zum vorherigen",
-	config_autoGossip = "Automatisch Gesprächsoptionen auswählen während Mythic+ Dugeons (bsp: Odyn)",
-	config_cosRumors = "Gebe Hinweise von \"Geschwätzige Plaudertasche\" im Hof der Sterne im Gruppenchat aus",
-	config_silverGoldTimer = "Zeige Zeit für +2 und +3 Bonuskisten gleichzeitig",
-	config_completionMessage = "Zeige Nachricht mit finalen Zeiten am Ende des Dungeons an",
-	config_showSplits = "Zeige Zwischenzeit für jedes Ziel in der Zielverfolgung an",
-	keystoneFormat = "[Schlüsselstein: %s - Level %d]",
-	forcesFormat = " - Feindliche Streitkräfte: %s",
+	config_autoGossip = "Gesprächsoptionen während Mythisch+-Dungeons (z.B. Odyn) automatisch auswählen",
+	config_cosRumors = "Hinweise von \"Geschwätzige Plaudertasche\" im Hof der Sterne im Gruppenchat ausgeben",
+	config_silverGoldTimer = "Zeit für +2- und +3-Bonustruhen gleichzeitig zeigen",
+	config_completionMessage = "Nachricht mit finalen Zeiten am Ende des Dungeons anzeigen",
+	config_showSplits = "Zwischenzeit für jedes Ziel in der Zielverfolgung anzeigen",
+	keystoneFormat = "[Schlüsselstein: %s - Stufe %d]",
 	completion0 = "Zeit abgelaufen für %s mit %s, ihr wart %s über dem Zeitlimit.",
 	completion1 = "Zeit für %s in %s geschlagen. Ihr wart %s vor dem Zeitlimit, und habt +2 um %s verfehlt.",
 	completion2 = "Zeit für +2 %s in %s geschlagen. Ihr wart %s vor dem Zeitlimit für +2, und habt +3 um %s verfehlt.",
 	completion3 = "Zeit für +3 %s in %s geschlagen. Ihr wart %s vor dem Zeitlimit für +3.",
+	completionSplits = "Zwischenzeiten waren: %s.",
+	timeLost = "Verlorene Zeit",
+	config_smallAffixes = "Die Größe der Affix-Symbole im Zeitfenster verringern",
+	config_deathTracker = "Todeszähler im Zeitfenster zeigen",
+	config_persistTracker = "Zielverfolgung nach Abschluss eines mythischen Schlüsselsteins wieder zeigen (Erfordert UI neu laden)",
+	scheduleTitle = "Zeitplan",
+	scheduleWeek1 = "Diese Woche",
+	scheduleWeek2 = "Nächste Woche",
+	scheduleWeek3 = "In zwei Wochen",
+	scheduleWeek4 = "In drei Wochen",
+	scheduleMissingKeystone = "Erfordert einen mythischen Schlüsselstein mit Stufe 7+ in deiner Tasche zur Anzeige.",
+	config_exclusiveTracker = "Quest- und Erfolgsverfolgung während mythischen Schlüsselsteindungeons ausblenden (Erfordert UI neu laden)",
+	config_hideTalkingHead = "Gesprächseinblendungen während eines mythischen Schlüsselsteindungeons ausblenden",
 }
 
 langs.koKR = {
@@ -109,6 +121,7 @@ langs.koKR = {
 	scheduleWeek2 = "다음주",
 	scheduleWeek3 = "2주 뒤",
 	scheduleWeek4 = "3주 뒤",
+	scheduleMissingKeystone = "예정된 조합을 보려면 레벨 7 이상의 신화 쐐기돌이 가방에 있어야 합니다.",
 	config_exclusiveTracker = "신화 쐐기돌 던전에서 퀘스트와 업적 추적창 숨김 (UI 재시작 필요)",
 	config_hideTalkingHead = "신화 쐐기돌 던전에서 팝업 대화창 숨김",
 }
@@ -142,6 +155,7 @@ langs.zhCN = {
 	scheduleWeek2 = "下周",
 	scheduleWeek3 = "两周后",
 	scheduleWeek4 = "三周后",
+	scheduleMissingKeystone = "你需要一把7级以上的钥石才可激活此项功能。",
 	config_exclusiveTracker = "在副本中隐藏任务和成就追踪（重载插件后生效）",
 	config_hideTalkingHead = "在史诗钥石副本中隐藏NPC情景对话窗口",
 }
@@ -173,6 +187,7 @@ langs.zhTW = {
 	scheduleWeek2 = "下周",
 	scheduleWeek3 = "兩周後",
 	scheduleWeek4 = "三周後",
+	scheduleMissingKeystone = "你需要一把7級以上的鑰石來激活此項功能。",
 	config_exclusiveTracker = "在副本中隱藏成就和任務追蹤（重裝插件後生效）",
 	config_hideTalkingHead = "在傳奇鑰石副本中隱藏NPC情景對話窗口",
 }
@@ -402,11 +417,92 @@ rumors.koKR = {
 	["그 첩자는 물약을 가지고 다니지 않는다고 합니다."]="noPotion",
 	["그 첩자는 허리띠에 물약을 매달고 있을 게 분명합니다. 있는 게 분명해요."]="potion",
 	["그 첩자는 물약을 가지고 다닌데요. 이유가 뭘까요?"]="potion",
+	["그 첩자는 만약을 대비해... 물약 몇 개를 가져왔다고 합니다."]="potion",
 	["이 얘기를 깜빡할 뻔했네요... 그 첩자는 연금술사로 가장해 허리띠에 물약을 달고 다닌다고 합니다."]="potion",
 	["그 첩자는 허리띠 주머니도 휘황찬란한 자수로 꾸며져 있다고 합니다."]="coinpurse",
 	["제 친구가 말하길, 그 첩자는 금을 너무 좋아해서 허리띠 주머니에도 금이 가득 들어 있다고 합니다."]="coinpurse",
 	["그 첩자는 어찌나 사치스러운지 허리띠에 달린 주머니에 금화를 잔뜩 넣어서 다닌다고 합니다."]="coinpurse",
 	["그 첩자는 마법의 주머니를 항상 가지고 다닌다고 들었습니다."]="coinpurse",
+}
+
+clues.deDE = {
+	male = MALE,
+	female = FEMALE,
+	lightVest = "Helle Weste",
+	darkVest = "Dunkle Weste",
+	shortSleeves = "Kurze Ärmel",
+	longSleeves = "Lange Ärmel",
+	cloak = "Umhang",
+	noCloak = "Kein Umhang",
+	gloves = "Handschuhe",
+	noGloves = "Keine Handschuhe",
+	noPotion = "Kein Fläschchen",
+	book = "Buch",
+	coinpurse = "Geldbeutel",
+	potion = "Fläschchen",
+}
+
+rumors.deDE = {
+	["Irgendwo habe ich gehört, dass der Spion nicht weiblich ist."]="male",
+	["Ich hörte, dass der Spion ein äußerst gutaussehender Herr ist."]="male",
+	["Ein Gast sagte, sie sah, wie ein Herr an der Seite der Großmagistrix das Anwesen betreten hat."]="male",
+	["Einer der Musiker sagte, er stellte unablässig Fragen über den Bezirk."]="male",
+
+	["Jemand hat behauptet, dass unser neuester Gast nicht männlich ist."]="female",
+	["Ein Gast hat beobachtet, wie sie und Elisande vorhin gemeinsam eingetroffen sind."]="female",
+	["Man sagt, die Spionin wäre hier und sie wäre eine wahre Augenweide."]="female",
+	["Wie ich höre, hat eine Frau sich ständig nach diesem Bezirk erkundigt..."]="female",
+
+	["Der Spion bevorzugt auf jeden Fall Westen mit hellen Farben."]="lightVest",
+	["Wie ich hörte, trägt der Spion auf der Party heute Abend eine helle Weste."]="lightVest",
+	["Die Leute sagen, dass der Spion heute Abend keine dunkle Weste trägt."]="lightVest",
+
+	["Der Spion bevorzugt auf alle Fälle dunkle Kleidung."]="darkVest",
+	["Ich hörte, dass die Weste des Spions heute Abend von dunkler, kräftiger Farbe ist."]="darkVest",
+	["Dem Spion gefallen Westen mit dunklen Farben... dunkel wie die Nacht."]="darkVest",
+	["Gerüchten zufolge vermeidet der Spion es, helle Kleidung zu tragen, damit er nicht so auffällt."]="darkVest",
+
+	["Jemand sagte mir, dass der Spion lange Ärmel hasst."]="shortSleeves",
+	["Mir ist zu Ohren gekommen, dass der Spion kurze Ärmel trägt, damit er seine Arme ungehindert bewegen kann."]="shortSleeves",
+	["Man hat mir zugetragen, dass der Spion die kühle Luft mag und deshalb heute Abend keine langen Ärmel trägt."]="shortSleeves",
+	["Eine meiner Freundinnen sagte, dass sie die Kleidung des Spions gesehen hat. Er trägt keine langen Ärmel."]="shortSleeves",
+
+	["Wie ich höre, trägt der Spion heute Abend Kleidung mit langen Ärmeln."]="longSleeves",
+	["Einer meiner Freunde erwähnte, dass der Spion lange Ärmel trägt."]="longSleeves",
+	["Jemand sagte, dass der Spion heute Abend seine Arme mit langen Ärmeln bedeckt."]="longSleeves",
+	["Ich habe am frühen Abend einen kurzen Blick auf die langen Ärmel des Spions erhascht."]="longSleeves",
+
+	["Jemand erwähnte, dass der Spion vorhin hier hereinkam und einen Umhang trug."]="cloak",
+	["Mir ist zu Ohren gekommen, dass der Spion gerne Umhänge trägt."]="cloak",
+
+	["Ich hörte, dass der Spion seinen Umhang im Palast gelassen hat, bevor er hierhergekommen ist."]="noCloak",
+	["Ich hörte, dass der Spion keine Umhänge mag und sich weigert, einen zu tragen."]="noCloak",
+
+	["Einem Gerücht zufolge trägt der Spion immer Handschuhe."]="gloves",
+	["Wie ich hörte, verbirgt der Spion sorgfältig die Hände."]="gloves",
+	["Jemand behauptete, dass der Spion Handschuhe trägt, um sichtbare Narben zu verbergen."]="gloves",
+	["Ich hörte, dass der Spion immer Handschuhe anlegt."]="gloves",
+
+	["Wisst Ihr... Ich habe ein zusätzliches Paar Handschuhe im Hinterzimmer gefunden. Wahrscheinlich ist der Spion hier irgendwo mit bloßen Händen unterwegs."]="noGloves",
+	["Es gibt Gerüchte, dass der Spion niemals Handschuhe trägt."]="noGloves",
+	["Ich hörte, dass der Spion es vermeidet, Handschuhe zu tragen, falls er schnell handeln muss."]="noGloves",
+	["Mir ist zu Ohren gekommen, dass der Spion ungern Handschuhe trägt."]="noGloves",
+
+	["Gerüchte zufolge liest der Spion gerne und trägt immer mindestens ein Buch bei sich."]="book",
+	["Ich hörte, dass der Spion immer ein Buch mit niedergeschriebenen Geheimnissen am Gürtel trägt."]="book",
+
+	["Eine Musikerin erzählte mir, dass sie gesehen hat, wie der Spion seinen letzten Trank wegwarf und jetzt keinen mehr übrig hat."]="noPotion",
+	["Wie ich hörte, hat der Spion keine Tränke bei sich."]="noPotion",
+
+	["Ich bin mir ziemlich sicher, dass der Spion Tränke am Gürtel trägt."]="potion",
+	["Ich hörte, dass der Spion Tränke mitgebracht hat... Ich frage mich wieso?"]="potion",
+	["Wie ich hörte, hat der Spion einige Tränke mitgebracht... für alle Fälle."]="potion",
+	["Von mir habt Ihr das nicht... aber der Spion verkleidet sich als Alchemist und trägt Tränke an seinem Gürtel."]="potion",
+
+	["Ich hörte, dass der Gürtelbeutel des Spions mit ausgefallenem Garn gesäumt wurde."]="coinpurse",
+	["Ein Freund behauptet, dass der Spion Gold liebt und einen Gürtelbeutel voll davon hat."]="coinpurse",
+	["Mir ist zu Ohren gekommen, dass der Gürtelbeutel des Spions mit Gold gefüllt ist, um besonders extravagant zu erscheinen."]="coinpurse",
+	["Ich hörte, dass der Spion immer einen magischen Beutel mit sich herumträgt."]="coinpurse",
 }
 
 function Locale:HasRumors()

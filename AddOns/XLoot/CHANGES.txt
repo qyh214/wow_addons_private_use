@@ -1,0 +1,12 @@
+tag eaf46e84d87733851608aa0f932f91732f8782b6 7.1-3
+Author:	Xuerian <xuerian@gmail.com>
+Date:	Tue Dec 27 03:33:43 2016 -0500
+
+Monitor: Add Player name width option
+
+commit 1624f330704023ca3f7ca244ee9e87574ac56a54
+Author: Xuerian <xuerian@gmail.com>
+Date:   Tue Dec 27 03:33:14 2016 -0500
+
+    Monitor: Add Player name width option
+

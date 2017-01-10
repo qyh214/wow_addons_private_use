@@ -1,4 +1,4 @@
-﻿-- Author      : Ris
+-- Author      : Ris
 -- Create Date : 11/20/2010 3:43:04 PM
 
 -- French localization file for frFR

@@ -25,6 +25,7 @@ local function UpdateAffixes()
 	if currentWeek then
 		for i = 1, rowCount do
 			local entry = Mod.Frame.Entries[i]
+			entry:Show()
 
 			local scheduleWeek = (currentWeek - 2 + i) % (#affixSchedule) + 1
 			local affixes = affixSchedule[scheduleWeek]

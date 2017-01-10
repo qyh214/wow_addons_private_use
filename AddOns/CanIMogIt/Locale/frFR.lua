@@ -1,40 +1,38 @@
-local translations = {
-	["Adds tooltips to items showing if you have learned a transmog appearance."] = "Ajoute une infobulle aux objets, indiquant si vous en avez appris l'apparence de transmogrification.",
-	["Another class can learn this item."] = "Une autre classe peut débloquer cette apparence.",
-	["Appearances updated: "] = "Apparences mises à jour :",
-	["Can be learned by:"] = "Peut être débloquée par :",
-	["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Message important de Can I Mog It? : Merci de vous connecter sur tous vos personnages, afin d'assembler les données d'apparences de transmogrification.",
-	["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions introuvable, paramètres par défaut chargés !",
-	["Cannot be learned."] = "Ne peut pas être débloquée.",
-	["Cannot be learned by this character."] = "Ne peut pas être débloquée par ce personnage.",
-	["Cannot determine status on other characters."] = "État pour les autres personnages actuellement imprécis.",
-	["Cannot learn:"] = "Ne peut être appris :",
-	["Cannot learn: Soulbound"] = "Ne peut être appris : Lié",
-	["Debug Tooltip"] = "Infobulle de débug",
-	["Detailed information for debug purposes. Use this when sending bug reports."] = "Informations détaillées à des fins de debug. À utiliser lors de l'envoi de rapports de bugs.",
-	["Equippable Items Only"] = "Objets pouvant être équipés uniquement",
-	["Items updated: "] = "Objets mis à jour :",
-	["Learned."] = "Débloquée.",
-	["Learned but cannot transmog yet."] = "Débloquée mais impossible à transmogrifier pour le moment.",
-	["Learned for a different class."] = "Débloquée pour une autre classe.",
-	["Learned for a different class and item."] = "Débloquée pour une autre classe et objet.",
-	["Learned from another item."] = "Débloquée depuis un autre objet.",
-	["Learned from another item but cannot transmog yet."] = "Débloquée depuis un autre objet, mais impossible à transmogrifier pour le moment.",
-	["Not learned."] = "Non débloquée.",
-	["Okay, I'll go log onto all of my toons!"] = "Okay, je me connecte sur tous mes perso !",
-	["Only show on items that can be equipped."] = "Afficher uniquement pour les objets pouvant être équipés.",
-	["Only show on items that can be transmoggrified."] = "Afficher uniquement pour les objets pouvant être transmogrifiés.",
-	["Only show on items that you haven't learned."] = "Afficher uniquement pour les objets que vous n'avez pas appris.",
-	["Show Bag Icons"] = "Affiche l'icône sur l'objet",
-	["Shows a more detailed text for some of the tooltips."] = "Affiche un texte plus détaillé pour certaines info-bulles.",
-	["Shows the icon directly on the item in your bag."] = "Affiche l'icône sur l'objet contenu dans votre inventaire.",
-	["Transmoggable Items Only"] = "Objets pouvant être transmogrifiés uniquement",
-	["Unknown Items Only"] = "Objets inconnus uniquement",
-	["Updating appearances database."] = "Mise à jour de la base de données d'apparences.",
-	["Verbose Text"] = "Texte détaillé",
-}
+L = {}
+L["Adds tooltips to items showing if you have learned a transmog appearance."] = "Ajoute une infobulle aux objets, indiquant si vous en avez appris l'apparence de transmogrification."
+L["Another class can learn this item."] = "Une autre classe peut débloquer cette apparence."
+L["Appearances updated: "] = "Apparences mises à jour :"
+L["Can be learned by:"] = "Peut être débloquée par :"
+L["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Message important de Can I Mog It? : Merci de vous connecter sur tous vos personnages, afin d'assembler les données d'apparences de transmogrification."
+L["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions introuvable, paramètres par défaut chargés !"
+L["Cannot be learned by this character."] = "Ne peut pas être débloquée par ce personnage."
+L["Cannot be learned."] = "Ne peut pas être débloquée."
+L["Cannot determine status on other characters."] = "État pour les autres personnages actuellement imprécis."
+L["Cannot learn:"] = "Ne peut être appris :"
+L["Cannot learn: Soulbound"] = "Ne peut être appris : Lié"
+L["Debug Tooltip"] = "Infobulle de débug"
+L["Detailed information for debug purposes. Use this when sending bug reports."] = "Informations détaillées à des fins de debug. À utiliser lors de l'envoi de rapports de bugs."
+L["Equippable Items Only"] = "Objets pouvant être équipés uniquement"
+L["Items updated: "] = "Objets mis à jour :"
+L["Learned but cannot transmog yet."] = "Débloquée mais impossible à transmogrifier pour le moment."
+L["Learned for a different class and item."] = "Débloquée pour une autre classe et objet."
+L["Learned for a different class."] = "Débloquée pour une autre classe."
+L["Learned from another item but cannot transmog yet."] = "Débloquée depuis un autre objet, mais impossible à transmogrifier pour le moment."
+L["Learned from another item."] = "Débloquée depuis un autre objet."
+L["Learned."] = "Débloquée."
+L["Not learned."] = "Non débloquée."
+L["Okay, I'll go log onto all of my toons!"] = "Okay, je me connecte sur tous mes perso !"
+L["Only show on items that can be equipped."] = "Afficher uniquement pour les objets pouvant être équipés."
+L["Only show on items that can be transmoggrified."] = "Afficher uniquement pour les objets pouvant être transmogrifiés."
+L["Only show on items that you haven't learned."] = "Afficher uniquement pour les objets que vous n'avez pas appris."
+L["Show Bag Icons"] = "Affiche l'icône sur l'objet"
+L["Shows a more detailed text for some of the tooltips."] = "Affiche un texte plus détaillé pour certaines info-bulles."
+L["Shows the icon directly on the item in your bag."] = "Affiche l'icône sur l'objet contenu dans votre inventaire."
+L["Transmoggable Items Only"] = "Objets pouvant être transmogrifiés uniquement"
+L["Unknown Items Only"] = "Objets inconnus uniquement"
+L["Updating appearances database."] = "Mise à jour de la base de données d'apparences."
+L["Verbose Text"] = "Texte détaillé"
 
 
-
-CanIMogIt:RegisterLocale("frFR", translations)
-translations = nil
+CanIMogIt:RegisterLocale("frFR", L)
+L = nil

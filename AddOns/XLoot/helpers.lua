@@ -161,4 +161,3 @@ function XLoot.Deformat(str, pattern)
 end
 XLoot.InvertFormatString = invert
 
-

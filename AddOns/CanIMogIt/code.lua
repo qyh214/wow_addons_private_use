@@ -130,6 +130,10 @@ local miscArmorExceptions = {
 }
 
 
+-- Get the name for Cosmetic. Uses http://www.wowhead.com/item=130064/deadeye-monocle.
+local COSMETIC_NAME = select(3, GetItemInfoInstant(130064))
+
+
 -- Built-in colors
 -- TODO: move to constants
 local BLIZZARD_RED = "|cffff1919"
@@ -332,7 +336,6 @@ end
 
 
 CanIMogIt.tooltip = nil;
-CanIMogIt.cache = {}
 
 
 -----------------------------
@@ -366,6 +369,34 @@ function copyTable (t)
     return target
 end
 
+
+--------------------------------
+-- CanIMogIt Caching methods  --
+--------------------------------
+
+CanIMogIt.cache = {}
+
+function CanIMogIt.cache:Clear()
+    self.data = {}
+end
+
+function CanIMogIt.cache:GetItemTextValue(itemLink)
+    return self.data["text"..itemLink]
+end
+
+function CanIMogIt.cache:SetItemTextValue(itemLink, value)
+    self.data["text"..itemLink] = value
+end
+
+function CanIMogIt.cache:GetItemSourcesValue(itemLink)
+    return self.data["source"..itemLink]
+end
+
+function CanIMogIt.cache:SetItemSourcesValue(itemLink, value)
+    self.data["source"..itemLink] = value
+end
+
+CanIMogIt.cache:Clear()
 
 -----------------------------
 -- CanIMogIt Core methods  --
@@ -461,7 +492,9 @@ local function _GetAppearances()
     appearancesTable = {} -- cleanup
     CanIMogIt:ResetCache()
     CanIMogIt.frame:SetScript("OnUpdate", nil)
-    CanIMogIt:Print(CanIMogIt.DATABASE_DONE_UPDATE_TEXT..CanIMogIt.BLUE.."+" .. sourcesAdded .. ", "..CanIMogIt.ORANGE.."-".. sourcesRemoved)
+    if CanIMogItOptions["printDatabaseScan"] then
+        CanIMogIt:Print(CanIMogIt.DATABASE_DONE_UPDATE_TEXT..CanIMogIt.BLUE.."+" .. sourcesAdded .. ", "..CanIMogIt.ORANGE.."-".. sourcesRemoved)
+    end
 end
 
 
@@ -479,7 +512,9 @@ end
 function CanIMogIt:GetAppearances()
     -- Gets a table of all the appearances known to
     -- a character and adds it to the database.
-    CanIMogIt:Print(CanIMogIt.DATABASE_START_UPDATE_TEXT)
+    if CanIMogItOptions["printDatabaseScan"] then
+        CanIMogIt:Print(CanIMogIt.DATABASE_START_UPDATE_TEXT)
+    end
     removeAppearancesTable = copyTable(CanIMogIt.db.global.appearances)
     CanIMogIt.frame:SetScript("OnUpdate", GetAppearancesOnUpdate)
 end
@@ -487,9 +522,75 @@ end
 
 function CanIMogIt:ResetCache()
     -- Resets the cache, and calls things relying on the cache being reset.
-    CanIMogIt.cache = {}
+    CanIMogIt.cache:Clear()
     -- Fake a BAG_UPDATE event to updating the icons.
     CanIMogIt.frame:ItemOverlayEvents("BAG_UPDATE")
+end
+
+
+function CanIMogIt:CalculateSourceLocationText(itemLink)
+    --[[
+        Calculates the sources for this item.
+        This function is not cached, so avoid calling often!
+        Use GetSourceLocationText whenever possible!
+    ]]
+    local output = ""
+
+    local appearanceID = CanIMogIt:GetAppearanceID(itemLink)
+    if appearanceID == nil then return end
+    local sources = C_TransmogCollection.GetAppearanceSources(appearanceID)
+    if sources then
+        local totalSourceTypes = { 0, 0, 0, 0, 0, 0 }
+        local knownSourceTypes = { 0, 0, 0, 0, 0, 0 }
+        local totalUnknownType = 0
+        local knownUnknownType = 0
+        for _, source in pairs(sources) do
+            if source.sourceType ~= 0 then
+                totalSourceTypes[source.sourceType] = totalSourceTypes[source.sourceType] + 1
+                if source.isCollected then
+                    knownSourceTypes[source.sourceType] = knownSourceTypes[source.sourceType] + 1
+                end
+            elseif source.sourceType == 0 and source.isCollected then
+                totalUnknownType = totalUnknownType + 1
+                knownUnknownType = knownUnknownType + 1
+            end
+        end
+        for sourceType, totalCount in ipairs(totalSourceTypes) do
+            if (totalCount > 0) then
+                local knownCount = knownSourceTypes[sourceType]
+                local knownColor = CanIMogIt.RED_ORANGE
+                if knownCount == totalCount then
+                    knownColor = CanIMogIt.GRAY
+                elseif knownCount > 0 then
+                    knownColor = CanIMogIt.BLUE
+                end
+                output = string.format("%s"..knownColor.."%s ("..knownColor.."%i/%i"..knownColor..")"..CanIMogIt.WHITE..", ",
+                    output, _G["TRANSMOG_SOURCE_"..sourceType], knownCount, totalCount)
+            end
+        end
+        if totalUnknownType > 0 then
+            output = string.format("%s"..CanIMogIt.GRAY.."Unobtainable ("..CanIMogIt.GRAY.."%i/%i"..CanIMogIt.GRAY..")"..CanIMogIt.WHITE..", ",
+                output, knownUnknownType, totalUnknownType)
+        end
+        output = string.sub(output, 1, -3)
+    end
+    return output
+end
+
+
+function CanIMogIt:GetSourceLocationText(itemLink)
+    -- Returns string of the all the types of sources which can provide an item with this appearance.
+
+    cached_value = CanIMogIt.cache:GetItemSourcesValue(itemLink)
+    if cached_value then
+        return cached_value
+    end
+
+    local output = CanIMogIt:CalculateSourceLocationText(itemLink)
+
+    CanIMogIt.cache:SetItemSourcesValue(itemLink, output)
+
+    return output
 end
 
 
@@ -709,17 +810,18 @@ function CanIMogIt:PlayerKnowsTransmog(itemLink)
     local appearanceID = CanIMogIt:GetAppearanceID(itemLink)
     if appearanceID == nil then return false end
     if CanIMogIt:DBHasAppearance(appearanceID) then
-        -- if CanIMogIt:IsItemArmor(itemLink) then
+        if CanIMogIt:IsItemArmor(itemLink) then
             -- The character knows the appearance, check that it's from the same armor type.
-        for sourceID, knownItem in pairs(CanIMogIt:DBGetSources(appearanceID)) do
-            if CanIMogIt:IsArmorSubClassName(knownItem.subClass, itemLink) then
-                return true
+            for sourceID, knownItem in pairs(CanIMogIt:DBGetSources(appearanceID)) do
+                if CanIMogIt:IsArmorSubClassName(knownItem.subClass, itemLink) 
+                        or knownItem.subClass == COSMETIC_NAME then
+                    return true
+                end
             end
+        else
+            -- Is not armor, don't worry about same appearance for different types
+            return true
         end
-        -- else
-        --     -- ???Is not armor, don't worry about same appearance for different types ???
-        --     return true
-        -- end
     end
 
     -- Don't know from the database, try using the API.
@@ -856,50 +958,14 @@ function CanIMogIt:PostLogicOptionsText(text, unmodifiedText)
 end
 
 
-local foundAnItemFromBags = false
 
 
-function CanIMogIt:GetTooltipText(itemLink, bag, slot)
-    --[[
-        Gets the text to display on the tooltip from the itemLink.
-
-        If bag and slot are given, this will use the itemLink from 
-        bag and slot instead.
-
-        Returns two things:
-            the text to display.
-            the unmodifiedText that can be used for lookup values.
+function CanIMogIt:CalculateTooltipText(itemLink, bag, slot)
+    --[[ 
+        Calculate the tooltip text.
+        No caching is done here, so don't call this often!
+        Use GetTooltipText whenever possible!
     ]]
-    if bag and slot then
-        itemLink = GetContainerItemLink(bag, slot)
-        if not itemLink then
-            if foundAnItemFromBags then
-                return "", ""
-            else
-                -- If we haven't found any items in the bags yet, then
-                -- it's likely that the inventory hasn't been loaded yet.
-                return nil
-            end
-        else
-            foundAnItemFromBags = true
-        end
-    end
-    if not itemLink then return "", "" end
-    local text = ""
-    local unmodifiedText = ""
-
-    -- Must have GetItemInfo available for item.
-    local itemInfo = GetItemInfo(itemLink)
-    if itemInfo == nil then return end
-
-    if not CanIMogIt:PreLogicOptionsContinue(itemLink) then return "", "" end
-
-    -- Return cached items
-    if CanIMogIt.cache[itemLink] then
-        local cachedText, cachedUnmodifiedText = unpack(CanIMogIt.cache[itemLink])
-        return cachedText, cachedUnmodifiedText
-    end
-
     local exception_text = CanIMogIt:GetExceptionText(itemLink)
     if exception_text then
         return exception_text
@@ -978,11 +1044,61 @@ function CanIMogIt:GetTooltipText(itemLink, bag, slot)
         unmodifiedText = CanIMogIt.NOT_TRANSMOGABLE
     end
 
+    return text, unmodifiedText
+end
+
+
+local foundAnItemFromBags = false
+
+
+function CanIMogIt:GetTooltipText(itemLink, bag, slot)
+    --[[
+        Gets the text to display on the tooltip from the itemLink.
+
+        If bag and slot are given, this will use the itemLink from 
+        bag and slot instead.
+
+        Returns two things:
+            the text to display.
+            the unmodifiedText that can be used for lookup values.
+    ]]
+    if bag and slot then
+        itemLink = GetContainerItemLink(bag, slot)
+        if not itemLink then
+            if foundAnItemFromBags then
+                return "", ""
+            else
+                -- If we haven't found any items in the bags yet, then
+                -- it's likely that the inventory hasn't been loaded yet.
+                return nil
+            end
+        else
+            foundAnItemFromBags = true
+        end
+    end
+    if not itemLink then return "", "" end
+    local text = ""
+    local unmodifiedText = ""
+
+    -- Must have GetItemInfo available for item.
+    local itemInfo = GetItemInfo(itemLink)
+    if itemInfo == nil then return end
+
+    if not CanIMogIt:PreLogicOptionsContinue(itemLink) then return "", "" end
+
+    -- Return cached items
+    if CanIMogIt.cache:GetItemTextValue(itemLink) then
+        local cachedText, cachedUnmodifiedText = unpack(CanIMogIt.cache:GetItemTextValue(itemLink))
+        return cachedText, cachedUnmodifiedText
+    end
+
+    text, unmodifiedText = CanIMogIt:CalculateTooltipText(itemLink, bag, slot)
+
     text = CanIMogIt:PostLogicOptionsText(text, unmodifiedText)
 
     -- Update cached items
     if text ~= nil then
-        CanIMogIt.cache[itemLink] = {text, unmodifiedText}
+        CanIMogIt.cache:SetItemTextValue(itemLink, {text, unmodifiedText})
     end
 
     return text, unmodifiedText
@@ -1008,22 +1124,24 @@ local function addToTooltip(tooltip, itemLink)
         bag, slot = tooltip:GetOwner():GetParent():GetID(), tooltip:GetOwner():GetID()
     end
 
-    -- local ok;
     if CanIMogItOptions["debug"] then
-        -- ok = pcall(printDebug, CanIMogIt.tooltip, itemLink)
-        -- if not ok then return end
         printDebug(CanIMogIt.tooltip, itemLink, bag, slot)
     end
 
     local text;
-    -- ok, text = pcall(CanIMogIt.GetTooltipText, CanIMogIt, itemLink)
-    -- if not ok then return end
     text = CanIMogIt.GetTooltipText(CanIMogIt, itemLink, bag, slot)
     if text and text ~= "" then
         if leftTexts[text] then
             addLine(tooltip, text)
         else
             addDoubleLine(tooltip, " ", text)
+        end
+    end
+
+    if CanIMogItOptions["showSourceLocationTooltip"] then
+        local sourceTypesText = CanIMogIt:GetSourceLocationText(itemLink)
+        if sourceTypesText and sourceTypesText ~= "" then
+            addDoubleLine(tooltip, " ", sourceTypesText)
         end
     end
 end

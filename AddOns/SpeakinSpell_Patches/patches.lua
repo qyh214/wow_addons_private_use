@@ -1,4 +1,4 @@
-﻿-- Author      : Ris
+-- Author      : Ris
 -- Create Date : 10/15/2010 10:12:13 PM
 local SpeakinSpell = LibStub("AceAddon-3.0"):GetAddon("SpeakinSpell")
 local L = LibStub("AceLocale-3.0"):GetLocale("SpeakinSpell", false)

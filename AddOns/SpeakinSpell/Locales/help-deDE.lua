@@ -1,4 +1,4 @@
-﻿-- Autor      : leXin (Aiwendyl Das_Syndikat)
+-- Autor      : leXin (Aiwendyl Das_Syndikat)
 -- Erstellungsdatum : 24.07.2009
 
 -- Deutsche Lokalisierungs-Datei für deDE.

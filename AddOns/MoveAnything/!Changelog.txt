@@ -3,6 +3,10 @@
 * Reseting bags while the bag is not opened won't reset it's scale to default.
 
 
+**16.1.4**
+* Fixed Frames:
+	* World Quest Complete Alert
+
 **16.1.3**
 * Dropdown taint fixes.
 

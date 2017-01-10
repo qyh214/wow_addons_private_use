@@ -1,0 +1,20 @@
+tag fd4a67633c99310bfb2fca4e741ba3cbbf5fb139 7.1.0.04
+Author:	Salvatore Lopiparo <toreltwiddler@gmail.com>
+Date:	Sat Jan 7 16:28:39 2017 -0800
+
+* AdiBags support
+* Option for disabling startup text
+* New experimental option to display item source locations on tooltip
+
+commit 34bfecd7cf5bc3c23cab6a7610b144d07a70f2b5
+Author: Salvatore Lopiparo <toreltwiddler@gmail.com>
+Date:   Wed Jan 4 21:50:17 2017 -0800
+
+    Increased AdiBags frame counter.
+
+commit 9b27b477236fe8628539460ff776c5642409b3ce
+Author: Salvatore Lopiparo <toreltwiddler@gmail.com>
+Date:   Wed Jan 4 18:47:33 2017 -0800
+
+    Registered updates to AdiBags event messages.
+

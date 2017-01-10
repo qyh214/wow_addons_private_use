@@ -1,4 +1,4 @@
-﻿-- Simplified Chinese
+-- Simplified Chinese
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("SpeakinSpell", "zhCN", false)
 if not L then return end

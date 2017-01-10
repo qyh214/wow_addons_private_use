@@ -1,4 +1,4 @@
-﻿-- French
+-- French
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("SpeakinSpell", "frFR", false)
 if not L then return end

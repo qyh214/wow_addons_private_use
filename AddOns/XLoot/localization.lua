@@ -39,24 +39,21 @@ local locales = {
 }
 
 -- Automatically inserted translations
-
-
 locales.deDE["anchor_hide"] = "verstecken"
-locales.deDE["skin_legacy"] = "XLoot: Legacy" -- Needs review
-locales.deDE["skin_smooth"] = "XLoot: Smooth" -- Needs review
-locales.deDE["skin_svelte"] = "XLoot: Svelte" -- Needs review
-
+locales.deDE["skin_legacy"] = "XLoot: Legacy"
+locales.deDE["skin_smooth"] = "XLoot: Smooth"
+locales.deDE["skin_svelte"] = "XLoot: Svelte"
 locales.koKR["anchor_hide"] = "감추기"
 locales.koKR["skin_legacy"] = "XLoot: Legacy"
 locales.koKR["skin_smooth"] = "XLoot: Smooth"
 locales.koKR["skin_svelte"] = "XLoot: Svelte"
-
-
-locales.ruRU["anchor_hide"] = "Скрыть" -- Needs review
+locales.ruRU["anchor_hide"] = "скрыть "
+locales.ruRU["anchor_hide_desc"] = [=[Заблокируйте положение этого модуля
+Это позволит скрыть якорь,
+но он может быть показан еще раз в настройках]=]
 locales.ruRU["skin_legacy"] = "XLoot: Legacy"
 locales.ruRU["skin_smooth"] = "XLoot: Smooth"
 locales.ruRU["skin_svelte"] = "XLoot: Svelte"
-
 locales.zhCN["anchor_hide"] = "隐藏"
 locales.zhCN["anchor_hide_desc"] = [=[在此位置锁定此模块
 这将隐藏锚点
@@ -64,8 +61,6 @@ locales.zhCN["anchor_hide_desc"] = [=[在此位置锁定此模块
 locales.zhCN["skin_legacy"] = "XLoot: Legacy"
 locales.zhCN["skin_smooth"] = "XLoot: Smooth"
 locales.zhCN["skin_svelte"] = "XLoot: Svelte"
-
-
 locales.zhTW["anchor_hide"] = "隱藏"
 locales.zhTW["anchor_hide_desc"] = [=[鎖定此模組在此位置上
 這會隱藏此錨點,
@@ -73,7 +68,6 @@ locales.zhTW["anchor_hide_desc"] = [=[鎖定此模組在此位置上
 locales.zhTW["skin_legacy"] = "XLoot: 傳統"
 locales.zhTW["skin_smooth"] = "XLoot: 滑順"
 locales.zhTW["skin_svelte"] = "XLoot: 苗條"
-
 
 
 XLoot.L = CompileLocales(locales)

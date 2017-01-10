@@ -1,4 +1,4 @@
-﻿
+
 -- French
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local HELPFILE = AceLocale:NewLocale("SpeakinSpell_HELPFILE", "frFR", false)

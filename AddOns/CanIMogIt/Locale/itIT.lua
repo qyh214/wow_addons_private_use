@@ -1,40 +1,34 @@
-local translations = {
-	["Adds tooltips to items showing if you have learned a transmog appearance."] = "Aggiunge un suggerimento, sull'oggetto che stai osservando, se è stato memorizzato nella tua collezione di aspetti.",
-	["Another class can learn this item."] = "Un'altra classe può apprendere questo oggetto.",
-	-- ["Appearances updated: "] = "",
-	["Can be learned by:"] = "Può essere imparato da:",
-	["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Can I Mog It? Messaggio Importante: Per favore, effettua l'accesso con tutti i tuoi personaggi per ottenere informazioni riguardo la tua collezione di aspetti.",
-	["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions non trovato, carico le impostazioni predefinite!",
-	["Cannot be learned."] = "Non può essere appreso.",
-	["Cannot be learned by this character."] = "Non può essere appreso da questo personaggio.",
-	["Cannot determine status on other characters."] = "Impossibile determinare lo stato su gli altri personaggi.",
-	["Cannot learn:"] = "Impossibile apprendere:",
-	["Cannot learn: Soulbound"] = "Impossibile apprendere: Vincolato",
-	["Debug Tooltip"] = "Tooltip per il debug",
-	["Detailed information for debug purposes. Use this when sending bug reports."] = "Informazioni dettagliate per scopi di debug. Utilizza questo per inviare rapporti contenenti bug.",
-	["Equippable Items Only"] = "Solo oggetti equipaggiabili",
-	-- ["Items updated: "] = "",
-	["Learned."] = "Imparato.",
-	["Learned but cannot transmog yet."] = "Imparato, ma non si può ancora trasmogrificare.",
-	["Learned for a different class."] = "Imparato per una classe differente.",
-	["Learned for a different class and item."] = "Imparato per una diversa classe e oggetto.",
-	["Learned from another item."] = "Imparato da un altro oggetto.",
-	["Learned from another item but cannot transmog yet."] = "Imparato da un altro oggetto, ma non si può ancora trasmogrificare.",
-	["Not learned."] = "Non appreso.",
-	-- ["Okay, I'll go log onto all of my toons!"] = "",
-	["Only show on items that can be equipped."] = "Mostra solamente su oggetti che possono essere equipaggiati.",
-	["Only show on items that can be transmoggrified."] = "Mostra solamente su oggetti che possono essere trasmogrificati.",
-	["Only show on items that you haven't learned."] = "Mostra solamente su oggetti che non hai appreso.",
-	["Show Bag Icons"] = "Mostra Icone Borsa",
-	["Shows a more detailed text for some of the tooltips."] = "Mostra un testo molto dettagliato su alcuni tooltip.",
-	["Shows the icon directly on the item in your bag."] = "Mostra direttamente l'icona sull'oggetto nella tua borsa.",
-	["Transmoggable Items Only"] = "Solo oggetti trasmogrificabili",
-	["Unknown Items Only"] = "Solo oggetti sconosciuti",
-	-- ["Updating appearances database."] = "",
-	["Verbose Text"] = "Testo Dettagliato",
-}
+L = {}
+L["Adds tooltips to items showing if you have learned a transmog appearance."] = "Aggiunge un suggerimento, sull'oggetto che stai osservando, se è stato memorizzato nella tua collezione di aspetti."
+L["Another class can learn this item."] = "Un'altra classe può apprendere questo oggetto."
+L["Can be learned by:"] = "Può essere imparato da:"
+L["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Can I Mog It? Messaggio Importante: Per favore, effettua l'accesso con tutti i tuoi personaggi per ottenere informazioni riguardo la tua collezione di aspetti."
+L["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions non trovato, carico le impostazioni predefinite!"
+L["Cannot be learned by this character."] = "Non può essere appreso da questo personaggio."
+L["Cannot be learned."] = "Non può essere appreso."
+L["Cannot determine status on other characters."] = "Impossibile determinare lo stato su gli altri personaggi."
+L["Cannot learn:"] = "Impossibile apprendere:"
+L["Cannot learn: Soulbound"] = "Impossibile apprendere: Vincolato"
+L["Debug Tooltip"] = "Tooltip per il debug"
+L["Detailed information for debug purposes. Use this when sending bug reports."] = "Informazioni dettagliate per scopi di debug. Utilizza questo per inviare rapporti contenenti bug."
+L["Equippable Items Only"] = "Solo oggetti equipaggiabili"
+L["Learned but cannot transmog yet."] = "Imparato, ma non si può ancora trasmogrificare."
+L["Learned for a different class and item."] = "Imparato per una diversa classe e oggetto."
+L["Learned for a different class."] = "Imparato per una classe differente."
+L["Learned from another item but cannot transmog yet."] = "Imparato da un altro oggetto, ma non si può ancora trasmogrificare."
+L["Learned from another item."] = "Imparato da un altro oggetto."
+L["Learned."] = "Imparato."
+L["Not learned."] = "Non appreso."
+L["Only show on items that can be equipped."] = "Mostra solamente su oggetti che possono essere equipaggiati."
+L["Only show on items that can be transmoggrified."] = "Mostra solamente su oggetti che possono essere trasmogrificati."
+L["Only show on items that you haven't learned."] = "Mostra solamente su oggetti che non hai appreso."
+L["Show Bag Icons"] = "Mostra Icone Borsa"
+L["Shows a more detailed text for some of the tooltips."] = "Mostra un testo molto dettagliato su alcuni tooltip."
+L["Shows the icon directly on the item in your bag."] = "Mostra direttamente l'icona sull'oggetto nella tua borsa."
+L["Transmoggable Items Only"] = "Solo oggetti trasmogrificabili"
+L["Unknown Items Only"] = "Solo oggetti sconosciuti"
+L["Verbose Text"] = "Testo Dettagliato"
 
 
-
-CanIMogIt:RegisterLocale("itIT", translations)
-translations = nil
+CanIMogIt:RegisterLocale("itIT", L)
+L = nil

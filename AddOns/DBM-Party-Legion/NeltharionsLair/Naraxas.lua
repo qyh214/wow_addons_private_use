@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1673, "DBM-Party-Legion", 5, 767)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15186 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15575 $"):sub(12, -3))
 mod:SetCreatureID(91005)
 mod:SetEncounterID(1792)
 mod:SetZone()
@@ -38,7 +38,7 @@ function mod:OnCombatStart(delay)
 	timerAddsCD:Start(5.5-delay)
 	timerRancidMawCD:Start(7.3-delay)
 	timerToxicRetchCD:Start(12.4-delay)
-	timerSpikedTongueCD:Start(54.7-delay)
+	timerSpikedTongueCD:Start(50.5-delay)
 end
 
 function mod:OnCombatEnd()

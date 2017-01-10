@@ -1,4 +1,4 @@
-﻿-- Simplified Chinese
+-- Simplified Chinese
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local DEFAULT_ADS = AceLocale:NewLocale("SpeakinSpell_DEFAULT_SPEECHES", "zhCN", false)
 if not DEFAULT_ADS then return end

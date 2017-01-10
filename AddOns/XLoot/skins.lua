@@ -1,4 +1,4 @@
-﻿local XLoot = select(2, ...)
+local XLoot = select(2, ...)
 local lib = {
 	skins = {},
 	masque_tweaks = {}
@@ -459,5 +459,4 @@ end
 function XLoot:SetSkin(name)
 	lib.current = lib.skins[lib.skins[name] and name or 'smooth']
 end
-
 

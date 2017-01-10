@@ -1,36 +1,18 @@
 ------------------------------------------------------------------------
-r706 | zarnivoop | 2016-12-25 12:48:24 -0600 (Sun, 25 Dec 2016) | 1 line
+r716 | zarnivoop | 2017-01-06 08:31:00 -0600 (Fri, 06 Jan 2017) | 1 line
 Changed paths:
-   M /trunk/BarDisplay.lua
-   M /trunk/Options.lua
-   M /trunk/Skada.lua
-   M /trunk/locale/enUS.lua
-   M /trunk/modules/Damage.lua
-   M /trunk/modules/DamageTaken.lua
-
-added spell school colors and tooltip info
-------------------------------------------------------------------------
-r705 | zarnivoop | 2016-12-25 08:36:27 -0600 (Sun, 25 Dec 2016) | 1 line
-Changed paths:
-   M /trunk/BarDisplay.lua
-   M /trunk/Options.lua
    M /trunk/lib/SpecializedLibBars-1.0/SpecializedLibBars-1.0.lua
 
-slight cosmetic tweaks
+bump libbars minor version to get around issues for RealUI
 ------------------------------------------------------------------------
-r704 | zarnivoop | 2016-12-25 07:50:22 -0600 (Sun, 25 Dec 2016) | 1 line
+r715 | zarnivoop | 2017-01-06 06:38:09 -0600 (Fri, 06 Jan 2017) | 2 lines
 Changed paths:
+   M /trunk/Menus.lua
+   M /trunk/Options.lua
    M /trunk/Skada.lua
+   M /trunk/lib/SpecializedLibBars-1.0/SpecializedLibBars-1.0.lua
 
-slightly less obnoxious non-boss icon for segments
-------------------------------------------------------------------------
-r703 | zarnivoop | 2016-12-25 07:31:40 -0600 (Sun, 25 Dec 2016) | 1 line
-Changed paths:
-   M /trunk
-   M /trunk/.pkgmeta
-   M /trunk/embeds.xml
-   A /trunk/lib/LibBossIDs-1.0.lua
-
-fixed references; temporarily including libbossids directly
+few cases of non-local function references fixed in libbars
+moved configuration options out from Blizz options
 ------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-﻿-- Author      : RisM
+-- Author      : RisM
 -- Create Date : 11/21/2009 5:58:56 PM
 
 local SpeakinSpell = LibStub("AceAddon-3.0"):GetAddon("SpeakinSpell")

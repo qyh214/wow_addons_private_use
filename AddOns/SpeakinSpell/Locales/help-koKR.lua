@@ -1,4 +1,4 @@
-﻿-- Author      : RisM
+-- Author      : RisM
 -- Create Date : 5/21/2009 10:56:30 PM
 
 -- Korean localization file for koKR.

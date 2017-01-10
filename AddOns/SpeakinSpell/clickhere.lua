@@ -1,4 +1,4 @@
-﻿local SpeakinSpell = LibStub("AceAddon-3.0"):GetAddon("SpeakinSpell")
+local SpeakinSpell = LibStub("AceAddon-3.0"):GetAddon("SpeakinSpell")
 
 SpeakinSpell:PrintLoading("clickhere.lua")
 

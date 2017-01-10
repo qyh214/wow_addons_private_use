@@ -611,6 +611,9 @@ function mod:ApplySettings(win)
 
 	-- Scale
 	g:SetScale(p.scale)
+    
+    -- Smoothing
+    g:SetSmoothing(p.smoothing)
 
 	libwindow.SavePosition(g)
 
@@ -835,6 +838,18 @@ function mod:AddDisplayOptions(win, options)
 			        get=function() return db.clickthrough end,
 			        set=function()
 			        		db.clickthrough = not db.clickthrough
+		         			Skada:ApplySettings()
+			        	end,
+			},
+            
+			smoothing = {
+			        type="toggle",
+			        name=L["Smooth bars"],
+			        desc=L["Animate bar changes smoothly rather than immediately."],
+			        order=34,
+			        get=function() return db.smoothing end,
+			        set=function()
+			        		db.smoothing = not db.smoothing
 		         			Skada:ApplySettings()
 			        	end,
 			},
