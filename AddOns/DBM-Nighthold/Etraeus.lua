@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1732, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15562 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15722 $"):sub(12, -3))
 mod:SetCreatureID(103758)
 mod:SetEncounterID(1863)
 mod:SetZone()
 --mod:SetUsedIcons(8, 7, 6, 3, 2, 1)
---mod:SetHotfixNoticeRev(12324)
+mod:SetHotfixNoticeRev(15673)
 mod.respawnTime = 30--or 35 or 40
 
 mod:RegisterCombat("combat")
@@ -71,7 +71,7 @@ local specWarnConjunctionSign		= mod:NewSpecialWarningYouPos(205408, nil, nil, n
 local timerGravPullCD				= mod:NewCDTimer(29, 205984, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 --Stage One: The Dome of Observation
 mod:AddTimerLine(SCENARIO_STAGE:format(1))
-local timerCoronalEjectionCD		= mod:NewCDTimer(16, 206464, nil, nil, nil, 3)--CD is not known, always push phase 2 before this is cast 2nd time
+--local timerCoronalEjectionCD		= mod:NewCDTimer(16, 206464, nil, nil, nil, 3)--CD is not known, always push phase 2 before this is cast 2nd time
 --Stage Two: Absolute Zero
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
 local timerIcyEjectionCD			= mod:NewCDCountTimer(16, 206936, nil, nil, nil, 3)
@@ -82,6 +82,7 @@ local timerFelEjectionCD			= mod:NewCDCountTimer(16, 205649, nil, nil, nil, 3)
 local timerFelNovaCD				= mod:NewCDCountTimer(25, 206517, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)--47.1, 45.0, 25.1
 --Stage Four: Inevitable Fate
 mod:AddTimerLine(SCENARIO_STAGE:format(4))
+local timerWitnessVoid				= mod:NewCastTimer(4, 207720, nil, nil, nil, 2)
 local timerWitnessVoidCD			= mod:NewCDTimer(14.2, 207720, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
 --local timerVoidEjectionCD			= mod:NewCDCountTimer(16, 207143, nil, nil, nil, 3)--Where did it go? wasn't on normal test and wasn't on heroic retest
 local timerVoidNovaCD				= mod:NewCDTimer(74, 207439, nil, nil, nil, 2)--Only saw a single pull it was cast twice, so CD needs more verification
@@ -113,7 +114,7 @@ local voiceFelEjection				= mod:NewVoice(205649)--runout/keepmove
 local voiceFelnova					= mod:NewVoice(206517)--justrun
 local voiceFelFlame					= mod:NewVoice(206398)--runaway
 --Stage Four: Inevitable Fate
-local voiceThing					= mod:NewVoice("ej13057", "-Healer")--killmob
+local voiceThing					= mod:NewVoice("ej13057", "-Healer")--bigadd
 local voiceWitnessVoid				= mod:NewVoice(207720)--turnaway
 local voiceVoidEjection				= mod:NewVoice(207143)--runout
 local voiceVoidNova					= mod:NewVoice(207439)--aesoon
@@ -267,10 +268,10 @@ function mod:OnCombatStart(delay)
 	self.vb.StarSigns = 0
 	self.vb.phase = 1
 	if self:IsMythic() then
-		timerCoronalEjectionCD:Start(12-delay)--Still could be health based
+--		timerCoronalEjectionCD:Start(12-delay)--Still could be health based
 		timerConjunctionCD:Start(15-delay)
 	else
-		timerCoronalEjectionCD:Start(12.9-delay)--Still could be health based
+--		timerCoronalEjectionCD:Start(12.9-delay)--Still could be health based
 	end
 	--berserkTimer:Start(-delay)
 end
@@ -309,6 +310,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 207720 then
 		specWarnWitnessVoid:Show()
 		voiceWitnessVoid:Play("turnaway")
+		timerWitnessVoid:Start(nil, args.sourceGUID)
 		if self:IsEasy() then
 			timerWitnessVoidCD:Start(14.5, args.sourceGUID)
 		else
@@ -379,7 +381,7 @@ function mod:SPELL_SUMMON(args)
 	local spellId = args.spellId
 	if spellId == 207813 then
 		specWarnThing:Show()
-		voiceThing:Play("killmob")
+		voiceThing:Play("bigadd")
 		timerWitnessVoidCD:Start(10, args.destGUID)
 		timerThingCD:Start()
 	end
@@ -489,7 +491,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVoidEjection:Show()
 			voiceVoidEjection:Play("runout")
 		end
-	elseif spellId == 206398 and not self:IsTank() and self:AntiSpam(2, 1) then
+	elseif spellId == 206398 and args:IsPlayer() and self:AntiSpam(2, 1) and not UnitDebuff("Player", gravPullDebuff) then
 		specWarnFelFlame:Show()
 	end
 end
@@ -545,11 +547,12 @@ function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 104880 then--Thing That Should Not Be
 		timerWitnessVoidCD:Cancel(args.destGUID)
+		timerWitnessVoid:Cancel(args.destGUID)
 	end
 end
 
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 206398 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
+	if spellId == 206398 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) and not UnitDebuff("Player", gravPullDebuff) then
 		specWarnFelFlame:Show()
 		voiceFelFlame:Play("runaway")
 	end
@@ -563,7 +566,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	if spellId == 222130 then--Phase 2 Conversation
 		self.vb.phase = 2
 		self.vb.icyEjectionCount = 0
-		timerCoronalEjectionCD:Stop()
+--		timerCoronalEjectionCD:Stop()
 		timerConjunctionCD:Stop()
 		timerIcyEjectionCD:Start(23.3, 1)
 		timerGravPullCD:Start(30)

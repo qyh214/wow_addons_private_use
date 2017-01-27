@@ -3,6 +3,7 @@
   <Script file="NetEaseGUI.lua" />
   <Script file="Localization\zhCN.lua" />
   <Include file="Template\Frame.xml" />
+  <Include file="Template\Fonts.xml" />
   <Script file="Embed\Refresh.lua" />
   <Script file="Embed\View.lua" />
   <Script file="Embed\Scroll.lua" />
@@ -52,6 +53,9 @@
   <Script file="Widget\PanelBlocker.lua" />
   <Script file="Widget\ScrollSummaryHtml.lua" />
   <Script file="Widget\ShineWidget.lua" />
+  <Script file="Widget\LeftTabItem.lua" />
+  <Script file="Widget\LeftTabPanel.lua" />
+  <Script file="Widget\PageScrollBar.lua" />
   <Script file="Public\Feedback.lua" />
   <Script file="Public\SpecialFrame.lua" />
   <Script file="Public\Dialog.lua" />

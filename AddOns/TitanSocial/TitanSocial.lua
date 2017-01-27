@@ -23,10 +23,10 @@ local FriendsFrame, ShowUIPanel, HideUIPanel = _G.FriendsFrame, _G.ShowUIPanel, 
 local FriendsFrame_Update = _G.FriendsFrame_Update
 local BNGetNumFriends, BNGetFriendInfo, BNGetGameAccountInfo, BNGetInfo = _G.BNGetNumFriends, _G.BNGetFriendInfo, _G.BNGetGameAccountInfo, _G.BNGetInfo
 local BNGetFriendIndex, BNGetNumFriendGameAccounts, BNGetFriendGameAccountInfo = _G.BNGetFriendIndex, _G.BNGetNumFriendGameAccounts, _G.BNGetFriendGameAccountInfo
-local UIDropDownMenu_CreateInfo = _G.UIDropDownMenu_CreateInfo
-local UIDropDownMenu_Refresh = _G.UIDropDownMenu_Refresh
-local UIDropDownMenu_GetCurrentDropDown = _G.UIDropDownMenu_GetCurrentDropDown
-local UIDropDownMenu_AddButton = _G.UIDropDownMenu_AddButton
+local Lib_UIDropDownMenu_CreateInfo = _G.Lib_UIDropDownMenu_CreateInfo
+local Lib_UIDropDownMenu_Refresh = _G.Lib_UIDropDownMenu_Refresh
+local Lib_UIDropDownMenu_GetCurrentDropDown = _G.Lib_UIDropDownMenu_GetCurrentDropDown
+local Lib_UIDropDownMenu_AddButton = _G.Lib_UIDropDownMenu_AddButton
 local CanViewOfficerNote = _G.CanViewOfficerNote
 local ChatFrame_SendTell, ChatFrame_SendSmartTell = _G.ChatFrame_SendTell, _G.ChatFrame_SendSmartTell
 local InviteUnit, BNInviteFriend = _G.InviteUnit, _G.BNInviteFriend
@@ -34,7 +34,7 @@ local CanGroupWithAccount = _G.CanGroupWithAccount
 local IsAltKeyDown = _G.IsAltKeyDown
 local UnitPopup_ShowMenu = _G.UnitPopup_ShowMenu
 local CreateFrame = _G.CreateFrame
-local ToggleDropDownMenu, CloseDropDownMenus = _G.ToggleDropDownMenu, _G.CloseDropDownMenus
+local Lib_ToggleDropDownMenu, Lib_CloseDropDownMenus = _G.Lib_ToggleDropDownMenu, _G.Lib_CloseDropDownMenus
 local PlaySound = _G.PlaySound
 local UnitFactionGroup = _G.UnitFactionGroup
 local BNet_GetClientTexture = _G.BNet_GetClientTexture
@@ -71,7 +71,7 @@ local bDebugMode = false
 
 -- Required Titan variables
 local TITAN_SOCIAL_ID = "Social"
-local TITAN_SOCIAL_VERSION = "7.1.0"
+local TITAN_SOCIAL_VERSION = "7.1.5"
 local TITAN_SOCIAL_TOOLTIP_KEY = "TitanSocialTooltip"
 
 local MOBILE_HERE_ICON = "|TInterface\\ChatFrame\\UI-ChatIcon-ArmoryChat:0:0:0:0:16:16:0:16:0:16:73:177:73|t"
@@ -119,13 +119,13 @@ local function colorText(text, className)
 end
 
 local function addSubmenu(text, value, level)
-	local info = UIDropDownMenu_CreateInfo()
+	local info = Lib_UIDropDownMenu_CreateInfo()
 	info.text = text
 	info.menuList = value
 	info.hasArrow = true
 	info.notCheckable = true
 	info.keepShownOnClick = true
-	UIDropDownMenu_AddButton(info, level)
+	Lib_UIDropDownMenu_AddButton(info, level)
 end
 
 local function setTitanSocialOption(info, key, value)
@@ -134,7 +134,7 @@ end
 
 local function setTitanSocialOptionRefresh(info, key, value)
 	TitanSetVar(TITAN_SOCIAL_ID, key, value)
-	UIDropDownMenu_Refresh(UIDropDownMenu_GetCurrentDropDown())
+	Lib_UIDropDownMenu_Refresh(Lib_UIDropDownMenu_GetCurrentDropDown())
 end
 
 local function optionDropdownCheckedFunc(button)
@@ -143,7 +143,7 @@ local function optionDropdownCheckedFunc(button)
 end
 
 local function addSortOption(text, key, value, level)
-	local info = UIDropDownMenu_CreateInfo()
+	local info = Lib_UIDropDownMenu_CreateInfo()
 	info.text = text
 	info.func = setTitanSocialOption
 	info.arg1 = key
@@ -151,18 +151,18 @@ local function addSortOption(text, key, value, level)
 	info.keepShownOnClick = false -- can't update the menu while visible
 	info.checked = optionDropdownCheckedFunc
 	info.disabled = not TitanGetVar(TITAN_SOCIAL_ID, "SortGuild")
-	UIDropDownMenu_AddButton(info, level)
+	Lib_UIDropDownMenu_AddButton(info, level)
 end
 
 local function addRadioRefresh(text, key, value, level)
-	local info = UIDropDownMenu_CreateInfo()
+	local info = Lib_UIDropDownMenu_CreateInfo()
 	info.text = text
 	info.func = setTitanSocialOptionRefresh
 	info.arg1 = key
 	info.arg2 = value
 	info.keepShownOnClick = true
 	info.checked = optionDropdownCheckedFunc
-	UIDropDownMenu_AddButton(info, level)
+	Lib_UIDropDownMenu_AddButton(info, level)
 end
 
 -- TitanPanelRightClickMenu_PrepareSocialMenu() must be global for TitanPanel to find it
@@ -246,14 +246,14 @@ function _G.TitanPanelRightClickMenu_PrepareSocialMenu(frame, level, menuList)
 		if menuList == "GuildSort" then
 			-- we'd like to use AddToggleVar() but we can't keep the menu open
 			do
-				local info = UIDropDownMenu_CreateInfo()
+				local info = Lib_UIDropDownMenu_CreateInfo()
 				info.text = L.MENU_GUILD_SORT_DEFAULT
 				info.func = function ()
 					TitanToggleVar(TITAN_SOCIAL_ID, "SortGuild")
 				end
 				info.keepShownOnClick = false
 				info.checked = not TitanGetVar(TITAN_SOCIAL_ID, "SortGuild")
-				UIDropDownMenu_AddButton(info, level)
+				Lib_UIDropDownMenu_AddButton(info, level)
 			end
 			TitanPanelRightClickMenu_AddSpacer(level)
 			addSortOption(L.MENU_GUILD_SORT_NAME, "GuildSortKey", "name", level)
@@ -494,39 +494,39 @@ end
 local rightClickFrame
 local function getRightClickFrame()
 	if not rightClickFrame then
-		rightClickFrame = CreateFrame("Frame", addonName.."TooltipContextualMenu", _G.UIParent, "UIDropDownMenuTemplate")
+		rightClickFrame = CreateFrame("Frame", addonName.."TooltipContextualMenu", _G.UIParent, "Lib_UIDropDownMenuTemplate")
 	end
 	return rightClickFrame
 end
 
 local function showGuildRightClick(player, isMobile)
 	local frame = getRightClickFrame()
-	frame.initialize = function() UnitPopup_ShowMenu(_G.UIDROPDOWNMENU_OPEN_MENU, "GUILD", nil, player) end
+	frame.initialize = function() UnitPopup_ShowMenu(_G.LIB_UIDROPDOWNMENU_OPEN_MENU, "GUILD", nil, player) end
 	frame.displayMode = "MENU";
 	frame.friendsList = false
 	frame.bnetIDAccount = nil
 	frame.isMobile = isMobile
-	ToggleDropDownMenu(1, nil, frame, "cursor")
+	Lib_ToggleDropDownMenu(1, nil, frame, "cursor")
 end
 
 local function showFriendRightClick(player)
 	local frame = getRightClickFrame()
-	frame.initialize = function() UnitPopup_ShowMenu(_G.UIDROPDOWNMENU_OPEN_MENU, "FRIEND", nil, player) end
+	frame.initialize = function() UnitPopup_ShowMenu(_G.LIB_UIDROPDOWNMENU_OPEN_MENU, "FRIEND", nil, player) end
 	frame.displayMode = "MENU"
 	frame.friendsList = true
 	frame.bnetIDAccount = nil
 	frame.isMobile = nil
-	ToggleDropDownMenu(1, nil, frame, "cursor")
+	Lib_ToggleDropDownMenu(1, nil, frame, "cursor")
 end
 
 local function showRealIDRightClick(accountName, bnetIDAccount)
 	local frame = getRightClickFrame()
-	frame.initialize = function() UnitPopup_ShowMenu(_G.UIDROPDOWNMENU_OPEN_MENU, "BN_FRIEND", nil, accountName) end
+	frame.initialize = function() UnitPopup_ShowMenu(_G.LIB_UIDROPDOWNMENU_OPEN_MENU, "BN_FRIEND", nil, accountName) end
 	frame.displayMode = "MENU"
 	frame.friendsList = true
 	frame.bnetIDAccount = bnetIDAccount
 	frame.isMobile = nil
-	ToggleDropDownMenu(1, nil, frame, "cursor")
+	Lib_ToggleDropDownMenu(1, nil, frame, "cursor")
 end
 
 local function clickPlayer(frame, info, button)
@@ -577,10 +577,10 @@ local function sendBattleNetInvite(bnetIDAccount)
 			PlaySound("igMainMenuOptionCheckBoxOn")
 			local dropDown = TravelPassDropDown
 			if dropDown.index ~= index then
-				CloseDropDownMenus()
+				Lib_CloseDropDownMenus()
 			end
 			dropDown.index = index
-			ToggleDropDownMenu(1, nil, dropDown, "cursor", 1, -1)
+			Lib_ToggleDropDownMenu(1, nil, dropDown, "cursor", 1, -1)
 		else
 			local bnetIDGameAccount = select(6, BNGetFriendInfo(index))
 			if bnetIDGameAccount then

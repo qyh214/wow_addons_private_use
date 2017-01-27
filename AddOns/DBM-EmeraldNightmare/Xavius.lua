@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1726, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15590 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15646 $"):sub(12, -3))
 mod:SetCreatureID(103769)
 mod:SetEncounterID(1864)
 mod:SetZone()
@@ -236,8 +236,10 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 207830 then
 		timerCorruptingNovaCD:Start(nil, args.sourceGUID)
-		specWarnCorruptingNova:Show(args.sourceName)
-		voiceCorruptingNova:Play("aesoon")
+		if self:AntiSpam(2, 1) then
+			specWarnCorruptingNova:Show(args.sourceName)
+			voiceCorruptingNova:Play("aesoon")
+		end
 	elseif spellId == 209443 then
 		if self.vb.phase == 3 then
 			timerNightmareInfusionCD:Start(31.5)

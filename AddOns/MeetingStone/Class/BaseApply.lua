@@ -24,10 +24,6 @@ function BaseApply:Constructor(activityId, customId)
     self:SetActivityID(activityId)
     self:SetCustomID(customId)
     self:SetCode(GetActivityCode(activityId, customId))
-    -- self:SetSearch(search)
-    -- self:SetIsTank(tank)
-    -- self:SetIsHealer(healer)
-    -- self:SetIsDamager(damager)
 
     local _, _, categoryId, groupId = C_LFGList.GetActivityInfo(activityId)
 

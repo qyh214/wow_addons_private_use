@@ -1,9 +1,9 @@
 
 BuildEnv(...)
 
-local memorize = require('NetEaseMemorize-1.0')
-local nepy = require('NetEasePinyin-1.0')
-
+local memorize      = require('NetEaseMemorize-1.0')
+local nepy          = require('NetEasePinyin-1.0')
+local Base64        = LibStub('NetEaseBase64-1.0')
 local AceSerializer = LibStub('AceSerializer-3.0')
 
 function GetClassColorText(className, text)
@@ -169,9 +169,9 @@ function IsUseHonorLevel(activityId)
 end
 
 local PVP_INDEXS = {
-    [6] = 1,
-    [7] = 1,
-    [8] = 1,
+    [6]  = 1,
+    [7]  = 1,
+    [8]  = 1,
     [19] = 2,
 }
 
@@ -375,4 +375,53 @@ function GetAddonSource()
         end
     end
     return 0
+end
+
+
+function GetGuildName()
+    local name, _, _, realm = GetGuildInfo('player')
+    return name and GetFullName(name, realm) or nil
+end
+
+function ChatTargetAppToSystem(chatTarget)
+    return chatTarget and chatTarget:gsub(APP_WHISPER_DOT, '-')
+end
+
+function ChatTargetSystemToApp(chatTarget)
+    return chatTarget and chatTarget:gsub('-', APP_WHISPER_DOT)
+end
+
+function IsChatTargetApp(chatTarget)
+    return chatTarget and chatTarget:find(APP_WHISPER_DOT, nil, true)
+end
+
+function UnpackIds(data)
+    local min_id, data = data:match('^(%d+):(.+)$')
+    min_id = tonumber(min_id)
+
+    data = Base64:DeCode(data)
+
+    local list = {}
+    local offset = 0
+    local byte, b
+    for i = 1, #data do
+        byte = data:byte(i)
+        for j = 7, 0, -1 do
+            b = bit.band(byte, bit.lshift(1, j)) > 0 and 1 or 0
+            if b == 1 then
+                table.insert(list, min_id + offset)
+            end
+            offset = offset + 1
+        end
+    end
+    return list
+end
+
+function ListToMap(list)
+    local map = {} do
+        for i,v in ipairs(list) do
+            map[v] = true
+        end
+    end
+    return map
 end

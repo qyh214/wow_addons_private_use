@@ -161,7 +161,7 @@ GameTooltip:SetScript("OnTooltipSetItem",
 				-- Check additional tint criteria
 				local k=GetAchievementCriteriaInfo
 				local x,b; local a=0
-				for i=1,11 do 
+				for i=1,12 do 
 					_,_,_,x,b = k(11152,i)
 					a=a+x
 				end
@@ -170,11 +170,11 @@ GameTooltip:SetScript("OnTooltipSetItem",
 		
 				local n_once="\n"
 
-				if a~=b then
+				if a<b then
 					if HiddenArtifactTracker.colourOptions then
-						GameTooltip:AddLine(n_once.."Dungeons:"..a.."/"..b,math.min(1,2-(2*a/b)),math.min(1,2*a/b),0,True)
+						GameTooltip:AddLine(n_once.."Dungeons: "..a.."/"..b,math.min(1,2-(2*a/b)),math.min(1,2*a/b),0,True)
 					else
-						GameTooltip:AddLine(n_once.."Dungeons:"..a.."/"..b,1,1,1,True)
+						GameTooltip:AddLine(n_once.."Dungeons: "..a.."/"..b,1,1,1,True)
 					end
 					n_once=""
 				end

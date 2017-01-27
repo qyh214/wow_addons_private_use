@@ -1,0 +1,22 @@
+lightweight tag 27eb2ad77a675a661e27a1e314ccba39dee17519 7.1.5
+Author:	GitHub <noreply@github.com>
+Date:	Wed Jan 25 19:40:25 2017 -0600
+
+commit 85f0ab063c4da6f386b1d215a370234b520f6ef8
+Author: Joshua Worden <solocommand@gmail.com>
+Date:   Wed Jan 25 19:39:43 2017 -0600
+
+    Update to use new NoTaint menu library calls
+
+commit 85f0ab063c4da6f386b1d215a370234b520f6ef8
+Author: Joshua Worden <solocommand@gmail.com>
+Date:   Wed Jan 25 19:39:43 2017 -0600
+
+    Update to use new NoTaint menu library calls
+
+commit 49d36be80cb24b2e4466e6f8b7bdf2ca2f7e5974
+Author: Joshua Worden <solocommand@gmail.com>
+Date:   Wed Jan 25 19:31:34 2017 -0600
+
+    Add .pkgmeta
+

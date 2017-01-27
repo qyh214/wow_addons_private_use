@@ -28,6 +28,8 @@ local cache={} --#cache
 local followerTypes={}
 local cacheTypes={LE_FOLLOWER_TYPE_GARRISON_6_0,LE_FOLLOWER_TYPE_SHIPYARD_6_2,LE_FOLLOWER_TYPE_GARRISON_7_0}
 local EMPTY={}
+local GMCUsedFollowers={}
+local GMCUsedFollowersCount=0
 function module:OnInitialized()
 	self:RegisterEvent("GARRISON_FOLLOWER_REMOVED","OnEvent")
 	self:RegisterEvent("GARRISON_FOLLOWER_ADDED","OnEvent")
@@ -280,4 +282,19 @@ function addon:GetFollowerID(followerName)
 end
 function addon:GetCache(followerTypeID)
 	return module.caches[followerTypeID]
+end
+function addon:GMCBusy(followerID,value)
+	if not followerID then 
+		GMCUsedFollowersCount=0
+		wipe(GMCUsedFollowers) 
+		return 
+	end
+	if value and not GMCUsedFollowers[followerID] then 
+		GMCUsedFollowers[followerID]=true
+		GMCUsedFollowersCount=GMCUsedFollowersCount+1
+	end
+	return GMCUsedFollowers[followerID]
+end
+function addon:GMCBusyCount()
+	return GMCUsedFollowersCount
 end

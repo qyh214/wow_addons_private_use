@@ -327,7 +327,7 @@ end
 DCS_TableData.StatData.GCD = {
     updateFunc = function(statFrame, unit)
 		local spec = GetSpecialization();
-		local primaryStat = select(7, GetSpecializationInfo(spec, nil, nil, nil, UnitSex("player")));
+		local primaryStat = select(6, GetSpecializationInfo(spec, nil, nil, nil, UnitSex("player")));
 		local gcd
 		local _, classfilename = UnitClass("player")
 		--print(classfilename)

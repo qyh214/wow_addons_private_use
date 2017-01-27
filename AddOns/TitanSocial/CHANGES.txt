@@ -1,0 +1,22 @@
+lightweight tag 2aba4b5d1dc29b6331dcbe06cf8e2df019b11ab3 7.1.5
+Author:	GitHub <noreply@github.com>
+Date:	Wed Jan 25 20:01:42 2017 -0600
+
+commit c80f8258cfcefc6c5d777ecbe260e745466106d1
+Author: Joshua Worden <solocommand@gmail.com>
+Date:   Wed Jan 25 19:57:43 2017 -0600
+
+    Update to use new NoTaint menu library calls
+
+commit c80f8258cfcefc6c5d777ecbe260e745466106d1
+Author: Joshua Worden <solocommand@gmail.com>
+Date:   Wed Jan 25 19:57:43 2017 -0600
+
+    Update to use new NoTaint menu library calls
+
+commit 0a22e00b48e00b0164b40f53954745941acb98e7
+Author: Joshua Worden <solocommand@gmail.com>
+Date:   Wed Jan 25 19:49:39 2017 -0600
+
+    Update packager config for titan panel dep
+

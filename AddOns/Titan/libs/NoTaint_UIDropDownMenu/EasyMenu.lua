@@ -28,6 +28,8 @@ function Lib_EasyMenu_Initialize( frame, level, menuList )
 		if (value.text) then
 			value.index = index;
 			Lib_UIDropDownMenu_AddButton( value, level );
+		else
+			Lib_UIDropDownMenu_AddSeparator( value, level );
 		end
 	end
 end

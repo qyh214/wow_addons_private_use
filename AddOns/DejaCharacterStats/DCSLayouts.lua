@@ -1,3 +1,5 @@
+--Elvis is the greatest!
+
 local ADDON_NAME, namespace = ... 	--localization
 local L = namespace.L 				--localization
 
@@ -138,7 +140,9 @@ local configMode = false
 
 local function ShowCharacterStats(unit)
     local stat
-    local count, backgroundcount, height = 0, 0, 4
+    local count, backgroundcount, height = 0, false, 4
+	local hideatzero = true --placeholder for the checkbox hideatzero
+	local butshowstatifchecked = false --placeholder for the checkbox butshowstatifchecked
     for _, v in ipairs(ShownData) do
         stat = DCS_TableData.StatData[v.statKey]
 		if stat then -- if some stat gets removed or if experimenting with adding stats
@@ -149,13 +153,10 @@ local function ShowCharacterStats(unit)
 				stat.frame.checkButton:SetChecked(not v.hidden)
 				if (v.hidden) then
 					stat.frame:SetAlpha(0.32)
-				end
-				if (not v.hidden) then
+				else
 					stat.frame:SetAlpha(1)
 				end
 			else
-				local hideatzero = true --placeholder for the checkbox hideatzero
-				local butshowstatifchecked = false --placeholder for the checkbox butshowstatifchecked
 				if hideatzero and not butshowstatifchecked then
 					if v.hideAt then
 						if v.hideAt == stat.frame.numericValue then
@@ -180,10 +181,10 @@ local function ShowCharacterStats(unit)
 					count = count + 1
 				end
 				if (stat.category) then
-					backgroundcount = 0
+					backgroundcount = false
 				else
-					stat.frame.Background:SetShown((backgroundcount%2) ~= 0)
-					backgroundcount = backgroundcount + 1
+					stat.frame.Background:SetShown(backgroundcount)
+					backgroundcount = not backgroundcount
 				end
 				if not (configMode) then
 					stat.frame:SetAlpha(1)
@@ -195,12 +196,12 @@ local function ShowCharacterStats(unit)
 		height = floor(height)
 		StatFrame:SetHeight(height)
 		local statheight = StatFrame:GetHeight()
-		local baseheight = CharacterFrameInsetRight:GetHeight()
+		--local baseheight = CharacterFrameInsetRight:GetHeight()
 		--print(statheight, baseheight)
 		if count <= 24 then
 			UpdateStatFrameWidth(191)
 			StatScrollFrame.ScrollBar:Hide()
-		elseif count > 24 then
+		else
 			local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked
 			if checked.ScrollbarSetChecked == true then
 				UpdateStatFrameWidth(180)
@@ -235,7 +236,7 @@ local function DCS_Table_Relevant()
 		--print(spec)
 	local role = GetSpecializationRole(spec)
 		--print(role)
-	local primaryStat = select(7, GetSpecializationInfo(spec, nil, nil, nil, UnitSex("player")));
+	local primaryStat = select(6, GetSpecializationInfo(spec, nil, nil, nil, UnitSex("player")));
 		--print(primaryStat)
     for _, v in ipairs(ShownData) do
 		--print (v.statKey, " ", v.hidden)
@@ -554,7 +555,7 @@ local DCS_TableResetCheck = CreateFrame("Button", "DCS_TableResetButton", Charac
 ------------------------
 local DCS_ConfigtooltipText = L["Unlock DCS"]
 
-local DCS_configButton = CreateFrame("Button", nil, PaperDollSidebarTab1)
+local DCS_configButton = CreateFrame("Button", "DCS_configButton", PaperDollSidebarTab1)
 	DCS_configButton:SetSize(32, 32)
 	DCS_configButton:SetPoint("BOTTOMLEFT", PaperDollSidebarTab1, "BOTTOMLEFT", 96, 34)
 	DCS_configButton:SetNormalTexture("Interface\\Buttons\\LockButton-Locked-Up")
@@ -584,6 +585,14 @@ local function configButtonOnClose()
 	DCS_ConfigtooltipText = L["Unlock DCS"]
 	ShowCharacterStats("player")
 end
+
+local function DCS_ClassCrestBGCheck()
+	if DCS_ClassBackgroundCheck:GetChecked(true) then
+		CharacterStatsPane.ClassBackground:Show() 
+	else
+		CharacterStatsPane.ClassBackground:Hide()
+	end
+end
 	
 local function DCS_DefaultStatsAnchors()
 	StatScrollFrame:ClearAllPoints()
@@ -610,6 +619,7 @@ local function DCS_DefaultStatsAnchors()
 	CharacterStatsPane.ClassBackground:SetPoint("TOP", StatScrollFrame, "TOP", -2.50, 3)
 	
 	configButtonOnClose()
+	DCS_ClassCrestBGCheck()
 	ShowCharacterStats("player")
 end
 
@@ -617,29 +627,31 @@ local function DCS_InterfaceOptionsStatsAnchors()
 	if (DejaCharacterStatsPanel~=nil) then
 		StatScrollFrame:ClearAllPoints()
 		StatScrollFrame:SetParent(DejaCharacterStatsPanel)
-		StatScrollFrame:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 380, -6)
-		StatScrollFrame:SetPoint("BOTTOMRIGHT", DejaCharacterStatsPanel, "BOTTOMRIGHT", -50, 3)
+		StatScrollFrame:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 380, -80)
+		StatScrollFrame:SetPoint("BOTTOMRIGHT", DejaCharacterStatsPanel, "BOTTOMRIGHT", -50, 126)
 		StatScrollFrame:Show()
 
 		StatScrollFrame.ScrollBar:ClearAllPoints()
 		StatScrollFrame.ScrollBar:SetParent(StatScrollFrame)
-		StatScrollFrame.ScrollBar:SetPoint("TOPLEFT", StatScrollFrame, "TOPRIGHT", -16, -16)
-		StatScrollFrame.ScrollBar:SetPoint("BOTTOMLEFT", StatScrollFrame, "BOTTOMRIGHT", -16, 16)
+		StatScrollFrame.ScrollBar:SetPoint("TOPLEFT", StatScrollFrame, "TOPRIGHT", -15, -16)
+		StatScrollFrame.ScrollBar:SetPoint("BOTTOMLEFT", StatScrollFrame, "BOTTOMRIGHT", -15, 16)
 		StatScrollFrame.ScrollBar:Hide()
 
 		DCS_TableRelevantStats:ClearAllPoints()
 		DCS_TableRelevantStats:SetParent(StatScrollFrame)
-		DCS_TableRelevantStats:SetPoint("BOTTOMLEFT", -134, 35)
+		DCS_TableRelevantStats:SetPoint("BOTTOMRIGHT", -122,-42)
 
 		DCS_TableResetCheck:ClearAllPoints()
 		DCS_TableResetCheck:SetParent(StatScrollFrame)
-		DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", -250, 5)
+		DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", 3, -42)
 
 		CharacterStatsPane.ClassBackground:ClearAllPoints()
 		CharacterStatsPane.ClassBackground:SetParent(DejaCharacterStatsPanel)
-		CharacterStatsPane.ClassBackground:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 377, -6)
+		CharacterStatsPane.ClassBackground:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 377, -80)
+		CharacterStatsPane.ClassBackground:SetPoint("BOTTOMRIGHT", DejaCharacterStatsPanel, "BOTTOMRIGHT", -48, 126)
 		CharacterStatsPane.ClassBackground:Show()
 
+		DCS_ClassCrestBGCheck()
 		ShowCharacterStats("player")
 	end
 end	
@@ -652,6 +664,8 @@ CharacterFrameInsetRight:HookScript("OnHide", function(self)
 	if InterfaceOptionsFrame:IsShown() then
 		DCS_InterfaceOptionsStatsAnchors()
 	else
+		CharacterFrameInsetRightScrollBar:SetValue(0)
+	
 		StatScrollFrame:ClearAllPoints()
 		StatScrollFrame:SetParent(UIParent)
 		StatScrollFrame:SetPoint("BOTTOMRIGHT", UIParent, "TOPLEFT", -100, 100)

@@ -1,24 +1,12 @@
-tag 309910f0a99304962171e07f5177419fbb496261 2.15.9
+tag 9aa3e7693c8a5536f738aa0530acf0685cea5020 2.16.2
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Mon Dec 5 22:17:03 2016 +0100
+Date:	Tue Jan 24 10:44:45 2017 +0100
 
-Fixed non latin localization
+Bugfix release
 
-commit 99845c90e118e529c438951e522653831316cc6a
+commit 7911563135c33cb2561ba20418ea97b679596775
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Mon Dec 5 00:34:46 2016 +0100
+Date:   Tue Jan 24 10:42:13 2017 +0100
 
-    Bump notes
-
-commit eebb80c18fc3aebd7c1d3761da81c5b72098dfca
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Mon Dec 5 00:34:00 2016 +0100
-
-    Drop rates updated
-
-commit 614c2fec686c81720ec0e814f36c331b93707ffd
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Mon Dec 5 00:33:53 2016 +0100
-
-    Fix: Non latin languages localization should now work
+    Fix: backported fixes for OrderHallCommander
 

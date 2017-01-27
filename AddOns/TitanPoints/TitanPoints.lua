@@ -123,7 +123,7 @@ function TitanPanelRightClickMenu_PreparePointsMenu()
                 TitanPanelPoints_ToggleVisibility(icon);
             end
             info.keepShownOnClick = 1;
-            UIDropDownMenu_AddButton(info, 1);
+            Lib_UIDropDownMenu_AddButton(info, 1);
         else
             TitanPanelRightClickMenu_AddSpacer();
             TitanPanelRightClickMenu_AddTitle(name);

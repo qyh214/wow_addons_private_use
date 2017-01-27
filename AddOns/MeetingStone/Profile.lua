@@ -3,6 +3,18 @@ BuildEnv(...)
 
 Profile = Addon:NewModule('Profile', 'AceEvent-3.0')
 
+local DEFAULT_CHATGROUP_LISTENING = {
+    APP_WHISPER = {
+        [1] = true,
+    }
+}
+
+local DEFAULT_CHATGROUP_COLOR = {
+    APP_WHISPER = {
+        r = 0.7, g = 1, b = 0,
+    }
+}
+
 function Profile:OnInitialize()
     local gdb = {
         global = {
@@ -32,14 +44,19 @@ function Profile:OnInitialize()
             minimap = {
                 minimapPos = 192.68,
             },
-            searchHistoryList = {},
-            createHistoryList = {},
+            searchHistoryList  = {},
+            createHistoryList  = {},
             searchInputHistory = {},
+            followMemberList   = {},
+            chatGroupListening = DEFAULT_CHATGROUP_LISTENING,
+            chatGroupColor     = DEFAULT_CHATGROUP_COLOR,
             recent = {},
         }
     }
 
+    self.chatGroupListeningTemp = { APP_WHISPER = {} }
     self.ignoreCache = {}
+
     self.gdb = LibStub('AceDB-3.0'):New('MEETINGSTONE_UI_DB', gdb, true)
     self.cdb = LibStub('AceDB-3.0'):New('MEETINGSTONE_CHARACTER_DB', cdb)
 
@@ -350,6 +367,79 @@ end
 
 function Profile:ClearAdvShine()
     self.cdb.profile.advShine = ADDON_VERSION
+end
+
+---- Follow
+
+function Profile:AddFollow(target, guid, bitfollow)
+    for i, v in ipairs(self.cdb.profile.followMemberList) do
+        if v.name == target then
+            v.guid = guid
+            if bitfollow ~= nil then
+                v.bitfollow = bitfollow
+            end
+            self:SendMessage('MEETINGSTONE_FOLLOWMEMBERLIST_UPDATE')
+            return
+        end
+    end
+
+    tinsert(self.cdb.profile.followMemberList, 1, {
+        name = target,
+        guid = guid,
+        time = time(),
+        isNew = true,
+        bitfollow = bitfollow,
+    })
+    self:SendMessage('MEETINGSTONE_FOLLOWMEMBERLIST_UPDATE')
+end
+
+function Profile:IsFollowed(target)
+    for i, v in ipairs(self.cdb.profile.followMemberList) do
+        if v.name == target then
+            return i
+        end
+    end
+end
+
+function Profile:GetFollowGuid(target)
+    for i, v in ipairs(self.cdb.profile.followMemberList) do
+        if v.name == target then
+            return v.guid
+        end
+    end
+end
+
+function Profile:GetFollowList()
+    return self.cdb.profile.followMemberList
+end
+
+---- Whisper
+
+function Profile:GetChatGroupListeningDB(id, group)
+    return id > 10 and self.chatGroupListeningTemp[group] or self.cdb.profile.chatGroupListening[group]
+end
+
+function Profile:IsChatGroupListening(id, group)
+    return self:GetChatGroupListeningDB(id, group)[id]
+end
+
+function Profile:ToggleChatGroupListening(id, group, checked)
+    self:GetChatGroupListeningDB(id, group)[id] = not not checked
+end
+
+function Profile:SetChatGroupColor(group, r, g, b)
+    self.cdb.profile.chatGroupColor[group] = {r = r, g = g, b = b}
+end
+
+function Profile:GetChatGroupColor(group)
+    local color = self.cdb.profile.chatGroupColor[group]
+    return color.r, color.g, color.b
+end
+
+function Profile:ResetChatWindows()
+    self.chatGroupListeningTemp = {}
+    self.cdb.profile.chatGroupListening = CopyTable(DEFAULT_CHATGROUP_LISTENING)
+    self.cdb.profile.chatGroupColor = CopyTable(DEFAULT_CHATGROUP_COLOR)
 end
 
 function Profile:NeedWorldQuestHelp()

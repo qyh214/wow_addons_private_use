@@ -85,3 +85,7 @@ function RecentPlayer:Match(text, class, role)
     end
     return true
 end
+
+function RecentPlayer:IsTimeOut()
+    return time() - self:GetTime() > 86400 * 30
+end

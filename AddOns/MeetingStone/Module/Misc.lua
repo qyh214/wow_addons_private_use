@@ -73,6 +73,10 @@ function Misc:GetNumIgnores()
     return self.hooks.GetNumIgnores() + Profile:GetNumIgnores()
 end
 
+function Misc:ChangeIgnoreName(name)
+    return Ambiguate(ChatTargetAppToSystem(name), 'none')
+end
+
 function Misc:DelIgnore(name)
     if not name then
         return
@@ -81,6 +85,8 @@ function Misc:DelIgnore(name)
     if type(name) == 'number' then
         name = self:GetIgnoreName(name)
     end
+
+    name = self:ChangeIgnoreName(name)
 
     if self.hooks.IsIgnored(name) then
         self.hooks.DelIgnore(name)
@@ -94,13 +100,21 @@ function Misc:IsIgnored(name)
     if not name then
         return false
     end
+    if UnitExists(name) then
+        name = UnitFullName(name)
+    end
+
+    name = self:ChangeIgnoreName(name)
+
     return self.hooks.IsIgnored(name) or Profile:IsIgnored(name)
 end
 
-function Misc:AddIgnore(name, msg)
+function Misc:AddIgnore(name)
     if not name then
         return
     end
+
+    local name = self:ChangeIgnoreName(name)
 
     if self:IsIgnored(name) then
         SendSystemMessage(format(ERR_IGNORE_ALREADY_S, name))
@@ -112,7 +126,6 @@ function Misc:AddIgnore(name, msg)
             SendSystemMessage(format(ERR_IGNORE_ADDED_S, name))
             IgnoreList_Update()
         end
-        Logic:AddIgnore(name, msg)
     end
 end
 
@@ -136,9 +149,9 @@ function Misc:AddOrDelIgnore(name)
 
     if self:IsIgnored(name) then
         self:DelIgnore(name)
-        SendSystemMessage(format(ERR_IGNORE_REMOVED_S, name))
     else
-        self:AddIgnore(name, self:GetChatLog(name))
+        self:AddIgnore(name, log)
+        Logic:AddIgnore(name, self:GetChatLog(name))
     end
 end
 

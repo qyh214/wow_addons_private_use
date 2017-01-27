@@ -403,7 +403,7 @@ local function DecorateRelic(self)
 
 			if invRelicSpecOptions[db.profile.relicSpecs] > 3 then
 				for q = 1,#specKeys do
-					local _, specName, _, _, _, _, classKey = GetSpecializationInfoByID(specKeys[q])
+					local _, specName, _, _, _, classKey = GetSpecializationInfoByID(specKeys[q])
 					local classColorSet = RAID_CLASS_COLORS[classKey]
 					local classColor = classColorSet.colorStr
 					local spellLookupKey = ArtifactBySpec[specKeys[q]] .. '.' .. itemID
@@ -430,7 +430,7 @@ local function DecorateRelic(self)
 				-- Assemble the string of all specs (and quantities if applicable)
 				local specsStr = ""
 				for q = 1,#specKeys do
-					local _, specName, _, _, _, _, classKey = GetSpecializationInfoByID(specKeys[q])
+					local _, specName, _, _, _, classKey = GetSpecializationInfoByID(specKeys[q])
 					local classColorSet = RAID_CLASS_COLORS[classKey]
 					local classColor = classColorSet.colorStr
 					local separator = ", "

@@ -249,6 +249,10 @@ L:SetGeneralLocalization({
 	name =	"Trash des Hofs der Sterne"
 })
 
+L:SetOptionLocalization({
+	SpyHelper	= "Hilf bei der Erkennung des Spions"
+})
+
 L:SetMiscLocalization({
     Gloves1        = "Einem Gerücht zufolge trägt der Spion immer Handschuhe.",
     Gloves2        = "Wie ich hörte, verbirgt der Spion sorgfältig die Hände.",
@@ -280,7 +284,7 @@ L:SetMiscLocalization({
     ShortSleeve1= "Mir ist zu Ohren gekommen, dass der Spion kurze Ärmel trägt, damit er seine Arme ungehindert bewegen kann.",
     ShortSleeve2= "Jemand sagte mir, dass der Spion lange Ärmel hasst.",
     ShortSleeve3= "Einer meiner Freundinnen sagte, dass sie die Kleidung des Spions gesehen hat. Er trägt keine langen Ärmel.",
-    ShortSleeve4= "Mir ist zu Ohren gekommen, dass der Spion die kühle Luft mag und deshalb heute Abend keine langen Ärmel trägt.",
+    ShortSleeve4= "Man hat mir zugetragen, dass der Spion die kühle Luft mag und deshalb heute Abend keine langen Ärmel trägt.",
     LongSleeve1 = "Wie ich höre, trägt der Spion heute Abend Kleidung mit langen Ärmeln.",
     LongSleeve2 = "Jemand sagte, dass der Spion heute Abend seine Arme mit langen Ärmeln bedeckt.",
     LongSleeve3 = "Ich habe am frühen Abend einen kurzen Blick auf die langen Ärmel des Spions erhascht.",
@@ -296,7 +300,22 @@ L:SetMiscLocalization({
     Pouch1        = "Ich hörte, dass der Spion immer einen magischen Beutel mit sich herumträgt.",
     Pouch2        = "",
     Pouch3        = "",
-    Pouch4        = ""
+    Pouch4        = "",
+    --
+    Gloves        = "Handschuhe",
+    NoGloves    = "keine Handschuhe",
+    Cape        = "Umhang",
+    Nocape        = "kein Umhang",
+    LightVest    = "helle Weste",
+    DarkVest    = "dunkle Weste",
+    Female        = "weiblich",
+    Male        = "männlich",
+    ShortSleeve = "kurze Ärmel",
+    LongSleeve    = "lange Ärmel",
+    Potions        = "Tränke",
+    NoPotions    = "keine Tränke",
+    Book        = "Buch",
+    Pouch        = "Beutel"
 })
 
 
@@ -491,6 +510,15 @@ L= DBM:GetModLocalization(1818)
 L= DBM:GetModLocalization(1838)
 
 -----------------------
+--Nightbane
+-----------------------
+L = DBM:GetModLocalization("Nightbane")
+
+L:SetGeneralLocalization({
+	name =	"Schrecken der Nacht"
+})
+
+-----------------------
 --Return To Karazhan Trash
 -----------------------
 L = DBM:GetModLocalization("RTKTrash")
@@ -498,3 +526,8 @@ L = DBM:GetModLocalization("RTKTrash")
 L:SetGeneralLocalization({
 	name =	"Trash der Rückkehr nach Karazhan"
 })
+
+L:SetMiscLocalization({
+	speedRun		=	"Die seltsame Kühle einer dunklen Präsenz durchweht die Luft..."
+})
+

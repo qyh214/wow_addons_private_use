@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'Tooltip', 4
+local WIDGET, VERSION = 'Tooltip', 5
 
 local GUI = LibStub('NetEaseGUI-2.0')
 local Tooltip = GUI:NewClass(WIDGET, 'GameTooltip.GameTooltipTemplate', VERSION)
@@ -61,6 +61,17 @@ function Tooltip:AddLine(text, r, g, b, wrap)
     local textLeft = self:GetFontStrings(self:NumLines())
     textLeft:SetFontObject('GameTooltipText')
     textLeft:SetTextColor(checkcolor(r, g, b))
+end
+
+function Tooltip:AddDoubleLine(textL, textR, rL, gL, bL, rR, gR, bR)
+    self:SuperCall('AddDoubleLine', textL, textR)
+
+    local numLines = self:NumLines()
+    local textLeft, textRight = self:GetFontStrings(numLines)
+    textLeft:SetFontObject('GameTooltipText')
+    textLeft:SetTextColor(checkcolor(rL, gL, bL))
+    textRight:SetFontObject('GameTooltipText')
+    textRight:SetTextColor(checkcolor(rR, gR, bR))
 end
 
 function Tooltip:GetFontStrings(line)

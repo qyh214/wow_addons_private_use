@@ -36,6 +36,12 @@ function MallItem:Constructor()
         end
     end
 
+    local Title = self:CreateFontString(nil, 'OVERLAY') do
+        Title:SetPoint('CENTER', Icon, 'CENTER', 0, -10)
+        Title:SetFont(STANDARD_TEXT_FONT, 26)
+        Title:SetShadowOffset(2, -2)
+    end
+
     local Price = self:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall2', 3) do
         Price:SetPoint('BOTTOM', 0, 30)
     end
@@ -172,16 +178,17 @@ function MallItem:Constructor()
     self:SetCheckedTexture(CheckedTexture)
     self:SetHighlightTexture(HighlightTexture)
 
-    self.Price = Price
-    self.Icon = Icon
-    self.Shadows = Shadows
-    self.Model = Model
-    self.Magnifier = Magnifier
-    self.Name = Name
+    self.Price         = Price
+    self.Icon          = Icon
+    self.Shadows       = Shadows
+    self.Model         = Model
+    self.Magnifier     = Magnifier
+    self.Name          = Name
     self.Strikethrough = Strikethrough
-    self.SalePrice = SalePrice
-    self.Discount = Discount
-    self.CheckMark = CheckMark
+    self.SalePrice     = SalePrice
+    self.Discount      = Discount
+    self.CheckMark     = CheckMark
+    self.Title         = Title
 
     self:SetScript('OnSizeChanged', self.OnSizeChanged)
     self:SetScript('OnShow', self.OnShow)
@@ -245,6 +252,11 @@ function MallItem:SetSmallText(text)
     self:Refresh()
 end
 
+function MallItem:SetTitle(title)
+    self.title = title
+    self:Refresh()
+end
+
 function MallItem:Update()
     if self.item then
         local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, icon = GetItemInfo(self.item)
@@ -260,7 +272,8 @@ function MallItem:Update()
     end
 
     self.Model:SetShown(self.model)
-    self.Icon:SetShown(not self.model)
+    self.Icon:SetShown(not self.model and self.icon)
+    self.Title:SetShown(not self.model and not self.icon and self.title)
 
     if self.model then
         if self.Model:GetID() ~= self.model then
@@ -270,9 +283,13 @@ function MallItem:Update()
     elseif self.icon then
         self.Icon:SetTexture(tonumber(self.icon) or self.icon)
         SetPortraitToTexture(self.Icon, self.icon)
+    elseif self.title then
+        self.Title:SetText(self.title)
     end
 
     if self.price then
+        self.Shadows:Show()
+        self.Price:Show()
         self.Price:ClearAllPoints()
         self.SalePrice:SetShown(self.originalPrice)
         self.Strikethrough:SetShown(self.originalPrice)
@@ -294,6 +311,11 @@ function MallItem:Update()
             end
             self.Price:SetPoint('BOTTOM', self, 0, 30)
         end
+    else
+        self.Price:Hide()
+        self.SalePrice:Hide()
+        self.Strikethrough:Hide()
+        self.Shadows:Hide()
     end
 
     if self.hour then
@@ -322,6 +344,7 @@ function MallItem:Update()
 end
 
 function MallItem:Clear()
+    self.title = nil
     self.data = nil
     self.item = nil
     self.model = nil
@@ -391,6 +414,7 @@ function MallItem:SetData(data)
         self:SetStartTime(data.startTime)
         self:SetAutoUpdate(false)
         self:SetSmallText(data.smallText)
+        self:SetTitle(data.title)
     end
 end
 

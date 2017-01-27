@@ -37,6 +37,7 @@ local _G=_G
 local UIERRORS_HOLD_TIME=UIERRORS_HOLD_TIME or 1
 local UIErrorsFrame=UIErrorsFrame
 local ChatTypeInfo=ChatTypeInfo
+local GetItemQualityColor=GetItemQualityColor
 lib.colors={
 azure                   ="0c92dc"
 ,aqua					="00ffff"
@@ -94,7 +95,6 @@ if (_G.RAID_CLASS_COLORS) then
 		lib.colors[strlower(class)]=color
 	end
 end
-local GetItemQualityColor=GetItemQualityColor
 local numqualities=_G.NUM_ITEM_QUALITIES or 8
 for i=1,numqualities do
 	local _,_,_,hex=GetItemQualityColor(i)
@@ -145,51 +145,48 @@ setmetatable(lib.colors,
 	end
 }
 )
-
-do
-	local function colorize(stringa,colore,dummy)
-			-- Crayon compatibility
-			if (type(stringa)=="table") then
-					stringa=dummy
-			end
-			if (type(colore)~="string") then colore="Yellow" end
-			if (colore:len()== 6 and colore:match("^%x%x%x%x%x%x$")) then
-					return "|cff" .. colore .. tostring(stringa) .. "|r"
-			else
-					return "|cff" .. C[colore] .. tostring(stringa) .. "|r"
-			end
-	end
-	local colors=lib.colors
-	local map={r=1,g=2,b=3,c=4}
-	local mt={
-			__index=function(table,key)
-					return rawget(table,map[key])
-			end,
-			__tostring=function(table)
-					return rawget(table,4)
-			end,
-			__concat=function(t1,t2)
-					return tostring(t1) .. tostring(t2)
-			end,
-			__call=function(table,...)
-					return unpack(table)
-			end
-
-	}
-	C=setmetatable({},{
-			__index=function(table,key)
-				key=strlower(tostring(key))
-					local c=colors[key]
-					local r,g,b=tonumber(c:sub(1,2),16)/255,tonumber(c:sub(3,4),16)/255,tonumber(c:sub(5,6),16)/255
-					rawset(table,key,setmetatable({r,g,b,c},mt))
-					return  rawget(table,key)
-			end,
-			__call = function(table,...)
-							return colorize(...)
-			end
-	}
-	)
+local function colorize(stringa,colore,dummy)
+		-- Crayon compatibility
+		if (type(stringa)=="table") then
+				stringa=dummy
+		end
+		if (type(colore)~="string") then colore="Yellow" end
+		if (colore:len()== 6 and colore:match("^%x%x%x%x%x%x$")) then
+				return "|cff" .. colore .. tostring(stringa) .. "|r"
+		else
+				return "|cff" .. C[colore] .. tostring(stringa) .. "|r"
+		end
 end
+local colors=lib.colors
+local map={r=1,g=2,b=3,c=4}
+local mt={
+		__index=function(table,key)
+				return rawget(table,map[key])
+		end,
+		__tostring=function(table)
+				return rawget(table,4)
+		end,
+		__concat=function(t1,t2)
+				return tostring(t1) .. tostring(t2)
+		end,
+		__call=function(table,...)
+				return unpack(table)
+		end
+
+}
+C=setmetatable({},{
+		__index=function(table,key)
+			key=strlower(tostring(key))
+				local c=colors[key]
+				local r,g,b=tonumber(c:sub(1,2),16)/255,tonumber(c:sub(3,4),16)/255,tonumber(c:sub(5,6),16)/255
+				rawset(table,key,setmetatable({r,g,b,c},mt))
+				return  rawget(table,key)
+		end,
+		__call = function(table,...)
+						return colorize(...)
+		end
+	}
+)
 function lib:OnScreen(color,msg,hold)
 	color=color or "Yellow"
 	msg=msg or "Test message"

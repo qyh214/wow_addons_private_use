@@ -1,0 +1,3 @@
+local me,ns = ...
+
+ns.wowhead_update=1478642523

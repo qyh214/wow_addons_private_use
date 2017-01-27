@@ -50,6 +50,11 @@ ns.GSF=_G.GarrisonShipyardFrame
 ns.GMFMissions=ns.GMF.MissionTab.MissionList
 ns.GSFMissions=ns.GSF.MissionTab.MissionList
 _G.GARRISON_FOLLOWER_MAX_ITEM_LEVEL = _G.GARRISON_FOLLOWER_MAX_ITEM_LEVEL or 675
+ns.quests={}
+GetQuestsCompleted(ns.quests)
+function addon:EventQUEST_TURNED_IN(event,quest,item,gold)
+	ns.quests[quest]=true
+end
 do
 	--[===[@debug@
 	local newcount, delcount,createdcount,cached = 0,0,0

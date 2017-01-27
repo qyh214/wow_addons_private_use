@@ -1,5 +1,5 @@
 
-local GUI = LibStub:NewLibrary('NetEaseGUI-2.0', 1)
+local GUI = LibStub:NewLibrary('NetEaseGUI-2.0', 2)
 if not GUI then
     return
 end
@@ -68,7 +68,7 @@ end
 
 function GUI:NewEmbed(name, version)
     _EmbedTargets[name] = _EmbedTargets[name] or {}
-    
+
     local embed, oldversion = LibStub:NewLibrary('NetEaseGUI-2.0.Embed.' .. name, version)
     if oldversion and next(_EmbedTargets[name]) then
         C_Timer.After(0, function()

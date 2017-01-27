@@ -4,12 +4,12 @@
 -- @name LibInit
 -- @class module
 -- @author Alar of Runetotem
--- @release 37
+-- @release 39
 --
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):9:")) -- Always check line number in regexp and file
 
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 37
+local MINOR_VERSION = 39
 local off=(_G.RED_FONT_COLOR_CODE or '|cffff0000') .. _G.VIDEO_OPTIONS_DISABLED ..  _G.FONT_COLOR_CODE_CLOSE or '|r'
 local on=(_G.GREEN_FONT_COLOR_CODE or '|cff00ff00') .. _G.VIDEO_OPTIONS_ENABLED ..  _G.FONT_COLOR_CODE_CLOSE or '|r'
 local nop=function()end
@@ -22,7 +22,7 @@ local dprint=function() end
 --@debug@
 -- Checking packager behaviour
 --@end-debug@
---[===[@debug@
+--@debug@
 LoadAddOn("LibDebug")
 LoadAddOn("Blizzard_DebugTools")
 if LibDebug then
@@ -31,7 +31,7 @@ if LibDebug then
 	dprint=print
 	setfenv(1,_G)
 end
---@end-debug@]===]
+--@end-debug@
 --GAME_LOCALE="itIT"
 local me, ns = ...
 local LibStub=LibStub
@@ -39,17 +39,17 @@ local obj,old=LibStub:NewLibrary(MAJOR_VERSION,MINOR_VERSION)
 local upgrading
 if obj then
 	upgrading=old
---[===[@debug@
+--@debug@
 	if old then
 		dprint(strconcat("Upgrading ",MAJOR_VERSION,'.',old,' to',MINOR_VERSION,' from ',__FILE__))
 	else
 		dprint(strconcat("Loading ",MAJOR_VERSION,'.',MINOR_VERSION,' from ',__FILE__))
 	end
---@end-debug@]===]
+--@end-debug@
 else
---[===[@debug@
+--@debug@
 	dprint(strconcat("Equal or newer ",MAJOR_VERSION,' already loaded from ',__FILE__))
---@end-debug@]===]
+--@end-debug@
 	return
 end
 local lib=obj --#Lib
@@ -122,21 +122,21 @@ lib.pool=lib.pool or setmetatable({},{__mode="k"})
 local new, del, recursivedel,copy, cached, stats
 do
 	local pool = lib.pool
---[===[@debug@
+--@debug@
 	local newcount, delcount,createdcount,cached = 0,0,0
---@end-debug@]===]
+--@end-debug@
 	function new()
---[===[@debug@
+--@debug@
 		newcount = newcount + 1
---@end-debug@]===]
+--@end-debug@
 		local t = next(pool)
 		if t then
 			pool[t] = nil
 			return t
 		else
---[===[@debug@
+--@debug@
 			createdcount = createdcount + 1
---@end-debug@]===]
+--@end-debug@
 			return {}
 		end
 	end
@@ -148,16 +148,16 @@ do
 		return c
 	end
 	function del(t)
---[===[@debug@
+--@debug@
 		delcount = delcount + 1
---@end-debug@]===]
+--@end-debug@
 		wipe(t)
 		pool[t] = true
 	end
 	function recursivedel(t)
---[===[@debug@
+--@debug@
 		delcount = delcount + 1
---@end-debug@]===]
+--@end-debug@
 		for k,v in pairs(t) do
 			if type(v)=="table" then
 				recursivedel(v)
@@ -173,19 +173,19 @@ do
 		end
 		return n
 	end
---[===[@debug@
+--@debug@
 	function stats()
 		print("Created:",createdcount)
 		print("Aquired:",newcount)
 		print("Released:",delcount)
 		print("Cached:",cached())
 	end
---@end-debug@]===]
---@non-debug@
+--@end-debug@
+--[===[@non-debug@
 	function stats()
 		return
 	end
---@end-non-debug@
+--@end-non-debug@]===]
 end
 function lib.NewTable()
 	return new()
@@ -671,7 +671,7 @@ local function loadOptionsTable(self)
 				func="Gui",
 				guiHidden=true,
 			},
---[===[@debug@
+--@debug@
 			help = {
 				name="HELP",
 				desc="Show help",
@@ -687,7 +687,7 @@ local function loadOptionsTable(self)
 				guiHidden=true,
 				cmdHidden=true,
 			},
---@end-debug@]===]
+--@end-debug@
 			silent = {
 				name="SILENT",
 				desc="Eliminates startup messages",
@@ -779,10 +779,10 @@ local function PurgeProfiles(info,...)
 	for k,v in pairs(db.sv.profileKeys) do
 		used[v]=true
 	end
---[===[@debug@
+--@debug@
 	DevTools_Dump(profiles)
 	DevTools_Dump(used)
---@end-debug@]===]
+--@end-debug@
 	for _,v in ipairs(profiles) do
 		if not used[v] then
 			db:DeleteProfile(v)
@@ -1296,17 +1296,17 @@ end
 function lib:AddAction(method,label,description,private)
 	label=label or method
 	description=description or label
-		local group=getgroup(self)
-		local t={
-			func=method,
-			name=label,
-			type="execute",
-			desc=description,
-			confirm=false,
-			cmdHidden=true,
-			order=getorder(self,group)
-		}
-	if (private) then t.hidden=true end
+	local group=getgroup(self)
+	local t={
+		func=method,
+		name=label,
+		type="execute",
+		desc=description,
+		confirm=false,
+		cmdHidden=true,
+		order=getorder(self,group)
+	}
+if (private) then t.hidden=true end
 	group.args[strlower(label)]=t
 	lib.toggles[self][method]=t
 	return t
@@ -1802,7 +1802,8 @@ lib.coroutines=lib.coroutines or setmetatable({},{__index=function(t,k) rawset(t
 if not lib.CoroutineScheduler then
 	lib.CoroutineScheduler = CallbackHandler:New(lib,"_OnCoroutineEnd","_CancelOnCoroutine")
 end
-local coroutines=lib.coroutines
+---
+local coroutines=lib.coroutines --#Coroutines
 
 --- Executes an action as soon as a coroutine exit
 -- Action can be executed immediately if coroutine is already dead
@@ -1842,9 +1843,9 @@ function lib:coroutineExecute(interval,func,combatSafe,...)
 	c.interval=interval
 	c.combatSafe=combatSafe
 	if c.running then
-	--[===[@debug@
+	--@debug@
 		print("")
-	--@end-debug@]===] 
+	--@end-debug@ 
 		return 
 	end
 	if type(c.co)=="thread" and coroutine.status(c.co)=="suspended" then return signature end
@@ -1969,6 +1970,18 @@ function lib:Popup(msg,timeout,OnAccept,OnCancel,data,StopCasting)
 	StaticPopup_Show("LIBINIT_POPUP",nil,nil,data);
 end
 -- Interface widgets
+local backdrop = {
+	bgFile="Interface\\TutorialFrame\\TutorialFrameBackground",
+	edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
+	tile=true,
+	tileSize=16,
+	edgeSize=16,
+	insets={bottom=7,left=7,right=7,top=7}
+}
+local function addBackdrop(f,color)
+	f:SetBackdrop(backdrop)
+	f:SetBackdropBorderColor(C[color or 'Yellow']())
+end
 local factory={} --#factory
 do
 	local nonce=0
@@ -2062,6 +2075,24 @@ do
 		function frame:SetOnChange(func) self.OnChange=func end
 		return frame
 	end
+	function factory:Button(father,message,tooltip)
+		if type(message)=="table" then
+			tooltip=message.desc
+			message=message.name
+		end
+		local name=GetUniqueName("button",father)
+		local bt=CreateFrame("Button",name,father,"SecureActionButtonTemplate,GameMenuButtonTemplate")
+		bt:SetText(message)
+		bt.tooltipText=tooltip
+		function bt:SetOnChange(func)
+			if type(func)=="function" then
+				bt:SetScript("OnClick",func)
+			else
+				bt:SetScript("OnClick",function(this,...) this.obj[func](this.obj,this,...) end)
+			end
+		end
+		return bt
+	end
 --- Creates a dropdown menu
 -- @tparam frame father Parent frame to use
 -- @tparam mixed current Initial value
@@ -2071,8 +2102,22 @@ do
 			tooltip=message.desc
 			message=message.name
 		end
-		local dd=CreateFrame("Frame",GetUniqueName("dropdown",father),father,"UIDropDownMenuTemplate")
-	   dd:SetBackdropColor(1,0,0,1)		
+		local frame=CreateFrame("Frame",nil,father)
+		local framename=GetUniqueName("dropdown",father)
+		local dd=CreateFrame("Frame",framename,frame,"UIDropDownMenuTemplate")
+		_G[framename.."Left"]:SetPoint("TOPLEFT",-15,17)
+		_G[framename.."Middle"]:SetWidth(140)
+		dd:SetPoint("BOTTOMLEFT")
+		dd:SetPoint("BOTTOMRIGHT")
+		frame.SetScript=SetScript
+		frame.child=dd
+		dd.frame=frame
+		local desc=frame:CreateFontString(nil,"ARTWORK","GameFontNormalSmall")
+		desc:SetText(message)
+		desc:SetPoint("TOPLEFT")
+		desc:SetPoint("TOPRIGHT")
+		frame:SetWidth(140)
+		frame:SetHeight(45)		
 		if (tooltip) then
 			dd.tooltip=tooltip
 			dd:SetScript("OnEnter",function(self)
@@ -2083,14 +2128,14 @@ do
 		end
 		dd:SetScript("OnLeave",function() GameTooltip:Hide() end)
 		dd.text=dd:CreateFontString(nil,"ARTWORK","GameFontHighlight")
-		function dd:SetText(...)
-			self.text:SetText(...)
+		function frame:SetText(...)
+			self.child.text:SetText(...)
 		end
-		function dd:SetFormattedText(...)
-			self.text:SetFormattedText(...)
+		function frame:SetFormattedText(...)
+			self.child.text:SetFormattedText(...)
 		end
-		function dd:SetTextColor(...)
-			self.text:SetTextColor(...)
+		function frame:SetTextColor(...)
+			self.child.text:SetTextColor(...)
 		end
 		dd.list=list
 		local name=tostring(GetTime()*1000) ..nonce
@@ -2114,11 +2159,11 @@ do
 		function dd:OnValueChanged(this,index,value,...)
 			value=value or index
 			UIDropDownMenu_SetSelectedID(dd,index)
-			return self:OnChange(value)
+			return self.frame:OnChange(value)
 		end
-		function dd:OnChange(value) end
-		function dd:SetOnChange(func) self.OnChange=func end
-		return dd
+		function frame:OnChange(value) end
+		function frame:SetOnChange(func) frame.OnChange=func end
+		return frame
 	end
 	-- These functions directly map to variables
 	local function ToggleSet(this,value)
@@ -2135,13 +2180,17 @@ do
 		local tipo=info.type
 		if (tipo=="toggle") then
 			w=self:Checkbox(f,addon:ToggleGet(flag,tipo),info)
-		elseif( info.type=="select") then
+			w:SetOnChange(ToggleSet)
+		elseif( tipo=="select") then
 			w=self:DropDown(f,addon:ToggleGet(flag,tipo),info.values,info)			
-		elseif (info.type=="range") then
+			w:SetOnChange(ToggleSet)
+		elseif (tipo=="range") then
 			w=self:Slider(f,info.min,info.max,addon:ToggleGet(flag,info.type),info)
-		else
+			w:SetOnChange(ToggleSet)
+		elseif (tipo=="execute") then
+			w=self:Button(f,info)
+			w:SetOnChange(info.func)
 		end
-		w:SetOnChange(ToggleSet)
 		w.flag=flag
 		w.tipo=tipo
 		w.obj=addon

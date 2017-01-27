@@ -9,6 +9,7 @@ GUI = LibStub('NetEaseGUI-2.0')
 
 function Addon:OnInitialize()
     self:RawHook('LFGListUtil_OpenBestWindow', 'Toggle', true)
+    self:RawHook('SetItemRef', true)
 
     self:RegisterMessage('MEETINGSTONE_NEW_VERSION')
     self:RegisterMessage('MEETINGSTONE_FILTER_DATA_UPDATED')
@@ -88,4 +89,14 @@ end
 
 function Addon:GetFilterData()
     return self.filterPinyin, self.filterNormal
+end
+
+function Addon:SetItemRef(link, text, button, chatFrame)
+    local type, panel = strsplit(':', link)
+    if type == 'meetingstonepanel' then
+        Addon:ToggleModule('MainPanel')
+        MainPanel:SelectPanel(Addon:GetModule(panel))
+        return
+    end
+    return self.hooks.SetItemRef(link, text, button, chatFrame)
 end

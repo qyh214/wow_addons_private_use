@@ -116,7 +116,10 @@ function Logic:SEI(activity)
         activity:GetCustomID(),
         activity:GetMode(),
         activity:GetLoot(),
-        activity:GetSummary())
+        activity:GetSummary(),
+        activity:GetItemLevel(),
+        activity:GetPvPRating(),
+        (select(3, UnitClass('player'))))
 end
 
 function Logic:SEJ(activity, comment, tank, healer, damager)
@@ -135,7 +138,8 @@ function Logic:SEJ(activity, comment, tank, healer, damager)
         comment,
         tank,
         healer,
-        damager)
+        damager,
+        activity:GetLeaderClass())
 end
 
 function Logic:AddIgnore(name, msg)

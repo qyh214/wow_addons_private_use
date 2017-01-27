@@ -548,7 +548,7 @@ function CreatePanel:Create(activity, isSelf)
             Profile:SaveActivityProfile(activity)
             Profile:SaveCreateHistory(activity:GetCode())
         end
-        if isCreated then
+        if not isCreated then
             Logic:SEI(activity)
         end
         self:SendMessage('MEETINGSTONE_CREATING_ACTIVITY', true)

@@ -20,25 +20,29 @@ SOLO_VISIBLE_CUSTOM_ID      = 998
 MAX_PLAYER_LEVEL            = MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
 MAX_SEARCHBOX_HISTORY_LINES = 5
 
+-- App
+APP_WHISPER_DOT = '@'
+COMMIT_INTERVAL = 10
+
 ACTIVITY_BG_COUNT = 3
 MAX_LOTTERY_COUNT = 8
 LOTTERY_ORDER     = [[10101010102102021031203210432034105340251062345601234567]]
 
 MAX_SUMMARY_LETTERS = 255
-MIN_PLAYER_LEVEL = 10
+MIN_PLAYER_LEVEL    = 10
 
 ACTIVITY_FILTER_BROWSE = 1
 ACTIVITY_FILTER_CREATE = 2
 ACTIVITY_FILTER_OTHER  = 3
 
 DEFAULT_LOOT_LIST = {
-    [4] = 4,
-    [7] = 4,
-    [8] = 4,
-    [9] = 4,
-    [10] = 4,
-    ['6-0-17-5'] = 4,
-    ['6-0-17-0'] = 4,
+    [4]              = 4,
+    [7]              = 4,
+    [8]              = 4,
+    [9]              = 4,
+    [10]             = 4,
+    ['6-0-17-5']     = 4,
+    ['6-0-17-0']     = 4,
     ['1-71-280-998'] = 3,
 }
 
@@ -53,11 +57,11 @@ DEFAULT_MODE_LIST = {
 }
 
 INVITE_STATUS_NAMES = {
-    failed = LFG_LIST_APP_CANCELLED,
-    cancelled = LFG_LIST_APP_CANCELLED,
-    declined = LFG_LIST_APP_DECLINED,
-    timedout = LFG_LIST_APP_TIMED_OUT,
-    invited = LFG_LIST_APP_INVITED,
+    failed         = LFG_LIST_APP_CANCELLED,
+    cancelled      = LFG_LIST_APP_CANCELLED,
+    declined       = LFG_LIST_APP_DECLINED,
+    timedout       = LFG_LIST_APP_TIMED_OUT,
+    invited        = LFG_LIST_APP_INVITED,
     inviteaccepted = LFG_LIST_APP_INVITE_ACCEPTED,
     invitedeclined = LFG_LIST_APP_INVITE_DECLINED,
 }
@@ -83,29 +87,29 @@ PROVING_GROUND_DATA = {
 CATEGORY = {
     [0] = {
         groups = {
-            [5] = true,
+            [5]  = true,
             [18] = true,
             [19] = true,
             [30] = true,
             [31] = true,
         },
         activities = {
-            [50] = true,
-            [52] = true,
-            [54] = true,
-            [55] = true,
-            [56] = true,
-            [57] = true,
-            [58] = true,
-            [59] = true,
-            [60] = true,
-            [61] = true,
-            [62] = true,
-            [63] = true,
-            [64] = true,
-            [65] = true,
-            [66] = true,
-            [9] = true,
+            [50]  = true,
+            [52]  = true,
+            [54]  = true,
+            [55]  = true,
+            [56]  = true,
+            [57]  = true,
+            [58]  = true,
+            [59]  = true,
+            [60]  = true,
+            [61]  = true,
+            [62]  = true,
+            [63]  = true,
+            [64]  = true,
+            [65]  = true,
+            [66]  = true,
+            [9]   = true,
             [293] = true,
             [294] = true,
             [295] = true,
@@ -131,7 +135,7 @@ CATEGORY = {
             [37] = true,
         },
         activities = {
-            [45] = true,
+            [45]  = true,
             [296] = true,
             [297] = true,
             [298] = true,
@@ -168,7 +172,7 @@ CATEGORY = {
     },
     [3] = {
         groups = {
-            [5] = true,
+            [5]  = true,
             [19] = true,
             [54] = true,
             [55] = true,
@@ -203,7 +207,7 @@ CATEGORY = {
             [65] = true,
             [66] = true,
             [84] = true,
-            [1] = true,
+            [1]  = true,
             [83] = true,
             [82] = true,
             [81] = true,
@@ -215,18 +219,18 @@ CATEGORY = {
     },
     [5] = {
         groups = {
-            [6] = true,
-            [7] = true,
-            [8] = true,
-            [9] = true,
-            [10] = true,
-            [11] = true,
-            [12] = true,
-            [13] = true,
+            [6]   = true,
+            [7]   = true,
+            [8]   = true,
+            [9]   = true,
+            [10]  = true,
+            [11]  = true,
+            [12]  = true,
+            [13]  = true,
             [109] = true,
-            [14] = true,
-            [15] = true,
-            [67] = true,
+            [14]  = true,
+            [15]  = true,
+            [67]  = true,
             [110] = true,
         },
         activities = {

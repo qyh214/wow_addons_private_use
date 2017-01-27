@@ -1,5 +1,19 @@
 HiddenArtifactTrackerFuncs={}
 
+--Blood
+HiddenArtifactTrackerFuncs["Maw of the Damned"] = 
+	function()
+		HiddenArtifactTrackerFuncs.getWorldBossQ("Withered Training", 43943, 1033) -- Withered Training / questnumber / in Suramar
+	end
+
+--Frost (DK)
+HiddenArtifactTrackerFuncs["Blades of the Fallen Prince"] = 
+	function()
+		if HiddenArtifactTrackerFuncs.getAK(4) then
+			HiddenArtifactTrackerFuncs.getWorldBossQ("World Boss: Soultakers", 42269, 1017) -- Soultakers / questnumber / in Stormheim
+		end
+	end
+
 --Unholy
 HiddenArtifactTrackerFuncs["Apocalypse"] =
 	function()
@@ -87,8 +101,9 @@ HiddenArtifactTrackerFuncs["Aluneth"] =
 		HiddenArtifactTrackerFuncs.CheckQuest(43790, "Polymorph a Wild Dreamrunner in Val'sharah", nil)
 		HiddenArtifactTrackerFuncs.CheckQuest(43791, "Polymorph a Heartwood Doe in Suramar", nil)
 
-		HiddenArtifactTrackerFuncs.getAK(6)
-		HiddenArtifactTrackerFuncs.CheckQuest(43828, "Check class-hall for sheep event", nil)
+		if HiddenArtifactTrackerFuncs.getAK(6) then
+			HiddenArtifactTrackerFuncs.CheckQuest(43828, "Check class-hall for sheep event", nil)
+		end
 	end
 
 --fire
@@ -110,12 +125,25 @@ HiddenArtifactTrackerFuncs["Sheilun, Staff of the Mists"] =
 		HiddenArtifactTrackerFuncs.BossLockouts("The Emerald Nightmare", 1288, "Dragons of Nightmare", 2) 
 	end
 
+--windwalker
+HiddenArtifactTrackerFuncs["Fists of the Heavens"] = 
+	function()
+		HiddenArtifactTrackerFuncs.getWorldBossQ("Withered Training", 43943, 1033) -- Withered Training / questnumber / in Suramar
+	end
+
 --holy (paladin)
 HiddenArtifactTrackerFuncs["The Silver Hand"] =
 	function()
 		HiddenArtifactTrackerFuncs.getAK(5)
 	end
 HiddenArtifactTrackerFuncs["Tome of the Silver Hand"] = HiddenArtifactTrackerFuncs["The Silver Hand"]
+
+--protection
+HiddenArtifactTrackerFuncs["Truthguard"] = 
+	function()
+		HiddenArtifactTrackerFuncs.getWorldBossQ("Withered Training", 43943, 1033) -- Withered Training / questnumber / in Suramar
+	end
+HiddenArtifactTrackerFuncs["Oathseeker"] = HiddenArtifactTrackerFuncs["Truthguard"]
 
 --retribution
 HiddenArtifactTrackerFuncs["Ashbringer"] =
@@ -128,20 +156,20 @@ HiddenArtifactTrackerFuncs["Ashbringer"] =
 --discipline
 HiddenArtifactTrackerFuncs["Light's Wrath"] =
 	function()
-		HiddenArtifactTrackerFuncs.getAK(4)
-
-		HiddenArtifactTrackerFuncs.CheckQuest(44339, "Book 1 not read", "Book 1 read")
-		HiddenArtifactTrackerFuncs.CheckQuest(44340, "Book 2 not read", "Book 2 read")
-		HiddenArtifactTrackerFuncs.CheckQuest(44341, "Book 3 not read", "Book 3 read")
-		HiddenArtifactTrackerFuncs.CheckQuest(44342, "Book 4 not read", "Book 4 read")
-		HiddenArtifactTrackerFuncs.CheckQuest(44343, "Book 5 not read", "Book 5 read")
-		HiddenArtifactTrackerFuncs.CheckQuest(44344, "Book 6 not read", "Book 6 read")
-		HiddenArtifactTrackerFuncs.CheckQuest(44345, "Book 7 not read", "Book 7 read")
-		HiddenArtifactTrackerFuncs.CheckQuest(44346, "Book 8 not read", "Book 8 read")
-		HiddenArtifactTrackerFuncs.CheckQuest(44347, "Book 9 not read", "Book 9 read")
-		HiddenArtifactTrackerFuncs.CheckQuest(44348, "Book 10 not read", "Book 10 read")
-		HiddenArtifactTrackerFuncs.CheckQuest(44349, "Book 11 not read", "Book 11 read")
-		HiddenArtifactTrackerFuncs.CheckQuest(44350, "Book 12 not read", "Book 12 read")
+		if HiddenArtifactTrackerFuncs.getAK(4) then
+			HiddenArtifactTrackerFuncs.CheckQuest(44339, "Book 1 not read", "Book 1 read")
+			HiddenArtifactTrackerFuncs.CheckQuest(44340, "Book 2 not read", "Book 2 read")
+			HiddenArtifactTrackerFuncs.CheckQuest(44341, "Book 3 not read", "Book 3 read")
+			HiddenArtifactTrackerFuncs.CheckQuest(44342, "Book 4 not read", "Book 4 read")
+			HiddenArtifactTrackerFuncs.CheckQuest(44343, "Book 5 not read", "Book 5 read")
+			HiddenArtifactTrackerFuncs.CheckQuest(44344, "Book 6 not read", "Book 6 read")
+			HiddenArtifactTrackerFuncs.CheckQuest(44345, "Book 7 not read", "Book 7 read")
+			HiddenArtifactTrackerFuncs.CheckQuest(44346, "Book 8 not read", "Book 8 read")
+			HiddenArtifactTrackerFuncs.CheckQuest(44347, "Book 9 not read", "Book 9 read")
+			HiddenArtifactTrackerFuncs.CheckQuest(44348, "Book 10 not read", "Book 10 read")
+			HiddenArtifactTrackerFuncs.CheckQuest(44349, "Book 11 not read", "Book 11 read")
+			HiddenArtifactTrackerFuncs.CheckQuest(44350, "Book 12 not read", "Book 12 read")
+		end
 	end
 
 --holy (priest)
@@ -163,12 +191,32 @@ HiddenArtifactTrackerFuncs["The Kingslayers"] =
 		HiddenArtifactTrackerFuncs.getAK(4)
 	end
 
+--outlaw
+HiddenArtifactTrackerFuncs["The Dreadblades"] =
+	function()
+		HiddenArtifactTrackerFuncs.getAK(5)
+	end
+
 --elemental
 HiddenArtifactTrackerFuncs["The Fist of Ra-den"] =
 	function()
 		HiddenArtifactTrackerFuncs.getAK(4)
 	end
 HiddenArtifactTrackerFuncs["The Highkeeper's Ward"] = HiddenArtifactTrackerFuncs["The Fist of Ra-den"]
+
+--enhancement
+HiddenArtifactTrackerFuncs["Doomhammer"] = 
+	function()
+		HiddenArtifactTrackerFuncs.getWorldBossQ("World Boss: Flotsam", 43985, 1024) --1024 = highmountain
+		HiddenArtifactTrackerFuncs.getWorldBossQ("World Boss: Levantus", 43192, 1015) --1015 = azsuna
+	end
+HiddenArtifactTrackerFuncs["Fury of the Stonemother"] = HiddenArtifactTrackerFuncs["Doomhammer"]
+
+--affliction
+HiddenArtifactTrackerFuncs["Ulthalesh, the Deadwind Harvester"] =
+	function()
+		HiddenArtifactTrackerFuncs.getAK(5)
+	end
 
 --Demonology
 HiddenArtifactTrackerFuncs["Skull of the Man'ari"] =
@@ -178,24 +226,39 @@ HiddenArtifactTrackerFuncs["Skull of the Man'ari"] =
 	end
 HiddenArtifactTrackerFuncs["Spine of Thal'kiel"] = HiddenArtifactTrackerFuncs["Skull of the Man'ari"]
 
+--ARMS
+
 --fury
 HiddenArtifactTrackerFuncs["Warswords of the Valarjar"] =
 	function()
-		HiddenArtifactTrackerFuncs.RepCheck(1948, 8) --Valarjar to exalted
-		HiddenArtifactTrackerFuncs.getWorldBossQ("Nithogg", 42270, 1017) -- Nithogg / questnumber / in Stormheim
-		HiddenArtifactTrackerFuncs.getWorldBossQ("Shar'thos", 42779, 1018) --Shar'thos / quest number / in val'sharah
+		if HiddenArtifactTrackerFuncs.RepCheck(1948, 8) then --Valarjar to exalted
+			HiddenArtifactTrackerFuncs.getWorldBossQ("World Boss: Nithogg", 42270, 1017) -- Nithogg / questnumber / in Stormheim
+			HiddenArtifactTrackerFuncs.getWorldBossQ("World Boss: Shar'thos", 42779, 1018) --Shar'thos / quest number / in val'sharah
+		end
 	end
 
 --protection (warrior)
 HiddenArtifactTrackerFuncs["Scale of the Earth-Warder"] =
 	function()
-		HiddenArtifactTrackerFuncs.getAK(5)
 		
-		if IsQuestFlaggedCompleted(44311) then
-			local r = HiddenArtifactTracker.colourOptions and 0 or 1
-			local g = 1
-			local b = HiddenArtifactTracker.colourOptions and 0 or 1
-			GameTooltip:AddLine("Visit Neltharion's Vault in Highmountain (not Lair!).", r,g,b)
+		if HiddenArtifactTrackerFuncs.getAK(5) then
+		
+			if IsQuestFlaggedCompleted(44311) then
+				local r = HiddenArtifactTracker.colourOptions and 0 or 1
+				local g = 1
+				local b = HiddenArtifactTracker.colourOptions and 0 or 1
+				GameTooltip:AddLine("Hidden appearance successfully rolled!", r,g,b)
+			elseif IsQuestFlaggedCompleted(44312) then
+				local r = 1
+				local g = HiddenArtifactTracker.colourOptions and 0 or 1
+				local b = HiddenArtifactTracker.colourOptions and 0 or 1
+				GameTooltip:AddLine("Hidden appearance event did not roll today.", r,g,b)
+			else
+				local r = HiddenArtifactTracker.colourOptions and 0 or 1
+				local g = HiddenArtifactTracker.colourOptions and 0 or 1
+				local b = 1
+				GameTooltip:AddLine("Visit Neltharion's Vault in Highmountain (not Lair!).", r,g,b)
+			end
 		end
 	end
 HiddenArtifactTrackerFuncs["Scaleshard"] = HiddenArtifactTrackerFuncs["Scale of the Earth-Warder"]
@@ -211,7 +274,7 @@ function HiddenArtifactTrackerFuncs.getWorldBossQ(name, qNumber, zNumber)
 			local r = HiddenArtifactTracker.colourOptions and 0 or 1
 			local g = 1
 			local b = HiddenArtifactTracker.colourOptions and 0 or 1
-			GameTooltip:AddLine("World Boss "..name.." is available!",r,g,b)
+			GameTooltip:AddLine(name.." is available!",r,g,b)
 			return
 		end
 	end
@@ -219,7 +282,7 @@ function HiddenArtifactTrackerFuncs.getWorldBossQ(name, qNumber, zNumber)
 	local r = 1
 	local g = HiddenArtifactTracker.colourOptions and 0 or 1
 	local b = HiddenArtifactTracker.colourOptions and 0 or 1
-	GameTooltip:AddLine("World Boss "..name.." is NOT available.",r,g,b)
+	GameTooltip:AddLine(name.." is NOT available.",r,g,b)
 
 end
 
@@ -302,6 +365,8 @@ function HiddenArtifactTrackerFuncs.getAK(threshold)
 		end
 		
 		GameTooltip:AddLine("\n"..name..": "..amount.."/"..threshold,r,g,b)
+
+		return amount >= threshold
 end
 
 function HiddenArtifactTrackerFuncs.RepCheck(faction, level)
@@ -317,6 +382,8 @@ function HiddenArtifactTrackerFuncs.RepCheck(faction, level)
 			b = (level < standingID) and 0.5 or 0
 		end
 		GameTooltip:AddLine("\n"..name..": "..value.."/"..standingLvls[level].." ("..standing[standingID].."/"..standing[level]..")", r,g,b)
+
+		return standingID >= level
 end
 
 function HiddenArtifactTrackerFuncs.CheckQuest(id, promptStringF, promptStringT)

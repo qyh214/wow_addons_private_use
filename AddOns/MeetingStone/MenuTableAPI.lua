@@ -41,7 +41,7 @@ local function MakeActivityMenuTable(activityId, baseFilter, customId, ...)
         fullName = ACTIVITY_CUSTOM_NAMES[customId]
     end
 
-    local data = {}
+    local data      = {}
     data.text       = fullName
     data.fullName   = fullName
     data.categoryId = categoryId
@@ -65,7 +65,7 @@ local function MakeCustomActivityMenuTable(activityId, baseFilter, customId)
     local customData = ACTIVITY_CUSTOM_DATA.A[activityId]
     if customData and not customId then
         data.menuTable = {}
-        data.hasArrow = true
+        data.hasArrow  = true
 
         for _, id in ipairs(customData) do
             tinsert(data.menuTable, MakeActivityMenuTable(activityId, baseFilter, id))
@@ -142,7 +142,7 @@ local function MakeVersionMenuTable(categoryId, versionId, baseFilter, menuType)
 
     if #menuTable > 0 then
         data.menuTable = menuTable
-        data.hasArrow = true
+        data.hasArrow  = true
     else
         return
     end
@@ -192,7 +192,7 @@ local function MakeCategoryMenuTable(categoryId, baseFilter, menuType)
 
     if #menuTable > 0 then
         data.menuTable = menuTable
-        data.hasArrow = true
+        data.hasArrow  = true
     end
 
     return data
@@ -274,10 +274,10 @@ function GetActivitesMenuTable(menuType)
     if UnitLevel('player') >= 70 then
         if menuType == ACTIVITY_FILTER_CREATE then
             tinsert(list, {
-                text = L['单刷'],
+                text         = L['单刷'],
                 notClickable = true,
-                hasArrow = true,
-                menuTable = {
+                hasArrow     = true,
+                menuTable    = {
                     MakeActivityMenuTable(
                         ACTIVITY_CUSTOM_IDS[SOLO_HIDDEN_CUSTOM_ID],
                         LE_LFG_LIST_FILTER_PVP,

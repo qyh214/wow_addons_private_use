@@ -430,6 +430,7 @@ function addon:OnInitialized()
 	self:SafeRegisterEvent("GARRISON_MISSION_NPC_CLOSED")
 	self:SafeRegisterEvent("GARRISON_MISSION_STARTED")
 	self:SafeRegisterEvent("ADDON_LOADED")
+	self:SafeRegisterEvent("QUEST_TURNED_IN")
 	for _,b in ipairs(GMF.MissionTab.MissionList.listScroll.buttons) do
 		local scale=0.8
 		local f,h,s=b.Title:GetFont()
@@ -878,8 +879,8 @@ function addon:SetDbDefaults(default)
 	default.global=default.global or {}
 	default.global["*"]={}
 	default.profile=default.profile or {}
+	default.profile.blacklist={}
 	default.profile.missionControl={
-		blacklist={},
 		version=1,
 		allowedRewards = {
 			['*']=true,
@@ -895,6 +896,25 @@ function addon:SetDbDefaults(default)
 		epicExp = false,
 		skipRare=true,
 		skipEpic=not addon:HasSalvageYard(),
+		minLevel=540,
+		minUpgrade=600
+	}
+	default.profile.shipControl={
+		version=1,
+		allowedRewards = {
+			['*']=true,
+		},
+		rewardChance={
+			['*']=100,
+		},
+		rewardList={},
+		useOneChance=true,
+		minimumChance = 100,
+		minDuration = 0,
+		maxDuration = 24,
+		epicExp = false,
+		skipRare=true,
+		skipEpic=true,
 		minLevel=540,
 		minUpgrade=600
 	}
@@ -1269,12 +1289,11 @@ end
 function addon:GetMain()
 	return GMF
 end
-function addon:CreateHeader(module,PIN)
+function addon:CreateHeader(module,MOVEPANEL,PIN)
 	if not module then module=self end
 	-- Main Garrison Commander Header
 	local GCF=CreateFrame("Frame","GCF",UIParent,"GarrisonCommanderTitle")
 	local signature=me .. " " .. self.version
-	local MOVEPANEL =module and "SHIPMOVEPANEL" or "MOVEPANEL"
 	GCF.Signature:SetText(signature)
 --[===[@alpha@
 	GCF.Warning:SetText("Alpha Version")
@@ -1350,11 +1369,15 @@ function addon:CreateHeader(module,PIN)
 	GCF:EnableMouse(true)
 	GCF:SetMovable(true)
 	GCF:RegisterForDrag("LeftButton")
-	GCF:SetScript("OnDragStart",function(frame)if self:GetBoolean(MOVEPANEL) then frame:StartMoving() end end)
+--@non-debug@
+	GCF:SetScript("OnDragStart",function(frame) print(MOVEPANEL,self:GetBoolean(MOVEPANEL)) if self:GetBoolean(MOVEPANEL) then frame:StartMoving() end end)
+--@end-non-debug@	
+--[===[@debug@
+	GCF:SetScript("OnDragStart",function(frame) print(self,MOVEPANEL,self:GetBoolean(MOVEPANEL)) frame:StartMoving() end)
+--@end-debug@]===]
 	GCF:SetScript("OnDragStop",function(frame) frame:StopMovingOrSizing() end)
 	GCF:Show()
-	self:Trigger(MOVEPANEL)
-	return GCF
+return GCF
 end
 
 function addon:ScriptTrace(hook,frame,...)
@@ -1640,7 +1663,7 @@ print("Setup")
 		end
 	end
 	self:CheckGMM()
-	GCF=self:CreateHeader(self,"PIN")
+	GCF=self:CreateHeader(self,"MOVEPANEL","PIN")
 	local tabMC=CreateFrame("CheckButton",nil,GMF,"SpellBookSkillLineTabTemplate")
 	GMF.tabMC=tabMC
 	tabMC.tooltip=L["Open Garrison Commander Mission Control"]
@@ -1696,6 +1719,51 @@ print("Setup")
 	--collectgarbage("step",10)
 --/Interface/FriendsFrame/UI-Toast-FriendOnlineIcon
 end
+function addon:RefreshConfig(event,settings,oldsettings,classlist,class2order,followerType)
+	if #settings.rewardList==0 and oldsettings and #oldsettings.rewardList>0 then
+		clone(oldsettings,settings)
+	end
+	--self:ShowList()
+	-- 1) Check for removed category
+	local validKeys={}
+	for _,v in ipairs(addon:GetRewardClasses(followerType)) do
+		validKeys[v.key]=true
+	end
+	local good=new()
+	for index=1,#classlist do
+		local key=classlist[index]
+		if key then
+			if validKeys[key] then
+				tinsert(good,key)
+			end
+		end
+	end
+	if #good > 0 then
+		wipe(classlist)
+		for i=1,#good do
+			tinsert(classlist,good[i])
+		end
+	end
+	del(good)
+	wipe(class2order)
+	for index,key in ipairs(classlist) do
+		class2order[key]=index
+	end
+	-- 2) Check for added categories
+	if #classlist < #addon:GetRewardClasses(followerType) then
+		self:Print("Check for additions")
+		for _,v in ipairs(addon:GetRewardClasses(followerType)) do
+			if not rawget(class2order,v.key) then
+				tinsert(classlist,v.key)
+			end
+		end
+		wipe(class2order)
+		for index,key in ipairs(classlist) do
+			class2order[key]=index
+		end
+	end
+end
+
 local function frametoname(m)
 	if m==GMF.MissionTab then
 		return "MissionTab"

@@ -36,14 +36,10 @@ local tItems ={
 for _,data in ipairs(addon:GetRewardClasses()) do
 	tItems[data.key]=data
 end
-local classlist={} ---#table local reference to settings.rewardList
+local classlist ---#table local reference to settings.rewardList
 local class2order={} ---#table maps a classname to its priority
 local settings ---#table Pointer to settings in saved var
 local module=addon:NewSubClass("MissionControl") --#module
-function module:Busy(followerID)
-	return GMCUsedFollowers[followerID]
-end
-addon.GMCBusy=module.Busy
 local function chooseBestClass(class,moreClasses)
 	local i=class2order[class] or 999
 	local class=class
@@ -233,7 +229,7 @@ do
 				self:Unhook(this,"OnUpdate")
 				GMC.list.widget:SetTitle(READY)
 				GMC.list.widget:SetTitleColor(C.Green())
-				wipe(GMCUsedFollowers)
+				addon:GMCBusy()
 				this:Enable()
 				GMC.runButton:Enable()
 				if (#GMC.list.Parties>0) then
@@ -272,7 +268,7 @@ do
 					local mb=AceGUI:Create("GMCMissionButton")
 					if not blacklist[missionID] then
 						for i=1,#party.members do
-							GMCUsedFollowers[party.members[i]]=true
+							addon:GMCBusy(party.members[i],true)
 						end
 					end
 					party.missionID=missionID
@@ -510,7 +506,7 @@ local function drawItemButtons(frame)
 		info:SetFontObject('GameFontHighlight')
 		info:SetText("Click to enable/disable a reward. Drag to reorder")
 		info:SetTextColor(1, 1, 1)
-		info:SetPoint("BOTTOM",0,-5)
+		info:SetPoint("BOTTOM",0,-20)
 	end
 	return GMC.ignoreFrames[#tItems]
 end
@@ -663,6 +659,21 @@ end
 function module:RefreshConfig(event)
 	settings=addon.db.profile.missionControl
 	local oldsettings=addon.privatedb.profile.missionControl
+	if type (settings.blacklist)=="table" then
+		for i=1,#settings.blacklist do
+			tinsert(addon.db.profile.blacklist,settings.blacklist[i])
+		end
+		wipe (settings.blacklist)
+		settings.blacklist=nil
+	end
+	blacklist=addon.db.profile.blacklist
+	classlist=settings.rewardList
+	addon:RefreshConfig(event,settings,oldsettings,classlist,class2order,LE_FOLLOWER_TYPE_GARRISON_6_0)
+	if event ~="Init" then -- Initialization routine, we cant design yet
+		drawItemButtons()
+	end	
+end
+function module:Removed()
 	if #settings.rewardList==0 and oldsettings and #oldsettings.rewardList>0 then
 		clone(oldsettings,settings)
 	end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Brawlers", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14489 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15661 $"):sub(12, -3))
 --mod:SetCreatureID(60491)
 --mod:SetModelID(41448)
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
@@ -24,6 +24,7 @@ local berserkTimer			= mod:NewBerserkTimer(120)--all fights have a 2 min enrage 
 
 mod:AddBoolOption("SpectatorMode", true)
 mod:AddBoolOption("SpeakOutQueue", true)
+mod:AddBoolOption("NormalizeVolume", true, "misc")
 mod:RemoveOption("HealthFrame")
 
 local playerIsFighting = false
@@ -33,7 +34,24 @@ local currentZoneID = select(8, GetInstanceInfo())
 local modsStopped = false
 local eventsRegistered = false
 local lastRank = 0
-local QueuedBuff = GetSpellInfo(132639)
+
+local function setDialog(self, set)
+	if not self.Options.NormalizeVolume then return end
+	if set then
+		local soundVolume = tonumber(GetCVar("Sound_SFXVolume"))
+		self.Options.SoundOption = tonumber(GetCVar("Sound_DialogVolume")) or 1
+		DBM:Debug("Setting normalized volume to SFX volume of: "..soundVolume)
+		SetCVar("Sound_DialogVolume", soundVolume)
+	else
+		DBM:Debug("Exiting Brawlers Area, checking Sound")
+		if self.Options.SoundOption then
+			DBM:Debug("Restoring Dialog volume to saved value of: "..self.Options.SoundOption)
+			SetCVar("Sound_DialogVolume", self.Options.SoundOption)
+			self.Options.SoundOption = nil
+		end
+	end
+end
+
 --Fix for not registering events on reloadui or login while already inside brawlers guild.
 if currentZoneID == 369 or currentZoneID == 1043 then
 	eventsRegistered = true
@@ -43,6 +61,8 @@ if currentZoneID == 369 or currentZoneID == 1043 then
 		"UNIT_DIED",
 		"UNIT_AURA player"
 	)
+	mod:Unschedule(setDialog)
+	mod:Schedule(1, setDialog, mod, true)
 end
 
 function mod:PlayerFighting() -- for external mods
@@ -51,19 +71,22 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 135385 then
-		warnOrgPortal:Show()
 		if not playerIsFighting then--Do not distract player in arena with special warning
 			specWarnOrgPortal:Show()
+		else
+			warnOrgPortal:Show()
 		end
 	elseif args.spellId == 135386 then
-		warnStormPortal:Show()
 		if not playerIsFighting then--Do not distract player in arena with special warning
 			specWarnStormPortal:Show()
+		else
+			warnStormPortal:Show()
 		end
 	end
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
+	if npc ~= L.Bizmo and npc ~= L.Bazzelflange then return end
 	local isMatchBegin = true
 	if msg:find(L.Rank1, 1, true) then -- fix for ruRU clients.
 		currentFighter = target
@@ -152,6 +175,8 @@ function mod:ZONE_CHANGED_NEW_AREA()
 			"UNIT_DIED",
 			"UNIT_AURA player"
 		)
+		self:Unschedule(setDialog)
+		self:Schedule(1, setDialog, mod, true)
 		return
 	end--We returned to arena, reset variable
 	if modsStopped then return end--Don't need this to fire every time you change zones after the first.
@@ -164,12 +189,19 @@ function mod:ZONE_CHANGED_NEW_AREA()
 			mod2:Stop()--Stop all timers and warnings
 		end
 	end
-	for i = 1, 2 do
-		local mod2 = DBM:GetModByName("BrawlRare" .. i)
-		if mod2 then
-			mod2:Stop()--Stop all timers and warnings
-		end
+	local mod2 = DBM:GetModByName("BrawlChallenges")
+	if mod2 then
+		mod2:Stop()--Stop all timers and warnings
 	end
+	local mod2 = DBM:GetModByName("BrawlLegacy")
+	if mod2 then
+		mod2:Stop()--Stop all timers and warnings
+	end
+	local mod2 = DBM:GetModByName("BrawlRumble")
+	if mod2 then
+		mod2:Stop()--Stop all timers and warnings
+	end
+	setDialog(self)
 	modsStopped = true
 end
 
@@ -215,26 +247,34 @@ function mod:OnSync(msg)
 				mod2:Stop()--Stop all timers and warnings
 			end
 		end
-		for i = 1, 2 do
-			local mod2 = DBM:GetModByName("BrawlRare" .. i)
-			if mod2 then
-				mod2:Stop()--Stop all timers and warnings
+		local mod2 = DBM:GetModByName("BrawlChallenges")
+		if mod2 then
+			mod2:Stop()--Stop all timers and warnings
+		end
+		local mod2 = DBM:GetModByName("BrawlLegacy")
+		if mod2 then
+			mod2:Stop()--Stop all timers and warnings
+		end
+		local mod2 = DBM:GetModByName("BrawlRumble")
+		if mod2 then
+			mod2:Stop()--Stop all timers and warnings
+		end
+	end
+end
+
+do
+	local QueuedBuff = GetSpellInfo(132639)
+	function mod:UNIT_AURA(uId)
+		local currentQueueRank = select(17, UnitBuff("player", QueuedBuff))
+		if currentQueueRank and currentQueueRank ~= lastRank then
+			lastRank = currentQueueRank
+			warnQueuePosition:Show(currentQueueRank)
+			if currentQueueRank == 1 then
+				specWarnYourNext:Show()
+			end
+			if self.Options.SpeakOutQueue then
+				DBM:PlayCountSound(currentQueueRank)
 			end
 		end
 	end
 end
-
-function mod:UNIT_AURA(uId)
-	local currentQueueRank = select(15, UnitBuff("player", QueuedBuff))
-	if currentQueueRank and currentQueueRank ~= lastRank then
-		lastRank = currentQueueRank
-		warnQueuePosition:Show(currentQueueRank)
-		if currentQueueRank == 1 then
-			specWarnYourNext:Show()
-		end
-		if self.Options.SpeakOutQueue then
-			DBM:PlayCountSound(currentQueueRank)
-		end
-	end
-end
-

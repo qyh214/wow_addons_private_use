@@ -10,6 +10,7 @@ local GSF=GSF
 local GSFMissions=GSFMissions
 local G=C_Garrison
 local pairs=pairs
+local kpairs=addon:GetKpairs()
 local format=format
 local strsplit=strsplit
 local select=select
@@ -72,8 +73,71 @@ function module:OnInitialize()
 	addon:AddToggle("SHIPMOVEPANEL",true,L["Unlock Panel"],L["Makes shipyard panel movable"])
 	--addon:AddToggle("BIGSCREEN",true,L["Use big screen"],L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"])
 	addon:AddToggle("SHIPPIN",true,L["Show Garrison Commander menu"],L["Disable if you dont want the full Garrison Commander Header."])
-  addon:AddToggle("SHIPENHA",true,L["Show Enhancement buttons"],L["Disable if you dont want the equipment buttons in ship view."])
+ 	addon:AddToggle("SHIPENHA",true,L["Show Enhancement buttons"],L["Disable if you dont want the equipment buttons in ship view."])
+	local tabMC=CreateFrame("CheckButton",nil,GSF,"SpellBookSkillLineTabTemplate")
+	GSF.tabMC=tabMC
+	tabMC.tooltip=L["Open Garrison Commander Mission Control"]
+	tabMC:SetNormalTexture("Interface\\ICONS\\ACHIEVEMENT_GUILDPERK_WORKINGOVERTIME.blp")
+	self:MarkAsNew(tabMC,'MissionControl','New in 2.2.0! Try automatic mission management!')
+	tabMC:SetScript("OnClick",function(this,...) module:OpenMissionControlTab() end)
+	tabMC:Show()
+	tabMC:SetPoint('TOPLEFT',GSF,'TOPRIGHT',0,0)
+  
 end
+function module:OpenLastTab()
+	print("Open Last Tab",lastTab)
+	lastTab=lastTab or PanelTemplates_GetSelectedTab(GSF)
+	if lastTab then
+		if GSF.MissionControlTab:IsVisible() then
+			GSF.MissionControlTab:Hide()
+			GSF.tabMC:SetChecked(false)
+			if lastTab==2 then
+				GSF.FollowerTab:Show()
+				GSF.FollowerList:Show()
+				self:RefreshFollowerStatus()
+			else
+				GSF.MissionTab:Show()
+			end
+		end
+		GSF:SelectTab(lastTab)
+	else
+		return self:OpenMissionsTab()
+	end
+end
+function module:OpenFollowersTab()
+	lastTab=2
+	return self:OpenLastTab()
+end
+function module:OpenMissionsTab()
+	lastTab=1
+	return self:OpenLastTab()
+end
+function module:OpenProgressTab()
+	lastTab=3
+	return self:OpenLastTab()
+end
+function module:CloseMissionControlTab() 
+	GSF.MissionControlTab:Hide()
+	GSF.tabMC:SetChecked(false)
+end
+function module:OpenMissionControlTab()
+	if (not GSF.MissionControlTab:IsVisible()) then
+		lastTab=PanelTemplates_GetSelectedTab(GSF)
+		GSF.FollowerTab:Hide()
+		GSF.FollowerList:Hide()
+		GSF.MissionTab:Hide()
+		GSF.BorderFrame.TitleText:SetText(L["Shipyard Commander Mission Control"])
+		GSF.MissionControlTab:Show()
+		GSF.MissionControlTab.startButton:Click()
+		GSF.tabMC:SetChecked(true)
+	else
+		self:OpenLastTab()
+		GSF.tabMC:SetChecked(false)
+		self:OpenLastTab()
+	end
+	self:RefreshMenu()
+end
+
 function module:GetMain()
 	return GSF
 end
@@ -87,7 +151,41 @@ end
 --Invoked on every mission display, only for available missions
 --
 local i=0
-
+--[===[@debug@
+local function colors(c1,c2)
+	return C[c1].r,C[c1].g,C[c1].b,C[c2].r,C[c2].g,C[c2].b
+end
+local function dump(tip,data,indent)
+	indent=indent or ''
+	for k,v in kpairs(data) do
+		local color="Silver"
+		if type(v)=="number" then color="Cyan" 
+		elseif type(v)=="string" then color="Yellow" v=v:sub(1,30)
+		elseif type(v)=="boolean" then v=v and 'True' or 'False' color="White" 
+		elseif type(v)=="table" then color="Green" 
+		else v=type(v) color="Blue"
+		end
+		if k=="description" then v =v:sub(1,10) end
+		if type(v)=="table" then 
+			if v.GetObjectType then 
+				v=v:GetObjectType() 
+				tip:AddDoubleLine(indent..k,v,colors("Purple",color))
+			else 
+				tip:AddDoubleLine(indent..k,v,colors("Yellow",color))
+				dump(tip,v,indent .. '  ')
+			end
+		else
+			tip:AddDoubleLine(indent..k,v,colors("Orange",color))
+		end	
+	end
+end
+function module:TTDump(frame,data)
+	local anchor = "ANCHOR_TOPRIGHT"
+	GameTooltip:SetOwner(frame,anchor)
+	dump(GameTooltip,data)
+	GameTooltip:Show()
+end
+--@end-debug@]===]
 function module:HookedGarrisonShipyardMap_SetupBonus(missionList,frame,mission)
 	if not GSF:IsShown() then return end
 	addon:AddExtraData(mission)
@@ -98,7 +196,11 @@ function module:HookedGarrisonShipyardMap_SetupBonus(missionList,frame,mission)
 		i=i+1
 		addendum=CreateFrame("Frame",nil,frame)
 		addendum:SetPoint("TOPLEFT",frame,"TOPRIGHT",-10,-15)
-
+--[===[@debug@
+		addendum:EnableMouse(true)
+		addendum:SetScript("OnEnter",function(frame) module:TTDump(frame,mission) end)
+		addendum:SetScript("OnLeave",function(frame) GameTooltip:Hide() end)
+--@end-debug@]===]
 		AddBackdrop(addendum)
 		addendum:SetBackdropColor(0,0,0,0.5)
 		addendum:SetWidth(50)
@@ -107,12 +209,22 @@ function module:HookedGarrisonShipyardMap_SetupBonus(missionList,frame,mission)
 		addendum.chance:SetAllPoints()
 		addendum.chance:SetJustifyH("CENTER")
 		addendum.chance:SetJustifyV("CENTER")
+		addendum.icon=addendum:CreateTexture(nil,"ARTWORK")
+		addendum.icon:SetWidth(24)
+		addendum.icon:SetHeight(24)
+		addendum.icon:SetPoint("LEFT",addendum.chance,"RIGHT")
 		frame.GcAddendum=addendum
 	end
 	if mission.inProgress then addendum:Hide() return end
 	addendum:Show()
 	addendum.chance:SetFormattedText("%d%%",perc)
 	addendum.chance:SetTextColor(self:GetDifficultyColors(perc))
+	local reward=mission.rewards[1]
+	if reward.icon then
+		addendum.icon:SetTexture(reward.icon)
+	elseif reward.itemID then
+		addendum.icon:SetTexture(GetItemIcon(reward.itemID))
+	end	
 	local cost=mission.cost
 	local currency=mission.costCurrencyTypesID
 	if not mission.canStart then
@@ -175,7 +287,7 @@ print("Doing one time initialization for",this:GetName(),...)
 	addon:CheckMP()
 	self:SafeSecureHookScript("GarrisonShipyardFrame","OnShow")
 	self:SafeSecureHookScript(GSF.FollowerTab,"OnShow","FollowerOnShow")
-	GCS=addon:CreateHeader(self,'SHIPPIN')
+	GCS=addon:CreateHeader(self,'SHIPMOVEPANEL','SHIPPIN')
 	GSF.FollowerStatusInfo=GSF.BorderFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	GSF.ResourceInfo=GSF.BorderFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	GSF.ResourceFormat="|TInterface\\Icons\\garrison_oil:0|t %s " .. GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY)
@@ -189,7 +301,16 @@ print("Doing one time initialization for",this:GetName(),...)
 	ns.tabCO:ClearAllPoints()
 	ns.tabCO:SetParent(GSF)
 	ns.tabCO:SetPoint('TOPRIGHT',GSF,'TOPLEFT',0,0)
+	for i =1,9 do
+		local hook="GarrisonShipyardFrameTab" ..i
+		if (_G[hook]) then
+			self:SafeHookScript(hook,"OnClick","HookedClickOnTabs")
+		end
+	end	
 
+end
+function module:HookedClickOnTabs()
+	self:CloseMissionControlTab()
 end
 function module:ScriptGarrisonShipyardFrame_OnShow()
 --[===[@debug@
@@ -280,7 +401,7 @@ print("Adding Menu",GCS.Menu,GSF.MissionTab:IsVisible(),GSF.FollowerTab:IsVisibl
 	end
 	local menu,size
 	self.currentmenu=GSF.FollowerTab
-	menu,size=self:CreateOptionsLayer('SHIPMOVEPANEL','SHIPENHA')
+	menu,size=self:CreateOptionsLayer('SHIPMOVEPANEL','SHIPENHA','SGCSKIPEPIC','SGCMINLEVEL','SGCRIG')
 --[===[@debug@
 	self:AddOptionToOptionsLayer(menu,'DBG')
 	self:AddOptionToOptionsLayer(menu,'TRC')
@@ -310,8 +431,6 @@ print("Removing menu")
 	end
 end
 
-function module:OpenLastTab()
-end
 function module:FollowerOnShow()
   if addon:GetBoolean("SHIPENHA") then
   	self:ShowEnhancements()

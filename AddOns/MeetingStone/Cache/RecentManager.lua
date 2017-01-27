@@ -81,7 +81,9 @@ end
 function RecentManager:ToDB()
     local db = {}
     for i, player in ipairs(self.players) do
-        tinsert(db, player:ToDB())
+        if player:GetNotes() or not player:IsTimeOut() then
+            tinsert(db, player:ToDB())
+        end
     end
     return next(db) and db or nil
 end

@@ -185,6 +185,22 @@ function ServerDataCache:FormatMallData(MallData, cache)
         productList[categoryOrder] = category
     end
 
+    tinsert(productList, {
+        text = L['其它游戏兑换'],
+        coord = MALL_CATEGORY_ICON_LIST[6],
+        item = {
+            {
+                id = 0,
+                priceType = 2,
+                name = L['积分兑换平台'],
+                title = L['暴雪游戏'],
+                model = false,
+                itemId = false,
+                web = 'http://reward.battlenet.com.cn/',
+            },
+        }
+    })
+
     MallData:SetData(productList)
 end
 

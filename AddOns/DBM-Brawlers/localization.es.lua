@@ -134,16 +134,20 @@ L:SetGeneralLocalization({
 ------------
 -- Legado --
 ------------
-L= DBM:GetModLocalization("BrawlRare1")
+L= DBM:GetModLocalization("BrawlLegacy")
 
 L:SetGeneralLocalization({
 	name = "Desafíos de legado"
 })
 
+L:SetOptionLocalization({
+	SpeakOutStrikes		= "Anunciar número de $spell:141190"
+})
+
 ----------------
 -- Especiales --
 ----------------
-L= DBM:GetModLocalization("BrawlRare2")
+L= DBM:GetModLocalization("BrawlChallenges")
 
 L:SetGeneralLocalization({
 	name = "Desafíos especiales"
@@ -155,8 +159,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	ArrowOnBoxing		= "Mostrar flecha para $spell:140868, $spell:140862 y $spell:140886",
-	specWarnRPS			= "Mostrar aviso especial con qué usar para $spell:141206",
-	SpeakOutStrikes		= "Anunciar número de $spell:141190"
+	specWarnRPS			= "Mostrar aviso especial con qué usar para $spell:141206"
 })
 
 L:SetMiscLocalization({

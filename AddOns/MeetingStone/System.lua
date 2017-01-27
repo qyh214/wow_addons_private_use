@@ -1,7 +1,7 @@
 
 BuildEnv(...)
 
-System = Addon:NewModule('System')
+System = Addon:NewModule('System', 'LibInvoke-1.0')
 
 function System:OnInitialize()
 end
@@ -10,16 +10,12 @@ function System:Errorf(formatter, ...)
     self:Error(formatter:format(...))
 end
 
-function System:Error(msg)
-    C_Timer.After(0, function()
-        GUI:CallWarningDialog(msg, 1)
-    end)
+function System.Invoke:Error(msg)
+    GUI:CallWarningDialog(msg, 1)
 end
 
-function System:Message(msg)
-    C_Timer.After(0, function()
-        GUI:CallWarningDialog(msg)
-    end)
+function System.Invoke:Message(msg)
+    GUI:CallWarningDialog(msg)
 end
 
 function System:Messagef(formatter, ...)

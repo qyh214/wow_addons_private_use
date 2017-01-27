@@ -1,4 +1,4 @@
-if GetBuildInfo() ~= "7.1.0" then return end
+if GetBuildInfo() ~= "7.1.5" then return end
 local ADDON, Addon = ...
 local Mod = Addon:NewModule('Persist')
 

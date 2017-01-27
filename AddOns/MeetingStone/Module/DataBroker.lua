@@ -5,7 +5,9 @@ DataBroker = Addon:NewModule('DataBroker', 'AceEvent-3.0')
 
 local ICON1 = [[|TInterface\AddOns\MeetingStone\Media\DataBroker:12:12:0:0:128:32:0:32:0:32|t]]
 local ICON2 = [[|TInterface\AddOns\MeetingStone\Media\DataBroker:12:12:0:0:128:32:32:65:0:32|t]]
+local ICON3 = [[|TInterface\AddOns\MeetingStone\Media\DataBroker:12:12:0:0:128:32:96:128:0:32|t]]
 local TEXT_FORMAT = format('%s %%d   %s %%d', ICON1, ICON2)
+local TEXT_FORMAT_WITH_APP = format('%s %%d   %s %%d   %s %%d', ICON1, ICON2, ICON3)
 
 function DataBroker:OnInitialize()
     self.db = Profile:GetCharacterDB()
@@ -15,6 +17,8 @@ function DataBroker:OnInitialize()
         icon = ADDON_LOGO,
 
         OnEnter = function(owner)
+            self.BrokerObject.flash = false
+            
             local anchor = owner:GetBottom() < GetScreenHeight() / 2 and 'ANCHOR_TOP' or 'ANCHOR_BOTTOM'
             GameTooltip:SetOwner(owner, anchor)
             GameTooltip:SetText(L['集合石'])
@@ -26,6 +30,11 @@ function DataBroker:OnInitialize()
             local item = BrowsePanel:GetCurrentActivity()
             local label = item and format(L['“%s”总数'], item.text) or L['活动总数']
             GameTooltip:AddDoubleLine(ICON2 .. label, self.activityCount or 0, 1, 1, 1, 1, 1, 1)
+
+            if App:HasApp() then
+                GameTooltip:AddDoubleLine(ICON3 .. L['关注请求'], self.followQueryCount or 0, 1, 1, 1, 1, 1, 1)
+            end
+
             GameTooltip:Show()
         end,
 
@@ -44,7 +53,7 @@ function DataBroker:OnInitialize()
     })
 
     local BrokerPanel = LibStub('LibWindow-1.1'):Embed(CreateFrame('Button', nil, UIParent)) do
-        BrokerPanel:SetSize(150, 26)
+        BrokerPanel:SetSize(160, 26)
         BrokerPanel:SetToplevel(true)
         BrokerPanel:SetFrameStrata('HIGH')
         BrokerPanel:SetClampedToScreen(true)
@@ -75,7 +84,7 @@ function DataBroker:OnInitialize()
     end
 
     local BrokerText = BrokerPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight') do
-        BrokerText:SetPoint('CENTER', 0, 0)
+        BrokerText:SetPoint('CENTER', 10, 0)
         BrokerText:SetText(BrokerObject.text)
     end
 
@@ -88,6 +97,7 @@ function DataBroker:OnInitialize()
         BrokerFlash:SetTexture([[INTERFACE\CHATFRAME\ChatFrameTab-NewMessage]])
         BrokerFlash:SetVertexColor(1.00, 0.89, 0.18)
         BrokerFlash:SetBlendMode('ADD')
+        BrokerFlash:SetAlpha(0.7)
     end
 
     self.BrokerIcon = BrokerIcon
@@ -108,6 +118,9 @@ function DataBroker:OnInitialize()
     self:RegisterMessage('MEETINGSTONE_NEW_VERSION')
     self:RegisterMessage('MEETINGSTONE_ACTIVITIES_COUNT_UPDATED')
     self:RegisterMessage('MEETINGSTONE_SETTING_CHANGED')
+    self:RegisterMessage('MEETINGSTONE_APP_FOLLOWQUERY_ADDED')
+    self:RegisterMessage('MEETINGSTONE_APP_FOLLOWQUERYLIST_UPDATE')
+    self:RegisterMessage('MEETINGSTONE_APP_READY', 'UpdateLabel')
 end
 
 function DataBroker:MEETINGSTONE_SETTING_CHANGED(_, key, value, onUser)
@@ -159,8 +172,18 @@ function DataBroker:MEETINGSTONE_ACTIVITIES_COUNT_UPDATED(_, count)
     self:UpdateLabel()
 end
 
+function DataBroker:MEETINGSTONE_APP_FOLLOWQUERYLIST_UPDATE(_, count)
+    self.followQueryCount = count
+    self:UpdateLabel()
+end
+
+function DataBroker:MEETINGSTONE_APP_FOLLOWQUERY_ADDED()
+    self.BrokerObject.flash = self.BrokerObject.flash or not AppFollowQueryPanel:IsVisible()
+end
+
 function DataBroker:LFG_LIST_APPLICANT_LIST_UPDATED(_, hasNewPending, hasNewPendingWithData)
     if hasNewPending and hasNewPendingWithData and IsActivityManager() then
+        self.BrokerObject.flash = self.BrokerObject.flash or not ApplicantPanel:IsVisible()
         self:SetMinimapButtonGlow(not ApplicantPanel:IsVisible())
         FlashClientIcon()
     end
@@ -175,11 +198,12 @@ function DataBroker:LFG_LIST_APPLICANT_UPDATED()
 end
 
 function DataBroker:UpdateLabel()
-    if C_LFGList.GetActiveEntryInfo() then
-        self.BrokerObject.text = format(TEXT_FORMAT, select(2, C_LFGList.GetNumApplicants()), self.activityCount or 0)
-    else
-        self.BrokerObject.text = format(TEXT_FORMAT, select(2, C_LFGList.GetNumApplications()), self.activityCount or 0)
-    end
+    self.BrokerObject.text = format(
+        App:HasApp() and TEXT_FORMAT_WITH_APP or TEXT_FORMAT,
+        C_LFGList.GetActiveEntryInfo() and select(2, C_LFGList.GetNumApplicants()) or select(2, C_LFGList.GetNumApplications()),
+        self.activityCount or 0,
+        self.followQueryCount or 0
+    )
 end
 
 function DataBroker:SetMinimapButtonGlow(enable)

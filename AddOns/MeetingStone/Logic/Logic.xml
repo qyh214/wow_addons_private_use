@@ -2,6 +2,9 @@
 ..\FrameXML\UI.xsd">
   <Script file="Logic.lua" />
   <Script file="Activities.lua" />
+  <Script file="App.lua" />
+  <Script file="AppSupport.lua" />
+  <Script file="AppWhisper.lua" />
   <Script file="Recent.lua" />
   <Script file="AutoApply.lua" />
 </Ui>

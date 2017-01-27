@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("CoSTrash", "DBM-Party-Legion", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15587 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15660 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -25,7 +25,7 @@ local specWarnBewitch				= mod:NewSpecialWarningInterrupt(211470, "HasInterrupt"
 local specWarnChargingStation		= mod:NewSpecialWarningInterrupt(225100, "HasInterrupt", nil, nil, 1, 2)
 local specWarnSearingGlare			= mod:NewSpecialWarningInterrupt(211299, "HasInterrupt", nil, nil, 1, 2)
 local specWarnFelDetonation			= mod:NewSpecialWarningSpell(211464, false, nil, 2, 2, 2)
-local specWarnSealMagic				= mod:NewSpecialWarningRun(209404, "Melee", nil, nil, 4, 2)
+local specWarnSealMagic				= mod:NewSpecialWarningRun(209404, false, nil, 2, 4, 2)
 local specWarnDisruptingEnergy		= mod:NewSpecialWarningMove(209512, nil, nil, nil, 1, 2)
 
 local voiceFortification			= mod:NewVoice(209033, "MagicDispeller")--dispelnow
@@ -39,7 +39,7 @@ local voiceBewitch					= mod:NewVoice(211470, "HasInterrupt")--kickcast
 local voiceChargingStation			= mod:NewVoice(225100, "HasInterrupt")--kickcast
 local voiceSearingGlare				= mod:NewVoice(211299, "HasInterrupt")--kickcast
 local voiceFelDetonation			= mod:NewVoice(211464, false, nil, 2)--aesoon
-local voiceSealMagic				= mod:NewVoice(209404, "Melee")--runout
+local voiceSealMagic				= mod:NewVoice(209404, false, nil, 2)--runout
 local voiceDisruptingEnergy			= mod:NewVoice(209512)--runaway
 
 mod:RemoveOption("HealthFrame")
@@ -48,10 +48,10 @@ mod:AddBoolOption("SpyHelper", true)
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 209027 then
+	if spellId == 209027 and self:AntiSpam(2, 1) then
 		specWarnQuellingStrike:Show()
 		voiceQuellingStrike:Play("shockwave")
-	elseif spellId == 212031 then
+	elseif spellId == 212031 and self:AntiSpam(2, 2) then
 		specWarnChargedBlast:Show()
 		voiceChargedBlast:Play("shockwave")
 	elseif spellId == 209485 and self:CheckInterruptFilter(args.sourceGUID) then
@@ -180,9 +180,9 @@ do
 
 	local function updateInfoFrame()
 		local lines = {}
-
 		for hint, j in pairs(hints) do
-			lines[hintTranslations[hint]] = ""
+			local text = hintTranslations[hint] or hint
+			lines[text] = ""
 		end
 		
 		return lines

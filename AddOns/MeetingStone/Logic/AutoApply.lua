@@ -26,12 +26,6 @@ function AutoApply:Start()
         return
     end
 
-    -- local usable, reason = BrowsePanel:CheckSignUpStatus(nil, true)
-    -- if not usable then
-    --     System:Logf(L['预申请活动失败，%s'], reason)
-    --     return
-    -- end
-
     self.co = coroutine.create(function()
         self:Process()
         self.co = nil
@@ -68,8 +62,6 @@ function AutoApply:Search(apply)
         local activities = {}
         local wait = false
         local count, list = C_LFGList.GetSearchResults()
-
-        
 
         for _, id in ipairs(list) do
             local activity = Activity:Get(id)
@@ -142,12 +134,12 @@ function AutoApply:Process()
             if activity and usable then
                 C_LFGList.ApplyToGroup(activity:GetID(), '', apply:IsTank(), apply:IsHealer(), apply:IsDamager())
                 count = count + 1
-                apply:Log(activity, true)
+                apply:Log(activity, true, reason)
                 self:Sleep(2)
             else
-                apply:Log(activity, false)
+                apply:Log(activity, false, reason)
             end
         end
-        apply:LogDone(count)
+        apply:LogDone(count, #activities)
     until false
 end

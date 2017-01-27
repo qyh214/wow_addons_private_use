@@ -1,18 +1,15 @@
 ------------------------------------------------------------------------
-r716 | zarnivoop | 2017-01-06 08:31:00 -0600 (Fri, 06 Jan 2017) | 1 line
+r727 | zarnivoop | 2017-01-26 16:06:58 -0600 (Thu, 26 Jan 2017) | 1 line
 Changed paths:
-   M /trunk/lib/SpecializedLibBars-1.0/SpecializedLibBars-1.0.lua
+   M /trunk/.pkgmeta
+   M /trunk/embeds.xml
 
-bump libbars minor version to get around issues for RealUI
+screw that then - disembedded disabled until someone with more patience than me takes a look
 ------------------------------------------------------------------------
-r715 | zarnivoop | 2017-01-06 06:38:09 -0600 (Fri, 06 Jan 2017) | 2 lines
+r726 | zarnivoop | 2017-01-26 15:50:36 -0600 (Thu, 26 Jan 2017) | 1 line
 Changed paths:
-   M /trunk/Menus.lua
-   M /trunk/Options.lua
-   M /trunk/Skada.lua
-   M /trunk/lib/SpecializedLibBars-1.0/SpecializedLibBars-1.0.lua
+   M /trunk/Skada.toc
 
-few cases of non-local function references fixed in libbars
-moved configuration options out from Blizz options
+another bump, just to see if the packager/curse client will make nice with disembedded now
 ------------------------------------------------------------------------
 

@@ -14,9 +14,11 @@
   <Script file="Cover.lua" />
   <Script file="BossCheckBox.lua" />
   <Script file="LotteryItem.lua" />
-  <Script file="ActivitiesTabItem.lua" />
   <Script file="InputDialog.lua" />
   <Script file="SpamWordItem.lua" />
   <Script file="EditDialog.lua" />
+  <Script file="FollowQueryCard.lua" />
+  <Script file="FollowItem.lua" />
+  <Script file="AppEmptyBlocker.lua" />
   <Script file="RecentItem.lua" />
 </Ui>

@@ -5,7 +5,7 @@ local BroadMiddleware = LibStub('NetEaseBroadMiddleware-2.0')
 local AceTimer = LibStub('AceTimer-3.0')
 local AceEvent = LibStub('AceEvent-3.0')
 
-local MAJOR, MINOR = 'SocketHandler-2.0', 18
+local MAJOR, MINOR = 'SocketHandler-2.0', 19
 local SocketHandler,oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not SocketHandler then return end
 
@@ -15,7 +15,7 @@ local SOCKET_NORMAL  = 1
 local SOCKET_CONNECT = 2
 local SOCKET_READY   = 3
 
-local CONNECT_DELAY = (...):match('^!!!!!!!!') and 10 or 60
+local CONNECT_DELAY = (...):match('^!!!!!!!!') and 10 or 30
 local RETRY_DELAY = CONNECT_DELAY
 
 local NOT_FOUND_MATCH = ERR_CHAT_PLAYER_NOT_FOUND_S:format('(.+)')

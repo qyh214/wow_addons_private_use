@@ -2,7 +2,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("WorldQuestTrackerAddon", "ruRU")
 if not L then return end 
 
 L["S_APOWER_AVAILABLE"] = "Доступно"
-L["S_APOWER_DOWNVALUE"] = "Задания с %s означают, что они доступны дольше чем выбранное для выполнения задание."
+L["S_APOWER_DOWNVALUE"] = "Задания с %s означают, что они доступны дольше, чем текущий уровень знаний."
 L["S_APOWER_NEXTLEVEL"] = "Следующий уровень"
 L["S_ENABLED"] = "Включено"
 L["S_ERROR_NOTIMELEFT"] = "Время выполнения задания истекло."
@@ -23,6 +23,7 @@ L["S_MAPBAR_OPTIONSMENU_ARROWSPEED_HIGH"] = "Высокая частота"
 L["S_MAPBAR_OPTIONSMENU_ARROWSPEED_MEDIUM"] = "Средняя частота"
 L["S_MAPBAR_OPTIONSMENU_ARROWSPEED_REALTIME"] = "Обновлять непрерывно"
 L["S_MAPBAR_OPTIONSMENU_ARROWSPEED_SLOW"] = "Низкая частота"
+L["S_MAPBAR_OPTIONSMENU_EQUIPMENTICONS"] = "Значки экипировки"
 L["S_MAPBAR_OPTIONSMENU_QUESTTRACKER"] = "Включить World Quest Tracker"
 L["S_MAPBAR_OPTIONSMENU_REFRESH"] = "Обновить"
 L["S_MAPBAR_OPTIONSMENU_SHARE"] = "Поделиться аддоном"

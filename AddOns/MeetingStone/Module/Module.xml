@@ -13,6 +13,9 @@
   <Script file="ActivitiesSummary.lua" />
   <Script file="ActivitiesMall.lua" />
   <Script file="ActivitiesLottery.lua" />
+  <Script file="AppParent.lua" />
+  <Script file="AppFollowQueryPanel.lua" />
+  <Script file="AppFollowPanel.lua" />
   <Script file="RecentPanel.lua" />
   <Script file="OptionPanel.lua" />
   <Script file="Misc.lua" />

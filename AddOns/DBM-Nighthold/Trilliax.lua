@@ -1,8 +1,8 @@
 local mod	= DBM:NewMod(1731, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15525 $"):sub(12, -3))
-mod:SetCreatureID(104327)
+mod:SetRevision(("$Revision: 15723 $"):sub(12, -3))
+mod:SetCreatureID(104288)
 mod:SetEncounterID(1867)
 mod:SetZone()
 mod:SetUsedIcons(1)
@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 206788 208924 207513 207502",
 	"SPELL_CAST_SUCCESS 206560 206557 206559 206641",
-	"SPELL_AURA_APPLIED 211615 208910 208915",
+	"SPELL_AURA_APPLIED 211615 208910 208915 206641",
 	"SPELL_AURA_REMOVED 208499 206560",
 	"SPELL_PERIODIC_DAMAGE 206488",
 	"SPELL_PERIODIC_MISSED 206488",
@@ -21,6 +21,11 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, do more videos with debug to determine if combat log order is valid for link partners
+--[[
+(ability.id = 207513 or ability.id = 206788 or ability.id = 207502) and type = "begincast" or
+(ability.id = 206560 or ability.id = 206557 or ability.id = 206559 or ability.id = 206641 or ability.id = 207630) and type = "cast" or 
+(ability.id = 211615 or ability.id = 208910) and type = "applydebuff"
+--]]
 --Cleaner
 local warnCleanerMode				= mod:NewSpellAnnounce(206560, 2)
 local warnToxicSlice				= mod:NewSpellAnnounce(206788, 2)
@@ -32,6 +37,7 @@ local warnCaretakerMode				= mod:NewSpellAnnounce(206559, 2)
 local warnSucculentFeast			= mod:NewSpellAnnounce(207502, 1)
 
 local specWarnArcaneSeepage			= mod:NewSpecialWarningMove(206488, nil, nil, nil, 1, 2)
+local specWarnArcanoSlash			= mod:NewSpecialWarningTaunt(206641, nil, nil, nil, 1, 2)
 --Cleaner
 local specWarnSterilize				= mod:NewSpecialWarningMoveAway(208499, nil, nil, nil, 1, 2)
 local yellSterilize					= mod:NewYell(208499)
@@ -62,6 +68,7 @@ local countdownModes				= mod:NewCountdown(40, 206560)--All modes
 local countdownAnnihilation			= mod:NewCountdown("Alt20", 207630)
 
 local voiceArcaneSeepage			= mod:NewVoice(206488)--runaway
+local voiceArcaneSlash				= mod:NewVoice(206641)--tauntboss
 --Cleaner
 local voiceSterilize				= mod:NewVoice(208499)--scatter (runout better?)
 local voiceCleansingRage			= mod:NewVoice(206820)--aesoon
@@ -134,10 +141,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnManiacMode:Show()
 		timerToxicSliceCD:Stop()--Must be stopped here too since first cleaner mode has no buff removal
 		timerArcaneSlashCD:Stop()
-		timerArcingBondsCD:Start(3.4)--Confirm if it's always this now that blizz pushed it up some to no longer be delayed by arcing slash
-		timerArcaneSlashCD:Start(6)--Maybe 7 now, confirm
-		timerAnnihilationCD:Start()
-		countdownAnnihilation:Start()
+		timerArcingBondsCD:Start(5)--Updated Jan 24, make sure it's ok consistently
+		timerArcaneSlashCD:Start(9)--Updated Jan 24, make sure it's ok consistently
+		timerAnnihilationCD:Start()--20
+		countdownAnnihilation:Start()--20
 		timerPhaseChange:Start(40)--Caretaker
 		countdownModes:Start(40)
 	elseif spellId == 206559 then--Caretaker Mode (15 seconds)
@@ -168,6 +175,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnArcingBonds:Show()
 			voiceArcingBonds:Play("linegather")
+		end
+	elseif spellId == 206641 then
+		if not args:IsPlayer() and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
+			specWarnArcanoSlash:Show(args.destName)
+			voiceArcaneSlash:Play("tauntboss")
 		end
 	end
 end

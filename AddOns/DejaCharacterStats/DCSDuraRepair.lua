@@ -111,6 +111,7 @@ function DCS_Mean_DurabilityCalc()
 		if addon.duraMean == nil then addon.duraMean = 0 end
 		
 		duraTotal = duraTotal + durCur
+		if duraTotal == 0 then duraTotal = 1 	end
 		duraMaxTotal = duraMaxTotal + durMax
 		if duraMaxTotal == 0 then duraMaxTotal = 1 	end
 		addon.duraMean = ((duraTotal/duraMaxTotal)*100)

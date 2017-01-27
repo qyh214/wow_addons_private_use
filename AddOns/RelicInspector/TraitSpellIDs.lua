@@ -4100,36 +4100,12 @@ addon.SpellIDByRelic = {
 	["128911.136693"] = 210029, -- Sharas'dal, Scepter of Tides (Pull of the Sea)
 	["128860.136693"] = 210575, -- Fangs of Ashamane (Powerful Bite)
 	["128938.136693"] = 213180, -- Fu Zan, the Wanderer's Companion (Overflow)
-	-- Farsight Spiritjewel
-	["127857.140810"] = 187287, -- Aluneth, Greatstaff of the Magna (Aegwynn's Fury)
-	["128820.140810"] = 194239, -- Felo'melorn (Pyroclasmic Paranoia)
-	["128862.140810"] = 195352, -- Ebonchill, Greatstaff of Alodi (The Storm Rages)
-	["128858.140810"] = 202464, -- Scythe of Elune (Empowerment)
-	["128861.140810"] = 206910, -- Titanstrike (Unleash the Beast)
-	["128866.140810"] = 209216, -- Truthguard (Bastion of Truth)
-	["128832.140810"] = 212819, -- The Aldrachi Warblades (Will of the Illidari)
-	-- Soggy Manascrubber Brush
-	["127857.140812"] = 187313, -- Aluneth, Greatstaff of the Magna (Arcane Purification)
-	["128820.140812"] = 194313, -- Felo'melorn (Great Balls of Fire)
-	["128862.140812"] = 195345, -- Ebonchill, Greatstaff of Alodi (Frozen Veins)
-	["128861.140812"] = 197140, -- Titanstrike (Spitting Cobras)
-	["128858.140812"] = 202445, -- Scythe of Elune (Falling Star)
-	["128866.140812"] = 209223, -- Truthguard (Scatter the Shadows)
-	["128832.140812"] = 212816, -- The Aldrachi Warblades (Embrace the Pain)
 	-- Absolved Ravencrest Brooch
 	["120978.136717"] = 186945, -- Ashbringer (Wrath of the Ashbringer)
 	["128825.136717"] = 196418, -- T'uure, Beacon of the Naaru (Reverence)
 	["128868.136717"] = 197716, -- Light's Wrath (Burst of Light)
 	["128823.136717"] = 200296, -- The Silver Hand (Expel the Darkness)
 	["128866.136717"] = 209226, -- Truthguard (Righteous Crusader)
-	-- Arcana Crux
-	["127857.140813"] = 187304, -- Aluneth, Greatstaff of the Magna (Torrential Barrage)
-	["128820.140813"] = 194224, -- Felo'melorn (Fire at Will)
-	["128862.140813"] = 195315, -- Ebonchill, Greatstaff of Alodi (Icy Caress)
-	["128861.140813"] = 197038, -- Titanstrike (Wilderness Expert)
-	["128858.140813"] = 202384, -- Scythe of Elune (Dark Side of the Moon)
-	["128832.140813"] = 207343, -- The Aldrachi Warblades (Aldrachi Design)
-	["128866.140813"] = 209229, -- Truthguard (Hammer Time)
 	-- Mark of Varo'then
 	["128289.136718"] = 203227, -- Scale of the Earth-Warder (Intolerance)
 	["128403.136718"] = 191488, -- Apocalypse (The Darkest Crusade)
@@ -4155,20 +4131,6 @@ addon.SpellIDByRelic = {
 	["128292.136719"] = 204875, -- Blades of the Fallen Prince (Frozen Skin)
 	["128910.136719"] = 209541, -- Strom'kar, the Warbreaker (Touch of Zakajz)
 	["128943.136719"] = 211131, -- Skull of the Man'ari (Firm Resolve)
-	-- Infused Chitin Fragment
-	["128289.140815"] = 203227, -- Scale of the Earth-Warder (Intolerance)
-	["128402.140815"] = 192544, -- Maw of the Damned (Vampiric Fangs)
-	["128870.140815"] = 192349, -- The Kingslayers (Master Assassin)
-	["128940.140815"] = 195291, -- Fists of the Heavens (Fists of the Wind)
-	["128861.140815"] = 197162, -- Titanstrike (Jaws of Thunder)
-	["128819.140815"] = 198349, -- Doomhammer (Gathering of the Maelstrom)
-	["128908.140815"] = 200860, -- Warswords of the Valarjar (Unrivaled Strength)
-	["128872.140815"] = 202530, -- The Dreadblades (Fortune Strikes)
-	["128808.140815"] = 203670, -- Talonclaw, Spear of the Wild Gods (Explosive Force)
-	["128866.140815"] = 209218, -- Truthguard (Consecration in Flame)
-	["128910.140815"] = 209492, -- Strom'kar, the Warbreaker (Precise Strikes)
-	["128832.140815"] = 212817, -- The Aldrachi Warblades (Fiery Demise)
-	["128938.140815"] = 213133, -- Fu Zan, the Wanderer's Companion (Healthy Appetite)
 	-- Snapped Emerald Pendant
 	["128306.136720"] = 189768, -- G'Hanir, the Mother Tree (Seeds of the World Tree)
 	["128826.136720"] = 190457, -- Thas'dorah, Legacy of the Windrunners (Windrunner's Guidance)
@@ -4180,281 +4142,12 @@ addon.SpellIDByRelic = {
 	["128911.136720"] = 207092, -- Sharas'dal, Scepter of Tides (Buffeting Waves)
 	["128860.136720"] = 210571, -- Fangs of Ashamane (Feral Power)
 	["128938.136720"] = 227687, -- Fu Zan, the Wanderer's Companion (Hot Blooded)
-	-- Fingernail of the Fel Brute
-	["128289.140816"] = 216272, -- Scale of the Earth-Warder (Rage of the Fallen)
-	["128402.140816"] = 192453, -- Maw of the Damned (Meat Shield)
-	["128870.140816"] = 192315, -- The Kingslayers (Serrated Edge)
-	["128940.140816"] = 195263, -- Fists of the Heavens (Rising Winds)
-	["128861.140816"] = 197047, -- Titanstrike (Furious Swipes)
-	["128819.140816"] = 198236, -- Doomhammer (Forged in Lava)
-	["128908.140816"] = 216273, -- Warswords of the Valarjar (Wild Slashes)
-	["128872.140816"] = 202507, -- The Dreadblades (Blade Dancer)
-	["128808.140816"] = 203577, -- Talonclaw, Spear of the Wild Gods (My Beloved Monster)
-	["128832.140816"] = 207347, -- The Aldrachi Warblades (Aura of Pain)
-	["128866.140816"] = 209217, -- Truthguard (Stern Judgment)
-	["128910.140816"] = 209462, -- Strom'kar, the Warbreaker (One Against Many)
-	["128938.140816"] = 227687, -- Fu Zan, the Wanderer's Companion (Hot Blooded)
 	-- Mo'arg Eyepatch
 	["128941.136721"] = 196258, -- Scepter of Sargeras (Fire From the Sky)
 	["128476.136721"] = 197239, -- Fangs of the Devourer (Energetic Stabbing)
 	["127829.136721"] = 201464, -- Twinblades of the Deceiver (Overwhelming Power)
 	["128943.136721"] = 211099, -- Skull of the Man'ari (Maw of Shadows)
 	["128832.136721"] = 212819, -- The Aldrachi Warblades (Will of the Illidari)
-	-- Lionshead Lapel Clasp
-	["128289.140817"] = 188683, -- Scale of the Earth-Warder (Will to Survive)
-	["128402.140817"] = 192447, -- Maw of the Damned (Grim Perseverance)
-	["128870.140817"] = 192318, -- The Kingslayers (Master Alchemist)
-	["128940.140817"] = 218607, -- Fists of the Heavens (Tiger Claws)
-	["128861.140817"] = 197080, -- Titanstrike (Pack Leader)
-	["128819.140817"] = 198247, -- Doomhammer (Wind Surge)
-	["128908.140817"] = 200849, -- Warswords of the Valarjar (Wrath and Fury)
-	["128872.140817"] = 202514, -- The Dreadblades (Fate's Thirst)
-	["128808.140817"] = 203578, -- Talonclaw, Spear of the Wild Gods (Lacerating Talons)
-	["128832.140817"] = 207352, -- The Aldrachi Warblades (Honed Warblades)
-	["128866.140817"] = 209220, -- Truthguard (Unflinching Defense)
-	["128910.140817"] = 209472, -- Strom'kar, the Warbreaker (Crushing Blows)
-	["128938.140817"] = 213180, -- Fu Zan, the Wanderer's Companion (Overflow)
-	-- Foreign Contaminant
-	["128289.140818"] = 216272, -- Scale of the Earth-Warder (Rage of the Fallen)
-	["128403.140818"] = 191442, -- Apocalypse (Rotten Touch)
-	["128402.140818"] = 192453, -- Maw of the Damned (Meat Shield)
-	["128826.140818"] = 190457, -- Thas'dorah, Legacy of the Windrunners (Windrunner's Guidance)
-	["128870.140818"] = 192315, -- The Kingslayers (Serrated Edge)
-	["128827.140818"] = 193643, -- Xal'atath, Blade of the Black Empire (Mind Shattering)
-	["128942.140818"] = 199112, -- Ulthalesh, the Deadwind Harvester (Hideous Corruption)
-	["128821.140818"] = 200399, -- Claws of Ursoc (Ursoc's Endurance)
-	["128872.140818"] = 202507, -- The Dreadblades (Blade Dancer)
-	["128808.140818"] = 203577, -- Talonclaw, Spear of the Wild Gods (My Beloved Monster)
-	["128910.140818"] = 209462, -- Strom'kar, the Warbreaker (One Against Many)
-	["128860.140818"] = 210571, -- Fangs of Ashamane (Feral Power)
-	-- Vampiric Fetish
-	["128289.140819"] = 203225, -- Scale of the Earth-Warder (Dragon Skin)
-	["128403.140819"] = 191494, -- Apocalypse (Scourge the Unbeliever)
-	["128402.140819"] = 192460, -- Maw of the Damned (Coagulopathy)
-	["128826.140819"] = 190520, -- Thas'dorah, Legacy of the Windrunners (Precision)
-	["128870.140819"] = 192329, -- The Kingslayers (Gushing Wound)
-	["128827.140819"] = 194007, -- Xal'atath, Blade of the Black Empire (Touch of Darkness)
-	["128942.140819"] = 199153, -- Ulthalesh, the Deadwind Harvester (Seeds of Doom)
-	["128821.140819"] = 200409, -- Claws of Ursoc (Jagged Claws)
-	["128872.140819"] = 202524, -- The Dreadblades (Fatebringer)
-	["128808.140819"] = 203669, -- Talonclaw, Spear of the Wild Gods (Fluffy, Go)
-	["128910.140819"] = 209481, -- Strom'kar, the Warbreaker (Deathblow)
-	["128860.140819"] = 210593, -- Fangs of Ashamane (Tear the Flesh)
-	-- Phial of Fel Blood
-	["128289.140820"] = 188635, -- Scale of the Earth-Warder (Vrykul Shield Training)
-	["128403.140820"] = 191419, -- Apocalypse (Deadliest Coil)
-	["128402.140820"] = 192450, -- Maw of the Damned (Iron Heart)
-	["128826.140820"] = 190449, -- Thas'dorah, Legacy of the Windrunners (Deadly Aim)
-	["128870.140820"] = 192310, -- The Kingslayers (Toxic Blades)
-	["128827.140820"] = 194093, -- Xal'atath, Blade of the Black Empire (Unleash the Shadows)
-	["128942.140820"] = 199111, -- Ulthalesh, the Deadwind Harvester (Inimitable Agony)
-	["128821.140820"] = 200395, -- Claws of Ursoc (Reinforced Fur)
-	["128872.140820"] = 216230, -- The Dreadblades (Black Powder)
-	["128808.140820"] = 203566, -- Talonclaw, Spear of the Wild Gods (Sharpened Fang)
-	["128910.140820"] = 209459, -- Strom'kar, the Warbreaker (Unending Rage)
-	["128860.140820"] = 210570, -- Fangs of Ashamane (Razor Fangs)
-	-- Precipice of Eternity
-	["128292.140821"] = 189080, -- Blades of the Fallen Prince (Cold as Ice)
-	["128403.140821"] = 191419, -- Apocalypse (Deadliest Coil)
-	["128402.140821"] = 192450, -- Maw of the Damned (Iron Heart)
-	["128870.140821"] = 192310, -- The Kingslayers (Toxic Blades)
-	["128827.140821"] = 194093, -- Xal'atath, Blade of the Black Empire (Unleash the Shadows)
-	["128476.140821"] = 197231, -- Fangs of the Devourer (The Quiet Knife)
-	["128868.140821"] = 197708, -- Light's Wrath (Confession)
-	["128942.140821"] = 199111, -- Ulthalesh, the Deadwind Harvester (Inimitable Agony)
-	["127829.140821"] = 201454, -- Twinblades of the Deceiver (Contained Fury)
-	["128910.140821"] = 209459, -- Strom'kar, the Warbreaker (Unending Rage)
-	["128943.140821"] = 211108, -- Skull of the Man'ari (Summoner's Prowess)
-	-- Breath of Dusk
-	["128292.140822"] = 189147, -- Blades of the Fallen Prince (Bad to the Bone)
-	["128403.140822"] = 191488, -- Apocalypse (The Darkest Crusade)
-	["128402.140822"] = 192544, -- Maw of the Damned (Vampiric Fangs)
-	["128870.140822"] = 192349, -- The Kingslayers (Master Assassin)
-	["128827.140822"] = 194016, -- Xal'atath, Blade of the Black Empire (Void Corruption)
-	["128476.140822"] = 197386, -- Fangs of the Devourer (Soul Shadows)
-	["128868.140822"] = 197729, -- Light's Wrath (Shield of Faith)
-	["128942.140822"] = 199158, -- Ulthalesh, the Deadwind Harvester (Perdition)
-	["127829.140822"] = 201460, -- Twinblades of the Deceiver (Unleashed Demons)
-	["128910.140822"] = 209492, -- Strom'kar, the Warbreaker (Precise Strikes)
-	["128943.140822"] = 211119, -- Skull of the Man'ari (Infernal Furnace)
-	-- Warchief's Shattered Tusk
-	["128292.140823"] = 189086, -- Blades of the Fallen Prince (Blast Radius)
-	["128403.140823"] = 191485, -- Apocalypse (Plaguebearer)
-	["128402.140823"] = 192447, -- Maw of the Damned (Grim Perseverance)
-	["128870.140823"] = 192318, -- The Kingslayers (Master Alchemist)
-	["128827.140823"] = 193644, -- Xal'atath, Blade of the Black Empire (To the Pain)
-	["128476.140823"] = 197234, -- Fangs of the Devourer (Gutripper)
-	["128868.140823"] = 197715, -- Light's Wrath (The Edge of Dark and Light)
-	["128942.140823"] = 199120, -- Ulthalesh, the Deadwind Harvester (Drained to a Husk)
-	["127829.140823"] = 201456, -- Twinblades of the Deceiver (Chaos Vision)
-	["128910.140823"] = 209472, -- Strom'kar, the Warbreaker (Crushing Blows)
-	["128943.140823"] = 211106, -- Skull of the Man'ari (The Doom of Azeroth)
-	-- Writ of Subjugation
-	["128941.140824"] = 196217, -- Scepter of Sargeras (Chaotic Instability)
-	["128476.140824"] = 197233, -- Fangs of the Devourer (Demon's Kiss)
-	["127829.140824"] = 201455, -- Twinblades of the Deceiver (Critical Chaos)
-	["128832.140824"] = 207347, -- The Aldrachi Warblades (Aura of Pain)
-	["128943.140824"] = 211126, -- Skull of the Man'ari (Legionwrath)
-	-- Felfire Pitch
-	["128941.140825"] = 196227, -- Scepter of Sargeras (Residual Flames)
-	["128476.140825"] = 197235, -- Fangs of the Devourer (Precision Strike)
-	["127829.140825"] = 201457, -- Twinblades of the Deceiver (Sharpened Glaives)
-	["128943.140825"] = 211123, -- Skull of the Man'ari (Sharpened Dreadfangs)
-	["128832.140825"] = 207375, -- The Aldrachi Warblades (Infernal Force)
-	-- Felstained Jawbone Fragments
-	["128941.140826"] = 196211, -- Scepter of Sargeras (Master of Disaster)
-	["128476.140826"] = 197231, -- Fangs of the Devourer (The Quiet Knife)
-	["127829.140826"] = 201454, -- Twinblades of the Deceiver (Contained Fury)
-	["128832.140826"] = 207343, -- The Aldrachi Warblades (Aldrachi Design)
-	["128943.140826"] = 211108, -- Skull of the Man'ari (Summoner's Prowess)
-	-- Manatoxin Gland
-	["127857.140827"] = 187321, -- Aluneth, Greatstaff of the Magna (Aegwynn's Wrath)
-	["128820.140827"] = 194312, -- Felo'melorn (Burning Gaze)
-	["128862.140827"] = 195322, -- Ebonchill, Greatstaff of Alodi (Let It Go)
-	["128861.140827"] = 197080, -- Titanstrike (Pack Leader)
-	["128858.140827"] = 202426, -- Scythe of Elune (Solar Stabbing)
-	["128832.140827"] = 207352, -- The Aldrachi Warblades (Honed Warblades)
-	["128866.140827"] = 209220, -- Truthguard (Unflinching Defense)
-	-- Suspended Nightwell Droplet
-	["127857.140831"] = 187276, -- Aluneth, Greatstaff of the Magna (Ethereal Sensitivity)
-	["128292.140831"] = 189147, -- Blades of the Fallen Prince (Bad to the Bone)
-	["128306.140831"] = 189749, -- G'Hanir, the Mother Tree (Natural Mending)
-	["128935.140831"] = 191577, -- The Fist of Ra-den (Electric Discharge)
-	["128862.140831"] = 195351, -- Ebonchill, Greatstaff of Alodi (Clarity of Thought)
-	["128937.140831"] = 199380, -- Sheilun, Staff of the Mists (Infusion of Life)
-	["128911.140831"] = 207285, -- Sharas'dal, Scepter of Tides (Queen Ascendant)
-	["128860.140831"] = 210637, -- Fangs of Ashamane (Sharpened Claws)
-	-- Heart of Frost
-	["127857.140832"] = 187258, -- Aluneth, Greatstaff of the Magna (Blasting Rod)
-	["128292.140832"] = 189092, -- Blades of the Fallen Prince (Ambidexterity)
-	["128306.140832"] = 189768, -- G'Hanir, the Mother Tree (Seeds of the World Tree)
-	["128935.140832"] = 191499, -- The Fist of Ra-den (The Ground Trembles)
-	["128862.140832"] = 195317, -- Ebonchill, Greatstaff of Alodi (Ice Age)
-	["128937.140832"] = 199366, -- Sheilun, Staff of the Mists (Way of the Mistweaver)
-	["128911.140832"] = 207092, -- Sharas'dal, Scepter of Tides (Buffeting Waves)
-	["128860.140832"] = 210571, -- Fangs of Ashamane (Feral Power)
-	-- Sundered Comet
-	["127857.140833"] = 187264, -- Aluneth, Greatstaff of the Magna (Aegwynn's Imperative)
-	["128292.140833"] = 189164, -- Blades of the Fallen Prince (Dead of Winter)
-	["128306.140833"] = 189757, -- G'Hanir, the Mother Tree (Infusion of Nature)
-	["128935.140833"] = 191740, -- The Fist of Ra-den (Firestorm)
-	["128862.140833"] = 195323, -- Ebonchill, Greatstaff of Alodi (Orbital Strike)
-	["128937.140833"] = 199372, -- Sheilun, Staff of the Mists (Extended Healing)
-	["128911.140833"] = 207206, -- Sharas'dal, Scepter of Tides (Wavecrash)
-	["128860.140833"] = 210579, -- Fangs of Ashamane (Ashamane's Energy)
-	-- Soul of Flame
-	["120978.140834"] = 186944, -- Ashbringer (Protector of the Ashen Blade)
-	["128289.140834"] = 188639, -- Scale of the Earth-Warder (Shatter the Bones)
-	["128820.140834"] = 194239, -- Felo'melorn (Pyroclasmic Paranoia)
-	["128941.140834"] = 196258, -- Scepter of Sargeras (Fire From the Sky)
-	["128819.140834"] = 198238, -- Doomhammer (Spirit of the Maelstrom)
-	["128821.140834"] = 200415, -- Claws of Ursoc (Sharpened Instincts)
-	["128908.140834"] = 200861, -- Warswords of the Valarjar (Raging Berserker)
-	["128403.140834"] = 208598, -- Apocalypse (Eternal Agony)
-	["128943.140834"] = 211099, -- Skull of the Man'ari (Maw of Shadows)
-	-- Unkindled Ember
-	["120978.140835"] = 184843, -- Ashbringer (Righteous Blade)
-	["128289.140835"] = 188683, -- Scale of the Earth-Warder (Will to Survive)
-	["128403.140835"] = 191485, -- Apocalypse (Plaguebearer)
-	["128820.140835"] = 194312, -- Felo'melorn (Burning Gaze)
-	["128941.140835"] = 196222, -- Scepter of Sargeras (Fire and the Flames)
-	["128819.140835"] = 198247, -- Doomhammer (Wind Surge)
-	["128821.140835"] = 208762, -- Claws of Ursoc (Mauler)
-	["128908.140835"] = 200849, -- Warswords of the Valarjar (Wrath and Fury)
-	["128943.140835"] = 211106, -- Skull of the Man'ari (The Doom of Azeroth)
-	-- Sunflare Coal
-	["120978.140836"] = 184759, -- Ashbringer (Sharpened Edge)
-	["128289.140836"] = 216272, -- Scale of the Earth-Warder (Rage of the Fallen)
-	["128403.140836"] = 191442, -- Apocalypse (Rotten Touch)
-	["128820.140836"] = 194234, -- Felo'melorn (Reignition Overdrive)
-	["128941.140836"] = 196217, -- Scepter of Sargeras (Chaotic Instability)
-	["128819.140836"] = 198236, -- Doomhammer (Forged in Lava)
-	["128821.140836"] = 200399, -- Claws of Ursoc (Ursoc's Endurance)
-	["128908.140836"] = 216273, -- Warswords of the Valarjar (Wild Slashes)
-	["128943.140836"] = 211126, -- Skull of the Man'ari (Legionwrath)
-	-- Exothermic Core
-	["120978.140837"] = 185368, -- Ashbringer (Might of the Templar)
-	["128289.140837"] = 203227, -- Scale of the Earth-Warder (Intolerance)
-	["128403.140837"] = 191488, -- Apocalypse (The Darkest Crusade)
-	["128820.140837"] = 194314, -- Felo'melorn (Everburning Consumption)
-	["128941.140837"] = 196432, -- Scepter of Sargeras (Burning Hunger)
-	["128819.140837"] = 198349, -- Doomhammer (Gathering of the Maelstrom)
-	["128821.140837"] = 200414, -- Claws of Ursoc (Bestial Fortitude)
-	["128908.140837"] = 200860, -- Warswords of the Valarjar (Unrivaled Strength)
-	["128943.140837"] = 211119, -- Skull of the Man'ari (Infernal Furnace)
-	-- Construct Personality Sphere
-	["128306.140838"] = 189760, -- G'Hanir, the Mother Tree (Essence of Nordrassil)
-	["128826.140838"] = 190462, -- Thas'dorah, Legacy of the Windrunners (Quick Shot)
-	["128825.140838"] = 196416, -- T'uure, Beacon of the Naaru (Serenity Now)
-	["128937.140838"] = 199367, -- Sheilun, Staff of the Mists (Protection of Shaohao)
-	["128821.140838"] = 208762, -- Claws of Ursoc (Mauler)
-	["128823.140838"] = 200315, -- The Silver Hand (Shock Treatment)
-	["128858.140838"] = 202426, -- Scythe of Elune (Solar Stabbing)
-	["128911.140838"] = 210029, -- Sharas'dal, Scepter of Tides (Pull of the Sea)
-	["128860.140838"] = 210575, -- Fangs of Ashamane (Powerful Bite)
-	["128938.140838"] = 213180, -- Fu Zan, the Wanderer's Companion (Overflow)
-	-- Parasitic Spore
-	["128306.140839"] = 189744, -- G'Hanir, the Mother Tree (Blessing of the World Tree)
-	["128826.140839"] = 190567, -- Thas'dorah, Legacy of the Windrunners (Gust of Wind)
-	["128825.140839"] = 196430, -- T'uure, Beacon of the Naaru (Words of Healing)
-	["128937.140839"] = 199485, -- Sheilun, Staff of the Mists (Essence of the Mists)
-	["128821.140839"] = 200415, -- Claws of Ursoc (Sharpened Instincts)
-	["128858.140839"] = 202464, -- Scythe of Elune (Empowerment)
-	["128911.140839"] = 207348, -- Sharas'dal, Scepter of Tides (Floodwaters)
-	["128860.140839"] = 210631, -- Fangs of Ashamane (Feral Instinct)
-	["128823.140839"] = 200482, -- The Silver Hand (Second Sunrise)
-	["128938.140839"] = 213136, -- Fu Zan, the Wanderer's Companion (Gifted Student)
-	-- Chittering Mandible
-	["128935.140840"] = 191499, -- The Fist of Ra-den (The Ground Trembles)
-	["128826.140840"] = 190457, -- Thas'dorah, Legacy of the Windrunners (Windrunner's Guidance)
-	["128940.140840"] = 195263, -- Fists of the Heavens (Rising Winds)
-	["128861.140840"] = 197047, -- Titanstrike (Furious Swipes)
-	["128819.140840"] = 198236, -- Doomhammer (Forged in Lava)
-	["128937.140840"] = 199366, -- Sheilun, Staff of the Mists (Way of the Mistweaver)
-	["128908.140840"] = 216273, -- Warswords of the Valarjar (Wild Slashes)
-	["128872.140840"] = 202507, -- The Dreadblades (Blade Dancer)
-	["128808.140840"] = 203577, -- Talonclaw, Spear of the Wild Gods (My Beloved Monster)
-	["128938.140840"] = 227687, -- Fu Zan, the Wanderer's Companion (Hot Blooded)
-	-- Tempest of the Heavens
-	["128935.140841"] = 191577, -- The Fist of Ra-den (Electric Discharge)
-	["128826.140841"] = 190529, -- Thas'dorah, Legacy of the Windrunners (Marked for Death)
-	["128940.140841"] = 195291, -- Fists of the Heavens (Fists of the Wind)
-	["128861.140841"] = 197162, -- Titanstrike (Jaws of Thunder)
-	["128819.140841"] = 198349, -- Doomhammer (Gathering of the Maelstrom)
-	["128937.140841"] = 199380, -- Sheilun, Staff of the Mists (Infusion of Life)
-	["128908.140841"] = 200860, -- Warswords of the Valarjar (Unrivaled Strength)
-	["128872.140841"] = 202530, -- The Dreadblades (Fortune Strikes)
-	["128808.140841"] = 203670, -- Talonclaw, Spear of the Wild Gods (Explosive Force)
-	["128938.140841"] = 213133, -- Fu Zan, the Wanderer's Companion (Healthy Appetite)
-	-- Collapsing Epoch
-	["128935.140842"] = 191493, -- The Fist of Ra-den (Call the Thunder)
-	["128826.140842"] = 190449, -- Thas'dorah, Legacy of the Windrunners (Deadly Aim)
-	["128940.140842"] = 195243, -- Fists of the Heavens (Inner Peace)
-	["128861.140842"] = 197038, -- Titanstrike (Wilderness Expert)
-	["128819.140842"] = 215381, -- Doomhammer (Weapons of the Elements)
-	["128937.140842"] = 199364, -- Sheilun, Staff of the Mists (Coalescing Mists)
-	["128908.140842"] = 200846, -- Warswords of the Valarjar (Deathdealer)
-	["128872.140842"] = 216230, -- The Dreadblades (Black Powder)
-	["128808.140842"] = 203566, -- Talonclaw, Spear of the Wild Gods (Sharpened Fang)
-	["128938.140842"] = 213051, -- Fu Zan, the Wanderer's Companion (Obsidian Fists)
-	-- Flickering Timespark
-	["120978.140843"] = 186945, -- Ashbringer (Wrath of the Ashbringer)
-	["128825.140843"] = 196418, -- T'uure, Beacon of the Naaru (Reverence)
-	["128868.140843"] = 197716, -- Light's Wrath (Burst of Light)
-	["128823.140843"] = 200296, -- The Silver Hand (Expel the Darkness)
-	["128866.140843"] = 209226, -- Truthguard (Righteous Crusader)
-	-- Archaic Nathrezim Keepsake
-	["120978.140844"] = 186941, -- Ashbringer (Highlord's Judgment)
-	["128825.140844"] = 196434, -- T'uure, Beacon of the Naaru (Holy Guidance)
-	["128868.140844"] = 197708, -- Light's Wrath (Confession)
-	["128823.140844"] = 200326, -- The Silver Hand (Focused Healing)
-	["128866.140844"] = 209229, -- Truthguard (Hammer Time)
-	-- Glistening Meteorite Shard
-	["120978.140845"] = 186927, -- Ashbringer (Deliver the Justice)
-	["128825.140845"] = 196422, -- T'uure, Beacon of the Naaru (Holy Hands)
-	["128868.140845"] = 197727, -- Light's Wrath (Doomsayer)
-	["128823.140845"] = 200294, -- The Silver Hand (Deliver the Light)
-	["128866.140845"] = 209223, -- Truthguard (Scatter the Shadows)
 	-- Northern Gale
 	["128935.133682"] = 191740, -- The Fist of Ra-den (Firestorm)
 	["128826.133682"] = 190467, -- Thas'dorah, Legacy of the Windrunners (Called Shot)
@@ -6423,4 +6116,312 @@ addon.SpellIDByRelic = {
 	["128808.143825"] = 203670,
 	["128908.143825"] = 200860,
 	["128935.143825"] = 191577,
+
+	-- BEGIN 7.1.5 Updated Nighthold Relic Data
+	["128868.140843"] = 197716,
+	["128825.140843"] = 196418,
+	["128823.140843"] = 200296,
+	["120978.140843"] = 186945,
+	["128866.140843"] = 209226,
+
+	["128866.140844"] = 209229,
+	["120978.140844"] = 186941,
+	["128823.140844"] = 200326,
+	["128868.140844"] = 197708,
+	["128825.140844"] = 196434,
+
+	["128823.140845"] = 200294,
+	["128825.140845"] = 196422,
+	["128868.140845"] = 197727,
+	["128866.140845"] = 209223,
+	["120978.140845"] = 186927,
+
+	["128819.140840"] = 198236,
+	["128826.140840"] = 190457,
+	["128938.140840"] = 213049,
+	["128908.140840"] = 216273,
+	["128940.140840"] = 195263,
+	["128935.140840"] = 191499,
+	["128937.140840"] = 199366,
+	["128808.140840"] = 203577,
+	["128861.140840"] = 197047,
+	["128872.140840"] = 202507,
+
+	["128908.140841"] = 200860,
+	["128940.140841"] = 195291,
+	["128937.140841"] = 199380,
+	["128808.140841"] = 203670,
+	["128935.140841"] = 191577,
+	["128872.140841"] = 202530,
+	["128861.140841"] = 197162,
+	["128819.140841"] = 198349,
+	["128938.140841"] = 213133,
+	["128826.140841"] = 190529,
+
+	["128861.140842"] = 197038,
+	["128872.140842"] = 216230,
+	["128935.140842"] = 191493,
+	["128937.140842"] = 199364,
+	["128808.140842"] = 203566,
+	["128908.140842"] = 200846,
+	["128940.140842"] = 195243,
+	["128826.140842"] = 190449,
+	["128938.140842"] = 213051,
+	["128819.140842"] = 215381,
+
+	["128825.140838"] = 196416,
+	["128938.140838"] = 213180,
+	["128823.140838"] = 200315,
+	["128826.140838"] = 190462,
+	["128860.140838"] = 210575,
+	["128306.140838"] = 189760,
+	["128858.140838"] = 202426,
+	["128821.140838"] = 208762,
+	["128937.140838"] = 199367,
+	["128911.140838"] = 207118,
+
+	["128860.140839"] = 210631,
+	["128306.140839"] = 189744,
+	["128825.140839"] = 196430,
+	["128938.140839"] = 213136,
+	["128823.140839"] = 200482,
+	["128826.140839"] = 190567,
+	["128937.140839"] = 199485,
+	["128911.140839"] = 207348,
+	["128858.140839"] = 202464,
+	["128821.140839"] = 200415,
+
+	["120978.140834"] = 186944,
+	["128908.140834"] = 200861,
+	["128403.140834"] = 208598,
+	["128821.140834"] = 200415,
+	["128943.140834"] = 211099,
+	["128819.140834"] = 198238,
+	["128820.140834"] = 194239,
+	["128289.140834"] = 188639,
+	["128941.140834"] = 196258,
+
+	["120978.140835"] = 184843,
+	["128908.140835"] = 200849,
+	["128403.140835"] = 191485,
+	["128821.140835"] = 208762,
+	["128943.140835"] = 211106,
+	["128819.140835"] = 198247,
+	["128820.140835"] = 194312,
+	["128289.140835"] = 188683,
+	["128941.140835"] = 196222,
+
+	["128403.140836"] = 191442,
+	["128821.140836"] = 200399,
+	["120978.140836"] = 184759,
+	["128908.140836"] = 216273,
+	["128289.140836"] = 216272,
+	["128941.140836"] = 196217,
+	["128943.140836"] = 211126,
+	["128819.140836"] = 198236,
+	["128820.140836"] = 194234,
+
+	["128908.140837"] = 200860,
+	["120978.140837"] = 185368,
+	["128821.140837"] = 200414,
+	["128403.140837"] = 191488,
+	["128820.140837"] = 194314,
+	["128819.140837"] = 198349,
+	["128943.140837"] = 211119,
+	["128941.140837"] = 196432,
+	["128289.140837"] = 203227,
+
+	["128860.140831"] = 210637,
+	["128292.140831"] = 189147,
+	["128306.140831"] = 189749,
+	["127857.140831"] = 187276,
+	["128937.140831"] = 199380,
+	["128862.140831"] = 195351,
+	["128935.140831"] = 191577,
+	["128911.140831"] = 207285,
+
+	["127857.140832"] = 187258,
+	["128862.140832"] = 195317,
+	["128911.140832"] = 207092,
+	["128935.140832"] = 191499,
+	["128937.140832"] = 199366,
+	["128306.140832"] = 189768,
+	["128860.140832"] = 210571,
+	["128292.140832"] = 189092,
+
+	["128860.140833"] = 210579,
+	["128292.140833"] = 189164,
+	["128306.140833"] = 189757,
+	["127857.140833"] = 187264,
+	["128937.140833"] = 199372,
+	["128935.140833"] = 191740,
+	["128862.140833"] = 195323,
+	["128911.140833"] = 207206,
+
+	["128820.140810"] = 194239,
+	["128866.140810"] = 209216,
+	["127857.140810"] = 187287,
+	["128862.140810"] = 195352,
+	["128858.140810"] = 202464,
+	["128832.140810"] = 212819,
+	["128861.140810"] = 206910,
+
+	["128862.140812"] = 195345,
+	["128866.140812"] = 209223,
+	["127857.140812"] = 187313,
+	["128861.140812"] = 197140,
+	["128858.140812"] = 202445,
+	["128832.140812"] = 212816,
+	["128820.140812"] = 194313,
+
+	["128866.140813"] = 209229,
+	["127857.140813"] = 187304,
+	["128862.140813"] = 195315,
+	["128858.140813"] = 202384,
+	["128832.140813"] = 207343,
+	["128861.140813"] = 197038,
+	["128820.140813"] = 194224,
+
+	["128820.140827"] = 194312,
+	["128866.140827"] = 209220,
+	["127857.140827"] = 187321,
+	["128862.140827"] = 195322,
+	["128858.140827"] = 202426,
+	["128832.140827"] = 207352,
+	["128861.140827"] = 197080,
+
+	["128476.140824"] = 197233,
+	["128832.140824"] = 207347,
+	["127829.140824"] = 201455,
+	["128943.140824"] = 211126,
+	["128941.140824"] = 196217,
+
+	["128941.140825"] = 196301,
+	["128943.140825"] = 211144,
+	["127829.140825"] = 201459,
+	["128832.140825"] = 212821,
+	["128476.140825"] = 197241,
+
+	["128943.140826"] = 211119,
+	["127829.140826"] = 201460,
+	["128941.140826"] = 196432,
+	["128476.140826"] = 197386,
+	["128832.140826"] = 212817,
+
+	["128292.140821"] = 189080,
+	["128943.140821"] = 211108,
+	["127829.140821"] = 201454,
+	["128827.140821"] = 194093,
+	["128870.140821"] = 192310,
+	["128402.140821"] = 192450,
+	["128476.140821"] = 197231,
+	["128910.140821"] = 209459,
+	["128868.140821"] = 197708,
+	["128403.140821"] = 191419,
+	["128942.140821"] = 199111,
+
+	["128402.140822"] = 192542,
+	["128827.140822"] = 194016,
+	["128870.140822"] = 192349,
+	["128943.140822"] = 211119,
+	["127829.140822"] = 201460,
+	["128292.140822"] = 189147,
+	["128942.140822"] = 199158,
+	["128868.140822"] = 197729,
+	["128403.140822"] = 191488,
+	["128910.140822"] = 209492,
+	["128476.140822"] = 197386,
+
+	["128402.140823"] = 192447,
+	["128827.140823"] = 193644,
+	["128870.140823"] = 192318,
+	["128943.140823"] = 211106,
+	["128292.140823"] = 189086,
+	["127829.140823"] = 201456,
+	["128942.140823"] = 199120,
+	["128403.140823"] = 191485,
+	["128868.140823"] = 197715,
+	["128910.140823"] = 209472,
+	["128476.140823"] = 197234,
+
+	["128821.140818"] = 200399,
+	["128942.140818"] = 199112,
+	["128403.140818"] = 191442,
+	["128872.140818"] = 202507,
+	["128910.140818"] = 209462,
+	["128808.140818"] = 203577,
+	["128826.140818"] = 190457,
+	["128289.140818"] = 216272,
+	["128402.140818"] = 192453,
+	["128870.140818"] = 192315,
+	["128827.140818"] = 193643,
+	["128860.140818"] = 210571,
+
+	["128289.140819"] = 203225,
+	["128826.140819"] = 190520,
+	["128860.140819"] = 210593,
+	["128402.140819"] = 192460,
+	["128827.140819"] = 194007,
+	["128870.140819"] = 192329,
+	["128403.140819"] = 191494,
+	["128910.140819"] = 209481,
+	["128872.140819"] = 202524,
+	["128821.140819"] = 200409,
+	["128942.140819"] = 199153,
+	["128808.140819"] = 203669,
+
+	["128942.140820"] = 199111,
+	["128821.140820"] = 200395,
+	["128403.140820"] = 191419,
+	["128872.140820"] = 216230,
+	["128910.140820"] = 209459,
+	["128808.140820"] = 203566,
+	["128826.140820"] = 190449,
+	["128289.140820"] = 188635,
+	["128402.140820"] = 192450,
+	["128870.140820"] = 192310,
+	["128827.140820"] = 194093,
+	["128860.140820"] = 210570,
+
+	["128908.140815"] = 200860,
+	["128940.140815"] = 195291,
+	["128866.140815"] = 209218,
+	["128808.140815"] = 203670,
+	["128832.140815"] = 212817,
+	["128872.140815"] = 202530,
+	["128910.140815"] = 209492,
+	["128861.140815"] = 197162,
+	["128870.140815"] = 192349,
+	["128402.140815"] = 192542,
+	["128819.140815"] = 198349,
+	["128938.140815"] = 213133,
+	["128289.140815"] = 203227,
+
+	["128808.140816"] = 203577,
+	["128940.140816"] = 195263,
+	["128908.140816"] = 216273,
+	["128866.140816"] = 209217,
+	["128861.140816"] = 197047,
+	["128910.140816"] = 209462,
+	["128872.140816"] = 202507,
+	["128832.140816"] = 207347,
+	["128819.140816"] = 198236,
+	["128402.140816"] = 192453,
+	["128870.140816"] = 192315,
+	["128289.140816"] = 216272,
+	["128938.140816"] = 213049,
+
+	["128808.140817"] = 203578,
+	["128940.140817"] = 218607,
+	["128908.140817"] = 200849,
+	["128866.140817"] = 209220,
+	["128861.140817"] = 197080,
+	["128910.140817"] = 209472,
+	["128872.140817"] = 202514,
+	["128832.140817"] = 207352,
+	["128819.140817"] = 198247,
+	["128402.140817"] = 192447,
+	["128870.140817"] = 192318,
+	["128289.140817"] = 188683,
+	["128938.140817"] = 213180,
 }

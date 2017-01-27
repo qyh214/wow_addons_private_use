@@ -248,6 +248,12 @@ function MallPanel:Purchase()
     if not item then
         return
     end
+
+    if item.web then
+        GUI:CallUrlDialog(item.web, L.MallOtherGameTip)
+        return
+    end
+
     local name = GetItemInfo(item.itemId)
     if not name then
         return

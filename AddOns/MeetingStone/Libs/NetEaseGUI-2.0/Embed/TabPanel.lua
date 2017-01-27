@@ -1,6 +1,6 @@
 
 local GUI = LibStub('NetEaseGUI-2.0')
-local View = GUI:NewEmbed('TabPanel', 2)
+local View = GUI:NewEmbed('TabPanel', 3)
 if not View then
     return
 end
@@ -45,7 +45,28 @@ function View:UpdateTab()
     end
 end
 
-function View:RegisterPanel(name, panel, padding, topHeight, bottomHeight, noInset)
+local function parseArgs(panel, opts, ...)
+    if type(opts) ~= 'table' then
+        opts = {
+            padding = opts,
+        }
+        opts.topHeight, opts.bottomHeight, opts.noInset = ...
+    end
+
+    if panel.InjectPanelArgs then
+        local default = panel:InjectPanelArgs()
+        if default then
+            for k, v in pairs(default) do
+                if opts[k] == nil then
+                    opts[k] = v
+                end
+            end
+        end
+    end
+    return opts
+end
+
+function View:RegisterPanel(name, panel, ...)
     if self.noTab then
         if #_PanelList[self] > 0 then
             error([[Can register only one panel into notab container.]], 2)
@@ -54,25 +75,42 @@ function View:RegisterPanel(name, panel, padding, topHeight, bottomHeight, noIns
     if self:IsPanelRegistered(name) then
         error([[Cannot register panel (same name)]], 2)
     end
-    if panel.InjectPanelArgs then
-        padding, topHeight, bottomHeight, noInset = panel:InjectPanelArgs()
-    end
 
     GUI:Embed(panel, 'Owner')
 
+    local opts = parseArgs(panel, ...)
     local data = {
-        name = name,
-        panel = panel,
-        topHeight = topHeight or self.GetTopHeight and self:GetTopHeight() or 0,
-        bottomHeight = bottomHeight or self.GetBottomHeight and self:GetBottomHeight() or 0,
-        noInset = noInset,
+        name         = name,
+        panel        = panel,
+        topHeight    = opts.topHeight or self.GetTopHeight and self:GetTopHeight() or 0,
+        bottomHeight = opts.bottomHeight or self.GetBottomHeight and self:GetBottomHeight() or 0,
+        noInset      = opts.noInset,
     }
-    tinsert(_PanelList[self], data)
 
-    padding = padding or 10
+    local offset
+    if opts.before then
+        local i, v = self:IsPanelRegistered(opts.before)
+        if i then
+            offset = i
+        end
+    elseif opts.after then
+        local i, v = self:IsPanelRegistered(opts.after)
+        if i then
+            offset = i + 1
+        end
+    end
+    
+    if offset then
+        tinsert(_PanelList[self], offset, data)
+    else
+        tinsert(_PanelList[self], data)
+    end
+
+    local padding = opts.padding or 10
+
     panel:Hide()
     panel:SetOwner(self)
-    panel:SetParent(noInset and self.Inset2 or self.Inset)
+    panel:SetParent(opts.noInset and self.Inset2 or self.Inset)
     panel:ClearAllPoints()
     panel:SetPoint('TOPLEFT', padding, -padding)
     panel:SetPoint('BOTTOMRIGHT', -padding, padding)

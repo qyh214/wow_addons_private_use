@@ -26,7 +26,7 @@ local time=time
 local tostring,GetSpecializationInfo,GetSpecialization=tostring,GetSpecializationInfo,GetSpecialization
 local empty={}
 local index={}
-local classes
+local classes={}
 local _G=_G
 -- Mission caching is a bit different fron follower caching mission appears and disappears on a regular basis
 local module=addon:NewSubClass('MissionCache') --#module
@@ -148,6 +148,7 @@ function module:AddExtraData(mission)
 	if not rewards then
 		rewards=G.GetMissionRewardInfo(mission.missionID)
 	end
+	local classes=classes[mission.followerTypeID]
 	for i=1,#classes do
 		mission[classes[i].key]=0
 	end
@@ -157,10 +158,6 @@ function module:AddExtraData(mission)
 	mission.moreClasses=mission.moreClasses or {}
 	wipe(mission.moreClasses)
 	mission.class=nil
---[===[@debug@
-	local dbg=461
---@end-debug@]===]
-	if mission.missionID == dbg then print("Extradata loading for ",mission.name) end
 	for k,v in pairs(rewards) do
 		if k==615 and v.followerXP then mission.xpBonus=mission.xpBonus+v.followerXP end
 		mission.numrewards=mission.numrewards+1
@@ -222,6 +219,11 @@ function module:AddExtraData(mission)
 				break
 			end
 		end
+	end
+	if mission.type:find("Siege")==6 then
+		mission.moreClasses[mission.class]=mission[mission.class]
+		mission.class="blockade"
+		mission.blockade=10
 	end
 	for k,v in pairs(mission.moreClasses) do
 		if not mission.class then mission.class=k end
@@ -435,7 +437,7 @@ local function newMissionType(key,name,icon,maxable,mat,func,...)
 		validate=isValid
 	}
 end
-classes={
+classes[LE_FOLLOWER_TYPE_GARRISON_6_0]={
 	newMissionType('xp',L['Follower experience'],'XPBonus_icon',false,false,nil,0),
 	newMissionType('resources',GetCurrencyInfo(GARRISON_CURRENCY),'inv_garrison_resource',true,true,nil,-GARRISON_CURRENCY),
 	newMissionType('oil',GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY),'garrison_oil',true,true,isOilMission,128316),
@@ -453,8 +455,30 @@ classes={
 	newMissionType('itemLevel',L['Item Tokens'],'INV_Bracer_Cloth_Reputation_C_01',false,false,nil,0),
 	newMissionType('other',L['Other rewards'],'INV_Box_02',false,false,nil,0),
 }
-function addon:GetRewardClasses()
-	return classes
+classes[LE_FOLLOWER_TYPE_SHIPYARD_6_2]={
+	newMissionType('xp',L['Follower experience'],'XPBonus_icon',false,false,nil,0),
+	newMissionType('rush',L['Rush orders'],'INV_Scroll_12',false,false,nil,122595,122594,122596,122592,122590,122593,122591,122576),
+	newMissionType('apexis',GetCurrencyInfo(823),'inv_apexis_draenor',false,false,nil,-823),
+	newMissionType('seal',GetCurrencyInfo(994),'ability_animusorbs',false,false,nil,-994),
+	newMissionType('gold',BONUS_ROLL_REWARD_MONEY,'inv_misc_coin_01',false,false,nil,0),
+	newMissionType('followerUpgrade',L['Follower equipment set or upgrade'],'Garrison_ArmorUpgrade',false,false,nil,0),
+	newMissionType('primalspirit',L['Reagents'],'6BF_Explosive_shard',false,false,nil,118472,120945,113261,113262,113263,113264),
+	newMissionType('ark',L['Archaelogy'],'achievement_character_orc_male',false,false,nil,-829,-828,-821,108439,109585,109584), -- Fragments and completer
+	newMissionType('training',L['Follower Training'],'Spell_Holy_WeaponMastery',false,false,nil,123858,118354,118475,122582,122583,122580,122584,118474),
+	newMissionType('legendary',L['Legendary Items'],'INV_Relics_Runestone',false,false,nil,115510,115280,128693,115981),
+	newMissionType('toys',L['Toys and Mounts'],'INV_LesserGronnMount_Red',false,false,nil,128310,127748,128311),
+	newMissionType('reputation',L['Reputation Items'],'Spell_Shadow_DemonicCircleTeleport',false,false,nil,117492,128315),
+	newMissionType('itemLevel',L['Item Tokens'],'INV_Bracer_Cloth_Reputation_C_01',false,false,nil,0),
+	newMissionType('other',L['Other rewards'],'INV_Box_02',false,false,nil,0),
+}
+classes[LE_FOLLOWER_TYPE_GARRISON_7_0]={
+	newMissionType('xp',L['Follower experience'],'XPBonus_icon',false,false,nil,0),
+	newMissionType('gold',BONUS_ROLL_REWARD_MONEY,'inv_misc_coin_01',false,false,nil,0),
+	newMissionType('other',L['Other rewards'],'INV_Box_02',false,false,nil,0),
+}
+function addon:GetRewardClasses(followerType)
+	followerType=followerType or LE_FOLLOWER_TYPE_GARRISON_6_0
+	return classes[followerType]
 end
 function addon:TestMissionExtra(id)
 	local data={missionID=id}

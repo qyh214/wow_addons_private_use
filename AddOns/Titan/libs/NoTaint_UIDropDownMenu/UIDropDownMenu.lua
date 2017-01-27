@@ -86,7 +86,6 @@ function Lib_UIDropDownMenu_Initialize(frame, initFunction, displayMode, level, 
 	if(level == nil) then
 		level = 1;
 	end
-	
 	local dropDownList = _G["Lib_DropDownList"..level]
 	dropDownList.dropdown = frame;
 	dropDownList.shouldRefresh = true;
@@ -101,7 +100,6 @@ function Lib_UIDropDownMenu_Initialize(frame, initFunction, displayMode, level, 
 		_G[name.."ButtonDisabledTexture"]:SetTexture("");
 		_G[name.."ButtonPushedTexture"]:SetTexture("");
 		_G[name.."ButtonHighlightTexture"]:SetTexture("");
-		
 		local button = _G[name.."Button"]
 		button:ClearAllPoints();
 		button:SetPoint("LEFT", name.."Text", "LEFT", -9, 0);
@@ -130,7 +128,6 @@ function Lib_UIDropDownMenu_OnUpdate(self, elapsed)
 		Lib_UIDropDownMenu_RefreshDropDownSize(self);
 		self.shouldRefresh = false;
 	end
-	
 	if ( not self.showTimer or not self.isCounting ) then
 		return;
 	elseif ( self.showTimer < 0 ) then
@@ -225,7 +222,7 @@ function Lib_UIDropDownMenu_CreateFrames(level, index)
 		LIB_UIDROPDOWNMENU_MAXLEVELS = LIB_UIDROPDOWNMENU_MAXLEVELS + 1;
 		local newList = CreateFrame("Button", "Lib_DropDownList"..LIB_UIDROPDOWNMENU_MAXLEVELS, nil, "Lib_UIDropDownListTemplate");
 		newList:SetFrameStrata("FULLSCREEN_DIALOG");
-		newList:SetToplevel(true);
+		newList:SetToplevel(1);
 		newList:Hide();
 		newList:SetID(LIB_UIDROPDOWNMENU_MAXLEVELS);
 		newList:SetWidth(180)
@@ -283,13 +280,8 @@ function Lib_UIDropDownMenu_AddButton(info, level)
 		level = 1;
 	end
 	
-	local index;
 	local listFrame = _G["Lib_DropDownList"..level];
-	if (listFrame and listFrame.numButtons) then
-		index = listFrame.numButtons + 1;
-	else
-		index = 1;
-	end
+	local index = listFrame and (listFrame.numButtons + 1) or 1;
 	local width;
 
 	Lib_UIDropDownMenuDelegate:SetAttribute("createframes-level", level);
@@ -346,7 +338,6 @@ function Lib_UIDropDownMenu_AddButton(info, level)
 		else
 			button:SetText(info.text);
 		end
-		
 		-- Set icon
 		if ( info.icon ) then
 			icon:SetSize(16,16);
@@ -363,7 +354,6 @@ function Lib_UIDropDownMenu_AddButton(info, level)
 		else
 			icon:Hide();
 		end
-
 		-- Check to see if there is a replacement font
 		if ( info.fontObject ) then
 			button:SetNormalFontObject(info.fontObject);
@@ -489,7 +479,6 @@ function Lib_UIDropDownMenu_AddButton(info, level)
 		end
 	end
 
-
 	if not info.notCheckable then 
 		if ( info.disabled ) then
 			_G[listFrameName.."Button"..index.."Check"]:SetDesaturated(true);
@@ -502,7 +491,6 @@ function Lib_UIDropDownMenu_AddButton(info, level)
 			_G[listFrameName.."Button"..index.."UnCheck"]:SetDesaturated(false);
 			_G[listFrameName.."Button"..index.."UnCheck"]:SetAlpha(1);
 		end
-
 		if info.isNotRadio then
 			_G[listFrameName.."Button"..index.."Check"]:SetTexCoord(0.0, 0.5, 0.0, 0.5);
 			_G[listFrameName.."Button"..index.."UnCheck"]:SetTexCoord(0.5, 1.0, 0.0, 0.5);
@@ -547,13 +535,9 @@ function Lib_UIDropDownMenu_AddButton(info, level)
 
 	width = max(Lib_UIDropDownMenu_GetButtonWidth(button), info.minWidth or 0);
 	--Set maximum button width
-	--if (not listFrame.maxWidth) then 
-	--	listFrame.maxWidth = 0;
-	--end
-	if ( listFrame.maxWidth and width > listFrame.maxWidth ) then
+	if ( width > listFrame.maxWidth ) then
 		listFrame.maxWidth = width;
 	end
-
 	-- Set the height of the listframe
 	listFrame:SetHeight((index * LIB_UIDROPDOWNMENU_BUTTON_HEIGHT) + (LIB_UIDROPDOWNMENU_BORDER_HEIGHT * 2));
 
@@ -936,7 +920,8 @@ function Lib_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
 			end
 			listFrame:ClearAllPoints();
 			-- If this is a dropdown button, not the arrow anchor it to itself
-			if ( strsub(button:GetParent():GetName(), 0,12) == "Lib_DropDownList" and strlen(button:GetParent():GetName()) == 13 ) then
+			local bname = button:GetParent():GetName()
+			if bname:match("^Lib_DropDownList%d+$") then
 				anchorFrame = button;
 			else
 				anchorFrame = button:GetParent();
@@ -1219,15 +1204,15 @@ end
 
 function Lib_UIDropDownMenu_GetValue(id)
 	--Only works if the dropdown has just been initialized, lame, I know =(
-	local button = _G["Lib_DropDownList1Button"..id];
+	local button = _G["DropDownList1Button"..id];
 	if ( button ) then
-		return _G["Lib_DropDownList1Button"..id].value;
+		return _G["DropDownList1Button"..id].value;
 	else
 		return nil;
 	end
 end
 
---[[function OpenColorPicker(info) --ColorPicker stuff not changed
+--[[function OpenColorPicker(info) ColorPicker stuff not changed
 	ColorPickerFrame.func = info.swatchFunc;
 	ColorPickerFrame.hasOpacity = info.hasOpacity;
 	ColorPickerFrame.opacityFunc = info.opacityFunc;

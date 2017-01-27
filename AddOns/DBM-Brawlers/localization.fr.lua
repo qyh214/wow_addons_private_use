@@ -134,16 +134,20 @@ L:SetGeneralLocalization({
 -------------
 -- Rares 1 --
 -------------
-L= DBM:GetModLocalization("BrawlRare1")
+L= DBM:GetModLocalization("BrawlLegacy")
 
 L:SetGeneralLocalization({
 	name = "Bastonneurs : Défis Héritage"
 })
 
+L:SetOptionLocalization({
+	SpeakOutStrikes		= "Compter le nombre de $spell:141190"
+})
+
 -------------
 -- Rares 2 --
 -------------
-L= DBM:GetModLocalization("BrawlRare2")
+L= DBM:GetModLocalization("BrawlChallenges")
 
 L:SetGeneralLocalization({
 	name = "Bastonneurs : Défis Spéciaux"
@@ -155,8 +159,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	ArrowOnBoxing		= "Afficher une flèche DBM pendant $spell:140868 et $spell:140862 et $spell:140886",
-	specWarnRPS			= "Afficher une alerte spéciale pour faire le bon choix lors de $spell:141206",
-	SpeakOutStrikes		= "Compter le nombre de $spell:141190"
+	specWarnRPS			= "Afficher une alerte spéciale pour faire le bon choix lors de $spell:141206"
 })
 
 L:SetMiscLocalization({

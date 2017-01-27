@@ -1,3 +1,4 @@
+NomiCakesGossipButtonName = 'GossipTitleButton'
 --[[
 	Operating under the following assumptions about how recipes are discovered:
 	1) You must know the base rank of a recipe to receive higher ranked versions of it
@@ -194,7 +195,7 @@ local function DecorateNomi()
 		local _, _, _, _, ingredientIcon = GetItemInfoInstant(ingredientItemID)
 		if count >= 5 then -- we have enough of an ingredient for nomi to display it
 			i = i + 1
-			local buttonName = 'GossipTitleButton' .. i
+			local buttonName = NomiCakesGossipButtonName .. i
 			local button = _G[buttonName]
 			local buttonIcon = _G[buttonName .. 'GossipIcon'] -- check that the icon is for a work order, otherwise we might overwrite a quest button or something
 			if button and button:IsShown() and buttonIcon and buttonIcon:GetTexture():lower() == 'interface\\gossipframe\\workordergossipicon' then

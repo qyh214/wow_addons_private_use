@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 15610 $"):sub(12, -3)),
-	DisplayVersion = "7.1.6", -- the string that is shown as version
-	ReleaseRevision = 15610 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 15725 $"):sub(12, -3)),
+	DisplayVersion = "7.1.11", -- the string that is shown as version
+	ReleaseRevision = 15725 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -420,7 +420,7 @@ local dbmToc = 0
 local UpdateChestTimer
 local breakTimerStart
 
-local fakeBWVersion, fakeBWHash = 30, "3fd1ebb"
+local fakeBWVersion, fakeBWHash = 38, "472eafa"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -1171,7 +1171,7 @@ do
 				if GetAddOnMetadata(i, "X-DBM-Mod") and enabled ~= 0 then
 					if checkEntry(bannedMods, addonName) then
 						self:AddMsg("The mod " .. addonName .. " is deprecated and will not be available. Please remove the folder " .. addonName .. " from your Interface" .. (IsWindowsClient() and "\\" or "/") .. "AddOns folder to get rid of this message. Check for an updated version of " .. addonName .. " that is compatible with your game version.")
-					elseif minToc and minToc > wowTOC then
+					elseif not testBuild and minToc and minToc > wowTOC then
 						self:Debug(i.." not loaded because mod requires minimum toc of "..minToc)
 					else
 						local mapIdTable = {strsplit(",", GetAddOnMetadata(i, "X-DBM-Mod-MapID") or "")}
@@ -3596,9 +3596,9 @@ do
 	end
 	local function SecondaryLoadCheck(self)
 		local _, instanceType, difficulty, _, _, _, _, mapID, instanceGroupSize = GetInstanceInfo()
-		self:Debug("Instance Check fired with mapID "..mapID.." and difficulty "..difficulty)
+		self:Debug("Instance Check fired with mapID "..mapID.." and difficulty "..difficulty, 2)
 		if LastInstanceMapID == mapID then
-			self:Debug("No action taken because mapID hasn't changed since last check")
+			self:Debug("No action taken because mapID hasn't changed since last check", 2)
 			return
 		end--ID hasn't changed, don't waste cpu doing anything else (example situation, porting into garrosh phase 4 is a loading screen)
 		LastInstanceMapID = mapID
@@ -3637,6 +3637,9 @@ do
 		if DBM:HasMapRestrictions() then
 			DBM.Arrow:Hide()
 			DBMHudMap:Disable()
+			if DBM.RangeCheck:IsRadarShown() then
+				DBM.RangeCheck:Hide(true)
+			end
 		end
 	end
 
@@ -3704,7 +3707,7 @@ function DBM:LoadMod(mod, force)
 		self:SetCurrentSpecInfo()
 	end
 	EJ_SetDifficulty(difficultyIndex)--Work around blizzard crash bug where other mods (like Boss) screw with Ej difficulty value, which makes EJ_GetSectionInfo crash the game when called with invalid difficulty index set.
-	self:Debug("LoadAddOn should have fired for "..mod.name)
+	self:Debug("LoadAddOn should have fired for "..mod.name, 2)
 	local loaded, reason = LoadAddOn(mod.modId)
 	if not loaded then
 		if reason then
@@ -3922,7 +3925,7 @@ do
 		else--Not from self, it means someone with a higher version than us probably sent it
 			canSetIcons[optionName] = false
 		end
-		local name = DBM:GetFullPlayerNameByGUID(iconSetPerson[optionName])
+		local name = DBM:GetFullPlayerNameByGUID(iconSetPerson[optionName]) or DBM_CORE_UNKNOWN
 		DBM:Debug(name.." was elected icon setter for "..optionName, 2)
 	end
 
@@ -5519,15 +5522,10 @@ do
 				--elect icon person
 				if mod.findFastestComputer and not self.Options.DontSetIcons then
 					if self:GetRaidRank() > 0 then
-						local optionName = mod.findFastestComputer[1]
-						if #mod.findFastestComputer == 1 and mod.Options[optionName] then
-							sendSync("IS", UnitGUID("player").."\t"..DBM.Revision.."\t"..optionName)
-						else
-							for i = 1, #mod.findFastestComputer do
-								local option = mod.findFastestComputer[i]
-								if mod.Options[option] then
-									sendSync("IS", UnitGUID("player").."\t"..DBM.Revision.."\t"..option)
-								end
+						for i = 1, #mod.findFastestComputer do
+							local option = mod.findFastestComputer[i]
+							if mod.Options[option] then
+								sendSync("IS", UnitGUID("player").."\t"..DBM.Revision.."\t"..option)
 							end
 						end
 					elseif not IsInGroup() then
@@ -5977,7 +5975,7 @@ do
 	local autoTLog = false
 	
 	local function isCurrentContent()
-		if LastInstanceMapID == 1520 or LastInstanceMapID == 1530 or LastInstanceMapID == 1220 or LastInstanceMapID == 1648 then--Legion
+		if LastInstanceMapID == 1520 or LastInstanceMapID == 1530 or LastInstanceMapID == 1220 or LastInstanceMapID == 1648 or LastInstanceMapID == 1676 then--Legion
 			return true
 		end
 		return false
@@ -6701,8 +6699,9 @@ function DBM:RoleCheck(ignoreLoot)
 	local spec = GetSpecialization()
 	if not spec then return end
 	local role = GetSpecializationRole(spec)
+	if not role then return end
 	local specID = GetLootSpecialization()
-	local _, _, _, _, _, lootrole = GetSpecializationInfoByID(specID)
+	local _, _, _, _, lootrole = GetSpecializationInfoByID(specID)
 	if not InCombatLockdown() and ((IsPartyLFG() and (difficultyIndex == 14 or difficultyIndex == 15)) or not IsPartyLFG()) then
 		if UnitGroupRolesAssigned("player") ~= role then
 			UnitSetRole("player", role)
@@ -6759,11 +6758,8 @@ function DBM:FindInstanceIDs()
 	end
 end
 
---/run DBM:FindEncounterIDs(768)--Emerald Nightmare
---/run DBM:FindEncounterIDs(786)--The Nighthold
---/run DBM:FindEncounterIDs(822)--Broken Isles
---/run DBM:FindEncounterIDs(861)--Trial of Valor
---/run DBM:FindEncounterIDs(860, 23)--Return to Karazhan
+--/run DBM:FindEncounterIDs(875)--Tomb of Sargeras
+--/run DBM:FindEncounterIDs(900, 23)--Cathedral of Eternal Night
 function DBM:FindEncounterIDs(instanceID, diff)
 	if not instanceID then
 		self:AddMsg("Error: Function requires instanceID be provided")
@@ -7989,7 +7985,7 @@ function bossModPrototype:IsTank()
 	if not currentSpecID then
 		DBM:SetCurrentSpecInfo()
 	end
-	local _, _, _, _, _, role = GetSpecializationInfoByID(currentSpecID)
+	local _, _, _, _, role = GetSpecializationInfoByID(currentSpecID)
 	if role == "TANK" then
 		return true
 	else
@@ -8007,7 +8003,7 @@ function bossModPrototype:IsDps(uId)
 	if not currentSpecID then
 		DBM:SetCurrentSpecInfo()
 	end
-	local _, _, _, _, _, role = GetSpecializationInfoByID(currentSpecID)
+	local _, _, _, _, role = GetSpecializationInfoByID(currentSpecID)
 	if role == "DAMAGER" then
 		return true
 	else
@@ -8025,7 +8021,7 @@ function bossModPrototype:IsHealer(uId)
 	if not currentSpecID then
 		DBM:SetCurrentSpecInfo()
 	end
-	local _, _, _, _, _, role = GetSpecializationInfoByID(currentSpecID)
+	local _, _, _, _, role = GetSpecializationInfoByID(currentSpecID)
 	if role == "HEALER" then
 		return true
 	else
@@ -11009,7 +11005,7 @@ do
 		return false
 	end
 
-	local mobUids = {"mouseover", "boss1", "boss2", "boss3", "boss4", "boss5"}
+	local mobUids = {"mouseover", "target", "boss1", "boss2", "boss3", "boss4", "boss5"}
 	function bossModPrototype:ScanForMobs(creatureID, iconSetMethod, mobIcon, maxIcon, scanInterval, scanningTime, optionName, isFriendly, secondCreatureID)
 		if not optionName then optionName = self.findFastestComputer[1] end
 		if canSetIcons[optionName] then
@@ -11046,10 +11042,11 @@ do
 				local unitid = uId.."target"
 				local guid = UnitGUID(unitid)
 				local cid = self:GetCIDFromGUID(guid)
-				local isEnemy = UnitIsEnemy("player", unitid)
+				local isEnemy = UnitIsEnemy("player", unitid) or true--If api returns nil, assume it's an enemy
 				local isFiltered = false
 				if not isFriendly and not isEnemy then
 					isFiltered = true
+					DBM:Debug("ScanForMobs aborting because friendly mob", 2)
 				end
 				if not isFiltered then
 					if guid and type(creatureID) == "table" and creatureID[cid] and not addsGUIDs[guid] then

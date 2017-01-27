@@ -1,0 +1,12 @@
+tag 56b9961e64c2e6c1aa224419cdc75522153c405b 3.3.3
+Author:	Hendrik Leppkes <h.leppkes@gmail.com>
+Date:	Wed Jan 11 13:35:10 2017 +1100
+
+Tag as 3.3.3
+
+commit 0cbb6767ba6560e22aa6f0a2a04d09e7d569517f
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Wed Jan 11 11:14:33 2017 +1100
+
+    Update channeling spell info for 7.1.5
+

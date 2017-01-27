@@ -1,16 +1,13 @@
-tag 6d463cbaef455d98d855c417bf9829ce6517143c 1.0.8
+tag 7002136a3500b8e89112a7555768abeaf115e23e 1.0.9
 Author:	Benjamin Staneck <staneck@gmail.com>
-Date:	Thu Dec 8 20:33:12 2016 +0100
+Date:	Sat Jan 14 04:56:45 2017 +0100
 
-commit bc4ea0346dccf65f145617aa019ff4450f72d8a1
-Author: kesava-wow <kesava-wow@users.noreply.github.com>
-Date:   Thu Dec 8 19:05:30 2016 +0000
+commit 9ec6a0d6ed4bb00715c5718fdcbcedeff8d55a53
+Author: semlar <teslagraafs@gmail.com>
+Date:   Fri Jan 13 21:21:57 2017 -0500
 
-    add some 7.1 nameplate cvars
-
-commit bc4ea0346dccf65f145617aa019ff4450f72d8a1
-Author: kesava-wow <kesava-wow@users.noreply.github.com>
-Date:   Thu Dec 8 19:05:30 2016 +0000
-
-    add some 7.1 nameplate cvars
+    More aggressively prevent user from modifying cvars in combat
+    
+    If I had a nickel for every time I tainted the interface I could afford
+    to do this full-time
 

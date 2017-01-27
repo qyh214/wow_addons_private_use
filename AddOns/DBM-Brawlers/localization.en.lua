@@ -20,7 +20,8 @@ L:SetOptionLocalization({
 	specWarnYourNext	= "Show special warning when you're next in line",
 	specWarnYourTurn	= "Show special warning when it's your match",
 	SpectatorMode		= "Show warnings/timers when spectating fights<br/>(Personal 'Special Warning' messages not shown to spectators)",
-	SpeakOutQueue		= "Count out your number in the queue when it updates"
+	SpeakOutQueue		= "Count out your number in the queue when it updates",
+	NormalizeVolume		= "Automatically normalize the DIALOG sound channel volume to match SFX sound channel volume when in Brawlers area so that cheers aren't so loud."
 })
 
 L:SetMiscLocalization({
@@ -112,6 +113,7 @@ L:SetGeneralLocalization({
 	name = "Brawlers: Rank 7"
 })
 
+--[[
 ------------
 -- Rank 8 --
 ------------
@@ -129,23 +131,28 @@ L= DBM:GetModLocalization("BrawlRank9")
 L:SetGeneralLocalization({
 	name = "Brawlers: Rank 9"
 })
+--]]
 
 -------------
--- Rares 1 --
+-- Brawlers: Legacy --
 -------------
-L= DBM:GetModLocalization("BrawlRare1")
+L= DBM:GetModLocalization("BrawlLegacy")
 
 L:SetGeneralLocalization({
-	name = "Brawlers: Legacy Challenges"
+	name = "Brawlers: Legacy"
+})
+
+L:SetOptionLocalization({
+	SpeakOutStrikes		= "Count out number of $spell:141190 attacks"
 })
 
 -------------
--- Rares 2 --
+-- Brawlers: Challenges --
 -------------
-L= DBM:GetModLocalization("BrawlRare2")
+L= DBM:GetModLocalization("BrawlChallenges")
 
 L:SetGeneralLocalization({
-	name = "Brawlers: Special Challenges"
+	name = "Brawlers: Challenge"
 })
 
 L:SetWarningLocalization({
@@ -154,12 +161,20 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	ArrowOnBoxing		= "Show DBM Arrow during $spell:140868 and $spell:140862 and $spell:140886",
-	specWarnRPS			= "Show special warning on what to use for $spell:141206",
-	SpeakOutStrikes		= "Count out number of $spell:141190 attacks"
+	specWarnRPS			= "Show special warning on what to use for $spell:141206"
 })
 
 L:SetMiscLocalization({
 	rock			= "Rock",
 	paper			= "Paper",
 	scissors		= "Scissors"
+})
+
+-------------
+-- Brawlers: Rumble --
+-------------
+L= DBM:GetModLocalization("BrawlRumble")
+
+L:SetGeneralLocalization({
+	name = "Brawlers: Rumble"
 })

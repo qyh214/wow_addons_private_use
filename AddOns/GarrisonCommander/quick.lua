@@ -7,6 +7,9 @@ function qm:OnInitialized()
 	ns.step="none"
 end
 local watchdog=0
+local function HasShipTable()
+	return ns.quests[39068] or ns.quests[39246] -- Naval Domination
+end
 function qm:RunQuick()
 	if not ns.quick then return end
 --[===[@debug@
