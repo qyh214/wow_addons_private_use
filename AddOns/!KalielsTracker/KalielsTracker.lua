@@ -9,6 +9,7 @@ local KT = LibStub("AceAddon-3.0"):NewAddon(addon, addonName, "LibSink-2.0")
 KT:SetDefaultModuleState(false)
 KT.title = GetAddOnMetadata(addonName, "Title")
 KT.version = GetAddOnMetadata(addonName, "Version")
+KT.gameVersion = GetBuildInfo()
 KT.locale = GetLocale()
 
 local LSM = LibStub("LibSharedMedia-3.0")
@@ -44,6 +45,8 @@ local questState = {}
 local freeTags = {}
 local freeButtons = {}
 local msgPatterns = {}
+local msgShow = true
+local updateAll = false
 local combatLockdown = false
 local numQuestItems = 0
 local numWorldQuestItems = 0
@@ -66,7 +69,10 @@ OBJECTIVE_TRACKER_TEXT_WIDTH = OBJECTIVE_TRACKER_LINE_WIDTH - OBJECTIVE_TRACKER_
 DEFAULT_OBJECTIVE_TRACKER_MODULE.lineWidth = OBJECTIVE_TRACKER_TEXT_WIDTH
 DEFAULT_OBJECTIVE_TRACKER_MODULE.freeLines[1].Text:SetWidth(OBJECTIVE_TRACKER_TEXT_WIDTH)
 
+OTF.BlocksFrame.PopupQuestHeader = CreateFrame("Frame", "PopupQuestHeader", OTF.BlocksFrame, "ObjectiveTrackerHeaderTemplate")
+AUTO_QUEST_POPUP_TRACKER_MODULE:SetHeader(OTF.BlocksFrame.PopupQuestHeader, TRACKER_HEADER_QUESTS, nil)
 AUTO_QUEST_POPUP_TRACKER_MODULE.blockOffsetX = -26
+AUTO_QUEST_POPUP_TRACKER_MODULE.blockOffsetY = -6
 SCENARIO_CONTENT_TRACKER_MODULE.blockOffsetX = -16
 BONUS_OBJECTIVE_TRACKER_MODULE.blockPadding = 0
 WORLD_QUEST_TRACKER_MODULE.blockPadding = 0
@@ -190,8 +196,9 @@ local function Init()
 		SetOverrideBindingClick(KTF, false, db.keyBindMinimize, KTF.MinimizeButton:GetName())
 	end
 
-	for _, module in ipairs(OTF.MODULES) do
-		KT:SaveHeader(module)
+	for i, module in ipairs(db.modulesOrder) do
+		OTF.MODULES_UI_ORDER[i] = _G[module]
+		KT:SaveHeader(OTF.MODULES_UI_ORDER[i])
 	end
 
 	KT:MoveTracker()
@@ -201,10 +208,20 @@ local function Init()
 	KT:SetQuestsHeaderText()
 	KT:SetAchievsHeaderText()
 
+	KT.initialized = true
+	KT.stopUpdate = false
+
 	if db.collapsed then
 		ObjectiveTracker_MinimizeButton_OnClick()
+	else
+		OTF.BlocksFrame:Hide()
+		ObjectiveTracker_Update()
+		OTF.BlocksFrame:Show()
+		ObjectiveTracker_Update()
 	end
 end
+
+-- Frames --------------------------------------------------------------------------------------------------------------
 
 local function SetFrames()
 	-- Main frame
@@ -214,14 +231,14 @@ local function SetFrames()
 
 	KTF:SetScript("OnEvent", function(_, event, ...)
 		_DBG("Event - "..event)
-		if event == "PLAYER_ENTERING_WORLD" then
-			KT.stopUpdate = false
+		if event == "PLAYER_ENTERING_WORLD" and not KT.stopUpdate then
+			msgShow = true
 			KT.inInstance = IsInInstance()
 			if db.collapseInInstance and KT.inInstance and not db.collapsed then
 				ObjectiveTracker_MinimizeButton_OnClick()
 			end
 		elseif event == "PLAYER_LEAVING_WORLD" then
-			KT.stopUpdate = true
+			msgShow = false
 		elseif event == "QUEST_WATCH_LIST_CHANGED" then
 			local id, added = ...
 			if id and not added then
@@ -229,15 +246,20 @@ local function SetFrames()
 				if KT.activeTask == id then
 					KT.activeTask = nil
 				end
+				updateAll = (numQuestItems > 0 or numWorldQuestItems > 0)
 			end
 			KT:ToggleEmptyTracker(added)
 		elseif event == "TRACKED_ACHIEVEMENT_LIST_CHANGED" then
 			local id, added = ...
 			KT:ToggleEmptyTracker(added)
+		elseif event == "SCENARIO_UPDATE" then
+			local newStage = ...
+			KT:ToggleEmptyTracker(newStage)
 		elseif event == "QUEST_AUTOCOMPLETE" then
 			KTF.Scroll.value = 0
 		elseif event == "QUEST_ACCEPTED" or event == "QUEST_REMOVED" then
 			KT:SetQuestsHeaderText()
+			updateAll = (numQuestItems > 0 or numWorldQuestItems > 0)
 		elseif event == "ACHIEVEMENT_EARNED" then
 			KT:SetAchievsHeaderText()
 		elseif event == "PLAYER_REGEN_ENABLED" and combatLockdown then
@@ -251,9 +273,11 @@ local function SetFrames()
 			KT:UpdateHotkey()
 		end
 	end)
+	KTF:RegisterEvent("PLAYER_ENTERING_WORLD")
 	KTF:RegisterEvent("PLAYER_LEAVING_WORLD")
 	KTF:RegisterEvent("QUEST_WATCH_LIST_CHANGED")
 	KTF:RegisterEvent("TRACKED_ACHIEVEMENT_LIST_CHANGED")
+	KTF:RegisterEvent("SCENARIO_UPDATE")
 	KTF:RegisterEvent("QUEST_AUTOCOMPLETE")
 	KTF:RegisterEvent("QUEST_ACCEPTED")
 	KTF:RegisterEvent("QUEST_REMOVED")
@@ -298,6 +322,7 @@ local function SetFrames()
 	end)
 	KTF.MinimizeButton = button
 
+	-- Other buttons
 	KT:ToggleOtherButtons()
 
 	-- Scroll frame
@@ -325,9 +350,6 @@ local function SetFrames()
 			_DBG("SCROLL ... "..self.value.." ... "..OTF.height.." - "..db.maxHeight)
 		end
 	end)
-	Scroll:SetScript("OnScrollRangeChanged", function(self, x, y)
-		KT:MoveButtons()
-	end)
 	KTF.Scroll = Scroll
 
 	-- Scroll child frame
@@ -349,7 +371,6 @@ local function SetFrames()
 	OTF:KTSetParent(Child)
 	OTF:KTSetPoint("TOPLEFT", 30, -1)
 	OTF:KTSetPoint("BOTTOMRIGHT")
-
 	OTFHeader:Show()
 	OTFHeader.Hide = function() end
 	OTFHeader.SetShown = function() end
@@ -361,7 +382,6 @@ local function SetFrames()
 	OTFHeader.Title:SetWidth(trackerWidth - 90)
 	OTFHeader.Title:SetJustifyH("LEFT")
 	OTFHeader.Title:SetWordWrap(false)
-
 	ScenarioBlocksFrame:SetWidth(243)
 
 	-- Buttons frame
@@ -385,14 +405,85 @@ end
 -- Hooks ---------------------------------------------------------------------------------------------------------------
 
 local function SetHooks()
+	local function FixedButtonsReanchor()
+		if InCombatLockdown() then
+			if KTF.Buttons.num > 0 then
+				combatLockdown = true
+			end
+		else
+			if KTF.Buttons.reanchor then
+				local questID, block, questLogIndex, yOfs
+				local contentsHeight = 0
+				-- World Quest items
+				_DBG(" - REANCHOR buttons - WQ", true)
+				local tasksTable = GetTasksTable()
+				for i = 1, #tasksTable do
+					questID = tasksTable[i]
+					questLogIndex = GetQuestLogIndexByID(questID)
+					if questLogIndex > 0 and QuestUtils_IsQuestWorldQuest(questID) and not IsWorldQuestWatched(questID) then
+						block = WORLD_QUEST_TRACKER_MODULE.usedBlocks[questID]
+						if block and block.itemButton then
+							yOfs = -(contentsHeight + 7)
+							contentsHeight = contentsHeight + 26 + 3
+							KT.fixedButtons[questID]:SetPoint("TOP", 0, yOfs)
+						end
+					end
+				end
+				for i = 1, GetNumWorldQuestWatches() do
+					questID = GetWorldQuestWatchInfo(i)
+					if questID then
+						block = WORLD_QUEST_TRACKER_MODULE.usedBlocks[questID]
+						if block and block.itemButton then
+							yOfs = -(contentsHeight + 7)
+							contentsHeight = contentsHeight + 26 + 3
+							KT.fixedButtons[questID]:SetPoint("TOP", 0, yOfs)
+						end
+					end
+				end
+				-- Quest items
+				_DBG(" - REANCHOR buttons - Q", true)
+				for i = 1, GetNumQuestWatches() do
+					questID = GetQuestWatchInfo(i)
+					block = QUEST_TRACKER_MODULE.usedBlocks[questID]
+					if block and block.itemButton then
+						yOfs = -(contentsHeight + 7)
+						contentsHeight = contentsHeight + 26 + 3
+						KT.fixedButtons[questID]:SetPoint("TOP", 0, yOfs)
+					end
+				end
+				if contentsHeight > 0 then
+					contentsHeight = contentsHeight + 7 + 4
+				end
+				KTF.Buttons:SetHeight(contentsHeight)
+				KTF.Buttons.reanchor = false
+			end
+			if db.collapsed or (numQuestItems == 0 and numWorldQuestItems == 0) then
+				KTF.Buttons:Hide()
+			else
+				KTF.Buttons:Show()
+			end
+			KT.ActiveButton:Update()
+		end
+		if db.collapsed or (numQuestItems == 0 and numWorldQuestItems == 0) then
+			KTF.Buttons:SetAlpha(0)
+		else
+			KTF.Buttons:SetAlpha(1)
+		end
+	end
+
 	local bck_ObjectiveTracker_Update = ObjectiveTracker_Update
 	ObjectiveTracker_Update = function(reason, id)
 		if KT.stopUpdate then return end
 		if reason ~= OBJECTIVE_TRACKER_UPDATE_STATIC then
-			_DBG("|cffffff00Update ... "..(reason and reason or ""))
+			_DBG("|cffffff00Update ... "..(reason or ""))
+		end
+		if updateAll then
+			reason = nil
+			updateAll = false
 		end
 		bck_ObjectiveTracker_Update(reason, id)
 		OTF.isUpdating = true
+		FixedButtonsReanchor()
 		if db.collapsed then
 			local _, numQuests = GetNumQuestLogEntries()
 			local title = ""
@@ -405,10 +496,6 @@ local function SetHooks()
 		end
 		if reason == OBJECTIVE_TRACKER_UPDATE_STATIC then
 			return
-		elseif reason == OBJECTIVE_TRACKER_UPDATE_TASK_ADDED or reason == OBJECTIVE_TRACKER_UPDATE_WORLD_QUEST_ADDED then
-			if db.collapsed and KT.AddonPetTracker:IsShown() then
-				return
-			end
 		elseif not KT.activeTask then
 			KT:ToggleEmptyTracker()
 		end
@@ -449,7 +536,7 @@ local function SetHooks()
 			line.Check:SetPoint("LEFT", -db.fontSize*0.2+(db.fontFlag == "" and 0 or 1), 0)
 		end
 		-- completion state
-		if type(objectiveKey) == "string" then
+		if msgShow and type(objectiveKey) == "string" then
 			if strfind(objectiveKey, "Complete") then
 				if not questState[block.id] or questState[block.id] ~= "complete" then
 					SetMessage(block.title, ERR_QUEST_COMPLETE_S, 0, 1, 0, "Interface\\GossipFrame\\ActiveQuestIcon", -2, 0)
@@ -491,9 +578,9 @@ local function SetHooks()
 			GameTooltip:SetOwner(block, "ANCHOR_NONE")
 			GameTooltip:ClearAllPoints()
 			if KTF.anchorLeft then
-				GameTooltip:SetPoint("TOPLEFT", block, "TOPRIGHT", 12, 0)
+				GameTooltip:SetPoint("TOPLEFT", block, "TOPRIGHT", 12, 1)
 			else
-				GameTooltip:SetPoint("TOPRIGHT", block, "TOPLEFT", -32, 0)
+				GameTooltip:SetPoint("TOPRIGHT", block, "TOPLEFT", -32, 1)
 			end
 			if self == QUEST_TRACKER_MODULE then
 				GameTooltip:SetHyperlink(GetQuestLink(block.id))
@@ -749,8 +836,7 @@ local function SetHooks()
 
 	local bck_QUEST_TRACKER_MODULE_SetBlockHeader = QUEST_TRACKER_MODULE.SetBlockHeader
 	function QUEST_TRACKER_MODULE:SetBlockHeader(block, text, questLogIndex, isQuestComplete, questID)
-		-- TODO: Change in patch 7.1.5
-		local _, level, _, _, _, _, frequency, questID = GetQuestLogTitle(questLogIndex)
+		local _, level, _, _, _, _, frequency, _ = GetQuestLogTitle(questLogIndex)
 		local tagID, _ = GetQuestTagInfo(questID)
 		text = KT:CreateQuestTag(level, tagID, frequency)..text
 		bck_QUEST_TRACKER_MODULE_SetBlockHeader(self, block, text, questLogIndex, isQuestComplete, questID)
@@ -761,7 +847,7 @@ local function SetHooks()
 		if item and (not isQuestComplete or showItemWhenComplete) then
 			KTF.Buttons.num = KTF.Buttons.num + 1
 			numQuestItems = numQuestItems + 1
-			CreateFixedTag(block, 3, 3)
+			CreateFixedTag(block, 3, 4)
 			local button = CreateFixedButton(block)
 			if not InCombatLockdown() then
 				button:SetID(questLogIndex)
@@ -788,79 +874,9 @@ local function SetHooks()
 	local bck_QUEST_TRACKER_MODULE_Update = QUEST_TRACKER_MODULE.Update
 	function QUEST_TRACKER_MODULE:Update()
 		numQuestItems = 0
-		KTF.Buttons.num = numQuestItems
+		KTF.Buttons.num = numWorldQuestItems
 		bck_QUEST_TRACKER_MODULE_Update()
 	end
-
-	local function FixedButtonsReanchor()
-		if InCombatLockdown() then
-			if KTF.Buttons.num > 0 then
-				combatLockdown = true
-			end
-		else
-			if KTF.Buttons.reanchor then
-				local questID, block, questLogIndex, yOfs
-				local contentsHeight = 0
-				-- Quest items
-				_DBG(" - REANCHOR buttons - Q", true)
-				for i = 1, GetNumQuestWatches() do
-					questID = GetQuestWatchInfo(i)
-					block = QUEST_TRACKER_MODULE.usedBlocks[questID]
-					if block and block.itemButton then
-						yOfs = -(contentsHeight + 7)
-						contentsHeight = contentsHeight + 26 + 3
-						KT.fixedButtons[questID]:SetPoint("TOP", 0, yOfs)
-					end
-				end
-				-- World Quest items
-				_DBG(" - REANCHOR buttons - WQ", true)
-				local tasksTable = GetTasksTable()
-				for i = 1, #tasksTable do
-					questID = tasksTable[i]
-					questLogIndex = GetQuestLogIndexByID(questID)
-					if questLogIndex > 0 and QuestUtils_IsQuestWorldQuest(questID) and not IsWorldQuestWatched(questID) then
-						block = WORLD_QUEST_TRACKER_MODULE.usedBlocks[questID]
-						if block and block.itemButton then
-							yOfs = -(contentsHeight + 7)
-							contentsHeight = contentsHeight + 26 + 3
-							KT.fixedButtons[questID]:SetPoint("TOP", 0, yOfs)
-						end
-					end
-				end
-				for i = 1, GetNumWorldQuestWatches() do
-					questID = GetWorldQuestWatchInfo(i)
-					if questID then
-						block = WORLD_QUEST_TRACKER_MODULE.usedBlocks[questID]
-						if block and block.itemButton then
-							yOfs = -(contentsHeight + 7)
-							contentsHeight = contentsHeight + 26 + 3
-							KT.fixedButtons[questID]:SetPoint("TOP", 0, yOfs)
-						end
-					end
-				end
-				if contentsHeight > 0 then
-					contentsHeight = contentsHeight + 7 + 4
-				end
-				KTF.Buttons:SetHeight(contentsHeight)
-				KTF.Buttons.reanchor = false
-			end
-			if db.collapsed or (numQuestItems == 0 and numWorldQuestItems == 0) then
-				KTF.Buttons:Hide()
-			else
-				KTF.Buttons:Show()
-			end
-			KT.ActiveButton:Update()
-		end
-		if db.collapsed or (numQuestItems == 0 and numWorldQuestItems == 0) then
-			KTF.Buttons:SetAlpha(0)
-		else
-			KTF.Buttons:SetAlpha(1)
-		end
-	end
-
-	hooksecurefunc(QUEST_TRACKER_MODULE, "EndLayout", function(self, isStaticReanchor)
-		FixedButtonsReanchor()
-	end)
 
 	local function SetQuestItemButton(block)
 		local questLogIndex = GetQuestLogIndexByID(block.id)
@@ -868,7 +884,7 @@ local function SetHooks()
 		if item and (not isQuestComplete or showItemWhenComplete) then
 			KTF.Buttons.num = KTF.Buttons.num + 1
 			numWorldQuestItems = numWorldQuestItems + 1
-			CreateFixedTag(block, 0, 2)
+			CreateFixedTag(block, 0, 1)
 			local button = CreateFixedButton(block)
 			if not InCombatLockdown() then
 				button:SetID(questLogIndex)
@@ -886,23 +902,27 @@ local function SetHooks()
 		end
 	end
 
+	function QuestObjectiveSetupBlockButton_FindGroup(block, questID)
+		return nil
+	end
+
 	hooksecurefunc(WORLD_QUEST_TRACKER_MODULE, "Update", function(self)
-		if self.ShowWorldQuests then
-			numWorldQuestItems = 0
-			KTF.Buttons.num = numQuestItems
-			local block, questID, questLogIndex
-			local tasksTable = GetTasksTable()
-			for i = 1, #tasksTable do
-				questID = tasksTable[i]
-				questLogIndex = GetQuestLogIndexByID(questID)
-				if questLogIndex > 0 and QuestUtils_IsQuestWorldQuest(questID) and not IsWorldQuestWatched(questID) then
-					block = self.usedBlocks[questID]
-					if block then
-						block.TrackedQuest:SetPoint("TOPLEFT", -2, 0)
-						SetQuestItemButton(block)
-					end
+		numWorldQuestItems = 0
+		KTF.Buttons.num = 0
+		local block, questID, questLogIndex
+		local tasksTable = GetTasksTable()
+		for i = 1, #tasksTable do
+			questID = tasksTable[i]
+			questLogIndex = GetQuestLogIndexByID(questID)
+			if questLogIndex > 0 and QuestUtils_IsQuestWorldQuest(questID) and not IsWorldQuestWatched(questID) then
+				block = self.usedBlocks[questID]
+				if block then
+					block.TrackedQuest:SetPoint("TOPLEFT", -2, 0)
+					SetQuestItemButton(block)
 				end
 			end
+		end
+		if self.ShowWorldQuests then
 			for i = 1, GetNumWorldQuestWatches() do
 				questID = GetWorldQuestWatchInfo(i)
 				if questID then
@@ -913,8 +933,6 @@ local function SetHooks()
 					end
 				end
 			end
-
-			FixedButtonsReanchor()
 		end
 	end)
 
@@ -923,7 +941,6 @@ local function SetHooks()
 		if KT.activeTask == block.id then
 			KT.activeTask = nil
 		end
-		KT:RemoveFixedButton(block)
 		bck_WORLD_QUEST_TRACKER_MODULE_OnFreeBlock(self, block)
 	end
 
@@ -977,6 +994,18 @@ local function SetHooks()
 		end
 	end
 
+	local bck_SCENARIO_CONTENT_TRACKER_MODULE_Update = SCENARIO_CONTENT_TRACKER_MODULE.Update
+	function SCENARIO_CONTENT_TRACKER_MODULE:Update()
+		local _, _, numStages, _ = C_Scenario.GetInfo()
+		local BlocksFrame = SCENARIO_TRACKER_MODULE.BlocksFrame
+		self.topBlock = nil
+		self.lastBlock = nil
+		bck_SCENARIO_CONTENT_TRACKER_MODULE_Update(self)
+		if numStages > 0 and BlocksFrame.currentStage ~= currentStage and BlocksFrame.currentBlock then
+			self.lastBlock = ScenarioBlocksFrame
+		end
+	end
+
 	local bck_SCENARIO_TRACKER_MODULE_AddProgressBar = SCENARIO_TRACKER_MODULE.AddProgressBar
 	function SCENARIO_TRACKER_MODULE:AddProgressBar(block, line, criteriaIndex)
 		local anchor = block.currentLine or block.HeaderText
@@ -1017,13 +1046,12 @@ local function SetHooks()
 		MSA_CloseDropDownMenus()
 	end
 
-	hooksecurefunc("BonusObjectiveTracker_OnBlockAnimOutFinished", function(self)
+	local bck_BonusObjectiveTracker_OnBlockAnimOutFinished = BonusObjectiveTracker_OnBlockAnimOutFinished
+	BonusObjectiveTracker_OnBlockAnimOutFinished = function(self)
+		KT.activeTask = nil
+		bck_BonusObjectiveTracker_OnBlockAnimOutFinished(self)
 		KT.animTask = false
-		if KT.AddonPetTracker:IsShown() then
-			local yOfs = PetTracker.Objectives:GetUsedHeight()
-			PetTracker.Objectives:SetPoint("TOPLEFT", OTF, -10, -yOfs)
-		end
-	end)
+	end
 
 	hooksecurefunc("BonusObjectiveTracker_SetBlockState", function(block, state, force)
 		if state == "ENTERING" then
@@ -1035,11 +1063,26 @@ local function SetHooks()
 			KT.activeTask = block.id
 		elseif state == "LEAVING" and KT.activeTask then
 			_DBG(" - "..state)
+			KT:RemoveFixedButton(block)
 			if db.collapsed then
 				BonusObjectiveTracker_OnBlockAnimOutFinished(block.ScrollContents)
 			end
 		end
 	end)
+
+	local bck_ObjectiveTracker_ReorderModules = ObjectiveTracker_ReorderModules
+	ObjectiveTracker_ReorderModules = function()
+		local reorder = false
+		for i = 1, #OTF.MODULES do
+			if OTF.MODULES[i] ~= OTF.MODULES_UI_ORDER[i] then
+				reorder = true
+				break
+			end
+		end
+		if reorder then
+			bck_ObjectiveTracker_ReorderModules()
+		end
+	end
 
 	local bck_QuestPOI_GetButton = QuestPOI_GetButton
 	QuestPOI_GetButton = function(parent, questID, style, index)
@@ -1067,6 +1110,18 @@ local function SetHooks()
 	end)
 
 	-- DropDown
+	function ObjectiveTracker_Util_AddDropdownEntryForQuestGroupSearch(questID)		-- replacement
+		if ObjectiveTracker_Util_ShouldAddDropdownEntryForQuestGroupSearch(questID) then
+			local info = MSA_DropDownMenu_CreateInfo();
+			info.notCheckable = true;
+			info.text = OBJECTIVES_FIND_GROUP;
+			info.func = function()
+				LFGListUtil_FindQuestGroup(questID);
+			end
+			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+		end
+	end
+
 	function ObjectiveTracker_ToggleDropDown(frame, handlerFunc)	-- replacement
 		local dropDown = KT.DropDown;
 		if ( dropDown.activeFrame ~= frame ) then
@@ -1110,6 +1165,8 @@ local function SetHooks()
 		info.isTitle = 1;
 		info.notCheckable = 1;
 		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+
+		ObjectiveTracker_Util_AddDropdownEntryForQuestGroupSearch(block.id);
 
 		info = MSA_DropDownMenu_CreateInfo();
 		info.notCheckable = 1;
@@ -1200,17 +1257,34 @@ local function SetHooks()
 	function BonusObjectiveTracker_OnOpenDropDown(self)		-- replacement
 		local block = self.activeFrame;
 		local questID = block.TrackedQuest.questID;
+		local addFindGroup = ObjectiveTracker_Util_ShouldAddDropdownEntryForQuestGroupSearch(questID);
+		local addStopTracking = IsWorldQuestWatched(questID);
 
+		-- Ensure at least one option will appear before showing the dropdown.
+		if not (addFindGroup or addStopTracking) then
+			return;
+		end
+
+		-- Add title
 		local info = MSA_DropDownMenu_CreateInfo();
-		info.notCheckable = true;
-
-		info.text = OBJECTIVES_STOP_TRACKING;
-		info.func = function()
-			BonusObjectiveTracker_UntrackWorldQuest(questID);
-		end;
-
-		info.checked = false;
+		info.text = C_TaskQuest.GetQuestInfoByQuestID(questID);
+		info.isTitle = 1;
+		info.notCheckable = 1;
 		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+
+		-- Add "find group"
+		ObjectiveTracker_Util_AddDropdownEntryForQuestGroupSearch(questID);
+
+		-- Add "stop tracking"
+		if IsWorldQuestWatched(questID) then
+			info = MSA_DropDownMenu_CreateInfo();
+			info.notCheckable = true;
+			info.text = OBJECTIVES_STOP_TRACKING;
+			info.func = function()
+				BonusObjectiveTracker_UntrackWorldQuest(questID);
+			end
+			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+		end
 	end
 end
 
@@ -1287,7 +1361,6 @@ end
 function KT:SetSize()
 	local height = 33
 	local mod = 0
-	local PTheight = 0
 
 	if OTF.BlocksFrame.contentsHeight then
 		OTF.BlocksFrame.contentsHeight = round(OTF.BlocksFrame.contentsHeight)
@@ -1297,21 +1370,8 @@ function KT:SetSize()
 
 	_DBG(" - height = "..OTF.BlocksFrame.contentsHeight)
 	if not db.collapsed and not self:IsTrackerEmpty() then
-		if OTF.BlocksFrame.contentsHeight == 0 then
-			return
-		end
-
-		if ACHIEVEMENT_TRACKER_MODULE.hasSkippedBlocks then
-			OTF.BlocksFrame:Hide()
-			OTF.BlocksFrame:Show()
-		end
-
 		if BONUS_OBJECTIVE_TRACKER_MODULE.firstBlock then
 			mod = mod + BONUS_OBJECTIVE_TRACKER_MODULE.blockPadding
-		end
-		if self.AddonPetTracker:IsShown() then
-			PTheight = round(PetTracker.Objectives:GetHeight()) + 7 - (self:IsTrackerEmpty(true) and paddingBottom or 0)
-			mod = mod + PTheight
 		end
 
 		height = OTF.BlocksFrame.contentsHeight + mod + 10 + paddingBottom
@@ -1334,11 +1394,11 @@ function KT:SetSize()
 				KTF.Scroll.value = 0
 				KTF.Scroll:SetVerticalScroll(0)
 			end
-			KTF.Scroll:UpdateScrollChildRect()
 			if db.frameScrollbar then
 				KTF.Bar:Hide()
 			end
 		end
+		KTF:SetHeight(height)
 		self:MoveButtons()
 	else
 		OTF.height = height - 10
@@ -1347,9 +1407,9 @@ function KT:SetSize()
 		if db.frameScrollbar then
 			KTF.Bar:Hide()
 		end
+		KTF:SetHeight(height)
 	end
 
-	KTF:SetHeight(height)
 	KTF.height = height
 end
 
@@ -1490,7 +1550,7 @@ function KT:ToggleOtherButtons()
 		-- Achievements button
 		button = CreateFrame("Button", addonName.."AchievementsButton", KTF)
 		button:SetSize(16, 16)
-		button:SetPoint("TOPRIGHT", (self.Filters:IsEnabled() and KTF.FilterButton or KTF.MinimizeButton), "TOPLEFT", -4, 0)
+		button:SetPoint("TOPRIGHT", (KTF.FilterButton or KTF.MinimizeButton), "TOPLEFT", -4, 0)
 		button:SetFrameLevel(KTF:GetFrameLevel() + 10)
 		button:SetNormalTexture(mediaPath.."UI-KT-HeaderButtons")
 		button:GetNormalTexture():SetTexCoord(0.5, 1, 0.25, 0.5)
@@ -1748,8 +1808,8 @@ function KT:OnInitialize()
 	self.fixedButtons = {}
 	self.activeTask = nil
 	self.animTask = false
-	self.stopUpdate = false
 	self.inInstance = IsInInstance()
+	self.stopUpdate = true
 	self.initialized = false
 
 	-- Setup Options
@@ -1780,25 +1840,29 @@ end
 
 function KT:OnEnable()
 	_DBG("|cff00ff00Enable|r - "..self:GetName(), true)
+	SetFrames()
+	SetHooks()
+
+	self.QuestLog:Enable()
+	self.WorldMap:Enable()
+	self.Filters:Enable()
+	if self.AddonPetTracker.isLoaded then self.AddonPetTracker:Enable() end
+	if self.AddonTomTom.isLoaded then self.AddonTomTom:Enable() end
+	self.AddonOthers:Enable()
+	if db.qiActiveButton then self.ActiveButton:Enable() end
+	self.Help:Enable()
+
+	if db.version ~= self.version then
+		db.version = self.version
+	end
+
 	self.screenWidth = round(GetScreenWidth())
 	self.screenHeight = round(GetScreenHeight())
 
-	KTF:SetScript("OnEvent", function()
-		SetHooks()
-		SetFrames()
-
-		-- Modules
-		self.QuestLog:Enable()
-		self.WorldMap:Enable()
-		self.Filters:Enable()
-		if db.qiActiveButton then self.ActiveButton:Enable() end
-		if self.AddonPetTracker.isLoaded then self.AddonPetTracker:Enable() end
-		if self.AddonTomTom.isLoaded then self.AddonTomTom:Enable() end
-		self.AddonOthers:Enable()
-		self.Help:Enable()
-
+	local initFrame = CreateFrame("Frame")
+	initFrame:SetScript("OnEvent", function(self, event)
 		Init()
-		self.initialized = true
+		self:UnregisterEvent(event)
 	end)
-	KTF:RegisterEvent("PLAYER_ENTERING_WORLD")
+	initFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 end

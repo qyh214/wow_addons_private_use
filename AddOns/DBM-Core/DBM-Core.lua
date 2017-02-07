@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 15725 $"):sub(12, -3)),
-	DisplayVersion = "7.1.11", -- the string that is shown as version
-	ReleaseRevision = 15725 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 15758 $"):sub(12, -3)),
+	DisplayVersion = "7.1.12", -- the string that is shown as version
+	ReleaseRevision = 15758 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -420,7 +420,7 @@ local dbmToc = 0
 local UpdateChestTimer
 local breakTimerStart
 
-local fakeBWVersion, fakeBWHash = 38, "472eafa"
+local fakeBWVersion, fakeBWHash = 41, "be79f59"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -445,7 +445,7 @@ local bannedMods = { -- a list of "banned" (meaning they are replaced by another
 local LL
 if LibStub("LibLatency", true) then
 	LL = LibStub("LibLatency")
-end
+end 
 
 
 --------------------------------------------------------
@@ -9775,6 +9775,10 @@ do
 	end
 	
 	function DBM:ShowTestHUD()
+		if self:HasMapRestrictions() then
+			self:AddMsg(DBM_CORE_NO_HUD)
+			return
+		end
 		local x, y = UnitPosition("player")
 		DBMHudMap:RegisterPositionMarker(10000, "Test1", "highlight", x, y-20, 5, 10, 1, 1, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
 		DBMHudMap:RegisterPositionMarker(20000, "Test2", "highlight", x-20, y, 5, 10, 1, 0, 0, 0.5, nil, 2):Pulse(0.5, 0.5)

@@ -1,17 +1,31 @@
 local addonName, addon = ...
 local E = addon:Eve()
 local _G = _G
+local SetCVar = SetCVar -- Keep a local copy of SetCVar so we don't call the hooked version
+AdvancedInterfaceOptionsSaved = {}
 
 -- Saved settings
-AdvancedInterfaceOptionsSaved = {
+local DefaultSettings = {
 	AccountVars = {}, -- account-wide cvars to be re-applied on login, [cvar] = value
 	CharVars = {}, -- (todo) character-specific cvar settings? [charName-realm] = { [cvar] = value }
+	EnforceSettings = false, -- true to load cvars from our saved variables every time we log in
+	-- this will override anything that sets a cvar outside of this addon
+	CustomVars = {}, -- custom options for missing/removed cvars
+	ModifiedCVars = {}, -- [cvar:lower()] = 'last addon to modify it'
 }
 
 local AlwaysCharacterSpecificCVars = {
 	-- list of cvars that should never be account-wide
 	-- [cvar] = true
+	-- stopAutoAttackOnTargetChange
 }
+
+-- GLOBALS: GameTooltip InterfaceOptionsFrame_OpenToCategory
+-- GLOBALS: GetSortBagsRightToLeft SetSortBagsRightToLeft GetInsertItemsLeftToRight SetInsertItemsLeftToRight
+-- GLOBALS: UIDropDownMenu_AddButton UIDropDownMenu_CreateInfo UIDropDownMenu_SetSelectedValue
+-- GLOBALS: SLASH_AIO1 InterfaceOptionsFrame DEFAULT_CHAT_FRAME AdvancedInterfaceOptionsSaved COMBAT_TEXT_FLOAT_MODE
+-- GLOBALS: BlizzardOptionsPanel_UpdateCombatText GameFontHighlightSmall StaticPopup_Show PetFrame PlayerFrame TargetFrame
+-- GLOBALS: TextStatusBar_UpdateTextString PlayerFrameAlternateManaBar MainMenuExpBar MAX_PARTY_MEMBERS
 
 local AddonLoaded, VariablesLoaded = false, false
 function E:VARIABLES_LOADED()
@@ -21,49 +35,108 @@ function E:VARIABLES_LOADED()
 	end
 end
 
-function E:ADDON_LOADED(addon)
-	--[[
-	if addon == addonName then
+local statusTextOptions
+function E:ADDON_LOADED(addon_name)
+	if addon_name == addonName then
 		E:UnregisterEvent('ADDON_LOADED')
 		AddonLoaded = true
 		if VariablesLoaded then
-			if not AdvancedInterfaceOptionsSaved.AccountVars then
-				AdvancedInterfaceOptionsSaved['AccountVars'] = {}
-			end
-			for cvar, value in pairs(AdvancedInterfaceOptionsSaved.AccountVars) do
-				SetCVar(cvar, value)
+			E('Init')
+		end
+	end
+end
+
+local function MergeTable(a, b) -- Non-destructively merges table b into table a
+	for k,v in pairs(b) do
+		if a[k] == nil or type(a[k]) ~= type(b[k]) then
+			a[k] = v
+			-- print('replacing key', k, v)
+		elseif type(v) == 'table' then
+			a[k] = MergeTable(a[k], b[k])
+		end
+	end
+	return a
+end
+
+function E:Init() -- Runs after our saved variables are loaded and cvars have been loaded
+	MergeTable(AdvancedInterfaceOptionsSaved, DefaultSettings) -- Repair database if keys are missing
+
+	for k, v in pairs(AdvancedInterfaceOptionsSaved.CustomVars) do
+		if statusTextOptions[k] then
+			statusTextOptions[k](v and "statusText")
+		end
+	end
+
+	if AdvancedInterfaceOptionsSaved.EnforceSettings then
+		if not AdvancedInterfaceOptionsSaved.AccountVars then
+			AdvancedInterfaceOptionsSaved['AccountVars'] = {}
+		end
+		for cvar, value in pairs(AdvancedInterfaceOptionsSaved.AccountVars) do
+			if addon.hiddenOptions[cvar] then -- confirm we still use this cvar
+				if GetCVar(cvar) ~= value then
+					SetCVar(cvar, value)
+					-- print('Loading cvar', cvar, value)
+				end
+			else -- remove if cvar is no longer supported
+				AdvancedInterfaceOptionsSaved.AccountVars[cvar] = nil
 			end
 		end
 	end
-	--]]
 end
 
-function addon:SetCVar(cvar, value) -- save our cvar to the db
-	if not InCombatLockdown() then
-		if not AlwaysCharacterSpecificCVars[cvar] then
-			AdvancedInterfaceOptionsSaved.AccountVars[cvar] = value
+function addon:RecordCVar(cvar, value) -- Save cvar to DB for loading later
+	if not AlwaysCharacterSpecificCVars[cvar] then
+		-- We either need to normalize all cvars being entered into this table or verify that
+		-- the case matches the case in our database or we risk duplicating entries.
+		-- eg. MouseSpeed = 1, and mouseSpeed = 2 could exist in the table simultaneously,
+		-- which would lead to an indeterminate value being loaded on startup
+		local found = rawget(addon.hiddenOptions, cvar)
+		if not found then
+			local mk = cvar:lower()
+			for k,v in pairs(addon.hiddenOptions) do
+				if k:lower() == mk then
+					cvar = k
+					found = true
+					break
+				end
+			end
 		end
-		SetCVar(cvar, value)
+		if found then -- only record cvars that exist in our database
+			if GetCVar(cvar) == GetCVarDefault(cvar) then -- don't bother recording if default value
+				AdvancedInterfaceOptionsSaved.AccountVars[cvar] = nil
+			else
+				AdvancedInterfaceOptionsSaved.AccountVars[cvar] = GetCVar(cvar) -- not necessarily the same as "value"
+			end
+		end
+	end
+end
+
+function addon:SetCVar(cvar, value, ...) -- save our cvar to the db
+	if not InCombatLockdown() then
+		SetCVar(cvar, value, ...)
+		addon:RecordCVar(cvar, value)
+		-- Clear entry from ModifiedCVars if we're modifying it directly
+		-- Enforced settings don't use this function, so shouldn't wipe them out
+		if AdvancedInterfaceOptionsSaved.ModifiedCVars[cvar:lower()] then
+			AdvancedInterfaceOptionsSaved.ModifiedCVars[cvar:lower()] = nil
+		end
 	else
 		--print("Can't modify interface options in combat")
 	end
 end
 
--- GLOBALS: GameTooltip InterfaceOptionsFrame_OpenToCategory
--- GLOBALS: GetSortBagsRightToLeft SetSortBagsRightToLeft GetInsertItemsLeftToRight SetInsertItemsLeftToRight
--- GLOBALS: UIDropDownMenu_AddButton UIDropDownMenu_CreateInfo UIDropDownMenu_SetSelectedValue
--- GLOBALS: SLASH_AIO1 InterfaceOptionsFrame DEFAULT_CHAT_FRAME AdvancedInterfaceOptionsSaved COMBAT_TEXT_FLOAT_MODE
--- GLOBALS: BlizzardOptionsPanel_UpdateCombatText
+
 
 local AIO = CreateFrame('Frame', nil, InterfaceOptionsFramePanelContainer)
 AIO:Hide()
 AIO:SetAllPoints()
 AIO.name = addonName
 
--- Some wrapper functions
+-- Register all of our widgets here so we can iterate over them
+local Widgets = {} -- [frame] = cvar
 
 -------------
--- Checkbox
+-- Checkbox widget
 -------------
 local function checkboxGetCVar(self) return GetCVarBool(self.cvar) end
 local function checkboxSetChecked(self) self:SetChecked(self:GetValue()) end
@@ -74,10 +147,23 @@ local function checkboxOnClick(self)
 	self:SetValue(checked)
 end
 
-local function newCheckbox(parent, cvar, getValue, setValue)
+local function checkboxDisable(self)
+	self.label:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+end
+
+local function checkboxEnable(self)
+	self.label:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
+end
+
+local function newCheckbox(parent, cvar, getValue, setValue, label, description)
 	local cvarTable = addon.hiddenOptions[cvar]
-	local label = cvarTable['prettyName'] or cvar
-	local description = _G[cvarTable['description']] or cvarTable['description'] or 'No description'
+	if cvarTable then
+		label = cvarTable['prettyName'] or cvar
+		description = _G[cvarTable['description']] or cvarTable['description'] or 'No description'
+	else
+		label = label or '[PH] Label'
+		description = description or '[PH] Description'
+	end
 	local check = CreateFrame("CheckButton", "AIOCheck" .. label, parent, "InterfaceOptionsCheckButtonTemplate")
 
 	check.cvar = cvar
@@ -89,11 +175,16 @@ local function newCheckbox(parent, cvar, getValue, setValue)
 	check.label:SetText(label)
 	check.tooltipText = label
 	check.tooltipRequirement = description
+
+	check:HookScript('OnDisable', checkboxDisable)
+	check:HookScript('OnEnable', checkboxEnable)
+
+	Widgets[ check ] = cvar
 	return check
 end
 
 -----------
--- Slider
+-- Slider widget
 -----------
 local function sliderGetCVar(self) return GetCVar(self.cvar) end
 local function sliderRefresh(self) self:SetValue(self:GetCVarValue()) end
@@ -103,20 +194,25 @@ local function sliderDisable(self)
 	self.text:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
 	self.minText:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
 	self.maxText:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
-	self.valueText:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+	self.valueBox:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+	self.valueBox:SetEnabled(false)
 end
 
 local function sliderEnable(self)
 	self.text:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
 	self.minText:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
 	self.maxText:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
-	self.valueText:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
+	self.valueBox:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
+	self.valueBox:SetEnabled(true)
 end
 
 local function newSlider(parent, cvar, minRange, maxRange, stepSize, getValue, setValue)
 	local cvarTable = addon.hiddenOptions[cvar]
 	local label = cvarTable['prettyName'] or cvar
-	local description = cvarTable['description'] or 'No description'
+	local description = cvarTable['description'] or ''
+
+	local _, defaultValue = GetCVarInfo(cvar)
+	description = description .. '\n\nDefault Value: ' .. (defaultValue or '')
 	local slider = CreateFrame('Slider', 'AIOSlider' .. cvar, parent, 'OptionsSliderTemplate')
 
 	slider.cvar = cvar
@@ -135,14 +231,47 @@ local function newSlider(parent, cvar, minRange, maxRange, stepSize, getValue, s
 	slider.maxText:SetText(maxRange)
 	slider.text:SetText(label)
 
-	local valueText = slider:CreateFontString(nil, nil, 'GameFontHighlight')
-	valueText:SetPoint('TOP', slider, 'BOTTOM', 0, -5)
-	slider.valueText = valueText
+	local valueBox = CreateFrame('editbox', nil, slider)
+	valueBox:SetPoint('TOP', slider, 'BOTTOM', 0, 0)
+	valueBox:SetSize(60, 14)
+	valueBox:SetFontObject(GameFontHighlightSmall)
+	valueBox:SetAutoFocus(false)
+	valueBox:SetJustifyH('CENTER')
+	valueBox:SetScript('OnEscapePressed', function(self)
+		-- ignore input, reset value to current cvar
+		local current, default = GetCVarInfo(slider.cvar)
+		self:SetText(current or default)
+		self:ClearFocus()
+	end)
+	valueBox:SetScript('OnEnterPressed', function(self)
+		local current, default = GetCVarInfo(slider.cvar)
+		local value = tonumber(self:GetText()) or current or default
+		local factor = 1 / stepSize
+		value = floor(value * factor + 0.5) / factor
+		value = max(minRange, min(maxRange, value))
+		slider:SetValue(value)
+		self:SetText(value)
+		self:ClearFocus()
+	end)
 	slider:HookScript('OnValueChanged', function(self, value)
 		local factor = 1 / stepSize
 		value = floor(value * factor + 0.5) / factor
-		valueText:SetText(value)
+		valueBox:SetText(value)
 	end)
+	valueBox:SetScript('OnChar', function(self) -- filter input to decimal values
+		self:SetText(self:GetText():gsub('[^%.0-9]+', ''):gsub('(%..*)%.', '%1'))
+	end)
+	valueBox:SetMaxLetters(5)
+
+	valueBox:SetBackdrop({
+		bgFile = 'Interface/ChatFrame/ChatFrameBackground',
+		edgeFile = 'Interface/ChatFrame/ChatFrameBackground',
+		tile = true, edgeSize = 1, tileSize = 5,
+	})
+	valueBox:SetBackdropColor(0, 0, 0, 0.5)
+	valueBox:SetBackdropBorderColor(0.3, 0.3, 0.3, 0.8)
+
+	slider.valueBox = valueBox
 
 	slider:HookScript('OnValueChanged', slider.SetCVarValue)
 
@@ -151,9 +280,26 @@ local function newSlider(parent, cvar, minRange, maxRange, stepSize, getValue, s
 
 	slider.tooltipText = label
 	slider.tooltipRequirement = description
+
+	Widgets[ slider ] = cvar
 	return slider
 end
 
+-------------
+-- Custom vars
+-------------
+
+local function getCustomVar(self)
+	return AdvancedInterfaceOptionsSaved.CustomVars[self.cvar]
+end
+
+local function setCustomVar(self, value)
+	AdvancedInterfaceOptionsSaved.CustomVars[self.cvar] = value
+end
+
+-----------
+-- Main options
+-----------
 local title = AIO:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 title:SetPoint("TOPLEFT", 16, -16)
 title:SetText(AIO.name)
@@ -175,21 +321,17 @@ local secureToggle = newCheckbox(AIO, 'secureAbilityToggle')
 local luaErrors = newCheckbox(AIO, 'scriptErrors')
 local targetDebuffFilter = newCheckbox(AIO, 'noBuffDebuffFilterOnTarget')
 local reverseCleanupBags = newCheckbox(AIO, 'reverseCleanupBags',
-	-- Get Value
 	function(self)
 		return GetSortBagsRightToLeft()
 	end,
-	-- Set Value
 	function(self, checked)
 		SetSortBagsRightToLeft(checked)
 	end
 )
 local lootLeftmostBag = newCheckbox(AIO, 'lootLeftmostBag',
-	-- Get Value
 	function(self)
 		return GetInsertItemsLeftToRight()
 	end,
-	-- Set Value
 	function(self, checked)
 		SetInsertItemsLeftToRight(checked)
 	end
@@ -224,6 +366,7 @@ questSortingDropdown:HookScript("OnEnter", function(self)
 	end
 end)
 questSortingDropdown:HookScript("OnLeave", GameTooltip_Hide)
+Widgets[ questSortingDropdown ] = 'trackQuestSorting'
 
 local actionCamModeLabel = AIO:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
 actionCamModeLabel:SetPoint('TOPLEFT', questSortingDropdown, 'BOTTOMLEFT', 16, 0)
@@ -262,7 +405,70 @@ lootLeftmostBag:SetPoint("TOPLEFT", reverseCleanupBags, "BOTTOMLEFT", 0, -4)
 enableWoWMouse:SetPoint("TOPLEFT", lootLeftmostBag, "BOTTOMLEFT", 0, -4)
 
 
--- Chat settings
+-- Checkbox to enforce all settings through reloads
+local enforceBox = newCheckbox(AIO, nil,
+	function(self) -- getter
+		 return not not AdvancedInterfaceOptionsSaved.EnforceSettings
+	end,
+	function(self, checked) -- setter
+		AdvancedInterfaceOptionsSaved.EnforceSettings = checked
+		if checked then
+			AdvancedInterfaceOptionsSaved.AccountVars = {}
+			--for widget, cvar in pairs(Widgets) do
+			for cvar in pairs(addon.hiddenOptions) do
+				local current, default = GetCVarInfo(cvar)
+				if not AlwaysCharacterSpecificCVars[cvar] and current ~= default then
+					AdvancedInterfaceOptionsSaved.AccountVars[cvar] = current
+					-- print('Saving', cvar, 'as', current)
+				end
+			end
+		end
+	end,
+	'Enforce Settings on Startup',
+	"Reapplies all settings when you log in or change characters.\n\nCheck this if your settings aren't being saved between sessions.")
+enforceBox:SetPoint("LEFT", title, "RIGHT", 5, 0)
+
+-- Button to reset all of our settings back to their defaults
+StaticPopupDialogs['AIO_RESET_EVERYTHING'] = {
+	text = 'Type "IRREVERSIBLE" into the text box to reset all CVars to their default settings',
+	button1 = 'Confirm',
+	button2 = 'Cancel',
+	hasEditBox = true,
+	OnShow = function(self)
+		self.button1:SetEnabled(false)
+	end,
+	EditBoxOnTextChanged = function(self, data)
+		self:GetParent().button1:SetEnabled(self:GetText():lower() == 'irreversible')
+	end,
+	OnAccept = function()
+		for cvar in pairs(addon.hiddenOptions) do
+			local current, default = GetCVarInfo(cvar)
+			if current ~= default then
+				print(format('|cffaaaaff%s|r reset from |cffffaaaa%s|r to |cffaaffaa%s|r', tostring(cvar), tostring(current), tostring(default)))
+				addon:SetCVar(cvar, default)
+			end
+		end
+		wipe(AdvancedInterfaceOptionsSaved.CustomVars)
+		AIO:Hide()
+		AIO:Show()
+	end,
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = true,
+	preferredIndex = 3,
+	showAlert = true,
+}
+
+local resetButton = CreateFrame('button', nil, AIO, 'UIPanelButtonTemplate')
+resetButton:SetSize(120, 20)
+resetButton:SetText("Load Defaults")
+resetButton:SetPoint('BOTTOMRIGHT', -10, 10)
+resetButton:SetScript('OnClick', function(self)
+	StaticPopup_Show('AIO_RESET_EVERYTHING')
+end)
+
+
+-- Chat section
 local AIO_Chat = CreateFrame('Frame', nil, InterfaceOptionsFramePanelContainer)
 AIO_Chat:Hide()
 AIO_Chat:SetAllPoints()
@@ -282,7 +488,7 @@ SubText_Chat:SetJustifyV('TOP')
 SubText_Chat:SetJustifyH('LEFT')
 SubText_Chat:SetPoint('TOPLEFT', Title_Chat, 'BOTTOMLEFT', 0, -8)
 SubText_Chat:SetPoint('RIGHT', -32, 0)
-SubText_Chat:SetText('These options allow you to modify chat settings.') -- TODO
+SubText_Chat:SetText('These options allow you to modify various chat settings that are no longer part of the default UI.')
 
 local chatMouseScroll = newCheckbox(AIO_Chat, 'chatMouseScroll')
 local chatDelay = newCheckbox(AIO_Chat, 'removeChatDelay')
@@ -291,7 +497,7 @@ chatDelay:SetPoint('TOPLEFT', SubText_Chat, 'BOTTOMLEFT', 0, -8)
 chatMouseScroll:SetPoint('TOPLEFT', chatDelay, 'BOTTOMLEFT', 0, -4)
 
 
--- Floating Combat Text settings
+-- Floating Combat Text section
 local AIO_FCT = CreateFrame('Frame', nil, InterfaceOptionsFramePanelContainer)
 AIO_FCT:Hide()
 AIO_FCT:SetAllPoints()
@@ -338,6 +544,7 @@ fctfloatmodeDropdown:HookScript("OnEnter", function(self)
 	end
 end)
 fctfloatmodeDropdown:HookScript("OnLeave", GameTooltip_Hide)
+Widgets[ fctfloatmodeDropdown ] = 'floatingCombatTextFloatMode'
 
 local revUVARINFO = {}
 for k, v in pairs(UVARINFO) do
@@ -355,9 +562,13 @@ local fctDamage = newCheckbox(AIO_FCT, 'floatingCombatTextCombatDamage')
 local fctDirectionalScale = newCheckbox(AIO_FCT, 'floatingCombatTextCombatDamageDirectionalScale')
 local fctHealing = newCheckbox(AIO_FCT, 'floatingCombatTextCombatHealing')
 local fctPeriodicSpells = newCheckbox(AIO_FCT, 'floatingCombatTextCombatLogPeriodicSpells')
-local fctPetMeleeDamage = newCheckbox(AIO_FCT, 'floatingCombatTextPetMeleeDamage')
+local fctPetMeleeDamage = newCheckbox(AIO_FCT, 'floatingCombatTextPetMeleeDamage', nil, function(self, checked)
+	checkboxSetCVar(self, checked)
+	addon:SetCVar('floatingCombatTextPetSpellDamage', checked)
+end)
 local fctSpellMechanics = newCheckbox(AIO_FCT, 'floatingCombatTextSpellMechanics')
 local fctSpellMechanicsOther = newCheckbox(AIO_FCT, 'floatingCombatTextSpellMechanicsOther')
+local worldTextScale = newSlider(AIO_FCT, 'WorldTextScale', 0.5, 2.5, 0.1)
 
 local enablefct = newCheckbox(AIO_FCT, 'enableFloatingCombatText', nil, FCT_SetValue)
 local fctAbsorbSelf = newCheckbox(AIO_FCT, 'floatingCombatTextCombatHealingAbsorbSelf')
@@ -387,6 +598,7 @@ fctAbsorbTarget:SetPoint("TOPLEFT", fctHealing, "BOTTOMLEFT", 10, 0)
 
 fctSpellMechanics:SetPoint("TOPLEFT", fctDamage, "TOPRIGHT", 260, 0)
 fctSpellMechanicsOther:SetPoint("TOPLEFT", fctSpellMechanics, "BOTTOMLEFT", 10, -4)
+worldTextScale:SetPoint("TOPLEFT", fctSpellMechanicsOther, "BOTTOMLEFT", -6, -40)
 
 local fctSelfLabel = AIO_FCT:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
 fctSelfLabel:SetText(FLOATING_COMBAT_SELF_LABEL)
@@ -407,7 +619,122 @@ fctPeriodicEnergyGains:SetPoint("TOPLEFT", fctEnergyGains, "BOTTOMLEFT", 0, -4)
 fctHonorGains:SetPoint("TOPLEFT", fctPeriodicEnergyGains, "BOTTOMLEFT", 0, -4)
 fctAuras:SetPoint("TOPLEFT", fctHonorGains, "BOTTOMLEFT", 0, -4)
 
--- Nameplate settings
+-- Status Text section
+local AIO_ST = CreateFrame('Frame', nil, InterfaceOptionsFramePanelContainer)
+AIO_ST:Hide()
+AIO_ST:SetAllPoints()
+AIO_ST.name = STATUSTEXT_LABEL
+AIO_ST.parent = addonName
+
+local Title_ST = AIO_ST:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
+Title_ST:SetJustifyV('TOP')
+Title_ST:SetJustifyH('LEFT')
+Title_ST:SetPoint('TOPLEFT', 16, -16)
+Title_ST:SetText(AIO_ST.name)
+
+local SubText_ST = AIO_ST:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
+SubText_ST:SetMaxLines(3)
+SubText_ST:SetNonSpaceWrap(true)
+SubText_ST:SetJustifyV('TOP')
+SubText_ST:SetJustifyH('LEFT')
+SubText_ST:SetPoint('TOPLEFT', Title_ST, 'BOTTOMLEFT', 0, -8)
+SubText_ST:SetPoint('RIGHT', -32, 0)
+SubText_ST:SetText(STATUSTEXT_SUBTEXT)
+
+local function setStatusTextBars(frame, value)
+	frame.healthbar.cvar = value
+	frame.manabar.cvar = value
+	TextStatusBar_UpdateTextString(frame.healthbar)
+	TextStatusBar_UpdateTextString(frame.manabar)
+end
+
+statusTextOptions = {
+	playerStatusText = function(value)
+		setStatusTextBars(PlayerFrame, value)
+	end,
+	petStatusText = function(value)
+		setStatusTextBars(PetFrame, value)
+	end,
+	partyStatusText = function(value)
+		for i = 1, MAX_PARTY_MEMBERS do
+			setStatusTextBars(_G["PartyMemberFrame"..i], value)
+		end
+	end,
+	targetStatusText = function(value)
+		setStatusTextBars(TargetFrame, value)
+	end,
+	alternateResourceText = function(value)
+		PlayerFrameAlternateManaBar.cvar = value
+		TextStatusBar_UpdateTextString(PlayerFrameAlternateManaBar)
+	end,
+}
+
+local function setStatusText(self, value)
+	setCustomVar(self, value)
+	statusTextOptions[self.cvar](value and "statusText")
+end
+
+local stPlayer = newCheckbox(AIO_ST, 'playerStatusText', getCustomVar, setStatusText)
+local stPet = newCheckbox(AIO_ST, 'petStatusText', getCustomVar, setStatusText)
+local stParty = newCheckbox(AIO_ST, 'partyStatusText', getCustomVar, setStatusText)
+local stTarget = newCheckbox(AIO_ST, 'targetStatusText', getCustomVar, setStatusText)
+local stAltResource = newCheckbox(AIO_ST, 'alternateResourceText', getCustomVar, setStatusText)
+local stXpBar = newCheckbox(AIO_ST, 'xpBarText', nil, function(self, checked)
+	checkboxSetCVar(self, checked)
+	TextStatusBar_UpdateTextString(MainMenuExpBar)
+end)
+
+local stToggleStatusText = newCheckbox(AIO_ST, 'statusText',
+	function(self) -- getter
+		local value = checkboxGetCVar(self)
+		stPlayer:SetEnabled(value)
+		stPet:SetEnabled(value)
+		stParty:SetEnabled(value)
+		stTarget:SetEnabled(value)
+		stAltResource:SetEnabled(value)
+		stXpBar:SetEnabled(value)
+		return value
+	end,
+	function(self, value) -- setter
+		addon:SetCVar('statusText', value, 'STATUS_TEXT_DISPLAY') -- forces text on status bars to update
+		stPlayer:SetEnabled(value)
+		stPet:SetEnabled(value)
+		stParty:SetEnabled(value)
+		stTarget:SetEnabled(value)
+		stAltResource:SetEnabled(value)
+		stXpBar:SetEnabled(value)
+	end)
+
+
+stToggleStatusText:SetPoint("TOPLEFT", SubText_ST, "BOTTOMLEFT", 0, -8)
+stPlayer:SetPoint("TOPLEFT", stToggleStatusText, "BOTTOMLEFT", 10, -4)
+stPet:SetPoint("TOPLEFT", stPlayer, "BOTTOMLEFT", 0, -4)
+stParty:SetPoint("TOPLEFT", stPet, "BOTTOMLEFT", 0, -4)
+stTarget:SetPoint("TOPLEFT", stParty, "BOTTOMLEFT", 0, -4)
+stAltResource:SetPoint("TOPLEFT", stTarget, "BOTTOMLEFT", 0, -4)
+stXpBar:SetPoint("TOPLEFT", stAltResource, "BOTTOMLEFT", 0, -4)
+
+local function stTextDisplaySetValue(self)
+	addon:SetCVar('statusTextDisplay', self.value, 'STATUS_TEXT_DISPLAY')
+end
+
+-- todo: figure out why the built-in tooltipTitle and tooltipText attributes don't work
+local stTextDisplay = addon:CreateDropdown(AIO_ST, 130, {
+	{text = STATUS_TEXT_VALUE, value = 'NUMERIC', func = stTextDisplaySetValue},
+	{text = STATUS_TEXT_PERCENT, value = 'PERCENT', func = stTextDisplaySetValue},
+	{text = STATUS_TEXT_BOTH, value = 'BOTH', func = stTextDisplaySetValue},
+})
+stTextDisplay:SetPoint('LEFT', stToggleStatusText, 'RIGHT', 100, -2)
+stTextDisplay:HookScript('OnShow', function(self) self:SetValue(GetCVar('statusTextDisplay')) end)
+--[[ this tooltip seems pretty pointless anyway, but maybe come up with some better text for it
+stTextDisplay:HookScript("OnEnter", function(self)
+	GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+	GameTooltip:SetText(OPTION_TOOLTIP_STATUS_TEXT_DISPLAY, nil, nil, nil, nil, true)
+end)
+stTextDisplay:HookScript("OnLeave", GameTooltip_Hide)
+--]]
+
+-- Nameplate section
 local AIO_NP = CreateFrame('Frame', nil, InterfaceOptionsFramePanelContainer)
 AIO_NP:Hide()
 AIO_NP:SetAllPoints()
@@ -440,7 +767,7 @@ nameplateAtBase:SetScript('OnClick', function(self)
 	self:SetValue(checked and 2 or 0)
 end)
 
--- Combat settings
+-- Combat section
 local AIO_C = CreateFrame('Frame', nil, InterfaceOptionsFramePanelContainer)
 AIO_C:Hide()
 AIO_C:SetAllPoints()
@@ -487,6 +814,7 @@ reducedLagTolerance:HookScript('OnClick', function(self)
 		spellStartRecovery:Disable()
 	end
 end)
+
 reducedLagTolerance:HookScript('OnShow', function(self)
 	if self:GetChecked() then
 		spellStartRecovery:Enable()
@@ -495,21 +823,13 @@ reducedLagTolerance:HookScript('OnShow', function(self)
 	end
 end)
 
-
 -- Hook up options to addon panel
 InterfaceOptions_AddCategory(AIO, addonName)
 InterfaceOptions_AddCategory(AIO_Chat, addonName)
 InterfaceOptions_AddCategory(AIO_C, addonName)
 InterfaceOptions_AddCategory(AIO_FCT, addonName)
+InterfaceOptions_AddCategory(AIO_ST, addonName)
 InterfaceOptions_AddCategory(AIO_NP, addonName)
-
---[[
-function E:PLAYER_REGEN_DISABLED()
-	if AIO:IsVisible() then
-		InterfaceOptionsFrame:Hide()
-	end
-end
---]]
 
 -- Slash handler
 SlashCmdList.AIO = function(msg)

@@ -2525,7 +2525,7 @@ local function XPerl_Raid_ConfigDefault(default)
 		precisionManaPercent = 1,
 		scale			= 0.8,
 		spacing			= 0,
-		inParty			= 1,
+		inParty			= 0,
 		buffs = {
 --			enable		= nil,
 			castable	= 0,
@@ -3369,6 +3369,10 @@ if (XPerl_UpgradeSettings) then
 
 			if (oldVersion < "5.0.8") then
 				old.player.lockRunes = 1
+			end
+
+			if (oldVersion < "5.1.6") then
+				old.raid.inParty = 0
 			end
 		end
 	end

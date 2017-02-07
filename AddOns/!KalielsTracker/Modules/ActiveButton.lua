@@ -120,7 +120,7 @@ local function SetFrames()
 		end
 		button:Hide()
 		
-		KT:Masque_AddButton(button, "Active Button")
+		KT:Masque_AddButton(button, 2)
 		KTF.ActiveButton = button
 	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1731, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15723 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15746 $"):sub(12, -3))
 mod:SetCreatureID(104288)
 mod:SetEncounterID(1867)
 mod:SetZone()
@@ -11,12 +11,13 @@ mod:SetHotfixNoticeRev(15058)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 206788 208924 207513 207502",
+	"SPELL_CAST_START 206788 208924 207513 207502 215062",
 	"SPELL_CAST_SUCCESS 206560 206557 206559 206641",
 	"SPELL_AURA_APPLIED 211615 208910 208915 206641",
 	"SPELL_AURA_REMOVED 208499 206560",
 	"SPELL_PERIODIC_DAMAGE 206488",
 	"SPELL_PERIODIC_MISSED 206488",
+	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -47,6 +48,8 @@ local specWarnArcingBonds			= mod:NewSpecialWarningYou(208915, nil, nil, nil, 1,
 local specWarnAnnihilation			= mod:NewSpecialWarningDodge(207630, nil, nil, nil, 3, 6)--Hallion Style
 --Caretaker
 local specWarnTidyUp				= mod:NewSpecialWarningDodge(207513, nil, nil, nil, 2, 2)--Maybe switch to mob name instead of "tidy up"
+--Mythic
+local specWarnEchoDuder				= mod:NewSpecialWarningSwitchCount(214880, nil, nil, nil, 1, 2)
 
 local timerArcaneSlashCD			= mod:NewCDTimer(9, 206641, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerPhaseChange				= mod:NewNextTimer(45, 155005, nil, nil, nil, 6)
@@ -85,11 +88,14 @@ mod:AddInfoFrameOption(214573, false)
 mod.vb.ArcaneSlashCooldown = 10.5--10.5 now?, Verify it can never be 9 anymore
 mod.vb.toxicSliceCooldown = 26.5--Confirmed still true
 
+local seenMobs = {}
+
 function mod:OnCombatStart(delay)
+	table.wipe(seenMobs)
 	self.vb.ArcaneSlashCooldown = 10.5
 	self.vb.toxicSliceCooldown = 26.5
 	timerArcaneSlashCD:Start(7-delay)
-	timerToxicSliceCD:Start(10.5-delay)
+	timerToxicSliceCD:Start(10.5-delay, "boss")
 	timerPhaseChange:Start(45)--Maniac
 	countdownModes:Start(45)
 	--On combat start he starts in a custom cleaner mode (206570) that doesn't have sterilize or cleansing rage abilities but casts cake and ArcaneSlashs more often
@@ -98,9 +104,16 @@ function mod:OnCombatStart(delay)
 		DBM.InfoFrame:SetHeader(spellName)
 		DBM.InfoFrame:Show(10, "playerbaddebuff", spellName, true)
 	end
+	if self:IsMythic() then
+		self:RegisterShortTermEvents(
+			"UNIT_DIED",
+			"INSTANCE_ENCOUNTER_ENGAGE_UNIT"
+		)
+	end
 end
 
 function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
@@ -113,7 +126,9 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 206788 then--Toxic Slice (Cleaner Mode)
 		warnToxicSlice:Show()
-		timerToxicSliceCD:Start(self.vb.toxicSliceCooldown)
+		timerToxicSliceCD:Start(self.vb.toxicSliceCooldown, "boss")
+	elseif spellId == 215062 then--Toxic Slice (Imprint)
+		warnToxicSlice:Show()
 	elseif spellId == 207513 then--Tidy Up (Caretaker Mode)
 		specWarnTidyUp:Show()
 		voiceTidyUp:Play("mobsoon")
@@ -132,14 +147,14 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerArcaneSlashCD:Stop()
 		--timerSterilizeCD:Start()--Used 1-3 seconds later
 		timerCleansingRageCD:Start()--10
-		timerToxicSliceCD:Start(13)
+		timerToxicSliceCD:Start(13, "boss")
 		timerArcaneSlashCD:Start(19.5)
 		timerPhaseChange:Start(45)--Maniac
 		countdownModes:Start(45)
 	elseif spellId == 206557 then--Maniac Mode (40 seconds)
 		self.vb.ArcaneSlashCooldown = 7
 		warnManiacMode:Show()
-		timerToxicSliceCD:Stop()--Must be stopped here too since first cleaner mode has no buff removal
+		timerToxicSliceCD:Stop("boss")--Must be stopped here too since first cleaner mode has no buff removal
 		timerArcaneSlashCD:Stop()
 		timerArcingBondsCD:Start(5)--Updated Jan 24, make sure it's ok consistently
 		timerArcaneSlashCD:Start(9)--Updated Jan 24, make sure it's ok consistently
@@ -193,7 +208,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			end
 		end
 	elseif spellId == 206560 then--Cleaner Mode (45 seconds)
-		timerToxicSliceCD:Stop()
+		timerToxicSliceCD:Stop("boss")
 	end
 end
 
@@ -204,6 +219,32 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+
+function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
+	for i = 1, 5 do
+		local unitID = "boss"..i
+		local GUID = UnitGUID(unitID)
+		if GUID and not seenMobs[GUID] then
+			seenMobs[GUID] = true
+			local cid = self:GetCIDFromGUID(GUID)
+			if cid == 108144 then--Maniac Imprint
+				local name = GetSpellInfo(206557)
+				specWarnEchoDuder:Show(name)
+			elseif cid == 108303 then--Caretaker Imprint
+				local name = GetSpellInfo(206560)
+				specWarnEchoDuder:Show(name)
+				timerToxicSliceCD:Start(16, "Echo")
+			end
+		end
+	end
+end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 108303 then--Arcanist Tel'arn
+		timerToxicSliceCD:Stop("Echo")
+	end
+end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)

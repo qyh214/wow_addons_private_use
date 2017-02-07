@@ -85,7 +85,9 @@ function module:OnInitialize()
   
 end
 function module:OpenLastTab()
+--[===[@debug@
 	print("Open Last Tab",lastTab)
+--@end-debug@]===]
 	lastTab=lastTab or PanelTemplates_GetSelectedTab(GSF)
 	if lastTab then
 		if GSF.MissionControlTab:IsVisible() then
@@ -396,7 +398,7 @@ function module:AddMenu()
 --[===[@debug@
 print("Adding Menu",GCS.Menu,GSF.MissionTab:IsVisible(),GSF.FollowerTab:IsVisible())
 --@end-debug@]===]
-	if GCS.Menu then
+	if not GCS or GCS.Menu then
 		return
 	end
 	local menu,size

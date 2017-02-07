@@ -56,7 +56,7 @@ local format = string.format
 local strfind = string.find
 local round = function(n) return floor(n + 0.5) end
 
-local Lib = LibStub:NewLibrary('MSA-Tutorials-1.0', 2)
+local Lib = LibStub:NewLibrary('MSA-Tutorials-1.0', 3)
 if Lib then
 	Lib.NewFrame, Lib.NewButton, Lib.UpdateFrame = nil
 	Lib.numFrames = Lib.numFrames or 1
@@ -93,6 +93,9 @@ local function UpdateFrame(frame, i)
 		return
 	end
 
+	if not data.image and not data.textY then
+		data.textY = 0
+	end
 	for k, v in pairs(default) do
 		if not data[k] then
 			if not frame.data[k] then
@@ -101,9 +104,6 @@ local function UpdateFrame(frame, i)
 				data[k] = frame.data[k]
 			end
 		end
-	end
-	if not data.image and data.textY == default.textY then
-		data.textY = 0
 	end
 	
 	-- Callbacks
@@ -118,6 +118,7 @@ local function UpdateFrame(frame, i)
 	frame:ClearAllPoints()
 	frame:SetPoint(data.point, data.anchor, data.relPoint, data.x, data.y)
 	frame:SetWidth(data.width + 16)
+	frame.TitleText:SetPoint('TOP', 0, -5)
 	frame.TitleText:SetText(data.title)
 	
 	-- Cache inline texture

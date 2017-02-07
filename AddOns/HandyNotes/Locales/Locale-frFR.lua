@@ -5,11 +5,12 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes", "frFR")
 if not L then return end
 
-L["Add Handy Note"] = "Ajouter une note pratique"
-L["Add this location to TomTom waypoints"] = "Ajouter cette position aux points de naviguation de TomTom"
 L[ [=[
 Alt+Right Click To Add a HandyNote]=] ] = "Alt+clic droit pour ajouter une note pratique"
+L["(No Title)"] = "(Aucun titre)"
 L["|cFF00FF00Hint: |cffeda55fCtrl+Shift+LeftDrag|cFF00FF00 to move a note"] = "|cFF00FF00Astuce : |cffeda55fCtrl+Maj+SaisirGauche|cFF00FF00 pour déplacer une note"
+L["Add Handy Note"] = "Ajouter une note pratique"
+L["Add this location to TomTom waypoints"] = "Ajouter cette position aux points de naviguation de TomTom"
 L["Configuration for each individual plugin database."] = "Configuration de chaque base de données des plugins individuels."
 L["Delete Handy Note"] = "Supprimer une note pratique"
 L["Description/Notes:"] = "Description / notes :"
@@ -22,7 +23,6 @@ L["Icon Alpha"] = "Transparence des icônes"
 L["Icon Scale"] = "Échelle des icônes"
 L["Minimap Icon Alpha"] = "Transparence des icônes de la mini-carte"
 L["Minimap Icon Scale"] = "Échelle des icônes de la mini-carte"
-L["(No Title)"] = "(Aucun titre)"
 L["Overall settings"] = "Paramètres globaux"
 L["Overall settings that affect every database"] = "Définit les paramètres globaux qui affectent toutes les bases de données."
 L["Plugin databases"] = "Bases de données des plugins."
@@ -42,4 +42,3 @@ L["These settings control the look and feel of the HandyNotes icons."] = "Ces pa
 L["Title"] = "Titre"
 L["World Map Icon Alpha"] = "Transparence des icônes de la carte du monde"
 L["World Map Icon Scale"] = "Échelle des icônes de la carte du monde"
-

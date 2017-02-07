@@ -26,13 +26,14 @@ local strata = { "LOW", "MEDIUM", "HIGH" }
 local flags = { [""] = "None", ["OUTLINE"] = "Outline", ["OUTLINE, MONOCHROME"] = "Outline Monochrome" }
 local textures = { "None", "Default (Blizzard)", "One line", "Two lines" }
 
-local cNote = "|cff00ffe3"
+local cBold = "|cff00ffe3"
 local beta = "|cffff7fff[Beta]|r"
 local warning = "|cffff7f00Warning:|r UI will be re-loaded!"
 
 local KTF = KT.frame
+local OTF = ObjectiveTrackerFrame
 
-local SetSharedColor, IsSpecialLocale, DecToHex, RgbToHex	-- functions
+local GetModulesOptionsTable, MoveModule, SetSharedColor, IsSpecialLocale, DecToHex, RgbToHex	-- functions
 
 local defaults = {
 	profile = {
@@ -87,6 +88,15 @@ local defaults = {
 		sink20OutputSink = "UIErrorsFrame",
 		sink20Sticky = false,
 
+		modulesOrder = {
+			"SCENARIO_CONTENT_TRACKER_MODULE",
+			"AUTO_QUEST_POPUP_TRACKER_MODULE",
+			"QUEST_TRACKER_MODULE",
+			"BONUS_OBJECTIVE_TRACKER_MODULE",
+			"WORLD_QUEST_TRACKER_MODULE",
+			"ACHIEVEMENT_TRACKER_MODULE"
+		},
+
 		addonMasque = false,
 		addonPetTracker = false,
 		addonTomTom = false,
@@ -111,18 +121,30 @@ local options = {
 					order = 0,
 					args = {
 						info = {
-							name = "  |cffffd100Version:|r  "..KT.version,
+							name = "  |cffffd100Version:|r\n    "..KT.version,
 							type = "description",
-							width = "normal",
+							width = "half",
 							fontSize = "medium",
 							order = 0.1,
 						},
 						slash = {
-							name = cNote.." /kt|r ... Toggle (expand/collapse) the tracker\n"..
-									cNote.." /kt config|r ... Show this config window",
+							name = cBold.." /kt|r ... Toggle (expand/collapse) the tracker\n"..
+									cBold.." /kt config|r ... Show this config window",
 							type = "description",
 							width = "normal+half",
 							order = 0.2
+						},
+						news = {
+							name = "News",
+							type = "execute",
+							width = "half",
+							disabled = function()
+								return not KT.Help:IsEnabled()
+							end,
+							func = function()
+								KT.Help:ShowHelp(true)
+							end,
+							order = 0.3,
 						},
 						help = {
 							name = "Help",
@@ -134,7 +156,7 @@ local options = {
 							func = function()
 								KT.Help:ShowHelp()
 							end,
-							order = 0.3,
+							order = 0.4,
 						},
 					},
 				},
@@ -205,7 +227,7 @@ local options = {
 							order = 1.4,
 						},
 						maxHeightNote = {
-							name = cNote.." Max. height is related with value Y offset.\n"..
+							name = cBold.." Max. height is related with value Y offset.\n"..
 								" Content is lesser ... tracker height is automatically increases.\n"..
 								" Content is greater ... tracker enables scrolling.",
 							type = "description",
@@ -258,7 +280,6 @@ local options = {
 							set = function(_, value)
 								db.bgr = value
 								KT:SetBackground()
-								KT:MoveButtons()
 							end,
 							order = 2.1,
 						},
@@ -279,7 +300,7 @@ local options = {
 							order = 2.2,
 						},
 						bgrNote = {
-							name = cNote.." For a custom background\n texture set white color.",
+							name = cBold.." For a custom background\n texture set white color.",
 							type = "description",
 							width = "normal",
 							order = 2.21,
@@ -468,20 +489,19 @@ local options = {
 							set = function()
 								db.textWordWrap = not db.textWordWrap
 								KT:SetText()
-								ObjectiveTrackerFrame.BlocksFrame:Hide()
-								ObjectiveTracker_Update()
-								ObjectiveTrackerFrame.BlocksFrame:Show()
-								ObjectiveTracker_Update()
-								if PetTracker then
-									PetTracker.Objectives:TrackingChanged()
+								if not db.collapsed then
+									OTF.BlocksFrame:Hide()
+									ObjectiveTracker_Update()
+									OTF.BlocksFrame:Show()
 								end
+								C_Timer.After(0, ObjectiveTracker_Update)
 							end,
 							order = 3.6,
 						},
 						objNumSwitch = {
 							name = "Objective numbers at the beginning "..beta,
 							desc = "Changing the position of objective numbers at the beginning of the line. "..
-								   cNote.."Only for deDE, esES, frFR, ruRU locale.",
+								   cBold.."Only for deDE, esES, frFR, ruRU locale.",
 							descStyle = "inline",
 							type = "toggle",
 							width = "double",
@@ -800,7 +820,7 @@ local options = {
 						qiActiveButton = {
 							name = "Enable Active button "..beta,
 							desc = "Show Quest item button for CLOSEST quest as \"Extra Action Button\". "..
-								   cNote.."Key bind is shared with EXTRAACTIONBUTTON1.",
+								   cBold.."Key bind is shared with EXTRAACTIONBUTTON1.",
 							descStyle = "inline",
 							width = "double",
 							type = "toggle",
@@ -839,6 +859,24 @@ local options = {
 								SaveBindings(GetCurrentBindingSet())
 							end,
 							order = 5.4,
+						},
+						addonMasqueLabel = {
+							name = " Skin options - for Quest item buttons or Active button",
+							type = "description",
+							width = "double",
+							fontSize = "medium",
+							order = 5.5,
+						},
+						addonMasqueOptions = {
+							name = "Masque",
+							type = "execute",
+							disabled = function()
+								return (not IsAddOnLoaded("Masque") or not db.addonMasque or not KT.AddonOthers:IsEnabled())
+							end,
+							func = function()
+								SlashCmdList["MASQUE"]()
+							end,
+							order = 5.51,
 						},
 					},
 				},
@@ -903,6 +941,18 @@ local options = {
 				},
 				sec7 = {
 					-- LibSink
+				},
+			},
+		},
+		modules = {
+			name = "Modules",
+			type = "group",
+			args = {
+				sec1 = {
+					name = "Order Modules "..beta,
+					type = "group",
+					inline = true,
+					order = 1,
 				},
 			},
 		},
@@ -1024,6 +1074,7 @@ local options = {
 }
 
 local general = options.args.general.args
+local modules = options.args.modules.args
 local addons = options.args.addons.args
 
 function KT:CheckAddOn(addon, version, isUI)
@@ -1032,7 +1083,7 @@ function KT:CheckAddOn(addon, version, isUI)
 	local result = false
 	local path
 	if IsAddOnLoaded(addon) then
-		local actualVersion = GetAddOnMetadata(addon, "Version")
+		local actualVersion = GetAddOnMetadata(addon, "Version") or "unknown"
 		ver = isUI and "  -  " or ""
 		ver = (ver.."|cff%s"..actualVersion.."|r"):format(actualVersion == version and "00d200" or "ff0000")
 		result = true
@@ -1071,7 +1122,7 @@ function KT:SetupOptions()
 	general.sec7.inline = true
 	general.sec7.order = 7
 	self:SetSinkStorage(db)
-	
+
 	options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 	options.args.profiles.confirm = true
 	options.args.profiles.args.reset.confirmText = warning
@@ -1083,8 +1134,9 @@ function KT:SetupOptions()
 	
 	self.optionsFrame = {}
 	self.optionsFrame.general = ACD:AddToBlizOptions(addonName, self.title, nil, "general")
-	self.optionsFrame.profiles = ACD:AddToBlizOptions(addonName, options.args.profiles.name, self.title, "profiles")
+	self.optionsFrame.modules = ACD:AddToBlizOptions(addonName, options.args.modules.name, self.title, "modules")
 	self.optionsFrame.addons = ACD:AddToBlizOptions(addonName, options.args.addons.name, self.title, "addons")
+	self.optionsFrame.profiles = ACD:AddToBlizOptions(addonName, options.args.profiles.name, self.title, "profiles")
 
 	self.db.RegisterCallback(self, "OnProfileChanged", "InitProfile")
 	self.db.RegisterCallback(self, "OnProfileCopied", "InitProfile")
@@ -1094,6 +1146,93 @@ function KT:SetupOptions()
 	if not IsSpecialLocale() then
 		db.objNumSwitch = false
 	end
+end
+
+function GetModulesOptionsTable()
+	local numModules = #db.modulesOrder
+	local text
+	local args = {
+		descCurOrder = {
+			name = " |cff0dadf2Current Order",
+			type = "description",
+			width = "double",
+			fontSize = "medium",
+			order = 0.1,
+		},
+		descDefOrder = {
+			name = "|T:1:45|t|cff0dadf2Default Order",
+			type = "description",
+			width = "normal",
+			fontSize = "medium",
+			order = 0.2,
+		},
+		descModules = {
+			name = "\n * "..TRACKER_HEADER_DUNGEON.." / "..CHALLENGE_MODE.." / "..TRACKER_HEADER_SCENARIO.." / "..TRACKER_HEADER_PROVINGGROUNDS.."\n",
+			type = "description",
+			order = 20,
+		},
+	}
+	for i, module in ipairs(db.modulesOrder) do
+		text = _G[module].Header.Text:GetText()
+		if module == "SCENARIO_CONTENT_TRACKER_MODULE" then
+			text = text.." *"
+		elseif module == "AUTO_QUEST_POPUP_TRACKER_MODULE" then
+			text = "Popup "..text
+		end
+		args["pos"..i] = {
+			name = " "..text,
+			type = "description",
+			width = "normal",
+			fontSize = "medium",
+			order = i,
+		}
+		args["pos"..i.."up"] = {
+			name = (i > 1) and "Up" or " ",
+			desc = text,
+			type = (i > 1) and "execute" or "description",
+			width = "half",
+			func = function()
+				MoveModule(i, "up")
+			end,
+			order = i + 0.1,
+		}
+		args["pos"..i.."down"] = {
+			name = (i < numModules) and "Down" or " ",
+			desc = text,
+			type = (i < numModules) and "execute" or "description",
+			width = "half",
+			func = function()
+				MoveModule(i)
+			end,
+			order = i + 0.2,
+		}
+		args["pos"..i.."default"] = {
+			name = "|T:1:55|t|cff808080"..(OTF.MODULES_UI_ORDER[i] == AUTO_QUEST_POPUP_TRACKER_MODULE and "Popup " or "")..OTF.MODULES_UI_ORDER[i].Header.Text:GetText()..(OTF.MODULES_UI_ORDER[i] == SCENARIO_CONTENT_TRACKER_MODULE and " *" or ""),
+			type = "description",
+			width = "normal",
+			order = i + 0.3,
+		}
+	end
+	return args
+end
+
+function MoveModule(idx, direction)
+	local text = strsub(modules.sec1.args["pos"..idx].name, 2)
+	local tmpIdx = (direction == "up") and idx-1 or idx+1
+	local tmpText = strsub(modules.sec1.args["pos"..tmpIdx].name, 2)
+	modules.sec1.args["pos"..tmpIdx].name = " "..text
+	modules.sec1.args["pos"..tmpIdx.."up"].desc = text
+	modules.sec1.args["pos"..tmpIdx.."down"].desc = text
+	modules.sec1.args["pos"..idx].name = " "..tmpText
+	modules.sec1.args["pos"..idx.."up"].desc = tmpText
+	modules.sec1.args["pos"..idx.."down"].desc = tmpText
+
+	local module = tremove(db.modulesOrder, idx)
+	tinsert(db.modulesOrder, tmpIdx, module)
+
+	module = tremove(OTF.MODULES_UI_ORDER, idx)
+	tinsert(OTF.MODULES_UI_ORDER, tmpIdx, module)
+	ObjectiveTracker_Update()
 end
 
 function SetSharedColor(color)
@@ -1129,3 +1268,10 @@ function RgbToHex(color)
 	b = (strlen(b) < 2) and "0"..b or b
 	return r..g..b
 end
+
+local initFrame = CreateFrame("Frame")
+initFrame:SetScript("OnEvent", function(self, event)
+	modules.sec1.args = GetModulesOptionsTable()
+	self:UnregisterEvent(event)
+end)
+initFrame:RegisterEvent("PLAYER_ENTERING_WORLD")

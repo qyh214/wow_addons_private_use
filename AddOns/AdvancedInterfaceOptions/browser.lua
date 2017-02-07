@@ -1,11 +1,59 @@
 local addonName, addon = ...
 local _G = _G
+local E = addon:Eve()
+
+-- GLOBALS: ListFrame GameTooltip SLASH_AIO1 InterfaceOptionsFrame_OpenToCategory SLASH_CVAR1 AdvancedInterfaceOptionsSaved
+
+function addon:CVarExists(cvar)
+	return pcall(function() return GetCVarDefault(cvar) end)
+end
+
+-- Go through list of cvars and remove any that don't currently exist
+local CVarList = {}
+for cvar in pairs(addon.hiddenOptions) do
+	local cvar_exists = addon:CVarExists(cvar) -- pcall(function() return GetCVarDefault(cvar) end)
+	if cvar_exists then
+		CVarList[cvar] = addon.hiddenOptions[cvar]
+	else
+		-- addon.hiddenOptions[cvar] = nil -- can't do this because we have exceptions for some settings that aren't cvars, should probably restructure the database
+		-- print("Warning, CVar doesn't exist:", cvar)
+	end
+end
+
+-------------------------------------------------------
+-- Track cvars set by the interface and other addons
+local function TraceCVar(cvar, value, ...)
+	if not addon:CVarExists(cvar) then return end
+	local trace = debugstack(2)
+	local func, source, lineNum = trace:match("in function `([^']+)'%s*([^:%[]+):(%d+)")
+	if source then
+		-- local blizzardAddon = source:match('(B?l?i?z?zard_.+)')
+		-- local addonName, file = source:match('^.?.?.?I?n?t?e?r?f?a?c?e?\\?A?d?d?O?n?s?\\([^\\]+)\\?(.*)$')
+		-- source is Interface\FrameXML\ChatFrame.lua if we've manually typed /script or /console
+		-- print('|cffffccff' .. source .. ':' .. lineNum .. '|r', cvar, value)
+		AdvancedInterfaceOptionsSaved.ModifiedCVars[ cvar:lower() ] = source .. ':' .. lineNum
+		addon:RecordCVar(cvar, value)
+	end
+end
+
+function E:Init()
+	hooksecurefunc('SetCVar', TraceCVar) -- /script SetCVar(cvar, value)
+	hooksecurefunc('ConsoleExec', function(msg)
+		local cmd, cvar, value = msg:match('^(%S+)%s+(%S+)%s*(%S*)')
+		if cmd then
+			if cmd:lower() == 'set' then -- /console SET cvar value
+				TraceCVar(cvar, value)
+			else -- /console cvar value
+				TraceCVar(cmd, cvar)
+			end
+		end
+	end)
+end
 
 local SetCVar = function(cvar, value)
 	addon:SetCVar(cvar, value)
 end
 
--- GLOBALS: ListFrame GameTooltip SLASH_AIO1 InterfaceOptionsFrame_OpenToCategory SLASH_CVAR1
 
 -- Create an options panel and insert it into the interface menu
 local OptionsPanel = CreateFrame('Frame', nil, InterfaceOptionsFramePanelContainer)
@@ -47,13 +95,11 @@ FilterBox:SetScript('OnEditFocusGained', function(self)
 	self:SetAutoFocus(true)
 	self:HighlightText()
 end)
---FilterBox:SetAutoFocus(true) -- should be the default state anyway
 
 local CVarTable = {}
 local ListFrame = addon:CreateListFrame(OptionsPanel, 615, 465, {{NAME, 200}, {'Description', 260, 'LEFT'}, {'Value', 100, 'RIGHT'}})
 ListFrame:SetPoint('TOP', FilterBox, 'BOTTOM', 0, -20)
 ListFrame:SetPoint('BOTTOMLEFT', 4, 6)
---ListFrame:SetPoint('BOTTOMRIGHT', -4, 6)
 ListFrame:SetItems(CVarTable)
 
 ListFrame.Bg:SetAlpha(0.8)
@@ -64,6 +110,7 @@ FilterBox:SetMaxLetters(100)
 local function Literalize(str)
 	return str:gsub('[%(%)%.%%%+%-%*%?%[%]%^%$]', '%%%1')
 end
+
 -- Rewrite text pattern to be case-insensitive
 local function UnCase(c)
 	return '[' .. strlower(c) .. strupper(c) .. ']'
@@ -94,9 +141,6 @@ local function FilterCVarList()
 					end
 					tinsert(FilteredTable, newrow)
 					break
-				--if col:lower():find(text, 1, true) then
-					--tinsert(FilteredTable, row)
-					--break
 				end
 			end
 		end
@@ -125,7 +169,7 @@ end
 local function RefreshCVarList()
 	wipe(CVarTable)
 	-- todo: this needs to be updated every time a cvar changes while the table is visible
-	for cvar, tbl in pairs(addon.hiddenOptions) do
+	for cvar, tbl in pairs(CVarList) do
 		local value, default, isDefault = GetPrettyCVar(cvar)
 		tinsert(CVarTable, {cvar, cvar, tbl.description or '', isDefault and value or ('|cffff0000' .. value .. '|r')})
 	end
@@ -199,34 +243,33 @@ function E:PLAYER_LOGIN()
 		self:Hide()
 		FilterBox:SetFocus()
 	end)
-	
+
 	function E:PLAYER_REGEN_DISABLED()
 		if CVarInputBox:IsVisible() then
 			CVarInputBox:Hide()
 		end
 		FilterBox:GetScript('OnEscapePressed')(FilterBox)
 	end
-	
+
 	local LastClickTime = 0 -- Track double clicks on rows
 	ListFrame:SetScripts({
 		OnEnter = function(self)
 			if self.value ~= '' then
 				GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-				local cvarTable = addon.hiddenOptions[self.value]
+				local cvarTable = CVarList[self.value]
 				local _, defaultValue = GetCVarInfo(self.value)
-				if cvarTable['prettyName'] then --and _G[ cvarTable['prettyName'] ] then
-					GameTooltip:AddLine(cvarTable['prettyName'], nil, nil, nil, false)
-					GameTooltip:AddLine(" ")
-				else
-					GameTooltip:AddLine(self.value, nil, nil, nil, false)
-					GameTooltip:AddLine(" ")
-				end
+				GameTooltip:AddLine(cvarTable['prettyName'] or self.value, nil, nil, nil, false)
+				GameTooltip:AddLine(" ")
 				if cvarTable['description'] then --and _G[ cvarTable['description'] ] then
-					GameTooltip:AddLine("|cFFFFFFFF" .. cvarTable['description'] .. "|r", nil, nil, nil, true)
-					GameTooltip:AddDoubleLine("|cFF33FF99Default Value:|r", defaultValue, nil, nil, nil, false)
-				else
-					GameTooltip:AddDoubleLine("|cFF33FF99Default Value:|r", defaultValue, nil, nil, nil, false)
+					GameTooltip:AddLine(cvarTable['description'], 1, 1, 1, true)
 				end
+				GameTooltip:AddDoubleLine("Default Value:", defaultValue, 0.2, 1, 0.6, 0.2, 1, 0.6)
+
+				local modifiedBy = AdvancedInterfaceOptionsSaved.ModifiedCVars[ self.value:lower() ]
+				if modifiedBy then
+					GameTooltip:AddDoubleLine("Last Modified By:", modifiedBy, 1, 0, 0, 1, 0, 0)
+				end
+
 				GameTooltip:Show()
 			end
 			self.bg:Show()

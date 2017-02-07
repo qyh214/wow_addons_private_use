@@ -1,22 +1,20 @@
-lightweight tag 2aba4b5d1dc29b6331dcbe06cf8e2df019b11ab3 7.1.5
+lightweight tag 45ba4e8956de7fe0a68a33a39f49ed1d89896a21 7.1.5a
 Author:	GitHub <noreply@github.com>
-Date:	Wed Jan 25 20:01:42 2017 -0600
+Date:	Wed Feb 1 20:19:50 2017 -0600
 
-commit c80f8258cfcefc6c5d777ecbe260e745466106d1
-Author: Joshua Worden <solocommand@gmail.com>
-Date:   Wed Jan 25 19:57:43 2017 -0600
+commit 9efc91ea501b703151900c65122ae4dca51941c2
+Author: Josh Worden <solocommand@gmail.com>
+Date:   Wed Feb 1 20:18:19 2017 -0600
 
-    Update to use new NoTaint menu library calls
+    Revert bad notaint change
+    
+    This partially reverts commit c80f8258cfcefc6c5d777ecbe260e745466106d1.
 
-commit c80f8258cfcefc6c5d777ecbe260e745466106d1
-Author: Joshua Worden <solocommand@gmail.com>
-Date:   Wed Jan 25 19:57:43 2017 -0600
+commit 9efc91ea501b703151900c65122ae4dca51941c2
+Author: Josh Worden <solocommand@gmail.com>
+Date:   Wed Feb 1 20:18:19 2017 -0600
 
-    Update to use new NoTaint menu library calls
-
-commit 0a22e00b48e00b0164b40f53954745941acb98e7
-Author: Joshua Worden <solocommand@gmail.com>
-Date:   Wed Jan 25 19:49:39 2017 -0600
-
-    Update packager config for titan panel dep
+    Revert bad notaint change
+    
+    This partially reverts commit c80f8258cfcefc6c5d777ecbe260e745466106d1.
 

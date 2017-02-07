@@ -11807,6 +11807,7 @@
 									XPerl_Options_EnableSibling(self, "Mana")
 									XPerl_Options_EnableSibling(self, "ManaPercent", "Mana")
 									XPerl_Options_EnableSibling(self, "precisionManaPercent")
+									XPerl_Options_EnableSibling(self, "ShowParty")
 									XPerl_Options_EnableSibling(self, "Buffs")
 									XPerl_Options_EnableSibling(self, "Debuffs")
 									XPerl_Options_EnableSibling(self, "Castable")

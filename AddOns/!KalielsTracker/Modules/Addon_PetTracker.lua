@@ -10,61 +10,51 @@ KT.AddonPetTracker = M
 
 local _DBG = function(...) if _DBG then _DBG("KT", ...) end end
 
--- Lua API
-local floor = math.floor
-local round = function(n) return floor(n + 0.5) end
-
-local paddingBottom = 15
-
 local db
 local OTF = ObjectiveTrackerFrame
+local PetTracker = PetTracker
 
 local eventFrame
+local header, content
+
+OBJECTIVE_TRACKER_UPDATE_MODULE_PETTRACKER = 0x80000
+OBJECTIVE_TRACKER_UPDATE_PETTRACKER = 0x80001
+PETTRACKER_TRACKER_MODULE = ObjectiveTracker_GetModuleInfoTable()
 
 --------------
 -- Internal --
 --------------
 
-local function SetHooks()
-	PetTracker.Objectives.Header:SetParent(OTF.BlocksFrame)
-	PetTracker.Objectives.Header:EnableMouse(false)
-	PetTracker.Objectives.Anchor:SetParent(OTF.BlocksFrame)
-	PetTracker.Objectives.Anchor:SetPoint("TOPLEFT", PetTracker.Objectives.Header, "BOTTOMLEFT", -1, -10)
-	PetTracker.Objectives.Anchor:EnableMouse(false)
-
-	local LPJ = LibStub("LibPetJournal-2.0")
-	LPJ.RegisterCallback(PetTracker.Objectives, "PetListUpdated", function()
-		local numPets = C_PetJournal.GetNumPets()
-		if numPets > 0 then
-			ObjectiveTracker_Update()
-			LPJ.UnregisterCallback(PetTracker.Objectives, "PetListUpdated")
-		end
+local function SetHooks_Enabled()
+	hooksecurefunc("ObjectiveTracker_Initialize", function(self)
+		tinsert(self.MODULES, PETTRACKER_TRACKER_MODULE)
+		tinsert(self.MODULES_UI_ORDER, PETTRACKER_TRACKER_MODULE)
 	end)
 
-	local bck_PetTracker_Objectives_TrackingChanged = PetTracker.Objectives.TrackingChanged
+	function PetTracker.Objectives:Startup()
+		self.Anchor:SetWidth(content:GetWidth())
+		self.Anchor:SetPoint("TOPLEFT", content, -10, 0)
+		self:SetParent(OTF.BlocksFrame)
+		self.Header = header
+		self.maxEntries = 100
+	end
+end
+
+local function SetHooks_Disabled()
+	if not db.addonPetTracker and PetTracker then
+		PetTracker.Objectives.Startup = function() end
+	end
+end
+
+local function SetHooks()
 	function PetTracker.Objectives:TrackingChanged()
 		if not PetTracker.Sets.HideTracker then
-			_DBG(" - PT Update ... "..self.maxEntries)
-			self.maxEntries = 100
-			bck_PetTracker_Objectives_TrackingChanged(self)
-			self.maxEntries = self:Count()
-			self.maxEntries = self.maxEntries > 0 and self.maxEntries + 1 or 0
-			_DBG("    maxEntries = "..self.maxEntries)
-			self.Header:SetShown(self.Anchor:IsShown())
+			self:Update()
 		end
+		self:SetShown(not PetTracker.Sets.HideTracker and self.Anchor:IsShown())
+		ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_PETTRACKER)
 	end
 	
-	-- Replace original function!
-	function PetTracker.Objectives:GetUsedHeight()
-		local mod = KT:IsTrackerEmpty(true) and 0 or paddingBottom + 1
-		-- Bonus objectives - problem with order of events
-		if KT.animTask or KT.activeTask then
-			mod = mod + BONUS_OBJECTIVE_TRACKER_MODULE.blockPadding
-		end
-		return OTF.BlocksFrame.contentsHeight + mod
-	end
-	
-	-- Replace original function!
 	function PetTracker.Tracker:AddSpecie(specie, quality, level)
 		local Journal = PetTracker.Journal
 		local sourceIcon = Journal:GetSourceIcon(specie)
@@ -74,7 +64,6 @@ local function SetHooks()
 			local r,g,b = self:GetColor(quality)
 			local line = self:NewLine()
 			line.Text:SetText(name .. (level > 0 and format(' (%s)', level) or ''))
-			line.Text:SetWidth(self.Anchor:GetWidth())
 			line.SubIcon:SetTexture(sourceIcon)
 			line.Icon:SetTexture(icon)
 			line:SetScript('OnClick', function()
@@ -88,30 +77,20 @@ local function SetHooks()
 			end)
 			line:GetScript('OnLeave')(line)
 			-- added code
+			line.Text:SetWidth(self.Anchor:GetWidth() - line.Icon:GetWidth() - 10)
 			line.Text:SetFont(KT.font, db.fontSize, db.fontFlag)
 			line.Text:SetShadowColor(0, 0, 0, db.fontShadow)
+			line.Text:SetWordWrap(false)
 			line.Text:ClearAllPoints()
 			line.Text:SetPoint("LEFT", line.Icon, "RIGHT", 10, 0)
 			line:SetParent(OTF.BlocksFrame)
 		end
 	end
 
-	hooksecurefunc(PetTracker, "ForAllModules", function(self, event, ...)
-		if event == "TrackingChanged" then
-			if ACHIEVEMENT_TRACKER_MODULE.hasSkippedBlocks then		-- fix - init achievements only
-				ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_ACHIEVEMENT)
-			else
-				KT:SetSize()
-			end
-			KT:ToggleEmptyTracker()
-		end				
-	end)
-	
-	-- Disable DropDown (it's moved to filters menu)
+	-- Disable DropDown (it was moved to filters menu)
 	PetTracker.Tracker.ShowOptions = function() end
 	
 	-- Sushi Lib - hack - revert back DropDownMenu
-	-- Replace original functions!
 	if SushiDropFrame then
 		local dropDownFrame = CreateFrame("Frame", "SushiDropDownFrameFix", nil, "MSA_DropDownMenuTemplate")
 		function dropDownFrame:AddLine(data)
@@ -158,7 +137,7 @@ local function SetHooks_PetTracker_Journal()
 		infoFrame:SetScript("OnEnter", function(self)
 			GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
 			GameTooltip:AddLine(PetTracker.Locals.ZoneTracker, 1, 1, 1)
-			GameTooltip:AddLine("Support can be enabled in addon "..KT.title, 1, 0, 0, true)
+			GameTooltip:AddLine("Support can be enabled inside addon "..KT.title, 1, 0, 0, true)
 			GameTooltip:Show()
 		end)
 		infoFrame:SetScript("OnLeave", function(self)
@@ -177,16 +156,7 @@ local function SetHooks_PetTracker_Journal()
 	end
 end
 
-local function SetHooks_DisabledPetTracker()
-	if not db.addonPetTracker and PetTracker then
-		PetTracker.Objectives.Startup = function() end
-		if IsAddOnLoaded("PetTracker_Journal") then
-			SetHooks_PetTracker_Journal()
-		end
-	end
-end
-
-local function SetFrames()
+local function SetFrames_Init()
 	-- Event frame
 	if not eventFrame then
 		eventFrame = CreateFrame("Frame")
@@ -195,6 +165,10 @@ local function SetFrames()
 			if event == "ADDON_LOADED" and arg1 == "PetTracker_Journal" then
 				SetHooks_PetTracker_Journal()
 				self:UnregisterEvent(event)
+			elseif event == "PLAYER_ENTERING_WORLD" then
+				SetHooks()
+				self:RegisterEvent("PET_JOURNAL_LIST_UPDATE")
+				self:UnregisterEvent(event)
 			elseif event == "PET_JOURNAL_LIST_UPDATE" then
 				M:SetPetsHeaderText()
 			end
@@ -202,39 +176,113 @@ local function SetFrames()
 	end
 	if not IsAddOnLoaded("PetTracker_Journal") then
 		eventFrame:RegisterEvent("ADDON_LOADED")
+	else
+		SetHooks_PetTracker_Journal()
 	end
+end
+
+local function SetFrames()
+	-- Header frame
+	header = CreateFrame("Frame", nil, OTF.BlocksFrame, "ObjectiveTrackerHeaderTemplate")
+	header:Hide()
+
+	-- Content frame
+	content = CreateFrame("Frame", nil, OTF.BlocksFrame)
+	content:SetSize(232 - PETTRACKER_TRACKER_MODULE.blockOffsetX, 10)
+	content:Hide()
 end
 
 --------------
 -- External --
 --------------
 
-function M:SetPetsHeaderText(reset)
-	if self.isLoaded and db.hdrPetTrackerTitleAppend then
-		local _, numPetsOwned = C_PetJournal.GetNumPets()
-		KT:SetHeaderText(PetTracker.Objectives, numPetsOwned)
-	elseif reset then
-		KT:SetHeaderText(PetTracker.Objectives)
+function PETTRACKER_TRACKER_MODULE:GetBlock()
+	local block = content
+	block.module = self
+	block.used = true
+	block.height = 0
+	block.lineWidth = OBJECTIVE_TRACKER_TEXT_WIDTH - self.blockOffsetX
+	block.currentLine = nil
+	if block.lines then
+		for _, line in ipairs(block.lines) do
+			line.used = nil
+		end
+	else
+		block.lines = {}
 	end
+	return block
+end
+
+function PETTRACKER_TRACKER_MODULE:MarkBlocksUnused()
+	content.used = nil
+end
+
+function PETTRACKER_TRACKER_MODULE:FreeUnusedBlocks()
+	if not content.used then
+		content:Hide()
+	end
+end
+
+function PETTRACKER_TRACKER_MODULE:Update()
+	self:BeginLayout()
+	if PetTracker.Objectives:IsShown() then
+		local block = self:GetBlock()
+		block.height = PetTracker.Objectives:GetHeight() - 45
+		block:SetHeight(block.height)
+		if ObjectiveTracker_AddBlock(block) then
+			block:Show()
+			self:FreeUnusedLines(block)
+		else
+			block.used = nil
+		end
+	end
+	self:EndLayout()
 end
 
 function M:OnInitialize()
 	_DBG("|cffffff00Init|r - "..self:GetName(), true)
 	db = KT.db.profile
-	self.isLoaded = (KT:CheckAddOn("PetTracker", "7.1.3") and db.addonPetTracker)
-	SetHooks_DisabledPetTracker()
-	SetFrames()
+	self.isLoaded = (KT:CheckAddOn("PetTracker", "7.1.4") and db.addonPetTracker)
+
+	if self.isLoaded then
+		tinsert(KT.db.defaults.profile.modulesOrder, "PETTRACKER_TRACKER_MODULE")
+		KT.db:RegisterDefaults(KT.db.defaults)
+	else
+		for i, module in ipairs(db.modulesOrder) do
+			if module == "PETTRACKER_TRACKER_MODULE" then
+				tremove(db.modulesOrder, i)
+				break
+			end
+		end
+	end
+
+	SetFrames_Init()
+	SetHooks_Disabled()
 end
 
 function M:OnEnable()
 	_DBG("|cff00ff00Enable|r - "..self:GetName(), true)
-	SetHooks()
-	KT:SaveHeader(PetTracker.Objectives)
-	eventFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE")
+	SetFrames()
+	SetHooks_Enabled()
+
+	PETTRACKER_TRACKER_MODULE.updateReasonModule = OBJECTIVE_TRACKER_UPDATE_MODULE_PETTRACKER
+	PETTRACKER_TRACKER_MODULE.updateReasonEvents = OBJECTIVE_TRACKER_UPDATE_PETTRACKER
+	PETTRACKER_TRACKER_MODULE:SetHeader(header, PETS)
+
+	eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 
 function M:IsShown()
 	return (self.isLoaded and
 		not PetTracker.Sets.HideTracker and
 		PetTracker.Objectives:IsShown())
+end
+
+function M:SetPetsHeaderText(reset)
+	if self.isLoaded and db.hdrPetTrackerTitleAppend then
+		local _, numPetsOwned = C_PetJournal.GetNumPets()
+		KT:SetHeaderText(PETTRACKER_TRACKER_MODULE, numPetsOwned)
+	elseif reset then
+		KT:SetHeaderText(PETTRACKER_TRACKER_MODULE)
+	end
 end

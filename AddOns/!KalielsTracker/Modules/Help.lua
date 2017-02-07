@@ -14,10 +14,13 @@ local _DBG = function(...) if _DBG then _DBG("KT", ...) end end
 local db
 local mediaPath = "Interface\\AddOns\\"..addonName.."\\Media\\"
 local helpPath = mediaPath.."Help\\"
+local helpName = "help"
+local helpNumPages = 10
 local cTitle = "|cffffd100"
-local cKey = "|cff00ffe3"
+local cBold = "|cff00ffe3"
 local cWarning = "|cffff7f00"
 local cDots = "|cff808080"
+local offs = "\n|T:1:9|t"
 local beta = "|cffff7fff[Beta]|r"
 
 local KTF = KT.frame
@@ -37,7 +40,7 @@ local function AddonInfo(name)
 end
 
 local function SetupTutorials()
-	T.RegisterTutorial("help", {
+	T.RegisterTutorial(helpName, {
 		savedvariable = db,
 		key = "helpTutorial",
 		title = KT.title.." |cffffffffv"..KT.version.."|r",
@@ -74,8 +77,8 @@ local function SetupTutorials()
 				"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:2:-1:32:64:16:30:32:46:209:170:0|t  "..cDots.."...|r Open Filters menu\n\n"..
 				"Buttons |T"..mediaPath.."UI-KT-HeaderButtons:14:14:0:-1:32:64:16:30:0:14:209:170:0|t and "..
 				"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:0:-1:32:64:16:30:16:30:209:170:0|t you can disable in Options.\n\n"..
-				"You can set "..cKey.."[key bind]|r for Minimize button.\n"..
-				cKey.."Alt+Click|r on Minimize button opens "..KT.title.." Options.",
+				"You can set "..cBold.."[key bind]|r for Minimize button.\n"..
+				cBold.."Alt+Click|r on Minimize button opens "..KT.title.." Options.",
 			textY = 16,
 			shine = KTF.MinimizeButton,
 			shineTop = 13,
@@ -103,7 +106,7 @@ local function SetupTutorials()
 		{	-- 4
 			image = helpPath.."help_tracker-filters",
 			text = cTitle.."Tracker Filters|r\n\n"..
-				"For open Filters menu "..cKey.."Click|r on the button |T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:16:30:32:46:209:170:0|t.\n\n"..
+				"For open Filters menu "..cBold.."Click|r on the button |T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:16:30:32:46:209:170:0|t.\n\n"..
 				"There are two types of filters:\n"..
 				cTitle.."Static filter|r - adds quests/achievements to tracker by criterion (e.g. \"Daily\") and then you can add/remove items by hand.\n"..
 				cTitle.."Dynamic filter|r - automatically adding quests/achievements to tracker by criterion (e.g. \"|cff00ff00Auto|r Zone\") "..
@@ -135,15 +138,15 @@ local function SetupTutorials()
 		},
 		{	-- 6
 			image = helpPath.."help_active-button",
-			text = cTitle.."Active Button|r "..beta.."\n\n"..
+			text = cTitle.."Active Button|r\n\n"..
 				"Active Button is for a better use of quest items. Displays quest item button for CLOSEST quest as Extra Action Button (like Draenor zone ability).\n\n"..
 				"Features:\n"..
-				"- Auto show Active Button when you approach the place of performance\n"..
-				"|T:1:9|tof the quest.\n"..
-				"- You can set "..cKey.."[key bind]|r to use quest item. Key set up in "..KT.title.."\n"..
-				"|T:1:9|tOptions. Active Button uses the same key bind as the Extra Action Button.\n"..
-				"- Button is movable using some addons (e.g. Bartender4, MoveAnything).\n"..
-				"|T:1:9|tFor position change, move \"Extra Action Button\" resp. \"Extra Action Bar\".\n\n"..
+				"- Auto show Active Button when you approach the place of performance"..
+				offs.."of the quest.\n"..
+				"- You can set "..cBold.."[key bind]|r to use quest item. Key set up in "..KT.title..
+				offs.."Options. Active Button uses the same key bind as the Extra Action Button.\n"..
+				"- Button is movable using some addons (e.g. Bartender4, MoveAnything)."..
+				offs.."For position change, move \"Extra Action Button\" resp. \"Extra Action Bar\".\n\n"..
 				cWarning.."Warning:|r\n"..
 				"- Active Button works only for tracked quests.\n"..
 				"- When tracker is collapsed, Active Button feature is paused.",
@@ -160,13 +163,13 @@ local function SetupTutorials()
 		},
 		{	-- 8
 			image = helpPath.."help_addon-pettracker",
-			text = cTitle.."Support addon PetTracker|r "..beta.."\n\n"..
+			text = cTitle.."Support addon PetTracker|r\n\n"..
 				"PetTracker support adjusts display of zone pet tracking inside "..KT.title..". Also fix some visual bugs in the display.\n"..
 				AddonInfo("PetTracker"),
 		},
 		{	-- 9
 			image = helpPath.."help_addon-tomtom",
-			text = cTitle.."Support addon TomTom|r "..beta.."\n\n"..
+			text = cTitle.."Support addon TomTom|r\n\n"..
 				"TomTom support combined Blizzard's POI and TomTom's Arrow.\n\n"..
 				"|TInterface\\WorldMap\\UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:224:256:224:256|t"..
 				"|TInterface\\WorldMap\\UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:128:160:96:128|t"..cDots.."...|r  Default Blizzard POI button\n"..
@@ -175,21 +178,57 @@ local function SetupTutorials()
 				"Features:\n"..
 				"- The newly tracked quests automatically gets waypoints.\n"..
 				"- Waypoints of untracked or abandoned quests will be removed.\n"..
-				"- "..cKey.."Click|r on POI button add new waypoint or activate existing waypoint.\n"..
-				"- If quest doesn't have POI button, "..cKey.."Right Click|r on quest and use context menu.\n"..
-				"- Or use "..cKey.."[modifier key]+Left Click|r, modifier set up in "..KT.title.." Options.\n"..
+				"- "..cBold.."Click|r on POI button add new waypoint or activate existing waypoint.\n"..
+				"- If quest doesn't have POI button, "..cBold.."Right Click|r on quest and use context menu.\n"..
+				"- Or use "..cBold.."[modifier key]+Left Click|r, modifier set up in "..KT.title.." Options.\n"..
 				AddonInfo("TomTom"),
 			shineTop = 10,
 			shineBottom = -10,
 			shineLeft = -11,
 			shineRight = 11,
 		},
+		{	-- 10
+			text = cTitle.."         What's NEW in version |cffffffff"..KT.version.."|r\n\n"..
+				"- ADDED - Order Modules "..beta.." - Set modules order inside the tracker,"..offs.."supported all modules including PetTracker.\n"..
+				"- FIXED - issue #112 - Blocked action button on World Map - taint protected"..offs.."function (see bellow World Map issues).\n"..
+				"- FIXED - issue #169 and #177 - World Map tracking dropdown menu doesn't"..offs.."show items from other addons.\n"..
+				"- UPDATED - PetTracker support v7.1.4.\n"..
+				"- UPDATED - Q/WQ dropdown menu items (patch 7.1.5).\n"..
+				"- IMPROVED - Q/WQ item buttons.\n\n"..
+				cTitle.."World Map issues|r\n"..
+				"- I reworked elimination of taint inside World Map, but I need some tests from"..
+				offs.."YOU! Especially with World Quest Class Hall Tier 5 button ("..cBold.."issue #112|r)."..
+				offs..cWarning.."Please send me info if this fix works!|r\n"..
+				"- I had to disable zoom in World Map, for eliminating taint.\n\n"..
+				cTitle.."Known issues|r\n"..
+				"- Spell / Quest item buttons in Scenario not supported for now.\n\n"..
+				cTitle.."Issues reporting|r\n"..
+				"For reporting please use "..cBold.."Tickets|r (|cff666666https://wow.curseforge.com/projects/kaliels-tracker/issues|r) instead of Comments on Curse.com.\n\n"..
+				"To the description of a new ticket, please insert the following information:\n"..
+				"- "..cBold..KT.title.." version|r (number),\n"..
+				"- "..cBold.."User interface|r (e.g. ElvUI) and version,\n"..
+				"- "..cBold.."Addon(s) in collision|r,\n"..
+				"- "..cBold.."WoW language|r,\n"..
+				"- "..cBold.."Character class|r,\n"..
+				"- "..cBold.."Error log|r (if it exists).\n\n"..
+				cWarning.."Before reporting of errors, please deactivate other addons and make sure the bug is not caused by a collision with another addon.|r",
+			textY = -20,
+			shine = KTF,
+			shineTop = 5,
+			shineBottom = -5,
+			shineLeft = -6,
+			shineRight = 6,
+		},
 		onShow = function(self, i)
 			if db.collapsed then
 				ObjectiveTracker_MinimizeButton_OnClick()
 			end
 			if i == 2 then
-				self[i].shineLeft = db.hdrOtherButtons and -75 or -35
+				if KTF.FilterButton then
+					self[i].shineLeft = db.hdrOtherButtons and -75 or -35
+				else
+					self[i].shineLeft = db.hdrOtherButtons and -55 or -15
+				end
 			elseif i == 3 then
 				local questID, _ = GetQuestWatchInfo(1)
 				local block = QUEST_TRACKER_MODULE.usedBlocks[questID]
@@ -227,11 +266,20 @@ end
 function M:OnEnable()
 	_DBG("|cff00ff00Enable|r - "..self:GetName(), true)
 	SetupTutorials()
-	T.TriggerTutorial("help", 9)
+	local last = false
+	if KT.version ~= db.version then
+		local data = T.GetTutorial(helpName)
+		local index = data.savedvariable[data.key]
+		if index then
+			last = index < helpNumPages and index+1 or true
+			T.ResetTutorial(helpName)
+		end
+	end
+	T.TriggerTutorial(helpName, helpNumPages, last)
 end
 
-function M:ShowHelp()
+function M:ShowHelp(index)
 	InterfaceOptionsFrame:Hide()
-	T.ResetTutorial("help")
-	T.TriggerTutorial("help", 9)
+	T.ResetTutorial(helpName)
+	T.TriggerTutorial(helpName, helpNumPages, index or false)
 end

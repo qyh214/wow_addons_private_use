@@ -1,12 +1,30 @@
-tag 9aa3e7693c8a5536f738aa0530acf0685cea5020 2.16.2
+tag 74bab272e4f76b8eee1a5f402e505e616d312446 2.16.3
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Tue Jan 24 10:44:45 2017 +0100
+Date:	Tue Jan 31 19:53:58 2017 +0100
 
 Bugfix release
 
-commit 7911563135c33cb2561ba20418ea97b679596775
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Tue Jan 24 10:42:13 2017 +0100
+Fix: Lua error in shipyard.lua
+Feature: OrderHallCommander updated to 1.0.2
 
-    Fix: backported fixes for OrderHallCommander
+commit c2f2e44a04eaacf9fbbae40d45a6038ac8ea421d
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Tue Jan 31 17:17:28 2017 +0100
+
+    Feature: OrderHallCommander 1.0.2
+
+commit fe8fbc76c396b7522bab556f032dffd2fe02f198
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Tue Jan 31 17:16:28 2017 +0100
+
+    Fix: Lua error
+    
+    Message: ..\AddOns\GarrisonCommander\ShipYard.lua line 399:
+       attempt to index upvalue 'GCS' (a nil value)
+
+commit 36b901156936c1d671fcacd964d2bb9d83e9fbe1
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Mon Jan 30 23:05:20 2017 +0100
+
+    In quick mode skips final report
 

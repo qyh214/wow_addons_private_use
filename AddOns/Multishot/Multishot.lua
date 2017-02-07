@@ -25,6 +25,7 @@ function Multishot:OnEnable()
   self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
   self:RegisterEvent("PLAYER_REGEN_ENABLED")
   self:RegisterEvent("GARISSON_BUILDING_ACTIVATED")
+  self:RegisterEvent("ADDON_LOADED")
   self:RegisterEvent("SCREENSHOT_FAILED", "Debug")
   if MultishotConfig.timeLineEnable then
   	self.timeLineTimer = self:ScheduleRepeatingTimer("TimeLineProgress",5)
@@ -60,9 +61,20 @@ end
 
 function Multishot:CHALLENGE_MODE_COMPLETED(strEvent)
 	if not MultishotConfig.challengemode then return end
-	hooksecurefunc(ChallengeModeCompleteBanner,"PlayBanner",function()
-		self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
-	end)
+	--hooksecurefunc(ChallengeModeCompleteBanner,"PlayBanner",function()
+	--	self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
+	--end)
+end
+
+function Multishot:ADDON_LOADED(strEvent, subev)
+	if not MultishotConfig.challengemode then return end
+	if subev == "Blizzard_ChallengesUI" then
+		hooksecurefunc(ChallengeModeCompleteBanner,"PlayBanner",function()
+			self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, subev)
+		end)
+	else
+		return
+	end		
 end
 
 function Multishot:UPDATE_BATTLEFIELD_STATUS(strEvent)

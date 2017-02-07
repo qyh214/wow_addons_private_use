@@ -1,5 +1,11 @@
-changeset:   109:520f766a9301
+changeset:   110:cd43c39b0149
 tag:         tip
+user:        Tercio
+date:        Mon Jan 30 13:56:41 2017 -0200
+summary:     - undo Blizzard func overwrite, it might be causing taints.
+
+
+changeset:   109:520f766a9301
 user:        Tercio
 date:        Sun Jan 22 16:56:02 2017 -0200
 summary:     - fixed the animation border for quests that aren't epic.
@@ -597,11 +603,5 @@ changeset:   10:d73fcbea2b72
 user:        Tercio
 date:        Thu Jul 14 01:58:34 2016 -0300
 summary:     - updates.
-
-
-changeset:   9:92f7315fd32c
-user:        Tercio
-date:        Wed Jul 13 00:22:08 2016 -0300
-summary:     - stability fixes.
 
 

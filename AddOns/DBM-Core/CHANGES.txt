@@ -1,128 +1,263 @@
-tag 1b400af9d6c899cfd879db2780e1d9eb5ae22823 7.1.11
+tag 07541e2f2fb8c5b8e49fceeaffabeb4d63357354 7.1.12
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Wed Jan 25 17:24:09 2017 +0100
+Date:	Sun Jan 29 20:11:04 2017 +0100
 
-Tagging as 7.1.11
+Tagging as 7.1.12
 
-commit e626a494436434af9243c118eb59a711ea74680e
+commit 7318ef49760ab1c2025e961494cd3dd09ec0d2fd
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 25 17:24:09 2017 +0100
+Date:   Sun Jan 29 20:11:04 2017 +0100
 
-    increment version number to 7.1.11
+    increment version number to 7.1.12
 
-commit 434af4ff7d07b513449d79fe45a93c7a15c081a2
+commit 6c084b02ff7f81611b0684f5238db1ce7a004f2a
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 25 12:27:23 2017 +0100
+Date:   Sun Jan 29 19:51:55 2017 +0100
 
-    Omega via svn r15725:
-    also bump this before tag
+    Omega via svn r15758:
+    Add unstable mana warning to vandros
 
-commit 7335b39ecd845ddac946f773365d71d16920912d
+commit 5e7aacc7308a824a0eb4842eea2cb6bebb5304fa
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 25 12:11:07 2017 +0100
+Date:   Sun Jan 29 19:48:33 2017 +0100
 
-    Omega via svn r15724:
-    Set HF
+    Omega via svn r15757:
+    Bump some revisions
 
-commit 0a3474370439ae20d55805e2bbbf52386d5d4c2b
+commit f687551b547220180bc4f9a50ae4e4525e5038fb
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 25 12:10:42 2017 +0100
+Date:   Sun Jan 29 19:33:52 2017 +0100
 
-    Omega via svn r15723:
-    Massive Anomaly update for mythic.
-    Plus attempt to fix the timebomb says/etc.
+    Omega via svn r15756:
+    Silence a lua error if fel soul unit ID could not be found.
 
-commit d29ddcbde0289883a3934bc79e793e65db17002b
+commit 8d34b0f46899cc437435dacf06a1779e74066856
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 25 09:19:12 2017 +0100
+Date:   Sun Jan 29 03:09:55 2017 +0100
 
-    Omega via svn r15722:
-    ##DBM-Core
-    *Possibly finally fix actual cause of icons not working on two fights in nighthold
-    #Aluriel
-    *Updated some timers for mythic
-    #Star Auger
-    *Fixed one voice pack warning for big add in final phase to say ?\226?\128?\156big mob?\226?\128?\157 not ?\226?\128?\156kill big add?\226?\128?\157 to be more clear it?\226?\128?\153s not an add you kill
+    Omega via svn r15755:
+    #Aluriel Update
+    *Add knockback alert to decimate for whoever is currently tanking Fel Soul
+    *Added timers for decimate
+    *Fixed tanking timers for annihilate on mythic
+
+commit b5d2b6a7d65385e2c66f33067131e3f556f297c7
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Jan 28 23:49:11 2017 +0100
+
+    Omega via svn r15754:
+    Update mythic fel ejection/icy injection timers, which are slightly altered by grand conjunction
+
+commit 7dac70b501489267fba5bf602460d6847173ca45
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Jan 28 23:28:05 2017 +0100
+
+    Omega via svn r15753:
+    Fix lua error on anomaly
+    Refactor some etraeus code to be cleaner, and more efficient. Also more robust
+
+commit 817c2b481fb47769d1e059c416690849133f8530
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Jan 28 21:33:24 2017 +0100
+
+    Omega via svn r15752:
+    Push first mythic Star auger update
+    *Updated grand Conjunction timers
+    *Updated fel nova timer (for first cast anyways)
+    *Added yells to fel injection
     
-    #Trash
-    *further throttle fulminate
+    More work is under way but i wanted to push this so far since at least two guilds are working on this using my mods
 
-commit 06ba1944e786e9c33eeea56810b4c540d1b61e2f
+commit 106623621eecbc739dabe89f6a1910a6a9f160b5
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Jan 24 07:14:40 2017 +0100
+Date:   Sat Jan 28 12:20:55 2017 +0100
 
-    Omega via svn r15721:
-    #Gul?\226?\128?\153dan udpate
-    *Fix faster phase 2 detection
-    *Add another taunt warning on cast START for bonds of fel
-    *add a taunt warning for flames of sargeras if it?\226?\128?\153s on a tank.
-    *scrap soul vortex timer for now. mob almost never casts it. when ti does, it?\226?\128?\153s never at same time.
-    *all eye warnings/timers now have count in them
-    *added rule for 7th phase 2 eye
-    #Telarn
-    *Update timers for Normal/LFR nerfs
-    *Updated code throughout to be easier to manage/hotfix in future. MUCH cleaner too.
+    Omega via svn r15751:
+    scrap fetter (mob) marking. it doesn?\226?\128?\153t work, and will never work for some reason. There is no explanation other than maybe these mobs are just protected from mods marking somehow.
 
-commit a1402e9c80393664ef5cbcad55acdb844d542533
+commit 8aa6a6f4a932ba78268458971848f2e2bac6aa03
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Jan 24 06:32:27 2017 +0100
+Date:   Sat Jan 28 11:34:58 2017 +0100
 
-    Omega via svn r15720:
-    #Gul?\226?\128?\153dan udpate
-    *Fix faster phase 2 detection
-    *Add another taunt warning on cast START for bonds of fel
-    *add a taunt warning for flames of sargeras if it?\226?\128?\153s on a tank.
-    *scrap soul vortex timer for now. mob almost never casts it. when ti does, it?\226?\128?\153s never at same time.
-    *all eye warnings/timers now have count in them
-    *added rule for 7th phase 2 eye
+    Omega via svn r15750:
+    add first phase 3 plasma spheres if solarist is last
 
-commit a5b87455e8ee15bfa476f8c5ab2818a4ccb4daa4
+commit 53f004c27ee05bd15b16283b8dfb3d3a81333dd7
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Jan 23 09:12:55 2017 +0100
+Date:   Sat Jan 28 11:21:37 2017 +0100
 
-    Omega via svn r15719:
-    KR update
+    Omega via svn r15749:
+    Add mythic tel?\226?\128?\153arn berserk
 
-commit 749076bc6dded971c92dd2fabf8f7b0a21e1b043
+commit 47545d32da6826e9ce4e927ee94ca60aec14c974
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Jan 23 07:23:39 2017 +0100
+Date:   Fri Jan 27 07:34:51 2017 +0100
 
-    Omega via svn r15718:
-    Include Tomb in ?\226?\128?\156currentContent?\226?\128?\157 filter
+    Omega via svn r15748:
+    #Elisande
+    *Add another backup orb trigger for localized clients.
+    *Cancel tank countdown if phase change
+    #Guldan
+    *More phase 2 timer data for REALLY long phase 2s
+    *More robustness for the 0 threat bug on phase 2 start (first bonds of fel)
+    *Reset liquid hellfire count on phase 2
 
-commit 1a90fc744b2b3b7c996ae26b1e1d66eef715e67e
+commit 77cfbf3fc72e5997f3d9851669c1c1b339b013d9
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Jan 23 06:36:29 2017 +0100
+Date:   Fri Jan 27 04:33:43 2017 +0100
 
-    Omega via svn r15717:
-    Fix gul?\226?\128?\153dan?\226?\128?\153s creatureID so boss health is returned correctly.
+    Omega via svn r15747:
+    An extra check for good measure. for some reason threat check isn?\226?\128?\153t enough
 
-commit a1840bed814a10fec5835b8ee65a5eea61885adc
+commit b469243f22539da6c1dbb3eba440d241eeae8f7d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Jan 23 05:03:22 2017 +0100
+Date:   Fri Jan 27 01:00:19 2017 +0100
 
-    Omega via svn r15716:
-    Fix typo, which doesn?\226?\128?\153t matter for mods sake but it bothers me
+    Omega via svn r15746:
+    Push mythic aluriel berserk and more mythic stuff for trilliax
 
-commit 454f6f9c99e20e130a5eff5bfdec594e99b4d2dd
+commit 1d2a6a22fbbdd7df7e773528dbb563b99f46f3d6
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Jan 23 05:02:09 2017 +0100
+Date:   Thu Jan 26 23:16:25 2017 +0100
 
-    Omega via svn r15715:
-    re-add demonic invasions mod, not enabled yet because I still have to figure out a good load condition for it. with any luck broken shore 2.0 has a new  unique mapid so don?\226?\128?\153t have to load world events on login.
-    bump BW version
+    Omega via svn r15745:
+    Revert telarn changes, 65, 55, 35 from beta is still true. they were right before i screwed em up assuming they were changed too
+    
+    Changed anomaly message
+    
+    Fixed a bug if a user tries to do HUD test in an instance.
 
-commit 59a3b7e874fc64ecda3b79f3e4b424ed2a06f6d5
+commit 1b3b966d4ab3880b0bd423239e906831dfcdf48e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Jan 23 03:33:45 2017 +0100
+Date:   Thu Jan 26 21:47:02 2017 +0100
 
-    ultrashining via svn r15714:
-    zhTW update
+    Omega via svn r15744:
+    Revert last, and heroic/normal too. blizzard did do it right. although beam always alternates 100%, the first beam IS random to throw off mods guessing
 
-commit a52a40770ea03161372f59ac8c85a31723559974
+commit cb8d3989e47278ef878b029e12eb0b5eb5ff02df
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Jan 22 22:09:50 2017 +0100
+Date:   Thu Jan 26 21:37:08 2017 +0100
 
-    tandanu via svn r15713:
+    Omega via svn r15743:
+    Enable on mythic as well.
+
+commit fa0dd9fd8fd771e5360442d0cd822b96d833fdfd
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 21:14:11 2017 +0100
+
+    Omega via svn r15742:
+    Revert timeMod stuff. I don?\226?\128?\153t think that?\226?\128?\153s needed. the issue is scheduling. I think the Unit events for speed changes happen before aura hits raid so that?\226?\128?\153s too early to check/update times
+    
+    leave timemod debug in for now
+
+commit ea81cbb0fd9ccb05122d12b9ca8ce67ba8d08255
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 09:24:05 2017 +0100
+
+    Omega via svn r15741:
+    HF revisions
+
+commit 493c9a87449a1686e7dfc48a67d5646b9277f5c6
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 09:20:37 2017 +0100
+
+    Omega via svn r15740:
+    Add more mythic Krosus timer data
+
+commit 4692098fd3ba1f99efbefae696bb36b8cf9afb63
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 08:53:15 2017 +0100
+
+    Omega via svn r15739:
+    Add some debug
+
+commit fe3cf5d6e88c6f3b5c81a4575065f33afde631f2
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 08:35:26 2017 +0100
+
+    Omega via svn r15738:
+    Disable skorpyron mythic timers, they are all over the place now. 8-46 second variation (and everything in between).
+    Add generic announces for transforms though.
+
+commit 86f5ff1f0272f84adbfd76e30db339696554a9ec
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 08:21:47 2017 +0100
+
+    Omega via svn r15737:
+    Back it up another second based on initial testing
+
+commit 8e55dce9a17f4076d2321965ed942157df14738b
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 07:41:07 2017 +0100
+
+    Omega via svn r15736:
+    Fix tichondrius normal timers. they are same as mythic now across the board (minus no argus)
+
+commit 909e8575fd4eff7999d9a3f5f60b2826675f57a6
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 06:52:03 2017 +0100
+
+    Omega via svn r15735:
+    Updated elemental and ring timers for normal elisande, which changed this week (love those undocumented hotfixes)
+    Disabled echoes as well since they no longer exist in normal (no rings in phase 2/3 and no orbs in phase 3)
+    
+    Changed kick warning for power overwhelming to generic aoe warning for everyone. kick strats very based on healing and ultimately not up to DBM to dictate when is appropriate.
+    Fixed a bug with couple mythic anomaly timers that didn?\226?\128?\153t show properly do to concurrently overriding eachother.
+
+commit 4a849f51f60e8ec924629967c2b132a80efa6e04
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 03:53:48 2017 +0100
+
+    Omega via svn r15734:
+    activate timemod
+
+commit c6529c6beb4cde6130b24d7007c38df98003a7c6
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 03:23:41 2017 +0100
+
+    Omega via svn r15733:
+    bump curse
+
+commit c90c43c73bb1b175d7ef4ca7e8bc7616f6296cfa
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 02:25:12 2017 +0100
+
+    Omega via svn r15732:
+    Begin work on trilliax imprints
+
+commit 37eb50917129e332d7fabcac84bcec722aa65f17
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 00:53:41 2017 +0100
+
+    Omega via svn r15731:
+    Speed up searing brand marker/warning to be 2 seconds before detonate cast
+
+commit 1741a090e0aa6a4bc365ff363c45d8f0c65692d8
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Jan 26 00:33:14 2017 +0100
+
+    Omega via svn r15730:
+    For time being, assume mythic telarn is inverse heroic, like it was before
+
+commit 38cc2db07850d4aa234c9b6fa3156c609f348a72
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Jan 25 23:09:28 2017 +0100
+
+    Omega via svn r15729:
+    Add experimental marking of players affected by searing brand when detonate is cast, so users can quickly get to assigned marks if needed depending on strat.
+
+commit a37d427fab8e561154cd9e9ce608a3369a11bb22
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Jan 25 22:23:44 2017 +0100
+
+    Omega via svn r15728:
+    Add more phase 3 guldan timers to normal/heroic
+    Added trash warnings to oozing rush, fel glare, toxic chit, infinite abyss, poison brambles
+
+commit caba0d63723af6bf5450572c9325e8522c9ea2df
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Jan 25 17:24:31 2017 +0100
+
+    tandanu via svn r15727:
     increment alpha version
 

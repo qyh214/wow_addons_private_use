@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1737, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15721 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15748 $"):sub(12, -3))
 mod:SetCreatureID(104154)--104537 (Fel Lord Kuraz'mal)
 mod:SetEncounterID(1866)
 mod:SetZone()
@@ -106,7 +106,7 @@ local timerShatterEssenceCD			= mod:NewCDTimer(54, 206675, nil, "Tank", nil, 5, 
 ----Inquisitor Vethriz
 mod:AddTimerLine(Vethriz)
 local timerVethrizCD				= mod:NewCastTimer(25, "ej13124", nil, nil, nil, 1, 212258)
-local timerGazeofVethrizCD			= mod:NewCDTimer(5, 206840, nil, nil, nil, 3)
+local timerGazeofVethrizCD			= mod:NewCDTimer(4.7, 206840, nil, nil, nil, 3)
 local timerShadowBlinkCD			= mod:NewCDTimer(36, 207938)--Role color maybe if blink applies to tank
 ----D'zorykx the Trapper
 mod:AddTimerLine(Dzorykx)
@@ -120,7 +120,7 @@ local timerBondsofFelCD				= mod:NewNextTimer(50, 206222, nil, nil, nil, 3)
 local timerEyeofGuldanCD			= mod:NewNextCountTimer(60, 209270, nil, nil, nil, 1)
 --Stage Three: The Master's Power
 mod:AddTimerLine(SCENARIO_STAGE:format(3))
-local timerFlamesofSargerasCD		= mod:NewCDTimer(58.5, 221783, nil, nil, nil, 3)
+local timerFlamesofSargerasCD		= mod:NewCDCountTimer(58.5, 221783, nil, nil, nil, 3)
 local timerStormOfDestroyerCD		= mod:NewCDCountTimer(16, 161121, nil, nil, nil, 3)
 local timerWellOfSoulsCD			= mod:NewCDTimer(16, 206939, nil, nil, nil, 5)
 local timerBlackHarvestCD			= mod:NewCDCountTimer(83, 206744, nil, nil, nil, 2)
@@ -156,35 +156,35 @@ mod:AddHudMapOption("HudMapOnBondsofFel", 206222, "-Tank")
 
 mod.vb.phase = 1
 mod.vb.addsDied = 0
---mod.vb.inquisitorDead = false
 mod.vb.liquidHellfireCast = 0
 mod.vb.felEffluxCast = 0
 mod.vb.handofGuldanCast = 0
 mod.vb.stormCast = 0
 mod.vb.blackHarvestCast = 0
 mod.vb.eyeCast = 0
+mod.vb.flamesSargCast = 0
 local felEffluxTimers = {11.0, 14.0, 19.6, 12.0, 12.2, 12.0}
 local felEffluxTimersEasy = {11.0, 14.0, 19.9, 15.6, 16.8, 15.9, 15.8}
 local handofGuldanTimers = {14.5, 48.9, 138.8}
-local stormTimersEasy = {94, 78.6, 70.0}
-local stormTimers = {84.1, 68.7, 61.3}
+local stormTimersEasy = {94, 78.6, 70.0, 87}
+local stormTimers = {84.1, 68.7, 61.3, 76.5}
 local blackHarvestTimersEasy = {63, 82.9, 100.0}
 local blackHarvestTimers = {64.1, 72.5, 87.5}
 --local phase2Eyes = {29, 53.3, 53.4, 53.3, 53.3, 53.3, 66}--Not used, not needed if only 1 is different. need longer pulls to see what happens after 66
-local p3EmpoweredEyeTimersEasy = {42.5, 71.5, 71.4, 28.6}
-local p3EmpoweredEyeTimers = {39.1, 62.5, 62.5, 25}
+local p3EmpoweredEyeTimersEasy = {42.5, 71.5, 71.4, 28.6, 114}--114 is guessed on the 1/8th formula
+local p3EmpoweredEyeTimers = {39.1, 62.5, 62.5, 25, 100}--100 is confirmed
 local bondsIcons = {}
 
 function mod:OnCombatStart(delay)
 	self.vb.phase = 1
 	self.vb.addsDied = 0
---	self.vb.inquisitorDead = false
 	self.vb.liquidHellfireCast = 0
 	self.vb.felEffluxCast = 0
 	self.vb.handofGuldanCast = 0
 	self.vb.stormCast = 0
 	self.vb.blackHarvestCast = 0
 	self.vb.eyeCast = 0
+	self.vb.flamesSargCast = 0
 	table.wipe(bondsIcons)
 	timerLiquidHellfireCD:Start(2-delay, 1)
 	timerFelEffluxCD:Start(11-delay, 1)
@@ -219,9 +219,21 @@ function mod:SPELL_CAST_START(args)
 			end
 		else--Phase 2
 			if self:IsEasy() then
-				timerLiquidHellfireCD:Start(41, self.vb.liquidHellfireCast+1)
+				if self.vb.liquidHellfireCast == 6 then
+					timerLiquidHellfireCD:Start(84, self.vb.liquidHellfireCast+1)
+				elseif self.vb.liquidHellfireCast == 7 then--TODO, if a longer phase 2 than 7 casts, and continue to see diff timers than 36, build a table
+					timerLiquidHellfireCD:Start(36, self.vb.liquidHellfireCast+1)
+				else
+					timerLiquidHellfireCD:Start(41, self.vb.liquidHellfireCast+1)
+				end
 			else
-				timerLiquidHellfireCD:Start(36, self.vb.liquidHellfireCast+1)
+				if self.vb.liquidHellfireCast == 6 then
+					timerLiquidHellfireCD:Start(74, self.vb.liquidHellfireCast+1)
+				elseif self.vb.liquidHellfireCast == 7 then--TODO, if a longer phase 2 than 7 casts, and continue to see diff timers than 36, build a table
+					timerLiquidHellfireCD:Start(31.6, self.vb.liquidHellfireCast+1)
+				else
+					timerLiquidHellfireCD:Start(36, self.vb.liquidHellfireCast+1)
+				end
 			end
 		end
 	elseif spellId == 206220 then
@@ -308,12 +320,15 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 206222 or spellId == 206221 then
 		table.wipe(bondsIcons)
-		if UnitDetailedThreatSituation("player", "boss1") then
+		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
+		if tanking or (status == 3) then
 			--Not a thing!
 		else
 			local targetName = UnitName("boss1target") or DBM_CORE_UNKNOWN
-			specWarnBondsofFelTank:Show(targetName)
-			voiceBondsofFel:Play("tauntboss")
+			if not UnitIsUnit("player", "boss1target") then--the very first bonds of fel, threat reads funny and we need an additional filter
+				specWarnBondsofFelTank:Show(targetName)
+				voiceBondsofFel:Play("tauntboss")
+			end
 		end
 	end
 end
@@ -327,10 +342,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerBondsofFelCD:Start(44.4)
 		end
 	elseif spellId == 221783 then
+		self.vb.flamesSargCast = self.vb.flamesSargCast + 1
 		if self:IsEasy() then
-			timerFlamesofSargerasCD:Start()
+			timerFlamesofSargerasCD:Start(nil, self.vb.flamesSargCast+1)
 		else
-			timerFlamesofSargerasCD:Start(51)
+			timerFlamesofSargerasCD:Start(50, self.vb.flamesSargCast+1)--5-6 is 50, 1-5 is 51. For time being using a simple 50 timer
 		end
 	elseif spellId == 212258 and self.vb.phase > 1.5 then--Ignore phase 1 adds with this cast
 		self.vb.handofGuldanCast = self.vb.handofGuldanCast + 1
@@ -444,11 +460,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerWellOfSoulsCD:Start(15)
 		timerBlackHarvestCD:Start(63, 1)
 		if self:IsEasy() then
-			timerFlamesofSargerasCD:Start(29)
+			timerFlamesofSargerasCD:Start(29, 1)
 			timerEyeofGuldanCD:Start(42.5, 1)
 			timerStormOfDestroyerCD:Start(94, 1)--Health based or timer? VERIFY THIS
 		else
-			timerFlamesofSargerasCD:Start(27.5)
+			timerFlamesofSargerasCD:Start(27.5, 1)
 			timerEyeofGuldanCD:Start(39, 1)
 			timerStormOfDestroyerCD:Start(84, 1)
 		end
@@ -481,17 +497,18 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 206516 and self.vb.phase < 2 then--The Eye of Aman'Thul (phase 1 buff)
 		--Backup trigger since sometimes unit_died not fire for all 3 adds
 		self.vb.phase = 2
+		self.vb.liquidHellfireCast = 0
 		warnPhase2:Show()
 		timerLiquidHellfireCD:Stop()
 		timerFelEffluxCD:Stop()--This probably needs refactoring for mythic since phase 1 and 2 happen at same time
 		timerBondsofFelCD:Start(8.8)
 		if self:IsEasy() then
 			timerEyeofGuldanCD:Start(32.5, 1)
-			timerLiquidHellfireCD:Start(45, self.vb.liquidHellfireCast+1)
+			timerLiquidHellfireCD:Start(45, 1)
 		else
 			timerHandofGuldanCD:Start(14, 1)
 			timerEyeofGuldanCD:Start(29, 1)
-			timerLiquidHellfireCD:Start(40, self.vb.liquidHellfireCast+1)
+			timerLiquidHellfireCD:Start(40, 1)
 		end
 	end
 end
@@ -584,6 +601,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			if self.vb.addsDied == 3 and not self:IsMythic() then
 				--This probably needs refactoring for mythic since phase 1 and 2 happen at same time
 				self.vb.phase = 2
+				self.vb.liquidHellfireCast = 0
 				warnPhase2:Show()
 				timerLiquidHellfireCD:Stop()
 				timerFelEffluxCD:Stop()
@@ -591,11 +609,11 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				timerBondsofFelCD:Start(27.8)
 				if self:IsEasy() then
 					timerEyeofGuldanCD:Start(51.5, 1)
-					timerLiquidHellfireCD:Start(64, self.vb.liquidHellfireCast+1)
+					timerLiquidHellfireCD:Start(64, 1)
 				else
 					timerHandofGuldanCD:Start(33, 1)
 					timerEyeofGuldanCD:Start(48, 1)
-					timerLiquidHellfireCD:Start(59, self.vb.liquidHellfireCast+1)
+					timerLiquidHellfireCD:Start(59, 1)
 				end
 			end
 		end

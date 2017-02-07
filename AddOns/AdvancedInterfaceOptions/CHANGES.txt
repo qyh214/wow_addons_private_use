@@ -1,13 +1,170 @@
-tag 7002136a3500b8e89112a7555768abeaf115e23e 1.0.9
+tag f0b8242f54474b267f4492d45f297c7638600184 1.1.0
 Author:	Benjamin Staneck <staneck@gmail.com>
-Date:	Sat Jan 14 04:56:45 2017 +0100
+Date:	Mon Jan 30 23:53:05 2017 +0100
 
-commit 9ec6a0d6ed4bb00715c5718fdcbcedeff8d55a53
+commit 23e9754125a5017f1219307b62aba3a216235b78
+Author: Benjamin Staneck <staneck@gmail.com>
+Date:   Wed Jan 25 04:14:00 2017 +0100
+
+    gardening
+
+commit 7f64184a326282e875495578fa3d4e5470991787
 Author: semlar <teslagraafs@gmail.com>
-Date:   Fri Jan 13 21:21:57 2017 -0500
+Date:   Mon Jan 23 21:54:02 2017 -0500
 
-    More aggressively prevent user from modifying cvars in combat
+    Delayed cvar trace hook until SV have loaded
+
+commit b3bf65710666f0e1c41bdc50929fbb66907a7db0
+Author: Ketho <sghs17@outlook.com>
+Date:   Mon Jan 23 21:01:52 2017 +0100
+
+    Add floatingCombatTextPetSpellDamage
+
+commit b3bf65710666f0e1c41bdc50929fbb66907a7db0
+Author: Ketho <sghs17@outlook.com>
+Date:   Mon Jan 23 21:01:52 2017 +0100
+
+    Add floatingCombatTextPetSpellDamage
+
+commit a6eb5f37cd2e10453b83503856a138df73148a9a
+Author: semlar <teslagraafs@gmail.com>
+Date:   Sun Jan 22 07:26:23 2017 -0500
+
+    Respect other addon settings, identify last addon to modify a cvar
     
-    If I had a nickel for every time I tainted the interface I could afford
-    to do this full-time
+    Experimental Changes:
+    
+    Added code to allow other addons to modify cvars without overwriting
+    their settings on startup.
+    
+    Added line to cvar browser tooltip showing which addon last modified its
+    value.
+
+commit 2a040ee2562b5f5e9a00972d52c064db8f3bc5a0
+Author: semlar <teslagraafs@gmail.com>
+Date:   Mon Jan 16 16:18:53 2017 -0500
+
+    Added a bunch of cvars to the browser
+    
+    Some of these should probably be filtered out, but I wanted to expand
+    what was in it to include some of the more obscure settings
+
+commit 4c5530afebb55854303a8a66d6e214909441671e
+Author: semlar <teslagraafs@gmail.com>
+Date:   Mon Jan 16 02:54:01 2017 -0500
+
+    Added dropdown for status text display mode
+
+commit ae042dc891e5a807b88ecb4c8648bb7603b22931
+Author: semlar <teslagraafs@gmail.com>
+Date:   Mon Jan 16 01:02:29 2017 -0500
+
+    Added master toggle for status text options
+    
+    todo: add dropdown for different status text options
+
+commit fb74d28a8ae74fc860eb4bade9cb089e46ca61e8
+Author: Ketho <sghs17@outlook.com>
+Date:   Mon Jan 16 05:06:54 2017 +0100
+
+    add WorldTextScale
+
+commit fb74d28a8ae74fc860eb4bade9cb089e46ca61e8
+Author: Ketho <sghs17@outlook.com>
+Date:   Mon Jan 16 05:06:54 2017 +0100
+
+    add WorldTextScale
+
+commit 8ab478ad269586e7ce72bfa10b3c19ce3caa02bf
+Author: Ketho <sghs17@outlook.com>
+Date:   Mon Jan 16 03:52:34 2017 +0100
+
+    add Status Text custom options
+
+commit 4661a7f87e3c8e0c7f0b7274e7bf5e5c854aa695
+Author: Benjamin Staneck <staneck@gmail.com>
+Date:   Mon Jan 16 03:20:19 2017 +0100
+
+    add back ffxDeath
+
+commit ac66855c241e597ddd8ef0361e187c8285ea23e2
+Author: Benjamin Staneck <staneck@gmail.com>
+Date:   Mon Jan 16 03:09:19 2017 +0100
+
+    gardening
+
+commit 526cdec7fa924bb4760a20db0e25961233a69986
+Author: semlar <teslagraafs@gmail.com>
+Date:   Sun Jan 15 17:12:27 2017 -0500
+
+    Added CustomVars table to saved variables
+    
+    Use AdvancedInterfaceOptionsSaved.CustomVars to keep track of custom
+    variables
+
+commit abe9d7fe2b5add3c38fc9e545188b13e8a610dc9
+Author: semlar <teslagraafs@gmail.com>
+Date:   Sun Jan 15 12:31:24 2017 -0500
+
+    Automatically strip cvars that don't exist from the browser
+    
+    Prevent cvars that don't exist any more from showing up in the cvar
+    browser
+
+commit 1938cb6d2d04b76f2c5ac617c78cf1290dcf58b2
+Author: semlar <teslagraafs@gmail.com>
+Date:   Sun Jan 15 12:05:55 2017 -0500
+
+    Changed "enforce settings" to use all cvars instead of just widgets
+    
+    Also uncommented "TargetNearestUseOld" since it appears to still exist
+    and function. It currently resets back to "1" when restarting the game.
+
+commit 9c289f07ad22efa2f7f904656022ed877fc44920
+Author: semlar <teslagraafs@gmail.com>
+Date:   Sat Jan 14 21:06:01 2017 -0500
+
+    Added options to enforce and reset all settings
+    
+    Added a checkbox to enforce our settings and a button to reset
+    everything to default on the main panel
+
+commit 51bd267bb3592768bdd9fa6cfb4e49d09ba9f850
+Author: Benjamin Staneck <staneck@gmail.com>
+Date:   Sat Jan 14 22:51:55 2017 +0100
+
+    gardening
+
+commit 0dbf8a8d700cb9984e877d25910cdd1d25cd5c2a
+Author: semlar <teslagraafs@gmail.com>
+Date:   Sat Jan 14 16:50:35 2017 -0500
+
+    Hack for my other hack
+    
+    Fix for tainting nameplates when clicking "okay" button in the interface
+    options panel
+
+commit 6c5067bafedf2182d30e2c2b1eab55b8143e1031
+Author: semlar <teslagraafs@gmail.com>
+Date:   Sat Jan 14 15:51:47 2017 -0500
+
+    Changed slider input boxes to look like acegui's
+
+commit 83f12a944009be0c9f2404288623b07b498d9c68
+Author: semlar <teslagraafs@gmail.com>
+Date:   Sat Jan 14 15:30:03 2017 -0500
+
+    Removed "spreading" from nameplateMotion cvar description
+
+commit 126531680502d770a5ef36d6a471103c381bdda1
+Author: semlar <teslagraafs@gmail.com>
+Date:   Sat Jan 14 14:54:22 2017 -0500
+
+    Replaced slider value text with input box
+
+commit b156c627e572866d6bffd31495e8984e82fc578b
+Author: Benjamin Staneck <staneck@gmail.com>
+Date:   Sat Jan 14 19:04:25 2017 +0100
+
+    temp(?) comment the "new" tab targetting cvars since blizzard reverted back to the old system, keep them around in case they return some day
 

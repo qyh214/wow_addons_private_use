@@ -1,5 +1,5 @@
 --[[
-	Copyright (c) 2009-2016, Hendrik "Nevcairiel" Leppkes < h.leppkes at gmail dot com >
+	Copyright (c) 2009-2017, Hendrik "Nevcairiel" Leppkes < h.leppkes at gmail dot com >
 	All rights reserved.
 ]]
 local _, Bartender4 = ...
@@ -53,6 +53,7 @@ function ZoneAbilityBar:ApplyConfig(config)
 
 	if not self.config.position.x then
 		self:ClearSetPoint("BOTTOM", 0, 160)
+		self:PerformLayout()
 		self:SavePosition()
 	end
 

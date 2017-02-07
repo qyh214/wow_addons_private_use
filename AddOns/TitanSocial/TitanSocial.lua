@@ -494,7 +494,7 @@ end
 local rightClickFrame
 local function getRightClickFrame()
 	if not rightClickFrame then
-		rightClickFrame = CreateFrame("Frame", addonName.."TooltipContextualMenu", _G.UIParent, "Lib_UIDropDownMenuTemplate")
+		rightClickFrame = CreateFrame("Frame", addonName.."TooltipContextualMenu", _G.UIParent, "UIDropDownMenuTemplate")
 	end
 	return rightClickFrame
 end

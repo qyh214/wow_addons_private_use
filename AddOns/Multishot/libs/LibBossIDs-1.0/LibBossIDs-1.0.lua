@@ -1827,7 +1827,7 @@ local BossIDs = {
 	[114251] = true, -- Galindre
 	[113971] = true, -- Maiden of Virtue
 	[114312] = true, -- Moroes <Tower Steward>
-	[114462] = true, -- The Curator
+	[114247] = true, -- The Curator
 	[114350] = true, -- Shade of Medivh
 	[114252] = true, -- Mana Devourer
 	[114790] = true, -- Viz'aduum the Watcher
@@ -1841,6 +1841,20 @@ local BossIDs = {
 	[114360] = true, -- Hyrja <Chosen of Eyir>
 	[114323] = true, -- Guarm
 	[114537] = true, -- Helya
+	
+	-------------------------------------------------------------------------------
+	-- Nighthold
+	-------------------------------------------------------------------------------
+	[102263] = true, -- Skorpyron
+	[104415] = true, -- Chronomatic Anomaly
+	[104288] = true, -- Trilliax
+	[104881] = true, -- Spellblade Aluriel <Captain of the Magistrix's Guard>
+	[103685] = true, -- Tichondrius
+	[101002] = true, -- Krosus
+	[104528] = true, -- High Botanist Tel'arn
+	[103758] = true, -- Star Augur Etraeus
+	[106643] = true, -- Elisande <Grand Magistrix>
+	[104154] = true, -- Gul'dan <Lord of the Shadow Council>
 
 }
 

@@ -1,10 +1,12 @@
 **r1021**
+* Raid in Party is disabled by default.
+* Force disabling Raid in Party options. (Anyone who would like to use this feauture reenable it again.)
+* Some GUI fixes.
+
+**r1020**
 * Added an option to show the raid frames while in a party.
 * Localization fixes.
 * Other smaller fixes.
-
-**r1020**
-* Localization updates.
 
 **r1019**
 * Fixed an another issue with the Raid Helper.

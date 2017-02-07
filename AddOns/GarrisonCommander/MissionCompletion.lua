@@ -339,6 +339,12 @@ function module:GetMissionResults(success,currentMission)
 end
 function module:MissionsPrintResults(success)
 	stopTimer()
+	if ns.quick then
+		self:CloseReport()
+		local qm=addon:GetModule("Quick")
+		addon.ScheduleTimer(qm,"RunQuick",0.2)
+		return
+	end	
 	local reported
 	local followers
 	for k,v in pairs(rewards.currencies) do
@@ -395,11 +401,7 @@ function module:MissionsPrintResults(success)
 		addon:ScheduleTimer(GarrisonShipyardMap_UpdateMissions,0.1)
 	end
 	report:AddRow(DONE)
-	if ns.quick then
-		self:ScheduleTimer("CloseReport",0.1)
-		local qm=addon:GetModule("Quick")
-		addon.ScheduleTimer(qm,"RunQuick",0.2)
-	end
+
 end
 function addon:MissionComplete(...)
 	return module:MissionComplete(...)

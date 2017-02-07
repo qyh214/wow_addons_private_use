@@ -16,6 +16,7 @@ local _G = _G
 
 local db
 local OTF = ObjectiveTrackerFrame
+local msqGroup1, msqGroup2
 
 local KTwarning = "|cff00ffffAddon "..KT.title.." is active."
 
@@ -37,16 +38,20 @@ StaticPopupDialogs[addonName.."_ReloadUI"] = {
 -- Masque
 local function Masque_SetSupport()
     if db.addonMasque and MSQ then
-        MSQ:Group(KT.title, "Quest Item Button")
-        local group = MSQ:Group(KT.title, "Active Button")
-        hooksecurefunc(group, "Enable", function(self)
-            for Button in pairs(self.Buttons) do
-                Button.Style:SetAlpha(0)
+        msqGroup1 = MSQ:Group(KT.title, "Quest Item Button")
+        msqGroup2 = MSQ:Group(KT.title, "Active Button")
+        hooksecurefunc(msqGroup2, "Enable", function(self)
+            for button in pairs(self.Buttons) do
+                if button.Style then
+                    button.Style:SetAlpha(0)
+                end
             end
         end)
-        hooksecurefunc(group, "Disable", function(self)
-            for Button in pairs(self.Buttons) do
-                Button.Style:SetAlpha(1)
+        hooksecurefunc(msqGroup2, "Disable", function(self)
+            for button in pairs(self.Buttons) do
+                if button.Style then
+                    button.Style:SetAlpha(1)
+                end
             end
         end)
     end
@@ -54,7 +59,7 @@ end
 
 -- ElvUI
 local function ElvUI_SetSupport()
-    if KT:CheckAddOn("ElvUI", "10.24", true) then
+    if KT:CheckAddOn("ElvUI", "10.33", true) then
         local E = unpack(_G.ElvUI)
         E.Blizzard.MoveObjectiveFrame = function() end
         hooksecurefunc(E, "ToggleConfig", function(self)
@@ -76,7 +81,7 @@ end
 
 -- Tukui
 local function Tukui_SetSupport()
-    if KT:CheckAddOn("Tukui", "17.06", true) then
+    if KT:CheckAddOn("Tukui", "17.08", true) then
         local T = unpack(_G.Tukui)
         T.Miscellaneous.ObjectiveTracker.Enable = function() end
     end
@@ -169,8 +174,12 @@ end
 
 -- Masque
 function KT:Masque_AddButton(button, group)
-    if db.addonMasque and MSQ then
-        local group = MSQ:Group(KT.title, group or "Quest Item Button")
+    if db.addonMasque and MSQ and msqGroup1 then
+        if not group or group == 1 then
+            group = msqGroup1
+        elseif group == 2 then
+            group = msqGroup2
+        end
         group:AddButton(button)
         if button.Style then
             if not group.db.Disabled then
