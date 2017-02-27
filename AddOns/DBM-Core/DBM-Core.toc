@@ -17,7 +17,7 @@
 ## DefaultState: enabled
 ## Author: Tandanu and Nitram
 ## X-Website: http://www.deadlybossmods.com
-## Version: 7.1.12
+## Version: 7.1.15
 
 #@no-lib-strip@
 Libs\LibStub\LibStub.lua
@@ -45,3 +45,4 @@ DBM-BossHealth.lua
 DBM-BossHealth.xml
 DBM-InfoFrame.lua
 DBM-HudMap.lua
+DBM-Nameplate.lua

@@ -14,6 +14,8 @@ DBM_CORE_LOAD_GUI_ERROR				= "Could not load GUI: %s"
 DBM_CORE_LOAD_GUI_COMBAT			= "GUI cannot be initially loaded in combat. GUI will be loaded out of combat. After GUI loaded, you can open GUI in combat."
 DBM_CORE_BAD_LOAD					= "DBM has detected your mod for this instance failed to fully load correctly because of combat. As soon as you are out of combat, please do /console reloadui as soon as possible."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s could not be loaded because your DBM-Core does not meet requirements. An updated version is required"
+DBM_CORE_LOAD_MOD_DISABLED			= "%s is installed but currently disabled. This mod will not be loaded unless you enable it."
+DBM_CORE_LOAD_MOD_DISABLED_PLURAL	= "%s are installed but currently disabled. These mods will not be loaded unless you enable them."
 
 DBM_CORE_WHATS_NEW					= "New in this version: Fixed a bug that caused 'Major Patch' force update/disable to trigger wrongfully for non major patch updates. DBM will no longer filter Broken Shore cut scenes regardless of user settings. Added Demonic Invasions mod. Minor Text Fixes"
 DBM_CORE_WHATS_NEW_LINK				= "Reminder: Many features that relied on unit positions have been limited. You can read more about why by |HDBM:forumsnews|h|cff3588ffclicking here|r"
@@ -252,6 +254,7 @@ DBM_CORE_FRONT						= "Front"
 DBM_CORE_INTERMISSION				= "Intermission"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
 DBM_CORE_ORB						= "Orb"
 DBM_CHEST							= "Chest"--As in Treasure 'Chest'. Not Chest as in body part.
+DBM_NO_DEBUFF						= "Not %s"--For use in places like info frame where you put "Not Spellname"
 --Common Locals end
 
 DBM_CORE_BREAK_USAGE				= "Break timer cannot be longer than 60 minutes. Make sure you're inputting time in minutes and not seconds."
@@ -340,7 +343,8 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
 	count			= "%s! (%%s)",
 	stack			= "%%d stacks of %s on you",
 	switch			= "%s - switch targets",
-	switchcount		= "%s - switch targets (%%s)"
+	switchcount		= "%s - switch targets (%%s)",
+	Adds			= "Incoming Adds - switch targets"
 }
 
 -- Auto-generated Special Warning Localizations
@@ -373,7 +377,8 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
 	count 			= "Show special warning (with count) for $spell:%s",
 	stack 			= "Show special warning when you are affected by >=%d stacks of $spell:%s",
 	switch			= "Show special warning to switch targets for $spell:%s",
-	switchcount		= "Show special warning (with count) to switch targets for $spell:%s"
+	switchcount		= "Show special warning (with count) to switch targets for $spell:%s",
+	Adds			= "Show special warning to switch targets for incoming adds"
 }
 
 -- Auto-generated Timer Localizations
@@ -394,7 +399,8 @@ DBM_CORE_AUTO_TIMER_TEXTS = {
 	nextspecial	= "Next Special Ability",
 	achievement	= "%s",
 	phase		= "Next Phase",
-	roleplay	= GUILD_INTEREST_RP--Does not require DBM_CORE_AUTO_TIMER_TEXTS.roleplay in other languages, skip this one unless you want to word better.
+	adds		= "Next Incoming Adds",
+	roleplay	= GUILD_INTEREST_RP
 }
 
 DBM_CORE_AUTO_TIMER_OPTIONS = {
@@ -414,6 +420,7 @@ DBM_CORE_AUTO_TIMER_OPTIONS = {
 	nextspecial	= "Show timer for next special ability",
 	achievement	= "Show timer for %s",
 	phase		= "Show timer for next phase",
+	adds		= "Show timer for incoming adds",
 	roleplay	= "Show timer for roleplay duration"--This does need localizing though.
 }
 
@@ -425,6 +432,7 @@ DBM_CORE_AUTO_ARROW_OPTION_TEXT2		= "Show DBM Arrow to move away from target aff
 DBM_CORE_AUTO_ARROW_OPTION_TEXT3		= "Show DBM Arrow to move toward specific location for $spell:%s"
 DBM_CORE_AUTO_VOICE_OPTION_TEXT			= "Play spoken alerts for $spell:%s"
 DBM_CORE_AUTO_VOICE2_OPTION_TEXT		= "Play spoken alerts for phase changes"
+DBM_CORE_AUTO_VOICE3_OPTION_TEXT		= "Play spoken alerts for incoming adds"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Play countdown sound for $spell:%s cooldown"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2	= "Play countdown sound for when $spell:%s fades"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Play countout sound for $spell:%s duration"
@@ -441,8 +449,9 @@ DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT = {
 	position 	= "%s %%s on {rt%%d}"..UnitName("player").."{rt%%d}"
 }
 DBM_CORE_AUTO_YELL_CUSTOM_POSITION		= "{rt%d} %s {rt%d}"--Doesn't need translating. Has no strings
-DBM_CORE_AUTO_HUD_OPTION_TEXT			= "Show HudMap for $spell:%s"
-DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "Show HudMap for various mechanics"
+DBM_CORE_AUTO_HUD_OPTION_TEXT			= "Show HudMap for $spell:%s (Retired)"
+DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "Show HudMap for various mechanics (Retired)"
+DBM_CORE_AUTO_NAMEPLATE_OPTION_TEXT		= "Show Nameplate Auras for $spell:%s"
 DBM_CORE_AUTO_RANGE_OPTION_TEXT			= "Show range frame (%s) for $spell:%s"--string used for range so we can use things like "5/2" as a value for that field
 DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT	= "Show range frame (%s)"--For when a range frame is just used for more than one thing
 DBM_CORE_AUTO_RRANGE_OPTION_TEXT		= "Show reverse range frame (%s) for $spell:%s"--Reverse range frame (green when players in range, red when not)

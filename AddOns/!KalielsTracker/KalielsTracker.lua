@@ -46,10 +46,7 @@ local freeTags = {}
 local freeButtons = {}
 local msgPatterns = {}
 local msgShow = true
-local updateAll = false
 local combatLockdown = false
-local numQuestItems = 0
-local numWorldQuestItems = 0
 local db
 
 -- Main frame
@@ -246,7 +243,6 @@ local function SetFrames()
 				if KT.activeTask == id then
 					KT.activeTask = nil
 				end
-				updateAll = (numQuestItems > 0 or numWorldQuestItems > 0)
 			end
 			KT:ToggleEmptyTracker(added)
 		elseif event == "TRACKED_ACHIEVEMENT_LIST_CHANGED" then
@@ -259,16 +255,14 @@ local function SetFrames()
 			KTF.Scroll.value = 0
 		elseif event == "QUEST_ACCEPTED" or event == "QUEST_REMOVED" then
 			KT:SetQuestsHeaderText()
-			updateAll = (numQuestItems > 0 or numWorldQuestItems > 0)
 		elseif event == "ACHIEVEMENT_EARNED" then
 			KT:SetAchievsHeaderText()
 		elseif event == "PLAYER_REGEN_ENABLED" and combatLockdown then
 			combatLockdown = false
+			KT:RemoveFixedButton()
 			ObjectiveTracker_Update()
 		elseif event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED" then
-			if KTF.Buttons.num > 0 then
-				KTF.Buttons.reanchor = not InCombatLockdown()
-			end
+			KTF.Buttons.reanchor = (KTF.Buttons.num > 0)
 		elseif event == "UPDATE_BINDINGS" then
 			KT:UpdateHotkey()
 		end
@@ -405,6 +399,17 @@ end
 -- Hooks ---------------------------------------------------------------------------------------------------------------
 
 local function SetHooks()
+	local function SetFixedButton(block, idx, height, yOfs)
+		idx = idx + 1
+		block.fixedTag.text:SetText(idx)
+		KT.fixedButtons[block.id].text:SetText(idx)
+		KT.fixedButtons[block.id].num = idx
+		yOfs = -(height + 7)
+		height = height + 26 + 3
+		KT.fixedButtons[block.id]:SetPoint("TOP", 0, yOfs)
+		return idx, height, yOfs
+	end
+
 	local function FixedButtonsReanchor()
 		if InCombatLockdown() then
 			if KTF.Buttons.num > 0 then
@@ -413,7 +418,17 @@ local function SetHooks()
 		else
 			if KTF.Buttons.reanchor then
 				local questID, block, questLogIndex, yOfs
+				local idx = 0
 				local contentsHeight = 0
+				-- Scenario
+				_DBG(" - REANCHOR buttons - Scen", true)
+				local objectiveBlock = ScenarioObjectiveBlock
+				for i = 1, objectiveBlock.numSpells or 0 do
+					block = objectiveBlock.spells[i]
+					if block and block.SpellButton then
+						idx, contentsHeight, yOfs = SetFixedButton(block, idx, contentsHeight, yOfs)
+					end
+				end
 				-- World Quest items
 				_DBG(" - REANCHOR buttons - WQ", true)
 				local tasksTable = GetTasksTable()
@@ -423,9 +438,7 @@ local function SetHooks()
 					if questLogIndex > 0 and QuestUtils_IsQuestWorldQuest(questID) and not IsWorldQuestWatched(questID) then
 						block = WORLD_QUEST_TRACKER_MODULE.usedBlocks[questID]
 						if block and block.itemButton then
-							yOfs = -(contentsHeight + 7)
-							contentsHeight = contentsHeight + 26 + 3
-							KT.fixedButtons[questID]:SetPoint("TOP", 0, yOfs)
+							idx, contentsHeight, yOfs = SetFixedButton(block, idx, contentsHeight, yOfs)
 						end
 					end
 				end
@@ -434,9 +447,7 @@ local function SetHooks()
 					if questID then
 						block = WORLD_QUEST_TRACKER_MODULE.usedBlocks[questID]
 						if block and block.itemButton then
-							yOfs = -(contentsHeight + 7)
-							contentsHeight = contentsHeight + 26 + 3
-							KT.fixedButtons[questID]:SetPoint("TOP", 0, yOfs)
+							idx, contentsHeight, yOfs = SetFixedButton(block, idx, contentsHeight, yOfs)
 						end
 					end
 				end
@@ -446,25 +457,24 @@ local function SetHooks()
 					questID = GetQuestWatchInfo(i)
 					block = QUEST_TRACKER_MODULE.usedBlocks[questID]
 					if block and block.itemButton then
-						yOfs = -(contentsHeight + 7)
-						contentsHeight = contentsHeight + 26 + 3
-						KT.fixedButtons[questID]:SetPoint("TOP", 0, yOfs)
+						idx, contentsHeight, yOfs = SetFixedButton(block, idx, contentsHeight, yOfs)
 					end
 				end
 				if contentsHeight > 0 then
 					contentsHeight = contentsHeight + 7 + 4
 				end
 				KTF.Buttons:SetHeight(contentsHeight)
+				KTF.Buttons.num = idx
 				KTF.Buttons.reanchor = false
 			end
-			if db.collapsed or (numQuestItems == 0 and numWorldQuestItems == 0) then
+			if db.collapsed or KTF.Buttons.num == 0 then
 				KTF.Buttons:Hide()
 			else
 				KTF.Buttons:Show()
 			end
 			KT.ActiveButton:Update()
 		end
-		if db.collapsed or (numQuestItems == 0 and numWorldQuestItems == 0) then
+		if db.collapsed or KTF.Buttons.num == 0 then
 			KTF.Buttons:SetAlpha(0)
 		else
 			KTF.Buttons:SetAlpha(1)
@@ -476,10 +486,6 @@ local function SetHooks()
 		if KT.stopUpdate then return end
 		if reason ~= OBJECTIVE_TRACKER_UPDATE_STATIC then
 			_DBG("|cffffff00Update ... "..(reason or ""))
-		end
-		if updateAll then
-			reason = nil
-			updateAll = false
 		end
 		bck_ObjectiveTracker_Update(reason, id)
 		OTF.isUpdating = true
@@ -727,25 +733,23 @@ local function SetHooks()
 		end
 	end)
 
-	local function CreateFixedTag(block, x, y)
-		block.itemButton:Hide()
-
+	local function CreateFixedTag(block, x, y, anchor)
 		local tag = block.fixedTag
 		if not tag then
 			local numFreeButtons = #freeTags
 			if numFreeButtons > 0 then
 				tag = freeTags[numFreeButtons]
 				tremove(freeTags, numFreeButtons)
-				tag:SetParent(OTF.BlocksFrame)
+				tag:SetParent(block)
 			else
-				tag = CreateFrame("Frame", nil, OTF.BlocksFrame)
+				tag = CreateFrame("Frame", nil, block)
 				tag:SetSize(32, 32)
 				tag:SetBackdrop({ bgFile = mediaPath.."UI-KT-QuestItemTag" })
 				tag.text = tag:CreateFontString(nil, "ARTWORK", "GameFontNormalMed1")
 				tag.text:SetFont(LSM:Fetch("font", "Arial Narrow"), 14, "None")
 				tag.text:SetPoint("CENTER", -0.5, 0)
 			end
-			tag:SetPoint("TOPRIGHT", block, x, y)
+			tag:SetPoint(anchor or "TOPRIGHT", block, x, y)
 			tag:Show()
 			block.fixedTag = tag
 		end
@@ -753,10 +757,9 @@ local function SetHooks()
 		local colorStyle = OBJECTIVE_TRACKER_COLOR["Normal"]
 		tag:SetBackdropColor(colorStyle.r, colorStyle.g, colorStyle.b)
 		tag.text:SetTextColor(colorStyle.r, colorStyle.g, colorStyle.b)
-		tag.text:SetText(KTF.Buttons.num)
 	end
 
-	local function CreateFixedButton(block)
+	local function CreateFixedButton(block, isSpell)
 		local questID = block.id
 		local button = KT:GetFixedButton(questID)
 		if not button then
@@ -777,33 +780,40 @@ local function SetHooks()
 				button = CreateFrame("Button", name, KTF.Buttons, "SecureActionButtonTemplate")		--"KTQuestObjectiveItemButtonTemplate"
 				button:SetSize(26, 26)
 
-				button.icon = button:CreateTexture(name.."Icon", "BORDER")
-				button.icon:SetAllPoints()
+				button[isSpell and "Icon" or "icon"] = button:CreateTexture(name.."Icon", "BORDER")
+				button[isSpell and "Icon" or "icon"]:SetAllPoints()
 
 				button.Count = button:CreateFontString(name.."Count", "BORDER", "NumberFontNormal")
 				button.Count:SetJustifyH("RIGHT")
-				button.Count:SetPoint("BOTTOMRIGHT", button.icon, -3, 2)
+				button.Count:SetPoint("BOTTOMRIGHT", button[isSpell and "Icon" or "icon"], -3, 2)
 
 				button.Cooldown = CreateFrame("Cooldown", name.."Cooldown", button, "CooldownFrameTemplate")
 				button.Cooldown:SetAllPoints()
 
-				button.HotKey = button:CreateFontString(name.."HotKey", "ARTWORK", "NumberFontNormalSmallGray")
-				button.HotKey:SetSize(29, 10)
-				button.HotKey:SetJustifyH("RIGHT")
-				button.HotKey:SetText(RANGE_INDICATOR)
-				button.HotKey:SetPoint("TOPRIGHT", button.icon, 2, -2)
+				if not isSpell then
+					button.HotKey = button:CreateFontString(name.."HotKey", "ARTWORK", "NumberFontNormalSmallGray")
+					button.HotKey:SetSize(29, 10)
+					button.HotKey:SetJustifyH("RIGHT")
+					button.HotKey:SetText(RANGE_INDICATOR)
+					button.HotKey:SetPoint("TOPRIGHT", button.icon, 2, -2)
+				end
 
 				button.text = button:CreateFontString(name.."Text", "ARTWORK", "NumberFontNormalSmall")
 				button.text:SetSize(29, 10)
 				button.text:SetJustifyH("LEFT")
-				button.text:SetPoint("TOPLEFT", button.icon, 1, -3)
+				button.text:SetPoint("TOPLEFT", button[isSpell and "Icon" or "icon"], 1, -3)
 
-				button:SetScript("OnEvent", QuestObjectiveItem_OnEvent)
-				button:SetScript("OnUpdate", QuestObjectiveItem_OnUpdate)
-				button:SetScript("OnShow", QuestObjectiveItem_OnShow)
-				button:SetScript("OnHide", QuestObjectiveItem_OnHide)
-				button:SetScript("OnEnter", QuestObjectiveItem_OnEnter)
-				button:SetScript("OnLeave", QuestObjectiveItem_OnLeave)
+				if isSpell then
+					button:SetScript("OnEnter", ScenarioSpellButton_OnEnter)
+					button:SetScript("OnLeave", GameTooltip_Hide)
+				else
+					button:SetScript("OnEvent", QuestObjectiveItem_OnEvent)
+					button:SetScript("OnUpdate", QuestObjectiveItem_OnUpdate)
+					button:SetScript("OnShow", QuestObjectiveItem_OnShow)
+					button:SetScript("OnHide", QuestObjectiveItem_OnHide)
+					button:SetScript("OnEnter", QuestObjectiveItem_OnEnter)
+					button:SetScript("OnLeave", QuestObjectiveItem_OnLeave)
+				end
 				button:RegisterForClicks("AnyUp")
 
 				button:SetNormalTexture("Interface\\Buttons\\UI-Quickslot2")
@@ -815,7 +825,7 @@ local function SetHooks()
 				button:SetPushedTexture("Interface\\Buttons\\UI-Quickslot-Depress")
 				button:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
 				button:SetFrameLevel(KTF:GetFrameLevel() + 1)
-				button:SetAttribute("type","item")
+				button:SetAttribute("type", isSpell and "spell" or "item")
 				button:Hide()	-- Cooldown init
 
 				KT:Masque_AddButton(button)
@@ -825,8 +835,6 @@ local function SetHooks()
 			KTF.Buttons.reanchor = true
 		end
 		button.block = block
-		button.num = KTF.Buttons.num
-		button.text:SetText(KTF.Buttons.num)
 		button:SetAlpha(1)
 		if db.qiActiveButton and KTF.ActiveButton.questID == questID then
 			KT.ActiveButton:Update(questID)
@@ -845,8 +853,7 @@ local function SetHooks()
 
 		local link, item, charges, showItemWhenComplete = GetQuestLogSpecialItemInfo(questLogIndex)
 		if item and (not isQuestComplete or showItemWhenComplete) then
-			KTF.Buttons.num = KTF.Buttons.num + 1
-			numQuestItems = numQuestItems + 1
+			block.itemButton:Hide()
 			CreateFixedTag(block, 3, 4)
 			local button = CreateFixedButton(block)
 			if not InCombatLockdown() then
@@ -871,20 +878,12 @@ local function SetHooks()
 		bck_QUEST_TRACKER_MODULE_OnFreeBlock(self, block)
 	end
 
-	local bck_QUEST_TRACKER_MODULE_Update = QUEST_TRACKER_MODULE.Update
-	function QUEST_TRACKER_MODULE:Update()
-		numQuestItems = 0
-		KTF.Buttons.num = numWorldQuestItems
-		bck_QUEST_TRACKER_MODULE_Update()
-	end
-
 	local function SetQuestItemButton(block)
 		local questLogIndex = GetQuestLogIndexByID(block.id)
 		local link, item, charges, showItemWhenComplete = GetQuestLogSpecialItemInfo(questLogIndex)
 		if item and (not isQuestComplete or showItemWhenComplete) then
-			KTF.Buttons.num = KTF.Buttons.num + 1
-			numWorldQuestItems = numWorldQuestItems + 1
-			CreateFixedTag(block, 0, 1)
+			block.itemButton:Hide()
+			CreateFixedTag(block, 0, 2)
 			local button = CreateFixedButton(block)
 			if not InCombatLockdown() then
 				button:SetID(questLogIndex)
@@ -907,8 +906,6 @@ local function SetHooks()
 	end
 
 	hooksecurefunc(WORLD_QUEST_TRACKER_MODULE, "Update", function(self)
-		numWorldQuestItems = 0
-		KTF.Buttons.num = 0
 		local block, questID, questLogIndex
 		local tasksTable = GetTasksTable()
 		for i = 1, #tasksTable do
@@ -941,6 +938,7 @@ local function SetHooks()
 		if KT.activeTask == block.id then
 			KT.activeTask = nil
 		end
+		KT:RemoveFixedButton(block)
 		bck_WORLD_QUEST_TRACKER_MODULE_OnFreeBlock(self, block)
 	end
 
@@ -1013,6 +1011,24 @@ local function SetHooks()
 		SetProgressBarStyle(block, anchor, progressBar)
 		return progressBar
 	end
+
+	hooksecurefunc(SCENARIO_CONTENT_TRACKER_MODULE, "AddSpells", function(self, objectiveBlock, spellInfo)
+		for i = 1, objectiveBlock.numSpells do
+			local block = objectiveBlock.spells[i]
+			block.id = spellInfo[i].spellID
+			block.SpellButton:Hide()
+			CreateFixedTag(block, 17, -1, "TOPLEFT")
+			local button = CreateFixedButton(block, true)
+			if not InCombatLockdown() then
+				button.spellID = spellInfo[i].spellID
+				button.Icon:SetTexture(spellInfo[i].spellIcon)
+				button:SetAttribute("spell", spellInfo[i].spellID)
+			end
+		end
+		for i = objectiveBlock.numSpells + 1, #objectiveBlock.spells do
+			KT:RemoveFixedButton(objectiveBlock.spells[i])
+		end
+	end)
 
 	ScenarioStageBlock:HookScript("OnEnter", function(self)
 		GameTooltip:ClearAllPoints()
@@ -1309,7 +1325,7 @@ function QuestObjectiveItem_OnUpdate(self, elapsed)		-- replacement
 		rangeTimer = rangeTimer - elapsed
 		if rangeTimer <= 0 then
 			local link, item, charges, showItemWhenComplete = GetQuestLogSpecialItemInfo(self:GetID())
-			if not charges or charges ~= self.charges then
+			if charges and charges ~= self.charges then
 				ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_QUEST)
 				return
 			end
@@ -1632,8 +1648,9 @@ function KT:RemoveFixedButton(block)
 		local tag = block.fixedTag
 		if tag then
 			tinsert(freeTags, tag)
-			block.fixedTag = nil
+			tag.text:SetText("")
 			tag:Hide()
+			block.fixedTag = nil
 		end
 		local questID = block.id
 		local button = self:GetFixedButton(questID)
@@ -1844,7 +1861,6 @@ function KT:OnEnable()
 	SetHooks()
 
 	self.QuestLog:Enable()
-	self.WorldMap:Enable()
 	self.Filters:Enable()
 	if self.AddonPetTracker.isLoaded then self.AddonPetTracker:Enable() end
 	if self.AddonTomTom.isLoaded then self.AddonTomTom:Enable() end

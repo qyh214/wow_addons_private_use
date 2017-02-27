@@ -1,5 +1,41 @@
-changeset:   110:cd43c39b0149
+changeset:   116:56b190814817
 tag:         tip
+user:        Tercio
+date:        Sat Feb 25 13:35:49 2017 -0300
+summary:     - more fixes on the dalaran quests not showing up.
+
+
+changeset:   115:a3693bcdf453
+user:        Tercio
+date:        Sat Feb 25 10:46:12 2017 -0300
+summary:     - added broken shore for PTR 2.0
+
+
+changeset:   114:7c8bbf0e53c2
+user:        Tercio
+date:        Sat Feb 25 10:00:33 2017 -0300
+summary:     - reupload, looks like packpager didn't added the localization on the latest alpha version.
+
+
+changeset:   113:a80bc14b61ce
+user:        Tercio
+date:        Fri Feb 24 18:11:32 2017 -0300
+summary:     - fix for dalaran quests not showing up.
+
+
+changeset:   112:572b1468a547
+user:        Tercio
+date:        Thu Feb 16 14:57:59 2017 -0200
+summary:     - re enabled sound and animations when adding a quest to the tracker.
+
+
+changeset:   111:a449abbf1e73
+user:        Tercio
+date:        Tue Feb 07 13:50:18 2017 -0200
+summary:     - added option to show only quests that are being tracked.
+
+
+changeset:   110:cd43c39b0149
 user:        Tercio
 date:        Mon Jan 30 13:56:41 2017 -0200
 summary:     - undo Blizzard func overwrite, it might be causing taints.
@@ -567,41 +603,5 @@ changeset:   16:a4002db25a28
 user:        Tercio
 date:        Mon Jul 25 00:04:58 2016 -0300
 summary:     - many small fixes.
-
-
-changeset:   15:e0cf755ac85b
-user:        Tercio
-date:        Sat Jul 16 18:50:58 2016 -0300
-summary:     - first polish pass.
-
-
-changeset:   14:7dce41b511f4
-user:        Tercio
-date:        Sat Jul 16 01:16:00 2016 -0300
-summary:     - updates
-
-
-changeset:   13:e515c381ad21
-user:        Tercio
-date:        Sat Jul 16 01:13:45 2016 -0300
-summary:     - updates.
-
-
-changeset:   12:b9e4a0395971
-user:        Tercio
-date:        Thu Jul 14 14:25:11 2016 -0300
-summary:     updates.
-
-
-changeset:   11:294f506fb9f4
-user:        Tercio
-date:        Thu Jul 14 02:06:51 2016 -0300
-summary:     -updates
-
-
-changeset:   10:d73fcbea2b72
-user:        Tercio
-date:        Thu Jul 14 01:58:34 2016 -0300
-summary:     - updates.
 
 

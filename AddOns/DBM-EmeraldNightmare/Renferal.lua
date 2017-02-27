@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1744, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15646 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15778 $"):sub(12, -3))
 mod:SetCreatureID(106087)
 mod:SetEncounterID(1876)
 mod:SetZone()
@@ -164,7 +164,6 @@ function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)--540 heroic, other difficulties not confirmed
 	self.vb.platformCount = 1
 	self.vb.ViolentWindsPlat = false
-	DBM:AddMsg(L.MapMessage)
 end
 
 function mod:OnCombatEnd()

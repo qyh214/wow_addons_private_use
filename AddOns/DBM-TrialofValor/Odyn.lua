@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(1819, "DBM-TrialofValor", nil, 861)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15621 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15881 $"):sub(12, -3))
 mod:SetCreatureID(114263, 114361, 114360)--114263 Odyn, 114361 Hymdall, 114360 Hyrja 
 mod:SetEncounterID(1958)
 mod:SetZone()
-mod:SetBossHPInfoToHighest()
+--mod:SetBossHPInfoToHighest()
+mod:SetMainBossID(114263)
 mod:SetUsedIcons(1)
 mod:SetHotfixNoticeRev(15581)
 mod.respawnTime = 29
@@ -123,6 +124,7 @@ local voiceRunicBrand				= mod:NewVoice(231297)--mmX (will be changed to mmc whe
 mod:AddSetIconOption("SetIconOnShield", 228270, true)
 mod:AddInfoFrameOption(227503, true)
 mod:AddRangeFrameOption("5/8/15")
+mod:AddNamePlateOption("NPAuraOnRunicBrand", 231297, true)
 
 mod.vb.phase = 1
 mod.vb.hornCasting = false
@@ -225,6 +227,9 @@ function mod:OnCombatStart(delay)
 		timerExpelLightCD:Start(25-delay)
 		timerDrawPowerCD:Start(35-delay)
 		countdownDrawPower:Start(35-delay)
+		if self.Options.NPAuraOnRunicBrand then
+			DBM:FireEvent("BossMod_EnableFriendlyNameplates")
+		end
 	elseif not self:IsEasy() then
 		timerHornOfValorCD:Start(8-delay, 1)
 		countdownHorn:Start(8-delay)
@@ -254,6 +259,9 @@ function mod:OnCombatEnd()
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
+	end
+	if self.Options.NPAuraOnRunicBrand and self:IsMythic() then
+		DBM.Nameplate:Hide(false, nil, nil, nil, true)
 	end
 end
 
@@ -475,6 +483,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			updateRangeFrame(self)
 		end
+		if self.Options.NPAuraOnRunicBrand then
+			DBM.Nameplate:Show(false, args.destName, spellId, nil, 10)
+		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -497,6 +508,9 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 231311 or spellId == 231342 or spellId == 231344 or spellId == 231345 or spellId == 231346 then--Branded (Draw Power Runes)
 		if args:IsPlayer() then
 			playerDebuff = nil
+		end
+		if self.Options.NPAuraOnRunicBrand then
+			DBM.Nameplate:Hide(false, args.destName, spellId)
 		end
 	end
 end

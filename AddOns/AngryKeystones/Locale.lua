@@ -42,6 +42,7 @@ langs.enUS = {
 	scheduleMissingKeystone = "Requires a level 7+ Mythic Keystone in your inventory to display.",
 	config_exclusiveTracker = "Hide quest and achievement trackers during Mythic Keystone dungeons (requires Reload UI to take effect)",
 	config_hideTalkingHead = "Hide Talking Head dialog during a Mythic Keystone dungeon",
+	config_resetPopup = "Show popup to reset instances upon completion of a Mythic Keystone dungeon",
 }
 langs.enGB = langs.enUS
 
@@ -352,6 +353,7 @@ rumors.zhCN = {
 	["我敢肯定，那个密探的腰带上挂着药水。"]="potion",
 	["我听说那个密探随身带着药水，这是为什么呢？"]="potion",
 	["可别说是我告诉你的……那个密探伪装成了炼金师，腰带上挂着药水。"]="potion",
+	["我听说那个密探买了一些药水……以防万一。"]="potion",
 	["我听说那个密探的腰包上绣着精美的丝线。"]="coinpurse",
 	["一个朋友说，那个密探喜欢黄金，所以在腰包里装满了金币。"]="coinpurse",
 	["我听说那个密探的腰包里装满了摆阔用的金币。"]="coinpurse",

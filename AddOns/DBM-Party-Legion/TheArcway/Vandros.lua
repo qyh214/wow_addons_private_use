@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1501, "DBM-Party-Legion", 6, 726)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15758 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15893 $"):sub(12, -3))
 mod:SetCreatureID(98208)
 mod:SetEncounterID(1829)
 mod:SetZone()
@@ -63,7 +63,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnUnstableMana:Show()
 			voiceUnstableMana:Play("runout")
-			voiceUnstableMana:schedule(1, "keepmove")
+			voiceUnstableMana:Schedule(1, "keepmove")
 		else
 			warnUnstableMana:Show(args.destName)
 		end

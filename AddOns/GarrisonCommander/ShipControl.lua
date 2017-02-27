@@ -327,10 +327,11 @@ function module:OnClick_Run(this,button)
 				if (not rc) then
 					self:Unhook(GMC.runButton,'OnUpdate')
 					GMC.logoutButton:Enable()
-					ns.quick=false
-					if addon:GetBoolean("SAUTOLOGOUT") then
-						addon:ScheduleTimer(function() GMC.logoutButton:Click() end,0.5)
+					if not ns.quick and addon:GetBoolean("SAUTOLOGOUT") then
+						addon:LogoutPopup(5)
 					end
+					addon:shipyardDone()
+					ns.quick=false
 				end
 			end
 		end
@@ -339,9 +340,6 @@ function module:OnClick_Run(this,button)
 end
 function module:OnClick_Start(this,button)
 	local GMC=GSF.MissionControlTab
-	--[===[@debug@
-	print(C("-------------------------------------------------","Yellow"))
-	--@end-debug@]===]
 	GMC.list.widget:ClearChildren()
 	if (shipyard:GetTotFollowers(AVAILABLE) == 0) then
 		GMC.list.widget:SetTitle("All followers are busy")

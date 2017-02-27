@@ -18,6 +18,7 @@ local helpName = "help"
 local helpNumPages = 10
 local cTitle = "|cffffd100"
 local cBold = "|cff00ffe3"
+local cNew = "|cff00ff00"
 local cWarning = "|cffff7f00"
 local cDots = "|cff808080"
 local offs = "\n|T:1:9|t"
@@ -189,19 +190,17 @@ local function SetupTutorials()
 		},
 		{	-- 10
 			text = cTitle.."         What's NEW in version |cffffffff"..KT.version.."|r\n\n"..
-				"- ADDED - Order Modules "..beta.." - Set modules order inside the tracker,"..offs.."supported all modules including PetTracker.\n"..
-				"- FIXED - issue #112 - Blocked action button on World Map - taint protected"..offs.."function (see bellow World Map issues).\n"..
-				"- FIXED - issue #169 and #177 - World Map tracking dropdown menu doesn't"..offs.."show items from other addons.\n"..
-				"- UPDATED - PetTracker support v7.1.4.\n"..
-				"- UPDATED - Q/WQ dropdown menu items (patch 7.1.5).\n"..
-				"- IMPROVED - Q/WQ item buttons.\n\n"..
-				cTitle.."World Map issues|r\n"..
-				"- I reworked elimination of taint inside World Map, but I need some tests from"..
-				offs.."YOU! Especially with World Quest Class Hall Tier 5 button ("..cBold.."issue #112|r)."..
-				offs..cWarning.."Please send me info if this fix works!|r\n"..
-				"- I had to disable zoom in World Map, for eliminating taint.\n\n"..
+				"- "..cNew.."ADDED - Order Modules|r "..beta.." - Set modules order inside the tracker,"..
+				offs.."supported all modules including PetTracker.\n"..
+				"- "..cNew.."ADDED - Support for Scenario spell buttons.|r\n"..
+				"- IMPROVED - Q/WQ item buttons.\n"..
+				"- REMOVED - Fixes of World Map taint - does not work.\n\n"..
+
 				cTitle.."Known issues|r\n"..
-				"- Spell / Quest item buttons in Scenario not supported for now.\n\n"..
+				"- Work with World Map during combat generates LUA errors. This is because"..
+				offs.."World Map was changed to Secure frame in Legion and use some functions"..
+				offs.."from the tracker. "..cWarning.."These errors I will not fix - it's not possible!|r\n\n"..
+
 				cTitle.."Issues reporting|r\n"..
 				"For reporting please use "..cBold.."Tickets|r (|cff666666https://wow.curseforge.com/projects/kaliels-tracker/issues|r) instead of Comments on Curse.com.\n\n"..
 				"To the description of a new ticket, please insert the following information:\n"..

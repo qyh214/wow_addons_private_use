@@ -63,6 +63,7 @@ local m = {
 		local gcaf = API:AddElement({name = "GuildChallengeAlertFrame", displayName = "Guild Challenge Achievement Alert"}, c)
 		API:AddElement({name = "ObjectiveTrackerFrameMover", displayName = "Objectives Window", scaleWH = 1}, c)
 		API:AddElement({name = "ObjectiveTrackerFrameScaleMover", displayName = "Objectives Window Scale"}, c)
+		API:AddElement({name = "ObjectiveTrackerBonusBannerFrame", displayName = "Objectives Banner Frame"}, c)
 		--[[local qldf = API:AddElement({name = "QuestLogDetailFrame", displayName = "Quest Details", runOnce = function()
 			if not QuestLogDetailFrame:IsShown() then
 				ShowUIPanel(QuestLogDetailFrame)
@@ -548,6 +549,7 @@ local m = {
 		API:AddElement({name = "BNToastFrame", displayName = "Battle.Net Popup Message"}, c)
 		API:AddElement({name = "QuickJoinToastMover", displayName = "Quick Join Toast"}, c)
 		API:AddElement({name = "QuickJoinToast2Mover", displayName = "Quick Join Toast 2"}, c)
+		API:AddElement({name = "QuickJoinToastButton", displayName = "Quick Join Toast Button"}, c)
 		API:AddElement({name = "MirrorTimer1", displayName = "BreathFatigue Bar"}, c)
 		API:AddElement({name = "CalendarFrame", displayName = "Calendar"}, c)
 		API:AddElement({name = "CalendarViewEventFrame", displayName = "Calendar Event"}, c)

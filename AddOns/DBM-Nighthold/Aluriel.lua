@@ -1,19 +1,19 @@
 local mod	= DBM:NewMod(1751, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15757 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15881 $"):sub(12, -3))
 mod:SetCreatureID(104881)
 mod:SetEncounterID(1871)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
-mod:SetHotfixNoticeRev(15756)
+mod:SetHotfixNoticeRev(15854)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 213853 213567 213564 213852 212735 213275 213390 213083 212492 230504",
 	"SPELL_AURA_APPLIED 213864 216389 213867 213869 212531 213148 213569 212587 230951 213760 213808",
-	"SPELL_AURA_REMOVED 213569 212531 213148 230951",
+	"SPELL_AURA_REMOVED 213569 212531 213148 230951 212587",
 	"SPELL_PERIODIC_DAMAGE 212736 213278 213504",
 	"SPELL_PERIODIC_MISSED 212736 213278 213504",
 	"SPELL_DAMAGE 213520",
@@ -131,6 +131,7 @@ mod:AddSetIconOption("SetIconOnFrozenTempest", 213083, true, true)
 mod:AddSetIconOption("SetIconOnSearingDetonate", 213275, true)
 mod:AddSetIconOption("SetIconOnBurstOfFlame", 213760, true, true)
 mod:AddSetIconOption("SetIconOnBurstOfMagic", 213808, true, true)
+mod:AddNamePlateOption("NPAuraOnMarkOfFrost", 212531)
 mod:AddInfoFrameOption(212647)
 
 mod.vb.annihilateCount = 0
@@ -207,6 +208,9 @@ function mod:OnCombatStart(delay)
 	else
 		berserkTimer:Start(480-delay)--480 confirmed on heroic (needs reconfirm on live)
 	end
+	if self.Options.NPAuraOnMarkOfFrost then
+		DBM:FireEvent("BossMod_EnableFriendlyNameplates")
+	end
 end
 
 function mod:OnCombatEnd()
@@ -218,6 +222,9 @@ function mod:OnCombatEnd()
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
+	end
+	if self.Options.NPAuraOnMarkOfFrost then
+		DBM.Nameplate:Hide(false, nil, nil, nil, true)
 	end
 end
 
@@ -335,7 +342,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			timerSearingBrandCD:Start(17.8)
 			timerSearingBrandRepCD:Start(27)
-			self:Schedule(42, findSearingMark, self)--Schedule markers to go out 2 seconds before detonate cast, making a 5 total seconds to position instead of 3
+			self:Schedule(42, findSearingMark, self)--Schedule markers to go out 3 seconds before detonate cast, making a 6 total seconds to position instead of 3
 			timerSearingBrandDetonateCD:Start(45)
 			timerAnimateFireCD:Start(62)
 			timerArcanePhaseCD:Start(85)
@@ -378,10 +385,18 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:AntiSpam(7, args.destName)
 			yellMarkofFrost:Yell()
 		end
-	elseif spellId == 212587 and args:IsPlayer() and self:AntiSpam(7, args.destName) then
-		specWarnMarkOfFrost:Show()
-		voiceMarkOfFrost:Play("targetyou")
-		yellMarkofFrost:Yell()
+		if self.Options.NPAuraOnMarkOfFrost then
+			DBM.Nameplate:Show(false, args.destName, spellId, nil, 5)
+		end
+	elseif spellId == 212587 then
+		if args:IsPlayer() and self:AntiSpam(7, args.destName) then
+			specWarnMarkOfFrost:Show()
+			voiceMarkOfFrost:Play("targetyou")
+			yellMarkofFrost:Yell()
+		end
+		if self.Options.NPAuraOnMarkOfFrost then
+			DBM.Nameplate:Show(false, args.destName, spellId)
+		end
 	elseif spellId == 213148 then--Searing Brand (5sec Targetting Debuff)
 		warnSearingBrandChosen:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
@@ -419,12 +434,21 @@ function mod:SPELL_AURA_REMOVED(args)
 				countdownArmageddon:Cancel()
 			end
 		end
-	elseif spellId == 212531 and args:IsPlayer() then--Mark of Frost (5sec Targetting Debuff)
-		countdownMarkOfFrost:Cancel()
+	elseif spellId == 212531 then--Mark of Frost (5sec Targetting Debuff)
+		if args:IsPlayer() then
+			countdownMarkOfFrost:Cancel()
+		end
+		if self.Options.NPAuraOnMarkOfFrost then
+			DBM.Nameplate:Hide(false, args.destName, spellId)
+		end
 	elseif spellId == 213148 and args:IsPlayer() then--Searing Brand (5sec Targetting Debuff)
 		countdownSearingBrand:Cancel()
 	elseif spellId == 230951 then
 		timerFelSoul:Stop()
+	elseif spellId == 212587 then
+		if self.Options.NPAuraOnMarkOfFrost then
+			DBM.Nameplate:Hide(false, args.destName, spellId)
+		end
 	end
 end
 	

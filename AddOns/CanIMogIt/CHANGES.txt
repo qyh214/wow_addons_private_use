@@ -1,20 +1,18 @@
-tag fd4a67633c99310bfb2fca4e741ba3cbbf5fb139 7.1.0.04
+tag 17bead7a577d29f77a168aa4a291c4e6ddae91ea 7.1.5.04
 Author:	Salvatore Lopiparo <toreltwiddler@gmail.com>
-Date:	Sat Jan 7 16:28:39 2017 -0800
+Date:	Thu Feb 23 17:16:06 2017 -0800
 
-* AdiBags support
-* Option for disabling startup text
-* New experimental option to display item source locations on tooltip
+Fix for errors when AceEvent wasn't included in another addon.
 
-commit 34bfecd7cf5bc3c23cab6a7610b144d07a70f2b5
+commit 909d0c9c67a5ff59f1bea623e3ecd351ea13670d
 Author: Salvatore Lopiparo <toreltwiddler@gmail.com>
-Date:   Wed Jan 4 21:50:17 2017 -0800
+Date:   Thu Feb 23 17:05:02 2017 -0800
 
-    Increased AdiBags frame counter.
+    Added CallbackHandler-1.0 to .pkgmeta and embeds.xml.
 
-commit 9b27b477236fe8628539460ff776c5642409b3ce
+commit 9fd1a2ad1bc7ebcf2fbe6f14c598c9a193a15b87
 Author: Salvatore Lopiparo <toreltwiddler@gmail.com>
-Date:   Wed Jan 4 18:47:33 2017 -0800
+Date:   Thu Feb 23 16:56:42 2017 -0800
 
-    Registered updates to AdiBags event messages.
+    Added AceEvent to the .pkgmeta.
 

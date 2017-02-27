@@ -260,7 +260,7 @@ L:SetMiscLocalization({
 	NoGloves1	= "There's a rumor that the spy never has gloves on.",
 	NoGloves2	= "You know... I found an extra pair of gloves in the back room. The spy is likely to be bare handed somewhere around here.",
 	NoGloves3	= "I heard the spy dislikes wearing gloves.",
-	NoGloves4	= "I heard the spy avoids having gloves on, in case some quick actions are needed",
+	NoGloves4	= "I heard the spy avoids having gloves on, in case some quick actions are needed.",
 	Cape1		= "Someone mentioned the spy came in earlier wearing a cape.",
 	Cape2		= "I heard the spy enjoys wearing capes.",
 	NoCape1		= "I heard the spy dislikes capes and refuses to wear one.",

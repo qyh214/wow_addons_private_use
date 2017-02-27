@@ -82,6 +82,16 @@ function module:OnInitialize()
 	tabMC:SetScript("OnClick",function(this,...) module:OpenMissionControlTab() end)
 	tabMC:Show()
 	tabMC:SetPoint('TOPLEFT',GSF,'TOPRIGHT',0,0)
+	local tabQ=CreateFrame("Button",nil,GSF,"SpellBookSkillLineTabTemplate")
+	GSF.tabQ=tabQ
+	tabQ.tooltip=L["Automatically process completed missions and schedules new ones."].."\n"..
+		format(L["Check %s in mission control in order to be also logged out"],L["Auto Logout"]) .. "\n" .. 
+		C(format(L["Keep pressed %s while opening table to automate processing"],CTRL_KEY),"green")	
+	tabQ:SetNormalTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
+	tabQ:SetPushedTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
+	tabQ:Show()
+	tabQ:SetScript("OnClick",function(this,button) addon:RunQuick() end)
+	tabQ:SetPoint('TOPLEFT',GSF,'TOPRIGHT',0,-210)
   
 end
 function module:OpenLastTab()
@@ -309,7 +319,7 @@ print("Doing one time initialization for",this:GetName(),...)
 			self:SafeHookScript(hook,"OnClick","HookedClickOnTabs")
 		end
 	end	
-
+	self:SafeHookScript(GSF,"OnHide","EventGARRISON_SHIPYARD_NPC_CLOSED")
 end
 function module:HookedClickOnTabs()
 	self:CloseMissionControlTab()
@@ -325,12 +335,11 @@ function module:ScriptGarrisonShipyardFrame_OnShow()
 	GSF:SetPoint("TOPLEFT",GCS,"BOTTOMLEFT",0,23)
 	GSF:SetPoint("TOPRIGHT",GCS,"BOTTOMRIGHT",0,23)
 	self:RefreshMenu()
-	self:RefrreshCurrency()
+	self:RefreshCurrency()
 	self:RefreshFollowerStatus()
---[===[@debug@
-	print("Doing all time initialization")
-	print(GetTime())
---@end-debug@]===]
+	if IsControlKeyDown() then
+		self:ScheduleTimer("RunQuick",0.1,true)
+	end
 end
 function module:HookedGarrisonShipyardMapMission_OnLeave()
 
@@ -365,9 +374,9 @@ print("NPC CLOSED")
 	end
 end
 function module:EventCHAT_MSG_CURRENCY(event)
-	self:RefrreshCurrency()
+	self:RefreshCurrency()
 end
-function module:RefrreshCurrency()
+function module:RefreshCurrency()
 	if GSF:IsVisible() then
 		local qt=select(2,GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY))
 		GSF.ResourceInfo:SetFormattedText(GSF.ResourceFormat,qt)
@@ -385,7 +394,7 @@ function module:EventGARRISON_MISSION_STARTED(event,missionType,missionID,...)
 	print(event,missionID)
 	--@end-debug@]===]
 	self:RefreshFollowerStatus()
-	self:ScheduleTimer("RefrreshCurrency",0.2)
+	self:ScheduleTimer("RefreshCurrency",0.2)
 end
 function module:RefreshMenu()
 	if not GCS then return end  -- This could be called befaur header is built

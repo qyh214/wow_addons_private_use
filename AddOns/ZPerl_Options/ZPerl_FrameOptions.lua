@@ -2525,7 +2525,7 @@ local function XPerl_Raid_ConfigDefault(default)
 		precisionManaPercent = 1,
 		scale			= 0.8,
 		spacing			= 0,
-		inParty			= 0,
+		inParty			= nil,
 		buffs = {
 --			enable		= nil,
 			castable	= 0,
@@ -3372,7 +3372,11 @@ if (XPerl_UpgradeSettings) then
 			end
 
 			if (oldVersion < "5.1.6") then
-				old.raid.inParty = 0
+				old.raid.inParty = nil
+			end
+
+			if (oldVersion < "5.1.7") then
+				old.raid.inParty = nil
 			end
 		end
 	end
@@ -3406,6 +3410,7 @@ if (XPerl_UpgradeSettings) then
 		for realmName, realmList in pairs(ZPerlConfigNew) do
 			if (type(realmList) == "table" and realmName ~= "global" and realmName ~= "savedPositions") then
 				for playerName, settings in pairs(realmList) do
+					print(playerName)
 					if (playerName == "global") then
 						-- Fix global settings being put in with realms
 						if (not ZPerlConfigNew.global) then

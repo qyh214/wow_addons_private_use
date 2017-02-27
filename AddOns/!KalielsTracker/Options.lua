@@ -7,6 +7,7 @@
 local addonName, KT = ...
 
 local ACD = LibStub("MSA-AceConfigDialog-3.0")
+local ACR = LibStub("AceConfigRegistry-3.0")
 local WidgetLists = AceGUIWidgetLSMlists
 local _DBG = function(...) if _DBG then _DBG("KT", ...) end end
 
@@ -27,8 +28,9 @@ local flags = { [""] = "None", ["OUTLINE"] = "Outline", ["OUTLINE, MONOCHROME"] 
 local textures = { "None", "Default (Blizzard)", "One line", "Two lines" }
 
 local cBold = "|cff00ffe3"
+local cWarning = "|cffff7f00"
 local beta = "|cffff7fff[Beta]|r"
-local warning = "|cffff7f00Warning:|r UI will be re-loaded!"
+local warning = cWarning.."Warning:|r UI will be re-loaded!"
 
 local KTF = KT.frame
 local OTF = ObjectiveTrackerFrame
@@ -120,36 +122,34 @@ local options = {
 					inline = true,
 					order = 0,
 					args = {
-						info = {
-							name = "  |cffffd100Version:|r\n    "..KT.version,
+						version = {
+							name = " |cffffd100Version:|r  "..KT.version,
 							type = "description",
-							width = "half",
+							width = "double",
 							fontSize = "medium",
 							order = 0.1,
 						},
-						slash = {
-							name = cBold.." /kt|r ... Toggle (expand/collapse) the tracker\n"..
-									cBold.." /kt config|r ... Show this config window",
+						slashCmd = {
+							name = cBold.." /kt|r  |cff808080...............|r  Toggle (expand/collapse) the tracker\n"..
+									cBold.." /kt config|r  |cff808080...|r  Show this config window\n",
 							type = "description",
-							width = "normal+half",
-							order = 0.2
+							width = "double",
+							order = 0.3,
 						},
 						news = {
-							name = "News",
+							name = "What's New",
 							type = "execute",
-							width = "half",
 							disabled = function()
 								return not KT.Help:IsEnabled()
 							end,
 							func = function()
 								KT.Help:ShowHelp(true)
 							end,
-							order = 0.3,
+							order = 0.2,
 						},
 						help = {
 							name = "Help",
 							type = "execute",
-							width = "half",
 							disabled = function()
 								return not KT.Help:IsEnabled()
 							end,
@@ -489,12 +489,13 @@ local options = {
 							set = function()
 								db.textWordWrap = not db.textWordWrap
 								KT:SetText()
-								if not db.collapsed then
-									OTF.BlocksFrame:Hide()
-									ObjectiveTracker_Update()
-									OTF.BlocksFrame:Show()
+								if db.collapsed then
+									ObjectiveTracker_MinimizeButton_OnClick()
+									ObjectiveTracker_MinimizeButton_OnClick()
+								else
+									ObjectiveTracker_MinimizeButton_OnClick()
+									C_Timer.After(0, ObjectiveTracker_MinimizeButton_OnClick)
 								end
-								C_Timer.After(0, ObjectiveTracker_Update)
 							end,
 							order = 3.6,
 						},
@@ -1130,7 +1131,7 @@ function KT:SetupOptions()
 	options.args.profiles.args.choose.confirmText = warning
 	options.args.profiles.args.copyfrom.confirmText = warning
 	
-	LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options, nil)
+	ACR:RegisterOptionsTable(addonName, options, nil)
 	
 	self.optionsFrame = {}
 	self.optionsFrame.general = ACD:AddToBlizOptions(addonName, self.title, nil, "general")
@@ -1147,6 +1148,18 @@ function KT:SetupOptions()
 		db.objNumSwitch = false
 	end
 end
+
+KT.settings = {}
+InterfaceOptionsFrame:HookScript("OnHide", function(self)
+	for k, v in pairs(KT.settings) do
+		if strfind(k, "Save") then
+			KT.settings[k] = false
+		else
+			db[k] = v
+		end
+	end
+	ACR:NotifyChange(addonName)
+end)
 
 function GetModulesOptionsTable()
 	local numModules = #db.modulesOrder

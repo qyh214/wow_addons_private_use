@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1512, "DBM-Party-Legion", 8, 727)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14987 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15917 $"):sub(12, -3))
 mod:SetCreatureID(96754)
 mod:SetEncounterID(1823)
 mod:SetZone()
@@ -24,7 +24,7 @@ local specWarnVoidSnap			= mod:NewSpecialWarningInterrupt(194266, "HasInterrupt"
 local timerFragmentCD			= mod:NewCDTimer(30, 194327, nil, nil, nil, 3)
 local timerServitorCD			= mod:NewCDTimer(23, 194231, nil, nil, nil, 1)--23-30
 
-local voiceFragment				= mod:NewVoice(194231, "Dps")--mobkill
+local voiceFragment				= mod:NewVoice(194327, "Dps")--mobkill
 local voiceServitor				= mod:NewVoice(194231, "-Healer")--bigmob
 local voiceVoidSnap				= mod:NewVoice(194266, "HasInterrupt")--kickcast
 

@@ -1,20 +1,16 @@
-lightweight tag 45ba4e8956de7fe0a68a33a39f49ed1d89896a21 7.1.5a
+lightweight tag b6def1b9824a35657254994cb9033f2257f63406 7.1.5b
 Author:	GitHub <noreply@github.com>
-Date:	Wed Feb 1 20:19:50 2017 -0600
+Date:	Thu Feb 9 18:59:48 2017 -0600
 
-commit 9efc91ea501b703151900c65122ae4dca51941c2
-Author: Josh Worden <solocommand@gmail.com>
-Date:   Wed Feb 1 20:18:19 2017 -0600
+commit 5135f70d5bce1f1401e0965b2cdb5a5e46fa2fc3
+Author: Joshua Worden <solocommand@gmail.com>
+Date:   Thu Feb 9 18:59:14 2017 -0600
 
-    Revert bad notaint change
-    
-    This partially reverts commit c80f8258cfcefc6c5d777ecbe260e745466106d1.
+    Restore original drop down menu interaction
 
-commit 9efc91ea501b703151900c65122ae4dca51941c2
-Author: Josh Worden <solocommand@gmail.com>
-Date:   Wed Feb 1 20:18:19 2017 -0600
+commit 5135f70d5bce1f1401e0965b2cdb5a5e46fa2fc3
+Author: Joshua Worden <solocommand@gmail.com>
+Date:   Thu Feb 9 18:59:14 2017 -0600
 
-    Revert bad notaint change
-    
-    This partially reverts commit c80f8258cfcefc6c5d777ecbe260e745466106d1.
+    Restore original drop down menu interaction
 

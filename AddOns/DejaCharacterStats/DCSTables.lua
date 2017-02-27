@@ -340,8 +340,11 @@ DCS_TableData.StatData.GCD = {
 				gcd = casterGCD()
 			end
 		else
-			if (primaryStat == LE_UNIT_STAT_INTELLECT) or (classfilename == "HUNTER") or (classfilename == "DEATHKNIGHT") then 
-				-- would be interesting to write "or (primaryStat == LE_UNIT_STAT_STRENGTH)" but needs tests on wariors, paladins
+			if (primaryStat == LE_UNIT_STAT_INTELLECT) or (classfilename == "HUNTER") or (primaryStat == LE_UNIT_STAT_STRENGTH) then 
+				-- adding wariors, paladins
+				-- tested with Crusader Strike, Judgment on retribution paladin
+				-- tested with Consecration, Avenger's Shield, Judgment on protection paladin
+				-- tested with Slam on level 1 warior
 				-- tested with Cobra shot and Multi-shot for hunter. Have troll hunter but don't have pet with Ancient Hysteria //Kakjens
 				-- adding DK-s as reported by Mpstark
 				gcd = casterGCD()
@@ -493,10 +496,11 @@ DCS_TableData.StatData.VERSATILITY_RATING = {
 		end
 		local versatility = GetCombatRating(CR_VERSATILITY_DAMAGE_DONE);
 		local versatilityDamageBonus = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_DONE);
-		local versatilityDamageTakenReduction = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_TAKEN) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_TAKEN);
+		--local versatilityDamageTakenReduction = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_TAKEN) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_TAKEN);
 		PaperDollFrame_SetLabelAndText(statFrame, "Versatility Rating", versatility, false, versatility);
 		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE.."Versatility Rating".." "..versatility..FONT_COLOR_CODE_CLOSE;
-		statFrame.tooltip2 = format("Versatility Rating of %s increases damage and healing done by %.2f%% and reduces damage taken by %.2f%%", BreakUpLargeNumbers(versatility), versatilityDamageBonus, versatilityDamageTakenReduction);
+		statFrame.tooltip2 = format(rating_and_percentage,"Versatility Rating", BreakUpLargeNumbers(versatility), "versatility", versatilityDamageBonus);
+		--statFrame.tooltip2 = format("Versatility Rating of %s increases damage and healing done by %.2f%% and reduces damage taken by %.2f%%", BreakUpLargeNumbers(versatility), versatilityDamageBonus, versatilityDamageTakenReduction);
 		statFrame:Show();
 	end
 }

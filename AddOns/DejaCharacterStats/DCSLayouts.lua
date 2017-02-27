@@ -14,11 +14,6 @@ local _, gdbprivate = ...
 	gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsClassBackgroundChecked = {
 		ClassBackgroundChecked = true,
 	}
-	gdbprivate.gdbdefaults.gdbdefaults.DCS_TableRelevantStatsChecked = {
-		RelevantStatsSetChecked = false,
-	}
-
-local ShowAllStats = false
 
 local StatScrollFrame = CreateFrame("ScrollFrame", nil, CharacterFrameInsetRight, "UIPanelScrollFrameTemplate")
 	StatScrollFrame:ClearAllPoints()
@@ -131,10 +126,56 @@ local function UpdateStatFrameWidth(width)
 	end
 end
 
+	local DCS_TableRelevantStatstooltipText
+	local relevantStatsSetChecked = true
+	local function DCS_TableRelevantStats_init()
+		if relevantStatsSetChecked then
+			--print(checked)
+			--print("Show Relevant Button")
+			DCS_TableRelevantStatstooltipText = L["Show only stats relevant to your class spec."] --Creates a tooltip on mouseover.
+			_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["Relevant Stats"])
+		else
+			--print(checked)
+			--print("Show All Button")
+			DCS_TableRelevantStatstooltipText = L["Show all stats."] --Creates a tooltip on mouseover.
+			_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["All Stats"])
+			return
+		end
+	end
+
+
+
+
 
 -----------------------
 -- Config Mode Setup --
 -----------------------
+
+local function set_relevant_stat_state()
+	local stat
+	local ccount = 0
+	for _, v in ipairs(ShownData) do
+        stat = DCS_TableData.StatData[v.statKey]
+		if stat then
+			if not v.hidden then ccount = ccount +1 end
+		end
+	end
+	local temp = ccount/#ShownData
+	--print(temp)
+	--if gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked then
+	--	print("Wants to show Relevant Stats button")
+	--else
+	--	print("Wants to show All Stats button")
+	--end
+	if temp < 1 then --playing safe, probably 0.9 is sufficient; maybe epsilon check is needed?
+	--	print("All Stats due to number of stats")
+		relevantStatsSetChecked = false
+	else
+	--	print("Relevant Stats due to number of stats")
+		relevantStatsSetChecked = true
+	end
+	DCS_TableRelevantStats_init()
+end
 
 local configMode = false
 
@@ -193,31 +234,33 @@ local function ShowCharacterStats(unit)
 			end
 			--print(count)
 		end
-		height = floor(height)
-		StatFrame:SetHeight(height)
-		local statheight = StatFrame:GetHeight()
-		--local baseheight = CharacterFrameInsetRight:GetHeight()
-		--print(statheight, baseheight)
-		if count <= 24 then
+		
+	end
+	height = floor(height)
+	StatFrame:SetHeight(height)
+	--local statheight = StatFrame:GetHeight()
+	--local baseheight = CharacterFrameInsetRight:GetHeight()
+	if count <= 24 then
+		UpdateStatFrameWidth(191)
+		StatScrollFrame.ScrollBar:Hide()
+	else
+		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked
+		if checked.ScrollbarSetChecked == true then
+			UpdateStatFrameWidth(180)
+			StatScrollFrame.ScrollBar:Show()
+		else
 			UpdateStatFrameWidth(191)
 			StatScrollFrame.ScrollBar:Hide()
-		else
-			local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked
-			if checked.ScrollbarSetChecked == true then
-				UpdateStatFrameWidth(180)
-				StatScrollFrame.ScrollBar:Show()
-			else
-				UpdateStatFrameWidth(191)
-				StatScrollFrame.ScrollBar:Hide()
-			end			
-		end
+		end			
 	end
+	set_relevant_stat_state()
 end
 
 
 local function DCS_Table_ShowAllStats()
 	for _, v in ipairs(ShownData) do
-		if v.hidden == true then v.hidden = false end
+		--if v.hidden == true then v.hidden = false end
+		v.hidden = false -- should be slightly faster because when this function gets called the most of stats are invisible
 	end
 	ShowCharacterStats("player")
 end
@@ -229,7 +272,7 @@ local function DCS_Table_Relevant()
 	--ShownData = DCS_TableData:CopyTable(DefaultData)
 
 	for _, v in ipairs(ShownData) do
-		if v.hidden == true then v.hidden = false end
+		if v.hidden then v.hidden = false end
 	end 
 
 	local spec = GetSpecialization();
@@ -282,7 +325,7 @@ local function DCS_Table_Relevant()
 		if v.statKey == "PARRY_RATING" then v.hidden = true end
 		if v.statKey == "ITEMLEVEL" then v.hidden = true end
 	end
-	gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = false
+	--gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = false
 	ShownData.uniqueKey = uniqueKey
 	DCS_ClassSpecDB[uniqueKey] = ShownData
 	ShowCharacterStats("player")
@@ -298,21 +341,32 @@ local function DCS_Login_Initialization()
 		ShownData = DCS_TableData:MergeTable(DCS_ClassSpecDB[uniqueKey])
 		--print("Set saved variables.")
 		end
+		ShowCharacterStats("player")
 	else
 		--print("Set default initialization")
 		DCS_Table_Relevant()
 	end
-	ShowCharacterStats("player")
+	--ShowCharacterStats("player") --DCS_Table_Relevant in the end calls it
 end
 
 local function DCS_Table_Reset()
 	local uniqueKey = UnitName("player") .. ":" .. GetRealmName() .. ":" .. GetSpecialization()
 	--print(uniqueKey)
-	--print("Set default initialization")
-	ShownData = DCS_TableData:CopyTable(DefaultData)
+	--print("reseting just order of stata")
+	--ShownData = DCS_TableData:CopyTable(DefaultData)
+	local temp = DCS_TableData:CopyTable(DefaultData)
+	for _, v1 in ipairs(temp) do
+		for _, v2 in ipairs(ShownData) do
+			if v1.statKey == v2.statKey then
+				v1.hidden = v2.hidden
+			end
+		end
+	end
+	ShownData = temp
 	ShownData.uniqueKey = uniqueKey
 	DCS_ClassSpecDB[uniqueKey] = ShownData
-	DCS_Table_ShowAllStats()
+	--DCS_Table_ShowAllStats()
+	ShowCharacterStats("player")
 end
 
 
@@ -365,6 +419,8 @@ local function onCheckClick(self)
 			break
 		end
 	end
+	set_relevant_stat_state()
+	--ShowCharacterStats("player") --seems a waste to call whole function
 end
 
 for k, v in pairs(DCS_TableData.StatData) do
@@ -430,8 +486,6 @@ end)
 -- Relevant Stats Button --
 ------------------------
 
-local DCS_TableRelevantStatstooltipText
-
 local function DCS_TableRelevantStats_OnEnter(self)
 	GameTooltip:SetOwner(DCS_TableRelevantStats, "ANCHOR_RIGHT");
 	GameTooltip:SetText(DCS_TableRelevantStatstooltipText, 1, 1, 1, 1, true)
@@ -469,24 +523,24 @@ local DCS_TableRelevantStats = CreateFrame("Button", "DCS_TableRelevantStats", C
 	DCS_TableRelevantStats:SetScript("OnLeave", DCS_TableRelevantStats_OnLeave)
 
 	DCS_TableRelevantStats:SetScript("OnClick", function(self, button, up)
-		local checked = gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked
-		if checked == true then
+		if relevantStatsSetChecked then
 			--print(checked)
 			DCS_Table_Relevant()
 			--print("Show All Button")
-			DCS_TableRelevantStatstooltipText = L["Show all stats."] --Creates a tooltip on mouseover.
-			_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["All Stats"])
-			gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = false
-		return
-		end
-		if checked == false then
+			--DCS_TableRelevantStatstooltipText = L["Show all stats."] --Creates a tooltip on mouseover.
+			--_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["All Stats"])
+			--gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = false
+		--return
+		--end
+		else
+		--if checked == false then
 			--print(checked)
 			DCS_Table_ShowAllStats()
 			--print("Show Relevant Button")
-			DCS_TableRelevantStatstooltipText = L["Show only stats relevant to your class spec."] --Creates a tooltip on mouseover.
-			_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["Relevant Stats"])
-			gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = true
-		return
+			--DCS_TableRelevantStatstooltipText = L["Show only stats relevant to your class spec."] --Creates a tooltip on mouseover.
+			--_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["Relevant Stats"])
+			--gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = true
+		--return
 		end
 		DCS_TableRelevantStats_OnEnter()
 	end)
@@ -496,21 +550,7 @@ local DCS_TableRelevantStats = CreateFrame("Button", "DCS_TableRelevantStats", C
 		if event == "ADDON_LOADED" or event == "PLAYER_TALENT_UPDATE" then
 			if IsLoggedIn() then
 				DCS_Login_Initialization()
-				local checked = gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked
-				if checked == true then
-					--print(checked)
-					--print("Show Relevant Button")
-					DCS_TableRelevantStatstooltipText = L["Show only stats relevant to your class spec."] --Creates a tooltip on mouseover.
-					_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["Relevant Stats"])
-					return
-				end
-				if checked == false then
-					--print(checked)
-					--print("Show All Button")
-					DCS_TableRelevantStatstooltipText = L["Show all stats."] --Creates a tooltip on mouseover.
-					_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["All Stats"])
-					return
-				end
+				DCS_TableRelevantStats_init()
 			end
 		end
 	end)
@@ -537,15 +577,15 @@ local DCS_TableResetCheck = CreateFrame("Button", "DCS_TableResetButton", Charac
 	--DCS_TableResetCheck:SetWidth(LOCALE)
 	DCS_TableResetCheck:SetWidth(125)
 	DCS_TableResetCheck:SetHeight(30)
-	DCS_TableResetCheck.tooltipText = L["Reset and enable all stats."] --Creates a tooltip on mouseover.
-	_G[DCS_TableResetCheck:GetName() .. "Text"]:SetText(L["Reset Stats"])
+	DCS_TableResetCheck.tooltipText = L["Resets order of stats."] --Creates a tooltip on mouseover. --needs to be localised
+	_G[DCS_TableResetCheck:GetName() .. "Text"]:SetText(L["Reset Stats"]) -- somehow now the name seems wrong
 
 	DCS_TableResetCheck:SetScript("OnClick", function(self, button, down)
 		DCS_Table_Reset()
 		--print("Show Relevant Button")
-		DCS_TableRelevantStatstooltipText = L["Show only stats relevant to your class spec."] --Creates a tooltip on mouseover.
-		_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["Relevant Stats"])
-		gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = true
+		--DCS_TableRelevantStatstooltipText = L["Show only stats relevant to your class spec."] --Creates a tooltip on mouseover.
+		--_G[DCS_TableRelevantStats:GetName() .. "Text"]:SetText(L["Relevant Stats"])
+		--gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = true
 		--print("true")
 	end)
 
@@ -553,7 +593,21 @@ local DCS_TableResetCheck = CreateFrame("Button", "DCS_TableResetButton", Charac
 ------------------------
 -- Config Mode Toggle --
 ------------------------
+
 local DCS_ConfigtooltipText = L["Unlock DCS"]
+
+local function set_config_mode(state)
+	configMode = state
+	if state then --on
+		DCS_ConfigtooltipText = L["Lock DCS"]
+		DCS_TableResetCheck:Show()
+		DCS_TableRelevantStats:Show()
+	else --off
+		DCS_ConfigtooltipText = L["Unlock DCS"]
+		DCS_TableRelevantStats:Hide()
+		DCS_TableResetCheck:Hide()
+	end
+end
 
 local DCS_configButton = CreateFrame("Button", "DCS_configButton", PaperDollSidebarTab1)
 	DCS_configButton:SetSize(32, 32)
@@ -575,14 +629,22 @@ local function DCS_configButton_OnLeave(self)
 	DCS_configButton:SetScript("OnEnter", DCS_configButton_OnEnter)
 	DCS_configButton:SetScript("OnLeave", DCS_configButton_OnLeave)
 
+local function dcsRStatConfigButtonsHide()
+	DCS_TableRelevantStats:ClearAllPoints()
+	DCS_TableRelevantStats:SetParent(UIParent)
+	DCS_TableRelevantStats:SetPoint("BOTTOMRIGHT", UIParent, "TOPLEFT", -100, 100)
+
+	DCS_TableResetCheck:ClearAllPoints()
+	DCS_TableResetCheck:SetParent(UIParent)
+	DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", UIParent, "TOPLEFT", -100, 100)
+end
 local function configButtonOnClose()
 	StatScrollFrame:SetVerticalScroll(0)
-	configMode = false
-	DCS_TableResetCheck:Hide()
-	DCS_TableRelevantStats:Hide()
+	set_config_mode(false)
+	dcsRStatConfigButtonsHide()
+
 	DCS_configButton:SetNormalTexture("Interface\\Buttons\\LockButton-Locked-Up")
 	DCS_InterfaceOptConfigButton:SetNormalTexture("Interface\\Buttons\\LockButton-Locked-Up")
-	DCS_ConfigtooltipText = L["Unlock DCS"]
 	ShowCharacterStats("player")
 end
 
@@ -595,6 +657,10 @@ local function DCS_ClassCrestBGCheck()
 end
 	
 local function DCS_DefaultStatsAnchors()
+	--configMode = false --seems like those four lines are not needed. Leaving incase they ARE needed
+	--DCS_ConfigtooltipText = L["Unlock DCS"] 
+	--DCS_TableResetCheck:Hide()
+	--DCS_TableRelevantStats:Hide()
 	StatScrollFrame:ClearAllPoints()
 	StatScrollFrame:SetParent(CharacterFrameInsetRight)
 	StatScrollFrame:SetPoint("TOPLEFT", CharacterFrameInsetRight, "TOPLEFT", 5, -6)
@@ -605,14 +671,6 @@ local function DCS_DefaultStatsAnchors()
 	StatScrollFrame.ScrollBar:SetPoint("TOPLEFT", StatScrollFrame, "TOPRIGHT", -16, -16)
 	StatScrollFrame.ScrollBar:SetPoint("BOTTOMLEFT", StatScrollFrame, "BOTTOMRIGHT", -16, 16)
 	StatScrollFrame.ScrollBar:Hide()
-
-	DCS_TableRelevantStats:ClearAllPoints()
-	DCS_TableRelevantStats:SetParent(CharacterFrameInsetRight)
-	DCS_TableRelevantStats:SetPoint("BOTTOMRIGHT", -130,-36)
-
-	DCS_TableResetCheck:ClearAllPoints()
-	DCS_TableResetCheck:SetParent(CharacterFrameInsetRight)
-	DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", 5, -36)
 
 	CharacterStatsPane.ClassBackground:ClearAllPoints()
 	CharacterStatsPane.ClassBackground:SetParent(StatScrollFrame)
@@ -625,6 +683,8 @@ end
 
 local function DCS_InterfaceOptionsStatsAnchors()
 	if (DejaCharacterStatsPanel~=nil) then
+		set_config_mode(true)
+				
 		StatScrollFrame:ClearAllPoints()
 		StatScrollFrame:SetParent(DejaCharacterStatsPanel)
 		StatScrollFrame:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 380, -80)
@@ -677,15 +737,8 @@ CharacterFrameInsetRight:HookScript("OnHide", function(self)
 		StatScrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", UIParent, "TOPLEFT", -160, 160)
 		StatScrollFrame.ScrollBar:Hide()
 
-		DCS_TableRelevantStats:ClearAllPoints()
-		DCS_TableRelevantStats:SetParent(CharacterFrameInsetRight)
-		DCS_TableRelevantStats:SetPoint("BOTTOMRIGHT", -130,-36)
-		DCS_TableRelevantStats:Hide()
-
-		DCS_TableResetCheck:ClearAllPoints()
-		DCS_TableResetCheck:SetParent(CharacterFrameInsetRight)
-		DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", 5, -36)
-		DCS_TableResetCheck:Hide()
+		DCS_TableRelevantStats:Hide() 	--For some reason these two have to be hidden again even tho they are hidden with configButtonOnClose() below.
+		DCS_TableResetCheck:Hide()		--For some reason these two have to be hidden again even tho they are hidden with configButtonOnClose() below.
 
 		CharacterStatsPane.ClassBackground:ClearAllPoints()
 		CharacterStatsPane.ClassBackground:SetParent(UIParent)
@@ -700,9 +753,16 @@ end)
 		configMode = not configMode
 		if (configMode) then
 			self:SetNormalTexture("Interface\\Buttons\\LockButton-Unlocked-Up")
-			DCS_ConfigtooltipText = L["Lock DCS"] --Creates a tooltip on mouseover.
-			DCS_TableResetCheck:Show()
-			DCS_TableRelevantStats:Show()
+			
+			DCS_TableRelevantStats:ClearAllPoints()
+			DCS_TableRelevantStats:SetParent(CharacterFrameInsetRight)
+			DCS_TableRelevantStats:SetPoint("BOTTOMRIGHT", -130,-36)
+
+			DCS_TableResetCheck:ClearAllPoints()
+			DCS_TableResetCheck:SetParent(CharacterFrameInsetRight)
+			DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", 5, -36)
+			
+			set_config_mode(true)
 		else
 			configButtonOnClose()
 		end
@@ -742,14 +802,10 @@ local function DCS_InterfaceOptConfigButton_OnLeave(self)
 		configMode = not configMode
 		if (configMode) then
 			self:SetNormalTexture("Interface\\Buttons\\LockButton-Unlocked-Up")
-			DCS_ConfigtooltipText = L["Lock DCS"] --Creates a tooltip on mouseover.
-			DCS_TableResetCheck:Show()
-			DCS_TableRelevantStats:Show()
+			set_config_mode(true)
 		else
 			self:SetNormalTexture("Interface\\Buttons\\LockButton-Locked-Up")
-			DCS_ConfigtooltipText = L["Unlock DCS"] --Creates a tooltip on mouseover.
-			DCS_TableResetCheck:Hide()
-			DCS_TableRelevantStats:Hide()
+			set_config_mode(false)
 		end
 		ShowCharacterStats("player")
 		DCS_InterfaceOptConfigButton_OnEnter()

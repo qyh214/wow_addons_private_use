@@ -37,7 +37,7 @@ function module:OnInitialize(...)
 		self:Print("Delegating hall management to OrderHallCommander")
 		return
 	else
-		self:Popup(L["Support for Order Hall missions is being moved to OrderHallCommander.\nPlease install and update it"],7)
+		self:Print(L["Support for Order Hall missions is being moved to OrderHallCommander.\nPlease install and update it"],7)
 	end
 	GHF=ns.GHF
 	GHFMissions=ns.GHFMissions
@@ -213,7 +213,7 @@ print("Doing one time initialization for",this:GetName(),...)
 --@end-debug@]===]
 	addon:CheckMP()
 	self:SafeSecureHookScript("OrderHallMissionFrame","OnShow")
-	GCS=addon:CreateHeader(self,'HALLPIN')
+	GCS=addon:CreateHeader(self,'HALLMOVEPANEL','HALLPIN')
 	GHF.FollowerStatusInfo=GHF:CreateFontString(nil, "BORDER", "GameFontNormal")
 	GHF.FollowerStatusInfo:SetPoint("TOPRIGHT",-30,0)
 	GHF.FollowerStatusInfo:SetHeight(25)

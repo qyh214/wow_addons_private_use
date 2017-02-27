@@ -980,7 +980,7 @@ end
 
 function addon:EventGARRISON_MISSION_NPC_CLOSED(event,...)
 --[===[@debug@
-	print(event,...)
+	self:Print(event,...)
 --@end-debug@]===]
 	if (GCF) then
 		self:RemoveMenu()
@@ -996,9 +996,6 @@ function addon:EventGARRISON_MISSION_STARTED(event,missionType,missionID,...)
 --[===[@debug@
 	print(event,missionType,missionID,...)
 --@end-debug@]===]
-	if toc<70000 then
-		missionID=missionType
-	end
 	self:RefreshFollowerStatus()
 	if (not GMF:IsVisible()) then
 		-- Shipyard
@@ -1690,17 +1687,16 @@ print("Setup")
 	tabHP:Show()
 	tabHP:SetPoint('TOPLEFT',GCF,'TOPRIGHT',0,-10)
 	tabHP:SetScript("OnClick",function(this,button) addon:ShowHelpWindow(this,button) end)
-	if self.RunQuick then
-		local tabQ=CreateFrame("Button",nil,GMF,"SpellBookSkillLineTabTemplate")
-		GMF.tabQ=tabQ
-		tabQ.tooltip=L["Automatically process completed missions and schedules new ones."].."\n"..
-			format(L["Check %s in mission control in order to be also logged out"],L["Auto Logout"])
-		tabQ:SetNormalTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
-		tabQ:SetPushedTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
-		tabQ:Show()
-		tabQ:SetScript("OnClick",function(this,button) addon:RunQuick() end)
-		tabQ:SetPoint('TOPLEFT',GCF,'TOPRIGHT',0,-210)
-	end
+	local tabQ=CreateFrame("Button",nil,GMF,"SpellBookSkillLineTabTemplate")
+	GMF.tabQ=tabQ
+	tabQ.tooltip=L["Automatically process completed missions and schedules new ones."].."\n"..
+		format(L["Check %s in mission control in order to be also logged out"],L["Auto Logout"]) .. "\n" .. 
+		C(format(L["Keep pressed %s while opening table to automate processing"],CTRL_KEY),"green")
+	tabQ:SetNormalTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
+	tabQ:SetPushedTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
+	tabQ:Show()
+	tabQ:SetScript("OnClick",function(this,button) addon:RunQuick() end)
+	tabQ:SetPoint('TOPLEFT',GCF,'TOPRIGHT',0,-210)
 
 	local ref=GMFMissions.CompleteDialog.BorderFrame.ViewButton
 	local bt = CreateFrame('BUTTON','GarrisonCommanderQuickMissionComplete', ref, 'UIPanelButtonTemplate')
@@ -1710,6 +1706,7 @@ print("Setup")
 	bt.missionType=LE_FOLLOWER_TYPE_GARRISON_6_0
 	addon:ActivateButton(bt,"MissionComplete",L["Complete all missions without confirmation"])
 	self:SafeSecureHookScript("GarrisonMissionFrame","OnShow")
+	self:SafeSecureHookScript("GarrisonMissionFrame","OnHide","EventGARRISON_MISSION_NPC_CLOSED")
 	self:Trigger("MSORT")
 	local parties=self:GetParties()
 	if #parties==0 then
@@ -1881,6 +1878,9 @@ function addon:ScriptGarrisonMissionFrame_OnShow(...)
 	self:RefreshFollowerStatus()
 	self:Trigger("MSORT")
 	self:Trigger("CKMP")
+	if IsControlKeyDown() then
+		self:ScheduleTimer("RunQuick",0.1,true)
+	end	
 	return self:RefreshMissions()
 end
 function addon:RaiseCompleteDialog()

@@ -201,7 +201,24 @@ function Mod:UpdatePlayerDeaths()
 	UpdatePlayerDeaths(ScenarioChallengeModeBlock)
 end
 
+local keystoneWasCompleted = false
+function Mod:PLAYER_ENTERING_WORLD()
+	if keystoneWasCompleted and Addon.Config.resetPopup and IsInGroup() and UnitIsGroupLeader("player") then
+		StaticPopup_Show("CONFIRM_RESET_INSTANCES")
+	end
+	keystoneWasCompleted = false
+end
+
+function Mod:CHALLENGE_MODE_START()
+	keystoneWasCompleted = false
+end
+
+function Mod:CHALLENGE_MODE_RESET()
+	keystoneWasCompleted = false
+end
+
 function Mod:CHALLENGE_MODE_COMPLETED()
+	keystoneWasCompleted = true
 	if not Addon.Config.completionMessage then return end
 
 	local mapID, level, time, onTime, keystoneUpgradeLevels = C_ChallengeMode.GetCompletionInfo()
@@ -229,6 +246,9 @@ end
 
 function Mod:Startup()
 	self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+	self:RegisterEvent("CHALLENGE_MODE_START")
+	self:RegisterEvent("CHALLENGE_MODE_RESET")
+	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	Addon.Config:RegisterCallback('deathTracker', function()
 		self:UpdatePlayerDeaths()
 	end)

@@ -104,33 +104,17 @@ function module:CreateMissionList(workList)
 		local moreClasses=self:GetMissionData(missionID,"moreClasses")
 		local name=self:GetMissionData(missionID,"name")
 		repeat
-			--[===[@debug@
-			print("|cffff0000Examining|r",missionID,name,class,self:GetMissionData(missionID,class))
-			--@end-debug@]===]
 			local durationSeconds=self:GetMissionData(missionID,'durationSeconds')
 			if (durationSeconds > settings.maxDuration * 3600 or durationSeconds <  settings.minDuration * 3600) then
-				--[===[@debug@
-				print("  ",missionID,"discarded due to duration",durationSeconds /3600)
-				--@end-debug@]===]
 				break
 			end -- Mission too long, out of here
 			if self:GetMissionData(missionID,'isRare') and addon:GetBoolean('GCSKIPRARE') then
-				--[===[@debug@
-				print("  ",missionID,"discarded due to rarity")
-				--@end-debug@]===]
 				break
 			end
 			for _,testclass in ipairs(priority) do
 				if class==testclass or moreClasses[testclass] then
 					if self:AcceptMission(missionID,testclass,self:GetMissionData(missionID,testclass),name,choosenby) then
-				--[===[@debug@
-						print("  ",missionID,"accepted for",testclass)
-				--@end-debug@]===]
 						break
-				--[===[@debug@
-					else
-						print("  ",missionID,"refused for",testclass)
-				--@end-debug@]===]
 					end
 
 				end
@@ -139,18 +123,12 @@ function module:CreateMissionList(workList)
 	end
 	local parties=self:GetParty()
 	table.sort(choosenby)
-	--[===[@debug@
-	print("Final worklist")
-	--@end-debug@]===]
 	local used=self:NewTable()
 	for i=1,#choosenby do
 		local _1,_2,missionId,_=strsplit('@',choosenby[i])
 		if not used[missionId] then
 			tinsert(workList,tonumber(missionId))
 			used[missionId]=true
-			--[===[@debug@
-				print(missionId,_1,99999999-tonumber(_2))
-			--@end-debug@]===]
 		end
 	end
 	self:DelTable(used)
@@ -162,9 +140,6 @@ end
 -- @param #number missionID Optional, to run a single mission
 -- @param #boolean start Optional, tells that follower already are on mission and that we need just to start it
 function module:RunMission(missionID,start)
-	--[===[@debug@
-	print("Asked to start mission",missionID)
-	--@end-debug@]===]
 	local GMC=GMF.MissionControlTab
 	if (start) then
 		G.StartMission(missionID)
@@ -174,9 +149,6 @@ function module:RunMission(missionID,start)
 	end
 	for i=1,#GMC.list.Parties do
 		local party=GMC.list.Parties[i]
-		--[===[@debug@
-		print("Checking",party.missionID)
-		--@end-debug@]===]
 		if (missionID and party.missionID==missionID or not missionID) then
 			GMC.list.widget:RemoveChild(party.missionID)
 			GMC.list.widget:DoLayout()
@@ -302,10 +274,11 @@ function module:OnClick_Run(this,button)
 				if (not rc) then
 					self:Unhook(GMC.runButton,'OnUpdate')
 					GMC.logoutButton:Enable()
-					ns.quick=false
-					if addon:GetBoolean("AUTOLOGOUT") then
-						addon:ScheduleTimer(function() GMC.logoutButton:Click() end,0.5)
+					if not ns.quick and addon:GetBoolean("AUTOLOGOUT") then
+						addon:LogoutPopout(5)
 					end
+					addon:missionDone()
+					ns.quick=false
 				end
 			end
 		end
@@ -314,9 +287,6 @@ function module:OnClick_Run(this,button)
 end
 function module:OnClick_Start(this,button)
 	local GMC=GMF.MissionControlTab
-	--[===[@debug@
-	print(C("-------------------------------------------------","Yellow"))
-	--@end-debug@]===]
 	GMC.list.widget:ClearChildren()
 	if (self:GetTotFollowers(AVAILABLE) == 0) then
 		GMC.list.widget:SetTitle("All followers are busy")

@@ -1,30 +1,20 @@
-tag 74bab272e4f76b8eee1a5f402e505e616d312446 2.16.3
+tag f686b91278c1f7e88e70f0b92dda9f5c9765d637 2.17.0
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Tue Jan 31 19:53:58 2017 +0100
+Date:	Sat Feb 18 20:09:40 2017 +0100
 
-Bugfix release
+Feature: Fast mode: if you keep the CTRL key pressed while opening the
+mission table, GC automagically completes pending mission and schedule
+new ones
+Feature: Fast mode works for both Garrison and Shipyard mission
+Feature: On auto logout informs you if you have items to salvage
+Feature: No longer includes OrderHallCommander: be sure you added it to
+Curse Client or manually update it 
+Fix: Lua error when trying to close header in Order Hall if
+OrderHallCommander was not installed
 
-Fix: Lua error in shipyard.lua
-Feature: OrderHallCommander updated to 1.0.2
-
-commit c2f2e44a04eaacf9fbbae40d45a6038ac8ea421d
+commit c802b2d4704eabecb9a53530cc5a95dec81a4588
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Tue Jan 31 17:17:28 2017 +0100
+Date:   Sat Feb 18 00:38:26 2017 +0100
 
-    Feature: OrderHallCommander 1.0.2
-
-commit fe8fbc76c396b7522bab556f032dffd2fe02f198
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Tue Jan 31 17:16:28 2017 +0100
-
-    Fix: Lua error
-    
-    Message: ..\AddOns\GarrisonCommander\ShipYard.lua line 399:
-       attempt to index upvalue 'GCS' (a nil value)
-
-commit 36b901156936c1d671fcacd964d2bb9d83e9fbe1
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Mon Jan 30 23:05:20 2017 +0100
-
-    In quick mode skips final report
+    Fix in logout popup
 

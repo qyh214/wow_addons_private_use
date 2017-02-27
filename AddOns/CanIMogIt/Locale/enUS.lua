@@ -31,7 +31,7 @@ L["Please note that this may not always be correct as Blizzard's information is 
 L["Show Bag Icons"] = "Show Bag Icons"
 L["Show Source Location Tooltip"] = "Show Source Location Tooltip"
 L["Shows a more detailed text for some of the tooltips."] = "Shows a more detailed text for some of the tooltips."
-L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor, World Drop). This only works on items your current class can learn."] = "Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor, World Drop)."
+L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor, World Drop). This only works on items your current class can learn."] = "Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor, World Drop). This only works on items your current class can learn."
 L["Shows chat messages on login about the database scan."] = "Shows chat messages on login about the database scan."
 L["Shows messages on login about the database scan."] = "Shows messages on login about the database scan."
 L["Shows the icon directly on the item in your bag."] = "Shows the icon directly on the item in your bag."

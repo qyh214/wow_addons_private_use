@@ -523,7 +523,8 @@ end
 function CanIMogIt:ResetCache()
     -- Resets the cache, and calls things relying on the cache being reset.
     CanIMogIt.cache:Clear()
-    -- Fake a BAG_UPDATE event to updating the icons.
+    CanIMogIt:SendMessage("ResetCache")
+    -- Fake a BAG_UPDATE event to updating the icons. TODO: Replace this with message
     CanIMogIt.frame:ItemOverlayEvents("BAG_UPDATE")
 end
 
@@ -1103,6 +1104,23 @@ function CanIMogIt:GetTooltipText(itemLink, bag, slot)
 
     return text, unmodifiedText
 end
+
+
+function CanIMogIt:GetIconText(itemLink, bag, slot)
+    --[[
+        Gets the icon as text for this itemLink/bag+slot. Does not include the other text
+        that is also caluculated.
+    ]]
+    local text, unmodifiedText = CanIMogIt:GetTooltipText(itemLink, bag, slot)
+    local icon
+    if text ~= "" and text ~= nil then
+        icon = CanIMogIt.tooltipIcons[unmodifiedText]
+    else
+        icon = ""
+    end
+    return icon
+end
+
 
 -----------------------------
 -- Tooltip hooks           --

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1761, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15757 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15917 $"):sub(12, -3))
 mod:SetCreatureID(104528)--109042
 mod:SetEncounterID(1886)
 mod:SetZone()
@@ -17,7 +17,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 218424 218807 223437",
 	"SPELL_AURA_APPLIED 218809 218503 218304 218342 222021 222010 222020",
 	"SPELL_AURA_APPLIED_DOSE 218503",
-	"SPELL_AURA_REMOVED 218809 218304",
+	"SPELL_AURA_REMOVED 218809 218304 218342",
 --	"SPELL_DAMAGE",
 --	"SPELL_MISSED",
 --	"UNIT_DIED",
@@ -113,6 +113,8 @@ mod:AddRangeFrameOption(8, 218807)
 mod:AddSetIconOption("SetIconOnFetter", 218304, true)
 mod:AddSetIconOption("SetIconOnCoN", 218807, true)
 mod:AddHudMapOption("HudMapOnCoN", 218807)
+mod:AddNamePlateOption("NPAuraOnFixate", 218342)
+mod:AddNamePlateOption("NPAuraOnCoN", 218809)
 
 mod.vb.CoNIcon = 1
 mod.vb.phase = 1
@@ -144,7 +146,7 @@ function mod:OnCombatStart(delay)
 	self.vb.phase = 1
 	if self:IsMythic() then
 		self:SetCreatureID(109038, 109040, 109041)		
-		self.vb.globalTimer = 64--Needs updating
+		self.vb.globalTimer = 64
 		timerSolarCollapseCD:Start(5-delay)
 		timerParasiticFetterCD:Start(16-delay)--16-18
 		countdownParasiticFetter:Start(16-delay)
@@ -156,7 +158,6 @@ function mod:OnCombatStart(delay)
 		timerGraceOfNatureCD:Start(65-delay)
 		countdownGraceOfNature:Start(65-delay)
 		berserkTimer:Start(540-delay)
-		DBM:AddMsg("Most mythic timers same as beta, so for most part mythic timers look good, but some more updates needed and will be coming soon")
 	else
 		if self:IsHeroic() then
 			self.vb.globalTimer = 35
@@ -170,6 +171,9 @@ function mod:OnCombatStart(delay)
 		timerControlledChaosCD:Start(-delay)
 		countdownControlledChaos:Start()
 	end
+	if self.Options.NPAuraOnFixate or self.Options.NPAuraOnCoN then
+		DBM:FireEvent("BossMod_EnableFriendlyNameplates")
+	end
 end
 
 function mod:OnCombatEnd()
@@ -178,6 +182,9 @@ function mod:OnCombatEnd()
 	end
 	if self.Options.HudMapOnCoN then
 		DBMHudMap:Disable()
+	end
+	if self.Options.NPAuraOnFixate or self.Options.NPAuraOnCoN then
+		DBM.Nameplate:Hide(false, nil, nil, nil, true)
 	end
 end
 
@@ -323,6 +330,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnCoN then
 			self:SetIcon(args.destName, number)
 		end
+		if self.Options.NPAuraOnCoN then
+			DBM.Nameplate:Show(false, args.destName, spellId, nil, 45)
+		end
 	elseif spellId == 218503 then
 		local amount = args.amount or 1
 		if amount >= 5 then
@@ -354,6 +364,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnParasiticFixate:Show()
 			voiceParasiticFixate:Play("targetyou")
+		end
+		if self.Options.NPAuraOnFixate then
+			DBM.Nameplate:Show(false, args.destName, spellId)
 		end
 --	elseif spellId == 219009 then
 --		local targetName = args.destName
@@ -482,6 +495,9 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.SetIconOnCoN then
 			self:SetIcon(args.destName, 0)
 		end
+		if self.Options.NPAuraOnCoN then
+			DBM.Nameplate:Hide(false, args.destName, spellId)
+		end
 	elseif spellId == 218304 then
 		if self:AntiSpam(5, 2) and not UnitDebuff("player", args.spellName) then
 			specWarnLasher:Show()
@@ -489,6 +505,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		if self.Options.SetIconOnFetter and not self:IsLFR() then
 			self:SetIcon(args.destName, 0)
+		end
+	elseif spellId == 218342 then
+		if self.Options.NPAuraOnFixate then
+			DBM.Nameplate:Hide(false, args.destName, spellId)
 		end
 	end
 end
@@ -592,7 +612,7 @@ end
 
 function mod:UNIT_HEALTH(uId)
 	local cid = self:GetUnitCreatureId(uId)
-	if cid == 109804 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.15 then
+	if cid == 109804 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.25 then
 		local guid = UnitGUID(uId)
 		if not sentLowHP[guid] then
 			sentLowHP[guid] = true

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("CoSTrash", "DBM-Party-Legion", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15660 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15845 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -188,6 +188,7 @@ do
 		return lines
 	end
 	
+	--/run DBM:GetModByName("CoSTrash"):ResetGossipState()
 	function mod:ResetGossipState()
 		table.wipe(hints)
 		DBM.InfoFrame:Hide()

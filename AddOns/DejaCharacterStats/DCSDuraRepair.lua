@@ -106,16 +106,16 @@ function DCS_Mean_DurabilityCalc()
 		-- --------------------------
 		if durCur == nil then durCur = 0 end
 		if durMax == nil then durMax = 0 end
-		if duraTotal == nil then duraTotal = 0 end
-		if duraMaxTotal == nil then duraMaxTotal = 0 end
-		if addon.duraMean == nil then addon.duraMean = 0 end
+		--if duraTotal == nil then duraTotal = 0 end -- does it ever happen?
+		--if duraMaxTotal == nil then duraMaxTotal = 0 end -- does it ever happen?
+		--if addon.duraMean == nil then addon.duraMean = 0 end -- does it ever happen?
 		
 		duraTotal = duraTotal + durCur
-		if duraTotal == 0 then duraTotal = 1 	end
+		--if duraTotal == 0 then duraTotal = 1 	end
 		duraMaxTotal = duraMaxTotal + durMax
-		if duraMaxTotal == 0 then duraMaxTotal = 1 	end
-		addon.duraMean = ((duraTotal/duraMaxTotal)*100)
 	end
+	if duraMaxTotal == 0 then duraMaxTotal = 1 	 end --puting outside of for loop
+	addon.duraMean = ((duraTotal/duraMaxTotal)*100)
 end		
 
 -----------------------------------
@@ -172,8 +172,9 @@ local function DCS_Mean_Durability()
 			duraMeanTexture:SetAllPoints(CharacterShirtSlot)
 			duraMeanTexture:SetColorTexture(1, 0, 0, 0.15)
 		end
-		DCS_Durability_Frame_Mean_Display()
+		--DCS_Durability_Frame_Mean_Display() -- moving outside for loop
 	end
+	DCS_Durability_Frame_Mean_Display()
 end
 
 -------------------------
@@ -206,13 +207,14 @@ local function DCS_Item_DurabilityTop()
 				v.duratexture:SetColorTexture(1, 0, 0)
 				v.durability:SetTextColor(1, 0, 0)
 			elseif duraFinite <= 10 then
-				v.duratexture:SetAllPoints(v)
+				--v.duratexture:SetAllPoints(v) -Removed so green boxes do not appear when durability is at zero.
 				v.duratexture:SetColorTexture(1, 0, 0, 0.10)
 				v.durability:SetTextColor(1, 0, 0)
 			end
 		end
-		DCS_Mean_DurabilityCalc()
+		--DCS_Mean_DurabilityCalc() -- moving outside for loop
 	end
+	DCS_Mean_DurabilityCalc()
 end
 
 gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowDuraChecked = {
@@ -424,20 +426,18 @@ end
 -----------------------
 -- Total Repair Cost --
 -----------------------
-local repairitemCostTotal
+--local repairitemCostTotal -- making it to look like a normal function
 local function DCS_Item_RepairTotal()
+	local repairitemCostTotal = 0
 	for k, v in ipairs(DCSITEM_SLOT_FRAMES) do
 		local slotId = v:GetID()
 		local scanTool = CreateFrame("GameTooltip")
 			scanTool:ClearLines()
 		local repairnewitemCost = select(3, scanTool:SetInventoryItem("player", slotId))
-		if repairitemCostTotal == nil then
-			repairitemCostTotal = 0
-		end
-		local repairTotal = repairitemCostTotal + repairnewitemCost
-		repairitemCostTotal = repairTotal
+		repairitemCostTotal = repairitemCostTotal + repairnewitemCost
 		--print(repairitemCostTotal)
 	end
+	return repairitemCostTotal
 end
 
 -------------------------
@@ -448,7 +448,7 @@ function PaperDollFrame_SetRepairTotal(statFrame, unit)
 		statFrame:Hide();
 		return;
 	end
-	DCS_Item_RepairTotal()
+	local repairitemCostTotal = DCS_Item_RepairTotal()
 	local gold = floor(abs(repairitemCostTotal / 10000))
 	local silver = floor(abs(mod(repairitemCostTotal / 100, 100)))
 	local copper = floor(abs(mod(repairitemCostTotal, 100)))
@@ -464,7 +464,7 @@ function PaperDollFrame_SetRepairTotal(statFrame, unit)
 	statFrame.tooltip2 = (L["Total equipped item repair cost before discounts."]);
 
 	statFrame:Show();
-	repairitemCostTotal = 0
+	--repairitemCostTotal = 0 -- now that there's a fucntion there's no need to reset it
 end
 
 

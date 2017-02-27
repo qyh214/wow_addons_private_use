@@ -70,7 +70,8 @@ local function SetHooks()
 	
 	hooksecurefunc("QuestObjectiveTracker_OnOpenDropDown", function(self)
 		if db.filterAuto[1] then
-			MSA_DropDownMenu_DisableButton(1, 3)
+			local listFrame = _G["MSA_DropDownList1"]
+			MSA_DropDownMenu_DisableButton(1, listFrame.numButtons == 5 and 4 or 3)
 		end
 	end)
 	

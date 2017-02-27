@@ -501,32 +501,32 @@ end
 
 local function showGuildRightClick(player, isMobile)
 	local frame = getRightClickFrame()
-	frame.initialize = function() UnitPopup_ShowMenu(_G.LIB_UIDROPDOWNMENU_OPEN_MENU, "GUILD", nil, player) end
+	frame.initialize = function() UnitPopup_ShowMenu(_G.UIDROPDOWNMENU_OPEN_MENU, "GUILD", nil, player) end
 	frame.displayMode = "MENU";
 	frame.friendsList = false
 	frame.bnetIDAccount = nil
 	frame.isMobile = isMobile
-	Lib_ToggleDropDownMenu(1, nil, frame, "cursor")
+	ToggleDropDownMenu(1, nil, frame, "cursor")
 end
 
 local function showFriendRightClick(player)
 	local frame = getRightClickFrame()
-	frame.initialize = function() UnitPopup_ShowMenu(_G.LIB_UIDROPDOWNMENU_OPEN_MENU, "FRIEND", nil, player) end
+	frame.initialize = function() UnitPopup_ShowMenu(_G.UIDROPDOWNMENU_OPEN_MENU, "FRIEND", nil, player) end
 	frame.displayMode = "MENU"
 	frame.friendsList = true
 	frame.bnetIDAccount = nil
 	frame.isMobile = nil
-	Lib_ToggleDropDownMenu(1, nil, frame, "cursor")
+	ToggleDropDownMenu(1, nil, frame, "cursor")
 end
 
 local function showRealIDRightClick(accountName, bnetIDAccount)
 	local frame = getRightClickFrame()
-	frame.initialize = function() UnitPopup_ShowMenu(_G.LIB_UIDROPDOWNMENU_OPEN_MENU, "BN_FRIEND", nil, accountName) end
+	frame.initialize = function() UnitPopup_ShowMenu(_G.UIDROPDOWNMENU_OPEN_MENU, "BN_FRIEND", nil, accountName) end
 	frame.displayMode = "MENU"
 	frame.friendsList = true
 	frame.bnetIDAccount = bnetIDAccount
 	frame.isMobile = nil
-	Lib_ToggleDropDownMenu(1, nil, frame, "cursor")
+	ToggleDropDownMenu(1, nil, frame, "cursor")
 end
 
 local function clickPlayer(frame, info, button)

@@ -22,6 +22,13 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(2,17,0,[[
+Feature: Fast mode: if you keep the CTRL key pressed while opening the mission table, GC automagically completes pending mission and schedule new ones
+Feature: Fast mode works for both Garrison and Shipyard mission
+Feature: On auto logout informs you if you have items to salvage
+Feature: No longer includes OrderHallCommander: be sure you added it to Curse Client or manually update it 
+Fix: Lua error when trying to close header in Order Hall if OrderHallCommander was not installed 
+]])
 self:RelNotes(2,16,1,[[
 Fix: Mission control was reusing followers
 Feature: Option to always fill Oil Rig mission when available

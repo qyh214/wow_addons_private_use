@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1017 $")
+end, "$Revision: 1022 $")
 
 -- Upvalues
 local _G = _G
@@ -871,7 +871,10 @@ function XPerl_Target_UpdateHealth(self)
 		end
 	end]]
 
-	XPerl_SetHealthBar(self, hp, hpMax)
+	if hp and hp >= 0 and hpMax and hpMax > 0 then
+		XPerl_SetHealthBar(self, hp, hpMax)
+	end
+
 	XPerl_Target_UpdateAbsorbPrediction(self)
 	XPerl_Target_UpdateHealPrediction(self)
 
@@ -921,9 +924,7 @@ function XPerl_Target_UpdateHealth(self)
 	end
 
 	if (color) then
-		if hpMax == 0 then -- For some dumb reason max HP is 0, this should never happen, but it does, prevent any division by 0.
-			XPerl_ColourHealthBar(self, 0)
-		else
+		if hp and hp >= 0 and hpMax and hpMax > 0 then
 			XPerl_ColourHealthBar(self, hp / hpMax)
 		end	
 

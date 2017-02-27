@@ -1,6 +1,10 @@
+**r1022**
+* Force disabling Raid in Party options. (Anyone who would like to use this feature reenable it again.)
+* Fixed an issue with target and target's target frames.
+
 **r1021**
 * Raid in Party is disabled by default.
-* Force disabling Raid in Party options. (Anyone who would like to use this feauture reenable it again.)
+* Force disabling Raid in Party options. (Anyone who would like to use this feature reenable it again.)
 * Some GUI fixes.
 
 **r1020**
