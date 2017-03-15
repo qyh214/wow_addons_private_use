@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1725, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15924 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15988 $"):sub(12, -3))
 mod:SetCreatureID(104415)--104731 (Depleted Time Particle). 104676 (Waning Time Particle). 104491 (Accelerated Time particle). 104492 (Slow Time Particle)
 mod:SetEncounterID(1865)
 mod:SetZone()
@@ -14,7 +14,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 211927 207228",
 	"SPELL_CAST_SUCCESS 219815",
-	"SPELL_AURA_APPLIED 206617 206609 207052 207051 206607",
+	"SPELL_AURA_APPLIED 206617 206609 207052 207051 206607 212099",
 	"SPELL_AURA_APPLIED_DOSE 206607 219823",
 	"SPELL_AURA_REMOVED 206617 206609 207052 207051",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5",
@@ -33,6 +33,7 @@ local warnTimeBomb					= mod:NewTargetAnnounce(206617, 3)
 local warnTimeRelease				= mod:NewTargetAnnounce(206610, 3, nil, false)--Too many targets
 local warnChronometricPart			= mod:NewStackAnnounce(206607, 3, nil, "Tank")
 local warnPowerOverwhelmingStack	= mod:NewStackAnnounce(219823, 2)
+local warnTemporalCharge			= mod:NewTargetAnnounce(212099, 1)
 
 local specWarnTemporalOrbs			= mod:NewSpecialWarningDodge(219815, nil, nil, nil, 2, 2)
 local specWarnPowerOverwhelming		= mod:NewSpecialWarningSpell(211927, nil, nil, 2, 2, 2)
@@ -75,7 +76,7 @@ mod.vb.interruptCount = 0
 mod.vb.timeBombDebuffCount = 0
 local timeBombDebuff = GetSpellInfo(206617)
 local function updateTimeBomb(self)
-	local _, _, _, _, _, _, expires, _, _, _, _, _, _, _, _, timeMod = UnitDebuff("player", timeBombDebuff)
+	local _, _, _, _, _, _, expires = UnitDebuff("player", timeBombDebuff)
 	if expires then
 		specWarnTimeBomb:Cancel()
 		voiceTimeBomb:Cancel()
@@ -117,7 +118,7 @@ function mod:OnCombatEnd()
 		DBM.InfoFrame:Hide()
 	end
 	if self.Options.NPAuraOnTimeBomb then
-		DBM.Nameplate:Hide(false, nil, nil, nil, true)
+		DBM.Nameplate:Hide(false, nil, nil, nil, true, true)
 	end
 end
 
@@ -171,6 +172,8 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 219823 then
 		local amount = args.amount or 1
 		warnPowerOverwhelmingStack:Show(args.destName, amount)
+	elseif spellId == 212099 then
+		warnTemporalCharge:Show(args.destName)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -246,7 +249,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				timerTemporalOrbsCD:Start(48, 1)
 				timerPowerOverwhelmingCD:Start(84, 1)
 			else--LFR
-				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+				
 			end
 		elseif self.vb.normCount == 2 then
 			if self:IsMythic() then--Updated Jan 25
@@ -260,7 +263,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			elseif self:IsNormal() then
 				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
 			else--LFR
-				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+				
 			end
 		elseif self.vb.normCount == 3 then
 			if self:IsMythic() then--Updated Jan 25
@@ -272,7 +275,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			elseif self:IsNormal() then--Normal confirmed
 				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
 			else--LFR
-				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+				
 			end
 		elseif self.vb.normCount == 4 then
 			if self:IsMythic() then--Updated Jan 25
@@ -283,7 +286,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			elseif self:IsNormal() then--Normal confirmed
 				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
 			else--LFR
-				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+				
 			end
 		else
 			DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
@@ -325,7 +328,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				countdownBigAdd:Start(38)
 				timerPowerOverwhelmingCD:Start(90, 1)
 			else--LFR
-				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+				
 			end
 		elseif self.vb.slowCount == 2 then
 			if self:IsMythic() then--Updated Jan 25
@@ -340,7 +343,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			elseif self:IsNormal() then--Normal confirmed
 				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
 			else--LFR
-				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+				
 			end
 		elseif self.vb.slowCount == 3 then
 			if self:IsMythic() then
@@ -352,7 +355,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			elseif self:IsNormal() then--Normal confirmed
 				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
 			else--LFR
-				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+				
 			end
 		elseif self.vb.slowCount == 4 then
 			if self:IsMythic() then--Updated Jan 25
@@ -366,7 +369,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			elseif self:IsNormal() then--Normal confirmed
 				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
 			else--LFR
-				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+				
 			end
 		else--Slow 5
 			if self:IsMythic() then--Updated Jan 25
@@ -378,7 +381,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			elseif self:IsNormal() then--Normal confirmed
 				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
 			else--LFR
-				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+				
 			end
 		end
 		updateTimeBomb(self)
@@ -403,7 +406,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				timerTemporalOrbsCD:Start(15, 1)
 				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
 			else--LFR
-				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+				
 			end
 		elseif self.vb.fastCount == 2 then
 			if self:IsMythic() then--Updated Feb 15
@@ -420,7 +423,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			elseif self:IsNormal() then--Normal confirmed
 				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
 			else--LFR
-				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+				
 			end
 		elseif self.vb.fastCount == 3 then
 			if self:IsMythic() then--Updated Feb 15
@@ -437,7 +440,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			elseif self:IsNormal() then--Normal confirmed
 				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
 			else--LFR
-				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+				
 			end
 		elseif self.vb.fastCount == 4 then
 			if self:IsMythic() then--Updated Jan 25
@@ -451,7 +454,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
 			end
 		else--LFR
-			DBM:AddMsg("There is no timer data going this far into the fight. Please submit transcriptor log to improve this mod")
+			
 		end
 		updateTimeBomb(self)
 		self:Schedule(2, updateTimeBomb, self)

@@ -3,7 +3,10 @@
 -- @name Colorize
 -- @class module
 -- @author Alar of Daggerspine
--- @release 2
+-- @release 5
+
+---
+-- @type C
 -- @usage
 -- local C=LibStub("LibInit"):GetColorTable()
 -- C.Azure.c --returns a string "rrggbb"
@@ -38,6 +41,7 @@ local UIERRORS_HOLD_TIME=UIERRORS_HOLD_TIME or 1
 local UIErrorsFrame=UIErrorsFrame
 local ChatTypeInfo=ChatTypeInfo
 local GetItemQualityColor=GetItemQualityColor
+
 lib.colors={
 azure                   ="0c92dc"
 ,aqua					="00ffff"

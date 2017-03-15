@@ -23,6 +23,7 @@ MAX_SEARCHBOX_HISTORY_LINES = 5
 -- App
 APP_WHISPER_DOT = '@'
 COMMIT_INTERVAL = 10
+APP_DOWNLOAD_URL = 'http://sh.hosapp.blz.netease.com/qrcode/download/wow'
 
 ACTIVITY_BG_COUNT = 3
 MAX_LOTTERY_COUNT = 8
@@ -313,7 +314,6 @@ RAID_PROGRESSION_LIST = {
         { id = 10929, name = '梦魇之龙' },
         { id = 10933, name = '塞纳留斯' },
         { id = 10937, name = '萨维斯' },
-        -- { id = 10941, name = '斯考匹隆' },
     },  -- 翡翠梦魇（普通）
     [414] = {
         { id = 10913, name = '尼珊德拉' },
@@ -323,26 +323,27 @@ RAID_PROGRESSION_LIST = {
         { id = 10930, name = '梦魇之龙' },
         { id = 10934, name = '塞纳留斯' },
         { id = 10938, name = '萨维斯' },
-        -- { id = 10942, name = '斯考匹隆' },
     },  -- 翡翠梦魇（英雄）
     [415] = {
+        { id = 10941, name = '斯考匹隆' },
         { id = 10945, name = '时空畸体' },
         { id = 10949, name = '崔利艾克斯' },
         { id = 10953, name = '魔剑士奥鲁瑞尔' },
         { id = 10957, name = '占星师艾塔乌斯' },
         { id = 10962, name = '高级植物学家特尔安' },
-        { id = 10966, name = '克迪奥斯' },
+        { id = 10966, name = '提克迪奥斯' },
         { id = 10970, name = '克洛苏斯' },
         { id = 10974, name = '大魔导师艾利桑德' },
         { id = 10978, name = '古尔丹' },
     },  -- 暗夜要塞（普通）
     [416] = {
+        { id = 10942, name = '斯考匹隆' },
         { id = 10946, name = '时空畸体' },
         { id = 10950, name = '崔利艾克斯' },
         { id = 10954, name = '魔剑士奥鲁瑞尔' },
         { id = 10959, name = '占星师艾塔乌斯' },
         { id = 10963, name = '高级植物学家特尔安' },
-        { id = 10967, name = '克迪奥斯' },
+        { id = 10967, name = '提克迪奥斯' },
         { id = 10971, name = '克洛苏斯' },
         { id = 10975, name = '大魔导师艾利桑德' },
         { id = 10979, name = '古尔丹' },

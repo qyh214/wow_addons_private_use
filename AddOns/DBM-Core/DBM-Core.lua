@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 15924 $"):sub(12, -3)),
-	DisplayVersion = "7.1.15", -- the string that is shown as version
-	ReleaseRevision = 15924 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 15993 $"):sub(12, -3)),
+	DisplayVersion = "7.1.17", -- the string that is shown as version
+	ReleaseRevision = 15993 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -181,7 +181,7 @@ DBM.DefaultOptions = {
 	SpecialWarningX = 0,
 	SpecialWarningY = 75,
 	SpecialWarningFont = standardFont,
-	SpecialWarningFontSize2 = 40,
+	SpecialWarningFontSize2 = 35,
 	SpecialWarningFontStyle = "THICKOUTLINE",
 	SpecialWarningFontShadow = false,
 	SpecialWarningIcon = true,
@@ -403,8 +403,7 @@ local updateNotificationDisplayed = 0
 local showConstantReminder = 0
 local tooltipsHidden = false
 local SWFilterDisabed = 3
-local currentSpecGroup = GetSpecialization() or 1
-local currentSpecID, currentSpecName
+local currentSpecID, currentSpecName, currentSpecGroup
 local cSyncSender = {}
 local cSyncReceived = 0
 local eeSyncSender = {}
@@ -422,7 +421,7 @@ local UpdateChestTimer
 local breakTimerStart
 local AddMsg
 
-local fakeBWVersion, fakeBWHash = 45, "2fb6605"
+local fakeBWVersion, fakeBWHash = 47, "12100f9"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -2993,6 +2992,9 @@ function DBM:LoadModOptions(modId, inCombat, first)
 	local savedVarsName = modId:gsub("-", "").."_AllSavedVars"
 	local savedStatsName = modId:gsub("-", "").."_SavedStats"
 	local fullname = playerName.."-"..playerRealm
+	if not currentSpecID or not currentSpecGroup then
+		self:SetCurrentSpecInfo()
+	end
 	local profileNum = playerLevel > 9 and DBM_UseDualProfile and currentSpecGroup or 0
 	if not _G[savedVarsName] then _G[savedVarsName] = {} end
 	local savedOptions = _G[savedVarsName][fullname] or {}
@@ -3126,7 +3128,7 @@ function DBM:LoadAllModDefaultOption(modId)
 	-- modId is string like "DBM-Highmaul"
 	if not modId or not self.ModLists[modId] then return end
 	-- prevent error
-	if not currentSpecID then
+	if not currentSpecID or not currentSpecGroup then
 		self:SetCurrentSpecInfo()
 	end
 	-- variable init
@@ -3165,7 +3167,7 @@ function DBM:LoadModDefaultOption(mod)
 	-- mod must be table
 	if not mod then return end
 	-- prevent error
-	if not currentSpecID then
+	if not currentSpecID or not currentSpecGroup then
 		self:SetCurrentSpecInfo()
 	end
 	-- variable init
@@ -3201,7 +3203,7 @@ function DBM:CopyAllModOption(modId, sourceName, sourceProfile)
 	-- modId is string like "DBM-Highmaul"
 	if not modId or not sourceName or not sourceProfile or not DBM.ModLists[modId] then return end
 	-- prevent error
-	if not currentSpecID then
+	if not currentSpecID or not currentSpecGroup then
 		self:SetCurrentSpecInfo()
 	end
 	-- variable init
@@ -3261,7 +3263,7 @@ function DBM:CopyAllModTypeOption(modId, sourceName, sourceProfile, Type)
 	-- modId is string like "DBM-Highmaul"
 	if not modId or not sourceName or not sourceProfile or not self.ModLists[modId] or not Type then return end
 	-- prevent error
-	if not currentSpecID then
+	if not currentSpecID or not currentSpecGroup then
 		self:SetCurrentSpecInfo()
 	end
 	-- variable init
@@ -3318,7 +3320,7 @@ function DBM:DeleteAllModOption(modId, name, profile)
 	-- modId is string like "DBM-Highmaul"
 	if not modId or not name or not profile or not self.ModLists[modId] then return end
 	-- prevent error
-	if not currentSpecID then
+	if not currentSpecID or not currentSpecGroup then
 		self:SetCurrentSpecInfo()
 	end
 	-- variable init
@@ -3946,7 +3948,7 @@ do
 	end
 
 	syncHandlers["K"] = function(sender, cId)
-		if select(2, IsInInstance()) == "pvp" then return end
+		if select(2, IsInInstance()) == "pvp" or select(2, IsInInstance()) == "none" then return end
 		cId = tonumber(cId or "")
 		if cId then DBM:OnMobKill(cId, true) end
 	end
@@ -6761,7 +6763,7 @@ function DBM:AntiSpam(time, id)
 end
 
 function DBM:GetTOC()
-	return wowTOC
+	return wowTOC, testBuild
 end
 
 function DBM:FlashClientIcon()
@@ -6789,6 +6791,7 @@ function DBM:FindInstanceIDs()
 	end
 end
 
+--/run DBM:FindEncounterIDs(822)--Broken Isles
 --/run DBM:FindEncounterIDs(875)--Tomb of Sargeras
 --/run DBM:FindEncounterIDs(900, 23)--Cathedral of Eternal Night
 function DBM:FindEncounterIDs(instanceID, diff)

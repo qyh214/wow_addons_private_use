@@ -94,8 +94,17 @@ end
 function Addon:SetItemRef(link, text, button, chatFrame)
     local type, panel = strsplit(':', link)
     if type == 'meetingstonepanel' then
-        Addon:ToggleModule('MainPanel')
-        MainPanel:SelectPanel(Addon:GetModule(panel))
+        panel = self:GetModule(panel, true)
+        if panel and MainPanel:GetPanelIndex(panel) then
+            Addon:ToggleModule('MainPanel')
+            MainPanel:SelectPanel(panel)
+        end
+        return
+    elseif type == 'meetingstonedialog' then
+        panel = _ENV[panel]
+        if panel then
+            ToggleFrame(panel)
+        end
         return
     end
     return self.hooks.SetItemRef(link, text, button, chatFrame)

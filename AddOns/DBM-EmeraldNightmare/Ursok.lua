@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1667, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15881 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15941 $"):sub(12, -3))
 mod:SetCreatureID(100497)
 mod:SetEncounterID(1841)
 mod:SetZone()
@@ -153,7 +153,7 @@ function mod:OnCombatEnd()
 		DBM.InfoFrame:Hide()
 	end
 	if self.Options.NPAuraOnCharge then
-		DBM.Nameplate:Hide(false, nil, nil, nil, true)
+		DBM.Nameplate:Hide(false, nil, nil, nil, true, true)
 	end
 end
 

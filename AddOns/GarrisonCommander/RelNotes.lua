@@ -22,6 +22,11 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(2,18,0,[[
+Feature: Improved autologout management. Now you are logged out on timeout ONLY if you started mission control via ctrl-click on table.
+Popup message should be informative
+Feature: Added help button to Shipyard and revamped help to show release notes and addon description
+]])
 self:RelNotes(2,17,0,[[
 Feature: Fast mode: if you keep the CTRL key pressed while opening the mission table, GC automagically completes pending mission and schedule new ones
 Feature: Fast mode works for both Garrison and Shipyard mission

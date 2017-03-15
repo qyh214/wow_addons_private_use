@@ -5,10 +5,6 @@ local L
 ---------------
 L= DBM:GetModLocalization(1706)
 
-L:SetMiscLocalization({
-	NoDebuff	= "No %s"
-})
-
 ---------------------------
 -- Chronomatic Anomaly --
 ---------------------------
@@ -103,13 +99,19 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	noCLEU4EchoRings		= "Let the waves of time crash over you!",
-	noCLEU4EchoOrbs			= "You'll find time can be quite volatile."
+	noCLEU4EchoOrbs			= "You'll find time can be quite volatile.",
+	prePullRP				= "I foresaw your coming, of course. The threads of fate that led you to this place. Your desperate attempt to stop the Legion."
 })
 
 ------------------
 -- Gul'dan --
 ------------------
 L= DBM:GetModLocalization(1737)
+
+L:SetMiscLocalization({
+	mythicPhase3		= "Time to return the demon hunter's soul to his body... and deny the Legion's master a host!",
+	prePullRP			= "Ah yes, the heroes have arrived. So persistent. So confident. But your arrogance will be your undoing!"
+})
 
 -------------
 --  Trash  --
@@ -119,8 +121,3 @@ L = DBM:GetModLocalization("NightholdTrash")
 L:SetGeneralLocalization({
 	name =	"Nighthold Trash"
 })
-
-L:SetMiscLocalization({
-	mythicPhase3		= "Time to return the demon hunter's soul to his body... and deny the Legion's master a host!"
-})
-

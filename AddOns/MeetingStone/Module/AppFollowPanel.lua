@@ -25,13 +25,11 @@ function AppFollowPanel:OnInitialize()
 
         local LeftName = BgFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge') do
             LeftName:SetFont(LeftName:GetFont(), 19)
-            LeftName:SetPoint('TOP', LeftBg, 'TOPLEFT', LeftBg:GetWidth()/4, -30)
             LeftName:SetText(L['角色名'])
         end
 
         local LeftRealm = BgFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge') do
             LeftRealm:SetFont(LeftRealm:GetFont(), 19)
-            LeftRealm:SetPoint('TOP', LeftBg, 'TOPRIGHT', -LeftBg:GetWidth()/4, -30)
             LeftRealm:SetText(L['服务器'])
         end
 
@@ -44,15 +42,20 @@ function AppFollowPanel:OnInitialize()
 
         local RightName = BgFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge') do
             RightName:SetFont(RightName:GetFont(), 19)
-            RightName:SetPoint('TOP', RightBg, 'TOPLEFT', RightBg:GetWidth()/4, -30)
             RightName:SetText(L['角色名'])
         end
 
         local RightRealm = BgFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge') do
             RightRealm:SetFont(RightRealm:GetFont(), 19)
-            RightRealm:SetPoint('TOP', RightBg, 'TOPRIGHT', -RightBg:GetWidth()/4, -30)
             RightRealm:SetText(L['服务器'])
         end
+
+        BgFrame.LeftBg     = LeftBg
+        BgFrame.LeftName   = LeftName
+        BgFrame.LeftRealm  = LeftRealm
+        BgFrame.RightBg    = RightBg
+        BgFrame.RightName  = RightName
+        BgFrame.RightRealm = RightRealm
     end
 
     local FollowList = GUI:GetClass('GridView'):New(self) do
@@ -127,7 +130,16 @@ function AppFollowPanel:OnInitialize()
     self.FollowList = FollowList
     self.BgFrame = BgFrame
 
+    self:SetScript('OnSizeChanged', self.OnSizeChanged)
+
     self:RegisterMessage('MEETINGSTONE_FOLLOWMEMBERLIST_UPDATE', 'Refresh')
+end
+
+function AppFollowPanel:OnSizeChanged()
+    self.BgFrame.LeftName:SetPoint('TOP', self.BgFrame.LeftBg, 'TOPLEFT', self.BgFrame.LeftBg:GetWidth()/4, -30)
+    self.BgFrame.LeftRealm:SetPoint('TOP', self.BgFrame.LeftBg, 'TOPRIGHT', -self.BgFrame.LeftBg:GetWidth()/4, -30)
+    self.BgFrame.RightName:SetPoint('TOP', self.BgFrame.RightBg, 'TOPLEFT', self.BgFrame.RightBg:GetWidth()/4, -30)
+    self.BgFrame.RightRealm:SetPoint('TOP', self.BgFrame.RightBg, 'TOPRIGHT', -self.BgFrame.RightBg:GetWidth()/4, -30)
 end
 
 function AppFollowPanel:Update()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1770, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15457 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15968 $"):sub(12, -3))
 mod:SetCreatureID(108879)
 mod:SetEncounterID(1917)
 mod:SetReCombatTime(20)
@@ -20,7 +20,7 @@ mod:RegisterEventsInCombat(
 --TODO, evaluate severity of some warnings and promote/demote between warn/specwarn as needed
 local warnIceFist				= mod:NewTargetAnnounce(216432, 3)
 local warnSnow					= mod:NewSpellAnnounce(216467, 3)
-local warnFireBoom				= mod:NewTargetAnnounce(216467, 2)
+local warnFireBoom				= mod:NewTargetAnnounce(216428, 2)
 
 local specWarnFireBoom			= mod:NewSpecialWarningMoveAway(216428, nil, nil, nil, 1, 2)
 local yellFireBoom				= mod:NewYell(216428)

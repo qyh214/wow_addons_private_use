@@ -52,46 +52,11 @@ function module:OnInitialize()
 	self:SafeSecureHook(GSF,"OnClickMission","HookedGSF_OnClickMission")
 	self:SafeSecureHook("GarrisonShipyardMapMission_OnEnter")
 	self:SafeSecureHook("GarrisonShipyardMapMission_OnLeave")
-  self:SafeSecureHook(GSF,"SelectTab","AddMenu")	
-	local ref=GSFMissions.CompleteDialog.BorderFrame.ViewButton
-	local bt = CreateFrame('BUTTON','GCQuickShipMissionCompletionButton', ref, 'UIPanelButtonTemplate')
-	bt.missionType=LE_FOLLOWER_TYPE_SHIPYARD_6_2
-	bt:SetWidth(300)
-	bt:SetText(L["Garrison Comander Quick Mission Completion"])
-	bt:SetPoint("CENTER",0,-50)
-	addon:ActivateButton(bt,"MissionComplete",L["Complete all missions without confirmation"])
-	if IsAddOnLoaded("MasterPlanA") then
-		self:SafeSecureHook("GarrisonShipyardMap_UpdateMissions") -- low efficiency, but survives MasterPlan
-	end
-	self:SafeSecureHook("GarrisonShipyardMap_SetupBonus")
+	self:SafeSecureHook(GSF,"SelectTab","AddMenu")	
 	self:SafeSecureHookScript(GSF,"OnShow","Setup",true)
 	self:SafeRegisterEvent("GARRISON_SHIPYARD_NPC_CLOSED")
 	self:SafeRegisterEvent("GARRISON_MISSION_STARTED")
-	--GarrisonShipyardFrameFollowersListScrollFrameButton1
-	--GarrisonShipyardMapMission1
-	addon:AddLabel(L["Shipyard Appearance"])
-	addon:AddToggle("SHIPMOVEPANEL",true,L["Unlock Panel"],L["Makes shipyard panel movable"])
-	--addon:AddToggle("BIGSCREEN",true,L["Use big screen"],L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"])
-	addon:AddToggle("SHIPPIN",true,L["Show Garrison Commander menu"],L["Disable if you dont want the full Garrison Commander Header."])
- 	addon:AddToggle("SHIPENHA",true,L["Show Enhancement buttons"],L["Disable if you dont want the equipment buttons in ship view."])
-	local tabMC=CreateFrame("CheckButton",nil,GSF,"SpellBookSkillLineTabTemplate")
-	GSF.tabMC=tabMC
-	tabMC.tooltip=L["Open Garrison Commander Mission Control"]
-	tabMC:SetNormalTexture("Interface\\ICONS\\ACHIEVEMENT_GUILDPERK_WORKINGOVERTIME.blp")
-	self:MarkAsNew(tabMC,'MissionControl','New in 2.2.0! Try automatic mission management!')
-	tabMC:SetScript("OnClick",function(this,...) module:OpenMissionControlTab() end)
-	tabMC:Show()
-	tabMC:SetPoint('TOPLEFT',GSF,'TOPRIGHT',0,0)
-	local tabQ=CreateFrame("Button",nil,GSF,"SpellBookSkillLineTabTemplate")
-	GSF.tabQ=tabQ
-	tabQ.tooltip=L["Automatically process completed missions and schedules new ones."].."\n"..
-		format(L["Check %s in mission control in order to be also logged out"],L["Auto Logout"]) .. "\n" .. 
-		C(format(L["Keep pressed %s while opening table to automate processing"],CTRL_KEY),"green")	
-	tabQ:SetNormalTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
-	tabQ:SetPushedTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
-	tabQ:Show()
-	tabQ:SetScript("OnClick",function(this,button) addon:RunQuick() end)
-	tabQ:SetPoint('TOPLEFT',GSF,'TOPRIGHT',0,-210)
+	self:SafeSecureHookScript(GSF.FollowerTab,"OnShow","FollowerOnShow")
   
 end
 function module:OpenLastTab()
@@ -297,9 +262,51 @@ function module:Setup(this,...)
 print("Doing one time initialization for",this:GetName(),...)
 --@end-debug@]===]
 	addon:CheckMP()
-	self:SafeSecureHookScript("GarrisonShipyardFrame","OnShow")
-	self:SafeSecureHookScript(GSF.FollowerTab,"OnShow","FollowerOnShow")
 	GCS=addon:CreateHeader(self,'SHIPMOVEPANEL','SHIPPIN')
+	local ref=GSFMissions.CompleteDialog.BorderFrame.ViewButton
+	local bt = CreateFrame('BUTTON','GCQuickShipMissionCompletionButton', ref, 'UIPanelButtonTemplate')
+	bt.missionType=LE_FOLLOWER_TYPE_SHIPYARD_6_2
+	bt:SetWidth(300)
+	bt:SetText(L["Garrison Comander Quick Mission Completion"])
+	bt:SetPoint("CENTER",0,-50)
+	addon:ActivateButton(bt,"MissionComplete",L["Complete all missions without confirmation"])
+	if IsAddOnLoaded("MasterPlanA") then
+		self:SafeSecureHook("GarrisonShipyardMap_UpdateMissions") -- low efficiency, but survives MasterPlan
+	end
+	self:SafeSecureHook("GarrisonShipyardMap_SetupBonus")
+	--GarrisonShipyardFrameFollowersListScrollFrameButton1
+	--GarrisonShipyardMapMission1
+	addon:AddLabel(L["Shipyard Appearance"])
+	addon:AddToggle("SHIPMOVEPANEL",true,L["Unlock Panel"],L["Makes shipyard panel movable"])
+	--addon:AddToggle("BIGSCREEN",true,L["Use big screen"],L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"])
+	addon:AddToggle("SHIPPIN",true,L["Show Garrison Commander menu"],L["Disable if you dont want the full Garrison Commander Header."])
+ 	addon:AddToggle("SHIPENHA",true,L["Show Enhancement buttons"],L["Disable if you dont want the equipment buttons in ship view."])
+	local tabHP=CreateFrame("Button",nil,GSF,"SpellBookSkillLineTabTemplate")
+	GSF.tabHP=tabHP
+	tabHP.tooltip=L["Open Garrison Commander Help"]
+	tabHP:SetNormalTexture("Interface\\ICONS\\INV_Misc_QuestionMark.blp")
+	tabHP:SetPushedTexture("Interface\\ICONS\\INV_Misc_QuestionMark.blp")
+	tabHP:Show()
+	tabHP:SetPoint('TOPLEFT',GCS,'TOPRIGHT',0,-10)
+	tabHP:SetScript("OnClick",function(this,button) addon:ShowHelpWindow(this,button) end) 	
+	local tabMC=CreateFrame("CheckButton",nil,GSF,"SpellBookSkillLineTabTemplate")
+	GSF.tabMC=tabMC
+	tabMC.tooltip=L["Open Garrison Commander Mission Control"]
+	tabMC:SetNormalTexture("Interface\\ICONS\\ACHIEVEMENT_GUILDPERK_WORKINGOVERTIME.blp")
+	tabMC:SetScript("OnClick",function(this,...) module:OpenMissionControlTab() end)
+	tabMC:Show()
+	tabMC:SetPoint('TOPLEFT',GSF,'TOPRIGHT',0,0)
+	local tabQ=CreateFrame("Button",nil,GSF,"SpellBookSkillLineTabTemplate")
+	GSF.tabQ=tabQ
+	tabQ.tooltip=L["Automatically process completed missions and schedules new ones."].."\n"..
+		format(L["Check %s in mission control in order to be also logged out"],L["Auto Logout"]) .. "\n" .. 
+		C(format(L["Keep pressed %s while opening table to automate processing"],CTRL_KEY),"green")	
+	tabQ:SetNormalTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
+	tabQ:SetPushedTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
+	tabQ:Show()
+	tabQ:SetScript("OnClick",function(this,button) addon:RunQuick() end)
+	tabQ:SetPoint('TOPLEFT',GSF,'TOPRIGHT',0,-210)
+	
 	GSF.FollowerStatusInfo=GSF.BorderFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	GSF.ResourceInfo=GSF.BorderFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	GSF.ResourceFormat="|TInterface\\Icons\\garrison_oil:0|t %s " .. GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY)
@@ -319,6 +326,7 @@ print("Doing one time initialization for",this:GetName(),...)
 			self:SafeHookScript(hook,"OnClick","HookedClickOnTabs")
 		end
 	end	
+	self:SafeSecureHookScript(GSF,"OnShow")
 	self:SafeHookScript(GSF,"OnHide","EventGARRISON_SHIPYARD_NPC_CLOSED")
 end
 function module:HookedClickOnTabs()
@@ -338,6 +346,7 @@ function module:ScriptGarrisonShipyardFrame_OnShow()
 	self:RefreshCurrency()
 	self:RefreshFollowerStatus()
 	if IsControlKeyDown() then
+		self:EnableAutoLogout()
 		self:ScheduleTimer("RunQuick",0.1,true)
 	end
 end

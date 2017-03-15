@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(865, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 100 $"):sub(12, -3))
 mod:SetCreatureID(71504)--71591 Automated Shredder
 mod:SetEncounterID(1601)
 mod:SetZone()
@@ -104,7 +104,7 @@ mod.vb.weapon = 0
 mod.vb.shredderCount = 0
 
 --VEM Idea
-local function showWeaponInfo()
+local function updateInfoFrame()
 	local lines = {}
 	if mod.vb.weapon == 1 or mod.vb.weapon == 2 or mod.vb.weapon == 4 then
 		lines[shockwaveMissile] = laserTurret.." , "..crawlerMine
@@ -307,7 +307,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 		countdownAssemblyLine:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(assemblyLine.."("..self.vb.weapon..")")
-			DBM.InfoFrame:Show(1, "function", showWeaponInfo, true)
+			DBM.InfoFrame:Show(1, "function", updateInfoFrame, false)
 		end
 	elseif msg == L.newShredder or msg:find(L.newShredder) then
 		self.vb.shredderCount = self.vb.shredderCount + 1

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1713, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15915 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15979 $"):sub(12, -3))
 mod:SetCreatureID(101002)
 mod:SetEncounterID(1842)
 mod:SetZone()
@@ -27,7 +27,7 @@ local warnExpelOrbDestro			= mod:NewTargetCountAnnounce(205344, 4)
 local warnSlamSoon					= mod:NewAnnounce("warnSlamSoon", 4, 205862, nil, nil, true)
 local warnSlam						= mod:NewCountAnnounce(205862, 2)--Regular slams don't need special warn, only bridge smashing ones
 
-local specWarnSearingBrand			= mod:NewSpecialWarningStack(206677, nil, 5, nil, 2, 1, 2)--Lets go with 5 for now
+local specWarnSearingBrand			= mod:NewSpecialWarningStack(206677, nil, 4, nil, 2, 1, 2)--Lets go with 4 for now
 local specWarnSearingBrandOther		= mod:NewSpecialWarningTaunt(206677, nil, nil, nil, 1, 2)
 local specWarnFelBeam				= mod:NewSpecialWarningDodge(205368, nil, nil, nil, 2, 2)
 local specWarnOrbDestro				= mod:NewSpecialWarningMoveAway(205344, nil, nil, nil, 3, 2)
@@ -245,16 +245,21 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 206677 then
-		local amount = args.amount or 1
-		timerSearingBrand:Start(args.destName)
-		if amount >= 5 and self:AntiSpam(3, 1) then
-			if args:IsPlayer() then
-				specWarnSearingBrand:Show(amount)
-				voiceSearingBrand:Play("changemt")
-			else
-				if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
-					specWarnSearingBrandOther:Show(args.destName)
-					voiceSearingBrand:Play("tauntboss")
+		local uId = DBM:GetRaidUnitId(args.destName)
+		if self:IsTanking(uId) then
+			local amount = args.amount or 1
+			timerSearingBrand:Start(args.destName)
+			if amount >= 2 then
+				if args:IsPlayer() then
+					if amount >= 4 then
+						specWarnSearingBrand:Show(amount)
+						voiceSearingBrand:Play("stackhigh")
+					end
+				else
+					if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
+						specWarnSearingBrandOther:Show(args.destName)
+						voiceSearingBrand:Play("tauntboss")
+					end
 				end
 			end
 		end

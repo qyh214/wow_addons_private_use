@@ -1,60 +1,55 @@
---- **LibInit** should make using Ace3 even more easier and pleasant.
--- An embeddable library which offer clean methods to build a configuration table
--- instead of directly fiddling wit an Ace options table
--- @name LibInit
--- @class module
+--- Main methods directly available in your addon
+-- @classmod lib
 -- @author Alar of Runetotem
--- @release 39
---
-local __FILE__=tostring(debugstack(1,2,0):match("(.*):9:")) -- Always check line number in regexp and file
+-- @release 42
+-- @set sort=true
+-- @usage
+-- -- Create a new addon this way:
+-- local me,ns=... -- Wow engine passes you your addon name and a private table to use
+-- addon=LibStub("LibInit"):newAddon(ns,me)
+-- -- Since now, all LibInit methods are available on self
 
+local __FILE__=tostring(debugstack(1,2,0):match("(.*):12:")) -- Always check line number in regexp and file
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 39
-local off=(_G.RED_FONT_COLOR_CODE or '|cffff0000') .. _G.VIDEO_OPTIONS_DISABLED ..  _G.FONT_COLOR_CODE_CLOSE or '|r'
-local on=(_G.GREEN_FONT_COLOR_CODE or '|cff00ff00') .. _G.VIDEO_OPTIONS_ENABLED ..  _G.FONT_COLOR_CODE_CLOSE or '|r'
+local MINOR_VERSION = 42
+local LibStub=LibStub
+local dprint=function() end
+local function encapsulate()
+if LibDebug and AlarDbg then LibDebug() dprint=print end
+end
+encapsulate()
+local obj,old=LibStub:NewLibrary(MAJOR_VERSION,MINOR_VERSION)
+if obj then
+	dprint(strconcat("Loading ",MAJOR_VERSION,'.',MINOR_VERSION,' from ',__FILE__))
+	if old then
+		dprint(strconcat("Upgrading ",MAJOR_VERSION,'.',old))
+	end
+--	obj.loadedFrom=__FILE__
+else
+	dprint(strconcat("Already loaded ",MAJOR_VERSION,'.',MINOR_VERSION," checked from ", __FILE__))
+	return
+end
+local off=(_G.RED_FONT_COLOR_CODE or '|cffff0000') .. (_G.VIDEO_OPTIONS_DISABLED or  'Off') .. ( _G.FONT_COLOR_CODE_CLOSE or '|r')
+local on=(_G.GREEN_FONT_COLOR_CODE or '|cff00ff00') .. (_G.VIDEO_OPTIONS_ENABLED or 'On') .. ( _G.FONT_COLOR_CODE_CLOSE or '|r')
 local nop=function()end
 local pp=print -- Keeping a handy plain print around
 local assert=assert
 local strconcat=strconcat
 local tostring=tostring
+local tremove=tremove
 local _G=_G -- Unmodified env
-local dprint=function() end
 --@debug@
 -- Checking packager behaviour
 --@end-debug@
---@debug@
-LoadAddOn("LibDebug")
-LoadAddOn("Blizzard_DebugTools")
-if LibDebug then
-	--pulling libdebug print in without pulling also the whole _G management and without changing loading addon env
-	LibDebug()
-	dprint=print
-	setfenv(1,_G)
-end
---@end-debug@
---GAME_LOCALE="itIT"
+
 local me, ns = ...
-local LibStub=LibStub
-local obj,old=LibStub:NewLibrary(MAJOR_VERSION,MINOR_VERSION)
-local upgrading
-if obj then
-	upgrading=old
---@debug@
-	if old then
-		dprint(strconcat("Upgrading ",MAJOR_VERSION,'.',old,' to',MINOR_VERSION,' from ',__FILE__))
-	else
-		dprint(strconcat("Loading ",MAJOR_VERSION,'.',MINOR_VERSION,' from ',__FILE__))
-	end
---@end-debug@
-else
---@debug@
-	dprint(strconcat("Equal or newer ",MAJOR_VERSION,' already loaded from ',__FILE__))
---@end-debug@
-	return
-end
 local lib=obj --#Lib
+function lib:Info()
+	print(MAJOR_VERSION,MINOR_VERSION,' loaded from ',__FILE__)
+end
 local L
 local C=LibStub("LibInit-Colorize")()
+local F=LibStub("LibInit-Factory")
 local CallbackHandler = LibStub:GetLibrary("CallbackHandler-1.0")
 -- Upvalues
 local _G=_G
@@ -113,23 +108,53 @@ local AceDB  = LibStub("AceDB-3.0",true)
 
 
 -- Persistent tables
+
 lib.mixinTargets=lib.mixinTargets or {}
+--- Runtime storage for variables.
+-- 
 lib.toggles=lib.toggles or {}
 lib.chats=lib.chats or {}
-lib.options=lib.options or {}
-lib.pool=lib.pool or setmetatable({},{__mode="k"})
+--- Runtime storage for information on LibInit managed addons.
+-- 
+lib.options=lib.options or {} 
+--- Recycling system pool.
+-- 
+lib.pool=lib.pool or setmetatable({},{__mode="k",__tostring=function(t) return "Recycle Pool:" end})
+--- Mixins list
+--
+lib.mixins=lib.mixins or {}
+wipe(lib.mixins)
 -- Recycling function from ACE3
-local new, del, recursivedel,copy, cached, stats
+
+--- Table Recycling System.
+-- 
+-- A set of functions to allow for table reusing
+-- @section Recycle
+-- @usage
+-- -- You better upvalue these functions
+-- local addon=LibStub("LibInit"):NewAddon("myaddon")
+-- local new=addon:Wrap("NewTable")
+-- local new=addon:Wrap("DelTable")
+-- 
+
+
+local new, del, add, recursivedel,copy, cached, stats
 do
+	local meta={__metatable="RECYCLE"}
 	local pool = lib.pool
 --@debug@
-	local newcount, delcount,createdcount,cached = 0,0,0
+	local newcount, delcount,createdcount= 0,0,0
 --@end-debug@
-	function new()
+	function new(t)
 --@debug@
 		newcount = newcount + 1
 --@end-debug@
-		local t = next(pool)
+		if type(t)=="table" then
+			local rc=pcall(setmetatable,t,meta)
+			return t
+		else
+			t = next(pool)
+		end
 		if t then
 			pool[t] = nil
 			return t
@@ -137,7 +162,7 @@ do
 --@debug@
 			createdcount = createdcount + 1
 --@end-debug@
-			return {}
+			return setmetatable({},meta)
 		end
 	end
 	function copy(t)
@@ -151,20 +176,24 @@ do
 --@debug@
 		delcount = delcount + 1
 --@end-debug@
-		wipe(t)
-		pool[t] = true
+		if getmetatable(t)=="RECYCLE" then
+			wipe(t)
+			pool[t] = true
+		end
 	end
 	function recursivedel(t)
 --@debug@
 		delcount = delcount + 1
 --@end-debug@
 		for k,v in pairs(t) do
-			if type(v)=="table" then
+			if type(v)=="table" and getmetatable(v) == "RECYCLE" then
 				recursivedel(v)
 			end
 		end
-		wipe(t)
-		pool[t] = true
+		if getmetatable(t)=="RECYCLE" then
+			wipe(t)
+			pool[t] = true
+		end
 	end
 	function cached()
 		local n = 0
@@ -187,46 +216,63 @@ do
 	end
 --@end-non-debug@]===]
 end
-function lib.NewTable()
-	return new()
-end
----
--- Must support both calling style
-function lib.DelTable(...)
-	local n=select('#',...)
-	local tbl,recursive
-	if n==3 then
-		tbl,recursive=select(2,...)
+--- Get a new table from the recycle pool
+-- Preferred usage is assigning to a local via wrap function
+-- @tparam[opt=nil] table tbl Optional table which will be added to the pool after use. Must NOT have a metatable
+-- @treturn table A new table or a recycled one. Table is wiped
+-- @usage
+-- -- Assuming you upvalued it as new
+-- local t=new()
+-- -- do something
+-- del(t)
+-- t=new()
+-- t.check=new()
+-- del(t,true) -- will recycle both t and t.check
+function lib:NewTable(tbl)
+	if tbl and lib.options[tbl] then
+		return new()
 	else
-		tbl,recursive=...
+		return new(tbl)
 	end
-	if type(recursive)=="table" then
-		tbl,recursive=recursive,nil
-	end
-	if n==0 then
-		error("Usage: DelTable(table[,recursive]")
-	end
-	if lib.options[tbl] then
-		error("Called as :DelTable without arguments")
-	end		
-	assert(type(tbl)=="table","Usage: DelTable(table)")
+end
+--- Returns a table to the recycle pool
+-- Table will be wiped
+-- Only manages tables allocated via NewTable
+-- Other tables are left intact
+-- -- Preferred usage is assigning to a local via wrap function
+-- @tparam table tbl table to be recycled
+-- @tparam[opt=true] boolean recursive If true, embedded tables added cia new table will be wiped and recycled
+-- 
+function lib:DelTable(tbl,recursive)
+	if type(recursive)=="nil" then recursive=true end
+	--assert(type(tbl)=="table","Usage: DelTable(table) called as DelTable(" ..tostring(tbl) ..','..tostring(recursive)..")")
 	return recursive and recursivedel(tbl) or del(tbl)
 end
+
 function lib:CachedTableCount()
 	return cached()
 end
 function lib:CacheStats()
 	return stats()
-end--- Create a new AceAddon-3.0 addon.
+end
+
+--- Addon management.
+-- @section addon
+
+--- Create a new AceAddon-3.0 addon.
+-- 
 -- Any library you specified will be embeded, and the addon will be scheduled for
 -- its OnInitializee and OnEnabled callbacks.
+-- 
 -- The final addon object, with all libraries embeded, will be returned.
+-- 
 -- Options table format:
--- 	*profile: choose the initial profile (if omittete, uses a per character one)
---		*noswitch: disables Ace profile managemente, user will not be able to change it
---		*nogui: do not generate a gui for configuration
---		*nohelp: do not generate help (actually, help generation is not yet implemented)
---		*enhancedProfile: adds "Switch all profiles to default" and "Remove unused profiles" do Ace profile gui
+-- 
+--* profile: choose the initial profile (if omittete, uses a per character one)
+--* noswitch: disables Ace profile managemente, user will not be able to change it
+--* nogui: do not generate a gui for configuration
+--* nohelp: do not generate help (actually, help generation is not yet implemented)
+--* enhancedProfile: adds "Switch all profiles to default" and "Remove unused profiles" do Ace profile gui
 --
 -- @tparam[opt] table target to use as a base for the addon (optional)
 -- @tparam string name Name of the addon object to create
@@ -246,7 +292,6 @@ end--- Create a new AceAddon-3.0 addon.
 -- local myname,addon = ...
 -- LibStub("LibInit"):NewAddon(addon,myname)
 --
----
 function lib:NewAddon(target,...)
 	local name
 	local customOptions
@@ -332,6 +377,57 @@ function lib:NewAddon(target,...)
 	}
 	return target
 end
+
+function lib:NewSubModule(name,...)
+	local obj=self:NewModule(name,...)
+	-- To avoid strange interactions
+	obj.OnInitialized=function()end -- placeholder
+	obj.OnInitialize=function(self,...) return  self:OnInitialized(...) end
+	obj.OnEnable=nil
+	obj.OnDisable=nil
+	return obj
+end
+function lib:NewSubClass(name)
+	return self:NewSubModule(name,self)
+end
+
+--- Returns a closure to call a method as simple local function
+-- @tparam string name Method name
+-- @usage local print=self:Wrap("print") ; print("Hello") same as self:print("Hello") 
+-- @treturn func Wrapper
+function lib:Wrap(name)
+	if (name=="Trace") then
+		return function(...) lib._Trace(self,1,...) end
+	end
+	if (type(self[name])=="function") then
+		return function(...) return self[name](self,...) end
+	else
+		return nop
+	end
+end
+function lib:GetAddon(name)
+	return Ace:GetAddon(name,true)
+end
+function lib:GetLocale()
+	return AceLocale:GetLocale(self.name)
+end
+
+--- Generic.
+-- General utilities
+-- @section utils
+
+--- Colors a string.
+-- @tparam string stringa A string
+-- @tparam string colore Name of a color (red, rare, alliance and so on). If not existent uses yellow
+-- @treturn string Colored string
+-- 
+function lib:Colorize(stringa,colore)
+	return C(stringa,colore) .. "|r"
+end
+function lib:GetTocVersion()
+	return select(4,GetBuildInfo())
+end
+
 -- Combat scheduler done with LibCallbackHandler
 if not lib.CombatScheduler then
 	lib.CombatScheduler = CallbackHandler:New(lib,"_OnLeaveCombat","_CancelCombatAction")
@@ -352,11 +448,11 @@ if not lib.CombatScheduler then
 	end)
 	lib.CombatFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 end
-local tremove=tremove
 local function Run(args) tremove(args,1)(unpack(args)) end
---- Executes an action as soon as combat restrictions lift
+
+--- Executes an action as soon as combat restrictions lift.
 -- Action can be executed immediately if toon is out of combat
--- @tparam string|function action To be executed, Can be a function or a method name
+-- @tparam string|func action To be executed, Can be a function or a method name
 -- @tparam[opt] mixed ... More parameters will be directly passed to action
 --
 function lib:OnLeaveCombat(action,...)
@@ -374,40 +470,6 @@ function lib:OnLeaveCombat(action,...)
 	if (not InCombatLockdown()) then
 		lib.CombatFrame:GetScript("OnEvent")()
 	end
-end
-
-function lib:NewSubModule(name,...)
-	local obj=self:NewModule(name,...)
-	-- To avoid strange interactions
-	obj.OnInitialized=function()end -- placeholder
-	obj.OnInitialize=function(self,...) return  self:OnInitialized(...) end
-	obj.OnEnable=nil
-	obj.OnDisable=nil
-	return obj
-end
-function lib:NewSubClass(name)
-	return self:NewSubModule(name,self)
-end
-
---- Returns a closure to call a method as simple local function
--- @tparam string name Method name
--- @usage local print=self:Wrap("print") ; print("Hello") same as self:print("Hello") 
--- @return function Wrapper
-function lib:Wrap(nome)
-	if (nome=="Trace") then
-		return function(...) lib._Trace(self,1,...) end
-	end
-	if (type(self[nome])=="function") then
-		return function(...) self[nome](self,...) end
-	else
-		return nop
-	end
-end
-function lib:GetAddon(name)
-	return Ace:GetAddon(name,true)
-end
-function lib:GetLocale()
-	return AceLocale:GetLocale(self.name)
 end
 function lib:Gradient(perc)
 	return self:ColorGradient(perc,0,1,0,1,1,0,1,0,0)
@@ -452,10 +514,12 @@ do
 		end
 	}
 end
----
--- Return a named chatframe or the default one if no parameter passed
--- @tparam[opt] chat string Chat name
--- @return frame requested chat frame, can be nil if "chat" does not exist 
+
+--- Return a named chatframe.
+--  Returns nil if chat does not exist
+-- @tparam[opt=DEFAULT_CHAT_FRAME] string chat Chat name
+-- @treturn frame|nil requested chat frame, can be nil if "chat" does not exist
+--  
 function lib:GetChatFrame(chat)
 	if (chat) then
 		if (lib.chats[chat]) then return lib.chats[chat] end
@@ -494,7 +558,7 @@ end
 ---
 -- Parses a command from chat or from an table options handjer command
 -- Internally calls AceConsole-3.0:GetArgs
--- @tparam mixed msg Can be a string (chat command) or a table (called by Ace3 Options Table Handler)
+-- @tparam string|table msg Can be a string (when called from chat command) or a table (wbe called by Ace3 Options Table Handler)
 -- @tparam number n index in command list
 -- @return command,subcommand,arg,full string after command
 function lib:Parse(msg,n)
@@ -519,7 +583,8 @@ function lib:GetItemID(itemlink)
 	end
 end
 ---
--- Return the toal numner of bag slots
+-- Return the total numner of bag slots
+-- @treturn number Total bag slots
 function lib:GetTotalBagSlots()
 	local i=0
 	for bag=0,NUM_BAG_SLOTS do
@@ -531,13 +596,21 @@ end
 -- Scans Bags for an item based on different criteria
 --
 -- All parameters are optional.
+-- 
 -- With no parameters ScanBags returns the first empty slot
+-- 
+-- Passing starbag and scanslot allows to continue scanning after the first finding
 --
--- @tparam[opt] number index is index in GetItemInfo result. 0 is a special case to match just itemid
--- @tparam[opt] number value is the value against to match. 0 is a special case for empty slot
--- @tparam[opt] number startbag and startslot are used to restart scan from the last item found
--- @tparam[opt] number startslot
--- @return Found ItemId,bag,slot,full GetItemInfo result
+-- @tparam[opt=0] number index index in GetItemInfo result. 0 is a special case to match just itemid
+-- @tparam[opt=0] number value value against to match. 0 is a special case for empty slot
+-- @tparam[opt=0] number startbag Initialbag to start scan from
+-- @tparam[opt=1] number startslot Initial slot to start scan from 
+-- @treturn[1] number ItemId
+-- @treturn[1] number bag
+-- @treturn[1] number slot
+-- @treturn[1] list all return value from GetItemInfo called on _Itemid_
+-- @treturn[2] bool false If nothing found
+-- 
 function lib:ScanBags(index,value,startbag,startslot)
 	index=index or 0
 	value=value or 0
@@ -565,10 +638,22 @@ function lib:ScanBags(index,value,startbag,startslot)
 	end
 	return false
 end
+
+--- Returns number of free bag slots and total bagt slots.
+-- @treturn number Free bag slots
+-- @treturn number Total bag slots
+function lib:GetBagSlotCount()
+	local free,total=0,0
+	for bag=0,NUM_BAG_SLOTS do
+		free=free+(GetContainerNumFreeSlots(bag) or 0)
+		total=total+(GetContainerNumSlots(bag) or 0)
+	end
+	return free,total
+end
+
 --- Returns unit's health as a normalized percent value
 -- @tparam string unit A standard unit name
 -- @treturn number health as percent value
-
 function lib:Health(unit)
 		local totale=UnitHealthMax(unit) or 1
 		local corrente=UnitHealth(unit) or 1
@@ -645,15 +730,6 @@ function lib:NumericVersion()
 	else
 		return 0
 	end
-end
-function lib:OnInitialized()
-	print("|cff33ff99"..tostring( self ).."|r:",format(ITEM_MISSING,"OnInitialized"))
-end
-function lib:LoadHelp()
-end
-function lib:SetDbDefaults()
-end
-function lib:SetOptionsTable()
 end
 local function loadOptionsTable(self)
 	local options=lib.options[self]
@@ -779,10 +855,6 @@ local function PurgeProfiles(info,...)
 	for k,v in pairs(db.sv.profileKeys) do
 		used[v]=true
 	end
---@debug@
-	DevTools_Dump(profiles)
-	DevTools_Dump(used)
---@end-debug@
 	for _,v in ipairs(profiles) do
 		if not used[v] then
 			db:DeleteProfile(v)
@@ -837,7 +909,6 @@ function lib:OnInitialize(...)
 	self.revision=self.revision or options.revision
 	if (AceDB and not self.db) then
 		self.db=AceDB:New(options.DATABASE,nil,options.profile)
-		dprint(self.db:GetCurrentProfile())
 	end
 	if self.db then
 		self.db:RegisterDefaults(self.DbDefaults)
@@ -847,6 +918,7 @@ function lib:OnInitialize(...)
 				self:Colorize(format("(Revision: %s)",options.revision),"silver"),
 				"Disable message with /" .. strlower(options.ID) .. " silent")
 			)
+			self:Print("Using profile ",self.db:GetCurrentProfile())
 		end
 		self:SetEnabledState(self:GetBoolean("Active"))
 	else
@@ -935,7 +1007,8 @@ function lib:UpdateVersion()
 	end
 end
 
--- help related functions
+--- Help system.
+-- @section help
 function lib:HF_Push(section,text)
 	if section then section=titles[section] end
 	section=section or self.lastsection or RELNOTES
@@ -1124,8 +1197,18 @@ function lib:EndLabel()
 			table.remove(m)
 	end
 end
+--- Configuration panel.
+-- These functions allow to build a ACE option table which will be fed to
+-- AceConfigDialog:AddToBlizOptions
+-- @section add
 
 --self:AddLabel("General","General Options",C.Green)
+---@section Variables management
+--- Create a tab (ace type "header")
+-- @tparam string title
+-- @tparam string description
+-- @tparam string stringcolor esadecimal color string without "|cff"
+-- @treturn table Pointer to option table fragment added
 function lib:AddLabel(title,description,stringcolor)
 	self:EndLabel()
 	description=description or title
@@ -1135,7 +1218,13 @@ function lib:AddLabel(title,description,stringcolor)
 	self:AddSeparator(description)
 	return t
 end
+
 --self:AddSubLabel("Local","Local Options",C.Green)
+--- Create a label (ace type "group")
+-- @tparam string title
+-- @tparam string description
+-- @tparam string stringcolor esadecimal color string without "|cff"
+-- @treturn table Pointer to option table fragment added
 function lib:AddSubLabel(title,description,stringcolor)
 	local m=self.MenuLevels
 	description=description or title
@@ -1155,6 +1244,13 @@ function lib:AddSubLabel(title,description,stringcolor)
 end
 
 --self:AddText("Testo"[,texture[,height[,width[,texcoords]]]])
+--- Create a description (ace type "description")
+-- @tparam string text
+-- @tparam[opt] string image
+-- @tparam[opt] number imageHeight
+-- @tparam[opt] string imageWidth
+-- @tparam[opt] table imageCoords
+-- @treturn table Pointer to option table fragment added
 function lib:AddText(text,image,imageHeight,imageWidth,imageCoords)
 	local group=getgroup(self)
 	local flag=toflag(group.name,text)
@@ -1175,6 +1271,13 @@ end
 
 --self:AddToggle("AUTOLEAVE",true,"Quick Battlefield Leave","Alt-Click on hide button in battlefield alert leaves the queue")
 function lib:AddBoolean(...) return self:AddToggle(...) end
+--- Create a boolean configuration var
+-- @tparam string flag variable name
+-- @tparam any defaultvalue
+-- @tparam string name public name  (appears in gui)
+-- @tparam[opt=name] string description long description (appears in tooltip)
+-- @tparam[opt] string icon icon reference
+-- @treturn table A reference to the newly create item inside Ace OptionTable
 function lib:AddToggle(flag,defaultvalue,name,description,icon)
 	description=description or name
 	local group=getgroup(self)
@@ -1444,83 +1547,6 @@ function lib:AddSeparator(text)
 	group.args[flag]=t
 	return t
 end
-
-function lib:OnEmbedEnable(first)
-end
-
-function lib:OnEmbedDisable()
-end
-
-
-function lib:OnEnable()
-	if (self.OnEnabled) then
-		if (not self.db.global.silent) then
-			self:Print(C(VIDEO_OPTIONS_ENABLED,"green"))
-		end
-		pcall(self.OnEnabled,self,lib.options[self].first)
-		lib.options[self].first=nil
-	end
-end
-function lib:OnDisable(...)
-	if (self.OnDisabled) then
-		if (not self.db.global.silent) then
-			self.print(C(VIDEO_OPTIONS_DISABLED,'red'))
-		end
-		pcall(self.OnDisabled,self,...)
-	end
-end
-local function _GetMethod(target,prefix,func)
-	if (func == 'Start' or func == 'Stop') then return end
-	local method=prefix .. func
-	if (type(target[method])== "function") then
-			return method
-	elseif (type(target["_" .. prefix])) then
-			return "_" .. prefix
-	end
-end
-function lib:StartAutomaticEvents()
-	for k,v in pairs(self) do
-		if (type(v)=='function') then
-			if (k:sub(1,3)=='Evt') then
-				self:RegisterEvent(k:sub(4),k)
-			end
-		end
-	end
-end
-function lib:StopAutomaticEvents(ignore)
-	for k,v in pairs(self) do
-		if (type(v)=='function') then
-			if (k:sub(1,3)=='Evt') then
-				if (ignore and k==ignore or k:sub(4)==ignore) then
-					--a kickstart event not to be disabled
-				else
-					self:UnregisterEvent(k:sub(4))
-				end
-			end
-		end
-	end
-end
-function lib:Dprint(...)
-end
-function lib:Notify(...)
-	return self:CustomPrint(C.orange.r,C.orange.g,C.orange.b, nil, nil, ' ', ...)
-end
-function lib:Debug()
-	self.DebugOn=not self.DebugOn
-	self:Print("Debug:",self.DebugOn and on or off)
-	if self.DebugOn then
-		self.Dprint=dprint
-	else
-		self.Dprint=nop
-	end
-end
-
-function lib:Colorize(stringa,colore)
-	return C(stringa,colore) .. "|r"
-end
-function lib:GetTocVersion()
-	return select(4,GetBuildInfo())
-end
 function lib:Toggle()
 	if (self:IsEnabled()) then
 		self:Disable()
@@ -1639,6 +1665,82 @@ function lib:ApplySettings()
 		end
 	end
 end
+
+--- Hooks.
+-- Stub function you can (and should) overrid in your addon
+-- @section hooks
+
+--- Called When the embedding addon is enabled
+--
+function lib:OnEmbedEnable(first)
+end
+
+--- Called when the wmbedding addon is disabled
+--
+function lib:OnEmbedDisable()
+end
+
+--- Called after VARIABLES_LOADED event, by OnInitialize Ace Hook
+-- 
+function lib:OnInitialized()
+	print("|cff33ff99"..tostring( self ).."|r:",format(ITEM_MISSING,"OnInitialized"))
+end
+
+--- Called to fill the help system
+--
+function lib:LoadHelp()
+end
+
+--- Called with the db default table as argument
+-- 
+-- You can customize defaults here
+-- 
+-- @tparam table tbl ACE DB default table
+function lib:SetDbDefaults(tbl)
+end
+
+--- Called with the current option table
+--
+-- You can change the default options table here
+-- @tparam table tbl ACE Options Table
+-- 
+function lib:SetOptionsTable(tbl)
+end
+
+--- Called from the OnEnable ACE event
+-- @function lib:OnEnabled
+-- @tparam[opt] bool first True on the first activation
+function lib:OnEnable()
+	if (self.OnEnabled) then
+		if (not self.db.global.silent) then
+			self:Print(C(VIDEO_OPTIONS_ENABLED,"green"))
+		end
+		pcall(self.OnEnabled,self,lib.options[self].first)
+		lib.options[self].first=nil
+	end
+end
+
+--- Called from the OnDisable ACE event
+-- @function lib:OnDisabled
+-- 
+function lib:OnDisable(...)
+	if (self.OnDisabled) then
+		if (not self.db.global.silent) then
+			self.print(C(VIDEO_OPTIONS_DISABLED,'red'))
+		end
+		pcall(self.OnDisabled,self,...)
+	end
+end
+local function _GetMethod(target,prefix,func)
+	if (func == 'Start' or func == 'Stop') then return end
+	local method=prefix .. func
+	if (type(target[method])== "function") then
+			return method
+	elseif (type(target["_" .. prefix])) then
+			return "_" .. prefix
+	end
+end
+
 local neveropened=true
 function lib:Gui(info)
 	if (AceConfigDialog and AceGUI) then
@@ -1694,9 +1796,30 @@ function lib:TimeToStr(time) -- Converts time data to a string format
 		return format("%s%d:%02d",p,m,s)
 	end
 end
+---
+-- Returns a crayon like object
+-- @usage
+-- local C=LibStub("LibInit"):GetColorTable()
+-- C.Azure.c --returns a string "rrggbb"
+-- C.Azure.r --returns red value as a number
+-- C.Azure.g --returns green value as a number
+-- C.Azure.b --returns blue value as a number
+-- tostring(C.Azure) -- returns a string "rrggbb"
+-- "aa" .. C.Azure -- returns "aarrggbb"
+-- C.Azure() -- returns r,g,b as float list
+-- C.Azure.r -- returns r as float
+-- C("testo","azure") -- returns "|cff" .. >color code for azure> .. "test" .. "|r"
+-- -- For a list of available color check Colors
+-- -- Each color became the name of a meth
 
 function lib:GetColorTable()
 	return C
+end
+
+--- Returns a factory for lightweight widgets
+-- @see factory
+function lib:GetFactory()
+	return F
 end
 -- In case of upgrade, we need to redo embed for ALL Addons
 -- This function get called on addon creation
@@ -1746,10 +1869,35 @@ local function kpairs(t,f)
 	end
 	return iter
 end
+function lib:Kpairs(t,f)
+	return kpairs(t,f)
+end 
+--- Returns kpairs implementatio
+-- Deprecated in favour of Wrap("Kpairs")
+-- @deprecated
+-- 
 function lib:GetKpairs()
 	return kpairs
 end
 lib.getKpairs=lib.GetKpairs
+
+--- Implements PHP empty function.
+-- @tparam any obj variable to be tested
+-- @treturn boolean 
+function lib:Empty(obj)
+	if not obj then return true end -- Simplest case, obj evaluates to false in boolean context
+	local t=type(obj)
+	if t=="number" then
+		return obj==0
+	elseif t=="bool" then
+		return t
+	elseif t=="string" then
+		return obj=='' or obj==tostring(nil) or obj=="0"
+	elseif t=="table" then
+		return not next(obj)
+	end
+	return false -- Userdata and threads can never be empty
+end
 -- This metatable is used to generate a sorted proxy to an hashed table.
 -- It should not used directly
 lib.mt={__metatable=true,__version=MINOR_VERSION}
@@ -1797,7 +1945,86 @@ end
 function lib:ScheduleLeaveCombatAction(method, ...)
 	return self:OnLeaveCombat(method,...)
 end
+if not lib.secureframe then
+	lib.secureframe=CreateFrame("Button",nil,nil,"StaticPopupButtonTemplate,SecureActionButtonTemplate")
+	lib.secureframe:Hide()
+end
 
+
+local function StopSpellCasting(this)
+	local b2=_G[this:GetName().."Button2"]
+	local AC=lib.secureframe
+	AC:SetParent(b2)
+	AC:SetAllPoints()
+	AC:SetText(b2:GetText())
+	AC:SetAttribute("type","stop")
+	AC:SetScript("PostClick",function() b2:Click() end)
+	AC:Show()
+end
+local function StopSpellCastingCleanup(this)
+	local AC=lib.secureframe
+	AC:SetParent(nil)
+	AC:Hide()
+
+end
+local StaticPopupDialogs=StaticPopupDialogs
+local StaticPopup_Show=StaticPopup_Show
+--- Show a popup
+-- Display a popup message with Accept and optionally Cancel button
+-- @tparam string msg Message to be shown
+-- @tparam[opt=60] number timeout In seconds, if omitted assumes 60
+-- @tparam[opt] func OnAccept Executed when clicked on Accept
+-- @tparam[opt] func OnCancel Executed when clicked on Cancel (if nill, Cancel button is not shown)
+-- @tparam[opt] mixed data Passed to the callback function
+-- @tparam[opt] bool StopCasting If true, when the popup appear will stop any running casting.
+-- Useful to ask confirmation before performing a programmatic initiated spellcasting
+function lib:Popup(msg,timeout,OnAccept,OnCancel,data,StopCasting)
+	if InCombatLockdown() then
+		return self:ScheduleLeaveCombatAction("Popup",msg,timeout,OnAccept,OnCancel,data,StopCasting)
+	end
+	msg=msg or "Something strange happened"
+	if type(timeout)=="function" then
+		StopCasting=data
+		data=OnCancel
+		OnAccept=timeout
+		timeout=60
+	end
+	StaticPopupDialogs["LIBINIT_POPUP"] = StaticPopupDialogs["LIBINIT_POPUP"] or
+	{
+	text = msg,
+	showAlert = true,
+	timeout = timeout or 60,
+	exclusive = true,
+	whileDead = true,
+	interruptCinematic = true
+	};
+	local popup=StaticPopupDialogs["LIBINIT_POPUP"]
+	if StopCasting then
+		popup.OnShow=StopSpellCasting
+		popup.OnHide=StopSpellCastingCleanup
+	else
+		popup.OnShow=nil
+		popup.OnHide=nil
+	end
+	popup.timeout=timeout
+	popup.text=msg
+	popup.OnCancel=nil
+	popup.OnAccept=OnAccept
+	popup.button1=ACCEPT
+	popup.button2=nil
+	if (OnCancel) then
+		if (type(OnCancel)=="function") then
+			popup.OnCancel=OnCancel
+		end
+		popup.button2=CANCEL
+	else
+		popup.button1=OKAY
+	end
+	return StaticPopup_Show("LIBINIT_POPUP",timeout,SECONDS,data);
+end
+--- Coroutines.
+-- Methods to manage coroutines
+-- @section coroutine
 lib.coroutines=lib.coroutines or setmetatable({},{__index=function(t,k) rawset(t,k,{}) return t[k] end})
 if not lib.CoroutineScheduler then
 	lib.CoroutineScheduler = CallbackHandler:New(lib,"_OnCoroutineEnd","_CancelOnCoroutine")
@@ -1807,6 +2034,7 @@ local coroutines=lib.coroutines --#Coroutines
 
 --- Executes an action as soon as a coroutine exit
 -- Action can be executed immediately if coroutine is already dead
+-- @tparam string signature Coroutine indentifier as returined by coroutineExecute
 -- @tparam string|function action To be executed, Can be a function or a method name
 -- @tparam[opt] mixed ... More parameters will be directly passed to action
 --
@@ -1830,14 +2058,14 @@ end
 -- If called for already running coroutine changes the interval and the combat status
 -- @tparam number interval between steps
 -- @tparam string|function action To be executed, Can be a function or a method name
--- @tparam[opt] bool keep running in combat
+-- @tparam[opt] bool combatSafe keep running in combat
 -- @tparam[opt] mixed more parameter are passed to function
-function lib:coroutineExecute(interval,func,combatSafe,...)
-	local signature=strjoin(':',tostringall(self,func,...))
-	if type(func)=="string" then
-		func=self[func]
+function lib:coroutineExecute(interval,action,combatSafe,...)
+	local signature=strjoin(':',tostringall(self,action,...))
+	if type(action)=="string" then
+		action=self[action]
 	end
-	assert(type(func) =="function","coroutineExecute arg1 was not convertible to a function " .. tostring(func))
+	assert(type(action) =="function","coroutineExecute arg1 was not convertible to a function " .. tostring(action))
 	local c=lib.coroutines[signature]
 	c.signature=signature
 	c.interval=interval
@@ -1846,10 +2074,10 @@ function lib:coroutineExecute(interval,func,combatSafe,...)
 	--@debug@
 		print("")
 	--@end-debug@ 
-		return 
+		return signature
 	end
 	if type(c.co)=="thread" and coroutine.status(c.co)=="suspended" then return signature end
-	c.co=coroutine.create(func)
+	c.co=coroutine.create(action)
 	c.running=true
 	c.paused=false
 	do 
@@ -1895,312 +2123,60 @@ function lib:coroutineRestart(signature)
 		end
 	end
 end
-if not lib.secureframe then
-	lib.secureframe=CreateFrame("Button",nil,nil,"StaticPopupButtonTemplate,SecureActionButtonTemplate")
-	lib.secureframe:Hide()
-end
-local function StopSpellCasting(this)
-	local b2=_G[this:GetName().."Button2"]
-	local AC=lib.secureframe
-	AC:SetParent(b2)
-	AC:SetAllPoints()
-	AC:SetText(b2:GetText())
-	AC:SetAttribute("type","stop")
-	AC:SetScript("PostClick",function() b2:Click() end)
-	AC:Show()
-end
-local function StopSpellCastingCleanup(this)
-	local AC=lib.secureframe
-	AC:SetParent(nil)
-	AC:Hide()
 
+--- Automatic events.
+--  You can have automatic events creating methods with the name EvtEVENTNAME
+--  For example in order to manage the event ADDON\_LOADED you can just define
+--  a EvtADDON\_LOADED method
+--  @section event
+--  @usage
+--  function addon:EvtADDON_LOADED(event,addonname)
+--  end
+--  function addon:OnEnabled()
+--  self:StartAutomaticEvents()
+--  end
+--  function addon:OnDisabled()
+--  self:StopAutomaticEvents()
+--  end
+
+--- 
+-- Starts all automatic events.
+-- Automatic events are the one for which exists and EvtEVENTNAME method
+-- 
+function lib:StartAutomaticEvents()
+	for k,v in pairs(self) do
+		if (type(v)=='function') then
+			if (k:sub(1,3)=='Evt') then
+				self:RegisterEvent(k:sub(4),k)
+			end
+		end
+	end
 end
-local StaticPopupDialogs=StaticPopupDialogs
-local StaticPopup_Show=StaticPopup_Show
---- Show a popup
--- Display a popup message with Accept and optionally Cancel button
--- @tparam string msg Message to be shown
--- @tparam[opt] number timeout In seconds, if omitted assumes 60
--- @tparam[opt] func OnAccept Executed when clicked on Accept
--- @tparam[opt] func OnCancel Executed when clicked on Cancel (if nill, Cancel button is not shown)
--- @tparam[opt] mixed data Passed to the callback function
--- @tparam[opt] bool StopCasting If true, when the popup appear will stop any running casting.
--- Useful to ask confirmation before performing a programmatic initiated spellcasting
-function lib:Popup(msg,timeout,OnAccept,OnCancel,data,StopCasting)
-	if InCombatLockdown() then
-		return self:ScheduleLeaveCombatAction("Popup",msg,timeout,OnAccept,OnCancel,data,StopCasting)
-	end
-	msg=msg or "Something strange happened"
-	if type(timeout)=="function" then
-		StopCasting=data
-		data=OnCancel
-		OnAccept=timeout
-		timeout=60
-	end
-	StaticPopupDialogs["LIBINIT_POPUP"] = StaticPopupDialogs["LIBINIT_POPUP"] or
-	{
-	text = msg,
-	showAlert = true,
-	timeout = timeout or 60,
-	exclusive = true,
-	whileDead = true,
-	interruptCinematic = true
-	};
-	local popup=StaticPopupDialogs["LIBINIT_POPUP"]
-	if StopCasting then
-		popup.OnShow=StopSpellCasting
-		popup.OnHide=StopSpellCastingCleanup
-	else
-		popup.OnShow=nil
-		popup.OnHide=nil
-	end
-	popup.text=msg
-	popup.OnCancel=nil
-	popup.OnAccept=OnAccept
-	popup.button1=ACCEPT
-	popup.button2=nil
-	if (OnCancel) then
-		if (type(OnCancel)=="function") then
-			popup.OnCancel=OnCancel
-		end
-		popup.button2 = CANCEL
-	else
-		popup.button1=OKAY
-	end
-	StaticPopup_Show("LIBINIT_POPUP",nil,nil,data);
-end
--- Interface widgets
-local backdrop = {
-	bgFile="Interface\\TutorialFrame\\TutorialFrameBackground",
-	edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
-	tile=true,
-	tileSize=16,
-	edgeSize=16,
-	insets={bottom=7,left=7,right=7,top=7}
-}
-local function addBackdrop(f,color)
-	f:SetBackdrop(backdrop)
-	f:SetBackdropBorderColor(C[color or 'Yellow']())
-end
-local factory={} --#factory
-do
-	local nonce=0
-	local GetTime=GetTime
-	local function GetUniqueName(type,father)
-		if father then 
-			local name=father:GetName()
-			if name then 
-				type=type..name 
-			else
-				type=type..father:GetObjectType()
-			end
-		end
-		nonce=nonce+1
-		return type .. tostring(GetTime()*1000) ..nonce
-	end
-	local function SetScript(this,...)
-		this.child:SetScript(...)
-	end
-	local function SetStep(this,value)
-		this:SetObeyStepOnDrag(true)
-		this:SetValueStep(value)
-		this:SetStepsPerPage(1)
-	end
-	function factory:Slider(father,min,max,current,message,tooltip)
-		if type(message)=="table" then
-			tooltip=message.desc
-			message=message.name
-		end
-		local name=GetUniqueName("slider",father)
-		local sl = CreateFrame('Slider',name, father, 'OptionsSliderTemplate')
-		sl:SetWidth(128)
-		sl:SetHeight(20)
-		sl:SetOrientation('HORIZONTAL')
-		sl:SetMinMaxValues(min, max)
-		sl:SetValue(current or -1)
-		sl.SetStep=SetStep
-		sl.Low=_G[name ..'Low']
-		sl.Low:SetText(min)
-		sl.High=_G[name .. 'High']
-		sl.High:SetText(max)
-		sl.Text=_G[name.. 'Text']
-		sl.Text:SetText(message)
-		sl.Value=sl:CreateFontString(name..'Value','ARTWORK','GameFontHighlightSmall')
-		sl.Value:SetPoint("TOP",sl,"BOTTOM")
-		sl.Value:SetJustifyH("CENTER")
-		sl.SetText=function(this,value) this.Text:SetText(value) end
-		sl.SetFormattedText=function(this,...) this.Text:SetFormattedText(...) end
-		sl.SetTextColor=function(this,...) this.Text:SetTextColor(...) end
-		sl.tooltipText=tooltip
-		function sl:OnValueChanged(value)
-			if (not self.unrounded) then
-				value = math.floor(value)
-			end
-			if (self.isPercent) then
-				self.Value:SetFormattedText('%d%%',value)
-			else
-				self.Value:SetText(value)
-			end
-			self:OnChange(value)
-		end
-		function sl:OnChange(value) end
-		function sl:SetOnChange(func) self.OnChange=func end
-		sl:SetScript("OnValueChanged",sl.OnValueChanged)
-		sl:OnValueChanged(current)
-		return sl
-	end
-	function factory:Checkbox(father,current,message,tooltip)
-		if type(message)=="table" then
-			tooltip=message.desc
-			message=message.name
-		end
-		local frame=CreateFrame("Frame",nil,father)
-		local name=GetUniqueName("checkbox",father)
-		local ck=CreateFrame("CheckButton",name,frame,"ChatConfigCheckButtonTemplate")
-		ck.OnClick=function(this)
-			this.frame:OnChange(this:GetChecked())
-		end		
-		frame.SetScript=SetScript
-		frame.child=ck
-		ck.frame=frame
-		ck:SetPoint('TOPLEFT')
-		ck:SetScript("OnClick",ck.OnClick)
-		ck.Text=_G[name..'Text']
-		ck.Text:SetText(message)
-		ck:SetChecked(current)
-		ck.tooltip=tooltip
-		frame:SetWidth(ck:GetWidth()+ck.Text:GetWidth()+2)
-		frame:SetHeight(ck:GetHeight())
-		function frame:OnChange(value) end
-		function frame:SetOnChange(func) self.OnChange=func end
-		return frame
-	end
-	function factory:Button(father,message,tooltip)
-		if type(message)=="table" then
-			tooltip=message.desc
-			message=message.name
-		end
-		local name=GetUniqueName("button",father)
-		local bt=CreateFrame("Button",name,father,"SecureActionButtonTemplate,GameMenuButtonTemplate")
-		bt:SetText(message)
-		bt.tooltipText=tooltip
-		function bt:SetOnChange(func)
-			if type(func)=="function" then
-				bt:SetScript("OnClick",func)
-			else
-				bt:SetScript("OnClick",function(this,...) this.obj[func](this.obj,this,...) end)
-			end
-		end
-		return bt
-	end
---- Creates a dropdown menu
--- @tparam frame father Parent frame to use
--- @tparam mixed current Initial value
--- @tparam array list Option list 
-	function factory:DropDown(father,current,list,message,tooltip)
-		if type(message)=="table" then
-			tooltip=message.desc
-			message=message.name
-		end
-		local frame=CreateFrame("Frame",nil,father)
-		local framename=GetUniqueName("dropdown",father)
-		local dd=CreateFrame("Frame",framename,frame,"UIDropDownMenuTemplate")
-		_G[framename.."Left"]:SetPoint("TOPLEFT",-15,17)
-		_G[framename.."Middle"]:SetWidth(140)
-		dd:SetPoint("BOTTOMLEFT")
-		dd:SetPoint("BOTTOMRIGHT")
-		frame.SetScript=SetScript
-		frame.child=dd
-		dd.frame=frame
-		local desc=frame:CreateFontString(nil,"ARTWORK","GameFontNormalSmall")
-		desc:SetText(message)
-		desc:SetPoint("TOPLEFT")
-		desc:SetPoint("TOPRIGHT")
-		frame:SetWidth(140)
-		frame:SetHeight(45)		
-		if (tooltip) then
-			dd.tooltip=tooltip
-			dd:SetScript("OnEnter",function(self)
-					GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-					GameTooltip:SetText(self.tooltip, nil, nil, nil, nil, (self.tooltipStyle or true));
+
+--- 
+-- Stops all automatic events.
+-- Automatic events are the one for which exists and EvtEVENTNAME method
+-- @tparam[opt] string ignore Name of an event method not to be stopped
+-- @usage
+-- self:StopAutomaticEvents("ADDON_LOADED")
+-- -- Will stop all events but ADDON_LOADED
+-- 
+function lib:StopAutomaticEvents(ignore)
+	for k,v in pairs(self) do
+		if (type(v)=='function') then
+			if (k:sub(1,3)=='Evt') then
+				if (ignore and k==ignore or k:sub(4)==ignore) then
+					--a kickstart event not to be disabled
+				else
+					self:UnregisterEvent(k:sub(4))
 				end
-			)
-		end
-		dd:SetScript("OnLeave",function() GameTooltip:Hide() end)
-		dd.text=dd:CreateFontString(nil,"ARTWORK","GameFontHighlight")
-		function frame:SetText(...)
-			self.child.text:SetText(...)
-		end
-		function frame:SetFormattedText(...)
-			self.child.text:SetFormattedText(...)
-		end
-		function frame:SetTextColor(...)
-			self.child.text:SetTextColor(...)
-		end
-		dd.list=list
-		local name=tostring(GetTime()*1000) ..nonce
-		--dd.dropdown=CreateFrame('Frame',name,father,"UIDropDownMenuTemplate")
-		UIDropDownMenu_Initialize(dd, function(...)
-			local i=0
-			for k,v in pairs(dd.list) do
-				i=i+1
-				local info=UIDropDownMenu_CreateInfo()
-				info.text=v
-				info.value=k
-				info.func=function(...) return dd:OnValueChanged(...) end
-				info.arg1=i
-				info.arg2=k
-				--info.notCheckable=true
-				UIDropDownMenu_AddButton(info)
 			end
-		end)
-		UIDropDownMenu_SetSelectedValue(dd, current)
-		UIDropDownMenu_JustifyText(dd, "LEFT")
-		function dd:OnValueChanged(this,index,value,...)
-			value=value or index
-			UIDropDownMenu_SetSelectedID(dd,index)
-			return self.frame:OnChange(value)
 		end
-		function frame:OnChange(value) end
-		function frame:SetOnChange(func) frame.OnChange=func end
-		return frame
 	end
-	-- These functions directly map to variables
-	local function ToggleSet(this,value)
-		this.obj:ToggleSet(this.flag,this.tipo,value)
-	end
-	function factory:Option(addon,father,flag)
-		if not addon or not addon.GetVarInfo or not father or not flag then
-			error("Usage factory:Option(addon,father,flag",2)
-		end
-		local info=addon:GetVarInfo(flag)
-		if not info then error("factory:Option() Not existent " ..flag,2) end
-		local f=father
-		local w
-		local tipo=info.type
-		if (tipo=="toggle") then
-			w=self:Checkbox(f,addon:ToggleGet(flag,tipo),info)
-			w:SetOnChange(ToggleSet)
-		elseif( tipo=="select") then
-			w=self:DropDown(f,addon:ToggleGet(flag,tipo),info.values,info)			
-			w:SetOnChange(ToggleSet)
-		elseif (tipo=="range") then
-			w=self:Slider(f,info.min,info.max,addon:ToggleGet(flag,info.type),info)
-			w:SetOnChange(ToggleSet)
-		elseif (tipo=="execute") then
-			w=self:Button(f,info)
-			w:SetOnChange(info.func)
-		end
-		w.flag=flag
-		w.tipo=tipo
-		w.obj=addon
-		return w		
-	end
-	factory.Dropdown=factory.DropDown -- compatibility
 end
-function lib:GetFactory()
-	return factory
-end
+
+
+
 local meta={__index=_G,
 __newindex=function(t,k,v)
 	assert(type(_G[k]) == 'nil',"Attempting to override global " ..k)
@@ -2220,10 +2196,7 @@ function lib:SetCustomEnvironment(new_env)
 	end
 	setfenv(2, new_env)
 end
---- reembed routine
--- Prepares the mixins table
-lib.mixins=lib.mixins or {}
-wipe(lib.mixins)
+
 for name,method in pairs(lib) do
 	if type(method)=="function" and name~="NewAddon" and name~="GetAddon" and name:sub(1,1)~="_" then
 		lib.mixins[name] = method

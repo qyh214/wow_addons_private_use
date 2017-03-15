@@ -14,6 +14,8 @@ AppParent:Hide()
 function AppParent:OnInitialize()
     GUI:Embed(self, 'Refresh')
 
+    -- MainPanel:RegisterPanel(L['随身集合石'], self)
+
     self:SetTopHeight(5)
     self:SetBottomHeight(33)
     self.Title:Hide()
@@ -48,7 +50,7 @@ function AppParent:OnInitialize()
                 QrCode:SetSize(100, 100)
                 QrCode:SetPoint('CENTER', 0, 18)
                 QrCode:SetMargin(3)
-                QrCode:SetValue('http://sh.hosapp.blz.netease.com/qrcode/download/wow')
+                QrCode:SetValue(APP_DOWNLOAD_URL)
                 QrCode:Show()
             end
 

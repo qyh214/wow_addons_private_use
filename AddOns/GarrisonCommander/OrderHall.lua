@@ -37,7 +37,7 @@ function module:OnInitialize(...)
 		self:Print("Delegating hall management to OrderHallCommander")
 		return
 	else
-		self:Print(L["Support for Order Hall missions is being moved to OrderHallCommander.\nPlease install and update it"],7)
+		self:Print(L["Support for Order Hall missions is being moved to OrderHallCommander.\nPlease install and update it"])
 	end
 	GHF=ns.GHF
 	GHFMissions=ns.GHFMissions
@@ -151,7 +151,6 @@ function module:ReleaseButton(u)
 	tinsert(pool,u)
 end
 function module:RefreshUpgrades(model,followerID,displayID,showWeapon)
-	print("YO")
 	if not OHFFollowerTab:IsVisible() then return end
 	if model then
 		UpgradeFrame:SetFrameStrata(model:GetFrameStrata())
@@ -251,7 +250,6 @@ print("NPC CLOSED")
 end
 function addon:ApplyMSORTH(value)
 	self:ApplyMSORT(value)
-	self:RefreshMissions()
 end
 
 function module:EventGARRISON_MISSION_STARTED(event,missionType,missionID,...)
@@ -308,6 +306,11 @@ print("Adding Menu",GCS.Menu,GHF.MissionTab:IsVisible(),GHF.FollowerTab:IsVisibl
 	frame:SetParent(GCS)
 	frame:SetFrameStrata(GCS:GetFrameStrata())
 	frame:SetFrameLevel(GCS:GetFrameLevel()+2)
+	local label=AceGUI:Create("Label")
+	label:SetText(L["Support for Order Hall missions is being moved to OrderHallCommander.\nPlease install and update it"])
+	label:SetColor(C.Orange())
+	label:SetWidth(380)
+	menu:AddChild(label)
 	menu:ClearAllPoints()
 	menu:SetPoint("TOPLEFT",GCS,"TOPLEFT",25,-18)
 	menu:SetWidth(GCS:GetWidth()-50)

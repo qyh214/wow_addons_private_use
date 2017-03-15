@@ -22,6 +22,8 @@ local pairs=pairs
 local tinsert=tinsert
 local tremove=tremove
 local dbg
+local new, del, copy =ns.new,ns.del,ns.copy
+
 local tItems ={}
 for _,data in ipairs(addon:GetRewardClasses(LE_FOLLOWER_TYPE_SHIPYARD_6_2)) do
 	tItems[data.key]=data
@@ -150,7 +152,7 @@ function module:CreateMissionList(workList)
 	--[===[@debug@
 	print("Final worklist")
 	--@end-debug@]===]
-	local used=self:NewTable()
+	local used=new()
 	for i=1,#choosenby do
 		local _1,_2,missionId,_=strsplit('@',choosenby[i])
 		if not used[missionId] then
@@ -161,7 +163,7 @@ function module:CreateMissionList(workList)
 			--@end-debug@]===]
 		end
 	end
-	self:DelTable(used)
+	del(used)
 end
 ---
 -- This routine can be called both as coroutin and as a standard one

@@ -1,17 +1,18 @@
 local mod	= DBM:NewMod(1731, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15912 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15976 $"):sub(12, -3))
 mod:SetCreatureID(104288)
 mod:SetEncounterID(1867)
 mod:SetZone()
 mod:SetUsedIcons(1)
 mod:SetHotfixNoticeRev(15058)
+mod:SetModelSound("Sound\\Creature\\Trilliax\\VO_701_Trilliax_19.ogg", "Sound\\Creature\\Trilliax\\VO_701_Trilliax_19.ogg")
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 206788 208924 207513 207502 215062 206641 214672",
+	"SPELL_CAST_START 206788 208924 207513 207502 215062 206641 214672 206820",
 	"SPELL_CAST_SUCCESS 206560 206557 206559 206641",
 	"SPELL_AURA_APPLIED 211615 208910 208915 206641 207327",
 	"SPELL_AURA_APPLIED_DOSE 206641",
@@ -25,7 +26,7 @@ mod:RegisterEventsInCombat(
 --TODO, do more videos with debug to determine if combat log order is valid for link partners
 --TODO, annihilate timer for second Imprint
 --[[
-(ability.id = 207513 or ability.id = 206788 or ability.id = 207502 or ability.id = 214672) and type = "begincast" or
+(ability.id = 207513 or ability.id = 206788 or ability.id = 207502 or ability.id = 214672 or ability.id = 206820) and type = "begincast" or
 (ability.id = 206560 or ability.id = 206557 or ability.id = 206559 or ability.id = 206641 or ability.id = 207630) and type = "cast" or 
 (ability.id = 211615 or ability.id = 208910) and type = "applydebuff"
 --]]
@@ -88,7 +89,7 @@ local voiceSterilize				= mod:NewVoice(208499)--scatter (runout better?)
 local voiceCleansingRage			= mod:NewVoice(206820)--aesoon
 --Maniac
 local voiceArcingBonds				= mod:NewVoice(208915)--linegather
-local voiceAnnihilation				= mod:NewVoice(207630)--farfromline (stay away from lines) Good match for cutter laser?
+local voiceAnnihilation				= mod:NewVoice(207630)--stilldanger
 
 --Caretaker
 local voiceTidyUp					= mod:NewVoice(207513)--mobsoon/watchstep
@@ -130,7 +131,7 @@ function mod:OnCombatStart(delay)
 		)
 	end
 	if self.Options.NPAuraOnCleansing then
-		DBM:FireEvent("BossMod_EnableFriendlyNameplates")
+		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 end
 
@@ -143,7 +144,7 @@ function mod:OnCombatEnd()
 		DBM.InfoFrame:Hide()
 	end
 	if self.Options.NPAuraOnCleansing then
-		DBM.Nameplate:Hide(true, nil, nil, nil, true)
+		DBM.Nameplate:Hide(true, nil, nil, nil, true, false, true)
 	end
 end
 
@@ -166,7 +167,10 @@ function mod:SPELL_CAST_START(args)
 		voiceArcaneSlash:Play("defensive")
 	elseif spellId == 214672 then--Imprint Annihilation
 		specWarnAnnihilation:Show()
-		voiceAnnihilation:Play("farfromline")
+		voiceAnnihilation:Play("stilldanger")
+	elseif spellId == 206820 then
+		specWarnCleansingRage:Show()
+		voiceCleansingRage:Play("aesoon")
 	end
 end
 
@@ -331,8 +335,5 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		voiceAnnihilation:Play("farfromline")
 		timerArcaneSlashCD:Stop()
 		countdownArcaneSlash:Cancel()
-	elseif spellId == 206834 then--Cleansing Rage
-		specWarnCleansingRage:Show()
-		voiceCleansingRage:Play("aesoon")
 	end
 end

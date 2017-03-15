@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(850, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
 mod:SetCreatureID(71515)
 mod:SetEncounterID(1603)
 mod:SetZone()
@@ -109,15 +109,6 @@ local addsTable = {
 
 local bossPower = 0--Will be moved into updateinfoframe function when test code removed
 local lines = {}
-
-local function sortInfoFrame(a, b)
-	local a = lines[a]
-	local b = lines[b]
-	if not tonumber(a) then a = -1 end
-	if not tonumber(b) then b = -1 end
-	if a > b then return true else return false end
-end
-
 local function updateInfoFrame()
 	table.wipe(lines)
 	if UnitExists("boss1") then
@@ -263,7 +254,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerBerserkerStanceCD:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(GetSpellInfo(143589))
-			DBM.InfoFrame:Show(5, "function", updateInfoFrame, sortInfoFrame)
+			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif spellId == 143594 then
 		specWarnBerserkerStance:Show()
@@ -275,7 +266,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnDefensiveStanceSoon:Schedule(59, 1)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(GetSpellInfo(143594))
-			DBM.InfoFrame:Show(5, "function", updateInfoFrame, sortInfoFrame)
+			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif spellId == 143593 then
 		if not self.vb.allForcesReleased then
@@ -292,7 +283,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerBattleStanceCD:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(GetSpellInfo(143593))
-			DBM.InfoFrame:Show(5, "function", updateInfoFrame, sortInfoFrame)
+			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif spellId == 143536 then
 		warnKorkronBanner:Show()
@@ -418,7 +409,7 @@ function mod:OnSync(msg)
 			end
 		end
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:Show(5, "function", updateInfoFrame, sortInfoFrame)
+			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif msg == "AllAdds" and self:AntiSpam(10, 4) then
 		self.vb.allForcesReleased = true

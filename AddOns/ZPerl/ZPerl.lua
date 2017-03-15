@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1022 $")
-XPerl_SetModuleRevision("$Revision: 1022 $")
+end, "$Revision: 1023 $")
+XPerl_SetModuleRevision("$Revision: 1023 $")
 
 -- Upvalus
 local _G = _G
@@ -199,6 +199,9 @@ end
 -- meta table for string based colours. Allows for other mods changing class colours and things all working
 XPerlColourTable = setmetatable({ }, {
 	__index = function(self, class)
+		if not class then
+			return
+		end
 		local c = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[strupper(class or "")]
 		if (c) then
 			c = format("|c00%02X%02X%02X", 255 * c.r, 255 * c.g, 255 * c.b)

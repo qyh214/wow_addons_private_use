@@ -3410,7 +3410,6 @@ if (XPerl_UpgradeSettings) then
 		for realmName, realmList in pairs(ZPerlConfigNew) do
 			if (type(realmList) == "table" and realmName ~= "global" and realmName ~= "savedPositions") then
 				for playerName, settings in pairs(realmList) do
-					print(playerName)
 					if (playerName == "global") then
 						-- Fix global settings being put in with realms
 						if (not ZPerlConfigNew.global) then

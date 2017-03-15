@@ -13,6 +13,7 @@ local NavalDomination={
 	Alliance=39068,
 	Horde=39246
 }
+local autologout=false
 local questid=NavalDomination[UnitFactionGroup("player")]
 function qm:OnInitialized()
 	ns.step="none"
@@ -103,22 +104,29 @@ function addon:LogoutPopup(timeout)
 			end
 			msg=C(msg,'green').."\n"
 		end
-		
 	end
-	local popup=addon:Popup(msg .. CAMP_TIMER,timeout or 10,
+	if not autologout then
+		msg=msg .. LOGOUT
+	else
+		msg=msg .. CAMP_TIMER
+	end
+	local popup=addon:Popup(msg,timeout or 10,
 		function(dialog,data,data2)
 			addon:Unhook(dialog,"OnUpdate")
 			Logout()
 		end,
 		function(dialog,data,timeout)
 			addon:Unhook(dialog,"OnUpdate")
-			if timeout=="timeout" then Logout() end
+			if timeout=="timeout" and autologout then Logout() end
+			autologout=false
 			missionDone=false
 			shipyardDone=false
 			StaticPopup_Hide("LIBINIT_POPUP")
 		end
 	)
-	self:SecureHookScript(popup, "OnUpdate", "LogoutTimer")
+	if autologout then
+		self:SecureHookScript(popup, "OnUpdate", "LogoutTimer")
+	end
 end
 function qm:RunQuick()
 	local completeButton=GMF:IsVisible() and GarrisonCommanderQuickMissionComplete or GCQuickShipMissionCompletionButton
@@ -130,6 +138,8 @@ function qm:RunQuick()
 		end
 		if missionDone and shipyardDone then
 			addon:LogoutPopup(5)
+		else 
+			autologout=false
 		end
 		return 
 	end
@@ -155,6 +165,9 @@ function qm:RunQuick()
 		return addon.ScheduleTimer(qm,"RunQuick",1)
 	end
 
+end
+function addon:EnableAutoLogout()
+	autologout=true
 end
 function addon:RunQuick(force)
 	local main=GMF:IsVisible() and GMF or GSF

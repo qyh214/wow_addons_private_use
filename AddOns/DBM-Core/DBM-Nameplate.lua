@@ -16,6 +16,7 @@ local twipe, floor = table.wipe, math.floor
 --  Create Frame  --
 --------------------
 local DBMNameplateFrame = CreateFrame("Frame", "DBMNameplate", UIParent)
+DBMNameplateFrame:SetFrameStrata('BACKGROUND')
 DBMNameplateFrame:Hide()
 
 --------------------------
@@ -24,9 +25,8 @@ DBMNameplateFrame:Hide()
 local CreateAuraFrame
 do
     local function AuraFrame_CreateIcon(frame)
-        local icon = frame.parent:CreateTexture()
-        icon:SetParent(UIParent)
-        icon:SetSize(48,48)
+        local icon = DBMNameplateFrame:CreateTexture(nil,'BACKGROUND',nil,0)
+        icon:SetSize(40,40)
         icon:Hide()
 
         tinsert(frame.icons,icon)
@@ -257,14 +257,19 @@ function nameplateFrame:Show(isGUID, unit, spellId, texture, duration, desaturat
     end
 end
 
-function nameplateFrame:Hide(isGUID, unit, spellId, texture, force)
+function nameplateFrame:Hide(isGUID, unit, spellId, texture, force, isFriendly, isHostile)
     local currentTexture = texture or GetSpellTexture(spellId)
 
     if self:SupportedNPMod() then
         DBM:Debug("DBM.Nameplate Found supported NP mod, only sending Hide callbacks", 2)
 
         if force then
-            DBM:FireEvent("BossMod_DisableFriendlyNameplates")
+        	if isFriendly then
+            	DBM:FireEvent("BossMod_DisableFriendlyNameplates")
+            end
+            if isHostile then
+            	DBM:FireEvent("BossMod_DisableHostileNameplates")
+            end
         elseif unit then
             DBM:FireEvent("BossMod_HideNameplateAura", isGUID, unit, currentTexture)
         end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1762, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15893 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15981 $"):sub(12, -3))
 mod:SetCreatureID(103685)
 mod:SetEncounterID(1862)
 mod:SetZone()
@@ -12,13 +12,14 @@ mod.respawnTime = 30
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 212997 213238 212794 213531 206365 216034 216723",
+	"SPELL_CAST_START 212997 213238 212794 213531 206365 216034 216723 215988",
 	"SPELL_CAST_SUCCESS 212997 212794 208230",
 	"SPELL_AURA_APPLIED 206480 212794 208230 216040",
 	"SPELL_AURA_APPLIED_DOSE 216024",
 	"SPELL_AURA_REMOVED 212794 216040 206480",
 	"SPELL_PERIODIC_DAMAGE 216027",
 	"SPELL_PERIODIC_MISSED 216027",
+	"UNIT_DIED",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
@@ -30,6 +31,7 @@ mod:RegisterEventsInCombat(
  --(ability.id = 212997 or ability.id = 213238 or ability.id = 208230 or ability.id = 213531 or ability.id = 206365) and type = "begincast"
 local warnCarrionPlague				= mod:NewTargetAnnounce(206480, 3)
 local warnBrandOfArgus				= mod:NewTargetAnnounce(212794, 4)
+local warnBloodFang					= mod:NewCountAnnounce("ej13528", 1)
 --Nightborne
 local warnVolatileWound				= mod:NewStackAnnounce(216024, 3, nil, false, 2)
 --The Legion
@@ -44,6 +46,7 @@ local yellBrandOfArgus				= mod:NewPosYell(212794, 156225)--"Branded" short text
 local specWarnFeastOfBlood			= mod:NewSpecialWarningRun(208230, nil, nil, nil, 1, 2)--Move away, or run? neither one really says "get 30 yards from boss"
 local specWarnFeastOfBloodOther		= mod:NewSpecialWarningTaunt(208230, nil, nil, nil, 1, 2)
 local specWarnEchoesOfVoid			= mod:NewSpecialWarningDodge(213531, nil, nil, nil, 3, 2)
+local specWarnCarrionNightmare 		= mod:NewSpecialWarningDodge(215988, nil, nil, nil, 1, 2)
 local specWarnAdds					= mod:NewSpecialWarningAdds(216726, "-Healer", nil, nil, 1, 2)
 --Nightborne
 local specWarnBlastNova				= mod:NewSpecialWarningInterrupt(216034, "HasInterrupt", nil, nil, 2, 2)
@@ -60,6 +63,7 @@ local timerEchoesOfVoidCD			= mod:NewNextCountTimer(65, 213531, nil, nil, nil, 2
 local timerIllusionaryNightCD		= mod:NewNextCountTimer(125, 206365, nil, nil, nil, 6)
 local timerIllusionaryNight			= mod:NewBuffActiveTimer(32, 206365, nil, nil, nil, 6)
 local timerAddsCD					= mod:NewAddsTimer(25, 216726, nil, "-Healer")
+local timerCarrionNightmare			= mod:NewNextCountTimer(4, 215988, nil, nil, nil, 2)
 
 local berserkTimer					= mod:NewBerserkTimer(470)
 
@@ -67,12 +71,14 @@ local countdownSeekerSwarm			= mod:NewCountdown(25, 213238)
 local countdownEchoesOfVoid			= mod:NewCountdown("Alt65", 213531)
 local countdownFeastOfBlood			= mod:NewCountdown("AltTwo25", 208230, "Tank")
 local countdownNightPhase			= mod:NewCountdown(32, 206365)
+local countdownCarrionNightmare 	= mod:NewCountdown("Alt4", 215988, false, 2, 3)
 
 local voiceCarrionPlague			= mod:NewVoice(206480)--scatter
 local voiceSeekerSwarm				= mod:NewVoice(213238)--targetyou/farfromline
 local voiceFeastOfBlood				= mod:NewVoice(208230)--runout/tauntboss
 local voiceEchoesOfVoid				= mod:NewVoice(213531)--findshelter
 local voiceAdds						= mod:NewVoice(216726, "-Healer", DBM_CORE_AUTO_VOICE3_OPTION_TEXT)--killmob
+local voiceCarrionNightmare			= mod:NewVoice(215988)--watchstep
 --Nightborne
 local voiceBlastNova				= mod:NewVoice(216034)--kickcast
 local voiceNetherZone				= mod:NewVoice(216027)--runaway
@@ -113,6 +119,8 @@ mod.vb.seekerSwarmCast = 0
 mod.vb.brandOfArgusCast = 0
 mod.vb.echoesOfVoidCast = 0
 mod.vb.addsCount = 0
+mod.vb.carrionNightmare = 0
+mod.vb.batsKilled = 0
 
 local updateInfoFrame, sortInfoFrame, breakMarks
 do
@@ -181,6 +189,8 @@ function mod:OnCombatStart(delay)
 	self.vb.brandOfArgusCast = 0
 	self.vb.echoesOfVoidCast = 0
 	self.vb.addsCount = 0
+	self.vb.carrionNightmare = 0
+	self.vb.batsKilled = 0
 	table.wipe(carrionTargets)
 	table.wipe(argusTargets)
 	timerCarrionPlagueCD:Start(7-delay, 1)--Cast end
@@ -212,13 +222,21 @@ function mod:OnCombatEnd()
 		DBMHudMap:Disable()
 	end
 	if self.Options.NPAuraOnCarrionPlague then
-		DBM.Nameplate:Hide(false, nil, nil, nil, true)
+		DBM.Nameplate:Hide(false, nil, nil, nil, true, true)
 	end
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 212997 then
+	if spellId == 215988 then
+		self.vb.carrionNightmare = self.vb.carrionNightmare + 1
+		specWarnCarrionNightmare:Show()
+		voiceCarrionNightmare:Play("watchstep")
+		if self.vb.carrionNightmare < 6 then
+			timerCarrionNightmare:Start()
+			countdownCarrionNightmare:Start()
+		end
+	elseif spellId == 212997 then
 		table.wipe(carrionTargets)
 		if self.vb.darkPhase then--He casts it immediately after a Night phase ends
 			self.vb.darkPhase = false
@@ -327,8 +345,12 @@ function mod:SPELL_CAST_START(args)
 		timerEchoesOfVoidCD:Stop()
 		countdownEchoesOfVoid:Cancel()
 		self.vb.darkPhase = true
+		self.vb.carrionNightmare = 0
+		self.vb.batsKilled = 0
 		timerIllusionaryNight:Start()
 		countdownNightPhase:Start()
+		timerCarrionNightmare:Start(6, 1)
+		countdownCarrionNightmare:Start(6)
 		--Switch to debuff tracking on mythic.
 		if self.Options.InfoFrame and self:IsMythic() then
 			local essenceOfNightDebuff = GetSpellInfo(206466)
@@ -476,6 +498,16 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 104326 then--Dark Phase bats
+		self.vb.batsKilled = self.vb.batsKilled + 1
+		if self.vb.batsKilled % 5 == 0 then
+			warnBloodFang:Show(self.vb.batsKilled)
+		end
+	end
+end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
 	if msg == L.Adds1 or msg:find(L.Adds1) or msg == L.Adds2 or msg:find(L.Adds2) then

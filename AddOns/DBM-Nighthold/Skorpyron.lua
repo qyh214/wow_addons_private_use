@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1706, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15738 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15967 $"):sub(12, -3))
 mod:SetCreatureID(102263)
 mod:SetEncounterID(1849)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -42,21 +42,16 @@ local specWarnTether				= mod:NewSpecialWarningYou(204531, nil, nil, nil, 1, 2)
 local specWarnArcanoslash			= mod:NewSpecialWarningDefensive(204275, "Tank", nil, nil, 1, 2)
 local specWarnCallofScorp			= mod:NewSpecialWarningSwitch(204372, "Tank", nil, nil, 1, 2)--Determine common strat for dps switching
 local specWarnFocusedBlast			= mod:NewSpecialWarningDodge(204471, nil, nil, nil, 2, 2)
-local specWarnShockwave				= mod:NewSpecialWarningMoveTo(204316, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dodge:format(158986), nil, 3, 2)
+local specWarnShockwave				= mod:NewSpecialWarningMoveTo(204316, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dodge:format(204316), nil, 3, 2)
 local specWarnVulnerableStarted		= mod:NewSpecialWarningSwitch(204459, false, nil, nil, 1)
 local specWarnVulnerableOver		= mod:NewSpecialWarningEnd(204459, false, nil, nil, 1)--Special warning because anything that came off cd during stun, is being cast immediately
 local specWarnToxicChit				= mod:NewSpecialWarningMove(204744, nil, nil, nil, 1, 2)
 
 local timerArcanoslashCD			= mod:NewCDTimer(9.6, 204275, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerCallofScorpidCD			= mod:NewCDTimer(20.3, 204372, nil, nil, nil, 1)--20-22 Unless delayed by shockwave/stun then as high as 40
+local timerCallofScorpidCD			= mod:NewCDTimer(20.3, 204372, 88879, nil, nil, 1)--20-22 Unless delayed by shockwave/stun then as high as 40
 local timerShockwaveCD				= mod:NewCDTimer(57.9, 204316, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)--58-60
 local timerFocusedBlastCD			= mod:NewCDTimer(30.4, 204471, nil, nil, nil, 3)--30-34 (32.8 NEW data)
 local timerVulnerable				= mod:NewBuffFadesTimer(15, 204459, nil, nil, nil, 6)
---These are all 46 unless delayed by shockwave or stun
-mod:AddTimerLine(PLAYER_DIFFICULTY6)
---local timerVolatileFragments		= mod:NewCDTimer(46, 214661, nil, nil, nil, 6)--8-46, something tells me it's not Cd based anymore
---local timerAcidicFragments			= mod:NewCDTimer(46, 214652, nil, nil, nil, 6)
---local timerCrystallineFragments		= mod:NewCDTimer(46, 204292, nil, nil, nil, 6)
 
 local countdownShockwave			= mod:NewCountdown(58.3, 204316)
 local countdownCallofScorpid		= mod:NewCountdown("Alt20", 204372)
@@ -155,7 +150,7 @@ function mod:SPELL_CAST_START(args)
 			end
 		end
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(L.NoDebuff:format(GetSpellInfo(204284)))
+			DBM.InfoFrame:SetHeader(DBM_NO_DEBUFF:format(GetSpellInfo(204284)))
 			DBM.InfoFrame:Show(5, "playergooddebuff", 204284)
 		end
 	elseif spellId == 204471 then

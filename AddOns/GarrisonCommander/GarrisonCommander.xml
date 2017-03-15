@@ -1,9 +1,11 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Script file="GarrisonCommander.lua"/>
+<!-- <Button name="GarrisonCommanderWhatsNew" inherits="UIPanelInfoButton" hidden="true" virtual="true"> -->
 	<Button name="GarrisonCommanderWhatsNew" inherits="UIPanelInfoButton" hidden="true" virtual="true">
+		<Size x="32" y="32"/>
 		<Scripts>
-			<OnLeave>GameTooltip:FadeOut()</OnLeave>
+			<OnLeave function="GameTooltip_Hide"/>
 			<OnEnter>
 				if self.tooltip then
 					GameTooltip:SetOwner(self,"ANCHOR_TOPLEFT")

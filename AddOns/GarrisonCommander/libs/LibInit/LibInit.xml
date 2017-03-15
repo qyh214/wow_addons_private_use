@@ -4,5 +4,6 @@
 	<Include file="libs.xml"/>
 	<Script file="LibDataBroker-1.1.lua"/>
 	<Script file="colorize.lua"/>
+	<Script file="factory.lua"/>
 	<Script file="LibInit.lua"/>
 </Ui>

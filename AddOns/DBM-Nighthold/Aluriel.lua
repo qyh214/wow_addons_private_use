@@ -1,21 +1,22 @@
 local mod	= DBM:NewMod(1751, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15881 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15987 $"):sub(12, -3))
 mod:SetCreatureID(104881)
 mod:SetEncounterID(1871)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
-mod:SetHotfixNoticeRev(15854)
+mod:SetHotfixNoticeRev(15984)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 213853 213567 213564 213852 212735 213275 213390 213083 212492 230504",
+	"SPELL_CAST_SUCCESS 230403",
 	"SPELL_AURA_APPLIED 213864 216389 213867 213869 212531 213148 213569 212587 230951 213760 213808",
 	"SPELL_AURA_REMOVED 213569 212531 213148 230951 212587",
-	"SPELL_PERIODIC_DAMAGE 212736 213278 213504",
-	"SPELL_PERIODIC_MISSED 212736 213278 213504",
+	"SPELL_PERIODIC_DAMAGE 212736 213278 213504 230414",
+	"SPELL_PERIODIC_MISSED 212736 213278 213504 230414",
 	"SPELL_DAMAGE 213520",
 	"SPELL_MISSED 213520",
 	"UNIT_AURA player",
@@ -27,9 +28,10 @@ mod:RegisterEventsInCombat(
 --TODO, probably fix more timers. Especially mythic fire and arcane.
 --[[
 (ability.id = 213853 or ability.id = 213567 or ability.id = 213564 or ability.id = 213852 or ability.id = 212735 or ability.id = 213275 or ability.id = 213390 or ability.id = 213083 or ability.id = 212492 or ability.id = 230951 or ability.id = 230504) and type = "begincast" or
+ability.id = 230403 and type = "cast" or
 (ability.id = 213864 or ability.id = 216389 or ability.id = 213867 or ability.id = 213869) and type = "applybuff" or
 (ability.id = 212531 or ability.id = 213148) and type = "applydebuff" or
-ability.id = 230951 and type = "removebuff"
+ability.id = 230951 and type = "removebuff" or ability.id = 230414
 --]]
 --Phases
 local warnFrostPhase				= mod:NewSpellAnnounce(213864, 2)
@@ -62,17 +64,19 @@ local specWarnArcaneDetonate		= mod:NewSpecialWarningDodge(213390, nil, nil, nil
 local specWarnPoolOfFrost			= mod:NewSpecialWarningMove(212736, nil, nil, nil, 1, 2)
 local specWarnBurningGround			= mod:NewSpecialWarningMove(213278, nil, nil, nil, 1, 2)
 local specWarnArcaneFog				= mod:NewSpecialWarningMove(213504, nil, nil, nil, 1, 2)--Fog and orbs combined for simplicity
+local specWarnFelStomp				= mod:NewSpecialWarningMove(230414, nil, nil, nil, 1, 2)--Mythic
 --Animates
 local specWarnAnimateFrost			= mod:NewSpecialWarningSwitch(213853, "-Healer", nil, nil, 1, 2)--Currently spell ID does not contain "animate" in name, which makes warning confusing. Hopefully blizzard fixes
 local specWarnAnimateFire			= mod:NewSpecialWarningSwitch(213567, "-Healer", nil, nil, 1, 2)
 local specWarnAnimateArcane			= mod:NewSpecialWarningSwitch(213564, "-Healer", nil, nil, 1, 2)
 --Mythic
 local specWarnDecimate				= mod:NewSpecialWarningSpell(230504, nil, nil, nil, 1, 2)
+local specWarnFelLash				= mod:NewSpecialWarningSoon(230403, nil, nil, nil, 1, 2)
 
 local timerFrostPhaseCD				= mod:NewNextTimer(80, 213864, nil, nil, nil, 6)
 local timerFirePhaseCD				= mod:NewNextTimer(85, 213867, nil, nil, nil, 6)
 local timerArcanePhaseCD			= mod:NewNextTimer(85, 213869, nil, nil, nil, 6)
-local timerAnnihilateCD				= mod:NewCDCountTimer(40, 212492, nil, "Tank", nil, 5, nil, DBM_CORE_DEADLY_ICON..DBM_CORE_TANK_ICON)
+local timerAnnihilateCD				= mod:NewNextCountTimer(40, 212492, nil, "Tank", nil, 5, nil, DBM_CORE_DEADLY_ICON..DBM_CORE_TANK_ICON)
 --Debuffs
 local timerMarkOfFrostCD			= mod:NewNextTimer(16, 212531, nil, nil, nil, 3)
 local timerSearingBrandCD			= mod:NewNextTimer(16, 213148, nil, nil, nil, 3)
@@ -93,12 +97,15 @@ local timerAnimateArcaneCD			= mod:NewNextTimer(16, 213564, 124338, nil, nil, 1,
 local timerArmageddon				= mod:NewCastTimer(33, 213568, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 --Mythic
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
-local timerFelSoulCD				= mod:NewNextTimer(15, 230951, nil, nil, nil, 1)
+local timerFelSoulCD				= mod:NewNextTimer(15, 230951, nil, nil, nil, 1, nil, DBM_CORE_HEROIC_ICON)
 local timerFelSoul					= mod:NewBuffActiveTimer(45, 230951, nil, nil, nil, 6)
 local timerDecimateCD				= mod:NewCDTimer(17, 230504, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--17-20 (Tank timer by default, holy/ret/etc that's doing taunting will have to enable by default)
+local timerFelStompCD				= mod:NewNextTimer(25, 230414, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
+local timerFelLashCD				= mod:NewNextCountTimer(25, 230403, nil, nil, nil, 2, nil, DBM_CORE_HEROIC_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(600)--480
 
+local countdownFelLash				= mod:NewCountdown(8, 230403)
 local countdownMarkOfFrost			= mod:NewCountdown("Alt30", 212531, nil, nil, 3)
 local countdownSearingBrand			= mod:NewCountdown("Alt30", 213148, nil, nil, 3)
 local countdownAnnihilate			= mod:NewCountdown("Alt30", 212492, "Tank")
@@ -118,12 +125,14 @@ local voiceArcaneDetonate			= mod:NewVoice(213390)--watchorb
 local voicePoolOfFrost				= mod:NewVoice(212736)--runaway
 local voiceBurningGround			= mod:NewVoice(213278)--runaway
 local voiceArcaneFog				= mod:NewVoice(213504)--runaway
+local voiceFelStomp					= mod:NewVoice(230414)--runaway
 --Animates
 local voiceAnimateFrost				= mod:NewVoice(213853)--mobsoon
 local voiceAnimateFire				= mod:NewVoice(213567)--mobsoon
 local voiceAnimateArcane			= mod:NewVoice(213564)--mobsoon
 --Mythic
 local voiceDecimate					= mod:NewVoice(230504)--carefly
+local voiceFelLash					= mod:NewVoice(230403)--gathershare
 
 mod:AddRangeFrameOption("8")
 mod:AddHudMapOption("HudMapOnBrandCharge", 213166)
@@ -136,6 +145,7 @@ mod:AddInfoFrameOption(212647)
 
 mod.vb.annihilateCount = 0
 mod.vb.armageddonAdds = 0
+mod.vb.felLashCount = 0
 local MarkOfFrostDebuff = GetSpellInfo(212587)
 local SearingBrandDebuff = GetSpellInfo(213166)
 local annihilatedDebuff = GetSpellInfo(215458)
@@ -143,6 +153,7 @@ local rangeShowAll = false
 local chargeTable = {}
 local annihilateTimers = {8.0, 45.0, 40.0, 44.0, 38.0, 37.0, 33.0, 47.0, 41.0, 44.0, 38.0, 37.0, 33.0}--Need longer pulls/more data. However this pattern did prove to always be same
 local mythicAnnihilateTimers = {8, 46, 30, 37, 35, 43, 27, 37, 41, 37, 35, 43, 27}
+local felLashTimers = {21, 10.9, 6, 12, 6}
 local searingDetonateIcons = {}
 
 local debuffFilter
@@ -202,6 +213,7 @@ function mod:OnCombatStart(delay)
 	table.wipe(searingDetonateIcons)
 	rangeShowAll = false
 	if self:IsMythic() then
+		self.vb.felLashCount = 0
 		berserkTimer:Start(450)
 	elseif self:IsEasy() then
 		berserkTimer:Start(-delay)--600 confirmed on normal (needs reconfirm on live)
@@ -224,7 +236,7 @@ function mod:OnCombatEnd()
 		DBM.InfoFrame:Hide()
 	end
 	if self.Options.NPAuraOnMarkOfFrost then
-		DBM.Nameplate:Hide(false, nil, nil, nil, true)
+		DBM.Nameplate:Hide(false, nil, nil, nil, true, true)
 	end
 end
 
@@ -302,6 +314,20 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 230403 then
+		self.vb.felLashCount = self.vb.felLashCount + 1
+		local timer = felLashTimers[self.vb.felLashCount+1]
+		if timer then
+			specWarnFelLash:Schedule(timer-3)
+			voiceFelLash:Schedule(timer-3, "gathershare")
+			timerFelLashCD:Start(timer, self.vb.felLashCount+1)
+			countdownFelLash:Start(timer)
+		end
+	end
+end
+
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 213864 or spellId == 216389 then--Icy enchantment (Two versions for some reason, probably normal/lfr version and heroic/mythic)
@@ -334,6 +360,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:IsMythic() then
 			timerFelSoulCD:Start(15)
 			timerSearingBrandCD:Start(17.8)
+			timerFelStompCD:Start(25)
 			timerSearingBrandRepCD:Start(27)
 			self:Schedule(37, findSearingMark, self)--Schedule markers to go out 3 seconds before detonate cast, making a 6 total seconds to position instead of 3
 			timerSearingBrandDetonateCD:Start(40)
@@ -354,9 +381,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnArcanePhase:Show()
 		voicePhaseChange:Play("phasechange")
 		if self:IsMythic() then
+			self.vb.felLashCount = 0
 			timerFelSoulCD:Start(12)
 			--Arcane orb not started here, started somewhere else so timer is actually useful
 			timerArcaneOrbRepCD:Start(15)
+			specWarnFelLash:Schedule(18)
+			voiceFelLash:Schedule(18, "gathershare")
+			timerFelLashCD:Start(21, 1)
+			countdownFelLash:Start(21)
 			timerArcaneOrbDetonateCD:Start(35)--Not in combat log, So difficult to fix until transcriptor. Needs verification
 			specWarnArcaneDetonate:Schedule(35)--^^
 			voiceArcaneDetonate:Schedule(35, "watchorb")--^^
@@ -464,6 +496,9 @@ do
 		elseif spellId == 213504 and destGUID == playerGUID and self:AntiSpam(2, 3) then
 			specWarnArcaneFog:Show()
 			voiceArcaneFog:Play("runaway")
+		elseif spellId == 230414 and destGUID == playerGUID and self:AntiSpam(2, 4) then
+			specWarnFelStomp:Show()
+			voiceFelStomp:Play("runaway")
 		end
 	end
 	mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

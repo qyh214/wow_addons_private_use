@@ -59,23 +59,27 @@ function AppSupport:StatInit()
     end)
 
     ---- Quest
-    RegisterStat('QuestCount', 'QUEST_FINISHED', function()
-        local completed = GetQuestsCompleted()
-        local count = 0
-        for _, id in ipairs(QUEST_LIST) do
-            if completed[id] then
-                count = count + 1
-            end
-        end
-        return count
+    -- RegisterStat('QuestCount', 'QUEST_FINISHED', function()
+    --     local completed = GetQuestsCompleted()
+    --     local count = 0
+    --     for _, id in ipairs(QUEST_LIST) do
+    --         if completed[id] then
+    --             count = count + 1
+    --         end
+    --     end
+    --     return count
+    -- end)
+
+    RegisterStat('OrderHallQuestCount', 'GARRISON_MISSION_COMPLETE_RESPONSE', function()
+        return tonumber((GetStatistic(11236)))
     end)
 
     ---- Achievement
     RegisterStat('AchievementPoint', 'ACHIEVEMENT_EARNED', function()
         local value = 0
-        for _, id in ipairs(ACHIEVEMENT_LIST) do
-            local _, _, points, completed = GetAchievementInfo(id)
-            if completed then
+        for id = 10439, 13000 do
+            local _, _, points, completed, _, _, _, _, _, _, _, isGuild = GetAchievementInfo(id)
+            if not isGuild and completed then
                 value = value + points
             end
         end

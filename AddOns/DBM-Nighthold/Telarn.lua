@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1761, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15917 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15990 $"):sub(12, -3))
 mod:SetCreatureID(104528)--109042
 mod:SetEncounterID(1886)
 mod:SetZone()
@@ -55,7 +55,7 @@ local warnChaosSpheresOfNature		= mod:NewSpellAnnounce(223219, 4)
 --Stage 1: The High Botanist
 local specWarnRecursiveStrikes		= mod:NewSpecialWarningTaunt(218503, nil, nil, nil, 1, 2)
 local specWarnControlledChaos		= mod:NewSpecialWarningDodge(218438, nil, nil, nil, 2, 2)
-local specWarnLasher				= mod:NewSpecialWarningSwitch("ej13699", "Dps", nil, nil, 1, 2)
+local specWarnLasher				= mod:NewSpecialWarningSwitch("ej13699", "RangedDps", nil, 2, 1, 2)
 local yellParasiticFetter			= mod:NewYell(218304)
 local specWarnParasiticFetter		= mod:NewSpecialWarningClose(218304, nil, nil, nil, 1, 2)
 local specWarnParasiticFixate		= mod:NewSpecialWarningRun(218342, nil, nil, nil, 4, 2)
@@ -72,10 +72,8 @@ local yellCoN						= mod:NewPosYell(218809)
 --Stage 1: The High Botanist
 mod:AddTimerLine(SCENARIO_STAGE:format(1))
 local timerControlledChaosCD		= mod:NewNextTimer(35, 218438, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
-local timerSummonChaosSpheresCD		= mod:NewNextTimer(35, 223034, nil, nil, nil, 1, nil, DBM_CORE_HEROIC_ICON)
 local timerParasiticFetterCD		= mod:NewNextTimer(35, 218304, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)--Technically can also be made add timer instead of targetted
 local timerSolarCollapseCD			= mod:NewNextTimer(35, 218148, nil, nil, nil, 3)
-local timerCollapseofNightCD		= mod:NewNextTimer(35, 223437, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 
 --Stage 2: Nightosis
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
@@ -86,6 +84,8 @@ local timerToxicSporesCD			= mod:NewNextTimer(8.5, 219049, nil, nil, nil, 3)--Ex
 local timerGraceOfNatureCD			= mod:NewNextTimer(48, 218927, nil, "Tank", nil, 5)--48-51
 local timerCoNCD					= mod:NewNextTimer(50, 218809, nil, nil, nil, 3)
 mod:AddTimerLine(PLAYER_DIFFICULTY6)
+local timerSummonChaosSpheresCD		= mod:NewNextTimer(35, 223034, nil, nil, nil, 1, nil, DBM_CORE_HEROIC_ICON)
+local timerCollapseofNightCD		= mod:NewNextTimer(35, 223437, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 local timerChaotiSpheresofNatureCD	= mod:NewNextTimer(35, 223219, nil, nil, nil, 1, nil, DBM_CORE_HEROIC_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(480)
@@ -184,7 +184,7 @@ function mod:OnCombatEnd()
 		DBMHudMap:Disable()
 	end
 	if self.Options.NPAuraOnFixate or self.Options.NPAuraOnCoN then
-		DBM.Nameplate:Hide(false, nil, nil, nil, true)
+		DBM.Nameplate:Hide(false, nil, nil, nil, true, true)
 	end
 end
 
@@ -380,9 +380,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			--Bump phase and stop all timers since regardless of kills, phase changes reset anyone that's still up
 			self.vb.phase = self.vb.phase + 1
 			if self.vb.phase == 2 then
-				self.vb.globalTimer = 55--Needs updating
+				self.vb.globalTimer = 55
 			else
-				self.vb.globalTimer = 35--Needs updating
+				self.vb.globalTimer = 35
 			end
 			--Arcanist Timers
 			timerCoNCD:Stop()

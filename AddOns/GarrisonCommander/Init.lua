@@ -30,8 +30,8 @@ local addon=ns.addon --#addon
 ns.toc=select(4,GetBuildInfo())
 ns.AceGUI=LibStub("AceGUI-3.0")
 ns.D=LibStub("LibDeformat-3.0")
-ns.C=ns.addon:GetColorTable()
-ns.L=ns.addon:GetLocale()
+ns.C=addon:GetColorTable()
+ns.L=addon:GetLocale()
 ns.G=C_Garrison
 ns.GMF=_G.GarrisonMissionFrame
 ns.blacklist=false
@@ -59,8 +59,8 @@ GetQuestsCompleted(ns.quests)
 function addon:EventQUEST_TURNED_IN(event,quest,item,gold)
 	ns.quests[quest]=true
 end
-ns.new=function() return addon:NewTable() end
-ns.del=function(t) return addon:NewTable(t) end
+ns.new=addon:Wrap("NewTable")
+ns.del=addon:Wrap("DelTable")
 --[===[@debug@
 local t =ns.new()
 if type(t)~="table" then

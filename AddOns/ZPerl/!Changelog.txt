@@ -1,3 +1,6 @@
+**r1023**
+* Fixed some lua error with the meta tables.
+
 **r1022**
 * Force disabling Raid in Party options. (Anyone who would like to use this feature reenable it again.)
 * Fixed an issue with target and target's target frames.

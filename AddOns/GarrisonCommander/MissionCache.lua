@@ -28,6 +28,8 @@ local empty={}
 local index={}
 local classes={}
 local _G=_G
+local new, del, copy =ns.new,ns.del,ns.copy
+
 -- Mission caching is a bit different fron follower caching mission appears and disappears on a regular basis
 local module=addon:NewSubClass('MissionCache') --#module
 
@@ -258,8 +260,8 @@ end
 function module:OnAllGarrisonMissions(func,inProgress,missionType)
 	local m=(missionType and missionType==LE_FOLLOWER_TYPE_GARRISON_7_0) and GHFMissions or GMFMissions
 	local list=inProgress and m.inProgressMissions or m.availableMissions
-	local tmp=addon:NewTable()
 	if type(list)=='table' then
+		local tmp=new()
 		for i=1,#list do
 			tinsert(tmp,list[i].missionID)
 		end
@@ -267,8 +269,8 @@ function module:OnAllGarrisonMissions(func,inProgress,missionType)
 		for i=1,#tmp do
 			func(tmp[i])
 		end
+		del(tmp)
 	end
-	addon:DelTable(tmp)
 end
 
 -- Old cache to be removed
