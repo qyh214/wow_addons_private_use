@@ -12,9 +12,9 @@
   <Script file="MenuTableAPI.lua" />
   <Script file="Main.lua" />
   <Script file="Profile.lua" />
-  <Include file="Logic\Logic.xml" />
   <Include file="Cache\Cache.xml" />
   <Include file="Class\Class.xml" />
+  <Include file="Logic\Logic.xml" />
   <Include file="Widget\Widget.xml" />
   <Include file="Module\Module.xml" />
   <Script file="System.lua" />

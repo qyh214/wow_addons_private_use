@@ -1,8 +1,8 @@
 
-local WIDGET, VERSION = 'BottomTabButton', 1
+local WIDGET, VERSION = 'BottomTabButton', 2
 
 local GUI = LibStub('NetEaseGUI-2.0')
-local BottomTabButton = GUI:NewClass(WIDGET, GUI:GetClass('ItemButton'), VERSION)
+local BottomTabButton = GUI:NewClass(WIDGET, GUI:GetClass('TabItemButton'), VERSION)
 if not BottomTabButton then
     return
 end

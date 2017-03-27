@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1732, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15982 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16048 $"):sub(12, -3))
 mod:SetCreatureID(103758)
 mod:SetEncounterID(1863)
 mod:SetZone()
@@ -100,7 +100,7 @@ mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerConjunctionCD			= mod:NewCDCountTimer(16, 205408, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 local timerConjunction				= mod:NewBuffFadesTimer(10, 207720, nil, nil, nil, 5, nil, DBM_CORE_DEADLY_ICON)
 
---local berserkTimer					= mod:NewBerserkTimer(463)
+local berserkTimer					= mod:NewBerserkTimer(463)
 
 --Base abilities
 local countdownConjunction			= mod:NewCountdownFades("AltTwo10", 205408, nil, nil, 10)
@@ -161,11 +161,11 @@ local felEjectionTimers = {18.2, 3.6, 3.2, 2.4, 10.2, 4.4, 2.8, 32.8, 4.0, 1.6, 
 local mythicfelEjectionTimers = {17.4, 3.2, 2.8, 2.4, 9.3, 2.4, 3.2, 31.2, 2, 1.2, 13.4, 1.2, 1.7, 23, 8.5, 9.3, 2.5, 1.5, 24.3, 3.2}
 local voidEjectionTimers = {24, 3.2, 14.1, 17.4, 0.8, 4.7, 25.7, 2.3}
 --local felNovaTImers = {34.8, 31.3, 29.3}--Latest is 47.1, 45.0, 25.1. Currently unused. for now just doing 45 or 25
-local worldDestroyingTimers = {22, 42, 57}
+local worldDestroyingTimers = {22, 42, 57, 51.8}
 local ps1Grand = {15, 12.2}
 local ps2Grand = {27, 44.9, 58.3}
 local ps3Grand = {58.7, 43, 41.4}
-local ps4Grand = {48, 61.7, 50}
+local ps4Grand = {46.5, 61.6, 51.2}
 local abZeroDebuff, chilledDebuff, gravPullDebuff = GetSpellInfo(206585), GetSpellInfo(206589), GetSpellInfo(205984)
 local icyEjectionDebuff, coronalEjectionDebuff, voidEjectionDebuff = GetSpellInfo(206936), GetSpellInfo(206464), GetSpellInfo(207143)
 local crabDebuff, dragonDebuff, hunterDebuff, wolfDebuff = GetSpellInfo(205429), GetSpellInfo(216344), GetSpellInfo(216345), GetSpellInfo(205445)
@@ -190,16 +190,9 @@ do
 	end
 end
 
-local updateInfoFrame, sortInfoFrame
+local updateInfoFrame
 do
 	local lines = {}
-	sortInfoFrame = function(a, b)
-		local a = lines[a]
-		local b = lines[b]
-		if not tonumber(a) then a = -1 end
-		if not tonumber(b) then b = -1 end
-		if a < b then return true else return false end
-	end
 	updateInfoFrame = function()
 		table.wipe(lines)
 		local infoNeeded = false
@@ -358,7 +351,6 @@ function mod:OnCombatStart(delay)
 	else
 --		timerCoronalEjectionCD:Start(12.9-delay)--Still could be health based
 	end
-	--berserkTimer:Start(-delay)
 end
 
 function mod:OnCombatEnd()
@@ -553,7 +545,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.vb.StarSigns == 1 then
 			updateRangeFrame(self)
 			if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
-				DBM.InfoFrame:Show(15, "function", updateInfoFrame, sortInfoFrame, true)
+				DBM.InfoFrame:Show(15, "function", updateInfoFrame, false, true)
 			end
 		end
 		if self.Options.NPAuraOnConjunction and not self.Options.ShowCustomNPAuraTextures then
@@ -756,14 +748,15 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			timerWorldDevouringForceCD:Start(22, 1)
 			countWorldDevouringForce:Start(22)
 			timerConjunctionCD:Start(46.5, 1)
+			berserkTimer:Start(201)
+		else
+			berserkTimer:Start(231)
 		end
 	end
 end
 
 do
 	local debuffName = GetSpellInfo(207143)
-	--Jumps didn't show in combat log during testing, only original casts. However, jumps need warnings too
-	--Check at later time if jumps are in combat log
 	function mod:UNIT_AURA(uId)
 		local hasDebuff = UnitDebuff("player", debuffName)
 		if hasDebuff and not voidWarned then

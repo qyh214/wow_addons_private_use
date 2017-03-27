@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(609, "DBM-Party-WotLK", 15, 278)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 236 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 243 $"):sub(12, -3))
 mod:SetCreatureID(36476)
 mod:SetEncounterID(835, 836, 2001)
 mod:SetUsedIcons(8)
@@ -15,22 +15,26 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 69029",
 	"SPELL_PERIODIC_DAMAGE 69024",
 	"SPELL_PERIODIC_MISSED 69024",
-	"RAID_BOSS_EMOTE",
 	"UNIT_AURA_UNFILTERED"
 )
 
 local warnPursuitCast			= mod:NewCastAnnounce(68987, 3)
 local warnPursuit				= mod:NewTargetAnnounce(68987, 4)--TODO, just switch to UNIT_AURA, syncing not reliable especially with older zones.
 
-local specWarnToxic				= mod:NewSpecialWarningMove(69024)
-local specWarnMines				= mod:NewSpecialWarningSpell(69015, nil, nil, nil, 2)
-local specWarnPursuit			= mod:NewSpecialWarningRun(68987, nil, nil, 2, 4)
-local specWarnPoisonNova		= mod:NewSpecialWarningRun(68989, "Melee", nil, 2, 4)
+local specWarnToxic				= mod:NewSpecialWarningMove(69024, nil, nil, nil, 1, 2)
+local specWarnMines				= mod:NewSpecialWarningSpell(69015, nil, nil, nil, 2, 2)
+local specWarnPursuit			= mod:NewSpecialWarningRun(68987, nil, nil, 2, 4, 2)
+local specWarnPoisonNova		= mod:NewSpecialWarningRun(68989, "Melee", nil, 2, 4, 2)
 
 local timerSpecialCD			= mod:NewCDSpecialTimer(20)--Every 20-22 seconds. In rare cases he skips a special though and goes 40 seconds. unsure of cause
 local timerPursuitCast			= mod:NewCastTimer(5, 68987)
 local timerPursuitConfusion		= mod:NewBuffActiveTimer(12, 69029)
 local timerPoisonNova			= mod:NewCastTimer(5, 68989, nil, "Melee", 2, 2)
+
+local voiceToxic				= mod:NewVoice(69024)--runaway
+local voiceMines				= mod:NewVoice(69015)--watchstep/keepmove
+local voicePursuit				= mod:NewVoice(68987)--justrun
+local voicePoisonNova			= mod:NewVoice(68989, "Melee")--runout
 
 mod:AddBoolOption("SetIconOnPursuitTarget", true)
 
@@ -44,28 +48,30 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 68987 then							-- Pursuit
+	if spellId == 68987 then					-- Pursuit
 		warnPursuitCast:Show()
 		timerPursuitCast:Start()
 		timerSpecialCD:Start()
 	elseif spellId == 68989 then				-- Poison Nova
 		timerPoisonNova:Start()
 		specWarnPoisonNova:Show()
+		voicePoisonNova:Play("runout")
 		timerSpecialCD:Start()
 	elseif spellId == 69012 then				--Explosive Barrage
 		specWarnMines:Show()
+		voiceMines:Play("watchstep")
 		timerSpecialCD:Start(22)--Will be 2 seconds longer because of how long barrage lasts
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 69029 then							-- Pursuit Confusion
+	if args.spellId == 69029 then					-- Pursuit Confusion
 		timerPursuitConfusion:Start()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 69029 then							-- Pursuit Confusion
+	if args.spellId == 69029 then					-- Pursuit Confusion
 		timerPursuitConfusion:Cancel()
 	end
 end
@@ -73,16 +79,10 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 69024 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnToxic:Show()
+		voiceToxic:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
-
---[[
-function mod:RAID_BOSS_EMOTE(msg)
-	if msg == L.Barrage or msg:find(L.Barrage) then
-		specWarnMines:Show()
-	end
-end--]]
 
 function mod:UNIT_AURA_UNFILTERED(uId)
 	local isPursuitDebuff = UnitDebuff(uId, pursuit)
@@ -96,6 +96,7 @@ function mod:UNIT_AURA_UNFILTERED(uId)
 		pursuitTable[name] = true
 		if UnitIsUnit(uId, "player") then
 			specWarnPursuit:Show()
+			voicePursuit:Play("justrun")
 		else
 			warnPursuit:Show(name)
 		end

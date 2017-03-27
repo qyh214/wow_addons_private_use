@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(533, "DBM-Party-BC", 16, 249)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 606 $"):sub(12, -3))
 mod:SetCreatureID(24664)
 mod:SetEncounterID(1894)
 mod:SetModelID(22906)--Here for a reason?
@@ -23,14 +23,17 @@ mod:RegisterEventsInCombat(
 local WarnShockBarrior		= mod:NewSpellAnnounce(46165, 3)
 local WarnGravityLapse		= mod:NewSpellAnnounce(44224, 2)
 
-local specwarnPyroblast		= mod:NewSpecialWarningInterrupt(36819)
-local specwarnPhoenix		= mod:NewSpecialWarningSwitch(44194, "-Healer")
+local specwarnPyroblast		= mod:NewSpecialWarningInterrupt(36819, "HasInterrupt", nil, 2, 1, 2)
+local specwarnPhoenix		= mod:NewSpecialWarningSwitch(44194, "-Healer", nil, nil, 1, 2)
 
 local timerPyroblast		= mod:NewCastTimer(4, 36819, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 local timerShockBarrior		= mod:NewNextTimer(60, 46165, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 local timerPhoenix			= mod:NewCDTimer(45, 44194, nil, nil, nil, 1)--45-70?
 local timerGravityLapse		= mod:NewBuffActiveTimer(35, 44194, nil, nil, nil, 6)
 local timerGravityLapseCD	= mod:NewNextTimer(13.5, 44194, nil, nil, nil, 6)
+
+local voicePyroblast		= mod:NewVoice(36819, "HasInterrupt")--kickcast
+local voicePhoenix			= mod:NewVoice(44194, "-Healer")--killmob
 
 local interruptable = false
 local phase2Started = false
@@ -68,6 +71,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 44194 then
 		specwarnPhoenix:Show()
+		voicePhoenix:Play("killmob")
 		timerPhoenix:Start()
 	end
 end
@@ -82,6 +86,7 @@ end
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 46165 and interruptable then
         specwarnPyroblast:Show(args.destName)
+        voicePyroblast:Play("kickcast")
 	end
 end
 

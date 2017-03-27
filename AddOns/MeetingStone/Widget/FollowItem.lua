@@ -22,9 +22,8 @@ function FollowItem:Constructor()
     end
 
     local FollowStatus = self:CreateTexture(nil, 'ARTWORK') do
-        FollowStatus:SetPoint('RIGHT', Name, 'LEFT', -5, 0)
-        FollowStatus:SetSize(16, 16)
-        FollowStatus:SetTexture([[Interface\COMMON\Indicator-Green]])
+        FollowStatus:SetPoint('RIGHT', Name, 'LEFT', -3, 0)
+        FollowStatus:SetSize(24, 24)
     end
 
     self:SetHighlightTexture([[INTERFACE\QUESTFRAME\UI-QuestTitleHighlight]], 'ADD')
@@ -42,14 +41,16 @@ function FollowItem:OnSizeChanged()
     self.Realm:SetPoint('CENTER', self, 'RIGHT', -x, 0)
 end
 
+
+local FollowIcons = {
+    [FOLLOW_STATUS_UNKNOWN] = [[Interface\AddOns\MeetingStone\Media\FollowStatus\Unknown]],
+    [FOLLOW_STATUS_STARED]  = [[Interface\AddOns\MeetingStone\Media\FollowStatus\Stared]],
+    [FOLLOW_STATUS_FRIEND]  = [[Interface\AddOns\MeetingStone\Media\FollowStatus\Friend]],
+}
+
 function FollowItem:SetData(data)
     local name, realm = strsplit('-', data.name)
     self.Name:SetText(name)
     self.Realm:SetText(realm)
-
-    if data.bitfollow then
-        self.FollowStatus:SetTexture([[Interface\COMMON\Indicator-Green]])
-    else
-        self.FollowStatus:SetTexture([[Interface\COMMON\Indicator-Red]])
-    end
+    self.FollowStatus:SetTexture(FollowIcons[data.status or FOLLOW_STATUS_UNKNOWN])
 end

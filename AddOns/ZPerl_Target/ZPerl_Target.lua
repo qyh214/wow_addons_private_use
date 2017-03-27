@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1022 $")
+end, "$Revision: 1026 $")
 
 -- Upvalues
 local _G = _G
@@ -139,6 +139,7 @@ function XPerl_Target_OnLoad(self, partyid)
 		"UNIT_NAME_UPDATE",
 		--"PET_BATTLE_OPENING_START"
 		--"PET_BATTLE_CLOSE",
+		"HONOR_PRESTIGE_UPDATE",
 	}
 
 	for i, event in pairs(events) do
@@ -421,13 +422,64 @@ end
 local function XPerl_Target_UpdatePVP(self)
 	local partyid = self.partyid
 
-	local pvp = self.conf.pvpIcon and ((UnitIsPVPFreeForAll(partyid) and "FFA") or (UnitIsPVP(partyid) and (UnitFactionGroup(partyid) ~= "Neutral") and UnitFactionGroup(partyid)))
+	local pvpIcon = self.nameFrame.pvp
+	local prestigeIcon = self.nameFrame.prestige
+
+	local factionGroup, factionName = UnitFactionGroup(partyid)
+
+	if self.conf.pvpIcon and UnitIsPVPFreeForAll(partyid) then
+		local prestige = UnitPrestige(partyid)
+
+		if prestige > 0 then
+			prestigeIcon.icon:SetTexture(GetPrestigeInfo(prestige))
+			prestigeIcon:Show()
+			pvpIcon:Hide()
+		else
+			prestigeIcon:Hide()
+			pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
+			pvpIcon:Show()
+		end
+	elseif self.conf.pvpIcon and factionGroup and factionGroup ~= "Neutral" and UnitIsPVP(partyid) then
+		local prestige = UnitPrestige(partyid)
+
+		if prestige > 0 then
+			if UnitIsMercenary(partyid) then
+				if factionGroup == "Horde" then
+					factionGroup = "Alliance"
+				elseif factionGroup == "Alliance" then
+					factionGroup = "Horde"
+				end
+			end
+
+			prestigeIcon.icon:SetTexture(GetPrestigeInfo(prestige))
+			prestigeIcon:Show()
+			pvpIcon:Hide()
+		else
+			prestigeIcon:Hide()
+			pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
+
+			if UnitIsMercenary(partyid) then
+				if factionGroup == "Horde" then
+					pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
+				elseif factionGroup == "Alliance" then
+					pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
+				end
+			end
+
+			pvpIcon:Show()
+		end
+	else
+		prestigeIcon:Hide()
+		pvpIcon:Hide()
+	end
+
+	--[[local pvp = self.conf.pvpIcon and ((UnitIsPVPFreeForAll(partyid) and "FFA") or (UnitIsPVP(partyid) and (UnitFactionGroup(partyid) ~= "Neutral") and UnitFactionGroup(partyid)))
 	if (pvp) then
 		self.nameFrame.pvp.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
 		self.nameFrame.pvp:Show()
 	else
 		self.nameFrame.pvp:Hide()
-	end
+	end]]
 
 	if (self.conf.reactionHighlight) then
 		local c = XPerl_ReactionColour(partyid)
@@ -1554,6 +1606,11 @@ end
 function XPerl_Target_Events:UNIT_FACTION()
 	XPerl_Target_UpdatePVP(self)
 	XPerl_Targets_BuffPositions(self)
+end
+
+-- HONOR_PRESTIGE_UPDATE
+function XPerl_Target_Events:HONOR_PRESTIGE_UPDATE()
+	XPerl_Target_UpdatePVP(self)
 end
 
 -- PLAYER_FLAGS_CHANGED

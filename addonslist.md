@@ -64,6 +64,8 @@ OmniCC冷却计时
 
 Postal
 
+PersonalLootHelper
+
 Quartz施法条美化（castbar替代品）
 
 RelicInspector

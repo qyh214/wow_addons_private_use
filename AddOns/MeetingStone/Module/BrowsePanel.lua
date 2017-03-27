@@ -505,7 +505,7 @@ function BrowsePanel:OnInitialize()
         AdvButton:SetSize(32, 32)
         AdvButton:SetPoint('LEFT', RefreshButton, 'RIGHT', 0, 0)
 
-        if Profile:NeedAdvShine() then
+        if Profile:IsProfileKeyNew('advShine', 60200.09) then
             local Shine = GUI:GetClass('ShineWidget'):New(AdvButton) do
                 Shine:SetPoint('TOPLEFT', 5, -5)
                 Shine:SetPoint('BOTTOMRIGHT', -5, 5)
@@ -513,7 +513,7 @@ function BrowsePanel:OnInitialize()
             end
             AdvButton.Shine = Shine
             AdvButton:SetScript('OnClick', function()
-                Profile:ClearAdvShine()
+                Profile:ClearProfileKeyNew('advShine')
                 Shine:Stop()
                 Shine:Hide()
                 AdvButton:SetScript('OnClick', function()
@@ -664,7 +664,6 @@ function BrowsePanel:OnInitialize()
 
     self:RegisterEvent('LFG_LIST_SEARCH_RESULT_UPDATED')
     self:RegisterEvent('LFG_LIST_APPLICATION_STATUS_UPDATED', 'LFG_LIST_SEARCH_RESULT_UPDATED')
-    self:RegisterMessage('LFG_LIST_SEARCH_RESULT_REMOVED')
     self:RegisterMessage('MEETINGSTONE_SEARCH_PROFILE_UPDATE')
 
     self:RegisterMessage('MEETINGSTONE_SETTING_CHANGED_packedPvp', 'LFG_LIST_AVAILABILITY_UPDATE')
@@ -713,11 +712,6 @@ function BrowsePanel:LFG_LIST_SEARCH_RESULT_UPDATED(_, id)
     self.ActivityList:Refresh()
 end
 
-function BrowsePanel:LFG_LIST_SEARCH_RESULT_REMOVED(_, id)
-    self:RemoveActivity(id)
-    self.ActivityList:Refresh()
-end
-
 function BrowsePanel:MEETINGSTONE_SEARCH_PROFILE_UPDATE()
     self.SearchProfileDropdown:SetMenuTable(self:GetSearchProfileMenuTable())
     self.SearchProfileDropdown:SetValue(nil)
@@ -747,12 +741,14 @@ function BrowsePanel:CacheActivity(id)
         return
     elseif not activityId then
         return
-    -- elseif title:match('单刷') or comment:match('单刷') or title == '勿扰' then
-    --     return
     end
 
     local activityItem = self.ActivityDropdown:GetItem()
     local activity = Activity:New(id)
+
+    if not activity:Update() then
+        return
+    end
 
     if activityItem then
         if activityItem.activityId and not ACTIVITY_CUSTOM_DATA.A[activityItem.activityId] then

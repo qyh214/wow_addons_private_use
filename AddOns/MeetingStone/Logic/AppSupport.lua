@@ -16,6 +16,9 @@ function AppSupport:OnEnable()
     self:GuildMOTDInit()
     self:StatInit()
     self:ChallengeInit()
+    self:DataInit()
+
+    
 end
 
 function AppSupport:OnDisable()
@@ -118,6 +121,40 @@ function AppSupport:StatInit()
         end
     end
     App:SendServer('APP_STATISTIC_INIT', prevStatCache)
+end
+
+---- App Data
+
+function AppSupport:DataInit()
+    local function RegisterData(key, events, fn, interval, all)
+        local val
+        local function cb(...)
+            local newval = fn(...)
+            if newval and (all or newval ~= val) then
+                val = newval
+                App:SendServer('APP_DATA', key, val)
+            end
+        end
+
+        if type(events) == 'table' and (not interval or interval <= 0) then
+            interval = 1
+        end
+
+        if interval and interval > 0 then
+            self:RegisterBucketEvent(events, interval, cb)
+        else
+            self:RegisterEvent(events, cb)
+        end
+    end
+
+    local function GetLegendaryItem(_, msg)
+        local item = tonumber(msg:match('item:(%d+)'))
+        local _, _, quality, _, reqLevel = GetItemInfo(item)
+        return item and quality == LE_ITEM_QUALITY_LEGENDARY and reqLevel >= 110 and IsEquippableItem(item) and item
+    end
+
+    RegisterData('Zone', {'ZONE_CHANGED_NEW_AREA', 'ZONE_CHANGED_INDOORS', 'ZONE_CHANGED'}, GetZoneText, COMMIT_INTERVAL)
+    RegisterData('ItemPush', 'CHAT_MSG_LOOT', GetLegendaryItem, 0, true)
 end
 
 ---- Group Member

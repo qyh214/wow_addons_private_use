@@ -3,4 +3,5 @@
   <Script file="BaseApply.lua" />
   <Script file="WorldQuestApply.lua" />
   <Script file="RemoteApply.lua" />
+  <Script file="Throttle.lua" />
 </Ui>

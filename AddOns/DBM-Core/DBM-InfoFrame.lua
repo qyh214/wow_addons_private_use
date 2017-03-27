@@ -61,8 +61,7 @@ local modLines = 5
 local currentEvent
 local headerText = "DBM Info Frame"	-- this is only used if DBM.InfoFrame:SetHeader(text) is not called before :Show()
 local lines = {}
-local sortingAsc
-local noSort
+local sortMethod = 1--1 Default, 2 SortAsc, 3 GroupId
 local sortedLines = {}
 local icons = {}
 local value = {}
@@ -259,18 +258,24 @@ local function sortFuncDesc(a, b) return lines[a] > lines[b] end
 local function sortFuncAsc(a, b) return lines[a] < lines[b] end
 local function namesortFuncAsc(a, b) return a < b end
 local function sortGroupId(a, b) return getGroupId(DBM, a) < getGroupId(DBM, b) end
-local function updateLines()
+local function updateLines(preSorted)
 	twipe(sortedLines)
-	for i in pairs(lines) do
-		sortedLines[#sortedLines + 1] = i
-	end
-	if noSort then
-		-- noSort actually means: sort by group id
-		table.sort(sortedLines, sortGroupId)
-	elseif sortingAsc then
-		table.sort(sortedLines, sortFuncAsc)
+	if preSorted then
+		-- copy table as code from mod keeps around references this this and the "normal" table is wiped regularly
+		for i, v in ipairs(preSorted) do
+			sortedLines[i] = v
+		end
 	else
-		table.sort(sortedLines, sortFuncDesc)
+		for i in pairs(lines) do
+			sortedLines[#sortedLines + 1] = i
+		end
+		if sortMethod == 3 then
+			table.sort(sortedLines, sortGroupId)
+		elseif sortMethod == 2 then
+			table.sort(sortedLines, sortFuncAsc)
+		else
+			table.sort(sortedLines, sortFuncDesc)
+		end
 	end
 	for i, v in ipairs(updateCallbacks) do
 		v(sortedLines)
@@ -293,9 +298,7 @@ local function updateLinesCustomSort(sortFunc)
 	for i in pairs(lines) do
 		sortedLines[#sortedLines + 1] = i
 	end
-	if type(sortFunc) == "function" then
-		table.sort(sortedLines, sortFunc)
-	end
+	table.sort(sortedLines, sortFunc)
 	for i, v in ipairs(updateCallbacks) do
 		v(sortedLines)
 	end
@@ -366,6 +369,55 @@ local function updateEnemyPower()
 			if currentPower / maxPower * 100 >= threshold then
 				lines[UnitName("boss"..i)] = currentPower
 			end
+		end
+	end
+	updateLines()
+	updateIcons()
+end
+
+local function updateEnemyAbsorb()
+	twipe(lines)
+	local spellName = value[1]
+	for i = 1, 5 do
+		if UnitExists("boss"..i) then
+			local absorbAmount = select(17, UnitBuff("boss"..i, spellName)) or select(17, UnitDebuff("boss"..i, spellName))
+			if absorbAmount then
+				lines[UnitName("boss"..i)] = absorbAmount
+			end
+		end
+	end
+	updateLines()
+	updateIcons()
+end
+
+local function updateAllAbsorb()
+	twipe(lines)
+	local spellName = value[1]
+	for i = 1, 5 do
+		if UnitExists("boss"..i) then
+			local absorbAmount = select(17, UnitBuff("boss"..i, spellName)) or select(17, UnitDebuff("boss"..i, spellName))
+			if absorbAmount then
+				lines[UnitName("boss"..i)] = absorbAmount
+			end
+		end
+	end
+	for uId in DBM:GetGroupMembers() do
+		local absorbAmount = select(17, UnitBuff(uId, spellName)) or select(17, UnitDebuff(uId, spellName))
+		if absorbAmount then
+			lines[UnitName(uId)] = absorbAmount
+		end
+	end
+	updateLines()
+	updateIcons()
+end
+
+local function updatePlayerAbsorb()
+	twipe(lines)
+	local spellName = value[1]
+	for uId in DBM:GetGroupMembers() do
+		local absorbAmount = select(17, UnitBuff(uId, spellName)) or select(17, UnitDebuff(uId, spellName))
+		if absorbAmount then
+			lines[UnitName(uId)] = absorbAmount
 		end
 	end
 	updateLines()
@@ -550,15 +602,22 @@ local function updatePlayerTargets()
 end
 
 local function updateByFunction()
-	twipe(lines)
 	local func = value[1]
 	local sortFunc = value[2]
 	local useIcon = value[3]
-	lines = func()
+	local presortedLines
+	lines, presortedLines = func()
 	if sortFunc then
-		updateLinesCustomSort(sortFunc)
-	else
-		updateLines()
+		if type(sortFunc) == "function" then
+			DBM:Debug("updateByFunction custom sorting", 3)
+			updateLinesCustomSort(sortFunc)
+		else--Sort function is a bool/true
+			DBM:Debug("updateByFunction regular sorting", 3)
+			updateLines()--regular update lines with regular sort code
+		end
+	else--Nil, or bool/false
+		DBM:Debug("updateByFunction no sorting or presorting", 3)
+		updateLines(presortedLines)--Update lines with sorting if provided by the custom function
 	end
 	if useIcon then
 		updateIcons()
@@ -579,6 +638,9 @@ local events = {
 	["health"] = updateHealth,
 	["playerpower"] = updatePlayerPower,
 	["enemypower"] = updateEnemyPower,
+	["enemyabsorb"] = updateEnemyAbsorb,
+	["allabsorb"] = updateAllAbsorb,
+	["playerabsorb"] = updatePlayerAbsorb,
 	["playerbuff"] = updatePlayerBuffs,
 	["playergooddebuff"] = updateGoodPlayerDebuffs,
 	["playerbaddebuff"] = updateBadPlayerDebuffs,
@@ -600,6 +662,7 @@ local events = {
 local friendlyEvents = {
 	["health"] = true,
 	["playerpower"] = true,
+	["playerabsorb"] = true,
 	["playerbuff"] = true,
 	["playergooddebuff"] = true,
 	["playerbaddebuff"] = true,
@@ -617,8 +680,10 @@ function onUpdate(frame)
 	if events[currentEvent] then
 		events[currentEvent]()
 	else
-		frame:Hide()
-		--error("DBM-InfoFrame: Unsupported event", 2)
+		if frame then
+			frame:Hide()
+			--error("DBM-InfoFrame: Unsupported event", 2)
+		end
 	end
 	local color = NORMAL_FONT_COLOR
 	frame:ClearLines()
@@ -635,7 +700,6 @@ function onUpdate(frame)
 		local icon = icons[leftText] and icons[leftText]..leftText
 		if friendlyEvents[currentEvent] then
 			local unitId = DBM:GetRaidUnitId(DBM:GetUnitFullName(leftText)) or "player"--Prevent nil logical error
-			--local addedSelf
 			if unitId and select(4, UnitPosition(unitId)) == currentMapId then
 				local _, class = UnitClass(unitId)
 				if class then
@@ -643,8 +707,7 @@ function onUpdate(frame)
 				end
 				linesShown = linesShown + 1
 				if leftText == playerName then--It's player.
-					--addedSelf = true
-					if currentEvent == "health" or currentEvent == "playerpower" or currentEvent == "playerbuff" or currentEvent == "playergooddebuff" or currentEvent == "playerbaddebuff" or currentEvent == "playerdebuffremaining" or currentEvent == "playerbuffremaining" or currentEvent == "playerbaddebuffbyspellid" or currentEvent == "playertargets" or (currentEvent == "playeraggro" and value[1] == 3) then--Red
+					if currentEvent == "health" or currentEvent == "playerpower" or currentEvent == "playerabsorb" or currentEvent == "playerbuff" or currentEvent == "playergooddebuff" or currentEvent == "playerbaddebuff" or currentEvent == "playerdebuffremaining" or currentEvent == "playerbuffremaining" or currentEvent == "playerbaddebuffbyspellid" or currentEvent == "playertargets" or (currentEvent == "playeraggro" and value[1] == 3) then--Red
 						frame:AddDoubleLine(icon or leftText, rightText, 255, 0, 0, 255, 255, 255)-- (leftText, rightText, left.R, left.G, left.B, right.R, right.G, right.B)
 					else--Green
 						frame:AddDoubleLine(icon or leftText, rightText, 0, 255, 0, 255, 255, 255)
@@ -668,9 +731,6 @@ function onUpdate(frame)
 					end
 				end
 			end
-			--if not addedSelf and DBM.Options.InfoFrameShowSelf and currentEvent == "playerpower" then-- Only Shows on playerpower event.
-			--	frame:AddDoubleLine(playerName, lines[playerName], color.r, color.g, color.b, 255, 255, 255)
-			--end
 		else
 			local unitId = DBM:GetRaidUnitId(DBM:GetUnitFullName(leftText))
 			if unitId then
@@ -690,6 +750,7 @@ end
 ---------------
 --  Methods  --
 ---------------
+--Arg 1: spellID, health/powervalue, customfunction. Arg 2: TankIgnore, Powertype, SortFunction. Arg 3: SpellFilter, UseIcon. Arg 4: disable onUpdate
 function infoFrame:Show(maxLines, event, ...)
 	currentMapId = select(4, UnitPosition("player"))
 	if DBM.Options.DontShowInfoFrame and (event or 0) ~= "test" then return end
@@ -705,16 +766,12 @@ function infoFrame:Show(maxLines, event, ...)
 	end
 	frame = frame or createFrame()
 
-	if event == "health" or event == "playerdebuffremaining" then
-		sortingAsc = true	-- Sort lowest first
-	else
-		sortingAsc = nil
-	end
-	
 	if event == "playerbuff" or event == "playerbaddebuff" or event == "playergooddebuff" then
-		noSort = value[3]
+		sortMethod = 3
+	elseif event == "health" or event == "playerdebuffremaining" then
+		sortMethod = 2	-- Sort lowest first
 	else
-		noSort = nil
+		sortMethod = 1
 	end
 	
 	--If spellId is given as value one, convert to spell name on show instead of in every onupdate
@@ -736,7 +793,7 @@ function infoFrame:Show(maxLines, event, ...)
 	frame:Show()
 	frame:SetOwner(UIParent, "ANCHOR_PRESERVE")
 	onUpdate(frame)
-	if not frame.ticker then
+	if not frame.ticker and not value[4] then
 		frame.ticker = C_Timer.NewTicker(0.5, function() onUpdate(frame) end)
 	end
 end
@@ -746,6 +803,7 @@ function infoFrame:RegisterCallback(cb)
 end
 
 function infoFrame:Update()
+	frame = frame or createFrame()
 	onUpdate(frame)
 end
 
@@ -764,8 +822,7 @@ function infoFrame:Hide()
 		frame:Hide()
 	end
 	currentEvent = nil
-	noSort = nil
-	sortingAsc = nil
+	sortMethod = 1
 end
 
 function infoFrame:IsShown()
@@ -777,6 +834,10 @@ function infoFrame:SetHeader(text)
 	headerText = text
 end
 
-function infoFrame:SetSortingAsc(ascending)
-	sortingAsc = ascending
+function infoFrame:SetSortingAsc()
+	sortMethod = 2
+end
+
+function infoFrame:SetSortingGroupId()
+	sortMethod = 3
 end

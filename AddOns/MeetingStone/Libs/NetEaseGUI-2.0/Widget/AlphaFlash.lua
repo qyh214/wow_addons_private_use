@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'AlphaFlash', 2
+local WIDGET, VERSION = 'AlphaFlash', 3
 
 local GUI = LibStub('NetEaseGUI-2.0')
 local AlphaFlash = GUI:NewClass(WIDGET, 'Frame', VERSION)
@@ -26,16 +26,24 @@ function AlphaFlash:Constructor()
     self:SetScript('OnHide', AnimParentOnHide)
 end
 
-local apis = {
+for i, v in ipairs({
     'SetDrawLayer',
     'SetTexture',
     'SetVertexColor',
     'SetTexCoord',
     'SetBlendMode',
-}
-
-for i, v in ipairs(apis) do
+}) do
     AlphaFlash[v] = function(self, ...)
         self.Texture[v](self.Texture, ...)
+    end
+end
+
+for i, v in ipairs({
+    'SetFromAlpha',
+    'SetToAlpha',
+    'SetDuration',
+}) do
+    AlphaFlash[v] = function(self, ...)
+        self.Alpha[v](self.Alpha, ...)
     end
 end

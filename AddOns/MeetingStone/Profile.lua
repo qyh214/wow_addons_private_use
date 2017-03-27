@@ -62,6 +62,17 @@ function Profile:OnInitialize()
 
     self.cdb.profile.settings.onlyms = nil
 
+    for _, v in pairs(self.cdb.profile.followMemberList) do
+        if not v.status then
+            if v.bitfollow then
+                v.status = FOLLOW_STATUS_FRIEND
+            else
+                v.status = FOLLOW_STATUS_STARED
+            end
+	    v.bitfollow = nil
+        end
+    end
+
     self.cdb.RegisterCallback(self, 'OnDatabaseShutdown')
 end
 
@@ -361,23 +372,22 @@ function Profile:GetSearchProfile(name)
     return self.gdb.global.searchProfiles[name]
 end
 
-function Profile:NeedAdvShine()
-    return not self.cdb.profile.advShine or self.cdb.profile.advShine < '60200.09'
+function Profile:IsProfileKeyNew(key, version)
+    local value = self.cdb.profile[key]
+    return not value or (version and value < tostring(version))
 end
 
-function Profile:ClearAdvShine()
-    self.cdb.profile.advShine = ADDON_VERSION
+function Profile:ClearProfileKeyNew(key)
+    self.cdb.profile[key] = ADDON_VERSION
 end
 
 ---- Follow
 
-function Profile:AddFollow(target, guid, bitfollow)
+function Profile:AddFollow(target, guid, status)
     for i, v in ipairs(self.cdb.profile.followMemberList) do
         if v.name == target then
             v.guid = guid
-            if bitfollow ~= nil then
-                v.bitfollow = bitfollow
-            end
+            v.status = status
             self:SendMessage('MEETINGSTONE_FOLLOWMEMBERLIST_UPDATE')
             return
         end
@@ -388,7 +398,7 @@ function Profile:AddFollow(target, guid, bitfollow)
         guid = guid,
         time = time(),
         isNew = true,
-        bitfollow = bitfollow,
+        status = status
     })
     self:SendMessage('MEETINGSTONE_FOLLOWMEMBERLIST_UPDATE')
 end
@@ -396,7 +406,7 @@ end
 function Profile:IsFollowed(target)
     for i, v in ipairs(self.cdb.profile.followMemberList) do
         if v.name == target then
-            return i
+            return (v.status == FOLLOW_STATUS_STARED or v.status == FOLLOW_STATUS_FRIEND), i
         end
     end
 end

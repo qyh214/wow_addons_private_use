@@ -16,7 +16,7 @@ local m = {
 			return
 		end
 		MovAny:UnlockScale(f)
-		if f.GetName and e.scaleWH then
+		if f and f.GetName and e.scaleWH then
 			if opt.width or opt.height then
 				if opt.width and opt.orgWidth == nil then
 					opt.orgWidth = f:GetWidth()

@@ -25,6 +25,7 @@ function App:OnEnable()
 
     self:RegisterServer('APP_QUERY_RESULT')
     self:RegisterServer('APP_FOLLOW')
+    self:RegisterServer('APP_FOLLOW_RESULT')
     self:RegisterServer('APP_BITFOLLOWED')
     self:RegisterServer('APP_APPLY_ACTIVITIES')
 
@@ -50,6 +51,10 @@ function App:IsConnected()
     return self.isConnected
 end
 
+function App:IsFirstLogin()
+    return not self.hasApp and self.alive and Profile:IsProfileKeyNew('appShine')
+end
+
 function App:SERVER_CONNECTED()
     self.isConnected = true
     self:ScheduleTimer('SendServer', 1, 'APP_QUERY', GetGuildName())
@@ -64,6 +69,7 @@ function App:APP_QUERY_RESULT(_, flag, enable, alive)
         Addon:EnableModule('AppSupport')
     end
     if alive then
+        self.alive = true
         MainPanel:RegisterPanel(L['随身集合石'], AppParent, {after = L['最新活动']})
     end
     self:SendMessage('MEETINGSTONE_APP_READY')
@@ -72,7 +78,6 @@ end
 ---- Remote Apply
 
 function App:APP_APPLY_ACTIVITIES(_, activities)
-    
     for leader, args in pairs(activities) do
         local apply = Addon:GetClass('RemoteApply'):New(args.activityId, args.customId)
 
@@ -96,19 +101,19 @@ function App:APP_WHISPER_RAW(_, target, guid, text)
     self:MakeAppWhisper('CHAT_MSG_APP_WHISPER', text, ChatTargetSystemToApp(target))
 end
 
-function App:APP_WHISPER_FAILED(_, target, guid, text)
+function App:APP_WHISPER_FAILED(_, target, guid, text, status)
     self:APP_WHISPER_RAW(_, target, guid, text)
-    Profile:AddFollow(target, guid, false)
+    Profile:AddFollow(target, guid, status)
 end
 
 function App:APP_WHISPER(_, target, guid, text)
     self:APP_WHISPER_RAW(_, target, guid, text)
-    Profile:AddFollow(target, guid, true)
+    Profile:AddFollow(target, guid, FOLLOW_STATUS_FRIEND)
 end
 
 function App:APP_WHISPER_INFORM(_, target, guid, text)
     self:MakeAppWhisper('CHAT_MSG_APP_WHISPER_INFORM', text, ChatTargetSystemToApp(target))
-    Profile:AddFollow(target, guid, true)
+    Profile:AddFollow(target, guid, FOLLOW_STATUS_FRIEND)
 end
 
 function App:SendChatMessage(text, chatType, languageIndex, channel)
@@ -144,42 +149,69 @@ function App:RemoveFollowQuery(target)
     end
 end
 
+local followThrottle = Addon:GetClass('Throttle'):New(10, 5)
 function App:Follow(target, targetGuid)
-    self:SendServer('APP_FOLLOW', target, targetGuid, GetPlayerClass(), UnitLevel('player'), GetPlayerItemLevel())
-    self:RemoveFollowQuery(target)
-    Profile:AddFollow(target, targetGuid)
-end
-
-function App:FollowIngore(target, targetGuid)
-    self:SendServer('APP_FOLLOW_INGORE', target, targetGuid)
-    self:RemoveFollowQuery(target)
-end
-
-function App:APP_FOLLOW(_, target, targetGuid, class, level, itemLevel, sex)
-    if Profile:IsFollowed(target) then
-        return
+    if followThrottle:IsThrottled() then
+        self:APP_FOLLOW_RESULT(nil, target, targetGuid, FOLLOW_STATUS_THROTTLED)
+    else
+        followThrottle:Mark()
+        self:SendServer('APP_FOLLOW', target, targetGuid, GetPlayerClass(), UnitLevel('player'), GetPlayerItemLevel())
+        self:RemoveFollowQuery(target)
     end
+end
+
+function App:FollowIgnore(target, targetGuid)
+    self:SendServer('APP_FOLLOW_IGNORE', target, targetGuid)
+    self:RemoveFollowQuery(target)
+end
+
+function App:APP_FOLLOW(_, target, targetGuid, class, level, itemLevel)
     local followQuery = FollowQuery:Get(target)
-    if tContains(self.followQueryList, followQuery) then
-        return
-    end
-
     followQuery:SetGuid(targetGuid)
     followQuery:SetLevel(level)
     followQuery:SetItemLevel(itemLevel)
     followQuery:SetClass(class)
-    followQuery:SetSex(sex)
 
-    tinsert(self.followQueryList, 1, followQuery)
-
+    if not tContains(self.followQueryList, followQuery) then
+        tinsert(self.followQueryList, 1, followQuery)
+        self.hasNewFollower = true
+        self:SendMessage('MEETINGSTONE_APP_NEW_FOLLOWER_STATUS_UPDATE')
+    end
+    if select(2, Profile:IsFollowed(target)) then
+        Profile:AddFollow(target, targetGuid, FOLLOW_STATUS_UNKNOWN)
+    end
     self:SendMessage('MEETINGSTONE_APP_FOLLOWQUERYLIST_UPDATE', #self.followQueryList)
-    self:SendMessage('MEETINGSTONE_APP_FOLLOWQUERY_ADDED')
+end
+
+function App:APP_FOLLOW_RESULT(_, target, targetGuid, status)
+    if status == FOLLOW_STATUS_STARED then
+        System:Logf(L['你已关注%s。'], target)
+        Profile:AddFollow(target, targetGuid, FOLLOW_STATUS_STARED)
+    elseif status == FOLLOW_STATUS_FRIEND then
+        System:Logf(L['你和%s已经互相关注了，可以通过随身集合石APP随时沟通了。'], target)
+        Profile:AddFollow(target, targetGuid, FOLLOW_STATUS_FRIEND)
+    elseif status == FOLLOW_STATUS_THROTTLED then
+        System:Logf(L['关注失败，操作太频繁。'])
+    elseif status == FOLLOW_STATUS_MAX then
+        System:Logf(L['关注失败，你的关注人数已经达到上限了。'])
+    else
+        System:Logf(L['关注失败，请稍后再试。'])
+    end
 end
 
 function App:APP_BITFOLLOWED(_, target, targetGuid)
-    Profile:AddFollow(target, targetGuid, true)
+    Profile:AddFollow(target, targetGuid, FOLLOW_STATUS_FRIEND)
 end
 
 function App:GetFollowQueryList()
     return self.followQueryList
+end
+
+function App:HasNewFollower()
+    return self.hasNewFollower
+end
+
+function App:ClearNewFollower()
+    self.hasNewFollower = false
+    self:SendMessage('MEETINGSTONE_APP_NEW_FOLLOWER_STATUS_UPDATE')
 end

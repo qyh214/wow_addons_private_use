@@ -8,7 +8,7 @@ ADDON_LOGO          = [[Interface\AddOns\]] .. ADDON_NAME .. [[\Media\Logo]]
 ADDON_VERSION       = GetAddOnMetadata(ADDON_NAME, 'Version')
 ADDON_VERSION_SHORT = ADDON_VERSION:gsub('(%d)%d(%d)%d%d%.(%d%d)','%1%2%3')
 ADDON_REGIONSUPPORT = GetCurrentRegion() == 5
-ADDON_SERVER        = 'S1' .. UnitFactionGroup('player')
+ADDON_SERVER        = (NETEASE_SERVER_PREFIX or 'S1') .. UnitFactionGroup('player')
 SERVER_TIMEOUT      = 120
 
 _G.BINDING_NAME_MEETINGSTONE_TOGGLE = L['打开/关闭集合石']
@@ -22,7 +22,7 @@ MAX_SEARCHBOX_HISTORY_LINES = 5
 
 -- App
 APP_WHISPER_DOT = '@'
-COMMIT_INTERVAL = 10
+COMMIT_INTERVAL = 60
 APP_DOWNLOAD_URL = 'http://sh.hosapp.blz.netease.com/qrcode/download/wow'
 
 ACTIVITY_BG_COUNT = 3
@@ -35,6 +35,13 @@ MIN_PLAYER_LEVEL    = 10
 ACTIVITY_FILTER_BROWSE = 1
 ACTIVITY_FILTER_CREATE = 2
 ACTIVITY_FILTER_OTHER  = 3
+
+FOLLOW_STATUS_UNKNOWN   = 0
+FOLLOW_STATUS_STARED    = 1
+FOLLOW_STATUS_FOLLOWER  = 2
+FOLLOW_STATUS_FRIEND    = 3
+FOLLOW_STATUS_THROTTLED = 4
+FOLLOW_STATUS_MAX       = 5
 
 DEFAULT_LOOT_LIST = {
     [4]              = 4,
@@ -653,13 +660,6 @@ RAID_PROGRESSION_LIST = {
         { id = 7924, name = '伊拉贡' },
         { id = 7927, name = '皇帝的意志' },
     },  --  魔古山宝库（25人英雄）
-}
-
-SOURCE_ICONS = {
-    [0] = [[Interface\AddOns\MeetingStone\Media\Mark\0]],
-    [2] = [[Interface\AddOns\MeetingStone\Media\Mark\2]],
-    [3] = [[Interface\AddOns\MeetingStone\Media\Mark\3]],
-    [5] = [[Interface\AddOns\MeetingStone\Media\Mark\5]],
 }
 
 DEFAULT_SPAMWORD = [[

@@ -11,6 +11,12 @@ L= DBM:GetModLocalization(1706)
 ---------------------------
 L= DBM:GetModLocalization(1725)
 
+L:SetOptionLocalization({
+	InfoFrameBehavior	= "전투 도중 정보 창에 표시할 정보 설정",
+	TimeRelease			= "시간 방출 대상자 표시",
+	TimeBomb			= "시한 폭탄 대상자 표시"
+})
+
 ---------------------------
 -- Trilliax --
 ---------------------------
@@ -110,7 +116,8 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1737)
 
 L:SetMiscLocalization({
-	mythicPhase3		= "악마사냥꾼의 영혼을 육신으로 돌려보내야 할 때요... 군단의 주인을 거부해야 하오!"
+	mythicPhase3		= "악마사냥꾼의 영혼을 육신으로 돌려보내야 할 때요... 군단의 주인을 거부해야 하오!",
+	prePullRP			= "아, 그래, 영웅들이 납셨군. 아주 끈질겨... 자신감이 넘치고. 그 오만 때문에 파멸할 것이다!"
 })
 
 -------------

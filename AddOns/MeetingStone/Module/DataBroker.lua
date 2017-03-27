@@ -17,8 +17,6 @@ function DataBroker:OnInitialize()
         icon = ADDON_LOGO,
 
         OnEnter = function(owner)
-            self.BrokerObject.flash = false
-            
             local anchor = owner:GetBottom() < GetScreenHeight() / 2 and 'ANCHOR_TOP' or 'ANCHOR_BOTTOM'
             GameTooltip:SetOwner(owner, anchor)
             GameTooltip:SetText(L['集合石'])
@@ -113,14 +111,14 @@ function DataBroker:OnInitialize()
     BrokerObject.icon = [[Interface\AddOns\MeetingStone\Media\Mark\0]]
 
     self:RegisterEvent('LFG_LIST_APPLICATION_STATUS_UPDATED', 'UpdateLabel')
-    self:RegisterEvent('LFG_LIST_APPLICANT_LIST_UPDATED')
     self:RegisterEvent('LFG_LIST_APPLICANT_UPDATED')
     self:RegisterMessage('MEETINGSTONE_NEW_VERSION')
     self:RegisterMessage('MEETINGSTONE_ACTIVITIES_COUNT_UPDATED')
     self:RegisterMessage('MEETINGSTONE_SETTING_CHANGED')
-    self:RegisterMessage('MEETINGSTONE_APP_FOLLOWQUERY_ADDED')
     self:RegisterMessage('MEETINGSTONE_APP_FOLLOWQUERYLIST_UPDATE')
-    self:RegisterMessage('MEETINGSTONE_APP_READY', 'UpdateLabel')
+    self:RegisterMessage('MEETINGSTONE_APP_NEW_FOLLOWER_STATUS_UPDATE', 'UpdateFlash')
+    self:RegisterMessage('MEETINGSTONE_NEW_APPLICANT_STATUS_UPDATE')
+    self:RegisterMessage('MEETINGSTONE_APP_READY')
 end
 
 function DataBroker:MEETINGSTONE_SETTING_CHANGED(_, key, value, onUser)
@@ -148,7 +146,6 @@ function DataBroker:MEETINGSTONE_SETTING_CHANGED(_, key, value, onUser)
     end
 end
 
-
 function DataBroker:MEETINGSTONE_NEW_VERSION(_, _, _, isSupport)
     if not isSupport then
         self:UnregisterAllEvents()
@@ -162,6 +159,9 @@ function DataBroker:OnDataBrokerChanged(_, name, key, value, object)
         self.BrokerText:SetText(value)
     elseif key == 'flash' then
         self.BrokerFlash:SetShown(value)
+        if value then
+            FlashClientIcon()
+        end
     elseif key == 'icon' then
         self.BrokerIcon:SetTexture(value)
     end
@@ -177,16 +177,7 @@ function DataBroker:MEETINGSTONE_APP_FOLLOWQUERYLIST_UPDATE(_, count)
     self:UpdateLabel()
 end
 
-function DataBroker:MEETINGSTONE_APP_FOLLOWQUERY_ADDED()
-    self.BrokerObject.flash = self.BrokerObject.flash or not AppFollowQueryPanel:IsVisible()
-end
-
 function DataBroker:LFG_LIST_APPLICANT_LIST_UPDATED(_, hasNewPending, hasNewPendingWithData)
-    if hasNewPending and hasNewPendingWithData and IsActivityManager() then
-        self.BrokerObject.flash = self.BrokerObject.flash or not ApplicantPanel:IsVisible()
-        self:SetMinimapButtonGlow(not ApplicantPanel:IsVisible())
-        FlashClientIcon()
-    end
     self:UpdateLabel()
 end
 
@@ -197,6 +188,16 @@ function DataBroker:LFG_LIST_APPLICANT_UPDATED()
     self:UpdateLabel()
 end
 
+function DataBroker:MEETINGSTONE_NEW_APPLICANT_STATUS_UPDATE()
+    self:SetMinimapButtonGlow(ApplicantPanel:HasNewPending() and not ApplicantPanel:IsVisible())
+    self:UpdateFlash()
+end
+
+function DataBroker:MEETINGSTONE_APP_READY()
+    self:UpdateLabel()
+    self:UpdateFlash()
+end
+
 function DataBroker:UpdateLabel()
     self.BrokerObject.text = format(
         App:HasApp() and TEXT_FORMAT_WITH_APP or TEXT_FORMAT,
@@ -204,6 +205,15 @@ function DataBroker:UpdateLabel()
         self.activityCount or 0,
         self.followQueryCount or 0
     )
+end
+
+function DataBroker:UpdateFlash()
+    local applicantFlash = ApplicantPanel:HasNewPending() and not ApplicantPanel:IsVisible()
+    local appFlash = (App:IsFirstLogin() or App:HasNewFollower()) and not AppFollowQueryPanel:IsVisible()
+
+    MainPanel:FlashTabByPanel(ApplicantPanel, applicantFlash)
+    MainPanel:FlashTabByPanel(AppParent, appFlash)
+    self.BrokerObject.flash = appFlash or applicantFlash
 end
 
 function DataBroker:SetMinimapButtonGlow(enable)

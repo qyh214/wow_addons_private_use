@@ -33,7 +33,7 @@ function AppFollowQueryPanel:OnInitialize()
             App:Follow(followQuery:GetName(), followQuery:GetGuid())
         end)
         QueryList:SetCallback('OnCancelClick', function(_, _, followQuery)
-            App:FollowIngore(followQuery:GetName(), followQuery:GetGuid())
+            App:FollowIgnore(followQuery:GetName(), followQuery:GetGuid())
         end)
         QueryList:SetCallback('OnRefresh', function(QueryList)
             self.EmptyBlocker:SetShown(QueryList:GetShownCount() == 0)
@@ -68,6 +68,12 @@ function AppFollowQueryPanel:OnInitialize()
     self.EmptyBlocker = EmptyBlocker
 
     self:RegisterMessage('MEETINGSTONE_APP_FOLLOWQUERYLIST_UPDATE')
+
+    self:SetScript('OnShow', self.OnShow)
+end
+
+function AppFollowQueryPanel:OnShow()
+    return App:ClearNewFollower()
 end
 
 function AppFollowQueryPanel:MEETINGSTONE_APP_FOLLOWQUERYLIST_UPDATE()

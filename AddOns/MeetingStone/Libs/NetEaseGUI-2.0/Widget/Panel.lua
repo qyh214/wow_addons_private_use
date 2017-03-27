@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'Panel', 4
+local WIDGET, VERSION = 'Panel', 5
 
 local GUI = LibStub('NetEaseGUI-2.0')
 local Panel = GUI:NewClass(WIDGET, 'Frame.NetEasePanelTemplate', VERSION, 'TabPanel')
@@ -177,6 +177,14 @@ function Panel:GetTabFrame()
                 end
             end
         end)
+        TabFrame:SetCallback('OnFlashCreated', function(TabFrame, button, _, Flash)
+            Flash:ClearAllPoints()
+            Flash:SetTexture([[Interface\PaperDollInfoFrame\UI-Character-Tab-RealHighlight]], 'ADD')
+            Flash:SetPoint('TOPLEFT', 4, 5)
+            Flash:SetPoint('BOTTOMRIGHT', -4, 0)
+            Flash:SetTexCoord(0.1, 0.9, 0, 1)
+            Flash:SetDuration(0.8)
+        end)
         self.TabFrame = TabFrame
         return TabFrame
     end
@@ -197,7 +205,7 @@ function Panel:CreateTitleButton(t)
     button:SetScript('OnClick', t.callback or t.onClick)
     button:SetTexture(t.texture, unpack(t.coords))
     button:SetTooltip(t.title or t.text, unpack(t.notes))
-    
+
     if t.size then
         button:SetSize(unpack(t.size))
     end

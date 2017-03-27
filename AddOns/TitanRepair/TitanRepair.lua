@@ -802,7 +802,7 @@ function TitanRepair_GetCostStr(cost)
 		return TitanUtils_GetHighlightText(string.format("%.2fg" , cost / 10000));
 	end
 
-   return nil;
+	return nil;
 end
 
 local function RepairSumTotals()

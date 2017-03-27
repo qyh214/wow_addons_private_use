@@ -24,6 +24,7 @@
   <Script file="Widget\ScrollBar.lua" />
   <Script file="Widget\ScrollFrame.lua" />
   <Script file="Widget\ItemButton.lua" />
+  <Script file="Widget\TabItemButton.lua" />
   <Script file="Widget\AutoCompleteItem.lua" />
   <Script file="Widget\AutoCompleteFrame.lua" />
   <Script file="Widget\EditBox.lua" />

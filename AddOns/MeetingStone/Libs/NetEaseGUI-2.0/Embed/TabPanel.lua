@@ -1,6 +1,6 @@
 
 local GUI = LibStub('NetEaseGUI-2.0')
-local View = GUI:NewEmbed('TabPanel', 3)
+local View = GUI:NewEmbed('TabPanel', 4)
 if not View then
     return
 end
@@ -99,9 +99,14 @@ function View:RegisterPanel(name, panel, ...)
             offset = i + 1
         end
     end
-    
+
     if offset then
         tinsert(_PanelList[self], offset, data)
+
+        local selectTab = self:GetSelectedTab()
+        if selectTab and selectTab >= offset then
+            self:SelectTab(selectTab + 1)
+        end
     else
         tinsert(_PanelList[self], data)
     end
@@ -115,6 +120,8 @@ function View:RegisterPanel(name, panel, ...)
     panel:SetPoint('TOPLEFT', padding, -padding)
     panel:SetPoint('BOTTOMRIGHT', -padding, padding)
     panel:SetFrameLevel(self.Inset:GetFrameLevel()+1)
+
+    self:UpdateTab()
 
     if self.PortraitFrame then
         self.PortraitFrame:SetFrameLevel(max(panel:GetFrameLevel()+1, self.PortraitFrame:GetFrameLevel()))
@@ -248,4 +255,18 @@ end
 
 function View:GetPanelByIndex(index)
     return _PanelList[self][index] and _PanelList[self][index].panel
+end
+
+function View:FlashTab(index, flag)
+    local tabframe = self:GetTabFrame()
+    if tabframe then
+        return tabframe:FlashTab(index, flag)
+    end
+end
+
+function View:FlashTabByPanel(panel, flag)
+    local index = self:GetPanelIndex(panel)
+    if index then
+        return self:FlashTab(index, flag)
+    end
 end

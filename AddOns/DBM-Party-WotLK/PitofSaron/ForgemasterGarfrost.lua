@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(608, "DBM-Party-WotLK", 15, 278)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 236 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 243 $"):sub(12, -3))
 mod:SetCreatureID(36494)
 mod:SetEncounterID(833, 834, 1999)
 mod:SetUsedIcons(8)
@@ -22,14 +22,17 @@ local warnForgeWeapon			= mod:NewSpellAnnounce(68785, 2)
 local warnDeepFreeze			= mod:NewTargetAnnounce(70381, 2)
 local warnSaroniteRock			= mod:NewTargetAnnounce(68789, 3)
 
-local specWarnSaroniteRock		= mod:NewSpecialWarningYou(68789)
+local specWarnSaroniteRock		= mod:NewSpecialWarningYou(68789, nil, nil, nil, 1, 2)
 local yellRock					= mod:NewYell(68789)
-local specWarnSaroniteRockNear	= mod:NewSpecialWarningClose(68789)
-local specWarnPermafrost		= mod:NewSpecialWarningStack(68786, nil, 9)
+local specWarnSaroniteRockNear	= mod:NewSpecialWarningClose(68789, nil, nil, nil, 1, 2)
+local specWarnPermafrost		= mod:NewSpecialWarningStack(68786, nil, 9, nil, nil, 1, 2)
 
 local timerSaroniteRockCD		= mod:NewCDTimer(15.5, 68789, nil, nil, nil, 3)--15.5-20
 local timerDeepFreezeCD			= mod:NewCDTimer(19, 70381, nil, "Healer", 2, 5, nil, DBM_CORE_HEALER_ICON)
 local timerDeepFreeze			= mod:NewTargetTimer(14, 70381, nil, false, 3, 5)
+
+local voiceSaroniteRock			= mod:NewVoice(68789)--watchstep
+local voicePermafrost			= mod:NewVoice(68786)--stackhigh
 
 mod:AddBoolOption("SetIconOnSaroniteRockTarget", true)
 mod:AddBoolOption("AchievementCheck", false, "announce")
@@ -64,6 +67,7 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 		local amount = args.amount or 1
 		if amount >= 9 and args:IsPlayer() and self:AntiSpam(5) then --11 stacks is what's needed for achievement, 9 to give you time to clear/dispel
 			specWarnPermafrost:Show(amount)
+			voicePermafrost:Play("stackhigh")
 		end
 		if self.Options.AchievementCheck and not warnedfailed then
 			local channel = IsInGroup(2) and "INSTANCE_CHAT" or "PARTY"
@@ -86,6 +90,7 @@ function mod:RAID_BOSS_WHISPER(msg)
 	--Commented out string check for now, since it should be the only thing on fight sending RAID_BOSS_WHISPER
 --	if msg == L.SaroniteRockThrow or msg:match(L.SaroniteRockThrow) then
 		specWarnSaroniteRock:Show()
+		voiceSaroniteRock:Play("watchstep")
 		yellRock:Yell()
 --	end 
 end
@@ -100,6 +105,7 @@ function mod:CHAT_MSG_ADDON(prefix, msg, channel, targetName)
 			local uId = DBM:GetRaidUnitId(targetName)
 			if uId and not UnitIsUnit(uId, "player") and self:CheckNearby(10, targetName) then
 				specWarnSaroniteRockNear:Show(targetName)
+				voiceSaroniteRock:Play("watchstep")
 			else
 				warnSaroniteRock:Show(targetName)
 			end

@@ -173,11 +173,12 @@ end
 
 function AppParent:OnEnable()
     local FollowButton = CreateFrame('Button', nil, UIParent) do
-        FollowButton:SetNormalTexture([[Interface\AddOns\MeetingStone\Media\Follow]])
-        FollowButton:GetNormalTexture():SetTexCoord(0.1875, 0.8125, 0.1875, 0.8125)
+        FollowButton:SetNormalTexture([[Interface\AddOns\MeetingStone\Media\ButtonUp]])
+        FollowButton:SetPushedTexture([[Interface\AddOns\MeetingStone\Media\ButtonDown]])
         FollowButton:SetNormalFontObject('NetEaseFontHighlightSmall')
         FollowButton:SetHighlightFontObject('NetEaseFontNormalSmall')
-        FollowButton:SetSize(40, 40)
+        FollowButton:SetHitRectInsets(0, 0, 4, 4)
+        FollowButton:SetSize(64, 32)
         FollowButton:SetText(L['关注'])
         FollowButton:SetScript('OnEnter', function()
             if PlayerLinkList then
@@ -212,6 +213,10 @@ end
 function AppParent:Update()
     self.Blocker:Hide()
     MainPanel:UpdateBlockers()
+    Profile:ClearProfileKeyNew('appShine')
+    if App:HasNewFollower() then
+        self:SelectPanel(AppFollowQueryPanel)
+    end
 end
 
 function AppParent:UnitPopup_ShowMenu(dropdownMenu, which, unit)
@@ -263,7 +268,17 @@ function AppParent.Invoke:OpenFollowButton(name, guid)
     self.FollowButton.name = name
     self.FollowButton.guid = guid
     self.FollowButton:SetParent(parent)
-    self.FollowButton:SetPoint('CENTER', parent, 'TOPRIGHT', -10, -5)
+    self.FollowButton:SetPoint('CENTER', parent, 'TOPRIGHT', -20, -5)
     self.FollowButton:SetFrameLevel(parent:GetFrameLevel() + 10)
     self.FollowButton:Show()
+
+    if Profile:IsFollowed(name) then
+        self.FollowButton:SetText(L['已关注'])
+        self.FollowButton:GetNormalTexture():SetDesaturated(true)
+        self.FollowButton:GetPushedTexture():SetDesaturated(true)
+    else
+        self.FollowButton:SetText(L['关注'])
+        self.FollowButton:GetNormalTexture():SetDesaturated(false)
+        self.FollowButton:GetPushedTexture():SetDesaturated(false)
+    end
 end

@@ -379,7 +379,7 @@ function MainPanel:OpenApplicantTooltip(applicant)
     end
 
     -- Add statistics
-    local stats = C_LFGList.GetApplicantMemberStats(applicant:GetID(), applicant:GetIndex()) do
+    local stats = C_LFGList.GetApplicantMemberStats(applicant:GetID(), applicant:GetIndex()) or {} do
         for k, v in pairs(stats) do
             if v == 0 then
                 stats[k] = nil

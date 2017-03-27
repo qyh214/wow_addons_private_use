@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1873, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15991 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16020 $"):sub(12, -3))
 mod:SetCreatureID(116939)--Maiden of Valor 120437
 mod:SetEncounterID(2038)
 mod:SetZone()
@@ -14,13 +14,13 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 239207 239132 235572 233856 233556 240623",
-	"SPELL_CAST_SUCCES 239132 236494 240594",
+	"SPELL_CAST_SUCCESS 239132 236494 240594",
 	"SPELL_AURA_APPLIED 234009 234059 236494 240728 239739",
 	"SPELL_AURA_APPLIED_DOSE 236494 240728",
 	"SPELL_AURA_REMOVED 234009 234059 239739",
 	"SPELL_PERIODIC_DAMAGE 239212",
 	"SPELL_PERIODIC_MISSED 239212",
---	"CHAT_MSG_RAID_BOSS_EMOTE",
+	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2"
 )
 
@@ -83,7 +83,7 @@ local timerTaintedMatrixCD			= mod:NewCastTimer(10, 240623, nil, nil, nil, 6)--M
 --Stage Two: An Avatar Awakened
 local timerDarkMarkCD				= mod:NewCDTimer(20.5, 239739, nil, nil, nil, 3)
 local timerBlackWindsCD				= mod:NewCDTimer(31, 239418, nil, nil, nil, 3)
-local timerRainoftheDestroyerCD		= mod:NewAITimer(31, 240396, nil, nil, nil, 3)
+local timerRainoftheDestroyerCD		= mod:NewCDTimer(44, 240396, nil, nil, nil, 3)
 
 --local berserkTimer				= mod:NewBerserkTimer(300)
 
@@ -182,10 +182,10 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 233856 then
 		specWarnCleansingProtocol:Show()
 		voiceCleansingProtocol:Play("targetchange")
-	elseif spellId == 233556 then
-		timerCorruptedMatrixCD:Start(50)
-	elseif spellId == 240623 then
-		timerTaintedMatrixCD:Start(60)
+	elseif spellId == 233556 and self:AntiSpam(2, 2) then
+		timerCorruptedMatrixCD:Start(10)
+	elseif spellId == 240623 and self:AntiSpam(2, 3) then
+		timerTaintedMatrixCD:Start(10)
 	end
 end
 
@@ -204,11 +204,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerTaintedMatrixCD:Stop()
 		
 		warnPhase2:Show()
-		--timerRuptureRealitiesCD:Start(2)
 		timerDesolateCD:Start(21)
 		timerDarkMarkCD:Start(23)
+		timerRainoftheDestroyerCD:Start(25)
 		timerBlackWindsCD:Start(35)
-		--timerRainoftheDestroyerCD:Start(2)
+		timerRuptureRealitiesCD:Start(35)
 	end
 end
 
@@ -300,21 +300,17 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
---[[
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
-	if msg:find("spell:228162") then
-
-	end
-end
---]]
-
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
-	if spellId == 234417 then
+	if msg:find("spell:234418") then
 		specWarnRainoftheDestroyer:Show()
 		voiceRainoftheDestroyer:Play("watchstep")
 		timerRainoftheDestroyerCD:Start()
-	elseif spellId == 234057 then
+	end
+end
+
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
+	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+	if spellId == 234057 then
 		timerUnboundChaosCD:Start()
 	elseif spellId == 239739 then
 		timerDarkMarkCD:Start()
@@ -328,6 +324,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(10, nil, nil, nil, nil, 5)
 		end
+	elseif spellId == 235597 then--Annihilation
+		--Slower phase 2, but in off chance consume isn't good enough and boss can throw one last cast off in 3 seconds between that event and this on
 	end
 end
 

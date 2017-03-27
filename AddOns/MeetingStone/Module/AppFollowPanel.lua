@@ -159,6 +159,12 @@ function AppFollowPanel:ToggleFollowMenu(button, data)
             end
         },
         {
+            text = L['关注'],
+            func = function()
+                App:Follow(data.name, data.guid)
+            end
+        },
+        {
             text = CANCEL
         }
     }, 'cursor')

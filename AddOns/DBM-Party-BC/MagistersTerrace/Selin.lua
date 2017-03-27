@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(530, "DBM-Party-BC", 16, 249)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 606 $"):sub(12, -3))
 
 mod:SetCreatureID(24723)
 mod:SetEncounterID(1897)
@@ -12,9 +12,11 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 44320"
 )
 
-local specWarnChannel		= mod:NewSpecialWarningSwitch("ej5081", "-Healer", nil, 3)
+local specWarnChannel		= mod:NewSpecialWarningSwitch("ej5081", "-Healer", nil, 3, 1, 2)
 
 local timerChannelCD		= mod:NewCDTimer(47, "ej5081", nil, nil, nil, 1, 44320)
+
+local voiceChannel			= mod:NewVoice("ej5081", "-Healer")--targetchange
 
 function mod:OnCombatStart(delay)
 	timerChannelCD:Start(15-delay)
@@ -23,6 +25,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 69029 then--Mana Rage, triggers right before CHAT_MSG_RAID_BOSS_EMOTE
 		specWarnChannel:Show()
+		voiceChannel:Play("targetchange")
 		timerChannelCD:Start()
 	end
 end

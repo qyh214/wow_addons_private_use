@@ -1,5 +1,5 @@
 
-local WIDGET, VERSION = 'TabView', 2
+local WIDGET, VERSION = 'TabView', 3
 
 local GUI = LibStub('NetEaseGUI-2.0')
 local TabView = GUI:NewClass(WIDGET, 'Frame', VERSION, 'Refresh', 'View')
@@ -100,7 +100,7 @@ function TabView:UpdateItems()
         button:SetStatus(status)
 
         self:UpdateItemPosition(i)
-        
+
         if self:IsButtonOverflow(i) then
             button:Hide()
             break
@@ -147,7 +147,7 @@ function TabView:SetOrientation(orientation, align)
     if type(align) ~= 'string' then
         error(([[bad argument #2 to 'SetOrientation' (string expected, got %s)]]):format(type(align)), 2)
     end
-    
+
     orientation = orientation:upper()
 
     if orientation == 'HORIZONTAL' then
@@ -205,7 +205,7 @@ function TabView:GetMenu()
         end)
         menu:SetOwner(self)
         GUI:GetClass('AutoHideController'):New(menu)
-        
+
         self.menu = menu
     end
     return self.menu
@@ -296,5 +296,14 @@ function TabView:SetTabEnabled(index, flag)
         self:EnableTab(index)
     else
         self:DisableTab(index)
+    end
+end
+
+function TabView:FlashTab(index, flag)
+    local button = self:GetButton(index)
+    if flag then
+        button:StartFlash()
+    else
+        button:StopFlash()
     end
 end

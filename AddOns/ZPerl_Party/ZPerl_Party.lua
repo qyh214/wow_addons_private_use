@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 1010 $")
+end, "$Revision: 1026 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -681,13 +681,66 @@ end
 
 -- XPerl_Party_UpdatePVP
 local function XPerl_Party_UpdatePVP(self)
-	local pvp = pconf.pvpIcon and ((UnitIsPVPFreeForAll(self.partyid) and "FFA") or (UnitIsPVP(self.partyid) and (UnitFactionGroup(self.partyid) ~= "Neutral") and UnitFactionGroup(self.partyid)))
+	local partyid = self.partyid
+
+	local pvpIcon = self.nameFrame.pvpIcon
+	local prestigeIcon = self.nameFrame.prestigueIcon
+
+	local factionGroup, factionName = UnitFactionGroup(partyid)
+
+	if pconf.pvpIcon and UnitIsPVPFreeForAll(partyid) then
+		local prestige = UnitPrestige(partyid)
+
+		if prestige > 0 then
+			prestigeIcon:SetTexture(GetPrestigeInfo(prestige))
+			prestigeIcon:Show()
+			pvpIcon:Hide()
+		else
+			prestigeIcon:Hide()
+			pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
+			pvpIcon:Show()
+		end
+	elseif pconf.pvpIcon and factionGroup and factionGroup ~= "Neutral" and UnitIsPVP(partyid) then
+		local prestige = UnitPrestige(partyid)
+
+		if prestige > 0 then
+			if UnitIsMercenary(partyid) then
+				if factionGroup == "Horde" then
+					factionGroup = "Alliance"
+				elseif factionGroup == "Alliance" then
+					factionGroup = "Horde"
+				end
+			end
+
+			prestigeIcon:SetTexture(GetPrestigeInfo(prestige))
+			prestigeIcon:Show()
+			pvpIcon:Hide()
+		else
+			prestigeIcon:Hide()
+			pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
+
+			if UnitIsMercenary(partyid) then
+				if factionGroup == "Horde" then
+					pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
+				elseif factionGroup == "Alliance" then
+					pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
+				end
+			end
+
+			pvpIcon:Show()
+		end
+	else
+		prestigeIcon:Hide()
+		pvpIcon:Hide()
+	end
+
+	--[[local pvp = pconf.pvpIcon and ((UnitIsPVPFreeForAll(self.partyid) and "FFA") or (UnitIsPVP(self.partyid) and (UnitFactionGroup(self.partyid) ~= "Neutral") and UnitFactionGroup(self.partyid)))
 	if (pvp) then
 		self.nameFrame.pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
 		self.nameFrame.pvpIcon:Show()
 	else
 		self.nameFrame.pvpIcon:Hide()
-	end
+	end]]
 end
 
 -- XPerl_Party_UpdateCombat

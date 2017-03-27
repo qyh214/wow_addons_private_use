@@ -1,4 +1,7 @@
-**r1023**
+**r1026**
+* Added support for prestige icons.
+
+**r1024**
 * Fixed some lua error with the meta tables.
 
 **r1022**

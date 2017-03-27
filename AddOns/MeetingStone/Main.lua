@@ -57,12 +57,19 @@ end
 
 function Addon:Toggle()
     if Logic:IsSupport() then
-        Addon:ToggleModule('MainPanel')
-
-        if C_LFGList.GetActiveEntryInfo() then
-            MainPanel:SelectPanel(ManagerPanel)
-        elseif DataCache:GetObject('ActivitiesData'):IsNew() then
-            MainPanel:SelectPanel(ActivitiesParent)
+        if MainPanel:IsShown() then
+            Addon:HideModule('MainPanel')
+        else
+            if ApplicantPanel:HasNewPending() then
+                MainPanel:SelectPanel(ManagerPanel)
+            elseif DataCache:GetObject('ActivitiesData'):IsNew() then
+                MainPanel:SelectPanel(ActivitiesParent)
+            elseif App:HasNewFollower() then
+                MainPanel:SelectPanel(AppParent)
+            elseif C_LFGList.GetActiveEntryInfo() then
+                MainPanel:SelectPanel(ManagerPanel)
+            end
+            Addon:ShowModule('MainPanel')
         end
     else
         self:ShowNewVersion(self.url, self.changeLog)

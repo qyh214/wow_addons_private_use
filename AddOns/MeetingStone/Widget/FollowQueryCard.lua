@@ -20,11 +20,11 @@ function FollowQueryCard:Constructor()
         Name:SetPoint('TOP', 10, -22)
     end
 
-    local SexIcon = self:CreateTexture(nil, 'ARTWORK') do
-        SexIcon:SetPoint('RIGHT', Name, 'LEFT', -5, 0)
-        SexIcon:SetSize(16, 16)
-        SexIcon:SetTexture([[Interface\AddOns\MeetingStone\Media\Male]])
-        SexIcon:SetBlendMode('ADD')
+    local ClassIcon = self:CreateTexture(nil, 'ARTWORK') do
+        ClassIcon:SetPoint('RIGHT', Name, 'LEFT', -5, 0)
+        ClassIcon:SetSize(16, 16)
+        -- ClassIcon:SetBlendMode('ADD')
+        ClassIcon:SetTexture([[Interface\WorldStateFrame\ICONS-CLASSES]])
     end
 
     local function MakeLabel(w, ...)
@@ -84,7 +84,7 @@ function FollowQueryCard:Constructor()
     local Level = MakeLabel(50, 'BOTTOMLEFT', AcceptButton, 'TOPLEFT', 8, 13)
     local ItemLevel = MakeLabel(75, 'BOTTOMRIGHT', IgnoreButton, 'TOPRIGHT', -8, 13)
 
-    self.SexIcon = SexIcon
+    self.ClassIcon = ClassIcon
     self.Name = Name
     self.Level = Level
     self.ItemLevel = ItemLevel
@@ -96,5 +96,5 @@ function FollowQueryCard:SetFollowQuery(followQuery)
     self.Name:SetText(followQuery:GetNameText())
     self.Level:SetText(L['等级:'] .. followQuery:GetLevel())
     self.ItemLevel:SetText(L['物品等级:'] .. followQuery:GetItemLevel())
-    self.SexIcon:SetTexture(followQuery:GetSexTexture())
+    self.ClassIcon:SetTexCoord(unpack(CLASS_ICON_TCOORDS[followQuery:GetClass()]))
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(613, "DBM-Party-WotLK", 3, 279)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 236 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 243 $"):sub(12, -3))
 mod:SetCreatureID(26532)
 mod:SetEncounterID(295, 299, 2003)
 mod:SetZone()
@@ -16,6 +16,7 @@ mod:RegisterEventsInCombat(
 
 local warningTime 	= mod:NewSpellAnnounce(58848, 3)
 local warningCurse 	= mod:NewTargetAnnounce(52772, 2)
+
 local timerCurse	= mod:NewTargetTimer(10, 52772)
 local timerTimeCD	= mod:NewCDTimer(25, 58848)
 

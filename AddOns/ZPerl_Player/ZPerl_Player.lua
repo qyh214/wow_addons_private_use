@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 1017 $")
+end, "$Revision: 1026 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -449,20 +449,71 @@ end
 -- XPerl_Player_UpdatePVP
 local function XPerl_Player_UpdatePVP(self)
 	-- PVP Status settings
-	local nf = self.nameFrame
+	--local nf = self.nameFrame
 	if (UnitAffectingCombat(self.partyid)) then
-		nf.text:SetTextColor(1, 0, 0)
+		self.nameFrame.text:SetTextColor(1, 0, 0)
 	else
-		XPerl_ColourFriendlyUnit(nf.text, "player")
+		XPerl_ColourFriendlyUnit(self.nameFrame.text, "player")
 	end
 
-	local pvp = pconf.pvpIcon and ((UnitIsPVPFreeForAll("player") and "FFA") or (UnitIsPVP("player") and (UnitFactionGroup("player") ~= "Neutral") and UnitFactionGroup("player")))
+	local pvpIcon = self.nameFrame.pvp
+	local prestigeIcon = self.nameFrame.prestige
+
+	local factionGroup, factionName = UnitFactionGroup("player")
+
+	if pconf.pvpIcon and UnitIsPVPFreeForAll("player") then
+		local prestige = UnitPrestige("player")
+
+		if prestige > 0 then
+			prestigeIcon.icon:SetTexture(GetPrestigeInfo(prestige))
+			prestigeIcon:Show()
+			pvpIcon:Hide()
+		else
+			prestigeIcon:Hide()
+			pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
+			pvpIcon:Show()
+		end
+	elseif pconf.pvpIcon and factionGroup and factionGroup ~= "Neutral" and UnitIsPVP("player") then
+		local prestige = UnitPrestige("player")
+
+		if prestige > 0 then
+			if UnitIsMercenary("player") then
+				if factionGroup == "Horde" then
+					factionGroup = "Alliance"
+				elseif factionGroup == "Alliance" then
+					factionGroup = "Horde"
+				end
+			end
+
+			prestigeIcon.icon:SetTexture(GetPrestigeInfo(prestige))
+			prestigeIcon:Show()
+			pvpIcon:Hide()
+		else
+			prestigeIcon:Hide()
+			pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
+
+			if UnitIsMercenary("player") then
+				if factionGroup == "Horde" then
+					pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
+				elseif factionGroup == "Alliance" then
+					pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
+				end
+			end
+
+			pvpIcon:Show()
+		end
+	else
+		prestigeIcon:Hide()
+		pvpIcon:Hide()
+	end
+
+	--[[local pvp = pconf.pvpIcon and ((UnitIsPVPFreeForAll("player") and "FFA") or (UnitIsPVP("player") and (UnitFactionGroup("player") ~= "Neutral") and UnitFactionGroup("player")))
 	if (pvp) then
 		nf.pvp.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
 		nf.pvp:Show()
 	else
 		nf.pvp:Hide()
-	end
+	end]]
 end
 
 -- CreateBar(self, name)
@@ -922,6 +973,7 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 		"UPDATE_EXHAUSTION",
 		--"PET_BATTLE_OPENING_START",
 		--"PET_BATTLE_CLOSE",
+		"HONOR_PRESTIGE_UPDATE",
 	}
 
 	for i, event in pairs(events) do
@@ -1034,6 +1086,11 @@ function XPerl_Player_Events:UNIT_FACTION()
 	XPerl_Player_UpdateCombat(self)
 end
 XPerl_Player_Events.UNIT_FLAGS = XPerl_Player_Events.UNIT_FACTION
+
+-- HONOR_PRESTIGE_UPDATE
+function XPerl_Player_Events:HONOR_PRESTIGE_UPDATE()
+	XPerl_Player_UpdatePVP(self)
+end
 
 function XPerl_Player_Events:UNIT_SPELLCAST_SUCCEEDED(spell, rank, lineID, spellID)
 	if spellID == 191477 then

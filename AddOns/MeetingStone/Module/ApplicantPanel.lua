@@ -198,7 +198,7 @@ function ApplicantPanel:OnInitialize()
     self.AutoInvite = AutoInvite
 
     self:RegisterEvent('LFG_LIST_APPLICANT_UPDATED', 'UpdateApplicantsList')
-    self:RegisterEvent('LFG_LIST_APPLICANT_LIST_UPDATED', 'UpdateApplicantsList')
+    self:RegisterEvent('LFG_LIST_APPLICANT_LIST_UPDATED')
     self:RegisterEvent('LFG_LIST_ACTIVE_ENTRY_UPDATE', function()
         AutoInvite:SetChecked(select(9, C_LFGList.GetActiveEntryInfo()))
     end)
@@ -207,9 +207,21 @@ function ApplicantPanel:OnInitialize()
         self.AutoInvite:SetEnabled(C_LFGList.GetActiveEntryInfo() and canCreate)
     end)
 
-    self:SetScript('OnShow', function()
-        DataBroker:SetMinimapButtonGlow(false)
-    end)
+    self:SetScript('OnShow', self.ClearNewPending)
+end
+
+function ApplicantPanel:LFG_LIST_APPLICANT_LIST_UPDATED(_, hasNewPending, hasNewPendingWithData)
+    self.hasNewPending = hasNewPending and hasNewPendingWithData and IsActivityManager()
+    self:SendMessage('MEETINGSTONE_NEW_APPLICANT_STATUS_UPDATE')
+end
+
+function ApplicantPanel:HasNewPending()
+    return self.hasNewPending
+end
+
+function ApplicantPanel:ClearNewPending()
+    self.hasNewPending = false
+    self:SendMessage('MEETINGSTONE_NEW_APPLICANT_STATUS_UPDATE')
 end
 
 function ApplicantPanel:UpdateApplicantsList()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1713, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15979 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16046 $"):sub(12, -3))
 mod:SetCreatureID(101002)
 mod:SetEncounterID(1842)
 mod:SetZone()
@@ -107,27 +107,26 @@ function mod:OnCombatStart(delay)
 	self.vb.orbCount = 0
 	self.vb.pitchCount = 0
 	self.vb.firstBeam = 0
+	warnSlamSoon:Schedule(85, 5)
+	warnSlamSoon:Schedule(86, 4)
+	warnSlamSoon:Schedule(87, 3)
+	warnSlamSoon:Schedule(88, 2)
+	warnSlamSoon:Schedule(89, 1)
+	timerSlamCD:Start(-delay, 1)
+	countdownBigSlam:Start(-delay)
+	berserkTimer:Start(-delay)
 	if self:IsMythic() then
 		timerFelBeamCD:Start(6-delay, 1)
 		timerOrbDestroCD:Start(13-delay, 1)
 		timerBurningPitchCD:Start(45-delay, 1)
-		timerSlamCD:Start(-delay, 1)
-		countdownBigSlam:Start(-delay)
-		berserkTimer:Start(-delay)
 	elseif self:IsHeroic() then
 		timerFelBeamCD:Start(5-delay, 1)
-		timerOrbDestroCD:Start(22-delay, 1)
+		timerOrbDestroCD:Start(20-delay, 1)
 		timerBurningPitchCD:Start(50-delay, 1)
-		timerSlamCD:Start(-delay, 1)
-		countdownBigSlam:Start(-delay)
-		berserkTimer:Start(-delay)
 	else
 		timerFelBeamCD:Start(5-delay, 1)
-		timerSlamCD:Start(-delay, 1)
 		timerBurningPitchCD:Start(38-delay, 1)
 		timerOrbDestroCD:Start(70-delay, 1)
-		countdownBigSlam:Start(-delay)
-		berserkTimer:Start(-delay)
 	end
 end
 

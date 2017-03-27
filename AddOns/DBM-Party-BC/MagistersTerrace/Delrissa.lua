@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(532, "DBM-Party-BC", 16, 249)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 604 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 606 $"):sub(12, -3))
 
 mod:SetCreatureID(24560)--24560 is main boss.
 mod:SetEncounterID(1895)
@@ -20,18 +20,23 @@ local warnBlizzard		= mod:NewSpellAnnounce(46195, 2)
 local warnRenew         = mod:NewTargetAnnounce(46192, 3, nil, false, 2)
 local warnSoC           = mod:NewTargetAnnounce(44141, 2, nil, false, 2)
 local warnPolymorph     = mod:NewTargetAnnounce(13323, 4)
-local warnPWShield      = mod:NewTargetAnnounce(44175, 2, nil, false)
 
-local specWarnFlashHeal	= mod:NewSpecialWarningInterrupt(17843, "-Healer", nil, 2)
-local specWarnLHW		= mod:NewSpecialWarningInterrupt(46181, "-Healer", nil, 2)
-local specWarnPWS		= mod:NewSpecialWarningDispel(44175, "MagicDispeller", nil, 2)
+local specWarnFlashHeal	= mod:NewSpecialWarningInterrupt(17843, "HasInterrupt", nil, 3, 1, 2)
+local specWarnLHW		= mod:NewSpecialWarningInterrupt(46181, "HasInterrupt", nil, 3, 1, 2)
+local specWarnPWS		= mod:NewSpecialWarningDispel(44175, "MagicDispeller", nil, 2, 1, 2)
+
+local voiceFlashHeal	= mod:NewVoice(17843, "HasInterrupt")--kickcast
+local voiceLHW			= mod:NewVoice(46181, "HasInterrupt")--kickcast
+local voicePWS			= mod:NewVoice(44175, "MagicDispeller")--dispelboss
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 17843 and self:CheckInterruptFilter(args.sourceGUID) then		-- Delrissa's Flash Heal
 		specWarnFlashHeal:Show(args.sourceName)
+		voiceFlashHeal:Play("kickcast")
 	elseif args:IsSpellID(44256, 46181) and self:CheckInterruptFilter(args.sourceGUID) then					-- Apoko's LHW
 		specWarnLHW:Show(args.sourceName)
+		specWarnLHW:Play("kickcast")
 	end
 end
 
@@ -51,8 +56,8 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 44141 then                                                  -- Ellrys SoC
 		warnSoC:Show(args.destName)
 	elseif args:IsSpellID(44175, 44291, 46193) and not args:IsDestTypePlayer() then    -- Delrissa's PWShield
-		warnPWShield:Show(args.destName)
 		specWarnPWS:Show(args.destName)
+		voicePWS:Play("dispelboss")
 	elseif args:IsSpellID(44174, 46192) and not args:IsDestTypePlayer() then           -- Delrissa's Renew
 		warnRenew:Show(args.destName)
 	end

@@ -3,7 +3,7 @@ if not testBuild and wowTOC < 70200 then return end
 local mod	= DBM:NewMod(1956, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15968 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16063 $"):sub(12, -3))
 mod:SetCreatureID(121124)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
@@ -22,7 +22,7 @@ local specWarnQuake						= mod:NewSpecialWarningSpell(241458, nil, nil, nil, 2, 
 local specWarnFelfireMissiles			= mod:NewSpecialWarningMoveAway(241498, nil, nil, nil, 1, 2)
 local yellFelfireMissiles				= mod:NewYell(241498)
 local specWarnFelfireMissilesNear		= mod:NewSpecialWarningClose(241498, nil, nil, nil, 1, 2)
-local specWarnSear						= mod:NewSpecialWarningDefensive(241518, nil, nil, nil, 1, 2)
+local specWarnSear						= mod:NewSpecialWarningDefensive(241518, "Tank", nil, nil, 1, 2)
 
 local timerQuakeCD						= mod:NewCDTimer(22.1, 241458, nil, nil, nil, 2)--22.1-25.6
 local timerFelfireMissilesCD			= mod:NewCDTimer(9.7, 241498, nil, nil, nil, 3)--9.7-14.6
@@ -30,7 +30,7 @@ local timerSearCD						= mod:NewCDTimer(9.7, 241518, nil, nil, nil, 5, nil, DBM_
 
 local voiceQuake						= mod:NewVoice(241458)--carefly
 local voiceFelfireMissiles				= mod:NewVoice(241498)--runout/watchstep
-local voiceSear							= mod:NewVoice(241518)--defensive
+local voiceSear							= mod:NewVoice(241518, "Tank")--defensive
 
 --mod:AddReadyCheckOption(37460, false)
 

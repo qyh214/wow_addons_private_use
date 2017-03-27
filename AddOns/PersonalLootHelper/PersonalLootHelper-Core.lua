@@ -39,6 +39,9 @@ When PLH becomes disabled, set isAnnouncer to false
 	
 Changelog
 
+20170323 - 1.23
+	Added 7.2 trinkets
+	
 20170312 - 1.22
 	Fixed bug that could cause raid frames to be non-responsive after PLH showed loot in them
 		note:  hide tooltip in UnhighlightRaidFrames()
@@ -680,7 +683,7 @@ local ExpectedItemCount = {			-- number of items expected by spec, assuming pers
 
 --[[
 to easily populate these arrays:
-	wowhead search trinkets -> usable by "whichever" -> added in expansion/patch
+	wowhead search trinkets -> usable by "whichever" -> added in expansion/patch; also ID > 0
 	paste into OpenOffice
 	=concatenate(b1;", -- ";d1)
 	ensure curly quotes are off in tools -> autocorrect options -> localized options
@@ -688,6 +691,18 @@ to easily populate these arrays:
 ]]--	
 local TRINKET_AGILITY_DPS = {
 
+	-- 7.2 trinkets
+	147275, -- Beguiler's Talisman
+	144477, -- Splinters of Agronax
+	147011, -- Vial of Ceaseless Toxins
+	147012, -- Umbral Moonglaives
+	147016, -- Terror From Below
+	147017, -- Tarnished Sentinel Medallion
+	147018, -- Spectral Thurible
+	147009, -- Infernal Cinders
+	147015, -- Engine of Eradication
+	147010, -- Cradle of Anguish
+	
 	-- 7.1.5 and previously missed 7.1 trinkets
 	142506, -- Eye of Guarm
 	142166, -- Ethereal Urn
@@ -754,6 +769,15 @@ local TRINKET_AGILITY_DPS = {
 }
 
 local TRINKET_INTELLECT_DPS = {
+	-- 7.2 trinkets
+	147276, -- Spellbinder's Seal
+	144480, -- Dreadstone of Endless Shadows
+	147019, -- Tome of Unraveling Sanity
+	147016, -- Terror From Below
+	147017, -- Tarnished Sentinel Medallion
+	147018, -- Spectral Thurible
+	147002, -- Charm of the Rising Tide
+	
 	-- 7.1.5 and previously missed 7.1 trinkets
 	142166, -- Ethereal Urn
 
@@ -804,6 +828,15 @@ local TRINKET_INTELLECT_DPS = {
 }
 
 local TRINKET_STRENGTH_DPS = {
+	-- 7.2 trinkets
+	147278, -- Stalwart Crest
+	144482, -- Fel-Oiled Infernal Machine
+	147011, -- Vial of Ceaseless Toxins
+	147012, -- Umbral Moonglaives
+	147009, -- Infernal Cinders
+	147015, -- Engine of Eradication
+	147010, -- Cradle of Anguish
+	
 	-- 7.1.5 and previously missed 7.1 trinkets
 	142166, -- Ethereal Urn
 	142508, -- Chains of the Valorous
@@ -851,6 +884,20 @@ local TRINKET_STRENGTH_DPS = {
 }
 
 local TRINKET_HEALER = {
+	-- 7.2 trinkets
+	147276, -- Spellbinder's Seal
+	144480, -- Dreadstone of Endless Shadows
+	147019, -- Tome of Unraveling Sanity
+	147007, -- The Deceiver's Grand Design
+	147016, -- Terror From Below
+	147017, -- Tarnished Sentinel Medallion
+	147018, -- Spectral Thurible
+	147004, -- Sea Star of the Depthmother
+	147002, -- Charm of the Rising Tide
+	147005, -- Chalice of Moonlight
+	147003, -- Barbaric Mindslaver
+	147006, -- Archive of Faith
+	
 	-- 7.1.5 and previously missed 7.1 trinkets
 	142166, -- Ethereal Urn
 	142507, -- Brinewater Slime in a Bottle
@@ -915,6 +962,17 @@ local TRINKET_HEALER = {
 }
 
 local TRINKET_TANK = {
+	-- 7.2 trinkets
+	147278, -- Stalwart Crest
+	147275, -- Beguiler's Talisman
+	144477, -- Splinters of Agronax
+	144482, -- Fel-Oiled Infernal Machine
+	147026, -- Shifting Cosmic Sliver
+	147024, -- Reliquary of the Damned
+	147025, -- Recompiled Guardian Module
+	147023, -- Leviathan's Hunger
+	147022, -- Feverish Carapace
+	
 	-- 7.1.5 and previously missed 7.1 trinkets
 	142506, -- Eye of Guarm
 	142166, -- Ethereal Urn

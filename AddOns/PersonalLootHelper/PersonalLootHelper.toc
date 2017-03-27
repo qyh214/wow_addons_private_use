@@ -1,6 +1,6 @@
 ## Interface: 70100
 ## Title: Personal Loot Helper
-## Version: 1.22
+## Version: 1.23
 ## SavedVariables: PLH_NOTIFY_MODE, PLH_INCLUDE_BOE, PLH_MIN_QUALITY, PLH_MIN_ILVL, PLH_DEBUG, PLH_CURRENT_SPEC_ONLY, PLH_CHECK_CHARACTER_LEVEL, PLH_COORDINATE_ROLLS, PLH_NOTIFY_GROUP, PLH_HIGHLIGHT_RAID_FRAMES, PLH_HIGHLIGHT_SIZE
 ## Notes: Simplifies trading of personal loot by notifying you when a drop is not an upgrade for the looter, but is an upgrade for you or others in your group.
 ## Author: Madone-Zul'Jin
