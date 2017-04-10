@@ -1,7 +1,7 @@
-changeset:   122:e5293c622815
-tag:         tip
+changeset:   125:e79e4d8941df
+tag:         v7.2.0.125-release
 user:        Tercio
-date:        Thu Mar 23 11:15:09 2017 -0300
-summary:     Added tag v7.1.5.119-release for changeset b2dd83fef4be
+date:        Tue Apr 04 11:39:36 2017 -0300
+summary:     - ticket #353: "quests on broken shore should by pass filters".
 
 

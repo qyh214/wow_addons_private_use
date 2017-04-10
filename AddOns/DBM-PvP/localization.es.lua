@@ -1,37 +1,36 @@
 ﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
-
 local L
 
-----------------------------
---  General BG functions  --
-----------------------------
+---------------------------------------------
+-- Opciones generales de campos de batalla --
+---------------------------------------------
 L = DBM:GetModLocalization("Battlegrounds")
 
 L:SetGeneralLocalization({
 	name = "Opciones generales"
 })
 
+
 L:SetTimerLocalization({
 	TimerInvite = "%s"
 })
 
 L:SetOptionLocalization({
-	ColorByClass	= "Mostrar colores de clases en la Tabla de Estadísticas.",
-	ShowInviteTimer	= "Mostrar tiempo restante para entrar en batalla.",
-	AutoSpirit	= "Liberar espíritu automaticamente",
-	HideBossEmoteFrame	= "Ocultar el marco de chat del Boss"
+	ColorByClass	= "Mostrar nombres con el color de su clase en la tabla de estadísticas",
+	ShowInviteTimer	= "Mostrar tiempo restante para unirse al campo de batalla",
+	AutoSpirit		= "Liberar espíritu automáticamente",
+	HideBossEmoteFrame	= "Ocultar marco de jefe de banda y botón de ciudadela en campos de batalla"
 })
 
 L:SetMiscLocalization({
-	BgStart60 			= "La batalla comienza en 1 minuto.",
-	BgStart30 			= "La batalla comienza en 30 segundos. ¡Preparaos!",
-	ArenaInvite	= "Mostrar tiempo para la Arena"
+	BgStart60 		= "La batalla comienza en 1 minuto.",
+	BgStart30 		= "La batalla comienza en 30 segundos. ¡Preparaos!",
+	ArenaInvite	= "Invitación a la arena"
 })
 
-
---------------
---  Arenas  --
---------------
+------------
+-- Arenas --
+------------
 L = DBM:GetModLocalization("Arenas")
 
 L:SetGeneralLocalization({
@@ -43,131 +42,146 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	TimerShadow 	= "Mostrar tiempo para que salga Visión de las Sombras."
+	TimerShadow = "Mostrar temporizador para Visión de las Sombras"
 })
 
 L:SetMiscLocalization({
-	Start15		= "¡Quince segundos hasta que comience la batalla en arena!"
+	Start15	= "¡Quince segundos hasta que comience la batalla en arena!",
+	highmaulArena = "¡La batalla por la supremacía comienza en 30 segundos!"
 })
 
----------------
---  Alterac  --
----------------
+----------------------
+-- Valle de Alterac --
+----------------------
 L = DBM:GetModLocalization("z30")
 
 L:SetTimerLocalization({
-	TimerTower		= "%s",
-	TimerGY			= "%s"
+	TimerTower	= "%s",
+	TimerGY		= "%s"
 })
 
 L:SetOptionLocalization({
-	TimerTower		= "Mostrar tiempo para conquistar las Torres.",
-	TimerGY			= "Mostrar tiempo para conquistar los Cementerios.",
-	AutoTurnIn		= "Completar automaticamente las misiones de entregar piezas."
+	TimerTower	= "Mostrar temporizador para captura de torres",
+	TimerGY		= "Mostrar temporizador para captura de cementerios",
+	AutoTurnIn	= "Entregar misiones automáticamente"
 })
 
----------------
---  Arathi  --
----------------
+----------------------
+-- Cuenca de Arathi --
+----------------------
 L = DBM:GetModLocalization("z529")
 
-L:SetMiscLocalization({
-	ScoreExpr 		= "(%d+)/1500",
-	Alliance 		= "Alianza",
-	Horde 			= "Horda",
-	WinBarText 		= "%s ganara en",
-	BasesToWin 		= "Bases necesarias para ganar: %d",
-	Flag 			= "Bandera"
-})
-
 L:SetTimerLocalization({
-	TimerCap 		= "%s"
+	TimerCap	= "%s"
 })
 
 L:SetOptionLocalization({
-	TimerWin 		= "Mostrar tiempo para que una faccion Gane la Batalla.",
-	TimerCap 		= "Mostrar tiempo que tarda en conquistar Banderas.",
-	ShowAbEstimatedPoints	= "Mostrar recursos estimados a ganar.",
-	ShowAbBasesToWin	= "Mostrar bases para ganar."
+	TimerWin				= "Mostrar temporizador de victoria",
+	TimerCap				= "Mostrar temporizador de captura",
+	ShowAbEstimatedPoints	= "Mostrar recursos restantes estimados para ganar/perder",
+	ShowAbBasesToWin		= "Mostrar bases necesarias para ganar"
+})
+
+L:SetMiscLocalization({
+	ScoreExpr	= "(%d+)/1500",
+	WinBarText	= "La %s gana",
+	BasesToWin	= "Bases para ganar: %d"
 })
 
 -----------------------
---  Eye of the Storm --
+-- Cañón del Céfireo --
 -----------------------
+L = DBM:GetModLocalization("z1105")
+
+L:SetTimerLocalization({
+       TimerCap        = "%s"
+})
+
+L:SetOptionLocalization({
+       TimerCap        = "Mostrar temporizador de captura",
+       TimerWin        = "Mostrar temporizador de victoria"
+})
+
+L:SetMiscLocalization({
+       ScoreExpr       = "(%d+)/1500",
+       WinBarText      = "La %s gana"
+})
+
+------------------------
+-- Ojo de la Tormenta --
+------------------------
 L = DBM:GetModLocalization("z566")
+
+L:SetTimerLocalization({
+	TimerFlag	= "Reaparición de bandera"
+})
+
+L:SetOptionLocalization({
+	TimerWin 		= "Mostrar temporizador de victoria",
+	TimerFlag 		= "Mostrar temporizador de reaparición de bandera",
+	ShowPointFrame	= "Mostrar portador de bandera y puntos estimados"
+})
 
 L:SetMiscLocalization({
 	ScoreExpr		= "(%d+)/1500",
-	Alliance 		= "Alianza",
-	Horde 			= "Horda",
-	WinBarText 		= "%s ganara en",
+	WinBarText 		= "La %s gana",
+	Flag			= "Bandera",
 	FlagReset 		= "La bandera se ha restablecido.",
-	FlagTaken 		= "¡ (.+) ha tomado la bandera!",
-	FlagCaptured 		= "¡La .+ ha%w+ ha capturado la bandera!",
-	FlagDropped 		= "¡Ha caído la bandera!"
-
+	FlagTaken 		= "¡(.+) ha tomado la bandera!",
+	FlagCaptured	= "¡La .+ ha%w+ ha capturado la bandera!",
+	FlagDropped		= "¡Ha caído la bandera!"
 })
 
-L:SetTimerLocalization({
-	TimerFlag 		= "Bandera Restablecida"
-})
-
-L:SetOptionLocalization({
-	TimerWin 		= "Mostrar tiempo para que una faccion Gane la Batalla.",
-	TimerFlag 		= "Mostrar tiempo que tarda en restablecer la Bandera.",
-	ShowPointFrame 		= "Ver puntos que dara la bandera."
-})
-
---------------------
---  Warsong Gulch --
---------------------
+------------------------------
+-- Garganta Grito de Guerra --
+------------------------------
 L = DBM:GetModLocalization("z489")
 
-L:SetMiscLocalization({
-	Alliance 			= "Alianza",
-	Horde 				= "Horda",
-	InfoErrorText 			= "The flag carrier targeting function will be restored when you are out of combat.",
-	ExprFlagPickUp 			= "¡(.+) ha cogido la bandera de la (%w+)!",
-	ExprFlagCaptured 		= "¡(.+) ha capturado la bandera de la (%w+)!",
-	ExprFlagReturn 			= "¡(.+) ha devuelto la bandera de la (%w+) a su base!",
-	FlagAlliance 			= "Banderas capturadas por la Alianza: ",
-	FlagHorde			= "Banderas capturadas por la Horda: ",
-	FlagBase			= "Base"
-})
-
 L:SetTimerLocalization({
-	TimerStart 			= "La batalla va comenzar",
-	TimerFlag 			= "La bandera se resetea en"
+	TimerStart	= "La batalla comienza",
+	TimerFlag	= "Reaparición de bandera"
 })
 
 L:SetOptionLocalization({
-	TimerStart  			= "Mostrar tiempo para que comienze la Batalla.",
-	TimerFlag			= "Mostrar tiempo que tarda en restablecer la Bandera.",
-	ShowFlagCarrier			= "Mostrar por donde va la bandera",
-	ShowFlagCarrierErrorNote 	= "Mostrar error de por donde va la bandera"
+	TimerStart					= "Mostrar temporizador de inicio",
+	TimerFlag					= "Mostrar temporizador de reaparición de banderas",
+	ShowFlagCarrier				= "Mostrar portadores de banderas",
+	ShowFlagCarrierErrorNote	= "Mostrar mensaje de error de portador de bandera al estar en combate"
 })
 
-------------------------
---  Isle of Conquest  --
-------------------------
+L:SetMiscLocalization({
+	InfoErrorText		= "La función de selección de portador de bandera se restaurará cuando salgas de combate.",
+	ExprFlagPickUp		= "¡(.+) ha cogido la bandera de la (%w+)!",
+	ExprFlagCaptured	= "¡(.+) ha capturado la bandera de la (%w+)!",
+	ExprFlagReturn		= "¡(.+) ha devuelto la bandera de la (%w+) a su base!",
+	FlagAlliance		= "Banderas capturadas por la Alianza: ",
+	FlagHorde			= "Banderas capturadas por la Horda: ",
+	FlagBase			= "Base",
+	Vulnerable1			= "¡Los portadores de las banderas se han vuelto vulnerables a los ataques!",
+	Vulnerable2			= "¡Los portadores de las banderas se han vuelto más vulnerables a los ataques!"
+})
+
+--------------------------
+-- Isla de la Conquista --
+--------------------------
 L = DBM:GetModLocalization("z628")
 
 L:SetWarningLocalization({
-	WarnSiegeEngine		= "Máquina de asedio Lista!",
-	WarnSiegeEngineSoon	= "Máquina de asedio en ~10 seg"
+	WarnSiegeEngine		= "¡Máquina de asedio lista!",
+	WarnSiegeEngineSoon	= "Máquina de asedio en ~10 s"
 })
 
 L:SetTimerLocalization({
-	TimerPOI		= "%s",
-	TimerSiegeEngine	= "Máquina de asedio Lista"
+	TimerPOI			= "%s",
+	TimerSiegeEngine	= "Máquina de asedio lista"
 })
 
 L:SetOptionLocalization({
-	TimerPOI		= "Mostrar tiempo para las Capturas",
-	TimerSiegeEngine	= "Mostrar tiempo para la construcción de Máquina de asedio",
-	WarnSiegeEngine		= "Mostrar aviso cuando Máquina de asedio esté lista",
-	WarnSiegeEngineSoon	= "Mostrar aviso cuando Máquina de asedio esté casi lista",
-	ShowGatesHealth		= "Mostrar la vida de las puertas dañadas (Puede que muestre valores erréneos si te unes a una BG empezada!)"
+	TimerPOI			= "Mostrar temporizador de captura",
+	TimerSiegeEngine	= "Mostrar temporizador para construcción de máquinas de asedio",
+	WarnSiegeEngine		= "Mostrar aviso cuando una máquina de asedio esté lista",
+	WarnSiegeEngineSoon	= "Mostrar aviso cuando una máquina de asedio esté casi lista",
+	ShowGatesHealth		= "Mostrar salud de puertas dañadas (¡puede dar resultados erróneos al unirse a una batalla en curso!)"
 })
 
 L:SetMiscLocalization({
@@ -175,66 +189,97 @@ L:SetMiscLocalization({
 	SiegeEngine				= "Máquina de asedio",
 	GoblinStartAlliance		= "¿Ves esas bombas de seforio? Úsalas en las puertas mientras reparo la máquina de asedio.",
 	GoblinStartHorde		= "Trabajaré en la máquina de asedio, solo cúbreme las espaldas. ¡Usa esas bombas de seforio en las puertas si las necesitas!",
-	GoblinHalfwayAlliance	= "¡Estoy a medias! Mantén a la Horda alejada de aquí. ¡En la escuela de ingeniería no enseñan a luchar!",
+	GoblinHalfwayAlliance	= "¡Ya casi estoy! Mantén a la Horda alejada. ¡No me enseñaron a luchar en la escuela de ingeniería!",--Comprobar por si acaso
 	GoblinHalfwayHorde		= "¡Ya casi estoy! Mantén a la Alianza alejada... ¡Luchar no entra en mi contrato!",
-	GoblinFinishedAlliance	= "¡Mi mejor obra! ¡Esta máquina de asedio está lista para la acción!",
+	GoblinFinishedAlliance	= "¡Mi mejor trabajo hasta ahora! ¡Esta máquina de asedio está lista para la acción!",--Comprobar por si acaso
 	GoblinFinishedHorde		= "¡La máquina de asedio está lista para la acción!",
-	GoblinBrokenAlliance	= "¿Ya está rota? No pasa nada. No es nada que no pueda arreglar.",
-	GoblinBrokenHorde		= "¿Está estropeada otra vez? La arreglaré... pero no esperes que la garantía cubra esto."
+	GoblinBrokenAlliance	= "¡¿Ya se ha roto?! No te preocupes. No es nada que no pueda arreglar.",--Comprobar por si acaso
+	GoblinBrokenHorde		= "¡¿Se ha vuelto a romper?1 Ya lo arreglo... Pero no esperes que esto lo cubra la garantía."--Comprobar por si acaso
 })
 
-------------------
---  Twin Peaks  --
-------------------
+---------------------
+-- Cumbres Gemelas --
+---------------------
 L = DBM:GetModLocalization("z726")
 
+L:SetTimerLocalization({
+	TimerStart	= "La batalla comienza",
+	TimerFlag	= "Reaparición de banderas"
+})
+
+L:SetOptionLocalization({
+	TimerStart					= "Mostrar temporizador de inicio",
+	TimerFlag					= "Mostrar temporizador de reaparición de banderas",
+	ShowFlagCarrier				= "Mostrar portadores de banderas",
+	ShowFlagCarrierErrorNote	= "Mostrar mensaje de error de portador de bandera al estar en combate"
+})
+
 L:SetMiscLocalization({
-	Alliance 			= "Alianza",
-	Horde 				= "Horda",
-	InfoErrorText		= "La función de targetear al portador de la bandera se restaurará cuando estés fuera de combate.",
+	InfoErrorText		= "La función de selección de portador de bandera se restaurará cuando salgas de combate.",
 	ExprFlagPickUp		= "¡(.+) ha cogido la bandera de la (%w+)!",
 	ExprFlagCaptured	= "¡(.+) ha capturado la bandera de la (%w+)!",
 	ExprFlagReturn		= "¡(.+) ha devuelto la bandera de la (%w+) a su base!",
-	FlagAlliance		= "Bandera de la Alianza: ",
-	FlagHorde			= "Bandera de la Horda: ",
+	FlagAlliance		= "Banderas capturadas por la Alianza: ",
+	FlagHorde			= "Banderas capturadas por la Horda: ",
 	FlagBase			= "Base",
-	Vulnerable1		= "¡Los portadores de las banderas se han vuelto vulnerables a los ataques!",
-	Vulnerable2		= "¡Los portadores de las banderas se han vuelto más vulnerables a los ataques!"
+	Vulnerable1			= "¡Los portadores de las banderas se han vuelto vulnerables a los ataques!",
+	Vulnerable2			= "¡Los portadores de las banderas se han vuelto más vulnerables a los ataques!"
 })
 
-L:SetTimerLocalization({
-	TimerStart	= "Empieza la batalla",
-	TimerFlag	= "Reaparición de la bandera"
-})
-
-L:SetOptionLocalization({
-	TimerStart					= "Mostrar tiempo de inicio",
-	TimerFlag					= "Mostrar tiempo de reaparición de bandera",
-	ShowFlagCarrier				= "Mostrar portador de la bandera",
-	ShowFlagCarrierErrorNote	= "Mostrar mensaje de error del portador de la bandera en combate"
-})
-
---------------------------
---  Battle for Gilneas  --
---------------------------
+----------------------------
+-- La Batalla por Gilneas --
+----------------------------
 L = DBM:GetModLocalization("z761")
 
-L:SetMiscLocalization({
-	ScoreExpr 		= "(%d+)/1500",
-	Alliance 		= "Alianza",
-	Horde 			= "Horda",
-	WinBarText 		= "%s ganara en",
-	BasesToWin 		= "Bases necesarias para ganar: %d",
-	Flag 			= "Bandera"
-})
-
 L:SetTimerLocalization({
-	TimerCap 		= "%s"
+	TimerCap	= "%s"
 })
 
 L:SetOptionLocalization({
-	TimerWin 			= "Mostrar tiempo para que una faccion Gane la Batalla.",
-	TimerCap 			= "Mostrar tiempo que tarda en conquistar Banderas.",
-	ShowGilneasEstimatedPoints	= "Mostrar recursos estimados a ganar.",
-	ShowGilneasBasesToWin		= "Mostrar bases para ganar."
+	TimerWin				= "Mostrar temporizador de victoria",
+	TimerCap				= "Mostrar temporizador de captura",
+	ShowGilneasEstimatedPoints		= "Mostrar recursos restantes estimados para ganar/perder",
+	ShowGilneasBasesToWin			= "Mostrar bases necesarias para ganar"
+})
+
+L:SetMiscLocalization({
+	ScoreExpr	= "(%d+)/1500",
+	WinBarText	= "La %s gana",
+	BasesToWin	= "Bases para ganar: %d"
+})
+
+----------------------
+-- Minas Lonjaplata --
+----------------------
+L = DBM:GetModLocalization("z727")
+
+L:SetTimerLocalization({
+	TimerCart	= "Reaparición de vagoneta"
+})
+
+L:SetOptionLocalization({
+	TimerCart	= "Mostrar temporizador de reaparición de vagoneta"
+})
+
+L:SetMiscLocalization({
+	Capture = "ha capturado"
+})
+
+-----------------------
+-- Templo de Kotmogu --
+-----------------------
+L = DBM:GetModLocalization("z998")
+
+L:SetOptionLocalization({
+	TimerWin			= "Mostrar temporizador de victoria",
+	ShowKotmoguEstimatedPoints	= "Mostrar puntos restantes estimados para ganar/perder",
+	ShowKotmoguOrbsToWin		= "Mostrar orbes necesarios para ganar"
+})
+
+L:SetMiscLocalization({
+	OrbTaken 	= "¡(%S+) se ha hecho con el orbe (%S+)!",
+	OrbReturn 	= "¡El orbe (%S+) ha sido devuelto!",
+	ScoreExpr	= "(%d+)/1500",
+	WinBarText	= "La %s gana",
+	OrbsToWin	= "Orbes para ganar: %d"
 })

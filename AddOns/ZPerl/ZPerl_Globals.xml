@@ -11,7 +11,7 @@
 	<Script file="localization.itIT.lua"/>
 	<Script file="ZPerl_Globals.lua"/>
 	<Script file="ZPerl_Init.lua"/>
-	<Script file="ZPerl_Voice.lua"/>
+	<!--<Script file="ZPerl_Voice.lua"/>-->
 	<Script file="ZPerl_Slash.lua"/>
 
 	<Button name="XPerl_BasicButton" virtual="true">

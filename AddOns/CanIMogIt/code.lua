@@ -110,6 +110,23 @@ local classArmorTypeMap = {
 }
 
 
+-- Class Masks
+local classMask = {
+    [1] = "WARRIOR",
+    [2] = "PALADIN",
+    [4] = "HUNTER",
+    [8] = "ROGUE",
+    [16] = "PRIEST",
+    [32] = "DEATHKNIGHT",
+    [64] = "SHAMAN",
+    [128] = "MAGE",
+    [256] = "WARLOCK",
+    [512] = "MONK",
+    [1024] = "DRUID",
+    [2048] = "DEMONHUNTER",
+}
+
+
 local armorTypeSlots = {
     [HEAD] = true,
     [SHOULDER] = true,
@@ -130,6 +147,10 @@ local miscArmorExceptions = {
 }
 
 
+local APPEARANCES_ITEMS_TAB = 1
+local APPEARANCES_SETS_TAB = 2
+
+
 -- Get the name for Cosmetic. Uses http://www.wowhead.com/item=130064/deadeye-monocle.
 local COSMETIC_NAME = select(3, GetItemInfoInstant(130064))
 
@@ -137,6 +158,9 @@ local COSMETIC_NAME = select(3, GetItemInfoInstant(130064))
 -- Built-in colors
 -- TODO: move to constants
 local BLIZZARD_RED = "|cffff1919"
+local BLIZZARD_GREEN = "|cff19ff19"
+local BLIZZARD_DARK_GREEN = "|cff40c040"
+local BLIZZARD_YELLOW = "|cffffd100"
 
 
 -------------------------
@@ -274,6 +298,12 @@ local function printDebug(tooltip, itemLink, bag, slot)
     local appearanceID = CanIMogIt:GetAppearanceID(itemLink)
     addDoubleLine(tooltip, "Item appearanceID:", tostring(appearanceID))
 
+    local setID = CanIMogIt:SetsDBGetSetFromSourceID(sourceID) or "nil"
+    addDoubleLine(tooltip, "Item setID:", tostring(setID))
+
+    local baseSetID = setID ~= nil and setID ~= "nil" and C_TransmogSets.GetBaseSetID(setID) or "nil"
+    addDoubleLine(tooltip, "Item baseSetID:", tostring(setID))
+
     addLine(tooltip, '--------')
 
     local playerHasTransmog = C_TransmogCollection.PlayerHasTransmog(itemID)
@@ -396,6 +426,14 @@ function CanIMogIt.cache:SetItemSourcesValue(itemLink, value)
     self.data["source"..itemLink] = value
 end
 
+function CanIMogIt.cache:GetSetsInfoTextValue(itemLink)
+    return self.data["sets"..itemLink]
+end
+
+function CanIMogIt.cache:SetSetsInfoTextValue(itemLink, value)
+    self.data["sets"..itemLink] = value
+end
+
 CanIMogIt.cache:Clear()
 
 -----------------------------
@@ -468,7 +506,7 @@ local appearancesIter, removeIter = nil, nil
 local function _GetAppearances()
     -- Core logic for getting the appearances.
     if getAppearancesDone then return end
-    C_TransmogCollection.ClearSearch()
+    C_TransmogCollection.ClearSearch(APPEARANCES_ITEMS_TAB)
     GetAppearancesTable()
     buffer = 0
 
@@ -525,6 +563,152 @@ function CanIMogIt:GetAppearances()
     end
     removeAppearancesTable = copyTable(CanIMogIt.db.global.appearances)
     CanIMogIt.frame:SetScript("OnUpdate", GetAppearancesOnUpdate)
+end
+
+
+function CanIMogIt:GetSets()
+    -- Gets a table of all of the sets available to the character,
+    -- along with their items, and adds them to the sets database.
+    C_TransmogCollection.ClearSearch(APPEARANCES_SETS_TAB)
+    for i, set in pairs(C_TransmogSets.GetAllSets()) do
+        -- This is a base set, so we need to get the variant sets as well
+        for i, sourceID in pairs(C_TransmogSets.GetAllSourceIDs(set.setID)) do
+            CanIMogIt:SetsDBAddSetItem(set, sourceID)
+        end
+        local variantSets = C_TransmogSets.GetVariantSets(set.setID)
+        --[[
+            It seems that C_TransmogSets.GetVariantSets(setID) returns a number
+            (instead of the expected table of sets) if it can't find a matching
+            base set. We currently are checking that it's returning a table first
+            to prevent issues.
+        ]]
+        if type(variantSets) == "table" then
+            for i, variantSet in pairs(C_TransmogSets.GetVariantSets(set.setID)) do
+                for i, sourceID in pairs(C_TransmogSets.GetAllSourceIDs(variantSet.setID)) do
+                    CanIMogIt:SetsDBAddSetItem(variantSet, sourceID)
+                end
+            end
+        end
+    end
+end
+
+
+function CanIMogIt:_GetRatioText(setID)
+    -- Gets the ratio text (and color) of known/total for the given setID.
+    local have = 0
+    local total = 0
+    for _, knownSource in pairs(C_TransmogSets.GetSetSources(setID)) do
+        total = total + 1
+        if knownSource then
+            have = have + 1
+        end
+    end
+
+    local ratioText = ""
+    if have == total then
+        ratioText = CanIMogIt.BLUE
+    else
+        ratioText = CanIMogIt.RED_ORANGE
+    end
+    ratioText = ratioText .. "(" .. have .. "/" .. total .. ")"
+    return ratioText
+end
+
+
+function CanIMogIt:GetSetClass(set)
+    --[[
+        Returns the set's class. If it belongs to more than one class,
+        return an empty string.
+
+        This is done based on the player's sex.
+        Player's sex
+        1 = Neutrum / Unknown
+        2 = Male
+        3 = Female
+    ]]
+    local playerSex = UnitSex("player")
+    local className
+    if playerSex == 2 then
+        className = LOCALIZED_CLASS_NAMES_MALE[classMask[set.classMask]]
+    else
+        className = LOCALIZED_CLASS_NAMES_FEMALE[classMask[set.classMask]]
+    end
+    return className or ""
+end
+
+
+local classSetIDs = nil
+
+
+function CanIMogIt:CalculateSetsText(itemLink)
+    --[[
+        Gets the two lines of text to display on the tooltip related to sets.
+
+        Example:
+
+        Demon Hunter: Garb of the Something or Other
+        Ulduar: 25 Man Normal (2/8)
+
+        This function is not cached, so avoid calling often!
+        Use GetSetsText whenever possible!
+    ]]
+    local sourceID = CanIMogIt:GetSourceID(itemLink)
+    if not sourceID then return end
+    local setID = CanIMogIt:SetsDBGetSetFromSourceID(sourceID)
+    if not setID then return end
+
+    local set = C_TransmogSets.GetSetInfo(setID)
+
+    local ratioText = CanIMogIt:_GetRatioText(setID)
+
+    -- Build the classSetIDs table, if it hasn't been built yet.
+    if classSetIDs == nil then
+        classSetIDs = {}
+        for i, baseSet in pairs(C_TransmogSets.GetBaseSets()) do
+            classSetIDs[baseSet.setID] = true
+            for i, variantSet in pairs(C_TransmogSets.GetVariantSets(baseSet.setID)) do
+                classSetIDs[variantSet.setID] = true
+            end
+        end
+    end
+
+    local setNameColor, otherClass
+    if classSetIDs[set.setID] then
+        setNameColor = CanIMogIt.WHITE
+        otherClass = ""
+    else
+        setNameColor = CanIMogIt.GRAY
+        otherClass = CanIMogIt:GetSetClass(set) .. ": "
+    end
+
+
+    local secondLineText = ""
+    if set.label and set.description then
+        secondLineText = CanIMogIt.WHITE .. set.label .. ": " .. BLIZZARD_GREEN ..  set.description .. " "
+    elseif set.label then
+        secondLineText = CanIMogIt.WHITE .. set.label .. " "
+    elseif set.description then
+        secondLineText = BLIZZARD_GREEN .. set.description .. " "
+    end
+    -- TODO: replace CanIMogIt.WHITE with setNameColor, add otherClass
+    -- e.g.: setNameColor .. otherClass .. set.name
+    return CanIMogIt.WHITE .. set.name, secondLineText .. ratioText
+end
+
+
+function CanIMogIt:GetSetsText(itemLink)
+    -- Gets the cached text regarding the sets info for the given item.
+    local line1, line2;
+    if CanIMogIt.cache:GetSetsInfoTextValue(itemLink) then
+        line1, line2 = unpack(CanIMogIt.cache:GetSetsInfoTextValue(itemLink))
+        return line1, line2
+    end
+
+    line1, line2 = CanIMogIt:CalculateSetsText(itemLink)
+
+    CanIMogIt.cache:SetSetsInfoTextValue(itemLink, {line1, line2})
+
+    return line1, line2
 end
 
 
@@ -1164,6 +1348,16 @@ local function addToTooltip(tooltip, itemLink)
             addLine(tooltip, text)
         else
             addDoubleLine(tooltip, " ", text)
+        end
+    end
+
+    if CanIMogItOptions["showSetTooltipText"] then
+        local setFirstLineText, setSecondLineText = CanIMogIt:GetSetsText(itemLink)
+        if setFirstLineText and setFirstLineText ~= "" then
+            addDoubleLine(tooltip, " ", setFirstLineText)
+        end
+        if setSecondLineText and setSecondLineText ~= "" then
+            addDoubleLine(tooltip, " ", setSecondLineText)
         end
     end
 

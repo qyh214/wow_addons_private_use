@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1856, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16012 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16089 $"):sub(12, -3))
 mod:SetCreatureID(116407)
 mod:SetEncounterID(2036)
 mod:SetZone()
@@ -151,7 +151,7 @@ function mod:OnCombatEnd()
 --		DBM.InfoFrame:Hide()
 --	end
 	if self.Options.NPAuraOnSicklyFixate and self:IsMythic() or self.Options.NPAuraOnDrivenAssault then
-		DBM.Nameplate:Hide(true, nil, nil, nil, true, false, true)
+		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
 	end
 end
 

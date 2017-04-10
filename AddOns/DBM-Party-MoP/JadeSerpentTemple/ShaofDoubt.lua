@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(335, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 102 $"):sub(12, -3))
 mod:SetCreatureID(56439)
 mod:SetEncounterID(1439)
 mod:SetZone()
@@ -15,16 +15,15 @@ mod:RegisterEventsInCombat(
 )
 
 
-local warnWitherWill			= mod:NewSpellAnnounce(106736, 3)
-local warnTouchofNothingness	= mod:NewTargetAnnounce(106113, 4)
+local warnWitherWill			= mod:NewSpellAnnounce(106736, 3, nil, false, 2)
 local warnBoundsOfReality		= mod:NewSpellAnnounce(117665, 3)
 
 local specWarnTouchOfNothingness= mod:NewSpecialWarningDispel(106113, "Healer")
 local specWarnShadowsOfDoubt	= mod:NewSpecialWarningMove(110099)--Actually used by his trash, but in a speed run, you tend to pull it all together
 
-local timerWitherWillCD			= mod:NewCDTimer(6, 106736)--6-10 second variations.
-local timerTouchofNothingnessCD	= mod:NewCDTimer(15.5, 106113, nil, nil, nil, 3)--15.5~20 second variations.
-local timerTouchofNothingness	= mod:NewTargetTimer(30, 106113)
+local timerWitherWillCD			= mod:NewCDTimer(6, 106736, nil, false, 2)--6-10 second variations.
+local timerTouchofNothingnessCD	= mod:NewCDTimer(15.5, 106113, nil, "Heaker", 2, 5, nil, DBM_CORE_MAGIC_ICON)--15.5~20 second variations.
+local timerTouchofNothingness	= mod:NewTargetTimer(30, 106113, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
 local timerBoundsOfRealityCD	= mod:NewCDTimer(60, 117665, nil, nil, nil, 6)
 local timerBoundsOfReality		= mod:NewBuffFadesTimer(30, 117665, nil, nil, nil, 6)
 
@@ -51,7 +50,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerBoundsOfReality:Start()
 		timerBoundsOfRealityCD:Start()
 	elseif args.spellId == 106113 then
-		warnTouchofNothingness:Show(args.destName)
 		specWarnTouchOfNothingness:Show(args.destName)
 		timerTouchofNothingness:Start(args.destName)
 	elseif args.spellId == 110099 and args:IsPlayer() then

@@ -5,6 +5,7 @@ CurrentActivity = Addon:NewClass('CurrentActivity', BaseActivity)
 
 CurrentActivity:InitAttr{
     'Title',
+    'PrivateGroup',
 }
 
 function CurrentActivity:FromAddon(data)
@@ -28,12 +29,13 @@ function CurrentActivity:_FromAddon(data)
     end
 end
 
-function CurrentActivity:UpdateBySystem(activityId, ilvl, honorLevel, title, comment, voiceChat)
+function CurrentActivity:UpdateBySystem(activityId, ilvl, honorLevel, title, comment, voiceChat, privateGroup)
     self:SetActivityID(activityId)
     self:SetItemLevel(ilvl)
     self:SetHonorLevel(honorLevel)
     self:SetVoiceChat(voiceChat)
     self:UpdateCustomData(comment, title)
+    self:SetPrivateGroup(privateGroup)
 end
 
 function CurrentActivity:GetTitle()
@@ -48,5 +50,6 @@ function CurrentActivity:GetCreateArguments(autoAccept)
             self:GetHonorLevel(),
             self:GetVoiceChat(),
             self:GetSummary() .. comment,
-            autoAccept
+            autoAccept,
+            self:GetPrivateGroup()
 end

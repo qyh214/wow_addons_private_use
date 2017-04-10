@@ -14,7 +14,6 @@ local tinsert=tinsert
 local tContains=tContains
 local wipe=wipe
 local Mbase = {}
-local GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY=GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY
 local GARRISON_FOLLOWER_MAX_LEVEL=GARRISON_FOLLOWER_MAX_LEVEL
 local format=format
 local tostring=tostring
@@ -22,7 +21,8 @@ local GetItemInfo=GetItemInfo
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
 local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0
-local maxrank=GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY*1000+GARRISON_FOLLOWER_MAX_LEVEL
+local maxrank=_G.GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY[LE_FOLLOWER_TYPE_GARRISON_6_0]*1000+GARRISON_FOLLOWER_MAX_LEVEL
+local maxrankoh=_G.GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY[LE_FOLLOWER_TYPE_GARRISON_7_0]*1000+110
 local module=addon:NewSubClass('FollowerCache') --#module
 local cache={} --#cache
 local followerTypes={}
@@ -155,7 +155,7 @@ function cache:AddExtraData(follower)
 	follower.fullname=format("%3d %s",follower.rank,follower.coloredname)
 	follower.maxed=follower.qLevel>=maxrank
 	if follower.followerTypeID==LE_FOLLOWER_TYPE_GARRISON_7_0 then
-		follower.maxed=false
+		follower.maxed=follower.qLevel>=maxrankoh
 	end
 	local weaponItemID, weaponItemLevel, armorItemID, armorItemLevel = G.GetFollowerItems(follower.followerID);
 	follower.weaponItemID=weaponItemID

@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 16083 $"):sub(12, -3)),
-	DisplayVersion = "7.1.18", -- the string that is shown as version
-	ReleaseRevision = 16083 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 16140 $"):sub(12, -3)),
+	DisplayVersion = "7.2.3", -- the string that is shown as version
+	ReleaseRevision = 16140 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -53,6 +53,7 @@ if not DBM.Revision then
 	DBM.Revision = DBM.ReleaseRevision
 end
 
+local wowVersionString, _, _, wowTOC = GetBuildInfo()
 local testBuild = false
 if IsTestBuild() then
 	testBuild = true
@@ -263,7 +264,7 @@ DBM.DefaultOptions = {
 	BigBrotherAnnounceToRaid = false,
 	SettingsMessageShown = false,
 	ForumsMessageShown = false,
-	PGMessageShown = false,
+	PGMessageShown2 = false,
 	MCMessageShown = false,
 	BCTWMessageShown = false,
 	WOTLKTWMessageShown = false,
@@ -415,13 +416,12 @@ local addsGUIDs = {}
 local targetEventsRegistered = false
 local targetMonitor = nil
 local statusWhisperDisabled = false
-local wowVersionString, _, _, wowTOC = GetBuildInfo()
 local dbmToc = 0
 local UpdateChestTimer
 local breakTimerStart
 local AddMsg
 
-local fakeBWVersion, fakeBWHash = 48, "b49a4be"
+local fakeBWVersion, fakeBWHash = 51, "eacf411"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -435,6 +435,7 @@ local bannedMods = { -- a list of "banned" (meaning they are replaced by another
 	"DBM-SiegeOfOrgrimmar",--Block legacy version. New version is "DBM-SiegeOfOrgrimmarV2"
 	"DBM-HighMail",
 	"DBM-ProvingGrounds-MoP",--Renamed to DBM-ProvingGrounds in 6.0 version since blizzard updated content for WoD
+	"DBM-ProvingGrounds",--Renamed to DBM-Challenges going forward to include proving grounds and any new single player challendges of similar design such as mage tower artifact quests
 	"DBM-VPKiwiBeta",--Renamed to DBM-VPKiwi in final version.
 	"DBM-Suramar",--Renamed to DBM-Nighthold
 }
@@ -1118,6 +1119,9 @@ do
 				self.Options.tempBreak2 = nil
 			end
 		end
+		if IsInGuild() then
+			SendAddonMessage("D4", "GH", "GUILD")
+		end
 	end
 
 	-- register a callback that will be executed once the addon is fully loaded (ADDON_LOADED fired, saved vars are available)
@@ -1139,17 +1143,17 @@ do
 			onLoadCallbacks = nil
 			loadOptions(self)
 			if GetAddOnEnableState(playerName, "VEM-Core") >= 1 then
-				self:Disable(true)
+				self:Disable()
 				C_TimerAfter(15, function() AddMsg(self, DBM_CORE_VEM) end)
 				return
 			end
 			if GetAddOnEnableState(playerName, "DBM-Profiles") >= 1 then
-				self:Disable(true)
+				self:Disable()
 				C_TimerAfter(15, function() AddMsg(self, DBM_CORE_3RDPROFILES) end)
 				return
 			end
 			if GetAddOnEnableState(playerName, "DPMCore") >= 1 then
-				self:Disable(true)
+				self:Disable()
 				C_TimerAfter(15, function() AddMsg(self, DBM_CORE_DPMCORE) end)
 				return
 			end
@@ -2845,6 +2849,7 @@ do
 	end
 
 	function DBM:GetUnitFullName(uId)
+		if not uId then return nil end
 		return GetUnitName(uId, true)
 	end
 
@@ -3603,9 +3608,9 @@ do
 				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-Party-Cataclysm"))
 			end
 		else
-			if LastInstanceMapID == 1148 and not self.Options.PGMessageShown and not GetAddOnInfo("DBM-ProvingGrounds") then
-				self.Options.PGMessageShown = true
-				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-ProvingGrounds"))
+			if (LastInstanceMapID == 1148 or LastInstanceMapID == 1698) and not self.Options.PGMessageShown2 and not GetAddOnInfo("DBM-Challenges") then
+				self.Options.PGMessageShown2 = true
+				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-Challenges"))
 			elseif LastInstanceMapID == 409 and not self.Options.MCMessageShown and not GetAddOnInfo("DBM-MC") then
 				self.Options.MCMessageShown = true
 				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-MC"))
@@ -4121,7 +4126,12 @@ do
 		breakTimerStart(DBM, timer, sender)
 	end
 
-	local function SendVersion()
+	local function SendVersion(guild)
+		if guild then
+			local message = ("%d\t%s\t%s"):format(DBM.Revision, tostring(DBM.ReleaseRevision), DBM.DisplayVersion)
+			SendAddonMessage("D4", "GV\t" .. message, "GUILD")
+			return
+		end
 		if DBM.Options.FakeBWVersion then
 			SendAddonMessage("BigWigs", versionResponseString:format(fakeBWVersion, fakeBWHash), IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
 			return
@@ -4138,11 +4148,83 @@ do
 			sendSync("V", ("%d\t%s\t%s\t%s\t%s"):format(DBM.Revision, tostring(DBM.ReleaseRevision), DBM.DisplayVersion, GetLocale(), tostring(not DBM.Options.DontSetIcons)))
 		end
 	end
+	
+	local function HandleVersion(revision, version, displayVersion, sender)
+		if version > DBM.Revision then -- Update reminder
+			if not checkEntry(newerVersionPerson, sender) then
+				newerVersionPerson[#newerVersionPerson + 1] = sender
+				DBM:Debug("Newer version detected from "..sender.." : Rev - "..revision..", Ver - "..version..", Rev Diff - "..(revision - DBM.Revision), 3)
+			end
+			if #newerVersionPerson < 4 then
+				if #newerVersionPerson == 2 and updateNotificationDisplayed < 2 then--Only requires 2 for update notification.
+					if DBM.HighestRelease < version then
+						DBM.HighestRelease = version
+					end
+					DBM.NewerVersion = displayVersion
+					--UGLY hack to get release version number instead of alpha one
+					if DBM.NewerVersion:find("alpha") then
+						local temp1, temp2 = string.split(" ", DBM.NewerVersion)--Strip down to just version, no alpha
+						local temp3, temp4, temp5 = string.split(".", temp1)--Strip version down to 3 numbers
+						if temp5 then
+							temp5 = tonumber(temp5)
+							temp5 = temp5 - 1
+							temp5 = tostring(temp5)
+							DBM.NewerVersion = temp3.."."..temp4.."."..temp5
+						end
+					end
+					--Find min revision.
+					updateNotificationDisplayed = 2
+					AddMsg(DBM, DBM_CORE_UPDATEREMINDER_HEADER:match("([^\n]*)"))
+					AddMsg(DBM, DBM_CORE_UPDATEREMINDER_HEADER:match("\n(.*)"):format(displayVersion, version))
+					AddMsg(DBM, ("|HDBM:update:%s:%s|h|cff3588ff[%s]"):format(displayVersion, version, DBM_CORE_UPDATEREMINDER_URL or "http://www.deadlybossmods.com"))
+					showConstantReminder = 1
+				elseif #newerVersionPerson == 3 and updateNotificationDisplayed < 3 then--The following code requires at least THREE people to send that higher revision. That should be more than adaquate
+					--Find min revision.
+					local revDifference = mmin((raid[newerVersionPerson[1]].revision - DBM.Revision), (raid[newerVersionPerson[2]].revision - DBM.Revision), (raid[newerVersionPerson[3]].revision - DBM.Revision))
+					--Disable if out of date and it's a major patch.
+					if not testBuild and dbmToc < wowTOC then
+						updateNotificationDisplayed = 3
+						AddMsg(DBM, DBM_CORE_UPDATEREMINDER_MAJORPATCH)
+						DBM:Disable()
+					--Disable if revision grossly out of date even if not major patch.
+					elseif revDifference > 100 then
+						if updateNotificationDisplayed < 3 then
+							updateNotificationDisplayed = 3
+							AddMsg(DBM, DBM_CORE_UPDATEREMINDER_DISABLE)
+							DBM:Disable()
+						end
+					end
+				end
+			end
+		end
+		if DBM.DisplayVersion:find("alpha") and #newerVersionPerson < 2 and #newerRevisionPerson < 2 and updateNotificationDisplayed < 2 and (revision - DBM.Revision) > 20 then
+			if not checkEntry(newerRevisionPerson, sender) then
+				newerRevisionPerson[#newerRevisionPerson + 1] = sender
+				DBM:Debug("Newer revision detected from "..sender.." : Rev - "..revision..", Ver - "..version..", Rev Diff - "..(revision - DBM.Revision))
+			end
+			if #newerRevisionPerson == 2 then
+				local revDifference = mmin((raid[newerRevisionPerson[1]].revision - DBM.Revision), (raid[newerRevisionPerson[2]].revision - DBM.Revision))
+				if testBuild and revDifference > 5 then
+					updateNotificationDisplayed = 3
+					AddMsg(DBM, DBM_CORE_UPDATEREMINDER_DISABLE)
+					DBM:Disable()
+				else
+					updateNotificationDisplayed = 2
+					AddMsg(DBM, DBM_CORE_UPDATEREMINDER_HEADER_ALPHA:format(revDifference))
+				end
+			end
+		end
+	end
 
 	-- TODO: is there a good reason that version information is broadcasted and not unicasted?
 	syncHandlers["H"] = function(sender)
 		DBM:Unschedule(SendVersion)--Throttle so we don't needlessly send tons of comms during initial raid invites
 		DBM:Schedule(3, SendVersion)--Send version if 3 seconds have past since last "Hi" sync
+	end
+	
+	syncHandlers["GH"] = function(sender)
+		DBM:Unschedule(SendVersion, true)--Throttle so we don't needlessly send tons of comms during initial raid invites
+		DBM:Schedule(3, SendVersion, true)--Send version if 3 seconds have past since last "Hi" sync
 	end
 
 	syncHandlers["BV"] = function(sender, version, hash)--Parsed from bigwigs V7+
@@ -4162,74 +4244,17 @@ do
 			raid[sender].locale = locale
 			raid[sender].enabledIcons = iconEnabled or "false"
 			DBM:Debug("Received version info from "..sender.." : Rev - "..revision..", Ver - "..version..", Rev Diff - "..(revision - DBM.Revision), 3)
-			if version > DBM.Revision then -- Update reminder
-				if not checkEntry(newerVersionPerson, sender) then
-					newerVersionPerson[#newerVersionPerson + 1] = sender
-					DBM:Debug("Newer version detected from "..sender.." : Rev - "..revision..", Ver - "..version..", Rev Diff - "..(revision - DBM.Revision), 3)
-				end
-				if #newerVersionPerson < 4 then
-					if #newerVersionPerson == 2 and updateNotificationDisplayed < 2 then--Only requires 2 for update notification.
-						if DBM.HighestRelease < version then
-							DBM.HighestRelease = version
-						end
-						DBM.NewerVersion = displayVersion
-						--UGLY hack to get release version number instead of alpha one
-						if DBM.NewerVersion:find("alpha") then
-							local temp1, temp2 = string.split(" ", DBM.NewerVersion)--Strip down to just version, no alpha
-							local temp3, temp4, temp5 = string.split(".", temp1)--Strip version down to 3 numbers
-							if temp5 then
-								temp5 = tonumber(temp5)
-								temp5 = temp5 - 1
-								temp5 = tostring(temp5)
-								DBM.NewerVersion = temp3.."."..temp4.."."..temp5
-							end
-						end
-						--Find min revision.
-						updateNotificationDisplayed = 2
-						AddMsg(DBM, DBM_CORE_UPDATEREMINDER_HEADER:match("([^\n]*)"))
-						AddMsg(DBM, DBM_CORE_UPDATEREMINDER_HEADER:match("\n(.*)"):format(displayVersion, version))
-						AddMsg(DBM, ("|HDBM:update:%s:%s|h|cff3588ff[%s]"):format(displayVersion, version, DBM_CORE_UPDATEREMINDER_URL or "http://www.deadlybossmods.com"))
-						showConstantReminder = 1
-					elseif #newerVersionPerson == 3 then--Requires 3 for force disable.
-						--Find min revision.
-						local revDifference = mmin((raid[newerVersionPerson[1]].revision - DBM.Revision), (raid[newerVersionPerson[2]].revision - DBM.Revision), (raid[newerVersionPerson[3]].revision - DBM.Revision))
-						--The following code requires at least THREE people to send that higher revision (I just upped it from 2). That should be more than adaquate.
-						--Disable if out of date and it's a major patch.
-						--[[if not testBuild and dbmToc < wowTOC then
-							updateNotificationDisplayed = 3
-							AddMsg(DBM, DBM_CORE_UPDATEREMINDER_MAJORPATCH)
-							DBM:Disable(true)--]]
-						--Disable if revision grossly out of date even if not major patch.
-						if revDifference > 180 then
-						--elseif revDifference > 180 then
-							if updateNotificationDisplayed < 3 then
-								updateNotificationDisplayed = 3
-								AddMsg(DBM, DBM_CORE_UPDATEREMINDER_DISABLE)
-								DBM:Disable(true)
-							end
-						end
-					end
-				end
-			end
-			if DBM.DisplayVersion:find("alpha") and #newerVersionPerson < 2 and #newerRevisionPerson < 2 and updateNotificationDisplayed < 2 and (revision - DBM.Revision) > 20 then
-				if not checkEntry(newerRevisionPerson, sender) then
-					newerRevisionPerson[#newerRevisionPerson + 1] = sender
-					DBM:Debug("Newer revision detected from "..sender.." : Rev - "..revision..", Ver - "..version..", Rev Diff - "..(revision - DBM.Revision))
-				end
-				if #newerRevisionPerson == 2 then
-					local revDifference = mmin((raid[newerRevisionPerson[1]].revision - DBM.Revision), (raid[newerRevisionPerson[2]].revision - DBM.Revision))
-					if testBuild and revDifference > 5 then
-						updateNotificationDisplayed = 3
-						AddMsg(DBM, DBM_CORE_UPDATEREMINDER_DISABLE)
-						DBM:Disable(true)
-					else
-						updateNotificationDisplayed = 2
-						AddMsg(DBM, DBM_CORE_UPDATEREMINDER_HEADER_ALPHA:format(revDifference))
-					end
-				end
-			end
+			HandleVersion(revision, version, displayVersion, sender)
 		end
 		DBM:GROUP_ROSTER_UPDATE()
+	end
+	
+	syncHandlers["GV"] = function(sender, revision, version, displayVersion)
+		revision, version = tonumber(revision), tonumber(version)
+		if revision and version and displayVersion then
+			DBM:Debug("Received G version info from "..sender.." : Rev - "..revision..", Ver - "..version..", Rev Diff - "..(revision - DBM.Revision), 3)
+			HandleVersion(revision, version, displayVersion, sender)
+		end
 	end
 
 	syncHandlers["U"] = function(sender, time, text)
@@ -5124,8 +5149,8 @@ do
 	end
 
 	function DBM:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, spellGUID, spellId)
-		local correctSpellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
-		self:Debug("UNIT_SPELLCAST_SUCCEEDED fired: "..UnitName(uId).."'s "..spellName.."("..correctSpellId..")", 3)
+		--local correctSpellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+		self:Debug("UNIT_SPELLCAST_SUCCEEDED fired: "..UnitName(uId).."'s "..spellName.."("..spellId..")", 3)
 	end
 
 	function DBM:ENCOUNTER_START(encounterID, name, difficulty, size)
@@ -6326,49 +6351,13 @@ function DBM:SendVariableInfo(mod, target)
 end
 
 do
-	local soundFiles = {
-		"Sound\\Creature\\Rhonin\\UR_Rhonin_Event01.ogg",--5
-		"Sound\\Creature\\Rhonin\\UR_Rhonin_Event02.ogg",--5
-		"Sound\\Creature\\Rhonin\\UR_Rhonin_Event03.ogg",--5.5
-		"Sound\\Creature\\Rhonin\\UR_Rhonin_Event04.ogg",--9
-		"Sound\\Creature\\Rhonin\\UR_Rhonin_Event05.ogg",--4
-		"Sound\\Creature\\Rhonin\\UR_Rhonin_Event06.ogg",--10
-		"Sound\\Creature\\Rhonin\\UR_Rhonin_Event07.ogg",--15
-		"Sound\\Creature\\Rhonin\\UR_Rhonin_Event08.ogg",
-	}
-	local function playDelay(self, count)
-		self:PlaySoundFile(soundFiles[count])
-	end
-
-	function DBM:AprilFools()
-		self:Unschedule(self.AprilFools)
-		local currentMapId = GetPlayerMapAreaID("player")
-		if not currentMapId then
-			SetMapToCurrentZone()
-			currentMapId = GetCurrentMapAreaID()
-		end
-		self:Schedule(120 + math.random(0, 300) , self.AprilFools, self)
-		if currentMapId ~= 1014 then return end--Legion Dalaran
-		playDelay(self, 1)
-		self:Schedule(5, playDelay, self, 2)
-		self:Schedule(10, playDelay, self, 3)
-		self:Schedule(15.5, playDelay, self, 4)
-		self:Schedule(24.5, playDelay, self, 5)
-		self:Schedule(28, playDelay, self, 6)
-		self:Schedule(37.5, playDelay, self, 7)
-		self:Schedule(50.5, playDelay, self, 8)
-	end
 	function DBM:PLAYER_ENTERING_WORLD()
-		local weekday, month, day, year = CalendarGetDate()--Must be called after PLAYER_ENTERING_WORLD
-		if month == 4 and day == 1 then--April 1st
-			self:Schedule(180 + math.random(0, 300) , self.AprilFools, self)
-		end
 		if GetLocale() == "ptBR" or GetLocale() == "frFR" or GetLocale() == "itIT" or GetLocale() == "esES" or GetLocale() == "ruRU" then
 			C_TimerAfter(10, function() if self.Options.HelpMessageVersion < 4 then self.Options.HelpMessageVersion = 4 self:AddMsg(DBM_CORE_NEED_LOCALS) end end)
 		end
-		C_TimerAfter(20, function() if not self.Options.ForumsMessageShown then self.Options.ForumsMessageShown = self.ReleaseRevision self:AddMsg(DBM_FORUMS_MESSAGE) end end)
+		--C_TimerAfter(20, function() if not self.Options.ForumsMessageShown then self.Options.ForumsMessageShown = self.ReleaseRevision self:AddMsg(DBM_FORUMS_MESSAGE) end end)
 		C_TimerAfter(30, function() if not self.Options.SettingsMessageShown then self.Options.SettingsMessageShown = true self:AddMsg(DBM_HOW_TO_USE_MOD) end end)
-		C_TimerAfter(40, function() if self.Options.NewsMessageShown < 8 then self.Options.NewsMessageShown = 8 self:AddMsg(DBM_CORE_WHATS_NEW_LINK) end end)
+		--C_TimerAfter(40, function() if self.Options.NewsMessageShown < 8 then self.Options.NewsMessageShown = 8 self:AddMsg(DBM_CORE_WHATS_NEW_LINK) end end)
 		if type(RegisterAddonMessagePrefix) == "function" then
 			if not RegisterAddonMessagePrefix("D4") then -- main prefix for DBM4
 				self:AddMsg("Error: unable to register DBM addon message prefix (reached client side addon message filter limit), synchronization will be unavailable") -- TODO: confirm that this actually means that the syncs won't show up
@@ -6607,7 +6596,7 @@ end
 --------------------------
 --  Enable/Disable DBM  --
 --------------------------
-function DBM:Disable(forced)
+function DBM:Disable()
 	unscheduleAll()
 	dbmIsEnabled = false
 end
@@ -8848,8 +8837,14 @@ do
 		)
 		if #DBM.Voices < 2 then optionName = false end--Hide options if no voice packs are installed
 		if optionName then
-			obj.option = optionName
-			self:AddBoolOption(obj.option, optionDefault, "sound")
+			if spellId then--Still need to use spell ID for voice pack filter if one is provided
+				obj.option = "Voice"..spellId..(optionVersion or "")
+				self:AddBoolOption(obj.option, optionDefault, "sound")
+				self.localization.options[obj.option] = optionName
+			else
+				obj.option = optionName
+				self:AddBoolOption(obj.option, optionDefault, "sound")
+			end
 		elseif not (optionName == false) then
 			obj.option = "Voice"..spellId..(optionVersion or "")
 			self:AddBoolOption(obj.option, optionDefault, "sound")
@@ -8899,20 +8894,18 @@ do
 		voice3 = self.Options.CountdownVoice3v2
 		local voicesFound = 0
 		for i = 1, #self.Counts do
-			if voicesFound == 3 then return end
 			local curVoice = self.Counts[i]
 			if curVoice.value == voice1 then
 				path1 = curVoice.path
 				voice1max = curVoice.max
-				voicesFound = voicesFound + 1
-			elseif curVoice.value == voice2 then
+			end
+			if curVoice.value == voice2 then
 				path2 = curVoice.path
 				voice2max = curVoice.max
-				voicesFound = voicesFound + 1
-			elseif curVoice.value == voice3 then
+			end
+			if curVoice.value == voice3 then
 				path3 = curVoice.path
 				voice3max = curVoice.max
-				voicesFound = voicesFound + 1
 			end
 		end
 	end

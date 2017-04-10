@@ -1,0 +1,14 @@
+tag 646ded2368eb89394b249c1dd02704c64fc2de2f v1.9.6
+Author:	Talyrius <contact@talyrius.net>
+Date:	Sat Apr 1 12:49:21 2017 -0700
+
+Tagging as v1.9.6.
+
+commit f5ae897be4805e6d0ea67a2ff83951f51d06922a
+Author: legowxelab2z8 <legowxelab2z8@gmail.com>
+Date:   Sat Apr 1 11:37:40 2017 -0700
+
+    Fixed quality colored borders for keystones and battle pets.
+    
+    Fixes #181.
+

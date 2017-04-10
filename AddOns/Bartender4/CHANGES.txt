@@ -1,20 +1,18 @@
-tag 633a195d8ee5d83daca795246d05e9751f4ea28c 4.7.6
+tag 687c79f59023059c8ab5ccfdbcac79fb603be928 4.7.7
 Author:	Hendrik Leppkes <h.leppkes@gmail.com>
-Date:	Wed Feb 1 06:11:26 2017 +0100
+Date:	Tue Mar 28 19:18:38 2017 +0200
 
-Tag as 4.7.6
+Tag as 4.7.7
 
-commit 3931ced5caf294dc74b3075a53ad67ab9d732ee5
+commit 74bfd217bb4b953014c708269a2e16badac4a4a9
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Wed Feb 1 06:11:02 2017 +0100
+Date:   Tue Mar 28 19:18:27 2017 +0200
 
-    Update copyright to 2017
+    Update TOC to 7.2
 
-commit 5424105c813351ff2f20d111c010bb845a33d261
+commit 233e1c34cc971d43b11b613b96e790e2da1b52f8
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Wed Feb 1 06:06:37 2017 +0100
+Date:   Sun Feb 19 07:43:32 2017 +0100
 
-    Set the Layout before trying to save the position
-    
-    This hopefully helps to avoid issues saving the initial position
+    7.2 removed the HelpMicroButton, so we don't need to handle it anymore.
 

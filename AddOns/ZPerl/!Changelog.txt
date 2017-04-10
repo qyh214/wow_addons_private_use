@@ -1,3 +1,14 @@
+**r1030**
+* Force load party layout on load, to prevent some protected issues.
+* PVP timer is now visible for prestige icons too.
+* Some optimizations with the pvp timer functions.
+* Fixed an issue with registering textures with LibSharedMedia.
+
+**r1028**
+* Updated for 7.2.0.
+* Temporary removed the voice chat functions.
+* Fixed an issue with reputation tracking.
+
 **r1026**
 * Added support for prestige icons.
 

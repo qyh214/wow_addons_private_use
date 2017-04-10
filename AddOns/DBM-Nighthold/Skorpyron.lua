@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1706, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15967 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16092 $"):sub(12, -3))
 mod:SetCreatureID(102263)
 mod:SetEncounterID(1849)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -42,7 +42,7 @@ local specWarnTether				= mod:NewSpecialWarningYou(204531, nil, nil, nil, 1, 2)
 local specWarnArcanoslash			= mod:NewSpecialWarningDefensive(204275, "Tank", nil, nil, 1, 2)
 local specWarnCallofScorp			= mod:NewSpecialWarningSwitch(204372, "Tank", nil, nil, 1, 2)--Determine common strat for dps switching
 local specWarnFocusedBlast			= mod:NewSpecialWarningDodge(204471, nil, nil, nil, 2, 2)
-local specWarnShockwave				= mod:NewSpecialWarningMoveTo(204316, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dodge:format(204316), nil, 3, 2)
+local specWarnShockwave				= mod:NewSpecialWarningMoveTo(204316, nil, nil, nil, 3, 2)
 local specWarnVulnerableStarted		= mod:NewSpecialWarningSwitch(204459, false, nil, nil, 1)
 local specWarnVulnerableOver		= mod:NewSpecialWarningEnd(204459, false, nil, nil, 1)--Special warning because anything that came off cd during stun, is being cast immediately
 local specWarnToxicChit				= mod:NewSpecialWarningMove(204744, nil, nil, nil, 1, 2)

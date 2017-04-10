@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(672, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 102 $"):sub(12, -3))
 mod:SetCreatureID(56448)
 mod:SetEncounterID(1418)
 mod:SetZone()
@@ -15,10 +15,10 @@ mod:RegisterEventsInCombat(
 	"SPELL_DAMAGE 115167",
 	"SPELL_MISSED 115167",
 	"UNIT_DIED",
-	"UNIT_TARGET"
+	"UNIT_TARGET_UNFILTERED"
 )
 
-local warnBubbleBurst			= mod:NewCastAnnounce(106612, 3, nil)
+local warnBubbleBurst			= mod:NewCastAnnounce(106612, 3)
 local warnAddsLeft				= mod:NewAddsLeftAnnounce("ej5616", 2, 106526)
 
 local specWarnLivingWater		= mod:NewSpecialWarningSwitch("ej5616", "-Healer")
@@ -26,15 +26,16 @@ local specWarnCorruptingWaters	= mod:NewSpecialWarningMove(115167)
 local specWarnShaResidue		= mod:NewSpecialWarningMove(106653)
 
 local timerLivingWater			= mod:NewCastTimer(5.5, 106526)
-local timerLivingWaterCD		= mod:NewCDTimer(13, 106526, nil, nil, nil, 1)
+--local timerLivingWaterCD		= mod:NewCDTimer(13, 106526, nil, nil, nil, 1)
 local timerWashAway				= mod:NewNextTimer(8, 106334)
 
 mod:AddBoolOption("SetIconOnAdds", false)
 
 mod.vb.addsRemaining = 4--Also 4 on heroic?
+mod.vb.firstAdd = false
 local addsName = EJ_GetSectionInfo(5616)
 
-function mod:UNIT_TARGET()
+function mod:UNIT_TARGET_UNFILTERED()
 	if self.Options.SetIconOnAdds and not DBM.Options.DontSetIcons and UnitName("target") == addsName then
 		SetRaidTarget("target", 8)
 	end
@@ -42,7 +43,8 @@ end
 
 function mod:OnCombatStart(delay)
 	self.vb.addsRemaining = 4
-	timerLivingWaterCD:Start(13-delay)
+	self.vb.firstAdd = false
+	timerLivingWater:Start(13-delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
@@ -53,7 +55,11 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 106526 then--Call Water
-		timerLivingWater:Start()
+		if not self.vb.firstAdd then
+			self.vb.firstAdd = true
+		else
+			timerLivingWater:Start()
+		end
 		specWarnLivingWater:Schedule(5.5)
 	elseif args.spellId == 106612 then--Bubble Burst (phase 2)
 		warnBubbleBurst:Show()

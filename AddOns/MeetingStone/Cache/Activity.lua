@@ -73,9 +73,7 @@ function Activity:Update()
     self:SetApplicationDuration(appDuration)
     self:SetApplicationExpiration(GetTime() + appDuration)
 
-    self:UpdateCustomData(comment, title)
-
-    if self:GetLoot() == 0 or self:GetMode() == 0 then
+    if not self:UpdateCustomData(comment, title) then
         return false
     end
 

@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1743, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16066 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16128 $"):sub(12, -3))
 mod:SetCreatureID(106643)
 mod:SetEncounterID(1872)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--During soft enrage will go over 8 debuffs, can't mark beyond that
-mod:SetHotfixNoticeRev(15863)
+mod:SetHotfixNoticeRev(16127)
 mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 209615 209244 209973 209598 211261 232974",
 	"SPELL_AURA_REFRESH 209973",
 	"SPELL_AURA_APPLIED_DOSE 209615 209973",
-	"SPELL_AURA_REMOVED 209973 209598 209244",
+	"SPELL_AURA_REMOVED 209973 209598",
 	"SPELL_PERIODIC_DAMAGE 209433",
 	"SPELL_PERIODIC_MISSED 209433",
 	"PARTY_KILL",
@@ -136,42 +136,45 @@ local voiceAblativePulse			= mod:NewVoice(209971, "Tank", nil, 2)--kickcast
 mod:AddRangeFrameOption(8, 209973)
 mod:AddInfoFrameOption(209598)
 mod:AddSetIconOption("SetIconOnConflexiveBurst", 209598)
-mod:AddHudMapOption("HudMapOnDelphuricBeam", 214278)
-mod:AddNamePlateOption("NPAuraOnBeam", 214278, false)
 
 --Exists in phases 1-3
-local slowElementalTimers = {5, 49, 52, 60}--Heroic Jan 18
-local normalslowElementalTimers = {5, 49, 41}--Normal Jan 26
+local heroicSlowElementalTimers = {5, 49, 52, 60}--Heroic Jan 18
+local normalSlowElementalTimers = {5, 49, 41}--Normal Jan 26
+local lfrSlowElementalTimers = {5, 62, 40}--LFR Apr 2
 local mythicP1SlowElementalTimers = {5, 39, 75}--Mythic Feb 5
 local mythicP2SlowElementalTimers = {5, 39, 45, 30, 30, 30}--Mythic Feb 5
 local mythicP3SlowElementalTimers = {5, 54, 55, 30}--Mythic Feb 5
-local fastElementalTimers = {8, 88, 95, 20}--Heroic Jan 19
-local normalfastElementalTimers = {8, 71}--Norma Jan 26
+local heroicFastElementalTimers = {8, 88, 95, 20}--Heroic Jan 19
+local normalFastElementalTimers = {8, 71}--Normal Jan 26
+--local lfrFastElementalTimers = {65}--LFR Apr 2 (currently unused since the first timer on phase change and combat start not started by this. Will be used if ever see second one spawn
 local mythicP1FastElementalTimers = {8, 81.0}--Mythic Feb 5
 local mythicP2FastElementalTimers = {8, 51}--Mythic Feb 5
 local mythicP3FastElementalTimers = {8, 36, 44}--Mythic Feb 5
-local RingTimers = {34, 40, 10, 62, 9, 45}--Heroic Jan 19
+local heroicRingTimers = {34, 40, 10, 62, 9, 45}--Heroic Jan 19
 local normalRingTimers = {34, 30, 75, 50}--Normal Feb 8
 local mythicRingTimers = {30, 39, 15, 30, 19, 10, 25, 9, 10, 10}--Mythic Feb 5 (figure out that 25 in middle of 10s)
-local SingularityTimers = {10, 22, 36.0, 57, 65}--Heroic Jan 18
+local lfrRingTimers = {21, 30, 37, 35}
+local heroicSingularityTimers = {10, 22, 36.0, 57, 65}--Heroic Jan 18
 local normalSingularityTimers = {10, 22, 36.0, 46}--Normal Feb 2
 local mythicSingularityTimers = {10, 55, 50, 45}--Mythic Feb 5th
+local lfrSingularityTimers = {10, 15, 57, 30}--LFR April 2nd
 --Only exist in phase 2
-local BeamTimers = {72, 57, 60}--Heroic Jan 18
+local heroicBeamTimers = {72, 57, 60}--Heroic Jan 18
 local normalBeamTimers = {72, 26, 40}--Normal Feb 2
 local mythicBeamTimers = {67, 50, 65}--Mythic Feb 5
+local lfrBeamTimers = {23.7, 25.0, 76.9}--LFR April 2
 --Exists in Phase 2 and Phase 3 (but cast start event missing in phase 3)
-local OrbTimers = {27, 76, 37, 70, 15, 15, 15}--Heroic Jan 18
+local heroicOrbTimers = {27, 76, 37, 70, 15, 15, 15}--Heroic Jan 18
 local normalOrbTimers = {27, 56, 31}--Normal Feb 2
 local mythicOrbTimers = {24, 85, 60, 20, 10}--Mythic Feb 5
+local lfrOrbTimers = {50, 37}--LFR Apr 2
 --Only exist in phase 3 so first timer of course isn't variable
-local BurstTimers = {58, 52.0, 56.0, 65.0, 10.0, 10.0, 10.0, 10.0}--Heroic Jan 21 (normal ones are different i'm sure, just no data to fix yet)
+local heroicBurstTimers = {58, 52.0, 56.0, 65.0, 10.0, 10.0, 10.0, 10.0}--Heroic Jan 21 (normal ones are different i'm sure, just no data to fix yet)
 local normalBurstTimers = {58, 67}--Normal Feb 2
 local mythicBurstTimers = {48, 90, 45, 30}--Mythic Feb 5
-local TormentTimers = {33, 61, 37, 60}--Heroic Jan 21
+local heroicTormentTimers = {33, 61, 37, 60}--Heroic Jan 21
 local normalTormentTimers = {33, 41}--Normal Feb 2
 local mythicTormentTimers = {74, 75, 25, 20}--Mythic Feb 5
-local currentTank, tankUnitID = nil, nil--not recoverable on purpose
 mod.vb.firstElementals = false
 mod.vb.slowElementalCount = 0
 mod.vb.fastElementalCount = 0
@@ -190,23 +193,8 @@ mod.vb.transitionActive = false
 mod.vb.totalRingCasts = 0
 mod.vb.totalbeamCasts = 0
 mod.vb.totalsingularityCasts = 0
-mod.vb.pos1X, mod.vb.pos1Y = nil, nil
-mod.vb.pos2X, mod.vb.pos2Y = nil, nil
-mod.vb.pos3X, mod.vb.pos3Y = nil, nil
-mod.vb.pos4X, mod.vb.pos4Y = nil, nil
-mod.vb.pos5X, mod.vb.pos5Y = nil, nil
-mod.vb.pos6X, mod.vb.pos6Y = nil, nil
-mod.vb.pos7X, mod.vb.pos7Y = nil, nil
-
-local function checkPlayerDot(self, spellName)
-	if not UnitDebuff("player", spellName) then
- 		DBMHudMap:RegisterRangeMarkerOnPartyMember(209244, "party", UnitName("player"), 0.7, 3, nil, nil, nil, 1, nil, false):Appear()--Create Player Dot
-	end
-end
 
 function mod:OnCombatStart(delay)
-	currentTank, tankUnitID = nil, nil
-	--self.vb.firstElementals = false
 	self.vb.slowElementalCount = 0
 	self.vb.fastElementalCount = 0
 	self.vb.slowBubbleCount = 0
@@ -220,29 +208,25 @@ function mod:OnCombatStart(delay)
 	self.vb.totalRingCasts = 0
 	self.vb.totalbeamCasts = 0
 	self.vb.totalsingularityCasts = 0
-	self.vb.pos1X, self.vb.pos1Y = nil, nil
-	self.vb.pos2X, self.vb.pos2Y = nil, nil
-	self.vb.pos3X, self.vb.pos3Y = nil, nil
-	self.vb.pos4X, self.vb.pos4Y = nil, nil
-	self.vb.pos5X, self.vb.pos5Y = nil, nil
-	self.vb.pos6X, self.vb.pos6Y = nil, nil
-	self.vb.pos7X, self.vb.pos7Y = nil, nil
 	timerLeaveNightwell:Start(4-delay)
 	timerTimeElementalsCD:Start(5-delay, SLOW)
-	timerTimeElementalsCD:Start(8-delay, FAST)
 	--timerAblationCD:Start(8.5-delay)--Verify/tweak
 	if self:IsMythic() then
+		timerTimeElementalsCD:Start(8-delay, FAST)
 		timerSpanningSingularityCD:Start(56-delay, 2)
 		countdownSpanningSingularity:Start(56)
 		timerArcaneticRing:Start(30-delay, 1)
 		countdownArcaneticRing:Start(30-delay)
+	elseif self:IsLFR() then
+		timerSpanningSingularityCD:Start(15-delay, 2)
+		timerArcaneticRing:Start(21-delay, 1)
+		countdownArcaneticRing:Start(21-delay)
+		timerTimeElementalsCD:Start(65-delay, FAST)
 	else
+		timerTimeElementalsCD:Start(8-delay, FAST)
 		timerSpanningSingularityCD:Start(22-delay, 2)
 		timerArcaneticRing:Start(34-delay, 1)
 		countdownArcaneticRing:Start(34-delay)
-	end
-	if self.Options.NPAuraOnBeam then
-		DBM:FireEvent("BossMod_EnableFriendlyNameplates")
 	end
 end
 
@@ -250,14 +234,8 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
-	if self.Options.HudMapOnDelphuricBeam then
-		DBMHudMap:Disable()
-	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
-	end
-	if self.Options.NPAuraOnBeam then
-		DBM.Nameplate:Hide(false, nil, nil, nil, true, true)
 	end
 end
 
@@ -298,7 +276,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnEpochericOrb:Show()
 		voiceEpochericOrb:Play("161612")
 		local nextCount = self.vb.orbCastCount + 1
-		local timer = self:IsMythic() and mythicOrbTimers[nextCount] or self:IsNormal() and normalOrbTimers[nextCount] or self:IsHeroic() and OrbTimers[nextCount]
+		local timer = self:IsMythic() and mythicOrbTimers[nextCount] or self:IsNormal() and normalOrbTimers[nextCount] or self:IsHeroic() and heroicOrbTimers[nextCount] or self:IsLFR() and lfrOrbTimers[nextCount]
 		if timer then
 			timerEpochericOrbCD:Start(timer, nextCount)
 			countdownOrbs:Start(timer)
@@ -311,7 +289,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 209597 then
 		self.vb.burstCastCount = self.vb.burstCastCount + 1
 		local nextCount = self.vb.burstCastCount + 1
-		local timer = self:IsMythic() and mythicBurstTimers[nextCount] or self:IsNormal() and normalBurstTimers[nextCount] or self:IsHeroic() and BurstTimers[nextCount]
+		local timer = self:IsMythic() and mythicBurstTimers[nextCount] or self:IsNormal() and normalBurstTimers[nextCount] or self:IsHeroic() and heroicBurstTimers[nextCount]
 		if timer then
 			timerConflexiveBurstCD:Start(timer, nextCount)
 			countdownConflexiveBurst:Start(timer)
@@ -319,7 +297,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 210387 then
 		self.vb.tormentCastCount = self.vb.tormentCastCount + 1
 		local nextCount = self.vb.tormentCastCount + 1
-		local timer = self:IsMythic() and mythicTormentTimers[nextCount] or self:IsNormal() and normalTormentTimers[nextCount] or self:IsHeroic() and TormentTimers[nextCount]
+		local timer = self:IsMythic() and mythicTormentTimers[nextCount] or self:IsNormal() and normalTormentTimers[nextCount] or self:IsHeroic() and heroicTormentTimers[nextCount]
 		if timer then
 			timerPermaliativeTormentCD:Start(timer, nextCount)
 		end
@@ -328,33 +306,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		local nextCount = self.vb.beamCastCount + 1
 		if self.vb.phase == 2 then
 			self.vb.totalbeamCasts = self.vb.totalbeamCasts + 1
-			if not self:HasMapRestrictions() then
-				currentTank, tankUnitID = self:GetCurrentTank()
-				if not currentTank then
-					DBM:Debug("Tank Detection Failure in HudMapOnDelphuricBeam", 2)
-					return
-				end
-				--Yes this could be in a table and be far prettier, but being ugly like this makes it recoverable by dbms timer recovery feature
-				if self.vb.beamCastCount == 1 then
-					self.vb.pos1X, self.vb.pos1Y = UnitPosition(tankUnitID)
-				elseif self.vb.beamCastCount == 2 then
-					self.vb.pos2X, self.vb.pos2Y = UnitPosition(tankUnitID)
-				elseif self.vb.beamCastCount == 3 then
-					self.vb.pos3X, self.vb.pos3Y = UnitPosition(tankUnitID)
-				elseif self.vb.beamCastCount == 4 then
-					self.vb.pos4X, self.vb.pos4Y = UnitPosition(tankUnitID)
-				elseif self.vb.beamCastCount == 5 then
-					self.vb.pos5X, self.vb.pos5Y = UnitPosition(tankUnitID)
-				elseif self.vb.beamCastCount == 6 then
-					self.vb.pos6X, self.vb.pos6Y = UnitPosition(tankUnitID)
-				elseif self.vb.beamCastCount == 7 then
-					self.vb.pos7X, self.vb.pos7Y = UnitPosition(tankUnitID)
-				end
-			end
 		else
 			if nextCount > self.vb.totalbeamCasts then return end
 		end
-		local timer = self:IsMythic() and mythicBeamTimers[nextCount] or self:IsNormal() and normalBeamTimers[nextCount] or self:IsHeroic() and BeamTimers[nextCount]
+		local timer = self:IsMythic() and mythicBeamTimers[nextCount] or self:IsNormal() and normalBeamTimers[nextCount] or self:IsHeroic() and heroicBeamTimers[nextCount] or self:IsLFR() and lfrBeamTimers[nextCount]
 		if timer then
 			timerDelphuricBeamCD:Start(timer, nextCount)
 		end
@@ -363,7 +318,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 210024 and self:AntiSpam(15, 4) then
 		self.vb.orbCastCount = self.vb.orbCastCount + 1
 		local nextCount = self.vb.orbCastCount + 1
-		local timer = self:IsMythic() and mythicOrbTimers[nextCount] or self:IsNormal() and normalOrbTimers[nextCount] or self:IsHeroic() and OrbTimers[nextCount]
+		local timer = self:IsMythic() and mythicOrbTimers[nextCount] or self:IsNormal() and normalOrbTimers[nextCount] or self:IsHeroic() and heroicOrbTimers[nextCount] or self:IsLFR() and lfrOrbTimers[nextCount]
 		if timer then
 			specWarnEpochericOrb:Schedule(timer-10)
 			voiceEpochericOrb:Schedule(timer-10, "161612")
@@ -396,49 +351,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnDelphuricBeam:Show()
 			voiceDelphuricBeam:Play("targetyou")
 			yellDelphuricBeam:Yell()
-		end
-		if self.Options.NPAuraOnBeam then
-			DBM.Nameplate:Show(false, args.destName, spellId)
-		end
-		--TODO, phase 3 lines need exact location of the echo ( map coords )
-		if self.Options.HudMapOnDelphuricBeam and not self:HasMapRestrictions() then
-			self:Unschedule(checkPlayerDot)
-			self:Schedule(0.3, checkPlayerDot, self, args.spellName)--Give player just a dot if they don't end up with debuff
-			--Always put dots up
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(213166, "party", args.destName, 0.35, 5, nil, nil, nil, 0.5, nil, false):Appear():SetLabel(args.destName, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
-			--Now attempt to do lines to best of ability using tanks position as an approximation to boss position
-			if self.vb.phase == 2 then--use current tanks current position
-				if not currentTank then return end
-				if args:IsPlayer() then--Yellow Line
-					DBMHudMap:AddEdge(1, 1, 0, 0.5, 4, currentTank, args.destName, nil, nil, nil, nil, 125)
-				else--Red Line
-					DBMHudMap:AddEdge(1, 0, 0, 0.5, 4, currentTank, args.destName, nil, nil, nil, nil, 125)
-				end
-			else--Echos, pull saved coords
-				--Yes this could be in a table and be far prettier, but being ugly like this makes it recoverable by dbms timer recovery feature
-				local EchoX, EchoY
-				if self.vb.beamCastCount == 1 then
-					EchoX, EchoY = self.vb.pos1X, self.vb.pos1Y
-				elseif self.vb.beamCastCount == 2 then
-					EchoX, EchoY = self.vb.pos2X, self.vb.pos2Y
-				elseif self.vb.beamCastCount == 3 then
-					EchoX, EchoY = self.vb.pos3X, self.vb.pos3Y
-				elseif self.vb.beamCastCount == 4 then
-					EchoX, EchoY = self.vb.pos4X, self.vb.pos4Y
-				elseif self.vb.beamCastCount == 5 then
-					EchoX, EchoY = self.vb.pos5X, self.vb.pos5Y
-				elseif self.vb.beamCastCount == 6 then
-					EchoX, EchoY = self.vb.pos6X, self.vb.pos6Y
-				elseif self.vb.beamCastCount == 7 then
-					EchoX, EchoY = self.vb.pos7X, self.vb.pos7Y
-				end
-				if not EchoX or not EchoY then return end
-				if args:IsPlayer() then--Yellow Line
-					DBMHudMap:AddEdge(1, 1, 0, 0.5, 4, nil, args.destName, EchoX, EchoY, nil, nil, 125)
-				else--Red Line
-					DBMHudMap:AddEdge(1, 0, 0, 0.5, 4, nil, args.destName, EchoX, EchoY, nil, nil, 125)
-				end
-			end
 		end
 	elseif spellId == 209973 then
 		warnAblatingExplosion:Show(args.destName)
@@ -498,10 +410,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.InfoFrame and self.vb.burstDebuffCount == 0 then
 			DBM.InfoFrame:Hide()
 		end
-	elseif spellId == 209244 then
-		if self.Options.NPAuraOnBeam then
-			DBM.Nameplate:Hide(false, args.destName, spellId)
-		end
 	end
 end
 
@@ -553,28 +461,35 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		timerLeaveNightwell:Start()
 		timerSpanningSingularityCD:Start(10, 1)--Updated Jan 18 heroic
 		timerTimeElementalsCD:Start(14.7, SLOW)--Updated Jan 18 heroic
-		timerTimeElementalsCD:Start(17, FAST)--Updated Jan 18 (17-18)
+		if self:IsLFR() then
+			timerTimeElementalsCD:Start(74.9, FAST)--Updated April 2
+		else
+			timerTimeElementalsCD:Start(17, FAST)--Updated Jan 18 (17-18)
+		end
 		if self.vb.phase == 2 then
 			warnPhase2:Show()
 			voicePhaseChange:Play("ptwo")
 			timerAblatingExplosionCD:Start(22)--Verfied unchanged Dec 13 Heroic
-			if not self:IsEasy() then
-				if self:IsMythic() then--TODO: Fine tune these as they may be hit or miss by some seconds Hard to measure precise phase changes from WCL
-					timerEpochericOrbCD:Start(24, 1)
-					countdownOrbs:Start(24)
-					timerArcaneticRing:Start(43, 1)--Verified Jan 18
-					countdownArcaneticRing:Start(43.7)
-					countdownSpanningSingularity:Start(10)
-				else
-					timerEpochericOrbCD:Start(27, 1)
-					countdownOrbs:Start(27)
-					timerArcaneticRing:Start(45.7, 1)--Verified Jan 18
-					countdownArcaneticRing:Start(45.7)
-				end
-			end
 			if self:IsMythic() then--TODO: Fine tune these as they may be hit or miss by some seconds Hard to measure precise phase changes from WCL
+				timerEpochericOrbCD:Start(24, 1)
+				countdownOrbs:Start(24)
+				timerArcaneticRing:Start(43, 1)--Verified Jan 18
+				countdownArcaneticRing:Start(43.7)
 				timerDelphuricBeamCD:Start(67, 1)--Cast SUCCESS
-			else
+				countdownSpanningSingularity:Start(10)
+			elseif self:IsHeroic() then
+				timerEpochericOrbCD:Start(27, 1)
+				countdownOrbs:Start(27)
+				timerArcaneticRing:Start(45.7, 1)--Verified Jan 18
+				countdownArcaneticRing:Start(45.7)
+				timerDelphuricBeamCD:Start(72, 1)--Cast SUCCESS
+			--LFR and Normal have no rings. LFR has no beams
+			elseif self:IsLFR() then
+				timerEpochericOrbCD:Start(50, 1)
+				countdownOrbs:Start(50)
+			else--Normal
+				timerEpochericOrbCD:Start(27, 1)
+				countdownOrbs:Start(27)
 				timerDelphuricBeamCD:Start(72, 1)--Cast SUCCESS
 			end
 		elseif self.vb.phase == 3 then
@@ -584,34 +499,33 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			timerAblatingExplosionCD:Stop()
 			yellAblatingExplosion:Cancel()
 			--timerAblativePulseCD:Start(20.5)
-			if not self:IsEasy() then
-				if self:IsMythic() then
-					timerEpochericOrbCD:Start(24, 1)
-					countdownOrbs:Start(24)
-					specWarnEpochericOrb:Schedule(24)--Spawning isn't in combat log in phase 3, only landing, so need to use schedule for warnings
-					voiceEpochericOrb:Schedule(24, "161612")
-					timerArcaneticRing:Start(43, 1)--Verified Jan 18
-					countdownArcaneticRing:Start(43)
-					countdownSpanningSingularity:Start(10)
-				else
-					timerEpochericOrbCD:Start(27, 1)
-					countdownOrbs:Start(27)
-					specWarnEpochericOrb:Schedule(27)--Spawning isn't in combat log in phase 3, only landing, so need to use schedule for warnings
-					voiceEpochericOrb:Schedule(27, "161612")
-					timerArcaneticRing:Start(45.7, 1)--Verified Jan 18
-					countdownArcaneticRing:Start(45.7)
-				end
-			end
 			if self:IsMythic() then
+				countdownSpanningSingularity:Start(10)
+				timerEpochericOrbCD:Start(24, 1)
+				countdownOrbs:Start(24)
+				specWarnEpochericOrb:Schedule(24)--Spawning isn't in combat log in phase 3, only landing, so need to use schedule for warnings
+				voiceEpochericOrb:Schedule(24, "161612")
+				timerArcaneticRing:Start(43, 1)--Verified Jan 18
+				countdownArcaneticRing:Start(43)
 				timerConflexiveBurstCD:Start(48, 1)
 				countdownConflexiveBurst:Start(48)
 				timerPermaliativeTormentCD:Start(74)--Updated Jan 18 Heroic
-			else
-				timerPermaliativeTormentCD:Start(33)--Updated Jan 18 Heroic
-				if not self:IsLFR() then
-					timerConflexiveBurstCD:Start(57.7, 1)
-					countdownConflexiveBurst:Start(57.7)
-				end
+			elseif self:IsHeroic() then
+				timerEpochericOrbCD:Start(27, 1)
+				countdownOrbs:Start(27)
+				specWarnEpochericOrb:Schedule(27)--Spawning isn't in combat log in phase 3, only landing, so need to use schedule for warnings
+				voiceEpochericOrb:Schedule(27, "161612")
+				timerPermaliativeTormentCD:Start(33)
+				timerArcaneticRing:Start(45.7, 1)--Verified Jan 18
+				countdownArcaneticRing:Start(45.7)
+				timerConflexiveBurstCD:Start(57.7, 1)
+				countdownConflexiveBurst:Start(57.7)
+			elseif self:IsLFR() then
+				timerDelphuricBeamCD:Start(23.7, 1)--Special exception
+			else--Normal
+				timerPermaliativeTormentCD:Start(33)
+				timerConflexiveBurstCD:Start(57.7, 1)
+				countdownConflexiveBurst:Start(57.7)
 			end
 		end
 	elseif spellId == 208863 then
@@ -630,10 +544,11 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			voiceElemental:Play("bigmob")
 		--end
 		local timer
+		local nextCount = self.vb.slowElementalCount+1
 		if self:IsMythic() then
-			timer = self.vb.phase == 1 and mythicP1SlowElementalTimers[self.vb.slowElementalCount+1] or self.vb.phase == 2 and mythicP2SlowElementalTimers[self.vb.slowElementalCount+1] or mythicP3SlowElementalTimers[self.vb.slowElementalCount+1]
+			timer = self.vb.phase == 1 and mythicP1SlowElementalTimers[nextCount] or self.vb.phase == 2 and mythicP2SlowElementalTimers[nextCount] or mythicP3SlowElementalTimers[nextCount]
 		else
-			timer = self:IsNormal() and normalslowElementalTimers[self.vb.slowElementalCount+1] or self:IsHeroic() and slowElementalTimers[self.vb.slowElementalCount+1]
+			timer = self:IsNormal() and normalSlowElementalTimers[nextCount] or self:IsHeroic() and heroicSlowElementalTimers[nextCount] or self:IsLFR() and lfrSlowElementalTimers[nextCount]
 		end
 		if timer then
 			timerTimeElementalsCD:Start(timer, SLOW)
@@ -645,10 +560,11 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			voiceElemental:Play("bigmob")
 		--end
 		local timer
+		local nextCount = self.vb.fastElementalCount+1
 		if self:IsMythic() then
-			timer = self.vb.phase == 1 and mythicP1FastElementalTimers[self.vb.slowElementalCount+1] or self.vb.phase == 2 and mythicP2FastElementalTimers[self.vb.slowElementalCount+1] or mythicP3FastElementalTimers[self.vb.slowElementalCount+1]
+			timer = self.vb.phase == 1 and mythicP1FastElementalTimers[nextCount] or self.vb.phase == 2 and mythicP2FastElementalTimers[nextCount] or mythicP3FastElementalTimers[nextCount]
 		else
-			timer = self:IsNormal() and normalfastElementalTimers[self.vb.fastElementalCount+1] or self:IsHeroic() and fastElementalTimers[self.vb.fastElementalCount+1]
+			timer = self:IsNormal() and normalFastElementalTimers[nextCount] or self:IsHeroic() and heroicFastElementalTimers[nextCount]
 		end
 		if timer then
 			timerTimeElementalsCD:Start(timer, FAST)
@@ -658,7 +574,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		--specWarnTimeElementals:Show(STATUS_TEXT_BOTH)
 		--voiceElemental:Play("bigmob")
 		DBM:Debug("Both elementals summoned, this event still exists, probably need custom code for certain difficulties")
-	elseif (spellId == 209168 or spellId == 233012 or spellId == 233011) and self:AntiSpam(3, 3) and not self.vb.transitionActive then
+	elseif (spellId == 209168 or spellId == 233012 or spellId == 233011 or spellId == 233009) and self:AntiSpam(4, 3) and not self.vb.transitionActive then
 		self.vb.singularityCount = self.vb.singularityCount + 1
 		specWarnSpanningSingularity:Show()
 		voiceSpanningSingularity:Play("watchstep")
@@ -668,7 +584,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		else
 			if nextCount > self.vb.totalsingularityCasts then return end--There won't be any more
 		end
-		local timer = self:IsMythic() and mythicSingularityTimers[nextCount] or self:IsNormal() and normalSingularityTimers[nextCount] or self:IsHeroic() and SingularityTimers[nextCount]
+		local timer = self:IsMythic() and mythicSingularityTimers[nextCount] or self:IsNormal() and normalSingularityTimers[nextCount] or self:IsHeroic() and heroicSingularityTimers[nextCount] or self:IsLFR() and lfrSingularityTimers[nextCount]
 		if timer then
 			timerSpanningSingularityCD:Start(timer, nextCount)
 			if self:IsMythic() then
@@ -709,10 +625,10 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 		else
 			if nextCount > self.vb.totalRingCasts then return end--There won't be any more
 		end
-		local timer = self:IsMythic() and mythicRingTimers[nextCount] or self:IsNormal() and normalRingTimers[nextCount] or self:IsHeroic() and RingTimers[nextCount]
+		local timer = self:IsMythic() and mythicRingTimers[nextCount] or self:IsNormal() and normalRingTimers[nextCount] or self:IsHeroic() and heroicRingTimers[nextCount] or self:IsLFR() and lfrRingTimers[nextCount]
 		if timer then
-			timerArcaneticRing:Start(timer, nextCount)
-			countdownArcaneticRing:Start(timer)
+			timerArcaneticRing:Start(timer-2, nextCount)
+			countdownArcaneticRing:Start(timer-2)
 		end
 	end
 end
@@ -732,7 +648,7 @@ function mod:OnSync(msg, targetname)
 		else
 			if nextCount > self.vb.totalRingCasts then return end--There won't be any more
 		end
-		local timer = self:IsMythic() and mythicRingTimers[nextCount] or self:IsNormal() and normalRingTimers[nextCount] or self:IsHeroic() and RingTimers[nextCount]
+		local timer = self:IsMythic() and mythicRingTimers[nextCount] or self:IsNormal() and normalRingTimers[nextCount] or self:IsHeroic() and heroicRingTimers[nextCount] or self:IsLFR() and lfrRingTimers[nextCount]
 		if timer then
 			timerArcaneticRing:Start(timer, nextCount)
 			countdownArcaneticRing:Start(timer)
@@ -745,7 +661,7 @@ function mod:OnSync(msg, targetname)
 		specWarnEpochericOrb:Show()
 		voiceEpochericOrb:Play("161612")
 		local nextCount = self.vb.orbCastCount + 1
-		local timer = self:IsMythic() and mythicOrbTimers[nextCount] or self:IsNormal() and normalOrbTimers[nextCount] or self:IsHeroic() and OrbTimers[nextCount]
+		local timer = self:IsMythic() and mythicOrbTimers[nextCount] or self:IsNormal() and normalOrbTimers[nextCount] or self:IsHeroic() and heroicOrbTimers[nextCount] or self:IsLFR() and lfrOrbTimers[nextCount]
 		if timer then
 			timerEpochericOrbCD:Start(timer, nextCount)
 			countdownOrbs:Start(timer)

@@ -1,10 +1,12 @@
-if GetBuildInfo() ~= "7.1.5" then return end
+if GetBuildInfo() ~= "7.2.0" then return end
 local ADDON, Addon = ...
 local Mod = Addon:NewModule('Persist')
 
+local challengeMapID
+
 local function LoadPersist()
 	local function IsInCompletedInstance()
-		return select(10, C_Scenario.GetInfo()) == LE_SCENARIO_TYPE_CHALLENGE_MODE and C_ChallengeMode.GetCompletionInfo() ~= 0 and select(3, C_Scenario.GetInfo()) == 0
+		return select(10, C_Scenario.GetInfo()) == LE_SCENARIO_TYPE_CHALLENGE_MODE and C_ChallengeMode.GetCompletionInfo() ~= 0 and select(3, C_Scenario.GetInfo()) == 0 and challengeMapID
 	end
 
 	ScenarioTimer_OnUpdate_Old = ScenarioTimer_OnUpdate
@@ -24,6 +26,7 @@ local function LoadPersist()
 		else
 			local _, elapsedTime = GetWorldElapsedTime(block.timerID);
 			ScenarioTimerFrame.baseTime = elapsedTime;
+			challengeMapID = C_ChallengeMode.GetActiveChallengeMapID()
 		end
 		ScenarioTimerFrame.timeSinceBase = 0;
 		ScenarioTimerFrame.block = block;
@@ -35,7 +38,7 @@ local function LoadPersist()
 	function ScenarioTimer_Stop(...)
 		if IsInCompletedInstance() then
 			local mapID, level, timeElapsed, onTime, keystoneUpgradeLevels = C_ChallengeMode.GetCompletionInfo()
-			local name, _, timeLimit = C_ChallengeMode.GetMapInfo(mapID)
+			local name, _, timeLimit = C_ChallengeMode.GetMapInfo(challengeMapID)
 
 			Scenario_ChallengeMode_ShowBlock(-1, floor(timeElapsed/1000), timeLimit)
 		else
@@ -132,6 +135,11 @@ local function LoadPersist()
 					else
 						stageBlock.Stage:SetPoint("TOPLEFT", 15, -18);
 					end
+				end
+				if (not stageBlock.appliedAlready) then
+					-- Ugly hack to get around :IsTruncated failing if used during load
+					C_Timer.After(1, function() stageBlock.Stage:ApplyFontObjects(); end);
+					stageBlock.appliedAlready = true;
 				end
 				ScenarioStage_CustomizeBlock(stageBlock, scenarioType);
 			end
@@ -276,6 +284,7 @@ function Mod:Startup()
 		LoadExclusive = nil
 		self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
 	end
+	challengeMapID = C_ChallengeMode.GetActiveChallengeMapID()
 end
 
 function Mod:AfterStartup()

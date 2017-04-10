@@ -1,14 +1,20 @@
 local PLH_LONG_ADDON_NAME_PREFIX = '<' .. PLH_LONG_ADDON_NAME .. '> '
 local PLH_SHORT_ADDON_NAME_PREFIX = '<' .. PLH_SHORT_ADDON_NAME .. '> '
-local PLH_ITEM_LEVEL_PATTERN = _G.ITEM_LEVEL
-	  PLH_ITEM_LEVEL_PATTERN = PLH_ITEM_LEVEL_PATTERN:gsub('%%d', '(%%d+)')
-local PLH_RELIC_TOOLTIP_TYPE_PATTERN = _G.RELIC_TOOLTIP_TYPE
-	  PLH_RELIC_TOOLTIP_TYPE_PATTERN = PLH_RELIC_TOOLTIP_TYPE_PATTERN:gsub('%%s', '(.+)')
+PLH_ITEM_LEVEL_PATTERN = _G.ITEM_LEVEL
+PLH_ITEM_LEVEL_PATTERN = PLH_ITEM_LEVEL_PATTERN:gsub('%%d', '(%%d+)')  -- 'Item Level (%d+)'
+PLH_RELIC_TOOLTIP_TYPE_PATTERN = _G.RELIC_TOOLTIP_TYPE
+PLH_RELIC_TOOLTIP_TYPE_PATTERN = PLH_RELIC_TOOLTIP_TYPE_PATTERN:gsub('%%s', '(.+)')  -- '(.+) Artifact Relic'
 	  
 local tooltip
 
 local waitTable = {};     -- used by PLH_wait
 local waitFrame = nil;    -- used by PLH_wait
+
+local waitTable2 = {};     -- used by PLH_wait
+local waitFrame2 = nil;    -- used by PLH_wait
+
+local waitTable3 = {};     -- used by PLH_wait
+local waitFrame3 = nil;    -- used by PLH_wait
 
 --[[
 informational - possible tooltip item type row arrangements
@@ -85,7 +91,6 @@ function PLH_GetRelicType(item)
 		tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
 		tooltip:ClearLines()
 		tooltip:SetHyperlink(item)
-		local t = tooltip.leftside[2]:GetText()
 
 		local index = 1
 		local t
@@ -104,6 +109,7 @@ function PLH_GetRelicType(item)
 	return relicType
 end
 
+--[[
 function PLH_IsBoundToPlayer(item)
 	local isBoundToPlayer = false
 	
@@ -132,6 +138,7 @@ function PLH_IsBoundToPlayer(item)
 	end
 	return isBoundToPlayer
 end
+]]--
 
 function PLH_GetRealILVL(item)
 	local realILVL = nil
@@ -272,6 +279,9 @@ function PLH_SendDebugMessage(message)
 	end		
 end	
 
+-- having 3 of the same function is very much a hack...multiple waits can happen during inspect loop, so we need different global vars to track separate timers
+-- I could consolidate to a single function with a param determining which globals to use, but I'm not even sure this will
+-- solve the inspect issues, hence the quick-and-dirty approach
 function PLH_wait(delay, func, ...)
   if(type(delay)~='number' or type(func)~='function') then
   print('bad types')
@@ -298,6 +308,35 @@ function PLH_wait(delay, func, ...)
     end);
   end
   tinsert(waitTable,{delay,func,{...}});
+  return true;
+end
+
+function PLH_wait2(delay, func, ...)
+  if(type(delay)~='number' or type(func)~='function') then
+  print('bad types')
+    return false;
+  end
+  if(waitFrame2 == nil) then
+    waitFrame2 = CreateFrame('Frame','WaitFrame2', UIParent);
+    waitFrame2:SetScript('onUpdate',function (self,elapse)
+      local count = #waitTable2;
+      local i = 1;
+      while(i<=count) do
+        local waitRecord = tremove(waitTable2,i);
+        local d = tremove(waitRecord,1);
+        local f = tremove(waitRecord,1);
+        local p = tremove(waitRecord,1);
+        if(d>elapse) then
+          tinsert(waitTable2,i,{d-elapse,f,p});
+          i = i + 1;
+        else
+          count = count - 1;
+          f(unpack(p));
+        end
+      end
+    end);
+  end
+  tinsert(waitTable2,{delay,func,{...}});
   return true;
 end
 

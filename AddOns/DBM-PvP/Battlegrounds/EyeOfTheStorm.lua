@@ -8,7 +8,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod:RemoveOption("HealthFrame")
 
-mod:SetRevision(("$Revision: 59 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 63 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -16,7 +16,7 @@ mod:RegisterEvents(
 )
 
 local bgzone = false
-local GetMapLandmarkInfo, GetNumMapLandmarks = GetMapLandmarkInfo, GetNumMapLandmarks
+local GetMapLandmarkInfo, GetNumMapLandmarks = C_WorldMap.GetMapLandmarkInfo, GetNumMapLandmarks
 local ResPerSec = {
 	[0] = 1e-300, -- blah
 	[1] = 1,

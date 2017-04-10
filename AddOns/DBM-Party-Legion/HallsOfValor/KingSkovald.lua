@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1488, "DBM-Party-Legion", 4, 721)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15186 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16092 $"):sub(12, -3))
 mod:SetCreatureID(95675)
 mod:SetEncounterID(1808)
 mod:SetZone()
@@ -24,7 +24,7 @@ local warnClaimAegis				= mod:NewSpellAnnounce(194112, 2)
 
 local yellFelblazeRush				= mod:NewYell(193659)
 local specWarnSavageBlade			= mod:NewSpecialWarningDefensive(193668, "Tank", nil, nil, 1, 2)
-local specWarnRagnarok				= mod:NewSpecialWarningMoveTo(193826, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(193826), nil, 3, 2)
+local specWarnRagnarok				= mod:NewSpecialWarningMoveTo(193826, nil, nil, nil, 3, 2)
 local specWarnFlames				= mod:NewSpecialWarningMove(193702, nil, nil, nil, 1, 2)
 
 local timerRushCD					= mod:NewCDTimer(11, 193659, nil, nil, nil, 3)--11-13 unless delayed by claim aegis or ragnarok
@@ -34,8 +34,6 @@ local timerRagnarokCD				= mod:NewCDTimer(51, 193826, nil, nil, nil, 2, nil, DBM
 local voiceSavageBlade				= mod:NewVoice(193668, "Tank")--defensive
 local voiceRagnarok					= mod:NewVoice(193826)--findshield
 local voiceFlames					= mod:NewVoice(193702)--runaway
-
---mod:AddRangeFrameOption(5, 153396)
 
 function mod:FelblazeRushTarget(targetname, uId)
 	if not targetname then return end

@@ -226,8 +226,10 @@ HiddenArtifactTrackerFuncs["Skull of the Man'ari"] =
 	end
 HiddenArtifactTrackerFuncs["Spine of Thal'kiel"] = HiddenArtifactTrackerFuncs["Skull of the Man'ari"]
 
---ARMS
-
+--arms
+HiddenArtifactTrackerFuncs["Strom'kar, the Warbreaker"] =
+	function()
+	end
 --fury
 HiddenArtifactTrackerFuncs["Warswords of the Valarjar"] =
 	function()
@@ -254,8 +256,8 @@ HiddenArtifactTrackerFuncs["Scale of the Earth-Warder"] =
 				local b = HiddenArtifactTracker.colourOptions and 0 or 1
 				GameTooltip:AddLine("Hidden appearance event did not roll today.", r,g,b)
 			else
-				local r = HiddenArtifactTracker.colourOptions and 0 or 1
-				local g = HiddenArtifactTracker.colourOptions and 0 or 1
+				local r = HiddenArtifactTracker.colourOptions and 0.5 or 1
+				local g = HiddenArtifactTracker.colourOptions and 0.5 or 1
 				local b = 1
 				GameTooltip:AddLine("Visit Neltharion's Vault in Highmountain (not Lair!).", r,g,b)
 			end
@@ -278,7 +280,7 @@ function HiddenArtifactTrackerFuncs.getWorldBossQ(name, qNumber, zNumber)
 			return
 		end
 	end
-	
+
 	local r = 1
 	local g = HiddenArtifactTracker.colourOptions and 0 or 1
 	local b = HiddenArtifactTracker.colourOptions and 0 or 1

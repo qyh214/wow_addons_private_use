@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1693, "DBM-Party-Legion", 9, 777)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15008 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16091 $"):sub(12, -3))
 mod:SetCreatureID(101995)
 mod:SetEncounterID(1848)
 mod:SetZone()
@@ -28,8 +28,6 @@ local countdownOozes				= mod:NewCountdown(51, 201598)
 local voiceOozes					= mod:NewVoice("ej12646")--mobsoon
 local voiceBlackBile				= mod:NewVoice("ej12651")--mobsoon (maybe use a diff one?)
 local voiceOozeGTFO					= mod:NewVoice(202266)--runaway
-
---mod:AddRangeFrameOption(5, 153396)
 
 function mod:OnCombatStart(delay)
 --	timerOozesCD:Start(3.7-delay)--Too variable on pull, 3-6, pretty much right away anyways so no need for timer

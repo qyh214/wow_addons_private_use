@@ -1,8 +1,8 @@
-## Interface: 70100
+## Interface: 70200
 ## Title: RelicInspector
 ## Notes: Displays artifact weapon relics in the tooltip
 ## Author: Thoralie
-## Version: 1.11.4
+## Version: 1.11.8
 ## SavedVariables: RelicInspectorDB
 
 Libs\LibStub\LibStub.lua

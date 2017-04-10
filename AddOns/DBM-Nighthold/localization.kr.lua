@@ -32,10 +32,6 @@ L= DBM:GetModLocalization(1751)
 ------------------
 L= DBM:GetModLocalization(1762)
 
-L:SetOptionLocalization({
-	HUDSeekerLines		= "추적 박쥐떼 경로에 HUD 표시"
-})
-
 L:SetMiscLocalization({
 	First				= "1번 낙인",
 	Second				= "2번 낙인",
@@ -85,8 +81,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1732)
 
 L:SetOptionLocalization({
-	ShowCustomNPAuraTextures	= "별자리의 징표에 걸리면 징표 디버프 대신 사용자 지정 녹색/빨간색 아이콘 표시",
-	FilterOtherSigns		= "당신이 걸리지 않은 징표는 대상 알림에서 제외합니다."
+	ConjunctionYellFilter	= "$spell:205408 동안 다른 모든 일반 대화 메시지를 끄고 천체 정렬이 끝날 때까지 별자리 징표만 도배"
 })
 
 ------------------

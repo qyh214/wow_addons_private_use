@@ -1,5 +1,5 @@
-## Interface: 70100
-## Version: v7.1.1
+## Interface: 70200
+## Version: v7.2.0
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
 ## Notes-deDE: Spice up your minimap with some sexy options.
@@ -17,7 +17,7 @@
 ## SavedVariables: SexyMap2DB
 
 ## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
-## X-Curse-Project-ID: sexymap
+## X-Curse-Project-ID: 15936
 ## X-WoWI-ID: 21538
 
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, Blizzard_TimeManager

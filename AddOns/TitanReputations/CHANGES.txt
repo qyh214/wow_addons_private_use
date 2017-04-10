@@ -1,12 +1,10 @@
-lightweight tag 3690a0399c61869c200ed94a1408f97d29e1a112 v1.8
+lightweight tag c516afb5db717c243f32fa615505a33af590d73d v1.10
 Author:	Eliote <>
-Date:	Sun Dec 11 22:52:48 2016 -0200
+Date:	Sat Apr 8 16:22:49 2017 -0300
 
-commit 3690a0399c61869c200ed94a1408f97d29e1a112
+commit c516afb5db717c243f32fa615505a33af590d73d
 Author: Eliote <>
-Date:   Sat Dec 10 14:10:23 2016 -0200
+Date:   Sat Apr 8 16:22:49 2017 -0300
 
-    Fix options
-    
-    * Update Elib-2.4
+    Add Paragon Reputation
 

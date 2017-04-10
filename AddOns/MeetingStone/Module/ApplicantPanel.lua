@@ -201,6 +201,7 @@ function ApplicantPanel:OnInitialize()
     self:RegisterEvent('LFG_LIST_APPLICANT_LIST_UPDATED')
     self:RegisterEvent('LFG_LIST_ACTIVE_ENTRY_UPDATE', function()
         AutoInvite:SetChecked(select(9, C_LFGList.GetActiveEntryInfo()))
+        self:UpdateApplicantsList()
     end)
 
     self:RegisterMessage('MEETINGSTONE_PERMISSION_UPDATE', function(_, canCreate, isManager)
@@ -212,6 +213,7 @@ end
 
 function ApplicantPanel:LFG_LIST_APPLICANT_LIST_UPDATED(_, hasNewPending, hasNewPendingWithData)
     self.hasNewPending = hasNewPending and hasNewPendingWithData and IsActivityManager()
+    self:UpdateApplicantsList()
     self:SendMessage('MEETINGSTONE_NEW_APPLICANT_STATUS_UPDATE')
 end
 
@@ -224,13 +226,6 @@ function ApplicantPanel:ClearNewPending()
     self:SendMessage('MEETINGSTONE_NEW_APPLICANT_STATUS_UPDATE')
 end
 
-function ApplicantPanel:UpdateApplicantsList()
-    local applicants = C_LFGList.GetApplicants()
-    if applicants then
-        self:UpdateList(applicants)
-    end
-end
-
 local function _SortApplicants(applicant1, applicant2)
     if applicant1:IsNew() ~= applicant2:IsNew() then
         return applicant2:IsNew()
@@ -238,18 +233,22 @@ local function _SortApplicants(applicant1, applicant2)
     return applicant1:GetOrderID() < applicant2:GetOrderID()
 end
 
-function ApplicantPanel:UpdateList(applicants)
+function ApplicantPanel:UpdateApplicantsList()
     local list = {}
     local _, activityId = C_LFGList.GetActiveEntryInfo()
+    local applicants = C_LFGList.GetApplicants()
 
-    for i, v in ipairs(applicants) do
-        local id, _, _, numMembers = C_LFGList.GetApplicantInfo(v)
-        for i = 1, numMembers do
-            tinsert(list, Applicant:New(id, i, activityId))
+    if applicants and activityId then
+        for i, v in ipairs(applicants) do
+            local id, _, _, numMembers = C_LFGList.GetApplicantInfo(v)
+            for i = 1, numMembers do
+                tinsert(list, Applicant:New(id, i, activityId))
+            end
         end
+
+        table.sort(list, _SortApplicants)
     end
 
-    table.sort(list, _SortApplicants)
     self.ApplicantList:SetItemList(list)
     self.ApplicantList:Refresh()
 end

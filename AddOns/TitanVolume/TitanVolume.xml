@@ -3,7 +3,7 @@
 	<Script file="TitanVolume.lua"/>
 	<Frame name="TitanPanelVolumeControlFrameTemplate" virtual="true" hidden="true">
 		<Size>
-			<AbsDimension x="540" y="200" />
+			<AbsDimension x="400" y="200" />
 		</Size>
 		<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 			<EdgeSize>
@@ -31,7 +31,7 @@
 					<Anchors>
 						<Anchor point="TOP">
 							<Offset>
-								<AbsDimension x="-230" y="-30" />
+								<AbsDimension x="-160" y="-30" />
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -40,7 +40,7 @@
 					<Anchors>
 						<Anchor point="TOP">
 							<Offset>
-								<AbsDimension x="-160" y="-30" />
+								<AbsDimension x="-90" y="-30" />
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -49,7 +49,7 @@
 					<Anchors>
 						<Anchor point="TOP">
 							<Offset>
-								<AbsDimension x="-90" y="-30" />
+								<AbsDimension x="-20" y="-30" />
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -58,7 +58,7 @@
 					<Anchors>
 						<Anchor point="TOP">
 							<Offset>
-								<AbsDimension x="-20" y="-30" />
+								<AbsDimension x="50" y="-30" />
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -67,11 +67,12 @@
 					<Anchors>
 						<Anchor point="TOP">
 							<Offset>
-								<AbsDimension x="50" y="-30" />
+								<AbsDimension x="130" y="-30" />
 							</Offset>
 						</Anchor>
 					</Anchors>
 				</FontString>
+<!--
 				<FontString name="$parentMicrophoneTitle" inherits="GameFontNormalSmall">
 					<Anchors>
 						<Anchor point="TOP">
@@ -90,6 +91,7 @@
 						</Anchor>
 					</Anchors>
 				</FontString>
+-->
 			</Layer>
 		</Layers>
 		<Frames>
@@ -97,7 +99,7 @@
 				<Anchors>
 					<Anchor point="TOP">
 						<Offset>
-							<AbsDimension x="-230" y="-60"/>
+							<AbsDimension x="-160" y="-60"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -123,7 +125,7 @@
 				<Anchors>
 					<Anchor point="TOP">
 						<Offset>
-							<AbsDimension x="-160" y="-60"/>
+							<AbsDimension x="-90" y="-60"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -149,7 +151,7 @@
 				<Anchors>
 					<Anchor point="TOP">
 						<Offset>
-							<AbsDimension x="-90" y="-60"/>
+							<AbsDimension x="-20" y="-60"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -175,7 +177,7 @@
 				<Anchors>
 					<Anchor point="TOP">
 						<Offset>
-							<AbsDimension x="-20" y="-60"/>
+							<AbsDimension x="50" y="-60"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -201,7 +203,7 @@
 				<Anchors>
 					<Anchor point="TOP">
 						<Offset>
-							<AbsDimension x="50" y="-60"/>
+							<AbsDimension x="130" y="-60"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -223,6 +225,7 @@
 					</OnLeave>
 				</Scripts>
 			</Slider>
+<!--
 			<Slider name="TitanPanelMicrophoneVolumeControlSlider" inherits="TitanOptionsSliderTemplate">
 				<Anchors>
 					<Anchor point="TOP">
@@ -275,6 +278,7 @@
 					</OnLeave>
 				</Scripts>
 			</Slider>
+-->
 		</Frames>
 		<Scripts>
 			<OnLoad>

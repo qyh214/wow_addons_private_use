@@ -25,28 +25,10 @@ local events = {
 }
 
 local function filter(self, event, msg, ...)
-	local msg2 = msg:gsub("(|c"..epicColor.."|Hitem:138019:([0-9:]+)|h(%b[])|h|r)", function(msg, itemString, itemName)
+	local msg2 = msg:gsub("(|Hkeystone:([0-9:]+)|h(%b[])|h)", function(msg, itemString, itemName)
 		local info = { strsplit(":", itemString) }
-		local mapID = tonumber(info[13])
-		local mapLevel = tonumber(info[14])
-		if not mapID or not mapLevel then return msg end
-
-		local offset = 15
-		if mapLevel >= 4 then offset = offset + 1 end
-		if mapLevel >= 7 then offset = offset + 1 end
-		if mapLevel >= 10 then offset = offset + 1 end
-		local depleted = info[offset] ~= "1"
-
-		if depleted then
-			return msg:gsub("|c"..epicColor, "|c"..poorColor)
-		else
-			return msg
-		end
-	end)
-	msg2 = msg2:gsub("(|Hitem:138019:([0-9:]+)|h(%b[])|h)", function(msg, itemString, itemName)
-		local info = { strsplit(":", itemString) }
-		local mapID = tonumber(info[13])
-		local mapLevel = tonumber(info[14])
+		local mapID = tonumber(info[1])
+		local mapLevel = tonumber(info[2])
 
 		if mapID and mapLevel then
 			local mapName = C_ChallengeMode.GetMapInfo(mapID)

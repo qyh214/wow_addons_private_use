@@ -7,6 +7,7 @@ L["ShowPercent"] = "Show percentage"
 L["ShowHeaders"] = "Show headers"
 L["HideMax"] = "Hide maximun"
 L["HideExalted"] = "Hide exalted factions"
+L["AlwaysShowParagon"] = "Always show Paragon reputations"
 
 if GetLocale() == "ptBR" then
 	L["Reputation"] = "Reputação"
@@ -16,4 +17,5 @@ if GetLocale() == "ptBR" then
 	L["ShowHeaders"] = "Mostrar cabeçalhos"
 	L["HideMax"] = "Esconder máximo"
 	L["HideExalted"] = "Esconder facções exaltadas"
+	L["AlwaysShowParagon"] = "Sempre mostrar reputações Paragão"
 end

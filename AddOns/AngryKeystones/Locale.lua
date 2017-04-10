@@ -42,7 +42,7 @@ langs.enUS = {
 	scheduleMissingKeystone = "Requires a level 7+ Mythic Keystone in your inventory to display.",
 	config_exclusiveTracker = "Hide quest and achievement trackers during Mythic Keystone dungeons (requires Reload UI to take effect)",
 	config_hideTalkingHead = "Hide Talking Head dialog during a Mythic Keystone dungeon",
-	config_resetPopup = "Show popup to reset instances upon completion of a Mythic Keystone dungeon",
+	config_resetPopup = "Show popup to reset instances upon leaving a completed Mythic Keystone dungeon",
 }
 langs.enGB = langs.enUS
 

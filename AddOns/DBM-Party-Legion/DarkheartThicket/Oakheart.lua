@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1655, "DBM-Party-Legion", 2, 762)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15337 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16091 $"):sub(12, -3))
 mod:SetCreatureID(103344)
 mod:SetEncounterID(1837)
 mod:SetZone()
@@ -28,8 +28,6 @@ local countdownThrow				= mod:NewCountdown("Alt28", 204658, "Tank")
 
 local voiceRoots					= mod:NewVoice(204574)--watchstep
 local voiceBreath					= mod:NewVoice(204667, "Tank")--Defensive
-
---mod:AddRangeFrameOption(5, 153396)
 
 --AKA Crushing Grip
 function mod:ThrowTarget(targetname, uId)

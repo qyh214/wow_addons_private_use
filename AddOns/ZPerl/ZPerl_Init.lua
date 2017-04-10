@@ -531,7 +531,7 @@ function ZPerl_Init()
 		}
 	end
 
-	XPerl_RegisterSMBarTextures()
+	--XPerl_RegisterSMBarTextures()
 
 	XPerl_pcall(ZPerl_DebufHighlightInit)
 

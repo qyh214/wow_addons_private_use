@@ -20,7 +20,7 @@ local CHECK_USEABLE_EVENTS = {
 function ManagerPanel:OnInitialize()
     GUI:Embed(self, 'Owner', 'Tab', 'Refresh')
 
-    MainPanel:RegisterPanel(L['管理活动'], self, 5)
+    MainPanel:RegisterPanel(L['管理活动'], self, 5, 70)
 
     -- frames
     local FullBlocker = Addon:GetClass('Cover'):New(self) do
@@ -39,7 +39,7 @@ function ManagerPanel:OnInitialize()
     end
 
     local RefreshButton = Addon:GetClass('RefreshButton'):New(self) do
-        RefreshButton:SetPoint('TOPRIGHT', self:GetOwner(), 'TOPRIGHT', -10, -30)
+        RefreshButton:SetPoint('TOPRIGHT', self:GetOwner(), 'TOPRIGHT', -10, -23)
         RefreshButton:SetTooltip(LFG_LIST_REFRESH)
         RefreshButton:SetScript('OnClick', function()
             if self:GetActivity() then

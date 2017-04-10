@@ -26,7 +26,7 @@ function CreatePanel:OnInitialize()
     --- frames
     local InfoWidget = CreateFrame('Frame', nil, ViewBoardWidget) do
         InfoWidget:SetPoint('TOPLEFT')
-        InfoWidget:SetSize(219, 100)
+        InfoWidget:SetSize(219, 120)
 
         local bg = InfoWidget:CreateTexture(nil, 'BACKGROUND', nil, 1)
         bg:SetPoint('TOPLEFT', -2, 2)
@@ -59,6 +59,12 @@ function CreatePanel:OnInitialize()
         end)
         summary:SetScript('OnLeave', GameTooltip_Hide)
 
+        local privateGroupLabel = InfoWidget:CreateFontString(nil, 'OVERLAY', 'GameFontNormalLeft') do
+            privateGroupLabel:SetPoint('TOPLEFT', summary, 'BOTTOMLEFT', -10, -4)
+            privateGroupLabel:SetText(L['仅战网好友和公会成员可见'])
+            privateGroupLabel:SetTextColor(0.51, 0.77, 1)
+        end
+
         local mode = InfoWidget:CreateTexture(nil, 'ARTWORK')
         mode:SetTexture([[INTERFACE\GROUPFRAME\UI-GROUP-MAINASSISTICON]])
         mode:SetPoint('BOTTOMLEFT', 10, 10)
@@ -80,6 +86,8 @@ function CreatePanel:OnInitialize()
         InfoWidget.Loot = lootText
         InfoWidget.Background = bg
         InfoWidget.Summary = summaryLabel
+        InfoWidget.PrivateGroup = privateGroupLabel
+        InfoWidget.SummaryBox = summary
     end
 
     local MemberWidget = GUI:GetClass('TitleWidget'):New(ViewBoardWidget) do
@@ -210,7 +218,7 @@ function CreatePanel:OnInitialize()
     local VoiceItemLevelWidget = GUI:GetClass('TitleWidget'):New(CreateWidget) do
         VoiceItemLevelWidget:SetPoint('TOPLEFT', ActivityOptions, 'BOTTOMLEFT', 0, -3)
         VoiceItemLevelWidget:SetPoint('TOPRIGHT', ActivityOptions, 'BOTTOMRIGHT', 0, -3)
-        VoiceItemLevelWidget:SetSize(225, 125)
+        VoiceItemLevelWidget:SetSize(225, 147)
     end
 
     local ItemLevel = GUI:GetClass('NumericBox'):New(VoiceItemLevelWidget) do
@@ -267,6 +275,22 @@ function CreatePanel:OnInitialize()
         self:RegisterInputBox(MaxLevel)
     end
 
+    local PrivateGroup = CreateFrame('CheckButton', nil, VoiceItemLevelWidget) do
+        PrivateGroup:SetNormalTexture([[Interface\Buttons\UI-CheckBox-Up]])
+        PrivateGroup:SetPushedTexture([[Interface\Buttons\UI-CheckBox-Down]])
+        PrivateGroup:SetHighlightTexture([[Interface\Buttons\UI-CheckBox-Highlight]])
+        PrivateGroup:SetCheckedTexture([[Interface\Buttons\UI-CheckBox-Check]])
+        PrivateGroup:SetDisabledCheckedTexture([[Interface\Buttons\UI-CheckBox-Check-Disabled]])
+        PrivateGroup:SetSize(22, 22)
+        PrivateGroup:SetPoint('TOPLEFT', MinLevel, 'BOTTOMLEFT', -83, 0)
+        local text = PrivateGroup:CreateFontString(nil, 'ARTWORK')
+        text:SetPoint('LEFT', PrivateGroup, 'RIGHT', 2, 0)
+        PrivateGroup:SetFontString(text)
+        PrivateGroup:SetNormalFontObject('GameFontHighlightSmall')
+        PrivateGroup:SetHighlightFontObject('GameFontNormalSmall')
+        PrivateGroup:SetDisabledFontObject('GameFontDisableSmall')
+        PrivateGroup:SetText(L['仅战网好友和公会成员可见'])
+    end
 
     --- summary
     local SummaryWidget = GUI:GetClass('TitleWidget'):New(CreateWidget) do
@@ -393,6 +417,7 @@ function CreatePanel:OnInitialize()
     self.MaxLevel = MaxLevel
     self.PvPRating = PvPRating
     self.HonorLevel = HonorLevel
+    self.PrivateGroup = PrivateGroup
 
     self.ViewBoardWidget = ViewBoardWidget
     self.InfoWidget = InfoWidget
@@ -434,6 +459,7 @@ function CreatePanel:UpdateControlState()
     self.ActivityMode:SetEnabled(activityItem and (not isCreated and not isSolo or not mode))
     self.ActivityLoot:SetEnabled(activityItem and (not isCreated and not isSolo or not loot))
 
+    self.PrivateGroup:SetEnabled(editable)
     self.ItemLevel:SetEnabled(editable)
     self.VoiceBox:SetEnabled(editable)
     self.MinLevel:SetEnabled(editable)
@@ -530,6 +556,7 @@ function CreatePanel:CreateActivity()
         MaxLevel = self.MaxLevel:GetNumber(),
         PvPRating = self.PvPRating:GetNumber(),
         HonorLevel = self.HonorLevel:GetNumber(),
+        PrivateGroup = self.PrivateGroup:GetChecked(),
     })
     if self:Create(activity, true) then
         self.CreateButton:Disable()
@@ -573,6 +600,7 @@ function CreatePanel:ClearAllContent()
     self.ActivityType:SetValue(nil)
     self.ActivityMode:SetValue(nil)
     self.ActivityLoot:SetValue(nil)
+    self.PrivateGroup:SetChecked(false)
 end
 
 function CreatePanel:UpdateActivity()
@@ -595,6 +623,7 @@ function CreatePanel:UpdateActivity()
     self.PvPRating:SetText(activity:GetPvPRating() or '')
     self.HonorLevel:SetText(activity:GetHonorLevel() or '')
     self.SummaryBox:SetText(activity:GetSummary())
+    self.PrivateGroup:SetChecked(activity:GetPrivateGroup())
 end
 
 function CreatePanel:UpdateActivityView()
@@ -620,6 +649,14 @@ function CreatePanel:UpdateActivityView()
     self.MiscWidget.PvPRating:SetText(activity:GetPvPRating())
     self.MiscWidget.Level:SetText(minLevel == maxLevel and minLevel or isMax and '≥' .. minLevel or minLevel .. '-' .. maxLevel)
 
+    if activity:GetPrivateGroup() then
+        self.InfoWidget.PrivateGroup:Show()
+        self.InfoWidget.SummaryBox:SetPoint('BOTTOM', 0, 50)
+    else
+        self.InfoWidget.PrivateGroup:Hide()
+        self.InfoWidget.SummaryBox:SetPoint('BOTTOM', 0, 26)
+    end
+
     local atlasName, suffix do
         local fullName, shortName, categoryID, groupID, iLevel, filters, minLevel, maxPlayers, displayType = C_LFGList.GetActivityInfo(activity:GetActivityID())
         local _, separateRecommended = C_LFGList.GetCategoryInfo(categoryID)
@@ -644,9 +681,9 @@ function CreatePanel:UpdateActivityView()
 end
 
 function CreatePanel:GetCurrentActivity()
-    local active, activityId, ilvl, honorLevel, title, comment, voiceChat = C_LFGList.GetActiveEntryInfo()
+    local active, activityId, ilvl, honorLevel, title, comment, voiceChat, questId, autoAccept, privateGroup = C_LFGList.GetActiveEntryInfo()
     if active then
-        self.Activity = CurrentActivity:FromSystem(activityId, ilvl, honorLevel, title, comment, voiceChat)
+        self.Activity = CurrentActivity:FromSystem(activityId, ilvl, honorLevel, title, comment, voiceChat, privateGroup)
         return self.Activity
     else
         self.Activity = nil

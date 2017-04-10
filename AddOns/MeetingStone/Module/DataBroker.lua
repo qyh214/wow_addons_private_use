@@ -159,9 +159,6 @@ function DataBroker:OnDataBrokerChanged(_, name, key, value, object)
         self.BrokerText:SetText(value)
     elseif key == 'flash' then
         self.BrokerFlash:SetShown(value)
-        if value then
-            FlashClientIcon()
-        end
     elseif key == 'icon' then
         self.BrokerIcon:SetTexture(value)
     end
@@ -207,13 +204,47 @@ function DataBroker:UpdateLabel()
     )
 end
 
-function DataBroker:UpdateFlash()
-    local applicantFlash = ApplicantPanel:HasNewPending() and not ApplicantPanel:IsVisible()
-    local appFlash = (App:IsFirstLogin() or App:HasNewFollower()) and not AppFollowQueryPanel:IsVisible()
+local flashs = {
+    {
+        flash = function()
+            return ApplicantPanel:HasNewPending()
+        end,
+        shown = function()
+            return ApplicantPanel:IsVisible()
+        end,
+        panel = ApplicantPanel,
+    },
+    {
+        flash = function()
+            return App:IsFirstLogin() or App:HasNewFollower()
+        end,
+        shown = function()
+            return AppFollowQueryPanel:IsVisible()
+        end,
+        panel = AppParent,
+    }
+}
 
-    MainPanel:FlashTabByPanel(ApplicantPanel, applicantFlash)
-    MainPanel:FlashTabByPanel(AppParent, appFlash)
-    self.BrokerObject.flash = appFlash or applicantFlash
+function DataBroker:UpdateFlash()
+    local flash = false
+    local icon = false
+
+    for i, v in ipairs(flashs) do
+        local f = v.flash()
+        local s = v.shown()
+
+        if v.panel then
+            MainPanel:FlashTabByPanel(v.panel, f and not s)
+        end
+
+        icon = icon or f
+        flash = flash or (f and not s)
+    end
+
+    self.BrokerObject.flash = flash
+    if icon then
+        FlashClientIcon()
+    end
 end
 
 function DataBroker:SetMinimapButtonGlow(enable)

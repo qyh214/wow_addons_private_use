@@ -611,10 +611,17 @@ end
 
 local DCS_configButton = CreateFrame("Button", "DCS_configButton", PaperDollSidebarTab1)
 	DCS_configButton:SetSize(32, 32)
+	DCS_configButton:RegisterEvent("MERCHANT_SHOW")
+	DCS_configButton:RegisterEvent("MERCHANT_CLOSED")
+	DCS_configButton:RegisterEvent("UPDATE_INVENTORY_DURABILITY")
 	DCS_configButton:SetPoint("BOTTOMLEFT", PaperDollSidebarTab1, "BOTTOMLEFT", 96, 34)
 	DCS_configButton:SetNormalTexture("Interface\\Buttons\\LockButton-Locked-Up")
 	DCS_configButton:SetPushedTexture("Interface\\Buttons\\LockButton-Unlocked-Down")
 	DCS_configButton:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
+	
+DCS_configButton:SetScript("OnEvent", function(self, event, ...)
+	PaperDollFrame_UpdateStats()
+end)
 
 local function DCS_configButton_OnEnter(self)
 	GameTooltip:SetOwner(DCS_configButton, "ANCHOR_RIGHT");
@@ -657,6 +664,8 @@ local function DCS_ClassCrestBGCheck()
 end
 	
 local function DCS_DefaultStatsAnchors()
+	DCS_InterfaceOptConfigButton:UnregisterEvent("UNIT_AURA")
+	DCS_InterfaceOptConfigButton:UnregisterEvent("UPDATE_INVENTORY_DURABILITY")
 	--configMode = false --seems like those four lines are not needed. Leaving incase they ARE needed
 	--DCS_ConfigtooltipText = L["Unlock DCS"] 
 	--DCS_TableResetCheck:Hide()
@@ -683,6 +692,8 @@ end
 
 local function DCS_InterfaceOptionsStatsAnchors()
 	if (DejaCharacterStatsPanel~=nil) then
+		DCS_InterfaceOptConfigButton:RegisterEvent("UNIT_AURA")
+		DCS_InterfaceOptConfigButton:RegisterEvent("UPDATE_INVENTORY_DURABILITY")
 		set_config_mode(true)
 				
 		StatScrollFrame:ClearAllPoints()
@@ -798,6 +809,10 @@ local function DCS_InterfaceOptConfigButton_OnLeave(self)
 	DCS_InterfaceOptConfigButton:SetScript("OnEnter", DCS_InterfaceOptConfigButton_OnEnter)
 	DCS_InterfaceOptConfigButton:SetScript("OnLeave", DCS_InterfaceOptConfigButton_OnLeave)
 
+	DCS_InterfaceOptConfigButton:SetScript("OnEvent", function(self, event)
+				ShowCharacterStats("player")
+	end)
+	
 	DCS_InterfaceOptConfigButton:SetScript("OnMouseUp", function(self, button, up)
 		configMode = not configMode
 		if (configMode) then

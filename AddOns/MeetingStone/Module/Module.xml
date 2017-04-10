@@ -5,7 +5,6 @@
   <Script file="ManagerPanel.lua" />
   <Script file="CreatePanel.lua" />
   <Script file="ApplicantPanel.lua" />
-  <Script file="DataBroker.lua" />
   <Script file="ExchangePanel.lua" />
   <Script file="MallPanel.lua" />
   <Script file="RewardPanel.lua" />
@@ -22,4 +21,5 @@
   <Script file="PlayerInfoDialog.lua" />
   <Script file="WorldQuest.lua" />
   <Script file="AppQrDialog.lua" />
+  <Script file="DataBroker.lua" />
 </Ui>

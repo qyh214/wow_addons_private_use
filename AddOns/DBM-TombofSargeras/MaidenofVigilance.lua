@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1897, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16058 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16102 $"):sub(12, -3))
 mod:SetCreatureID(118289)
 mod:SetEncounterID(2052)
 mod:SetZone()
@@ -45,7 +45,7 @@ local warnEssenceFragments			= mod:NewSpellAnnounce(236061, 2)
 local specWarnInfusion				= mod:NewSpecialWarningSpell(235271, nil, nil, nil, 2, 2)
 local specWarnFelInfusion			= mod:NewSpecialWarningYou(235240, nil, nil, nil, 1, 7)
 local specWarnLightInfusion			= mod:NewSpecialWarningYou(235213, nil, nil, nil, 1, 7)
-local specWarnUnstableSoul			= mod:NewSpecialWarningMoveTo(235117, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you:format(235117), nil, 3, 7)
+local specWarnUnstableSoul			= mod:NewSpecialWarningMoveTo(235117, nil, nil, nil, 3, 7)
 local yellUnstableSoul				= mod:NewFadesYell(235117)--While learning the fight this will be spammy, but also nessesary
 local specWarnLightHammer			= mod:NewSpecialWarningCount(241635, nil, nil, nil, 2, 2)
 local specWarnFelhammer				= mod:NewSpecialWarningCount(241636, nil, nil, nil, 2, 2)
@@ -53,11 +53,11 @@ local specWarnFelhammer				= mod:NewSpecialWarningCount(241636, nil, nil, nil, 2
 local specWarnWrathofCreators		= mod:NewSpecialWarningInterrupt(234891, "HasInterrupt", nil, nil, 1, 2)
 
 --Stage One: Divide and Conquer
-local timerInfusionCD				= mod:NewNextCountTimer(38, 235271, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerInfusionCD				= mod:NewNextCountTimer(37.9, 235271, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerLightHammerCD			= mod:NewNextCountTimer(18, 241635, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerFelHammerCD				= mod:NewNextCountTimer(18, 241636, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerMassInstabilityCD		= mod:NewNextCountTimer(31, 235267, nil, nil, nil, 3)
-local timerBlowbackCD				= mod:NewNextTimer(82, 237722, nil, nil, nil, 6)
+local timerBlowbackCD				= mod:NewNextTimer(81.1, 237722, nil, nil, nil, 6)--81-82
 --Mythic
 local timerSpontFragmentationCD		= mod:NewNextTimer(8, 239153, nil, nil, nil, 5, nil, DBM_CORE_HEROIC_ICON)
 
@@ -96,7 +96,7 @@ function mod:OnCombatStart(delay)
 	timerInfusionCD:Start(2-delay, 2)
 	timerLightHammerCD:Start(12-delay, 3)--12-14
 	timerMassInstabilityCD:Start(22-delay, 2)
-	timerBlowbackCD:Start(41-delay)
+	timerBlowbackCD:Start(40.9-delay)
 	if self:IsMythic() then
 		self.vb.spontFragmentationCount = 0
 		timerSpontFragmentationCD:Start(10-delay)
@@ -173,13 +173,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.unstableSoulCount = self.vb.unstableSoulCount + 1
 		warnUnstableSoul:CombinedShow(1, args.destName)
 		if args:IsPlayer() then
-			specWarnUnstableSoul:Show(AegynnsWard)
+			specWarnUnstableSoul:Schedule(5.5, AegynnsWard)--2.5 before expire, maybe adjust to 3
 			if not self:IsLFR() then
 				yellUnstableSoul:Yell(8)
 				yellUnstableSoul:Schedule(7, 1)
 				yellUnstableSoul:Schedule(6, 2)
 				yellUnstableSoul:Schedule(5, 3)
-				voiceUnsableSoul:Play("jumpinpit")
+				voiceUnsableSoul:Schedule(5.5, "jumpinpit")
 			else
 				voiceUnsableSoul:Play("defensive")--Whatever, doens't matter in LFR. LFR doesn't need Aegwynn's Ward/pit
 			end

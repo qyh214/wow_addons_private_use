@@ -16,12 +16,12 @@ local strsplit=strsplit
 local select=select
 local GetCurrencyInfo=GetCurrencyInfo
 local generated
-local GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY=GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY
 local GARRISON_CURRENCY=GARRISON_CURRENCY
 local GARRISON_SHIP_OIL_CURRENCY=GARRISON_SHIP_OIL_CURRENCY
 local GARRISON_FOLLOWER_MAX_LEVEL=GARRISON_FOLLOWER_MAX_LEVEL
 local LE_FOLLOWER_TYPE_GARRISON_6_0=LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=LE_FOLLOWER_TYPE_SHIPYARD_6_2
+local GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY=GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY[LE_FOLLOWER_TYPE_SHIPYARD_6_2]
 local module=addon:NewSubClass('ShipYard') --#Module
 local GameTooltip=GameTooltip
 local GarrisonShipyardMapMissionTooltip=GarrisonShipyardMapMissionTooltip
@@ -413,12 +413,12 @@ function module:RefreshMenu()
 	end
 end
 function module:AddMenu()
---[===[@debug@
-print("Adding Menu",GCS.Menu,GSF.MissionTab:IsVisible(),GSF.FollowerTab:IsVisible())
---@end-debug@]===]
 	if not GCS or GCS.Menu then
 		return
 	end
+--[===[@debug@
+	print("Adding Menu",GCS.Menu,GSF.MissionTab:IsVisible(),GSF.FollowerTab:IsVisible())
+--@end-debug@]===]
 	local menu,size
 	self.currentmenu=GSF.FollowerTab
 	menu,size=self:CreateOptionsLayer('SHIPMOVEPANEL','SHIPENHA','SGCSKIPEPIC','SGCMINLEVEL','SGCRIG')

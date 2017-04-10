@@ -22,6 +22,12 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(2,18,2,[[
+Fix: Message: Interface\AddOns\GarrisonCommander\FollowerCache.lua:25: attempt to perform arithmetic on local 'GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY' (a table value)
+]])
+self:RelNotes(2,18,1,[[
+Toc bump
+]])
 self:RelNotes(2,18,0,[[
 Feature: Improved autologout management. Now you are logged out on timeout ONLY if you started mission control via ctrl-click on table.
 Popup message should be informative

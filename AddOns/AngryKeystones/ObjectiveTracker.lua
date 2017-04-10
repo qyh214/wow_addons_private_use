@@ -1,6 +1,8 @@
 local ADDON, Addon = ...
 local Mod = Addon:NewModule('ObjectiveTracker')
 
+local challengeMapID
+
 local TIME_FOR_3 = 0.6
 local TIME_FOR_2 = 0.8
 
@@ -211,6 +213,7 @@ end
 
 function Mod:CHALLENGE_MODE_START()
 	keystoneWasCompleted = false
+	challengeMapID = C_ChallengeMode.GetActiveChallengeMapID()
 end
 
 function Mod:CHALLENGE_MODE_RESET()
@@ -220,9 +223,10 @@ end
 function Mod:CHALLENGE_MODE_COMPLETED()
 	keystoneWasCompleted = true
 	if not Addon.Config.completionMessage then return end
+	if not challengeMapID then return end
 
 	local mapID, level, time, onTime, keystoneUpgradeLevels = C_ChallengeMode.GetCompletionInfo()
-	local name, _, timeLimit = C_ChallengeMode.GetMapInfo(mapID)
+	local name, _, timeLimit = C_ChallengeMode.GetMapInfo(challengeMapID)
 
 	timeLimit = timeLimit * 1000
 	local timeLimit2 = timeLimit * TIME_FOR_2
@@ -258,4 +262,6 @@ function Mod:Startup()
 			SetUpAffixes(ScenarioChallengeModeBlock, affixes)
 		end
 	end)
+
+	challengeMapID = C_ChallengeMode.GetActiveChallengeMapID()
 end

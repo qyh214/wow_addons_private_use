@@ -1,150 +1,141 @@
-tag 0e7781f4ef8b1962ad3fca305c886396c9c0f6a7 7.1.18
+tag c2c4254b115d315214e278eb5629a0c35efea55f 7.2.3
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Fri Mar 24 21:02:04 2017 +0100
+Date:	Thu Apr 6 18:20:13 2017 +0200
 
-Tagging as 7.1.18
+Tagging as 7.2.3
 
-commit 646b7916753d68d7a16dd28452e179d141b613e1
+commit adec88c4090c5a15ed7a6ea4969ae60fbf27df11
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Mar 24 21:02:04 2017 +0100
+Date:   Thu Apr 6 18:20:13 2017 +0200
 
-    increment version number to 7.1.18
+    increment version number to 7.2.3
 
-commit 5930c57e232a92802c3d1eee770c1aae88ef5f07
+commit bcf765e941bdd2fb244fb816da80b7bd2d8c23e1
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Mar 24 07:21:10 2017 +0100
+Date:   Thu Apr 6 13:13:14 2017 +0200
 
-    Omega via svn r16083:
-    fix bug where dark phase variable didn?\226?\128?\153t reset on wipe.
-    Refactored infoframe to be more hybrid between the varius functions of fight instead of having it swap back and forth. should present more information and in less cluttered way.
+    Omega via svn r16140:
+    Kr update
 
-commit 36fcb4b4ab4be395dab25a8610be04bd3ccd6da2
+commit b5e947354955068c53f6ded890aa6b7bbdcefdf6
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Mar 24 05:10:05 2017 +0100
+Date:   Thu Apr 6 13:09:44 2017 +0200
 
-    Omega via svn r16082:
-    Fix logic issue for the keep brands up entire fight strat
+    Omega via svn r16139:
+    And remove this
 
-commit 68e3287290614f379d45cfb8e9373a71cdf51e1b
+commit 5d0c895b3bfe6f6706fb3a26387b501229e16c34
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Mar 24 04:39:54 2017 +0100
+Date:   Thu Apr 6 13:06:57 2017 +0200
 
-    Omega via svn r16081:
-    text
+    Omega via svn r16138:
+    Disable combat mechanics, they don?\226?\128?\153t work even remotely correctly. Shouldn?\226?\128?\153t be needed anyways
 
-commit 8be007f9196a6d62c34f937a5b116677bae6240e
+commit ccc987a2f7f39c72e39c158f0f22641bbfc661ea
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Mar 24 04:32:52 2017 +0100
+Date:   Thu Apr 6 09:22:01 2017 +0200
 
-    Omega via svn r16080:
-    Fix couple bugs
+    ultrashining via svn r16137:
+    zhTW update
 
-commit 16a1dcd791e13c345db7a8551af9e0e003dd450d
+commit 3a329295e8a3fc668366c01fd76a61d885ee9a8e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Mar 24 00:19:23 2017 +0100
+Date:   Thu Apr 6 06:42:23 2017 +0200
 
-    Omega via svn r16079:
-    Fix mod typo
-    add Agronox drycode
+    Omega via svn r16136:
+    Flame crash countdown for kihra
 
-commit 6162cb7953f884c3967f956dd342d83897e6612c
+commit a404c55f199cb73b5de72a8a3267a0b440ed2e70
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Mar 23 07:26:17 2017 +0100
+Date:   Thu Apr 6 06:19:53 2017 +0200
 
-    Omega via svn r16078:
-    Oh forgot this HF revision too for last updates berserk timer changes
+    Omega via svn r16135:
+    Add more countdowns to star auger
 
-commit 49c2bdc55b87d682d99d25ecefca79fce2d1c4c6
+commit 9e2eacc664b4cf794f201b31741fc0782ec0e6bc
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Mar 23 07:25:47 2017 +0100
+Date:   Thu Apr 6 00:07:31 2017 +0200
 
-    Omega via svn r16077:
-    Cleanup
+    Omega via svn r16134:
+    Add loading for other 3 invasions and one new warning for val scenario
 
-commit e9abe24bd5fea722570a3b527cae0872bb7651b9
+commit 5e4cb3337c364a4bb50329e73b242cb2bf24e577
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Mar 23 07:22:54 2017 +0100
+Date:   Wed Apr 5 14:32:43 2017 +0200
 
-    Omega via svn r16076:
-    Invert the fixate auras back onto casters instead of targets, to be 7.2 compatible (not as useful, but better than nothing, and might as well make change now)
+    Omega via svn r16133:
+    Tweak another timer
+    Attempt to fix voice pack filter on custom option text warnings
 
-commit 0cfc858caefdbe709feac9cad92162c263560bb0
+commit 4545671eda32790effe656b033890dcdb590bd45
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Mar 23 07:09:42 2017 +0100
+Date:   Wed Apr 5 00:33:49 2017 +0200
 
-    Omega via svn r16075:
-    More analysis shows this is cleaner way to do  icons, since I didn?\226?\128?\153t factor how long they take to pop up
+    Omega via svn r16132:
+    Update challenges message
 
-commit f03496dd3392c1c826a61ff32f000e4ea923a219
+commit 52ffd86663dec3402c73152cfc01dab7a73e2bcb
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Mar 23 06:52:30 2017 +0100
+Date:   Wed Apr 5 00:18:49 2017 +0200
 
-    Omega via svn r16074:
-    more alluriel tweaks and bug fixes to tanking warning
-    Add a print on engage to ilgynoth to explain that if you overgear the encounter the add timers mean very little (adds will spawn faster if you overgear encounter, by design, just like first boss of HFC did)
+    Omega via svn r16131:
+    Preliminary invasion support. this supports two warnings in azsuna scenario
 
-commit 28640b35c86a930a45004470565043bc8488a19b
+commit 94007a980943dd4e9b538912532ffa002dfbc9cd
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Mar 23 05:48:31 2017 +0100
+Date:   Tue Apr 4 03:29:58 2017 +0200
 
-    Omega via svn r16073:
-    Fix bug with second icy phase timers being wrong.
-    improved timers for decimate as well
-    Changed fel soul warning to be when it?\226?\128?\153s targetable instead of the cast
+    Omega via svn r16130:
+    Update Banned mods
 
-commit a426053800fadce5acce2d1a838bdcd2ab36e8f6
+commit f6adfcfcd9bf3707fca32c1faf5d0c68fa415283
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 22 23:07:36 2017 +0100
+Date:   Mon Apr 3 20:42:22 2017 +0200
 
-    Omega via svn r16072:
-    This should fix winds 3
+    Omega via svn r16129:
+    fix error
 
-commit 0bc6e052abc2b0fa7151433ac5206215dc14ad90
+commit f2c84b8f24ef39f8ec5697fb9c79b0f1aa358536
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 22 22:10:54 2017 +0100
+Date:   Mon Apr 3 04:08:35 2017 +0200
 
-    Omega via svn r16071:
-    Add more debug
+    Omega via svn r16128:
+    Bump revision
 
-commit 9507acbbdca3b7448463a23c92224bbdc6e01968
+commit f18e63610f3911526410bee0fc177c572c7d8d51
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 22 22:04:53 2017 +0100
+Date:   Mon Apr 3 04:05:56 2017 +0200
 
-    Omega via svn r16070:
-    more debug, more redundancy, more aggressive scans. honestly if this doesn?\226?\128?\153t work I?\226?\128?\153m scrapping scanformobs entirely and hard coding mob icon setting in onupdate handlers in mods themselves like old days. it worked and it was fast.
+    Omega via svn r16127:
+    Add LFR timers for Elisande
+    Fix some other timer bugs in normal elisande and mythic elisande
 
-commit a6e993704e9d64bd2f70b97a9eee3c91acee5053
+commit 766b08db25756a3036d27c1b72f0459999291d86
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 22 19:40:18 2017 +0100
+Date:   Sun Apr 2 22:43:54 2017 +0200
 
-    tandanu via svn r16069:
-    make custom sorted lines last longer than one update
+    Omega via svn r16126:
+    Remove debug message forgot to remove
 
-commit 880ebf016e818ca31985ea29c01ec4b4a227e9e8
+commit dc7e4e53e97dd7fcdc25331f06ec97a31b95922f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 22 11:43:54 2017 +0100
+Date:   Sun Apr 2 07:24:22 2017 +0200
 
-    Omega via svn r16068:
-    small fix, if this is ever used
+    Omega via svn r16125:
+    fix a bug where BuildVoiceCountdownCache would fail to set paths correctly if more than one were set to same voice.
+    Unfortunately I could find no fix that worked that didn?\226?\128?\153t require making it a LOT less inefficient. Fortunately it?\226?\128?\153s a one time function.
 
-commit 24a3b7972f2fdf43077747e9a90d32ac902dee00
+commit 209633e717cd9796c0ee89214db815fc4c454ceb
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 22 02:40:39 2017 +0100
+Date:   Sun Apr 2 05:33:23 2017 +0200
 
-    Omega via svn r16067:
-    Fix logic bug with 3rd flames casts
+    Omega via svn r16124:
+    updated version code for guild. may contain bugs
 
-commit ff16839faaccfe260bd809fc3bce85a3c6873aef
+commit ac823f7bb142858c0dfee499775fbb56fcefa80f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 22 02:22:39 2017 +0100
+Date:   Sat Apr 1 12:33:12 2017 +0200
 
-    Omega via svn r16066:
-    Fix bug with annoucning burst expiring
-
-commit 6a79d7ded43d999fb8479cfc21655e72c495ec4d
-Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Mar 21 22:02:46 2017 +0100
-
-    tandanu via svn r16065:
+    tandanu via svn r16123:
     increment alpha version
 

@@ -425,3 +425,11 @@ function ListToMap(list)
     end
     return map
 end
+
+function CheckMode(mode)
+    return mode ~= 0 and rawget(ACTIVITY_MODE_NAMES, mode)
+end
+
+function CheckLoot(loot)
+    return loot ~= 0 and rawget(ACTIVITY_LOOT_NAMES, loot)
+end

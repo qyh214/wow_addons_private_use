@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+﻿## Interface: 70200
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
@@ -6,8 +6,8 @@
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
-## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Batallas|r
-## Title-esMX:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Batallas|r
+## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0JcJ|r
+## Title-esMX:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0JcJ|r
 ## Title-ptBR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0JxJ|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Author: Nitram/Tandanu/Arta
@@ -24,8 +24,8 @@
 ## X-DBM-Mod-SubCategories-koKR: 투기장,전장
 ## X-DBM-Mod-SubCategories-zhTW: 競技場,戰場
 ## X-DBM-Mod-SubCategories-zhCN: 竞技场　,战场
-## X-DBM-Mod-SubCategories-esES: Arena,Campos de Batallas
-## X-DBM-Mod-SubCategories-esMX: Arena,Campos de Batallas
+## X-DBM-Mod-SubCategories-esES: Arenas,Campos de batalla
+## X-DBM-Mod-SubCategories-esMX: Arenas,Campos de batalla
 ## X-DBM-Mod-SubCategories-ptBR: Arena,Campos de Batalha
 ## X-DBM-Mod-SubCategories-frFR: Arène,Champs de Bataille
 ## X-DBM-Mod-Name: PvP

@@ -104,6 +104,7 @@ function LFGCreateOptimize:OnInitialize()
     self.HonorLevel = EntryCreation.HonorLevel
     self.SummaryBox = EntryCreation.Description.EditBox
     self.CreateButton = EntryCreation.ListGroupButton
+    self.PrivateGroup = EntryCreation.PrivateGroup
 
     self.Controls = {
         self.ItemLevel,
@@ -111,6 +112,7 @@ function LFGCreateOptimize:OnInitialize()
         self.PvPRating,
         self.VoiceChat,
         self.MinMaxLevel,
+        self.PrivateGroup,
     }
 
     for i, v in ipairs(self.Controls) do
@@ -305,13 +307,14 @@ function LFGCreateOptimize:UpdateControlState()
     local enable = mode and loot and activityId
     local solo = IsSoloCustomID(customId)
 
+    self:SetRequirementEnabled(self.PrivateGroup, enable and not solo)
     self:SetRequirementEnabled(self.ItemLevel, enable and not solo)
     self:SetRequirementEnabled(self.VoiceChat, enable and not solo)
     self:SetRequirementEnabled(self.MinMaxLevel, enable and not solo)
     self:SetRequirementEnabled(self.HonorLevel, enable and not solo and IsUseHonorLevel(activityId))
     self:SetRequirementEnabled(self.PvPRating, enable and not solo and IsUsePvPRating(activityId))
     self.SummaryBox:SetEnabled(enable and not solo)
-
+    
     self.ActivityMode:SetEnabled(not editMode and not solo)
     self.ActivityLoot:SetEnabled(not editMode and not solo)
 
@@ -322,8 +325,10 @@ end
 
 function LFGCreateOptimize:SetRequirementEnabled(frame, flag)
     frame.CheckButton:SetEnabled(flag)
-    frame.EditBox:SetEnabled(flag)
     frame.Label:SetFontObject(flag and 'GameFontHighlightSmall' or 'GameFontDisableSmall')
+    if frame.EditBox then
+        frame.EditBox:SetEnabled(flag)
+    end
     if frame.EditBox2 then
         frame.EditBox2:SetEnabled(flag)
     end

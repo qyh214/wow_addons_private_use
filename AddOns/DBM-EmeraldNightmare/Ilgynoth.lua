@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1738, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16074 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16092 $"):sub(12, -3))
 mod:SetCreatureID(105393)
 mod:SetEncounterID(1873)
 mod:SetZone()
@@ -47,7 +47,7 @@ local warnCursedBlood				= mod:NewTargetAnnounce(215128, 3)
 
 --Stage One: The Ruined Ground
 local specWarnNightmareCorruption	= mod:NewSpecialWarningMove(212886, nil, nil, nil, 1, 2)
-local specWarnFixate				= mod:NewSpecialWarningMoveTo(210099, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you:format(210099), nil, 1, 2)
+local specWarnFixate				= mod:NewSpecialWarningMoveTo(210099, nil, nil, nil, 1, 2)
 local specWarnNightmareHorror		= mod:NewSpecialWarningSwitch("ej13188", "-Healer", nil, nil, 1, 2)--spellId for summon 210289
 local specWarnEyeOfFate				= mod:NewSpecialWarningStack(210984, nil, 2)
 local specWarnEyeOfFateOther		= mod:NewSpecialWarningTaunt(210984, nil, nil, nil, 1, 2)

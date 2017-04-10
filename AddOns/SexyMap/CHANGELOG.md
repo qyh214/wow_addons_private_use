@@ -1,6 +1,9 @@
 # SexyMap
 
-## [v7.1.1](https://github.com/funkydude/SexyMap/tree/v7.1.1) (2016-10-25) [](#top)
-[Full Changelog](https://github.com/funkydude/SexyMap/compare/v7.1.0...v7.1.1)
+## [v7.2.0](https://github.com/funkydude/SexyMap/tree/v7.2.0) (2017-03-28) [](#top)
+[Full Changelog](https://github.com/funkydude/SexyMap/compare/v7.1.1...v7.2.0)
 
--   Coordinates: Fix coords error in dungeons.  
+- bump toc  
+- Remove support for the OSX recording button, which is removed in patch 7.2 and causes an error.  
+- Drop some buttons  
+- update metadata  

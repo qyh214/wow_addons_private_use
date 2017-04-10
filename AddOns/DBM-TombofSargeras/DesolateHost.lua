@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1896, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16063 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16092 $"):sub(12, -3))
 mod:SetCreatureID(118460, 118462, 119072)--118460 Engine of Souls, 118462 Soul Queen Dajahna, 119072 The Desolate Host
 mod:SetEncounterID(2054)
 mod:SetZone()
@@ -65,7 +65,7 @@ local specWarnTormentingCries		= mod:NewSpecialWarningYou(238018, nil, nil, nil,
 local specWarnSoulbind				= mod:NewSpecialWarningYou(236459, nil, nil, nil, 3, 2)
 local yellSoulbind					= mod:NewYell(236459)
 local specWarnWither				= mod:NewSpecialWarningYou(236138, nil, nil, nil, 1, 7)
-local specWarnShatteringScream		= mod:NewSpecialWarningMoveTo(235969, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you:format(235969), nil, 3, 2)
+local specWarnShatteringScream		= mod:NewSpecialWarningMoveTo(235969, nil, nil, nil, 3, 2)
 local specWarnWailingSouls			= mod:NewSpecialWarningCount(236072, nil, nil, nil, 2, 2)
 --The Desolate Host
 local specWarnSunderingDoomGather	= mod:NewSpecialWarningMoveTo(236542, nil, nil, nil, 1, 2)
@@ -188,7 +188,7 @@ function mod:OnCombatEnd()
 		DBM.InfoFrame:Hide()
 	end
 	if self.Options.NPAuraOnBonecageArmor then
-		DBM.Nameplate:Hide(true, nil, nil, nil, true, false, true)--Uses both hostile and friendly
+		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
 	end
 end
 

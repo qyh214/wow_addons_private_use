@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 1026 $")
+end, "$Revision: 1027 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -107,7 +107,7 @@ function XPerl_Player_OnLoad(self)
 	self.Power = 0
 	self.nameFrame.pvp.time = 0
 	
-	self.nameFrame.pvp:SetScript("OnUpdate", function(self, elapsed)
+	--[[self.nameFrame.pvp:SetScript("OnUpdate", function(self, elapsed)
 		self.time = self.time + elapsed
 		if (self.time >= 0.2) then
 			self.time = 0
@@ -122,7 +122,9 @@ function XPerl_Player_OnLoad(self)
 			end
 			self.timer:Hide()
 		end
-	end)
+	end)]]
+
+	self.nameFrame.pvptimer:SetScript("OnUpdate", XPerl_Player_UpdatePVPTimerOnUpdate)
 
 	XPerl_Player_InitCP(self)
 	if (playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST") then
@@ -371,6 +373,13 @@ local function XPerl_Player_UpdateRep(self)
 			rb.bg:SetVertexColor(color.r, color.g, color.b, 0.25)
 
 			local perc = (value * 100) / max
+
+			if perc < 0 then
+				perc = 0
+			elseif perc > 100 then
+				perc = 100
+			end
+
 			rb.percent:SetFormattedText(perc1F, perc)
 
 			rb.tex:SetTexCoord(0, perc/100, 0, 1)
@@ -446,6 +455,31 @@ local function XPerl_Player_UpdateXP(self)
 	end
 end
 
+-- XPerl_Player_UpdatePVPTimer
+function XPerl_Player_UpdatePVPTimerOnUpdate(self, elapsed)
+	self.time = (self.time or 0) + elapsed
+	if self.time >= 0.5 then
+		local timeLeft = GetPVPTimer()
+
+		if timeLeft > 0 then
+			timeLeft = floor(timeLeft / 1000)
+			self.text:SetFormattedText("%d:%02d", timeLeft / 60, timeLeft % 60)
+		end
+
+		self.time = 0
+	end
+end
+
+-- XPerl_Player_UpdatePVPTimer
+local function XPerl_Player_UpdatePVPTimer(self)
+	if pconf.pvpIcon and IsPVPTimerRunning() then
+		self.nameFrame.pvptimer:Show()
+	else
+		self.nameFrame.pvptimer:Hide()
+		self.nameFrame.pvptimer.text:SetText("")
+	end
+end
+
 -- XPerl_Player_UpdatePVP
 local function XPerl_Player_UpdatePVP(self)
 	-- PVP Status settings
@@ -506,6 +540,8 @@ local function XPerl_Player_UpdatePVP(self)
 		prestigeIcon:Hide()
 		pvpIcon:Hide()
 	end
+
+	XPerl_Player_UpdatePVPTimer(self)
 
 	--[[local pvp = pconf.pvpIcon and ((UnitIsPVPFreeForAll("player") and "FFA") or (UnitIsPVP("player") and (UnitFactionGroup("player") ~= "Neutral") and UnitFactionGroup("player")))
 	if (pvp) then
@@ -1102,6 +1138,7 @@ end
 
 function XPerl_Player_Events:PLAYER_FLAGS_CHANGED()
 	XPerl_Player_UpdateHealth(self)
+	XPerl_Player_UpdatePVPTimer(self)
 end
 
 -- RAID_TARGET_UPDATE

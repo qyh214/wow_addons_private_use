@@ -39,6 +39,49 @@ When PLH becomes disabled, set isAnnouncer to false
 	
 Changelog
 
+20170401 - 1.29
+	Fixed bugs that were sometimes causing PLH to not properly cache equipped items for all players in the group
+		note: commented out extra call to PLH_InspectNextGroupMember in the outer loop portion of PLH_InspectNextGroupMember
+		note: Separated PLH_wait into multiple methods to eliminate concurrency issues
+		note: reduced DELAY_BETWEEN_INSPECTIONS from 3 to 1 (seconds)
+	
+20170331 - 1.28
+	Fixed new bug with 7.2 that was sometimes preventing PLH from activating when reloading UI or entering an instance
+		note: added ZONE_CHANGED_NEW_AREA and PLAYER_ENTERING_WORLD in Initialize()
+
+	Added sorting of names by ilvl when more than one person can use an item
+		note: in GetNames
+		
+	note: reduced NUM_EXPECTED_RELICS_110 from 3 to 2 so we reduce inspect retries; many people (in lfr at least) still don't have 3
+	note: increased MAX_INSPECT_LOOPS from 3 to 4
+	
+20170329 - 1.27
+	Increased inspect attempts back to 5; this may have been causing some characters' gear to not be fully inspected and thus missing recommendations
+	
+	Minor additional error checking
+		note: additional nil check in AskForRolls()
+
+20170328 - 1.26
+	Bug fixes to "coordinate rolls" mode - sometimes trades were being ignored
+		note: removed extra spaces in ProcessWhisper, added nil check for description in CheckForRolls
+	
+20170328 - 1.25
+	Added eligibility check for class-restricted gear (ex: tier)
+	Significant performance/memory improvements
+		note: Added GetFullItemInfo and related; only create tooltips once per looted item
+
+	Added description of item being rolled for in "coordinate rolls" mode
+		note: in AskForRolls()
+
+	Reduced number of attempts to inspect each player from 5 to 3 to reduce potential interference with manual inspects.
+		note: reduced MAX_INSPECTS_PER_CHARACTER
+
+	Updated to WoW client 7.2
+	
+20170327 - 1.24
+	Permitted offspec rolls regardless of the "current spec only" option (in "coordinate rolls" mode)
+		note: parameter added to IsEquippableItemForCharacter
+	
 20170323 - 1.23
 	Added 7.2 trinkets
 	
@@ -357,13 +400,13 @@ local DEFAULT_HIGHLIGHT_SIZE = 20
 local TRADE_MESSAGE = 'TRADE'  -- added some hardcording in ProcessWhisper for various way people may offer to trade items; customize text there if needed (ex: foreign languages)
 local DELAY_BETWEEN_ROLLS = 4 -- in seconds
 local UNHIGHLIGHT_DELAY = 105  -- in seconds
-local DELAY_BETWEEN_INSPECTIONS = 3  -- in seconds
-local MAX_INSPECT_LOOPS = 3    -- maximum # of times to retry calling NotifyInspect on all members in the roster for whom we've cached fewer than the expected number of items
+local DELAY_BETWEEN_INSPECTIONS = 1  -- in seconds
+local MAX_INSPECT_LOOPS = 4    -- maximum # of times to retry calling NotifyInspect on all members in the roster for whom we've cached fewer than the expected number of items
 local NUM_EXPECTED_ITEMS = 15 -- number of items we expect each person to have equipped (based on having something in every gear) plus 3 relics
 	-- slot; if we've cached fewer than that amount of items for a character, we'll include that character in additional
 	-- inspect loops.
 --local MAX_INSPECT_RETRIES = 2  -- maximum # of times to retry calling NotifyInspect for a specific character if we don't get an INSPECT_READY
-local NUM_EXPECTED_RELICS_110 = 3
+local NUM_EXPECTED_RELICS_110 = 2
 local NUM_EXPECTED_RELICS_101 = 1
 local MAX_INSPECTS_PER_CHARACTER = 5
 local MAX_NAMES_TO_SHOW = 4
@@ -1065,7 +1108,7 @@ local LOOT_ITEM_SELF_PATTERN = _G.LOOT_ITEM_SELF
 	  LOOT_ITEM_SELF_PATTERN = LOOT_ITEM_SELF_PATTERN:gsub('%%s', '(.+)')
 local LOOT_ITEM_PATTERN = _G.LOOT_ITEM
 	  LOOT_ITEM_PATTERN = LOOT_ITEM_PATTERN:gsub('%%s', '(.+)')
-
+	  
 -- set up variables that will cache group member's information
 local groupInfoCache = {}  -- array keyed by name-realm paired with a list of slotid-items
 local maxInspectIndex = 0  -- the index of the last character in GetRaidRosterInfo(); must be < inspectIndex to start with so PopulateGroupInfoCache can start inspections
@@ -1077,6 +1120,164 @@ local inspectLoop = MAX_INSPECT_LOOPS + 1 -- defaulting to a higher value so Pop
 
 local raidFrameTextures = {}  -- array indexed by characterName-realmName, containing texture to be shown in raid frames (for loot identification)
 local raidFrameTooltips = {}  -- array indexed by characterName-realmName, containing tooltip to be shown in raid frames (for loot identification)
+
+-- indexes of array returned by GetFullItemInfo()
+local FII_ITEM = "ITEM"									-- contains the actual item
+local FII_NAME = "NAME"									-- return value 1 of Blizzard API call GetItemInfo()
+local FII_LINK = "LINK"									-- return value 2 of Blizzard API call GetItemInfo()
+local FII_QUALITY = "QUALITY"							-- return value 3 of Blizzard API call GetItemInfo()
+local FII_BASE_ILVL = "BASE_ILVL"						-- return value 4 of Blizzard API call GetItemInfo()
+local FII_REQUIRED_LEVEL = "REQUIRED_LEVEL"				-- return value 5 of Blizzard API call GetItemInfo()
+local FII_TYPE = "TYPE"									-- return value 6 of Blizzard API call GetItemInfo()
+local FII_SUB_TYPE = "SUB_TYPE"							-- return value 7 of Blizzard API call GetItemInfo()
+local FII_MAX_STACK = "MAX_STACK"						-- return value 8 of Blizzard API call GetItemInfo()
+local FII_ITEM_EQUIP_LOC = "ITEM_EQUIP_LOC"				-- return value 9 of Blizzard API call GetItemInfo()
+local FII_TEXTURE = "TEXTURE"							-- return value 10 of Blizzard API call GetItemInfo()
+local FII_VENDOR_PRICE = "VENDOR_PRICE"					-- return value 11 of Blizzard API call GetItemInfo()
+local FII_CLASS = "CLASS"								-- return value 12 of Blizzard API call GetItemInfo()
+local FII_SUB_CLASS = "SUB_CLASS"						-- return value 13 of Blizzard API call GetItemInfo()
+local FII_BIND_TYPE = "BIND_TYPE"						-- return value 14 of Blizzard API call GetItemInfo()
+local FII_EXPAC_ID = "EXPAC_ID"							-- return value 15 of Blizzard API call GetItemInfo()
+local FII_ITEM_SET_ID = "ITEM_SET_ID"					-- return value 16 of Blizzard API call GetItemInfo()
+local FII_IS_CRAFTING_REAGENT = "IS_CRAFTING_REAGENT"	-- return value 17 of Blizzard API call GetItemInfo()
+local FII_IS_EQUIPPABLE = "IS_EQUIPPABLE"				-- true if the item is equippable, false otherwise
+local FII_IS_RELIC = "IS_RELIC"							-- true if item is a relic, false otherwise
+local FII_REAL_ILVL = "REAL_ILVL"						-- real ilvl, derived from tooltip
+local FII_RELIC_TYPE = "RELIC_TYPE"						-- relic type, derived from tooltip
+local FII_CLASSES = "CLASSES"							-- uppercase string of classes that can use the item (ex: tier); nil if item is not class-restricted
+
+local PLH_CLASSES_ALLOWED_PATTERN = _G.ITEM_CLASSES_ALLOWED
+	  PLH_CLASSES_ALLOWED_PATTERN = PLH_CLASSES_ALLOWED_PATTERN:gsub('%%s', '(.+)')  -- 'Classes: (.+)'
+local tooltip
+
+--[[
+creates an empty tooltip that is ready to be populated with the information from an item
+-- note: a complicated tooltip could have the following lines (ex):
+	1 - Oathclaw Helm, nil
+	2 - Mythic, nil
+	3 - Item Level 735
+	4 - Upgrade Level: 2/2, nil
+	5 - Binds when picked up, nil
+	6 - Head, Leather
+	
+	rows - how many rows of the tooltip to populate; prior to version 1.24 we only cared about the first 6 rows, but to find the "classes:" row we have to go much deeper
+]]--
+local function CreateEmptyTooltip(rows)
+    local tip = CreateFrame('GameTooltip')
+	local leftside = {}
+	local rightside = {}
+	local L, R
+    for i = 1, rows do
+        L, R = tip:CreateFontString(), tip:CreateFontString()
+        L:SetFontObject(GameFontNormal)
+        R:SetFontObject(GameFontNormal)
+        tip:AddFontStrings(L, R)
+        leftside[i] = L
+		rightside[i] = R
+    end
+    tip.leftside = leftside
+	tip.rightside = rightside
+    return tip
+end
+
+local function GetFullItemInfo(item)
+	fullItemInfo = {}
+	if item ~= nil then
+		fullItemInfo[FII_ITEM] = item
+		
+		-- determine the basic values from the Blizzard GetItemInfo() API call
+		fullItemInfo[FII_NAME],
+			fullItemInfo[FII_LINK],
+			fullItemInfo[FII_QUALITY],
+			fullItemInfo[FII_BASE_ILVL],
+			fullItemInfo[FII_REQUIRED_LEVEL],
+			fullItemInfo[FII_TYPE],
+			fullItemInfo[FII_SUB_TYPE],
+			fullItemInfo[FII_MAX_STACK],
+			fullItemInfo[FII_ITEM_EQUIP_LOC],
+			fullItemInfo[FII_TEXTURE],
+			fullItemInfo[FII_VENDOR_PRICE],
+			fullItemInfo[FII_CLASS],
+			fullItemInfo[FII_SUB_CLASS],
+			fullItemInfo[FII_BIND_TYPE],
+			fullItemInfo[FII_EXPAC_ID],
+			fullItemInfo[FII_ITEM_SET_ID],
+			fullItemInfo[FII_IS_CRAFTING_REAGENT]
+			= GetItemInfo(item)
+
+		-- determine whether the item is equippable & whether it is a relic
+		fullItemInfo[FII_IS_EQUIPPABLE] = IsEquippableItem(item)
+		fullItemInfo[FII_IS_RELIC] = fullItemInfo[FII_CLASS] == LE_ITEM_CLASS_GEM and fullItemInfo[FII_SUB_CLASS] == LE_ITEM_ARMOR_RELIC
+
+		-- we only need to determine other values if it's an equippable item or a relic
+		if fullItemInfo[FII_IS_EQUIPPABLE] or fullItemInfo[FII_IS_RELIC] then
+
+			-- set up the tooltip to determine values that aren't returned via GetItemInfo()
+			local rows = 30
+			if fullItemInfo[FII_IS_RELIC] then
+				rows = 6  -- if it's a relic, we only need to inspect the first 6 rows
+			end
+			tooltip = tooltip or CreateEmptyTooltip(30)
+			tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
+			tooltip:ClearLines()
+			tooltip:SetHyperlink(item)
+			local t
+			local index
+
+			-- determine the real iLVL
+			local realILVL = nil
+			t = tooltip.leftside[2]:GetText()
+			if t ~= nil then
+				realILVL = t:match(PLH_ITEM_LEVEL_PATTERN)
+			end
+			if realILVL == nil then  -- ilvl can be in the 2nd or 3rd line dependng on the tooltip; if we didn't find it in 2nd, try 3rd
+				t = tooltip.leftside[3]:GetText()
+				if t ~= nil then
+					realILVL = t:match(PLH_ITEM_LEVEL_PATTERN)
+				end
+			end
+			if realILVL == nil then  -- if we still couldn't find it (shouldn't happen), just use the ilvl we got from GetItemInfo()
+				realILVL = fullItemInfo[FII_BASE_ILVL]
+			end
+			fullItemInfo[FII_REAL_ILVL] = tonumber(realILVL)
+
+			-- if the item is a relic, determine the relic type
+			local relicType = nil
+			if fullItemInfo[FII_IS_RELIC] then
+				index = 1
+				while not relicType and tooltip.leftside[index] do
+					t = tooltip.leftside[index]:GetText()
+					if t ~= nil then
+						relicType = t:match(PLH_RELIC_TOOLTIP_TYPE_PATTERN)				
+					end
+					index = index + 1
+				end
+			end
+			fullItemInfo[FII_RELIC_TYPE] = relicType
+
+			-- if the item is restricted to certain classes, determine which ones
+			local classes = nil
+			index = 1
+			while not classes and tooltip.leftside[index] do
+				t = tooltip.leftside[index]:GetText()
+				if t ~= nil then
+					classes = t:match(PLH_CLASSES_ALLOWED_PATTERN)
+				end
+				index = index + 1
+			end
+			if classes ~= nil then
+				classes = string.upper(classes)
+				classes = string.gsub(classes, " ", "")  -- remove space for DEMON HUNTER, DEATH KNIGHT
+			end
+			fullItemInfo[FII_CLASSES] = classes
+
+			-- hide the tooltip now that we're done with it (is this really necessary?)
+			tooltip:Hide()
+		end
+	end
+
+	return fullItemInfo
+end
 
 local function GetExpectedRelicCount(level)
 	if level ~= nil then
@@ -1242,13 +1443,16 @@ local function IsValidRelicTypeForSpec(relicType, spec)
 end
 
 -- Returns false if the character cannot use the item.
-local function IsEquippableItemForCharacter(item, characterName)
+local function IsEquippableItemForCharacter(fullItemInfo, characterName, currentSpecOnly)
 	local isEquippableForClass = false
 	local isEquippableForSpec = false
 	local isEquippableForOffspec = false
-	if item ~= nil and characterName ~= nil then
-		if IsEquippableItem(item) or IsRelic(item) then
-			local _, _, _, _, requiredLevel, _, _, _, itemEquipLoc, _, _, itemClass, itemSubclass = GetItemInfo(item)
+	if fullItemInfo ~= nil and characterName ~= nil then
+		if fullItemInfo[FII_IS_EQUIPPABLE] or fullItemInfo[FII_IS_RELIC] then
+			local requiredLevel = fullItemInfo[FII_REQUIRED_LEVEL]
+			local itemEquipLoc = fullItemInfo[FII_ITEM_EQUIP_LOC]
+			local itemClass = fullItemInfo[FII_CLASS]
+			local itemSubclass = fullItemInfo[FII_SUB_CLASS]
 			local class
 			local spec
 			local characterLevel
@@ -1261,7 +1465,7 @@ local function IsEquippableItemForCharacter(item, characterName)
 				spec = groupInfoCache[characterName]['Spec']
 				characterLevel = groupInfoCache[characterName]['Level']
 			else
-				PLH_SendDebugMessage('Unable to determine class and spec in InEquippableItemForCharacter()!!!!')
+				PLH_SendDebugMessage('Unable to determine class and spec in InEquippableItemForCharacter()!!!! for ' .. characterName)
 				return false  -- should never reach here, but if we do it means we're not looking up the player or anyone in cache
 			end
 			
@@ -1270,7 +1474,6 @@ local function IsEquippableItemForCharacter(item, characterName)
 				return false
 			end
 			
-			local isRelic = IsRelic(item)
 			isEquippableForClass = itemEquipLoc == 'INVTYPE_CLOAK' -- cloaks show up as type=armor, subtype=cloth, but they're equippable by all, so set to true if cloak
 			local i = 1
 			
@@ -1281,8 +1484,16 @@ local function IsEquippableItemForCharacter(item, characterName)
 				i = i + 1
 			end
 
+			-- check whether to item is a class restricted item (ex: tier)
+			if fullItemInfo[FII_CLASSES] ~= nil then
+				if not string.find(class, fullItemInfo[FII_CLASSES]) then
+					isEquippableForClass = false
+				end
+			end
+			
 			if isEquippableForClass then
 				if itemEquipLoc == 'INVTYPE_TRINKET' then
+					item = fullItemInfo[FII_ITEM]
 					if spec == 105 or spec == 270 or spec == 65 or spec == 256 or spec == 257 or spec == 264 then
 						isEquippableForSpec = IsTrinketUsable(item, 'Healer')					
 					elseif spec == 250 or spec == 581 or spec == 104 or spec == 268 or spec == 66 or spec == 73 then
@@ -1295,7 +1506,7 @@ local function IsEquippableItemForCharacter(item, characterName)
 						isEquippableForSpec = IsTrinketUsable(item, 'IntellectDPS')
 					end
 						
-					if not PLH_CURRENT_SPEC_ONLY and not isEquippableForSpec then
+					if not currentSpecOnly and not isEquippableForSpec then
 						if class == DEATH_KNIGHT or class == WARRIOR then
 							isEquippableForOffspec = IsTrinketUsable(item, 'Tank') or IsTrinketUsable(item, 'StrengthDPS')
 						elseif class == DEMON_HUNTER then
@@ -1313,7 +1524,7 @@ local function IsEquippableItemForCharacter(item, characterName)
 						end
 					end
 				else
-					local itemPrimaryAttribute = GetItemPrimaryAttribute(item)
+					local itemPrimaryAttribute = GetItemPrimaryAttribute(fullItemInfo[FII_ITEM])
 					if itemPrimaryAttribute == nil then
 						isEquippableForSpec = true  -- if there's no primary attr (ex: ring/neck), then the item is equippable by everyone
 					elseif IsMutablePrimaryAttribute(itemEquipLoc) then
@@ -1328,7 +1539,7 @@ local function IsEquippableItemForCharacter(item, characterName)
 							i = i + 1
 						end
 
-						if not PLH_CURRENT_SPEC_ONLY and not isEquippableForSpec then
+						if not currentSpecOnly and not isEquippableForSpec then
 							-- now check to see if it's usable by an offspec
 							i = 1
 							while not isEquippableForSpec and OffspecAttributes[i] do
@@ -1340,11 +1551,11 @@ local function IsEquippableItemForCharacter(item, characterName)
 						end
 					end
 				end
-			elseif isRelic then
-				local relicType = PLH_GetRelicType(item)
+			elseif fullItemInfo[FII_IS_RELIC] then
+				local relicType = fullItemInfo[FII_RELIC_TYPE]
 				isEquippableForSpec = IsValidRelicTypeForSpec(relicType, spec)
 				isEquippableForClass = isEquippableForSpec
-				if not PLH_CURRENT_SPEC_ONLY and not isEquippableForSpec then
+				if not currentSpecOnly and not isEquippableForSpec then
 					if class == DEATH_KNIGHT then
 						isEquippableForOffspec = IsValidRelicTypeForSpec(relicType, 250) or IsValidRelicTypeForSpec(relicType, 251) or IsValidRelicTypeForSpec(relicType, 252)
 					elseif class == DEMON_HUNTER then
@@ -1381,13 +1592,13 @@ local function IsEquippableItemForCharacter(item, characterName)
 end
 
 -- returns two variables:  true if the item is an upgrade over equippedItem (based on ilvl), equipped ilvl
-local function IsAnUpgrade(item, equippedItem)
+local function IsAnUpgrade(itemILVL, equippedItem)
 	local equippedILVL = PLH_GetRealILVL(equippedItem)
 	if equippedILVL == 0 then
 		-- this means we couldn't find an equippedItem
 		return false, 0
 	else
-		return PLH_GetRealILVL(item) > PLH_GetRealILVL(equippedItem), equippedILVL
+		return itemILVL > equippedILVL, equippedILVL
 	end
 end
 
@@ -1426,33 +1637,35 @@ end
 
 -- returns two variables:  true if the item is an upgrade over equippedItem (based on ilvl), equipped ilvl
 -- note: doesn't check if item is equippable, so make sure you do that check beforehand
-local function IsAnUpgradeForCharacter(item, characterName)
+local function IsAnUpgradeForCharacter(fullItemInfo, characterName)
 	local isAnUpgrade = false
 	local equippedILVL = 0
-	local _, _, _, _, _, _, _, _, itemEquipLoc, _, _ = GetItemInfo(item)
+	local itemEquipLoc = fullItemInfo[FII_ITEM_EQUIP_LOC]
+	local itemRealILVL = fullItemInfo[FII_REAL_ILVL]
+	
 	if itemEquipLoc ~= nil and itemEquipLoc ~= '' then
 		if itemEquipLoc == 'INVTYPE_FINGER' then
 			local equippedItem0 = GetEquippedItem(characterName, 11)	-- 1st ring
 			local equippedItem1 = GetEquippedItem(characterName, 12)  	-- 2nd ring
-			isAnUpgrade = IsAnUpgrade(item, equippedItem0) or IsAnUpgrade(item, equippedItem1)
+			isAnUpgrade = IsAnUpgrade(itemRealILVL, equippedItem0) or IsAnUpgrade(itemRealILVL, equippedItem1)
 			equippedILVL = min(PLH_GetRealILVL(equippedItem0), PLH_GetRealILVL(equippedItem1))
 		elseif itemEquipLoc == 'INVTYPE_TRINKET' then
 			local equippedItem0 = GetEquippedItem(characterName, 13)	-- 1st trinket
 			local equippedItem1 = GetEquippedItem(characterName, 14)	-- 2nd trinket
-			isAnUpgrade = IsAnUpgrade(item, equippedItem0) or IsAnUpgrade(item, equippedItem1)
+			isAnUpgrade = IsAnUpgrade(itemRealILVL, equippedItem0) or IsAnUpgrade(itemRealILVL, equippedItem1)
 			equippedILVL = min(PLH_GetRealILVL(equippedItem0), PLH_GetRealILVL(equippedItem1))
 		elseif itemEquipLoc == 'INVTYPE_WEAPON' then
 			local equippedItem0 = GetEquippedItem(characterName, 16)		-- main hand
 			local equippedItem1 = GetEquippedItem(characterName, 17)		-- off hand
-			isAnUpgrade = IsAnUpgrade(item, equippedItem0) or IsAnUpgrade(item, equippedItem1)
+			isAnUpgrade = IsAnUpgrade(itemRealILVL, equippedItem0) or IsAnUpgrade(itemRealILVL, equippedItem1)
 			equippedILVL = min(PLH_GetRealILVL(equippedItem0), PLH_GetRealILVL(equippedItem1))
 		else
 			local slotID = GetSlotID(itemEquipLoc)
 			local equippedItem =  GetEquippedItem(characterName, slotID)
-			isAnUpgrade, equippedILVL = IsAnUpgrade(item, equippedItem)
+			isAnUpgrade, equippedILVL = IsAnUpgrade(itemRealILVL, equippedItem)
 		end
-	elseif IsRelic(item) then
-		local relicType = PLH_GetRelicType(item)
+	elseif fullItemInfo[FII_IS_RELIC] then
+		local relicType = fullItemInfo[FII_RELIC_TYPE]
 
 		local relic1 = GetEquippedRelic(characterName, 1)
 		local relic1ILVL = PLH_GetRealILVL(relic1)
@@ -1463,9 +1676,9 @@ local function IsAnUpgradeForCharacter(item, characterName)
 		local relic3 = GetEquippedRelic(characterName, 3)
 		local relic3ILVL = PLH_GetRealILVL(relic3)
 		local relic3Type = PLH_GetRelicType(relic3)
-		isAnUpgrade = (relicType == relic1Type and IsAnUpgrade(item, relic1))
-			or (relicType == relic2Type and IsAnUpgrade(item, relic2))
-			or (relicType == relic3Type and IsAnUpgrade(item, relic3))
+		isAnUpgrade = (relicType == relic1Type and IsAnUpgrade(itemRealILVL, relic1))
+			or (relicType == relic2Type and IsAnUpgrade(itemRealILVL, relic2))
+			or (relicType == relic3Type and IsAnUpgrade(itemRealILVL, relic3))
 		if relicType == relic1Type then
 			equippedILVL = relic1ILVL
 		end
@@ -1480,7 +1693,7 @@ local function IsAnUpgradeForCharacter(item, characterName)
 end
 
 -- returns two variables:  first is true or false, second is list of people for whom the item may is an upgrade (by ilvl)
-local function IsAnUpgradeForAnyCharacter(item)
+local function IsAnUpgradeForAnyCharacter(fullItemInfo)
 	local isAnUpgrade, equippedILVL
 	local isAnUpgradeForAnyCharacterNames = {}
 
@@ -1492,8 +1705,8 @@ local function IsAnUpgradeForAnyCharacter(item)
 		if not string.find(characterName, '-') then
 			characterName = PLH_GetFullName(characterName, GetRealmName())
 		end
-		if IsEquippableItemForCharacter(item, characterName) then
-			isAnUpgrade, equippedILVL = IsAnUpgradeForCharacter(item, characterName)
+		if IsEquippableItemForCharacter(fullItemInfo, characterName, PLH_CURRENT_SPEC_ONLY) then
+			isAnUpgrade, equippedILVL = IsAnUpgradeForCharacter(fullItemInfo, characterName)
 			if isAnUpgrade then
 --				PLH_SendDebugMessage(item .. ' is an ilvl upgrade for ' .. characterName)
 				isAnUpgradeForAnyCharacterNames[#isAnUpgradeForAnyCharacterNames + 1] = PLH_GetNameWithoutRealm(characterName) .. ' (' .. equippedILVL .. ')'
@@ -1517,6 +1730,15 @@ local function IsPlayerInUpgradeList(list)
 	return false
 end
 
+-- creates a copy of the table
+local function ShallowCopy(t)
+	local t2 = {}
+	for k, v in pairs(t) do
+		t2[k] = v
+	end
+	return t2
+end
+
 -- returns the names from the given array, with 'and others' if array size > limit
 local function GetNames(namelist, limit)
 	local names = ''
@@ -1525,20 +1747,50 @@ local function GetNames(namelist, limit)
 			limit = #namelist
 		end
 		if namelist[1] ~= nil then
-			names = namelist[1]
-			local maxnames = min(#namelist, limit)
+			-- sort the array by ilvl first
+			local sortedNamelist = namelist
+			if #namelist > 1 then
+				local copiedNamelist = ShallowCopy(namelist)  -- we will destroy elements in the list while sorting, so copy it
+				sortedNamelist = {}
+				local lowestILVL
+				local lowestIndex
+				local ilvl
+				local i = 1
+				local size = #copiedNamelist
+				while i <= size do
+					lowestILVL = 1000000
+					lowestIndex = 1  -- we could be sorting a list without ilvls, in which case just keep the same order
+					for j = 1, #copiedNamelist do
+						if copiedNamelist[j] ~= nil then
+							ilvl = string.match(copiedNamelist[j], '(%d+)')
+							if ilvl ~= nil then
+								ilvl = tonumber(ilvl)
+								if ilvl < lowestILVL then
+									lowestILVL = ilvl
+									lowestIndex = j
+								end
+							end
+						end
+					end
+					table.insert(sortedNamelist, table.remove(copiedNamelist, lowestIndex))
+					i = i + 1
+				end
+			end
+		
+			names = sortedNamelist[1]
+			local maxnames = min(#sortedNamelist, limit)
 			for i = 2, maxnames do
-				if #namelist == 2 then
+				if #sortedNamelist == 2 then
 					names = names .. ' '
 				else
 					names = names .. ', '
 				end
-				if i == #namelist then -- last person
+				if i == #sortedNamelist then -- last person
 					names = names .. 'and '
 				end
-				names = names .. namelist[i]
+				names = names .. sortedNamelist[i]
 			end
-			if #namelist > limit then
+			if #sortedNamelist > limit then
 				names = names .. ', and others'
 			end
 		end
@@ -1645,10 +1897,10 @@ end
 
 -- Determines whether item is not an upgrade for the person who looted the item, and is an upgrade for someone else in the group
 -- If that's the case, performs the action based on the users' selected Notify Mode
-local function PerformNotify(item, characterName)
-	local isAnUpgradeForLooter, equippedILVL = IsAnUpgradeForCharacter(item, characterName)
+local function PerformNotify(fullItemInfo, characterName)
+	local isAnUpgradeForLooter, equippedILVL = IsAnUpgradeForCharacter(fullItemInfo, characterName)
 	if PLH_COORDINATE_ROLLS and PlayerCanCoordinateRolls() then
-		whisperedItems[characterName] = item  -- use full name-realm since that what we'll get when we look it up from the whisper
+		whisperedItems[characterName] = fullItemInfo[FII_ITEM]  -- use full name-realm since that what we'll get when we look it up from the whisper
 --		if #isAnUpgradeForAnyCharacterNames > 1 then  -- more than 1 person can use the item
 --					PLH_SendWhisper('You can trade ' .. item .. ', which is an ilvl upgrade for ' .. names .. '. Reply \'' .. TRADE_MESSAGE .. '\' to initiate rolls for this item.', characterName)
 --		end
@@ -1656,9 +1908,10 @@ local function PerformNotify(item, characterName)
 	if equippedILVL > 0 and not isAnUpgradeForLooter then
 		-- we now know the item can be traded by the person who received it, so let's check to see if anyone can actually
 		--    use the item as an upgrade
-		local isAnUpgradeForAnyCharacter, isAnUpgradeForAnyCharacterNames = IsAnUpgradeForAnyCharacter(item)
+		local isAnUpgradeForAnyCharacter, isAnUpgradeForAnyCharacterNames = IsAnUpgradeForAnyCharacter(fullItemInfo)
 		if isAnUpgradeForAnyCharacter then
 			local names = GetNames(isAnUpgradeForAnyCharacterNames, MAX_NAMES_TO_SHOW)
+			item = fullItemInfo[FII_ITEM]
 
 			if PLH_NOTIFY_GROUP then
 				if not PLH_IsInLFR() then
@@ -1683,19 +1936,17 @@ end
 --   2. ilvl is >= min ilvl from preferences
 --   3. quality is >= min quality from preferences
 --   4. item is BoP, or user specified to include BoE items in preferences
-local function ShouldBeEvaluated(item)
-	if not IsEquippableItem(item) and not IsRelic(item) then
+local function ShouldBeEvaluated(fullItemInfo)
+	if not fullItemInfo[FII_IS_EQUIPPABLE] and not fullItemInfo[FII_IS_RELIC] then
 		return false
 	else
-		local ilvl = PLH_GetRealILVL(item)
-		if ilvl < PLH_MIN_ILVL then
+		if fullItemInfo[FII_REAL_ILVL] < PLH_MIN_ILVL then
 			return false
 		else
-			local quality = select(3, GetItemInfo(item))
-			if quality < PLH_MIN_QUALITY then
+			if fullItemInfo[FII_QUALITY] < PLH_MIN_QUALITY then
 				return false
 			else
-				if not PLH_INCLUDE_BOE and not PLH_IsBoundToPlayer(item) then
+				if fullItemInfo[FII_BIND_TYPE] ~= LE_ITEM_BIND_ON_ACQUIRE and not (fullItemInfo[FII_BIND_TYPE] == LE_ITEM_BIND_ON_EQUIP and PLH_INCLUDE_BOE) then
 					return false
 				else
 					return true
@@ -1716,35 +1967,14 @@ local function LootReceivedEvent(self, event, ...)
 	end
 	
 	if lootedItem then
-		if ShouldBeEvaluated(lootedItem) then
+		local fullItemInfo = GetFullItemInfo(lootedItem)
+		if ShouldBeEvaluated(fullItemInfo) then
 			if not string.find(looter, '-') then
 				looter = PLH_GetUnitNameWithRealm(looter)
 			end
-			PerformNotify(lootedItem, looter)
+			PerformNotify(fullItemInfo, looter)
 		end
 	end
-			
---[[			
-	local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9 = ...
-	local owner
-
-	local message = arg1			
-	local _, _, lootedItem = string.find(message, 'You receive loot: (|.+|r)')
-	if lootedItem then
-		if ShouldBeEvaluated(lootedItem) then
-			PerformNotify(lootedItem, PLH_GetUnitNameWithRealm('player'))
-		end
-	else
-		local _, _, owner, lootedItem = string.find(message, '(.+) receives loot: (|.+|r)')
-
-		if lootedItem then
-			if ShouldBeEvaluated(lootedItem) then
-				owner = PLH_GetUnitNameWithRealm(owner)
-				PerformNotify(lootedItem, owner)
-			end
-		end
-	end
-]]--	
 end	
 
 local function QueueItem(sender, item)
@@ -1758,7 +1988,28 @@ local function AskForRolls()
 		currentRollOwner = queuedRollOwners[numOfQueuedRollItems - 1]
 		currentRollItem = queuedRollItems[numOfQueuedRollItems - 1]
 		numOfQueuedRollItems = numOfQueuedRollItems - 1
-		PLH_SendBroadcast('Roll for ' .. currentRollItem .. ' from ' .. PLH_GetNameWithoutRealm(currentRollOwner), true)
+		
+		local fullItemInfo = GetFullItemInfo(currentRollItem)
+		local description = " ("
+		if fullItemInfo[FII_REAL_ILVL] ~= nil then
+			description = description .. fullItemInfo[FII_REAL_ILVL] .. " "
+		end
+		if fullItemInfo[FII_IS_RELIC] and fullItemInfo[FII_RELIC_TYPE] ~= nil then
+			description = description .. fullItemInfo[FII_RELIC_TYPE] .. " Relic"
+		else
+			if fullItemInfo[FII_CLASS] == LE_ITEM_CLASS_ARMOR then
+				if fullItemInfo[FII_SUB_CLASS] == LE_ITEM_ARMOR_GENERIC or fullItemInfo[FII_ITEM_EQUIP_LOC] == "INVTYPE_CLOAK" then
+					description = description .. _G[fullItemInfo[FII_ITEM_EQUIP_LOC]]
+				else
+					description = description .. fullItemInfo[FII_SUB_TYPE] .. " " .. _G[fullItemInfo[FII_ITEM_EQUIP_LOC]]
+				end
+			else
+				description = description .. fullItemInfo[FII_SUB_TYPE]
+			end
+			
+		end
+		description = description .. ")"
+		PLH_SendBroadcast('Roll for ' .. currentRollItem .. description .. ' from ' .. PLH_GetNameWithoutRealm(currentRollOwner), true)
 
 		local FiveSecondWarningDisplayed = false
 		local FifteenSecondWarningDisplayed = false
@@ -1850,14 +2101,13 @@ local function ProcessWhisper(message, sender)
 		if not string.find(sender, '-') then
 			sender = PLH_GetUnitNameWithRealm(sender)
 		end
-
 		-- if the person whispered 'trade [item]' or '[item] trade', then add the item to the array so we can process it
-		local _, _, whisperedItem = string.find(message, 'trade  (|.+|r)')
+		local _, _, whisperedItem = string.find(message, 'trade (|.+|r)')
 		if whisperedItem == nil then
-			_, _, whisperedItem = string.find(message, 'Trade  (|.+|r)')
+			_, _, whisperedItem = string.find(message, 'Trade (|.+|r)')
 		end
 		if whisperedItem == nil then
-			_, _, whisperedItem = string.find(message, 'TRADE  (|.+|r)')
+			_, _, whisperedItem = string.find(message, 'TRADE (|.+|r)')
 		end
 		if whisperedItem == nil then
 			_, _, whisperedItem = string.find(message, '(|.+|r) trade')
@@ -1871,7 +2121,6 @@ local function ProcessWhisper(message, sender)
 		if whisperedItem ~= nil then
 			whisperedItems[sender] = whisperedItem
 		end
-
 		message = string.upper(message)
 		if whisperedItem ~= nil or message == TRADE_MESSAGE or message == '\'' .. TRADE_MESSAGE .. '\'' then
 			if whisperedItems[sender] ~= nil then
@@ -1930,7 +2179,7 @@ local function RollReceivedEvent(self, event, ...)
 					PLH_SendBroadcast(name .. ' rolled ' .. minRoll .. ' - ' .. maxRoll .. '; roll ignored', false)
 				elseif currentRolls[name] ~= nil then
 					PLH_SendBroadcast(name .. ' rolled multiple times; only the first roll of ' .. currentRolls[name] .. ' counts', false)
-				elseif fullname ~= nil and not IsEquippableItemForCharacter(currentRollItem, fullname) then
+				elseif fullname ~= nil and not IsEquippableItemForCharacter(GetFullItemInfo(currentRollItem), fullname, false) then
 					PLH_SendBroadcast(name .. ' is not eligible for ' .. currentRollItem .. '; roll ignored', false)
 				else 
 					currentRolls[name] = roll
@@ -1971,7 +2220,7 @@ local function UpdateGroupInfoCache(unit)
 	local name = PLH_GetUnitNameWithRealm(unit)
 
 	if name ~= nil then
---		PLH_SendDebugMessage('   Updating GroupInfoCache for ' .. name .. ', inspectIndex = ' .. inspectIndex)
+		PLH_SendDebugMessage('   Updating GroupInfoCache for ' .. name .. ', inspectIndex = ' .. inspectIndex)
 		local characterDetails
 		if groupInfoCache[name] == nil then
 			characterDetails = {}
@@ -2059,7 +2308,7 @@ local function InspectGroupMember(characterName)
 			if UnitIsVisible(characterName) then
 				NotifyInspect(characterName)
 				notifyInspectName = characterName
-				PLH_wait(DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
+				PLH_wait2(DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
 				return true
 			else
 				PLH_SendDebugMessage('   ' .. characterName .. ' out of range for inspect')
@@ -2136,7 +2385,6 @@ function PLH_InspectNextGroupMember()
 --				if inspectCount >= MAX_INSPECTS_PER_CHARACTER then
 --					PLH_SendDebugMessage('Discontinuing inspections for ' .. fullname .. ' due to max inspect limit')
 --				end
-				
 				if inspectCount < MAX_INSPECTS_PER_CHARACTER and (numCachedItems < expectedItemCount or numCachedRelics < expectedRelicCount) then  -- if we've already cached 15 or more items, don't bother refreshing
 					queuedAnInspection = InspectGroupMember(characterName)
 				end
@@ -2157,8 +2405,8 @@ function PLH_InspectNextGroupMember()
 				-- the inspectIndex counter so the next element that gets picked up when we come back into PLH_InspectNextGroupMember
 				-- is the 2nd
 			inspectLoop = inspectLoop + 1
-			if queuedAnInspection then  -- if we just queued someone for inspection, wait before we start the new loop
-				PLH_wait(DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
+			if queuedAnInspection then
+				-- if we just queued someone for inspection, we don't need to do anything else to start the new loop since InspectGroupMember will call PLH_InspectNextGroupMember()
 			else  -- otherwise start the new loop immediately
 				PLH_InspectNextGroupMember()
 			end
@@ -2243,13 +2491,17 @@ local function Disable()
 end
 
 local function EnableOrDisable()
+	PLH_SendDebugMessage('Entering EnableOrDisable()')
 	local shouldBeEnabled = IsPersonalLoot()
 	if not isEnabled and shouldBeEnabled then	
+		PLH_SendDebugMessage('...Enabling PLH')
 		Enable()
 	elseif isEnabled and not shouldBeEnabled then
+		PLH_SendDebugMessage('...Disabling PLH')
 		Disable()
 	end
 	if isEnabled then 
+		PLH_SendDebugMessage('...Calling PopulateGroupInfoCache()')
 		PopulateGroupInfoCache()
 	end
 end
@@ -2358,6 +2610,8 @@ local function Initialize(self, event, addonName, ...)
 			rosterUpdatedEventFrame = CreateFrame('Frame')
 			rosterUpdatedEventFrame:SetScript('OnEvent', RosterUpdatedEvent)
 			rosterUpdatedEventFrame:RegisterEvent('GROUP_ROSTER_UPDATE')
+			rosterUpdatedEventFrame:RegisterEvent('ZONE_CHANGED_NEW_AREA')
+			rosterUpdatedEventFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
 			
 			groupMemberInfoChangedEventFrame = CreateFrame('Frame')
 			groupMemberInfoChangedEventFrame:SetScript('OnEvent', GroupMemberInfoChangedEvent)
@@ -2429,6 +2683,7 @@ function PLH_RefreshCache()
 	PopulateGroupInfoCache()
 end
 
+--[[
 function PLH_TestItems(characterIndex)
 	if characterIndex == nil then
 		PLH_SendDebugMessage('Usage: PLH_TestItems(characterIndex)')
@@ -2458,7 +2713,7 @@ function PLH_TestItems(characterIndex)
 						evalName = PLH_GetFullName(evalName, GetRealmName())
 					end
 				
-					isEquippable = IsEquippableItemForCharacter(item, evalName)
+					isEquippable = IsEquippableItemForCharacter(item, evalName, PLH_CURRENT_SPEC_ONLY)
 					PLH_SendDebugMessage('      For ' .. evalName ..
 						' equippable = ' .. tostring(isEquippable) ..
 						'; upgrade = ' .. tostring(isEquippable and IsAnUpgradeForCharacter(item, evalName))
@@ -2486,7 +2741,7 @@ function PLH_TestItems(characterIndex)
 						evalName = PLH_GetFullName(evalName, GetRealmName())
 					end
 				
-					isEquippable = IsEquippableItemForCharacter(relic, evalName)
+					isEquippable = IsEquippableItemForCharacter(relic, evalName, PLH_CURRENT_SPEC_ONLY)
 					PLH_SendDebugMessage('      For ' .. evalName ..
 						' equippable = ' .. tostring(isEquippable) ..
 						'; upgrade = ' .. tostring(isEquippable and IsAnUpgradeForCharacter(relic, evalName))
@@ -2496,153 +2751,18 @@ function PLH_TestItems(characterIndex)
 		end
 	end
 end
-
-function PLH_TestRelic(relic, item)
-	local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(relic)
-	print('name ', name)
-	print('class ', class)  -- 'Gem'
---	print('iLevel ', iLevel)  -- gives wrong value
-	print('subclass ', subclass)  -- 'Artifact Relic'
---	print('equipSlot ', equipSlot)  -- nil
-	print('real ilvl is ', PLH_GetRealILVL(relic))  -- correct
-	print('IsEquippableItem	is ', IsEquippableItem(relic))  -- false, so we'll need to change where we do this check!
-	print('IsArtifactRelicItem is ', IsArtifactRelicItem(relic))  -- true; can add this where we check isEquippable
-	
-	local gemname, gemlink = GetItemGem(item, 1)  -- 2nd arg is index; does return gem link from artifact
-	print('gemname ', gemname)
-	print('gemlink ', gemlink)
-	print('real ilvl is ', PLH_GetRealILVL(gemlink))  -- correct
-
-	local gemname, gemlink = GetItemGem(item, 2)  -- 2nd arg is index; does return gem link from artifact
-	print('gemname ', gemname)
-	print('gemlink ', gemlink)
-	print('real ilvl is ', PLH_GetRealILVL(gemlink))  -- correct
-
-	local gemname, gemlink = GetItemGem(item, 3)  -- 2nd arg is index; does return gem link from artifact
-	print('gemname ', gemname)
-	print('gemlink ', gemlink)
-	print('real ilvl is ', PLH_GetRealILVL(gemlink))  -- correct
-
---	local slotId, texture, checkRelic = GetInventorySlotInfo("MainHandSlot")
---	print('checkRelic1 ', checkRelic)  -- false
-	
---	local slotId, texture, checkRelic = GetInventorySlotInfo("RangedSlot")
---	print('checkRelic2 ', checkRelic)  -- invalid slot error
-
-	-- following method not found even though it's in API docs
---	local gem1, gem2, gem3 = GetInventoryItemGems(INVSLOT_RANGED)	--18
---	local gem1, gem2, gem3 = GetInventoryItemGems(18)	--18
---	print('gem1 ', gem1)
---	print('gem2 ', gem2)
---	print('gem3 ', gem3)
-end
-
-function PLH_Test(item)
-	print(IsEquippableItemForCharacter(item, "Madone-Zul'jin"))
-end
-
---[[
-*********************************************************
-Code from BlizzBugsSuck.lua to resolve known blizzard bug when opening interface options
-*********************************************************
-]]--
--- Fix InterfaceOptionsFrame_OpenToCategory not actually opening the category (and not even scrolling to it)
--- Confirmed still broken in 6.2.2.20490 (6.2.2a)
---[[
-local doNotRun = false
-
-do
-	local function get_panel_name(panel)
-		local tp = type(panel)
-		local cat = INTERFACEOPTIONS_ADDONCATEGORIES
-		if tp == "string" then
-			for i = 1, #cat do
-				local p = cat[i]
-				if p.name == panel then
-					if p.parent then
-						return get_panel_name(p.parent)
-					else
-						return panel
-					end
-				end
-			end
-		elseif tp == "table" then
-			for i = 1, #cat do
-				local p = cat[i]
-				if p == panel then
-					if p.parent then
-						return get_panel_name(p.parent)
-					else
-						return panel.name
-					end
-				end
-			end
-		end
-	end
-
-	local function InterfaceOptionsFrame_OpenToCategory_Fix(panel)
-		if doNotRun or InCombatLockdown() then return end
-		local panelName = get_panel_name(panel)
-		if not panelName then return end -- if its not part of our list return early
-		local noncollapsedHeaders = {}
-		local shownpanels = 0
-		local mypanel
-		local t = {}
-		local cat = INTERFACEOPTIONS_ADDONCATEGORIES
-		for i = 1, #cat do
-			local panel = cat[i]
-			if not panel.parent or noncollapsedHeaders[panel.parent] then
-				if panel.name == panelName then
-					panel.collapsed = true
-					t.element = panel
-					InterfaceOptionsListButton_ToggleSubCategories(t)
-					noncollapsedHeaders[panel.name] = true
-					mypanel = shownpanels + 1
-				end
-				if not panel.collapsed then
-					noncollapsedHeaders[panel.name] = true
-				end
-				shownpanels = shownpanels + 1
-			end
-		end
-		local Smin, Smax = InterfaceOptionsFrameAddOnsListScrollBar:GetMinMaxValues()
-		if shownpanels > 15 and Smin < Smax then
-			local val = (Smax/(shownpanels-15))*(mypanel-2)
-			InterfaceOptionsFrameAddOnsListScrollBar:SetValue(val)
-		end
-		doNotRun = true
-		InterfaceOptionsFrame_OpenToCategory(panel)
-		doNotRun = false
-	end
-
-	hooksecurefunc("InterfaceOptionsFrame_OpenToCategory", InterfaceOptionsFrame_OpenToCategory_Fix)
-end
-]]--
---[[
--- following only returns for some items (notably trinkets), and only returns spec IDs relevant to the player
-function PrintItemSpecInfo(item)
-	specs = {}
-	results = GetItemSpecInfo(item, specs)
-	print('results is ', results)
-	print('#results is ', #results)
-	print('#specs is ', #specs)
-	for i = 1, #results do
-		print(results[i])
-	end
-	for i = 1, #specs do
-		print(results[i])
-	end
-	for key, value in pairs(results) do
-		print('key = ', key)
-		print('value = ', value)
-	end
-	for key, value in pairs(specs) do
-		print('key2 = ', key)
-		print('value2 = ', value)
-	end
-end
 ]]--
 
 function PLH_TestHighlight(item)
 	HighlightRaidFrames("Madone-Zul'jin", item)
+end
+
+function PLH_Test(item)
+	print("IsEquippableItemForCharacter = ", IsEquippableItemForCharacter(GetFullItemInfo(item), "Madone-Zul'jin", PLH_CURRENT_SPEC_ONLY))
+	print("IsAnUpgradeForCharacter = ", IsAnUpgradeForCharacter(GetFullItemInfo(item), "Madone-Zul'jin"))
+	print("IsAnUpgradeForAnyCharacter = ", IsAnUpgradeForAnyCharacter(GetFullItemInfo(item)))
+
+	print("IsEquippableItemForCharacter = ", IsEquippableItemForCharacter(GetFullItemInfo(item), "Madknight-Zul'jin", PLH_CURRENT_SPEC_ONLY))
+	print("IsAnUpgradeForCharacter = ", IsAnUpgradeForCharacter(GetFullItemInfo(item), "Madknight-Zul'jin"))
+
 end

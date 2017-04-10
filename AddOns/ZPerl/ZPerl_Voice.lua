@@ -6,7 +6,7 @@ CreateFrame("Frame", "XPerl_Voice")
 local voice = XPerl_Voice
 
 local conf
-XPerl_RequestConfig(function(new) conf = new voice:RepositionAll() end, "$Revision: 925 $")
+XPerl_RequestConfig(function(new) conf = new voice:RepositionAll() end, "$Revision: 1027 $")
 
 voice.frames = {}
 voice.permenantUnits = {}
@@ -95,7 +95,7 @@ end
 
 -- voice:Updatevoice
 function voice:UpdateVoice(frame, onoff)
-	if (IsVoiceChatEnabled()) then
+	--[[if (IsVoiceChatEnabled()) then
 		if (onoff == nil) then
 			if (frame.partyid and GetVoiceStatus(frame.partyid)) then
 				onoff = UnitIsTalking(frame.partyid)
@@ -103,7 +103,7 @@ function voice:UpdateVoice(frame, onoff)
 		end
 	else
 		onoff = nil
-	end
+	end]]
 
 	if (onoff) then
 		frame.voiceButton.On:Show()

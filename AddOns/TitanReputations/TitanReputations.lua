@@ -22,11 +22,21 @@ local function GetValueAndMaximum(standingId, barValue, bottomValue, topValue, f
 	local current = barValue - bottomValue
 	local maximun = topValue - bottomValue
 	local color = "|cFF00FF00"
-	local stantingText = " (" .. ((SEX == 2 and _G["FACTION_STANDING_LABEL" .. standingId]) or _G["FACTION_STANDING_LABEL" .. standingId .. "_FEMALE"]) .. ")"
+	local standingText = " (" .. ((SEX == 2 and _G["FACTION_STANDING_LABEL" .. standingId]) or _G["FACTION_STANDING_LABEL" .. standingId .. "_FEMALE"]) .. ")"
+
+	if (C_Reputation.IsFactionParagon(factionId)) then
+		color = "|cFF00FFFF"
+
+		local currentValue, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionId);
+
+		if hasRewardPending then standingText = standingText .. "*" end
+
+		return currentValue, threshold, color, standingText, hasRewardPending
+	end
 
 	local friendID, friendRep, friendMaxRep, friendName, friendText, friendTexture, friendTextLevel, friendThreshold, nextFriendThreshold = GetFriendshipReputation(factionId)
 	if (friendID) then
-		stantingText = " (" .. friendTextLevel .. ")"
+		standingText = " (" .. friendTextLevel .. ")"
 
 		if (nextFriendThreshold) then
 			maximun, current = nextFriendThreshold - friendThreshold, friendRep - friendThreshold
@@ -53,7 +63,7 @@ local function GetValueAndMaximum(standingId, barValue, bottomValue, topValue, f
 		end
 	end
 
-	return current, maximun, color, stantingText
+	return current, maximun, color, standingText
 end
 
 local function GetButtonText(self, id)
@@ -62,7 +72,7 @@ local function GetButtonText(self, id)
 	if not name then
 		return "", ""
 	end
-	local value, max, color = GetValueAndMaximum(standingID, barValue, bottomValue, topValue, factionId)
+	local value, max, color, _, hasRewardPending = GetValueAndMaximum(standingID, barValue, bottomValue, topValue, factionId)
 
 	local text = "" .. color
 
@@ -82,6 +92,10 @@ local function GetButtonText(self, id)
 			text = text .. " (" .. percent .. "%)"
 		else
 			text = text .. percent .. "%"
+		end
+
+		if hasRewardPending then
+			text = "*" + text
 		end
 	end
 
@@ -109,10 +123,11 @@ local function IsMaxed(factionId, standingId)
 end
 
 local function GetTooltipText(self, id)
-		local text = ""
+	local text = ""
 
 	local hideNeutral = TitanGetVar(id, "HideNeutral")
 	local showHeaders = TitanGetVar(id, "ShowHeaders")
+	local alwaysShowParagon = TitanGetVar(id, "AlwaysShowParagon")
 
 	local numFactions = GetNumFactions()
 
@@ -122,7 +137,7 @@ local function GetTooltipText(self, id)
 	local childText = ""
 
 	for factionIndex = 1, numFactions do
-		local name, _, standingId, bottomValue, topValue, earnedValue, atWarWith, _, isHeader, _, hasRep, isWatched, _, factionId = GetFactionInfo(factionIndex)
+		local name, _, standingId, bottomValue, topValue, earnedValue, atWarWith, _, isHeader, _, hasRep, isWatched, _, factionId, hasBonusRepGain, canBeLFGBonus = GetFactionInfo(factionIndex)
 
 		if name then
 			if isWatched then
@@ -159,6 +174,10 @@ local function GetTooltipText(self, id)
 					show = false
 				elseif hideExalted and IsMaxed(factionId, standingId) then
 					show = false
+				end
+
+				if (alwaysShowParagon and C_Reputation.IsFactionParagon(factionId)) then
+					show = true
 				end
 
 				if show then
@@ -207,6 +226,7 @@ local menus = {
 	{ type = "toggle", text = L["ShowHeaders"], var = "ShowHeaders", def = true, keepShown = true },
 	{ type = "toggle", text = L["HideMax"], var = "HideMax", def = false, keepShown = true },
 	{ type = "toggle", text = L["HideExalted"], var = "HideExalted", def = false, keepShown = true },
+	{ type = "toggle", text = L["AlwaysShowParagon"], var = "AlwaysShowParagon", def = true, keepShown = true },
 	{ type = "space" },
 	{ type = "rightSideToggle" }
 }

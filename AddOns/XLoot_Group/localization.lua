@@ -36,6 +36,7 @@ local locales = {
 }
 
 -- Automatically inserted translations
+locales.ptBR["alert_anchor"] = "Aparecer Saques"
 locales.deDE["alert_anchor"] = "Beute Popups"
 locales.deDE["anchor"] = "Gruppenwürfe"
 locales.deDE["undecided"] = "Unentschlossen"

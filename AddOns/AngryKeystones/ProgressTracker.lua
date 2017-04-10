@@ -94,7 +94,7 @@ local function CheckTime(...)
 		local timerID = select(i, ...)
 		local _, elapsedTime, type = GetWorldElapsedTime(timerID)
 		if type == LE_WORLD_ELAPSED_TIMER_TYPE_CHALLENGE_MODE then
-			local _, _, _, _, _, _, _, mapID = GetInstanceInfo()
+			local mapID = C_ChallengeMode.GetActiveChallengeMapID()
 			if mapID then
 				StartTime()
 				return
@@ -219,7 +219,7 @@ function Mod:Startup()
 		AngryKeystones_Data = { progress = AngryKeystones_Data }
 	end
 	if not AngryKeystones_Data.state then AngryKeystones_Data.state = {} end
-	local mapID = select(8, GetInstanceInfo())
+	local mapID = C_ChallengeMode.GetActiveChallengeMapID()
 	if select(10, C_Scenario.GetInfo()) == LE_SCENARIO_TYPE_CHALLENGE_MODE and mapID and mapID == AngryKeystones_Data.state.mapID and AngryKeystones_Data.state.playerDeaths then
 		Mod.playerDeaths = AngryKeystones_Data.state.playerDeaths
 	else

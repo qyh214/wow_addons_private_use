@@ -29,6 +29,11 @@ function Addon:OnInitialize()
     self:RegisterEvent('COMPANION_LEARNED', function()
         wipe(self.mountCache)
     end)
+
+    local lfgTooManyDialog = _G.StaticPopupDialogs['LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS']
+    if lfgTooManyDialog and lfgTooManyDialog.text and strlenutf8(lfgTooManyDialog.text) == #lfgTooManyDialog.text then
+        lfgTooManyDialog.text = L['你的队伍成员已经达到当前活动的人数上限，活动已经自动解散。']
+    end
 end
 
 function Addon:OnEnable()
@@ -85,6 +90,9 @@ function Addon:ShowNewVersion(url, changeLog)
 end
 
 function Addon:FindMount(id)
+    if not id then
+        return
+    end
     return self.mountCache[id]
 end
 

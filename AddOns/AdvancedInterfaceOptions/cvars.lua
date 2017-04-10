@@ -1,7 +1,7 @@
 local addonName, addon = ...
 local _G = _G
 
--- GLOBALS: UIDropDownMenu_AddButton
+-- luacheck: globals UIDropDownMenu_AddButton
 
 addon.combatProtected = {
 	-- List of cvars that can't be modified in combat
@@ -73,7 +73,7 @@ addon.combatProtected = {
 	["uiScaleMultiplier"] = true,
 	["UnitNameGuildTitle"] = true,
 	["useCompactPartyFrames"] = true,
-	["useUiScale"] = true,	
+	["useUiScale"] = true,
 }
 
 addon.hiddenOptions = {
@@ -152,6 +152,9 @@ addon.hiddenOptions = {
 	["nameplatePersonalHideDelaySeconds"] = { prettyName = "", description = "The delay to wait before hiding the personal nameplate", type = "boolean" },
 	["ShowNamePlateLoseAggroFlash"] = { prettyName = nil, description = "When enabled, if you are a tank role and lose aggro, the nameplate with briefly flash.", type = "boolean" },
 	["ShowClassColorInNameplate"] = { prettyName = SHOW_CLASS_COLOR_IN_V_KEY, description = OPTION_TOOLTIP_SHOW_CLASS_COLOR_IN_V_KEY, type = "boolean" },
+	["nameplateTargetRadialPosition"] = { prettyName = nil, description = "When target is off screen, position its nameplate radially around sides and bottom", type = "number"},
+	["nameplateOccludedAlphaMult"] = { prettyName = nil, description = "Alpha multiplier of nameplates for occluded targets", type = "number"},
+
 
 	["reverseCleanupBags"] = { prettyName = REVERSE_CLEAN_UP_BAGS_TEXT, description = OPTION_TOOLTIP_REVERSE_CLEAN_UP_BAGS, type = "boolean" },
 	["lootLeftmostBag"] = { prettyName = REVERSE_NEW_LOOT_TEXT, description = OPTION_TOOLTIP_REVERSE_NEW_LOOT, type = "boolean" },
@@ -202,14 +205,14 @@ addon.hiddenOptions = {
 	["wholeChatWindowClickable"] = { prettyName = nil, description = OPTION_TOOLTIP_CHAT_WHOLE_WINDOW_CLICKABLE, type = "boolean" },
 	["useEnglishAudio"] = { prettyName = nil, description = OPTION_TOOLTIP_USE_ENGLISH_AUDIO, type = "boolean" },
 	["ChatSoundVolume"] = { prettyName = nil, description = OPTION_TOOLTIP_, type = "number" },
-	["reducedLagTolerance"] = { prettyName = "Custom Lag Tolerance", description = OPTION_TOOLTIP_REDUCED_LAG_TOLERANCE, type = "boolean" },
+	--["reducedLagTolerance"] = { prettyName = "Custom Lag Tolerance", description = OPTION_TOOLTIP_REDUCED_LAG_TOLERANCE, type = "boolean" },
 	["EnableMicrophone"] = { prettyName = nil, description = OPTION_TOOLTIP_ENABLE_MICROPHONE, type = "boolean" },
 	["autoOpenLootHistory"] = { prettyName = nil, description = OPTION_TOOLTIP_AUTO_OPEN_LOOT_HISTORY, type = "boolean" },
 	["showVKeyCastbarOnlyOnTarget"] = { prettyName = nil, description = OPTION_TOOLTIP_SHOW_TARGET_CASTBAR_IN_V_KEY_ONLY_ON_TARGET, type = "boolean" },
 	["displaySpellActivationOverlays"] = { prettyName = nil, description = OPTION_TOOLTIP_DISPLAY_SPELL_ALERTS, type = "boolean" },
 	["hdPlayerModels"] = { prettyName = nil, description = OPTION_TOOLTIP_SHOW_HD_MODELS, type = "boolean" },
 	["autoLootKey"] = { prettyName = nil, description = OPTION_TOOLTIP_AUTO_LOOT_KEY, type = "boolean" }, -- TODO TYPE
-	["MaxSpellStartRecoveryOffset"] = { prettyName = LAG_TOLERANCE, description = "Determines how far ahead of the \'end of a spell\' start-recovery spell system can be, before allowing spell request to be sent to the server. Ie this controls the built-in lag for the ability queuing system. Ideally, you\'ll want to set this to your in-game latency. Note: For this cvar to work, reducedLagTolerance must be enabled.", type = "number" },
+	["SpellQueueWindow"] = { prettyName = LAG_TOLERANCE, description = "Determines how far ahead of the \'end of a spell\' start-recovery spell system can be, before allowing spell request to be sent to the server. Ie this controls the built-in lag for the ability queuing system. Ideally, you\'ll want to set this to your in-game latency.", type = "number" },
 	["advancedCombatLogging"] = { prettyName = nil, description = OPTION_TOOLTIP_ADVANCED_COMBAT_LOGGING, type = "boolean" },
 	["disableServerNagle"] = { prettyName = nil, description = OPTION_TOOLTIP_OPTIMIZE_NETWORK_SPEED, type = "boolean" },
 	-- Camera
@@ -323,16 +326,17 @@ addon.hiddenOptions = {
 	["noBuffDebuffFilterOnTarget"] = { prettyName = "No Debuff Filter on Target", description = "Do not filter buffs or debuffs at all on targets", type = "boolean" },
 	["showHonorAsExperience"] = { prettyName = nil, description = "Show the honor bar as a regular experience bar in place of rep", type = "boolean" },
 	-- Tab-Targetting
-	["TargetNearestUseOld"] = { prettyName = nil, description = "Use pre-7.0 'nearest target' functionality", type = "boolean" },
+	["TargetNearestUseNew"] = { prettyName = nil, description = "Use 7.2 'nearest target' functionality", type = "boolean" },
 	--["TargetPriorityAllowAnyOnScreen"] = { prettyName = nil, description = "If set, and no 100% correct target is available, allow selecting any valid in-range target (2 = also out-of-range)", type = "boolean" },
-	--["TargetPriorityCombatLock"] = { prettyName = nil, description = "1=Lock to in-combat targets when starting from an in-combat target. 2=Further restrict to in-combat with player.", type = "boolean" },
-	--["TargetPriorityCombatLockHighlight"] = { prettyName = nil, description = "1=Lock to in-combat targets when starting from an in-combat target. 2=Further restrict to in-combat with player. (while doing hold-to-target)", type = "boolean" },
+	["TargetPriorityCombatLock"] = { prettyName = nil, description = "1=Lock to in-combat targets when starting from an in-combat target. 2=Further restrict to in-combat with player.", type = "boolean" },
+	["TargetPriorityCombatLockHighlight"] = { prettyName = nil, description = "1=Lock to in-combat targets when starting from an in-combat target. 2=Further restrict to in-combat with player. (while doing hold-to-target)", type = "boolean" },
 	--["TargetPriorityHoldHighlightDelay"] = { prettyName = nil, description = "Delay in Milliseconds before priority target highlight starts when holding the button", type = "number" },
 	--["TargetPriorityIncludeBehind"] = { prettyName = nil, description = "If set, include target's behind the player in priority target selection", type = "boolean" },
-	--["TargetPriorityPvp"] = { prettyName = nil, description = "When in pvp, give higher priority to players and important pvp targets (2 = all pvp targets, 3 = players only)", type = "boolean" },
+	["TargetPriorityPvp"] = { prettyName = nil, description = "When in pvp, give higher priority to players and important pvp targets (2 = all pvp targets, 3 = players only)", type = "boolean" },
 	--["TargetPriorityPvpLock"] = { prettyName = nil, description = "Lock to important pvp targets when starting from a pvp target.", type = "boolean" },
 	--["TargetPriorityPvpLockHighlight"] = { prettyName = nil, description = "Lock to players when starting from a player target in pvp. (while doing hold-to-target)", type = "boolean" },
 	--["TargetPriorityValueBank"] = { prettyName = nil, description = "Selects the scoring values bank for calculating target priority order", type = "boolean" },
+	["TargetPriorityCombatLockContextualRelaxation"] = { prettyName = nil, description = "", type = "number" },
 
 	["unitClutter"] = { prettyName = nil, description = "Enables/Disables unit clutter", type = "boolean" },
 	["unitClutterInstancesOnly"] = { prettyName = nil, description = "Whether or not to use unit clutter in instances only (0 or 1)", type = "boolean" },
@@ -385,7 +389,7 @@ addon.hiddenOptions = {
 	["targetStatusText"] = { prettyName = STATUS_TEXT_TARGET, description = OPTION_TOOLTIP_STATUS_TEXT_TARGET, type = "boolean"}, -- removed
 	["alternateResourceText"] = { prettyName = ALTERNATE_RESOURCE_TEXT, description = OPTION_TOOLTIP_ALTERNATE_RESOURCE, type = "boolean"}, -- removed
 	["xpBarText"] = { prettyName = XP_BAR_TEXT, description = OPTION_TOOLTIP_XP_BAR, type = "boolean" },
-	
+
 	["violenceLevel"] = { prettyName = "Violence Level", description = "Sets the violence level of the game", type = "number" },
 	["ffxGlow"] = { prettyName = "FFX Glow", description = "full screen glow effect", type = "boolean" },
 	["releaseUITextures"] = { prettyName = "Release UI Textures", description = "Release Hidden UI Textures by default", type = "boolean" },
@@ -402,8 +406,8 @@ addon.hiddenOptions = {
 	["cursorsizepreferred"] = { prettyName = "Cursor Size", description = "0 = 32x32, 1 = 48x48, 2 = 64x64, -1 = autodetect", type = "number" },
 	["ffxDeath"] = { prettyName = "FFX Death", description = "Enables full screen death effect", type = "boolean" },
 	["WorldTextScale"] = { prettyName = "World Text Scale", description = "The scale of in-world damage numbers, xp gain, artifact gains, etc", type = "number" },
-	
-	
+
+
 	-- 7.1.5 dump (1/16/17)
 	["BrowserNavigateLog"] = { description = "Enables Logging of browser navigation requests (Requires /reload)" },
 	--["CACHE-WGOB-GameObjectsHotfixCount"] = {},
@@ -984,6 +988,8 @@ addon.hiddenOptions = {
 	["worldQuestFilterGold"] = { description = "If enabled, world quests with gold rewards will be shown on the map" },
 	["worldQuestFilterOrderResources"] = { description = "If enabled, world quests with order resource rewards will be shown on the map" },
 	["worldQuestFilterProfessionMaterials"] = { description = "If enabled, world quests with profession material rewards will be shown on the map" },
+	["CastTimingEnhancements"] = { prettyName = nil, description = "", type = "boolean" },
+	["autoAcceptQuickJoinRequests"] = { prettyName = "Auto-accept quick join requests", description = "", type = "boolean" },
 }
 
 -- Allow case-insensitive lookup of cvars in our table (relatively slow, so match the case when possible)

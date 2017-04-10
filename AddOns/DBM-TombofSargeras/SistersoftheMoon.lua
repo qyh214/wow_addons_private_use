@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1903, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16040 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16092 $"):sub(12, -3))
 mod:SetCreatureID(118523, 118374, 118518)--118523 Huntress kasparian, 118374 Captain Yathae Moonstrike, 118518 Prestess Lunaspyre
 mod:SetEncounterID(2050)
 mod:SetZone()
@@ -57,7 +57,7 @@ local specWarnGlaiveStorm			= mod:NewSpecialWarningDodge(236480, nil, nil, nil, 
 local specWarnTwilightGlaiveOther	= mod:NewSpecialWarningTarget(237561, nil, nil, nil, 2, 2)
 local specWarnTwilightGlaive		= mod:NewSpecialWarningMoveAway(237561, nil, nil, nil, 2, 2)
 local yellTwilightGlaive			= mod:NewYell(237561)
-local specWarnDiscorporate			= mod:NewSpecialWarningMoveTo(236550, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you:format(236550), nil, 1, 7)
+local specWarnDiscorporate			= mod:NewSpecialWarningMoveTo(236550, nil, nil, nil, 1, 7)
 local specWarnDiscorporateSwap		= mod:NewSpecialWarningTaunt(236550, nil, nil, nil, 1, 2)
 --Captain Yathae Moonstrike
 local specWarnCallMoontalon			= mod:NewSpecialWarningSwitch(236694, "-Healer", nil, nil, 1, 2)

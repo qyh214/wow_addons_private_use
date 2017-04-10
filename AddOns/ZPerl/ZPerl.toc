@@ -1,5 +1,5 @@
-## Interface: 70100
-## Version: 5.1.8
+## Interface: 70200
+## Version: 5.2.2
 ## Author: Resike
 ## Title: Z-Perl UnitFrames
 ## Title-itIT: Z-Perl UnitFrames

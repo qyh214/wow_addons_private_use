@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NLTrash", "DBM-Party-Legion", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15403 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16091 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -12,7 +12,7 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 200154 183407"
 )
 
-local warnBurningHatred			= mod:NewTargetAnnounce(182879, 3)
+local warnBurningHatred			= mod:NewTargetAnnounce(200154, 3)
 
 local specWarnBurningHatred		= mod:NewSpecialWarningYou(200154, nil, nil, nil, 1, 2)
 local specWarnAcidSplatter		= mod:NewSpecialWarningMove(183407, nil, nil, nil, 1, 2)

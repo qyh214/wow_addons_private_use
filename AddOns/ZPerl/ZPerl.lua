@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1026 $")
-XPerl_SetModuleRevision("$Revision: 1026 $")
+end, "$Revision: 1030 $")
+XPerl_SetModuleRevision("$Revision: 1030 $")
 
 -- Upvalus
 local _G = _G
@@ -660,7 +660,7 @@ do
 		end
 
 		if (media) then
-			for k,v in pairs(shortlist) do
+			for k, v in pairs(shortlist) do
 				media:Register("statusbar", v[1], v[2])
 			end
 
@@ -676,9 +676,9 @@ do
 			end
 
 			if (media) then
-				list = {}
+				list = { }
 				local smlBars = media:List("statusbar")
-				for k,v in pairs(smlBars) do
+				for k, v in pairs(smlBars) do
 					tinsert(list, {v, media:Fetch("statusbar", v)})
 				end
 			else

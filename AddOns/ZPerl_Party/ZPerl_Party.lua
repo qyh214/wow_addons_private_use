@@ -90,7 +90,9 @@ function XPerl_Party_Events_OnLoad(self)
 	XPerl_RegisterOptionChanger(XPerl_Party_Set_Bits)
 	XPerl_Highlight:Register(XPerl_Party_HighlightCallback, self)
 
-	XPerl_Party_Events_OnLoad = nil
+	XPerl_Party_Set_Bits()
+
+	--XPerl_Party_Events_OnLoad = nil
 end
 
 -- XPerl_Party_HighlightCallback

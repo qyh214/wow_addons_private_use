@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1654, "DBM-Party-Legion", 2, 762)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15190 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16091 $"):sub(12, -3))
 mod:SetCreatureID(96512)
 mod:SetEncounterID(1836)
 mod:SetZone()
@@ -30,8 +30,6 @@ local timerNightfallCD			= mod:NewCDTimer(14.5, 198401, nil, nil, nil, 3)
 
 local voiceNightFall			= mod:NewVoice(198408)--runaway
 local voiceRampage				= mod:NewVoice(198379, "Tank")--defensive
-
---mod:AddRangeFrameOption(5, 153396)
 
 function mod:LeapTarget(targetname, uId)
 	if not targetname then

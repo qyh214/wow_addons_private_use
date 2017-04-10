@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1486, "DBM-Party-Legion", 4, 721)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15186 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16092 $"):sub(12, -3))
 mod:SetCreatureID(95833)
 mod:SetEncounterID(1806)
 mod:SetZone()
@@ -25,7 +25,7 @@ local warnPhase2					= mod:NewPhaseAnnounce(2, 2)
 
 local specWarnShieldOfLight			= mod:NewSpecialWarningDefensive(192018, "Tank", nil, nil, 3, 2)--Journal lies, this is NOT dodgable
 local specWarnSanctify				= mod:NewSpecialWarningDodge(192158, nil, nil, nil, 2, 5)
-local specWarnEyeofStorm			= mod:NewSpecialWarningMoveTo(200901, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(200901), nil, 2, 2)
+local specWarnEyeofStorm			= mod:NewSpecialWarningMoveTo(200901, nil, nil, nil, 2, 2)
 local specWarnExpelLight			= mod:NewSpecialWarningMoveAway(192048, nil, nil, nil, 2, 2)
 local yellExpelLight				= mod:NewYell(192048)
 local specWarnSearingLight			= mod:NewSpecialWarningInterrupt(192288, "HasInterrupt", nil, nil, 1, 2)
@@ -44,7 +44,7 @@ local voiceExpelLight				= mod:NewVoice(192048)--runout
 local voiceSearingLight				= mod:NewVoice(192288, "HasInterrupt")--kickcast
 local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 
-mod:AddRangeFrameOption(8, 153396)
+mod:AddRangeFrameOption(8, 192048)
 
 local eyeShortName = GetSpellInfo(91320)--Inner Eye
 mod.vb.phase = 1

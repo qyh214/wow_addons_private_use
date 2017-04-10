@@ -1,4 +1,4 @@
-## Interface: 70100
+## Interface: 70200
 ## Title: Skada
 ## Notes: Modular damage meter.
 ## Notes-koKR: 데미지 미터 모듈입니다.
@@ -7,7 +7,7 @@
 ## Notes-frFR: Un damage meter.
 ## Notes-zhCN: 模块化伤害统计。
 ## Author: Zarnivoop
-## Version: 1.6.5
+## Version: 1.6.6
 ## SavedVariables: SkadaDB
 ## SavedVariablesPerCharacter: SkadaPerCharDB
 

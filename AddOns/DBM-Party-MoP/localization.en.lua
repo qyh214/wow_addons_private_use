@@ -25,6 +25,10 @@ L:SetOptionLocalization({
 	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
+L:SetMiscLocalization({
+	Event1	= "Ah, it is not yet over. From what I see, we face the trial of the yaungol. Let me shed some light..."
+})
+
 -----------------------
 -- Liu Flameheart --
 -----------------------

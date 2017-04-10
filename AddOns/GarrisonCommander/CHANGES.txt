@@ -1,37 +1,22 @@
-tag f43e40c08d5b394030e49eb493ca8f6f9634d31b 2.18.0
+tag 2aceee4450b4e18a16a168c563e078e700089b31 2.18.2
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Tue Mar 14 15:28:58 2017 +0100
+Date:	Wed Mar 29 09:42:35 2017 +0200
 
-Feature: Improved autologout management. Now you are logged out on
-timeout ONLY if you started mission control via ctrl-click on table.
-Popup message should be informative
-Feature: Added help button to Shipyard and revamped help to show release
-notes and addon description
-Feature: possibly reduced memory
-Fix from last beta:
-Lua error when opening mission control
+Fix: Message: Interface\AddOns\GarrisonCommander\FollowerCache.lua:25:
+attempt to perform arithmetic on local
+'GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY' (a table value)
 
-commit 96e5cf4d4cd90516103121a1cb344bfc667f1bc4
+commit 3ffa3dca0243d6fa7a13de3b67a5dcfb308392ea
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Fri Mar 10 23:07:21 2017 +0100
+Date:   Wed Mar 29 09:38:48 2017 +0200
 
-    OrderHallCommander advertised
+    Rel notes
 
-commit 21f74fde42304ca0e186fc645e53cc29a48cd7a7
+commit 4ddbc2483c4e6e42ce83d4dd1404ebc476a5443c
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Fri Mar 10 20:05:13 2017 +0100
+Date:   Wed Mar 29 09:29:27 2017 +0200
 
-    Optimized sort
-
-commit c497e35bce895293d24cb0b37284b7e80d4632c7
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Fri Mar 10 19:49:33 2017 +0100
-
-    Removed debug
-
-commit 95e8d51f02d7b734be5dfe6755b63269785b7e77
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Wed Mar 8 13:38:23 2017 +0100
-
-    Fix: del() was missing paramter
+    Blizzard changed GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY to an array
+    
+    Fix: Message: Interface\AddOns\GarrisonCommander\FollowerCache.lua:25: attempt to perform arithmetic on local 'GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY' (a table value)
 

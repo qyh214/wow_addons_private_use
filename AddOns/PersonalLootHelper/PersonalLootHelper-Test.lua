@@ -108,8 +108,7 @@ function PLH_PrintConstants()
 	print('   PLH_DEBUG is ', PLH_DEBUG)
 end
 
-local function TestGetNames()
-
+function PLH_TestGetNames()
 	local limit = 3
 	local names
 	
@@ -117,25 +116,46 @@ local function TestGetNames()
 	print('0a - ' .. GetNames(names))
 	print('0b - ' .. GetNames(names, limit))
 	
-	names = {'Madone{655}'}
+	names = {'Madone {655}'}
 	print('1a - ' .. GetNames(names))
 	print('1b - ' .. GetNames(names, limit))
 	
-	names = {'Madone{655}', 'Madtwo{655}'}
+	names = {'Madone {655}', 'Madtwo {655}'}
 	print('2a - ' .. GetNames(names))
 	print('2b - ' .. GetNames(names, limit))
 
-	names = {'Madone{655}', 'Madtwo{655}', 'Madthree{655}'}
+	names = {'Madone {655}', 'Madtwo {655}', 'Madthree {655}'}
 	print('3a - ' .. GetNames(names))
 	print('3b - ' .. GetNames(names, limit))
 
-	names = {'Madone{655}', 'Madtwo{655}', 'Madthree{655}', 'Madfour{655}'}
+	names = {'Madone {655}', 'Madtwo {655}', 'Madthree {655}', 'Madfour {655}'}
 	print('4a - ' .. GetNames(names))
 	print('4b - ' .. GetNames(names, limit))
 
-	names = {'Madone{655}', 'Madtwo{655}', 'Madthree{655}', 'Madfour{655}', 'Madfive{655}'}
+	names = {'Madone {655}', 'Madtwo {654}', 'Madthree {656}', 'Madfour {657}', 'Madfive {653}'}
 	print('5a - ' .. GetNames(names))
 	print('5b - ' .. GetNames(names, limit))
+
+	names = {'Madone {651}', 'Madtwo {652}', 'Madthree {653}', 'Madfour {654}', 'Madfive {655}'}
+	print('6a - ' .. GetNames(names))
+	print('6b - ' .. GetNames(names, limit))
+
+	names = {'Madone {655}', 'Madtwo {654}', 'Madthree {653}', 'Madfour {652}', 'Madfive {651}'}
+	print('7a - ' .. GetNames(names))
+	print('7b - ' .. GetNames(names, limit))
+
+	names = {'Madone {655}', 'Madtwo {654}', 'Madthree {654}', 'Madfour {652}', 'Madfive {651}'}
+	print('8a - ' .. GetNames(names))
+	print('8b - ' .. GetNames(names, limit))
+
+	names = {'Madone {655}', 'Madtwo {655}', 'Madthree {655}', 'Madfour {655}', 'Madfive {655}'}
+	print('9a - ' .. GetNames(names))
+	print('9b - ' .. GetNames(names, limit))
+
+	names = {'Madone', 'Madtwo', 'Madthree', 'Madfour', 'Madfive'}
+	print('10a - ' .. GetNames(names))
+	print('10b - ' .. GetNames(names, limit))
+
 end
 
 -- THE FOLLOWING ACCESSES VARIABLES FROM CORE FILE; MUST COPY INTO CORE FILE TO USE

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1731, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16022 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16089 $"):sub(12, -3))
 mod:SetCreatureID(104288)
 mod:SetEncounterID(1867)
 mod:SetZone()
@@ -144,7 +144,7 @@ function mod:OnCombatEnd()
 		DBM.InfoFrame:Hide()
 	end
 	if self.Options.NPAuraOnCleansing then
-		DBM.Nameplate:Hide(true, nil, nil, nil, true, false, true)
+		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
 	end
 end
 

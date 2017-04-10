@@ -12,13 +12,13 @@ local strsplit=strsplit
 local select=select
 local GetCurrencyInfo=GetCurrencyInfo
 local generated
-local GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY=GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY
 local GARRISON_CURRENCY=GARRISON_CURRENCY
 local GARRISON_SHIP_OIL_CURRENCY=GARRISON_SHIP_OIL_CURRENCY
 local GARRISON_FOLLOWER_MAX_LEVEL=GARRISON_FOLLOWER_MAX_LEVEL
 local LE_FOLLOWER_TYPE_GARRISON_6_0=LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=LE_FOLLOWER_TYPE_SHIPYARD_6_2
 local LE_FOLLOWER_TYPE_GARRISON_7_0=LE_FOLLOWER_TYPE_GARRISON_7_0
+local GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY=GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY[LE_FOLLOWER_TYPE_GARRISON_7_0]
 local module=addon:NewSubClass('OrderHall') --#Module
 local GameTooltip=GameTooltip
 local GCS
@@ -307,8 +307,8 @@ print("Adding Menu",GCS.Menu,GHF.MissionTab:IsVisible(),GHF.FollowerTab:IsVisibl
 	frame:SetFrameStrata(GCS:GetFrameStrata())
 	frame:SetFrameLevel(GCS:GetFrameLevel()+2)
 	local label=AceGUI:Create("Label")
-	label:SetText(L["Support for Order Hall missions is being moved to OrderHallCommander.\nPlease install and update it"])
-	label:SetColor(C.Orange())
+	label:SetText(L["Support for Order Hall missions has been moved to OrderHallCommander.\nPlease install it NOW! (no need to remove GarrisoCommander)"])
+	label:SetColor(C.Red())
 	label:SetWidth(380)
 	menu:AddChild(label)
 	menu:ClearAllPoints()

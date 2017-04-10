@@ -330,6 +330,8 @@ local function settingspart1(self, event)
 	XPerl_UpgradeSettings = nil
 
 	XPerl_pcall(XPerl_ValidateSettings)
+
+	XPerl_RegisterSMBarTextures()
 end
 	
 

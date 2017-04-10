@@ -161,7 +161,7 @@ GameTooltip:SetScript("OnTooltipSetItem",
 				-- Check additional tint criteria
 				local k=GetAchievementCriteriaInfo
 				local x,b; local a=0
-				for i=1,12 do 
+				for i=1,14 do 
 					_,_,_,x,b = k(11152,i)
 					a=a+x
 				end

@@ -1,6 +1,8 @@
 local ADDON, Addon = ...
 local Mod = Addon:NewModule('Splits')
 
+local challengeMapID
+
 local function GetElapsedTime()
 	for i = 1, select("#", GetWorldElapsedTimers()) do
 		local timerID = select(i, GetWorldElapsedTimers())
@@ -54,8 +56,12 @@ local function UpdateSplits(self, numCriteria, objectiveBlock, addObjectives)
 		else
 			local line = objectiveBlock.lines[criteriaIndex]
 			if line then
+				local old_height = line:GetHeight()
 				local height = SCENARIO_TRACKER_MODULE:SetStringText(line.Text, criteriaString, nil, completed and OBJECTIVE_TRACKER_COLOR["Complete"], objectiveBlock.isHighlighted)
 				line:SetHeight(height)
+				if old_height ~= height then
+					objectiveBlock.height = objectiveBlock.height + height - old_height
+				end
 			end
 		end
 	end
@@ -119,8 +125,9 @@ local function ArcwayMapVariation()
 end
 
 function Mod:CHALLENGE_MODE_COMPLETED()
+	if not challengeMapID then return end
 	local mapID, level, timeElapsed, onTime, keystoneUpgradeLevels = C_ChallengeMode.GetCompletionInfo()
-	local name, _, timeLimit = C_ChallengeMode.GetMapInfo(mapID)
+	local name, _, timeLimit = C_ChallengeMode.GetMapInfo(challengeMapID)
 	local _, affixes, wasEnergized = C_ChallengeMode.GetActiveKeystoneInfo()
 	local splits = Mod.splits
 
@@ -167,7 +174,7 @@ function Mod:SCENARIO_UPDATE()
 	local scenarioType = select(10, C_Scenario.GetInfo())
 	if scenarioType == LE_SCENARIO_TYPE_CHALLENGE_MODE then
 		local numCriteria = select(3, C_Scenario.GetStepInfo())
-		local mapID = select(8, GetInstanceInfo())
+		local mapID = C_ChallengeMode.GetActiveChallengeMapID()
 		if not Mod.splits and numCriteria > 0 then
 			Mod.splits = {}
 			AngryKeystones_Data.state.splits = Mod.splits
@@ -186,7 +193,7 @@ end
 function Mod:SCENARIO_CRITERIA_UPDATE()
 	local scenarioType = select(10, C_Scenario.GetInfo())
 	if scenarioType == LE_SCENARIO_TYPE_CHALLENGE_MODE then
-		local mapID = select(8, GetInstanceInfo())
+		local mapID = C_ChallengeMode.GetActiveChallengeMapID()
 		if mapID == 1516 and Addon.Config.recordSplits and not Mod.mapVariation then Mod.mapVariation = ArcwayMapVariation() end -- The Arcway
 
 		local fresh = false
@@ -214,12 +221,16 @@ function Mod:SCENARIO_CRITERIA_UPDATE()
 	end
 end
 
+function Mod:CHALLENGE_MODE_START()
+	challengeMapID = C_ChallengeMode.GetActiveChallengeMapID()
+end
+
 function Mod:Startup()
 	if not AngryKeystones_Data then AngryKeystones_Data = {} end
 	if not AngryKeystones_Data.splits then AngryKeystones_Data.splits = {} end
 	if not AngryKeystones_Data.state then AngryKeystones_Data.state = {} end
 
-	local mapID = select(8, GetInstanceInfo())
+	local mapID = C_ChallengeMode.GetActiveChallengeMapID()
 	if select(10, C_Scenario.GetInfo()) == LE_SCENARIO_TYPE_CHALLENGE_MODE and mapID and mapID == AngryKeystones_Data.state.mapID then
 		Mod.splits = AngryKeystones_Data.state.splits
 		Mod.splitNames = AngryKeystones_Data.state.splitNames
@@ -228,7 +239,10 @@ function Mod:Startup()
 		AngryKeystones_Data.state.splits = nil
 		AngryKeystones_Data.state.splitNames = nil
 	end
+	challengeMapID = mapID
+
 	self:RegisterEvent("SCENARIO_CRITERIA_UPDATE")
+	self:RegisterEvent("CHALLENGE_MODE_START")
 	self:RegisterEvent("CHALLENGE_MODE_RESET")
 	self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
 	self:RegisterEvent("SCENARIO_UPDATE")

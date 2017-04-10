@@ -104,12 +104,12 @@ function AppSupport:StatInit()
     ----
     RegisterStat('ArtifactPower', {'ARTIFACT_XP_UPDATE', 'PLAYER_EQUIPMENT_CHANGED'}, function()
         local count = 0
-        local id, _, _, _, xp, pointsSpent = C_ArtifactUI.GetEquippedArtifactInfo()
+        local id, _, _, _, xp, pointsSpent, _, _, _, _, _, _, artifactTier = C_ArtifactUI.GetEquippedArtifactInfo()
         if not id then
             return
         end
         for i = 1, pointsSpent - 1 do
-            count = count + C_ArtifactUI.GetCostForPointAtRank(i)
+            count = count + C_ArtifactUI.GetCostForPointAtRank(i, artifactTier)
         end
         return count + xp, id
     end)
@@ -149,8 +149,14 @@ function AppSupport:DataInit()
 
     local function GetLegendaryItem(_, msg)
         local item = tonumber(msg:match('item:(%d+)'))
-        local _, _, quality, _, reqLevel = GetItemInfo(item)
-        return item and quality == LE_ITEM_QUALITY_LEGENDARY and reqLevel >= 110 and IsEquippableItem(item) and item
+        if not item then
+            return
+        end
+        local name, _, quality, _, reqLevel = GetItemInfo(item)
+        if not name then
+            return
+        end
+        return quality == LE_ITEM_QUALITY_LEGENDARY and reqLevel >= 110 and IsEquippableItem(item) and item
     end
 
     RegisterData('Zone', {'ZONE_CHANGED_NEW_AREA', 'ZONE_CHANGED_INDOORS', 'ZONE_CHANGED'}, GetZoneText, COMMIT_INTERVAL)

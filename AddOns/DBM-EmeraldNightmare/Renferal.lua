@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1744, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15778 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16092 $"):sub(12, -3))
 mod:SetCreatureID(106087)
 mod:SetEncounterID(1876)
 mod:SetZone()
@@ -46,7 +46,7 @@ local yellNecroticVenom				= mod:NewFadesYell(218831)
 local specWarnWebofPain				= mod:NewSpecialWarning("specWarnWebofPain")--No voice. Tech doesn't really exist yet to filter special warning sounds on generics. Plus how you handle this may differ between groups
 --Roc Form
 local specWarnGatheringClouds		= mod:NewSpecialWarningSpell(212707, nil, nil, nil, 1, 2)
-local specWarnDarkStorm				= mod:NewSpecialWarningMoveTo(210948, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(210948), nil, 1, 2)
+local specWarnDarkStorm				= mod:NewSpecialWarningMoveTo(210948, nil, nil, nil, 1, 2)
 local specWarnTwistingShadows		= mod:NewSpecialWarningMoveAway(210864, nil, nil, nil, 1, 2)
 local specWarnTwistingShadowsMove	= mod:NewSpecialWarningMove(210864, nil, nil, nil, 1, 2)--For expires. visual is WAY off from debuff, if you wait for visual you'll die to this
 local yellTwistingShadows			= mod:NewFadesYell(210864)
@@ -97,7 +97,6 @@ local voiceRakingTalon				= mod:NewVoice(215582)--defensive/tauntboss
 --mod:AddRangeFrameOption("5")--Add range frame to Necrotic Debuff if detecting it actually works with FindDebuff()
 mod:AddSetIconOption("SetIconOnWeb", 215307)
 mod:AddSetIconOption("SetIconOnWinds", 218124)
-mod:AddDropdownOption("WebConfiguration", {"Disabled", "Arrow", "HudSelf", "HudAll"}, "HudSelf", "misc")
 
 mod.vb.feedingTimeCast = 0
 mod.vb.venomCast = 0
@@ -164,15 +163,6 @@ function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)--540 heroic, other difficulties not confirmed
 	self.vb.platformCount = 1
 	self.vb.ViolentWindsPlat = false
-end
-
-function mod:OnCombatEnd()
-	if self.Options.WebConfiguration == "HudAll" or self.Options.WebConfiguration == "HudSelf" then
-		DBMHudMap:Disable()
-	end
-	if self.Options.WebConfiguration == "Arrow" then
-		DBM.Arrow:Hide()
-	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -274,29 +264,10 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 215300 then--215307 can also be used and technically is actually faster since it's first event in combat log, However 215300 is what BW uses and I want to make sure DMM repots it in same Order. Especially if they add icon options
 		if args.sourceGUID == playerGUID then
 			specWarnWebofPain:Show(args.destName)
-			if self.Options.WebConfiguration == "HudAll" or self.Options.WebConfiguration == "HudSelf" then
-				local marker1 = DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "party", args.sourceName, 0.1, 6, nil, nil, nil, 0.5):Appear()
-				local marker2 = DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "party", args.destName, 0.35, 6, nil, nil, nil, 0.5):Appear():SetLabel(args.destName, nil, nil, nil, nil, nil, 0.8, nil, -9, 9, nil)
-				marker1:EdgeTo(marker2, nil, 10, 1, 1, 0, 0.5)--Yellow Line
-			elseif self.Options.WebConfiguration == "Arrow" then
-				DBM.Arrow:ShowRunTo(args.destName, 0, 0)
-			end
 		elseif args.destGUID == playerGUID then
 			specWarnWebofPain:Show(args.sourceName)
-			if self.Options.WebConfiguration == "HudAll" or self.Options.WebConfiguration == "HudSelf" then
-				local marker1 = DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "party", args.destName, 0.1, 6, nil, nil, nil, 0.5):Appear()
-				local marker2 = DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "party", args.sourceName, 0.35, 6, nil, nil, nil, 0.5):Appear():SetLabel(args.sourceName, nil, nil, nil, nil, nil, 0.8, nil, -9, 9, nil)
-				marker1:EdgeTo(marker2, nil, 10, 1, 1, 0, 0.5)--Yellow Line
-			elseif self.Options.WebConfiguration == "Arrow" then
-				DBM.Arrow:ShowRunTo(args.sourceName, 0, 0)
-			end
 		else
 			warnWebOfPain:Show(args.sourceName, args.destName)
-			if self.Options.WebConfiguration == "HudAll" then
-				local marker1 = DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "party", args.sourceName, 0.35, 6, nil, nil, nil, 0.5):Appear():SetLabel(args.sourceName, nil, nil, nil, nil, nil, 0.8, nil, -9, 9, nil)
-				local marker2 = DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "party", args.destName, 0.35, 6, nil, nil, nil, 0.5):Appear():SetLabel(args.destName, nil, nil, nil, nil, nil, 0.8, nil, -9, 9, nil)
-				marker1:EdgeTo(marker2, nil, 10, 1, 0, 0, 0.5)--Red Line
-			end
 		end
 		if self.Options.SetIconOnWeb and self:IsInCombat() then
 			local uId = DBM:GetRaidUnitId(args.destName)
@@ -333,10 +304,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.SetIconOnWeb then
 			self:SetIcon(args.destName, 0)
 		end
-		if args:IsPlayer() and self.Options.WebConfiguration == "Arrow" then
-			DBM.Arrow:Hide()
-		end
-		DBMHudMap:FreeEncounterMarkerByTarget(215300, args.destName)
 	end
 end
 

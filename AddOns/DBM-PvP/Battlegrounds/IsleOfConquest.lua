@@ -1,7 +1,7 @@
 local mod		= DBM:NewMod("z628", "DBM-PvP", 2)
 local L			= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 59 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 63 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -18,7 +18,7 @@ local timerSiegeEngine 	= mod:NewTimer(180, "TimerSiegeEngine", 15048)
 
 mod:AddBoolOption("ShowGatesHealth", true)
 
-local GetMapLandmarkInfo, GetNumMapLandmarks = GetMapLandmarkInfo, GetNumMapLandmarks
+local GetMapLandmarkInfo, GetNumMapLandmarks = C_WorldMap.GetMapLandmarkInfo, GetNumMapLandmarks
 local allyTowerIcon = "Interface\\AddOns\\DBM-PvP\\Textures\\GuardTower"
 local allyColor = {r = 0, g = 0, b = 1}
 local hordeTowerIcon = "Interface\\AddOns\\DBM-PvP\\Textures\\OrcTower"

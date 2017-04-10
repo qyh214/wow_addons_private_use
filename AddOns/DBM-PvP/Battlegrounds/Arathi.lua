@@ -1,7 +1,7 @@
 local mod		= DBM:NewMod("z529", "DBM-PvP", 2)
 local L			= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 59 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 63 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -12,7 +12,7 @@ local winTimer 		= mod:NewTimer(30, "TimerWin", "Interface\\Icons\\INV_Misc_Pock
 local capTimer 		= mod:NewTimer(60, "TimerCap", "Interface\\Icons\\Spell_Misc_HellifrePVPHonorHoldFavor")
 
 local bgzone = false
-local GetMapLandmarkInfo, GetNumMapLandmarks = GetMapLandmarkInfo, GetNumMapLandmarks
+local GetMapLandmarkInfo, GetNumMapLandmarks = C_WorldMap.GetMapLandmarkInfo, GetNumMapLandmarks
 mod:AddBoolOption("ShowAbEstimatedPoints", true, nil, function()
 	if mod.Options.ShowAbEstimatedPoints and bgzone then
 		mod:ShowEstimatedPoints()

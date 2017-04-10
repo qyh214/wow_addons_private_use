@@ -62,7 +62,11 @@ function BaseActivity:UpdateCustomData(comment, title)
     local summary, isMeetingStone, customId, version, mode, loot,
             class, itemLevel, progression, leaderPvPRating, minLevel, maxLevel, pvpRating, source, creator, savedInstance, _, honorLevel = DecodeCommetData(comment)
 
-    if isMeetingStone then
+    if isMeetingStone then    
+        if not CheckMode(mode) or not CheckLoot(loot) then
+            return false
+        end
+
         if customId == 0 then
             customId = nil
         end
@@ -114,6 +118,8 @@ function BaseActivity:UpdateCustomData(comment, title)
         self:SetSavedInstance(nil)
     end
     self:SetIsMeetingStone(isMeetingStone)
+
+    return true
 end
 
 function BaseActivity:HasInvalidContent()
