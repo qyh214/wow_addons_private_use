@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TeronGorefiend", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 609 $"):sub(12, -3))
 mod:SetCreatureID(22871)
 mod:SetEncounterID(604)
 mod:SetModelID(21254)
@@ -29,12 +29,12 @@ local timerVengefulSpirit	= mod:NewTimer(60, "TimerVengefulSpirit", 40325, nil, 
 mod:AddBoolOption("CrushIcon", false)
 
 local warnCrushedTargets = {}
-local crushIcon = 8
+mod.vb.crushIcon = 8
 
-local function showCrushedTargets()
+local function showCrushedTargets(self)
 	warnCrushed:Show(table.concat(warnCrushedTargets, "<, >"))
 	table.wipe(warnCrushedTargets)
-	crushIcon = 8
+	self.vb.crushIcon = 8
 end
 
 function mod:OnCombatStart(delay)
@@ -47,13 +47,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerCrushed:Start()
 		self:Unschedule(showCrushedTargets)
 		if self.Options.CrushIcon then
-			self:SetIcon(args.destName, crushIcon, 15)
-			crushIcon = crushIcon - 1
+			self:SetIcon(args.destName, self.vb.crushIcon, 15)
+			self.vb.crushIcon = self.vb.crushIcon - 1
 		end
 		if #warnCrushedTargets >= 5 then
 			showCrushedTargets()
 		else
-			self:Schedule(0.3, showCrushedTargets)
+			self:Schedule(0.3, showCrushedTargets, self)
 		end
 	elseif args.spellId == 40251 then
 		warnDeath:Show(args.destName)

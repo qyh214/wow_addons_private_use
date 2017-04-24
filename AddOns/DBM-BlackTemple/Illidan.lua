@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Illidan", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 604 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 609 $"):sub(12, -3))
 mod:SetCreatureID(22917)
 mod:SetEncounterID(609)
 mod:SetModelID(21135)
@@ -62,44 +62,29 @@ local timerCombatStart		= mod:NewCombatTimer(36)
 local berserkTimer			= mod:NewBerserkTimer(1500)
 
 mod:AddBoolOption("RangeFrame")
-mod:AddBoolOption("ParasiteIcon")
+mod:AddSetIconOption("ParasiteIcon", 41917)
 
-local flameTargets = {}
-local shadowDemonTargets = {}
-local flamesDown = 0
-local flameBursts = 0
-local warned_preP2 = false
-local warned_preP4 = false
-local phase4 = false
+mod.vb.flamesDown = 0
+mod.vb.flameBursts = 0
+mod.vb.warned_preP2 = false
+mod.vb.warned_preP4 = false
+mod.vb.phase = 1
 
-
-local function humanForms()
+local function humanForms(self)
 	warnHuman:Show()
 	timerNextFlameBurst:Cancel()
 	timerNextDemon:Start()
-	if phase4 then
+	if self.vb.phase == 4 then
 		timerEnrage:Start()
 	end
 end
 
-local function showFlameTargets()
-	warnFlame:Show(table.concat(flameTargets, "<, >"))
-	table.wipe(flameTargets)
-end
-
-local function showDemonTargets()
-	warnShadowDemon:Show(table.concat(shadowDemonTargets, "<, >"))
-	table.wipe(shadowDemonTargets)
-end
-
 function mod:OnCombatStart(delay)
-	table.wipe(flameTargets)
-	table.wipe(shadowDemonTargets)
-	flamesDown = 0
-	flameBursts = 0
-	warned_preP2 = false
-	warned_preP4 = false
-	phase4 = false
+	self.vb.phase = 1
+	self.vb.flamesDown = 0
+	self.vb.flameBursts = 0
+	self.vb.warned_preP2 = false
+	self.vb.warned_preP4 = false
 	berserkTimer:Start(-delay)
 end
 
@@ -127,21 +112,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnBarrage:Show()
 		end
 	elseif args.spellId == 40932 then
-		flameTargets[#flameTargets + 1] = args.destName
+		warnFlame:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() and not self:IsTrivial(85) then
 			specWarnFlame:Show()
 		end
 		timerFlame:Start(args.destName)
-		self:Unschedule(showFlameTargets)
-		self:Schedule(0.3, showFlameTargets)
 	elseif args.spellId == 41083 then
-		shadowDemonTargets[#shadowDemonTargets + 1] = args.destName
-		self:Unschedule(showDemonTargets)
-		if #shadowDemonTargets >= 4 then
-			showDemonTargets()
-		else
-			self:Schedule(1, showDemonTargets)
-		end
+		warnShadowDemon:CombinedShow(1, args.destName)
 	elseif args.spellId == 40683 then
 		warnEnrage:Show()
 		timerEnrage:Start()
@@ -159,8 +136,9 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 39855 and self:AntiSpam(4, 1) then
-		flamesDown = 0
-		warned_preP2 = true
+		self.vb.phase = 2
+		self.vb.flamesDown = 0
+		self.vb.warned_preP2 = true
 		warnPhase2:Show()
 		timerNextBarrage:Start(81)
 	end
@@ -169,8 +147,8 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, _, _, _, _, spellId)
 	if spellId == 41131 and self:AntiSpam(4, 2) then
 		warnFlameBurst:Show()
-		flameBursts = flameBursts + 1
-		if flameBursts < 3 then
+		self.vb.flameBursts = self.vb.flameBursts + 1
+		if self.vb.flameBursts < 3 then
 			timerNextFlameBurst:Start()
 		end
 	end
@@ -180,8 +158,9 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 22997 then
-		flamesDown = flamesDown + 1
-		if flamesDown >= 2 then
+		self.vb.flamesDown = self.vb.flamesDown + 1
+		if self.vb.flamesDown >= 2 then
+			self.vb.phase = 3
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show()
 			end
@@ -198,15 +177,15 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	elseif msg == L.Eyebeam or msg:find(L.Eyebeam) then
 		warnEyebeam:Show()
 	elseif msg == L.Demon or msg:find(L.Demon) then
-		flameBursts = 0
+		self.vb.flameBursts = 0
 		warnDemon:Show()
 		timerNextHuman:Start()
 		timerNextFlameBurst:Start()
 		timerShadowDemon:Start()
-		self:Schedule(74, humanForms)
+		self:Schedule(74, humanForms, self)
 	elseif msg == L.Phase4 or msg:find(L.Phase4) then
-		phase4 = true
-		warned_preP4 = true
+		self.vb.phase = 4
+		self.vb.warned_preP4 = true
 		self:Unschedule(humanForms)
 		timerParasite:Cancel()
 		timerFlame:Cancel()
@@ -222,11 +201,11 @@ end
 
 function mod:UNIT_HEALTH(uId)
 	local cid = self:GetUnitCreatureId(uId)
-	if not warned_preP2 and cid == 22917 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.75 then
-		warned_preP2 = true
+	if not self.vb.warned_preP2 and cid == 22917 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.75 then
+		self.vb.warned_preP2 = true
 		warnPhase2Soon:Show()
-	elseif not warned_preP4 and cid == 22917 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.35 then
-		warned_preP4 = true
+	elseif not self.vb.warned_preP4 and cid == 22917 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.35 then
+		self.vb.warned_preP4 = true
 		warnPhase4Soon:Show()
 	end
 end

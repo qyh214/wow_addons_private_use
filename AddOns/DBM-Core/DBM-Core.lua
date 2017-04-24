@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 16140 $"):sub(12, -3)),
-	DisplayVersion = "7.2.3", -- the string that is shown as version
-	ReleaseRevision = 16140 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 16180 $"):sub(12, -3)),
+	DisplayVersion = "7.2.4", -- the string that is shown as version
+	ReleaseRevision = 16180 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -101,7 +101,6 @@ DBM.DefaultOptions = {
 	ChosenVoicePack = "None",
 	VoiceOverSpecW2 = "DefaultOnly",
 	AlwaysPlayVoice = false,
-	ShowCountdownText = false,
 	Enabled = true,
 	ShowWarningsInChat = true,
 	ShowSWarningsInChat = true,
@@ -421,7 +420,7 @@ local UpdateChestTimer
 local breakTimerStart
 local AddMsg
 
-local fakeBWVersion, fakeBWHash = 51, "eacf411"
+local fakeBWVersion, fakeBWHash = 52, "8fcf8bb"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -585,10 +584,6 @@ local function stripServerName(cap)
 		cap = Ambiguate(cap, "short")
 	end
 	return cap
-end
-
-local function countDownTextDelay(timer)
-	TimerTracker_OnEvent(TimerTracker, "START_TIMER", 2, timer+1, timer+1)
 end
 
 --------------
@@ -2318,8 +2313,6 @@ do
 			self:Unschedule(loopTimer)
 			fakeMod.countdown:Cancel()
 			self.Bars:CancelBar(text)
-			self:Unschedule(countDownTextDelay)
-			TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")
 			return
 		end
 		if sender and ignore[sender] then return end
@@ -2354,16 +2347,6 @@ do
 			if not self.Options.DontPlayPTCountdown then
 				fakeMod.countdown:Cancel()
 				fakeMod.countdown:Start(time)
-			end
-			if not self.Options.DontShowPTCountdownText then
-				self:Unschedule(countDownTextDelay)
-				TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")
-				local threshold = self.Options.PTCountThreshold
-				if time > threshold then
-					self:Schedule(time-threshold, countDownTextDelay, threshold)
-				else
-					TimerTracker_OnEvent(TimerTracker, "START_TIMER", 2, time, time)
-				end
 			end
 		end
 		if loop then
@@ -2451,9 +2434,9 @@ do
 		elseif arg1 == "update" then
 			DBM:ShowUpdateReminder(arg2, arg3) -- displayVersion, revision
 		elseif arg == "localizersneeded" then
-			DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG, "http://www.deadlybossmods.com/forum/viewtopic.php?f=3&t=5")
+			DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG, "https://www.deadlybossmods.com/forum/viewtopic.php?f=3&t=5")
 		elseif arg1 == "forumsnews" then
-			DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG_NEWS, "http://www.deadlybossmods.com/forum/viewtopic.php?f=3&p=171#p171")
+			DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG_NEWS, "https://www.deadlybossmods.com/forum/viewtopic.php?f=3&t=226&p=690#p690")
 		elseif arg1 == "forums" then
 			DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG)
 		elseif arg1 == "showRaidIdResults" then
@@ -3608,7 +3591,7 @@ do
 				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-Party-Cataclysm"))
 			end
 		else
-			if (LastInstanceMapID == 1148 or LastInstanceMapID == 1698) and not self.Options.PGMessageShown2 and not GetAddOnInfo("DBM-Challenges") then
+			if (LastInstanceMapID == 1148 or LastInstanceMapID == 1698 or LastInstanceMapID == 1710 or LastInstanceMapID == 1703 or LastInstanceMapID == 1702 or LastInstanceMapID == 1684 or LastInstanceMapID == 1673 or LastInstanceMapID == 1616) and not self.Options.PGMessageShown2 and not GetAddOnInfo("DBM-Challenges") then
 				self.Options.PGMessageShown2 = true
 				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-Challenges"))
 			elseif LastInstanceMapID == 409 and not self.Options.MCMessageShown and not GetAddOnInfo("DBM-MC") then
@@ -3648,6 +3631,13 @@ do
 		-- LoadMod
 		self:LoadModsOnDemand("mapId", mapID)
 		checkMods(self)
+		if DBM:HasMapRestrictions() then
+			DBM.Arrow:Hide()
+			DBMHudMap:Disable()
+			if DBM.RangeCheck:IsRadarShown() then
+				DBM.RangeCheck:Hide(true)
+			end
+		end
 	end
 	--Faster and more accurate loading for instances, but useless outside of them
 	function DBM:LOADING_SCREEN_DISABLED()
@@ -4008,7 +3998,6 @@ do
 			dummyMod.countdown:Cancel()
 		end
 		if not DBM.Options.DontShowPTCountdownText then
-			DBM:Unschedule(countDownTextDelay)
 			TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")--easiest way to nil out timers on TimerTracker frame. This frame just has no actual star/stop functions
 		end
 		dummyMod.text:Cancel()
@@ -4149,7 +4138,7 @@ do
 		end
 	end
 	
-	local function HandleVersion(revision, version, displayVersion, sender)
+	local function HandleVersion(revision, version, displayVersion, sender, noRaid)
 		if version > DBM.Revision then -- Update reminder
 			if not checkEntry(newerVersionPerson, sender) then
 				newerVersionPerson[#newerVersionPerson + 1] = sender
@@ -4178,7 +4167,7 @@ do
 					AddMsg(DBM, DBM_CORE_UPDATEREMINDER_HEADER:match("\n(.*)"):format(displayVersion, version))
 					AddMsg(DBM, ("|HDBM:update:%s:%s|h|cff3588ff[%s]"):format(displayVersion, version, DBM_CORE_UPDATEREMINDER_URL or "http://www.deadlybossmods.com"))
 					showConstantReminder = 1
-				elseif #newerVersionPerson == 3 and updateNotificationDisplayed < 3 then--The following code requires at least THREE people to send that higher revision. That should be more than adaquate
+				elseif not noRaid and #newerVersionPerson == 3 and updateNotificationDisplayed < 3 then--The following code requires at least THREE people to send that higher revision. That should be more than adaquate
 					--Find min revision.
 					local revDifference = mmin((raid[newerVersionPerson[1]].revision - DBM.Revision), (raid[newerVersionPerson[2]].revision - DBM.Revision), (raid[newerVersionPerson[3]].revision - DBM.Revision))
 					--Disable if out of date and it's a major patch.
@@ -4253,7 +4242,7 @@ do
 		revision, version = tonumber(revision), tonumber(version)
 		if revision and version and displayVersion then
 			DBM:Debug("Received G version info from "..sender.." : Rev - "..revision..", Ver - "..version..", Rev Diff - "..(revision - DBM.Revision), 3)
-			HandleVersion(revision, version, displayVersion, sender)
+			HandleVersion(revision, version, displayVersion, sender, true)
 		end
 	end
 
@@ -5133,6 +5122,7 @@ do
 	function DBM:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 		if timerRequestInProgress then return end--do not start ieeu combat if timer request is progressing. (not to break Timer Recovery stuff)
 		if dbmIsEnabled and combatInfo[LastInstanceMapID] then
+			self:Debug("INSTANCE_ENCOUNTER_ENGAGE_UNIT event fired for zoneId"..LastInstanceMapID, 3)
 			for i, v in ipairs(combatInfo[LastInstanceMapID]) do
 				if v.type:find("combat") and isBossEngaged(v.multiMobPullDetection or v.mob) then
 					self:StartCombat(v.mod, 0, "IEEU")
@@ -5591,7 +5581,7 @@ do
 					self:AddMsg(DBM_CORE_NEED_LOGS)
 				end
 				--call OnCombatStart
-				if mod.OnCombatStart and not mod.ignoreBestkill then
+				if mod.OnCombatStart then
 					mod:OnCombatStart(delay or 0, event == "PLAYER_REGEN_DISABLED_AND_MESSAGE" or event == "SPELL_CAST_SUCCESS")
 				end
 				--send "C" sync
@@ -6099,7 +6089,8 @@ function DBM:GetCurrentInstanceDifficulty()
 	elseif difficulty == 7 then--Fixed LFR (ie pre WoD zones)
 		return "lfr25", difficultyName.." - ", difficulty, instanceGroupSize
 	elseif difficulty == 8 then
-		return "challenge5", PLAYER_DIFFICULTY6.."+ - ", difficulty, instanceGroupSize
+		local currentMPRank = C_ChallengeMode.GetActiveKeystoneInfo() or 0
+		return "challenge5", PLAYER_DIFFICULTY6.."+ ("..currentMPRank..") - ", difficulty, instanceGroupSize
 	elseif difficulty == 9 then--40 man raids have their own difficulty now, no longer returned as normal 10man raids
 		return "normal10", difficultyName.." - ",difficulty, instanceGroupSize--Just use normal10 anyways, since that's where we been saving 40 man stuff for so long anyways, no reason to change it now, not like any 40 mans can be toggled between 10 and 40 where we NEED to tell the difference.
 	elseif difficulty == 11 then
@@ -6357,7 +6348,7 @@ do
 		end
 		--C_TimerAfter(20, function() if not self.Options.ForumsMessageShown then self.Options.ForumsMessageShown = self.ReleaseRevision self:AddMsg(DBM_FORUMS_MESSAGE) end end)
 		C_TimerAfter(30, function() if not self.Options.SettingsMessageShown then self.Options.SettingsMessageShown = true self:AddMsg(DBM_HOW_TO_USE_MOD) end end)
-		--C_TimerAfter(40, function() if self.Options.NewsMessageShown < 8 then self.Options.NewsMessageShown = 8 self:AddMsg(DBM_CORE_WHATS_NEW_LINK) end end)
+		C_TimerAfter(40, function() if self.Options.NewsMessageShown < 9 then self.Options.NewsMessageShown = 9 self:AddMsg(DBM_CORE_WHATS_NEW_LINK) end end)
 		if type(RegisterAddonMessagePrefix) == "function" then
 			if not RegisterAddonMessagePrefix("D4") then -- main prefix for DBM4
 				self:AddMsg("Error: unable to register DBM addon message prefix (reached client side addon message filter limit), synchronization will be unavailable") -- TODO: confirm that this actually means that the syncs won't show up
@@ -6440,12 +6431,12 @@ do
 			if not difficultyText then -- prevent error when timer recovery function worked and etc (StartCombat not called)
 				difficultyText = select(2, DBM:GetCurrentInstanceDifficulty())
 			end
-			if IsInScenarioGroup() then return end--status not really useful on scenario mods since there is no way to report progress as a percent. We just ignore it.
 			local mod
 			for i, v in ipairs(inCombat) do
 				mod = not v.isCustomMod and v
 			end
 			mod = mod or inCombat[1]
+			if IsInScenarioGroup() and not mod.soloChallenge then return end--status not really useful on scenario mods since there is no way to report progress as a percent. We just ignore it.
 			local hp = mod.highesthealth and mod:GetHighestBossHealth() or mod:GetLowestBossHealth()
 			local hpText = mod.CustomHealthUpdate and mod:CustomHealthUpdate() or hp and ("%d%%"):format(hp) or DBM_CORE_UNKNOWN
 			if mod.vb.phase then
@@ -6475,7 +6466,7 @@ do
 				hpText = hpText.." ("..BOSSES_KILLED:format(bossesKilled, mod.numBoss)..")"
 			end
 			if not autoRespondSpam[sender] then
-				if IsInScenarioGroup() then
+				if IsInScenarioGroup() and not mod.soloChallenge then
 					sendWhisper(sender, chatPrefix..DBM_CORE_AUTO_RESPOND_WHISPER_SCENARIO:format(playerName, difficultyText..(mod.combatInfo.name or ""), getNumAlivePlayers(), DBM:GetNumGroupMembers()))
 				else
 					sendWhisper(sender, chatPrefix..DBM_CORE_AUTO_RESPOND_WHISPER:format(playerName, difficultyText..(mod.combatInfo.name or ""), hpText, IsInInstance() and getNumRealAlivePlayers() or getNumAlivePlayers(), DBM:GetNumRealGroupMembers()))
@@ -8910,28 +8901,12 @@ do
 		end
 	end
 
-	local function showCountdown(timer)
-		TimerTracker_OnEvent(TimerTracker, "START_TIMER", 2, timer+1, timer+1)
-	end
-
-	local function stopCountdown()
-		TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")
-	end
-
 	function countdownProtoType:Start(timer, count)
 		if not self.option or self.mod.Options[self.option] then
 			timer = timer or self.timer or 10
 			timer = timer < 2 and self.timer or timer
 			count = count or self.count or 5
 			if timer <= count then count = floor(timer) end
-			if DBM.Options.ShowCountdownText and not (self.textDisabled or self.alternateVoice) and self.type ~= "Countout" then
-				stopCountdown()
-				if timer >= count then
-					DBM:Schedule(timer-count, showCountdown, count)
-				else
-					DBM:Schedule(timer%1, showCountdown, floor(timer))
-				end
-			end
 			if DBM.Options.DontPlayCountdowns then return end
 			if not path1 or not path2 or not path3 then
 				DBM:Debug("Voice cache not built at time of countdownProtoType:Start. On fly caching.")
@@ -8977,10 +8952,6 @@ do
 	end
 
 	function countdownProtoType:Cancel()
-		if DBM.Options.ShowCountdownText and not self.textDisabled then
-			DBM:Unschedule(showCountdown)
-			stopCountdown()
-		end
 		self.mod:Unschedule(self.Start, self)
 		self.sound5:Cancel()
 	end
@@ -10334,14 +10305,6 @@ do
 			if not DBM.Options.DontPlayPTCountdown then
 				self.countdown:Start(timer)
 			end
-			if not DBM.Options.DontShowPTCountdownText then
-				local threshold = DBM.Options.PTCountThreshold
-				if timer > threshold then
-					DBM:Schedule(timer-threshold, countDownTextDelay, threshold)
-				else
-					TimerTracker_OnEvent(TimerTracker, "START_TIMER", 2, timer, timer)
-				end
-			end
 		end
 	end
 
@@ -10358,9 +10321,7 @@ do
 			self.warning2:Cancel()
 		end
 		if self.countdown then
-			DBM:Unschedule(countDownTextDelay)
 			self.countdown:Cancel()
-			TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")
 		end
 		self.bar:Stop()
 	end

@@ -230,7 +230,7 @@ L:SetMiscLocalization{
 
 
 -- Nightbane
-L = DBM:GetModLocalization("Nightbane")
+L = DBM:GetModLocalization("NightbaneRaid")
 
 L:SetGeneralLocalization{
 	name = "Nocturno"

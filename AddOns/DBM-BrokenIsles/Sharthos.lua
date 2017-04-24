@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1763, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15451 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16165 $"):sub(12, -3))
 mod:SetCreatureID(108678)
 mod:SetEncounterID(1888)
 mod:SetReCombatTime(20)
@@ -21,7 +21,7 @@ local specWarnBreath			= mod:NewSpecialWarningSpell(215821, "Tank", nil, nil, 1,
 local specWarnBurningEarth		= mod:NewSpecialWarningMove(215876, nil, nil, nil, 1, 2)
 local specWarnFear				= mod:NewSpecialWarningSpell(216044, nil, nil, nil, 2, 2)
 
-local timerBreathCD				= mod:NewCDTimer(19.8, 215821, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)--19.8-23
+local timerBreathCD				= mod:NewCDTimer(18.4, 215821, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)--18.4-23
 local timerFearCD				= mod:NewCDTimer(63, 216044, nil, nil, nil, 1)--63-65
 
 local voiceBreath				= mod:NewVoice(215821, "Tank")--breathsoon

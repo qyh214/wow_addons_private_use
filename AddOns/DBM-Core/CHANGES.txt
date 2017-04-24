@@ -1,141 +1,291 @@
-tag c2c4254b115d315214e278eb5629a0c35efea55f 7.2.3
+tag fc71d6b284dfbcb0080f4bb1913b55e919e8fd39 7.2.4
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Thu Apr 6 18:20:13 2017 +0200
+Date:	Sat Apr 22 20:08:49 2017 +0200
 
-Tagging as 7.2.3
+Tagging as 7.2.4
 
-commit adec88c4090c5a15ed7a6ea4969ae60fbf27df11
+commit a19597e52c01f9aaa8ff9e03417ef661100f8859
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Apr 6 18:20:13 2017 +0200
+Date:   Sat Apr 22 20:08:49 2017 +0200
 
-    increment version number to 7.2.3
+    increment version number to 7.2.4
 
-commit bcf765e941bdd2fb244fb816da80b7bd2d8c23e1
+commit 35ddaf4cd35333e8af9f09699f42db3c202156e6
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Apr 6 13:13:14 2017 +0200
+Date:   Sat Apr 22 10:20:55 2017 +0200
 
-    Omega via svn r16140:
+    Omega via svn r16180:
+    Change barrage warning to fire on cast start not finish. not sure why it was that way but now warning will go off when emote from blizzard does.
+
+commit 98fc343383cc8400dad7656dbf8476b6507a0d32
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Apr 22 09:40:28 2017 +0200
+
+    Omega via svn r16179:
+    Fix black temple timewalking stats
+
+commit 038bee7946dade4fffdbb690fed5993161a09e96
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Apr 22 07:17:51 2017 +0200
+
+    Omega via svn r16178:
+    Kr Update
+
+commit f825c63fa3bd49b89eb81ca4ce2ce3451ad91dd7
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Apr 21 06:08:56 2017 +0200
+
+    Omega via svn r16177:
+    Hide info frame on phase change on phase 2 start, so it doesn?\226?\128?\153t get stuck if you ignore adds and push on mythic
+
+commit 2ef4ce5bfb27b3a909eb524b18868ac874ee47f2
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Apr 21 06:06:53 2017 +0200
+
+    Omega via svn r16176:
+    couple timer tweaks
+
+commit 9079e3f09a15293c56053f72f6c5d92d4fd2b1cd
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Apr 21 04:11:16 2017 +0200
+
+    Omega via svn r16175:
+    Fix missing count
+
+commit 1fdeda0c12674d8de3954319526b7f970491c5d7
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Apr 20 06:48:16 2017 +0200
+
+    Omega via svn r16174:
+    Fix here too
+
+commit 46a2eb2ccba0bc2667fccf9f30e1bb7800e470d7
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Apr 20 06:47:31 2017 +0200
+
+    Omega via svn r16173:
+    another minor tweak
+
+commit 1e43c0fbb3b5799637dd44ab2d591bfde2e0c837
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Apr 20 05:21:05 2017 +0200
+
+    Omega via svn r16172:
+    prevent guldan mod from ending combat if long before demon comes out.
+
+commit 6ffda15a4045477591dce3e7cdb4f0576dd1736c
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Apr 19 13:21:54 2017 +0200
+
+    Omega via svn r16171:
+    Couple minor adjustments
+
+commit 4308ef7715e56482659e8f4701c2b1b2b26f6082
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Apr 18 20:33:04 2017 +0200
+
+    Omega via svn r16170:
+    tweak fix, it?\226?\128?\153s a unique situation that causes this. player isn?\226?\128?\153t in restricted zone but someone else in raid is
+
+commit d177cfb34119be5691c0f6b7f5362851654f281d
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Apr 18 20:12:45 2017 +0200
+
+    Omega via svn r16169:
+    More protections/checks against radar being open when entering an instance
+
+commit bb4bac2bfc7b79db99ba01e0539b60ed961645c1
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Apr 18 18:34:03 2017 +0200
+
+    Omega via svn r16168:
+    Bump some mod revisions that got bug fixes
+
+commit 75163f5a4f48c6a527c212d956efbe35dd961f78
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Apr 18 18:32:34 2017 +0200
+
+    Omega via svn r16167:
+    update hash
+
+commit eff3c3eca3ab313941184708d5f729ecc9315f20
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Apr 18 18:27:51 2017 +0200
+
+    Omega via svn r16166:
+    adjust debug level
+
+commit 60aa4e97e854898ed023fc7d46a2045ce75ba227
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Apr 18 18:24:18 2017 +0200
+
+    Omega via svn r16165:
+    Tweak
+
+commit f7b2702e4456de7c4b9e51115e554385287b8631
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Apr 18 00:35:42 2017 +0200
+
+    Omega via svn r16164:
+    Tweak
+
+commit 0b414610353b5cf0894bb0ed0b8d19e913ce22ca
+Author: subversion <svn@deadlybossmods.com>
+Date:   Mon Apr 17 01:32:04 2017 +0200
+
+    Omega via svn r16163:
+    Push voice pack message
+
+commit 7b4e505514be2118e845550f2b16cb4c7398ac62
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sun Apr 16 23:58:02 2017 +0200
+
+    Omega via svn r16162:
     Kr update
 
-commit b5e947354955068c53f6ded890aa6b7bbdcefdf6
+commit aa0caf005b075ee347ba66df09aa74352e30b13d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Apr 6 13:09:44 2017 +0200
+Date:   Sun Apr 16 02:17:40 2017 +0200
 
-    Omega via svn r16139:
-    And remove this
+    Omega via svn r16161:
+    Include keystone level in all mythic+ messages
 
-commit 5d0c895b3bfe6f6706fb3a26387b501229e16c34
+commit 7e18787aceb9435c8379559e3764a7dc3d525db0
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Apr 6 13:06:57 2017 +0200
+Date:   Sat Apr 15 10:15:23 2017 +0200
 
-    Omega via svn r16138:
-    Disable combat mechanics, they don?\226?\128?\153t work even remotely correctly. Shouldn?\226?\128?\153t be needed anyways
+    Omega via svn r16160:
+    Improve challenge scenario status whispers
 
-commit ccc987a2f7f39c72e39c158f0f22641bbfc661ea
+commit 69a6a913bd60a72c4afab7df8b90b245194597bd
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Apr 6 09:22:01 2017 +0200
+Date:   Sat Apr 15 01:32:55 2017 +0200
 
-    ultrashining via svn r16137:
-    zhTW update
+    Omega via svn r16159:
+    Add other map ids to challenges message
 
-commit 3a329295e8a3fc668366c01fd76a61d885ee9a8e
+commit 79154a2055b142200f14a7e36763d1b1b2b3f860
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Apr 6 06:42:23 2017 +0200
+Date:   Fri Apr 14 07:58:13 2017 +0200
 
-    Omega via svn r16136:
-    Flame crash countdown for kihra
+    Omega via svn r16158:
+    minor tweak
 
-commit a404c55f199cb73b5de72a8a3267a0b440ed2e70
+commit a6005b1deeed772767d8c13bce68a58078f72a16
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Apr 6 06:19:53 2017 +0200
+Date:   Fri Apr 14 07:54:50 2017 +0200
 
-    Omega via svn r16135:
-    Add more countdowns to star auger
+    Omega via svn r16157:
+    cleanup
 
-commit 9e2eacc664b4cf794f201b31741fc0782ec0e6bc
+commit 4198342699f863c128605d4f9879d0c2bba11cc8
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Apr 6 00:07:31 2017 +0200
+Date:   Fri Apr 14 07:02:49 2017 +0200
 
-    Omega via svn r16134:
-    Add loading for other 3 invasions and one new warning for val scenario
+    Omega via svn r16156:
+    Make CoS Trash mod smarter with chat messages.
+    Fixes messages for LFG parties and non party groups (solo)
 
-commit 5e4cb3337c364a4bb50329e73b242cb2bf24e577
+commit 5496d7ffdfead88c73ee97d0189183c4dbb5c50e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Apr 5 14:32:43 2017 +0200
+Date:   Fri Apr 14 06:14:10 2017 +0200
 
-    Omega via svn r16133:
-    Tweak another timer
-    Attempt to fix voice pack filter on custom option text warnings
+    Omega via svn r16155:
+    Add some core debug
 
-commit 4545671eda32790effe656b033890dcdb590bd45
+commit 79bbd96434745475ff976197e67ac984789ed7f0
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Apr 5 00:33:49 2017 +0200
+Date:   Thu Apr 13 06:15:46 2017 +0200
 
-    Omega via svn r16132:
-    Update challenges message
+    Omega via svn r16154:
+    Various tweaks
 
-commit 52ffd86663dec3402c73152cfc01dab7a73e2bcb
+commit 839788c9763e22cc266a79bff396954ffc9a8457
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Apr 5 00:18:49 2017 +0200
+Date:   Thu Apr 13 04:30:16 2017 +0200
 
-    Omega via svn r16131:
-    Preliminary invasion support. this supports two warnings in azsuna scenario
+    Omega via svn r16153:
+    Fix first timer
 
-commit 94007a980943dd4e9b538912532ffa002dfbc9cd
+commit 1c43f5b7687e391e30cd4321269600b5b6a04f44
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Apr 4 03:29:58 2017 +0200
+Date:   Wed Apr 12 10:05:04 2017 +0200
 
-    Omega via svn r16130:
-    Update Banned mods
+    Omega via svn r16152:
+    Timewalking classic raids for stats
 
-commit f6adfcfcd9bf3707fca32c1faf5d0c68fa415283
+commit d054d5590c1a7f9144a38c0eac5d5cf0829c4757
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Apr 3 20:42:22 2017 +0200
+Date:   Wed Apr 12 06:53:30 2017 +0200
 
-    Omega via svn r16129:
-    fix error
+    Omega via svn r16151:
+    Remove countdown text feature from all timers and countdowns except pull, since that?\226?\128?\153s only pace it works (only place that doesn?\226?\128?\153t use scheduling)
 
-commit f2c84b8f24ef39f8ec5697fb9c79b0f1aa358536
+commit 947ccb58e82a2d3b7adab438f91c4d2b0bd9c0c2
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Apr 3 04:08:35 2017 +0200
+Date:   Mon Apr 10 20:21:43 2017 +0200
 
-    Omega via svn r16128:
-    Bump revision
+    Omega via svn r16150:
+    Re-enable tentacle cast with fix
 
-commit f18e63610f3911526410bee0fc177c572c7d8d51
+commit f7fca715476f307d9205be9b39c3e10329e6b06e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Apr 3 04:05:56 2017 +0200
+Date:   Mon Apr 10 09:13:13 2017 +0200
 
-    Omega via svn r16127:
-    Add LFR timers for Elisande
-    Fix some other timer bugs in normal elisande and mythic elisande
+    Omega via svn r16149:
+    Tweaks
 
-commit 766b08db25756a3036d27c1b72f0459999291d86
+commit 7cc940bef988ac7459e2b6703953b15ee11aa433
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Apr 2 22:43:54 2017 +0200
+Date:   Mon Apr 10 06:38:45 2017 +0200
 
-    Omega via svn r16126:
-    Remove debug message forgot to remove
+    Omega via svn r16148:
+    Update Malificus
 
-commit dc7e4e53e97dd7fcdc25331f06ec97a31b95922f
+commit cdf3e7075465345a0e1c08a2fcbe9d8a35617657
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Apr 2 07:24:22 2017 +0200
+Date:   Mon Apr 10 04:20:34 2017 +0200
 
-    Omega via svn r16125:
-    fix a bug where BuildVoiceCountdownCache would fail to set paths correctly if more than one were set to same voice.
-    Unfortunately I could find no fix that worked that didn?\226?\128?\153t require making it a LOT less inefficient. Fortunately it?\226?\128?\153s a one time function.
+    Omega via svn r16147:
+    Fix a bug that?\226?\128?\153d prevent oncombatstart from running when engaging world bosses. there is no need to double filter it. It?\226?\128?\153s filtered by second arg of OnCombatStart
+    
+    This will fix range finder not showing on malificus when engaging while in progress
 
-commit 209633e717cd9796c0ee89214db815fc4c454ceb
+commit d50b25cb3c251804cc6f5431efac99948efd5ba2
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Apr 2 05:33:23 2017 +0200
+Date:   Fri Apr 7 06:52:59 2017 +0200
 
-    Omega via svn r16124:
-    updated version code for guild. may contain bugs
+    Omega via svn r16146:
+    Tweak orb yells to be more condensed
+    Re add taint of sea pre warning but make it off by default
+    Add new optional icon yell for taint of sea off by default to help with certain strats
+    Changed way icons are assigned to accommodate above so there may be brief compatibility issues.
 
-commit ac823f7bb142858c0dfee499775fbb56fcefa80f
+commit 8190b22fd854691cea88b4ee4e9f196b485a5098
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Apr 1 12:33:12 2017 +0200
+Date:   Fri Apr 7 02:55:47 2017 +0200
 
-    tandanu via svn r16123:
+    Omega via svn r16145:
+    Tweaks
+
+commit 1019dd55cf8f4904fa0c0c2ffb791676feae2bad
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Apr 6 22:09:34 2017 +0200
+
+    Omega via svn r16144:
+    Prevent lua error in version comparison to raid table which isn?\226?\128?\153t generated by guild version checks. this also means no force disable for guild checks, but that?\226?\128?\153s fine for now.
+
+commit 058022f093124b63f301a1cb5a09907c1f732cb0
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Apr 6 20:35:05 2017 +0200
+
+    ebmor via svn r16143:
+    deDE update, EN: fix typo
+
+commit 45f69d352a8a2a01c2b3586a7d325e3acdbcc921
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Apr 6 18:20:31 2017 +0200
+
+    tandanu via svn r16142:
     increment alpha version
 

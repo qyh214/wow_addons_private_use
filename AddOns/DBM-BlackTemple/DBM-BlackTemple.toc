@@ -13,6 +13,7 @@
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: BC
 ## X-DBM-Mod-Has-Single-Format: 1
+## X-DBM-Mod-Has-TimeWalker: 1
 ## X-DBM-Mod-MapID: 564
 ## X-DBM-Mod-Sort: 501
 ## X-DBM-Mod-MinCoreRevision: 12473

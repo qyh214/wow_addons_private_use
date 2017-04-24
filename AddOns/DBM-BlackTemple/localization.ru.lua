@@ -17,7 +17,6 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	SpineIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(39837),
 	RangeFrame	= "Show range frame (10)"--Translate
 }
 
@@ -161,9 +160,7 @@ L:SetOptionLocalization{
 	TimerEnrage		= "Show timer for Enrage",--Translate
 	TimerNextEnrage	= "Show timer for next Enrage",--Translate
 	TimerMana		= "Show timer for zero mana in Phase 2",--Translate
-	SpiteWhisper	= "Send whisper to $spell:41376 targets (requires Raid Leader)",--Translate
-	DrainIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41303),
-	SpiteIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41376)
+	SpiteWhisper	= "Send whisper to $spell:41376 targets (requires Raid Leader)"--Translate
 }
 
 L:SetMiscLocalization{
@@ -187,15 +184,6 @@ L:SetWarningLocalization{
 }
 
 L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	FAIcons		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41001),
-	FAWhisper	= "Send whisper to $spell:41001 targets (requires Raid Leader)"--Translate
-}
-
-L:SetMiscLocalization{
-	FAWhisper	= "Смертельное Притяжение на Вас!"
 }
 
 ----------------------
@@ -223,9 +211,7 @@ L:SetOptionLocalization{
 	WarnFaded		= "Show warning when $spell:41476 fades",--Translate
 	WarnDevAura		= "Show warning for $spell:41452",--Translate
 	WarnResAura		= "Show warning for $spell:41453",--Translate
-	Immune			= "Show warning when Manalde becomes spell or melee immune",--Translate
-	PoisonIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41485),--Translate
-	PoisonWhisper	= "Send whisper to $spell:41485 targets (requires Raid Leader)"--Translate
+	Immune			= "Show warning when Manalde becomes spell or melee immune"--Translate
 }
 
 L:SetMiscLocalization{
@@ -272,8 +258,6 @@ L:SetOptionLocalization{
 	TimerCombatStart= "Show time for start of combat",--Translate
 	TimerNextHuman	= "Show time for Next Human Phase",--Translate
 	TimerNextDemon	= "Show time for Demon Human Phase",--Translate
-	ParasiteIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41917),
-	ParasiteWhisper	= "Send whisper to $spell:41917 targets (requires Raid Leader)",--Translate
 	RangeFrame		= "Show range frame (10 yards) in Phase 3 and 4"--Translate
 }
 

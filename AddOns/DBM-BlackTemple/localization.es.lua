@@ -11,9 +11,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	InfoFrame	= "Mostrar marco de información de salud de los jugadores (por debajo de 8,8mil de salud)",
-	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(8),
-	SpineIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(39837)
+	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(8)
 }
 
 L:SetMiscLocalization{
@@ -108,9 +106,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	WarnMana		= "Mostrar aviso previo para cuando el maná máximo de los jugadores llegue a cero en Fase 2",
-	TimerMana		= "Mostrar temporizador para cuando el maná máximo de los jugadores llegue a cero en Fase 2",
-	DrainIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41303),
-	SpiteIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41376)
+	TimerMana		= "Mostrar temporizador para cuando el maná máximo de los jugadores llegue a cero en Fase 2"
 }
 
 L:SetMiscLocalization{
@@ -133,8 +129,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	timerAura	= "Mostrar temporizador para la siguiente Aura centelleante",
-	FAIcons		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41001)
+	timerAura	= "Mostrar temporizador para la siguiente Aura centelleante"
 }
 
 ----------------------
@@ -151,8 +146,7 @@ L:SetWarningLocalization{
 }
 
 L:SetOptionLocalization{
-	Immune			= "Mostrar aviso cuando Manalde se vuelva inmune al daño físico o de hechizos",
-	PoisonIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41485)
+	Immune			= "Mostrar aviso cuando Manalde se vuelva inmune al daño físico o de hechizos"
 }
 
 L:SetMiscLocalization{
@@ -188,8 +182,7 @@ L:SetOptionLocalization{
 	WarnDemon		= "Anunciar cambio a fase demoníaca",
 	TimerNextHuman	= "Mostrar temporizador para la siguiente fase humanoide",
 	TimerNextDemon	= "Mostrar temporizador para la siguiente fase demoníaca",
-	RangeFrame		= "Mostrar marco de distancia (10 m) en las fases 3 y 4",
-	ParasiteIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41917)
+	RangeFrame		= "Mostrar marco de distancia (10 m) en las fases 3 y 4"
 }
 
 L:SetMiscLocalization{

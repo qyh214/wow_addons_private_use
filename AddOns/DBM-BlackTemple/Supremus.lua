@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Supremus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 609 $"):sub(12, -3))
 mod:SetCreatureID(22898)
 mod:SetEncounterID(602)
 mod:SetModelID(21145)
@@ -26,15 +26,15 @@ local berserkTimer		= mod:NewBerserkTimer(900)
 
 mod:AddBoolOption("KiteIcon", true)
 
-local phase2 = false
-local lastTarget = false
+mod.vb.phase2 = false
+mod.vb.lastTarget = "None"
 
 function mod:ScanTarget()
 	local target = self:GetBossTarget(22898)
 	if target then
-		if lastTarget ~= target then
+		if self.vb.lastTarget ~= target then
 			warnKite:Show(target)
-			lastTarget = target
+			self.vb.lastTarget = target
 			if self.Options.KiteIcon then
 				self:SetIcon(target, 8)
 			end
@@ -45,8 +45,8 @@ end
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
 	timerPhase:Start(-delay, L.Kite)
-	phase2 = false
-	lastTarget = false
+	self.vb.phase2 = false
+	self.vb.lastTarget = "None"
 	if not self:IsTrivial(85) then--Only warning that uses these events is remorseless winter and that warning is completely useless spam for level 90s.
 		self:RegisterShortTermEvents(
 			"SPELL_DAMAGE 40265 42052",
@@ -57,8 +57,8 @@ end
 
 function mod:OnCombatEnd()
 	self:UnregisterShortTermEvents()
-	if lastTarget then
-		self:SetIcon(lastTarget, 0)
+	if self.vb.lastTarget ~= "None" then
+		self:SetIcon(self.vb.lastTarget, 0)
 	end
 end
 
@@ -73,19 +73,19 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:RAID_BOSS_EMOTE(msg)
 	if msg == L.PhaseKite or msg:find(L.PhaseKite) then
-		phase2 = true
+		self.vb.phase2 = true
 		warnPhase:Show(L.Kite)
 		timerPhase:Start(L.Tank)
 		self:ScheduleMethod(4, "ScanTarget")
-		if lastTarget then
-			self:SetIcon(lastTarget, 0)
+		if self.vb.lastTarget ~= "None" then
+			self:SetIcon(self.vb.lastTarget, 0)
 		end
 	elseif msg == L.PhaseTank or msg:find(L.PhaseTank) then
-		phase2 = false
+		self.vb.phase2 = false
 		warnPhase:Show(L.Tank)
 		timerPhase:Start(L.Kite)
-		if lastTarget then
-			self:SetIcon(lastTarget, 0)
+		if self.vb.lastTarget ~= "None" then
+			self:SetIcon(self.vb.lastTarget, 0)
 		end
 	elseif msg == L.ChangeTarget or msg:find(L.ChangeTarget) then
 		self:ScheduleMethod(0.5, "ScanTarget")

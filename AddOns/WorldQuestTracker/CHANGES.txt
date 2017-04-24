@@ -1,7 +1,13 @@
-changeset:   125:e79e4d8941df
-tag:         v7.2.0.125-release
+changeset:   130:57195f88cc0f
+tag:         v7.2.0.130-release
 user:        Tercio
-date:        Tue Apr 04 11:39:36 2017 -0300
-summary:     - ticket #353: "quests on broken shore should by pass filters".
+date:        Thu Apr 20 12:49:06 2017 -0300
+summary:     - one digit for million fractions (related to ticket #389).
+
+
+changeset:   129:67e1913afa12
+user:        Tercio
+date:        Tue Apr 18 17:15:30 2017 -0300
+summary:     - Ticket #389: issue with artifact power above 1 million.
 
 

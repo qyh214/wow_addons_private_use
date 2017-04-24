@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod(1737, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16136 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16173 $"):sub(12, -3))
 mod:SetCreatureID(104154)--104537 (Fel Lord Kuraz'mal)
 mod:SetEncounterID(1866)
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
-mod:SetHotfixNoticeRev(16028)
+mod:SetHotfixNoticeRev(16172)
 
 mod:RegisterCombat("combat")
+mod:SetWipeTime(30)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 206219 206220 206514 206675 206840 207938 104534 208545 209270 211152 208672 206744 206883 206221 206222 221783 211439 220957 227008 221408 221486",
@@ -270,6 +271,7 @@ function mod:OnCombatStart(delay)
 	table.wipe(bondsIcons)
 	table.wipe(flamesIcons)
 	if self:IsMythic() then
+		self:SetCreatureID(104154, 104537)
 		timerBondsofFelCD:Start(8.4-delay, 1)
 		countdownBondsOfFel:Start(8.4)
 		timerDzorykxCD:Start(17-delay)
@@ -280,6 +282,7 @@ function mod:OnCombatStart(delay)
 		countdownLiquidHellfire:Start(36)
 		self:SetCreatureID(104154, 999999)--Placeholder until I know id of mythic enemy
 	else
+		self:SetCreatureID(104154)
 		timerLiquidHellfireCD:Start(2-delay, 1)
 		timerFelEffluxCD:Start(11-delay, 1)
 		timerFelLordKurazCD:Start(11-delay)
@@ -526,7 +529,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerFlamesofSargerasCD:Start(18.9, (self.vb.flamesSargCast).."-"..2)
 			timerFlamesofSargerasCD:Start(58.5, (self.vb.flamesSargCast+1).."-"..1)
 		end
-	elseif spellId == 212258 and self.vb.phase > 1.5 then--Ignore phase 1 adds with this cast
+	elseif spellId == 212258 and (self:IsMythic() or self.vb.phase > 1.5) then--Ignore phase 1 adds with this cast
 		self.vb.handofGuldanCast = self.vb.handofGuldanCast + 1
 		specWarnHandofGuldan:Show()
 		voiceHandofGuldan:Play("bigmob")

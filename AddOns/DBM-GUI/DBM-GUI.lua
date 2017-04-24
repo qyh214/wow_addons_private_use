@@ -43,7 +43,7 @@
 --
 
 
-local revision =("$Revision: 15805 $"):sub(12, -3)
+local revision =("$Revision: 16179 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -3285,9 +3285,6 @@ local function CreateOptionsMenu()
 		end)
 		VoiceDropDown:SetPoint("TOPLEFT", CountSoundDropDown2, "TOPLEFT", 0, -45)
 
-		local countdownOptionsArea	= spokenAlertsPanel:CreateArea(L.Area_CountdownOptions, nil, 100, true)
-		local ShowCountdownText 	= countdownOptionsArea:CreateCheckButton(L.ShowCountdownText,  true, nil, "ShowCountdownText")
-
 		local voiceFilterArea		= spokenAlertsPanel:CreateArea(L.Area_VoicePackOptions, nil, 100, true)
 		local VPF1 					= voiceFilterArea:CreateCheckButton(L.SpecWarn_AlwaysVoice, true, nil, "AlwaysPlayVoice")
 		local voiceSWOptions = {
@@ -3301,7 +3298,6 @@ local function CreateOptionsMenu()
 		SWFilterDropDown:SetPoint("TOPLEFT", VPF1, "TOPLEFT", 0, -45)
 
 		--spokenGeneralArea:AutoSetDimension()
-		countdownOptionsArea:AutoSetDimension()
 		spokenAlertsPanel:SetMyOwnHeight()
 	end
 
@@ -3688,7 +3684,7 @@ do
 				else
 					bottom2value3:SetText( stats.challengeBestTime and ("%d:%02d"):format(mfloor(stats.challengeBestTime / 60), stats.challengeBestTime % 60) or "-" )
 				end
-			elseif statsType == 5 then--Party: Normal, TimeWalker (some normal only dungeons with timewalker such as classic)
+			elseif statsType == 5 then--Party/TW Raid: Normal, TimeWalker (some normal only dungeons with timewalker such as classic)
 				top1value1:SetText( stats.normalKills )
 				top1value2:SetText( stats.normalPulls - stats.normalKills )
 				top1value3:SetText( stats.normalBestTime and ("%d:%02d"):format(mfloor(stats.normalBestTime / 60), stats.normalBestTime % 60) or "-" )
@@ -3997,14 +3993,36 @@ do
 
 				--Set enable or disable per mods.
 				if mod.addon.oneFormat then--Classic/BC Raids
-					statsType = 2--Fix for BC instance
-					--Do not use top1 header.
-					top1text1:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
-					top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
-					top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
-					top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
-					top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
-					top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+					if mod.addon.hasTimeWalker then--Time walking classic raid (ie Black Temple)
+						statsType = 5
+						--Use top1 and top2 area.
+						top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+						top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
+						top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
+						top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
+						top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
+						top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
+						top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+						top2header:SetPoint("LEFT", top1header, "LEFT", 220, 0)
+						top2text1:SetPoint("LEFT", top1text1, "LEFT", 220, 0)
+						top2text2:SetPoint("LEFT", top1text2, "LEFT", 220, 0)
+						top2text3:SetPoint("LEFT", top1text3, "LEFT", 220, 0)
+						top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+						top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+						top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+						--Set header text.
+						top1header:SetText(PLAYER_DIFFICULTY1)
+						top2header:SetText(PLAYER_DIFFICULTY_TIMEWALKER)
+					else
+						statsType = 2--Fix for BC instance
+						--Do not use top1 header.
+						top1text1:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+						top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
+						top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
+						top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
+						top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
+						top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+					end
 					--Set Dims
 					Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*5*singleline))
 					area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*5 )

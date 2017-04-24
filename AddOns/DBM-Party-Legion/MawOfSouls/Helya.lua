@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1663, "DBM-Party-Legion", 8, 727)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15432 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16180 $"):sub(12, -3))
 mod:SetCreatureID(96759)
 mod:SetEncounterID(1824)
 mod:SetZone()
@@ -53,8 +53,8 @@ function mod:SPELL_CAST_START(args)
 		timerBreathCD:Start()
 		countdownBreath:Start()
 	elseif spellId == 202088 then
-		specWarnBrackwaterBarrage:Schedule(5)
-		voiceBrackwaterBarrage:Schedule(5, "breathsoon")
+		specWarnBrackwaterBarrage:Show()
+		voiceBrackwaterBarrage:Play("breathsoon")
 		--timerBreathCD:Start()
 		--countdownBreath:Start()
 	elseif spellId == 198495 then

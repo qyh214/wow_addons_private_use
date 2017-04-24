@@ -1,7 +1,7 @@
 local mod		= DBM:NewMod("z529", "DBM-PvP", 2)
 local L			= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 63 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 65 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -138,7 +138,8 @@ end
 
 do
 	local function AB_Initialize()
-		if DBM:GetCurrentArea() == 529 then
+		local zoneID = DBM:GetCurrentArea()
+		if zoneID == 529 or zoneID == 1681 then
 			bgzone = true
 			mod:RegisterShortTermEvents(
 				"CHAT_MSG_BG_SYSTEM_HORDE",

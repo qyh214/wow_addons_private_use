@@ -8,8 +8,8 @@
 local _G = getfenv(0);
 local TITAN_BAG_ID = "Bag";
 local TITAN_BAG_THRESHOLD_TABLE = {
-	Values = { 0.5, 0.75 },
-	Colors = { GREEN_FONT_COLOR, NORMAL_FONT_COLOR, RED_FONT_COLOR },
+	Values = { 0.5, 0.75, 0.9 },
+	Colors = { HIGHLIGHT_FONT_COLOR, NORMAL_FONT_COLOR, ORANGE_FONT_COLOR, RED_FONT_COLOR },
 }
 local updateTable = {TITAN_BAG_ID, TITAN_PANEL_UPDATE_BUTTON};
 -- ******************************** Variables *******************************

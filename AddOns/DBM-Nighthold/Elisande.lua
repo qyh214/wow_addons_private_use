@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1743, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16128 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16176 $"):sub(12, -3))
 mod:SetCreatureID(106643)
 mod:SetEncounterID(1872)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--During soft enrage will go over 8 debuffs, can't mark beyond that
-mod:SetHotfixNoticeRev(16127)
+mod:SetHotfixNoticeRev(16158)
 mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
@@ -152,11 +152,11 @@ local mythicP2FastElementalTimers = {8, 51}--Mythic Feb 5
 local mythicP3FastElementalTimers = {8, 36, 44}--Mythic Feb 5
 local heroicRingTimers = {34, 40, 10, 62, 9, 45}--Heroic Jan 19
 local normalRingTimers = {34, 30, 75, 50}--Normal Feb 8
-local mythicRingTimers = {30, 39, 15, 30, 19, 10, 25, 9, 10, 10}--Mythic Feb 5 (figure out that 25 in middle of 10s)
+local mythicRingTimers = {30, 39, 14.7, 30, 19, 10, 25, 9, 10, 10}--Mythic Feb 5 (figure out that 25 in middle of 10s)
 local lfrRingTimers = {21, 30, 37, 35}
 local heroicSingularityTimers = {10, 22, 36.0, 57, 65}--Heroic Jan 18
 local normalSingularityTimers = {10, 22, 36.0, 46}--Normal Feb 2
-local mythicSingularityTimers = {10, 55, 50, 45}--Mythic Feb 5th
+local mythicSingularityTimers = {10, 53.7, 49.8, 45}--Mythic April 20th
 local lfrSingularityTimers = {10, 15, 57, 30}--LFR April 2nd
 --Only exist in phase 2
 local heroicBeamTimers = {72, 57, 60}--Heroic Jan 18
@@ -213,8 +213,8 @@ function mod:OnCombatStart(delay)
 	--timerAblationCD:Start(8.5-delay)--Verify/tweak
 	if self:IsMythic() then
 		timerTimeElementalsCD:Start(8-delay, FAST)
-		timerSpanningSingularityCD:Start(56-delay, 2)
-		countdownSpanningSingularity:Start(56)
+		timerSpanningSingularityCD:Start(53.7-delay, 2)
+		countdownSpanningSingularity:Start(53.7)
 		timerArcaneticRing:Start(30-delay, 1)
 		countdownArcaneticRing:Start(30-delay)
 	elseif self:IsLFR() then
@@ -471,10 +471,10 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			voicePhaseChange:Play("ptwo")
 			timerAblatingExplosionCD:Start(22)--Verfied unchanged Dec 13 Heroic
 			if self:IsMythic() then--TODO: Fine tune these as they may be hit or miss by some seconds Hard to measure precise phase changes from WCL
-				timerEpochericOrbCD:Start(24, 1)
-				countdownOrbs:Start(24)
-				timerArcaneticRing:Start(43, 1)--Verified Jan 18
-				countdownArcaneticRing:Start(43.7)
+				timerEpochericOrbCD:Start(23.8, 1)
+				countdownOrbs:Start(23.8)
+				timerArcaneticRing:Start(41.9, 1)--Verified Jan 18
+				countdownArcaneticRing:Start(41.9)
 				timerDelphuricBeamCD:Start(67, 1)--Cast SUCCESS
 				countdownSpanningSingularity:Start(10)
 			elseif self:IsHeroic() then
@@ -505,17 +505,17 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				countdownOrbs:Start(24)
 				specWarnEpochericOrb:Schedule(24)--Spawning isn't in combat log in phase 3, only landing, so need to use schedule for warnings
 				voiceEpochericOrb:Schedule(24, "161612")
-				timerArcaneticRing:Start(43, 1)--Verified Jan 18
-				countdownArcaneticRing:Start(43)
+				timerArcaneticRing:Start(42, 1)--Verified Jan 18
+				countdownArcaneticRing:Start(42)
 				timerConflexiveBurstCD:Start(48, 1)
 				countdownConflexiveBurst:Start(48)
-				timerPermaliativeTormentCD:Start(74)--Updated Jan 18 Heroic
+				timerPermaliativeTormentCD:Start(73.7, 1)--Updated April 21 Mythic
 			elseif self:IsHeroic() then
 				timerEpochericOrbCD:Start(27, 1)
 				countdownOrbs:Start(27)
 				specWarnEpochericOrb:Schedule(27)--Spawning isn't in combat log in phase 3, only landing, so need to use schedule for warnings
 				voiceEpochericOrb:Schedule(27, "161612")
-				timerPermaliativeTormentCD:Start(33)
+				timerPermaliativeTormentCD:Start(33, 1)
 				timerArcaneticRing:Start(45.7, 1)--Verified Jan 18
 				countdownArcaneticRing:Start(45.7)
 				timerConflexiveBurstCD:Start(57.7, 1)
@@ -523,7 +523,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			elseif self:IsLFR() then
 				timerDelphuricBeamCD:Start(23.7, 1)--Special exception
 			else--Normal
-				timerPermaliativeTormentCD:Start(33)
+				timerPermaliativeTormentCD:Start(33, 1)
 				timerConflexiveBurstCD:Start(57.7, 1)
 				countdownConflexiveBurst:Start(57.7)
 			end

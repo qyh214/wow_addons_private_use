@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Souls", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 605 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 609 $"):sub(12, -3))
 mod:SetCreatureID(23420)
 mod:SetEncounterID(606)
 mod:SetModelID(21483)
@@ -33,7 +33,7 @@ local warnShield		= mod:NewSpellAnnounce(41431, 3)
 
 local warnPhase3		= mod:NewPhaseAnnounce(3, 2)
 local warnSoul			= mod:NewSpellAnnounce(41545, 3)
-local warnSpite			= mod:NewSpellAnnounce(41376, 3)
+local warnSpite			= mod:NewTargetAnnounce(41376, 3)
 
 local specWarnShock		= mod:NewSpecialWarningInterrupt(41426, "HasInterrupt", nil, 2)
 local specWarnShield	= mod:NewSpecialWarningDispel(41431, "MagicDispeller", nil, 2)
@@ -48,30 +48,13 @@ local timerNextShield	= mod:NewCDTimer(15, 41431)
 local timerNextSoul		= mod:NewCDTimer(10, 41545)
 local timerNextShock	= mod:NewCDTimer(12, 41426, nil, nil, nil, 4)--Blizz lied, this is a 12-15 second cd. you can NOT solo interrupt these with most classes
 
-mod:AddBoolOption("DrainIcon", false)
-mod:AddBoolOption("SpiteIcon", false)
+mod:AddSetIconOption("DrainIcon", 41303, false)
+mod:AddSetIconOption("SpiteIcon", 41376, false)
 
-local warnDrainTargets = {}
-local warnSpiteTargets = {}
-local lastFixate = false
-local drainIcon = 8
-local spiteIcon = 8
-
-local function showDrain()
-	warnDrain:Show(table.concat(warnDrainTargets, "<, >"))
-	table.wipe(warnDrainTargets)
-	drainIcon = 8
-end
-
-local function showSpite()
-	warnSpite:Show(table.concat(warnSpiteTargets, "<, >"))
-	table.wipe(warnSpiteTargets)
-	spiteIcon = 8
-end
+mod.vb.lastFixate = "None"
 
 function mod:OnCombatStart(delay)
-	lastFixate = false
-	table.wipe(warnSpiteTargets)
+	self.vb.lastFixate = "None"
 	timerNextEnrage:Start(47-delay)
 	warnEnrageSoon:Schedule(42-delay)
 	if DBM.BossHealth:IsShown() then
@@ -90,28 +73,22 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerNextShield:Start()
 		specWarnShield:Show(args.destName)
 	elseif args.spellId == 41376 then
-		warnSpiteTargets[#warnSpiteTargets + 1] = args.destName
-		self:Unschedule(showSpite)
-		if self.Options.SpiteIcon then
-			self:SetIcon(args.destName, spiteIcon)
-			spiteIcon = spiteIcon - 1
-		end
+		warnSpite:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnSpite:Show()
 		end
-		self:Schedule(0.3, showSpite)
-	elseif args.spellId == 41303 then
-		warnDrainTargets[#warnDrainTargets + 1] = args.destName
-		self:Unschedule(showDrain)
-		if self.Options.DrainIcon then
-			self:SetIcon(args.destName, drainIcon)
-			drainIcon = drainIcon - 1
+		if self.Options.SpiteIcon then
+			self:SetAlphaIcon(0.5, args.destName)
 		end
-		self:Schedule(1, showDrain)
+	elseif args.spellId == 41303 then
+		warnDrain:CombinedShow(1, args.destName)
+		if self.Options.DrainIcon then
+			self:SetAlphaIcon(1, args.destName)
+		end
 	elseif args.spellId == 41294 then
-		if lastFixate ~= args.destName then
+		if self.vb.lastFixate ~= args.destName then
 			warnFixate:Show(args.destName)
-			lastFixate = args.destName
+			self.vb.lastFixate = args.destName
 		end
 	elseif args.spellId == 41410 then
 		warnDeaden:Show(args.destName)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1819, "DBM-TrialofValor", nil, 861)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16089 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16177 $"):sub(12, -3))
 mod:SetCreatureID(114263, 114361, 114360)--114263 Odyn, 114361 Hymdall, 114360 Hyrja 
 mod:SetEncounterID(1958)
 mod:SetZone()
@@ -670,6 +670,9 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		end
 		--Timers above started in earliest possible place
 		--Timer started at jump though has to be delayed to avoid phase 1 ClearAllDebuffs events
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:Hide()
+		end
 	elseif spellId == 227882 then--Jump into Battle (phase 2 begin)
 		self.vb.phase = 2
 		if not self:IsEasy() then

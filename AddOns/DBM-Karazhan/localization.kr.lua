@@ -218,7 +218,7 @@ L:SetMiscLocalization{
 
 
 -- Nightbane
-L = DBM:GetModLocalization("Nightbane")
+L = DBM:GetModLocalization("NightbaneRaid")
 
 L:SetGeneralLocalization{
 	name = "파멸의 어둠"

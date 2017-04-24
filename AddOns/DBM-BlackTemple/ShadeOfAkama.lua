@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Akama", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 605 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 609 $"):sub(12, -3))
 mod:SetCreatureID(22841)
 mod:SetEncounterID(603)
 mod:SetModelID(21357)
@@ -18,6 +18,8 @@ mod:RegisterEventsInCombat(
 	"UNIT_DIED"
 )
 
+--TODO, add RP timer to the spell aura REMOVED event
+--TODO, add spawn wave timers for phase 1?
 local warnPhase2	= mod:NewPhaseAnnounce(2)
 
 mod.vb.phase = 1

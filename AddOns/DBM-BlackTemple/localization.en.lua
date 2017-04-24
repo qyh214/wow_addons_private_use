@@ -10,9 +10,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	InfoFrame	= "Show info frame for health (<8.8k hp)",
-	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(8),
-	SpineIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(39837)
+	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(8)
 }
 
 L:SetMiscLocalization{
@@ -107,9 +105,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	WarnMana		= "Show warning from zero mana in Phase 2",
-	TimerMana		= "Show timer for zero mana in Phase 2",
-	DrainIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41303),
-	SpiteIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41376)
+	TimerMana		= "Show timer for zero mana in Phase 2"
 }
 
 L:SetMiscLocalization{
@@ -132,8 +128,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	timerAura	= "Show timer for Prismatic Aura",
-	FAIcons		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41001)
+	timerAura	= "Show timer for Prismatic Aura"
 }
 
 ----------------------
@@ -150,8 +145,7 @@ L:SetWarningLocalization{
 }
 
 L:SetOptionLocalization{
-	Immune			= "Show warning when Manalde becomes spell or melee immune",
-	PoisonIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41485)
+	Immune			= "Show warning when Manalde becomes spell or melee immune"
 }
 
 L:SetMiscLocalization{
@@ -187,8 +181,7 @@ L:SetOptionLocalization{
 	WarnDemon		= "Show warning for Demon Phase",
 	TimerNextHuman	= "Show time for Next Human Phase",
 	TimerNextDemon	= "Show time for Demon Human Phase",
-	RangeFrame		= "Show range frame (10 yards) in Phase 3 and 4",
-	ParasiteIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(41917)
+	RangeFrame		= "Show range frame (10 yards) in Phase 3 and 4"
 }
 
 L:SetMiscLocalization{

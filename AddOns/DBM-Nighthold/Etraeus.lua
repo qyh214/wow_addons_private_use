@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1732, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16135 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16171 $"):sub(12, -3))
 mod:SetCreatureID(103758)
 mod:SetEncounterID(1863)
 mod:SetZone()
@@ -159,9 +159,9 @@ mod.vb.isPhaseChanging = false
 --"207143-Void Ejection" = "pull:328.7, 5.7, 14.1, 20.7, 2.8, 6.1, 25.7, 4.9",
 --"207143-Void Ejection" = "pull:326.8, 4.4, 17.5, 17.4, 4.6, 4.7, 26.3, 4.8",
 --For all inclusive, i'll simply use lowest observed time for each count, which will give close approx cd timer but imprecise to be a "next" timer.
-local icyEjectionTimers = {24.5, 34.4, 6.5, 4.8, 50.2, 1.2, 2.4, 25.6, 2.8}--43.3, 35.6, 8.1, 4.1, 52.2, 1.2, 2.4
+local icyEjectionTimers = {24.5, 34.1, 6.5, 4.8, 50.2, 1.2, 2.4, 25.6, 2.8}--43.3, 35.6, 8.1, 4.1, 52.2, 1.2, 2.4
 local felEjectionTimers = {18.2, 3.6, 3.2, 2.4, 10.2, 4.4, 2.8, 32.8, 4.0, 1.6, 4.0, 4.5, 22.3, 6.9, 17.0, 1.6, 1.2, 2.0, 18.3, 0.4}--10 after 4, 32 after 7, 22 after 12, 17 after 14, 18 after 18
-local mythicfelEjectionTimers = {17.4, 3.2, 2.8, 2.4, 9.3, 2.4, 3.2, 31.2, 2, 1.2, 13.4, 1.2, 1.7, 22.2, 8.5, 9.3, 2.5, 1.5, 24.3, 3.2}
+local mythicfelEjectionTimers = {17.4, 3.2, 2.8, 2.4, 9.3, 2.4, 3.2, 30, 2, 1.2, 12.6, 1.2, 1.7, 22.2, 5.6, 9.3, 2.5, 1.5, 24.3, 3.2}
 local voidEjectionTimers = {24, 3.2, 14.1, 17.4, 0.8, 4.7, 25.7, 2.3}
 --local felNovaTImers = {34.8, 31.3, 29.3}--Latest is 47.1, 45.0, 25.1. Currently unused. for now just doing 45 or 25
 local worldDestroyingTimers = {22, 42, 57, 51.8}
@@ -632,7 +632,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 --		timerCoronalEjectionCD:Stop()
 		timerConjunctionCD:Stop()
 		countdownConjunction:Cancel()
-		timerGravPullCD:Start(30)
+		timerGravPullCD:Start(28.7)
 		if not self:IsEasy() then
 			timerFrigidNovaCD:Start(49, 1)
 			countdownFrigidNova:Start(49)
@@ -641,8 +641,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			self:Unschedule(showConjunction)
 			self.vb.grandConCount = 0
 			timerIcyEjectionCD:Start(15, 1)
-			timerConjunctionCD:Start(27, 1)
-			countdownConjunction:Start(27)
+			timerConjunctionCD:Start(24, 1)
+			countdownConjunction:Start(24)
 		else
 			timerIcyEjectionCD:Start(23.3, 1)
 		end
@@ -689,7 +689,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		timerThingCD:Start(31)
 		if not self:IsEasy() then--Was never used on normal, probably not LFR either then
 			--timerVoidEjectionCD:Start(24, 1)
-			timerVoidNovaCD:Start(41, 1)
+			timerVoidNovaCD:Start(39.2, 1)
 		end
 		if self:IsMythic() then
 			self:Unschedule(showConjunction)
@@ -697,8 +697,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			self.vb.worldDestroyingCount = 0
 			timerWorldDevouringForceCD:Start(22, 1)
 			countWorldDevouringForce:Start(22)
-			timerConjunctionCD:Start(46.5, 1)
-			countdownConjunction:Start(46.5)
+			timerConjunctionCD:Start(46, 1)
+			countdownConjunction:Start(46)
 			berserkTimer:Start(201)
 		else
 			berserkTimer:Start(231)
