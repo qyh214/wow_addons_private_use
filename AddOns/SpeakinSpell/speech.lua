@@ -1,4 +1,5 @@
 -- Author      : RisM
+-- Modified by : TehAkarf
 -- Create Date : 6/28/2009 4:04:27 PM
 
 local SpeakinSpell = LibStub("AceAddon-3.0"):GetAddon("SpeakinSpell")
@@ -157,30 +158,38 @@ function SpeakinSpell:GetChatLanguageForSpell(EventTableEntry)
 	--		but now you're playing on your Undead where "you don't know that language" errors would happen
 	--		that is why the RPLanguage stores a custom value ("RANDOM", "COMMON", or "RACIAL")
 	--		instead of the actual language name ("Common", "Orcish", "Foresaken", etc)
+
+	--NOTE: SendChatMessage needs the locale-independant languageIndex from these APIs:
+	--		languageName, languageIndex = GetLanguageByIndex(index)
+	--      languageName, languageIndex = SpeakinSpell:GetRacialLanguage() too
 	
+	-- NOTE: GetLanguageByIndex returns the name of the language in String format - TehAkarf
 	if "RANDOM" == EventTableEntry.RPLanguage then
 		-- Player Selected "Random"
-		local Random = math.random(1,100)
-		local Chance = EventTableEntry.RPLanguageRandomChance*100
-
-		--self:DebugMsg(funcname, string.format(L["Random:%d <= Chance:%d"], Random, Chance) )
-		if Random <= Chance then -- use racial language
-			--NOTE: languageName, languageIndex = GetLanguageByIndex(index)
-			--      SpeakinSpell:GetRacialLanguage() returns the localized languageName
-			--      but SendChatMessage needs the locale-independant languageIndex
-			return select(2, GetLanguageByIndex(2))
-		else -- use Common
-			return nil --more reliable than GetDefaultLanguage("player") for our purposes here
+		local list = {}
+		for	i=1,NumLanguages do
+			-- i and languageIndex are different
+			-- i is an index to this toon's known languages: 1 to GetNumLanguages()
+			-- languageIndex is a global index: 1 to the total available languages in the game right now
+			-- for example a night elf will see i=1, languageIndex=7, languageName=Darnassian
+			local languageName, languageIndex = GetLanguageByIndex(i)
+			self:DebugMsg(funcname, string.format(L["i=%d, languageName=%s, languageIndex=%d"], i, languageName, languageIndex) )
+			list[i] = languageIndex
 		end
+		local Random = math.random(1,NumLanguages)
+		self:DebugMsg(funcname, string.format(L["NumLanguages=%d, selected Random=%d, return languageIndex=%d"], NumLanguages, Random, list[Random]) )
+		return list[Random]
 	elseif "COMMON" == EventTableEntry.RPLanguage then
 		-- Common
 		return nil
 	elseif "RACIAL" == EventTableEntry.RPLanguage then
 		-- use the racial language
-		--NOTE: languageName, languageIndex = GetLanguageByIndex(index)
-		--      SpeakinSpell:GetRacialLanguage() returns the localized languageName
-		--      but SendChatMessage needs the locale-independant languageIndex
-		return select(2, GetLanguageByIndex(2));
+		local languageName, languageIndex = SpeakinSpell:GetRacialLanguage()
+		return languageIndex
+	elseif "CLASS" == EventTableEntry.RPLanguage then
+		-- Use the class's language (i.e. Demon Hunter)
+		local languageName, languageIndex = SpeakinSpell:GetClassLanguage()
+		return languageIndex
 	else
 		-- invalid option, assume common
 		-- TODOFUTURE: add SpeakinSpell language filters like "Pirate" and "Drunk" (and treat Random as one of those?)

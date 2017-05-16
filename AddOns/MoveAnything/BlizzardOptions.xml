@@ -79,9 +79,6 @@
 					<OnShow>
 						Lib_UIDropDownMenu_SetWidth(self, 150)
 					</OnShow>
-					<OnClick>
-						ToggleDropDownMenu(self:GetID(), nil, self, self, 6, 7, nil, self)
-					</OnClick>
 				</Scripts>
 			</Button>
 			

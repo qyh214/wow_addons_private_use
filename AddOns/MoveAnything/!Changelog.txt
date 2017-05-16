@@ -3,6 +3,12 @@
 * Reseting bags while the bag is not opened won't reset it's scale to default.
 
 
+**16.1.8**
+* Updated NoTain UIDropDownMenu.
+* Some other dropdown changes.
+* Fixed Frames:
+	* Transmogrification
+
 **16.1.7**
 * Updated for 7.2.0.
 

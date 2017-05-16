@@ -30,6 +30,7 @@ L["guildlevelups"] = "guild levelups"
 L["instancedifficulty"] = "difficulty"
 L["intro"] = "Multishot will take screenshots of the following events"
 L["jpeg"] = "Low Quality (JPEG)"
+L["legendaryloot"] = "Legendary Loot"
 L["levelups"] = true
 L["played"] = "add /played"
 L["png"] = "High Quality (PNG)"

@@ -1638,7 +1638,7 @@ end
 
 
 -----------------------------------------------------------------------------------
--- Patch 4.2.0.02
+-- Patch 5.1.0.01
 -----------------------------------------------------------------------------------
 -- WoW 5.1 removed the BATTLEGROUND chat channel, replaced with new INSTANCE_CHAT
 
@@ -1673,3 +1673,34 @@ function SpeakinSpell:FixOld_51001_BGChannel()
 	end
 end
 
+-----------------------------------------------------------------------------------
+-- Patch 7.2.1.01
+-----------------------------------------------------------------------------------
+-- SpeakinSpell 7.2.1.01 removed EventTableEntry.RPLanguageRandomChance
+-- additional languages are now supported and the random chance is an equal distribution
+
+function SpeakinSpell:FixOld_72101_OneEventTable(EventTable)
+	for key, ete in pairs(EventTable) do
+		ete.RPLanguageRandomChance = nil
+	end
+end
+
+function SpeakinSpell:FixOld_72101_RPLanguageRandomChance()
+	for realm,ToonList in pairs(SpeakinSpellSavedDataForAll.Toons) do
+		for toon,ToonSettings in pairs(ToonList) do
+			if ToonSettings.EventTable then
+				self:FixOld_72101_OneEventTable(ToonSettings.EventTable)
+			end
+		end
+	end
+	
+	-- if using a shared event table, update that too
+	if SpeakinSpellSavedDataForAll.AllToonsEventTable then
+		self:FixOld_72101_OneEventTable(SpeakinSpellSavedDataForAll.AllToonsEventTable)
+	end
+	
+	-- simply delete the collected event tables, rather than bother updating them
+	if SpeakinSpellSavedDataForAll.Networking then
+		SpeakinSpellSavedDataForAll.Networking.CollectedEventTables = {}
+	end
+end

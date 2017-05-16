@@ -1,9 +1,9 @@
-NomiCakesGossipButtonName = 'GossipTitleButton'
 --[[
 	Operating under the following assumptions about how recipes are discovered:
 	1) You must know the base rank of a recipe to receive higher ranked versions of it
 	2) You must already know all recipes which are reagents for the recipe (No longer true in 7.1)
 --]]
+NomiCakesGossipButtonName = 'GossipTitleButton' -- Allow other addons to override the buttons we hook, if needed
 
 local HookedButtons = {} -- [button] = true
 local Undiscoverable = { -- List of rank 1 recipes that can't be obtained from nomi
@@ -85,7 +85,7 @@ local Requisites = { -- List of recipes you must (probably) already know in orde
 }
 
 local IngredientList = { -- In the order they appear in Nomi's dialog options
-	[124117] = {201506,201555,201544,201516,201563,201550,201524,201543,201530,201535}, -- Lean Shank
+	[124117] = {201506,201555,201544,201516,201563,201550,201524,201543,201530,201535,201515,201542,201562}, -- Lean Shank
 	[124121] = {201536,201547,201562,201507,201515,201527,201542,201556}, -- Wildfowl Egg
 	[124119] = {201562,201549,201542,201529,201516,201548,201505,201528,201554,201534,201543,201515,201563}, -- Big Gamy Ribs
 	[124118] = {201560,201554,201534,201505,201540}, -- Fatty Bearsteak

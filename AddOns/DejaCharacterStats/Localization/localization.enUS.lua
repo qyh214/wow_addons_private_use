@@ -4,12 +4,6 @@ local L = namespace.L 				--localization
 local LOCALE = GetLocale()
 
 if LOCALE == "enUS" then
-
-weekday, month, day, year = CalendarGetDate();
-
-if month==4 and day==1 then --April Fools
---print(day,month)
-
 	-- The EU English game client also
 	-- uses the US English locale code.
 
@@ -38,8 +32,8 @@ if month==4 and day==1 then --April Fools
 -- ## Global Options Left Column ##
 -- ################################
 
-	L["Equipped/Available"] = "SAD/Tremendous"
-	L['Displays Equipped/Available item levels unless equal.'] = "Displays how SAD/Tremendous your item level is unless equal."
+--	L["Equipped/Available"] = "Equipped/Available Checkbox Name"
+--	L['Displays Equipped/Available item levels unless equal.'] = "Equipped/Available Checkbox Mouseover Description"
 
 --	L["Decimals"] = "Decimals Checkbox Name"
 --	L['Displays "Enhancements" category stats to two decimal places.'] = "Decimals Checkbox Mouseover Description"
@@ -47,24 +41,24 @@ if month==4 and day==1 then --April Fools
 --	L["Ilvl Decimals"] = "Ilvl Decimals Checkbox Name"
 --	L['Displays average item level to two decimal places.'] = "Ilvl Decimals Checkbox Mouseover Description"
 
-	L['Durability '] = "Constitution"
+--	L['Durability '] = "Durability Checkbox Name"
 --	L['Displays the average Durability percentage for equipped items in the stat frame.'] = "Durability Checkbox Mouseover Description"
 
-	L['Repair Total '] = "Thanks Obama!"
+--	L['Repair Total '] = "Repair Total Checkbox Name"
 --	L['Displays the Repair Total before discounts for equipped items in the stat frame.'] = "Repair Total Checkbox Mouseover Description"
 
 -- ################################
 
-	L["Durability Bars"] = "Constitution Bars"
+--	L["Durability Bars"] = "Durability Bars Checkbox Name"
 --	L["Displays a durability bar next to each item." ] = "Durability Bars Checkbox Mouseover Description"
 
-	L["Average Durability"] = "Средняя Constitution"
+--	L["Average Durability"] = "Average Dura Checkbox Name"
 --	L["Displays average item durability on the character shirt slot and durability frames."] = "Average Durability Checkbox Mouseover Description"
 
-	L["Item Durability"] = "Constitution предмета"
+--	L["Item Durability"] = "Item Durability Checkbox Name"
 --	L["Displays each equipped item's durability."] = "Item Durability Checkbox Mouseover Description"
 
-	L["Item Repair Cost"] = "Obamacare Cost"
+--	L["Item Repair Cost"] = "Item Repair Cost Checkbox Name"
 --	L["Displays each equipped item's repair cost."] = "Item Repair Cost Checkbox Mouseover Description"
 
 -- ################################
@@ -91,52 +85,46 @@ if month==4 and day==1 then --April Fools
 -- ## Stats ##
 -- ################################
 
-	L["Durability"] = "Constitution" -- Be sure to include the colon ":" or it will conflict wih the options checkbox.
+--	L["Durability"] = "Durability Stat Name" -- Be sure to include the colon ":" or it will conflict wih the options checkbox.
 --	L["Durability %s"] = "Durability stat tooltip white mouseover title. You must use %%s to show %s. " -- ## --> %s MUST be included <-- ## 
 --	L["Average equipped item durability percentage."] = "Durability stat mouseover tooltip yellow description."
 
-	L["Repair Total"] = "Thanks Obama!" -- Be sure to include the colon ":" or it will conflict wih the options checkbox.
+--	L["Repair Total"] = "Repair Tot Stat Name" -- Be sure to include the colon ":" or it will conflict wih the options checkbox.
 --	L["Repair Total %s"] = "Repair Total stat tooltip white mouseover title. You must use %%s to show %s. " -- ## --> %s MUST be included <-- ## 
 --	L["Total equipped item repair cost before discounts."] = "Repair Total stat mouseover tooltip yellow description."
 
 -- ## Attributes ##
 
-	L["Attributes"] = "Alt Stats"
-	L["Health"] = "Life"
-	L["Power"] = "Power"
-	L["Druid Mana"] = "Other Power"
-	L["Armor"] = "Damage Control"
-	L["Strength"] = "Tremendousness"
-	L["Agility"] = "Dexterity"
-	L["Intellect"] = "Intelligence"
-	L["Stamina"] = "Endurance"
-	L["Damage"] = "Урон"
-	L["Attack Power"] = "Twitter Power"
-	L["Attack Speed"] = "Twitter Speed"
-	L["Weapon DPS"] = "WMDs"
-	L["Spell Power"] = "Literacy"
-	L["Mana Regen"] = "Man-a-Lago"
-	L["Energy Regen"] = "Red Bull"
-	L["Rune Regen"] = "Восст. рун"
-	L["Focus Regen"] = "Adderall"
-	L["Movement Speed"] = "Скорость движения"
-	L["Global Cooldown"] = "Global Warming"
-	L["Durability"] = "Constitution"
-	L["Repair Total"] = "Thanks Obama!"
+--	L["Health"] = ""
+--	L["Power"] = ""
+--	L["Druid Mana"] = ""
+--	L["Armor"] = ""
+--	L["Strength"] = ""
+--	L["Agility"] = ""
+--	L["Intellect"] = ""
+--	L["Stamina"] = ""
+--	L["Damage"] = ""
+--	L["Attack Power"] = ""
+--	L["Attack Speed"] = ""
+--	L["Spell Power"] = ""
+--	L["Mana Regen"] = ""
+--	L["Energy Regen"] = ""
+--	L["Rune Regen"] = ""
+--	L["Focus Regen"] = ""
+--	L["Movement Speed"] = ""
+--	L["Durability"] = ""
+--	L["Repair Total"] = ""
 
 -- ## Enhancements ##
 
-	L["Critical Strike"] = "District Court"
-	L["Haste"] = "AHCA"
-	L["Versatility"] = "Bipartisanship"
-	L["Mastery"] = "Искусность"
-	L["Leech"] = "Welfare"
-	L["Avoidance"] = "Town Hall"
-	L["Dodge"] = "Evade"
-	L["Parry"] = "Circumvent"
-	L["Block"] = "Filibuster"
+--	L["Critical Strike"] = ""
+--	L["Haste"] = ""
+--	L["Versatility"] = ""
+--	L["Mastery"] = ""
+--	L["Leech"] = ""
+--	L["Avoidance"] = ""
+--	L["Dodge"] = ""
+--	L["Parry"] = ""
+--	L["Block"] = ""
 
--- ## Other ##
-	L["Class Crest Background"] = "Working Class Background"
-end
 return end

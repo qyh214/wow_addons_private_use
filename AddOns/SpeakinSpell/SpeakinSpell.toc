@@ -1,10 +1,11 @@
 ###############################################################################
-## Interface: 70100
+## Interface: 70200
 ## Title: SpeakinSpell
 ## Title-deDE: SpeakinSpell
 ## Author: Stonarius of Antonidas
 ## Author: Groguz
-## Version: 7.1.0.02
+## Author: Bazor (Akarf of Dawnbringer)
+## Version: 7.2.1.01
 ## Notes: Says random things in chat when casting any spell or ability. Type "/ss help" for the user's manual.
 ## Notes-deDE: Sendet zufällige oder selbstkreierte Sprüche in den Chat, wenn Zauber oder Fähigkeiten benutzt werden. Tippe "/SpeakinSpell hilfe" für mehr Informationen.
 ## X-Credits: Created by Stonarius. German translation by Lexin. Korean by troth75. See in-game help for full credits.

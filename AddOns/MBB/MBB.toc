@@ -1,4 +1,4 @@
-## Interface: 70100
+## Interface: 70200
 ## Title: MinimapButtonBag
 ## Author: karlsnyder
 ## X-Category: Map
@@ -9,18 +9,6 @@
 ## Notes-zhCN: 清除迷你地图周围按钮，整合它们至一个弹出菜单中！
 ## Notes-ruRU: Очищает миникарту от кнопок аддонов и держит их в одном меню!
 ## SavedVariablesPerCharacter: MBB_Exclude, MBB_Options
-## X-Curse-Packaged-Version: 4.11.6
-## X-Curse-Project-Name: MBB
-## X-Curse-Project-ID: mbb
-## X-Curse-Repository-ID: wow/mbb/mainline
-## X-Curse-Packaged-Version: v3.00
-## X-Curse-Project-Name: MBB
-## X-Curse-Project-ID: mbb
-## X-Curse-Repository-ID: wow/mbb/mainline
-## X-Curse-Packaged-Version: v3.01
-## X-Curse-Project-Name: MBB
-## X-Curse-Project-ID: mbb
-## X-Curse-Repository-ID: wow/mbb/mainline
 
 localization-enGB.lua
 localization-frFR.lua

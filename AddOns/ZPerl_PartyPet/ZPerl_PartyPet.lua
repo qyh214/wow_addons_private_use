@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(New)
 	for k, v in pairs(PartyPetFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 1017 $")
+end, "$Revision: 1033 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -87,7 +87,7 @@ function XPerl_Party_Pet_GetUnitFrameByUnit(unitid)
 end
 
 -- CheckVisiblity()
-local function CheckVisiblity()
+--[[local function CheckVisiblity()
 	local on
 	for i, frame in pairs(PartyPetFrames) do
 		if (frame:IsShown()) then
@@ -100,13 +100,26 @@ local function CheckVisiblity()
 	else
 		XPerl_Party_Pet_EventFrame:Hide()
 	end
-end
+end]]
 
 -- XPerl_Party_Pet_OnLoad
 function XPerl_Party_Pet_OnLoad(self)
 	XPerl_SetChildMembers(self)
 
 	tinsert(AllPetFrames, self)
+
+	if self:GetParent():GetParent():GetAttribute("showPlayer") then
+		if self:GetID() == 1 then
+			self.partyid = "pet"
+			self.ownerid = "player"
+		else
+			self.partyid = "partypet"..self:GetID() - 1
+			self.ownerid = "party"..self:GetID() - 1
+		end
+	else
+		self.partyid = "partypet"..self:GetID()
+		self.ownerid = "party"..self:GetID()
+	end
 
 	local BuffOnUpdate, DebuffOnUpdate, BuffUpdateTooltip, DebuffUpdateTooltip
 	BuffUpdateTooltip = XPerl_Unit_SetBuffTooltip
@@ -159,8 +172,14 @@ function XPerl_Party_Pet_OnLoad(self)
 		}
 	end
 
-	XPerl_SecureUnitButton_OnLoad(self, nil, nil, nil, XPerl_ShowGenericMenu)
-	XPerl_SecureUnitButton_OnLoad(self.nameFrame, nil, nil, nil, XPerl_ShowGenericMenu)
+	--XPerl_SecureUnitButton_OnLoad(self, nil, nil, nil, XPerl_ShowGenericMenu)
+	--XPerl_SecureUnitButton_OnLoad(self.nameFrame, nil, nil, nil, XPerl_ShowGenericMenu)
+
+	self:SetAttribute("*type1", "target")
+	self:SetAttribute("type2", "togglemenu")
+	self.nameFrame:SetAttribute("*type1", "target")
+	self.nameFrame:SetAttribute("type2", "togglemenu")
+
 
 	self:SetAttribute("useparent-unit", true)
 	self:SetAttribute("unitsuffix", "pet")
@@ -174,12 +193,12 @@ function XPerl_Party_Pet_OnLoad(self)
 
 	self:SetScript("OnShow", function(self)
 		self.conf = conf.partypet
-		CheckVisiblity()
+		--CheckVisiblity()
 		XPerl_Party_Pet_UpdateDisplay(self)
 		XPerl_Party_SetDebuffLocation(self:GetParent())
 	end)
 	self:SetScript("OnHide", function(self)
-		CheckVisiblity()
+		--CheckVisiblity()
 		XPerl_Party_SetDebuffLocation(self:GetParent())
 	end)
 
@@ -189,7 +208,7 @@ function XPerl_Party_Pet_OnLoad(self)
 		self.conf = conf.partypet
 	end
 
-	--XPerl_Party_Pet_Set_Bits1(self)
+	XPerl_Party_Pet_Set_Bits1(self)
 end
 
 -- XPerl_Party_Pet_CheckPet
@@ -412,11 +431,11 @@ end
 function XPerl_Party_Pet_OnUpdate(self, elapsed)
 	for unit, frame in pairs(PartyPetFrames) do
 		if (frame:IsShown()) then
-			local visible = UnitIsVisible(unit)
+			--[[local visible = UnitIsVisible(unit)
 			if frame.visible ~= visible then
 				XPerl_Party_Pet_UpdateDisplay(frame)
 				frame.visible = visible
-			end
+			end]]
 
 			if (conf.combatFlash and frame.PlayerFlash) then
 				XPerl_Party_Pet_CombatFlash(frame, elapsed, false)
@@ -440,21 +459,48 @@ end
 -- XPerl_Party_Pet_OnEvent
 function XPerl_Party_Pet_OnEvent(self, event, unit, ...)
 	local func = XPerl_Party_Pet_Events[event]
-	if (func) then
+	if func then
 		if (strfind(event, "^UNIT_")) then
 			local f = PartyPetFrames[unit]
-			if (f) then
+			if f then
 				if event == "UNIT_HEAL_PREDICTION" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
+					if not UnitIsUnit(f.partyid, unit) then
+						return
+					end
+
 					func(f, unit, ...)
 				else
+					if not UnitIsUnit(f.partyid, unit) then
+						return
+					end
+
 					func(f, ...)
 				end
+			end
+		elseif event == "PARTY_MEMBER_ENABLE" or event == "PARTY_MEMBER_DISABLE" then
+			local pet = string.gsub(unit, "(%a+)(%d+)", "%1pet%2")
+			local f = PartyPetFrames[pet]
+			if f then
+				local unitID = f.partyid
+				if unitID == "pet" or unitID == "playerpet" then
+					owner = "player"
+				else
+					owner = string.gsub(unitID, "(%a+)pet(%d+)", "%1%2")
+				end
+
+				if owner ~= "player" then
+					if not UnitIsUnit(owner, unit) then
+						return
+					end
+				else
+					return
+				end
+
+				func(f, unit, ...)
 			end
 		else
 			func(unit, ...)
 		end
-	else
-	--XPerl_ShowMessage("EXTRA EVENT")
 	end
 end
 
@@ -540,14 +586,22 @@ end
 XPerl_Party_Pet_Events.UNIT_POWER_FREQUENT = XPerl_Party_Pet_Events.UNIT_MANA
 XPerl_Party_Pet_Events.UNIT_MAXPOWER = XPerl_Party_Pet_Events.UNIT_MANA
 
+function XPerl_Party_Pet_Events:PARTY_MEMBER_ENABLE(unit)
+	XPerl_Party_Pet_UpdateDisplay(self)
+end
+
+function XPerl_Party_Pet_Events:PARTY_MEMBER_DISABLE(unit)
+	XPerl_Party_Pet_UpdateDisplay(self)
+end
+
 function XPerl_Party_Pet_Events:UNIT_HEAL_PREDICTION(unit)
-	if (pconf.healprediction and unit == self.partyid) then
+	if pconf.healprediction then
 		XPerl_SetExpectedHealth(self)
 	end
 end
 
 function XPerl_Party_Pet_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
-	if (pconf.absorbs and unit == self.partyid) then
+	if pconf.absorbs then
 		XPerl_SetExpectedAbsorbs(self)
 	end
 end
@@ -665,6 +719,9 @@ function XPerl_Party_Pet_Set_Bits()
 	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.mana, {"UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MANA", "UNIT_DISPLAYPOWER"})
 	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.name, {"UNIT_NAME_UPDATE"})
 	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.name and petconf.level, {"UNIT_LEVEL"})
+
+	XPerl_Party_Pet_EventFrame:RegisterEvent("PARTY_MEMBER_ENABLE")
+	XPerl_Party_Pet_EventFrame:RegisterEvent("PARTY_MEMBER_DISABLE")
 
 	if (pconf.healprediction) then
 		XPerl_Party_Pet_EventFrame:RegisterEvent("UNIT_HEAL_PREDICTION")

@@ -1,5 +1,4 @@
 --Elvis is the greatest!
-
 local ADDON_NAME, namespace = ... 	--localization
 local L = namespace.L 				--localization
 
@@ -333,7 +332,6 @@ end
 
 local function DCS_Login_Initialization()
 	ShownData = DCS_TableData:CopyTable(DefaultData)
-
 	local uniqueKey = UnitName("player") .. ":" .. GetRealmName() .. ":" .. GetSpecialization()
 	--print(uniqueKey)
 	if (DCS_ClassSpecDB[uniqueKey]) then
@@ -464,13 +462,14 @@ end)
 -- Show/Hide Logic --
 ---------------------
 
+
 CharacterStatsPane:HookScript("OnShow", function(self)
 	self:Hide()
 	StatScrollFrame:Show()
 end)
 
 hooksecurefunc("PaperDollFrame_UpdateStats", function()
-	ShowCharacterStats("player")
+		ShowCharacterStats("player")
 end)
 
 hooksecurefunc("PaperDollFrame_SetSidebar", function(self, index)
@@ -825,7 +824,6 @@ local function DCS_InterfaceOptConfigButton_OnLeave(self)
 		ShowCharacterStats("player")
 		DCS_InterfaceOptConfigButton_OnEnter()
 	end)
-
 
 ----------------------------
 -- Scrollbar Check Button --

@@ -5972,7 +5972,7 @@
 						<Scripts>
 							<OnLoad>
 								local _, class = UnitClass("player")
-								if (class == "SHAMAN" or class == "DRUID" or class == "MAGE" or class == "MONK" or class == "PRIEST" or class == "WARRIOR") then
+								if (class == "SHAMAN" or class == "DRUID" or class == "MAGE" or class == "MONK" or class == "PRIEST" or class == "WARLOCK" or class == "WARRIOR") then
 									self:Show()
 								else
 									self:Hide()
@@ -11072,9 +11072,28 @@
 						</Scripts>
 					</CheckButton>
 
-					<CheckButton name="$parent_InRaid" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_ShowPlayer" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_PVPIcon" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="0" y="6"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_PARTY_SHOWPLAYER")
+								self.configBase = "XPerlDB.party"
+								self.configIndex = "showPlayer"
+								self.configClick = XPerl_Party_Reset
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_InRaid" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_ShowPlayer" relativePoint="BOTTOMLEFT">
 								<Offset>
 									<AbsDimension x="0" y="6"/>
 								</Offset>
@@ -11106,7 +11125,12 @@
 								self.configIndex = "smallRaid"
 								self.configClick = function()
 									XPerl_Party_Reset()
-									XPerl_Raid_HideShowRaid()
+									if XPerl_Raid_HideShowRaid then
+										XPerl_Raid_HideShowRaid()
+									end
+									if XPerl_RaidPets_OptionActions then
+										XPerl_RaidPets_OptionActions()
+									end
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -12956,7 +12980,10 @@
 										XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_SORTBYROLE", true)
 										self.configBase = "XPerlDB.raid"
 										self.configIndex = "sortByRole"
-										self.configClick = function() XPerl_Raid_ChangeAttributes() XPerl_Raid_OptionActions() end
+										self.configClick = function()
+											XPerl_Raid_ChangeAttributes()
+											XPerl_Raid_OptionActions()
+										end
 										XPerl_Options_RegisterProtected(self)
 										self.Validate = function()
 											XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_ByClass"], not XPerlDB.raid.sortByRole)

@@ -1,6 +1,7 @@
 local ADDON_NAME, namespace = ... 	--localization
 local L = namespace.L 				--localization
-
+local version = GetAddOnMetadata(ADDON_NAME, "Version")
+local addoninfo = 'v'..version
 --------------------------
 -- SavedVariables Setup --
 --------------------------
@@ -107,6 +108,7 @@ for k, v in pairs(RegisteredEvents) do
 end
 
 function DejaCharacterStats.ShowHelp()
+	print(addoninfo)
 	print(L["DejaCharacterStats Slash commands (/dcstats):"])
 	print(L["  /dcstats config: Open the DejaCharacterStats addon config menu."])
 	print(L["  /dcstats reset:  Resets DejaCharacterStats frames to default positions."])
@@ -174,16 +176,21 @@ InterfaceOptions_AddCategory(DejaCharacterStats.panel);
 -- InterfaceOptions_AddCategory(DejaViewPanel.DejaCharacterStatsPanel);
 
 local dcstitle=CreateFrame("Frame", "DCSTitle", DejaCharacterStatsPanel)
-	dcstitle:SetPoint("TOPLEFT", 5, -5)
-	dcstitle:SetScale(2.0)
-	dcstitle:SetWidth(150)
-	dcstitle:SetHeight(50)
+	dcstitle:SetPoint("TOPLEFT", 10, -10)
+	--dcstitle:SetScale(2.0)
+	dcstitle:SetWidth(300)
+	dcstitle:SetHeight(100)
 	dcstitle:Show()
 
 local dcstitleFS = dcstitle:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	dcstitleFS:SetText('|cff00c0ffDejaCharacterStats|r')
 	dcstitleFS:SetPoint("TOPLEFT", 0, 0)
-	dcstitleFS:SetFont("Fonts\\FRIZQT__.TTF", 10)
+	dcstitleFS:SetFont("Fonts\\FRIZQT__.TTF", 20)
+
+local dcsversionFS = DejaCharacterStatsPanel:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	dcsversionFS:SetText('|cffffffff' .. addoninfo .. '|r')
+	dcsversionFS:SetPoint("BOTTOMRIGHT", -10, 10)
+	dcsversionFS:SetFont("Fonts\\FRIZQT__.TTF", 12)
 	
 local dcsresetcheck = CreateFrame("Button", "DCSResetButton", DejaCharacterStatsPanel, "UIPanelButtonTemplate")
 	dcsresetcheck:ClearAllPoints()

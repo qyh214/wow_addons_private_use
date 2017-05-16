@@ -1,4 +1,4 @@
-﻿if( GetLocale() == "zhCN" ) then
+if( GetLocale() == "zhCN" ) then
 
 MBB_TOOLTIP1 = "Ctrl + 右键 选择将一个按钮重新依附到迷你地图。";
 MBB_OPTIONS_HEADER = "选项";

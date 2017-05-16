@@ -1,4 +1,5 @@
 -- Author      : RisM
+-- Modified by : TehAkarf
 -- Create Date : 6/28/2009 3:38:58 PM
 
 -- This loader.lua file is loaded first, and defines default values, sets up critical declarations
@@ -287,8 +288,7 @@ SpeakinSpell.DEFAULTS = {
 			WG			= nil,
 		},
 		--NOTE: GetDefaultLanguage("player") doesn't work during loader, or OnInitialize, or OnVariablesLoaded
-		RPLanguage = "COMMON", -- may be one of { COMMON, RACIAL, or RANDOM } see GetChatLanguageForSpell()
-		RPLanguageRandomChance = 0.5, --50/50 chance to use racial language, only if RPLanguage == RANDOM
+		RPLanguage = "COMMON", -- may be one of { COMMON, RACIAL, CLASS, or RANDOM } see GetChatLanguageForSpell()
 
 		-- Spam Reduction options
 		Frequency = 1.00,

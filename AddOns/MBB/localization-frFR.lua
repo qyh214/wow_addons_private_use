@@ -18,5 +18,5 @@ if( GetLocale() == "frFR" ) then
 	MBB_HELP2 = "  |c00ffffffbuttons|r: Affiche la liste de tous les boutons de la barre MBB";
 	MBB_HELP3 = "  |c00ffffffreset position|r: Reinitialiser la position du bouton MBB";
 	MBB_HELP4 = "  |c00ffffffreset all|r: Reinitialiser toutes les options";
-	MBB_NOERRORS = "Pas d'erreurs trouvées!";
+	MBB_NOERRORS = "Pas d'erreurs trouvï¿½es!";
 end

@@ -1,6 +1,6 @@
 -- --------------------------------------------------------------------------------
 -- Moncai Compare
--- Copyright (C) 2009-2016 Moncai
+-- Copyright (C) 2009-2017 Moncai
 -- Main module
 -- --------------------------------------------------------------------------------
 
@@ -8,6 +8,7 @@
 
 local ItemRefTooltip = ItemRefTooltip
 
+-- ItemRef.xml:45
 ItemRefTooltip.UpdateTooltip = function(self)
 	if ( not self.comparing and not IsModifiedClick("COMPAREITEMS")) then
 		GameTooltip_ShowCompareItem(self);
@@ -22,6 +23,7 @@ ItemRefTooltip.UpdateTooltip = function(self)
 	end
 end
 
+-- ItemRef.xml:60
 ItemRefTooltip:SetScript("OnTooltipSetItem", function(self)
 	if (not IsModifiedClick("COMPAREITEMS") and self:IsMouseOver()) then
 		GameTooltip_ShowCompareItem(self);
@@ -40,6 +42,7 @@ ItemRefTooltip:SetScript("OnDragStop", function(self)
 end
 )
 
+-- GameTooltip.xml:25
 GameTooltip:SetScript("OnTooltipSetItem", function(self)
 	if ( not IsModifiedClick("COMPAREITEMS") and not self:IsEquippedItem() ) then
 		GameTooltip_ShowCompareItem(self);

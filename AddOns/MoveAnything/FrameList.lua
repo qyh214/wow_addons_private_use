@@ -459,7 +459,7 @@ local m = {
 		API:AddElement({name = "OpenMailFrame", displayName = "Open Mail"}, c)
 		API:AddElement({name = "PetStableFrame", displayName = "Pet Stable"}, c)
 		API:AddElement({name = "FriendsFrame", displayName = "Social - Friends / Who / Guild / Chat / Raid"}, c)
-		API:AddElement({name = "TransmogrifyFrame", displayName = "Transmogrification"}, c)
+		API:AddElement({name = "WardrobeFrame", displayName = "Transmogrification"}, c)
 		pvpf:AddCategory(c)
 		--qldf:AddCategory(c)
 		--qlf:AddCategory(c)

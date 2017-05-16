@@ -94,7 +94,6 @@ local EVENTS = {
     "QUEST_ACCEPTED",
     "BAG_SLOT_FLAGS_UPDATED",
     "BANK_BAG_SLOT_FLAGS_UPDATED",
-    "UNIT_AURA",
     "PLAYERBANKSLOTS_CHANGED",
     "BANKFRAME_OPENED",
     "START_LOOT_ROLL",
@@ -104,6 +103,7 @@ local EVENTS = {
     "TRANSMOG_COLLECTION_SOURCE_ADDED",
     "TRANSMOG_COLLECTION_SOURCE_REMOVED",
     "TRANSMOG_SEARCH_UPDATED",
+    "PLAYERREAGENTBANKSLOTS_CHANGED",
 }
 
 for i, event in pairs(EVENTS) do
@@ -223,6 +223,8 @@ function CanIMogIt:SlashCommands(input)
         self:OpenOptionsMenu()
     elseif input == 'PleaseDeleteMyDB' then
         self:DBReset()
+    elseif input == 'refresh' then
+        self:ResetCache()
     else
         self:Print("Unknown command!")
     end

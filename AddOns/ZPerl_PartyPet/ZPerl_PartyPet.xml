@@ -177,6 +177,15 @@
 			</Anchor>
 		</Anchors>
 	</Button>
+	<Button name="XPerl_partypet5" inherits="XPerl_Party_Pet_FrameTemplate" parent="XPerl_party5" id="5">
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="XPerl_party4statsFrame" relativePoint="TOPRIGHT">
+				<Offset>
+					<AbsDimension x="-2" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</Button>
 
 	<Frame name="XPerl_Party_Pet_EventFrame" hidden="true">
 		<Scripts>

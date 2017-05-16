@@ -1,6 +1,8 @@
 L = {}
 L["(Experimental)"] = "(Experimentell)"
 L["Adds tooltips to items showing if you have learned a transmog appearance."] = "Fügt Gegenständen Tooltips hinzu, ob eine Transmogrifikationsvorlage bereits bekannt ist."
+--Translation missing 
+-- L["Also shows a summary in the Appearance Sets UI of how many pieces of a transmog set you have collected."] = ""
 L["Another class can learn this item."] = "Eine andere Klasse kann diesen Gegenstand erlernen."
 L["Appearances updated: "] = "Aktualisierte Vorlagen:"
 L["Can be learned by:"] = "Kann erlernt werden durch:"
@@ -29,16 +31,23 @@ L["Only show on items that can be transmoggrified."] = "Hinweise nur bei Gegenst
 L["Only show on items that you haven't learned."] = "Hinweise nur bei Gegenständen, die noch erlernt werden können."
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "Bitte berücksichtige, dass dies nicht immer korrekt ist, da Blizzards Informationen unvollständig sind."
 L["Show Bag Icons"] = "Zeige Taschen Symbole"
+--Translation missing 
+-- L["Show information on the tooltip about transmog sets."] = ""
 L["Show Source Location Tooltip"] = "Zeige Tooltip mit Quellenangabe"
+--Translation missing 
+-- L["Show Transmog Set Info"] = ""
 L["Shows a more detailed text for some of the tooltips."] = "Zeige einen ausführlicheren Text für einige der Tooltips."
 L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor, World Drop). This only works on items your current class can learn."] = "Zeige einen Tooltip mit der Quellenangabe einer Vorlage (z. B. Quest, Händler, Weltdrop)."
 L["Shows chat messages on login about the database scan."] = "Zeige beim Einloggen eine Chatmeldung zum Datenbankscan."
 L["Shows messages on login about the database scan."] = "Zeige beim Einloggen eine Meldung zum Datenbankscan."
 L["Shows the icon directly on the item in your bag."] = "Zeigt das Symbol direkt auf den Gegenstand in der Tasche."
+--Translation missing 
+-- L["TEST IGNORE ME"] = ""
 L["Transmoggable Items Only"] = "Nur transmogrifizierbare Gegenstände"
 L["Unknown Items Only"] = "Nur unbekannte Gegenstände"
 L["Updating appearances database."] = "Vorlagen-Datenbank wird aktualisiert."
 L["Verbose Text"] = "Ausführlicher Text"
+
 
 
 CanIMogIt:RegisterLocale("deDE", L)

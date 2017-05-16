@@ -1,10 +1,12 @@
-lightweight tag c516afb5db717c243f32fa615505a33af590d73d v1.10
+lightweight tag aa37fea2588d20a2d82810a384cf042a6b5a44b6 v1.11
 Author:	Eliote <>
-Date:	Sat Apr 8 16:22:49 2017 -0300
+Date:	Tue May 2 00:37:51 2017 -0300
 
-commit c516afb5db717c243f32fa615505a33af590d73d
+commit aa37fea2588d20a2d82810a384cf042a6b5a44b6
 Author: Eliote <>
-Date:   Sat Apr 8 16:22:49 2017 -0300
+Date:   Tue May 2 00:37:51 2017 -0300
 
-    Add Paragon Reputation
+    Fix paragon reputation
+    
+    * Use currentValue mod threshold instead of currentValue
 

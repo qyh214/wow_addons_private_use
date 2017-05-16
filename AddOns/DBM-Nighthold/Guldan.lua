@@ -1,8 +1,8 @@
 local mod	= DBM:NewMod(1737, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16173 $"):sub(12, -3))
-mod:SetCreatureID(104154)--104537 (Fel Lord Kuraz'mal)
+mod:SetRevision(("$Revision: 16201 $"):sub(12, -3))
+mod:SetCreatureID(104154)--The Demon Within (111022)
 mod:SetEncounterID(1866)
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
@@ -94,7 +94,7 @@ local specWarnWilloftheDemonWithin	= mod:NewSpecialWarningSpell(211439, nil, nil
 local specWarnParasiticWound		= mod:NewSpecialWarningMoveAway(206847, nil, nil, nil, 3, 2)
 local yellParasiticWound			= mod:NewYell(206847)
 local yellParasiticWoundFades		= mod:NewFadesYell(206847)
-local specWarnShearedSoul			= mod:NewSpecialWarningYou(206458, nil, nil, nil, 1, 2)
+local specWarnShearedSoul			= mod:NewSpecialWarningDefensive(206458, nil, nil, nil, 1, 2)
 local specWarnSoulsever				= mod:NewSpecialWarningCount(220957, nil, nil, nil, 3)--Needs voice, but what?
 local specWarnVisionsofDarkTitan	= mod:NewSpecialWarningMoveTo(227008, nil, nil, nil, 3, 7)
 local specWarnSummonNightorb		= mod:NewSpecialWarningSwitchCount(227283, "-Healer", nil, nil, 1, 2)
@@ -184,7 +184,7 @@ local voiceFlamesOfSargeras			= mod:NewVoice(221606)--runout
 --Mythic Only
 local voiceWilloftheDemonWithin		= mod:NewVoice(211439)--carefly
 local voiceParasiticWound			= mod:NewVoice(206847)--scatter
-local voiceShearedSoul				= mod:NewVoice(206458)--targetyou (don't know what to do for most of this stuff yet so generic voices)
+local voiceShearedSoul				= mod:NewVoice(206458)--defensive
 --local voiceSoulSever				= mod:NewVoice(220957)--??? (temp, no idea what you're supposed to for spell_
 local voiceVisionsOfDarkTitan		= mod:NewVoice(227008)--getstoptime
 local voiceSummonNightorb			= mod:NewVoice(227283, "-Healer")--killmob
@@ -271,8 +271,8 @@ function mod:OnCombatStart(delay)
 	table.wipe(bondsIcons)
 	table.wipe(flamesIcons)
 	if self:IsMythic() then
-		self:SetCreatureID(104154, 104537)
-		timerBondsofFelCD:Start(8.4-delay, 1)
+		self:SetCreatureID(104154, 111022)
+		timerBondsofFelCD:Start(self:IsTank() and 6.4 or 8.4, 1)
 		countdownBondsOfFel:Start(8.4)
 		timerDzorykxCD:Start(17-delay)
 		countdownHandofGuldan:Start(17)
@@ -441,7 +441,9 @@ function mod:SPELL_CAST_START(args)
 		table.wipe(bondsIcons)
 		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
 		if tanking or (status == 3) then
-			--Not a thing!
+			if spellId == 206221 then
+				voiceBondsofFel:Play("carefly")
+			end
 		else
 			local targetName = UnitName("boss1target") or DBM_CORE_UNKNOWN
 			if not UnitIsUnit("player", "boss1target") then--the very first bonds of fel, threat is broken and not available yet, so we need an additional filter
@@ -500,17 +502,21 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 206222 or spellId == 206221 then
 		self.vb.bondsofFelCast = self.vb.bondsofFelCast + 1
 		if self:IsMythic() then
-			timerBondsofFelCD:Start(40, self.vb.bondsofFelCast+1)
-			countdownBondsOfFel:Start(40)
+			local timer = self:IsTank() and 38 or 40
+			timerBondsofFelCD:Start(timer, self.vb.bondsofFelCast+1)
+			countdownBondsOfFel:Start(timer)
 		elseif self:IsHeroic() then
-			timerBondsofFelCD:Start(44.4, self.vb.bondsofFelCast+1)
-			countdownBondsOfFel:Start(44.4)
+			local timer = self:IsTank() and 42.4 or 44.4
+			timerBondsofFelCD:Start(timer, self.vb.bondsofFelCast+1)
+			countdownBondsOfFel:Start(timer)
 		elseif self:IsNormal() then
-			timerBondsofFelCD:Start(50, self.vb.bondsofFelCast+1)
-			countdownBondsOfFel:Start(50)
+			local timer = self:IsTank() and 48 or 50
+			timerBondsofFelCD:Start(timer, self.vb.bondsofFelCast+1)
+			countdownBondsOfFel:Start(timer)
 		else
-			timerBondsofFelCD:Start(53, self.vb.bondsofFelCast+1)
-			countdownBondsOfFel:Start(53)
+			local timer = self:IsTank() and 51 or 53
+			timerBondsofFelCD:Start(timer, self.vb.bondsofFelCast+1)
+			countdownBondsOfFel:Start(timer)
 		end
 	elseif spellId == 221783 and self:AntiSpam(35, 1) then
 		self.vb.flamesSargCast = self.vb.flamesSargCast + 1
@@ -603,7 +609,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				timerFlamesofSargerasCD:Start(13.6, (self.vb.flamesSargCast).."-"..3)
 				timerFlamesofSargerasCD:Start(45, (self.vb.flamesSargCast+1).."-"..1)
 				if self.vb.flamesSargCast == 2 then
-					timerWindsCD:Start(31, 2)--FIXME later and start at correct flames cast
+					timerWindsCD:Start(31, 2)
 				end
 			elseif self:IsHeroic() then
 				timerFlamesofSargerasCD:Start(7.7, (self.vb.flamesSargCast).."-"..2)
@@ -658,17 +664,19 @@ function mod:SPELL_AURA_APPLIED(args)
 		countdownEyeofGuldan:Cancel()
 		timerHandofGuldanCD:Stop()
 		countdownHandofGuldan:Cancel()
+		timerWindsCD:Start(12, 1)
 		timerWellOfSouls:Start(15)
 		self.vb.eyeCast = 0
 		if self:IsMythic() then
 			self.vb.phase = 2
 			warnPhase2:Show()
+			timerDzorykxCD:Stop()
+			timerFelLordKurazCD:Stop()
 			timerFlamesofSargerasCD:Start(24.5, "1-1")
-			timerEyeofGuldanCD:Start(35.1, 1)
-			countdownEyeofGuldan:Start(35)
+			timerEyeofGuldanCD:Start(34.3, 1)
+			countdownEyeofGuldan:Start(34.3)
 			timerBlackHarvestCD:Start(55.7, 1)
 			countdownBlackHarvest:Start(55.7)
-			timerWindsCD:Start(68, 1)
 			timerStormOfDestroyerCD:Start(72.6, 1)
 		else
 			self.vb.phase = 3
@@ -704,7 +712,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 206458 then
 		if args:IsPlayer() then
 			specWarnShearedSoul:Show()
-			voiceShearedSoul:Play("targetyou")
+			voiceShearedSoul:Play("defensive")
 		end
 	elseif spellId == 227009 then
 		warnWounded:Show()
@@ -845,7 +853,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				countdownLiquidHellfire:Cancel()
 				timerFelEffluxCD:Stop()
 				timerTransition:Start(19)
-				timerBondsofFelCD:Start(27.6, 1)
+				local timer = 
+				timerBondsofFelCD:Start(self:IsTank() and 25.5 or 27.6, 1)
 				countdownBondsOfFel:Start(27.6)
 				if self:IsLFR() then
 					timerEyeofGuldanCD:Start(54, 1)

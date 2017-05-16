@@ -61,16 +61,22 @@ local function DCS_Set_Dura_Item_Positions()
 		v.durability:ClearAllPoints()
 		v.itemrepair:ClearAllPoints()
 		if DCS_ShowDuraCheck:GetChecked(true) then --those outer-most ifs seem really strange, like almost the same is done
+		--These outer if statements are because this whole function is clustered. 
+		--It encompasses item repair, durability and, indirectly, durability bars.
 			if DCS_ShowItemRepairCheck:GetChecked(true) then
 				v.durability:SetPoint("TOP",v,"TOP",3,-30)
 				v.durability:SetFont("Fonts\\FRIZQT__.TTF", 11, "THINOUTLINE")
 				v.itemrepair:SetPoint("BOTTOM",v,"BOTTOM",1,3)
 				v.itemrepair:SetFont("Fonts\\FRIZQT__.TTF", 11, "THINOUTLINE")
-			elseif not DCS_ShowItemRepairCheck:GetChecked(true) then -- no need to check, can remain as comment for easier understanding
+			elseif not DCS_ShowItemRepairCheck:GetChecked(true) then --Absoultely need to check
+			--or else initial conditions will always show durability,
+			--even when clicking Durability Bars, Average Durability and item Repair Cost buttons.
 				v.durability:SetPoint("CENTER",v,"CENTER",1,-2)
 				v.durability:SetFont("Fonts\\FRIZQT__.TTF", 15, "THINOUTLINE")
 			end
-		elseif DCS_ShowDuraCheck:GetChecked(false) then -- no need to check, can remain as comment for easier understanding
+		elseif DCS_ShowDuraCheck:GetChecked(false) then --Absoultely need to check
+			--or else initial conditions will always show durability,
+			--even when clicking Durability Bars, Average Durability and item Repair Cost buttons.
 			v.durability:SetPoint("TOP",v,"TOP",3,-3)
 			v.durability:SetFont("Fonts\\FRIZQT__.TTF", 11, "THINOUTLINE")
 		end
@@ -80,11 +86,15 @@ local function DCS_Set_Dura_Item_Positions()
 				v.durability:SetFont("Fonts\\FRIZQT__.TTF", 11, "THINOUTLINE")
 				v.itemrepair:SetPoint("BOTTOM",v,"BOTTOM",1,3)
 				v.itemrepair:SetFont("Fonts\\FRIZQT__.TTF", 11, "THINOUTLINE")
-			elseif not DCS_ShowDuraCheck:GetChecked(true) then -- no need to check, can remain as comment for easier understanding
+			elseif not DCS_ShowDuraCheck:GetChecked(true) then --Absoultely need to check
+			--or else initial conditions will always show durability,
+			--even when clicking Durability Bars, Average Durability and item Repair Cost buttons.
 				v.itemrepair:SetPoint("CENTER",v,"CENTER",0,-2)
 				v.itemrepair:SetFont("Fonts\\FRIZQT__.TTF", 12, "THINOUTLINE")
 			end
-		elseif DCS_ShowItemRepairCheck:GetChecked(false) then -- no need to check, can remain as comment for easier understanding
+		elseif DCS_ShowItemRepairCheck:GetChecked(false) then --Absoultely need to check
+			--or else initial conditions will always show durability,
+			--even when clicking Durability Bars, Average Durability and item Repair Cost buttons.
 			v.itemrepair:SetPoint("BOTTOM",v,"BOTTOM",1,3)
 			v.itemrepair:SetFont("Fonts\\FRIZQT__.TTF", 11, "THINOUTLINE")
 		end
@@ -106,15 +116,18 @@ function DCS_Mean_DurabilityCalc()
 		-- --------------------------
 		if durCur == nil then durCur = 0 end
 		if durMax == nil then durMax = 0 end
-		--if duraTotal == nil then duraTotal = 0 end -- does it ever happen?
-		--if duraMaxTotal == nil then duraMaxTotal = 0 end -- does it ever happen?
-		--if addon.duraMean == nil then addon.duraMean = 0 end -- does it ever happen?
+		--if duraTotal == nil then duraTotal = 0 end -- does it ever happen? Yes, when all you wear are heirlooms
+		--if duraMaxTotal == nil then duraMaxTotal = 0 end -- does it ever happen? Yes, when all you wear are heirlooms
+		--if addon.duraMean == nil then addon.duraMean = 0 end -- does it ever happen? Yes, when all you wear are heirlooms
 		
 		duraTotal = duraTotal + durCur
 		--if duraTotal == 0 then duraTotal = 1 	end
 		duraMaxTotal = duraMaxTotal + durMax
 	end
-	if duraMaxTotal == 0 then duraMaxTotal = 1 	 end --puting outside of for loop
+	if duraMaxTotal == 0 then 
+		duraMaxTotal = 1
+		duraTotal = 1 --if nothing to break then durability should be 100%
+	end --puting outside of for loop
 	addon.duraMean = ((duraTotal/duraMaxTotal)*100)
 end		
 
@@ -126,15 +139,15 @@ local function DCS_Durability_Frame_Mean_Display()
 	duraDurabilityFrameFS:SetFormattedText("%.0f%%", addon.duraMean)
 	duraDurabilityFrameFS:Show()
 --	print(addon.duraMean)
-	if addon.duraMean == 100 then 
+	if addon.duraMean == 100 then --If mean is 100 hide text % display
 		duraDurabilityFrameFS:Hide()
-	elseif addon.duraMean >= 80 then
+	elseif addon.duraMean >= 80 then --If mean is 80% or greater color the text off-white.
 		duraDurabilityFrameFS:SetTextColor(0.753, 0.753, 0.753)
-	elseif addon.duraMean > 66 then
+	elseif addon.duraMean > 66 then --If mean is 66% or greater then color the text green.
 		duraDurabilityFrameFS:SetTextColor(0, 1, 0)
-	elseif addon.duraMean > 33 then
+	elseif addon.duraMean > 33 then --If mean is 33% or greater then color the text yellow.
 		duraDurabilityFrameFS:SetTextColor(1, 1, 0)
-	else --if addon.duraMean >= 0 then -- no need to check, can remain as comment for easier understanding
+	elseif addon.duraMean >= 0 then --If mean is 0% or greater then color the text red.
 		duraDurabilityFrameFS:SetTextColor(1, 0, 0)
 	end
 end
@@ -184,10 +197,11 @@ local function DCS_Item_DurabilityTop()
 	for k, v in ipairs(DCSITEM_SLOT_FRAMES) do
 		local slotId = v:GetID()
 		local durCur, durMax = GetInventoryItemDurability(slotId)
-		if durCur == nil or durMax == nil then
-			v.duratexture:SetColorTexture(0, 0, 0, 0)
-			v.durability:SetFormattedText("")
-		elseif ( durCur == durMax ) then
+		--if durCur == nil or durMax == nil then
+		--	v.duratexture:SetColorTexture(0, 0, 0, 0)
+		--	v.durability:SetFormattedText("")
+		--elseif ( durCur == durMax ) then
+		if ( durCur == durMax ) then
 			v.duratexture:SetColorTexture(0, 0, 0, 0)
 			v.durability:SetFormattedText("")
 		else --if ( durCur ~= durMax ) then -- no need to check, can remain as comment for easier understanding
@@ -233,8 +247,8 @@ local DCS_ShowDuraCheck = CreateFrame("CheckButton", "DCS_ShowDuraCheck", DejaCh
 DCS_ShowDuraCheck:SetScript("OnEvent", function(self, event, ...)
 	local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDuraChecked
 	self:SetChecked(checked.ShowDuraSetChecked)
+	DCS_Set_Dura_Item_Positions()
 	if self:GetChecked(true) then
-		DCS_Set_Dura_Item_Positions()
 		DCS_Item_DurabilityTop()
 		gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDuraChecked.ShowDuraSetChecked = true
 	else
@@ -267,15 +281,18 @@ local function DCS_Durability_Bar_Textures()
 		local slotId = v:GetID()
 		local durCur, durMax = GetInventoryItemDurability(slotId)
 
-		if durCur == nil or durMax == nil then
-			v.duratexture:SetColorTexture(0, 0, 0, 0)
-		elseif ( durCur == durMax ) then
+		--if durCur == nil or durMax == nil then
+		--	v.duratexture:SetColorTexture(0, 0, 0, 0)
+		--elseif ( durCur == durMax ) then
+		if ( durCur == durMax ) then
 			v.duratexture:SetColorTexture(0, 0, 0, 0)
 		else --if ( durCur ~= durMax ) then -- no need to check, can remain as comment for easier understanding
-			duraFinite = ((durCur/durMax)*100)
+			--duraFinite = ((durCur/durMax)*100)
+			duraFinite = durCur/durMax
 		end
-		v.duratexture:SetPoint("BOTTOMLEFT",v,"BOTTOMRIGHT",1,3)
-		v.duratexture:SetSize(4, (31*(duraFinite/100)))
+		v.duratexture:SetPoint("BOTTOMLEFT",v,"BOTTOMRIGHT",1,3) -- might be interesting to put between else and end
+		--v.duratexture:SetSize(4, (31*(duraFinite/100)))
+		v.duratexture:SetSize(4, (31*duraFinite))
 		v.duratexture:Show()
 		duraMeanTexture:Show()
 	end
@@ -283,15 +300,18 @@ local function DCS_Durability_Bar_Textures()
 		local slotId = v:GetID()
 		local durCur, durMax = GetInventoryItemDurability(slotId)
 
-		if durCur == nil or durMax == nil then
-			v.duratexture:SetColorTexture(0, 0, 0, 0)
-		elseif ( durCur == durMax ) then
+		--if durCur == nil or durMax == nil then
+		--	v.duratexture:SetColorTexture(0, 0, 0, 0)
+		--elseif ( durCur == durMax ) then
+		if ( durCur == durMax ) then
 			v.duratexture:SetColorTexture(0, 0, 0, 0)
 		else --if ( durCur ~= durMax ) then -- no need to check, can remain as comment for easier understanding
-			duraFinite = ((durCur/durMax)*100)
+			--duraFinite = ((durCur/durMax)*100)
+			duraFinite = durCur/durMax
 		end
-		v.duratexture:SetPoint("BOTTOMRIGHT",v,"BOTTOMLEFT",-2,3)
-		v.duratexture:SetSize(3, (31*(duraFinite/100)))
+		v.duratexture:SetPoint("BOTTOMRIGHT",v,"BOTTOMLEFT",-2,3) -- might be interesting to put between else and end
+		--v.duratexture:SetSize(3, (31*(duraFinite/100)))
+		v.duratexture:SetSize(3, (31*duraFinite))
 		v.duratexture:Show()
 		duraMeanTexture:Show()
 	end
@@ -488,8 +508,8 @@ local DCS_ShowItemRepairCheck = CreateFrame("CheckButton", "DCS_ShowItemRepairCh
 DCS_ShowItemRepairCheck:SetScript("OnEvent", function(self, event, ...)
 	local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowItemRepairChecked
 	self:SetChecked(checked.ShowItemRepairSetChecked)
+	DCS_Set_Dura_Item_Positions()
 	if self:GetChecked(true) then
-		DCS_Set_Dura_Item_Positions()
 		DCS_Item_RepairCostBottom()
 		gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowItemRepairChecked.ShowItemRepairSetChecked = true
 	else

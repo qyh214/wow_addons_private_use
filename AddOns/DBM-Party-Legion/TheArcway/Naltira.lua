@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1500, "DBM-Party-Legion", 6, 726)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15607 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16189 $"):sub(12, -3))
 mod:SetCreatureID(98207)
 mod:SetEncounterID(1826)
 mod:SetZone()
@@ -30,14 +30,14 @@ local warnWeb					= mod:NewTargetAnnounce(200284, 3)
 local specWarnBlink				= mod:NewSpecialWarningRun(199811, nil, nil, nil, 4, 2)
 local yellBlink					= mod:NewYell(199811, nil, false)
 local specWarnBlinkNear			= mod:NewSpecialWarningClose(199811, nil, nil, nil, 1, 2)
-local specWarnVenomGTFO			= mod:NewSpecialWarningMove(199809, nil, nil, nil, 1, 2)
+local specWarnVenomGTFO			= mod:NewSpecialWarningMove(200040, nil, nil, nil, 1, 2)
 
 local timerBlinkCD				= mod:NewNextTimer(30, 199811, nil, nil, nil, 3)
 local timerWebCD				= mod:NewCDTimer(21.8, 200227, nil, nil, nil, 3)--21-26
 local timerVenomCD				= mod:NewCDTimer(30, 200024, nil, nil, nil, 3)--30-33
 
 local voiceBlink				= mod:NewVoice(199811)--runaway
-local voiceVenomGTFO			= mod:NewVoice(199809)--runaway
+local voiceVenomGTFO			= mod:NewVoice(200040)--runaway
 
 mod:AddSetIconOption("SetIconOnWeb", 200284)
 

@@ -272,6 +272,7 @@ local BossIDs = {
 	[98696] = true, -- Illysanna Ravencrest
 	[98949] = true, -- Smashspite the Hateful
 	[98965] = true, -- Lord Kur'talos Ravencrest
+	[98970] = true, -- Dantalionax <Betrayer of Hope>
 
 	-------------------------------------------------------------------------------
 	-- Caverns of Time: Battle for Mount Hyjal
@@ -1855,6 +1856,14 @@ local BossIDs = {
 	[103758] = true, -- Star Augur Etraeus
 	[106643] = true, -- Elisande <Grand Magistrix>
 	[104154] = true, -- Gul'dan <Lord of the Shadow Council>
+	
+	-------------------------------------------------------------------------------
+	-- Cathedral of Eternal Night
+	-------------------------------------------------------------------------------
+	[117193] = true, -- Agronox <Corrupted Caretaker>
+	[117194] = true, -- Thrashbite the Scornful
+	[118804] = true, -- Domatrax
+	[116944] = true, -- Mephistroth
 
 }
 

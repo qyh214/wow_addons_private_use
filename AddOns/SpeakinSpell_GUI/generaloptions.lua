@@ -159,10 +159,7 @@ Toggling this option will merge or split your settings between all of your chara
 						return SpeakinSpell:FormatSubs( L["Always use <language>"], subs )
 					end,
 					desc = function()
-						local subs = {
-							language = SpeakinSpell:GetRacialLanguage(),
-						}
-						return SpeakinSpell:FormatSubs( L["Don't ever use your racial/roleplay language, <language>"], subs)
+						return SpeakinSpell:FormatSubs( L["Don't ever use racial/roleplay languages based on your character's race or class"], subs)
 					end,
 					get = function() return SpeakinSpellSavedData.AlwaysUseCommon end,
 					set = function(_,value) SpeakinSpellSavedData.AlwaysUseCommon = value end,

@@ -9,7 +9,7 @@ XPerl_RequestConfig(function(New)
 	conf = New
 	raidconf = New.raid
 	rconf = New.raidpet
-end, "$Revision: 1017 $")
+end, "$Revision: 1031 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -503,6 +503,9 @@ local function SetMainHeaderAttributes(self)
 		petsPerColumn = 6
 	end
 
+	self:SetAttribute("showParty", raidconf.inParty)
+	self:SetAttribute("showPlayer", raidconf.inParty)
+
 	self:SetAttribute("filterOnPet", true)
 	self:SetAttribute("unitsPerColumn", petsPerColumn) -- Don't grow taller than a standard raid group
 	self:SetAttribute("maxColumns", 8)
@@ -560,7 +563,7 @@ function XPerl_RaidPets_HideShow()
 		end
 	end
 
-	local on = (IsInRaid() and rconf.enable)
+	local on = ((IsInRaid() and rconf.enable) or (IsInGroup() and XPerl_Raid_GrpPets:GetAttribute("showPlayer") and rconf.enable))
 
 	local events = {
 		"UNIT_HEALTH_FREQUENT",

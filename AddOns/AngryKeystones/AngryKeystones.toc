@@ -4,13 +4,12 @@
 ## Author: Ermad
 ## SavedVariables: AngryKeystones_Config, AngryKeystones_Data
 ## SavedVariablesPerCharacter: AngryKeystones_CharacterConfig
-## X-Packaged-Version: v0.11.1
+## X-Packaged-Version: v0.12.1
 
 Core.lua
 Locale.lua
 Config.lua
 
-Persist.lua
 ObjectiveTracker.lua
 ProgressTracker.lua
 Keystone.lua

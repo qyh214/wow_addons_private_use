@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 1021 $")
+end, "$Revision: 1031 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -529,7 +529,7 @@ function XPerl_Raid_UpdateHealth(self)
 	end
 	local myRoster = ZPerl_Roster[name]
 	if (name and UnitIsConnected(partyid)) then
-		self.disco = nil
+		--self.disco = nil
 		--[[if (self.feigning and not UnitBuff(partyid, feignDeath)) then
 			self.feigning = nil
 		end]]
@@ -602,7 +602,7 @@ function XPerl_Raid_UpdateHealth(self)
 			end
 		end
 	else
-		self.disco = true
+		--self.disco = true
 		self.dead = nil
 		XPerl_Raid_ShowFlags(self, XPERL_LOC_OFFLINE)
 
@@ -1411,7 +1411,7 @@ function XPerl_Raid_Events:PET_BATTLE_CLOSE()
 end
 
 -- XPerl_Raid_Events:PLAYER_ENTERING_WORLDsmall()
-function XPerl_Raid_Events:PLAYER_ENTERING_WORLDsmall()
+--[[function XPerl_Raid_Events:PLAYER_ENTERING_WORLDsmall()
 	-- Force a re-draw. Events not processed for anything that happens during
 	-- the small time you zone. Some display anomolies can occur from this
 	XPerl_Raid_UpdateDisplayAll()
@@ -1420,7 +1420,7 @@ function XPerl_Raid_Events:PLAYER_ENTERING_WORLDsmall()
 		ZPerl_CustomHighlight = true
 		LoadAddOn("ZPerl_CustomHighlight")
 	end
-end
+end]]
 
 --[[function XPerl_Raid_Events:PLAYER_REGEN_ENABLED()
 	-- Update all raid frame that would have tained
@@ -1453,8 +1453,12 @@ end
 function XPerl_Raid_Events:PLAYER_ENTERING_WORLD()
 	--self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 
+	--XPerl_Raid_ChangeAttributes()
+	--XPerl_RaidTitles()
+
 	XPerl_Raid_ChangeAttributes()
-	XPerl_RaidTitles()
+	XPerl_Raid_Position()
+	XPerl_Raid_Set_Bits(XPerl_Raid_Frame)
 
 	raidLoaded = true
 	rosterUpdated = nil
@@ -1467,8 +1471,10 @@ function XPerl_Raid_Events:PLAYER_ENTERING_WORLD()
 		LoadAddOn("ZPerl_CustomHighlight")
 	end
 
-	XPerl_Raid_Events.PLAYER_ENTERING_WORLD = XPerl_Raid_Events.PLAYER_ENTERING_WORLDsmall
-	XPerl_Raid_Events.PLAYER_ENTERING_WORLDsmall = nil
+	XPerl_Raid_UpdateDisplayAll()
+
+	--XPerl_Raid_Events.PLAYER_ENTERING_WORLD = XPerl_Raid_Events.PLAYER_ENTERING_WORLDsmall
+	--XPerl_Raid_Events.PLAYER_ENTERING_WORLDsmall = nil
 end
 
 local rosterGuids
@@ -1917,15 +1923,32 @@ function SetRaidRoster()
 	--RaidGroupCounts = new(0,0,0,0,0,0,0,0,0,0,0)
 	RaidGroupCounts = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
+	local player
 	for i = 1, GetNumGroupMembers() do
 		local name, rank, group, level, class, fileName = GetRaidRosterInfo(i)
 
-		if (name and IsInRaid()) then
-			local unit = "raid"..i
+		if (name and (IsInRaid() or (IsInGroup() and rconf.inParty))) then
+			local unit
+			if IsInRaid() then
+				unit = "raid"..i
+			else
+				if name == UnitName("player") then
+					unit = "player"
+					player = true
+				else
+					if player then
+						unit = "party"..i - 1
+					else
+						unit = "party"..i
+					end
+				end
+			end
 			RaidPositions[name] = unit
 
-			if (UnitIsUnit(unit, "player")) then
+			if (IsInRaid() and UnitIsUnit(unit, "player")) then
 				myGroup = group
+			else
+				myGroup = nil
 			end
 
 			if (rconf.sortByClass) then
@@ -2554,7 +2577,7 @@ function XPerl_Raid_ChangeAttributes()
 		-- Fix Secure Header taint in combat
 		local maxColumns = groupHeader:GetAttribute("maxColumns") or 1
 		local unitsPerColumn = groupHeader:GetAttribute("unitsPerColumn") or 5
-		local startingIndex = groupHeader:GetAttribute("startingIndex")
+		local startingIndex = groupHeader:GetAttribute("startingIndex") or 1
 		local maxUnits = maxColumns * unitsPerColumn
 
 		groupHeader:Show()

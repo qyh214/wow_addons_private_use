@@ -26,6 +26,7 @@ function Multishot:OnEnable()
   self:RegisterEvent("PLAYER_REGEN_ENABLED")
   self:RegisterEvent("GARISSON_BUILDING_ACTIVATED")
   self:RegisterEvent("ADDON_LOADED")
+  self:RegisterEvent("SHOW_LOOT_TOAST_LEGENDARY_LOOTED")
   self:RegisterEvent("SCREENSHOT_FAILED", "Debug")
   if MultishotConfig.timeLineEnable then
   	self.timeLineTimer = self:ScheduleRepeatingTimer("TimeLineProgress",5)
@@ -75,6 +76,10 @@ function Multishot:ADDON_LOADED(strEvent, subev)
 	else
 		return
 	end		
+end
+
+function Multishot:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(strEvent)
+	if MultishotConfig.legendaryloot then self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent) end
 end
 
 function Multishot:UPDATE_BATTLEFIELD_STATUS(strEvent)

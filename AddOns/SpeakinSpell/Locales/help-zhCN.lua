@@ -909,6 +909,9 @@ SpeakinSpell was created by |cff33ff99Stonarius of Antonidas|r
 
 Additional coding by...
 - Duerma
+- Groguz
+- Bazor (Akarf of Dawnbringer)
+- Harmoniii
 
 Primary Beta Testing, Arena Team Pwnage, Key Grip...
 - Meneldill

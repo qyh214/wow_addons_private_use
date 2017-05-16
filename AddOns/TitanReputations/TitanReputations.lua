@@ -31,7 +31,7 @@ local function GetValueAndMaximum(standingId, barValue, bottomValue, topValue, f
 
 		if hasRewardPending then standingText = standingText .. "*" end
 
-		return currentValue, threshold, color, standingText, hasRewardPending
+		return mod(currentValue, threshold), threshold, color, standingText, hasRewardPending
 	end
 
 	local friendID, friendRep, friendMaxRep, friendName, friendText, friendTexture, friendTextLevel, friendThreshold, nextFriendThreshold = GetFriendshipReputation(factionId)

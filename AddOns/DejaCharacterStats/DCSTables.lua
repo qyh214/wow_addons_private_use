@@ -27,8 +27,6 @@ local _, gdbprivate = ...
 	
 	DCS_ILvl_EQ_AV_Check:SetScript("OnEvent", function(self, event, arg1)
 		if event == "PLAYER_LOGIN" then
-			weekday, month, day, year = CalendarGetDate();
-			mystrangefunction()
 			local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsItemLevelChecked.ItemLevelEQ_AV_SetChecked
 			self:SetChecked(checked)
 		end
@@ -201,16 +199,11 @@ DCS_TableData.StatData.EnhancementsCategory = {
 
 DCS_TableData.StatData.DCS_POWER = {
 	updateFunc = function(statFrame, unit)
-		powerToken = SPELL_POWER_MANA
-		local power = UnitPowerMax(unit,powerToken);
+		powerType = SPELL_POWER_MANA --changing here as well for similarity
+		local power = UnitPowerMax(unit,powerType);
 		local powerText = BreakUpLargeNumbers(power);
 		if power > 0 then
-			--print("TABLES",weekday,month,day,year)
-			if month==4 and day==1 then --April Fools
-				PaperDollFrame_SetLabelAndText(statFrame, "Power", powerText, false, power);
-			else
-				PaperDollFrame_SetLabelAndText(statFrame, MANA, powerText, false, power);
-			end
+			PaperDollFrame_SetLabelAndText(statFrame, MANA, powerText, false, power);
 			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, MANA).." "..powerText..FONT_COLOR_CODE_CLOSE;
 			statFrame.tooltip2 = _G["STAT_MANA_TOOLTIP"];
 			statFrame:Show();
@@ -231,11 +224,7 @@ DCS_TableData.StatData.DCS_ALTERNATEMANA = {
 		local powerText = BreakUpLargeNumbers(power);
 		
 		if (powerToken and _G[powerToken]) then
-			if month==4 and day==1 then --April Fools
-				PaperDollFrame_SetLabelAndText(statFrame, "Alt Power", powerText, false, power);
-			else
-				PaperDollFrame_SetLabelAndText(statFrame, _G[powerToken], powerText, false, power);
-			end
+			PaperDollFrame_SetLabelAndText(statFrame, _G[powerToken], powerText, false, power);
 			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, _G[powerToken]).." "..powerText..FONT_COLOR_CODE_CLOSE;
 			statFrame.tooltip2 = _G["STAT_"..powerToken.."_TOOLTIP"];
 			statFrame:Show();
@@ -259,13 +248,11 @@ DCS_TableData.StatData.DCS_ATTACK_ATTACKSPEED = {
 		else
 			displaySpeed =  BreakUpLargeNumbers(displaySpeed);
 		end
-		if month==4 and day==1 then --April Fools
-			PaperDollFrame_SetLabelAndText(statFrame, "Twitter Speed", displaySpeed, false, speed);
-		else	
-			PaperDollFrame_SetLabelAndText(statFrame, WEAPON_SPEED, displaySpeed, false, speed);
-		end
+		PaperDollFrame_SetLabelAndText(statFrame, WEAPON_SPEED, displaySpeed, false, speed);
+
 		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, ATTACK_SPEED).." "..displaySpeed..FONT_COLOR_CODE_CLOSE;
 		statFrame.tooltip2 = format(STAT_ATTACK_SPEED_BASE_TOOLTIP, BreakUpLargeNumbers(meleeHaste));
+
 		statFrame:Show();
 	end
 }
@@ -290,12 +277,7 @@ DCS_TableData.StatData.DCS_RUNEREGEN = {
 		regenRate = tonumber(regenRate)
 		
 		local regenRateText = (format(STAT_RUNE_REGEN_FORMAT, regenRate));
-		
-		if month==4 and day==1 then --April Fools
-			PaperDollFrame_SetLabelAndText(statFrame, "Восст. рун", regenRateText, false, regenRate);
-		else
-			PaperDollFrame_SetLabelAndText(statFrame, STAT_RUNE_REGEN, regenRateText, false, regenRate);
-		end
+		PaperDollFrame_SetLabelAndText(statFrame, STAT_RUNE_REGEN, regenRateText, false, regenRate);
 		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_RUNE_REGEN).." "..regenRateText..FONT_COLOR_CODE_CLOSE;
 		statFrame.tooltip2 = STAT_RUNE_REGEN_TOOLTIP;
 		statFrame:Show();
@@ -330,11 +312,7 @@ DCS_TableData.StatData.WEAPON_DPS = {
 		local misses_etc = (1+BASE_MISS_CHANCE_PHYSICAL[3]/100)*(1+BASE_ENEMY_DODGE_CHANCE[3]/100)*(1+BASE_ENEMY_PARRY_CHANCE[3]/100) -- hopefully the right formula
 		white_dps = white_dps*(1 + GetCritChance()/100)/misses_etc --assumes crits do twice as damage
 		white_dps = format("%.2f", white_dps)
-		if month==4 and day==1 then --April Fools
-			PaperDollFrame_SetLabelAndText(statFrame, "WMDs", white_dps, false, white_dps)
-		else
-			PaperDollFrame_SetLabelAndText(statFrame, L["Weapon DPS"], white_dps, false, white_dps)
-		end
+		PaperDollFrame_SetLabelAndText(statFrame, L["Weapon DPS"], white_dps, false, white_dps)
 		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, format(L["Weapon DPS"], main_oh_dps)).." "..format("%s", main_oh_dps)..FONT_COLOR_CODE_CLOSE;
 		statFrame.tooltip2 = (tooltip2);
 	end
@@ -374,11 +352,7 @@ DCS_TableData.StatData.GCD = {
 				gcd = 1 -- tested with mutilate for assasination rogues.
 			end
 		end
-		if month==4 and day==1 then --April Fools
-			PaperDollFrame_SetLabelAndText(statFrame, "Global Warming", format("%.2fs",gcd), false, gcd)
-		else
-			PaperDollFrame_SetLabelAndText(statFrame, L["Global Cooldown"], format("%.2fs",gcd), false, gcd)
-		end
+		PaperDollFrame_SetLabelAndText(statFrame, L["Global Cooldown"], format("%.2fs",gcd), false, gcd)
 		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, format(L["Global Cooldown"], gcd)).." "..format("%.2fs", gcd)..FONT_COLOR_CODE_CLOSE;
 		statFrame.tooltip2 = (L["General global cooldown refresh time."]);
 	end
@@ -396,6 +370,18 @@ DCS_TableData.StatData.REPAIR_COST = {
 			--print (font, size, flag)
             statFrame.Label:SetFont(font, size, flag)
         end
+		--beware of strange mathematical calculations below
+		local try_to_predict_more_accurately = false -- placeholder for the checkbox
+		local multiplier
+		local upperbound, lowerbound
+		if try_to_predict_more_accurately then
+			reaction = UnitReaction("target", "player")
+			if not UnitIsPVP("target") then reaction = 4 end -- should take care of repair bots/repair mounts
+			--if not reaction then reaction = 4 end --if no target then neutral faction; seems like isn't needed
+			multiplier = (24 - reaction)/20 -- friendly faction has 5% discount, and exalted 20% discount
+			--print("mult= ",multiplier)
+			upperbound, lowerbound = 0, 0
+		end
         local totalCost = 0
         local _, repairCost
         for _, index in ipairs({1,3,5,6,7,8,9,10,16,17}) do
@@ -403,9 +389,21 @@ DCS_TableData.StatData.REPAIR_COST = {
             _, _, repairCost = statFrame.scanTooltip:SetInventoryItem(unit, index)
             if (repairCost and repairCost > 0) then
                 totalCost = totalCost + repairCost
+				if try_to_predict_more_accurately then
+					upperbound = upperbound + floor((repairCost+0.5)/multiplier)
+					lowerbound = lowerbound + ceil((repairCost-0.5)/multiplier)
+				end
             end
         end
 
+		--local repairAllCost, canRepair = GetRepairAllCost()
+		--print(repairAllCost)
+--		print("----")
+		if try_to_predict_more_accurately then
+			--print("between ",lowerbound," and ",upperbound)
+			totalCost = floor(0.5+multiplier*(upperbound + lowerbound)/2)
+			--print(totalCost)
+		end
         MoneyFrame_Update(statFrame.MoneyFrame, totalCost)
 		statFrame.MoneyFrame:Hide()
 		
@@ -420,11 +418,8 @@ DCS_TableData.StatData.REPAIR_COST = {
 
 		--STAT_FORMAT
 		-- PaperDollFrame_SetLabelAndText(statFrame, label, text, isPercentage, numericValue) -- Formatting
-		if month==4 and day==1 then --April Fools
-			PaperDollFrame_SetLabelAndText(statFrame, "Thanks Obama!", totalRepairCost, false, displayRepairTotal);
-		else
-			PaperDollFrame_SetLabelAndText(statFrame, (L["Repair Total"]), totalRepairCost, false, displayRepairTotal);
-		end
+
+		PaperDollFrame_SetLabelAndText(statFrame, (L["Repair Total"]), totalRepairCost, false, displayRepairTotal);
 		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, format(L["Repair Total"], totalRepairCost)).." "..format("%s", totalRepairCost)..FONT_COLOR_CODE_CLOSE;
 		statFrame.tooltip2 = (L["Total equipped item repair cost before discounts."]);
     end
@@ -441,11 +436,8 @@ DCS_TableData.StatData.DURABILITY_STAT = {
 		--print(addon.duraMean)
 		
 		local displayDura = format("%.2f%%", addon.duraMean);
-		if month==4 and day==1 then --April Fools
-			PaperDollFrame_SetLabelAndText(statFrame, "Constitution", displayDura, false, addon.duraMean);
-		else
-			PaperDollFrame_SetLabelAndText(statFrame, (L["Durability"]), displayDura, false, addon.duraMean);
-		end
+
+		PaperDollFrame_SetLabelAndText(statFrame, (L["Durability"]), displayDura, false, addon.duraMean);
 		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, format(L["Durability %s"], displayDura));
 		statFrame.tooltip2 = (L["Average equipped item durability percentage."]);
 
@@ -588,482 +580,3 @@ DCS_TableData.StatData.PARRY_RATING = {
 		statframeratings(statFrame, unit, CR_PARRY)
 	end
 }
-
--- ############## April Fools ###################
-
-function mystrangefunction()
-	if month==4 and day==1 then --April Fools
-	local AltStats = CharacterStatsPane.AttributesCategory:CreateFontString("FontString","OVERLAY","GameTooltipText")
-	AltStats:SetPoint("CENTER",CharacterStatsPane.AttributesCategory,"CENTER",0,0)
-	AltStats:SetFont("Fonts\\FRIZQT__.TTF", 18, "THICKOUTLINE")
-	AltStats:SetText("Alternative Stats");
-	AltStats:SetTextColor(1, 1, 1);
-	
-	local AltStatsframe=CharacterStatsPane.AttributesCategory:CreateTexture(nil,"ARTWORK")
-		AltStatsframe:SetAllPoints(CharacterStatsPane.AttributesCategory)
-		--AltStatsframe:SetColorTexture(0, 192, 255, 0.7)
-			
-			
-	local FAKEStats = CharacterStatsPane.EnhancementsCategory:CreateFontString("FontString","OVERLAY","GameTooltipText")
-
-		FAKEStats:SetPoint("CENTER",CharacterStatsPane.EnhancementsCategory,"CENTER",0,0)
-		FAKEStats:SetFont("Fonts\\FRIZQT__.TTF", 18, "THICKOUTLINE")
-		FAKEStats:SetText("FAKE Stats");
-		FAKEStats:SetTextColor(1, 1, 1);
-		
-	local FAKEStatsframe=CharacterStatsPane.EnhancementsCategory:CreateTexture(nil,"ARTWORK")
-		FAKEStatsframe:SetAllPoints(CharacterStatsPane.EnhancementsCategory)
-		
-		function PaperDollFrame_SetHealth(statFrame, unit)
-			if (not unit) then
-				unit = "player";
-			end
-			local health = UnitHealthMax(unit);
-			local healthText = BreakUpLargeNumbers(health);
-			PaperDollFrame_SetLabelAndText(statFrame, "Life", healthText, false, health);
-			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, HEALTH).." "..healthText..FONT_COLOR_CODE_CLOSE;
-			if (unit == "player") then
-				statFrame.tooltip2 = STAT_HEALTH_TOOLTIP;
-			elseif (unit == "pet") then
-				statFrame.tooltip2 = STAT_HEALTH_PET_TOOLTIP;
-			end
-			statFrame:Show();
-		end
-		function PaperDollFrame_SetStat(statFrame, unit, statIndex)
-			if (unit ~= "player") then
-				statFrame:Hide();
-				return;
-			end
-
-			local stat;
-			local effectiveStat;
-			local posBuff;
-			local negBuff;
-			stat, effectiveStat, posBuff, negBuff = UnitStat(unit, statIndex);
-
-			local effectiveStatDisplay = BreakUpLargeNumbers(effectiveStat);
-			-- Set the tooltip text
-			local statName = _G["SPELL_STAT"..statIndex.."_NAME"];
-			local tooltipText = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, statName).." ";
-
-			if ( ( posBuff == 0 ) and ( negBuff == 0 ) ) then
-				statFrame.tooltip = tooltipText..effectiveStatDisplay..FONT_COLOR_CODE_CLOSE;
-			else
-				tooltipText = tooltipText..effectiveStatDisplay;
-				if ( posBuff > 0 or negBuff < 0 ) then
-					tooltipText = tooltipText.." ("..BreakUpLargeNumbers(stat - posBuff - negBuff)..FONT_COLOR_CODE_CLOSE;
-				end
-				if ( posBuff > 0 ) then
-					tooltipText = tooltipText..FONT_COLOR_CODE_CLOSE..GREEN_FONT_COLOR_CODE.."+"..BreakUpLargeNumbers(posBuff)..FONT_COLOR_CODE_CLOSE;
-				end
-				if ( negBuff < 0 ) then
-					tooltipText = tooltipText..RED_FONT_COLOR_CODE.." "..BreakUpLargeNumbers(negBuff)..FONT_COLOR_CODE_CLOSE;
-				end
-				if ( posBuff > 0 or negBuff < 0 ) then
-					tooltipText = tooltipText..HIGHLIGHT_FONT_COLOR_CODE..")"..FONT_COLOR_CODE_CLOSE;
-				end
-				statFrame.tooltip = tooltipText;
-
-				-- If there are any negative buffs then show the main number in red even if there are
-				-- positive buffs. Otherwise show in green.
-				if ( negBuff < 0 and not GetPVPGearStatRules() ) then
-					effectiveStatDisplay = RED_FONT_COLOR_CODE..effectiveStatDisplay..FONT_COLOR_CODE_CLOSE;
-				end
-			end
-			PaperDollFrame_SetLabelAndText(statFrame, statName, effectiveStatDisplay, false, effectiveStat);
-			statFrame.tooltip2 = _G["DEFAULT_STAT"..statIndex.."_TOOLTIP"];
-
-			if (unit == "player") then
-				local _, unitClass = UnitClass("player");
-				unitClass = strupper(unitClass);
-
-				local primaryStat, spec;
-				spec = GetSpecialization();
-				local role = GetSpecializationRole(spec);
-				if (spec) then
-					primaryStat = select(6, GetSpecializationInfo(spec, nil, nil, nil, UnitSex("player")));
-				end
-				-- Strength
-				if ( statIndex == LE_UNIT_STAT_STRENGTH ) then
-					PaperDollFrame_SetLabelAndText(statFrame, "Tremendousness", effectiveStatDisplay, false, effectiveStat);
-					local attackPower = GetAttackPowerForStat(statIndex,effectiveStat);
-					if (HasAPEffectsSpellPower()) then
-						statFrame.tooltip2 = STAT_TOOLTIP_BONUS_AP_SP;
-					end
-					if (not primaryStat or primaryStat == LE_UNIT_STAT_STRENGTH) then
-						statFrame.tooltip2 = format(statFrame.tooltip2, BreakUpLargeNumbers(attackPower));
-						if ( role == "TANK" ) then
-							local increasedParryChance = GetParryChanceFromAttribute();
-							if ( increasedParryChance > 0 ) then
-								statFrame.tooltip2 = statFrame.tooltip2.."|n|n"..format(CR_PARRY_BASE_STAT_TOOLTIP, increasedParryChance);
-							end
-						end	
-					else
-						statFrame.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
-					end
-				-- Agility
-				elseif ( statIndex == LE_UNIT_STAT_AGILITY ) then
-					PaperDollFrame_SetLabelAndText(statFrame, "Dexterity", effectiveStatDisplay, false, effectiveStat);
-					local attackPower = GetAttackPowerForStat(statIndex,effectiveStat);
-					local tooltip = STAT_TOOLTIP_BONUS_AP;
-					if (HasAPEffectsSpellPower()) then
-						tooltip = STAT_TOOLTIP_BONUS_AP_SP;
-					end
-					if (not primaryStat or primaryStat == LE_UNIT_STAT_AGILITY) then
-						statFrame.tooltip2 = format(tooltip, BreakUpLargeNumbers(attackPower));
-						if ( role == "TANK" ) then
-							local increasedDodgeChance = GetDodgeChanceFromAttribute();
-							if ( increasedDodgeChance > 0 ) then
-								statFrame.tooltip2 = statFrame.tooltip2.."|n|n"..format(CR_DODGE_BASE_STAT_TOOLTIP, increasedDodgeChance);
-							end
-						end
-					else
-						statFrame.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
-					end
-				-- Stamina
-				elseif ( statIndex == LE_UNIT_STAT_STAMINA ) then
-					PaperDollFrame_SetLabelAndText(statFrame, "Endurance", effectiveStatDisplay, false, effectiveStat);
-					statFrame.tooltip2 = format(statFrame.tooltip2, BreakUpLargeNumbers(((effectiveStat*UnitHPPerStamina("player")))*GetUnitMaxHealthModifier("player")));
-				-- Intellect
-				elseif ( statIndex == LE_UNIT_STAT_INTELLECT ) then
-					PaperDollFrame_SetLabelAndText(statFrame, "Intelligence", effectiveStatDisplay, false, effectiveStat);
-					if ( UnitHasMana("player") ) then
-						if (HasAPEffectsSpellPower()) then
-							statFrame.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
-						else
-							local result, druid = HasSPEffectsAttackPower();
-							if (result and druid) then
-								statFrame.tooltip2 = format(STAT_TOOLTIP_SP_AP_DRUID, max(0, effectiveStat), max(0, effectiveStat));
-							elseif (result) then
-								statFrame.tooltip2 = format(STAT_TOOLTIP_BONUS_AP_SP, max(0, effectiveStat));
-							elseif (not primaryStat or primaryStat == LE_UNIT_STAT_INTELLECT) then
-								statFrame.tooltip2 = format(statFrame.tooltip2, max(0, effectiveStat));
-							else
-								statFrame.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
-							end
-						end
-					else
-						statFrame.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
-					end
-				end
-			end
-			statFrame:Show();
-		end
-		function PaperDollFrame_SetArmor(statFrame, unit)
-			local baselineArmor, effectiveArmor, armor, posBuff, negBuff = UnitArmor(unit);
-			PaperDollFrame_SetLabelAndText(statFrame, "Damage Control", effectiveArmor, false, effectiveArmor);
-			local armorReduction = PaperDollFrame_GetArmorReduction(effectiveArmor, UnitEffectiveLevel(unit));
-
-			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, ARMOR).." "..string.format("%s", effectiveArmor)..FONT_COLOR_CODE_CLOSE;
-			statFrame.tooltip2 = format(STAT_ARMOR_TOOLTIP, armorReduction);
-			statFrame:Show();
-		end
-
-		local function GetAppropriateDamage(unit)
-			if IsRangedWeapon() then
-				local attackTime, minDamage, maxDamage, bonusPos, bonusNeg, percent = UnitRangedDamage(unit);
-				return minDamage, maxDamage, nil, nil, 0, 0, percent;
-			else
-				return UnitDamage(unit);
-			end
-		end
-
-		function PaperDollFrame_SetDamage(statFrame, unit)
-			local speed, offhandSpeed = UnitAttackSpeed(unit);
-			local minDamage, maxDamage, minOffHandDamage, maxOffHandDamage, physicalBonusPos, physicalBonusNeg, percent = GetAppropriateDamage(unit);
-
-			-- remove decimal points for display values
-			local displayMin = max(floor(minDamage),1);
-			local displayMinLarge = BreakUpLargeNumbers(displayMin);
-			local displayMax = max(ceil(maxDamage),1);
-			local displayMaxLarge = BreakUpLargeNumbers(displayMax);
-
-			-- calculate base damage
-			minDamage = (minDamage / percent) - physicalBonusPos - physicalBonusNeg;
-			maxDamage = (maxDamage / percent) - physicalBonusPos - physicalBonusNeg;
-
-			local baseDamage = (minDamage + maxDamage) * 0.5;
-			local fullDamage = (baseDamage + physicalBonusPos + physicalBonusNeg) * percent;
-			local totalBonus = (fullDamage - baseDamage);
-			-- set tooltip text with base damage
-			local damageTooltip = BreakUpLargeNumbers(max(floor(minDamage),1)).." - "..BreakUpLargeNumbers(max(ceil(maxDamage),1));
-
-			local colorPos = "|cff20ff20";
-			local colorNeg = "|cffff2020";
-
-			-- epsilon check
-			if ( totalBonus < 0.1 and totalBonus > -0.1 ) then
-				totalBonus = 0.0;
-			end
-
-			local value;
-			if ( totalBonus == 0 ) then
-				if ( ( displayMin < 100 ) and ( displayMax < 100 ) ) then
-					value = displayMinLarge.." - "..displayMaxLarge;
-				else
-					value = displayMinLarge.."-"..displayMaxLarge;
-				end
-			else
-				-- set bonus color and display
-				local color;
-				if ( totalBonus > 0 ) then
-					color = colorPos;
-				else
-					color = colorNeg;
-				end
-				if ( ( displayMin < 100 ) and ( displayMax < 100 ) ) then
-					value = color..displayMinLarge.." - "..displayMaxLarge.."|r";
-				else
-					value = color..displayMinLarge.."-"..displayMaxLarge.."|r";
-				end
-				if ( physicalBonusPos > 0 ) then
-					damageTooltip = damageTooltip..colorPos.." +"..physicalBonusPos.."|r";
-				end
-				if ( physicalBonusNeg < 0 ) then
-					damageTooltip = damageTooltip..colorNeg.." "..physicalBonusNeg.."|r";
-				end
-				if ( percent > 1 ) then
-					damageTooltip = damageTooltip..colorPos.." x"..floor(percent*100+0.5).."%|r";
-				elseif ( percent < 1 ) then
-					damageTooltip = damageTooltip..colorNeg.." x"..floor(percent*100+0.5).."%|r";
-				end
-
-			end
-			PaperDollFrame_SetLabelAndText(statFrame, "Урон", value, false, displayMax);
-			statFrame.damage = damageTooltip;
-			statFrame.attackSpeed = speed;
-			statFrame.unit = unit;
-
-			-- If there's an offhand speed then add the offhand info to the tooltip
-			if ( offhandSpeed and minOffHandDamage and maxOffHandDamage ) then
-				minOffHandDamage = (minOffHandDamage / percent) - physicalBonusPos - physicalBonusNeg;
-				maxOffHandDamage = (maxOffHandDamage / percent) - physicalBonusPos - physicalBonusNeg;
-
-				local offhandBaseDamage = (minOffHandDamage + maxOffHandDamage) * 0.5;
-				local offhandFullDamage = (offhandBaseDamage + physicalBonusPos + physicalBonusNeg) * percent;
-				local offhandDamageTooltip = BreakUpLargeNumbers(max(floor(minOffHandDamage),1)).." - "..BreakUpLargeNumbers(max(ceil(maxOffHandDamage),1));
-				if ( physicalBonusPos > 0 ) then
-					offhandDamageTooltip = offhandDamageTooltip..colorPos.." +"..physicalBonusPos.."|r";
-				end
-				if ( physicalBonusNeg < 0 ) then
-					offhandDamageTooltip = offhandDamageTooltip..colorNeg.." "..physicalBonusNeg.."|r";
-				end
-				if ( percent > 1 ) then
-					offhandDamageTooltip = offhandDamageTooltip..colorPos.." x"..floor(percent*100+0.5).."%|r";
-				elseif ( percent < 1 ) then
-					offhandDamageTooltip = offhandDamageTooltip..colorNeg.." x"..floor(percent*100+0.5).."%|r";
-				end
-				statFrame.offhandDamage = offhandDamageTooltip;
-				statFrame.offhandAttackSpeed = offhandSpeed;
-			else
-				statFrame.offhandAttackSpeed = nil;
-			end
-
-			statFrame.onEnterFunc = CharacterDamageFrame_OnEnter;
-
-			statFrame:Show();
-		end
-		function PaperDollFrame_SetAttackPower(statFrame, unit)
-			local base, posBuff, negBuff;
-
-			local rangedWeapon = IsRangedWeapon();
-
-			local tag, tooltip;
-			if ( rangedWeapon ) then
-				base, posBuff, negBuff = UnitRangedAttackPower(unit);
-				tag, tooltip = RANGED_ATTACK_POWER, RANGED_ATTACK_POWER_TOOLTIP;
-			else
-				base, posBuff, negBuff = UnitAttackPower(unit);
-				tag, tooltip = MELEE_ATTACK_POWER, MELEE_ATTACK_POWER_TOOLTIP;
-			end
-
-			local damageBonus =  BreakUpLargeNumbers(max((base+posBuff+negBuff), 0)/ATTACK_POWER_MAGIC_NUMBER);
-			local spellPower = 0;
-			local value, valueText, tooltipText;
-			if (GetOverrideAPBySpellPower() ~= nil) then
-				local holySchool = 2;
-				-- Start at 2 to skip physical damage
-				spellPower = GetSpellBonusDamage(holySchool);
-				for i=(holySchool+1), MAX_SPELL_SCHOOLS do
-					spellPower = min(spellPower, GetSpellBonusDamage(i));
-				end
-				spellPower = min(spellPower, GetSpellBonusHealing()) * GetOverrideAPBySpellPower();
-
-				value = spellPower;
-				valueText, tooltipText = PaperDollFormatStat(tag, spellPower, 0, 0);
-				damageBonus = BreakUpLargeNumbers(spellPower / ATTACK_POWER_MAGIC_NUMBER);
-			else
-				value = base;
-				valueText, tooltipText = PaperDollFormatStat(tag, base, posBuff, negBuff);
-			end
-			PaperDollFrame_SetLabelAndText(statFrame, "Twitter Power", valueText, false, value);
-			statFrame.tooltip = tooltipText;
-
-			local effectiveAP = max(0,base + posBuff + negBuff);
-			if (GetOverrideSpellPowerByAP() ~= nil) then
-				statFrame.tooltip2 = format(MELEE_ATTACK_POWER_SPELL_POWER_TOOLTIP, damageBonus, BreakUpLargeNumbers(effectiveAP * GetOverrideSpellPowerByAP() + 0.5));
-			else
-				statFrame.tooltip2 = format(tooltip, damageBonus);
-			end
-			statFrame:Show();
-		end
-		function PaperDollFrame_SetSpellPower(statFrame, unit)
-			local minModifier = 0;
-
-			if (unit == "player") then
-				local holySchool = 2;
-				-- Start at 2 to skip physical damage
-				minModifier = GetSpellBonusDamage(holySchool);
-
-				if (statFrame.bonusDamage) then
-					table.wipe(statFrame.bonusDamage);
-				else
-					statFrame.bonusDamage = {};
-				end
-				statFrame.bonusDamage[holySchool] = minModifier;
-				for i=(holySchool+1), MAX_SPELL_SCHOOLS do
-					local bonusDamage = GetSpellBonusDamage(i);
-					minModifier = min(minModifier, bonusDamage);
-					statFrame.bonusDamage[i] = bonusDamage;
-				end
-			elseif (unit == "pet") then
-				minModifier = GetPetSpellBonusDamage();
-				statFrame.bonusDamage = nil;
-			end
-
-			PaperDollFrame_SetLabelAndText(statFrame, "Literacy", BreakUpLargeNumbers(minModifier), false, minModifier);
-			statFrame.tooltip = STAT_SPELLPOWER;
-			statFrame.tooltip2 = STAT_SPELLPOWER_TOOLTIP;
-
-			statFrame.minModifier = minModifier;
-			statFrame.unit = unit;
-			statFrame.onEnterFunc = CharacterSpellBonusDamage_OnEnter;
-			statFrame:Show();
-		end
-
-		function PaperDollFrame_SetEnergyRegen(statFrame, unit)
-			if ( unit ~= "player" ) then
-				statFrame:Hide();
-				return;
-			end
-
-			local powerType, powerToken = UnitPowerType(unit);
-			if (powerToken ~= "ENERGY") then
-				statFrame:Hide();
-				return;
-			end
-
-			local regenRate = GetPowerRegen();
-			local regenRateText = BreakUpLargeNumbers(regenRate);
-			PaperDollFrame_SetLabelAndText(statFrame, "Red Bull", regenRateText, false, regenRate);
-			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_ENERGY_REGEN).." "..regenRateText..FONT_COLOR_CODE_CLOSE;
-			statFrame.tooltip2 = STAT_ENERGY_REGEN_TOOLTIP;
-			statFrame:Show();
-		end
-
-		function PaperDollFrame_SetFocusRegen(statFrame, unit)
-			if ( unit ~= "player" ) then
-				statFrame:Hide();
-				return;
-			end
-
-			local powerType, powerToken = UnitPowerType(unit);
-			if (powerToken ~= "FOCUS") then
-				statFrame:Hide();
-				return;
-			end
-
-			local regenRate = GetPowerRegen();
-			local regenRateText = BreakUpLargeNumbers(regenRate);
-			PaperDollFrame_SetLabelAndText(statFrame, "Adderall", regenRateText, false, regenRate);
-			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_FOCUS_REGEN).." "..regenRateText..FONT_COLOR_CODE_CLOSE;
-			statFrame.tooltip2 = STAT_FOCUS_REGEN_TOOLTIP;
-			statFrame:Show();
-		end
-
-		function PaperDollFrame_SetRuneRegen(statFrame, unit)
-			if ( unit ~= "player" ) then
-				statFrame:Hide();
-				return;
-			end
-
-			local _, class = UnitClass(unit);
-			if (class ~= "DEATHKNIGHT") then
-				statFrame:Hide();
-				return;
-			end
-
-			local _, regenRate = GetRuneCooldown(1); -- Assuming they are all the same for now
-			local regenRateText = (format(STAT_RUNE_REGEN_FORMAT, regenRate));
-			PaperDollFrame_SetLabelAndText(statFrame, "Восст. рун", regenRateText, false, regenRate);
-			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_RUNE_REGEN).." "..regenRateText..FONT_COLOR_CODE_CLOSE;
-			statFrame.tooltip2 = STAT_RUNE_REGEN_TOOLTIP;
-			statFrame:Show();
-		end
-
-		function PaperDollFrame_SetManaRegen(statFrame, unit)
-			if ( unit ~= "player" ) then
-				statFrame:Hide();
-				return;
-			end
-
-			if ( not UnitHasMana("player") ) then
-				PaperDollFrame_SetLabelAndText(statFrame, "Man-a-Lago", NOT_APPLICABLE, false, 0);
-				statFrame.tooltip = nil;
-				return;
-			end
-
-			local base, combat = GetManaRegen();
-			-- All mana regen stats are displayed as mana/5 sec.
-			base = floor(base * 5.0);
-			combat = floor(combat * 5.0);
-			local baseText = BreakUpLargeNumbers(base);
-			local combatText = BreakUpLargeNumbers(combat);
-			-- Combat mana regen is most important to the player, so we display it as the main value
-			PaperDollFrame_SetLabelAndText(statFrame, "Man-a-Lago", combatText, false, combat);
-			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, MANA_REGEN) .. " " .. combatText .. FONT_COLOR_CODE_CLOSE;
-			-- Base (out of combat) regen is displayed only in the subtext of the tooltip
-			statFrame.tooltip2 = format(MANA_REGEN_TOOLTIP, baseText);
-			statFrame:Show();
-		end
-
-		function MovementSpeed_OnUpdate(statFrame, elapsedTime)
-			local unit = statFrame.unit;
-			local _, runSpeed, flightSpeed, swimSpeed = GetUnitSpeed(unit);
-			runSpeed = runSpeed/BASE_MOVEMENT_SPEED*100;
-			flightSpeed = flightSpeed/BASE_MOVEMENT_SPEED*100;
-			swimSpeed = swimSpeed/BASE_MOVEMENT_SPEED*100;
-
-			-- Pets seem to always actually use run speed
-			if (unit == "pet") then
-				swimSpeed = runSpeed;
-			end
-
-			-- Determine whether to display running, flying, or swimming speed
-			local speed = runSpeed;
-			local swimming = IsSwimming(unit);
-			if (swimming) then
-				speed = swimSpeed;
-			elseif (IsFlying(unit)) then
-				speed = flightSpeed;
-			end
-
-			-- Hack so that your speed doesn't appear to change when jumping out of the water
-			if (IsFalling(unit)) then
-				if (statFrame.wasSwimming) then
-					speed = swimSpeed;
-				end
-			else
-				statFrame.wasSwimming = swimming;
-			end
-
-			local valueText = format("%d%%", speed+0.5);
-			PaperDollFrame_SetLabelAndText(statFrame, "Скорость движения", valueText, false, speed);
-			statFrame.speed = speed;
-			statFrame.runSpeed = runSpeed;
-			statFrame.flightSpeed = flightSpeed;
-			statFrame.swimSpeed = swimSpeed;
-		end
-
-	end
-end

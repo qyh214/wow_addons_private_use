@@ -33,14 +33,14 @@ langs.enUS = {
 	timeLost = "Time Lost",
 	config_smallAffixes = "Reduce the size of affix icons on timer frame",
 	config_deathTracker = "Show death tracker on timer frame",
-	config_persistTracker = "Continue showing objective tracker after Mythic Keystone completion (requires Reload UI to take effect)",
+	config_persistTracker = "Show objective tracker after Mythic Keystone completion (requires Reload UI to take effect)",
 	scheduleTitle = "Schedule",
 	scheduleWeek1 = "This week",
 	scheduleWeek2 = "Next week",
 	scheduleWeek3 = "In two weeks",
 	scheduleWeek4 = "In three weeks",
 	scheduleMissingKeystone = "Requires a level 7+ Mythic Keystone in your inventory to display.",
-	config_exclusiveTracker = "Hide quest and achievement trackers during Mythic Keystone dungeons (requires Reload UI to take effect)",
+	config_exclusiveTracker = "Hide quest and achievement trackers during Mythic Keystones (requires Reload UI to take effect)",
 	config_hideTalkingHead = "Hide Talking Head dialog during a Mythic Keystone dungeon",
 	config_resetPopup = "Show popup to reset instances upon leaving a completed Mythic Keystone dungeon",
 }
@@ -125,6 +125,7 @@ langs.koKR = {
 	scheduleMissingKeystone = "예정된 조합을 보려면 레벨 7 이상의 신화 쐐기돌이 가방에 있어야 합니다.",
 	config_exclusiveTracker = "신화 쐐기돌 던전에서 퀘스트와 업적 추적창 숨김 (UI 재시작 필요)",
 	config_hideTalkingHead = "신화 쐐기돌 던전에서 팝업 대화창 숨김",
+	config_resetPopup = "완료한 신화 쐐기돌 던전을 나가면 인스턴스 초기화 팝업창 표시",
 }
 
 langs.zhCN = {

@@ -38,10 +38,12 @@ L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor
 L["Shows chat messages on login about the database scan."] = "Shows chat messages on login about the database scan."
 L["Shows messages on login about the database scan."] = "Shows messages on login about the database scan."
 L["Shows the icon directly on the item in your bag."] = "Shows the icon directly on the item in your bag."
+L["TEST IGNORE ME"] = "TEST IGNORE ME"
 L["Transmoggable Items Only"] = "Transmoggable Items Only"
 L["Unknown Items Only"] = "Unknown Items Only"
 L["Updating appearances database."] = "Updating appearances database."
 L["Verbose Text"] = "Verbose Text"
+
 
 
 CanIMogIt:RegisterLocale("enUS", L)

@@ -1,4 +1,13 @@
 --------------
+7.2.1.01
+--------------
+
+Compatible with WoW patch 7.2.1
+
+Added support for the Demon Hunter language and the Arcane Languages buff.
+
+
+--------------
 7.1.0.02
 --------------
 

@@ -487,9 +487,9 @@ function MovAny:CreateFrameEditor(id, name)
 	posResetButton:SetText("R")
 
 
-	local dropDownClickFunc = function(self)
-		ToggleDropDownMenu(1, nil, self, self, 6, 7, nil, self)
-	end
+	--[[local dropDownClickFunc = function(self)
+		Lib_ToggleDropDownMenu(1, nil, self, self, 6, 7, nil, self)
+	end]]
 
 	local pointLabel = fe:CreateFontString()
 	pointLabel:SetFontObject("GameFontNormalSmall")
@@ -499,7 +499,7 @@ function MovAny:CreateFrameEditor(id, name)
 	pointLabel:SetText("Attach")
 
 	pointDropDownButton:SetID(1)
-	pointDropDownButton:SetScript("OnClick", dropDownClickFunc)
+	--pointDropDownButton:SetScript("OnClick", dropDownClickFunc)
 	pointDropDownButton:SetPoint("TOPLEFT", pointLabel, "TOPRIGHT", -12, 3)
 	Lib_UIDropDownMenu_Initialize(pointDropDownButton, pointDropDown_MenuInit)
 	Lib_UIDropDownMenu_SetWidth(pointDropDownButton, 100)
@@ -538,7 +538,7 @@ function MovAny:CreateFrameEditor(id, name)
 	relPointLabel:SetText("to")
 
 	relPointDropDownButton:SetID(2)
-	relPointDropDownButton:SetScript("OnClick", dropDownClickFunc)
+	--relPointDropDownButton:SetScript("OnClick", dropDownClickFunc)
 	relPointDropDownButton:SetPoint("TOPLEFT", relPointLabel, "TOPRIGHT", -12, 3)
 	Lib_UIDropDownMenu_Initialize(relPointDropDownButton, relPointDropDown_MenuInit)
 	Lib_UIDropDownMenu_SetWidth(relPointDropDownButton, 100)
@@ -1723,7 +1723,7 @@ function MovAny:CreateFrameEditor(id, name)
 
 	local strataDropDownButton = CreateFrame("Button", fn.."Strata", fe, "Lib_UIDropDownMenuTemplate")
 	strataDropDownButton:SetID(3)
-	strataDropDownButton:SetScript("OnClick", dropDownClickFunc)
+	--strataDropDownButton:SetScript("OnClick", dropDownClickFunc)
 
 	local strataFunc = function(self)
 		Lib_UIDropDownMenu_SetSelectedValue(strataDropDownButton, self.value)
@@ -1779,7 +1779,7 @@ function MovAny:CreateFrameEditor(id, name)
 	Lib_UIDropDownMenu_Initialize(strataDropDownButton, strataDropDown_MenuInit)
 	Lib_UIDropDownMenu_SetWidth(strataDropDownButton, 130)
 	--[[trataDropDownButton:SetScript("OnClick", function()
-		ToggleDropDownMenu(1, nil, nil, strataDropDownButton, 0, 0, nil, strataDropDownButton)
+		Lib_ToggleDropDownMenu(1, nil, nil, strataDropDownButton, 0, 0, nil, strataDropDownButton)
 	end)]]
 
 	local strataResetButton = CreateFrame("Button", fn.."StrataResetButton", fe, "MAButtonTemplate")

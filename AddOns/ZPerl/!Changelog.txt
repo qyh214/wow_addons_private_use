@@ -1,3 +1,21 @@
+**r1039**
+* Dropdown updates.
+
+**r1036**
+* Fixed party target range updates.
+
+**r1034**
+* Party header visibility fixes.
+* Party pet attribute and update fixes.
+
+**r1032**
+* Added a new option to show the player on the party frames.
+* Warlock now can enable/disable the totem bar too.
+* Party layout fixes.
+* Party pet optimizations.
+* Fixed a major issue with raid attributes.
+* Raid pets will properly show up when raid in party is enabled.
+
 **r1030**
 * Force load party layout on load, to prevent some protected issues.
 * PVP timer is now visible for prestige icons too.

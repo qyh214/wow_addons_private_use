@@ -1,4 +1,7 @@
-﻿v3.3.5
+﻿v3.3.6
+Quick TOC update.
+
+v3.3.5
 Super tiny and quick change to hopefully fix some syncing issues with sites.
 
 v3.3.4

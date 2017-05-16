@@ -3,21 +3,6 @@ local L = namespace.L 				--localization
 
 -- Decimal Check
 
-local function get_gcd(haste)
-	--TODO checks for cases when cooldown is not according to formula
-	--print("INT",LE_UNIT_STAT_INTELLECT)
-	--print("STR",LE_UNIT_STAT_STRENGTH)
-	--print("AGI",LE_UNIT_STAT_AGILITY)
-	--print(primary)
-	local spec = GetSpecialization();
-	local primaryStat = select(6, GetSpecializationInfo(spec, nil, nil, nil, UnitSex("player")));
-	local fn = "";
-	if (primaryStat == LE_UNIT_STAT_INTELLECT) then
-		fn = format("; Global CD %.2fs", 1.5/(1+haste/100))
-	end
-	return fn
-end
-
 local function DCS_Decimals(notinteger)
 	-- Crit Chance
 		local statformat
@@ -62,11 +47,8 @@ local function DCS_Decimals(notinteger)
 				rating = CR_CRIT_MELEE;
 			end
 		-- PaperDollFrame_SetLabelAndText Format Change
-			if month==4 and day==1 then --April Fools
-				PaperDollFrame_SetLabelAndText(statFrame, "District Court", format(statformat, critChance), false, critChance);
-			else
-				PaperDollFrame_SetLabelAndText(statFrame, STAT_CRITICAL_STRIKE, format(statformat, critChance), false, critChance);
-			end
+			PaperDollFrame_SetLabelAndText(statFrame, STAT_CRITICAL_STRIKE, format(statformat, critChance), false, critChance);
+
 			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_CRITICAL_STRIKE).." "..format("%.2f%%", critChance)..FONT_COLOR_CODE_CLOSE;
 			local extraCritChance = GetCombatRatingBonus(rating);
 			local extraCritRating = GetCombatRating(rating);
@@ -95,12 +77,9 @@ local function DCS_Decimals(notinteger)
 				hasteFormatString = "+%s";
 			end
 		-- PaperDollFrame_SetLabelAndText Format Change
-			if month==4 and day==1 then --April Fools
-				PaperDollFrame_SetLabelAndText(statFrame, "AHCA", format(hasteFormatString, format(statformat, haste)), false, haste);
-			else
-				PaperDollFrame_SetLabelAndText(statFrame, STAT_HASTE, format(hasteFormatString, format(statformat, haste)), false, haste);
-			end
-			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_HASTE) .. " " .. format(hasteFormatString, format("%.2f%%", haste)) .. get_gcd(haste) .. FONT_COLOR_CODE_CLOSE;
+			PaperDollFrame_SetLabelAndText(statFrame, STAT_HASTE, format(hasteFormatString, format(statformat, haste)), false, haste);
+
+			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_HASTE) .. " " .. format(hasteFormatString, format("%.2f%%", haste)) .. FONT_COLOR_CODE_CLOSE;
 
 			local _, class = UnitClass(unit);
 			statFrame.tooltip2 = _G["STAT_HASTE_"..class.."_TOOLTIP"];
@@ -123,11 +102,8 @@ local function DCS_Decimals(notinteger)
 			local versatilityDamageBonus = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_DONE);
 			local versatilityDamageTakenReduction = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_TAKEN) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_TAKEN);
 		-- PaperDollFrame_SetLabelAndText Format Change
-			if month==4 and day==1 then --April Fools
-				PaperDollFrame_SetLabelAndText(statFrame, "Bipartisanship", format(statformat, versatilityDamageBonus) .. " / " .. format(statformat, versatilityDamageTakenReduction), false, versatilityDamageBonus);
-			else
-				PaperDollFrame_SetLabelAndText(statFrame, STAT_VERSATILITY, format(statformat, versatilityDamageBonus) .. " / " .. format(statformat, versatilityDamageTakenReduction), false, versatilityDamageBonus);
-			end
+			PaperDollFrame_SetLabelAndText(statFrame, STAT_VERSATILITY, format(statformat, versatilityDamageBonus) .. " / " .. format(statformat, versatilityDamageTakenReduction), false, versatilityDamageBonus);
+
 			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(VERSATILITY_TOOLTIP_FORMAT, STAT_VERSATILITY, versatilityDamageBonus, versatilityDamageTakenReduction) .. FONT_COLOR_CODE_CLOSE;
 			statFrame.tooltip2 = format(CR_VERSATILITY_TOOLTIP, versatilityDamageBonus, versatilityDamageTakenReduction, BreakUpLargeNumbers(versatility), versatilityDamageBonus, versatilityDamageTakenReduction);
 
@@ -147,11 +123,7 @@ local function DCS_Decimals(notinteger)
 
 			local mastery = GetMasteryEffect();
 		-- PaperDollFrame_SetLabelAndText Format Change
-			if month==4 and day==1 then --April Fools
-				PaperDollFrame_SetLabelAndText(statFrame, "Искусность", format(statformat, mastery), false, mastery);
-			else
-				PaperDollFrame_SetLabelAndText(statFrame, STAT_MASTERY, format(statformat, mastery), false, mastery);
-			end			
+			PaperDollFrame_SetLabelAndText(statFrame, STAT_MASTERY, format(statformat, mastery), false, mastery);
 			statFrame.onEnterFunc = Mastery_OnEnter;
 			statFrame:Show();
 		end
@@ -165,11 +137,7 @@ local function DCS_Decimals(notinteger)
 
 			local lifesteal = GetLifesteal();
 		-- PaperDollFrame_SetLabelAndText Format Change
-			if month==4 and day==1 then --April Fools
-				PaperDollFrame_SetLabelAndText(statFrame, "Welfare", format(statformat, lifesteal), false, lifesteal);
-			else
-				PaperDollFrame_SetLabelAndText(statFrame, STAT_LIFESTEAL, format(statformat, lifesteal), false, lifesteal);
-			end
+			PaperDollFrame_SetLabelAndText(statFrame, STAT_LIFESTEAL, format(statformat, lifesteal), false, lifesteal);
 			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_LIFESTEAL) .. " " .. format("%.2f%%", lifesteal) .. FONT_COLOR_CODE_CLOSE;
 
 			statFrame.tooltip2 = format(CR_LIFESTEAL_TOOLTIP, BreakUpLargeNumbers(GetCombatRating(CR_LIFESTEAL)), GetCombatRatingBonus(CR_LIFESTEAL));
@@ -186,12 +154,9 @@ local function DCS_Decimals(notinteger)
 
 			local avoidance = GetAvoidance();
 		-- PaperDollFrame_SetLabelAndText Format Change
-			if month==4 and day==1 then --April Fools
-				PaperDollFrame_SetLabelAndText(statFrame, "Town Hall", format(statformat, avoidance), false, avoidance);
-			else
-				PaperDollFrame_SetLabelAndText(statFrame, STAT_AVOIDANCE, format(statformat, avoidance), false, avoidance);
-			end
+			PaperDollFrame_SetLabelAndText(statFrame, STAT_AVOIDANCE, format(statformat, avoidance), false, avoidance);
 			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_AVOIDANCE) .. " " .. format("%.2f%%", avoidance) .. FONT_COLOR_CODE_CLOSE;
+
 			statFrame.tooltip2 = format(CR_AVOIDANCE_TOOLTIP, BreakUpLargeNumbers(GetCombatRating(CR_AVOIDANCE)), GetCombatRatingBonus(CR_AVOIDANCE));
 
 			statFrame:Show();
@@ -206,11 +171,7 @@ local function DCS_Decimals(notinteger)
 
 			local chance = GetDodgeChance();
 		-- PaperDollFrame_SetLabelAndText Format Change
-			if month==4 and day==1 then --April Fools
-				PaperDollFrame_SetLabelAndText(statFrame, "Evade", format(statformat, chance), false, chance);
-			else
-				PaperDollFrame_SetLabelAndText(statFrame, STAT_DODGE, format(statformat, chance), false, chance);
-			end
+			PaperDollFrame_SetLabelAndText(statFrame, STAT_DODGE, format(statformat, chance), false, chance);
 			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, DODGE_CHANCE).." "..string.format("%.2f", chance).."%"..FONT_COLOR_CODE_CLOSE;
 			statFrame.tooltip2 = format(CR_DODGE_TOOLTIP, GetCombatRating(CR_DODGE), GetCombatRatingBonus(CR_DODGE));
 			statFrame:Show();
@@ -225,11 +186,7 @@ local function DCS_Decimals(notinteger)
 
 			local chance = GetParryChance();
 		-- PaperDollFrame_SetLabelAndText Format Change
-			if month==4 and day==1 then --April Fools
-				PaperDollFrame_SetLabelAndText(statFrame, "Circumvent", format(statformat, chance), false, chance);
-			else
-				PaperDollFrame_SetLabelAndText(statFrame, STAT_PARRY, format(statformat, chance), false, chance);
-			end
+			PaperDollFrame_SetLabelAndText(statFrame, STAT_PARRY, format(statformat, chance), false, chance);
 			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, PARRY_CHANCE).." "..string.format("%.2f", chance).."%"..FONT_COLOR_CODE_CLOSE;
 			statFrame.tooltip2 = format(CR_PARRY_TOOLTIP, GetCombatRating(CR_PARRY), GetCombatRatingBonus(CR_PARRY));
 			statFrame:Show();
@@ -244,16 +201,12 @@ local function DCS_Decimals(notinteger)
 
 			local chance = GetBlockChance();
 		-- PaperDollFrame_SetLabelAndText Format Change
-			if month==4 and day==1 then --April Fools
-				PaperDollFrame_SetLabelAndText(statFrame, "Filibuster", format(statformat, chance), false, chance);
-			else
-				PaperDollFrame_SetLabelAndText(statFrame, STAT_BLOCK, format(statformat, chance), false, chance);
-			end
+			PaperDollFrame_SetLabelAndText(statFrame, STAT_BLOCK, format(statformat, chance), false, chance);
 			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, BLOCK_CHANCE).." "..string.format("%.2f", chance).."%"..FONT_COLOR_CODE_CLOSE;
 			statFrame.tooltip2 = format(CR_BLOCK_TOOLTIP, GetShieldBlock());
 			statFrame:Show();
 		end
-		PaperDollFrame_UpdateStats()
+		PaperDollFrame_UpdateStats() -- needs to get called for checkbox Decimals
 end
 	
 local _, gdbprivate = ...

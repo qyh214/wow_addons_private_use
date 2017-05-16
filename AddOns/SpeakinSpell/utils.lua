@@ -1,4 +1,5 @@
 -- Author      : RisM
+-- Modified by : TehAkarf
 -- Create Date : 6/28/2009 3:54:18 PM
 
 local SpeakinSpell = LibStub("AceAddon-3.0"):GetAddon("SpeakinSpell")
@@ -180,7 +181,6 @@ function SpeakinSpell:NameIsMe( InputName )
 	
 	return false
 end
-
 
 function SpeakinSpell:GetDefaultTarget(ShowDebugMsg)
 	-- try the currently selected target
@@ -447,22 +447,124 @@ end
 
 
 -- languageName, languageIndex = GetLanguageByIndex(index)
--- GetRacialLanguage returns the localized languageName
--- do not use with SendChatMessage which needs the locale-independant languageIndex
+-- GetRacialLanguage also returns languageName, languageIndex
+-- With SendChatMessage, use the locale-independant languageIndex
 function SpeakinSpell:GetRacialLanguage()
-	-- return GetLanguageByIndex( 2 ) -- appears to be non-deterministically ordered
-	--TODOLATER: is this *always* GetLanguageByIndex(1) ??
-	--		that would be faster, but GetNumLanguages() is never >2, so its never a long loop
+	-- the languages are ordered differently for every race
+	-- return GetLanguageByIndex( 2 ) -- doesn't work as simply as that
+	local funcname = "GetRacialLanguage"
+	
+	-- following is Harmoniii's logic table for finding the racial language
+	-- adapted to remove redundant code
+	local NumLanguages = GetNumLanguages()
 	local Common = GetDefaultLanguage("player")
-	for i=1, GetNumLanguages() do
-		local lang = GetLanguageByIndex(i)
-		if lang ~= Common then
-			return lang
+	local Race = select(2, UnitRace ("player"))
+	local Faction = UnitFactionGroup("player")
+	local i = 0 -- find this index passed to GetLanguageByIndex at the end
+	if (NumLanguages == 2) then   
+		if Faction == "Horde" then
+			i = 2
+		else -- Alliance
+			if (GetLanguageByIndex(2) == Common) then  
+				-- alliance elves and dwarves.
+				i = 1
+			else
+				-- Gnomish, draenei and pandaren work like horde
+				i = 2
+			end
 		end
+	elseif (NumLanguages == 3) then -- Demon Hunter
+		if Faction == "Horde" then -- Horde
+			i = 3
+		else 
+			i = 1
+		end
+	elseif (NumLanguages == 5) then -- alliance non-pandaren mage
+		if Race == "NightElf" then
+			i = 1
+		elseif Race == "Dwarf" then
+			i = 2
+		elseif Race == "Gnome" then
+			i = 4
+		elseif Race == "Draenei" then
+			i = 5
+		else -- impossible, only if forgot something
+			self:DebugMsg(funcname, string.format("Unexpected combination of NumLanguages=%d and Race=%s", NumLanguages, Race))
+			i = 3 
+		end
+	elseif (NumLanguages == 6) then   
+		if Faction == "Horde" then -- Horde non-pandaren mages
+			if Race == "Tauren" then
+				i = 2
+			elseif Race == "BloodElf" then
+				i = 3
+			elseif Race == "Troll" then
+				i = 4
+			elseif Race == "Scourge" then
+				i = 5
+			elseif Race == "Goblin" then
+				i = 6
+			else -- impossible, only if forgot something
+				self:DebugMsg(funcname, string.format("Unexpected combination of NumLanguages=%d and Race=%s", NumLanguages, Race))
+				i = 3
+			end
+		else -- Alliance pandaren mage
+			if Race == "NightElf" then
+				i = 1
+			elseif Race == "Dwarf" then
+				i = 2
+			elseif Race == "Gnome" then
+				i = 4
+			elseif Race == "Draenei" then
+				i = 5
+			elseif Race == "Pandaren" then
+				i = 6
+			else -- impossible, only if forgot something
+				self:DebugMsg(funcname, string.format("Unexpected combination of NumLanguages=%d and Race=%s", NumLanguages, Race))
+				i = 3
+			end
+		end
+	elseif (NumLanguages == 7) then  -- horde pandaren mage
+		i = 7
+	else
+		-- unexpected scenario should not occur until Blizzard changes something
+		self:DebugMsg(funcname, string.format("Unexpected combination of NumLanguages=%d and Race=%s", NumLanguages, Race))
+		i = 1
 	end
-	return Common
+
+	-- i and languageIndex are different
+	-- i is an index to this toon's known languages: 1 to GetNumLanguages()
+	-- languageIndex is a global index: 1 to the total available languages in the game right now
+	-- for example a night elf will have i=1, languageIndex=7, languageName=Darnassian
+	local languageName, languageIndex = GetLanguageByIndex(i)
+	self:DebugMsg(funcname, string.format("i=%d, languageIndex=%d, languageName=%s", i, languageIndex, languageName))
+	return languageName, languageIndex 
 end
 
+-- TehAkarf
+-- Gets the language of the class, if it has one. Based on the GetRacialLanguage function.
+-- Returns languageName, languageIndex
+function SpeakinSpell:GetClassLanguage()
+	-- return GetLanguageByIndex( 2 )
+	-- When the index is equal to 2, it returns the class language for the Demon Hunter. 
+	-- Other class's that use a speical language may change this in the future.
+	
+	-- check the player's class in order to get the correct class language.
+	local i = 0
+	if UnitClass("player") == "Demon Hunter" then
+		i = 2
+	else
+		-- if the player doesn't have a class language, fall back to common
+		i = 1
+	end
+	
+	-- i and languageIndex are different
+	-- i is an index to this toon's known languages: 1 to GetNumLanguages()
+	-- languageIndex is a global index: 1 to the total available languages in the game right now
+	local languageName, languageIndex = GetLanguageByIndex(i)
+	self:DebugMsg("GetClassLanguage", string.format("i=%d, languageIndex=%d, languageName=%s", i, languageIndex, languageName))
+	return languageName, languageIndex
+end
 
 -- if any key is missing from obj, it will be imported from DefaultObject
 function SpeakinSpell:ValidateObject( obj, DefaultObject )
@@ -999,7 +1101,7 @@ local CHAT_CHANNEL_SELECTORS = {
 }
 
 
-function SpeakinSpell:RunSlashCommand(text)
+--function SpeakinSpell:RunSlashCommand(text)
 	local funcname = "RunSlashCommand"
 
 	-- split "/slash rest" into slash="/slash" rest="rest"
@@ -1125,9 +1227,9 @@ function SpeakinSpell:RunSlashCommand(text)
 end
 --]]
 
---[[
-WoW 5.0.4
-Copied from SlashIn.lua
+--[
+--WoW 5.0.4
+--Copied from SlashIn.lua
 -- We execute lines by faking them as EXECUTE_CHAT_LINE events to the MacroEditBox defined in ChatFrame.lua.
 -- The main benefit of this is that MacroEditBox gets special treatment in ChatEdit_OnEscapePressed.
 -- It's also elegant, and reuses Blizzard code.
@@ -1136,9 +1238,9 @@ Copied from SlashIn.lua
 -- If taint does become a problem, there are other implementations that work just as well; they're just
 -- less elegant. The dev version in Git has an alternative implementation commented out at the bottom.
 
-Ris: This is what I've always wanted to do in SpeakinSpell to begin with
-and it appears that this is the correct way (at last!) to write the code
---]]
+--Ris: This is what I've always wanted to do in SpeakinSpell to begin with
+--and it appears that this is the correct way (at last!) to write the code
+--]
 
 local MacroEditBox = MacroEditBox
 local MacroEditBox_OnEvent = MacroEditBox:GetScript("OnEvent")

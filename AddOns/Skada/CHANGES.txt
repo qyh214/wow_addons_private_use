@@ -1,8 +1,32 @@
 ------------------------------------------------------------------------
-r729 | zarnivoop | 2017-03-29 10:34:35 -0500 (Wed, 29 Mar 2017) | 1 line
+r735 | zarnivoop | 2017-05-14 14:22:00 -0500 (Sun, 14 May 2017) | 1 line
 Changed paths:
-   M /trunk/Skada.toc
+   M /trunk/modules/Debuffs.lua
 
-.toc bump
+fixed buff/debuffs counters being a bit wacky
+------------------------------------------------------------------------
+r734 | zarnivoop | 2017-05-14 13:57:22 -0500 (Sun, 14 May 2017) | 1 line
+Changed paths:
+   M /trunk/modules/Debuffs.lua
+
+added spell icons for debuffs/buffs
+------------------------------------------------------------------------
+r733 | zarnivoop | 2017-05-14 12:41:13 -0500 (Sun, 14 May 2017) | 1 line
+Changed paths:
+   M /trunk/Version.lua
+
+have some version notifications too!
+------------------------------------------------------------------------
+r732 | zarnivoop | 2017-05-14 12:37:28 -0500 (Sun, 14 May 2017) | 1 line
+Changed paths:
+   M /trunk/locale/enUS.lua
+
+localization
+------------------------------------------------------------------------
+r731 | zarnivoop | 2017-05-14 12:36:58 -0500 (Sun, 14 May 2017) | 1 line
+Changed paths:
+   M /trunk/modules/Debuffs.lua
+
+added buff/debuff spell overviews
 ------------------------------------------------------------------------
 

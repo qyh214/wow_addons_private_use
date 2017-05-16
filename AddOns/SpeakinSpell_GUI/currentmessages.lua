@@ -704,7 +704,7 @@ Non-spell Speech Events also have a <target>. This uses the same target as the <
 							type = "select",
 							name = LANGUAGE,
 							desc = L["Select the racial game language you want to use to announce these speeches\n\nThis option will be ignored if you set the \"Always Use Common\" option under general settings."],
-							--values = { "COMMON", "RACIAL", "RANDOM" }
+							--values = { "COMMON", "RACIAL", "RANDOM", "CLASS" } NOTE: Added Class to the list. -- TehAkarf
 							--NOTE: GetDefaultLanguage("player") doesn't work during loader, 
 							--		or OnInitialize, or OnVariablesLoaded
 							--		try to use it exclusively in the GUI, and must be in a function call
@@ -717,74 +717,39 @@ Non-spell Speech Events also have a <target>. This uses the same target as the <
 								if GetNumLanguages() > 1 then
 									values[ "RACIAL" ] = SpeakinSpell:GetRacialLanguage() -- could say "Dwarvish"
 								end
-								values[ "RANDOM" ] = L["Random"] -- always says "Random", and causes appearance of a slider
+								-- if GetNumLanguages() > 2 then -- no, it could be a mage with a buff
+								if UnitClass("player") == "Demon Hunter" then
+									-- this should be called for characters that have three languages: common, racial, and class - TehAkarf
+									-- mainly for Demon Hunters Demonic language, Blizzard could expand later
+									values[ "CLASS" ] = SpeakinSpell:GetClassLanguage()
+								end
+								values[ "RANDOM" ] = L["Random"] -- always says "Random"
 								return values
 							end,
 							hidden = function() 
 								return (GetNumLanguages() < 2)
 							end,
 							get = function() 
+								local funcname = "RPLanguage.get"
 								local EventTableEntry = SpeakinSpell:CurrentMessagesGUI_GetSelectedEventObject()
 								if (nil == EventTableEntry) or (nil == EventTableEntry.RPLanguage) then
+									SpeakinSpell:DebugMsg(funcname, "RPLanguage is nil, use default COMMON")
 									return "COMMON"
 								else
+									SpeakinSpell:DebugMsg(funcname, "EventTableEntry.RPLanguage="..EventTableEntry.RPLanguage)
 									return EventTableEntry.RPLanguage
 								end
 							end,
 							set = function(_,value) 
+								local funcname = "RPLanguage.set"
 								local EventTableEntry = SpeakinSpell:CurrentMessagesGUI_GetSelectedEventObject()
 								if not EventTableEntry then
 									return
 								end
 								EventTableEntry.RPLanguage = value
+								SpeakinSpell:DebugMsg(funcname, "EventTableEntry.RPLanguage="..EventTableEntry.RPLanguage)
 							end,
 						}, --select language 
-						RPLanguageRandomChance = {
-							order = 37,
-							type = "range",
-							min = 0.01, max = 1.00, step=0.01,
-							isPercent = true,
-							width = "full",
-							name = function()
-								local subs = {
-									language = SpeakinSpell:GetRacialLanguage()
-								}
-								return SpeakinSpell:FormatSubs( L["Random Chance to use <language>"], subs )
-							end,
-							desc = function()
-								local subs = {
-									common = GetDefaultLanguage("player"), -- could be "orcish"
-									racial = SpeakinSpell:GetRacialLanguage(), --could be "thallasian" (sp?)
-								}
-								return SpeakinSpell:FormatSubs( L[
-[[Select the random chance to use your racial/roleplay language for this event
-0% will always use <common>. 100% will always use <racial>.]]
-									], subs )
-							end,
-							get = function() 
-								local EventTableEntry = SpeakinSpell:CurrentMessagesGUI_GetSelectedEventObject()
-								if not EventTableEntry
-								   and EventTableEntry.RPLanguageRandomChance then
-									return 0.5 -- 50/50
-								end
-								return EventTableEntry.RPLanguageRandomChance 
-							end,
-							set = function(_,value) 
-								local EventTableEntry = SpeakinSpell:CurrentMessagesGUI_GetSelectedEventObject()
-								if not EventTableEntry then
-									return
-								end
-								EventTableEntry.RPLanguageRandomChance = value 
-							end,
-							hidden = function() -- if you've not selected "RANDOM" from the RPLanguage drop-down above
-								local EventTableEntry = SpeakinSpell:CurrentMessagesGUI_GetSelectedEventObject()
-								if not EventTableEntry then
-									return true
-								end
-								return EventTableEntry.RPLanguage ~= "RANDOM"
-							end,
-						}, --"Random chance to use language"
-						
 						ExpandMacros = {
 							order = 40,
 							type = "toggle",
@@ -1474,8 +1439,6 @@ function SpeakinSpell:CurrentMessagesGUI_RebuildSpellList()
 	
 	self:RebuildSpellList( values, OptionsGUIState, EventTable, MatchesFilterFunc, GetDisplayNameFunc )
 end
-
-
 
 
 function SpeakinSpell:CurrentMessagesGUI_GetSelectedDisplayNameForEditLabel()

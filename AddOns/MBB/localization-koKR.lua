@@ -1,4 +1,4 @@
-﻿if( GetLocale() == "koKR" ) then
+if( GetLocale() == "koKR" ) then
 
 MBB_TOOLTIP1 = "Ctrl + 우클릭시 미니맵에서 분리하거나 묶을수 있습니다.";
 MBB_OPTIONS_HEADER = "옵션";

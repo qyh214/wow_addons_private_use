@@ -1,6 +1,8 @@
 L = {}
 L["(Experimental)"] = "(实验)"
 L["Adds tooltips to items showing if you have learned a transmog appearance."] = "当你解锁幻化外观时，将添加一个提示到物品信息。"
+--Translation missing 
+-- L["Also shows a summary in the Appearance Sets UI of how many pieces of a transmog set you have collected."] = ""
 L["Another class can learn this item."] = "其他职业可以解锁"
 L["Appearances updated: "] = "外观已更新："
 L["Can be learned by:"] = "可以解锁通过："
@@ -29,16 +31,23 @@ L["Only show on items that can be transmoggrified."] = "只对可幻化的物品
 L["Only show on items that you haven't learned."] = "只对未解锁的物品进行提示"
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "请注意，这可能并不总正确的，因为暴雪的信息不完整。"
 L["Show Bag Icons"] = "显示状态图标"
+--Translation missing 
+-- L["Show information on the tooltip about transmog sets."] = ""
 L["Show Source Location Tooltip"] = "显示来源位置提示"
+--Translation missing 
+-- L["Show Transmog Set Info"] = ""
 L["Shows a more detailed text for some of the tooltips."] = "为部分物品显示更为详细的提示"
 L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor, World Drop). This only works on items your current class can learn."] = "显示外观的来源位置提示(例如：任务、商人、世界掉落)。"
 L["Shows chat messages on login about the database scan."] = "在登录时显示关于数据库扫描的聊天信息。"
 L["Shows messages on login about the database scan."] = "登录时显示数据库扫描的信息。"
 L["Shows the icon directly on the item in your bag."] = "在背包物品上显示解锁状态的图标"
+--Translation missing 
+-- L["TEST IGNORE ME"] = ""
 L["Transmoggable Items Only"] = "只提示可幻化物品"
 L["Unknown Items Only"] = "只提示未解锁的物品"
 L["Updating appearances database."] = "更新外观数据库中"
 L["Verbose Text"] = "详细提示"
+
 
 
 CanIMogIt:RegisterLocale("zhCN", L)

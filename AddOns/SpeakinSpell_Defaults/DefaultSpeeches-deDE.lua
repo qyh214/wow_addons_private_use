@@ -213,7 +213,6 @@ DEFAULT_SPEECHES.Templates = {
 					["WG"] = "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 		}, -- end EventTable
 	},

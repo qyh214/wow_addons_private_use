@@ -29,7 +29,7 @@ function XPerl_SetModuleRevision(rev)
 end
 local AddRevision = XPerl_SetModuleRevision
 
-XPerl_SetModuleRevision("$Revision: 1004 $")
+XPerl_SetModuleRevision("$Revision: 1031 $")
 
 function XPerl_Notice(...)
 	if (DEFAULT_CHAT_FRAME) then
@@ -451,7 +451,7 @@ function XPerl_Globals_OnEvent(self, event, arg1, ...)
 		settingspart1(self, event)
 	elseif (event == "PLAYER_LOGIN") then
 		self:UnregisterEvent(event)
-		startupCheckSettings(self,event)
+		startupCheckSettings(self, event)
 		ZPerl_MinimapButton_Init(XPerl_MinimapButton_Frame)
 		-- Load the player's layout, will be profile dependent later.
 		local layout = format("%s(%s)", GetRealmName(), UnitName("player"))

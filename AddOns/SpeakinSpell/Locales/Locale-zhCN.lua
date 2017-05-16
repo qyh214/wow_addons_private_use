@@ -309,7 +309,6 @@ L["Raid Officer"] = "团队指挥官"
 L["Raid Officer Mode"] = "团队指挥官模式"
 L["Random"] = "随机"
 L["Random Chance (%)"] = "概率 (%)"
-L["Random Chance to use <language>"] = "使用 <language> 的概率"
 L["Random Speech <number>"] = "随机讲话 <number>"
 L["Random Substitutions"] = "随机替换"
 L["Random Substitutions like <randomtaunt> and <randomfaction>"] = "随机替换如 <randomtaunt> 和 <randomfaction>"
@@ -345,9 +344,6 @@ L[ [=[Select the racial game language you want to use to announce these speeches
 This option will be ignored if you set the "Always Use Common" option under general settings.]=] ] = [=[为这些语句选择种族语言
 
 当你在综合设置中选上了“总是使用通用语言”时，此选项就不会起作用。]=] -- Needs review
-L[ [=[Select the random chance to use your racial/roleplay language for this event
-0% will always use <common>. 100% will always use <racial>.]=] ] = [=[为事件选择种族、角色语言的使用几率
-0%：将总是使用<common>，100%将总是使用<racial>。]=] -- Needs review
 L["Select which channel to use for this spell while in a Battleground"] = "战场中使用哪个聊天频道" -- Needs review
 L["Select which channel to use for this spell while in a Party"] = "小队中使用哪个聊天频道" -- Needs review
 L["Select which channel to use for this spell while in a Raid"] = "团队中使用哪个聊天频道" -- Needs review

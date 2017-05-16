@@ -247,7 +247,6 @@ DEFAULT_SPEECHES.Templates = {
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["COMBATENTERING_COMBAT"] = {
 				["DetectedEvent"] = {
@@ -270,7 +269,6 @@ DEFAULT_SPEECHES.Templates = {
 					PartyLeader	= "SAY",
 					--Solo		= "SAY",
 				},
-				["RPLanguageRandomChance"] = 0.5,
 				["Cooldown"] = 0,
 				["Frequency"] = 0.05,
 			},
@@ -348,7 +346,6 @@ DEFAULT_SPEECHES.Templates = {
 			},
 			["WhisperTarget"] = false,
 			["OncePerTarget"] = true,
-			["RPLanguageRandomChance"] = 0.5,
 			["DisableAnnouncements"] = false,
 			["RPLanguage"] = "COMMON",
 			["key"] = "UNIT_SPELLCAST_CHANNEL_STARTSUMMONING_STONE_EFFECT",
@@ -627,7 +624,6 @@ DEFAULT_SPEECHES.Templates = {
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["UNIT_SPELLCAST_SENTCALL_PET"] = {
 				["Messages"] = {
@@ -1064,7 +1060,6 @@ DEFAULT_SPEECHES.Templates = {
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 		["UNIT_SPELLCAST_SENTHAND_OF_SALVATION"] = {
 			["Messages"] = {
@@ -1205,7 +1200,6 @@ DEFAULT_SPEECHES.Templates = {
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 		["COMBATEXITING_COMBAT"] = {
 				["DetectedEvent"] = {
@@ -1326,7 +1320,6 @@ DEFAULT_SPEECHES.Templates = {
 				["eventname"] = "Ritual of Refreshment",
 			},
 			["key"] = "UNIT_SPELLCAST_SENTRITUAL_OF_REFRESHMENT",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["RaidLeader"] = "SAY",
@@ -2214,7 +2207,6 @@ DEFAULT_SPEECHES.Templates = {
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 		["UNIT_SPELLCAST_SENTBLIND"] = {
 			["DetectedEvent"] = {
@@ -2370,7 +2362,6 @@ DEFAULT_SPEECHES.Templates = {
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["UNIT_SPELLCAST_SENTENTANGLING_ROOTS"] = {
 				["Messages"] = {
@@ -2463,7 +2454,6 @@ DEFAULT_SPEECHES.Templates = {
 				"No one expects the Undead Zombie Spanish Inquisition!", -- [5]
 			},
 			["WhisperTarget"] = false,
-			["RPLanguageRandomChance"] = 0.5,
 			["DisableAnnouncements"] = false,
 			["RPLanguage"] = "COMMON",
 			["key"] = "UNIT_SPELLCAST_CHANNEL_STARTARMY_OF_THE_DEAD",
@@ -2618,7 +2608,6 @@ DEFAULT_SPEECHES.Templates = {
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["COMBATEXITING_COMBAT"] = {
 				["DetectedEvent"] = {
@@ -3131,7 +3120,6 @@ DEFAULT_SPEECHES.Templates = {
 					"repair mammoth is up", -- [1]
 				},
 				["WhisperTarget"] = false,
-				["RPLanguageRandomChance"] = 0.5,
 				["DisableAnnouncements"] = false,
 				["RPLanguage"] = "COMMON",
 				["ExpandMacros"] = false,
@@ -3306,7 +3294,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					"Oh Damn!  I died!  Again!", -- [56]
 				},
 				["WhisperTarget"] = false,
-				["RPLanguageRandomChance"] = 0.5,
 				["DisableAnnouncements"] = false,
 				["RPLanguage"] = "COMMON",
 				["key"] = "COMBATI_DIED",
@@ -3376,7 +3363,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 				["ExpandMacros"] = false,
 				["RPLanguage"] = "COMMON",
 				["key"] = "ACHIEVEMENTA_GUILD_MEMBER",
-				["RPLanguageRandomChance"] = 0.5,
 				["Channels"] = {
 					["Solo"] = "GUILD",
 					["BG"] = "GUILD",
@@ -3412,7 +3398,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 				["ExpandMacros"] = false,
 				["RPLanguage"] = "COMMON",
 				["key"] = "ACHIEVEMENTSOMEONE_NEARBY",
-				["RPLanguageRandomChance"] = 0.5,
 				["Channels"] = {
 					["Solo"] = "SAY",
 					["BG"] = "SAY",
@@ -3449,7 +3434,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 				["ExpandMacros"] = false,
 				["RPLanguage"] = "COMMON",
 				["key"] = "EVENTBEGIN_/FOLLOW",
-				["RPLanguageRandomChance"] = 0.5,
 				["Channels"] = {
 					["Solo"] = "SAY",
 					["BG"] = "SAY",
@@ -3486,7 +3470,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 				["DisableAnnouncements"] = false,
 				["ExpandMacros"] = false,
 				["key"] = "SPELL_AURA_APPLIED_DEBUFFRECENTLY_DROPPED_FLAG",
-				["RPLanguageRandomChance"] = 0.5,
 				["RPLanguage"] = "COMMON",
 				["Channels"] = {
 					["BG"] = "SAY",
@@ -3500,7 +3483,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					"Receive speeches from <caster>", -- [1]
 				},
 				["WhisperTarget"] = false,
-				["RPLanguageRandomChance"] = 0.5,
 				["DisableAnnouncements"] = false,
 				["RPLanguage"] = "COMMON",
 				["DetectedEvent"] = {
@@ -3530,7 +3512,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					"Receive >randomsubs< word list from <caster>", -- [1]
 				},
 				["WhisperTarget"] = false,
-				["RPLanguageRandomChance"] = 0.5,
 				["ReadOnly"] = {
 				},
 				["DisableAnnouncements"] = false,
@@ -3568,7 +3549,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					"Fish down, eat it before the cockroaches get it", -- [1]
 				},
 				["WhisperTarget"] = false,
-				["RPLanguageRandomChance"] = 0.5,
 				["DisableAnnouncements"] = false,
 				["RPLanguage"] = "COMMON",
 				["ExpandMacros"] = false,
@@ -3610,7 +3590,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					"<spellname> on me! Run Away! Run Away!", -- [1]
 				},
 				["WhisperTarget"] = false,
-				["RPLanguageRandomChance"] = 0.5,
 				["DisableAnnouncements"] = false,
 				["RPLanguage"] = "COMMON",
 				["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNMALLEABLE_GOO",
@@ -3662,7 +3641,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNFEAR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -3689,7 +3667,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNWYVERN_STING",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -3716,7 +3693,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "UNIT_SPELLCAST_SENTEVOCATION",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -3743,7 +3719,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNCHARGE_STUN",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -3758,7 +3733,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 				"/p hammer on <target>\n/rw hammer on <target>", -- [2]
 			},
 			["WhisperTarget"] = false,
-			["RPLanguageRandomChance"] = 0.5,
 			["DisableAnnouncements"] = false,
 			["RPLanguage"] = "COMMON",
 			["key"] = "UNIT_SPELLCAST_SUCCEEDEDHAMMER_OF_JUSTICE",
@@ -3796,7 +3770,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "UNIT_SPELLCAST_SENTPOLYMORPH",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -3823,7 +3796,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNPSYCHIC_SCREAM",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -3850,7 +3822,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_BUFFEVERY_MAN_FOR_HIMSELF",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -3877,7 +3848,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNCYCLONE",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -3904,7 +3874,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNCONCUSSION_BLOW",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -3931,7 +3900,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNHAMMER_OF_JUSTICE",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -3958,7 +3926,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNPOLYMORPH",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -4047,7 +4014,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNPSYCHIC_SCREAM",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -4070,7 +4036,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNFEAR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4097,7 +4062,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNABLAZE",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4124,7 +4088,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNAAURA_OF_FEAR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4151,7 +4114,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNBELLOWING_ROAR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4178,7 +4140,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNFLEEING_IN_TERROR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4205,7 +4166,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNFRIGHTENING_SHOUT",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4232,7 +4192,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNHOWL_OF_TERROR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4259,7 +4218,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNINCITE_TERROR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4286,7 +4244,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNINTIMIDATING_ROAR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4313,7 +4270,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNINTIMIDATING_SHOUT",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4340,7 +4296,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNPANIC",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4367,7 +4322,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNPRESENCE_OF_DEATH",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4394,7 +4348,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNREPULSIVE_GAZE",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4421,7 +4374,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNSCREAM_OF_CHAOS",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4448,7 +4400,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNTERRIFY",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4475,7 +4426,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNTERRIFYING_HOWL",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4502,7 +4452,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNTERRIFYING_ROAR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4529,7 +4478,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNTERRIFYING_SCREECH",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4556,7 +4504,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNTHUNDERING_ROAR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4583,7 +4530,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNWAKING_NIGHTMARE",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4616,7 +4562,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNPOLYMORPH",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4644,7 +4589,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNWHAMMY",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4672,7 +4616,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNPOULTRYIZED",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4705,7 +4648,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNPOLYMORPH",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4734,7 +4676,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNMASS_POLYMORPH",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["RaidLeader"] = "RAID",
@@ -4760,7 +4701,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNCOMBOBULATING_SPRAY",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 					["Party"] = "PARTY",
@@ -4815,7 +4755,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["COMBATEXITING_COMBAT"] = {
 				["DetectedEvent"] = {
@@ -4929,7 +4868,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["COMBATEXITING_COMBAT"] = {
 				["DetectedEvent"] = {
@@ -5087,7 +5025,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["NPCTALK_TO_QUEST-GIVER"] = {
 				["DetectedEvent"] = {
@@ -5188,7 +5125,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["SPELL_AURA_APPLIED_DEBUFF_FOREIGNFEAR"] = {
 			["DetectedEvent"] = {
@@ -5205,7 +5141,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNFEAR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -5287,7 +5222,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["SPELL_AURA_APPLIED_DEBUFF_FOREIGNFEAR"] = {
 			["DetectedEvent"] = {
@@ -5304,7 +5238,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNFEAR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -5365,7 +5298,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["SPELL_AURA_APPLIED_DEBUFF_FOREIGNFEAR"] = {
 			["DetectedEvent"] = {
@@ -5382,7 +5314,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 			["DisableAnnouncements"] = false,
 			["ExpandMacros"] = false,
 			["key"] = "SPELL_AURA_APPLIED_DEBUFF_FOREIGNFEAR",
-			["RPLanguageRandomChance"] = 0.5,
 			["RPLanguage"] = "COMMON",
 			["Channels"] = {
 				["Arena"] = "RAID",
@@ -5562,7 +5493,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["COMBATEXITING_COMBAT"] = {
 				["DetectedEvent"] = {
@@ -5762,7 +5692,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["COMBATCRITICAL_STRIKE"] = {
 				["DetectedEvent"] = {
@@ -5943,7 +5872,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["COMBATEXITING_COMBAT"] = {
 				["DetectedEvent"] = {
@@ -6150,7 +6078,6 @@ The <spellname> said "<subzone>, they got 'em all over the place!!"
 					Solo		= "YELL",
 				},
 				["RPLanguage"] = "RANDOM",
-				["RPLanguageRandomChance"] = 0.10,
 			},
 			["COMBATEXITING_COMBAT"] = {
 				["DetectedEvent"] = {

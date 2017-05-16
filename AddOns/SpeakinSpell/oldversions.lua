@@ -183,6 +183,13 @@ SpeakinSpell.Patches = {
 	OnlyForAll = true,
 },
 
+{ Version = "7.2.1.01",
+	-- SpeakinSpell 7.2.1.01 removed EventTableEntry.RPLanguageRandomChance
+	-- additional languages are now supported and the random chance is an equal distribution
+	func = function() SpeakinSpell:FixOld_72101_RPLanguageRandomChance() end,
+	OnlyForAll = true,
+},
+
 -----------------------------------------------------------------------------------
 } -- end Patches
 

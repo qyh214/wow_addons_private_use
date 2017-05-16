@@ -350,7 +350,8 @@
 					<OnLoad>
 						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 1)
 						self:RegisterForClicks("AnyUp")
-						XPerl_SecureUnitButton_OnLoad(self, nil, XPerl_ShowGenericMenu)
+						self:SetAttribute("*type1", "target")
+						self:SetAttribute("type2", "togglemenu")
 						self:SetAttribute("useparent-unit", true)
 						self:SetAttribute("unitsuffix", "target")
 						self:SetScript("OnEnter", ZPerl_Unit_OnEnter)
@@ -595,6 +596,7 @@
 	<Button name="XPerl_party2" inherits="XPerl_Party_FrameTemplate" parent="ZPerl_Party_SecureHeader" id="2"/>
 	<Button name="XPerl_party3" inherits="XPerl_Party_FrameTemplate" parent="ZPerl_Party_SecureHeader" id="3"/>
 	<Button name="XPerl_party4" inherits="XPerl_Party_FrameTemplate" parent="ZPerl_Party_SecureHeader" id="4"/>
+	<Button name="XPerl_party5" inherits="XPerl_Party_FrameTemplate" parent="ZPerl_Party_SecureHeader" id="5"/>
 	<Frame name="XPerl_Party_Events_Frame">
 		<Scripts>
 			<OnLoad function="XPerl_Party_Events_OnLoad"/>

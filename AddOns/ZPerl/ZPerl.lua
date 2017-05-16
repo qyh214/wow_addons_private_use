@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1030 $")
-XPerl_SetModuleRevision("$Revision: 1030 $")
+end, "$Revision: 1039 $")
+XPerl_SetModuleRevision("$Revision: 1039 $")
 
 -- Upvalus
 local _G = _G
@@ -1519,11 +1519,11 @@ function XPerl_MinimapButton_Details(tt, ldb)
 end
 
 function XPerl_GetDisplayedPowerType(unitID) -- copied from CompactUnitFrame.lua
-	local barType, minPower, startInset, endInset, smooth, hideFromOthers, showOnRaid, opaqueSpark, opaqueFlash, powerName, powerTooltip = UnitAlternatePowerInfo(unitID);
+	local barType, minPower, startInset, endInset, smooth, hideFromOthers, showOnRaid, opaqueSpark, opaqueFlash, powerName, powerTooltip = UnitAlternatePowerInfo(unitID)
 	if ( showOnRaid and UnitHasVehicleUI(unitID) and (UnitInParty(unitID) or UnitInRaid(unitID)) ) then
-		return ALTERNATE_POWER_INDEX;
+		return ALTERNATE_POWER_INDEX
 	else
-		return UnitPowerType(unitID);
+		return UnitPowerType(unitID)
 	end
 end
 
@@ -3355,10 +3355,14 @@ end
 -- XPerl_Update_RaidIcon
 function XPerl_Update_RaidIcon(self, unit)
 	local index = GetRaidTargetIndex(unit)
-	if (index) then
+	if index then
 		local mark
 		if unit == "player" or unit == "vehicle" or unit == "target" or unit == "focus" then
-			mark = self.texture
+			if self.texture then
+				mark = self.texture
+			else
+				mark = self
+			end
 		else
 			mark = self
 		end

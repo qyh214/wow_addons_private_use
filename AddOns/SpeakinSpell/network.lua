@@ -548,7 +548,9 @@ function SpeakinSpell:Network_GetCompressedNewEventsDetected( AlreadyKnownToFarE
 	return data
 end
 
-
+-- Compress the EventTable down to the fields that matter
+-- sometimes there is extra junk that accumulates in these tables
+-- or things local settings that other users don't care about
 function SpeakinSpell:Network_GetCompressedActiveEventTable()
 	local data = {}
 	
@@ -567,10 +569,9 @@ function SpeakinSpell:Network_GetCompressedActiveEventTable()
 			WhisperTarget	= ete.WhisperTarget,
 			Channels		= ete.Channels,
 			--NOTE: GetDefaultLanguage("player") doesn't work during loader, or OnInitialize, or OnVariablesLoaded
-			RPLanguage				= ete.RPLanguage, -- "Common", "Dwarvish", etc, may also be L["Random"]
-			RPLanguageRandomChance	= ete.RPLanguageRandomChance, --0.5, etc
-			Frequency				= ete.Frequency,
-			Cooldown				= ete.Cooldown,
+			RPLanguage		= ete.RPLanguage, -- "Common", "Dwarvish", etc, may also be L["Random"]
+			Frequency		= ete.Frequency,
+			Cooldown		= ete.Cooldown,
 		}
 	end
 	

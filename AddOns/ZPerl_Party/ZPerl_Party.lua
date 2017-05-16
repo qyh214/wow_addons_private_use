@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 1026 $")
+end, "$Revision: 1036 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -43,6 +43,9 @@ local feignDeath = GetSpellInfo(5384)
 function XPerl_Party_Events_OnLoad(self)
 	local events = {
 		"PLAYER_ENTERING_WORLD",
+		"PLAYER_TARGET_CHANGED",
+		"PLAYER_LOGIN",
+		"PLAYER_FLAGS_CHANGED",
 		"GROUP_ROSTER_UPDATE",
 		"UNIT_CONNECTION",
 		"UNIT_PHASE",
@@ -62,14 +65,11 @@ function XPerl_Party_Events_OnLoad(self)
 		"UNIT_LEVEL",
 		"UNIT_DISPLAYPOWER",
 		"UNIT_NAME_UPDATE",
-		"PLAYER_FLAGS_CHANGED",
+		"UNIT_THREAT_LIST_UPDATE",
 		"RAID_TARGET_UPDATE",
 		"READY_CHECK",
 		"READY_CHECK_CONFIRM",
 		"READY_CHECK_FINISHED",
-		"PLAYER_LOGIN",
-		"UNIT_THREAT_LIST_UPDATE",
-		"PLAYER_TARGET_CHANGED",
 		"PARTY_LOOT_METHOD_CHANGED",
 		--"PET_BATTLE_OPENING_START",
 		--"PET_BATTLE_CLOSE",
@@ -113,7 +113,12 @@ local function SetFrameArray(self, value)
 		if (v == self) then
 			PartyFrames[k] = nil
 			if (XPerl_PartyPetFrames) then
-				local petid = "partypet"..strmatch(k, "^party(%d)")
+				local petid
+				if k == "player" then
+					petid = "pet"
+				else
+					petid = "partypet"..strmatch(k, "^party(%d)")
+				end
 				if (XPerl_PartyPetFrames[petid]) then
 					XPerl_PartyPetFrames[petid].partyid = nil
 					XPerl_PartyPetFrames[petid].ownerid = nil
@@ -128,7 +133,13 @@ local function SetFrameArray(self, value)
 		self.targetid = value.."target"
 		PartyFrames[value] = self
 		if (XPerl_PartyPetFrames and self.petFrame) then
-			local petid = "partypet"..strmatch(value, "^party(%d)")
+			--local petid = "partypet"..strmatch(value, "^party(%d)")
+			local petid
+			if value == "player" then
+				petid = "pet"
+			else
+				petid = "partypet"..strmatch(value, "^party(%d)")
+			end
 			XPerl_PartyPetFrames[petid] = self.petFrame
 			self.petFrame.partyid = petid
 			self.petFrame.ownerid = value
@@ -206,8 +217,17 @@ function ZPerl_Party_OnLoad(self)
 		}
 	end
 
+	partyHeader:SetAttribute("showPlayer", pconf.showPlayer)
 	partyHeader:SetAttribute("child"..self:GetID(), self)
-	self.partyid = "party"..self:GetID()
+	if partyHeader:GetAttribute("showPlayer") then
+		if self:GetID() == 1 then
+			self.partyid = "player"
+		else
+			self.partyid = "party"..(self:GetID() - 1)
+		end
+	else
+		self.partyid = "party"..self:GetID()
+	end
 	PartyFrames[self.partyid] = self
 
 	CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
@@ -239,14 +259,18 @@ function ZPerl_Party_OnLoad(self)
 	self.targetFrame:SetScript("OnUpdate", XPerl_Party_Target_OnUpdate)
 
 	if (XPerl_ArcaneBar_RegisterFrame) then
-		XPerl_ArcaneBar_RegisterFrame(self.nameFrame, self.partyid)
+		if self.partyid == "player" then
+			XPerl_ArcaneBar_RegisterFrame(self.nameFrame, "party"..self.partyid)
+		else
+			XPerl_ArcaneBar_RegisterFrame(self.nameFrame, self.partyid)
+		end
 	end
 
 	if (XPerlDB) then
 		self.conf = XPerlDB.party
 	end
 
-	--XPerl_Party_Set_Bits1(self)
+	XPerl_Party_Set_Bits1(self)
 
 	--[[if (XPerl_party1 and XPerl_party2 and XPerl_party3 and XPerl_party4) then
 		ZPerl_Party_OnLoad = nil
@@ -919,6 +943,7 @@ local function XPerl_Party_TargetUpdateHealth(self)
 			percent = hp / hpMax--Everything is dandy, so just do it right way.
 		end
 	end
+	--tf.healthBar:SetAlpha(1)
 	-- end division by 0 check
 	if (hpMax > 0) then 
 		tf.healthBar.text:SetFormattedText(percD, 100 * percent)	-- XPerl_Percent[floor(100 * hp / hpMax)])
@@ -970,6 +995,7 @@ local function XPerl_Party_UpdateTarget(self)
 		if (self.targetid and UnitIsConnected(self.partyid) and UnitExists(self.partyid) and UnitIsVisible(self.partyid)) then
 			local targetname = UnitName(self.targetid)
 			if (targetname and targetname ~= UNKNOWNOBJECT) then
+				--self.targetFrame:SetAlpha(1)
 				self.targetFrame.text:SetText(targetname)
 				XPerl_SetUnitNameColor(self.targetFrame.text, self.targetid)
 				XPerl_Party_TargetUpdateHealth(self)
@@ -1094,12 +1120,10 @@ function XPerl_Party_OnEvent(self, event, unit, ...)
 	if (func) then
 		if (strfind(event, "^UNIT_") and event ~= "UNIT_THREAT_LIST_UPDATE") then
 			local f = PartyFrames[unit]
-			if event == "UNIT_CONNECTION" or event == "UNIT_PHASE" or event == "UNIT_HEAL_PREDICTION" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
-				if (f) then
+			if f then
+				if event == "UNIT_CONNECTION" or event == "UNIT_PHASE" or event == "UNIT_HEAL_PREDICTION" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
 					func(f, unit, ...)
-				end
-			else
-				if (f) then
+				else
 					func(f, ...)
 				end
 			end
@@ -1246,17 +1270,27 @@ function XPerl_Party_Events:UNIT_THREAT_LIST_UPDATE(unit)
 end
 
 function XPerl_Party_Events:PLAYER_TARGET_CHANGED()
+	if partyHeader:GetAttribute("showPlayer") then
+		local f = PartyFrames["player"]
+		if f then
+			--XPerl_Party_UpdateDisplay(f)
+			XPerl_Party_UpdateTarget(f)
+			XPerl_UpdateSpellRange(f.targetFrame, "target")
+		end
+	end
 	updatePartyThreat(true)
 end
 
 -- PLAYER_ENTERING_WORLD
 function XPerl_Party_Events:PLAYER_ENTERING_WORLD()
 	UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE") -- Re-do, in case
+	
 	if (not startupDone) then
 		startupDone = true
 		XPerl_ProtectedCall(XPerl_Party_SetInitialAttributes)
 		CheckRaid()
 	end
+
 	XPerl_Party_UpdateDisplayAll()
 end
 
@@ -1278,6 +1312,12 @@ local function BuildGuidMap()
 	if (GetNumSubgroupMembers() > 0) then
 		--rosterGuids = XPerl_GetReusableTable()
 		rosterGuids = { }
+		if partyHeader:GetAttribute("showPlayer") then
+			local guid = UnitGUID("player")
+			if (guid) then
+				rosterGuids[guid] = "player"
+			end
+		end
 		for i = 1, GetNumSubgroupMembers() do
 			local guid = UnitGUID("party"..i)
 			if (guid) then
@@ -1700,6 +1740,16 @@ function XPerl_Party_SetInitialAttributes()
 		--self:SetAttribute("initial-width", CalcWidth())
 	end]]
 
+	-- Fix Secure Header taint in combat
+	--[[local maxColumns = partyHeader:GetAttribute("maxColumns") or 1
+	local unitsPerColumn = partyHeader:GetAttribute("unitsPerColumn") or 5
+	local startingIndex = partyHeader:GetAttribute("startingIndex") or 1
+	local maxUnits = maxColumns * unitsPerColumn
+
+	partyHeader:Show()
+	partyHeader:SetAttribute("startingIndex", - maxUnits + 1)
+	partyHeader:SetAttribute("startingIndex", startingIndex)]]
+
 	partyHeader:Hide()
 
 	XPerl_Party_SetMainAttributes()
@@ -1789,6 +1839,8 @@ function XPerl_Party_Set_Bits()
 
 	partyAnchor:SetScale(pconf.scale)
 	XPerl_SavePosition(partyAnchor, true)
+
+	ZPerl_Party_SecureHeader:SetAttribute("showPlayer", pconf.showPlayer)
 
 	ZPerl_Party_SecureState:SetAttribute("partyEnabled", pconf.enable)
 	ZPerl_Party_SecureState:SetAttribute("partyInRaid", pconf.inRaid)

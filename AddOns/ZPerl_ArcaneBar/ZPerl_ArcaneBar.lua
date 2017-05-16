@@ -100,6 +100,11 @@ end
 
 -- XPerl_ArcaneBar_OnEvent
 function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
+	-- Override for showPlayer attribute in party.
+	if self.unit == "partyplayer" then
+		self.unit = "player"
+	end
+
 	if (event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_TARGET_CHANGED" or event == "PLAYER_FOCUS_CHANGED" or event == "PARTY_MEMBER_ENABLE" or event == "PARTY_MEMBER_DISABLE") then
 		local nameChannel = UnitChannelInfo(self.unit)
 		local nameSpell = UnitCastingInfo(self.unit)
@@ -447,7 +452,7 @@ local function XPerl_MakePreCast(self)
 	self.precast:SetBlendMode("ADD")
 	--self.precast:SetVertexColor(1, 0, 0)	--SetGradient("HORIZONTAL", 0, 0, 1, 1, 0, 0)
 	self.precast:SetGradient("HORIZONTAL", 0, 0, 1, 1, 0, 0)
-	XPerl_MakePreCast = nil
+	--XPerl_MakePreCast = nil
 end
 
 -- XPerl_ArcaneBar_RegisterFrame
