@@ -92,3 +92,4 @@ L["S_TUTORIAL_TIMELEFT"] = "显示剩余时间（大于4小时，大于90分钟�
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "点击这个按钮将向你显示破碎群岛地图。"
 L["S_UNKNOWNQUEST"] = "未知任务"
 L["S_WORLDQUESTS"] = "世界任务"
+

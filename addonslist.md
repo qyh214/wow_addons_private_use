@@ -88,6 +88,8 @@ Titan 泰坦信息条
 
 TrinketMenu 
 
+WardrobeSort
+
 WhisperInvite 私密邀请
 
 WIM聊天窗口美化

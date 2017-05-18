@@ -1,0 +1,15 @@
+## Interface: 70200
+## Version: v1.2.0
+## Title: WardrobeSort
+## Notes: Sorts the Wardrobe
+## Author: Ketho @ EU-Boulderfist
+## SavedVariables: WardrobeSortDB
+## LoadOnDemand: 1
+## LoadWith: Blizzard_Collections
+
+#@no-lib-strip@
+Libs\LibStub\LibStub.lua
+Libs\NoTaint_UIDropDownMenu\UIDropDownMenu.xml
+#@end-no-lib-strip@
+
+WardrobeSort.lua

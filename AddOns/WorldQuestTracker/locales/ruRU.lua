@@ -92,3 +92,4 @@ L["S_TUTORIAL_TIMELEFT"] = "показывает оставшееся время
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Эта кнопка открывает карту Расколотых островов."
 L["S_UNKNOWNQUEST"] = "Неизвестное задание"
 L["S_WORLDQUESTS"] = "Локальные задания"
+

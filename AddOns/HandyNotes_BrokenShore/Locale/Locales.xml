@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: Locales.xml 4 2017-04-20 17:20:21Z arith $
+-->
+<Ui xmlns="http://www.blizzard.com/wow/ui/"   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+	<Script file="enUS.lua"/>
+	<Script file="deDE.lua"/>
+	<Script file="esES.lua"/>
+	<Script file="esMX.lua"/>
+	<Script file="frFR.lua"/>
+	<Script file="itIT.lua"/>
+	<Script file="koKR.lua"/>
+	<Script file="ptBR.lua"/>
+	<Script file="ruRU.lua"/>
+	<Script file="zhCN.lua"/>
+	<Script file="zhTW.lua"/>
+</Ui>

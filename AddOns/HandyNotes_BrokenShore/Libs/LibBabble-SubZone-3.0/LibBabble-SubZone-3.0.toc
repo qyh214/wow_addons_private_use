@@ -1,0 +1,36 @@
+## Interface: 70200
+## LoadOnDemand: 1
+#@non-debug@
+## Title: HandyNotes - Broken Shore
+## Title-deDE: HandyNotes - Verheerte Küste
+## Title-esES: HandyNotes - Costa Abrupta
+## Title-koKR: HandyNotes - 부서진 해변
+## Title-ruRU: HandyNotes - Расколотый берег
+## Title-zhCN: HandyNotes - 破碎海滩
+## Title-zhTW: HandyNotes - 破碎海岸
+## Notes: Shows the POIs in Broken Shore
+## Notes-deDE: Zeigt interessante Orte der Verheerten Küste
+## Notes-esES: Mostrar los POI de la Costa Abrupta
+## Notes-koKR: 부서진 해변에 관심 지점을 표시합니다
+## Notes-ruRU: Показывает точки в Расколотом берегу
+## Notes-zhCN: 顯示破碎海滩的 POI 位置
+## Notes-zhTW: 顯示破碎海岸的 POI 位置
+#@end-non-debug@
+#@debug@
+## Title: Lib: Babble-SubZone-3.0
+## Notes: A library to help with localization of in-game subzone names.
+## Notes-deDE: Eine Bibliothek, die dabei hilft, die Untergebiete des Spiels zu übersetzen.
+## Notes-koKR: 게임 내 세부 지역 이름의 지역화로 도움을 주는 라이브러리 입니다.
+## Notes-zhCN: 一个帮助游戏内子区域名称本地化的库。
+## Notes-zhTW: 為本地化服務的函式庫 [副區域名稱]
+#@end-debug@
+## Author: Arith
+## X-eMail: arithmandarjp at yahoo.co.jp
+## X-Category: Library
+## X-License: MIT
+## X-Date: @project-date-iso@
+## X-Website: http://www.wowace.com/addons/libbabble-subzone-3-0/
+
+LibStub\LibStub.lua
+lib.xml
+

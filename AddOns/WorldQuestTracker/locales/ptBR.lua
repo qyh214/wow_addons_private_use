@@ -91,3 +91,4 @@ L["S_TUTORIAL_TIMELEFT"] = "indica o tempo restante (+4 horas, +90 minutos, +30 
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Este botão mostra o mapa das Ilhas Partidas."
 L["S_UNKNOWNQUEST"] = "Quest Desconhecida"
 L["S_WORLDQUESTS"] = "Quests Globais"
+

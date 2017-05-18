@@ -1,7 +1,7 @@
-changeset:   134:8af53588bc6a
-tag:         v7.2.0.134-release
+changeset:   136:e0f8b80f783a
+tag:         v7.2.0.136-release
 user:        Tercio
-date:        Fri May 05 14:26:31 2017 -0300
-summary:     - fix for fractional numbers on chinesse, when they are > 10000.
+date:        Tue May 16 19:13:09 2017 -0300
+summary:     - fixed some artifact power issues with koKR language.
 
 

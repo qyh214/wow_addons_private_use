@@ -1,7 +1,11 @@
-Standard UIDropDownMenu global functions using protected frames and causing taints when used by third-party addons. But it is possible to avoid taints by using same functionality with that library.
+Standard UIDropDownMenu global functions using protected frames and causing taints 
+when used by third-party addons. But it is possible to avoid taints by using same 
+functionality with that library.
 
 == What is it ==
-Library is standard code from Blizzard's files EasyMenu.lua, UIDropDownMenu.lua and UIDropDownMenuTemplates.xml with frames, tables, variables and functions renamed to:
+Library is standard code from Blizzard's files EasyMenu.lua, UIDropDownMenu.lua, 
+UIDropDownMenu.xml and UIDropDownMenuTemplates.xml with frames, tables, variables 
+and functions renamed to:
 * constants (typed with all CAPS): "LIB_" added at the start
 * functions: "Lib_" added at the start
 
@@ -26,13 +30,18 @@ Library is standard code from Blizzard's files EasyMenu.lua, UIDropDownMenu.lua 
 * Lib_UIDropDownMenuDelegate_OnAttributeChanged
 * Lib_UIDropDownMenu_InitializeHelper
 * Lib_UIDropDownMenu_Initialize
+* Lib_UIDropDownMenu_SetInitializeFunction
+* Lib_UIDropDownMenu_RefreshDropDownSize
 * Lib_UIDropDownMenu_OnUpdate
 * Lib_UIDropDownMenu_StartCounting
 * Lib_UIDropDownMenu_StopCounting
 * Lib_UIDropDownMenu_CreateInfo
 * Lib_UIDropDownMenu_CreateFrames
+* Lib_UIDropDownMenu_AddSeparator
 * Lib_UIDropDownMenu_AddButton
 * Lib_UIDropDownMenu_AddSeparator
+* Lib_UIDropDownMenu_GetMaxButtonWidth
+* Lib_UIDropDownMenu_GetButtonWidth
 * Lib_UIDropDownMenu_Refresh
 * Lib_UIDropDownMenu_RefreshAll
 * Lib_UIDropDownMenu_SetIconImage
@@ -61,6 +70,8 @@ Library is standard code from Blizzard's files EasyMenu.lua, UIDropDownMenu.lua 
 * Lib_UIDropDownMenu_DisableButton
 * Lib_UIDropDownMenu_EnableButton
 * Lib_UIDropDownMenu_SetButtonText
+* Lib_UIDropDownMenu_SetButtonNotClickable
+* Lib_UIDropDownMenu_SetButtonClickable
 * Lib_UIDropDownMenu_DisableDropDown
 * Lib_UIDropDownMenu_EnableDropDown
 * Lib_UIDropDownMenu_IsEnabled
@@ -68,5 +79,5 @@ Library is standard code from Blizzard's files EasyMenu.lua, UIDropDownMenu.lua 
 
 == How to use it ==
 
-* Add it to your toc. 
+* Add UIDropDownMenu.xml to your toc. 
 * Like ordinal code for UIDropDownMenu with "Lib_" instead.

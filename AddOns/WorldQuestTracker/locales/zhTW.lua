@@ -91,3 +91,4 @@ L["S_TUTORIAL_TIMELEFT"] = "表示剩餘時間 (+4小時, +90分鐘, +30分鐘, 
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "按下這個按鈕會顯示整個破碎群島的地圖。"
 L["S_UNKNOWNQUEST"] = "未知的任務"
 L["S_WORLDQUESTS"] = "世界任務"
+

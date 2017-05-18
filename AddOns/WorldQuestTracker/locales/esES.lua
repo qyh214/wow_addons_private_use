@@ -90,3 +90,4 @@ L["S_TUTORIAL_TIMELEFT"] = "Indica el tiempo restante (+4 horas, +90 minutos, +3
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Este botón te lleva al mapa de las Islas Abruptas."
 L["S_UNKNOWNQUEST"] = "Misión desconocida"
 L["S_WORLDQUESTS"] = "Misiones del mundo"
+
