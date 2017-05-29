@@ -5,8 +5,9 @@ local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_BrokenShore", "ruRU", f
 if not L then return end
 
 if L then
-L["Add all Ancient Shrine nodes to TomTom waypoints"] = "Добавить все Древнее святилище заметки в точку назначения TomTom"
+L["Add all Ancient Shrine nodes to TomTom waypoints"] = "Добавить все заметки Древнего святилища в точку назначения TomTom"
 L["Add all treasure nodes to TomTom waypoints"] = "Добавить все заметки сокровищ в точку назначения TomTom"
+L["Add all Unstable Nether Portal nodes to TomTom waypoints"] = "Добавить всe заметки Нестабильного портала Пустоты в точку назначения TomTom"
 L["AddOn Settings"] = "Настройки аддона"
 L["Ancient Shrine"] = "Древнее святилище"
 L["Ancient Tomb"] = "Древняя гробница"
@@ -38,7 +39,9 @@ L["Send query request to server to lookup localized names. May be a little bit s
 L["Show all nodes that you manually hid by right-clicking on them and choosing \"hide\"."] = "Показать все заметки, которые вы вручную скрываете, щелкнув на них правой кнопкой мыши и выбрать \"скрыть\"."
 L["Show all the other misc nodes."] = "Показать все разные и другие заметки."
 L["Show Ancient Shrine's locations."] = "Показывать местонахождение Древних святилищ."
+L["Show coordinate"] = "Показать координаты"
 L["Show Master Pet Tamer's location."] = "Показывать местонахождение опытных укротителей питомцев."
+L["Show node's coordinate information."] = "Показать информацию о координатах заметках"
 L["Show note"] = "Показать заметки"
 L["Show possible spawning location of Veiled Wyrmtongue Chest."] = "Показывает возможное место, повторного появления на Потайной сундук змееустов."
 L["Show ramp to the higher ground. This could be useful before you can fly!"] = "Показывает подъемы на возвышенность. Это может быть полезно, прежде чем вы сможете летать!"
@@ -46,6 +49,7 @@ L["Show rare mobs' location even if any of them has not yet spawned."] = "Пок
 L["Show Smoldering Infernal Core's locations."] = "Показывать местонахождение Тлеющее ядро инфернала."
 L["Show the entrance of specific cave or the entrance to special location."] = "Показать вход в определенную пещеру или вход в специальное место."
 L["Show the node's additional notes when it's available."] = "Показывать дополнительные заметки к уже заметкам, когда она доступна."
+L["Show Unstable Nether Portal's location."] = "Показывать местоположение Нестабильного портала Пустоты."
 L["Shows the POIs in Broken Shore"] = "Показывает точки в Расколотом берегу"
 L["Smoldering Infernal Core"] = "Тлеющее ядро инфернала"
 L["The alpha transparency of the icons"] = "Альфа-прозрачность для значков"
@@ -53,6 +57,7 @@ L["the cave in Stonefin Shoals"] = "Пещера в отмели каменны�
 L["The scale of the icons"] = "Масштаб для значков"
 L["These settings control the look and feel of the icon."] = "Эти настройки контролируют внешний вид значка."
 L["These settings control what type of icons to be displayed."] = "Эти настройки контролируют какой, тип значков будет отображаться на карте мира и на мини-карте."
+L["Unstable Nether Portal"] = "Нестабильный портал Пустоты"
 L["Veiled Wyrmtongue Chest"] = "Потайной сундук змееустов"
 L["What to display"] = "Что показывать"
 L["Wyrmtongue Chest"] = "Сундук змееустов"

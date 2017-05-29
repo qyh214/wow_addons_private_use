@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Council", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 609 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 612 $"):sub(12, -3))
 mod:SetCreatureID(22949, 22950, 22951, 22952)
 mod:SetEncounterID(608)
 mod:SetModelID(21416)
@@ -25,7 +25,7 @@ mod:SetBossHealthInfo(
 	22952, L.Veras
 )
 
-local warnPoison			= mod:NewTargetAnnounce(41485, 3)
+local warnPoison			= mod:NewTargetAnnounce(41485, 3, nil, false, 2)
 local warnVanish			= mod:NewTargetAnnounce(41476, 3)
 local warnVanishEnd			= mod:NewEndAnnounce(41476, 3)
 local warnShield			= mod:NewTargetAnnounce(41475, 3)
@@ -52,7 +52,6 @@ local timerNextCoH			= mod:NewCDTimer(14, 41455)
 
 local berserkTimer			= mod:NewBerserkTimer(900)
 
-mod:AddBoolOption("HealthFrame", false)
 mod:AddSetIconOption("PoisonIcon", 41485)
 
 function mod:OnCombatStart(delay)
@@ -65,11 +64,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.PoisonIcon then
 			self:SetIcon(args.destName, 8)
 		end
-	elseif args.spellId == 41481 and args:IsPlayer() and self:AntiSpam(4, 1) and not self:IsTrivial(85) then
+	elseif args.spellId == 41481 and args:IsPlayer() and self:AntiSpam(3, 1) and not self:IsTrivial(85) then
 		 specWarnFlame:Show()
-	elseif args.spellId == 41482 and args:IsPlayer() and self:AntiSpam(4, 1) and not self:IsTrivial(85) then
+	elseif args.spellId == 41482 and args:IsPlayer() and self:AntiSpam(3, 2) and not self:IsTrivial(85) then
 		 specWarnBlizzard:Show()
-	elseif args.spellId == 41541 and args:IsPlayer() and self:AntiSpam(4, 1) and not self:IsTrivial(85) then
+	elseif args.spellId == 41541 and args:IsPlayer() and self:AntiSpam(3, 3) and not self:IsTrivial(85) then
 		 specWarnConsecration:Show()
 	elseif args.spellId == 41476 then
 		warnVanish:Show(args.destName)

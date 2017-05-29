@@ -1,4 +1,4 @@
--- $Id: Handler.lua 51 2017-05-12 12:38:00Z arith $
+-- $Id: Handler.lua 62 2017-05-25 06:46:53Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -35,6 +35,17 @@ addon.Name = FOLDER_NAME;
 _G.HandyNotes_BrokenShore = addon;
 
 -- //////////////////////////////////////////////////////////////////////////
+-- get creature's name from server
+local mcache_tooltip = CreateFrame("GameTooltip", private.addon_name.."_mcacheToolTip", UIParent, "GameTooltipTemplate")
+local creature_cache
+
+-- activation code
+local function getCreatureNamebyID(id)
+	mcache_tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+	mcache_tooltip:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
+	creature_cache = _G[private.addon_name.."_mcacheToolTipTextLeft1"]:GetText()
+end
+-- //////////////////////////////////////////////////////////////////////////
 local function work_out_texture(point)
 	local icon_key
 	
@@ -67,7 +78,13 @@ local get_point_info = function(point)
 			if not point.alpha then point.alpha = 0.6 end
 		end
 		if (point.entrance) then
+			if not point.scale then point.scale = 0.8 end
 			if not point.alpha then point.alpha = 0.8 end
+		end
+		if (point.netherPortal) then 
+			if not point.label then point.label = L["Unstable Nether Portal"] end
+			if not point.scale then point.scale = 1.4 end
+			if not point.alpha then point.alpha = 0.6 end
 		end
 
 		local icon = work_out_texture(point)
@@ -81,16 +98,14 @@ local get_point_info_by_coord = function(mapFile, coord)
 	return get_point_info(private.DB.points[mapFile] and private.DB.points[mapFile][coord])
 end
 
---[===[@debug@
 local function handle_tooltip(tooltip, point, coord)
---@end-debug@]===]
---@non-debug@
-local function handle_tooltip(tooltip, point)
---@end-non-debug@
 	if point then
 		if (point.label) then
 			if (point.npc and private.db.query_server) then
-				tooltip:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(point.npc))
+				--tooltip:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(point.npc))
+				getCreatureNamebyID(point.npc)
+				tooltip:AddLine(creature_cache or point.label)
+				creature_cache = nil
 			else
 				tooltip:AddLine(point.label)
 			end
@@ -104,8 +119,11 @@ local function handle_tooltip(tooltip, point)
 		if (point.note and private.db.show_note) then
 			tooltip:AddLine("("..point.note..")", nil, nil, nil, true)
 		end
+		if (private.db.show_coords and coord) then
+			local x, y = HandyNotes:getXY(coord)
+			tooltip:AddLine(format("%.2f, %.2f", x*100, y*100), 1, 1, 1, true)
+		end
 --[===[@debug@
-		tooltip:AddLine(coord, 1, 1, 1, true)
 		if (point.quest) then
 			if (IsQuestFlaggedCompleted(point.quest)) then
 				tooltip:AddDoubleLine(L["QuestID"], point.quest or UNKNOWN, 0.5, 0.5, 1, 1, 0.5, 1)
@@ -122,12 +140,7 @@ end
 
 local handle_tooltip_by_coord = function(tooltip, mapFile, coord)
 	mapFile = string.gsub(mapFile, "_terrain%d+$", "")
---[===[@debug@
 	return handle_tooltip(tooltip, private.DB.points[mapFile] and private.DB.points[mapFile][coord], coord)
---@end-debug@]===]
---@non-debug@
-	return handle_tooltip(tooltip, private.DB.points[mapFile] and private.DB.points[mapFile][coord])
---@end-non-debug@
 end
 
 -- //////////////////////////////////////////////////////////////////////////
@@ -158,7 +171,7 @@ local function hideNode(button, mapFile, coord)
 end
 
 local function closeAllDropdowns()
-	Lib_CloseDropDownMenus(1)
+	L_CloseDropDownMenus(1)
 end
 
 local function addTomTomWaypoint(button, mapFile, coord)
@@ -205,58 +218,80 @@ local function addAllShrineToWayPoint(button, mapFile)
 	end
 end
 
+local function addAllNetherPortalToWayPoint(button, mapFile)
+	if TomTom then
+		local mapId = HandyNotes:GetMapFiletoMapID(mapFile)
+		for k, v in pairs(private.DB.netherPortals) do
+			local x, y = HandyNotes:getXY(k)
+			TomTom:AddMFWaypoint(mapId, nil, x, y, {
+				title = L["Unstable Nether Portal"],
+				persistent = nil,
+				minimap = true,
+				world = true
+			})
+		end
+	end
+end
+
 do
 	local currentZone, currentCoord
 	local function generateMenu(button, level)
 		if (not level) then return end
 		if (level == 1) then
 			-- Create the title of the menu
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = L_UIDropDownMenu_CreateInfo()
 			info.isTitle 		= 1
-			info.text 		= "HandyNotes - " ..L["PLUGIN_NAME"]
+			info.text 		= "HandyNotes - " ..addon.pluginName
 			info.notCheckable 	= 1
-			Lib_UIDropDownMenu_AddButton(info, level)
+			L_UIDropDownMenu_AddButton(info, level)
 
 			if TomTom then
 				-- Waypoint menu item
-				info = Lib_UIDropDownMenu_CreateInfo()
+				info = L_UIDropDownMenu_CreateInfo()
 				info.text = LH["Add this location to TomTom waypoints"]
 				info.notCheckable = 1
 				info.func = addTomTomWaypoint
 				info.arg1 = currentZone
 				info.arg2 = currentCoord
-				Lib_UIDropDownMenu_AddButton(info, level)
+				L_UIDropDownMenu_AddButton(info, level)
 
-				info = Lib_UIDropDownMenu_CreateInfo()
+				info = L_UIDropDownMenu_CreateInfo()
 				info.text = L["Add all treasure nodes to TomTom waypoints"]
 				info.notCheckable = 1
 				info.func = addAllTreasureToWayPoint
 				info.arg1 = currentZone
-				Lib_UIDropDownMenu_AddButton(info, level)
+				L_UIDropDownMenu_AddButton(info, level)
 
-				info = Lib_UIDropDownMenu_CreateInfo()
+				info = L_UIDropDownMenu_CreateInfo()
 				info.text = L["Add all Ancient Shrine nodes to TomTom waypoints"]
 				info.notCheckable = 1
 				info.func = addAllShrineToWayPoint
 				info.arg1 = currentZone
-				Lib_UIDropDownMenu_AddButton(info, level)
+				L_UIDropDownMenu_AddButton(info, level)
+
+				info = L_UIDropDownMenu_CreateInfo()
+				info.text = L["Add all Unstable Nether Portal nodes to TomTom waypoints"]
+				info.notCheckable = 1
+				info.func = addAllNetherPortalToWayPoint
+				info.arg1 = currentZone
+				L_UIDropDownMenu_AddButton(info, level)
 			end
 
 			-- Hide menu item
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = L_UIDropDownMenu_CreateInfo()
 			info.text		= HIDE 
 			info.notCheckable 	= 1
 			info.func		= hideNode
 			info.arg1		= currentZone
 			info.arg2		= currentCoord
-			Lib_UIDropDownMenu_AddButton(info, level)
+			L_UIDropDownMenu_AddButton(info, level)
 
 			-- Close menu item
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = L_UIDropDownMenu_CreateInfo()
 			info.text		= CLOSE
 			info.func		= closeAllDropdowns
 			info.notCheckable 	= 1
-			Lib_UIDropDownMenu_AddButton(info, level)
+			L_UIDropDownMenu_AddButton(info, level)
 		end
 	end
 	local HL_Dropdown = CreateFrame("Frame", private.addon_name.."DropdownMenu")
@@ -267,7 +302,7 @@ do
 		if button == "RightButton" and not down then
 			currentZone = string.gsub(mapFile, "_terrain%d+$", "")
 			currentCoord = coord
-			Lib_ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
+			L_ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
 		end
 	end
 end
@@ -321,6 +356,9 @@ do
 			return false
 		end
 		if (point.tamer and not private.db.show_tamer) then
+			return false
+		end
+		if (point.netherPortal and not private.db.show_netherPortals) then
 			return false
 		end
 		if (point.dungeonLevel and point.dungeonLevel ~= currentLevel) then
@@ -378,6 +416,10 @@ end
 
 function addon:ENCOUNTER_LOOT_RECEIVED()
 	addon:Refresh()
+end
+
+function addon:CLOSE_WORLD_MAP()
+	closeAllDropdowns()
 end
 
 -- //////////////////////////////////////////////////////////////////////////

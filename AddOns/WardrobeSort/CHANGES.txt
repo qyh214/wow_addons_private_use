@@ -1,58 +1,18 @@
-lightweight tag 9b2ad0f7f8000c57f5b4c5de861a7c0b8d512ef3 v1.2.0
+lightweight tag 2df4bc22bf6f810772fbd9f4b3c6c30a8edba422 v1.2.4
 Author:	Ketho <sghs17@outlook.com>
-Date:	Wed May 17 01:53:09 2017 +0200
+Date:	Sat May 20 01:37:32 2017 +0200
 
-commit 9b2ad0f7f8000c57f5b4c5de861a7c0b8d512ef3
+commit 2df4bc22bf6f810772fbd9f4b3c6c30a8edba422
 Author: Ketho <sghs17@outlook.com>
-Date:   Wed May 17 01:53:09 2017 +0200
+Date:   Sat May 20 01:37:32 2017 +0200
 
-    Added sorting by color and source
+    Fixed sorting by Source sometimes not working
+    
+    Reverse sort order is now saved between sessions
 
-commit 2ae2e3df1ffdc627d659a1073581834171bbfec2
+commit 02480eae7a64955b78c77c4ef53c1a29fe6e59f0
 Author: Ketho <sghs17@outlook.com>
-Date:   Wed May 17 01:49:29 2017 +0200
+Date:   Fri May 19 16:39:22 2017 +0200
 
-    7.2.0.24015 FileData
-
-commit d42ddeaeb883ed288a835a3c299d30d9a2c70629
-Author: Ketho <sghs17@outlook.com>
-Date:   Mon May 15 08:43:09 2017 +0200
-
-    Only reference NoTaint_UIDropDownMenu\UIDropDownMenu.xml
-
-commit 292f8f575ccfa9cf85de3fda818089b3bc68210b
-Author: Ketho <sghs17@outlook.com>
-Date:   Mon May 15 07:34:54 2017 +0200
-
-    Hard-embed NoTaint_UIDropDownMenu 7.2.0.24015
-
-commit f3bd6719b294237221fc2fd0b0911cce2a327797
-Author: Ketho <sghs17@outlook.com>
-Date:   Fri May 12 23:14:45 2017 +0200
-
-    Try to build with NoTaint_UIDropDownMenu
-
-commit fa5daf0f5fb27e0a2c8bb03ea46fc12ccf913dfc
-Author: Ketho <sghs17@outlook.com>
-Date:   Fri May 12 22:21:44 2017 +0200
-
-    Try again with just LibStub
-
-commit bfccf2d6457f7fe0aeeabdfea961e98957fbf3ea
-Author: Ketho <sghs17@outlook.com>
-Date:   Fri May 12 22:19:48 2017 +0200
-
-    Try again without LibStub and with NoTaint_UIDropDownMenu tag attribute
-
-commit a6530da02c3300ef0dfe756c177f2144e38e6ad7
-Author: Ketho <sghs17@outlook.com>
-Date:   Fri May 12 22:12:37 2017 +0200
-
-    Try again with empty \Libs\ folder
-
-commit de2ca88baf521c5151c3a8321120965bd5d9ee69
-Author: Ketho <sghs17@outlook.com>
-Date:   Fri May 12 22:00:14 2017 +0200
-
-    Try to soft-embed NoTaint_UIDropDownMenu
+    Fixed sorting by unknown Item Sources
 

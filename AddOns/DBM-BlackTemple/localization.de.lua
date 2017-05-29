@@ -44,8 +44,8 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	PhaseKite		= "schlägt wütend auf den Boden!",
-	PhaseTank		= "Der Boden beginnt aufzubrechen!",
+	PhaseTank		= "schlägt wütend auf den Boden!",
+	PhaseKite		= "Der Boden beginnt aufzubrechen!",
 	ChangeTarget	= "wählt ein neues Ziel!",
 	Kite			= "Kite",
 	Tank			= "Tank"

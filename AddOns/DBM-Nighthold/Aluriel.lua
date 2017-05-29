@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1751, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16171 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16232 $"):sub(12, -3))
 mod:SetCreatureID(104881)
 mod:SetEncounterID(1871)
 mod:SetZone()
@@ -432,7 +432,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 212647 then
 		local amount = args.amount or 1
-		if args:IsPlayer() and amount % 2 == 0 and amount >= 6 then
+		if args:IsPlayer() and amount % 2 == 0 and amount >= 6 and amount ~= 8 then
 			specWarnFrostbitten:Show(amount)
 			voiceFrostbitten:Play("stackhigh")
 		end

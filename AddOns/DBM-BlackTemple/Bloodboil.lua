@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Bloodboil", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 609 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 612 $"):sub(12, -3))
 mod:SetCreatureID(22948)
 mod:SetEncounterID(605)
 mod:SetModelID(21443)
@@ -27,7 +27,6 @@ local specWarnBlood		= mod:NewSpecialWarningYou(42005)
 local specWarnRage		= mod:NewSpecialWarningYou(40604)
 
 local timerBlood		= mod:NewCDTimer(10, 42005, nil, nil, nil, 5)
-local timerWound		= mod:NewTargetTimer(60, 40481, nil, false)
 local timerStrikeCD		= mod:NewCDTimer(30, 40491)
 local timerRage			= mod:NewCDTimer(52, 40604, nil, nil, nil, 3)
 local timerRageEnd		= mod:NewBuffActiveTimer(28, 40604)
@@ -64,9 +63,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args.spellId == 40481 and not self.vb.rage then
 		local amount = args.amount or 1
-		if (amount == 1) or (amount % 3 == 0) then
+		if (amount % 5 == 0) then
 			warnWound:Show(args.destName, amount)
-			timerWound:Start(args.destName)
 		end
 	elseif args.spellId == 40491 then
 		warnStrike:Show(args.destName)

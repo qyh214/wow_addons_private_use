@@ -10,6 +10,7 @@ local FileData
 local nameVisuals, nameCache = {}, {}
 local catCompleted, itemLevels = {}, {}
 local unknown = {-1}
+local LegionWardrobeY = IsAddOnLoaded("LegionWardrobe") and 55 or 5
 
 local LE_DEFAULT = 1
 local LE_APPEARANCE = 2
@@ -25,13 +26,14 @@ local L = {
 	[LE_APPEARANCE] = APPEARANCE_LABEL,
 	[LE_ITEM_LEVEL] = STAT_AVERAGE_ITEM_LEVEL,
 	[LE_ALPHABETIC] = COMPACT_UNIT_FRAME_PROFILE_SORTBY_ALPHABETICAL,
-	[LE_ITEM_SOURCE] = SOURCE:gsub(":", ""),
+	[LE_ITEM_SOURCE] = SOURCE:gsub("[:：]", ""),
 	[LE_COLOR] = COLOR,
 }
 
 local defaults = {
-	db_version = 1,
+	db_version = 2,
 	sortDropdown = LE_DEFAULT,
+	reverse = false,
 }
 
 local colors = {
@@ -98,13 +100,21 @@ local function LoadFileData(addon)
 	return _G[addon]:GetFileData()
 end
 
+local function SortOperator(a, b)
+	if db.reverse then
+		return a > b -- reverse sort
+	else
+		return a < b
+	end
+end
+
 local function SortAlphabetic()
 	if Wardrobe:IsVisible() then
 		sort(Wardrobe:GetFilteredVisualsList(), function(source1, source2)
 			if nameVisuals[source1.visualID] and nameVisuals[source2.visualID] then
-				return nameVisuals[source1.visualID] < nameVisuals[source2.visualID]
+				return SortOperator(nameVisuals[source1.visualID], nameVisuals[source2.visualID])
 			else
-				return source1.visualID < source2.visualID
+				return SortOperator(source1.uiOrder, source2.uiOrder)
 			end
 		end)
 		Wardrobe:UpdateItems()
@@ -115,9 +125,9 @@ end
 local function CacheHeaders()
 	for k in pairs(nameCache) do
 		-- oh my god so much wasted tables
-		local appearances = WardrobeCollectionFrame_GetSortedAppearanceSources(k)
-		if appearances[1].name then
-			nameVisuals[k] = appearances[1].name
+		local appearances = WardrobeCollectionFrame_GetSortedAppearanceSources(k)[1]
+		if appearances.name then
+			nameVisuals[k] = appearances.name
 			nameCache[k] = nil
 		end
 	end
@@ -136,9 +146,9 @@ local sortFunc = {
 		FileData = FileData or LoadFileData("WardrobeSortData")
 		sort(self:GetFilteredVisualsList(), function(source1, source2)
 			if FileData[source1.visualID] and FileData[source2.visualID] then
-				return FileData[source1.visualID]:lower() < FileData[source2.visualID]:lower()
+				return SortOperator(FileData[source1.visualID], FileData[source2.visualID])
 			else
-				return source1.visualID < source2.visualID
+				return SortOperator(source1.uiOrder, source2.uiOrder)
 			end
 		end)
 	end,
@@ -150,9 +160,9 @@ local sortFunc = {
 				local itemLevel2 = GetItemLevel(source2.visualID)
 				
 				if itemLevel1 ~= itemLevel2 then
-					return itemLevel1 < itemLevel2
+					return SortOperator(itemLevel1, itemLevel2)
 				else
-					return source1.visualID < source2.visualID
+					return SortOperator(source1.uiOrder, source2.uiOrder)
 				end
 			end)
 		end
@@ -174,9 +184,11 @@ local sortFunc = {
 		sort(self:GetFilteredVisualsList(), function(source1, source2)
 			local item1 = WardrobeCollectionFrame_GetSortedAppearanceSources(source1.visualID)[1]
 			local item2 = WardrobeCollectionFrame_GetSortedAppearanceSources(source2.visualID)[1]
+			item1.sourceType = item1.sourceType or 7
+			item2.sourceType = item2.sourceType or 7
 			
-			if item1.sourceType and item2.sourceType then
-				if item1.sourceType == TRANSMOG_SOURCE_BOSS_DROP and item2.sourceType == item1.sourceType then
+			if item1.sourceType == item2.sourceType then
+				if item1.sourceType == TRANSMOG_SOURCE_BOSS_DROP then
 					local drops1 = C_TransmogCollection.GetAppearanceSourceDrops(item1.sourceID)
 					local drops2 = C_TransmogCollection.GetAppearanceSourceDrops(item2.sourceID)
 					
@@ -185,27 +197,20 @@ local sortFunc = {
 						local instance2, encounter2 = drops2[1].instance, drops2[1].encounter
 						
 						if instance1 == instance2 then
-							return encounter1 < encounter2
+							return SortOperator(encounter1, encounter2)
 						else
-							return instance1 < instance2
+							return SortOperator(instance1, instance2)
 						end
 					end
 				else
-					if item1.sourceType == item2.sourceType then
-						local file1 = FileData[source1.visualID]
-						local file2 = FileData[source2.visualID]
-						
-						if file1 and file2 then
-							return file1 > file2
-						else
-							return source1.visualID < source2.visualID
-						end
-					else
-						return item1.sourceType < item2.sourceType
+					if FileData[source1.visualID] and FileData[source2.visualID] then
+						return SortOperator(FileData[source1.visualID], FileData[source2.visualID])
 					end
 				end
+			else
+				return SortOperator(item1.sourceType, item2.sourceType)
 			end
-			return source1.visualID < source2.visualID
+			return SortOperator(source1.uiOrder, source2.uiOrder)
 		end)
 	end,
 	
@@ -219,7 +224,7 @@ local sortFunc = {
 			if file1 and file2 then
 				local index1 = #colors+1
 				for k, v in pairs(colors) do
-					if strfind(file1:lower(), v) then
+					if strfind(file1, v) then
 						index1 = k
 						break
 					end
@@ -227,19 +232,19 @@ local sortFunc = {
 				
 				local index2 = #colors+1
 				for k, v in pairs(colors) do
-					if strfind(file2:lower(), v) then
+					if strfind(file2, v) then
 						index2 = k
 						break
 					end
 				end
 				
 				if index1 == index2 then
-					return file1 < file2
+					return SortOperator(file1, file2)
 				else
-					return index1 < index2
+					return SortOperator(index1, index2)
 				end
 			else
-				return source1.visualID < source2.visualID
+				return SortOperator(source1.uiOrder, source2.uiOrder)
 			end
 		end)
 	end,
@@ -248,24 +253,37 @@ local sortFunc = {
 -- sort again when we are sure all items are cached
 -- not the most efficient way to do this
 local function SortItemLevelEvent()
-	if Wardrobe:IsVisible() then
-		if Lib_UIDropDownMenu_GetSelectedValue(WardRobeSortDropDown) == LE_ITEM_LEVEL then
-			sortFunc[db.sortDropdown](Wardrobe)
-			Wardrobe:UpdateItems()
-		end
+	if Wardrobe:IsVisible() and (db.sortDropdown == LE_ITEM_LEVEL or db.sortDropdown == LE_ITEM_SOURCE) then
+		sortFunc[db.sortDropdown](Wardrobe)
+		Wardrobe:UpdateItems()
 	end
 end
 
 local function Model_OnEnter(self)
 	if Wardrobe:GetActiveCategory() then
 		local selectedValue = Lib_UIDropDownMenu_GetSelectedValue(WardRobeSortDropDown)
+		
 		if selectedValue == LE_APPEARANCE or selectedValue == LE_COLOR then
 			if FileData[self.visualInfo.visualID] then
 				GameTooltip:AddLine(FileData[self.visualInfo.visualID])
 			end
+		
 		elseif selectedValue == LE_ITEM_LEVEL then
 			local avg_ilvl, min_ilvl, max_ilvl = GetItemLevel(self.visualInfo.visualID)
 			GameTooltip:AddLine(format(min_ilvl == max_ilvl and "%d" or "%d  [%d-%d]", avg_ilvl, min_ilvl, max_ilvl))
+		
+		elseif selectedValue == LE_ITEM_SOURCE then
+			if self.visualInfo.isCollected then
+				local item = WardrobeCollectionFrame_GetSortedAppearanceSources(self.visualInfo.visualID)[1]
+				if item.sourceType == TRANSMOG_SOURCE_BOSS_DROP then
+					local drops = C_TransmogCollection.GetAppearanceSourceDrops(item.sourceID)
+					if #drops > 0 then
+						GameTooltip:AddLine(_G["TRANSMOG_SOURCE_"..item.sourceType]..": "..format(WARDROBE_TOOLTIP_ENCOUNTER_SOURCE, drops[1].encounter, drops[1].instance))
+					end
+				else
+					GameTooltip:AddLine(item.sourceType and _G["TRANSMOG_SOURCE_"..item.sourceType] or UNKNOWN)
+				end
+			end
 		end
 		GameTooltip:Show()
 	end
@@ -277,7 +295,7 @@ local function PositionDropDown()
 		local _, isWeapon = C_TransmogCollection.GetCategoryInfo(Wardrobe:GetActiveCategory() or -1)
 		WardRobeSortDropDown:SetPoint("TOPLEFT", Wardrobe.WeaponDropDown, "BOTTOMLEFT", 0, isWeapon and 55 or 32)
 	else
-		WardRobeSortDropDown:SetPoint("TOPLEFT", Wardrobe.WeaponDropDown, "BOTTOMLEFT", 0, 5)
+		WardRobeSortDropDown:SetPoint("TOPLEFT", Wardrobe.WeaponDropDown, "BOTTOMLEFT", 0, LegionWardrobeY)
 	end
 end
 
@@ -293,6 +311,7 @@ local function CreateDropdown()
 			db.sortDropdown = self.value
 			Lib_UIDropDownMenu_SetSelectedValue(dropdown, self.value)
 			Lib_UIDropDownMenu_SetText(dropdown, COMPACT_UNIT_FRAME_PROFILE_SORTBY.." "..L[self.value])
+			db.reverse = IsModifierKeyDown()
 			Wardrobe:SortVisuals()
 		end
 		

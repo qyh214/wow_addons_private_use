@@ -44,8 +44,8 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	PhaseKite		= "golpea el suelo enfadado!",
-	PhaseTank		= "El suelo comienza a abrirse.",
+	PhaseTank		= "golpea el suelo enfadado!",
+	PhaseKite		= "El suelo comienza a abrirse.",
 	ChangeTarget	= "adquiere un nuevo objetivo!",
 	Kite			= "persecución",
 	Tank			= "tanqueo"

@@ -1,4 +1,4 @@
--- $Id: Config.lua 52 2017-05-14 13:29:33Z arith $
+-- $Id: Config.lua 55 2017-05-17 11:57:08Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -107,6 +107,12 @@ config.options = {
 					desc = L["Show Master Pet Tamer's location."],
 					order = 16,
 				},
+				show_netherPortals = {
+					type = "toggle",
+					name = L["Unstable Nether Portal"],
+					desc = L["Show Unstable Nether Portal's location."],
+					order = 17,
+				},
 				show_others = {
 					type = "toggle",
 					name = L["Others"],
@@ -138,6 +144,12 @@ config.options = {
 					name = L["Hide looted mobs"],
 					desc = L["Hide the rare elite mobs which have been killed and looted today."],
 					order = 15,
+				},
+				show_coords = {
+					type = "toggle",
+					name = L["Show coordinate"],
+					desc = L["Show node's coordinate information."],
+					order = 16,
 				},
 				unhide = {
 					type = "execute",

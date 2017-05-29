@@ -302,12 +302,17 @@ local UnitRole do
 end
 
 function AppSupport:CHALLENGE_MODE_COMPLETED()
-    local mapID, level, time = C_ChallengeMode.GetCompletionInfo()
+    local _, level, time = C_ChallengeMode.GetCompletionInfo()
+    local mapId = C_ChallengeMode.GetActiveChallengeMapID() or self.lastMapId
 
     local class = select(3, UnitClass('player'))
     local itemLevel = math.floor( select(2, GetAverageItemLevel()) )
 
-    App:SendServer('APP_CHALLENGE', mapID, level, time, class, itemLevel, UnitRole('player'), unpack(self:GetChallengeMembers()))
+    App:SendServer('APP_CHALLENGE', mapId, level, time, class, itemLevel, UnitRole('player'), unpack(self:GetChallengeMembers()))
+end
+
+function AppSupport:CHALLENGE_MODE_START()
+    self.lastMapId = C_ChallengeMode.GetActiveChallengeMapID() or self.lastMapId
 end
 
 function AppSupport:GetChallengeMembers()
@@ -330,4 +335,6 @@ end
 
 function AppSupport:ChallengeInit()
     self:RegisterEvent('CHALLENGE_MODE_COMPLETED')
+    self:RegisterEvent('CHALLENGE_MODE_START')
+    self:CHALLENGE_MODE_START()
 end

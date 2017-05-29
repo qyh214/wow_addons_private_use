@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Najentus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 609 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 611 $"):sub(12, -3))
 mod:SetCreatureID(22887)
 mod:SetEncounterID(601)
 mod:SetModelID(21174)
@@ -36,7 +36,7 @@ function mod:OnCombatStart(delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(8)
 	end
-	if self.Options.InfoFrame then
+	if self.Options.InfoFrame and not self:IsTrivial(80) then
 		DBM.InfoFrame:SetHeader(L.HealthInfo)
 		DBM.InfoFrame:Show(5, "health", 8800)
 	end

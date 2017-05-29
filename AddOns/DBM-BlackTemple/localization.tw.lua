@@ -44,8 +44,8 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	PhaseKite		= "瑟普莫斯憤怒的捶擊地面!",
-	PhaseTank		= "地上開始裂開!",
+	PhaseTank		= "瑟普莫斯憤怒的捶擊地面!",--Check if Backwards
+	PhaseKite		= "地上開始裂開!",--Check if Backwards
 	ChangeTarget	= "瑟普莫斯需要一個新目標!",
 	Kite			= "風箏",
 	Tank			= "坦克"

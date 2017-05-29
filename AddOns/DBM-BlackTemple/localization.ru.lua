@@ -52,10 +52,9 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	PhaseKite		= "в гневе ударяет по земле!",
-	PhaseTank		= "Земля начинает раскалываться!",
+	PhaseTank		= "в гневе ударяет по земле!",--Check if Backwards
+	PhaseKite		= "Земля начинает раскалываться!",--Check if Backwards
 	ChangeTarget	= "атакует новую цель!",
-	KiteWhisper		= "Беги, Форест, беги!",
 	Kite			= "Kite",--Translate
 	Tank			= "Tank"--Translate
 }

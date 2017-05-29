@@ -52,10 +52,9 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	PhaseKite		= "愤怒地击打着地面！",
-	PhaseTank		= "地面崩裂了！",
+	PhaseTank		= "愤怒地击打着地面！",--Check if Backwards
+	PhaseKite		= "地面崩裂了！",--Check if Backwards
 	ChangeTarget	= "锁定了一个新目标！",
-	KiteWhisper		= "跑!",
 	Kite			= "Kite",--Translate
 	Tank			= "Tank"--Translate
 }

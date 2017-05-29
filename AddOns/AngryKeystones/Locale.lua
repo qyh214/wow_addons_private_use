@@ -160,6 +160,7 @@ langs.zhCN = {
 	scheduleMissingKeystone = "你需要一把7级以上的钥石才可激活此项功能。",
 	config_exclusiveTracker = "在副本中隐藏任务和成就追踪（重载插件后生效）",
 	config_hideTalkingHead = "在史诗钥石副本中隐藏NPC情景对话窗口",
+	config_resetPopup = "离开已完成的副本后提示是否重置",
 }
 langs.zhTW = {
 	config_characterConfig = "為角色進行獨立的配置",
@@ -192,6 +193,7 @@ langs.zhTW = {
 	scheduleMissingKeystone = "你需要一把7級以上的鑰石來激活此項功能。",
 	config_exclusiveTracker = "在副本中隱藏成就和任務追蹤（重裝插件後生效）",
 	config_hideTalkingHead = "在傳奇鑰石副本中隱藏NPC情景對話窗口",
+	config_resetPopup = "離開已完成的副本後提示是否重置",
 }
 
 function Locale:Get(key)

@@ -44,8 +44,8 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	PhaseKite		= "땅이 갈라져서 열리기 시작합니다!",
-	PhaseTank		= "분노하여 땅을 내리찍습니다!",
+	PhaseTank		= "땅이 갈라져서 열리기 시작합니다!",--Check if Backwards
+	PhaseKite		= "분노하여 땅을 내리찍습니다!",--Check if Backwards
 	ChangeTarget	= "새로운 대상이 필요합니다!",
 	Kite			= "추적",
 	Tank			= "일반"

@@ -1,5 +1,5 @@
 ## Interface: 70200
-## Version: v1.2.0
+## Version: v1.2.4
 ## Title: WardrobeSort
 ## Notes: Sorts the Wardrobe
 ## Author: Ketho @ EU-Boulderfist

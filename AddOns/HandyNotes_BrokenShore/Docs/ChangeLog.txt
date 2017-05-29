@@ -1,7 +1,33 @@
-$Id: ChangeLog.txt 52 2017-05-14 13:29:33Z arith $
+$Id: ChangeLog.txt 62 2017-05-25 06:46:53Z arith $
 
 Revision History:
 =================
+
+* v1.16 (May 25, 2017)
+-----------------------
+- Lib update:
+  - Replace NoTaint_UIDropDownMenu with LibUIDropDownMenu
+- Enhanced dropdown menu's behavior when world map is changed or closed
+- Fixed issue that no-lib version was not able to locate LibBabble-SubZone-3.0
+
+* v1.15 (May 22, 2017)
+-----------------------
+- Fixed localization key issue. 
+
+* v1.14 (May 20, 2017)
+-----------------------
+- Lib update:
+  - NoTaint_UIDropDownMenu
+- Localization update:
+  - German (pas06)
+
+* v1.13 (May 18, 2017)
+-----------------------
+- Added Unstable Nether Portal's locations
+- Added toggle to show node's coordinate (mostly for debugging purpose)
+- Localization update:
+  - Korean (yuk6196)
+  - Russian (BLizzatron)
 
 * v1.12 (May 14, 2017)
 -----------------------

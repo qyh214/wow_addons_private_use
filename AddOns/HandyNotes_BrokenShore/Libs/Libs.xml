@@ -2,7 +2,7 @@
 ..\FrameXML\UI.xsd">
 
 <!--@no-lib-strip@-->
-<Include file="NoTaint_UIDropDownMenu\UIDropDownMenu.xml"/>
+<Include file="LibUIDropDownMenu\LibUIDropDownMenu.xml"/>
 <Include file="LibBabble-SubZone-3.0\lib.xml"/>
 <!--@end-no-lib-strip@-->
 

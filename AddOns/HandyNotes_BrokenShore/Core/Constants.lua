@@ -1,4 +1,4 @@
--- $Id: Constants.lua 52 2017-05-14 13:29:33Z arith $
+-- $Id: Constants.lua 62 2017-05-25 06:46:53Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -34,8 +34,10 @@ constants.defaults = {
 		show_shrine = true,
 		show_infernalCores = true,
 		show_tamer = true,
+		show_netherPortals = true,
 		ignore_InOutDoor = false,
 		hide_completed = true,
+		show_coords = false,
 	},
 	char = {
 		hidden = {
@@ -52,27 +54,36 @@ constants.icon_texture = {
 	ramp 		= "Interface\\MINIMAP\\MiniMap-VignetteArrow",
 	greenButton 	= { 
 		icon = OBJECTICONS,
-		tCoordLeft = 0.5, tCoordRight = 0.625, tCoordTop = 0, tCoordBottom = 0.125 },
+		tCoordLeft = 0.5, tCoordRight = 0.625, tCoordTop = 0, tCoordBottom = 0.125,
+	},
 	blueButton 	= {
 		icon = OBJECTICONS,
-		tCoordLeft = 0.125, tCoordRight = 0.25, tCoordTop = 0, tCoordBottom = 0.125 },
+		tCoordLeft = 0.125, tCoordRight = 0.25, tCoordTop = 0, tCoordBottom = 0.125,
+	},
 	redButton 	= {
 		icon = OBJECTICONS,
-		tCoordLeft = 0.25, tCoordRight = 0.375, tCoordTop = 0, tCoordBottom = 0.125 },
+		tCoordLeft = 0.25, tCoordRight = 0.375, tCoordTop = 0, tCoordBottom = 0.125,
+	},
 	yellowButton 	= {
 		icon = OBJECTICONS,
-		tCoordLeft = 0.125, tCoordRight = 0.25, tCoordTop = 0.5, tCoordBottom = 0.625 },
+		tCoordLeft = 0.125, tCoordRight = 0.25, tCoordTop = 0.5, tCoordBottom = 0.625,
+	},
 	portal 		= {
 		icon = OBJECTICONS,
-		tCoordLeft = 0.125, tCoordRight = 0.25, tCoordTop = 0.875, tCoordBottom = 1 },
+		tCoordLeft = 0.125, tCoordRight = 0.25, tCoordTop = 0.875, tCoordBottom = 1,
+	},
 	rare 		= {
 		icon = OBJECTICONS,
-		tCoordLeft = 0.875, tCoordRight = 1, tCoordTop = 0.75, tCoordBottom = 0.875 },
-	--treasure 	= "Interface\\AddOns\\HandyNotes_BrokenShore\\Images\\treasure",
+		tCoordLeft = 0.875, tCoordRight = 1, tCoordTop = 0.75, tCoordBottom = 0.875,
+	},
 	treasure	= {
 		icon = OBJECTICONS,
-		tCoordLeft = 0.25, tCoordRight = 0.375, tCoordTop = 0.625, tCoordBottom = 0.75 },
-
+		tCoordLeft = 0.25, tCoordRight = 0.375, tCoordTop = 0.625, tCoordBottom = 0.75,
+	},
+	netherPortal	= {
+		icon = OBJECTICONS,
+		tCoordLeft = 0.5, tCoordRight = 0.625, tCoordTop = 0.75, tCoordBottom = 0.875,
+	},
 }
 
 -- Define the default icon here
@@ -86,4 +97,5 @@ constants.events = {
 	-- such as a bridge or building and onto terrain or another object.
 	"NEW_WMO_CHUNK",
 	"ENCOUNTER_LOOT_RECEIVED",
-};
+	"CLOSE_WORLD_MAP",
+}

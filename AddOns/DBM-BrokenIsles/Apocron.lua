@@ -3,7 +3,7 @@ if not testBuild and wowTOC < 70200 then return end
 local mod	= DBM:NewMod(1956, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16063 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16242 $"):sub(12, -3))
 mod:SetCreatureID(121124)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
@@ -48,11 +48,13 @@ function mod:MissilesTarget(targetname, uId)
 	end
 end
 
+--[[
 function mod:OnCombatStart(delay, yellTriggered)
 	if yellTriggered then
 
 	end
 end
+--]]
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId

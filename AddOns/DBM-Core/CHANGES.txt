@@ -1,26 +1,305 @@
-tag 8862b63fac8213bb0c2a9a1d45d4f5c18f65f6e4 7.2.6
+tag cd63b695fff5fd9710419c2b944776556dafa655 7.2.7
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Tue May 2 19:26:07 2017 +0200
+Date:	Tue May 23 22:00:02 2017 +0200
 
-Tagging as 7.2.6
+Tagging as 7.2.7
 
-commit 68f89c3d332e729fb4e0ece77ca763e6fd41697d
+commit 8f6a200528d8b90743383113fe50abda1921f255
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue May 2 19:26:07 2017 +0200
+Date:   Tue May 23 22:00:02 2017 +0200
 
-    increment version number to 7.2.6
+    increment version number to 7.2.7
 
-commit 9fdf2c10e94711f17e5383aa05bd50d0d810ba48
+commit 07329974b44f230e0cb619674e0593590d9c4601
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue May 2 19:09:59 2017 +0200
+Date:   Tue May 23 02:18:20 2017 +0200
 
-    Omega via svn r16201:
-    fix errors
+    Omega via svn r16243:
+    Just make this consistent.
 
-commit 134626691b5fc1783ae179cc43ff8c02c8094441
+commit 295399a8d9d8f54de5c0bc5bb45787bbe8231729
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue May 2 10:00:13 2017 +0200
+Date:   Tue May 23 02:14:22 2017 +0200
 
-    tandanu via svn r16200:
+    Omega via svn r16242:
+    Add basic flotsam stuff
+
+commit 071775f0a8d8aaa4e1782af28dca37f4a81fe4c4
+Author: subversion <svn@deadlybossmods.com>
+Date:   Mon May 22 04:44:22 2017 +0200
+
+    ultrashining via svn r16241:
+    zhTW update
+
+commit 1b8f35da7498d5170302d0f7fb5d4d89aedfa4b8
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat May 20 02:04:21 2017 +0200
+
+    Omega via svn r16240:
+    Kr update
+
+commit 0b57622c1fe381b2c86be777dd9925e9e781a2c6
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri May 19 07:32:37 2017 +0200
+
+    Omega via svn r16239:
+    And add another filter
+
+commit 9c537ee952ba0fd0e09ba83b42110e5f1f2538ef
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri May 19 07:31:26 2017 +0200
+
+    Omega via svn r16238:
+    Bump VP version
+
+commit 1cd1be9b05b4f954186ff2617ecb28f9a8651c3b
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri May 19 07:28:54 2017 +0200
+
+    Omega via svn r16237:
+    Add singularity pre warning for just ranged on just mythic that specifically says run to edge.
+
+commit 604c1b55a986330fd5c20680f8d0f315036ddb7a
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri May 19 07:10:13 2017 +0200
+
+    Omega via svn r16236:
+    Add black temple and mist 5 mans to timewalker mod not installed detection
+
+commit 0672c060624eb452d3fcce96abda14d1e5355260
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri May 19 07:02:05 2017 +0200
+
+    Omega via svn r16235:
+    Countdown default setting revert more verbose
+
+commit 8ed45f5618b4ff0d450a9c3f958974dcc432cbc4
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri May 19 06:50:38 2017 +0200
+
+    Omega via svn r16234:
+    Add slash command for ?\226?\128?\156silent Mode?\226?\128?\157 per user request. quickly enable/disable all sounds globally on fly.
+
+commit 3ff11069c7ec910b9a4aa0db61aaf2002aa2d140
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri May 19 06:34:56 2017 +0200
+
+    Omega via svn r16233:
+    Tweak
+
+commit 04c055562fc8053cc89dada8e8a6b3d88617a982
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 18 07:36:22 2017 +0200
+
+    Omega via svn r16232:
+    Tweak frostbitten to not warn at 8 stacks. 6, then 10, then every 2
+
+commit ce7320f4fd4ace4ff7536955675dbee3f42321f9
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 18 07:26:05 2017 +0200
+
+    Omega via svn r16231:
+    Fix arcanoslash defensive sound so it?\226?\128?\153s tank only by default
+
+commit 24334d9fdbd90afc4742c62e588da4c7dc76a54e
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed May 17 08:40:44 2017 +0200
+
+    ultrashining via svn r16230:
+    zhTW update
+
+commit 906fbd2f6022cdc8639574043d45da64920a12bc
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue May 16 01:59:41 2017 +0200
+
+    Omega via svn r16229:
+    Update note
+
+commit dacbf9f58f764e500802dace2b230eeb5b360508
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue May 16 01:43:49 2017 +0200
+
+    Omega via svn r16228:
+    Purge heroes voices next, update notes some, and add migration if users install the heroes count pack before running this version so it saves raven voice as voice 3 instead of forcing pewsey
+
+commit 0861fd3a07bfd979047b37b7600a39e4bb03dd4c
+Author: subversion <svn@deadlybossmods.com>
+Date:   Mon May 15 08:25:19 2017 +0200
+
+    Omega via svn r16227:
+    CLeanup
+
+commit 624672fcfd962c81cc3145a1ad7c99ace87fd30b
+Author: subversion <svn@deadlybossmods.com>
+Date:   Mon May 15 07:18:37 2017 +0200
+
+    Omega via svn r16226:
+    *Added support for countpacks as external injection modules
+    *Removed overwatch count files from DBM-Core
+
+commit 3535fdc5be295a5cac2abc27911a6e0c59d1a7f6
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sun May 14 12:48:06 2017 +0200
+
+    Omega via svn r16225:
+    Switch ADD to DBM_ADDS
+
+commit eaaa1e8b6a7f97c06868ec3a059a2c7e6c0f92d7
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat May 13 18:51:23 2017 +0200
+
+    Omega via svn r16224:
+    Kr Update
+
+commit d1a9f2081f6241de2992806e40944aa4fb73e884
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat May 13 18:47:51 2017 +0200
+
+    Omega via svn r16223:
+    Several more CoEN trash warning additions plus fix one of existing ones
+
+commit 1879b96538489cea17ced90100a2bb818b838fd7
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri May 12 06:56:35 2017 +0200
+
+    Omega via svn r16222:
+    Antispam purified essence warnings for when you blow up 3-4 at once
+    fix voice file name
+
+commit c55f9413c1cf581a2a936d2f5a7424785391afe2
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 11 07:11:23 2017 +0200
+
+    Omega via svn r16221:
+    Some tweaks
+
+commit 351d66743cd4c3cafbe82a5d5c838de314c0fc6c
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed May 10 06:29:14 2017 +0200
+
+    Omega via svn r16220:
+    More tweaks for pre phase
+
+commit be283622ef0712cd4014ff4f26ba3952d7075354
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed May 10 06:22:05 2017 +0200
+
+    Omega via svn r16219:
+    Change all countdowns to start at 6 for that phase
+
+commit c1b4f5a237d275a1bca40f5dff66e90967abab64
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed May 10 06:15:02 2017 +0200
+
+    Omega via svn r16218:
+    Some tweaks/fixes
+
+commit 37dfa620790b783ca7ffe5bae76f6548356c093f
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue May 9 08:10:57 2017 +0200
+
+    Omega via svn r16217:
+    change voice file
+
+commit 0f32205123bc76c922047c4c3c4ec2674064de33
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 4 23:05:27 2017 +0200
+
+    Omega via svn r16216:
+    add more messages to block
+
+commit 247a127c975293ea71eafb1c57f174179c3d6d72
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 4 10:03:16 2017 +0200
+
+    Omega via svn r16215:
+    Include this too, since people hated that too
+
+commit 8f132b39f5af623bbabe6c5232581e2eca555f50
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 4 09:44:16 2017 +0200
+
+    Omega via svn r16214:
+    Fix case
+
+commit efb96c57eba1ffc5b77f55093f8eecd41c25b129
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 4 09:33:21 2017 +0200
+
+    Omega via svn r16213:
+    make it a toggle instead. and add more stuff to it. This is what the paying users want, this is what they get.
+    Remove some unused options.
+
+commit a8febc68b0723f21d57b7983f03e8638c3952731
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 4 08:54:42 2017 +0200
+
+    Omega via svn r16212:
+    Disable all login messages, even for first time users. almost no one reads them and they seem to annoy most users.
+
+commit abd713ac1c53854d8417499fc15ffbfceab541fa
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 4 08:17:17 2017 +0200
+
+    Omega via svn r16211:
+    Add 3 more trash warnings to CoEN (Issue 114). Drycodes and untested
+
+commit aa264d8727a890f20dbea1c9a5f323db25082bb1
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 4 08:04:05 2017 +0200
+
+    Omega via svn r16210:
+    Some antispam tweaks
+
+commit d901e6ee1429fdf8a90e70302a48492e6673fc0f
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 4 06:18:24 2017 +0200
+
+    Omega via svn r16209:
+    Count add spawns in phase 3 mythic
+    countdown for visions
+    change countdown for crash to tank by default and change voice.
+    more attempts at fixing boss health reporting of phase 3 wipes
+
+commit 3f8edf792ff88523b9dd6bf00ff4e68680255388
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 4 04:07:33 2017 +0200
+
+    Omega via svn r16208:
+    another fix
+
+commit 5c83a17bf72bf237948e5608fe3c1e8c4fb630a0
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu May 4 04:06:44 2017 +0200
+
+    Omega via svn r16207:
+    Fix more stupid
+
+commit 44cc6eb1685502e41ed2a930b58d527cf64bcfab
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed May 3 06:22:25 2017 +0200
+
+    Omega via svn r16206:
+    fix winds 3
+
+commit 0f7a760eb794132c7d08738e9481dd52877766ac
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed May 3 04:24:57 2017 +0200
+
+    Omega via svn r16205:
+    Do countdown too for first one
+
+commit 6f47ccc9a282ad3b923ac2cb79e1ce357cde34a9
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed May 3 04:05:52 2017 +0200
+
+    Omega via svn r16204:
+    apparently I forgot this. no idea how didn?\226?\128?\153t even notice.
+
+commit 5721bcda593b8eb5dc2cfc770e50b47221210b1a
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue May 2 19:26:27 2017 +0200
+
+    tandanu via svn r16203:
     increment alpha version
 

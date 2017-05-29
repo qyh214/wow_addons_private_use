@@ -1,4 +1,4 @@
--- $Id: enUS.lua 52 2017-05-14 13:29:33Z arith $
+-- $Id: enUS.lua 58 2017-05-20 07:01:08Z arith $
 
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
 local L = AceLocale:NewLocale("HandyNotes_BrokenShore", "enUS", true, true);
@@ -6,6 +6,7 @@ local L = AceLocale:NewLocale("HandyNotes_BrokenShore", "enUS", true, true);
 if L then
 L["Add all Ancient Shrine nodes to TomTom waypoints"] = "Add all Ancient Shrine nodes to TomTom waypoints"
 L["Add all treasure nodes to TomTom waypoints"] = "Add all treasure nodes to TomTom waypoints"
+L["Add all Unstable Nether Portal nodes to TomTom waypoints"] = "Add all Unstable Nether Portal nodes to TomTom waypoints"
 L["AddOn Settings"] = "AddOn Settings"
 L["Ancient Shrine"] = "Ancient Shrine"
 L["Ancient Tomb"] = "Ancient Tomb"
@@ -37,7 +38,9 @@ L["Send query request to server to lookup localized names. May be a little bit s
 L["Show all nodes that you manually hid by right-clicking on them and choosing \"hide\"."] = "Show all nodes that you manually hid by right-clicking on them and choosing \"hide\"."
 L["Show all the other misc nodes."] = "Show all the other misc nodes."
 L["Show Ancient Shrine's locations."] = "Show Ancient Shrine's locations."
+L["Show coordinate"] = "Show coordinate"
 L["Show Master Pet Tamer's location."] = "Show Master Pet Tamer's location."
+L["Show node's coordinate information."] = "Show node's coordinate information."
 L["Show note"] = "Show note"
 L["Show possible spawning location of Veiled Wyrmtongue Chest."] = "Show possible spawning location of Veiled Wyrmtongue Chest."
 L["Show ramp to the higher ground. This could be useful before you can fly!"] = "Show ramp to the higher ground. This could be useful before you can fly!"
@@ -45,6 +48,7 @@ L["Show rare mobs' location even if any of them has not yet spawned."] = "Show r
 L["Show Smoldering Infernal Core's locations."] = "Show Smoldering Infernal Core's locations."
 L["Show the entrance of specific cave or the entrance to special location."] = "Show the entrance of specific cave or the entrance to special location."
 L["Show the node's additional notes when it's available."] = "Show the node's additional notes when it's available."
+L["Show Unstable Nether Portal's location."] = "Show Unstable Nether Portal's location."
 L["Shows the POIs in Broken Shore"] = "Shows the POIs in Broken Shore"
 L["Smoldering Infernal Core"] = "Smoldering Infernal Core"
 L["The alpha transparency of the icons"] = "The alpha transparency of the icons"
@@ -52,6 +56,7 @@ L["the cave in Stonefin Shoals"] = "the cave in Stonefin Shoals"
 L["The scale of the icons"] = "The scale of the icons"
 L["These settings control the look and feel of the icon."] = "These settings control the look and feel of the icon."
 L["These settings control what type of icons to be displayed."] = "These settings control what type of icons to be displayed on the WorldMap and Minimap."
+L["Unstable Nether Portal"] = "Unstable Nether Portal"
 L["Veiled Wyrmtongue Chest"] = "Veiled Wyrmtongue Chest"
 L["What to display"] = "What to display"
 L["Wyrmtongue Chest"] = "Wyrmtongue Chest"

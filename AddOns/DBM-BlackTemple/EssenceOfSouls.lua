@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Souls", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 609 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 612 $"):sub(12, -3))
 mod:SetCreatureID(23420)
 mod:SetEncounterID(606)
 mod:SetModelID(21483)
@@ -20,8 +20,9 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"
 )
 
+--TODO, if boss unit IDs ar never added, register target/mouseover to detect the phase change transitions
 local warnFixate		= mod:NewTargetAnnounce(41294, 3, nil, "Tank|Healer")
-local warnDrain			= mod:NewTargetAnnounce(41303, 3)
+local warnDrain			= mod:NewTargetAnnounce(41303, 3, nil, "Healer", 2)
 local warnEnrage		= mod:NewSpellAnnounce(41305, 4, 41292)
 local warnEnrageSoon	= mod:NewPreWarnAnnounce(41305, 5, 3)
 local warnEnrageEnd		= mod:NewEndAnnounce(41305, 3)
@@ -39,6 +40,7 @@ local specWarnShock		= mod:NewSpecialWarningInterrupt(41426, "HasInterrupt", nil
 local specWarnShield	= mod:NewSpecialWarningDispel(41431, "MagicDispeller", nil, 2)
 local specWarnSpite		= mod:NewSpecialWarningYou(41376)
 
+local timerPhaseChange	= mod:NewPhaseTimer(41)
 local timerEnrage		= mod:NewBuffActiveTimer(15, 41305)
 local timerNextEnrage	= mod:NewNextTimer(32, 41305)
 local timerDeaden		= mod:NewTargetTimer(10, 41410)
@@ -47,6 +49,8 @@ local timerMana			= mod:NewTimer(160, "TimerMana", 41350)
 local timerNextShield	= mod:NewCDTimer(15, 41431)
 local timerNextSoul		= mod:NewCDTimer(10, 41545)
 local timerNextShock	= mod:NewCDTimer(12, 41426, nil, nil, nil, 4)--Blizz lied, this is a 12-15 second cd. you can NOT solo interrupt these with most classes
+
+local countdownDeaden	= mod:NewCountdown(31, 41410, "Tank" and select(2, UnitClass("player")) == "WARRIOR")
 
 mod:AddSetIconOption("DrainIcon", 41303, false)
 mod:AddSetIconOption("SpiteIcon", 41376, false)
@@ -107,6 +111,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 41410 then
 		timerNextDeaden:Start()
+		countdownDeaden:Start()
 	elseif args.spellId == 41426 then
 		timerNextShock:Start()
 		specWarnShock:Show(args.sourceName)
@@ -151,12 +156,14 @@ function mod:OnSync(msg)
 		warnEnrageEnd:Cancel()
 		warnEnrageSoon:Cancel()
 		warnMana:Cancel()
-		timerNextEnrage:Cancel()
-		timerEnrage:Cancel()
-		timerMana:Cancel()
-		timerNextShield:Cancel()
-		timerNextDeaden:Cancel()
-		timerNextShock:Cancel()
+		timerNextEnrage:Stop()
+		timerEnrage:Stop()
+		timerMana:Stop()
+		timerNextShield:Stop()
+		timerNextDeaden:Stop()
+		countdownDeaden:Cancel()
+		timerNextShock:Stop()
+		timerPhaseChange:Start()--41
 		if DBM.BossHealth:IsShown() then
 			DBM.BossHealth:Clear()
 		end

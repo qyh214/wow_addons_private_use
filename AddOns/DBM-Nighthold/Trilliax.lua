@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1731, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16089 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16231 $"):sub(12, -3))
 mod:SetCreatureID(104288)
 mod:SetEncounterID(1867)
 mod:SetZone()
@@ -83,7 +83,7 @@ local countdownAnnihilation			= mod:NewCountdown("AltTwo20", 207630)
 local countdownArcaneSlash			= mod:NewCountdown("Alt20", 206641, "Tank")
 
 local voiceArcaneSeepage			= mod:NewVoice(206488)--runaway
-local voiceArcaneSlash				= mod:NewVoice(206641)--tauntboss
+local voiceArcaneSlash				= mod:NewVoice(206641, "Tank", nil, 2)--tauntboss
 --Cleaner
 local voiceSterilize				= mod:NewVoice(208499)--scatter (runout better?)
 local voiceCleansingRage			= mod:NewVoice(206820)--aesoon
