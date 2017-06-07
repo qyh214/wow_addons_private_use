@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1026 $")
+end, "$Revision: 1053 $")
 
 -- Upvalues
 local _G = _G
@@ -161,7 +161,7 @@ function XPerl_Target_OnLoad(self, partyid)
 
 		self:RegisterEvent("PLAYER_TARGET_CHANGED")
 		self:RegisterEvent("PLAYER_FOCUS_CHANGED")
-	
+
 		if (XPerl_Target_Events.INSPECT_READY) then
 			self:RegisterEvent("INSPECT_READY")
 		end
@@ -797,8 +797,8 @@ local function XPerl_Target_UpdateType(self)
 	end
 
 	self.typeFramePlayer:Hide()
-	
-	
+
+
 	if ( UnitIsWildBattlePet(partyid) or UnitIsBattlePetCompanion(partyid) ) then
 		self.creatureTypeFrame.text:SetText(PET_TYPE_SUFFIX[UnitBattlePetType(partyid)])
 	else
@@ -808,7 +808,7 @@ local function XPerl_Target_UpdateType(self)
 	--if (UnitIsPlayer(partyid)) then
 		if (self.conf.classIcon and (UnitIsPlayer(partyid) or UnitClassification(partyid) == "normal")) then
 			local LocalClass, PlayerClass = UnitClassBase(partyid)
-				
+
 			if (self.conf.classText) then
 				self.bossFrame.text:SetText(LocalClass)
 				self.bossFrame.text:SetTextColor(1, 1, 1)
@@ -935,7 +935,7 @@ function XPerl_Target_UpdateHealth(self)
 			hbt:SetFormattedText(percD, 0)
 		else
 			hbt:SetFormattedText(percD, 100 * hp / hpMax)
-		end	
+		end
 	end
 
 	local color
@@ -978,7 +978,7 @@ function XPerl_Target_UpdateHealth(self)
 	if (color) then
 		if hp and hp >= 0 and hpMax and hpMax > 0 then
 			XPerl_ColourHealthBar(self, hp / hpMax)
-		end	
+		end
 
 		if (self.statsFrame.greyMana) then
 			self.statsFrame.greyMana = nil
@@ -1099,7 +1099,7 @@ local function XPerl_Target_UpdateLeader(self)
 		--if (index > 0) then
 		--	leader = UnitIsUnit(partyid, "party"..index)
 		--end
-		
+
 		leader = UnitIsGroupLeader(partyid)
 	end
 
@@ -1113,7 +1113,7 @@ local function XPerl_Target_UpdateLeader(self)
 	--Don't think this is the case anymore.... -- Cexikitin
 	local ml
 	--if (UnitInParty("party1") or UnitInRaid("player")) then
-	
+
 		local method, pindex, rindex = GetLootMethod()
 		--[[local method, index = GetLootMethod()
 
@@ -1124,7 +1124,7 @@ local function XPerl_Target_UpdateLeader(self)
 				ml = UnitIsUnit(partyid, "party"..index)
 			end
 		end]]--
-		
+
 		if (method == "master") then
 			if (rindex ~= nil) then
 				if (UnitIsUnit("raid"..rindex, partyid)) then
@@ -1136,7 +1136,7 @@ local function XPerl_Target_UpdateLeader(self)
 				end
 			end
 		end
-		
+
 	--end
 
 	if (ml) then
@@ -1214,7 +1214,7 @@ function XPerl_Target_UpdateDisplay(self)
 		end
 
 		XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
-	
+
 		XPerl_Target_Update_Range(self)
 		XPerl_UpdateSpellRange(self, partyid)
 
@@ -1423,13 +1423,13 @@ end
 function XPerl_Target_Events:UNIT_COMBAT(unitID, action, descriptor, damage, damageType)
 	if (unitID == self.partyid) then
 		XPerl_Target_Update_Combat(self)
-	
+
 		if (not self.conf.ownDamageOnly) then
 			if (self.conf.hitIndicator and self.conf.portrait) then
 				CombatFeedback_OnCombatEvent(self, action, descriptor, damage, damageType)
 			end
 		end
-	
+
 		if (action == "HEAL") then
 			XPerl_Target_CombatFlash(self, 0, true, true)
 		elseif (damage and damage > 0) then

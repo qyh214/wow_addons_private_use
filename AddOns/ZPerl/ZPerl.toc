@@ -1,5 +1,5 @@
 ## Interface: 70200
-## Version: 5.2.7
+## Version: 5.3.1
 ## Author: Resike
 ## Title: Z-Perl UnitFrames
 ## Title-itIT: Z-Perl UnitFrames
@@ -16,6 +16,8 @@
 ## Notes-zhTW: 提供玩家單位、隊伍、目標、寵物、目標的目標頭像增強以及團隊框架顯示、團隊助手等等功能
 ## SavedVariables: ZPerlConfig, ZPerlConfig_Global, ZPerlConfigNew, ZPerlConfigSavePerCharacter, ZPerlImportDone
 
+Libs\!NoTaint\!NoTaint.xml
+Libs\!NoTaint\!NoTaint.lua
 Libs\LibStub\LibStub.lua
 Libs\UIDropDownMenu\UIDropDownMenu.xml
 

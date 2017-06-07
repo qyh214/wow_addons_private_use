@@ -1,5 +1,4 @@
 if (GetLocale() == "zhCN") then
-
 XPERL_ADMIN_TITLE		= "X-Perl 团队管理"
 
 XPERL_MSG_PREFIX	= "|c00C05050X-Perl|r "
@@ -109,5 +108,4 @@ XPERL_ROSTERTEXT_TOGGLE		= "反选"
 XPERL_ROSTERTEXT_TOGGLE_DESC	= "反选已选定的小队"
 XPERL_ROSTERTEXT_SORT		= "排序"
 XPERL_ROSTERTEXT_SORT_DESC	= "按名字排序而不按照小队+名字排序"
-
 end

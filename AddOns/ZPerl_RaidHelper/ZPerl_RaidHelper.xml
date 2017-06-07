@@ -1,5 +1,5 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
-..\FrameXML\UI.xsd">
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
 	<Script file="localization.lua"/>
 	<Script file="localization.deDE.lua"/>
 	<Script file="localization.frFR.lua"/>
@@ -18,8 +18,8 @@
 		<Scripts>
 			<OnEnter>
 				if (self.tooltipText) then
-					GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-					GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true);
+					GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+					GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true)
 				end
 			</OnEnter>
 			<OnLeave>
@@ -192,8 +192,12 @@
 	</Button>
 
 	<Frame name="XPerl_MTList_Anchor" parent="UIParent" movable="true" resizable="true" clampedToScreen="true">
-		<Size><AbsDimension x="206" y="80"/></Size>
-		<Anchors><Anchor point="CENTER"/></Anchors>
+		<Size>
+			<AbsDimension x="206" y="80"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
 	</Frame>
 
 	<Frame name="XPerl_RaidHelperCheck">
@@ -503,18 +507,26 @@
 				<Layers>
 					<Layer level="OVERLAY">
 						<Texture name="XPerl_MainAssist" file="Interface\GroupFrame\UI-Group-MainAssistIcon" hidden="true">
-							<Size><AbsDimension x="12" y="12"/></Size>
+							<Size>
+								<AbsDimension x="12" y="12"/>
+							</Size>
 							<Anchors>
 								<Anchor point="RIGHT" relativePoint="LEFT">
-									<Offset><AbsDimension x="-100" y="0"/></Offset>
+									<Offset>
+										<AbsDimension x="-100" y="0"/>
+									</Offset>
 								</Anchor>
 							</Anchors>
 						</Texture>
 						<Texture name="XPerl_MainTank" file="Interface\GroupFrame\UI-Group-MainTankIcon" hidden="true">
-							<Size><AbsDimension x="12" y="12"/></Size>
+							<Size>
+								<AbsDimension x="12" y="12"/>
+							</Size>
 							<Anchors>
 								<Anchor point="RIGHT" relativePoint="LEFT">
-									<Offset><AbsDimension x="-100" y="0"/></Offset>
+									<Offset>
+										<AbsDimension x="-100" y="0"/>
+									</Offset>
 								</Anchor>
 							</Anchors>
 						</Texture>

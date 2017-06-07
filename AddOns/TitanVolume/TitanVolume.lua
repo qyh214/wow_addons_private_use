@@ -408,7 +408,7 @@ function TitanPanelRightClickMenu_PrepareVolumeMenu()
 	info.func = function() 
 		ShowUIPanel(VideoOptionsFrame);
 		end  
-	Lib_UIDropDownMenu_AddButton(info);
+	L_UIDropDownMenu_AddButton(info);
 
 	info.text = L["TITAN_VOLUME_MENU_OVERRIDE_BLIZZ_SETTINGS"];
 	info.notCheckable = false
@@ -416,7 +416,7 @@ function TitanPanelRightClickMenu_PrepareVolumeMenu()
 		TitanToggleVar(TITAN_VOLUME_ID, "OverrideBlizzSettings");
 	end 
 	info.checked = TitanGetVar(TITAN_VOLUME_ID, "OverrideBlizzSettings");
-	Lib_UIDropDownMenu_AddButton(info);
+	L_UIDropDownMenu_AddButton(info);
 
 	TitanPanelRightClickMenu_AddSpacer();
 	TitanPanelRightClickMenu_AddCommand(L["TITAN_PANEL_MENU_HIDE"], TITAN_VOLUME_ID, TITAN_PANEL_MENU_FUNC_HIDE);

@@ -1,5 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
 	<Script file="ZPerl_Target.lua"/>
+
 	<Button name="XPerl_TargetTemplate" inherits="SecureUnitButtonTemplate" virtual="true" clampedToScreen="true" frameStrata="LOW" movable="true" parent="UIParent" hidden="true">
 		<Size>
 			<!-- The size of this frame determines what can be clicked for the menu and moving, hence it is the same size as the name frame. -->

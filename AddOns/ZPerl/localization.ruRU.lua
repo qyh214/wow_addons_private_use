@@ -4,10 +4,10 @@
 --Russian localization file translated by StingerSoft
 if (GetLocale() == "ruRU") then
 
-XPerl_ProductName	    = "|cFFD00000X-Perl|r Фреймы Игроков"
-XPerl_Description	    = XPerl_ProductName.." от "..XPerl_Author
-XPerl_Version		    = XPerl_Description.." - "..XPerl_VersionNumber
-XPERL_LongDescription	= "Фреймы Игроков заменяются на новый вид Игроков, Питомцев, Группы, Цели, Целей Цели, Фокуса, Рейда"
+	XPerl_ProductName	    = "|cFFD00000X-Perl|r Фреймы Игроков"
+	XPerl_Description	    = XPerl_ProductName.." от "..XPerl_Author
+	XPerl_Version		    = XPerl_Description.." - "..XPerl_VersionNumber
+	XPERL_LongDescription	= "Фреймы Игроков заменяются на новый вид Игроков, Питомцев, Группы, Цели, Целей Цели, Фокуса, Рейда"
 
 	XPERL_MINIMAP_HELP1		= "|c00FFFFFFЛевый rклик|r - опции  (а также |c0000FF00перемещение фреймов|r)"
 	XPERL_MINIMAP_HELP2		= "|c00FFFFFFПравый клик|r - перемещение иконки"
@@ -33,22 +33,22 @@ XPERL_LongDescription	= "Фреймы Игроков заменяются на �
 	XPERL_TYPE_RAREPLUS			= "Редкий+"
 	XPERL_TYPE_ELITE			= "Элита"
 	XPERL_TYPE_RARE				= "Редкий"
-	
--- Zones
-XPERL_LOC_ZONE_SERPENTSHRINE_CAVERN = "Змеиное святилище"
-XPERL_LOC_ZONE_BLACK_TEMPLE = "Черный храм"
-XPERL_LOC_ZONE_HYJAL_SUMMIT = "Вершина Хиджала"
-XPERL_LOC_ZONE_KARAZHAN = "Каражан"
-XPERL_LOC_ZONE_SUNWELL_PLATEAU = "Плато Солнечного Колодца"
-XPERL_LOC_ZONE_NAXXRAMAS = "Наксрамас"
-XPERL_LOC_ZONE_OBSIDIAN_SANCTUM = "Обсидиановое святилище"
-XPERL_LOC_ZONE_EYE_OF_ETERNITY = "Око Вечности"
-XPERL_LOC_ZONE_ULDUAR = "Ульдуар"
-XPERL_LOC_ZONE_TRIAL_OF_THE_CRUSADER = "Испытание крестоносца"
-XPERL_LOC_ZONE_ICECROWN_CITADEL = "Цитадель Ледяной Короны"
-XPERL_LOC_ZONE_RUBY_SANCTUM = "Рубиновое святилище"
 
--- Status
+	-- Zones
+	XPERL_LOC_ZONE_SERPENTSHRINE_CAVERN = "Змеиное святилище"
+	XPERL_LOC_ZONE_BLACK_TEMPLE = "Черный храм"
+	XPERL_LOC_ZONE_HYJAL_SUMMIT = "Вершина Хиджала"
+	XPERL_LOC_ZONE_KARAZHAN = "Каражан"
+	XPERL_LOC_ZONE_SUNWELL_PLATEAU = "Плато Солнечного Колодца"
+	XPERL_LOC_ZONE_NAXXRAMAS = "Наксрамас"
+	XPERL_LOC_ZONE_OBSIDIAN_SANCTUM = "Обсидиановое святилище"
+	XPERL_LOC_ZONE_EYE_OF_ETERNITY = "Око Вечности"
+	XPERL_LOC_ZONE_ULDUAR = "Ульдуар"
+	XPERL_LOC_ZONE_TRIAL_OF_THE_CRUSADER = "Испытание крестоносца"
+	XPERL_LOC_ZONE_ICECROWN_CITADEL = "Цитадель Ледяной Короны"
+	XPERL_LOC_ZONE_RUBY_SANCTUM = "Рубиновое святилище"
+
+	-- Status
 	XPERL_LOC_DEAD			= DEAD		-- "Dead"
 	XPERL_LOC_GHOST			= "Дух"
 	XPERL_LOC_FEIGNDEATH	= "Притворяется мертвым"
@@ -64,12 +64,12 @@ XPERL_LOC_ZONE_RUBY_SANCTUM = "Рубиновое святилище"
 
 	XPERL_LOC_STATUSTIP = "Статус подсвечивания: " 	-- Tooltip explanation of status highlight on unit
 	XPERL_LOC_STATUSTIPLIST = {
-	HOT = "Исцеления за Время",
-	AGGRO = "Аггро",
-	MISSING = "Отсутствие классового' баффа",
-	HEAL = "Излечен",
-	SHIELD = "Защищенный"
-}
+		HOT = "Исцеления за Время",
+		AGGRO = "Аггро",
+		MISSING = "Отсутствие классового' баффа",
+		HEAL = "Излечен",
+		SHIELD = "Защищенный"
+	}
 
 	XPERL_OK	= "OK"
 	XPERL_CANCEL	= "Отмена"
@@ -115,5 +115,4 @@ XPERL_LOC_ZONE_RUBY_SANCTUM = "Рубиновое святилище"
 	XPERL_RAID_TOOLTIP_WITHBUFF		= "С баффом: (%s)"
 	XPERL_RAID_TOOLTIP_WITHOUTBUFF	= "Без баффа: (%s)"
 	XPERL_RAID_TOOLTIP_BUFFEXPIRING	= "%s'а %s заканчивается через %s"	-- Name, buff name, time to expire
-
 end

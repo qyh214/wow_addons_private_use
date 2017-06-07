@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 1031 $")
+end, "$Revision: 1053 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -127,7 +127,7 @@ function XPerl_Raid_OnLoad(self)
 	for i, event in pairs(events) do
 		self:RegisterEvent(event)
 	end
-	
+
 	self:SetScript("OnEvent", XPerl_Raid_OnEvent)
 
 	for i = 1, WoWclassCount do
@@ -216,11 +216,11 @@ function XPerl_Raid_OnLoad(self)
 					CompactRaidFrameManager_SetSetting("IsShown", "0")
 				end
 			end
-			
+
 			hooksecurefunc("CompactRaidFrameManager_UpdateShown", function()
 				hideRaid()
 			end)
-			
+
 			hideRaid()
 			CompactRaidFrameContainer:HookScript("OnShow", hideRaid)
 			CompactRaidFrameManager:HookScript("OnShow", hideRaid)
@@ -643,7 +643,7 @@ local function XPerl_Raid_UpdateMana(self)
 		if (not partyid) then
 			return
 		end
-		
+
 		local pType = XPerl_GetDisplayedPowerType(self.partyid)
 
 		local mana = UnitPower(partyid, pType)
@@ -664,7 +664,7 @@ local function XPerl_Raid_UpdateMana(self)
 					pmanaPct = mana / manamax -- Everything is dandy, so just do it right way.
 				end
 				-- end division by 0 check
-				
+
 				if rconf.precisionManaPercent then
 					self.statsFrame.manaBar.text:SetFormattedText(percF, pmanaPct * 100)
 				else
@@ -2547,7 +2547,7 @@ function XPerl_Raid_ChangeAttributes()
 
 		-- Hide this when we change attributes, so the whole re-calc is only done once, instead of for every attribute change
 		groupHeader:Hide()
-		
+
 		if rconf.sortByRole then
 			groupHeader:SetAttribute("groupBy", "ASSIGNEDROLE")
 			groupHeader:SetAttribute("groupingOrder", "TANK,HEALER,DAMAGER,NONE")

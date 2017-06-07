@@ -29,7 +29,7 @@ function XPerl_SetModuleRevision(rev)
 end
 local AddRevision = XPerl_SetModuleRevision
 
-XPerl_SetModuleRevision("$Revision: 1031 $")
+XPerl_SetModuleRevision("$Revision: 1053 $")
 
 function XPerl_Notice(...)
 	if (DEFAULT_CHAT_FRAME) then
@@ -333,8 +333,6 @@ local function settingspart1(self, event)
 
 	XPerl_RegisterSMBarTextures()
 end
-	
-
 
 local function startupCheckSettings(self,event)
 	ZPerl_Init()

@@ -7,9 +7,9 @@ if (not XPerl_RequestConfig) then
 end
 
 local conf
-XPerl_RequestConfig(function(new) 
-	conf = new.custom 
-end, "$Revision: 1006 $")
+XPerl_RequestConfig(function(new)
+	conf = new.custom
+end, "$Revision: 1053 $")
 
 local ch = CreateFrame("Frame", "ZPerl_Custom")
 ch.active = {}
@@ -189,7 +189,7 @@ function ch:DefaultZoneData()
 
 				[73020] = true,								-- Vile Gas (Festergut/Heroic Rotface)
 				[69674] = true,								-- Mutated Infection (Rotface)
-				
+
 				[70672] = true,								-- Gaseous Bloat (Professor Putricide)
 				[70447] = true,								-- Volatile Ooze Adhesive (Professor Putricide)
 				[72855] = true,								-- Unbound Plague (Professor Putricide)
@@ -244,7 +244,7 @@ function ch:DefaultZoneData()
 				[78092] = true,								-- Tracking (Atramedes)
 				[92685] = true,								-- Pestered! (Atramedes Heroic)
 
-				[79318] = true,								-- Dominion (Nefarian Heroic)				
+				[79318] = true,								-- Dominion (Nefarian Heroic)
 				[79339] = true,								-- Explosive Cinders (Nefarian Heroic)
 			},
 		[XPERL_LOC_ZONE_BASTION_OF_TWILIGHT] =
@@ -278,7 +278,7 @@ function ch:DefaultZoneData()
 				[99837] = true,								-- Crystal Prison Trapped (Shannox)
 				[99838] = true,								-- Immo Trap Debuff (Shannox)
 
-				[99476] = true,								-- Widows Kiss (Beth'tilac)		
+				[99476] = true,								-- Widows Kiss (Beth'tilac)
 				[99526] = true,								-- Fixate (Beth'tilac Heroic)
 
 				[101223] = true,							-- Fieroblast(Alysrazor)
@@ -299,8 +299,8 @@ function ch:DefaultZoneData()
 
 				[105171] = true,							-- Deep Corruption (Yor'Sahj)
 
-				[109325] = true,							-- Frostflake (Hagara Heroic)	
-	
+				[109325] = true,							-- Frostflake (Hagara Heroic)
+
 				[109075] = true,							-- Fading Light (Ultraxion)
 
 				[107439] = true,							-- Twilight Barrage (Blackhorn Heroic)

@@ -1,7 +1,7 @@
 ## Interface: 70200
-## Title: Titan Panel |cff00aa005.11.5.70200|r
+## Title: Titan Panel |cff00aa005.12.0.70200|r
 ## Author: Titan Development Team
-## Version: 5.11.5.70200
+## Version: 5.12.0.70200
 ## SavedVariables: TitanAll, TitanSettings, TitanSkins, ServerTimeOffsets, ServerHourFormat
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibQTip-1.0
 ## Notes: Adds a display bar on the top and/or bottom of the screen. Allows users to show and control information/launcher plugins.

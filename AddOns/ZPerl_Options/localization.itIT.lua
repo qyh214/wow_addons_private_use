@@ -1,10 +1,9 @@
 --[[
-Localization file
-Translated by Asixandur, Philipxander and Darkvalky
+	Localization file
+	Translated by Asixandur, Philipxander and Darkvalky
 ]]
 
 if (GetLocale() == "itIT") then
-
 -- Tabs
 XPERL_CONF_TITLE1                        = "Globali"
 XPERL_CONF_TITLE2                        = PLAYER    -- "Player"    Taken from WoW's FrameXML/GlobalStrings.lua
@@ -1035,5 +1034,4 @@ XPERL_CONF_RAID_CUSTOM_NEW                = NEW
 XPERL_CONF_RAID_CUSTOM_NEW_DESC            = "Crea un nuovo controllo penalità"
 XPERL_CONF_RAID_CUSTOM_ZONE                = ZONE
 XPERL_CONF_RAID_CUSTOM_SEARCH            = SEARCH
-
 end

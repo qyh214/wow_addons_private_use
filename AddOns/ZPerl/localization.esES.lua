@@ -27,10 +27,10 @@ if (GetLocale() == "esES" or GetLocale() == "esMX") then
 
 	XPERL_TYPE_NOT_SPECIFIED = "No indicado"
 	XPERL_TYPE_PET		= "Mascota"
-	XPERL_TYPE_BOSS 	= "Jefe"
+	XPERL_TYPE_BOSS		= "Jefe"
 	XPERL_TYPE_RAREPLUS 	= "Raro+"
 	XPERL_TYPE_ELITE	= "\195\137lite"
-	XPERL_TYPE_RARE 	= "Raro"
+	XPERL_TYPE_RARE		= "Raro"
 
 	XPERL_LOC_ZONE_SERPENTSHRINE_CAVERN = "Caverna Santuario Serpiente"
 	XPERL_LOC_ZONE_BLACK_TEMPLE = "El Templo Oscuro"

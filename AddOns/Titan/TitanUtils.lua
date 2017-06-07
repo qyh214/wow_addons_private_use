@@ -684,7 +684,7 @@ function TitanPanelRightClickMenu_AddTitle(title, level)
 		info.notCheckable = true;
 		info.notClickable = true;
 		info.isTitle = 1;
-		Lib_UIDropDownMenu_AddButton(info, level);
+		L_UIDropDownMenu_AddButton(info, level);
 	end
 end
 
@@ -709,7 +709,7 @@ function TitanPanelRightClickMenu_AddCommand(text, value, functionName, level)
 			callback(value)
 		end
 	end
-	Lib_UIDropDownMenu_AddButton(info, level);
+	L_UIDropDownMenu_AddButton(info, level);
 end
 
 --[[ API
@@ -723,7 +723,7 @@ function TitanPanelRightClickMenu_AddSpacer(level)
 	info.notCheckable = true;
 	info.notClickable = true;
 	info.disabled = 1;
-	Lib_UIDropDownMenu_AddButton(info, level);
+	L_UIDropDownMenu_AddButton(info, level);
 end
 
 --[[ API
@@ -755,7 +755,7 @@ function TitanPanelRightClickMenu_AddToggleVar(text, id, var, toggleTable, level
 	end
 	info.checked = TitanGetVar(id, var);
 	info.keepShownOnClick = 1;
-	Lib_UIDropDownMenu_AddButton(info, level);
+	L_UIDropDownMenu_AddButton(info, level);
 end
 
 --[[ API
@@ -809,7 +809,7 @@ function TitanPanelRightClickMenu_AddHide(id, level)
 	info.func = function()
 		TitanPanelRightClickMenu_Hide(id)
 	end
-	Lib_UIDropDownMenu_AddButton(info, level);
+	L_UIDropDownMenu_AddButton(info, level);
 end
 
 --[[ API
@@ -1510,7 +1510,7 @@ local function TitanRightClickMenu_OnLoad(self)
 	if id then
 		local prepareFunction = _G["TitanPanelRightClickMenu_Prepare"..id.."Menu"]
 		if prepareFunction and type(prepareFunction) == "function" then
-			Lib_UIDropDownMenu_Initialize(self, prepareFunction, "MENU");
+			L_UIDropDownMenu_Initialize(self, prepareFunction, "MENU");
 		end
 	else
 		-- TitanDebug("Could not display tooltip. "
@@ -1542,7 +1542,7 @@ local function TitanDisplayRightClickMenu_OnLoad(self, func)
 		-- not good practice but there seems to be no other way to get
 		-- the actual bar (frame parent) to the dropdown implementation
 		TitanPanel_DropMenu = self
-		Lib_UIDropDownMenu_Initialize(self, prepareFunction, "MENU");
+		L_UIDropDownMenu_Initialize(self, prepareFunction, "MENU");
 	end
 end
 
@@ -1592,9 +1592,9 @@ function TitanPanelRightClickMenu_Toggle(self, isChildButton)
 
 	x, y, scale = TitanRightClick_UIScale()
 
-	Lib_ToggleDropDownMenu(1, nil, menu, frame, TitanUtils_Max(x - 40, 0), 0, nil, self);
+	L_ToggleDropDownMenu(1, nil, menu, frame, TitanUtils_Max(x - 40, 0), 0, nil, self);
 --[[ was not used...
-	local listFrame = _G["DropDownList"..LIB_UIDROPDOWNMENU_MENU_LEVEL];
+	local listFrame = _G["DropDownList"..L_UIDROPDOWNMENU_MENU_LEVEL];
 	local offscreenX, offscreenY = TitanUtils_GetOffscreen(listFrame);
 
 	if offscreenX == 1 then
@@ -1651,10 +1651,10 @@ function TitanPanelDisplayRightClickMenu_Toggle(self, isChildButton)
 
 	x, y, scale = TitanRightClick_UIScale()
 
-	Lib_ToggleDropDownMenu(1, nil, menu, frame, TitanUtils_Max(x - 40, 0), 0, nil, self)
+	L_ToggleDropDownMenu(1, nil, menu, frame, TitanUtils_Max(x - 40, 0), 0, nil, self)
 
 --[[ was not used...
-	local listFrame = _G["DropDownList"..LIB_UIDROPDOWNMENU_MENU_LEVEL];
+	local listFrame = _G["DropDownList"..L_UIDROPDOWNMENU_MENU_LEVEL];
 	local offscreenX, offscreenY = TitanUtils_GetOffscreen(listFrame);
 	if offscreenX == 1 then
 		if position == TITAN_PANEL_PLACE_TOP then

@@ -73,9 +73,7 @@ if (GetLocale() == "frFR") then
 
 	XPerl_DefaultRangeSpells.ANY = {item = "Bandage \195\169pais en \195\169toffe runique"}
 
-	XPERL_RAID_TOOLTIP_WITHBUFF	      = "Avec buffs: (%s)"
-	XPERL_RAID_TOOLTIP_WITHOUTBUFF	      = "Sans buffs: (%s)"
-	XPERL_RAID_TOOLTIP_BUFFEXPIRING	      = "%s's %s expires dans %s"	-- Name, buff name, time to expire
-
-
+	XPERL_RAID_TOOLTIP_WITHBUFF			= "Avec buffs: (%s)"
+	XPERL_RAID_TOOLTIP_WITHOUTBUFF		= "Sans buffs: (%s)"
+	XPERL_RAID_TOOLTIP_BUFFEXPIRING		= "%s's %s expires dans %s"	-- Name, buff name, time to expire
 end

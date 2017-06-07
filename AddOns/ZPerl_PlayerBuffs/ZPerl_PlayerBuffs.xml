@@ -1,5 +1,4 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-
 	<Button name="XPerl_Secure_BuffTemplate" inherits="SecureActionButtonTemplate" virtual="true" enableMouse="true" registerForClicks="RightButtonUp">
 		<Size>
 			<AbsDimension x="32" y="32"/>
@@ -67,5 +66,4 @@
 			<Attribute name="type2" value="cancelaura"/>
 		</Attributes>
 	</Button>
-
 </Ui>

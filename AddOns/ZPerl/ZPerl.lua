@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1041 $")
-XPerl_SetModuleRevision("$Revision: 1041 $")
+end, "$Revision: 1053 $")
+XPerl_SetModuleRevision("$Revision: 1053 $")
 
 -- Upvalus
 local _G = _G
@@ -850,111 +850,111 @@ function XPerl_SetValuedText(self, unitHealth, unitHealthMax, suffix)
 	if locale == "zhCN" or locale == "zhTW" then
 		if unitHealthMax >= 1000000000000 then
 			if abs(unitHealth) >= 1000000000000 then
-				self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 1000000000000, veryhugeNumTag, unitHealthMax / 1000000000000, veryhugeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.2f%s%s", unitHealth / 1000000000000, veryhugeNumTag, unitHealthMax / 1000000000000, veryhugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 1000000000 then
-				self:SetFormattedText("%.1f%s/%.2f%s", unitHealth / 100000000, hugeNumTag, unitHealthMax / 1000000000000, veryhugeNumTag, suffix or "")
+				self:SetFormattedText("%.1f%s/%.2f%s%s", unitHealth / 100000000, hugeNumTag, unitHealthMax / 1000000000000, veryhugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 100000000 then
-				self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 100000000, hugeNumTag, unitHealthMax / 1000000000000, veryhugeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.2f%s%s", unitHealth / 100000000, hugeNumTag, unitHealthMax / 1000000000000, veryhugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 1000000 then
-				self:SetFormattedText("%.1f%s/%.2f%s", unitHealth / 10000, hugeNumTag, unitHealthMax / 1000000000000, veryhugeNumTag, suffix or "")
+				self:SetFormattedText("%.1f%s/%.2f%s%s", unitHealth / 10000, hugeNumTag, unitHealthMax / 1000000000000, veryhugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 100000 then
-				self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 10000, largeNumTag, unitHealthMax / 1000000000000, veryhugeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.2f%s%s", unitHealth / 10000, largeNumTag, unitHealthMax / 1000000000000, veryhugeNumTag, suffix or "")
 			else
-				self:SetFormattedText("%d/%.2f%s", unitHealth, unitHealthMax / 1000000000000, veryhugeNumTag, suffix or "")
+				self:SetFormattedText("%d/%.2f%s%s", unitHealth, unitHealthMax / 1000000000000, veryhugeNumTag, suffix or "")
 			end
 		elseif unitHealthMax >= 1000000000 then
 			if abs(unitHealth) >= 1000000000 then
-				self:SetFormattedText("%.1f%s/%.1f%s", unitHealth / 100000000, hugeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%.1f%s/%.1f%s%s", unitHealth / 100000000, hugeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 100000000 then
-				self:SetFormattedText("%.2f%s/%.1f%s", unitHealth / 100000000, hugeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.1f%s%s", unitHealth / 100000000, hugeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 1000000 then
-				self:SetFormattedText("%.1f%s/%.1f%s", unitHealth / 10000, largeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%.1f%s/%.1f%s%s", unitHealth / 10000, largeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 100000 then
-				self:SetFormattedText("%.2f%s/%.1f%s", unitHealth / 10000, largeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.1f%s%s", unitHealth / 10000, largeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
 			else
-				self:SetFormattedText("%d/%.2f%s", unitHealth, unitHealthMax / 100000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%d/%.2f%s%s", unitHealth, unitHealthMax / 100000000, hugeNumTag, suffix or "")
 			end
 		elseif unitHealthMax >= 100000000 then
 			if abs(unitHealth) >= 100000000 then
-				self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 100000000, hugeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.2f%s%s", unitHealth / 100000000, hugeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 1000000 then
-				self:SetFormattedText("%.1f%s/%.2f%s", unitHealth / 10000, largeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%.1f%s/%.2f%s%s", unitHealth / 10000, largeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 100000 then
-				self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 10000, largeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.2f%s%s", unitHealth / 10000, largeNumTag, unitHealthMax / 100000000, hugeNumTag, suffix or "")
 			else
-				self:SetFormattedText("%d/%.2f%s", unitHealth, unitHealthMax / 100000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%d/%.2f%s%s", unitHealth, unitHealthMax / 100000000, hugeNumTag, suffix or "")
 			end
 		elseif unitHealthMax >= 1000000 then
 			if abs(unitHealth) >= 1000000 then
-				self:SetFormattedText("%.1f%s/%.1f%s", unitHealth / 10000, largeNumTag, unitHealthMax / 10000, largeNumTag, suffix or "")
+				self:SetFormattedText("%.1f%s/%.1f%s%s", unitHealth / 10000, largeNumTag, unitHealthMax / 10000, largeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 100000 then
-				self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 10000, largeNumTag, unitHealthMax / 10000, largeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.2f%s%s", unitHealth / 10000, largeNumTag, unitHealthMax / 10000, largeNumTag, suffix or "")
 			else
-				self:SetFormattedText("%d/%.1f%s", unitHealth, unitHealthMax / 10000, largeNumTag, suffix or "")
+				self:SetFormattedText("%d/%.1f%s%s", unitHealth, unitHealthMax / 10000, largeNumTag, suffix or "")
 			end
 		elseif unitHealthMax >= 100000 then
 			if abs(unitHealth) >= 100000 then
-				self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 10000, largeNumTag, unitHealthMax / 10000, largeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.2f%s%s", unitHealth / 10000, largeNumTag, unitHealthMax / 10000, largeNumTag, suffix or "")
 			else
-				self:SetFormattedText("%d/%.2f%s", unitHealth, unitHealthMax / 10000, largeNumTag, suffix or "")
+				self:SetFormattedText("%d/%.2f%s%s", unitHealth, unitHealthMax / 10000, largeNumTag, suffix or "")
 			end
 		else
-			self:SetFormattedText("%d/%d", unitHealth, unitHealthMax, suffix or "")
+			self:SetFormattedText("%d/%d%s", unitHealth, unitHealthMax, suffix or "")
 		end
 	else
 		if unitHealthMax >= 1000000000 then
 			if abs(unitHealth) >= 1000000000 then
 				-- 1.23G/1.23G
-				self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 1000000000, veryhugeNumTag, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.2f%s%s", unitHealth / 1000000000, veryhugeNumTag, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 10000000 then
 				-- 12.3M/1.23G
-				self:SetFormattedText("%.1f%s/%.2f%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
+				self:SetFormattedText("%.1f%s/%.2f%s%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 1000000 then
 				-- 1.23M/1.23G
-				self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.2f%s%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 100000 then
 				-- 123.4K/1.23G
-				self:SetFormattedText("%.1f%s/%.1f%s", unitHealth / 1000, largeNumTag, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
+				self:SetFormattedText("%.1f%s/%.1f%s%s", unitHealth / 1000, largeNumTag, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
 			else
 				-- 12345/1.23G
-				self:SetFormattedText("%d/%.2f%s", unitHealth, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
+				self:SetFormattedText("%d/%.2f%s%s", unitHealth, unitHealthMax / 1000000000, veryhugeNumTag, suffix or "")
 			end
 		elseif unitHealthMax >= 10000000 then
 			if abs(unitHealth) >= 10000000 then
 				-- 12.3M/12.3M
-				self:SetFormattedText("%.1f%s/%.1f%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%.1f%s/%.1f%s%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 1000000 then
 				-- 1.23M/12.3M
-				self:SetFormattedText("%.2f%s/%.1f%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.1f%s%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 100000 then
 				-- 123.4K/12.3M
-				self:SetFormattedText("%.1f%s/%.1f%s", unitHealth / 1000, largeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%.1f%s/%.1f%s%s", unitHealth / 1000, largeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
 			else
 				-- 12345/12.3M
-				self:SetFormattedText("%d/%.1f%s", unitHealth, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%d/%.1f%s%s", unitHealth, unitHealthMax / 1000000, hugeNumTag, suffix or "")
 			end
 		elseif unitHealthMax >= 1000000 then
 			if abs(unitHealth) >= 1000000 then
 				-- 1.23M/1.23M
-				self:SetFormattedText("%.2f%s/%.2f%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%.2f%s/%.2f%s%s", unitHealth / 1000000, hugeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
 			elseif abs(unitHealth) >= 100000 then
 				-- 123.4K/1.23M
-				self:SetFormattedText("%.1f%s/%.2f%s", unitHealth / 1000, largeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%.1f%s/%.2f%s%s", unitHealth / 1000, largeNumTag, unitHealthMax / 1000000, hugeNumTag, suffix or "")
 			else
 				-- 12345/1.23M
-				self:SetFormattedText("%d/%.2f%s", unitHealth, unitHealthMax / 1000000, hugeNumTag, suffix or "")
+				self:SetFormattedText("%d/%.2f%s%s", unitHealth, unitHealthMax / 1000000, hugeNumTag, suffix or "")
 			end
 		elseif unitHealthMax >= 100000 then
 			if abs(unitHealth) >= 100000 then
 				-- 123.4K/123.4K
-				self:SetFormattedText("%.1f%s/%.1f%s", unitHealth / 1000, largeNumTag, unitHealthMax / 1000, largeNumTag, suffix or "")
+				self:SetFormattedText("%.1f%s/%.1f%s%s", unitHealth / 1000, largeNumTag, unitHealthMax / 1000, largeNumTag, suffix or "")
 			else
 				-- 12345/123.4K
-				self:SetFormattedText("%d/%.1f%s", unitHealth, unitHealthMax / 1000, largeNumTag, suffix or "")
+				self:SetFormattedText("%d/%.1f%s%s", unitHealth, unitHealthMax / 1000, largeNumTag, suffix or "")
 			end
 		else
 			-- 12345/12345
-			self:SetFormattedText("%d/%d", unitHealth, unitHealthMax, suffix or "")
+			self:SetFormattedText("%d/%d%s", unitHealth, unitHealthMax, suffix or "")
 		end
 	end
 end
@@ -972,18 +972,14 @@ function XPerl_SetHealthBar(self, hp, Max)
 		percent = 0
 	else
 		percent = hp / Max
-	end		
-	if percent > 100 then percent = 100 end -- percent only goes to 100        
+	end
+	if percent > 100 then percent = 100 end -- percent only goes to 100
 	if (conf.bar.inverse) then
-
 		bar:SetValue(Max - hp)
 		bar.tex:SetTexCoord(0, max(0,(1 - percent)), 0, 1)
-	
 	else
-
 		bar:SetValue(hp)
 		bar.tex:SetTexCoord(0, max(0, percent), 0, 1)
-	
 	end
 
 	XPerl_ColourHealthBar(self, percent)
@@ -1799,7 +1795,7 @@ local MagicCureTalents = {
 
 local function CanClassCureMagic(class)
 	if (MagicCureTalents[class]) then
-		return (GetSpecialization() == MagicCureTalents[class])--IsSpellKnown(MagicCureTalents[class])	
+		return (GetSpecialization() == MagicCureTalents[class])--IsSpellKnown(MagicCureTalents[class])
 	end
 end
 
@@ -2535,7 +2531,7 @@ function XPerl_SecureUnitButton_OnLoad(self, unit, menufunc, m1, m2, toggledisab
 	else
 		self:SetAttribute("type2", "togglemenu")
 	end
-	
+
 	if (unit) then
 		self:SetAttribute("unit", unit)
 	end
@@ -2792,7 +2788,7 @@ local function AuraButtonOnShow(self)
 	end
 	cd:SetReverse(true)
 	--cd:SetDrawEdge(true) Blizzard removed this call from 5.0.4, commented it out to avoid lua error
-	
+
 	if (not cd.countdown) then
 		cd.countdown = self.cooldown:CreateFontString(nil, "OVERLAY", "GameFontNormalHuge")
 		cd.countdown:SetPoint("TOPLEFT")
@@ -3159,7 +3155,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 						else
 							button.count:Hide()
 						end
-	
+
 						-- Handle cooldowns
 						if (button.cooldown) then
 							if (duration and conf.buffs.cooldown and (isMine or conf.buffs.cooldownAny)) then
@@ -3205,7 +3201,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 						end
 
 						lastIcon = buffIconIndex
-	
+
 						if ((self.conf.buffs.big and isMine) or (self.conf.buffs.bigStealable and isStealable)) then
 							buffsMine = buffsMine + 1
 							button.big = true

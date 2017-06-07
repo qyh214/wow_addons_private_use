@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 1027 $")
+end, "$Revision: 1053 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -69,20 +69,349 @@ function XPerl_Player_OnLoad(self)
 	self.state = CreateFrame("Frame", nil, nil, "SecureHandlerStateTemplate")
 
 	self.state:SetFrameRef("ZPerlPlayer", self)
+	self.state:SetFrameRef("ZPerlPlayerPortrait", self.portraitFrame)
+	self.state:SetFrameRef("ZPerlPlayerStats", self.statsFrame)
+
+	--self.state:SetFrameRef("ZPerlPlayerBuffs", self.buffFrame)
+
+	local class, classFileName, classID = UnitClass("player")
+
+	self.state:SetAttribute("playerClass", classFileName)
+	self.state:SetAttribute("playerSpec", GetSpecialization())
+	self.state:SetAttribute("extendedPortrait", pconf.extendPortrait)
+	self.state:SetAttribute("druidBarOff", pconf.noDruidBar)
+	self.state:SetAttribute("xpBar", pconf.xpBar)
+	self.state:SetAttribute("repBar", pconf.repBar)
+	self.state:SetAttribute("special", pconf.showRunes)
+	self.state:SetAttribute("docked", pconf.dockRunes)
 
 	self.state:Execute([[
 		frame = self:GetFrameRef("ZPerlPlayer")
+		portrait = self:GetFrameRef("ZPerlPlayerPortrait")
+		stats = self:GetFrameRef("ZPerlPlayerStats")
 	]])
 
 	self.state:SetAttribute("_onstate-petbattleupdate", [[
 		if newstate == "inpetbattle" then
 			frame:Hide()
 		else
+			local buffs = self:GetFrameRef("ZPerlPlayerBuffs")
+
+			local class = self:GetAttribute("playerClass")
+			local spec = self:GetAttribute("playerSpec")
+			local extend = self:GetAttribute("extendedPortrait")
+			local bar = self:GetAttribute("druidBarOff")
+			local xp = self:GetAttribute("xpBar")
+			local rep = self:GetAttribute("repBar")
+			local special = self:GetAttribute("spec")
+			local docked = self:GetAttribute("docked")
+			local above = self:GetAttribute("buffsAbove")
+
+			local offset = 10 * ((bar and 0 or 1) + (xp and 1 or 0) + (rep and 1 or 0))
+			local buffoffset = 13.5 * ((bar and 0 or 1) + (xp and 1 or 0) + (rep and 1 or 0))
+
+			if class == "DRUID" then
+				if spec == 1 then
+					if newstate == 1 then
+						if extend then
+							frame:SetHeight(62 + offset)
+							portrait:SetHeight(62 + offset)
+						else
+							frame:SetHeight(62)
+							portrait:SetHeight(62)
+						end
+						stats:SetHeight(40 + offset)
+						if not above and buffs then
+							if extend then
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+							else
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+							end
+						end
+					elseif newstate == 2 then
+						if extend then
+							frame:SetHeight(62 + offset)
+							portrait:SetHeight(62 + offset)
+						else
+							frame:SetHeight(62)
+							portrait:SetHeight(62)
+						end
+						stats:SetHeight(40 + offset)
+						if not above and buffs then
+							if extend then
+								if special and docked then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0 - 28)
+								else
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+								end
+							else
+								if special and docked then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset - 28)
+								else
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+								end
+							end
+						end
+					elseif newstate == 3 then
+						if extend then
+							if bar then
+								frame:SetHeight(62 + offset)
+								portrait:SetHeight(62 + offset)
+							else
+								frame:SetHeight(62 + offset - 10)
+								portrait:SetHeight(62 + offset - 10)
+							end
+						else
+							if bar then
+								frame:SetHeight(62)
+								portrait:SetHeight(62)
+							else
+								frame:SetHeight(62)
+								portrait:SetHeight(62)
+							end
+						end
+						if bar then
+							stats:SetHeight(40 + offset)
+						else
+							stats:SetHeight(40 + offset - 10)
+						end
+						if not above and buffs then
+							if extend then
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+							else
+								if bar then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+								else
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset + 13.5)
+								end
+							end
+						end
+					elseif newstate == 4 then
+						if extend then
+							frame:SetHeight(62 + offset)
+							portrait:SetHeight(62 + offset)
+						else
+							frame:SetHeight(62)
+							portrait:SetHeight(62)
+						end
+						stats:SetHeight(40 + offset)
+						if not above and buffs then
+							if extend then
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+							else
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+							end
+						end
+					else
+						if extend then
+							frame:SetHeight(62 + offset)
+							portrait:SetHeight(62 + offset)
+						else
+							frame:SetHeight(62)
+							portrait:SetHeight(62)
+						end
+						stats:SetHeight(40 + offset)
+						if not above and buffs then
+							if extend then
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+							else
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+							end
+						end
+					end
+				elseif spec == 2 or spec == 3 or spec == 4 then
+					if newstate == 1 then
+						if extend then
+							frame:SetHeight(62 + offset)
+							portrait:SetHeight(62 + offset)
+						else
+							frame:SetHeight(62)
+							portrait:SetHeight(62)
+						end
+						stats:SetHeight(40 + offset)
+						if not above and buffs then
+							if extend then
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+							else
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+							end
+						end
+					elseif newstate == 2 then
+						if extend then
+							frame:SetHeight(62 + offset)
+							portrait:SetHeight(62 + offset)
+						else
+							frame:SetHeight(62)
+							portrait:SetHeight(62)
+						end
+						if extend then
+							portrait:SetHeight(62 + offset)
+						end
+						stats:SetHeight(40 + offset)
+						if not above and buffs then
+							if extend then
+								if special and docked then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0 - 28)
+								else
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+								end
+							else
+								if special and docked then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset - 28)
+								else
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+								end
+							end
+						end
+					elseif newstate == 3 then
+						if extend then
+							if bar then
+								frame:SetHeight(62 + offset)
+								portrait:SetHeight(62 + offset)
+							else
+								frame:SetHeight(62 + offset - 10)
+								portrait:SetHeight(62 + offset - 10)
+							end
+						else
+							if bar then
+								frame:SetHeight(62)
+								portrait:SetHeight(62)
+							else
+								frame:SetHeight(62)
+								portrait:SetHeight(62)
+							end
+						end
+						if bar then
+							stats:SetHeight(40 + offset)
+						else
+							stats:SetHeight(40 + offset - 10)
+						end
+						if not above and buffs then
+							if extend then
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+							else
+								if bar then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+								else
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset + 13.5)
+								end
+							end
+						end
+					else
+						if extend then
+							if bar then
+								frame:SetHeight(62 + offset)
+								portrait:SetHeight(62 + offset)
+							else
+								frame:SetHeight(62 + offset - 10)
+								portrait:SetHeight(62 + offset - 10)
+							end
+						else
+							if bar then
+								frame:SetHeight(62)
+								portrait:SetHeight(62)
+							else
+								frame:SetHeight(62)
+								portrait:SetHeight(62)
+							end
+						end
+						if bar then
+							stats:SetHeight(40 + offset)
+						else
+							stats:SetHeight(40 + offset - 10)
+						end
+						if not above and buffs then
+							if extend then
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+							else
+								if bar then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+								else
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset + 13.5)
+								end
+							end
+						end
+					end
+				end
+			elseif class == "SHAMAN" then
+				if spec == 1 or spec == 2 then
+					if newstate == 1 then
+						if extend then
+							if bar then
+								frame:SetHeight(62 + offset)
+								portrait:SetHeight(62 + offset)
+							else
+								frame:SetHeight(62 + offset - 10)
+								portrait:SetHeight(62 + offset - 10)
+							end
+						else
+							if bar then
+								frame:SetHeight(62)
+								portrait:SetHeight(62)
+							else
+								frame:SetHeight(62)
+								portrait:SetHeight(62)
+							end
+						end
+						if bar then
+							stats:SetHeight(40 + offset)
+						else
+							stats:SetHeight(40 + offset - 10)
+						end
+						if not above and buffs then
+							if extend then
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+							else
+								if bar then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+								else
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset + 13.5)
+								end
+							end
+						end
+					else
+						if extend then
+							frame:SetHeight(62 + offset)
+							portrait:SetHeight(62 + offset)
+						else
+							frame:SetHeight(62)
+							portrait:SetHeight(62)
+						end
+						if extend then
+							portrait:SetHeight(62 + offset)
+						end
+						stats:SetHeight(40 + offset)
+						if not above and buffs then
+							if extend then
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+							else
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+							end
+						end
+					end
+				elseif spec == 3 then
+					frame:SetHeight(62)
+					portrait:SetHeight(62)
+					stats:SetHeight(40)
+					if not above and buffs then
+						if extend then
+							buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+						else
+							if bar then
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+							else
+								buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset + 13.5)
+							end
+						end
+					end
+				end
+			end
+
 			frame:Show()
 		end
 	]])
 
-	RegisterStateDriver(self.state, "petbattleupdate", "[petbattle] inpetbattle; none")
+	RegisterStateDriver(self.state, "petbattleupdate", "[petbattle] inpetbattle; [stance:0] 0; [stance:1] 1; [stance:2] 2; [stance:3] 3; [stance:4] 4; none")
 
 	--RegisterAttributeDriver(self.nameFrame, "unit", "[vehicleui] vehicle; player")
 	RegisterAttributeDriver(self, "unit", "[vehicleui] vehicle; player")
@@ -93,7 +422,7 @@ function XPerl_Player_OnLoad(self)
 	self:RegisterEvent("VARIABLES_LOADED")
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("PLAYER_ALIVE")
-	
+
 	if (HealBot_Options_EnablePlayerFrame) then
 		HealBot_Options_EnablePlayerFrame = function() end
 	end
@@ -103,10 +432,9 @@ function XPerl_Player_OnLoad(self)
 	self:SetScript("OnShow", XPerl_Unit_UpdatePortrait)
 	self.time = 0
 
-	
 	self.Power = 0
 	self.nameFrame.pvp.time = 0
-	
+
 	--[[self.nameFrame.pvp:SetScript("OnUpdate", function(self, elapsed)
 		self.time = self.time + elapsed
 		if (self.time >= 0.2) then
@@ -150,7 +478,7 @@ function XPerl_Player_OnLoad(self)
 	end]]
 
 	XPerl_RegisterPerlFrames(self, perlframes)--, self.runes
-		
+
 	XPerl_RegisterOptionChanger(XPerl_Player_Set_Bits, self)
 	XPerl_Highlight:Register(XPerl_Player_HighlightCallback, self)
 	--self.IgnoreHighlightStates = {AGGRO = true}
@@ -177,7 +505,7 @@ local function UpdateAssignedRoles(self)
 	--[[if (instanceType == "party") then
 		-- No point getting it otherwise, as they can be wrong. Usually the values you had
 		-- from previous instance if you're running more than one with the same people
-		
+
 		-- According to http://forums.worldofwarcraft.com/thread.html?topicId=26560499864
 		-- this is the new way to check for roles
 		role = UnitGroupRolesAssigned(unit)
@@ -192,7 +520,7 @@ local function UpdateAssignedRoles(self)
 			isDamage = true
 		end
 	end]]
-	
+
 	-- role icons option check by playerlin
 	if (conf and conf.xperlOldroleicons) then
 		if isTank then
@@ -246,14 +574,14 @@ function XPerl_Player_UpdateLeader(self)
 	local method, pindex, rindex, ml
 	if (UnitInParty("party1") or UnitInRaid("player")) then
 		method, pindex, rindex = GetLootMethod()
-	
+
 		if (method == "master") then
 			if (rindex ~= nil) then
 				ml = UnitIsUnit("raid"..rindex, "player")
 			elseif (pindex and (pindex == 0)) then
 				ml = true
 			end
-		end 
+		end
 	end
 
 	if (ml) then
@@ -382,7 +710,7 @@ local function XPerl_Player_UpdateRep(self)
 
 			rb.percent:SetFormattedText(perc1F, perc)
 
-			rb.tex:SetTexCoord(0, perc/100, 0, 1)
+			rb.tex:SetTexCoord(0, perc / 100, 0, 1)
 
 			if (max == 1) then
 				rb.text:SetText(name)
@@ -437,18 +765,26 @@ local function XPerl_Player_UpdateXP(self)
 				else
 					XPerl_SetValuedText(xpBar.text, playerxp, playerxpmax, suffix)
 				end
-				if (xpBar.text:GetStringWidth() <= w) then
+				if (xpBar.text:GetStringWidth() + 20 <= w) then
 					break
 				end
 			end
 
 			xpBar:SetStatusBarColor(color.r, color.g, color.b, 1)
 			xpBar.bg:SetVertexColor(color.r, color.g, color.b, 0.25)
-			xpBar.tex:SetTexCoord(0, (playerxp * 100 / playerxpmax), 0, 1)
+			local x = playerxp / playerxpmax
+			if x > 1 then
+				x = 1
+			end
+			xpBar.tex:SetTexCoord(0, x, 0, 1)
 
 			restBar:SetValue(playerxp + playerxprest)
 			restBar:SetStatusBarColor(color.r, color.g, color.b, 0.5)
-			restBar.tex:SetTexCoord(0, (playerxp * 100 / playerxpmax), 0, 1)
+			local y = (playerxp + playerxprest) / playerxpmax
+			if y > 1 then
+				y = 1
+			end
+			restBar.tex:SetTexCoord(0, y, 0, 1)
 			restBar.bg:SetVertexColor(color.r, color.g, color.b, 0.25)
 			xpBar.percent:SetFormattedText(percD, (playerxp * 100) / playerxpmax)
 		end
@@ -578,9 +914,9 @@ local function XPerl_Player_DruidBarUpdate(self)
 		if (druidBar) then
 			druidBar:Hide()
 			XPerl_StatsFrameSetup(self, {self.statsFrame.xpBar, self.statsFrame.repBar})
-			if (XPerl_Player_Buffs_Position) then
+			--[[if (XPerl_Player_Buffs_Position) then
 				XPerl_Player_Buffs_Position(self)
-			end
+			end]]
 		end
 		return
 	elseif (not druidBar) then
@@ -602,7 +938,7 @@ local function XPerl_Player_DruidBarUpdate(self)
 	druidBar.percent:SetFormattedText(percD, (currMana or 0) * 100 / (maxMana or 1))
 
 	local druidBarExtra
-	if (UnitPowerType(self.partyid) > 0) then
+	if ((playerClass == "DRUID" or playerClass == "PRIEST") and UnitPowerType(self.partyid) > 0) or (playerClass == "SHAMAN" and (GetSpecialization() == 1 or GetSpecialization() == 2) and GetShapeshiftForm() == 0) then -- Shaman's UnitPowerType is buggy
 		if (pconf.values) then
 			druidBar.text:Show()
 		else
@@ -639,7 +975,7 @@ local function XPerl_Player_DruidBarUpdate(self)
 		self.highlight:SetPoint("TOPRIGHT", self.nameFrame, "TOPRIGHT", 0, 0)
 	end]]
 
-	local h = 40 + ((druidBarExtra + (pconf.repBar and 1 or 0) + (pconf.xpBar and 1 or 0)) * 10)
+	--[[local h = 40 + ((druidBarExtra + (pconf.repBar and 1 or 0) + (pconf.xpBar and 1 or 0)) * 10)
 	if InCombatLockdown() then
 		XPerl_ProtectedCall(XPerl_Player_DruidBarUpdate, self)
 	else
@@ -653,12 +989,12 @@ local function XPerl_Player_DruidBarUpdate(self)
 		XPerl_ProtectedCall(XPerl_Player_DruidBarUpdate, self)
 	else
 		self.statsFrame:SetHeight(h)
-	end
+	end]]
 
 	XPerl_StatsFrameSetup(self, {druidBar, self.statsFrame.xpBar, self.statsFrame.repBar})
-	if (XPerl_Player_Buffs_Position) then
+	--[[if (XPerl_Player_Buffs_Position) then
 		XPerl_Player_Buffs_Position(self)
-	end
+	end]]
 end
 
 -- XPerl_Player_UpdateMana
@@ -667,10 +1003,10 @@ local function XPerl_Player_UpdateMana(self)
 	local pType = XPerl_GetDisplayedPowerType(self.partyid)
 	local playermana = UnitPower(self.partyid, pType)
 	local playermanamax = UnitPowerMax(self.partyid, pType)
-	
+
 	mb:SetMinMaxValues(0, playermanamax)
 	mb:SetValue(playermana)
-	
+
 	-- Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
 	local percent
 	if playermana > 0 and playermanamax == 0 then -- We have current mana but max mana failed.
@@ -682,7 +1018,7 @@ local function XPerl_Player_UpdateMana(self)
 		percent = playermana / playermanamax -- Everything is dandy, so just do it right way.
 	end
 	-- end division by 0 check
-	
+
 	mb.text:SetFormattedText("%d/%d", playermana, playermanamax)
 
 	if (pType >= 1 or UnitPowerMax(self.partyid, pType) < 1) then
@@ -690,9 +1026,9 @@ local function XPerl_Player_UpdateMana(self)
 	else
 		mb.percent:SetFormattedText(percD, percent * 100)
 	end
-	
+
 	mb.tex:SetTexCoord(0, max(0, (percent)), 0, 1)
-	
+
 	if (not self.statsFrame.greyMana) then
 		if (pconf.values) then
 			mb.text:Show()
@@ -934,6 +1270,10 @@ function XPerl_Player_Events:PLAYER_ENTERING_WORLD()
 		end
 	end
 
+	if not InCombatLockdown() then
+		self.state:SetAttribute("playerSpec", GetSpecialization())
+	end
+
 	XPerl_Player_UpdateDisplay(self)
 end
 
@@ -998,7 +1338,7 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 		"UNIT_FACTION",
 		"UNIT_PORTRAIT_UPDATE",
 		"UNIT_FLAGS",
-		"UNIT_SPELLCAST_SUCCEEDED", 
+		"UNIT_SPELLCAST_SUCCEEDED",
 		"PLAYER_FLAGS_CHANGED",
 		"UNIT_ENTERED_VEHICLE",
 		"UNIT_EXITING_VEHICLE",
@@ -1019,7 +1359,7 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 			self:RegisterEvent(event)
 		end
 	end
-	
+
 	--XPerl_Player_UpdateDisplay(self)
 
 	XPerl_Player_Events.VARIABLES_LOADED = nil
@@ -1159,7 +1499,7 @@ end
 
 -- UPDATE_SHAPESHIFT_FORM
 function XPerl_Player_Events:UPDATE_SHAPESHIFT_FORM()
-	if (playerClass == "DRUID") then
+	if (playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST") then
 		XPerl_Player_DruidBarUpdate(self)
 	end
 
@@ -1193,10 +1533,14 @@ function XPerl_Player_Events:PLAYER_UPDATE_RESTING()
 end
 
 function XPerl_Player_Events:PLAYER_SPECIALIZATION_CHANGED()
-	if pconf.buffs.enable then
-		if XPerl_Player_Buffs_Position then
-			XPerl_Player_Buffs_Position(XPerl_Player)
-		end
+	if not InCombatLockdown() then
+		self.state:SetAttribute("playerSpec", GetSpecialization())
+
+		XPerl_Player_Set_Bits(self)
+	end
+
+	if XPerl_Player_Buffs_Position then
+		XPerl_Player_Buffs_Position(XPerl_Player)
 	end
 end
 
@@ -1363,6 +1707,15 @@ function XPerl_Player_Set_Bits(self)
 		self.portraitFrame:SetWidth(3)
 	end
 
+	if not InCombatLockdown() then
+		self.state:SetAttribute("extendedPortrait", pconf.extendPortrait)
+		self.state:SetAttribute("druidBarOff", pconf.noDruidBar)
+		self.state:SetAttribute("xpBar", pconf.xpBar)
+		self.state:SetAttribute("repBar", pconf.repBar)
+		self.state:SetAttribute("spec", pconf.showRunes)
+		self.state:SetAttribute("specDock", pconf.dockRunes)
+	end
+
 	if (pconf.level) then
 		self.levelFrame:Show()
 	else
@@ -1439,6 +1792,10 @@ function XPerl_Player_Set_Bits(self)
 		self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 	end
 
+	if (playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST") then
+		XPerl_Player_DruidBarUpdate(self)
+	end
+
 	XPerl_Player_SetWidth(self)
 
 	local h1 = self.nameFrame:GetHeight() + self.statsFrame:GetHeight() - 2
@@ -1446,14 +1803,18 @@ function XPerl_Player_Set_Bits(self)
 	XPerl_SwitchAnchor(self, "TOPLEFT")
 	self:SetHeight(max(h1, h2))
 
-	if (pconf.extendPortrait or (self.runes and pconf.showRunes and pconf.dockRunes)) then
-		self.portraitFrame:SetHeight(62 + (((pconf.xpBar and 1 or 0) + (pconf.repBar and 1 or 0)) * 10))
-	else
-		self.portraitFrame:SetHeight(62)
-	end
+	if (pconf.extendPortrait --[[or (self.runes and pconf.showRunes and pconf.dockRunes)]]) then
+		if (UnitPowerType(self.partyid) > 0 and not pconf.noDruidBar) and ((playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST")) then
+			druidBarExtra = 1
+		else
+			druidBarExtra = 0
+		end
 
-	if (playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST") then
-		XPerl_Player_DruidBarUpdate(self)
+		self:SetHeight(62 + druidBarExtra * 10 + (((pconf.xpBar and 1 or 0) + (pconf.repBar and 1 or 0)) * 10))
+		self.portraitFrame:SetHeight(62 + druidBarExtra * 10 + (((pconf.xpBar and 1 or 0) + (pconf.repBar and 1 or 0)) * 10))
+	else
+		self:SetHeight(62)
+		self.portraitFrame:SetHeight(62)
 	end
 
 	if (self.runes) then
@@ -1486,7 +1847,7 @@ function XPerl_Player_Set_Bits(self)
 			self.totemHooked = true
 		end
 	end
-	
+
 	self:SetAlpha(conf.transparency.frame)
 
 	self.buffOptMix = nil
@@ -1510,7 +1871,7 @@ local function MakeMoveable(frame)
 	frame:SetMovable(true)
 	frame:SetUserPlaced(true)
 	frame:RegisterForDrag("LeftButton")
-	
+
 	frame:SetScript("OnDragStart", function(self)
 		if (not pconf.dockRunes) then
 			self:StartMoving()
@@ -1574,7 +1935,7 @@ function XPerl_Player_InitWarlock(self)
 		if not WarlockPowerFrame then
 			return
 		end
-	
+
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 0, 2)
 		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -22)
@@ -1656,7 +2017,6 @@ end
 function XPerl_Player_InitMonk(self)
 	local _, class = UnitClass("player")
 	if (class == "MONK") then
-		
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 0, 2)
 		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -22)
@@ -1739,7 +2099,7 @@ function XPerl_Player_InitMage(self)
 		if not MageArcaneChargesFrame then
 			return
 		end
-	
+
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 0, 2)
 		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -22)
@@ -1782,7 +2142,7 @@ function XPerl_Player_InitDK(self)
 		if not RuneFrame then
 			return
 		end
-	
+
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 0, 2)
 		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -22)

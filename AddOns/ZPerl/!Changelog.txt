@@ -1,3 +1,30 @@
+**r1053**
+* Rested XP should show up again as a number.
+* XP and rested XP text coord fixes.
+* Protected widget statuses will properly get updated when showing/hiding the options frame or changing tabs while in combat.
+* Code clean up.
+
+**r1052**
+* Sync the revision number with actual value in the repo, r1049 is not exist, no code changes(only the revision number), sorry again.
+
+**r1051**
+* Added to the Changelog file about r1050 change, I forgot that, sorry.
+
+**r1050**
+* zhTW updates for the Option UI
+
+**r1048**
+* Fixed resto shaman's duplicate mana bar.
+* Some other buff related fixes.
+
+**r1046**
+* Buff related fixes.
+
+**r1044**
+* Securely updating player frame height and buff positions when shape shifting in combat.
+* Shamans and Priests can hide the extra mana bar in the options now.
+* Added !NoTaint library, to prevent taints while opening the spell book.
+
 **r1041**
 * Dropdown updates.
 
@@ -134,7 +161,7 @@
 * Added an option to disable the combo point indicator on the target tab.
 
 **r1003**
-* deDE locale updates for Option UI, thanks CanRanBan@Curse. 
+* deDE locale updates for Option UI, thanks CanRanBan@Curse.
 
 **r1002**
 * Various special bar fixes for every class.

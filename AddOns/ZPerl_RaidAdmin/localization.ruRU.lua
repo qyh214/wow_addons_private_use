@@ -1,5 +1,7 @@
---Russian localization file
---Translated by StingerSoft
+--[[
+	Translated by StingerSoft
+]]
+
 if (GetLocale() == "ruRU") then
 XPERL_ADMIN_TITLE	= XPerl_ShortProductName.." Рейд Админ"
 
@@ -109,5 +111,4 @@ XPERL_ROSTERTEXT_TOGGLE		= "Тумблер"
 XPERL_ROSTERTEXT_TOGGLE_DESC	= "Переключатель выбранной группы"
 XPERL_ROSTERTEXT_SORT		= "Сорт"
 XPERL_ROSTERTEXT_SORT_DESC	= "Сортировать по имени вместо группа+имя"
-
 end

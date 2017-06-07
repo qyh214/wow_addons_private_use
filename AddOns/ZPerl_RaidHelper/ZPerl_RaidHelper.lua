@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1018 $")
+XPerl_SetModuleRevision("$Revision: 1053 $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -386,7 +386,7 @@ function XPerl_MTRosterChanged()
 	MainTanks = {}
 
 	blizzMTanks, ctraTanks = 0, 0
-	
+
 	-- if conf is nothing, just return.
 	if (conf == nil) then
 		return

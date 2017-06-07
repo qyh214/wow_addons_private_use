@@ -1,5 +1,4 @@
 if (GetLocale() == "zhTW") then
-
 XPERL_ADMIN_TITLE	= "Z-Perl 團隊管理介面"
 
 XPERL_MSG_PREFIX	= "|c00C05050Z-Perl|r "
@@ -108,5 +107,4 @@ XPERL_ROSTERTEXT_TOGGLE		= "切換"
 XPERL_ROSTERTEXT_TOGGLE_DESC	= "切換選取的小隊"
 XPERL_ROSTERTEXT_SORT		= "排序"
 XPERL_ROSTERTEXT_SORT_DESC	= "以名稱排序替代隊伍 + 名稱"
-
 end

@@ -1,5 +1,4 @@
 if (GetLocale() == "deDE") then
-
 -- Tabs
 XPERL_CONF_TITLE1			= GENERAL_LABEL -- "Allgemein"
 XPERL_CONF_TITLE2			= PLAYER		-- "Spieler"	Taken from WoW's FrameXML/GlobalStrings.lua
@@ -1024,5 +1023,4 @@ XPERL_CONF_RAID_CUSTOM_NEW				= NEW
 XPERL_CONF_RAID_CUSTOM_NEW_DESC			= "Erstelle einen neuen Debuff, der beobachtet werden soll"
 XPERL_CONF_RAID_CUSTOM_ZONE				= ZONE
 XPERL_CONF_RAID_CUSTOM_SEARCH			= SEARCH
-
 end

@@ -5,7 +5,7 @@
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1006 $")
+end, "$Revision: 1053 $")
 
 local XPerl_Usage = { }
 
@@ -212,7 +212,7 @@ function mod:GROUP_ROSTER_UPDATE()
 	else
 		self.inRaid = nil
 	end
-	
+
 	if (UnitInParty("player")) then
 		if (not self.inParty and not self.inRaid) then
 			self.inParty = true

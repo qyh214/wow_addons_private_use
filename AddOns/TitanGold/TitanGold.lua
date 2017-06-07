@@ -499,7 +499,7 @@ local function ShowMenuButtons(faction)
 				GoldSave[rementry].show = not GoldSave[rementry].show;
 				TitanPanelButton_UpdateButton(TITAN_GOLD_ID)
 			end
-			Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
+			L_UIDropDownMenu_AddButton(info, L_UIDROPDOWNMENU_MENU_LEVEL);
 		end
 	end
 end
@@ -525,7 +525,7 @@ local function DeleteMenuButtons(faction)
 			else
 				info.disabled = nil;
 			end
-			Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
+			L_UIDropDownMenu_AddButton(info, L_UIDROPDOWNMENU_MENU_LEVEL);
 		end
 	end
 end
@@ -584,7 +584,7 @@ end
 -- DESC: Builds the right click config menu
 -- *******************************************************************************************
 function TitanPanelRightClickMenu_PrepareGoldMenu()
-	if LIB_UIDROPDOWNMENU_MENU_LEVEL == 1 then
+	if L_UIDROPDOWNMENU_MENU_LEVEL == 1 then
 		-- Menu title
 		TitanPanelRightClickMenu_AddTitle(L["TITAN_GOLD_ITEMNAME"]);
 
@@ -618,21 +618,21 @@ function TitanPanelRightClickMenu_PrepareGoldMenu()
 		info.func = function()
 			ShowProperLabels("ShowCoinNone")
 		end
-		Lib_UIDropDownMenu_AddButton(info, _G["LIB_UIDROPDOWNMENU_MENU_LEVEL"]);
+		L_UIDropDownMenu_AddButton(info, _G["L_UIDROPDOWNMENU_MENU_LEVEL"]);
 		local info = {};
 		info.text = L["TITAN_GOLD_COIN_LABELS"];
 		info.checked = TitanGetVar(TITAN_GOLD_ID, "ShowCoinLabels");
 		info.func = function()
 			ShowProperLabels("ShowCoinLabels")
 		end
-		Lib_UIDropDownMenu_AddButton(info, _G["LIB_UIDROPDOWNMENU_MENU_LEVEL"]);
+		L_UIDropDownMenu_AddButton(info, _G["L_UIDROPDOWNMENU_MENU_LEVEL"]);
 		local info = {};
 		info.text = L["TITAN_GOLD_COIN_ICONS"];
 		info.checked = TitanGetVar(TITAN_GOLD_ID, "ShowCoinIcons");
 		info.func = function()
 			ShowProperLabels("ShowCoinIcons")
 		end
-		Lib_UIDropDownMenu_AddButton(info, _G["LIB_UIDROPDOWNMENU_MENU_LEVEL"]);
+		L_UIDropDownMenu_AddButton(info, _G["L_UIDROPDOWNMENU_MENU_LEVEL"]);
 
 		TitanPanelRightClickMenu_AddSpacer();
 
@@ -642,14 +642,14 @@ function TitanPanelRightClickMenu_PrepareGoldMenu()
 		info.func = function()
 			Seperator("UseSeperatorComma")
 		end
-		Lib_UIDropDownMenu_AddButton(info, _G["LIB_UIDROPDOWNMENU_MENU_LEVEL"]);
+		L_UIDropDownMenu_AddButton(info, _G["L_UIDROPDOWNMENU_MENU_LEVEL"]);
 		local info = {};
 		info.text = L["TITAN_USE_PERIOD"];
 		info.checked = TitanGetVar(TITAN_GOLD_ID, "UseSeperatorPeriod");
 		info.func = function()
 			Seperator("UseSeperatorPeriod")
 		end
-		Lib_UIDropDownMenu_AddButton(info, _G["LIB_UIDROPDOWNMENU_MENU_LEVEL"]);
+		L_UIDropDownMenu_AddButton(info, _G["L_UIDROPDOWNMENU_MENU_LEVEL"]);
 
 		TitanPanelRightClickMenu_AddSpacer();
 
@@ -659,14 +659,14 @@ function TitanPanelRightClickMenu_PrepareGoldMenu()
 		info.func = function()
 			Merger("MergeServers")
 		end
-		Lib_UIDropDownMenu_AddButton(info, _G["LIB_UIDROPDOWNMENU_MENU_LEVEL"]);
+		L_UIDropDownMenu_AddButton(info, _G["L_UIDROPDOWNMENU_MENU_LEVEL"]);
 		local info = {};
 		info.text = L["TITAN_GOLD_SEPARATE"];
 		info.checked = TitanGetVar(TITAN_GOLD_ID, "SeparateServers");
 		info.func = function()
 			Merger("SeparateServers")
 		end
-		Lib_UIDropDownMenu_AddButton(info, _G["LIB_UIDROPDOWNMENU_MENU_LEVEL"]);
+		L_UIDropDownMenu_AddButton(info, _G["L_UIDROPDOWNMENU_MENU_LEVEL"]);
 
 		TitanPanelRightClickMenu_AddSpacer();
 
@@ -677,7 +677,7 @@ function TitanPanelRightClickMenu_PrepareGoldMenu()
 			TitanToggleVar(TITAN_GOLD_ID, "ShowGoldOnly");
 			TitanPanelButton_UpdateButton(TITAN_GOLD_ID);
 		end
-		Lib_UIDropDownMenu_AddButton(info, _G["LIB_UIDROPDOWNMENU_MENU_LEVEL"]);
+		L_UIDropDownMenu_AddButton(info, _G["L_UIDROPDOWNMENU_MENU_LEVEL"]);
 
 		-- A blank line in the menu
 		TitanPanelRightClickMenu_AddSpacer();
@@ -688,7 +688,7 @@ function TitanPanelRightClickMenu_PrepareGoldMenu()
 		info.text = L["TITAN_GOLD_SHOW_PLAYER"];
 		info.value = "ToonShow";
 		info.hasArrow = 1;
-		Lib_UIDropDownMenu_AddButton(info);
+		L_UIDropDownMenu_AddButton(info);
 
 		-- Delete toon
 		info = {};
@@ -696,7 +696,7 @@ function TitanPanelRightClickMenu_PrepareGoldMenu()
 		info.text = L["TITAN_GOLD_DELETE_PLAYER"];
 		info.value = "ToonDelete";
 		info.hasArrow = 1;
-		Lib_UIDropDownMenu_AddButton(info);
+		L_UIDropDownMenu_AddButton(info);
 
 		-- A blank line in the menu
 		TitanPanelRightClickMenu_AddSpacer();
@@ -706,7 +706,7 @@ function TitanPanelRightClickMenu_PrepareGoldMenu()
 		info.notCheckable = true
 		info.text = L["TITAN_GOLD_CLEAR_DATA_TEXT"];
 		info.func = TitanGold_ClearDB;
-		Lib_UIDropDownMenu_AddButton(info);
+		L_UIDropDownMenu_AddButton(info);
 
 		TitanPanelRightClickMenu_AddCommand(L["TITAN_GOLD_RESET_SESS_TEXT"], TITAN_GOLD_ID, "TitanPanelGoldButton_ResetSession");
 
@@ -721,39 +721,39 @@ function TitanPanelRightClickMenu_PrepareGoldMenu()
 		TitanPanelRightClickMenu_AddCommand(L["TITAN_PANEL_MENU_HIDE"], TITAN_GOLD_ID, TITAN_PANEL_MENU_FUNC_HIDE);
 	end
 
-	if LIB_UIDROPDOWNMENU_MENU_LEVEL == 2 and LIB_UIDROPDOWNMENU_MENU_VALUE == "ToonDelete" then
+	if L_UIDROPDOWNMENU_MENU_LEVEL == 2 and L_UIDROPDOWNMENU_MENU_VALUE == "ToonDelete" then
 		local info = {};
 		info.notCheckable = true
 		info.text = L["TITAN_GOLD_FACTION_PLAYER_ALLY"];
 		info.value = "DeleteAlliance";
 		info.hasArrow = 1;
-		Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
+		L_UIDropDownMenu_AddButton(info, L_UIDROPDOWNMENU_MENU_LEVEL);
 
 		info.text = L["TITAN_GOLD_FACTION_PLAYER_HORDE"];
 		info.value = "DeleteHorde";
 		info.hasArrow = 1;
-		Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
-	elseif LIB_UIDROPDOWNMENU_MENU_LEVEL == 2 and LIB_UIDROPDOWNMENU_MENU_VALUE == "ToonShow" then
+		L_UIDropDownMenu_AddButton(info, L_UIDROPDOWNMENU_MENU_LEVEL);
+	elseif L_UIDROPDOWNMENU_MENU_LEVEL == 2 and L_UIDROPDOWNMENU_MENU_VALUE == "ToonShow" then
 		local info = {};
 		info.notCheckable = true
 		info.text = L["TITAN_GOLD_FACTION_PLAYER_ALLY"];
 		info.value = "ShowAlliance";
 		info.hasArrow = 1;
-		Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
+		L_UIDropDownMenu_AddButton(info, L_UIDROPDOWNMENU_MENU_LEVEL);
 
 		info.text = L["TITAN_GOLD_FACTION_PLAYER_HORDE"];
 		info.value = "ShowHorde";
 		info.hasArrow = 1;
-		Lib_UIDropDownMenu_AddButton(info, LIB_UIDROPDOWNMENU_MENU_LEVEL);
+		L_UIDropDownMenu_AddButton(info, L_UIDROPDOWNMENU_MENU_LEVEL);
 	end
 		
-	if LIB_UIDROPDOWNMENU_MENU_LEVEL == 3 and LIB_UIDROPDOWNMENU_MENU_VALUE == "DeleteAlliance" then
+	if L_UIDROPDOWNMENU_MENU_LEVEL == 3 and L_UIDROPDOWNMENU_MENU_VALUE == "DeleteAlliance" then
 		DeleteMenuButtons("Alliance")
-	elseif LIB_UIDROPDOWNMENU_MENU_LEVEL == 3 and LIB_UIDROPDOWNMENU_MENU_VALUE == "DeleteHorde" then
+	elseif L_UIDROPDOWNMENU_MENU_LEVEL == 3 and L_UIDROPDOWNMENU_MENU_VALUE == "DeleteHorde" then
 		DeleteMenuButtons("Horde")
-	elseif LIB_UIDROPDOWNMENU_MENU_LEVEL == 3 and LIB_UIDROPDOWNMENU_MENU_VALUE == "ShowAlliance" then
+	elseif L_UIDROPDOWNMENU_MENU_LEVEL == 3 and L_UIDROPDOWNMENU_MENU_VALUE == "ShowAlliance" then
 		ShowMenuButtons("Alliance")
-	elseif LIB_UIDROPDOWNMENU_MENU_LEVEL == 3 and LIB_UIDROPDOWNMENU_MENU_VALUE == "ShowHorde" then
+	elseif L_UIDROPDOWNMENU_MENU_LEVEL == 3 and L_UIDROPDOWNMENU_MENU_VALUE == "ShowHorde" then
 		ShowMenuButtons("Horde")
 	end
 end

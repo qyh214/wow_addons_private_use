@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(New)
 	for k, v in pairs(PartyPetFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 1033 $")
+end, "$Revision: 1053 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -356,7 +356,7 @@ function XPerl_Party_Pet_Buff_UpdateAll(self)
 					if (not self.conf) then
 						self.conf = conf.partypet
 					end
-	
+
 					XPerl_Unit_UpdateBuffs(self, nil, nil, petconf.buffs.castble, petconf.debuffs.curable)
 				end
 			else
@@ -507,7 +507,7 @@ end
 -- UNIT_COMBAT
 function XPerl_Party_Pet_Events:UNIT_COMBAT(...)
 	local action, descriptor, damage, damageType = ...
-	
+
 	if (action == "HEAL") then
 		XPerl_Party_Pet_CombatFlash(self, 0, true, true)
 	elseif (damage and damage > 0) then

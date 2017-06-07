@@ -1,5 +1,5 @@
 ## Interface: 70200
-## Version: v1.2.4
+## Version: v1.2.5
 ## Title: WardrobeSort
 ## Notes: Sorts the Wardrobe
 ## Author: Ketho @ EU-Boulderfist
@@ -9,7 +9,7 @@
 
 #@no-lib-strip@
 Libs\LibStub\LibStub.lua
-Libs\NoTaint_UIDropDownMenu\UIDropDownMenu.xml
+Libs\LibUIDropDownMenu\LibUIDropDownMenu.xml
 #@end-no-lib-strip@
 
 WardrobeSort.lua

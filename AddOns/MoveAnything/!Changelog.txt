@@ -3,6 +3,9 @@
 * Reseting bags while the bag is not opened won't reset it's scale to default.
 
 
+**16.2.0**
+* Readded !NoTaint lib.
+
 **16.1.9**
 * Updated NoTaint UIDropDownMenu.
 
@@ -233,12 +236,12 @@ Tooltips can be properly hidden.
 
 **15.1.4**
 * Fixed Frames:
-	* Player Buffs From Right to Left 
+	* Player Buffs From Right to Left
 
 **15.1.3**
 * Fixed some smaller issues.
 * Fixed Frames:
-	* Player Buffs From Right to Left 
+	* Player Buffs From Right to Left
 
 **15.1.2**
 * Fixed a smaller issue.

@@ -6,7 +6,7 @@ local init_done, gradient, conf, doneOptions
 local errorCount = 0
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1001 $")
+end, "$Revision: 1053 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -199,12 +199,12 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 			--cet[GetSpellInfo(21562)] = 2			-- Fortitudeh
 			--cet[GetSpellInfo(27683)] = 2			-- Shadow Protection
 		end
-		
+
 		if (class == "DRUID" or UnitIsGroupAssistant("player")) then
 			--cet[GetSpellInfo(1126)] = 2				-- Mark of the Wild
 			--cet[GetSpellInfo(467)] = 1			-- Thorns
 		end
-		
+
 		if (class == "MAGE" or UnitIsGroupAssistant("player")) then
 			--cet[GetSpellInfo(1459)] = 2				-- Intellect
 		end
@@ -393,7 +393,7 @@ local function XPerl_ToolTip_AddBuffDuration(self, partyid, buffID, filter)
 			end
 			if (c) then
 				self:AddLine(casterName, c.r, c.g, c.b)
-			else				
+			else
 				self:AddLine(casterName)
 			end
 		end
@@ -575,7 +575,7 @@ function XPerl_StatsFrameSetup(self, others, offset)
 	end
 
 	if (others) then
-		for i,bar in pairs(others) do
+		for i, bar in pairs(others) do
 			if (bar) then
 				tinsert(otherBars, bar)
 				if (bar:IsShown()) then
@@ -585,7 +585,7 @@ function XPerl_StatsFrameSetup(self, others, offset)
 			end
 		end
 	end
-	
+
 	if (conf.bar.fat) then
 		if (StatsFrame == XPerl_Player_PetstatsFrame) then
 			healthBarText:SetFontObject(GameFontNormalSmall)

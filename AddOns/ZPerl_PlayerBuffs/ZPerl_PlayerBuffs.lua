@@ -6,7 +6,7 @@ local conf, pconf
 XPerl_RequestConfig(function(new)
 	conf = new
 	pconf = new.player
-end, "$Revision: 1010 $")
+end, "$Revision: 1053 $")
 
 --local playerClass
 
@@ -52,7 +52,7 @@ local function setCommon(self, filter, buffTemplate)
 		local needScale = pconf.buffs.size / 32
 		self:SetScale(needScale)
 	elseif (pconf.debuffs) then
-		local needScale = pconf.debuffs.size / pconf.buffs.size 
+		local needScale = pconf.debuffs.size / pconf.buffs.size
 		self:SetScale(needScale)
 	end
 end
@@ -62,21 +62,44 @@ function XPerl_Player_Buffs_Position(self)
 	if (self.buffFrame and not InCombatLockdown()) then
 		self.buffFrame:ClearAllPoints()
 		self.debuffFrame:ClearAllPoints()
-		
+
 		if (pconf.buffs.above) then
 			self.buffFrame:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 3, 0)
 		else
-			if (self.runes and self.runes:IsShown() and ((self.runes.child and self.runes.child:IsShown()) or (self.runes.child2 and self.runes.child2:IsShown())) and pconf.dockRunes) then
+			--[[if (self.runes and self.runes:IsShown() and ((self.runes.child and self.runes.child:IsShown()) or (self.runes.child2 and self.runes.child2:IsShown())) and pconf.dockRunes) then
 				self.buffFrame:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 3, -28)
 			elseif ((pconf.xpBar or pconf.repBar) and not pconf.extendPortrait) then
 				local diff = self.statsFrame:GetBottom() - self.portraitFrame:GetBottom()
 				self.buffFrame:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 3, diff - 5)
 			else
 				self.buffFrame:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 3, 0)
+			end]]
+
+			local _, class = UnitClass("player")
+
+			if (class == "DRUID" and UnitPowerType(self.partyid) > 0 and not pconf.noDruidBar) or (class == "SHAMAN" and GetShapeshiftForm() == 0 and not pconf.noDruidBar) or (class == "PRIEST" and UnitPowerType(self.partyid) > 0 and not pconf.noDruidBar) then
+				extraBar = 1
+			else
+				extraBar = 0
 			end
 
+			local offset = ((extraBar + (pconf.repBar and 1 or 0) + (pconf.xpBar and 1 or 0)) * 13.5)
+
+			if (self.runes and self.runes:IsShown() and ((self.runes.child and self.runes.child:IsShown()) or (self.runes.child2 and self.runes.child2:IsShown())) and pconf.dockRunes) then
+				if pconf.extendPortrait then
+					self.buffFrame:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 5, 0 - 28)
+				else
+					self.buffFrame:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 5, 0 - offset - 28)
+				end
+			else
+				if pconf.extendPortrait then
+					self.buffFrame:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 5, 0)
+				else
+					self.buffFrame:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 5, 0 - offset)
+				end
+			end
 		end
-		
+
 		if (pconf.buffs.above) then
 			self.debuffFrame:SetPoint("BOTTOMLEFT", self.buffFrame, "TOPLEFT", 0, 2)
 		else
@@ -100,9 +123,9 @@ function XPerl_Player_BuffSetup(self)
 		self.buffFrame = CreateFrame("Frame", self:GetName().."buffFrame", self, "SecureAuraHeaderTemplate")
 		self.debuffFrame = CreateFrame("Frame", self:GetName().."debuffFrame", self.buffFrame, "SecureAuraHeaderTemplate")
 
-		
+
 		self.buffFrame:SetAttribute("frameStrata", "DIALOG")
-		
+
 		self.buffFrame.BuffFrameUpdateTime = 0
 		self.buffFrame.BuffFrameFlashTime = 0
 		self.buffFrame.BuffFrameFlashState = 1
@@ -167,6 +190,9 @@ local function XPerl_Player_Buffs_Set_Bits(self)
 
 	XPerl_Player_BuffSetup(self)
 
+	self.state:SetFrameRef("ZPerlPlayerBuffs", self.buffFrame)
+	self.state:SetAttribute("buffsAbove", pconf.buffs.above)
+
 	local buffs = self.buffFrame
 	if buffs then
 		if pconf.buffs.enable then
@@ -176,7 +202,7 @@ local function XPerl_Player_Buffs_Set_Bits(self)
 			buffs:Hide()
 		end
 	end
-		
+
 	local debuffs = self.debuffFrame
 	if debuffs then
 		if pconf.buffs.enable and pconf.debuffs.enable then
@@ -212,7 +238,7 @@ local function DoEnchant(self, slotID, hasEnchant, expire, charges)
 		--[[if (playerClass == "SHAMAN") then
 			if ((expire / 1000) > 30 * 60) then
 				self.fullDuration = 60 * 60
-			else         
+			else
 				self.fullDuration = 30 * 60
 			end
 		end]]
@@ -350,7 +376,7 @@ function XPerl_PlayerBuffs_Update(self)
 			else
 				self.count:Hide()
 			end
-	
+
 			-- Handle cooldowns
 			if (self.cooldown and (duration or 0) ~= 0 and conf.buffs.cooldown and (isMine or conf.buffs.cooldownAny)) then
 				local start = endTime - duration

@@ -1,5 +1,5 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
-..\FrameXML\UI.xsd">
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
 	<Script file="Localization.lua"/>
 	<Script file="Localization.deDE.lua"/>
 	<Script file="Localization.frFR.lua"/>
@@ -29,7 +29,6 @@
 			<TexCoords left="0.4140625" right="0.828125" top="0.3515625" bottom="0.703125"/>
 		</HighlightTexture>
 	</Button>
-
 
 	<EditBox name="XPerlEditBox" autoFocus="false" multiline="false" ignoreArrows="true" historyLines="0" letters="20" hidden="false" virtual="true">
 		<Size>

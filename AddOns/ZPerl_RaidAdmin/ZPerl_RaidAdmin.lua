@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 736 $")
+XPerl_SetModuleRevision("$Revision: 1053 $")
 
 local SavedRoster = nil
 local XswapCount = 0
@@ -18,7 +18,7 @@ local function AdminCommands(msg)
 	end
 
 	if (not args[1]) then
-        	XPerl_AdminFrame:Show()
+			XPerl_AdminFrame:Show()
 	else
 		if (not XPerl_AdminCommands[args[1]] or not XPerl_AdminCommands[args[1]](args[2], args[3], args[4])) then
 			XPerl_AdminCommands.help()
@@ -87,7 +87,7 @@ end
 local function XPerl_AdminStartup(self)
 
 	Defaults()
-        XPerl_AdminFrame_TitleBar_Pin:SetButtonTex()
+		XPerl_AdminFrame_TitleBar_Pin:SetButtonTex()
 
 	XPerl_Check_Setup()
 	XPerl_AdminSetupFrames()
@@ -208,37 +208,37 @@ local function LoadRoster()
 	end
 
 	local function Swap(a, b)
---ChatFrame7:AddMessage("Swapping: "..a.." (Grp"..CurrentRoster[a].group..") with "..b.." (Grp"..CurrentRoster[b].group..")")
-		if (CurrentRoster[a] and CurrentRoster[b]) then
-			SwapRaidSubgroup(CurrentRoster[a].index, CurrentRoster[b].index)
-			local save = CurrentRoster[b].group
-			CurrentRoster[b].group = CurrentRoster[a].group
-			CurrentRoster[b].moved = true
-			CurrentRoster[a].group = save
-			CurrentRoster[a].moved = true
+	--ChatFrame7:AddMessage("Swapping: "..a.." (Grp"..CurrentRoster[a].group..") with "..b.." (Grp"..CurrentRoster[b].group..")")
+	if (CurrentRoster[a] and CurrentRoster[b]) then
+		SwapRaidSubgroup(CurrentRoster[a].index, CurrentRoster[b].index)
+		local save = CurrentRoster[b].group
+		CurrentRoster[b].group = CurrentRoster[a].group
+		CurrentRoster[b].moved = true
+		CurrentRoster[a].group = save
+		CurrentRoster[a].moved = true
 
-			if (FreeFloating[a]) then
-				FreeFloating[a].group = CurrentRoster[a].group
-			end
-			if (FreeFloating[b]) then
-				FreeFloating[b].group = CurrentRoster[b].group
-			end
-
-			swapCount = swapCount + 1
+		if (FreeFloating[a]) then
+			FreeFloating[a].group = CurrentRoster[a].group
 		end
+		if (FreeFloating[b]) then
+			FreeFloating[b].group = CurrentRoster[b].group
+		end
+
+		swapCount = swapCount + 1
+	end
 	end
 
 	local function Move(name, target)
---ChatFrame7:AddMessage("Moving: "..name.." (Grp"..CurrentRoster[name].group..") to group "..target)
-       		SetRaidSubgroup(CurrentRoster[name].index, target)
-       		CurrentRoster[name].group = target
-       		CurrentRoster[name].moved = true
-       		if (FreeFloating[name]) then
-       			FreeFloating[name].group = target
-       		end
+	--ChatFrame7:AddMessage("Moving: "..name.." (Grp"..CurrentRoster[name].group..") to group "..target)
+		SetRaidSubgroup(CurrentRoster[name].index, target)
+		CurrentRoster[name].group = target
+		CurrentRoster[name].moved = true
+		if (FreeFloating[name]) then
+			FreeFloating[name].group = target
+		end
 
-       		moveCount = moveCount + 1
-       	end
+		moveCount = moveCount + 1
+	end
 
 	local function GroupCount(grp)
 		local count = 0
@@ -250,93 +250,93 @@ local function LoadRoster()
 		return count
 	end
 
-       	for nameSaved, saved in pairs(SavedRoster) do
-		local name = nameSaved
-		local group = saved.group
+	for nameSaved, saved in pairs(SavedRoster) do
+	local name = nameSaved
+	local group = saved.group
 
-       		if (not CurrentRoster[name]) then
-			-- Saved player not in raid, so find someone of the same class in the free floater list
-			for floaterName,floater in pairs(FreeFloating) do
-				if (floater.class == saved.class) then
-					name = floaterName
-					FreeFloating[name] = nil
-					break
+		if (not CurrentRoster[name]) then
+		-- Saved player not in raid, so find someone of the same class in the free floater list
+		for floaterName,floater in pairs(FreeFloating) do
+			if (floater.class == saved.class) then
+				name = floaterName
+				FreeFloating[name] = nil
+				break
+			end
+		end
+	end
+
+		if (CurrentRoster[name] and not CurrentRoster[name].moved) then
+			if (CurrentRoster[name].group == group) then
+				CurrentRoster[name].moved = true;		-- They're in right group already
+			elseif (not FreeFloating[name]) then
+			-- First see if we can directly swap any 2 players
+				local swapName
+				for name2, saved2 in pairs(SavedRoster) do
+					if (name ~= name2) then
+						if (CurrentRoster[name] and CurrentRoster[name].group == saved2.group) then
+							if (CurrentRoster[name2] and CurrentRoster[name2].group == group) then
+								swapName = name2
+								break
+							end
+						end
+
+					end
+				end
+
+				if (swapName) then
+					Swap(name, swapName)
+				--break
+				else
+				local done
+					-- Nothing suitable found to swap, see if target group has space
+					if (GroupCount(group) < 5) then
+						Move(name, group)
+					done = true
+						--break
+					end
+
+					-- No space in target group, put them anywhere
+					if (not done) then
+						for i = 1,8 do
+							if (CurrentRoster[name].group ~= i and GroupCount(i) < 5) then
+								Move(name, i)
+							done = true
+								break
+							end
+						end
+					end
+
+					if (not done) then
+					-- Nothing done yet, see if we can swap a free floater
+					local free
+					for name2, group in pairs(FreeFloating) do
+						if (group ~= CurrentRoster[name2].group) then
+							free = name2
+							break
+						end
+					end
+						if (free) then
+							Swap(CurrentRoster[name].index, CurrentRoster[free].index)
+						--break
+						else
+						-- Couldn't put them anywhere, add them to floater list
+							FreeFloating[name] = group
+						end
+				--else
+				--	break
+					end
 				end
 			end
 		end
 
-       		if (CurrentRoster[name] and not CurrentRoster[name].moved) then
-       			if (CurrentRoster[name].group == group) then
-       				CurrentRoster[name].moved = true;		-- They're in right group already
-       			elseif (not FreeFloating[name]) then
-				-- First see if we can directly swap any 2 players
-       				local swapName
-       				for name2, saved2 in pairs(SavedRoster) do
-       					if (name ~= name2) then
-       						if (CurrentRoster[name] and CurrentRoster[name].group == saved2.group) then
-       							if (CurrentRoster[name2] and CurrentRoster[name2].group == group) then
-       								swapName = name2
-       								break
-       							end
-       						end
-
-       					end
-       				end
-
-       				if (swapName) then
-       					Swap(name, swapName)
-					--break
-       				else
-					local done
-       					-- Nothing suitable found to swap, see if target group has space
-       					if (GroupCount(group) < 5) then
-       						Move(name, group)
-						done = true
-       						--break
-       					end
-
-       					-- No space in target group, put them anywhere
-       					if (not done) then
-       						for i = 1,8 do
-       							if (CurrentRoster[name].group ~= i and GroupCount(i) < 5) then
-       								Move(name, i)
-								done = true
-       								break
-       							end
-       						end
-       					end
-
-       					if (not done) then
-						-- Nothing done yet, see if we can swap a free floater
-						local free
-						for name2, group in pairs(FreeFloating) do
-							if (group ~= CurrentRoster[name2].group) then
-								free = name2
-								break
-							end
-						end
-       						if (free) then
-       							Swap(CurrentRoster[name].index, CurrentRoster[free].index)
-							--break
-       						else
-							-- Couldn't put them anywhere, add them to floater list
-       							FreeFloating[name] = group
-       						end
-					--else
-					--	break
-       					end
-       				end
-       			end
-       		end
-
-       		--if (moveCount > 0) then		-- or swapCount > 0) then
+		--if (moveCount > 0) then		-- or swapCount > 0) then
 		--	break
 		--end
-       	end
+		end
 
-       	if (moveCount == 0 and swapCount == 0) then
---ChatFrame7:AddMessage("Finished!")
- 		XPerl_StopLoad()
+	if (moveCount == 0 and swapCount == 0) then
+		--ChatFrame7:AddMessage("Finished!")
+		XPerl_StopLoad()
 	else
 		WaitingForRoster = GetTime()
 		XswapCount = XswapCount + swapCount
@@ -344,7 +344,7 @@ local function LoadRoster()
 		XPendingRosters = XPendingRosters + swapCount
 		XPendingRosters = XPendingRosters + moveCount
 	end
---ChatFrame7:AddMessage("Done arranging (swaps: "..swapCount..")  (moves: "..moveCount..")")
+	--ChatFrame7:AddMessage("Done arranging (swaps: "..swapCount..")  (moves: "..moveCount..")")
 end
 
 -- XPerl_AdminOnEvent
@@ -352,7 +352,7 @@ function XPerl_AdminOnEvent(self, event)
 	XPerl_AdminCheckMyRank()
 
 	if (event == "GROUP_ROSTER_UPDATE") then
-                XPerl_AdminFrame_Controls:Details()
+		XPerl_AdminFrame_Controls:Details()
 
 		if (WaitingForRoster) then
 			if (not XFinishedLoad) then
@@ -380,7 +380,6 @@ end
 
 -- XPerl_LoadRoster
 function XPerl_LoadRoster(loadName)
-
 	if (not ZPerl_Admin.SavedRosters) then
 		return
 	end
@@ -456,91 +455,90 @@ function XPerl_Admin_CountDifferences(rosterName)
 end
 
 function XPerl_Admin_ControlsOnLoad(self)
-
 	self.Details = function(self)
-	        local name = XPerl_AdminFrame_Controls_Edit:GetText()
-	        local diff
-	        if (name) then
-	                diff = XPerl_Admin_CountDifferences(name)
-	        end
+		local name = XPerl_AdminFrame_Controls_Edit:GetText()
+		local diff
+		if (name) then
+			diff = XPerl_Admin_CountDifferences(name)
+		end
 
-	        if (diff) then
-	                XPerl_AdminFrame_Controls_DetailsText:SetFormattedText(XPERL_ADMIN_DIFFERENCES, diff)
-	                XPerl_AdminFrame_Controls_Details:Show()
-	        else
-	                XPerl_AdminFrame_Controls_Details:Hide()
-	        end
+		if (diff) then
+			XPerl_AdminFrame_Controls_DetailsText:SetFormattedText(XPERL_ADMIN_DIFFERENCES, diff)
+			XPerl_AdminFrame_Controls_Details:Show()
+		else
+			XPerl_AdminFrame_Controls_Details:Hide()
+		end
 	end
 
 	self.MakeList = function(self)
-	        local index = 1;
+		local index = 1
 		local line = 1
-	        local find = XPerl_AdminFrame_Controls_Edit:GetText()
+		local find = XPerl_AdminFrame_Controls_Edit:GetText()
 
-	        local Offset = XPerl_AdminFrame_Controls_RosterScrollBarScrollBar:GetValue() + 1
-	        for name,roster in pairs(ZPerl_Admin.SavedRosters) do
-	                if (index >= Offset) then
-	                        local f = _G["XPerl_AdminFrame_Controls_Roster"..line]
-	                        if (f) then
-	                                if (name == find) then
-	                                        f:LockHighlight()
-	                                else
-	                                        f:UnlockHighlight()
-	                                end
-	                                f:SetText(name)
-	                                f:Show()
-	                        end
+		local Offset = XPerl_AdminFrame_Controls_RosterScrollBarScrollBar:GetValue() + 1
+		for name,roster in pairs(ZPerl_Admin.SavedRosters) do
+			if (index >= Offset) then
+				local f = _G["XPerl_AdminFrame_Controls_Roster"..line]
+				if (f) then
+					if (name == find) then
+						f:LockHighlight()
+					else
+						f:UnlockHighlight()
+					end
+					f:SetText(name)
+					f:Show()
+				end
 				line = line + 1
-	                end
-	                index = index + 1
-	        end
-	        for i = line,5 do
-	                local f = _G["XPerl_AdminFrame_Controls_Roster"..i]
-	                if (f) then
-	                        f:SetText("")
-	                        f:UnlockHighlight()
-	                        f:Hide()
-	                end
-	        end
+			end
+			index = index + 1
+		end
+		for i = line,5 do
+			local f = _G["XPerl_AdminFrame_Controls_Roster"..i]
+			if (f) then
+				f:SetText("")
+				f:UnlockHighlight()
+				f:Hide()
+			end
+		end
 
-	        local offset = XPerl_AdminFrame_Controls_RosterScrollBarScrollBar:GetValue()
-	        if (FauxScrollFrame_Update(XPerl_AdminFrame_Controls_RosterScrollBar, index - 1, 5, 1)) then
-	                XPerl_AdminFrame_Controls_RosterScrollBar:Show()
-	        else
-	                XPerl_AdminFrame_Controls_RosterScrollBar:Hide()
-	        end
+		local offset = XPerl_AdminFrame_Controls_RosterScrollBarScrollBar:GetValue()
+		if (FauxScrollFrame_Update(XPerl_AdminFrame_Controls_RosterScrollBar, index - 1, 5, 1)) then
+			XPerl_AdminFrame_Controls_RosterScrollBar:Show()
+		else
+			XPerl_AdminFrame_Controls_RosterScrollBar:Hide()
+		end
 
-	        XPerl_AdminFrame_Controls:Details()
+		XPerl_AdminFrame_Controls:Details()
 	end
 
 	self.Validate = function(self)
-	        XPerl_AdminFrame.Valid = false
-	        XPerl_AdminFrame_Controls_LoadRoster:Disable()
-	        XPerl_AdminFrame_Controls_DeleteRoster:Disable()
+		XPerl_AdminFrame.Valid = false
+		XPerl_AdminFrame_Controls_LoadRoster:Disable()
+		XPerl_AdminFrame_Controls_DeleteRoster:Disable()
 
-	        local index = 1
+		local index = 1
 		local line = 1
-	        local find = XPerl_AdminFrame_Controls_Edit:GetText()
-	        local Offset = XPerl_AdminFrame_Controls_RosterScrollBarScrollBar:GetValue()
-	        for name,roster in pairs(ZPerl_Admin.SavedRosters) do
-	                if (index - 1 >= Offset) then
-	                	local f = _G["XPerl_AdminFrame_Controls_Roster"..line]
-				if (not f) then
-					break
-				end
-	                	if (name == find) then
-	                	        f:LockHighlight()
-	                	        XPerl_AdminFrame.Valid = true
-	                	        if (UnitIsGroupAssistant("player") or UnitIsGroupLeader("player")) then
-	                	                XPerl_AdminFrame_Controls_LoadRoster:Enable()
-	                	        end
-	                	        XPerl_AdminFrame_Controls_DeleteRoster:Enable()
-	                	else
-	                	        f:UnlockHighlight()
-	                	end
+		local find = XPerl_AdminFrame_Controls_Edit:GetText()
+		local Offset = XPerl_AdminFrame_Controls_RosterScrollBarScrollBar:GetValue()
+			for name,roster in pairs(ZPerl_Admin.SavedRosters) do
+				if (index - 1 >= Offset) then
+					local f = _G["XPerl_AdminFrame_Controls_Roster"..line]
+					if (not f) then
+						break
+					end
+					if (name == find) then
+						f:LockHighlight()
+						XPerl_AdminFrame.Valid = true
+						if (UnitIsGroupAssistant("player") or UnitIsGroupLeader("player")) then
+							XPerl_AdminFrame_Controls_LoadRoster:Enable()
+						end
+						XPerl_AdminFrame_Controls_DeleteRoster:Enable()
+					else
+						f:UnlockHighlight()
+					end
 				line = line + 1
 			end
-	                index = index + 1
-	        end
+		   index = index + 1
+		end
 	end
 end

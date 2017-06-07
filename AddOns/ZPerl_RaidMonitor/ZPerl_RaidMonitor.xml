@@ -54,7 +54,9 @@
 	</StatusBar>
 
 	<Button name="XPerl_RaidMonitor_BarTemplate" inherits="SecureActionButtonTemplate" virtual="true">
-		<Size><AbsDimension x="80" y="12"/></Size>
+		<Size>
+			<AbsDimension x="80" y="12"/>
+		</Size>
 		<HighlightTexture file="Interface\Addons\ZPerl\Images\XPerl_Highlight" alphaMode="ADD">
 			<TexCoords left="0" right="1" top="0.5" bottom="1"/>
 		</HighlightTexture>
@@ -99,11 +101,11 @@
 				self.castBar.spark = _G[self:GetName().."BarCastBarSpark"]
 				self.castBar.bg:Hide()
 				self.target = _G[self:GetName().."Target"]
-				
+
 				self.target:SetAttribute("useparent-unit", true)
 				self.target:SetAttribute("unitsuffix", "target")
 				self.target:SetAttribute("type", "target")
-				
+
 				self:RegisterForClicks("AnyUp")
 				XPerl_CastMon_ChildUnits(self)
 			</OnLoad>
@@ -196,7 +198,9 @@
 									<TexCoords left="0.25" right="0.75" top="0.125" bottom="0.875"/>
 								</Texture>
 								<Texture name="$parentIcon">
-									<Size><AbsDimension x="12" y="12"/></Size>
+									<Size>
+										<AbsDimension x="12" y="12"/>
+									</Size>
 									<Anchors>
 										<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT">
 											<Offset>
@@ -213,10 +217,14 @@
 				<Layers>
 					<Layer level="OVERLAY">
 						<Texture name="$parentGrouped" file="Interface\Addons\ZPerl_RaidHelper\Images\XPerl_Bits" hidden="true">
-							<Size><AbsDimension x="8" y="8"/></Size>
+							<Size>
+								<AbsDimension x="8" y="8"/>
+							</Size>
 							<Anchors>
 								<Anchor point="RIGHT">
-									<Offset><AbsDimension x="-5" y="0"/></Offset>
+									<Offset>
+										<AbsDimension x="-5" y="0"/>
+									</Offset>
 								</Anchor>
 							</Anchors>
 							<TexCoords left="0" right="0.125" top="0.25" bottom="0.359375"/>
@@ -225,7 +233,9 @@
 				</Layers>
 			</StatusBar>
 			<Button name="$parentTarget" inherits="XPerl_RaidMonitor_BarTemplate">
-				<Size><AbsDimension x="80" y="12"/></Size>
+				<Size>
+					<AbsDimension x="80" y="12"/>
+				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT"/>
 				</Anchors>
@@ -234,8 +244,12 @@
 	</Button>
 
 	<Frame name="XPerl_RaidMonitor_Anchor" parent="UIParent" movable="true" resizable="true" clampedToScreen="true">
-		<Size><AbsDimension x="200" y="80"/></Size>
-		<Anchors><Anchor point="CENTER"/></Anchors>
+		<Size>
+			<AbsDimension x="200" y="80"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
 	</Frame>
 
 	<Frame name="XPerl_RaidMonitor_Frame" enableMouse="true" parent="XPerl_RaidMonitor_Anchor" clampedToScreen="true">
@@ -276,7 +290,9 @@
 		</Backdrop>
 		<Frames>
 			<Frame name="$parent_TitleBar">
-				<Size><AbsDimension x="160" y="12"/></Size>
+				<Size>
+					<AbsDimension x="160" y="12"/>
+				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
@@ -447,10 +463,14 @@
 			</Frame>
 
 			<Frame name="$parentArea" inherits="SecureRaidGroupHeaderTemplate">
-				<Size><AbsDimension x="160" y="26"/></Size>
+				<Size>
+					<AbsDimension x="160" y="26"/>
+				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset><AbsDimension x="4" y="-15"/></Offset>
+						<Offset>
+							<AbsDimension x="4" y="-15"/>
+						</Offset>
 					</Anchor>
 				</Anchors>
 			</Frame>
@@ -477,32 +497,46 @@
 						self.sep = _G[self:GetName().."Separator"]
 					</OnLoad>
 				</Scripts>
-				<Size><AbsDimension x="160" y="26"/></Size>
+				<Size>
+					<AbsDimension x="160" y="26"/>
+				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentArea">
-						<Offset><AbsDimension x="0" y="-2"/></Offset>
+						<Offset>
+							<AbsDimension x="0" y="-2"/>
+						</Offset>
 					</Anchor>
 					<Anchor point="BOTTOMRIGHT">
-						<Offset><AbsDimension x="-4" y="4"/></Offset>
+						<Offset>
+							<AbsDimension x="-4" y="4"/>
+						</Offset>
 					</Anchor>
 				</Anchors>
 				<Frames>
 					<StatusBar name="$parentHighMana" inherits="XPerl_RaidMonitor_StatusBarTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT">
-								<Offset><AbsDimension x="80" y="0"/></Offset>
+								<Offset>
+									<AbsDimension x="80" y="0"/>
+								</Offset>
 							</Anchor>
 							<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
-								<Offset><AbsDimension x="-1" y="-10"/></Offset>
+								<Offset>
+									<AbsDimension x="-1" y="-10"/>
+								</Offset>
 							</Anchor>
 						</Anchors>
 						<Layers>
 							<Layer level="OVERLAY">
 								<FontString inherits="GameFontNormalSmall" text="XPERL_RAID_MONITOR_STATS_HIGH_MANA" justifyH="RIGHT">
-									<Size><AbsDimension x="90" y="10"/></Size>
+									<Size>
+										<AbsDimension x="90" y="10"/>
+									</Size>
 									<Anchors>
 										<Anchor point="RIGHT" relativePoint="LEFT">
-											<Offset><AbsDimension x="-2" y="0"/></Offset>
+											<Offset>
+												<AbsDimension x="-2" y="0"/>
+											</Offset>
 										</Anchor>
 									</Anchors>
 									<Color r="0.75" g="1" b="0.75"/>
@@ -513,19 +547,27 @@
 					<StatusBar name="$parentLowMana" inherits="XPerl_RaidMonitor_StatusBarTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentHighMana">
-								<Offset><AbsDimension x="0" y="-2"/></Offset>
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
 							</Anchor>
 							<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentHighMana">
-								<Offset><AbsDimension x="0" y="-12"/></Offset>
+								<Offset>
+									<AbsDimension x="0" y="-12"/>
+								</Offset>
 							</Anchor>
 						</Anchors>
 						<Layers>
 							<Layer level="OVERLAY">
 								<FontString inherits="GameFontNormalSmall" text="XPERL_RAID_MONITOR_STATS_LOW_MANA" justifyH="RIGHT">
-									<Size><AbsDimension x="90" y="10"/></Size>
+									<Size>
+										<AbsDimension x="90" y="10"/>
+									</Size>
 									<Anchors>
 										<Anchor point="RIGHT" relativePoint="LEFT">
-											<Offset><AbsDimension x="-2" y="0"/></Offset>
+											<Offset>
+												<AbsDimension x="-2" y="0"/>
+											</Offset>
 										</Anchor>
 									</Anchors>
 									<Color r="1" g="0.75" b="0.75"/>
@@ -536,19 +578,27 @@
 					<StatusBar name="$parentRaidMana" inherits="XPerl_RaidMonitor_StatusBarTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLowMana">
-								<Offset><AbsDimension x="0" y="-2"/></Offset>
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
 							</Anchor>
 							<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentLowMana">
-								<Offset><AbsDimension x="0" y="-12"/></Offset>
+								<Offset>
+									<AbsDimension x="0" y="-12"/>
+								</Offset>
 							</Anchor>
 						</Anchors>
 						<Layers>
 							<Layer level="OVERLAY">
 								<FontString inherits="GameFontNormalSmall" text="XPERL_RAID_MONITOR_STATS_RAID_MANA" justifyH="RIGHT">
-									<Size><AbsDimension x="90" y="10"/></Size>
+									<Size>
+										<AbsDimension x="90" y="10"/>
+									</Size>
 									<Anchors>
 										<Anchor point="RIGHT" relativePoint="LEFT">
-											<Offset><AbsDimension x="-2" y="0"/></Offset>
+											<Offset>
+												<AbsDimension x="-2" y="0"/>
+											</Offset>
 										</Anchor>
 									</Anchors>
 									<Color r="0.5" g="0.5" b="1"/>
@@ -559,19 +609,27 @@
 					<StatusBar name="$parentRaidHealth" inherits="XPerl_RaidMonitor_StatusBarTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentRaidMana">
-								<Offset><AbsDimension x="0" y="-2"/></Offset>
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
 							</Anchor>
 							<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentRaidMana">
-								<Offset><AbsDimension x="0" y="-12"/></Offset>
+								<Offset>
+									<AbsDimension x="0" y="-12"/>
+								</Offset>
 							</Anchor>
 						</Anchors>
 						<Layers>
 							<Layer level="OVERLAY">
 								<FontString inherits="GameFontNormalSmall" text="XPERL_RAID_MONITOR_STATS_RAID_HEALTH" justifyH="RIGHT">
-									<Size><AbsDimension x="90" y="10"/></Size>
+									<Size>
+										<AbsDimension x="90" y="10"/>
+									</Size>
 									<Anchors>
 										<Anchor point="RIGHT" relativePoint="LEFT">
-											<Offset><AbsDimension x="-2" y="0"/></Offset>
+											<Offset>
+												<AbsDimension x="-2" y="0"/>
+											</Offset>
 										</Anchor>
 									</Anchors>
 									<Color r="1" g="1" b="0.5"/>

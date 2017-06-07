@@ -507,7 +507,7 @@
 			</Anchor>
 		</Anchors>
 	</Frame>
-	
+
 	<Frame name="XPerl_Raid_Title11" parent="UIParent" inherits="XPerl_Raid_TitleDragTemplate" id="11">
 		<Anchors>
 			<Anchor point="TOPLEFT">
@@ -599,7 +599,7 @@
 			<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
 		</Anchors>
 	</Frame>
-	
+
 	<Frame name="XPerl_Raid_Frame" parent="UIParent" hidden="true">
 		<Anchors>
 			<Anchor point="TOPLEFT"/>

@@ -95,8 +95,12 @@
 	</Frame>
 
 	<Frame name="XPerl_DropDown" inherits="Lib_UIDropDownMenuTemplate" id="1" hidden="true">
-		<Size><AbsDimension x="10" y="10"/></Size>
-		<Anchors><Anchor point="TOP"/></Anchors>
+		<Size>
+			<AbsDimension x="10" y="10"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOP"/>
+		</Anchors>
 		<Scripts>
 			<OnLoad function="XPerl_GenericDropDown_OnLoad"/>
 		</Scripts>

@@ -6,6 +6,7 @@ local Wardrobe = WardrobeCollectionFrame.ItemsCollectionFrame
 
 local db, active
 local FileData
+local SortOrder
 
 local nameVisuals, nameCache = {}, {}
 local catCompleted, itemLevels = {}, {}
@@ -100,21 +101,21 @@ local function LoadFileData(addon)
 	return _G[addon]:GetFileData()
 end
 
-local function SortOperator(a, b)
-	if db.reverse then
-		return a > b -- reverse sort
-	else
-		return a < b
-	end
+local function SortNormal(a, b)
+	return a < b
+end
+
+local function SortReverse(a, b)
+	return a > b
 end
 
 local function SortAlphabetic()
-	if Wardrobe:IsVisible() then
+	if Wardrobe:IsVisible() then -- check if wardrobe is still open after caching is finished
 		sort(Wardrobe:GetFilteredVisualsList(), function(source1, source2)
 			if nameVisuals[source1.visualID] and nameVisuals[source2.visualID] then
-				return SortOperator(nameVisuals[source1.visualID], nameVisuals[source2.visualID])
+				return SortOrder(nameVisuals[source1.visualID], nameVisuals[source2.visualID])
 			else
-				return SortOperator(source1.uiOrder, source2.uiOrder)
+				return SortOrder(source1.uiOrder, source2.uiOrder)
 			end
 		end)
 		Wardrobe:UpdateItems()
@@ -146,26 +147,24 @@ local sortFunc = {
 		FileData = FileData or LoadFileData("WardrobeSortData")
 		sort(self:GetFilteredVisualsList(), function(source1, source2)
 			if FileData[source1.visualID] and FileData[source2.visualID] then
-				return SortOperator(FileData[source1.visualID], FileData[source2.visualID])
+				return SortOrder(FileData[source1.visualID], FileData[source2.visualID])
 			else
-				return SortOperator(source1.uiOrder, source2.uiOrder)
+				return SortOrder(source1.uiOrder, source2.uiOrder)
 			end
 		end)
 	end,
 	
 	[LE_ITEM_LEVEL] = function(self)
-		if self:IsVisible() then -- check if wardrobe is still open after caching is finished
-			sort(self:GetFilteredVisualsList(), function(source1, source2)
-				local itemLevel1 = GetItemLevel(source1.visualID)
-				local itemLevel2 = GetItemLevel(source2.visualID)
-				
-				if itemLevel1 ~= itemLevel2 then
-					return SortOperator(itemLevel1, itemLevel2)
-				else
-					return SortOperator(source1.uiOrder, source2.uiOrder)
-				end
-			end)
-		end
+		sort(self:GetFilteredVisualsList(), function(source1, source2)
+			local itemLevel1 = GetItemLevel(source1.visualID)
+			local itemLevel2 = GetItemLevel(source2.visualID)
+			
+			if itemLevel1 ~= itemLevel2 then
+				return SortOrder(itemLevel1, itemLevel2)
+			else
+				return SortOrder(source1.uiOrder, source2.uiOrder)
+			end
+		end)
 	end,
 	
 	[LE_ALPHABETIC] = function(self)
@@ -197,20 +196,20 @@ local sortFunc = {
 						local instance2, encounter2 = drops2[1].instance, drops2[1].encounter
 						
 						if instance1 == instance2 then
-							return SortOperator(encounter1, encounter2)
+							return SortOrder(encounter1, encounter2)
 						else
-							return SortOperator(instance1, instance2)
+							return SortOrder(instance1, instance2)
 						end
 					end
 				else
 					if FileData[source1.visualID] and FileData[source2.visualID] then
-						return SortOperator(FileData[source1.visualID], FileData[source2.visualID])
+						return SortOrder(FileData[source1.visualID], FileData[source2.visualID])
 					end
 				end
 			else
-				return SortOperator(item1.sourceType, item2.sourceType)
+				return SortOrder(item1.sourceType, item2.sourceType)
 			end
-			return SortOperator(source1.uiOrder, source2.uiOrder)
+			return SortOrder(source1.uiOrder, source2.uiOrder)
 		end)
 	end,
 	
@@ -239,12 +238,12 @@ local sortFunc = {
 				end
 				
 				if index1 == index2 then
-					return SortOperator(file1, file2)
+					return SortOrder(file1, file2)
 				else
-					return SortOperator(index1, index2)
+					return SortOrder(index1, index2)
 				end
 			else
-				return SortOperator(source1.uiOrder, source2.uiOrder)
+				return SortOrder(source1.uiOrder, source2.uiOrder)
 			end
 		end)
 	end,
@@ -252,6 +251,7 @@ local sortFunc = {
 
 -- sort again when we are sure all items are cached
 -- not the most efficient way to do this
+-- this event does not seem to fire for weapons or only when mouseovering a weapon appearance (?)
 local function SortItemLevelEvent()
 	if Wardrobe:IsVisible() and (db.sortDropdown == LE_ITEM_LEVEL or db.sortDropdown == LE_ITEM_SOURCE) then
 		sortFunc[db.sortDropdown](Wardrobe)
@@ -261,7 +261,7 @@ end
 
 local function Model_OnEnter(self)
 	if Wardrobe:GetActiveCategory() then
-		local selectedValue = Lib_UIDropDownMenu_GetSelectedValue(WardRobeSortDropDown)
+		local selectedValue = L_UIDropDownMenu_GetSelectedValue(WardRobeSortDropDown)
 		
 		if selectedValue == LE_APPEARANCE or selectedValue == LE_COLOR then
 			if FileData[self.visualInfo.visualID] then
@@ -278,7 +278,8 @@ local function Model_OnEnter(self)
 				if item.sourceType == TRANSMOG_SOURCE_BOSS_DROP then
 					local drops = C_TransmogCollection.GetAppearanceSourceDrops(item.sourceID)
 					if #drops > 0 then
-						GameTooltip:AddLine(_G["TRANSMOG_SOURCE_"..item.sourceType]..": "..format(WARDROBE_TOOLTIP_ENCOUNTER_SOURCE, drops[1].encounter, drops[1].instance))
+						local drop = format(WARDROBE_TOOLTIP_ENCOUNTER_SOURCE, drops[1].encounter, drops[1].instance)
+						GameTooltip:AddLine(_G["TRANSMOG_SOURCE_"..item.sourceType]..": "..drop)
 					end
 				else
 					GameTooltip:AddLine(item.sourceType and _G["TRANSMOG_SOURCE_"..item.sourceType] or UNKNOWN)
@@ -300,30 +301,31 @@ local function PositionDropDown()
 end
 
 local function CreateDropdown()
-	local dropdown = CreateFrame("Frame", "WardRobeSortDropDown", Wardrobe, "Lib_UIDropDownMenuTemplate")
-	Lib_UIDropDownMenu_SetWidth(dropdown, 140)
+	local dropdown = CreateFrame("Frame", "WardRobeSortDropDown", Wardrobe, "L_UIDropDownMenuTemplate")
+	L_UIDropDownMenu_SetWidth(dropdown, 140)
 	
-	Lib_UIDropDownMenu_Initialize(dropdown, function(self)
-		local info = Lib_UIDropDownMenu_CreateInfo()
-		local selectedValue = Lib_UIDropDownMenu_GetSelectedValue(self)
+	L_UIDropDownMenu_Initialize(dropdown, function(self)
+		local info = L_UIDropDownMenu_CreateInfo()
+		local selectedValue = L_UIDropDownMenu_GetSelectedValue(self)
 		
 		info.func = function(self)
 			db.sortDropdown = self.value
-			Lib_UIDropDownMenu_SetSelectedValue(dropdown, self.value)
-			Lib_UIDropDownMenu_SetText(dropdown, COMPACT_UNIT_FRAME_PROFILE_SORTBY.." "..L[self.value])
+			L_UIDropDownMenu_SetSelectedValue(dropdown, self.value)
+			L_UIDropDownMenu_SetText(dropdown, COMPACT_UNIT_FRAME_PROFILE_SORTBY.." "..L[self.value])
 			db.reverse = IsModifierKeyDown()
+			SortOrder = db.reverse and SortReverse or SortNormal
 			Wardrobe:SortVisuals()
 		end
 		
 		for _, id in pairs(dropdownOrder) do
 			info.value, info.text = id, L[id]
 			info.checked = (id == selectedValue)
-			Lib_UIDropDownMenu_AddButton(info)
+			L_UIDropDownMenu_AddButton(info)
 		end
 	end)
 	
-	Lib_UIDropDownMenu_SetSelectedValue(dropdown, db.sortDropdown)
-	Lib_UIDropDownMenu_SetText(dropdown, COMPACT_UNIT_FRAME_PROFILE_SORTBY.." "..L[db.sortDropdown])
+	L_UIDropDownMenu_SetSelectedValue(dropdown, db.sortDropdown)
+	L_UIDropDownMenu_SetText(dropdown, COMPACT_UNIT_FRAME_PROFILE_SORTBY.." "..L[db.sortDropdown])
 	return dropdown
 end
 
@@ -341,6 +343,8 @@ Wardrobe:HookScript("OnShow", function(self)
 	end
 	db = WardrobeSortDB
 	
+	SortOrder = db.reverse and SortReverse or SortNormal
+	
 	f:RegisterEvent("TRANSMOG_COLLECTION_ITEM_UPDATE")
 	f:SetScript("OnEvent", SortItemLevelEvent)
 	
@@ -353,9 +357,9 @@ Wardrobe:HookScript("OnShow", function(self)
 		if self:GetActiveCategory() then
 			sortFunc[db.sortDropdown](self)
 			self:UpdateItems()
-			Lib_UIDropDownMenu_EnableDropDown(dropdown)
+			L_UIDropDownMenu_EnableDropDown(dropdown)
 		else
-			Lib_UIDropDownMenu_DisableDropDown(dropdown)
+			L_UIDropDownMenu_DisableDropDown(dropdown)
 		end
 	end)
 	

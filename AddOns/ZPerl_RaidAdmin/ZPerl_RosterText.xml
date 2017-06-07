@@ -1,9 +1,11 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-	<!-- LUA Scripts -->
+
 	<Script file="ZPerl_RosterText.lua"/>
 
 	<CheckButton name="XPerlRosterCheckButtonTemplate" virtual="true">
-		<Size><AbsDimension x="22" y="22"/></Size>
+		<Size>
+			<AbsDimension x="22" y="22"/>
+		</Size>
 		<HitRectInsets>
 			<AbsInset left="0" right="-80" top="0" bottom="0"/>
 		</HitRectInsets>
@@ -28,10 +30,14 @@
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString name="$parenttext" inherits="GameFontNormalSmall" justifyH="left" wraponspaces="false">
-					<Size><AbsDimension x="200" y="12"/></Size>
+					<Size>
+						<AbsDimension x="200" y="12"/>
+					</Size>
 					<Anchors>
 						<Anchor point="LEFT" relativePoint="RIGHT">
-							<Offset><AbsDimension x="-2" y="0"/></Offset>
+							<Offset>
+								<AbsDimension x="-2" y="0"/>
+							</Offset>
 						</Anchor>
 					</Anchors>
 				</FontString>
@@ -60,7 +66,9 @@
 	</CheckButton>
 
 	<Button name="XPerlRosterTextOptionsButtonTemplate" virtual="true">
-		<Size><AbsDimension x="90" y="21"/></Size>
+		<Size>
+			<AbsDimension x="90" y="21"/>
+		</Size>
 		<ButtonText name="$parentText" setAllPoints="true"/>
 		<NormalFont style="GameFontNormal"/>
 		<HighlightFont style="GameFontHighlight"/>
@@ -72,7 +80,9 @@
 	</Button>
 
 	<Button name="XPerlRosterGroupSetnButtonTemplate" inherits="XPerlRosterTextOptionsButtonTemplate" virtual="true">
-		<Size><AbsDimension x="50" y="22"/></Size>
+		<Size>
+			<AbsDimension x="50" y="22"/>
+		</Size>
 		<Scripts>
 			<OnShow>
 				self.text = _G[self:GetName().."Text"]
@@ -115,17 +125,23 @@
 	<Frame name="XPerl_RosterTextAnchor" clampedToScreen="true" parent="UIParent" movable="true" resizable="true">
 		<Anchors>
 			<Anchor point="TOP">
-				<Offset><AbsDimension x="0" y="-270"/></Offset>
+				<Offset>
+					<AbsDimension x="0" y="-270"/>
+				</Offset>
 			</Anchor>
 		</Anchors>
-		<Size><AbsDimension x="350" y="250"/></Size>
+		<Size>
+			<AbsDimension x="350" y="250"/>
+		</Size>
 	</Frame>
 
 	<Frame name="XPerl_RosterText" clampedToScreen="true" hidden="true" parent="XPerl_RosterTextAnchor" enableMouse="true">
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
 		</Anchors>
-		<Size><AbsDimension x="350" y="250"/></Size>
+		<Size>
+			<AbsDimension x="350" y="250"/>
+		</Size>
 		<Scripts>
 			<OnLoad>
 				XPerl_RosterText_Init(self)
@@ -162,10 +178,14 @@
 				<FontString name="$parenttitle" inherits="GameFontNormal" justifyV="TOP" justifyH="LEFT" text="XPERL_ROSTERTEXT_TITLE">
 					<Anchors>
 						<Anchor point="TOPLEFT">
-							<Offset><AbsDimension x="5" y="-5"/></Offset>
+							<Offset>
+								<AbsDimension x="5" y="-5"/>
+							</Offset>
 						</Anchor>
 						<Anchor point="BOTTOMRIGHT">
-							<Offset><AbsDimension x="-25" y="-20"/></Offset>
+							<Offset>
+								<AbsDimension x="-25" y="-20"/>
+							</Offset>
 						</Anchor>
 					</Anchors>
 					<Color r="1" g="1" b="1"/>
@@ -174,10 +194,14 @@
 				<FontString name="$parenthelp" inherits="GameFontNormal" justifyV="BOTTOM" justifyH="CENTER" text="XPERL_ROSTERTEXT_HELP">
 					<Anchors>
 						<Anchor point="BOTTOMLEFT">
-							<Offset><AbsDimension x="5" y="10"/></Offset>
+							<Offset>
+								<AbsDimension x="5" y="10"/>
+							</Offset>
 						</Anchor>
 						<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT">
-							<Offset><AbsDimension x="-10" y="25"/></Offset>
+							<Offset>
+								<AbsDimension x="-10" y="25"/>
+							</Offset>
 						</Anchor>
 					</Anchors>
 					<Color r="0.6" g="0.6" b="0.6"/>
@@ -187,7 +211,9 @@
 					<Anchors>
 						<Anchor point="BOTTOMLEFT" relativeTo="$parenthelp" relativePoint="TOPLEFT"/>
 						<Anchor point="TOPRIGHT" relativeTo="$parenthelp" relativePoint="TOPRIGHT">
-							<Offset><AbsDimension x="0" y="16"/></Offset>
+							<Offset>
+								<AbsDimension x="0" y="16"/>
+							</Offset>
 						</Anchor>
 					</Anchors>
 					<Color r="1" g="1" b="1"/>
@@ -198,16 +224,24 @@
 		<Frames>
 			-- Player and Target Frame Options
 			<Button name="$parentbuttonClose" inherits="UIPanelCloseButton">
-				<Anchors><Anchor point="TOPRIGHT">
-					<Offset><AbsDimension x="3" y="2"/></Offset>
-				</Anchor></Anchors>
+				<Anchors>
+					<Anchor point="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="3" y="2"/>
+						</Offset>
+				</Anchor>
+			</Anchors>
 			</Button>
 
 			<Frame name="$parentgroupFrame">
-				<Size><AbsDimension x="176" y="176"/></Size>
+				<Size>
+					<AbsDimension x="176" y="176"/>
+				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset><AbsDimension x="5" y="-25"/></Offset>
+						<Offset>
+							<AbsDimension x="5" y="-25"/>
+						</Offset>
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -217,47 +251,77 @@
 				</Scripts>
 				<Frames>
 					<CheckButton name="$parent1" inherits="XPerlRosterGroupCheckButtonTemplate" id="1">
-						<Anchors><Anchor point="TOPLEFT"/></Anchors>
+						<Anchors>
+							<Anchor point="TOPLEFT"/>
+						</Anchors>
 					</CheckButton>
 					<CheckButton name="$parent2" inherits="XPerlRosterGroupCheckButtonTemplate" id="2">
-						<Anchors><Anchor point="TOPLEFT" relativeTo="$parent1" relativePoint="BOTTOMLEFT"/></Anchors>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent1" relativePoint="BOTTOMLEFT"/>
+						</Anchors>
 					</CheckButton>
 					<CheckButton name="$parent3" inherits="XPerlRosterGroupCheckButtonTemplate" id="3">
-						<Anchors><Anchor point="TOPLEFT" relativeTo="$parent2" relativePoint="BOTTOMLEFT"/></Anchors>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent2" relativePoint="BOTTOMLEFT"/>
+						</Anchors>
 					</CheckButton>
 					<CheckButton name="$parent4" inherits="XPerlRosterGroupCheckButtonTemplate" id="4">
-						<Anchors><Anchor point="TOPLEFT" relativeTo="$parent3" relativePoint="BOTTOMLEFT"/></Anchors>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent3" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
 					</CheckButton>
 					<CheckButton name="$parent5" inherits="XPerlRosterGroupCheckButtonTemplate" id="5">
-						<Anchors><Anchor point="TOPLEFT" relativeTo="$parent4" relativePoint="BOTTOMLEFT"/></Anchors>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent4" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
 					</CheckButton>
 					<CheckButton name="$parent6" inherits="XPerlRosterGroupCheckButtonTemplate" id="6">
-						<Anchors><Anchor point="TOPLEFT" relativeTo="$parent5" relativePoint="BOTTOMLEFT"/></Anchors>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent5" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
 					</CheckButton>
 					<CheckButton name="$parent7" inherits="XPerlRosterGroupCheckButtonTemplate" id="7">
-						<Anchors><Anchor point="TOPLEFT" relativeTo="$parent6" relativePoint="BOTTOMLEFT"/></Anchors>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent6" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
 					</CheckButton>
 					<CheckButton name="$parent8" inherits="XPerlRosterGroupCheckButtonTemplate" id="8">
-						<Anchors><Anchor point="TOPLEFT" relativeTo="$parent7" relativePoint="BOTTOMLEFT"/></Anchors>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent7" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
 					</CheckButton>
 
 					<Button name="$parentsize10" inherits="XPerlRosterGroupSetnButtonTemplate" id="10">
-						<Anchors><Anchor point="TOPRIGHT"/></Anchors>
+						<Anchors>
+							<Anchor point="TOPRIGHT"/>
+						</Anchors>
 					</Button>
 					<Button name="$parentsize25" inherits="XPerlRosterGroupSetnButtonTemplate" id="25">
-						<Anchors><Anchor point="TOPRIGHT" relativeTo="$parentsize10" relativePoint="BOTTOMRIGHT">
-							<Offset><AbsDimension x="0" y="-2"/></Offset>
-						</Anchor></Anchors>
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="$parentsize10" relativePoint="BOTTOMRIGHT">
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
 					</Button>
 					<Button name="$parentsize40" inherits="XPerlRosterGroupSetnButtonTemplate" id="40">
-						<Anchors><Anchor point="TOPRIGHT" relativeTo="$parentsize25" relativePoint="BOTTOMRIGHT">
-							<Offset><AbsDimension x="0" y="-2"/></Offset>
-						</Anchor></Anchors>
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="$parentsize25" relativePoint="BOTTOMRIGHT">
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
 					</Button>
 					<Button name="$parenttoggle" inherits="XPerlRosterGroupSetnButtonTemplate" id="0">
-						<Anchors><Anchor point="TOPRIGHT" relativeTo="$parentsize40" relativePoint="BOTTOMRIGHT">
-							<Offset><AbsDimension x="0" y="-2"/></Offset>
-						</Anchor></Anchors>
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="$parentsize40" relativePoint="BOTTOMRIGHT">
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
 					</Button>
 				</Frames>
 			</Frame>
@@ -282,10 +346,14 @@
 			<Frame name="$parenttextFrame">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentgroupFrame" relativePoint="TOPRIGHT">
-						<Offset><AbsDimension x="5" y="0"/></Offset>
+						<Offset>
+							<AbsDimension x="5" y="0"/>
+						</Offset>
 					</Anchor>
 					<Anchor point="BOTTOMRIGHT">
-						<Offset><AbsDimension x="-5" y="40"/></Offset>
+						<Offset>
+							<AbsDimension x="-5" y="40"/>
+						</Offset>
 					</Anchor>
 				</Anchors>
 
@@ -302,10 +370,14 @@
 					<ScrollFrame name="$parentscroll" inherits="UIPanelScrollFrameTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT">
-								<Offset><AbsDimension x="5" y="-5"/></Offset>
+								<Offset>
+									<AbsDimension x="5" y="-5"/>
+								</Offset>
 							</Anchor>
 							<Anchor point="BOTTOMRIGHT">
-								<Offset><AbsDimension x="-28" y="4"/></Offset>
+								<Offset>
+									<AbsDimension x="-28" y="4"/>
+								</Offset>
 							</Anchor>
 						</Anchors>
 						<Scripts>

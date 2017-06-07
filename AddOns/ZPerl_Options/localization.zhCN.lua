@@ -1,5 +1,6 @@
---zhCN Locale
--- Translation Updated by Xgale @20090222
+--[[
+	Translation Updated by Xgale @20090222
+]]
 
 if (GetLocale() == "zhCN") then
 -- Tabs

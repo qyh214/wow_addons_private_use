@@ -36,7 +36,7 @@
 		</ButtonText>
 		-->
 		<Frames>
-			<Frame name="$parentRightClickMenu" inherits="Lib_UIDropDownMenuTemplate" hidden="true">
+			<Frame name="$parentRightClickMenu" inherits="L_UIDropDownMenuTemplate" hidden="true">
 			</Frame>
 		</Frames>
 	</Button>

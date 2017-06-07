@@ -1,4 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
 	<Script file="ZPerl_Player.lua"/>
 
 	<Button name="XPerl_Player" inherits="SecureUnitButtonTemplate" clampedToScreen="true" frameStrata="LOW" movable="true" parent="UIParent">
@@ -35,7 +36,7 @@
 			</OnDragStop>
 		</Scripts>
 		<Frames>
-			<Frame name="$parentportraitFrame" inherits="XPerl_Portrait_Template">
+			<Frame name="$parentportraitFrame" inherits="XPerl_Portrait_Template_Secure">
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
@@ -362,7 +363,7 @@
 				</Backdrop>
 			</Frame>
 			<!-- Player Stats -->
-			<Frame name="$parentstatsFrame" inherits="XPerl_Stats_Template">
+			<Frame name="$parentstatsFrame" inherits="XPerl_Stats_Template_Secure">
 				<Anchors>
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentnameFrame">
 						<Offset>

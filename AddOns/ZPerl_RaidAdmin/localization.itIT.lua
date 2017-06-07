@@ -1,6 +1,4 @@
-
 if (GetLocale() == "itIT") then
-
 XPERL_ADMIN_TITLE	= XPerl_ShortProductName.." Amministrazione Raid"
 
 XPERL_MSG_PREFIX	= "|c00C05050X-Perl|r "

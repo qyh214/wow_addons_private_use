@@ -1,18 +1,34 @@
-lightweight tag 2df4bc22bf6f810772fbd9f4b3c6c30a8edba422 v1.2.4
+lightweight tag 5148c8ce2dd1ed24137cb86542c39e06030eed62 v1.2.5
 Author:	Ketho <sghs17@outlook.com>
-Date:	Sat May 20 01:37:32 2017 +0200
+Date:	Mon Jun 5 21:04:14 2017 +0200
 
-commit 2df4bc22bf6f810772fbd9f4b3c6c30a8edba422
+commit 5148c8ce2dd1ed24137cb86542c39e06030eed62
 Author: Ketho <sghs17@outlook.com>
-Date:   Sat May 20 01:37:32 2017 +0200
+Date:   Mon Jun 5 21:04:14 2017 +0200
 
-    Fixed sorting by Source sometimes not working
-    
-    Reverse sort order is now saved between sessions
+    refactoring
 
-commit 02480eae7a64955b78c77c4ef53c1a29fe6e59f0
+commit 969cb1f77d07b7ad725112a45248a81dccadc810
 Author: Ketho <sghs17@outlook.com>
-Date:   Fri May 19 16:39:22 2017 +0200
+Date:   Thu May 25 17:37:23 2017 +0200
 
-    Fixed sorting by unknown Item Sources
+    Soft-embed LibUIDropDownMenu
+
+commit e6fa78c49ba5d74bd134c5b4ed01fb7c4550c2a7
+Author: Ketho <sghs17@outlook.com>
+Date:   Thu May 25 17:37:19 2017 +0200
+
+    Remove hard-embedded NoTaint_UIDropDownMenu
+
+commit e817b9ee24b6d64acbc05535ffa29e0ca6fab780
+Author: Ketho <sghs17@outlook.com>
+Date:   Sun May 21 23:51:03 2017 +0200
+
+    Remove nolib creation since only LibStub is external
+
+commit e6910dfe8a4d456ec79945c90b645ad49b7d6817
+Author: Ketho <sghs17@outlook.com>
+Date:   Sun May 21 23:32:01 2017 +0200
+
+    Optimized sorting function
 

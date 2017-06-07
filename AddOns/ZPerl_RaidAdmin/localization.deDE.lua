@@ -1,7 +1,7 @@
 if (GetLocale() == "deDE") then
 	XPERL_ADMIN_TITLE	= XPerl_ShortProductName.." Schlachtzugsadmin"
 
--- Raid Admin
+	-- Raid Admin
 	XPERL_BUTTON_ADMIN_PIN			= "Pin das Fenster"
 	XPERL_BUTTON_ADMIN_LOCKOPEN		= "Das Fenster offen halten"
 	XPERL_BUTTON_ADMIN_SAVE1		= "Liste speichern"
@@ -68,7 +68,7 @@ if (GetLocale() == "deDE") then
 	XPERL_CHECK_REPORT_PNOTEQUIPED		= "%s HAT %s NICHT angelegt"
 	XPERL_CHECK_REPORT_DROPDOWN			= "Ausgabe-Channel"
 	XPERL_CHECK_REPORT_DROPDOWN_DESC	= "W\195\164hle einen Ausgabe-Channel f\195\188r die Ergebnisse des Gegenstands-Checker"
-	
+
 	XPERL_CHECK_REPORT_WITHSHORT		= " : %d mit"
 	XPERL_CHECK_REPORT_WITHOUTSHORT		= " : %d ohne"
 	XPERL_CHECK_REPORT_EQUIPEDSHORT		= " : %d angelegt"

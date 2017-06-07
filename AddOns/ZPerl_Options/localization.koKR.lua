@@ -1,9 +1,8 @@
 --[[
-Korean Localisation file By 地獄天使(kohalbae), Modified By DroArc, Fenlis
+	Korean Localisation file By 地獄天使(kohalbae), Modified By DroArc, Fenlis
 ]]
 
 if (GetLocale() == "koKR") then
-
 -- 탭 제목
 XPERL_CONF_TITLE1			= "일반"
 XPERL_CONF_TITLE2			= PLAYER	-- "Player"	Taken from WoW's FrameXML/GlobalStrings.lua

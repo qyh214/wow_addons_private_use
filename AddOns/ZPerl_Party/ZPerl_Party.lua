@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 1036 $")
+end, "$Revision: 1053 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -81,7 +81,7 @@ function XPerl_Party_Events_OnLoad(self)
 	--partyHeader:UnregisterEvent("UNIT_NAME_UPDATE") -- IMPORTANT! Fix for WoW 2.1 UNIT_NAME_UPDATE lockup issues
 
 	UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE") -- IMPORTANT! Stops raid framerate lagging when members join/leave/zone
-	
+
 	for i = 1, 4 do
 		XPerl_BlizzFrameDisable(_G["PartyMemberFrame"..i])
 	end
@@ -606,7 +606,7 @@ local function UpdateAssignedRoles(self)
 	if (instanceType == "party") then
 		-- No point getting it otherwise, as they can be wrong. Usually the values you had
 		-- from previous instance if you're running more than one with the same people
-		
+
 		-- According to http://forums.worldofwarcraft.com/thread.html?topicId=26560499864
 		-- this is the new way to check for roles
 		-- Port this from XPerl_Player.lua by PlayerLin
@@ -675,7 +675,7 @@ end
 local function UpdatePhasingDisplays(self)
 	local unit = self.partyid
 	local inPhase = UnitInPhase(unit)
-	
+
 	if ( inPhase or not UnitExists(unit) or not UnitIsConnected(unit)) then
 		self.phasingIcon:Hide()
 	else
@@ -685,7 +685,7 @@ end
 
 -- XPerl_Party_UpdateLeader
 local function XPerl_Party_UpdateLeader(self)
-	
+
 	if (UnitIsGroupLeader(self.partyid)) then
 		self.nameFrame.leaderIcon:Show()
 	else
@@ -693,13 +693,13 @@ local function XPerl_Party_UpdateLeader(self)
 	end
 
 	local lootMethod, lootMaster, raidLootMaster = GetLootMethod()
-	
+
 	if (lootMethod == "master" and lootMaster) then
 		if (self.partyid == "party"..lootMaster) then
 			self.nameFrame.masterIcon:Show()
 		else
 			self.nameFrame.masterIcon:Hide()
-		end	
+		end
 	end
 	-- Removed the call to UpdateAllAssignedRoles because UpdateLeader() is called by UpdateDisplay()
 	-- and UpdateDisplay() already call the UpdateAssignedRoles() function
@@ -809,9 +809,9 @@ local function XPerl_Party_UpdateMana(self)
 	if (self.afk and not UnitIsAFK(self.partyid)) then
 		XPerl_Party_UpdatePlayerFlags(self)
 	end
-	
+
 	local pType = XPerl_GetDisplayedPowerType(self.partyid)
-	
+
 	local Partymana = UnitPower(self.partyid, pType)
 	local Partymanamax = UnitPowerMax(self.partyid, pType)
 
@@ -903,7 +903,7 @@ local function CheckRaid()
 		partyAnchor:StopMovingOrSizing()
 
 		local singleGroup = XPerl_Party_SingleGroup()
-		
+
 		if (not pconf or ((pconf.inRaid and IsInRaid()) or (pconf.smallRaid and singleGroup) or (GetNumGroupMembers() > 0 and not IsInRaid()))) then -- or GetNumGroupMembers() > 0
 			if not C_PetBattles.IsInBattle() then
 				if (not partyHeader:IsShown()) then
@@ -945,7 +945,7 @@ local function XPerl_Party_TargetUpdateHealth(self)
 	end
 	--tf.healthBar:SetAlpha(1)
 	-- end division by 0 check
-	if (hpMax > 0) then 
+	if (hpMax > 0) then
 		tf.healthBar.text:SetFormattedText(percD, 100 * percent)	-- XPerl_Percent[floor(100 * hp / hpMax)])
 		tf.healthBar:SetMinMaxValues(0, hpMax)
 		tf.healthBar:SetValue(hp)
@@ -973,7 +973,7 @@ local function XPerl_Party_TargetUpdateHealth(self)
 	else
 		tf.combatIcon:Hide()
 	end
-	
+
 	local pvp = pconf.pvpIcon and ((UnitIsPVPFreeForAll(self.targetid) and "FFA") or (UnitIsPVP(self.targetid) and (UnitFactionGroup(self.targetid) ~= "Neutral") and UnitFactionGroup(self.targetid)))
 	if (pvp) then
 		tf.pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
@@ -1136,7 +1136,7 @@ end
 -- PARTY_LEADER_CHANGED
 -- fix by Sontix this portion of code was never called becuse the even PARTY_LEDAER_CHANGED is not registered
 -- because Xperl rearrange the party members order to keep always on top the leader, UpdateDisplay() was need
--- to not mess-up party frame 
+-- to not mess-up party frame
 -- (in that function the Leader Icon is updated, so there's no need to listen to this event)
 -- function XPerl_Party_Events:PARTY_LEADER_CHANGED()
 --	for i,frame in pairs(PartyFrames) do
@@ -1204,7 +1204,7 @@ XPerl_Party_Events.READY_CHECK_FINISHED = XPerl_Party_Events.READY_CHECK
 -- UNIT_COMBAT
 function XPerl_Party_Events:UNIT_COMBAT(...)
 	local action, descriptor, damage, damageType = ...
-	
+
 	if (pconf.hitIndicator and pconf.portrait) then
 		CombatFeedback_OnCombatEvent(self, action, descriptor, damage, damageType)
 	end
@@ -1284,7 +1284,7 @@ end
 -- PLAYER_ENTERING_WORLD
 function XPerl_Party_Events:PLAYER_ENTERING_WORLD()
 	UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE") -- Re-do, in case
-	
+
 	if (not startupDone) then
 		startupDone = true
 		XPerl_ProtectedCall(XPerl_Party_SetInitialAttributes)
@@ -1723,19 +1723,19 @@ function XPerl_Party_SetInitialAttributes()
 
 	--[[partyHeader.initialConfigFunction = function(self)
 		-- This is the only place we're allowed to set attributes whilst in combat
-	
+
 		self:SetAttribute("*type1", "target")
 		self:SetAttribute("type2", "menu")
 		self.menu = XPerl_ShowGenericMenu
 		XPerl_RegisterClickCastFrame(self)
-	
+
 		-- Does AllowAttributeChange work for children?
 		self.nameFrame:SetAttribute("useparent-unit", true)
 		self.nameFrame:SetAttribute("*type1", "target")
 		self.nameFrame:SetAttribute("type2", "menu")
 		self.nameFrame.menu = XPerl_ShowGenericMenu
 		XPerl_RegisterClickCastFrame(self.nameFrame)
-	
+
 		--self:SetAttribute("initial-height", CalcHeight())
 		--self:SetAttribute("initial-width", CalcWidth())
 	end]]

@@ -83,7 +83,7 @@ if (GetLocale() == "koKR") then
 	XPERL_DRAGHINT1		= "창 비율을 조절하려면 |c00FFFFFF클릭|r하세요."
 	XPERL_DRAGHINT2		= "창 크기를 조절하려면 |c00FFFFFFSHIFT+클릭|r하세요."
 
--- 사용법
+	-- 사용법
 	XPerlUsageNameList	= {XPerl = "코어", XPerl_Player = "플레이어", XPerl_PlayerPet = "소환수", XPerl_Target = "대상", XPerl_TargetTarget = "대상의 대상", XPerl_Party = "파티", XPerl_PartyPet = "파티 소환수", XPerl_RaidFrames = "공격대 창", XPerl_RaidHelper = "공격대 도우미", XPerl_RaidAdmin = "공격대 관리", XPerl_TeamSpeak = "음성대화 현황", XPerl_RaidMonitor = "공격대 현황", XPerl_RaidPets = "공격대 소환수", XPerl_ArcaneBar = "아케인 바", XPerl_PlayerBuffs = "플레이어 버프", XPerl_GrimReaper = "Grim Reaper"}
 	XPERL_USAGE_MEMMAX	= "UI 메모리 최대값 : %d"
 	XPERL_USAGE_MODULES	= "모듈: "
@@ -102,7 +102,6 @@ if (GetLocale() == "koKR") then
 	XPERL_RAID_TOOLTIP_WITHBUFF	= "버프있음: (%s)"
 	XPERL_RAID_TOOLTIP_WITHOUTBUFF	= "버프없음: (%s)"
 	XPERL_RAID_TOOLTIP_BUFFEXPIRING	= "%s의 %s %s 이내 사라짐"	-- Name, buff name, time to expire
-	
-	XPerl_DefaultRangeSpells.ANY = {item = "두꺼운 황천매듭 붕대"}
 
+	XPerl_DefaultRangeSpells.ANY = {item = "두꺼운 황천매듭 붕대"}
 end

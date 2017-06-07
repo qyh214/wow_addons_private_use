@@ -714,7 +714,7 @@
 					end
 				elseif self.configSelection then
 					local vars, ticked = 0, 0
-					for i,var in pairs(self.configSelection) do
+					for i, var in pairs(self.configSelection) do
 						vars = vars + 1
 
 						local table
@@ -1843,7 +1843,7 @@
 
 					local lastTab = nil
 					local totalTabWidth = 0
-					for i,tab in pairs(tabs) do
+					for i, tab in pairs(tabs) do
 						if (i > 1) then
 							tab:ClearAllPoints()
 							tab:SetPoint("BOTTOMLEFT", lastTab, "BOTTOMRIGHT", -1, 0)
@@ -1883,7 +1883,7 @@
 				end
 			</OnEvent>
 			<OnUpdate>
-				XPerl_Options_OnUpdate(self,elapsed)
+				XPerl_Options_OnUpdate(self, elapsed)
 			</OnUpdate>
 			<OnMouseDown>
 				if (button == "LeftButton") then
@@ -3045,6 +3045,7 @@
 						<Scripts>
 							<OnClick>
 								self:GetParent():SelectTab(1)
+								XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -3057,6 +3058,7 @@
 							<OnClick>
 								self:GetParent():SelectTab(2)
 								XPerl_OptionsFrame_SelectFrame("player")
+								XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -3069,6 +3071,7 @@
 							<OnClick>
 								self:GetParent():SelectTab(3)
 								XPerl_OptionsFrame_SelectFrame("player")
+								XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -3081,6 +3084,7 @@
 							<OnClick>
 								self:GetParent():SelectTab(4)
 								XPerl_OptionsFrame_SelectFrame("player")
+								XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -3093,6 +3097,7 @@
 							<OnClick>
 								self:GetParent():SelectTab(5)
 								XPerl_OptionsFrame_SelectFrame("player")
+								XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -3105,6 +3110,7 @@
 							<OnClick>
 								self:GetParent():SelectTab(6)
 								XPerl_OptionsFrame_SelectFrame("party")
+								XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -3117,6 +3123,7 @@
 							<OnClick>
 								self:GetParent():SelectTab(7)
 								XPerl_OptionsFrame_SelectFrame("raid")
+								XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -3128,6 +3135,7 @@
 						<Scripts>
 							<OnClick>
 								self:GetParent():SelectTab(8)
+								XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -3139,6 +3147,7 @@
 						<Scripts>
 							<OnClick>
 								self:GetParent():SelectTab(9)
+								XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -3150,6 +3159,7 @@
 						<Scripts>
 							<OnClick>
 								self:GetParent():SelectTab(10)
+								XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -3161,6 +3171,7 @@
 						<Scripts>
 							<OnClick>
 								self:GetParent():SelectTab(11)
+								XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -3172,6 +3183,7 @@
 						<Scripts>
 							<OnClick>
 								self:GetParent():SelectTab(12)
+								XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -3907,7 +3919,7 @@
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
-					
+
 					<CheckButton name="$parent_HighlightSparkles" inherits="XPerlCheckButtonTemplate">
 						<Size>
 							<AbsDimension x="26" y="26"/>
@@ -5366,11 +5378,11 @@
 						<Scripts>
 							<OnLoad>
 								local _, class = UnitClass("player")
-								if (class ~= "DRUID") then
+								if (class ~= "DRUID" and class ~= "SHAMAN" and class ~= "PRIEST") then
 									self:Hide()
 								end
 
-								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_DRUIDBAR")
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_MANABAR")
 								self.configBase = "XPerlDB.player"
 								self.configIndex = "noDruidBar"
 								self.configClick = XPerl_Player_Reset
@@ -5653,16 +5665,16 @@
 											end
 										end
 										self.Validate = function()
-											XPerl_Options_EnableSibling(self,"PlayerDebuffs")
-											XPerl_Options_EnableSibling(self,"PlayerBuffsAbove")
-											XPerl_Options_EnableSibling(self,"HideBlizzardBuffBar")
-											XPerl_Options_EnableSibling(self,"FlashExpiring")
-											XPerl_Options_EnableSibling(self,"Cooldowns")
-											XPerl_Options_EnableSibling(self,"MaxBuffs")
-											XPerl_Options_EnableSibling(self,"BuffSize")
-											XPerl_Options_EnableSibling(self,"DebuffSize")
-											XPerl_Options_EnableSibling(self,"BuffWrap")
-											XPerl_Options_EnableSibling(self,"MaxRows")
+											XPerl_Options_EnableSibling(self, "PlayerDebuffs")
+											XPerl_Options_EnableSibling(self, "PlayerBuffsAbove")
+											XPerl_Options_EnableSibling(self, "HideBlizzardBuffBar")
+											XPerl_Options_EnableSibling(self, "FlashExpiring")
+											XPerl_Options_EnableSibling(self, "Cooldowns")
+											XPerl_Options_EnableSibling(self, "MaxBuffs")
+											XPerl_Options_EnableSibling(self, "BuffSize")
+											XPerl_Options_EnableSibling(self, "DebuffSize")
+											XPerl_Options_EnableSibling(self, "BuffWrap")
+											XPerl_Options_EnableSibling(self, "MaxRows")
 										end
 									</OnLoad>
 								</Scripts>
@@ -5739,13 +5751,12 @@
 										self.flashFrame = XPerl_PlayerbuffFrame
 										self.configBase = "XPerlDB.player.buffs"
 										self.configIndex = "hideBlizzard"
-										self.configClick =
-											function()
-												if (XPerl_Player_BuffSetup) then
-													XPerl_Player_BuffSetup(XPerl_Player)
-												end
-												--BuffFrame_Update()
+										self.configClick = function()
+											if (XPerl_Player_BuffSetup) then
+												XPerl_Player_BuffSetup(XPerl_Player)
 											end
+											--BuffFrame_Update()
+										end
 										XPerl_Options_RegisterProtected(self)
 									</OnLoad>
 								</Scripts>
@@ -5794,7 +5805,11 @@
 										self.flashFrame = XPerl_PlayerbuffFrame
 										self.configBase = "XPerlDB.player.buffs"
 										self.configIndex = "cooldown"
-										self.configClick = function() if (XPerl_Player_BuffSetup) then XPerl_Player_BuffSetup(XPerl_Player) end end
+										self.configClick = function()
+											if (XPerl_Player_BuffSetup) then
+												XPerl_Player_BuffSetup(XPerl_Player)
+											end
+										end
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
@@ -5920,7 +5935,7 @@
 										self.configIndex = "wrap"
 										self.configClick = XPerl_Player_Reset
 										self.Validate = function()
-											XPerl_Options_EnableSibling(self,"MaxRows")
+											XPerl_Options_EnableSibling(self, "MaxRows")
 										end
 										XPerl_Options_RegisterProtected(self)
 									</OnLoad>
@@ -5945,7 +5960,7 @@
 										self:SetValueStep(1)
 										self:SetObeyStepOnDrag(true)
 
-										local t = XPerl_Options_GetSibling("BuffWrap",self)
+										local t = XPerl_Options_GetSibling("BuffWrap", self)
 										local t2 = _G[t:GetName().."Text"]
 										self:SetPoint("LEFT", t, "RIGHT", (t2:GetStringWidth() + 10) / 0.8, 0)
 
@@ -8144,7 +8159,7 @@
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
-							
+
 							<CheckButton name="$parent_Debuffs" inherits="XPerlCheckButtonTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="TOPRIGHT">
@@ -8166,7 +8181,7 @@
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
-							
+
 							<CheckButton name="$parent_BigDebuffs" inherits="XPerlCheckButtonTemplate">
 								<Size><AbsDimension x="26" y="26"/></Size>
 								<Anchors>
@@ -11136,7 +11151,7 @@
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
-					
+
 					<CheckButton name="$parent_30yd" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_SmallRaid" relativePoint="BOTTOMLEFT">
@@ -11983,7 +11998,7 @@
 							</OnClick>
 						</Scripts>
 					</CheckButton>
-					
+
 					<CheckButton name="$parent_precisionPercent" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeTo="$parent_Percent" relativePoint="TOPRIGHT">
@@ -12112,7 +12127,7 @@
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
-					
+
 					<CheckButton name="$parent_precisionManaPercent" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeTo="$parent_ManaPercent" relativePoint="TOPRIGHT">
@@ -12718,7 +12733,7 @@
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
-							
+
 							<CheckButton name="$parent_Grp11" inherits="XPerlCheckButtonTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="$parent_Grp10" relativePoint="BOTTOMLEFT">
@@ -12897,7 +12912,7 @@
 									</Anchor>
 								</Anchors>
 							</Frame>
-							
+
 							<Button name="$parent_All" inherits="XPerlButtonTemplate">
 								<Size>
 									<AbsDimension x="70" y="24"/>
@@ -12966,7 +12981,7 @@
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
-							
+
 							<CheckButton name="$parent_sortByRole" inherits="XPerlCheckButtonTemplate">
 								<Anchors>
 									<Anchor point="TOPRIGHT" relativeTo="$parent_ByClass" relativePoint="BOTTOMLEFT">
@@ -12989,7 +13004,7 @@
 											XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_ByClass"], not XPerlDB.raid.sortByRole)
 										end
 									</OnLoad>
-									
+
 								</Scripts>
 							</CheckButton>
 
@@ -13290,7 +13305,7 @@
 										XPerl_Options_CheckRadio(self, {"Add", "Blend"})
 									</OnClick>
 								</Scripts>
-							</CheckButton>							
+							</CheckButton>
 						</Frames>
 						<Layers>
 							<Layer level="BORDER">
@@ -16140,7 +16155,9 @@
 									XPerl_Options_EnableSibling(self, "Alpha")
 									XPerl_Options_EnableSibling(self, "BackgroundAlpha")
 								end
-								self.configClick = function()	XPerl_RaidMonitor_Frame:Init()	end
+								self.configClick = function()
+									XPerl_RaidMonitor_Frame:Init()
+								end
 							</OnLoad>
 						</Scripts>
 					</CheckButton>

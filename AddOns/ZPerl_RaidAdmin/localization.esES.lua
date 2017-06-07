@@ -1,9 +1,8 @@
 --[[
-Translation by Hastings
+	Translation by Hastings
 ]]
 
 if (GetLocale() == "esES") then
-
 XPERL_ADMIN_TITLE	= "X-Perl Administración de banda"
 
 XPERL_MSG_PREFIX	= "|c00C05050X-Perl|r "

@@ -3,7 +3,9 @@
 	<Script file="ZPerl_Check.lua"/>
 
 	<Button name="XPerl_CheckButtonTemplate" inherits="XPerl_BasicButton" virtual="true">
-		<Size><AbsDimension x="32" y="32"/></Size>
+		<Size>
+			<AbsDimension x="32" y="32"/>
+		</Size>
 	</Button>
 
 	<Button name="XPerlNormalListItemTemplate" virtual="true">
@@ -31,7 +33,9 @@
 					</Anchors>
 				</FontString>
 				<FontString name="$parentCount" inherits="GameFontNormal" wraponspaces="false" justifyV="CENTER" justifyH="RIGHT">
-					<Size><AbsDimension x="50" y="14"/></Size>
+					<Size>
+						<AbsDimension x="50" y="14"/>
+					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeTo="$parentIcon" relativePoint="TOPRIGHT"/>
 						<Anchor point="BOTTOMRIGHT">
@@ -42,7 +46,9 @@
 					</Anchors>
 				</FontString>
 				<FontString name="$parentFR" inherits="GameFontNormal" justifyH="RIGHT" hidden="true">
-					<Size><AbsDimension x="28" y="14"/></Size>
+					<Size>
+						<AbsDimension x="28" y="14"/>
+					</Size>
 					<Anchors>
 						<Anchor point="TOPRIGHT" relativePoint="TOP">
 							<Offset>
@@ -53,35 +59,45 @@
 					<Color r="1" g="0" b="0"/>
 				</FontString>
 				<FontString name="$parentNR" inherits="GameFontNormal" justifyH="RIGHT" hidden="true">
-					<Size><AbsDimension x="28" y="14"/></Size>
+					<Size>
+						<AbsDimension x="28" y="14"/>
+					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentFR"/>
 					</Anchors>
 					<Color r="0" g="1" b="0"/>
 				</FontString>
 				<FontString name="$parentFRR" inherits="GameFontNormal" justifyH="RIGHT" hidden="true">
-					<Size><AbsDimension x="28" y="14"/></Size>
+					<Size>
+						<AbsDimension x="28" y="14"/>
+					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentNR"/>
 					</Anchors>
 					<Color r="0" g="0" b="1"/>
 				</FontString>
 				<FontString name="$parentSR" inherits="GameFontNormal" justifyH="RIGHT" hidden="true">
-					<Size><AbsDimension x="28" y="14"/></Size>
+					<Size>
+						<AbsDimension x="28" y="14"/>
+					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentFRR"/>
 					</Anchors>
 					<Color r="1" g="0" b="1"/>
 				</FontString>
 				<FontString name="$parentAR" inherits="GameFontNormal" justifyH="RIGHT" hidden="true">
-					<Size><AbsDimension x="28" y="14"/></Size>
+					<Size>
+						<AbsDimension x="28" y="14"/>
+					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentSR"/>
 					</Anchors>
 					<Color r="1" g="1" b="1"/>
 				</FontString>
 				<Texture name="$parentEquiped" file="Interface\Buttons\UI-CheckBox-Check" hidden="true">
-					<Size><AbsDimension x="18" y="18"/></Size>
+					<Size>
+						<AbsDimension x="18" y="18"/>
+					</Size>
 					<Anchors>
 						<Anchor point="TOP" relativeTo="$parentNR"/>
 					</Anchors>

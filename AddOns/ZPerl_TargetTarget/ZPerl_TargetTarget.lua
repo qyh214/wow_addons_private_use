@@ -55,7 +55,7 @@ XPerl_RequestConfig(function(new)
 	if XPerl_PetTarget then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 986 $")
+end, "$Revision: 1053 $")
 
 local buffSetup
 
@@ -64,7 +64,7 @@ function ZPerl_TargetTarget_OnLoad(self)
 	self:RegisterForClicks("AnyUp")
 	self:RegisterForDrag("LeftButton")
 	XPerl_SetChildMembers(self)
-	
+
 	local events = {
 		"UNIT_HEALTH",
 		"UNIT_POWER_FREQUENT",
