@@ -40,6 +40,16 @@
 -- Returns querying result in format of: (bookId, bookType) or (spellName) in case of flyout spells
 ------------------------------------------------------------------------
 
+-- lib:GetNumSpells()
+
+-- Returns number of spells the player has for current spec
+------------------------------------------------------------------------
+
+-- lib:GetSpellByIndex(index)
+
+-- Returns spell name
+------------------------------------------------------------------------
+
 -- lib:GetSpellCooldown("spell")
 
 -- Get spell cooldown, returns cooldown, start, duration, enabled
@@ -105,6 +115,8 @@ local select = select
 local type = type
 local pairs = pairs
 local ipairs = ipairs
+local sort = sort
+local tinsert = tinsert
 local GetTalentInfo = GetTalentInfo
 local strfind = strfind
 local GetFlyoutInfo = GetFlyoutInfo
@@ -118,7 +130,7 @@ local FLYOUT_FACTOR = 10000000
 local MAX_TALENT_TIERS = MAX_TALENT_TIERS
 local NUM_TALENT_COLUMNS = NUM_TALENT_COLUMNS
 
-local VERSION = 1.50
+local VERSION = 1.51
 
 local lib = _G.LibPlayerSpells
 if lib and lib.version >= VERSION then return end
@@ -191,6 +203,7 @@ end
 --------------------------------------------------------
 
 local spellList = {}
+local spellTable = {}
 
 function lib:PlayerHasSpell(spell)
 	local id = spellList[spell]
@@ -205,6 +218,14 @@ function lib:PlayerHasSpell(spell)
 
 		return id, BOOKTYPE_SPELL
 	end
+end
+
+function lib:GetNumSpells()
+	return #spellTable
+end
+
+function lib:GetSpellByIndex(index)
+	return spellTable[index]
 end
 
 function lib:GetSpellCooldown(spell)
@@ -282,6 +303,9 @@ local function AddFlyouts(id)
 	for i = 1, numSlots do
 		local _, _, isKnown, name = GetFlyoutSlotInfo(id, i)
 		if isKnown and name then
+			if not spellList[name] then
+				tinsert(spellTable, name)
+			end
 			spellList[name] = id + FLYOUT_FACTOR
 		end
 	end
@@ -297,6 +321,11 @@ local function VerifySpell(id, bookType)
 			if bookType == BOOKTYPE_PET then
 				id = -id
 			end
+
+			if not spellList[name] then
+				tinsert(spellTable, name)
+			end
+
 			spellList[name] = id
 		end
 	end
@@ -314,6 +343,7 @@ end
 
 local function UpdateSpellData()
 	wipe(spellList)
+	wipe(spellTable)
 	local num = HasPetSpells()
 	if type(num) == "number" and num > 0 then
 		local id
@@ -324,6 +354,8 @@ local function UpdateSpellData()
 
 	UpdateTabSpells(1)
 	UpdateTabSpells(2)
+
+	sort(spellTable)
 	CallHooks("OnSpellsChanged")
 end
 

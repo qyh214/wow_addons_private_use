@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1053 $")
-XPerl_SetModuleRevision("$Revision: 1053 $")
+end, "$Revision: 1057 $")
+XPerl_SetModuleRevision("$Revision: 1057 $")
 
 -- Upvalus
 local _G = _G
@@ -1290,9 +1290,9 @@ function XPerl_MinimapMenu_Initialize(self, level)
 			info.notCheckable = 1
 			info.text = XPERL_MINIMENU_CASTMON
 			info.func = function()
-					XPerlRaidMonConfig.enabled = 1
-					XPerl_RaidMonitor_Frame:SetFrameSizes()
-				end
+				ZPerlRaidMonConfig.enabled = 1
+				XPerl_RaidMonitor_Frame:SetFrameSizes()
+			end
 			Lib_UIDropDownMenu_AddButton(info)
 		end
 	end

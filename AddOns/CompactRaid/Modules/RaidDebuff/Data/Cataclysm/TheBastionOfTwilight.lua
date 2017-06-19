@@ -1,11 +1,11 @@
-------------------------------------------------------------
+﻿------------------------------------------------------------
 -- TheBastionOfTwilight.lua
 --
 -- Abin
 -- 2011/1/07
 ------------------------------------------------------------
 
-local module = CompactRaid:FindModule("RaidDebuff")
+local module = CompactRaid:GetModule("RaidDebuff")
 if not module then return end
 
 local TIER = 4 -- Cataclysm

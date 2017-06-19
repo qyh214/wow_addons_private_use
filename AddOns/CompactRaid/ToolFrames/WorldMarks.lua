@@ -5,16 +5,14 @@
 -- 2012/1/14
 ------------------------------------------------------------
 
-local _G = _G
 local IsRaidMarkerActive = IsRaidMarkerActive
 
 local _, addon = ...
 local L = addon.L
 
 local function IsAllowed()
-	local group, leadship = addon:GetGroupStats()
-	if group == "raid" then
-		return leadship == "leader" or leadship == "officer"
+	if addon.group == "raid" then
+		return addon.leadship == "leader" or addon.leadship == "officer"
 	else
 		return 1
 	end

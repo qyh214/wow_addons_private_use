@@ -5,7 +5,7 @@
 -- 2010/10/30
 ------------------------------------------------------------
 
-local module = CompactRaid:FindModule("ClickSets")
+local module = CompactRaid:GetModule("ClickSets")
 if not module then return end
 
 local CLASS = select(2, UnitClass("player"))
@@ -52,7 +52,6 @@ module.DEFAULT_SPELLS = {
 		29166, -- Innervate
 		467, -- Thorns
 		212040, -- Revitalize
-		145205, -- Efflorescence
 		102342, -- Ironbark
 	},
 

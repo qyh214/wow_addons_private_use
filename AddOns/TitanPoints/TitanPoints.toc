@@ -1,10 +1,10 @@
-## Interface: 70200
+## Interface: 70250
 ## X-Min-Interface: 60000
-## Title: Titan Panel [|cffeda55fPoints|r] |cff00aa007.2.0|r
+## Title: Titan Panel [|cffeda55fPoints|r] |cff00aa007.2.5|r
 ## Notes: A simple Currency Point list for the Titan Panel AddOn.
 ## Author: solocommand
 ## SavedVariables:
 ## OptionalDeps:
 ## Dependencies: Titan
-## Version: 7.2.0
+## Version: 7.2.5
 TitanPoints.xml

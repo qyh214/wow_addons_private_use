@@ -1,4 +1,4 @@
-------------------------------------------------------------
+﻿------------------------------------------------------------
 -- RaidDebuff.lua
 --
 -- Abin
@@ -10,7 +10,7 @@ local UnitDebuff = UnitDebuff
 local _
 
 local L = CompactRaid:GetLocale("RaidDebuff")
-local module = CompactRaid:CreateModule("RaidDebuff", L["raid debuff"], "3.0", L["raid debuff desc"], "account")
+local module = CompactRaid:CreateModule("RaidDebuff", "ACCOUNT", L["raid debuff"], L["raid debuff desc"])
 if not module then return end
 
 local activeDebuffs
@@ -31,7 +31,7 @@ end
 function module:OnInitialize(db, chardb, firstTime)
 	self:InitAPI()
 	if type(db.customDebuffs) ~= "table" then
-		CompactRaid:CloneTable(DEFAULT_DB, db)
+		CompactRaid.tcopy(DEFAULT_DB, db)
 	end
 	self:ApplyCustomDebuffs()
 	self:ApplyUserLevels()

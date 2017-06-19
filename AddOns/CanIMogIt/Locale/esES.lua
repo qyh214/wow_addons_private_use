@@ -50,8 +50,6 @@ L["Shows a more detailed text for some of the tooltips."] = "Muestra un texto m√
 --Translation missing 
 -- L["Shows messages on login about the database scan."] = ""
 L["Shows the icon directly on the item in your bag."] = "Muestra directamente el icono en el objeto de tu bolsa."
---Translation missing 
--- L["TEST IGNORE ME"] = ""
 L["Transmoggable Items Only"] = "Solo objetos transfigurables"
 L["Unknown Items Only"] = "S√≥lo objetos desconocidos"
 --Translation missing 

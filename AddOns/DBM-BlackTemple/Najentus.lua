@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Najentus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 611 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 615 $"):sub(12, -3))
 mod:SetCreatureID(22887)
 mod:SetEncounterID(601)
 mod:SetModelID(21174)
@@ -16,23 +16,26 @@ mod:RegisterEventsInCombat(
 )
 
 local warnShield		= mod:NewSpellAnnounce(39872, 4)
-local warnShieldSoon	= mod:NewPreWarnAnnounce(39872, 10, 3)
+local warnShieldSoon	= mod:NewSoonAnnounce(39872, 10, 3)
 local warnSpine			= mod:NewTargetAnnounce(39837, 3)
 
+local specWarnSpineTank	= mod:NewSpecialWarningTaunt(39837, nil, nil, nil, 1, 2)
 local yellSpine			= mod:NewYell(39837)
 
-local timerShield		= mod:NewCDTimer(58, 39872, nil, nil, nil, 5)
+local timerShield		= mod:NewCDTimer(56, 39872, nil, nil, nil, 5)
 
 local berserkTimer		= mod:NewBerserkTimer(480)
 
+local voiceSpineTank	= mod:NewVoice(39837)--tauntboss
+
 mod:AddSetIconOption("SpineIcon", 39837)
 mod:AddInfoFrameOption(39872, true)
-mod:AddBoolOption("RangeFrame", true)
+mod:AddRangeFrameOption("8")
 
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
-	timerShield:Start(58-delay)
-	warnShieldSoon:Schedule(48-delay)
+	timerShield:Start(55.5-delay)
+	warnShieldSoon:Schedule(50-delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(8)
 	end
@@ -54,7 +57,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 39872 then
 		warnShield:Show()
-		warnShieldSoon:Schedule(48)
+		warnShieldSoon:Schedule(50)
 		timerShield:Start()
 	elseif args.spellId == 39837 then
 		warnSpine:Show(args.destName)
@@ -63,6 +66,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if args:IsPlayer() then
 			yellSpine:Yell()
+		else
+			local uId = DBM:GetRaidUnitId(args.destName)
+			if self:IsTanking(uId) then--Tank got spike and it wasn't us
+				--Taunt off spiked tank
+				specWarnSpineTank:Show(args.destName)
+				voiceSpineTank:Play("tauntboss")
+			end
 		end
 	end
 end

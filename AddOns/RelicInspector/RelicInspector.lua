@@ -139,7 +139,7 @@ local function SetupOptions()
 						get = function(info) return db.profile.enabled end,
 						order = 10
 					},
-					--[[itemLevelChoice = {
+					itemLevelChoice = {
 						name = "Item Level To Display:",
 						desc = "Whether to show relic item level or weapon gain",
 						type = "select",
@@ -148,7 +148,7 @@ local function SetupOptions()
 						get = function(info) return invItemLevelOptions[db.profile.itemLevelDisplay] end,
 						order = 15,
 						values = locItemLevelOptions
-					},]]
+					},
 					itemTooltipHeader = {
 						name = "Artifact Item Tooltips",
 						type = "header",
@@ -307,10 +307,10 @@ local function DecorateArtifact(self)
 						if nil == relicType then relicType = "???" end
 						
 						local itemLevel = gemLevel
-						--[[if invItemLevelOptions[db.profile.itemLevelDisplay] == 2 then
+						if invItemLevelOptions[db.profile.itemLevelDisplay] == 2 then
 							local artifactLevelGain = C_ArtifactUI.GetItemLevelIncreaseProvidedByRelic(gemLink)
 							itemLevel = "+" .. artifactLevelGain
-						end]]
+						end
 
 						self:AddDoubleLine(format('|cffffd400 (%s) %s|r', itemLevel or '???', gemLink or '???'), 
 							format('|cff00ff00(%s)',relicType), 0, 1, 0, 0, 1, 0)

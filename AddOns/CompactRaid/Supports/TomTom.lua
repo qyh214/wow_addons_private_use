@@ -40,7 +40,7 @@ local UnitInParty = UnitInParty
 local UnitInRaid = UnitInRaid
 local UnitIsConnected = UnitIsConnected
 
-local PI = math.pi -- 3.1415926353
+local PI = math.pi -- 3.1415926535
 
 local _, addon = ...
 

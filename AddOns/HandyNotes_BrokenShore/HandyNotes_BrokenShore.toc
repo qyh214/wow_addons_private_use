@@ -11,7 +11,7 @@
 ## Notes-deDE: Zeigt interessante Orte der Verheerten Küste
 ## Notes-esES: Mostrar los POI de la Costa Abrupta
 ## Notes-koKR: 부서진 해변에 관심 지점을 표시합니다
-## Notes-ruRU: Показывает точки в Расколотом берегу
+## Notes-ruRU: Показывает точки на Расколотом берегу
 ## Notes-zhCN: 顯示破碎海滩的 POI 位置
 ## Notes-zhTW: 顯示破碎海岸的 POI 位置
 #@end-non-debug@
@@ -24,12 +24,12 @@
 # ## Notes-zhTW: 顯示破碎海岸的 POI 位置
 #@end-debug@
 ## Author: arith
-## Version: v1.16
+## Version: v1.18
 ## RequiredDeps: HandyNotes
 ## OptionalDeps: LibBabble-SubZone-3.0, LibUIDropDownMenu
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_BrokenShoreDB
-## X-Date: 2017-05-25T6:46:53Z
+## X-Date: 2017-06-13T10:18:01Z
 ## X-License: GPLv2
 ## X-Category: Map
 

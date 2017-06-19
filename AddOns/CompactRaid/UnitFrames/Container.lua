@@ -47,19 +47,6 @@ function addon:RegisterMainFrameMover(frame)
 	frame:SetScript("OnDragStop", DragFrame_OnDragStop)
 end
 
---[[
-addon:RegisterEventCallback("OnInitialize", function(db, chardb)
-	local point, x, y = chardb.point, chardb.x, chardb.y
-	if point and x and y then
-		frame:SetPoint(point, x, y)
-	end
-end)
-
-addon:RegisterEventCallback("OnPlayerLogout", function(db, chardb)
-
-end)
---]]
-
 local container = CreateFrame("Frame", frame:GetName().."Container", frame)
 container:SetPoint("TOPLEFT")
 container:SetFrameStrata("BACKGROUND")
@@ -149,7 +136,7 @@ container:SetScript("OnUpdate", function(self, elapsed)
 	end
 	needCalcSize = nil
 
-	local group = addon:GetGroupStats()
+	local group = addon.group
 	local method
 
 	local cols, rows

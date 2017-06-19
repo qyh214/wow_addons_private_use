@@ -83,7 +83,7 @@
 				XPerl_RegisterHighlight(self, 3)
 			</OnLoad>
 			<OnEnter>
-				if (XPerlRaidMonConfig.Tooltips == 1) then
+				if (ZPerlRaidMonConfig.Tooltips == 1) then
 					XPerl_PlayerTip(self)
 				end
 			</OnEnter>
@@ -122,7 +122,7 @@
 				self.groupedIcon:SetHeight(h - 4)
 			</OnSizeChanged>
 			<OnEnter>
-				if (XPerlRaidMonConfig.Tooltips == 1) then
+				if (ZPerlRaidMonConfig.Tooltips == 1) then
 					local unit = SecureButton_GetUnit(self)
 					if (unit) then
 						XPerl_PlayerTip(self)
@@ -260,7 +260,7 @@
 				self:RegisterForDrag("LeftButton")
 			</OnLoad>
 			<OnDragStart>
-				if (not XPerlRaidMonConfig.Pinned) then
+				if (not ZPerlRaidMonConfig.Pinned) then
 					XPerl_RaidMonitor_Anchor:StartMoving()
 				end
 			</OnDragStart>
@@ -329,7 +329,7 @@
 								self:GetParent():GetParent().Buttons.Close = self
 							</OnLoad>
 							<OnClick>
-								XPerlRaidMonConfig.enabled = false
+								ZPerlRaidMonConfig.enabled = false
 								XPerl_RaidMonitor_Frame:Hide()
 							</OnClick>
 						</Scripts>
@@ -364,14 +364,14 @@
 
 								self.SetButtonTex = function(self)
 									local tex = self:GetNormalTexture()
-									if (XPerlRaidMonConfig.Pinned) then
+									if (ZPerlRaidMonConfig.Pinned) then
 										tex:SetTexCoord(0.5, 0.96875, 0, 0.453125)
 									else
 										tex:SetTexCoord(0, 0.46875, 0, 0.453125)
 									end
 
 									tex = self:GetPushedTexture()
-									if (XPerlRaidMonConfig.Pinned) then
+									if (ZPerlRaidMonConfig.Pinned) then
 										if (XPerl_RaidMonitor_Frame.corner) then
 											XPerl_RaidMonitor_Frame.corner:Hide()
 										end
@@ -386,7 +386,7 @@
 								self.tooltipText = XPERL_BUTTON_HELPER_PIN
 							</OnLoad>
 							<OnClick>
-								XPerlRaidMonConfig.Pinned = not XPerlRaidMonConfig.Pinned
+								ZPerlRaidMonConfig.Pinned = not ZPerlRaidMonConfig.Pinned
 								self:SetButtonTex()
 							</OnClick>
 						</Scripts>
@@ -423,14 +423,14 @@
 								self.SetButtonTex = function(self)
 									local tex = self:GetNormalTexture()
 
-									if (XPerlRaidMonConfig.Totals) then
+									if (ZPerlRaidMonConfig.Totals) then
 										tex:SetTexCoord(0.625, 0.75, 0.125, 0.25)
 									else
 										tex:SetTexCoord(0.625, 0.75, 0, 0.125)
 									end
 
 									tex = self:GetDisabledTexture()
-									if (XPerlRaidMonConfig.Totals) then
+									if (ZPerlRaidMonConfig.Totals) then
 										tex:SetTexCoord(0.625, 0.75, 0.375, 0.5)
 									else
 										tex:SetTexCoord(0.625, 0.75, 0.25, 0.375)
@@ -438,7 +438,7 @@
 								end
 							</OnLoad>
 							<OnClick>
-								XPerlRaidMonConfig.Totals = not XPerlRaidMonConfig.Totals
+								ZPerlRaidMonConfig.Totals = not ZPerlRaidMonConfig.Totals
 								self:SetButtonTex()
 								self:GetParent():GetParent():SetFrameSizes()
 							</OnClick>

@@ -1,4 +1,4 @@
-------------------------------------------------------------
+﻿------------------------------------------------------------
 -- OptionFrame.lua
 --
 -- Abin
@@ -20,7 +20,7 @@ local ColorPickerFrame = ColorPickerFrame
 local _
 
 local L = CompactRaid:GetLocale("CornerIndicators")
-local module = CompactRaid:FindModule("CornerIndicators")
+local module = CompactRaid:GetModule("CornerIndicators")
 if not module then return end
 
 local auraGroups = _G["LibBuffGroups-1.0"]

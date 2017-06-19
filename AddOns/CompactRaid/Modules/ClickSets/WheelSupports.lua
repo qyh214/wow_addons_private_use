@@ -9,7 +9,7 @@ local ipairs = ipairs
 local SecureHandlerExecute = SecureHandlerExecute
 local _
 
-local module = CompactRaid:FindModule("ClickSets")
+local module = CompactRaid:GetModule("ClickSets")
 if not module then return end
 
 local WHEEL_UP_START = 6

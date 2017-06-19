@@ -1,3 +1,13 @@
+**r1057**
+Tagging as release.
+
+**r1056**
+* Revision bump.
+
+**r1055**
+* Raid Monitor settings will get loaded/saved properly.
+* Fixed an issue about loading the Raid Admin module.
+
 **r1053**
 * Rested XP should show up again as a number.
 * XP and rested XP text coord fixes.

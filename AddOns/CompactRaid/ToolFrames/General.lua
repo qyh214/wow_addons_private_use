@@ -15,11 +15,10 @@ local _, addon = ...
 local L = addon.L
 
 local function IsAllowed(officer)
-	local group, leadship = addon:GetGroupStats()
-	if group == "raid" then
-		return leadship == "leader" or (officer and leadship == "officer")
-	elseif group == "party" then
-		return leadship == "leader"
+	if addon.group == "raid" then
+		return addon.leadship == "leader" or (officer and addon.leadship == "officer")
+	elseif addon.group == "party" then
+		return addon.leadship == "leader"
 	end
 end
 
@@ -79,8 +78,7 @@ button:SetScript("OnUpdate", function(self)
 end)
 
 function button:OnClick()
-	local _, leadship = addon:GetGroupStats()
-	if leadship == "leader" then
+	if addon.leadship == "leader" then
 		SetEveryoneIsAssistant(not IsEveryoneAssistant())
 	else
 		addon:PrintPermissionError(ALL_ASSIST_NOT_LEADER_ERROR)

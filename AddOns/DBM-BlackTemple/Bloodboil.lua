@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Bloodboil", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 612 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 615 $"):sub(12, -3))
 mod:SetCreatureID(22948)
 mod:SetEncounterID(605)
 mod:SetModelID(21443)
@@ -10,28 +10,32 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
+	"SPELL_CAST_SUCCESS 42005",
 	"SPELL_AURA_APPLIED 42005 40481 40491 40604",
-	"SPELL_AURA_APPLIED_DOSE 40481 42005"
+	"SPELL_AURA_APPLIED_DOSE 40481 42005",
+	"SPELL_AURA_REFRESH 42005 40481"
 )
 
---TODO, voice pack support
---TODO, move timers to SUCCESS events
 local warnBlood			= mod:NewTargetAnnounce(42005, 3)
-local warnWound			= mod:NewStackAnnounce(40481, 2)
-local warnStrike		= mod:NewTargetAnnounce(40491, 3)
+local warnWound			= mod:NewStackAnnounce(40481, 2, nil, "Tank", 2)
+local warnStrike		= mod:NewTargetAnnounce(40491, 3, nil, "Tank", 2)
 local warnRage			= mod:NewTargetAnnounce(40604, 4)
 local warnRageSoon		= mod:NewSoonAnnounce(40604, 3)
 local warnRageEnd		= mod:NewEndAnnounce(40604, 4)
 
-local specWarnBlood		= mod:NewSpecialWarningYou(42005)
-local specWarnRage		= mod:NewSpecialWarningYou(40604)
+local specWarnBlood		= mod:NewSpecialWarningStack(42005, nil, 1, nil, nil, 1, 2)
+local specWarnRage		= mod:NewSpecialWarningYou(40604, nil, nil, nil, 1, 2)
+local yellRage			= mod:NewYell(40604)
 
-local timerBlood		= mod:NewCDTimer(10, 42005, nil, nil, nil, 5)
-local timerStrikeCD		= mod:NewCDTimer(30, 40491)
-local timerRage			= mod:NewCDTimer(52, 40604, nil, nil, nil, 3)
-local timerRageEnd		= mod:NewBuffActiveTimer(28, 40604)
+local timerBlood		= mod:NewCDTimer(10, 42005, nil, nil, nil, 5)--10-12. Most of time it's 11 but I have seen as low as 10.1
+local timerStrikeCD		= mod:NewCDTimer(25, 40491, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)--25-82? Is this even a CD timer?
+local timerRage			= mod:NewCDTimer(52, 40604, nil, nil, nil, 3)--Verify?
+local timerRageEnd		= mod:NewBuffActiveTimer(28, 40604, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
+
+local voiceBlood		= mod:NewVoice(42005)--targetyou? (stack high is wrong beacuse you're supposed to soak stacks and for this warning you want to know whether or not soak is going to you
+local voiceRage			= mod:NewVoice(40604)--targetyou
 
 mod.vb.rage = false
 
@@ -52,32 +56,40 @@ function mod:OnCombatStart(delay)
 	timerRage:Start(-delay)
 end
 
-function mod:SPELL_AURA_APPLIED(args)
+function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 42005 then
+		timerBlood:Start()
+	end
+end
+
+function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
+	if spellId == 42005 then
 		warnBlood:CombinedShow(0.8, args.destName)
-		if self:AntiSpam(2, 1) then
-			timerBlood:Start()
-		end
 		if args:IsPlayer() then
-			specWarnBlood:Show()
+			specWarnBlood:Show(args.amount or 1)
+			voiceBlood:Play("targetyou")
 		end
-	elseif args.spellId == 40481 and not self.vb.rage then
+	elseif spellId == 40481 and not self.vb.rage then
 		local amount = args.amount or 1
 		if (amount % 5 == 0) then
 			warnWound:Show(args.destName, amount)
 		end
-	elseif args.spellId == 40491 then
+	elseif spellId == 40491 then
 		warnStrike:Show(args.destName)
 		timerStrikeCD:Start()
-	elseif args.spellId == 40604 then
+	elseif spellId == 40604 then
 		self.vb.rage = true
 		warnRage:Show(args.destName)
-		timerBlood:Cancel()
+		timerBlood:Stop()
 		timerRageEnd:Start()
 		self:Schedule(28, nextRage, self)
 		if args:IsPlayer() then
 			specWarnRage:Show()
+			voiceRage:Play("targetyou")
+			yellRage:Yell()
 		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
+mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED

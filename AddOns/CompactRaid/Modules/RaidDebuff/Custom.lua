@@ -5,30 +5,22 @@
 -- 2010/3/29
 ------------------------------------------------------------
 
-local StaticPopup_Show = StaticPopup_Show
-local StaticPopup_Hide = StaticPopup_Hide
-local format= format
+local format = format
 local HandleModifiedItemClick = HandleModifiedItemClick
 local strtrim = strtrim
 local tonumber = tonumber
 local GetSpellInfo = GetSpellInfo
 local GameTooltip = GameTooltip
-local _
 
-local MAX_SPELL_ID = 240000 -- for legion
+local MAX_SPELL_ID = 250000 -- for legion
 
 local L = CompactRaid:GetLocale("RaidDebuff")
-local module = CompactRaid:FindModule("RaidDebuff")
+local module = CompactRaid:GetModule("RaidDebuff")
 if not module then return end
 
-local POPUP_ID = "CompactRaid_RaidDebuff_Custom"
 local page = module.optionPage
 local debuffList = page.debuffList
 local tierId, instanceId, bossId
-
-function module:StartCustomInput()
-	StaticPopup_Show(POPUP_ID)
-end
 
 local list = UICreateVirtualScrollList(page:GetName().."CustomList", page, 15, 1, nil, "TABLE")
 page.customLst = list
@@ -69,7 +61,7 @@ buttonRegister:Disable()
 buttonRegister:SetAllPoints(page.buttonAdd)
 
 buttonRegister:SetScript("OnHide", function(self)
-	StaticPopup_Hide(POPUP_ID)
+	addon:PopupHide()
 end)
 
 buttonRegister:SetScript("OnClick", function(self)
@@ -121,7 +113,7 @@ local function ProcessInput(text)
 	list:Clear()
 	list:RefreshContents()
 
-	local name, icon, link
+	local name, _, icon, link
 	local id = tonumber(text)
 	if id then
 		name, _, icon = GetSpellInfo(id)
@@ -145,27 +137,6 @@ local function ProcessInput(text)
 	end
 end
 
-StaticPopupDialogs[POPUP_ID] = {
-	text = L["type debuff name or it's spell id"],
-	button1 = OKAY,
-	button2 = CANCEL,
-	hasEditBox = 1,
-	timeout = 0,
-	exclusive = 1,
-	whileDead = 1,
-	hideOnEscape = 1,
-
-	OnAccept = function(self)
-		return ProcessInput(self.editBox:GetText())
-	end,
-
-	EditBoxOnEnterPressed = function(self)
-		if not ProcessInput(self:GetText()) then
-			self:GetParent():Hide()
-		end
-	end,
-
-	EditBoxOnEscapePressed = function(self)
-		self:GetParent():Hide()
-	end,
-}
+function module:StartCustomInput()
+	addon:PopupShowInput(L["type debuff name or it's spell id"], ProcessInput)
+end

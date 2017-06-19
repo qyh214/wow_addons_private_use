@@ -1,11 +1,11 @@
-------------------------------------------------------------
+﻿------------------------------------------------------------
 -- Firelands.lua
 --
 -- Abin
 -- 2011/8/21
 ------------------------------------------------------------
 
-local module = CompactRaid:FindModule("RaidDebuff")
+local module = CompactRaid:GetModule("RaidDebuff")
 if not module then return end
 
 local TIER = 4 -- Cataclysm

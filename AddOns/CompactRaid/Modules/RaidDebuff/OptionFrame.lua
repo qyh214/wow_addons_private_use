@@ -1,4 +1,4 @@
-------------------------------------------------------------
+﻿------------------------------------------------------------
 -- RaidDebuff.lua
 --
 -- Abin
@@ -16,10 +16,9 @@ local StaticPopup_Show = StaticPopup_Show
 local StaticPopup_Hide = StaticPopup_Hide
 local HandleModifiedItemClick = HandleModifiedItemClick
 local GameTooltip = GameTooltip
-local _
 
 local L = CompactRaid:GetLocale("RaidDebuff")
-local module = CompactRaid:FindModule("RaidDebuff")
+local module = CompactRaid:GetModule("RaidDebuff")
 if not module then return end
 
 local templates = CompactRaid.optionTemplates

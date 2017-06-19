@@ -38,8 +38,6 @@ L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor
 L["Shows chat messages on login about the database scan."] = "데이터베이스 검색에 대한 로그인 시 대화 메시지를 표시합니다."
 L["Shows messages on login about the database scan."] = "데이터베이스 검색에 대한 로그인 시 메시지를 표시합니다."
 L["Shows the icon directly on the item in your bag."] = "가방에 있는 아이템에 형상변환 가능 여부를 아이콘으로 표시합니다."
---Translation missing 
--- L["TEST IGNORE ME"] = ""
 L["Transmoggable Items Only"] = "형상변환 가능한 아이템만 표시"
 L["Unknown Items Only"] = "형상변환 미등록 아이템만 표시"
 L["Updating appearances database."] = "형상 변환 자료를 갱신중입니다."

@@ -2,7 +2,9 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1053 $")
+local AddonName, Addon = ...
+
+XPerl_SetModuleRevision("$Revision: 1055 $")
 
 local SavedRoster = nil
 local XswapCount = 0
@@ -53,14 +55,15 @@ function XPerl_AdminOnLoad(self)
 
 	self:RegisterForDrag("LeftButton")
 
-	ZPerl_Admin = {}
+	ZPerl_Admin = { }
 
 	SlashCmdList["XPERLRAIDADMIN"] = AdminCommands
 	SLASH_XPERLRAIDADMIN1 = "/rad"
 	SLASH_XPERLRAIDADMIN2 = "/xpadmin"
 	SLASH_XPERLRAIDADMIN3 = "/xpad"
 
-	self:RegisterEvent("VARIABLES_LOADED")
+	--self:RegisterEvent("VARIABLES_LOADED")
+	self:RegisterEvent("ADDON_LOADED")
 	self:RegisterEvent("GROUP_ROSTER_UPDATE")
 	self:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
 	self:SetBackdropColor(0, 0, 0, 1)
@@ -85,9 +88,8 @@ end
 
 -- XPerl_AdminStartup
 local function XPerl_AdminStartup(self)
-
 	Defaults()
-		XPerl_AdminFrame_TitleBar_Pin:SetButtonTex()
+	XPerl_AdminFrame_TitleBar_Pin:SetButtonTex()
 
 	XPerl_Check_Setup()
 	XPerl_AdminSetupFrames()
@@ -348,7 +350,7 @@ local function LoadRoster()
 end
 
 -- XPerl_AdminOnEvent
-function XPerl_AdminOnEvent(self, event)
+function XPerl_AdminOnEvent(self, event, ...)
 	XPerl_AdminCheckMyRank()
 
 	if (event == "GROUP_ROSTER_UPDATE") then
@@ -363,9 +365,14 @@ function XPerl_AdminOnEvent(self, event)
 			end
 		end
 
-	elseif (event == "VARIABLES_LOADED") then
-		self:UnregisterEvent(event)
-		XPerl_AdminStartup(self)
+	elseif (event == "ADDON_LOADED") then
+		local addon = ...
+
+		if addon == AddonName then
+			XPerl_AdminStartup(self)
+
+			self:UnregisterEvent(event)
+		end
 	end
 end
 

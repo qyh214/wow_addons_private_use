@@ -1,4 +1,14 @@
-﻿v3.3.6
+﻿v3.4.1
+Fixed purchases with gold because I missed a function return change.
+
+v3.4.0
+Formatted parts for easier readablity, for me at least.
+Rewrote the alternate currency handler to be more adaptive.
+Thanks to a recent (7.2.5) change, removed my clunky alternate currency ID function.
+Added an auto rounding function to work better with buying a vendor stack for one item. (e.g., Blood of Sargeras)
+A note on the auto rounding, the number you see in the frame will be rounded to the nearest multiple of the purchasable item when bought.
+
+v3.3.6
 Quick TOC update.
 
 v3.3.5

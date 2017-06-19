@@ -9,10 +9,6 @@ L:SetGeneralLocalization{
 	name = "High Warlord Naj'entus"
 }
 
-L:SetOptionLocalization{
-	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(8)
-}
-
 L:SetMiscLocalization{
 	HealthInfo	= "Health Info"
 }
@@ -27,8 +23,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-	WarnPhase		= "%s Phase",
-	WarnKite		= "Gaze on >%s<"
+	WarnPhase		= "%s Phase"
 }
 
 L:SetTimerLocalization{
@@ -37,7 +32,6 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	WarnPhase		= "Show warning for next phase",
-	WarnKite		= "Announce Kite targets",
 	TimerPhase		= "Show time for next phase",
 	KiteIcon		= "Set icon on Kite target"
 }
@@ -73,8 +67,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	TimerVengefulSpirit		= "Show timer for Ghost durations",
-	CrushIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(40243)
+	TimerVengefulSpirit		= "Show timer for Ghost durations"
 }
 
 ----------------------------
@@ -111,7 +104,9 @@ L:SetOptionLocalization{
 L:SetMiscLocalization{
 	Suffering		= "Essence of Suffering",
 	Desire			= "Essence of Desire",
-	Anger			= "Essence of Anger"
+	Anger			= "Essence of Anger",
+	Phase1End		= "I don't want to go back!",
+	Phase2End		= "I won't be far!"
 }
 
 -----------------------

@@ -30,7 +30,7 @@ L["Only show on items that can be equipped."] = "Показывать тольк
 L["Only show on items that can be transmoggrified."] = "Показывать только на предметах, которые могут быть трансмогрифицированы."
 L["Only show on items that you haven't learned."] = "Показывать только на предметах, которые ещё не изучены."
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "Обратите внимание, что подсказка не всегда верна, поскольку Blizzard не предоставляет полную информацию."
-L["Show Bag Icons"] = "Значки в сумках"
+L["Show Bag Icons"] = "Показывать значки сумок"
 --Translation missing 
 -- L["Show information on the tooltip about transmog sets."] = ""
 L["Show Source Location Tooltip"] = "Сведения об источнике в подсказке"
@@ -41,8 +41,6 @@ L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor
 L["Shows chat messages on login about the database scan."] = "Показывать в чате при входе в игру сообщения о сканировании базы данных."
 L["Shows messages on login about the database scan."] = "Показывать при входе в игру сообщения о сканировании базы данных."
 L["Shows the icon directly on the item in your bag."] = "Показывать значок прямо на предмете в вашей сумке."
---Translation missing 
--- L["TEST IGNORE ME"] = ""
 L["Transmoggable Items Only"] = "Только трансмогрифицируемые предметы"
 L["Unknown Items Only"] = "Только неизвестные предметы"
 L["Updating appearances database."] = "Обновление базы гардероба."

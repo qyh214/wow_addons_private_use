@@ -1,24 +1,23 @@
-## Interface: 70100
+## Interface: 70200
 ## Title: CompactRaid
-## Version: 4.25
+## Version: 4.30
 ## Author: Abin
 ## SavedVariables: CompactRaidDB
 ## SavedVariablesPerCharacter: CompactRaidCharDB
 ## OptionalDeps: Clique, TomTom
 ## X-Category: UnitFrame
 ## X-eMail: abinn32@yahoo.com
-## X-Curse-Packaged-Version: v4.25
+## X-Curse-Packaged-Version: v4.30
 ## X-Curse-Project-Name: CompactRaid
 ## X-Curse-Project-ID: compactraid
 ## X-Curse-Repository-ID: wow/compactraid/mainline
 
+Includes\LibAddonManager.lua
 Includes\utf8.lua
-Includes\EmbedEvent-1.0.lua
 Includes\InterfaceOptionPage-1.0.lua
 Includes\VirtualScrollList-1.0.lua
 Includes\TabFrame-1.0.lua
 Includes\LibAuraGroups-1.0.lua
-Includes\LibMsgBox-1.0.lua
 Includes\ModularOptionFrame.lua
 Includes\LibPlayerSpells-1.0.lua
 
@@ -31,9 +30,4 @@ Supports\embeds.xml
 UnitFrames\embeds.xml
 ToolFrames\embeds.xml
 OptionFrames\embeds.xml
-
-Modules\Manager.lua
-Modules\Artwork\embeds.xml
-Modules\ClickSets\embeds.xml
-Modules\CornerIndicators\embeds.xml
-Modules\RaidDebuff\embeds.xml
+Modules\embeds.xml

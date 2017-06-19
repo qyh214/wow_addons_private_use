@@ -6,7 +6,7 @@
 
 local bDebugMode = false;
 TITAN_POINTS_ID = "Points";
-TITAN_POINTS_VERSION = "7.2.0";
+TITAN_POINTS_VERSION = "7.2.5";
 TITAN_NIL = false;
 TITAN_POINTS_TAB = "TokenFrame";    -- Currency Tab
 
@@ -96,6 +96,10 @@ end
 ----------------------------------------------------------------------
 
 function TitanPanelRightClickMenu_PreparePointsMenu()
+    local L_UIDropDownMenu_AddButton = _G.L_UIDropDownMenu_AddButton
+    if not L_UIDropDownMenu_AddButton then
+        L_UIDropDownMenu_AddButton = _G.Lib_UIDropDownMenu_AddButton
+    end
 
     TitanPanelRightClickMenu_AddTitle(TitanPlugins[TITAN_POINTS_ID].menuText);
     TitanPanelRightClickMenu_AddToggleIcon(TITAN_POINTS_ID);
@@ -123,7 +127,7 @@ function TitanPanelRightClickMenu_PreparePointsMenu()
                 TitanPanelPoints_ToggleVisibility(icon);
             end
             info.keepShownOnClick = 1;
-            Lib_UIDropDownMenu_AddButton(info, 1);
+            L_UIDropDownMenu_AddButton(info, 1);
         else
             TitanPanelRightClickMenu_AddSpacer();
             TitanPanelRightClickMenu_AddTitle(name);

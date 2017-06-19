@@ -751,11 +751,11 @@ function BrowsePanel:CacheActivity(id)
     end
 
     if activityItem then
-        if activityItem.activityId and not ACTIVITY_CUSTOM_DATA.A[activityItem.activityId] then
-            if activityItem.activityId ~= activity:GetActivityID() or activityItem.customId ~= activity:GetCustomID() then
-                return
-            end
-        end
+        -- if activityItem.activityId and not ACTIVITY_CUSTOM_DATA.A[activityItem.activityId] then
+        --     if activityItem.activityId ~= activity:GetActivityID() or activityItem.customId ~= activity:GetCustomID() then
+        --         return
+        --     end
+        -- end
         if activity:IsSoloActivity() and activityItem.customId ~= activity:GetCustomID() then
             return
         end
@@ -871,6 +871,8 @@ function BrowsePanel:Search()
     end
 
     local searchText = self:GetSearchCode(fullName, self.ModeDropdown:GetValue(), self.LootDropdown:GetValue(), activityItem.customId)
+
+    searchText = LFGListSearchPanel_ParseSearchTerms(searchText)
 
     Profile:SetLastSearchValue(searchValue)
     C_LFGList.Search(categoryId, searchText, 0, baseFilter)

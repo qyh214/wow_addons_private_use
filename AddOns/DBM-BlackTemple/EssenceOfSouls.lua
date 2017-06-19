@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Souls", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 612 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 615 $"):sub(12, -3))
 mod:SetCreatureID(23420)
 mod:SetEncounterID(606)
 mod:SetModelID(21483)
@@ -17,40 +17,46 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 41350 41337",
 	"SPELL_DAMAGE 41545",
 	"SPELL_MISSED 41545",
-	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"
+	"CHAT_MSG_MONSTER_YELL",
+	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 target mouseover"
 )
 
---TODO, if boss unit IDs ar never added, register target/mouseover to detect the phase change transitions
-local warnFixate		= mod:NewTargetAnnounce(41294, 3, nil, "Tank|Healer")
+--maybe a warning for Seethe if tanks mess up in phase 3
+local warnFixate		= mod:NewTargetAnnounce(41294, 3, nil, "Tank|Healer", 2)
 local warnDrain			= mod:NewTargetAnnounce(41303, 3, nil, "Healer", 2)
-local warnEnrage		= mod:NewSpellAnnounce(41305, 4, 41292)
-local warnEnrageSoon	= mod:NewPreWarnAnnounce(41305, 5, 3)
-local warnEnrageEnd		= mod:NewEndAnnounce(41305, 3)
+local warnFrenzy		= mod:NewSpellAnnounce(41305, 3, nil, "Tank|Healer", 2)
+local warnFrenzySoon	= mod:NewPreWarnAnnounce(41305, 5, 2)
+local warnFrenzyEnd		= mod:NewEndAnnounce(41305, 1, nil, "Tank|Healer", 2)
 
 local warnPhase2		= mod:NewPhaseAnnounce(2, 2)
 local warnMana			= mod:NewAnnounce("WarnMana", 4, 41350)
-local warnDeaden		= mod:NewTargetAnnounce(41410, 3)
-local warnShield		= mod:NewSpellAnnounce(41431, 3)
+local warnDeaden		= mod:NewTargetAnnounce(41410, 1)
+local specWarnShock		= mod:NewSpecialWarningInterrupt(41426, "HasInterrupt", nil, 2)
 
 local warnPhase3		= mod:NewPhaseAnnounce(3, 2)
-local warnSoul			= mod:NewSpellAnnounce(41545, 3)
+local warnSoul			= mod:NewSpellAnnounce(41545, 2, nil, "Tank", 2)
 local warnSpite			= mod:NewTargetAnnounce(41376, 3)
 
-local specWarnShock		= mod:NewSpecialWarningInterrupt(41426, "HasInterrupt", nil, 2)
-local specWarnShield	= mod:NewSpecialWarningDispel(41431, "MagicDispeller", nil, 2)
-local specWarnSpite		= mod:NewSpecialWarningYou(41376)
+local specWarnShield	= mod:NewSpecialWarningDispel(41431, "MagicDispeller", nil, 2, 1, 2)
+local specWarnSpite		= mod:NewSpecialWarningYou(41376, nil, nil, nil, 1, 2)
 
+--Phase 1
 local timerPhaseChange	= mod:NewPhaseTimer(41)
-local timerEnrage		= mod:NewBuffActiveTimer(15, 41305)
-local timerNextEnrage	= mod:NewNextTimer(32, 41305)
-local timerDeaden		= mod:NewTargetTimer(10, 41410)
-local timerNextDeaden	= mod:NewCDTimer(31, 41410)
+local timerFrenzy		= mod:NewBuffActiveTimer(8, 41305, nil, "Tank|Healer", 2, 5, nil, DBM_CORE_TANK_ICON)
+local timerNextFrenzy	= mod:NewNextTimer(40, 41305, nil, "Tank|Healer", 2, 5, nil, DBM_CORE_TANK_ICON)
+--Phase 2
+local timerDeaden		= mod:NewTargetTimer(10, 41410, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
+local timerNextDeaden	= mod:NewCDTimer(31, 41410, nil, nil, nil, 5)--Roll timer because I don't want to assign it interrupt one when many groups will use prot warrior
 local timerMana			= mod:NewTimer(160, "TimerMana", 41350)
-local timerNextShield	= mod:NewCDTimer(15, 41431)
-local timerNextSoul		= mod:NewCDTimer(10, 41545)
-local timerNextShock	= mod:NewCDTimer(12, 41426, nil, nil, nil, 4)--Blizz lied, this is a 12-15 second cd. you can NOT solo interrupt these with most classes
+local timerNextShock	= mod:NewCDTimer(12, 41426, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)--Blizz lied, this is a 12-15 second cd. you can NOT solo interrupt these with most classes
+--Phase 3
+local timerNextShield	= mod:NewCDTimer(15, 41431, nil, "MagicDispeller", 2, 5, nil, DBM_CORE_MAGIC_ICON)
+local timerNextSoul		= mod:NewCDTimer(10, 41545, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
 
 local countdownDeaden	= mod:NewCountdown(31, 41410, "Tank" and select(2, UnitClass("player")) == "WARRIOR")
+
+local voiceShield		= mod:NewVoice(41431)--dispelboss
+local voiceSpite		= mod:NewVoice(41376)--defensive
 
 mod:AddSetIconOption("DrainIcon", 41303, false)
 mod:AddSetIconOption("SpiteIcon", 41376, false)
@@ -59,8 +65,8 @@ mod.vb.lastFixate = "None"
 
 function mod:OnCombatStart(delay)
 	self.vb.lastFixate = "None"
-	timerNextEnrage:Start(47-delay)
-	warnEnrageSoon:Schedule(42-delay)
+	timerNextFrenzy:Start(49-delay)
+	warnFrenzySoon:Schedule(44-delay)
 	if DBM.BossHealth:IsShown() then
 		DBM.BossHealth:Clear()
 		DBM.BossHealth:Show(L.name)
@@ -70,16 +76,17 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 41305 then
-		warnEnrage:Show()
-		timerEnrage:Start()
+		warnFrenzy:Show()
+		timerFrenzy:Start()
 	elseif args.spellId == 41431 and not args:IsDestTypePlayer() then
-		warnShield:Show()
 		timerNextShield:Start()
 		specWarnShield:Show(args.destName)
+		voiceShield:Play("dispelboss")
 	elseif args.spellId == 41376 then
 		warnSpite:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnSpite:Show()
+			voiceSpite:Play("defensive")
 		end
 		if self.Options.SpiteIcon then
 			self:SetAlphaIcon(0.5, args.destName)
@@ -94,7 +101,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnFixate:Show(args.destName)
 			self.vb.lastFixate = args.destName
 		end
-	elseif args.spellId == 41410 then
+	elseif args.spellId == 41410 and not args:IsDestTypePlayer() then
 		warnDeaden:Show(args.destName)
 		timerDeaden:Start(args.destName)
 	end
@@ -102,9 +109,9 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 41305 then
-		warnEnrageEnd:Show()
-		warnEnrageSoon:Schedule(27)
-		timerNextEnrage:Start()
+		warnFrenzyEnd:Show()
+		warnFrenzySoon:Schedule(35)
+		timerNextFrenzy:Start()
 	end
 end
 
@@ -145,19 +152,27 @@ function mod:SPELL_DAMAGE(_, _, _, _, _, _, _, _, spellId)
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
+--Boss Unit IDs stilln ot present in 7.2.5 so mouseover/target and antispam required
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 28819 and self:AntiSpam(2, 2) then--Submerge Visual
 		self:SendSync("PhaseEnd")
 	end
 end
 
+--Backup to no one targetting boss
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if msg == L.Phase1End or msg:find(L.Phase1End) or msg == L.Phase2End or msg:find(L.Phase2End) then
+		self:SendSync("PhaseEnd")
+	end
+end
+
 function mod:OnSync(msg)
 	if msg == "PhaseEnd" then
-		warnEnrageEnd:Cancel()
-		warnEnrageSoon:Cancel()
+		warnFrenzyEnd:Cancel()
+		warnFrenzySoon:Cancel()
 		warnMana:Cancel()
-		timerNextEnrage:Stop()
-		timerEnrage:Stop()
+		timerNextFrenzy:Stop()
+		timerFrenzy:Stop()
 		timerMana:Stop()
 		timerNextShield:Stop()
 		timerNextDeaden:Stop()

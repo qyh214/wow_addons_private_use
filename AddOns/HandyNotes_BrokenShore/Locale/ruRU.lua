@@ -63,7 +63,7 @@ L["What to display"] = "Что показывать"
 L["Wyrmtongue Chest"] = "Сундук змееустов"
 
 -- ToC
-L["Description"] = "Показывает точки в Расколотом берегу"
+L["Description"] = "Показывает точки на Расколотом берегу"
 L["Title"] = "HandyNotes - Расколотый берег"
 
 end

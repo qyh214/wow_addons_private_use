@@ -6,11 +6,9 @@
 ------------------------------------------------------------
 
 local GetAddOnMetadata = GetAddOnMetadata
-local _
 
 local L = CompactRaid:GetLocale("Artwork")
-if type(CompactRaid.CheckVersion) ~= "function" or not CompactRaid:CheckVersion("3.0", L["title"]) then return end
-local module = CompactRaid:CreateModule("Artwork", L["title"], "3.0", L["desc"], "account")
+local module = CompactRaid:CreateModule("Artwork", "ACCOUNT", L["title"], L["desc"])
 if not module then return end
 
 module.initialOff = 1

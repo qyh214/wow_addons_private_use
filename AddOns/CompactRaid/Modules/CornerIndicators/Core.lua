@@ -1,4 +1,4 @@
-------------------------------------------------------------
+﻿------------------------------------------------------------
 -- Core.lua
 --
 -- Abin
@@ -11,7 +11,7 @@ local _
 
 local L = CompactRaid:GetLocale("CornerIndicators")
 
-local module = CompactRaid:CreateModule("CornerIndicators", L["title"], "3.0", L["desc"], "talent")
+local module = CompactRaid:CreateModule("CornerIndicators", "CHAR", L["title"], L["desc"], 1)
 if not module then return end
 
 module.initialOff = 1
@@ -49,7 +49,7 @@ function module:OnRestoreDefaults()
 end
 
 function module:OnUnitChange(frame, displayedUnit, unit, inVehicle, class)
-	local visual = module:GetVisual(frame)
+	local visual = self:GetVisual(frame)
 	visual.unit = displayedUnit
 	if not displayedUnit then
 		visual:Hide()
@@ -64,7 +64,7 @@ function module:OnUnitChange(frame, displayedUnit, unit, inVehicle, class)
 end
 
 function module:OnRangeChange(frame, inRange)
-	local visual = module:GetVisual(frame)
+	local visual = self:GetVisual(frame)
 	visual.inRange = inRange
 	visual:UpdateAura()
 end

@@ -246,7 +246,7 @@ addon:RegisterOptionCallback("raidFilter", function(value)
 
 	elseif value == "ROLE" then
 		groupBy = "ROLE"
-		groupingOrder = "MAINTANK,MAINASSIST"
+		groupingOrder = "MAINTANK,MAINASSIST,TANK,HEALER,DAMAGER,NONE"
 
 	elseif value == "NAME" then
 		sortMethod = "NAME"

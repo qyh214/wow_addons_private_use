@@ -1,7 +1,16 @@
-$Id: ChangeLog.txt 62 2017-05-25 06:46:53Z arith $
+$Id: ChangeLog.txt 66 2017-06-13 10:18:01Z arith $
 
 Revision History:
 =================
+
+* v1.18 (Jun. 13, 2017)
+-----------------------
+- Added Unstable Nether Portal's locations
+
+* v1.17 (Jun. 08, 2017)
+-----------------------
+- Localization update:
+  - Russian (DogmatX)
 
 * v1.16 (May 25, 2017)
 -----------------------

@@ -10,7 +10,7 @@ local type = type
 local pairs = pairs
 local _
 
-local addonName, addon = ...
+local _, addon = ...
 local L = addon.L
 local templates = addon.optionTemplates
 
@@ -44,7 +44,7 @@ function frame:OnCategorySelect(category)
 		category.page:Hide()
 	end
 
-	LibMsgBox:Clear()
+	addon:PopupHide()
 end
 
 function frame:GetSelectedPage()
@@ -53,7 +53,7 @@ function frame:GetSelectedPage()
 end
 
 frame:SetScript("OnHide", function(self)
-	LibMsgBox:Clear()
+	addon:PopupHide()
 end)
 
 -------------------------------------------------------
@@ -560,7 +560,7 @@ local function UpdateMemoryUsage()
 	end
 
 	UpdateAddOnMemoryUsage()
-	monitorText:SetFormattedText(L["memory monitor info"], color, buttons, color, GetAddOnMemoryUsage(addonName))
+	monitorText:SetFormattedText(L["memory monitor info"], color, buttons, color, GetAddOnMemoryUsage(addon.name))
 end
 
 monitor:SetScript("OnShow", UpdateMemoryUsage)
@@ -573,14 +573,8 @@ monitor:SetScript("OnUpdate", function(self, elapsed)
 	end
 end)
 
-------------------------------------------------------------
--- Register slash command to toggle the option frame
-------------------------------------------------------------
-SLASH_COMPACTRAID1 = "/compactraid"
-SLASH_COMPACTRAID2 = "/craid"
-
-SlashCmdList["COMPACTRAID"] = function(cmd)
-	if cmd and strlower(cmd) == "debug" then
+function addon:OnSlashCmd(cmd)
+	if strlower(cmd) == "debug" then
 		addon:SetDebugMode(not addon:IsDebugMode())
 	else
 		frame:Toggle()

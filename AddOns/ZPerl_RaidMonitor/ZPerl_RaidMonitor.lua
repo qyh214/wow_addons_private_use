@@ -5,14 +5,14 @@
 local cast
 local MonUnits = {}			-- Fixed list of all monitor units
 local TableUnits = {}			-- Dynamic list of units indexed by raid id, changed on attr change
-XPerlRaidMonConfig = {}
-local config = XPerlRaidMonConfig
+ZPerlRaidMonConfig = {}
+local config = ZPerlRaidMonConfig
 
 local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 
-XPerl_SetModuleRevision("$Revision: 1053 $")
+XPerl_SetModuleRevision("$Revision: 1055 $")
 
 XPERL_RAIDMON_UNIT_WIDTH_MIN = 50
 XPERL_RAIDMON_UNIT_WIDTH_MAX = 150
@@ -320,7 +320,7 @@ end
 
 -- cast:VARIABLES_LOADED
 function cast:VARIABLES_LOADED()
-	config = XPerlRaidMonConfig
+	config = ZPerlRaidMonConfig
 	self:Vars()
 	self:DoButtons()
 	self:SetupAlpha()

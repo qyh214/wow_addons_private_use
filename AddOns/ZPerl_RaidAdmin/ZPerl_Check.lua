@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1053 $")
+XPerl_SetModuleRevision("$Revision: 1055 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -154,7 +154,6 @@ end
 
 -- XPerl_Check_Setup
 function XPerl_Check_Setup()
-
 	SlashCmdList["XPERLITEM"] = XPerl_ItemCheck
 	SLASH_XPERLITEM1 = "/xpitem"
 	SLASH_XPERLITEM2 = "/raitem"

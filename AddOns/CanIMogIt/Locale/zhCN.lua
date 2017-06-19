@@ -41,8 +41,6 @@ L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor
 L["Shows chat messages on login about the database scan."] = "在登录时显示关于数据库扫描的聊天信息。"
 L["Shows messages on login about the database scan."] = "登录时显示数据库扫描的信息。"
 L["Shows the icon directly on the item in your bag."] = "在背包物品上显示解锁状态的图标"
---Translation missing 
--- L["TEST IGNORE ME"] = ""
 L["Transmoggable Items Only"] = "只提示可幻化物品"
 L["Unknown Items Only"] = "只提示未解锁的物品"
 L["Updating appearances database."] = "更新外观数据库中"

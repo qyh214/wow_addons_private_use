@@ -45,7 +45,7 @@ addon:RegisterEventCallback("OnInitialize", function(db)
 end)
 
 function addon:CanGroupSwap()
-	if not addon.db.keepgroupstogether then
+	if not self.db.keepgroupstogether then
 		return nil, "CONFIG"
 	end
 
@@ -53,7 +53,7 @@ function addon:CanGroupSwap()
 		return nil, "COMBAT"
 	end
 
-	if not select(2, addon:GetGroupStats()) then
+	if not self.leadship then
 		return nil, "PRIV"
 	end
 

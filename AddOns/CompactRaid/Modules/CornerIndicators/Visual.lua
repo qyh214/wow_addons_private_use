@@ -17,7 +17,7 @@ local tinsert = tinsert
 local UnitBuff = UnitBuff
 local UnitDebuff = UnitDebuff
 
-local module = CompactRaid:FindModule("CornerIndicators")
+local module = CompactRaid:GetModule("CornerIndicators")
 if not module then return end
 
 module.indicators = {}

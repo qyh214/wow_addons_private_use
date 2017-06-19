@@ -5,63 +5,17 @@
 -- 2012/1/03
 ------------------------------------------------------------
 
-local _G = _G
 local type = type
-local GetLocale = GetLocale
-local DEFAULT_CHAT_FRAME = DEFAULT_CHAT_FRAME
-local tostring = tostring
-local strlower = strlower
 local CreateFrame = CreateFrame
 local format = format
 local pairs = pairs
-local GetSpecialization = GetSpecialization
 local ReloadUI = ReloadUI
+local wipe = wipe
+local InCombatLockdown = InCombatLockdown
+local _G = _G
 
 local _, addon = ...
 local L = addon.L
-
-local OBSOLETE_MODULES = { ["BarTextures"] = 1, ["RaidDebuff_Records"] = 1, ["PartyTargets"] = 1, ["Direction"] = 1 } -- Obsolete modules, reject them from registering
-local OBSOLETE_ADDONS = { ["CompactRaid_ClickSets"] = 1, ["CompactRaid_PartyTargets"] = 1, ["CompactRaid_RaidDebuff_WotLK"] = 1, ["CompactRaid_RaidDebuff_CTM"] = 1, ["CompactRaid_Direction"] = 1 }
-
-local modules = {}
-local moduleLocales = {}
-
-function addon:RegisterLocale(name, locale, data)
-	if type(name) == "string" and type(data) == "table" and type(locale) == "string" then
-		if not moduleLocales[name] then
-			moduleLocales[name] = {}
-		end
-
-		if not moduleLocales[name][locale] then
-			moduleLocales[name][locale] = data
-		end
-	end
-end
-
-function addon:GetLocale(name, locale)
-	local data = moduleLocales[name]
-	if data then
-		if type(locale) ~= "string" then
-			locale = GetLocale()
-		end
-
-		return data[locale] or data.enUS
-	end
-end
-
-local function Print(module, msg, r, g, b)
-	if msg then
-		local header = addon.name
-		if type(module) == "table" then
-			header = header.."-"..(module.title or module.name or UNKNOWN)
-		end
-		DEFAULT_CHAT_FRAME:AddMessage("|cffffff78"..header..":|r "..tostring(msg), r or 0.5, g or 0.75, b or 1) -- All modules use uniformed message color, please!
-	end
-end
-
-function addon:FindModule(name)
-	return modules[name]
-end
 
 local function Module_GetVisual(self, frame)
 	return self.__visualFrames[frame]
@@ -69,144 +23,6 @@ end
 
 local function Module_EnumVisuals(self, object, func, ...)
 	return addon._EnumFrames(self.__visualFrames, object, func, ...)
-end
-
-local function Module_IsDualTalentsSynced(self)
-	return self.chardb.talent_Synced and "talent_Synced" or nil
-end
-
-local function Module_IsEnabled(self)
-	return self._moduleEnabled
-end
-
-local function Module_ShowVisuals(self, show)
-	Module_EnumVisuals(self, show and "Show" or "Hide")
-end
-
-local function Module_HasFlag(self, flag)
-	if type(flag) == "string" then
-		local result = strfind(self.__flags, flag)
-		return result
-	end
-end
-
--- Create a new module, must be called before "PLAYER_LOGIN"
-function addon:CreateModule(name, title, version, desc, flags, parent)
-	if type(name) ~= "string" or modules[name] or OBSOLETE_MODULES[name] then
-		return
-	end
-
-	if type(flags) == "string" then
-		flags = strlower(flags)
-	else
-		flags = ""
-	end
-
-	local module = {}
-	module.name = name
-	module.title = title or name
-	module.version = version
-	module.desc = desc
-	module.parent = parent
-	module.__visualFrames = {}
-	module.__flags = flags
-
-	module.Print = Print
-	module.pcall = addon.pcall
-	module.RequestRestoreDefaults = addon.RestoreModuleDefaults
-	module.CombatSafeCall = addon.CombatSafeCall
-	module.CancelPendingCombatSafeCall = addon.CancelPendingCombatSafeCall
-	module.IsEnabled = Module_IsEnabled
-	module.IsDualTalentsSynced = Module_IsDualTalentsSynced
-	module.GetVisual = Module_GetVisual
-	module.ShowVisuals = Module_ShowVisuals
-	module.EnumVisuals = Module_EnumVisuals
-	module.EnumUnitFrames = addon.EnumUnitFrames
-	module.CloneTable = addon.CloneTable
-	module.HasFlag = Module_HasFlag
-
-	EmbedEventObject(module)
-	modules[name] = module
-	self:BroadcastEvent("OnModuleCreated", module)
-	return module
-end
-
-function addon:EnumModules(func, ...)
-	if type(func) == "function" then
-		local name, module
-		for name, module in pairs(modules) do
-			func(name, module, ...)
-		end
-	end
-end
-
-function addon:CallModuleFunc(module, func, ...)
-	func = module and module[func]
-	if type(func) == "function" then
-		-- Why pcall? One module's error won't halt the entire process. I do need a way to let the module know
-		-- it's encountering errors, though, so just print out the error message. You got a better idea?
-		module:pcall(func, module, ...)
-	end
-end
-
-function addon:CallAllModulesFunc(func, ...)
-	local module
-	for _, module in pairs(modules) do
-		addon:CallModuleFunc(module, func, ...)
-	end
-end
-
-------------------------------------------------------------
--- Internal module events handling
-------------------------------------------------------------
-
-local function CopyDefaultDB(module, key, db, ...)
-	if type(db) ~= "table" then
-		return
-	end
-
-	local defaults
-	if type(module.GetDefaultDB) == "function" then
-		defaults = module:GetDefaultDB(key, ...)
-	end
-
-	wipe(db)
-	if defaults then
-		addon:CloneTable(defaults, db)
-	end
-end
-
-local function EnumModuleProc_OnTalentSwitch(name, module, spec, init)
-	if not module:IsEnabled() or not module:HasFlag("talent") then
-		return
-	end
-
-	if Module_IsDualTalentsSynced(module) then
-		if init then
-			module.talentdb = module.chardb.talent_Synced
-			module:pcall(module.OnTalentGroupChange, module, "sync", module.talentdb)
-		end
-
-		if module.optionPage then
-			module.optionPage:SetSpecSymbol(0)
-		end
-	else
-		local key = "talent"..spec
-		local firstTime
-		local talentdb = module.chardb[key]
-		if type(module.chardb[key]) ~= "table" then
-			firstTime = 1
-			talentdb = {}
-			module.chardb[key] = talentdb
-			CopyDefaultDB(module, "talent", talentdb, spec)
-		end
-		module.talentdb = talentdb
-		module:pcall(module.OnTalentGroupChange, module, spec, talentdb, firstTime)
-
-		if module.optionPage then
-			module.optionPage:SetSpecSymbol()
-		end
-	end
 end
 
 local function VisualFrame_GetUnitFrame(self)
@@ -228,130 +44,205 @@ local function OnCreateVisualEnumProc(unitFrame, module, dynamic)
 end
 
 local function OnUpdateNotifyEnumProc(frame, module)
-	addon:CallModuleFunc(module, "OnUnitChange", frame, frame:GetUnitInfo())
-	addon:CallModuleFunc(module, "OnUnitFlagChange", frame, frame:GetUnitFlag())
-	addon:CallModuleFunc(module, "OnRangeChange", frame, frame:IsInRange())
-	addon:CallModuleFunc(module, "OnRoleIconChange", frame, frame:GetRoleIconStatus())
-	addon:CallModuleFunc(module, "OnRaidIconChange", frame, frame:GetRaidIconStatus())
-	addon:CallModuleFunc(module, "OnAurasChange", frame, frame:GetUnitInfo())
+	addon:CallModule(module, "OnUnitChange", frame, frame:GetUnitInfo())
+	addon:CallModule(module, "OnUnitFlagChange", frame, frame:GetUnitFlag())
+	addon:CallModule(module, "OnRangeChange", frame, frame:IsInRange())
+	addon:CallModule(module, "OnRoleIconChange", frame, frame:GetRoleIconStatus())
+	addon:CallModule(module, "OnRaidIconChange", frame, frame:GetRaidIconStatus())
+	addon:CallModule(module, "OnAurasChange", frame, frame:GetUnitInfo())
 end
 
-local function OnEnableModule(module)
-	if type(module.OnCreateVisual) == "function" then
-		addon:EnumUnitFrames(OnCreateVisualEnumProc, module)
-	end
-
-	module._moduleEnabled = 1
-	addon:CallModuleFunc(module, "OnEnable")
-	EnumModuleProc_OnTalentSwitch(module.name, module, GetSpecialization(), 1)
-	addon:EnumUnitFrames(OnUpdateNotifyEnumProc, module)
-end
-
-local function EnumModuleProc_OnInitialize(name, module, db, chardb)
-	if module._moduleInitDone then
-		return
-	end
-
-	local firstTime, accountdb, playerdb
-	accountdb = db[name]
-	if module:HasFlag("account") then
-		if type(accountdb) ~= "table" then
-			firstTime = 1
-			accountdb = {}
-			db[name] = accountdb
-			CopyDefaultDB(module, "account", accountdb)
-		end
-	else
-		db[name] = nil
-	end
-
-	playerdb = chardb[name]
-	if type(playerdb) ~= "table" then
-		firstTime = 1
-		playerdb = {}
-		chardb[name] = playerdb
-		CopyDefaultDB(module, "char", playerdb)
-	end
-
-	module.db = accountdb
-	module.chardb = playerdb
-
-	addon:CallModuleFunc(module, "OnInitialize", accountdb, playerdb, firstTime)
-	module._moduleInitDone = 1
-
-	addon:BroadcastEvent("OnModuleInitialize", module, accountdb, playerdb, firstTime)
-
-	if firstTime and module.initialOff then
-		playerdb.disabled = 1
-	end
-
-	if not playerdb.disabled then
-		OnEnableModule(module)
-		addon:BroadcastEvent("OnModuleEnable", module)
-	end
-end
-
-addon:RegisterEventCallback("SyncDaulTalents", function(module, enable)
-	if not module or not module:HasFlag("talent") or not module:IsDualTalentsSynced() == not enable then
-		return
-	end
-
-	if enable then
-		local syncdb = module.chardb.talent_Synced
-		if type(syncdb) ~= "table" then
-			syncdb = addon:CloneTable(module.talentdb)
-			module.chardb.talent_Synced = syncdb
-		end
-
-		module.talentdb = syncdb
-		module:Print(L["sync dual-talent enabled"])
-		addon:BroadcastEvent("OnModuleSync", module)
-	else
-		local spec = GetSpecialization()
-		local specdb = module.chardb["talent"..spec]
-		if type(specdb) ~= "table" then
-			specdb = addon:CloneTable(module.talentdb)
-			module.chardb["talent"..spec] = specdb
-		end
-
-		module.talentdb = specdb
-		module.chardb.talent_Synced = nil
-		module:Print(L["sync dual-talent disabled"])
-		addon:BroadcastEvent("OnModuleUnsync", module)
-	end
-end)
-
-addon:RegisterEventCallback("EnableModule", function(module, enable)
-	if not module or not module:IsEnabled() == not enable then
-		return
-	end
-
-	if enable then
-		module.chardb.disabled = nil
-		OnEnableModule(module)
-		module:Print(L["module enabled"])
-		addon:BroadcastEvent("OnModuleEnable", module)
-	else
-		module.chardb.disabled = 1
-		module._moduleEnabled = nil
-		module:UnregisterAllEvents()
-		module:UnregisterTick()
-		addon:CallModuleFunc(module, "OnDisable")
-		Module_ShowVisuals(module)
-		module:Print(L["module disabled"])
-		addon:BroadcastEvent("OnModuleDisable", module)
-	end
-end)
-
-local function EnumModuleProc_OnUnitNotify(name, module, frame, func, ...)
+local function EnumModuleProc_OnUnitNotify(module, frame, func, ...)
 	if module:IsEnabled() then
-		addon:CallModuleFunc(module, func, frame, ...)
+		addon:CallModule(module, func, frame, ...)
 	end
 end
 
 addon:RegisterEventCallback("OnUnitNotify", function(frame, func, ...)
 	addon:EnumModules(EnumModuleProc_OnUnitNotify, frame, func, ...)
 end)
+
+local function CopyDefaultDB(module, key, db, ...)
+	if type(db) ~= "table" then
+		return
+	end
+
+	local defaults
+	if type(module.GetDefaultDB) == "function" then
+		defaults = module:GetDefaultDB(key, ...)
+	end
+
+	wipe(db)
+	if defaults then
+		addon.tcopy(defaults, db)
+	end
+end
+
+local function Module_IsSpecsSynced(self)
+	return self.spec and self.chardb.talent_Synced and "talent_Synced" or nil
+end
+
+local function Module_SyncSpecs(self)
+	if not self.spec then
+		return
+	end
+
+	local syncdb = self.chardb.talent_Synced
+	if type(syncdb) ~= "table" then
+		syncdb = addon.tcopy(self.talentdb)
+		self.chardb.talent_Synced = syncdb
+	end
+
+	self.talentdb = syncdb
+	self:Print(L["sync dual-talent enabled"])
+	addon:BroadcastEvent("OnModuleSync", self)
+end
+
+local function Module_UnsyncSpecs(self)
+	if not self.spec then
+		return
+	end
+
+	local specdb = self.chardb["talent"..addon.spec]
+	if type(specdb) ~= "table" then
+		specdb = addon.tcopy(self.talentdb)
+		self.chardb["talent"..addon.spec] = specdb
+	end
+
+	self.talentdb = specdb
+	self.chardb.talent_Synced = nil
+	self:Print(L["sync dual-talent disabled"])
+	addon:BroadcastEvent("OnModuleUnsync", self)
+end
+
+local function Module_ShowVisuals(self, show)
+	Module_EnumVisuals(self, show and "Show" or "Hide")
+end
+
+local function Module_IsEnabled(self)
+	if self.dbType == "ACCOUNT" then
+		return not self.db.disabled
+	elseif self.dbType == "CHAR" then
+		return not self.chardb.disabled
+	else
+		return true
+	end
+end
+
+local function Module_Enable(self, force)
+	if not force and self:IsEnabled() then
+		return
+	end
+
+	if self.dbType == "ACCOUNT" then
+		self.db.disabled = nil
+	elseif self.dbType == "CHAR" then
+		self.chardb.disabled = nil
+	end
+
+	if type(self.OnCreateVisual) == "function" then
+		addon:EnumUnitFrames(OnCreateVisualEnumProc, self)
+	end
+
+	if type(self.OnEnable) == "function" then
+		self:OnEnable()
+	end
+
+	if self.spec then
+		self:OnSpecChange(addon.spec)
+	end
+
+	addon:EnumUnitFrames(OnUpdateNotifyEnumProc, self)
+
+	self:Print(L["module enabled"])
+	addon:BroadcastEvent("OnModuleEnable", self)
+end
+
+local function Module_Disable(self)
+	if not self:IsEnabled() then
+		return
+	end
+
+	if self.dbType == "ACCOUNT" then
+		self.db.disabled = 1
+	elseif self.dbType == "CHAR" then
+		self.chardb.disabled = 1
+	end
+
+	self:UnregisterAllEvents()
+	self:UnregisterTick()
+
+	Module_ShowVisuals(self)
+
+	if type(self.OnDisable) == "function" then
+		self:OnDisable()
+	end
+
+	self:Print(L["module disabled"])
+	addon:BroadcastEvent("OnModuleDisable", self)
+end
+
+local function Module_OnSpecChange(self, spec)
+	if not self.spec then
+		return
+	end
+
+	if Module_IsSpecsSynced(self) then
+		self.talentdb = self.chardb.talent_Synced
+		self:pcall(self.OnTalentGroupChange, self, "sync", self.talentdb)
+
+		if self.optionPage then
+			self.optionPage:SetSpecSymbol(0)
+		end
+	else
+		local key = "talent"..spec
+		local firstTime
+		local talentdb = self.chardb[key]
+		if type(self.chardb[key]) ~= "table" then
+			firstTime = 1
+			talentdb = {}
+			self.chardb[key] = talentdb
+			CopyDefaultDB(self, "talent", talentdb, spec)
+		end
+		self.talentdb = talentdb
+		self:pcall(self.OnTalentGroupChange, self, spec, talentdb, firstTime)
+
+		if self.optionPage then
+			self.optionPage:SetSpecSymbol()
+		end
+	end
+end
+
+function addon:OnCreateModule(module, key, title, desc, spec, secure)
+	module.name = key
+	module.title = title or key
+	module.desc = desc
+	module.spec = spec
+	module.secure = secure
+	module.__visualFrames = {}
+
+	module.Print = self.Print
+	module.pcall = self.pcall
+	module.RequestRestoreDefaults = self.RestoreModuleDefaults
+	module.IsSpecsSynced = Module_IsSpecsSynced
+	module.SyncSpecs = Module_SyncSpecs
+	module.UnsyncSpecs = Module_UnsyncSpecs
+	module.GetVisual = Module_GetVisual
+	module.ShowVisuals = Module_ShowVisuals
+	module.EnumVisuals = Module_EnumVisuals
+	module.EnumUnitFrames = self.EnumUnitFrames
+	module.OnSpecChange = Module_OnSpecChange
+
+	module.IsEnabled = Module_IsEnabled
+	module.Enable = Module_Enable
+	module.Disable = Module_Disable
+
+	self:BroadcastEvent("OnModuleCreated", module)
+end
+
+------------------------------------------------------------
+-- Internal module events handling
+------------------------------------------------------------
 
 local function OnDynamicUnitFrameCreated(unitFrame)
 	local module
@@ -366,64 +257,39 @@ local function OnDynamicUnitFrameCreated(unitFrame)
 	end
 end
 
-addon:RegisterEventCallback("OnPlayerLogin", function(db, chardb)
-	-- Do one-time initializtion on all modules
-	addon:EnumModules(EnumModuleProc_OnInitialize, db.modules, chardb.modules)
-	addon.CreateModule = nil
-	addon:BroadcastEvent("OnModulesInitDone")
-
-	-- Remove obsoleted data
-	local obsoleted
-	for obsoleted in pairs(OBSOLETE_MODULES) do
-		db.modules[obsoleted] = nil
-		chardb.modules[obsoleted] = nil
-	end
-
-	-- Disable obsoleted addons
-	for obsoleted in pairs(OBSOLETE_ADDONS) do
-		DisableAddOn(obsoleted)
-	end
-
-	-- Unit frames created after this point are all dynamic
+function addon:OnModulesInitDone()
+	addon:CallAllEnabledModules("Enable", 1)
 	addon:RegisterEventCallback("UnitButtonCreated", OnDynamicUnitFrameCreated)
-end)
-
-addon:RegisterEventCallback("OnTalentSwitch", function(spec)
-	addon:EnumModules(EnumModuleProc_OnTalentSwitch, spec)
-end)
-
-------------------------------------------------------------
--- For modules' "Restore Defaults" features, new feature added in 0.2 beta
-------------------------------------------------------------
+end
 
 ------------------------------------------------------------
 -- For modules' "Restore Defaults" features, new feature added in 0.2 beta
 ------------------------------------------------------------
 
 local function OnConfirmRestore(module)
-	if InCombatLockdown() and module:HasFlag("secure") then
+	if module.secure and InCombatLockdown() then
 		module:Print(L["cannot cange these settings while in combat"], 1, 0, 0)
 		return
 	end
 
 	if module ~= addon:GetCoreModule() then
-		if module:HasFlag("account") then
+		if module.dbType == "ACCOUNT" then
 			CopyDefaultDB(module, "account", module.db)
-		end
-
-		local talentKey, talentdb
-		if module:HasFlag("talent") and module.talentdb then
-			talentKey = module:IsDualTalentsSynced(module)
-			if not talentKey then
-				talentKey = "talent"..(GetSpecialization() or 1)
+		elseif module.dbType == "CHAR" then
+			local talentKey, talentdb
+			if module.spec and module.talentdb then
+				talentKey = module:IsSpecsSynced()
+				if not talentKey then
+					talentKey = "talent"..(addon.spec or 1)
+				end
+				talentdb = module.talentdb
+				CopyDefaultDB(module, "talent", talentdb)
 			end
-			talentdb = module.talentdb
-			CopyDefaultDB(module, "talent", talentdb)
-		end
 
-		CopyDefaultDB(module, "char", module.chardb)
-		if talentKey then
-			module.chardb[talentKey] = talentdb
+			CopyDefaultDB(module, "char", module.chardb)
+			if talentKey then
+				module.chardb[talentKey] = talentdb
+			end
 		end
 	end
 
@@ -442,13 +308,6 @@ end
 function addon:RestoreModuleDefaults(module)
 	if type(module) == "table" then
 		local text = format(module.requestReload and L["restore defaults text reloadui"] or L["restore defaults text"], module.title or module.name or UNKNOWN)
-		LibMsgBox:Confirm(text, "MB_OKCANCEL", OnConfirmRestore, module)
+		addon:PopupShowConfirm(text, OnConfirmRestore, module)
 	end
 end
-
-------------------------------------------------------------
--- Obsoleted functions, only present in order not to generate lua errors
-------------------------------------------------------------
-
-function addon:RegisterModule() end
-function addon:GetModule() end

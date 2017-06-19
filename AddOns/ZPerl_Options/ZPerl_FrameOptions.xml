@@ -16130,7 +16130,7 @@
 						<Scripts>
 							<OnLoad>
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_ENABLE")
-								self.XconfigVars = "XPerlRaidMonConfig"
+								self.XconfigVars = "ZPerlRaidMonConfig"
 								self.XconfigVar = "enabled"
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "Priest")
@@ -16178,10 +16178,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_PRIEST")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(XPerlRaidMonConfig.classes.PRIEST)
+								self:SetChecked(ZPerlRaidMonConfig.classes.PRIEST)
 							</OnShow>
 							<OnClick>
-								XPerlRaidMonConfig.classes.PRIEST = not XPerlRaidMonConfig.classes.PRIEST
+								ZPerlRaidMonConfig.classes.PRIEST = not ZPerlRaidMonConfig.classes.PRIEST
 								XPerl_RaidMonitor_Frame:Init()
 							</OnClick>
 						</Scripts>
@@ -16203,10 +16203,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_DRUID")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(XPerlRaidMonConfig.classes.DRUID)
+								self:SetChecked(ZPerlRaidMonConfig.classes.DRUID)
 							</OnShow>
 							<OnClick>
-								XPerlRaidMonConfig.classes.DRUID = not XPerlRaidMonConfig.classes.DRUID
+								ZPerlRaidMonConfig.classes.DRUID = not ZPerlRaidMonConfig.classes.DRUID
 								XPerl_RaidMonitor_Frame:Init()
 							</OnClick>
 						</Scripts>
@@ -16228,10 +16228,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_SHAMAN")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(XPerlRaidMonConfig.classes.SHAMAN)
+								self:SetChecked(ZPerlRaidMonConfig.classes.SHAMAN)
 							</OnShow>
 							<OnClick>
-								XPerlRaidMonConfig.classes.SHAMAN = not XPerlRaidMonConfig.classes.SHAMAN
+								ZPerlRaidMonConfig.classes.SHAMAN = not ZPerlRaidMonConfig.classes.SHAMAN
 								XPerl_RaidMonitor_Frame:Init()
 							</OnClick>
 						</Scripts>
@@ -16253,10 +16253,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_PALADIN")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(XPerlRaidMonConfig.classes.PALADIN)
+								self:SetChecked(ZPerlRaidMonConfig.classes.PALADIN)
 							</OnShow>
 							<OnClick>
-								XPerlRaidMonConfig.classes.PALADIN = not XPerlRaidMonConfig.classes.PALADIN
+								ZPerlRaidMonConfig.classes.PALADIN = not ZPerlRaidMonConfig.classes.PALADIN
 								XPerl_RaidMonitor_Frame:Init()
 							</OnClick>
 						</Scripts>
@@ -16278,10 +16278,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_MAGE")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(XPerlRaidMonConfig.classes.MAGE)
+								self:SetChecked(ZPerlRaidMonConfig.classes.MAGE)
 							</OnShow>
 							<OnClick>
-								XPerlRaidMonConfig.classes.MAGE = not XPerlRaidMonConfig.classes.MAGE
+								ZPerlRaidMonConfig.classes.MAGE = not ZPerlRaidMonConfig.classes.MAGE
 								XPerl_RaidMonitor_Frame:Init()
 							</OnClick>
 						</Scripts>
@@ -16303,10 +16303,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_WARLOCK")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(XPerlRaidMonConfig.classes.WARLOCK)
+								self:SetChecked(ZPerlRaidMonConfig.classes.WARLOCK)
 							</OnShow>
 							<OnClick>
-								XPerlRaidMonConfig.classes.WARLOCK = not XPerlRaidMonConfig.classes.WARLOCK
+								ZPerlRaidMonConfig.classes.WARLOCK = not ZPerlRaidMonConfig.classes.WARLOCK
 								XPerl_RaidMonitor_Frame:Init()
 							</OnClick>
 						</Scripts>
@@ -16328,10 +16328,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_HUNTER")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(XPerlRaidMonConfig.classes.HUNTER)
+								self:SetChecked(ZPerlRaidMonConfig.classes.HUNTER)
 							</OnShow>
 							<OnClick>
-								XPerlRaidMonConfig.classes.HUNTER = not XPerlRaidMonConfig.classes.HUNTER
+								ZPerlRaidMonConfig.classes.HUNTER = not ZPerlRaidMonConfig.classes.HUNTER
 								XPerl_RaidMonitor_Frame:Init()
 							</OnClick>
 						</Scripts>
@@ -16353,10 +16353,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_ROGUE")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(XPerlRaidMonConfig.classes.ROGUE)
+								self:SetChecked(ZPerlRaidMonConfig.classes.ROGUE)
 							</OnShow>
 							<OnClick>
-								XPerlRaidMonConfig.classes.ROGUE = not XPerlRaidMonConfig.classes.ROGUE
+								ZPerlRaidMonConfig.classes.ROGUE = not ZPerlRaidMonConfig.classes.ROGUE
 								XPerl_RaidMonitor_Frame:Init()
 							</OnClick>
 						</Scripts>
@@ -16378,10 +16378,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_WARRIOR")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(XPerlRaidMonConfig.classes.WARRIOR)
+								self:SetChecked(ZPerlRaidMonConfig.classes.WARRIOR)
 							</OnShow>
 							<OnClick>
-								XPerlRaidMonConfig.classes.WARRIOR = not XPerlRaidMonConfig.classes.WARRIOR
+								ZPerlRaidMonConfig.classes.WARRIOR = not ZPerlRaidMonConfig.classes.WARRIOR
 								XPerl_RaidMonitor_Frame:Init()
 							</OnClick>
 						</Scripts>
@@ -16403,10 +16403,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_DEATHKNIGHT")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(XPerlRaidMonConfig.classes.DEATHKNIGHT)
+								self:SetChecked(ZPerlRaidMonConfig.classes.DEATHKNIGHT)
 							</OnShow>
 							<OnClick>
-								XPerlRaidMonConfig.classes.DEATHKNIGHT = not XPerlRaidMonConfig.classes.DEATHKNIGHT
+								ZPerlRaidMonConfig.classes.DEATHKNIGHT = not ZPerlRaidMonConfig.classes.DEATHKNIGHT
 								XPerl_RaidMonitor_Frame:Init()
 							</OnClick>
 						</Scripts>
@@ -16428,10 +16428,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_MONK")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(XPerlRaidMonConfig.classes.MONK)
+								self:SetChecked(ZPerlRaidMonConfig.classes.MONK)
 							</OnShow>
 							<OnClick>
-								XPerlRaidMonConfig.classes.MONK = not XPerlRaidMonConfig.classes.MONK
+								ZPerlRaidMonConfig.classes.MONK = not ZPerlRaidMonConfig.classes.MONK
 								XPerl_RaidMonitor_Frame:Init()
 							</OnClick>
 						</Scripts>
@@ -16453,10 +16453,10 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_DEMONHUNTER")
 							</OnLoad>
 							<OnShow>
-								self:SetChecked(XPerlRaidMonConfig.classes.DEMONHUNTER)
+								self:SetChecked(ZPerlRaidMonConfig.classes.DEMONHUNTER)
 							</OnShow>
 							<OnClick>
-								XPerlRaidMonConfig.classes.DEMONHUNTER = not XPerlRaidMonConfig.classes.DEMONHUNTER
+								ZPerlRaidMonConfig.classes.DEMONHUNTER = not ZPerlRaidMonConfig.classes.DEMONHUNTER
 								XPerl_RaidMonitor_Frame:Init()
 							</OnClick>
 						</Scripts>
@@ -16482,13 +16482,13 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_LOWMANA")
 							</OnLoad>
 							<OnShow>
-								self:SetValue(XPerlRaidMonConfig.LowMana)
+								self:SetValue(ZPerlRaidMonConfig.LowMana)
 							</OnShow>
 							<OnValueChanged>
-								if (XPerlRaidMonConfig.LowMana ~= value) then
-									XPerlRaidMonConfig.LowMana = value
+								if (ZPerlRaidMonConfig.LowMana ~= value) then
+									ZPerlRaidMonConfig.LowMana = value
 								end
-								_G[self:GetName().."Current"]:SetText(XPerlRaidMonConfig.LowMana)
+								_G[self:GetName().."Current"]:SetText(ZPerlRaidMonConfig.LowMana)
 							</OnValueChanged>
 						</Scripts>
 					</Slider>
@@ -16513,13 +16513,13 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_HIGHMANA")
 							</OnLoad>
 							<OnShow>
-								self:SetValue(XPerlRaidMonConfig.HighMana)
+								self:SetValue(ZPerlRaidMonConfig.HighMana)
 							</OnShow>
 							<OnValueChanged>
-								if (XPerlRaidMonConfig.HighMana ~= value) then
-									XPerlRaidMonConfig.HighMana = value
+								if (ZPerlRaidMonConfig.HighMana ~= value) then
+									ZPerlRaidMonConfig.HighMana = value
 								end
-								_G[self:GetName().."Current"]:SetText(XPerlRaidMonConfig.HighMana)
+								_G[self:GetName().."Current"]:SetText(ZPerlRaidMonConfig.HighMana)
 							</OnValueChanged>
 						</Scripts>
 					</Slider>
@@ -16544,15 +16544,15 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_UNITWIDTH")
 							</OnLoad>
 							<OnShow>
-								self:SetValue(XPerlRaidMonConfig.UnitWidth)
+								self:SetValue(ZPerlRaidMonConfig.UnitWidth)
 							</OnShow>
 							<OnValueChanged>
-								if (XPerlRaidMonConfig.UnitWidth ~= value) then
-									XPerlRaidMonConfig.UnitWidth = value
+								if (ZPerlRaidMonConfig.UnitWidth ~= value) then
+									ZPerlRaidMonConfig.UnitWidth = value
 									XPerl_RaidMonitor_Frame:SetUnitSizes()
 									XPerl_RaidMonitor_Frame:SetFrameSizes()
 								end
-								_G[self:GetName().."Current"]:SetText(XPerlRaidMonConfig.UnitWidth)
+								_G[self:GetName().."Current"]:SetText(ZPerlRaidMonConfig.UnitWidth)
 							</OnValueChanged>
 						</Scripts>
 					</Slider>
@@ -16577,15 +16577,15 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_UNITHEIGHT")
 							</OnLoad>
 							<OnShow>
-								self:SetValue(XPerlRaidMonConfig.UnitHeight)
+								self:SetValue(ZPerlRaidMonConfig.UnitHeight)
 							</OnShow>
 							<OnValueChanged>
-								if (XPerlRaidMonConfig.UnitHeight ~= value) then
-									XPerlRaidMonConfig.UnitHeight = value
+								if (ZPerlRaidMonConfig.UnitHeight ~= value) then
+									ZPerlRaidMonConfig.UnitHeight = value
 									XPerl_RaidMonitor_Frame:SetUnitSizes()
 									XPerl_RaidMonitor_Frame:SetFrameSizes()
 								end
-								_G[self:GetName().."Current"]:SetText(XPerlRaidMonConfig.UnitHeight)
+								_G[self:GetName().."Current"]:SetText(ZPerlRaidMonConfig.UnitHeight)
 							</OnValueChanged>
 						</Scripts>
 					</Slider>
@@ -16610,15 +16610,15 @@
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_TARGETWIDTH")
 							</OnLoad>
 							<OnShow>
-								self:SetValue(XPerlRaidMonConfig.TargetWidth)
+								self:SetValue(ZPerlRaidMonConfig.TargetWidth)
 							</OnShow>
 							<OnValueChanged>
-								if (XPerlRaidMonConfig.TargetWidth ~= value) then
-									XPerlRaidMonConfig.TargetWidth = value
+								if (ZPerlRaidMonConfig.TargetWidth ~= value) then
+									ZPerlRaidMonConfig.TargetWidth = value
 									XPerl_RaidMonitor_Frame:SetUnitSizes()
 									XPerl_RaidMonitor_Frame:SetFrameSizes()
 								end
-								_G[self:GetName().."Current"]:SetText(XPerlRaidMonConfig.TargetWidth)
+								_G[self:GetName().."Current"]:SetText(ZPerlRaidMonConfig.TargetWidth)
 							</OnValueChanged>
 						</Scripts>
 					</Slider>
@@ -16638,7 +16638,7 @@
 							<OnLoad>
 								XPerl_Options_RegisterProtected(self)
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_GROWUP")
-								self.configBase = "XPerlRaidMonConfig"
+								self.configBase = "ZPerlRaidMonConfig"
 								self.configIndex = "GrowUp"
 								self.configClick = function()
 									XPerl_RaidMonitor_Frame:Init()
@@ -16659,7 +16659,7 @@
 						<Scripts>
 							<OnLoad>
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_TOOLTIPS")
-								self.configBase = "XPerlRaidMonConfig"
+								self.configBase = "ZPerlRaidMonConfig"
 								self.configIndex = "Tooltips"
 							</OnLoad>
 						</Scripts>
@@ -16685,14 +16685,14 @@
 								XPerl_SliderSetup(self)
 							</OnLoad>
 							<OnShow>
-								self:SetValue(floor(100 * XPerlRaidMonConfig.Alpha + 0.5))
+								self:SetValue(floor(100 * ZPerlRaidMonConfig.Alpha + 0.5))
 							</OnShow>
 							<OnValueChanged>
-								if (floor(100 * XPerlRaidMonConfig.Alpha + 0.5) ~= value) then
-									XPerlRaidMonConfig.Alpha = value / 100
+								if (floor(100 * ZPerlRaidMonConfig.Alpha + 0.5) ~= value) then
+									ZPerlRaidMonConfig.Alpha = value / 100
 									XPerl_RaidMonitor_Frame:SetupAlpha()
 								end
-								_G[self:GetName().."Current"]:SetText(floor(100 * XPerlRaidMonConfig.Alpha + 0.5).."%")
+								_G[self:GetName().."Current"]:SetText(floor(100 * ZPerlRaidMonConfig.Alpha + 0.5).."%")
 							</OnValueChanged>
 						</Scripts>
 					</Slider>
@@ -16717,14 +16717,14 @@
 								XPerl_SliderSetup(self)
 							</OnLoad>
 							<OnShow>
-								self:SetValue(floor(100 * XPerlRaidMonConfig.BackgroundAlpha + 0.5))
+								self:SetValue(floor(100 * ZPerlRaidMonConfig.BackgroundAlpha + 0.5))
 							</OnShow>
 							<OnValueChanged>
-								if (floor(100 * XPerlRaidMonConfig.BackgroundAlpha + 0.5) ~= value) then
-									XPerlRaidMonConfig.BackgroundAlpha = value / 100
+								if (floor(100 * ZPerlRaidMonConfig.BackgroundAlpha + 0.5) ~= value) then
+									ZPerlRaidMonConfig.BackgroundAlpha = value / 100
 									XPerl_RaidMonitor_Frame:SetupAlpha()
 								end
-								_G[self:GetName().."Current"]:SetText(floor(100 * XPerlRaidMonConfig.BackgroundAlpha + 0.5).."%")
+								_G[self:GetName().."Current"]:SetText(floor(100 * ZPerlRaidMonConfig.BackgroundAlpha + 0.5).."%")
 							</OnValueChanged>
 						</Scripts>
 					</Slider>

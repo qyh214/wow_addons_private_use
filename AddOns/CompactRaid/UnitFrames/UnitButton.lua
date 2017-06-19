@@ -76,13 +76,12 @@ function addon:NumButtons()
 	return #unitFrames
 end
 
-local modulesInitDone
-addon:RegisterEventCallback("OnModulesInitDone", function()
-	modulesInitDone = 1
-end)
+function addon:GetButton(index)
+	return unitFrames[index]
+end
 
 local function BroadcastUnitNotify(frame, event, ...)
-	if modulesInitDone then
+	if addon:Initialized() then
 		addon:BroadcastEvent("OnUnitNotify", frame, event, ...)
 	end
 end
@@ -722,7 +721,9 @@ local GHOST_AURA, _, GHOST_TEXTURE = GetSpellInfo(8326)
 local DEATH_TEXTURE = "Interface\\TargetingFrame\\UI-TargetingFrame-Skull"
 local SPIRIT_OF_REDEMPTION = GetSpellInfo(27827)
 local SPIRIT_TEXTURE = "Interface\\Icons\\Spell_Holy_GuardianSpirit"
-local CAUTERIZE_AURA, _, CAUTERIZE_TEXTURE = GetSpellInfo(87023)
+local CAUTERIZE_AURA, _, CAUTERIZE_TEXTURE = GetSpellInfo(87023) -- mage
+local PURGATORY_AURA, _, PURGATORY_TEXTURE = GetSpellInfo(116888) -- death knight
+local CHEATING_DEATH_AURA, _, CHEATING_DEATH_TEXTURE = GetSpellInfo(45182) -- rogue
 
 local function UnitFrame_UpdateFlags(self)
 	local unit = self.unit
@@ -749,6 +750,14 @@ local function UnitFrame_UpdateFlags(self)
 		flag = "dying"
 		texture = CAUTERIZE_TEXTURE
 		text = CAUTERIZE_AURA
+	elseif self.unitClass == "DEATHKNIGHT" and UnitDebuff(unit, PURGATORY_AURA) then
+		flag = "dying"
+		texture = PURGATORY_TEXTURE
+		text = PURGATORY_AURA
+	elseif self.unitClass == "ROGUE" and UnitBuff(unit, CHEATING_DEATH_AURA) then
+		flag = "dying"
+		texture = CHEATING_DEATH_TEXTURE
+		text = CHEATING_DEATH_AURA
 	end
 
 	self.flagIcon:SetTexture(texture)
@@ -1244,7 +1253,7 @@ local function CheckAndApplyDynamicOptions(frame)
 end
 
 function addon._UnitButton_OnLoad(frame)
-	frame:RegisterForClicks(addon.db.clickDownMode and "AnyDown" or "AnyUp")
+	frame:RegisterForClicks(addon.db and addon.db.clickDownMode and "AnyDown" or "AnyUp")
 	local name = frame:GetName()
 
 	-- Art frame

@@ -1,11 +1,11 @@
-------------------------------------------------------------
+﻿------------------------------------------------------------
 -- BlackrockFoundry.lua
 --
 -- Abin
 -- 2014/10/19
 ------------------------------------------------------------
 
-local module = CompactRaid:FindModule("RaidDebuff")
+local module = CompactRaid:GetModule("RaidDebuff")
 if not module then return end
 
 local TIER = 6 -- The Warlords of Draenor

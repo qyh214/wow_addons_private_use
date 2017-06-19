@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("Akama", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 609 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 614 $"):sub(12, -3))
 mod:SetCreatureID(22841)
 mod:SetEncounterID(603)
 mod:SetModelID(21357)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
-mod:SetWipeTime(30)
+mod:SetWipeTime(50)--Adds come about every 50 seconds, so require at least this long to wipe combat if they die instantly
 
 --mod:RegisterEvents(
 --	"SPELL_AURA_REMOVED 34189"

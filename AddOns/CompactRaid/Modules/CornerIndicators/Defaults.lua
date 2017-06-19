@@ -12,7 +12,7 @@ local strfind = strfind
 local tonumber = tonumber
 local GetSpellInfo = GetSpellInfo
 
-local module = CompactRaid:FindModule("CornerIndicators")
+local module = CompactRaid:GetModule("CornerIndicators")
 if not module then return end
 
 module.DEFAULT_SPELLS = {
@@ -33,6 +33,7 @@ module.DEFAULT_SPELLS = {
 		33763, -- Lifebloom
 		48438, -- Wild Growth
 		29166, -- Innervate
+		102342, -- Ironbark
 	},
 
 	SHAMAN = {
@@ -104,9 +105,9 @@ local CLASS_DEFAULTS = {
 
 	PALADIN = {
 		TOPLEFT = { spell = 53563, numeric = 1 }, -- Beacon of Light
-		TOPRIGHT = { spell = 203538, other = 1, lacks = 1 }, -- Blessing of Kings
-		BOTTOMLEFT = { spell = 203528, other = 1, lacks = 1 }, -- Blessing of Might
-		BOTTOMRIGHT = { spell = 203539, other = 1, lacks = 1 }, -- Blessing of wisdom
+		--TOPRIGHT = { spell = 203538, other = 1, lacks = 1 }, -- Blessing of Kings
+		--BOTTOMLEFT = { spell = 203528, other = 1, lacks = 1 }, -- Blessing of Might
+		--BOTTOMRIGHT = { spell = 203539, other = 1, lacks = 1 }, -- Blessing of wisdom
 	},
 
 	WARRIOR = {
@@ -235,7 +236,7 @@ local defaultdb = {}
 local _, key
 for _, key in ipairs(module.INDICATOR_KEYS) do
 	local data = {}
-	module:CloneTable(DEFAULTS_INDICATOR, data)
+	CompactRaid.tcopy(DEFAULTS_INDICATOR, data)
 	local spell, numeric, other, lacks, ignorePhysical, ignoreMagical = GetClassDefaults(key)
 	if spell then
 		data.aura = GetSpellInfo(spell)

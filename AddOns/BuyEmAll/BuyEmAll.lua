@@ -61,13 +61,13 @@ end
 
 
 function BuyEmAll:SlashHandler(message, editbox)
-    if message == "" then
-        print("BuyEmAll: Use /buyemall confirm to enable/disable the large purchange confirm.");
-    elseif message == "confirm" then
-        if BEAConfirmToggle == true then
+    if (message == "") then
+        print("BuyEmAll: Use /buyemall confirm to enable/disable the large purchase confirm.");
+    elseif (message == "confirm") then
+        if (BEAConfirmToggle == true) then
             BEAConfirmToggle = false;
             print("BuyEmAll: Large purchase confirm window disabled.");
-        elseif BEAConfirmToggle == false then
+        elseif (BEAConfirmToggle == false) then
             BEAConfirmToggle = true;
             print("BuyEmAll: Large purchase confirm window enabled.");
         end
@@ -109,15 +109,15 @@ function BuyEmAll:CogsFreeBagSpace(itemID)
     for theBag = 0, 4 do
         local doBag = true;
 
-        if theBag > 0 then -- 0 is always the backpack.
+        if (theBag > 0) then -- 0 is always the backpack.
         local bagLink = GetInventoryItemLink("player", 19 + theBag); -- Bag #1 is in inventory slot 20.
-        if bagLink then
+        if (bagLink) then
             local bagSubType = GetItemFamily(bagLink);
-            if bagSubType == itemSubType then
+            if (bagSubType == itemSubType) then
                 doBag = true;
-            elseif bagSubType == 0 then
+            elseif (bagSubType == 0) then
                 doBag = true;
-            elseif bit.band(itemSubType, bagSubType) == bagSubType then
+            elseif (bit.band(itemSubType, bagSubType) == bagSubType) then
                 doBag = true;
             else doBag = false;
             end
@@ -126,13 +126,13 @@ function BuyEmAll:CogsFreeBagSpace(itemID)
         end
         end
 
-        if doBag then
+        if (doBag) then
             local numSlot = GetContainerNumSlots(theBag);
             for theSlot = 1, numSlot do
                 local itemLink = GetContainerItemLink(theBag, theSlot);
-                if not itemLink then
+                if not (itemLink) then
                     freeSpace = freeSpace + stackSize;
-                elseif strfind(itemLink, "item:" .. itemID .. ":") then
+                elseif (strfind(itemLink, "item:" .. itemID .. ":")) then
                     local _, itemCount = GetContainerItemInfo(theBag, theSlot);
                     freeSpace = freeSpace + stackSize - itemCount;
                 end
@@ -152,10 +152,10 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
     --if ChatFrame1EditBox:HasFocus() then ChatFrame1EditBox:Insert(GetMerchantItemLink(frame:GetID()));
 
 
-    if MerchantFrame.selectedTab == 1
-            and IsShiftKeyDown()
-            and not IsControlKeyDown()
-            and not ChatFrame1EditBox:HasFocus() then
+    if (MerchantFrame.selectedTab == 1)
+            and (IsShiftKeyDown())
+            and not (IsControlKeyDown())
+            and not (ChatFrame1EditBox:HasFocus()) then
 
         -- Set up various data before showing the BuyEmAll frame.
 
@@ -176,7 +176,7 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
 
         -- Bypass for purchasable things without an itemlink, don't know any other way right now.
 
-        if self.itemLink == nil then
+        if (self.itemLink == nil) then
             self.ConfirmNoItemLink = self.itemIndex;
             local dialog = StaticPopup_Show("BUYEMALL_CONFIRM2", quantity, self.itemName);
             return
@@ -184,11 +184,9 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
 
         -- Buying a currency with a currency! At least what it should be. Don't know if there are any items that are used to purchase currency.
 
-        if tonumber(strmatch(self.itemLink, "item:(%d+):")) == nil then
-            local CurrencyTex = select(2, GetMerchantItemInfo(self.itemIndex));
-            local CurrencyID = self:AltCurrencyTranslating(CurrencyTex);
-            self.fit = select(6, GetCurrencyInfo(CurrencyID));
-            if self.fit == 0 then
+        if ((strmatch(self.itemLink, "item")) == nil) then
+            self.fit = select(6, GetCurrencyInfo(self.itemLink));
+            if (self.fit == 0) then
                 self.fit = 10000000; -- 0 meaning no set maximum, so set how much one can fit super high.
             end
             self.stack = 1;
@@ -201,7 +199,7 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
         self.stack = stack;
         self.fit = bagMax;
 
-        if select(7, GetMerchantItemInfo(self.itemIndex)) == true then
+        if (select(8, GetMerchantItemInfo(self.itemIndex)) == true) then
             self:AltCurrencyHandling(self.itemIndex, frame);
             return
         end
@@ -214,19 +212,19 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
         -- Modified to check for free items. Mostly for the PTR/Beta servers, but it shouldn't hurt to leave it in.
         -- Put after the alternate currency trigger to prevent issues. Always had it here, just adding the note.
 
-        if self.price == 0 then
+        if (self.price == 0) then
             self.afford = self.fit;
         else
             self.afford = floor(GetMoney() / ceil(price / self.preset));
         end
 
         self.max = min(self.fit, self.afford);
-        if numAvailable > -1 then
+        if (numAvailable > -1) then
             self.max = min(self.max, numAvailable);
         end
-        if self.max == 0 then
+        if (self.max == 0) then
             return
-        elseif self.max == 1 then
+        elseif (self.max == 1) then
             MerchantItemButton_OnClick(frame, "LeftButton");
             return
         end
@@ -245,84 +243,44 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
     end
 end
 
---[[ Processor for Alternate Currencies. Yeah, it's huge, as far as I can tell it's as small as I can get it while also
-including every possibility, but I still want to see if I can make it smaller. ]]
+-- Processor for Alternate Currencies. I think I got it compact as it can be.
 
 function BuyEmAll:AltCurrencyHandling(itemIndex, frame)
     self.AltCurrencyMode = true;
 
-    local price1, price2, price3 = 0, 0, 0;
-    self.price1, self.price2, self.price3 = 0, 0, 0;
-
-    self.AltCurrency1Type, self.AltCurrency2Type, self.AltCurrency3Type = 0, 0, 0;
-    self.AltCurrency1, self.AltCurrency2, self.AltCurrency3 = 0, 0, 0;
-    local Afford1, Afford2, Afford3 = 999999, 999999, 999999; -- Set them all to a high number to begin with. For later.
-
-    local NumAltCurrency = GetMerchantItemCostInfo(itemIndex);
-
-
-    self.NumAltCurrency = NumAltCurrency;
-    if (NumAltCurrency == 1) or (NumAltCurrency == 2) or (NumAltCurrency == 3) then
-        if (select(3, GetMerchantItemCostItem(itemIndex, 1)) == nil) then -- Itemlink check.
-            self.AltCurrency1Type = 0; -- 0 = Pure currency, 1 = Item/Currency, possibly more later.
-            self.AltCurrency1Tex = select(1, GetMerchantItemCostItem(itemIndex, 1)); -- Grabs texture path, hopefully the same no matter the language.
-            self.AltCurrency1 = self:AltCurrencyTranslating(self.AltCurrency1Tex); -- Uses the currency texture to determine which one it is.
-            price1 = select(2, GetMerchantItemCostItem(itemIndex, 1)); -- Gets the cost of the item being purchased.
-            Afford1 = floor(select(2, GetCurrencyInfo(self.AltCurrency1)) / price1) * self.preset; -- How much can be bought.
+    self.NumAltCurrency = GetMerchantItemCostInfo(itemIndex);
+    
+    self.AltCurrTex = {};
+    self.AltCurrPrice = {};
+    self.AltCurrAfford = {};
+    
+    for i = 1, self.NumAltCurrency do
+        self.AltCurrPrice[i] = select(2, GetMerchantItemCostItem(itemIndex, i));
+        local Link = select(3, GetMerchantItemCostItem(itemIndex, i));
+        if (strmatch(Link, "currency")) then -- Item/Currency link check
+            self.AltCurrTex[i] = select(1, GetMerchantItemCostItem(itemIndex, i)); -- Get the currency texture for later display.
+            self.AltCurrAfford[i] = floor(select(2, GetCurrencyInfo(Link)) / self.AltCurrPrice[i]) * self.preset; -- Calculate how many can be purchased.
         else
-            self.AltCurrency1Type = 1; -- Currency is an item/something that can be in bags.
-            self.AltCurrency1 = tonumber(strmatch(select(3, GetMerchantItemCostItem(itemIndex, 1)), "item:(%d+):")); -- Grabs the item's ID.
-            self.AltCurrency1Tex = select(10, GetItemInfo(self.AltCurrency1)); -- Gets the texture for the item to show in the BEA frame.
-            price1 = select(2, GetMerchantItemCostItem(itemIndex, 1)); -- Gets the number of the item required.
-            Afford1 = floor((GetItemCount(self.AltCurrency1, true)) / price1) * self.preset; -- How much can be bought.
+            self.AltCurrTex[i] = select(1, GetMerchantItemCostItem(itemIndex, i)); -- Get the currency texture for later display.
+            self.AltCurrAfford[i] = floor((GetItemCount(tonumber(strmatch(Link, "item:(%d+):")), true)) / self.AltCurrPrice[i]) * self.preset; -- Calculate how many can be purchased.
         end
     end
-    if (NumAltCurrency == 2) or (NumAltCurrency == 3) then
-        if (select(3, GetMerchantItemCostItem(itemIndex, 2)) == nil) then
-            self.AltCurrency2Type = 0;
-            self.AltCurrency2Tex = select(1, GetMerchantItemCostItem(itemIndex, 2));
-            self.AltCurrency2 = self:AltCurrencyTranslating(self.AltCurrency2Tex);
-            price2 = select(2, GetMerchantItemCostItem(itemIndex, 2));
-            Afford2 = floor(select(2, GetCurrencyInfo(self.AltCurrency2)) / price2) * self.preset;
-        else
-            self.AltCurrency2Type = 1;
-            self.AltCurrency2 = tonumber(strmatch(select(3, GetMerchantItemCostItem(itemIndex, 2)), "item:(%d+):"));
-            self.AltCurrency2Tex = select(10, GetItemInfo(self.AltCurrency2));
-            price2 = select(2, GetMerchantItemCostItem(itemIndex, 2));
-            Afford2 = floor((GetItemCount(self.AltCurrency2, true)) / price2) * self.preset;
-        end
+    
+    if (NumAltCurrency == 1) then
+        self.afford = self.AltCurrAfford[1];
+    else
+        self.afford = min(self.AltCurrAfford[1], self.AltCurrAfford[2] or 999999, self.AltCurrAfford[3] or 999999); -- Used Min so if there's not 3 currencies, the others won't be called on.
     end
-    if (NumAltCurrency == 3) then
-        if (select(3, GetMerchantItemCostItem(itemIndex, 3)) == nil) then
-            self.AltCurrency3Type = 0;
-            self.AltCurrency3Tex = select(1, GetMerchantItemCostItem(itemIndex, 3));
-            self.AltCurrency3 = self:AltCurrencyTranslating(self.AltCurrency3Tex);
-            price3 = select(2, GetMerchantItemCostItem(itemIndex, 3));
-            Afford3 = floor(select(2, GetCurrencyInfo(self.AltCurrency3)) / price3) * self.preset;
-        else
-            self.AltCurrency3Type = 1;
-            self.AltCurrency3 = tonumber(strmatch(select(3, GetMerchantItemCostItem(itemIndex, 3)), "item:(%d+):"));
-            self.AltCurrency3Tex = select(10, GetItemInfo(self.AltCurrency3));
-            price3 = select(2, GetMerchantItemCostItem(itemIndex, 3));
-            Afford3 = floor((GetItemCount(self.AltCurrency3, true)) / price3) * self.preset;
-        end
-    end
-
-    self.price1 = price1;
-    self.price2 = price2;
-    self.price3 = price3;
-
-    self.afford = min(Afford1, Afford2, Afford3); -- Used Min so if there's not 3 currencies, the unused Affords will be really high and not be used.
 
     self.max = min(self.fit, self.afford);
 
-    if self.available > -1 then
+    if (self.available > -1) then
         self.max = min(self.max, self.available * self.preset);
     end
 
-    if self.max == 0 then
+    if (self.max == 0) then
         return
-    elseif self.max == 1 then
+    elseif (self.max == 1) then
         MerchantItemButton_OnClick(frame, "LeftButton");
         return
     end
@@ -341,62 +299,6 @@ function BuyEmAll:AltCurrencyHandling(itemIndex, frame)
     self:Show(frame);
 end
 
-function BuyEmAll:AltCurrencyTranslating(Texture) -- Uses the texture string/path to determine which currency it is, only way I know how right now.
-    if (strmatch(Texture, "%a+_%d+$") == "variety_01") then -- Dalaran Jewelcrafter's Token
-        return 61;
-    elseif (strmatch(Texture, "%a+_%d+$") == "ribbon_01") then -- Epicurean's Award
-        return 81;
-    elseif (strmatch(Texture, "_(%a+)$") == "artofwar") then -- Champion's Seal
-        return 241;
-    elseif (strmatch(Texture, "_(%w+)$") == "argentdawn3") then -- Illustrious Jewelcrafter's Token
-        return 361;
-    elseif (strmatch(Texture, "$a+_%a+$") == "zone_tolbarad") then -- Tol Barad Commendation
-        return 391;
-    elseif (strmatch(Texture, "_(%a+)$") == "idolofferocity") then -- Ironpaw Token
-        return 402;
-    elseif (strmatch(Texture, "_(%a+)$") == "markoftheworldtree") then -- Mark of the World Tree
-        return 416;
-    elseif (strmatch(Texture, "%a+_%d+$") == "darkmoon_01") then -- Darkmoon Prize Ticket
-        return 515;
-    elseif (strmatch(Texture, "_(%a+)$") == "sealofkings") then -- Mote of Darkness
-        return 614;
-    elseif (strmatch(Texture, "%a+_%a+$") == "primal_shadow") then -- Essence of Corrupted Deathwing
-        return 615;
-    elseif (strmatch(Texture, "%a+_%d+$") == "coin_17") then -- Elder Charm of Good Fortune
-        return 697;
-    elseif (strmatch(Texture, "%a+_%d+$") == "coin_18") then -- Lesser Charm of Good Fortune
-        return 738;
-    elseif (strmatch(Texture, "%a+$") == "mogucoin") then -- Mogu Rune of Fate
-        return 752;
-    elseif (strmatch(Texture, "%a+$") == "timelesscoin") then -- Timeless Coin
-        return 777;
-    elseif (strmatch(Texture, "%a+-%a+$") == "timelesscoin-bloody") then -- Bloody Coin
-        return 789;
-    elseif (strmatch(Texture, "%a+_%a+$") == "apexis_draenor") then -- Apexis Crystal
-        return 823;
-    elseif (strmatch(Texture, "%a+_%a+$") == "garrison_resource") then -- Garrison Resources
-        return 824;
-    elseif (strmatch(Texture, "%a+_%a+$") == "ashran_artifact") then -- Artifact Fragment
-        return 944;
-    elseif (strmatch(Texture, "%a+_%a+$") == "ability_animusorbs") then -- Seal of Tempered Fate
-        return 994;
-    elseif (strmatch(Texture, "%a+_%a+_%d+$") == "misc_coin_09") then -- Dingy Iron Coins
-        return 980;
-    elseif (strmatch(Texture, "%a+_%a+_%a+$") == "reputation_kirintor_offensive") then -- Sightless Eye
-        return 1149;
-    elseif (strmatch(Texture, "%a+-%a+$") == "pvecurrency-justice") then -- Timewarped Badge
-        return 1166;
-    elseif (strmatch(Texture, "%a+-%a+$") == "pvecurrency-valor") then -- Valor
-        return 1191;
-    elseif (strmatch(Texture, "%a+%d+$") == "datacrystal01") then -- Nethershard
-        return 1226;
-    elseif (strmatch(Texture, "%a+_%a+$") == "orderhall_orderresources") then -- Order Resources
-        return 1220;
-    elseif (strmatch(Texture, "%a+_%a+$") == "misc_elvencoins") then -- Curious Coin
-        return 1275;
-    end
-end
-
 -- Prepare the various UI elements of the BuyEmAll frame and show it.
 
 function BuyEmAll:Show(frame)
@@ -405,7 +307,7 @@ function BuyEmAll:Show(frame)
     BuyEmAllRightButton:Enable();
 
     BuyEmAllStackButton:Enable();
-    if self.max < self.stackClick then
+    if (self.max < self.stackClick) then
         BuyEmAllStackButton:Disable();
     end
 
@@ -421,10 +323,15 @@ end
 
 function BuyEmAll:VerifyPurchase(amount)
     amount = amount or self.split;
+    
+    if (self.AltCurrencyMode == true) then
+        amount = self:AltCurrRounding(amount);
+    end
+    
     if (amount > 0) then
-        amount = (amount / self.preset) * self.preset;
-        if amount > self.stack and amount > self.defaultStack then
-            if BEAConfirmToggle == true then
+        -- amount = (amount / self.preset) * self.preset; Leaving this here just in case, but commenting it out because as far as I can tell and test, it does nothing.
+        if (amount > self.stack) and (amount > self.defaultStack) then
+            if (BEAConfirmToggle == true) then
                 self:DoConfirmation(amount);
             else
                 self:DoPurchase(amount);
@@ -435,7 +342,7 @@ function BuyEmAll:VerifyPurchase(amount)
     end
 end
 
--- This code is from Treeston on the MMO-Champion forums, and modified to suit my needs. Link: https://is.gd/25JTV1
+-- The outer layers of this code are from Treeston on the MMO-Champion forums, and modified to suit my needs. Link: https://is.gd/25JTV1
 
 local framePurchAmount, frameNumLoops, frameLeftover = 0, 0, 0; -- Have to use locals because the whole self bit doesn't work in this function. Fun fact, that still goes over my head. ;.;
 local frameItemIndex;
@@ -466,7 +373,7 @@ function BuyEmAll:DoPurchase(amount)
     BuyEmAllFrame:Hide();
     local numLoops, purchAmount, leftover;
 
-    if amount <= self.stack then
+    if (amount <= self.stack) then
         purchAmount = amount;
         numLoops = 1;
         leftover = 0;
@@ -484,7 +391,7 @@ function BuyEmAll:DoPurchase(amount)
 
     framePurchAmount = purchAmount;
     frameNumLoops = numLoops;
-    if leftover == 0 then
+    if (leftover == 0) then
         frameLeftover = 0;
     else
         frameLeftover = leftover;
@@ -494,12 +401,32 @@ function BuyEmAll:DoPurchase(amount)
     PurchaseLoopFrame:SetScript("OnUpdate", BuyEmAll.onUpdate);
 end
 
+-- Rounds the alternate currency purchase amount, if needed, to the nearest multiple of the preset stack.
+
+function BuyEmAll:AltCurrRounding(purchase)
+    local singleCost = 0;
+    local amount = purchase;
+    for i = 1, self.NumAltCurrency do   -- Checks the alternate currencies used if any is used once.
+        if (self.AltCurrPrice[i] == 1) then
+            singleCost = 1;
+        end
+    end
+    if (singleCost) then    -- Checks if the previous result is true, if so, the purchase can't be less than the preset amount.
+        if ((purchase % self.preset) < (self.preset / 2)) then  -- Rounding down.
+            amount = purchase - (purchase % self.preset);
+            return amount;
+        elseif ((purchase % self.preset) >= (self.preset / 2)) then -- Rounding up.
+            amount = purchase + (self.preset - (purchase % self.preset));
+            return amount;
+        end
+    else
+        return amount;
+    end 
+end
 
 -- Changes the money display to however much amount of the item will cost. If amount is not specified, it uses the current split value.
 
 function BuyEmAll:UpdateDisplay()
-    local purchase = self.split;
-    
     BuyEmAllLeftButton:Enable();
     BuyEmAllRightButton:Enable();
     BuyEmAllMaxButton:Enable();
@@ -516,13 +443,15 @@ function BuyEmAll:UpdateDisplay()
 
     self:SetStackClick();
     BuyEmAllStackButton:Enable();
-    if self.max < self.stackClick then
+    if (self.max < self.stackClick) then
         BuyEmAllStackButton:Disable();
     end
     
+    local purchase = self.split;
+    
     if (self.AltCurrencyMode == false) then
         local cost = 0;
-        if self.defaultStack > 1 then
+        if (self.defaultStack > 1) then
             cost = purchase * (self.price / self.defaultStack);
         else
             cost = purchase * self.price;
@@ -536,32 +465,18 @@ function BuyEmAll:UpdateDisplay()
         BuyEmAllCurrencyAmt2:SetText(silver);
         BuyEmAllCurrencyAmt3:SetText(copper);
     elseif (self.AltCurrencyMode == true) then
-        if ((purchase % self.preset) ~= 0) then
-            if ((purchase % self.preset) <= (self.preset / 2)) then
-                if ((purchase - (purchase % self.preset)) == 0) then
-                    purchase = self.preset;
-                end
-                purchase = purchase - (purchase % self.preset);
-            elseif ((purchase % self.preset) > (self.preset / 2)) then
-                purchase = purchase + (self.preset - (purchase % self.preset));
-            end
-        end
-        self.AltNumPurchases = purchase / self.preset; -- Adjustment for not being able to buy less than the preset of items using alternate currency.
-        if ((self.NumAltCurrency == 1) or (self.NumAltCurrency == 2) or (self.NumAltCurrency == 3)) then
-            local cost1 = self.AltNumPurchases * self.price1;
-            BuyEmAllCurrencyAmt1:SetText(cost1);
-            BuyEmAllCurrency1:SetTexture(self.AltCurrency1Tex);
-        end
-        if ((self.NumAltCurrency == 2) or (self.NumAltCurrency == 3)) then
-            local cost2 = self.AltNumPurchases * self.price2;
-            BuyEmAllCurrencyAmt2:SetText(cost2);
-            BuyEmAllCurrency2:SetTexture(self.AltCurrency2Tex);
-        end
-        if ((self.NumAltCurrency == 3)) then
-            local cost3 = self.AltNumPurchases * self.price3;
-            BuyEmAllCurrencyAmt3:SetText(cost3);
-            BuyEmAllCurrency3:SetTexture(self.AltCurrency3Tex);
-        end
+        
+        local amount = self:AltCurrRounding(purchase);
+        self.AltNumPurchases = amount / self.preset; -- Adjustment for not being able to buy less than the preset of items using alternate currency.
+        
+        BuyEmAllCurrencyAmt1:SetText(self.AltNumPurchases * self.AltCurrPrice[1]);
+        BuyEmAllCurrency1:SetTexture(self.AltCurrTex[1]);
+        BuyEmAllCurrencyAmt2:SetText(self.AltNumPurchases * (self.AltCurrPrice[2] or 0));
+        BuyEmAllCurrency2:SetTexture(self.AltCurrTex[2]);
+        if (self.AltCurrPrice[2] == nil) then BuyEmAllCurrencyAmt2:SetText() end
+        BuyEmAllCurrencyAmt3:SetText(self.AltNumPurchases * (self.AltCurrPrice[3] or 0));
+        BuyEmAllCurrency3:SetTexture(self.AltCurrTex[3]);
+        if (self.AltCurrPrice[2] == nil) then BuyEmAllCurrencyAmt3:SetText() end
     end
 
     BuyEmAllText:SetText(self.split);
@@ -585,7 +500,7 @@ end
 
 function BuyEmAll:DeStackClick()
     local decrease = tonumber(BuyEmAllText:GetText());
-    if decrease <= self.stack then
+    if (decrease <= self.stack) then
         self.split = 1;
         self:UpdateDisplay();
     else
@@ -598,29 +513,30 @@ end
 -- OnClick handler for the four main buttons.
 
 function BuyEmAll:OnClick(frame, button)
-    if frame == BuyEmAllOkayButton then
+    if (frame == BuyEmAllOkayButton) then
         local amount = tonumber(BuyEmAllText:GetText());
         self:VerifyPurchase(amount);
-    elseif frame == BuyEmAllCancelButton then
+    elseif (frame == BuyEmAllCancelButton) then
         BuyEmAllFrame:Hide();
-    elseif frame == BuyEmAllStackButton then
-        if button == "LeftButton" then
+    elseif (frame == BuyEmAllStackButton) then
+        if (button == "LeftButton") then
             self.split = self.stackClick;
             self:UpdateDisplay();
-            if frame:IsEnabled() == true then
+            if (frame:IsEnabled() == true) then
                 self:OnEnter(frame);
             else
                 GameTooltip:Hide();
             end
-        elseif button == "RightButton" then
+        elseif (button == "RightButton") then
             self:DeStackClick();
-            if frame:IsEnabled() == true then
+            self:UpdateDisplay();
+            if (frame:IsEnabled() == true) then
                 self:OnEnter(frame);
             else
                 GameTooltip:Hide();
             end
         end
-    elseif frame == BuyEmAllMaxButton then
+    elseif (frame == BuyEmAllMaxButton) then
         self.split = self.max;
         self:UpdateDisplay();
     end
@@ -630,29 +546,30 @@ end
 -- Allows you to type a number to buy. This is adapted directly from the Default UI's code.
 
 function BuyEmAll:OnChar(text)
-    if text < "0" or text > "9" then
+    if (text < "0") or (text > "9") then    -- If input is not a number, then stop/ignore it.
         return
     end
 
-    if self.typing == false then
+    if (self.typing == false) then  -- Note down that typing is starting and set the input variable to 0.
         self.typing = true;
         self.split = 0;
     end
+    
+    
+    local input = (self.split * 10) + text; -- Adds a local variable to hold the input numbers and keep track of them.
 
-    local split = (self.split * 10) + text;
-
-    if split == self.split then
-        if self.split == 0 then
+    if (input == self.split) then   -- Checks if the input number is the same as the current value, if so it calls to update the UI and exits.
+        if (self.split == 0) then   -- Checks if the current value is 0, if so it sets it to 1.
             self.split = 1;
         end
         self:UpdateDisplay();
         return
     end
-    if split <= self.max then
-        self.split = split;
-    elseif (split > self.max) then
+    if (input <= self.max) then -- If the input is smaller than or equal to the maximum that can be purchased, set the UI to the input number.
+        self.split = input;
+    elseif (input > self.max) then  -- If the input is larger than the maximum purchase somehow, push it back to the maximum.
         self.split = self.max;
-    elseif split == 0 then
+    elseif (input <= 0) then    -- If the input is somehow a negative number, push it back to 1.
         self.split = 1;
     end
     self:UpdateDisplay();
@@ -662,27 +579,27 @@ end
 -- Key handler for keys other than 0-9.
 
 function BuyEmAll:OnKeyDown(key)
-    if key == "BACKSPACE" or key == "DELETE" then
-        if self.typing == false or self.split == 1 then
+    if (key == "BACKSPACE") or (key == "DELETE") then
+        if (self.typing == false) or (self.split == 1) then
             return
         end
 
         self.split = floor(self.split / 10);
-        if self.split <= 1 then
+        if (self.split <= 1) then
             self.split = 1;
             self.typing = false;
         end
 
         self:UpdateDisplay();
-    elseif key == "ENTER" then
+    elseif (key == "ENTER") then
         self:VerifyPurchase();
-    elseif key == "ESCAPE" then
+    elseif (key == "ESCAPE") then
         BuyEmAllFrame:Hide();
-    elseif key == "LEFT" or key == "DOWN" then
+    elseif (key == "LEFT") or (key == "DOWN") then
         BuyEmAll:Left_Click();
-    elseif key == "RIGHT" or key == "UP" then
+    elseif (key == "RIGHT") or (key == "UP") then
         BuyEmAll:Right_Click();
-    elseif key == "PRINTSCREEN" then
+    elseif (key == "PRINTSCREEN") then
         Screenshot();
     end
 end
@@ -782,7 +699,6 @@ function BuyEmAll:OnLeave()
     --GameTooltip_ClearMoney(GameTooltip);
     -- Not needed because of previous commenting out.
 end
-
 
 -- When the BuyEmAll frame is closed, close any confirmations waiting for a response as well as clear the currencies.
 

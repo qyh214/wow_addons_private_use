@@ -44,7 +44,8 @@ function BaseApply:GetName()
 end
 
 function BaseApply:GetSearchArgs()
-    return self:GetCategoryID(), self:GetSearch() or self:GetName(), 0, self:GetBaseFilters()
+    local search = self:GetSearch() and LFGListSearchPanel_ParseSearchTerms(self:GetSearch())
+    return self:GetCategoryID(),  search or self:GetName(), 0, self:GetBaseFilters()
 end
 
 function BaseApply:GetBaseFilters()

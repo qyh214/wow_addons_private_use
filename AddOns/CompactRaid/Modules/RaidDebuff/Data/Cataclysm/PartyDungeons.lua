@@ -1,11 +1,11 @@
-------------------------------------------------------------
+﻿------------------------------------------------------------
 -- PartyDungeons.lua
 --
 -- Abin
 -- 2011/2/09
 ------------------------------------------------------------
 
-local module = CompactRaid:FindModule("RaidDebuff")
+local module = CompactRaid:GetModule("RaidDebuff")
 if not module then return end
 
 local TIER = 4 -- Cataclysm

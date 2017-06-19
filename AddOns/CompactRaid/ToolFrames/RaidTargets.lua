@@ -17,9 +17,8 @@ local frame = addon:CreateToolbox("CompactRaidToolboxRaidTargets", 0.5, 0.5, 1, 
 local menu = frame:CreateMenu(BINDING_HEADER_RAID_TARGET, 1)
 
 local function IsAllowed()
-	local group, leadship = addon:GetGroupStats()
-	if group == "raid" then
-		return leadship == "leader" or leadship == "officer"
+	if addon.group == "raid" then
+		return addon.leadship == "leader" or addon.leadship == "officer"
 	else
 		return 1
 	end

@@ -18,19 +18,19 @@ if LOCALE == "ruRU" then
 --	L["/dcstats"] = ""
 	L["DejaCharacterStats Slash commands (/dcstats):"] = "DejaCharacterStats Slash команды (/dcstats):"
 	L["  /dcstats config: Open the DejaCharacterStats addon config menu."] = "  /dcstats config: Открывает настройки дополнения DejaCharacterStats." --configuration
-	L["  /dcstats reset:  Resets DejaCharacterStats frames to default positions."] = "  /dcstats reset: Сбрасывает DejaCharacterStats до настроек по умолчанию."
-	L["Resetting config to defaults"] = "Сброс конфигурации по умолчанию." --configuration
-	L["DejaCharacterStats is currently using "] = "DejaCharacterStats уже используется "
+	L["  /dcstats reset:  Resets DejaCharacterStats frames to default positions."] = "  /dcstats reset: Сбрасывает рамки DejaCharacterStats на позиции по умолчанию."
+	L["Resetting config to defaults"] = "Сброс до конфигурации по умолчанию." --configuration
+	L["DejaCharacterStats is currently using "] = "DejaCharacterStats теперь использует "
 	L[" kbytes of memory"] = " кбайт памяти" --kilobytes
 --	L["DejaCharacterStats is currently using "] = "DejaCharacterStats уже используется"
-	L[" kbytes of memory after garbage collection"] = " кбайт памяти после уборки мусора" --kilobytes
+	L[" kbytes of memory after garbage collection"] = " кбайт памяти после сборки мусора" --kilobytes
 --	L["config"] = "" --configuration
 --	L["dumpconfig"] = "" --configuration
-	L["With defaults"] = "По умолчанию"
+	L["With defaults"] = "С конфигурацией по умолчанию"
 	L["Direct table"] = "Прямая таблица"
 --	L["reset"] = ""
 --	L["perf"] = "" --performance
-	L["Reset to Default"] = "По умолчанию"
+	L["Reset to Default"] = "Сбросить до настроек по умолчанию"
 
 -- ################################
 -- ## Global Options Left Column ##
@@ -40,10 +40,10 @@ if LOCALE == "ruRU" then
 	L['Displays Equipped/Available item levels unless equal.'] = "Отображает уровень Надетых/Доступных предметов, если значения не равны."
 
 	L["Decimals"] = "Десятичные числа"
-	L['Displays "Enhancements" category stats to two decimal places.'] = 'Отображает "расширенные" характеристики персонажа используя десятичные числа.'
+	L['Displays "Enhancements" category stats to two decimal places.'] = 'Отображает "расширенные" характеристики персонажа используя два знака после запятой.'
 
 	L["Ilvl Decimals"] = "Десятичные числа для ilvl"
-	L['Displays average item level to two decimal places.'] = "Отображает средний уровень предметов используя десятичные числа."
+	L['Displays average item level to two decimal places.'] = "Отображает средний уровень предметов используя два знака после запятой."
 
 	L['Durability '] = "Прочность "
 	L['Displays the average Durability percentage for equipped items in the stat frame.'] = "Показывать средний процент Прочности для экипированных предметов в окне характеристик."
@@ -138,9 +138,9 @@ if LOCALE == "ruRU" then
 	L["Unlock DCS"] = "Разблокировать DCS"
 	L["Lock DCS"] = "Заблокировать DCS"
 	L["Item Level 1 Decimal Place"] = "Уровень предметов с десятичными"
-	L["Displays average item level to one decimal place."] = "Отображать средний уровень предметов используя одно число после точки."
+	L["Displays average item level to one decimal place."] = "Отображать средний уровень предметов используя один знак после запятой."
 	L["Item Level 2 Decimal Places"] = "Уровень предметов с сотыми"
-	L["Displays average item level to two decimal places."] = "Отображать средний уровень предметов используя два числа после точки."
+	L["Displays average item level to two decimal places."] = "Отображать средний уровень предметов используя два знака после запятой."
 	L["Main Hand"] = "Правая рука"
 	L["/Off Hand"] = "/Левая рука"
 	L[" weapon auto attack (white) DPS."] = ' Автоматическая атака оружием. "Белый" урон.'

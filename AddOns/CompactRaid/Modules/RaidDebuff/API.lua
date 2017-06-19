@@ -36,7 +36,7 @@ local EJ_GetTierInfo = EJ_GetTierInfo
 local EJ_GetCurrentTier = EJ_GetCurrentTier
 
 local L = CompactRaid:GetLocale("RaidDebuff")
-local module = CompactRaid:FindModule("RaidDebuff")
+local module = CompactRaid:GetModule("RaidDebuff")
 if not module then return end
 
 local tierList = {}

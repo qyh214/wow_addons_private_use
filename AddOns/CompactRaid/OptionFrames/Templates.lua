@@ -22,27 +22,6 @@ local L = addon.L
 local templates = {}
 addon.optionTemplates = templates
 
-function addon:CloneTable(src, dest)
-	if type(dest) == "table" then
-		wipe(dest)
-	else
-		dest = {}
-	end
-
-	if type(src) == "table" then
-		local k, v
-		for k, v in pairs(src) do
-			if type(v) == "table" then
-				dest[k] = addon:CloneTable(v)
-			else
-				dest[k] = v
-			end
-		end
-	end
-
-	return dest
-end
-
 function addon:NormalizeNumber(number, low, high, default)
 	if type(number) ~= "number" then
 		return default
@@ -82,23 +61,33 @@ local function ModuleGroup_OnCheckInit(self, value)
 	if value == "enable" then
 		return self.module:IsEnabled()
 	else
-		return self.module:IsDualTalentsSynced()
+		return self.module:IsSpecsSynced()
 	end
 end
 
 local function ModuleGroup_OnCheckChanged(self, value, checked, button)
+	local module = self.module
+	if not module then
+		return
+	end
+
 	if value == "enable" then
-		local module = self.module
-		if module then
-			local func = checked and module.OnPreEnable or module.OnPreDisable
-			if type(func) == "function" and func(module) then
-				button:SetChecked(not checked)
+		local func = checked and module.OnPreEnable or module.OnPreDisable
+		if type(func) == "function" and func(module) then
+			button:SetChecked(not checked)
+		else
+			if checked then
+				module:Enable()
 			else
-				addon:BroadcastEvent("EnableModule", self.module, checked)
+				module:Disable()
 			end
 		end
 	else
-		addon:BroadcastEvent("SyncDaulTalents", self.module, checked)
+		if checked then
+			module:SyncSpecs()
+		else
+			module:UnsyncSpecs()
+		end
 	end
 end
 
@@ -162,10 +151,7 @@ local function ModulePage_SetSpecSymbol(self, spec)
 end
 
 function templates:CreateModulePage(module, page)
-	local dualTalents = module:HasFlag("talent")
-	local secure = module:HasFlag("secure")
-
-	if dualTalents then
+	if module.spec then
 		local frame = CreateFrame("Frame", nil, page)
 		page.specSymbolFrame = frame
 		frame:SetSize(16, 16)
@@ -187,7 +173,7 @@ function templates:CreateModulePage(module, page)
 	module.optionPage = page
 	page.SetSpecSymbol = ModulePage_SetSpecSymbol
 
-	local defaults = page:CreatePressButton(DEFAULTS, secure)
+	local defaults = page:CreatePressButton(DEFAULTS, module.secure)
 	page.buttonDefaults = defaults
 	defaults.module = module
 	defaults:SetSize(96, 24)
@@ -201,14 +187,14 @@ function templates:CreateModulePage(module, page)
 		group.OnCheckInit = ModuleGroup_OnCheckInit
 		group.OnCheckChanged = ModuleGroup_OnCheckChanged
 
-		local enable = group:AddButton(L["enable module"], "enable", secure)
+		local enable = group:AddButton(L["enable module"], "enable", module.secure)
 		page.buttonEnable = enable
 		enable:ClearAllPoints()
 		enable:SetPoint("TOPLEFT", addon.optionFrame.rightPanel, "BOTTOMLEFT", 0, -5)
 		enable.tooltipText = format(L["enable module tooltip"], module.title)
 
-		if dualTalents then
-			local sync = group:AddButton(L["sync dual-talent settings"], "sync", secure)
+		if module.spec then
+			local sync = group:AddButton(L["sync dual-talent settings"], "sync", module.secure)
 			page.buttonSync = sync
 			sync.tooltipText = format(L["sync dual-talent tooltip"], module.title)
 		end
@@ -261,15 +247,15 @@ local editToolltip = CreateFrame("Button", "CompactRaidOptionPageTooltip", UIPar
 templates.editToolltip = editToolltip
 
 editToolltip:SetBackdrop({ edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16, insets = {left = 5, right = 5, top = 5, bottom = 5 }, })
---editToolltip:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b)
 editToolltip:SetFrameStrata("TOOLTIP")
 editToolltip:SetClampedToScreen(true)
 editToolltip:SetWidth(240)
 
-local tooltipBk = editToolltip:CreateTexture(nil, "BACKGROUND")
+local tooltipBk = editToolltip:CreateTexture(nil, "BORDER")
+tooltipBk:SetTexture("Interface\\BUTTONS\\WHITE8X8.BLP")
+tooltipBk:SetVertexColor(0, 0, 0, 1)
 tooltipBk:SetPoint("TOPLEFT", 4, -4)
 tooltipBk:SetPoint("BOTTOMRIGHT", -4, 4)
-tooltipBk:SetTexture(0, 0, 0, 1)
 
 editToolltip.text = editToolltip:CreateFontString(editToolltip:GetName().."Text", "ARTWORK", "GameFontHighlightSmallLeftTop")
 editToolltip.text:SetPoint("TOPLEFT", 10, -10)

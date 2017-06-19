@@ -1,4 +1,4 @@
-------------------------------------------------------------
+﻿------------------------------------------------------------
 -- Core.lua
 --
 -- Abin
@@ -16,12 +16,9 @@ local strtrim = strtrim
 local strlen = strlen
 local _G = _G
 local ATTRIBUTE_NOOP = ATTRIBUTE_NOOP
-local _
 
 local L = CompactRaid:GetLocale("ClickSets")
-if type(CompactRaid.CheckVersion) ~= "function" or not CompactRaid:CheckVersion(2.0, L["title"]) then return end
-
-local module = CompactRaid:CreateModule("ClickSets", L["title"], "3.0", L["desc"], "talent,secure")
+local module = CompactRaid:CreateModule("ClickSets", "CHAR", L["title"], L["desc"], 1, 1)
 if not module then return end
 
 module.initialOff = 1
@@ -88,7 +85,7 @@ local function AssignBind(modifier, id, action, extra)
 end
 
 local function ClearAll()
-	local modifier, id
+	local _, modifier, id
 	for _, modifier in ipairs(module.BINDING_MODIFIERS) do
 		for id = 1, 7 do
 			AssignBind(modifier, id)

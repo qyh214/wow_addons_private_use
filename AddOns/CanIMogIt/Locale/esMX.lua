@@ -38,8 +38,6 @@ L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor
 L["Shows chat messages on login about the database scan."] = "Muestra un mensaje en el chat al iniciar sesión sobre el escaneo de la base de datos"
 L["Shows messages on login about the database scan."] = "Mostrar mensaje al inicio de sesión sobre el escaneo de la base de datos"
 L["Shows the icon directly on the item in your bag."] = "Muestra el icono directamente sobre el item en tu mochila."
---Translation missing 
--- L["TEST IGNORE ME"] = ""
 L["Transmoggable Items Only"] = "Solo items transfigurables"
 L["Unknown Items Only"] = "Sólo items desconocidos"
 L["Updating appearances database."] = "Actualizando base de datos de apariencias"

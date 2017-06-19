@@ -44,60 +44,42 @@ local duraDurabilityFrameFS = DurabilityFrame:CreateFontString("FontString","OVE
 	duraDurabilityFrameFS:SetFormattedText("")
 	
 for k, v in ipairs(DCSITEM_SLOT_FRAMES) do
-	v.duratexture = duraColorTexture
+	--v.duratexture = duraColorTexture
 	v.duratexture = v:CreateTexture(nil,"ARTWORK")
 
-	v.durability = duraFS
+	--v.durability = duraFS
     v.durability = v:CreateFontString("FontString","OVERLAY","GameTooltipText")
     v.durability:SetFormattedText("")
 
-    v.itemrepair = itemrepairFS
+    --v.itemrepair = itemrepairFS
     v.itemrepair = v:CreateFontString("FontString","OVERLAY","GameTooltipText")
     v.itemrepair:SetFormattedText("")
 end
 
 local function DCS_Set_Dura_Item_Positions()
+	--It encompasses item repair, durability and, indirectly, durability bars.
+	local showdura = DCS_ShowDuraCheck:GetChecked()
+	local showrepair = DCS_ShowItemRepairCheck:GetChecked()
 	for k, v in ipairs(DCSITEM_SLOT_FRAMES) do
 		v.durability:ClearAllPoints()
 		v.itemrepair:ClearAllPoints()
-		if DCS_ShowDuraCheck:GetChecked(true) then --those outer-most ifs seem really strange, like almost the same is done
-		--These outer if statements are because this whole function is clustered. 
-		--It encompasses item repair, durability and, indirectly, durability bars.
-			if DCS_ShowItemRepairCheck:GetChecked(true) then
-				v.durability:SetPoint("TOP",v,"TOP",3,-30)
-				v.durability:SetFont("Fonts\\FRIZQT__.TTF", 11, "THINOUTLINE")
-				v.itemrepair:SetPoint("BOTTOM",v,"BOTTOM",1,3)
-				v.itemrepair:SetFont("Fonts\\FRIZQT__.TTF", 11, "THINOUTLINE")
-			elseif not DCS_ShowItemRepairCheck:GetChecked(true) then --Absoultely need to check
-			--or else initial conditions will always show durability,
-			--even when clicking Durability Bars, Average Durability and item Repair Cost buttons.
-				v.durability:SetPoint("CENTER",v,"CENTER",1,-2)
-				v.durability:SetFont("Fonts\\FRIZQT__.TTF", 15, "THINOUTLINE")
-			end
-		elseif DCS_ShowDuraCheck:GetChecked(false) then --Absoultely need to check
-			--or else initial conditions will always show durability,
-			--even when clicking Durability Bars, Average Durability and item Repair Cost buttons.
-			v.durability:SetPoint("TOP",v,"TOP",3,-3)
-			v.durability:SetFont("Fonts\\FRIZQT__.TTF", 11, "THINOUTLINE")
-		end
-		if DCS_ShowItemRepairCheck:GetChecked(true) then
-			if DCS_ShowDuraCheck:GetChecked(true) then
+		if showdura then 
+			if showrepair then
 				v.durability:SetPoint("TOP",v,"TOP",3,-3)
 				v.durability:SetFont("Fonts\\FRIZQT__.TTF", 11, "THINOUTLINE")
 				v.itemrepair:SetPoint("BOTTOM",v,"BOTTOM",1,3)
 				v.itemrepair:SetFont("Fonts\\FRIZQT__.TTF", 11, "THINOUTLINE")
-			elseif not DCS_ShowDuraCheck:GetChecked(true) then --Absoultely need to check
-			--or else initial conditions will always show durability,
-			--even when clicking Durability Bars, Average Durability and item Repair Cost buttons.
+			else --not showrepair
+				v.durability:SetPoint("CENTER",v,"CENTER",1,-2)
+				v.durability:SetFont("Fonts\\FRIZQT__.TTF", 15, "THINOUTLINE")
+			end
+		else --not showdura
+			if showrepair then
 				v.itemrepair:SetPoint("CENTER",v,"CENTER",0,-2)
 				v.itemrepair:SetFont("Fonts\\FRIZQT__.TTF", 12, "THINOUTLINE")
 			end
-		elseif DCS_ShowItemRepairCheck:GetChecked(false) then --Absoultely need to check
-			--or else initial conditions will always show durability,
-			--even when clicking Durability Bars, Average Durability and item Repair Cost buttons.
-			v.itemrepair:SetPoint("BOTTOM",v,"BOTTOM",1,3)
-			v.itemrepair:SetFont("Fonts\\FRIZQT__.TTF", 11, "THINOUTLINE")
 		end
+		
 	end
 end
 

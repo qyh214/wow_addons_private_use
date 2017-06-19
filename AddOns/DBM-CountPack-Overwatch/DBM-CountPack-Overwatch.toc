@@ -1,0 +1,10 @@
+﻿## Interface: 70200
+## X-Min-Interface: 70200
+## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Countpack Overwatch|r
+## DefaultState: enabled
+## RequiredDeps: DBM-Core
+## Author: MysticalOS
+## Version: 1.1
+## X-DBM-CountPack: 1
+## X-DBM-CountPack-GlobalName: DBMCPOverwatch
+CountLoadList.lua

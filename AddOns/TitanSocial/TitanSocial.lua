@@ -23,10 +23,17 @@ local FriendsFrame, ShowUIPanel, HideUIPanel = _G.FriendsFrame, _G.ShowUIPanel, 
 local FriendsFrame_Update = _G.FriendsFrame_Update
 local BNGetNumFriends, BNGetFriendInfo, BNGetGameAccountInfo, BNGetInfo = _G.BNGetNumFriends, _G.BNGetFriendInfo, _G.BNGetGameAccountInfo, _G.BNGetInfo
 local BNGetFriendIndex, BNGetNumFriendGameAccounts, BNGetFriendGameAccountInfo = _G.BNGetFriendIndex, _G.BNGetNumFriendGameAccounts, _G.BNGetFriendGameAccountInfo
-local Lib_UIDropDownMenu_CreateInfo = _G.Lib_UIDropDownMenu_CreateInfo
-local Lib_UIDropDownMenu_Refresh = _G.Lib_UIDropDownMenu_Refresh
-local Lib_UIDropDownMenu_GetCurrentDropDown = _G.Lib_UIDropDownMenu_GetCurrentDropDown
-local Lib_UIDropDownMenu_AddButton = _G.Lib_UIDropDownMenu_AddButton
+local L_UIDropDownMenu_CreateInfo = _G.L_UIDropDownMenu_CreateInfo
+local L_UIDropDownMenu_Refresh = _G.L_UIDropDownMenu_Refresh
+local L_UIDropDownMenu_GetCurrentDropDown = _G.L_UIDropDownMenu_GetCurrentDropDown
+local L_UIDropDownMenu_AddButton = _G.L_UIDropDownMenu_AddButton
+if not L_UIDropDownMenu_CreateInfo then
+	-- Must be using an older TitanSocial
+	L_UIDropDownMenu_CreateInfo = _G.Lib_UIDropDownMenu_CreateInfo
+	L_UIDropDownMenu_Refresh = _G.Lib_UIDropDownMenu_Refresh
+	L_UIDropDownMenu_GetCurrentDropDown = _G.Lib_UIDropDownMenu_GetCurrentDropDown
+	L_UIDropDownMenu_AddButton = _G.Lib_UIDropDownMenu_AddButton
+end
 local CanViewOfficerNote = _G.CanViewOfficerNote
 local ChatFrame_SendTell, ChatFrame_SendSmartTell = _G.ChatFrame_SendTell, _G.ChatFrame_SendSmartTell
 local InviteUnit, BNInviteFriend = _G.InviteUnit, _G.BNInviteFriend
@@ -71,7 +78,7 @@ local bDebugMode = false
 
 -- Required Titan variables
 local TITAN_SOCIAL_ID = "Social"
-local TITAN_SOCIAL_VERSION = "7.2.0"
+local TITAN_SOCIAL_VERSION = "7.2.5"
 local TITAN_SOCIAL_TOOLTIP_KEY = "TitanSocialTooltip"
 
 local MOBILE_HERE_ICON = "|TInterface\\ChatFrame\\UI-ChatIcon-ArmoryChat:0:0:0:0:16:16:0:16:0:16:73:177:73|t"
@@ -119,13 +126,13 @@ local function colorText(text, className)
 end
 
 local function addSubmenu(text, value, level)
-	local info = Lib_UIDropDownMenu_CreateInfo()
+	local info = L_UIDropDownMenu_CreateInfo()
 	info.text = text
 	info.menuList = value
 	info.hasArrow = true
 	info.notCheckable = true
 	info.keepShownOnClick = true
-	Lib_UIDropDownMenu_AddButton(info, level)
+	L_UIDropDownMenu_AddButton(info, level)
 end
 
 local function setTitanSocialOption(info, key, value)
@@ -134,7 +141,7 @@ end
 
 local function setTitanSocialOptionRefresh(info, key, value)
 	TitanSetVar(TITAN_SOCIAL_ID, key, value)
-	Lib_UIDropDownMenu_Refresh(Lib_UIDropDownMenu_GetCurrentDropDown())
+	L_UIDropDownMenu_Refresh(L_UIDropDownMenu_GetCurrentDropDown())
 end
 
 local function optionDropdownCheckedFunc(button)
@@ -143,7 +150,7 @@ local function optionDropdownCheckedFunc(button)
 end
 
 local function addSortOption(text, key, value, level)
-	local info = Lib_UIDropDownMenu_CreateInfo()
+	local info = L_UIDropDownMenu_CreateInfo()
 	info.text = text
 	info.func = setTitanSocialOption
 	info.arg1 = key
@@ -151,18 +158,18 @@ local function addSortOption(text, key, value, level)
 	info.keepShownOnClick = false -- can't update the menu while visible
 	info.checked = optionDropdownCheckedFunc
 	info.disabled = not TitanGetVar(TITAN_SOCIAL_ID, "SortGuild")
-	Lib_UIDropDownMenu_AddButton(info, level)
+	L_UIDropDownMenu_AddButton(info, level)
 end
 
 local function addRadioRefresh(text, key, value, level)
-	local info = Lib_UIDropDownMenu_CreateInfo()
+	local info = L_UIDropDownMenu_CreateInfo()
 	info.text = text
 	info.func = setTitanSocialOptionRefresh
 	info.arg1 = key
 	info.arg2 = value
 	info.keepShownOnClick = true
 	info.checked = optionDropdownCheckedFunc
-	Lib_UIDropDownMenu_AddButton(info, level)
+	L_UIDropDownMenu_AddButton(info, level)
 end
 
 -- TitanPanelRightClickMenu_PrepareSocialMenu() must be global for TitanPanel to find it
@@ -246,14 +253,14 @@ function _G.TitanPanelRightClickMenu_PrepareSocialMenu(frame, level, menuList)
 		if menuList == "GuildSort" then
 			-- we'd like to use AddToggleVar() but we can't keep the menu open
 			do
-				local info = Lib_UIDropDownMenu_CreateInfo()
+				local info = L_UIDropDownMenu_CreateInfo()
 				info.text = L.MENU_GUILD_SORT_DEFAULT
 				info.func = function ()
 					TitanToggleVar(TITAN_SOCIAL_ID, "SortGuild")
 				end
 				info.keepShownOnClick = false
 				info.checked = not TitanGetVar(TITAN_SOCIAL_ID, "SortGuild")
-				Lib_UIDropDownMenu_AddButton(info, level)
+				L_UIDropDownMenu_AddButton(info, level)
 			end
 			TitanPanelRightClickMenu_AddSpacer(level)
 			addSortOption(L.MENU_GUILD_SORT_NAME, "GuildSortKey", "name", level)

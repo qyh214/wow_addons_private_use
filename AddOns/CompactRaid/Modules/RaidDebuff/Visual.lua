@@ -8,9 +8,8 @@
 local GetTime = GetTime
 local CreateFrame = CreateFrame
 local DebuffTypeColor = DebuffTypeColor
-local _
 
-local module = CompactRaid:FindModule("RaidDebuff")
+local module = CompactRaid:GetModule("RaidDebuff")
 if not module then return end
 
 local function RaidDebuffFrame_OnUpdate(self, elapsed)
