@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1761, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16154 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16246 $"):sub(12, -3))
 mod:SetCreatureID(104528)--109042
 mod:SetEncounterID(1886)
 mod:SetZone()
@@ -106,7 +106,7 @@ local voiceSolarCollapse			= mod:NewVoice(218148)--watchstep
 
 --Stage 3: Pure Forms
 local voiceGraceOfNature			= mod:NewVoice(218927, "Tank")--bossout
-local voiceCoN						= mod:NewVoice(218809)--mmX
+local voiceCoN						= mod:NewVoice(218809)--targetyou
 
 mod:AddRangeFrameOption(8, 218807)
 mod:AddSetIconOption("SetIconOnFetter", 218304, true)
@@ -342,10 +342,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnCoN:Show(self:IconNumToString(number))
 			yellCoN:Yell(self:IconNumToString(number), number, number)
-			voiceCoN:Play("mm"..number)
+			voiceCoN:Play("targetyou")
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(8, noCoN, nil, nil, true)
-				DBM:AddMsg(L.RadarMessage)
 			end
 		end
 		if self.Options.SetIconOnCoN then

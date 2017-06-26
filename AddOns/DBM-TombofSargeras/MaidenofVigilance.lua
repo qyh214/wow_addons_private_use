@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1897, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16102 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16309 $"):sub(12, -3))
 mod:SetCreatureID(118289)
 mod:SetEncounterID(2052)
 mod:SetZone()
---mod:SetUsedIcons(1)
---mod:SetHotfixNoticeRev(15581)
+mod:SetUsedIcons(4, 1)
+mod:SetHotfixNoticeRev(16285)
 mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
@@ -64,7 +64,9 @@ local timerSpontFragmentationCD		= mod:NewNextTimer(8, 239153, nil, nil, nil, 5,
 --local berserkTimer				= mod:NewBerserkTimer(300)
 
 --Stage One: Divide and Conquer
---local countdownInfusion			= mod:NewCountdown(33, 235271)
+local countdownInfusion				= mod:NewCountdown("AltTwo", 235271)
+local countdownLightHammer			= mod:NewCountdown(18, 241635)
+local countdownFelHammer			= mod:NewCountdown("Alt18", 241636)
 
 --Stage One: Divide and Conquer
 local voiceInfusion					= mod:NewVoice(235271)--scatter
@@ -74,7 +76,7 @@ local voiceUnsableSoul				= mod:NewVoice(235117)--jumpinpit
 --Stage Two
 local voiceWrathofCreators			= mod:NewVoice(234891, "HasInterrupt")--kickcast
 
---mod:AddSetIconOption("SetIconOnShield", 228270, true)
+mod:AddSetIconOption("SetIconOnInfusion", 235271, true)
 mod:AddInfoFrameOption(235117, true)
 --mod:AddRangeFrameOption("5/8/15")
 
@@ -95,6 +97,7 @@ function mod:OnCombatStart(delay)
 	self.vb.massShitCount = 1
 	timerInfusionCD:Start(2-delay, 2)
 	timerLightHammerCD:Start(12-delay, 3)--12-14
+	countdownLightHammer:Start(12-delay)
 	timerMassInstabilityCD:Start(22-delay, 2)
 	timerBlowbackCD:Start(40.9-delay)
 	if self:IsMythic() then
@@ -119,18 +122,21 @@ function mod:SPELL_CAST_START(args)
 		voiceInfusion:Play("scatter")
 		if self.vb.infusionCount == 1 then
 			timerInfusionCD:Start(38, 2)
+			countdownInfusion:Start(38)
 		end
 	elseif spellId == 241635 then--Light Hammer
 		self.vb.hammerCount = self.vb.hammerCount + 1
 		specWarnLightHammer:Show(self.vb.hammerCount)
 		if self.vb.hammerCount < 4 then
 			timerFelHammerCD:Start(18, self.vb.hammerCount+1)--20 on Mythic, 18 on LFR?
+			countdownFelHammer:Start(18)
 		end
 	elseif spellId == 241636 then--Fel Hammer
 		self.vb.hammerCount = self.vb.hammerCount + 1
 		specWarnFelhammer:Show(self.vb.hammerCount)
 		if self.vb.hammerCount == 2 then
 			timerLightHammerCD:Start(18, 3)
+			countdownLightHammer:Start(18)
 		end
 	elseif spellId == 235267 then
 		self.vb.massShitCount = self.vb.massShitCount + 1
@@ -152,8 +158,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerSpontFragmentationCD:Stop()
 		timerMassInstabilityCD:Stop()
 		timerInfusionCD:Stop()
+		countdownInfusion:Cancel()
 		timerLightHammerCD:Stop()
+		countdownLightHammer:Cancel()
 		timerFelHammerCD:Stop()
+		countdownFelHammer:Cancel()
 	end
 end
 
@@ -164,22 +173,38 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnFelInfusion:Show()
 			voiceFelInfusion:Play("felinfusion")
 		end
+		local uId = DBM:GetRaidUnitId(args.destName)
+		if self.Options.SetIconOnInfusion and self:IsTanking(uId) then
+			self:SetIcon(args.destName, 4)
+		end
 	elseif spellId == 235213 then--Light Infusion
 		if args:IsPlayer() then
 			specWarnLightInfusion:Show()
 			voiceLightInfusion:Play("lightinfusion")
 		end
+		local uId = DBM:GetRaidUnitId(args.destName)
+		if self.Options.SetIconOnInfusion and self:IsTanking(uId) then
+			self:SetIcon(args.destName, 1)
+		end
 	elseif spellId == 235117 or spellId == 240209 then
 		self.vb.unstableSoulCount = self.vb.unstableSoulCount + 1
 		warnUnstableSoul:CombinedShow(1, args.destName)
 		if args:IsPlayer() then
-			specWarnUnstableSoul:Schedule(5.5, AegynnsWard)--2.5 before expire, maybe adjust to 3
+			if self:IsEasy() then
+				specWarnUnstableSoul:Schedule(5.75, AegynnsWard)--2.5 before expire, maybe adjust to 3
+			else
+				specWarnUnstableSoul:Schedule(6.75, AegynnsWard)
+			end
 			if not self:IsLFR() then
 				yellUnstableSoul:Yell(8)
 				yellUnstableSoul:Schedule(7, 1)
 				yellUnstableSoul:Schedule(6, 2)
 				yellUnstableSoul:Schedule(5, 3)
-				voiceUnsableSoul:Schedule(5.5, "jumpinpit")
+				if self:IsEasy() then
+					voiceUnsableSoul:Schedule(5.75, "jumpinpit")
+				else
+					voiceUnsableSoul:Schedule(6.75, "jumpinpit")
+				end
 			else
 				voiceUnsableSoul:Play("defensive")--Whatever, doens't matter in LFR. LFR doesn't need Aegwynn's Ward/pit
 			end
@@ -191,10 +216,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 236061 then
 		warnEssenceFragments:Show()
 	elseif spellId == 234891 then
+		local shieldname = GetSpellInfo(235028)
 		self.vb.shieldActive = true
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(args.spellName)
-			DBM.InfoFrame:Show(2, "enemyabsorb", args.spellName)
+			DBM.InfoFrame:SetHeader(shieldname)
+			DBM.InfoFrame:Show(2, "enemyabsorb", shieldname)
 		end
 	end
 end
@@ -202,15 +228,28 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 228029 then
+	if spellId == 235240 then--Fel Infusion
+		if self.Options.SetIconOnInfusion then
+			local uId = DBM:GetRaidUnitId(args.destName)
+			local currentIcon = GetRaidTargetIndex(uId) or 0
+			if self:IsTanking(uId) and currentIcon ~= 1 then--Fel infusion removed but light infusion icon is already set, don't touch it
+				self:SetIcon(args.destName, 0)
+			end
+		end
 	elseif spellId == 235213 then--Light Infusion
-		
+		if self.Options.SetIconOnInfusion then
+			local uId = DBM:GetRaidUnitId(args.destName)
+			local currentIcon = GetRaidTargetIndex(uId) or 0
+			if self:IsTanking(uId) and currentIcon ~= 4 then--Light infusion removed but fel infusion icon is already set, don't touch it
+				self:SetIcon(args.destName, 0)
+			end
+		end
 	elseif spellId == 235117 or spellId == 240209 then
 		self.vb.unstableSoulCount = self.vb.unstableSoulCount - 1
 		if args:IsPlayer() then
 			yellUnstableSoul:Cancel()
 		end
-		if self.Options.InfoFrame and self.vb.burstDebuffCount == 0 and not self.vb.shieldActive then
+		if self.Options.InfoFrame and self.vb.unstableSoulCount == 0 and not self.vb.shieldActive then
 			DBM.InfoFrame:Hide()
 		end
 	elseif spellId == 235028 then--Bulwark Removed
@@ -223,13 +262,14 @@ function mod:SPELL_AURA_REMOVED(args)
 		voiceWrathofCreators:Play("kickcast")
 		timerInfusionCD:Start(2, 1)
 		timerLightHammerCD:Start(14, 1)
+		countdownLightHammer:Start(14)
 		timerMassInstabilityCD:Start(22, 1)
 		timerBlowbackCD:Start()
 		if self:IsMythic() then
 			self.vb.spontFragmentationCount = 0
 			--timerSpontFragmentationCD:Start(nil, 1)
 		end
-		if self.Options.InfoFrame and self.vb.burstDebuffCount > 0 then
+		if self.Options.InfoFrame then
 			local spellName = GetSpellInfo(235117)
 			DBM.InfoFrame:SetHeader(spellName)
 			DBM.InfoFrame:Show(10, "playerdebuffremaining", spellName)

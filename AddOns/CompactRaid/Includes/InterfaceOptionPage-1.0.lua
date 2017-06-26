@@ -42,6 +42,8 @@
 -- function combo:OnComboChanged(value) end
 
 -- editbox = page:CreateEditBox("text" [, horizontal [, disableInCombat]])
+-- editBox.handleClick: string, "link" or "name" which causes shift-clicks on an item copy link/name into the activated editbox
+
 -- editbox:CommitText() -- Commit the text and clear focus if succeeds
 
 -- function editbox:OnTextValidate(text) return cancel, newText end -- called when ENTER key is pressed
@@ -99,12 +101,13 @@ local hooksecurefunc = hooksecurefunc
 local CloseDropDownMenus = CloseDropDownMenus
 local InterfaceOptions_AddCategory = InterfaceOptions_AddCategory
 local InterfaceOptionsFrame_OpenToCategory = InterfaceOptionsFrame_OpenToCategory
+local GetCurrentKeyBoardFocus = GetCurrentKeyBoardFocus
+local strmatch = strmatch
 local _G = _G
 local UISpecialFrames = UISpecialFrames
-local _
 
 local MAJOR_VERSION = 1
-local MINOR_VERSION = 77
+local MINOR_VERSION = 82
 
 -- To prevent older libraries from over-riding newer ones...
 if type(UICreateInterfaceOptionPage_IsNewerVersion) == "function" and not UICreateInterfaceOptionPage_IsNewerVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -120,6 +123,24 @@ if not frame then
 	frame:RegisterEvent("PLAYER_REGEN_DISABLED")
 	frame:RegisterEvent("PLAYER_REGEN_ENABLED")
 end
+
+hooksecurefunc("ChatEdit_InsertLink", function(link)
+	if type(link) ~= "string" then
+		return
+	end
+
+	local editBox = GetCurrentKeyBoardFocus()
+	if not editBox then
+		return
+	end
+
+	if editBox.handleClick == "link" then
+		editBox:SetText(link)
+	elseif editBox.handleClick == "name" then
+		local name = strmatch(link, "%[(.+)%]")
+		editBox:SetText(name or link)
+	end
+end)
 
 frame:SetScript("OnEvent", function(self, event)
 	if event == "PLAYER_REGEN_ENABLED" then
@@ -355,7 +376,7 @@ end
 
 local function MultiGroup_SetChecked(self, value, checked, noNotify)
 	checked = checked and 1 or nil
-	local button
+	local _, button
 	for _, button in ipairs(self.buttons) do
 		if button.value == value then
 			if CheckButton_GetChecked(button) ~= checked then
@@ -370,7 +391,7 @@ local function MultiGroup_SetChecked(self, value, checked, noNotify)
 end
 
 local function MultiGroup_GetChecked(self, value)
-	local button
+	local _, button
 	for _, button in ipairs(self.buttons) do
 		if button.value == value then
 			return CheckButton_GetChecked(button)
@@ -393,7 +414,7 @@ end
 
 local function SingleGroup_OnCheckChanged(self, value, checked, button)
 	if checked then
-		local other, changed
+		local _, other, changed
 		for _, other in ipairs(self.buttons) do
 			if other ~= button and CheckButton_GetChecked(other) then
 				other:SetChecked(nil)
@@ -411,7 +432,7 @@ local function SingleGroup_OnCheckChanged(self, value, checked, button)
 end
 
 local function SingleGroup_SetSelection(self, value, noNotify)
-	local button, found
+	local _, button, found
 	for _, button in ipairs(self.buttons) do
 		if button.value == value then
 			found = button
@@ -560,7 +581,7 @@ local function ComboBox_GetSelection(self)
 end
 
 local function ComboBox_SetSelection(self, value, noNotify)
-	local line, found
+	local _, line, found
 	for _, line in ipairs(self.dropdown.lines) do
 		if line.value == value then
 			found = line
@@ -600,7 +621,7 @@ local function ComboBox_AddLine(self, text, value, icon, flags, r, g, b, positio
 		line = { text = text, value = value, icon = icon }
 		if type(flags) == "string" then
 			local symbols = { strsplit(",", flags) }
-			local flag
+			local _, flag
 			for _, flag in ipairs(symbols) do
 				flag = strtrim(flag)
 				if flag ~= "" then
@@ -637,14 +658,17 @@ end
 
 local function ComboBox_DeleteLine(self, value, noNotify)
 	local i, line = ComboBox_FindLineData(self, value)
-	if i then
-		self.value = nil
-		ComboBox_SetText(self)
-		if not noNotify then
-			pcall(self.OnComboChanged, self)
-		end
-		return i
+	if not i then
+		return
 	end
+
+	tremove(self.dropdown.lines, i)
+	self.value = nil
+	ComboBox_SetText(self)
+	if not noNotify then
+		pcall(self.OnComboChanged, self)
+	end
+	return i
 end
 
 local function ComboBox_ClearLines(self, noNotify)

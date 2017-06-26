@@ -23,7 +23,6 @@ L:SetMiscLocalization{
 
 L:SetOptionLocalization{
 	WarningSnobold				= "為極地狗頭人奴僕出現顯示警告",
-	PingCharge					= "當冰嚎即將衝鋒你時自動點擊小地圖",
 	ClearIconsOnIceHowl			= "衝鋒前消除所有標記",
 	TimerNextBoss				= "為下一隻王到來顯示計時器",
 	TimerEmerge					= "為持續鑽地顯示計時器",

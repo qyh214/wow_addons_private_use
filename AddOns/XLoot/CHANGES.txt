@@ -1,12 +1,12 @@
-tag e0afa5e277a561aef78b2219f961c57a69a2954c 7.2-1
+tag e55e363a4e7769b4ddff499cca194e32464f33f3 7.2-7
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Thu Mar 30 17:46:40 2017 -0400
+Date:	Thu Jun 22 01:22:03 2017 -0400
 
-7.2 TOC bump
+Add option to show itemlevel on rolls (Take 4)
 
-commit 4fcb1406cfcf7d58e316999118703271c60d2836
+commit a9a14b700b99b5a44a20bdb70eeb77720d6af9e3
 Author: Xuerian <xuerian@gmail.com>
-Date:   Thu Mar 30 17:45:38 2017 -0400
+Date:   Wed Jun 21 20:11:04 2017 -0400
 
-    70200 TOC
+    Fix dumb nil mistake
 

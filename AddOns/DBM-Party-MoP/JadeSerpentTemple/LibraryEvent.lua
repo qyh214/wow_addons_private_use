@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(664, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 103 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 106 $"):sub(12, -3))
 mod:SetCreatureID(59051, 59726, 58826)--59051 (Strife), 59726 (Anger), 58826 (Zao Sunseeker). This event has a random chance to be Zao (solo) or Anger and Strife (together)
 mod:SetEncounterID(1417)
 mod:SetZone()
@@ -22,6 +22,7 @@ mod:RegisterEvents(
 --Stuff that might be used with more data--
 --4/6 12:57:22.825  UNIT_DISSIPATES,0x0000000000000000,nil,0x80000000,0x80000000,0xF130DEF800005B63,"Corrupted Scroll",0xa48,0x0
 -------------------------------------------
+local warnIntensity			= mod:NewStackAnnounce(113315, 3)
 local warnUltimatePower		= mod:NewTargetAnnounce(113309, 4)
 
 local specWarnIntensity		= mod:NewSpecialWarning("SpecWarnIntensity")

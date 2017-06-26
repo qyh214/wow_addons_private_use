@@ -18,6 +18,10 @@ L:SetWarningLocalization({
 	SpecWarnIntensity	= "%s auf %s (%d)"
 })
 
+L:SetMiscLocalization({
+	Event1	= "Ah, es ist noch nicht vorbei. Wenn ich das richtig sehe, stehen wir der Probe des Yaungol gegenüber. Lasst mich erklären..."
+})
+
 -----------------------
 -- Liu Flameheart --
 -----------------------

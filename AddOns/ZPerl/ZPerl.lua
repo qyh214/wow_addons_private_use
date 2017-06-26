@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1057 $")
-XPerl_SetModuleRevision("$Revision: 1057 $")
+end, "$Revision: 1059 $")
+XPerl_SetModuleRevision("$Revision: 1059 $")
 
 -- Upvalus
 local _G = _G
@@ -359,7 +359,34 @@ local function DoRangeCheck(unit, opt)
 
 	if (not range) then
 		if (opt.interact) then
-			if (opt.interact == 5) then
+			if (opt.interact == 6) then
+				--[[range, checkedRange = UnitInRange(unit) -- 40 yards
+				if not checkedRange then
+					range = 1
+				end]]
+				local checkedRange
+				if UnitCanAssist("player", unit) then
+					-- Wrangling Rope (45y)
+					range = IsItemInRange(32698, unit)
+					if range == nil then
+						-- Fallback (40y)
+						range, checkedRange = UnitInRange(unit)
+						if not checkedRange then
+							range = 1
+						end
+					end
+				else
+					-- Goblin Rocket Launcher (45y)
+					range = IsItemInRange(23836, unit)
+					if range == nil then
+						-- Fallback (40y)
+						range, checkedRange = UnitInRange(unit)
+						if not checkedRange then
+							range = 1
+						end
+					end
+				end
+			elseif (opt.interact == 5) then
 				--[[range, checkedRange = UnitInRange(unit) -- 40 yards
 				if not checkedRange then
 					range = 1

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1732, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16233 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16267 $"):sub(12, -3))
 mod:SetCreatureID(103758)
 mod:SetEncounterID(1863)
 mod:SetZone()
@@ -96,7 +96,6 @@ local timerWitnessVoidCD			= mod:NewCDTimer(13, 207720, nil, nil, nil, 2, nil, D
 --local timerVoidEjectionCD			= mod:NewCDCountTimer(16, 207143, nil, nil, nil, 3)--Where did it go? wasn't on normal test and wasn't on heroic retest
 local timerVoidNovaCD				= mod:NewCDCountTimer(74, 207439, nil, nil, nil, 2)--Only saw a single pull it was cast twice, so CD needs more verification
 local timerWorldDevouringForceCD	= mod:NewCDCountTimer(42, 216909, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON..DBM_CORE_HEROIC_ICON)
-local timerThingCD					= mod:NewCDTimer(63, "ej13057", 207813, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerConjunctionCD			= mod:NewCDCountTimer(16, 205408, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 local timerConjunction				= mod:NewBuffFadesTimer(15, 207720, nil, nil, nil, 5, nil, DBM_CORE_DEADLY_ICON)
@@ -161,10 +160,10 @@ mod.vb.isPhaseChanging = false
 --For all inclusive, i'll simply use lowest observed time for each count, which will give close approx cd timer but imprecise to be a "next" timer.
 local icyEjectionTimers = {24.5, 34.1, 6.5, 4.8, 50.2, 1.2, 2.4, 25.6, 2.8}--43.3, 35.6, 8.1, 4.1, 52.2, 1.2, 2.4
 local felEjectionTimers = {18.2, 3.6, 3.2, 2.4, 10.2, 4.4, 2.8, 32.8, 4.0, 1.6, 4.0, 4.5, 22.3, 6.9, 17.0, 1.6, 1.2, 2.0, 18.3, 0.4}--10 after 4, 32 after 7, 22 after 12, 17 after 14, 18 after 18
-local mythicfelEjectionTimers = {17.4, 3.2, 2.8, 2.4, 9.3, 2.4, 3.2, 30, 2, 1.2, 12.6, 1.2, 1.7, 22.2, 5.6, 9.3, 2.5, 1.5, 24.3, 3.2}
+local mythicfelEjectionTimers = {17.4, 3.2, 2.8, 2.4, 9.3, 2.4, 3.2, 30, 2, 1.2, 12.6, 1.2, 1.7, 21.1, 5.6, 9.3, 2.5, 1.5, 24.3, 3.2}
 local voidEjectionTimers = {24, 3.2, 14.1, 17.4, 0.8, 4.7, 25.7, 2.3}
 --local felNovaTImers = {34.8, 31.3, 29.3}--Latest is 47.1, 45.0, 25.1. Currently unused. for now just doing 45 or 25
-local worldDestroyingTimers = {22, 42, 57, 51.8}
+local worldDestroyingTimers = {22, 41.3, 57, 51.8}
 local ps1Grand = {15, 12.2}
 local ps2Grand = {27, 43.9, 58.3}
 local ps3Grand = {58.7, 43, 41.4}
@@ -440,7 +439,6 @@ function mod:SPELL_SUMMON(args)
 		specWarnThing:Show()
 		voiceThing:Play("bigmob")
 		timerWitnessVoidCD:Start(10, args.destGUID)
-		timerThingCD:Start()
 	end
 end
 
@@ -686,7 +684,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		timerConjunctionCD:Stop()
 		countdownConjunction:Cancel()
 		timerGravPullCD:Start(19.6)
-		timerThingCD:Start(31)
 		if not self:IsEasy() then--Was never used on normal, probably not LFR either then
 			--timerVoidEjectionCD:Start(24, 1)
 			timerVoidNovaCD:Start(39.2, 1)

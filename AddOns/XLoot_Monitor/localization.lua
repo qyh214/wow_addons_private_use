@@ -34,10 +34,37 @@ local locales = {
 }
 
 -- Automatically inserted translations
-locales.deDE["anchor"] = "Beutemonitor"
-locales.koKR["anchor"] = "전리품 모니터"
-locales.ruRU["anchor"] = "Монитор добычи"
-locales.zhCN["anchor"] = "掷骰监控"
-locales.zhTW["anchor"] = "拾取監控"
+locales.ptBR["Monitor"] = {
+}
+
+locales.frFR["Monitor"] = {
+}
+
+locales.deDE["Monitor"] = {
+	["anchor"] = "Beutemonitor",
+}
+
+locales.koKR["Monitor"] = {
+	["anchor"] = "전리품 모니터",
+}
+
+locales.esMX["Monitor"] = {
+}
+
+locales.ruRU["Monitor"] = {
+	["anchor"] = "Монитор добычи",
+}
+
+locales.zhCN["Monitor"] = {
+	["anchor"] = "掷骰监控",
+}
+
+locales.esES["Monitor"] = {
+}
+
+locales.zhTW["Monitor"] = {
+	["anchor"] = "拾取監控",
+}
+
 
 XLoot:Localize("Monitor", locales)

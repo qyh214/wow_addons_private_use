@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1790, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14958 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16272 $"):sub(12, -3))
 mod:SetCreatureID(109943)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
@@ -23,13 +23,13 @@ local warnMothersEmbraceFail	= mod:NewTargetAnnounce(219068, 4)
 local warnGaseousBreath			= mod:NewSpellAnnounce(219254, 2)
 
 local specWarnFelGeyser			= mod:NewSpecialWarningDodge(218823, nil, nil, nil, 2, 2)
-local specWarnImpishFlames		= mod:NewSpecialWarningDefensive(218888, "Tank")
-local specWarnMothersEmbrace	= mod:NewSpecialWarningDispel(219045, "Healer")
+local specWarnImpishFlames		= mod:NewSpecialWarningDefensive(218888, "Tank", nil, nil, 1, 2)
+local specWarnMothersEmbrace	= mod:NewSpecialWarningDispel(219045, "Healer", nil, nil, 1, 2)
 
 local timerFelGeyserCD			= mod:NewAITimer(16, 218823, nil, nil, nil, 2)
-local timerImpishFlamesCD		= mod:NewAITimer(90, 218888, nil, "Tank", nil, 5)
-local timerMothersEmbraceCD		= mod:NewAITimer(90, 219045, nil, nil, nil, 3)
-local timerGaseousBreathCD		= mod:NewAITimer(90, 219254, nil, nil, nil, 1)
+local timerImpishFlamesCD		= mod:NewCDTimer(23, 218888, nil, "Tank", nil, 5)
+local timerMothersEmbraceCD		= mod:NewCDTimer(62, 219045, nil, nil, nil, 3)
+local timerGaseousBreathCD		= mod:NewCDTimer(30, 219254, nil, nil, nil, 1)
 
 local voiceFelGeyser			= mod:NewVoice(218823)--watchstep
 local voiceImpishFlames			= mod:NewVoice(218888, "Tank")--breathsoon

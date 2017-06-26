@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1762, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16133 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16256 $"):sub(12, -3))
 mod:SetCreatureID(103685)
 mod:SetEncounterID(1862)
 mod:SetZone()
@@ -219,7 +219,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnCarrionNightmare:Show()
 		voiceCarrionNightmare:Play("watchstep")
 		if self.vb.carrionNightmare < 6 then
-			timerCarrionNightmare:Start()
+			timerCarrionNightmare:Start(nil, self.vb.carrionNightmare+1)
 			countdownCarrionNightmare:Start()
 		end
 	elseif spellId == 212997 then

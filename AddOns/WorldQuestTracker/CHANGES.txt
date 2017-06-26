@@ -1,7 +1,7 @@
-changeset:   145:9bd2ee26a356
-tag:         v7.2.5.145-release
+changeset:   147:9507428afa05
+tag:         v7.2.5.147-release
 user:        Tercio
-date:        Sun Jun 18 14:46:35 2017 -0300
-summary:     - Artifact power amount rounded: now showns "10M" instead of "10.0M" or "10.2M".
+date:        Tue Jun 20 09:39:10 2017 -0300
+summary:     - Fix for Ticket #449: error on opening the world map.
 
 

@@ -24,6 +24,7 @@ local defaults = {
 		show_decided = true,
 		show_undecided = false,
 		show_time_remaining = false,
+		text_ilvl = false,
 
 		equip_prefix = true,
 		prefix_equippable = "*",
@@ -296,6 +297,8 @@ function addon:START_LOOT_ROLL(id, length, uid, ongoing)
 
 	frame.text_bind:SetText(bop and '|cffff4422BoP' or '')
 	frame.text_loot:SetText(name)
+	local _, _, _, ilvl = GetItemInfo(link)
+	frame.text_ilvl:SetText(ilvl > 1 and ilvl or nil)
 
 	frame.text_loot:SetVertexColor(r, g, b)
 	frame.overlay:SetBorderColor(r, g, b)
@@ -979,6 +982,11 @@ do
 		time:SetPoint('CENTER', 0, 2)
 		frame.text_time = time
 
+		-- Item level
+		local ilvl = icon_frame:CreateFontString(nil, 'OVERLAY')
+		ilvl:SetPoint('TOPLEFT', 3, -3)
+		frame.text_ilvl = ilvl
+
 		-- Roll buttons
 		local n = RollButtonPrototype:New(frame, 1, NEED, 'Dice', icon_frame, 3, -1, {.2, 1, .1})
 		local g = RollButtonPrototype:New(frame, 2, GREED, 'Coin', n, 0, -2, {.1, .2, 1})
@@ -1017,12 +1025,14 @@ do
 		self.disenchant:ApplyOptions()
 		self.pass:ApplyOptions()
 
+		self.text_ilvl:SetFont(opt.font, 8, 'OUTLINE')
 		self.text_bind:SetFont(opt.font, 8, 'THICKOUTLINE')
 		self.text_time:SetFont(opt.font, 12, 'OUTLINE')
 		self.text_status:SetFont(opt.font, 12, opt.font_flag)
 		self.text_loot:SetFont(opt.font, 12, opt.font_flag)
 
 		self.text_time:SetShown(opt.show_time_remaining)
+		self.text_ilvl:SetShown(opt.text_ilvl)
 	end
 end
 

@@ -1,3 +1,9 @@
+**r1059**
+* Added a 45 yard range check.
+* Fixed Restoration Shaman's frame squish.
+* The Hide Default Buffs options now should work independently from the Player Buffs.
+* Removed a deprecated event from every unit frame.
+
 **r1057**
 Tagging as release.
 

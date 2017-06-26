@@ -17,7 +17,7 @@
 ## DefaultState: enabled
 ## Author: Tandanu and Nitram
 ## X-Website: http://www.deadlybossmods.com
-## Version: 7.2.7
+## Version: 7.2.10
 
 #@no-lib-strip@
 Libs\LibStub\LibStub.lua
@@ -25,6 +25,7 @@ Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 Libs\LibChatAnims\LibChatAnims.xml
 Libs\LibSharedMedia-3.0\lib.xml
 Libs\LibLatency\LibLatency.xml
+Libs\LibDurability\LibDurability.xml
 #@end-no-lib-strip@
 
 localization.en.lua

@@ -21,7 +21,6 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	WarningSnobold		= "Show warning for Snobold Vassal spawns",
-	PingCharge			= "Ping the minimap when Icehowl is about to charge you",
 	ClearIconsOnIceHowl	= "Clear all icons before charge",
 	TimerNextBoss		= "Show timer for next boss spawn",
 	TimerEmerge			= "Show timer for emerge",

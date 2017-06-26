@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 1053 $")
+end, "$Revision: 1059 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -390,9 +390,28 @@ function XPerl_Player_OnLoad(self)
 						end
 					end
 				elseif spec == 3 then
-					frame:SetHeight(62)
-					portrait:SetHeight(62)
-					stats:SetHeight(40)
+					if extend then
+						if bar then
+							frame:SetHeight(62 + offset)
+							portrait:SetHeight(62 + offset)
+						else
+							frame:SetHeight(62 + offset - 10)
+							portrait:SetHeight(62 + offset - 10)
+						end
+					else
+						if bar then
+							frame:SetHeight(62)
+							portrait:SetHeight(62)
+						else
+							frame:SetHeight(62)
+							portrait:SetHeight(62)
+						end
+					end
+					if bar then
+						stats:SetHeight(40 + offset)
+					else
+						stats:SetHeight(40 + offset - 10)
+					end
 					if not above and buffs then
 						if extend then
 							buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
@@ -1292,13 +1311,6 @@ function XPerl_Player_Events:UNIT_COMBAT(action, descriptor, damage, damageType)
 	end
 end
 
--- UNIT_SPELLMISS
-function XPerl_Player_Events:UNIT_SPELLMISS(...)
-	if (pconf.hitIndicator and pconf.portrait) then
-		CombatFeedback_OnSpellMissEvent(self, ...)
-	end
-end
-
 -- UNIT_PORTRAIT_UPDATE
 function XPerl_Player_Events:UNIT_PORTRAIT_UPDATE()
 	XPerl_Unit_UpdatePortrait(self, true)
@@ -1334,7 +1346,6 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 		"UNIT_LEVEL",
 		"UNIT_DISPLAYPOWER",
 		"UNIT_NAME_UPDATE",
-		"UNIT_SPELLMISS",
 		"UNIT_FACTION",
 		"UNIT_PORTRAIT_UPDATE",
 		"UNIT_FLAGS",

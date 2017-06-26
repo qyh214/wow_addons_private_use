@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1743, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16237 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16266 $"):sub(12, -3))
 mod:SetCreatureID(106643)
 mod:SetEncounterID(1872)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--During soft enrage will go over 8 debuffs, can't mark beyond that
-mod:SetHotfixNoticeRev(16196)
+mod:SetHotfixNoticeRev(16265)
 mod.respawnTime = 30
 
 mod:RegisterCombat("combat")
@@ -64,7 +64,7 @@ local specWarnExpedite				= mod:NewSpecialWarningInterrupt(209617, "HasInterrupt
 --Time Layer 1
 local specWarnArcaneticRing			= mod:NewSpecialWarningDodge(208807, nil, nil, nil, 2, 5)
 local specWarnAblation				= mod:NewSpecialWarningTaunt(209615, nil, nil, nil, 1, 2)
-local specWarnSpanningSingularityPre= mod:NewSpecialWarningMoveTo(209168, "Ranged", nil, nil, 1, 7)
+local specWarnSpanningSingularityPre= mod:NewSpecialWarningMoveTo(209168, "RangedDps", nil, 2, 1, 7)
 local specWarnSpanningSingularity	= mod:NewSpecialWarningDodge(209168, nil, nil, nil, 2, 2)
 local specWarnSingularityGTFO		= mod:NewSpecialWarningMove(209168, "-Tank", nil, 2, 1, 2)
 --Time Layer 2
@@ -76,6 +76,7 @@ local specWarnAblationExplosionOut	= mod:NewSpecialWarningMoveAway(209615, nil, 
 local yellAblatingExplosion			= mod:NewFadesYell(209973)
 --Time Layer 3
 local specWarnConflexiveBurst		= mod:NewSpecialWarningYou(209598, nil, nil, nil, 1, 2)
+local specWarnConflexiveBurstTank	= mod:NewSpecialWarningTaunt(209598, nil, nil, nil, 1, 2)
 local specWarnAblativePulse			= mod:NewSpecialWarningInterrupt(209971, "Tank", nil, 2, 1, 2)
 
 --Base
@@ -193,7 +194,7 @@ mod.vb.transitionActive = false
 --Saved Information for echos
 mod.vb.totalRingCasts = 0
 mod.vb.totalbeamCasts = 0
-mod.vb.totalsingularityCasts = 0
+mod.vb.totalsingularityCasts = 1
 
 function mod:OnCombatStart(delay)
 	self.vb.slowElementalCount = 0
@@ -208,7 +209,7 @@ function mod:OnCombatStart(delay)
 	self.vb.transitionActive = false
 	self.vb.totalRingCasts = 0
 	self.vb.totalbeamCasts = 0
-	self.vb.totalsingularityCasts = 0
+	self.vb.totalsingularityCasts = 1
 	timerLeaveNightwell:Start(4-delay)
 	timerTimeElementalsCD:Start(5-delay, SLOW)
 	--timerAblationCD:Start(8.5-delay)--Verify/tweak
@@ -216,7 +217,9 @@ function mod:OnCombatStart(delay)
 		timerTimeElementalsCD:Start(8-delay, FAST)
 		timerSpanningSingularityCD:Start(53.7-delay, 2)
 		specWarnSpanningSingularityPre:Schedule(48.7, DBM_CORE_ROOM_EDGE)
-		voiceSpanningSingularity:Schedule(48.7, "runtoedge")
+		if self.Options.SpecWarn209168moveto then
+			voiceSpanningSingularity:Schedule(48.7, "runtoedge")
+		end
 		countdownSpanningSingularity:Start(53.7)
 		timerArcaneticRing:Start(30-delay, 1)
 		countdownArcaneticRing:Start(30-delay)
@@ -376,9 +379,13 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 209598 then
 		self.vb.burstDebuffCount = self.vb.burstDebuffCount + 1
 		warnConflexiveBurst:CombinedShow(0.5, args.destName)
+		local uId = DBM:GetRaidUnitId(args.destName)
 		if args:IsPlayer() then
 			specWarnConflexiveBurst:Show()
 			voiceConflexiveBurst:Play("targetyou")
+		elseif self:IsTanking(uId, "boss1") then
+			specWarnConflexiveBurstTank:Show(args.destName)
+			voiceConflexiveBurst:Play("tauntboss")
 		end
 		if self.Options.SetIconOnConflexiveBurst then
 			self:SetAlphaIcon(0.5, args.destName)
@@ -579,7 +586,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		--specWarnTimeElementals:Show(STATUS_TEXT_BOTH)
 		--voiceElemental:Play("bigmob")
 		DBM:Debug("Both elementals summoned, this event still exists, probably need custom code for certain difficulties")
-	elseif (spellId == 209168 or spellId == 233012 or spellId == 233011 or spellId == 233009) and self:AntiSpam(4, 3) and not self.vb.transitionActive then
+	elseif (spellId == 209168 or spellId == 233013 or spellId == 233012 or spellId == 233011 or spellId == 233009 or spellId == 233010) and self:AntiSpam(4, 3) and not self.vb.transitionActive then
 		self.vb.singularityCount = self.vb.singularityCount + 1
 		specWarnSpanningSingularity:Show()
 		voiceSpanningSingularity:Play("watchstep")
@@ -594,7 +601,9 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			timerSpanningSingularityCD:Start(timer, nextCount)
 			if self:IsMythic() then
 				specWarnSpanningSingularityPre:Schedule(timer-5, DBM_CORE_ROOM_EDGE)
-				voiceSpanningSingularity:Schedule(timer-5, "runtoedge")
+				if self.Options.SpecWarn209168moveto then
+					voiceSpanningSingularity:Schedule(timer-5, "runtoedge")
+				end
 				countdownSpanningSingularity:Start(timer)
 			end
 		end

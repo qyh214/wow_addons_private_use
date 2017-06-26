@@ -41,35 +41,62 @@ local locales = {
 }
 
 -- Automatically inserted translations
-locales.deDE["bind_on_equip_short"] = "BoE"
-locales.deDE["bind_on_pickup_short"] = "BoP"
-locales.deDE["bind_on_use_short"] = "BoU"
-locales.deDE["button_close"] = "Schließen"
-locales.deDE["button_link"] = "Senden"
-locales.deDE["linkall_threshold_missed"] = "Beute entspricht nicht deinen Qualitätsansprüchen"
-locales.koKR["bind_on_equip_short"] = "착귀"
-locales.koKR["bind_on_pickup_short"] = "획귀"
-locales.koKR["bind_on_use_short"] = "사귀"
-locales.koKR["button_close"] = "닫기"
-locales.koKR["button_link"] = "링크"
-locales.koKR["linkall_threshold_missed"] = "당신의 품질 기준을 충족하는 전리품이 없습니다."
-locales.ruRU["bind_on_equip_short"] = "БоЕ"
-locales.ruRU["bind_on_pickup_short"] = "БоП"
-locales.ruRU["bind_on_use_short"] = "Становится персональным при использовании"
-locales.ruRU["button_close"] = "Закрыть"
-locales.ruRU["button_link"] = "Ссылка"
-locales.ruRU["linkall_threshold_missed"] = "Нет добычи, удовлетворяющей установленному порогу качества"
-locales.zhCN["bind_on_equip_short"] = "装备后绑定"
-locales.zhCN["bind_on_pickup_short"] = "拾取后绑定"
-locales.zhCN["bind_on_use_short"] = "使用后绑定"
-locales.zhCN["button_close"] = "关闭"
-locales.zhCN["button_link"] = "链接"
-locales.zhCN["linkall_threshold_missed"] = "没有达到拾取品质门槛的物品"
-locales.zhTW["bind_on_equip_short"] = "裝綁"
-locales.zhTW["bind_on_pickup_short"] = "拾榜"
-locales.zhTW["bind_on_use_short"] = "使綁"
-locales.zhTW["button_close"] = "關閉"
-locales.zhTW["button_link"] = "連結"
-locales.zhTW["linkall_threshold_missed"] = "沒有達到品質門檻的戰利品"
+locales.ptBR["Frame"] = {
+}
+
+locales.frFR["Frame"] = {
+}
+
+locales.deDE["Frame"] = {
+	["bind_on_equip_short"] = "BoE",
+	["bind_on_pickup_short"] = "BoP",
+	["bind_on_use_short"] = "BoU",
+	["button_close"] = "Schließen",
+	["button_link"] = "Senden",
+	["linkall_threshold_missed"] = "Beute entspricht nicht deinen Qualitätsansprüchen",
+}
+
+locales.koKR["Frame"] = {
+	["bind_on_equip_short"] = "착귀",
+	["bind_on_pickup_short"] = "획귀",
+	["bind_on_use_short"] = "사귀",
+	["button_close"] = "닫기",
+	["button_link"] = "링크",
+	["linkall_threshold_missed"] = "당신의 품질 기준을 만족하는 전리품 없음",
+}
+
+locales.esMX["Frame"] = {
+}
+
+locales.ruRU["Frame"] = {
+	["bind_on_equip_short"] = "БоЕ",
+	["bind_on_pickup_short"] = "БоП",
+	["bind_on_use_short"] = "Становится персональным при использовании",
+	["button_close"] = "Закрыть",
+	["button_link"] = "Ссылка",
+	["linkall_threshold_missed"] = "Нет добычи, удовлетворяющей установленному порогу качества",
+}
+
+locales.zhCN["Frame"] = {
+	["bind_on_equip_short"] = "装备后绑定",
+	["bind_on_pickup_short"] = "拾取后绑定",
+	["bind_on_use_short"] = "使用后绑定",
+	["button_close"] = "关闭",
+	["button_link"] = "链接",
+	["linkall_threshold_missed"] = "没有达到拾取品质门槛的物品",
+}
+
+locales.esES["Frame"] = {
+}
+
+locales.zhTW["Frame"] = {
+	["bind_on_equip_short"] = "裝綁",
+	["bind_on_pickup_short"] = "拾榜",
+	["bind_on_use_short"] = "使綁",
+	["button_close"] = "關閉",
+	["button_link"] = "連結",
+	["linkall_threshold_missed"] = "沒有達到品質門檻的戰利品",
+}
+
 
 XLoot:Localize("Frame", locales)

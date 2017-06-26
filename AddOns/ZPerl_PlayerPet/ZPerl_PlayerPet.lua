@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision: 1010 $")
+end, "$Revision: 1059 $")
 
 local XPerl_Player_Pet_HighlightCallback
 
@@ -111,7 +111,6 @@ function XPerl_Player_Pet_OnLoad(self)
 		"UNIT_PET",
 		"PET_ATTACK_START",
 		"UNIT_COMBAT",
-		"UNIT_SPELLMISS",
 		"VARIABLES_LOADED",
 		--[["PLAYER_REGEN_ENABLED",]]
 		"PLAYER_ENTERING_WORLD",
@@ -450,13 +449,6 @@ function XPerl_Player_Pet_Events:UNIT_COMBAT(...)
 		elseif (damage and damage > 0) then
 			XPerl_Player_Pet_CombatFlash(XPerl_Player_Pet, 0, true)
 		end
-	end
-end
-
--- UNIT_SPELLMISS
-function XPerl_Player_Pet_Events:UNIT_SPELLMISS(...)
-	if (pconf.hitIndicator and pconf.portrait) then
-		CombatFeedback_OnSpellMissEvent(self, ...)
 	end
 end
 

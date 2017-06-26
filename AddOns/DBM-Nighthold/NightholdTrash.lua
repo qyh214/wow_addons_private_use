@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod("NightholdTrash", "DBM-Nighthold")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16195 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16271 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 221164 224510 224246 231005 143807 231737",
+	"SPELL_CAST_START 221164 224510 224246 231005 143807 231737 224440",
 	"SPELL_CAST_SUCCESS 225389",
 	"SPELL_AURA_APPLIED 221344 222111 224572 225390 224632 224560 204744 224978 225856 223655 224982 225105 222079 225845",
 	"SPELL_AURA_APPLIED_DOSE 222079"
@@ -17,10 +17,11 @@ mod:RegisterEvents(
 local warnAnnihilatingOrb			= mod:NewTargetAnnounce(221344, 3)
 local warnCelestialBrand			= mod:NewTargetAnnounce(224560, 2)
 local warnArcaneRelease				= mod:NewTargetAnnounce(225105, 2)
-local warnChosenFate				= mod:NewTargetAnnounce(225845, 2)
+local warnChosenFate				= mod:NewTargetAnnounce(225845, 2, nil, false, 2)
 local warnOozingRush				= mod:NewTargetAnnounce(223655, 2)
 local warnFelGlare					= mod:NewTargetAnnounce(224982, 2)
 
+local specWarnCrushingStomp			= mod:NewSpecialWarningRun(224440, nil, nil, nil, 4, 2)
 local specWarnAnnihilatingOrb		= mod:NewSpecialWarningMoveAway(221344, nil, nil, nil, 1, 2)
 local yellAnnihilatingOrb			= mod:NewYell(221344)
 local specWarnFulminate				= mod:NewSpecialWarningRun(221164, "Melee", nil, nil, 4, 2)
@@ -50,8 +51,9 @@ local specWarnSearingWounds			= mod:NewSpecialWarningStack(222079, nil, 4, nil, 
 local specWarnSearingWoundsOther	= mod:NewSpecialWarningTaunt(222079, nil, nil, nil, 1, 2)
 local specWarnNightwellDischarge	= mod:NewSpecialWarningDodge(231737, nil, nil, nil, 1, 2)
 
-local timerSearingWounds				= mod:NewTargetTimer(20, 222079, nil, "Tank", nil, 5)
+local timerSearingWounds			= mod:NewTargetTimer(20, 222079, nil, "Tank", nil, 5)
 
+local voiceCrushingStomp			= mod:NewVoice(224440)--justrun
 local voiceAnnihilatingOrb			= mod:NewVoice(221344)--runout
 local voiceFulminate				= mod:NewVoice(221164, "Melee")--runout
 local voiceCracklingSlice			= mod:NewVoice(224510, "Tank")--shockwave
@@ -94,6 +96,9 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 231737 and self:AntiSpam(4, 4) then
 		specWarnNightwellDischarge:Show()
 		voiceNightwellDischarge:Play("watchorb")
+	elseif spellId == 224440 then
+		specWarnCrushingStomp:Show()
+		voiceCrushingStomp:Play("justrun")
 	end
 end
 
@@ -179,7 +184,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnFelGlare:Show(args.destName)
 		end
 	elseif spellId == 225845 then
-		warnChosenFate:CombinedShow(0.5, args.destName)
+		warnChosenFate:CombinedShow(1, args.destName)
 		if args:IsPlayer() then
 			specWarnChosenFate:Show()
 			voiceChosenFate:Play("stopattack")

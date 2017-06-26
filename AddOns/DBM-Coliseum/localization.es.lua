@@ -22,7 +22,6 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	WarningSnobold		= "Mostrar aviso cuando aparezca un Vasallo snóbold",
-	PingCharge			= "Marcar en el minimapa cuando Aullahielo vaya a cargar hacia ti",
 	ClearIconsOnIceHowl	= "Quitar todos los iconos antes de cada carga",
 	TimerNextBoss		= "Mostrar temporizador para el siguiente jefe",
 	TimerEmerge			= "Mostrar temporizador para cuando Fauceácida y Aterraescama regresen a la superficie",

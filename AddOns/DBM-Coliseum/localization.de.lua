@@ -22,7 +22,6 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	WarningSnobold		= "Zeige Warnung, wenn ein Schneeboldvasall erscheint",
-	PingCharge			= "Pingt die Minimap, wenn Eisheuler dich niedertrampeln will",
 	ClearIconsOnIceHowl	= "Entferne alle Zeichen vor dem Trampeln",
 	TimerNextBoss		= "Zeige Zeit bis zum Erscheinen des nächsten Bosses",
 	TimerEmerge			= "Zeige Zeit bis Auftauchen",

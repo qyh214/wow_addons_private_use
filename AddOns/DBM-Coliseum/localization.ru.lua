@@ -24,7 +24,6 @@ L:SetMiscLocalization{
 
 L:SetOptionLocalization{
 	WarningSnobold				= "Предупреждение о призыве Снобольда-вассала",
-	PingCharge					= "Показать на миникарте место, куда попадает Ледяной Рев, если он избрал вас целью",
 	ClearIconsOnIceHowl			= "Снимать все иконки перед Топотом",
 	TimerNextBoss				= "Отсчет времени до появления следующего противника",
 	TimerEmerge					= "Отсчет времени до появления",

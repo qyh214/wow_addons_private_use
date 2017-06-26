@@ -52,8 +52,7 @@ function button:UpdateGroup(value)
 end
 
 function button:OnClick()
-	local _, leadship = addon:GetGroupStats()
-	if leadship == "leader" then
+	if addon.leadship == "leader" then
 		self.func()
 	else
 		addon:PrintPermissionError()

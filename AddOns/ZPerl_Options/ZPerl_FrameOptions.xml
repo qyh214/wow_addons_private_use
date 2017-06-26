@@ -4029,6 +4029,7 @@
 											XPerl_Options_EnableSibling(self, "Interact20")
 											XPerl_Options_EnableSibling(self, "Interact30")
 											XPerl_Options_EnableSibling(self, "Interact40")
+											XPerl_Options_EnableSibling(self, "Interact45")
 										end
 									</OnLoad>
 									<OnShow>
@@ -4316,7 +4317,7 @@
 								<Anchors>
 									<Anchor point="LEFT" relativeTo="$parent_OnlyInRaid" relativePoint="RIGHT">
 										<Offset>
-											<AbsDimension x="15" y="0"/>
+											<AbsDimension x="50" y="20"/>
 										</Offset>
 									</Anchor>
 								</Anchors>
@@ -4326,14 +4327,14 @@
 										XPerl_OptionsSetMyText(self, "XPERL_CONF_RANGE_INTERACTNONE")
 									</OnLoad>
 									<OnShow>
-										local t = XPerl_Options_GetSibling("OnlyInRaid",self)
+										local t = XPerl_Options_GetSibling("OnlyInRaid", self)
 										local t2 = _G[t:GetName().."Text"]
-										self:SetPoint("LEFT", t, "RIGHT", t2:GetStringWidth() + 15, 0)
+										self:SetPoint("LEFT", t, "RIGHT", t2:GetStringWidth() + 50, 20)
 										self:SetChecked(XPerlDB.rangeFinder[XPerl_Options.optRange].interact == nil)
 									</OnShow>
 									<OnClick>
 										XPerlDB.rangeFinder[XPerl_Options.optRange].interact = nil
-										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40"})
+										XPerl_Options_CheckRadio(self, {"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40", "Interact45"})
 										self:GetParent():Refresh()
 									</OnClick>
 								</Scripts>
@@ -4357,7 +4358,7 @@
 									</OnShow>
 									<OnClick>
 										XPerlDB.rangeFinder[XPerl_Options.optRange].interact = 3
-										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40"})
+										XPerl_Options_CheckRadio(self, {"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40", "Interact45"})
 										self:GetParent():Refresh()
 									</OnClick>
 								</Scripts>
@@ -4381,7 +4382,7 @@
 									</OnShow>
 									<OnClick>
 										XPerlDB.rangeFinder[XPerl_Options.optRange].interact = 2
-										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40"})
+										XPerl_Options_CheckRadio(self, {"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40", "Interact45"})
 										self:GetParent():Refresh()
 									</OnClick>
 								</Scripts>
@@ -4405,7 +4406,7 @@
 									</OnShow>
 									<OnClick>
 										XPerlDB.rangeFinder[XPerl_Options.optRange].interact = 1
-										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40"})
+										XPerl_Options_CheckRadio(self, {"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40", "Interact45"})
 										self:GetParent():Refresh()
 									</OnClick>
 								</Scripts>
@@ -4429,7 +4430,31 @@
 									</OnShow>
 									<OnClick>
 										XPerlDB.rangeFinder[XPerl_Options.optRange].interact = 5
-										XPerl_Options_CheckRadio(self,{"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40"})
+										XPerl_Options_CheckRadio(self, {"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40", "Interact45"})
+										self:GetParent():Refresh()
+									</OnClick>
+								</Scripts>
+							</CheckButton>
+
+							<CheckButton name="$parent_Interact45" inherits="XPerlRadioButtonTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_Interact40" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="3"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										self:SetChecked(false)
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_RANGE_INTERACT45")
+									</OnLoad>
+									<OnShow>
+										self:SetChecked(XPerlDB.rangeFinder[XPerl_Options.optRange].interact == 6)
+									</OnShow>
+									<OnClick>
+										XPerlDB.rangeFinder[XPerl_Options.optRange].interact = 6
+										XPerl_Options_CheckRadio(self, {"InteractNone", "Interact10", "Interact20", "Interact30", "Interact40", "Interact45"})
 										self:GetParent():Refresh()
 									</OnClick>
 								</Scripts>
@@ -5667,7 +5692,7 @@
 										self.Validate = function()
 											XPerl_Options_EnableSibling(self, "PlayerDebuffs")
 											XPerl_Options_EnableSibling(self, "PlayerBuffsAbove")
-											XPerl_Options_EnableSibling(self, "HideBlizzardBuffBar")
+											--XPerl_Options_EnableSibling(self, "HideBlizzardBuffBar")
 											XPerl_Options_EnableSibling(self, "FlashExpiring")
 											XPerl_Options_EnableSibling(self, "Cooldowns")
 											XPerl_Options_EnableSibling(self, "MaxBuffs")
@@ -5734,40 +5759,12 @@
 								</Scripts>
 							</CheckButton>
 
-							<CheckButton name="$parent_HideBlizzardBuffBar" inherits="XPerlCheckButtonTemplate">
-								<Size>
-									<AbsDimension x="26" y="26"/>
-								</Size>
-								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_PlayerBuffsAbove" relativePoint="BOTTOMLEFT">
-										<Offset>
-											<AbsDimension x="0" y="6"/>
-										</Offset>
-									</Anchor>
-								</Anchors>
-								<Scripts>
-									<OnLoad>
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_BUFFSHIDEBLIZZ")
-										self.flashFrame = XPerl_PlayerbuffFrame
-										self.configBase = "XPerlDB.player.buffs"
-										self.configIndex = "hideBlizzard"
-										self.configClick = function()
-											if (XPerl_Player_BuffSetup) then
-												XPerl_Player_BuffSetup(XPerl_Player)
-											end
-											--BuffFrame_Update()
-										end
-										XPerl_Options_RegisterProtected(self)
-									</OnLoad>
-								</Scripts>
-							</CheckButton>
-
 							<CheckButton name="$parent_FlashExpiring" inherits="XPerlCheckButtonTemplate">
 								<Size>
 									<AbsDimension x="26" y="26"/>
 								</Size>
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_HideBlizzardBuffBar" relativePoint="BOTTOMLEFT">
+									<Anchor point="TOPLEFT" relativeTo="$parent_PlayerBuffsAbove" relativePoint="BOTTOMLEFT">
 										<Offset>
 											<AbsDimension x="0" y="6"/>
 										</Offset>
@@ -5980,6 +5977,34 @@
 									</OnValueChanged>
 								</Scripts>
 							</Slider>
+
+							<CheckButton name="$parent_HideBlizzardBuffBar" inherits="XPerlCheckButtonTemplate">
+								<Size>
+									<AbsDimension x="30" y="30"/>
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_PlayerBuffs" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="-180"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_BUFFSHIDEBLIZZ")
+										self.flashFrame = XPerl_PlayerbuffFrame
+										self.configBase = "XPerlDB.player.buffs"
+										self.configIndex = "hideBlizzard"
+										self.configClick = function()
+											if (XPerl_Player_BuffSetup) then
+												XPerl_Player_BuffSetup(XPerl_Player)
+											end
+											BuffFrame_Update()
+										end
+										XPerl_Options_RegisterProtected(self)
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
 						</Frames>
 					</Frame>
 

@@ -186,6 +186,8 @@ XPERL_CONF_RANGE_INTERACT30				= "30 Yards"
 XPERL_CONF_RANGE_INTERACT30_DESC		= "Use a fixed 30 yard range check regardless of item/spell selection."
 XPERL_CONF_RANGE_INTERACT40				= "40 Yards"
 XPERL_CONF_RANGE_INTERACT40_DESC		= "Use a fixed 40 yard range check regardless of item/spell selection."
+XPERL_CONF_RANGE_INTERACT45				= "45 Yards"
+XPERL_CONF_RANGE_INTERACT45_DESC		= "Use a fixed 45 yard range check regardless of item/spell selection."
 
 if (GetCursorInfo) then
 XPERL_CONF_CUSTOMSPELL_DESC2			= "Drop a spell or item here to replace this-"

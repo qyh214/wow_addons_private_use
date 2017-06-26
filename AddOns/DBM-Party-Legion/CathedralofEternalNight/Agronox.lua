@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1905, "DBM-Party-Legion", 12, 900)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16248 $"):sub(12, -3))
 mod:SetCreatureID(117193)
 mod:SetEncounterID(2055)
 mod:SetZone()
@@ -22,7 +22,7 @@ mod:RegisterEventsInCombat(
 local warnSpores					= mod:NewSpellAnnounce(236524, 2)
 
 local specWarnTimberSmash			= mod:NewSpecialWarningDefensive(235751, "Tank", nil, nil, 1, 2)
-local specWarnChokingVine			= mod:NewSpecialWarningMove(238598, nil, nil, nil, 1, 2)
+local specWarnChokingVine			= mod:NewSpecialWarningRun(238598, nil, nil, nil, 4, 2)
 local specWarnSucculentSecretion	= mod:NewSpecialWarningMove(240065, nil, nil, nil, 1, 2)
 local specWarnFulminatingLashers	= mod:NewSpecialWarningSwitch(236527, "-Healer", nil, nil, 1, 2)
 local specWarnSucculentLashers		= mod:NewSpecialWarningSwitch(236639, "-Healer", nil, nil, 1, 2)

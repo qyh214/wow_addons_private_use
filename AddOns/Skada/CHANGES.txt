@@ -1,32 +1,14 @@
 ------------------------------------------------------------------------
-r735 | zarnivoop | 2017-05-14 14:22:00 -0500 (Sun, 14 May 2017) | 1 line
-Changed paths:
-   M /trunk/modules/Debuffs.lua
-
-fixed buff/debuffs counters being a bit wacky
-------------------------------------------------------------------------
-r734 | zarnivoop | 2017-05-14 13:57:22 -0500 (Sun, 14 May 2017) | 1 line
-Changed paths:
-   M /trunk/modules/Debuffs.lua
-
-added spell icons for debuffs/buffs
-------------------------------------------------------------------------
-r733 | zarnivoop | 2017-05-14 12:41:13 -0500 (Sun, 14 May 2017) | 1 line
-Changed paths:
-   M /trunk/Version.lua
-
-have some version notifications too!
-------------------------------------------------------------------------
-r732 | zarnivoop | 2017-05-14 12:37:28 -0500 (Sun, 14 May 2017) | 1 line
+r738 | zarnivoop | 2017-06-25 04:15:29 -0500 (Sun, 25 Jun 2017) | 1 line
 Changed paths:
    M /trunk/locale/enUS.lua
 
-localization
+hps datatext localization
 ------------------------------------------------------------------------
-r731 | zarnivoop | 2017-05-14 12:36:58 -0500 (Sun, 14 May 2017) | 1 line
+r737 | zarnivoop | 2017-06-25 04:15:08 -0500 (Sun, 25 Jun 2017) | 1 line
 Changed paths:
-   M /trunk/modules/Debuffs.lua
+   M /trunk/modules/Healing.lua
 
-added buff/debuff spell overviews
+hps datatexts
 ------------------------------------------------------------------------
 

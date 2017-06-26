@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1053 $")
+end, "$Revision: 1059 $")
 
 -- Upvalues
 local _G = _G
@@ -122,7 +122,6 @@ function XPerl_Target_OnLoad(self, partyid)
 		"PARTY_LEADER_CHANGED",
 		"PARTY_LOOT_METHOD_CHANGED",
 		"UNIT_THREAT_LIST_UPDATE",
-		"UNIT_SPELLMISS",
 		"UNIT_FACTION",
 		"UNIT_FLAGS",
 		"UNIT_CLASSIFICATION_CHANGED",
@@ -1435,13 +1434,6 @@ function XPerl_Target_Events:UNIT_COMBAT(unitID, action, descriptor, damage, dam
 		elseif (damage and damage > 0) then
 			XPerl_Target_CombatFlash(self, 0, true)
 		end
-	end
-end
-
--- UNIT_SPELLMISS
-function XPerl_Target_Events:UNIT_SPELLMISS(...)
-	if (self.conf.hitIndicator and self.conf.portrait) then
-		CombatFeedback_OnSpellMissEvent(self, ...)
 	end
 end
 

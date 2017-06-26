@@ -67,6 +67,12 @@ local function Deaths_OnLeave()
 	GameTooltip:Hide()
 end
 
+local function CheckHideDefaultDeathTracher(self)
+	if Addon.Config.deathTracker then
+		self:Hide()
+	end
+end
+
 local function GetTimerFrame(block)
 	if not block.TimerFrame then
 		local TimerFrame = CreateFrame("Frame", nil, block)
@@ -106,6 +112,9 @@ local function GetTimerFrame(block)
 		TimerFrame.DeathsFrame.Icon:SetTexture("Interface\\Minimap\\POIIcons")
 		TimerFrame.DeathsFrame.Icon:SetTexCoord( GetPOITextureCoords(8) )
 		TimerFrame.DeathsFrame.Icon:Show()
+
+		hooksecurefunc(block.DeathCount, "Update", CheckHideDefaultDeathTracher)
+		CheckHideDefaultDeathTracher(block.DeathCount)
 
 		TimerFrame:Show()
 
@@ -253,8 +262,10 @@ function Mod:Startup()
 	self:RegisterEvent("CHALLENGE_MODE_START")
 	self:RegisterEvent("CHALLENGE_MODE_RESET")
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+
 	Addon.Config:RegisterCallback('deathTracker', function()
 		self:UpdatePlayerDeaths()
+		ScenarioChallengeModeBlock.DeathCount:Update()
 	end)
 	Addon.Config:RegisterCallback('smallAffixes', function()
 		local level, affixes, wasEnergized = C_ChallengeMode.GetActiveKeystoneInfo()

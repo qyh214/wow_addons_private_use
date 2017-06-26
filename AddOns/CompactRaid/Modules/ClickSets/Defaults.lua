@@ -105,6 +105,7 @@ module.DEFAULT_SPELLS = {
 
 	ROGUE = {
 		57934, -- Tricks of the Trade
+		36554, -- Shadow Step
 	},
 
 	DEATHKNIGHT = {
@@ -191,6 +192,7 @@ local CLASS_DEFAULTS = {
 
 	ROGUE = {
 		["ctrl-1"]	= 57934, -- Tricks of the Trade
+		["alt-1"]	= 36554, -- Shadow Step
 	},
 
 	DEATHKNIGHT = {

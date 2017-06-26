@@ -36,21 +36,48 @@ local locales = {
 }
 
 -- Automatically inserted translations
-locales.ptBR["alert_anchor"] = "Aparecer Saques"
-locales.deDE["alert_anchor"] = "Beute Popups"
-locales.deDE["anchor"] = "Gruppenwürfe"
-locales.deDE["undecided"] = "Unentschlossen"
-locales.koKR["alert_anchor"] = "전리품 팝업"
-locales.koKR["anchor"] = "그룹 주사위"
-locales.koKR["undecided"] = "미결정"
-locales.ruRU["alert_anchor"] = "Всплывающие фреймы добычи"
-locales.ruRU["anchor"] = "Броски группы"
-locales.ruRU["undecided"] = "Не принял решения"
-locales.zhCN["alert_anchor"] = "掷骰弹窗锚点"
-locales.zhCN["anchor"] = "团队掷骰锚点"
-locales.zhCN["undecided"] = "未决定的"
-locales.zhTW["alert_anchor"] = "拾取彈出視窗定位"
-locales.zhTW["anchor"] = "團體擲骰定位"
-locales.zhTW["undecided"] = "未決"
+locales.ptBR["Group"] = {
+	["alert_anchor"] = "Aparecer Saques",
+}
+
+locales.frFR["Group"] = {
+}
+
+locales.deDE["Group"] = {
+	["alert_anchor"] = "Beute Popups",
+	["anchor"] = "Gruppenwürfe",
+	["undecided"] = "Unentschlossen",
+}
+
+locales.koKR["Group"] = {
+	["alert_anchor"] = "전리품 팝업",
+	["anchor"] = "그룹 주사위",
+	["undecided"] = "미결정",
+}
+
+locales.esMX["Group"] = {
+}
+
+locales.ruRU["Group"] = {
+	["alert_anchor"] = "Всплывающие фреймы добычи",
+	["anchor"] = "Броски группы",
+	["undecided"] = "Не принял решения",
+}
+
+locales.zhCN["Group"] = {
+	["alert_anchor"] = "掷骰弹窗锚点",
+	["anchor"] = "团队掷骰锚点",
+	["undecided"] = "未决定的",
+}
+
+locales.esES["Group"] = {
+}
+
+locales.zhTW["Group"] = {
+	["alert_anchor"] = "拾取彈出視窗定位",
+	["anchor"] = "團體擲骰定位",
+	["undecided"] = "未決",
+}
+
 
 XLoot:Localize("Group", locales)

@@ -11,7 +11,7 @@
 -- API Documentation:
 -----------------------------------------------------------
 
--- addon = LibAddonManager:CreateAddon("name", addon) -- Take over the addon object
+-- addon = LibAddonManager:CreateAddon(...) -- Take over the addon object
 
 -- addon is a table represents your addon object, it contains the following field upon creation:
 
@@ -64,7 +64,7 @@
 -- addon:UnregisterEvent("event")
 -- addon:RegisterAllEvents()
 -- addon:UnregisterAllEvents()
--- addon:RegisterTick(interval)
+-- addon:RegisterTick(interval) -- addon:OnTick() will be called every "interval" seconds
 -- addon:UnregisterTick()
 -- addon:SetInterval(interval)
 -- addon:IsTicking()

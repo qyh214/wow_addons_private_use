@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1751, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16232 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16271 $"):sub(12, -3))
 mod:SetCreatureID(104881)
 mod:SetEncounterID(1871)
 mod:SetZone()
@@ -157,7 +157,7 @@ local rangeShowAll = false
 local chargeTable = {}
 local annihilateTimers = {8.0, 45.0, 40.0, 44.0, 38.0, 37.0, 33.0, 47.0, 41.0, 44.0, 38.0, 37.0, 33.0}--Need longer pulls/more data. However this pattern did prove to always be same
 local mythicAnnihilateTimers = {8, 46, 30, 37, 35, 43, 27, 37, 41, 37, 35, 43, 27}
-local felLashTimers = {21, 10.9, 6, 12, 6}
+local felLashTimers = {21, 10.9, 6, 11, 6}
 local searingDetonateIcons = {}
 
 local debuffFilter

@@ -16,16 +16,17 @@ BOSS = 1862
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 233279)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 230345)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 231363, 5)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 236329)
 
 BOSS = 1867
-module:RegisterDebuff(TIER, INSTANCE, BOSS, 233104)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 233430)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 233983, 5)
-module:RegisterDebuff(TIER, INSTANCE, BOSS, 239358)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 248713)
 
 BOSS = 1856
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 231770)
-module:RegisterDebuff(TIER, INSTANCE, BOSS, 231998, 5)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 231998, 4)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 234016, 5)
 
 BOSS = 1903
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 236603)
@@ -35,10 +36,18 @@ module:RegisterDebuff(TIER, INSTANCE, BOSS, 236519)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 236547, 5)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 236550)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 239264)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 237351, 4)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 236712, 4)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 237561)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 236305, 4)
 
 BOSS = 1861
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 230959)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 230201)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 234661)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 230139)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 232754)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 232913)
 
 BOSS = 1896
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 236449)
@@ -50,7 +59,7 @@ module:RegisterDebuff(TIER, INSTANCE, BOSS, 236340, 4)
 BOSS = 1897
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 235213)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 235240)
-module:RegisterDebuff(TIER, INSTANCE, BOSS, 235117)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 235117, 5)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 235534)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 235538)
 
@@ -66,3 +75,11 @@ module:RegisterDebuff(TIER, INSTANCE, BOSS, 237725)
 module:RegisterDebuff(TIER, INSTANCE, BOSS, 239932, 5)
 
 BOSS = 0
+
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 240706)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 239810)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 240737)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 240766)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 241171)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 241009)
+module:RegisterDebuff(TIER, INSTANCE, BOSS, 239666)

@@ -23,7 +23,6 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	WarningSnobold				= "스노볼트 부하 생성 알림 보기",
 	ClearIconsOnIceHowl			= "사나운 돌진 전에 모든 전술 목표 아이콘 지움",
-	PingCharge					= "사나운 돌진 대상이 있는 위치를 미니맵에 보기",
 	TimerNextBoss				= "다음 우두머리 등장 바 보기",
 	TimerEmerge					= "출현 바 보기",
 	TimerSubmerge				= "숨기 바 보기",

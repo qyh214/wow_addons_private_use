@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 16243 $"):sub(12, -3)),
-	DisplayVersion = "7.2.7", -- the string that is shown as version
-	ReleaseRevision = 16243 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 16324 $"):sub(12, -3)),
+	DisplayVersion = "7.2.10", -- the string that is shown as version
+	ReleaseRevision = 16324 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -388,7 +388,7 @@ local UpdateChestTimer
 local breakTimerStart
 local AddMsg
 
-local fakeBWVersion, fakeBWHash = 54, "31ef498"
+local fakeBWVersion, fakeBWHash = 56, "2dbc3da"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -414,6 +414,10 @@ local bannedMods = { -- a list of "banned" (meaning they are replaced by another
 local LL
 if LibStub("LibLatency", true) then
 	LL = LibStub("LibLatency")
+end
+local LD
+if LibStub("LibDurability", true) then
+	LD = LibStub("LibDurability")
 end 
 
 
@@ -1734,13 +1738,13 @@ do
 		local xNum, yNum = tonumber(x or ""), tonumber(y or "")
 		local success
 		if xNum and yNum then
-			DBM.Arrow:ShowRunTo(xNum, yNum, 0.5, nil, true)
+			DBM.Arrow:ShowRunTo(xNum, yNum, 1, nil, true)
 			success = true
 		else--Check if they used , instead of space.
 			x, y = string.split(",", msg:sub(1):trim())
 			xNum, yNum = tonumber(x or ""), tonumber(y or "")
 			if xNum and yNum then
-				DBM.Arrow:ShowRunTo(xNum, yNum, 0.5, nil, true)
+				DBM.Arrow:ShowRunTo(xNum, yNum, 1, nil, true)
 				success = true
 			end
 		end
@@ -1936,6 +1940,14 @@ do
 			LL:RequestLatency()
 			DBM:AddMsg(DBM_CORE_LAG_CHECKING)
 			C_TimerAfter(5, function() DBM:ShowLag() end)
+		elseif cmd:sub(1, 10) == "durability" then
+			if not LD then
+				DBM:AddMsg(DBM_CORE_UPDATE_REQUIRES_RELAUNCH)
+				return
+			end
+			LD:RequestDurability()
+			DBM:AddMsg(DBM_CORE_DUR_CHECKING)
+			C_TimerAfter(5, function() DBM:ShowDurability() end)
 		elseif cmd:sub(1, 3) == "hud" then
 			if DBM:HasMapRestrictions() then
 				DBM:AddMsg(DBM_CORE_NO_HUD)
@@ -2272,6 +2284,52 @@ do
 			if sender and raid[sender] then
 				raid[sender].homelag = homelag
 				raid[sender].worldlag = worldlag
+			end
+		end)
+	end
+
+end
+
+-- Durability checking
+do
+	local sortDur = {}
+	local nodurResponse = {}
+	local function sortit(v1, v2)
+		return (v1.worldlag or 0) < (v2.worldlag or 0)
+	end
+	function DBM:ShowDurability()
+		for i, v in pairs(raid) do
+			tinsert(sortDur, v)
+		end
+		tsort(sortDur, sortit)
+		self:AddMsg(DBM_CORE_DUR_HEADER)
+		for i, v in ipairs(sortDur) do
+			local name = v.name
+			local playerColor = RAID_CLASS_COLORS[DBM:GetRaidClass(name)]
+			if playerColor then
+				name = ("|r|cff%.2x%.2x%.2x%s|r|cff%.2x%.2x%.2x"):format(playerColor.r * 255, playerColor.g * 255, playerColor.b * 255, name, 0.41 * 255, 0.8 * 255, 0.94 * 255)
+			end
+			if v.durpercent then
+				self:AddMsg(DBM_CORE_DUR_ENTRY:format(name, v.durpercent, v.durbroken), false)
+			else
+				tinsert(nodurResponse, v.name)
+			end
+		end
+		if #nodurResponse > 0 then
+			self:AddMsg(DBM_CORE_LAG_FOOTER:format(tconcat(nodurResponse, ", ")), false)
+			for i = #nodurResponse, 1, -1 do
+				nodurResponse[i] = nil
+			end
+		end
+		for i = #sortDur, 1, -1 do
+			sortDur[i] = nil
+		end
+	end
+	if LD then
+		LD:Register("DBM", function(percent, broken, sender, channel)
+			if sender and raid[sender] then
+				raid[sender].durpercent = percent
+				raid[sender].durbroken = broken
 			end
 		end)
 	end
@@ -3564,7 +3622,7 @@ end
 --------------------------------
 do
 	local function checkMods(self)
-		if difficultyIndex == 24 then--Timewalking
+		if difficultyIndex == 24 or difficultyIndex == 33 then--Timewalking
 			if (LastInstanceMapID == 540 or LastInstanceMapID == 558 or LastInstanceMapID == 556 or LastInstanceMapID == 555 or LastInstanceMapID == 542 or LastInstanceMapID == 546 or LastInstanceMapID == 545 or LastInstanceMapID == 547 or LastInstanceMapID == 553 or LastInstanceMapID == 554 or LastInstanceMapID == 552 or LastInstanceMapID == 557 or LastInstanceMapID == 269 or LastInstanceMapID == 560 or LastInstanceMapID == 543 or LastInstanceMapID == 585) and not self.Options.BCTWMessageShown and not GetAddOnInfo("DBM-Party-BC") then
 				self.Options.BCTWMessageShown = true
 				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-Party-BC"))
@@ -5609,7 +5667,7 @@ do
 							self:AddMsg(DBM_CORE_SCENARIO_STARTED:format(difficultyText..name))
 						else
 							self:AddMsg(DBM_CORE_COMBAT_STARTED:format(difficultyText..name))
-							if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 then--Only send relevant content, not guild beating down lich king or LFR.
+							if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 or difficultyIndex == 33 then--Only send relevant content, not guild beating down lich king or LFR.
 								if InGuildParty() then--Guild Group
 									SendAddonMessage("D4", "GCB\t"..modId.."\t2\t"..difficultyIndex, "GUILD")
 								end
@@ -5691,7 +5749,7 @@ do
 
 	function DBM:EndCombat(mod, wipe)
 		if removeEntry(inCombat, mod) then
-			local scenario = mod.addon.type == "SCENARIO"
+			local scenario = mod.addon.type == "SCENARIO" and not mod.soloChallenge
 			if mod.inCombatOnlyEvents and mod.inCombatOnlyEventsRegistered then
 				-- unregister all events except for SPELL_AURA_REMOVED events (might still be needed to remove icons etc...)
 				mod:UnregisterInCombatEvents()
@@ -5758,7 +5816,7 @@ do
 							self:AddMsg(DBM_CORE_SCENARIO_ENDED_AT_LONG:format(difficultyText..name, strFromTime(thisTime), totalPulls - totalKills))
 						else
 							self:AddMsg(DBM_CORE_COMBAT_ENDED_AT_LONG:format(difficultyText..name, wipeHP, strFromTime(thisTime), totalPulls - totalKills))
-							if (difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() then--Maybe add mythic plus/CM?
+							if (difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 or difficultyIndex == 33) and InGuildParty() then--Maybe add mythic plus/CM?
 								SendAddonMessage("D4", "GCE\t"..modId.."\t3\t1\t"..strFromTime(thisTime).."\t"..difficultyIndex.."\t"..wipeHP, "GUILD")
 							end
 						end
@@ -5840,7 +5898,7 @@ do
 							msg = DBM_CORE_SCENARIO_COMPLETE:format(difficultyText..name, strFromTime(thisTime))
 						else
 							msg = DBM_CORE_BOSS_DOWN:format(difficultyText..name, strFromTime(thisTime))
-							if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 then
+							if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 or difficultyIndex == 33 then
 								if InGuildParty() then--Guild Group
 									SendAddonMessage("D4", "GCE\t"..modId.."\t3\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex, "GUILD")
 								end
@@ -5851,7 +5909,7 @@ do
 							msg = DBM_CORE_SCENARIO_COMPLETE_NR:format(difficultyText..name, strFromTime(thisTime), strFromTime(bestTime), totalKills)
 						else
 							msg = DBM_CORE_BOSS_DOWN_NR:format(difficultyText..name, strFromTime(thisTime), strFromTime(bestTime), totalKills)
-							if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 then
+							if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 or difficultyIndex == 33 then
 								if InGuildParty() then--Guild Group
 									SendAddonMessage("D4", "GCE\t"..modId.."\t3\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex, "GUILD")
 								end
@@ -5862,7 +5920,7 @@ do
 							msg = DBM_CORE_SCENARIO_COMPLETE_L:format(difficultyText..name, strFromTime(thisTime), strFromTime(lastTime), strFromTime(bestTime), totalKills)
 						else
 							msg = DBM_CORE_BOSS_DOWN_L:format(difficultyText..name, strFromTime(thisTime), strFromTime(lastTime), strFromTime(bestTime), totalKills)
-							if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 then
+							if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 or difficultyIndex == 33 then
 								if InGuildParty() then--Guild Group
 									SendAddonMessage("D4", "GCE\t"..modId.."\t3\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex, "GUILD")
 								end
@@ -6115,7 +6173,7 @@ function DBM:GetCurrentInstanceDifficulty()
 		return "event20", difficultyName.." - ", difficulty, instanceGroupSize
 	elseif difficulty == 23 then
 		return "mythic", difficultyName.." - ", difficulty, instanceGroupSize
-	elseif difficulty == 24 then
+	elseif difficulty == 24 or difficulty == 33 then
 		return "timewalker", difficultyName.." - ", difficulty, instanceGroupSize
 --	elseif difficulty == 25 then--Used by Ashran in 7.x.
 --		return "pvpscenario", difficultyName.." - ", difficulty, instanceGroupSize
@@ -9638,6 +9696,10 @@ do
 
 	function bossModPrototype:NewSpecialWarningMove(text, optionDefault, ...)
 		return newSpecialWarning(self, "move", text, nil, optionDefault, ...)
+	end
+	
+	function bossModPrototype:NewSpecialWarningGTFO(text, optionDefault, ...)
+		return newSpecialWarning(self, "gtfo", text, nil, optionDefault, ...)
 	end
 	
 	function bossModPrototype:NewSpecialWarningDodge(text, optionDefault, ...)

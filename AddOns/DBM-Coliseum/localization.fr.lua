@@ -24,7 +24,6 @@ L:SetMiscLocalization{
 
 L:SetOptionLocalization{
 	WarningSnobold				= "Montre une alerte quand les Vassal arrivent",
-	PingCharge					= "Ping sur la minimap quand Glace-hurlante va vous charger",
 	ClearIconsOnIceHowl			= "Enlève toutes les icônes avant la prochaine charge",
 	TimerNextBoss				= "Montre le timer pour l'arrivée du prochain boss",
 	TimerEmerge					= "Montre le timer avant que les vers rentre dans le sol",
