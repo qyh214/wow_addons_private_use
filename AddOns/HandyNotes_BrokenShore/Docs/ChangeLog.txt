@@ -1,7 +1,17 @@
-$Id: ChangeLog.txt 66 2017-06-13 10:18:01Z arith $
+$Id: ChangeLog.txt 70 2017-07-02 14:53:21Z arith $
 
 Revision History:
 =================
+
+* v1.19 (Jul. 02, 2017)
+-----------------------
+- Lib Update: LibUIDropDownMenu
+- Treasure data updated
+- Rare node enhanced
+- Nether portals' location tuning
+# For Development:
+  - Added iterCont() to allow POIs to be displayed on continent maps
+    (but for now I have not yet decided to activate this feature)
 
 * v1.18 (Jun. 13, 2017)
 -----------------------

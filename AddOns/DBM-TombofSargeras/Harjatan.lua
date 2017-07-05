@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1856, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16289 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16380 $"):sub(12, -3))
 mod:SetCreatureID(116407)
 mod:SetEncounterID(2036)
 mod:SetZone()
@@ -23,7 +23,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_MISSED 231768",
 	"UNIT_DIED",
 	"INSTANCE_ENCOUNTER_ENGAGE_UNIT",
---	"UNIT_POWER_FREQUENT boss1",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -59,7 +58,7 @@ local specWarnDrenchingWaters		= mod:NewSpecialWarningMove(231768, nil, nil, nil
 local specWarnCommandingroar		= mod:NewSpecialWarningSwitch(232192, "-Healer", nil, nil, 1, 2)
 --Razorjaw Wavemender
 local specWarnAqueousBurst			= mod:NewSpecialWarningMoveAway(231729, nil, nil, nil, 1, 2)
-local yellAqueousBurst				= mod:NewYell(231729)
+local yellAqueousBurst				= mod:NewShortYell(231729)
 local specWarnTendWounds			= mod:NewSpecialWarningInterrupt(231904, "HasInterrupt")
 local specWarnTendWoundsDispel		= mod:NewSpecialWarningDispel(231904, "MagicDispeller")
 --Razorjaw Gladiator
@@ -75,13 +74,12 @@ local timerDrawInCD					= mod:NewNextTimer(59, 232061, nil, nil, nil, 6)
 local timerCommandingRoarCD			= mod:NewNextTimer(31.8, 232192, nil, nil, nil, 1)
 --Razorjaw Wavemender
 local timerAqueousBurstCD			= mod:NewCDTimer(6, 231729, nil, false, nil, 3)--6-8
-local timerTendWoundsCD				= mod:NewAITimer(15, 231904, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 --Razorjaw Gladiator
 local timerDrivenAssault			= mod:NewTargetTimer(10, 234016, nil, false, nil, 3)--Too many spawn, this would be spammy so off by default
 local timerSplashCleaveCD			= mod:NewCDTimer(12, 234129, nil, false, nil, 5, nil, DBM_CORE_TANK_ICON)
 --Mythic
-local timerHatchingCD				= mod:NewCDTimer(40.6, 240319, nil, nil, nil, 1)--40.6-42
---local berserkTimer				= mod:NewBerserkTimer(300)
+local timerHatchingCD				= mod:NewNextTimer(40.6, 240319, nil, nil, nil, 1)--40.6-42
+local berserkTimer					= mod:NewBerserkTimer(360)
 
 --Harjatan
 local countdownUncheckedRage		= mod:NewCountdown(20, 231854)
@@ -108,13 +106,12 @@ local voiceTantrum					= mod:NewVoice(241590)--aesoon
 --mod:AddRangeFrameOption("5/8/15")
 mod:AddNamePlateOption("NPAuraOnSicklyFixate", 241600)
 mod:AddNamePlateOption("NPAuraOnDrivenAssault", 234016)
+mod:AddSetIconOption("SetIconOnWavemender", "ej14555", true, true)
 
---mod.vb.rageWarned = false
 mod.vb.rageCount = 0
 local seenMobs = {}
 
 function mod:OnCombatStart(delay)
-	--self.vb.rageWarned = false
 	self.vb.rageCount = 0
 	table.wipe(seenMobs)
 	timerUncheckedRageCD:Start(-delay, 1)
@@ -126,9 +123,11 @@ function mod:OnCombatStart(delay)
 		timerCommandingRoarCD:Start(6.3-delay)
 		if self:IsMythic() then
 			timerHatchingCD:Start(30.5-delay)
+			berserkTimer:Start(360-delay)
 		end
 	else
 		timerCommandingRoarCD:Start(17.3-delay)
+		berserkTimer:Start(480-delay)--Confirm in LFR too?
 	end
 	if self.Options.NPAuraOnSicklyFixate and self:IsMythic() or self.Options.NPAuraOnDrivenAssault then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
@@ -159,10 +158,9 @@ function mod:SPELL_CAST_START(args)
 		voiceUncheckedRage:Play(17, "gathershare")
 		timerDrawInCD:Start()
 		if self:IsMythic() then
-			--timerHatchingCD:Start()
+			timerHatchingCD:Start(30)
 		end
 	elseif spellId == 231904 then
-		timerTendWoundsCD:Start(nil, args.sourceGUID)
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnTendWounds:Show(args.sourceName)
 			voiceTendWounds:Play("kickcast")
@@ -182,20 +180,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerAqueousBurstCD:Start(nil, args.sourceGUID)
 	elseif spellId == 231854 then--Unchecked Rage
 		self.vb.rageCount = self.vb.rageCount + 1
-		local remaining = timerDrawInCD:GetRemaining()
-		if remaining > 20 then
-			timerUncheckedRageCD:Start(nil, self.vb.rageCount+1)
-			countdownUncheckedRage:Start()
-			specWarnUncheckedRage:Schedule(17, self.vb.rageCount+1)
-			voiceUncheckedRage:Schedule(17, "gathershare")
-		else
-			--It'll be cast immediately after 10 second cast of draw in + 1, unless draw in successfully absorbs pools
-			DBM:Debug("Draw In is next before unchecked Rage", 2)
-			--timerUncheckedRageCD:Start(remaining+11, self.vb.rageCount+1)
-			--countdownUncheckedRage:Start(remaining+11)
-			--specWarnUncheckedRage:Schedule(remaining+7, self.vb.rageCount+1)
-			--voiceUncheckedRage:Schedule(remaining+7, "gathershare")--]]
-		end
+		timerUncheckedRageCD:Start(nil, self.vb.rageCount+1)
+		countdownUncheckedRage:Start()
+		specWarnUncheckedRage:Schedule(17, self.vb.rageCount+1)
+		voiceUncheckedRage:Schedule(17, "gathershare")
 	elseif spellId == 234129 then
 		timerSplashCleaveCD:Start(nil, args.sourceGUID)
 	end
@@ -249,24 +237,29 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId)
 		end
 	elseif spellId == 241600 then
+		warnSicklyFixate:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnSicklyFixate:Show()
 			voiceSicklyFixate:Play("justrun")
 			voiceSicklyFixate:Schedule(1, "keepmove")
-		else
-			warnSicklyFixate:Show(args.destName)
 		end
 		if self.Options.NPAuraOnSicklyFixate then
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId)
 		end
-	elseif spellId == 233429 then--Frigid Blows
+	--[[elseif spellId == 233429 then--Frigid Blows
+		timerUncheckedRageCD:Stop()
+		countdownUncheckedRage:Cancel()
+		specWarnUncheckedRage:Cancel()
+		voiceUncheckedRage:Cancel()
+		timerCommandingRoarCD:Stop()
+		timerDrawInCD:Stop()--]]
+	elseif spellId == 232061 then
 		timerUncheckedRageCD:Stop()
 		countdownUncheckedRage:Cancel()
 		specWarnUncheckedRage:Cancel()
 		voiceUncheckedRage:Cancel()
 		timerCommandingRoarCD:Stop()
 		timerDrawInCD:Stop()
-	elseif spellId == 232061 then
 		warnDrawIn:Show()
 	end
 end
@@ -305,7 +298,6 @@ function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 116569 then--Razorjaw Wavemender
 		timerAqueousBurstCD:Stop(args.destGUID)
-		timerTendWoundsCD:Stop(args.destGUID)
 	elseif cid == 117596 then--Razorjaw Gladiator
 		timerSplashCleaveCD:Stop(args.destGUID)
 	--elseif cid == 117522 then--Darkscale Taskmaster
@@ -328,59 +320,24 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 			local cid = self:GetCIDFromGUID(GUID)
 			if cid == 116569 then--Razorjaw Wavemender
 				--timerAqueousBurstCD:Start(1, GUID)
-				timerTendWoundsCD:Start(1, GUID)
-			elseif cid == 117596 then--Razorjaw Gladiator
-
-			--elseif cid == 117522 then--Darkscale Taskmaster
-				--timerFrostySpittleCD:Start(1, GUID)
+				if self.Options.SetIconOnWavemender then
+					self:ScanForMobs(GUID, 0, 8, 2, 0.2, 10, "SetIconOnWavemender")
+				end
 			end
 		end
 	end
 end
-
---[[
-function mod:UNIT_POWER_FREQUENT(uId)
-	local bossPower = UnitPower("boss1") --Get Boss Power
-	if bossPower >= 80 and not self.vb.rageWarned then--Fine tune numbers? Right now it gives 4 second warning
-		self.vb.rageWarned = true
-		self.vb.rageCount = self.vb.rageCount + 1
-		specWarnUncheckedRage:Show(self.vb.rageCount)
-		voiceUncheckedRage:Play("gathershare")
-	elseif bossPower < 10 and self.vb.rageWarned then--Should catch 0, if not, at least 1-4 will fire it but then timer may be a second or so off
-		self.vb.rageWarned = false
-	end
-end
-
-function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
-	if msg:find("spell:228162") then
-
-	end
-end
---]]
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
 	if spellId == 232192 then--Commanding Roar
 		specWarnCommandingroar:Show()
 		voiceCommandingroar:Play("killmob")
-		local remaining = timerDrawInCD:GetRemaining()
-		if remaining > 32 or remaining < 22 then--Should come off cd not during a draw In
-			timerCommandingRoarCD:Start()
-		else
-			--He'll be casting draw in when this is cast, so adjust timer around draw in cast finish
-			--timerCommandingRoarCD:Start(remaining+11)
-			DBM:Debug("Draw In is comming before next Commaning Roar", 2)
-		end
+		timerCommandingRoarCD:Start()
 	elseif spellId == 240347 then--Warn Players of Hatching Eggs
 		specWarnHatching:Show()
 		voiceHatching:Play("killmob")
 		timerHatchingCD:Start()
---	elseif spellId == 240360 then--Red Murloc Tadpole
-	
---	elseif spellId == 241562 then--Blue Murloc Tadpole
-	
---	elseif spellId == 241563 then--Green Murloc Tadpole
-	
 	end
 end
 

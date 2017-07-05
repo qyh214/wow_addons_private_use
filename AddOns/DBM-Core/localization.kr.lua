@@ -229,7 +229,8 @@ DBM_CORE_SLASHCMD_HELP2				= {
 	"/dbm version: 공대원의 보스 모드 버전 검사를 실시합니다. (단축 명령어: ver)",
 	"/dbm version2: 공대원 보스 모드 버전 검사 및 구버전 사용자에게 귓속말을 보냅니다. (단축 명령어: ver2)",
 	"/dbm lockout: 공대원에게 공격대 귀속 정보를 수집합니다. (단축 명령어: lockouts, ids) (승급 권한 필요)",
-	"/dbm lag: 공격대 지연시간 검사 작업을 실행합니다."
+	"/dbm lag: 공격대 지연시간 검사 작업을 실행합니다.",
+	"/dbm durability: 공대원의 내구도 검사를 실시합니다."
 }
 DBM_CORE_TIMER_USAGE	= {
 	"DBM 타이머 명령어:",
@@ -255,6 +256,10 @@ DBM_CORE_RIGHT						= "오른쪽"
 DBM_CORE_BACK						= "뒤쪽"--BACK
 DBM_CORE_MIDDLE						= "가운데"
 DBM_CORE_FRONT						= "앞쪽"
+DBM_CORE_EAST						= "동쪽"
+DBM_CORE_WEST						= "서쪽"
+DBM_CORE_NORTH						= "북쪽"
+DBM_CORE_SOUTH						= "남쪽"
 DBM_CORE_INTERMISSION				= "사잇 단계"
 DBM_CORE_ORB						= "구슬"
 DBM_CHEST							= "상자"--As in Treasure 'Chest'. Not Chest as in body part.
@@ -262,6 +267,7 @@ DBM_NO_DEBUFF						= "%s 없음"--For use in places like info frame where you pu
 DBM_ALLY							= "공대원"--Such as "Move to Ally"
 DBM_ADDS							= "쫄"--Such as "Move to Ally"
 DBM_CORE_ROOM_EDGE					= "구석"
+DBM_CORE_SAFE						= "안전함"
 --Common Locals end
 
 DBM_CORE_BREAK_USAGE				= "쉬는 시간은 60분을 초과할 수 없습니다. 쉬는 시간은 초단위가 아니라 분단위로 입력해야 합니다."
@@ -331,7 +337,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.youpos		= "%s (위치: %%s): 당신"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.soakpos		= "%s (뭉칠 위치: %%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= "%s: >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.targetcount	= "%s (%%s): >%%s< "
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.defensive		= "%s - 방어 기술 사용"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.defensive		= "%s - 생존기 켜세요"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt		= "%s: >%%s< - 지금 도발"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close		= "근처의 >%%2$s<에게 %1$s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move		= "%s - 피하세요"
@@ -346,7 +352,9 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.count		= "%s! (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "당신에게 %s (%%d중첩)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= "%s - 대상 바꾸세요"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - 대상 바꾸세요 (%%s)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.gtfo		= "바닥 - 피하세요"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.Adds		= "쫄 등장 - 대상 바꾸세요"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.Addscustom	= "쫄 등장 - %s"
 
 -- Auto-generated Special Warning Localizations
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell			= "$spell:%s 특수 경고 보기"
@@ -378,7 +386,9 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.count			= "$spell:%s 특수 경고 보기 (횟�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack			= "당신이 $spell:%2$s %1$d중첩 이상이 된 경우 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch			= "$spell:%s에 대상 변경 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount 		= "$spell:%s에 대상 변경 특수 경고 보기 (횟수 포함)"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.gtfo 			= "바닥 피하기 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.Adds 			= "쫄 등장시 대상 변경 특수 경고 보기"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.Addscustom		= "쫄 등장시 특수 경고 보기"
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS.target		= "%s: %%s"
@@ -398,6 +408,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.nextspecial		= "다음 특수 능력"
 DBM_CORE_AUTO_TIMER_TEXTS.achievement		= "%s"
 DBM_CORE_AUTO_TIMER_TEXTS.phase			= "다음 단계"
 DBM_CORE_AUTO_TIMER_TEXTS.adds			= "다음 쫄 등장"
+DBM_CORE_AUTO_TIMER_TEXTS.addscustom		= "쫄 등장 (%s)"
 
 DBM_CORE_AUTO_TIMER_OPTIONS.target		= "$spell:%s 디버프 타이머 바 보기"
 DBM_CORE_AUTO_TIMER_OPTIONS.cast		= "$spell:%s 시전 타이머 바 보기"
@@ -416,6 +427,7 @@ DBM_CORE_AUTO_TIMER_OPTIONS.nextspecial		= "다음 특수 능력 타이머 바 �
 DBM_CORE_AUTO_TIMER_OPTIONS.achievement		= "%s 업적의 타이머 바 보기"
 DBM_CORE_AUTO_TIMER_OPTIONS.phase		= "다음 단계 타이머 바 보기"
 DBM_CORE_AUTO_TIMER_OPTIONS.adds		= "쫄 등장 타이머 바 보기"
+DBM_CORE_AUTO_TIMER_OPTIONS.addscustom		= "쫄 등장 타이머 바 보기"
 DBM_CORE_AUTO_TIMER_OPTIONS.roleplay		= "역할 수행(롤플레이) 지속 시간 타이머 바 보기"
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT			= "$spell:%s 대상에 공격대 징표 설정"
@@ -426,16 +438,21 @@ DBM_CORE_AUTO_ARROW_OPTION_TEXT3		= "$spell:%s 특정 지점을 가리키는 DBM
 DBM_CORE_AUTO_VOICE_OPTION_TEXT			= "$spell:%s에 대한 음성 경보 듣기"
 DBM_CORE_AUTO_VOICE2_OPTION_TEXT		= "단계 전환시 음성 경보 듣기"
 DBM_CORE_AUTO_VOICE3_OPTION_TEXT		= "쫄 등장시 음성 경보 듣기"
+DBM_CORE_AUTO_VOICE4_OPTION_TEXT		= "바닥 밟았을 때 음성 경보 듣기"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "$spell:%s 쿨타임에 맞춰 초읽기 듣기"
-DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2	= "$spell:%s 남은 시간 초읽기 듣기"
+DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2		= "$spell:%s 남은 시간 초읽기 듣기"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "$spell:%s 지속 시간 초읽기 듣기"
-DBM_CORE_AUTO_YELL_OPTION_TEXT.yell		= "$spell:%s 대상일 때 대화로 알리기"
-DBM_CORE_AUTO_YELL_OPTION_TEXT.count	= "$spell:%s 대상일 때 대화로 알리기 (횟수 포함)"
-DBM_CORE_AUTO_YELL_OPTION_TEXT.fade		= "$spell:%s 대상일 때 대화로 알리기 (초읽기 포함)"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.shortyell	= "$spell:%s 대상일 때 대화로 알리기"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.yell		= "$spell:%s 대상일 때 대화로 알리기 (플레이어 이름 포함)"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.count		= "$spell:%s 대상일 때 대화로 알리기 (횟수 포함)"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.fade		= "$spell:%s 지속시간이 끝나갈 때 대화로 알리기 (주문 이름 및 초읽기 포함)"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.shortfade	= "$spell:%s 지속시간이 끝나갈 때 대화로 알리기 (초읽기 포함)"
 DBM_CORE_AUTO_YELL_OPTION_TEXT.position	= "$spell:%s 대상일 때 대화로 알리기 (위치 포함)"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.shortyell	= "%%s"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.yell	= UnitName("player") .. "에게 %s!"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.count	= UnitName("player") .. "에게 %s! (%%d)"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.fade	= "%s %%d초 후 사라짐!"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.shortfade	= "%%d초"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.position	= "{rt%%3$d}"..UnitName("player").."{rt%%3$d}에게 %1$s %%2$s"
 DBM_CORE_AUTO_HUD_OPTION_TEXT			= "$spell:%s에 HUD 표시 (중단됨)"
 DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "여러 보스 기술에 HUD 표시 (중단됨)"
@@ -507,5 +524,10 @@ DBM_CORE_LAG_CHECKING				= "공격대의 지연시간 확인중..."
 DBM_CORE_LAG_HEADER					= "Deadly Boss Mods - 지연시간 확인 결과"
 DBM_CORE_LAG_ENTRY					= "%s: 서버 지연시간 [%d ms] / 개인 지연시간 [%d ms]"
 DBM_CORE_LAG_FOOTER					= "응답없음: %s"
+
+DBM_CORE_DUR_CHECKING				= "공격대 내구도 검사중..."
+DBM_CORE_DUR_HEADER					= "Deadly Boss Mods - 내구도 검사 결과"
+DBM_CORE_DUR_ENTRY					= "%s: 내구도 [%d 퍼센트] / 깨진 장비 [%s]"
+DBM_CORE_LAG_FOOTER					= "응답 없음: %s"
 
 end

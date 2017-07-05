@@ -1,8 +1,0 @@
-2016-10-27  sylvanaar  <sylvanaar@mindspring.com>
-
-[6f8728b80c84] [3.4.30]
-* ACP.toc:
-
-TOC 70100
-
-

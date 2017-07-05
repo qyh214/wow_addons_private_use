@@ -2,7 +2,7 @@ wow_addons_private_use
 插件列表
 ======================
 
-!KalielsTracker
+!KalielsTracker 任务列表美化、整理
 
 !MoncaiCompare 装备比较
 
@@ -10,11 +10,11 @@ ACP插件管理
 
 AdiBags 背包整合、整理
 
-AdvancedInterfaceOptions
+AdvancedInterfaceOptions 额外界面设置
 
-AngryKeystones
+AngryKeystones 大秘境钥石插件
 
-AuctionLite
+AuctionLite AH拍卖行增强插件
 
 BagSync
 
@@ -24,7 +24,7 @@ BlizzMove 暴雪系统窗体移动
 
 BuyEmAll
 
-CanIMogIt
+CanIMogIt 幻化提示插件
 
 Chatter 聊天增强
 
@@ -34,7 +34,7 @@ CompactRaid团队框架
 
 DBM 首领报警
 
-DejaCharacterStats
+DejaCharacterStats 角色信息增强
 
 EnhancedMenu
 
@@ -48,31 +48,31 @@ HiddenArtifactTracker
 
 MBB 小地图图标整合
 
-MeetingStone 
+MeetingStone 集合石
 
 merchantEx 自动售卖垃圾、修理装备（若npc该功能可用）
 
 MikScrollingBattleText（MSBT战斗浮动信息，parrot替代品）
 
-MoveAnything
+MoveAnything 
 
-Multishot
+Multishot 自动截图
 
-NomiCakes
+NomiCakes 诺米助手
 
-OmniCC冷却计时
+OmniCC 冷却计时
 
-Postal
+Postal 邮件增强
 
-PersonalLootHelper
+PersonalLootHelper 个人拾取帮助
 
 Quartz施法条美化（castbar替代品）
 
 RelicInspector
 
-SexyMap小地图美化
+SexyMap 小地图美化
 
-SimpleILevel
+SimpleILevel 
 
 Skada伤害统计
 
@@ -80,9 +80,11 @@ SlashRL /rl
 
 SpeakinSpell 技能台词喊话RP插件
 
-TidyPlates血条美化
+TidyPlates 血条美化
 
-TipTac tooltip美化
+TinyInspect 角色面板信息增强显示额外的装备展示、与TinyTooltip结合更好实现玩家等级显示
+
+TinyTooltip  tooltip美化（TipTac替代品）
 
 Titan 泰坦信息条
 

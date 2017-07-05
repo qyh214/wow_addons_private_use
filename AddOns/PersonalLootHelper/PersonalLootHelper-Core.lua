@@ -39,6 +39,12 @@ When PLH becomes disabled, set isAnnouncer to false
 	
 Changelog
 
+20170627 - 1.31
+	Added 7.2.5 trinkets
+	
+20170403 - 1.30
+	note:  commented out some extraneous debug info
+	
 20170401 - 1.29
 	Fixed bugs that were sometimes causing PLH to not properly cache equipped items for all players in the group
 		note: commented out extra call to PLH_InspectNextGroupMember in the outer loop portion of PLH_InspectNextGroupMember
@@ -733,6 +739,10 @@ to easily populate these arrays:
 	to obtain IDs: http://www.wowhead.com/items/armor/trinkets/role:1?filter=166:151;7:1;0:0#0-3+2
 ]]--	
 local TRINKET_AGILITY_DPS = {
+	-- 7.2.5 trinkets
+	151190, -- Specter of Betrayal
+	150526,	-- Shadowmoon Insignia
+	150527,	-- Madness of the Betrayer
 
 	-- 7.2 trinkets
 	147275, -- Beguiler's Talisman
@@ -812,6 +822,10 @@ local TRINKET_AGILITY_DPS = {
 }
 
 local TRINKET_INTELLECT_DPS = {
+	-- 7.2.5 trinkets
+	150522,	-- The Skull of Gul'dan
+	150388,	-- Hibernation Crystal
+	
 	-- 7.2 trinkets
 	147276, -- Spellbinder's Seal
 	144480, -- Dreadstone of Endless Shadows
@@ -871,6 +885,11 @@ local TRINKET_INTELLECT_DPS = {
 }
 
 local TRINKET_STRENGTH_DPS = {
+	-- 7.2.5 trinkets
+	151190, -- Specter of Betrayal
+	150526,	-- Shadowmoon Insignia
+	150527,	-- Madness of the Betrayer
+
 	-- 7.2 trinkets
 	147278, -- Stalwart Crest
 	144482, -- Fel-Oiled Infernal Machine
@@ -927,6 +946,10 @@ local TRINKET_STRENGTH_DPS = {
 }
 
 local TRINKET_HEALER = {
+	-- 7.2.5 trinkets
+	150523,	-- Memento of Tyrande
+	150388,	-- Hibernation Crystal
+
 	-- 7.2 trinkets
 	147276, -- Spellbinder's Seal
 	144480, -- Dreadstone of Endless Shadows
@@ -1005,6 +1028,10 @@ local TRINKET_HEALER = {
 }
 
 local TRINKET_TANK = {
+	-- 7.2.5 trinkets
+	150526,	-- Shadowmoon Insignia
+	150527,	-- Madness of the Betrayer	
+	
 	-- 7.2 trinkets
 	147278, -- Stalwart Crest
 	147275, -- Beguiler's Talisman
@@ -2220,7 +2247,7 @@ local function UpdateGroupInfoCache(unit)
 	local name = PLH_GetUnitNameWithRealm(unit)
 
 	if name ~= nil then
-		PLH_SendDebugMessage('   Updating GroupInfoCache for ' .. name .. ', inspectIndex = ' .. inspectIndex)
+--		PLH_SendDebugMessage('   Updating GroupInfoCache for ' .. name .. ', inspectIndex = ' .. inspectIndex)
 		local characterDetails
 		if groupInfoCache[name] == nil then
 			characterDetails = {}
@@ -2491,7 +2518,7 @@ local function Disable()
 end
 
 local function EnableOrDisable()
-	PLH_SendDebugMessage('Entering EnableOrDisable()')
+--	PLH_SendDebugMessage('Entering EnableOrDisable()')
 	local shouldBeEnabled = IsPersonalLoot()
 	if not isEnabled and shouldBeEnabled then	
 		PLH_SendDebugMessage('...Enabling PLH')

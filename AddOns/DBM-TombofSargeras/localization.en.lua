@@ -5,17 +5,6 @@ local L
 ---------------------------
 L= DBM:GetModLocalization(1862)
 
-L:SetTimerLocalization({
-	timerComboWamboCD =	"Next Comet/Spike (%d)"
-})
-
-L:SetOptionLocalization({
-	timerComboWamboCD =	"Show timer for next Crashing Comet/Infernal Spike"
-})
-
-L:SetMiscLocalization({
-})
-
 ---------------------------
 -- Demonic Inquisition --
 ---------------------------
@@ -59,6 +48,10 @@ L:SetOptionLocalization({
 -- Kil'jaeden --
 ---------------------------
 L= DBM:GetModLocalization(1898)
+
+L:SetMiscLocalization({
+	Obelisklasers	= "Obelisk Lasers"
+})
 
 -------------
 --  Trash  --

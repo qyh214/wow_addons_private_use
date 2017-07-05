@@ -1,4 +1,4 @@
--- $Id: Handler.lua 62 2017-05-25 06:46:53Z arith $
+-- $Id: Handler.lua 70 2017-07-02 14:53:21Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -324,11 +324,49 @@ do
 		end
 		return nil, nil, nil, nil, nil, nil
 	end
+	local function iterCont(t, prestate)
+		if not t then return nil end
+		local zone = t.Z
+		local mapFile = HandyNotes:GetMapIDtoMapFile(t.C[zone])
+		local state, value, data, cleanMapFile
+
+		while mapFile do
+			cleanMapFile = gsub(mapFile, "_terrain%d+$", "")
+			data = private.DB.points[cleanMapFile]
+
+			if data then -- only if there is data for this zone
+				state, value = next(data, prestate)
+
+				while state do -- have we reached the end of this zone?
+					if value and private:ShouldShow(state, value, currentZone, currentLevel) then
+						local label, icon, scale, alpha, dungeonLevel = get_point_info(value)
+						scale = (scale or 1) * (icon and icon.scale or 1) * private.db.icon_scale
+						alpha = (alpha or 1) * (icon and icon.alpha or 1) * private.db.icon_alpha
+						return state, mapFile, icon, scale, alpha, dungeonLevel or 0
+					end
+					state, value = next(data, state) -- get next data
+				end
+			end
+
+			-- get next zone
+			zone = next(t.C, zone)
+			t.Z = zone
+			mapFile = HandyNotes:GetMapIDtoMapFile(t.C[zone])
+			prestate = nil
+		end
+	end
 	function PluginHandler:GetNodes(mapFile, minimap, level)
 		currentLevel = level
-		mapFile = string.gsub(mapFile, "_terrain%d+$", "")
-		currentZone = mapFile
-		return iter, private.DB.points[mapFile], nil
+		local C = HandyNotes:GetContinentZoneList(mapFile) -- Is this a continent?
+
+		if C and private.db.showNodesOnContinentMap then -- Once we added a config section in config panel, user will be able to toggle this
+			local tbl = { C = C, Z = next(C) }
+			return iterCont, tbl, nil
+		else
+			mapFile = string.gsub(mapFile, "_terrain%d+$", "")
+			currentZone = mapFile
+			return iter, private.DB.points[mapFile], nil
+		end
 	end
 	function private:ShouldShow(coord, point, currentZone, currentLevel)
 		if (private.hidden[currentZone] and private.hidden[currentZone][coord]) then

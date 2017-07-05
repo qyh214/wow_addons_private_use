@@ -1,7 +1,7 @@
-changeset:   147:9507428afa05
-tag:         v7.2.5.147-release
+changeset:   149:88979ded866c
+tag:         v7.2.5.149-release
 user:        Tercio
-date:        Tue Jun 20 09:39:10 2017 -0300
-summary:     - Fix for Ticket #449: error on opening the world map.
+date:        Thu Jun 29 13:48:23 2017 -0300
+summary:     - 7.3 PTR compatibility.
 
 

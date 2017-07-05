@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1896, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16321 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16382 $"):sub(12, -3))
 mod:SetCreatureID(118460, 118462, 119072)--118460 Engine of Souls, 118462 Soul Queen Dajahna, 119072 The Desolate Host
 mod:SetEncounterID(2054)
 mod:SetZone()
@@ -58,12 +58,13 @@ local warnTorment					= mod:NewStackAnnounce(236548, 3)
 local specWarnSpearofAnguish		= mod:NewSpecialWarningYou(235924, nil, nil, nil, 1, 2)
 local yellSpearofAnguish			= mod:NewFadesYell(235924)
 local specWarnTormentingCries		= mod:NewSpecialWarningYou(238018, nil, nil, nil, 1, 2)
-local yellTormentingCries			= mod:NewYell(238018)
+local yellTormentingCries			= mod:NewShortYell(238018)
 --Spirit Realm
 local specWarnSoulbind				= mod:NewSpecialWarningYou(236459, nil, nil, nil, 3, 2)
 local yellSoulbind					= mod:NewYell(236459)
 local specWarnWither				= mod:NewSpecialWarningYou(236138, nil, nil, nil, 1, 7)
-local specWarnShatteringScream		= mod:NewSpecialWarningMoveTo(235969, nil, nil, nil, 3, 2)
+local specWarnShatteringScream		= mod:NewSpecialWarningMoveAway(235969, nil, nil, nil, 1, 2)
+local specWarnShatteringScreamAdd	= mod:NewSpecialWarningMoveTo(235969, nil, nil, nil, 3, 2)
 local specWarnWailingSouls			= mod:NewSpecialWarningCount(236072, nil, nil, nil, 2, 2)
 --The Desolate Host
 local specWarnSunderingDoomTaunt	= mod:NewSpecialWarningTaunt(236542, nil, nil, nil, 1, 2)
@@ -84,13 +85,13 @@ local timerSoulbindCD				= mod:NewCDCountTimer(24, 236459, nil, nil, nil, 3)
 --local timerShatteringScreamCD		= mod:NewCDTimer(12, 235969, nil, nil, nil, 3)--12 seconds, per add
 local timerWailingSoulsCD			= mod:NewCDCountTimer(58, 236072, nil, nil, nil, 2)
 --The Desolate Host
-local timerSunderingDoomCD			= mod:NewCDTimer(26.1, 236542, nil, nil, nil, 5)
-local timerDoomedSunderingCD		= mod:NewCDTimer(26.4, 236544, nil, nil, nil, 5)
+local timerSunderingDoomCD			= mod:NewCDTimer(25.4, 236542, nil, nil, nil, 5)
+local timerDoomedSunderingCD		= mod:NewCDTimer(25.2, 236544, nil, nil, nil, 5)
 
 --local berserkTimer				= mod:NewBerserkTimer(300)
 
-local countdownSunderingDoom		= mod:NewCountdown(26.1, 236542)
-local countdownDoomedSundering		= mod:NewCountdown(26.4, 236544)
+local countdownSunderingDoom		= mod:NewCountdown(25.4, 236542)
+local countdownDoomedSundering		= mod:NewCountdown(25.2, 236544)
 
 --Corporeal Realm
 local voiceSpearofAnguish			= mod:NewVoice(235924)--runout
@@ -314,9 +315,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnSpearofAnguish:Show()
 			voiceSpearofAnguish:Play("runout")
-			yellSpearofAnguish:Schedule(5, 1)
-			yellSpearofAnguish:Schedule(4, 2)
-			yellSpearofAnguish:Schedule(3, 3)
+			yellSpearofAnguish:Countdown(6)
 		end
 	elseif spellId == 238018 then
 		if args:IsPlayer() then
@@ -340,8 +339,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 235969 then
 		if args:IsPlayer() then
-			specWarnShatteringScream:Show(boneArmor)
-			voiceShatteringScream:Play("getboned")
+			if self.vb.boneArmorCount > 0 then
+				specWarnShatteringScreamAdd:Show(boneArmor)
+				voiceShatteringScream:Play("getboned")
+			else
+				specWarnShatteringScream:Show()
+				voiceShatteringScream:Play("scatter")
+			end
 		end
 		warnShatteringScream:CombinedShow(1, args.destName)
 	elseif spellId == 236361 or spellId == 239923 then

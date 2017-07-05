@@ -663,6 +663,10 @@ function ACP:OnEvent(this, event, arg1, arg2, arg3)
             end
         end
 
+        if savedVar.scale then self.frame:SetScale(savedVar.scale) end
+
+        self:MakeFrameScalable(self.frame, -46, 16)
+
         self:ToggleRecursion(not savedVar.NoRecurse)
         _G[ACP_FRAME_NAME .. "_NoRecurseText"]:SetText(L["Recursive"])
 
@@ -2227,4 +2231,61 @@ function ACP_EnableRecurse(name, skip_children)
     else
     --    self:Print(L["Addon <%s> not valid"]:format(tostring(name)))
     end
+end
+
+local HandleBase = {}
+function HandleBase:OnUpdate()
+    local uiScale = UIParent:GetScale()
+    local frame = self:GetParent()
+    local cursorX, cursorY = GetCursorPosition(UIParent)
+
+    -- calculate new scale
+    local newXScale = frame.oldScale * (cursorX/uiScale - frame.oldX*frame.oldScale) / (self.oldCursorX/uiScale - frame.oldX*frame.oldScale)
+    local newYScale = frame.oldScale * (cursorY/uiScale - frame.oldY*frame.oldScale) / (self.oldCursorY/uiScale - frame.oldY*frame.oldScale)
+    local newScale = min(2, max(0.4, newXScale, newYScale))
+    frame:SetScale(newScale)
+    savedVar.scale = newScale
+
+    -- calculate new frame position
+    local newX = frame.oldX * frame.oldScale / newScale
+    local newY = frame.oldY * frame.oldScale / newScale
+    frame:ClearAllPoints()
+    frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", newX, newY)
+end
+function HandleBase:OnMouseDown()
+    local frame = self:GetParent()
+    frame.oldScale = frame:GetScale()
+    self.oldCursorX, self.oldCursorY = GetCursorPosition(UIParent)
+    frame.oldX = frame:GetLeft()
+    frame.oldY = frame:GetTop()
+    self:SetScript("OnUpdate", HandleBase.OnUpdate)
+end
+function HandleBase:OnMouseUp()
+    self:SetScript("OnUpdate", nil)
+end
+function HandleBase:OnEnter()
+    self.tex:SetVertexColor(1, 1, 1)
+end
+function HandleBase:OnLeave()
+    self.tex:SetVertexColor(0.6, 0.6, 0.6)
+end
+
+local frame = CreateFrame("Frame")
+
+function ACP:MakeFrameScalable(parent, x, y)
+    local handle = CreateFrame("Frame", nil, parent)
+    handle:EnableMouse(true)
+    handle:SetSize(25, 25)
+    handle:SetPoint("BOTTOMRIGHT", parent, x, y)
+    frame.SetScale = handle.SetScale
+
+    handle.tex = handle:CreateTexture()
+    handle.tex:SetTexture("Interface\\AddOns\\ACP\\Resize")
+    handle.tex:SetVertexColor(0.6, 0.6, 0.6)
+    handle.tex:SetAllPoints()
+
+    for k, v in pairs(HandleBase) do
+        handle:SetScript(k, v)
+    end
+    handle:SetScript("OnUpdate", nil)
 end

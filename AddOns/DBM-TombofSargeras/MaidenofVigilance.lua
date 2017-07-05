@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1897, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16309 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16382 $"):sub(12, -3))
 mod:SetCreatureID(118289)
 mod:SetEncounterID(2052)
 mod:SetZone()
@@ -15,11 +15,10 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 235271 241635 241636 235267",
 	"SPELL_CAST_SUCCESS 239153 237722",
 	"SPELL_AURA_APPLIED 235240 235213 235117 240209 235028 236061 234891",
---	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED 235240 235213 235117 240209 235028 234891",
---	"SPELL_PERIODIC_DAMAGE",
---	"SPELL_PERIODIC_MISSED",
---	"CHAT_MSG_RAID_BOSS_EMOTE",
+	"SPELL_AURA_REFRESH 235240 235213",
+	"SPELL_AURA_REMOVED 235117 240209 235028 234891",
+	"SPELL_PERIODIC_DAMAGE 238408 238028",
+	"SPELL_PERIODIC_MISSED 238408 238028",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -46,9 +45,10 @@ local specWarnInfusion				= mod:NewSpecialWarningSpell(235271, nil, nil, nil, 2,
 local specWarnFelInfusion			= mod:NewSpecialWarningYou(235240, nil, nil, nil, 1, 7)
 local specWarnLightInfusion			= mod:NewSpecialWarningYou(235213, nil, nil, nil, 1, 7)
 local specWarnUnstableSoul			= mod:NewSpecialWarningMoveTo(235117, nil, nil, nil, 3, 7)
-local yellUnstableSoul				= mod:NewFadesYell(235117)--While learning the fight this will be spammy, but also nessesary
+local yellUnstableSoul				= mod:NewShortFadesYell(235117)--While learning the fight this will be spammy, but also nessesary
 local specWarnLightHammer			= mod:NewSpecialWarningCount(241635, nil, nil, nil, 2, 2)
 local specWarnFelhammer				= mod:NewSpecialWarningCount(241636, nil, nil, nil, 2, 2)
+local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 2)
 --Stage Two
 local specWarnWrathofCreators		= mod:NewSpecialWarningInterrupt(234891, "HasInterrupt", nil, nil, 1, 2)
 
@@ -61,7 +61,7 @@ local timerBlowbackCD				= mod:NewNextTimer(81.1, 237722, nil, nil, nil, 6)--81-
 --Mythic
 local timerSpontFragmentationCD		= mod:NewNextTimer(8, 239153, nil, nil, nil, 5, nil, DBM_CORE_HEROIC_ICON)
 
---local berserkTimer				= mod:NewBerserkTimer(300)
+local berserkTimer					= mod:NewBerserkTimer(480)
 
 --Stage One: Divide and Conquer
 local countdownInfusion				= mod:NewCountdown("AltTwo", 235271)
@@ -73,6 +73,7 @@ local voiceInfusion					= mod:NewVoice(235271)--scatter
 local voiceFelInfusion				= mod:NewVoice(235240)--felinfusion
 local voiceLightInfusion			= mod:NewVoice(235213)--lightinfusion
 local voiceUnsableSoul				= mod:NewVoice(235117)--jumpinpit
+local voiceGTFO						= mod:NewVoice(238028, nil, DBM_CORE_AUTO_VOICE4_OPTION_TEXT)--runaway
 --Stage Two
 local voiceWrathofCreators			= mod:NewVoice(234891, "HasInterrupt")--kickcast
 
@@ -104,6 +105,7 @@ function mod:OnCombatStart(delay)
 		self.vb.spontFragmentationCount = 0
 		timerSpontFragmentationCD:Start(10-delay)
 	end
+	berserkTimer:Start(480-delay)--Heroic/normal confirmed, others assumed until seen
 end
 
 function mod:OnCombatEnd()
@@ -196,10 +198,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnUnstableSoul:Schedule(6.75, AegynnsWard)
 			end
 			if not self:IsLFR() then
-				yellUnstableSoul:Yell(8)
-				yellUnstableSoul:Schedule(7, 1)
-				yellUnstableSoul:Schedule(6, 2)
-				yellUnstableSoul:Schedule(5, 3)
+				yellUnstableSoul:Countdown(8)
 				if self:IsEasy() then
 					voiceUnsableSoul:Schedule(5.75, "jumpinpit")
 				else
@@ -224,26 +223,26 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	end
 end
---mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
+mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 235240 then--Fel Infusion
-		if self.Options.SetIconOnInfusion then
+		--[[if self.Options.SetIconOnInfusion then
 			local uId = DBM:GetRaidUnitId(args.destName)
 			local currentIcon = GetRaidTargetIndex(uId) or 0
 			if self:IsTanking(uId) and currentIcon ~= 1 then--Fel infusion removed but light infusion icon is already set, don't touch it
 				self:SetIcon(args.destName, 0)
 			end
-		end
+		end--]]
 	elseif spellId == 235213 then--Light Infusion
-		if self.Options.SetIconOnInfusion then
+		--[[if self.Options.SetIconOnInfusion then
 			local uId = DBM:GetRaidUnitId(args.destName)
 			local currentIcon = GetRaidTargetIndex(uId) or 0
 			if self:IsTanking(uId) and currentIcon ~= 4 then--Light infusion removed but fel infusion icon is already set, don't touch it
 				self:SetIcon(args.destName, 0)
 			end
-		end
+		end-]]
 	elseif spellId == 235117 or spellId == 240209 then
 		self.vb.unstableSoulCount = self.vb.unstableSoulCount - 1
 		if args:IsPlayer() then
@@ -254,12 +253,12 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 235028 then--Bulwark Removed
 		specWarnWrathofCreators:Show(args.destName)
+		voiceWrathofCreators:Play("kickcast")
 	elseif spellId == 234891 then--Wrath Interrupted
 		self.vb.shieldActive = false
 		self.vb.hammerCount = 0
 		self.vb.infusionCount = 0
 		self.vb.massShitCount = 0
-		voiceWrathofCreators:Play("kickcast")
 		timerInfusionCD:Start(2, 1)
 		timerLightHammerCD:Start(14, 1)
 		countdownLightHammer:Start(14)
@@ -277,25 +276,10 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
---[[
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 228007 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
---		specWarnDancingBlade:Show()
---		voiceDancingBlade:Play("runaway")
+	if (spellId == 238408 or spellId == 238028) and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
+		specWarnGTFO:Show()
+		voiceGTFO:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
-
-function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
-	if msg:find("spell:228162") then
-
-	end
-end
-
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
-	if spellId == 227503 then
-
-	end
-end
---]]

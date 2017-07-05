@@ -1,4 +1,4 @@
--- $Id: Constants.lua 62 2017-05-25 06:46:53Z arith $
+-- $Id: Constants.lua 70 2017-07-02 14:53:21Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -38,6 +38,7 @@ constants.defaults = {
 		ignore_InOutDoor = false,
 		hide_completed = true,
 		show_coords = false,
+		showNodesOnContinentMap = false,
 	},
 	char = {
 		hidden = {

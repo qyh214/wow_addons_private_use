@@ -1,181 +1,97 @@
-tag 586158ee10a7afc4020543335f829225fa778b6a 7.2.10
+tag e0d9165807c08d8e114b97f0eb217347e1fb9048 7.2.13
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Sat Jun 24 20:39:32 2017 +0200
+Date:	Tue Jul 4 20:52:20 2017 +0200
 
-Tagging as 7.2.10
+Tagging as 7.2.13
 
-commit 64d018b5485deb0e3bc7df1a4b0ad7bcb1b65cff
+commit def4c409669259699a6b2d985bb8ce07af4331d7
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 20:39:32 2017 +0200
+Date:   Tue Jul 4 20:52:20 2017 +0200
 
-    increment version number to 7.2.10
+    increment version number to 7.2.13
 
-commit 45ccf636385fef46ae2597e81c0e670f75483c5e
+commit 6fdc4dc7ec23b44c9b2e02d7776d18a563d8dae5
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 10:54:41 2017 +0200
+Date:   Tue Jul 4 20:49:33 2017 +0200
 
-    Omega via svn r16324:
-    Document the command
+    tandanu via svn r16406:
+    fix parameter validation
 
-commit 5ae8b14e2f7041797ead80d63f82fbc6faddeb37
+commit ca59e7cd40779ff33ececafb579d918fd0764cc6
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 10:50:14 2017 +0200
+Date:   Tue Jul 4 19:33:35 2017 +0200
 
-    Omega via svn r16323:
-    fixes to last, it works now
+    Omega via svn r16405:
+    more checks to nil error from user reports
+    Added obelisk warnings/timers to KJ
 
-commit 5412c2b4447f48a1fd7d571cfee599d3321d73b8
+commit 4ff4dd9de8dc44ad2def9a2d2b47373d46da8f2a
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 10:08:22 2017 +0200
+Date:   Tue Jul 4 18:24:57 2017 +0200
 
-    Omega via svn r16322:
-    Begin work on durability check, and embed libdurability. More aimed to help Ora3 than DBM, but if lib is going to be embedded in DBM to help ORA3, at least support using it locally too.
+    Omega via svn r16404:
+    in all languages
 
-commit 3295557eae975f50b07a05a8c2e6ab1d119511bb
+commit 63211fddfae406568b3134959e0f474e907e8abe
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 08:25:39 2017 +0200
+Date:   Tue Jul 4 18:24:06 2017 +0200
 
-    Omega via svn r16321:
-    Fix normal soulbind
+    Omega via svn r16403:
+    Fix shortyell and shortfade hopefully
 
-commit a3f8f8c7bead89421279b17fb3744867a56ea06e
+commit d2f278268d048985401ff744b6c46da336862ca2
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 05:24:14 2017 +0200
+Date:   Tue Jul 4 18:16:56 2017 +0200
 
-    Omega via svn r16320:
-    Better phase 3 detection for KJ
+    Omega via svn r16402:
+    fix nil error
 
-commit 06fda8b59b484b847430506abcc92f4090db947d
+commit 2657d01f252873d7c1e95f866cbfbb5e94c99026
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 05:14:24 2017 +0200
+Date:   Tue Jul 4 05:47:00 2017 +0200
 
-    Omega via svn r16319:
-    Reduce spam from sisters stack message
+    Omega via svn r16401:
+    Add protection against double incorp timer (if target dies and she retargets)
 
-commit f1dc83d6b57e6152692ceeae5f61e85b21209cf6
+commit 3ecc9fe3b49d68a18135653e52abcb379e570c6d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 05:03:55 2017 +0200
+Date:   Mon Jul 3 17:33:03 2017 +0200
 
-    Omega via svn r16318:
-    Revert last, that?\226?\128?\153s already a protected function, when did blizz sneak that in there.
+    Omega via svn r16400:
+    CN Update
 
-commit a5a6b00dc07a8cbd853ec66007c7a60d228fee2b
+commit 46c21669e35c228e8d8d2833fc7da117ffe898b2
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 04:45:07 2017 +0200
+Date:   Mon Jul 3 08:04:44 2017 +0200
 
-    Omega via svn r16317:
-    Add option to auto ping minimap your location when you find illiden
+    Omega via svn r16399:
+    Kr Update
 
-commit 5bc8edc06ca52620fc1dc2a7035f2839daf5d0ed
+commit 46a956441a4675f182e3b6768f1fb1bb34af2713
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 04:22:25 2017 +0200
+Date:   Mon Jul 3 02:43:07 2017 +0200
 
-    Omega via svn r16316:
-    Some short bar text for souls timers
-    Added comet impact bar for singularity and moved countdown to that instead
+    Omega via svn r16398:
+    Add more core shortcuts
 
-commit 94608a10f9781cde301bf9a0549b91fc587c882b
+commit 9fc5c1f2d01707e1bb5da38c00e441271654c80c
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 03:49:54 2017 +0200
+Date:   Sun Jul 2 04:39:19 2017 +0200
 
-    Omega via svn r16315:
-    added more KJ countdowns
+    Omega via svn r16397:
+    Fix sever soul warning saying polymorph
 
-commit 195e23ae35bfb77bf480ea421b4f24c871223543
+commit 7b113bcecb650ce0675f7045fcee949614275823
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 03:39:05 2017 +0200
+Date:   Sun Jul 2 04:35:12 2017 +0200
 
-    Omega via svn r16314:
-    Fix that countdown being on for everyone. meant for tanks
+    Omega via svn r16396:
+    Fix sever soul warning saying polymorph
 
-commit 848983069a3c73f0b1b93f12cef19bc5ccfbff27
+commit 9c914287667242144bfe005b2880057f91e32301
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 03:22:32 2017 +0200
+Date:   Sun Jul 2 00:04:25 2017 +0200
 
-    Omega via svn r16313:
-    Reworked how taunts work for felclaws
-    added countdown for felclaws
-
-commit 5ee034fde74eeb5b582bce79a8eab7d0086086f7
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 01:11:10 2017 +0200
-
-    Omega via svn r16312:
-    Fix wailing timer not canceling on 2.5 and fix typo
-
-commit e9e915637af6ef4a63c89573cafd2fcd657726d9
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 01:04:19 2017 +0200
-
-    Omega via svn r16311:
-    Icon based yells for shadowy blades
-
-commit fed846106f65dcbec16d091cf396ee2a703e5ac3
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 24 00:57:37 2017 +0200
-
-    Omega via svn r16310:
-    Added a personal torment warning for torment > 75 to Demonic Inquisition
-
-commit 5a4a583ab39eb2e7cbbd32a11a07f93b9d719b0d
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jun 23 10:33:54 2017 +0200
-
-    Omega via svn r16309:
-    Add taunt warnings to desolate host for when the phase 2 casts finish, to tell next tank who?\226?\128?\153s to soak to taunt the boss
-    Add extra checks ot maiden of vigilence to try to make tank icons more resistant to accidental pruning caused by combat log events being out of order.
-
-commit d6a6691bc3b49c47cb85fa1f75f03fa2f70fd9e3
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jun 23 08:38:28 2017 +0200
-
-    Omega via svn r16308:
-    Scrap combo wambo, it doesn?\226?\128?\153t work like that anymore
-
-commit 43f421832771315cfcfee2c2254f995638097438
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jun 23 08:27:48 2017 +0200
-
-    Omega via svn r16307:
-    *Removed all target/personal warnings for touch of sargeras, there is no way to detect that
-    *Fixed phase 2 detection for fallen avatar if maiden dies instead of heals the avatar
-    *Changed icons used by shadowy blades to start at 1 instead of 3
-    *Added icons and icon based yells to dark mark and made sure compatible with BW marking.
-    *scrapped hardcoded timer sequences as it just doesn?\226?\128?\153t work that way. they look consistent between pulls for same group, but compare two diff groups and they are radically different, indicating timer variance is actually caused by strategy/dps/some other factor that?\226?\128?\153s currently unknown. For now standard lowest observed CD will be used
-    *Really fix infoframe this time i hope, and also make sure it closes on phase 2 start
-    *Made corrupted matrix warning more clear so it says ?\226?\128?\156move to Pylon beam?\226?\128?\157 not ?\226?\128?\156move to target?\226?\128?\157
-    *Fixed missing spell ID on dark mark timer
-
-commit 38428fb3ec29d40c917c8db12c185b48bd1f421a
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jun 23 03:44:21 2017 +0200
-
-    Omega via svn r16306:
-    try this to fix enemy power
-
-commit c20afd6854a5fd7e0ad261f2d5990e69e247071c
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jun 23 02:05:15 2017 +0200
-
-    Omega via svn r16305:
-    Fix yell not working for shadowy blades
-
-commit ca8764d950ae8ceef79b856450f6fcd633af2a42
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jun 23 01:53:30 2017 +0200
-
-    Omega via svn r16304:
-    Split shadow reflections
-
-commit 9983f63be0c60425d1c6b3d00c7dcf059aa3f523
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jun 23 01:24:35 2017 +0200
-
-    Omega via svn r16303:
-    Fix wrong warning type on singularity
-    Tweaked some timers on fallen avatar
-    Tweaked some timers on KJ (and fixed some missed ones I disabled on normal by mistake)
-    Added icon to incorp shot on sisters as requested
-    Fixes to desolate host timers again
-    Some minor timer/warning fixes to sasszine
+    tandanu via svn r16395:
+    increment alpha version
 
