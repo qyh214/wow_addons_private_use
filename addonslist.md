@@ -72,8 +72,6 @@ RelicInspector
 
 SexyMap 小地图美化
 
-SimpleILevel 
-
 Skada伤害统计
 
 SlashRL /rl
