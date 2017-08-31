@@ -1,8 +1,20 @@
 ------------------------------------------------------------------------
-r275 | h.leppkes@gmail.com | 2017-03-28 12:06:45 -0500 (Tue, 28 Mar 2017) | 1 line
+r279 | nevcairiel | 2017-08-29 16:23:33 -0500 (Tue, 29 Aug 2017) | 1 line
 Changed paths:
    M /trunk/HandyNotes.toc
 
-Update TOC to 7.2
+Update TOC for 7.3
+------------------------------------------------------------------------
+r278 | nevcairiel | 2017-07-12 07:18:31 -0500 (Wed, 12 Jul 2017) | 1 line
+Changed paths:
+   M /trunk/Locales/Locale-deDE.lua
+   M /trunk/Locales/Locale-esES.lua
+   M /trunk/Locales/Locale-frFR.lua
+   M /trunk/Locales/Locale-koKR.lua
+   M /trunk/Locales/Locale-ruRU.lua
+   M /trunk/Locales/Locale-zhCN.lua
+   M /trunk/Locales/Locale-zhTW.lua
+
+Switch to ignoring missing locale strings
 ------------------------------------------------------------------------
 

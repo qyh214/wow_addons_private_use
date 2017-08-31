@@ -1,12 +1,10 @@
-lightweight tag aa37fea2588d20a2d82810a384cf042a6b5a44b6 v1.11
+lightweight tag a21d33fb613a599dedbe2945a60bf01ba86baafb v1.13
 Author:	Eliote <>
-Date:	Tue May 2 00:37:51 2017 -0300
+Date:	Tue Aug 29 20:17:31 2017 -0300
 
-commit aa37fea2588d20a2d82810a384cf042a6b5a44b6
+commit a21d33fb613a599dedbe2945a60bf01ba86baafb
 Author: Eliote <>
-Date:   Tue May 2 00:37:51 2017 -0300
+Date:   Tue Aug 29 20:17:31 2017 -0300
 
-    Fix paragon reputation
-    
-    * Use currentValue mod threshold instead of currentValue
+    Update to WoW 7.3
 

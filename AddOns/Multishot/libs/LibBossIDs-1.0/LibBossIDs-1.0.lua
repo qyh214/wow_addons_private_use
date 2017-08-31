@@ -1864,7 +1864,24 @@ local BossIDs = {
 	[117194] = true, -- Thrashbite the Scornful
 	[118804] = true, -- Domatrax
 	[116944] = true, -- Mephistroth
-
+	
+	
+	-------------------------------------------------------------------------------
+	-- Tomb of Sagares
+	-------------------------------------------------------------------------------
+	[115844] = true, -- Goroth <The Blighted>
+	[116689] = true, -- Atrigan <Grand Tormenter>
+	[116691] = true, -- Belac <Fel Warden>
+	[116407] = true, -- Harjatan <The Bludgeoner>
+	[115767] = true, -- Mistress Sassz'ine <The Depthmother>
+	[118523] = true, -- Huntress Kasparian
+	[118374] = true, -- Captain Yathae Moonstrike
+	[118518] = true, -- Priestess Lunaspyre
+	[118460] = true, -- Engine of Souls
+	[119072] = true, -- The Desolate Host
+	[118289] = true, -- Maiden of Vigilance
+	[116939] = true, -- Fallen Avatar
+	[117269] = true, -- Kil'jaeden <The Deceiver>
 }
 
 lib.BossIDs = BossIDs

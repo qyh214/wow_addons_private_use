@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1053 $")
+XPerl_SetModuleRevision("$Revision: 1066 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -256,7 +256,7 @@ end
 function XPerl_Options_CheckRadio(self,buttons)
 	local prefix = self:GetParent():GetName().."_"
 
-	for i,name in pairs(buttons) do
+	for i, name in pairs(buttons) do
 		if (prefix..name == self:GetName()) then
 			_G[prefix..name]:SetChecked(true)
 		else
@@ -820,6 +820,8 @@ function XPerl_Options_InCombatChange(inCombat)
 
 				if (k.wasChecked) then
 					k:SetChecked(true)
+
+					k.wasChecked = nil
 				end
 			end
 		elseif ((k.GetFrameType or k.GetObjectType)(k) == "Slider") then

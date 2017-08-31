@@ -11,7 +11,7 @@
 ## Notes-ruRU: Отображает иконки баффов на фрейме игрока.
 ## Notes-deDE: Zeigt die Buffsymbole am Z-Perl Spielerfenster an.
 ## Notes-zhTW: 給予 Z-Perl 玩家單位框架增益狀態圖標功能
-## RequiredDeps: ZPerl_Player
+## RequiredDeps: ZPerl, ZPerl_Player
 
 ZPerl_PlayerBuffs.lua
 ZPerl_PlayerBuffs.xml

@@ -2,7 +2,7 @@ local mod	= DBM:NewMod(2031, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
 mod:SetRevision(("$Revision: 16369 $"):sub(12, -3))
---mod:SetCreatureID(108573)
+mod:SetCreatureID(125111)--or 124828
 mod:SetEncounterID(2092)
 mod:SetZone()
 --mod:SetBossHPInfoToHighest()
@@ -75,7 +75,7 @@ local function updateRangeFrame(self)
 end
 
 function mod:OnCombatStart(delay)
-
+	DBM:AddMsg(DBM_CORE_NEED_LOGS)
 end
 
 function mod:OnCombatEnd()
@@ -85,6 +85,7 @@ function mod:OnCombatEnd()
 --	if self.Options.InfoFrame then
 --		DBM.InfoFrame:Hide()
 --	end
+	DBM:AddMsg(DBM_CORE_NEED_LOGS)
 end
 
 function mod:SPELL_CAST_START(args)

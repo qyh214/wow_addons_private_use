@@ -431,10 +431,10 @@ local function createHistoryViewer()
     
     -- window actions
     win:SetScript("OnShow", function(self)
-            _G.PlaySound("igMainMenuOpen");
+            _G.PlaySound(850);
             self.UpdateUserList();
         end);
-    win:SetScript("OnHide", function(self) _G.PlaySound("igMainMenuClose"); end);
+    win:SetScript("OnHide", function(self) _G.PlaySound(851); end);
     table.insert(_G.UISpecialFrames,win:GetName());
     
     -- create nav

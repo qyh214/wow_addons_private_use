@@ -43,3 +43,4 @@ L["These settings control the look and feel of the HandyNotes icons."] = "Diese 
 L["Title"] = "Titel"
 L["World Map Icon Alpha"] = "Transparenz der Weltkartensymbole"
 L["World Map Icon Scale"] = "Größe der Weltkartensymbole"
+

@@ -1,5 +1,8 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: Hidden Artifact Tracker
 ## SavedVariables: HiddenArtifactTracker
+## SavedVariablesPerCharacter: HiddenArtifactTrackerChars
+## Notes: In-tooltip tracking for hidden artifact appearances.
 HiddenArtifactTracker_artifacts.lua
+HiddenArtifactTracker_mage.lua
 HiddenArtifactTracker.lua

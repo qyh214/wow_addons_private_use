@@ -9,7 +9,7 @@ LibEvent:attachTrigger("tooltip:init", function(self, tip)
         tip.model = CreateFrame("PlayerModel", nil, tip)
         tip.model:SetSize(90, 90)
         tip.model:SetFacing(-0.25)
-        tip.model:SetPoint("BOTTOMRIGHT", tip, "TOPRIGHT", 8, -18)
+        tip.model:SetPoint("BOTTOMRIGHT", tip, "TOPRIGHT", 8, -16)
         tip.model:Hide()
         tip.model:SetScript("OnUpdate", function(self, elapsed)
             if (IsControlKeyDown() or IsAltKeyDown()) then

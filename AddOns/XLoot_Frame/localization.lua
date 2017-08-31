@@ -8,7 +8,11 @@ local locales = {
 		button_auto_tooltip = "Add this item to XLoot's autoloot list\nSee /xloot for more info",
 		bind_on_use_short = "BoU",
 		bind_on_equip_short = "BoE",
-		bind_on_pickup_short = "BoP"
+		bind_on_pickup_short = "BoP",
+
+		slot_name_error = "Could not get item name for loot slot %s , it may have already been looted. You can turn this message off in /xloot",
+		slot_icon_error = "Could not get item icon for loot slot %s , it may have already been looted. You can turn this message off in /xloot",
+
 	},
 	-- Possibly localized
 	ptBR = {

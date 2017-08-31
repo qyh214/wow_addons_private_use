@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1862, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16372 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16618 $"):sub(12, -3))
 mod:SetCreatureID(115844)
 mod:SetEncounterID(2032)
 mod:SetZone()
@@ -30,7 +30,7 @@ mod:RegisterEventsInCombat(
  or ability.name = "Rain of Brimstone"
 --]]
 local warnInfernalSpike					= mod:NewSpellAnnounce(233055, 1)
-local warnShatteringStar				= mod:NewTargetAnnounce(233272, 3)
+local warnShatteringStar				= mod:NewTargetCountAnnounce(233272, 3)
 local warnCrashingComet					= mod:NewTargetAnnounce(232249, 4)
 
 local specWarnInfernalBurning			= mod:NewSpecialWarningMoveTo(233062, nil, nil, nil, 3, 2)
@@ -48,8 +48,9 @@ local timerShatteringStar				= mod:NewBuffFadesTimer(6, 233272, nil, nil, nil, 5
 local timerCrashingComet				= mod:NewBuffFadesTimer(5, 232249, nil, nil, nil, 5)
 local timerCrashingCometCD				= mod:NewCDTimer(18.2, 232249, nil, nil, nil, 3)--18.2-24.7
 local timerInfernalSpikeCD				= mod:NewCDTimer(16.2, 233055, nil, nil, nil, 3)--16.2-20.7
-local timerBurningArmorCD				= mod:NewCDTimer(24.3, 231363, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerBurningArmorCD				= mod:NewCDCountTimer(24.3, 231363, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerBurningArmor					= mod:NewBuffFadesTimer(6, 231363, nil, nil, nil, 5, nil, DBM_CORE_DEADLY_ICON)
+mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerRainofBrimstoneCD			= mod:NewCDCountTimer(31, 238587, nil, nil, nil, 5, nil, DBM_CORE_HEROIC_ICON)
 local timerRainofBrimstone				= mod:NewCastTimer(8, 238587, 87701, nil, nil, 5, nil, DBM_CORE_HEROIC_ICON)
 
@@ -80,13 +81,15 @@ local shatteringStarTimers = {24, 60, 60, 50}--24, 60, 60, 50, 20, 40, 20, 40, 2
 --["233050-Infernal Spike"] = "pull:4.1, 16.7, 17.1, 23.2, 17.1, 17.1, 17.1, 16.3, 16.7, 17.0, 20.7, 17.0", --Infernal Spike
 mod.vb.shatteringStarCount = 0
 mod.vb.brimstoneCount = 0
+mod.vb.burningArmorCount = 0
 
 function mod:OnCombatStart(delay)
 	table.wipe(cometTable)
 	self.vb.shatteringStarCount = 0
+	self.vb.burningArmorCount = 0
 	timerInfernalSpikeCD:Start(4-delay)
 	timerCrashingCometCD:Start(8.5-delay)
-	timerBurningArmorCD:Start(10.5-delay)
+	timerBurningArmorCD:Start(10.5-delay, 1)
 	timerInfernalBurningCD:Start(54-delay)
 	if self:IsMythic() then
 		self.vb.brimstoneCount = 0
@@ -119,15 +122,16 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 231363 then
-		timerBurningArmorCD:Start()
+		self.vb.burningArmorCount = self.vb.burningArmorCount + 1
+		timerBurningArmorCD:Start(nil, self.vb.burningArmorCount+1)
 	elseif spellId == 233272 then
 		self.vb.shatteringStarCount = self.vb.shatteringStarCount + 1
 		local nextCount = self.vb.shatteringStarCount+1
 		if self:IsMythic() then
 			--["233272-Shattering Star"] = "pull:34.8, 61.2, 60.4, 60.8, 32.9, 30.5, 29.6, 30.4",
 			if nextCount > 4 then
-				timerShatteringStarCD:Start(29.6, nextCount)
-				countdownShatteringStar:Start(29.6)
+				timerShatteringStarCD:Start(29.2, nextCount)
+				countdownShatteringStar:Start(29.2)
 			else
 				timerShatteringStarCD:Start(60, nextCount)
 				countdownShatteringStar:Start(60)
@@ -163,7 +167,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			countdownShatteringStarFades:Start()
 			timerShatteringStar:Start()
 		else
-			warnShatteringStar:Show(args.destName)
+			warnShatteringStar:Show(self.vb.shatteringStarCount, args.destName)
 		end
 	elseif spellId == 231363 then
 		if args:IsPlayer() then
@@ -240,20 +244,26 @@ end
 --]]
 
 function mod:UNIT_AURA_UNFILTERED(uId)
-	local hasDebuff, _, _, _, _, _, _, _, _, _, spellId = UnitDebuff(uId, crashingComet)
+	local hasDebuff = UnitDebuff(uId, crashingComet)
 	local name = DBM:GetUnitFullName(uId)
-	if hasDebuff and not cometTable[name] and spellId == 232249 then
-		cometTable[name] = true
-		warnCrashingComet:CombinedShow(0.3, name)--Multiple targets in heroic/mythic
-		if UnitIsUnit(uId, "player") then
-			specWarnCrashingComet:Show()
-			voiceCrashingComet:Play("runout")
-			yellCrashingComet:Yell(5)
-			yellCrashingComet:Countdown(5)
-			timerCrashingComet:Start()
-			countdownCrashingComet:Start()
-			if self.Options.RangeFrame then
-				DBM.RangeCheck:Show(10, nil, nil, nil, nil, 5)
+	if hasDebuff and not cometTable[name] then--Any version of comet
+		for i = 1, 40 do
+			local spellName, _, _, _, _, _, _, _, _, _, spellId = UnitDebuff(uId, i)
+			if spellId == 232249 then--Correct version of comet
+				cometTable[name] = true
+				warnCrashingComet:CombinedShow(0.5, name)--Multiple targets in heroic/mythic
+				if UnitIsUnit(uId, "player") then
+					specWarnCrashingComet:Show()
+					voiceCrashingComet:Play("runout")
+					yellCrashingComet:Yell(5)
+					yellCrashingComet:Countdown(5)
+					timerCrashingComet:Start()
+					countdownCrashingComet:Start()
+					if self.Options.RangeFrame then
+						DBM.RangeCheck:Show(10, nil, nil, nil, nil, 5)
+					end
+				end
+				break
 			end
 		end
 	end

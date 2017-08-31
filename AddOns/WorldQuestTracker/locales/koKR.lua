@@ -10,6 +10,43 @@ L["S_ERROR_NOTLOADEDYET"] = "이 퀘스트를 아직 불러오지 못했습니�
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "추적 중인 퀘스트만"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "추적 중인 퀘스트만 표시"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "전역 퀘스트 표시"
+L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"] = "신청을 취소하려면 클릭하세요..."
+L["S_GROUPFINDER_ACTIONS_CANCELING"] = "취소 중..."
+L["S_GROUPFINDER_ACTIONS_CREATE"] = [=[검색된 파티가 없나요?
+새로 만들려면 클릭하세요]=]
+L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = "파티 만들기"
+L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = "파티를 떠날까요?"
+L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = "파티를 떠납니다 (지금 떠나려면 클릭):"
+L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = "검색 재시도"
+L["S_GROUPFINDER_ACTIONS_SEARCH"] = "파티를 검색하려면 클릭하세요"
+L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = "이 퀘스트를 수행하는 파티에 참여합니다"
+L["S_GROUPFINDER_ACTIONS_SEARCHING"] = "검색 중..."
+L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = "파티원을 더 찾으려면 클릭하세요"
+L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = "현재 파티를 떠나고 다른 파티를 검색할까요?"
+L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = "새로운 파티를 만들 수 있도록 참여 신청을 취소하려면 클릭하세요"
+L["S_GROUPFINDER_ACTIONS_UNLIST"] = "현재 파티를 검색 목록에서 제거하려면 클릭하세요"
+L["S_GROUPFINDER_ACTIONS_UNLISTING"] = "등록 해제 중..."
+L["S_GROUPFINDER_ACTIONS_WAITING"] = "대기 중..."
+L["S_GROUPFINDER_ENABLED"] = "새로운 퀘스트에서 자동으로 열기"
+L["S_GROUPFINDER_LEAVEOPTIONS"] = "파티 떠나기 옵션"
+L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = "X초 후 떠나기"
+L["S_GROUPFINDER_LEAVEOPTIONS_ASKX"] = "자동으로 떠나지 않고 X초 후에 물어보기"
+L["S_GROUPFINDER_LEAVEOPTIONS_DONTLEAVE"] = "파티 떠나기 창 표시하지 않기"
+L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"] = "퀘스트 완료 시 즉시 떠나기"
+L["S_GROUPFINDER_NOPVP"] = "PVP 서버 피하기"
+L["S_GROUPFINDER_OT_ENABLED"] = "퀘스트 추적기에 버튼 표시"
+L["S_GROUPFINDER_QUEUEBUSY"] = "당신은 이미 대기열에 있습니다."
+L["S_GROUPFINDER_RESULTS_APPLYING"] = "파티가 %d개 남았습니다, 다시 클릭하세요"
+L["S_GROUPFINDER_RESULTS_APPLYING1"] = "참여할 파티가 1개 남았습니다, 다시 클릭하세요"
+L["S_GROUPFINDER_RESULTS_FOUND"] = [=[%d개 파티 찾음
+참여하려면 클릭]=]
+L["S_GROUPFINDER_RESULTS_FOUND1"] = [=[1개 파티 찾음
+참여하려면 클릭]=]
+L["S_GROUPFINDER_RESULTS_UNAPPLY"] = "%d개 신청 남음..."
+L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = "닫으려면 오른쪽 클릭하세요"
+L["S_GROUPFINDER_SECONDS"] = "초"
+L["S_GROUPFINDER_TITLE"] = "파티 찾기"
+L["S_GROUPFINDER_TUTORIAL1"] = "같은 퀘스트를 수행하는 파티에 참가하여 빠르게 전역 퀘스트를 완료하세요!"
 L["S_MAPBAR_AUTOWORLDMAP"] = "자동 세계 지도"
 L["S_MAPBAR_AUTOWORLDMAP_DESC"] = [=[달라란이나 직업 전당에 있을 때, 'M' 키를 누르면 바로 부서진 섬 지도를 표시합니다.
 

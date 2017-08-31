@@ -6,16 +6,23 @@
 -- 
 -- @classmod factory
 -- @author Alar of Runetotem
--- @release 1
+-- @release 4
 -- @usage
 -- local addon=LibStub("LibInit"):newAddon("example")
 -- local factory=addon:GetFactory()
 -- local widget=factory:Checkbox(frame,true,"Checkbox","Checkbox tooltip")
 -- widget:SetOnChange(function(checked) end)
 
+
+local GetTime=GetTime
+local GameTooltip=GameTooltip
+local CreateFrame=CreateFrame
+local type=type
+local tostring=tostring
  
-local factory=LibStub:NewLibrary("LibInit-Factory",1) --#factory
+local factory=LibStub:NewLibrary("LibInit-Factory",4) --#factory
 if (not factory) then return end
+factory.nonce=factory.nonce or 0
 local backdrop = {
 	bgFile="Interface\\TutorialFrame\\TutorialFrameBackground",
 	edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
@@ -24,23 +31,24 @@ local backdrop = {
 	edgeSize=16,
 	insets={bottom=7,left=7,right=7,top=7}
 }
-local function addBackdrop(f,color)
+local function addBackdrop(f,r,g,b)
 	f:SetBackdrop(backdrop)
-	f:SetBackdropBorderColor(C[color or 'Yellow']())
+	f:SetBackdropBorderColor(r,g,b)
 end
-local nonce=0
-local GetTime=GetTime
-local function GetUniqueName(type,father)
-	if father then 
-		local name=father:GetName()
-		if name then 
-			type=type..name 
-		else
-			type=type..father:GetObjectType()
-		end
-	end
-	nonce=nonce+1
-	return type .. tostring(GetTime()*1000) ..nonce
+local function truncate(fontstring,width)
+	fontstring:SetHeight(fontstring:GetStringHeight())
+	fontstring:SetNonSpaceWrap(false)
+	fontstring:SetWidth(width)
+end
+local function getPoint(frame)
+	local a1,f,a2,x,y=frame:GetPoint()
+	f=f:GetName() or tostring(f)
+	return frame:GetName() or tostring(frame),a1,f,a2,x,y,frame:GetWidth()
+end
+
+local function GetUniqueName(type)
+	factory.nonce=factory.nonce+1
+	return ("LibInit%s%05d"):format(type,factory.nonce)
 end
 local function SetScript(this,...)
 	this.child:SetScript(...)
@@ -50,6 +58,36 @@ local function SetStep(this,value)
 	this:SetValueStep(value)
 	this:SetStepsPerPage(1)
 end
+local function OnTooltip(this)
+	GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+	GameTooltip:AddLine(this.message or "Prova" ,0,1,0)
+	GameTooltip:AddLine(this.tooltip, nil, nil, nil, nil, (this.tooltipStyle or true));
+	GameTooltip:Show()
+end
+local function SetUp(father,widgetType,message,tooltip,maxwidth)
+	local name=GetUniqueName(widgetType,father)
+	if type(message)=="table" then
+		tooltip=message.desc
+		maxwidth=message.maxwidth
+		message=message.name
+		
+	end
+	local frame
+	if widgetType=="Button" then
+		frame=CreateFrame("Button",name,father,"SecureActionButtonTemplate,GameMenuButtonTemplate")
+	else
+		frame= CreateFrame('Frame',nil,father)
+	end
+	frame:SetScript("OnEnter",tooltip and OnTooltip or nil)
+	frame:SetScript("OnLeave",function() GameTooltip:Hide() end)
+	maxwidth=maxwidth or 140
+	frame:SetWidth(maxwidth)
+	frame.message=message
+	frame.tooltip=tooltip
+	frame.maxwidth=maxwidth
+	frame.widgetType=widgetType
+	return frame,name
+end
 --- Creates a slider.
 -- 
 -- @tparam frame father Parent frame to use
@@ -58,17 +96,14 @@ end
 -- @tparam number current Actual value
 -- @tparam string|table message String with description or table with .desc and .tooltip fields 
 -- @tparam[opt] string tooltip Tooltip message (ignored if message is a table) 
+-- @tparam[opt] number maxwidth maximum widget width
 -- @treturn widget slider widget object
 -- 
-function factory:Slider(father,min,max,current,message,tooltip)
-	if type(message)=="table" then
-		tooltip=message.desc
-		message=message.name
-	end
-	local name=GetUniqueName("slider",father)
-	local sl = CreateFrame('Slider',name, father, 'OptionsSliderTemplate')
-	sl:SetWidth(128)
-	sl:SetHeight(20)
+function factory:Slider(father,min,max,current,...)
+	local frame,name=SetUp(father,"Slider",...)
+	local sl = CreateFrame('Slider',name, frame, 'OptionsSliderTemplate')
+	frame:SetHeight(50)
+	--sl:SetHeight(20)
 	sl:SetOrientation('HORIZONTAL')
 	sl:SetMinMaxValues(min, max)
 	sl:SetValue(current or -1)
@@ -78,31 +113,56 @@ function factory:Slider(father,min,max,current,message,tooltip)
 	sl.High=_G[name .. 'High']
 	sl.High:SetText(max)
 	sl.Text=_G[name.. 'Text']
-	sl.Text:SetText(message)
-	sl.Text:SetFontObject(GameFontNormalSmall)
+	frame.Text=sl.Text
+	frame.Text:SetText(frame.message)
+	truncate(frame.Text,frame.maxwidth)
+	local h=sl.Text:GetHeight()
+	sl:SetPoint("LEFT",5,0)
+	sl:SetPoint("RIGHT",-5,0)
 	sl.Value=sl:CreateFontString(name..'Value','ARTWORK','GameFontHighlightSmall')
 	sl.Value:SetPoint("TOP",sl,"BOTTOM")
 	sl.Value:SetJustifyH("CENTER")
-	sl.SetText=function(this,value) this.Text:SetText(value) end
-	sl.SetFormattedText=function(this,...) this.Text:SetFormattedText(...) end
-	sl.SetTextColor=function(this,...) this.Text:SetTextColor(...) end
-	sl.tooltipText=tooltip
-	function sl:OnValueChanged(value)
-		if (not self.unrounded) then
+	frame.Text:SetFontObject(GameFontNormalSmall)
+	frame.SetText=function(this,value) this.Text:SetText(value) end
+	frame.SetFormattedText=function(this,...) this.Text:SetFormattedText(...) end
+	frame.SetTextColor=function(this,...) this.Text:SetTextColor(...) end
+	if frame.tooltip then 
+		sl:SetScript("OnEnter",function() frame:GetScript("OnEnter")(frame) end)
+	end
+	frame.lastvalue=max+1 -- makes sure that first update fires
+	local function OnChange(self,value) end
+	function frame:SetValue(value)
+		sl:SetValue(value)
+	end
+	function frame:SetStep(value)
+		sl:SetStep(value)
+	end
+	function frame:OnValueChanged(value)
+		if (not sl.unrounded) then
 			value = math.floor(value)
 		end
-		if (self.isPercent) then
-			self.Value:SetFormattedText('%d%%',value)
+		if (sl.isPercent) then
+			sl.Value:SetFormattedText('%d%%',value)
 		else
-			self.Value:SetText(value)
+			sl.Value:SetText(value)
 		end
-		self:OnChange(value)
+		if value==frame.lastvalue then return end
+		frame.lastvalue=value
+		OnChange(frame,value)
 	end
-	function sl:OnChange(value) end
-	function sl:SetOnChange(func) self.OnChange=func end
-	sl:SetScript("OnValueChanged",sl.OnValueChanged)
-	sl:OnValueChanged(current)
-	return sl
+	function frame:SetOnChange(func) 
+		OnChange=func 
+	end
+	function frame:SetScript(script,value)
+		if script=="OnValueChanged" then
+			OnChange=value
+		else
+			sl:SetScript(script,value)
+		end
+	end
+	sl:SetScript("OnValueChanged",frame.OnValueChanged)
+	frame:OnValueChanged(current)
+	return frame
 end
 --- Creates a checkbox.
 -- 
@@ -110,32 +170,41 @@ end
 -- @tparam bool current Actual value
 -- @tparam string|table message String with description or table with .desc and .tooltip fields 
 -- @tparam[opt] string tooltip Tooltip message (ignored if message is a table)
+-- @tparam[opt] number maxwidth maximum widget width
 -- @treturn widget checkbox widget object
 -- 
-function factory:Checkbox(father,current,message,tooltip)
-	if type(message)=="table" then
-		tooltip=message.desc
-		message=message.name
-	end
-	local frame=CreateFrame("Frame",nil,father)
-	local name=GetUniqueName("checkbox",father)
+function factory:Checkbox(father,current,...)
+	local frame,name=SetUp(father,"Checkbox",...)
 	local ck=CreateFrame("CheckButton",name,frame,"ChatConfigCheckButtonTemplate")
-	ck.OnClick=function(this)
-		this.frame:OnChange(this:GetChecked())
-	end		
 	frame.SetScript=SetScript
 	frame.child=ck
 	ck.frame=frame
+	local textlen=frame.maxwidth-ck:GetWidth()-2
 	ck:SetPoint('TOPLEFT')
-	ck:SetScript("OnClick",ck.OnClick)
+	ck:SetScript("OnClick",function(this) this.frame:OnChange(this:GetChecked()) end)
 	ck.Text=_G[name..'Text']
-	ck.Text:SetText(message)
+	ck.Text:SetText(frame.message)
+	ck.Text:SetJustifyH("LEFT")
+	truncate(ck.Text,textlen)
 	ck:SetChecked(current)
-	ck.tooltip=tooltip
+	local r,g,b,a=ck.Text:GetTextColor()
+	if current then ck.Text:SetTextColor(0,1,0,1) end
+	if frame.tooltip then 
+		ck:SetScript("OnEnter",function() frame:GetScript("OnEnter")(frame) end)
+	end
 	frame:SetWidth(ck:GetWidth()+ck.Text:GetWidth()+2)
 	frame:SetHeight(ck:GetHeight())
-	function frame:OnChange(value) end
-	function frame:SetOnChange(func) self.OnChange=func end
+	frame:SetWidth(frame.maxwidth)
+	function frame:OnChange(value)
+		if value then
+			ck.Text:SetTextColor(0,1,0,1)
+		else
+			ck.Text:SetTextColor(r,g,b,a)
+		end 
+		self:CustomOnChange(value) 
+	end
+	function frame:CustomOnChange(value) end
+	function frame:SetOnChange(func) self.CustomOnChange=func end
 	return frame
 end
 --- Creates a buttom.
@@ -143,17 +212,15 @@ end
 -- @tparam frame father Parent frame to use
 -- @tparam string|table message String with description or table with .desc and .tooltip fields 
 -- @tparam[opt] string tooltip Tooltip message (ignored if message is a table
+-- @tparam[opt] number maxwidth maximum widget width
 -- @treturn widget button widget object
 -- 
-function factory:Button(father,message,tooltip)
-	if type(message)=="table" then
-		tooltip=message.desc
-		message=message.name
-	end
-	local name=GetUniqueName("button",father)
-	local bt=CreateFrame("Button",name,father,"SecureActionButtonTemplate,GameMenuButtonTemplate")
-	bt:SetText(message)
-	bt.tooltipText=tooltip
+function factory:Button(father,...)
+	local bt,name=SetUp(father,"Button",...)
+	bt:SetText(bt.message)
+	bt:SetWidth(bt.maxwidth)
+	truncate(bt:GetFontString(),bt.maxwidth)
+
 	function bt:SetOnChange(func)
 		if type(func)=="function" then
 			bt:SetScript("OnClick",func)
@@ -170,71 +237,63 @@ end
 -- @tparam tab list Option list
 -- @tparam string|table message String with description or table with .desc and .tooltip fields 
 -- @tparam[opt] string tooltip Tooltip message (ignored if message is a table) 
+-- @tparam[opt] number maxwidth maximum widget width
 -- @treturn widget dropdown widget object
 -- 
-	function factory:DropDown(father,current,list,message,tooltip)
-	if type(message)=="table" then
-		tooltip=message.desc
-		message=message.name
-	end
-	local frame=CreateFrame("Frame",nil,father)
-	local framename=GetUniqueName("dropdown",father)
-	local dd=CreateFrame("Frame",framename,frame,"UIDropDownMenuTemplate")
-	_G[framename.."Left"]:SetPoint("TOPLEFT",-15,17)
-	_G[framename.."Middle"]:SetWidth(140)
+	function factory:DropDown(father,current,list,...)
+	local frame,name=SetUp(father,"Dropdown",...)
+	frame:SetHeight(50)
+	frame:SetWidth(frame.maxwidth)
+	frame.SetOnChange=function() end
+	local dd=CreateFrame("Frame",name,frame,"MSA_DropDownMenuTemplate")
 	dd:SetPoint("BOTTOMLEFT")
 	dd:SetPoint("BOTTOMRIGHT")
+	dd.Left=_G[name.."Left"]
+	dd.Left:SetPoint("TOPLEFT",-15,17)
+	dd.Middle=_G[name.."Middle"]
+	dd.Middle:SetWidth(frame.maxwidth-15)
+	dd.Button=_G[name.."Button"]
+	dd.Right=_G[name.."Right"]
+	--dd.Left:SetPoint("TOPLEFT",0,0)
+	dd.Icon:SetColorTexture(0,0,1,1)
+	dd.Icon:Show()
+	local desc=frame:CreateFontString(nil,"ARTWORK","GameFontNormalSmall")
+	desc:SetText(frame.message)
+	desc:SetPoint("TOPLEFT",5,-2)
+	desc:SetPoint("TOPRIGHT",0,-2)
+	desc:SetJustifyH("LEFT")
+	truncate(desc,desc:GetWidth())
+	local h=dd.Text:GetHeight()
+	--dd:SgetPointetPoint("TOPLEFT",-15,-h)
+	--dd:SetPoint("TOPRIGHT",0,-h)
 	frame.SetScript=SetScript
 	frame.child=dd
-	dd.frame=frame
-	local desc=frame:CreateFontString(nil,"ARTWORK","GameFontNormalSmall")
-	desc:SetText(message)
-	desc:SetPoint("TOPLEFT")
-	desc:SetPoint("TOPRIGHT")
-	frame:SetWidth(140)
-	frame:SetHeight(45)		
-	if (tooltip) then
-		dd.tooltip=tooltip
-		dd:SetScript("OnEnter",function(self)
-				GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-				GameTooltip:SetText(self.tooltip, nil, nil, nil, nil, (self.tooltipStyle or true));
-			end
-		)
+	if frame.tooltip then 
+		dd:SetScript("OnEnter",function() frame:GetScript("OnEnter")(frame) end)
 	end
+	
 	dd:SetScript("OnLeave",function() GameTooltip:Hide() end)
-	dd.text=dd:CreateFontString(nil,"ARTWORK","GameFontHighlight")
-	function frame:SetText(...)
-		self.child.text:SetText(...)
-	end
-	function frame:SetFormattedText(...)
-		self.child.text:SetFormattedText(...)
-	end
-	function frame:SetTextColor(...)
-		self.child.text:SetTextColor(...)
-	end
 	dd.list=list
-	local name=tostring(GetTime()*1000) ..nonce
-	--dd.dropdown=CreateFrame('Frame',name,father,"UIDropDownMenuTemplate")
-	UIDropDownMenu_Initialize(dd, function(...)
+	MSA_DropDownMenu_Initialize(dd, function(...)
 		local i=0
 		for k,v in pairs(dd.list) do
 			i=i+1
-			local info=UIDropDownMenu_CreateInfo()
+			local info=MSA_DropDownMenu_CreateInfo()
 			info.text=v
 			info.value=k
 			info.func=function(...) return dd:OnValueChanged(...) end
 			info.arg1=i
 			info.arg2=k
 			--info.notCheckable=true
-			UIDropDownMenu_AddButton(info)
+			MSA_DropDownMenu_AddButton(info)
 		end
 	end)
-	UIDropDownMenu_SetSelectedValue(dd, current)
-	UIDropDownMenu_JustifyText(dd, "LEFT")
+	MSA_DropDownMenu_SetSelectedValue(dd, current)
+	MSA_DropDownMenu_JustifyText(dd, "LEFT")
 	function dd:OnValueChanged(this,index,value,...)
 		value=value or index
-		UIDropDownMenu_SetSelectedID(dd,index)
-		return self.frame:OnChange(value)
+		MSA_DropDownMenu_SetSelectedID(dd,index)
+		return frame:OnChange(value)
 	end
 	function frame:OnChange(value) end
 	function frame:SetOnChange(func) frame.OnChange=func end
@@ -249,7 +308,8 @@ end
 -- @tparam table addon The addon wich defined the variable
 -- @tparam frame father Parent frame to use
 -- @tparam string flag name of the variable to use 
-function factory:Option(addon,father,flag)
+-- @tparam[opt] number maxwidth maximum widget width
+function factory:Option(addon,father,flag,maxwidth)
 	if not addon or not addon.GetVarInfo or not father or not flag then
 		return		
 	end
@@ -258,6 +318,7 @@ function factory:Option(addon,father,flag)
 	local f=father
 	local w
 	local tipo=info.type
+	info.maxwidth=maxwidth
 	if (tipo=="toggle") then
 		w=self:Checkbox(f,addon:ToggleGet(flag,tipo),info)
 		w:SetOnChange(ToggleSet)
@@ -266,11 +327,13 @@ function factory:Option(addon,father,flag)
 		w:SetOnChange(ToggleSet)
 	elseif (tipo=="range") then
 		w=self:Slider(f,info.min,info.max,addon:ToggleGet(flag,info.type),info)
+		w:SetStep(info.step)
 		w:SetOnChange(ToggleSet)
 	elseif (tipo=="execute") then
 		w=self:Button(f,info)
 		w:SetOnChange(info.func)
 	end
+	info.maxwidth=nil
 	w.flag=flag
 	w.tipo=tipo
 	w.obj=addon

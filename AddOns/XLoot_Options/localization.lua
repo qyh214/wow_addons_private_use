@@ -71,6 +71,9 @@ local locales = {
 			autolooting_list = "To automatically loot specific items, list them below.\n  Example: Linen Cloth,Ashbringer,Copper Ore",
 
 			autolooting_details = "XLoot will choose the highest setting when deciding to loot a slot. This allows, for example, auto looting everything while solo yet only quest items and money while in a group.",
+
+			show_slot_errors = "Looting errors in chat",
+			show_slot_errors_details = "Print a chat message when a loot item cannot be shown for some reason. Most of these should be able to be safely ignored.",
 		},
 		Group = {
 			panel_title = "Group Loot",

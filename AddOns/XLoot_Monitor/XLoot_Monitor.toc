@@ -1,7 +1,7 @@
 ## Interface: 70200
 ## Title: XLoot Monitor
 ## Notes: A graphical presentation of items looted by yourself and your group
-## Version: 7.2-7
+## Version: 7.2-9
 ## Author: Xuerian
 ## X-Category: Inventory
 

@@ -12,6 +12,74 @@ L["S_FLYMAP_SHOWTRACKEDONLY"] = "Solo Tracciati"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Mostra solo le missioni tracciate"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Mostra Missioni Mondiali"
 --Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_CANCELING"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_CREATE"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCH"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCHING"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_UNLIST"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_UNLISTING"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_WAITING"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ENABLED"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_LEAVEOPTIONS"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_LEAVEOPTIONS_ASKX"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_LEAVEOPTIONS_DONTLEAVE"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_NOPVP"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_OT_ENABLED"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_QUEUEBUSY"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_RESULTS_APPLYING"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_RESULTS_APPLYING1"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_RESULTS_FOUND"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_RESULTS_FOUND1"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_RESULTS_UNAPPLY"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_SECONDS"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_TITLE"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_TUTORIAL1"] = ""
+--Translation missing 
 -- L["S_MAPBAR_AUTOWORLDMAP"] = ""
 L["S_MAPBAR_AUTOWORLDMAP_DESC"] = [=[Quando ti trovi a Dalaran o nell'Enclave di Classe, premendo 'M' viene mostrata la mappa delle Isole Disperse.
 

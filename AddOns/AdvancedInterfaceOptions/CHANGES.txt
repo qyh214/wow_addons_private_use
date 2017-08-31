@@ -1,46 +1,16 @@
-tag c92623eed949e253e12266abdfcab94415c03651 1.1.4
+tag ef3ae03a7508f389bb2d8fa872fab21b664bda93 1.2.0
 Author:	Benjamin Staneck <staneck@gmail.com>
-Date:	Wed May 3 10:16:34 2017 +0200
+Date:	Tue Aug 29 17:23:56 2017 +0200
 
-commit ca317740e6fa64b4b582b4784dc911bed6312689
-Author: semlar <teslagraafs@gmail.com>
-Date:   Thu Apr 20 15:03:14 2017 -0400
+commit 58cc86c60df954617bde26987a9a87d58a5b365e
+Author: Benjamin Staneck <staneck@gmail.com>
+Date:   Sat Aug 5 22:42:12 2017 +0200
 
-    Record cvars set earlier in the startup process
-    
-    Try and catch addons setting cvars before ours finishes loading. Still
-    won't hook addons that load before ours.
+    7.3 sound API change
 
-commit 902890f629503ce1323c6cb921893a0f07922326
-Author: semlar <teslagraafs@gmail.com>
-Date:   Thu Apr 20 14:31:08 2017 -0400
+commit 4858b3f959dd60885432a76a20ea14827e224bda
+Author: Benjamin Staneck <staneck@gmail.com>
+Date:   Fri Jun 16 23:27:35 2017 +0200
 
-    Don't skip saving cvar defaults to the db
-    
-    Save cvars that are set to their default value so they can be enforced
-    when you log in
-
-commit 3aca34b507bbb33ba1e66ecaa1909ddf9b839784
-Author: semlar <teslagraafs@gmail.com>
-Date:   Thu Apr 13 05:19:12 2017 -0400
-
-    Added some cvars and descriptions
-
-commit 34beafdeaddbbdc522b638ca8c132e2b27f428b1
-Author: semlar <teslagraafs@gmail.com>
-Date:   Thu Apr 13 04:34:06 2017 -0400
-
-    Fixed description for "minimapShowArchBlobs"
-
-commit 9290387bd54e452233dfd56ec3d922a32b33828f
-Author: semlar <teslagraafs@gmail.com>
-Date:   Thu Mar 30 18:19:27 2017 -0400
-
-    Unfocus cvar browser search box on enter-press because ketho says it's better
-
-commit d1ca17f57762155fd10615f183c6303a3f49aa9c
-Author: semlar <teslagraafs@gmail.com>
-Date:   Thu Mar 30 01:08:54 2017 -0400
-
-    Added fallback to prevent an error if an undocumented cvar is used
+    add ShowClassColorInFriendlyNameplate
 

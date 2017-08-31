@@ -1,9 +1,10 @@
+--local ADDON_NAME, namespace = ... 	--localization
 local ADDON_NAME, namespace = ... 	--localization
 local L = namespace.L 				--localization
 
-local LOCALE = GetLocale()
-
-if LOCALE == "deDE" then
+--local LOCALE = GetLocale()
+--print("at deDE",namespace.locale)
+if namespace.locale == "deDE" then
 	-- The EU English game client also
 	-- uses the US English locale code.
 

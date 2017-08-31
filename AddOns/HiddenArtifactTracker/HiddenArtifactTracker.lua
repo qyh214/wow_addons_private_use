@@ -2,7 +2,10 @@ HiddenArtifactTracker ={}  			--options
 HiddenArtifactTracker.active = true;		--turn the addon on/off
 HiddenArtifactTracker.colourOptions = true;	--colour tooltip text; false to make all addon text white
 HiddenArtifactTracker.advTracking = true;	--extra tracking for artifact specific unlock criteria; false to hide
+HiddenArtifactTracker.forceTracking = false;	--extra tracking for artifact specific unlock criteria; false to hide
+HiddenArtifactTrackerChars.trackBosses = true;	--tracking for mage tower dungeon completion
 
+--DATA
 local arti_names = {
 	["Maw of the Damned"]=43646,
 	["Blades of the Fallen Prince"]=43647,
@@ -109,18 +112,31 @@ local artNumbers = {
 	[128288] = "Scaleshard"
 	}
 
+
 SLASH_HIDDENAT1 = '/hat'
 function SlashCmdList.HIDDENAT(msg, editbox)
-	if msg=="on" then
-		HiddenArtifactTracker.active = true
-	elseif msg=="off" then
-		HiddenArtifactTracker.active = false
-	elseif msg=="colour" or msg=="color" then
-		HiddenArtifactTracker.colourOptions = not HiddenArtifactTracker.colourOptions
-	elseif msg=="adv" then
-		HiddenArtifactTracker.advTracking = not HiddenArtifactTracker.advTracking
-	else
-		print("Usage: /hat <option> where option is:\noff - deactivate\non - enable\nadv - toggle advanced tracking\ncolour - toggle coloured/white text")
+
+	local success = 1
+	for imsg in string.gmatch(msg, "%S+") do
+		if imsg=="on" then
+			HiddenArtifactTracker.active = true
+		elseif imsg=="off" then
+			HiddenArtifactTracker.active = false
+		elseif imsg=="colour" or msg=="color" then
+			HiddenArtifactTracker.colourOptions = not HiddenArtifactTracker.colourOptions
+		elseif imsg=="adv" then
+			HiddenArtifactTracker.advTracking = not HiddenArtifactTracker.advTracking
+		elseif imsg=="force" then
+			HiddenArtifactTracker.forceTracking = not HiddenArtifactTracker.forceTracking
+		elseif imsg=="mage" then
+			HiddenArtifactTrackerChars.trackBosses = not HiddenArtifactTrackerChars.trackBosses
+		else
+			success = 0
+		end
+	end
+
+	if success ~= 1 or msg == "" then
+		print("Usage: /hat <option> where option is:\noff - deactivate\non - enable\nadv - toggle advanced tracking\ncolour - toggle coloured/white text\nmage - toggle display of dungeon boss tracking for mage tower skin")
 	end
 end
 
@@ -156,7 +172,7 @@ GameTooltip:SetScript("OnTooltipSetItem",
 			end
 
 			-- tracking for tint unlocks if base appearance is unlocked
-			if IsQuestFlaggedCompleted(arti_names[name]) then
+			if IsQuestFlaggedCompleted(arti_names[name]) or HiddenArtifactTracker.forceTracking then
 
 				-- Check additional tint criteria
 				local k=GetAchievementCriteriaInfo
@@ -193,6 +209,26 @@ GameTooltip:SetScript("OnTooltipSetItem",
 						GameTooltip:AddLine(n_once.."PvP: "..e.."/"..f,1,1,1,True)
 					end
 					n_once=""
+				end
+			end
+
+			if HiddenArtifactTrackerChars.trackBosses and HiddenArtifactTrackerChars[name] ~= nil and IsQuestFlaggedCompleted(HiddenArtifactTrackerChars[name]["quest"]) and HiddenArtifactTrackerChars[name]["completion"] < 10 then
+				GameTooltip:AddLine(" ", 1,1,1,True)
+				local col = HiddenArtifactTrackerChars[name]["completion"] / 10
+				GameTooltip:AddLine("Mage Tower dungeons: "..HiddenArtifactTrackerChars[name]["completion"].."/10", 2-2*col, 2*col, 0, True)
+			elseif HiddenArtifactTrackerChars.trackBosses and HiddenArtifactTrackerChars[name] ~= nil and IsQuestFlaggedCompleted(HiddenArtifactTrackerChars[name]["quest"]) == false then
+				GameTooltip:AddLine(" ", 1,1,1,True)
+
+				local state,perc,time = C_ContributionCollector.GetState(1)
+				perc = math.floor(perc*100)
+				local col = not HiddenArtifactTracker.colourOptions and 1 or 0
+
+				if state == Enum.ContributionState.Active or state == Enum.ContributionState.UnderAttack then
+					GameTooltip:AddLine("Mage Tower is available!", col, 1, col, True)
+				elseif state == Enum.ContributionState.Destroyed then
+					GameTooltip:AddLine("Mage Tower is destroyed!", 1, col, col, True)			
+				else
+					GameTooltip:AddLine("Mage Tower is at "..perc.."% completion.", 1,col,col,True)
 				end
 			end
 

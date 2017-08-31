@@ -497,6 +497,7 @@ function addon:OnEnable() -- Construct addon option tables here
 				{ "frame_snap_offset_y", "range", -2000, 2000, 1, -250, 250, 10, requires = "frame_snap" },
 				{ "frame_draggable" },
 				{ "frame_grow_upwards" },
+				{ "show_slot_errors" },
 			}},
 			{ "slot_options", "group", {
 				{ "loot_texts_info", "toggle", width = "double" },

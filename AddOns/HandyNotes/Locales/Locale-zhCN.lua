@@ -42,3 +42,4 @@ L["These settings control the look and feel of the HandyNotes icons."] = "这些
 L["Title"] = "标题"
 L["World Map Icon Alpha"] = "世界地图图标透明度"
 L["World Map Icon Scale"] = "世界地图图标缩放"
+

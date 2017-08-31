@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("CoSTrash", "DBM-Party-Legion", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16156 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16481 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -182,6 +182,22 @@ do
 		[L.Pouch3] = "pouch",
 		[L.Pouch4] = "pouch"
 	}
+	local bwClues = {
+		[1] = "cape",
+		[2] = "no cape",
+		[3] = "pouch",
+		[4] = "potions",
+		[5] = "long sleeves",
+ 		[6] = "short sleeves",
+ 		[7] = "gloves",
+ 		[8] = "no gloves",
+ 		[9] = "male",
+ 		[10] = "female",
+ 		[11] = "light vest",
+ 		[12] = "dark vest",
+ 		[13] = "no potion",
+		[14] = "book"
+	}
 
 	local function updateInfoFrame()
 		local lines = {}
@@ -237,6 +253,15 @@ do
 	function mod:OnSync(msg, clue)
 		if msg == "CoS" and clue and self.Options.SpyHelper then
 			hints[clue] = true
+			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
+		end
+	end
+	function mod:OnBWSync(msg)
+		msg = tonumber(msg)
+		if msg and msg > 0 and msg < 15 then
+			DBM:Debug("Recieved BigWigs Comm:"..msg)
+			local bwClue = bwClues[msg]
+			hints[bwClue] = true
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	end

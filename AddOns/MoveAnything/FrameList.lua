@@ -530,6 +530,7 @@ local m = {
 		API:AddElement({name = "MiniMapWorldMapButton", displayName = "Minimap World Map Button"}, c)
 		API:AddElement({name = "BattlefieldMinimap", displayName = "Zone Minimap"}, c)
 		c = API:GetCategory("Miscellaneous")
+		API:AddElement({name = "ActionStaus", displayName = "Action Staus"}, c)
 		API:AddElement({name = "TimeManagerFrame", displayName = "Alarm Clock"}, c)
 		API:AddElement({name = "BlackMarketFrame", displayName = "Black Market Auction", runOnce = BlackMarketFrame_Show}, c)
 		API:AddElement({name = "AuctionFrame", displayName = "Auction House", runOnce = function()

@@ -5,6 +5,11 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("Bartender4", "ruRU")
 if not L then return end
 
+L[ [=["None" as modifier means its always active, and no modifier is required.
+
+Remember to enable Mouse-Over Casting for the individual bars, on the "State Configuration" tab, if you want it to be active for a specific bar.]=] ] = [=["Нет" в качестве модификатора означает, что он всегда активен, и модификатор не требуется.
+
+Не забудьте включить функцию применение заклинаний при наведении мыши для отдельных панелей, на вкладке "Настройка состояния", если Вы хотите, чтобы она была активной для определённой панели.]=]
 L["|cffff0000WARNING|cffffffff: Pressing the button will reset your complete profile! If you're not sure about this, create a new profile and use that to experiment."] = "|cffff0000ВНИМАНИЕ|cffffffff: Нажатие клавиши сбросит ваш профиль полностью! Если вы не уверены в своих действиях, лучше создайте новый профиль для своих экспериментов."
 L["|cffffff00Click|r to toggle bar lock"] = "|cffffff00Клик|r – закрепление/разблокировка панелей"
 L["|cffffff00Right-click|r to open the options menu"] = "|cffffff00Правый-клик|r – открытие меню настроек"
@@ -26,6 +31,7 @@ L["Bar Style & Layout"] = "Расположение и вид панелей"
 L["Bars"] = "Панели"
 L["Bars unlocked. Move them now and click Lock when you are done."] = "Панели разблокированы. Перемещайте их, и нажмите «заблокировать» по завершении."
 L["Bartender4"] = "Bartender4"
+L["Bartender4 only converts the bindings of Bar1 to be directly usable, all other Bars will have to be re-bound to the Bartender4 keys. A direct indicator if your key-bindings are setup correctly is the hotkey display on the buttons. If the key-bindings shows correctly on your button, everything should work fine as well."] = "Bartender4 преобразует привязки Панель1, только к прямому использованию, все остальные Панели должны быть привязаны к клавишам Bartender4. Прямым индикатором, если ваши привязки клавиш настроены правильно, то появляется отображение горячих клавиш на кнопках. Если привязки клавиш отображаются правильно на ваших кнопках, тогда все должно работать нормально."
 L["Bartender4 was written by Nevcairiel of EU-Antonidas. He will accept cookies as compensation for his hard work!"] = "Bartender4 был написан Nevcairiel с сервера EU-Antonidas. Он с радостью принимает печеньки в качестве компенсации за столь трудную работу!"
 L["Blizzard Art"] = "Blizzard Арт"
 L["Blizzard Art Bar"] = "Панели Blizzard Арт"
@@ -68,11 +74,13 @@ L["Configure the Reputation Bar"] = "Настройка полосы репут�
 L["Configure the scale of the bar."] = "Настройка масштаба панели."
 L["Configure the VehicleBar"] = "Настройка панели транспорта"
 L["Configure the XP Bar"] = "Настройка полосы опыта"
+L["Configure the Zone Ability Bar"] = "Настроить зону полосы способности"
 L["Copy Conditionals"] = "Копировать условия"
 L["Create a copy of the auto-generated conditionals in the custom configuration as a base template."] = "Копировать автоматически созданные условия в личную конфигурацию в качестве базового шаблона."
 L["CTRL"] = "Ctrl"
 L["Custom Conditionals"] = "Свои условия"
 L["Default Bar State"] = "Состояние \"По умолчанию\""
+L["Direction of the button flyouts on this bar (eg. summon demon/pet)"] = "Направление кнопки на всплывающие окно, на этой панели (например, вызвать демона/питомца)"
 L["Disable any reaction to mouse events on this bar, making the bar click-through."] = "Не реагировать никак на щелчки мыши в эту панель, сделать панель прозрачной для кликов."
 L["Disabled"] = "Отключено"
 L["Disabled in Combat"] = "Отключать в бою"
@@ -102,6 +110,7 @@ L["Enable the use of a custom condition, disabling all of the above."] = "Раз
 L["Enable the use of the Blizzard Vehicle UI, hiding any Bartender4 bars in the meantime."] = "Разрешить использование стандартного интерфейса управления транспортом, все панели Bartender4 будут скрыты на это время."
 L["Enable the Vehicle Bar"] = "Включить панель транспорта"
 L["Enable the XP Bar"] = "Включить полосу опыта"
+L["Enable the Zone Ability Bar"] = "Включить Зона полосы способности"
 L["Enable/Disable the bar."] = "Включить/Отключить панель."
 L["Enabled"] = "Включено"
 L["Extra Action Bar"] = "Extra Action Bar"
@@ -140,6 +149,7 @@ L["Hide without pet"] = "Скрывать без питомца"
 L["Horizontal Growth"] = "Рост по горизонтали"
 L["Horizontal growth direction for this bar."] = "Горизонтальное направление роста для данной панели."
 L["Hotkey Mode"] = "Режим горячих клавиш"
+L["How do I change the Bartender4 Keybindings then?"] = "Как я могу изменить сочетания клавиш в Bartender4?"
 L["I just installed Bartender4, but my keybindings do not show up on the buttons/do not work."] = "Я только что установил аддон Bartender4, но Назначенные клавиши не подписаны на панелях, либо вообще не работают."
 L["I've found a bug! Where do I report it?"] = "Я нашёл баг/проблему. Как мне сообщить об этом разработчикам?"
 L["Key Bindings"] = "Назначение клавиш"
@@ -161,6 +171,7 @@ L["Number of buttons."] = "Количество кнопок на панели."
 L["Number of rows."] = "Количество строк у панели."
 L["Offset in X direction (horizontal) from the given anchor point."] = "Сдвиг по оси Х (горизонтально) от заданной точки привязки."
 L["Offset in Y direction (vertical) from the given anchor point."] = "Сдвиг по оси Y (вертикально) от заданной точки привязки."
+L["Once open, simply hover the button you want to bind, and press the key you want to be bound to that button. The keyBound tooltip and on-screen status will inform you about already existing bindings to that button, and the success of your binding attempt."] = "После открытия, просто наведите кнопку, которую вы хотите привязать, и нажмите клавишу, которую вы хотите привязать к этой кнопке. Подсказка привязки клавиатуры, и статус на экране будут информировать вас о уже существующих привязках и успеха, вашего назначение привязки."
 L["One action bar only"] = "Только одна активная панель"
 L["One Bag"] = "Одна сумка"
 L["Only show one Bag Button in the BagBar."] = "Отображать только главную сумку на панели сумок."
@@ -186,8 +197,10 @@ L["Self-Cast by modifier"] = "Чтение на себя по модификат
 L["Self-Cast Modifier"] = "Модификатор заклинания на себя"
 L["SHIFT"] = "Shift"
 L["Show a Icon to open the config at the Minimap"] = "Отображать иконку у мини-карты для открытия настроек"
+L["Show Artifact Power Bar"] = "Показать полосу \"Сила Артефакта\""
 L["Show Reputation Bar"] = "Отобразить панель репутации"
 L["Show XP Bar"] = "Отобразить панель опыта"
+L["Smart Target selection"] = "Выбор умной цели"
 L["Specify the Color of the Out of Mana Indicator"] = "Выбрать цвет для индикации нехватки маны"
 L["Specify the Color of the Out of Range Indicator"] = "Выберите цвет для индикации недостижимости"
 L["Stance Bar"] = "Панель стоек"
@@ -199,6 +212,7 @@ L["The background of button places where no buttons are placed"] = "Фон на 
 L["The bar default is to be visible all the time, you can configure conditions here to control when the bar should be hidden."] = "По умолчанию панели будут отображаться всегда. Здесь вы можете настроить условия сокрытия панелей."
 L["The default behaviour of this bar when no state-based paging option affects it."] = "Поведение данной панели когда она не попадает под какие-либо другие модификаторы состояния."
 L["The Positioning options here will allow you to position the bar to your liking and with an absolute precision."] = "Опции позиционирования позволят вам определить местоположение панелей с абсолютной точностью"
+L["These options can automatically select a different target for your spell, based on macro conditions. Note however that they will overrule any target changes from normal macros."] = "Эти параметры могут автоматически выбрать другую цель для вашего заклинания на основе макро-условий. Однако следует отметить, что они будут, отменять любые изменения цели от обычных макросов."
 L["This bar will be hidden once you enter combat."] = "Данная панель будет скрыта, как только вы вступите в бой."
 L["This bar will be hidden whenever you are not in combat."] = "Данная панель будет скрыта, пока вы находитесь вне боя."
 L["Three bars stacked"] = "Сложены три панели"
@@ -221,10 +235,12 @@ L["VehicleBar"] = "Панель транспорта"
 L["Vertical Growth"] = "Рост по вертикали"
 L["Vertical growth direction for this bar."] = "Вертикальное направление роста для данной панели."
 L["Visibility"] = "Видимость"
+L["When reporting a bug, make sure you include the |cffffff78steps on how to reproduce the bug|r, supply any |cffffff78error messages|r with stack traces if possible, give the |cffffff78revision number|r of Bartender4 the problem occured in and state whether you are using an |cffffff78English client or otherwise|r."] = "Если вы сообщаете об ошибке, убедитесь, что у вас есть |cffffff78действия по воспроизведению об ошибки|r передать любые |cffffff78сообщения об ошибках|r с трассировки стека, eсли возможно, дать |cffffff78номер версии|r Bartender4, в котором возникла проблема, и укажите, используете ли вы |cffffff78Английский клиент или другой."
 L["Who wrote this cool addon?"] = "Кто написал этот клёвое дополнение?"
 L["X Offset"] = "Сдвиг по Х"
 L["XP Bar"] = "Полоса опыта"
 L["Y Offset"] = "Сдвиг по Y"
+L["You can either click the KeyBound button in the options, or use the |cffffff78/kb|r chat command to open the keyBound control. Alternatively, you can also use the Blizzard Keybinding Interface."] = "Вы можете, нажать на Назначение клавиш в опциях или командой в чат |cffffff78/kb|r используется для настройки Назначения клавиш. Кроме того, вы можете использовать меню Назначение клавиш от Blizzard интерфейса."
 L["You can report bugs or give suggestions at the discussion forums at |cffffff78http://forums.wowace.com/showthread.php?t=12513|r or check the project page at |cffffff78http://www.wowace.com/addons/bartender4/|r"] = [=[Вы можете отправлять ошибки и предложения в ветку форума на:
 |cffffff78http://forums.wowace.com/showthread.php?t=12513|r
 или просмотреть страницу проекта на:
@@ -240,4 +256,6 @@ Example: [form:1]9;0]=] ] = [=[Вы можете использовать люб
 Пример: [form:1]9;0]=]
 L["You can use the preset defaults as a starting point for setting up your interface. Just choose your preferences here and click the button below to reset your profile to the preset default. Note that not all defaults show all bars."] = "Вы можете использовать настройки по-умолчанию в качестве отправной точки для настройки Вашего интерфейса. Сделайте здесь свой выбор, щёлкнув по соответствующей клавише, для перехода к состоянию по-умолчанию. Важно: не все панели отображаются при настройках по-умолчанию."
 L["You have to exit the vehicle in order to be able to change the Vehicle UI settings."] = "Вы должны выйти из транспортного средства, чтобы иметь возможность изменить настройки UI транспорта."
+L["Zone Ability Bar"] = "Зона полосы способности"
 L["Zoom"] = "Увеличение"
+

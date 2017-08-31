@@ -5,7 +5,7 @@
 
 local LibEvent = LibStub:GetLibrary("LibEvent.7000")
 
-local VERSION = 2.2
+local VERSION = 2.25
 
 local addon, ns = ...
 
@@ -34,7 +34,9 @@ local DefaultDB = {
     ShowInspectAngularBorder = false,     --觀察面板直角邊框
     ShowInspectColoredLabel = true,       --觀察面板高亮橙裝武器標簽
     ShowOwnFrameWhenInspecting = false,   --觀察同時顯示自己裝備列表
+    ShowItemStats = false,                --顯示裝備屬性統計
     DisplayPercentageStats = false,       --裝備屬性換算成百分比數值
+    ShowCharacterItemSheet = true,        --顯示玩家自己裝備列表
     EnablePartyItemLevel = true,          --小隊裝等
         SendPartyItemLevelToSelf = false, --發送小隊裝等到自己面板
         SendPartyItemLevelToParty = true, --發送小隊裝等到隊伍頻道
@@ -42,7 +44,7 @@ local DefaultDB = {
     EnableRaidItemLevel = false,          --團隊裝等
     EnableMouseItemLevel = true,          --鼠標裝等
     EnableMouseSpecialization = true,     --鼠標天賦
-    EnableMouseWeaponLevel = true,        --鼠標物品等級
+    EnableMouseWeaponLevel = true,        --鼠標武器等級
     PaperDollItemLevelOutsideString = false, --PaperDoll文字外邊顯示(沒有在配置面板)
     ItemLevelAnchorPoint = "TOP",         --裝等位置
 }
@@ -70,8 +72,13 @@ local options = {
     },
     { key = "ShowInspectAngularBorder" },
     { key = "ShowInspectColoredLabel" },
+    { key = "ShowCharacterItemSheet" },
     { key = "ShowOwnFrameWhenInspecting" },
-    { key = "DisplayPercentageStats" },
+    { key = "ShowItemStats", 
+      child = {
+        { key = "DisplayPercentageStats" },
+      }
+    },
     { key = "EnablePartyItemLevel",
       child = {
         { key = "ShowPartySpecialization" },
@@ -201,7 +208,7 @@ end
 
 local function CreateCheckbox(list, parent, anchor, offsetx, offsety)
     local checkbox, subbox
-    local stepx, stepy = 20, 31
+    local stepx, stepy = 20, 28
     if (not list) then return offsety end
     for i, v in ipairs(list) do
         checkbox = CreateFrame("CheckButton", nil, parent, "InterfaceOptionsCheckButtonTemplate")

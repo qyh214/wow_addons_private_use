@@ -428,7 +428,7 @@ local function General_Fonts()
             end
             
             button:SetScript("OnClick", function(self)
-                    _G.PlaySound("igMainMenuOptionCheckBoxOn");
+                    _G.PlaySound(856);
                     db.skin.font = self.font;
                     LoadSkin(db.skin.selected);
                     frame.list:Hide(); frame.list:Show();
@@ -627,7 +627,7 @@ local function Whispers_Filters(isChat)
             end
             
             button:SetScript("OnClick", function(self)
-                    _G.PlaySound("igMainMenuOptionCheckBoxOn");
+                    _G.PlaySound(856);
                     frame.list.selected = self.index;
                     frame.list:Hide(); frame.list:Show();
                 end);

@@ -3075,20 +3075,22 @@ MovAny.lVirtualMovers = {
 		children = {"CompactRaidFrameContainer"},
 		dontLock = true,
 		OnLoad = function(self)
-			hooksecurefunc("CompactRaidFrameManager_SetSetting", function(setting, value, skip)
-				if skip ~= "MASkip" and setting == "Locked" and IsShiftKeyDown() then
-					if not InCombatLockdown() then
-						if value then
-							MovAny:StopMoving(self:GetName())
-						else
-							CompactRaidFrameManager_LockContainer(CompactRaidFrameManager)
-							if not MovAny:GetMoverByFrame(self:GetName()) then
-								MovAny:AttachMover(self:GetName())
+			if CompactRaidFrameManager_SetSetting then
+				hooksecurefunc("CompactRaidFrameManager_SetSetting", function(setting, value, skip)
+					if skip ~= "MASkip" and setting == "Locked" and IsShiftKeyDown() then
+						if not InCombatLockdown() then
+							if value then
+								MovAny:StopMoving(self:GetName())
+							else
+								CompactRaidFrameManager_LockContainer(CompactRaidFrameManager)
+								if not MovAny:GetMoverByFrame(self:GetName()) then
+									MovAny:AttachMover(self:GetName())
+								end
 							end
 						end
 					end
-				end
-			end)
+				end)
+			end
 		end,
 		OnMAHook = function(self)
 			local con = _G["CompactRaidFrameContainer"]

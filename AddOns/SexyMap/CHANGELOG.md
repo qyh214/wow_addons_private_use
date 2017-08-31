@@ -1,6 +1,7 @@
 # SexyMap
 
-## [v7.2.1](https://github.com/funkydude/SexyMap/tree/v7.2.1) (2017-06-29)
-[Full Changelog](https://github.com/funkydude/SexyMap/compare/v7.2.0...v7.2.1)
+## [v7.3.0](https://github.com/funkydude/SexyMap/tree/v7.3.0) (2017-08-29)
+[Full Changelog](https://github.com/funkydude/SexyMap/compare/v7.2.1...v7.3.0)
 
-- Remove some temporary code  
+- drop more buttons  
+- bump toc  

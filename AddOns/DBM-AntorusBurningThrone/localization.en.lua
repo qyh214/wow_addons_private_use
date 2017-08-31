@@ -34,6 +34,16 @@ L= DBM:GetModLocalization(2025)
 ---------------------------
 L= DBM:GetModLocalization(1985)
 
+L:SetOptionLocalization({
+	ShowAllPlatforms =	"Show all announces regardless of player platform location"
+})
+
+L:SetMiscLocalization({
+	Xoroth = "Witness Xoroth, a world of infernal heat and scorched bones!",
+	Rancora = "Gaze upon Rancora, a landscape of festering pools and skittering death!",
+	Nathreza = "Nathreza... once a world of magic and knowledge, now a twisted landscape from which none escape."
+})
+
 ---------------------------
 -- Imonar the Soulhunter --
 ---------------------------
@@ -44,6 +54,10 @@ L= DBM:GetModLocalization(2009)
 ---------------------------
 L= DBM:GetModLocalization(2004)
 
+L:SetOptionLocalization({
+	InfoFrame =	"Show InfoFrame for fight overview"
+})
+
 ---------------------------
 -- Varimathras --
 ---------------------------
@@ -53,6 +67,14 @@ L= DBM:GetModLocalization(1983)
 -- The Coven of Shivarra --
 ---------------------------
 L= DBM:GetModLocalization(1986)
+
+L:SetTimerLocalization({
+	timerBossIncoming		= DBM_INCOMING
+})
+
+L:SetOptionLocalization({
+	timerBossIncoming		= "Show timer for next boss swap"
+})
 
 ---------------------------
 -- Aggramar --

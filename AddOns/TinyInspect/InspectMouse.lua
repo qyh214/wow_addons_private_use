@@ -27,7 +27,7 @@ local function AppendToGameTooltip(guid, ilevel, spec, weaponLevel, isArtifact)
     local ilvlText = format("%s|cffffffff%s|r", LevelLabel, ilevel)
     local specText = format("|cffb8b8b8%s|r", spec)
     if (weaponLevel and weaponLevel > 0 and TinyInspectDB.EnableMouseWeaponLevel) then
-        ilvlText = ilvlText .. format("(%s)", weaponLevel)
+        ilvlText = ilvlText .. format(" (%s)", weaponLevel)
     end
     if (ilvlLine) then
         ilvlLine:SetText(ilvlText)

@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 1059 $")
+end, "$Revision: 1066 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -423,7 +423,7 @@ function XPerl_Party_SetDebuffLocation(self)
 				end
 			end
 		else
-			if (self.petFrame and self.petFrame:IsVisible()) then
+			if (self.petFrame and self.petFrame:IsShown()) then
 				if (pconf.flip) then
 					debuff1:SetPoint("TOPRIGHT", self.petFrame.nameFrame, "TOPLEFT", 0, -4)
 				else
@@ -924,8 +924,8 @@ end
 -- XPerl_Party_TargetUpdateHealth
 local function XPerl_Party_TargetUpdateHealth(self)
 	local tf = self.targetFrame
-	local hp, hpMax = UnitHealth(self.targetid), UnitHealthMax(self.targetid)
-	tf.lastHP, tf.lastHPMax = hp, hpMax
+	local hp, hpMax, heal, abosrb = UnitHealth(self.targetid), UnitHealthMax(self.targetid), UnitGetIncomingHeals(self.targetid), UnitGetTotalAbsorbs(self.targetid)
+	tf.lastHP, tf.lastHPMax, tf.lastHeal, tf.lastAbsorb = hp, hpMax, heal, abosrb
 	tf.lastUpdate = GetTime()
 
 	--tf.healthBar:SetMinMaxValues(0, hpMax)
@@ -950,6 +950,9 @@ local function XPerl_Party_TargetUpdateHealth(self)
 		tf.healthBar:SetValue(hp)
 	end
 	tf.healthBar.text:Show()
+
+	XPerl_Party_TargetUpdateAbsorbPrediction(self.targetFrame)
+	XPerl_Party_TargetUpdateHealPrediction(self.targetFrame)
 
 	if (UnitIsDeadOrGhost(self.targetid)) then
 		tf.healthBar:SetStatusBarColor(0.5, 0.5, 0.5, 1)
@@ -979,6 +982,24 @@ local function XPerl_Party_TargetUpdateHealth(self)
 		tf.pvpIcon:Show()
 	else
 		tf.pvpIcon:Hide()
+	end
+end
+
+-- XPerl_Party_TargetUpdateHealPrediction
+function XPerl_Party_TargetUpdateHealPrediction(self)
+	if pconf.healprediction then
+		XPerl_SetExpectedHealth(self)
+	else
+		self.expectedHealth:Hide()
+	end
+end
+
+-- XPerl_Party_TargetUpdateAbsorbPrediction
+function XPerl_Party_TargetUpdateAbsorbPrediction(self)
+	if pconf.absorbs then
+		XPerl_SetExpectedAbsorbs(self)
+	else
+		self.expectedAbsorbs:Hide()
 	end
 end
 
@@ -1029,9 +1050,9 @@ function XPerl_Party_OnUpdate(self, elapsed)
 			XPerl_Party_UpdatePlayerFlags(self)
 		end
 
-		if (pconf.target.large and self.targetFrame:IsVisible()) then
-			local hp, hpMax = UnitHealth(self.targetid), UnitHealthMax(self.targetid)
-			if (hp ~= self.targetFrame.lastHP or hpMax ~= self.targetFrame.lastHPMax or GetTime() > self.targetFrame.lastUpdate + 5000) then
+		if (pconf.target.large and self.targetFrame:IsShown()) then
+			local hp, hpMax, heal, absorb = UnitHealth(self.targetid), UnitHealthMax(self.targetid), UnitGetIncomingHeals(self.targetid), UnitGetTotalAbsorbs(self.targetid)
+			if (hp ~= self.targetFrame.lastHP or hpMax ~= self.targetFrame.lastHPMax or heal ~= self.targetFrame.lastHeal or absorb ~= self.targetFrame.lastAbsorb or GetTime() > self.targetFrame.lastUpdate + 5000) then
 				XPerl_Party_TargetUpdateHealth(self)
 			end
 		end
@@ -1388,18 +1409,6 @@ XPerl_Party_Events.UNIT_FLAGS = XPerl_Party_Events.UNIT_FACTION
 function XPerl_Party_Events:UNIT_TARGET()
 	XPerl_Party_UpdateTarget(self)
 	updatePartyThreat(true)
-end
-
-function XPerl_Party_Events:UNIT_HEAL_PREDICTION(unit)
-	if (pconf.healprediction and unit == self.partyid) then
-		XPerl_SetExpectedHealth(self)
-	end
-end
-
-function XPerl_Party_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
-	if (pconf.absorbs and unit == self.partyid) then
-		XPerl_SetExpectedAbsorbs(self)
-	end
 end
 
 function XPerl_Party_Events:UNIT_HEAL_PREDICTION(unit)
@@ -1847,11 +1856,15 @@ function XPerl_Party_Set_Bits()
 		end
 	end
 
-	if (not pconf.healprediction) then
+	if pconf.healprediction then
+		XPerl_Party_Events_Frame:RegisterEvent("UNIT_HEAL_PREDICTION")
+	else
 		XPerl_Party_Events_Frame:UnregisterEvent("UNIT_HEAL_PREDICTION")
 	end
 
-	if (not pconf.absorbs) then
+	if pconf.absorbs then
+		XPerl_Party_Events_Frame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+	else
 		XPerl_Party_Events_Frame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 	end
 

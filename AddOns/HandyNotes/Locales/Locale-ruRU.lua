@@ -42,3 +42,4 @@ L["These settings control the look and feel of the HandyNotes icons."] = "Эти
 L["Title"] = "Название"
 L["World Map Icon Alpha"] = "Прозрачность значков карты мира"
 L["World Map Icon Scale"] = "Масштаб значков карты мира"
+

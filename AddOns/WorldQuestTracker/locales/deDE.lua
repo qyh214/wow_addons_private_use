@@ -10,6 +10,44 @@ L["S_ERROR_NOTLOADEDYET"] = "Diese Quest ist noch nicht geladen. Bitte warte ein
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Nur verfolgte"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Zeigt nur verfolgte Quests"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Weltquests anzeigen"
+L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"] = "Klicken, um Anmeldungen zurückzunehmen..."
+L["S_GROUPFINDER_ACTIONS_CANCELING"] = "abbrechen..."
+L["S_GROUPFINDER_ACTIONS_CREATE"] = "Keine Gruppe gefunden? Klicke, um eine zu erstellen"
+L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = "Gruppe erstellen"
+L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = "Die Gruppe verlassen?"
+L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = "Du verlässt die Gruppe in (Klicken zum sofortigen Verlassen):"
+L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = "Suche wiederholen"
+L["S_GROUPFINDER_ACTIONS_SEARCH"] = "Klicken, um mit der Suche nach Gruppen zu starten"
+L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = "Einer Gruppe, die diese Quest macht, beitreten"
+L["S_GROUPFINDER_ACTIONS_SEARCHING"] = "suche..."
+L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = "Klicken, um nach weiteren Gruppenmitgliedern zu suchen."
+L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = "Verlassen und eine andere Gruppe suchen?"
+L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = "Klicken, um die Anmeldung aufzuheben, damit eine neue Gruppe gestartet werden kann"
+L["S_GROUPFINDER_ACTIONS_UNLIST"] = "Klicken, um deine derzeitige Gruppe abzumelden"
+L["S_GROUPFINDER_ACTIONS_UNLISTING"] = "abmelden..."
+L["S_GROUPFINDER_ACTIONS_WAITING"] = "warten..."
+L["S_GROUPFINDER_ENABLED"] = "Bei neuer Quest automatisch öffnen"
+L["S_GROUPFINDER_LEAVEOPTIONS"] = "Optionen Gruppenverlassen"
+L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = "Nach X Sekunden verlassen"
+--Translation missing 
+-- L["S_GROUPFINDER_LEAVEOPTIONS_ASKX"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_LEAVEOPTIONS_DONTLEAVE"] = ""
+L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"] = "Nach Questabschluss sofort verlassen"
+L["S_GROUPFINDER_NOPVP"] = "PvP-Realms vermeiden"
+L["S_GROUPFINDER_OT_ENABLED"] = "Buttons auf der Questverfolgung zeigen."
+L["S_GROUPFINDER_QUEUEBUSY"] = "Du bist bereits in einer Warteschlange."
+L["S_GROUPFINDER_RESULTS_APPLYING"] = "Es gibt noch %d verbleibende Gruppen, klicke nochmal"
+L["S_GROUPFINDER_RESULTS_APPLYING1"] = "Es gibt noch 1 verbleibende Gruppe, klicke nochmal"
+L["S_GROUPFINDER_RESULTS_FOUND"] = [=[Es wurden %s Gruppen gefunden
+Klicke, um beizutreten]=]
+L["S_GROUPFINDER_RESULTS_FOUND1"] = [=[Es wurden eine Gruppe gefunden
+Klicke, um beizutreten]=]
+L["S_GROUPFINDER_RESULTS_UNAPPLY"] = "%d verbleibende Anmeldungen..."
+L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = "Rechtsklick, um dieses Menü zu schließen"
+L["S_GROUPFINDER_SECONDS"] = "Sekunden"
+L["S_GROUPFINDER_TITLE"] = "Dungeonbrowser"
+L["S_GROUPFINDER_TUTORIAL1"] = "Erledige deine Weltquests schneller, indem du Gruppen beitrittst, die die gleiche Quest machen!"
 L["S_MAPBAR_AUTOWORLDMAP"] = "Autom. Weltkarte"
 L["S_MAPBAR_AUTOWORLDMAP_DESC"] = [=[Wenn du dich in Dalaran oder in der Klassenordenshalle befindest, öffnet das Drücken von "M" direkt die Karte der Verheerten Inseln.
 

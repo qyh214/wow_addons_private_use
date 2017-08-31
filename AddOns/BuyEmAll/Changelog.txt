@@ -1,4 +1,7 @@
-﻿v3.4.2
+﻿v3.4.3
+Tiny fix for purchasing currencies with a set maximum, missed that detail.
+
+v3.4.2
 Fixed buying currencies and some other non-item things with gold.
 Added some checks to ensure things are handled in the right function.
 

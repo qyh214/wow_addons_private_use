@@ -1,18 +1,30 @@
-tag a138908ec226a0747db2fde1cea37b9cd6bebee6 3.3.4
+tag 5cf164130d6aee1e55d8f6ac61575af143052fb6 3.3.6
 Author:	Hendrik Leppkes <h.leppkes@gmail.com>
-Date:	Mon Apr 10 12:38:55 2017 +0200
+Date:	Wed Aug 30 08:51:17 2017 +0200
 
-Tag as 3.3.4
+Tag as 3.3.6
 
-commit 59ed80b589ef6eb65417281d68336ac6987cf7d6
+commit 8ad4f8c33e84a5b6163dd20066827e434a4e6afa
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Mon Apr 10 12:37:20 2017 +0200
+Date:   Tue Aug 29 23:26:50 2017 +0200
 
-    Update TOC for 7.2
+    Update TOC for 7.3
 
-commit c24528d448b19fd3a7c0d53586a1b70b9f9ae38f
+commit 16b2dbaeee0bd589c0b342a054d95719e2c59a4e
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Wed Feb 1 06:12:21 2017 +0100
+Date:   Tue Aug 29 23:26:31 2017 +0200
 
-    Update copyright to 2017
+    Update PlaySound usage for 7.3
+
+commit 92d98a4d5eb9a1d3478e9a11669fee5559bdd55f
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Sat Jul 15 10:04:58 2017 +0200
+
+    Apparently UNIT_SPELLCAST_CHANNEL_INTERRUPTED never existed, wherever it came from
+
+commit 3a4e4cc7d2d103931fd15303735d262d5319245f
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Wed Jul 12 14:15:47 2017 +0200
+
+    Switch to ignoring missing locale strings
 

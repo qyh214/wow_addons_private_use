@@ -1,3 +1,22 @@
+**r1066**
+* Fixed multiple issues with party and party target incoming heals and absorbs.
+* Protected and children element fixes in the options frame.
+
+**r1064**
+* Tagging as release.
+
+**r1063**
+* Range check should work properly at the Desolate Host encounter.
+* Party target absorbs and heal predictions should get updated properly.
+* Party pet power bar fixes.
+* Fixed some addon dependencies.
+
+
+**r1061**
+* Party pet and party target tweaks.
+* Protected and children element fixes in the options frame.
+* Some other minor fixes.
+
 **r1059**
 * Added a 45 yard range check.
 * Fixed Restoration Shaman's frame squish.

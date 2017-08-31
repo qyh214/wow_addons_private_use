@@ -1,18 +1,18 @@
-tag 687c79f59023059c8ab5ccfdbcac79fb603be928 4.7.7
+tag 154e76502ed4433e6fe39b40b165892ae0f803a6 4.7.10
 Author:	Hendrik Leppkes <h.leppkes@gmail.com>
-Date:	Tue Mar 28 19:18:38 2017 +0200
+Date:	Wed Aug 30 08:55:06 2017 +0200
 
-Tag as 4.7.7
+Tag as 4.7.10
 
-commit 74bfd217bb4b953014c708269a2e16badac4a4a9
+commit fe21ea01ebcb9dc7b843d04ac42cd1b5260c36eb
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Tue Mar 28 19:18:27 2017 +0200
+Date:   Tue Aug 29 16:36:00 2017 +0200
 
-    Update TOC to 7.2
+    Update TOC for 7.3
 
-commit 233e1c34cc971d43b11b613b96e790e2da1b52f8
+commit 3ee94996819ed8819188558e7d7b82dd6d9e3e81
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Sun Feb 19 07:43:32 2017 +0100
+Date:   Tue Aug 29 16:35:39 2017 +0200
 
-    7.2 removed the HelpMicroButton, so we don't need to handle it anymore.
+    Update PlaySound usage for 7.3
 

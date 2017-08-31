@@ -1,7 +1,7 @@
 ## Interface: 70200
 ## Title: XLoot Frame
 ## Notes: A customizable, skinnable loot frame.
-## Version: 7.2-7
+## Version: 7.2-9
 ## Author: Xuerian
 ## X-Category: Inventory
 

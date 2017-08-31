@@ -1,9 +1,9 @@
 local ADDON_NAME, namespace = ... 	--localization
 local L = namespace.L 				--localization
 
-local LOCALE = GetLocale()
+--local LOCALE = GetLocale()
 
-if LOCALE == "itIT" then
+if namespace.locale == "itIT" then
 	-- The EU English game client also
 	-- uses the US English locale code.
 

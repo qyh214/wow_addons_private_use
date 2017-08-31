@@ -226,7 +226,7 @@ local function CreateCheckButton(parent, title, dbTree, varName, tooltip, valCha
             self:UpdateChildren();
         end);
     cb:SetScript("OnClick", function(self, button)
-            _G.PlaySound("igMainMenuOptionCheckBoxOn");
+            _G.PlaySound(856);
             for i=1, #self.children do
                 if(self:GetChecked()) then
                     self.children[i]:Enable(self);
@@ -319,7 +319,7 @@ local function CreateCheckButtonMenu(parent, title, dbTree, varName, tooltip, va
     
     -- now the menu work...
     cbm.menu:SetScript("OnClick", function(self, button)
-            _G.PlaySound("igChatScrollDown");
+            _G.PlaySound(1115);
             self.dropdown:SetItemList(self.itemList, dbTree2[varName2], clickFunc);
             self.dropdown:ToggleDropDownMenu(self, "TOPLEFT", "BOTTOMLEFT", 0, 0);
         end);

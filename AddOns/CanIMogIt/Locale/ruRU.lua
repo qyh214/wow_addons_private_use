@@ -1,8 +1,7 @@
 L = {}
 L["(Experimental)"] = "(экспериментальная)"
 L["Adds tooltips to items showing if you have learned a transmog appearance."] = "Добавляет предметам подсказку, показывающую, выучен предмет для трансмогрификации или нет."
---Translation missing 
--- L["Also shows a summary in the Appearance Sets UI of how many pieces of a transmog set you have collected."] = ""
+L["Also shows a summary in the Appearance Sets UI of how many pieces of a transmog set you have collected."] = "Кроме того, показывает в Модели -> Наборы количество собранных частей набора."
 L["Another class can learn this item."] = "Другой класс может выучить этот предмет."
 L["Appearances updated: "] = "Обновлено моделей:"
 L["Can be learned by:"] = "Может выучить:"
@@ -31,11 +30,9 @@ L["Only show on items that can be transmoggrified."] = "Показывать т�
 L["Only show on items that you haven't learned."] = "Показывать только на предметах, которые ещё не изучены."
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "Обратите внимание, что подсказка не всегда верна, поскольку Blizzard не предоставляет полную информацию."
 L["Show Bag Icons"] = "Показывать значки сумок"
---Translation missing 
--- L["Show information on the tooltip about transmog sets."] = ""
+L["Show information on the tooltip about transmog sets."] = "Показывать в подсказках сведения о наборах предметов."
 L["Show Source Location Tooltip"] = "Сведения об источнике в подсказке"
---Translation missing 
--- L["Show Transmog Set Info"] = ""
+L["Show Transmog Set Info"] = "Показывать сведения о наборах предметов"
 L["Shows a more detailed text for some of the tooltips."] = "Показывать более подробный текст в некоторых подсказках."
 L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor, World Drop). This only works on items your current class can learn."] = "Показывать всплывающую подсказку об источнике модели (т. е. задание, торговец, мировая добыча). Действует лишь в отношении моделей, которые могут быть изучены вашим классом."
 L["Shows chat messages on login about the database scan."] = "Показывать в чате при входе в игру сообщения о сканировании базы данных."

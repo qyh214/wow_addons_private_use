@@ -311,10 +311,10 @@ function module:GetMissionResults(success,currentMission)
 	stopTimer()
 	if (success) then
 		report:AddMissionResult(currentMission.missionID,true)
-		PlaySound("UI_Garrison_Mission_Complete_Mission_Success")
+		PlaySound(SOUNDKIT.UI_GARRISON_MISSION_COMPLETE_MISSION_SUCCESS)
 	else
 		report:AddMissionResult(currentMission.missionID,false)
-		PlaySound("UI_Garrison_Mission_Complete_Encounter_Fail")
+		PlaySound(SOUNDKIT.UI_GARRISON_MISSION_COMPLETE_MISSION_FAIL_STINGER)	
 	end
 	if success then
 		local resourceMultiplier=currentMission.resourceMultiplier or {}

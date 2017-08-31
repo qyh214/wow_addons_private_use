@@ -38,6 +38,7 @@ local function GetMembers(num)
             members[guid].name = UnitName(unit)
             members[guid].class = select(2, UnitClass(unit))
             members[guid].role  = UnitGroupRolesAssigned(unit)
+            members[guid].done  = GetInspectInfo(unit, 0, true)
         else
             members[guid] = {
                 done   = false,

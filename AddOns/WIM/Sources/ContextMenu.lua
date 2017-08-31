@@ -139,7 +139,7 @@ function PopContextMenu(tag, parent)
         ToggleDropDownMenu(1, 1, menuFrame, parent, 0, 0);
         _G.UIDropDownMenu_SetButtonWidth(menuFrame, 25);
 	_G.UIDropDownMenu_SetWidth(menuFrame, 25, 5);
-        _G.PlaySound("UChatScrollButton");
+        _G.PlaySound(1115);
     else
         dPrint("Menu ["..tag.."] not found!")
     end

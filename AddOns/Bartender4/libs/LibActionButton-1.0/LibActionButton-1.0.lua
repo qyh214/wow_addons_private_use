@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ]]
 local MAJOR_VERSION = "LibActionButton-1.0"
-local MINOR_VERSION = 69
+local MINOR_VERSION = 70
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib, oldversion = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
@@ -663,6 +663,7 @@ function InitializeEventHandler()
 	lib.eventFrame:RegisterEvent("UPDATE_BINDINGS")
 	lib.eventFrame:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
 	lib.eventFrame:RegisterEvent("UPDATE_VEHICLE_ACTIONBAR")
+	lib.eventFrame:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED")
 
 	lib.eventFrame:RegisterEvent("ACTIONBAR_UPDATE_STATE")
 	lib.eventFrame:RegisterEvent("ACTIONBAR_UPDATE_USABLE")
@@ -735,6 +736,10 @@ function OnEvent(frame, event, arg1, ...)
 		end
 	elseif event == "SPELL_UPDATE_USABLE" then
 		for button in next, NonActionButtons do
+			UpdateUsable(button)
+		end
+	elseif event == "PLAYER_MOUNT_DISPLAY_CHANGED" then
+		for button in next, ActiveButtons do
 			UpdateUsable(button)
 		end
 	elseif event == "ACTIONBAR_UPDATE_COOLDOWN" then

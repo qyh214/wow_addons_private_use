@@ -19,6 +19,7 @@
 -- numericVersion: number, numeric form of version
 -- name: string, name of the addon, same as the toc file name
 -- title: string, same as "name" by default but developers may change for different locales
+-- path: string, the folder path where the addon resides, usually "Interface\\AddOns\\myaddon"
 -- player: string, player name
 -- realm: string, current realm name
 -- faction: string, player faction group in English, either "Alliance" or "Horde"
@@ -158,7 +159,7 @@ local UnitIsRaidOfficer = UnitIsRaidOfficer
 local GetSpecialization = GetSpecialization
 local _G = _G
 
-local VERSION = 1.26
+local VERSION = 1.27
 
 local lib = _G.LibAddonManager
 if type(lib) == "table" then
@@ -851,6 +852,7 @@ function lib:CreateAddon(name, addon)
 	lib.CopyPlayerInfo(addon)
 	addon.members = 0
 	addon.spec = 1
+	addon.path = "Interface\\AddOns\\"..name
 
 	local popupId = "LibAddonManager_PopupData_"..name
 

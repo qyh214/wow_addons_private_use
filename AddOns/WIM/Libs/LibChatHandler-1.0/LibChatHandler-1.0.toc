@@ -1,4 +1,4 @@
-## Interface: 40300
+## Interface: 70000
 
 ## Title: LibChatHandler-1.0
 ## Notes: Chat Event Model Control View (MCV)

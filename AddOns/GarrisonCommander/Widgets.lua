@@ -127,7 +127,7 @@ print(follower)
 		local quality=G.GetFollowerQuality(followerID) or follower.quality
 		local level=G.GetFollowerLevel(followerID) or follower.level
 		if levelup then
-			PlaySound("UI_Garrison_CommandTable_Follower_LevelUp");
+			PlaySound(SOUNDKIT.UI_GARRISON_COMMAND_TABLE_FOLLOWER_LEVEL_UP);
 		end
 		return self:AddFollowerIcon(followerType,
 			addon:GetFollowerTexture(follower),

@@ -1,4 +1,4 @@
--- $Id: LibUIDropDownMenu.lua 19 2017-07-02 13:34:55Z arith $
+-- $Id: LibUIDropDownMenu.lua 21 2017-08-29 13:32:07Z arith $
 -- ----------------------------------------------------------------------------
 -- Localized Lua globals.
 -- ----------------------------------------------------------------------------
@@ -13,8 +13,8 @@ local wipe = table.wipe
 local CreateFrame, GetCursorPosition, GetCVar, GetScreenHeight, GetScreenWidth, OpenColorPicker, PlaySound = CreateFrame, GetCursorPosition, GetCVar, GetScreenHeight, GetScreenWidth, OpenColorPicker, PlaySound
 
 -- ----------------------------------------------------------------------------
-local MAJOR_VERSION = "LibUIDropDownMenu-1.04.7030024484"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 19 $"):match("%d+"))
+local MAJOR_VERSION = "LibUIDropDownMenu-1.05.7030024920"
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 21 $"):match("%d+"))
 
 local LibStub = _G.LibStub
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end

@@ -256,3 +256,4 @@ L["You can use the preset defaults as a starting point for setting up your inter
 L["You have to exit the vehicle in order to be able to change the Vehicle UI settings."] = true
 L["Zone Ability Bar"] = true
 L["Zoom"] = true
+

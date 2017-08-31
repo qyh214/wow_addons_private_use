@@ -288,11 +288,12 @@ end)
 ----------------
 
 PaperDollFrame:HookScript("OnShow", function(self)
+    if (TinyInspectDB and not TinyInspectDB.ShowCharacterItemSheet) then return end
     ShowInspectItemListFrame("player", self, select(2,GetAverageItemLevel()))
 end)
 
 LibEvent:attachEvent("PLAYER_EQUIPMENT_CHANGED", function(self)
-    if (CharacterFrame:IsShown()) then
+    if (CharacterFrame:IsShown() and TinyInspectDB and TinyInspectDB.ShowCharacterItemSheet) then
         ShowInspectItemListFrame("player", PaperDollFrame, select(2,GetAverageItemLevel()))
     end
 end)

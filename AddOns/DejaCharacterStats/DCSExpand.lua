@@ -1,11 +1,12 @@
-local ADDON_NAME, namespace = ... 	--localization
+local _, namespace = ... 	--localization
 local L = namespace.L 				--localization
 
 -- ------------------------------------------------
 -- -- DCS Character Frame Expand/Collapse Button --
 -- ------------------------------------------------
 local DCS_tooltipText
-
+local PaperDollFrame = PaperDollFrame
+local CharacterFrame = CharacterFrame
 local function DCS_ExpandCheck_OnEnter(self)
 	GameTooltip:SetOwner(PaperDollFrame.ExpandButton, "ANCHOR_RIGHT");
 	GameTooltip:SetText(DCS_tooltipText, 1, 1, 1, 1, true)
@@ -30,7 +31,7 @@ local _, gdbprivate = ...
 	PaperDollFrame.ExpandButton:SetScript("OnEnter", DCS_ExpandCheck_OnEnter)
 	PaperDollFrame.ExpandButton:SetScript("OnLeave", DCS_ExpandCheck_OnLeave)
 			 
-	PaperDollFrame.ExpandButton:SetScript("OnMouseUp", function (self, button, up)
+	PaperDollFrame.ExpandButton:SetScript("OnMouseUp", function (self)
 		if (CharacterFrame.Expanded) then
 			CharacterFrame_Collapse()
 			self:SetNormalTexture("Interface\\BUTTONS\\UI-SpellbookIcon-NextPage-Up")
@@ -80,7 +81,17 @@ local DCS_ExpandButtonCheck = CreateFrame("CheckButton", "DCS_ExpandButtonCheck"
 	DCS_ExpandButtonCheck.tooltipText = L['Displays the Expand button for the character stats frame.'] --Creates a tooltip on mouseover.
 	_G[DCS_ExpandButtonCheck:GetName() .. "Text"]:SetText(L["Expand"])
 	
-	DCS_ExpandButtonCheck:SetScript("OnEvent", function(self, event, arg1)
+	DCS_ExpandButtonCheck:SetScript("OnEvent", function(self, event)
+		if event == "PLAYER_LOGIN" then
+			local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsExpandButtonChecked.ExpandButtonSetChecked
+			self:SetChecked(checked)
+			if checked then
+				PaperDollFrame.ExpandButton:Show()
+			else
+				PaperDollFrame.ExpandButton:Hide()
+			end
+		end
+		--[[
 		if event == "PLAYER_LOGIN" then
 		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsExpandButtonChecked
 			self:SetChecked(checked.ExpandButtonSetChecked)
@@ -92,9 +103,18 @@ local DCS_ExpandButtonCheck = CreateFrame("CheckButton", "DCS_ExpandButtonCheck"
 				gdbprivate.gdb.gdbdefaults.dejacharacterstatsExpandButtonChecked.ExpandButtonSetChecked = false
 			end
 		end
+		--]]
 	end)
 
-	DCS_ExpandButtonCheck:SetScript("OnClick", function(self,event,arg1) 
+	DCS_ExpandButtonCheck:SetScript("OnClick", function(self)
+		local checked = self:GetChecked()
+		gdbprivate.gdb.gdbdefaults.dejacharacterstatsExpandButtonChecked.ExpandButtonSetChecked = checked
+		if checked then
+			PaperDollFrame.ExpandButton:Show()
+		else
+			PaperDollFrame.ExpandButton:Hide()
+		end
+		--[[
 		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsExpandButtonChecked
 		if self:GetChecked(true) then
 			PaperDollFrame.ExpandButton:Show()
@@ -103,4 +123,5 @@ local DCS_ExpandButtonCheck = CreateFrame("CheckButton", "DCS_ExpandButtonCheck"
 			PaperDollFrame.ExpandButton:Hide()
 			gdbprivate.gdb.gdbdefaults.dejacharacterstatsExpandButtonChecked.ExpandButtonSetChecked = false
 		end
+		--]]
 	end)

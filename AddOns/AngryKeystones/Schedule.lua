@@ -1,4 +1,4 @@
-if GetBuildInfo() ~= "7.1.5" then return end
+if GetBuildInfo() ~= "7.2.5" then return end
 local ADDON, Addon = ...
 local Mod = Addon:NewModule('Schedule')
 
@@ -8,14 +8,18 @@ local requestKeystoneCheck
 
 -- 1: Overflowing, 2: Skittish, 3: Volcanic, 4: Necrotic, 5: Teeming, 6: Raging, 7: Bolstering, 8: Sanguine, 9: Tyrannical, 10: Fortified
 local affixSchedule = {
-	{ 6, 4, 10 },
-	{ 7, 1, 9 },
-	{ 8, 3, 10 },
-	{ 5, 4, 9 },
 	{ 6, 3, 9 },
+	{ 5, 13, 10 },
+	{ 7, 12, 9 },
+	{ 8, 3, 10 },
+	{ 11, 2, 9 },
+	{ 5, 14, 10 },
+	{ 6, 4, 9 },
 	{ 7, 2, 10 },
-	{ 8, 1, 9 },
-	{ 5, 2, 10 },
+	{ 5, 4, 9 },
+	{ 8, 12, 10 },
+	{ 7, 13, 9 },
+	{ 11, 14, 10 },
 }
 local currentWeek
 
@@ -67,11 +71,11 @@ end
 
 function Mod:Blizzard_ChallengesUI()
 	ChallengesFrame.GuildBest:ClearAllPoints()
-	ChallengesFrame.GuildBest:SetPoint("TOPLEFT", ChallengesFrame.WeeklyBest.Child.Star, "BOTTOMRIGHT", 9, 0)
+	ChallengesFrame.GuildBest:SetPoint("TOPLEFT", ChallengesFrame.WeeklyBest.Child.Star, "BOTTOMRIGHT", 9, 30)
 
 	local frame = CreateFrame("Frame", nil, ChallengesFrame)
 	frame:SetSize(206, 110)
-	frame:SetPoint("TOP", ChallengesFrame.WeeklyBest.Child.Star, "BOTTOM", 0, 0)
+	frame:SetPoint("TOP", ChallengesFrame.WeeklyBest.Child.Star, "BOTTOM", 0, 30)
 	frame:SetPoint("LEFT", ChallengesFrame, "LEFT", 40, 0)
 	Mod.Frame = frame
 
@@ -136,9 +140,6 @@ function Mod:Blizzard_ChallengesUI()
 	label:SetText(Addon.Locale.scheduleMissingKeystone)
 	frame.Label = label
 
-	ChallengesFrame.GuildBest:ClearAllPoints()
-	ChallengesFrame.GuildBest:SetPoint("TOPLEFT", ChallengesFrame.WeeklyBest.Child.Star, "BOTTOMRIGHT", 9, 0)
-
 	hooksecurefunc("ChallengesFrame_Update", UpdateAffixes)
 end
 
@@ -147,13 +148,13 @@ function Mod:CheckInventoryKeystone()
 	for container=BACKPACK_CONTAINER, NUM_BAG_SLOTS do
 		local slots = GetContainerNumSlots(container)
 		for slot=1, slots do
-			local _, _, _, _, _, _, slotLink, _, _, slotItemID = GetContainerItemInfo(container, slot)
-			if slotItemID == 138019 then
-				local itemString = slotLink:match("|Hitem:138019:([0-9:]+)|h(%b[])|h")
+			local _, _, _, _, _, _, slotLink = GetContainerItemInfo(container, slot)
+			local itemString = slotLink and slotLink:match("|Hkeystone:([0-9:]+)|h(%b[])|h")
+			if itemString then
 				local info = { strsplit(":", itemString) }
-				local mapLevel = tonumber(info[14])
+				local mapLevel = tonumber(info[2])
 				if mapLevel >= 7 then
-					local affix1, affix2 = tonumber(info[15]), tonumber(info[16])
+					local affix1, affix2 = tonumber(info[3]), tonumber(info[4])
 					for index, affixes in ipairs(affixSchedule) do
 						if affix1 == affixes[1] and affix2 == affixes[2] then
 							currentWeek = index

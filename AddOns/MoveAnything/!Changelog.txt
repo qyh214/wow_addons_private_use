@@ -3,6 +3,14 @@
 * Reseting bags while the bag is not opened won't reset it's scale to default.
 
 
+**16.2.2**
+* Fixed an issue with the NoTaint library.
+
+**16.2.1**
+* Fixed an issue with Compact Raid Frames.
+* Added Frames:
+	* Action Status
+
 **16.2.0**
 * Readded !NoTaint lib.
 

@@ -61,8 +61,8 @@ local function createOptionsFrame()
     win:RegisterForDrag("LeftButton");
 
     -- set script events
-    win:SetScript("OnShow", function(self) _G.PlaySound("igMainMenuOpen"); options.OnShow(self); end);
-    win:SetScript("OnHide", function(self) _G.PlaySound("igMainMenuClose"); options.OnHide(self); end);
+    win:SetScript("OnShow", function(self) _G.PlaySound(850); options.OnShow(self); end);
+    win:SetScript("OnHide", function(self) _G.PlaySound(851); options.OnHide(self); end);
     win:SetScript("OnDragStart", function(self) self:StartMoving(); end);
     win:SetScript("OnDragStop", function(self) self:StopMovingOrSizing(); end);
     
@@ -159,7 +159,7 @@ local function createCategory(index)
     cat:SetWidth(options.frame.nav:GetWidth()-2);
     cat:Show();
     cat:SetScript("OnClick", function(self, button)
-            _G.PlaySound("igMainMenuOptionCheckBoxOn");
+            _G.PlaySound(856);
             categorySelected = self.catIndex;
             subCategorySelected = 1;
             options.UpdateCategories();
@@ -182,7 +182,7 @@ local function createSubCategory(index)
     local font, _, _ = _G.ChatFontNormal:GetFont();
     sub.text:SetFont(font, 14, "");
     sub:SetScript("OnClick", function(self, button)
-            _G.PlaySound("igMainMenuOptionCheckBoxOn");
+            _G.PlaySound(856);
             subCategorySelected = self.subIndex;
             local cat = options.frame.nav.sub.category[self.subIndex];
             if(type(cat.frame) == "function") then

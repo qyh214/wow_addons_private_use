@@ -11,18 +11,18 @@ local function SetItemAngularBorder(self, quality, itemIDOrLink)
     if (not self.angularFrame) then
         local parent = self.IconBorder or self
         self.angularFrame = CreateFrame("Frame", nil, self)
-        self.angularFrame:Hide()
         self.angularFrame:SetFrameLevel(5)
         self.angularFrame:SetSize(parent:GetSize())
-        self.angularFrame:SetPoint("CENTER")
+        self.angularFrame:SetPoint("CENTER", parent, "CENTER")
+        self.angularFrame:Hide()
         self.angularFrame.mask = CreateFrame("Frame", nil, self.angularFrame)
         self.angularFrame.mask:SetSize(parent:GetWidth()-2, parent:GetHeight()-2)
-        self.angularFrame.mask:SetPoint("CENTER", parent, "CENTER")
+        self.angularFrame.mask:SetPoint("CENTER")
         self.angularFrame.mask:SetBackdrop({edgeFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeSize = 2})
         self.angularFrame.mask:SetBackdropBorderColor(0, 0, 0)
         self.angularFrame.border = CreateFrame("Frame", nil, self.angularFrame)
         self.angularFrame.border:SetSize(parent:GetWidth(), parent:GetHeight())
-        self.angularFrame.border:SetPoint("CENTER", parent, "CENTER")
+        self.angularFrame.border:SetPoint("CENTER")
         self.angularFrame.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8X8", edgeSize = 1})
     end
     if (TinyInspectDB and TinyInspectDB.ShowItemBorder) then
@@ -45,7 +45,7 @@ end)
 
 --設置物品直角邊框
 LibEvent:attachTrigger("SET_ITEM_ANGULARBORDER", function(self, frame, quality, itemIDOrLink)
-    if (quality) then
+    if (quality and quality > 0) then
         local r, g, b = GetItemQualityColor(quality)
         if (quality <= 1) then
             r = r - 0.3

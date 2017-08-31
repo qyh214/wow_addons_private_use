@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1749, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14989 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16481 $"):sub(12, -3))
 mod:SetCreatureID(107023)
 mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
@@ -15,7 +15,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 212887",
 	"SPELL_AURA_APPLIED 212887 212943 212852 212884",
 	"RAID_BOSS_WHISPER",
-	"CHAT_MSG_ADDON",
 	"UNIT_SPELLCAST_SUCCEEDED target focus mouseover"
 )
 
@@ -57,10 +56,6 @@ function mod:OnCombatStart(delay, yellTriggered)
 	if yellTriggered then
 
 	end
-end
-
-function mod:OnCombatEnd()
-
 end
 
 function mod:SPELL_CAST_START(args)
@@ -130,9 +125,8 @@ function mod:RAID_BOSS_WHISPER(msg)
 	end
 end
 
-function mod:CHAT_MSG_ADDON(prefix, msg, channel, targetName)
-	if prefix ~= "Transcriptor" then return end
-	if msg:find("spell:212841") then--Rapid fire
+function mod:OnTranscriptorSync(msg, targetName)
+	if msg:find("spell:212841") then
 		targetName = Ambiguate(targetName, "none")
 		if self:CheckNearby(4, targetName) and self:AntiSpam(4, 1) then
 			specWarnCracklingJoltNear:Show(targetName)

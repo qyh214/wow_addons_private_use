@@ -22,6 +22,9 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(2,18,4,[[
+Fix: Error when playing sounds 
+]])
 self:RelNotes(2,18,2,[[
 Fix: Message: Interface\AddOns\GarrisonCommander\FollowerCache.lua:25: attempt to perform arithmetic on local 'GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY' (a table value)
 ]])

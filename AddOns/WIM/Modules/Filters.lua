@@ -111,7 +111,7 @@ local function logBlockedEvent(eventItem)
         arg2 = _G.Ambiguate(arg2, "none")
         local msg = "|cffff7d0a"..L["WIM has blocked a message from %s."].." |r|cffff0000[|HWIMBLOCKED:"..arg11.."|h"..L["View Blocked Message"].."|h]|r"
         _G.DEFAULT_CHAT_FRAME:AddMessage(msg:gsub("%%s", "|r[|Hplayer:"..arg2.."|h"..arg2.."|h]|cffff7d0a"));
-        _G.PlaySound("TellMessage");
+        --_G.PlaySound("TellMessage");
     end
 end
 
@@ -801,14 +801,14 @@ local function createFilterFrame()
         
     -- window actions
     win:SetScript("OnShow", function(self)
-            _G.PlaySound("igMainMenuOpen");
+            _G.PlaySound(850);
             if(options.frame) then
                 options.frame:Disable();
             end
         end);
     win:SetScript("OnHide", function(self)
             self.saveIndex = nil;
-            _G.PlaySound("igMainMenuClose");
+            _G.PlaySound(851);
             if(options.frame) then
                 options.frame:Enable();
             end

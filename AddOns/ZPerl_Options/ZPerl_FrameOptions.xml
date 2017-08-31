@@ -9099,7 +9099,7 @@
 									XPerl_Options_EnableSibling(self, "Portrait3D", "Portrait")
 									XPerl_Options_EnableSibling(self, "ClassPortrait", "Portrait")
 									XPerl_Options_EnableSibling(self, "HitIndicator", "Portrait")
-									XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator", "Enable")
+									XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator")
 									XPerl_Options_EnableSibling(self, "Threat")
 									XPerl_Options_EnableSibling(self, "ThreatName", "Threat")
 									XPerl_Options_EnableSibling(self, "ThreatPortrait", "Threat")
@@ -9111,8 +9111,10 @@
 									XPerl_Options_EnableSibling(self, "MobType")
 									XPerl_Options_EnableSibling(self, "Level")
 									XPerl_Options_EnableSibling(self, "HealPrediction")
+									XPerl_Options_EnableSibling(self, "Absorbs")
 									XPerl_Options_EnableSibling(self, "Elite")
 									XPerl_Options_EnableSibling(self, "EliteGfx")
+									XPerl_Options_EnableSibling(self, "EliteNone")
 									XPerl_Options_EnableSibling(self, "Values")
 									XPerl_Options_EnableSibling(self, "Percent")
 									XPerl_Options_EnableSibling(self, "PVPIcon")
@@ -9123,20 +9125,22 @@
 									XPerl_Options_EnableSibling(self, "Width")
 									XPerl_Options_EnableSibling(self, "Buffs")
 									XPerl_Options_EnableSibling(self, "Debuffs")
-									XPerl_Options_EnableSibling(self, "BuffSize")
-									XPerl_Options_EnableSibling(self, "DebuffSize")
+									XPerl_Options_EnableSibling(self, "BuffSize", "Buffs")
+									XPerl_Options_EnableSibling(self, "DebuffSize", "Debuffs")
 									XPerl_Options_EnableSibling(self, "BuffWrap")
-									XPerl_Options_EnableSibling(self, "MaxRows")
-									XPerl_Options_EnableSibling(self, "Castable")
-									XPerl_Options_EnableSibling(self, "Curable")
+									XPerl_Options_EnableSibling(self, "MaxRows", "BuffWrap")
+									XPerl_Options_EnableSibling(self, "Castable", "Buffs")
+									XPerl_Options_EnableSibling(self, "Curable", "Buffs")
+									XPerl_Options_EnableSibling(self, "OnlyMyDebuffs", "Debuffs")
 									XPerl_Options_EnableSibling(self, "Above")
-									XPerl_Options_EnableSibling(self, "BigBuffs")
-									XPerl_Options_EnableSibling(self, "BigDebuffs")
-									XPerl_Options_EnableSibling(self, "BigPet", "BigBuffs")
+									XPerl_Options_EnableSibling(self, "BigBuffs", "Buffs")
+									XPerl_Options_EnableSibling(self, "BigDebuffs", "Debuffs")
+									XPerl_Options_EnableSibling(self, "BigPet", "BigBuffs", "Buffs")
 									XPerl_Options_EnableSibling(self, "DebuffHighlight")
 									XPerl_Options_EnableSibling(self, "All", "DebuffHighlight")
 									XPerl_Options_EnableSibling(self, "Friend", "DebuffHighlight")
 									XPerl_Options_EnableSibling(self, "Enemy", "DebuffHighlight")
+									--XPerl_Options_EnableSibling(self, "FocusTarget_TargetsTarget")
 								end
 							</OnLoad>
 						</Scripts>
@@ -9158,10 +9162,10 @@
 								self.configIndex = "portrait"
 								self.configClick = XPerl_Target_Reset
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "Portrait3D")
-									XPerl_Options_EnableSibling(self, "ClassPortrait")
-									XPerl_Options_EnableSibling(self, "HitIndicator")
-									XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator")
+									XPerl_Options_EnableSibling(self, "Portrait3D", "Enable")
+									XPerl_Options_EnableSibling(self, "ClassPortrait", "Enable")
+									XPerl_Options_EnableSibling(self, "HitIndicator", "Enable")
+									XPerl_Options_EnableSibling(self, "OnlyMine", "HitIndicator", "Enable")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -9229,7 +9233,7 @@
 								self.configBase = "XPerlDB.focus"
 								self.configIndex = "hitIndicator"
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "OnlyMine")
+									XPerl_Options_EnableSibling(self, "OnlyMine", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -9269,8 +9273,8 @@
 								self.configBase = "XPerlDB.focus"
 								self.configIndex = "threat"
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "ThreatName")
-									XPerl_Options_EnableSibling(self, "ThreatPortrait")
+									XPerl_Options_EnableSibling(self, "ThreatName", "Enable")
+									XPerl_Options_EnableSibling(self, "ThreatPortrait", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -10160,12 +10164,12 @@
 								self.configIndex = "enable"
 								self.configClick = XPerl_Target_Reset
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "Castable")
-									XPerl_Options_EnableSibling(self, "OnlyMyBuffs")
-									XPerl_Options_EnableSibling(self, "BigBuffs")
-									XPerl_Options_EnableSibling(self, "BigPet", "BigBuffs")
-									XPerl_Options_EnableSibling(self, "BigBuffsStealable")
-									XPerl_Options_EnableSibling(self, "BuffSize")
+									XPerl_Options_EnableSibling(self, "Castable", "Enable")
+									XPerl_Options_EnableSibling(self, "OnlyMyBuffs", "Enable")
+									XPerl_Options_EnableSibling(self, "BigBuffs", "Enable")
+									XPerl_Options_EnableSibling(self, "BigPet", "BigBuffs", "Enable")
+									XPerl_Options_EnableSibling(self, "BigBuffsStealable", "Enable")
+									XPerl_Options_EnableSibling(self, "BuffSize", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -10296,10 +10300,10 @@
 								self.configIndex = "enable"
 								self.configClick = XPerl_Target_Reset
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "Curable")
-									XPerl_Options_EnableSibling(self, "OnlyMyDebuffs")
-									XPerl_Options_EnableSibling(self, "BigDebuffs")
-									XPerl_Options_EnableSibling(self, "DebuffSize")
+									XPerl_Options_EnableSibling(self, "Curable", "Enable")
+									XPerl_Options_EnableSibling(self, "OnlyMyDebuffs", "Enable")
+									XPerl_Options_EnableSibling(self, "BigDebuffs", "Enable")
+									XPerl_Options_EnableSibling(self, "DebuffSize", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -10367,7 +10371,7 @@
 								self.configIndex = "big"
 								self.configClick = XPerl_Target_Reset
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "BigPet")
+									XPerl_Options_EnableSibling(self, "BigPet", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -10461,7 +10465,7 @@
 									XPerl_TargetTarget_Reset()
 								end
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "MaxRows")
+									XPerl_Options_EnableSibling(self, "MaxRows", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -10541,9 +10545,9 @@
 								self.configIndex = "enable"
 								self.configClick = XPerl_Target_Reset
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "All")
-									XPerl_Options_EnableSibling(self, "Friend")
-									XPerl_Options_EnableSibling(self, "Enemy")
+									XPerl_Options_EnableSibling(self, "All", "Enable")
+									XPerl_Options_EnableSibling(self, "Friend", "Enable")
+									XPerl_Options_EnableSibling(self, "Enemy", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -10650,48 +10654,45 @@
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "Name")
 									XPerl_Options_EnableSibling(self, "Portrait")
-									XPerl_Options_EnableSibling(self, "Portrait3D")
-									XPerl_Options_EnableSibling(self, "ClassPortrait")
-									XPerl_Options_EnableSibling(self, "HitIndicator")
+									XPerl_Options_EnableSibling(self, "Portrait3D", "Portrait")
+									XPerl_Options_EnableSibling(self, "ClassPortrait", "Portrait")
+									XPerl_Options_EnableSibling(self, "HitIndicator", "Portrait")
 									XPerl_Options_EnableSibling(self, "Threat")
-									XPerl_Options_EnableSibling(self, "ThreatName")
-									XPerl_Options_EnableSibling(self, "ThreatPortrait")
+									XPerl_Options_EnableSibling(self, "ThreatName", "Threat")
+									XPerl_Options_EnableSibling(self, "ThreatPortrait", "Threat")
 									XPerl_Options_EnableSibling(self, "ArcaneBar")
 									XPerl_Options_EnableSibling(self, "Level")
 									XPerl_Options_EnableSibling(self, "HealPrediction")
 									XPerl_Options_EnableSibling(self, "Absorbs")
 									XPerl_Options_EnableSibling(self, "Target")
-									XPerl_Options_EnableSibling(self, "TargetLarge")
-									XPerl_Options_EnableSibling(self, "TargetSize")
+									XPerl_Options_EnableSibling(self, "TargetLarge", "Target")
+									XPerl_Options_EnableSibling(self, "TargetSize", "Target")
 									XPerl_Options_EnableSibling(self, "Icon")
 									XPerl_Options_EnableSibling(self, "Values")
 									XPerl_Options_EnableSibling(self, "Percent")
 									XPerl_Options_EnableSibling(self, "InRaid")
 									XPerl_Options_EnableSibling(self, "PVPIcon")
+									XPerl_Options_EnableSibling(self, "ShowPlayer")
 									XPerl_Options_EnableSibling(self, "SmallRaid")
 									XPerl_Options_EnableSibling(self, "30yd")
 									XPerl_Options_EnableSibling(self, "Healer_Healer")
+									XPerl_Options_EnableSibling(self, "Healer_DeficitOnly", "Healer_Healer")
+									XPerl_Options_EnableSibling(self, "Healer_DeficitMax", "Healer_Healer")
+									XPerl_Options_EnableSibling(self, "Healer_CurMaxDeficit", "Healer_Healer")
 									XPerl_Options_EnableSibling(self, "Width")
 									XPerl_Options_EnableSibling(self, "Buffs")
-									XPerl_Options_EnableSibling(self, "Castable")
-									XPerl_Options_EnableSibling(self, "OnlyMyBuffs")
+									XPerl_Options_EnableSibling(self, "Castable", "Buffs")
+									XPerl_Options_EnableSibling(self, "OnlyMyBuffs", "Buffs")
 									XPerl_Options_EnableSibling(self, "Debuffs")
-									XPerl_Options_EnableSibling(self, "Curable")
-									XPerl_Options_EnableSibling(self, "Below")
-									XPerl_Options_EnableSibling(self, "HalfSize")
-									XPerl_Options_EnableSibling(self, "BuffSize")
-									XPerl_Options_EnableSibling(self, "DebuffSize")
+									XPerl_Options_EnableSibling(self, "Curable", "Debuffs")
+									XPerl_Options_EnableSibling(self, "Below", "Debuffs")
+									XPerl_Options_EnableSibling(self, "HalfSize", "Debuffs")
+									XPerl_Options_EnableSibling(self, "BuffSize", "Buffs")
+									XPerl_Options_EnableSibling(self, "DebuffSize", "Debuffs")
 									XPerl_Options_EnableSibling(self, "BuffWrap")
-									XPerl_Options_EnableSibling(self, "MaxRows")
+									XPerl_Options_EnableSibling(self, "MaxRows", "BuffWrap")
 									XPerl_Options_EnableSibling(self, "BigBuffs")
-									XPerl_Options_EnableSibling(self, "BigPet")
-									XPerl_Options_EnableSibling(self, "PartyPets_Pets")
-									XPerl_Options_EnableSibling(self, "PartyPets_PetNames")
-									XPerl_Options_EnableSibling(self, "PartyPets_PetLevel")
-									XPerl_Options_EnableSibling(self, "PartyPets_PetMana")
-									XPerl_Options_EnableSibling(self, "PartyPets_PetBuffs")
-									XPerl_Options_EnableSibling(self, "PartyPets_BuffSize")
-									XPerl_Options_EnableSibling(self, "PartyPets_DebuffSize")
+									XPerl_Options_EnableSibling(self, "BigPet", "BigBuffs")
 								end
 								self.configBase = "XPerlDB.party"
 								self.configIndex = "enable"
@@ -10737,9 +10738,9 @@
 								self.configIndex = "portrait"
 								self.configClick = XPerl_Party_Reset
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "Portrait3D")
-									XPerl_Options_EnableSibling(self, "ClassPortrait")
-									XPerl_Options_EnableSibling(self, "HitIndicator")
+									XPerl_Options_EnableSibling(self, "Portrait3D", "Enable")
+									XPerl_Options_EnableSibling(self, "ClassPortrait", "Enable")
+									XPerl_Options_EnableSibling(self, "HitIndicator", "Enable")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -10824,8 +10825,8 @@
 								self.configBase = "XPerlDB.party"
 								self.configIndex = "threat"
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "ThreatName")
-									XPerl_Options_EnableSibling(self, "ThreatPortrait")
+									XPerl_Options_EnableSibling(self, "ThreatName", "Enable")
+									XPerl_Options_EnableSibling(self, "ThreatPortrait", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -10970,8 +10971,8 @@
 								self.configClick = XPerl_Party_Reset
 								XPerl_Options_RegisterProtected(self)
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "TargetSize")
-									XPerl_Options_EnableSibling(self, "TargetLarge")
+									XPerl_Options_EnableSibling(self, "TargetSize", "Enable")
+									XPerl_Options_EnableSibling(self, "TargetLarge", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -11278,9 +11279,9 @@
 								self.configIndex = "enable"
 								self.configClick = XPerl_Party_Reset
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "Castable")
-									XPerl_Options_EnableSibling(self, "OnlyMyBuffs")
-									XPerl_Options_EnableSibling(self, "BuffSize")
+									XPerl_Options_EnableSibling(self, "Castable", "Enable")
+									XPerl_Options_EnableSibling(self, "OnlyMyBuffs", "Enable")
+									XPerl_Options_EnableSibling(self, "BuffSize", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -11340,10 +11341,10 @@
 							<OnLoad>
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PARTY_DEBUFFS")
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "Curable")
-									XPerl_Options_EnableSibling(self, "Below")
-									XPerl_Options_EnableSibling(self, "HalfSize")
-									XPerl_Options_EnableSibling(self, "DebuffSize")
+									XPerl_Options_EnableSibling(self, "Curable", "Enable")
+									XPerl_Options_EnableSibling(self, "Below", "Enable")
+									XPerl_Options_EnableSibling(self, "HalfSize", "Enable")
+									XPerl_Options_EnableSibling(self, "DebuffSize", "Enable")
 								end
 								self.flashFrame = {XPerl_party1buffFrame, XPerl_party2buffFrame, XPerl_party3buffFrame, XPerl_party4buffFrame}
 								self.configBase = "XPerlDB.party.debuffs"
@@ -11498,7 +11499,7 @@
 								self.configIndex = "wrap"
 								self.configClick = XPerl_Party_Reset
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "MaxRows")
+									XPerl_Options_EnableSibling(self, "MaxRows", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -11556,7 +11557,7 @@
 								self.configIndex = "big"
 								self.configClick = XPerl_Party_Reset
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "BigPet")
+									XPerl_Options_EnableSibling(self, "BigPet", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -11865,12 +11866,12 @@
 									XPerl_Options_EnableSibling(self, "HealthText")
 									XPerl_Options_EnableSibling(self, "Percent", "HealthText")
 									XPerl_Options_EnableSibling(self, "Values", "HealthText")
+									XPerl_Options_EnableSibling(self, "PrecisionPercent", "HealthText")
 									XPerl_Options_EnableSibling(self, "HealPrediction")
 									XPerl_Options_EnableSibling(self, "Absorbs")
-									XPerl_Options_EnableSibling(self, "precisionPercent")
 									XPerl_Options_EnableSibling(self, "Mana")
 									XPerl_Options_EnableSibling(self, "ManaPercent", "Mana")
-									XPerl_Options_EnableSibling(self, "precisionManaPercent")
+									XPerl_Options_EnableSibling(self, "PrecisionManaPercent", "Mana")
 									XPerl_Options_EnableSibling(self, "ShowParty")
 									XPerl_Options_EnableSibling(self, "Buffs")
 									XPerl_Options_EnableSibling(self, "Debuffs")
@@ -11992,8 +11993,9 @@
 								self.configIndex = "percent"
 								self.configClick = XPerl_Raid_OptionActions
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "Percent")
-									XPerl_Options_EnableSibling(self, "Values")
+									XPerl_Options_EnableSibling(self, "Percent", "Enable")
+									XPerl_Options_EnableSibling(self, "PrecisionPercent", "Enable")
+									XPerl_Options_EnableSibling(self, "Values", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -12019,12 +12021,12 @@
 								XPerlDB.raid.values = nil
 								XPerl_Raid_OptionActions()
 								XPerl_Options_CheckRadio(self,{"Percent", "Values"})
-								XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_precisionPercent"], true)
+								XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_PrecisionPercent"], true)
 							</OnClick>
 						</Scripts>
 					</CheckButton>
 
-					<CheckButton name="$parent_precisionPercent" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_PrecisionPercent" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeTo="$parent_Percent" relativePoint="TOPRIGHT">
 								<Offset>
@@ -12056,14 +12058,14 @@
 							</OnLoad>
 							<OnShow>
 								self:SetChecked(XPerlDB.raid.values)
-								XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_precisionPercent"], not XPerlDB.raid.values)
+								--XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_PrecisionPercent"], not XPerlDB.raid.values)
 							</OnShow>
 							<OnClick>
 								self:SetChecked(true)
 								XPerlDB.raid.values = 1
 								XPerl_Raid_OptionActions()
 								XPerl_Options_CheckRadio(self,{"Percent", "Values"})
-								XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_precisionPercent"], false)
+								XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_PrecisionPercent"], false)
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -12121,7 +12123,7 @@
 								self.configIndex = "mana"
 								self.configClick = XPerl_Raid_OptionActions
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "ManaPercent")
+									XPerl_Options_EnableSibling(self, "ManaPercent", "Enable")
 								end
 								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
@@ -12147,13 +12149,13 @@
 								self.configClick = XPerl_Raid_OptionActions
 								XPerl_Options_RegisterProtected(self)
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "precisionManaPercent")
+									XPerl_Options_EnableSibling(self, "PrecisionManaPercent", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
 
-					<CheckButton name="$parent_precisionManaPercent" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_PrecisionManaPercent" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeTo="$parent_ManaPercent" relativePoint="TOPRIGHT">
 								<Offset>
@@ -12285,7 +12287,7 @@
 								self.configIndex = "right"
 								self.configClick = XPerl_Raid_OptionActions
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "BuffsInside")
+									XPerl_Options_EnableSibling(self, "BuffsInside", "Enable")
 								end
 							</OnLoad>
 						</Scripts>
@@ -12341,10 +12343,10 @@
 								self.configBase = "XPerlDB.buffHelper"
 								self.configIndex = "enable"
 								self.Validate = function()
-									XPerl_Options_EnableSibling(self, "BuffTooltipHelperVis")
-									XPerl_Options_EnableSibling(self, "BuffHelperNoSort")
-									XPerl_Options_EnableSibling(self, "BuffHelperSortGroup")
-									XPerl_Options_EnableSibling(self, "BuffHelperSortClass")
+									XPerl_Options_EnableSibling(self, "BuffTooltipHelperVis", "Enable")
+									XPerl_Options_EnableSibling(self, "BuffHelperNoSort", "Enable")
+									XPerl_Options_EnableSibling(self, "BuffHelperSortGroup", "Enable")
+									XPerl_Options_EnableSibling(self, "BuffHelperSortClass", "Enable")
 								end
 							</OnLoad>
 						</Scripts>

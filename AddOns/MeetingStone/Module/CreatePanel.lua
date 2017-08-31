@@ -428,7 +428,7 @@ function CreatePanel:OnInitialize()
     self:RegisterEvent('LFG_LIST_ACTIVE_ENTRY_UPDATE')
     self:RegisterEvent('LFG_LIST_AVAILABILITY_UPDATE')
     self:RegisterEvent('LFG_LIST_ENTRY_CREATION_FAILED')
-    self:RegisterEvent('PARTY_LEADER_CHANGED')
+    -- self:RegisterEvent('PARTY_LEADER_CHANGED')
     self:RegisterMessage('MEETINGSTONE_PERMISSION_UPDATE', 'ChooseWidget')
 
     self:RegisterMessage('MEETINGSTONE_SETTING_CHANGED_packedPvp', 'LFG_LIST_AVAILABILITY_UPDATE')
@@ -437,7 +437,7 @@ function CreatePanel:OnInitialize()
 end
 
 function CreatePanel:OnEnable()
-    self:PARTY_LEADER_CHANGED()
+    -- self:PARTY_LEADER_CHANGED()
 end
 
 function CreatePanel:UpdateControlState()

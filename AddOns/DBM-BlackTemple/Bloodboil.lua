@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Bloodboil", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 615 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 621 $"):sub(12, -3))
 mod:SetCreatureID(22948)
 mod:SetEncounterID(605)
 mod:SetModelID(21443)
@@ -29,7 +29,7 @@ local yellRage			= mod:NewYell(40604)
 
 local timerBlood		= mod:NewCDTimer(10, 42005, nil, nil, nil, 5)--10-12. Most of time it's 11 but I have seen as low as 10.1
 local timerStrikeCD		= mod:NewCDTimer(25, 40491, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)--25-82? Is this even a CD timer?
-local timerRage			= mod:NewCDTimer(52, 40604, nil, nil, nil, 3)--Verify?
+local timerRageCD		= mod:NewCDTimer(52, 40604, nil, nil, nil, 3)--Verify?
 local timerRageEnd		= mod:NewBuffActiveTimer(28, 40604, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
@@ -42,18 +42,18 @@ mod.vb.rage = false
 local function nextRage(self)
 	self.vb.rage = false
 	warnRageEnd:Show()
-	timerRage:Start()
+	timerRageCD:Start()
 	warnRageSoon:Schedule(47)
-	timerBlood:Start(11.5)
+	timerBlood:Start(10.9)
 end
 
 function mod:OnCombatStart(delay)
 	self.vb.rage = false
 	berserkTimer:Start(-delay)
 	warnRageSoon:Schedule(47-delay)
-	timerBlood:Start(11.5-delay)
-	timerStrikeCD:Start(37-delay)
-	timerRage:Start(-delay)
+	timerBlood:Start(10.9-delay)
+	timerStrikeCD:Start(26.8-delay)
+	timerRageCD:Start(-delay)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)

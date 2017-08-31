@@ -47,8 +47,8 @@ local tooltip_lines = {
 function XLoot.GetItemBindType(link)
 	tooltip:ClearLines()
 	tooltip:SetHyperlink(link)
-	for i,line in ipairs(tooltip_lines) do
-		local value = bind_types[line:GetText()]
+	for i=1, #tooltip_lines do
+		local value = bind_types[tooltip_lines[i]:GetText()]
 		if value then
 			return value
 		end

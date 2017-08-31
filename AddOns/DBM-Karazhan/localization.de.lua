@@ -221,7 +221,7 @@ L:SetMiscLocalization{
 L = DBM:GetModLocalization("NightbaneRaid")
 
 L:SetGeneralLocalization{
-	name = "Schrecken der Nacht"
+	name = "Schrecken der Nacht (Schlachtzug)"
 }
 
 L:SetWarningLocalization{

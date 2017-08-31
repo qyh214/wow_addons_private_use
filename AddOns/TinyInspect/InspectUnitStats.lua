@@ -170,5 +170,6 @@ hooksecurefunc("ShowInspectItemListFrame", function(unit, parent, itemLevel)
     local frame = parent.inspectFrame
     if (not frame) then return end
     if (unit == "player") then return end
+    if (TinyInspectDB and not TinyInspectDB.ShowItemStats) then return end
     ShowInspectItemStatsFrame(frame, unit)
 end)

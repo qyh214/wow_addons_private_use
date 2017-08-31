@@ -38,13 +38,6 @@ local Requisites = { -- List of recipes you must (probably) already know in orde
 	[201505] = {201500}, -- The Hungry Magister: Leybeque Ribs
 	[201511] = {201504}, -- Fishbrul Special: Drogbar-Style Salmon
 	
-	[201515] = {201413, 201496, 201497, 201498, 201499}, -- Hearty Feast
-	[201542] = {201515}, -- Hearty Feast
-	[201562] = {201515}, -- Hearty Feast
-	[201516] = {201500, 201501, 201502, 201503, 201504}, -- Lavish Suramar Feast
-	[201543] = {201516}, -- Lavish Suramar Feast
-	[201563] = {201516}, -- Lavish Suramar Feast
-	
 	[201538] = {201511}, -- Fishbrul Special
 	[201558] = {201511}, -- Fishbrul Special
 	[201534] = {201505}, -- The Hungry Magister
@@ -56,6 +49,14 @@ local Requisites = { -- List of recipes you must (probably) already know in orde
 	[201537] = {201508}, -- Seed-Battered Fish Plate
 	[201557] = {201508}, -- Seed-Battered Fish Plate
 	--]]
+	
+	[201515] = {201413, 201496, 201497, 201498, 201499}, -- Hearty Feast
+	[201542] = {201515}, -- Hearty Feast
+	[201562] = {201515}, -- Hearty Feast
+	[201516] = {201500, 201501, 201502, 201503, 201504}, -- Lavish Suramar Feast
+	[201543] = {201516}, -- Lavish Suramar Feast
+	[201563] = {201516}, -- Lavish Suramar Feast
+	
 	[201531] = {201502}, -- Barracuda Mrglgagh
 	[201551] = {201502}, -- Barracuda Mrglgagh
 	[201533] = {201504}, -- Drogbar-Style Salmon

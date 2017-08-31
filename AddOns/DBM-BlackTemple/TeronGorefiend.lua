@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TeronGorefiend", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 615 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 621 $"):sub(12, -3))
 mod:SetCreatureID(22871)
 mod:SetEncounterID(604)
 mod:SetModelID(21254)
@@ -24,7 +24,7 @@ local warnDeath				= mod:NewTargetAnnounce(40251, 3)
 local specWarnDeath			= mod:NewSpecialWarningYou(40251, nil, nil, nil, 1, 2)
 local specWarnDeathEnding	= mod:NewSpecialWarningMoveAway(40251, nil, nil, nil, 3, 2)
 
-local timerCrushed			= mod:NewBuffActiveTimer(15, 40243, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)
+local timerCrushed			= mod:NewBuffActiveTimer(15, 40243, nil, "Healer", 2, 5, nil, DBM_CORE_HEALER_ICON)
 local timerDeath			= mod:NewTargetTimer(55, 40251, nil, nil, nil, 3)
 local timerVengefulSpirit	= mod:NewTimer(60, "TimerVengefulSpirit", 40325, nil, nil, 1)
 
@@ -32,33 +32,29 @@ local voiceDeath			= mod:NewVoice(40251)--targetyou/runout
 
 mod:AddBoolOption("CrushIcon", false)
 
-local warnCrushedTargets = {}
+local CrushedTargets = {}
 mod.vb.crushIcon = 8
 
 local function showCrushedTargets(self)
-	warnCrushed:Show(table.concat(warnCrushedTargets, "<, >"))
-	table.wipe(warnCrushedTargets)
+	warnCrushed:Show(table.concat(CrushedTargets, "<, >"))
+	table.wipe(CrushedTargets)
 	self.vb.crushIcon = 8
 end
 
 function mod:OnCombatStart(delay)
-	table.wipe(warnCrushedTargets)
+	table.wipe(CrushedTargets)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 40243 then
-		warnCrushedTargets[#warnCrushedTargets + 1] = args.destName
+		CrushedTargets[#CrushedTargets + 1] = args.destName
 		timerCrushed:Start()
 		self:Unschedule(showCrushedTargets)
 		if self.Options.CrushIcon then
 			self:SetIcon(args.destName, self.vb.crushIcon, 15)
 			self.vb.crushIcon = self.vb.crushIcon - 1
 		end
-		if #warnCrushedTargets >= 5 then
-			showCrushedTargets()
-		else
-			self:Schedule(0.5, showCrushedTargets, self)
-		end
+		self:Schedule(0.5, showCrushedTargets, self)
 	elseif args.spellId == 40251 then
 		timerDeath:Start(args.destName)
 		if args:IsPlayer() then

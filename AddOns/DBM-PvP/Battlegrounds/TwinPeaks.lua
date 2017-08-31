@@ -8,7 +8,7 @@ local L			= mod:GetLocalizedStrings()
 
 mod:RemoveOption("HealthFrame")
 
-mod:SetRevision(("$Revision: 48 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 66 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -106,14 +106,14 @@ end
 
 function mod:CreateFlagCarrierButton()
 	if not self.Options.ShowFlagCarrier then return end
-	if not self.FlagCarrierFrame1Button then
+	if AlwaysUpFrame1 and not self.FlagCarrierFrame1Button then
 		self.FlagCarrierFrame1Button = CreateFrame("Button", nil, nil, "SecureActionButtonTemplate")
 		self.FlagCarrierFrame1Button:SetHeight(15)
 		self.FlagCarrierFrame1Button:SetWidth(150)
 		self.FlagCarrierFrame1Button:SetAttribute("type", "macro")
 		self.FlagCarrierFrame1Button:SetPoint("LEFT", "AlwaysUpFrame1", "RIGHT", 28, 4)
 	end
-	if not self.FlagCarrierFrame2Button then
+	if AlwaysUpFrame2 and not self.FlagCarrierFrame2Button then
 		self.FlagCarrierFrame2Button = CreateFrame("Button", nil, nil, "SecureActionButtonTemplate")
 		self.FlagCarrierFrame2Button:SetHeight(15)
 		self.FlagCarrierFrame2Button:SetWidth(150)

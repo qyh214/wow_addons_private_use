@@ -146,7 +146,7 @@ function module:RunMission(missionID,start)
 	local GMC=GMF.MissionControlTab
 	if (start) then
 		G.StartMission(missionID)
-		PlaySound("UI_Garrison_CommandTable_MissionStart")
+		PlaySound(SOUNDKIT.UI_GARRISON_COMMAND_TABLE_MISSION_START)
 		addon:RefreshFollowerStatus()
 		return
 	end
@@ -162,7 +162,7 @@ function module:RunMission(missionID,start)
 				if (not missionID) then
 					coroutine.yield(true)
 					G.StartMission(party.missionID)
-					PlaySound("UI_Garrison_CommandTable_MissionStart")
+					PlaySound(SOUNDKIT.UI_GARRISON_COMMAND_TABLE_MISSION_START)
 					coroutine.yield(true)
 				else
 					self:ScheduleTimer("RunMission",0.25,party.missionID,true)

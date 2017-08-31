@@ -20,9 +20,6 @@ L:SetGeneralLocalization({
 	name =	"Rückkehr des Hochlords"
 })
 
-L:SetMiscLocalization({
-})
-
 ------------------------
 -- Mage Tower: Healer --
 ------------------------
@@ -48,6 +45,10 @@ L= DBM:GetModLocalization("ArtifactImpossibleFoe")
 
 L:SetGeneralLocalization({
 	name =	"Ein unmöglicher Feind"
+})
+
+L:SetMiscLocalization({
+	impServants =	"Tötet die Wichteldiener, bevor sie Agatha Energie gewähren!"--needs to be verified (video-captured translation)
 })
 
 ------------------------

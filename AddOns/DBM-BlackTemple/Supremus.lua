@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Supremus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 615 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 621 $"):sub(12, -3))
 mod:SetCreatureID(22898)
 mod:SetEncounterID(602)
 mod:SetModelID(21145)
@@ -114,18 +114,18 @@ function mod:RAID_BOSS_EMOTE(msg)
 		if self.vb.lastTarget ~= "None" then
 			self:SetIcon(self.vb.lastTarget, 0)
 		end
+		if self:IsMelee() and not self:IsTrivial(85) then
+			--Melee Dps Not technically fixated but melee should run out at start of kite phase in case chosen.
+			--Tank should run out because boss actually fixates tank for couple seconds before choosing new target.
+			specWarnFixate:Show()
+			voiceFixate:Play("justrun")
+		end
 	elseif msg == L.PhaseTank or msg:find(L.PhaseTank) then
 		warnPhase:Show(L.Tank)
 		timerPhase:Start(L.Kite)
 		--self:Unschedule(ScanTarget)
 		if self.vb.lastTarget ~= "None" then
 			self:SetIcon(self.vb.lastTarget, 0)
-		end
-		if self:IsMelee() and not self:IsTrivial(85) then
-			--Melee Dps Not technically fixated but melee should run out at start of kite phase in case chosen.
-			--Tank should run out because boss actually fixates tank for couple seconds before choosing new target.
-			specWarnFixate:Show()
-			voiceFixate:Play("justrun")
 		end
 	--elseif msg == L.ChangeTarget or msg:find(L.ChangeTarget) then
 		--self:Unschedule(ScanTarget)

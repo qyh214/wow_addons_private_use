@@ -1,3 +1,51 @@
+7.3.0.01 Release - 2017/08/29
+
+Bump TOC for 7.3.
+
+*****
+
+7.2.5.04 Release - 2017/08/26
+
+ElvUI bags and bank now have the overlay!
+
+![ElvUI bags & bank overlay!](http://i.imgur.com/5ZJMZGb.png "ElvUI bags & bank overlay!")
+
+* [#18](https://gitlab.com/toreltwiddler/CanIMogIt/issues/18) Added some more slash commands.
+* [#44](https://gitlab.com/toreltwiddler/CanIMogIt/issues/44) Added support for ElvUI bags and bank.  Also Tradeskills windows now update correctly.
+* [#106](https://gitlab.com/toreltwiddler/CanIMogIt/issues/106) Updated options menu checkbox sound to use 7.3 API.
+* [#112](https://gitlab.com/toreltwiddler/CanIMogIt/issues/112) Cleaned up Locales in TOC.
+
+*****
+
+7.2.5.03 Release - 2017/08/20
+
+Prevents errors with addons that overwrite the default Auction House.
+
+*****
+
+7.2.5.02 Release - 2017/08/20
+
+Auction House now has the overlay!
+
+![Auction House overlay!](http://i.imgur.com/5jrKJxs.png "Auction House overlay!")
+
+* [#24](https://gitlab.com/toreltwiddler/CanIMogIt/issues/24) Added the overlay to the default Auction House (code from crappyusername).
+* [#97](https://gitlab.com/toreltwiddler/CanIMogIt/issues/97) Separated the overlay code into different files and their own subfolder.
+
+*****
+
+7.2.5.01 Release - 2017/07/16
+
+Release of database change.  You cannot downgrade from this version to older versions!  If you do you will have to delete your CanIMogIt.lua save variables file!
+
+*****
+
+7.2.5.01 Beta - 2017/07/09
+
+Changed how the database stores items so that items of different types that share appearances are not stored together.
+
+*****
+
 7.2.0.04 Release - 2017/06/10
 
 Fixed log-in and loading screen lag. ([#58](https://gitlab.com/toreltwiddler/CanIMogIt/issues/58) & [#89](https://gitlab.com/toreltwiddler/CanIMogIt/issues/89))

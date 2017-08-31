@@ -1,6 +1,6 @@
 --[[
 Name: LibKeyBound-1.0
-Revision: $Rev: 109 $
+Revision: $Rev: 110 $
 Author(s): Gello, Maul, Toadkiller, Tuller
 Website: http://www.wowace.com/wiki/LibKeyBound-1.0
 Documentation: http://www.wowace.com/wiki/LibKeyBound-1.0
@@ -10,7 +10,7 @@ Dependencies: CallbackHandler-1.0
 --]]
 
 local MAJOR = 'LibKeyBound-1.0'
-local MINOR = tonumber(("$Revision: 109 $"):match("(%d+)")) + 90000
+local MINOR = tonumber(("$Revision: 110 $"):match("(%d+)")) + 90000
 
 --[[
 	LibKeyBound-1.0
@@ -63,8 +63,8 @@ function LibKeyBound:Initialize()
 		}
 		f:SetPoint('TOP', 0, -24)
 		f:Hide()
-		f:SetScript('OnShow', function() PlaySound('igMainMenuOption') end)
-		f:SetScript('OnHide', function() PlaySound('gsTitleOptionExit') end)
+		f:SetScript('OnShow', function() PlaySound(SOUNDKIT and SOUNDKIT.IG_MAINMENU_OPTION or 'igMainMenuOption') end)
+		f:SetScript('OnHide', function() PlaySound(SOUNDKIT and SOUNDKIT.GS_TITLE_OPTION_EXIT or 'gsTitleOptionExit') end)
 
 		f:RegisterForDrag('LeftButton')
 		f:SetScript('OnDragStart', function(f) f:StartMoving() end) 

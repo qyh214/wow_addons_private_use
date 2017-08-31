@@ -1,0 +1,15 @@
+## Interface: 70000
+
+## Title: Lib: LibWho-2.0
+## Notes: Queing of /who and SendWho() queries and a much better interface (see docs), with gurantee to be executed & callback.
+## Version: 2.0.154
+## Author: ALeX Kazik, Sylvanaar, Pazza
+## eMail: wow@kazik.de
+## X-Category: Library
+
+## OptionalDeps: LibStub, CallbackHandler-1.0
+
+## LoadOnDemand: 1
+
+
+LibWho-2.0\LibWho-2.0.lua

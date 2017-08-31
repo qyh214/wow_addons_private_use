@@ -261,3 +261,4 @@ L["You can use the preset defaults as a starting point for setting up your inter
 L["You have to exit the vehicle in order to be able to change the Vehicle UI settings."] = "你已经离开载具并可以改变载具用户界面设置。"
 L["Zone Ability Bar"] = "区域技能条"
 L["Zoom"] = "缩放"
+

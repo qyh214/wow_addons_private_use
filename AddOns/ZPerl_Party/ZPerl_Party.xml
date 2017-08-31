@@ -348,7 +348,7 @@
 			<Button name="$parenttargetFrame" hidden="true" inherits="SecureUnitButtonTemplate">
 				<Scripts>
 					<OnLoad>
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 1)
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 5)
 						self:RegisterForClicks("AnyUp")
 						self:SetAttribute("*type1", "target")
 						self:SetAttribute("type2", "togglemenu")
@@ -380,11 +380,12 @@
 					</BackgroundInsets>
 				</Backdrop>
 				<Frames>
+					<!-- Health Bar -->
 					<StatusBar name="$parenthealthBar" inherits="XPerlStatusBar">
 						<Anchors>
 							<Anchor point="TOPLEFT">
 								<Offset>
-									<AbsDimension x="5" y="-16"/>
+									<AbsDimension x="5" y="-14"/>
 								</Offset>
 							</Anchor>
 							<Anchor point="BOTTOMRIGHT">
@@ -394,6 +395,53 @@
 							</Anchor>
 						</Anchors>
 						<BarColor r="0" g="0.8" b="0"/>
+					</StatusBar>
+					<!-- Expected Health Bar -->
+					<StatusBar name="$parentexpectedHealth" drawLayer="BORDER" hidden="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parenthealthBar">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="BOTTOMRIGHT" relativeTo="$parenthealthBar">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<BarTexture name="$parenttex" file="Interface\TargetingFrame\UI-StatusBar"/>
+						<BarColor r="0" g="1" b="1" a="1"/>
+						<Scripts>
+							<OnLoad>
+								XPerl_SetChildMembers(self)
+								XPerl_RegisterBar(self)
+								self:SetFrameLevel(_G[self:GetParent():GetName().."healthBar"]:GetFrameLevel() - 1)
+							</OnLoad>
+						</Scripts>
+					</StatusBar>
+					<!-- Absorb Health Bar -->
+					<StatusBar name="$parentexpectedAbsorbs" drawLayer="OVERLAY" hidden="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parenthealthBar">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="BOTTOMRIGHT" relativeTo="$parenthealthBar">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<BarTexture name="$parenttex" file="Interface\Buttons\White8x8"/>
+						<BarColor r="0.14" g="0.33" b="0.7" a="0.7"/>
+						<Scripts>
+							<OnLoad>
+								self:SetReverseFill(true)
+								XPerl_SetChildMembers(self)
+							</OnLoad>
+						</Scripts>
 					</StatusBar>
 				</Frames>
 				<Layers>

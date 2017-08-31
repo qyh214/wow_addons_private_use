@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 524 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 534 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,6 +16,11 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.7.12", "12/19/2016", [[
+	*7.3 Compat Fixes
+	*SC1 client icon support
+	*Updated some profile URLS
+]]);
 addEntry("3.7.11", "12/19/2016", [[
 	*Changed font used in 7.1 work around to avoid CYR font issues.
 ]]);
@@ -37,9 +42,6 @@ addEntry("3.7.6", "05/24/2016", [[
 ]]);
 addEntry("3.7.5", "05/04/2016", [[
 	*I didn't like the Overwatch icon quality, so I made it better.
-]]);
-addEntry("3.7.4", "05/02/2016", [[
-	*Added chat icon support for Heroes of Storm, Hearthstone, Overwatch, and Demon Hunters
 ]]);
 
 
@@ -112,8 +114,8 @@ local function createChangeLogWindow()
     win:RegisterForDrag("LeftButton");
 
     -- set script events
-    win:SetScript("OnShow", function(self) _G.PlaySound("igMainMenuOpen"); self:update();  end);
-    win:SetScript("OnHide", function(self) _G.PlaySound("igMainMenuClose");  end);
+    win:SetScript("OnShow", function(self) _G.PlaySound(850); self:update();  end);
+    win:SetScript("OnHide", function(self) _G.PlaySound(851);  end);
     win:SetScript("OnDragStart", function(self) self:StartMoving(); end);
     win:SetScript("OnDragStop", function(self) self:StopMovingOrSizing(); end);
     

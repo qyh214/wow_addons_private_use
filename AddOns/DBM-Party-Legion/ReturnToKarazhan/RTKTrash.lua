@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("RTKTrash", "DBM-Party-Legion", 11)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15429 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16664 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -35,7 +35,7 @@ local yellBurningBrand				= mod:NewYell(228610)
 local specWarnLeechLife				= mod:NewSpecialWarningDispel(228606, "Healer", nil, nil, 1, 2)
 local specWarnCurseofDoom			= mod:NewSpecialWarningDispel(229716, "Healer", nil, nil, 1, 2)
 local specWarnRoyalty				= mod:NewSpecialWarningSwitch(229489, nil, nil, nil, 1, 2)
-local specWarnFlashlight			= mod:NewSpecialWarningSpell(227966, nil, nil, nil, 1, 2)
+local specWarnFlashlight			= mod:NewSpecialWarningLookAway(227966, nil, nil, nil, 1, 2)
 
 local voiceSoulLeech				= mod:NewVoice(228255, "HasInterrupt")--kickcast
 local voiceTerrifyingWail			= mod:NewVoice(228239, "HasInterrupt")--kickcast

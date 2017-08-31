@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1059 $")
-XPerl_SetModuleRevision("$Revision: 1059 $")
+end, "$Revision: 1066 $")
+XPerl_SetModuleRevision("$Revision: 1066 $")
 
 -- Upvalus
 local _G = _G
@@ -313,6 +313,8 @@ function XPerl_UpdateSpellRange()
 	return
 end
 
+local SpiritRealm = GetSpellInfo(235621)
+
 -- DoRangeCheck
 local function DoRangeCheck(unit, opt)
 	local range
@@ -358,7 +360,12 @@ local function DoRangeCheck(unit, opt)
 	end
 
 	if (not range) then
-		if (opt.interact) then
+		local playerRealm = UnitDebuff("player", SpiritRealm)
+		local unitRealm = UnitDebuff(unit, SpiritRealm)
+
+		if playerRealm ~= unitRealm then
+			range = nil
+		elseif (opt.interact) then
 			if (opt.interact == 6) then
 				--[[range, checkedRange = UnitInRange(unit) -- 40 yards
 				if not checkedRange then
@@ -2184,6 +2191,7 @@ local BuffExceptions = {
 		[GetSpellInfo(774)] = true,					-- Rejuvenation
 		[GetSpellInfo(8936)] = true,				-- Regrowth
 		[GetSpellInfo(33076)] = true,				-- Prayer of Mending
+		[GetSpellInfo(81749)] = true,				-- Atonement
 	},
 	DRUID = {
 		[GetSpellInfo(139)] = true,					-- Renew
@@ -2588,7 +2596,7 @@ local function HideSetFocus()
 		end
 	end
 end
-hooksecurefunc("UnitPopup_HideButtons", HideSetFocus)
+--hooksecurefunc("UnitPopup_HideButtons", HideSetFocus)
 
 -- TODO: Marked to delete --[=[
 -- XPerl_GenericDropDown_OnLoad
@@ -3924,18 +3932,24 @@ end
 -- XPerl_SetExpectedAbsorbs
 function XPerl_SetExpectedAbsorbs(self)
 	local bar
-	if self.statsFrame then
+	if self.statsFrame and self.statsFrame.expectedAbsorbs then
 		bar = self.statsFrame.expectedAbsorbs
 	else
 		bar = self.expectedAbsorbs
 	end
 	if (bar) then
-		local amount = UnitGetTotalAbsorbs(self.partyid)
-		if (amount and amount > 0 and not UnitIsDeadOrGhost(self.partyid)) then
-			local healthMax = UnitHealthMax(self.partyid)
-			local health = UnitHealth(self.partyid)
+		local unit = self.partyid
 
-			if UnitIsAFK(self.partyid) then
+		if not unit then
+			unit = self:GetParent().targetid
+		end
+
+		local amount = UnitGetTotalAbsorbs(unit)
+		if (amount and amount > 0 and not UnitIsDeadOrGhost(unit)) then
+			local healthMax = UnitHealthMax(unit)
+			local health = UnitHealth(unit)
+
+			if UnitIsAFK(unit) then
 				bar:SetStatusBarColor(0.2, 0.2, 0.2, 0.7)
 			else
 				if not conf.colour.bar.absorb then
@@ -3953,7 +3967,7 @@ function XPerl_SetExpectedAbsorbs(self)
 			bar:SetMinMaxValues(0, healthMax)
 
 			local healthBar
-			if self.statsFrame then
+			if self.statsFrame and self.statsFrame.healthBar then
 				healthBar = self.statsFrame.healthBar
 			else
 				healthBar = self.healthBar
@@ -3978,16 +3992,22 @@ end
 -- XPerl_SetExpectedHealth
 function XPerl_SetExpectedHealth(self)
 	local bar
-	if self.statsFrame then
+	if self.statsFrame and self.statsFrame.expectedHealth then
 		bar = self.statsFrame.expectedHealth
 	else
 		bar = self.expectedHealth
 	end
 	if (bar) then
-		local amount = UnitGetIncomingHeals(self.partyid)
-		if (amount and amount > 0 and not UnitIsDeadOrGhost(self.partyid)) then
-			local healthMax = UnitHealthMax(self.partyid)
-			local health = UnitHealth(self.partyid)
+		local unit = self.partyid
+
+		if not unit then
+			unit = self:GetParent().targetid
+		end
+
+		local amount = UnitGetIncomingHeals(unit)
+		if (amount and amount > 0 and not UnitIsDeadOrGhost(unit)) then
+			local healthMax = UnitHealthMax(unit)
+			local health = UnitHealth(unit)
 			if not conf.colour.bar.healprediction then
 				conf.colour.bar.healprediction = { }
 				conf.colour.bar.healprediction.r = 0

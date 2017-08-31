@@ -21,6 +21,7 @@ function MainPanel:OnInitialize()
     self:HookScript('OnShow', function()
         C_LFGList.RequestAvailableActivities()
         self:UpdateBlockers()
+        self:SendMessage('MEETINGSTONE_OPEN')
     end)
 
     self:RegisterMessage('MEETINGSTONE_NEW_VERSION')

@@ -108,7 +108,7 @@ local function AppendFriendlyNpcMatrix(cols, rows, hasPet, group, show)
 	end
 
 	local reserve = 1
-	if group == addon:GetGroupStats() and not show then
+	if group == addon.group and not show then
 		reserve = 0
 	end
 

@@ -152,6 +152,8 @@ addon.hiddenOptions = {
 	["nameplatePersonalHideDelaySeconds"] = { prettyName = "", description = "The delay to wait before hiding the personal nameplate", type = "boolean" },
 	["ShowNamePlateLoseAggroFlash"] = { prettyName = nil, description = "When enabled, if you are a tank role and lose aggro, the nameplate with briefly flash.", type = "boolean" },
 	["ShowClassColorInNameplate"] = { prettyName = SHOW_CLASS_COLOR_IN_V_KEY, description = OPTION_TOOLTIP_SHOW_CLASS_COLOR_IN_V_KEY, type = "boolean" },
+	["ShowClassColorInFriendlyNameplate"] = { prettyName = "Class color friendly nameplates", description = "Class color for friendly nameplates", type = "boolean" },
+	
 	["nameplateTargetRadialPosition"] = { prettyName = nil, description = "When target is off screen, position its nameplate radially around sides and bottom", type = "number"},
 	["nameplateOccludedAlphaMult"] = { prettyName = nil, description = "Alpha multiplier of nameplates for occluded targets", type = "number"},
 
@@ -1006,6 +1008,44 @@ addon.hiddenOptions = {
 	
 	["lodObjectFadeScale"] = {},
 }
+
+local CategoryNames = { -- not sure how meaningful these really are (/Blizzard_Console/Blizzard_Console_AutoComplete.lua Enum.ConsoleCategory)
+	[0] = "Debug",
+	[1] = "Graphics",
+	[2] = "Console",
+	[3] = "Combat",
+	[4] = "Game",
+	[5] = "Default",
+	[6] = "Net",
+	[7] = "Sound",
+	[8] = "GM",
+	[9] = "None",
+}
+
+--[[
+	C_Console.GetAllCommands() returns a list of tables in this format:
+		category: number from 0 to 9 representing a category above
+		command: cvar name
+		commandType: 0 seems to represent a cvar, 1 is a script command (like quit)
+		help: cvar description text
+--]]
+
+for _, info in pairs(C_Console.GetAllCommands()) do
+	if not addon.hiddenOptions[info.command]
+	  and info.commandType == 0 -- cvar, rather than script
+	  and info.category ~= 0 -- ignore debug category
+	  and not strfind(info.command:lower(), 'debug') -- a number of commands with "debug" in their name are inexplicibly not in the "debug" category
+	  and info.category ~= 8 -- ignore GM category
+	then
+		local value = GetCVar(info.command)
+		local optionTable = {
+			-- prettyName = info.command, -- the api doesn't provide pretty names, so the only way to keep these would be to create a table for them
+			description = info.help,		
+		}
+		addon.hiddenOptions[info.command] = optionTable
+	end
+end
+
 
 -- Allow case-insensitive lookup of cvars in our table (relatively slow, so match the case when possible)
 local NoCase = {

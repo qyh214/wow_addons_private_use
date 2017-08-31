@@ -1,6 +1,22 @@
-$Id: Revision.txt 13 2017-05-25 04:26:27Z arith $
+$Id: Revision.txt 21 2017-08-29 13:32:07Z arith $
 Revision History:
 =================
+
+v1.05.7030024920 (2017/08/29)
+-----------------------------
+- ToC update to support WoW 7.3.0
+
+v1.04.7030024484 (2017/07/02)
+-----------------------------
+- Changed soundkit's ID to key indicator likes SOUNDKIT.U_CHAT_SCROLL_BUTTON
+
+v1.03.7030024484 (2017/06/30)
+-----------------------------
+- Update version number
+
+v1.02.7030024484 (2017/06/30)
+-----------------------------
+- Updated PlaySound API's usage method to support both 7.2.5 and 7.3.0 of WoW clients
 
 v1.01.7020024015 (2017/05/25)
 ----------------------------

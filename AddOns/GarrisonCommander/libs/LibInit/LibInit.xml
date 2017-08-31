@@ -6,4 +6,5 @@
 	<Script file="colorize.lua"/>
 	<Script file="factory.lua"/>
 	<Script file="LibInit.lua"/>
+	<Include file="MSA-DropDownMenu-1.0\MSA-DropDownMenu-1.0.xml"/>
 </Ui>

@@ -11,6 +11,6 @@
 ## Notes-ruRU: Фреймы питомцев рейда.
 ## Notes-deDE: Z-Perl Schlachtzugsbegleiter
 ## Notes-zhTW: Z-Perl 團隊寵物框架
-## Dependencies: ZPerl_RaidFrames
+## Dependencies: ZPerl, ZPerl_RaidFrames
 
 ZPerl_RaidPets.xml

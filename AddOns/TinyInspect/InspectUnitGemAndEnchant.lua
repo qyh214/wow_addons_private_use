@@ -47,7 +47,7 @@ local function CreateIconFrame(frame, index)
     icon.texture = icon:CreateTexture(nil, "BORDER")
     icon.texture:SetSize(12, 12)
     icon.texture:SetPoint("CENTER")
-    icon.texture:SetMask("Interface\\Minimap\\UI-Minimap-Background")
+    icon.texture:SetMask("Interface\\FriendsFrame\\Battlenet-Portrait")
     frame["xicon"..index] = icon
     return frame["xicon"..index]
 end

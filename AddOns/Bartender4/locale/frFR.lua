@@ -259,3 +259,4 @@ Exemple : [form:1]9;0]=]
 L["You can use the preset defaults as a starting point for setting up your interface. Just choose your preferences here and click the button below to reset your profile to the preset default. Note that not all defaults show all bars."] = "Vous pouvez utiliser les paramètres préétablis par défaut comme point de départ pour paramétrer votre interface. Choisissez simplement vos préférences ici et cliquez sur le bouton ci-dessous pour réinitialiser votre profil avec les paramètres préétablis par défaut. Notez que les paramètres par défaut n'affichent pas toujours toutes les barres."
 L["You have to exit the vehicle in order to be able to change the Vehicle UI settings."] = "Vous devez quitter le véhicule avant de pouvoir changer les paramètres du véhicule."
 L["Zoom"] = "Zoom"
+

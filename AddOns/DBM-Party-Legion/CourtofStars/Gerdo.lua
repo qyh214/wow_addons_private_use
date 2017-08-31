@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1718, "DBM-Party-Legion", 7, 800)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15622 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16585 $"):sub(12, -3))
 mod:SetCreatureID(104215)
 mod:SetEncounterID(1868)
 mod:SetZone()
@@ -19,7 +19,7 @@ local warnFlask						= mod:NewSpellAnnounce(207815, 2)
 
 local specWarnResonantSlash			= mod:NewSpecialWarningDodge(207261, nil, nil, nil, 2, 2)
 local specWarnArcaneLockdown		= mod:NewSpecialWarningJump(207278, nil, nil, nil, 2, 6)
-local specWarnBeacon				= mod:NewSpecialWarningSwitch(207806, nil, nil, nil, 2, 2)
+local specWarnBeacon				= mod:NewSpecialWarningSwitch(207806, nil, nil, nil, 1, 2)
 
 local timerResonantSlashCD			= mod:NewCDTimer(12.1, 207261, nil, nil, nil, 3)
 local timerArcaneLockdownCD			= mod:NewCDTimer(30, 207278, nil, nil, nil, 3)

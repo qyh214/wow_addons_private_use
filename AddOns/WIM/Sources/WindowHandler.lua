@@ -911,11 +911,14 @@ local function instantiateWindow(obj)
                                 classTag = "sc2";--"Interface\\FriendsFrame\\Battlenet-Sc2icon"
                                 icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
                                 icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
+                elseif(self.bn and self.bn.client == _G.BNET_CLIENT_SC) then
+                                classTag = "sc1";--"Interface\\FriendsFrame\\Battlenet-SCicon"
+                                icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
+                                icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
                 elseif(self.bn and self.bn.client == _G.BNET_CLIENT_D3) then
                                 classTag = "d3";--"Interface\\FriendsFrame\\Battlenet-D3icon"
                                 icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
                                 icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
-                --(Out of room in class textures file. maybe it's time to skin only class icons and use blizzard provided textures for game clients)
                 elseif(self.bn and self.bn.client == _G.BNET_CLIENT_WTCG) then
                                 classTag = "hs";--"Interface\\FriendsFrame\\Battlenet-WTCGicon"
                                 icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);

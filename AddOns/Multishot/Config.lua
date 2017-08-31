@@ -27,7 +27,7 @@ end
 local GetDifficulties = function()
 	local diffs,id = {[0]=_G.NONE}, 1
 	
-	for i=1,25 do
+	for i=1,33 do
 		local name = GetDifficultyInfo(i)
 		if name and name ~= "" then
 			diffs[i] = name
@@ -43,7 +43,7 @@ local GetDifficulties = function()
 end
 local getDiffDefaults = function()
 	local defaults,id = {[0]=true}, 1
-	for i=1,25 do
+	for i=1,33 do
 		local name = GetDifficultyInfo(i)
 		if name and name ~= "" then
 			defaults[i] = true

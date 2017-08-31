@@ -472,7 +472,7 @@ rumors.deDE = {
 	["Man hat mir zugetragen, dass der Spion die kühle Luft mag und deshalb heute Abend keine langen Ärmel trägt."]="shortSleeves",
 	["Eine meiner Freundinnen sagte, dass sie die Kleidung des Spions gesehen hat. Er trägt keine langen Ärmel."]="shortSleeves",
 
-	["Wie ich höre, trägt der Spion heute Abend Kleidung mit langen Ärmeln."]="longSleeves",
+	["Wie ich hörte, trägt der Spion heute Abend Kleidung mit langen Ärmeln."]="longSleeves",
 	["Einer meiner Freunde erwähnte, dass der Spion lange Ärmel trägt."]="longSleeves",
 	["Jemand sagte, dass der Spion heute Abend seine Arme mit langen Ärmeln bedeckt."]="longSleeves",
 	["Ich habe am frühen Abend einen kurzen Blick auf die langen Ärmel des Spions erhascht."]="longSleeves",
@@ -493,7 +493,7 @@ rumors.deDE = {
 	["Ich hörte, dass der Spion es vermeidet, Handschuhe zu tragen, falls er schnell handeln muss."]="noGloves",
 	["Mir ist zu Ohren gekommen, dass der Spion ungern Handschuhe trägt."]="noGloves",
 
-	["Gerüchte zufolge liest der Spion gerne und trägt immer mindestens ein Buch bei sich."]="book",
+	["Gerüchten zufolge liest der Spion gerne und trägt immer mindestens ein Buch bei sich."]="book",
 	["Ich hörte, dass der Spion immer ein Buch mit niedergeschriebenen Geheimnissen am Gürtel trägt."]="book",
 
 	["Eine Musikerin erzählte mir, dass sie gesehen hat, wie der Spion seinen letzten Trank wegwarf und jetzt keinen mehr übrig hat."]="noPotion",

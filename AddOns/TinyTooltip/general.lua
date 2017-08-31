@@ -3,7 +3,6 @@ local LibEvent = LibStub:GetLibrary("LibEvent.7000")
 
 local DEAD = DEAD
 
-local addonName = ...
 local addon = TinyTooltip
 
 BigTipDB = {}
@@ -40,7 +39,6 @@ LibEvent:attachEvent("VARIABLES_LOADED", function()
     end
     --StatusBar
     local bar = GameTooltipStatusBar
-    bar:SetStatusBarTexture("Interface\\AddOns\\"..addonName.."\\texture\\StatusBar")
     bar.bg = bar:CreateTexture(nil, "BACKGROUND")
     bar.bg:SetAllPoints()
     bar.bg:SetColorTexture(1, 1, 1)
@@ -67,12 +65,17 @@ LibEvent:attachEvent("VARIABLES_LOADED", function()
     --Variable
     addon.db = addon:MergeVariable(addon.db, BigTipDB)
     LibEvent:trigger("tooltip:variables:loaded")
+    if (not addon.db.unit.player.elements.zone) then
+        addon.db.unit.player.elements.zone = { enable = true,  color = "ffffff",  wildcard = "%s", filter = "none" }
+        tinsert(addon.db.unit.player.elements, {"zone"})
+    end
     --Init
-    LibEvent:trigger("tooltip.style.font.header", addon.db.general.headerFont, addon.db.general.headerFontSize, addon.db.general.headerFontFlag)
-    LibEvent:trigger("tooltip.style.font.body", addon.db.general.bodyFont, addon.db.general.bodyFontSize, addon.db.general.bodyFontFlag)
+    LibEvent:trigger("tooltip.style.font.header", GameTooltip, addon.db.general.headerFont, addon.db.general.headerFontSize, addon.db.general.headerFontFlag)
+    LibEvent:trigger("tooltip.style.font.body", GameTooltip, addon.db.general.bodyFont, addon.db.general.bodyFontSize, addon.db.general.bodyFontFlag)
     LibEvent:trigger("tooltip.statusbar.height", addon.db.general.statusbarHeight)
     LibEvent:trigger("tooltip.statusbar.text", addon.db.general.statusbarText)
-    LibEvent:trigger("tooltip.statusbar.font", nil, addon.db.general.statusbarFontSize)
+    LibEvent:trigger("tooltip.statusbar.font", addon.db.general.statusbarFont, addon.db.general.statusbarFontSize, addon.db.general.statusbarFontFlag)
+    LibEvent:trigger("tooltip.statusbar.texture", addon.db.general.statusbarTexture)
     for _, tip in ipairs(addon.tooltips) do
         LibEvent:trigger("tooltip.style.init", tip)
         LibEvent:trigger("tooltip.scale", tip, addon.db.general.scale)

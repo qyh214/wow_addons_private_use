@@ -1,8 +1,8 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: TinyTooltip
 ## Notes: TinyTooltip
 ## Author: M
-## Version: 2.1.3
+## Version: 2.1.8
 ## SavedVariables: BigTipDB
 
 libs\lib.xml
@@ -19,6 +19,5 @@ quest.lua
 linkid.lua
 skinframes.lua
 
-libs\UIDropDownMenu\UIDropDownMenu.xml
 locales\locales.xml
 options.lua

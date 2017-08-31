@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1732, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16267 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16664 $"):sub(12, -3))
 mod:SetCreatureID(103758)
 mod:SetEncounterID(1863)
 mod:SetZone()
@@ -66,7 +66,7 @@ local specWarnFelNova				= mod:NewSpecialWarningRun(206517, nil, nil, nil, 4, 2)
 local specWarnFelFlame				= mod:NewSpecialWarningMove(206398, nil, nil, nil, 1, 2)
 --Stage Four: Inevitable Fate
 local specWarnThing					= mod:NewSpecialWarningSwitch("ej13057", "Tank", nil, 2, 1, 2)
-local specWarnWitnessVoid			= mod:NewSpecialWarningSpell(207720, nil, nil, nil, 1, 2)
+local specWarnWitnessVoid			= mod:NewSpecialWarningLookAway(207720, nil, nil, nil, 1, 2)
 local specWarnVoidEjection			= mod:NewSpecialWarningMoveAway(207143, nil, nil, nil, 1, 2)--Should this be a move away, does void burst do any damage?
 local specWarnVoidNova				= mod:NewSpecialWarningSpell(207439, nil, nil, nil, 2, 2)
 local specWarnWorldDevouringForce	= mod:NewSpecialWarningDodge(216909, nil, nil, nil, 3, 2)

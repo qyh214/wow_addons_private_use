@@ -443,7 +443,7 @@ function TitanMapFrame_OnUpdate(self, elapsed)
 
 	-- Determine the text to show for player coords
 	--
-	if WorldMapFrameSizeUpButton:IsVisible() then
+	if WorldMapFrame_InWindowedMode() then
 		TitanMapPlayerLocation:SetText("");
 	else
 		self.px, self.py = GetPlayerMapPosition("player");
@@ -500,7 +500,7 @@ function TitanMapFrame_OnUpdate(self, elapsed)
 
 	-- *
 	TitanMapPlayerLocation:ClearAllPoints()
-	if ( WorldMapFrameSizeUpButton:IsVisible() ) then
+	if ( WorldMapFrame_InWindowedMode() ) then
 		-- **
 		TitanMapPlayerLocation:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 75, -12)
 	else

@@ -3,6 +3,7 @@
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Argus|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Argus|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0아르거스|r
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0阿古斯|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -14,17 +15,16 @@
 ## X-DBM-Mod-Has-Single-Format: 1
 ## X-DBM-Mod-World-Boss: 1
 ## X-DBM-Mod-Sort: 056
-## X-DBM-Mod-MapID: 1520
-## X-DBM-Mod-LoadCID: 
+## X-DBM-Mod-MapID: 1669
+## X-DBM-Mod-LoadCID: 124625,124555,124719,124592,124492,124514
 ## X-DBM-Mod-MinCoreRevision: 14737
 localization.en.lua
 localization.cn.lua
 localization.de.lua
-Percontatum.lua
-Alluradel.lua
-Ovetigo.lua
+localization.tw.lua
+Meto.lua
+Occularus.lua
 Sotanathor.lua
+Alluradel.lua
 Folnuna.lua
-Aedis.lua
-Zedaat.lua
 Vilemus.lua

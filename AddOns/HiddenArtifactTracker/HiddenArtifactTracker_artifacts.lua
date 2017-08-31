@@ -1,4 +1,4 @@
-HiddenArtifactTrackerFuncs={}
+if HiddenArtifactTrackerFuncs == nil then HiddenArtifactTrackerFuncs={} end
 
 --Blood
 HiddenArtifactTrackerFuncs["Maw of the Damned"] = 
@@ -128,6 +128,7 @@ HiddenArtifactTrackerFuncs["Sheilun, Staff of the Mists"] =
 --windwalker
 HiddenArtifactTrackerFuncs["Fists of the Heavens"] = 
 	function()
+		GameTooltip:AddLine(" ")
 		HiddenArtifactTrackerFuncs.getWorldBossQ(true,"Withered Training", 43943, 1033) -- Withered Training / questnumber / in Suramar
 	end
 
@@ -141,6 +142,7 @@ HiddenArtifactTrackerFuncs["Tome of the Silver Hand"] = HiddenArtifactTrackerFun
 --protection
 HiddenArtifactTrackerFuncs["Truthguard"] = 
 	function()
+		GameTooltip:AddLine(" ")
 		HiddenArtifactTrackerFuncs.getWorldBossQ(true,"Withered Training", 43943, 1033) -- Withered Training / questnumber / in Suramar
 	end
 HiddenArtifactTrackerFuncs["Oathseeker"] = HiddenArtifactTrackerFuncs["Truthguard"]
@@ -207,8 +209,11 @@ HiddenArtifactTrackerFuncs["The Highkeeper's Ward"] = HiddenArtifactTrackerFuncs
 --enhancement
 HiddenArtifactTrackerFuncs["Doomhammer"] = 
 	function()
+		GameTooltip:AddLine(" ")
 		HiddenArtifactTrackerFuncs.getWorldBossQ(true,"World Boss: Flotsam", 43985, 1024) --1024 = highmountain
 		HiddenArtifactTrackerFuncs.getWorldBossQ(true,"World Boss: Levantus", 43192, 1015) --1015 = azsuna
+		GameTooltip:AddLine(" ")
+		HiddenArtifactTrackerFuncs.BossLockouts("Trial of Valor", 1411, "Helya", 3)
 	end
 HiddenArtifactTrackerFuncs["Fury of the Stonemother"] = HiddenArtifactTrackerFuncs["Doomhammer"]
 
@@ -218,27 +223,42 @@ HiddenArtifactTrackerFuncs["Ulthalesh, the Deadwind Harvester"] =
 		if HiddenArtifactTrackerFuncs.getAK(5) then
 
 		--as requested by jetah! using comments from http://www.wowhead.com/quest=44083/the-grimoire-of-the-first-necrolyte#comments
-
+			GameTooltip:AddLine(" ")
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Stormheim: Fjorlag", 42806 ,1017)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Stormheim: Captain Dargun",42864,1017)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Stormheim: Rulf Bonesnapper",42963,1017)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Stormheim: Lagertha",42964,1017)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Stormheim: Runeseer Sigvid",42991,1017)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Stormheim: Soulbinder Halldora",42953,1017)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Stormheim: Aegir Wavecrusher",42820,1017)
 
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Azsuna: Mortiferous",43027,1015)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Azsuna: Lysanis Shadesoul",44192,1015)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Azsuna: Jade Darkhaven",44190,1015)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Azsuna: Chief Treasurer Jabrill",43121,1015)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Azsuna: Sea King Tidross",44193,1015)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Azsuna: Valakar the Thirsty",43040,1015)
 
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Highmountain: Ormagrogg",41703,1024)
-			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Highmountain: Durguth",41093,1024)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Highmountain: Durguth",41,1024)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Highmountain: Oubdob da Smasher",41816,1024)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Highmountain: Olokk the Shipbreaker",41686,1024)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Highmountain: Defilia",41695,1024)
 
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Suramar: Magistrix Vilessa",44114,1033)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Suramar: Auditor Esiel",44118,1033)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Suramar: Az'jatar",44121,1033)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Suramar: Apothecary Faldren",44032,1033)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Suramar: Colerian, Alteria, and Selenyi - Outrider Trio",41697,1033)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Suramar: Sorallus",44122,1033)
 
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Val'sharah: Kathaw the Savage",42870,1018)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Val'sharah: Malisandra",42927,1018)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Val'sharah: Ealdis",43346,1018)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Val'sharah: Rabxach",43347,1018)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Val'sharah: Shalas'aman",41700,1018)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Val'sharah: Aodh Witherpetal",43344,1018)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Val'sharah: Witchdoctor Grgl-Brgl",43101,1018)
 		end
 	end
 
@@ -260,6 +280,8 @@ HiddenArtifactTrackerFuncs["Warswords of the Valarjar"] =
 		if HiddenArtifactTrackerFuncs.RepCheck(1948, 8) then --Valarjar to exalted
 			HiddenArtifactTrackerFuncs.getWorldBossQ(true,"World Boss: Nithogg", 42270, 1017) -- Nithogg / questnumber / in Stormheim
 			HiddenArtifactTrackerFuncs.getWorldBossQ(true,"World Boss: Shar'thos", 42779, 1018) --Shar'thos / quest number / in val'sharah
+			GameTooltip:AddLine(" ")
+			HiddenArtifactTrackerFuncs.BossLockouts("Trial of Valor", 1411, "Odyn", 1) 
 		end
 	end
 

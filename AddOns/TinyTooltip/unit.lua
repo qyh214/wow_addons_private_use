@@ -53,13 +53,14 @@ end
 
 local function PlayerCharacter(tip, unit, config, raw)
     local data = addon:GetUnitData(unit, config.elements, raw)
-    for i, v in ipairs(data) do
-        addon:GetLine(tip,i):SetText(strip(table.concat(v, " ")))
-    end
+    addon:HideLines(tip, 2, 3)
     addon:HideLine(tip, "^"..LEVEL)
     addon:HideLine(tip, "^"..FACTION_ALLIANCE)
     addon:HideLine(tip, "^"..FACTION_HORDE)
     addon:HideLine(tip, "^"..PVP)
+    for i, v in ipairs(data) do
+        addon:GetLine(tip,i):SetText(strip(table.concat(v, " ")))
+    end
     ColorBorder(tip, config, raw)
     ColorBackground(tip, config, raw)
     GrayForDead(tip, config, unit)

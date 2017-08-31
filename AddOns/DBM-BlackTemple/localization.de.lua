@@ -10,10 +10,6 @@ L:SetGeneralLocalization{
 	name = "Oberster Kriegsfürst Naj'entus"
 }
 
-L:SetOptionLocalization{
-	InfoFrame	= "Zeige Infofenster für Gesundheit (weniger als 8800 Lebenspunkte)"
-}
-
 L:SetMiscLocalization{
 	HealthInfo	= "Gesundheitsinfo"
 }
@@ -28,8 +24,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-	WarnPhase		= "%sphase",
-	WarnKite		= "Blick auf >%s<"
+	WarnPhase		= "%sphase"
 }
 
 L:SetTimerLocalization{
@@ -38,7 +33,6 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	WarnPhase		= "Zeige Warnung für nächste Phase",
-	WarnKite		= "Verkünde verfolgte Ziele",
 	TimerPhase		= "Zeige Zeit bis nächste Phase",
 	KiteIcon		= "Setze Zeichen auf das verfolgte Ziel"
 }
@@ -111,7 +105,9 @@ L:SetOptionLocalization{
 L:SetMiscLocalization{
 	Suffering		= "Essenz des Leidens",
 	Desire			= "Essenz der Begierde",
-	Anger			= "Essenz des Zorns"
+	Anger			= "Essenz des Zorns",
+	Phase1End		= "Ich will nicht zurück!",
+	Phase2End		= "I won't be far!"--translate (trigger)
 }
 
 -----------------------

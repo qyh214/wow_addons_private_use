@@ -1,4 +1,6 @@
 
+--/dump BrokenIslesArgusButton:IsProtected()
+
 --details! framework
 local DF = _G ["DetailsFramework"]
 if (not DF) then
@@ -34,13 +36,28 @@ do
 	
 	DF:InstallTemplate ("font", "WQT_SUMMARY_TITLE", {color = "orange", size = 12, font = "Friz Quadrata TT"})
 	DF:InstallTemplate ("font", "WQT_RESOURCES_AVAILABLE", {color = {1, .7, .2, .85}, size = 10, font = "Friz Quadrata TT"})
+	DF:InstallTemplate ("font", "WQT_GROUPFINDER_BIG", {color = {1, .7, .2, .85}, size = 11, font = "Friz Quadrata TT"})
+	DF:InstallTemplate ("font", "WQT_GROUPFINDER_SMALL", {color = {1, .9, .1, .85}, size = 10, font = "Friz Quadrata TT"})
+	DF:InstallTemplate ("font", "WQT_GROUPFINDER_TRANSPARENT", {color = {1, 1, 1, .2}, size = 10, font = "Friz Quadrata TT"})
+	
+	DF:InstallTemplate ("button", "WQT_GROUPFINDER_BUTTON", {
+		backdrop = {edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true},
+		backdropcolor = {.2, .2, .2, 1},
+		backdropbordercolor = {0, 0, 0, 1},
+		width = 20,
+		height = 20,
+		enabled_backdropcolor = {.2, .2, .2, 1},
+		disabled_backdropcolor = {.2, .2, .2, 1},
+		onenterbordercolor = {0, 0, 0, 1},
+	})
+	
 end
 
 local GameCooltip = GameCooltip2
-local Saturate = Saturate
+--local Saturate = Saturate
 local floor = floor
-local ceil = ceil
-local ipairs = ipairs
+--local ceil = ceil
+--local ipairs = ipairs
 local GetItemInfo = GetItemInfo
 local p = math.pi/2
 local pi = math.pi
@@ -142,6 +159,22 @@ local default_config = {
 			equipment = true,
 			trade_skill = true,
 		},
+		
+		groupfinder = {
+			enabled = true,
+			tracker_buttons = true,
+			autoleave = false,
+			autoleave_delayed = false,
+			askleave_delayed = true,
+			noleave = false,
+			leavetimer = 30,
+			noafk = true,
+			noafk_ticks = 5,
+			nopvp = false,
+			frame = {},
+			tutorial = 0,
+		},
+		
 		disable_world_map_widgets = false,
 		worldmap_widgets = {
 			textsize = 9,
@@ -225,7 +258,8 @@ local suramar_mapId = 1033
 local valsharah_mapId = 1018
 local eoa_mapId = 1096
 
-local is_broken_isles_map = {
+--zones which aren't quest hubs
+local zones_with_worldquests = {
 	[azsuna_mapId] = true,
 	[highmountain_mapId] = true,
 	[stormheim_mapId] = true,
@@ -234,7 +268,20 @@ local is_broken_isles_map = {
 	[eoa_mapId] = true,
 	[1014] = true, --dalaran
 	[1021] = true, --broken shore
+	
+	--> argus zones
+	[1171] = true, --antoran
+	[1135] = true, --krokuun
+	[1170] = true, --mccree
 }
+
+--patch 7.3
+local is_argus_map = {
+	[1171] = true, --antoran
+	[1135] = true, --krokuun
+	[1170] = true, --mccree
+}
+
 
 local WORLDMAP_SQUARE_SIZE = 24
 local WORLDMAP_SQUARE_TIMEBLIP_SIZE = 14
@@ -265,7 +312,7 @@ local WQT_QUEST_NAMES_AND_ICONS = {
 	--[WQT_QUESTTYPE_PROFESSION] = {name = "Profession", icon = [[Interface\Garrison\MobileAppIcons]], coords = {256/1024, 384/1024, 0/1024, 128/1024}},
 	--[WQT_QUESTTYPE_PVP] = {name = "PvP", icon = [[Interface\PVPFrame\Icon-Combat]], coords = {0, 1, 0, 1}},
 	[WQT_QUESTTYPE_PVP] = {name = L["S_QUESTTYPE_PVP"], icon = [[Interface\QUESTFRAME\QuestTypeIcons]], coords = {37/128, 53/128, 19/64, 36/64}},
-	[WQT_QUESTTYPE_PETBATTLE] = {name = L["S_QUESTTYPE_PETBATTLE"], icon = [[Interface\MINIMAP\ObjectIconsAtlas]], coords = {172/512, 201/512, 270/512, 301/512}},
+	[WQT_QUESTTYPE_PETBATTLE] = {name = L["S_QUESTTYPE_PETBATTLE"], icon = [[Interface\MINIMAP\ObjectIconsAtlas]], coords = {219/512, 246/512, 478/512, 502/512}},
 	[WQT_QUESTTYPE_TRADE] = {name = L["S_QUESTTYPE_TRADESKILL"], icon = [[Interface\ICONS\INV_Blood of Sargeras]], coords = {5/64, 59/64, 5/64, 59/64}},
 }
 
@@ -329,17 +376,7 @@ function TQueue:AddToQueue (texture, file, coords, color)
 	end
 end
 
-local BROKEN_ISLES_ZONES = {
-	[azsuna_mapId] = true, --azsuna
-	[valsharah_mapId] = true, --valsharah
-	[highmountain_mapId] = true, --highmountain
-	[stormheim_mapId] = true, --stormheim
-	[suramar_mapId] = true, --suramar
-	[eoa_mapId] = true, --eye of azshara
-	
-	[1014] = true, --dalaran
-	[1021] = true, --broken shore	
-}
+
 
 local WorldQuestTracker = DF:CreateAddOn ("WorldQuestTrackerAddon", "WQTrackerDB", default_config)
 WorldQuestTracker.QuestTrackList = {} --place holder until OnInit is triggered
@@ -351,6 +388,7 @@ WorldQuestTracker.Cache_ShownWidgetsOnZoneMap = {}
 WorldQuestTracker.WorldMapSupportWidgets = {}
 WorldQuestTracker.PartyQuestsPool = {}
 WorldQuestTracker.PartySharedQuests = {}
+WorldQuestTracker.CurrentZoneQuests = {}
 WorldQuestTracker.CurrentMapID = 0
 WorldQuestTracker.LastWorldMapClick = 0
 WorldQuestTracker.MapSeason = 0
@@ -373,6 +411,8 @@ if (not LibWindow) then
 end
 
 WorldQuestTracker.MAPID_DALARAN = 1014
+WorldQuestTracker.MAPID_ARGUS = 1184
+WorldQuestTracker.MAPID_BROKENISLES = 1007
 local MAPID_BROKENISLES = 1007
 local ARROW_UPDATE_FREQUENCE = 0.016
 
@@ -429,12 +469,6 @@ local all_widgets = {}
 local extra_widgets = {}
 local faction_frames = {}
 
-local azsuna_widgets = {}
-local highmountain_widgets = {}
-local stormheim_widgets = {}
-local suramar_widgets = {}
-local valsharah_widgets = {}
-local eoa_widgets = {}
 local WorldWidgetPool = {}
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -551,10 +585,10 @@ local CreatePartySharer = function()
 		
 		if (not noMapUpdate) then
 			if (WorldMapFrame and WorldMapFrame:IsShown()) then
-				if (WorldMapFrame.mapID == 1007 or GetCurrentMapAreaID() == 1007) then
+				if (WorldQuestTracker.IsWorldQuestHub (WorldMapFrame.mapID) or WorldQuestTracker.IsCurrentMapQuestHub()) then
 					WorldQuestTracker.UpdateWorldQuestsOnWorldMap (false, false) --noCache, showFade, isQuestFlaggedRecheck, forceCriteriaAnimation
 				else
-					if (is_broken_isles_map [GetCurrentMapAreaID()]) then
+					if (WorldQuestTracker.ZoneHaveWorldQuest()) then
 						WorldQuestTracker.UpdateZoneWidgets()
 					end
 				end
@@ -668,10 +702,10 @@ local CreatePartySharer = function()
 		wipe (WorldQuestTracker.PartySharedQuests)
 		
 		if (WorldMapFrame and WorldMapFrame:IsShown()) then
-			if (WorldMapFrame.mapID == 1007 or GetCurrentMapAreaID() == 1007) then
+			if (WorldQuestTracker.IsWorldQuestHub (WorldMapFrame.mapID) or WorldQuestTracker.IsCurrentMapQuestHub()) then
 				WorldQuestTracker.UpdateWorldQuestsOnWorldMap (false, false) --noCache, showFade, isQuestFlaggedRecheck, forceCriteriaAnimation
 			else
-				if (is_broken_isles_map [GetCurrentMapAreaID()]) then
+				if (WorldQuestTracker.ZoneHaveWorldQuest()) then
 					WorldQuestTracker.UpdateZoneWidgets()
 				end
 			end
@@ -741,6 +775,9 @@ function WorldQuestTracker:OnInit()
 	WQTrackerDBChr = WQTrackerDBChr or {}
 	WorldQuestTracker.dbChr = WQTrackerDBChr
 	WorldQuestTracker.dbChr.ActiveQuests = WorldQuestTracker.dbChr.ActiveQuests or {}
+	
+	local SharedMedia = LibStub:GetLibrary ("LibSharedMedia-3.0")
+	SharedMedia:Register ("statusbar", "Iskar Serenity", [[Interface\AddOns\WorldQuestTracker\media\bar_serenity]])
 	
 	C_Timer.After (2, function()
 		if (WorldQuestTracker.db:GetCurrentProfile() ~= "Default") then
@@ -1108,10 +1145,25 @@ local onEndClickAnimation = function (self)
 	self:GetParent():Hide()
 end
 
---o mapa � uma zona de broken isles?
-function WorldQuestTracker.IsBrokenIslesZone (mapID)
-	return BROKEN_ISLES_ZONES [mapID]
+--does the the zone have world quests?
+function WorldQuestTracker.ZoneHaveWorldQuest (mapID)
+	return zones_with_worldquests [mapID or GetCurrentMapAreaID()]
 end
+
+--is a argus zone?
+function WorldQuestTracker.IsArgusZone (mapID)
+	return is_argus_map [mapID]
+end
+
+--is the current map zone a world quest hub?
+function WorldQuestTracker.IsWorldQuestHub (mapID)
+	return mapID == WorldQuestTracker.MAPID_ARGUS or mapID == WorldQuestTracker.MAPID_BROKENISLES
+end
+function WorldQuestTracker.IsCurrentMapQuestHub()
+	local currentMap = GetCurrentMapAreaID()
+	return currentMap == WorldQuestTracker.MAPID_BROKENISLES or currentMap == WorldQuestTracker.MAPID_ARGUS
+end
+
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> addon wide functions
@@ -1134,6 +1186,1447 @@ local questButton_OnLeave = function	(self)
 	WorldQuestTracker.CurrentHoverQuest = nil
 end
 
+
+
+
+
+--[=
+	--~group
+	--> the main frame
+	local ff = CreateFrame ("frame", nil, UIParent)
+	ff:SetSize (240, 100)
+	ff:SetBackdrop ({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16, edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1})
+	ff:SetBackdropColor (0, 0, 0, 1)
+	ff:SetBackdropBorderColor (0, 0, 0, 1)
+	ff:SetPoint ("center")
+	ff:EnableMouse (true)
+	ff:SetMovable (true)
+	ff:Hide()
+	
+	ff.TickFrame = CreateFrame ("frame", nil, UIParent)
+	
+	--> titlebar
+	ff.TitleBar = CreateFrame ("frame", "$parentTitleBar", ff)
+	ff.TitleBar:SetPoint ("topleft", ff, "topleft", 2, -3)
+	ff.TitleBar:SetPoint ("topright", ff, "topright", -2, -3)
+	ff.TitleBar:SetHeight (20)
+	ff.TitleBar:EnableMouse (false)
+	ff.TitleBar:SetBackdrop ({edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
+	ff.TitleBar:SetBackdropColor (.2, .2, .2, 1)
+	ff.TitleBar:SetBackdropBorderColor (0, 0, 0, .5)
+	
+	--close button
+	ff.Close = CreateFrame ("button", "$parentCloseButton", ff)
+	ff.Close:SetPoint ("right", ff.TitleBar, "right", -2, 0)
+	ff.Close:SetSize (16, 16)
+	ff.Close:SetNormalTexture (DF.folder .. "icons")
+	ff.Close:SetHighlightTexture (DF.folder .. "icons")
+	ff.Close:SetPushedTexture (DF.folder .. "icons")
+	ff.Close:GetNormalTexture():SetTexCoord (0, 16/128, 0, 1)
+	ff.Close:GetHighlightTexture():SetTexCoord (0, 16/128, 0, 1)
+	ff.Close:GetPushedTexture():SetTexCoord (0, 16/128, 0, 1)
+	ff.Close:SetAlpha (0.7)
+	ff.Close:SetScript ("OnClick", function() ff.HideMainFrame() end)
+	
+	--gear button
+	ff.Options = CreateFrame ("button", "$parentOptionsButton", ff)
+	ff.Options:SetPoint ("right", ff.Close, "left", -2, 0)
+	ff.Options:SetSize (16, 16)
+	ff.Options:SetNormalTexture (DF.folder .. "icons")
+	ff.Options:SetHighlightTexture (DF.folder .. "icons")
+	ff.Options:SetPushedTexture (DF.folder .. "icons")
+	ff.Options:GetNormalTexture():SetTexCoord (48/128, 64/128, 0, 1)
+	ff.Options:GetHighlightTexture():SetTexCoord (48/128, 64/128, 0, 1)
+	ff.Options:GetPushedTexture():SetTexCoord (48/128, 64/128, 0, 1)
+	ff.Options:SetAlpha (0.7)
+	
+	--do the menu with cooltip injection
+	ff.Options.SetEnabledFunc = function (_, _, value)
+		WorldQuestTracker.db.profile.groupfinder.enabled = value
+		if (value) then
+			--check if is doing a world quest and popup the gump
+			
+		else
+			--hide the current doing world quest
+			--ff.ResetMembers()
+			--ff.ResetInteractionButton()
+			--ff.HideMainFrame()
+		end
+		
+		GameCooltip:Hide()
+	end
+	
+	ff.Options.SetAvoidPVPFunc = function (_, _, value)
+		WorldQuestTracker.db.profile.groupfinder.nopvp = value
+		GameCooltip:Hide()
+	end
+	
+	ff.Options.SetNoAFKFunc = function (_, _, value)
+		WorldQuestTracker.db.profile.groupfinder.noafk = value
+		GameCooltip:Hide()
+	end
+	
+	ff.Options.SetOTButtonsFunc = function (_, _, value)
+		WorldQuestTracker.db.profile.groupfinder.tracker_buttons = value
+		if (value) then
+			--enabled
+			WorldQuestTracker:FullTrackerUpdate()
+		else
+			--disabled
+			for block, button in pairs (ff.BQuestTrackerUsedWidgets) do
+				ff.RemoveButtonFromBBlock (block)
+			end
+		end
+		GameCooltip:Hide()
+	end
+	
+	ff.Options.SetAutoGroupLeaveFunc = function (_, _, value, key)
+		WorldQuestTracker.db.profile.groupfinder.autoleave = false
+		WorldQuestTracker.db.profile.groupfinder.autoleave_delayed = false
+		WorldQuestTracker.db.profile.groupfinder.askleave_delayed = false
+		WorldQuestTracker.db.profile.groupfinder.noleave = false
+		
+		WorldQuestTracker.db.profile.groupfinder [key] = true
+		
+		GameCooltip:Hide()
+	end
+	ff.Options.SetGroupLeaveTimeoutFunc = function (_, _, value)
+		WorldQuestTracker.db.profile.groupfinder.leavetimer = value
+		if (WorldQuestTracker.db.profile.groupfinder.autoleave) then
+			WorldQuestTracker.db.profile.groupfinder.autoleave = false
+			WorldQuestTracker.db.profile.groupfinder.askleave_delayed = true
+		end
+		GameCooltip:Hide()
+	end
+	
+	ff.Options.BuildMenuFunc = function()
+		GameCooltip:Preset (2)
+		GameCooltip:SetOption ("TextSize", 10)
+		GameCooltip:SetOption ("FixedWidth", 180)
+		
+		--enabled
+		GameCooltip:AddLine (L["S_GROUPFINDER_ENABLED"])
+		if (WorldQuestTracker.db.profile.groupfinder.enabled) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 1, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 1, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (1, ff.Options.SetEnabledFunc, not WorldQuestTracker.db.profile.groupfinder.enabled)
+		
+		--uses buttons on the quest tracker
+		GameCooltip:AddLine (L["S_GROUPFINDER_OT_ENABLED"])
+		if (WorldQuestTracker.db.profile.groupfinder.tracker_buttons) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 1, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 1, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (1, ff.Options.SetOTButtonsFunc, not WorldQuestTracker.db.profile.groupfinder.tracker_buttons)
+
+		--
+		GameCooltip:AddLine ("$div", nil, 1, nil, -5, -11)
+		--
+		
+		GameCooltip:AddLine (L["S_GROUPFINDER_LEAVEOPTIONS"])
+		GameCooltip:AddIcon ([[Interface\BUTTONS\UI-GROUPLOOT-PASS-DOWN]], 1, 1, IconSize, IconSize)
+		
+		--leave group
+		GameCooltip:AddLine (L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"], "", 2)
+		if (WorldQuestTracker.db.profile.groupfinder.autoleave) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (2, ff.Options.SetAutoGroupLeaveFunc, not WorldQuestTracker.db.profile.groupfinder.autoleave, "autoleave")
+		
+		GameCooltip:AddLine (L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"], "", 2)
+		if (WorldQuestTracker.db.profile.groupfinder.autoleave_delayed) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (2, ff.Options.SetAutoGroupLeaveFunc, not WorldQuestTracker.db.profile.groupfinder.autoleave_delayed, "autoleave_delayed")
+		
+		GameCooltip:AddLine (L["S_GROUPFINDER_LEAVEOPTIONS_ASKX"], "", 2)
+		if (WorldQuestTracker.db.profile.groupfinder.askleave_delayed) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (2, ff.Options.SetAutoGroupLeaveFunc, not WorldQuestTracker.db.profile.groupfinder.askleave_delayed, "askleave_delayed")
+		
+		GameCooltip:AddLine (L["S_GROUPFINDER_LEAVEOPTIONS_DONTLEAVE"], "", 2)
+		if (WorldQuestTracker.db.profile.groupfinder.noleave) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (2, ff.Options.SetAutoGroupLeaveFunc, not WorldQuestTracker.db.profile.groupfinder.noleave, "noleave")
+		
+		--
+		GameCooltip:AddLine ("$div", nil, 2, nil, -5, -11)
+		--ask to leave with timeout
+		GameCooltip:AddLine ("10 " .. L["S_GROUPFINDER_SECONDS"], "", 2)
+		if (WorldQuestTracker.db.profile.groupfinder.leavetimer == 10) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (2, ff.Options.SetGroupLeaveTimeoutFunc, 10)
+		
+		GameCooltip:AddLine ("15 " .. L["S_GROUPFINDER_SECONDS"], "", 2)
+		if (WorldQuestTracker.db.profile.groupfinder.leavetimer == 15) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (2, ff.Options.SetGroupLeaveTimeoutFunc, 15)
+		
+		GameCooltip:AddLine ("20 " .. L["S_GROUPFINDER_SECONDS"], "", 2)
+		if (WorldQuestTracker.db.profile.groupfinder.leavetimer == 20) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (2, ff.Options.SetGroupLeaveTimeoutFunc, 20)
+		
+		GameCooltip:AddLine ("30 " .. L["S_GROUPFINDER_SECONDS"], "", 2)
+		if (WorldQuestTracker.db.profile.groupfinder.leavetimer == 30) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (2, ff.Options.SetGroupLeaveTimeoutFunc, 30)
+		
+		GameCooltip:AddLine ("60 " .. L["S_GROUPFINDER_SECONDS"], "", 2)
+		if (WorldQuestTracker.db.profile.groupfinder.leavetimer == 60) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (2, ff.Options.SetGroupLeaveTimeoutFunc, 60)
+		
+		GameCooltip:AddLine ("$div", nil, 1, nil, -5, -11)
+		
+		--no pvp realms
+		GameCooltip:AddLine (L["S_GROUPFINDER_NOPVP"])
+		if (WorldQuestTracker.db.profile.groupfinder.nopvp) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 1, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 1, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (1, ff.Options.SetAvoidPVPFunc, not WorldQuestTracker.db.profile.groupfinder.nopvp)
+		
+		--kick afk players
+		GameCooltip:AddLine ("Kick AFKs")
+		if (WorldQuestTracker.db.profile.groupfinder.noafk) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 1, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 1, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (1, ff.Options.SetNoAFKFunc, not WorldQuestTracker.db.profile.groupfinder.noafk)
+		
+	end
+	
+	ff.Options.CoolTip = {
+		Type = "menu",
+		BuildFunc = ff.Options.BuildMenuFunc,
+		OnEnterFunc = function (self) end,
+		OnLeaveFunc = function (self) end,
+		FixedValue = "none",
+		ShowSpeed = 0.05,
+		Options = {
+			["FixedWidth"] = 300,
+		},
+	}
+	
+	GameCooltip:CoolTipInject (ff.Options)
+	
+	--> illustrate the clickable box
+	ff.ClickArea = CreateFrame ("frame", nil, ff)
+	ff.ClickArea:SetPoint ("topleft", ff.TitleBar, "bottomleft", 0, -1)
+	ff.ClickArea:SetPoint ("topright", ff.TitleBar, "bottomright", 0, -1)
+	ff.ClickArea:SetHeight (74)
+	ff.ClickArea:SetBackdrop ({edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
+	ff.ClickArea:SetBackdropColor (.2, .2, .2, .4)
+	ff.ClickArea:SetBackdropBorderColor (0, 0, 0, .5)
+	ff.ClickArea:EnableMouse (false)
+	ff.ClickArea:SetFrameLevel (ff:GetFrameLevel()+1)
+	
+	--> interaction button
+	local interactionButton = CreateFrame ("button", nil, ff)
+	interactionButton:SetPoint ("topleft", ff, "topleft", 0, -20)
+	interactionButton:SetPoint ("bottomright", ff, "bottomright", 0, 0)
+	interactionButton:SetFrameLevel (ff:GetFrameLevel()+2)
+	interactionButton:RegisterForClicks ("RightButtonDown", "LeftButtonDown")
+	
+	local secondaryInteractionButton = CreateFrame ("button", nil, ff)
+	secondaryInteractionButton:SetPoint ("bottomright", ff, "bottomright", -5, 4)
+	secondaryInteractionButton:SetWidth (100)
+	secondaryInteractionButton:SetHeight (18)
+	secondaryInteractionButton:SetFrameLevel (ff:GetFrameLevel()+4)
+	secondaryInteractionButton:RegisterForClicks ("RightButtonDown", "LeftButtonDown")
+	secondaryInteractionButton:SetBackdrop ({edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
+	secondaryInteractionButton:SetBackdropColor (.2, .2, .2, 1)
+	secondaryInteractionButton:SetBackdropBorderColor (0, 0, 0, 1)
+	secondaryInteractionButton.ButtonText = DF:CreateLabel (secondaryInteractionButton, "placeholder", DF:GetTemplate ("font", "WQT_GROUPFINDER_SMALL"))
+	secondaryInteractionButton.ButtonText:SetPoint ("CENTER", secondaryInteractionButton, "CENTER", 0, 0)
+	secondaryInteractionButton:Hide()
+
+	--title
+	ff.Title = ff.TitleBar:CreateFontString ("$parentTitle", "overlay", "GameFontNormal")
+	ff.Title:SetPoint ("center", ff.TitleBar, "center")
+	ff.Title:SetTextColor (.8, .8, .8, 1)
+	ff.Title:SetText ("World Quest Tracker")
+	
+	ff.AnchorFrame = CreateFrame ("frame", nil, ff)
+	ff.AnchorFrame:SetAllPoints()
+	ff.AnchorFrame:SetFrameLevel (ff:GetFrameLevel()+3)
+	
+	--> label 1
+	ff.Label1 = DF:CreateLabel (ff.AnchorFrame, " ", DF:GetTemplate ("font", "WQT_GROUPFINDER_BIG"))
+	ff.Label1:SetPoint (5, -30)
+	
+	--> label 2
+	ff.Label2 = DF:CreateLabel (ff.AnchorFrame, " ", DF:GetTemplate ("font", "WQT_GROUPFINDER_SMALL"))
+	ff.Label2:SetPoint (5, -47)
+	
+	--> label 3
+	ff.Label3 = DF:CreateLabel (ff.AnchorFrame, L["S_GROUPFINDER_RIGHTCLICKCLOSE"], DF:GetTemplate ("font", "WQT_GROUPFINDER_TRANSPARENT"))
+	ff.Label3:SetPoint ("bottomleft", ff, "bottomleft", 5, 4)
+	
+	--> progress bar
+	ff.ProgressBar = DF:CreateBar (ff.AnchorFrame, nil, 230, 16, 50)
+	ff.ProgressBar:SetPoint (5, -60)
+	ff.ProgressBar.fontsize = 11
+	ff.ProgressBar.fontface = "Accidental Presidency"
+	ff.ProgressBar.fontcolor = "darkorange"
+	ff.ProgressBar.color = "gray"	
+	ff.ProgressBar:EnableMouse (false)
+	
+	function ff.ShowSecondaryInteractionButton (actionID, text)
+		--> reset the button
+		secondaryInteractionButton.ToSearch = nil
+		secondaryInteractionButton.ToCreate = nil
+		
+		--> setup new variables
+		secondaryInteractionButton.ButtonText:SetText (text)
+		
+		if (actionID == ff.actions.ACTIONTYPE_GROUP_SEARCH) then
+			secondaryInteractionButton.ToSearch = true
+			
+		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_CREATE) then
+			secondaryInteractionButton.ToCreate = true
+		end
+		
+		--> show it
+		secondaryInteractionButton:Show()
+	end
+	
+	function ff.HideSecondaryInteractionButton()
+		secondaryInteractionButton:Hide()
+	end
+	
+	--> feedback
+	--[=
+		ff.FeedbackFrame = CreateFrame ("button", nil, ff)
+		ff.FeedbackFrame:SetPoint ("topleft", ff, "bottomleft", 0, -2)
+		ff.FeedbackFrame:SetPoint ("topright", ff, "bottomright", 0, -2)
+		ff.FeedbackFrame:SetHeight (16)
+		ff.FeedbackFrame:SetBackdrop ({edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
+		ff.FeedbackFrame:SetBackdropColor (.2, .2, .2, 1)
+		ff.FeedbackFrame:SetBackdropBorderColor (.1, .10, .10, 1)
+		
+		ff.FeedbackEntry = DF:CreateTextEntry (ff.FeedbackFrame, function()end, 120, 20, nil, _, nil, nil)
+		ff.FeedbackEntry:SetAllPoints()
+		ff.FeedbackEntry:SetText ([[https://wow.curseforge.com/projects/world-quest-tracker/issues/464]])
+		ff.FeedbackEntry:Hide()
+		
+		ff.FeedbackFrame:SetScript ("OnClick", function()
+			ff.FeedbackEntry:Show()
+			ff.FeedbackEntry:SetFocus (true)
+			ff.FeedbackEntry:HighlightText()
+			
+			C_Timer.After (1, function()
+				ff.FeedbackEntry:SetFocus (true)
+				ff.FeedbackEntry:HighlightText()
+			end)
+			
+			C_Timer.After (20, function()
+				ff.FeedbackFrame:Hide()
+			end)
+		end)
+		
+		DF:InstallTemplate ("font", "WQT_GROUPFINDER_FEEDBACK", {color = {1, .9, .4, .85}, size = 9, font = "Friz Quadrata TT"})
+		ff.FeedbackFrame.Text = DF:CreateLabel (ff.FeedbackFrame, "Under Development - Send Feedback", DF:GetTemplate ("font", "WQT_GROUPFINDER_FEEDBACK"))
+		ff.FeedbackFrame.Text:SetPoint ("center", ff.FeedbackFrame, "center")
+		
+		ff.FeedbackFrame:Hide()
+	--]=]
+	--[[
+	quotes:
+	-middle clicking the tracked quest will start a search for that quest
+	
+	/dump LFGListInviteDialog
+	resultID=4,
+	informational=true,
+	
+	--]]
+	-- end of the feedback code
+	
+	ff.BQuestTrackerFreeWidgets = {}
+	ff.BQuestTrackerUsedWidgets = {}
+	
+	ff.actions = {
+		ACTIONTYPE_GROUP_SEARCH = 1,
+		ACTIONTYPE_GROUP_CREATE = 2,
+		ACTIONTYPE_GROUP_RELIST = 3,
+		ACTIONTYPE_GROUP_APPLY = 4,
+		ACTIONTYPE_GROUP_WAIT = 5,
+		ACTIONTYPE_GROUP_SEARCHING = 6,
+		ACTIONTYPE_GROUP_LEAVE = 7,
+		ACTIONTYPE_GROUP_UNLIST = 8,
+		ACTIONTYPE_GROUP_UNAPPLY = 9,
+		ACTIONTYPE_GROUP_KICK = 10,
+		ACTIONTYPE_GROUP_SEARCHANOTHER = 11,
+	}
+	
+	--http://www.wowhead.com/quest=43179/the-kirin-tor-of-dalaran#comments:id=2429524
+	--http://www.wowhead.com/search?q=Supplies+Needed
+	ff.IgnoreList = {
+		[43325] = true,--race
+		[43753] = true,--race
+		[43764] = true,--race
+		[43769] = true,--race
+		[43774] = true,--race
+		[45047] = true,--wind
+		[45046] = true,--wind
+		[45048] = true,--wind
+		[45047] = true,--wind
+		[45049] = true,--wind
+		[45071] = true,--barrel
+		[45068] = true,--barrel
+		[45069] = true,--barrel
+		[45070] = true,--barrel
+		[45072] = true,--barrel
+		[43327] = true,--fly
+		[43777] = true,--fly
+		[43771] = true,--fly
+		[43766] = true,--fly
+		[43755] = true,--fly
+		[43756] = true, --enigmatic
+		[43772] = true, --enigmatic
+		[43767] = true, --enigmatic
+		[43778] = true, --enigmatic
+		[43328] = true, --enigmatic
+		[41327] = true, --supplies-needed-stormscales
+		[41224] = true, --supplies-needed-foxflower
+		[41293] = true, --supplies-needed-dreamleaf
+		[41288] = true, --supplies-needed-aethril
+		[41339] = true, --supplies-needed-stonehide-leather
+		[41318] = true, --supplies-needed-felslate
+		[41351] = true, --supplies-needed-stonehide-leather
+		[41345] = true, --supplies-needed-stormscales
+		[41207] = true, --supplies-needed-leystone
+		[41303] = true, --supplies-needed-starlight-roses
+		[41237] = true, --supplies-needed-stonehide-leather
+		[41298] = true, --supplies-needed-fjarnskaggl
+		[41317] = true, --supplies-needed-leystone
+		[41315] = true, --supplies-needed-leystone
+		[41316] = true, --supplies-needed-leystone
+		
+		--other quests
+		[45988] = true, --ancient bones broken shore
+		[45379] = true, --tresure master rope broken shore
+		[43943] = true, --army training suramar
+		[45791] = true, --war materiel broken shore
+	}
+	
+	ff.cannot_group_quest = {
+		[LE_QUEST_TAG_TYPE_PET_BATTLE] = true,
+	}
+	
+	function WorldQuestTracker.RegisterGroupFinderFrameOnLibWindow()
+		LibWindow.RegisterConfig  (ff, WorldQuestTracker.db.profile.groupfinder.frame)
+		LibWindow.MakeDraggable (ff)
+		LibWindow.RestorePosition (ff)
+		ff.IsRegistered = true
+
+		local texture = LibStub:GetLibrary ("LibSharedMedia-3.0"):Fetch ("statusbar", "Iskar Serenity")
+		ff.ProgressBar.timer_texture:SetTexture (texture)
+		ff.ProgressBar.background:SetTexture (texture)
+	end
+	
+	--> register needed events
+	function ff.RegisterEvents()
+		ff:RegisterEvent ("QUEST_ACCEPTED")
+		ff:RegisterEvent ("QUEST_TURNED_IN")
+		ff:RegisterEvent ("GROUP_ROSTER_UPDATE")
+		ff:RegisterEvent ("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS")
+		ff:RegisterEvent ("GROUP_INVITE_CONFIRMATION")
+	end
+	function ff.UnregisterEvents()
+		ff:UnregisterEvent ("QUEST_ACCEPTED")
+		ff:UnregisterEvent ("QUEST_TURNED_IN")
+		ff:UnregisterEvent ("GROUP_ROSTER_UPDATE")
+		ff:UnregisterEvent ("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS")
+		ff:UnregisterEvent ("GROUP_INVITE_CONFIRMATION")
+	end
+	
+	ff.RegisterEvents()
+	
+	--> members
+	ff.IsInWQGroup = false
+	ff.GroupMembers = 0
+	
+	function ff.ShowMainFrame()
+		ff.SetCheckIfIsInArea (true)
+		ff:Show()
+	end
+	function ff.HideMainFrame()
+		ff.SetCheckIfIsInArea (false)
+		
+		if (interactionButton.LeaveTimer) then
+			interactionButton.LeaveTimer:Cancel()
+			interactionButton.LeaveTimer = nil
+		end
+		
+		ff:Hide()
+	end
+	
+	function ff.SetApplyTimeout (timeout)
+		--> cancel previous timer if exists
+		if (ff.TimeoutTimer) then
+			ff.TimeoutTimer:Cancel()
+		end
+		
+		--> create a new timer
+		ff.TimeoutTimer = C_Timer.NewTimer (timeout, ff.GroupApplyTimeout)
+		
+		--> and set the time on the statusbar
+		ff.ProgressBar:SetTimer (timeout)
+	end
+	
+	function ff.GroupApplyTimeout()
+		--> clear the timer
+		ff.TimeoutTimer = nil
+		
+		--> found a group? if not need to create a new one
+		if (not IsInGroup() and not LFGListInviteDialog:IsShown()) then
+		
+			--> need to check if there is applycations
+			local activeApplications = C_LFGList.GetNumApplications()
+			
+			if (activeApplies and activeApplies > 0) then
+				--> need to undo applications apply before create a new group
+				ff.SetAction (ff.actions.ACTIONTYPE_GROUP_UNAPPLY, L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"])
+			else
+				--> request an action
+				ff.SetAction (ff.actions.ACTIONTYPE_GROUP_CREATE)
+			end
+
+			--> and shutdown the group checker
+			--ff.SetCheckIfIsInGroup (false)
+		else
+			--> found group, good to go
+			if (IsInGroup()) then
+				ff.IsInWQGroup = true
+				ff.GroupMembers = GetNumGroupMembers (LE_PARTY_CATEGORY_HOME) + 1
+			else
+				ff.QueueGroupUpdate = true
+			end
+			
+			--> hide the main frame
+			ff.HideMainFrame()
+		end
+	end
+	
+	function ff.LeaveTimerTimeout()
+		--> clear the timer
+		interactionButton.LeaveTimer = nil
+		
+		--> if is leave after time
+		if (WorldQuestTracker.db.profile.groupfinder.autoleave_delayed) then
+			if (IsInGroup()) then
+				LeaveParty()
+			end
+		end
+		
+		--> hide the main frame
+		ff.HideMainFrame()
+	end
+	
+	--
+		--quando a lideran� passa para o jogador vindo de um player que estava offline
+		--muitas vezes nao esta acontecendo nadad ao tentar crita um grupo
+	--
+	
+	function ff.SetAction (actionID, message, ...)
+	
+		--> show the frame
+		ff.ShowMainFrame()
+		ff.ProgressBar:Hide()
+		ff.HideSecondaryInteractionButton()
+		
+		ff.Label3:Show()
+		
+		--> reset the button state
+		ff.ClearInteractionButtonActions()
+
+		--> deal with each request action
+		if (actionID == ff.actions.ACTIONTYPE_GROUP_SEARCH) then
+			interactionButton.ToSearch = true
+			ff.SetCurrentActionText (L["S_GROUPFINDER_ACTIONS_SEARCH"])
+			
+			ff.ShowSecondaryInteractionButton (ff.actions.ACTIONTYPE_GROUP_CREATE, L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"])
+			
+		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_SEARCHING) then
+			ff.SetCurrentActionText (L["S_GROUPFINDER_ACTIONS_SEARCHING"])
+			ff.ProgressBar:SetTimer (2)
+			ff.ProgressBar:Show()
+			
+		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_UNAPPLY) then
+			interactionButton.ToUnapply = true
+			ff.SetCurrentActionText (message or L["S_GROUPFINDER_ACTIONS_UNAPPLY1"])
+			ff.ShowSecondaryInteractionButton (ff.actions.ACTIONTYPE_GROUP_SEARCH, L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"])
+			
+		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_CREATE) then
+			interactionButton.ToCreate = true
+			ff.SetCurrentActionText (L["S_GROUPFINDER_ACTIONS_CREATE"])
+			ff.ShowSecondaryInteractionButton (ff.actions.ACTIONTYPE_GROUP_SEARCH, L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"])
+			--ff.Label3:Hide()
+			
+		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_UNLIST) then
+			interactionButton.ToUnlist = true
+			ff.SetCurrentActionText (L["S_GROUPFINDER_ACTIONS_UNLIST"])
+			
+		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_RELIST) then
+			interactionButton.ToCreate = true
+			ff.SetCurrentActionText (L["S_GROUPFINDER_ACTIONS_SEARCHMORE"])
+			
+		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_APPLY) then
+			interactionButton.ToApply = true
+			ff.SetCurrentActionText (message)
+			ff.ProgressBar:Show()
+			
+		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_LEAVE) then
+			interactionButton.ToLeave = true
+			
+			if (WorldQuestTracker.db.profile.groupfinder.autoleave_delayed) then
+				ff.SetCurrentActionText (L["S_GROUPFINDER_ACTIONS_LEAVINGIN"])
+				
+			elseif (WorldQuestTracker.db.profile.groupfinder.askleave_delayed) then
+				ff.SetCurrentActionText (L["S_GROUPFINDER_ACTIONS_LEAVEASK"])
+			end
+			
+			ff.ProgressBar:SetTimer (WorldQuestTracker.db.profile.groupfinder.leavetimer)
+			if (interactionButton.LeaveTimer) then
+				interactionButton.LeaveTimer:Cancel()
+			end
+			interactionButton.LeaveTimer = C_Timer.NewTimer (WorldQuestTracker.db.profile.groupfinder.leavetimer, ff.LeaveTimerTimeout)
+			ff.ProgressBar:Show()
+			ff.SetCheckIfIsInGroup (true)
+		
+		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_KICK) then
+			ff.SetCurrentActionText (message)
+			interactionButton.ToKick = true
+			local UnitID, GUID = ...
+			ff.KickTargetUnitID = UnitID
+			ff.KickTargetGUID = GUID
+			interactionButton.ToKick = true
+		
+		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_WAIT) then
+			ff.SetCurrentActionText (message or L["S_GROUPFINDER_ACTIONS_WAITING"])
+			interactionButton.ToApply = nil
+			local waitTime, callBack = ...
+			if (waitTime) then
+				ff.ProgressBar:SetTimer (waitTime)
+				if (callBack) then
+					C_Timer.After (waitTime, callBack)
+				end
+			end
+			ff.ProgressBar:Show()
+		
+		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_SEARCHANOTHER) then
+			ff.SetCurrentActionText (message or L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"])
+			interactionButton.ToSearchAnother = true
+
+		end
+	end
+	
+	function ff.OnBBlockButtonPress (self, button)
+		if (self.questID) then
+			ff.FindGroupForQuest (self.questID, true)
+		end
+	end
+	
+	function ff.OnBBlockButtonEnter (self)
+		GameTooltip:SetOwner (self, "ANCHOR_LEFT")
+		GameTooltip:AddLine (L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"])
+		GameTooltip:Show()
+	end
+	
+	function ff.OnBBlockButtonLeave (self)
+		GameTooltip:Hide()
+	end
+	
+	function ff.UpdateButtonAnchorOnBBlock (block, button)
+		button:ClearAllPoints()
+		
+		--> detect other addons to avoid placing our icons over other addons icons
+		if (WorldQuestGroupFinderAddon) then --todo: add the world quest assistant addon here too
+			--button:SetPoint ("right", block.TrackedQuest, "left", -2, 0)
+			button:SetPoint ("topright", block, "topright", 11, -17)
+		else
+			--check if there's a quest button
+			if (block.rightButton and block.rightButton:IsShown()) then
+				button:SetPoint ("right", block.rightButton, "left", -2, 0)
+			else
+				button:SetPoint ("topright", block, "topright", 10, 0)
+			end
+		end
+		
+		button:SetParent (block)
+		button:SetFrameStrata ("HIGH")
+		button:Show()
+	end
+	
+	--> need to place a button somewhere to search for a group in case the player closes the panel
+	function ff.AddButtonToBBlock (block, questID)
+		local button = tremove (ff.BQuestTrackerFreeWidgets)
+		if (not button) then
+			button = CreateFrame ("button", nil, UIParent)
+			button:SetFrameStrata ("FULLSCREEN")
+			button:SetSize (30, 30)
+			
+			button:SetNormalTexture ([[Interface\BUTTONS\UI-SquareButton-Up]])
+			button:SetPushedTexture ([[Interface\BUTTONS\UI-SquareButton-Down]])
+			button:SetHighlightTexture ([[Interface\BUTTONS\UI-Common-MouseHilight]])
+			
+			local icon = button:CreateTexture (nil, "OVERLAY")
+			icon:SetAtlas ("socialqueuing-icon-eye")
+			icon:SetSize (13, 13)
+			
+			--icon:SetSize (22, 22)
+			--icon:SetTexture ([[Interface\FriendsFrame\PlusManz-PlusManz]])
+			--icon:SetPoint ("center", button, "center")
+			
+			icon:SetPoint ("center", button, "center", -1, 0)
+			
+			button:SetScript ("OnClick", ff.OnBBlockButtonPress)
+			button:SetScript ("OnEnter", ff.OnBBlockButtonEnter)
+			button:SetScript ("OnLeave", ff.OnBBlockButtonLeave)
+		end
+		
+		ff.UpdateButtonAnchorOnBBlock (block, button)
+		
+		ff.BQuestTrackerUsedWidgets [block] = button
+		button.questID = questID
+		
+	end
+	
+	function ff.RemoveButtonFromBBlock (block)
+		tinsert (ff.BQuestTrackerFreeWidgets, ff.BQuestTrackerUsedWidgets [block])
+		ff.BQuestTrackerUsedWidgets [block]:ClearAllPoints()
+		ff.BQuestTrackerUsedWidgets [block]:Hide()
+		ff.BQuestTrackerUsedWidgets [block] = nil
+	end
+	
+	function ff.HandleBTrackerBlock (questID, block)
+		if (not ff.BQuestTrackerUsedWidgets [block]) then
+			if (type (questID) == "number" and HaveQuestData (questID) and QuestMapFrame_IsQuestWorldQuest (questID)) then
+				local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = WorldQuestTracker.GetQuest_Info (questID)
+				if (not ff.cannot_group_quest [worldQuestType] and not ff.IgnoreList [questID]) then			
+					--> give a button for this block
+					ff.AddButtonToBBlock (block, questID)
+				end
+			end
+		else
+			local isInArea, isOnMap, numObjectives = GetTaskInfo (questID) -- or not isInArea
+			if (type (questID) ~= "number" or not HaveQuestData (questID) or not QuestMapFrame_IsQuestWorldQuest (questID)) then
+				--> remove the button from this block
+				ff.RemoveButtonFromBBlock (block)
+			else
+				--> just update the questID
+				ff.BQuestTrackerUsedWidgets [block].questID = questID
+				--> update the anchor
+				ff.UpdateButtonAnchorOnBBlock (block, ff.BQuestTrackerUsedWidgets [block])
+			end
+		end
+	end
+	
+	
+	function ff.NewWorldQuestEngaged (questName, questID)
+		--> reset the gump
+		ff.ShutdownOnTickScript (true)
+		ff.ResetInteractionButton()
+		ff.ResetMembers()
+		
+		--> update the interactive button to current quest
+		interactionButton.questName = questName
+		interactionButton.questID = questID
+		interactionButton.HadInteraction = nil
+		
+		ff.AFKCheckList = ff.AFKCheckList or {}
+		wipe (ff.AFKCheckList)
+		
+		ff.SetQuestTitle (questName .. " (" .. questID .. ")")
+		ff.SetAction (ff.actions.ACTIONTYPE_GROUP_SEARCH)
+		
+		ff.HasLeadership = false
+		
+		--> show the main frame
+		if (not ff.IsRegistered) then
+			WorldQuestTracker.RegisterGroupFinderFrameOnLibWindow()
+		end
+	end
+	
+	function ff.WorldQuestFinished (questID)
+		if (interactionButton.questID == questID and interactionButton.HadInteraction) then
+			--> hide the frame
+			ff.HideMainFrame()
+			
+			--> leave the group
+			if (IsInGroup()) then
+				if (WorldQuestTracker.db.profile.groupfinder.autoleave) then
+					LeaveParty()
+				else
+					--> show timer to leave the group
+					ff.SetAction (ff.actions.ACTIONTYPE_GROUP_LEAVE)
+				end
+			end
+			
+			--> shutdown ontick script
+			ff.ShutdownOnTickScript (true)
+		end
+	end
+	
+	function ff.SetQuestTitle (questName)
+		ff.Label1.text = questName
+	end
+	
+	function ff.SetCurrentActionText (actionText)
+		ff.Label2.text = actionText
+	end
+	
+	function ff.ResetMembers()
+		ff.IsInWQGroup = false
+		ff.GroupMembers = 0
+	end
+	
+	function ff.ResetInteractionButton()
+		ff.ClearInteractionButtonActions()
+		
+		interactionButton.questName = ""
+		interactionButton.questID = 0
+		
+		if (interactionButton.LeaveTimer) then
+			interactionButton.LeaveTimer:Cancel()
+		end
+		
+		ff.HideSecondaryInteractionButton()
+	end
+	
+	function ff.OnTick (self, deltaTime)
+		if (ff.CheckIfInGroup) then
+			if (IsInGroup()) then
+				ff.HideMainFrame()
+				ff.SetCheckIfIsInGroup (false)
+			end
+		end
+		
+		if (ff.CheckCurrentQuestArea) then
+			ff.CheckCurrentQuestArea_Timer = ff.CheckCurrentQuestArea_Timer + deltaTime
+			
+			if (ff.CheckCurrentQuestArea_Timer > 2) then
+				local isInArea, isOnMap, numObjectives = GetTaskInfo (interactionButton.questID)
+				if (not isInArea) then
+					ff.SetCheckIfIsInArea (false)
+					ff.HideMainFrame()
+				end
+				ff.CheckCurrentQuestArea_Timer = 0
+			end
+		end
+
+		if (ff.CheckForAFKs) then
+			ff.CheckForAFKs_Timer = ff.CheckForAFKs_Timer + deltaTime
+			
+			if (ff.CheckForAFKs_Timer > 5) then
+				--> check if we are in the quest and not in raid, just to make sure
+				local isInArea, isOnMap, numObjectives = GetTaskInfo (interactionButton.questID)
+				if (isInArea and not IsInRaid()) then
+					--> do the check
+					local mySelf = UnitGUID ("player")
+					local selfX, selfY = UnitPosition ("player")
+					
+					for i = 1, GetNumGroupMembers() do
+						local GUID = UnitGUID ("party" .. i)
+						if (GUID and GUID ~= mySelf) then
+							local unitTable = ff.AFKCheckList [GUID]
+							if (not unitTable) then
+								ff.AFKCheckList [GUID] = {
+									tick = 0,
+									name = UnitName ("party" .. i),
+									x = 0,
+									y = 0,
+									faraway = 0,
+								}
+								unitTable = ff.AFKCheckList [GUID]
+							end
+							
+							--local x, y = GetPlayerMapPosition ("party" .. i)
+							local x, y, posZ, instanceID = UnitPosition ("party" .. i)
+							x = x or 0
+							y = y or 0
+							
+							--> check location for afk
+							if (x ~= unitTable.x or y ~= unitTable.y or UnitHealth ("party" .. i) < UnitHealthMax ("party" .. i)) then
+								unitTable.tick = 0
+								unitTable.x = x
+								unitTable.y = y
+							else
+								unitTable.tick = unitTable.tick + 1
+								if (unitTable.tick > WorldQuestTracker.db.profile.groupfinder.noafk_ticks) then
+									--print ("[debug] found a afk player, not moving or taking damage for 30 seconds", UnitName ("party" .. i))
+									ff.SetAction (ff.actions.ACTIONTYPE_GROUP_KICK, "click to kick an AFK player", "party" .. i, GUID)
+									break
+								end
+							end
+							
+							--> check location for distance
+							if (selfX and selfX ~= 0 and DF.GetDistance_Point) then
+								local distance = DF:GetDistance_Point (selfX, selfY, x, y)
+								if (distance > 500) then
+									unitTable.faraway = unitTable.faraway + 1
+									if (unitTable.faraway > WorldQuestTracker.db.profile.groupfinder.noafk_ticks) then
+										--print ("[debug] found a player too far away, sqrt > 500 yards:", distance, UnitName ("party" .. i))
+										ff.SetAction (ff.actions.ACTIONTYPE_GROUP_KICK, "click to kick an AFK player", "party" .. i, GUID)
+										unitTable.faraway = 0
+										break
+									end
+								else
+									unitTable.faraway = 0
+								end
+							end
+						end
+					end
+				end
+				
+				ff.CheckForAFKs_Timer = 0
+			end
+		end
+	end
+	
+	function ff.ShutdownOnTickScript (force)
+		if (force) then
+			ff.CheckIfInGroup = nil
+			ff.CheckCurrentQuestArea = nil
+			ff.CheckForAFKs = nil
+			ff.TickFrame:SetScript ("OnUpdate", nil)
+			return
+		end
+		if (	not ff.CheckIfInGroup and 
+			not ff.CheckCurrentQuestArea and 
+			not ff.CheckForAFKs
+		) then
+			ff.TickFrame:SetScript ("OnUpdate", nil)
+		end
+	end
+	
+	function ff.SetCheckIfIsInGroup (state)
+		if (state) then
+			ff.CheckIfInGroup = true
+			ff.TickFrame:SetScript ("OnUpdate", ff.OnTick)
+		else
+			ff.CheckIfInGroup = nil
+			ff.ShutdownOnTickScript()
+		end
+	end
+	
+	function ff.SetCheckIfIsInArea (state)
+		if (state) then
+			ff.CheckCurrentQuestArea = true
+			ff.TickFrame:SetScript ("OnUpdate", ff.OnTick)
+			ff.CheckCurrentQuestArea_Timer = 0
+		else
+			ff.CheckCurrentQuestArea = nil
+			ff.ShutdownOnTickScript()
+		end
+	end
+	
+	function ff.SetCheckIfTrackingAFKs (state)
+		if (state) then
+			ff.CheckForAFKs = true
+			ff.CheckForAFKs_Timer = 0
+			ff.TickFrame:SetScript ("OnUpdate", ff.OnTick)
+		else
+			ff.CheckForAFKs = nil
+			ff.ShutdownOnTickScript()
+		end
+	end
+	
+	function ff.ClearInteractionButtonActions()
+		interactionButton.ToApply = nil
+		interactionButton.ToCreate = nil
+		interactionButton.ToSearch = nil
+		interactionButton.ToLeave = nil
+		interactionButton.ToUnlist = nil
+		interactionButton.ToUnapply = nil
+		interactionButton.ToKick = nil
+		interactionButton.ToSearchAnother = nil
+		
+	end
+	
+	function ff.IsPVPRealm (desc)
+		if (desc:find ("@PVP") or desc:find ("#PVP")) then
+			return true
+		end
+	end
+	
+	function ff.SearchCompleted() --~searchfinished
+		--C_LFGList.GetSearchResultInfo (applicationID)
+		
+		local active, activityID, iLevel, name, comment, voiceChat, expiration, autoAccept = C_LFGList.GetActiveEntryInfo()
+		if (active) then
+			--> the player group is listing, need request to get out
+			--> we can do this automatically, but is best request an interaction
+			ff.SetAction (ff.actions.ACTIONTYPE_GROUP_UNLIST)
+			return
+		end
+		
+		ff.ClearInteractionButtonActions()
+		
+		local numResults, resultIDTable = C_LFGList.GetSearchResults()
+		interactionButton.GroupsToApply = interactionButton.GroupsToApply or {}
+		wipe (interactionButton.GroupsToApply)
+		interactionButton.GroupsToApply.n = 1
+		
+		local t = {}
+		
+		for index, resultID in pairs (resultIDTable) do
+			--no filters but, pve players shouldn't queue on pvp servers?
+			
+			local id, activityID, name, desc, voiceChat, ilvl, honorLevel, age, numBNetFriends, numCharFriends, numGuildMates, isDelisted, leaderName, members, isAuto = C_LFGList.GetSearchResultInfo (resultID)
+			
+			--print (members) --is always an int?
+			if (isAuto and not isDelisted and name == interactionButton.questName and ilvl <= GetAverageItemLevel()) then -- and members < 5
+				local isPVP = ff.IsPVPRealm (desc)
+				if (not WorldQuestTracker.db.profile.groupfinder.nopvp) then
+					tinsert (t, {resultID, (numBNetFriends or 0) + (numCharFriends or 0) + (numGuildMates or 0), members or 0, isPVP and 0 or 1})
+				else
+					if (not isPVP) then
+						tinsert (t, {resultID, (numBNetFriends or 0) + (numCharFriends or 0) + (numGuildMates or 0), members or 0, isPVP and 0 or 1})
+					end
+				end
+			end
+			
+			--ApplyToGroup(resultID, comment, tankOK, healerOK, damageOK)
+			--print (index, resultID)
+			--C_LFGList.ApplyToGroup (resultID, "WorldQuestTrackerInvite-" .. self.questName, UnitGetAvailableRoles ("player"))
+		end
+		
+		table.sort (t,  function(t1, t2) return t1[3] > t2[3] end) --more people first
+		table.sort (t,  function(t1, t2) return t1[2] > t2[2] end) --more friends first
+		table.sort (t,  function(t1, t2) return t1[4] > t2[4] end) --pvp status first
+		
+		for i = 1, #t do
+			tinsert (interactionButton.GroupsToApply, t[i][1])
+		end
+		
+		if (#interactionButton.GroupsToApply > 0) then
+			local amt = #interactionButton.GroupsToApply
+			if (amt > 1) then
+				ff.SetAction (ff.actions.ACTIONTYPE_GROUP_APPLY, format (L["S_GROUPFINDER_RESULTS_FOUND"], #interactionButton.GroupsToApply))
+			else
+				ff.SetAction (ff.actions.ACTIONTYPE_GROUP_APPLY, L["S_GROUPFINDER_RESULTS_FOUND1"])
+			end
+			
+			interactionButton.ApplyLeft = #interactionButton.GroupsToApply
+		else
+			--> no group found
+			ff.SetAction (ff.actions.ACTIONTYPE_GROUP_CREATE)			
+		end
+	end
+	
+	function ff.CheckValidClick (self, button)
+		if (button == "RightButton") then
+			ff.HideMainFrame()
+			return
+		end
+		
+		if (GetLFGMode (1) or GetLFGMode (3)) then --dungeon and raid finder
+			print ("nop, you are in queue...")
+			print ("World Quest Tracker: ", L["S_GROUPFINDER_QUEUEBUSY"])
+			ff.HideMainFrame()
+			return
+		end
+		
+		for i = 1, 5 do --bg / wont work with ashran
+			local status, mapName, teamSize, registeredMatch, suspendedQueue, queueType, gameType, role = GetBattlefieldStatus (i)
+			if (queueType and status ~= "none") then
+				print ("World Quest Tracker: ", L["S_GROUPFINDER_QUEUEBUSY"])
+				ff.HideMainFrame()
+				return
+			end
+		end
+		
+		if (not self.ToSearch and not self.ToUnlist and not self.ToLeave and not self.ToCreate and not self.ToApply and not self.ToKick and not self.ToUnapply and not self.ToSearchAnother) then
+			--print ("No actions scheduled!")
+			return
+		end
+		
+		return true
+	end
+	
+	function ff.StartSearch()
+		C_LFGList.Search (1, LFGListSearchPanel_ParseSearchTerms (interactionButton.questName)) --ignora os filtros
+		C_Timer.After (2, ff.SearchCompleted)
+	end
+	
+	function ff.CreateNewListing (questID, questName)
+		local pvpType = GetZonePVPInfo()
+		local pvpTag
+		if (pvpType == "contested") then
+			pvpTag = "@PVP"
+		else
+			pvpTag = ""
+		end
+		
+		local groupDesc = "Doing world quest " .. questName .. ". Group created with World Quest Tracker. @ID" .. questID .. pvpTag
+		
+		local itemLevelRequired = 0
+		local honorLevelRequired = 0
+		local isAutoAccept = true
+		local isPrivate = false
+
+		C_LFGList.CreateListing (C_LFGList.GetActivityIDForQuestID (questID) or 469, "", itemLevelRequired, honorLevelRequired, "", groupDesc, isAutoAccept, isPrivate, questID)
+		
+		--> if is an epic quest, converto to raid
+		local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = WorldQuestTracker.GetQuest_Info (questID)
+		if (rarity == LE_WORLD_QUEST_QUALITY_EPIC) then
+			C_Timer.After (2, function() ConvertToRaid(); end)
+		end
+
+		ff.IsInWQGroup = true
+		ff.GroupMembers = 1
+		
+		ff.HideMainFrame()
+	end
+	
+	secondaryInteractionButton:SetScript ("OnClick", function (self, button)
+		--> is a valid click?
+		if (not ff.CheckValidClick (self, button)) then
+			return
+		end
+		
+		--> disable the main interaction button, the actions below should set the new state
+		ff.ClearInteractionButtonActions()
+		
+		--> hide the secondary button
+		ff.HideSecondaryInteractionButton()
+		
+		--> parse the action
+		if (self.ToSearch) then
+			ff.StartSearch()
+			self.ToSearch = nil
+			ff.SetAction (ff.actions.ACTIONTYPE_GROUP_SEARCHING)
+			
+		elseif (self.ToCreate) then
+			self.ToCreate = nil
+			interactionButton.ToSearch = nil
+			interactionButton.HadInteraction = true
+			ff.CreateNewListing (interactionButton.questID, interactionButton.questName)
+		end
+	end)
+	
+	interactionButton:SetScript ("OnClick", function (self, button)
+	
+		if (not ff.CheckValidClick (self, button)) then
+			return
+		end
+		
+		---C_LFGList.GetLanguageSearchFilter()
+		--print (self.questName)
+		--Message: Usage: C_LFGList.Search(categoryID, searchTerms [, filter, preferredFilters, languageFilter])
+		--LFGListSearchPanel_ParseSearchTerms = coloca dentro de uma tabela
+		
+--		print ("Search", self.ToSearch, "Unlist", self.ToUnlist, "Leave", self.ToLeave, "Create", self.ToCreate, "Apply", self.ToApply, "Kick", self.ToKick, "UnApply", self.ToUnapply)
+		
+		if (self.ToSearch) then
+			ff.StartSearch()
+			interactionButton.ToSearch = nil
+			self.HadInteraction = true
+			ff.SetAction (ff.actions.ACTIONTYPE_GROUP_SEARCHING)
+
+		elseif (self.ToSearchAnother) then
+			--> get the current leader, so we don't apply to the same group again
+			for i = 1, GetNumGroupMembers() do 
+				if (UnitIsGroupLeader ("party" .. i)) then
+					ff.PreviousLeader = UnitName ("party" .. i)
+					break
+				end
+			end
+			--> leave the group
+			ff.IsInWQGroup = false
+			LeaveParty()
+			ff.StartSearch()
+			self.ToSearchAnother = nil
+			self.HadInteraction = true
+			ff.SetAction (ff.actions.ACTIONTYPE_GROUP_SEARCHING)
+			
+		elseif (self.ToUnlist) then
+			C_LFGList.RemoveListing()
+			--> call search completed once it can only enter on Unlist state from there
+			ff.SetAction (ff.actions.ACTIONTYPE_GROUP_WAIT, L["S_GROUPFINDER_ACTIONS_UNLISTING"], 1.2, ff.SearchCompleted)
+			self.ToUnlist = nil
+		
+		elseif (self.ToKick) then
+			local GUID = UnitGUID (ff.KickTargetUnitID)
+			if (GUID and ff.KickTargetGUID == GUID) then
+				UninviteUnit (ff.KickTargetUnitID)
+			end
+			ff.HideMainFrame()
+			self.ToKick = nil
+		
+		elseif (self.ToLeave) then
+			LeaveParty()
+			ff.HideMainFrame()
+			ff.ResetInteractionButton()
+			ff.ShutdownOnTickScript (true)
+			return
+		
+		elseif (self.ToUnapply) then
+			
+			local numApplications = C_LFGList.GetNumApplications() --Returns the number of groups the player has applied for.
+			local applications = C_LFGList.GetApplications() --Returns a table with the groups the player has applied for
+			--groupID, status, unknown, timeRemaining, role = C_LFGList.GetApplicationInfo(groupID)
+
+			if (numApplications > 0) then
+				local groupID, status, unknown, timeRemaining, role = C_LFGList.GetApplicationInfo (applications [numApplications])
+				if (status == "invited") then
+					C_LFGList.DeclineInvite (applications [numApplications])
+				else
+					C_LFGList.CancelApplication (applications [numApplications])
+				end
+			end
+			
+			if (numApplications == 1) then
+				ff.SetAction (ff.actions.ACTIONTYPE_GROUP_WAIT, L["S_GROUPFINDER_ACTIONS_CANCELING"], 1, ff.GroupApplyTimeout)
+				self.ToUnapply = nil
+			else
+				ff.SetAction (ff.actions.ACTIONTYPE_GROUP_UNAPPLY, format (L["S_GROUPFINDER_RESULTS_UNAPPLY"], numApplications-1))
+			end
+			
+			self.HadInteraction = true
+			
+		elseif (self.ToCreate) then
+			local questID = self.questID
+			local questName = self.questName
+			
+			ff.CreateNewListing (questID, questName)
+			
+			self.ToCreate = nil
+			self.HadInteraction = true
+
+		elseif (self.ToApply) then	
+			self.HadInteraction = true
+			
+			local id, activityID, name, desc, voiceChat, ilvl, honorLevel, age, numBNetFriends, numCharFriends, numGuildMates, isDelisted, leaderName, members, isAuto = C_LFGList.GetSearchResultInfo (interactionButton.GroupsToApply [interactionButton.GroupsToApply.n])
+			local isPreviousLeader = ff.PreviousLeader and ((ff.PreviousLeader == leaderName) or (leaderName:find (ff.PreviousLeader)))
+			
+			if (isAuto and not isDelisted and name == interactionButton.questName and ilvl <= GetAverageItemLevel() and not isPreviousLeader) then -- and members < 5
+				--print ("Applying:", interactionButton.GroupsToApply [interactionButton.GroupsToApply.n], "WorldQuestTrackerInvite-" .. self.questName, UnitGetAvailableRoles ("player"))
+
+				--Usage: ApplyToGroup(resultID, comment, tankOK, healerOK, damageOK)
+				local id, name, description, icon, role, primaryStat = GetSpecializationInfo (GetSpecialization())
+
+				C_LFGList.ApplyToGroup (interactionButton.GroupsToApply [interactionButton.GroupsToApply.n], "WQTInvite-" .. self.questName, role == "TANK", role == "HEALER", role == "DAMAGER")
+				--print (interactionButton.GroupsToApply.n, interactionButton.GroupsToApply [interactionButton.GroupsToApply.n], role == "TANK", role == "HEALER", role == "DAMAGER")
+				
+				--> set the timeout
+				ff.SetApplyTimeout (4)
+				
+				interactionButton.ApplyLeft = interactionButton.ApplyLeft - 1
+				if (interactionButton.ApplyLeft > 0) then
+					if (interactionButton.ApplyLeft > 1) then
+						ff.SetAction (ff.actions.ACTIONTYPE_GROUP_APPLY, format (L["S_GROUPFINDER_RESULTS_APPLYING"], interactionButton.ApplyLeft))
+					else
+						ff.SetAction (ff.actions.ACTIONTYPE_GROUP_APPLY, L["S_GROUPFINDER_RESULTS_APPLYING1"])
+					end
+				else
+					ff.SetAction (ff.actions.ACTIONTYPE_GROUP_WAIT)
+				end
+				
+				ff.SetCheckIfIsInGroup (true)
+				
+			end
+			
+			interactionButton.GroupsToApply.n = interactionButton.GroupsToApply.n + 1
+			
+			if (interactionButton.GroupsToApply.n > #interactionButton.GroupsToApply) then
+			
+				if (true) then --debug
+--					self.ToApply = nil
+--					ff.SetAction (ff.actions.ACTIONTYPE_GROUP_UNAPPLY, "click to cancel applications...")
+--					return
+				end
+			
+				ff.SetApplyTimeout (4)
+				ff.SetAction (ff.actions.ACTIONTYPE_GROUP_WAIT)
+				return
+			end
+		end
+	end)
+
+	function WorldQuestTracker.FindGroupForQuest (questID)
+		ff.FindGroupForQuest (questID)
+	end
+	
+	function ff.FindGroupForQuest (questID, fromOTButton)
+		if (fromOTButton and IsInGroup() and ff.IsInWQGroup) then
+			--> player already doing the quest
+			ff.SetAction (ff.actions.ACTIONTYPE_GROUP_SEARCHANOTHER)
+			return
+		end
+		
+		if ((not IsInGroup() and not IsInRaid()) or (IsInGroup() and GetNumGroupMembers() == 1) or (IsInGroup() and not IsInRaid() and not ff.IsInWQGroup)) then --> causou problemas de ? - precisa de um aviso case esteja em grupo
+			local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = WorldQuestTracker.GetQuest_Info (questID)
+			if (not ff.cannot_group_quest [worldQuestType] and not ff.IgnoreList [questID]) then
+				ff.NewWorldQuestEngaged (title, questID)
+			end
+		end
+	end
+	
+	function ff.DelayedCheckForDisband()
+		--> everyone from player group could be gone, check if the quest is valid and if still  doing it
+		if (interactionButton.questID) then
+			local isInArea, isOnMap, numObjectives = GetTaskInfo (interactionButton.questID)
+			if (isInArea and not IsQuestFlaggedCompleted (interactionButton.questID)) then
+				--> just to make sure there's no group listed on the group finder
+				--> it should be false since the player isn't in group
+				local active, activityID, iLevel, name, comment, voiceChat, expiration, autoAccept = C_LFGList.GetActiveEntryInfo()
+				if (not active) then
+					--> everything at this point should be already set
+					--> just query the player if want another group
+					ff.SetAction (ff.actions.ACTIONTYPE_GROUP_SEARCH)
+				end
+			end
+		end
+	end
+	
+	ff:SetScript ("OnShow", function (self)
+		if (WorldQuestTracker.db.profile.groupfinder.tutorial == 0) then
+			local alert = CreateFrame ("frame", "WorldQuestTrackerGroupFinderTutorialAlert1", ff, "MicroButtonAlertTemplate")
+			alert:SetFrameLevel (302)
+			alert.label = L["S_GROUPFINDER_TUTORIAL1"]
+			alert.Text:SetSpacing (4)
+			MicroButtonAlert_SetText (alert, alert.label)
+			alert:SetPoint ("topleft", ff, "topleft", 10, 110)
+			alert.CloseButton:HookScript ("OnClick", function()
+				
+			end)
+			alert:Show()
+			WorldQuestTracker.db.profile.groupfinder.tutorial = WorldQuestTracker.db.profile.groupfinder.tutorial + 1
+		end
+	end)
+	
+	ff:SetScript ("OnEvent", function (self, event, arg1, questID, arg3)
+	
+		--is this feature enable?
+		if (not WorldQuestTracker.db.profile.groupfinder.enabled) then
+			return
+		end
+		
+		if (event == "QUEST_ACCEPTED") then
+			--> get quest data
+			local isInArea, isOnMap, numObjectives = GetTaskInfo (questID)
+			local title, factionID, capped = C_TaskQuest.GetQuestInfoByQuestID (questID)
+			
+			-->  do the regular checks
+			if (isInArea and HaveQuestData (questID)) then
+				local isWorldQuest = QuestMapFrame_IsQuestWorldQuest (questID)
+				if (isWorldQuest) then
+					ff.FindGroupForQuest (questID)
+				end
+			end 
+		
+		elseif (event == "QUEST_TURNED_IN") then
+			questID = arg1
+			local isWorldQuest = QuestMapFrame_IsQuestWorldQuest (questID)
+			--print ("quest finished", questID, "is world:", isWorldQuest, "is last:", interactionButton.questID == questID)
+			if (isWorldQuest) then
+				ff.WorldQuestFinished (questID)
+			end
+		
+		elseif (event == "LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS" or event == "GROUP_INVITE_CONFIRMATION") then
+			--> hide annoying alerts
+			if (ff.IsInWQGroup) then
+				StaticPopup_Hide ("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS")
+				StaticPopup_Hide ("LFG_LIST_AUTO_ACCEPT_CONVERT_TO_RAID")
+				StaticPopup_Hide ("GROUP_INVITE_CONFIRMATION")
+				--print ("popup ignored")
+			end
+			--for d,_ in pairs(StaticPopupDialogs)do if (StaticPopup_FindVisible(d)) then print (d) end end
+		
+		elseif (event == "GROUP_ROSTER_UPDATE") then
+			--> is in a world quest group
+			if (ff.IsInWQGroup) then
+				--> player left the group
+				if (not IsInGroup()) then
+					ff.IsInWQGroup = false
+					ff.PreviousLeader = nil
+					C_Timer.After (2, ff.DelayedCheckForDisband)
+				else
+					--> check if lost a member
+					if (ff.GroupMembers > GetNumGroupMembers (LE_PARTY_CATEGORY_HOME) + 1) then
+						--> is the leader?
+						if (UnitIsGroupLeader ("player")) then
+							--> is the player still doing this quest?
+							local isInArea, isOnMap, numObjectives = GetTaskInfo (interactionButton.questID)
+							if (isInArea) then
+								--> is the quest not completed?
+								if (not IsQuestFlaggedCompleted (interactionButton.questID)) then
+									--> is the group not listed?
+									local active, activityID, iLevel, name, comment, voiceChat, expiration, autoAccept = C_LFGList.GetActiveEntryInfo()
+									if (not active) then
+										ff.SetAction (ff.actions.ACTIONTYPE_GROUP_RELIST)
+									end
+								end
+							end
+						end
+					end
+					
+					if (UnitIsGroupLeader ("player") and not ff.HasLeadership) then
+						ff.HasLeadership = true
+						if (WorldQuestTracker.db.profile.groupfinder.noafk) then
+							ff.SetCheckIfTrackingAFKs (true)
+						end
+						
+					elseif (ff.HasLeadership and not UnitIsGroupLeader ("player")) then
+						ff.HasLeadership = false
+						ff.SetCheckIfTrackingAFKs (false)
+					end
+					
+					ff.GroupMembers = GetNumGroupMembers (LE_PARTY_CATEGORY_HOME) + 1
+				end
+			else
+				if (ff.QueueGroupUpdate) then
+					ff.QueueGroupUpdate = nil
+					
+					if (IsInGroup()) then
+						ff.IsInWQGroup = true
+						ff.GroupMembers = GetNumGroupMembers (LE_PARTY_CATEGORY_HOME) + 1
+						
+						--> player entered in a group
+						
+					end
+				end
+			end
+		end
+	end)
+--]=]
+
+
+
 --ao clicar no bot�o de uma quest na zona ou no world map, colocar para trackear ela
 -- �nclick ~onclick ~click
 local questButton_OnClick = function (self, button)
@@ -1155,55 +2648,16 @@ local questButton_OnClick = function (self, button)
 		return
 	end
 
---was middle button and have WQGF installed
-	if (WorldQuestGroupFinderAddon and button == "MiddleButton") then
-	
-		WorldQuestGroupFinder.HandleBlockClick (self.questID)
-		
+	--was middle button and our group finder is enabled
+	if (button == "MiddleButton" and WorldQuestTracker.db.profile.groupfinder.enabled) then
+		WorldQuestTracker.FindGroupForQuest (self.questID)
 		return
-		
-	elseif (button == "MiddleButton") then
+	end
 	
-		--PVEFrame_ShowFrame("GroupFinderFrame", LFGListPVEStub);
-		
-		--local activityID, categoryID, filters, questName = LFGListUtil_GetQuestCategoryData (self.questID)
-		--LFGListCategorySelection_SelectCategory (LFGListFrame.CategorySelection, categoryID, filters)
-		
-		--LFGListFrame.CategorySelection.FindGroupButton:Click()
-		
-		--LFGListCategorySelection_StartFindGroup (LFGListFrame.CategorySelection, questName, self.questID)
-		
-		--[[
-		local f = CreateFrame ("button", "testebutton", UIParent, "UIPanelButtonTemplate")
-		f:SetSize (100, 100)
-		f:SetPoint ("center", 0, 0)
-		f:Show()
-		f:SetScript ("OnClick", function()
-			PVEFrame_ShowFrame ("GroupFinderFrame", LFGListPVEStub);
-			local activityID, categoryID, filters, questName = LFGListUtil_GetQuestCategoryData (self.questID)
-			--LFGListCategorySelection_SelectCategory (LFGListFrame.CategorySelection, categoryID, filters)
-			--LFGListFrame.CategorySelection.FindGroupButton:Click()
-			
-			--local baseFilters = LFGListFrame.CategorySelection:GetParent().baseFilters;
-			--local searchPanel = LFGListFrame.CategorySelection:GetParent().SearchPanel;
-			
-			--print (baseFilters, searchPanel)
-
-			--LFGListSearchPanel_SetCategory (searchPanel, 1, LFGListFrame.selectedFilters, baseFilters);
-			
-			C_LFGList.Search (1, questName, 0, 4, {})
-			
-			--LFGListSearchPanel_UpdateResultList (LFGListFrame);
-			--LFGListSearchPanel_UpdateResults (LFGListFrame);
-			
-		end)
-		--]]
-		
-		--print (activityID, categoryID, filters, questName)
-		
-		--LFGListFrame_BeginFindQuestGroup (LFGListFrame, self.questID);
-		--LFGListUtil_FindQuestGroup (self.questID)
-	
+	--middle click without our group finder enabled, check for other addons
+	if (button == "MiddleButton" and WorldQuestGroupFinderAddon) then
+		WorldQuestGroupFinder.HandleBlockClick (self.questID)
+		return
 	end
 	
 --isn't using the tracker
@@ -1264,16 +2718,16 @@ end
 
 --/dump WorldQuestTrackerAddon.GetCurrentZoneType()
 function WorldQuestTracker.GetCurrentZoneType()
-	if (is_broken_isles_map [GetCurrentMapAreaID()]) then
+	if (WorldQuestTracker.ZoneHaveWorldQuest (GetCurrentMapAreaID())) then
 		return "zone"
-	elseif (WorldMapFrame.mapID == 1007 or GetCurrentMapAreaID() == 1007) then
+	elseif (WorldQuestTracker.IsWorldQuestHub (WorldMapFrame.mapID) or WorldQuestTracker.IsCurrentMapQuestHub()) then
 		return "world"
 	end
 end
 
 --verifica se pode mostrar os widgets de broken isles
 function WorldQuestTracker.CanShowWorldMapWidgets (noFade)
-	if (WorldMapFrame.mapID == 1007 or GetCurrentMapAreaID() == 1007) then
+	if (WorldQuestTracker.IsWorldQuestHub (WorldMapFrame.mapID) or WorldQuestTracker.IsCurrentMapQuestHub()) then
 		if (noFade) then
 			WorldQuestTracker.UpdateWorldQuestsOnWorldMap()
 		else
@@ -1415,6 +2869,8 @@ local anime_square = function (self, deltaTime)
 	end
 end
 
+
+
 function WorldQuestTracker.GetBorderByQuestType (self, rarity, worldQuestType)
 	if (worldQuestType == LE_QUEST_TAG_TYPE_PVP) then
 		--return "border_zone_browT"
@@ -1526,11 +2982,12 @@ function WorldQuestTracker.UpdateBorder (self, rarity, worldQuestType, mapID)
 		
 				self.rareSerpent:Show()
 				self.rareSerpent:SetSize (48, 52)
-				--self.rareSerpent:SetAtlas ("worldquest-questmarker-dragon")
+				self.rareSerpent:SetSize (48*0.7, 52*0.7)
 				self.rareSerpent:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\rare_dragon_curveT]])
+				
 				self.rareGlow:Show()
 				self.rareGlow:SetVertexColor (0, 0.36863, 0.74902)
-				self.rareGlow:SetSize (48, 52)
+				self.rareGlow:SetSize (48*0.7, 52*0.7)
 				self.rareGlow:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\rare_dragonT]])
 				
 				--se estiver sendo trackeada, trocar o banner
@@ -1540,7 +2997,7 @@ function WorldQuestTracker.UpdateBorder (self, rarity, worldQuestType, mapID)
 					self.bgFlag:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\icon_flagT]])
 				end
 
-				self.bgFlag:Show()
+				--self.bgFlag:Show()
 				self.flagText:SetPoint ("top", self.bgFlag, "top", 0, -3)
 				--self.glassTransparence:Show()
 			end
@@ -2186,7 +3643,7 @@ end)
 -- ~bar ~showbar ~statusbar ~worldmapevent ~event
 function WorldQuestTracker.RefreshStatusBar()
 	if (WorldQuestTracker.DoubleTapFrame and not InCombatLockdown()) then
-		if (GetCurrentMapAreaID() == MAPID_BROKENISLES or is_broken_isles_map [GetCurrentMapAreaID()]) then
+		if (WorldQuestTracker.IsWorldQuestHub (GetCurrentMapAreaID()) or WorldQuestTracker.ZoneHaveWorldQuest (GetCurrentMapAreaID())) then
 			WorldQuestTracker.DoubleTapFrame:Show()
 		else
 			WorldQuestTracker.DoubleTapFrame:Hide()
@@ -2223,6 +3680,7 @@ local ActionButton = WorldMapFrame.UIElementsFrame.ActionButton
 
 WorldMapFrame:HookScript ("OnUpdate", function (self, deltaTime)
 	
+	--[[
 	if (ActionButton and ActionButton:IsShown()) then
 		if (ActionButton.SpellButton.Cooldown:GetCooldownDuration() and ActionButton.SpellButton.Cooldown:GetCooldownDuration() > 0) then
 			ActionButton:SetAlpha (.2)
@@ -2230,11 +3688,23 @@ WorldMapFrame:HookScript ("OnUpdate", function (self, deltaTime)
 			ActionButton:SetAlpha (1)
 		end
 	end
+	--]]
 
+	--> hide blizzard widgets on the zone map (if scheduled)
+	if (WorldQuestTracker.HideZoneWidgetsOnNextTick and not (WorldQuestTracker.Temp_HideZoneWidgets > GetTime())) then
+		for i = 1, #WorldQuestTracker.AllTaskPOIs do
+			if (WorldQuestTracker.CurrentZoneQuests [WorldQuestTracker.AllTaskPOIs [i].questID]) then
+				WorldQuestTracker.AllTaskPOIs [i]:Hide()
+			end
+		end
+		WorldQuestTracker.HideZoneWidgetsOnNextTick = false
+	end
+	
 	if (WorldQuestTracker.CanShowZoneSummaryFrame()) then
 		WorldMapFrame.UIElementsFrame.BountyBoard:ClearAllPoints()
 		WorldMapFrame.UIElementsFrame.BountyBoard:SetPoint ("bottomright", WorldMapFrame.UIElementsFrame, "bottomright", -18, 15)
 		
+		--[[ --only in fullscreen
 		if (ActionButton:IsShown()) then
 			if (not InCombatLockdown()) then
 				WorldMapFrame.UIElementsFrame.ActionButton:ClearAllPoints()
@@ -2245,6 +3715,7 @@ WorldMapFrame:HookScript ("OnUpdate", function (self, deltaTime)
 				ActionButton:SetAlpha (0)
 			end
 		end
+		--]]
 
 	end
 	if (WorldQuestTracker.HaveZoneSummaryHover) then
@@ -2304,9 +3775,25 @@ local allow_map_change = function (...)
 		WorldQuestTracker.StopLoadingAnimation()
 	end
 end
-
 WorldMapButton:HookScript ("PreClick", deny_auto_switch)
 WorldMapButton:HookScript ("PostClick", allow_map_change)
+
+if (BrokenIslesArgusButton) then
+	--> at the current PTR state, goes directly to argus map
+	BrokenIslesArgusButton:HookScript ("OnClick", function (self)
+		allow_map_change()
+	end)
+	--> argus map zone use an overlaied button for each of its three zones
+	MacAreeButton:HookScript ("OnClick", function (self)
+		allow_map_change()
+	end)
+	AntoranWastesButton:HookScript ("OnClick", function (self)
+		allow_map_change()
+	end)
+	KrokuunButton:HookScript ("OnClick", function (self)
+		allow_map_change()
+	end)
+end
 
 hooksecurefunc ("WorldMap_CreatePOI", function (index, isObjectIcon, atlasIcon)
 	local POI = _G [ "WorldMapFramePOI"..index]
@@ -2404,7 +3891,7 @@ function WorldQuestTracker.CreateZoneWidget (index, name, parent) --~zone
 	button.IsTrackingGlow:SetSize (36, 36)
 	
 	button.IsTrackingRareGlow = supportFrame:CreateTexture(button:GetName() .. "IsTrackingRareGlow", "BACKGROUND", -6)
-	button.IsTrackingRareGlow:SetSize (44, 44)
+	button.IsTrackingRareGlow:SetSize (44*0.7, 44*0.7)
 	button.IsTrackingRareGlow:SetPoint ("center", button, "center")
 	button.IsTrackingRareGlow:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\rare_dragon_TrackingT]])
 	--button.IsTrackingRareGlow:SetBlendMode ("ADD")
@@ -2450,11 +3937,10 @@ function WorldQuestTracker.CreateZoneWidget (index, name, parent) --~zone
 	button.rareSerpent = supportFrame:CreateTexture (button:GetName() .. "RareSerpent", "OVERLAY")
 	button.rareSerpent:SetWidth (34 * 1.1)
 	button.rareSerpent:SetHeight (34 * 1.1)
-	button.rareSerpent:SetPoint ("CENTER", 1, -2)
+	button.rareSerpent:SetPoint ("CENTER", 1, 0)
 	
 	-- � a sombra da serpente no fundo, pode ser na cor azul ou roxa
 	button.rareGlow = supportFrame:CreateTexture (nil, "background")
-	--button.rareGlow:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\rare_dragonT]])
 	button.rareGlow:SetPoint ("CENTER", 1, -2)
 	button.rareGlow:SetSize (48, 48)
 	button.rareGlow:SetAlpha (.85)
@@ -2574,7 +4060,11 @@ function WorldQuestTracker.CreateZoneWidget (index, name, parent) --~zone
 	button.IsTrackingRareGlow:SetDrawLayer ("overlay", 0)
 	button.circleBorder:SetDrawLayer ("overlay", 1)
 	button.squareBorder:SetDrawLayer ("overlay", 1)
+	
 	button.rareSerpent:SetDrawLayer ("overlay", 3)
+	button.rareSerpent:SetDrawLayer ("BACKGROUND", -6)
+	button.rareGlow:SetDrawLayer ("BACKGROUND", -7)
+	
 	button.bgFlag:SetDrawLayer ("overlay", 4)
 	button.blackGradient:SetDrawLayer ("overlay", 5)
 	button.flagText:SetDrawLayer ("overlay", 6)
@@ -2622,24 +4112,56 @@ end
 --	end
 --end)
 
+function WorldQuestTracker.IsASubLevel()
+	local level, x1 = GetCurrentMapDungeonLevel()
+	if (level and level >  0 and x1) then
+		x1 = floor (x1)
+		--vindicar antoran
+		if (level == 5 and floor (x1) == 8479) then
+			return true
+		end
+		
+		--vindicar krokuun
+		if (level == 1 and floor (x1) == 1302) then
+			return true
+		end
+		
+		--vindicar mccree
+		if (level == 3 and floor (x1) == 9689) then
+			return true
+		end
+		
+	end
+end
+
 --atualiza as quest do mapa da zona ~updatezone ~zoneupdate
 function WorldQuestTracker.UpdateZoneWidgets()
 	
 	local mapID = GetCurrentMapAreaID()
 	
-	if (mapID == MAPID_BROKENISLES or mapID ~= WorldQuestTracker.LastMapID) then
+	if (WorldQuestTracker.IsWorldQuestHub (mapID) or (mapID ~= WorldQuestTracker.LastMapID and not WorldQuestTracker.IsArgusZone (mapID))) then
 		return WorldQuestTracker.HideZoneWidgets()
-	elseif (not WorldQuestTracker.IsBrokenIslesZone (mapID)) then
+		
+	elseif (not WorldQuestTracker.ZoneHaveWorldQuest (mapID)) then
 		return WorldQuestTracker.HideZoneWidgets()
+		
+	elseif (WorldQuestTracker.IsASubLevel()) then
+		return WorldQuestTracker.HideZoneWidgets()
+		
 	end
 	
 	WorldQuestTracker.RefreshStatusBar()
 	
-	WorldQuestTracker.lastZoneWidgetsUpdate = GetTime()
+	WorldQuestTracker.lastZoneWidgetsUpdate = GetTime() --why there's two timers?
+	
+	--stop the update if it already updated on this tick
+	if (WorldQuestTracker.LastZoneUpdate and WorldQuestTracker.LastZoneUpdate == GetTime()) then
+		return
+	end
 	
 	--local taskInfo = GetQuestsForPlayerByMapID (mapID, 1007)
 	local taskInfo
-	if (mapID == 1014) then
+	if (mapID == WorldQuestTracker.MAPID_DALARAN) then
 		--taskInfo = GetQuestsForPlayerByMapID (mapID, 1007)
 		taskInfo = GetQuestsForPlayerByMapID (mapID) --fix from @legowxelab2z8 from curse
 	else
@@ -2661,9 +4183,14 @@ function WorldQuestTracker.UpdateZoneWidgets()
 	local total_Gold, total_Resources, total_APower = 0, 0, 0
 	local scale = WorldQuestTracker.db.profile.zonemap_widgets.scale
 	
+	local questFailed = false
+	local showBlizzardWidgets = WorldQuestTracker.Temp_HideZoneWidgets > GetTime()
+	wipe (WorldQuestTracker.CurrentZoneQuests)
+	
 	if (taskInfo and #taskInfo > 0) then
 		for i, info  in ipairs (taskInfo) do
 			local questID = info.questId
+			
 			if (HaveQuestData (questID)) then
 				local isWorldQuest = QuestMapFrame_IsQuestWorldQuest (questID)
 				if (isWorldQuest) then
@@ -2672,8 +4199,10 @@ function WorldQuestTracker.UpdateZoneWidgets()
 					local passFilters = WorldMap_DoesWorldQuestInfoPassFilters (info, true, true) --blizzard filters
 					local timeLeft = WorldQuestTracker.GetQuest_TimeLeft (questID)
 					
-					if (not isSuppressed and passFilters and timeLeft > 3) then
+					if (not isSuppressed and passFilters and timeLeft > 2) then
+						
 						C_TaskQuest.RequestPreloadRewardData (questID)
+						WorldQuestTracker.CurrentZoneQuests [questID] = true
 
 						local tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, allowDisplayPastCritical = GetQuestTagInfo (questID) -- allowDisplayPastCritical 7.2
 						
@@ -2686,7 +4215,10 @@ function WorldQuestTracker.UpdateZoneWidgets()
 							local itemName, itemTexture, itemLevel, quantity, quality, isUsable, itemID, isArtifact, artifactPower, isStackable, stackAmount = WorldQuestTracker.GetQuestReward_Item (questID)
 						------
 						
+						local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = WorldQuestTracker.GetQuest_Info (questID)
+						
 						local filter, order = WorldQuestTracker.GetQuestFilterTypeAndOrder (worldQuestType, gold, rewardName, itemName, isArtifact, stackAmount, numRewardItems, rewardTexture)
+						--print (title, filter, order, itemName, worldQuestType, filter, order, rewardName, rewardTexture, numRewardItems, timeLeft)
 						
 						-- ~legion
 						-- worldQuestType == LE_QUEST_TAG_TYPE_INVASION
@@ -2741,7 +4273,7 @@ function WorldQuestTracker.UpdateZoneWidgets()
 								total_APower = total_APower + artifactPower
 							end
 							
-							if (WorldQuestTracker.Temp_HideZoneWidgets > GetTime()) then
+							if (showBlizzardWidgets) then
 								widget:Hide()
 								for _, button in ipairs (WorldQuestTracker.AllTaskPOIs) do
 									if (button.questID == questID) then
@@ -2750,28 +4282,23 @@ function WorldQuestTracker.UpdateZoneWidgets()
 								end
 							else
 								widget:Show()
-								for _, button in ipairs (WorldQuestTracker.AllTaskPOIs) do
-									if (button.questID == questID) then
-										button:Hide()
-									end
-								end
 							end
 							
 							index = index + 1
 						else
-							--precisa hidar o widget da UI default
-							for i = 1, #WorldQuestTracker.AllTaskPOIs do
-								if (WorldQuestTracker.AllTaskPOIs [i].questID == questID) then
-									--print ("achou o botao")
-									WorldQuestTracker.AllTaskPOIs [i]:Hide()
-								end
-							end
+							--
 						end
 					end
 				end
 			else
+				questFailed = true
 				WorldQuestTracker.ScheduleZoneMapUpdate()
 			end
+		end
+		
+		if (not questFailed) then
+			WorldQuestTracker.HideZoneWidgetsOnNextTick = true
+			WorldQuestTracker.LastZoneUpdate = GetTime()
 		end
 	else
 		WorldQuestTracker.ScheduleZoneMapUpdate (3)
@@ -2902,7 +4429,8 @@ function WorldQuestTracker.SetupWorldQuestButton (self, worldQuestType, rarity, 
 			self.questTypeBlip:Show()
 			self.questTypeBlip:SetTexture ([[Interface\MINIMAP\ObjectIconsAtlas]])
 			--self.questTypeBlip:SetTexCoord (172/512, 201/512, 273/512, 301/512)
-			self.questTypeBlip:SetTexCoord (376/512, 403/512, 239/512, 265/512) -- left right    top botton
+			self.questTypeBlip:SetTexCoord (219/512, 246/512, 478/512, 502/512) -- left right    top botton  --7.2.5
+			self.questTypeBlip:SetTexCoord (387/512, 414/512, 378/512, 403/512) -- left right    top botton  --7.3
 			self.questTypeBlip:SetAlpha (1)
 			
 		elseif (worldQuestType == LE_QUEST_TAG_TYPE_PROFESSION) then
@@ -3059,6 +4587,9 @@ function WorldQuestTracker.SetupWorldQuestButton (self, worldQuestType, rarity, 
 			if (not okay) then
 				WorldQuestTracker.ScheduleZoneMapUpdate()
 			end
+		else
+		--	local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = WorldQuestTracker.GetQuest_Info (questID)
+		--	print ("no time left:", title, timeLeft)
 		end
 		
 	else
@@ -3091,21 +4622,11 @@ hooksecurefunc ("WorldMap_UpdateQuestBonusObjectives", function (self, event)
 	end
 	
 	--depois de ter executa o update, vamos hidar todos os widgets default e criar os nossos
-	if (GetCurrentMapAreaID() ~= MAPID_BROKENISLES) then
+	if (WorldQuestTracker.ZoneHaveWorldQuest (mapID)) then
 		--roda nosso custom update e cria nossos proprios widgets
 		WorldQuestTracker.UpdateZoneWidgets()
 	end
 end)
-
---update tick
---desativa toda a atualiza��o das quests no codigo da interface
---esta causando problemas com protected, mesmo colocando pra ser uma fun��o aleatoria
---_G ["WorldMap_UpdateQuestBonusObjectives"] = math.random
-function oie ()
-	if (WorldQuestTracker.lastZoneWidgetsUpdate + 20 < GetTime()) then
-		WorldQuestTracker.UpdateZoneWidgets()
-	end
-end
 
 --WorldQuestTracker.db.profile.AlertTutorialStep = nil
 -- ~tutorial
@@ -4238,7 +5759,7 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 				GameCooltip:ExecFunc (sortButton)
 				
 				--atualiza as quests
-				if (GetCurrentMapAreaID() == MAPID_BROKENISLES) then
+				if (WorldQuestTracker.IsWorldQuestHub (GetCurrentMapAreaID())) then
 					WorldQuestTracker.UpdateWorldQuestsOnWorldMap (true)
 				end
 			end
@@ -4849,6 +6370,132 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 				end
 				GameCooltip:AddMenu (2, options_on_click, "zone_only_tracked", not WorldQuestTracker.db.profile.zone_only_tracked)
 				
+				do
+					--group finder config
+					GameCooltip:AddLine (L["S_GROUPFINDER_TITLE"])
+					GameCooltip:AddIcon ([[Interface\LFGFRAME\BattlenetWorking1]], 1, 1, IconSize, IconSize, .22, .78, .22, .78)
+					
+					--enabled
+					GameCooltip:AddLine (L["S_GROUPFINDER_ENABLED"], "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.enabled) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetEnabledFunc, not WorldQuestTracker.db.profile.groupfinder.enabled)
+					
+					--uses buttons on the quest tracker
+					GameCooltip:AddLine (L["S_GROUPFINDER_OT_ENABLED"], "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.tracker_buttons) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetOTButtonsFunc, not WorldQuestTracker.db.profile.groupfinder.tracker_buttons)					
+					
+					--
+					--GameCooltip:AddLine ("$div", nil, 1, nil, -5, -11)
+					--
+					GameCooltip:AddLine ("$div", nil, 2, nil, -7, -14)
+					--GameCooltip:AddLine ("Leave Group")
+					--GameCooltip:AddIcon ([[Interface\AddOns\WorldQuestTracker\media\ArrowGridT]], 1, 1, IconSize, IconSize, 944/1024, 993/1024, 272/1024, 324/1024)
+					
+					--leave group
+					GameCooltip:AddLine (L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"], "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.autoleave) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetAutoGroupLeaveFunc, not WorldQuestTracker.db.profile.groupfinder.autoleave, "autoleave")
+					
+					GameCooltip:AddLine (L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"], "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.autoleave_delayed) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetAutoGroupLeaveFunc, not WorldQuestTracker.db.profile.groupfinder.autoleave_delayed, "autoleave_delayed")
+					
+					GameCooltip:AddLine (L["S_GROUPFINDER_LEAVEOPTIONS_ASKX"], "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.askleave_delayed) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetAutoGroupLeaveFunc, not WorldQuestTracker.db.profile.groupfinder.askleave_delayed, "askleave_delayed")
+					
+					GameCooltip:AddLine (L["S_GROUPFINDER_LEAVEOPTIONS_DONTLEAVE"], "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.noleave) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetAutoGroupLeaveFunc, not WorldQuestTracker.db.profile.groupfinder.noleave, "noleave")					
+					
+					--
+					GameCooltip:AddLine ("$div", nil, 2, nil, -5, -11)
+					--ask to leave with timeout
+					GameCooltip:AddLine ("10 " .. L["S_GROUPFINDER_SECONDS"], "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.leavetimer == 10) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetGroupLeaveTimeoutFunc, 10)
+					
+					GameCooltip:AddLine ("15 " .. L["S_GROUPFINDER_SECONDS"], "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.leavetimer == 15) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetGroupLeaveTimeoutFunc, 15)
+					
+					GameCooltip:AddLine ("20 " .. L["S_GROUPFINDER_SECONDS"], "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.leavetimer == 20) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetGroupLeaveTimeoutFunc, 20)
+					
+					GameCooltip:AddLine ("30 " .. L["S_GROUPFINDER_SECONDS"], "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.leavetimer == 30) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetGroupLeaveTimeoutFunc, 30)
+					
+					GameCooltip:AddLine ("60 " .. L["S_GROUPFINDER_SECONDS"], "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.leavetimer == 60) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetGroupLeaveTimeoutFunc, 60)
+					
+					GameCooltip:AddLine ("$div", nil, 2, nil, -5, -11)
+					
+					--no pvp realms
+					GameCooltip:AddLine ("Avoid PVP Servers", "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.nopvp) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetAvoidPVPFunc, not WorldQuestTracker.db.profile.groupfinder.nopvp)					
+					
+					--kick afk players
+					GameCooltip:AddLine ("Kick AFKs", "", 2)
+					if (WorldQuestTracker.db.profile.groupfinder.noafk) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetNoAFKFunc, not WorldQuestTracker.db.profile.groupfinder.noafk)					
+				end
 				
 				
 				GameCooltip:AddLine ("$div")
@@ -5402,7 +7049,7 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 			WorldQuestTracker.CanChangeMap = true
 			WorldQuestTracker.UpdateWorldQuestsOnWorldMap (false, true)
 			
-		elseif (WorldMapFrame.mapID == MAPID_BROKENISLES) then
+		elseif (WorldQuestTracker.IsWorldQuestHub (WorldMapFrame.mapID)) then
 			WorldQuestTracker.UpdateWorldQuestsOnWorldMap (false, true)
 			
 		else
@@ -5992,7 +7639,7 @@ function WorldQuestTracker.SetupZoneSummaryButton (summaryWidget, zoneWidget)
 end
 
 function WorldQuestTracker.CanShowZoneSummaryFrame()
-	return WorldQuestTracker.db.profile.use_quest_summary and is_broken_isles_map [GetCurrentMapAreaID()] and not WorldMapFrame_InWindowedMode()
+	return WorldQuestTracker.db.profile.use_quest_summary and WorldQuestTracker.ZoneHaveWorldQuest() and not WorldMapFrame_InWindowedMode()
 end
 
 function WorldQuestTracker.UpdateZoneSummaryFrame()
@@ -6394,10 +8041,10 @@ local TrackerFrameOnClick = function (self, button)
 		WorldQuestTracker.RemoveQuestFromTracker (self.questID)
 		---se o worldmap estiver aberto, dar refresh
 		if (WorldMapFrame:IsShown()) then
-			if (GetCurrentMapAreaID() == MAPID_BROKENISLES) then
+			if (WorldQuestTracker.IsCurrentMapQuestHub()) then
 				--refresh no world map
 				WorldQuestTracker.UpdateWorldQuestsOnWorldMap (true)
-			elseif (is_broken_isles_map [GetCurrentMapAreaID()]) then
+			elseif (WorldQuestTracker.ZoneHaveWorldQuest()) then
 				--refresh nos widgets
 				WorldQuestTracker.UpdateZoneWidgets()
 				WorldQuestTracker.WorldWidgets_NeedFullRefresh = true
@@ -6406,11 +8053,20 @@ local TrackerFrameOnClick = function (self, button)
 			WorldQuestTracker.WorldWidgets_NeedFullRefresh = true
 		end
 	else
-		--WQGF integration
-		if (WorldQuestGroupFinderAddon and button == "MiddleButton") then
-			WorldQuestGroupFinder.HandleBlockClick (self.questID)
-			return
+		if (button == "MiddleButton") then
+			--was middle button and our group finder is enabled
+			if (WorldQuestTracker.db.profile.groupfinder.enabled) then
+				WorldQuestTracker.FindGroupForQuest (self.questID)
+				return
+			end
+			
+			--middle click without our group finder enabled, check for other addons
+			if (WorldQuestGroupFinderAddon) then
+				WorldQuestGroupFinder.HandleBlockClick (self.questID)
+				return
+			end
 		end
+	
 		WorldQuestTracker.CanLinkToChat (self, button)
 	end
 end
@@ -6573,6 +8229,20 @@ local TrackerIconButtonOnLeave = function (self)
 	
 end
 local TrackerIconButtonOnClick = function (self, button)
+	if (button == "MiddleButton") then
+		--was middle button and our group finder is enabled
+		if (WorldQuestTracker.db.profile.groupfinder.enabled) then
+			WorldQuestTracker.FindGroupForQuest (self.questID)
+			return
+		end
+		
+		--middle click without our group finder enabled, check for other addons
+		if (WorldQuestGroupFinderAddon) then
+			WorldQuestGroupFinder.HandleBlockClick (self.questID)
+			return
+		end
+	end
+
 	if (self.questID == GetSuperTrackedQuestID()) then
 		WorldQuestTracker.SuperTracked = nil
 		QuestSuperTracking_ChooseClosestQuest()
@@ -6727,6 +8397,7 @@ function WorldQuestTracker.GetOrCreateTrackerWidget (index)
 	IconButton:SetScript ("OnClick", TrackerIconButtonOnClick)
 	IconButton:SetScript ("OnMouseDown", TrackerIconButtonOnMouseDown)
 	IconButton:SetScript ("OnMouseUp", TrackerIconButtonOnMouseUp)
+	IconButton:RegisterForClicks ("LeftButtonDown", "MiddleButtonDown")
 	IconButton.Icon = f.Icon
 	f.IconButton = IconButton
 --
@@ -6990,6 +8661,12 @@ end
 
 --atualiza os widgets e reajusta a ancora
 function WorldQuestTracker.RefreshTrackerWidgets()
+
+	if (WorldQuestTracker.LastTrackerRefresh and WorldQuestTracker.LastTrackerRefresh+0.2 > GetTime()) then
+		return
+	end
+	WorldQuestTracker.LastTrackerRefresh = GetTime()
+
 	--reordena as quests
 	WorldQuestTracker.ReorderQuestsOnTracker()
 	--atualiza as quest no tracker
@@ -7339,6 +9016,22 @@ local On_ObjectiveTracker_Update = function()
 		local module = tracker.MODULES [i]
 		if (module.Header:IsShown()) then
 			y = y + module.contentsHeight
+			
+			if (WorldQuestTracker.db.profile.groupfinder.tracker_buttons) then
+				for questID, block in pairs (module.usedBlocks) do
+					ff.HandleBTrackerBlock (questID, block)
+				end
+			end
+			
+			--> is a module for world quests?
+			--if (module.DefaultHeaderText == TRACKER_HEADER_WORLD_QUESTS) then
+				--> which blocks are active showing a world quest
+			--		if (type (questID) == "number" and HaveQuestData (questID) and QuestMapFrame_IsQuestWorldQuest (questID)) then
+			
+			--		end
+			--	end
+			--end
+
 		end
 	end
 	
@@ -7750,102 +9443,82 @@ local factionAmountForEachMap = {}
 --tabela de configura��o
 WorldQuestTracker.mapTables = {
 	[azsuna_mapId] = {
-		worldMapLocation = {x = 10, y = -345, lineWidth = 233},
-		worldMapLocationMax = {x = 168, y = -468, lineWidth = 330},
-		bipAnchor = {side = "right", x = 0, y = -1},
-		factionAnchor = {mySide = "left", anchorSide = "right", x = 0, y = 0},
-		squarePoints = {mySide = "topleft", anchorSide = "bottomleft", y = -1, xDirection = 1},
-		widgets = azsuna_widgets,
-		
+		widgets = {},
 		Anchor_X = 0.01,
 		Anchor_Y = 0.52,
 		GrowRight = true,
+		show_on_map = WorldQuestTracker.MAPID_BROKENISLES,
 	},
 	[valsharah_mapId] = {
-		worldMapLocation = {x = 10, y = -218, lineWidth = 240},
-		worldMapLocationMax = {x = 168, y = -284, lineWidth = 340},
-		bipAnchor = {side = "right", x = 0, y = -1},
-		factionAnchor = {mySide = "left", anchorSide = "right", x = 0, y = 0},
-		squarePoints = {mySide = "topleft", anchorSide = "bottomleft", y = -1, xDirection = 1},
-		widgets = valsharah_widgets,
-		
+		widgets = {},
 		Anchor_X = 0.01,
 		Anchor_Y = 0.37,
 		GrowRight = true,
+		show_on_map = WorldQuestTracker.MAPID_BROKENISLES,
 	},
 	[highmountain_mapId] = {
-		worldMapLocation = {x = 10, y = -179, lineWidth = 320},
-		worldMapLocationMax = {x = 168, y = -230, lineWidth = 452},
-		bipAnchor = {side = "right", x = 0, y = -1},
-		factionAnchor = {mySide = "left", anchorSide = "right", x = 0, y = 0},
-		squarePoints = {mySide = "topleft", anchorSide = "bottomleft", y = -1, xDirection = 1},
-		widgets = highmountain_widgets,
-
+		widgets = {},
 		Anchor_X = 0.01,
 		Anchor_Y = 0.20,
 		GrowRight = true,
+		show_on_map = WorldQuestTracker.MAPID_BROKENISLES,
 	},
 	[stormheim_mapId] = {
-		worldMapLocation = {x = 415, y = -235, lineWidth = 277},
-		worldMapLocationMax = {x = 747, y = -313, lineWidth = 393},
-		bipAnchor = {side = "left", x = 0, y = -1},
-		factionAnchor = {mySide = "right", anchorSide = "left", x = -0, y = 0},
-		squarePoints = {mySide = "topright", anchorSide = "bottomright", y = -1, xDirection = -1},
-		widgets = stormheim_widgets,
-		
+		widgets = {},
 		Anchor_X = 0.99,
-		Anchor_Y = 0.20,
+		Anchor_Y = 0.37,
+		show_on_map = WorldQuestTracker.MAPID_BROKENISLES,
 	},
 	[suramar_mapId] = {
-		worldMapLocation = {x = 327, y = -277, lineWidth = 365},
-		worldMapLocationMax = {x = 618, y = -367, lineWidth = 522},
-		bipAnchor = {side = "left", x = 0, y = -1},
-		factionAnchor = {mySide = "right", anchorSide = "left", x = -0, y = 0},
-		squarePoints = {mySide = "topright", anchorSide = "bottomright", y = -1, xDirection = -1},
-		widgets = suramar_widgets,
-		
+		widgets = {},
 		Anchor_X = 0.99,
-		Anchor_Y = 0.438,
+		Anchor_Y = 0.52,
+		show_on_map = WorldQuestTracker.MAPID_BROKENISLES,
 	},
+	[1021] = { --broken shore
+		widgets = {},
+		Anchor_X = 0.99,
+		Anchor_Y = 0.67,
+		show_on_map = WorldQuestTracker.MAPID_BROKENISLES,
+	},	
 	[eoa_mapId] = {
-		worldMapLocation = {x = 325, y = -460, lineWidth = 50},
-		worldMapLocationMax = {x = 614, y = -633, lineWidth = 50},
-		bipAnchor = {side = "left", x = 0, y = -1},
-		factionAnchor = {mySide = "right", anchorSide = "left", x = -0, y = 0},
-		squarePoints = {mySide = "topright", anchorSide = "bottomright", y = -1, xDirection = -1},
-		widgets = eoa_widgets,
-		
+		widgets = {},
 		Anchor_X = 0.5,
 		Anchor_Y = 0.8,
 		GrowRight = true,
+		show_on_map = WorldQuestTracker.MAPID_BROKENISLES,
 	},
 	[WorldQuestTracker.MAPID_DALARAN] = {
-		worldMapLocation = {x = 325, y = -460, lineWidth = 50},
-		worldMapLocationMax = {x = 614, y = -633, lineWidth = 50},
-		bipAnchor = {side = "left", x = 0, y = -1},
-		factionAnchor = {mySide = "right", anchorSide = "left", x = -0, y = 0},
-		squarePoints = {mySide = "topright", anchorSide = "bottomright", y = -1, xDirection = -1},
-		widgets = eoa_widgets,
-		
+		widgets = {},
 		Anchor_X = 0.47,
 		Anchor_Y = 0.62,
 		GrowRight = true,
+		show_on_map = WorldQuestTracker.MAPID_BROKENISLES,
 	},
 	
-	[1021] = { --broken shore
-		worldMapLocation = {x = 425, y = -480, lineWidth = 50},
-		worldMapLocationMax = {x = 614, y = -633, lineWidth = 50},
-		bipAnchor = {side = "left", x = 0, y = -1},
-		factionAnchor = {mySide = "right", anchorSide = "left", x = -0, y = 0},
-		squarePoints = {mySide = "topright", anchorSide = "bottomright", y = -1, xDirection = -1},
-		widgets = eoa_widgets,
-		
-		Anchor_X = 0.62,
-		Anchor_Y = 0.67,
+	[1170] = { --mccree
+		widgets = {},
+		Anchor_X = 0.01,
+		Anchor_Y = 0.20,
+		show_on_map = WorldQuestTracker.MAPID_ARGUS,
+		GrowRight = true,
+	},	
+	[1171] = { --antoran
+		widgets = {},
+		Anchor_X = 0.01,
+		Anchor_Y = 0.37,
+		show_on_map = WorldQuestTracker.MAPID_ARGUS,
+		GrowRight = true,
+	},	
+	[1135] = { --krokuun
+		widgets = {},
+		Anchor_X = 0.01,
+		Anchor_Y = 0.52,
+		show_on_map = WorldQuestTracker.MAPID_ARGUS,
 		GrowRight = true,
 	},
 }
- 
+
 --esconde todos os widgets do world map
 function WorldQuestTracker.HideWorldQuestsOnWorldMap()
 	for _, widget in ipairs (all_widgets) do --quadrados das quests
@@ -7887,76 +9560,6 @@ function WorldQuestTracker.SetTextSize (MapType, Size)
 	end
 	
 end
-
-
---cria as linhas que servem de apoio para as quests no world map
-local create_worldmap_line = function (lineWidth, mapId)
-	local line = worldFramePOIs:CreateTexture (nil, "artwork", 2)
-	line:SetSize (lineWidth, 2)
-	line:SetHorizTile (true)
-	line:SetAlpha (0.5)
-	line:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\line_tiletextureT]], true)
-	local blip = worldFramePOIs:CreateTexture (nil, "overlay", 3)
-	blip:SetTexture ([[Interface\Scenarios\ScenarioIcon-Combat]], true)
-	
-	local factionFrame = CreateFrame ("frame", "WorldQuestTrackerFactionFrame" .. mapId, worldFramePOIs)
-	tinsert (faction_frames, factionFrame)
-	factionFrame:SetSize (20, 20)
-	
-	local factionIcon = factionFrame:CreateTexture (nil, "background")
-	factionIcon:SetSize (18, 18)
-	factionIcon:SetPoint ("center", factionFrame, "center")
-	factionIcon:SetDrawLayer ("background", -2)
-	
-	local factionHighlight = factionFrame:CreateTexture (nil, "background")
-	factionHighlight:SetSize (36, 36)
-	factionHighlight:SetTexture ([[Interface\QUESTFRAME\WorldQuest]])
-	factionHighlight:SetTexCoord (0.546875, 0.62109375, 0.6875, 0.984375)
-	factionHighlight:SetDrawLayer ("background", -3)
-	factionHighlight:SetPoint ("center", factionFrame, "center")
-
-	local factionIconBorder = factionFrame:CreateTexture (nil, "artwork", 0)
-	factionIconBorder:SetSize (20, 20)
-	factionIconBorder:SetPoint ("center", factionFrame, "center")
-	factionIconBorder:SetTexture ([[Interface\COMMON\GoldRing]])
-	
-	local factionQuestAmount = factionFrame:CreateFontString (nil, "overlay", "GameFontNormal")
-	factionQuestAmount:SetPoint ("center", factionFrame, "center")
-	factionQuestAmount:SetText ("")
-	
-	local factionQuestAmountBackground = factionFrame:CreateTexture (nil, "background")
-	factionQuestAmountBackground:SetPoint ("center", factionFrame, "center")
-	factionQuestAmountBackground:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\background_blackgradientT]])
-	--factionQuestAmountBackground:SetTexCoord (12/512, 74/512, 251/512, 281/512)
-	factionQuestAmountBackground:SetSize (20, 10)
-	factionQuestAmountBackground:SetAlpha (.7)
-	factionQuestAmountBackground:SetDrawLayer ("background", 3)
-	
-	factionFrame.icon = factionIcon
-	factionFrame.text = factionQuestAmount
-	factionFrame.background = factionQuestAmountBackground
-	factionFrame.border = factionIconBorder
-	factionFrame.highlight = factionHighlight
-	
-	tinsert (extra_widgets, line)
-	tinsert (extra_widgets, blip)
-	tinsert (extra_widgets, factionIcon)
-	tinsert (extra_widgets, factionIconBorder)
-	tinsert (extra_widgets, factionQuestAmount)
-	tinsert (extra_widgets, factionQuestAmountBackground)
-	tinsert (extra_widgets, factionHighlight)
-	
-	WorldQuestTracker.WorldMapSupportWidgets [mapId] = {line, blip, factionIcon, factionIconBorder, factionQuestAmount, factionQuestAmountBackground, factionHighlight}
-	
-	return line, blip, factionFrame
-end
-
---hooksecurefunc ("LFGListUtil_FindQuestGroup", function (a, b) 
---	print ("--> ", a, b)
---end)
---hooksecurefunc ("LFGListFrame_BeginFindQuestGroup", function (a, b) 
---	print ("result> ", a, b)
---end)
 
 --cria uma square widget no world map ~world ~createworld ~createworldwidget
 local create_worldmap_square = function (mapName, index)
@@ -8258,25 +9861,33 @@ WorldQuestTracker.QUEST_POI_FRAME_HEIGHT = 1
 WorldQuestTracker.NextWorldMapWidget = 1
 WorldQuestTracker.WorldMapSquares = {}
 
-function WorldQuestTracker.UpdateAllWorldMapAnchors()
+--> anchor for world quests hub, this is only shown on world maps
+function WorldQuestTracker.UpdateAllWorldMapAnchors (worldMapID)
 	for mapId, configTable in pairs (WorldQuestTracker.mapTables) do
-		local x, y = configTable.Anchor_X, configTable.Anchor_Y
-		WorldQuestTracker.UpdateWorldMapAnchors (x, y, configTable.MapAnchor)
-		
-		local mapName = GetMapNameByID (mapId)
-		configTable.MapAnchor.Title:SetText (mapName)
-		
-		configTable.MapAnchor.Title:ClearAllPoints()
-		configTable.MapAnchor.Title:Show()
-		if (configTable.GrowRight) then
-			configTable.MapAnchor.Title:SetPoint ("bottomleft", configTable.MapAnchor, "topleft", 0, 0)
-			configTable.MapAnchor.Title:SetJustifyH ("left")
+	
+		if (configTable.show_on_map == worldMapID) then
+			local x, y = configTable.Anchor_X, configTable.Anchor_Y
+			WorldQuestTracker.UpdateWorldMapAnchors (x, y, configTable.MapAnchor)
+			
+			local mapName = GetMapNameByID (mapId)
+			configTable.MapAnchor.Title:SetText (mapName)
+			
+			configTable.MapAnchor.Title:ClearAllPoints()
+			configTable.MapAnchor.Title:Show()
+			if (configTable.GrowRight) then
+				configTable.MapAnchor.Title:SetPoint ("bottomleft", configTable.MapAnchor, "topleft", 0, 0)
+				configTable.MapAnchor.Title:SetJustifyH ("left")
+			else
+				configTable.MapAnchor.Title:SetPoint ("bottomright", configTable.MapAnchor, "topright", 0, 0)
+				configTable.MapAnchor.Title:SetJustifyH ("right")
+			end
+			
+			configTable.MapAnchor:Show()
+			configTable.factionFrame:Show()
 		else
-			configTable.MapAnchor.Title:SetPoint ("bottomright", configTable.MapAnchor, "topright", 0, 0)
-			configTable.MapAnchor.Title:SetJustifyH ("right")
+			configTable.MapAnchor:Hide()
+			configTable.factionFrame:Hide()
 		end
-		
-		configTable.factionFrame:Show()
 	end
 end
 
@@ -8311,7 +9922,7 @@ function WorldQuestTracker.GetWorldMapWidget (configTable, showTimeLeftText)
 		end
 	else
 		if (configTable.LastWidget) then
-			if (configTable.WidgetNumber == 11) then
+			if (configTable.WidgetNumber == 21) then --21 disabling this feature due to argus be in the map
 				if (showTimeLeftText) then
 					widget:SetPoint ("topright", configTable.MapAnchor, "topleft", 0, -50)
 				else
@@ -8324,6 +9935,8 @@ function WorldQuestTracker.GetWorldMapWidget (configTable, showTimeLeftText)
 			widget:SetPoint ("topright", configTable.MapAnchor, "topleft", 0, 0)
 		end
 	end
+	
+	widget:SetAlpha (.75)
 	
 	configTable.LastWidget = widget
 	configTable.WidgetNumber = configTable.WidgetNumber + 1
@@ -8389,7 +10002,7 @@ create_world_widgets()
 
 --agenda uma atualiza��o nos widgets do world map caso os dados das quests estejam indispon�veis
 local do_worldmap_update = function()
-	if (GetCurrentMapAreaID() == MAPID_BROKENISLES) then
+	if (WorldQuestTracker.IsWorldQuestHub (GetCurrentMapAreaID())) then
 		WorldQuestTracker.UpdateWorldQuestsOnWorldMap (true) --no cache true
 	else
 		if (WorldQuestTracker.ScheduledWorldUpdate and not WorldQuestTracker.ScheduledWorldUpdate._cancelled) then
@@ -8437,17 +10050,20 @@ function WorldQuestTracker.GetQuestFilterTypeAndOrder (worldQuestType, gold, rew
 	-- = to string since legionfall resource icons is number
 	--if (rewardName and (type (rewardTexture) == "string" and rewardTexture:find ("inv_orderhall_orderresources"))) then
 	--1397630 = order hall resource icon - since 7.2.5 is a number
-	if (rewardName and ((type(rewardTexture) == "string" and rewardTexture:find("inv_orderhall_orderresources")) or (type(rewardTexture) == "number" and rewardTexture == 1397630))) then --thanks @TOM_RUS on curseforge
-		--if (numRewardItems and numRewardItems > 1) then
-			--can be an invasion quest
-		--	if (rewardTexture and rewardTexture:find ("inv_misc_summonable_boss_token")) then
-				--> is an invasion quest, need to see which are the real reward
-				
-		--	end
-			--
-		--end
-		order = WorldQuestTracker.db.profile.sort_order [WQT_QUESTTYPE_RESOURCE]
-		filter = FILTER_TYPE_GARRISON_RESOURCE
+	
+	-- and ((type(rewardTexture) == "string" and rewardTexture:find("inv_orderhall_orderresources")) or (type(rewardTexture) == "number" and rewardTexture == 1397630))
+	
+	if (rewardName) then
+		if (rewardTexture == 1397630) then --order hall resources (legion)
+			order = WorldQuestTracker.db.profile.sort_order [WQT_QUESTTYPE_RESOURCE]
+			filter = FILTER_TYPE_GARRISON_RESOURCE
+		elseif (rewardTexture == 1064188) then --veiled argunite (legion)
+			order = WorldQuestTracker.db.profile.sort_order [WQT_QUESTTYPE_TRADE]
+			filter = FILTER_TYPE_TRADESKILL
+		elseif (rewardTexture == 399041) then --argus waystone (legion)
+			order = WorldQuestTracker.db.profile.sort_order [WQT_QUESTTYPE_TRADE]
+			filter = FILTER_TYPE_TRADESKILL
+		end
 	end	
 	
 	if (isArtifact) then
@@ -8486,6 +10102,8 @@ end
 
 function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQuestFlaggedRecheck, forceCriteriaAnimation)
 
+	--print (debugstack())
+
 	if (UnitLevel ("player") < 110) then
 		WorldQuestTracker.HideWorldQuestsOnWorldMap()
 		return
@@ -8501,7 +10119,7 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 		WorldQuestTracker.HideWorldQuestsOnWorldMap()
 		return
 	end
-	
+
 	WorldQuestTracker.RefreshStatusBar()
 	
 	WorldQuestTracker.ClearZoneSummaryButtons()
@@ -8531,19 +10149,17 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 
 	local sortByTimeLeft = WorldQuestTracker.db.profile.force_sort_by_timeleft
 	local worldMapID = GetCurrentMapAreaID()
-	
+
 	for mapId, configTable in pairs (WorldQuestTracker.mapTables) do
 	
-		--PTR
 		questsAvailable [mapId] = {}
 
-		--local taskInfo = GetQuestsForPlayerByMapID (mapId, 1007)
-		local taskInfo = GetQuestsForPlayerByMapID (mapId, worldMapID)
+		local taskInfo = GetQuestsForPlayerByMapID (mapId, mapId) --, WorldQuestTracker.MAPID_ARGUS
 		
 		local shownQuests = 0
---		/dump #GetQuestsForPlayerByMapID (1015)
 
-		if (taskInfo and #taskInfo > 0) then
+		if (taskInfo and #taskInfo > 0 and configTable.show_on_map == worldMapID) then
+		
 			for i, info in ipairs (taskInfo) do
 			
 				local questID = info.questId
@@ -8603,6 +10219,9 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 								--	print ("DENIED:", i, title, filter)
 								--end
 							end
+						else
+						--	local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = WorldQuestTracker.GetQuest_Info (questID)
+						--	print ("no time left:", title, timeLeft)
 						end
 					end
 				else
@@ -8684,23 +10303,21 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 	
 	for mapId, configTable in pairs (WorldQuestTracker.mapTables) do
 		--local taskInfo = GetQuestsForPlayerByMapID (mapId, 1007)
-		local taskInfo = GetQuestsForPlayerByMapID (mapId, worldMapID)
+		local taskInfo = GetQuestsForPlayerByMapID (mapId, mapId)
 		local taskIconIndex = 1
 		local widgets = configTable.widgets
 		
 		if (taskInfo and #taskInfo > 0) then
 			availableQuests = availableQuests + #taskInfo
-			
-			--for i, info  in ipairs (taskInfo) do
+
 			for i, quest in ipairs (questsAvailable [mapId]) do
-			--print (i, quest)
-				--local questID = info.questId
 				
 				local questID = quest [1]
 				local numObjectives = quest [3]
-
+				
 				if (HaveQuestData (questID)) then
 					local isWorldQuest = QuestMapFrame_IsQuestWorldQuest (questID)
+					
 					if (isWorldQuest) then
 					
 						C_TaskQuest.RequestPreloadRewardData (questID)
@@ -8892,7 +10509,8 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 										widget.questTypeBlip:Show()
 										widget.questTypeBlip:SetTexture ([[Interface\MINIMAP\ObjectIconsAtlas]])
 										--widget.questTypeBlip:SetTexCoord (172/512, 201/512, 273/512, 301/512)
-										widget.questTypeBlip:SetTexCoord (376/512, 403/512, 239/512, 265/512) -- left right    top botton
+										widget.questTypeBlip:SetTexCoord (219/512, 246/512, 478/512, 502/512) -- left right    top botton --7.2.5
+										widget.questTypeBlip:SetTexCoord (387/512, 414/512, 378/512, 403/512) -- left right    top botton --7.3
 										widget.questTypeBlip:SetAlpha (.85)
 										
 									elseif (worldQuestType == LE_QUEST_TAG_TYPE_DUNGEON) then
@@ -9086,8 +10704,8 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 		WorldQuestTracker.ScheduleWorldMapUpdate()
 	end
 	
-	--> update na ancora caso foi de window mode para fullscreen
-	WorldQuestTracker.UpdateAllWorldMapAnchors()
+	--> need update the anchors for windowed and fullscreen modes, plus need to show and hide for different worlds
+	WorldQuestTracker.UpdateAllWorldMapAnchors (worldMapID)
 
 	WorldQuestTracker.HideZoneWidgets()
 	WorldQuestTracker.SavedQuestList_CleanUp()
@@ -9099,7 +10717,7 @@ end
 if (WorldMapFrameSizeDownButton) then
 	WorldMapFrameSizeDownButton:HookScript ("OnClick", function() --window mode
 		if (WorldQuestTracker.UpdateWorldQuestsOnWorldMap) then
-			if (GetCurrentMapAreaID() == MAPID_BROKENISLES) then
+			if (WorldQuestTracker.IsCurrentMapQuestHub()) then
 				WorldQuestTracker.UpdateWorldQuestsOnWorldMap (false, true)
 				WorldQuestTracker.RefreshStatusBar()
 				C_Timer.After (1, WorldQuestTracker.RefreshStatusBar)
@@ -9110,7 +10728,7 @@ if (WorldMapFrameSizeDownButton) then
 elseif (MinimizeButton) then
 	MinimizeButton:HookScript ("OnClick", function() --window mode
 		if (WorldQuestTracker.UpdateWorldQuestsOnWorldMap) then
-			if (GetCurrentMapAreaID() == MAPID_BROKENISLES) then
+			if (WorldQuestTracker.IsCurrentMapQuestHub()) then
 				WorldQuestTracker.UpdateWorldQuestsOnWorldMap (false, true)
 				WorldQuestTracker.RefreshStatusBar()
 				C_Timer.After (1, WorldQuestTracker.RefreshStatusBar)
@@ -9122,7 +10740,7 @@ end
 if (WorldMapFrameSizeUpButton) then
 	WorldMapFrameSizeUpButton:HookScript ("OnClick", function() --full screen
 		if (WorldQuestTracker.UpdateWorldQuestsOnWorldMap) then
-			if (GetCurrentMapAreaID() == MAPID_BROKENISLES) then
+			if (WorldQuestTracker.IsCurrentMapQuestHub()) then
 				WorldQuestTracker.UpdateWorldQuestsOnWorldMap (false, true)
 				C_Timer.After (1, WorldQuestTracker.RefreshStatusBar)
 			end
@@ -9132,7 +10750,7 @@ if (WorldMapFrameSizeUpButton) then
 elseif (MaximizeButton) then
 	MaximizeButton:HookScript ("OnClick", function() --full screen
 		if (WorldQuestTracker.UpdateWorldQuestsOnWorldMap) then
-			if (GetCurrentMapAreaID() == MAPID_BROKENISLES) then
+			if (WorldQuestTracker.IsCurrentMapQuestHub()) then
 				WorldQuestTracker.UpdateWorldQuestsOnWorldMap (false, true)
 				C_Timer.After (1, WorldQuestTracker.RefreshStatusBar)
 			end
@@ -9293,7 +10911,7 @@ end
 
 --quando selecionar uma fac��o, atualizar todas as quests no world map para que seja atualiza a quiantidade de quests que ha em cada mapa para esta fac�ao
 hooksecurefunc (WorldMapFrame.UIElementsFrame.BountyBoard, "SetSelectedBountyIndex", function (self)
-	if (WorldMapFrame.mapID == MAPID_BROKENISLES) then
+	if (WorldQuestTracker.IsWorldQuestHub (WorldMapFrame.mapID)) then
 		WorldQuestTracker.UpdateWorldQuestsOnWorldMap (false, false, false, true)
 	end
 end)

@@ -256,3 +256,4 @@ L["You can use the preset defaults as a starting point for setting up your inter
 L["You have to exit the vehicle in order to be able to change the Vehicle UI settings."] = "탈것 UI 설정을 변경하려면 탈것에서 내려야 합니다."
 L["Zone Ability Bar"] = "지역 특수능력 바"
 L["Zoom"] = "확대"
+

@@ -42,3 +42,4 @@ L["These settings control the look and feel of the HandyNotes icons."] = "Ces pa
 L["Title"] = "Titre"
 L["World Map Icon Alpha"] = "Transparence des icônes de la carte du monde"
 L["World Map Icon Scale"] = "Échelle des icônes de la carte du monde"
+

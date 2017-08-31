@@ -20,12 +20,10 @@ local unittip = CreateFrame("GameTooltip", "LibItemLevelTooltip2", UIParent, "Ga
 --物品是否已經本地化
 function lib:HasLocalCached(item)
     if (not item or item == "" or item == "0") then return true end
-    local gem1, gem2, gem3
-    local id = tonumber(item)
-    if (id) then
-        return select(10, GetItemInfo(id))
+    if (tonumber(item)) then
+        return select(10, GetItemInfo(tonumber(item)))
     else
-        id, gem1, gem2, gem3 = string.match(item, "item:(%d+):[^:]*:(%d-):(%d-):(%d-):")
+        local id, gem1, gem2, gem3 = string.match(item, "item:(%d+):[^:]*:(%d-):(%d-):(%d-):")
         return self:HasLocalCached(id) and self:HasLocalCached(gem1) and self:HasLocalCached(gem2) and self:HasLocalCached(gem3)
     end
 end

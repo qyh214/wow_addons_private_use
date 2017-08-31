@@ -12,10 +12,12 @@ local tonumber = tonumber
 local GetSpellInfo = GetSpellInfo
 local GameTooltip = GameTooltip
 
+local addon = CompactRaid
+
 local MAX_SPELL_ID = 250000 -- for legion
 
-local L = CompactRaid:GetLocale("RaidDebuff")
-local module = CompactRaid:GetModule("RaidDebuff")
+local L = addon:GetLocale("RaidDebuff")
+local module = addon:GetModule("RaidDebuff")
 if not module then return end
 
 local page = module.optionPage

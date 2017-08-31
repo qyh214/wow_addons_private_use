@@ -137,8 +137,280 @@ L["You can open the menu clicking on the icon in top right corner"] = true
 L["You have ignored followers"] = true
 L["You never performed this mission"] = true
 L["You performed this mission %d times with a win ratio of"] = true
+
 	L=l:NewLocale(me,"ptBR")
 	if (L) then
+--Translation missing 
+-- L["%s |4follower:followers; with %s"] = ""
+--Translation missing 
+-- L["(Ignores low bias ones)"] = ""
+--Translation missing 
+-- L["Add %1$d levels to %2$s"] = ""
+--Translation missing 
+-- L["Adds a list of other useful followers to tooltip"] = ""
+--Translation missing 
+-- L["Affects only little screen mode, hiding the per follower mission list if not checked"] = ""
+--Translation missing 
+-- L["Allowed Rewards"] = ""
+--Translation missing 
+-- L["Allows a lower success percentage for resource missions. Use /gac gui to change percentage. Default is 80%"] = ""
+--Translation missing 
+-- L["Applied when 'maximize result' is enabled. Default is 80%"] = ""
+--Translation missing 
+-- L["Applies the best armor set"] = ""
+--Translation missing 
+-- L["Applies the best armor upgrade"] = ""
+--Translation missing 
+-- L["Applies the best weapon set"] = ""
+--Translation missing 
+-- L["Applies the best weapon upgrade"] = ""
+--Translation missing 
+-- L["Archaelogy"] = ""
+--Translation missing 
+-- L["Big screen"] = ""
+--Translation missing 
+-- L["Blacklisted"] = ""
+--Translation missing 
+-- L["Blacklisted missions are ignored in Mission Control"] = ""
+--Translation missing 
+-- L["Building Final report"] = ""
+--Translation missing 
+-- L["Capped %1$s. Spend at least %2$d of them"] = ""
+--Translation missing 
+-- L["Complete all missions without confirmation"] = ""
+--Translation missing 
+-- L["Consider again"] = ""
+--Translation missing 
+-- L["Disable if you dont want the full Garrison Commander Header."] = ""
+--Translation missing 
+-- L["Disables automatic population of mission page screen. You can also press control while clicking to disable it for a single mission"] = ""
+--Translation missing 
+-- L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"] = ""
+--Translation missing 
+-- L["Do not show follower icon on plots"] = ""
+--Translation missing 
+-- L["Duration Time"] = ""
+--Translation missing 
+-- L["Enhance tooltip"] = ""
+--Translation missing 
+-- L["Environment Preference"] = ""
+--Translation missing 
+-- L["Epic followers are NOT sent alone on xp only missions"] = ""
+--Translation missing 
+-- L["Expiration Time"] = ""
+--Translation missing 
+-- L["Follower"] = ""
+--Translation missing 
+-- L["Follower equipment set or upgrade"] = ""
+--Translation missing 
+-- L["Follower experience"] = ""
+--Translation missing 
+-- L["Follower set minimum upgrade"] = ""
+--Translation missing 
+-- L["Follower Training"] = ""
+--Translation missing 
+-- L["Followers status "] = ""
+--Translation missing 
+-- L["Garrison Appearance"] = ""
+--Translation missing 
+-- L["Garrison Comander Quick Mission Completion"] = ""
+--Translation missing 
+-- L["Garrison Commander Mission Control"] = ""
+--Translation missing 
+-- L["Global approx. xp reward"] = ""
+--Translation missing 
+-- L["Global success chance"] = ""
+--Translation missing 
+-- L["Gold incremented!"] = ""
+--Translation missing 
+-- L["Hide followers"] = ""
+--Translation missing 
+-- L["If checked, clicking an upgrade icon will consume the item and upgrade the follower, |cFFFF0000NO QUESTION ASKED|r"] = ""
+--Translation missing 
+-- L["IF checked, shows armors on the left and weapons on the right "] = ""
+--Translation missing 
+-- L["If you continue, you will lose them"] = ""
+--Translation missing 
+-- L["IF you have a Salvage Yard you probably dont want to have this one checked"] = ""
+--Translation missing 
+-- L["Ignore \"maxed\""] = ""
+--Translation missing 
+-- L["Ignore epic for xp missions."] = ""
+--Translation missing 
+-- L["Ignore for all missions"] = ""
+--Translation missing 
+-- L["Ignore for this mission"] = ""
+--Translation missing 
+-- L["Ignore rare missions"] = ""
+--Translation missing 
+-- L["Increased Rewards"] = ""
+--Translation missing 
+-- L["Item minimum level"] = ""
+--Translation missing 
+-- L["Item Tokens"] = ""
+--Translation missing 
+-- L["Left Click to see available missions"] = ""
+--Translation missing 
+-- L["Legendary Items"] = ""
+--Translation missing 
+-- L["Level 100 epic followers are not used for xp only missions."] = ""
+--Translation missing 
+-- L["Makes main mission panel movable"] = ""
+--Translation missing 
+-- L["Makes shipyard panel movable"] = ""
+--Translation missing 
+-- L["Maximize result"] = ""
+--Translation missing 
+-- L["Maximum mission duration."] = ""
+--Translation missing 
+-- L["Minimum chance"] = ""
+--Translation missing 
+-- L["Minimum mission duration."] = ""
+--Translation missing 
+-- L["Minimum needed chance"] = ""
+--Translation missing 
+-- L["Minimum requested level for equipment rewards"] = ""
+--Translation missing 
+-- L["Minimum requested upgrade for followers set (Enhancements are always included)"] = ""
+--Translation missing 
+-- L["Minimun chance success under which ignore missions"] = ""
+--Translation missing 
+-- L["Minumum needed chance"] = ""
+--Translation missing 
+-- L["Mission Control"] = ""
+--Translation missing 
+-- L["Mission Duration"] = ""
+--Translation missing 
+-- L["Mission shown"] = ""
+--Translation missing 
+-- L["Mission shown for follower"] = ""
+--Translation missing 
+-- L["Mission Success"] = ""
+--Translation missing 
+-- L["Mission time reduced!"] = ""
+--Translation missing 
+-- L["Mission with lower success chance will be ignored"] = ""
+--Translation missing 
+-- L["Missionlist"] = ""
+--Translation missing 
+-- L["Must reload interface to apply"] = ""
+--Translation missing 
+-- L["No confirmation"] = ""
+--Translation missing 
+-- L["No follower gained xp"] = ""
+--Translation missing 
+-- L["No mission prefill"] = ""
+--Translation missing 
+-- L["Not blacklisted"] = ""
+--Translation missing 
+-- L["Nothing to report"] = ""
+--Translation missing 
+-- L["Number of followers"] = ""
+--Translation missing 
+-- L["Only first %1$d missions with over %2$d%% chance of success are shown"] = ""
+--Translation missing 
+-- L["Only meaningful upgrades are shown"] = ""
+--Translation missing 
+-- L["Original concept and interface by %s"] = ""
+--Translation missing 
+-- L["Original method"] = ""
+--Translation missing 
+-- L["Original sort restores original sorting method, whatever it was (If you have another addon sorting mission, it should kick in again)"] = ""
+--Translation missing 
+-- L["Other"] = ""
+--Translation missing 
+-- L["Other rewards"] = ""
+--Translation missing 
+-- L["Other settings"] = ""
+--Translation missing 
+-- L["Other useful followers"] = ""
+--Translation missing 
+-- L["Processing mission %d of %d"] = ""
+--Translation missing 
+-- L["Profession"] = ""
+--Translation missing 
+-- L["Racial Preference"] = ""
+--Translation missing 
+-- L["Rare missions will not be considered"] = ""
+--Translation missing 
+-- L["Reagents"] = ""
+--Translation missing 
+-- L["Reputation Items"] = ""
+--Translation missing 
+-- L["Reward type"] = ""
+--Translation missing 
+-- L["Right-Click to blacklist"] = ""
+--Translation missing 
+-- L["Right-Click to remove from blacklist"] = ""
+--Translation missing 
+-- L["Rush orders"] = ""
+--Translation missing 
+-- L["Shipyard Appearance"] = ""
+--Translation missing 
+-- L["Show Garrison Commander menu"] = ""
+--Translation missing 
+-- L["Show itemlevel"] = ""
+--Translation missing 
+-- L["Show upgrades"] = ""
+--Translation missing 
+-- L["Show xp"] = ""
+--Translation missing 
+-- L["Slayer"] = ""
+--Translation missing 
+-- L["Some follower"] = ""
+--Translation missing 
+-- L["Sort missions by:"] = ""
+--Translation missing 
+-- L["Submit all your mission at once. No question asked."] = ""
+--Translation missing 
+-- L["Success Chance"] = ""
+--Translation missing 
+-- L["Swap upgrades positions"] = ""
+--Translation missing 
+-- L["Switch between Garrison Commander and Master Plan interface for missions"] = ""
+--Translation missing 
+-- L["Threat Counter"] = ""
+--Translation missing 
+-- L["To go: %d"] = ""
+--Translation missing 
+-- L["Toggles Garrison Commander Menu Header on/off"] = ""
+--Translation missing 
+-- L["Toys and Mounts"] = ""
+--Translation missing 
+-- L["Unchecking this will allow you to set specific success chance for each reward type"] = ""
+--Translation missing 
+-- L["Unlock Panel"] = ""
+--Translation missing 
+-- L["Upgrade %1$s to  %2$d itemlevel"] = ""
+--Translation missing 
+-- L["Upgrading to |cff00ff00%d|r"] = ""
+--Translation missing 
+-- L["Use big screen"] = ""
+--Translation missing 
+-- L["Use GC Interface"] = ""
+--Translation missing 
+-- L["Uses armor token"] = ""
+--Translation missing 
+-- L["Uses weapon token"] = ""
+--Translation missing 
+-- L["When checked, show on each follower button missing xp to next level"] = ""
+--Translation missing 
+-- L["When checked, show on each follower button weapon and armor level for maxed followers"] = ""
+--Translation missing 
+-- L["Xp incremented!"] = ""
+--Translation missing 
+-- L["You are wasting |cffff0000%d|cffffd200 point(s)!!!"] = ""
+--Translation missing 
+-- L["You can also send mission one by one clicking on each button."] = ""
+--Translation missing 
+-- L["You can open the menu clicking on the icon in top right corner"] = ""
+--Translation missing 
+-- L["You have ignored followers"] = ""
+--Translation missing 
+-- L["You never performed this mission"] = ""
+--Translation missing 
+-- L["You performed this mission %d times with a win ratio of"] = ""
+
 	end
 	L=l:NewLocale(me,"frFR")
 	if (L) then
@@ -278,6 +550,7 @@ L["You can open the menu clicking on the icon in top right corner"] = "Vous pouv
 L["You have ignored followers"] = "Vous avez ignor\195\169 des sujets"
 L["You never performed this mission"] = "Vous n'avez jamais effectu\195\169 cette mission"
 L["You performed this mission %d times with a win ratio of"] = "Vous avez effectu\195\169 cette mission %d fois avec un rapport de"
+
 	end
 	L=l:NewLocale(me,"deDE")
 	if (L) then
@@ -417,6 +690,7 @@ L["You can open the menu clicking on the icon in top right corner"] = "Du kannst
 L["You have ignored followers"] = "Du hast ignorierte Anh\195\164nger"
 L["You never performed this mission"] = "Du hast diese Mission noch nie durchgef\195\188hrt."
 L["You performed this mission %d times with a win ratio of"] = "Du hast diese Mission %d-mal durchgef\195\188hrt, mit einem Gewinnverh\195\164ltnis von"
+
 	end
 	L=l:NewLocale(me,"itIT")
 	if (L) then
@@ -555,6 +829,7 @@ L["You can open the menu clicking on the icon in top right corner"] = "Puoi apri
 L["You have ignored followers"] = "Hai seguaci ignorati"
 L["You never performed this mission"] = "Non hai mai fatto questa missione"
 L["You performed this mission %d times with a win ratio of"] = "Hai fatto questa missione %d volde, con una percentuale di successo del"
+
 	end
 	L=l:NewLocale(me,"koKR")
 	if (L) then
@@ -693,12 +968,555 @@ L["You can open the menu clicking on the icon in top right corner"] = "\236\154\
 L["You have ignored followers"] = "\235\172\180\236\139\156\235\144\156 \236\182\148\236\162\133\236\158\144\234\176\128 \236\158\136\236\138\181\235\139\136\235\139\164"
 L["You never performed this mission"] = "\236\157\180 \236\158\132\235\172\180\235\165\188 \236\136\152\237\150\137\237\149\156 \236\160\129\236\157\180 \236\151\134\236\138\181\235\139\136\235\139\164"
 L["You performed this mission %d times with a win ratio of"] = "\236\157\180 \236\158\132\235\172\180\235\165\188 \235\139\164\236\157\140\236\157\152 \236\132\177\234\179\181 \237\153\149\235\165\160\235\161\156 %d\235\178\136 \236\136\152\237\150\137\237\150\136\236\138\181\235\139\136\235\139\164:"
+
 	end
 	L=l:NewLocale(me,"esMX")
 	if (L) then
+--Translation missing 
+-- L["%s |4follower:followers; with %s"] = ""
+--Translation missing 
+-- L["(Ignores low bias ones)"] = ""
+--Translation missing 
+-- L["Add %1$d levels to %2$s"] = ""
+--Translation missing 
+-- L["Adds a list of other useful followers to tooltip"] = ""
+--Translation missing 
+-- L["Affects only little screen mode, hiding the per follower mission list if not checked"] = ""
+--Translation missing 
+-- L["Allowed Rewards"] = ""
+--Translation missing 
+-- L["Allows a lower success percentage for resource missions. Use /gac gui to change percentage. Default is 80%"] = ""
+--Translation missing 
+-- L["Applied when 'maximize result' is enabled. Default is 80%"] = ""
+--Translation missing 
+-- L["Applies the best armor set"] = ""
+--Translation missing 
+-- L["Applies the best armor upgrade"] = ""
+--Translation missing 
+-- L["Applies the best weapon set"] = ""
+--Translation missing 
+-- L["Applies the best weapon upgrade"] = ""
+--Translation missing 
+-- L["Archaelogy"] = ""
+--Translation missing 
+-- L["Big screen"] = ""
+--Translation missing 
+-- L["Blacklisted"] = ""
+--Translation missing 
+-- L["Blacklisted missions are ignored in Mission Control"] = ""
+--Translation missing 
+-- L["Building Final report"] = ""
+--Translation missing 
+-- L["Capped %1$s. Spend at least %2$d of them"] = ""
+--Translation missing 
+-- L["Complete all missions without confirmation"] = ""
+--Translation missing 
+-- L["Consider again"] = ""
+--Translation missing 
+-- L["Disable if you dont want the full Garrison Commander Header."] = ""
+--Translation missing 
+-- L["Disables automatic population of mission page screen. You can also press control while clicking to disable it for a single mission"] = ""
+--Translation missing 
+-- L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"] = ""
+--Translation missing 
+-- L["Do not show follower icon on plots"] = ""
+--Translation missing 
+-- L["Duration Time"] = ""
+--Translation missing 
+-- L["Enhance tooltip"] = ""
+--Translation missing 
+-- L["Environment Preference"] = ""
+--Translation missing 
+-- L["Epic followers are NOT sent alone on xp only missions"] = ""
+--Translation missing 
+-- L["Expiration Time"] = ""
+--Translation missing 
+-- L["Follower"] = ""
+--Translation missing 
+-- L["Follower equipment set or upgrade"] = ""
+--Translation missing 
+-- L["Follower experience"] = ""
+--Translation missing 
+-- L["Follower set minimum upgrade"] = ""
+--Translation missing 
+-- L["Follower Training"] = ""
+--Translation missing 
+-- L["Followers status "] = ""
+--Translation missing 
+-- L["Garrison Appearance"] = ""
+--Translation missing 
+-- L["Garrison Comander Quick Mission Completion"] = ""
+--Translation missing 
+-- L["Garrison Commander Mission Control"] = ""
+--Translation missing 
+-- L["Global approx. xp reward"] = ""
+--Translation missing 
+-- L["Global success chance"] = ""
+--Translation missing 
+-- L["Gold incremented!"] = ""
+--Translation missing 
+-- L["Hide followers"] = ""
+--Translation missing 
+-- L["If checked, clicking an upgrade icon will consume the item and upgrade the follower, |cFFFF0000NO QUESTION ASKED|r"] = ""
+--Translation missing 
+-- L["IF checked, shows armors on the left and weapons on the right "] = ""
+--Translation missing 
+-- L["If you continue, you will lose them"] = ""
+--Translation missing 
+-- L["IF you have a Salvage Yard you probably dont want to have this one checked"] = ""
+--Translation missing 
+-- L["Ignore \"maxed\""] = ""
+--Translation missing 
+-- L["Ignore epic for xp missions."] = ""
+--Translation missing 
+-- L["Ignore for all missions"] = ""
+--Translation missing 
+-- L["Ignore for this mission"] = ""
+--Translation missing 
+-- L["Ignore rare missions"] = ""
+--Translation missing 
+-- L["Increased Rewards"] = ""
+--Translation missing 
+-- L["Item minimum level"] = ""
+--Translation missing 
+-- L["Item Tokens"] = ""
+--Translation missing 
+-- L["Left Click to see available missions"] = ""
+--Translation missing 
+-- L["Legendary Items"] = ""
+--Translation missing 
+-- L["Level 100 epic followers are not used for xp only missions."] = ""
+--Translation missing 
+-- L["Makes main mission panel movable"] = ""
+--Translation missing 
+-- L["Makes shipyard panel movable"] = ""
+--Translation missing 
+-- L["Maximize result"] = ""
+--Translation missing 
+-- L["Maximum mission duration."] = ""
+--Translation missing 
+-- L["Minimum chance"] = ""
+--Translation missing 
+-- L["Minimum mission duration."] = ""
+--Translation missing 
+-- L["Minimum needed chance"] = ""
+--Translation missing 
+-- L["Minimum requested level for equipment rewards"] = ""
+--Translation missing 
+-- L["Minimum requested upgrade for followers set (Enhancements are always included)"] = ""
+--Translation missing 
+-- L["Minimun chance success under which ignore missions"] = ""
+--Translation missing 
+-- L["Minumum needed chance"] = ""
+--Translation missing 
+-- L["Mission Control"] = ""
+--Translation missing 
+-- L["Mission Duration"] = ""
+--Translation missing 
+-- L["Mission shown"] = ""
+--Translation missing 
+-- L["Mission shown for follower"] = ""
+--Translation missing 
+-- L["Mission Success"] = ""
+--Translation missing 
+-- L["Mission time reduced!"] = ""
+--Translation missing 
+-- L["Mission with lower success chance will be ignored"] = ""
+--Translation missing 
+-- L["Missionlist"] = ""
+--Translation missing 
+-- L["Must reload interface to apply"] = ""
+--Translation missing 
+-- L["No confirmation"] = ""
+--Translation missing 
+-- L["No follower gained xp"] = ""
+--Translation missing 
+-- L["No mission prefill"] = ""
+--Translation missing 
+-- L["Not blacklisted"] = ""
+--Translation missing 
+-- L["Nothing to report"] = ""
+--Translation missing 
+-- L["Number of followers"] = ""
+--Translation missing 
+-- L["Only first %1$d missions with over %2$d%% chance of success are shown"] = ""
+--Translation missing 
+-- L["Only meaningful upgrades are shown"] = ""
+--Translation missing 
+-- L["Original concept and interface by %s"] = ""
+--Translation missing 
+-- L["Original method"] = ""
+--Translation missing 
+-- L["Original sort restores original sorting method, whatever it was (If you have another addon sorting mission, it should kick in again)"] = ""
+--Translation missing 
+-- L["Other"] = ""
+--Translation missing 
+-- L["Other rewards"] = ""
+--Translation missing 
+-- L["Other settings"] = ""
+--Translation missing 
+-- L["Other useful followers"] = ""
+--Translation missing 
+-- L["Processing mission %d of %d"] = ""
+--Translation missing 
+-- L["Profession"] = ""
+--Translation missing 
+-- L["Racial Preference"] = ""
+--Translation missing 
+-- L["Rare missions will not be considered"] = ""
+--Translation missing 
+-- L["Reagents"] = ""
+--Translation missing 
+-- L["Reputation Items"] = ""
+--Translation missing 
+-- L["Reward type"] = ""
+--Translation missing 
+-- L["Right-Click to blacklist"] = ""
+--Translation missing 
+-- L["Right-Click to remove from blacklist"] = ""
+--Translation missing 
+-- L["Rush orders"] = ""
+--Translation missing 
+-- L["Shipyard Appearance"] = ""
+--Translation missing 
+-- L["Show Garrison Commander menu"] = ""
+--Translation missing 
+-- L["Show itemlevel"] = ""
+--Translation missing 
+-- L["Show upgrades"] = ""
+--Translation missing 
+-- L["Show xp"] = ""
+--Translation missing 
+-- L["Slayer"] = ""
+--Translation missing 
+-- L["Some follower"] = ""
+--Translation missing 
+-- L["Sort missions by:"] = ""
+--Translation missing 
+-- L["Submit all your mission at once. No question asked."] = ""
+--Translation missing 
+-- L["Success Chance"] = ""
+--Translation missing 
+-- L["Swap upgrades positions"] = ""
+--Translation missing 
+-- L["Switch between Garrison Commander and Master Plan interface for missions"] = ""
+--Translation missing 
+-- L["Threat Counter"] = ""
+--Translation missing 
+-- L["To go: %d"] = ""
+--Translation missing 
+-- L["Toggles Garrison Commander Menu Header on/off"] = ""
+--Translation missing 
+-- L["Toys and Mounts"] = ""
+--Translation missing 
+-- L["Unchecking this will allow you to set specific success chance for each reward type"] = ""
+--Translation missing 
+-- L["Unlock Panel"] = ""
+--Translation missing 
+-- L["Upgrade %1$s to  %2$d itemlevel"] = ""
+--Translation missing 
+-- L["Upgrading to |cff00ff00%d|r"] = ""
+--Translation missing 
+-- L["Use big screen"] = ""
+--Translation missing 
+-- L["Use GC Interface"] = ""
+--Translation missing 
+-- L["Uses armor token"] = ""
+--Translation missing 
+-- L["Uses weapon token"] = ""
+--Translation missing 
+-- L["When checked, show on each follower button missing xp to next level"] = ""
+--Translation missing 
+-- L["When checked, show on each follower button weapon and armor level for maxed followers"] = ""
+--Translation missing 
+-- L["Xp incremented!"] = ""
+--Translation missing 
+-- L["You are wasting |cffff0000%d|cffffd200 point(s)!!!"] = ""
+--Translation missing 
+-- L["You can also send mission one by one clicking on each button."] = ""
+--Translation missing 
+-- L["You can open the menu clicking on the icon in top right corner"] = ""
+--Translation missing 
+-- L["You have ignored followers"] = ""
+--Translation missing 
+-- L["You never performed this mission"] = ""
+--Translation missing 
+-- L["You performed this mission %d times with a win ratio of"] = ""
+
 	end
 	L=l:NewLocale(me,"ruRU")
 	if (L) then
+--Translation missing 
+-- L["%s |4follower:followers; with %s"] = ""
+--Translation missing 
+-- L["(Ignores low bias ones)"] = ""
+--Translation missing 
+-- L["Add %1$d levels to %2$s"] = ""
+--Translation missing 
+-- L["Adds a list of other useful followers to tooltip"] = ""
+--Translation missing 
+-- L["Affects only little screen mode, hiding the per follower mission list if not checked"] = ""
+--Translation missing 
+-- L["Allowed Rewards"] = ""
+--Translation missing 
+-- L["Allows a lower success percentage for resource missions. Use /gac gui to change percentage. Default is 80%"] = ""
+--Translation missing 
+-- L["Applied when 'maximize result' is enabled. Default is 80%"] = ""
+--Translation missing 
+-- L["Applies the best armor set"] = ""
+--Translation missing 
+-- L["Applies the best armor upgrade"] = ""
+--Translation missing 
+-- L["Applies the best weapon set"] = ""
+--Translation missing 
+-- L["Applies the best weapon upgrade"] = ""
+--Translation missing 
+-- L["Archaelogy"] = ""
+--Translation missing 
+-- L["Big screen"] = ""
+--Translation missing 
+-- L["Blacklisted"] = ""
+--Translation missing 
+-- L["Blacklisted missions are ignored in Mission Control"] = ""
+--Translation missing 
+-- L["Building Final report"] = ""
+--Translation missing 
+-- L["Capped %1$s. Spend at least %2$d of them"] = ""
+--Translation missing 
+-- L["Complete all missions without confirmation"] = ""
+--Translation missing 
+-- L["Consider again"] = ""
+--Translation missing 
+-- L["Disable if you dont want the full Garrison Commander Header."] = ""
+--Translation missing 
+-- L["Disables automatic population of mission page screen. You can also press control while clicking to disable it for a single mission"] = ""
+--Translation missing 
+-- L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"] = ""
+--Translation missing 
+-- L["Do not show follower icon on plots"] = ""
+--Translation missing 
+-- L["Duration Time"] = ""
+--Translation missing 
+-- L["Enhance tooltip"] = ""
+--Translation missing 
+-- L["Environment Preference"] = ""
+--Translation missing 
+-- L["Epic followers are NOT sent alone on xp only missions"] = ""
+--Translation missing 
+-- L["Expiration Time"] = ""
+--Translation missing 
+-- L["Follower"] = ""
+--Translation missing 
+-- L["Follower equipment set or upgrade"] = ""
+--Translation missing 
+-- L["Follower experience"] = ""
+--Translation missing 
+-- L["Follower set minimum upgrade"] = ""
+--Translation missing 
+-- L["Follower Training"] = ""
+--Translation missing 
+-- L["Followers status "] = ""
+--Translation missing 
+-- L["Garrison Appearance"] = ""
+--Translation missing 
+-- L["Garrison Comander Quick Mission Completion"] = ""
+--Translation missing 
+-- L["Garrison Commander Mission Control"] = ""
+--Translation missing 
+-- L["Global approx. xp reward"] = ""
+--Translation missing 
+-- L["Global success chance"] = ""
+--Translation missing 
+-- L["Gold incremented!"] = ""
+--Translation missing 
+-- L["Hide followers"] = ""
+--Translation missing 
+-- L["If checked, clicking an upgrade icon will consume the item and upgrade the follower, |cFFFF0000NO QUESTION ASKED|r"] = ""
+--Translation missing 
+-- L["IF checked, shows armors on the left and weapons on the right "] = ""
+--Translation missing 
+-- L["If you continue, you will lose them"] = ""
+--Translation missing 
+-- L["IF you have a Salvage Yard you probably dont want to have this one checked"] = ""
+--Translation missing 
+-- L["Ignore \"maxed\""] = ""
+--Translation missing 
+-- L["Ignore epic for xp missions."] = ""
+--Translation missing 
+-- L["Ignore for all missions"] = ""
+--Translation missing 
+-- L["Ignore for this mission"] = ""
+--Translation missing 
+-- L["Ignore rare missions"] = ""
+--Translation missing 
+-- L["Increased Rewards"] = ""
+--Translation missing 
+-- L["Item minimum level"] = ""
+--Translation missing 
+-- L["Item Tokens"] = ""
+--Translation missing 
+-- L["Left Click to see available missions"] = ""
+--Translation missing 
+-- L["Legendary Items"] = ""
+--Translation missing 
+-- L["Level 100 epic followers are not used for xp only missions."] = ""
+--Translation missing 
+-- L["Makes main mission panel movable"] = ""
+--Translation missing 
+-- L["Makes shipyard panel movable"] = ""
+--Translation missing 
+-- L["Maximize result"] = ""
+--Translation missing 
+-- L["Maximum mission duration."] = ""
+--Translation missing 
+-- L["Minimum chance"] = ""
+--Translation missing 
+-- L["Minimum mission duration."] = ""
+--Translation missing 
+-- L["Minimum needed chance"] = ""
+--Translation missing 
+-- L["Minimum requested level for equipment rewards"] = ""
+--Translation missing 
+-- L["Minimum requested upgrade for followers set (Enhancements are always included)"] = ""
+--Translation missing 
+-- L["Minimun chance success under which ignore missions"] = ""
+--Translation missing 
+-- L["Minumum needed chance"] = ""
+--Translation missing 
+-- L["Mission Control"] = ""
+--Translation missing 
+-- L["Mission Duration"] = ""
+--Translation missing 
+-- L["Mission shown"] = ""
+--Translation missing 
+-- L["Mission shown for follower"] = ""
+--Translation missing 
+-- L["Mission Success"] = ""
+--Translation missing 
+-- L["Mission time reduced!"] = ""
+--Translation missing 
+-- L["Mission with lower success chance will be ignored"] = ""
+--Translation missing 
+-- L["Missionlist"] = ""
+--Translation missing 
+-- L["Must reload interface to apply"] = ""
+--Translation missing 
+-- L["No confirmation"] = ""
+--Translation missing 
+-- L["No follower gained xp"] = ""
+--Translation missing 
+-- L["No mission prefill"] = ""
+--Translation missing 
+-- L["Not blacklisted"] = ""
+--Translation missing 
+-- L["Nothing to report"] = ""
+--Translation missing 
+-- L["Number of followers"] = ""
+--Translation missing 
+-- L["Only first %1$d missions with over %2$d%% chance of success are shown"] = ""
+--Translation missing 
+-- L["Only meaningful upgrades are shown"] = ""
+--Translation missing 
+-- L["Original concept and interface by %s"] = ""
+--Translation missing 
+-- L["Original method"] = ""
+--Translation missing 
+-- L["Original sort restores original sorting method, whatever it was (If you have another addon sorting mission, it should kick in again)"] = ""
+--Translation missing 
+-- L["Other"] = ""
+--Translation missing 
+-- L["Other rewards"] = ""
+--Translation missing 
+-- L["Other settings"] = ""
+--Translation missing 
+-- L["Other useful followers"] = ""
+--Translation missing 
+-- L["Processing mission %d of %d"] = ""
+--Translation missing 
+-- L["Profession"] = ""
+--Translation missing 
+-- L["Racial Preference"] = ""
+--Translation missing 
+-- L["Rare missions will not be considered"] = ""
+--Translation missing 
+-- L["Reagents"] = ""
+--Translation missing 
+-- L["Reputation Items"] = ""
+--Translation missing 
+-- L["Reward type"] = ""
+--Translation missing 
+-- L["Right-Click to blacklist"] = ""
+--Translation missing 
+-- L["Right-Click to remove from blacklist"] = ""
+--Translation missing 
+-- L["Rush orders"] = ""
+--Translation missing 
+-- L["Shipyard Appearance"] = ""
+--Translation missing 
+-- L["Show Garrison Commander menu"] = ""
+--Translation missing 
+-- L["Show itemlevel"] = ""
+--Translation missing 
+-- L["Show upgrades"] = ""
+--Translation missing 
+-- L["Show xp"] = ""
+--Translation missing 
+-- L["Slayer"] = ""
+--Translation missing 
+-- L["Some follower"] = ""
+--Translation missing 
+-- L["Sort missions by:"] = ""
+--Translation missing 
+-- L["Submit all your mission at once. No question asked."] = ""
+--Translation missing 
+-- L["Success Chance"] = ""
+--Translation missing 
+-- L["Swap upgrades positions"] = ""
+--Translation missing 
+-- L["Switch between Garrison Commander and Master Plan interface for missions"] = ""
+--Translation missing 
+-- L["Threat Counter"] = ""
+--Translation missing 
+-- L["To go: %d"] = ""
+--Translation missing 
+-- L["Toggles Garrison Commander Menu Header on/off"] = ""
+--Translation missing 
+-- L["Toys and Mounts"] = ""
+--Translation missing 
+-- L["Unchecking this will allow you to set specific success chance for each reward type"] = ""
+--Translation missing 
+-- L["Unlock Panel"] = ""
+--Translation missing 
+-- L["Upgrade %1$s to  %2$d itemlevel"] = ""
+--Translation missing 
+-- L["Upgrading to |cff00ff00%d|r"] = ""
+--Translation missing 
+-- L["Use big screen"] = ""
+--Translation missing 
+-- L["Use GC Interface"] = ""
+--Translation missing 
+-- L["Uses armor token"] = ""
+--Translation missing 
+-- L["Uses weapon token"] = ""
+--Translation missing 
+-- L["When checked, show on each follower button missing xp to next level"] = ""
+--Translation missing 
+-- L["When checked, show on each follower button weapon and armor level for maxed followers"] = ""
+--Translation missing 
+-- L["Xp incremented!"] = ""
+--Translation missing 
+-- L["You are wasting |cffff0000%d|cffffd200 point(s)!!!"] = ""
+--Translation missing 
+-- L["You can also send mission one by one clicking on each button."] = ""
+--Translation missing 
+-- L["You can open the menu clicking on the icon in top right corner"] = ""
+--Translation missing 
+-- L["You have ignored followers"] = ""
+--Translation missing 
+-- L["You never performed this mission"] = ""
+--Translation missing 
+-- L["You performed this mission %d times with a win ratio of"] = ""
+
 	end
 	L=l:NewLocale(me,"zhCN")
 	if (L) then
@@ -838,9 +1656,281 @@ L["You can open the menu clicking on the icon in top right corner"] = "\228\189\
 L["You have ignored followers"] = "\228\189\160\230\156\137\229\191\189\231\149\165\231\154\132\232\191\189\233\154\143\232\128\133"
 L["You never performed this mission"] = "\228\189\160\228\187\142\230\156\170\230\137\167\232\161\140\232\191\153\228\184\170\228\187\187\229\138\161"
 L["You performed this mission %d times with a win ratio of"] = "\228\189\160\230\137\167\232\161\140\232\191\153\228\184\170\228\187\187\229\138\161 %d \230\172\161\239\188\140\230\136\144\229\138\159\231\142\135\228\184\186"
+
 	end
 	L=l:NewLocale(me,"esES")
 	if (L) then
+--Translation missing 
+-- L["%s |4follower:followers; with %s"] = ""
+--Translation missing 
+-- L["(Ignores low bias ones)"] = ""
+--Translation missing 
+-- L["Add %1$d levels to %2$s"] = ""
+--Translation missing 
+-- L["Adds a list of other useful followers to tooltip"] = ""
+--Translation missing 
+-- L["Affects only little screen mode, hiding the per follower mission list if not checked"] = ""
+--Translation missing 
+-- L["Allowed Rewards"] = ""
+--Translation missing 
+-- L["Allows a lower success percentage for resource missions. Use /gac gui to change percentage. Default is 80%"] = ""
+--Translation missing 
+-- L["Applied when 'maximize result' is enabled. Default is 80%"] = ""
+--Translation missing 
+-- L["Applies the best armor set"] = ""
+--Translation missing 
+-- L["Applies the best armor upgrade"] = ""
+--Translation missing 
+-- L["Applies the best weapon set"] = ""
+--Translation missing 
+-- L["Applies the best weapon upgrade"] = ""
+--Translation missing 
+-- L["Archaelogy"] = ""
+--Translation missing 
+-- L["Big screen"] = ""
+--Translation missing 
+-- L["Blacklisted"] = ""
+--Translation missing 
+-- L["Blacklisted missions are ignored in Mission Control"] = ""
+--Translation missing 
+-- L["Building Final report"] = ""
+--Translation missing 
+-- L["Capped %1$s. Spend at least %2$d of them"] = ""
+--Translation missing 
+-- L["Complete all missions without confirmation"] = ""
+--Translation missing 
+-- L["Consider again"] = ""
+--Translation missing 
+-- L["Disable if you dont want the full Garrison Commander Header."] = ""
+--Translation missing 
+-- L["Disables automatic population of mission page screen. You can also press control while clicking to disable it for a single mission"] = ""
+--Translation missing 
+-- L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"] = ""
+--Translation missing 
+-- L["Do not show follower icon on plots"] = ""
+--Translation missing 
+-- L["Duration Time"] = ""
+--Translation missing 
+-- L["Enhance tooltip"] = ""
+--Translation missing 
+-- L["Environment Preference"] = ""
+--Translation missing 
+-- L["Epic followers are NOT sent alone on xp only missions"] = ""
+--Translation missing 
+-- L["Expiration Time"] = ""
+--Translation missing 
+-- L["Follower"] = ""
+--Translation missing 
+-- L["Follower equipment set or upgrade"] = ""
+--Translation missing 
+-- L["Follower experience"] = ""
+--Translation missing 
+-- L["Follower set minimum upgrade"] = ""
+--Translation missing 
+-- L["Follower Training"] = ""
+--Translation missing 
+-- L["Followers status "] = ""
+--Translation missing 
+-- L["Garrison Appearance"] = ""
+--Translation missing 
+-- L["Garrison Comander Quick Mission Completion"] = ""
+--Translation missing 
+-- L["Garrison Commander Mission Control"] = ""
+--Translation missing 
+-- L["Global approx. xp reward"] = ""
+--Translation missing 
+-- L["Global success chance"] = ""
+--Translation missing 
+-- L["Gold incremented!"] = ""
+--Translation missing 
+-- L["Hide followers"] = ""
+--Translation missing 
+-- L["If checked, clicking an upgrade icon will consume the item and upgrade the follower, |cFFFF0000NO QUESTION ASKED|r"] = ""
+--Translation missing 
+-- L["IF checked, shows armors on the left and weapons on the right "] = ""
+--Translation missing 
+-- L["If you continue, you will lose them"] = ""
+--Translation missing 
+-- L["IF you have a Salvage Yard you probably dont want to have this one checked"] = ""
+--Translation missing 
+-- L["Ignore \"maxed\""] = ""
+--Translation missing 
+-- L["Ignore epic for xp missions."] = ""
+--Translation missing 
+-- L["Ignore for all missions"] = ""
+--Translation missing 
+-- L["Ignore for this mission"] = ""
+--Translation missing 
+-- L["Ignore rare missions"] = ""
+--Translation missing 
+-- L["Increased Rewards"] = ""
+--Translation missing 
+-- L["Item minimum level"] = ""
+--Translation missing 
+-- L["Item Tokens"] = ""
+--Translation missing 
+-- L["Left Click to see available missions"] = ""
+--Translation missing 
+-- L["Legendary Items"] = ""
+--Translation missing 
+-- L["Level 100 epic followers are not used for xp only missions."] = ""
+--Translation missing 
+-- L["Makes main mission panel movable"] = ""
+--Translation missing 
+-- L["Makes shipyard panel movable"] = ""
+--Translation missing 
+-- L["Maximize result"] = ""
+--Translation missing 
+-- L["Maximum mission duration."] = ""
+--Translation missing 
+-- L["Minimum chance"] = ""
+--Translation missing 
+-- L["Minimum mission duration."] = ""
+--Translation missing 
+-- L["Minimum needed chance"] = ""
+--Translation missing 
+-- L["Minimum requested level for equipment rewards"] = ""
+--Translation missing 
+-- L["Minimum requested upgrade for followers set (Enhancements are always included)"] = ""
+--Translation missing 
+-- L["Minimun chance success under which ignore missions"] = ""
+--Translation missing 
+-- L["Minumum needed chance"] = ""
+--Translation missing 
+-- L["Mission Control"] = ""
+--Translation missing 
+-- L["Mission Duration"] = ""
+--Translation missing 
+-- L["Mission shown"] = ""
+--Translation missing 
+-- L["Mission shown for follower"] = ""
+--Translation missing 
+-- L["Mission Success"] = ""
+--Translation missing 
+-- L["Mission time reduced!"] = ""
+--Translation missing 
+-- L["Mission with lower success chance will be ignored"] = ""
+--Translation missing 
+-- L["Missionlist"] = ""
+--Translation missing 
+-- L["Must reload interface to apply"] = ""
+--Translation missing 
+-- L["No confirmation"] = ""
+--Translation missing 
+-- L["No follower gained xp"] = ""
+--Translation missing 
+-- L["No mission prefill"] = ""
+--Translation missing 
+-- L["Not blacklisted"] = ""
+--Translation missing 
+-- L["Nothing to report"] = ""
+--Translation missing 
+-- L["Number of followers"] = ""
+--Translation missing 
+-- L["Only first %1$d missions with over %2$d%% chance of success are shown"] = ""
+--Translation missing 
+-- L["Only meaningful upgrades are shown"] = ""
+--Translation missing 
+-- L["Original concept and interface by %s"] = ""
+--Translation missing 
+-- L["Original method"] = ""
+--Translation missing 
+-- L["Original sort restores original sorting method, whatever it was (If you have another addon sorting mission, it should kick in again)"] = ""
+--Translation missing 
+-- L["Other"] = ""
+--Translation missing 
+-- L["Other rewards"] = ""
+--Translation missing 
+-- L["Other settings"] = ""
+--Translation missing 
+-- L["Other useful followers"] = ""
+--Translation missing 
+-- L["Processing mission %d of %d"] = ""
+--Translation missing 
+-- L["Profession"] = ""
+--Translation missing 
+-- L["Racial Preference"] = ""
+--Translation missing 
+-- L["Rare missions will not be considered"] = ""
+--Translation missing 
+-- L["Reagents"] = ""
+--Translation missing 
+-- L["Reputation Items"] = ""
+--Translation missing 
+-- L["Reward type"] = ""
+--Translation missing 
+-- L["Right-Click to blacklist"] = ""
+--Translation missing 
+-- L["Right-Click to remove from blacklist"] = ""
+--Translation missing 
+-- L["Rush orders"] = ""
+--Translation missing 
+-- L["Shipyard Appearance"] = ""
+--Translation missing 
+-- L["Show Garrison Commander menu"] = ""
+--Translation missing 
+-- L["Show itemlevel"] = ""
+--Translation missing 
+-- L["Show upgrades"] = ""
+--Translation missing 
+-- L["Show xp"] = ""
+--Translation missing 
+-- L["Slayer"] = ""
+--Translation missing 
+-- L["Some follower"] = ""
+--Translation missing 
+-- L["Sort missions by:"] = ""
+--Translation missing 
+-- L["Submit all your mission at once. No question asked."] = ""
+--Translation missing 
+-- L["Success Chance"] = ""
+--Translation missing 
+-- L["Swap upgrades positions"] = ""
+--Translation missing 
+-- L["Switch between Garrison Commander and Master Plan interface for missions"] = ""
+--Translation missing 
+-- L["Threat Counter"] = ""
+--Translation missing 
+-- L["To go: %d"] = ""
+--Translation missing 
+-- L["Toggles Garrison Commander Menu Header on/off"] = ""
+--Translation missing 
+-- L["Toys and Mounts"] = ""
+--Translation missing 
+-- L["Unchecking this will allow you to set specific success chance for each reward type"] = ""
+--Translation missing 
+-- L["Unlock Panel"] = ""
+--Translation missing 
+-- L["Upgrade %1$s to  %2$d itemlevel"] = ""
+--Translation missing 
+-- L["Upgrading to |cff00ff00%d|r"] = ""
+--Translation missing 
+-- L["Use big screen"] = ""
+--Translation missing 
+-- L["Use GC Interface"] = ""
+--Translation missing 
+-- L["Uses armor token"] = ""
+--Translation missing 
+-- L["Uses weapon token"] = ""
+--Translation missing 
+-- L["When checked, show on each follower button missing xp to next level"] = ""
+--Translation missing 
+-- L["When checked, show on each follower button weapon and armor level for maxed followers"] = ""
+--Translation missing 
+-- L["Xp incremented!"] = ""
+--Translation missing 
+-- L["You are wasting |cffff0000%d|cffffd200 point(s)!!!"] = ""
+--Translation missing 
+-- L["You can also send mission one by one clicking on each button."] = ""
+--Translation missing 
+-- L["You can open the menu clicking on the icon in top right corner"] = ""
+--Translation missing 
+-- L["You have ignored followers"] = ""
+--Translation missing 
+-- L["You never performed this mission"] = ""
+--Translation missing 
+-- L["You performed this mission %d times with a win ratio of"] = ""
+
 	end
 	L=l:NewLocale(me,"zhTW")
 	if (L) then
@@ -980,6 +2070,7 @@ L["You can open the menu clicking on the icon in top right corner"] = "\230\130\
 L["You have ignored followers"] = "\230\130\168\230\156\137\229\191\189\231\149\165\231\154\132\232\191\189\233\154\168\232\128\133"
 L["You never performed this mission"] = "\230\130\168\230\156\170\230\155\190\229\159\183\232\161\140\233\128\153\229\128\139\228\187\187\229\139\153"
 L["You performed this mission %d times with a win ratio of"] = "\230\130\168\229\159\183\232\161\140\233\129\142\230\173\164\228\187\187\229\139\153 %d\230\172\161\228\184\166\228\184\148\230\136\144\229\138\159\230\169\159\231\142\135\230\156\137"
+
 	end
 end
 L=LibStub("AceLocale-3.0"):GetLocale(me,true)

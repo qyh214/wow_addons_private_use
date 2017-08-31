@@ -6,7 +6,7 @@ L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Translated by "
 L.TranslationBy 			= nil -- your name here, localizers!
-L.Website					= "Visit discussion/support forums at |cFF73C2FBwww.deadlybossmods.com|r. Follow on twitter @deadlybossmods or @MysticalOS"
+L.Website					= "Visit us on discord at |cFF73C2FBhttps://discord.gg/DF5mffk|r. Follow on twitter @deadlybossmods or @MysticalOS"
 L.WebsiteButton				= "Forums"
 
 L.OTabBosses	= "Bosses"
@@ -316,7 +316,6 @@ L.AutoReplySound			= "Play alert sound and flash application icon when receiving
 --
 L.TimerGeneral 				= "Timer Options"
 L.SKT_Enabled				= "Show record victory timer for current fight if available"
-L.CRT_Enabled				= "Show timer for next combat ressurection charge"
 L.ShowRespawn				= "Show boss respawn timer after a wipe"
 L.ShowQueuePop				= "Show time remaining to accept a queue pop (LFG,BG,etc)"
 --

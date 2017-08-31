@@ -539,7 +539,7 @@ XPERL_CONF_TARGETTARGET_WIDTHBONUS_DESC	= "Adjust the width of the target target
 XPERL_CONF_FOCUS_ENABLE					= "Enable Focus Frame"
 XPERL_CONF_FOCUS_ENABLE_DESC			= "Enable the use of the Focus frame."
 XPERL_CONF_FOCUS_PORTRAIT				= "Focus Portrait"
-XPERL_CONF_FOCUS_PORTRAIT_DESC			= "Enable display of focus' portrait.\r|c00FF0000NOTE: Combat Hit Indicator is dependant on this."
+XPERL_CONF_FOCUS_PORTRAIT_DESC			= "Enable display of focus' portrait."
 XPERL_CONF_FOCUS_PORTRAIT3D				= "3D Portrait"
 XPERL_CONF_FOCUS_PORTRAIT3D_DESC		= "Enable display of 3D focus portrait."
 XPERL_CONF_FOCUS_CLASSPORTRAIT			= "Class Portrait"
@@ -677,7 +677,7 @@ XPERL_CONF_PETTARGET_BIGPETBUFFS_DESC	= XPERL_CONF_TARGET_BIGPETBUFFS_DESC
 
 XPERL_CONF_PARTY_SHOW					= "Show Party Frames"
 XPERL_CONF_PARTY_NAMES					= "Party Names"
-XPERL_CONF_PARTY_NAMES_DESC				= "Enable the display of the party member's names.\r|c00FF0000NOTE: Combat indicator, group leader, master looter, mind control warning and range indicator displays are all dependant on this frame."
+XPERL_CONF_PARTY_NAMES_DESC				= "Enable the display of the party member's names."
 XPERL_CONF_PARTY_FLIP					= "Flip"
 XPERL_CONF_PARTY_FLIP_DESC				= "Flip the party frames to be more suitable on the right hand side of screen."
 XPERL_CONF_PARTY_PORTRAIT				= "Party Portraits"

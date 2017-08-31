@@ -42,8 +42,44 @@ local addon, L = XLoot:NewModule("Frame")
 local XLootFrame = CreateFrame("Frame", "XLootFrame", UIParent)
 XLootFrame.addon = addon
 -- Grab locals
-local print, mouse_focus, opt = print
-local GetItemBindType = XLoot.GetItemBindType
+local mouse_focus, opt
+
+-- Chat output
+local print, wprint = print, print
+local function xprint(text)
+	wprint(('%s: %s'):format('|c2244dd22XLoot|r', tostring(text)))
+end
+
+-- Performance blah blah blah
+-- Using this function is a pain in the ass.
+local BIND_ON_NONE = 0
+local BIND_ON_PICKUP = 1
+local BIND_ON_EQUIP = 2
+local function GetItemInfoTable(link)
+	-- Variable names match wowpedia documentation
+	local name, link, rarity, level, minLevel, type, subType, stackCount, equipLoc, fileDataID, itemSellPrice, itemClassID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(link)
+	if not name then return nil end
+	-- But table names match common usage
+	return {
+		name = name,
+		link = link,
+		quality = rarity,
+		level = level,
+		minLevel = minLevel,
+		typeName = type, -- type and subType are localzied
+		subTypeName = subType,
+		stackCount = stackCount,
+		equipLoc = equipLoc,
+		icon = fileDataID,
+		sellPrice = itemSellPrice,
+		typeID = itemClassID, -- class and subClass are not
+		subTypeID = itemSubClassID,
+		bindType = bindType, -- NONE|PICKUP|EQUIP|?
+		-- expacID = expacID,
+		-- itemSetID = itemSetID,
+		isCraftingReagent = isCraftingReagent
+	}
+end
 
 -------------------------------------------------------------------------------
 -- Settings
@@ -114,7 +150,9 @@ local defaults = {
 		loot_color_backdrop = { 0, 0, 0, .9 },
 		loot_color_gradient = { .5, .5, .5, .4 },
 		loot_color_info = { .5, .5, .5, 1 },
-		loot_color_button_auto = { .4, .8, .4, .6 }
+		loot_color_button_auto = { .4, .8, .4, .6 },
+
+		show_slot_errors = true,
 	}
 }
 
@@ -163,6 +201,7 @@ local preview_loot = {
 }
 
 for i=1,#preview_loot do
+	XLootTooltip:SetItemByID(preview_loot[i][1])
 	GetItemInfo(preview_loot[i][1])
 end
 
@@ -178,21 +217,37 @@ function addon:ApplyOptions(in_options)
 		local Fake = XLootFakeFrame
 		Fake:UpdateAppearance()
 		Fake.opt = opt
-		local max_width, max_quality = 0, 0
+		local slot, max_width, max_quality = 0, 0, 0
 		for i,v in ipairs(preview_loot) do
-			local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(v[1])
-			local row = Fake.rows[i]
-			row.item = itemLink
-			row.quality = itemRarity
-			Fake.slots[i] = row
-			max_width = math.max(max_width, row:Update(true, itemTexture, itemName, itemLink, 1, itemRarity, v[2], v[3], v[4]))
-			max_quality = math.max(max_quality, itemRarity)
+			local t = GetItemInfoTable(v[1])
+			-- local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(v[1])
+			if not t then
+				-- xprint("Error: Failed to get information for an item in the configuration preview window. Please re-open the options window in a moment.")
+			else
+				t.quantity = 1
+				t.slotType = LOOT_SLOT_ITEM
+				slot = slot + 1
+				local row = Fake.rows[slot]
+				row.item = t.link
+				row.quality = t.quality
+				Fake.slots[slot] = row
+				max_width = math.max(max_width, row:Update(t))
+				max_quality = math.max(max_quality, t.quality)
+			end
 		end
 		do
-			name, currentAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered, rarity = GetCurrencyInfo(828)
-			local row =  Fake.rows[#preview_loot+1]
-			max_width = math.max(max_width, row:Update(false, texture, name, nil, 5, rarity))
-			Fake.slots[#preview_loot+1] = row
+			local name, currentAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered, rarity = GetCurrencyInfo(828)
+			if name and texture then
+				local row =  Fake.rows[slot+1]
+				max_width = math.max(max_width, row:Update({
+					name = name,
+					icon = texture,
+					quality = rarity,
+					slotType = LOOT_SLOT_CURRENCY,
+					quantity = 5,
+				}))
+				Fake.slots[#preview_loot+1] = row
+			end
 		end
 		Fake:SizeAndColor(max_width, max_quality)
 	end
@@ -215,10 +270,6 @@ end
 function addon:OnOptionsHide(panel)
 	XLootFakeFrame:Hide()
 end
-
--- CLI output
-local print, wprint = print, print
-local function xprint(text) wprint(('%s: %s'):format('|c2244dd22XLoot|r', text)) end
 
 local IsGroupState = {
 	always = function() return true end,
@@ -544,51 +595,50 @@ do
 
 	-- Bind texts
 	local binds = {
-		pickup = ('|cffff4422%s|r '):format(L.bind_on_pickup_short),
-		equip = ('|cff44ff44%s|r '):format(L.bind_on_equip_short),
-		use = ('|cff2244ff%s|r '):format(L.bind_on_use_short),
-		account = 'BoA'
+		[1] = ('|cffff4422%s|r '):format(L.bind_on_pickup_short),
+		[2] = ('|cff44ff44%s|r '):format(L.bind_on_equip_short),
+		[3] = ('|cff2244ff%s|r '):format(L.bind_on_use_short),
+		-- account = 'BoA'
 	}
 
 	-- Update slot with loot
-	function RowPrototype:Update(is_item, icon, name, link, quantity, quality, locked, isQuestItem, questId, isActive)
+	function RowPrototype:Update(slotData)
 		local r, g, b, hex
 		local owner = self:GetParent()
 		local opt = owner.opt
 		local text_info, text_name, text_bind = '', '', ''
-		self.item_name = name
+		self.item_name = slotData.name
 		
 		-- Items
 		local layout = 'simple'
-		if is_item then
-			r, g, b, hex = GetItemQualityColor(quality or 0)
+		if slotData.slotType == LOOT_SLOT_ITEM then
+			r, g, b, hex = GetItemQualityColor(slotData.quality or 0)
 			
-			text_name = ('|c%s%s|r'):format(hex, name)
+			text_name = ('|c%s%s|r'):format(hex, slotData.name)
 			
 			if opt.loot_texts_info then -- This is a bit gnarly
-				local _, _, _, _, _, itemType, itemSubType, _, itemEquipLoc = GetItemInfo(link)
-				local equip = itemType == ENCHSLOT_WEAPON and ENCHSLOT_WEAPON or itemEquipLoc ~= '' and _G[itemEquipLoc] or ''
-				local itemtype = (itemSubType == 'Junk' and quality > 0) and MISCELLANEOUS or itemSubType
+				local equip = slotData.typeName == ENCHSLOT_WEAPON and ENCHSLOT_WEAPON or slotData.equipLoc ~= '' and _G[slotData.equipLoc] or ''
+				local itemtype = (slotData.subTypeName == 'Junk' and slotData.quality > 0) and MISCELLANEOUS or slotData.subTypeName
 				text_info = ((type(equip) == 'string' and equip ~= '') and equip..', ' or '') .. itemtype
 				layout = 'detailed'
 			end
 			
-			if opt.loot_texts_bind then
-				text_bind = binds[GetItemBindType(link)] or ''
+			if opt.loot_texts_bind and slotData.bindType then
+				text_bind = binds[slotData.bindType] or ''
 			end
 			
 		-- Currency
 		else
 			r, g, b = .4, .4, .4
-			text_name = name:gsub('\n', ', ')
+			text_name = slotData.name:gsub('\n', ', ')
 		end
 		
 		-- Strings
 		self.text_name:SetText(text_name)
 		self.text_info:SetText(text_info)
 		self.text_bind:SetText(text_bind)
-		self.text_quantity:SetText(quantity > 1 and quantity or nil)
-		if questId or isQuestItem then
+		self.text_quantity:SetText(slotData.quantity > 1 and slotData.quantity or nil)
+		if slotData.questID or slotData.isQuestItem then
 			self.text_info:SetTextColor(1, .8, .1)
 		else
 			self.text_info:SetTextColor(owner:GetColor('loot_color_info'))
@@ -596,8 +646,8 @@ do
 		local name_width = self.text_name:GetStringWidth()
 
 		-- Icon
-		self.texture_item:SetTexture(icon)
-		if locked and opt.loot_texts_lock then
+		self.texture_item:SetTexture(slotData.icon)
+		if slotData.locked and opt.loot_texts_lock then
 			self.text_locked:Show()
 		else
 			self.text_locked:Hide()
@@ -619,14 +669,14 @@ do
 		end
 		
 		-- Quest icon
-		if questId then
+		if slotData.questID then
 			self.texture_bang:Show()
 		else
 			self.texture_bang:Hide()
 		end
 		
 		-- Autoloot button
-		if opt.loot_buttons_auto and (self.owner.fake or (opt.autoloots.list ~= 'never' and is_item and not self.owner.auto_items[name])) then
+		if opt.loot_buttons_auto and (self.owner.fake or (opt.autoloots.list ~= 'never' and slotData.slotType == LOOT_SLOT_ITEM and not self.owner.auto_items[slotData.name])) then
 			self.button_auto:Show()
 			name_width = name_width + self.button_auto:GetWidth() - 6
 		else
@@ -1031,14 +1081,6 @@ function addon:PARTY_MEMBERS_CHANGED()
 	auto_states.party = not auto_states.raid
 end
 
-local function AutoLootSlot(slot, link)
-	LootSlot(slot)
-	if link and GetItemBindType(link) == 'pickup' then
-		return false, true
-	end
-	return true, true
-end
-
 local function clear(slot)
 	if not slot then return nil end
 	slot.slot = nil
@@ -1054,8 +1096,8 @@ local function BoPRefresh()
 	XLootFrame:Update(false, true)
 end
 
-local _bag_slots = {}
-function XLootFrame:Update(no_snap, no_hide)
+local _bag_slots, GetItemBindType = {}, XLoot.GetItemBindType
+function XLootFrame:Update(no_snap, is_refresh)
 	local numloot = GetNumLootItems()
 	if numloot == 0 then return nil end
 	local max = math.max
@@ -1081,30 +1123,58 @@ function XLootFrame:Update(no_snap, no_hide)
 	-- Update rows
 	local max_quality, max_width, our_slot, slot, need_refresh = 0, 0, 0
 	for slot = 1, numloot do
-		local _, icon, name, quantity, quality, locked, isQuestItem, questId, isActive = pcall(GetLootSlotInfo, slot)
-		-- local texture, item, quantity, quality, locked, isQuestItem, questId, isActive = GetLootSlotInfo(slot)
-		if icon then -- Occasionally WoW will open loot with empty or invalid slots
-			local looted, tried = false, false
-			-- Row data
-			local type = GetLootSlotType(slot)
-			local is_item, link = (type == LOOT_SLOT_ITEM)
-			if is_item then
-				link = GetLootSlotLink(slot)
+		local _, icon, name, quantity, quality, locked, isQuestItem, questID, startsQuest = pcall(GetLootSlotInfo, slot)
+		-- Already looted or erroring slot
+		if not name then
+			if not is_refresh and opt.show_slot_errors then
+				xprint(L.slot_name_error:format(tostring(slot)))
 			end
 
-			-- Autolooting currency
-			if (auto.all or auto.currency) and (type == LOOT_SLOT_MONEY or type == LOOT_SLOT_CURRENCY) then
-				looted, tried = AutoLootSlot(slot, link)
-				
-			-- Autolooting items
-			else
-				-- TODO: Pass on to row update
-				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(link or name)
-				if auto.all
-				or (auto.quest and isQuestItem)
-				or (auto.list and auto_items[name])
-				or (auto.tradegoods and select(17, GetItemInfo(link or name))) then
+		elseif not icon then
+			if not is_refresh and opt.show_slot_errors then
+				xprint(L.slot_icon_error:format(tostring(slot)))
+			end
 
+		else
+			local autoloot = false
+			local slotType, slotData = GetLootSlotType(slot)
+			if slotType == LOOT_SLOT_ITEM then
+				slotData = GetItemInfoTable(GetLootSlotLink(slot))
+				slotData.slotType = slotType
+				slotData.quantity = quantity
+				slotData.locked = locked
+				slotData.questItem = isQuestItem
+				slotData.questID = questID
+				slotData.startsQuest = startsQuest
+			else
+				slotData = {
+					name = name,
+					icon = icon,
+					slotType = slotType,
+					quantity = quantity,
+					quality = quality,
+					locked = locked,
+					-- questItem = isQuestItem,
+					-- questID = questID,
+					-- startsQuest = startsQuest,
+					bindType = 0
+				}
+			end
+
+			-- There's no reason to try to autoloot when refreshing the frame
+			if not is_refresh then
+				-- Autolooting currency
+				if (auto.all or auto.currency) and (slotType == LOOT_SLOT_MONEY or slotType == LOOT_SLOT_CURRENCY) then
+					autoloot = true
+				-- Quest items			
+				elseif (auto.all or auto.quest) and (isQuestItem or startsQuest) then
+					autoloot = true
+				-- Autolooting items
+				elseif
+					auto.all
+					or (auto.list and auto_items[name])
+					or (auto.tradegoods and slotData.isCraftingReagent)
+				then
 					-- Cache available space
 					--  Specific bag types make this a bit more annoying
 					if not bag_slots then
@@ -1117,76 +1187,70 @@ function XLootFrame:Update(no_snap, no_hide)
 						end
 					end
 
-					-- Simple quest item
-					local family = GetItemFamily(link)
-					if not family and isQuestItem then
-						looted, tried = AutoLootSlot(slot, link)
+					local family = GetItemFamily(slotData.link)
+					-- Empty slots
+					family = (family and family <= 4096) and family or 0
+					if bag_slots[0] > 0 or (bag_slots[family] and bag_slots[family] > 0) then
+						autoloot = true
+						-- Update remaining space estimate
+						family = bag_slots[family] and family or 0
+						bag_slots[family] = bag_slots[family] - 1
+
+					-- Space in existing stacks
 					else
-						-- We have room
-						family = (family and family <= 4096) and family or 0
-						if bag_slots[0] > 0 or (bag_slots[family] and bag_slots[family] > 0) then
-							looted, tried = AutoLootSlot(slot, link)
-							-- Update remaining space
-							family = bag_slots[family] and family or 0 
-							bag_slots[family] = bag_slots[family] - 1
-
-						-- Fits with existing items?
-						else
-							local partial = GetItemCount(link) % itemStackCount
-							if partial > 0 and (partial + quantity < itemStackCount) then
-								looted, tried = AutoLootSlot(slot, link)
-							end
-						end
-
-						-- Try to loot all remaining quest items anyway
-						if not looted and isQuestItem then
-							AutoLootSlot(slot, link)
+						local partial = GetItemCount(slotData.link) % slotData.stackCount
+						if partial > 0 and (partial + quantity < slotData.stackCount) then
+							autoloot = true
 						end
 					end
 				end
+
+				if autoloot then
+					need_refresh = true
+					LootSlot(slot)
+				end
 			end
+
 				
-			-- Initialize slot
-			if not tried or no_hide then
-				our_slot = our_slot + 1 -- Incriment visible slots
-				local row = rows[our_slot] -- Acquire row
-				slots[our_slot] = row -- Place in active list
-				
-				--local icon, name, quantity, quality, locked, isQuestItem, questId, isActive = GetLootSlotInfo(slot)
+			-- Show slot
+			if
+				not autoloot
+				or is_refresh
+			then
+				our_slot = our_slot + 1
+				local row = rows[our_slot]
+				slots[our_slot] = row
 				
 				-- Default UI and tooltip data
-				row.item = link
-				row.quality = quality
+				row.item = slotData.link
+				row.quality = slotData.quality
 				row.slot = slot
 				row.frame_slot = our_slot
 				row:SetID(slot)
 				
 				-- Update row
-				local width = row:Update(is_item, icon, name, link, quantity, quality, locked, isQuestItem, questId, isActive)
+				local width = row:Update(slotData)
 				
 				max_width = max(width, max_width)
 				max_quality = max(quality, max_quality)
 			end
-			if tried then
-				need_refresh = true
-			end
 		end
 	end
 
-	if not no_hide and need_refresh then
+	if not is_refresh and need_refresh then
 		C_Timer.After(0.8, BoPRefresh)
 	end
 
 	-- Exit if we autolooted everything
 	if our_slot == 0 then
-		CloseLoot()
+		-- CloseLoot()
 		return nil
 	end
 	
 	self:SizeAndColor(max_width, max_quality)
 
 	-- Show
-	if not no_snap and not no_hide then
+	if not no_snap and not is_refresh then
 		self:SnapToCursor()
 	end
 	self:Show()

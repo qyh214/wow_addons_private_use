@@ -10,25 +10,23 @@ local LibItemInfo = LibStub:GetLibrary("LibItemInfo.7000")
 local guids, inspecting = {}, false
 
 -- Global API
-function GetInspectInfo(unit, timelimit)
+function GetInspectInfo(unit, timelimit, checkhp)
     local guid = UnitGUID(unit)
-    if (guid and guids[guid]) then
-        if (not timelimit or timelimit == 0) then
-            return guids[guid]
-        end
-        if (guids[guid].timer > time()-timelimit) then
-            return guids[guid]
-        end
+    if (not guid or not guids[guid]) then return end
+    if (checkhp and UnitHealthMax(unit) ~= guids[guid].hp) then return end
+    if (not timelimit or timelimit == 0) then
+        return guids[guid]
+    end
+    if (guids[guid].timer > time()-timelimit) then
+        return guids[guid]
     end
 end
-
-local inuse = { inuse = true }
 
 -- Global API
 function GetInspecting()
     if (InspectFrame and InspectFrame.unit) then
         local guid = UnitGUID(InspectFrame.unit)
-        return guids[guid] or inuse
+        return guids[guid] or { inuse = true }
     end
     if (inspecting and inspecting.expired > time()) then
         return inspecting
@@ -126,7 +124,7 @@ LibEvent:attachEvent("INSPECT_READY", function(this, guid)
             local count, ilevel, _, weaponLevel, isArtifact = LibItemInfo:GetUnitItemLevel(self.data.unit)
             if (ilevel <= 0) then return true end
             if (count == 0 and ilevel > 0) then
-                if (UnitIsVisible(self.data.unit) or self.data.ilevel == ilevel) then
+                --if (UnitIsVisible(self.data.unit) or self.data.ilevel == ilevel) then
                     self.data.timer = time()
                     self.data.name = UnitName(self.data.unit)
                     self.data.class = select(2, UnitClass(self.data.unit))
@@ -138,9 +136,9 @@ LibEvent:attachEvent("INSPECT_READY", function(this, guid)
                     LibEvent:trigger("UNIT_INSPECT_READY", self.data)
                     inspecting = false
                     return true
-                else
-                    self.data.ilevel = ilevel
-                end
+                --else
+                --    self.data.ilevel = ilevel
+                --end
             end
         end,
     })

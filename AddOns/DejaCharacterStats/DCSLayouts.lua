@@ -1,7 +1,9 @@
 --Elvis is the greatest!
-local ADDON_NAME, namespace = ... 	--localization
+--local ADDON_NAME, namespace = ... 	--localization
+local _, namespace = ... 	--localization
 local L = namespace.L 				--localization
-
+--local _, char_ctats_pane = ... --seems like shared upvaluing of tables isn't so easy
+local char_ctats_pane = CharacterStatsPane
 DCS_ClassSpecDB = {}
 
 local _, DCS_TableData = ...
@@ -47,19 +49,19 @@ local StatScrollFrame = CreateFrame("ScrollFrame", nil, CharacterFrameInsetRight
 	StatFrame.AnchorFrame:SetPoint("TOPLEFT")
 	StatScrollFrame:SetScrollChild(StatFrame)
 
-	CharacterStatsPane.ItemLevelFrame:SetParent(StatFrame)
-	CharacterStatsPane.ItemLevelFrame.Value:SetFont(CharacterStatsPane.ItemLevelFrame.Value:GetFont(), 22, "THINOUTLINE")
-	CharacterStatsPane.ItemLevelFrame.Value:SetPoint("CENTER",CharacterStatsPane.ItemLevelFrame.Background, "CENTER", 0, 1)
+	char_ctats_pane.ItemLevelFrame:SetParent(StatFrame)
+	char_ctats_pane.ItemLevelFrame.Value:SetFont(char_ctats_pane.ItemLevelFrame.Value:GetFont(), 22, "THINOUTLINE")
+	char_ctats_pane.ItemLevelFrame.Value:SetPoint("CENTER",char_ctats_pane.ItemLevelFrame.Background, "CENTER", 0, 1)
 
-	CharacterStatsPane.AttributesCategory:SetParent(StatFrame)
-	CharacterStatsPane.AttributesCategory:SetHeight(28)
-	CharacterStatsPane.AttributesCategory.Background:SetHeight(28)
+	char_ctats_pane.AttributesCategory:SetParent(StatFrame)
+	char_ctats_pane.AttributesCategory:SetHeight(28)
+	char_ctats_pane.AttributesCategory.Background:SetHeight(28)
 
-	CharacterStatsPane.ClassBackground:SetParent(StatScrollFrame)
+	char_ctats_pane.ClassBackground:SetParent(StatScrollFrame)
 
-	CharacterStatsPane.EnhancementsCategory:SetParent(StatFrame)
-	CharacterStatsPane.EnhancementsCategory:SetHeight(28)
-	CharacterStatsPane.EnhancementsCategory.Background:SetHeight(28)
+	char_ctats_pane.EnhancementsCategory:SetParent(StatFrame)
+	char_ctats_pane.EnhancementsCategory:SetHeight(28)
+	char_ctats_pane.EnhancementsCategory.Background:SetHeight(28)
 
 local DefaultData = DCS_TableData:MergeTable({
     { statKey = "ItemLevelFrame" },
@@ -188,14 +190,18 @@ local configMode = false
 local function ShowCharacterStats(unit)
     local stat
     local count, backgroundcount, height = 0, false, 4
-	local hideatzero = gdbprivate.gdb.gdbdefaults.dejacharacterstatsHideatZeroChecked.SetChecked --placeholder for the checkbox hideatzero
+	local hideatzero = gdbprivate.gdb.gdbdefaults.dejacharacterstatsHideAtZeroChecked.SetChecked --placeholder for the checkbox hideatzero
 	--print(hideatzero,"hide@zero")
     for _, v in ipairs(ShownData) do
         stat = DCS_TableData.StatData[v.statKey]
 		--print(v.statKey)
 		if stat then -- if some stat gets removed or if experimenting with adding stats
 			stat.updateFunc(stat.frame, unit)
-			--print(v.statKey,stat.frame.numericValue) -- to verify that recorded numeric value is the one intended - either rounded or with many decimal digits
+			--[[
+			if v.statKey == "CRITCHANCE" then
+				print(v.statKey,stat.frame.numericValue) -- to verify that recorded numeric value is the one intended - either rounded or with many decimal digits
+			end
+			--]]
 			if (configMode) then
 				stat.frame:Show()
 				stat.frame.checkButton:Show()
@@ -473,7 +479,7 @@ end)
 ---------------------
 
 
-CharacterStatsPane:HookScript("OnShow", function(self)
+char_ctats_pane:HookScript("OnShow", function(self)
 	self:Hide()
 	StatScrollFrame:Show()
 end)
@@ -666,9 +672,9 @@ end
 
 local function DCS_ClassCrestBGCheck()
 	if DCS_ClassBackgroundCheck:GetChecked(true) then
-		CharacterStatsPane.ClassBackground:Show() 
+		char_ctats_pane.ClassBackground:Show() 
 	else
-		CharacterStatsPane.ClassBackground:Hide()
+		char_ctats_pane.ClassBackground:Hide()
 	end
 end
 	
@@ -690,9 +696,9 @@ local function DCS_DefaultStatsAnchors()
 	StatScrollFrame.ScrollBar:SetPoint("BOTTOMLEFT", StatScrollFrame, "BOTTOMRIGHT", -16, 16)
 	StatScrollFrame.ScrollBar:Hide()
 
-	CharacterStatsPane.ClassBackground:ClearAllPoints()
-	CharacterStatsPane.ClassBackground:SetParent(StatScrollFrame)
-	CharacterStatsPane.ClassBackground:SetPoint("TOP", StatScrollFrame, "TOP", -2.50, 3)
+	char_ctats_pane.ClassBackground:ClearAllPoints()
+	char_ctats_pane.ClassBackground:SetParent(StatScrollFrame)
+	char_ctats_pane.ClassBackground:SetPoint("TOP", StatScrollFrame, "TOP", -2.50, 3)
 	
 	configButtonOnClose()
 	DCS_ClassCrestBGCheck()
@@ -725,11 +731,11 @@ local function DCS_InterfaceOptionsStatsAnchors()
 		DCS_TableResetCheck:SetParent(StatScrollFrame)
 		DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", 3, -42)
 
-		CharacterStatsPane.ClassBackground:ClearAllPoints()
-		CharacterStatsPane.ClassBackground:SetParent(DejaCharacterStatsPanel)
-		CharacterStatsPane.ClassBackground:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 377, -80)
-		CharacterStatsPane.ClassBackground:SetPoint("BOTTOMRIGHT", DejaCharacterStatsPanel, "BOTTOMRIGHT", -48, 126)
-		CharacterStatsPane.ClassBackground:Show()
+		char_ctats_pane.ClassBackground:ClearAllPoints()
+		char_ctats_pane.ClassBackground:SetParent(DejaCharacterStatsPanel)
+		char_ctats_pane.ClassBackground:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 377, -80)
+		char_ctats_pane.ClassBackground:SetPoint("BOTTOMRIGHT", DejaCharacterStatsPanel, "BOTTOMRIGHT", -48, 126)
+		char_ctats_pane.ClassBackground:Show()
 
 		DCS_ClassCrestBGCheck()
 		ShowCharacterStats("player")
@@ -760,10 +766,10 @@ CharacterFrameInsetRight:HookScript("OnHide", function(self)
 		DCS_TableRelevantStats:Hide() 	--For some reason these two have to be hidden again even tho they are hidden with configButtonOnClose() below.
 		DCS_TableResetCheck:Hide()		--For some reason these two have to be hidden again even tho they are hidden with configButtonOnClose() below.
 
-		CharacterStatsPane.ClassBackground:ClearAllPoints()
-		CharacterStatsPane.ClassBackground:SetParent(UIParent)
-		CharacterStatsPane.ClassBackground:SetPoint("BOTTOMRIGHT", UIParent, "TOPLEFT", 0, 0)
-		CharacterStatsPane.ClassBackground:Show()
+		char_ctats_pane.ClassBackground:ClearAllPoints()
+		char_ctats_pane.ClassBackground:SetParent(UIParent)
+		char_ctats_pane.ClassBackground:SetPoint("BOTTOMRIGHT", UIParent, "TOPLEFT", 0, 0)
+		char_ctats_pane.ClassBackground:Show()
 
 		configButtonOnClose()
 	end
@@ -892,7 +898,8 @@ local DCS_ScrollbarCheck = CreateFrame("CheckButton", "DCS_ScrollbarCheck", Deja
 local DCS_ClassBackgroundCheck = CreateFrame("CheckButton", "DCS_ClassBackgroundCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
 	DCS_ClassBackgroundCheck:RegisterEvent("PLAYER_LOGIN")
 	DCS_ClassBackgroundCheck:ClearAllPoints()
-	DCS_ClassBackgroundCheck:SetPoint("TOPLEFT", 25, -120)
+	--DCS_ClassBackgroundCheck:SetPoint("TOPLEFT", 25, -120)
+	DCS_ClassBackgroundCheck:SetPoint("TOPLEFT", 25, -165)
 	DCS_ClassBackgroundCheck:SetScale(1.25)
 	DCS_ClassBackgroundCheck.tooltipText = L["Displays the class crest background."] --Creates a tooltip on mouseover.
 	_G[DCS_ClassBackgroundCheck:GetName() .. "Text"]:SetText(L["Class Crest Background"])
@@ -915,9 +922,9 @@ local DCS_ClassBackgroundCheck = CreateFrame("CheckButton", "DCS_ClassBackground
 			local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsClassBackgroundChecked.ClassBackgroundChecked
 			self:SetChecked(checked)
 			if checked then
-				CharacterStatsPane.ClassBackground:Show() 
+				char_ctats_pane.ClassBackground:Show() 
 			else
-				CharacterStatsPane.ClassBackground:Hide() 
+				char_ctats_pane.ClassBackground:Hide() 
 			end
 			self:UnregisterEvent(event);
 		end
@@ -938,9 +945,9 @@ local DCS_ClassBackgroundCheck = CreateFrame("CheckButton", "DCS_ClassBackground
 		local checked = self:GetChecked()
 		gdbprivate.gdb.gdbdefaults.dejacharacterstatsClassBackgroundChecked.ClassBackgroundChecked = checked
 		if checked then
-			CharacterStatsPane.ClassBackground:Show()
+			char_ctats_pane.ClassBackground:Show()
 		else
-			CharacterStatsPane.ClassBackground:Hide()
+			char_ctats_pane.ClassBackground:Hide()
 		end
         ShowCharacterStats("player") --does it need to be called?
 	end)

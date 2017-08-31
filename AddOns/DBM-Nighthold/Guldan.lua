@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1737, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16275 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16586 $"):sub(12, -3))
 mod:SetCreatureID(104154)--The Demon Within (111022)
 mod:SetEncounterID(1866)
 mod:SetZone()
@@ -15,9 +15,9 @@ mod:SetWipeTime(30)
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 206219 206220 206514 206675 206840 207938 104534 208545 209270 211152 208672 206744 206883 206221 206222 221783 211439 220957 227008 221408 221486",
 	"SPELL_CAST_SUCCESS 206222 206221 221783 212258 227008 221336 221486",
-	"SPELL_AURA_APPLIED 206219 206220 209011 206354 206384 209086 208903 211162 221891 208802 221606 221603 221785 221784 212686 227427 206516 206847 206983 206458 227009",
+	"SPELL_AURA_APPLIED 206219 206220 209011 206354 206384 209086 208903 211162 221891 208802 221606 221603 221785 221784 212686 227427 206516 206847 206983 206458 227009 206310",
 	"SPELL_AURA_APPLIED_DOSE 211162 208802",
-	"SPELL_AURA_REMOVED 209011 206354 206384 209086 221603 221785 221784 212686 221606 206847 206458",
+	"SPELL_AURA_REMOVED 209011 206354 206384 209086 221603 221785 221784 212686 221606 206847 206458 206310",
 --	"SPELL_DAMAGE",
 --	"SPELL_MISSED",
 	"UNIT_DIED",
@@ -86,7 +86,7 @@ local specWarnEyeofGuldan			= mod:NewSpecialWarningSwitchCount(209270, "Dps", ni
 local specWarnCarrionWave			= mod:NewSpecialWarningInterrupt(208672, "HasInterrupt", nil, nil, 1, 2)
 --Stage Three: The Master's Power
 local specWarnStormOfDestroyer		= mod:NewSpecialWarningDodge(161121, nil, nil, nil, 2, 2)
-local specWarnSoulCorrosion			= mod:NewSpecialWarningStack(208802, nil, 3, nil, nil, 1, 6)--stack guessed
+local specWarnSoulCorrosion			= mod:NewSpecialWarningStack(208802, nil, 5, nil, nil, 1, 6)--stack guessed
 local specWarnBlackHarvest			= mod:NewSpecialWarningCount(206744, nil, nil, nil, 2, 2)
 local specWarnFlamesOfSargeras		= mod:NewSpecialWarningMoveAway(221606, nil, nil, nil, 3, 2)
 local yellFlamesofSargeras			= mod:NewPosYell(221606, 15643)
@@ -167,6 +167,7 @@ local countdownFlameCrash			= mod:NewCountdown("AltTwo36", 227071, "Tank", nil, 
 
 --Stage One: The Council of Elders
 ----Gul'dan
+local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 local voiceLiquidHellfire			= mod:NewVoice(206219)--watchstep
 local voiceFelEfflux				= mod:NewVoice(206514)--159202 (flame jet)
 ----Fel Lord Kuraz'mal
@@ -575,7 +576,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			DBM.InfoFrame:Hide()
 		end
 	elseif spellId == 221336 then
-		timerChaosSeedCD:Start(10.5)
+		timerChaosSeedCD:Start(10.5, args.sourceGUID)
 	end
 end
 
@@ -614,7 +615,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnSoulSiphon:CombinedShow(0.3, args.destName)
 	elseif spellId == 208802 then
 		local amount = args.amount or 1
-		if args:IsPlayer() and amount >= 3 then
+		if args:IsPlayer() and amount >= 5 then
 			specWarnSoulCorrosion:Show(amount)
 			voiceSoulCorrosion:Play("stackhigh")
 		end
@@ -687,6 +688,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:IsMythic() then
 			self.vb.phase = 2
 			warnPhase2:Show()
+			voicePhaseChange:Play("ptwo")
 			timerDzorykxCD:Stop()
 			timerFelLordKurazCD:Stop()
 			timerFlamesofSargerasCD:Start(24.5, "1-1")
@@ -698,6 +700,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			self.vb.phase = 3
 			warnPhase3:Show()
+			voicePhaseChange:Play("pthree")
 			timerBlackHarvestCD:Start(self:IsLFR() and 73 or 63, 1)
 			countdownBlackHarvest:Start(self:IsLFR() and 73 or 63)
 			if self:IsEasy() then
@@ -720,9 +723,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnParasiticWound:Show()
 			voiceParasiticWound:Play("scatter")
 			yellParasiticWound:Yell()
-			yellParasiticWoundFades:Schedule(remaining-1, 1)
-			yellParasiticWoundFades:Schedule(remaining-2, 2)
-			yellParasiticWoundFades:Schedule(remaining-3, 3)
+			yellParasiticWoundFades:Countdown(remaining)
 		end
 	elseif spellId == 206983 and self:AntiSpam(2, args.destName) then
 		warnShadowyGaze:CombinedShow(0.3, args.destName)
@@ -735,6 +736,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnWounded:Show()
 		timerWounded:Start()
 		timerVisionsofDarkTitan:Stop()
+	elseif spellId == 206310 and args:IsPlayer() then
+		yellParasiticWoundFades:Cancel()
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -767,6 +770,13 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			yellParasiticWoundFades:Cancel()
 		end
+	elseif spellId == 206310 and args:IsPlayer() then
+		local parasiteName = GetSpellInfo(206847)
+		if UnitDebuff("player", parasiteName) then
+			local _, _, _, _, _, _, expires = UnitDebuff("player", parasiteName)
+			local remaining = expires-GetTime()
+			yellParasiticWoundFades:Countdown(remaining)
+		end
 	end
 end
 
@@ -783,7 +793,7 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 111070 then--Azzinoth
-		timerChaosSeedCD:Stop()
+		timerChaosSeedCD:Stop(args.destGUID)
 	elseif cid == 104154 and self:IsMythic() then--Gul'dan
 		self.vb.bossLeft = self.vb.bossLeft - 1
 		timerFlamesofSargerasCD:Stop()
@@ -867,6 +877,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				self.vb.phase = 2
 				self.vb.liquidHellfireCast = 0
 				warnPhase2:Show()
+				voicePhaseChange:Play("ptwo")
 				timerLiquidHellfireCD:Stop()
 				countdownLiquidHellfire:Cancel()
 				timerFelEffluxCD:Stop()

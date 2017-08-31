@@ -126,8 +126,6 @@ function addon:SetCVar(cvar, value, ...) -- save our cvar to the db
 	end
 end
 
-
-
 local AIO = CreateFrame('Frame', nil, InterfaceOptionsFramePanelContainer)
 AIO:Hide()
 AIO:SetAllPoints()
@@ -144,7 +142,7 @@ local function checkboxSetChecked(self) self:SetChecked(self:GetValue()) end
 local function checkboxSetCVar(self, checked) addon:SetCVar(self.cvar, checked) end
 local function checkboxOnClick(self)
 	local checked = self:GetChecked()
-	PlaySound(checked and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
+    PlaySound(checked and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
 	self:SetValue(checked)
 end
 
@@ -766,6 +764,8 @@ nameplateAtBase:SetScript('OnClick', function(self)
 	self:SetValue(checked and 2 or 0)
 end)
 
+local nameplateColorFriendly = newCheckbox(AIO_NP, 'ShowClassColorInFriendlyNameplate')
+nameplateColorFriendly:SetPoint("TOPLEFT", nameplateAtBase, "BOTTOMLEFT", 0, -8)
 
 -- Combat section
 local AIO_C = CreateFrame('Frame', nil, InterfaceOptionsFramePanelContainer)

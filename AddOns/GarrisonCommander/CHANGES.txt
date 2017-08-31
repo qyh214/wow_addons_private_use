@@ -1,22 +1,12 @@
-tag 2aceee4450b4e18a16a168c563e078e700089b31 2.18.2
+tag 445507e76359775d69ecd5e30831e520698752d9 2.18.4.1
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Wed Mar 29 09:42:35 2017 +0200
+Date:	Wed Aug 30 20:15:39 2017 +0200
 
-Fix: Message: Interface\AddOns\GarrisonCommander\FollowerCache.lua:25:
-attempt to perform arithmetic on local
-'GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY' (a table value)
+Repackaged with new libraries
 
-commit 3ffa3dca0243d6fa7a13de3b67a5dcfb308392ea
+commit 61f1c3cda7e631789824b3460c5c9c0b01585644
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Wed Mar 29 09:38:48 2017 +0200
+Date:   Wed Aug 30 10:55:56 2017 +0200
 
-    Rel notes
-
-commit 4ddbc2483c4e6e42ce83d4dd1404ebc476a5443c
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Wed Mar 29 09:29:27 2017 +0200
-
-    Blizzard changed GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY to an array
-    
-    Fix: Message: Interface\AddOns\GarrisonCommander\FollowerCache.lua:25: attempt to perform arithmetic on local 'GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY' (a table value)
+    Fix: Error when playing sounds
 

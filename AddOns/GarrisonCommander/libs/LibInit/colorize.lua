@@ -3,7 +3,7 @@
 -- @name Colorize
 -- @class module
 -- @author Alar of Daggerspine
--- @release 5
+-- @release 6
 
 ---
 -- @type C
@@ -24,7 +24,7 @@
 
 local C
 -- Color system related function
-local lib=LibStub:NewLibrary("LibInit-Colorize",5)
+local lib=LibStub:NewLibrary("LibInit-Colorize",6)
 if (not lib) then return end
 local setmetatable=setmetatable
 local tonumber=tonumber

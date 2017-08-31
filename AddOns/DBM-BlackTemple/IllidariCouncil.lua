@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Council", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 615 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 621 $"):sub(12, -3))
 mod:SetCreatureID(22949, 22950, 22951, 22952)
 mod:SetEncounterID(608)
 mod:SetModelID(21416)
@@ -28,8 +28,6 @@ mod:SetBossHealthInfo(
 local warnPoison			= mod:NewTargetAnnounce(41485, 3, nil, "Healer", 3)
 local warnVanish			= mod:NewTargetAnnounce(41476, 3)
 local warnVanishEnd			= mod:NewEndAnnounce(41476, 3)
-local warnMeleeImmune		= mod:NewTargetAnnounce(41450, 4, nil, "Physical", 2)
-local warnSpellImmune		= mod:NewTargetAnnounce(41451, 4, nil, "-Physical", 2)
 local warnDevAura			= mod:NewSpellAnnounce(41452, 3, nil, "Physical", 2)
 local warnResAura			= mod:NewSpellAnnounce(41453, 3, nil, "-Physical", 2)
 
@@ -93,11 +91,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnResAura:Show()
 		timerResAura:Start()
 	elseif spellId == 41450 and self:GetCIDFromGUID(args.destGUID) == 22951 then
-		warnMeleeImmune:Show(args.destName)
 		timerMeleeImmune:Start(args.destName)
 		specWarnImmune:Show(L.Melee)
 	elseif spellId == 41451 and self:GetCIDFromGUID(args.destGUID) == 22951 then
-		warnSpellImmune:Show(args.destName)
 		timerSpellImmune:Start(args.destName)
 		specWarnImmune:Show(L.Spell)
 	end

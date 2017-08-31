@@ -208,9 +208,21 @@ local dcsresetcheck = CreateFrame("Button", "DCSResetButton", DejaCharacterStats
 	dcsresetcheck:SetPoint("BOTTOMLEFT", 5, 5)
 	dcsresetcheck:SetScale(1.25)
 
-	local LOCALE = GetLocale()
+	--local LOCALE = GetLocale()
+	local LOCALE = namespace.locale
 		--print (LOCALE)
-
+	local sometable = {
+		["ptBR"] = {},
+		["frFR"] = {},
+		["deDE"] = {},
+	}
+	if sometable[LOCALE] then
+		LOCALE = 175
+	else
+		--print ("enUS = 125")
+		LOCALE = 125
+	end
+	--[[
 	if (LOCALE == "ptBR" or LOCALE == "frFR" or LOCALE == "deDE") then
 		--print ("ptBR, frFR, deDE = 175")
 		LOCALE = 175
@@ -218,7 +230,7 @@ local dcsresetcheck = CreateFrame("Button", "DCSResetButton", DejaCharacterStats
 		--print ("enUS = 125")
 		LOCALE = 125
 	end
-
+	--]]
 	dcsresetcheck:SetWidth(LOCALE)
 
 	dcsresetcheck:SetHeight(30)

@@ -1,13 +1,14 @@
 
 local LibEvent = LibStub:GetLibrary("LibEvent.7000")
+local LibDropdown = LibStub:GetLibrary("LibDropdown.7000")
 
-local UIDropDownMenu_SetText = Lib_UIDropDownMenu_SetText or UIDropDownMenu_SetText
-local UIDropDownMenu_AddButton = Lib_UIDropDownMenu_AddButton or UIDropDownMenu_AddButton
-local UIDropDownMenu_CreateInfo = Lib_UIDropDownMenu_CreateInfo or UIDropDownMenu_CreateInfo
-local UIDropDownMenu_Initialize = Lib_UIDropDownMenu_Initialize or UIDropDownMenu_Initialize
-local UIDropDownMenu_GetSelectedValue = Lib_UIDropDownMenu_GetSelectedValue or UIDropDownMenu_GetSelectedValue
-local UIDropDownMenu_SetSelectedValue = Lib_UIDropDownMenu_SetSelectedValue or UIDropDownMenu_SetSelectedValue
-local UIDropDownMenuTemplate = "Lib_UIDropDownMenuTemplate"
+local UIDropDownMenu_SetText = LibDropdown.SetText
+local UIDropDownMenu_AddButton = LibDropdown.AddButton
+local UIDropDownMenu_CreateInfo = LibDropdown.CreateInfo
+local UIDropDownMenu_Initialize = LibDropdown.Initialize
+local UIDropDownMenu_GetSelectedValue = LibDropdown.GetSelectedValue
+local UIDropDownMenu_SetSelectedValue = LibDropdown.SetSelectedValue
+local UIDropDownMenuTemplate = "UIDropDownMenuTemplate"
 
 local addonName = ...
 local addon = TinyTooltip
@@ -15,7 +16,7 @@ local addon = TinyTooltip
 addon.L = addon.L or {}
 setmetatable(addon.L, { __index = function(self, k)
     local s = {strsplit(".", k)}
-    return rawget(self,s[#s]) or (s[#s]:gsub("([a-z])([A-Z])", "%1 %2"):gsub("^(%a)", function(c) return strupper(c) end))
+    return rawget(self,s[#s]) or (s[#s]:gsub("([a-z])([A-Z])", "%1 %2"):gsub("^(%a)", strupper))
 end})
 local L = addon.L
 
@@ -44,8 +45,10 @@ local function CallTrigger(keystring, value)
         LibEvent:trigger("tooltip.statusbar.text", value)
     elseif (keystring == "general.statusbarHeight") then
         LibEvent:trigger("tooltip.statusbar.height", value)
-    elseif (keystring == "general.statusbarFontSize") then
-        LibEvent:trigger("tooltip.statusbar.font", nil, value, nil)
+    elseif (keystring == "general.statusbarTexture") then
+        LibEvent:trigger("tooltip.statusbar.texture", value)
+    elseif (strfind(keystring, "general.statusbarFont")) then
+        LibEvent:trigger("tooltip.statusbar.font", addon.db.general.statusbarFont, addon.db.general.statusbarFontSize, addon.db.general.statusbarFontFlag)
     elseif (strfind(keystring, "general.headerFont")) then
         LibEvent:trigger("tooltip.style.font.header", tip, addon.db.general.headerFont, addon.db.general.headerFontSize, addon.db.general.headerFontFlag)
     elseif (strfind(keystring, "general.bodyFont")) then
@@ -199,14 +202,14 @@ function widgets:dropdown(parent, config, labelText)
     local frame = CreateFrame("Frame", tostring(config), parent, UIDropDownMenuTemplate)
     frame.keystring = config.keystring
     frame.dropdata = config.dropdata
-    frame.Text:SetWidth(90)
+    if (frame.Text) then frame.Text:SetWidth(90) end
     frame.Label = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	frame.Label:SetPoint("LEFT", _G[frame:GetName().."Button"], "RIGHT", 6, 0)
 	UIDropDownMenu_Initialize(frame, function(self)
         local keystring = self.keystring
         local selectedValue = UIDropDownMenu_GetSelectedValue(self)
         local info
-        for _, v in pairs(self.dropdata) do
+        for _, v in ipairs(self.dropdata) do
             info = UIDropDownMenu_CreateInfo()
             info.text  = L["dropdown."..v]
             info.value = v
@@ -215,6 +218,12 @@ function widgets:dropdown(parent, config, labelText)
             info.func = function(self, dropdown)
                 SetVariable(dropdown.keystring, self.value)
                 UIDropDownMenu_SetSelectedValue(dropdown, self.value)
+            end
+            if (strfind(keystring, ".+Font$")) then
+                info.font = addon:GetFont(v)
+            elseif (strfind(keystring, ".+Texture$")) then
+                info.texture = addon:GetBarFile(v)
+                info.staticWidth = 168
             end
             UIDropDownMenu_AddButton(info)
         end
@@ -258,31 +267,6 @@ do
     line:SetPoint("CENTER")
 end
 
-local saframe = CreateFrame("Frame", nil, UIParent, "ThinBorderTemplate")
-saframe:Hide()
-saframe:SetFrameStrata("DIALOG")
-saframe.close = CreateFrame("Button", nil, saframe, "UIPanelCloseButton")
-saframe.close:SetPoint("LEFT", -5, 0)
-saframe.point = CreateFrame("Button", nil, saframe)
-saframe.point:SetSize(14, 14)
-saframe.point:SetPoint("BOTTOMRIGHT", 1, -1)
-saframe.point:SetNormalTexture("Interface\\Cursor\\Item")
-saframe.point:GetNormalTexture():SetTexCoord(12/32, 0, 12/32, 0)
-saframe:SetClampedToScreen(true)
-saframe:EnableMouse(true)
-saframe:SetMovable(true)
-saframe:SetSize(113, 20)
-saframe:RegisterForDrag("LeftButton")
-saframe:SetScript("OnDragStart", function(self) self:StartMoving() end)
-saframe:SetScript("OnDragStop", function(self)
-    self:StopMovingOrSizing()
-    local right, bottom = self:GetRight(), self:GetBottom()
-    SetVariable(self.kx, floor(right - GetScreenWidth())+4)
-    SetVariable(self.ky, floor(bottom)-3)
-end)
-saframe:SetScript("OnShow", function() grid:Show() end)
-saframe:SetScript("OnHide", function() grid:Hide() end)
-
 local function CreateAnchorButton(frame, anchorPoint)
     local button = CreateFrame("Button", nil, frame)
     button.cp = anchorPoint
@@ -312,6 +296,43 @@ local function CreateAnchorInput(frame, k)
     end)
     return box
 end
+
+local saframe = CreateFrame("Frame", nil, UIParent, "ThinBorderTemplate")
+saframe:Hide()
+saframe:SetFrameStrata("DIALOG")
+saframe.close = CreateFrame("Button", nil, saframe, "UIPanelCloseButton")
+saframe.close:SetPoint("CENTER")
+saframe:SetClampedToScreen(true)
+saframe:EnableMouse(true)
+saframe:SetMovable(true)
+saframe:SetSize(200, 80)
+saframe:RegisterForDrag("LeftButton")
+saframe:SetScript("OnDragStart", function(self) self:StartMoving() end)
+saframe:SetScript("OnDragStop", function(self)
+    self:StopMovingOrSizing()
+    local p = GetVariable(self.cp) or "BOTTOMRIGHT"
+    local left, right, top, bottom = self:GetLeft(), self:GetRight(), self:GetTop(), self:GetBottom()
+    if (p == "BOTTOMRIGHT") then
+        SetVariable(self.kx, floor(right - GetScreenWidth())+4)
+        SetVariable(self.ky, floor(bottom)-3)
+    elseif (p == "BOTTOMLEFT") then
+        SetVariable(self.kx, floor(left)-2)
+        SetVariable(self.ky, floor(bottom)-3)
+    elseif (p == "TOPLEFT") then
+        SetVariable(self.kx, floor(left)-2)
+        SetVariable(self.ky, floor(top-GetScreenHeight()))
+    elseif (p == "TOPRIGHT") then
+        SetVariable(self.kx, floor(right - GetScreenWidth())+4)
+        SetVariable(self.ky, floor(top-GetScreenHeight()))
+    end
+end)
+CreateAnchorButton(saframe, "TOPLEFT")
+CreateAnchorButton(saframe, "BOTTOMLEFT")
+CreateAnchorButton(saframe, "TOPRIGHT")
+CreateAnchorButton(saframe, "BOTTOMRIGHT")
+saframe:SetScript("OnShow", function() grid:Show() end)
+saframe:SetScript("OnHide", function() grid:Hide() end)
+
 local caframe = CreateFrame("Frame", nil, UIParent, "ThinBorderTemplate")
 caframe:Hide()
 caframe:SetFrameStrata("DIALOG")
@@ -364,7 +385,9 @@ function widgets:anchorbutton(parent, config)
         if (value == "static") then
             saframe.kx = self.keystring .. ".x"
             saframe.ky = self.keystring .. ".y"
-            saframe:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", GetVariable(saframe.kx) or -CONTAINER_OFFSET_X-13, GetVariable(saframe.ky) or CONTAINER_OFFSET_Y)
+            saframe.cp = self.keystring .. ".p"
+            saframe[GetVariable(saframe.cp) or "BOTTOMRIGHT"]:GetNormalTexture():SetVertexColor(1, 0.2, 0.1)
+            saframe:SetPoint(GetVariable(saframe.cp) or "BOTTOMRIGHT", UIParent, GetVariable(saframe.cp) or "BOTTOMRIGHT", GetVariable(saframe.kx) or -CONTAINER_OFFSET_X-13, GetVariable(saframe.ky) or CONTAINER_OFFSET_Y)
             saframe:Show()
         elseif (value == "cursor") then
             caframe.cx = self.keystring .. ".cx"
@@ -436,8 +459,26 @@ function widgets:dropdownslider(parent, config)
     return frame
 end
 
-widgets.filterDropdata = {"none","ininstance","incombat","inraid","samerealm","inpvp","inarena","reaction5","reaction6","not ininstance","not incombat","not inraid","not samerealm","not inpvp","not inarena","not reaction5","not reaction6",}
+widgets.filterDropdata = {"none","ininstance","incombat","inraid","samerealm","samecrossrealm","inpvp","inarena","reaction5","reaction6","not ininstance","not incombat","not inraid","not samerealm","not samecrossrealm","not inpvp","not inarena","not reaction5","not reaction6",}
 widgets.colorDropdata = {"default","class","level","reaction","itemQuality","selection","faction",}
+widgets.bgfileDropdata = {"gradual","dark","alpha","rock","marble",}
+widgets.borderDropdata = {"default","angular",}
+widgets.fontDropdata = {"default", "ChatFontNormal", "GameFontNormal", "QuestFont", "CombatLogFont",}
+widgets.barDropdata = {"Interface\\AddOns\\"..addonName.."\\texture\\StatusBar",}
+
+LibEvent:attachEvent("VARIABLES_LOADED", function()
+    local LibMedia = LibStub:GetLibrary("LibSharedMedia-3.0", true)
+    local MergeTable = function(a,b)
+        for _, v in pairs(b) do tinsert(a, v) end
+        return a
+    end
+    if (LibMedia) then
+        widgets.bgfileDropdata = MergeTable(widgets.bgfileDropdata, LibMedia:List("background"))
+        widgets.borderDropdata = MergeTable(widgets.borderDropdata, LibMedia:List("border"))
+        widgets.fontDropdata = MergeTable(widgets.fontDropdata, LibMedia:List("font"))
+        widgets.barDropdata = MergeTable(widgets.barDropdata, LibMedia:List("statusbar"))
+    end
+end)
 
 local options = {
     general = {
@@ -447,8 +488,8 @@ local options = {
         { keystring = "general.borderColor",        type = "colorpick", hasopacity = true },
         { keystring = "general.scale",              type = "slider", min = 0.5, max = 4, step = 0.1 },
         { keystring = "general.borderSize",         type = "slider", min = 1, max = 6, step = 1 },
-        { keystring = "general.borderCorner",       type = "dropdown", dropdata = {"default","angular"} },
-        { keystring = "general.bgfile",             type = "dropdown", dropdata = {"gradual","dark","alpha","rock","marble"} },
+        { keystring = "general.borderCorner",       type = "dropdown", dropdata = widgets.borderDropdata },
+        { keystring = "general.bgfile",             type = "dropdown", dropdata = widgets.bgfileDropdata },
         { keystring = "general.anchor",             type = "anchor", dropdata = {"default","cursorRight","cursor","static"} },
         { keystring = "item.coloredItemBorder",     type = "checkbox" },
         { keystring = "item.showItemIcon",          type = "checkbox" },
@@ -486,6 +527,7 @@ local options = {
         { keystring = "unit.player.elements.isPlayer",    type = "element", color = true, wildcard = true, filter = true, },
         { keystring = "unit.player.elements.role",        type = "element", color = true, wildcard = true, filter = true, },
         { keystring = "unit.player.elements.moveSpeed",   type = "element", color = true, wildcard = true, filter = true, },
+        { keystring = "unit.player.elements.zone",        type = "element", color = true, wildcard = true, filter = true, },
     },
     npc = {
         { keystring = "unit.npc.showTarget",            type = "checkbox" },
@@ -513,6 +555,9 @@ local options = {
         { keystring = "general.statusbarOffsetX",   type = "slider", min = -50, max = 50, step = 1 },
         { keystring = "general.statusbarOffsetY",   type = "slider", min = -50, max = 50, step = 1 },
         { keystring = "general.statusbarFontSize",  type = "slider", min = 6, max = 30, step = 1 },
+        { keystring = "general.statusbarFont",      type = "dropdown", dropdata = widgets.fontDropdata },
+        { keystring = "general.statusbarFontFlag",  type = "dropdown", dropdata = {"default", "NORMAL", "OUTLINE", "THINOUTLINE"} },
+        { keystring = "general.statusbarTexture",   type = "dropdown", dropdata = widgets.barDropdata },
         { keystring = "general.statusbarPosition",  type = "dropdown", dropdata = {"default","bottom","top"} },
         { keystring = "general.statusbarColor",     type = "dropdown", dropdata = {"default","auto","smooth"} },
     },
@@ -522,10 +567,10 @@ local options = {
         { keystring = "spell.borderColor",          type = "colorpick", hasopacity = true },
     },
     font = {
-        { keystring = "general.headerFont",         type = "dropdown", dropdata = {"default", "ChatFontNormal", "GameFontNormal", "QuestFont", "CombatLogFont"} },
+        { keystring = "general.headerFont",         type = "dropdown", dropdata = widgets.fontDropdata },
         { keystring = "general.headerFontSize",     type = "dropdown", dropdata = {"default", 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 } },
         { keystring = "general.headerFontFlag",     type = "dropdown", dropdata = {"default", "NORMAL", "OUTLINE", "THINOUTLINE"} },
-        { keystring = "general.bodyFont",           type = "dropdown", dropdata = {"default", "ChatFontNormal", "GameFontNormal", "QuestFont", "CombatLogFont"} },
+        { keystring = "general.bodyFont",           type = "dropdown", dropdata = widgets.fontDropdata },
         { keystring = "general.bodyFontSize",       type = "dropdown", dropdata = {"default", 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 } },
         { keystring = "general.bodyFontFlag",       type = "dropdown", dropdata = {"default", "NORMAL", "OUTLINE", "THINOUTLINE"} },
     },

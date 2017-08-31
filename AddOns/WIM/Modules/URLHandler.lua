@@ -21,16 +21,8 @@ local URL = CreateModule("URLHandler", true);
 
 armoryLinks = {
     {
-        title = "ArmoryLite",
-        url = "http://armorylite.com/{eu/us}/{realm}/{user}"
-    },
-    {
-        title = "AskMrRobot",
-        url = "http://www.askmrrobot.com/wow/player/{eu/us}/{realm}/{user}"
-    },
-    {
         title = "WoW Armory",
-        url = "http://{eu/us}.battle.net/wow/character/{realm}/{user}/advanced"
+        url = "http://{eu/us}.battle.net/wow/character/{realm-}/{user}/advanced"
     },
     {
         title = "WoW-Heroes",
@@ -39,6 +31,22 @@ armoryLinks = {
     {
 		title = "Wowhead Profiler",
 		url = "http://www.wowhead.com/profile={eu/us}.{realm-}.{user}",
+    },
+    {
+        title = "WoWProgress",
+        url = "http://www.wowprogress.com/character/{eu/us}/{realm}/{user}"
+    },
+    {
+        title = "AskMrRobot",
+        url = "http://www.askmrrobot.com/wow/player/{eu/us}/{realm}/{user}"
+    },
+    {
+        title = "Warcraftlogs",
+        url = "https://www.warcraftlogs.com/character/{eu/us}/{realm}/{user}"
+    },
+    {
+        title = "WoWTrack",
+        url = "https://wowtrack.org/characters/{eu/us}/{realm}/{user}"
     }
 };
 

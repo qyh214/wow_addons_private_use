@@ -6,7 +6,7 @@ local init_done, gradient, conf, doneOptions
 local errorCount = 0
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1053 $")
+end, "$Revision: 1063 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -593,9 +593,16 @@ function XPerl_StatsFrameSetup(self, others, offset)
 			healthBarText:SetFontObject(GameFontNormal)
 		end
 
+		local x = 10
+
+		local frameName = self:GetName()
+		if frameName == "XPerl_partypet1" or frameName == "XPerl_partypet2" or frameName == "XPerl_partypet3" or frameName == "XPerl_partypet4" or frameName == "XPerl_partypet5" then
+			x = 7
+		end
+
 		healthBar:ClearAllPoints()
 		healthBar:SetPoint("TOPLEFT", 5, -5)
-		healthBar:SetPoint("BOTTOMRIGHT", -(5 + percentSize), 5 + needTicker + (secondaryBarsShown * 10))
+		healthBar:SetPoint("BOTTOMRIGHT", -(5 + percentSize), 5 + needTicker + (secondaryBarsShown * x))
 
 		manaBar:ClearAllPoints()
 		manaBar:SetPoint("BOTTOMLEFT", 5, -5 + needTicker + (secondaryBarsShown * 10))
@@ -626,7 +633,7 @@ function XPerl_StatsFrameSetup(self, others, offset)
 		manaBar:SetPoint("BOTTOMRIGHT", healthBar, "BOTTOMRIGHT", 0, -12)
 
 		local lastBar = manaBar
-		for i,bar in pairs(otherBars) do
+		for i, bar in pairs(otherBars) do
 			if (bar:IsShown()) then
 				bar:ClearAllPoints()
 

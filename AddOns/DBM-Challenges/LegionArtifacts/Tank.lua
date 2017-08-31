@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod("Kruul", "DBM-Challenges", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 91 $"):sub(12, -3))
 mod:SetCreatureID(117933, 117198)--Variss, Kruul
 mod:SetZone()
 mod:SetBossHPInfoToHighest()
@@ -50,7 +50,7 @@ local timerInfernalCD			= mod:NewCDTimer(65, 235112, nil, nil, nil, 1, nil, DBM_
 local timerShadowSweepCD		= mod:NewCDTimer(20, 234441, nil, nil, nil, 2)--20-27
 local timerAnnihilateCD			= mod:NewCDCountTimer(27, 236572, nil, nil, nil, 3, nil, DBM_CORE_TANK_ICON)
 
-local countdownAbberation		= mod:NewCountdown(35, 235110)
+local countdownAbberations		= mod:NewCountdown(35, 235110)
 local countdownDrainLife		= mod:NewCountdown("Alt24", 234423)
 local countdownInfernal			= mod:NewCountdown("AltTwo65", 235112)
 --Phase 2

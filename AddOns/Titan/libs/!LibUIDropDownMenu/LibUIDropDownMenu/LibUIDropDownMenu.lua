@@ -1,4 +1,4 @@
--- $Id: LibUIDropDownMenu.lua 4 2017-05-24 08:48:50Z arith $
+-- $Id: LibUIDropDownMenu.lua 21 2017-08-29 13:32:07Z arith $
 -- ----------------------------------------------------------------------------
 -- Localized Lua globals.
 -- ----------------------------------------------------------------------------
@@ -13,8 +13,8 @@ local wipe = table.wipe
 local CreateFrame, GetCursorPosition, GetCVar, GetScreenHeight, GetScreenWidth, OpenColorPicker, PlaySound = CreateFrame, GetCursorPosition, GetCVar, GetScreenHeight, GetScreenWidth, OpenColorPicker, PlaySound
 
 -- ----------------------------------------------------------------------------
-local MAJOR_VERSION = "LibUIDropDownMenu-1.00.70200.24015"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 4 $"):match("%d+"))
+local MAJOR_VERSION = "LibUIDropDownMenu-1.05.7030024920"
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 21 $"):match("%d+"))
 
 local LibStub = _G.LibStub
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
@@ -817,7 +817,7 @@ function L_UIDropDownMenuButton_OnClick(self)
 	end
 
 	if ( playSound ) then
-		PlaySound("UChatScrollButton");
+		PlaySound(PlaySoundKitID and "UChatScrollButton" or SOUNDKIT.U_CHAT_SCROLL_BUTTON); 
 	end
 end
 
