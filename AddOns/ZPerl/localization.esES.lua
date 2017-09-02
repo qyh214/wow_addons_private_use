@@ -116,4 +116,6 @@ if (GetLocale() == "esES" or GetLocale() == "esMX") then
 	XPERL_RAID_TOOLTIP_WITHBUFF	= "Con ventaja: (%s)"
 	XPERL_RAID_TOOLTIP_WITHOUTBUFF	= "Sin ventaja: (%s)"
 	XPERL_RAID_TOOLTIP_BUFFEXPIRING	= "%s ha usado la %s que expira en %s"	-- Name, buff name, time to expire
+
+	XPERL_NEW_VERSION_DETECTED = "Se detectó una nueva versión:"
 end

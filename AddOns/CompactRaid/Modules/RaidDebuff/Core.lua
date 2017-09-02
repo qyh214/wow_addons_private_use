@@ -7,7 +7,7 @@
 
 local wipe = wipe
 local UnitDebuff = UnitDebuff
-local _
+local UnitGUID = UnitGUID
 
 local L = CompactRaid:GetLocale("RaidDebuff")
 local module = CompactRaid:CreateModule("RaidDebuff", "ACCOUNT", L["raid debuff"], L["raid debuff desc"])
@@ -45,6 +45,7 @@ end
 
 function module:OnUnitChange(frame, displayedUnit, unit, inVehicle, class)
 	local visual = self:GetVisual(frame)
+	visual.guid = displayedUnit and UnitGUID(displayedUnit)
 	visual.unit = displayedUnit
 	visual:UpdateDebuff()
 end

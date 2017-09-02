@@ -3,6 +3,8 @@ HiddenArtifactTracker.active = true;		--turn the addon on/off
 HiddenArtifactTracker.colourOptions = true;	--colour tooltip text; false to make all addon text white
 HiddenArtifactTracker.advTracking = true;	--extra tracking for artifact specific unlock criteria; false to hide
 HiddenArtifactTracker.forceTracking = false;	--extra tracking for artifact specific unlock criteria; false to hide
+
+if HiddenArtifactTrackerChars == nil then HiddenArtifactTrackerChars ={} end
 HiddenArtifactTrackerChars.trackBosses = true;	--tracking for mage tower dungeon completion
 
 --DATA

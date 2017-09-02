@@ -11,7 +11,7 @@ KT.Help = M
 local T = LibStub("MSA-Tutorials-1.0")
 local _DBG = function(...) if _DBG then _DBG("KT", ...) end end
 
-local db
+local db, dbChar
 local mediaPath = "Interface\\AddOns\\"..addonName.."\\Media\\"
 local helpPath = mediaPath.."Help\\"
 local helpName = "help"
@@ -42,7 +42,7 @@ end
 
 local function SetupTutorials()
 	T.RegisterTutorial(helpName, {
-		savedvariable = db,
+		savedvariable = KT.db.global,
 		key = "helpTutorial",
 		title = KT.title.." |cffffffffv"..KT.version.."|r",
 		icon = helpPath.."KT_logo",
@@ -189,12 +189,12 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 10
-			text = cTitle.."         What's NEW in version |cffffffff"..KT.version.."|r\n\n"..
-				"- "..cNew.."ADDED - Order Modules|r "..beta.." - Set modules order inside the tracker,"..
-				offs.."supported all modules including PetTracker.\n"..
-				"- "..cNew.."ADDED - Support for Scenario spell buttons.|r\n"..
-				"- IMPROVED - Q/WQ item buttons.\n"..
-				"- REMOVED - Fixes of World Map taint - does not work.\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff2.1.6|r\n\n"..
+				"- UPDATED - addon for patch 7.3.0.\n"..
+				"- UPDATED - libs for patch 7.3.0.\n"..
+				"- ADDED - DropDownMenu skin support for ElvUI and Tukui.\n"..
+				"- ADDED - Collapsed text set color (same as other header texts).\n"..
+				"- Some cosmetic changes.\n\n"..
 
 				cTitle.."Known issues|r\n"..
 				"- Work with World Map during combat generates LUA errors. This is because"..
@@ -203,13 +203,6 @@ local function SetupTutorials()
 
 				cTitle.."Issues reporting|r\n"..
 				"For reporting please use "..cBold.."Tickets|r (|cff666666https://wow.curseforge.com/projects/kaliels-tracker/issues|r) instead of Comments on Curse.com.\n\n"..
-				"To the description of a new ticket, please insert the following information:\n"..
-				"- "..cBold..KT.title.." version|r (number),\n"..
-				"- "..cBold.."User interface|r (e.g. ElvUI) and version,\n"..
-				"- "..cBold.."Addon(s) in collision|r,\n"..
-				"- "..cBold.."WoW language|r,\n"..
-				"- "..cBold.."Character class|r,\n"..
-				"- "..cBold.."Error log|r (if it exists).\n\n"..
 				cWarning.."Before reporting of errors, please deactivate other addons and make sure the bug is not caused by a collision with another addon.|r",
 			textY = -20,
 			shine = KTF,
@@ -219,7 +212,7 @@ local function SetupTutorials()
 			shineRight = 6,
 		},
 		onShow = function(self, i)
-			if db.collapsed then
+			if dbChar.collapsed then
 				ObjectiveTracker_MinimizeButton_OnClick()
 			end
 			if i == 2 then
@@ -260,13 +253,14 @@ end
 function M:OnInitialize()
 	_DBG("|cffffff00Init|r - "..self:GetName(), true)
 	db = KT.db.profile
+	dbChar = KT.db.char
 end
 
 function M:OnEnable()
 	_DBG("|cff00ff00Enable|r - "..self:GetName(), true)
 	SetupTutorials()
 	local last = false
-	if KT.version ~= db.version then
+	if KT.version ~= KT.db.global.version then
 		local data = T.GetTutorial(helpName)
 		local index = data.savedvariable[data.key]
 		if index then

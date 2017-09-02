@@ -21,7 +21,6 @@ local floor = math.floor
 local fmod = math.fmod
 local format = string.format
 local gsub = string.gsub
-local hooksecurefunc = hooksecurefunc
 local ipairs = ipairs
 local pairs = pairs
 local strfind = string.find
@@ -47,7 +46,7 @@ local freeButtons = {}
 local msgPatterns = {}
 local msgShow = true
 local combatLockdown = false
-local db
+local db, dbChar
 
 -- Main frame
 local KTF = CreateFrame("Frame", addonName.."Frame", UIParent)
@@ -95,8 +94,8 @@ local function SetHeaders(type)
 	local bgrColor = db.hdrBgrColorShare and KT.borderColor or db.hdrBgrColor
 	local txtColor = db.hdrTxtColorShare and KT.borderColor or db.hdrTxtColor
 
-	for _, header in ipairs(KT.headers) do
-		if not type or type == "background" then
+	if not type or type == "background" then
+		for _, header in ipairs(KT.headers) do
 			if db.hdrBgr == 1 then
 				header.Background:Hide()
 			elseif db.hdrBgr == 2 then
@@ -113,16 +112,24 @@ local function SetHeaders(type)
 				header.Background:Show()
 			end
 		end
-		if not type or type == "text" then
-			header.Text:SetFont(KT.font, db.fontSize+1, db.fontFlag)
-			if db.hdrBgr == 2 then
-				header.Text:SetTextColor(1, 0.82, 0)
-			else
-				header.Text:SetTextColor(txtColor.r, txtColor.g, txtColor.b)
+	end
+	if not type or type == "text" then
+		OTFHeader.Title:SetFont(KT.font, db.fontSize, db.fontFlag)
+		OTFHeader.Title:SetTextColor(txtColor.r, txtColor.g, txtColor.b)
+		OTFHeader.Title:SetShadowColor(0, 0, 0, db.fontShadow)
+
+		for _, header in ipairs(KT.headers) do
+			if type == "text" then
+				header.Text:SetFont(KT.font, db.fontSize+1, db.fontFlag)
+				if db.hdrBgr == 2 then
+					header.Text:SetTextColor(1, 0.82, 0)
+				else
+					header.Text:SetTextColor(txtColor.r, txtColor.g, txtColor.b)
+				end
+				header.Text:SetShadowColor(0, 0, 0, db.fontShadow)
+				header.Text:SetPoint("LEFT", 4, 0.5)
+				header.animateReason = 0
 			end
-			header.Text:SetShadowColor(0, 0, 0, db.fontShadow)
-			header.Text:SetPoint("LEFT", 4, 0)
-			header.animateReason = 0
 		end
 	end
 end
@@ -149,8 +156,10 @@ local function SetMessage(text, pattern, r, g, b, icon, x, y)
 		x = x or 0
 		y = y or 0
 		if db.sink20OutputSink == "Blizzard" then
-			x = floor(x * 2 * COMBAT_TEXT_X_SCALE)
-			y = y - 6
+			x = floor(x * 3 * COMBAT_TEXT_X_SCALE)
+			y = y - 7
+		elseif db.sink20OutputSink == "SCT" or db.sink20OutputSink == "MikSBT" then
+			y = y - 1
 		end
 		text = format("|T%s:0:0:%d:%d|t%s", icon, x, y, text)
 	end
@@ -208,7 +217,7 @@ local function Init()
 	KT.initialized = true
 	KT.stopUpdate = false
 
-	if db.collapsed then
+	if dbChar.collapsed then
 		ObjectiveTracker_MinimizeButton_OnClick()
 	else
 		OTF.BlocksFrame:Hide()
@@ -231,7 +240,7 @@ local function SetFrames()
 		if event == "PLAYER_ENTERING_WORLD" and not KT.stopUpdate then
 			msgShow = true
 			KT.inInstance = IsInInstance()
-			if db.collapseInInstance and KT.inInstance and not db.collapsed then
+			if db.collapseInInstance and KT.inInstance and not dbChar.collapsed then
 				ObjectiveTracker_MinimizeButton_OnClick()
 			end
 		elseif event == "PLAYER_LEAVING_WORLD" then
@@ -328,7 +337,7 @@ local function SetFrames()
 	Scroll.step = 20
 	Scroll.value = 0
 	Scroll:SetScript("OnMouseWheel", function(self, delta)
-		if not db.collapsed and OTF.height > db.maxHeight then
+		if not dbChar.collapsed and OTF.height > db.maxHeight then
 			if delta < 0 then
 				self.value = (self.value+self.step < OTF.height-db.maxHeight) and self.value + self.step or OTF.height - db.maxHeight
 			else
@@ -467,14 +476,14 @@ local function SetHooks()
 				KTF.Buttons.num = idx
 				KTF.Buttons.reanchor = false
 			end
-			if db.collapsed or KTF.Buttons.num == 0 then
+			if dbChar.collapsed or KTF.Buttons.num == 0 then
 				KTF.Buttons:Hide()
 			else
 				KTF.Buttons:Show()
 			end
 			KT.ActiveButton:Update()
 		end
-		if db.collapsed or KTF.Buttons.num == 0 then
+		if dbChar.collapsed or KTF.Buttons.num == 0 then
 			KTF.Buttons:SetAlpha(0)
 		else
 			KTF.Buttons:SetAlpha(1)
@@ -485,12 +494,12 @@ local function SetHooks()
 	ObjectiveTracker_Update = function(reason, id)
 		if KT.stopUpdate then return end
 		if reason ~= OBJECTIVE_TRACKER_UPDATE_STATIC then
-			_DBG("|cffffff00Update ... "..(reason or ""))
+			_DBG("|cffffff00Update ... "..(reason and format("%x", reason) or ""), true)
 		end
 		bck_ObjectiveTracker_Update(reason, id)
 		OTF.isUpdating = true
 		FixedButtonsReanchor()
-		if db.collapsed then
+		if dbChar.collapsed then
 			local _, numQuests = GetNumQuestLogEntries()
 			local title = ""
 			if db.hdrCollapsedTxt == 2 then
@@ -616,8 +625,9 @@ local function SetHooks()
 						-- currencies
 						local numQuestCurrencies = GetNumQuestLogRewardCurrencies(block.id)
 						for i = 1, numQuestCurrencies do
-							local name, texture, numItems = GetQuestLogRewardCurrencyInfo(i, block.id)
-							GameTooltip:AddLine(format(BONUS_OBJECTIVE_REWARD_WITH_COUNT_FORMAT, texture, numItems, name), 1, 1, 1)
+							local name, texture, numItems, currencyID = GetQuestLogRewardCurrencyInfo(i, block.id)
+							local currencyColor = GetColorForCurrencyReward(currencyID, numItems)
+							GameTooltip:AddLine(format(BONUS_OBJECTIVE_REWARD_WITH_COUNT_FORMAT, texture, numItems, name), currencyColor:GetRGB())
 						end
 						-- honor
 						local honorAmount = GetQuestLogRewardHonor(block.id)
@@ -746,8 +756,8 @@ local function SetHooks()
 				tag:SetSize(32, 32)
 				tag:SetBackdrop({ bgFile = mediaPath.."UI-KT-QuestItemTag" })
 				tag.text = tag:CreateFontString(nil, "ARTWORK", "GameFontNormalMed1")
-				tag.text:SetFont(LSM:Fetch("font", "Arial Narrow"), 14, "None")
-				tag.text:SetPoint("CENTER", -0.5, 0)
+				tag.text:SetFont(LSM:Fetch("font", "Arial Narrow"), 13, "")
+				tag.text:SetPoint("CENTER", -0.5, 1)
 			end
 			tag:SetPoint(anchor or "TOPRIGHT", block, x, y)
 			tag:Show()
@@ -1043,7 +1053,7 @@ local function SetHooks()
 		_DBG("--------------------------------")
 		_DBG("COLLAPSE")
 		OTF.collapsed = true
-		KT.db.profile.collapsed = OTF.collapsed
+		dbChar.collapsed = OTF.collapsed
 		OTF.BlocksFrame:Hide()
 		KTF.MinimizeButton:GetNormalTexture():SetTexCoord(0, 0.5, 0, 0.25)
 		OTFHeader.Title:Show()
@@ -1055,7 +1065,7 @@ local function SetHooks()
 		_DBG("--------------------------------")
 		_DBG("EXPAND")
 		OTF.collapsed = nil
-		KT.db.profile.collapsed = OTF.collapsed
+		dbChar.collapsed = OTF.collapsed
 		OTF.BlocksFrame:Show()
 		KTF.MinimizeButton:GetNormalTexture():SetTexCoord(0, 0.5, 0.25, 0.5)
 		OTFHeader.Title:Hide()
@@ -1080,7 +1090,7 @@ local function SetHooks()
 		elseif state == "LEAVING" and KT.activeTask then
 			_DBG(" - "..state)
 			KT:RemoveFixedButton(block)
-			if db.collapsed then
+			if dbChar.collapsed then
 				BonusObjectiveTracker_OnBlockAnimOutFinished(block.ScrollContents)
 			end
 		end
@@ -1385,7 +1395,7 @@ function KT:SetSize()
 	end
 
 	_DBG(" - height = "..OTF.BlocksFrame.contentsHeight)
-	if not db.collapsed and not self:IsTrackerEmpty() then
+	if not dbChar.collapsed and not self:IsTrackerEmpty() then
 		if BONUS_OBJECTIVE_TRACKER_MODULE.firstBlock then
 			mod = mod + BONUS_OBJECTIVE_TRACKER_MODULE.blockPadding
 		end
@@ -1509,10 +1519,6 @@ function KT:SetText()
 
 	OBJECTIVE_TRACKER_DOUBLE_LINE_HEIGHT = (2 * db.fontSize) + 1
 
-	-- Collapsed
-	OTFHeader.Title:SetFont(self.font, db.fontSize, db.fontFlag)
-	OTFHeader.Title:SetTextColor(0, 0.7, 1)	-- blue
-	OTFHeader.Title:SetShadowColor(0, 0, 0, db.fontShadow)
 	-- Headers
 	SetHeaders("text")
 	-- Others
@@ -1755,7 +1761,7 @@ end
 function KT:ToggleEmptyTracker(added)
 	local alpha, mouse = 1, true
 	if self:IsTrackerEmpty() then
-		if not db.collapsed then
+		if not dbChar.collapsed then
 			ObjectiveTracker_MinimizeButton_OnClick()
 		end
 		KTF.MinimizeButton:GetNormalTexture():SetTexCoord(0, 0.5, 0.5, 0.75)
@@ -1764,7 +1770,7 @@ function KT:ToggleEmptyTracker(added)
 			mouse = false
 		end
 	else
-		if db.collapsed then
+		if dbChar.collapsed then
 			if added then
 				ObjectiveTracker_MinimizeButton_OnClick()
 			else
@@ -1832,6 +1838,7 @@ function KT:OnInitialize()
 	-- Setup Options
 	self:SetupOptions()
 	db = self.db.profile
+	dbChar = self.db.char
 
 	-- Blizzard frame resets
 	OTF.KTSetParent = OTF.SetParent
@@ -1868,8 +1875,8 @@ function KT:OnEnable()
 	if db.qiActiveButton then self.ActiveButton:Enable() end
 	self.Help:Enable()
 
-	if db.version ~= self.version then
-		db.version = self.version
+	if self.db.global.version ~= self.version then
+		self.db.global.version = self.version
 	end
 
 	self.screenWidth = round(GetScreenWidth())

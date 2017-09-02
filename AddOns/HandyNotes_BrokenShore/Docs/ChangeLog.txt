@@ -1,7 +1,11 @@
-$Id: ChangeLog.txt 77 2017-08-30 13:32:59Z arith $
+$Id: ChangeLog.txt 79 2017-08-31 14:53:46Z arith $
 
 Revision History:
 =================
+
+* v1.21 (Aug. 31, 2017)
+-----------------------
+- Lib Update: LibUIDropDownMenu
 
 * v1.20 (Aug. 30, 2017)
 -----------------------

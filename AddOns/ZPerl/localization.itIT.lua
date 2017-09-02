@@ -125,4 +125,6 @@ if (GetLocale() == "itIT") then
 	XPERL_RAID_TOOLTIP_WITHBUFF	= "Con buff: (%s)"
 	XPERL_RAID_TOOLTIP_WITHOUTBUFF	= "Senza buff: (%s)"
 	XPERL_RAID_TOOLTIP_BUFFEXPIRING	= "%s ha usato %s che finisce in %s"	-- Name, buff name, time to expire
+
+	XPERL_NEW_VERSION_DETECTED = "Nuova versione rilevata:"
 end

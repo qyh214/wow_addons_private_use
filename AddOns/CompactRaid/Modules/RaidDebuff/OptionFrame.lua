@@ -101,8 +101,39 @@ buttonAdd:SetParent(list)
 buttonAdd:SetPoint("TOPRIGHT", panel, "BOTTOM", 0, -5)
 buttonAdd:SetSize(96, 24)
 
+local function ProcessInput(arg1, text)
+	local tierId = tierCombo:GetSelection()
+	local instanceId = instanceCombo:GetSelection()
+	local bossId = bossCombo:GetSelection()
+
+	if not tierId or not instanceId or not bossId then
+		return
+	end
+
+	local id = tonumber(strtrim(text or ""))
+	if not id or id < 1 then
+		return 1
+	end
+
+	local name, _, icon = GetSpellInfo(id)
+	if not name then
+		module:Print(format(L["debuff or spell not found for"], id))
+		return
+	end
+
+	if module:IsDebuffRegistered(tierId, instanceId, name) then
+		module:Print(format(L["debuff already registered"], name, module:GetInstanceName(tierId, instanceId)))
+		return
+	end
+
+	local data = module:RegisterDebuff(tierId, instanceId, bossId, id, nil, 1)
+	local position = list:InsertData(data)
+	list:SetSelection(position)
+	list:EnsureVisible()
+end
+
 buttonAdd:SetScript("OnClick", function(self)
-	module:StartCustomInput()
+	CompactRaid:PopupShowInput(L["type spell id of the debuff"], ProcessInput)
 end)
 
 local buttonDelete = page:CreatePressButton(DELETE)
@@ -113,9 +144,11 @@ buttonDelete:SetPoint("LEFT", buttonAdd, "RIGHT")
 buttonDelete:SetSize(96, 24)
 
 buttonDelete:SetScript("OnClick", function(self)
-	if self.data then
-		module:DeleteCustomDebuff(page.tierCombo:GetSelection(), page.instanceCombo:GetSelection(), self.data.id)
+	local data = self.data
+	if data and data.custom then
+		module:DeleteCustomDebuff(page.tierCombo:GetSelection(), page.instanceCombo:GetSelection(), data.id)
 		list:RemoveData(self.position)
+		list:SetSelection(nil)
 	end
 end)
 

@@ -13,7 +13,7 @@ local _DBG = function(...) if _DBG then _DBG("KT", ...) end end
 -- WoW API
 local InCombatLockdown = InCombatLockdown
 
-local db
+local db, dbChar
 local KTF = KT.frame
 local bar = ExtraActionBarFrame
 
@@ -146,6 +146,7 @@ function M:OnInitialize()
 	self.timerID = nil
 	
 	db = KT.db.profile
+	dbChar = KT.db.char
 end
 
 function M:OnEnable()
@@ -193,7 +194,7 @@ function M:Update(id)
 	local closestQuestID
 	local minDistSqr = 22500
 
-	if not db.collapsed then
+	if not dbChar.collapsed then
 		for questID, button in pairs(KT.fixedButtons) do
 			if QuestHasPOIInfo(questID) then
 				local distSqr, onContinent = GetDistanceSqToQuest(button:GetID())

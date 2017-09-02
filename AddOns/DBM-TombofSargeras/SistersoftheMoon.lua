@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1903, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16657 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16678 $"):sub(12, -3))
 mod:SetCreatureID(118523, 118374, 118518)--118523 Huntress kasparian, 118374 Captain Yathae Moonstrike, 118518 Prestess Lunaspyre
 mod:SetEncounterID(2050)
 mod:SetZone()
@@ -195,7 +195,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.beaconCount = self.vb.beaconCount + 1
 		timerLunarBeaconCD:Start(20.7)
 		--["236712-Lunar Beacon"] = "pull:359.7, 31.7, 54.8, 23.1, 31.7, 23.1, 31.8, 21.9, 20.7, 29.2",
-		self:BossTargetScanner(args.sourceGUID, "BeaconTarget", 0.1, 12, true)
+		self:ScheduleMethod(0.2, "BossTargetScanner", args.sourceGUID, "BeaconTarget", 0.1, 12, true, nil, nil, nil, true)
 	elseif spellId == 239379 then
 		specWarnGlaiveStorm:Show()
 		voiceGlaiveStorm:Play("watchstep")
@@ -221,7 +221,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		voiceCallMoontalon:Play("killbigmob")
 		if self.vb.moonTalonCount == 1 then
 			local remaining = GetTime() - self.vb.pulltime
-			timerCallMoontalonCD:Start(280-remaining)
+			timerCallMoontalonCD:Start(260-remaining)
 		end
 	elseif spellId == 237561 then--^^
 		self.vb.twilightGlaiveCount = self.vb.twilightGlaiveCount + 1

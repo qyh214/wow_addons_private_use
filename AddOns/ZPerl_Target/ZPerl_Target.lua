@@ -1444,11 +1444,11 @@ function XPerl_Target_Events:PLAYER_TARGET_CHANGED()
 	end
 	if (self.conf.sound and UnitExists("target")) then
 		if (UnitIsEnemy("target", "player")) then
-			PlaySound("igCreatureAggroSelect")
+			PlaySound(873)
 		elseif (UnitIsFriend("player", "target")) then
-			PlaySound("igCharacterNPCSelect")
+			PlaySound(867)
 		else
-			PlaySound("igCreatureNeutralSelect")
+			PlaySound(871)
 		end
 	end
 
@@ -1475,11 +1475,11 @@ function XPerl_Target_Events:PLAYER_FOCUS_CHANGED()
 	end
 	if (self.conf.sound and UnitExists("focus")) then
 		if (UnitIsEnemy("focus", "player")) then
-			PlaySound("igCreatureAggroSelect")
+			PlaySound(873)
 		elseif (UnitIsFriend("player", "focus")) then
-			PlaySound("igCharacterNPCSelect")
+			PlaySound(867)
 		else
-			PlaySound("igCreatureNeutralSelect")
+			PlaySound(871)
 		end
 	end
 

@@ -26,7 +26,18 @@ local function RaidDebuffFrame_OnUpdate(self, elapsed)
 end
 
 local function RaidDebuffFrame_UpdateDebuff(self)
-	local level, icon, count, dispelType, expires = module:FindTopDebuff(self.unit)
+	local level, icon, count, dispelType, expires
+
+	if module.GetOverrideDebuff then
+		icon, count, dispelType, expires = module:GetOverrideDebuff(self.guid)
+	end
+
+	if icon then
+		level = 5
+	else
+		level, icon, count, dispelType, expires = module:FindTopDebuff(self.unit) -- only check debuffs if not overridden
+	end
+
 	if not level then
 		self:SetAlpha(0)
 		self:SetScript("OnUpdate", nil)

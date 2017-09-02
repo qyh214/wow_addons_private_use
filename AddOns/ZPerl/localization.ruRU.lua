@@ -115,4 +115,6 @@ if (GetLocale() == "ruRU") then
 	XPERL_RAID_TOOLTIP_WITHBUFF		= "С баффом: (%s)"
 	XPERL_RAID_TOOLTIP_WITHOUTBUFF	= "Без баффа: (%s)"
 	XPERL_RAID_TOOLTIP_BUFFEXPIRING	= "%s'а %s заканчивается через %s"	-- Name, buff name, time to expire
+
+	XPERL_NEW_VERSION_DETECTED = "Обнаружена новая версия:"
 end

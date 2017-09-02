@@ -5,4 +5,6 @@
 	<Script file="TrialofValor.lua"/>
 	<Script file="TheNighthold.lua"/>
 	<Script file="TombofSargeras.lua"/>
+	<Script file="Argus.lua"/>
+	<Script file="AntorusBurningThrone.lua"/>
 </Ui>

@@ -21,6 +21,17 @@ local function Module_GetVisual(self, frame)
 	return self.__visualFrames[frame]
 end
 
+local function Module_FindUnitFrame(self, unit, byGuid)
+	return addon:FindUnitFrame(unit, byGuid)
+end
+
+local function Module_FindVisual(self, unit, byGuid)
+	local unitFrame = Module_FindUnitFrame(self, unit, byGuid)
+	if unitFrame then
+		return Module_GetVisual(self, unitFrame)
+	end
+end
+
 local function Module_EnumVisuals(self, object, func, ...)
 	return addon._EnumFrames(self.__visualFrames, object, func, ...)
 end
@@ -232,6 +243,8 @@ function addon:OnCreateModule(module, key, title, desc, spec, secure)
 	module.EnumVisuals = Module_EnumVisuals
 	module.EnumUnitFrames = self.EnumUnitFrames
 	module.OnSpecChange = Module_OnSpecChange
+	module.FindUnitFrame = Module_FindUnitFrame
+	module.FindVisual = Module_FindVisual
 
 	module.IsEnabled = Module_IsEnabled
 	module.Enable = Module_Enable

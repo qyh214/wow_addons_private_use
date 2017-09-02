@@ -1,3 +1,9 @@
+5.4.1
+- Updated for patch 7.3.0.
+
+5.4.0
+- 7.3.0 statement.
+
 **r1066**
 * Fixed multiple issues with party and party target incoming heals and absorbs.
 * Protected and children element fixes in the options frame.

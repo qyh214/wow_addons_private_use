@@ -19,8 +19,8 @@ CompactRaid:RegisterLocale("RaidDebuff", "enUS", {
 	["raid instances"] = "Raid Instances",
 	["5-Player instances"] = "5-Man Instances",
 	["developer mode"] = "Developer mode (display ID for instances & bosses)",
-	["type debuff name or it's spell id"] = "Type debuff name or it's spell ID:",
-	["debuff already registered"] = "Debuff |cffff0000\"%s\"|r was already registered for instance \"%s\".",
-	["debuff or spell not found for"] = "Debuff or spell not found for |cffff0000\"%s\"|r.",
+	["type spell id of the debuff"] = "Type spell ID of the debuff:",
+	["debuff already registered"] = "Debuff |cff00ff00\"%s\"|r was already registered for instance |cff00ff00\"%s\"|r.",
+	["debuff or spell not found for"] = "Debuff with spell ID |cffff0000%d|r not found.",
 	["spell list"] = "Spell list",
 })

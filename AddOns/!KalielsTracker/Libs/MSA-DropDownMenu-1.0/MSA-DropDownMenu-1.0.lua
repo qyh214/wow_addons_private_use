@@ -1,4 +1,4 @@
---- MSA-DropDownMenu-1.0 - Drop down menu for non-Blizzard addons
+--- MSA-DropDownMenu-1.0 - DropDown menu for non-Blizzard addons
 --- Marouan Sabbagh <mar.sabbagh@gmail.com>
 ---
 --- Default Blizzard UIDropDownMenu functions are sometimes used inside protected frames
@@ -6,21 +6,14 @@
 ---
 --- Extracted from Blizzard code, with some modifications.
 --- Usage is the same as the default Blizzard UIDropDownMenu. Constants, functions and templates
---- are prefixed " MSA_" and was removed original prefix "UI", if it contained.
+--- are prefixed "MSA_" and was removed original prefix "UI", if it contained.
 ---
 --- https://mods.curse.com/addons/wow/254936-msa-dropdownmenu-1-0
 
-local name, minor = "MSA-DropDownMenu-1.0", 0	-- 7.0.3.22267
+local name, minor = "MSA-DropDownMenu-1.0", 3	-- 7.3.0.24920
 
-local lib, oldMinor = LibStub:GetLibrary(name, true)
-if lib then
-	if oldMinor < minor then
-		error("|cffff0000Update library to latest version 1.0."..minor.."|r")
-	end
-	return
-else
-	lib = LibStub:NewLibrary(name, minor)
-end
+local lib = LibStub:NewLibrary(name, minor)
+if not lib then return end
 
 -- WoW API
 local _G = _G
@@ -92,7 +85,7 @@ function MSA_DropDownMenu_Initialize(frame, initFunction, displayMode, level, me
 	
 	-- Set the initialize function and call it.  The initFunction populates the dropdown list.
 	if ( initFunction ) then
-		frame.initialize = initFunction;
+		MSA_DropDownMenu_SetInitializeFunction(frame, initFunction);
 		initFunction(frame, level, frame.menuList);
 	end
 
@@ -123,6 +116,10 @@ function MSA_DropDownMenu_Initialize(frame, initFunction, displayMode, level, me
 		frame.displayMode = "MENU";
 	end
 
+end
+
+function MSA_DropDownMenu_SetInitializeFunction(frame, initFunction)
+	frame.initialize = initFunction;
 end
 
 function MSA_DropDownMenu_RefreshDropDownSize(self)
@@ -256,6 +253,7 @@ function MSA_DropDownMenu_AddSeparator(info, level)
 	info.isTitle = true;
 	info.isUninteractable = true;
 	info.notCheckable = true;
+	info.leftPadding = nil;		-- MSA
 	info.iconOnly = true;
 	info.icon = "Interface\\Common\\UI-TooltipDivider-Transparent";
 	info.tCoordLeft = 0;
@@ -274,6 +272,13 @@ function MSA_DropDownMenu_AddSeparator(info, level)
 							tFitDropDownSizeX = info.tFitDropDownSizeX };
 
 	MSA_DropDownMenu_AddButton(info, level);
+
+	-- MSA
+	info.isTitle = nil;
+	info.disabled = nil;
+	info.iconOnly = nil;
+	info.icon = nil;
+	info.iconInfo = nil;
 end
 
 function MSA_DropDownMenu_AddButton(info, level)
@@ -807,7 +812,7 @@ function MSA_DropDownMenuButton_OnClick(self)
 	end
 
 	if ( playSound ) then
-		PlaySound("UChatScrollButton");
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON);
 	end
 end
 
@@ -1247,3 +1252,39 @@ function MSA_OpenColorPicker(info)
 	ColorPickerFrame:SetColorRGB(info.r, info.g, info.b);
 	ShowUIPanel(ColorPickerFrame);
 end
+
+-- ElvUI skin
+local function LoadSkin_ElvUI()
+	if not IsAddOnLoaded("ElvUI") then return end
+	local E = unpack(_G.ElvUI)
+	if E.private.skins.blizzard.misc ~= true then return end
+	for i = 1, MSA_DROPDOWNMENU_MAXLEVELS do
+		_G["MSA_DropDownList"..i.."MenuBackdrop"]:SetTemplate("Transparent")
+		_G["MSA_DropDownList"..i.."Backdrop"]:SetTemplate("Transparent")
+	end
+end
+
+-- Tukui skin
+local function LoadSkin_Tukui()
+	if not IsAddOnLoaded("Tukui") then return end
+	local Backdrop
+	for i = 1, MSA_DROPDOWNMENU_MAXLEVELS do
+		Backdrop = _G["MSA_DropDownList"..i.."MenuBackdrop"]
+		Backdrop:SetTemplate("Default")
+		Backdrop:CreateShadow()
+		Backdrop.IsSkinned = true
+		Backdrop = _G["MSA_DropDownList"..i.."Backdrop"]
+		Backdrop:SetTemplate("Default")
+		Backdrop:CreateShadow()
+		Backdrop.IsSkinned = true
+	end
+end
+
+-- Init
+local initFrame = CreateFrame("Frame")
+initFrame:SetScript("OnEvent", function(self, event)
+	LoadSkin_ElvUI()
+	LoadSkin_Tukui()
+	self:UnregisterEvent(event)
+end)
+initFrame:RegisterEvent("PLAYER_ENTERING_WORLD")

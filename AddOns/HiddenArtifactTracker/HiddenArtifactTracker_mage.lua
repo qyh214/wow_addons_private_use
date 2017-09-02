@@ -1,5 +1,5 @@
 if HiddenArtifactTrackerFuncs == nil then HiddenArtifactTrackerFuncs={} end
-HiddenArtifactTrackerChars ={}	
+if HiddenArtifactTrackerChars == nil then HiddenArtifactTrackerChars ={} end
 --DATA
 local classWeaponQuests = {			--maps classes and their weapons to available mage tower quests {questID, artifact name, [companion weapon]}
 	[1]={	{44925, "Strom'kar, the Warbreaker"},

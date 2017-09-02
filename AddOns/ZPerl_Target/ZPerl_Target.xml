@@ -24,7 +24,7 @@
 			</OnDragStop>
 			<OnHide>
 				if (XPerlDB.target.sound) then
-					PlaySound("INTERFACESOUND_LOSTTARGETUNIT")
+					PlaySound(684)
 				end
 			</OnHide>
 		</Scripts>

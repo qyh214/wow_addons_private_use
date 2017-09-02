@@ -1,5 +1,5 @@
-## Interface: 70200
-## Version: 5.3.2
+## Interface: 70300
+## Version: 5.4.1
 ## Author: Resike
 ## Title: Z-Perl UnitFrames
 ## Title-itIT: Z-Perl UnitFrames
@@ -20,6 +20,8 @@ Libs\!NoTaint\!NoTaint.xml
 Libs\!NoTaint\!NoTaint.lua
 Libs\LibStub\LibStub.lua
 Libs\UIDropDownMenu\UIDropDownMenu.xml
+
+Version.lua
 
 ZPerl_Globals.xml
 ZPerl.xml

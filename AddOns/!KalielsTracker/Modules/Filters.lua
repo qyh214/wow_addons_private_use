@@ -18,7 +18,7 @@ local strfind = string.find
 -- WoW API
 local _G = _G
 
-local db
+local db, dbChar
 local mediaPath = "Interface\\AddOns\\"..addonName.."\\Media\\"
 
 local KTF = KT.frame
@@ -71,7 +71,7 @@ local function SetHooks()
 	hooksecurefunc("QuestObjectiveTracker_OnOpenDropDown", function(self)
 		if db.filterAuto[1] then
 			local listFrame = _G["MSA_DropDownList1"]
-			MSA_DropDownMenu_DisableButton(1, listFrame.numButtons == 5 and 4 or 3)
+			MSA_DropDownMenu_DisableButton(1, listFrame.numButtons == 5 and 5 or 4)
 		end
 	end)
 	
@@ -106,7 +106,7 @@ local function SetHooks()
 			QuestLogPopupDetailFrame.TrackButton:Enable()
 		end
 	end)
-	
+
 	-- POI
 	local bck_QuestPOIButton_OnClick = QuestPOIButton_OnClick
 	QuestPOIButton_OnClick = function(self)
@@ -165,10 +165,10 @@ local function IsInstanceQuest(questID)
 	local _, _, difficulty, _ = GetInstanceInfo()
 	local difficultyTags = instanceQuestDifficulty[difficulty]
 	if difficultyTags then
-		local questTag, tagName = GetQuestTagInfo(questID)
+		local tagID, tagName = GetQuestTagInfo(questID)
 		for _, tag in ipairs(difficultyTags) do
 			_DBG(difficulty.." ... "..tag, true)
-			if tag == questTag then
+			if tag == tagID then
 				return true
 			end
 		end
@@ -280,7 +280,7 @@ local function Filter_Achievements(self, spec)
 		local categoryName = (continentName == continents[2*8]) and EXPANSION_NAME6 or continentName
 		local instance = KT.inInstance and 168 or nil
 		_DBG(zoneName.." ... "..GetCurrentMapAreaID(), true)
-		
+
 		-- Dungeons & Raids
 		local type, difficulty, difficultyName
 		if instance and db.filterAchievCat[instance] then
@@ -581,7 +581,7 @@ function DropDown_Initialize(self, level)
 			info.checked = (not PetTracker.Sets.HideTracker)
 			info.func = function()
 				PetTracker.Tracker.Toggle()
-				if db.collapsed and not PetTracker.Sets.HideTracker then
+				if dbChar.collapsed and not PetTracker.Sets.HideTracker then
 					ObjectiveTracker_MinimizeButton_OnClick()
 				end
 			end
@@ -736,30 +736,32 @@ end
 function M:OnInitialize()
 	_DBG("|cffffff00Init|r - "..self:GetName(), true)
 	db = KT.db.profile
+	dbChar = KT.db.char
 
-	local defaults = {
-		profile = KT:MergeTables({
-			filterAuto = {
-				nil,	-- [1] Quests
-				nil,	-- [2] Achievements
-			},
-			filterAchievCat = {
-				[92] = true,	-- General
-				[96] = true,	-- Quests
-				[97] = true,	-- Exploration
-				[95] = true,	-- Player vs. Player
-				[168] = true,	-- Dungeons & Raids
-				[169] = true,	-- Professions
-				[201] = true,	-- Reputation
-				[15165] = true,	-- Scenarios
-				[155] = true,	-- World Events
-				[15117] = true,	-- Pet Battles
-				[15246] = true,	-- Collections
-				[15275] = true,	-- Class Hall
-				[15237] = true,	-- Draenor Garrison
-			},
-		}, KT.db.defaults.profile)
-	}
+    local defaults = KT:MergeTables({
+        profile = {
+            filterAuto = {
+                nil,	-- [1] Quests
+                nil,	-- [2] Achievements
+            },
+            filterAchievCat = {
+                [92] = true,	-- General
+                [96] = true,	-- Quests
+                [97] = true,	-- Exploration
+                [95] = true,	-- Player vs. Player
+                [168] = true,	-- Dungeons & Raids
+                [169] = true,	-- Professions
+                [201] = true,	-- Reputation
+                [15165] = true,	-- Scenarios
+                [155] = true,	-- World Events
+                [15117] = true,	-- Pet Battles
+                [15246] = true,	-- Collections
+                [15275] = true,	-- Class Hall
+                [15237] = true,	-- Draenor Garrison
+            },
+            filterWQTimeLeft = nil,
+        }
+    }, KT.db.defaults)
 	KT.db:RegisterDefaults(defaults)
 end
 

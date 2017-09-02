@@ -80,6 +80,29 @@ function addon:GetButton(index)
 	return unitFrames[index]
 end
 
+function addon:FindUnitFrame(unit, byGuid)
+	if type(unit) ~= "string" then
+		return
+	end
+
+	local i
+	for i = 1, #unitFrames do
+		local button = unitFrames[i]
+		local displayedUnit = button.displayedUnit
+		if displayedUnit and button:IsVisible() then
+			if byGuid then
+				if UnitGUID(displayedUnit) == unit then
+					return button
+				end
+			else
+				if UnitIsUnit(unit, displayedUnit) then
+					return button
+				end
+			end
+		end
+	end
+end
+
 local function BroadcastUnitNotify(frame, event, ...)
 	if addon:Initialized() then
 		addon:BroadcastEvent("OnUnitNotify", frame, event, ...)

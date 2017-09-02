@@ -10,7 +10,7 @@ KT.AddonPetTracker = M
 
 local _DBG = function(...) if _DBG then _DBG("KT", ...) end end
 
-local db
+local db, dbChar
 local OTF = ObjectiveTrackerFrame
 local PetTracker = PetTracker
 
@@ -145,7 +145,7 @@ local function SetHooks_PetTracker_Journal()
 		end)
 	else
 		PetTrackerTrackToggle:HookScript("OnClick", function()
-			if db.collapsed and not PetTracker.Sets.HideTracker then
+			if dbChar.collapsed and not PetTracker.Sets.HideTracker then
 				ObjectiveTracker_MinimizeButton_OnClick()
 			end
 		end)
@@ -242,6 +242,7 @@ end
 function M:OnInitialize()
 	_DBG("|cffffff00Init|r - "..self:GetName(), true)
 	db = KT.db.profile
+	dbChar = KT.db.char
 	self.isLoaded = (KT:CheckAddOn("PetTracker", "7.1.4") and db.addonPetTracker)
 
 	if self.isLoaded then

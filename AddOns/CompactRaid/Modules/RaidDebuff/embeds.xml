@@ -6,6 +6,6 @@
 	<Script file="API.lua"/>
 	<Script file="Visual.lua"/>
 	<Script file="OptionFrame.lua"/>
-	<Script file="Custom.lua"/>
 	<Include file="Data\embeds.xml"/>
+	<Include file="Overrides\embeds.xml"/>
 </Ui>

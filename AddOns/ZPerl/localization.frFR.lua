@@ -76,4 +76,6 @@ if (GetLocale() == "frFR") then
 	XPERL_RAID_TOOLTIP_WITHBUFF			= "Avec buffs: (%s)"
 	XPERL_RAID_TOOLTIP_WITHOUTBUFF		= "Sans buffs: (%s)"
 	XPERL_RAID_TOOLTIP_BUFFEXPIRING		= "%s's %s expires dans %s"	-- Name, buff name, time to expire
+
+	XPERL_NEW_VERSION_DETECTED = "Nouvelle version détectée:"
 end

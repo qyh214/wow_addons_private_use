@@ -59,7 +59,7 @@ end
 
 -- ElvUI
 local function ElvUI_SetSupport()
-    if KT:CheckAddOn("ElvUI", "10.33", true) then
+    if KT:CheckAddOn("ElvUI", "10.62", true) then
         local E = unpack(_G.ElvUI)
         E.Blizzard.MoveObjectiveFrame = function() end
         hooksecurefunc(E, "ToggleConfig", function(self)
@@ -81,7 +81,7 @@ end
 
 -- Tukui
 local function Tukui_SetSupport()
-    if KT:CheckAddOn("Tukui", "17.08", true) then
+    if KT:CheckAddOn("Tukui", "17.13", true) then
         local T = unpack(_G.Tukui)
         T.Miscellaneous.ObjectiveTracker.Enable = function() end
     end
@@ -89,7 +89,7 @@ end
 
 -- RealUI
 local function RealUI_SetSupport()
-    if KT:CheckAddOn("nibRealUI", "8.1_r18g", true) then
+    if KT:CheckAddOn("nibRealUI", "8.1 r20d", true) then
         local R = _G.RealUI
         R:SetModuleEnabled("Objectives Adv.", false)
         -- Fade
@@ -122,7 +122,7 @@ end
 
 -- SpartanUI
 local function SpartanUI_SetSupport()
-    if KT:CheckAddOn("SpartanUI", "4.3.0", true) then
+    if KT:CheckAddOn("SpartanUI", "4.4.0", true) then
         local S = LibStub("AceAddon-3.0"):GetAddon("SpartanUI")
         local ACD = LibStub("AceConfigDialog-3.0")
         DB.EnabledComponents.Objectives = false
@@ -158,7 +158,7 @@ end
 function M:OnInitialize()
     _DBG("|cffffff00Init|r - "..self:GetName(), true)
     db = KT.db.profile
-    KT:CheckAddOn("Masque", "7.1.0")
+    KT:CheckAddOn("Masque", "7.3.0")
 end
 
 function M:OnEnable()

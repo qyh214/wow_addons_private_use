@@ -118,4 +118,6 @@ if (GetLocale() == "deDE") then
 	XPERL_RAID_TOOLTIP_WITHBUFF      	= "Mit Buff: (%s)"
 	XPERL_RAID_TOOLTIP_WITHOUTBUFF   	= "Ohne Buff: (%s)"
 	XPERL_RAID_TOOLTIP_BUFFEXPIRING		= "%s's %s schwindet in %s"	-- Name, buff name, time to expire
+
+	XPERL_NEW_VERSION_DETECTED			= "Neue Version erkannt:"
 end

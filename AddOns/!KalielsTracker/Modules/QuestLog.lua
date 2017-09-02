@@ -118,7 +118,7 @@ local function SetHooks()
 			return;
 		end
 
-		PlaySound("igMainMenuOptionCheckBoxOn");
+		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
 
 		if ( IsShiftKeyDown() ) then
 			QuestMapQuestOptions_TrackQuest(self.questID);

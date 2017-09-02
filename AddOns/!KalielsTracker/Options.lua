@@ -8,6 +8,7 @@ local addonName, KT = ...
 
 local ACD = LibStub("MSA-AceConfigDialog-3.0")
 local ACR = LibStub("AceConfigRegistry-3.0")
+local LSM = LibStub("LibSharedMedia-3.0")
 local WidgetLists = AceGUIWidgetLSMlists
 local _DBG = function(...) if _DBG then _DBG("KT", ...) end end
 
@@ -20,7 +21,7 @@ local pairs = pairs
 local strlen = string.len
 local strsub = string.sub
 
-local db
+local db, dbChar
 local mediaPath = "Interface\\AddOns\\"..addonName.."\\Media\\"
 local anchors = { "TOPLEFT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMRIGHT" }
 local strata = { "LOW", "MEDIUM", "HIGH" }
@@ -55,7 +56,7 @@ local defaults = {
 		borderThickness = 16,
 		bgrInset = 4,
 		
-		font = "Friz Quadrata TT",
+		font = LSM:GetDefault("font"),
 		fontSize = 12,
 		fontFlag = "",
 		fontShadow = 1,
@@ -102,7 +103,8 @@ local defaults = {
 		addonMasque = false,
 		addonPetTracker = false,
 		addonTomTom = false,
-		
+	},
+	char = {
 		collapsed = false,
 	}
 }
@@ -489,7 +491,7 @@ local options = {
 							set = function()
 								db.textWordWrap = not db.textWordWrap
 								KT:SetText()
-								if db.collapsed then
+								if dbChar.collapsed then
 									ObjectiveTracker_MinimizeButton_OnClick()
 									ObjectiveTracker_MinimizeButton_OnClick()
 								else
@@ -1115,6 +1117,7 @@ function KT:SetupOptions()
 	self.db = LibStub("AceDB-3.0"):New(strsub(addonName, 2).."DB", defaults, true)
 	self.options = options
 	db = self.db.profile
+	dbChar = self.db.char
 
 	general.sec2.args.classBorder.name = general.sec2.args.classBorder.name:format(RgbToHex(self.classColor))
 

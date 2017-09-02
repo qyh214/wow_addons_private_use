@@ -117,4 +117,6 @@ if (GetLocale() == "zhTW") then
 	XPERL_RAID_TOOLTIP_WITHBUFF	= "有此 buff 的：(%s)"
 	XPERL_RAID_TOOLTIP_WITHOUTBUFF	= "沒有此 buff 的：(%s)"
 	XPERL_RAID_TOOLTIP_BUFFEXPIRING	= "%s 的 %s 將要在 %s 後消失。"	-- Name, buff name, time to expire
+
+	XPERL_NEW_VERSION_DETECTED = "检测到新版本："
 end

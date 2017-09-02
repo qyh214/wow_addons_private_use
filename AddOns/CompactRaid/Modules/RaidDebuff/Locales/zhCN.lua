@@ -19,8 +19,8 @@ CompactRaid:RegisterLocale("RaidDebuff", "zhCN", {
 	["raid instances"] = "团队副本",
 	["5-Player instances"] = "5人副本",
 	["developer mode"] = "开发者模式（显示副本与首领的ID）",
-	["type debuff name or it's spell id"] = "请输入Debuff名称或它的法术ID:",
-	["debuff already registered"] = "Debuff\"%s\"已经在副本\"%s\"中被注册。",
-	["debuff or spell not found for"] = "没有找到符合\"%s\"的Debuff或法术。",
+	["type spell id of the debuff"] = "请输入Debuff的法术ID:",
+	["debuff already registered"] = "Debuff|cff00ff00\"%s\"|r已经在副本|cff00ff00\"%s\"|r中被注册。",
+	["debuff or spell not found for"] = "没有找到法术ID为|cffff0000%d|r的Debuff。",
 	["spell list"] = "法术列表",
 })
