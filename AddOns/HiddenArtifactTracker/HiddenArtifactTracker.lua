@@ -214,10 +214,25 @@ GameTooltip:SetScript("OnTooltipSetItem",
 				end
 			end
 
-			if HiddenArtifactTrackerChars.trackBosses and HiddenArtifactTrackerChars[name] ~= nil and IsQuestFlaggedCompleted(HiddenArtifactTrackerChars[name]["quest"]) and HiddenArtifactTrackerChars[name]["completion"] < 10 then
-				GameTooltip:AddLine(" ", 1,1,1,True)
-				local col = HiddenArtifactTrackerChars[name]["completion"] / 10
-				GameTooltip:AddLine("Mage Tower dungeons: "..HiddenArtifactTrackerChars[name]["completion"].."/10", 2-2*col, 2*col, 0, True)
+			if HiddenArtifactTrackerChars.trackBosses and HiddenArtifactTrackerChars[name] ~= nil and IsQuestFlaggedCompleted(HiddenArtifactTrackerChars[name]["quest"]) then
+				--mage dungeon colour
+				if HiddenArtifactTrackerChars[name]["completion"] < 10 then
+					GameTooltip:AddLine(" ", 1,1,1,True)
+					local col = HiddenArtifactTrackerChars[name]["completion"] / 10
+					GameTooltip:AddLine("Mage Tower dungeons: "..HiddenArtifactTrackerChars[name]["completion"].."/10", 2-2*col, 2*col, 0, True)
+				end
+				
+				--mage RBG colour
+				local rbgWins =  GetStatistic(5694)
+				if rbgWins == "--" then rbgWins = 0 end
+				local startWins = HiddenArtifactTrackerChars[name].rbg or rbgWins
+				local deltaWins = rbgWins - startWins
+				if deltaWins < 10 then
+					GameTooltip:AddLine(" ", 1,1,1,True)
+					local col = deltaWins / 10
+					GameTooltip:AddLine("Mage Tower RBG wins: "..deltaWins.."/10", 2-2*col, 2*col, 0, True)	
+				end
+
 			elseif HiddenArtifactTrackerChars.trackBosses and HiddenArtifactTrackerChars[name] ~= nil and IsQuestFlaggedCompleted(HiddenArtifactTrackerChars[name]["quest"]) == false then
 				GameTooltip:AddLine(" ", 1,1,1,True)
 

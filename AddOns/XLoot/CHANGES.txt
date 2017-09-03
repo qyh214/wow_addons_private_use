@@ -1,12 +1,18 @@
-tag dcbf5ee08407ff1e49db156ee3d7611a82c491ae 7.2-9
+tag a4c5529132206674300eb13f989f17d295c860b3 7.3-1
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Wed Jul 26 22:19:55 2017 -0400
+Date:	Fri Sep 1 15:36:55 2017 -0400
 
-Autolooting fixes
+Fix PlaySound errors
 
-commit f9d51e846946cd4b3790846f8025d062ecad9b56
+commit 85298dfc232f7dca65a420148a0216c542e3fbf6
 Author: Xuerian <xuerian@gmail.com>
-Date:   Wed Jul 26 22:19:26 2017 -0400
+Date:   Fri Sep 1 15:36:32 2017 -0400
 
-    More autolooting fixes
+    Bump ToC 70300
+
+commit 96222f285e1ce62a76706fbfa9e5879158b559b9
+Author: Xuerian <xuerian@gmail.com>
+Date:   Fri Sep 1 14:52:31 2017 -0400
+
+    Frame: Update PlaySound usage to fix #151
 

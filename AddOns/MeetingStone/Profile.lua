@@ -478,3 +478,16 @@ end
 function Profile:OnDatabaseShutdown()
     self:SendMessage('MEETINGSTONE_DB_SHUTDOWN')
 end
+
+function Profile:GetLastVersion()
+    return tonumber(self.gdb.global.version) or 0
+end
+
+function Profile:GetLastCharacterVersion()
+    return tonumber(self.cdb.profile.version) or 0
+end
+
+function Profile:SaveLastVersion()
+    self.gdb.global.version = ADDON_VERSION
+    self.cdb.profile.version = ADDON_VERSION
+end

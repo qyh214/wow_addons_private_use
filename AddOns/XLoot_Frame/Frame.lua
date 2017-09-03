@@ -1273,10 +1273,11 @@ end
 function addon:LOOT_OPENED()
 	if GetNumLootItems() > 0 then
 		if not XLootFrame:IsShown() and IsFishingLoot() then
-			PlaySound('FISHING REEL IN')
+			PlaySound(SOUNDKIT.FISHING_REEL_IN)
 		end
 		XLootFrame:Update()
 	else
+		PlaySound(SOUNDKIT.LOOT_WINDOW_OPEN_EMPTY)
 		CloseLoot()
 	end
 end

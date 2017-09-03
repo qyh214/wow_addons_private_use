@@ -92,6 +92,9 @@ PROVING_GROUND_DATA = {
     },
 }
 
+-- last activity 491
+-- last group 134
+
 CATEGORY = {
     [0] = {
         groups = {
@@ -268,6 +271,8 @@ CATEGORY = {
             [129] = true,
             [130] = true,
             [131] = true,
+            [132] = true,
+            [133] = true,
         },
         activities = {
             [458] = true,

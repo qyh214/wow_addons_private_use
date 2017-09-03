@@ -443,6 +443,12 @@ locales.ptBR["Frame"] = {
 }
 
 locales.frFR["Frame"] = {
+	["bind_on_equip_short"] = "LqE",
+	["bind_on_pickup_short"] = "LqR",
+	["bind_on_use_short"] = "LqU",
+	["button_close"] = "Fermer",
+	["button_link"] = "Lien",
+	["linkall_threshold_missed"] = "Aucun butin ne correspond à votre seuil de qualité",
 }
 
 locales.deDE["Frame"] = {

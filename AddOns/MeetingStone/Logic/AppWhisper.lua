@@ -104,7 +104,7 @@ function AppWhisper:MakeAppWhisper(event, msg, target)
             if strsub(event, 10) == 'APP_WHISPER' then
                 ChatEdit_SetLastTellTarget(target, 'WHISPER')
                 if chatFrame.tellTimer and GetTime() > chatFrame.tellTimer then
-                    PlaySound('TellMessage')
+                    PlaySound(SOUNDKIT and SOUNDKIT.TELL_MESSAGE or 'TellMessage')
                 end
                 chatFrame.tellTimer = GetTime() + CHAT_TELL_ALERT_TIME
                 FlashClientIcon()

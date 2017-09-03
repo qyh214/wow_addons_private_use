@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1066 $")
+XPerl_SetModuleRevision("$Revision: 1074 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -601,10 +601,10 @@ function XPerl_Options_Anchor_OnLoad(self)
 	Lib_UIDropDownMenu_SetWidth(self, 100)
 end
 
--- XPerl_Options_Anchor_OnLoad
+-- XPerl_Options_Anchor_Initialize
 function XPerl_Options_Anchor_Initialize()
 	local info
-	local current = XPerl_Options_Party_Anchor.varGet() or "TOP"
+	local current = LIB_UIDROPDOWNMENU_INIT_MENU.varGet() or "TOP"
 
 	for k, v in pairs(XPerl_AnchorList) do
 		info = { }

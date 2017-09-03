@@ -287,11 +287,11 @@ function BrowsePanel:OnInitialize()
         ActivityDropdown:SetDefaultValue(0)
         ActivityDropdown:SetDefaultText(L['请选择活动类型'])
         ActivityDropdown:SetCallback('OnSelectChanged', function(_, data, ...)
-            
+            self:StartSet()
             self:UpdateModeDropdown(data.categoryId)
             self:UpdateBossFilter(data.activityId, data.customId)
             self:ClearSearchProfile()
-            self:DoSearch()
+            self:EndSet()
         end)
     end
 
@@ -674,7 +674,7 @@ function BrowsePanel:OnInitialize()
 
     LFGListApplicationDialog.SignUpButton:SetScript('OnClick', function(self)
         local dialog = self:GetParent()
-        PlaySound('igMainMenuOptionCheckBoxOn')
+        PlaySound(SOUNDKIT and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or 'igMainMenuOptionCheckBoxOn')
         local id = dialog.resultID
         local comment = format('%s%s', dialog.Description.EditBox:GetText(), dialog.playerData or '')
         local tank = dialog.TankButton:IsShown() and dialog.TankButton.CheckButton:GetChecked()
@@ -895,24 +895,20 @@ function BrowsePanel:GetSearchCode(fullName, mode, loot, customId)
     if mode == 0 then
         mode = nil
     end
+    if customId == 0 then
+        customId = nil
+    end
+    if fullName and fullName:trim() == '' then
+        fullName = nil
+    end
     loot = loot and rawget(ACTIVITY_LOOT_LONG_NAMES, loot)
     mode = mode and rawget(ACTIVITY_MODE_NAMES, mode)
 
-    if mode then
-        return format('%s-%s-%s',
-            loot or '',
-            mode,
-            fullName or ''
-        )
-    elseif loot then
-        return format('-%s-%s',
-            loot,
-            fullName or ''
-        )
-    elseif customId and customId ~= 0 and fullName then
-        return '-' .. fullName
-    end
-    return fullName or ''
+    return format('%s %s %s',
+        fullName and format('%s%s', customId and '-' or '', fullName) or '',
+        loot and format('-%s-', loot) or '',
+        mode and format('-%s-', mode) or ''
+    )
 end
 
 function BrowsePanel:OnRefreshTimer()

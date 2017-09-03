@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod("Kruul", "DBM-Challenges", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 91 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 93 $"):sub(12, -3))
 mod:SetCreatureID(117933, 117198)--Variss, Kruul
 mod:SetZone()
 mod:SetBossHPInfoToHighest()
@@ -11,7 +11,7 @@ mod.onlyNormal = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 234423 233473 234631 236572 234676",
+	"SPELL_CAST_START 234423 233473 234631 241717 236537 236572 234676",
 	"SPELL_CAST_SUCCESS 236572",
 	"SPELL_AURA_APPLIED 234422",
 	"SPELL_AURA_APPLIED_DOSE 234422",
@@ -92,7 +92,7 @@ function mod:SPELL_CAST_START(args)
 		warnHolyWard:Show()
 		timerHolyWard:Start()
 		timerHolyWardCD:Start()
-	elseif spellId == 234631 then
+	elseif spellId == 234631 or spellId == 241717 or spellId == 236537 then
 		specWarnSmash:Show()
 		voiceSmash:Play("shockwave")
 	elseif spellId == 236572 then

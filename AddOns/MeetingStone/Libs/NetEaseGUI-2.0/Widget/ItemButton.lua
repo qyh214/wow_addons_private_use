@@ -30,7 +30,7 @@ function ItemButton:FireHandler(name, ...)
 end
 
 function ItemButton:OnClick(button)
-    PlaySound('igMainMenuOptionCheckBoxOn')
+    PlaySound(SOUNDKIT and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or 'igMainMenuOptionCheckBoxOn')
     if not self:GetOwner() then
         return
     end
@@ -120,7 +120,7 @@ function ItemButton:BindCallback(object, callback, handler)
     if not Class:IsObject(object) then
         error([[bad argument #1 to 'BindCallback' (widget expected)]], 2)
     end
-    
+
     object:SetCallback(callback, function()
         self:FireHandler(handler)
     end)

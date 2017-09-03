@@ -5,7 +5,7 @@ local BroadMiddleware = LibStub('NetEaseBroadMiddleware-2.0')
 local AceTimer = LibStub('AceTimer-3.0')
 local AceEvent = LibStub('AceEvent-3.0')
 
-local MAJOR, MINOR = 'SocketHandler-2.0', 19
+local MAJOR, MINOR = 'SocketHandler-2.0', 20
 local SocketHandler,oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not SocketHandler then return end
 
@@ -337,7 +337,6 @@ function EventHandler:PLAYER_LOGIN()
     self:RegisterEvent('PLAYER_LOGOUT')
     self:RegisterEvent('CHAT_MSG_SYSTEM')
     self:RegisterEvent('CHAT_MSG_CHANNEL_NOTICE')
-    self:InitFilter()
 
     for _, handler in ipairs(connectQueue) do
         handler:TryConnect()
@@ -415,31 +414,3 @@ if not SocketHandler.hooked then
         end
     end)
 end
-
-function EventHandler:CVAR_UPDATE(_, key, value)
-    if key == 'PROFANITY_FILTER' and value == '1' then
-        C_Timer.After(1, function()
-            SetCVar('profanityFilter', 0)
-        end)
-    end
-end
-
-function EventHandler:BN_MATURE_LANGUAGE_FILTER(_, value)
-    if value then
-        C_Timer.After(1, function()
-            BNSetMatureLanguageFilter(false)
-        end)
-    end
-end
-
-function EventHandler:InitFilter()
-    pcall(function()
-        SetCVar('profanityFilter', 0)
-        if BNFeaturesEnabledAndConnected() then
-            BNSetMatureLanguageFilter(false)
-        end
-    end)
-end
-
-EventHandler:RegisterEvent('CVAR_UPDATE')
-EventHandler:RegisterEvent('BN_MATURE_LANGUAGE_FILTER')

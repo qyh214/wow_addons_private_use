@@ -15,12 +15,14 @@ end
 local RelicSpells = addon.SpellIDByRelic
 local RelicTypeNames = addon.RelicTypes
 local RelicSlotsByArtifact = addon.RelicSlots
+local PowersToScrape = addon.PowersToScrape
 local SpecByArtifact = addon.Artifacts
 local ArtifactBySpec = invertTable(addon.Artifacts)
 
 local DEBUG = 0
+local MAX_LINE_LENGTH = 80
 
---Potential 7.2 Hack
+-- 7.2 Hack for lack of item links
 local t_threshold = 1.0
 local itemRefLinkInfo = {'',0}
 local xSetHyperlink = ItemRefTooltip.SetHyperlink
@@ -39,7 +41,7 @@ end
 hooksecurefunc(GameTooltip,'SetInventoryItem', gHack)
 --
 
-local options, optionsFrame, db
+local options, optionsFrame, db, charDB
 
 local modifierPressed = 0
 
@@ -112,6 +114,7 @@ local defaults = {
 		itemLevelDisplay = "Relic",
 		hoverTraitNames = "Always",
 		hoverTraitDesc = "CTRL Key",
+		hoverNLC = "Always",
 		linkTraitNames = "Always",
 		linkTraitDesc = "Always",
 		relicSpecs = "Specs",
@@ -156,7 +159,7 @@ local function SetupOptions()
 					},
 					itemTooltipTraitNames = {
 						name = "Show Trait Names:",
-						desc = "When to show trait names on item tooltips",
+						desc = "When to show trait names on artifact tooltips",
 						type = "select",
 						width = "single",
 						set = function(info,val) db.profile.hoverTraitNames = hoverOptions[val] end,
@@ -166,13 +169,23 @@ local function SetupOptions()
 					},
 					itemTooltipTraitDesc = {
 						name = "Show Trait Descriptions:",
-						desc = "When to show trait descriptions on item tooltips",
+						desc = "When to show trait descriptions on artifact tooltips",
 						type = "select",
 						width = "single",
 						set = function(info,val) db.profile.hoverTraitDesc = hoverOptions[val] end,
 						get = function(info) return invHoverOptions[db.profile.hoverTraitDesc] end,
 						order = 22,
 						values = locHoverOptions
+					},
+					itemTooltipNetherlight = {
+						name = "Show " .. SPLASH_LEGION_NEW_7_3_FEATURE1_TITLE .. " " .. ARTIFACTS_PERK_TAB .. ":",
+						desc = "When to show Netherlight Crucible traits on artifact tooltips",
+						type = "select",
+						width = "single",
+						set = function(info,val) db.profile.hoverNLC = linkOptions[val] end,
+						get = function(info) return invLinkOptions[db.profile.hoverNLC] end,
+						order = 23,
+						values = locLinkOptions
 					},
 					linkTooltipHeader = {
 						name = "Artifact Link Tooltips",
@@ -240,6 +253,109 @@ local function initialize()
 
 	config:RegisterOptionsTable("RelicInspector", options)
 	optionsFrame = dialog:AddToBlizOptions("RelicInspector", "RelicInspector", nil, "general")
+
+	-- Init the per-character DB also
+	charDB = _G.LibStub("AceDB-3.0"):New("RelicInspectorCharDB")
+end
+
+local RISpellTooltip = CreateFrame('GameTooltip', 'RISpellTooltip', nil, 'GameTooltipTemplate')
+local function GetDescriptionFromTooltip(powerID) 
+	if not powerID then return nil end
+	if not PowersToScrape[powerID] then return nil end
+
+	RISpellTooltip:SetOwner(WorldFrame, 'ANCHOR_NONE')
+	RISpellTooltip:SetArtifactPowerByID(powerID)
+
+	local str = _G['RISpellTooltipTextLeft3']
+	local text = str and str:GetText()
+	return text
+end
+
+local function scrubRelicLink(link)
+	if link == nil then return nil end
+	local pieces = {strsplit(':', link)}
+	pieces[10] = '' --remove Level
+	pieces[11] = '' --remove Spec
+	local str = pieces[1]
+	for u=2,#pieces do
+		str = str .. ':' .. pieces[u]
+	end
+	return str
+end
+
+local function updateArtifactCache()
+	local artifactID,_,_,_,_,aLvl = C_ArtifactUI.GetArtifactInfo()
+
+	if nil ~= artifactID then
+		local weaponCache = {}
+		if nil == charDB.char.artifactCache then
+			charDB.char.artifactCache = {}
+		elseif nil ~= charDB.char.artifactCache[artifactID] then
+			weaponCache = charDB.char.artifactCache[artifactID]
+		end
+
+		local t = GetTime()
+		weaponCache['timestamp'] = t
+		weaponCache['level'] = aLvl
+
+		local crucibled = weaponCache['crucibled'] or false
+		
+		for n=1,3 do
+			local relicCache = {}
+			local relicInfo = {C_ArtifactUI.GetRelicInfo(n)}
+			if nil ~= relicInfo then
+				if DEBUG ~=0 then print(format("Updating Relic: %s",relicInfo[1])) end
+				relicInfo[4] = scrubRelicLink(relicInfo[4])
+				relicCache['relic'] = relicInfo
+			end
+
+			if C_ArtifactRelicForgeUI.IsAtForge() then -- if we're not, we can't update NLC stuff
+				if DEBUG ~=0 then print("I'm At the NLC") end
+				local relicTalents = C_ArtifactRelicForgeUI.GetSocketedRelicTalents(n)
+
+				--Cache the spellID for each "power"
+				if nil ~= relicTalents then
+					crucibled = true -- per-weapon check
+					charDB.char.crucibleUsed = true -- per character check
+					for p=1,#relicTalents do
+						local pID = relicTalents[p].powerID
+						local sID = C_ArtifactUI.GetPowerInfo(pID).spellID
+						if nil ~= sID then
+							relicTalents[p].spellID = sID
+							if DEBUG ~=0 then print(format('Spell ID: %s',sID)) end
+						end
+					end
+				end
+				relicCache['traits'] = relicTalents
+				weaponCache[n] = relicCache
+			else 
+				-- Still check relics but try not to nuke the NLC stuff if they haven't changed
+				if nil ~= weaponCache[n] then
+					if nil ~= weaponCache[n].relic then
+						if nil ~= weaponCache[n].relic[4] then
+							if nil ~= relicInfo[4] then
+								if weaponCache[n].relic[4] == relicInfo[4] then
+								else 
+									weaponCache[n] = relicCache
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+		weaponCache['crucibled'] = crucibled
+		
+		--store it in the per-character DB
+		if nil == charDB.char.artifactCache then
+			charDB.char.artifactCache = {}
+		end
+		charDB.char.artifactCache[artifactID] = weaponCache
+	end
+end
+
+local function isItemRef(self)
+	return (self:GetName() == "ItemRefTooltip")
 end
 
 local function DecorateArtifact(self)
@@ -247,8 +363,9 @@ local function DecorateArtifact(self)
 	if type(link) == 'string' and db.profile.enabled == true then
 		local _, itemID, _, relic1, relic2, relic3, _, _, _, _, _, upgradeID = strsplit(':', link)
 
+		-- 7.2-introduced hack for lack of proper item links
 		if nil == itemID or '' == itemID then 
-			if self:GetName() == "ItemRefTooltip" and itemRefLinkInfo[1] ~= nil and itemRefLinkInfo[1] ~= '' then
+			if isItemRef(self) and itemRefLinkInfo[1] ~= nil and itemRefLinkInfo[1] ~= '' then
 				local tc = GetTime()
 				local tdelta = tc-itemRefLinkInfo[2]
 				local _, itemRefID, _, IRrelic1, IRrelic2, IRrelic3, _, _, _, _, _, IRupgradeID = strsplit(':', itemRefLinkInfo[1])
@@ -273,11 +390,16 @@ local function DecorateArtifact(self)
 
 		if (upgradeID == '256' or upgradeID == '16777472') and nil ~= RelicSlotsByArtifact[tonumber(itemID)] then
 			--It's a recognized artifact item
+			local showTraitNames, showTraitDesc, showCrucibleTraits = false, false, false
 
-			-- Check options to see what to display
-			local showTraitNames, showTraitDesc = false, false
-			if(self:GetName() == "ItemRefTooltip") then
+			-- check if the user wants Crucible talents shown, then start eliminating reasons
+			if invLinkOptions[db.profile.hoverNLC] == 2 then
+				showCrucibleTraits = true
+			end
+			if(isItemRef(self)) then
 				-- Item Links
+				showCrucibleTraits = false -- Never show Crucible for links
+				
 				if invLinkOptions[db.profile.linkTraitNames] == 2 then
 					showTraitNames = true
 				end
@@ -293,9 +415,27 @@ local function DecorateArtifact(self)
 					(invHoverOptions[db.profile.hoverTraitDesc] == 2 and modifierPressed ~= 0) then
 					showTraitDesc = true
 				end
+
+				--Check what we're mousing over
+				local owner = self:GetOwner()
+				if nil ~= owner then
+					local parent = owner:GetParent()
+					if nil ~= parent and parent == InspectPaperDollItemsFrame then
+						showCrucibleTraits = false
+					end
+				end
+			end
+			local _,_,_,nc = GetAchievementInfo(12072) -- is the Crucible unlocked?
+			if not nc then
+				showCrucibleTraits = false
+			end
+			local artiCache = charDB.char.artifactCache
+			if nil == artiCache then
+				showCrucibleTraits = false
 			end
 
 			local relics = {relic1,relic2,relic3}
+			local showNewNLCTraitMsg = false
 			for i = 1,#relics do 
 				if '' ~= relics[i] then
 					if DEBUG ~=0 then print(format('Found a Relic: %s',relics[i])) end
@@ -312,36 +452,116 @@ local function DecorateArtifact(self)
 							itemLevel = "+" .. artifactLevelGain
 						end
 
-						self:AddDoubleLine(format('|cffffd400 (%s) %s|r', itemLevel or '???', gemLink or '???'), 
+						if (showTraitNames or showTraitDesc) and showCrucibleTraits then
+							self:AddLine(' ',1,1,1,false)  -- Blank line as a spacer
+						end
+						self:AddDoubleLine(format('|cffffd400(%s) %s|r', itemLevel or '???', gemLink or '???'), 
 							format('|cff00ff00(%s)',relicType), 0, 1, 0, 0, 1, 0)
 
 						-- Let's add the Ranks and Trait names if we are supposed to
 						if showTraitNames or showTraitDesc then
-							local spellLookupKey = itemID .. '.' .. relics[i]
-							local traitSpellID = RelicSpells[spellLookupKey]
+							local traitsToDisplay = {}
 
-							if nil ~= traitSpellID then
+							-- Add the native trait 
+							local spellLookupKey = itemID .. '.' .. relics[i]
+							if nil ~= RelicSpells[spellLookupKey] then
+								local nativeTrait = {}
+								nativeTrait['spellID'] = RelicSpells[spellLookupKey]
+								nativeTrait['powerID'] = 0 -- We don't really care what this is for now
+								tinsert(traitsToDisplay,nativeTrait)
+							end
+
+							if showCrucibleTraits then
+								local artiCacheWeapon = artiCache[tonumber(itemID)]
+								if nil ~= artiCacheWeapon then
+									local weaponArtifactLevel = artiCacheWeapon.level or 0
+									local artiCacheRelic = artiCacheWeapon[i]
+									if nil ~= artiCacheRelic then
+										local traitCache = artiCacheRelic.traits
+										if nil ~= traitCache then
+											if DEBUG ~=0 then print(format("Traits not nil for relic %d",i)) end
+											local traitsChosen = {}
+											for p = 1,#traitCache do 
+												if nil ~= traitCache[p] then
+													if traitCache[p].isChosen then 
+														traitsChosen[traitCache[p].requiredArtifactLevel] = true
+														if traitCache[p].powerID == 1739 then -- 1739 is Netherlight Fortification (+5 Item levels). Show that first since it's special.
+															tinsert(traitsToDisplay,1,traitCache[p])
+														else
+															tinsert(traitsToDisplay,traitCache[p])
+														end
+													else
+														if nil == traitsChosen[traitCache[p].requiredArtifactLevel] then
+															traitsChosen[traitCache[p].requiredArtifactLevel] = false
+														end
+													end
+												end
+											end
+											for l,isChosen in pairs(traitsChosen) do 
+												if not isChosen and l <= weaponArtifactLevel then
+													-- Should have a new trait available!
+													if DEBUG ~=0 then print(format('Relic %d NLC Trait for Level %d should be available',i,l)) end
+													showNewNLCTraitMsg = true
+												end
+
+											end
+										else
+											--No cached traits, but is it bc we haven't unlocked any? Or bc we just changed a relic?
+											if artiCacheWeapon.crucibled then
+												--We've theoretically unlocked traits on this weapon before, so at least one should be available.
+												--Prompt user to return to forge
+												showNewNLCTraitMsg = true
+											elseif charDB.char.crucibleUsed then
+												showNewNLCTraitMsg = true
+											end
+										end
+									elseif charDB.char.crucibleUsed then
+										showNewNLCTraitMsg = true
+									end
+								else
+									if charDB.char.crucibleUsed then
+										showNewNLCTraitMsg = true
+									end	
+								end
+							end
+
+							for w = 1,#traitsToDisplay do
+								local t = traitsToDisplay[w]
 								--Add Trait Name
 								if showTraitNames == true then
-									local traitName = GetSpellInfo(traitSpellID)
-									if nil ~= traitName then
-										-- Assuming 1 Rank per relic right now. Will have to update this if relics start giving more than 1 rank
-										self:AddLine(format(' ' .. RELIC_TOOLTIP_RANK_INCREASE, 1, traitName), 1, 1, 1, false)
+									if t.powerID == 1739 then -- 1739 is Netherlight Fortification
+										self:AddLine(format(RELIC_TOOLTIP_ILVL_INCREASE, 5), 0, 1, 0, false)
+									else  
+										local traitName = GetSpellInfo(t.spellID)
+										if nil ~= traitName then
+											-- Still assuming 1 Rank per relic/trait. Will have to update this if relics ever start giving more than 1 rank
+											self:AddLine(format(RELIC_TOOLTIP_RANK_INCREASE, 1, traitName), 1, 1, 1, false)
+										end
 									end
 								end
 								--Add Trait Description
 								if showTraitDesc == true then
-									local traitDesc = GetSpellDescription(traitSpellID)
-									if nil ~= traitDesc then
-										traitDesc = string.gsub(traitDesc,string.char(10),"")
-										traitDesc = string.gsub(traitDesc,string.char(13),"")
-										self:AddLine(format('|cffff78ff  %s|r', traitDesc), 1, 1, 1, true)
+									if t.powerID ~= 1739 then -- +Item Levels is pretty self explanatory, doesn't need a desc
+										local traitDesc = GetDescriptionFromTooltip(t.powerID) -- Check if it's one we should scrape first, do that
+										if not traitDesc then
+											traitDesc = GetSpellDescription(t.spellID)
+										end
+										if nil ~= traitDesc then
+											traitDesc = string.gsub(traitDesc,string.char(10),"")
+											traitDesc = string.gsub(traitDesc,string.char(13),string.char(13).."  ")
+											self:AddLine(format('|cffff78ff  %s|r', traitDesc), 1, 1, 1, (string.len(traitDesc) > MAX_LINE_LENGTH))
+										end
 									end
 								end
 							end
 						end
 					end	
 				end
+			end
+
+			if showCrucibleTraits and showNewNLCTraitMsg then
+				self:AddLine(' ',1,1,1,false)
+				self:AddLine(format(ARTIFACT_RELIC_TALENT_AVAILABLE, 1, traitName), 1, 0, 0, false)
 			end
 		end	
 	end
@@ -353,14 +573,12 @@ local function DecorateRelic(self)
 		local _, itemID = strsplit(':', link)
 		if nil == itemID or '' == itemID then return end  -- If there's no itemID we can't do anything
 
-		if DEBUG ~=0 then print(format('ItemID: %s',itemID)) end
 		local _, _, relicTypeKey = C_ArtifactUI.GetRelicInfoByItemID(tonumber(itemID))
 
 		if nil == relicTypeKey then	return end -- If it's not a relic then we don't care
 
-		local showOffspecs = false -- Let's assume false to start
+		local showOffspecs = false 
 		if invRelicOffspecOptions[db.profile.offspecsToShow] > 1 then
-			-- > 1 means all or obtained (if we can get that working)
 			showOffspecs = true
 		end
 
@@ -388,7 +606,7 @@ local function DecorateRelic(self)
 			end
 
 			if #specTraitInfo > 0 then 
-				self:AddLine(' ',1,1,1,false)  -- Blank line as a spacer
+				self:AddLine(' ',1,1,1,false) 
 			end
 			local showTraitNames, showTraitDesc = true, true  -- Change this if we want to give options for it
 			for r = 1,#specTraitInfo do
@@ -464,7 +682,7 @@ local function DecorateRelic(self)
 						if nil ~= traitDesc then
 							traitDesc = string.gsub(traitDesc,string.char(10),"")
 							traitDesc = string.gsub(traitDesc,string.char(13),"")
-							self:AddLine(format('|cffffd200  %s|r', traitDesc), 1, 1, 1, (string.len(traitDesc) > 80))
+							self:AddLine(format('|cffffd200  %s|r', traitDesc), 1, 1, 1, (string.len(traitDesc) > MAX_LINE_LENGTH))
 						end
 					end
 				end
@@ -506,6 +724,13 @@ f:SetScript('OnEvent', function(self, event, arg1)
   end
 end)
 f:RegisterEvent('ADDON_LOADED')
+
+local af = CreateFrame('frame')
+af:SetScript('OnEvent', function(self, event, arg1)
+	updateArtifactCache()
+end)
+af:RegisterEvent('ARTIFACT_RELIC_FORGE_UPDATE')
+af:RegisterEvent('ARTIFACT_UPDATE')
 
 
 ItemRefTooltip:HookScript('OnTooltipSetItem', DecorateArtifact)

@@ -8,7 +8,7 @@ if not Dropdown then
 end
 
 local function ButtonOnClick(self)
-    PlaySound('igMainMenuOptionCheckBoxOn')
+    PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
     self:GetParent():ToggleMenu()
 end
 

@@ -42,6 +42,12 @@ function Addon:OnEnable()
         GUI:CallWarningDialog(L.FoundRaidBuilder, true, nil, ReloadUI)
         return
     end
+
+    if Profile:GetLastVersion() < 70200.06 then
+        SetCVar('profanityFilter', 1)
+    end
+
+    Profile:SaveLastVersion()
 end
 
 function Addon:MEETINGSTONE_NEW_VERSION(_, version, url, isSupport, changeLog)

@@ -20,14 +20,14 @@ local function ScrollUpButtonOnClick(self)
     local parent = self:GetParent()
     local scrollStep = self:GetParent().scrollStep or (parent:GetHeight() / 2)
     parent:SetValue(parent:GetValue() - scrollStep)
-    PlaySound('UChatScrollButton')
+    PlaySound(SOUNDKIT and SOUNDKIT.U_CHAT_SCROLL_BUTTON or 'UChatScrollButton')
 end
 
 local function ScrollDownButtonOnClick(self)
     local parent = self:GetParent()
     local scrollStep = self:GetParent().scrollStep or (parent:GetHeight() / 2)
     parent:SetValue(parent:GetValue() + scrollStep)
-    PlaySound('UChatScrollButton')
+    PlaySound(SOUNDKIT and SOUNDKIT.U_CHAT_SCROLL_BUTTON or 'UChatScrollButton')
 end
 
 function PageScrollBar:Constructor(parent)
@@ -50,7 +50,7 @@ function PageScrollBar:Constructor(parent)
         ScrollDownButton:SetHighlightTexture([[Interface\Buttons\UI-Common-MouseHilight]], 'ADD')
         ScrollDownButton:SetScript('OnClick', ScrollDownButtonOnClick)
     end
-    
+
     self.ScrollUpButton = ScrollUpButton
     self.ScrollDownButton = ScrollDownButton
 

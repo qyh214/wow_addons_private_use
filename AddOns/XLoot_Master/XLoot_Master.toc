@@ -1,7 +1,7 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: XLoot Master
 ## Notes: Configurable Master Looter interface
-## Version: 7.2-9
+## Version: 7.3-1
 ## Author: Xuerian, Dridzt
 ## X-Category: Inventory
 

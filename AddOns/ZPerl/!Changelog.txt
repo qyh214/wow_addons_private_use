@@ -1,8 +1,14 @@
-5.4.1
-- Updated for patch 7.3.0.
+**r1074**
+* Party and Raid anchor dropdowns are usable again.
 
-5.4.0
-- 7.3.0 statement.
+**r1072**
+* PlaySound fix for the dropdowns.
+
+**r1070**
+* Updated for patch 7.3.0.
+
+***r1068*
+* 7.3.0 statement.
 
 **r1066**
 * Fixed multiple issues with party and party target incoming heals and absorbs.

@@ -68,6 +68,7 @@ for k,v in ipairs(classWeaponQuests[classID]) do
 	HiddenArtifactTrackerChars[v[2]] = {
 				["completion"]=0,
 				["quest"]=v[1],
+				["rbg"]=nil,
 
 -- they used to need each dungeon seperately, this seems to have changed to just any 10; keep until live
 --				["Assault on Violet Hold"]=false,
@@ -91,10 +92,37 @@ end
 
 CreateFrame("Button","HiArtTra",UIParent,"SecureHandlerClickTemplate,SecureHandlerStateTemplate")
 HiArtTra:RegisterEvent("BOSS_KILL")
+HiArtTra:RegisterEvent("PLAYER_ENTERING_BATTLEGROUND")
 
-HiArtTra:SetScript("OnEvent", function(self,event,id,name) HiddenArtifactTrackerFuncs.doBossKill(name) end);
+HiArtTra:SetScript("OnEvent", function(...) HiddenArtifactTrackerFuncs.event(...) end);
+
+function HiddenArtifactTrackerFuncs.event(...)
+	local arg = {...}
+	local event = arg[2]
+
+	if event == "PLAYER_ENTERING_BATTLEGROUND" then
+		HiddenArtifactTrackerFuncs.enterBG()
+	elseif event == "BOSS_KILL" then
+		local name = arg[4]
+		HiddenArtifactTrackerFuncs.doBossKill(name)
+	end
+end
+
+function HiddenArtifactTrackerFuncs.enterBG()
+	for k,v in ipairs(classWeaponQuests[classID]) do
+
+		local rbgWins =  GetStatistic(5694)
+		if rbgWins == "--" then rbgWins = 0 end
+
+		--if the mage tower is done for this weapon, and you've never initialised this weapon counter before, initialise it now
+		if HiddenArtifactTrackerChars[v[2]].rbg==nil and IsQuestFlaggedCompleted(v[1]) then
+			HiddenArtifactTrackerChars[v[2]].rbg = rbgWins
+		end
+	end
+end
 
 function HiddenArtifactTrackerFuncs.doBossKill(name)
+
 	for k,v in ipairs(classWeaponQuests[classID]) do
 		if HiddenArtifactTrackerChars[v[2]]["completion"]>9 then
 			classWeaponQuests[classID][k] = nil
@@ -175,4 +203,26 @@ function HiddenArtifactTrackerFuncs.undoBossKill(name)
 		end
 	end
 		
+end
+
+--5694
+function GetStatisticId(CategoryTitle, StatisticTitle)
+	local str = ""
+	for _, CategoryId in pairs(GetStatisticsCategoryList()) do
+		local Title, ParentCategoryId, Something
+		Title, ParentCategoryId, Something = GetCategoryInfo(CategoryId)
+		
+		if Title == CategoryTitle then
+			local i
+			local statisticCount = GetCategoryNumAchievements(CategoryId)
+			for i = 1, statisticCount do
+				local IDNumber, Name, Points, Completed, Month, Day, Year, Description, Flags, Image, RewardText
+				IDNumber, Name, Points, Completed, Month, Day, Year, Description, Flags, Image, RewardText = GetAchievementInfo(CategoryId, i)
+				if Name == StatisticTitle then
+					return IDNumber
+				end
+			end
+		end
+	end
+	return -1
 end
