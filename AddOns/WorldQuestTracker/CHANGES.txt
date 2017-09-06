@@ -1,7 +1,7 @@
-changeset:   198:947e08d817b1
-tag:         v7.3.0.198-release
+changeset:   218:8cee53478c4a
+tag:         v7.3.0.218-RC4
 user:        Tercio
-date:        Tue Aug 29 15:08:24 2017 -0300
-summary:     - ToC Update.
+date:        Mon Sep 04 13:14:30 2017 -0300
+summary:     - Fixed comm spam when selecting and deselecting a rare.
 
 

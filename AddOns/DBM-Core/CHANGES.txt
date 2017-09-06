@@ -1,68 +1,85 @@
-tag 341c3e2d23be5bdc36e041890f26a036fa9bcbae 7.3.1
+tag 2b09266b678cd65214562cbde5ee3bd6131f3388 7.3.2
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Thu Aug 31 20:44:37 2017 +0200
+Date:	Wed Sep 6 00:13:54 2017 +0200
 
-Tagging as 7.3.1
+Tagging as 7.3.2
 
-commit 41c65f61dd3c164e2015441a39c9184c25c65606
+commit 7102d25abc59b83244536bea927e7cf22230ab5b
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 31 20:44:37 2017 +0200
+Date:   Wed Sep 6 00:13:54 2017 +0200
 
-    increment version number to 7.3.1
+    increment version number to 7.3.2
 
-commit 402fe76a171f500601390a6bf37965245dc9684c
+commit c3ba62cd0516b46604faaaf2ef9ef5b6fe72ad95
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 31 06:32:53 2017 +0200
+Date:   Tue Sep 5 23:26:00 2017 +0200
 
-    Omega via svn r16683:
-    Tweak this
+    Omega via svn r16694:
+    Update Alluradel timers
+    scrap MC yell, looking away is hard for people so it?\226?\128?\153s spammy
 
-commit 909db1dadd67e3d77e34c862b18c84edacc5d769
+commit 67cf7daea1e8124c9d5ad5136b97729b4b2a34af
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 31 05:58:51 2017 +0200
+Date:   Tue Sep 5 23:11:02 2017 +0200
 
-    Omega via svn r16682:
-    Increase bone armor throttle
+    Omega via svn r16693:
+    Some minor adjustments
 
-commit 63aef20cd8d990fe74bcd9ababe48e9bdc915a86
+commit 2ac50eae686eef6a123bcb1220410d40e7265715
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 31 05:54:22 2017 +0200
+Date:   Tue Sep 5 22:53:52 2017 +0200
 
-    Omega via svn r16681:
-    Shorten message some
+    Omega via svn r16692:
+    mapID update
 
-commit 308e92bf87fdd121011401bf579df2aba1826048
+commit f07fe3fffb44b17d760c15e2b8134a4ae8c21180
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 31 05:43:23 2017 +0200
+Date:   Mon Sep 4 21:08:21 2017 +0200
 
-    Omega via svn r16680:
-    Antispam guild engage a little more to avoid players with 5000ms from making it appear fight was engaged twice.
+    Omega via svn r16691:
+    more redundancy
 
-commit 9bb5cfc10ea076231fe7cc62a8fd2b42ae5a6eae
+commit 536377c3ee170b8b7cda48ecc98804a354c1abdd
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Aug 30 04:16:36 2017 +0200
+Date:   Mon Sep 4 20:53:59 2017 +0200
 
-    Omega via svn r16679:
-    Remove that sound, fixes drop down menus. missed that one
+    Omega via svn r16690:
+    tidy up InGuildParty() stuff to be more pretty
 
-commit 81c2838adb13b753c709f8370fbf7c887bc561d1
+commit 55abd11652440af9ce187c3cef010dc0387d5c5e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Aug 30 04:10:08 2017 +0200
+Date:   Sun Sep 3 10:02:31 2017 +0200
 
-    Omega via svn r16678:
-    Also adjust this
+    Omega via svn r16689:
+    fix timer icon
 
-commit cfafc3431e1fb16d972ab0e0070f6d9cc0c4e120
+commit cf6ddd6f00c456f3bbdd10df80d9c29ac9ae5923
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Aug 30 04:09:47 2017 +0200
+Date:   Fri Sep 1 06:29:46 2017 +0200
 
-    Omega via svn r16677:
-    Filter tanks from lunar beacon, they don?\226?\128?\153t usually go on tank, well except for today cause fight is bugged, but still want to not false positive warn the tank. only warn tanks if APPLIED fires. target scan only for non tanks
+    Omega via svn r16688:
+    TOC tweaks for defaultSkin
 
-commit 01a6a8377feaf4b64ecad93d3b3d57cf48294281
+commit 003f18eba076f7e96fc8166055b1ca49250d1dd6
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Aug 29 18:17:27 2017 +0200
+Date:   Fri Sep 1 06:16:53 2017 +0200
 
-    tandanu via svn r16676:
+    Omega via svn r16687:
+    Devouring maw now shows count in timer and cast
+    Devouring maw and crashing wave will no longer spam warnings if boss continues to recast i (usually during a wipe)
+    Reverted a change to tank taunt warning during cast that cause warning to sometimes not show AT ALL if boss was looking at a non tank target during the cast.
+
+commit dc0b5b7ef098288c6fea918b225047e520eede8d
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Sep 1 02:03:23 2017 +0200
+
+    Omega via svn r16686:
+    fix two more soundkit IDs
+
+commit 9b5e249f53bf8fa28088faf58aaf6390091eed5e
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Aug 31 20:44:54 2017 +0200
+
+    tandanu via svn r16685:
     increment alpha version
 

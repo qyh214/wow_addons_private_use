@@ -276,7 +276,7 @@ function Guild:GUILD_ROSTER_UPDATE()
         for i=1, _G.GetNumGuildMembers() do 
 	    local name, rank, rankIndex, level, class, zone, note, officernote, online, status, classFileName, achievementPoints, achievementRank, isMobile = _G.GetGuildRosterInfo(i);
 	    if(online) then
-		_G.GuildControlSetRank(rankIndex);
+		--_G.GuildControlSetRank(rankIndex);
                 local guildchat_listen, guildchat_speak, officerchat_listen, officerchat_speak, promote, demote,
                         invite_member, remove_member, set_motd, edit_public_note, view_officer_note, edit_officer_note,
                         modify_guild_info, _, withdraw_repair, withdraw_gold, create_guild_event = _G.GuildControlGetRankFlags();
@@ -373,7 +373,7 @@ function Officer:GUILD_ROSTER_UPDATE()
         for i=1, _G.GetNumGuildMembers() do 
 	    local name, rank, rankIndex, level, class, zone, note, officernote, online, status, classFileName, achievementPoints, achievementRank, isMobile = _G.GetGuildRosterInfo(i);
             if(online) then
-                _G.GuildControlSetRank(rankIndex);
+                --_G.GuildControlSetRank(rankIndex);
                 local guildchat_listen, guildchat_speak, officerchat_listen, officerchat_speak, promote, demote,
                         invite_member, remove_member, set_motd, edit_public_note, view_officer_note, edit_officer_note,
                         modify_guild_info, _, withdraw_repair, withdraw_gold, create_guild_event = _G.GuildControlGetRankFlags();

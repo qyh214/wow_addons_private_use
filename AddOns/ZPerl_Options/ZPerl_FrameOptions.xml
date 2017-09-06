@@ -2311,11 +2311,8 @@
 										XPerl_Party_Virtual(true)
 									end
 								end
-								--XPerl_Options_Anchor_OnLoad(self)
-							</OnLoad>
-							<OnShow>
 								XPerl_Options_Anchor_OnLoad(self)
-							</OnShow>
+							</OnLoad>
 							<OnEnter>
 								GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -15, 0)
 								GameTooltip:SetText(XPERL_CONF_ANCHORMENU_DESC, nil, nil, nil, nil, true)
@@ -2449,11 +2446,8 @@
 									XPerlDB.raid.anchor = n
 								end
 								self.setFunc = XPerl_Raid_ChangeAttributes
-								--XPerl_Options_Anchor_OnLoad(self)
-							</OnLoad>
-							<OnShow>
 								XPerl_Options_Anchor_OnLoad(self)
-							</OnShow>
+							</OnLoad>
 							<OnEnter>
 								GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -15, 0)
 								GameTooltip:SetText(XPERL_CONF_ANCHORMENU_DESC, nil, nil, nil, nil, true)

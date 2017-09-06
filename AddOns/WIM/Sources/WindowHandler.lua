@@ -915,6 +915,10 @@ local function instantiateWindow(obj)
                                 classTag = "sc1";--"Interface\\FriendsFrame\\Battlenet-SCicon"
                                 icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
                                 icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
+                elseif(self.bn and self.bn.client == _G.BNET_CLIENT_DESTINY2) then
+                                classTag = "dsty2";--"Interface\\FriendsFrame\\Battlenet-SCicon"
+                                icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
+                                icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
                 elseif(self.bn and self.bn.client == _G.BNET_CLIENT_D3) then
                                 classTag = "d3";--"Interface\\FriendsFrame\\Battlenet-D3icon"
                                 icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);

@@ -1067,9 +1067,9 @@ function Lib_UIDropDownMenu_OnHide(self)
 	end
 	Lib_CloseDropDownMenus(id+1);
 	LIB_OPEN_DROPDOWNMENUS[id] = nil;
-	--[[if (id == 1) then
+	if (id == 1) then
 		LIB_UIDROPDOWNMENU_OPEN_MENU = nil;
-	end]]
+	end
 end
 
 function Lib_UIDropDownMenu_SetWidth(frame, width, padding)

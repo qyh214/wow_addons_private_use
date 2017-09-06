@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 534 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 540 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,32 +16,19 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
-addEntry("3.7.12", "12/19/2016", [[
+addEntry("3.7.14", "09/03/2017", [[
+	*Fixed Officr chat Taint
+]]);
+addEntry("3.7.13", "09/03/2017", [[
+	*Fixed Guild chat Taint
+]]);
+addEntry("3.7.12", "08/29/2017", [[
 	*7.3 Compat Fixes
 	*SC1 client icon support
 	*Updated some profile URLS
 ]]);
 addEntry("3.7.11", "12/19/2016", [[
 	*Changed font used in 7.1 work around to avoid CYR font issues.
-]]);
-addEntry("3.7.10", "11/12/2016", [[
-	*Fixed Links on 7.1
-	*Fixed lua errors on 7.1 (Caveate now there are font issues do to less than ideal fix)
-]]);
-addEntry("3.7.9", "07/29/2016", [[
-	*Fixed a few green texture issues.
-]]);
-addEntry("3.7.8", "07/19/2016", [[
-	*Set TOC version to 70000
-]]);
-addEntry("3.7.7", "06/04/2016", [[
-	*Whisper window will now report location correctly for non WoW clients.
-]]);
-addEntry("3.7.6", "05/24/2016", [[
-	*Whisper window will now report location correctly for non WoW clients.
-]]);
-addEntry("3.7.5", "05/04/2016", [[
-	*I didn't like the Overwatch icon quality, so I made it better.
 ]]);
 
 

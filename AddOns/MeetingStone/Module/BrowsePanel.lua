@@ -1,7 +1,7 @@
 
 BuildEnv(...)
 
-BrowsePanel = Addon:NewModule(CreateFrame('Frame'), 'BrowsePanel', 'AceEvent-3.0', 'AceTimer-3.0', 'AceSerializer-3.0')
+BrowsePanel = Addon:NewModule(CreateFrame('Frame'), 'BrowsePanel', 'AceEvent-3.0', 'AceTimer-3.0', 'AceSerializer-3.0', 'AceBucket-3.0')
 
 function BrowsePanel:OnInitialize()
     MainPanel:RegisterPanel(L['查找活动'], self, 5, 100)
@@ -287,6 +287,7 @@ function BrowsePanel:OnInitialize()
         ActivityDropdown:SetDefaultValue(0)
         ActivityDropdown:SetDefaultText(L['请选择活动类型'])
         ActivityDropdown:SetCallback('OnSelectChanged', function(_, data, ...)
+            
             self:StartSet()
             self:UpdateModeDropdown(data.categoryId)
             self:UpdateBossFilter(data.activityId, data.customId)
@@ -661,7 +662,8 @@ function BrowsePanel:OnInitialize()
     self:RegisterEvent('LFG_LIST_SEARCH_RESULTS_RECEIVED')
     self:RegisterEvent('LFG_LIST_SEARCH_FAILED', 'LFG_LIST_SEARCH_RESULTS_RECEIVED')
 
-    self:RegisterEvent('LFG_LIST_SEARCH_RESULT_UPDATED')
+    self:RegisterBucketEvent('LFG_LIST_SEARCH_RESULT_UPDATED', 0.1, 'LFG_LIST_SEARCH_RESULT_UPDATED_BUCKET')
+    -- self:RegisterEvent('LFG_LIST_SEARCH_RESULT_UPDATED')
     self:RegisterEvent('LFG_LIST_APPLICATION_STATUS_UPDATED', 'LFG_LIST_SEARCH_RESULT_UPDATED')
     self:RegisterMessage('MEETINGSTONE_SEARCH_PROFILE_UPDATE')
 
@@ -708,6 +710,13 @@ end
 
 function BrowsePanel:LFG_LIST_SEARCH_RESULT_UPDATED(_, id)
     self:UpdateActivity(id)
+    self.ActivityList:Refresh()
+end
+
+function BrowsePanel:LFG_LIST_SEARCH_RESULT_UPDATED_BUCKET(results)
+    for id in ipairs(results) do
+        self:UpdateActivity(id)
+    end
     self.ActivityList:Refresh()
 end
 

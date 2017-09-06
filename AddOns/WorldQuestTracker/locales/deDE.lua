@@ -18,6 +18,8 @@ L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = "Die Gruppe verlassen?"
 L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = "Du verlässt die Gruppe in (Klicken zum sofortigen Verlassen):"
 L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = "Suche wiederholen"
 L["S_GROUPFINDER_ACTIONS_SEARCH"] = "Klicken, um mit der Suche nach Gruppen zu starten"
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = ""
 L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = "Einer Gruppe, die diese Quest macht, beitreten"
 L["S_GROUPFINDER_ACTIONS_SEARCHING"] = "suche..."
 L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = "Klicken, um nach weiteren Gruppenmitgliedern zu suchen."
@@ -26,6 +28,8 @@ L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = "Klicken, um die Anmeldung aufzuheben, dam
 L["S_GROUPFINDER_ACTIONS_UNLIST"] = "Klicken, um deine derzeitige Gruppe abzumelden"
 L["S_GROUPFINDER_ACTIONS_UNLISTING"] = "abmelden..."
 L["S_GROUPFINDER_ACTIONS_WAITING"] = "warten..."
+--Translation missing 
+-- L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = ""
 L["S_GROUPFINDER_ENABLED"] = "Bei neuer Quest automatisch öffnen"
 L["S_GROUPFINDER_LEAVEOPTIONS"] = "Optionen Gruppenverlassen"
 L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = "Nach X Sekunden verlassen"
@@ -110,6 +114,15 @@ L["S_QUESTTYPE_PROFESSION"] = "Beruf"
 L["S_QUESTTYPE_PVP"] = "PvP"
 L["S_QUESTTYPE_RESOURCE"] = "Ressourcen"
 L["S_QUESTTYPE_TRADESKILL"] = "Berufsfertigkeit"
+--Translation missing 
+-- L["S_RAREFINDER_NPC_NOTREGISTERED"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_OPTIONS_SHOWICONS"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TITLE"] = ""
+L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Aufgespürt von"
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = ""
 L["S_SHAREPANEL_THANKS"] = [=[Danke, dass Du World Quest Tracker weitergibst!
 Sende den Link an deine Freunde auf Facebook, Twitter usw..]=]
 L["S_SHAREPANEL_TITLE"] = "World Quest Tracker weiterempfehlen"

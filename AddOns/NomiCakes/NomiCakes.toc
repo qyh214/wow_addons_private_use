@@ -1,7 +1,7 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: NomiCakes
 ## Author: Semlar
-## Version: 7.2.5.5
+## Version: 7.3.0.1
 ## SavedVariablesPerCharacter: NomiCakesDatas
 ## Notes: Shows what recipes can be learned from Nomi in Dalaran
 NomiCakes.lua

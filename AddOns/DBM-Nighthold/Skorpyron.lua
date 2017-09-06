@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1706, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16092 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16692 $"):sub(12, -3))
 mod:SetCreatureID(102263)
 mod:SetEncounterID(1849)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -31,7 +31,7 @@ mod:RegisterEventsInCombat(
 ability.id = 204292 and type = "summon" or
 ability.id = 204459
 --]]
-local warnBrokenShard				= mod:NewSpellAnnounce(204292, 2, nil, false)
+local warnBrokenShard				= mod:NewSpellAnnounce(204292, 2, nil, false, 2)
 local warnVulnerable				= mod:NewTargetAnnounce(204459, 1)
 local warnCallScorp					= mod:NewSpellAnnounce(204372, 3)
 local warnRed						= mod:NewSpellAnnounce(214661, 2)

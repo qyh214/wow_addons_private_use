@@ -16,7 +16,7 @@ assert(LibStub, "LibWho-2.0 requires LibStub")
 
 
 local major_version = 'LibWho-2.0'
-local minor_version = tonumber("535") or 99999
+local minor_version = tonumber("540") or 99999
 
 local lib = LibStub:NewLibrary(major_version, minor_version)
 

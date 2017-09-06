@@ -138,8 +138,8 @@ function WorldQuest:TaskPOI_OnClick(button, mouse)
         return
     end
 
-    local _, zoneId = C_TaskQuest.GetQuestZoneID(questID)
-    local activityCode = ZONE_ACTIVITY_MAP[zoneId]
+
+    local activityCode = self:GetActivityCodeByQuestID(questID)
     if not activityCode then
         return
     end
@@ -188,10 +188,8 @@ function WorldQuest:OnObjectiveBlockClick(block, mouse)
     end
 
     local questID = block.TrackedQuest.questID
-    local _, zoneId = C_TaskQuest.GetQuestZoneID(questID)
 
-
-    local activityCode = ZONE_ACTIVITY_MAP[zoneId]
+    local activityCode = self:GetActivityCodeByQuestID(questID)
     if not activityCode then
         return
     end
@@ -251,3 +249,25 @@ end
 --     AutoApply:Add(apply)
 --     AutoApply:Start()
 -- end
+
+
+--根据questid获取activitycode
+-- questid 任务id
+-- return activitycode 活动code
+function WorldQuest:GetActivityCodeByQuestID(questId)
+
+    if not questId then
+        return
+    end
+
+    local activityId = C_LFGList.GetActivityIDForQuestID(questId)
+    if not activityId then
+        return
+    end
+
+    local activityCode = GetActivityCode(activityId)
+    if not activityCode then
+        return
+    end
+    return activityCode
+end

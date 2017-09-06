@@ -27,6 +27,8 @@ L["S_FLYMAP_SHOWWORLDQUESTS"] = "Показывать локальные зад�
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_SEARCH"] = ""
 --Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = ""
+--Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = ""
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_SEARCHING"] = ""
@@ -42,6 +44,8 @@ L["S_FLYMAP_SHOWWORLDQUESTS"] = "Показывать локальные зад�
 -- L["S_GROUPFINDER_ACTIONS_UNLISTING"] = ""
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_WAITING"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = ""
 --Translation missing 
 -- L["S_GROUPFINDER_ENABLED"] = ""
 --Translation missing 
@@ -139,6 +143,16 @@ L["S_QUESTTYPE_PROFESSION"] = "Профессия"
 L["S_QUESTTYPE_PVP"] = "PvP"
 L["S_QUESTTYPE_RESOURCE"] = "Ресурсы"
 L["S_QUESTTYPE_TRADESKILL"] = "Материалы"
+--Translation missing 
+-- L["S_RAREFINDER_NPC_NOTREGISTERED"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_OPTIONS_SHOWICONS"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TITLE"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = ""
 L["S_SHAREPANEL_THANKS"] = [=[Спасибо что поделились World Quest Tracker! 
 Отправьте ссылку на наш аддон своим друзьям в твиттере, фэйсбуке или в Кремле :)]=]
 L["S_SHAREPANEL_TITLE"] = "Тем, кто любит рок!"

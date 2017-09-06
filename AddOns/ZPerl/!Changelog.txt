@@ -1,3 +1,6 @@
+**r1076**
+* Party and Raid anchor dropdowns are usable again, even with other older dropdown library addons loaded.
+
 **r1074**
 * Party and Raid anchor dropdowns are usable again.
 

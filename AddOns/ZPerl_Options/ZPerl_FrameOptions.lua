@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1074 $")
+XPerl_SetModuleRevision("$Revision: 1076 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -597,44 +597,36 @@ end
 function XPerl_Options_Anchor_OnLoad(self)
 	self.displayMode = "MENU"
 	Lib_UIDropDownMenu_Initialize(self, XPerl_Options_Anchor_Initialize)
-	Lib_UIDropDownMenu_SetSelectedID(self, MyIndex, 1)
+	local current = self.varGet() or "TOP"
+	Lib_UIDropDownMenu_SetSelectedName(self, current, 1)
 	Lib_UIDropDownMenu_SetWidth(self, 100)
 end
 
 -- XPerl_Options_Anchor_Initialize
-function XPerl_Options_Anchor_Initialize()
+function XPerl_Options_Anchor_Initialize(dropdown)
 	local info
-	local current = LIB_UIDROPDOWNMENU_INIT_MENU.varGet() or "TOP"
+	local current = dropdown.varGet() or "TOP"
 
 	for k, v in pairs(XPerl_AnchorList) do
 		info = { }
 		info.text = v
-		info.func = XPerl_Options_Anchor_OnClick
+		info.func = function(self)
+			dropdown.varSet(XPerl_AnchorList[self:GetID()])
 
-		if (current == v) then
-			MyIndex = k
+			Lib_UIDropDownMenu_SetSelectedName(dropdown, v, 1)
+
+			XPerl_ProtectedCall(dropdown.setFunc)
+
+			if (XPerl_Party_Virtual) then
+				XPerl_Party_Virtual(true)
+			end
+
+			if (XPerl_RaidTitles) then
+				XPerl_RaidTitles()
+			end
 		end
 
 		Lib_UIDropDownMenu_AddButton(info)
-	end
-end
-
--- XPerl_Options_Anchor_OnClick
-function XPerl_Options_Anchor_OnClick(self)
-	local obj = LIB_UIDROPDOWNMENU_OPEN_MENU
-
-	obj.varSet(XPerl_AnchorList[self:GetID()])
-	MyIndex = self:GetID()
-	Lib_UIDropDownMenu_SetSelectedID(obj, MyIndex, 1)
-
-	XPerl_ProtectedCall(obj.setFunc)
-
-	if (XPerl_Party_Virtual) then
-		XPerl_Party_Virtual(true)
-	end
-
-	if (XPerl_RaidTitles) then
-		XPerl_RaidTitles()
 	end
 end
 

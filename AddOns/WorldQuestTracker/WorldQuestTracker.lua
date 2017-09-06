@@ -175,6 +175,16 @@ local default_config = {
 			tutorial = 0,
 		},
 		
+		rarescan = {
+			show_icons = true,
+			alerts_anywhere = false,
+			join_channel = false,
+			search_group = true,
+			recently_spotted = {},
+			recently_killed = {},
+			name_cache = {},
+		},
+		
 		disable_world_map_widgets = false,
 		worldmap_widgets = {
 			textsize = 9,
@@ -389,6 +399,7 @@ WorldQuestTracker.WorldMapSupportWidgets = {}
 WorldQuestTracker.PartyQuestsPool = {}
 WorldQuestTracker.PartySharedQuests = {}
 WorldQuestTracker.CurrentZoneQuests = {}
+WorldQuestTracker.CachedQuestData = {}
 WorldQuestTracker.CurrentMapID = 0
 WorldQuestTracker.LastWorldMapClick = 0
 WorldQuestTracker.MapSeason = 0
@@ -404,6 +415,7 @@ WorldQuestTracker.RarityColors = {
 	[4] = "|cffc557FF",
 }
 WorldQuestTracker.GameLocale = GetLocale()
+WorldQuestTracker.COMM_PREFIX = "WQTC"
 
 local LibWindow = LibStub ("LibWindow-1.1")
 if (not LibWindow) then
@@ -455,13 +467,51 @@ function WorldQuestTracker.DumpTrackingList()
 	print (t)
 end
 
+function WorldQuestTracker.ColorScaleByPercent (percent_scaled)
+	local r, g
+	percent_scaled = percent_scaled * 100
+	if (percent_scaled < 50) then
+		r = 255
+	else
+		r = math.floor ( 255 - (percent_scaled * 2 - 100) * 255 / 100)
+	end
+	
+	if (percent_scaled > 50) then
+		g = 255
+	else
+		g = math.floor ( (percent_scaled * 2) * 255 / 100)
+	end
+	
+	return r, g
+end
+
 hooksecurefunc ("TaskPOI_OnEnter", function (self)
 	--WorldMapTooltip:AddLine ("quest ID: " .. self.questID)
 	--print (self.questID)
 	WorldQuestTracker.CurrentHoverQuest = self.questID
+	
+	if (self.IsRare) then
+		GameTooltip:Hide()
+		GameTooltip:SetOwner (self, "ANCHOR_TOPLEFT")
+		GameTooltip:AddLine (self.RareName)
+		local t = time() - self.RareTime
+		GameTooltip:AddDoubleLine (L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] .. ": ", "" .. (self.RareOwner or ""))
+		
+		local timeColor = abs ((t/3600)-1)
+		timeColor = Saturate (timeColor)
+		local colorR, colorG = WorldQuestTracker.ColorScaleByPercent (timeColor)
+		GameTooltip:AddLine ("" .. floor (t/60) .. ":" .. format ("%02.f", t%60) .. " " .. L["S_RAREFINDER_TOOLTIP_TIMEAGO"] .. "", colorR/255, colorG/255, 0)
+		
+		GameTooltip:Show()
+	end
 end)
+
 hooksecurefunc ("TaskPOI_OnLeave", function (self)
 	WorldQuestTracker.CurrentHoverQuest = nil
+	
+	if (self.IsRare) then
+		GameTooltip:Hide()
+	end	
 end)
 --enddebug
 
@@ -530,17 +580,12 @@ function WorldQuestTracker.UpdateArrowFrequence()
 	ARROW_UPDATE_FREQUENCE = WorldQuestTracker.db.profile.arrow_update_frequence
 end
 
---/run WorldQuestTrackerAddon.db.profile.arrow_update_frequence = .1; WorldQuestTrackerAddon.UpdateArrowFrequence()
-
 function WorldQuestTracker.IsPartyQuest (questID)
 	return WorldQuestTracker.PartySharedQuests [questID]
 end
 
 -- ~party ~share
 local CreatePartySharer = function()
-
-	local COMM_PREFIX = "WQTC"
-
 	local CanShareQuests = function()
 		if (UnitLevel ("player") < 110) then
 			return
@@ -638,7 +683,7 @@ local CreatePartySharer = function()
 			build_shared_quest_list()
 		end
 	end
-	WorldQuestTracker:RegisterComm (COMM_PREFIX, "CommReceived")
+	--WorldQuestTracker:RegisterComm (WorldQuestTracker.COMM_PREFIX, "CommReceived")
 
 	WorldQuestTracker.Sharer_LastSentUpdate = 0
 	WorldQuestTracker.Sharer_LastTimer = nil --
@@ -663,7 +708,7 @@ local CreatePartySharer = function()
 		list_to_send.GUID = UnitGUID ("player")
 		
 		local data = LibStub ("AceSerializer-3.0"):Serialize (list_to_send)
-		WorldQuestTracker:SendCommMessage (COMM_PREFIX, data, "PARTY")
+		WorldQuestTracker:SendCommMessage (WorldQuestTracker.COMM_PREFIX, data, "PARTY")
 	end
 
 	local group_changed = function (loggedIn)
@@ -672,7 +717,7 @@ local CreatePartySharer = function()
 				--> precisa pedir as quests dos demais membros do grupo
 				--> pode dar return pois ele vai enviar para si mesmo
 				local data = LibStub ("AceSerializer-3.0"):Serialize ("L")
-				WorldQuestTracker:SendCommMessage (COMM_PREFIX, data, "PARTY")
+				WorldQuestTracker:SendCommMessage (WorldQuestTracker.COMM_PREFIX, data, "PARTY")
 				return
 			end
 			
@@ -728,6 +773,7 @@ local CreatePartySharer = function()
 	group_changed (true)
 end
 
+
 -- /run WorldQuestTrackerAddon:GetNextResearchNoteTime()
 -- /run for a, b in pairs (_G) do if b == "Artifact Research Notes" then print (a,b) end end
 
@@ -748,6 +794,7 @@ Anota��es de Pesquisa de Artefato
 
 -- /run for i=1, 500 do local _,texture,_,_,_,_,_, timeleftString=C_Garrison.GetLandingPageShipmentInfoByContainerID(i) if texture==237446 then print ("achour research, timeleft:", timeleftString) end end
 
+--isnt' baing used on 7.3, should be removed?
 function WorldQuestTracker:GetNextResearchNoteTime()
 	local looseShipments = C_Garrison.GetLooseShipments (LE_GARRISON_TYPE_7_0)
 	if (looseShipments and #looseShipments > 0) then
@@ -762,6 +809,12 @@ function WorldQuestTracker:GetNextResearchNoteTime()
 				--print (name, texture, shipmentCapacity, shipmentsReady, shipmentsTotal, creationTime, duration, timeleftString)
 			end
 		end
+	end
+end
+
+function WorldQuestTracker.Debug (message)
+	if (WorldQuestTracker.debug) then
+		print ("|cFFFFFF44[WQT]|r", "|cFFDDDDDD(debug)|r", message)
 	end
 end
 
@@ -810,7 +863,7 @@ function WorldQuestTracker:OnInit()
 	WorldQuestTracker.db.RegisterCallback (WorldQuestTracker, "OnDatabaseShutdown", "CleanUpJustBeforeGoodbye") --more info at https://www.youtube.com/watch?v=GXFnT4YJLQo
 	
 	--
-	C_Timer.After (10, CreatePartySharer)
+	--C_Timer.After (10, CreatePartySharer) --disabled for now
 	--
 	
 	local save_player_name = function()
@@ -828,8 +881,11 @@ function WorldQuestTracker:OnInit()
 			playerTable.class = playerTable.class or select (2, UnitClass ("player"))
 		end
 	end
+	
 	C_Timer.After (3, save_player_name)
 	C_Timer.After (10, save_player_name)
+	C_Timer.After (11, WorldQuestTracker.RequestRares)
+	C_Timer.After (12, WorldQuestTracker.CheckForOldRareFinderData)
 	
 	local canLoad = IsQuestFlaggedCompleted (WORLD_QUESTS_AVAILABLE_QUEST_ID)
 	
@@ -1186,22 +1242,690 @@ local questButton_OnLeave = function	(self)
 	WorldQuestTracker.CurrentHoverQuest = nil
 end
 
+--> ~comm
+--> ~rare ~finder ~groupfinder
 
+--finder frame
+local ff = CreateFrame ("frame", nil, UIParent)
+ff:SetSize (240, 100)
+ff:SetBackdrop ({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16, edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1})
+ff:SetBackdropColor (0, 0, 0, 1)
+ff:SetBackdropBorderColor (0, 0, 0, 1)
+ff:SetPoint ("center")
+ff:EnableMouse (true)
+ff:SetMovable (true)
+ff:Hide()
 
+-- /run WorldQuestTrackerAddon.debug = true;
 
+--> rare finder frame
+local rf = CreateFrame ("frame", nil, UIParent)
+rf:RegisterEvent ("VIGNETTE_ADDED")
+rf:RegisterEvent ("PLAYER_TARGET_CHANGED")
+
+rf.RecentlySpotted = {}
+rf.LastPartyRareShared = 0
+rf.FullRareListSendCooldown = 0
+rf.RareSpottedSendCooldown = {}
+
+rf.RaresToScan = {
+	[126338] = true, --wrathlord yarez
+	[126852] = true, --wrangler kravos
+	[122958] = true, --blistermaw
+	[127288] = true, --houndmaster kerrax
+	[126912] = true, --skreeg the devourer
+	[126867] = true, --venomtail skyfin
+	[126862] = true, --baruut the bloodthirsty
+	[127703] = true, --doomcaster suprax
+	[126900] = true, --instructor tarahna
+	[126860] = true, --kaara the pale
+	[126419] = true, --naroua
+	[126898] = true, --sabuul
+	[126208] = true, --varga
+	[127705] = true, --mother rosula
+	[127706] = true, --rezira the seer
+	[123464] = true, --sister subversia
+	[127700] = true, --squadron commander vishax
+	[127581] = true, --the many faced devourer
+	[126887] = true, --ataxon
+	[126338] = true, --wrath lord yarez
+	[127090] = true, --admiral relvar
+	[120393] = true, --siegemaster voraan
+	[127096] = true, --all seer xanarian
+	[126199] = true, --vrax-thul
+	[127376] = true, --chief alchemist munculus
+	[127300] = true, --void warden valsuran
+	[125820] = true, --imp mother laglath
+	[125388] = true, --vagath the betrayed
+	[123689] = true, --talestra the vile
+	[127118] = true, --worldsplitter skuul
+	[124804] = true, --tereck the selector
+	[125479] = true, --tar spitter
+	[122911] = true, --commander vecaya
+	[125824] = true, --khazaduum
+	[122912] = true, --commander sathrenael
+	[124775] = true, --commander endaxis
+	[127704] = true, --soultender videx
+	[126040] = true, --puscilla
+	[127291] = true, --watcher aival
+	[127090] = true, --admiral relvar
+	[122999] = true, --garzoth
+	[122947] = true, --mistress ilthendra
+	[127581] = true, --the many faced devourer
+	[126115] = true, --venorn
+	[126254] = true, --lieutenant xakaar
+	[127084] = true, --commander texlaz
+	[126946] = true, --inquisitor vethroz
+	[126865] = true, --vigilant thanos
+	[126869] = true, --captain faruq
+	[126896] = true, --herald of chaos
+	[126899] = true, --jedhin champion vorusk
+	[125497] = true, --overseer ysorna
+	[126910] = true, --commander xethgar
+	[126913] = true, --slithon the last
+	[122838] = true, --shadowcaster voruun
+	[126815] = true, --soultwisted monstrosity
+	[126864] = true, --feasel the muffin thief
+	[126866] = true, --vigilant kuro
+	[126868] = true, --turek the lucid
+	[126885] = true, --umbraliss
+	[126889] = true, --sorolis the ill fated
+	[124440] = true, --overseer ybeda
+	[125498] = true, --overseer ymorna
+	[126908] = true, --zultan the numerous	
+}
+
+--> filling the list, getting the thingies from here: http://www.wowhead.com/achievement=12078/commander-of-argus#comments
+rf.RaresLocations = {
+	[126852] = {x = 55.7, y = 59.9}, --wrangler kravos
+	[122958] = {x = 61.7, y = 37.2}, --blistermaw
+	[127288] = {x = 63.1, y = 25.2}, --houndmaster kerrax
+	[126912] = {x = 49.7, y = 9.9}, --skreeg the devourer
+	[126867] = {x = 33.7, y = 47.5}, --venomtail skyfin
+	[126862] = {x = 43.8, y = 60.2}, --baruut the bloodthirsty
+	[127703] = {x = 58.50, y = 11.75}, --doomcaster suprax
+	[126900] = {x = 61.4, y = 50.2}, --instructor tarahna
+	[126860] = {x = 38.7, y = 55.8}, --kaara the pale
+	[126419] = {x = 70.5, y = 33.7}, --naroua
+	[126898] = {x = 44.2, y = 49.8}, --sabuul
+	[126208] = {x = 64.3, y = 48.2}, --varga
+	[127705] = {x = 65.5, y = 26.6}, --mother rosula
+	[127706] = {x = 0, y = 0}, --rezira the seer (no coords?)
+	[123464] = {x = 53.4, y = 30.9}, --sister subversia
+	[127700] = {x = 77.4, y = 74.9}, --squadron commander vishax
+	[126887] = {x = 30.3, y = 40.4}, --ataxon
+	[126338] = {x = 61.9, y = 64.3}, --wrath lord yarez
+	[120393] = {x = 58.0, y = 74.8}, --siegemaster voraan
+	[127096] = {x = 75.6, y = 56.5}, --all seer xanarian
+	[126199] = {x = 53.1, y = 35.8}, --vrax-thul
+	[127376] = {x = 60.9, y = 22.9}, --chief alchemist munculus
+	[127300] = {x = 55.7, y = 21.9}, --void warden valsuran
+	[125820] = {x = 41.7, y = 70.2}, --imp mother laglath
+	[125388] = {x = 60.8, y = 20.8}, --vagath the betrayed
+	[123689] = {x = 55.5, y = 80.2}, --talestra the vile
+	[127118] = {x = 50.9, y = 55.3}, --worldsplitter skuul
+	[124804] = {x = 69.6, y = 57.5}, --tereck the selector
+	[125479] = {x = 69.7, y = 80.5}, --tar spitter
+	[122911] = {x = 	42.0, y = 57.1}, --commander vecaya
+	[125824] = {x = 50.3, y = 17.3}, --khazaduum
+	[122912] = {x = 33.0, y = 76.0}, --commander sathrenael
+	[124775] = {x = 44.5, y = 58.7}, --commander endaxis
+	[127704] = {x = 0, y = 0}, --soultender videx (no coords?)
+	[126040] = {x = 65.6, y = 26.6}, --puscilla
+	[127291] = {x = 52.7, y = 29.5}, --watcher aival
+	[127090] = {x = 73.2, y = 70.8}, --admiral relvar
+	[122999] = {x = 56.2, y = 45.5}, --garzoth
+	[122947] = {x = 57.4, y = 32.9}, --mistress ilthendra
+	[127581] = {x = 54.7, y = 39.1}, --the many faced devourer
+	[126115] = {x = 62.9, y = 57.2}, --venorn
+	[126254] = {x = 62.4, y = 53.8}, --lieutenant xakaar
+	[127084] = {x = 80.5, y = 62.8}, --commander texlaz
+	[126946] = {x = 61.1, y = 45.7}, --inquisitor vethroz
+	[126865] = {x = 36.3, y = 23.6}, --vigilant thanos
+	[126869] = {x = 27.2, y = 29.8}, --captain faruq
+	[126896] = {x = 35.5, y = 58.7}, --herald of chaos
+	[126899] = {x = 48.5, y = 40.9}, --jedhin champion vorusk
+	[125497] = {x = 58.0, y = 30.9}, --overseer ysorna
+	[126910] = {x = 56.8, y = 14.5}, --commander xethgar
+	[126913] = {x = 49.5, y = 52.8}, --slithon the last
+	[122838] = {x = 44.6, y = 71.6}, --shadowcaster voruun
+	[126815] = {x = 65.3, y = 67.5}, --soultwisted monstrosity
+	[126864] = {x = 41.3, y = 11.6}, --feasel the muffin thief
+	[126866] = {x = 63.8, y = 64.6}, --vigilant kuro
+	[126868] = {x = 39.2, y = 66.6}, --turek the lucid
+	[126885] = {x = 35.2, y = 37.2}, --umbraliss
+	[126889] = {x = 70.4, y = 46.7}, --sorolis the ill fated
+	[124440] = {x = 59.2, y = 37.7}, --overseer ybeda
+	[125498] = {x = 60.4, y = 29.7}, --overseer ymorna
+	[126908] = {x = 64.0, y = 29.5}, --zultan the numerous	
+}
+
+rf.COMM_IDS = {
+	RARE_SPOTTED = "RS",
+	RARE_REQUEST = "RR",
+	RARE_LIST = "RL",
+}
+
+function WorldQuestTracker.RequestRares()
+	if (IsInGuild()) then
+		if (WorldQuestTracker.db.profile.rarescan.show_icons) then
+			local data = LibStub ("AceSerializer-3.0"):Serialize ({rf.COMM_IDS.RARE_REQUEST, UnitName ("player")})
+			WorldQuestTracker:SendCommMessage (WorldQuestTracker.COMM_PREFIX, data, "GUILD")
+			WorldQuestTracker.Debug ("requested list of rares > COMM_IDS.RARE_REQUEST")
+		end
+	end
+end
+
+function rf.SendRareList (channel)
+	--> check if the list is in cooldown
+	if (rf.FullRareListSendCooldown + 10 > time()) then
+		WorldQuestTracker.Debug ("cound't send full rare list: cooldown.")
+		return
+	end
+
+	--> if this has been called from C_Timer, the param will be the ticker object
+	if (type (channel) == "table") then
+		channel = "GUILD"
+	else
+		channel = channel or "GUILD"
+	end
+	
+	--> make sure the player is in a local group
+	if (channel == "PARTY") then
+		if (not IsInGroup (LE_PARTY_CATEGORY_HOME)) then
+			return
+		end
+	end
+	
+	--> make sure the player is in a guild
+	if (channel == "GUILD") then
+		if (not IsInGuild()) then
+			return
+		end
+	end
+
+	--> build the list to be shared
+	local data = LibStub ("AceSerializer-3.0"):Serialize ({rf.COMM_IDS.RARE_LIST, UnitName ("player"), WorldQuestTracker.db.profile.rarescan.recently_spotted, channel})
+	WorldQuestTracker:SendCommMessage (WorldQuestTracker.COMM_PREFIX, data, channel)
+	rf.FullRareListSendCooldown = time()
+	WorldQuestTracker.Debug ("sent list of rares > COMM_IDS.RARE_LIST")
+end
+
+--WorldQuestTracker.debug = true;
+
+function rf.ShareInWorldQuestParty()
+	--> check if is realy in a world quest group
+	if (IsInGroup (LE_PARTY_CATEGORY_HOME)) then
+		if (time() > rf.LastPartyRareShared + 30) then
+			rf.SendRareList ("PARTY")
+			rf.LastPartyRareShared = time()
+			WorldQuestTracker.Debug ("group updated, sending rare list to the party")
+		end
+	end
+end
+
+function rf.ScheduleGroupShareRares()
+	if (rf.ShareRaresTimer_Party and not rf.ShareRaresTimer_Party._cancelled) then
+		rf.ShareRaresTimer_Party:Cancel()
+	end
+	rf.ShareRaresTimer_Party = C_Timer.NewTimer (3, rf.ShareInWorldQuestParty)
+end
+
+function rf.ValidateCommData (validData, commType)
+	if (commType == rf.COMM_IDS.RARE_SPOTTED) then
+		if (not validData [2] or type (validData[2]) ~= "string") then --whoSpotted
+			return
+		elseif (not validData [3] or type (validData[3]) ~= "string") then --sourceChannel
+			return
+		elseif (not validData [4] or type (validData[4]) ~= "string") then --rareName
+			return
+		elseif (not validData [5] or type (validData[5]) ~= "string") then --rareSerial
+			return
+		elseif (not validData [6] or type (validData[6]) ~= "number") then --mapID
+			return
+		elseif (not validData [7] or type (validData[7]) ~= "number") then --playerX
+			return
+		elseif (not validData [8] or type (validData[8]) ~= "number") then --playerY
+			return
+		end
+	
+		return true
+	end
+	
+	if (commType == rf.COMM_IDS.RARE_LIST) then
+		if (not validData [2] or type (validData[2]) ~= "string") then --whoSent
+			return
+		elseif (not validData [3] or type (validData[2]) ~= "table") then --theList
+			return
+		elseif (not validData [4] or type (validData[2]) ~= "string") then --channel
+			return
+		end
+		
+		return true
+	end
+end
+
+function WorldQuestTracker:CommReceived (_, data)
+	local dataReceived = {LibStub ("AceSerializer-3.0"):Deserialize (data)}
+
+	if (dataReceived [1]) then
+		local validData = dataReceived [2]
+		
+		local prefix = validData [1]
+
+		if (prefix == rf.COMM_IDS.RARE_SPOTTED) then
+		
+			if (not rf.ValidateCommData (validData, rf.COMM_IDS.RARE_SPOTTED)) then
+				WorldQuestTracker.Debug ("received invalid data on comm ID RARE_SPOTTED")
+				return
+			end
+		
+			local whoSpotted = validData [2]
+			local sourceChannel = validData [3]
+			local rareName = validData [4]
+			local rareSerial = validData [5]
+			
+			local mapID = validData [6]
+			local playerX = validData [7]
+			local playerY = validData [8]
+			
+			local isReliable = validData [9]
+			
+			WorldQuestTracker.Debug ("received a rare spot COMM_IDS.RARE_SPOTTED from " .. (whoSpotted or "invalid whoSpotted"))
+			rf.RareSpotted (whoSpotted, sourceChannel, rareName, rareSerial, mapID, playerX, playerY, isReliable)
+			
+		elseif (prefix == rf.COMM_IDS.RARE_REQUEST) then
+			--> check if the request didn't came from the owner
+			local whoRequested = validData [2]
+			if (whoRequested == UnitName ("player")) then
+				return
+			end
+			
+			--> check if a timer already exists
+			if (rf.ShareRaresTimer_Guild and not rf.ShareRaresTimer_Guild._cancelled) then
+				return
+			end
+			
+			--> assign a random timer to share
+			rf.ShareRaresTimer_Guild = C_Timer.NewTimer (math.random (15), rf.SendRareList)
+			WorldQuestTracker.Debug ("received a rare list request COMM_IDS.RARE_REQUEST from " .. (whoRequested or "invalid whoRequested"))
+			
+		elseif (prefix == rf.COMM_IDS.RARE_LIST) then
+			--> if received from someone else, cancel our share timer
+			if (rf.ShareRaresTimer_Guild and not rf.ShareRaresTimer_Guild._cancelled) then
+				rf.ShareRaresTimer_Guild:Cancel()
+				rf.ShareRaresTimer_Guild = nil
+			end
+			
+			if (not rf.ValidateCommData (validData, rf.COMM_IDS.RARE_LIST)) then
+				WorldQuestTracker.Debug ("received invalid data on comm ID RARE_LIST")
+				return
+			end
+			
+			--> add the rares to our list
+			local whoSent = validData [2]
+			local fromChannel = validData [4]
+			
+			WorldQuestTracker.Debug ("received a rare list COMM_IDS.RARE_LIST from " .. (whoSent or "invalid whoSent") .. " on " .. fromChannel)
+			
+			--> ignore if who sent is the player
+			if (whoSent == UnitName ("player")) then
+				return
+			end
+			
+			local rareList = validData [3]
+			
+			--> list of rare spotted on the player that received the list
+			local localList = WorldQuestTracker.db.profile.rarescan.recently_spotted
+			
+			local newRares, justUpdated = 0, 0
+			
+			--> iterate on the list received
+			for npcId, rareTable in pairs (rareList) do
+				--> add to the name cache
+				WorldQuestTracker.db.profile.rarescan.name_cache [rareTable [6]] = npcId
+			
+				--> check if rare already is in the player rare list
+				local localRareTable = localList [npcId]
+				if (localRareTable) then
+					--> already exists
+					if (rareTable [1] > localRareTable [1]) then
+						--> update the timer
+						localRareTable [1] = rareTable [1]
+						localRareTable [7] = rareTable [7]
+						justUpdated = justUpdated + 1
+					end
+				else
+					--> the local player doesn't have this rare
+					if (rareTable [1] + 1800 > time()) then
+						--> add it to the list if the rare was spotted up to 30 min ago
+						localList [npcId] = rareTable
+						newRares = newRares + 1
+						
+						--> if the player doesn't have the rare and he received it from a party, broadcast the rare to his guild as a rare spotted
+						if (IsInGuild() and fromChannel == "PARTY") then
+							--> don't share if both players are in the same guild
+							local guildName = GetGuildInfo (whoSent)
+							if (guildName ~= GetGuildInfo ("player")) then
+								local timeSpotted, mapID,  playerX, playerY, rareSerial, rareName, whoSpotted, serverTime = unpack (rareTable)
+								local data = LibStub ("AceSerializer-3.0"):Serialize ({rf.COMM_IDS.RARE_SPOTTED, whoSpotted, "GUILD", rareName, rareSerial, mapID, playerX, playerY, true})
+								WorldQuestTracker:SendCommMessage (WorldQuestTracker.COMM_PREFIX, data, "GUILD")
+							end
+						end
+					end
+				end
+			end
+			
+			WorldQuestTracker.Debug (" > added: " .. newRares .. " updated: " .. justUpdated)
+		end
+	end
+end
+WorldQuestTracker:RegisterComm (WorldQuestTracker.COMM_PREFIX, "CommReceived")
+
+function rf.GetMyNpcKilledList()
+	local t = WorldQuestTracker.db.profile.rarescan.recently_killed
+	local chrGUID = UnitGUID ("player")
+	
+	if (not chrGUID) then
+		return
+	end
+	
+	if (t [chrGUID]) then
+		return t [chrGUID]
+	else
+		t [chrGUID] = {}
+		return t [chrGUID]
+	end
+end
+
+function rf.RareSpotted (whoSpotted, sourceChannel, rareName, rareSerial, mapID, playerX, playerY, isReliable)
+	local npcId = WorldQuestTracker:GetNpcIdFromGuid (rareSerial)
+	
+	--> add to the name cache
+	WorldQuestTracker.db.profile.rarescan.name_cache [rareName] = npcId
+	
+	--> announce on chat
+	if (not rf.RecentlySpotted [npcId] or rf.RecentlySpotted [npcId] + 800 < time()) then
+		--print ("|cFFFF9900WQT|r: rare '|cFFFFFF00" .. rareName .. "|r' spotted.")
+		rf.RecentlySpotted [npcId] = time()
+	end
+	
+	--> add to the rare table
+	local rareTable = WorldQuestTracker.db.profile.rarescan.recently_spotted [npcId]
+	if (not rareTable) then
+		rareTable = {time(), mapID, playerX, playerY, rareSerial, rareName, whoSpotted, GetServerTime()}
+		WorldQuestTracker.db.profile.rarescan.recently_spotted [npcId] = rareTable
+		WorldQuestTracker.Debug ("RareSpotted > added new npc: " .. rareName)
+	else
+		rareTable [1] = time()
+		rareTable [7] = whoSpotted
+		rareTable [8] = GetServerTime()
+		
+		if (isReliable) then
+			rareTable [3] = playerX
+			rareTable [4] = playerY
+		end
+		WorldQuestTracker.Debug ("RareSpotted > npc updated: " .. rareName)
+	end
+end
+
+function rf.IsRareAWorldQuest (rareName)
+	--> get the cache of widgets currently shown on map
+	local cache = WorldQuestTracker.Cache_ShownWidgetsOnZoneMap
+	local isWorldQuest = false
+	
+	--> do the iteration
+	for i = 1, #cache do 
+		local widget = cache [i]
+		if (widget.questName == rareName) then
+			return true
+		end
+	end
+end
+
+function rf.IsTargetARare()
+	if (UnitExists ("target")) then
+		local serial = UnitGUID ("target")
+		local npcId = WorldQuestTracker:GetNpcIdFromGuid (serial)
+		if (npcId) then
+			--> check if is a non registered rare
+			if (not rf.RaresToScan [npcId]) then
+				if (WorldQuestTracker.IsArgusZone (GetCurrentMapAreaID())) then
+					local unitClassification = UnitClassification ("target")
+					if (unitClassification == "rareelite") then
+						print ("|cFFFF9900[WQT]|r " .. L["S_RAREFINDER_NPC_NOTREGISTERED"] .. ":", UnitName ("target"), "NpcID:", npcId)
+					end
+				end
+			end
+			
+			--> is a rare npc?
+			if (rf.RaresToScan [npcId]) then
+				--> check is the npc is flagged as rare
+				local unitClassification = UnitClassification ("target")
+				if (unitClassification == "rareelite") then
+					--> send comm
+					local x, y = GetPlayerMapPosition ("player")
+					local map = GetCurrentMapAreaID()
+					local rareName = UnitName ("target")
+					local data = LibStub ("AceSerializer-3.0"):Serialize ({rf.COMM_IDS.RARE_SPOTTED, UnitName ("player"), "GUILD", rareName, serial, map, x, y, true})
+					if (IsInGuild()) then
+						--> check cooldown for this rare
+						rf.RareSpottedSendCooldown [npcId] = rf.RareSpottedSendCooldown [npcId] or 0
+						if (rf.RareSpottedSendCooldown [npcId] + 10 > time()) then
+							WorldQuestTracker.Debug ("cound't send rare spotted: cooldown.")
+							return
+						end
+					
+						WorldQuestTracker:SendCommMessage (WorldQuestTracker.COMM_PREFIX, data, "GUILD")
+						rf.RareSpottedSendCooldown [npcId] = time()
+					end
+					
+					--> add to the name cache
+					WorldQuestTracker.db.profile.rarescan.name_cache [rareName] = npcId
+					
+					--
+					rf:RegisterEvent ("COMBAT_LOG_EVENT_UNFILTERED")
+					rf.LastRareSerial = serial
+					rf.LastRareName = rareName
+					
+					--already searching?
+					if (not ff:IsShown() and not IsInGroup() and not QueueStatusMinimapButton:IsShown()) then
+						--> search for a group?
+						if (WorldQuestTracker.db.profile.rarescan.search_group) then
+							--> check if the rare isn't a world quest
+							local isWorldQuest = rf.IsRareAWorldQuest (rareName)
+							if (not isWorldQuest) then
+								WorldQuestTracker.FindGroupForCustom (rareName)
+							end
+						end
+					end
+				else
+					WorldQuestTracker.Debug ("IsTargetARare > unit isn't rareelite classification.")
+				end
+			else
+				--WorldQuestTracker.Debug ("IsTargetARare > unit isn't rare.")
+			end
+		else
+			WorldQuestTracker.Debug ("IsTargetARare > invalid npcId.")
+		end
+	end
+end
+
+rf:SetScript ("OnEvent", function (self, event, ...)
+	if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
+		local _, token, hidding, who_serial, who_name, who_flags, who_flags2, alvo_serial, alvo_name, alvo_flags, alvo_flags2 = ...
+		if (token == "UNIT_DIED") then
+			if (alvo_serial == rf.LastRareSerial) then
+				--> current rare got killed
+				rf.LastRareSerial = nil
+				rf.LastRareName = nil
+				rf:UnregisterEvent ("COMBAT_LOG_EVENT_UNFILTERED")
+
+				--> check if the group finder window is shown with the mob we just killed
+				if (ff:IsShown()) then
+					if (ff.Label1.text == alvo_name) then
+						ff.HideMainFrame()
+					end
+				end
+				
+				--> ask to leave the group
+				if (ff.Label1.text == alvo_name and ff.SearchCustom) then
+					ff.WorldQuestFinished (0, true)
+				end
+				
+				local killed = rf.GetMyNpcKilledList()
+				if (not killed) then
+					return
+				else
+					local npcId = WorldQuestTracker:GetNpcIdFromGuid (alvo_serial)
+					if (npcId) then
+						local resetTime = time() + GetQuestResetTime()
+						killed [npcId] = resetTime
+					end
+				end
+			end
+		end
+		
+	elseif (event == "PLAYER_TARGET_CHANGED") then
+		rf.IsTargetARare()
+		
+	elseif (event == "VIGNETTE_ADDED") then
+		if (WorldQuestTracker.IsArgusZone (GetCurrentMapAreaID())) then
+			rf.ScanMinimapForRares()
+		end
+	end
+end)
+
+WorldQuestTracker.RareWidgets = {}
+function WorldQuestTracker.UpdateRareIcons (index, mapID)
+	if (not WorldQuestTracker.db.profile.rarescan.show_icons) then
+		return
+	end
+	
+	local alreadyKilled = rf.GetMyNpcKilledList()
+	if (not alreadyKilled) then
+		--> player serial or database not available at the moment
+		return
+	end
+	
+	for npcId, rareTable in pairs (WorldQuestTracker.db.profile.rarescan.recently_spotted) do
+		local timeSpotted = rareTable [1]
+		if (timeSpotted + 3600 > time() and not alreadyKilled [npcId]) then
+			local rareMapID = rareTable [2]
+			if (rareMapID == mapID) then
+			
+				local rareName = rareTable [6]
+			
+				--> check if the rare isn't part of a world quest
+				local isWorldQuest = rf.IsRareAWorldQuest (rareName)
+				if (not isWorldQuest) then
+					local positionX = rareTable [3]
+					local positionY = rareTable [4]
+					local rareSerial = rareTable [5]
+					
+					local rareOwner = rareTable [7]
+					
+					local widget = WorldQuestTracker.GetOrCreateZoneWidget (nil, index)
+					WorldQuestTracker.ResetWorldQuestZoneButton (widget)
+					index = index + 1
+					
+					widget.mapID = mapID
+					widget.questID = 0
+					widget.numObjectives = 0
+					widget.Order = 0
+					widget.IsRare = true
+					widget.RareName = rareName
+					widget.RareSerial = rareSerial
+					widget.RareTime = timeSpotted
+					widget.RareOwner = rareOwner
+					
+					--widget.Texture:SetTexture ([[Interface\Scenarios\ScenarioIcon-Boss]])
+					widget.TextureCustom:SetTexture ([[Interface\MINIMAP\ObjectIconsAtlas]])
+					widget.TextureCustom:SetTexCoord (423/512, 447/512, 344/512, 367/512)
+					widget.TextureCustom:SetSize (16, 16)
+					widget.TextureCustom:Show()
+					widget.Texture:Hide()
+					
+					local npcId = WorldQuestTracker:GetNpcIdFromGuid (rareSerial)
+					local position = rf.RaresLocations [npcId]
+					
+					if (position and position.x ~= 0) then
+						positionX = position.x/100;
+						positionY = position.y/100;
+					end
+					
+					WorldMapPOIFrame_AnchorPOI (widget, positionX, positionY, WORLD_MAP_POI_FRAME_LEVEL_OFFSETS.WORLD_QUEST)
+					widget:Show()
+				end
+			end
+		end
+	end
+end
+
+-- /dump WorldQuestTrackerAddon.db.profile.rarescan.recently_killed
+function WorldQuestTracker.CheckForOldRareFinderData()
+	--> check for daily reset timers
+	local now = time()
+	local t = WorldQuestTracker.db.profile.rarescan.recently_killed
+	
+	for playerSerial, timeTable in pairs (t) do
+		--> is a valid player guid and table?
+		if (type (playerSerial) == "string" and type (timeTable) == "table") then
+			for npcId, timeLeft in pairs (timeTable) do
+				if (timeLeft < now) then
+					timeTable [npcId] = nil
+					WorldQuestTracker.Debug ("CheckForOldRareFinderData > daily reset: " .. npcId)
+				end
+			end
+		end
+	end
+	
+	--> check for outdated spotted rares
+	for npcId, rareTable in pairs (WorldQuestTracker.db.profile.rarescan.recently_spotted) do
+		if (rareTable [1] + 3600 < now) then
+			--> remove the npc from the list
+			WorldQuestTracker.db.profile.rarescan.recently_spotted [npcId] = nil
+			WorldQuestTracker.Debug ("CheckForOldRareFinderData > outdated entry removed: " .. rareTable [6] .. " ID: " .. npcId)
+		end
+	end
+end
+
+C_Timer.NewTicker (60, function (ticker)
+	if (WorldQuestTracker.db and WorldQuestTracker.db.profile) then
+		WorldQuestTracker.CheckForOldRareFinderData()
+	end
+end)
+
+function rf.ScanMinimapForRares()
+	if (not IsInGuild()) then
+		return
+	end
+	for i = 1, C_Vignettes.GetNumVignettes() do
+		local serial = C_Vignettes.GetVignetteGUID (i)
+		if (serial) then
+			local _, _, name, objectIcon = C_Vignettes.GetVignetteInfoFromInstanceID (serial)
+			if (objectIcon and (objectIcon == 41 or objectIcon == 4733)) then
+				local npcId = WorldQuestTracker.db.profile.rarescan.name_cache [name]
+				if (npcId and rf.RaresToScan [npcId]) then
+					local x, y = GetPlayerMapPosition ("player")
+					local map = GetCurrentMapAreaID()
+					local rareName = name
+					serial = "Creature-0-0000-0000-00000-" .. npcId .. "-0000000000"
+
+					local data = LibStub ("AceSerializer-3.0"):Serialize ({rf.COMM_IDS.RARE_SPOTTED, UnitName ("player"), "GUILD", rareName, serial, map, x, y, false})
+
+					WorldQuestTracker:SendCommMessage (WorldQuestTracker.COMM_PREFIX, data, "GUILD")
+					
+					WorldQuestTracker.Debug ("ScanMinimapForRares > added npc from minimap: " .. rareName .. " ID: " .. npcId)
+				end
+			end
+		end
+	end
+end
 
 --[=
 	--~group
 	--> the main frame
-	local ff = CreateFrame ("frame", nil, UIParent)
-	ff:SetSize (240, 100)
-	ff:SetBackdrop ({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16, edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1})
-	ff:SetBackdropColor (0, 0, 0, 1)
-	ff:SetBackdropBorderColor (0, 0, 0, 1)
-	ff:SetPoint ("center")
-	ff:EnableMouse (true)
-	ff:SetMovable (true)
-	ff:Hide()
 	
 	ff.TickFrame = CreateFrame ("frame", nil, UIParent)
 	
@@ -1266,6 +1990,11 @@ end
 		GameCooltip:Hide()
 	end
 	
+	ff.Options.SetFindGroupForRares = function (_, _, value)
+		WorldQuestTracker.db.profile.rarescan.search_group = value
+		GameCooltip:Hide()
+	end
+	
 	ff.Options.SetOTButtonsFunc = function (_, _, value)
 		WorldQuestTracker.db.profile.groupfinder.tracker_buttons = value
 		if (value) then
@@ -1312,6 +2041,15 @@ end
 			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 1, 1, 16, 16, .4, .6, .4, .6)
 		end
 		GameCooltip:AddMenu (1, ff.Options.SetEnabledFunc, not WorldQuestTracker.db.profile.groupfinder.enabled)
+		
+		--find group for rares
+		GameCooltip:AddLine (L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"])
+		if (WorldQuestTracker.db.profile.rarescan.search_group) then
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 1, 1, 16, 16)
+		else
+			GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 1, 1, 16, 16, .4, .6, .4, .6)
+		end
+		GameCooltip:AddMenu (1, ff.Options.SetFindGroupForRares, not WorldQuestTracker.db.profile.rarescan.search_group)		
 		
 		--uses buttons on the quest tracker
 		GameCooltip:AddLine (L["S_GROUPFINDER_OT_ENABLED"])
@@ -1588,6 +2326,7 @@ end
 		ACTIONTYPE_GROUP_UNAPPLY = 9,
 		ACTIONTYPE_GROUP_KICK = 10,
 		ACTIONTYPE_GROUP_SEARCHANOTHER = 11,
+		ACTIONTYPE_GROUP_SEARCHCUSTOM = 12,
 	}
 	
 	--http://www.wowhead.com/quest=43179/the-kirin-tor-of-dalaran#comments:id=2429524
@@ -1633,6 +2372,13 @@ end
 		[41317] = true, --supplies-needed-leystone
 		[41315] = true, --supplies-needed-leystone
 		[41316] = true, --supplies-needed-leystone
+		
+		[48338] = true, --supplies-needed-astral-glory
+		[48337] = true, --supplies-needed-astral-glory
+		[48360] = true, --supplies-needed-fiendish leather
+		[48358] = true, --supplies-needed-empyrium
+		[48349] = true, --supplies-needed-empyrium
+		[48374] = true, --supplies-needed-lightweave-cloth
 		
 		--other quests
 		[45988] = true, --ancient bones broken shore
@@ -1683,6 +2429,7 @@ end
 		ff:Show()
 	end
 	function ff.HideMainFrame()
+		--print (debugstack())
 		ff.SetCheckIfIsInArea (false)
 		
 		if (interactionButton.LeaveTimer) then
@@ -1846,6 +2593,11 @@ end
 			end
 			ff.ProgressBar:Show()
 		
+		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_SEARCHCUSTOM) then
+			ff.SetCurrentActionText (L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"])
+			interactionButton.ToSearchCustom = true
+			ff.SearchCustom = true
+		
 		elseif (actionID == ff.actions.ACTIONTYPE_GROUP_SEARCHANOTHER) then
 			ff.SetCurrentActionText (message or L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"])
 			interactionButton.ToSearchAnother = true
@@ -1955,22 +2707,27 @@ end
 	end
 	
 	
-	function ff.NewWorldQuestEngaged (questName, questID)
+	function ff.NewWorldQuestEngaged (questName, questID, isSearchOnCustom)
 		--> reset the gump
 		ff.ShutdownOnTickScript (true)
 		ff.ResetInteractionButton()
 		ff.ResetMembers()
 		
 		--> update the interactive button to current quest
-		interactionButton.questName = questName
-		interactionButton.questID = questID
+		interactionButton.questName = questName or isSearchOnCustom
+		interactionButton.questID = questID or 0
 		interactionButton.HadInteraction = nil
 		
 		ff.AFKCheckList = ff.AFKCheckList or {}
 		wipe (ff.AFKCheckList)
 		
-		ff.SetQuestTitle (questName .. " (" .. questID .. ")")
-		ff.SetAction (ff.actions.ACTIONTYPE_GROUP_SEARCH)
+		if (not isSearchOnCustom) then
+			ff.SetQuestTitle (questName .. " (" .. questID .. ")")
+			ff.SetAction (ff.actions.ACTIONTYPE_GROUP_SEARCH)
+		else
+			ff.SetQuestTitle (isSearchOnCustom)
+			ff.SetAction (ff.actions.ACTIONTYPE_GROUP_SEARCHCUSTOM, isSearchOnCustom)
+		end
 		
 		ff.HasLeadership = false
 		
@@ -1980,23 +2737,32 @@ end
 		end
 	end
 	
-	function ff.WorldQuestFinished (questID)
-		if (interactionButton.questID == questID and interactionButton.HadInteraction) then
-			--> hide the frame
-			ff.HideMainFrame()
-			
-			--> leave the group
-			if (IsInGroup()) then
-				if (WorldQuestTracker.db.profile.groupfinder.autoleave) then
-					LeaveParty()
-				else
-					--> show timer to leave the group
-					ff.SetAction (ff.actions.ACTIONTYPE_GROUP_LEAVE)
+	function ff.GroupDone()
+		--> hide the frame
+		ff.HideMainFrame()
+		--> leave the group
+		if (IsInGroup()) then
+			if (WorldQuestTracker.db.profile.groupfinder.autoleave) then
+				LeaveParty()
+			else
+				--> show timer to leave the group
+				ff.SetAction (ff.actions.ACTIONTYPE_GROUP_LEAVE)
+			end
+		end
+		
+		--> shutdown ontick script
+		ff.ShutdownOnTickScript (true)
+	end
+	
+	function ff.WorldQuestFinished (questID, fromCustomSeearch)
+		if (interactionButton.HadInteraction) then
+			if (fromCustomSearch) then
+				ff.GroupDone()
+			else
+				if (interactionButton.questID == questID) then
+					ff.GroupDone()
 				end
 			end
-			
-			--> shutdown ontick script
-			ff.ShutdownOnTickScript (true)
 		end
 	end
 	
@@ -2034,84 +2800,87 @@ end
 			end
 		end
 		
-		if (ff.CheckCurrentQuestArea) then
-			ff.CheckCurrentQuestArea_Timer = ff.CheckCurrentQuestArea_Timer + deltaTime
-			
-			if (ff.CheckCurrentQuestArea_Timer > 2) then
-				local isInArea, isOnMap, numObjectives = GetTaskInfo (interactionButton.questID)
-				if (not isInArea) then
-					ff.SetCheckIfIsInArea (false)
-					ff.HideMainFrame()
+		if (not ff.SearchCustom) then
+		
+			if (ff.CheckCurrentQuestArea) then
+				ff.CheckCurrentQuestArea_Timer = ff.CheckCurrentQuestArea_Timer + deltaTime
+				
+				if (ff.CheckCurrentQuestArea_Timer > 2) then
+					local isInArea, isOnMap, numObjectives = GetTaskInfo (interactionButton.questID)
+					if (not isInArea) then
+						ff.SetCheckIfIsInArea (false)
+						ff.HideMainFrame()
+					end
+					ff.CheckCurrentQuestArea_Timer = 0
 				end
-				ff.CheckCurrentQuestArea_Timer = 0
 			end
-		end
 
-		if (ff.CheckForAFKs) then
-			ff.CheckForAFKs_Timer = ff.CheckForAFKs_Timer + deltaTime
-			
-			if (ff.CheckForAFKs_Timer > 5) then
-				--> check if we are in the quest and not in raid, just to make sure
-				local isInArea, isOnMap, numObjectives = GetTaskInfo (interactionButton.questID)
-				if (isInArea and not IsInRaid()) then
-					--> do the check
-					local mySelf = UnitGUID ("player")
-					local selfX, selfY = UnitPosition ("player")
-					
-					for i = 1, GetNumGroupMembers() do
-						local GUID = UnitGUID ("party" .. i)
-						if (GUID and GUID ~= mySelf) then
-							local unitTable = ff.AFKCheckList [GUID]
-							if (not unitTable) then
-								ff.AFKCheckList [GUID] = {
-									tick = 0,
-									name = UnitName ("party" .. i),
-									x = 0,
-									y = 0,
-									faraway = 0,
-								}
-								unitTable = ff.AFKCheckList [GUID]
-							end
-							
-							--local x, y = GetPlayerMapPosition ("party" .. i)
-							local x, y, posZ, instanceID = UnitPosition ("party" .. i)
-							x = x or 0
-							y = y or 0
-							
-							--> check location for afk
-							if (x ~= unitTable.x or y ~= unitTable.y or UnitHealth ("party" .. i) < UnitHealthMax ("party" .. i)) then
-								unitTable.tick = 0
-								unitTable.x = x
-								unitTable.y = y
-							else
-								unitTable.tick = unitTable.tick + 1
-								if (unitTable.tick > WorldQuestTracker.db.profile.groupfinder.noafk_ticks) then
-									--print ("[debug] found a afk player, not moving or taking damage for 30 seconds", UnitName ("party" .. i))
-									ff.SetAction (ff.actions.ACTIONTYPE_GROUP_KICK, "click to kick an AFK player", "party" .. i, GUID)
-									break
+			if (ff.CheckForAFKs) then
+				ff.CheckForAFKs_Timer = ff.CheckForAFKs_Timer + deltaTime
+				
+				if (ff.CheckForAFKs_Timer > 5) then
+					--> check if we are in the quest and not in raid, just to make sure
+					local isInArea, isOnMap, numObjectives = GetTaskInfo (interactionButton.questID)
+					if (isInArea and not IsInRaid()) then
+						--> do the check
+						local mySelf = UnitGUID ("player")
+						local selfX, selfY = UnitPosition ("player")
+						
+						for i = 1, GetNumGroupMembers() do
+							local GUID = UnitGUID ("party" .. i)
+							if (GUID and GUID ~= mySelf) then
+								local unitTable = ff.AFKCheckList [GUID]
+								if (not unitTable) then
+									ff.AFKCheckList [GUID] = {
+										tick = 0,
+										name = UnitName ("party" .. i),
+										x = 0,
+										y = 0,
+										faraway = 0,
+									}
+									unitTable = ff.AFKCheckList [GUID]
 								end
-							end
-							
-							--> check location for distance
-							if (selfX and selfX ~= 0 and DF.GetDistance_Point) then
-								local distance = DF:GetDistance_Point (selfX, selfY, x, y)
-								if (distance > 500) then
-									unitTable.faraway = unitTable.faraway + 1
-									if (unitTable.faraway > WorldQuestTracker.db.profile.groupfinder.noafk_ticks) then
-										--print ("[debug] found a player too far away, sqrt > 500 yards:", distance, UnitName ("party" .. i))
+								
+								--local x, y = GetPlayerMapPosition ("party" .. i)
+								local x, y, posZ, instanceID = UnitPosition ("party" .. i)
+								x = x or 0
+								y = y or 0
+								
+								--> check location for afk
+								if (x ~= unitTable.x or y ~= unitTable.y or UnitHealth ("party" .. i) < UnitHealthMax ("party" .. i)) then
+									unitTable.tick = 0
+									unitTable.x = x
+									unitTable.y = y
+								else
+									unitTable.tick = unitTable.tick + 1
+									if (unitTable.tick > WorldQuestTracker.db.profile.groupfinder.noafk_ticks) then
+										--print ("[debug] found a afk player, not moving or taking damage for 30 seconds", UnitName ("party" .. i))
 										ff.SetAction (ff.actions.ACTIONTYPE_GROUP_KICK, "click to kick an AFK player", "party" .. i, GUID)
-										unitTable.faraway = 0
 										break
 									end
-								else
-									unitTable.faraway = 0
+								end
+								
+								--> check location for distance
+								if (selfX and selfX ~= 0 and DF.GetDistance_Point) then
+									local distance = DF:GetDistance_Point (selfX, selfY, x, y)
+									if (distance > 500) then
+										unitTable.faraway = unitTable.faraway + 1
+										if (unitTable.faraway > WorldQuestTracker.db.profile.groupfinder.noafk_ticks) then
+											--print ("[debug] found a player too far away, sqrt > 500 yards:", distance, UnitName ("party" .. i))
+											ff.SetAction (ff.actions.ACTIONTYPE_GROUP_KICK, "click to kick an AFK player", "party" .. i, GUID)
+											unitTable.faraway = 0
+											break
+										end
+									else
+										unitTable.faraway = 0
+									end
 								end
 							end
 						end
 					end
+					
+					ff.CheckForAFKs_Timer = 0
 				end
-				
-				ff.CheckForAFKs_Timer = 0
 			end
 		end
 	end
@@ -2173,6 +2942,7 @@ end
 		interactionButton.ToUnapply = nil
 		interactionButton.ToKick = nil
 		interactionButton.ToSearchAnother = nil
+		interactionButton.ToSearchCustom = nil
 		
 	end
 	
@@ -2269,12 +3039,17 @@ end
 			end
 		end
 		
-		if (not self.ToSearch and not self.ToUnlist and not self.ToLeave and not self.ToCreate and not self.ToApply and not self.ToKick and not self.ToUnapply and not self.ToSearchAnother) then
+		if (not self.ToSearch and not self.ToUnlist and not self.ToLeave and not self.ToCreate and not self.ToApply and not self.ToKick and not self.ToUnapply and not self.ToSearchAnother and not self.ToSearchCustom) then
 			--print ("No actions scheduled!")
 			return
 		end
 		
 		return true
+	end
+	
+	function ff.StartSearchForCustom()
+		C_LFGList.Search (6, LFGListSearchPanel_ParseSearchTerms (interactionButton.questName)) --ignora os filtros
+		C_Timer.After (2, ff.SearchCompleted)
 	end
 	
 	function ff.StartSearch()
@@ -2290,19 +3065,35 @@ end
 		else
 			pvpTag = ""
 		end
-		
-		local groupDesc = "Doing world quest " .. questName .. ". Group created with World Quest Tracker. @ID" .. questID .. pvpTag
-		
+
+		local groupDesc
+		if (questID == 0) then
+			groupDesc = "Doing rare encounter against " .. questName .. ". Group created with World Quest Tracker. @ID" .. questID .. pvpTag
+		else
+			groupDesc = "Doing world quest " .. questName .. ". Group created with World Quest Tracker. @ID" .. questID .. pvpTag
+		end
+
 		local itemLevelRequired = 0
 		local honorLevelRequired = 0
 		local isAutoAccept = true
 		local isPrivate = false
-
-		C_LFGList.CreateListing (C_LFGList.GetActivityIDForQuestID (questID) or 469, "", itemLevelRequired, honorLevelRequired, "", groupDesc, isAutoAccept, isPrivate, questID)
+		
+		if (questID == 0) then
+			--local matchingActivities = C_LFGList.GetAvailableActivities (6, 0, "", questName)
+			--print (matchingActivities [1])
+			
+			--self, activityID, name, itemLevel, honorLevel, voiceChatInfo, description, autoAccept, privateGroup, questID
+			--16, "teste", 0, 0, "", "descricao", false, false, 
+			
+			C_LFGList.CreateListing (16, questName, itemLevelRequired, honorLevelRequired, "", groupDesc, isAutoAccept, isPrivate)
+			--C_LFGList.CreateListing (lfgID, "groupName", itemLevel, honorLevel, "voiceChat", "comment", autoAccept, privateGroup[, questID])
+		else
+			C_LFGList.CreateListing (C_LFGList.GetActivityIDForQuestID (questID) or 469, "", itemLevelRequired, honorLevelRequired, "", groupDesc, isAutoAccept, isPrivate, questID)
+		end
 		
 		--> if is an epic quest, converto to raid
 		local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = WorldQuestTracker.GetQuest_Info (questID)
-		if (rarity == LE_WORLD_QUEST_QUALITY_EPIC) then
+		if (rarity == LE_WORLD_QUEST_QUALITY_EPIC or questID == 0) then
 			C_Timer.After (2, function() ConvertToRaid(); end)
 		end
 
@@ -2372,7 +3163,13 @@ end
 			self.ToSearchAnother = nil
 			self.HadInteraction = true
 			ff.SetAction (ff.actions.ACTIONTYPE_GROUP_SEARCHING)
-			
+		
+		elseif (self.ToSearchCustom) then
+			ff.StartSearchForCustom()
+			interactionButton.ToSearchCustom = nil
+			self.HadInteraction = true
+			ff.SetAction (ff.actions.ACTIONTYPE_GROUP_SEARCHING)
+		
 		elseif (self.ToUnlist) then
 			C_LFGList.RemoveListing()
 			--> call search completed once it can only enter on Unlist state from there
@@ -2481,7 +3278,19 @@ end
 		ff.FindGroupForQuest (questID)
 	end
 	
-	function ff.FindGroupForQuest (questID, fromOTButton)
+	function WorldQuestTracker.FindGroupForCustom (rareName)
+		ff.FindGroupForQuest (rareName, nil, true)
+	end
+	
+	function ff.FindGroupForQuest (questID, fromOTButton, isSearchOnCustom)
+		--> reset the search type
+		ff.SearchCustom = nil
+	
+		if (isSearchOnCustom) then
+			ff.NewWorldQuestEngaged (nil, nil, questID)
+			return
+		end
+	
 		if (fromOTButton and IsInGroup() and ff.IsInWQGroup) then
 			--> player already doing the quest
 			ff.SetAction (ff.actions.ACTIONTYPE_GROUP_SEARCHANOTHER)
@@ -2607,6 +3416,9 @@ end
 					end
 					
 					ff.GroupMembers = GetNumGroupMembers (LE_PARTY_CATEGORY_HOME) + 1
+					
+					--> tell the rare finder the group has been modified
+					rf.ScheduleGroupShareRares()
 				end
 			else
 				if (ff.QueueGroupUpdate) then
@@ -2785,7 +3597,9 @@ function WorldQuestTracker.GetAllWorldQuests_Ids()
 					local isWorldQuest = QuestMapFrame_IsQuestWorldQuest (questID)
 					if (isWorldQuest) then
 						allQuests [questID] = true
-						C_TaskQuest.RequestPreloadRewardData (questID)
+						if (not HaveQuestRewardData (questID)) then
+							C_TaskQuest.RequestPreloadRewardData (questID)
+						end						
 					end
 				else
 					dataUnavaliable = true
@@ -3653,6 +4467,10 @@ end
 
 WorldMapFrame:HookScript ("OnEvent", function (self, event)
 	if (event == "WORLD_MAP_UPDATE") then
+	
+		--print ("WQT: world_map_update event")
+		--if (true) then return end
+	
 		if (WorldQuestTracker.CurrentMapID ~= self.mapID) then
 			if (WorldQuestTracker.LastWorldMapClick+0.017 > GetTime()) then
 				WorldQuestTracker.CurrentMapID = self.mapID
@@ -3669,6 +4487,11 @@ WorldMapFrame:HookScript ("OnEvent", function (self, event)
 			WorldMapFrame.UIElementsFrame.BountyBoard:SetPoint ("bottomright", WorldMapFrame.UIElementsFrame, "bottomright", -18, 15)
 		end
 		
+		if (not zones_with_worldquests [self.mapID]) then --not calling the function just to make this faster
+			if (WorldWidgetPool[1] and WorldWidgetPool[1]:IsShown()) then
+				WorldQuestTracker.HideZoneWidgets()
+			end
+		end
 		--se for um mapa qualquer e n�o for o world map -> esconder os widget do world map
 		--fazer a mesma coisa para os widgets das zonas
 	end
@@ -3769,7 +4592,7 @@ local allow_map_change = function (...)
 	end
 	WorldQuestTracker.CanChangeMap = true
 	WorldQuestTracker.LastMapID = GetCurrentMapAreaID()
-	WorldQuestTracker.UpdateZoneWidgets()
+	WorldQuestTracker.UpdateZoneWidgets (true)
 	
 	if (WorldQuestTracker.LastMapID ~= MAPID_BROKENISLES and WorldQuestTracker.IsPlayingLoadAnimation()) then
 		WorldQuestTracker.StopLoadingAnimation()
@@ -3840,6 +4663,7 @@ local clear_widget = function (self)
 	self.questTypeBlip:Hide()
 	self.partySharedBlip:Hide()
 	self.flagCriteriaMatchGlow:Hide()
+	self.TextureCustom:Hide()
 end
 
 -- ~zoneicon
@@ -3866,6 +4690,10 @@ function WorldQuestTracker.CreateZoneWidget (index, name, parent) --~zone
 	button.Texture:SetPoint ("center", button, "center")
 	button.Texture:SetMask ([[Interface\CharacterFrame\TempPortraitAlphaMask]])
 	
+	button.TextureCustom = supportFrame:CreateTexture (button:GetName() .. "TextureCustom", "BACKGROUND")
+	button.TextureCustom:SetPoint ("center", button, "center")
+	button.TextureCustom:Hide()
+	
 	button.Glow = supportFrame:CreateTexture(button:GetName() .. "Glow", "BACKGROUND", -6)
 	button.Glow:SetSize (50, 50)
 	button.Glow:SetPoint ("center", button, "center")
@@ -3877,6 +4705,7 @@ function WorldQuestTracker.CreateZoneWidget (index, name, parent) --~zone
 	button.highlight:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\highlight_circleT]])
 	button.highlight:SetPoint ("center")
 	button.highlight:SetSize (16, 16)
+	button.highlight:Hide()
 	
 	button.IsTrackingGlow = supportFrame:CreateTexture(button:GetName() .. "IsTrackingGlow", "BACKGROUND", -6)
 	button.IsTrackingGlow:SetSize (44, 44)
@@ -4095,6 +4924,7 @@ function WorldQuestTracker.GetOrCreateZoneWidget (info, index)
 		WorldWidgetPool [index] = taskPOI
 	end
 
+	taskPOI.Texture:Show()
 	return taskPOI
 end
 
@@ -4134,8 +4964,41 @@ function WorldQuestTracker.IsASubLevel()
 	end
 end
 
+function WorldQuestTracker.GetOrLoadQuestData (questID, canCache)
+	local data = WorldQuestTracker.CachedQuestData [questID]
+	if (data) then
+		return unpack (data)
+	end
+
+	local tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, allowDisplayPastCritical = GetQuestTagInfo (questID)
+	local gold, goldFormated = WorldQuestTracker.GetQuestReward_Gold (questID)
+	local rewardName, rewardTexture, numRewardItems = WorldQuestTracker.GetQuestReward_Resource (questID)
+	local itemName, itemTexture, itemLevel, quantity, quality, isUsable, itemID, isArtifact, artifactPower, isStackable, stackAmount = WorldQuestTracker.GetQuestReward_Item (questID)
+	local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = WorldQuestTracker.GetQuest_Info (questID)
+	
+	if (WorldQuestTracker.CanCacheQuestData and canCache) then
+		WorldQuestTracker.CachedQuestData [questID] = {title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, allowDisplayPastCritical, gold, goldFormated, rewardName, rewardTexture, numRewardItems, itemName, itemTexture, itemLevel, quantity, quality, isUsable, itemID, isArtifact, artifactPower, isStackable, stackAmount}
+	end
+	
+	return title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, allowDisplayPastCritical, gold, goldFormated, rewardName, rewardTexture, numRewardItems, itemName, itemTexture, itemLevel, quantity, quality, isUsable, itemID, isArtifact, artifactPower, isStackable, stackAmount
+end
+
+function WorldQuestTracker.UpdateZoneWidgetAnchors()
+	for i = 1, #WorldQuestTracker.Cache_ShownWidgetsOnZoneMap do
+		local widget = WorldQuestTracker.Cache_ShownWidgetsOnZoneMap [i]
+		WorldMapPOIFrame_AnchorPOI (widget, widget.PosX, widget.PosY, WORLD_MAP_POI_FRAME_LEVEL_OFFSETS.WORLD_QUEST)
+	end
+end
+
+WorldMapScrollFrame:HookScript ("OnMouseWheel", function (self, delta)
+	--> update widget anchors if the map is a world quest zone
+	if (WorldQuestTracker.ZoneHaveWorldQuest()) then
+		WorldQuestTracker.UpdateZoneWidgetAnchors()
+	end
+end)
+
 --atualiza as quest do mapa da zona ~updatezone ~zoneupdate
-function WorldQuestTracker.UpdateZoneWidgets()
+function WorldQuestTracker.UpdateZoneWidgets (forceUpdate)
 	
 	local mapID = GetCurrentMapAreaID()
 	
@@ -4147,7 +5010,6 @@ function WorldQuestTracker.UpdateZoneWidgets()
 		
 	elseif (WorldQuestTracker.IsASubLevel()) then
 		return WorldQuestTracker.HideZoneWidgets()
-		
 	end
 	
 	WorldQuestTracker.RefreshStatusBar()
@@ -4188,9 +5050,12 @@ function WorldQuestTracker.UpdateZoneWidgets()
 	wipe (WorldQuestTracker.CurrentZoneQuests)
 	
 	if (taskInfo and #taskInfo > 0) then
+	
+		local needAnotherUpdate = false
+	
 		for i, info  in ipairs (taskInfo) do
 			local questID = info.questId
-			
+
 			if (HaveQuestData (questID)) then
 				local isWorldQuest = QuestMapFrame_IsQuestWorldQuest (questID)
 				if (isWorldQuest) then
@@ -4199,31 +5064,23 @@ function WorldQuestTracker.UpdateZoneWidgets()
 					local passFilters = WorldMap_DoesWorldQuestInfoPassFilters (info, true, true) --blizzard filters
 					local timeLeft = WorldQuestTracker.GetQuest_TimeLeft (questID)
 					
-					if (not isSuppressed and passFilters and timeLeft > 2) then
+					if (timeLeft == 0) then
+						timeLeft = 1
+					end
+					
+					if (not isSuppressed and passFilters and timeLeft and timeLeft > 0) then
 						
-						C_TaskQuest.RequestPreloadRewardData (questID)
+						local can_cache = true
+						if (not HaveQuestRewardData (questID)) then
+							C_TaskQuest.RequestPreloadRewardData (questID)
+							can_cache = false
+							needAnotherUpdate = true
+						end
+						
 						WorldQuestTracker.CurrentZoneQuests [questID] = true
-
-						local tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, allowDisplayPastCritical = GetQuestTagInfo (questID) -- allowDisplayPastCritical 7.2
 						
-						------ adicionados para fazer o filtro
-							--gold
-							local gold, goldFormated = WorldQuestTracker.GetQuestReward_Gold (questID)
-							--class hall resource
-							local rewardName, rewardTexture, numRewardItems = WorldQuestTracker.GetQuestReward_Resource (questID)
-							--item
-							local itemName, itemTexture, itemLevel, quantity, quality, isUsable, itemID, isArtifact, artifactPower, isStackable, stackAmount = WorldQuestTracker.GetQuestReward_Item (questID)
-						------
-						
-						local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = WorldQuestTracker.GetQuest_Info (questID)
-						
+						local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, allowDisplayPastCritical, gold, goldFormated, rewardName, rewardTexture, numRewardItems, itemName, itemTexture, itemLevel, quantity, quality, isUsable, itemID, isArtifact, artifactPower, isStackable, stackAmount = WorldQuestTracker.GetOrLoadQuestData (questID, can_cache)
 						local filter, order = WorldQuestTracker.GetQuestFilterTypeAndOrder (worldQuestType, gold, rewardName, itemName, isArtifact, stackAmount, numRewardItems, rewardTexture)
-						--print (title, filter, order, itemName, worldQuestType, filter, order, rewardName, rewardTexture, numRewardItems, timeLeft)
-						
-						-- ~legion
-						-- worldQuestType == LE_QUEST_TAG_TYPE_INVASION
-						-- LE_QUEST_TAG_TYPE_RAID
-						-- 
 						
 						local passFilter = filters [filter]
 						if (not passFilter) then
@@ -4241,47 +5098,84 @@ function WorldQuestTracker.UpdateZoneWidgets()
 							end
 						end
 
-						if (passFilter or (forceShowBrokenShore and mapID == 1021)) then
+						if (passFilter or (forceShowBrokenShore and WorldQuestTracker.IsArgusZone (mapID))) then
 							local widget = WorldQuestTracker.GetOrCreateZoneWidget (info, index)
+							if (widget.questID ~= questID or forceUpdate or not widget.Texture:GetTexture()) then
+								local selected = questID == GetSuperTrackedQuestID()
+								local isCriteria = WorldMapFrame.UIElementsFrame.BountyBoard:IsWorldQuestCriteriaForSelectedBounty (questID)
+								local isSpellTarget = SpellCanTargetQuest() and IsQuestIDValidSpellTarget (questID)
+								
+								widget.mapID = mapID
+								widget.questID = questID
+								widget.numObjectives = info.numObjectives
+								widget.questName = title
+								widget.Order = order or 1
+								
+								--> cache reward amount
+								widget.Currency_Gold = gold or 0
+								widget.Currency_ArtifactPower = artifactPower or 0
+								widget.Currency_Resources = numRewardItems or 0
+								
+								widget.PosX = info.x
+								widget.PosY = info.y
 
-							local selected = questID == GetSuperTrackedQuestID()
-							local isCriteria = WorldMapFrame.UIElementsFrame.BountyBoard:IsWorldQuestCriteriaForSelectedBounty (questID)
-							local isSpellTarget = SpellCanTargetQuest() and IsQuestIDValidSpellTarget (questID)
-							
-							widget.mapID = mapID
-							widget.questID = questID
-							widget.numObjectives = info.numObjectives
-							widget.Order = order or 1
+								local inProgress
+								WorldQuestTracker.SetupWorldQuestButton (widget, worldQuestType, rarity, isElite, tradeskillLineIndex, inProgress, selected, isCriteria, isSpellTarget, mapID)
+								WorldMapPOIFrame_AnchorPOI (widget, info.x, info.y, WORLD_MAP_POI_FRAME_LEVEL_OFFSETS.WORLD_QUEST)
+								widget:Show()
 
-							local inProgress
-							WorldQuestTracker.SetupWorldQuestButton (widget, worldQuestType, rarity, isElite, tradeskillLineIndex, inProgress, selected, isCriteria, isSpellTarget, mapID)
-							WorldMapPOIFrame_AnchorPOI (widget, info.x, info.y, WORLD_MAP_POI_FRAME_LEVEL_OFFSETS.WORLD_QUEST)
-							
-							tinsert (WorldQuestTracker.Cache_ShownQuestOnZoneMap, questID)
-							tinsert (WorldQuestTracker.Cache_ShownWidgetsOnZoneMap, widget)
-							
-							widget.SupportFrame:SetScale (scale)
-							--widget.circleBorder:SetScale (1.3)
+								tinsert (WorldQuestTracker.Cache_ShownQuestOnZoneMap, questID)
+								tinsert (WorldQuestTracker.Cache_ShownWidgetsOnZoneMap, widget)
+								
+								widget.SupportFrame:SetScale (scale)
+								--widget.circleBorder:SetScale (1.3)
 
-							if (gold) then
-								total_Gold = total_Gold + gold
-							end
-							if (numRewardItems) then
-								total_Resources = total_Resources + numRewardItems
-							end
-							if (isArtifact) then
-								total_APower = total_APower + artifactPower
-							end
-							
-							if (showBlizzardWidgets) then
-								widget:Hide()
-								for _, button in ipairs (WorldQuestTracker.AllTaskPOIs) do
-									if (button.questID == questID) then
-										button:Show()
+								if (gold) then
+									total_Gold = total_Gold + gold
+								end
+								if (numRewardItems) then
+									total_Resources = total_Resources + numRewardItems
+								end
+								if (isArtifact) then
+									total_APower = total_APower + artifactPower
+								end
+								
+								if (showBlizzardWidgets) then
+									widget:Hide()
+									for _, button in ipairs (WorldQuestTracker.AllTaskPOIs) do
+										if (button.questID == questID) then
+											button:Show()
+										end
 									end
+								else
+									widget:Show()
 								end
 							else
-								widget:Show()
+								if (showBlizzardWidgets) then
+									widget:Hide()
+									for _, button in ipairs (WorldQuestTracker.AllTaskPOIs) do
+										if (button.questID == questID) then
+											button:Show()
+										end
+									end
+								else
+									widget:Show()
+									
+									--> sum totals for the statusbar
+									if (widget.Currency_Gold) then
+										total_Gold = total_Gold + widget.Currency_Gold
+									end
+									if (widget.Currency_Resources) then
+										total_Resources = total_Resources + widget.Currency_Resources
+									end
+									if (widget.Currency_ArtifactPower) then
+										total_APower = total_APower + widget.Currency_ArtifactPower
+									end
+									
+									--> add the widget to cache tables
+									tinsert (WorldQuestTracker.Cache_ShownQuestOnZoneMap, questID)
+									tinsert (WorldQuestTracker.Cache_ShownWidgetsOnZoneMap, widget)
+								end
 							end
 							
 							index = index + 1
@@ -4292,7 +5186,19 @@ function WorldQuestTracker.UpdateZoneWidgets()
 				end
 			else
 				questFailed = true
-				WorldQuestTracker.ScheduleZoneMapUpdate()
+				WorldQuestTracker.ScheduleZoneMapUpdate (1, true)
+			end
+		end
+		
+		if (needAnotherUpdate) then
+			WorldQuestTracker.ScheduleZoneMapUpdate (0.5, true)
+		end
+		
+		if (not WorldQuestTracker.CanCacheQuestData) then
+			if (not WorldQuestTracker.PrepareToAllowCachedQuestData) then
+				WorldQuestTracker.PrepareToAllowCachedQuestData = C_Timer.NewTimer (10, function()
+					WorldQuestTracker.CanCacheQuestData = true
+				end)
 			end
 		end
 		
@@ -4325,11 +5231,13 @@ function WorldQuestTracker.UpdateZoneWidgets()
 	
 	WorldQuestTracker.UpdateZoneSummaryFrame()
 	
+	WorldQuestTracker.UpdateRareIcons (index, mapID)
+	
 end
 
 WorldMapActionButtonPressed = function()
 	WorldQuestTracker.Temp_HideZoneWidgets = GetTime() + 5
-	WorldQuestTracker.UpdateZoneWidgets()
+	WorldQuestTracker.UpdateZoneWidgets (true)
 	WorldQuestTracker.ScheduleZoneMapUpdate (6)
 end
 hooksecurefunc ("ClickWorldMapActionButton", function()
@@ -4337,6 +5245,43 @@ hooksecurefunc ("ClickWorldMapActionButton", function()
 end)
 
 --atualiza o widget da quest no mapa da zona ~setupzone ~updatezone ~zoneupdate
+
+function WorldQuestTracker.ResetWorldQuestZoneButton (self)
+	self.isArtifact = nil
+	self.circleBorder:Hide()
+	self.squareBorder:Hide()
+	self.flagText:SetText ("")
+	self.Glow:Hide()
+	self.SelectedGlow:Hide()
+	self.CriteriaMatchGlow:Hide()
+	self.SpellTargetGlow:Hide()
+	self.IsTrackingGlow:Hide()
+	self.IsTrackingRareGlow:Hide()
+	self.rareSerpent:Hide()
+	self.rareGlow:Hide()
+	self.blackBackground:Hide()
+	
+	self.criteriaIndicator:Hide()
+	self.criteriaIndicatorGlow:Hide()
+	
+	self.flagCriteriaMatchGlow:Hide()
+	self.questTypeBlip:Hide()
+	self.partySharedBlip:Hide()
+	self.timeBlipRed:Hide()
+	self.timeBlipOrange:Hide()
+	self.timeBlipYellow:Hide()
+	self.timeBlipGreen:Hide()
+	self.blackGradient:Hide()
+	self.Shadow:Hide()
+	self.TextureCustom:Hide()
+
+	self.IsRare = nil
+	self.RareName = nil
+	self.RareSerial = nil	
+	self.RareTime = nil
+	self.RareOwner = nil
+end
+
 function WorldQuestTracker.SetupWorldQuestButton (self, worldQuestType, rarity, isElite, tradeskillLineIndex, inProgress, selected, isCriteria, isSpellTarget, mapID)
 	local questID = self.questID
 	if (not questID) then
@@ -4352,37 +5297,15 @@ function WorldQuestTracker.SetupWorldQuestButton (self, worldQuestType, rarity, 
 	self.isCriteria = isCriteria
 	self.isSpellTarget = isSpellTarget
 	
-	self.isArtifact = nil
-	self.circleBorder:Hide()
-	self.squareBorder:Hide()
-	self.flagText:SetText ("")
-	self.Glow:Hide()
-	self.SelectedGlow:Hide()
-	self.CriteriaMatchGlow:Hide()
-	self.SpellTargetGlow:Hide()
-	self.IsTrackingGlow:Hide()
-	self.IsTrackingRareGlow:Hide()
-	self.rareSerpent:Hide()
-	self.rareGlow:Hide()
-	self.blackBackground:Hide()
---	self.criteriaIndicator:Hide()
---	self.criteriaIndicatorGlow:Hide()	
-	self.flagCriteriaMatchGlow:Hide()
-	self.questTypeBlip:Hide()
-	self.partySharedBlip:Hide()
+	WorldQuestTracker.ResetWorldQuestZoneButton (self)
 	
 	self.isSelected = selected
 	self.isCriteria = isCriteria
 	self.isSpellTarget = isSpellTarget
 	
 	self.flagText:Show()
-	self.timeBlipRed:Hide()
-	self.timeBlipOrange:Hide()
-	self.timeBlipYellow:Hide()
-	self.timeBlipGreen:Hide()
 	self.blackGradient:Show()
-
-	self.Texture:SetMask ([[Interface\CharacterFrame\TempPortraitAlphaMask]])
+	self.Shadow:Show()
 
 	if (HaveQuestData (questID)) then
 		local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = WorldQuestTracker.GetQuest_Info (questID)
@@ -4514,7 +5437,7 @@ function WorldQuestTracker.SetupWorldQuestButton (self, worldQuestType, rarity, 
 				if (isArtifact) then
 					local texture = WorldQuestTracker.GetArtifactPowerIcon (artifactPower, true) --
 					self.Texture:SetSize (16, 16)
-					self.Texture:SetMask (nil)
+					--self.Texture:SetMask (nil)
 					self.Texture:SetTexture (texture)
 
 					local research_nameLoc, research_timeleftString, research_timeLeft, research_elapsedTime = WorldQuestTracker:GetNextResearchNoteTime()
@@ -4598,14 +5521,19 @@ function WorldQuestTracker.SetupWorldQuestButton (self, worldQuestType, rarity, 
 end
 
 --agenda uma atualiza��o se algum dado de alguma quest n�o estiver dispon�vel ainda
-local do_zonemap_update = function()
-	WorldQuestTracker.UpdateZoneWidgets()
+local do_zonemap_update = function (self)
+	WorldQuestTracker.UpdateZoneWidgets (self.IsForceUpdate)
 end
-function WorldQuestTracker.ScheduleZoneMapUpdate (seconds)
+function WorldQuestTracker.ScheduleZoneMapUpdate (seconds, isForceUpdate)
 	if (WorldQuestTracker.ScheduledZoneUpdate and not WorldQuestTracker.ScheduledZoneUpdate._cancelled) then
+		--> if the previous schedule was a force update, make the new schedule be be a force update too
+		if (WorldQuestTracker.ScheduledZoneUpdate.IsForceUpdate) then
+			isForceUpdate = true
+		end
 		WorldQuestTracker.ScheduledZoneUpdate:Cancel()
 	end
 	WorldQuestTracker.ScheduledZoneUpdate = C_Timer.NewTimer (seconds or 1, do_zonemap_update)
+	WorldQuestTracker.ScheduledZoneUpdate.IsForceUpdate = isForceUpdate
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4613,6 +5541,10 @@ end
 
 --muda o mapa para o world map de broken isles
 hooksecurefunc ("WorldMap_UpdateQuestBonusObjectives", function (self, event)
+
+--	print ("WQT: updating bonus objetives")
+--	if (true) then return end
+
 	if (WorldMapFrame:IsShown() and not WorldQuestTracker.NoAutoSwitchToWorldMap) then
 		if (WorldQuestTracker.CanShowBrokenIsles()) then
 			SetMapByID (MAPID_BROKENISLES)
@@ -4731,7 +5663,7 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 	end
 	
 	if (WorldMapFrame:IsShown()) then
-		animFrame:SetScript ("OnUpdate", tickAnimation)
+		--animFrame:SetScript ("OnUpdate", tickAnimation)
 		WorldQuestTracker.MapSeason = WorldQuestTracker.MapSeason + 1
 		WorldQuestTracker.MapOpenedAt = GetTime()
 	else
@@ -4745,7 +5677,6 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 	
 	--verifica duplo click
 	if (WorldQuestTracker.lastMapTap+0.3 > GetTime() and not InCombatLockdown() and WorldQuestTracker.CanShowBrokenIsles()) then
-		
 		--SetMapToCurrentZone()
 		SetMapByID (GetCurrentMapAreaID())
 
@@ -4898,6 +5829,15 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 					if (WorldQuestTrackerAddon.GetCurrentZoneType() == "zone") then
 						WorldQuestTracker.UpdateZoneWidgets()
 					end
+					return
+				end
+				
+				if (option == "rarescan") then
+					WorldQuestTracker.db.profile.rarescan [value] = value2
+					if (WorldQuestTrackerAddon.GetCurrentZoneType() == "zone") then
+						WorldQuestTracker.UpdateZoneWidgets()
+					end
+					GameCooltip:Close()
 					return
 				end
 
@@ -5926,13 +6866,13 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 				GameCooltip:AddLine ("$div")
 				
 				if (WorldQuestTracker.db.profile.filter_force_show_brokenshore) then
-					GameCooltip:AddLine ("Ignore Broken Shore")
-					GameCooltip:AddLine ("World quets on Broken Shore map will always be shown.", "", 2)
+					GameCooltip:AddLine ("Ignore Argus")
+					GameCooltip:AddLine ("World quets on Argus map will always be shown.", "", 2)
 					GameCooltip:AddIcon ([[Interface\ICONS\70_inscription_vantus_rune_tomb]], 1, 1, 23*.54, 37*.40, 0, 1, 0, 1)
 					GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 1, 2, 16, 16, 0, 1, 0, 1, overlayColor, nil, true)
 				else
-					GameCooltip:AddLine ("Ignore Broken Shore", "", 1, "silver")
-					GameCooltip:AddLine ("World quets on Broken Shore map will always be shown.", "", 2)
+					GameCooltip:AddLine ("Ignore Argus", "", 1, "silver")
+					GameCooltip:AddLine ("World quets on Argus map will always be shown.", "", 2)
 					GameCooltip:AddIcon (WQT_GENERAL_STRINGS_AND_ICONS.criteria.icon, 1, 1, 23*.54, 37*.40, l, r, t, b, nil, nil, true)
 				end
 				GameCooltip:AddMenu (1, toggle_brokenshore_bypass)
@@ -6384,6 +7324,15 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 					end
 					GameCooltip:AddMenu (2, ff.Options.SetEnabledFunc, not WorldQuestTracker.db.profile.groupfinder.enabled)
 					
+					--find group for rares
+					GameCooltip:AddLine (L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"], "", 2)
+					if (WorldQuestTracker.db.profile.rarescan.search_group) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, ff.Options.SetFindGroupForRares, not WorldQuestTracker.db.profile.rarescan.search_group)						
+					
 					--uses buttons on the quest tracker
 					GameCooltip:AddLine (L["S_GROUPFINDER_OT_ENABLED"], "", 2)
 					if (WorldQuestTracker.db.profile.groupfinder.tracker_buttons) then
@@ -6497,7 +7446,21 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 					GameCooltip:AddMenu (2, ff.Options.SetNoAFKFunc, not WorldQuestTracker.db.profile.groupfinder.noafk)					
 				end
 				
+				--rare finder
+					GameCooltip:AddLine (L["S_RAREFINDER_TITLE"])
+					GameCooltip:AddIcon ([[Interface\Collections\Collections]], 1, 1, IconSize, IconSize, 101/512, 116/512, 12/512, 26/512)
+
+					--enabled
+					GameCooltip:AddLine (L["S_RAREFINDER_OPTIONS_SHOWICONS"], "", 2)
+					if (WorldQuestTracker.db.profile.rarescan.show_icons) then
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+					else
+						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+					end
+					GameCooltip:AddMenu (2, options_on_click, "rarescan", "show_icons", not WorldQuestTracker.db.profile.rarescan.show_icons)				
 				
+				
+				-- other options
 				GameCooltip:AddLine ("$div")
 				--
 				GameCooltip:AddLine (L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"])
@@ -6671,6 +7634,7 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 			local partyFrame = CreateFrame ("frame", nil, WorldQuestTracker.DoubleTapFrame)
 			partyFrame:SetSize (80, 20)
 			partyFrame:SetPoint ("left", filterButton, "right", 10, 0)
+			partyFrame:Hide()
 
 			local BuildPartyTooltipMenu = function (self)
 				GameCooltip:Preset (2)
@@ -7055,6 +8019,18 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 		else
 			WorldQuestTracker.HideWorldQuestsOnWorldMap()
 			--print ("eh pra hidar...")
+			
+			--is zone map?
+			if (WorldQuestTracker.ZoneHaveWorldQuest (WorldMapFrame.mapID)) then
+				--roda nosso custom update e cria nossos proprios widgets
+				WorldQuestTracker.UpdateZoneWidgets (true)
+				C_Timer.After (1.35, function()
+					if (WorldQuestTracker.ZoneHaveWorldQuest (WorldMapFrame.mapID)) then
+						WorldQuestTracker.UpdateZoneWidgets (true)
+					end
+				end)
+			end
+			
 		end
 
 		-- ~tutorial
@@ -8388,6 +9364,7 @@ function WorldQuestTracker.GetOrCreateTrackerWidget (index)
 	f.Icon = f:CreateTexture (nil, "artwork")
 	f.Icon:SetPoint ("topleft", f, "topleft", -13, -2)
 	f.Icon:SetSize (16, 16)
+	f.Icon:SetMask ([[Interface\CharacterFrame\TempPortraitAlphaMask]])
 	
 	local IconButton = CreateFrame ("button", "$parentIconButton", f)
 	IconButton:SetSize (18, 18)
@@ -8702,11 +9679,14 @@ function WorldQuestTracker.RefreshTrackerWidgets()
 				local color = OBJECTIVE_TRACKER_COLOR["Normal"]
 				widget.Zone:SetTextColor (color.r, color.g, color.b)
 				
-				if (quest.questType == QUESTTYPE_ARTIFACTPOWER) then
-					widget.Icon:SetMask (nil)
-				else
-					widget.Icon:SetMask ([[Interface\CharacterFrame\TempPortraitAlphaMask]])
-				end
+				--> the widget will always have the mask enabled
+				--if (quest.questType == QUESTTYPE_ARTIFACTPOWER) then
+					--widget.Icon:SetMask (nil)
+					--widget.Icon:SetMask ([[Interface\CharacterFrame\TempPortraitAlphaMask]])
+				--else
+					--widget.Icon:SetMask ([[Interface\CharacterFrame\TempPortraitAlphaMask]])
+				--end
+				
 				widget.Icon:SetTexture (quest.rewardTexture)
 				widget.IconButton.questID = quest.questID
 				
@@ -9131,7 +10111,10 @@ function WorldQuestTracker:GetAllWorldQuests_Info()
 				if (HaveQuestData (questID)) then
 					local isWorldQuest = QuestMapFrame_IsQuestWorldQuest (questID)
 					if (isWorldQuest) then
-						C_TaskQuest.RequestPreloadRewardData (questID)
+						if (not HaveQuestRewardData (questID)) then
+							C_TaskQuest.RequestPreloadRewardData (questID)
+						end
+						
 						result [mapId] = result [mapId] or {}
 						tinsert (result [mapId], info)
 						total = total + 1
@@ -10203,7 +11186,7 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 								end
 							end
 
-							if (filters [filter] or rarity == LE_WORLD_QUEST_QUALITY_EPIC or (forceShowBrokenShore and mapId == 1021)) then --force show broken shore quests
+							if (filters [filter] or rarity == LE_WORLD_QUEST_QUALITY_EPIC or (forceShowBrokenShore and WorldQuestTracker.IsArgusZone (mapId))) then --force show broken shore questsmapId == 1021
 								tinsert (questsAvailable [mapId], {questID, order, info.numObjectives})
 								shownQuests = shownQuests + 1
 								
@@ -10309,7 +11292,7 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 		
 		if (taskInfo and #taskInfo > 0) then
 			availableQuests = availableQuests + #taskInfo
-
+		
 			for i, quest in ipairs (questsAvailable [mapId]) do
 				
 				local questID = quest [1]
@@ -10319,8 +11302,9 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 					local isWorldQuest = QuestMapFrame_IsQuestWorldQuest (questID)
 					
 					if (isWorldQuest) then
-					
-						C_TaskQuest.RequestPreloadRewardData (questID)
+						if (not HaveQuestRewardData (questID)) then
+							C_TaskQuest.RequestPreloadRewardData (questID)
+						end
 						
 						--se � nova
 						local isNew = WorldQuestTracker.SavedQuestList_IsNew (questID)
@@ -10330,6 +11314,9 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 						local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = WorldQuestTracker.GetQuest_Info (questID)
 						--tempo restante
 						local timeLeft = WorldQuestTracker.GetQuest_TimeLeft (questID)
+						if (timeLeft == 0) then
+							timeLeft = 1
+						end
 
 						if (timeLeft and timeLeft > 0) then
 							local isCriteria = WorldMapFrame.UIElementsFrame.BountyBoard:IsWorldQuestCriteriaForSelectedBounty (questID)
@@ -10928,7 +11915,7 @@ hooksecurefunc (WorldMapFrame.UIElementsFrame.BountyBoard, "OnTabClick", functio
 	if (WorldQuestTrackerAddon.GetCurrentZoneType() == "zone") then
 		WorldQuestTracker.FindBestMapForSelectedBounty_Original (...)
 		WorldQuestTracker.LastMapID = GetCurrentMapAreaID()
-		C_Timer.After (1, WorldQuestTracker.UpdateZoneWidgets)
+		WorldQuestTracker.ScheduleZoneMapUpdate (0.5, true)
 	end
 end)
 

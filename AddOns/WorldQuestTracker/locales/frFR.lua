@@ -27,6 +27,8 @@ L["S_FLYMAP_SHOWWORLDQUESTS"] = "Affiche les Expéditions"
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_SEARCH"] = ""
 --Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = ""
+--Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = ""
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_SEARCHING"] = ""
@@ -42,6 +44,8 @@ L["S_FLYMAP_SHOWWORLDQUESTS"] = "Affiche les Expéditions"
 -- L["S_GROUPFINDER_ACTIONS_UNLISTING"] = ""
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_WAITING"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = ""
 --Translation missing 
 -- L["S_GROUPFINDER_ENABLED"] = ""
 --Translation missing 
@@ -137,6 +141,16 @@ L["S_QUESTTYPE_PROFESSION"] = "Profession"
 L["S_QUESTTYPE_PVP"] = "JcJ"
 L["S_QUESTTYPE_RESOURCE"] = "Ressources"
 L["S_QUESTTYPE_TRADESKILL"] = "Artisanat"
+--Translation missing 
+-- L["S_RAREFINDER_NPC_NOTREGISTERED"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_OPTIONS_SHOWICONS"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TITLE"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = ""
 L["S_SHAREPANEL_THANKS"] = [=[Merci de partager World Quest Tracker !
 Envoyez notre lien à vos amis sur Facebook, Twitter, à l'Élysée...]=]
 L["S_SHAREPANEL_TITLE"] = "For All Those About to Rock!"
