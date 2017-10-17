@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 16694 $"):sub(12, -3)),
-	DisplayVersion = "7.3.2", -- the string that is shown as version
-	ReleaseRevision = 16694 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 16781 $"):sub(12, -3)),
+	DisplayVersion = "7.3.5", -- the string that is shown as version
+	ReleaseRevision = 16781 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -114,11 +114,13 @@ DBM.DefaultOptions = {
 	ShowEngageMessage = true,
 	ShowDefeatMessage = true,
 	ShowGuildMessages = true,
+	ShowGuildMessagesPlus = false,
 	AutoRespond = true,
 	StatusEnabled = true,
 	WhisperStats = false,
 	DisableStatusWhisper = false,
-	HideBossEmoteFrame = true,
+	DisableGuildStatus = false,
+	HideBossEmoteFrame2 = true,
 	SpamBlockBossWhispers = true,
 	ShowMinimapButton = false,
 	ShowFlashFrame = true,
@@ -168,7 +170,7 @@ DBM.DefaultOptions = {
 	HPFrameX = -50,
 	HPFrameY = 50,
 	HPFrameMaxEntries = 5,
-	WarningDuration = 4,
+	WarningDuration2 = 1.5,
 	WarningPoint = "CENTER",
 	WarningX = 0,
 	WarningY = 260,
@@ -176,7 +178,7 @@ DBM.DefaultOptions = {
 	WarningFontSize = 20,
 	WarningFontStyle = "None",
 	WarningFontShadow = true,
-	SpecialWarningDuration = 4,
+	SpecialWarningDuration2 = 1.5,
 	SpecialWarningPoint = "CENTER",
 	SpecialWarningX = 0,
 	SpecialWarningY = 75,
@@ -380,12 +382,13 @@ local addsGUIDs = {}
 local targetEventsRegistered = false
 local targetMonitor = nil
 local statusWhisperDisabled = false
+local statusGuildDisabled = false
 local dbmToc = 0
 local UpdateChestTimer
 local breakTimerStart
 local AddMsg
 
-local fakeBWVersion, fakeBWHash = 69, "f7aadbb"
+local fakeBWVersion, fakeBWHash = 73, "3a9a7bb"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -1130,10 +1133,10 @@ do
 			self.Bars:LoadOptions("DBM")
 			self.Arrow:LoadPosition()
 			if not self.Options.ShowMinimapButton then self:HideMinimapButton() end
-			local soundChannels = tonumber(GetCVar("Sound_NumChannels")) or 24--if set to 24, may return nil, Defaults usually do
+--[[			local soundChannels = tonumber(GetCVar("Sound_NumChannels")) or 24--if set to 24, may return nil, Defaults usually do
 			if soundChannels < 64 then
 				SetCVar("Sound_NumChannels", 64)
-			end
+			end--]]
 			self.AddOns = {}
 			self.Voices = { {text = "None",value  = "None"}, }--Create voice table, with default "None" value
 			self.VoiceVersions = {}
@@ -3948,6 +3951,12 @@ do
 		statusWhisperDisabled = true
 		DBM:Debug("Raid leader has disabled status whispers")
 	end
+	
+	syncHandlers["DGP"] = function(sender)
+		if (DBM:GetRaidRank(sender) ~= 2 or not IsInGroup()) then return end--If not on group, we're probably sender, don't disable status. IF not leader, someone is trying to spoof this, block that too
+		statusGuildDisabled = true
+		DBM:Debug("Raid leader has disabled guild progress messages")
+	end
 
 	syncHandlers["IS"] = function(sender, guid, ver, optionName)
 		ver = tonumber(ver)
@@ -4415,10 +4424,13 @@ do
 			if not ver or not (ver == "2") then return end--Ignore old versions
 			if DBM:AntiSpam(10, "GCB") then
 				if IsInInstance() then return end--Simple filter, if you are inside an instance, just filter it, if not in instance, good to go.
+				difficulty = tonumber(difficulty)
+				if not DBM.Options.ShowGuildMessagesPlus and difficulty == 8 then return end
 				local bossName = EJ_GetEncounterInfo(modId) or DBM_CORE_UNKNOWN
 				local difficultyName = DBM_CORE_UNKNOWN
-				difficulty = tonumber(difficulty)
-				if difficulty == 16 then
+				if difficulty == 8 then
+					difficultyName = PLAYER_DIFFICULTY6.."+"
+				elseif difficulty == 16 then
 					difficultyName = PLAYER_DIFFICULTY6
 				elseif difficulty == 15 then
 					difficultyName = PLAYER_DIFFICULTY2
@@ -4434,10 +4446,13 @@ do
 			if not ver or not (ver == "3") then return end--Ignore old versions
 			if DBM:AntiSpam(5, "GCE") then
 				if IsInInstance() then return end--Simple filter, if you are inside an instance, just filter it, if not in instance, good to go.
+				difficulty = tonumber(difficulty)
+				if not DBM.Options.ShowGuildMessagesPlus and difficulty == 8 then return end
 				local bossName = EJ_GetEncounterInfo(modId) or DBM_CORE_UNKNOWN
 				local difficultyName = DBM_CORE_UNKNOWN
-				difficulty = tonumber(difficulty)
-				if difficulty == 16 then
+				if difficulty == 8 then
+					difficultyName = PLAYER_DIFFICULTY6.."+"
+				elseif difficulty == 16 then
 					difficultyName = PLAYER_DIFFICULTY6
 				elseif difficulty == 15 then
 					difficultyName = PLAYER_DIFFICULTY2
@@ -5449,6 +5464,9 @@ do
 				self:Debug("StartCombat called by individual mod or unknown reason. LastInstanceMapID is "..LastInstanceMapID)
 			end
 			--check completed. starting combat
+			if self.Options.DisableGuildStatus and UnitIsGroupLeader("player") then
+				sendSync("DGP")
+			end
 			tinsert(inCombat, mod)
 			if mod.inCombatOnlyEvents and not mod.inCombatOnlyEventsRegistered then
 				mod.inCombatOnlyEventsRegistered = 1
@@ -5597,7 +5615,7 @@ do
 				if not synced then
 					sendSync("C", (delay or 0).."\t"..modId.."\t"..(mod.revision or 0).."\t"..startHp.."\t"..DBM.Revision.."\t"..(mod.hotfixNoticeRev or 0))
 				end
-				if self.Options.DisableStatusWhisper and UnitIsGroupLeader("player") and (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 or difficultyIndex == 23) then
+				if self.Options.DisableStatusWhisper and UnitIsGroupLeader("player") and (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) then
 					sendSync("DSW")
 				end
 				--show bigbrother check
@@ -5619,7 +5637,7 @@ do
 							self:AddMsg(DBM_CORE_SCENARIO_STARTED:format(difficultyText..name))
 						else
 							self:AddMsg(DBM_CORE_COMBAT_STARTED:format(difficultyText..name))
-							if (difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() then--Only send relevant content, not guild beating down lich king or LFR.
+							if (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() and not statusGuildDisabled and not self.Options.DisableGuildStatus then--Only send relevant content, not guild beating down lich king or LFR.
 								SendAddonMessage("D4", "GCB\t"..modId.."\t2\t"..difficultyIndex, "GUILD")
 							end
 						end
@@ -5766,7 +5784,7 @@ do
 							self:AddMsg(DBM_CORE_SCENARIO_ENDED_AT_LONG:format(difficultyText..name, strFromTime(thisTime), totalPulls - totalKills))
 						else
 							self:AddMsg(DBM_CORE_COMBAT_ENDED_AT_LONG:format(difficultyText..name, wipeHP, strFromTime(thisTime), totalPulls - totalKills))
-							if (difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() then--Maybe add mythic plus/CM?
+							if (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() and not statusGuildDisabled and not self.Options.DisableGuildStatus then--Maybe add mythic plus/CM?
 								SendAddonMessage("D4", "GCE\t"..modId.."\t3\t1\t"..strFromTime(thisTime).."\t"..difficultyIndex.."\t"..wipeHP, "GUILD")
 							end
 						end
@@ -5848,7 +5866,7 @@ do
 							msg = DBM_CORE_SCENARIO_COMPLETE:format(difficultyText..name, strFromTime(thisTime))
 						else
 							msg = DBM_CORE_BOSS_DOWN:format(difficultyText..name, strFromTime(thisTime))
-							if (difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() then
+							if (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() and not statusGuildDisabled and not self.Options.DisableGuildStatus then
 								SendAddonMessage("D4", "GCE\t"..modId.."\t3\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex, "GUILD")
 							end
 						end
@@ -5857,7 +5875,7 @@ do
 							msg = DBM_CORE_SCENARIO_COMPLETE_NR:format(difficultyText..name, strFromTime(thisTime), strFromTime(bestTime), totalKills)
 						else
 							msg = DBM_CORE_BOSS_DOWN_NR:format(difficultyText..name, strFromTime(thisTime), strFromTime(bestTime), totalKills)
-							if (difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() then
+							if (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() and not statusGuildDisabled and not self.Options.DisableGuildStatus then
 								SendAddonMessage("D4", "GCE\t"..modId.."\t3\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex, "GUILD")
 							end
 						end
@@ -5866,7 +5884,7 @@ do
 							msg = DBM_CORE_SCENARIO_COMPLETE_L:format(difficultyText..name, strFromTime(thisTime), strFromTime(lastTime), strFromTime(bestTime), totalKills)
 						else
 							msg = DBM_CORE_BOSS_DOWN_L:format(difficultyText..name, strFromTime(thisTime), strFromTime(lastTime), strFromTime(bestTime), totalKills)
-							if (difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() then
+							if (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() and not statusGuildDisabled and not self.Options.DisableGuildStatus then
 								SendAddonMessage("D4", "GCE\t"..modId.."\t3\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex, "GUILD")
 							end
 						end
@@ -5928,6 +5946,7 @@ do
 			if mod.OnCombatEnd then mod:OnCombatEnd(wipe) end
 			if #inCombat == 0 then--prevent error if you pulled multiple boss. (Earth, Wind and Fire)
 				statusWhisperDisabled = false
+				statusGuildDisabled = false
 				self:Schedule(10, self.StopLogging, self)--small delay to catch kill/died combatlog events
 				self:HideBlizzardEvents(0)
 				self:Unschedule(checkBossHealth)
@@ -6563,7 +6582,7 @@ do
 			if self.Options.HideQuestTooltips then
 				SetCVar("showQuestTrackingTooltips", 0)
 			end
-			if (self.Options.HideBossEmoteFrame or custom) and not testBuild then
+			if (self.Options.HideBossEmoteFrame2 or custom) and not testBuild then
 				DisableEvent(RaidBossEmoteFrame, "RAID_BOSS_EMOTE")
 				DisableEvent(RaidBossEmoteFrame, "RAID_BOSS_WHISPER")
 				DisableEvent(RaidBossEmoteFrame, "CLEAR_BOSS_EMOTES")
@@ -6579,7 +6598,7 @@ do
 			if self.Options.HideQuestTooltips then
 				SetCVar("showQuestTrackingTooltips", 1)
 			end
-			if (self.Options.HideBossEmoteFrame or custom) and not testBuild then
+			if (self.Options.HideBossEmoteFrame2 or custom) and not testBuild then
 				EnableEvent(RaidBossEmoteFrame, "RAID_BOSS_EMOTE")
 				EnableEvent(RaidBossEmoteFrame, "RAID_BOSS_WHISPER")
 				EnableEvent(RaidBossEmoteFrame, "CLEAR_BOSS_EMOTES")
@@ -7049,17 +7068,19 @@ function bossModPrototype:IsLFR()
 	return false
 end
 
+--Dungeons: normal, heroic. Raids: LFR, normal
 function bossModPrototype:IsEasy()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	if diff == "normal" or diff == "lfr" then
+	if diff == "normal" or diff == "lfr" or diff == "lfr25" or diff == "heroic5" or diff == "normal5" then
 		return true
 	end
 	return false
 end
 
+--Dungeons, mythic, mythic+. Raids: heroic, mythic
 function bossModPrototype:IsHard()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	if diff == "mythic" or diff == "challenge5" then
+	if diff == "mythic" or diff == "challenge5" or diff == "heroic" then
 		return true
 	end
 	return false
@@ -8275,7 +8296,7 @@ do
 	local font1elapsed, font2elapsed, font3elapsed, moving
 
 	local function fontHide1()
-		local duration = DBM.Options.WarningDuration
+		local duration = DBM.Options.WarningDuration2
 		if font1elapsed > duration * 1.3 then
 			font1u:Hide()
 			font1:Hide()
@@ -8294,7 +8315,7 @@ do
 	end
 
 	local function fontHide2()
-		local duration = DBM.Options.WarningDuration
+		local duration = DBM.Options.WarningDuration2
 		if font2elapsed > duration * 1.3 then
 			font2u:Hide()
 			font2:Hide()
@@ -8313,7 +8334,7 @@ do
 	end
 
 	local function fontHide3()
-		local duration = DBM.Options.WarningDuration
+		local duration = DBM.Options.WarningDuration2
 		if font3elapsed > duration * 1.3 then
 			font3u:Hide()
 			font3:Hide()
@@ -8435,9 +8456,9 @@ do
 				anchorFrame.ticker:Cancel()
 				anchorFrame.ticker = nil
 			end
-			font1elapsed = self.Options.WarningDuration
-			font2elapsed = self.Options.WarningDuration
-			font3elapsed = self.Options.WarningDuration
+			font1elapsed = self.Options.WarningDuration2
+			font2elapsed = self.Options.WarningDuration2
+			font3elapsed = self.Options.WarningDuration2
 			frame:SetFrameStrata("HIGH")
 			self:Unschedule(moveEnd)
 			self.Bars:CancelBar(DBM_CORE_MOVE_WARNING_BAR)
@@ -9176,7 +9197,7 @@ do
 	local font1elapsed, font2elapsed, moving
 
 	local function fontHide1()
-		local duration = DBM.Options.SpecialWarningDuration
+		local duration = DBM.Options.SpecialWarningDuration2
 		if font1elapsed > duration * 1.3 then
 			font1:Hide()
 			if frame.font1ticker then
@@ -9194,7 +9215,7 @@ do
 	end
 
 	local function fontHide2()
-		local duration = DBM.Options.SpecialWarningDuration
+		local duration = DBM.Options.SpecialWarningDuration2
 		if font2elapsed > duration * 1.3 then
 			font2:Hide()
 			if frame.font2ticker then
@@ -9257,8 +9278,8 @@ do
 		local function moveEnd(self)
 			moving = false
 			anchorFrame:Hide()
-			font1elapsed = self.Options.SpecialWarningDuration
-			font2elapsed = self.Options.SpecialWarningDuration
+			font1elapsed = self.Options.SpecialWarningDuration2
+			font2elapsed = self.Options.SpecialWarningDuration2
 			frame:SetFrameStrata("HIGH")
 			self:Unschedule(moveEnd)
 			self.Bars:CancelBar(DBM_CORE_MOVE_SPECIAL_WARNING_BAR)
@@ -9600,7 +9621,7 @@ do
 			if announceType == "target" or announceType == "targetcount" or announceType == "close" or announceType == "reflect" or announceType == "switch" or announceType == "switchcount" then
 				catType = "announceother"
 			--Directly affects you
-			elseif announceType == "you" or announceType == "youcount" or announceType == "move" or announceType == "dodge" or announceType == "moveaway" or announceType == "run" or announceType == "stack" or announceType == "moveto" then
+			elseif announceType == "you" or announceType == "youcount" or announceType == "youpos" or announceType == "move" or announceType == "dodge" or announceType == "moveaway" or announceType == "run" or announceType == "stack" or announceType == "moveto" or announceType == "soakpos" then
 				catType = "announcepersonal"
 			--Things you have to do to fulfil your role
 			elseif announceType == "taunt" or announceType == "dispel" or announceType == "interrupt" or announceType == "interruptcount" then
@@ -9814,7 +9835,7 @@ do
 		self:AddSpecialWarning(DBM_CORE_MOVE_SPECIAL_WARNING_TEXT)
 		frame:SetFrameStrata("TOOLTIP")
 		self:Unschedule(testWarningEnd)
-		self:Schedule(self.Options.SpecialWarningDuration * 1.3, testWarningEnd)
+		self:Schedule(self.Options.SpecialWarningDuration2 * 1.3, testWarningEnd)
 		if number and not noSound then
 			self:PlaySpecialWarningSound(number)
 		end

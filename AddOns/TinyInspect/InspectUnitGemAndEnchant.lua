@@ -9,6 +9,16 @@ local LibItemGem = LibStub:GetLibrary("LibItemGem.7000")
 local LibSchedule = LibStub:GetLibrary("LibSchedule.7000")
 local LibItemEnchant = LibStub:GetLibrary("LibItemEnchant.7000")
 
+--0:optional
+local EnchantParts = {
+    [2]  = {1, NECKSLOT},
+    [11] = {1, FINGER1SLOT},
+    [12] = {1, FINGER1SLOT},
+    [15] = {1, BACKSLOT},
+--  [3]  = {0, SHOULDERSLOT},
+--  [10] = {0, HANDSSLOT},
+}
+
 --創建圖標框架
 local function CreateIconFrame(frame, index)
     local icon = CreateFrame("Button", nil, frame)
@@ -34,9 +44,9 @@ local function CreateIconFrame(frame, index)
         GameTooltip:Hide()
     end)
     icon:SetScript("OnDoubleClick", function(self)
-        if (self.itemLink) then
+        if (self.itemLink or self.title) then
             ChatEdit_ActivateChat(ChatEdit_ChooseBoxForSend())
-            ChatEdit_InsertLink(self.itemLink)
+            ChatEdit_InsertLink(self.itemLink or self.title)
         end
     end)
     icon.bg = icon:CreateTexture(nil, "BACKGROUND")
@@ -116,7 +126,7 @@ local function UpdateIconTexture(icon, texture, data, dataType)
 end
 
 --讀取並顯示圖標
-local function ShowGemAndEnchant(frame, ItemLink, anchorFrame)
+local function ShowGemAndEnchant(frame, ItemLink, anchorFrame, itemframe)
     if (not ItemLink) then return 0 end
     local num, info = LibItemGem:GetItemGemInfo(ItemLink)
     local _, quality, texture, icon, r, g, b
@@ -139,7 +149,7 @@ local function ShowGemAndEnchant(frame, ItemLink, anchorFrame)
         icon:Show()
         anchorFrame = icon
     end
-    local enchantItemID = LibItemEnchant:GetEnchantItemID(ItemLink)
+    local enchantItemID, enchantID = LibItemEnchant:GetEnchantItemID(ItemLink)
     local enchantSpellID = LibItemEnchant:GetEnchantSpellID(ItemLink)
     if (enchantItemID) then
         num = num + 1
@@ -166,6 +176,26 @@ local function ShowGemAndEnchant(frame, ItemLink, anchorFrame)
         icon:SetPoint("LEFT", anchorFrame, "RIGHT", num == 1 and 6 or 1, 0)
         icon:Show()
         anchorFrame = icon
+    elseif (enchantID) then
+        num = num + 1
+        icon = GetIconFrame(frame)
+        icon.title = "#" .. enchantID
+        icon.bg:SetVertexColor(0.4, 0.4, 0.4, 0.5)
+        icon.texture:SetTexture("Interface\\Cursor\\Item")
+        icon:ClearAllPoints()
+        icon:SetPoint("LEFT", anchorFrame, "RIGHT", num == 1 and 6 or 1, 0)
+        icon:Show()
+        anchorFrame = icon
+    elseif (not enchantID and EnchantParts[itemframe.index]) then
+        num = num + 1
+        icon = GetIconFrame(frame)
+        icon.title = ENCHANTS .. ":" .. EnchantParts[itemframe.index][2]
+        icon.bg:SetVertexColor(1, 0.2, 0.2, 0.5)
+        icon.texture:SetTexture("Interface\\Cursor\\" .. (EnchantParts[itemframe.index][1]==1 and "Quest" or "QuestRepeatable"))
+        icon:ClearAllPoints()
+        icon:SetPoint("LEFT", anchorFrame, "RIGHT", num == 1 and 6 or 1, 0)
+        icon:Show()
+        anchorFrame = icon
     end
     return num * 18
 end
@@ -180,7 +210,7 @@ hooksecurefunc("ShowInspectItemListFrame", function(unit, parent, itemLevel)
     HideAllIconFrame(frame)
     while (frame["item"..i]) do
         itemframe = frame["item"..i]
-        iconWidth = ShowGemAndEnchant(frame, itemframe.link, itemframe.itemString)
+        iconWidth = ShowGemAndEnchant(frame, itemframe.link, itemframe.itemString, itemframe)
         if (width < itemframe.width + iconWidth + 36) then
             width = itemframe.width + iconWidth + 36
         end

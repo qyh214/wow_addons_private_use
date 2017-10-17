@@ -1,4 +1,7 @@
-﻿v3.4.3
+﻿v3.4.4
+Quick TOC bump.
+
+v3.4.3
 Tiny fix for purchasing currencies with a set maximum, missed that detail.
 
 v3.4.2

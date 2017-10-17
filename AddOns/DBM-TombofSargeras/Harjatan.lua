@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1856, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16650 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(116407)
 mod:SetEncounterID(2036)
 mod:SetZone()
@@ -26,11 +26,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO, splashy cleave for Gladiator?
---TODO, escalate Frosty Spittle warning to special warning from taskmaster?
---TODO, Improve mythic stuff with warnings for specific tadpole colors more of stuff they do besides fixate?
---TODO, see if hatching is affected by draw in when it does succeed in pulling Frost stacks
---TODO< see if taskmaster is affected by draw in when it does succeed in pulling frost stacks
 --[[
 (ability.id = 232174 or ability.id = 231904) and type = "begincast" or
 (ability.id = 231854 or ability.id = 232061) and type = "cast" or

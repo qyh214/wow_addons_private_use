@@ -161,12 +161,13 @@ local function SetFrames_Init()
 	if not eventFrame then
 		eventFrame = CreateFrame("Frame")
 		eventFrame:SetScript("OnEvent", function(self, event, arg1)
-			_DBG("Event - "..event.." - "..(arg1 or ""), true)
+			_DBG("Event - "..event.." - "..tostring(arg1), true)
 			if event == "ADDON_LOADED" and arg1 == "PetTracker_Journal" then
 				SetHooks_PetTracker_Journal()
 				self:UnregisterEvent(event)
 			elseif event == "PLAYER_ENTERING_WORLD" then
 				SetHooks()
+				KT:ToggleEmptyTracker()
 				self:RegisterEvent("PET_JOURNAL_LIST_UPDATE")
 				self:UnregisterEvent(event)
 			elseif event == "PET_JOURNAL_LIST_UPDATE" then

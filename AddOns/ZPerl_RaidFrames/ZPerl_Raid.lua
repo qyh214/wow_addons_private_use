@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 1053 $")
+end, "$Revision: 1078 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -2454,7 +2454,9 @@ local function SetMainHeaderAttributes(self)
 
 	self:SetAttribute("showRaid", true)
 
-	self:SetAttribute("point", rconf.anchor)
+	if rconf.anchor ~= "BOTTOM" then
+		self:SetAttribute("point", rconf.anchor)
+	end
 	self:SetAttribute("minWidth", 80)
 	self:SetAttribute("minHeight", 10)
 	local titleFrame = self:GetParent()

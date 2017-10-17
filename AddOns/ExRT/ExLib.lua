@@ -406,7 +406,7 @@ do
 	end
 	local function OnClick(self)
 		ToggleDropDownMenu(nil, nil, self:GetParent())
-		PlaySound(ExRT.clientVersion >= 70300 and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or "igMainMenuOptionCheckBoxOn")
+		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 	end
 	function Templates:ExRTUIChatDownButtonTemplate(parent)
 		local self = CreateFrame("Button",nil,parent)
@@ -1350,7 +1350,7 @@ do
 	end
 	local function OnClick(self)
 		ToggleDropDownMenu(nil, nil, self:GetParent())
-		PlaySound("igMainMenuOptionCheckBoxOn")
+		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 	end
 	function Templates:ExRTUIChatDownButtonModernTemplate(parent)
 		local self = ExRTButtonModernTemplate(3,parent)
@@ -3920,7 +3920,7 @@ function ELib.ScrollDropDown.ClickButton(self)
 		dropDown = self:GetParent()
 	end
 	ELib.ScrollDropDown.ToggleDropDownMenu(dropDown)
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 end
 
 function ELib.ScrollDropDown:Reload(level)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1706, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16692 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16739 $"):sub(12, -3))
 mod:SetCreatureID(102263)
 mod:SetEncounterID(1849)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -33,7 +33,6 @@ ability.id = 204459
 --]]
 local warnBrokenShard				= mod:NewSpellAnnounce(204292, 2, nil, false, 2)
 local warnVulnerable				= mod:NewTargetAnnounce(204459, 1)
-local warnCallScorp					= mod:NewSpellAnnounce(204372, 3)
 local warnRed						= mod:NewSpellAnnounce(214661, 2)
 local warnGreen						= mod:NewSpellAnnounce(214652, 2)
 local warnBlue						= mod:NewSpellAnnounce(204292, 2)
@@ -106,8 +105,6 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.SpecWarn204372switch and self:AntiSpam(3.5, 2) then--Even if enabled, only special warn once every 3.5 seconds
 			specWarnCallofScorp:Show()
 			voiceCallScorp:Play("killmob")
-		else
-			warnCallScorp:Show()
 		end
 	elseif spellId == 204316 then
 		specWarnShockwave:Show(shardName)
@@ -215,8 +212,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SpecWarn204372switch and self:AntiSpam(3.5, 2) then--Even if enabled, only special warn once every 3.5 seconds
 			specWarnCallofScorp:Show()
 			voiceCallScorp:Play("killmob")
-		else
-			warnCallScorp:Show()
 		end
 		self.vb.volatileScorpCount = self.vb.volatileScorpCount + 1
 		if self.Options.SetIconOnVolatileScorpion then

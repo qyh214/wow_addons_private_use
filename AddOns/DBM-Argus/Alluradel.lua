@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2011, "DBM-Argus", nil, 959)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16694 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16712 $"):sub(12, -3))
 mod:SetCreatureID(124625)
 mod:SetEncounterID(2083)
 --mod:SetReCombatTime(20)
@@ -29,8 +29,12 @@ local timerBeguilingCharmCD			= mod:NewCDTimer(34.8, 247549, nil, nil, nil, 2, n
 local timerFelLashCD				= mod:NewCDTimer(31.1, 247604, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerHeartBreakerCD			= mod:NewCDTimer(21.2, 247517, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)
 
+local countdownBeguilingCharm		= mod:NewCountdown(34.8, 247549)
+
 local voiceBeguilingCharm			= mod:NewVoice(247549)--turnaway
 local voiceSadist					= mod:NewVoice(247544)--changemt
+
+--mod:AddReadyCheckOption(48620, false)
 
 function mod:OnCombatStart(delay, yellTriggered)
 	if yellTriggered then
@@ -44,6 +48,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnBeguilingCharm:Show()
 		voiceBeguilingCharm:Play("turnaway")
 		timerBeguilingCharmCD:Start()
+		countdownBeguilingCharm:Start()
 	elseif spellId == 247604 then
 		warnFelLash:Show()
 		timerFelLashCD:Start()

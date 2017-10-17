@@ -19,10 +19,12 @@ local SEX = UnitSex("player")
 
 -- @return current, maximun, color, standingText
 local function GetValueAndMaximum(standingId, barValue, bottomValue, topValue, factionId)
+	if (standingId == nil) then return "0", "0", "|cFFFF0000", "??? - " .. (factionId .. "?") end
+
 	local current = barValue - bottomValue
 	local maximun = topValue - bottomValue
 	local color = "|cFF00FF00"
-	local standingText = " (" .. ((SEX == 2 and _G["FACTION_STANDING_LABEL" .. standingId]) or _G["FACTION_STANDING_LABEL" .. standingId .. "_FEMALE"]) .. ")"
+	local standingText = " (" .. ((SEX == 2 and _G["FACTION_STANDING_LABEL" .. standingId]) or _G["FACTION_STANDING_LABEL" .. standingId .. "_FEMALE"] or "?") .. ")"
 
 	if (C_Reputation.IsFactionParagon(factionId)) then
 		color = "|cFF00FFFF"

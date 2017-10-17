@@ -61,8 +61,8 @@ function ReInspect(unit)
     })
 end
 
--- Get Inspect Specialization
-local function GetInspectSpec(unit)
+-- Global API
+function GetInspectSpec(unit)
     if (UnitLevel(unit) > 10) then
         local specID, specName
         if (unit == "player") then
@@ -90,12 +90,11 @@ hooksecurefunc("NotifyInspect", function(unit)
     local data = guids[guid]
     if (data) then
         data.unit = unit
-        data.name = UnitName(unit)
+        data.name, data.realm = UnitName(unit)
     else
         data = {
             unit   = unit,
             guid   = guid,
-            name   = UnitName(unit),
             class  = select(2, UnitClass(unit)),
             level  = UnitLevel(unit),
             ilevel = -1,
@@ -103,7 +102,11 @@ hooksecurefunc("NotifyInspect", function(unit)
             hp     = UnitHealthMax(unit),
             timer  = time(),
         }
+        data.name, data.realm = UnitName(unit)
         guids[guid] = data
+    end
+    if (not data.realm) then
+        data.realm = GetRealmName()
     end
     data.expired = time() + 4
     inspecting = data

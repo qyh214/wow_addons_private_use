@@ -50,6 +50,8 @@ L["S_FLYMAP_SHOWWORLDQUESTS"] = "Mostra Missioni Mondiali"
 --Translation missing 
 -- L["S_GROUPFINDER_ENABLED"] = ""
 --Translation missing 
+-- L["S_GROUPFINDER_INVASION_ENABLED"] = ""
+--Translation missing 
 -- L["S_GROUPFINDER_LEAVEOPTIONS"] = ""
 --Translation missing 
 -- L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = ""
@@ -65,6 +67,8 @@ L["S_FLYMAP_SHOWWORLDQUESTS"] = "Mostra Missioni Mondiali"
 -- L["S_GROUPFINDER_OT_ENABLED"] = ""
 --Translation missing 
 -- L["S_GROUPFINDER_QUEUEBUSY"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_QUEUEBUSY2"] = ""
 --Translation missing 
 -- L["S_GROUPFINDER_RESULTS_APPLYING"] = ""
 --Translation missing 
@@ -152,11 +156,25 @@ L["S_QUESTTYPE_PVP"] = "PvP"
 L["S_QUESTTYPE_RESOURCE"] = "Risorse"
 L["S_QUESTTYPE_TRADESKILL"] = "Creazioni"
 --Translation missing 
+-- L["S_RAREFINDER_ADDFROMPREMADE"] = ""
+--Translation missing 
 -- L["S_RAREFINDER_NPC_NOTREGISTERED"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = ""
 --Translation missing 
 -- L["S_RAREFINDER_OPTIONS_SHOWICONS"] = ""
 --Translation missing 
+-- L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_SOUND_ENABLED"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_SOUNDWARNING"] = ""
+--Translation missing 
 -- L["S_RAREFINDER_TITLE"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_REMOVE"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = ""
 --Translation missing 
 -- L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = ""
 --Translation missing 
@@ -188,5 +206,7 @@ L["S_TUTORIAL_REWARD"] = "indica la ricompensa (equipaggiamento, oro, potere art
 L["S_TUTORIAL_TIMELEFT"] = "indica il tempo rimasto (+4 ore, +90 minuti, + 30 minuti, meno di 30 minuti)"
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Questo pulsante mostra la mappa delle Isole Disperse."
 L["S_UNKNOWNQUEST"] = "Missione Sconosciuta"
+--Translation missing 
+-- L["S_WORLDMAP_TOOGLEQUESTS"] = ""
 L["S_WORLDQUESTS"] = "Missioni Mondiali"
 

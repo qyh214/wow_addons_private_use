@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1738, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16481 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(105393)
 mod:SetEncounterID(1873)
 mod:SetZone()
@@ -26,9 +26,7 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_RAID_BOSS_EMOTE"
 )
 
---TODO, figure out voice to use for specWarnHeartPhaseBegin
 --TODO, fix more adds timers (especially corruptors/deathglarers)
---TODO, improve spew corruption to work like thogar bombs (continous alerts/yells)
 --Stage One: The Ruined Ground
 --(ability.id = 208697 or ability.id = 208929 or ability.id = 218415) and type = "begincast" or ability.id = 209915
 local warnNightmareGaze				= mod:NewSpellAnnounce(210931, 3, nil, false)--Something tells me this is just something it spam casts

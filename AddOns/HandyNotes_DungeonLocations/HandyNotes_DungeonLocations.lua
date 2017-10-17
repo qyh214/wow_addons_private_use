@@ -1,7 +1,7 @@
 --[[
 Things to do
  Lump close dungeon/raids into one, (nexus/oculus/eoe) (DONE)
- Maybe implement lockout info on tooltip (Don't know if I want too, better addons for tracking it exist)
+ Maybe implement lockout info on tooltip (Don't know if I want too, better addons for tracking it exist) (DONE anyway)
 ]]--
 
 local DEBUG = false
@@ -25,6 +25,7 @@ local minimap = { } -- For nodes that need precise minimap locations but would l
 local alterName = { }
 local extraInfo = { }
 local mapLevels = { } -- Bad juju, I use this to hide nodes from appearing on the wrong map levels.  e.g the new Dalaran; definitely probably a better way to do this
+local legionInstancesDiscovered = { } -- Extrememly bad juju
 --local lockouts = { }
 
 if (DEBUG) then
@@ -53,6 +54,7 @@ local continents = {
 	["Kalimdor"] = true,
 	["Northrend"] = true,
 	["Pandaria"] = true,
+ ["BrokenIsles"] = true,
 }
 
 local LOCKOUTS = { }
@@ -285,10 +287,13 @@ local function updateStuff()
 end
 
 function Addon:PLAYER_ENTERING_WORLD()
+ --print("PLAYER_ENTERING_WORLD Fired!")
+ self:CheckForPOIs()
  updateStuff()
 end
 
 function Addon:UPDATE_INSTANCE_INFO()
+ self:CheckForPOIs()
  updateStuff()
 end
 
@@ -488,7 +493,8 @@ function Addon:PLAYER_LOGIN()
  
  updateLockouts()
  Addon:RegisterEvent("PLAYER_ENTERING_WORLD") -- Check for any lockout changes when we zone
- Addon:RegisterEvent("UPDATE_INSTANCE_INFO") --
+ Addon:RegisterEvent("UPDATE_INSTANCE_INFO")
+ --Addon:RegisterEvent("WORLD_MAP_UPDATE") -- For the mess that is the legion stuff I've done
 end
 
 -- I only put a few specific nodes on the minimap, so if the minimap is used in a zone then I need to add all zone nodes to it except for the specific ones
@@ -1364,11 +1370,43 @@ nodes["TanaanJungle"] = {
 }
 end
 
+-- Adding Zones and things to this will hide nodes from all but the listed mapLevels
 mapLevels["Dalaran70"] = { [10] = true, }
+mapLevels["CavernsofTime"] = { [18] = true, }
 
 if (not self.db.profile.hideBrokenIsles) then
 -- Legion Dungeons/Raids for minimap and continent map for consistency
--- This seems to be the only legion raid that isn't shown at all
+-- This seems to be the only legion dungeon/raid that isn't shown at all
+-- I have made this into an ugly abomination
+
+ nodes["BrokenIsles"] = { }
+ nodes["BrokenIsles"][35402850] = {
+  id = { 762, 768 },
+  type = "Mixed",
+  hideOnMinimap = true,
+ } -- The Emerald Nightmare 35102910
+ nodes["BrokenIsles"][65003870] = {
+  id = { 721, 861 },
+  type = "Mixed",
+  hideOnMinimap = true,
+ } -- Halls of Valor/Trial of Valor
+ nodes["BrokenIsles"][46704780] = {
+  id = { 726, 786 },
+  type = "Mixed",
+  hideOnMinimap = true,
+ }
+  nodes["BrokenIsles"][46606550] = {
+  id = 777,
+  type = "Dungeon",
+  hideOnMinimap = true,
+ } -- Assault on Violet Hold
+ nodes["BrokenIsles"][56506240] = { -- Always show because merged
+  id = { 875, 900 },
+  type = "Mixed",
+  hideOnMinimap = true,
+ } -- Tomb of Sargeras and Cathedral of the Night
+
+
 nodes["Dalaran70"] = {
  [66406850] = {
   id = 777,
@@ -1376,136 +1414,304 @@ nodes["Dalaran70"] = {
   hideOnContinent = true,
  }, -- Assault on Violet Hold
 }
-minimap["Azsuna"] = {
- [61204110] = {
+
+if (not legionInstancesDiscovered[946]) then
+nodes["ArgusCore"] = {
+ [54786241] = {
+  id = 946,
+  type = "Raid",
+ }, -- Antorus, the burning throne
+}
+else
+ minimap["ArgusCore"] = {
+  [54786241] = {
+   id = 946,
+   type = "Raid",
+  }, -- Antorus, the burning throne
+ }
+end
+if (not legionInstancesDiscovered[945]) then
+nodes["ArgusMacAree"] = {
+ -- 22.20 55.84
+ [22205584] = {
+  id = 945,
+  type = "Dungeon",
+ }, -- Seat of the Triumvirate
+}
+else
+minimap["ArgusMacAree"] = {
+ -- 22.20 55.84
+ [22205584] = {
+  id = 945,
+  type = "Dungeon",
+ }, -- Seat of the Triumvirate
+}
+end
+if (not legionInstancesDiscovered[716]) then
+ nodes["Azsuna"] = { }
+ nodes["Azsuna"][61204110] = {
   id = 716,
   type = "Dungeon",
- },
- [48308030] = {
+ }
+else
+ minimap["Azsuna"] = { }
+ minimap["Azsuna"][61204110] = {
+  id = 716,
+  type = "Dungeon",
+ }
+ nodes["BrokenIsles"][38805780] = {
+  id = 716,
+  type = "Dungeon",
+  hideOnMinimap = true,
+ }
+end
+if (not legionInstancesDiscovered[707]) then
+ if (not nodes["Azsuna"]) then
+  nodes["Azsuna"] = { }
+ end
+ nodes["Azsuna"][48308030] = {
   id = 707,
   type = "Dungeon"
- },
-}
-minimap["BrokenShore"] = {
- [64602070] = {
-  id = 875,
-  type = "Raid",
- },
- [64701660] = {
-  id = 900,
-  type = "Dungeon",
- },
-}
-minimap["Highmountain"] = {
- [49606860] = {
-  id = 767,
-  type = "Dungeon",
- },
-}
-minimap["Stormheim"] = {
- [71107280] = {
-  id = 861,
-  type = "Raid",
- },
- [72707050] = {
-  id = 721,
-  type = "Dungeon",
- },
- [52504530] = {
-  id = 727,
-  type = "Dungeon",
- },
-}
-minimap["Suramar"] = {
- [41106170] = {
-  id = 726,
-  type = "Dungeon",
- },
- [50806550] = {
-  id = 800,
-  type = "Dungeon",
- },
- [44105980] = {
-  id = 786,
-  type = "Raid",
- },
-}
-minimap["Valsharah"] = {
- [37205020] = {
-  id = 740,
-  type = "Dungeon",
- },
- [59003120] = {
-  id = 762,
-  type = "Dungeon",
- },
- [56303680] = {
-  id = 768,
-  type = "Raid",
- },
-}
-
-nodes["BrokenIsles"] = {
- [38805780] = {
-  id = 716,
-  type = "Dungeon",
-  hideOnMinimap = true,
- }, -- Eye of Azshara
- [34207210] = {
+ }
+else
+ if (not minimap["Azsuna"]) then
+  minimap["Azsuna"] = { }
+ end
+ minimap["Azsuna"][48308030] = {
+  id = 707,
+  type = "Dungeon"
+ }
+ nodes["BrokenIsles"][34207210] = {
   id = 707,
   type = "Dungeon",
   hideOnMinimap = true,
- }, -- Vault of the Wardens
- [47302810] = {
+ }
+end
+if (not legionInstancesDiscovered[875]) then
+ nodes["BrokenShore"] = { }
+ nodes["BrokenShore"][64602070] = {
+  id = 875,
+  type = "Raid",
+  hideOnContinent = true,
+ }
+else
+ minimap["BrokenShore"] = {
+  [64602070] = {
+   id = 875,
+   type = "Raid",
+  },
+ }
+end
+if (not legionInstancesDiscovered[900]) then
+ if (not nodes["BrokenShore"]) then
+  nodes["BrokenShore"] = { }
+ end
+ nodes["BrokenShore"][64701660] = {
+  id = 900,
+  type = "Dungeon",
+  hideOnContinent = true,
+ }
+else
+ if (not minimap["BrokenShore"]) then
+  minimap["BrokenShore"] = { }
+ end
+ minimap["BrokenShore"][64701660] = {
+  id = 900,
+  type = "Dungeon",
+ }
+end
+if (not legionInstancesDiscovered[767]) then
+ nodes["Highmountain"] = {
+  [49606860] = {
+   id = 767,
+   type = "Dungeon",
+  },
+ }
+else
+ minimap["Highmountain"] = {
+  [49606860] = {
+   id = 767,
+   type = "Dungeon",
+  },
+ }
+ nodes["BrokenIsles"][47302810] = {
   id = 767,
   type = "Dungeon",
   hideOnMinimap = true,
- }, -- Neltharion's Lair
- [59003060] = {
+ }
+end
+if (not legionInstancesDiscovered[861]) then
+ nodes["Stormheim"] = { }
+ nodes["Stormheim"][71107280] = {
+  id = 861,
+  type = "Raid",
+  hideOnContinent = true,
+ }
+else
+ minimap["Stormheim"] = {
+  [71107280] = {
+   id = 861,
+   type = "Raid",
+  },
+ }
+end
+if (not legionInstancesDiscovered[721]) then
+ if (not nodes["Stormheim"]) then
+  nodes["Stormheim"] = { }
+ end
+ nodes["Stormheim"][72707050] = {
+  id = 721,
+  type = "Dungeon",
+  hideOnContinent = true,
+ }
+else
+ if (not minimap["Stormheim"]) then
+  minimap["Stormheim"] = { }
+ end
+ minimap["Stormheim"][72707050] = {
+  id = 721,
+  type = "Dungeon",
+ }
+end
+if (not legionInstancesDiscovered[727]) then
+ if (not nodes["Stormheim"]) then
+  nodes["Stormheim"] = { }
+ end
+ nodes["Stormheim"][52504530] = {
+  id = 727,
+  type = "Dungeon",
+ }
+else
+ if (not minimap["Stormheim"]) then
+  minimap["Stormheim"] = { }
+ end
+ minimap["Stormheim"][52504530] = {
+  id = 727,
+  type = "Dungeon",
+ }
+ nodes["BrokenIsles"][59003060] = {
   id = 727,
   type = "Dungeon",
   hideOnMinimap = true,
- }, -- Maw of Souls
- [35402850] = {
-  id = { 762, 768 },
-  type = "Mixed",
-  hideOnMinimap = true,
- }, -- The Emerald Nightmare 35102910
- [65003870] = {
-  id = { 721, 861 },
-  type = "Mixed",
-  hideOnMinimap = true,
- }, -- Halls of Valor/Trial of Valor Unmerged: 65203840 64703900
- [46704780] = {
-  id = { 726, 786 },
-  type = "Mixed",
-  hideOnMinimap = true,
- }, -- The Arcway/The Nighthold
- [49104970] = {
+ }
+end
+if (not legionInstancesDiscovered[726]) then
+ nodes["Suramar"] = {
+  [41106170] = {
+   id = 726,
+   type = "Dungeon",
+   hideOnContinent = true,
+  },
+ }
+else
+ minimap["Suramar"] = {
+  [41106170] = {
+   id = 726,
+   type = "Dungeon",
+  },
+ }
+end
+if (not legionInstancesDiscovered[800]) then
+ if (not nodes["Suramar"]) then
+  nodes["Suramar"] = { }
+ end
+ nodes["Suramar"][50806550] = {
+  id = 800,
+  type = "Dungeon",
+ }
+else
+ if (not minimap["Suramar"]) then
+  minimap["Suramar"] = { }
+ end
+ minimap["Suramar"][50806550] = {
+  id = 800,
+  type = "Dungeon",
+ }
+ nodes["BrokenIsles"][49104970] = {
   id = 800,
   type = "Dungeon",
   hideOnMinimap = true,
- }, -- Court of Stars
- [29403300] = {
+ }
+end
+if (not legionInstancesDiscovered[786]) then
+ if (not nodes["Suramar"]) then
+  nodes["Suramar"] = { }
+ end
+ nodes["Suramar"][44105980] = {
+  id = 786,
+  type = "Raid",
+  hideOnContinent = true,
+ }
+else
+ if (not minimap["Suramar"]) then
+  minimap["Suramar"] = { }
+ end
+ minimap["Suramar"][44105980] = {
+  id = 786,
+  type = "Raid",
+ }
+end
+if (not legionInstancesDiscovered[740]) then
+ nodes["Valsharah"] = {
+  [37205020] = {
+   id = 740,
+   type = "Dungeon",
+  },
+ }
+else
+ minimap["Valsharah"] = {
+  [37205020] = {
+   id = 740,
+   type = "Dungeon",
+  },
+ }
+ nodes["BrokenIsles"][29403300] = {
   id = 740,
   type = "Dungeon",
   hideOnMinimap = true,
- }, -- Black Rook Hold
- [46606550] = {
-  id = 777,
+ }
+end
+if (not legionInstancesDiscovered[762]) then
+ if (not nodes["Valsharah"]) then
+  nodes["Valsharah"] = { }
+ end
+ nodes["Valsharah"][59003120] = {
+  id = 762,
   type = "Dungeon",
-  hideOnMinimap = true,
- }, -- Assault on Violet Hold
- --[56606210] = { 875,  type = "Raid" }, -- Tomb of Sargeras
- --[56706120] = { 900,  type = "Dungeon"}, -- Cathedral of the Night
- [56506240] = {
-  id = { 875, 900 },
-  type = "Mixed",
-  hideOnMinimap = true,
- }, -- Tomb of Sargeras and Cathedral of the Night
-}
+  hideOnContinent = true,
+ }
+else
+ if (not minimap["Valsharah"]) then
+  minimap["Valsharah"] = { }
+ end
+ minimap["Valsharah"][59003120] = {
+  id = 762,
+  type = "Dungeon",
+ }
+
+end
+if (not legionInstancesDiscovered[768]) then
+ if (not nodes["Valsharah"]) then
+  nodes["Valsharah"] = { }
+ end
+ nodes["Valsharah"][56303680] = {
+  id = 768,
+  type = "Raid",
+  hideOnContinent = true,
+ }
+else
+if (not minimap["Valsharah"]) then
+  minimap["Valsharah"] = { }
+ end
+ minimap["Valsharah"][56303680] = {
+  id = 768,
+  type = "Raid",
+ }
 end
 end
+end
+
+
 
 function Addon:ProcessTable()
 table.wipe(alterName)
@@ -1734,4 +1940,25 @@ function Addon:FullUpdate()
  self:PopulateMinimap()
  self:ProcessTable()
  --self:ProcessExtraInfo()
+end
+
+-- Looks through the legions maps and checks if the default blizzard thingies are visible.
+function Addon:CheckForPOIs()
+ if (WorldMapFrame:IsVisible()) then return end -- This function will interrupt the user if map is open while we do stuff
+ local needsUpdate = false
+ local LegionInstanceMapIDs = { 1015, 1017, 1018, 1024, 1033, 1170, 1171 }
+ for k,v in pairs(LegionInstanceMapIDs) do
+  SetMapByID(v)  
+  for i=1,GetNumMapLandmarks() do
+   local landmarkType, name, description, _, _, _, mapLinkID = C_WorldMap.GetMapLandmarkInfo(i)
+   if (landmarkType == LE_MAP_LANDMARK_TYPE_DUNGEON_ENTRANCE) then
+   --print(name, description, mapLinkID)
+    if (not legionInstancesDiscovered[mapLinkID]) then needsUpdate = true end
+	legionInstancesDiscovered[mapLinkID] = true
+    --print (name, mapLinkID, landmarkType, description)
+   end
+  end
+ end 
+ 
+ if (needsUpdate) then self:FullUpdate() end
 end

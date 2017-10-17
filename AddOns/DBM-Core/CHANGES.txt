@@ -1,85 +1,179 @@
-tag 2b09266b678cd65214562cbde5ee3bd6131f3388 7.3.2
+tag 5e6328d0f46e7c7f07523f3f1d3bbaf32a232cba 7.3.5
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Wed Sep 6 00:13:54 2017 +0200
+Date:	Tue Oct 10 21:07:03 2017 +0200
 
-Tagging as 7.3.2
+Tagging as 7.3.5
 
-commit 7102d25abc59b83244536bea927e7cf22230ab5b
+commit 1add5eb0732867863ab0b70755f6826408bb2edc
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Sep 6 00:13:54 2017 +0200
+Date:   Tue Oct 10 21:07:03 2017 +0200
 
-    increment version number to 7.3.2
+    increment version number to 7.3.5
 
-commit c3ba62cd0516b46604faaaf2ef9ef5b6fe72ad95
+commit 07b4daceb0b150d40ca0862c0c819e32dac43c92
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Sep 5 23:26:00 2017 +0200
+Date:   Tue Oct 10 21:04:07 2017 +0200
 
-    Omega via svn r16694:
-    Update Alluradel timers
-    scrap MC yell, looking away is hard for people so it?\226?\128?\153s spammy
+    Omega via svn r16781:
+    Update occularus
 
-commit 67cf7daea1e8124c9d5ad5136b97729b4b2a34af
+commit 3436cc7a25b4862b2ee977b3dc9b6d7cbe387e8e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Sep 5 23:11:02 2017 +0200
+Date:   Tue Oct 10 08:44:21 2017 +0200
 
-    Omega via svn r16693:
-    Some minor adjustments
+    Omega via svn r16780:
+    Comment cleanup
 
-commit 2ac50eae686eef6a123bcb1220410d40e7265715
+commit 8456424118efe09a1aa73afbc2a22745a956c774
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Sep 5 22:53:52 2017 +0200
+Date:   Tue Oct 10 07:57:00 2017 +0200
 
-    Omega via svn r16692:
-    mapID update
+    Omega via svn r16779:
+    Kr update
+    Change erupting voice pack to use ?\226?\128?\156move to <mark>?\226?\128?\157 on mythic difficulty
 
-commit f07fe3fffb44b17d760c15e2b8134a4ae8c21180
+commit 7c0041c5e71e06bc84dd3d2e81ccbd48108f930e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 4 21:08:21 2017 +0200
+Date:   Tue Oct 10 05:25:52 2017 +0200
 
-    Omega via svn r16691:
-    more redundancy
+    Omega via svn r16778:
+    argus stage 3 and 4
 
-commit 536377c3ee170b8b7cda48ecc98804a354c1abdd
+commit 065c459a149951bd4b976f26ed6dd4a3a41af6c7
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 4 20:53:59 2017 +0200
+Date:   Tue Oct 10 04:17:40 2017 +0200
 
-    Omega via svn r16690:
-    tidy up InGuildParty() stuff to be more pretty
+    Omega via svn r16777:
+    Push a mythic KJ fix, where my fix for missing emotes was actually running in wrong stage so not doing anything helpful.
 
-commit 55abd11652440af9ce187c3cef010dc0387d5c5e
+commit ffdb5fce1f9b26d25ee8ca768e29397aca986542
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Sep 3 10:02:31 2017 +0200
+Date:   Mon Oct 9 03:07:42 2017 +0200
 
-    Omega via svn r16689:
-    fix timer icon
+    Omega via svn r16776:
+    Antispam unleashed fury some
+    Argus stage 2 stuff (stage 3 and 4 tomorrow probably)
 
-commit cf6ddd6f00c456f3bbdd10df80d9c29ac9ae5923
+commit 17266e547767586bcf93d88469e7bd6d638b0727
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Sep 1 06:29:46 2017 +0200
+Date:   Sun Oct 8 20:17:04 2017 +0200
 
-    Omega via svn r16688:
-    TOC tweaks for defaultSkin
+    Omega via svn r16775:
+    Fix corrupting void spell ID
 
-commit 003f18eba076f7e96fc8166055b1ca49250d1dd6
+commit da800c799f0a0fa913293e7c482d939b0add9a37
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Sep 1 06:16:53 2017 +0200
+Date:   Sun Oct 8 07:42:43 2017 +0200
 
-    Omega via svn r16687:
-    Devouring maw now shows count in timer and cast
-    Devouring maw and crashing wave will no longer spam warnings if boss continues to recast i (usually during a wipe)
-    Reverted a change to tank taunt warning during cast that cause warning to sometimes not show AT ALL if boss was looking at a non tank target during the cast.
+    Omega via svn r16774:
+    tweaks/fixes and WCL helpers for Imonar and Hasabel
 
-commit dc0b5b7ef098288c6fea918b225047e520eede8d
+commit ca30c8d1fb635ff57b1cb178e534f6a5ce31cced
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Sep 1 02:03:23 2017 +0200
+Date:   Sat Oct 7 07:53:29 2017 +0200
 
-    Omega via svn r16686:
-    fix two more soundkit IDs
+    Omega via svn r16773:
+    more liked X than they did circle
 
-commit 9b5e249f53bf8fa28088faf58aaf6390091eed5e
+commit bd7e50fb156880c3c9896fa4a35f9decebe88aca
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 31 20:44:54 2017 +0200
+Date:   Sat Oct 7 06:15:52 2017 +0200
 
-    tandanu via svn r16685:
+    Omega via svn r16772:
+    Fix one of desolate host warnings saying to move to group instead of to boss
+
+commit 9e63ff768d0d36774fc585333625799f2e015fad
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Oct 7 06:02:44 2017 +0200
+
+    Omega via svn r16771:
+    Volume boosted incredible by 450%
+    scream warnings on host now off by default (target warnings not personal)
+
+commit b224fa3cb96bb1e46b5b0e41e3a92df2d5b9a3c6
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Oct 6 07:58:48 2017 +0200
+
+    Omega via svn r16770:
+    Bubbles too
+
+commit c7707c7927532050486fb9975ba6812348303fb9
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Oct 6 07:48:28 2017 +0200
+
+    Omega via svn r16769:
+    Update hounds timers for faster energy gains on mythic difficulty
+    Improved fel/shadow touched warnings with color coded icons
+
+commit 19b22afab7757bb609c0b68d8110c3488e5d82fc
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Oct 6 05:34:01 2017 +0200
+
+    Omega via svn r16768:
+    Fix fix
+
+commit 47e2574f70cea2463a3a7fdf27585acdf868bbc0
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Oct 6 05:26:37 2017 +0200
+
+    Omega via svn r16767:
+    Fix couple timer bugs
+
+commit 5694c206d8fe9f0c2f17711007af78754befc445
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Oct 5 21:21:15 2017 +0200
+
+    Omega via svn r16766:
+    Change Entropic Force behavior
+
+commit abd1405c7d9b19c83e713263e2b8eefa7f5db974
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Oct 5 02:47:22 2017 +0200
+
+    Omega via svn r16765:
+    Fix yell
+
+commit 1ce257a3731131071f2db6ec8f9218765a081c17
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Oct 4 10:39:24 2017 +0200
+
+    Omega via svn r16764:
+    Reset HideBossEmoteFrame. this should really be on by default and i see it off in a lot of user configurations who claim they didn?\226?\128?\153t turn it off. so to help reduce spam further (and not get blamed for blizzard messages), help users keep them out of middle of screen by default.
+
+commit 5b02605e1e6a28958a8a46666327c8294a4d4f4a
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Oct 4 10:22:44 2017 +0200
+
+    Omega via svn r16763:
+    if targeted by more than one shattering scream, only show/play one warning for it
+    When DBM is spammy, it?\226?\128?\153s probably a bug, don?\226?\128?\153t assume it?\226?\128?\153s intended, REPORT these things. I main a tank, 90% of fight mechanics don?\226?\128?\153t target me, so I don?\226?\128?\153t know when things like this are broken.
+
+commit a0c023c3bc5a2036a0cbf5dabbdd8ebb6b11a56c
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Oct 4 09:54:17 2017 +0200
+
+    Omega via svn r16762:
+    Fix confusing countdown combo for tanks on fallen avatar
+
+commit 552a30b99ff00633bf33e89397ee783ade259317
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Oct 4 04:36:45 2017 +0200
+
+    Omega via svn r16761:
+    Fix slider
+
+commit 478435031379adeb134a35d957d81ea755b8eab9
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Oct 4 04:28:39 2017 +0200
+
+    Omega via svn r16760:
+    Add support for .5 incriments in warning duration
+    Significantly lower default warning duration
+
+commit bf4162ebe04763f7a7a131511f1ad0b6aeef4643
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Oct 3 23:39:49 2017 +0200
+
+    tandanu via svn r16759:
     increment alpha version
 

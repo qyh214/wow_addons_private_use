@@ -38,7 +38,7 @@ local m = {
 		if not opt or e.noAlpha then
 			return
 		end
-		
+
 		alpha = opt.orgAlpha
 		if alpha == nil or alpha > 1 then
 			alpha = 1

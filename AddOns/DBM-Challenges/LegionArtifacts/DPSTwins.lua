@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod("ArtifactTwins", "DBM-Challenges", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 84 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 94 $"):sub(12, -3))
 mod:SetCreatureID(116409, 116410)--Raest Magespear, Karam Magespear
 mod:SetZone()--Healer (1710), Tank (1698), DPS (1703-The God-Queen's Fury), DPS (Fel Totem Fall)
 mod:SetBossHPInfoToHighest()
@@ -56,9 +56,9 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 235317 then--Dismiss (cast by Raest Magespear for phase 2 and phase 4 start)
 		self.vb.phase = self.vb.phase + 1
 		if self.vb.phase == 2 then
-			warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase:format(2))
+			warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		else--4
-			warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase:format(4))
+			warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(4))
 			timerHandCD:Stop()
 			countHand:Cancel()
 		end
@@ -99,9 +99,9 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID, spellId)
 			timerHandCD:Start(9)
 			countHand:Start(9)
 			if self.vb.phase == 3 then
-				warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase:format(3))
+				warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(3))
 			else--5
-				warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase:format(5))
+				warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(5))
 				timerRuneCD:Start(18.2)
 				countRune:Start(18.2)
 				timerRisingDragonCD:Start(25)--Only one time? need more data to be sure

@@ -35,3 +35,5 @@ ns.L = {
     PaperDoll                   = "Окно персонажа",
     Chat                        = "Чат",
 }
+
+BINDING_NAME_InspectRaidFrame = "рамку"

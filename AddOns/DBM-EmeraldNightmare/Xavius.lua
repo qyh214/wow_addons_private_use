@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1726, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16089 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(103769)
 mod:SetEncounterID(1864)
 mod:SetZone()
@@ -24,7 +24,6 @@ mod:RegisterEventsInCombat(
 
 --"<271.21 22:57:25> [CLEU] SPELL_PERIODIC_ENERGIZE##nil#Player-3693-07CA07EE#Jaybee#208385#Tainted Discharge#3#10", -- [5739]
 --TODO, infoframe for remaining tainted discharge maybe? Has to be combined with alt power infoframe
---TODO, figure out why arrows still flip and randomly change directions on blades, or remove arrows entirely and just use line texture.
 --TODO, reverify mythic/LFR timers
 --Nightmare Corruption
 local warnDescentIntoMadness			= mod:NewTargetAnnounce(208431, 4)

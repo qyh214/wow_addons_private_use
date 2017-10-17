@@ -5,7 +5,7 @@
 			<OnLoad function="MovAny_OptionsOnLoad"/>
 			<OnShow function="MovAny_OptionsOnShow"/>
 		</Scripts>
-		
+
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString name="MAOptFrameListRows" inherits="GameFontNormal" text="List rows:">
@@ -37,7 +37,7 @@
 				</FontString>
 			</Layer>
 		</Layers>
-		
+
 		<Frames>
 			<Slider name="MAOptRowsSlider" inherits="OptionsSliderTemplate">
 				<Size>
@@ -63,7 +63,7 @@
 					</OnValueChanged>
 				</Scripts>
 			</Slider>
-			
+
 			<Button name="MAOptProfileDropDown" inherits="Lib_UIDropDownMenuTemplate" id="1">
 				<Size>
 					<AbsDimension x="220" y="16"/>
@@ -81,7 +81,7 @@
 					</OnShow>
 				</Scripts>
 			</Button>
-			
+
 			<Button name="MAOptProfileRename" inherits="MAButtonTemplate" text="R">
 				<Size>
 					<AbsDimension x="20" y="20"/>
@@ -103,7 +103,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			
+
 			<Button name="MAOptProfileSaveAs" inherits="MAButtonTemplate" text="S">
 				<Size>
 					<AbsDimension x="20" y="20"/>
@@ -125,7 +125,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			
+
 			<Button name="MAOptProfileAdd" inherits="MAButtonTemplate" text="+">
 				<Size>
 					<AbsDimension x="20" y="20"/>
@@ -147,7 +147,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			
+
 			<Button name="MAOptProfileDelete" inherits="MAButtonTemplate" text="-">
 				<Size>
 					<AbsDimension x="20" y="20"/>
@@ -170,7 +170,7 @@
 				</Scripts>
 			</Button>
 
-	
+
 			<CheckButton name="MAOptAlwaysShowNudger" inherits="MACheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MAOptProfileDropDown" relativePoint="BOTTOMLEFT">
@@ -198,7 +198,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="MAOptShowTooltips" inherits="MACheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MAOptAlwaysShowNudger" relativePoint="BOTTOMLEFT">
@@ -218,7 +218,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="MAOptPlaySound" inherits="MACheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MAOptShowTooltips" relativePoint="BOTTOMLEFT">
@@ -238,7 +238,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="MAOptCloseGUIOnEscape" inherits="MACheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MAOptPlaySound" relativePoint="BOTTOMLEFT">
@@ -256,7 +256,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="MAOptDontSearchFrameNames" inherits="MACheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MAOptCloseGUIOnEscape" relativePoint="BOTTOMLEFT">
@@ -276,7 +276,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="MAOptNoBags" inherits="MACheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MAOptDontSearchFrameNames" relativePoint="BOTTOMLEFT">
@@ -296,7 +296,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="MAOptDontHookCreateFrame" inherits="MACheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MAOptNoBags" relativePoint="BOTTOMLEFT">
@@ -316,7 +316,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="MAOptDontSyncWhenLeavingCombat" inherits="MACheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MAOptDontHookCreateFrame" relativePoint="BOTTOMLEFT">
@@ -336,7 +336,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="MAOptSquareMM" inherits="MACheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MAOptDontSyncWhenLeavingCombat" relativePoint="BOTTOMLEFT">
@@ -356,7 +356,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="MAOptNoMMMW" inherits="MACheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MAOptSquareMM" relativePoint="BOTTOMLEFT">
@@ -376,7 +376,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="MAOptDisableErrorMessages" inherits="MACheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MAOptNoMMMW" relativePoint="BOTTOMLEFT">
@@ -396,7 +396,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<Button name="MAOptResetProfile" inherits="MAButtonTemplate" text="Reset Profile">
 				<Size>
 					<AbsDimension x="120" y="22"/>
@@ -417,13 +417,13 @@
 					<OnLeave function="MovAny_TooltipHide"/>
 					<OnClick>
 						if MADB.playSound then
-							PlaySound("igMainMenuOption")
+							PlaySound(852)
 						end
 						StaticPopup_Show("MOVEANYTHING_PROFILE_RESET_CONFIRM")
 					</OnClick>
 				</Scripts>
 			</Button>
-			
+
 			<Button name="MAOptExportProfile" inherits="MAButtonTemplate" text="Export Profile">
 				<Size>
 					<AbsDimension x="120" y="22"/>
@@ -444,13 +444,13 @@
 					<OnLeave function="MovAny_TooltipHide"/>
 					<OnClick>
 						if MADB.playSound then
-							PlaySound("igMainMenuOption")
+							PlaySound(852)
 						end
 						MovAny:PortDialog(2)
 					</OnClick>
 				</Scripts>
 			</Button>
-			
+
 			<Button name="MAOptImportProfile" inherits="MAButtonTemplate" text="Import Profile">
 				<Size>
 					<AbsDimension x="120" y="22"/>
@@ -471,13 +471,13 @@
 					<OnLeave function="MovAny_TooltipHide"/>
 					<OnClick>
 						if MADB.playSound then
-							PlaySound("igMainMenuOption")
+							PlaySound(852)
 						end
 						MovAny:PortDialog(1)
 					</OnClick>
 				</Scripts>
 			</Button>
-			
+
 			<Button name="MAOptResetAll" inherits="MAButtonTemplate" text="Reset All">
 				<Size>
 					<AbsDimension x="120" y="22"/>
@@ -498,7 +498,7 @@
 					<OnLeave function="MovAny_TooltipHide"/>
 					<OnClick>
 						if MADB.playSound then
-							PlaySound("igMainMenuOption")
+							PlaySound(852)
 						end
 						StaticPopup_Show("MOVEANYTHING_RESET_ALL_CONFIRM")
 					</OnClick>

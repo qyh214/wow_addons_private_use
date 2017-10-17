@@ -19,6 +19,10 @@ L:SetMiscLocalization({
 ---------------------------
 L= DBM:GetModLocalization(1987)
 
+L:SetOptionLocalization({
+	SequenceTimers =	"Squence the cooldown timers off previous ability casts instead of current ability cast to reduce timer clutter at expense of minor timer accuracy (1-2sec early)"
+})
+
 ---------------------------
 -- War Council --
 ---------------------------
@@ -36,12 +40,6 @@ L= DBM:GetModLocalization(1985)
 
 L:SetOptionLocalization({
 	ShowAllPlatforms =	"Show all announces regardless of player platform location"
-})
-
-L:SetMiscLocalization({
-	Xoroth = "Witness Xoroth, a world of infernal heat and scorched bones!",
-	Rancora = "Gaze upon Rancora, a landscape of festering pools and skittering death!",
-	Nathreza = "Nathreza... once a world of magic and knowledge, now a twisted landscape from which none escape."
 })
 
 ---------------------------

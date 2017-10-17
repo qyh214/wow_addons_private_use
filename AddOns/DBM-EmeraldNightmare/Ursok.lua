@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1667, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16089 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(100497)
 mod:SetEncounterID(1841)
 mod:SetZone()
@@ -21,8 +21,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_MISSED 205611"
 )
 
---TODO, find a good voice for roaring. Maybe watch step? move away?
---TODO, multiple auto assignments. Assign by group regardless of debuff status. Assign by smart mode (current default). Maybe other options?
 --(ability.id = 197942 or ability.id = 197969) and type = "begincast" or ability.id = 197943 and type = "cast" or ability.id = 198006 and type = "applydebuff"
 --(ability.id = 197969) and type = "begincast"
 local warnFocusedGaze				= mod:NewTargetCountAnnounce(198006, 3)

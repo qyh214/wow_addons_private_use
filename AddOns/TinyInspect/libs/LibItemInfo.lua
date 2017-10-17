@@ -116,11 +116,19 @@ function lib:GetItemInfo(link, stats)
     return 0, tonumber(level) or 0, GetItemInfo(link)
 end
 
---獲取UNIT裝備等級(Bizzard API 傳家寶等物品不准)
-function lib:GetDetailedUnitItemLevel(unit, index)
-    if (not UnitExists(unit)) then return 0 end
-    local link = GetInventoryItemLink(unit, index)
-    return GetDetailedItemLevelInfo(link or ""), link
+--獲取容器裏物品裝備等級(傳家寶/神器)
+function lib:GetContainerItemLevel(pid, id)
+    local text, level
+    if (pid and id) then
+        tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+        tooltip:SetBagItem(pid, id)
+        for i = 2, 5 do
+            text = _G[tooltip:GetName().."TextLeft" .. i]:GetText() or ""
+            level = string.match(text, ItemLevelPattern)
+            if (level) then break end
+        end
+    end
+    return 0, tonumber(level) or 0
 end
 
 --獲取UNIT物品實際等級信息

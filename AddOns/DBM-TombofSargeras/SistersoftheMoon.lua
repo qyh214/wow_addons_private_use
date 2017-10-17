@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1903, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16678 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(118523, 118374, 118518)--118523 Huntress kasparian, 118374 Captain Yathae Moonstrike, 118518 Prestess Lunaspyre
 mod:SetEncounterID(2050)
 mod:SetZone()
@@ -24,8 +24,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"
 )
 
---TODO, video fight and improve timer interactions to better deal with huge variation in stuff like moon glaive timer.
---TODO, auto timer extending around specials (which trigger 7 second spell lockout on all other abilities)
 --[[
 (ability.id = 236694 or ability.id = 236442 or ability.id = 239379 or ability.id = 236712) and type = "begincast" or
 (ability.id = 237561 or ability.id = 236547 or ability.id = 236518 or ability.id = 233263 or ability.id = 239264 or ability.id = 236672) and type = "cast" or

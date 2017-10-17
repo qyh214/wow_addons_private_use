@@ -21,6 +21,8 @@ local ArtifactBySpec = invertTable(addon.Artifacts)
 
 local DEBUG = 0
 local MAX_LINE_LENGTH = 80
+local TRAIT_DESC_COLOR = "|cffff78ff"
+local RELIC_SPEC_DESC_COLOR = "|cffffd200"
 
 -- 7.2 Hack for lack of item links
 local t_threshold = 1.0
@@ -358,6 +360,22 @@ local function isItemRef(self)
 	return (self:GetName() == "ItemRefTooltip")
 end
 
+local function isArtifactUsableByPlayerClass(artifactID)
+	if artifactID == nil then return false end
+
+	local specForArtifact = SpecByArtifact[artifactID]
+	if specForArtifact == nil then return false end
+
+	local _, _, classID = UnitClass("player")
+	for a = 1,4 do 
+		local aSpecID = GetSpecializationInfoForClassID(classID,a)
+		if nil ~= aSpecID and aSpecID == specForArtifact then
+			return true
+		end
+	end
+	return false
+end
+
 local function DecorateArtifact(self)
 	local _, link = self:GetItem()
 	if type(link) == 'string' and db.profile.enabled == true then
@@ -420,11 +438,28 @@ local function DecorateArtifact(self)
 				local owner = self:GetOwner()
 				if nil ~= owner then
 					local parent = owner:GetParent()
-					if nil ~= parent and parent == InspectPaperDollItemsFrame then
+					if nil ~= parent then
+						if parent:GetName() == nil then
+							-- This should stop false appearances in ERT and others.
+							showCrucibleTraits = false
+						end
+						if parent == InspectPaperDollItemsFrame or
+						   parent == InspectArmory or
+						   parent == TradeRecipientItem7 then 
+							-- Exclude standard Inspect window and Shadows&Light Armory inspect and trade window by name
+							showCrucibleTraits = false
+						end
+					else
+						-- This shouldn't happen but who knows. Don't show in this case.
 						showCrucibleTraits = false
 					end
 				end
 			end
+
+			if not isArtifactUsableByPlayerClass(tonumber(itemID)) then
+				showCrucibleTraits = false
+			end
+
 			local _,_,_,nc = GetAchievementInfo(12072) -- is the Crucible unlocked?
 			if not nc then
 				showCrucibleTraits = false
@@ -549,7 +584,8 @@ local function DecorateArtifact(self)
 										if nil ~= traitDesc then
 											traitDesc = string.gsub(traitDesc,string.char(10),"")
 											traitDesc = string.gsub(traitDesc,string.char(13),string.char(13).."  ")
-											self:AddLine(format('|cffff78ff  %s|r', traitDesc), 1, 1, 1, (string.len(traitDesc) > MAX_LINE_LENGTH))
+											traitDesc = string.gsub(traitDesc,"|r","|r"..TRAIT_DESC_COLOR)
+											self:AddLine(format('%s  %s|r', TRAIT_DESC_COLOR, traitDesc), 1, 1, 1, (string.len(traitDesc) > MAX_LINE_LENGTH))
 										end
 									end
 								end
@@ -629,7 +665,8 @@ local function DecorateRelic(self)
 						if nil ~= traitDesc then
 							traitDesc = string.gsub(traitDesc,string.char(10),"")
 							traitDesc = string.gsub(traitDesc,string.char(13),"")
-							self:AddLine(format('|cffff78ff  %s|r', traitDesc), 1, 1, 1, true)
+							traitDesc = string.gsub(traitDesc,"|r","|r"..TRAIT_DESC_COLOR)
+							self:AddLine(format('%s  %s|r', TRAIT_DESC_COLOR, traitDesc), 1, 1, 1, true)
 						end
 					end
 				end
@@ -682,7 +719,8 @@ local function DecorateRelic(self)
 						if nil ~= traitDesc then
 							traitDesc = string.gsub(traitDesc,string.char(10),"")
 							traitDesc = string.gsub(traitDesc,string.char(13),"")
-							self:AddLine(format('|cffffd200  %s|r', traitDesc), 1, 1, 1, (string.len(traitDesc) > MAX_LINE_LENGTH))
+							traitDesc = string.gsub(traitDesc,"|r","|r"..RELIC_SPEC_DESC_COLOR)
+							self:AddLine(format('%s  %s|r', RELIC_SPEC_DESC_COLOR, traitDesc), 1, 1, 1, (string.len(traitDesc) > MAX_LINE_LENGTH))
 						end
 					end
 				end

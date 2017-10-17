@@ -1,9 +1,7 @@
-local wowTOC, testBuild = DBM:GetTOC()
-if not testBuild and wowTOC < 70200 then return end
 local mod	= DBM:NewMod(1956, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16242 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16734 $"):sub(12, -3))
 mod:SetCreatureID(121124)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)

@@ -2666,6 +2666,7 @@ MovAny.lVirtualMovers = {
 				else
 					child:SetPoint("TOPRIGHT", self, "TOPRIGHT", 0, 0)
 				end
+				MovAny:LockPoint(child)
 			end
 		end,
 		OnMAReleaseChild = function(self, index, child)
@@ -2701,8 +2702,8 @@ MovAny.lVirtualMovers = {
 			b:ClearAllPoints()
 			b:SetPoint("TOPRIGHT", self, "TOPRIGHT", 0, 0)
 			MovAny:LockPoint(b)
-			b = _G["TemporaryEnchantFrame"]
-			MovAny:LockPoint(b)
+			--b = _G["TemporaryEnchantFrame"]
+			--MovAny:LockPoint(b)
 			self.tef = b
 			if self.attachedChildren and self.opt and self.opt.scale then
 				for i, v in pairs(self.attachedChildren) do
@@ -2722,6 +2723,10 @@ MovAny.lVirtualMovers = {
 			for i, v in pairs(self.attachedChildren) do
 				MovAny:UnlockScale(v)
 				v:SetScale(1)
+			end
+			BuffFrame:SetAlpha(1)
+			for i, v in pairs(self.attachedChildren) do
+				v:SetAlpha(1)
 			end
 			self.tef = nil
 		end,
@@ -2804,6 +2809,7 @@ MovAny.lVirtualMovers = {
 				else
 					child:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
 				end
+				MovAny:LockPoint(child)
 			else
 				if string.match(child:GetName(), "BuffButton") then
 					if index == 9 or index == 17 or index == 25 or index == 33 then
@@ -2897,6 +2903,10 @@ MovAny.lVirtualMovers = {
 			for i, v in pairs(self.attachedChildren) do
 				MovAny:UnlockScale(v)
 				v:SetScale(1)
+			end
+			BuffFrame:SetAlpha(1)
+			for i, v in pairs(self.attachedChildren) do
+				v:SetAlpha(1)
 			end
 			self.tef = nil
 		end,

@@ -1,3 +1,29 @@
+7.3.0.04 Release - 2017/10/08
+
+Prevent Auctioneer from loading icons.
+
+* [#127](https://gitlab.com/toreltwiddler/CanIMogIt/issues/127) Prevent the icon overlays from showing up in the Auction House when Auctioneer is enabled (it is not yet supported).
+
+*****
+
+7.3.0.03 Release - 2017/10/08
+
+Bug fixes for overlay.
+
+* [#119](https://gitlab.com/toreltwiddler/CanIMogIt/issues/119) Overlay now uses Blizzard constants in more places, which means addons like Extended Vendor UI will work more often (although they may still have [issues](https://gitlab.com/toreltwiddler/CanIMogIt/issues/53)).
+* [#116](https://gitlab.com/toreltwiddler/CanIMogIt/issues/116) & [#117](https://gitlab.com/toreltwiddler/CanIMogIt/issues/117) Auction House overlay now updates when options are changed and is included in the Show Bag Icons option.
+
+*****
+
+7.3.0.02 Release - 2017/09/10
+
+Bug fixes.
+
+* [#95](https://gitlab.com/toreltwiddler/CanIMogIt/issues/95) Tooltips and bags overlay will now properly display Cannot Learn: Soulbound instead of Cannot Learn: Reason if you moused over an item before looting.
+* [#98](https://gitlab.com/toreltwiddler/CanIMogIt/issues/98) Encounter Journal overlay will update if you have it open and then loot and learn an item.
+
+*****
+
 7.3.0.01 Release - 2017/08/29
 
 Bump TOC for 7.3.

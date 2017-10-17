@@ -6,7 +6,7 @@ XPerl_ProductName		= "|cFFD00000Z-Perl|r UnitFrames"
 XPerl_ShortProductName	= "|cFFD00000Z-Perl|r"
 XPerl_Author			= "|cFFFF8080Resike|r"
 XPerl_Description		= XPerl_ProductName.." by "..XPerl_Author
-XPerl_VersionNumber		= "5.4.4 release"
+XPerl_VersionNumber		= "5.4.5 release"
 XPerl_Version			= XPerl_Description.." - "..XPerl_VersionNumber
 XPerl_LongDescription	= "UnitFrame replacement for new look Player, Pet, Party, Target, Target's Target, Focus, Raid"
 XPerl_ModMenuIcon		= "Interface\\Icons\\INV_Misc_Gem_Pearl_02"
@@ -128,6 +128,8 @@ XPERL_RAID_TOOLTIP_WITHOUTBUFF	= "Without buff: (%s)"
 XPERL_RAID_TOOLTIP_BUFFEXPIRING	= "%s's %s expires in %s"	-- Name, buff name, time to expire
 
 XPERL_NEW_VERSION_DETECTED = "New version detected:"
+XPERL_DOWNLOAD_LATEST = "You can download the latest version from:"
+XPERL_DOWNLOAD_LOCATION = "https://mods.curse.com/addons/wow/zperl"
 
 
 -- Status highlight spells

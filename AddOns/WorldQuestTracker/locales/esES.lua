@@ -10,78 +10,49 @@ L["S_ERROR_NOTLOADEDYET"] = "Esta misión no está cargada todavía, por favor e
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Sólo en rastreo"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Mostrar sólo misiones en rastreo"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Muestra misiones del mundo"
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_CANCELING"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_CREATE"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = ""
+L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"] = "clic para cancelar aplicaciones..."
+L["S_GROUPFINDER_ACTIONS_CANCELING"] = "cancelando..."
+L["S_GROUPFINDER_ACTIONS_CREATE"] = "grupo no encontrado?, clic para comenzar uno"
+L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = "crear grupo"
+L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = "Salir del grupo?"
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = ""
+L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = "reintentar búsqueda"
+L["S_GROUPFINDER_ACTIONS_SEARCH"] = "clic para empezar a buscar grupos"
+L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = "buscar un grupo para matar este raro"
+L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = "Unirse a algún grupo haciendo esta misión"
+L["S_GROUPFINDER_ACTIONS_SEARCHING"] = "buscando..."
+L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = "Clic para buscar más miembros de grupo"
+L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = "Salir y Buscar un grupo diferente?"
+L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = "Clic para remover la aplicación para que podamos crear un grupo nuevo"
+L["S_GROUPFINDER_ACTIONS_UNLIST"] = "Clic para deslistar su grupo actual"
+L["S_GROUPFINDER_ACTIONS_UNLISTING"] = "Delistando..."
+L["S_GROUPFINDER_ACTIONS_WAITING"] = "Esperando..."
+L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = "Auto Abrir al Seleccionar un Mob Raro"
+L["S_GROUPFINDER_ENABLED"] = "Auto Abrir en Nueva Misión"
+L["S_GROUPFINDER_INVASION_ENABLED"] = "Auto Abrir en Punto de Invasión"
+L["S_GROUPFINDER_LEAVEOPTIONS"] = "Opciones de Salida de Grupo"
+L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = "Salir después de X Segundos"
+L["S_GROUPFINDER_LEAVEOPTIONS_ASKX"] = "No Auto Salir, Solo Preguntar por X Segundos"
+L["S_GROUPFINDER_LEAVEOPTIONS_DONTLEAVE"] = "No Mostrar Panel de Salida"
+L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"] = "Salir Inmediatamente al Completar Misión"
+L["S_GROUPFINDER_NOPVP"] = "Evitar Servidores PVP"
+L["S_GROUPFINDER_OT_ENABLED"] = "Mostrar botones en el Rastreador de Objetivos"
+L["S_GROUPFINDER_QUEUEBUSY"] = "Ya estás en cola."
 --Translation missing 
--- L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_SEARCH"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_SEARCHING"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_UNLIST"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_UNLISTING"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_WAITING"] = ""
---Translation missing 
--- L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ENABLED"] = ""
---Translation missing 
--- L["S_GROUPFINDER_LEAVEOPTIONS"] = ""
---Translation missing 
--- L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = ""
---Translation missing 
--- L["S_GROUPFINDER_LEAVEOPTIONS_ASKX"] = ""
---Translation missing 
--- L["S_GROUPFINDER_LEAVEOPTIONS_DONTLEAVE"] = ""
---Translation missing 
--- L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"] = ""
---Translation missing 
--- L["S_GROUPFINDER_NOPVP"] = ""
---Translation missing 
--- L["S_GROUPFINDER_OT_ENABLED"] = ""
---Translation missing 
--- L["S_GROUPFINDER_QUEUEBUSY"] = ""
---Translation missing 
--- L["S_GROUPFINDER_RESULTS_APPLYING"] = ""
---Translation missing 
--- L["S_GROUPFINDER_RESULTS_APPLYING1"] = ""
+-- L["S_GROUPFINDER_QUEUEBUSY2"] = ""
+L["S_GROUPFINDER_RESULTS_APPLYING"] = "Quedan %d grupos, clic nuevamente"
+L["S_GROUPFINDER_RESULTS_APPLYING1"] = "Queda 1 grupo para unirse, clic nuevamente"
 --Translation missing 
 -- L["S_GROUPFINDER_RESULTS_FOUND"] = ""
---Translation missing 
--- L["S_GROUPFINDER_RESULTS_FOUND1"] = ""
+L["S_GROUPFINDER_RESULTS_FOUND1"] = [=[encontrado 1 grupo
+clic para empezar a unirse]=]
 --Translation missing 
 -- L["S_GROUPFINDER_RESULTS_UNAPPLY"] = ""
---Translation missing 
--- L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = ""
---Translation missing 
--- L["S_GROUPFINDER_SECONDS"] = ""
---Translation missing 
--- L["S_GROUPFINDER_TITLE"] = ""
---Translation missing 
--- L["S_GROUPFINDER_TUTORIAL1"] = ""
+L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = "Clic derecho para cerrar"
+L["S_GROUPFINDER_SECONDS"] = "Segundos"
+L["S_GROUPFINDER_TITLE"] = "Buscador de Grupo"
+L["S_GROUPFINDER_TUTORIAL1"] = "Haz misiones de mundo más rápido uniéndote a un grupo haciendo la misma misión!"
 L["S_MAPBAR_AUTOWORLDMAP"] = "Auto mapa del mundo"
 L["S_MAPBAR_AUTOWORLDMAP_DESC"] = [=[Estando en Dalaran o en la Sede de Clase, apretar 'M' va directamente al mapa de las Islas Abruptas.
 Apretar 'M' dos veces va al mapa donde te encuentras.]=]
@@ -142,15 +113,24 @@ L["S_QUESTTYPE_PVP"] = "JcJ"
 L["S_QUESTTYPE_RESOURCE"] = "Recursos"
 L["S_QUESTTYPE_TRADESKILL"] = "Habilidad de comercio"
 --Translation missing 
--- L["S_RAREFINDER_NPC_NOTREGISTERED"] = ""
+-- L["S_RAREFINDER_ADDFROMPREMADE"] = ""
+L["S_RAREFINDER_NPC_NOTREGISTERED"] = "Raro no en la Base de Datos"
 --Translation missing 
--- L["S_RAREFINDER_OPTIONS_SHOWICONS"] = ""
+-- L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = ""
+L["S_RAREFINDER_OPTIONS_SHOWICONS"] = "Mostrar Iconos para Raros Activos"
 --Translation missing 
--- L["S_RAREFINDER_TITLE"] = ""
+-- L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = ""
 --Translation missing 
--- L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = ""
+-- L["S_RAREFINDER_SOUND_ENABLED"] = ""
 --Translation missing 
--- L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = ""
+-- L["S_RAREFINDER_SOUNDWARNING"] = ""
+L["S_RAREFINDER_TITLE"] = "Buscador Raro"
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_REMOVE"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = ""
+L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Visto por"
+L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = "Minutos Atrás"
 L["S_SHAREPANEL_THANKS"] = [=[¡Gracias por compartir el Rastreador de Misiones del Mundo!
 Envía nuestro enlace a tus amigos en Facebook, Twitter y la Moncloa.]=]
 L["S_SHAREPANEL_TITLE"] = "For All Those About to Rock!"
@@ -171,5 +151,6 @@ L["S_TUTORIAL_REWARD"] = "Indica la recompensa (equipo, oro, poder de artefacto,
 L["S_TUTORIAL_TIMELEFT"] = "Indica el tiempo restante (+4 horas, +90 minutos, +30 minutos, menos de 30 minutos)"
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Este botón te lleva al mapa de las Islas Abruptas."
 L["S_UNKNOWNQUEST"] = "Misión desconocida"
+L["S_WORLDMAP_TOOGLEQUESTS"] = "Alternar Misiones"
 L["S_WORLDQUESTS"] = "Misiones del mundo"
 

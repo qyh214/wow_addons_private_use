@@ -1,16 +1,12 @@
-tag ef3ae03a7508f389bb2d8fa872fab21b664bda93 1.2.0
+tag 0eee875b0371227f04cfaf8845527cb7aea0e4d4 1.2.2
 Author:	Benjamin Staneck <staneck@gmail.com>
-Date:	Tue Aug 29 17:23:56 2017 +0200
+Date:	Tue Sep 26 16:23:38 2017 +0200
 
-commit 58cc86c60df954617bde26987a9a87d58a5b365e
-Author: Benjamin Staneck <staneck@gmail.com>
-Date:   Sat Aug 5 22:42:12 2017 +0200
+commit f4f51f3da3640d252c7e16aeb3ae0b67eb7e19a7
+Author: semlar <teslagraafs@gmail.com>
+Date:   Mon Sep 25 23:24:57 2017 -0400
 
-    7.3 sound API change
-
-commit 4858b3f959dd60885432a76a20ea14827e224bda
-Author: Benjamin Staneck <staneck@gmail.com>
-Date:   Fri Jun 16 23:27:35 2017 +0200
-
-    add ShowClassColorInFriendlyNameplate
+    Fixed an issue caused by the last fix
+    
+    It turns out pcall has a second argument
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1725, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16253 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(104415)--104731 (Depleted Time Particle). 104676 (Waning Time Particle). 104491 (Accelerated Time particle). 104492 (Slow Time Particle)
 mod:SetEncounterID(1865)
 mod:SetZone()
@@ -22,7 +22,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_STOP boss1 boss2 boss3 boss4 boss5"
 )
 
---TODO, figure out how often tanks need to swap, adjust warnings accordingly
 --TODO, More data to complete sequences of timers on LFR/Heroic/Normal
 --(ability.id = 206618 or ability.id = 206610 or ability.id = 206614) and type = "cast" or ability.id = 211927
 local warnNormal					= mod:NewCountAnnounce(207012, 2)

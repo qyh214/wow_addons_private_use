@@ -167,6 +167,7 @@ local Extensions = {
 
 lib.Initialize = function(frame, initFunction, displayMode)
     for k, v in pairs(Extensions) do frame[k] = v end
+    if (not frame.dropdata) then frame.dropdata = {} end
     frame.Button:SetScript("OnClick", function() frame:ToggleDropDownFrame() end)
     frame:SetScript("OnHide", nil)
     if (initFunction) then
@@ -211,6 +212,12 @@ lib.SetSelectedValue = function(frame, value, text)
 end
 
 lib.ToggleDropDownMenu = function(level, value, dropDownFrame, anchorName, xOffset, yOffset, menuList, button, autoHideDelay)
-    
+    if (anchorName == "cursor") then
+        local cursorX, cursorY = GetCursorPosition()
+        xOffset = cursorX + (xOffset or 0)
+        yOffset = cursorY + (yOffset or 0)
+        --@todo
+    elseif (anchorName) then
+        Extensions.ToggleDropDownFrame(anchorName)
+    end
 end
-

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1731, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16271 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(104288)
 mod:SetEncounterID(1867)
 mod:SetZone()
@@ -23,8 +23,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO, do more videos with debug to determine if combat log order is valid for link partners
---TODO, annihilate timer for second Imprint
 --[[
 (ability.id = 207513 or ability.id = 206788 or ability.id = 207502 or ability.id = 214672 or ability.id = 206820) and type = "begincast" or
 (ability.id = 206560 or ability.id = 206557 or ability.id = 206559 or ability.id = 206641 or ability.id = 207630) and type = "cast" or 

@@ -703,7 +703,7 @@ LibEvent:attachTrigger("tooltip.style.init", function(self, tip)
         edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
         edgeSize = 14,
     }
-    tip:SetBackdrop({})
+    tip:SetBackdrop(nil)
     tip.style = CreateFrame("Frame", nil, tip)
     tip.style:SetFrameLevel(tip:GetFrameLevel())
     tip.style:SetAllPoints()

@@ -710,7 +710,7 @@ function ACP:OnEvent(this, event, arg1, arg2, arg3)
         this:RegisterEvent("PLAYER_ALIVE")
 
         GameMenuButtonAddons:SetScript("OnClick", function()
-            PlaySound("igMainMenuOption");
+            PlaySound(SOUNDKIT.IG_MAINMENU_OPTION);
             HideUIPanel(GameMenuFrame);
             ShowUIPanel(ACP_AddonList);
         end)

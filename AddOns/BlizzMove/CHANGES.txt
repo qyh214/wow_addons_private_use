@@ -1,12 +1,16 @@
-tag 5014d010fcda235871e0c23f657f4680585aae12 v1.5.4
+lightweight tag ab7319bc8cbb85905a94770c3d78dc7b7fd23849 v1.5.6
 Author:	yess <yess@xan.at>
-Date:	Wed Mar 29 14:38:20 2017 +0200
+Date:	Sun Sep 17 03:39:23 2017 +0200
 
-Tagging as v1.5.4
-
-commit 05b72dd9ad73d31664bfce8157fa91410ef2d544
+commit ab7319bc8cbb85905a94770c3d78dc7b7fd23849
 Author: yess <yess@xan.at>
-Date:   Wed Mar 29 14:37:34 2017 +0200
+Date:   Sun Sep 17 03:39:23 2017 +0200
 
-    Added OrderHallMissionFrame
+    added talkinghead frame
+
+commit 51e275b41addf9b029955a9a83fb1228dcf34437
+Author: Jessica <zanony@xan.at>
+Date:   Sun Sep 17 03:36:43 2017 +0200
+
+    Update toc
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1732, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16664 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(103758)
 mod:SetEncounterID(1863)
 mod:SetZone()
@@ -24,9 +24,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_AURA player"
 )
 
---TODO, evalulate hud size for conjunction for range check/hud. 5 yards guessed.
---TODO, felburst stacks/swapping?
---TODO, does void nova even merit a special warning, or regular?
 --TODO, void ejection gone?
 --[[
 (ability.id = 205408 or ability.id = 206949 or ability.id = 206517 or ability.id = 207720 or ability.id = 207439 or ability.id = 216909 or ability.id = 221875) and type = "begincast" or

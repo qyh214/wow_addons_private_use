@@ -73,6 +73,7 @@ function CIMI_AddToFrame(parentFrame, updateIconFunc)
         frame.CIMIIconTexture:SetPoint("TOPRIGHT", -2, -2)
         frame.timeSinceCIMIIconCheck = 0
         frame:SetScript("OnUpdate", CIMIOnUpdateFuncMaker(updateIconFunc))
+        return frame
     end
 end
 
@@ -105,10 +106,11 @@ end
 ----------------------------
 
 
-function CanIMogIt.frame:HookItemOverlay(event)
+local function HookItemOverlay(event)
     if event ~= "PLAYER_LOGIN" then return end
 end
 
+CanIMogIt.frame:AddEventFunction(HookItemOverlay)
 
 ------------------------
 -- Event functions    --
@@ -130,6 +132,7 @@ CIMIEvents = {
     ["VOID_STORAGE_CONTENTS_UPDATE"] = true,
     ["GUILDBANKBAGSLOTS_CHANGED"] = true,
     ["PLAYERREAGENTBANKSLOTS_CHANGED"] = true,
+    ["CHAT_MSG_LOOT"] = true,
 }
 
 

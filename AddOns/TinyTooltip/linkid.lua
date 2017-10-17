@@ -67,3 +67,30 @@ hooksecurefunc(GameTooltip, "SetArtifactPowerByID", function(self, powerID)
     ShowId(self, "Power", powerID)
     ShowId(self, "Spell", C_ArtifactUI.GetPowerInfo(powerID).spellID, 1)
 end)
+
+-- Quest
+hooksecurefunc("QuestMapLogTitleButton_OnEnter", function(self)
+    if (self.questID) then ShowId(GameTooltip, "Quest", self.questID) end
+end)
+
+-- Achievement UI
+local function ShowAchievementId(self)
+    if ((IsShiftKeyDown() or IsControlKeyDown() or IsAltKeyDown() or addon.db.general.alwaysShowIdInfo) and self.id) then
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT", 0, -32)
+        GameTooltip:SetText("|cffffdd22Achievement:|r " .. self.id, 0, 1, 0.8)
+        GameTooltip:Show()
+    end
+end
+
+hooksecurefunc("HybridScrollFrame_CreateButtons", function(self, buttonTemplate)
+    if (buttonTemplate == "StatTemplate") then
+        for _, button in pairs(self.buttons) do
+            button:HookScript("OnEnter", ShowAchievementId)
+        end
+    elseif (buttonTemplate == "AchievementTemplate") then
+        for _, button in pairs(self.buttons) do
+            button:HookScript("OnEnter", ShowAchievementId)
+            button:HookScript("OnLeave", GameTooltip_Hide)
+        end
+    end
+end)

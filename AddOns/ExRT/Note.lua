@@ -1111,6 +1111,8 @@ function module.main:ADDON_LOADED()
 		module:Enable()
 	end
 
+	module.frame:UpdateFont()
+
 	if VExRT.Note.Text1 then 
 		module.frame:UpdateText()
 	end
@@ -1123,9 +1125,7 @@ function module.main:ADDON_LOADED()
 	if VExRT.Note.ScaleBack then
 		module.frame.background:SetColorTexture(0, 0, 0, VExRT.Note.ScaleBack/100)
 	end
-	if VExRT.Note.Outline then
-		module.frame.text:SetFont(ExRT.F.defFont, 12,"OUTLINE")
-	end
+	--if VExRT.Note.Outline then module.frame.text:SetFont(ExRT.F.defFont, 12,"OUTLINE") end
 	if VExRT.Note.Fix then
 		module.frame:SetMovable(false)
 		module.frame:EnableMouse(false)
@@ -1158,7 +1158,6 @@ function module.main:ADDON_LOADED()
 	module:RegisterAddonMessage()
 	module:RegisterSlash()
 	
-	module.frame:UpdateFont()
 	module.frame:SetFrameStrata(VExRT.Note.Strata)
 end
 

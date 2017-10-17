@@ -1,8 +1,8 @@
 ﻿## Author: Shinisuryu
-## Interface: 70200 
+## Interface: 70300 
 ## Notes: Enhances shift-click interface at vendors.
 ## Title: BuyEmAll
-## Version: 3.4.3
+## Version: 3.4.4
 ## SavedVariablesPerCharacter: BEAConfirmToggle
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Merchant: true

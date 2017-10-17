@@ -28,7 +28,7 @@ end
 
 GameTooltip:HookScript("OnUpdate", function(self, elapsed)
     if (self.updateTooltip ~= TOOLTIP_UPDATE_TIME) then return end
-    if (not self:IsUnit("mouseover")) then return end
+    if (not UnitExists("mouseover")) then return end
     if (addon.db.unit.player.showTarget and UnitIsPlayer("mouseover"))
         or (addon.db.unit.npc.showTarget and not UnitIsPlayer("mouseover")) then
         local line = addon:FindLine(self, "^"..TARGET..":")

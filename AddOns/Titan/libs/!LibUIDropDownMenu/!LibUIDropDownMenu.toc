@@ -1,7 +1,7 @@
 ## Interface: 70300
 ## Title: Lib: UIDropDownMenu
 ## Notes: A Replacement for standard UIDropDownMenu
-## Version: v1.05.7030024920
+## Version: v1.07.7030024931
 ## X-Category: Libraries
 ## X-Website: https://www.wowace.com/projects/libuidropdownmenu
 ## OptionalDeps: LibStub

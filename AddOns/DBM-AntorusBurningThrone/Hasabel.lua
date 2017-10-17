@@ -1,20 +1,22 @@
 local mod	= DBM:NewMod(1985, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16369 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16774 $"):sub(12, -3))
 mod:SetCreatureID(122104)
 mod:SetEncounterID(2064)
+mod:DisableESCombatDetection()--Remove if blizz fixes clicking portals causing this event to fire (even though boss isn't engaged)
 mod:SetZone()
 --mod:SetBossHPInfoToHighest()
 --mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
---mod:SetHotfixNoticeRev(16350)
+mod:SetHotfixNoticeRev(16744)
+mod:SetMinSyncRevision(16744)
 mod.respawnTime = 35
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 243983 244709 245504 244607 244915 246805 244689 244000",
-	"SPELL_CAST_SUCCESS 245050 244073 244112 244136 244138 244146 244145 244598",
+	"SPELL_CAST_SUCCESS 245050 244073 244112 244136 244138 244146 244145 244598 244016",
 	"SPELL_AURA_APPLIED 244016 244383 244613 244949 244849 245050 245118",
 	"SPELL_AURA_APPLIED_DOSE 244016",
 	"SPELL_AURA_REFRESH 244016",
@@ -22,8 +24,7 @@ mod:RegisterEventsInCombat(
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
 	"UNIT_DIED",
---	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"CHAT_MSG_MONSTER_YELL",
+	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"
 )
 
@@ -34,6 +35,12 @@ mod:RegisterEventsInCombat(
 --TODO, find a workable cast ID for corrupt and enable interrupt warning
 --TODO, an overview info frame showing the needs of portal worlds (how many shields up, how much fel miasma, how many fires in dark realm if possible)
 --TODO, timer correction off UNIT_POWER to auto correct main boss timer variances
+--[[
+(ability.id = 243983 or ability.id = 244689 or ability.id = 244000) and type = "begincast"
+ or ability.id = 244016 and type = "cast"
+ or (ability.id = 244709 or ability.id = 245504 or ability.id = 244607 or ability.id = 246316 or ability.id = 244915  or ability.id = 246805) and type = "begincast"
+ or (ability.id = 245050 or ability.id = 244598) and type = "cast"
+ --]]
 --Platform: Nexus
 local warnRealityTear					= mod:NewStackAnnounce(244016, 2, nil, "Tank")
 --local warnTransportPortal				= mod:NewSpellAnnounce(244677, 2)
@@ -81,12 +88,12 @@ local yellCloyingShadows				= mod:NewFadesYell(245118)
 local specWarnHungeringGloom			= mod:NewSpecialWarningMoveTo(245075, nil, nil, nil, 1)--No voice yet
 
 --Platform: Nexus
-local timerRealityTearCD				= mod:NewCDTimer(12.2, 244016, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerCollapsingWorldCD			= mod:NewCDTimer(31.9, 243983, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)--32.9-41
-local timerFelstormBarrageCD			= mod:NewCDTimer(32.1, 244000, nil, nil, nil, 3)--32.9-41
---local timerTransportPortalCD			= mod:NewCDTimer(41.5, 244677, nil, nil, nil, 1)--41.5-60. most of time 50 on nose. but if comes early next one comes late to offset
+local timerRealityTearCD				= mod:NewCDTimer(12.1, 244016, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerCollapsingWorldCD			= mod:NewCDTimer(32.9, 243983, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)--32.9-41
+local timerFelstormBarrageCD			= mod:NewCDTimer(32.9, 244000, nil, nil, nil, 3)--32.9-41
+local timerTransportPortalCD			= mod:NewCDTimer(41.2, 244677, nil, nil, nil, 1)--41.2-60. most of time 50 on nose. but if comes early next one comes late to offset
 --Platform: Xoroth
-local timerSupernovaCD					= mod:NewCDTimer(5.2, 244598, nil, nil, nil, 3)
+local timerSupernovaCD					= mod:NewCDTimer(6.1, 244598, nil, nil, nil, 3)
 local timerFlamesofXorothCD				= mod:NewCDTimer(7.3, 244607, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 --Platform: Rancora
 local timerFelSilkWrapCD				= mod:NewCDTimer(16.6, 244949, nil, nil, nil, 3)
@@ -125,6 +132,11 @@ local voiceDelusions					= mod:NewVoice(245050)--targetyou (not sure if better o
 --mod:AddInfoFrameOption(239154, true)
 mod:AddRangeFrameOption("8/10")
 mod:AddBoolOption("ShowAllPlatforms", false)
+--"Transport Portal-244689-npc:122104 = pull:60.6, 51.2, 51.2, 41.6, 61.0, 42.7, 41.6, 41.6, 61.0", -- [10]
+--"Transport Portal-244689-npc:122104 = pull:48.7, 42.5, 52.4, 50.0, 52.3, 51.1", -- [8]
+--"Transport Portal-244689-npc:122104 = pull:41.3, 51.1, 42.6, 42.5, 52.3, 51.1, 51.2", -- [7]
+--"Transport Portal-244689-npc:122104 = pull:43.1, 51.1, 51.1, 51.1, 42.6, 42.6, 52.4, 51.2, 51.1", -- [8]
+--"Transport Portal-244689-npc:122104 = pull:45.7, 51.1, 42.2, 42.0, 41.6, 52.5, 41.5, 42.6, 60.8", -- [9]
 
 --mod.vb.shieldsActive = 0
 mod.vb.felBarrageCast = 0
@@ -165,9 +177,9 @@ function mod:OnCombatStart(delay)
 	countdownRealityTear:Start(6.2-delay)
 	timerCollapsingWorldCD:Start(10.5-delay)
 	countdownCollapsingWorld:Start(10.5-delay)
-	if not self:IsEasy() then
---		timerTransportPortalCD:Start(20.5-delay)
-	end
+--	if not self:IsEasy() then
+--		timerTransportPortalCD:Start(35-delay)
+--	end
 	timerFelstormBarrageCD:Start(25.2-delay)
 	countdownFelstormBarrage:Start(25.2-delay)
 	for uId in DBM:GetGroupMembers() do
@@ -219,7 +231,7 @@ function mod:SPELL_CAST_START(args)
 			end
 		end
 	elseif spellId == 244689 then
---		timerTransportPortalCD:Start()
+		timerTransportPortalCD:Start()
 		if self.Options.ShowAllPlatforms or playerPlatform == 1 then--Actually on nexus platform
 			specWarnTransportPortal:Show()
 			voiceTransportPortal:Play("killmob")
@@ -292,6 +304,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 			specWarnSupernova:Show()
 			voiceSuperNova:Play("watchstep")
 		end
+	elseif spellId == 244016 then
+		timerRealityTearCD:Start()
+		countdownRealityTear:Start(12.2)
 	end
 end
 
@@ -300,8 +315,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 244016 then
 		local uId = DBM:GetRaidUnitId(args.destName)
 --		if self:IsTanking(uId) then
-			timerRealityTearCD:Start()--Move this later
-			countdownRealityTear:Start(12.2)--Move this later
 			local amount = args.amount or 1
 			if amount >= 3 then
 				if args:IsPlayer() then--At this point the other tank SHOULD be clear.
@@ -421,13 +434,13 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 end
 --]]
 
-function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
-	if msg == L.Xoroth or msg:find(L.Xoroth) then
-		self:SendSync("XorothPortal")
-	elseif msg == L.Rancora or msg:find(L.Rancora) then
-		self:SendSync("RancoraPortal")
-	elseif msg == L.Nathreza or msg:find(L.Nathreza) then
-		self:SendSync("NathrezaPortal")
+function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
+	if msg:find("SPELL_MAGE_FLAMEORB") then
+		warnXorothPortal:Show()
+	elseif msg:find("ABILITY_CREATURE_POISON_02") then
+		warnRancoraPortal:Show()
+	elseif msg:find("SPELL_HOLY_CONSUMEMAGIC") then
+		warnNathrezaPortal:Show()
 	end
 end
 
@@ -451,14 +464,3 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	end
 end
 --]]
-
-function mod:OnSync(msg)
-	if not self:IsInCombat() then return end
-	if msg == "XorothPortal" then
-		warnXorothPortal:Show()
-	elseif msg == "RancoraPortal" then
-		warnRancoraPortal:Show()
-	elseif msg == "NathrezaPortal" then
-		warnNathrezaPortal:Show()
-	end
-end

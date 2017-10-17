@@ -1,28 +1,16 @@
-lightweight tag b260bc60db85defaec2b12bd58e18a7a5ead5490 7.2.5
+lightweight tag c06459c28bc879674c8fa43a7956deb6b4029d9f 7.3.0
 Author:	GitHub <noreply@github.com>
-Date:	Sat Jun 10 21:57:47 2017 -0500
+Date:	Mon Oct 16 10:32:28 2017 -0500
 
-commit 897549af75dc9cc93c4211e9d8c79930865c1b11
-Author: Joshua Worden <solocommand@gmail.com>
-Date:   Sat Jun 10 21:56:46 2017 -0500
-
-    version bump
-
-commit 897549af75dc9cc93c4211e9d8c79930865c1b11
-Author: Joshua Worden <solocommand@gmail.com>
-Date:   Sat Jun 10 21:56:46 2017 -0500
+commit 5408cd8ab51b3ca4bb7d86276c77c4abc1d97917
+Author: Josh Worden <solocommand@gmail.com>
+Date:   Mon Oct 16 10:25:23 2017 -0500
 
     version bump
 
-commit 2ca8abcf1f5738867cbe59a2b64f09fe958ee477
-Author: Kevin Ballard <kevin@sb.org>
-Date:   Sat Jun 10 17:32:00 2017 -0700
+commit 5408cd8ab51b3ca4bb7d86276c77c4abc1d97917
+Author: Josh Worden <solocommand@gmail.com>
+Date:   Mon Oct 16 10:25:23 2017 -0500
 
-    Fix compatibility with TitanSocial 5.12.0.70200
-
-commit 2ca8abcf1f5738867cbe59a2b64f09fe958ee477
-Author: Kevin Ballard <kevin@sb.org>
-Date:   Sat Jun 10 17:32:00 2017 -0700
-
-    Fix compatibility with TitanSocial 5.12.0.70200
+    version bump
 

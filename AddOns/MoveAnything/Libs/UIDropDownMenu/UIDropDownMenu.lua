@@ -499,7 +499,7 @@ function Lib_UIDropDownMenu_AddButton(info, level)
 	end
 
 
-	if not info.notCheckable then 
+	if not info.notCheckable then
 		if ( info.disabled ) then
 			_G[listFrameName.."Button"..index.."Check"]:SetDesaturated(true);
 			_G[listFrameName.."Button"..index.."Check"]:SetAlpha(0.5);
@@ -539,7 +539,7 @@ function Lib_UIDropDownMenu_AddButton(info, level)
 	else
 		_G[listFrameName.."Button"..index.."Check"]:Hide();
 		_G[listFrameName.."Button"..index.."UnCheck"]:Hide();
-	end	
+	end
 	button.checked = info.checked;
 
 	-- If has a colorswatch, show it and vertex color it
@@ -616,7 +616,7 @@ end
 function Lib_UIDropDownMenu_Refresh(frame, useValue, dropdownLevel)
 	local button, checked, checkImage, uncheckImage, normalText, width;
 	local maxWidth = 0;
-	local somethingChecked = nil; 
+	local somethingChecked = nil;
 	if ( not dropdownLevel ) then
 		dropdownLevel = LIB_UIDROPDOWNMENU_MENU_LEVEL;
 	end
@@ -817,7 +817,7 @@ function Lib_UIDropDownMenuButton_OnClick(self)
 	end
 
 	if ( playSound ) then
-		PlaySound("UChatScrollButton");
+		PlaySound(1115);
 	end
 end
 

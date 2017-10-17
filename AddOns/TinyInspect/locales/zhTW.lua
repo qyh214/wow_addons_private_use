@@ -1,6 +1,8 @@
 
 local _, ns = ...
 
+BINDING_HEADER_TinyInspect = "TinyInspect"
+
 if (GetLocale() ~= "zhTW") then return end
 
 ns.L = {
@@ -33,3 +35,5 @@ ns.L = {
     PaperDoll                   = "人物面板",
     Chat                        = "聊天",
 }
+
+BINDING_NAME_InspectRaidFrame = "顯示團隊觀察面板"

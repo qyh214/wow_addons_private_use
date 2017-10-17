@@ -1,7 +1,7 @@
-changeset:   218:8cee53478c4a
-tag:         v7.3.0.218-RC4
+changeset:   257:5f650be8d10f
+tag:         v7.3.0.257-release
 user:        Tercio
-date:        Mon Sep 04 13:14:30 2017 -0300
-summary:     - Fixed comm spam when selecting and deselecting a rare.
+date:        Sun Oct 15 09:23:43 2017 -0200
+summary:     - Ticket #556: attempt to fix an issue started on latest update for portuguese localization.
 
 

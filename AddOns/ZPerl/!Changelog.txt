@@ -1,3 +1,7 @@
+**r1078**
+* Raid anchor fixes.
+* Refactor version notifications.
+
 **r1076**
 * Party and Raid anchor dropdowns are usable again, even with other older dropdown library addons loaded.
 

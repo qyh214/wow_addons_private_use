@@ -44,7 +44,8 @@ local EnchantItemDB = {
     [5891] = 141910,
     [5899] = 144328,
     [5900] = 144346,
-    
+    [5931] = 153247,
+    [5929] = 153197,
 }
 
 --Data from: RRRRBUA(NGA), KibsItemLevel
@@ -753,13 +754,15 @@ local EnchantSpellDB = {
 function lib:GetEnchantSpellID(ItemLink)
     local enchant = tonumber(string.match(ItemLink, "item:%d+:(%d+):"))
     if (enchant and EnchantSpellDB[enchant]) then
-        return EnchantSpellDB[enchant]
+        return EnchantSpellDB[enchant], enchant
     end
+    return nil, enchant
 end
 
 function lib:GetEnchantItemID(ItemLink)
     local enchant = tonumber(string.match(ItemLink, "item:%d+:(%d+):"))
     if (enchant and EnchantItemDB[enchant]) then
-        return EnchantItemDB[enchant]
+        return EnchantItemDB[enchant], enchant
     end
+    return nil, enchant
 end

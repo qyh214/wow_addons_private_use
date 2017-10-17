@@ -95,7 +95,7 @@ local function SetItemLevelScheduled(button, ItemLevelFrame, link)
 end
 
 --設置物品等級
-local function SetItemLevel(self, link, category)
+local function SetItemLevel(self, link, category, BagID, SlotID)
     if (not self) then return end
     local frame = GetItemLevelFrame(self, category)
     if (self.OrigItemLink == link) then
@@ -104,7 +104,12 @@ local function SetItemLevel(self, link, category)
     else
         local _, count, level, quality, class, equipSlot
         if (link and string.match(link, "item:(%d+):")) then
-            count, level, _, _, quality, _, _, class, _, _, equipSlot = LibItemInfo:GetItemInfo(link)
+            _, _, quality, _, _, class, _, _, equipSlot = GetItemInfo(link)
+            if (BagID and SlotID and (category == "Bag" or category == "AltEquipment") and (quality == 7 or quality == 6)) then
+                count, level = LibItemInfo:GetContainerItemLevel(BagID, SlotID)
+            else
+                count, level = LibItemInfo:GetItemInfo(link)
+            end
             if (count > 0) then
                 SetItemLevelString(frame.levelString, "...")
                 return SetItemLevelScheduled(self, frame, link)
@@ -131,7 +136,7 @@ hooksecurefunc("ContainerFrame_Update", function(self)
     local button
     for i = 1, self.size do
         button = _G[name.."Item"..i]
-        SetItemLevel(button, GetContainerItemLink(id, button:GetID()), "Bag")
+        SetItemLevel(button, GetContainerItemLink(id, button:GetID()), "Bag", id, button:GetID())
     end
 end)
 
@@ -223,10 +228,11 @@ if (EquipmentFlyout_DisplayButton) then
         local link
         if (bags) then
             link = GetContainerItemLink(bag, slot)
+            SetItemLevel(button, link, "AltEquipment", bag, slot)
         else
             link = GetInventoryItemLink("player", slot)
+            SetItemLevel(button, link, "AltEquipment")
         end
-        SetItemLevel(button, link, "AltEquipment")
     end)
 end
 
@@ -234,42 +240,34 @@ end
 LibEvent:attachEvent("PLAYER_LOGIN", function()
     -- For Bagnon
     if (Bagnon and Bagnon.ItemSlot) then
-        local origFunc = Bagnon.ItemSlot.Update
-        function Bagnon.ItemSlot:Update()
-            origFunc(self)
-            SetItemLevel(self, self:GetItem(), "Bag")
-        end
+        hooksecurefunc(Bagnon.ItemSlot, "Update", function(self)
+            SetItemLevel(self, self:GetItem(), "Bag", self:GetBag(), self:GetID())
+        end)
     end
     -- For Combuctor
     if (Combuctor and Combuctor.ItemSlot) then
-        local origFunc = Combuctor.ItemSlot.Update
-        function Combuctor.ItemSlot:Update()
-            origFunc(self)
-            SetItemLevel(self, self:GetItem(), "Bag")
-        end
+        hooksecurefunc(Combuctor.ItemSlot, "Update", function(self)
+            SetItemLevel(self, self:GetItem(), "Bag", self:GetBag(), self:GetID())
+        end)
     elseif (Combuctor and Combuctor.Item) then
-        local origFunc = Combuctor.Item.Update
-        function Combuctor.Item:Update()
-            origFunc(self)
-            SetItemLevel(self, self.hasItem, "Bag")
-        end
+        hooksecurefunc(Combuctor.Item, "Update", function(self)
+            SetItemLevel(self, self.hasItem, "Bag", self.bag, self.GetID and self:GetID())
+        end)
     end
     -- For LiteBag
     if (LiteBagItemButton_UpdateItem) then
         hooksecurefunc("LiteBagItemButton_UpdateItem", function(self)
-            SetItemLevel(self, GetContainerItemLink(self:GetParent():GetID(), self:GetID()), "Bag")
+            SetItemLevel(self, GetContainerItemLink(self:GetParent():GetID(), self:GetID()), "Bag", self:GetParent():GetID(), self:GetID())
         end)
     end
     -- For ArkInventory
     if (ArkInventory and ArkInventory.Frame_Item_Update_Texture) then
-        local origFunc = ArkInventory.Frame_Item_Update_Texture
-        function ArkInventory.Frame_Item_Update_Texture(button)
-            origFunc(button)
+        hooksecurefunc(ArkInventory, "Frame_Item_Update_Texture", function(button)
             local i = ArkInventory.Frame_Item_GetDB(button)
             if (i) then
                 SetItemLevel(button, i.h, "Bag")
             end
-        end
+        end)
     end
 end)
 

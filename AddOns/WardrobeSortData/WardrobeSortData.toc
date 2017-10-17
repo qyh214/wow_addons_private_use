@@ -1,6 +1,6 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: WardrobeSortData
-## Version: 7.2.0.24015
+## Version: 7.3.0.25021
 ## Author: Ketho
 ## Notes: Load on Demand Wardrobe FileData
 ## LoadOnDemand: 1

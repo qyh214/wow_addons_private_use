@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1743, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16266 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(106643)
 mod:SetEncounterID(1872)
 mod:SetZone()
@@ -28,13 +28,6 @@ mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_SAY"
 )
 
---TODO, figure out interrupt order/count assistant for stuff
---TODO, determine which interrupts are off by default, if any
---TODO, Adjust beam lines/warnings as needed.
---TODO, Balls special warning on or off by default and for who?
---TODO, figure out how to do yell countdowns on Conflexive Burst. It'll probably require UNIT_AURA player scanning with constant checking of time remaining.
---TODO, are tanks enough to keep Ablative Pulse Interrupted? Dps have enough stuff to interrupt so hopefully tanks can worry about boss on their own
---TODO, auto assign conflexive burst. if always 3 targets have one stand out, 1 go to fast and one go to slow. this will perfectly stagger 3 explosions. assign by mark
 --(ability.id = 209595 or ability.id = 208807 or ability.id = 228877 or ability.id = 210022 or ability.id = 209168) and type = "begincast" or (ability.id = 209597 or ability.id = 210387 or ability.id = 214278 or ability.id = 214295 or ability.id = 208863) and type = "cast"
 --Base
 local warnTemporalisis				= mod:NewSpellAnnounce(209595, 3)

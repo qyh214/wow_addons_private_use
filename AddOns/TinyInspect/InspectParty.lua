@@ -36,16 +36,18 @@ local function GetMembers(num)
         if (members[guid]) then
             members[guid].done = false
             members[guid].unit = unit
-            members[guid].name = UnitName(unit)
             members[guid].class = select(2, UnitClass(unit))
         else
             members[guid] = {
                 done   = false,
                 unit   = unit,
-                name   = UnitName(unit),
                 class  = select(2, UnitClass(unit)),
                 ilevel = -1,
             }
+        end
+        members[guid].name, members[guid].realm = UnitName(unit)
+        if (not members[guid].realm) then
+            members[guid].realm = GetRealmName()
         end
     end
 end
@@ -63,6 +65,27 @@ local function SendInspect()
     end
 end
 
+--发送自己的信息
+local function SendPlayerInfo()
+    local ilvl = select(2, GetAverageItemLevel())
+    local spec = select(2, GetSpecializationInfo(GetSpecialization()))
+    SendAddonMessage("TinyInspect", format("%s|%s|%s", "LV", ilvl, spec), "PARTY")
+end
+
+--解析发送的信息
+LibEvent:attachEvent("CHAT_MSG_ADDON", function(self, prefix, text, channel, sender)
+    if (prefix == "TinyInspect" and channel == "PARTY") then
+        local flag, ilvl, spec = strsplit("|", text)
+        if (flag ~= "LV") then return end
+        local name, realm = strsplit("-", sender)
+        for guid, v in pairs(members) do
+            if (v.name == name and v.realm == realm) then
+                v.slevel = ilvl
+            end
+        end
+    end
+end)
+
 --@see InspectCore.lua
 LibEvent:attachTrigger("UNIT_INSPECT_READY", function(self, data)
     local member = members[data.guid]
@@ -71,6 +94,7 @@ LibEvent:attachTrigger("UNIT_INSPECT_READY", function(self, data)
         member.spec = data.spec
         member.name = data.name
         member.class = data.class
+        member.realm = data.realm
         member.done = true
     end
 end)
@@ -90,6 +114,7 @@ LibEvent:attachEvent("GROUP_ROSTER_UPDATE", function(self)
             unit   = "player",
             spec   = select(2, GetSpecializationInfo(GetSpecialization())),
         }
+        SendPlayerInfo()
         LibSchedule:AddTask({
             override  = true,
             identity  = "InspectParty",
@@ -113,7 +138,6 @@ LibEvent:attachEvent("GROUP_ROSTER_UPDATE", function(self)
     end
     numMembers = numCurrent
 end)
-
 
 
 
@@ -141,10 +165,10 @@ local function PrintItemLevel(members)
     end
     DEFAULT_CHAT_FRAME:AddMessage(string.rep("-", num), 1, 0.64, 0)
     for _, v in pairs(members) do
-        if (v.done or v.ilevel > 0) then
+        if (v.done or v.slevel or v.ilevel > 0) then
             DEFAULT_CHAT_FRAME:AddMessage(format(pattern,
                 GetRoleIcon(v.unit),
-                v.ilevel,
+                v.slevel or v.ilevel,
                 select(4, GetClassColor(v.class)),
                 v.name,
                 v.spec and "("..v.spec..")" or ""
@@ -178,8 +202,8 @@ local function SendItemLevel(members)
     end
     SendChatMessage(string.rep("-", num), channel)
     for _, v in pairs(members) do
-        if (v.done or v.ilevel > 0) then
-            SendChatMessage(format(pattern, label, v.ilevel, v.name, v.spec and "("..v.spec..")" or ""), channel)
+        if (v.done or v.slevel or v.ilevel > 0) then
+            SendChatMessage(format(pattern, label, v.slevel or v.ilevel, v.name, v.spec and "("..v.spec..")" or ""), channel)
         end
     end
     SendChatMessage(string.rep("-", num), channel)

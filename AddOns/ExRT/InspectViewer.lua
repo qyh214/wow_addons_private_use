@@ -85,15 +85,22 @@ module.db.topEnchGems = {
 	[5890]="Neck:",
 	[5891]="Neck:",
 	
-	[5463]="Gem:Crit:250",
-	[5464]="Gem:Haste:250",
-	[5465]="Gem:Mastery:250",
-	[5466]="Gem:Vers:250",
+	--[[
+	[5463]="Gem:Crit:150",
+	[5464]="Gem:Haste:150",
+	[5465]="Gem:Mastery:150",
+	[5466]="Gem:Vers:150",
 	
-	[130219]="Gem:Crit:250",
-	[130220]="Gem:Haste:250",
-	[130222]="Gem:Mastery:250",
-	[130221]="Gem:Vers:250",
+	[130219]="Gem:Crit:150",
+	[130220]="Gem:Haste:150",
+	[130222]="Gem:Mastery:150",
+	[130221]="Gem:Vers:150",
+	]]
+	
+	[151580]="Gem:Crit:200",
+	[151583]="Gem:Haste:200",
+	[151584]="Gem:Mastery:200",
+	[151585]="Gem:Vers:200",	
 	
 	[130246]="Gem:Str:200",
 	[130247]="Gem:Agi:200",
@@ -101,7 +108,13 @@ module.db.topEnchGems = {
 }
 
 module.db.achievementsList = {
-	{	--Nighthold
+	{	--A
+		L.S_ZoneT21A,
+		11988,11989,11990,11991,11992,11993,11994,11995,11996,11997,11998,11999,12000,12001,12002,12110,
+	},{	--ToS
+		L.S_ZoneT20ToS,
+		11787,11788,11789,11790,11767,11774,11775,11777,11778,11779,11780,11781,11874,
+	},{	--Nighthold
 		L.S_ZoneT19Suramar,
 		10829,10837,10838,10839,10840,10842,10843,10844,10848,10847,10846,10845,10849,10850,11195,
 	},{	--Trial of Valor
@@ -143,7 +156,11 @@ module.db.achievementsList = {
 	},
 }
 module.db.achievementsList_statistic = {
-	{	--Nighthold
+	{	--A
+		
+	},{	--ToS
+		
+	},{	--Nighthold
 		0,0,0,0,{10940,10941,10942,10943},{10944,10945,10946,10947},{10948,10949,10950,10951},{10952,10953,10954,10955},{10969,10970,10971,10972},{10965,10966,10967,10968},{10961,10962,10963,10964},{10956,10957,10959,10960},{10973,10974,10975,10976},{10977,10978,10979,10980},
 	},{	--Trial of Valor
 		0,{11407,11408,11409,11410},{11411,11412,11413,11414},{11415,11416,11417,11418},
@@ -361,7 +378,7 @@ function module.options:Load()
 	module.db.colorizeNoValorUpgrade = VExRT.InspectViewer.ColorizeNoValorUpgrade
 	
 	local colorizeLowIlvl630 = 875
-	local colorizeLowIlvl685 = 900
+	local colorizeLowIlvl685 = 920
 	
 	self.chkItemsTrackDropDown = ELib:DropDown(self,300,7):Point(50,0):Size(50)
 	self.chkItemsTrackDropDown:Hide()

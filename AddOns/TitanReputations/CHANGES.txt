@@ -1,10 +1,10 @@
-lightweight tag a21d33fb613a599dedbe2945a60bf01ba86baafb v1.13
+lightweight tag 0a14ca55af49dc61fb1a71c337211a4d7b9cb202 v1.14
 Author:	Eliote <>
-Date:	Tue Aug 29 20:17:31 2017 -0300
+Date:	Wed Sep 20 20:59:41 2017 -0300
 
-commit a21d33fb613a599dedbe2945a60bf01ba86baafb
+commit 0a14ca55af49dc61fb1a71c337211a4d7b9cb202
 Author: Eliote <>
-Date:   Tue Aug 29 20:17:31 2017 -0300
+Date:   Wed Sep 20 20:59:41 2017 -0300
 
-    Update to WoW 7.3
+    Fix: nil concatenation
 

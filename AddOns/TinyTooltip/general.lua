@@ -65,10 +65,6 @@ LibEvent:attachEvent("VARIABLES_LOADED", function()
     --Variable
     addon.db = addon:MergeVariable(addon.db, BigTipDB)
     LibEvent:trigger("tooltip:variables:loaded")
-    if (not addon.db.unit.player.elements.zone) then
-        addon.db.unit.player.elements.zone = { enable = true,  color = "ffffff",  wildcard = "%s", filter = "none" }
-        tinsert(addon.db.unit.player.elements, {"zone"})
-    end
     --Init
     LibEvent:trigger("tooltip.style.font.header", GameTooltip, addon.db.general.headerFont, addon.db.general.headerFontSize, addon.db.general.headerFontFlag)
     LibEvent:trigger("tooltip.style.font.body", GameTooltip, addon.db.general.bodyFont, addon.db.general.bodyFontSize, addon.db.general.bodyFontFlag)

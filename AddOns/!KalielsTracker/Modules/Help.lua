@@ -189,12 +189,10 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 10
-			text = cTitle.."         What's NEW in version |cffffffff2.1.6|r\n\n"..
-				"- UPDATED - addon for patch 7.3.0.\n"..
-				"- UPDATED - libs for patch 7.3.0.\n"..
-				"- ADDED - DropDownMenu skin support for ElvUI and Tukui.\n"..
-				"- ADDED - Collapsed text set color (same as other header texts).\n"..
-				"- Some cosmetic changes.\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff2.1.7|r\n\n"..
+				"- FIXED - issue #210 - error with PetTracker after start the game.\n"..
+				"- FIXED - issue #212 - error when hovering quest item, with enabled \"Color by"..
+				offs.."difficulty\".\n\n"..
 
 				cTitle.."Known issues|r\n"..
 				"- Work with World Map during combat generates LUA errors. This is because"..

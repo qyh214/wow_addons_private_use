@@ -9,9 +9,7 @@ HiddenArtifactTrackerFuncs["Maw of the Damned"] =
 --Frost (DK)
 HiddenArtifactTrackerFuncs["Blades of the Fallen Prince"] = 
 	function()
-		if HiddenArtifactTrackerFuncs.getAK(4) then
-			HiddenArtifactTrackerFuncs.getWorldBossQ(true,"World Boss: Soultakers", 42269, 1017) -- Soultakers / questnumber / in Stormheim
-		end
+		HiddenArtifactTrackerFuncs.getWorldBossQ(true,"World Boss: Soultakers", 42269, 1017) -- Soultakers / questnumber / in Stormheim
 	end
 
 --Unholy
@@ -32,7 +30,6 @@ HiddenArtifactTrackerFuncs["Apocalypse"] =
 --havoc
 HiddenArtifactTrackerFuncs["Twinblades of the Deceiver"] =
 	function()
-		HiddenArtifactTrackerFuncs.getAK(5)
 	end
 
 
@@ -47,7 +44,6 @@ HiddenArtifactTrackerFuncs["Fangs of Ashamane"] =
 	function()
 
 			local r,g,b
-			HiddenArtifactTrackerFuncs.getAK(4)
 
 			HiddenArtifactTrackerFuncs.CheckQuest(44326, "Check the Emerald Dreamway", nil)
 
@@ -100,16 +96,12 @@ HiddenArtifactTrackerFuncs["Aluneth"] =
 		HiddenArtifactTrackerFuncs.CheckQuest(43789, "Polymorph a Plains Runehorn Calf in Stormheim", nil)
 		HiddenArtifactTrackerFuncs.CheckQuest(43790, "Polymorph a Wild Dreamrunner in Val'sharah", nil)
 		HiddenArtifactTrackerFuncs.CheckQuest(43791, "Polymorph a Heartwood Doe in Suramar", nil)
-
-		if HiddenArtifactTrackerFuncs.getAK(6) then
-			HiddenArtifactTrackerFuncs.CheckQuest(43828, "Check class-hall for sheep event", nil)
-		end
+		HiddenArtifactTrackerFuncs.CheckQuest(43828, "Check class-hall for sheep event", nil)
 	end
 
 --fire
 HiddenArtifactTrackerFuncs["Felo'melorn"] =
 	function()
-		HiddenArtifactTrackerFuncs.getAK(5)
 	end
 HiddenArtifactTrackerFuncs["Heart of the Phoenix"] = HiddenArtifactTrackerFuncs["Felo'melorn"]
 
@@ -135,7 +127,6 @@ HiddenArtifactTrackerFuncs["Fists of the Heavens"] =
 --holy (paladin)
 HiddenArtifactTrackerFuncs["The Silver Hand"] =
 	function()
-		HiddenArtifactTrackerFuncs.getAK(5)
 	end
 HiddenArtifactTrackerFuncs["Tome of the Silver Hand"] = HiddenArtifactTrackerFuncs["The Silver Hand"]
 
@@ -150,28 +141,23 @@ HiddenArtifactTrackerFuncs["Oathseeker"] = HiddenArtifactTrackerFuncs["Truthguar
 --retribution
 HiddenArtifactTrackerFuncs["Ashbringer"] =
 	function()
-
-		--track questline?
-		HiddenArtifactTrackerFuncs.getAK(6)
 	end
 
 --discipline
 HiddenArtifactTrackerFuncs["Light's Wrath"] =
 	function()
-		if HiddenArtifactTrackerFuncs.getAK(4) then
-			HiddenArtifactTrackerFuncs.CheckQuest(44339, "Book 1 not read", "Book 1 read")
-			HiddenArtifactTrackerFuncs.CheckQuest(44340, "Book 2 not read", "Book 2 read")
-			HiddenArtifactTrackerFuncs.CheckQuest(44341, "Book 3 not read", "Book 3 read")
-			HiddenArtifactTrackerFuncs.CheckQuest(44342, "Book 4 not read", "Book 4 read")
-			HiddenArtifactTrackerFuncs.CheckQuest(44343, "Book 5 not read", "Book 5 read")
-			HiddenArtifactTrackerFuncs.CheckQuest(44344, "Book 6 not read", "Book 6 read")
-			HiddenArtifactTrackerFuncs.CheckQuest(44345, "Book 7 not read", "Book 7 read")
-			HiddenArtifactTrackerFuncs.CheckQuest(44346, "Book 8 not read", "Book 8 read")
-			HiddenArtifactTrackerFuncs.CheckQuest(44347, "Book 9 not read", "Book 9 read")
-			HiddenArtifactTrackerFuncs.CheckQuest(44348, "Book 10 not read", "Book 10 read")
-			HiddenArtifactTrackerFuncs.CheckQuest(44349, "Book 11 not read", "Book 11 read")
-			HiddenArtifactTrackerFuncs.CheckQuest(44350, "Book 12 not read", "Book 12 read")
-		end
+		HiddenArtifactTrackerFuncs.CheckQuest(44339, "Book 1 not read", "Book 1 read")
+		HiddenArtifactTrackerFuncs.CheckQuest(44340, "Book 2 not read", "Book 2 read")
+		HiddenArtifactTrackerFuncs.CheckQuest(44341, "Book 3 not read", "Book 3 read")
+		HiddenArtifactTrackerFuncs.CheckQuest(44342, "Book 4 not read", "Book 4 read")
+		HiddenArtifactTrackerFuncs.CheckQuest(44343, "Book 5 not read", "Book 5 read")
+		HiddenArtifactTrackerFuncs.CheckQuest(44344, "Book 6 not read", "Book 6 read")
+		HiddenArtifactTrackerFuncs.CheckQuest(44345, "Book 7 not read", "Book 7 read")
+		HiddenArtifactTrackerFuncs.CheckQuest(44346, "Book 8 not read", "Book 8 read")
+		HiddenArtifactTrackerFuncs.CheckQuest(44347, "Book 9 not read", "Book 9 read")
+		HiddenArtifactTrackerFuncs.CheckQuest(44348, "Book 10 not read", "Book 10 read")
+		HiddenArtifactTrackerFuncs.CheckQuest(44349, "Book 11 not read", "Book 11 read")
+		HiddenArtifactTrackerFuncs.CheckQuest(44350, "Book 12 not read", "Book 12 read")
 	end
 
 --holy (priest)
@@ -190,19 +176,16 @@ HiddenArtifactTrackerFuncs["Secrets of the Void"] = HiddenArtifactTrackerFuncs["
 --assassination
 HiddenArtifactTrackerFuncs["The Kingslayers"] =
 	function()
-		HiddenArtifactTrackerFuncs.getAK(4)
 	end
 
 --outlaw
 HiddenArtifactTrackerFuncs["The Dreadblades"] =
 	function()
-		HiddenArtifactTrackerFuncs.getAK(5)
 	end
 
 --elemental
 HiddenArtifactTrackerFuncs["The Fist of Ra-den"] =
 	function()
-		HiddenArtifactTrackerFuncs.getAK(4)
 	end
 HiddenArtifactTrackerFuncs["The Highkeeper's Ward"] = HiddenArtifactTrackerFuncs["The Fist of Ra-den"]
 
@@ -220,7 +203,6 @@ HiddenArtifactTrackerFuncs["Fury of the Stonemother"] = HiddenArtifactTrackerFun
 --affliction
 HiddenArtifactTrackerFuncs["Ulthalesh, the Deadwind Harvester"] =
 	function()
-		if HiddenArtifactTrackerFuncs.getAK(5) then
 
 		--as requested by jetah! using comments from http://www.wowhead.com/quest=44083/the-grimoire-of-the-first-necrolyte#comments
 			GameTooltip:AddLine(" ")
@@ -259,13 +241,11 @@ HiddenArtifactTrackerFuncs["Ulthalesh, the Deadwind Harvester"] =
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Val'sharah: Shalas'aman",41700,1018)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Val'sharah: Aodh Witherpetal",43344,1018)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Val'sharah: Witchdoctor Grgl-Brgl",43101,1018)
-		end
 	end
 
 --Demonology
 HiddenArtifactTrackerFuncs["Skull of the Man'ari"] =
 	function()
-		HiddenArtifactTrackerFuncs.getAK(4)
 	--track heads?
 	end
 HiddenArtifactTrackerFuncs["Spine of Thal'kiel"] = HiddenArtifactTrackerFuncs["Skull of the Man'ari"]
@@ -288,9 +268,7 @@ HiddenArtifactTrackerFuncs["Warswords of the Valarjar"] =
 --protection (warrior)
 HiddenArtifactTrackerFuncs["Scale of the Earth-Warder"] =
 	function()
-		
-		if HiddenArtifactTrackerFuncs.getAK(5) then
-		
+				
 			if IsQuestFlaggedCompleted(44311) then
 				local r = HiddenArtifactTracker.colourOptions and 0 or 1
 				local g = 1
@@ -307,7 +285,6 @@ HiddenArtifactTrackerFuncs["Scale of the Earth-Warder"] =
 				local b = 1
 				GameTooltip:AddLine("Visit Neltharion's Vault in Highmountain (not Lair!).", r,g,b)
 			end
-		end
 	end
 HiddenArtifactTrackerFuncs["Scaleshard"] = HiddenArtifactTrackerFuncs["Scale of the Earth-Warder"]
 

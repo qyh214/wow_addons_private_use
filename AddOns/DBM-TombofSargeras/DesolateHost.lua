@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1896, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16683 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(118460, 118462, 119072)--118460 Engine of Souls, 118462 Soul Queen Dajahna, 119072 The Desolate Host
 mod:SetEncounterID(2054)
 mod:SetZone()
@@ -26,13 +26,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"
 )
 
---TODO, improve tormenting cries voice
---TODO, interrupt count/rotation setup? Of course that might be a mess with realm swaps.
---TODO, figure out when withered souls casts. right now based on interaction and both having 1 minute duration I highly suspect it always follows withered
---TODO, what to do with spirit chains?
---TODO, 235907 (Collapsing Fissure) has all over the place timers, fixiable?
---TODO, adds timers (not incombat log, robably need videos/scheduling
---TODO more work on tormenting cries and resuming/restarting timers when it's over.
 --[[
 (ability.id = 238570 or ability.id = 235927 or ability.id = 236542 or ability.id = 236544) and type = "begincast" or
 (ability.id = 235907 or ability.id = 236072 or ability.id = 236507 or ability.id = 235969 or ability.id = 236449 or ability.id =  236138 or ability.id = 236131) and type = "cast" or
@@ -50,7 +43,7 @@ local warnBonecageArmor				= mod:NewTargetAnnounce(236513, 3)
 --Spirit Realm
 local warnSoulbind					= mod:NewTargetAnnounce(236459, 4)
 local warnWither					= mod:NewTargetAnnounce(236138, 3, nil, "Healer", 2)
-local warnShatteringScream			= mod:NewTargetAnnounce(235969, 4)--This warning DOES need to be cross phase
+local warnShatteringScream			= mod:NewTargetAnnounce(235969, 4, nil, false, 2)--This warning DOES need to be cross phase
 local warnSpiritChains				= mod:NewTargetAnnounce(236361, 3, nil, false, 2)
 --Desolate Host
 local warnTorment					= mod:NewStackAnnounce(236548, 3)
@@ -238,7 +231,7 @@ function mod:SPELL_CAST_START(args)
 		countdownSunderingDoom:Start()
 	elseif spellId == 236544 then--Doomed Sunering (spirit realm soaks)
 		if UnitBuff("player", spiritRealm) or UnitDebuff("player", spiritRealm) then--Figure out which it is
-			specWarnDoomedSunderingGather:Show(COMPACT_UNIT_FRAME_PROFILE_SORTBY_GROUP)
+			specWarnDoomedSunderingGather:Show(BOSS)
 			voiceDoomedSunderin:Play("gathershare")
 		else
 			specWarnDoomedSunderingRun:Show()
@@ -335,14 +328,18 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnTormentingCries:Show(args.destName)
 		end
 	elseif spellId == 236513 then
+		if self.Options.NPAuraOnBonecageArmor then
+			if self:IsMythic() then
+				DBM.Nameplate:Show(true, args.destGUID, spellId, nil, 180)
+			else
+				DBM.Nameplate:Show(true, args.destGUID, spellId, nil, 60)
+			end
+		end
 		local cid = self:GetCIDFromGUID(args.destGUID)
 		if self.Options.IgnoreTemplarOn3Tank and (cid == 119938 or cid == 118715) and self.vb.tankCount >= 3 then return end--Reanimated templar
 		self.vb.boneArmorCount = self.vb.boneArmorCount + 1
-		if self:AntiSpam(4, args.destName) then
+		if self:AntiSpam(4, args.destName) and self.vb.boneArmorCount == 1 then
 			warnBonecageArmor:Show(args.destName)
-		end
-		if self.Options.NPAuraOnBonecageArmor then
-			DBM.Nameplate:Show(true, args.destGUID, spellId)
 		end
 	elseif (spellId ==  236138 or spellId == 236131) then
 		warnWither:CombinedShow(0.3, args.destName)
@@ -351,7 +348,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			voiceWither:Play("switchphase")
 		end
 	elseif spellId == 235969 then
-		if args:IsPlayer() then
+		if args:IsPlayer() and self:AntiSpam(5, 2) then
 			if self.vb.boneArmorCount > 0 then
 				specWarnShatteringScreamAdd:Show(boneArmor)
 				voiceShatteringScream:Play("getboned")
@@ -395,12 +392,12 @@ function mod:SPELL_AURA_REMOVED(args)
 			yellSpearofAnguish:Cancel()
 		end
 	elseif spellId == 236513 then--Bonecage Armor
-		local cid = self:GetCIDFromGUID(args.destGUID)
-		if self.Options.IgnoreTemplarOn3Tank and (cid == 119938 or cid == 118715) and self.vb.tankCount >= 3 then return end--Reanimated templar
-		self.vb.boneArmorCount = self.vb.boneArmorCount - 1
 		if self.Options.NPAuraOnBonecageArmor then
 			DBM.Nameplate:Hide(true, args.destGUID, spellId)
 		end
+		local cid = self:GetCIDFromGUID(args.destGUID)
+		if self.Options.IgnoreTemplarOn3Tank and (cid == 119938 or cid == 118715) and self.vb.tankCount >= 3 then return end--Reanimated templar
+		self.vb.boneArmorCount = self.vb.boneArmorCount - 1
 	elseif spellId == 235969 and args:IsPlayer() then--Shattering Scream
 		yellShatteringScream:Cancel()
 	elseif spellId == 236072 then--Wailing Souls

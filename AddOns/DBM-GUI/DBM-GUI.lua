@@ -43,7 +43,7 @@
 --
 
 
-local revision =("$Revision: 16623 $"):sub(12, -3)
+local revision =("$Revision: 16764 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -248,6 +248,7 @@ local function MixinSharedMedia3(mediatype, mediatable)
 		LSM:Register("sound", "Void Reaver: Marked", [[Sound\Creature\VoidReaver\TEMPEST_VoidRvr_Aggro01.ogg]])
 		LSM:Register("sound", "Kaz'rogal: Marked", [[Sound\Creature\KazRogal\CAV_Kaz_Mark02.ogg]])
 		LSM:Register("sound", "C'Thun: You Will Die!", [[Sound\Creature\CThun\CThunYouWillDIe.ogg]])
+		LSM:Register("sound", "Thrall: That's Incredible!", [[Interface\AddOns\DBM-Core\sounds\incredible.ogg]])
 		--Do to terrible coding in LSM formating, it's not possible to do this a nice looking way
 		if DBM.Options.CustomSounds >= 1 then
 			LSM:Register("sound", "DBM: Custom 1", [[Interface\AddOns\DBM-CustomSounds\Custom1.ogg]])
@@ -1423,11 +1424,13 @@ local function CreateOptionsMenu()
 		generalMessagesArea:CreateCheckButton(L.ShowEngageMessage, true, nil, "ShowEngageMessage")
 		generalMessagesArea:CreateCheckButton(L.ShowDefeatMessage, true, nil, "ShowDefeatMessage")
 		generalMessagesArea:CreateCheckButton(L.ShowGuildMessages, true, nil, "ShowGuildMessages")
+		generalMessagesArea:CreateCheckButton(L.ShowGuildMessagesPlus, true, nil, "ShowGuildMessagesPlus")
 		local generalWhispersArea = generalWarningPanel:CreateArea(L.WhisperMessages, nil, 135, true)
 		generalWhispersArea:CreateCheckButton(L.AutoRespond, true, nil, "AutoRespond")
 		generalWhispersArea:CreateCheckButton(L.EnableStatus, true, nil, "StatusEnabled")
 		generalWhispersArea:CreateCheckButton(L.WhisperStats, true, nil, "WhisperStats")
 		generalWhispersArea:CreateCheckButton(L.DisableStatusWhisper, true, nil, "DisableStatusWhisper")
+		generalWhispersArea:CreateCheckButton(L.DisableGuildStatus, true, nil, "DisableGuildStatus")
 		generalCoreArea:AutoSetDimension()
 		generalMessagesArea:AutoSetDimension()
 		generalWhispersArea:AutoSetDimension()
@@ -1518,17 +1521,17 @@ local function CreateOptionsMenu()
 		end
 
 		-- RaidWarn Duration
-		local durationSlider = raidwarnoptions:CreateSlider(L.Warn_Duration, 1, 20, 1, 200)
+		local durationSlider = raidwarnoptions:CreateSlider(L.Warn_Duration, 1, 10, 0.5, 200)
 		durationSlider:SetPoint('TOPLEFT', FontDropDown, "TOPLEFT", 20, -170)
 		do
 			local firstshow = true
 			durationSlider:SetScript("OnShow", function(self)
 				firstshow = true
-				self:SetValue(DBM.Options.WarningDuration)
+				self:SetValue(DBM.Options.WarningDuration2)
 			end)
 			durationSlider:HookScript("OnValueChanged", function(self)
 				if firstshow then firstshow = false return end
-				DBM.Options.WarningDuration = self:GetValue()
+				DBM.Options.WarningDuration2 = self:GetValue()
 				DBM:UpdateWarningOptions()
 				DBM:AddWarning(DBM_CORE_MOVE_WARNING_MESSAGE)
 			end)
@@ -2518,17 +2521,17 @@ local function CreateOptionsMenu()
 			end)
 		end
 
-		local durationSlider = specArea:CreateSlider(L.Warn_Duration, 1, 20, 1, 150)
+		local durationSlider = specArea:CreateSlider(L.Warn_Duration, 1, 10, 0.5, 150)
 		durationSlider:SetPoint("LEFT", fontSizeSlider, "RIGHT", 20, 0)
 		do
 			local firstshow = true
 			durationSlider:SetScript("OnShow", function(self)
 				firstshow = true
-				self:SetValue(DBM.Options.SpecialWarningDuration)
+				self:SetValue(DBM.Options.SpecialWarningDuration2)
 			end)
 			durationSlider:HookScript("OnValueChanged", function(self)
 				if firstshow then firstshow = false return end
-				DBM.Options.SpecialWarningDuration = self:GetValue()
+				DBM.Options.SpecialWarningDuration2 = self:GetValue()
 				DBM:UpdateSpecialWarningOptions()
 				DBM:ShowTestSpecialWarning()--Pass with no sound, disabling both flash and sound play. This is a duration slider so it only needs font
 			end)
@@ -3448,7 +3451,7 @@ local function CreateOptionsMenu()
 	do
 		local hideBlizzPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_HideBlizzard, "option")
 		local hideBlizzArea = hideBlizzPanel:CreateArea(L.Area_HideBlizzard, nil, 315, true)
-		hideBlizzArea:CreateCheckButton(L.HideBossEmoteFrame, true, nil, "HideBossEmoteFrame")
+		hideBlizzArea:CreateCheckButton(L.HideBossEmoteFrame, true, nil, "HideBossEmoteFrame2")
 		hideBlizzArea:CreateCheckButton(L.HideWatchFrame, true, nil, "HideObjectivesFrame")
 		hideBlizzArea:CreateCheckButton(L.HideGarrisonUpdates, true, nil, "HideGarrisonToasts")
 		hideBlizzArea:CreateCheckButton(L.HideGuildChallengeUpdates, true, nil, "HideGuildChallengeUpdates")

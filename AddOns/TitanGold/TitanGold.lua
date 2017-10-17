@@ -265,10 +265,10 @@ function TitanPanelGoldButton_GetTooltipText()
 		local ttlgold = 0
 		local show_labels = (TitanGetVar(TITAN_GOLD_ID, "ShowCoinLabels")
 			or TitanGetVar(TITAN_GOLD_ID, "ShowCoinIcons"))
-	
+
 		-- This next section will sort the array based on user preference 
 		-- either by name, or by gold amount decending.
-	
+
 		local GoldSaveSorted = {};
 		for index, money in pairs(GoldSave) do
 			character, charserver = string.match(index, '(.*)_(.*)');
@@ -278,20 +278,19 @@ function TitanPanelGoldButton_GetTooltipText()
 				end
 			end
 		end
-	
+
 		if TitanGetVar(TITAN_GOLD_ID, "SortByName") then
 			table.sort(GoldSaveSorted, function (key1, key2) return GoldSave[key1].name < GoldSave[key2].name end)
 		else
 			table.sort(GoldSaveSorted, function (key1, key2) return GoldSave[key1].gold > GoldSave[key2].gold end)
 		end
-	
+
 		for i = 1, getn(GoldSaveSorted) do 
 			character, charserver = string.match(GoldSaveSorted[i], '(.*)_(.*)');
 			if (character) then
 				if (charserver == server) then
 					if (GoldSave[GoldSaveSorted[i]].show) then
 						coin_str = NiceCash(GoldSave[GoldSaveSorted[i]].gold, false, false)
-	
 						currentMoneyRichText = currentMoneyRichText.."\n"..character.."\t"..coin_str
 					end
 				end
@@ -299,7 +298,7 @@ function TitanPanelGoldButton_GetTooltipText()
 		end
 	else
 		-- Parse the database and display all characters from the same faction and combined servers
-		for ms = 1, 2 do
+		for ms = 1, countelements do
 			local server = realmNames[ms].."::"..UnitFactionGroup("Player");
 			GoldSave[GOLD_INDEX].gold = GetMoney("player")
 			local coin_str = ""
@@ -307,28 +306,30 @@ function TitanPanelGoldButton_GetTooltipText()
 			local ttlgold = 0
 			local show_labels = (TitanGetVar(TITAN_GOLD_ID, "ShowCoinLabels")
 				or TitanGetVar(TITAN_GOLD_ID, "ShowCoinIcons"))
-		
+
 			-- This next section will sort the array based on user preference 
 			-- either by name, or by gold amount decending.
-		
+
 			local GoldSaveSorted = {};
 			for index, money in pairs(GoldSave) do
 				character, charserver = string.match(index, '(.*)_(.*)');
+				charserver = string.gsub(charserver, "%s", "");
 				if (character) then
 					if (charserver == server) then
 						table.insert(GoldSaveSorted, index); -- insert all keys from hash into the array
 					end
 				end
 			end
-		
+
 			if TitanGetVar(TITAN_GOLD_ID, "SortByName") then
 				table.sort(GoldSaveSorted, function (key1, key2) return GoldSave[key1].name < GoldSave[key2].name end)
 			else
 				table.sort(GoldSaveSorted, function (key1, key2) return GoldSave[key1].gold > GoldSave[key2].gold end)
 			end
-		
+
 			for i = 1, getn(GoldSaveSorted) do 
 				character, charserver = string.match(GoldSaveSorted[i], '(.*)_(.*)');
+				charserver = string.gsub(charserver, "%s", "");
 				if (character) then
 					if (charserver == server) then
 						if (GoldSave[GoldSaveSorted[i]].show) then
@@ -341,7 +342,7 @@ function TitanPanelGoldButton_GetTooltipText()
 			end
 		end
 	end
-	
+
 	-- Display total gold
 	coin_str = NiceCash(TitanPanelGoldButton_TotalGold(), false, false)
 	currentMoneyRichText = currentMoneyRichText.."\n"
@@ -403,7 +404,7 @@ function TitanPanelGoldButton_GetTooltipText()
 			GOLD_COLOR = TITAN_GOLD_RED;
 		end
 	end
-	
+
 	return ""..TitanUtils_GetColoredText(final_tooltip,GOLD_COLOR)..FONT_COLOR_CODE_CLOSE
 		..currentMoneyRichText
 		..sessionMoneyRichText
@@ -460,12 +461,13 @@ function TitanPanelGoldButton_TotalGold()
 			end
 		end
 	else
-		for ms = 1, 2 do
+		for ms = 1, countelements do
 			local server = realmNames[ms].."::"..UnitFactionGroup("Player");
 			GoldSave[GOLD_INDEX].gold = GetMoney("player")
 	
 			for index, money in pairs(GoldSave) do
 				local character, charserver = string.match(index, '(.*)_(.*)');
+				charserver = string.gsub(charserver, "%s", "");
 				if (character) then
 					if (charserver == server) then
 						if GoldSave[index].show then

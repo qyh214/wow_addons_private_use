@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1898, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16672 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16779 $"):sub(12, -3))
 mod:SetCreatureID(117269)--121227 Illiden? 121193 Shadowsoul
 mod:SetEncounterID(2051)
 mod:SetZone()
@@ -26,9 +26,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"--Illiden might cast important stuff, or adds?
 )
 
---TODO, fine tune reflections with appropriate functions like range, etc if needed. Custom voices with correct actions other than "targetyou"
---TODO, verify/correct event for Malignant Anguish, it's likely a channeled/buff type interrupt since spellID has no cast time.
---TODO, if multiple hopelessness adds spawn at once, auto mark them so healers can be assigned to diff targets by raid icon
 --TODO, do we need shadow gaze warnings for player other then self?
 --TODO, how many shadowsouls? Also add a "remaining warning" for it as well.
 --TODO, deal wih wailing timer if tank suicides during spell cast start (and before success fires)
@@ -126,7 +123,7 @@ local voiceFelclaws					= mod:NewVoice(239932)--tauntboss
 local voiceRupturingSingularity		= mod:NewVoice(235059)--carefly
 local voiceArmageddon				= mod:NewVoice(240910)--helpsoak
 local voiceSRWailing				= mod:NewVoice(236378)--targetyou (temp, more customized after seen)
-local voiceSRErupting				= mod:NewVoice(236710)--targetyou (temp, more customized after seen)
+local voiceSRErupting				= mod:NewVoice(236710)--targetyou
 local voiceLingeringEruption		= mod:NewVoice(243536)--watchorb/keepmove
 --Intermission: Eternal Flame
 local voiceFocusedDreadflame		= mod:NewVoice(238502)--helpsoak/range5/targetyou
@@ -203,7 +200,7 @@ local function handleMissingEmote(self)
 	timerRupturingSingularity:Start(8.2, self.vb.singularityCount)
 	countdownSingularity:Start(8.2)
 	if self:IsMythic() then
-		local timer = phase1MythicSingularityTimers[self.vb.singularityCount+1]
+		local timer = phase1point5MythicSingularityTimers[self.vb.singularityCount+1]
 		if timer then
 			self:Schedule(timer, handleMissingEmote, self)--Already scheduled on delya
 			timerRupturingSingularityCD:Start(timer-1.5, self.vb.singularityCount+1)
@@ -227,18 +224,20 @@ function mod:OnCombatStart(delay)
 	self.vb.wailingCount = 0
 	timerArmageddonCD:Start(10-delay, 1)
 	countdownArmageddon:Start(10-delay)
-	if not self:IsEasy() then
-		timerShadReflectionEruptingCD:Start(21-delay)--Erupting
-	end
 	timerFelclawsCD:Start(25-delay, 1)
 	countdownFelclaws:Start(25-delay)
-	if not self:IsLFR() then
-		timerRupturingSingularityCD:Start(58-delay, 1)
-	end
 	if self:IsMythic() then
+		timerShadReflectionEruptingCD:Start(18.5-delay)
+		timerRupturingSingularityCD:Start(55.2-delay, 1)
 		timerShadReflectionWailingCD:Start(56, 1)
 		berserkTimer:Start(840-delay)--apparently it's anywhere between 14:00 and 14:10 depending on RNG
 	else
+		if not self:IsLFR() then
+			timerRupturingSingularityCD:Start(58-delay, 1)
+			if not self:IsEasy() then
+				timerShadReflectionEruptingCD:Start(21-delay)--Erupting
+			end
+		end
 		berserkTimer:Start(600-delay)
 	end
 end
@@ -363,7 +362,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 236378 then--Wailing Shadow Reflection (Stage 1)
 		self.vb.wailingCount = self.vb.wailingCount + 1
 		if self:IsMythic() and self.vb.phase == 2 then
-			if self.vb.wailingCount == 1 then--Need more data
+			--if self.vb.wailingCount == 1 then--Need more data
+			if self.vb.wailingCount % 2 == 0 then--Alternation assumed
+				timerShadReflectionWailingCD:Start(169.1, self.vb.wailingCount+1)
+			else
 				timerShadReflectionWailingCD:Start(60, self.vb.wailingCount+1)
 			end
 		else
@@ -371,9 +373,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 236710 then--Erupting Shadow Reflection (Stage 1)
 		self.vb.eruptingReflectionIcon = 3
-		if self.vb.phase == 2 then
-			timerShadReflectionEruptingCD:Start(112)--Erupting
-		else--Should only happen in mythic phase 1
+		if self.vb.phase == 2 and not self:IsMythic() then
+			timerShadReflectionEruptingCD:Start(112)
+		elseif self:IsMythic() and self.vb.phase == 1 then
 			timerShadReflectionEruptingCD:Start(109)
 		end
 	elseif spellId == 237590 then--Hopeless Shadow Reflection (Stage 2)
@@ -495,7 +497,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		local icon = self.vb.eruptingReflectionIcon
 		if args:IsPlayer() then
 			specWarnSRErupting:Show(self:IconNumToTexture(icon))
-			voiceSRErupting:Play("targetyou")
+			if self:IsMythic() then
+				voiceSRErupting:Play("mm"..icon)
+			else
+				voiceSRErupting:Play("targetyou")
+			end
 			yellSRErupting:Countdown(8, nil, icon)
 		end
 		if self.Options.SetIconOnEruptingReflection and self:IsMythic() then
@@ -609,11 +615,12 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerArmageddonCD:Start(19.4, 1)
 			countdownArmageddon:Start(19.4)
 			timerRupturingSingularityCD:Start(22.7, 1)
-			timerShadReflectionHopelessCD:Start(27.9)
+			timerShadReflectionHopelessCD:Start(27)
 			timerFocusedDreadflameCD:Start(33.4, 1)
 			countdownFocusedDread:Start(33.4)
-			timerShadReflectionWailingCD:Start(50.4, 1)
+			timerShadReflectionWailingCD:Start(49.5, 1)
 			timerBurstingDreadflameCD:Start(53.4, 1)
+			timerShadReflectionEruptingCD:Start(164, 1)
 		else
 			timerFelclawsCD:Start(9, 1)
 			countdownFelclaws:Start(9)
@@ -706,6 +713,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 			if self:IsMythic() then
 				local timer = phase1point5MythicSingularityTimers[self.vb.singularityCount+1]
 				if timer then
+					self:Schedule(timer+1.5, handleMissingEmote, self)
 					timerRupturingSingularityCD:Start(timer, self.vb.singularityCount+1)
 				end
 			else
@@ -726,7 +734,6 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 			if self:IsMythic() then
 				local timer = phase1MythicSingularityTimers[self.vb.singularityCount+1]
 				if timer then
-					self:Schedule(timer+1.5, handleMissingEmote, self)
 					timerRupturingSingularityCD:Start(timer, self.vb.singularityCount+1)
 				end
 			elseif self:IsEasy() then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1861, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16687 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(115767)--116328 Vellius, 115795 Abyss Stalker, 116329/116843 Sarukel
 mod:SetEncounterID(2037)
 mod:SetZone()
@@ -19,10 +19,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO: Do more with who has Buffer fish?
---TODO, automate Hydra Shot and assigning of soakers?
---TODO, target scan dark depths?
---TODO, hydra shot lowered to 30 on mythic, see if still 40 in other modes
 --[[
 (ability.id = 230273 or ability.id = 232722 or ability.id = 230384 or ability.id = 232746 or ability.id = 232757 or ability.id = 232827 or ability.id = 232756 or ability.id = 230358) and type = "begincast" or
 (ability.id = 230201 or ability.id = 232745) and type = "cast" or
@@ -119,6 +115,7 @@ local thunderingShock = GetSpellInfo(230358)
 local consumingHunger = GetSpellInfo(230384)
 local hydraIcons = {}
 local eventsRegistered = false
+local p3MythicCrashingWave = {30.9, 30.9, 40.6, 35.8, 30.9}--All minus 2 because timer starts at SUCCESS but is for START
 
 --/run DBM:GetModByName("1861"):TestHydraShot(1)
 function mod:TestHydraShot(icon)
@@ -208,7 +205,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			if not self.Options.TauntOnPainSuccess then
 				local targetName = UnitName("boss1target") or DBM_CORE_UNKNOWN
-				if self:AntiSpam(5, targetName) then
+				if self:AntiSpam(5, targetName) and UnitName("player") ~= targetName then
 					specWarnBurdenofPainTaunt:Show(targetName)
 					voiceBurdenofPain:Play("tauntboss")
 				end
@@ -237,7 +234,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 232757 then
 		self.vb.crashingWaveCount = self.vb.crashingWaveCount + 1
 		if self:IsMythic() and self.vb.phase == 3 then
-			timerCrashingWaveCD:Start(31.5, self.vb.crashingWaveCount+1)--33-45
+			local timer = p3MythicCrashingWave[self.vb.crashingWaveCount+1]
+			if timer then
+				timerCrashingWaveCD:Start(timer, self.vb.crashingWaveCount+1)
+			else
+				timerCrashingWaveCD:Start(30.9, self.vb.crashingWaveCount+1)
+			end
 		else
 			timerCrashingWaveCD:Start(nil, self.vb.crashingWaveCount+1)
 		end
@@ -420,7 +422,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				countdownBurdenofPain:Start(23.5)
 			end
 			timerFromtheAbyssCD:Start(28)
-			timerCrashingWaveCD:Start(30, 1)
+			timerCrashingWaveCD:Start(30, 1)--START
 			timerConsumingHungerCD:Start(39)--SUCCESS
 			timerSlicingTornadoCD:Start(51, self.vb.tornadoCount+1)
 			countdownSlicingTorando:Start(51)

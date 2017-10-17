@@ -1315,7 +1315,7 @@ local function SetHooks()
 end
 
 function QuestObjectiveItem_OnEnter(self)	-- replacement
-	QUEST_TRACKER_MODULE:OnBlockHeaderEnter(self.block)
+	self.block.module:OnBlockHeaderEnter(self.block)
 	if KTF.anchorLeft then
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT", 3)
 	else
@@ -1325,7 +1325,7 @@ function QuestObjectiveItem_OnEnter(self)	-- replacement
 end
 
 function QuestObjectiveItem_OnLeave(self)	-- replacement
-	QUEST_TRACKER_MODULE:OnBlockHeaderLeave(self.block)
+	self.block.module:OnBlockHeaderLeave(self.block)
 	GameTooltip:Hide()
 end
 

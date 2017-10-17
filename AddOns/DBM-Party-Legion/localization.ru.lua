@@ -302,20 +302,20 @@ L:SetMiscLocalization({
 	Pouch3			= "Мой друг говорил, что шпион просто обожает золото, и поэтому шпионский поясной кошель туго набит золотыми монетами.",
 	Pouch4			= "Я слышал, поясной кошель шпиона расшит золотом, чтобы подчеркнуть утонченность.",
 	--
-	Gloves		= "gloves",
-	NoGloves	= "no gloves",
-	Cape		= "cape",
-	Nocape		= "no cape",
-	LightVest	= "light vest",
-	DarkVest	= "dark vest",
-	Female		= "female",
-	Male		= "male",
-	ShortSleeve = "short sleeves",
-	LongSleeve	= "long sleeves",
-	Potions		= "potions",
-	NoPotions	= "no potions",
-	Book		= "book",
-	Pouch		= "pouch"
+	Gloves		= "Носит перчатки / Wears gloves",
+	NoGloves	= "Без перчаток / No gloves",
+	Cape		= "Носит плащ / Wearing a cape",
+	Nocape		= "Без плаща / No cape",
+	LightVest	= "Светлый жилет / Light vest",
+	DarkVest	= "Темный жилет / Dark vest",
+	Female		= "Женщина / Female",
+	Male		= "Мужчина / Male",
+	ShortSleeve = "Короткие рукава / Short sleeves",
+	LongSleeve	= "Длинные рукава / Long sleeves",
+	Potions		= "Зелья / Potions",
+	NoPotions	= "Нет зелий / No potions",
+	Book		= "Книга / Book",
+	Pouch		= "Кошель / Pouch"
 })
 
 -----------------------

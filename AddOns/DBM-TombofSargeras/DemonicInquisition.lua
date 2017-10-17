@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1867, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16650 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(116691, 116689)--Belac (116691), Atrigan (116689)
 mod:SetEncounterID(2048)
 mod:SetZone()
@@ -25,9 +25,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_POWER_FREQUENT player"
 )
 
---TODO, Handling of Confess and Cage?
---TODO, target scan Scythe Sweep? or is it always on tank and should only be tank warning?
---TODO, countdown options for relevant timers. If balac doesn't get reliable timers just put countdowns on all 3 of Atrigans spells?
 --[[
 (ability.id = 233426 or ability.id = 234015 or ability.id = 239401) and type = "begincast"or
 (ability.id = 233431 or ability.id = 233983 or ability.id = 233894) and type = "cast" or
@@ -115,7 +112,7 @@ local function updateAllAtriganTimers(self, ICD, ignoreBoneSaw)
 		timerScytheSweepCD:Stop()
 		timerScytheSweepCD:Update(elapsed, total+extend)
 	end
-	if timerCalcifiedQuillsCD:GetRemaining() < ICD then--3
+	if timerCalcifiedQuillsCD:GetRemaining() < ICD then--5
 		local elapsed, total = timerCalcifiedQuillsCD:GetTime()
 		local extend = ICD - (total-elapsed)
 		DBM:Debug("timerCalcifiedQuillsCD extended by: "..extend, 2)

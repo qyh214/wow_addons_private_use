@@ -6,6 +6,7 @@ HiddenArtifactTracker.forceTracking = false;	--extra tracking for artifact speci
 
 if HiddenArtifactTrackerChars == nil then HiddenArtifactTrackerChars ={} end
 HiddenArtifactTrackerChars.trackBosses = true;	--tracking for mage tower dungeon completion
+HiddenArtifactTrackerChars.hideArtBar= false;	--hiding the artifact XP tracker bar
 
 --DATA
 local arti_names = {
@@ -114,6 +115,22 @@ local artNumbers = {
 	[128288] = "Scaleshard"
 	}
 
+local localisedDungeons = {
+				["Assault on Violet Hold"]=GetLFGDungeonInfo(1209),
+				["Black Rook Hold"]=GetLFGDungeonInfo(1205),
+				["Cathedral of Eternal Night"]=GetLFGDungeonInfo(1488),
+				["Court of Stars"]=GetLFGDungeonInfo(1318),
+				["Darkheart Thicket"]=GetLFGDungeonInfo(1202),
+				["Eye of Azshara"]=GetLFGDungeonInfo(1175),
+				["Halls of Valor"]=GetLFGDungeonInfo(1194),
+				["Maw of Souls"]=GetLFGDungeonInfo(1192),
+				["Neltharion's Lair"]=GetLFGDungeonInfo(1207),
+				["Lower Karazhan"]=GetLFGDungeonInfo(1475),
+				["Return to Karazhan"]=GetLFGDungeonInfo(1474),
+				["The Arcway"]=GetLFGDungeonInfo(1190),
+				["Vault of the Wardens"]=GetLFGDungeonInfo(1044),
+				["Seat of the Triumvirate"]=GetLFGDungeonInfo(1535)
+			}
 
 SLASH_HIDDENAT1 = '/hat'
 function SlashCmdList.HIDDENAT(msg, editbox)
@@ -132,15 +149,68 @@ function SlashCmdList.HIDDENAT(msg, editbox)
 			HiddenArtifactTracker.forceTracking = not HiddenArtifactTracker.forceTracking
 		elseif imsg=="mage" then
 			HiddenArtifactTrackerChars.trackBosses = not HiddenArtifactTrackerChars.trackBosses
+		elseif imsg=="apbar" then
+			if HiddenArtifactTrackerChars.hideArtBar == false or HiddenArtifactTrackerChars.hideArtBar == nil then
+		 	--toggle to the HIDING state, and hide
+			print("The Artifact Power bar is now hidden.")
+				HiddenArtifactTrackerChars.hideArtBar = true
+				HiddenArtifactTrackerFuncs.hideBar()
+			else
+				HiddenArtifactTrackerChars.hideArtBar = false			--toggle to the SHOWING state, but only show if an artifact is actually equipped
+			print("The Artifact Power bar has been returned to default behaviour.")
+				if HiddenArtifactTrackerFuncs.isArtEquipped() and (not MainMenuExpBar:IsVisible() or not ReputationWatchBar:IsVisible() ) then
+					MainMenuMaxLevelBar0:GetParent():Hide()
+					ArtifactWatchBar:Show()
+				end
+			end
 		else
 			success = 0
 		end
 	end
 
 	if success ~= 1 or msg == "" then
-		print("Usage: /hat <option> where option is:\noff - deactivate\non - enable\nadv - toggle advanced tracking\ncolour - toggle coloured/white text\nmage - toggle display of dungeon boss tracking for mage tower skin")
+		print("Usage: /hat <option> where option is:\noff - deactivate\non - enable\nadv - toggle advanced tracking\ncolour - toggle coloured/white text\nmage - toggle display of dungeon boss tracking for mage tower skin\napbar - toggle display of the Artifact power bar")
 	end
 end
+
+--these hide the artifact XP bar if something tries to show it, and we have set to hide
+local artbarShow = ArtifactWatchBar:GetScript("OnShow")
+local artbarHide = MainMenuMaxLevelBar0:GetParent():GetScript("OnHide")
+ArtifactWatchBar:SetScript("OnShow", 
+	function(...)
+		artbarShow(...)
+		HiddenArtifactTrackerFuncs.hideBar()
+	end)
+function HiddenArtifactTrackerFuncs.hideBar()
+		if HiddenArtifactTrackerChars.hideArtBar==true then
+			ArtifactWatchBar:Hide()
+			if not MainMenuExpBar:IsVisible() and not ReputationWatchBar:IsVisible() then
+				ArtifactWatchBar:Hide()
+				MainMenuMaxLevelBar0:GetParent():Show()
+			elseif not MainMenuExpBar:IsVisible() or not ReputationWatchBar:IsVisible() then
+				ArtifactWatchBar:Hide()
+				MainMenuMaxLevelBar0:GetParent():Hide()
+			end
+		end
+
+		if not MainMenuExpBar:IsVisible() and HiddenArtifactTrackerChars.hideArtBar==true then
+			ReputationWatchBar:ClearAllPoints()
+			ReputationWatchBar:SetPoint("BOTTOM", 0, 42)
+		else
+			ReputationWatchBar:ClearAllPoints()
+			ReputationWatchBar:SetPoint("BOTTOM", 0, 50)
+		end
+end
+function HiddenArtifactTrackerFuncs.isArtEquipped()
+	for key,value in pairs(artNumbers) do
+		if IsEquippedItem(key) then
+			return true
+		end
+	end
+	return false
+end
+
+MainMenuMaxLevelBar0:GetParent():SetScript("OnHide", ArtifactWatchBar:GetScript("OnShow"))
 
 local handler = GameTooltip:GetScript("OnTooltipSetItem")
 GameTooltip:SetScript("OnTooltipSetItem",
@@ -149,6 +219,11 @@ GameTooltip:SetScript("OnTooltipSetItem",
 
 		--default tooltip behaviours
 		handler(...)
+
+		if HiddenArtifactTrackerFuncs.recoverSaveData then 
+			HiddenArtifactTrackerFuncs.recoverSaveData()
+			HiddenArtifactTrackerFuncs.recoverSaveData = nil
+		end
 
 		-- artifact specific additional text
 		local name = GameTooltip:GetItem()
@@ -179,7 +254,7 @@ GameTooltip:SetScript("OnTooltipSetItem",
 				-- Check additional tint criteria
 				local k=GetAchievementCriteriaInfo
 				local x,b; local a=0
-				for i=1,14 do 
+				for i=1,15 do 
 					_,_,_,x,b = k(11152,i)
 					a=a+x
 				end
@@ -218,8 +293,27 @@ GameTooltip:SetScript("OnTooltipSetItem",
 				--mage dungeon colour
 				if HiddenArtifactTrackerChars[name]["completion"] < 10 then
 					GameTooltip:AddLine(" ", 1,1,1,True)
-					local col = HiddenArtifactTrackerChars[name]["completion"] / 10
-					GameTooltip:AddLine("Mage Tower dungeons: "..HiddenArtifactTrackerChars[name]["completion"].."/10", 2-2*col, 2*col, 0, True)
+
+					if HiddenArtifactTracker.colourOptions then
+						local col = HiddenArtifactTrackerChars[name]["completion"] / 10
+						GameTooltip:AddLine("Mage Tower dungeons: "..HiddenArtifactTrackerChars[name]["completion"].."/10", 2-2*col, 2*col, 0, True)
+					else
+						GameTooltip:AddLine("Mage Tower dungeons: "..HiddenArtifactTrackerChars[name]["completion"].."/10", 1,1,1, True)
+					end
+
+					for k,v in pairs(HiddenArtifactTrackerChars[name]) do
+						if k ~= "rbg" and k ~= "completion" and k ~= "quest" then
+							if v==false then
+								if HiddenArtifactTracker.colourOptions then
+								GameTooltip:AddLine(localisedDungeons[k], 1,0,0,True)
+							else
+								GameTooltip:AddLine(localisedDungeons[k].." is available.", 1,1,1,True)
+							end
+							elseif v==true and HiddenArtifactTracker.colourOptions then
+								GameTooltip:AddLine(localisedDungeons[k], 0,1,0,True)
+							end
+						end
+					end
 				end
 				
 				--mage RBG colour
@@ -229,8 +323,12 @@ GameTooltip:SetScript("OnTooltipSetItem",
 				local deltaWins = rbgWins - startWins
 				if deltaWins < 10 then
 					GameTooltip:AddLine(" ", 1,1,1,True)
-					local col = deltaWins / 10
-					GameTooltip:AddLine("Mage Tower RBG wins: "..deltaWins.."/10", 2-2*col, 2*col, 0, True)	
+					if HiddenArtifactTracker.colourOptions then
+						local col = deltaWins / 10
+						GameTooltip:AddLine("Mage Tower RBG wins: "..deltaWins.."/10", 2-2*col, 2*col, 0, True)	
+					else
+						GameTooltip:AddLine("Mage Tower RBG wins: "..deltaWins.."/10", 1,1,1, True)	
+					end
 				end
 
 			elseif HiddenArtifactTrackerChars.trackBosses and HiddenArtifactTrackerChars[name] ~= nil and IsQuestFlaggedCompleted(HiddenArtifactTrackerChars[name]["quest"]) == false then

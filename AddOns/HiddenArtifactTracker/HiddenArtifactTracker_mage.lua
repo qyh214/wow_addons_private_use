@@ -69,20 +69,20 @@ for k,v in ipairs(classWeaponQuests[classID]) do
 				["completion"]=0,
 				["quest"]=v[1],
 				["rbg"]=nil,
-
--- they used to need each dungeon seperately, this seems to have changed to just any 10; keep until live
---				["Assault on Violet Hold"]=false,
---				["Black Rook Hold"]=false,
---				["Cathedral of Eternal Night"]=false,
---				["Court of Stars"]=false,
---				["Darkheart Thicket"]=false,
---				["Eye of Azshara"]=false,
---				["Halls of Valor"]=false,
---				["Maw of Souls"]=false,
---				["Neltharion's Lair"]=false,
---				["Return to Karazhan"]=false,
---				["The Arcway"]=false,
---				["Vault of the Wardens"]=false
+				["Assault on Violet Hold"]=false,
+				["Black Rook Hold"]=false,
+				["Cathedral of Eternal Night"]=false,
+				["Court of Stars"]=false,
+				["Darkheart Thicket"]=false,
+				["Eye of Azshara"]=false,
+				["Halls of Valor"]=false,
+				["Maw of Souls"]=false,
+				["Neltharion's Lair"]=false,
+				["Lower Karazhan"]=false,
+				["Return to Karazhan"]=false,
+				["The Arcway"]=false,
+				["Vault of the Wardens"]=false,
+				["Seat of the Triumvirate"]=false
 			};
 
 	if v[3] ~= nil then -- if there's a companion weapon with the artifact, it should point at the main weapon
@@ -136,27 +136,29 @@ function HiddenArtifactTrackerFuncs.doBossKill(name)
 	end
 
 	local bossKills = {	
-			["Sael'orn"]="Assault on Violet Hold",
-			["Fel Lord Betrug"]="Assault on Violet Hold",
-			["Lord Kur'talos Ravencrest"]="Black Rook Hold",
-			["Mephistroth"]="Cathedral of Eternal Night",
-			["Advisor Melandrus"]="Court of Stars",
-			["Shade of Xavius"]="Darkheart Thicket",
-			["Wrath of Azshara"]="Eye of Azshara",
-			["Odyn"]="Halls of Valor",
-			["Helya"]="Maw of Souls",
-			["Dargrul the Underking"]="Neltharion's Lair",
-			["Viz'aduum the Watcher"]="Return to Karazhan",
-			["Advisor Vandros"]="The Arcway",
-			["Cordana Felsong"]="Vault of the Wardens",
-			["L'ura"]="Seat of the Triumvirate"
+			[EJ_GetEncounterInfo(1697)]="Assault on Violet Hold",		--Sael'orn
+			[EJ_GetEncounterInfo(1711)]="Assault on Violet Hold",		--Fel Lord Betrug
+			[EJ_GetEncounterInfo(1672)]="Black Rook Hold",			--Lord Kur'talos Ravencrest
+			[EJ_GetEncounterInfo(1878)]="Cathedral of Eternal Night",	--Mephistroth
+			[EJ_GetEncounterInfo(1720)]="Court of Stars",			--Advisor Melandrus
+			[EJ_GetEncounterInfo(1657)]="Darkheart Thicket",		--Shade of Xavius
+			[EJ_GetEncounterInfo(1492)]="Eye of Azshara",			--Wrath of Azshara
+			[EJ_GetEncounterInfo(1489)]="Halls of Valor",			--Odyn
+			[EJ_GetEncounterInfo(1663)]="Maw of Souls",			--Helya
+			[EJ_GetEncounterInfo(1687)]="Neltharion's Lair",		--Dargrul the Underking
+			[EJ_GetEncounterInfo(1838)]="Return to Karazhan",		--Viz'aduum the Watcher
+			[EJ_GetEncounterInfo(1837)]="Lower Karazhan",			--Moroes
+			[EJ_GetEncounterInfo(1501)]="The Arcway",			--Advisor Vandros
+			[EJ_GetEncounterInfo(1470)]="Vault of the Wardens",		--Cordana Felsong
+			[EJ_GetEncounterInfo(1982)]="Seat of the Triumvirate"		--L'ura
 	}
 
 	-- classWeaponQuests is now definitely not empty, so save tracking for these quest numbers
 	if bossKills[name] ~= nil then
 		for k,v in ipairs(classWeaponQuests[classID]) do
-			if IsQuestFlaggedCompleted(v[1]) then
-				HiddenArtifactTrackerChars[v[2]].completion = HiddenArtifactTrackerChars[v[2]].completion + 1 
+ 			if IsQuestFlaggedCompleted(v[1]) and HiddenArtifactTrackerChars[v[2]][bossKills[name]] ~= true then
+				HiddenArtifactTrackerChars[v[2]].completion = HiddenArtifactTrackerChars[v[2]].completion + 1
+				HiddenArtifactTrackerChars[v[2]][bossKills[name]] = true
 			end
 		end
 	end
@@ -197,32 +199,70 @@ function HiddenArtifactTrackerFuncs.undoBossKill(name)
 	-- classWeaponQuests is now definitely not empty, so save tracking for these quest numbers
 	if bossKills[name] ~= nil then
 		for k,v in ipairs(classWeaponQuests[classID]) do
-			if IsQuestFlaggedCompleted(v[1]) then
+			if IsQuestFlaggedCompleted(v[1]) and HiddenArtifactTrackerChars[v[2]][bossKills[name]] ~= false then
 				HiddenArtifactTrackerChars[v[2]].completion = HiddenArtifactTrackerChars[v[2]].completion - 1 
+				HiddenArtifactTrackerChars[v[2]][bossKills[name]] = false
 			end
 		end
 	end
 		
 end
 
---5694
-function GetStatisticId(CategoryTitle, StatisticTitle)
-	local str = ""
-	for _, CategoryId in pairs(GetStatisticsCategoryList()) do
-		local Title, ParentCategoryId, Something
-		Title, ParentCategoryId, Something = GetCategoryInfo(CategoryId)
-		
-		if Title == CategoryTitle then
-			local i
-			local statisticCount = GetCategoryNumAchievements(CategoryId)
-			for i = 1, statisticCount do
-				local IDNumber, Name, Points, Completed, Month, Day, Year, Description, Flags, Image, RewardText
-				IDNumber, Name, Points, Completed, Month, Day, Year, Description, Flags, Image, RewardText = GetAchievementInfo(CategoryId, i)
-				if Name == StatisticTitle then
-					return IDNumber
+function HiddenArtifactTrackerFuncs.recoverSaveData()
+
+	local neededKeys = {
+				["completion"]=0,
+				["quest"]=1,
+				["rbg"]=nil,
+				["Assault on Violet Hold"]=false,
+				["Black Rook Hold"]=false,
+				["Cathedral of Eternal Night"]=false,
+				["Court of Stars"]=false,
+				["Darkheart Thicket"]=false,
+				["Eye of Azshara"]=false,
+				["Halls of Valor"]=false,
+				["Maw of Souls"]=false,
+				["Neltharion's Lair"]=false,
+				["Lower Karazhan"]=false,
+				["Return to Karazhan"]=false,
+				["The Arcway"]=false,
+				["Vault of the Wardens"]=false,
+				["Seat of the Triumvirate"]=false
+			}
+
+		for k,v in pairs(neededKeys) do
+			for i,d in pairs(classWeaponQuests[classID]) do
+				if HiddenArtifactTrackerChars[d[2]][k] == nil then
+					if k~="quest" then
+						HiddenArtifactTrackerChars[d[2]][k] = v
+					else
+						HiddenArtifactTrackerChars[d[2]][k] = d[1]
+					end
 				end
+	
 			end
 		end
-	end
-	return -1
 end
+
+--5694
+--function GetStatisticId(CategoryTitle, StatisticTitle)
+--	local str = ""
+--	for _, CategoryId in pairs(GetStatisticsCategoryList()) do
+--		local Title, ParentCategoryId, Something
+--		Title, ParentCategoryId, Something = GetCategoryInfo(CategoryId)
+--		
+--		if Title == CategoryTitle then
+--			local i
+--			local statisticCount = GetCategoryNumAchievements(CategoryId)
+--			for i = 1, statisticCount do
+--				local IDNumber, Name, Points, Completed, Month, Day, Year, Description, Flags, Image, RewardText
+--				IDNumber, Name, Points, Completed, Month, Day, Year, Description, Flags, Image, RewardText = GetAchievementInfo(CategoryId, i)
+--				if Name == StatisticTitle then
+--					return IDNumber
+--				end
+--			end
+--		end
+--	end
+--	return -1
+--end
+

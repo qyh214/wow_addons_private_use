@@ -20,8 +20,6 @@ local LE_ALPHABETIC = 4
 local LE_ITEM_SOURCE = 5
 local LE_COLOR = 6
 
-local dropdownOrder = {LE_DEFAULT, LE_APPEARANCE, LE_COLOR, LE_ITEM_SOURCE, LE_ITEM_LEVEL, LE_ALPHABETIC}
-
 local L = {
 	[LE_DEFAULT] = DEFAULT,
 	[LE_APPEARANCE] = APPEARANCE_LABEL,
@@ -30,6 +28,8 @@ local L = {
 	[LE_ITEM_SOURCE] = SOURCE:gsub("[:：]", ""),
 	[LE_COLOR] = COLOR,
 }
+
+local dropdownOrder = {LE_DEFAULT, LE_APPEARANCE, LE_COLOR, LE_ITEM_SOURCE, LE_ITEM_LEVEL, LE_ALPHABETIC}
 
 local defaults = {
 	db_version = 2,
@@ -249,8 +249,7 @@ local sortFunc = {
 	end,
 }
 
--- sort again when we are sure all items are cached
--- not the most efficient way to do this
+-- sort again when we are sure all items are cached. not the most efficient way to do this
 -- this event does not seem to fire for weapons or only when mouseovering a weapon appearance (?)
 local function SortItemLevelEvent()
 	if Wardrobe:IsVisible() and (db.sortDropdown == LE_ITEM_LEVEL or db.sortDropdown == LE_ITEM_SOURCE) then
@@ -264,9 +263,7 @@ local function Model_OnEnter(self)
 		local selectedValue = L_UIDropDownMenu_GetSelectedValue(WardRobeSortDropDown)
 		
 		if selectedValue == LE_APPEARANCE or selectedValue == LE_COLOR then
-			if FileData[self.visualInfo.visualID] then
-				GameTooltip:AddLine(FileData[self.visualInfo.visualID])
-			end
+			GameTooltip:AddLine(FileData[self.visualInfo.visualID] or self.visualInfo.visualID)
 		
 		elseif selectedValue == LE_ITEM_LEVEL then
 			local avg_ilvl, min_ilvl, max_ilvl = GetItemLevel(self.visualInfo.visualID)

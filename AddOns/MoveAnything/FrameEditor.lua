@@ -256,7 +256,7 @@ function MovAny:CreateFrameEditor(id, name)
 		if fe.opt and fe.opt.disabled then
 			fe.opt.hidden = self:GetChecked() and true or nil
 		else
-			if not MovAny:ToggleHide(fe.editFrame:GetName()) then
+			if fe.editFrame and not MovAny:ToggleHide(fe.editFrame:GetName()) then
 				self:SetChecked(nil)
 			end
 		end
@@ -1841,7 +1841,7 @@ function MovAny:CreateFrameEditor(id, name)
 			end
 			self.confirm = nil
 			MovAny:UpdateGUIIfShown(true)
-		else 
+		else
 			self.confirm = time()
 			maPrint(MOVANY.FE_UNREGISTER_ALL_EVENTS_CONFIRM)
 
@@ -1870,7 +1870,7 @@ function MovAny:CreateFrameEditor(id, name)
 			end
 			self.confirm = nil
 			MovAny:UpdateGUIIfShown(true)
-		else 
+		else
 			self.confirm = time()
 			maPrint(MOVANY.FE_FORCED_LOCK_POSITION_CONFIRM)
 

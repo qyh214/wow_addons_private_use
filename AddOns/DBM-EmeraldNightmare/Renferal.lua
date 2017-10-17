@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1744, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16092 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
 mod:SetCreatureID(106087)
 mod:SetEncounterID(1876)
 mod:SetZone()
@@ -21,7 +21,6 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, Shimering Feather (212993) also missing from combat log. Will add tracking for this when blizzard revises fight when/if they fix it. If they don't, UNIT_AURA it is!
---TODO, tangled webs warnings/timers if I can find any way to detect it, right now i can't.
 --(ability.id = 212707 or ability.id = 210948 or ability.id = 210547 or ability.id = 215582 or ability.id = 210326 or ability.id = 210308 or ability.id = 218124) and type = "begincast" or (ability.id = 210864 or ability.id = 215443 or ability.id = 218630 or ability.id = 218124) and type = "cast"
 --Spider Form
 local warnSpiderForm				= mod:NewSpellAnnounce(210326, 2)

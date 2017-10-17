@@ -20,6 +20,10 @@ L:SetMiscLocalization({
 ---------------------------
 L= DBM:GetModLocalization(1987)
 
+L:SetOptionLocalization({
+	SequenceTimers =	"이전에 시전한 스킬의 타이머를 삭제해서 타이머 수를 정리합니다. 대신 약간 타이머 정확도가 떨어지게 됩니다 (1-2초 빠르게 나옴)"
+})
+
 ---------------------------
 -- War Council --
 ---------------------------
@@ -37,12 +41,6 @@ L= DBM:GetModLocalization(1985)
 
 L:SetOptionLocalization({
 	ShowAllPlatforms =	"자신의 위치와 관계 없이 모든 공대원의 단상 위치 알림 보기"
-})
-
-L:SetMiscLocalization({
-	Xoroth = "소로스를 봐라, 지옥불의 열기와 불타버린 뼈의 세계다!",
-	Rancora = "란코라를 올려다 봐라, 부패한 웅덩이와 스멀거리는 죽음의 대지다!",
-	Nathreza = "나스레자... 한때 마법과 지식의 세계였지만, 이제 그 누구도 벗어날 수 없는 뒤틀린 대지다."
 })
 
 ---------------------------

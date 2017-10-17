@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1983, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16369 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16765 $"):sub(12, -3))
 mod:SetCreatureID(122366)
 mod:SetEncounterID(2069)
 mod:SetZone()
@@ -24,6 +24,7 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, icons on necrotic embrace?
+--TODO, on phase changes most ability CDs extended by 2+ seconds, but NOT ALWAYS so difficult to hard code a rule for it right now
 --[[
 (ability.id = 243960 or ability.id = 244093 or ability.id = 243999 or ability.id = 244042) and type = "cast"
  or (ability.id = 243968 or ability.id = 243977 or ability.id = 243980 or ability.id = 243973) and type = "applydebuff" and target.name = "Omegal"
@@ -96,7 +97,7 @@ function mod:OnCombatStart(delay)
 	timerDarkFissureCD:Start(17.9-delay)--success
 	timerMarkedPreyCD:Start(25.7-delay)
 	countdownMarkedPrey:Start(25.7-delay)
-	if self:IsHard() then
+	if not self:IsEasy() then
 		timerNecroticEmbraceCD:Start(35-delay)
 		countdownNecroticEmbrace:Start(35-delay)
 		berserkTimer:Start(390-delay)--Assumed until proven otherwise
