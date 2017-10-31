@@ -7,4 +7,5 @@ select( 2, ... ).L = setmetatable({
     COPY_NAME = "Copiar Nombre",
     SEND_WHO = "¿Quién?",
     ARMORY_URL = "Armería",
+	WOW_P = "WoW Progress",
 }, { __index = select(2, ... ).L})

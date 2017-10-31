@@ -129,6 +129,7 @@ local function MakeVersionMenuTable(categoryId, versionId, baseFilter, menuType)
     local menuTable = {}
 
     for _, groupId in ipairs(C_LFGList.GetAvailableActivityGroups(categoryId)) do
+        -- print(versionId, groupId)
         if CATEGORY[versionId].groups[groupId] then
             tinsert(menuTable, MakeGroupMenuTable(categoryId, groupId, baseFilter, menuType))
         end

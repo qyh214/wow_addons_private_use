@@ -1,3 +1,7 @@
+**r1080**
+* Library fix.
+* Warlock power bar fixes.
+
 **r1078**
 * Raid anchor fixes.
 * Refactor version notifications.

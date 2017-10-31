@@ -53,6 +53,11 @@ UnitPopupButtons["ARMORY_URL"] = {
 	dist = 0
 }
 
+UnitPopupButtons["WOW_P"] = {
+	text = L.WOW_P,
+	value = "WOW_P",
+	dist = 0
+}
 -------------------------------------------------------
 -- "which" for specific button
 -------------------------------------------------------
@@ -87,6 +92,19 @@ EnhancedMenu_ButtonSet["SEND_WHO"] = {
 }
 
 EnhancedMenu_ButtonSet["ARMORY_URL"] = {
+	["SELF"] = true,
+	["PARTY"] = true,
+	["PLAYER"] = true,
+	["RAID"] = true,
+	["RAID_PLAYER"] = true,
+	["FRIEND"] = true,
+	["FRIEND_OFFLINE"] = true,
+	["CHAT_ROSTER"] = true,
+	["GUILD"] = true,
+	["GUILD_OFFLINE"] = true,
+}
+
+EnhancedMenu_ButtonSet["WOW_P"] = {
 	["SELF"] = true,
 	["PARTY"] = true,
 	["PLAYER"] = true,
@@ -166,10 +184,65 @@ local function showArmoryURL(fullName)
 	-- local armoryNoEncode = host.."wow/character/"..server.."/"..name.."/advanced"
 	
 	local editBox = ChatEdit_ChooseBoxForSend()
-	ChatEdit_ActivateChat(editBox)
+	--ChatEdit_ActivateChat(editBox)
 	editBox:SetText(armory)
 	editBox:SetCursorPosition(0)
 	editBox:HighlightText()
+	
+	StaticPopupDialogs["PHRENPOPUP"] = {
+	text = "CTRL+C to copy your link",
+	hasEditBox = 1,
+	editBoxWidth = 500,
+	OnShow = function(self)
+		local editBox = self.editBox
+		editBox:SetText(armory);
+		editBox:HighlightText();
+	end,
+	EditBoxOnEscapePressed = function(self)
+		self:GetParent():Hide()
+	end,
+	timeout = 0,
+	whileDead = 1,
+	hideOnEscape = 1
+}
+StaticPopup_Show("PHRENPOPUP","")
+end
+
+local function showWoWPURL(fullName)
+	local name, server = string.split("-", fullName)
+	if not name or name == "" then return end
+	if not server or server == "" then -- offline, set to current server
+		server = GetRealmName()
+	end
+	
+	local portal = string.lower(LCR:GetCurrentRegion())
+	local host = ("https://www.wowprogress.com/character/%s/"):format(portal)
+		local wowp = host..urlencode(server).."/"..urlencode(name)
+	-- local armoryNoEncode = host.."wow/character/"..server.."/"..name.."/advanced"
+	
+	local editBox = ChatEdit_ChooseBoxForSend()
+	--ChatEdit_ActivateChat(editBox)
+	editBox:SetText(wowp)
+	editBox:SetCursorPosition(0)
+	editBox:HighlightText()
+	
+	StaticPopupDialogs["PHRENPOPUPA"] = {
+	text = "CTRL+C to copy your link",
+	hasEditBox = 1,
+	editBoxWidth = 500,
+	OnShow = function(self)
+		local editBox = self.editBox
+		editBox:SetText(wowp);
+		editBox:HighlightText();
+	end,
+	EditBoxOnEscapePressed = function(self)
+		self:GetParent():Hide()
+	end,
+	timeout = 0,
+	whileDead = 1,
+	hideOnEscape = 1
+}
+StaticPopup_Show("PHRENPOPUPA","")
 end
 
 local function showName(fullName)	  -- FriendsMenuXP
@@ -233,6 +306,8 @@ local function ToggleEnhancedDropDownMenu(funcName, btnName)
 					info.func = function(self) showName(self.value) end
 				elseif funcName == "ARMORY_URL" then
 					info.func = function(self) showArmoryURL(self.value) end
+					elseif funcName == "WOW_P" then
+					info.func = function(self) showWoWPURL(self.value) end
 				end
 				
 				UIDropDownMenu_AddButton(info, level)
@@ -297,6 +372,12 @@ function UnitPopup_OnClick(self)
 		else
 			showArmoryURL(pName)	-- only 1 WoW account available
 		end
+	elseif self.value == "WOW_P" then
+		if numValidGameAccounts > 1 then
+			ToggleEnhancedDropDownMenu("WOW_P", L.WOW_P)
+		else
+			showWoWPURL(pName)	-- only 1 WoW account available
+		end
 		return
 	end
 	
@@ -342,6 +423,7 @@ function FriendsFrame_ShowBNDropdown(name, connected, lineID, chatType, chatFram
 					table.insert(UnitPopupMenus["BN_FRIEND"], #UnitPopupMenus["BN_FRIEND"], "GUILD_INVITE")
 					table.insert(UnitPopupMenus["BN_FRIEND"], #UnitPopupMenus["BN_FRIEND"], "COPY_NAME")
 					table.insert(UnitPopupMenus["BN_FRIEND"], #UnitPopupMenus["BN_FRIEND"], "ARMORY_URL")
+					table.insert(UnitPopupMenus["BN_FRIEND"], #UnitPopupMenus["BN_FRIEND"], "WOW_P")
 					table.insert(UnitPopupMenus["BN_FRIEND"], #UnitPopupMenus["BN_FRIEND"], "SUBSECTION_SEPARATOR")
 				end
 		elseif buttonIndex then	-- no available WoW account
@@ -386,6 +468,14 @@ EnhancedMenu_Premade = {}
 EnhancedMenu_Premade["ARMORY_URL"] = {
 	text = L.ARMORY_URL,
 	func = function(_, name) showArmoryURL(name) end,
+	notCheckable = true,
+	arg1 = nil, --Leader name goes here
+	disabled = nil, --Disabled if we don't have a leader name yet
+}
+
+EnhancedMenu_Premade["WOW_P"] = {
+	text = L.WOW_P,
+	func = function(_, name) showWoWPURL(name) end,
 	notCheckable = true,
 	arg1 = nil, --Leader name goes here
 	disabled = nil, --Disabled if we don't have a leader name yet
@@ -524,6 +614,13 @@ local LFG_LIST_APPLICANT_MEMBER_MENU = {
 		notCheckable = EnhancedMenu_Premade["ARMORY_URL"].notCheckable,
 		arg1 = EnhancedMenu_Premade["ARMORY_URL"].arg1,
         disabled = EnhancedMenu_Premade["ARMORY_URL"].disabled,
+    },
+	{	-- ARMORY_URL
+        text = EnhancedMenu_Premade["WOW_P"].text,
+		func = EnhancedMenu_Premade["WOW_P"].func,
+		notCheckable = EnhancedMenu_Premade["WOW_P"].notCheckable,
+		arg1 = EnhancedMenu_Premade["WOW_P"].arg1,
+        disabled = EnhancedMenu_Premade["WOW_P"].disabled,
     },
     {
 		text = LFG_LIST_REPORT_FOR,

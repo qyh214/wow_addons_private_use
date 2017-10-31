@@ -69,7 +69,7 @@ _L["Chief Alchemist Munculus_search"] = { "mun", "munculus", "muculus" };
 _L["Chief Alchemist Munculus_note"] = "";
 _L["The Many-Faced Devourer"] = "The Many-Faced Devourer";
 _L["The Many-Faced Devourer_search"] = { "face", "many.*face", "face.*devourer" };
-_L["The Many-Faced Devourer_note"] = "Can always be summoned. However you need to find 'Call of the Devourer' from the enemies around there and then collect 3 more things and return tu the pile of bones to summon him.";
+_L["The Many-Faced Devourer_note"] = "Can always be summoned. However you need to find 'Call of the Devourer' from the enemies around there and then collect 3 more things and return to the pile of bones to summon him.";
 _L["Portal to Squadron Commander Vishax"] = "Portal to Squadron Commander Vishax";
 _L["Portal to Squadron Commander Vishax_note"] = "First find a Smashed Portal Generator from Immortal Netherwalker. Then collect Conductive Sheath, Arc Circuit and Power Cell from Eredar War-Mind and Felsworn Myrmidon. Use the Smashed Portal Generator to unlock the portal to Vishax.";
 _L["Squadron Commander Vishax"] = "Squadron Commander Vishax";
@@ -561,6 +561,7 @@ _L["48357_44571860_note"] = "";
 _L["48357_53491281_note"] = "";
 _L["48357_45241327_note"] = "";
 _L["48357_48251289_note"] = "Bottom level, near Skreeg";
+_L["48357_44952483_note"] = "";
 -- 48371
 _L["48371_48604971_note"] = "";
 _L["48371_49865494_note"] = "";
@@ -702,6 +703,8 @@ _L["Felmaw Emberfiend"] = "Felmaw Emberfiend";
 _L["bsrare_felmawemberfiend_search"] = { "m", "felmaw", "emberfiend" };
 _L["Inquisitor Chillbane"] = "Inquisitor Chillbane";
 _L["bsrare_chillbane_search"] = { "chillbane", "chillbane" };
+_L["Brood Mother Nix"] = "Brood Mother Nix";
+_L["bsrare_broodmothernix_search"] = { "nix", "nix" };
 
 --
 --

@@ -1,5 +1,5 @@
 -- For the gnomes!!!
-local VERSION = "0.24.1";
+local VERSION = "0.25.0";
 
 local _G = getfenv(0)
 -- Libraries
@@ -508,6 +508,7 @@ nodes["ArgusMacAree"] = {
 	{ coord = 53491281, questId = 48357, icon = "treasure", group = "treasure_ma", label = "48357", loot = nil, note = _L["48357_53491281_note"] },
 	{ coord = 45241327, questId = 48357, icon = "treasure", group = "treasure_ma", label = "48357", loot = nil, note = _L["48357_45241327_note"] },
 	{ coord = 48251289, questId = 48357, icon = "treasure", group = "treasure_ma", label = "48357", loot = nil, note = _L["48357_48251289_note"] },
+	{ coord = 44952483, questId = 48357, icon = "treasure", group = "treasure_ma", label = "48357", loot = nil, note = _L["48357_44952483_note"] },
 	-- 48371
 	{ coord = 48604971, questId = 48371, icon = "treasure", group = "treasure_ma", label = "48371", loot = nil, note = _L["48371_48604971_note"] },
 	{ coord = 49865494, questId = 48371, icon = "treasure", group = "treasure_ma", label = "48371", loot = nil, note = _L["48371_49865494_note"] },
@@ -627,6 +628,7 @@ local worldmapPOI = {
 	[5299] = { npcId = 0, group = "bsrare", label = _L["Imp Mother Bruva"], search = _L["bsrare_bruva_search"] },
 	[5300] = { npcId = 0, group = "bsrare", label = _L["Flllurlokkr"], search = _L["bsrare_flllurlokkr_search"] },
 	[5301] = { npcId = 0, group = "bsrare", label = _L["Aqueux"], search = _L["bsrare_aqueux_search"] },
+	[5302] = { npcId = 0, group = "bsrare", label = _L["Brood Mother Nix"], search = _L["bsrare_broodmothernix_search"] },
 	[5303] = { npcId = 0, group = "bsrare", label = _L["Grossir"], search = _L["bsrare_grossir_search"] },
 	[5304] = { npcId = 0, group = "bsrare", label = _L["Lady Eldrathe"], search = _L["bsrare_eldrathe_search"] },
 	[5305] = { npcId = 0, group = "bsrare", label = _L["Somber Dawn"], search = _L["bsrare_somberdawn_search"] },
@@ -753,6 +755,28 @@ local function getCurrentTimeSlot( decimals, offset )
 	local slot = ((h*60+m-offset) - 9*60) / (4*60);
 	if slot < 0 then
 		slot = slot + 6;
+	end
+	if ( decimals ) then
+		return slot;
+	else
+		return floor( slot );
+	end
+end
+
+local function getCurrentTimeSlot( decimals, resetSec )
+	-- 86400     - 86400-119 = -1
+	-- 86400-120 - 72000-119 = 0
+	-- 72000-120 - 57600-119 = 1
+	-- 57600-120 - 43200-119 = 2
+	-- 43200-120 - 28800-119 = 3
+	-- 28800-120 - 14400-119 = 4
+	-- 14400-120 - 00000-119 = 5
+	if ( not resetSec ) then
+		resetSec = GetQuestResetTime();
+	end
+	local slot = (((resetSec + 120) / (4*3600))-6.0);
+	if ( slot ~= 0 ) then
+		slot = slot * (-1);
 	end
 	if ( decimals ) then
 		return slot;
@@ -1166,7 +1190,7 @@ local function LFGcreate( button, node )
 			elseif ( string.find( node["group"], "bsrare" ) ) then
 				desc = string.format( _L["listing_desc_rare"], node["label"] ) .. " Created with HandyNotes_Argus ##poi:" .. node["poiId"] .. "#hna:" .. VERSION;
 			end
-			C_LFGList.CreateListing( 16, node["label"]:sub(1,31), 0, 0, "", desc:sub(1,200), true );
+			C_LFGList.CreateListing( 16, node["label"]:sub(1,31), 820, 0, "", desc:sub(1,200), true );
 		end
 	end
 end

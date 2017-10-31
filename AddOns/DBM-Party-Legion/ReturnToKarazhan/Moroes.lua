@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1837, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16041 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16800 $"):sub(12, -3))
 mod:SetCreatureID(114312)
 mod:SetEncounterID(1961)
 mod:SetZone()
@@ -14,7 +14,7 @@ mod.noNormal = true
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 227672 227578 227545 227736",
+	"SPELL_CAST_START 227672 227578 227545 227736 227672",
 	"SPELL_CAST_SUCCESS 227872",
 	"SPELL_AURA_APPLIED 227832 227616",
 --	"SPELL_AURA_REMOVED",
@@ -38,7 +38,7 @@ local warnEmpoweredArms				= mod:NewTargetAnnounce(227616, 3)
 local specWarnCoatCheck				= mod:NewSpecialWarningDefensive(227832, nil, nil, nil, 1, 2)
 local specWarnCoatCheckHealer		= mod:NewSpecialWarningDispel(227832, "Healer", nil, nil, 1, 2)
 --Lord Crispin Ference
-local specWarnWillBreaker			= mod:NewSpecialWarningSpell(227832, "Tank", nil, nil, 1, 2)
+local specWarnWillBreaker			= mod:NewSpecialWarningSpell(227672, "Tank", nil, nil, 1, 2)
 
 --Moroes
 local timerCoatCheckCD				= mod:NewNextTimer(33.8, 227832, nil, "Tank|Healer", nil, 5)
@@ -46,7 +46,7 @@ local timerVanishCD					= mod:NewNextTimer(20.5, 227737, nil, nil, nil, 3)
 --Lady Lady Catriona Von'Indi
 local timerHealingStreamCD			= mod:NewAITimer(40, 227578, nil, nil, nil, 0)--Interruptable via stun?
 --Lord Crispin Ference
-local timerWillBreakerCD			= mod:NewAITimer(40, 227832, nil, "Tank", nil, 5)
+local timerWillBreakerCD			= mod:NewAITimer(40, 227672, nil, "Tank", nil, 5)
 
 --local berserkTimer					= mod:NewBerserkTimer(300)
 
@@ -55,7 +55,7 @@ local timerWillBreakerCD			= mod:NewAITimer(40, 227832, nil, "Tank", nil, 5)
 --Moroes
 local voiceCoatCheck				= mod:NewVoice(227832)--defensive/dispelnow
 --Lord Crispin Ference
-local voiceWillBreaker				= mod:NewVoice(227832, "Tank")--shockwave
+local voiceWillBreaker				= mod:NewVoice(227672, "Tank")--shockwave
 
 --mod:AddSetIconOption("SetIconOnCharge", 198006, true)
 mod:AddInfoFrameOption(227909, true)

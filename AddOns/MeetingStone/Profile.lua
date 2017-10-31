@@ -51,6 +51,9 @@ function Profile:OnInitialize()
             chatGroupListening = DEFAULT_CHATGROUP_LISTENING,
             chatGroupColor     = DEFAULT_CHATGROUP_COLOR,
             recent = {},
+            combatData = {
+                dd = 0, dt = 0, hd = 0, dead = 0, time = 0,
+            }
         }
     }
 
@@ -490,4 +493,15 @@ end
 function Profile:SaveLastVersion()
     self.gdb.global.version = ADDON_VERSION
     self.cdb.profile.version = ADDON_VERSION
+end
+
+function Profile:GetCombatData()
+    return self.cdb.profile.combatData
+end
+
+function Profile:ResetCombatData()
+    self.cdb.profile.combatData = {
+        dd = 0, dt = 0, hd = 0, dead = 0, time = 0,
+    }
+    return self.cdb.profile.combatData
 end

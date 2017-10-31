@@ -6,4 +6,5 @@ select( 2, ... ).L = setmetatable({
 	COPY_NAME = "复制名字",
 	SEND_WHO = "查询",
 	ARMORY_URL = "英雄榜",
+	WOW_P = "WoW Progress",
 }, { __index = select(2, ... ).L})

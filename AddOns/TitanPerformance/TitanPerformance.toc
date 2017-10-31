@@ -1,10 +1,10 @@
 ## Interface: 70300
-## Title: Titan Panel [|cffeda55fPerformance|r] |cff00aa005.12.5.70300|r
+## Title: Titan Panel [|cffeda55fPerformance|r] |cff00aa005.12.6.70300|r
 ## Notes: Adds FPS and Garbage collection information to Titan Panel
 ## Author: Titan Development Team (http://www.titanpanel.org)
 ## SavedVariables: 
 ## OptionalDeps: 
 ## Dependencies: Titan
-## Version: 5.12.5.70300
+## Version: 5.12.6.70300
 ## X-Child-Of: Titan
 TitanPerformance.xml

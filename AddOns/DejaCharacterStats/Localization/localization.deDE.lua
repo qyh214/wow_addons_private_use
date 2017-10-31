@@ -8,148 +8,84 @@ if namespace.locale == "deDE" then
 	-- The EU English game client also
 	-- uses the US English locale code.
 
--- ###########################################################################################################
--- ##	Deutsche (German) translations provided by pas06, flow0284, Markurion and Branduril on Curseforge.	##
--- ##	Thank you pas06, flow0284, Markurion and Branduril!													##
--- ###########################################################################################################
+-- #######################################################################################################################
+-- ##	Deutsche (German) translations provided by pas06, flow0284, Markurion, Branduril, and NekoNyaaaa on Curseforge.	##
+-- #######################################################################################################################
 
--- ####################
--- ## Slash Commands ##
--- ####################
-
---	L["/dcstats"] = ""
-	L["DejaCharacterStats Slash commands (/dcstats):"] = "DejaCharacterStats Slashbefehle (/dcstats):"
-	L["  /dcstats config: Open the DejaCharacterStats addon config menu."] = "  /dcstats config: Öffnet das DejaCharacterStats Konfigurationsfenster." --configuration
-	L["  /dcstats reset:  Resets DejaCharacterStats frames to default positions."] = "  /dcstats reset: Setzt DejaCharacterStats zurück."
-	L["Resetting config to defaults"] = "Einstellungen zurücksetzen." --configuration
-	L["DejaCharacterStats is currently using "] = "DejaCharacterStats benutzt zurzeit "
-	L[" kbytes of memory"] = " Kilobyte Arbeitsspeicher" --kilobytes
---	L["DejaCharacterStats is currently using "] = ""
-	L[" kbytes of memory after garbage collection"] = " Kilobyte Arbeitsspeicher nach der Speicherbereinigung" --kilobytes
---	L["config"] = "" --configuration
---	L["dumpconfig"] = "" --configuration
---	L["With defaults"] = ""
---	L["Direct table"] = ""
---	L["reset"] = ""
---	L["perf"] = "" --performance
-	L["Reset to Default"] = "Standardeinstellungen"
-
--- ################################
--- ## Global Options Left Column ##
--- ################################
-
-	L["Equipped/Available"] = "Ausgerüstet/Verfügbar"
-	L['Displays Equipped/Available item levels unless equal.'] = "Zeigt die durchschnittliche Gegenstandsstufe von angelegten und verfügbaren Gegenständen an, wenn diese nicht gleich sind."
-
-	L["Decimals"] = "Nachkommastellen"
-	L['Displays "Enhancements" category stats to two decimal places.'] = 'Zeigt die Werte in der Kategorie "Verstärkungen" mit 2 Nachkommastellen an.'
-
-	L["Ilvl Decimals"] = "Nachkommastellen Ilvl"
-	L['Displays average item level to two decimal places.'] = "Zeigt die durchschnittliche Gegenstandsstufe mit zwei Nachkommastellen an."
-
-	L['Durability '] = "Haltbarkeit "
-	L['Displays the average Durability percentage for equipped items in the stat frame.'] = "Zeigt die durchschnittliche Haltbarkeit im Hemdplatz und in der Liste unter Haltbarkeit an."
-
-	L['Repair Total '] = "Ges. Reparaturkosten "
-	L['Displays the Repair Total before discounts for equipped items in the stat frame.'] = "Zeigt die gesamten Reparaturkosten ohne Bonus für die ausgerüsteten Gegenstände in der Charakterinfo an."
-
--- ################################
-
-	L["Durability Bars"] = "Haltbarkeitsleisten"
-	L["Displays a durability bar next to each item." ] = "Zeigt neben jedem Gegenstand eine Haltbarkeitsleiste an."
-
-	L["Average Durability"] = "Durchschnittliche Haltbarkeit"
-	L["Displays average item durability on the character shirt slot and durability frames."] = "Zeigt die durchschnittliche Haltbarkeit im Hemdslot und Haltbarkeitsframe."
-
-	L["Item Durability"] = "Gegenstandshaltbarkeit"
-	L["Displays each equipped item's durability."] = "Zeigt die Haltbarkeit von jedem ausgerüsteten Gegenstand an."
-
-	L["Item Repair Cost"] = "Gegenstandsreparaturkosten"
-	L["Displays each equipped item's repair cost."] = "Zeigt die Reparaturkosten von jedem ausgerüsteten Gegenstand an."
-
--- ################################
-
-	L["Expand"] = "Erweitern"
-	L['Displays the Expand button for the character stats frame.'] = "Zeigt die Erweiterungsschaltfläche für die Charakterwerte an." --## Needs review.
-	L['Show Character Stats'] = "Zeigt die Charakterwerte"
-	L['Hide Character Stats'] = "Versteckt die Charakterwerte"
-
-	L["Scrollbar"] = "Scrollleiste"
-	L['Displays the DCS scrollbar.'] = "Zeigt den DCS Scrollbalken."
-
--- ################################
--- ## Character Options Right Column ##
--- ################################
-
-	L["Show All Stats"] = "Alle Werte anzeigen"
-	L['Checked displays all stats. Unchecked displays relevant stats. Use Shift-scroll to snap to the top or bottom.'] = "Wenn ausgewählt, werden alle Werte gezeigt. Ansonsten nur die relevanten. Halte die Umschalttaste und scrolle, um direkt an den Anfang oder ans Ende zu springen."
-
---	L["Select-A-Stat™"]  = "Select-A-Stat™ Checkbox Name" -- Try to use something snappy and silly like a Fallout or 1950's appliance feature.
-	L['Select which stats to display. Use Shift-scroll to snap to the top or bottom.'] = "Wähle die anzuzeigenden Werte aus. Halte die Umschalttaste und scrolle, um direkt an den Anfang oder ans Ende zu springen."
-
--- ################################
--- ## Stats ##
--- ################################
-
-	L["Durability"] = "Haltbarkeit" -- Be sure to include the colon ":" or it will conflict wih the options checkbox.
-	L["Durability %s"] = "Haltbarkeit %s" -- ## --> %s MUST be included <-- ## 
-	L["Average equipped item durability percentage."] = "Prozentuale Haltbarkeit der angelegten Gegenstände."
-
-	L["Repair Total"] = "Ges. Reparaturkosten" -- Be sure to include the colon ":" or it will conflict wih the options checkbox.
-	L["Repair Total %s"] = "Gesamte Reparaturkosten %s" -- ## --> %s MUST be included <-- ## 
-	L["Total equipped item repair cost before discounts."] = "Reparaturkosten für angelegte Gegenstände ohne Abzug von Rabatt." -- ## Needs review
-
--- ## Attributes ##
-
-	L["Health"] = "Gesundheit"
-	L["Power"] = "Energiequelle"
-	L["Druid Mana"] = "Druide Mana"
-	L["Armor"] = "Rüstung"
-	L["Strength"] = "Stärke"
-	L["Agility"] = "Beweglichkeit"
-	L["Intellect"] = "Intelligenz"
-	L["Stamina"] = "Ausdauer"
-	L["Damage"] = "Schaden"
-	L["Attack Power"] = "Angriffskraft"
-	L["Attack Speed"] = "Angriffstempo"
-	L["Spell Power"] = "Zaubermacht"
-	L["Mana Regen"] = "Manaregeneration"
-	L["Energy Regen"] = "Energieregeneration"
-	L["Rune Regen"] = "Runentempo"
-	L["Focus Regen"] = "Fokusregeneration"
-	L["Movement Speed"] = "Lauftempo"
-	L["Bewegungsgeschwindigkeit"] = "Lauftempo"
-	L["Durability"] = "Haltbarkeit"
-	L["Repair Total"] = "Ges. Reparaturkosten"
-
--- ## Enhancements ##
-
-	L["Critical Strike"] = "Kritische Treffer"
-	L["Haste"] = "Tempo"
-	L["Versatility"] = "Vielseitigkeit"
-	L["Mastery"] = "Meisterschaft"
-	L["Leech"] = "Lebensraub"
-	L["Avoidance"] = "Vermeidung"
-	L["Dodge"] = "Ausweichen"
-	L["Parry"] = "Parieren"
-	L["Block"] = "Blocken"
-	
--- ## Patch 7.1.0 r2 additions ##
-	L["Global Cooldown"] = "Globale Abklingzeit"
-	L["Global Cooldown %.2fs"] = "Globale Abklingzeit %.2fs"
---	L["General global cooldown for casters. Individual spells, set bonuses, talents, etc. not considered. Not suitable for melee. Improvements coming Soon(TM)."] = ""
-	L["Unlock DCS"] = "DCS freischalten"
-	L["Lock DCS"] = "DCS sperren"
-	L["Item Level 1 Decimal Place"] = "Gegenstandsstufe mit 1 Nachkommastelle"
-	L["Displays average item level to one decimal place."] = "Zeigt die durchschnittliche Gegenstandsstufe mit einer Nachkommastelle an."
-	L["Item Level 2 Decimal Places"] = "Gegenstandsstufe mit 2 Nachkommastellen"
-	L["Displays average item level to two decimal places."] = "Zeigt die durchschnittliche Gegenstandsstufe mit zwei Nachkommastellen an."
-	L["Main Hand"] = "Waffenhand"
-	L["/Off Hand"] = "/Schildhand"
-	L[" weapon auto attack (white) DPS."] = ' Schaden pro Sekunde der automatischen (weißen) Waffenangriffe.'
-	L["Weapon DPS"] = "Waffen-SPS"
-	L["Weapon DPS %s"] = "Waffen-SPS %s"
---	L["Class Crest Background"] = ""
---	L["Displays the class crest background."] = ""
+L["  /dcstats config: Opens the DejaCharacterStats addon config menu."] = "  /dcstats config: Öffnet das DejaCharacterStats Konfigurationsfenster."
+L["  /dcstats reset:  Resets DejaCharacterStats options to default."] = "  /dcstats reset: Setzt DejaCharacterStats zurück."
+L["%s of %s increases %s by %.2f%%"] = "%s von %s erhöht die %s um %.2f%%."
+L["About DCS"] = "Über DCS"
+L["All Stats"] = "Alle Statistiken"
+L["Attack"] = "Angriff"
+L["Average Durability"] = "Durchschnittliche Haltbarkeit"
+L["Average equipped item durability percentage."] = "Prozentuale Haltbarkeit der angelegten Gegenstände."
+L["Average Item Level:"] = "Durchschnittliches Gegenstandslevel:"
+L["Avoidance Rating"] = "Vermeidungsbewertung"
+L["Blizzard's Hide At Zero"] = "Blizzard Verstecken bei Null"
+L["Character Stats:"] = "Charakterwerte:"
+L["Class Colors"] = "Klassenfarben"
+L["Class Crest Background"] = "Klassenwappen Hintergrund"
+L["Critical Strike Rating"] = "Kritische Trefferwertung"
+L["DCS's Hide At Zero"] = "DCS Verstecken bei Null"
+L["Decimals"] = "Nachkommastellen"
+L["Defense"] = "Verteidigung"
+L["DejaCharacterStats Slash commands (/dcstats):"] = "DejaCharacterStats Slashbefehle (/dcstats):"
+L["Displays \"Enhancements\" category stats to two decimal places."] = "Zeigt die Werte in der Kategorie \"Verstärkungen\" mit 2 Nachkommastellen an."
+L["Displays a durability bar next to each item."] = "Zeigt neben jedem Gegenstand eine Haltbarkeitsleiste an."
+L["Displays average item durability on the character shirt slot and durability frames."] = "Zeigt die durchschnittliche Haltbarkeit im Hemdplatz und in der Liste unter Haltbarkeit an."
+L["Displays average item level to one decimal place."] = "Zeigt die durchschnittliche Gegenstandsstufe mit einer Nachkommastelle an."
+L["Displays average item level to two decimal places."] = "Zeigt die durchschnittliche Elementebene mit zwei Nachkommastellen an."
+L["Displays average item level with class colors."] = "Zeigt das durchschnittliche Gegenstandslevel mit der Klassenfarbe an."
+L["Displays each equipped item's durability."] = "Zeigt die Haltbarkeit von jedem ausgerüsteten Gegenstand an."
+L["Displays each equipped item's repair cost."] = "Zeigt die Reparaturkosten von jedem ausgerüsteten Gegenstand an."
+L["Displays Equipped/Available item levels unless equal."] = "Zeigt das Itemlevel von Ausgerüstet/Verfügbar an bis diese gleich sind."
+L["Displays the class crest background."] = "Zeigt den Klassenwappen Hintergrund an."
+L["Displays the DCS scrollbar."] = "Zeigt den DCS Scrollbalken."
+L["Displays the Expand button for the character stats frame."] = "Zeigt die Erweiterungsschaltfläche für die Charakterwerte an. "
+L["Displays the item level of each equipped item."] = "Zeigt das Gegenstandslevel jedes angelegten Gegenstandes."
+L["Dodge Rating"] = "Ausweichwertung"
+L["Durability"] = "Haltbarkeit"
+L["Durability Bars"] = "Haltbarkeitsleisten"
+L["Equipped/Available"] = "Ausgerüstet/Verfügbar"
+L["Expand"] = "Erweitern"
+L["General"] = "Allgemein"
+L["General global cooldown refresh time."] = "Allgemeine Abklingzeit."
+L["Global Cooldown"] = "Globale Abklingzeit"
+L["Haste Rating"] = "Tempowertung"
+L["Hide Character Stats"] = "Versteckt die Charakterwerte"
+L["Hides \"Enhancements\" stats if their displayed value would be zero. Checking \"Decimals\" changes the displayed value."] = "Blendet \"Verstärkungen\" Statistiken aus,wenn ihr angezeigter Wert gleich Null wäre. \"Nachkommastellen\" auswählen verändert den angezeigten Wert."
+L["Hides \"Enhancements\" stats only if their numerical value is exactly zero. For example, if stat value is 0.001%, then it would be displayed as 0%."] = "Blendet \"Verstärkungen\" Statistiken nur aus,wenn ihr numerischer Wert genau Null ist. Zum Beispiel,wenn der Wert 0,001% ist,dann würde er als 0% angezeigt werden."
+L["Item Durability"] = "Gegenstandshaltbarkeit"
+L["Item Level"] = "Gegenstandslevel"
+L["Item Repair Cost"] = "Gegenstandsreparaturkosten"
+L["Item Slots:"] = "Gegenstandsfächer:"
+L["Leech Rating"] = "Lebensraubwertung"
+L["Lock DCS"] = "DCS sperren"
+L["Main Hand"] = "Haupthand"
+L["Mastery Rating"] = "Meisterschaftswertung"
+L["Miscellaneous:"] = "Sonstiges:"
+L["Movement Speed"] = "Lauftempo"
+L["Off Hand"] = "Nebenhand"
+L["Offense"] = "Angriff"
+L["One Decimal Place"] = "Eine Nachkommastelle"
+L["Parry Rating"] = "Parrierwertung"
+L["Ratings"] = "Bewertungen"
+L["Relevant Stats"] = "Relevante Werte"
+L["Repair Total"] = "Ges. Reparaturkosten"
+L["Requires Level "] = "Benötigt Stufe "
+L["Reset Stats"] = "Werte zurücksetzen"
+L["Reset to Default"] = "Standardeinstellungen"
+L["Resets order of stats."] = "Setzt die Reihenfolge der Statistiken zurück."
+L["Scrollbar"] = "Scrollbalken"
+L["Show all stats."] = "Alle Werte anzeigen."
+L["Show Character Stats"] = "Zeigt die Charakterwerte"
+L["Show only stats relevant to your class spec."] = "Zeigen Sie nur Statistiken an, die für Ihre Klassenspezifikation relevant sind."
+L["Total equipped item repair cost before discounts."] = "Reparaturkosten für angelegte Gegenstände ohne Abzug von Rabatt."
+L["Two Decimal Places"] = "Zwei Nachkommastellen"
+L["Unlock DCS"] = "DCS freischalten"
+L["Versatility Rating"] = "Vielseitigkeitswertung"
+L["weapon auto attack (white) DPS."] = "Schaden pro Sekunde der automatischen (weißen) Waffenangriffe."
+L["Weapon DPS"] = "Waffen-SPS"
 
 return end

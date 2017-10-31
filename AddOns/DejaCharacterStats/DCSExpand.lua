@@ -76,8 +76,8 @@ local _, gdbprivate = ...
 local DCS_ExpandButtonCheck = CreateFrame("CheckButton", "DCS_ExpandButtonCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
 	DCS_ExpandButtonCheck:RegisterEvent("PLAYER_LOGIN")
 	DCS_ExpandButtonCheck:ClearAllPoints()
-	DCS_ExpandButtonCheck:SetPoint("LEFT", 25, -150)
-	DCS_ExpandButtonCheck:SetScale(1.25)
+	DCS_ExpandButtonCheck:SetPoint("LEFT", 30, -205)
+	DCS_ExpandButtonCheck:SetScale(1)
 	DCS_ExpandButtonCheck.tooltipText = L['Displays the Expand button for the character stats frame.'] --Creates a tooltip on mouseover.
 	_G[DCS_ExpandButtonCheck:GetName() .. "Text"]:SetText(L["Expand"])
 	

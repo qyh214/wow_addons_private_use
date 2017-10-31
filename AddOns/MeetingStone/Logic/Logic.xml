@@ -6,4 +6,5 @@
   <Script file="AppSupport.lua" />
   <Script file="AppWhisper.lua" />
   <Script file="Recent.lua" />
+  <Script file="CombatStat.lua" />
 </Ui>

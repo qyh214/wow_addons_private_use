@@ -2,7 +2,7 @@
 ## Title: RelicInspector
 ## Notes: Displays artifact weapon relics in the tooltip
 ## Author: Thoralie
-## Version: 2.0.4
+## Version: 2.0.5
 ## SavedVariables: RelicInspectorDB
 ## SavedVariablesPerCharacter: RelicInspectorCharDB
 

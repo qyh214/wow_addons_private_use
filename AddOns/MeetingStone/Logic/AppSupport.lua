@@ -17,8 +17,6 @@ function AppSupport:OnEnable()
     self:StatInit()
     self:ChallengeInit()
     self:DataInit()
-
-    
 end
 
 function AppSupport:OnDisable()
@@ -310,12 +308,20 @@ function AppSupport:CHALLENGE_MODE_COMPLETED()
 
     local class = select(3, UnitClass('player'))
     local itemLevel = math.floor( select(2, GetAverageItemLevel()) )
+    local combatData = CombatStat:GetCombatData()
 
-    App:SendServer('APP_CHALLENGE', mapId, level, time, class, itemLevel, UnitRole('player'), unpack(self:GetChallengeMembers()))
+    self.lastMapId = nil
+
+    
+
+    CombatStat:Disable()
+    -- App:SendServer('APP_CHALLENGE', mapId, level, time, class, itemLevel, UnitRole('player'), unpack(self:GetChallengeMembers()))
+    App:SendServer('APP_CHALLENGE2', mapId, level, time, class, itemLevel, UnitRole('player'), self:GetChallengeMembers(), combatData)
 end
 
 function AppSupport:CHALLENGE_MODE_START()
-    self.lastMapId = C_ChallengeMode.GetActiveChallengeMapID() or self.lastMapId
+    CombatStat:Reset()
+    self:StartCombatStat()
 end
 
 function AppSupport:GetChallengeMembers()
@@ -339,5 +345,12 @@ end
 function AppSupport:ChallengeInit()
     self:RegisterEvent('CHALLENGE_MODE_COMPLETED')
     self:RegisterEvent('CHALLENGE_MODE_START')
-    self:CHALLENGE_MODE_START()
+    self:StartCombatStat()
+end
+
+function AppSupport:StartCombatStat()
+    self.lastMapId = C_ChallengeMode.GetActiveChallengeMapID() or self.lastMapId
+    if self.lastMapId then
+        CombatStat:Enable()
+    end
 end

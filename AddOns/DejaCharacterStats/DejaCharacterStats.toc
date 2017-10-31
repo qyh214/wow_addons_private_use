@@ -1,5 +1,5 @@
 ## Interface: 70300
-## Version: 730r101
+## Version: 730rc108
 ## Title: DejaCharacterStats
 ## Authors: Dejablue, Kakjens, loudsoul
 ## Notes: Dejablue's improved character stats panel view.
@@ -27,3 +27,4 @@ DCSLayouts.lua
 DCSExpand.lua
 DCSDecimals.lua
 DCSDuraRepair.lua
+DCSAbout.lua

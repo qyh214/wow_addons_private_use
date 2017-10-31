@@ -7,128 +7,121 @@ if namespace.locale == "koKR" then
 	-- The EU English game client also
 	-- uses the US English locale code.
 
--- ###################################################################################################
--- ##	한국어 (Korean) translations provided by PositiveMind on Curseforge. Thank you PositiveMind!	##
--- ###################################################################################################
+-- ###########################################################################################################
+-- ##	한국어 (Korean) translations provided by PositiveMind, yuk6196, netaras, and next96 on Curseforge.		##
+-- ###########################################################################################################
 
--- ################################
--- ## Slash Commands ##
--- ################################
-
---	L["/dcstats"] = ""
-	L["DejaCharacterStats Slash commands (/dcstats):"] = "DCS 명령어 (/dcstats):"
-	L["  /dcstats config: Open the DejaCharacterStats addon config menu."] = "  /dcstats config: DCS 설정 메뉴를 불러옵니다." --configuration
-	L["  /dcstats reset:  Resets DejaCharacterStats frames to default positions."] = "  /dcstats reset: DCS 창의 위치를 초기화합니다."
-	L["Resetting config to defaults"] = "설정을 기본값으로 초기화합니다." --configuration
-	L["DejaCharacterStats is currently using "] = "DCS는 "
-	L[" kbytes of memory"] = " kb의 메모리를 사용중입니다." --kilobytes
---	L["DejaCharacterStats is currently using "] = ""
-	L[" kbytes of memory after garbage collection"] = " kb의 메모리를 정리하였습니다." --kilobytes
---	L["config"] = "" --configuration
---	L["dumpconfig"] = "" --configuration
---	L["With defaults"] = ""
---	L["Direct table"] = ""
---	L["reset"] = ""
---	L["perf"] = "" --performance
-	L["Reset to Default"] = "기본설정"
-
--- ################################
--- ## Global Options Left Column ##
--- ################################
-
-	L["Equipped/Available"] = "착용중/소지중"
-	L['Displays Equipped/Available item levels unless equal.'] = "착용중/소지중인 아이템 레벨을 표시합니다."
-
-	L["Decimals"] = "소수점"
-	L['Displays "Enhancements" category stats to two decimal places.'] = "\"강화 수치\" 구역에 소수점 2자리까지 표시합니다."
-
-	L["Ilvl Decimals"] = "아이템레벨 소수점 표시"
-	L['Displays average item level to two decimal places.'] = "아이템레벨을 소수점 2자리까지 표시합니다."
-
-	L['Durability '] = "내구도 "
-	L['Displays the average Durability percentage for equipped items in the stat frame.'] = "캐릭터 정보 표시 구역에 착용중인 아이템의 평균 내구도를 표시합니다."
-
-	L['Repair Total '] = "총 수리비 "
-	L['Displays the Repair Total before discounts for equipped items in the stat frame.'] = "캐릭터 정보 표시 구역에 착용중인 장비의 총 수리비를 표시합니다."
-
--- ################################
-
-	L["Durability Bars"] = "내구도 바"
-	L["Displays a durability bar next to each item." ] = "각 아이템의 옆에 내구도 바를 표시합니다."
-
-	L["Average Durability"] = "평균 내구도"
-	L["Displays average item durability on the character shirt slot and durability frames."] = "캐릭터 정보 표시 구역에 착용중인 아이템의 평균 내구도를 표시합니다."
-
-	L["Item Durability"] = "아이템 내구도"
-	L["Displays each equipped item's durability."] = "각 아이템에 내구도를 표시합니다."
-
-	L["Item Repair Cost"] = "아이템 수리비"
-	L["Displays each equipped item's repair cost."] = "각 아이템에 수리비를 표시합니다."
-
--- ################################
-
-	L["Expand"] = "확장 표시"
-	L['Displays the Expand button for the character stats frame.'] = "캐릭터 정보 창에 확장 버튼을 표시합니다."
-	L['Show Character Stats'] = "캐릭터 정보 표시"
-	L['Hide Character Stats'] = "캐릭터 정보 숨기기"
-
-	L["Scrollbar"] = "스크롤 바"
-	L['Displays the DCS scrollbar.'] = "스크롤바 표시"
-
--- ################################
--- ## Character Options Right Column ##
--- ################################
-
-	L["Show All Stats"] = "모든 정보 보기"
-	L['Checked displays all stats. Unchecked displays relevant stats. Use Shift-scroll to snap to the top or bottom.'] = "모든 정보를 체크합니다. 해제시 필요한 정보만 표시됩니다. (Shift 스크롤로 안보이는 부분을 볼 수 있습니다.)"
-
-	L["Select-A-Stat™"]  = "선택-을-통계를™" -- Try to use something snappy and silly like a Fallout or 1950's appliance feature.
-	L['Select which stats to display. Use Shift-scroll to snap to the top or bottom.'] = "설정된 정보만 표시합니다. (Shift 스크롤로 안보이는 부분을 볼 수 있습니다.)"
-
--- ################################
--- ## Stats ##
--- ################################
-
-	L["Durability"] = "내구도" -- Be sure to include the colon ":" or it will conflict wih the options checkbox.
-	L["Durability %s"] = "내구도 %s" -- ## --> %s MUST be included <-- ## 
-	L["Average equipped item durability percentage."] = "착용중인 장비의 평균 내구도입니다."
-
-	L["Repair Total"] = "총 수리비" -- Be sure to include the colon ":" or it will conflict wih the options checkbox.
-	L["Repair Total %s"] = "총 수리비 %s" -- ## --> %s MUST be included <-- ## 
-	L["Total equipped item repair cost before discounts."] = "착용중인 장비의 할인 적용된 총 수리비입니다."
-
--- ## Attributes ##
-
-	L["Health"] = "생명력"
-	L["Power"] = "전원"
-	L["Druid Mana"] = "드루이드 마나"
-	L["Armor"] = "방어도"
-	L["Strength"] = "힘"
-	L["Agility"] = "민첩성"
-	L["Intellect"] = "지능"
-	L["Stamina"] = "체력"
-	L["Damage"] = "피해"
-	L["Attack Power"] = "전투력"
-	L["Attack Speed"] = "공격 속도"
-	L["Spell Power"] = "주문력"
-	L["Mana Regen"] = "마나 회복량"
-	L["Energy Regen"] = "기력 회복량"
-	L["Rune Regen"] = "룬 재생 시건"
-	L["Focus Regen"] = "집중 회복량"
-	L["Movement Speed"] = "이동 속도"
-	L["Durability"] = "내구도"
-	L["Repair Total"] = "총 수리비"
-
--- ## Enhancements ##
-
-	L["Critical Strike"] = "치명타 및 극대화"
-	L["Haste"] = "가속"
-	L["Versatility"] = "유연성"
-	L["Mastery"] = "특화"
-	L["Leech"] = "생기흡수"
-	L["Avoidance"] = "광역회피"
-	L["Dodge"] = "회피율"
-	L["Parry"] = "무기 막기"
-	L["Block"] = "방패 막기"
+L["  /dcstats config: Opens the DejaCharacterStats addon config menu."] = "/dcstats config: DejaCharacterStats 애드온 설정 메뉴를 엽니다."
+--Translation missing 
+-- L["  /dcstats reset:  Resets DejaCharacterStats options to default."] = ""
+--Translation missing 
+-- L["%s of %s increases %s by %.2f%%"] = ""
+--Translation missing 
+-- L["About DCS"] = ""
+--Translation missing 
+-- L["All Stats"] = ""
+--Translation missing 
+-- L["Attack"] = ""
+L["Average Durability"] = "평균 내구도"
+L["Average equipped item durability percentage."] = "착용 중인 아이템의 평균 내구도 백분율입니다."
+--Translation missing 
+-- L["Average Item Level:"] = ""
+--Translation missing 
+-- L["Avoidance Rating"] = ""
+--Translation missing 
+-- L["Blizzard's Hide At Zero"] = ""
+--Translation missing 
+-- L["Character Stats:"] = ""
+--Translation missing 
+-- L["Class Colors"] = ""
+--Translation missing 
+-- L["Class Crest Background"] = ""
+--Translation missing 
+-- L["Critical Strike Rating"] = ""
+--Translation missing 
+-- L["DCS's Hide At Zero"] = ""
+L["Decimals"] = "소수점"
+--Translation missing 
+-- L["Defense"] = ""
+L["DejaCharacterStats Slash commands (/dcstats):"] = "DejaCharacterStats 슬래시 명령어 (/dcstats):"
+L["Displays \"Enhancements\" category stats to two decimal places."] = "\"강화 수치\" 항목의 능력치를 소수점 2자리까지 표시합니다."
+L["Displays a durability bar next to each item."] = "각 아이템 옆에 내구도 바를 표시합니다."
+L["Displays average item durability on the character shirt slot and durability frames."] = "캐릭터 속옷 칸과 내구도 창에 착용 아이템의 평균 내구도를 표시합니다."
+L["Displays average item level to one decimal place."] = "평균 아이템 레벨을 소수점 첫째 자리까지 표시합니다."
+--Translation missing 
+-- L["Displays average item level to two decimal places."] = ""
+--Translation missing 
+-- L["Displays average item level with class colors."] = ""
+L["Displays each equipped item's durability."] = "각 착용 아이템의 내구도를 표시합니다."
+L["Displays each equipped item's repair cost."] = "각 착용 아이템의 수리비를 표시합니다."
+L["Displays Equipped/Available item levels unless equal."] = "동일하지 않으면 착용/소지 아이템 레벨을 표시합니다."
+--Translation missing 
+-- L["Displays the class crest background."] = ""
+L["Displays the DCS scrollbar."] = "DCS 스크롤바를 표시합니다"
+L["Displays the Expand button for the character stats frame."] = "캐릭터 능력치 창에 확장 버튼을 표시합니다."
+--Translation missing 
+-- L["Displays the item level of each equipped item."] = ""
+--Translation missing 
+-- L["Dodge Rating"] = ""
+L["Durability"] = "내구도"
+L["Durability Bars"] = "내구도 바"
+L["Equipped/Available"] = "착용 중/소지 중"
+L["Expand"] = "확장 표시"
+--Translation missing 
+-- L["General"] = ""
+L["General global cooldown refresh time."] = "일반적인 전역 재사용 대기시간입니다."
+L["Global Cooldown"] = "전역 재사용 대기시간"
+--Translation missing 
+-- L["Haste Rating"] = ""
+L["Hide Character Stats"] = "캐릭터 능력치 숨기기"
+--Translation missing 
+-- L["Hides \"Enhancements\" stats if their displayed value would be zero. Checking \"Decimals\" changes the displayed value."] = ""
+--Translation missing 
+-- L["Hides \"Enhancements\" stats only if their numerical value is exactly zero. For example, if stat value is 0.001%, then it would be displayed as 0%."] = ""
+L["Item Durability"] = " 아이템 내구도"
+--Translation missing 
+-- L["Item Level"] = ""
+L["Item Repair Cost"] = "아이템 수리비"
+--Translation missing 
+-- L["Item Slots:"] = ""
+--Translation missing 
+-- L["Leech Rating"] = ""
+L["Lock DCS"] = "DCS 잠그기"
+L["Main Hand"] = "주장비"
+--Translation missing 
+-- L["Mastery Rating"] = ""
+--Translation missing 
+-- L["Miscellaneous:"] = ""
+L["Movement Speed"] = "이동 속도"
+L["Off Hand"] = "보조장비"
+--Translation missing 
+-- L["Offense"] = ""
+--Translation missing 
+-- L["One Decimal Place"] = ""
+--Translation missing 
+-- L["Parry Rating"] = ""
+--Translation missing 
+-- L["Ratings"] = ""
+L["Relevant Stats"] = "관련 능력치"
+L["Repair Total"] = "총 수리비"
+--Translation missing 
+-- L["Requires Level "] = ""
+L["Reset Stats"] = "능력치 초기화"
+L["Reset to Default"] = "기본값으로 초기화"
+--Translation missing 
+-- L["Resets order of stats."] = ""
+L["Scrollbar"] = "스크롤바"
+L["Show all stats."] = "모든 능력치 표시"
+L["Show Character Stats"] = "캐릭터 능력치 표시"
+--Translation missing 
+-- L["Show only stats relevant to your class spec."] = ""
+L["Total equipped item repair cost before discounts."] = "착용 아이템의 할인 전 총 수리비입니다."
+--Translation missing 
+-- L["Two Decimal Places"] = ""
+L["Unlock DCS"] = "DCS 잠금 해제"
+--Translation missing 
+-- L["Versatility Rating"] = ""
+L["weapon auto attack (white) DPS."] = "무기의 자동 공격 (흰색) DPS입니다."
+L["Weapon DPS"] = "무기 DPS"
 
 return end

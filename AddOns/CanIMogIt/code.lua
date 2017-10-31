@@ -83,7 +83,7 @@ local inventorySlotsMap = {
     [RANGED_RIGHT] = {16},
     [WEAPON_OFF_HAND] = {17},
     [HOLDABLE] = {17},
-    [TABARD] = false,
+    [TABARD] = {19},
 }
 
 
@@ -222,26 +222,33 @@ local unknownTexts = {
 
 local exceptionItems = {
     [HEAD] = {
-        [134110] = CanIMogIt.KNOWN, -- Hidden Helm
-        [133320] = CanIMogIt.KNOWN, -- Illidari Blindfold (Alliance)
-        [112450] = CanIMogIt.KNOWN, -- Illidari Blindfold (Horde)
+        -- [134110] = CanIMogIt.KNOWN, -- Hidden Helm
+        [133320] = CanIMogIt.NOT_TRANSMOGABLE, -- Illidari Blindfold (Alliance)
+        [112450] = CanIMogIt.NOT_TRANSMOGABLE, -- Illidari Blindfold (Horde)
+        -- [150726] = CanIMogIt.NOT_TRANSMOGABLE, -- Illidari Blindfold (Alliance) - starting item
+        -- [150716] = CanIMogIt.NOT_TRANSMOGABLE, -- Illidari Blindfold (Horde) - starting item
     },
     [SHOULDER] = {
-        [119556] = CanIMogIt.KNOWN, -- Trailseeker Spaulders
-        [119588] = CanIMogIt.KNOWN, -- Mistdancer Pauldrons
+        [119556] = CanIMogIt.NOT_TRANSMOGABLE, -- Trailseeker Spaulders
+        [119588] = CanIMogIt.NOT_TRANSMOGABLE, -- Mistdancer Pauldrons
         [134112] = CanIMogIt.KNOWN, -- Hidden Shoulders
     },
     [BODY] = {},
     [CHEST] = {},
     [ROBE] = {},
-    [WAIST] = {},
+    [WAIST] = {
+        [143539] = CanIMogIt.KNOWN, -- Hidden Belt
+    },
     [LEGS] = {},
     [FEET] = {},
     [WRIST] = {},
     [HAND] = {
         [119585] = CanIMogIt.NOT_TRANSMOGABLE, -- Mistdancer Handguards
     },
-    [CLOAK] = {},
+    [CLOAK] = {
+        -- [134111] = CanIMogIt.KNOWN, -- Hidden Cloak
+        [112462] = CanIMogIt.NOT_TRANSMOGABLE, -- Illidari Drape
+    },
     [WEAPON] = {},
     [SHIELD] = {},
     [WEAPON_2HAND] = {},
@@ -250,7 +257,9 @@ local exceptionItems = {
     [RANGED_RIGHT] = {},
     [WEAPON_OFF_HAND] = {},
     [HOLDABLE] = {},
-    [TABARD] = {},
+    [TABARD] = {
+        -- [142504] = CanIMogIt.KNOWN, -- Hidden Tabard
+    },
 }
 
 
@@ -1032,8 +1041,7 @@ end
 
 
 function CanIMogIt:IsItemSoulbound(itemLink, bag, slot)
-    if not (bag and slot) then return false end
-    return CanIMogItTooltipScanner:IsItemSoulbound(bag, slot)
+    return CanIMogItTooltipScanner:IsItemSoulbound(itemLink, bag, slot)
 end
 
 
@@ -1280,7 +1288,7 @@ function CanIMogIt:CalculateTooltipText(itemLink, bag, slot)
     ]]
     local exception_text = CanIMogIt:GetExceptionText(itemLink)
     if exception_text then
-        return exception_text
+        return exception_text, exception_text
     end
 
     local isTransmogable = CanIMogIt:IsTransmogable(itemLink)

@@ -1,179 +1,167 @@
-tag 5e6328d0f46e7c7f07523f3f1d3bbaf32a232cba 7.3.5
+tag ca2d4751f6957cbf0a2ca23725872fb8c1db51ee 7.3.6
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Tue Oct 10 21:07:03 2017 +0200
+Date:	Tue Oct 17 20:32:22 2017 +0200
 
-Tagging as 7.3.5
+Tagging as 7.3.6
 
-commit 1add5eb0732867863ab0b70755f6826408bb2edc
+commit d33a08027c2f53479233b12cdbcc258bf3fae053
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Oct 10 21:07:03 2017 +0200
+Date:   Tue Oct 17 20:32:22 2017 +0200
 
-    increment version number to 7.3.5
+    increment version number to 7.3.6
 
-commit 07b4daceb0b150d40ca0862c0c819e32dac43c92
+commit 76c27b558d5b1e81cf414bff47401a28693d2c9f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Oct 10 21:04:07 2017 +0200
+Date:   Tue Oct 17 20:29:02 2017 +0200
 
-    Omega via svn r16781:
-    Update occularus
+    Omega via svn r16803:
+    Add yell I missed first time she was up, which enables pull timers and readycheck
 
-commit 3436cc7a25b4862b2ee977b3dc9b6d7cbe387e8e
+commit 7c098cefdb26bcd8cee1b820aadb41cfb4c4ae70
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Oct 10 08:44:21 2017 +0200
+Date:   Mon Oct 16 05:04:01 2017 +0200
 
-    Omega via svn r16780:
-    Comment cleanup
+    Omega via svn r16802:
+    In fact while at it, if UNITID is passed to boss health shield bars, use UnitGetTotalAbsorbs(unitID) not CLEU
 
-commit 8456424118efe09a1aa73afbc2a22745a956c774
+commit c1a4644d2c345e27eb4a917ff3bf0917913fcf6b
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Oct 10 07:57:00 2017 +0200
+Date:   Mon Oct 16 04:37:29 2017 +0200
 
-    Omega via svn r16779:
-    Kr update
-    Change erupting voice pack to use ?\226?\128?\156move to <mark>?\226?\128?\157 on mythic difficulty
+    Omega via svn r16801:
+    scrap boss health on kara maiden and use absorb infoframe instead. It?\226?\128?\153s more CPU efficient since it doesn?\226?\128?\153t use CLEU. Boss DBM boss health is really being phased out slowly.
 
-commit 7c0041c5e71e06bc84dd3d2e81ccbd48108f930e
+commit ebc1621bb843caf21ef8038848d5dce236285d89
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Oct 10 05:25:52 2017 +0200
+Date:   Mon Oct 16 03:36:03 2017 +0200
 
-    Omega via svn r16778:
-    argus stage 3 and 4
+    Omega via svn r16800:
+    Fix moroes bug in warnings too
 
-commit 065c459a149951bd4b976f26ed6dd4a3a41af6c7
+commit e03b7dee6e1bc0b8fcc82c4e7ca4fc481b33a38b
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Oct 10 04:17:40 2017 +0200
+Date:   Mon Oct 16 03:35:23 2017 +0200
 
-    Omega via svn r16777:
-    Push a mythic KJ fix, where my fix for missing emotes was actually running in wrong stage so not doing anything helpful.
+    Omega via svn r16799:
+    Fix a bug where willbreaker timer option and coat check timer options both had same spell ID and kept overwriting eachother and making both timers useless on moroes
+    Added more stuff to eonar info frame
 
-commit ffdb5fce1f9b26d25ee8ca768e29397aca986542
+commit e02d900d1a2db48fdb2600791721df8d3fe3b000
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Oct 9 03:07:42 2017 +0200
+Date:   Sun Oct 15 05:35:43 2017 +0200
 
-    Omega via svn r16776:
-    Antispam unleashed fury some
-    Argus stage 2 stuff (stage 3 and 4 tomorrow probably)
+    Omega via svn r16798:
+    Add burning hatred warning
 
-commit 17266e547767586bcf93d88469e7bd6d638b0727
+commit 0f30e998dd431897059ec65533dd952e1237b5bf
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Oct 8 20:17:04 2017 +0200
+Date:   Sat Oct 14 20:34:34 2017 +0200
 
-    Omega via svn r16775:
-    Fix corrupting void spell ID
+    Omega via svn r16797:
+    Tweak countdown voices and timers on antorus war council
+    Fix normal rain of fel timers on eonar
+    fix adds spawn messages on eonar
+    fixed alternate power on infoframe on eonar
+    Fixed some normal mode timers on Hasabel
+    fixed some spam on hasabel
 
-commit da800c799f0a0fa913293e7c482d939b0add9a37
+commit b30ee87a095ffe0ea9cc44b48d8e5ecf5a8c9bce
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Oct 8 07:42:43 2017 +0200
+Date:   Sat Oct 14 18:19:39 2017 +0200
 
-    Omega via svn r16774:
-    tweaks/fixes and WCL helpers for Imonar and Hasabel
+    Omega via svn r16796:
+    some antispam fixes for you people testing out there
 
-commit ca30c8d1fb635ff57b1cb178e534f6a5ce31cced
+commit f99fdfbfae28ac89d79b5a8f7261ef2827563e9c
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Oct 7 07:53:29 2017 +0200
+Date:   Sat Oct 14 17:39:02 2017 +0200
 
-    Omega via svn r16773:
-    more liked X than they did circle
+    Omega via svn r16795:
+    Fix stupid
 
-commit bd7e50fb156880c3c9896fa4a35f9decebe88aca
+commit 921f83f7b715302d87b1833e177669b9aee935f5
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Oct 7 06:15:52 2017 +0200
+Date:   Sat Oct 14 06:42:28 2017 +0200
 
-    Omega via svn r16772:
-    Fix one of desolate host warnings saying to move to group instead of to boss
+    Omega via svn r16794:
+    Update all of phase detections, timers, and non working warnings on argus.
 
-commit 9e63ff768d0d36774fc585333625799f2e015fad
+commit cb6a561d7b7e5cf0c44434a33f62bc822a53cd3f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Oct 7 06:02:44 2017 +0200
+Date:   Sat Oct 14 02:03:59 2017 +0200
 
-    Omega via svn r16771:
-    Volume boosted incredible by 450%
-    scream warnings on host now off by default (target warnings not personal)
+    Omega via svn r16793:
+    More bugfixes and updates to Antorus War council, they changed heroic timers again to match mythic.
 
-commit b224fa3cb96bb1e46b5b0e41e3a92df2d5b9a3c6
+commit f45d3ad7770a03188622801ede3f7833b7e5efa8
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Oct 6 07:58:48 2017 +0200
+Date:   Fri Oct 13 21:45:08 2017 +0200
 
-    Omega via svn r16770:
-    Bubbles too
+    Omega via svn r16792:
+    Some cpu saving tweaks to boss health, don?\226?\128?\153t register combat log for shields if frame isn?\226?\128?\153t even shown
 
-commit c7707c7927532050486fb9975ba6812348303fb9
+commit 9759c5f7621fe087a111a08681e11dbe6fbec722
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Oct 6 07:48:28 2017 +0200
+Date:   Fri Oct 13 04:43:30 2017 +0200
 
-    Omega via svn r16769:
-    Update hounds timers for faster energy gains on mythic difficulty
-    Improved fel/shadow touched warnings with color coded icons
+    Omega via svn r16791:
+    Tweaks
 
-commit 19b22afab7757bb609c0b68d8110c3488e5d82fc
+commit a1402f8253b21dedbd79117202fbba8c913c6939
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Oct 6 05:34:01 2017 +0200
+Date:   Thu Oct 12 07:11:39 2017 +0200
 
-    Omega via svn r16768:
-    Fix fix
+    Omega via svn r16790:
+    Add auto icon marking for Pyromancers
 
-commit 47e2574f70cea2463a3a7fdf27585acdf868bbc0
+commit de784e9b7e7162e2d534b5b598fc59dac9a7032d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Oct 6 05:26:37 2017 +0200
+Date:   Thu Oct 12 06:55:50 2017 +0200
 
-    Omega via svn r16767:
-    Fix couple timer bugs
+    Omega via svn r16789:
+    Do what eonar fixes I can from public logs
 
-commit 5694c206d8fe9f0c2f17711007af78754befc445
+commit 528b627481dcb606bb84b87e9987a78c93634827
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Oct 5 21:21:15 2017 +0200
+Date:   Thu Oct 12 06:05:18 2017 +0200
 
-    Omega via svn r16766:
-    Change Entropic Force behavior
+    Omega via svn r16788:
+    Fix wailing reflection timer not canceling on 1.5
 
-commit abd1405c7d9b19c83e713263e2b8eefa7f5db974
+commit 769bfb110825532bd45b4b631c5d86de24dfddb2
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Oct 5 02:47:22 2017 +0200
+Date:   Thu Oct 12 04:36:34 2017 +0200
 
-    Omega via svn r16765:
-    Fix yell
+    Omega via svn r16787:
+    Add bigger warning for melee to run out for wail
+    Fix icons being cleared too early on erupting
 
-commit 1ce257a3731131071f2db6ec8f9218765a081c17
+commit fc70dfb4d26adb8688858750c37465ca84803010
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Oct 4 10:39:24 2017 +0200
+Date:   Thu Oct 12 02:08:12 2017 +0200
 
-    Omega via svn r16764:
-    Reset HideBossEmoteFrame. this should really be on by default and i see it off in a lot of user configurations who claim they didn?\226?\128?\153t turn it off. so to help reduce spam further (and not get blamed for blizzard messages), help users keep them out of middle of screen by default.
+    Omega via svn r16786:
+    Several bug fixes and antispam tweaks and mythic updates to antorus war council
 
-commit 5b02605e1e6a28958a8a46666327c8294a4d4f4a
+commit 8f7221bae4f4d33abac3653f3278ab5c2e194856
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Oct 4 10:22:44 2017 +0200
+Date:   Thu Oct 12 00:35:57 2017 +0200
 
-    Omega via svn r16763:
-    if targeted by more than one shattering scream, only show/play one warning for it
-    When DBM is spammy, it?\226?\128?\153s probably a bug, don?\226?\128?\153t assume it?\226?\128?\153s intended, REPORT these things. I main a tank, 90% of fight mechanics don?\226?\128?\153t target me, so I don?\226?\128?\153t know when things like this are broken.
+    Omega via svn r16785:
+    Add defensive warning for lingering wail and optional (off by default) say message
+    tweaked sorrowful wail cd
 
-commit a0c023c3bc5a2036a0cbf5dabbdd8ebb6b11a56c
+commit b1d8ba799457e4e53f4ea2407dc0bc5d28768255
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Oct 4 09:54:17 2017 +0200
+Date:   Wed Oct 11 00:27:13 2017 +0200
 
-    Omega via svn r16762:
-    Fix confusing countdown combo for tanks on fallen avatar
+    Omega via svn r16784:
+    work around global having period in it by using _G[
 
-commit 552a30b99ff00633bf33e89397ee783ade259317
+commit a7fa1981ca48259e205ada1e1f560ce7977d83d8
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Oct 4 04:36:45 2017 +0200
+Date:   Tue Oct 10 21:07:18 2017 +0200
 
-    Omega via svn r16761:
-    Fix slider
-
-commit 478435031379adeb134a35d957d81ea755b8eab9
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Oct 4 04:28:39 2017 +0200
-
-    Omega via svn r16760:
-    Add support for .5 incriments in warning duration
-    Significantly lower default warning duration
-
-commit bf4162ebe04763f7a7a131511f1ad0b6aeef4643
-Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Oct 3 23:39:49 2017 +0200
-
-    tandanu via svn r16759:
+    tandanu via svn r16783:
     increment alpha version
 

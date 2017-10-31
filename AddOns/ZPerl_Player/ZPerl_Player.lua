@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 1059 $")
+end, "$Revision: 1080 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -1969,7 +1969,7 @@ function XPerl_Player_InitWarlock(self)
 				self:SetMovable(true)
 				--self:SetUserPlaced(true)
 				self:ClearAllPoints()
-				self:SetPoint("TOP", XPerl_Player.runes, "TOP", 0, -1)
+				self:SetPoint("TOP", XPerl_Player.runes, "TOP", 0, 0)
 				self:SetMovable(false)
 				moving = nil
 			end)
@@ -1977,7 +1977,7 @@ function XPerl_Player_InitWarlock(self)
 
 		WarlockPowerFrame:SetParent(self.runes)
 		WarlockPowerFrame:ClearAllPoints()
-		WarlockPowerFrame:SetPoint("TOP", self.runes, "TOP", 0, -1)
+		WarlockPowerFrame:SetPoint("TOP", self.runes, "TOP", 0, 0)
 	end
 end
 

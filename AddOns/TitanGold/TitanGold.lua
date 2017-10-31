@@ -313,7 +313,9 @@ function TitanPanelGoldButton_GetTooltipText()
 			local GoldSaveSorted = {};
 			for index, money in pairs(GoldSave) do
 				character, charserver = string.match(index, '(.*)_(.*)');
-				charserver = string.gsub(charserver, "%s", "");
+				if (charserver) then
+					charserver = string.gsub(charserver, "%s", "");
+				end
 				if (character) then
 					if (charserver == server) then
 						table.insert(GoldSaveSorted, index); -- insert all keys from hash into the array
@@ -329,7 +331,9 @@ function TitanPanelGoldButton_GetTooltipText()
 
 			for i = 1, getn(GoldSaveSorted) do 
 				character, charserver = string.match(GoldSaveSorted[i], '(.*)_(.*)');
-				charserver = string.gsub(charserver, "%s", "");
+				if (charserver) then
+					charserver = string.gsub(charserver, "%s", "");
+				end
 				if (character) then
 					if (charserver == server) then
 						if (GoldSave[GoldSaveSorted[i]].show) then
@@ -467,7 +471,9 @@ function TitanPanelGoldButton_TotalGold()
 	
 			for index, money in pairs(GoldSave) do
 				local character, charserver = string.match(index, '(.*)_(.*)');
-				charserver = string.gsub(charserver, "%s", "");
+				if (charserver) then
+					charserver = string.gsub(charserver, "%s", "");
+				end
 				if (character) then
 					if (charserver == server) then
 						if GoldSave[index].show then

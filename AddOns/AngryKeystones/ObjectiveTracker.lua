@@ -180,7 +180,7 @@ local function SetUpAffixes(block, affixes)
 	if Addon.Config.smallAffixes then
 		frameWidth, spacing, distance = 24, 3, -17
 	else
-		frameWidth, spacing, distance = 34, 4, -20
+		frameWidth, spacing, distance = 22, 4, -18
 	end
 	local num = #affixes
 	local leftPoint = 28 + (spacing * (num - 1)) + (frameWidth * num)

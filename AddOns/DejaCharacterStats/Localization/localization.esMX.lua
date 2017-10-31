@@ -13,7 +13,7 @@ if namespace.locale == "esMX" then
 
 --	L["/dcstats"] = ""
 --	L["DejaCharacterStats Slash commands (/dcstats):"] = ""
---	L["  /dcstats config: Open the DejaCharacterStats addon config menu."] = "" --configuration
+--	L["  /dcstats config: Opens the DejaCharacterStats addon config menu."] = "" --configuration
 --	L["  /dcstats reset:  Resets DejaCharacterStats frames to default positions."] = ""
 --	L["Resetting config to defaults"] = "" --configuration
 --	L["DejaCharacterStats is currently using "] = ""
