@@ -855,7 +855,7 @@
 						TrinketMenu.ProfilesFrame_OnHide()
 					</OnHide>
 					<OnShow>
-						PlaySound("GAMEGENERICBUTTONPRESS")
+						PlaySound(839)
 					</OnShow>
 				</Scripts>
 			</Frame>

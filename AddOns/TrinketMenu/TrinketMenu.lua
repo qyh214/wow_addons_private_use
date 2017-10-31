@@ -1025,7 +1025,7 @@ end
 --[[ Notify ]]
 
 function TrinketMenu.Notify(msg)
-	PlaySound("GnomeExploration")
+	PlaySound(839)
 	if MikSBT then -- send via MSBT if it exists
 		MikSBT.DisplayMessage(msg, "Notification", true, 255, 0, 0, nil, nil, nil, nil)
 	elseif SCT_Display then -- send via SCT if it exists
