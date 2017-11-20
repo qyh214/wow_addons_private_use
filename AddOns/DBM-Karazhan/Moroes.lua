@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Moroes", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 631 $"):sub(12, -3))
 mod:SetCreatureID(15687)--Moroes
 mod:SetEncounterID(653)
 mod:SetModelID(16540)
@@ -23,10 +23,10 @@ local warningManaBurn		= mod:NewCastAnnounce(29405, 3, nil, false)
 local warningGreaterHeal	= mod:NewCastAnnounce(35096, 3, nil, false)
 local warningHolyLight		= mod:NewCastAnnounce(29562, 3, nil, false)
 
-local timerVanishCD			= mod:NewCDTimer(31, 29448)
-local timerGouge			= mod:NewTargetTimer(6, 29425)
-local timerBlind			= mod:NewTargetTimer(10, 34694)
-local timerMortalStrike		= mod:NewTargetTimer(5, 29572)
+local timerVanishCD			= mod:NewCDTimer(31, 29448, nil, nil, nil, 6)
+local timerGouge			= mod:NewTargetTimer(6, 29425, nil, nil, nil, 3)
+local timerBlind			= mod:NewTargetTimer(10, 34694, nil, nil, nil, 3)
+local timerMortalStrike		= mod:NewTargetTimer(5, 29572, nil, nil, nil, 3)
 
 function mod:OnCombatStart(delay)
 	timerVanishCD:Start(-delay)

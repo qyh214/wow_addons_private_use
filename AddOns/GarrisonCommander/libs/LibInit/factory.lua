@@ -6,13 +6,18 @@
 -- 
 -- @classmod factory
 -- @author Alar of Runetotem
--- @release 4
 -- @usage
 -- local addon=LibStub("LibInit"):newAddon("example")
 -- local factory=addon:GetFactory()
 -- local widget=factory:Checkbox(frame,true,"Checkbox","Checkbox tooltip")
 -- widget:SetOnChange(function(checked) end)
+-- --You can set a custom object so you can pass a method to SetOnChange:
+-- widget:SetObj(mytable)
+-- widget:SetOnChange("method")
 
+local LibStub=LibStub
+local libinit,MINOR_VERSION = LibStub("LibInit")
+if not libinit then return end
 
 local GetTime=GetTime
 local GameTooltip=GameTooltip
@@ -20,7 +25,7 @@ local CreateFrame=CreateFrame
 local type=type
 local tostring=tostring
  
-local factory=LibStub:NewLibrary("LibInit-Factory",4) --#factory
+local factory=LibStub:NewLibrary("LibInit-Factory",MINOR_VERSION) --#factory
 if (not factory) then return end
 factory.nonce=factory.nonce or 0
 local backdrop = {
@@ -61,16 +66,34 @@ end
 local function OnTooltip(this)
 	GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
 	GameTooltip:AddLine(this.message or "Prova" ,0,1,0)
-	GameTooltip:AddLine(this.tooltip, nil, nil, nil, nil, (this.tooltipStyle or true));
+	if type(this.tooltip)=="table" then
+		for i,row in pairs(this.tooltip) do
+			if (type(i)=="number") then
+				GameTooltip:AddLine(row, nil, nil, nil, nil, (this.tooltipStyle or true))
+			else
+				GameTooltip:AddDoubleLine(i,row)
+			end		
+		end
+	else
+		GameTooltip:AddLine(this.tooltip, nil, nil, nil, nil, (this.tooltipStyle or true))
+	end
 	GameTooltip:Show()
 end
+---
+-- tooltip can be
+-- a string == AddLine
+-- a multiline strinf == Multiple AddLine
+-- a vector == Multiple AddLine
+-- a hash == Multiple AddDoubleLine(key,value)
 local function SetUp(father,widgetType,message,tooltip,maxwidth)
 	local name=GetUniqueName(widgetType,father)
 	if type(message)=="table" then
 		tooltip=message.desc
 		maxwidth=message.maxwidth
 		message=message.name
-		
+	end
+	if type(tooltip)=="string" and tooltip:find("\n") then
+		tooltip={strsplit("\n",tooltip)}
 	end
 	local frame
 	if widgetType=="Button" then
@@ -80,6 +103,7 @@ local function SetUp(father,widgetType,message,tooltip,maxwidth)
 	end
 	frame:SetScript("OnEnter",tooltip and OnTooltip or nil)
 	frame:SetScript("OnLeave",function() GameTooltip:Hide() end)
+	frame.SetObj=function(self,obj) self.obj=obj end
 	maxwidth=maxwidth or 140
 	frame:SetWidth(maxwidth)
 	frame.message=message
@@ -95,7 +119,7 @@ end
 -- @tparam number max Maximum value
 -- @tparam number current Actual value
 -- @tparam string|table message String with description or table with .desc and .tooltip fields 
--- @tparam[opt] string tooltip Tooltip message (ignored if message is a table) 
+-- @tparam[opt] string tooltip Tooltip message (ignored if message is a table). Can be a table for a multiline tooltip
 -- @tparam[opt] number maxwidth maximum widget width
 -- @treturn widget slider widget object
 -- 
@@ -169,7 +193,7 @@ end
 -- @tparam frame father Parent frame to use
 -- @tparam bool current Actual value
 -- @tparam string|table message String with description or table with .desc and .tooltip fields 
--- @tparam[opt] string tooltip Tooltip message (ignored if message is a table)
+-- @tparam[opt] string tooltip Tooltip message (ignored if message is a table).Can be a table for a multiline tooltip
 -- @tparam[opt] number maxwidth maximum widget width
 -- @treturn widget checkbox widget object
 -- 
@@ -195,6 +219,10 @@ function factory:Checkbox(father,current,...)
 	frame:SetWidth(ck:GetWidth()+ck.Text:GetWidth()+2)
 	frame:SetHeight(ck:GetHeight())
 	frame:SetWidth(frame.maxwidth)
+	function frame:SetValue(value)
+	   ck:SetChecked(value)
+	   self:OnChange(value)
+	end
 	function frame:OnChange(value)
 		if value then
 			ck.Text:SetTextColor(0,1,0,1)
@@ -211,7 +239,7 @@ end
 -- 
 -- @tparam frame father Parent frame to use
 -- @tparam string|table message String with description or table with .desc and .tooltip fields 
--- @tparam[opt] string tooltip Tooltip message (ignored if message is a table
+-- @tparam[opt] string tooltip Tooltip message (ignored if message is a table. Can be a table for a multiline tooltip
 -- @tparam[opt] number maxwidth maximum widget width
 -- @treturn widget button widget object
 -- 
@@ -224,8 +252,10 @@ function factory:Button(father,...)
 	function bt:SetOnChange(func)
 		if type(func)=="function" then
 			bt:SetScript("OnClick",func)
+		elseif type(func)=="string" and bt.obj and type(bt.obj[func])=="function" then
+			bt:SetScript("OnClick",function(this,...) bt.obj[func](bt.obj,this,...) end)
 		else
-			bt:SetScript("OnClick",function(this,...) this.obj[func](this.obj,this,...) end)
+		  error("Or func is an invalid method or you didnt set an object [" .. tostring(bt.obj)..'] ['.. tostring(func)..']')
 		end
 	end
 	return bt
@@ -236,7 +266,7 @@ end
 -- @tparam mixed current Initial value
 -- @tparam tab list Option list
 -- @tparam string|table message String with description or table with .desc and .tooltip fields 
--- @tparam[opt] string tooltip Tooltip message (ignored if message is a table) 
+-- @tparam[opt] string tooltip Tooltip message (ignored if message is a table). Can be a table for a multiline tooltip 
 -- @tparam[opt] number maxwidth maximum widget width
 -- @treturn widget dropdown widget object
 -- 
@@ -340,5 +370,6 @@ function factory:Option(addon,father,flag,maxwidth)
 	return w		
 end
 factory.Dropdown=factory.DropDown -- compatibility
+libinit:_SetFactory(factory)
 
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Hydross", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 638 $"):sub(12, -3))
 mod:SetCreatureID(21216)
 mod:SetEncounterID(623)
 mod:SetModelID(20162)
@@ -11,24 +11,24 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 38235 38246",
+	"SPELL_AURA_REMOVED 38246",
 	"SPELL_CAST_SUCCESS 38215 38216 38217 38219 38220 38221 38218 38231 40584 38222 38230 40583 25035 22035 22036"
 )
 
 local warnMark		= mod:NewAnnounce("WarnMark", 3, 38215)
 local warnPhase		= mod:NewAnnounce("WarnPhase", 4)
-local warnTomb		= mod:NewTargetAnnounce(38235)
-local warnSludge	= mod:NewTargetAnnounce(38246)
+local warnTomb		= mod:NewTargetAnnounce(38235, 3)
+local warnSludge	= mod:NewTargetAnnounce(38246, 2)
 
 local specWarnMark	= mod:NewSpecialWarning("SpecWarnMark")
 
-local timerMark		= mod:NewTimer(15, "TimerMark", 28730)
-local timerSludge	= mod:NewTargetTimer(24, 38246)
+local timerMark		= mod:NewTimer(15, "TimerMark", 38215, nil, nil, 2)
+local timerSludge	= mod:NewTargetTimer(24, 38246, nil, nil, nil, 3)
 
 local berserkTimer	= mod:NewBerserkTimer(600)
 
 mod:AddBoolOption("RangeFrame", true)
 
-local warnTombTargets = {}
 local markOfH = GetSpellInfo(38215)
 local markOfC = GetSpellInfo(38219)
 local damage = {
@@ -41,13 +41,7 @@ local damageNext = {
 	[38219] = "25%", [38220] = "50%", [38221] = "100%", [38222] = "250%", [38230] = "500%", [40583] = "500%",
 }
 
-local function showTombTargets()
-	warnTomb:Show(table.concat(warnTombTargets, "<, >"))
-	table.wipe(warnTombTargets)
-end
-
 function mod:OnCombatStart(delay)
-	table.wipe(warnTombTargets)
 	timerMark:Start(16-delay, markOfH, "10%")
 	berserkTimer:Start(-delay)
 	if self.Options.RangeFrame then
@@ -63,12 +57,16 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 38235 then
-		warnTombTargets[#warnTombTargets + 1] = args.destName
-		self:Unschedule(showTombTargets)
-		self:Schedule(0.3, showTombTargets)
+		warnTomb:CombinedShow(0.3, args.destName)
 	elseif args.spellId == 38246 then
 		warnSludge:Show(args.destName)
 		timerSludge:Start(args.destName)
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	if args.spellId == 38246 then
+		timerSludge:Stop(args.destName)
 	end
 end
 

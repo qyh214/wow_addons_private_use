@@ -1,11 +1,11 @@
 if GetLocale() ~= "zhTW" then return end
 
-DBM_CORE_NEED_LOCALS				= "你是否擁有良好的程式開發或語言能力? 如果是的話, DBM需要你的本地化翻譯。拜訪我們的討論區|HDBM:localizersneeded|h|cff3588ffclicking here|r"
-DBM_CORE_NEED_LOGS					= "DBM需要Transcriptor (http://www.wowace.com/addons/transcriptor/) 去紀錄此戰鬥紀錄讓插件更加完美。如果你願意幫忙，請使用transcriptor去紀錄這些戰鬥過程然後將記錄發佈在DBM討論區或discord。"
-DBM_HOW_TO_USE_MOD					= "歡迎使用DBM。在聊天頻道輸入 /dbm 打開設定開始設定。你可以載入特定區域後為任何首領設定你喜歡的特別設置。DBM會在第一次啟動時嘗試掃描你的職業天賦，但有些選項你可能想打開。"
+DBM_CORE_NEED_LOCALS				= "你是否擁有良好的程式開發或語言能力? 如果是的話, DBM需要你的本地化翻譯。如果你能幫忙，拜訪DBM討論區或到DBM Discrod聯繫MysticalOS。"
+DBM_CORE_NEED_LOGS					= "DBM需要Transcriptor (http://www.wowace.com/addons/transcriptor/) 去紀錄此戰鬥紀錄讓插件更加完美。如果你願意幫忙，請使用transcriptor去紀錄這些戰鬥過程然後將記錄發佈在DBM討論區或Discord。"
+DBM_HOW_TO_USE_MOD					= "歡迎使用DBM。在聊天頻道輸入 /dbm 打開設定開始設定。你可以載入特定區域後為任何首領設定你喜歡的特別設置。DBM會在設定你的職業天賦的預設值，但有些選項可能需要調整。"
 DBM_SILENT_REMINDER					= "提醒：DBM正處於無聲模式。"
 
-DBM_FORUMS_MESSAGE					= "發現臭蟲或錯誤的計時器?你希望要讓某些模組有新的警告，計時器或是特別功能?\nDeadly Boss Mods討論，臭蟲回報與功能要求討論區 |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (你可以點擊連結去複製網址)"
+DBM_FORUMS_MESSAGE					= "發現臭蟲或錯誤的計時器?你希望能讓某些模組有新的警告，計時器或是特別功能?\n拜訪DBM討論區或到DBM Discord伺服器給些回饋。"
 DBM_FORUMS_COPY_URL_DIALOG			= "來拜訪我們新的討論與支援討論區"
 DBM_FORUMS_COPY_URL_DIALOG_NEWS		= "想知道新功能以及如何運作，拜訪我們的討論區"
 
@@ -20,7 +20,6 @@ DBM_CORE_LOAD_MOD_DISABLED			= "%s已安裝但目前停用中。此模組不會�
 DBM_CORE_LOAD_MOD_DISABLED_PLURAL	= "%s已安裝但目前停用中。這些模組不會載入除非你啟用它們。"
 
 DBM_CORE_WHATS_NEW					= "'計時條向上延伸'和'填滿計時條'選項能夠獨立設定計時條類型(小大計時條)而非統一設定。試試看！"
-DBM_CORE_WHATS_NEW_LINK				= "記得：你可以到DBM Discord裡回報臭蟲，給些回饋或是到這走走：|HDBM:forumsnews|h|cff3588ffDiscord連結|r"
 
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "距離雷達不能在副本中使用，使用傳統文字距離框架取代"
@@ -89,7 +88,6 @@ DBM_CORE_MPROFILE_DELETE_SELF_ERROR	= "不能刪除使用中的模組設定。"
 DBM_CORE_MPROFILE_DELETE_S_ERROR	= "配置檔來源已經損毀，設定不能被刪除或是部分刪除，刪除已失敗。"
 
 DBM_CORE_NOTE_SHARE_SUCCESS			= "%s已分享他的%s的註記"
-DBM_CORE_NOTE_SHARE_LINK			= "點擊這裡打開註記"
 DBM_CORE_NOTE_SHARE_FAIL			= "%s嘗試與你分享%s的註記。模組相關的技能沒有安裝或是載入。請確定你載入此模組並請求他們在分享一次。"
 
 DBM_CORE_NOTEHEADER					= "為%s輸入你的註記。在><插入腳色名稱可套用職業顏色。多個註記請使用'/'分開"
@@ -156,7 +154,7 @@ DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s：尚未安裝任何團隊首領模組"
 DBM_CORE_VERSIONCHECK_FOOTER		= "找到有%d玩家正在使用DBM且有%d玩家正在使用Bigwigs"
 DBM_CORE_VERSIONCHECK_OUTDATED		= "下列有%d玩家正在使用過期的首領模組:%s"
 DBM_CORE_YOUR_VERSION_OUTDATED		= "你的 Deadly Boss Mod 已經過期。請到http://dev.deadlybossmods.com下載最新版本。"
-DBM_CORE_VOICE_PACK_OUTDATED		= "你的DBM語音包可能缺少在這個版本的DBM需要的語音。部分警告音效已經被停用。請下載新版本的語音包或是聯絡語音包作者更新並加入缺少的語音。"
+DBM_CORE_VOICE_PACK_OUTDATED		= "你所選的DBM語音包可能缺少一些DBM支援的的語音。部分警告音效仍然會使用預設音效播放。請下載新版本的語音包或是聯絡語音包作者更新並加入缺少的語音。"
 DBM_CORE_VOICE_MISSING				= "DBM找不到你所選取的語音包。你的語音包選項已經被重置為'None'。請確定你的語音包已正確的安裝與啟用。"
 DBM_CORE_VOICE_DISABLED				= "你的語音包已安裝但是尚未啟用。如果你想使用語音包，請確定語言包已在語音警告中被選取，或是刪除不使用的語音包去隱藏此訊息。"
 DBM_CORE_VOICE_COUNT_MISSING		= "所選取的語音/倒數語音包%d找不到倒數語音。設定已被重置回預設值。"
@@ -178,7 +176,8 @@ DBM_CORE_OUT_OF_DATE_NAG				= "你的DBM版本已經過期你設定忽略彈出�
 
 DBM_CORE_MOVABLE_BAR				= "拖動我!"
 
-DBM_PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h向你發送了一個倒數計時：'%2$s'\n|HDBM:cancel:%2$s:nil|h|cff3588ff[取消該計時]|r|h  |HDBM:ignore:%2$s:%1$s|h|cff3588ff[忽略來自%1$s的計時]|r|h"
+--DBM_PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h向你發送了一個倒數計時：'%2$s'\n|HDBM:cancel:%2$s:nil|h|cff3588ff[取消該計時]|r|h  |HDBM:ignore:%2$s:%1$s|h|cff3588ff[忽略來自%1$s的計時]|r|h"
+DBM_PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h向你發送了一個DBM計時器"
 DBM_PIZZA_CONFIRM_IGNORE			= "是否要在該次遊戲連結中忽略來自%s的計時？"
 DBM_PIZZA_ERROR_USAGE				= "命令：/dbm [broadcast] timer <時間（秒）> <文字>。<時間>必須大於1"
 
@@ -267,6 +266,7 @@ DBM_NO_DEBUFF						= "沒有%s"
 DBM_ALLY							= "隊友"
 DBM_ADDS							= "小怪"
 DBM_CORE_ROOM_EDGE					= "房間邊緣"
+DBM_CORE_FAR_AWAY					= "遠方"
 DBM_CORE_SAFE						= "安全"
 DBM_INCOMING						= "%s來了"
 --Common Locals end
@@ -346,7 +346,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveto		= "%s - 快跑向>%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.jump			= "%s - 快跳躍"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.run			= "%s - 快跑開"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast			= "%s - 停止施法"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.lookaway		= "%s - 快轉頭"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.lookaway		= "%s - 快轉身"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect		= "%s - 停止攻擊"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.count			= "%s!(%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack			= "你中了%%d層%s"
@@ -380,7 +380,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveto		= "為$spell:%s需要跑向某人或某�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.jump		= "當你中了$spell:%s需跳起來時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run			= "為$spell:%s顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.cast		= "為$spell:%s施放時顯示停止施法的特別警告"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.lookaway		= "當需要為$spell:%s轉頭時顯示特別警告"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.lookaway		= "當需要為$spell:%s轉身時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.reflect		= "為$spell:%s施放時顯示停止攻擊的特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.count 		= "為$spell:%s顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack		= "為中了>=%d層$spell:%s時顯示特別警告"
@@ -523,7 +523,8 @@ DBM_INSTANCE_INFO_STATS_DENIED		= "拒絕回傳數據:%s"
 DBM_INSTANCE_INFO_STATS_AWAY		= "離開:%s"
 DBM_INSTANCE_INFO_STATS_NO_RESPONSE	= "沒有安裝最新版本的DBM:%s"
 DBM_INSTANCE_INFO_RESULTS			= "副本ID掃描結果。注意如果團隊中有不同語言版本的魔獸客戶端，那麼同一副本可能會出現不止一次。"
-DBM_INSTANCE_INFO_SHOW_RESULTS		= "仍未回覆的玩家: %s\n|HDBM:showRaidIdResults|h|cff3588ff[查看結果]|r|h"
+--DBM_INSTANCE_INFO_SHOW_RESULTS		= "仍未回覆的玩家: %s\n|HDBM:showRaidIdResults|h|cff3588ff[查看結果]|r|h"
+DBM_INSTANCE_INFO_SHOW_RESULTS		= "仍未回覆的玩家: %s"
 
 DBM_CORE_LAG_CHECKING				= "檢測團隊成員的網路延遲中..."
 DBM_CORE_LAG_HEADER					= "Deadly Boss Mods - 網路延遲結果"

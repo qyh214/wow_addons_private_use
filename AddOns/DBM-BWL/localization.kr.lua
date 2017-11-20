@@ -40,6 +40,10 @@ L:SetGeneralLocalization{
 	name = "용기대장 래쉬레이어"
 }
 
+L:SetMiscLocalization{
+	Pull	= "너희 같은 놈들이 올 곳은 아닌데... 죽음을 자초했구나!"
+}
+
 ---------------
 --  Firemaw  --
 ---------------

@@ -40,6 +40,10 @@ L:SetGeneralLocalization{
 	name	= "勒什雷尔"
 }
 
+L:SetMiscLocalization{
+	Pull	= "你怎么进来的?你们这种生物不能进来!我要毁灭你们!"
+}
+
 ---------------
 --  Firemaw  --
 ---------------

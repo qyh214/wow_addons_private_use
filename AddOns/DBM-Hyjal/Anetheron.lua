@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Anetheron", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 630 $"):sub(12, -3))
 mod:SetCreatureID(17808)
 mod:SetEncounterID(619)
 mod:SetModelID(21069)
@@ -21,19 +21,24 @@ local warnSwarm			= mod:NewSpellAnnounce(31306, 3)
 local warnSleep			= mod:NewTargetAnnounce(31298, 2)
 local warnInferno		= mod:NewTargetAnnounce(31299, 4)
 
-local specWarnInferno	= mod:NewSpecialWarningYou(31299)
+local specWarnInferno	= mod:NewSpecialWarningYou(31299, nil, nil, nil, 1, 2)
+local yellInferno		= mod:NewYell(31299)
 
-local timerSwarm		= mod:NewBuffFadesTimer(20, 31306)
-local timerSleep		= mod:NewBuffFadesTimer(10, 31298)
+local timerSwarm		= mod:NewBuffFadesTimer(20, 31306, nil, nil, nil, 3)
+local timerSleep		= mod:NewBuffFadesTimer(10, 31298, nil, nil, nil, 3)
 local timerSleepCD		= mod:NewCDTimer(19, 31298, nil, nil, nil, 3)
-local timerInferno		= mod:NewCDTimer(51, 31299)
+local timerInferno		= mod:NewCDTimer(51, 31299, nil, nil, nil, 3)
+
+local voiceInferno		= mod:NewVoice(31299)--targetyou
 
 function mod:InfernoTarget(targetname, uId)
 	if not targetname then return end
-	warnInferno:Show(targetname)
-	timerInferno:Start()
 	if targetname == UnitName("player") then
 		specWarnInferno:Show()
+		voiceInferno:Play("targetyou")
+		yellInferno:Yell()
+	else
+		warnInferno:Show(targetname)
 	end
 end
 
@@ -56,6 +61,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 31299 then
+		timerInferno:Start()
 		self:BossTargetScanner(17808, "InfernoTarget", 0.05, 10)
 	end
 end

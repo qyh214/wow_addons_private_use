@@ -1,17 +1,17 @@
-local MAJOR, MINOR = "LibItemUpgradeInfo-1.0", 28
+local MAJOR, MINOR = "LibItemUpgradeInfo-1.0", 29
 local type,tonumber,select,strsplit,GetItemInfoFromHyperlink=type,tonumber,select,strsplit,GetItemInfoFromHyperlink
 local library,previous = _G.LibStub:NewLibrary(MAJOR, MINOR)
 local lib=library --#lib Needed to keep Eclipse LDT happy
 if not lib then return end
 local pp=print
---[===[@debug@
+--@debug@
 LoadAddOn("Blizzard_DebugTools")
 LoadAddOn("LibDebug")
 if LibDebug then LibDebug() end
---@end-debug@]===]
---@non-debug@
+--@end-debug@
+--[===[@non-debug@
 local print=function() end
---@end-non-debug@
+--@end-non-debug@]===]
 --[[
 Caching system
 1	itemName	String	The name of the item.

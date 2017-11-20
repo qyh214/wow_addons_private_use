@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Vashj", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 638 $"):sub(12, -3))
 mod:SetCreatureID(21212)
 mod:SetEncounterID(628)
 mod:SetModelID(20748)
@@ -26,51 +26,57 @@ local warnPhase2		= mod:NewPhaseAnnounce(2)
 local warnElemental		= mod:NewAnnounce("WarnElemental", 4, 31687)
 local warnStrider		= mod:NewAnnounce("WarnStrider", 3, 475)
 local warnNaga			= mod:NewAnnounce("WarnNaga", 3, 2120)
-local warnShield		= mod:NewAnnounce("WarnShield", 3)
+--local warnShield		= mod:NewAnnounce("WarnShield", 3)
 local warnLoot			= mod:NewAnnounce("WarnLoot", 4, 38132)
 local warnPhase3		= mod:NewPhaseAnnounce(3)
 
-local specWarnCharge	= mod:NewSpecialWarningYou(38280)
+local specWarnCharge	= mod:NewSpecialWarningMoveAway(38280, nil, nil, nil, 1, 2)
+local yellCharge		= mod:NewYell(38280)
 local specWarnElemental	= mod:NewSpecialWarning("SpecWarnElemental")--Changed from soon to a now warning. the soon warning not accurate because of 11 second variation so not useful special warning.
-local specWarnToxic		= mod:NewSpecialWarningMove(38575)
+local specWarnToxic		= mod:NewSpecialWarningMove(38575, nil, nil, nil, 1, 2)
 
-local timerCharge		= mod:NewTargetTimer(20, 38280)
-local timerElemental	= mod:NewTimer(22, "TimerElementalActive", 39088)--Blizz says they are active 20 seconds per patch notes, but my logs don't match those results. 22 second up time.
+local timerCharge		= mod:NewTargetTimer(20, 38280, nil, nil, nil, 3)
+local timerElemental	= mod:NewTimer(22, "TimerElementalActive", 39088, nil, nil, 1)--Blizz says they are active 20 seconds per patch notes, but my logs don't match those results. 22 second up time.
 local timerElementalCD	= mod:NewTimer(45, "TimerElemental", 39088, nil, nil, 1)--46-57 variation. because of high variation the pre warning special warning not useful, fortunately we can detect spawns with precise timing.
 local timerStrider		= mod:NewTimer(63, "TimerStrider", 475, nil, nil, 1)
 local timerNaga			= mod:NewTimer(47.5, "TimerNaga", 2120, nil, nil, 1)
+
+local voiceCharge		= mod:NewVoice(38280)--runout
+local voiceToxic		= mod:NewVoice(38575)--runaway
 
 mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("ChargeIcon", false)
 --mod:AddBoolOption("AutoChangeLootToFFA", true)
 
-local shieldLeft = 4
-local nagaCount = 1
-local striderCount = 1
-local elementalCount = 1
+mod.vb.phase = 1
+mod.vb.shieldLeft = 4
+mod.vb.nagaCount = 1
+mod.vb.striderCount = 1
+mod.vb.elementalCount = 1
 --local lootmethod, masterlooterRaidID
 local elementals = {}
 
 function mod:StriderSpawn()
-	striderCount = striderCount + 1
-	timerStrider:Start(nil, tostring(striderCount))
-	warnStrider:Schedule(57, tostring(striderCount))
+	self.vb.striderCount = self.vb.striderCount + 1
+	timerStrider:Start(nil, tostring(self.vb.striderCount))
+	warnStrider:Schedule(57, tostring(self.vb.striderCount))
 	self:ScheduleMethod(63, "StriderSpawn")
 end
 
 function mod:NagaSpawn()
-	nagaCount = nagaCount + 1
-	timerNaga:Start(nil, tostring(nagaCount))
-	warnNaga:Schedule(42.5, tostring(nagaCount))
+	self.vb.nagaCount = self.vb.nagaCount + 1
+	timerNaga:Start(nil, tostring(self.vb.nagaCount))
+	warnNaga:Schedule(42.5, tostring(self.vb.nagaCount))
 	self:ScheduleMethod(47.5, "NagaSpawn")
 end
 
 function mod:OnCombatStart(delay)
 	table.wipe(elementals)
-	shieldLeft = 4
-	nagaCount = 1
-	striderCount = 1
-	elementalCount = 1
+	self.vb.phase = 1
+	self.vb.shieldLeft = 4
+	self.vb.nagaCount = 1
+	self.vb.striderCount = 1
+	self.vb.elementalCount = 1
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show()
 	end
@@ -94,10 +100,13 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 38280 then
-		warnCharge:Show(args.destName)
 		timerCharge:Start(args.destName)
 		if args:IsPlayer() then
 			specWarnCharge:Show()
+			voiceCharge:Play("runout")
+			yellCharge:Yell()
+		else
+			warnCharge:Show(args.destName)
 		end
 		if self.Options.ChargeIcon then
 			self:SetIcon(args.destName, 1, 20)
@@ -109,7 +118,7 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 38280 then
-		timerCharge:Cancel(args.destName)
+		timerCharge:Stop(args.destName)
 		if self.Options.ChargeIcon then
 			self:SetIcon(args.destName, 0)
 		end
@@ -118,8 +127,8 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 	--[[elseif args.spellId == 38112 then
-		shieldLeft = shieldLeft - 1
-		warnShield:Show(shieldLeft)]]
+		self.vb.shieldLeft = self.vb.shieldLeft - 1
+		warnShield:Show(self.vb.shieldLeft)]]
 	end
 end
 
@@ -140,31 +149,33 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 22009 then
-		elementalCount = elementalCount + 1
-		timerElementalCD:Start(nil, tostring(elementalCount))
-		warnElemental:Schedule(45, tostring(elementalCount))
+		self.vb.elementalCount = self.vb.elementalCount + 1
+		timerElementalCD:Start(nil, tostring(self.vb.elementalCount))
+		warnElemental:Schedule(45, tostring(self.vb.elementalCount))
 	end
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.DBM_VASHJ_YELL_PHASE2 or msg:find(L.DBM_VASHJ_YELL_PHASE2) then
-		nagaCount = 1
-		striderCount = 1
-		elementalCount = 1
-		shieldLeft = 4
+		self.vb.phase = 2
+		self.vb.nagaCount = 1
+		self.vb.striderCount = 1
+		self.vb.elementalCount = 1
+		self.vb.shieldLeft = 4
 		warnPhase2:Show()
-		timerNaga:Start(nil, tostring(nagaCount))
-		warnNaga:Schedule(42.5, tostring(elementalCount))
+		timerNaga:Start(nil, tostring(self.vb.nagaCount))
+		warnNaga:Schedule(42.5, tostring(self.vb.elementalCount))
 		self:ScheduleMethod(47.5, "NagaSpawn")
-		timerElementalCD:Start(nil, tostring(elementalCount))
-		warnElemental:Schedule(45, tostring(elementalCount))
-		timerStrider:Start(nil, tostring(striderCount))
-		warnStrider:Schedule(57, tostring(striderCount))
+		timerElementalCD:Start(nil, tostring(self.vb.elementalCount))
+		warnElemental:Schedule(45, tostring(self.vb.elementalCount))
+		timerStrider:Start(nil, tostring(self.vb.striderCount))
+		warnStrider:Schedule(57, tostring(self.vb.striderCount))
 		self:ScheduleMethod(63, "StriderSpawn")
 --		if IsInGroup() and self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
 --			SetLootMethod("freeforall")
 --		end
 	elseif msg == L.DBM_VASHJ_YELL_PHASE3 or msg:find(L.DBM_VASHJ_YELL_PHASE3) then
+		self.vb.phase = 3
 		warnPhase3:Show()
 		timerNaga:Cancel()
 		warnNaga:Cancel()

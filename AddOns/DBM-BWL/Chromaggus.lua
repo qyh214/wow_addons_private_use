@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Chromaggus", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 604 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 631 $"):sub(12, -3))
 mod:SetCreatureID(14020)
 mod:SetEncounterID(616)
 mod:SetModelID(14367)
@@ -20,21 +20,23 @@ local warnRed			= mod:NewSpellAnnounce(23155, 2, nil, false)
 local warnGreen			= mod:NewSpellAnnounce(23169, 2, nil, false)
 local warnBlue			= mod:NewSpellAnnounce(23153, 2, nil, false)
 local warnBlack			= mod:NewSpellAnnounce(23154, 2, nil, false)
-local warnEnrage		= mod:NewSpellAnnounce(23128)
+local warnEnrage		= mod:NewSpellAnnounce(23128, 3, nil, "Tank", 2)
 local warnPhase2Soon	= mod:NewPrePhaseAnnounce(2, 1)
 local warnPhase2		= mod:NewPhaseAnnounce(2)
 
-local specWarnBronze	= mod:NewSpecialWarningYou(23170)
+local specWarnBronze	= mod:NewSpecialWarningYou(23170, nil, nil, nil, 1, 8)
 
-local timerBreathCD		= mod:NewTimer(60, "TimerBreathCD", 23316)
-local timerEnrage		= mod:NewBuffActiveTimer(8, 23128)
+local timerBreathCD		= mod:NewTimer(60, "TimerBreathCD", 23316, nil, nil, 3)
+local timerEnrage		= mod:NewBuffActiveTimer(8, 23128, nil, "Tank|RemoveEnrage", 2, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_ENRAGE_ICON)
 
-local prewarn_P2 = false
+local voiceBronze		= mod:NewVoice(23170)--useitem
+
+mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
 	timerBreathCD:Start(30-delay, L.Breath1)
-	timerBreathCD:Start(-delay, L.Breath2)
-	prewarn_P2 = false
+	timerBreathCD:Start(-delay, L.Breath2)--60
+	self.vb.phase = 1
 end
 
 function mod:SPELL_CAST_START(args)
@@ -55,10 +57,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnBlack:Show()
 	elseif args.spellId == 23170 and args:IsPlayer() then
 		specWarnBronze:Show()
+		voiceBronze:Play("useitem")
 	elseif args.spellId == 23128 then
 		warnEnrage:Show()
 		timerEnrage:Start()
 	elseif args.spellId == 23537 then
+		self.vb.phase = 2
 		warnPhase2:Show()
 	end
 end
@@ -72,8 +76,8 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:UNIT_HEALTH(uId)
-	if UnitHealth(uId) / UnitHealthMax(uId) <= 0.25 and self:GetUnitCreatureId(uId) == 14020 and not prewarn_P2 then
+	if UnitHealth(uId) / UnitHealthMax(uId) <= 0.25 and self:GetUnitCreatureId(uId) == 14020 and self.vb.phase == 1 then
 		warnPhase2Soon:Show()
-		prewarn_P2 = true
+		self.vb.phase = 1.5
 	end
 end

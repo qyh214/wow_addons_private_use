@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Oz", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 596 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 631 $"):sub(12, -3))
 mod:SetCreatureID(18168)
 --mod:SetEncounterID(655)--used by all 3 of them, so not usuable
 mod:SetModelID(17550)
@@ -25,7 +25,7 @@ local WarnTido		= mod:NewAnnounce("DBM_OZ_WARN_TITO", 2, nil, nil, false)
 local WarnCrone		= mod:NewAnnounce("DBM_OZ_WARN_CRONE", 2, nil, nil, false)
 local warnChain		= mod:NewSpellAnnounce(32337, 3)
 
-local timerFearCD	= mod:NewCDTimer(19, 31013)
+local timerFearCD	= mod:NewCDTimer(19, 31013, nil, nil, nil, 2)
 local timerRoar		= mod:NewTimer(12, "DBM_OZ_WARN_ROAR", "Interface\\Icons\\Ability_Druid_ChallangingRoar", nil, false, 1)
 local timerStrawman	= mod:NewTimer(21, "DBM_OZ_WARN_STRAWMAN", "Interface\\Icons\\INV_Helmet_34", nil, false, 1)
 local timerTinhead	= mod:NewTimer(29, "DBM_OZ_WARN_TINHEAD", "Interface\\Icons\\INV_Helmet_02", nil, false, 1)

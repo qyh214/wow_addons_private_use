@@ -1,20 +1,20 @@
 local mod	= DBM:NewMod("Thorim", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
 mod:SetCreatureID(32865)
 mod:SetEncounterID(1141)
 mod:SetModelID(28977)
 mod:SetUsedIcons(7)
 
-mod:RegisterCombat("yell", L.YellPhase1)
+mod:RegisterCombat("combat_yell", L.YellPhase1)
 mod:RegisterKill("yell", L.YellKill)
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"CHAT_MSG_MONSTER_YELL",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_DAMAGE"
+	"SPELL_AURA_APPLIED 62042 62130 62526 62527",
+	"SPELL_CAST_SUCCESS 62042 62466 62130",
+	"SPELL_DAMAGE 62017",
+	"CHAT_MSG_MONSTER_YELL"
 )
 
 local warnPhase2				= mod:NewPhaseAnnounce(2, 1)
@@ -23,21 +23,23 @@ local warnLightningCharge		= mod:NewSpellAnnounce(62466, 2)
 local warnUnbalancingStrike		= mod:NewTargetAnnounce(62130, 4)
 local warningBomb				= mod:NewTargetAnnounce(62526, 4)
 
-local specWarnOrb				= mod:NewSpecialWarningMove(62017)
+local specWarnLightningShock	= mod:NewSpecialWarningMove(62017, nil, nil, nil, 1, 2)
 
 mod:AddBoolOption("AnnounceFails", false, "announce")
 
 local enrageTimer				= mod:NewBerserkTimer(369)
 local timerStormhammer			= mod:NewCastTimer(16, 62042)--Cast timer? Review if i ever do this boss again.
-local timerLightningCharge	 	= mod:NewCDTimer(16, 62466, nil, nil, nil, 2) 
+local timerLightningCharge	 	= mod:NewCDTimer(16, 62466, nil, nil, nil, 3) 
 local timerUnbalancingStrike	= mod:NewCDTimer(26, 62130, nil, "Tank", nil, 5)
 local timerHardmode				= mod:NewTimer(175, "TimerHardmode", 62042)
+
+local voiceLightningShock		= mod:NewVoice(62017)--runaway
 
 mod:AddBoolOption("RangeFrame")
 mod:AddSetIconOption("SetIconOnRunic", 62527, false)
 
-local lastcharge				= {}
-local phase2 = false
+local lastcharge = {}
+mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
 	enrageTimer:Start()
@@ -46,7 +48,7 @@ function mod:OnCombatStart(delay)
 		DBM.RangeCheck:Show(10)
 	end
 	table.wipe(lastcharge)
-	phase2 = false
+	self.vb.phase = 1
 end
 
 local sortedFailsC = {}
@@ -72,7 +74,6 @@ function mod:OnCombatEnd()
 	end
 end
 
-
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 62042 then 					-- Storm Hammer
 		warnStormhammer:Show(args.destName)
@@ -97,19 +98,13 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-
-function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.YellPhase2 then		-- Bossfight (tank and spank)
-		self:SendSync("Phase2")
-	end
-end
-
 function mod:SPELL_DAMAGE(_, _, _, _, _, destName, destFlags, _, spellId)
 	if spellId == 62017 then -- Lightning Shock
 		if bit.band(destFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) ~= 0
 		and bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) ~= 0
 		and self:AntiSpam(5) then
-			specWarnOrb:Show()
+			specWarnLightningShock:Show()
+			voiceLightningShock:Play("runaway")
 		end
 	elseif self.Options.AnnounceFails and spellId == 62466 and DBM:GetRaidRank() >= 1 and DBM:GetRaidUnitId(destName) ~= "none" and destName then
 		lastcharge[destName] = (lastcharge[destName] or 0) + 1
@@ -117,9 +112,15 @@ function mod:SPELL_DAMAGE(_, _, _, _, _, destName, destFlags, _, spellId)
 	end
 end
 
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if msg == L.YellPhase2 then		-- Bossfight (tank and spank)
+		self:SendSync("Phase2")
+	end
+end
+
 function mod:OnSync(event, arg)
-	if event == "Phase2" and not phase2 then
-		phase2 = true
+	if event == "Phase2" and self.vb.phase < 2 then
+		self.vb.phase = 2
 		warnPhase2:Show()
 		enrageTimer:Stop()
 		timerHardmode:Stop()

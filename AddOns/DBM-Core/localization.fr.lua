@@ -16,7 +16,6 @@ DBM_CORE_BAD_LOAD                   = "DBM a détecté une erreur de chargement 
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s n'a pas pu être chargé car votre DBM-Core ne remplit pas les conditions. Il vous faut une version plus récente."
 
 --DBM_CORE_WHATS_NEW					= "Nouveau dans cette version: Amélioration de l'accès aux événements DBM par d'autres mods"
---DBM_CORE_WHATS_NEW_LINK			= "Nouveau dans cette version: Les timers DBM supportent plusieurs couleurs en fonction du type de sort concerné. Pour en apprendre plus vous pouvez lire |HDBM:forumsnews|h|cff3588ffclicking here|r"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP   = "DBM a désactivé la vérification du nombre de joueurs à portée sur ce combat pour cause de manque d'information sur le nombre de joueurs requis regroupés pour votre taille de raid."
 DBM_CORE_DYNAMIC_ADD_COUNT          = "DBM a désactivé les alertes de décompte d'adds en vie sur ce combat pour cause de manque d'information du nombre d'adds apparaissant pour votre taille de raid."
@@ -76,7 +75,6 @@ DBM_CORE_MPROFILE_DELETE_SELF_ERROR	= "Impossible de supprimer les paramètres d
 DBM_CORE_MPROFILE_DELETE_S_ERROR	= "La source est corrompue. Les paramètres n'ont pas été supprimés ou supprimés partiellement. Echec de la suppression."
 
 DBM_CORE_NOTE_SHARE_SUCCESS			= "%s a partagé sa note pour %s"
-DBM_CORE_NOTE_SHARE_LINK			= "Cliquez ici pour ouvrir les notes"
 DBM_CORE_NOTE_SHARE_FAIL			= "%s a essayé de partager un texte de note pour %s. Malheureusement, le mod associé avec cette note n'est pas installé ou activé. Si vous avez besoin de celle-ci, Assurez vous d'avoir activé le mod pour lequel cette note est destinée."
 
 DBM_CORE_NOTEHEADER					= "Entrez votre texte de note ici pour %s. Entourer le nom d'un joueur avec >< affichera la couleur associée. Pour les alertes vaec des notes multiples, séparez les par '/'"

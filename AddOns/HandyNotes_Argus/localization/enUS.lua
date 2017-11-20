@@ -706,6 +706,21 @@ _L["bsrare_chillbane_search"] = { "chillbane", "chillbane" };
 _L["Brood Mother Nix"] = "Brood Mother Nix";
 _L["bsrare_broodmothernix_search"] = { "nix", "nix" };
 
+_L["Lord Kazzak"] = "Lord Kazzak";
+_L["kazzak_search"] = { "kaz", "kaz" };
+_L["Azuregos"] = "Lord Kazzak";
+_L["azuregos_search"] = { "azu", "azu" };
+_L["Dragons of Nightmare"] = "Dragons of Nightmare";
+_L["dragonsofnightmare_search"] = { "e", "sondre", "leth?on", "emeris", "ta?erar", "nightmare" };
+_L["Ysondre"] = "Ysondre";
+_L["ysondre_search"] = { "sondre", "sondre" };
+_L["Lethon"] = "Lethon";
+_L["lethon_search"] = { "let", "leth?on" };
+_L["Emeriss"] = "Emeriss";
+_L["emeriss_search"] = { "eme", "emeris" };
+_L["Taerar"] = "Taerar";
+_L["taerar_search"] = { "tae", "taerar" };
+
 --
 --
 -- INTERFACE
@@ -735,6 +750,11 @@ _L["Polearm"] = "Polearm";
 _L["Bow"] = "Bow";
 _L["Gun"] = "Gun";
 _L["Crossbow"] = "Crossbow";
+_L["Ring"] = "Ring";
+_L["Amulet"] = "Amulet";
+_L["Cloak"] = "Cloak";
+_L["Trinket"] = "Trinket";
+_L["Off Hand"] = "Off Hand";
 
 _L["groupBrowserOptionOne"] = "%s - %s Member (%s)";
 _L["groupBrowserOptionMore"] = "%s - %s Members (%s)";
@@ -831,5 +851,12 @@ _L["options_toggle_hideKnowLoot_desc"] = "Hide all rares for which all loot is k
 _L["options_toggle_alwaysTrackCoA"] = "Always track Commander of Argus";
 _L["options_toggle_alwaysTrackCoA_desc"] = "Always track Commander of Argus, even if the achievement is complete on the account, but not on the character.";
 _L["Missing for CoALink"] = "Missing for %s";
+
+_L["options_toggle_birthday13"] = "WoW's 13th Anniversary World Bosses";
+_L["options_toggle_birthday13_desc"] = "Toggle Azuregos, Lord Kazzak and the Nightmare Dragons";
+_L["options_toggle_alwaysShowBirthday13"] = "- even if already looted today";
+_L["options_toggle_alwaysShowBirthday13_desc"] = "";
+_L["Shared"] = "Shared";
+_L["Somewhere"] = "Somewhere";
 
 end

@@ -39,6 +39,10 @@ L:SetGeneralLocalization{
 	name	= "Broodlord Lashlayer"
 }
 
+L:SetMiscLocalization{
+	Pull	= "None of your kind should be here!  You've doomed only yourselves!"
+}
+
 ---------------
 --  Firemaw  --
 ---------------
@@ -98,16 +102,14 @@ L:SetGeneralLocalization{
 	name = "Nefarian"
 }
 L:SetWarningLocalization{
-	WarnClassCall		= "%s call",
-	WarnPhase			= "Phase %s"
+	WarnClassCall		= "%s call"
 }
 L:SetTimerLocalization{
-	TimerClassCall		= "%s call"
+	TimerClassCall		= "%s call ends"
 }
 L:SetOptionLocalization{
 	TimerClassCall		= "Show timer for class call duration",
-	WarnClassCall		= "Announce class calls",
-	WarnPhase			= "Announce phase change"
+	WarnClassCall		= "Announce class calls"
 }
 L:SetMiscLocalization{
 	YellP2		= "Well done, my minions. The mortals' courage begins to wane! Now, let's see how they contend with the true Lord of Blackrock Spire!!!",

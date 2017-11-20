@@ -1,12 +1,18 @@
-tag 445507e76359775d69ecd5e30831e520698752d9 2.18.4.1
+tag a3447ee95ed0f6f28dae819e08478ad642d5840e 2.18.5
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Wed Aug 30 20:15:39 2017 +0200
+Date:	Fri Nov 3 16:15:17 2017 +0100
 
-Repackaged with new libraries
+Removed OrderHallCommander advertising
 
-commit 61f1c3cda7e631789824b3460c5c9c0b01585644
+commit 797379e3c267fc45791bd547aa5bcb120ddc5a6e
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Wed Aug 30 10:55:56 2017 +0200
+Date:   Fri Nov 3 16:14:44 2017 +0100
 
-    Fix: Error when playing sounds
+    doc
+
+commit 31846d809767fe07728a6be8b82fb24a60b4c72a
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Fri Nov 3 16:10:21 2017 +0100
+
+    OrderHallCommander advertising removed
 

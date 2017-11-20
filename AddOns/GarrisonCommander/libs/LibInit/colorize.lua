@@ -3,7 +3,6 @@
 -- @name Colorize
 -- @class module
 -- @author Alar of Daggerspine
--- @release 6
 
 ---
 -- @type C
@@ -21,10 +20,13 @@
 -- -- For a list of available color check Colors
 -- -- Each color became the name of a method
 --
+local LibStub=LibStub
+local libinit,MINOR_VERSION = LibStub("LibInit")
+if not libinit then return end
 
 local C
 -- Color system related function
-local lib=LibStub:NewLibrary("LibInit-Colorize",6)
+local lib=LibStub:NewLibrary("LibInit-Colorize",MINOR_VERSION)
 if (not lib) then return end
 local setmetatable=setmetatable
 local tonumber=tonumber
@@ -211,3 +213,4 @@ function lib:example()
 		print(format("%s Quality: %2d|r",v.hex,k))
 	end
 end
+libinit:_SetColorize(lib())

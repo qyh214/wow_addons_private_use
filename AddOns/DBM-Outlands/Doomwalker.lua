@@ -18,7 +18,7 @@ local warnQuake				= mod:NewSpellAnnounce(32686, 3)
 
 local timerChargeCD			= mod:NewCDTimer(42, 32637, nil, nil, nil, 3)
 local timerQuakeCD			= mod:NewCDTimer(52, 32686, nil, nil, nil, 2)
-local timerQuake			= mod:NewBuffActiveTimer(8, 32686)
+local timerQuake			= mod:NewBuffActiveTimer(8, 32686, nil, nil, nil, 2)
 
 mod:AddBoolOption("RangeFrame", true)
 

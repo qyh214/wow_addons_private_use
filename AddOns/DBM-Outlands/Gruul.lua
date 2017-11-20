@@ -19,12 +19,14 @@ local warnGroundSlam	= mod:NewSpellAnnounce(33525, 3)
 local warnShatter		= mod:NewSpellAnnounce(30403, 4)
 local warnSilence		= mod:NewSpellAnnounce(36297, 4)
 
-local specWarnCaveIn	= mod:NewSpecialWarningMove(36240)
+local specWarnCaveIn	= mod:NewSpecialWarningMove(36240, nil, nil, nil, 1, 2)
 
-local timerGrowthCD		= mod:NewNextTimer(30, 36300)
+local timerGrowthCD		= mod:NewNextTimer(30, 36300, nil, nil, nil, 6)
 local timerGroundSlamCD	= mod:NewCDTimer(74, 36300, nil, nil, nil, 2)--74-80 second variation,and this is just from 2 pulls.
-local timerShatterCD	= mod:NewNextTimer(10, 33654, nil, nil, nil, 2)--10 seconds after ground slam
-local timerSilenceCD	= mod:NewCDTimer(32, 36300, nil, nil, nil, 5)--Also showing a HUGE variation of 32-48 seconds.
+local timerShatterCD	= mod:NewNextTimer(10, 33654, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)--10 seconds after ground slam
+local timerSilenceCD	= mod:NewCDTimer(32, 36300, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)--Also showing a HUGE variation of 32-48 seconds.
+
+local voiceCaveIn		= mod:NewVoice(36240)--runaway
 
 mod:AddBoolOption("RangeFrame", true)
 
@@ -69,6 +71,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args.spellId == 36240 and args:IsPlayer() and not self:IsTrivial(85) then--Cave In
 		specWarnCaveIn:Show()
+		voiceCaveIn:Play("runaway")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED

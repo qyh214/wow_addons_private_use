@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Leotheras", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 638 $"):sub(12, -3))
 mod:SetCreatureID(21215)
 mod:SetEncounterID(625)
 mod:SetModelID(20514)
@@ -12,48 +12,52 @@ mod:RegisterCombat("combat")
 
 --Not using RegisterEventsInCombat on purpose because it uses weird combat rules
 mod:RegisterEvents(
-	"SPELL_AURA_APPLIED 37640 37676 37749",
-	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_DIED"
 )
+mod:RegisterEventsInCombat(
+	"SPELL_AURA_APPLIED 37640 37676 37749",
+	"CHAT_MSG_MONSTER_YELL"
+)
 
-local warnWhirl			= mod:NewSpellAnnounce(37640, 3)
 local warnPhase			= mod:NewAnnounce("WarnPhase", 1)
 local warnDemon			= mod:NewTargetAnnounce(37676, 4)
 local warnMC			= mod:NewTargetAnnounce(37749, 4)
 local warnPhase2		= mod:NewPhaseAnnounce(2)
 
-local specWarnWhirl		= mod:NewSpecialWarningRun(37640)
-local specWarnDemon		= mod:NewSpecialWarningYou(37676)
+local specWarnWhirl		= mod:NewSpecialWarningRun(37640, nil, nil, nil, 4, 2)
+local specWarnDemon		= mod:NewSpecialWarningYou(37676, nil, nil, nil, 1, 2)
 
 local timerWhirlCD		= mod:NewCDTimer(27, 37640, nil, nil, nil, 2)
-local timerWhirl		= mod:NewBuffActiveTimer(12, 37640)
+local timerWhirl		= mod:NewBuffActiveTimer(12, 37640, nil, nil, nil, 2)
 local timerPhase		= mod:NewTimer(60, "TimerPhase", 39088, nil, nil, 6)
 local timerDemonCD		= mod:NewCDTimer(23, 37676, nil, nil, nil, 6)
 local timerDemon		= mod:NewBuffFadesTimer(30, 37676, nil, nil, nil, 6)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
+local voiceWhirl		= mod:NewVoice(37640)--runout
+local voiceDemon		= mod:NewVoice(37676)--targetyou
+
 mod:AddBoolOption("DemonIcon", false)
 
 local warnDemonTargets = {}
 local warnMCTargets = {}
-local binderKill = 0
-local demonIcon = 8
-local whirlCount = 0
-local phase2 = false
+mod.vb.binderKill = 0
+mod.vb.demonIcon = 8
+mod.vb.whirlCount = 0
+mod.vb.phase = 1
 
-local function humanWarns()
-	whirlCount = 0
+local function humanWarns(self)
+	self.vb.whirlCount = 0
 	warnPhase:Show(L.Human)
 	timerWhirlCD:Start(15)
 	timerPhase:Start(nil, L.Demon)
 end
 
-local function showDemonTargets()
+local function showDemonTargets(self)
 	warnDemon:Show(table.concat(warnDemonTargets, "<, >"))
 	table.wipe(warnDemonTargets)
-	demonIcon = 8
+	self.vb.demonIcon = 8
 	timerDemon:Start()
 end
 
@@ -62,18 +66,23 @@ local function showMCTargets()
 	table.wipe(warnMCTargets)
 end
 
-function mod:OnCombatEnd()
-	binderKill = 0
+function mod:OnCombatStart(delay)
+	self.vb.demonIcon = 8
+	self.vb.whirlCount = 0
+end
+
+function mod:OnCombatEnd(delay)
+	self.vb.binderKill = 0
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 37640 then
-		warnWhirl:Show()
 		specWarnWhirl:Show()
+		voiceWhirl:Play("justrun")
 		timerWhirl:Start()
-		if not phase2 then
-			whirlCount = whirlCount + 1
-			if whirlCount < 3 then
+		if self.vb.phase ~= 2 then
+			self.vb.whirlCount = self.vb.whirlCount + 1
+			if self.vb.whirlCount < 3 then
 				timerWhirlCD:Start()
 			end
 		else
@@ -83,16 +92,17 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnDemonTargets[#warnDemonTargets + 1] = args.destName
 		self:Unschedule(showDemonTargets)
 		if self.Options.DemonIcon then
-			self:SetIcon(args.destName, demonIcon)
-			demonIcon = demonIcon - 1
+			self:SetIcon(args.destName, self.vb.demonIcon)
+			self.vb.demonIcon = self.vb.demonIcon - 1
 		end
 		if args:IsPlayer() then
 			specWarnDemon:Show()
+			voiceDemon:Play("targetyou")
 		end
 		if #warnDemonTargets >= 5 then
-			showDemonTargets()
+			showDemonTargets(self)
 		else
-			self:Schedule(0.7, showDemonTargets)
+			self:Schedule(0.7, showDemonTargets, self)
 		end
 	elseif args.spellId == 37749 then
 		warnMCTargets[#warnMCTargets + 1] = args.destName
@@ -109,9 +119,9 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerPhase:Cancel()
 		timerDemonCD:Start()
 		timerPhase:Start(nil, L.Human)
-		self:Schedule(60, humanWarns)
+		self:Schedule(60, humanWarns, self)
 	elseif msg == L.YellPhase2 or msg:find(L.YellPhase2) then
-		phase2 = true
+		self.vb.phase = 2
 		self:Unschedule(humanWarns)
 		timerPhase:Cancel()
 		timerWhirl:Cancel()
@@ -125,12 +135,12 @@ end
 function mod:UNIT_DIED(args)
 	local cId = self:GetCIDFromGUID(args.destGUID)
 	if cId == 21806 then
-		binderKill = binderKill + 1
-		if binderKill == 3 and not self:IsInCombat() then
+		self.vb.binderKill = self.vb.binderKill + 1
+		if self.vb.binderKill == 3 and not self:IsInCombat() then
 			DBM:StartCombat(self, 0)
-			demonIcon = 8
-			whirlCount = 0
-			phase2 = false
+			self.vb.demonIcon = 8
+			self.vb.whirlCount = 0
+			self.vb.phase = 1
 			table.wipe(warnMCTargets)
 			table.wipe(warnDemonTargets)
 			timerWhirlCD:Start(15)

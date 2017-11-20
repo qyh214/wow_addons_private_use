@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1983, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16765 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16812 $"):sub(12, -3))
 mod:SetCreatureID(122366)
 mod:SetEncounterID(2069)
 mod:SetZone()
@@ -14,7 +14,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 --	"SPELL_CAST_START 243999",
-	"SPELL_CAST_SUCCESS 243960 244093 243999",
+	"SPELL_CAST_SUCCESS 243960 244093 243999 257644",
 	"SPELL_AURA_APPLIED 243961 244042 244094 248732 243968 243977 243980 243973",
 --	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED 244042 244094",
@@ -26,7 +26,7 @@ mod:RegisterEventsInCombat(
 --TODO, icons on necrotic embrace?
 --TODO, on phase changes most ability CDs extended by 2+ seconds, but NOT ALWAYS so difficult to hard code a rule for it right now
 --[[
-(ability.id = 243960 or ability.id = 244093 or ability.id = 243999 or ability.id = 244042) and type = "cast"
+(ability.id = 243960 or ability.id = 244093 or ability.id = 243999 or ability.id = 244042 or ability.id = 257644) and type = "cast"
  or (ability.id = 243968 or ability.id = 243977 or ability.id = 243980 or ability.id = 243973) and type = "applydebuff" and target.name = "Omegal"
  or ability.id = 26662
 --]]
@@ -61,7 +61,7 @@ local timerTormentofFrostCD				= mod:NewNextTimer(61, 243976, nil, nil, nil, 6)
 local timerTormentofFelCD				= mod:NewNextTimer(61, 243979, nil, nil, nil, 6)
 local timerTormentofShadowsCD			= mod:NewNextTimer(61, 243974, nil, nil, nil, 6)
 --The Fallen Nathrezim
-local timerShadowStrikeCD				= mod:NewCDTimer(9.7, 243960, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerShadowStrikeCD				= mod:NewCDTimer(9, 243960, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--9-14
 local timerDarkFissureCD				= mod:NewCDTimer(32, 243999, nil, nil, nil, 3)
 local timerMarkedPreyCD					= mod:NewCDTimer(30.3, 244042, nil, nil, nil, 3)
 local timerNecroticEmbraceCD			= mod:NewCDTimer(30.3, 244093, nil, nil, nil, 3)
@@ -131,7 +131,7 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 243960 then
+	if spellId == 243960 or spellId == 257644 then--257644 LFR shadow strike
 		warnShadowStrike:Show()
 		timerShadowStrikeCD:Show()
 		countdownShadowStrike:Start(9.7)
@@ -175,7 +175,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnNecroticEmbrace:Show()
 			voiceNecroticEmbrace:Play("scatter")
-			yellNecroticEmbrace:Countdown(4, 4)
+			yellNecroticEmbrace:Countdown(6, 4)
 		else
 			warnNecroticEmbrace:CombinedShow(0.3, args.destName)--Combined message because even if it starts on 1, people are gonna fuck it up
 		end

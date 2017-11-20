@@ -34,10 +34,7 @@ function module:OnInitialize(...)
 	OHFFollowerTab=OrderHallMissionFrame.FollowerTab -- Contains model view	
 	if GetAddOnEnableState(UnitName("player"),"OrderHallCommander") > 0 then
 		ns.ignoreHall=true
-		self:Print("Delegating hall management to OrderHallCommander")
 		return
-	else
-		self:Print(L["Support for Order Hall missions is being moved to OrderHallCommander.\nPlease install and update it"])
 	end
 	GHF=ns.GHF
 	GHFMissions=ns.GHFMissions

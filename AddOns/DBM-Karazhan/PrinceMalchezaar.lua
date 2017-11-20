@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Prince", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 631 $"):sub(12, -3))
 mod:SetCreatureID(15690)
 mod:SetEncounterID(661)
 mod:SetModelID(19274)
@@ -21,13 +21,16 @@ local warnPhase3				= mod:NewPhaseAnnounce(3)
 local warningAmpMagic			= mod:NewTargetAnnounce(39095, 3)
 local warningSWP				= mod:NewTargetAnnounce(30898, 2, nil, false)
 
-local specWarnEnfeeble			= mod:NewSpecialWarningYou(37277)
-local specWarnNova				= mod:NewSpecialWarningRun(30852, "Melee")
+local specWarnEnfeeble			= mod:NewSpecialWarningYou(37277, nil, nil, nil, 3, 2)
+local specWarnNova				= mod:NewSpecialWarningRun(30852, "Melee", nil, nil, 4, 2)
 
 local timerNovaCD				= mod:NewNextTimer(30, 30852, nil, nil, nil, 2)
 local timerNextInfernal			= mod:NewCDTimer(45, 37277, nil, nil, nil, 1)
-local timerEnfeebleCD			= mod:NewNextTimer(30, 30843, nil, nil, nil, 3)
+local timerEnfeebleCD			= mod:NewNextTimer(30, 30843, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerEnfeeble				= mod:NewBuffFadesTimer(9, 30843)
+
+local voiceEnfeeble				= mod:NewVoice(37277)--targetyou
+local voiceNova					= mod:NewVoice(30852, "Melee")--justrun
 
 local phase	= 0
 local enfeebleTargets = {}
@@ -57,8 +60,12 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 30852 then
-		warningNovaCast:Show()
-		specWarnNova:Show()--Trivial damage, but because of enfeeble, don't want to do a blind level check here
+		if self.Options.SpecWarn30852run then
+			specWarnNova:Show()--Trivial damage, but because of enfeeble, don't want to do a blind level check here
+			voiceNova:Play("justrun")
+		else
+			warningNovaCast:Show()
+		end
 		timerNovaCD:Start()
 	end
 end
@@ -73,6 +80,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			timerEnfeeble:Start()
 			specWarnEnfeeble:Show()
+			voiceEnfeeble:Play("targetyou")
 		end
 		self:Unschedule(showEnfeebleWarning)
 		self:Schedule(0.3, showEnfeebleWarning)

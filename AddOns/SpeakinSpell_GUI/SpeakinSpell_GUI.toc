@@ -1,10 +1,10 @@
 ###############################################################################
-## Interface: 70200
+## Interface: 70300
 ## Title: SpeakinSpell_GUI
 ## Title-deDE: SpeakinSpell_GUI
 ## Author: Stonarius of Antonidas
 ## Author: Bazor (Akarf of Dawnbringer)
-## Version: 7.2.1.01
+## Version: 7.3.2.01
 ## Notes: GUI module for SpeakinSpell, loads on demand
 ## X-Credits: Created by Stonarius and Duerma
 ## X-Category: Chat

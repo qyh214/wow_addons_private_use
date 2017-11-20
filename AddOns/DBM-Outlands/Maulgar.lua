@@ -24,17 +24,19 @@ local warningPWS			= mod:NewTargetAnnounce(33147, 3, nil, false)
 local warningPoH			= mod:NewCastAnnounce(33152, 4)
 local warningHeal			= mod:NewCastAnnounce(33144, 4)
 
-local specWarnWhirlwind		= mod:NewSpecialWarningSpell(33238, "Melee")
-local specWarnPoH			= mod:NewSpecialWarningInterrupt(33152)
-local specWarnHeal			= mod:NewSpecialWarningInterrupt(33144)
+local specWarnWhirlwind		= mod:NewSpecialWarningRun(33238, "Melee", nil, nil, 4, 2)
+local specWarnPoH			= mod:NewSpecialWarningInterrupt(33152, "HasInterrupt")
+local specWarnHeal			= mod:NewSpecialWarningInterrupt(33144, "HasInterrupt")
 
 local timerWhirlwindCD		= mod:NewCDTimer(55, 33238, nil, nil, nil, 2)
-local timerWhirlwind		= mod:NewBuffActiveTimer(15, 33238)
-local timerFelhunter		= mod:NewBuffActiveTimer(48.5, 33131)--Buff Active or Cd timer?
-local timerPoH				= mod:NewCastTimer(4, 33152, nil, nil, nil, 4)
-local timerHeal				= mod:NewCastTimer(2, 33144, nil, nil, nil, 4)
+local timerWhirlwind		= mod:NewBuffActiveTimer(15, 33238, nil, nil, nil, 2)
+local timerFelhunter		= mod:NewBuffActiveTimer(48.5, 33131, nil, nil, nil, 1)--Buff Active or Cd timer?
+local timerPoH				= mod:NewCastTimer(4, 33152, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerHeal				= mod:NewCastTimer(2, 33144, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 
-local lastFear = 0
+local voiceWhirlwind		= mod:NewVoice(33238, "Melee")--justrun
+local voicePoH				= mod:NewVoice(33152, "HasInterrupt")
+local voiceHeal				= mod:NewVoice(33144, "HasInterrupt")
 
 function mod:OnCombatStart(delay)
 	timerWhirlwindCD:Start(58-delay)
@@ -42,24 +44,32 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 33152 then--Prayer of Healing
-		warningPoH:Show()
-		timerPoH:Start()
-		if self:GetUnitCreatureId("target") == 18836 or self:GetUnitCreatureId("focus") == 18836 then
+		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnPoH:Show(args.sourceName)
+			voicePoH:Play("kickcast")
+			timerPoH:Start()
+		else
+			warningPoH:Show()
 		end
 	elseif args.spellId == 33144 then--Heal
-		warningHeal:Show()
-		timerHeal:Start()
-		if self:GetUnitCreatureId("target") == 18836 or self:GetUnitCreatureId("focus") == 18836 then
+		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnHeal:Show(args.sourceName)
+			voiceHeal:Play("kickcast")
+			timerHeal:Start()
+		else
+			warningHeal:Show()
 		end
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 33238 then
-		warningWhirlwind:Show()
-		specWarnWhirlwind:Show()
+		if self.Options.SpecWarn33238run then
+			specWarnWhirlwind:Show()
+			voiceWhirlwind:Play("justrun")
+		else
+			warningWhirlwind:Show()
+		end
 		timerWhirlwind:Start()
 		timerWhirlwindCD:Start()
 	elseif args.spellId == 33054 and not args:IsDestTypePlayer() then

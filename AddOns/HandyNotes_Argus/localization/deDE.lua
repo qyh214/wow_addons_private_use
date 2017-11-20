@@ -667,6 +667,10 @@ _L["Polearm"] = "Stange";
 _L["Bow"] = "Bogen";
 _L["Gun"] = "Schußwaffe";
 _L["Crossbow"] = "Armbrust";
+_L["Ring"] = "Ring";
+_L["Cloak"] = "Umhang";
+_L["Trinket"] = "Schmuckstück";
+_L["Off Hand"] = "Nebenhand";
 
 _L["groupBrowserOptionOne"] = "%s - %s Spieler (%s)";
 _L["groupBrowserOptionMore"] = "%s - %s Spieler (%s)";

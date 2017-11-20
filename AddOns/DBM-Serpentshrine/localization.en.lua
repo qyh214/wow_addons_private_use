@@ -122,7 +122,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-	WarnMurlocs		= "Murlocs",
 	SpecWarnMurlocs	= "Murlocs Coming!"
 }
 
@@ -131,7 +130,6 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	WarnMurlocs		= "Show warning when Murlocs spawning",
 	SpecWarnMurlocs	= "Show special warning when Murlocs spawning",
 	TimerMurlocs	= "Show timer for Murlocs spawning",
 	GraveIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(38049)

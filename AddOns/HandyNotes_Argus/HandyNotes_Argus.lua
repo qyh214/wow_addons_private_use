@@ -1,5 +1,5 @@
 -- For the gnomes!!!
-local VERSION = "0.25.0";
+local VERSION = "0.26.3";
 
 local _G = getfenv(0)
 -- Libraries
@@ -87,6 +87,7 @@ local itemTypePet = 1;
 local itemTypeMount = 2;
 local itemTypeToy = 3;
 local itemTypeTransmog = 4;
+local itemTypeTitle = 5;
 
 local allLanguages = {
 	deDE = true,
@@ -131,7 +132,7 @@ nodes["ArgusCore"] = {
 	{ coord = 63042455, npcId = 127288, questId = 48821, icon = "skull_grey", group = "rare_aw", label = _L["Houndmaster Kerrax"], search = _L["Houndmaster Kerrax_search"], loot = { { itemId = 152790, itemType = itemTypeMount, mountId = 955 } }, note = _L["Houndmaster Kerrax_note"] },
 	{ coord = 55702190, npcId = 127300, questId = 48824, icon = "skull_grey", group = "rare_aw", label = _L["Void Warden Valsuran"], search = _L["Void Warden Valsuran_search"], loot = { { itemId = 153319, itemType = itemTypeTransmog, slot = _L["2h Mace"] }, { itemId = 152886, itemType = itemTypeTransmog, slot = _L["Cloth"] }, { itemId = 152888, itemType = itemTypeTransmog, slot = _L["Cloth"] }, { itemId = 152884, itemType = itemTypeTransmog, slot = _L["Cloth"] }, { itemId = 152889, itemType = itemTypeTransmog, slot = _L["Cloth"] }, { itemId = 152885, itemType = itemTypeTransmog, slot = _L["Cloth"] }, { itemId = 152881, itemType = itemTypeTransmog, slot = _L["Cloth"] }, { itemId = 152887, itemType = itemTypeTransmog, slot = _L["Cloth"] }, { itemId = 152883, itemType = itemTypeTransmog, slot = _L["Cloth"] } }, note = _L["Void Warden Valsuran_note"] },
 	{ coord = 61392095, npcId = 127376, questId = 48865, icon = "skull_grey", group = "rare_aw", label = _L["Chief Alchemist Munculus"], search = _L["Chief Alchemist Munculus_search"], loot = {}, note = _L["Chief Alchemist Munculus_note"] },
-	{ coord = 54823915, npcId = 127581, questId = 48966, icon = "skull_grey", group = "rare_aw", label = _L["The Many-Faced Devourer"], search = _L["The Many-Faced Devourer_search"], loot = { { itemId = 153195, itemType = itemTypePet, speciesId = 2136, forceUnknown = true } }, note = _L["The Many-Faced Devourer_note"] },
+	{ coord = 54823915, npcId = 127581, questId = 48966, icon = "skull_grey", group = "rare_aw", label = _L["The Many-Faced Devourer"], search = _L["The Many-Faced Devourer_search"], loot = { { itemId = 153195, itemType = itemTypePet, speciesId = 2136 } }, note = _L["The Many-Faced Devourer_note"] },
 	{ coord = 77567478, npcId = nil, questId = 48967, icon = "portalGreen", group = "portal_aw", label = _L["Portal to Squadron Commander Vishax"], loot = {}, note = _L["Portal to Squadron Commander Vishax_note"] },
 	{ coord = 84368118, npcId = 127700, questId = 48967, icon = "skull_grey", group = "rare_aw", label = _L["Squadron Commander Vishax"], search = _L["Squadron Commander Vishax_search"], loot = { { itemId = 153253, itemType = itemTypeToy } }, note = _L["Squadron Commander Vishax_note"] },
 	{ coord = 58001200, npcId = 127703, questId = 48968, icon = "skull_grey", group = "rare_aw", label = _L["Doomcaster Suprax"], search = _L["Doomcaster Suprax_search"], loot = { { itemId = 153194, itemType = itemTypeToy } }, note = _L["Doomcaster Suprax_note"] },
@@ -403,7 +404,7 @@ nodes["ArgusMacAree"] = {
 	{ coord = 52976684, npcId = 126815, questId = 48693, icon = "skull_grey", group = "rare_ma", label = _L["Soultwisted Monstrosity"], search = _L["Soultwisted Monstrosity_search"], loot = {}, note = _L["Soultwisted Monstrosity_note"] },
 	{ coord = 55536016, npcId = 126852, questId = 48695, icon = "skull_grey", group = "rare_ma", label = _L["Wrangler Kravos"], search = _L["Wrangler Kravos_search"], loot = { { itemId = 153269, itemType = itemTypeTransmog, slot = _L["1h Axe"] }, { itemId = 152814, itemType = itemTypeMount, mountId = 970 } }, note = _L["Wrangler Kravos_note"] },
 	{ coord = 38705580, npcId = 126860, questId = 48697, icon = "skull_grey", group = "rare_ma", label = _L["Kaara the Pale"], search = _L["Kaara the Pale_search"], loot = {}, note = _L["Kaara the Pale_note"] },
-	{ coord = 41121149, npcId = 126864, questId = 48702, icon = "skull_grey", group = "rare_ma", label = _L["Feasel the Muffin Thief"], search = _L["Feasel the Muffin Thief_search"], loot = { { itemId = 152998, itemType = itemTypeMisc, forceUnknown = true } }, note = _L["Feasel the Muffin Thief_note"] },
+	{ coord = 41121149, npcId = 126864, questId = 48702, icon = "skull_grey", group = "rare_ma", label = _L["Feasel the Muffin Thief"], search = _L["Feasel the Muffin Thief_search"], loot = { { itemId = 152998, itemType = itemTypeMisc } }, note = _L["Feasel the Muffin Thief_note"] },
 	{ coord = 36682383, npcId = 126865, questId = 48703, icon = "skull_grey", group = "rare_ma", label = _L["Vigilant Thanos"], search = _L["Vigilant Thanos_search"], loot = { { itemId = 153322, itemType = itemTypeTransmog, slot = _L["Shield"] }, { itemId = 153183, itemType = itemTypeToy } }, note = _L["Vigilant Thanos_note"] },
 	{ coord = 63806460, npcId = 126866, questId = 48704, icon = "skull_grey", group = "rare_ma", label = _L["Vigilant Kuro"], search = _L["Vigilant Kuro_search"], loot = { { itemId = 153323, itemType = itemTypeTransmog, slot = _L["Shield"] }, { itemId = 153183, itemType = itemTypeToy } }, note = _L["Vigilant Kuro_note"] },
 	{ coord = 33654801, npcId = 126867, questId = 48705, icon = "skull_grey", group = "rare_ma", label = _L["Venomtail Skyfin"], search = _L["Venomtail Skyfin_search"], loot = { { itemId = 152844, itemType = itemTypeMount, mountId = 973 } }, note = _L["Venomtail Skyfin_note"] },
@@ -659,6 +660,111 @@ local worldmapPOI = {
 
 --
 --
+--	13th Anniversary
+--
+--
+
+local kazzakLoot = {
+	{ itemId = 150379, itemType = itemTypeTransmog, slot = _L["Mail"] },
+	{ itemId = 150380, itemType = itemTypeTransmog, slot = _L["Cloak"] },
+	{ itemId = 150381, itemType = itemTypeTransmog, slot = _L["Leather"] },
+	{ itemId = 150382, itemType = itemTypeTransmog, slot = _L["Leather"] },
+	{ itemId = 150383, itemType = itemTypeTransmog, slot = _L["Staff"] },
+	{ itemId = 150384, itemType = itemTypeTransmog, slot = _L["Ring"] },
+	{ itemId = 150385, itemType = itemTypeTransmog, slot = _L["Cloth"] },
+	{ itemId = 150386, itemType = itemTypeTransmog, slot = _L["Cloth"] },
+	{ itemId = 150426, itemType = itemTypeTransmog, slot = _L["Trinket"] },
+	{ itemId = 150427, itemType = itemTypeTransmog, slot = _L["1h Mace"] },
+};
+
+-- 150424 cold snap ??
+local azuregosLoot = {
+	{ itemId = 150417, itemType = itemTypeTransmog, slot = _L["Cloak"] },
+	{ itemId = 150419, itemType = itemTypeTransmog, slot = _L["Cloth"] },
+	{ itemId = 150421, itemType = itemTypeTransmog, slot = _L["2h Sword"] },
+	{ itemId = 150422, itemType = itemTypeTransmog, slot = _L["Plate"] },
+	{ itemId = 150423, itemType = itemTypeTransmog, slot = _L["Dagger"] },
+	{ itemId = 150425, itemType = itemTypeTransmog, slot = _L["Cloth"] },
+	{ itemId = 150428, itemType = itemTypeTransmog, slot = _L["Fist"] },
+	{ itemId = 150543, itemType = itemTypeTransmog, slot = _L["Leather"] },
+	{ itemId = 150544, itemType = itemTypeTransmog, slot = _L["Mail"] },
+	{ itemId = 150545, itemType = itemTypeTransmog, slot = _L["Ring"] },
+};
+
+local dragonsofnightmareLoot = {
+	{ itemType = itemTypeTitle, title = " " },
+	{ itemType = itemTypeTitle, title = _L["Ysondre"] },
+	{ itemId = 150387, itemType = itemTypeTransmog, slot = _L["Plate"] },
+	{ itemId = 150389, itemType = itemTypeTransmog, slot = _L["Mail"] },
+	{ itemId = 150391, itemType = itemTypeTransmog, slot = _L["Cloth"] },
+	{ itemId = 150396, itemType = itemTypeTransmog, slot = _L["Leather"] },
+	{ itemId = 150397, itemType = itemTypeTransmog, slot = _L["Cloth"] },
+	{ itemId = 150409, itemType = itemTypeTransmog, slot = _L["Off Hand"] },
+	{ itemType = itemTypeTitle, title = " " },
+	{ itemType = itemTypeTitle, title = _L["Lethon"] },
+	{ itemId = 150398, itemType = itemTypeTransmog, slot = _L["Leather"] },
+	{ itemId = 150399, itemType = itemTypeTransmog, slot = _L["Cloth"] },
+	{ itemId = 150400, itemType = itemTypeTransmog, slot = _L["Mail"] },
+	{ itemId = 150401, itemType = itemTypeTransmog, slot = _L["Leather"] },
+	{ itemId = 150402, itemType = itemTypeTransmog, slot = _L["Plate"] },
+	{ itemId = 150407, itemType = itemTypeTransmog, slot = _L["Amulet"] },
+	{ itemId = 150429, itemType = itemTypeTransmog, slot = _L["Dagger"] },
+	{ itemType = itemTypeTitle, title = " " },
+	{ itemType = itemTypeTitle, title = _L["Emeriss"] },
+	{ itemId = 150404, itemType = itemTypeTransmog, slot = _L["Ring"] },
+	{ itemId = 150405, itemType = itemTypeTransmog, slot = _L["Leather"] },
+	{ itemId = 150406, itemType = itemTypeTransmog, slot = _L["Mail"] },
+	{ itemId = 150410, itemType = itemTypeTransmog, slot = _L["Plate"] },
+	{ itemId = 150415, itemType = itemTypeTransmog, slot = _L["Leather"] },
+	{ itemId = 150416, itemType = itemTypeTransmog, slot = _L["Cloth"] },
+	{ itemType = itemTypeTitle, title = " " },
+	{ itemType = itemTypeTitle, title = _L["Shared"] },
+	{ itemId = 150388, itemType = itemTypeTransmog, slot = _L["Trinket"] }, -- yle
+	{ itemId = 150393, itemType = itemTypeTransmog, slot = _L["1h Sword"] }, -- yle
+	{ itemId = 150403, itemType = itemTypeTransmog, slot = _L["Crossbow"] }, -- yle
+	{ itemId = 150408, itemType = itemTypeTransmog, slot = _L["Staff"] }, -- yle
+	{ itemId = 150411, itemType = itemTypeTransmog, slot = _L["Cloak"] }, -- yle
+	{ itemId = 150412, itemType = itemTypeTransmog, slot = _L["1h Mace"] }, -- yle
+	{ itemType = itemTypeTitle, title = " " },
+	{ itemType = itemTypeTitle, title = _L["Somewhere"] },
+	{ itemId = 150390, itemType = itemTypeTransmog, slot = _L["Plate"] },
+	{ itemId = 150413, itemType = itemTypeTransmog, slot = _L["Plate"] },
+	{ itemId = 150414, itemType = itemTypeTransmog, slot = _L["Mail"] },
+	
+	
+}
+
+nodes["BlastedLands"] = {
+	{ coord = 32274901, questId = 47461, npcId = 12397, icon = "skull_grey", group = "birthday13", label = _L["Lord Kazzak"], searchMaxAge = 3600*2, search = _L["kazzak_search"], loot = kazzakLoot, note = nil },
+}
+
+nodes["Aszhara"] = {
+	{ coord = 48778429, questId = 47462, npcId = 121820, icon = "skull_grey", group = "birthday13", label = _L["Azuregos"], searchMaxAge = 3600*2, search = _L["azuregos_search"], loot = azuregosLoot, note = nil },
+}
+
+-- taerar 14890
+-- emeriss 14889
+-- ysondre 14887 47463
+-- lethon 14888
+
+nodes["Duskwood"] = {
+	{ coord = 47533989, questId = 47463, icon = "skull_grey", group = "birthday13", label = _L["Dragons of Nightmare"], searchMaxAge = 3600*2, search = _L["dragonsofnightmare_search"], loot = dragonsofnightmareLoot, note = nil },
+}
+
+nodes["Hinterlands"] = {
+	{ coord = 62922546, questId = 47463, icon = "skull_grey", group = "birthday13", label = _L["Dragons of Nightmare"], searchMaxAge = 3600*2, search = _L["dragonsofnightmare_search"], loot = dragonsofnightmareLoot, note = nil },
+}
+
+nodes["Ashenvale"] = {
+	{ coord = 93634059, questId = 47463, icon = "skull_grey", group = "birthday13", label = _L["Dragons of Nightmare"], searchMaxAge = 3600*2, search = _L["dragonsofnightmare_search"], loot = dragonsofnightmareLoot, note = nil },
+}
+
+nodes["Feralas"] = {
+	{ coord = 50831161, questId = 47463, icon = "skull_grey", group = "birthday13", label = _L["Dragons of Nightmare"], searchMaxAge = 3600*2, search = _L["dragonsofnightmare_search"], loot = dragonsofnightmareLoot, note = nil },
+}
+
+--
+--
 --	Globals
 --
 --
@@ -679,7 +785,8 @@ local ADDON_MSG_CMD = {
 	sendVer = "SV",
 	getRares = "GR",
 	sendRares = "SR"
-}
+};
+local PLAYERS = {};
 
 --
 --
@@ -690,6 +797,15 @@ local ADDON_MSG_CMD = {
 local function debugMsg( msg )
 	if ( Argus.db.profile.show_debug ) then
 		print( msg );
+	end
+end
+
+local function versionToNumber( version )
+	local v1, v2, v3 = version:match("(%d+)%.(%d+)%.(%d+)");
+	if ( v1 and v2 and v3 ) then
+		return tonumber(v1) * 10000 + tonumber(v2) * 100 + tonumber(v3);
+	else
+		return 0;
 	end
 end
 
@@ -741,7 +857,7 @@ local function formatAge( age )
 	end
 end
 
-local function getCurrentTimeSlot( decimals, offset )
+local function __getCurrentTimeSlot( decimals, offset )
 	-- 09:02 - 13:02 = 0
 	-- 13:02 - 17:02 = 1
 	-- 17:02 - 21:02 = 2
@@ -792,11 +908,13 @@ local function updateLoot( node )
 	if ((node["loot"] ~= nil) and (type(node["loot"]) == "table") ) then
 		local ii;
 		for ii = 1, #node["loot"] do
-			total = total + 1;
-			local _, itemLink = GetItemInfo( node["loot"][ii]["itemId"] );
-			if ( not itemLink ) then failed = failed + 1 end
-			if ( not playerHasLoot( node["loot"][ii] ) ) then
-				node["allLootKnown"] = false;
+			if ( node["loot"][ii]["itemId"] ) then
+				total = total + 1;
+				local _, itemLink = GetItemInfo( node["loot"][ii]["itemId"] );
+				if ( not itemLink ) then failed = failed + 1 end
+				if ( not playerHasLoot( node["loot"][ii] ) ) then
+					node["allLootKnown"] = false;
+				end
 			end
 		end
 	end
@@ -827,6 +945,7 @@ local function prepareNodesData()
 	numSearches = 0;
 	for mapId,mapFile in pairs( nodes ) do
 		local numNodes = #nodes[mapId];
+		--debugMsg( mapId );
 		nodes[mapId][1]["lookup"] = {};
 		local lookup = nodes[mapId][1]["lookup"];
 		for i = 1,numNodes do
@@ -923,13 +1042,18 @@ function Argus:OnEnter( mapFile, coord )
 		local ii;
 		local loot = node["loot"];
 		for ii = 1, #loot do
-			local _, itemLink, _, _, _, _, _, _, _, _ = GetItemInfo( loot[ii]["itemId"] );
-			if ( not itemLink ) then
-				itemLink = "Retrieving data ...";
-				itemDataMissing = true;
+			local itemLink;
+			if ( loot[ii]["itemId"] ) then
+				_, itemLink, _, _, _, _, _, _, _, _ = GetItemInfo( loot[ii]["itemId"] );
+				if ( not itemLink ) then
+					itemLink = "Retrieving data ...";
+					itemDataMissing = true;
+				end
 			end
 			-- loot
-			if ( loot[ii]["itemType"] == itemTypeMount ) then
+			if ( loot[ii]["itemType"] == itemTypeTitle ) then
+				tooltip:AddLine( loot[ii]["title"] );
+			elseif ( loot[ii]["itemType"] == itemTypeMount ) then
 				-- check mount known
 				local n,_,_,_,_,_,_,_,_,_,c,j=C_MountJournal.GetMountInfoByID( loot[ii]["mountId"] );
 				if ( c == true ) then
@@ -1051,6 +1175,7 @@ local function checkResetNPCGroupCounts()
 	if ( lastRareResetSlot ~= currentTimeSlot ) then
 		resetNPCGroupCounts();
 		lastRareResetSlot = currentTimeSlot;
+		PLAYERS = {};
 	end
 end
 
@@ -1190,7 +1315,8 @@ local function LFGcreate( button, node )
 			elseif ( string.find( node["group"], "bsrare" ) ) then
 				desc = string.format( _L["listing_desc_rare"], node["label"] ) .. " Created with HandyNotes_Argus ##poi:" .. node["poiId"] .. "#hna:" .. VERSION;
 			end
-			C_LFGList.CreateListing( 16, node["label"]:sub(1,31), 820, 0, "", desc:sub(1,200), true );
+			local overallILvl, equippedILvl, pvpILvl = GetAverageItemLevel();
+			C_LFGList.CreateListing( 16, node["label"]:sub(1,31), math.min( equippedILvl, 820 ), 0, "", desc:sub(1,200), true );
 		end
 	end
 end
@@ -1248,7 +1374,7 @@ local function LFGbrowseMatches( matches, node, lfgcat )
 		menu = {
 			{ text = _L["Groups found:"], isTitle = true, notCheckable = true },
 		};
-		if ( node["group"] == "invasion" ) then
+		if ( node["group"] == "invasion" or node["group"] == "birthday13" ) then
 			table.sort( matches, function( a, b )
 				return a.numMembers > b.numMembers;
 			end );
@@ -1304,7 +1430,7 @@ finderFrame:SetScript("OnEvent", function( self, event, ... )
 			finderFrame.searchNode = nil;
 		end
 	elseif ( event == "LFG_LIST_SEARCH_FAILED" ) then
-		print( _L["chatmsg_search_failed"] );
+		debugMsg( _L["chatmsg_search_failed"] );
 	elseif ( event == "PLAYER_TARGET_CHANGED" ) then
 		if ( UnitHealth("target") == UnitHealthMax("target") and not UnitAffectingCombat("target") ) then
 			local guid = UnitGUID("target");
@@ -1384,11 +1510,11 @@ end );
 --
 --
 
-local commGetRares = function( channel )
+local function commGetRares( channel )
 	SendAddonMessage( ADDON_MSG_PREFIX, ADDON_MSG_CMD.getRares .. "=" .. VERSION, channel );
 end
 
-local commSendRares = function( channel )
+local function commSendRares( channel )
 	local s = "";
 	local now = getCurrentTimeSlot();
 	for npcId, node in pairs( nodeRef.rares ) do
@@ -1405,36 +1531,37 @@ local commSendRares = function( channel )
 	end
 end
 
-local commSendVersion = function( channel )
+local function commGetVersion( channel, nextCmd )
+	SendAddonMessage( ADDON_MSG_PREFIX, ADDON_MSG_CMD.getVer .. "=" .. nextCmd, channel );
+end
+
+local function commSendVersion( channel )
 	SendAddonMessage( ADDON_MSG_PREFIX, ADDON_MSG_CMD.sendVer .. "=" .. VERSION, channel );
 end
 
-local communicator = CreateFrame("Frame");
-communicator:SetScript("OnEvent", function( self, event, ... )
-	if ( event == "PLAYER_ENTERING_WORLD" ) then
-		if ( IsInGuild() ) then
-			commSendVersion( "GUILD" );
-			commGetRares( "GUILD" );
+local function commHandleCmd( channel, cmd, msg, target )
+	if ( cmd == ADDON_MSG_CMD.getVer ) then
+		local nextCmd = msg;
+		commSendVersion( channel );
+		commHandleCmd( channel, nextCmd, "", target );
+	elseif ( cmd == ADDON_MSG_CMD.sendVer ) then
+		debugMsg( target .. " -> " .. msg );
+		if ( target ) then
+			if ( not PLAYERS[target] ) then
+				PLAYERS[target] = { version = 0, tries = 0 };
+			end
+			PLAYERS[target]["version"] = versionToNumber( msg );
 		end
-	elseif ( event == "GROUP_JOINED" or event == "__GROUP_ROSTER_UPDATE" ) then
-		commSendVersion( "RAID" );
-		commGetRares( "RAID" );
-	elseif ( event == "CHAT_MSG_ADDON" ) then
-		local prefix, rawmsg, channel, playerRealm, player = ...
-		if ( playerRealm == MYSELF ) then
-			-- ignore myself
+	elseif ( cmd == ADDON_MSG_CMD.getRares ) then
+		commSendRares( channel );
+	elseif ( cmd == ADDON_MSG_CMD.sendRares ) then
+		if ( not PLAYERS[target] ) then
+			PLAYERS[target] = { version = 0, tries = 0 };
+			commGetVersion( channel, ADDON_MSG_CMD.getRares );
 			return;
-		end
-		local cmd = rawmsg:sub(1,2);
-		local msg = "";
-		if ( rawmsg:len() >= 4 ) then
-			msg = rawmsg:sub(4,-1);
-		end
-		if ( cmd == ADDON_MSG_CMD.getRares ) then
-			commSendRares( channel );
-		elseif ( cmd == ADDON_MSG_CMD.sendRares ) then
+		elseif ( PLAYERS[target]["version"] and PLAYERS[target]["version"] >= 2600 ) then
 			--print( ... );
-			--print( "parseRares:" .. msg );
+			--debugMsg( "parseRares:" .. msg );
 			local now = getCurrentTimeSlot();
 			msg:gsub("(%d+):(%d);", function ( npcId, timeSlot )
 				npcId = tonumber( npcId );
@@ -1458,7 +1585,36 @@ communicator:SetScript("OnEvent", function( self, event, ... )
 					--print("unknown npcid " .. npcId);
 				end
 			end );
+		else
+			-- print("ignore rares");
 		end
+	end
+end
+
+local communicator = CreateFrame("Frame");
+communicator:SetScript("OnEvent", function( self, event, ... )
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		if ( IsInGuild() ) then
+			commGetVersion( "GUILD", ADDON_MSG_CMD.getRares );
+			-- commSendVersion( "GUILD" );
+			-- commGetRares( "GUILD" );
+		end
+	elseif ( event == "GROUP_JOINED" or event == "__GROUP_ROSTER_UPDATE" ) then
+		commGetVersion( "RAID", ADDON_MSG_CMD.getRares );
+		-- commSendVersion( "RAID" );
+		-- commGetRares( "RAID" );
+	elseif ( event == "CHAT_MSG_ADDON" ) then
+		local prefix, rawmsg, channel, playerRealm, player = ...
+		if ( playerRealm == MYSELF or prefix ~= ADDON_MSG_PREFIX ) then
+			-- ignore myself and other addons
+			return;
+		end
+		local cmd = rawmsg:sub(1,2);
+		local msg = "";
+		if ( rawmsg:len() >= 4 ) then
+			msg = rawmsg:sub(4,-1);
+		end
+		commHandleCmd( channel, cmd, msg, playerRealm );
 	end
 end );
 
@@ -1571,11 +1727,13 @@ function Argus:OnClick(button, down, mapFile, coord)
         ToggleDropDownMenu(1, nil, HandyNotes_ArgusDropdownMenu, self, 0, 0)
 	elseif button == "MiddleButton" and down then
 		-- create group
-		if ( node["group"]:find("rare") ~= nil or node["group"]:find("invasion") ~= nil) then
+		if ( node["group"]:find("rare") ~= nil or node["group"]:find("invasion") ~= nil or node["group"]:find("birthday13") ~= nil ) then
 			LFGcreate( nil, node );
 		end
 	elseif button == "LeftButton" and down then
-		if ( node["group"]:find("rare") ~= nil or node["group"]:find("invasion") ~= nil) then
+		if ( node["group"]:find("rare") ~= nil or
+			node["group"]:find("invasion") ~= nil or
+			node["group"]:find("birthday13") ~= nil ) then
 			-- find group
 			LFGsearch( nil, node );
 		end
@@ -1855,7 +2013,7 @@ local options = {
 					arg = "nodeRareGlow",
 					name = _L["options_toggle_nodeRareGlow"],
 					desc = _L["options_toggle_nodeRareGlow_desc"],
-					order = 33,
+					order = 34,
 					width = "full",
 				},
 				hideKnowLoot = {
@@ -1863,7 +2021,7 @@ local options = {
 					arg = "hideKnowLoot",
 					name = _L["options_toggle_hideKnowLoot"],
 					desc = _L["options_toggle_hideKnowLoot_desc"],
-					order = 33,
+					order = 35,
 					width = "full",
 				},
 				alwaysTrackCoA = {
@@ -1871,7 +2029,23 @@ local options = {
 					arg = "alwaysTrackCoA",
 					name = _L["options_toggle_alwaysTrackCoA"],
 					desc = _L["options_toggle_alwaysTrackCoA_desc"],
-					order = 33,
+					order = 36,
+					width = "full",
+				},
+				birthday13 = {
+					type = "toggle",
+					arg = "birthday13",
+					name = _L["options_toggle_birthday13"],
+					desc = _L["options_toggle_birthday13_desc"],
+					order = 36,
+					width = "full",
+				},
+				alwaysShowBirthday13 = {
+					type = "toggle",
+					arg = "alwaysShowBirthday13",
+					name = _L["options_toggle_alwaysShowBirthday13"],
+					desc = _L["options_toggle_alwaysShowBirthday13_desc"],
+					order = 37,
 					width = "full",
 				},
 			},
@@ -2001,6 +2175,8 @@ function Argus:OnInitialize()
 			show_debug = false,
 			include_player_seen = false,
 			alwaysTrackCoA = false,
+			birthday13 = true,
+			alwaysShowBirthday13 = false,
         },
     }
 
@@ -2108,7 +2284,7 @@ function Argus:RegisterWithHandyNotes()
     end
 
     HandyNotes:RegisterPluginDB("HandyNotesArgus", self, options)
-    self:RegisterBucketEvent({ "LOOT_CLOSED" }, 2, "Refresh")
+    self:RegisterBucketEvent({ "LOOT_CLOSED", "PLAYER_MONEY", "SHOW_LOOT_TOAST", "SHOW_LOOT_TOAST_UPGRADE" }, 2, "Refresh")
     self:Refresh()
 end
  
@@ -2118,6 +2294,8 @@ end
 
 function Argus:ShowNode( mapFile, node )
 	if ( not self.db.profile[node["group"]] ) then return false end
+	if ( not self.db.profile.birthday13 ) then return false end
+	if ( self.db.profile.alwaysShowBirthday13 and (string.find(node["group"], "birthday13") ~= nil) ) then return true end
     if ( self.db.profile.alwaysshowtreasures and (string.find(node["group"], "treasure") ~= nil) ) then return true end
     if ( self.db.profile.alwaysshowrares and (string.find(node["group"], "rare") ~= nil) ) then return true end
 	if ( self.db.profile.alwaysshowsfll and (string.find(node["group"], "sfll") ~= nil) ) then return true end

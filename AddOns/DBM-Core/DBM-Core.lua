@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 16803 $"):sub(12, -3)),
-	DisplayVersion = "7.3.6", -- the string that is shown as version
-	ReleaseRevision = 16803 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 16840 $"):sub(12, -3)),
+	DisplayVersion = "7.3.7", -- the string that is shown as version
+	ReleaseRevision = 16840 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -121,7 +121,6 @@ DBM.DefaultOptions = {
 	DisableStatusWhisper = false,
 	DisableGuildStatus = false,
 	HideBossEmoteFrame2 = true,
-	SpamBlockBossWhispers = true,
 	ShowMinimapButton = false,
 	ShowFlashFrame = true,
 	SWarningAlphabetical = true,
@@ -278,7 +277,6 @@ DBM.DefaultOptions = {
 	MoviesSeen = {},
 	MovieFilter = "AfterFirst",
 	LastRevision = 0,
-	FilterSayAndYell = false,
 	DebugMode = false,
 	DebugLevel = 1,
 	RoleSpecAlert = true,
@@ -388,7 +386,7 @@ local UpdateChestTimer
 local breakTimerStart
 local AddMsg
 
-local fakeBWVersion, fakeBWHash = 73, "3a9a7bb"
+local fakeBWVersion, fakeBWHash = 75, "58fba63"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -2420,112 +2418,6 @@ function DBM:ShowPizzaInfo(id, sender)
 	end
 end
 
-------------------
---  Hyperlinks  --
-------------------
-do
-	local ignore, cancel
-	local popuplevel = 0
-	local function showPopupConfirmIgnore(ignore, cancel)
-		local popup = CreateFrame("Frame", "DBMHyperLinks", UIParent)
-		popup:SetBackdrop({bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
-			edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-			tile = true, tileSize = 16, edgeSize = 16,
-			insets = {left = 1, right = 1, top = 1, bottom = 1}}
-		)
-		popup:SetSize(500, 80)
-		popup:SetPoint("TOP", UIParent, "TOP", 0, -200)
-		popup:SetFrameStrata("DIALOG")
-		popup:SetFrameLevel(popuplevel)
-		popuplevel = popuplevel + 1
-
-		local text = popup:CreateFontString()
-		text:SetFontObject(ChatFontNormal)
-		text:SetWidth(470)
-		text:SetWordWrap(true)
-		text:SetPoint("TOP", popup, "TOP", 0, -15)
-		text:SetText(DBM_PIZZA_CONFIRM_IGNORE:format(ignore))
-
-		local accept = CreateFrame("Button", nil, popup)
-		accept:SetNormalTexture("Interface\\Buttons\\UI-DialogBox-Button-Up")
-		accept:SetPushedTexture("Interface\\Buttons\\UI-DialogBox-Button-Down")
-		accept:SetHighlightTexture("Interface\\Buttons\\UI-DialogBox-Button-Highlight", "ADD")
-		accept:SetSize(128, 35)
-		accept:SetPoint("BOTTOM", popup, "BOTTOM", -75, 0)
-		accept:SetScript("OnClick", function(f) DBM:AddToPizzaIgnore(ignore) DBM.Bars:CancelBar(cancel) f:GetParent():Hide() end)
-
-		local atext = accept:CreateFontString()
-		atext:SetFontObject(ChatFontNormal)
-		atext:SetPoint("CENTER", accept, "CENTER", 0, 5)
-		atext:SetText(YES)
-
-		local decline = CreateFrame("Button", nil, popup)
-		decline:SetNormalTexture("Interface\\Buttons\\UI-DialogBox-Button-Up")
-		decline:SetPushedTexture("Interface\\Buttons\\UI-DialogBox-Button-Down")
-		decline:SetHighlightTexture("Interface\\Buttons\\UI-DialogBox-Button-Highlight", "ADD")
-		decline:SetSize(128, 35)
-		decline:SetPoint("BOTTOM", popup, "BOTTOM", 75, 0)
-		decline:SetScript("OnClick", function(f) f:GetParent():Hide() end)
-
-		local dtext = decline:CreateFontString()
-		dtext:SetFontObject(ChatFontNormal)
-		dtext:SetPoint("CENTER", decline, "CENTER", 0, 5)
-		dtext:SetText(NO)
-		PlaySound(850)
-	end
-
-	local function linkHook(self, link, string, button, ...)
-		local linkType, arg1, arg2, arg3, arg4, arg5, arg6 = strsplit(":", link)
-		if linkType ~= "DBM" then
-			return
-		end
-		if arg1 == "cancel" then
-			DBM.Bars:CancelBar(link:match("DBM:cancel:(.+):nil$"))
-		elseif arg1 == "ignore" then
-			cancel = link:match("DBM:ignore:(.+):[^%s:]+$")
-			ignore = link:match(":([^:]+)$")
-			showPopupConfirmIgnore(ignore, cancel)
-		elseif arg1 == "update" then
-			DBM:ShowUpdateReminder(arg2, arg3) -- displayVersion, revision
-		elseif arg == "localizersneeded" then
-			DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG, "https://www.deadlybossmods.com/forum/viewtopic.php?f=3&t=5")
-		elseif arg1 == "forumsnews" then
-			DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG_NEWS, "https://discord.gg/DF5mffk")
-		elseif arg1 == "forums" then
-			DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG)
-		elseif arg1 == "showRaidIdResults" then
-			DBM:ShowRaidIDRequestResults()
-		elseif arg1 == "noteshare" then
-			local mod = DBM:GetModByName(arg2 or "")
-			if mod then
-				DBM:ShowNoteEditor(mod, arg3, arg4, arg5, arg6)
-			else--Should not happen, since mod was verified before getting this far, but just in case
-				DBM:Debug("Bad note share, mod not valid")
-			end
-		end
-	end
-
-	DEFAULT_CHAT_FRAME:HookScript("OnHyperlinkClick", linkHook) -- handles the weird case that the default chat frame is not one of the normal chat frames (3rd party chat frames or whatever causes this)
-	local i = 1
-	while _G["ChatFrame" .. i] do
-		if _G["ChatFrame" .. i] ~= DEFAULT_CHAT_FRAME then
-			_G["ChatFrame" .. i]:HookScript("OnHyperlinkClick", linkHook)
-		end
-		i = i + 1
-	end
-end
-
-do
-	local old = ItemRefTooltip.SetHyperlink -- we have to hook this function since the default ChatFrame code assumes that all links except for player and channel links are valid arguments for this function
-	function ItemRefTooltip:SetHyperlink(link, ...)
-		if link and link:sub(0, 4) == "DBM:" then
-			return
-		end
-		return old(self, link, ...)
-	end
-end
-
-
 -----------------
 --  GUI Stuff  --
 -----------------
@@ -3887,7 +3779,7 @@ do
 	
 	syncHandlers["NS"] = function(sender, modid, modvar, text, abilityName)
 		if sender == playerName then return end
-		if DBM.Options.BlockNoteShare or InCombatLockdown() or UnitAffectingCombat("player") or IsFalling() then return end
+		if DBM.Options.BlockNoteShare or InCombatLockdown() or UnitAffectingCombat("player") or IsFalling() or DBM:GetRaidRank(sender) == 0 then return end
 		if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and IsInInstance() then return end
 		--^^You are in LFR, BG, or LFG. Block note syncs. They shouldn't be sendable, but in case someone edits DBM^^
 		local mod = DBM:GetModByName(modid or "")
@@ -3895,8 +3787,7 @@ do
 		if mod and modvar and text and text ~= "" then
 			if DBM:AntiSpam(5, modvar) then--Don't allow calling same note more than once per 5 seconds
 				DBM:AddMsg(DBM_CORE_NOTE_SHARE_SUCCESS:format(sender, abilityName))
-				--Need to use modid in URL because we cannot insert a mod table into one
-				DBM:AddMsg(("|HDBM:noteshare:%s:%s:%s:%s:%s|h|cff3588ff[%s]"):format(modid, modvar, ability, text, sender, DBM_CORE_NOTE_SHARE_LINK))
+				DBM:ShowNoteEditor(mod, modvar, ability, text, sender)
 			else
 				DBM:Debug(sender.." is attempting to send too many notes so notes are being throttled")
 			end
@@ -5656,6 +5547,9 @@ do
 				end
 			else
 				self:AddMsg(DBM_CORE_COMBAT_STATE_RECOVERED:format(difficultyText..name, strFromTime(delay)))
+				if mod.OnTimerRecovery then
+					mod:OnTimerRecovery()
+				end
 			end
 			if savedDifficulty == "worldboss" and not mod.noWBEsync then
 				if lastBossEngage[modId..playerRealm] and (GetTime() - lastBossEngage[modId..playerRealm] < 30) then return end--Someone else synced in last 10 seconds so don't send out another sync to avoid needless sync spam.
@@ -6518,46 +6412,6 @@ do
 		local presenceId = select(12, ...) -- srsly?
 		return onWhisper(msg, presenceId, true)
 	end
-end
-
--------------------
---  Chat Filter  --
--------------------
-do
-	local function filterOutgoing(self, event, ...)
-		local msg = ...
-		if not msg and self then -- compatibility mode!
-			-- we also check if self exists to prevent a possible freeze if the function is called without arguments at all
-			-- as this would be even worse than the issue with missing whisper messages ;)
-			return filterOutgoing(nil, nil, self, event)
-		end
-		return msg:sub(1, chatPrefix:len()) == chatPrefix or msg:sub(1, chatPrefixShort:len()) == chatPrefixShort, ...
-	end
-
-	local function filterIncoming(self, event, ...)
-		local msg = ...
-		if not msg and self then -- compatibility mode!
-			return filterIncoming(nil, nil, self, event)
-		end
-		if DBM.Options.SpamBlockBossWhispers then
-			return #inCombat > 0 and (msg == "status" or msg:sub(1, chatPrefix:len()) == chatPrefix or msg:sub(1, chatPrefixShort:len()) == chatPrefixShort), ...
-		else
-			return msg == "status" and #inCombat > 0, ...
-		end
-	end
-
-	local function filterSayYell(self, event, ...)
-		return DBM.Options.FilterSayAndYell and #inCombat > 0, ...
-	end
-
-	--This is the source of the taints. As well as function DBM:AddMsg(text, prefix) function
-	--Which is why we embed libchatanims to fix those taints.
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", filterOutgoing)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", filterOutgoing)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", filterIncoming)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", filterIncoming)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", filterSayYell)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", filterSayYell)
 end
 
 --This completely unregisteres or registers distruptive events so they don't obstruct combat

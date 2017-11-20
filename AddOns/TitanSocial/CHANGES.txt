@@ -1,16 +1,16 @@
-lightweight tag c06459c28bc879674c8fa43a7956deb6b4029d9f 7.3.0
+lightweight tag 3bb777c9994c38ebcbaf1d0ac0f76bcf51261669 7.3.2
 Author:	GitHub <noreply@github.com>
-Date:	Mon Oct 16 10:32:28 2017 -0500
+Date:	Wed Nov 1 21:08:56 2017 -0500
 
-commit 5408cd8ab51b3ca4bb7d86276c77c4abc1d97917
+commit 0975861150d695aa100f6b4be92d063b2426b257
 Author: Josh Worden <solocommand@gmail.com>
-Date:   Mon Oct 16 10:25:23 2017 -0500
+Date:   Wed Nov 1 21:08:31 2017 -0500
 
-    version bump
+    Group mobile with battle.net app
 
-commit 5408cd8ab51b3ca4bb7d86276c77c4abc1d97917
+commit 0975861150d695aa100f6b4be92d063b2426b257
 Author: Josh Worden <solocommand@gmail.com>
-Date:   Mon Oct 16 10:25:23 2017 -0500
+Date:   Wed Nov 1 21:08:31 2017 -0500
 
-    version bump
+    Group mobile with battle.net app
 

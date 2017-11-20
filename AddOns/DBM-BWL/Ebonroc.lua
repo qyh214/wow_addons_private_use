@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ebonroc", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 597 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 627 $"):sub(12, -3))
 mod:SetCreatureID(14601)
 mod:SetEncounterID(614)
 mod:SetModelID(6377)
@@ -13,13 +13,17 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 23340"
 )
 
-local warnWingBuffet	= mod:NewCastAnnounce(23339)
-local warnShadowFlame	= mod:NewCastAnnounce(22539)
-local warnShadow		= mod:NewTargetAnnounce(23340)
+local warnWingBuffet	= mod:NewCastAnnounce(23339, 2)
+local warnShadowFlame	= mod:NewCastAnnounce(22539, 2)
+local warnShadow		= mod:NewTargetAnnounce(23340, 4)
 
-local timerWingBuffet	= mod:NewNextTimer(31, 23339)
-local timerShadowFlame	= mod:NewCastTimer(2, 22539)
-local timerShadow		= mod:NewTargetTimer(8, 23340)
+local specWarnShadowYou	= mod:NewSpecialWarningYou(23340, nil, nil, nil, 1, 2)
+local specWarnShadow	= mod:NewSpecialWarningTaunt(23340, nil, nil, nil, 1, 2)
+
+local timerWingBuffet	= mod:NewNextTimer(31, 23339, nil, nil, nil, 2)
+local timerShadow		= mod:NewTargetTimer(8, 23340, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
+
+local voiceShadow		= mod:NewVoice(23340)--Tauntboss
 
 function mod:OnCombatStart(delay)
 	timerWingBuffet:Start(-delay)
@@ -30,20 +34,29 @@ function mod:SPELL_CAST_START(args)--did not see ebon use any of these abilities
 		warnWingBuffet:Show()
 		timerWingBuffet:Start()
 	elseif args.spellId == 22539 then
-		timerShadowFlame:Start()
 		warnShadowFlame:Show()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 23340 then
-		warnShadow:Show(args.destName)
+		if args:IsPlayer() then
+			specWarnShadowYou:Show()
+			voiceShadow:Play("targetyou")
+		else
+			if self.Options.SpecWarn23340taunt then
+				specWarnShadow:Show(args.destName)
+				voiceShadow:Play("tauntboss")
+			else
+				warnShadow:Show(args.destName)
+			end
+		end
 		timerShadow:Start(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 23340 then
-		timerShadow:Cancel(args.destName)
+		timerShadow:Stop(args.destName)
 	end
 end

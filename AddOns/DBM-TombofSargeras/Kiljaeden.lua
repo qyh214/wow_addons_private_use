@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1898, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16791 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16822 $"):sub(12, -3))
 mod:SetCreatureID(117269)--121227 Illiden? 121193 Shadowsoul
 mod:SetEncounterID(2051)
 mod:SetZone()
@@ -38,6 +38,7 @@ mod:RegisterEventsInCombat(
  --Stage One:
 local warnFelClaw					= mod:NewCountAnnounce(239932, 3, nil, "Tank")
 local warnEruptingRelections		= mod:NewTargetAnnounce(236710, 2)
+local warnSingularitySoon			= mod:NewAnnounce("warnSingularitySoon", 4, 235059, nil, nil, true)
 --Intermission: Eternal Flame
 local warnBurstingDreadFlame		= mod:NewTargetCountAnnounce(238430, 2)--Generic for now until more known, likely something cast fairly often
 --Stage Two:
@@ -69,8 +70,9 @@ local yellFocusedDreadflameFades	= mod:NewFadesYell(238502)
 local specWarnFocusedDreadflameOther= mod:NewSpecialWarningTarget(238502, nil, nil, nil, 1, 2)
 local specWarnBurstingDreadflame	= mod:NewSpecialWarningMoveAway(238430, nil, nil, nil, 1, 2)
 local yellBurstingDreadflame		= mod:NewPosYell(238430, DBM_CORE_AUTO_YELL_CUSTOM_POSITION)
+local yellBurstingDreadflameFades	= mod:NewShortFadesYell(238430, nil, false)
 --Stage Two: Reflected Souls
-local specWarnSRHopeless			= mod:NewSpecialWarningYou(237590, nil, nil, nil, 1, 2)
+local specWarnSRHopeless			= mod:NewSpecialWarningYou(237590, nil, nil, 2, 3, 2)
 local yellSRHopeless				= mod:NewShortFadesYell(237590, 237724)
 local specWarnSRMalignant			= mod:NewSpecialWarningYou(236498, nil, nil, nil, 1, 2)
 local yellSRMalignant				= mod:NewShortFadesYell(236498)
@@ -170,7 +172,7 @@ local riftName, gravitySqueezeBuff = GetSpellInfo(239130), GetSpellInfo(239154)
 local phase1LFRArmageddonTimers = {10, 22, 42}--Incomplete
 local phase1MythicArmageddonTimers = {10, 54, 38, 46}--Incomplete
 local phase1MythicSingularityTimers = {55, 25, 25}--Incomplete
-local phase1point5MythicSingularityTimers = {15.1, 5, 13.2, 5, 5, 5, 25, 4.98}--Timers, if all of the emotes exist. Not all of them do, DBM attempts to hack fix this
+local phase1point5MythicSingularityTimers = {14.8, 5, 13.2, 5, 5, 4.98, 25, 4.98}--Timers, if all of the emotes exist. Not all of them do, DBM attempts to hack fix this
 local phase2LFRArmageddonTimers = {55.9, 27.8, 56.6, 26.6, 12.2}
 local phase2NormalArmageddonTimers = {50, 45, 31, 35, 31}
 local phase2HeroicArmageddonTimers = {50, 75, 35, 30}
@@ -329,8 +331,11 @@ function mod:SPELL_CAST_START(args)
 		--Special snow flake (https://www.warcraftlogs.com/reports/xntG1J4r7MmwAPqB#fight=3&type=summary&pins=2%24Off%24%23244F4B%24expression%24(ability.id%20%3D%20238502%20or%20ability.id%20%3D%20237725%20or%20ability.id%20%3D%20238999%20or%20ability.id%20%3D%20243982%20or%20ability.id%20%3D%20240910%20or%20ability.id%20%3D%20241983)%20and%20type%20%3D%20%22begincast%22%0A%20or%20(ability.id%20%3D%20239932%20or%20ability.id%20%3D%20235059%20or%20ability.id%20%3D%20238502%20or%20ability.id%20%3D%20239785%20or%20ability.id%20%3D%20236378%20or%20ability.id%20%3D%20236710%20or%20ability.id%20%3D%20237590%20or%20ability.id%20%3D%20236498%20or%20ability.id%20%3D%20238430)%20and%20type%20%3D%20%22cast%22%0A%20or%20ability.id%20%3D%20244834%20and%20type%20%3D%20%22applybuff%22%20or%20(ability.id%20%3D%20241983%20or%20ability.id%20%3D%20244834)%20and%20type%20%3D%20%22removebuff%22%0A%20or%20ability.name%20%3D%20%22Rupturing%20Singularity%22%20and%20target.name%20%3D%20%22Omegal%22&view=events)
 		--TODO, see if this happens more than once (8th claw, etc)
 		if self.vb.phase == 3 and self.vb.felClawsCount == 4 then
-			timerFelclawsCD:Start(20, self.vb.felClawsCount+1)
-			countdownFelclaws:Start(20)
+			timerFelclawsCD:Start(16, self.vb.felClawsCount+1)
+			countdownFelclaws:Start(16)
+		elseif self.vb.phase == 2 and self:IsMythic() and self.vb.felClawsCount == 2 then--Only sub 24 niche case?
+			timerFelclawsCD:Start(22.9, self.vb.felClawsCount+1)
+			countdownFelclaws:Start(22.9)
 		else
 			timerFelclawsCD:Start(24, self.vb.felClawsCount+1)
 			countdownFelclaws:Start()
@@ -357,7 +362,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.singularityCount = 0
 		voicePhaseChange:Play("phasechange")
 		if self:IsMythic() then
-			timerRupturingSingularityCD:Start(20.3, 1)
+			timerRupturingSingularityCD:Start(19.3, 1)
 		end
 	end
 end
@@ -455,6 +460,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			specWarnBurstingDreadflame:Show()
 			voiceBurstingDreadFlame:Play("scatter")
 			yellBurstingDreadflame:Yell(self.vb.burstingDreadIcon, args.spellName, self.vb.burstingDreadIcon)
+			yellBurstingDreadflameFades:Countdown(5)
 		end
 		if self.Options.SetIconOnBurstingDread then
 			self:SetIcon(args.destName, self.vb.burstingDreadIcon, 5)
@@ -561,7 +567,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 236378 then--Wailing Shadow Reflection (Stage 1)
 		if not self:IsEasy() then
-			timerSorrowfulWailCD:Start(15.9)
+			timerSorrowfulWailCD:Start(15.2)
 		end
 		if args:IsPlayer() then
 			yellSRWailing:Cancel()
@@ -628,15 +634,15 @@ function mod:SPELL_AURA_REMOVED(args)
 		warnPhase2:Show()
 		voicePhaseChange:Play("ptwo")
 		if self:IsMythic() then
-			timerFelclawsCD:Start(12, 1)
+			timerFelclawsCD:Start(10.4, 1)
 			timerArmageddonCD:Start(18.2, 1)
 			countdownArmageddon:Start(18.2)
 			timerRupturingSingularityCD:Start(21.5, 1)
 			timerShadReflectionHopelessCD:Start(27)
-			timerFocusedDreadflameCD:Start(33.4, 1)
-			countdownFocusedDread:Start(33.4)
+			timerFocusedDreadflameCD:Start(32.4, 1)
+			countdownFocusedDread:Start(32.4)
 			timerShadReflectionWailingCD:Start(49.5, 1)
-			timerBurstingDreadflameCD:Start(53.4, 1)
+			timerBurstingDreadflameCD:Start(52.6, 1)
 			timerShadReflectionEruptingCD:Start(164, 1)
 		else
 			timerFelclawsCD:Start(9, 1)
@@ -722,32 +728,48 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 	elseif msg:find("spell:235059") then
 		self:Unschedule(handleMissingEmote)
 		self.vb.singularityCount = self.vb.singularityCount + 1
-		specWarnRupturingSingularity:Show()
-		voiceRupturingSingularity:Play("carefly")
 		timerRupturingSingularity:Start(9.7, self.vb.singularityCount)
 		countdownSingularity:Start(9.7)
 		if self.vb.phase == 1.5 then
 			if self:IsMythic() then
+				if self.vb.singularityCount == 1 or self.vb.singularityCount == 3 or self.vb.singularityCount == 7 then
+					--Only show warning at start of each set
+					warnSingularitySoon:Countdown(9.7, 3)
+					specWarnRupturingSingularity:Show()
+					voiceRupturingSingularity:Play("carefly")
+				end
 				local timer = phase1point5MythicSingularityTimers[self.vb.singularityCount+1]
 				if timer then
 					self:Schedule(timer+1.5, handleMissingEmote, self)
 					timerRupturingSingularityCD:Start(timer, self.vb.singularityCount+1)
 				end
 			else
+				warnSingularitySoon:Countdown(9.7, 3)
+				specWarnRupturingSingularity:Show()
+				voiceRupturingSingularity:Play("carefly")
 				if self.vb.singularityCount == 1 then
 					timerRupturingSingularityCD:Start(30, self.vb.singularityCount+1)
 				end
 			end
 		elseif self.vb.phase == 2 then
+			warnSingularitySoon:Countdown(9.7, 3)
+			specWarnRupturingSingularity:Show()
+			voiceRupturingSingularity:Play("carefly")
 			local timer = self:IsMythic() and phase2MythicSingularityTimers[self.vb.singularityCount+1] or self:IsHeroic() and phase2HeroicSingularityTimers[self.vb.singularityCount+1] or self:IsNormal() and phase2NormalSingularityTimers[self.vb.singularityCount+1]
 			if timer then
 				timerRupturingSingularityCD:Start(timer, self.vb.singularityCount+1)
 			end
 		elseif self.vb.phase == 2.5 then--Second phase transition Mythic Only
+			warnSingularitySoon:Countdown(9.7, 3)
+			specWarnRupturingSingularity:Show()
+			voiceRupturingSingularity:Play("carefly")
 			if self.vb.singularityCount == 1 then
 				timerRupturingSingularityCD:Start(10, 2)
 			end
 		else--Phase 1
+			warnSingularitySoon:Countdown(9.7, 3)
+			specWarnRupturingSingularity:Show()
+			voiceRupturingSingularity:Play("carefly")
 			if self:IsMythic() then
 				local timer = phase1MythicSingularityTimers[self.vb.singularityCount+1]
 				if timer then
@@ -788,10 +810,10 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		timerShadReflectionWailingCD:Stop()
 		voicePhaseChange:Play("phasechange")
 		if self:IsMythic() then
-			timerArmageddonCD:Start(7.0, 1)
-			countdownArmageddon:Start(7.0)
+			timerArmageddonCD:Start(6.7, 1)
+			countdownArmageddon:Start(6.7)
 			timerBurstingDreadflameCD:Start(11, 1)
-			timerRupturingSingularityCD:Start(15, 1)--Approx, no cast ID so time damage - 9.7
+			timerRupturingSingularityCD:Start(14.7, 1)
 			timerFocusedDreadflameCD:Start(31.8, 1)
 			countdownFocusedDread:Start(31.8)
 			timerTransition:Start(95.1)
@@ -817,10 +839,18 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		specWarnFlamingOrbSpawn:Show(self.vb.orbCount)
 		voiceFlameOrbSpawn:Play("watchstep")
 		voiceFlameOrbSpawn:Schedule(1, "runout")
-		if self.vb.orbCount % 2 == 0 then
-			timerFlamingOrbCD:Start(64, self.vb.orbCount+1)
+		if self:IsMythic() then
+			if self.vb.orbCount < 3 then
+				timerFlamingOrbCD:Start(15, self.vb.orbCount+1)
+			else
+				timerFlamingOrbCD:Start(64, self.vb.orbCount+1)
+			end
 		else
-			timerFlamingOrbCD:Start(31, self.vb.orbCount+1)
+			if self.vb.orbCount % 2 == 0 then
+				timerFlamingOrbCD:Start(64, self.vb.orbCount+1)
+			else
+				timerFlamingOrbCD:Start(31, self.vb.orbCount+1)
+			end
 		end
 	end
 end

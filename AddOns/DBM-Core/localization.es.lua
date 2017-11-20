@@ -19,7 +19,6 @@ DBM_CORE_LOAD_MOD_DISABLED			= "%s está instalado pero se encuentra desactivado
 DBM_CORE_LOAD_MOD_DISABLED_PLURAL	= "%s están instalados pero se encuentran desactivados. Estos módulos no se cargarán hasta que los actives."
 
 --DBM_CORE_WHATS_NEW					= "Novedades de esta versión: Se ha arreglado un error que mostraba avisos erróneos de versión desfasada. Ahora DBM nunca saltará las cinemáticas de la Costa Abrupta, sin importar la configuración de usuario. Se ha añadido el módulo de Invasiones demoníacas."
---DBM_CORE_WHATS_NEW_LINK				= "Recordatorio: muchas funciones de DBM que dependían de posiciones de unidades han dejado de funcionar. Para más información, haz clic |HDBM:forumsnews|h|cff3588ffaquí|r."
 
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "No se puede usar el radar de distancia en estancias. Se procederá a usar el marco de distancia por texto."
@@ -88,7 +87,6 @@ DBM_CORE_MPROFILE_DELETE_SELF_ERROR	= "No se puede borrar una configuración que
 DBM_CORE_MPROFILE_DELETE_S_ERROR	= "La configuración de origen está corrupta. Es posible que la configuración se haya borrado a medias o haya fallado por completo."
 
 DBM_CORE_NOTE_SHARE_SUCCESS			= "%s está compartiendo su nota para %s."
-DBM_CORE_NOTE_SHARE_LINK			= "Haz clic aquí para abrir la nota"
 DBM_CORE_NOTE_SHARE_FAIL			= "%s está intentando compartir su nota para %s. Sin embargo, el módulo asociado con esta facultad no está instalado o cargado. Si necesitas esta nota, asegúrate de que tienes el módulo asociado cargado y pídele que vuelva a compartirla."
 
 DBM_CORE_NOTEHEADER					= "Introduce tu nota para %s. Los nombres de jugador entre '>' y '<' se mostrarán con el color de su clase. Para alertas con varias notas, sepáralas con '/'."

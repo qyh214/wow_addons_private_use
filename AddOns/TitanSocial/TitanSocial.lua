@@ -717,7 +717,7 @@ local function parseRealID(filterClients)
 					toon.location = gameText
 				end
 				seen[bnetIDGameAccount] = toon
-				if client == "App" then
+				if client == "App" or client == "BSAp" then
 					-- assume no more than 1 bnet toon, but check anyway
 					if bnet == nil then bnet = toon end
 				elseif hasFocus then

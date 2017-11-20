@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Tidewalker", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 638 $"):sub(12, -3))
 mod:SetCreatureID(21213)
 mod:SetEncounterID(627)
 mod:SetModelID(20739)
@@ -19,19 +19,18 @@ mod:RegisterEventsInCombat(
 
 local warnTidal			= mod:NewSpellAnnounce(37730, 3)
 local warnGrave			= mod:NewTargetAnnounce(38049, 4)
-local warnMurlocs		= mod:NewAnnounce("WarnMurlocs", 3)
 local warnBubble		= mod:NewSpellAnnounce(37854, 4)
 
 local specWarnMurlocs	= mod:NewSpecialWarning("SpecWarnMurlocs")
 
-local timerGraveCD		= mod:NewCDTimer(28.5, 38049)
+local timerGraveCD		= mod:NewCDTimer(28.5, 38049, nil, nil, nil, 3)
 local timerMurlocs		= mod:NewTimer(51, "TimerMurlocs", 39088, nil, nil, 1)
-local timerBubble		= mod:NewBuffActiveTimer(35, 37854)
+local timerBubble		= mod:NewBuffActiveTimer(35, 37854, nil, nil, nil, 1)
 
 mod:AddBoolOption("GraveIcon", true)
 
 local warnGraveTargets = {}
-local graveIcon = 8
+mod.vb.graveIcon = 8
 
 local function showGraveTargets()
 	warnGrave:Show(table.concat(warnGraveTargets, "<, >"))
@@ -40,7 +39,7 @@ local function showGraveTargets()
 end
 
 function mod:OnCombatStart(delay)
-	graveIcon = 8
+	self.vb.graveIcon = 8
 	table.wipe(warnGraveTargets)
 	timerGraveCD:Start(20-delay)
 	timerMurlocs:Start(41-delay)
@@ -51,9 +50,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnGraveTargets[#warnGraveTargets + 1] = args.destName
 		self:Unschedule(showGraveTargets)
 		if self.Options.GraveIcon then
-			self:SetIcon(args.destName, graveIcon)
-			graveIcon = graveIcon - 1
+			self:SetIcon(args.destName, self.vb.graveIcon)
 		end
+		self.vb.graveIcon = self.vb.graveIcon - 1
 		if #warnGraveTargets >= 4 then
 			showGraveTargets()
 		else
@@ -70,7 +69,6 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 37764 then
-		warnMurlocs:Show()
 		specWarnMurlocs:Show()
 		timerMurlocs:Start()
 	end

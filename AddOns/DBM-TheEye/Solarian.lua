@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Solarian", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 631 $"):sub(12, -3))
 mod:SetCreatureID(18805)
 mod:SetEncounterID(732)
 mod:SetModelID(18239)
@@ -15,15 +15,15 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
-local warnDomination	= mod:NewCastAnnounce(37135, 4)--Trash, but most poeple pull this boss with the trash
 local warnWrath			= mod:NewTargetAnnounce(42783, 2)
 local warnSplit			= mod:NewAnnounce("WarnSplit", 4, 39414)
 local warnAgent			= mod:NewAnnounce("WarnAgent", 1, 39414)
 local warnPriest		= mod:NewAnnounce("WarnPriest", 1, 39414)
 local warnPhase2		= mod:NewPhaseAnnounce(2)
 
-local specWarnDomination= mod:NewSpecialWarningInterrupt(37135)
-local specWarnWrath		= mod:NewSpecialWarningYou(42783)
+local specWarnDomination= mod:NewSpecialWarningInterrupt(37135, "HasInterrupt", nil, 2, 1, 2)
+local specWarnWrath		= mod:NewSpecialWarningMoveAway(42783, nil, nil, nil, 1, 2)
+local yellWrath			= mod:NewYell(42783)
 
 local timerWrath		= mod:NewTargetTimer(6, 42783)
 local timerSplit		= mod:NewTimer(90, "TimerSplit", 39414, nil, nil, 6)
@@ -31,6 +31,9 @@ local timerAgent		= mod:NewTimer(4, "TimerAgent", 39414, nil, nil, 1)
 local timerPriest		= mod:NewTimer(20, "TimerPriest", 39414, nil, nil, 1)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
+
+local voiceDomination	= mod:NewVoice(37135, "HasInterrupt")--kickcast
+local voiceWrath		= mod:NewVoice(42783)--runout
 
 mod:AddBoolOption("WrathIcon", true)
 
@@ -41,10 +44,13 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 42783 then
-		warnWrath:Show(args.destName)
 		timerWrath:Start(args.destName)
 		if args:IsPlayer() then
 			specWarnWrath:Show()
+			voiceWrath:Play("runout")
+			yellWrath:Yell()
+		else
+			warnWrath:Show(args.destName)
 		end
 		if self.Options.WrathIcon then
 			self:SetIcon(args.destName, 8, 6)
@@ -54,8 +60,8 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 37135 then
-		warnDomination:Show()
 		specWarnDomination:Show(args.sourceName)
+		voiceDomination:Play("kickcast")
 	end
 end
 

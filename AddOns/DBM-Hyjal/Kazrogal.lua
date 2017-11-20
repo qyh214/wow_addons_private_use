@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kazrogal", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 630 $"):sub(12, -3))
 mod:SetCreatureID(17888)
 mod:SetEncounterID(620)
 mod:SetModelID(17886)
@@ -17,8 +17,8 @@ mod:RegisterEventsInCombat(
 local warnMark		= mod:NewCountAnnounce(31447, 3)
 local warnStomp		= mod:NewSpellAnnounce(31480, 2)
 
-local timerMark		= mod:NewBuffFadesTimer(6.2, 31447)
-local timerMarkCD	= mod:NewNextCountTimer(45, 31447)
+local timerMark		= mod:NewBuffFadesTimer(6.2, 31447, nil, nil, nil, 2)
+local timerMarkCD	= mod:NewNextCountTimer(45, 31447, nil, nil, nil, 2)
 
 mod.vb.count = 0
 mod.vb.time = 45

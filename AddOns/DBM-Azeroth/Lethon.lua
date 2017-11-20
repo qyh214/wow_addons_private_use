@@ -1,0 +1,67 @@
+local mod	= DBM:NewMod("Lethon", "DBM-Azeroth")
+local L		= mod:GetLocalizedStrings()
+
+mod:SetRevision(("$Revision: 636 $"):sub(12, -3))
+mod:SetCreatureID(121821)--121821 TW ID, 14888 classic ID
+--mod:SetModelID(17887)
+mod:SetZone()
+
+mod:RegisterCombat("combat")
+
+mod:RegisterEventsInCombat(
+	"SPELL_CAST_START 243401 243468",
+	"SPELL_CAST_SUCCESS 243399",
+	"SPELL_AURA_APPLIED 243401",
+	"SPELL_AURA_APPLIED_DOSE 243401"
+)
+
+--TODO, maybe taunt special warnings for classic version when it matters more.
+local warnNoxiousBreath			= mod:NewStackAnnounce(243401, 2, nil, "Tank")
+
+local specWarnSleepingFog		= mod:NewSpecialWarningDodge(243399, nil, nil, nil, 2, 2)
+local specWarnShadowBoltWhirl	= mod:NewSpecialWarningDodge(243468, nil, nil, nil, 2, 2)
+
+local timerNoxiousBreathCD		= mod:NewCDTimer(18.3, 243401, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--Iffy
+local timerSleepingFogCD		= mod:NewCDTimer(16.8, 243399, nil, nil, nil, 3)
+local timerShadowBoltWhirlCD	= mod:NewCDTimer(15.8, 243468, nil, nil, nil, 3)
+
+local voiceSleepingFog			= mod:NewVoice(243399)--watchstep
+local voiceShadowBoltWhirl		= mod:NewVoice(243468)--watchorb
+
+--mod:AddReadyCheckOption(48620, false)
+
+function mod:OnCombatStart(delay, yellTriggered)
+	if yellTriggered then
+		--timerNoxiousBreathCD:Start(11.9-delay)
+		--timerSleepingFogCD:Start(18.4-delay)
+	end
+end
+
+function mod:SPELL_CAST_START(args)
+	if args.spellId == 243401 then
+		timerNoxiousBreathCD:Start()
+	elseif args.spellId == 243468 then
+		specWarnShadowBoltWhirl:Show()
+		voiceShadowBoltWhirl:Play("watchorb")
+		timerShadowBoltWhirlCD:Start()
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 243399 then
+		specWarnSleepingFog:Show()
+		voiceSleepingFog:Play("watchstep")
+		timerSleepingFogCD:Start()
+	end
+end
+
+function mod:SPELL_AURA_APPLIED(args)
+	if args.spellId == 243401 then
+		local uId = DBM:GetRaidUnitId(args.destName)
+		if self:IsTanking(uId) then
+			local amount = args.amount or 1
+			warnNoxiousBreath:Show(args.destName, amount)
+		end
+	end
+end
+mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED

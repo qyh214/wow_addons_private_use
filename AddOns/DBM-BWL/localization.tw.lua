@@ -40,6 +40,10 @@ L:SetGeneralLocalization{
 	name	= "幼龍領主勒西雷爾"
 }
 
+L:SetMiscLocalization{
+	Pull	= "你怎麼進來的?你們這種生物不能進來!我要毀滅你們!"
+}
+
 ---------------
 --  Firemaw  --
 ---------------

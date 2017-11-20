@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FlameLeviathan", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
 
 mod:SetCreatureID(33113)
 mod:SetEncounterID(1132)
@@ -11,9 +11,9 @@ mod:RegisterCombat("yell", L.YellPull)
 mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_REMOVED",
-	"SPELL_AURA_APPLIED",
-	"SPELL_SUMMON"
+	"SPELL_AURA_APPLIED 62396 62475 62374 62297",
+	"SPELL_AURA_REMOVED 62396",
+	"SPELL_SUMMON 62907"
 )
 
 local warnHodirsFury		= mod:NewTargetAnnounce(62297)
@@ -26,13 +26,13 @@ local warnWardofLife		= mod:NewSpecialWarning("warnWardofLife")
 
 local timerSystemOverload	= mod:NewBuffActiveTimer(20, 62475, nil, nil, nil, 6)
 local timerFlameVents		= mod:NewCastTimer(10, 62396, nil, nil, nil, 2)
-local timerPursued			= mod:NewBuffFadesTimer(30, 62374)
+local timerPursued			= mod:NewBuffFadesTimer(30, 62374, nil, nil, nil, 3)
 
 local guids = {}
 local function buildGuidTable()
 	table.wipe(guids)
 	for uId in DBM:GetGroupMembers() do
-		local name, server = UnitName(uId)
+		local name, server = GetUnitName(uId, true)
 		local fullName = name .. (server and server ~= "" and ("-" .. server) or "")
 		guids[UnitGUID(uId.."pet") or "none"] = fullName
 	end
@@ -42,10 +42,8 @@ function mod:OnCombatStart(delay)
 	buildGuidTable()
 end
 
-function mod:SPELL_SUMMON(args)
-	if args.spellId == 62907 then		-- Ward of Life spawned (Creature id: 34275)
-		warnWardofLife:Show()
-	end
+function mod:OnTimerRecovery()
+	buildGuidTable()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
@@ -75,5 +73,11 @@ end
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 62396 then
 		timerFlameVents:Stop()
+	end
+end
+
+function mod:SPELL_SUMMON(args)
+	if args.spellId == 62907 then		-- Ward of Life spawned (Creature id: 34275)
+		warnWardofLife:Show()
 	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1737, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16839 $"):sub(12, -3))
 mod:SetCreatureID(104154)--The Demon Within (111022)
 mod:SetEncounterID(1866)
 mod:SetZone()
@@ -300,6 +300,14 @@ function mod:OnCombatEnd()
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
+	end
+end
+
+function mod:OnTimerRecovery()
+	if self:IsMythic() then
+		self:SetCreatureID(104154, 111022)
+	else
+		self:SetCreatureID(104154)
 	end
 end
 

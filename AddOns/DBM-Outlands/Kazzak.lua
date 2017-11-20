@@ -14,17 +14,20 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED"
 )
 
-local warningFrenzy		= mod:NewSpellAnnounce(32964, 4)
+local warningFrenzy		= mod:NewSpellAnnounce(32964, 3)
 local warningMark		= mod:NewTargetAnnounce(32960, 4)
 local warningTwisted	= mod:NewTargetAnnounce(21063, 4)
 
-local specWarnMark		= mod:NewSpecialWarningYou(32960)
-local specWarnTwisted	= mod:NewSpecialWarningDispel(21063, false)
+local specWarnMark		= mod:NewSpecialWarningYou(32960, nil, nil, nil, 1, 2)
+local specWarnTwisted	= mod:NewSpecialWarningDispel(21063, "Healer", nil, nil, 1, 2)
 
 local timerFrenzy		= mod:NewBuffActiveTimer(10, 32964)
 local timerFrenzyCD		= mod:NewCDTimer(60, 32964, nil, nil, nil, 3)
---local timerTwistedCD	= mod:NewCDTimer(30, 21063)--Unknown, but would be nice to have
-local timerMark			= mod:NewTargetTimer(10, 32960)
+--local timerTwistedCD	= mod:NewCDTimer(30, 21063, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON..DBM_CORE_MAGIC_ICON)--Unknown, but would be nice to have
+local timerMark			= mod:NewTargetTimer(10, 32960, nil, nil, nil, 3)
+
+local voiceMark			= mod:NewVoice(32960)--targetyou
+local voiceTwisted		= mod:NewVoice(21063, "Healer")--dispelnow
 
 mod:AddBoolOption("SetIconOnMark", true)
 
@@ -35,10 +38,12 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 32960 then
-		warningMark:Show(args.destName)
 		timerMark:Start(args.destName)
 		if args:IsPlayer() then
 			specWarnMark:Show()
+			voiceMark:Play("targetyou")
+		else
+			warningMark:Show(args.destName)
 		end
 		if self.Options.SetIconOnMark then
 			self:SetIcon(args.destName, 8)
@@ -48,8 +53,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerFrenzy:Show()
 		timerFrenzyCD:Start()
 	elseif args.spellId == 21063 then
-		warningTwisted:Show(args.destName)
-		specWarnTwisted:Show(args.destName)
+		if self.Options.SpecWarn21063dispel then
+			specWarnTwisted:Show(args.destName)
+			voiceTwisted:Play("dispelnow")
+		else
+			warningTwisted:Show(args.destName)
+		end
 --		timerTwistedCD:Start()
 	end
 end

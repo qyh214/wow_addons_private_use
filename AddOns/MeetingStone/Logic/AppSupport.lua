@@ -17,6 +17,7 @@ function AppSupport:OnEnable()
     self:StatInit()
     self:ChallengeInit()
     self:DataInit()
+    self:RaidInit()
 end
 
 function AppSupport:OnDisable()
@@ -310,13 +311,11 @@ function AppSupport:CHALLENGE_MODE_COMPLETED()
     local itemLevel = math.floor( select(2, GetAverageItemLevel()) )
     local combatData = CombatStat:GetCombatData()
 
-    self.lastMapId = nil
-
     
 
-    CombatStat:Disable()
-    -- App:SendServer('APP_CHALLENGE', mapId, level, time, class, itemLevel, UnitRole('player'), unpack(self:GetChallengeMembers()))
     App:SendServer('APP_CHALLENGE2', mapId, level, time, class, itemLevel, UnitRole('player'), self:GetChallengeMembers(), combatData)
+    CombatStat:Disable()
+    self.lastMapId = nil
 end
 
 function AppSupport:CHALLENGE_MODE_START()
@@ -353,4 +352,68 @@ function AppSupport:StartCombatStat()
     if self.lastMapId then
         CombatStat:Enable()
     end
+end
+
+---- raid
+
+function AppSupport:RaidInit()
+    self:RegisterEvent('ENCOUNTER_END')
+    self:RegisterEvent('ENCOUNTER_START')
+end
+
+function AppSupport:ENCOUNTER_START(_, id, name, difficulty, size)
+    if not self:GetInstanceId() then
+        
+        return
+    end
+    CombatStat:Reset()
+    CombatStat:Enable()
+    self.encounterStartStamp = time()
+    
+end
+
+function AppSupport:ENCOUNTER_END(_, bossId, name, difficulty, maxPlayers, status)
+    local instanceId = self:GetInstanceId()
+    if instanceId and status == 1 then
+        local class = select(3, UnitClass('player'))
+        local itemLevel = math.floor( select(2, GetAverageItemLevel()) )
+        local combatData = CombatStat:GetCombatData()
+        local hash, leaderGuid = self:GetRaidInfo()
+
+        App:SendServer('APP_RAID', instanceId, bossId, difficulty, maxPlayers, class, itemLevel, hash, leaderGuid, combatData, UnitRole('player'), time() - self.encounterStartStamp)
+        
+    end
+    CombatStat:Disable()
+end
+
+function AppSupport:GetInstanceId()
+    local name, type, difficulty, _, maxPlayers, _, isDynamicInstance, mapId, instanceGroupSize = GetInstanceInfo()
+    return APP_RAID_DIFFICULTIES[difficulty] and APP_RAID_MAPS[mapId] and mapId or nil
+end
+
+function AppSupport:GetRaidInfo()
+    local units = {}
+    local leaderGuid
+    local hash
+    local hasError = false
+
+    for _, unit in IterateGroupUnits() do
+        if UnitExists(unit) then
+            local guid = UnitGUID(unit)
+            if guid then
+                if UnitIsGroupLeader(unit) then
+                    leaderGuid = guid
+                end
+                table.insert(units, unit)
+            else
+                hasError = true
+            end
+        end
+    end
+
+    if not hasError then
+        table.sort(units)
+        hash = crc32(table.concat(units, ',')), leaderGuid
+    end
+    return hash, leaderGuid
 end

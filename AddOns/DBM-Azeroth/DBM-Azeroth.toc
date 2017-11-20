@@ -1,0 +1,24 @@
+﻿## Interface: 70300
+## X-Min-Interface: 70300
+## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Azeroth|r
+## LoadOnDemand: 1
+## RequiredDeps: DBM-Core
+## SavedVariables: DBMAzeroth_AllSavedVars
+## SavedVariablesPerCharacter: DBMAzeroth_SavedStats
+## X-DBM-Mod: 1
+## X-DBM-Mod-Type: RAID
+## X-DBM-Mod-Category: Classic
+## X-DBM-Mod-World-Boss: 1
+## X-DBM-Mod-Has-Single-Format: 1
+## X-DBM-Mod-Name: Azeroth
+## X-DBM-Mod-Sort: 607
+## X-DBM-Mod-MapID: 0, 1
+## X-DBM-Mod-LoadCID: 121820,121818,121911,121912,121913,121821,14889,14888,14887,14890
+## X-DBM-Mod-MinCoreRevision: 12473
+localization.en.lua
+KazzakClassic.lua
+Azuregos.lua
+Taerar.lua
+Ysondre.lua
+Lethon.lua
+Emeriss.lua

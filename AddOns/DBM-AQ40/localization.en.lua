@@ -100,7 +100,6 @@ L:SetGeneralLocalization{
 }
 L:SetWarningLocalization{
 	WarnEyeTentacle			= "Eye Tentacle",
-	WarnWeakened			= "C'Thun Weaken",
 	SpecWarnWeakened		= "C'Thun Weaken!"
 }
 L:SetTimerLocalization{
@@ -109,7 +108,6 @@ L:SetTimerLocalization{
 }
 L:SetOptionLocalization{
 	WarnEyeTentacle			= "Show warning for Eye Tentacle",
-	WarnWeakened			= "Show warning when boss weaken",
 	SpecWarnWeakened		= "Show special warning when boss weaken",
 	TimerEyeTentacle		= "Show timer for next Eye Tentacle",
 	TimerWeakened			= "Show timer for boss weaken duration",

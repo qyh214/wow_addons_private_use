@@ -1,31 +1,37 @@
 local mod	= DBM:NewMod("Magmadar", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 597 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 637 $"):sub(12, -3))
 mod:SetCreatureID(11982)
 mod:SetEncounterID(664)
 mod:SetModelID(10193)
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 19451",
 	"SPELL_AURA_REMOVED 19451",
 	"SPELL_CAST_SUCCESS 19408"
 )
 
-local warnPanic		= mod:NewSpellAnnounce(19408, 2)
-local warnEnrage	= mod:NewTargetAnnounce(19451, 3, nil , "Healer|Tank|RemoveEnrage")
+local warnPanic			= mod:NewSpellAnnounce(19408, 2)
+local warnEnrage		= mod:NewTargetAnnounce(19451, 3, nil , "Healer|Tank|RemoveEnrage")
 
-local specWarnEnrage= mod:NewSpecialWarningDispel(19451, "RemoveEnrage")
+local specWarnEnrage	= mod:NewSpecialWarningDispel(19451, "RemoveEnrage")
 
 --local timerPanicCD	= mod:NewCDTimer(30, 19408)
-local timerPanic	= mod:NewBuffActiveTimer(8, 19408)
-local timerEnrage	= mod:NewBuffActiveTimer(8, 19451)
+local timerPanic		= mod:NewBuffActiveTimer(8, 19408, nil, nil, nil, 3)
+local timerEnrage		= mod:NewBuffActiveTimer(8, 19451, nil, nil, nil, 5, nil, DBM_CORE_ENRAGE_ICON)
+
+local voiceEnrage		= mod:NewVoice(19451, "RemoveEnrage")--trannow
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 19451 then
-		warnEnrage:Show(args.destName)
-		specWarnEnrage:Show(args.destName)
+		if self.Options.SpecWarn19451dispel then
+			specWarnEnrage:Show(args.destName)
+		else
+			warnEnrage:Show(args.destName)
+		end
+		voiceEnrage:Play("trannow")
 		timerEnrage:Start()
 	end
 end

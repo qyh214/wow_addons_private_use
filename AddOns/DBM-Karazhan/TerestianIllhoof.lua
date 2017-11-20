@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TerestianIllhoof", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 631 $"):sub(12, -3))
 mod:SetCreatureID(15688)
 mod:SetEncounterID(657)
 mod:SetModelID(11343)
@@ -19,13 +19,16 @@ local warningWeakened	= mod:NewTargetAnnounce(30065, 2)
 local warningImp		= mod:NewSpellAnnounce(30066, 3)
 local warningSacrifice	= mod:NewTargetAnnounce(30115, 4)
 
-local specWarnSacrifice	= mod:NewSpecialWarningYou(30115)
+local specWarnSacrifice	= mod:NewSpecialWarningYou(30115, nil, nil, nil, 1, 2)
+local yellSacrifice		= mod:NewYell(30115)
 
 local timerWeakened		= mod:NewBuffActiveTimer(31, 30065, nil, nil, nil, 6)
-local timerSacrifice	= mod:NewTargetTimer(30, 30115)
+local timerSacrifice	= mod:NewTargetTimer(30, 30115, nil, nil, nil, 3)
 local timerSacrificeCD	= mod:NewNextTimer(43, 30115, nil, nil, nil, 1)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
+
+local voiceSacrifice	= mod:NewVoice(30115)--targetyou
 
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
@@ -36,11 +39,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		if DBM.BossHealth:IsShown() then
 			DBM.BossHealth:AddBoss(17248, L.DChains)
 		end
-		warningSacrifice:Show(args.destName)
 		timerSacrifice:Start(args.destName)
 		timerSacrificeCD:Start()
 		if args:IsPlayer() then
 			specWarnSacrifice:Show()
+			voiceSacrifice:Play("targetyou")
+			yellSacrifice:Yell()
+		else
+			warningSacrifice:Show(args.destName)
 		end
 	elseif args.spellId == 30065 then
 		warningWeakened:Show(args.destName)
