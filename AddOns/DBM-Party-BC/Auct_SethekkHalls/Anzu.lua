@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(542, "DBM-Party-BC", 9, 252)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 606 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
 
 mod:SetCreatureID(23035)
 mod:SetEncounterID(1904)
@@ -25,20 +25,20 @@ local warnSpellBomb         = mod:NewTargetAnnounce(40303, 2)
 local specWarnScreech		= mod:NewSpecialWarningSpell(40184, nil, nil, nil, 2, 2)
 
 local timerScreech          = mod:NewCastTimer(5, 40184, nil, nil, nil, 2)
-local timerScreechDebuff    = mod:NewBuffActiveTimer(6, 40184)
-local timerCyclone          = mod:NewTargetTimer(6, 40321)
-local timerSpellBomb        = mod:NewTargetTimer(8, 40303)
+local timerScreechDebuff    = mod:NewBuffActiveTimer(6, 40184, nil, nil, nil, 3)
+local timerCyclone          = mod:NewTargetTimer(6, 40321, nil, nil, nil, 3)
+local timerSpellBomb        = mod:NewTargetTimer(8, 40303, nil, nil, nil, 3)
 local timerScreechCD        = mod:NewCDTimer(30, 40184, nil, nil, nil, 2)--Best guess on screech CD. Might need tweaking.
 
 local voiceScreech			= mod:NewVoice(40184)--aesoon
 
-local warnedbirds1 = false
-local warnedbirds2 = false
+mod.vb.warnedbirds1 = false
+mod.vb.warnedbirds2 = false
 
 function mod:OnCombatStart(delay)
 	timerScreechCD:Start()
-    warnedbirds1 = false
-    warnedbirds2 = false
+    self.vb.warnedbirds1 = false
+    self.vb.warnedbirds2 = false
 end
 
 function mod:SPELL_CAST_START(args)
@@ -69,11 +69,11 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:UNIT_HEALTH(uId)
-	if not warnedbirds1 and self:GetUnitCreatureId(uId) == 23035 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.70 then
-		warnedbirds1 = true
+	if not self.vb.warnedbirds1 and self:GetUnitCreatureId(uId) == 23035 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.70 then
+		self.vb.warnedbirds1 = true
 		warnBirds:Show()
-	elseif not warnedbirds2 and self:GetUnitCreatureId(uId) == 23035 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.37 then
-		warnedbirds2 = true
+	elseif not self.vb.warnedbirds2 and self:GetUnitCreatureId(uId) == 23035 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.37 then
+		self.vb.warnedbirds2 = true
 		warnBirds:Show()
 	end
 end

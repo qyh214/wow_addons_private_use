@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod(1987, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16773 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16893 $"):sub(12, -3))
 mod:SetCreatureID(122477, 122135)--122477 F'harg, 122135 Shatug
 mod:SetEncounterID(2074)
 mod:SetZone()
 mod:SetBossHPInfoToHighest()
 --mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
 --mod:SetHotfixNoticeRev(16350)
-mod.respawnTime = 4
+mod.respawnTime = 29--Guessed, it's not 4 anymore
 
 mod:RegisterCombat("combat")
 
@@ -29,7 +29,6 @@ mod:RegisterEventsInCombat(
 --TODO, figure out who sphere is chasing with a constant threat/aggro monitor while it's out?
 --TODO, more work on siphon targetting, it too may need icons/assignments. Same with Enflamed
 --TODO, update all timers on Focused power, probably pause them all for 15 seconds
---TODO, cleanup timers same way as flame chick in foundry. Sequence the timers instead of CD them all
 --[[
 (ability.id = 244057 or ability.id = 244056) and type = "begincast"
  or (ability.id = 244072 or ability.id = 251445 or ability.id = 245098 or ability.id = 251356 or ability.id = 254429) and type = "cast"
@@ -142,18 +141,23 @@ function mod:OnCombatStart(delay)
 	self.vb.WeightDarkIcon = 1
 	--Fire doggo
 	timerBurningMawCD:Start(8.2-delay)--was same on heroic/mythic, or now
-	timerMoltenTouchCD:Start(18-delay)--was same on heroic/mythic, or now
+	timerCorruptingMawCD:Start(8.9-delay)--was same on heroic/normal, for now
 	--Shadow doggo
 	if self:IsMythic() then
 		self.vb.longTimer = 89
 		self.vb.mediumTimer = 71.9
-		timerCorruptingMawCD:Start(8.9-delay)
+		timerMoltenTouchCD:Start(18-delay)--was same on heroic/mythic, or now
 		timerSiphonCorruptionCD:Start(25.5-delay)
-	else
+	elseif self:IsHeroic() then
 		self.vb.longTimer = 95.9
 		self.vb.mediumTimer = 77
-		timerCorruptingMawCD:Start(10.9-delay)
+		timerMoltenTouchCD:Start(18-delay)--was same on heroic/mythic, or now
 		timerSiphonCorruptionCD:Start(26.7-delay)
+	else
+		self.vb.longTimer = 104.7
+		self.vb.mediumTimer = 85
+		--Molten touch not even cast
+		timerSiphonCorruptionCD:Start(29.4-delay)
 	end
 	if not self.Options.SequenceTimers then
 		if self:IsMythic() then
@@ -163,21 +167,24 @@ function mod:OnCombatStart(delay)
 			--Shadow doggo
 			timerComsumingSphereCD:Start(48.7-delay)
 			timerWeightOfDarknessCD:Start(73.1-delay)
-		else
+		elseif self:IsHeroic() then
 			--Fire doggo
 			timerEnflamedCorruptionCD:Start(51.1-delay)
 			timerDesolateGazeCD:Start(82.4-delay)
 			--Shadow doggo
 			timerComsumingSphereCD:Start(51.1-delay)
 			timerWeightOfDarknessCD:Start(77-delay)
+		else--Normal confirmed, LFR assumed
+			--Fire doggo
+			timerEnflamedCorruptionCD:Start(55.2-delay)
+			timerDesolateGazeCD:Start(89.3-delay)
+			--Shadow doggo
+			timerComsumingSphereCD:Start(55.2-delay)
+			--Weight not even cast
 		end
 	end
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(5)--Molten Touch (assumed)
-	end
-	local wowTOC, testBuild = DBM:GetTOC()
-	if not testBuild then
-		DBM:AddMsg(DBM_CORE_NEED_LOGS)
 	end
 end
 
@@ -188,17 +195,13 @@ function mod:OnCombatEnd()
 --	if self.Options.InfoFrame then
 --		DBM.InfoFrame:Hide()
 --	end
-	local wowTOC, testBuild = DBM:GetTOC()
-	if not testBuild then
-		DBM:AddMsg(DBM_CORE_NEED_LOGS)
-	end
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 244057 then
 		warnEnflamedCorruption:Show()
-		if not self.Options.SequenceTimers then
+		if not self.Options.SequenceTimers or self:IsEasy() then
 			timerEnflamedCorruptionCD:Start(self.vb.longTimer)
 		else
 			if self:IsMythic() then
@@ -209,7 +212,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 244056 then
 		warnSiphonCorruption:Show()
-		if not self.Options.SequenceTimers then
+		if not self.Options.SequenceTimers or self:IsEasy() then
 			timerSiphonCorruptionCD:Start(self.vb.mediumTimer)
 		else
 			if self:IsMythic() then
@@ -226,7 +229,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 244072 then
 		specWarnMoltenTouch:Show()
 		voiceMoltenTouch:Play("watchstep")
-		if not self.Options.SequenceTimers then
+		if not self.Options.SequenceTimers or self:IsEasy() then
 			timerMoltenTouchCD:Start(self.vb.longTimer)
 		else
 			if self:IsMythic() then
@@ -243,7 +246,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerCorruptingMawCD:Start()
 	elseif spellId == 254429 then
 		self.vb.WeightDarkIcon = 1
-		if not self.Options.SequenceTimers then
+		if not self.Options.SequenceTimers or self:IsEasy() then
 			timerWeightOfDarknessCD:Start()
 		else
 			if self:IsMythic() then
@@ -368,7 +371,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 244159 then--Consuming Sphere
 		specWarnComsumingSphere:Show()
 		voiceConsumingSphere:Play("watchorb")
-		if not self.Options.SequenceTimers then
+		if not self.Options.SequenceTimers or self:IsEasy() then
 			timerComsumingSphereCD:Start(self.vb.mediumTimer)
 		else
 			if self:IsMythic() then
@@ -378,7 +381,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			end
 		end
 	elseif spellId == 244064 then--Desolate Gaze
-		if not self.Options.SequenceTimers then
+		if not self.Options.SequenceTimers or self:IsEasy() then
 			timerDesolateGazeCD:Start(self.vb.longTimer)
 		else
 			if self:IsMythic() then
@@ -388,7 +391,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			end
 		end
 	elseif spellId == 244069 then--Weight of Darkness
-		if not self.Options.SequenceTimers then
+		if not self.Options.SequenceTimers or self:IsEasy() then
 			timerWeightOfDarknessCD:Start(self.vb.mediumTimer)
 		else
 			if self:IsMythic() then

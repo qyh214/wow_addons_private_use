@@ -134,7 +134,6 @@ local function PublicResults(msg,chat_type)
 	end
 end
 
-
 local function GetRunes(checkType)
 	local f = {[0]={},[325]={}}
 	local gMax = ExRT.F.GetRaidDiffMaxGroup()
@@ -151,6 +150,7 @@ local function GetRunes(checkType)
 					if isRune then
 						f[325][ #f[325]+1 ] = name
 						isAnyBuff = true
+						break
 					end
 				end
 			end
@@ -191,6 +191,54 @@ local function GetRunes(checkType)
 		PublicResults(result,checkType)
 	end
 end
+
+local vruneName
+local function GetVRunes(checkType)
+	if not vruneName then
+		local kjrunename = GetSpellInfo(237825)
+		vruneName = "^"..kjrunename:match("^(.-):")
+	end
+	local f = {[0]={},[1]={}}
+	local gMax = ExRT.F.GetRaidDiffMaxGroup()
+	for j=1,40 do
+		local name,_,subgroup = GetRaidRosterInfo(j)
+		if name and subgroup <= gMax then
+			local isAnyBuff = nil
+			for i=1,40 do
+				local auraName = UnitAura(name, i,"HELPFUL")
+				if type(auraName)~='string' then
+					break
+				else
+					local isRune = auraName:find(vruneName)
+					if isRune then
+						f[1][ #f[1]+1 ] = name
+						isAnyBuff = true
+						break
+					end
+				end
+			end
+			if not isAnyBuff then
+				f[0][ #f[0]+1 ] = name
+			end
+		end
+	end
+	
+	PublicResults(vruneName:gsub("%^",""),checkType)
+	for stats,name in pairs({[0]=L.NoText,[1]=L.YesText}) do
+		local result = format("|cff00ff00%s (%d):|r ",name,#f[stats])
+		for i=1,#f[stats] do
+			result = result .. f[stats][i]
+			if #result > 230 then
+				PublicResults(result,checkType)
+				result = ""
+			elseif i ~= #f[stats] then
+				result = result .. ", "
+			end
+		end
+		PublicResults(result,checkType)
+	end
+end
+
 
 local function GetFood(checkType)
 	local f = {[0]={}}
@@ -376,6 +424,10 @@ local function GetFlask(checkType)
 	end
 end
 
+module.GetRunes = GetRunes
+module.GetVRunes = GetVRunes
+module.GetFood = GetFood
+module.GetFlask = GetFlask
 
 function module.options:Load()
 	self:CreateTilte()
@@ -393,13 +445,19 @@ function module.options:Load()
 	self.flaskToChat.txt = ELib:Text(self,"/rt flaskchat",11):Size(100,20):Point("LEFT",self.flaskToChat,"RIGHT",5,0)
 	
 	self.runes = ELib:Button(self,L.RaidCheckRunesCheck):Size(230,20):Point(5,-80):OnClick(function() GetRunes() end)
-	self.runes.txt = ELib:Text(self,"/rt check runes",11):Size(60,22):Point("LEFT",self.runes,"RIGHT",5,0)
+	self.runes.txt = ELib:Text(self,"/rt check r",11):Size(60,22):Point("LEFT",self.runes,"RIGHT",5,0)
 	
 	self.runesToChat = ELib:Button(self,L.RaidCheckRunesChat):Size(230,20):Point("LEFT",self.runes,"RIGHT",71,0):OnClick(function() GetRunes(1) end)
-	self.runesToChat.txt = ELib:Text(self,"/rt check runeschat",11):Size(100,22):Point("LEFT",self.runesToChat,"RIGHT",5,0)
+	self.runesToChat.txt = ELib:Text(self,"/rt check rc",11):Size(100,22):Point("LEFT",self.runesToChat,"RIGHT",5,0)
+
+	self.vantusrunes = ELib:Button(self,L.RaidCheckVRunesCheck):Size(230,20):Point(5,-105):OnClick(function() GetVRunes() end)
+	self.vantusrunes.txt = ELib:Text(self,"/rt check v",11):Size(60,22):Point("LEFT",self.vantusrunes,"RIGHT",5,0)
 	
+	self.vantusrunesToChat = ELib:Button(self,L.RaidCheckVRunesChat):Size(230,20):Point("LEFT",self.vantusrunes,"RIGHT",71,0):OnClick(function() GetVRunes(1) end)
+	self.vantusrunesToChat.txt = ELib:Text(self,"/rt check vc",11):Size(100,22):Point("LEFT",self.vantusrunesToChat,"RIGHT",5,0)
+
 	self.level2optLine = CreateFrame("Frame",nil,self)
-	self.level2optLine:SetPoint("TOPLEFT",0,-105)
+	self.level2optLine:SetPoint("TOPLEFT",0,-130)
 	self.level2optLine:SetSize(1,1)	
 
 	self.chkSlak = ELib:Check(self,L.raidcheckslak,VExRT.RaidCheck.ReadyCheck):Point("TOPLEFT",self.level2optLine,7,0):OnClick(function(self) 
@@ -535,7 +593,7 @@ function module.options:Load()
 	self.optReadyCheckFrame:SetBackdropColor(0,0,0,0.3)
 	self.optReadyCheckFrame:SetBackdropBorderColor(.24,.25,.30,0)
 	ELib:Border(self.optReadyCheckFrame,2,.24,.25,.30,1)
-	self.optReadyCheckFrame:SetPoint("TOP",0,-405)
+	self.optReadyCheckFrame:SetPoint("TOP",0,-420)
 
 	self.optReadyCheckFrameHeader = ELib:Text(self.optReadyCheckFrame,L.raidcheckReadyCheck):Size(550,20):Point("BOTTOMLEFT",self.optReadyCheckFrame,"TOPLEFT",10,1):Bottom()
 
@@ -659,10 +717,14 @@ function module:slash(arg)
 		GetPotion(2)
 	elseif arg == "potionchat" and VExRT.RaidCheck.PotionCheck then
 		GetPotion(1)
-	elseif arg == "check runes" then
+	elseif arg == "check runes" or arg == "check r" then
 		GetRunes()
-	elseif arg == "check runeschat" then
+	elseif arg == "check runeschat" or arg == "check rc" then
 		GetRunes(1)
+	elseif arg == "check v" then
+		GetVRunes()
+	elseif arg == "check vc" then
+		GetVRunes(1)
 	end
 end
 

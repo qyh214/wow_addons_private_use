@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Kil", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 642 $"):sub(12, -3))
 mod:SetCreatureID(25315)
+mod:SetEncounterID(729)
 mod:SetModelID(23200)
 mod:SetZone()
 mod:SetUsedIcons(4, 5, 6, 7, 8)
@@ -10,36 +11,37 @@ mod:SetUsedIcons(4, 5, 6, 7, 8)
 mod:RegisterCombat("yell", L.YellPull)
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_AURA_APPLIED 45641",
+	"SPELL_AURA_REMOVED 45641",
+	"SPELL_CAST_START 46605 45737 46680",
+	"SPELL_CAST_SUCCESS 45680 45848 45892",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
 local warnBloom			= mod:NewTargetAnnounce(45641, 2)
 local warnDarkOrb		= mod:NewAnnounce("WarnDarkOrb", 4, 45109)
 local warnDart			= mod:NewSpellAnnounce(45740, 3)
-local warnBomb			= mod:NewCastAnnounce(46605, 4, 8)
-local warnShield		= mod:NewSpellAnnounce(45848, 3)
+local warnShield		= mod:NewSpellAnnounce(45848, 1)
 local warnBlueOrb		= mod:NewAnnounce("WarnBlueOrb", 1, 45109)
 local warnPhase2		= mod:NewPhaseAnnounce(2)
 local warnPhase3		= mod:NewPhaseAnnounce(3)
 local warnPhase4		= mod:NewPhaseAnnounce(4)
 
-local specWarnBloom		= mod:NewSpecialWarningYou(45641)
+local specWarnBloom		= mod:NewSpecialWarningYou(45641, nil, nil, nil, 1, 2)
 local yellBloom			= mod:NewYell(45641)
-local specWarnBomb		= mod:NewSpecialWarningSpell(46605, nil, nil, nil, 3)
-local specWarnShield	= mod:NewSpecialWarningSpell(45848)
+local specWarnBomb		= mod:NewSpecialWarningMoveTo(46605, nil, nil, nil, 3, 2)--findshield
 local specWarnDarkOrb	= mod:NewSpecialWarning("SpecWarnDarkOrb", false)
 local specWarnBlueOrb	= mod:NewSpecialWarning("SpecWarnBlueOrb", false)
 
-local timerBloomCD		= mod:NewCDTimer(20, 45641)
-local timerDartCD		= mod:NewCDTimer(20, 45740)
-local timerBomb			= mod:NewCastTimer(9, 46605)
-local timerBombCD		= mod:NewCDTimer(45, 46605)
-local timerSpike		= mod:NewCastTimer(28, 46680)
+local timerBloomCD		= mod:NewCDTimer(20, 45641, nil, nil, nil, 2)
+local timerDartCD		= mod:NewCDTimer(20, 45740, nil, nil, nil, 2)--Targeted or aoe?
+local timerBomb			= mod:NewCastTimer(9, 46605, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerBombCD		= mod:NewCDTimer(45, 46605, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerSpike		= mod:NewCastTimer(28, 46680, nil, nil, nil, 3)
 local timerBlueOrb		= mod:NewTimer(37, "TimerBlueOrb", 45109, nil, nil, 5)
+
+local voiceBloom		= mod:NewVoice(45641)--targetyou
+local voiceBomb			= mod:NewVoice(46605)--findshield
 
 local berserkTimer		= mod:NewBerserkTimer(900)
 
@@ -48,21 +50,21 @@ mod:AddBoolOption("RangeFrame", true)
 
 local warnBloomTargets = {}
 local orbGUIDs = {}
-local bloomIcon = 8
-local phase = 1
+mod.vb.bloomIcon = 8
+mod.vb.phase = 1
 
-local function showBloomTargets()
+local function showBloomTargets(self)
 	warnBloom:Show(table.concat(warnBloomTargets, "<, >"))
 	table.wipe(warnBloomTargets)
-	bloomIcon = 8
+	self.vb.bloomIcon = 8
 	timerBloomCD:Start()
 end
 
 function mod:OnCombatStart(delay)
 	table.wipe(warnBloomTargets)
 	table.wipe(orbGUIDs)
-	bloomIcon = 8
-	phase = 1
+	self.vb.bloomIcon = 8
+	self.vb.phase = 1
 	berserkTimer:Start(-delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show()
@@ -80,17 +82,18 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnBloomTargets[#warnBloomTargets + 1] = args.destName
 		self:Unschedule(showBloomTargets)
 		if self.Options.BloomIcon then
-			self:SetIcon(args.destName, bloomIcon)
-			bloomIcon = bloomIcon - 1
+			self:SetIcon(args.destName, self.vb.bloomIcon)
 		end
+		self.vb.bloomIcon = self.vb.bloomIcon - 1
 		if args:IsPlayer() then
 			specWarnBloom:Show()
+			voiceBloom:Play("targetyou")
 			yellBloom:Yell()
 		end
 		if #warnBloomTargets >= 5 then
-			showBloomTargets()
+			showBloomTargets(self)
 		else
-			self:Schedule(0.3, showBloomTargets)
+			self:Schedule(0.3, showBloomTargets, self)
 		end
 	end
 end
@@ -105,10 +108,10 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 46605 then
-		warnBomb:Show()
-		specWarnBomb:Show()
+		specWarnBomb:Show(SHIELDSLOT)
+		voiceBomb:Play("findshield")
 		timerBomb:Start()
-		if phase == 4 then
+		if self.vb.phase == 4 then
 			timerBombCD:Start(25)
 		else
 			timerBombCD:Start()
@@ -130,15 +133,14 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif args.spellId == 45848 then
 		warnShield:Show()
-		specWarnShield:Show()
 	elseif args.spellId == 45892 then
-		phase = phase + 1
-		if phase == 2 then
+		self.vb.phase = self.vb.phase + 1
+		if self.vb.phase == 2 then
 			warnPhase2:Show()
 			timerBlueOrb:Start()
 			timerDartCD:Start(59)
 			timerBombCD:Start(77)
-		elseif phase == 3 then
+		elseif self.vb.phase == 3 then
 			warnPhase3:Show()
 			timerBlueOrb:Cancel()
 			timerDartCD:Cancel()
@@ -146,7 +148,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerBlueOrb:Start()
 			timerDartCD:Start(59)
 			timerBombCD:Start(77)
-		elseif phase == 4 then
+		elseif self.vb.phase == 4 then
 			warnPhase4:Show()
 			timerBlueOrb:Cancel()
 			timerDartCD:Cancel()

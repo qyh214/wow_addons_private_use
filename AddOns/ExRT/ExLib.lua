@@ -151,7 +151,7 @@ CheckButton	ExRTRadioButtonModernTemplate
 local GlobalAddonName, ExRT = ...
 local isExRT = GlobalAddonName == "ExRT"
 
-local libVersion = 29
+local libVersion = 30
 
 if type(ELib)=='table' and type(ELib.V)=='number' and ELib.V > libVersion then return end
 
@@ -2904,6 +2904,14 @@ do
 		self:_Disable()
 		return self
 	end
+	local function Widget_GetTextObj(self)
+		for i=1,self:GetNumRegions() do
+			local obj = select(i,self:GetRegions())
+			if obj.GetText and obj:GetText() == self:GetText() then
+				return obj
+			end
+		end
+	end
 		
 	function ELib:Button(parent,text,template)
 		if template == 0 then
@@ -2920,6 +2928,7 @@ do
 			'Tooltip',Widget_Tooltip
 		)
 		self._Disable = self.Disable	self.Disable = Widget_Disable
+		self.GetTextObj = Widget_GetTextObj
 		
 		return self
 	end
@@ -5069,10 +5078,63 @@ do
 			local _,scrollMax = parent.ScrollBar:GetMinMaxValues()
 			parent.ScrollBar:SetValue(min(ceil( y + height - heightNow ),scrollMax))
 		end
+		
+		if parent.Cursor730fix then
+			parent:Cursor730fix(height,y)
+		end
 	end
 	local function Widget_GetText(self)
 		return self.EditBox:GetText()
 	end
+	
+	local function Widget_Apply730fix(self)
+		if type(ExRT)=='table' and type(ExRT.clientVersion)=='number' and ExRT.clientVersion > 70300 then
+			return		--Fixed in 7.3.2
+		end
+		self.MirrorEditBox = ELib:Edit(self.C,nil,nil,1):Point("TOPLEFT",self.C,0,0):Point("TOPRIGHT",self.C,0,0)
+
+		self.MirrorEditBox:SetMultiLine(true) 
+		self.MirrorEditBox:SetBackdropColor(0, 0, 0, 0)
+		self.MirrorEditBox:SetBackdropBorderColor(0, 0, 0, 0)
+		self.MirrorEditBox:SetTextInsets(5,5,2,2)
+		
+		self.MirrorEditBox:EnableKeyboard(false)
+		self.MirrorEditBox:SetScript("OnKeyDown", function() end)
+		self.MirrorEditBox:SetAlpha(0)
+
+		for i=1,self.EditBox:GetNumRegions() do
+			local region = select(i,self.EditBox:GetRegions())
+			if region and region.GetTexture and region:GetTexture() == "Color-ffffffff" then
+				self.EditBox.cursor = region
+				local cursorHeigthHardcode = 12
+				local prevPosY,prevY = 0
+				local function UpdateVerticalPos()
+					local arg1,arg2,arg3,arg4,arg5 = region:GetPoint()
+					if not arg1 then
+						return
+					end
+					region:SetPoint(arg1,arg2,arg3,arg4,prevPosY)
+				end
+				self.Cursor730fix = function(_,cursorHeight,y)
+					local p = self.EditBox:GetCursorPosition()
+					cursorHeigthHardcode = cursorHeight
+					if prevY ~= y then
+						prevY = y
+						local textA = self.EditBox:GetText():sub(1,p)
+						local textB = self.EditBox:GetText():sub(p+1,-1):gsub("[ \n].*","")
+						self.MirrorEditBox:SetText(textA..textB)
+					else
+						UpdateVerticalPos()
+					end
+				end
+				self.MirrorEditBox:SetScript("OnSizeChanged", function(_,_,height) 
+					prevPosY = -(height - cursorHeigthHardcode - 4)
+					UpdateVerticalPos()
+				end)
+				break			
+			end
+		end
+	end	
 	
 	function ELib:MultiEdit(parent)
 		local self = ELib:ScrollFrame(parent)
@@ -5099,6 +5161,7 @@ do
 		self.SetText = Widget_SetText
 		self.GetTextHighlight = Widget_GetTextHighlight
 		self.GetText = Widget_GetText
+		self.Add730fix = Widget_Apply730fix
 		
 		return self
 	end

@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(561, "DBM-Party-BC", 14, 257)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
 
 mod:SetCreatureID(17980)
 mod:SetEncounterID(1927)
@@ -12,9 +12,9 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 34697"
 )
 
-local warnAllergic       = mod:NewTargetAnnounce(34697)
+local warnAllergic       = mod:NewTargetAnnounce(34697, 2)
 
-local timerAllergic      = mod:NewTargetTimer(18, 34697)
+local timerAllergic      = mod:NewTargetTimer(18, 34697, nil, nil, nil, 3)
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 34697 then

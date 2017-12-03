@@ -6,8 +6,7 @@ L["S_APOWER_DOWNVALUE"] = "Le Missioni con %s scadono dopo il completamento dell
 L["S_APOWER_NEXTLEVEL"] = "Prox Livello"
 L["S_ENABLED"] = "Abilitato"
 L["S_ERROR_NOTIMELEFT"] = "E' scaduto il tempo per questa missione."
---Translation missing 
--- L["S_ERROR_NOTLOADEDYET"] = ""
+L["S_ERROR_NOTLOADEDYET"] = "Questa quest non è ancora pronta, per favore aspetta qualche secondo. "
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Solo Tracciati"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Mostra solo le missioni tracciate"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Mostra Missioni Mondiali"
@@ -15,12 +14,9 @@ L["S_FLYMAP_SHOWWORLDQUESTS"] = "Mostra Missioni Mondiali"
 -- L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"] = ""
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_CANCELING"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_CREATE"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = ""
+L["S_GROUPFINDER_ACTIONS_CREATE"] = "Non hai trovato nessun gruppo? Premi qui per crearne uno"
+L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = "Crea gruppo"
+L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = "Vuoi abbandonare il gruppo?"
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = ""
 --Translation missing 
@@ -149,8 +145,7 @@ L["S_QUESTTYPE_ARTIFACTPOWER"] = "Potere Artefatto"
 L["S_QUESTTYPE_DUNGEON"] = "Spedizione"
 L["S_QUESTTYPE_EQUIPMENT"] = "Equipaggiamento"
 L["S_QUESTTYPE_GOLD"] = "Oro"
---Translation missing 
--- L["S_QUESTTYPE_PETBATTLE"] = ""
+L["S_QUESTTYPE_PETBATTLE"] = "Battaglia tra mascotte"
 L["S_QUESTTYPE_PROFESSION"] = "Professione"
 L["S_QUESTTYPE_PVP"] = "PvP"
 L["S_QUESTTYPE_RESOURCE"] = "Risorse"

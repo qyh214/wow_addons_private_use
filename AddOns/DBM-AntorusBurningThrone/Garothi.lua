@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1992, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16736 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16900 $"):sub(12, -3))
 mod:SetCreatureID(122450)
 mod:SetEncounterID(2076)
 mod:SetZone()
 --mod:SetBossHPInfoToHighest()
---mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
+mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7)
 mod:SetHotfixNoticeRev(16736)
 mod:SetMinSyncRevision(16736)
 --mod.respawnTime = 29
@@ -16,10 +16,10 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 244969",
-	"SPELL_CAST_SUCCESS 246220 244399 245294",
-	"SPELL_AURA_APPLIED 246220 247159 244152 244410 246920 246897 246965",
+	"SPELL_CAST_SUCCESS 246220 244399 245294 244294",
+	"SPELL_AURA_APPLIED 246220 247159 244152 244410 246920 246897 246965 245294",
 --	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED 246220 244152 244410 246920",
+	"SPELL_AURA_REMOVED 246220 244152 244410 246920 245294",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
 --	"UNIT_DIED",
@@ -30,12 +30,9 @@ mod:RegisterEventsInCombat(
 local annihilator = EJ_GetSectionInfo(15917)
 local Decimator = EJ_GetSectionInfo(15915)
 --TODO, work in range frame to include searing barrage, for ranged
---TODO, improve luring destruction if draw in needs specific action
---TODO, see how apoc drives affect other timers and impliment
---TODO, annilation have targetting? does mythic version have a cast ID? could only find one cast start ID
 --[[
 (ability.id = 244969 or ability.id = 246408 or ability.id = 247044) and type = "begincast"
- or abiity.id = 246220 and type = "cast"
+ or (abiity.id = 246220 or ability.id = 244294) and type = "cast"
  or (ability.id = 244152) and type = "applybuff"
  or (ability.id = 246220) and type = "applydebuff"
 --]]
@@ -87,6 +84,7 @@ local voiceAnnihilation					= mod:NewVoice(247044)--helpsoak
 local voiceLuringDestruction			= mod:NewVoice(247159)--aesoon
 
 mod:AddSetIconOption("SetIconOnDecimation", 244410, true)
+mod:AddSetIconOption("SetIconOnBombardment", 246220, true)
 --mod:AddInfoFrameOption(239154, true)
 mod:AddRangeFrameOption("7/17")
 
@@ -162,6 +160,14 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.vb.phase > 1 and not self:IsMythic() then
 			timerDecimationCD:Start(15.8)
 		end
+	elseif spellId == 244294 then
+		--self.vb.lastCannon = 1
+		specWarnAnnihilation:Show()
+		voiceAnnihilation:Play("helpsoak")
+		--Only cannon up, start timer at cannon event
+		if self.vb.phase > 1 and not self:IsMythic() then
+			timerAnnihilationCD:Start(15.8)
+		end
 	end
 end
 
@@ -172,8 +178,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnFelBombardment:Show()
 			voiceFelBombardment:Play("runout")
-			voiceFelBombardment:Schedule(5, "keepmove")
-			yellFelBombardment:Countdown(5)
+			voiceFelBombardment:Schedule(7, "keepmove")
+			yellFelBombardment:Countdown(7)
 		elseif self:IsTank() then
 			specWarnFelBombardmentTaunt:Show(args.destName)
 			voiceFelBombardment:Play("tauntboss")
@@ -181,6 +187,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnFelBombardment:Show(args.destName)
 		end
 		updateRangeFrame(self)
+		if self.Options.SetIconOnBombardment then
+			self:SetIcon(args.destName, 7, 13)
+		end
 	elseif spellId == 247159 then
 		specWarnLuringDestruction:Show()
 		voiceLuringDestruction:Play("aesoon")
@@ -192,19 +201,26 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnApocDrive:Show()
 		voiceApocDrive:Play("targetchange")
 		timerApocDriveCast:Start()
-	elseif spellId == 244410 or spellId == 246920 then
+	elseif spellId == 244410 or spellId == 246920 or spellId == 245294 then
 		self.vb.deciminationActive = self.vb.deciminationActive + 1
 		warnDecimation:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			local _, _, _, _, _, _, expires = UnitDebuff("player", args.spellName)
-			local remaining = expires-GetTime()
+			local remaining
+			if expires then 
+				remaining = expires-GetTime()
+			end
 			if spellId == 246920 then--Mythic rules
 				specWarnDecimationStun:Show()
-				yellDecimationStun:Countdown(remaining)
+				if remaining then
+					yellDecimationStun:Countdown(remaining)
+				end
 				voiceDecimationStun:Play("targetyou")
 			else
 				specWarnDecimation:Show()
-				yellDecimation:Countdown(remaining)
+				if remaining then
+					yellDecimation:Countdown(remaining)
+				end
 				voiceDecimation:Play("runout")
 			end
 		end
@@ -228,10 +244,13 @@ function mod:SPELL_AURA_REMOVED(args)
 			yellFelBombardment:Cancel()
 		end
 		updateRangeFrame(self)
+		--if self.Options.SetIconOnBombardment then
+			--self:SetIcon(args.destName, 0)
+		--end
 	elseif spellId == 244152 then--Apocolypse Drive
 		timerApocDriveCast:Stop()
 		--Probably start other timers too
-	elseif spellId == 244410 or spellId == 246920 then
+	elseif spellId == 244410 or spellId == 246920 or spellId == 245294 then
 		self.vb.deciminationActive = self.vb.deciminationActive - 1
 		if args:IsPlayer() then
 			yellDecimationStun:Cancel()

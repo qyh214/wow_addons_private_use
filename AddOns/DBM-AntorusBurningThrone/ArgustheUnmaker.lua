@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod(2031, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16803 $"):sub(12, -3))
-mod:SetCreatureID(125111)--or 124828
+mod:SetRevision(("$Revision: 16897 $"):sub(12, -3))
+mod:SetCreatureID(124828)--or 124828
 mod:SetEncounterID(2092)
 mod:SetZone()
 --mod:SetBossHPInfoToHighest()
-mod:SetUsedIcons(1, 2, 3, 4)
---mod:SetHotfixNoticeRev(16350)
+mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7)
+mod:SetHotfixNoticeRev(16895)
+mod:SetMinSyncRevision(16895)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -15,9 +16,9 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 248165 248317 257296 255594 257645 252516 256542 255648 257619 255935",
 	"SPELL_CAST_SUCCESS 248499 258039 251815 252729 252616 256388",
-	"SPELL_AURA_APPLIED 248499 248396 250669 251570 255199 253021 255496 255496 255478 252729 252616",
+	"SPELL_AURA_APPLIED 248499 248396 250669 251570 255199 253021 255496 255496 255478 252729 252616 255433 255430 255429 255425 255422 255419 255418 258647 258646",
 	"SPELL_AURA_APPLIED_DOSE 248499",
-	"SPELL_AURA_REMOVED 250669 251570 255199 253021 255496 255496 255478 252616",
+	"SPELL_AURA_REMOVED 250669 251570 255199 253021 255496 255496 255478 252616 255433 255430 255429 255425 255422 255419 255418",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
 --	"UNIT_DIED",
@@ -35,8 +36,8 @@ mod:RegisterEventsInCombat(
 --Stage One: Storm and Sky
 local warnSweepingScythe			= mod:NewStackAnnounce(248499, 2, nil, "Tank")
 local warnBlightOrb					= mod:NewSpellAnnounce(248317, 2)
-local warnSoulblight				= mod:NewTargetAnnounce(248396, 1)
-local warnSkyandSea					= mod:NewSpellAnnounce(255594, 1)
+local warnSoulblight				= mod:NewTargetAnnounce(248396, 2, nil, false, 2)
+local warnSkyandSea					= mod:NewTargetAnnounce(255594, 1)
 --Stage Two: The Protector Redeemed
 local warnPhase2					= mod:NewPhaseAnnounce(2, 2)
 local warnSoulburst					= mod:NewTargetAnnounce(250669, 2)
@@ -54,11 +55,15 @@ local warnDeadlyScythe				= mod:NewStackAnnounce(258039, 2, nil, "Tank")
 
 --Stage One: Storm and Sky
 local specWarnTorturedRage			= mod:NewSpecialWarningCount(257296, nil, nil, nil, 2, 2)
-local specWarnSweepingScythe		= mod:NewSpecialWarningStack(248499, nil, 2, nil, nil, 1, 2)
+local specWarnSweepingScythe		= mod:NewSpecialWarningStack(248499, nil, 3, nil, nil, 1, 6)
 local specWarnSweepingScytheTaunt	= mod:NewSpecialWarningTaunt(248499, nil, nil, nil, 1, 2)
 local specWarnConeofDeath			= mod:NewSpecialWarningDodge(248165, nil, nil, nil, 1, 2)
 local specWarnSoulblight			= mod:NewSpecialWarningMoveAway(248396, nil, nil, nil, 1, 2)
 local yellSoulblight				= mod:NewYell(248396)
+local specWarnGiftofSea				= mod:NewSpecialWarningYou(258647, nil, nil, nil, 1, 2)
+local yellGiftofSea					= mod:NewYell(258647)
+local specWarnGiftofSky				= mod:NewSpecialWarningYou(258646, nil, nil, nil, 1, 2)
+local yellGiftofSky					= mod:NewYell(258646)
 --local yellBurstingDreadflame		= mod:NewPosYell(238430, DBM_CORE_AUTO_YELL_CUSTOM_POSITION)
 --local specWarnMalignantAnguish		= mod:NewSpecialWarningInterrupt(236597, "HasInterrupt")
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 2)
@@ -84,14 +89,13 @@ local specWarnDeadlyScythe			= mod:NewSpecialWarningStack(258039, nil, 2, nil, n
 --local specWarnDeadlyScytheTaunt		= mod:NewSpecialWarningTaunt(258039, nil, nil, nil, 1, 2)
 local specWarnReorgModule			= mod:NewSpecialWarningSwitch(256389, "RangedDps", nil, nil, 1, 2)--Ranged only?
 
-
 local timerNextPhase				= mod:NewPhaseTimer(74)
 --Stage One: Storm and Sky
 mod:AddTimerLine(SCENARIO_STAGE:format(1))
 local timerSweepingScytheCD			= mod:NewCDTimer(5.6, 248499, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--5.6-15.7
 local timerConeofDeathCD			= mod:NewCDTimer(20, 248165, nil, nil, nil, 3)--20-24
 local timerBlightOrbCD				= mod:NewCDTimer(22, 248317, nil, nil, nil, 3)--22-32
-local timerTorturedRageCD			= mod:NewCDTimer(13.5, 257296, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)--13-16
+local timerTorturedRageCD			= mod:NewCDTimer(13, 257296, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)--13-16
 local timerSkyandSeaCD				= mod:NewCDTimer(25.9, 255594, nil, nil, nil, 5)--25.9-27.8
 --Stage Two: The Protector Redeemed
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
@@ -122,6 +126,8 @@ local voiceSweepingScythe				= mod:NewVoice(248499)--tauntboss
 local voiceConeofDeath					= mod:NewVoice(248165)--aesoon
 local voiceTorturedRage					= mod:NewVoice(257296)--aesoon
 local voiceSoulblight					= mod:NewVoice(248396)--runout
+local voiceGiftofSea					= mod:NewVoice(258647)--targetyou
+local voiceGiftofSky					= mod:NewVoice(258646)--targetyou
 --local voiceMalignantAnguish			= mod:NewVoice(236597, "HasInterrupt")--kickcast
 --local voiceGTFO						= mod:NewVoice(238028, nil, DBM_CORE_AUTO_VOICE4_OPTION_TEXT)--runaway
 --Stage Two: The Protector Redeemed
@@ -138,19 +144,21 @@ local voiceDeadlyScythe					= mod:NewVoice(258039)--tauntboss
 local voiceReorgModule					= mod:NewVoice(256389)--killmob
 
 
-mod:AddSetIconOption("SetIconOnAvatar", 255199, true)
-mod:AddSetIconOption("SetIconOnSoulBomb", 251570, true)
-mod:AddSetIconOption("SetIconOnSoulBurst", 250669, true)
+mod:AddSetIconOption("SetIconOnAvatar", 255199, true)--4
+mod:AddSetIconOption("SetIconOnSoulBomb", 251570, true)--3 and 7
+mod:AddSetIconOption("SetIconOnSoulBurst", 250669, true)--2
+mod:AddSetIconOption("SetIconOnVulnerability", 255418, true, true)--1-7
 mod:AddInfoFrameOption(258040, true)--Change to EJ entry since spell not localized
 mod:AddNamePlateOption("NPAuraOnInevitability", 253021)
 mod:AddNamePlateOption("NPAuraOnCosmosSword", 255496)
 mod:AddNamePlateOption("NPAuraOnEternalBlades", 255478)
+mod:AddNamePlateOption("NPAuraOnVulnerability", 255418)
 --mod:AddRangeFrameOption("5/10")
 
 local avatarOfAggramar, aggramarsBoon = GetSpellInfo(255199), GetSpellInfo(255200)
 mod.vb.phase = 1
 mod.vb.TorturedRage = 0
-mod.vb.soulBurstIcon = 1
+mod.vb.soulBurstIcon = 3
 
 --[[
 local debuffFilter
@@ -196,22 +204,19 @@ end
 function mod:OnCombatStart(delay)
 	self.vb.phase = 1
 	self.vb.TorturedRage = 0
-	self.vb.soulBurstIcon = 1
+	self.vb.soulBurstIcon = 3
 	timerSweepingScytheCD:Start(5.8-delay)
 	timerSkyandSeaCD:Start(10.8-delay)
 	timerTorturedRageCD:Start(12-delay)
 	timerConeofDeathCD:Start(30.9-delay)
 	timerBlightOrbCD:Start(35.2-delay)
+	--berserkTimer:Start(-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(_G["7.3_ARGUS_RAID_DEATH_TITAN_ENERGY"])--Validator won't accept this global so disabled for now
 		DBM.InfoFrame:Show(2, "enemypower", 2)
 		--DBM.InfoFrame:Show(7, "function", updateInfoFrame, false, false)
 	end
-	local wowTOC, testBuild = DBM:GetTOC()
-	if not testBuild then
-		DBM:AddMsg(DBM_CORE_NEED_LOGS)
-	end
-	if self.Options.NPAuraOnInevitability or self.Options.NPAuraOnCosmosSword or self.Options.NPAuraOnEternalBlades then
+	if self.Options.NPAuraOnInevitability or self.Options.NPAuraOnCosmosSword or self.Options.NPAuraOnEternalBlades or self.Options.NPAuraOnVulnerability then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 end
@@ -223,12 +228,11 @@ function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
-	local wowTOC, testBuild = DBM:GetTOC()
-	if not testBuild then
-		DBM:AddMsg(DBM_CORE_NEED_LOGS)
-	end
-	if self.Options.NPAuraOnInevitability or self.Options.NPAuraOnCosmosSword or self.Options.NPAuraOnEternalBlades then
+	if self.Options.NPAuraOnInevitability or self.Options.NPAuraOnCosmosSword or self.Options.NPAuraOnEternalBlades or self.Options.NPAuraOnVulnerability then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
+	end
+	if self:IsMythic() then
+		DBM:AddMsg(DBM_CORE_NEED_LOGS)
 	end
 end
 
@@ -247,7 +251,6 @@ function mod:SPELL_CAST_START(args)
 		voiceTorturedRage:Play("aesoon")
 		timerTorturedRageCD:Start()
 	elseif spellId == 255594 then
-		warnSkyandSea:Show()
 		timerSkyandSeaCD:Start()
 	elseif spellId == 252516 then
 		warnDiscsofNorg:Show()
@@ -321,7 +324,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if uId and self:IsTanking(uId) then
 			local amount = args.amount or 1
-			if amount >= 2 then
+			if amount >= 3 then
 				if args:IsPlayer() then
 					specWarnSweepingScythe:Show(amount)
 					voiceSweepingScythe:Play("stackhigh")
@@ -363,6 +366,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 250669 then
 		warnSoulburst:CombinedShow(0.3, args.destName)--2 Targets
+		if self.vb.soulBurstIcon > 7 then
+			self.vb.soulBurstIcon = 3
+		end
 		local icon = self.vb.soulBurstIcon
 		if args:IsPlayer() then
 			specWarnSoulburst:Show()
@@ -374,7 +380,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnSoulBurst then
 			self:SetIcon(args.destName, icon)
 		end
-		self.vb.soulBurstIcon = self.vb.soulBurstIcon + 1
+		self.vb.soulBurstIcon = self.vb.soulBurstIcon + 4--Icons 3 and 7 used to match BW
 	elseif spellId == 251570 then
 		if args:IsPlayer() then
 			specWarnSoulbomb:Show()
@@ -386,7 +392,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnSoulbomb:Show(args.destName)
 		end
 		if self.Options.SetIconOnSoulBomb then
-			self:SetIcon(args.destName, 3)
+			self:SetIcon(args.destName, 2)
 		end
 	elseif spellId == 255199 then
 		if args:IsPlayer() then
@@ -427,6 +433,41 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnCosmicBeacon:CombinedShow(0.3, args.destName)
 		end
+	elseif spellId == 258647 then--Gift of Sea
+		warnSkyandSea:CombinedShow(0.3, args.destName)
+		if args:IsPlayer() then
+			specWarnGiftofSea:Show()
+			voiceGiftofSea:Play("targetyou")
+			yellGiftofSea:Yell()
+		end
+	elseif spellId == 258646 then--Gift of Sky
+		warnSkyandSea:CombinedShow(0.3, args.destName)
+		if args:IsPlayer() then
+			specWarnGiftofSky:Show()
+			voiceGiftofSky:Play("targetyou")
+			yellGiftofSky:Yell()
+		end
+	elseif spellId == 255433 or spellId == 255430 or spellId == 255429 or spellId == 255425 or spellId == 255422 or spellId == 255419 or spellId == 255418 then--Vulnerability
+		if self.Options.NPAuraOnVulnerability then
+			DBM.Nameplate:Show(true, args.destGUID, spellId)
+		end
+		if self.Options.SetIconOnVulnerability then
+			if spellId == 255433 then--Arcane
+				self:ScanForMobs(args.destGUID, 2, 5, 1, 0.2, 15)
+			elseif spellId == 255430 then--Shadow
+				self:ScanForMobs(args.destGUID, 2, 3, 1, 0.2, 15)
+			elseif spellId == 255429 then--Fire
+				self:ScanForMobs(args.destGUID, 2, 2, 1, 0.2, 15)
+			elseif spellId == 255425 then--Frost
+				self:ScanForMobs(args.destGUID, 2, 6, 1, 0.2, 15)
+			elseif spellId == 255422 then--Nature
+				self:ScanForMobs(args.destGUID, 2, 4, 1, 0.2, 15)
+			elseif spellId == 255419 then--Holy
+				self:ScanForMobs(args.destGUID, 2, 1, 1, 0.2, 15)
+			elseif spellId == 255418 then--Melee
+				self:ScanForMobs(args.destGUID, 2, 7, 1, 0.2, 15)
+			end
+		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -463,6 +504,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 255478 then--Blades of the Eternal
 		if self.Options.NPAuraOnEternalBlades then
+			DBM.Nameplate:Hide(true, args.destGUID, spellId)
+		end
+	elseif spellId == 255433 or spellId == 255430 or spellId == 255429 or spellId == 255425 or spellId == 255422 or spellId == 255419 or spellId == 255418 then--Vulnerability
+		if self.Options.NPAuraOnVulnerability then
 			DBM.Nameplate:Hide(true, args.destGUID, spellId)
 		end
 	elseif spellId == 252616 then
@@ -521,8 +566,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
 			timerDeadlyScytheCD:Start(5)
 		end
 		--timerEmberofRageCD:Start(4)--used instantly
+		timerReorgModuleCD:Start(9)
 		timerTorturedRageCD:Start(10)
-		timerReorgModuleCD:Start(13.4)
 		timerVolatileSoulCD:Start(17.5)
 	elseif spellId == 258104 then--Argus Mythic Transform
 		

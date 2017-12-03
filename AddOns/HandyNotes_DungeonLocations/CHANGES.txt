@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------
-r58 | nagboy@gmail.com | 2017-10-01 09:00:12 -0500 (Sun, 01 Oct 2017) | 1 line
+r60 | nagboy@gmail.com | 2017-12-02 12:36:10 -0600 (Sat, 02 Dec 2017) | 1 line
 Changed paths:
    M /trunk/HandyNotes_DungeonLocations.lua
 
-Fixed Show on Continents option for Broken Isles
+Fixed Stratholme east entrance dungeon link.
 ------------------------------------------------------------------------
 

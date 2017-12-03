@@ -525,6 +525,7 @@ function module.main:ADDON_LOADED()
 	end
 end
 
+local negateHealing = {}
 
 local SLTReductionAuraSpellID = 98007
 local SLTReductionAuraName = GetSpellInfo(SLTReductionAuraSpellID)
@@ -1183,7 +1184,9 @@ function _BW_Start(encounterID,encounterName)
 	segmentsData = fightData.segments
 	
 	active_segment = 1
-	active_phase = 1	
+	active_phase = 1
+	
+	wipe(negateHealing)
 	
 	module:RegisterEvents('COMBAT_LOG_EVENT_UNFILTERED','UNIT_TARGET','RAID_BOSS_EMOTE','RAID_BOSS_WHISPER','UPDATE_MOUSEOVER_UNIT')
 	
@@ -2063,6 +2066,16 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 				
 		
 		--------------> Other
+		if negateHealing[destGUID] then
+			spellTable.amount = spellTable.amount - amount
+			spellTable.over = spellTable.over + amount + absorbed
+			spellTable.absorbed = spellTable.absorbed - absorbed
+			if critical then
+				spellTable.crit = spellTable.crit - amount - absorbed
+				spellTable.critcount = spellTable.critcount - 1
+				spellTable.critover = spellTable.critover - overhealing
+			end
+		end
 		if spellID == 183998 then	--Light of the Martyr: effective healing fix
 			local lotmData = spellFix_LotM[sourceGUID]
 			if not lotmData then
@@ -2205,6 +2218,8 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 		
 		if spellID == 45181 or spellID == 211336 or spellID == 87024 or spellID == 229333 or spellID == 116888 or spellID == 209261 then	--Cheated Death, Archbishop Benedictus' Restitution, Cauterize, Sands of Time (Trinket), Shroud of Purgatory, Uncontained Fel 
 			AddNotRealDeath(destGUID,timestamp,spellID)
+		elseif spellID == 243961 then	--Varimatras Disable Healing Debuff
+			negateHealing[destGUID] = true
 		end
 		
 		
@@ -2258,6 +2273,8 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 		--------------> Other
 		if spellID == 187464 then	--Shadow Mend
 			spellFix_SM[destGUID] = nil
+		elseif spellID == 243961 then	--Varimatras Disable Healing Debuff
+			negateHealing[destGUID] = nil
 		end
 
 	---------------------------------

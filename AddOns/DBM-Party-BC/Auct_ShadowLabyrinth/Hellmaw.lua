@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(544, "DBM-Party-BC", 10, 253)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
 
 mod:SetCreatureID(18731)
 mod:SetEncounterID(1908)
@@ -13,7 +13,7 @@ mod:RegisterEventsInCombat(
 
 local warnFear      = mod:NewSpellAnnounce(33547)
 
-local timerFear     = mod:NewNextTimer(25, 33547)
+local timerFear     = mod:NewNextTimer(25, 33547, nil, nil, nil, 2)
 
 local enrageTimer	= mod:NewBerserkTimer(180)
 

@@ -1,5 +1,5 @@
 -- For the gnomes!!!
-local VERSION = "0.26.3";
+local VERSION = "0.26.5";
 
 local _G = getfenv(0)
 -- Libraries
@@ -677,13 +677,13 @@ local kazzakLoot = {
 	{ itemId = 150427, itemType = itemTypeTransmog, slot = _L["1h Mace"] },
 };
 
--- 150424 cold snap ??
 local azuregosLoot = {
 	{ itemId = 150417, itemType = itemTypeTransmog, slot = _L["Cloak"] },
 	{ itemId = 150419, itemType = itemTypeTransmog, slot = _L["Cloth"] },
 	{ itemId = 150421, itemType = itemTypeTransmog, slot = _L["2h Sword"] },
 	{ itemId = 150422, itemType = itemTypeTransmog, slot = _L["Plate"] },
 	{ itemId = 150423, itemType = itemTypeTransmog, slot = _L["Dagger"] },
+	{ itemId = 150424, itemType = itemTypeTransmog, slot = _L["Wand"] },
 	{ itemId = 150425, itemType = itemTypeTransmog, slot = _L["Cloth"] },
 	{ itemId = 150428, itemType = itemTypeTransmog, slot = _L["Fist"] },
 	{ itemId = 150543, itemType = itemTypeTransmog, slot = _L["Leather"] },
@@ -718,20 +718,21 @@ local dragonsofnightmareLoot = {
 	{ itemId = 150415, itemType = itemTypeTransmog, slot = _L["Leather"] },
 	{ itemId = 150416, itemType = itemTypeTransmog, slot = _L["Cloth"] },
 	{ itemType = itemTypeTitle, title = " " },
-	{ itemType = itemTypeTitle, title = _L["Shared"] },
-	{ itemId = 150388, itemType = itemTypeTransmog, slot = _L["Trinket"] }, -- yle
-	{ itemId = 150393, itemType = itemTypeTransmog, slot = _L["1h Sword"] }, -- yle
-	{ itemId = 150403, itemType = itemTypeTransmog, slot = _L["Crossbow"] }, -- yle
-	{ itemId = 150408, itemType = itemTypeTransmog, slot = _L["Staff"] }, -- yle
-	{ itemId = 150411, itemType = itemTypeTransmog, slot = _L["Cloak"] }, -- yle
-	{ itemId = 150412, itemType = itemTypeTransmog, slot = _L["1h Mace"] }, -- yle
-	{ itemType = itemTypeTitle, title = " " },
-	{ itemType = itemTypeTitle, title = _L["Somewhere"] },
+	{ itemType = itemTypeTitle, title = _L["Taerar"] },
 	{ itemId = 150390, itemType = itemTypeTransmog, slot = _L["Plate"] },
-	{ itemId = 150413, itemType = itemTypeTransmog, slot = _L["Plate"] },
+	{ itemId = 150392, itemType = itemTypeTransmog, slot = _L["Ring"] },
+	{ itemId = 150394, itemType = itemTypeTransmog, slot = _L["Cloth"] },
+	{ itemId = 150395, itemType = itemTypeTransmog, slot = _L["Leather"] },
 	{ itemId = 150414, itemType = itemTypeTransmog, slot = _L["Mail"] },
-	
-	
+	{ itemId = 150413, itemType = itemTypeTransmog, slot = _L["Plate"] },
+	{ itemType = itemTypeTitle, title = " " },
+	{ itemType = itemTypeTitle, title = _L["Shared"] },
+	{ itemId = 150388, itemType = itemTypeTransmog, slot = _L["Trinket"] }, -- ylet
+	{ itemId = 150393, itemType = itemTypeTransmog, slot = _L["1h Sword"] }, -- ylet
+	{ itemId = 150403, itemType = itemTypeTransmog, slot = _L["Crossbow"] }, -- ylet
+	{ itemId = 150408, itemType = itemTypeTransmog, slot = _L["Staff"] }, -- yle
+	{ itemId = 150411, itemType = itemTypeTransmog, slot = _L["Cloak"] }, -- ylet
+	{ itemId = 150412, itemType = itemTypeTransmog, slot = _L["1h Mace"] }, -- yle
 }
 
 nodes["BlastedLands"] = {

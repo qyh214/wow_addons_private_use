@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(573, "DBM-Party-BC", 6, 261)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
 mod:SetCreatureID(17797)
 mod:SetEncounterID(1942)
 
@@ -19,8 +19,8 @@ local warningCloud		= mod:NewSpellAnnounce(25033)
 local warningWinds		= mod:NewTargetAnnounce(31718)
 local warningBurst		= mod:NewTargetAnnounce(31481)
 
-local timerWinds		= mod:NewTargetTimer(6, 31718)
-local timerBurst		= mod:NewTargetTimer(10, 31481)
+local timerWinds		= mod:NewTargetTimer(6, 31718, nil, nil, nil, 3)
+local timerBurst		= mod:NewTargetTimer(10, 31481, nil, nil, nil, 3)
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 25033 then

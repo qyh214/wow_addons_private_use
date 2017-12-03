@@ -1,6 +1,7 @@
 ﻿## Interface: 70300
 ## X-Min-Interface: 70300
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Azeroth|r
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0艾澤拉斯|r
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMAzeroth_AllSavedVars
@@ -16,6 +17,7 @@
 ## X-DBM-Mod-LoadCID: 121820,121818,121911,121912,121913,121821,14889,14888,14887,14890
 ## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
+localization.tw.lua
 KazzakClassic.lua
 Azuregos.lua
 Taerar.lua

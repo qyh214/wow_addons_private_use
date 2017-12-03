@@ -1,42 +1,59 @@
 local mod	= DBM:NewMod("Muru", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 642 $"):sub(12, -3))
 mod:SetCreatureID(25741)--25741 Muru, 25840 Entropius
+mod:SetEncounterID(728)
 mod:SetModelID(23404)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_SUMMON",
+	"SPELL_AURA_APPLIED 45996",
+	"SPELL_CAST_SUCCESS 46177",
+	"SPELL_SUMMON 46268 46282",
 	"UNIT_DIED"
 )
 
-local warnHuman			= mod:NewAnnounce("WarnHuman", 4)
+local warnHuman			= mod:NewAnnounce("WarnHuman", 4, 27778)
 local warnVoid			= mod:NewAnnounce("WarnVoid", 4, 46087)
 local warnDarkness		= mod:NewSpellAnnounce(45996, 2)
 local warnPhase2		= mod:NewPhaseAnnounce(2)
 local warnFiend			= mod:NewAnnounce("WarnFiend", 2, 46268)
 local warnBlackHole		= mod:NewSpellAnnounce(46282, 3)
 
-local timerHuman		= mod:NewTimer(60, "TimerHuman")
-local timerVoid			= mod:NewTimer(30, "TimerVoid", 46087)
-local timerNextDarkness	= mod:NewNextTimer(45, 45996)
+local timerHuman		= mod:NewTimer(60, "TimerHuman", 27778, nil, nil, 6)
+local timerVoid			= mod:NewTimer(30, "TimerVoid", 46087, nil, nil, 6)
+local timerNextDarkness	= mod:NewNextTimer(45, 45996, nil, nil, nil, 2)
 local timerBlackHoleCD	= mod:NewCDTimer(15, 46282)
-local timerPhase		= mod:NewTimer(10, "TimerPhase", 46087)
+local timerPhase		= mod:NewTimer(10, "TimerPhase", 46087, nil, nil, 6)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-local humanCount = 1
-local voidCount = 1
+mod.vb.humanCount = 1
+mod.vb.voidCount = 1
+mod.vb.phase = 1
 
-local function phase2()
+local function HumanSpawn(self)
+	warnHuman:Show(self.vb.humanCount)
+	self.vb.humanCount = self.vb.humanCount + 1
+	timerHuman:Start(nil, self.vb.humanCount)
+	self:Schedule(60, HumanSpawn, self)
+end
+
+local function VoidSpawn(self)
+	warnVoid:Show(self.vb.voidCount)
+	self.vb.voidCount = self.vb.voidCount + 1
+	timerVoid:Start(nil, self.vb.voidCount)
+	self:Schedule(30, VoidSpawn, self)
+end
+
+local function phase2(self)
+	self.vb.phase = 2
 	warnPhase2:Show()
-	mod:UnscheduleMethod("HumanSpawn")
-	mod:UnscheduleMethod("VoidSpawn")
+	self:Unschedule(HumanSpawn)
+	self:Unschedule(VoidSpawn)
 	timerBlackHoleCD:Start(17)
 	if DBM.BossHealth:IsShown() then
 		DBM.BossHealth:Clear()
@@ -44,28 +61,15 @@ local function phase2()
 	end
 end
 
-function mod:HumanSpawn()
-	warnHuman:Show(humanCount)
-	humanCount = humanCount + 1
-	timerHuman:Start(nil, humanCount)
-	self:ScheduleMethod(60, "HumanSpawn")
-end
-
-function mod:VoidSpawn()
-	warnVoid:Show(voidCount)
-	voidCount = voidCount + 1
-	timerVoid:Start(nil, voidCount)
-	self:ScheduleMethod(30, "VoidSpawn")
-end
-
 function mod:OnCombatStart(delay)
-	humanCount = 1
-	voidCount = 1
-	timerHuman:Start(15-delay, humanCount)
-	timerVoid:Start(36.5-delay, voidCount)
+	self.vb.phase = 1
+	self.vb.humanCount = 1
+	self.vb.voidCount = 1
+	timerHuman:Start(15-delay, 1)
+	timerVoid:Start(36.5-delay, 1)
 	timerNextDarkness:Start(-delay)
-	self:ScheduleMethod(15, "HumanSpawn")
-	self:ScheduleMethod(36.5, "VoidSpawn")
+	self:Schedule(15, HumanSpawn, self)
+	self:Schedule(36.5, VoidSpawn, self)
 	berserkTimer:Start(-delay)
 end
 
@@ -78,11 +82,11 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 46177 then
-		timerNextDarkness:Cancel()
-		timerHuman:Cancel()
-		timerVoid:Cancel()
+		timerNextDarkness:Stop()
+		timerHuman:Stop()
+		timerVoid:Stop()
 		timerPhase:Start()
-		self:Schedule(10, phase2)
+		self:Schedule(10, phase2, self)
 	end
 end
 

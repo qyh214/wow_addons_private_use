@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(562, "DBM-Party-BC", 14, 257)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
 
 mod:SetCreatureID(17977)
 mod:SetEncounterID(1929)
@@ -12,11 +12,11 @@ mod:RegisterEventsInCombat(
 	"SPELL_SUMMON 34727"
 )
 
-local warnTreants    = mod:NewSpellAnnounce(34727)
-local warnStomp      = mod:NewSpellAnnounce(34716)
+local warnTreants    = mod:NewSpellAnnounce(34727, 3)
+local warnStomp      = mod:NewSpellAnnounce(34716, 4)
 
 local timerTreants   = mod:NewNextTimer(45, 34727, nil, nil, nil, 1)
-local timerStomp     = mod:NewBuffActiveTimer(5, 34716)
+local timerStomp     = mod:NewBuffActiveTimer(5, 34716, nil, nil, nil, 3)
 
 function mod:OnCombatStart(delay)
     timerTreants:Start(15-delay)

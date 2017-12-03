@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2012, "DBM-Argus", nil, 959)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16742 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16866 $"):sub(12, -3))
 mod:SetCreatureID(124592)
 --mod:SetEncounterID(1952)--Does not have one
 --mod:SetReCombatTime(20)
@@ -23,7 +23,7 @@ local warnSow					= mod:NewStackAnnounce(247495, 2, nil, "Tank")
 local warnDeathField			= mod:NewSpellAnnounce(247632, 2)
 
 local specReap					= mod:NewSpecialWarningSpell(247492, "Tank", nil, nil, 1, 2)
-local specWarnSow				= mod:NewSpecialWarningStack(247495, nil, 2, nil, nil, 1, 2)
+local specWarnSow				= mod:NewSpecialWarningStack(247495, nil, 2, nil, nil, 1, 6)
 local specWarnSowOther			= mod:NewSpecialWarningTaunt(247495, nil, nil, nil, 1, 2)
 local specSeedsofChaos			= mod:NewSpecialWarningSpell(247585, "-Tank", nil, nil, 1, 2)
 --local specWarnDeathField		= mod:NewSpecialWarningDodge(247632, nil, nil, nil, 2, 2)

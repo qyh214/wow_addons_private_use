@@ -163,7 +163,7 @@ end
 
 function ExRT.F:GetCursorPos()
 	local x_f,y_f = GetCursorPosition()
-	local s = self:GetEffectiveScale()
+	local s = self.GetEffectiveScale and self:GetEffectiveScale() or self:GetParent():GetEffectiveScale()
 	x_f, y_f = x_f/s, y_f/s
 	local x,y = self:GetLeft(),self:GetTop()
 	x = x_f-x

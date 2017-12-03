@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2010, "DBM-Argus", nil, 959)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16712 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16866 $"):sub(12, -3))
 mod:SetCreatureID(124514)
 mod:SetEncounterID(2081)
 --mod:SetReCombatTime(20)
@@ -20,7 +20,7 @@ local warnInfectedClaws					= mod:NewStackAnnounce(247361, 2, nil, "Tank")
 local warnSlumberingGasp				= mod:NewTargetAnnounce(247389, 2, nil, false)
 local warnGrotesqueSpawn				= mod:NewSpellAnnounce(247443, 2)
 
-local specWarnInfectedClaws				= mod:NewSpecialWarningStack(247361, nil, 6, nil, nil, 1, 2)
+local specWarnInfectedClaws				= mod:NewSpecialWarningStack(247361, nil, 6, nil, nil, 1, 6)
 local specWarnInfectedClawsOther		= mod:NewSpecialWarningTaunt(247361, nil, nil, nil, 1, 2)
 local specWarnSlumberingGasp			= mod:NewSpecialWarningDodge(247379, nil, nil, nil, 2, 2)
 

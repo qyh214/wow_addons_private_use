@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(554, "DBM-Party-BC", 12, 255)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
 mod:SetCreatureID(17881)
 mod:SetEncounterID(1919)
 
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 local warnFrenzy		= mod:NewSpellAnnounce("ej5348", 3)
 local warnTimeStop		= mod:NewSpellAnnounce(31422, 3)
 
-local timerTimeStop		= mod:NewBuffActiveTimer(4, 31422)
+local timerTimeStop		= mod:NewBuffActiveTimer(4, 31422, nil, nil, nil, 3)
 
 function mod:CHAT_MSG_MONSTER_EMOTE(msg)
 	if msg == L.AeonusFrenzy and self:IsInCombat() then		-- Frenzy

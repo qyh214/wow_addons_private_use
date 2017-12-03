@@ -611,7 +611,7 @@ nodes["EasternPlaguelands"] = {
   type = "Dungeon",
  }, -- Stratholme World 52902870
  [43401940] = {
-  id = 246,
+  id = 236,
   lfgid = 274,
   type = "Dungeon", -- Stratholme Service Entrance
  },

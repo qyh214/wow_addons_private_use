@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(547, "DBM-Party-BC", 10, 253)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
 mod:SetCreatureID(18708)
 mod:SetEncounterID(1910)
 mod:SetUsedIcons(8)
@@ -16,17 +16,21 @@ mod:RegisterEventsInCombat(
 
 local warnTouch         = mod:NewTargetAnnounce(33711, 3)
 
-local specWarnBoom		= mod:NewSpecialWarningRun(33923, nil, nil, nil, 4)
-local specWarnTouch		= mod:NewSpecialWarningMoveAway(33711)
+local specWarnBoom		= mod:NewSpecialWarningRun(33923, nil, nil, nil, 4, 2)
+local specWarnTouch		= mod:NewSpecialWarningMoveAway(33711, nil, nil, nil, 1, 2)
 
 local timerBoomCast     = mod:NewCastTimer(5, 33923, nil, nil, nil, 2)
-local timerTouch        = mod:NewTargetTimer(14, 33711)
+local timerTouch        = mod:NewTargetTimer(14, 33711, nil, nil, nil, 3)
+
+local voiceBoom			= mod:NewVoice(33923)--justrun
+local voiceTouch		= mod:NewVoice(33711)--runout
 
 mod:AddBoolOption("SetIconOnTouchTarget", true)
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 33923 or args.spellId == 38796 then
 		specWarnBoom:Show()
+		voiceBoom:Play("justrun")
 		timerBoomCast:Start()
 	end
 end
@@ -39,6 +43,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if args:IsPlayer() then
             specWarnTouch:Show()
+            timerTouch:Play("runout")
         else
         	warnTouch:Show(args.destName)
         end

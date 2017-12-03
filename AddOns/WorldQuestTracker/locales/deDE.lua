@@ -120,8 +120,7 @@ L["S_QUESTTYPE_TRADESKILL"] = "Berufsfertigkeit"
 L["S_RAREFINDER_NPC_NOTREGISTERED"] = "Seltener NSC nicht in der Datenbank"
 L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = "Immer auf Englisch suchen"
 L["S_RAREFINDER_OPTIONS_SHOWICONS"] = "Symbole für aktive seltene Gegner anzeigen"
---Translation missing 
--- L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = ""
+L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = "Immer abspielen, selbst wenn Soundeffekte deaktiviert sind"
 --Translation missing 
 -- L["S_RAREFINDER_SOUND_ENABLED"] = ""
 --Translation missing 

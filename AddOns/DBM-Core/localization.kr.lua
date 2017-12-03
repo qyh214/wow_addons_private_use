@@ -19,7 +19,7 @@ DBM_CORE_LOAD_MOD_VER_MISMATCH		= "DBM-Core가 로딩 조건과 맞지 않아 %s
 DBM_CORE_LOAD_MOD_DISABLED			= "%s|1이;가; 설치는 돼있지만 켜져있질 않습니다. 직접 켜기 전까진 모드가 로딩되지 않습니다."
 DBM_CORE_LOAD_MOD_DISABLED_PLURAL	= "%s|1이;가; 설치는 돼있지만 켜져있질 않습니다. 직접 켜기 전까진 모드들이 로딩되지 않습니다."
 
-DBM_CORE_WHATS_NEW					= "대화창 Taint 문제로 인해 몇가지 대화창과 링크 Hook 기능이 삭제되었으며 이로 인해 일부 기능들이 삭제되거나 변경되었습니다 (사실 저는 UI Taint를 재현할 수 없었습니다. 따라서 이러한 변경 사항은 일단 그냥 시도만 해보는 것입니다)"
+DBM_CORE_WHATS_NEW					= "대화창 프레임에 문제를 일으킬 수 있는 관계로 일부 대화창 및 링크 Hook가 삭제되었습니다. 이러한 조치에도 '/접속종료' 문제는 블리자드 자체 버그이므로 고쳐지진 않으나, 적어도 DBM의 문제가 아니라는건 명확하게 드러나게 되었습니다."
 
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "거리 레이더를 인스턴스 던전에서 사용할 수 없습니다. 예전의 텍스트 방식 거리창으로 대체됩니다."
@@ -254,6 +254,8 @@ DBM_CORE_UNKNOWN					= "알 수 없음"--UNKNOWN
 DBM_CORE_LEFT						= "왼쪽"
 DBM_CORE_RIGHT						= "오른쪽"
 DBM_CORE_BACK						= "뒤쪽"--BACK
+DBM_CORE_TOP						= "위쪽"
+DBM_CORE_BOTTOM						= "아래쪽"
 DBM_CORE_MIDDLE						= "가운데"
 DBM_CORE_FRONT						= "앞쪽"
 DBM_CORE_EAST						= "동쪽"
@@ -269,6 +271,8 @@ DBM_ADDS							= "쫄"--Such as "Move to Ally"
 DBM_CORE_ROOM_EDGE					= "구석"
 DBM_CORE_FAR_AWAY					= "먼 곳"
 DBM_CORE_SAFE						= "안전함"
+DBM_CORE_SHIELD						= "보호막"
+DBM_INCOMING						= "%s 등장"
 --Common Locals end
 
 DBM_CORE_BREAK_USAGE				= "쉬는 시간은 60분을 초과할 수 없습니다. 쉬는 시간은 초단위가 아니라 분단위로 입력해야 합니다."
@@ -356,7 +360,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= "%s - 대상 바꾸세요"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - 대상 바꾸세요 (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.gtfo		= "%%s 깔림 - 피하세요"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.Adds		= "쫄 등장 - 대상 바꾸세요"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.Addscustom	= "쫄 등장 - %s"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.Addscustom	= "쫄 등장 - %%s"
 
 -- Auto-generated Special Warning Localizations
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell			= "$spell:%s 특수 경고 보기"
@@ -400,10 +404,10 @@ DBM_CORE_AUTO_TIMER_TEXTS.castsource		= "%s: %%s"
 DBM_CORE_AUTO_TIMER_TEXTS.active		= "%s 종료"--Buff/Debuff/event on boss
 DBM_CORE_AUTO_TIMER_TEXTS.fades			= "%s 사라짐"--Buff/Debuff on players
 DBM_CORE_AUTO_TIMER_TEXTS.ai				= "%s AI 예상"
-DBM_CORE_AUTO_TIMER_TEXTS.cd				= "%s 가능"
-DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "%s 가능 (%%d)"
-DBM_CORE_AUTO_TIMER_TEXTS.cdsource		= "%s 가능: >%%s<"
-DBM_CORE_AUTO_TIMER_TEXTS.cdspecial		= "특수 능력 가능"
+DBM_CORE_AUTO_TIMER_TEXTS.cd				= "%s 쿨타임"
+DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "%s 쿨타임 (%%s)"
+DBM_CORE_AUTO_TIMER_TEXTS.cdsource		= "%s 쿨타임: >%%s<"
+DBM_CORE_AUTO_TIMER_TEXTS.cdspecial		= "특수 능력 쿨타임"
 DBM_CORE_AUTO_TIMER_TEXTS.next			= "다음 %s"
 DBM_CORE_AUTO_TIMER_TEXTS.nextcount		= "다음 %s (%%s)"
 DBM_CORE_AUTO_TIMER_TEXTS.nextsource		= "다음 %s: %%s"
@@ -411,7 +415,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.nextspecial		= "다음 특수 능력"
 DBM_CORE_AUTO_TIMER_TEXTS.achievement		= "%s"
 DBM_CORE_AUTO_TIMER_TEXTS.stage			= "다음 단계"
 DBM_CORE_AUTO_TIMER_TEXTS.adds			= "다음 쫄 등장"
-DBM_CORE_AUTO_TIMER_TEXTS.addscustom		= "쫄 등장 (%s)"
+DBM_CORE_AUTO_TIMER_TEXTS.addscustom		= "쫄 등장 (%%s)"
 
 DBM_CORE_AUTO_TIMER_OPTIONS.target		= "$spell:%s 디버프 타이머 바 보기"
 DBM_CORE_AUTO_TIMER_OPTIONS.cast		= "$spell:%s 시전 타이머 바 보기"

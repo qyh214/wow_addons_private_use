@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1726, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16867 $"):sub(12, -3))
 mod:SetCreatureID(103769)
 mod:SetEncounterID(1864)
 mod:SetZone()
@@ -98,7 +98,7 @@ local voiceDreaming						= mod:NewVoice(205843)--stepring
 local voiceNightmareBlades				= mod:NewVoice(206656)--runout
 local voiceCorruptionHorror				= mod:NewVoice("ej12973", "-Healer")--bigmob
 local voiceCorruptingNova				= mod:NewVoice(207830, "HasInterrupt")--kickcast
-local voiceDarkeningSoul				= mod:NewVoice(206651, "Tank")--tauntboss
+local voiceDarkeningSoul				= mod:NewVoice(206651)--stackhigh/tauntboss
 local voiceTormentingFixation			= mod:NewVoice(205771)--targetyou (iffy, is there no voice that says fixate, run?)
 --Stage Two: From the Shadows
 local voiceBondsOfTerror				= mod:NewVoice(209034)--linegather

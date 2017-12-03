@@ -708,7 +708,7 @@ _L["bsrare_broodmothernix_search"] = { "nix", "nix" };
 
 _L["Lord Kazzak"] = "Lord Kazzak";
 _L["kazzak_search"] = { "kaz", "kaz" };
-_L["Azuregos"] = "Lord Kazzak";
+_L["Azuregos"] = "Azuregos";
 _L["azuregos_search"] = { "azu", "azu" };
 _L["Dragons of Nightmare"] = "Dragons of Nightmare";
 _L["dragonsofnightmare_search"] = { "e", "sondre", "leth?on", "emeris", "ta?erar", "nightmare" };
@@ -749,6 +749,7 @@ _L["Fist"] = "Fist";
 _L["Polearm"] = "Polearm";
 _L["Bow"] = "Bow";
 _L["Gun"] = "Gun";
+_L["Wand"] = "Wand";
 _L["Crossbow"] = "Crossbow";
 _L["Ring"] = "Ring";
 _L["Amulet"] = "Amulet";

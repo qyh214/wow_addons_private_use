@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(531, "DBM-Party-BC", 16, 249)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 606 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
 
 mod:SetCreatureID(24744)
 mod:SetEncounterID(1898)
@@ -13,7 +13,7 @@ mod:RegisterEventsInCombat(
 
 --TODO, see if TW matters enough to rotate dps for this warning. In original BC dps took turns because killing spark applies debuff/dot
 local specWarnEnergy	= mod:NewSpecialWarningSwitch("ej5085", "-Healer", nil, 3, 1, 2)
-local voiceEnergy			= mod:NewVoice("ej5085", "-Healer")--killmob
+local voiceEnergy		= mod:NewVoice("ej5085", "-Healer")--killmob
 
 --[[
 	"<11.24 20:39:02> [UNIT_SPELLCAST_SUCCEEDED] Vexallus(Omegal) [target:Summon Pure Energy::0:46154]", -- [22]

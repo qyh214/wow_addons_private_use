@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1898, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16822 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16863 $"):sub(12, -3))
 mod:SetCreatureID(117269)--121227 Illiden? 121193 Shadowsoul
 mod:SetEncounterID(2051)
 mod:SetZone()
@@ -108,11 +108,11 @@ local timerSorrowfulWailCD			= mod:NewCDTimer(14.1, 241564, nil, nil, nil, 2)
 local timerSightlessGaze			= mod:NewBuffActiveTimer(20, 241721, nil, nil, nil, 5)
 --Stage Three: Darkness of A Thousand Souls
 mod:AddTimerLine(SCENARIO_STAGE:format(3))
-local timerDarknessofSoulsCD		= mod:NewCDCountTimer(90, 238999, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerDarknessofSoulsCD		= mod:NewCDCountTimer(89.7, 238999, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 local timerTearRiftCD				= mod:NewCDCountTimer(95, 243982, nil, nil, nil, 3)
 local timerFlamingOrbCD				= mod:NewCDCountTimer(30, 239253, nil, nil, nil, 3)
 local timerObeliskCD				= mod:NewCDCountTimer(42, 239785, nil, nil, nil, 3)
-local timerObelisk					= mod:NewCastTimer(13, 239785, L.Obelisklasers, nil, nil, 3)
+local timerObelisk					= mod:NewCastTimer(13, 239785, L.Obelisklasers, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 
@@ -121,6 +121,7 @@ local countdownSingularity			= mod:NewCountdown(50, 235059, nil, nil, 5)
 local countdownArmageddon			= mod:NewCountdown("Alt25", 240910, false)
 local countdownFocusedDread			= mod:NewCountdown("AltTwo", 238502)
 local countdownFelclaws				= mod:NewCountdown("Alt25", 239932, "Tank", 2)
+local countdownObelisk				= mod:NewCountdown(12, 239785, nil, nil, 5)
 
 --Stage One: The Betrayer
 local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
@@ -194,7 +195,13 @@ local function ObeliskWarning(self)
 	self.vb.obeliskCount = self.vb.obeliskCount + 1
 	specWarnObelisk:Show(self.vb.obeliskCount)
 	voiceObelisk:Play("farfromline")
-	timerObelisk:Start()
+	if self:IsMythic() then
+		timerObelisk:Start(12)
+		countdownObelisk:Start(12)
+	else
+		timerObelisk:Start(13)
+		countdownObelisk:Start(13)
+	end
 	if self.vb.obeliskCount % 2 == 1 then
 		timerObeliskCD:Start(36, self.vb.obeliskCount+1)
 		self:Schedule(36, ObeliskWarning, self)
@@ -204,13 +211,13 @@ end
 local function handleMissingEmote(self)
 	self:Unschedule(handleMissingEmote)
 	self.vb.singularityCount = self.vb.singularityCount + 1
-	timerRupturingSingularity:Start(8.2, self.vb.singularityCount)
-	countdownSingularity:Start(8.2)
+	timerRupturingSingularity:Start(7.7, self.vb.singularityCount)
+	countdownSingularity:Start(7.7)
 	if self:IsMythic() then
 		local timer = phase1point5MythicSingularityTimers[self.vb.singularityCount+1]
 		if timer then
 			self:Schedule(timer, handleMissingEmote, self)--Already scheduled on delya
-			timerRupturingSingularityCD:Start(timer-1.5, self.vb.singularityCount+1)
+			timerRupturingSingularityCD:Start(timer-2, self.vb.singularityCount+1)
 		end
 	end
 end
@@ -330,7 +337,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.felClawsCount = self.vb.felClawsCount + 1
 		--Special snow flake (https://www.warcraftlogs.com/reports/xntG1J4r7MmwAPqB#fight=3&type=summary&pins=2%24Off%24%23244F4B%24expression%24(ability.id%20%3D%20238502%20or%20ability.id%20%3D%20237725%20or%20ability.id%20%3D%20238999%20or%20ability.id%20%3D%20243982%20or%20ability.id%20%3D%20240910%20or%20ability.id%20%3D%20241983)%20and%20type%20%3D%20%22begincast%22%0A%20or%20(ability.id%20%3D%20239932%20or%20ability.id%20%3D%20235059%20or%20ability.id%20%3D%20238502%20or%20ability.id%20%3D%20239785%20or%20ability.id%20%3D%20236378%20or%20ability.id%20%3D%20236710%20or%20ability.id%20%3D%20237590%20or%20ability.id%20%3D%20236498%20or%20ability.id%20%3D%20238430)%20and%20type%20%3D%20%22cast%22%0A%20or%20ability.id%20%3D%20244834%20and%20type%20%3D%20%22applybuff%22%20or%20(ability.id%20%3D%20241983%20or%20ability.id%20%3D%20244834)%20and%20type%20%3D%20%22removebuff%22%0A%20or%20ability.name%20%3D%20%22Rupturing%20Singularity%22%20and%20target.name%20%3D%20%22Omegal%22&view=events)
 		--TODO, see if this happens more than once (8th claw, etc)
-		if self.vb.phase == 3 and self.vb.felClawsCount == 4 then
+		if self.vb.phase == 3 and (self.vb.felClawsCount == 4 or self.vb.felClawsCount == 8) then
 			timerFelclawsCD:Start(16, self.vb.felClawsCount+1)
 			countdownFelclaws:Start(16)
 		elseif self.vb.phase == 2 and self:IsMythic() and self.vb.felClawsCount == 2 then--Only sub 24 niche case?
@@ -512,11 +519,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnEruptingRelections:CombinedShow(0.3, args.destName)
 		local icon = self.vb.eruptingReflectionIcon
 		if args:IsPlayer() then
-			specWarnSRErupting:Show(self:IconNumToTexture(icon))
+			
 			if self:IsMythic() then
+				specWarnSRErupting:Show(self:IconNumToTexture(icon))
 				voiceSRErupting:Play("mm"..icon)
 			else
-				voiceSRErupting:Play("targetyou")
+				specWarnSRErupting:Show(BOSS)
+				voiceSRErupting:Play("gathershare")
 			end
 			yellSRErupting:Countdown(8, nil, icon)
 		end
@@ -590,7 +599,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 241721 and args:IsPlayer() then
 		timerSightlessGaze:Stop()
-	elseif spellId == 239932 then--Felclaws ended
+	elseif spellId == 239932 and not self.vb.phase ~= 1.5 then--Felclaws ended
 		if (self.vb.lastTankHit ~= playerName) and self:AntiSpam(3, self.vb.lastTankHit) then
 			specWarnFelclawsOther:Show(self.vb.lastTankHit)
 			voiceFelclaws:Play("tauntboss")
@@ -740,7 +749,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 				end
 				local timer = phase1point5MythicSingularityTimers[self.vb.singularityCount+1]
 				if timer then
-					self:Schedule(timer+1.5, handleMissingEmote, self)
+					self:Schedule(timer+2, handleMissingEmote, self)
 					timerRupturingSingularityCD:Start(timer, self.vb.singularityCount+1)
 				end
 			else
@@ -840,10 +849,11 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		voiceFlameOrbSpawn:Play("watchstep")
 		voiceFlameOrbSpawn:Schedule(1, "runout")
 		if self:IsMythic() then
-			if self.vb.orbCount < 3 then
-				timerFlamingOrbCD:Start(15, self.vb.orbCount+1)
-			else
+			--"Flaming Orb-244856-npc:117269 = pull:20.1, 15.0, 16.0, 64.0, 15.0, 16.0", -- [1]
+			if self.vb.orbCount % 3 == 0 then
 				timerFlamingOrbCD:Start(64, self.vb.orbCount+1)
+			else
+				timerFlamingOrbCD:Start(15, self.vb.orbCount+1)--15-16
 			end
 		else
 			if self.vb.orbCount % 2 == 0 then

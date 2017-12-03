@@ -112,7 +112,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-	WarnMurlocs		= "魚人出現",
 	SpecWarnMurlocs	= "魚人出現!"
 }
 
@@ -121,7 +120,6 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	WarnMurlocs		= "提示魚人",
 	SpecWarnMurlocs	= "為魚人出現顯示特別警告",
 	TimerMurlocs	= "為魚人出現顯示計時器"
 }

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1713, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16809 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16866 $"):sub(12, -3))
 mod:SetCreatureID(101002)
 mod:SetEncounterID(1842)
 mod:SetZone()
@@ -25,7 +25,7 @@ local warnExpelOrbDestro			= mod:NewTargetCountAnnounce(205344, 4)
 local warnSlamSoon					= mod:NewAnnounce("warnSlamSoon", 4, 205862, nil, nil, true)
 local warnSlam						= mod:NewCountAnnounce(205862, 2)--Regular slams don't need special warn, only bridge smashing ones
 
-local specWarnSearingBrand			= mod:NewSpecialWarningStack(206677, nil, 4, nil, 2, 1, 2)--Lets go with 4 for now
+local specWarnSearingBrand			= mod:NewSpecialWarningStack(206677, nil, 4, nil, 2, 1, 6)--Lets go with 4 for now
 local specWarnSearingBrandOther		= mod:NewSpecialWarningTaunt(206677, nil, nil, nil, 1, 2)
 local specWarnFelBeam				= mod:NewSpecialWarningDodge(205368, nil, nil, nil, 2, 2)
 local specWarnOrbDestro				= mod:NewSpecialWarningMoveAway(205344, nil, nil, nil, 3, 2)

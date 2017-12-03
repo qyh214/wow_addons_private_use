@@ -10,10 +10,6 @@ L:SetGeneralLocalization{
 	name = "高階督軍納珍塔斯"
 }
 
-L:SetOptionLocalization{
-	InfoFrame	= "為血量顯示訊息框架(小於8.8千血量)"
-}
-
 L:SetMiscLocalization{
 	HealthInfo	= "血量資訊"
 }
@@ -28,8 +24,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-	WarnPhase		= "%s階段",
-	WarnKite		= ">%s<被注視了"
+	WarnPhase		= "%s階段"
 }
 
 L:SetTimerLocalization{
@@ -38,7 +33,6 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	WarnPhase		= "為下個階段顯示警告",
-	WarnKite		= "提示注視目標",
 	TimerPhase		= "為下個階段顯示計時器",
 	KiteIcon		= "為注視目標設置圖示",
 }
@@ -111,7 +105,9 @@ L:SetOptionLocalization{
 L:SetMiscLocalization{
 	Suffering		= "受難精華",
 	Desire			= "慾望精華",
-	Anger			= "憤怒精華"
+	Anger			= "憤怒精華",
+	Phase1End		= "I don't want to go back!",
+	Phase2End		= "I won't be far!"
 }
 
 -----------------------
@@ -146,7 +142,6 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	Immune			= "當瑪蘭黛法術或物理免疫時顯示警告",
-	PoisonWhisper	= "傳送密語給中了$spell:41485的目標(需要團隊隊長)"
 }
 
 L:SetMiscLocalization{

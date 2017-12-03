@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Brutallus", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 642 $"):sub(12, -3))
 mod:SetCreatureID(24882)
+mod:SetEncounterID(725)
 mod:SetModelID(22711)
 mod:SetMinSyncRevision(441)--Block bad pulls from old versions
 mod:SetZone()
@@ -11,33 +12,35 @@ mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:RegisterCombat("yell", L.Pull)
 mod.disableHealthCombat = true
 
-
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
-	"SPELL_MISSED"
+	"SPELL_CAST_START 45150",
+	"SPELL_AURA_APPLIED 46394 45185 45150",
+	"SPELL_AURA_APPLIED_DOSE 45150",
+	"SPELL_AURA_REMOVED 46394",
+	"SPELL_MISSED 46394"
 )
 
 local warnMeteor		= mod:NewSpellAnnounce(45150, 3)
-local warnBurn			= mod:NewTargetAnnounce(46394, 3)
-local warnStomp			= mod:NewTargetAnnounce(45185, 3)
+local warnBurn			= mod:NewTargetAnnounce(46394, 3, nil, false, 2)
+local warnStomp			= mod:NewTargetAnnounce(45185, 3, nil, "Tank", 2)
 
-local specWarnMeteor	= mod:NewSpecialWarningStack(45150, nil, 4)
-local specWarnBurn		= mod:NewSpecialWarningYou(46394)
+local specWarnMeteor	= mod:NewSpecialWarningStack(45150, nil, 4, nil, nil, 1, 6)
+local specWarnBurn		= mod:NewSpecialWarningYou(46394, nil, nil, nil, 1, 2)
 
-local timerMeteorCD		= mod:NewCDTimer(12, 45150)
-local timerStompCD		= mod:NewCDTimer(31, 45185)
-local timerBurn			= mod:NewTargetTimer(60, 46394)
+local timerMeteorCD		= mod:NewCDTimer(12, 45150, nil, nil, nil, 3)
+local timerStompCD		= mod:NewCDTimer(31, 45185, nil, nil, nil, 2)
+local timerBurn			= mod:NewTargetTimer(60, 46394, nil, "false", 2, 3)
 local timerBurnCD		= mod:NewCDTimer(20, 46394, nil, nil, nil, 3)
 
 local berserkTimer		= mod:NewBerserkTimer(360)
 
+local voiceMeteor		= mod:NewVoice(45150)--stackhigh
+local voiceBurn			= mod:NewVoice(46394)--targetyou
+
 mod:AddBoolOption("BurnIcon", true)
 mod:AddBoolOption("RangeFrame", true)
 
-local burnIcon = 8
+mod.vb.burnIcon = 8
 
 local DebuffFilter
 do
@@ -47,7 +50,7 @@ do
 end
 
 function mod:OnCombatStart(delay)
-	burnIcon = 8
+	self.vb.burnIcon = 8
 	timerBurnCD:Start(-delay)
 	timerStompCD:Start(-delay)
 	berserkTimer:Start(-delay)
@@ -67,15 +70,16 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerBurnCD:Start()
 		end
 		if self.Options.BurnIcon then
-			self:SetIcon(args.destName, burnIcon)
-			if burnIcon == 1 then
-				burnIcon = 8
-			else
-				burnIcon = burnIcon - 1
-			end
+			self:SetIcon(args.destName, self.vb.burnIcon)
+		end
+		if self.vb.burnIcon == 1 then
+			self.vb.burnIcon = 8
+		else
+			self.vb.burnIcon = self.vb.burnIcon - 1
 		end
 		if args:IsPlayer() then
 			specWarnBurn:Show()
+			voiceBurn:Play("targetyou")
 		end
 		if self.Options.RangeFrame then
 			if UnitDebuff("player", GetSpellInfo(46394)) then--You have debuff, show everyone
@@ -91,6 +95,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		if amount >= 4 then
 			specWarnMeteor:Show(amount)
+			voiceMeteor:Play("stackhigh")
 		end
 	end
 end

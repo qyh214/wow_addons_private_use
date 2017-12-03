@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(555, "DBM-Party-BC", 2, 256)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
 mod:SetCreatureID(17381)
 mod:SetEncounterID(1922)
 
@@ -14,7 +14,7 @@ mod:RegisterEventsInCombat(
 
 local warnMindControl      = mod:NewTargetAnnounce(30923, 4)
 
-local timerMindControl     = mod:NewTargetTimer(10, 30923)
+local timerMindControl     = mod:NewTargetTimer(10, 30923, nil, nil, nil, 3)
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 30923 then

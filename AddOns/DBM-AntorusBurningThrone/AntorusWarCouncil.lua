@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1997, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16797 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16875 $"):sub(12, -3))
 mod:SetCreatureID(122369, 122333, 122367)--Chief Engineer Ishkar, General Erodus, Admiral Svirax
 mod:SetEncounterID(2070)
 mod:SetZone()
@@ -103,13 +103,13 @@ local timerWarpFieldCD					= mod:NewAITimer(61, 244821, nil, nil, nil, 2)
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
 --General
-local countdownAssumeCommand			= mod:NewCountdown(50, 245227)
+local countdownAssumeCommand			= mod:NewCountdown("Alt50", 245227)
 local countdownExploitWeakness			= mod:NewCountdown("Alt8", 244892, "Tank", nil, 3)
 --In Pod
 ----Admiral Svirax
 local countdownFusillade				= mod:NewCountdown("AltTwo30", 244625)
 ----General Erodus
-local countdownReinforcements			= mod:NewCountdown("Alt25", 245546)
+local countdownReinforcements			= mod:NewCountdown(25, 245546)
 
 --General
 --local voiceGTFO						= mod:NewVoice(238028, nil, DBM_CORE_AUTO_VOICE4_OPTION_TEXT)--runaway
@@ -317,7 +317,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:IsTanking(uId) then
 			local amount = args.amount or 1
 			if amount >= 2 then
-				if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
+				local _, _, _, _, _, _, expireTime = UnitDebuff("player", args.spellName)
+				local remaining
+				if expireTime then
+					remaining = expireTime-GetTime()
+				end
+				if not UnitIsDeadOrGhost("player") and (not remaining or remaining and remaining < 8) then
 					specWarnExploitWeakness:Show(args.destName)
 					voiceExploitWeakness:Play("tauntboss")
 				else

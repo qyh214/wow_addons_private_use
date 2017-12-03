@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1985, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16813 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16874 $"):sub(12, -3))
 mod:SetCreatureID(122104)
 mod:SetEncounterID(2064)
 mod:DisableESCombatDetection()--Remove if blizz fixes clicking portals causing this event to fire (even though boss isn't engaged)
@@ -24,7 +24,7 @@ mod:RegisterEventsInCombat(
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
 	"UNIT_DIED",
-	"CHAT_MSG_RAID_BOSS_EMOTE",
+--	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"
 )
 
@@ -59,7 +59,7 @@ local warnCloyingShadows				= mod:NewTargetAnnounce(245118, 2, nil, false)
 local warnHungeringGloom				= mod:NewTargetAnnounce(245075, 2, nil, false)
 
 --Platform: Nexus
-local specWarnRealityTear				= mod:NewSpecialWarningStack(244016, nil, 3, nil, nil, 1, 2)
+local specWarnRealityTear				= mod:NewSpecialWarningStack(244016, nil, 3, nil, nil, 1, 6)
 local specWarnRealityTearOther			= mod:NewSpecialWarningTaunt(244016, nil, nil, nil, 1, 2)
 local specWarnTransportPortal			= mod:NewSpecialWarningSwitch(244677, "-Healer", nil, 2, 1, 2)
 local specWarnCollapsingWorld			= mod:NewSpecialWarningSpell(243983, nil, nil, nil, 2, 2)
@@ -428,7 +428,6 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 
 	end
 end
---]]
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 	if msg:find("SPELL_MAGE_FLAMEORB") then
@@ -439,6 +438,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 		warnNathrezaPortal:Show()
 	end
 end
+--]]
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
@@ -453,10 +453,12 @@ function mod:UNIT_DIED(args)
 	end
 end
 
---[[
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 244000 then--Felstorm Barrage
-
+	if spellId == 257939 then
+		warnXorothPortal:Show()
+	elseif spellId == 257941 then
+		warnRancoraPortal:Show()
+	elseif spellId == 257942 then
+		warnNathrezaPortal:Show()
 	end
 end
---]]

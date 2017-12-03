@@ -97,8 +97,7 @@ L:SetGeneralLocalization{
 }
 L:SetWarningLocalization{
 	WarnEyeTentacle			= "眼球觸鬚",
-	WarnWeakened			= "克蘇恩變得虛弱了",
-	SpecWarnWeakened		= "克蘇恩變得虛弱了!"
+	WarnWeakened			= "克蘇恩變得虛弱了"
 }
 L:SetTimerLocalization{
 	TimerEyeTentacle		= "下一次眼球觸鬚",
@@ -106,7 +105,6 @@ L:SetTimerLocalization{
 }
 L:SetOptionLocalization{
 	WarnEyeTentacle			= "為眼球觸鬚顯示警告",
-	WarnWeakened			= "當首領虛弱時顯示警告",
 	SpecWarnWeakened		= "當首領虛弱時顯示特別警告",
 	TimerEyeTentacle		= "為下一次眼球觸鬚顯示計時器",
 	TimerWeakened			= "為首領虛弱時間顯示計時器",

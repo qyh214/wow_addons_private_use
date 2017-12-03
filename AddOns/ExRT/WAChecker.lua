@@ -83,8 +83,8 @@ function module.options:Load()
 		self.helpicons[i+1] = {icon,t}
 	end
 
-	local function LineName_OnClick(self)
-		if IsShiftKeyDown() then
+	local function LineName_OnClick(self,_,_,force)
+		if IsShiftKeyDown() or force then
 			local name, realm = UnitFullName("player")
 			local fullName = name.."-"..realm
 			local id = self:GetParent().db.data.id
@@ -98,8 +98,27 @@ function module.options:Load()
 			end
 		end
 	end
+	local function LineName_ShareButton_OnEnter(self)
+		ELib.Tooltip.Show(self,nil,SOCIAL_SHARE_TEXT,module.ExportWA and L.WACheckerShareTooltip or nil)
+		self.background:SetVertexColor(1,1,0,1)
+	end	
+	local function LineName_ShareButton_OnLeave(self)
+		ELib.Tooltip.Hide()
+		self.background:SetVertexColor(1,1,1,0.7)
+	end
+	local function LineName_ShareButton_OnClick(self)
+		if not module.ExportWA then
+			LineName_OnClick(self:GetParent().name,nil,nil,true)
+		else
+			local id = self:GetParent().db.data.id
+			if id then
+				module:ExportWA(id)
+			end
+		end
+	end		
 
 	local lines = {}
+	self.lines = lines
 	for i=1,floor(PAGE_HEIGHT / LINE_HEIGHT) + 2 do
 		local line = CreateFrame("Frame",nil,mainScroll.C)
 		lines[i] = line
@@ -107,8 +126,22 @@ function module.options:Load()
 		line:SetPoint("TOPRIGHT",0,-(i-1)*LINE_HEIGHT)
 		line:SetSize(0,LINE_HEIGHT)
 		
-		line.name = ELib:Text(line,"",10):Point("LEFT",2,0):Size(LINE_NAME_WIDTH,LINE_HEIGHT):Color(1,1,1):Tooltip("ANCHOR_LEFT",true)
+		line.name = ELib:Text(line,"",10):Point("LEFT",2,0):Size(LINE_NAME_WIDTH-LINE_HEIGHT/2,LINE_HEIGHT):Color(1,1,1):Tooltip("ANCHOR_LEFT",true)
 		line.name.TooltipFrame:SetScript("OnClick",LineName_OnClick)
+		
+		line.share = CreateFrame("Button",nil,line)
+		line.share:SetPoint("LEFT",line.name,"RIGHT",0,0)
+		line.share:SetSize(LINE_HEIGHT,LINE_HEIGHT)
+		line.share:SetScript("OnEnter",LineName_ShareButton_OnEnter)
+		line.share:SetScript("OnLeave",LineName_ShareButton_OnLeave)
+		line.share:SetScript("OnClick",LineName_ShareButton_OnClick)
+		
+		line.share.background = line.share:CreateTexture(nil,"ARTWORK")
+		line.share.background:SetPoint("CENTER")
+		line.share.background:SetSize(LINE_HEIGHT,LINE_HEIGHT)
+		line.share.background:SetTexture([[Interface\AddOns\ExRT\media\DiesalGUIcons16x256x128]])
+		line.share.background:SetTexCoord(0.125+(0.1875 - 0.125)*4,0.1875+(0.1875 - 0.125)*4,0.5,0.625)
+		line.share.background:SetVertexColor(1,1,1,0.7)
 		
 		line.icons = {}
 		local iconSize = min(VERTICALNAME_WIDTH,LINE_HEIGHT)
@@ -135,7 +168,7 @@ function module.options:Load()
 	
 	local raidNames = CreateFrame("Frame",nil,self)
 	for i=1,VERTICALNAME_COUNT do
-		raidNames[i] = ELib:Text(raidNames,"RaidName"..i,10):Point("BOTTOMLEFT",mainScroll,"TOPLEFT",LINE_NAME_WIDTH + 20 + VERTICALNAME_WIDTH*(i-1),0):Color(1,1,1)
+		raidNames[i] = ELib:Text(raidNames,"RaidName"..i,10):Point("BOTTOMLEFT",mainScroll,"TOPLEFT",LINE_NAME_WIDTH + 15 + VERTICALNAME_WIDTH*(i-1),0):Color(1,1,1)
 
 		local f = CreateFrame("Frame",nil,self)
 		f:SetPoint("BOTTOMLEFT",mainScroll,"TOPLEFT",LINE_NAME_WIDTH + 15 + VERTICALNAME_WIDTH*(i-1),0)
@@ -159,7 +192,8 @@ function module.options:Load()
 	rotation:SetDuration(0.000001)
 	rotation:SetEndDelay(2147483647)
 	rotation:SetOrigin('BOTTOMRIGHT', 0, 0)
-	rotation:SetDegrees(90)
+	--rotation:SetDegrees(90)
+	rotation:SetDegrees(60)
 	group:Play()
 	
 	local highlight_y = mainScroll.C:CreateTexture(nil,"BACKGROUND",nil,2)

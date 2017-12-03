@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 16840 $"):sub(12, -3)),
-	DisplayVersion = "7.3.7", -- the string that is shown as version
-	ReleaseRevision = 16840 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 16900 $"):sub(12, -3)),
+	DisplayVersion = "7.3.8", -- the string that is shown as version
+	ReleaseRevision = 16900 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -386,7 +386,7 @@ local UpdateChestTimer
 local breakTimerStart
 local AddMsg
 
-local fakeBWVersion, fakeBWHash = 75, "58fba63"
+local fakeBWVersion, fakeBWHash = 76, "076e5e7"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -4921,11 +4921,19 @@ do
 			else
 				local msg = modid.."\t"..modvar.."\t"..syncText.."\t"..abilityName
 				if IsInRaid() then
-					SendAddonMessage("D4", "NS\t" .. msg, "RAID")
-					DBM:AddMsg(DBM_CORE_NOTESHARED)
+					if DBM:GetRaidRank(playerName) == 0 then
+						DBM:AddMsg(DBM_ERROR_NO_PERMISSION)
+					else
+						SendAddonMessage("D4", "NS\t" .. msg, "RAID")
+						DBM:AddMsg(DBM_CORE_NOTESHARED)
+					end
 				elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
-					SendAddonMessage("D4", "NS\t" .. msg, "PARTY")
-					DBM:AddMsg(DBM_CORE_NOTESHARED)
+					if DBM:GetRaidRank(playerName) == 0 then
+						DBM:AddMsg(DBM_ERROR_NO_PERMISSION)
+					else
+						SendAddonMessage("D4", "NS\t" .. msg, "PARTY")
+						DBM:AddMsg(DBM_CORE_NOTESHARED)
+					end
 				else--Solo
 					DBM:AddMsg(DBM_CORE_NOTESHAREERRORSOLO)
 				end
@@ -5171,7 +5179,7 @@ do
 				if v.type == type and checkEntry(v.msgs, msg) or v.type == type .. "_regex" and checkExpressionList(v.msgs, msg) then
 					self:StartCombat(v.mod, 0, "MONSTER_MESSAGE")
 				elseif v.type == "combat_" .. type .. "find" and findEntry(v.msgs, msg) or v.type == "combat_" .. type and checkEntry(v.msgs, msg) then
-					if IsInInstance() then--Indoor boss that uses both combat and yell for combat, so in other words (such as hodir), don't require "target" of boss for yell like scanForCombat does for World Bosses
+					if IsInInstance() then--Indoor boss that uses both combat and message for combat, so in other words (such as hodir), don't require "target" of boss for yell like scanForCombat does for World Bosses
 						self:StartCombat(v.mod, 0, "MONSTER_MESSAGE")
 					else--World Boss
 						scanForCombat(v.mod, v.mob, 0)
@@ -7523,11 +7531,12 @@ do
 		["Ranged"] = true,
 		["RangedDps"] = true,
 		["ManaUser"] = true,--Affected by things like mana drains, or mana detonation, etc
-		["SpellCaster"] = true,--Has channeled casts, can be interrupted/spell locked by roars, etc
+		["SpellCaster"] = true,--Has channeled casts, can be interrupted/spell locked by roars, etc, include healers. Use CasterDps if dealing with reflect
+		["CasterDps"] = true,--Ranged dps that uses spells, relevant for spell reflect type abilities that only reflect spells but not ranged physical such as hunters
 		["RaidCooldown"] = true,
 		["RemovePoison"] = true,
 		["RemoveDisease"] = true,
-		["RemoveEnrage"] = true,--Depricated, no one can remove enrage anymore
+		["RemoveEnrage"] = true,--Depricated, no one can remove enrage anymore, returning in classic!
 		["RemoveCurse"] = true,
 		["MagicDispeller"] = true--Buffs on targets, not debuffs on players
 		["HasInterrupt"] = true,--Has an interrupt that is 24 seconds or less CD.
@@ -7540,6 +7549,7 @@ do
 			["RangedDps"] = true,
 			["ManaUser"] = true,
 			["SpellCaster"] = true,
+			["CasterDps"] = true,
 			["MagicDispeller"] = true,
 			["HasInterrupt"] = true,
 		},
@@ -7591,6 +7601,7 @@ do
 			["RangedDps"] = true,
 			["ManaUser"] = true,
 			["SpellCaster"] = true,
+			["CasterDps"] = true,
 			["RemoveCurse"] = true,
 			["RemovePoison"] = true,
 		},
@@ -7652,6 +7663,7 @@ do
 			["Ranged"] = true,
 			["ManaUser"] = true,
 			["SpellCaster"] = true,
+			["CasterDps"] = true,--Iffy
 			["RaidCooldown"] = true,--Power Word: Barrier(Discipline) / Divine Hymn (Holy)
 			["RemoveDisease"] = true,
 			["MagicDispeller"] = true,
@@ -7662,6 +7674,7 @@ do
 			["RangedDps"] = true,
 			["ManaUser"] = true,
 			["SpellCaster"] = true,
+			["CasterDps"] = true,
 			["MagicDispeller"] = true,
 		},
 		[259] = {	--Assassination Rogue
@@ -7677,6 +7690,7 @@ do
 			["RangedDps"] = true,
 			["ManaUser"] = true,
 			["SpellCaster"] = true,
+			["CasterDps"] = true,
 			["RemoveCurse"] = true,
 			["MagicDispeller"] = true,
 			["HasInterrupt"] = true,
@@ -7708,6 +7722,7 @@ do
 			["RangedDps"] = true,
 			["ManaUser"] = true,
 			["SpellCaster"] = true,
+			["CasterDps"] = true,
 		},
 		[268] = {	--Brewmaster Monk
 			["Tank"] = true,
@@ -10063,9 +10078,9 @@ do
 				colorType = 6
 			end
 		elseif timerType == "roleplay" then
-			icon = type(texture) == "number" and GetSpellTexture(texture) or texture or type(spellId) == "string" and select(4, EJ_GetSectionInfo(string.sub(spellId, 3))) ~= "" and select(4, EJ_GetSectionInfo(string.sub(spellId, 3))) or (type(spellId) == "number" and GetSpellTexture(spellId)) or "Interface\\Icons\\Spell_Nature_WispSplode"
+			icon = type(texture) == "number" and GetSpellTexture(texture) or texture or type(spellId) == "string" and select(4, EJ_GetSectionInfo(string.sub(spellId, 3))) ~= "" and select(4, EJ_GetSectionInfo(string.sub(spellId, 3))) or (type(spellId) == "number" and GetSpellTexture(spellId)) or "Interface\\Icons\\Spell_Holy_BorrowedTime"
 			colorType = 6
-		elseif timerType == "adds" then
+		elseif timerType == "adds" or timerType == "addscustom" then
 			icon = type(texture) == "number" and GetSpellTexture(texture) or texture or type(spellId) == "string" and select(4, EJ_GetSectionInfo(string.sub(spellId, 3))) ~= "" and select(4, EJ_GetSectionInfo(string.sub(spellId, 3))) or (type(spellId) == "number" and GetSpellTexture(spellId)) or "Interface\\Icons\\Spell_Nature_WispSplode"
 			colorType = 1
 		else

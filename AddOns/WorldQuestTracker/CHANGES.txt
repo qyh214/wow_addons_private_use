@@ -1,7 +1,7 @@
-changeset:   257:5f650be8d10f
-tag:         v7.3.0.257-release
+changeset:   261:dc2d28227ee7
+tag:         v7.3.2.261-release
 user:        Tercio
-date:        Sun Oct 15 09:23:43 2017 -0200
-summary:     - Ticket #556: attempt to fix an issue started on latest update for portuguese localization.
+date:        Wed Nov 29 16:32:27 2017 -0200
+summary:     - Fixed artifact power formating not working correctly for numbers above 1 billion on enUS language.
 
 

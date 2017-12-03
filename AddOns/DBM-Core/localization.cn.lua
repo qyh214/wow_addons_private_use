@@ -363,7 +363,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch			= "%s - 转换目标"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount		= "%s - 转换目标 (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.gtfo				= "注意%%s - 快躲开"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.Adds				= "小怪出现 - 转换目标"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.Addscustom		= "小怪出现 - %s"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.Addscustom		= "小怪出现 - %%s"
 
 -- Auto-generated Special Warning Localizations
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell			= "特殊警报：$spell:%s"
@@ -407,7 +407,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.active				= "%s结束"--Buff/Debuff/event on boss
 DBM_CORE_AUTO_TIMER_TEXTS.fades					= "%s消失"--Buff/Debuff on players
 DBM_CORE_AUTO_TIMER_TEXTS.ai					= "%s人工智能计时冷却"
 DBM_CORE_AUTO_TIMER_TEXTS.cd					= "%s冷却"
-DBM_CORE_AUTO_TIMER_TEXTS.cdcount				= "%s冷却（%%d）"
+DBM_CORE_AUTO_TIMER_TEXTS.cdcount				= "%s冷却（%%s）"
 DBM_CORE_AUTO_TIMER_TEXTS.cdsource				= "%s冷却: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.cdspecial				= "特殊技能冷却"
 DBM_CORE_AUTO_TIMER_TEXTS.next 					= "下一次%s"
@@ -417,7 +417,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.nextspecial			= "下一次特殊技能"
 DBM_CORE_AUTO_TIMER_TEXTS.achievement 			= "%s"
 DBM_CORE_AUTO_TIMER_TEXTS.stage					= "下一阶段"
 DBM_CORE_AUTO_TIMER_TEXTS.adds					= "下一波小怪"
-DBM_CORE_AUTO_TIMER_TEXTS.addscustom			= "小怪 (%s)"
+DBM_CORE_AUTO_TIMER_TEXTS.addscustom			= "小怪 (%%s)"
 DBM_CORE_AUTO_TIMER_TEXTS.roleplay				= GUILD_INTEREST_RP
 
 DBM_CORE_AUTO_TIMER_OPTIONS.target				= "计时条：$spell:%s减益效果持续时间"

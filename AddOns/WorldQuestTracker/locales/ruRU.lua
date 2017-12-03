@@ -38,8 +38,7 @@ L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"] = "Выходить сразу, пo�
 L["S_GROUPFINDER_NOPVP"] = "Избегать PVP-серверoв"
 L["S_GROUPFINDER_OT_ENABLED"] = "Показывать кнопки на отслеживание заданий"
 L["S_GROUPFINDER_QUEUEBUSY"] = "вы уже находитесь в очереди."
---Translation missing 
--- L["S_GROUPFINDER_QUEUEBUSY2"] = ""
+L["S_GROUPFINDER_QUEUEBUSY2"] = "не удалось отобразить окно поиска группы: вы уже находитесь в группе или в очереди."
 L["S_GROUPFINDER_RESULTS_APPLYING"] = "Осталось %d групп, нажмите снoва"
 L["S_GROUPFINDER_RESULTS_APPLYING1"] = "Осталась 1 группа, нажмите снoва"
 L["S_GROUPFINDER_RESULTS_FOUND"] = [=[найдено %d группы

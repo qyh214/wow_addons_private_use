@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Twins", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 553 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 642 $"):sub(12, -3))
 mod:SetCreatureID(25165, 25166)
+mod:SetEncounterID(727)
 mod:SetModelID(23334)
 mod:SetZone()
 mod:SetUsedIcons(7, 8)
@@ -10,11 +11,11 @@ mod:SetUsedIcons(7, 8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_CAST_START",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
+	"SPELL_AURA_APPLIED 45230 45347 45348",
+	"SPELL_AURA_APPLIED_DOSE 45347 45348",
+	"SPELL_CAST_START 45248",
+	"SPELL_DAMAGE 45256",
+	"SPELL_MISSED 45256",
 	"CHAT_MSG_RAID_BOSS_EMOTE"
 )
 
@@ -23,26 +24,33 @@ mod:SetBossHealthInfo(
 	25166, L.Alythess
 )
 
-local warnPyro				= mod:NewSpellAnnounce(45230, 3)
 local warnBlade				= mod:NewSpellAnnounce(45248, 3)
 local warnBlow				= mod:NewTargetAnnounce(45256, 3)
 local warnConflag			= mod:NewTargetAnnounce(45333, 3)
 local warnNova				= mod:NewTargetAnnounce(45329, 3)
 
-local specWarnConflag		= mod:NewSpecialWarningYou(45333)
-local specWarnNova			= mod:NewSpecialWarningYou(45329)
-local specWarnPyro			= mod:NewSpecialWarningDispel(45230)
-local specWarnDarkTouch		= mod:NewSpecialWarningStack(45347, nil, 8)
-local specWarnFlameTouch	= mod:NewSpecialWarningStack(45348, false, 5)
+local specWarnConflag		= mod:NewSpecialWarningYou(45333, nil, nil, nil, 1, 2)
+local yellConflag			= mod:NewYell(45333, nil, false)
+local specWarnNova			= mod:NewSpecialWarningYou(45329, nil, nil, nil, 1, 2)
+local yellNova				= mod:NewYell(45329)
+local specWarnPyro			= mod:NewSpecialWarningDispel(45230, "MagicDispeller", nil, 2, 1, 2)
+local specWarnDarkTouch		= mod:NewSpecialWarningStack(45347, nil, 8, nil, nil, 1, 6)
+local specWarnFlameTouch	= mod:NewSpecialWarningStack(45348, false, 5, nil, nil, 1, 6)
 
-local timerBladeCD			= mod:NewCDTimer(11.5, 45248)
-local timerBlowCD			= mod:NewCDTimer(20, 45256)
-local timerConflagCD		= mod:NewCDTimer(31, 45333)
-local timerNovaCD			= mod:NewCDTimer(31, 45329)
-local timerConflag			= mod:NewCastTimer(3.5, 45333)
-local timerNova				= mod:NewCastTimer(3.5, 45329)
+local timerBladeCD			= mod:NewCDTimer(11.5, 45248, nil, "Melee", 2, 2)
+local timerBlowCD			= mod:NewCDTimer(20, 45256, nil, nil, nil, 3)
+local timerConflagCD		= mod:NewCDTimer(31, 45333, nil, nil, nil, 3)
+local timerNovaCD			= mod:NewCDTimer(31, 45329, nil, nil, nil, 3)
+local timerConflag			= mod:NewCastTimer(3.5, 45333, nil, false, 2)
+local timerNova				= mod:NewCastTimer(3.5, 45329, nil, false, 2)
 
 local berserkTimer			= mod:NewBerserkTimer(360)
+
+local voiceConflag			= mod:NewVoice(45333)--targetyou
+local voiceNova				= mod:NewVoice(45329)--targetyou
+local voicePyro				= mod:NewVoice(45230, "MagicDispeller")--dispelboss
+local voiceDarkTouch		= mod:NewVoice(45347)--stackhigh
+local voiceFlameTouch		= mod:NewVoice(45348, false)--stackhigh
 
 mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("ConflagIcon", false)
@@ -63,19 +71,20 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 45230 and not args:IsDestTypePlayer() then
-		warnPyro:Show()
 		specWarnPyro:Show(args.destName)
+		voicePyro:Play("dispelboss")
 	elseif args.spellId == 45347 and args:IsPlayer() then
 		if (args.amount or 1) >= 8 then
 			specWarnDarkTouch:Show(args.amount)
+			voiceDarkTouch:Play("stackhigh")
 		end
 	elseif args.spellId == 45348 and args:IsPlayer() then
 		if (args.amount or 1) >= 5 then
 			specWarnFlameTouch:Show(args.amount)
+			voiceFlameTouch:Play("stackhigh")
 		end
 	end
 end
-
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_DAMAGE(_, _, _, _, _, destName, _, _, spellId)
@@ -101,22 +110,28 @@ end
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg == L.Nova or msg:find(L.Nova) then
 		local target = DBM:GetUnitFullName(target)
-		warnNova:Show(target)
 		timerNova:Start()
 		timerNovaCD:Start()
 		if target == UnitName("player") then
 			specWarnNova:Show()
+			voiceNova:Play("targetyou")
+			yellNova:Yell()
+		else
+			warnNova:Show(target)
 		end
 		if self.Options.NovaIcon then
 			self:SetIcon(target, 7, 5)
 		end
 	elseif msg == L.Conflag or msg:find(L.Conflag) then
 		local target = DBM:GetUnitFullName(target)
-		warnConflag:Show(target)
 		timerConflag:Start()
 		timerConflagCD:Start()
 		if target == UnitName("player") then
 			specWarnConflag:Show()
+			voiceConflag:Play("targetyou")
+			yellConflag:Yell()
+		else
+			warnConflag:Show(target)
 		end
 		if self.Options.ConflagIcon then
 			self:SetIcon(target, 8, 5)

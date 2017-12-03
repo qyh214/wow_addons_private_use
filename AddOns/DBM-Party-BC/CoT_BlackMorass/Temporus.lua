@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(553, "DBM-Party-BC", 12, 255)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 606 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
 mod:SetCreatureID(17880)
 mod:SetEncounterID(1921)
 
@@ -16,8 +16,8 @@ mod:RegisterEventsInCombat(
 local specWarnSpellReflect	= mod:NewSpecialWarningReflect(38592, "SpellCaster", nil, 2, 1, 2)
 local specWarnHasten		= mod:NewSpecialWarningDispel(31458, "MagicDispeller", nil, nil, 1, 2)
 
-local timerSpellReflect		= mod:NewBuffActiveTimer(6, 38592, nil, "SpellCaster", 2)
-local timerHasten			= mod:NewTargetTimer(10, 31458, nil, "MagicDispeller|Healer|Tank", 2)
+local timerSpellReflect		= mod:NewBuffActiveTimer(6, 38592, nil, "SpellCaster", 2, 5, nil, DBM_CORE_DAMAGE_ICON)
+local timerHasten			= mod:NewTargetTimer(10, 31458, nil, "MagicDispeller|Healer|Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
 
 local voiceHasten			= mod:NewVoice(31458, "MagicDispeller")--dispelboss
 local voiceReflect			= mod:NewVoice(38592, "SpellCaster")--stopattack

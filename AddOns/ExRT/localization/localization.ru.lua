@@ -219,6 +219,8 @@ L.RaidCheckMinFlaskExp = "Показывать истекающие фласки
 L.RaidCheckMinFlaskExpNo = "нет"
 L.RaidCheckMinFlaskExpMin = "мин."
 L.RaidCheckDisableInLFR = "Отключить в ЛФР"
+L.RaidCheckVRunesCheck = "Проверить вантийские руны"
+L.RaidCheckVRunesChat = "Опубликовать вантийские руны в чат"
 
 L.marksbarstart = "Очистить"
 L.marksbardel = "Удалить"
@@ -899,6 +901,7 @@ L.WACheckerMissingAura = "Нет ауры"
 L.WACheckerExistsAura = "Есть аура"
 L.WACheckerPlayerHaveNotWA = "У игрока нет аддона"
 L.WACheckerConfirmOverride = "Ауры с совпадающими именами будут перезаписаны"
+L.WACheckerShareTooltip = "Каждый игрок в рейде с обновленным аддоном ExRT сможет получить эту WA"
 
 L.ProfilesIntro = "Изменяя активный профиль, вы можете задать различные настройки модификаций для каждого персонажа."
 L.ProfilesDefault = "По умолчанию"

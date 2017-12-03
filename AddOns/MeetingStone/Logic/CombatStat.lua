@@ -29,18 +29,12 @@ function CombatStat:OnEnable()
 end
 
 function CombatStat:Reset()
-    self.combatTick = nil
-    self.data = Profile:ResetCombatData()
-    
-end
-
-function CombatStat:OnDisable()
-    self:Reset()
     self.units = {}
-    self.groupUnits = {}
+    self.data = Profile:ResetCombatData()
     self:CancelTimer(self.combatTimer)
     
 end
+CombatStat.OnDisable = Reset
 
 function CombatStat:UpdateGroupUnits()
     wipe(self.groupUnits)
@@ -99,17 +93,17 @@ function CombatStat:UpdateUnits()
     end
 end
 
-function CombatStat:COMBAT_LOG_EVENT_UNFILTERED(_, timestamp, event, _, srcGuid, srcName, srcFlags, _, destGuid, _, destFlags, _, ...)
+function CombatStat:COMBAT_LOG_EVENT_UNFILTERED(_, timestamp, event, _, srcGuid, srcName, srcFlags, _, destGuid, _, dstFlags, _, ...)
     if not self[event] then
         return
     end
     -- if not (self:IsUnitSelf(srcGuid) or self:IsUnitSelf(destGuid)) then
     --     return
     -- end
-    self[event](self, timestamp, srcGuid, srcFlags, destGuid, destFlags, ...)
+    self[event](self, timestamp, srcGuid, destGuid, ...)
 end
 
-function CombatStat:SWING_DAMAGE(timestamp, srcGuid, srcFlags, destGuid, destFlags, amount)
+function CombatStat:SWING_DAMAGE(timestamp, srcGuid, destGuid, amount)
     if self:IsUnitFriend(srcGuid) then
         self:EnterCombat(timestamp)
     end
@@ -119,22 +113,17 @@ function CombatStat:SWING_DAMAGE(timestamp, srcGuid, srcFlags, destGuid, destFla
 
     if self:IsUnitSelf(srcGuid) then
         return self:Touch('dd', amount)
-    end
-    if self:IsUnitSelf(destGuid) and not self:IsUnitPet(destGuid) then
+    elseif not self:IsUnitPet(srcGuid) then
         return self:Touch('dt', amount)
     end
 end
 
-function CombatStat:SPELL_DAMAGE(timestamp, srcGuid, srcFlags, destGuid, destFlags, _, _, _, amount)
-    return self:SWING_DAMAGE(timestamp, srcGuid, srcFlags, destGuid, destFlags, amount)
+function CombatStat:SPELL_DAMAGE(timestamp, srcGuid, destGuid, _, _, _, amount)
+    return self:SWING_DAMAGE(timestamp, srcGuid, destGuid, amount)
 end
 
-function CombatStat:SPELL_HEAL(timestamp, srcGuid, srcFlags, destGuid, destFlags, spellId, spellName, _, amount, overhealing, absorbed)
-    if not self:IsUnitSelf(srcGuid) then
-        return
-    end
-
-    if bit.band(srcFlags, COMBATLOG_OBJECT_CONTROL_PLAYER) ~= 0 and bit.band(srcFlags, destFlags, COMBATLOG_OBJECT_REACTION_MASK) ~= 0 then
+function CombatStat:SPELL_HEAL(timestamp, srcGuid, destGuid, _, _, _, amount, overhealing)
+    if self:IsUnitSelf(srcGuid) then
         local amount = amount - overhealing
         if amount > 0 then
             return self:Touch('hd', amount)
@@ -142,13 +131,13 @@ function CombatStat:SPELL_HEAL(timestamp, srcGuid, srcFlags, destGuid, destFlags
     end
 end
 
-function CombatStat:UNIT_DIED(_, srcGuid, srcFlags, destGuid, destFlags)
+function CombatStat:UNIT_DIED(_, srcGuid, destGuid)
     if self:IsUnitSelf(destGuid) then
         return self:Touch('dead',1)
     end
 end
 
-function CombatStat:SPELL_SUMMON(timestamp, srcGuid, srcFlags, destGuid, destFlags)
+function CombatStat:SPELL_SUMMON(timestamp, srcGuid, destGuid)
     if self:IsUnitSelf(srcGuid) then
         self.units[destGuid] = 'pet'
     end
@@ -186,32 +175,19 @@ function CombatStat:GetCombatData()
 end
 
 local templates = [[
-dt: %s
-dd: %s
-dps: %s
-hd: %s
-hps: %s
-dead: %s
-%s
-
+dt: %d
+dd: %d
+dps: %d
+hd: %d
+hps: %d
+dead: %d
 %s
 ]]
 
 function CombatStat:Debug()
-    local healingData = {}
-    local healingNames = {}
-
-    local function healingText()
-        local sb = {}
-        for i, v in ipairs(healingNames) do
-            table.insert(sb, format('%s: %d', v, healingData[v]))
-        end
-        return table.concat(sb, '\n')
-    end
-
     local f = CreateFrame('Frame', nil, UIParent) do
         f:SetPoint('LEFT')
-        f:SetSize(200, 400)
+        f:SetSize(200, 200)
 
         local bg = f:CreateTexture(nil, 'BACKGROUND') do
             bg:SetColorTexture(0,0,0,0.3)
@@ -231,8 +207,7 @@ function CombatStat:Debug()
                 data.hd,
                 data.hps,
                 data.dead,
-                self:IsEnabled() and '已开启' or '已关闭',
-                healingText()
+                self:IsEnabled() and '已开启' or '已关闭'
             ))
         end)
     end
@@ -257,38 +232,9 @@ function CombatStat:Debug()
         ClearButton:SetScript('OnClick', function()
             GUI:CallMessageDialog('点这个按钮会清除数据，你应该只在打完木桩后验证完数据后点击', function(result)
                 if result then
-                    self:Reset()
                     self:Disable()
                 end
             end)
         end)
     end
-
-    hooksecurefunc(CombatStat, 'Reset', function()
-        healingData = {}
-        healingNames = {}
-    end)
-
-    function CombatStat:SPELL_HEAL(timestamp, srcGuid, srcFlags, destGuid, destFlags, spellId, spellName, _, amount, overhealing, absorbed)
-        if not self:IsUnitSelf(srcGuid) then
-            return
-        end
-
-        if bit.band(srcFlags, COMBATLOG_OBJECT_CONTROL_PLAYER) ~= 0 and bit.band(srcFlags, destFlags, COMBATLOG_OBJECT_REACTION_MASK) ~= 0 then
-            local amount = amount - overhealing
-            if amount > 0 then
-
-                if not healingData[spellName] then
-                    healingData[spellName] = amount
-                    table.insert(healingNames, spellName)
-                    table.sort(healingNames)
-                else
-                    healingData[spellName] = healingData[spellName] + amount
-                end
-
-                return self:Touch('hd', amount)
-            end
-        end
-    end
-    CombatStat.SPELL_PERIODIC_HEAL = CombatStat.SPELL_HEAL
 end

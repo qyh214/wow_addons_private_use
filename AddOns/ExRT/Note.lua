@@ -146,6 +146,7 @@ function module.options:Load()
 	}
 	
 	module.db.encountersList = {
+		{1188,2076,2074,2064,2070,2075,2082,2069,2088,2073,2063,2092},
 		{1147,2032,2048,2036,2037,2050,2054,2052,2038,2051},
 		{1088,1849,1865,1867,1871,1862,1886,1842,1863,1872,1866},
 		{1114,1958,1962,2008},
@@ -349,6 +350,8 @@ function module.options:Load()
 	end
 	
 	self.NoteEditBox = ELib:MultiEdit(self.tab.tabs[1]):Point("TOPLEFT",self.NotesList,"TOPRIGHT",9,-75):Size(469,294+91-25)
+	
+	self.NoteEditBox:Add730fix()	--Temp fix for cursor
 	
 	self.textClear = ELib:Text(self.NoteEditBox,"["..L.messagebutclear.."]"):Point("RIGHT",self.NoteEditBox,"BOTTOMRIGHT",-22,-6):Color()
 	self.textClear:SetShadowColor(1,1,1,0)
@@ -1107,11 +1110,13 @@ function module.main:ADDON_LOADED()
 		module.frame:SetHeight(VExRT.Note.Height) 
 	end
 
+	module.frame:UpdateFont()
 	if VExRT.Note.enabled then 
 		module:Enable()
 	end
-
-	module.frame:UpdateFont()
+	C_Timer.After(5,function()
+		module.frame:UpdateFont()
+	end)
 
 	if VExRT.Note.Text1 then 
 		module.frame:UpdateText()
@@ -1146,7 +1151,9 @@ function module.main:ADDON_LOADED()
 	if VExRT.Addon.Version < 3865 then
 		--VExRT.Note.EnableWhenReceive = true
 	end	
-	
+	if VExRT.Addon.Version < 3895 then
+		VExRT.Note.OnlyPromoted = true
+	end	
 	VExRT.Note.BlackNames = VExRT.Note.BlackNames or {}
 	
 	for i=1,3 do
