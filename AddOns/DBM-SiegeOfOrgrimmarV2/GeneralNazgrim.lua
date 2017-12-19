@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(850, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 109 $"):sub(12, -3))
 mod:SetCreatureID(71515)
 mod:SetEncounterID(1603)
 mod:SetZone()
@@ -107,84 +107,95 @@ local addsTable = {
 	[71656] = 4,--Sniper (Heroic)
 }
 
-local bossPower = 0--Will be moved into updateinfoframe function when test code removed
-local lines = {}
-local function updateInfoFrame()
-	table.wipe(lines)
-	if UnitExists("boss1") then
-		bossPower = UnitPower("boss1")
+local updateInfoFrame
+do
+	local bossPower = 0
+	local lines = {}
+	local sortedLines = {}
+	local spellName1, spellName2, spellName3, spellName4 = GetSpellInfo(143500), GetSpellInfo(143536), GetSpellInfo(143503), GetSpellInfo(143872)
+	local function addLine(key, value)
+		-- sort by insertion order
+		lines[key] = value
+		sortedLines[#sortedLines + 1] = key
 	end
-	if bossPower < 50 then
-		lines["|cFF088A08"..GetSpellInfo(143500).."|r"] = bossPower--Green
-		lines[GetSpellInfo(143536)] = 50
-		lines[GetSpellInfo(143503)] = 70
-		lines[GetSpellInfo(143872)] = 100
-	elseif bossPower < 70 then
-		lines[GetSpellInfo(143500)] = 25
-		lines["|cFF088A08"..GetSpellInfo(143536).."|r"] = bossPower--Green (Would yellow be too hard to see on this?)
-		lines[GetSpellInfo(143503)] = 70
-		lines[GetSpellInfo(143872)] = 100
-	elseif bossPower < 100 then
-		lines[GetSpellInfo(143500)] = 25
-		lines[GetSpellInfo(143536)] = 50
-		lines["|cFF088A08"..GetSpellInfo(143503).."|r"] = bossPower--Green (Maybe change to orange?)
-		lines[GetSpellInfo(143872)] = 100
-	elseif bossPower == 100 then
-		lines[GetSpellInfo(143500)] = 25
-		lines[GetSpellInfo(143536)] = 50
-		lines[GetSpellInfo(143503)] = 70
-		lines["|cFFFF0000"..GetSpellInfo(143872).."|r"] = bossPower--Red (definitely work making this one red, it's really the only critically bad one)
-	end
-	if mod:IsMythic() then--Same on 10 heroic? TODO, get normal LFR and flex adds info verified
-		if mod.vb.addsCount == 0 then
-			lines[L.nextAdds] = L.mage..", "..L.rogue..", "..L.warrior
-		elseif mod.vb.addsCount == 1 then
-			lines[L.nextAdds] = L.shaman..", "..L.rogue..", "..L.hunter
-		elseif mod.vb.addsCount == 2 then
-			lines[L.nextAdds] = L.mage..", "..L.shaman..", "..L.warrior
-		elseif mod.vb.addsCount == 3 then
-			lines[L.nextAdds] = L.mage..", "..L.rogue..", "..L.hunter
-		elseif mod.vb.addsCount == 4 then
-			lines[L.nextAdds] = L.shaman..", "..L.rogue..", "..L.warrior
-		elseif mod.vb.addsCount == 5 then
-			lines[L.nextAdds] = L.mage..", "..L.shaman..", "..L.hunter
-		elseif mod.vb.addsCount == 6 then
-			lines[L.nextAdds] = L.rogue..", "..L.hunter..", "..L.warrior
-		elseif mod.vb.addsCount == 7 then
-			lines[L.nextAdds] = L.mage..", "..L.shaman..", "..L.rogue
-		elseif mod.vb.addsCount == 8 then
-			lines[L.nextAdds] = L.shaman..", "..L.hunter..", "..L.warrior
-		elseif mod.vb.addsCount == 9 then
-			lines[L.nextAdds] = L.mage..", "..L.hunter..", "..L.warrior
-		else--Already had all 10 adds sets now we're just going to get no more adds (except for 10%)
-			lines[""] = ""
+	updateInfoFrame = function()
+		table.wipe(lines)
+		table.wipe(sortedLines)
+		if UnitExists("boss1") then
+			bossPower = UnitPower("boss1")
 		end
-	else--Not heroic
-		if mod.vb.addsCount == 0 then
-			lines[L.nextAdds] = L.mage..", "..L.warrior
-		elseif mod.vb.addsCount == 1 then
-			lines[L.nextAdds] = L.shaman..", "..L.rogue
-		elseif mod.vb.addsCount == 2 then
-			lines[L.nextAdds] = L.rogue..", "..L.warrior
-		elseif mod.vb.addsCount == 3 then
-			lines[L.nextAdds] = L.mage..", "..L.shaman
-		elseif mod.vb.addsCount == 4 then
-			lines[L.nextAdds] = L.shaman..", "..L.warrior
-		elseif mod.vb.addsCount == 5 then
-			lines[L.nextAdds] = L.mage..", "..L.rogue
-		elseif mod.vb.addsCount == 6 then
-			lines[L.nextAdds] = L.mage..", "..L.shaman..", "..L.rogue
-		elseif mod.vb.addsCount == 7 then
-			lines[L.nextAdds] = L.shaman..", "..L.rogue..", "..L.warrior
-		elseif mod.vb.addsCount == 8 then
-			lines[L.nextAdds] = L.mage..", "..L.shaman..", "..L.warrior
-		elseif mod.vb.addsCount == 9 then
-			lines[L.nextAdds] = L.mage..", "..L.rogue..", "..L.warrior
-		else--Already had all 10 adds sets now we're just going to get no more adds (except for 10%)
-			lines[""] = ""
+		if bossPower < 50 then
+			addLine("|cFF088A08"..spellName1.."|r", bossPower)--Green
+			addLine(GetSpellInfo(143536), 50)
+			addLine(GetSpellInfo(143503), 70)
+			addLine(GetSpellInfo(143872), 100)
+		elseif bossPower < 70 then
+			addLine(GetSpellInfo(143500), 25)
+			addLine("|cFF088A08"..spellName2.."|r", bossPower)--Green (Would yellow be too hard to see on this?)
+			addLine(GetSpellInfo(143503), 70)
+			addLine(GetSpellInfo(143872), 100)
+		elseif bossPower < 100 then
+			addLine(GetSpellInfo(143500), 25)
+			addLine(GetSpellInfo(143536), 50)
+			addLine("|cFF088A08"..spellName3.."|r", bossPower)--Green (Maybe change to orange?)
+			addLine(GetSpellInfo(143872), 100)
+		elseif bossPower == 100 then
+			addLine(GetSpellInfo(143500), 25)
+			addLine(GetSpellInfo(143536), 50)
+			addLine(GetSpellInfo(143503), 70)
+			addLine("|cFFFF0000"..spellName4.."|r", bossPower)--Red (definitely work making this one red, it's really the only critically bad one)
 		end
+		if mod:IsMythic() then--Same on 10 heroic? TODO, get normal LFR and flex adds info verified
+			if mod.vb.addsCount == 0 then
+				addLine(L.nextAdds, L.mage..", "..L.rogue..", "..L.warrior)
+			elseif mod.vb.addsCount == 1 then
+				addLine(L.nextAdds, L.shaman..", "..L.rogue..", "..L.hunter)
+			elseif mod.vb.addsCount == 2 then
+				addLine(L.nextAdds, L.mage..", "..L.shaman..", "..L.warrior)
+			elseif mod.vb.addsCount == 3 then
+				addLine(L.nextAdds, L.mage..", "..L.rogue..", "..L.hunter)
+			elseif mod.vb.addsCount == 4 then
+				addLine(L.nextAdds, L.shaman..", "..L.rogue..", "..L.warrior)
+			elseif mod.vb.addsCount == 5 then
+				addLine(L.nextAdds, L.mage..", "..L.shaman..", "..L.hunter)
+			elseif mod.vb.addsCount == 6 then
+				addLine(L.nextAdds, L.rogue..", "..L.hunter..", "..L.warrior)
+			elseif mod.vb.addsCount == 7 then
+				addLine(L.nextAdds, L.mage..", "..L.shaman..", "..L.rogue)
+			elseif mod.vb.addsCount == 8 then
+				addLine(L.nextAdds, L.shaman..", "..L.hunter..", "..L.warrior)
+			elseif mod.vb.addsCount == 9 then
+				addLine(L.nextAdds, L.mage..", "..L.hunter..", "..L.warrior)
+			else--Already had all 10 adds sets now we're just going to get no more adds (except for 10%)
+				addLine("", "")
+			end
+		else--Not heroic
+			if mod.vb.addsCount == 0 then
+				addLine(L.nextAdds, L.mage..", "..L.warrior)
+			elseif mod.vb.addsCount == 1 then
+				addLine(L.nextAdds, L.shaman..", "..L.rogue)
+			elseif mod.vb.addsCount == 2 then
+				addLine(L.nextAdds, L.rogue..", "..L.warrior)
+			elseif mod.vb.addsCount == 3 then
+				addLine(L.nextAdds, L.mage..", "..L.shaman)
+			elseif mod.vb.addsCount == 4 then
+				addLine(L.nextAdds, L.shaman..", "..L.warrior)
+			elseif mod.vb.addsCount == 5 then
+				addLine(L.nextAdds, L.mage..", "..L.rogue)
+			elseif mod.vb.addsCount == 6 then
+				addLine(L.nextAdds, L.mage..", "..L.shaman..", "..L.rogue)
+			elseif mod.vb.addsCount == 7 then
+				addLine(L.nextAdds, L.shaman..", "..L.rogue..", "..L.warrior)
+			elseif mod.vb.addsCount == 8 then
+				addLine(L.nextAdds, L.mage..", "..L.shaman..", "..L.warrior)
+			elseif mod.vb.addsCount == 9 then
+				addLine(L.nextAdds, L.mage..", "..L.rogue..", "..L.warrior)
+			else--Already had all 10 adds sets now we're just going to get no more adds (except for 10%)
+				addLine("", "")
+			end
+		end
+		return lines, sortedLines
 	end
-	return lines
 end
 
 function mod:LeapTarget(targetname, uId)

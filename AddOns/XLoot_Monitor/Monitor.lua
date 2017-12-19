@@ -30,6 +30,7 @@ local defaults = {
 		show_crafted = false,
 
 		show_totals = false,
+		show_ilvl = false,
 
 		fade_own = 10,
 		fade_other = 5,
@@ -37,10 +38,25 @@ local defaults = {
 		font = STANDARD_TEXT_FONT,
 		font_size_loot = 12,
 		font_size_quantity = 10,
+		font_size_ilvl = 8,
 		font_flag = "OUTLINE",
 	}
 }
 
+
+----------------------------------------------------------------------
+-- Helpers
+
+local numberize = function(v)
+	if v <= 9999 then return v end
+	if v >= 1000000 then
+		local value = string.format("%.1fm", v/1000000)
+		return value
+	elseif v >= 10000 then
+		local value = string.format("%.0fk", v/1000)
+		return value
+	end
+end
 
 -------------------------------------------------------------------------------
 -- Module init
@@ -78,7 +94,7 @@ end
 local events = {}
 function events.item(player, link, num)
 	if link and link:match("|Hitem:") then -- Proper items	
-		local name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(link)
+		local name, _, quality, level, _, _, _, _, _, icon = GetItemInfo(link)
 		if not name or type(quality) ~= "number" then
 			print(name and "Quality is not a number" or "Name is nil")
 			return false
@@ -96,6 +112,9 @@ function events.item(player, link, num)
 		local row = addon:AddRow(icon, (player and opt.fade_other or opt.fade_own), r, g, b)
 		local num = tonumber(num) or 1
 		row:SetTexts(player, num > 1 and ("%sx%d"):format(link, num) or link, GetItemCount(link) + num, nr, ng, nb)
+		if opt.show_ilvl and level > 1 then
+			row.ilvl:SetText(level)
+		end
 		row.item = link
 	elseif link and link:match("|Hbattlepet:") then -- Battlepets. Really?
 		-- local _, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID = strsplit(":", link)
@@ -217,6 +236,7 @@ function addon:Restack()
 		anchor:AnchorChild(v, i == 1 and nil or stack[i-1])
 	end
 end
+
 -------------------------------------------------------------------------------
 -- Frame methods
 do
@@ -258,10 +278,12 @@ do
 	local function SetTexts(self, name, text, total, nr, ng, nb, tr, tg, tb)
 		self.name:SetText(name and name.." " or nil)
 		self.text:SetText(text)
+		self.ilvl:SetText()
 		if not opt.show_totals or not total or total <= 1 then
-			total = ''
+			self.total:SetText()
+		else
+			self.total:SetText(numberize(total))
 		end
-		self.total:SetText(total)
 		self.name:SetVertexColor(nr or 1, ng or 1, nb or 1)
 		self.text:SetVertexColor(nr or 1, ng or 1, nb or 1)
 		if name then
@@ -300,6 +322,12 @@ do
 		icon:SetPoint("TOPLEFT", 3, -3)
 		icon:SetPoint("BOTTOMRIGHT", -3, 3)
 		icon:SetTexCoord(.07,.93,.07,.93)
+
+		local ilvl = icon_frame:CreateFontString(nil, "OVERLAY")
+		ilvl:SetFont(opt.font, opt.font_size_ilvl, opt.font_flag)
+		ilvl:SetPoint("BOTTOM", icon_frame, "BOTTOM", 0, 0)
+		ilvl:SetJustifyH("CENTER")
+		frame.ilvl = ilvl
 
 		local name = frame:CreateFontString(nil, "OVERLAY")
 		name:SetPoint("LEFT", icon_frame, "RIGHT", 2, 0)

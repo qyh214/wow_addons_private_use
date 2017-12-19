@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(865, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 101 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 108 $"):sub(12, -3))
 mod:SetCreatureID(71504)--71591 Automated Shredder
 mod:SetEncounterID(1601)
 mod:SetZone()
@@ -103,35 +103,44 @@ mod.vb.shockwaveOvercharged = false
 mod.vb.weapon = 0
 mod.vb.shredderCount = 0
 
---VEM Idea
-local function updateInfoFrame()
+local updateInfoFrame
+do
 	local lines = {}
-	if mod.vb.weapon == 1 or mod.vb.weapon == 2 or mod.vb.weapon == 4 then
-		lines[shockwaveMissile] = laserTurret.." , "..crawlerMine
-	elseif mod.vb.weapon == 3 then
-		lines[shockwaveMissile] = laserTurret.." , "..electroMagnet
-	elseif mod.vb.weapon == 5 then
-		lines[shockwaveMissile] = electroMagnet.." , "..crawlerMine
-	elseif mod.vb.weapon == 6 then
-		lines[crawlerMine] = laserTurret.." , "..crawlerMine
-	elseif mod.vb.weapon == 7 then
-		lines[shockwaveMissile] = laserTurret.." , "..crawlerMine
-	elseif mod.vb.weapon == 8 then
-		lines[shockwaveMissile] = electroMagnet.." , "..crawlerMine
-	elseif mod.vb.weapon == 9 then
-		lines[laserTurret] =  crawlerMine.." , "..laserTurret
-	elseif mod.vb.weapon == 10 then
-		lines[shockwaveMissile] =  crawlerMine.." , "..laserTurret
-	elseif mod.vb.weapon == 11 then
-		lines[shockwaveMissile] = electroMagnet.." , "..shockwaveMissile
-	elseif mod.vb.weapon == 12 then
-		lines[electroMagnet] = crawlerMine.." , "..laserTurret
-	else
-		lines[_G["UNKNOWN"]] = ""
+	local sortedLines = {}
+	local function addLine(key, value)
+		-- sort by insertion order
+		lines[key] = value
+		sortedLines[#sortedLines + 1] = key
 	end
-	return lines
+	updateInfoFrame = function()
+		table.wipe(lines)
+		table.wipe(sortedLines)
+		if mod.vb.weapon == 1 or mod.vb.weapon == 2 or mod.vb.weapon == 4 then
+			addLine(shockwaveMissile, laserTurret.." , "..crawlerMine)
+		elseif mod.vb.weapon == 3 then
+			addLine(shockwaveMissile, laserTurret.." , "..electroMagnet)
+		elseif mod.vb.weapon == 5 then
+			addLine(shockwaveMissile, electroMagnet.." , "..crawlerMine)
+		elseif mod.vb.weapon == 6 then
+			addLine(crawlerMine, laserTurret.." , "..crawlerMine)
+		elseif mod.vb.weapon == 7 then
+			addLine(shockwaveMissile, laserTurret.." , "..crawlerMine)
+		elseif mod.vb.weapon == 8 then
+			addLine(shockwaveMissile, electroMagnet.." , "..crawlerMine)
+		elseif mod.vb.weapon == 9 then
+			addLine(laserTurret, crawlerMine.." , "..laserTurret)
+		elseif mod.vb.weapon == 10 then
+			addLine(shockwaveMissile, crawlerMine.." , "..laserTurret)
+		elseif mod.vb.weapon == 11 then
+			addLine(shockwaveMissile, electroMagnet.." , "..shockwaveMissile)
+		elseif mod.vb.weapon == 12 then
+			addLine(electroMagnet, crawlerMine.." , "..laserTurret)
+		else
+			addLine(_G["UNKNOWN"], "")
+		end
+		return lines, sortedLines
+	end
 end
---End VEM Idea
 
 function mod:LaunchSawBladeTarget(targetname, uId)
 	warnLaunchSawblade:Show(targetname)
@@ -307,7 +316,11 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 		countdownAssemblyLine:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(assemblyLine.."("..self.vb.weapon..")")
-			DBM.InfoFrame:Show(1, "function", updateInfoFrame, false, false, true)
+			if not DBM.InfoFrame:IsShown() then
+				DBM.InfoFrame:Show(1, "function", updateInfoFrame, false, false, true)
+			else
+				DBM.InfoFrame:Update()
+			end
 		end
 	elseif msg == L.newShredder or msg:find(L.newShredder) then
 		self.vb.shredderCount = self.vb.shredderCount + 1

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1762, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16987 $"):sub(12, -3))
 mod:SetCreatureID(103685)
 mod:SetEncounterID(1862)
 mod:SetZone()
@@ -119,7 +119,7 @@ mod.vb.CarrionPlagueCount = 0
 
 local updateInfoFrame, breakMarks
 do
-	local argusDebuff, batsName, essenceOfNightDebuff = GetSpellInfo(212794), EJ_GetSectionInfo(13528), GetSpellInfo(206466)
+	local argusDebuff, batsName, essenceOfNightDebuff = GetSpellInfo(212794), DBM:EJ_GetSectionInfo(13528), GetSpellInfo(206466)
 	local lines = {}
 	local sortedLines = {}
 	local function addLine(key, value)

@@ -139,6 +139,7 @@ local locales = {
 			visible = "Anchor visible",
 			show_crafted = "Crafted",
 			show_totals = "Show total items in inventory",
+			show_ilvl = "Show item level",
 			name_width = "Player name width",
 		},
 		Master = {
@@ -258,6 +259,7 @@ locales.koKR["Options"] = {
 	["confirm_reset_profile"] = "이 프로필에 대한 모든 옵션을 초기화합니다. 계속할까요?",
 	["down"] = "아래",
 	["font"] = "글꼴",
+	["font_flag"] = "속성",
 	["font_size_loot"] = "전리품",
 	["font_size_quantity"] = "수량",
 	["font_sizes"] = "크기",
@@ -266,7 +268,7 @@ locales.koKR["Options"] = {
 	["items_own"] = "자기 아이템",
 	["minimum_quality"] = "최소 품질",
 	["profile"] = "프로필",
-	["scale"] = "크기",
+	["scale"] = "크기 비율",
 	["up"] = "위",
 	["visible"] = "보기",
 	["when_always"] = "항상",
@@ -396,7 +398,10 @@ locales.deDE["Core"] = {
 }
 
 locales.koKR["Core"] = {
-	["anchor_hide"] = "감추기",
+	["anchor_hide"] = "감춤",
+	["anchor_hide_desc"] = [=[이 모듈을 제 위치에 잠급니다.
+이는 표시기를 숨기지만,
+옵션에서 다시 표시할 수 있습니다.]=],
 	["skin_legacy"] = "XLoot: Legacy",
 	["skin_smooth"] = "XLoot: Smooth",
 	["skin_svelte"] = "XLoot: Svelte",
@@ -599,7 +604,11 @@ locales.deDE["Master"] = {
 }
 
 locales.koKR["Master"] = {
-	["ITEM_AWARDED"] = "%s 아이템을 획득했습니다: %s",
+	["BINDING_BANKER"] = "은행원 설정",
+	["BINDING_DISENCHANTER"] = "마법부여사 설정",
+	["ITEM_AWARDED"] = "%s |1을;를; 획득했습니다: %s",
+	["ML_BANKER"] = "은행인",
+	["ML_DISENCHANTER"] = "마법부여사",
 	["ML_RANDOM"] = "공격대 주사위",
 	["RECIPIENTS"] = "특별 수령인",
 	["SPECIALROLLS"] = "특별 주사위",

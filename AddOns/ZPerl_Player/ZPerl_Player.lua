@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 1080 $")
+end, "$Revision: 1083 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -696,22 +696,43 @@ local function XPerl_Player_UpdateRep(self)
 	if (pconf and pconf.repBar) then
 		local rb = self.statsFrame.repBar
 		if (rb) then
-			local name, reaction, min, max, value = GetWatchedFactionInfo()
+			local name, reaction, min, max, value, factionID = GetWatchedFactionInfo()
 			local color
+			local perc
 
-			if (name) then
-				color = FACTION_BAR_COLORS[reaction]
-			else
-				name = XPERL_LOC_NONEWATCHED
-				max = 1
-				min = 0
-				value = 0
-				color = FACTION_BAR_COLORS[4]
+			--[[if not min or not max or not value then
+				return
+			end]]
+
+			if max == 43000 then
+				max = 42000
 			end
 
-			value = value - min
-			max = max - min
-			min = 0
+			if (factionID == 1733 or factionID == 1736 or factionID == 1737 or factionID == 1738 or factionID == 1739 or factionID == 1740 or factionID == 1741) and min == 20000 and max == 21000 and value == 20000 then
+				min = 21000
+				value = 21000
+			end
+
+			if name then
+				color = FACTION_BAR_COLORS[reaction]
+				if min > 0 and max > 0 and value > 0 and min ~= max and min ~= value then
+					value = value - min
+					max = max - min
+				end
+				min = 0
+				if value > 0 and max > 0 then
+					perc = (value * 100) / max
+				else
+					perc = 100
+				end
+			else
+				name = XPERL_LOC_NONEWATCHED
+				value = 0
+				max = 1
+				min = 0
+				color = FACTION_BAR_COLORS[4]
+				perc = 0
+			end
 
 			rb:SetMinMaxValues(min, max)
 			rb:SetValue(value)
@@ -719,22 +740,24 @@ local function XPerl_Player_UpdateRep(self)
 			rb:SetStatusBarColor(color.r, color.g, color.b, 1)
 			rb.bg:SetVertexColor(color.r, color.g, color.b, 0.25)
 
-			local perc = (value * 100) / max
-
 			if perc < 0 then
 				perc = 0
 			elseif perc > 100 then
 				perc = 100
 			end
 
-			rb.percent:SetFormattedText(perc1F, perc)
-
 			rb.tex:SetTexCoord(0, perc / 100, 0, 1)
 
-			if (max == 1) then
+			if max == 1 then
 				rb.text:SetText(name)
 			else
 				rb.text:SetFormattedText("%d/%d", value, max)
+			end
+
+			if perc < 100 then
+				rb.percent:SetFormattedText(perc1F, perc)
+			else
+				rb.percent:SetFormattedText(percD, perc)
 			end
 		end
 	end
@@ -1038,7 +1061,8 @@ local function XPerl_Player_UpdateMana(self)
 	end
 	-- end division by 0 check
 
-	mb.text:SetFormattedText("%d/%d", playermana, playermanamax)
+	--mb.text:SetFormattedText("%d/%d", playermana, playermanamax)
+	XPerl_SetValuedText(mb.text, playermana, playermanamax)
 
 	if (pType >= 1 or UnitPowerMax(self.partyid, pType) < 1) then
 		mb.percent:SetText(playermana)

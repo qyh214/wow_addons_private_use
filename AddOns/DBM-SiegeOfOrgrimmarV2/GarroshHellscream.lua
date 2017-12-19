@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(869, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 108 $"):sub(12, -3))
 mod:SetCreatureID(71865)
 mod:SetEncounterID(1623)
 mod:SetZone()
@@ -152,15 +152,15 @@ local function updateInfoFrame()
 	return lines
 end
 
-local function showInfoFrame()
-	if mod.Options.InfoFrame and mod:IsInCombat() then
+local function showInfoFrame(self)
+	if self.Options.InfoFrame and self:IsInCombat() then
 		DBM.InfoFrame:SetHeader(L.NoReduce)
 		DBM.InfoFrame:Show(10, "function", updateInfoFrame)
 	end
 end
 
-local function hideInfoFrame()
-	if mod.Options.InfoFrame then
+local function hideInfoFrame(self)
+	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
 end
@@ -217,7 +217,7 @@ function mod:OnCombatEnd()
 	if self.Options.ShowDesecrateArrow then
 		DBM.Arrow:Hide()
 	end
-	hideInfoFrame()
+	hideInfoFrame(self)
 	self:UnregisterShortTermEvents()
 end
 
@@ -373,7 +373,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerGrippingDespair:Cancel(args.destName)
 	elseif spellId == 144945 then
 		warnYShaarjsProtectionFade:Show()
-		showInfoFrame()
+		showInfoFrame(self)
 	elseif args:IsSpellID(145065, 145171) and self.Options.SetIconOnMC then
 		self:SetIcon(args.destName, 0)
 	elseif spellId == 147209 then
@@ -436,7 +436,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			self.vb.whirlCount = 0
 			self.vb.desecrateCount = 0
 			self.vb.mindControlCount = 0
-			hideInfoFrame()
+			hideInfoFrame(self)
 			timerDesecrateCD:Start(10, 1)
 			countdownDesecrate:Start(10)
 			if numberOfPlayers > 1 then

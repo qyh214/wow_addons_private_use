@@ -1,19 +1,19 @@
 local mod	= DBM:NewMod(1984, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16893 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16992 $"):sub(12, -3))
 mod:SetCreatureID(121975)
 mod:SetEncounterID(2063)
 mod:SetZone()
 --mod:SetBossHPInfoToHighest()
 --mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
---mod:SetHotfixNoticeRev(16350)
+mod:SetHotfixNoticeRev(16964)
 mod.respawnTime = 25
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 244693 245458 245463 245301",
+	"SPELL_CAST_START 244693 245458 245463 245301 255058 255061 255059",
 --	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED 245990 245994 244894 244903 247091 254452",
 	"SPELL_AURA_APPLIED_DOSE 245990",
@@ -31,8 +31,9 @@ mod:RegisterEventsInCombat(
 --TODO, like fallen avatar in lat PTR, flare has two entirely different mechanics between journal and spellId toolipss, so it needs reviewing at testing.
 --TODO, empowered flare has same issue as flare. Figure out all the shit
 --[[
-(ability.id = 244693 or ability.id = 245458 or ability.id = 245463 or ability.id = 245301) and type = "begincast"
+(ability.id = 244693 or ability.id = 245458 or ability.id = 245463 or ability.id = 245301 or ability.id = 255058 or ability.id = 255061 or ability.id = 255059) and type = "begincast"
  or ability.id = 244894 and (type = "applybuff" or type = "removebuff")
+ or (ability.id = 245994 or ability.id = 254452) and type = "applydebuff"
 --]]
 --Stage One: Wrath of Aggramar
 local warnTaeshalachReach				= mod:NewStackAnnounce(245990, 2, nil, "Tank")
@@ -73,13 +74,13 @@ local timerTaeshalachTechCD				= mod:NewNextCountTimer(61, 244688, nil, nil, nil
 local timerFoeBreakerCD					= mod:NewNextCountTimer(6.1, 245458, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerFlameRendCD					= mod:NewNextCountTimer(6.1, 245463, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerTempestCD					= mod:NewNextTimer(6.1, 245301, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
-local timerScorchingBlazeCD				= mod:NewCDTimer(7.3, 245994, nil, nil, nil, 3)
+local timerScorchingBlazeCD				= mod:NewCDTimer(6.5, 245994, nil, nil, nil, 3)--6.5-8
 local timerRavenousBlazeCD				= mod:NewCDTimer(23.2, 254452, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 local timerWakeofFlameCD				= mod:NewCDTimer(24.3, 244693, nil, nil, nil, 3)
 --Stage Two: Champion of Sargeras
-local timerFlareCD						= mod:NewCDTimer(15.8, 245983, nil, nil, nil, 3)
+local timerFlareCD						= mod:NewCDTimer(15, 245983, nil, nil, nil, 3)
 
---local berserkTimer					= mod:NewBerserkTimer(600)
+local berserkTimer						= mod:NewBerserkTimer(600)
 
 --Stages One: Wrath of Aggramar
 local countdownTaeshalachTech			= mod:NewCountdown(61, 244688)
@@ -110,6 +111,7 @@ mod.vb.foeCount = 0
 mod.vb.rendCount = 0
 mod.vb.wakeOfFlameCount = 0
 mod.vb.blazeIcon = 1
+mod.vb.techActive = false
 
 function mod:WakeTarget(targetname, uId)
 	if not targetname then return end
@@ -125,12 +127,14 @@ function mod:OnCombatStart(delay)
 	self.vb.rendCount = 0
 	self.vb.wakeOfFlameCount = 0
 	self.vb.blazeIcon = 1
+	self.vb.techActive = false
 	if self:IsMythic() then
 		timerRavenousBlazeCD:Start(4.4-delay)
 		timerWakeofFlameCD:Start(10.7-delay)--Health based?
 		countdownWakeofFlame:Start(10.7-delay)
-		timerTaeshalachTechCD:Start(14.3-delay)--Health based?
+		timerTaeshalachTechCD:Start(14.3-delay, 1)--Health based?
 		countdownTaeshalachTech:Start(14.3-delay)
+		berserkTimer:Start(540-delay)
 	else
 		timerScorchingBlazeCD:Start(4.8-delay)
 		timerWakeofFlameCD:Start(5.9-delay)
@@ -168,13 +172,13 @@ function mod:SPELL_CAST_START(args)
 		self.vb.wakeOfFlameCount = self.vb.wakeOfFlameCount + 1
 		specWarnWakeofFlame:Show()
 		voiceWakeofFlame:Play("watchwave")
-		local techTimer = timerTaeshalachTechCD:GetRemaining()
+		local techTimer = timerTaeshalachTechCD:GetRemaining(self.vb.techCount+1)
 		if techTimer == 0 or techTimer > 24 then
 			timerWakeofFlameCD:Start()
 			countdownWakeofFlame:Start(24.3)
 		end
 		self:BossTargetScanner(args.sourceGUID, "WakeTarget", 0.1, 12, true, nil, nil, nil, true)
-	elseif spellId == 245458 then
+	elseif spellId == 245458 or spellId == 255059 then
 		self.vb.foeCount = self.vb.foeCount + 1
 		if self:IsTank() then
 			local tanking, status = UnitDetailedThreatSituation("player", "boss1")
@@ -194,10 +198,10 @@ function mod:SPELL_CAST_START(args)
 				timerFoeBreakerCD:Start(7.5, 2)
 			end
 		end
-	elseif spellId == 245463 then
+	elseif spellId == 245463 or spellId == 255058 then
 		self.vb.rendCount = self.vb.rendCount + 1
 		specWarnFlameRend:Show(self.vb.rendCount)
-		if self:IsMythic() then
+		if spellId == 255058 then--Empowered/Mythic Version
 			if self.vb.rendCount == 1 then
 				voiceFlameRend:Play("shareone")
 			else
@@ -213,7 +217,7 @@ function mod:SPELL_CAST_START(args)
 				timerFlameRendCD:Start(7.5, 2)
 			end
 		end
-	elseif spellId == 245301 then
+	elseif spellId == 245301 or spellId == 255061 then
 		specWarnSearingTempest:Show()
 		voiceSearingTempest:Play("runout")
 	end
@@ -277,8 +281,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.blazeIcon = self.vb.blazeIcon + 1
 	elseif spellId == 244894 then--Corrupt Aegis
 		voicePhaseChange:Play("phasechange")
-		self.vb.phase = self.vb.phase + 0.5
 		self.vb.wakeOfFlameCount = 0
+		self.vb.techActive = false
 		timerScorchingBlazeCD:Stop()
 		timerWakeofFlameCD:Stop()
 		timerFlareCD:Stop()
@@ -288,9 +292,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerFoeBreakerCD:Stop()
 		timerFlameRendCD:Stop()
 		timerTempestCD:Stop()
---		if self.vb.phase == 2.5 then
---			timerWakeofFlameCD:Start(3)
---		end
 	if self.Options.RangeFrame and not self:IsTank() then
 		DBM.RangeCheck:Hide()
 	end
@@ -310,17 +311,21 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.phase = self.vb.phase + 1
 		self.vb.wakeOfFlameCount = 0
 		--timerScorchingBlazeCD:Start(3)--Unknown
-		timerTaeshalachTechCD:Start(37)--Veriy with more data
+		timerTaeshalachTechCD:Start(37, self.vb.techCount+1)
 		countdownTaeshalachTech:Start(37)
+		if self:IsMythic() then
+			timerRavenousBlazeCD:Start(23)
+		else
+			timerScorchingBlazeCD:Start(5.9)
+		end
 		if self.vb.phase == 2 then
 			warnPhase2:Show()
 			voicePhaseChange:Play("ptwo")
-			--timerFlareCD:Start(2)--Unknown
+			timerFlareCD:Start(10)
 		elseif self.vb.phase == 3 then
 			warnPhase3:Show()
 			voicePhaseChange:Play("pthree")
-			--timerWakeofFlameCD:Start(4)--Unknown
-			--timerFlareCD:Start(3)--Unknown
+			timerFlareCD:Start(10)
 		end
 		if self.Options.RangeFrame and not self:IsTank() then
 			DBM.RangeCheck:Show(6)
@@ -372,6 +377,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		self.vb.blazeIcon = 1
 		timerRavenousBlazeCD:Start()--Unknown at this time
 	elseif spellId == 244688 then--Taeshalach Technique
+		self.vb.techActive = true
 		self.vb.foeCount = 0
 		self.vb.rendCount = 0
 		self.vb.techCount = self.vb.techCount + 1
@@ -396,7 +402,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 				timerTempestCD:Start(15)
 			end
 		end
-	elseif spellId == 244792 then--Burning Will of Taeshalach (technique ended)
+	elseif spellId == 244792 and self.vb.techActive then--Burning Will of Taeshalach (technique ended)
+		self.vb.techActive = false
 		if self:IsMythic() then
 			timerRavenousBlazeCD:Start(4.2)
 		else
@@ -418,6 +425,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	elseif spellId == 245983 or spellId == 246037 then--Flare
 		specWarnFlare:Show()
 		voiceFlare:Play("watchstep")
-		timerFlareCD:Start()--Might be wrong here
+		timerFlareCD:Start()
 	end
 end

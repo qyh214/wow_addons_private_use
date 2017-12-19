@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------
-r60 | nagboy@gmail.com | 2017-12-02 12:36:10 -0600 (Sat, 02 Dec 2017) | 1 line
+r62 | nagboy@gmail.com | 2017-12-11 11:06:08 -0600 (Mon, 11 Dec 2017) | 1 line
 Changed paths:
    M /trunk/HandyNotes_DungeonLocations.lua
 
-Fixed Stratholme east entrance dungeon link.
+Corrected lockout information for Violet Hold
 ------------------------------------------------------------------------
 

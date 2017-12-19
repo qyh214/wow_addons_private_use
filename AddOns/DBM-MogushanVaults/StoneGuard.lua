@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(679, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 109 $"):sub(12, -3))
 mod:SetCreatureID(60051, 60043, 59915, 60047)--Cobalt: 60051, Jade: 60043, Jasper: 59915, Amethyst: 60047
 mod:SetEncounterID(1395)
 mod:SetZone()
@@ -83,16 +83,27 @@ local function warnJasperChainsTargets()
 	table.wipe(jasperChainsTargets)
 end
 
-local function updateInfoFrame()
+local updateInfoFrame
+do
 	local lines = {}
-	for i = 1, 5 do
-		if UnitExists("boss"..i) then
-			lines[UnitName("boss"..i)] = UnitPower("boss"..i)
-		end
+	local sortedLines = {}
+	local function addLine(key, value)
+		-- sort by insertion order
+		lines[key] = value
+		sortedLines[#sortedLines + 1] = key
 	end
-	lines[UnitName("player")] = UnitPower("player", ALTERNATE_POWER_INDEX)
+	updateInfoFrame = function()
+		table.wipe(lines)
+		table.wipe(sortedLines)
+		for i = 1, 5 do
+			if UnitExists("boss"..i) then
+				addLine(UnitName("boss"..i), UnitPower("boss"..i))
+			end
+		end
+		addLine(UnitName("player"), UnitPower("player", ALTERNATE_POWER_INDEX))
 
-	return lines
+		return lines, sortedLines
+	end
 end
 
 function mod:ThreeBossStart(delay)

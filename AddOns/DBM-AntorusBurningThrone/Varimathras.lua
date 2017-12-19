@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(1983, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16812 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16995 $"):sub(12, -3))
 mod:SetCreatureID(122366)
 mod:SetEncounterID(2069)
 mod:SetZone()
 --mod:SetBossHPInfoToHighest()
-mod:SetUsedIcons(1)
---mod:SetHotfixNoticeRev(16350)
+mod:SetUsedIcons(1, 3, 4, 5, 6)
+mod:SetHotfixNoticeRev(16945)
 mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -37,7 +37,7 @@ local warnTormentofFel					= mod:NewSpellAnnounce(243979, 2)
 local warnTormentofShadows				= mod:NewSpellAnnounce(243974, 2)
 --The Fallen Nathrezim
 local warnShadowStrike					= mod:NewSpellAnnounce(243960, 2, nil, "Tank", 2)--Doesn't need special warning because misery should trigger special warning at same time
-local warnMarkedPrey					= mod:NewTargetAnnounce(243974, 3)
+local warnMarkedPrey					= mod:NewTargetAnnounce(244042, 3)
 local warnNecroticEmbrace				= mod:NewTargetAnnounce(244094, 4)
 local warnEchoesofDoom					= mod:NewTargetAnnounce(248732, 3)
 
@@ -47,11 +47,11 @@ local specWarnGTFO						= mod:NewSpecialWarningGTFO(243968, nil, nil, nil, 1, 2)
 local specWarnMisery					= mod:NewSpecialWarningYou(243961, nil, nil, nil, 1, 2)
 local specWarnMiseryTaunt				= mod:NewSpecialWarningTaunt(243961, nil, nil, nil, 1, 2)
 local specWarnDarkFissure				= mod:NewSpecialWarningDodge(243999, nil, nil, nil, 2, 2)
-local specWarnMarkedPrey				= mod:NewSpecialWarningYou(243974, nil, nil, nil, 1, 2)
-local yellMarkedPrey					= mod:NewFadesYell(243974)
-local specWarnNecroticEmbrace			= mod:NewSpecialWarningMoveAway(244094)
-local yellNecroticEmbrace				= mod:NewFadesYell(244094)
-local specWarnEchoesOfDoom				= mod:NewSpecialWarningMoveAway(248732)
+local specWarnMarkedPrey				= mod:NewSpecialWarningYou(244042, nil, nil, nil, 1, 2)
+local yellMarkedPrey					= mod:NewFadesYell(244042)
+local specWarnNecroticEmbrace			= mod:NewSpecialWarningMoveAway(244094, nil, nil, nil, 1, 2)
+local yellNecroticEmbrace				= mod:NewShortFadesYell(244094)
+local specWarnEchoesOfDoom				= mod:NewSpecialWarningMoveAway(248732, nil, nil, nil, 1, 2)
 local yellEchoesOfDoom					= mod:NewYell(248732)
 
 --Torments of the Shivarra
@@ -61,10 +61,10 @@ local timerTormentofFrostCD				= mod:NewNextTimer(61, 243976, nil, nil, nil, 6)
 local timerTormentofFelCD				= mod:NewNextTimer(61, 243979, nil, nil, nil, 6)
 local timerTormentofShadowsCD			= mod:NewNextTimer(61, 243974, nil, nil, nil, 6)
 --The Fallen Nathrezim
-local timerShadowStrikeCD				= mod:NewCDTimer(9, 243960, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--9-14
-local timerDarkFissureCD				= mod:NewCDTimer(32, 243999, nil, nil, nil, 3)
-local timerMarkedPreyCD					= mod:NewCDTimer(30.3, 244042, nil, nil, nil, 3)
-local timerNecroticEmbraceCD			= mod:NewCDTimer(30.3, 244093, nil, nil, nil, 3)
+local timerShadowStrikeCD				= mod:NewCDTimer(9, 243960, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--9-14 (most of time it's 9.7 or more, but sometimes it's 9.0-9.4 so 9.0 has to be used
+local timerDarkFissureCD				= mod:NewCDTimer(32, 243999, nil, nil, nil, 3)--32-33
+local timerMarkedPreyCD					= mod:NewNextTimer(30.3, 244042, nil, nil, nil, 3)
+local timerNecroticEmbraceCD			= mod:NewNextTimer(30.3, 244093, nil, nil, nil, 3)
 
 local berserkTimer						= mod:NewBerserkTimer(390)
 
@@ -84,19 +84,22 @@ local voiceNecroticEmbrace				= mod:NewVoice(244094)--scatter
 local voiceEchoesOfDoom					= mod:NewVoice(248732)--runout
 
 mod:AddSetIconOption("SetIconOnMarkedPrey", 244042, true)
+mod:AddSetIconOption("SetIconEmbrace", 244094, true)
 --mod:AddInfoFrameOption(239154, true)
 mod:AddRangeFrameOption("8/10")
 
 mod.vb.currentTorment = 0--Can't antispam, cause it'll just break if someone dies and gets brezzed
+mod.vb.totalEmbrace = 0
 
 function mod:OnCombatStart(delay)
 	self.vb.currentTorment = 0
+	self.vb.totalEmbrace = 0
 	timerTormentofFlamesCD:Start(5-delay)
-	timerShadowStrikeCD:Start(9.6-delay)
-	countdownShadowStrike:Start(9.6-delay)
-	timerDarkFissureCD:Start(17.9-delay)--success
-	timerMarkedPreyCD:Start(25.7-delay)
-	countdownMarkedPrey:Start(25.7-delay)
+	timerShadowStrikeCD:Start(9.3-delay)
+	countdownShadowStrike:Start(9.3-delay)
+	timerDarkFissureCD:Start(17.4-delay)--success
+	timerMarkedPreyCD:Start(25.2-delay)
+	countdownMarkedPrey:Start(25.2-delay)
 	if not self:IsEasy() then
 		timerNecroticEmbraceCD:Start(35-delay)
 		countdownNecroticEmbrace:Start(35-delay)
@@ -134,7 +137,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 243960 or spellId == 257644 then--257644 LFR shadow strike
 		warnShadowStrike:Show()
 		timerShadowStrikeCD:Show()
-		countdownShadowStrike:Start(9.7)
+		countdownShadowStrike:Start(9)
 	elseif spellId == 244093 then--Necrotic Embrace Cast
 		timerNecroticEmbraceCD:Start()
 		countdownNecroticEmbrace:Start(30.3)
@@ -152,8 +155,10 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 243961 and self.vb.currentTorment ~= 4 then--If current torment is shadow, disable these warnings, Because entire raid now has misery rest of fight
 		if args:IsPlayer() then
-			specWarnMisery:Show()
-			voiceMisery:Play("defensive")
+			if self:AntiSpam(4, 2) then
+				specWarnMisery:Show()
+				voiceMisery:Play("defensive")
+			end
 		else
 			local uId = DBM:GetRaidUnitId(args.destName)
 			--Applied to a tank that's not you and you don't have it, taunt
@@ -172,12 +177,20 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnMarkedPrey:Show(args.destName)
 		end
 	elseif spellId == 244094 then
+		self.vb.totalEmbrace = self.vb.totalEmbrace + 1
+		if self.vb.totalEmbrace >= 4 then return end--Once it's beyond 4 players, consider it a wipe and throttle messages
 		if args:IsPlayer() then
 			specWarnNecroticEmbrace:Show()
 			voiceNecroticEmbrace:Play("scatter")
-			yellNecroticEmbrace:Countdown(6, 4)
+			yellNecroticEmbrace:Countdown(6, 3)
+			if self.Options.RangeFrame then
+				DBM.RangeCheck:Show(10)
+			end
 		else
-			warnNecroticEmbrace:CombinedShow(0.3, args.destName)--Combined message because even if it starts on 1, people are gonna fuck it up
+			warnNecroticEmbrace:CombinedShow(0.5, args.destName)--Combined message because even if it starts on 1, people are gonna fuck it up
+		end
+		if self.Options.SetIconEmbrace then
+			self:SetIcon(args.destName, self.vb.totalEmbrace+2)--Should be BW compatible, for most part.
 		end
 	elseif spellId == 248732 then
 		warnEchoesofDoom:CombinedShow(0.5, args.destName)--In case multiple shadows up
@@ -190,21 +203,33 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.currentTorment = 1
 		warnTormentofFlames:Show()
 		voicePhaseChange:Play("phasechange")
-		if not self:IsEasy() then--No frost or fel in normal, LFR assumed
-			timerTormentofFrostCD:Start(120)
-		else
+		if not self:IsEasy() then
+			if self:IsMythic() then
+				timerTormentofFrostCD:Start(100)
+			else
+				timerTormentofFrostCD:Start(120)
+			end
+		else--No frost or fel in normal, LFR assumed
 			timerTormentofShadowsCD:Start(361)
 		end
 	elseif spellId == 243977 and self.vb.currentTorment ~= 2 then--Frost
 		self.vb.currentTorment = 2
 		warnTormentofFrost:Show()
 		voicePhaseChange:Play("phasechange")
-		timerTormentofFelCD:Start(115)--No fel or frost in normal, no reason to filter cause forst won't even happen
+		if self:IsMythic() then
+			timerTormentofFelCD:Start(99)
+		else
+			timerTormentofFelCD:Start(115)--No fel or frost in normal, no reason to filter cause forst won't even happen
+		end
 	elseif spellId == 243980 and self.vb.currentTorment ~= 3 then--Fel
 		self.vb.currentTorment = 3
 		warnTormentofFel:Show()
 		voicePhaseChange:Play("phasechange")
-		timerTormentofShadowsCD:Start(121)--(361 after pull technically, same as normal). No fel or frost in normal, no reason to filter cause fel won't even happen
+		if self:IsMythic() then
+			timerTormentofShadowsCD:Start(90)
+		else
+			timerTormentofShadowsCD:Start(121)--(361 after pull technically, same as normal). No fel or frost in normal
+		end
 	elseif spellId == 243973 and self.vb.currentTorment ~= 4 then--Shadow
 		self.vb.currentTorment = 4
 		warnTormentofShadows:Show()
@@ -220,8 +245,15 @@ function mod:SPELL_AURA_REMOVED(args)
 			yellMarkedPrey:Cancel()
 		end
 	elseif spellId == 244094 then
+		self.vb.totalEmbrace = self.vb.totalEmbrace - 1
 		if args:IsPlayer() then
 			yellNecroticEmbrace:Cancel()
+			if self.Options.RangeFrame then
+				DBM.RangeCheck:Show(8)
+			end
+		end
+		if self.Options.SetIconEmbrace then
+			self:SetIcon(args.destName, 0)
 		end
 	end
 end

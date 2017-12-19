@@ -1882,6 +1882,35 @@ local BossIDs = {
 	[118289] = true, -- Maiden of Vigilance
 	[116939] = true, -- Fallen Avatar
 	[117269] = true, -- Kil'jaeden <The Deceiver>
+	
+	-------------------------------------------------------------------------------
+	-- The Seat of the Triumvirate
+	-------------------------------------------------------------------------------
+	[122313] = true, -- Zuraal the Ascended
+	[122316] = true, -- Saprish <Ethereum-Lord of the Shadowguard>
+	[122056] = true, -- Viceroy Nezhar
+	[124729] = true, -- L'ura
+	
+	-------------------------------------------------------------------------------
+	-- Antorus, the Burning Throne
+	-------------------------------------------------------------------------------
+	
+	[122450] = true, -- Garothi Worldbreaker
+	[122477] = true, -- F'harg
+	[122135] = true, -- Shatug
+	[122367] = true, -- Admiral Svirax
+	[122333] = true, -- General Erodus
+	[122369] = true, -- Chief Engineer Ishkar
+	[122104] = true, -- Portal Keeper Hasabel
+	[124445] = true, -- The Paraxis
+	[124158] = true, -- Imonar the Soulhunter
+	[122578] = true, -- Kin'garoth <Engineer of the Apocalypse>
+	[122366] = true, -- Varimathras
+	[122467] = true, -- Asara, Mother of Night <Coven of Shivarra>
+	[122468] = true, -- Noura, Mother of Flames <Coven of Shivarra>
+	[122469] = true, -- Diima, Mother of Gloom <Coven of Shivarra>
+	[121975] = true, -- Aggramar
+	[124828] = true, -- Argus the Unmaker
 }
 
 lib.BossIDs = BossIDs

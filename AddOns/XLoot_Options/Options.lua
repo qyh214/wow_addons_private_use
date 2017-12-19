@@ -625,8 +625,9 @@ function addon:OnEnable() -- Construct addon option tables here
 				{ "fade_other", "range", 1, 30, 1, name = L.items_others }
 			}},
 			{ "details", "group", {
-				{ "show_totals", "toggle", width = "double" },
+				{ "show_totals", width = "double" },
 				{ "name_width", "range", 25, 200, 5 },
+				{ "show_ilvl" },
 			}},
 			{ "font", "group", {
 				{ "font", fonts },

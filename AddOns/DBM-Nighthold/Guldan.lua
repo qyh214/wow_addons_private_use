@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1737, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16839 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16987 $"):sub(12, -3))
 mod:SetCreatureID(104154)--The Demon Within (111022)
 mod:SetEncounterID(1866)
 mod:SetZone()
@@ -35,9 +35,9 @@ or (ability.id = 227427 or ability.id = 206516) and type = "applybuff"
 or (ability.id = 227427 or ability.id = 206516) and type = "removebuff"
 --]]
 
-local Kurazmal = EJ_GetSectionInfo(13121)
-local Vethriz = EJ_GetSectionInfo(13124)
-local Dzorykx = EJ_GetSectionInfo(13129)
+local Kurazmal = DBM:EJ_GetSectionInfo(13121)
+local Vethriz = DBM:EJ_GetSectionInfo(13124)
+local Dzorykx = DBM:EJ_GetSectionInfo(13129)
 
 --Stage One: The Council of Elders
 ----Gul'dan

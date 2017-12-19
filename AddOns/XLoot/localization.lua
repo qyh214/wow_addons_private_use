@@ -62,7 +62,10 @@ locales.deDE["Core"] = {
 }
 
 locales.koKR["Core"] = {
-	["anchor_hide"] = "감추기",
+	["anchor_hide"] = "감춤",
+	["anchor_hide_desc"] = [=[이 모듈을 제 위치에 잠급니다.
+이는 표시기를 숨기지만,
+옵션에서 다시 표시할 수 있습니다.]=],
 	["skin_legacy"] = "XLoot: Legacy",
 	["skin_smooth"] = "XLoot: Smooth",
 	["skin_svelte"] = "XLoot: Svelte",

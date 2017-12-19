@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1704, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16862 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16987 $"):sub(12, -3))
 mod:SetCreatureID(102679)--Ysondre, 102683 (Emeriss), 102682 (Lethon), 102681 (Taerar)
 mod:SetEncounterID(1854)
 mod:SetZone()
@@ -23,10 +23,10 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"
 )
 
-local Ysondre = EJ_GetSectionInfo(12768)
-local Emeriss = EJ_GetSectionInfo(12770)
-local Lethon = EJ_GetSectionInfo(12772)
-local Taerar = EJ_GetSectionInfo(12774)
+local Ysondre = DBM:EJ_GetSectionInfo(12768)
+local Emeriss = DBM:EJ_GetSectionInfo(12770)
+local Lethon = DBM:EJ_GetSectionInfo(12772)
+local Taerar = DBM:EJ_GetSectionInfo(12774)
 
 --(type = "begincast" or type = "cast" or type = "applybuff") and (source.name = "Taerar" or source.name = "Ysondre" or source.name = "Emeriss" or source.name = "Lethon")
 --TODO, if only one volatile infection goes out at a time, hide general alert if player affected
@@ -153,6 +153,7 @@ local function whoDatUpThere(self)
 	end
 end
 
+--Probably broken with recent infoframe changes, needs code review
 local updateInfoFrame
 do
 --	local playerName = UnitName("player")
@@ -238,7 +239,7 @@ function mod:OnCombatStart(delay)
 		self:Schedule(2, whoDatUpThere, self)
 	end
 	if self.Options.InfoFrame and not self:IsLFR() then
-		DBM.InfoFrame:SetHeader(EJ_GetSectionInfo(12809))
+		DBM.InfoFrame:SetHeader(DBM:EJ_GetSectionInfo(12809))
 		DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 	end
 end

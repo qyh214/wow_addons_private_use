@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1898, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16863 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16969 $"):sub(12, -3))
 mod:SetCreatureID(117269)--121227 Illiden? 121193 Shadowsoul
 mod:SetEncounterID(2051)
 mod:SetZone()
@@ -216,7 +216,7 @@ local function handleMissingEmote(self)
 	if self:IsMythic() then
 		local timer = phase1point5MythicSingularityTimers[self.vb.singularityCount+1]
 		if timer then
-			self:Schedule(timer, handleMissingEmote, self)--Already scheduled on delya
+			self:Schedule(timer, handleMissingEmote, self)--Already scheduled on delay
 			timerRupturingSingularityCD:Start(timer-2, self.vb.singularityCount+1)
 		end
 	end

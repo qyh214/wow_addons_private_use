@@ -1,18 +1,24 @@
-tag a4c5529132206674300eb13f989f17d295c860b3 7.3-1
+tag fa7e0615b89b00b8c691122e5c72bb71e14f1ab8 7.3-2
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Fri Sep 1 15:36:55 2017 -0400
+Date:	Fri Dec 8 01:09:44 2017 -0500
 
-Fix PlaySound errors
+Monitor: Item level display
 
-commit 85298dfc232f7dca65a420148a0216c542e3fbf6
+commit 00acd940c3d38f6999f12bbcb364311622c2ce52
 Author: Xuerian <xuerian@gmail.com>
-Date:   Fri Sep 1 15:36:32 2017 -0400
+Date:   Fri Dec 8 01:09:02 2017 -0500
 
-    Bump ToC 70300
+    Monitor: Fix number formatting error
 
-commit 96222f285e1ce62a76706fbfa9e5879158b559b9
+commit adc122a0ee1e328eec1079f5c8b980385211d07f
 Author: Xuerian <xuerian@gmail.com>
-Date:   Fri Sep 1 14:52:31 2017 -0400
+Date:   Fri Dec 8 01:07:12 2017 -0500
 
-    Frame: Update PlaySound usage to fix #151
+    Monitor: Add item level display option
+
+commit 7168a81b6f687be3903133dec771c53baf2dd62d
+Author: Xuerian <xuerian@gmail.com>
+Date:   Mon Sep 4 01:07:40 2017 -0400
+
+    Monitor: Shorten obscene numbers for specialty farmers
 

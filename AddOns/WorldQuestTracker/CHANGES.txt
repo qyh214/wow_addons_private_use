@@ -1,7 +1,7 @@
-changeset:   261:dc2d28227ee7
-tag:         v7.3.2.261-release
+changeset:   263:2622a9548910
+tag:         v7.3.2.263-release
 user:        Tercio
-date:        Wed Nov 29 16:32:27 2017 -0200
-summary:     - Fixed artifact power formating not working correctly for numbers above 1 billion on enUS language.
+date:        Sat Dec 09 11:41:05 2017 -0200
+summary:     - Back to convert to raid if the quest is an epic quest (world boss).
 
 

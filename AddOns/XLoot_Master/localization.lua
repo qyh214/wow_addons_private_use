@@ -61,7 +61,11 @@ locales.deDE["Master"] = {
 }
 
 locales.koKR["Master"] = {
-	["ITEM_AWARDED"] = "%s 아이템을 획득했습니다: %s",
+	["BINDING_BANKER"] = "은행원 설정",
+	["BINDING_DISENCHANTER"] = "마법부여사 설정",
+	["ITEM_AWARDED"] = "%s |1을;를; 획득했습니다: %s",
+	["ML_BANKER"] = "은행인",
+	["ML_DISENCHANTER"] = "마법부여사",
 	["ML_RANDOM"] = "공격대 주사위",
 	["RECIPIENTS"] = "특별 수령인",
 	["SPECIALROLLS"] = "특별 주사위",

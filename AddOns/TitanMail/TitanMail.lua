@@ -6,9 +6,10 @@
 --  5.0 MoP versioning
 --  6.0 WoD updated by Mikhalo
 --  7.0 Legion updated by Mikhailo / testing
+--  7.3 Legion updated by Mikhailo / for changes thanks r1ft58
 
 -- Version information
-local TITAN_MAIL_VERSION = "7.01";
+local TITAN_MAIL_VERSION = "7.30";
 -- Constants
 TITAN_MAIL_ID = "Mail";
 TITAN_MAIL_ID_RIGHT = "MailRight";
@@ -373,7 +374,7 @@ function TitanMail_PrepareMenu(isright)
 	info.keepShownOnClick = 1;
 	info.func = TitanMail_Toggle;
 	info.checked = TitanGetVar(TITAN_MAIL_ID, "hidemm");
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	info = {};
 	info.text = TITAN_MAIL_MENU_SOUND;
@@ -381,7 +382,7 @@ function TitanMail_PrepareMenu(isright)
 	info.func = TitanMail_Toggle;
 	info.keepShownOnClick = 1;
 	info.checked = TitanGetVar(TITAN_MAIL_ID, "sound");
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	info = {};
 	info.text = TITAN_MAIL_MENU_CHAT;
@@ -389,7 +390,7 @@ function TitanMail_PrepareMenu(isright)
 	info.func = TitanMail_Toggle;
 	info.keepShownOnClick = 1;
 	info.checked = TitanGetVar(TITAN_MAIL_ID, "chat");
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	if (not isright) then
 		TitanPanelRightClickMenu_AddSpacer();		
@@ -399,7 +400,7 @@ function TitanMail_PrepareMenu(isright)
 		info.func = TitanMail_Toggle;
 		info.checked = TitanGetVar(TITAN_MAIL_ID, "ShowIcon");
 		info.keepShownOnClick = 1;
-		UIDropDownMenu_AddButton(info);
+		Lib_UIDropDownMenu_AddButton(info);
 
 		info = {};
 		info.text = TITAN_MAIL_MENU_STEXT;
@@ -407,7 +408,7 @@ function TitanMail_PrepareMenu(isright)
 		info.func = TitanMail_Toggle;
 		info.checked = TitanGetVar(TITAN_MAIL_ID, "ShowText");
 		info.keepShownOnClick = 1;
-		UIDropDownMenu_AddButton(info);
+		Lib_UIDropDownMenu_AddButton(info);
 
 		info = {};
 		info.text = TITAN_MAIL_MENU_COUNT;
@@ -415,7 +416,7 @@ function TitanMail_PrepareMenu(isright)
 		info.func = TitanMail_Toggle;
 		info.keepShownOnClick = 1;
 		info.checked = TitanGetVar(TITAN_MAIL_ID, "ShowCount");
-		UIDropDownMenu_AddButton(info);
+		Lib_UIDropDownMenu_AddButton(info);
 	end
 	
 	TitanPanelRightClickMenu_AddSpacer();		
@@ -426,7 +427,7 @@ function TitanMail_PrepareMenu(isright)
 	info.func = TitanMail_Toggle;
 	info.keepShownOnClick = 1;
 	info.checked = TitanGetVar(TITAN_MAIL_ID, "ShowIconAlt");
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	info = {};
 	info.text = TITAN_MAIL_MENU_NOICONNOMAIL;
@@ -434,7 +435,7 @@ function TitanMail_PrepareMenu(isright)
 	info.func = TitanMail_Toggle;
 	info.keepShownOnClick = 1;
 	info.checked = TitanGetVar(TITAN_MAIL_ID, "NoIconNoMail");
-	UIDropDownMenu_AddButton(info);
+	Lib_UIDropDownMenu_AddButton(info);
 
 	TitanPanelRightClickMenu_AddSpacer();		
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1861, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16983 $"):sub(12, -3))
 mod:SetCreatureID(115767)--116328 Vellius, 115795 Abyss Stalker, 116329/116843 Sarukel
 mod:SetEncounterID(2037)
 mod:SetZone()
@@ -116,13 +116,6 @@ local consumingHunger = GetSpellInfo(230384)
 local hydraIcons = {}
 local eventsRegistered = false
 local p3MythicCrashingWave = {30.9, 30.9, 40.6, 35.8, 30.9}--All minus 2 because timer starts at SUCCESS but is for START
-
---/run DBM:GetModByName("1861"):TestHydraShot(1)
-function mod:TestHydraShot(icon)
-	specWarnHydraShot:Show(self:IconNumToTexture(icon))
-	yellHydraShot:Yell(icon, "Hydra Shot", icon)
-	yellHydraShotFades:Countdown(5, 4, icon)
-end
 
 function mod:OnCombatStart(delay)
 	self.vb.phase = 1

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2011, "DBM-Argus", nil, 959)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16803 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16905 $"):sub(12, -3))
 mod:SetCreatureID(124625)
 mod:SetEncounterID(2083)
 --mod:SetReCombatTime(20)
@@ -38,7 +38,7 @@ mod:AddReadyCheckOption(48620, false)
 
 function mod:OnCombatStart(delay, yellTriggered)
 	if yellTriggered then
-		timerHeartBreakerCD:Star(5-delay)
+		timerHeartBreakerCD:Start(5-delay)
 		timerFelLashCD:Start(15-delay)
 		timerBeguilingCharmCD:Start(30-delay)
 		countdownBeguilingCharm:Start(30-delay)

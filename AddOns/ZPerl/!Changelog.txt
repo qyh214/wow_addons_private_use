@@ -1,3 +1,9 @@
+**r1083**
+* Player power value changes.
+
+**r1082**
+* Reputation bar fixes.
+
 **r1080**
 * Library fix.
 * Warlock power bar fixes.

@@ -34,6 +34,12 @@ L= DBM:GetModLocalization(1997)
 ---------------------------
 L= DBM:GetModLocalization(2025)
 
+L:SetTimerLocalization({
+	timerObfuscator		=	"다음 혼란자 (%s)",
+	timerDestructor 	=	"다음 파괴자 (%s)",
+	timerPurifier 		=	"다음 정화자 (%s)"
+})
+
 L:SetMiscLocalization({
 	Obfuscators =	"혼란자",
 	Destructors =	"파괴자",
@@ -46,7 +52,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1985)
 
 L:SetOptionLocalization({
-	ShowAllPlatforms =	"자신의 위치와 관계 없이 모든 공대원의 단상 위치 알림 보기"
+	ShowAllPlatforms =	"단상 위치와 관계 없이 모든 알림 보기"
 })
 
 ---------------------------
@@ -54,13 +60,18 @@ L:SetOptionLocalization({
 ---------------------------
 L= DBM:GetModLocalization(2009)
 
+L:SetMiscLocalization({
+	DispelMe =		"해제 해주세요!"
+})
+
 ---------------------------
 -- Kin'garoth --
 ---------------------------
 L= DBM:GetModLocalization(2004)
 
 L:SetOptionLocalization({
-	InfoFrame =	"전투의 전반적인 상황을 정보 창에 표시"
+	InfoFrame =	"전투의 전반적인 상황을 정보 창에 표시",
+	UseAddTime = "초기화 페이즈가 끝났을 때 항상 보스의 다음 스킬 타이머가 표시됩니다. (옵션을 끄면 보스가 다시 활성화됐을 때 정확한 스킬 타이머가 표시되지만, 1~2초 남은 스킬의 쿨타임에 대한 경고만 뜰 수도 있습니다)"
 })
 
 ---------------------------
@@ -72,10 +83,6 @@ L= DBM:GetModLocalization(1983)
 -- The Coven of Shivarra --
 ---------------------------
 L= DBM:GetModLocalization(1986)
-
-L:SetTimerLocalization({
-	timerBossIncoming		= DBM_INCOMING
-})
 
 L:SetOptionLocalization({
 	timerBossIncoming		= "다음 보스 교대 타이머 바 보기"

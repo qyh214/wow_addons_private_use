@@ -709,7 +709,7 @@ end)
 -----------------------
 --  Check functions  --
 -----------------------
-local getDistanceBetween
+local getDistanceBetween, getDistanceBetweenALL
 do
 	local function itsBCAgain(uId)
 		if IsItemInRange(37727, uId) then return 5
@@ -726,7 +726,24 @@ do
 		elseif IsItemInRange(35278, uId) then return 80
 		else return 1000 end--Just so it has a numeric value, even if it's unknown to protect from nil errors
 	end
-	--TODO, add some check in 7.1 to return before calling UnitPosition, if in restricted area.
+	
+	function getDistanceBetweenALL(checkrange)
+		local range = 1000
+		for uId in DBM:GetGroupMembers() do
+			if UnitExists(uId) and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and UnitInPhase(uId) then
+				if DBM:HasMapRestrictions() then--API restrictions are in play, so pretend we're back in BC
+					range = itsBCAgain(uId)
+				else
+					range = UnitDistanceSquared(uId) ^ 0.5
+				end
+				if checkrange < (range+0.5) then
+					return true--return and end once anyone found
+				end
+			end
+		end
+		return false--No one was foundi nrnage
+	end
+	
 	function getDistanceBetween(uId, x, y)
 		local restrictionsActive = DBM:HasMapRestrictions()
 		if not x then--If only one arg then 2nd arg is always assumed to be player
@@ -884,4 +901,8 @@ end
 -- GetDistance(uId, uId2) -- distance between the two uIds
 function rangeCheck:GetDistance(...)
 	return getDistanceBetween(...)
+end
+
+function rangeCheck:GetDistanceAll(...)
+	return getDistanceBetweenALL(...)
 end
