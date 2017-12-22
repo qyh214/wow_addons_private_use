@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1987, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16965 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16999 $"):sub(12, -3))
 mod:SetCreatureID(122477, 122135)--122477 F'harg, 122135 Shatug
 mod:SetEncounterID(2074)
 mod:SetZone()
@@ -156,8 +156,8 @@ function mod:OnCombatStart(delay)
 	timerCorruptingMawCD:Start(8.9-delay)--was same on heroic/normal, for now
 	--Shadow doggo
 	if self:IsMythic() then
-		self.vb.longTimer = 89
-		self.vb.mediumTimer = 71.7--71.7-73
+		self.vb.longTimer = 88.3--88.3-89
+		self.vb.mediumTimer = 71.4--71.4-73
 		timerMoltenTouchCD:Start(18-delay)--was same on heroic/mythic, or now
 		timerSiphonCorruptionCD:Start(25.5-delay)
 	elseif self:IsHeroic() then

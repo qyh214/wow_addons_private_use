@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2004, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16985 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17015 $"):sub(12, -3))
 mod:SetCreatureID(122578)
 mod:SetEncounterID(2088)
 mod:SetZone()
@@ -44,7 +44,7 @@ mod:RegisterEventsInCombat(
 --Stage: Deployment
 local warnShatteringStrike				= mod:NewSpellAnnounce(248375, 2)
 local warnDiabolicBomb					= mod:NewSpellAnnounce(246779, 3)
-local warnReverberatingStrike			= mod:NewTargetAnnounce(246692, 3)
+local warnReverberatingStrike			= mod:NewTargetAnnounce(254926, 3)
 --Reavers (or empowered boss from reaver deaths)
 local warnDecimation					= mod:NewTargetAnnounce(246687, 4)
 local warnDemolish						= mod:NewTargetAnnounce(246692, 4)

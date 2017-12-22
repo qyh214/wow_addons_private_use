@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1985, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16965 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16998 $"):sub(12, -3))
 mod:SetCreatureID(122104)
 mod:SetEncounterID(2064)
 mod:DisableESCombatDetection()--Remove if blizz fixes clicking portals causing this event to fire (even though boss isn't engaged)
@@ -288,7 +288,7 @@ function mod:SPELL_CAST_START(args)
 			countdownFelstormBarrage:Start(27.1)
 		else
 			timerFelstormBarrageCD:Start()--32.9-41
-			countdownFelstormBarrage:Start(32.2)--Review/improve if possible
+			countdownFelstormBarrage:Start(32.2)
 		end
 		if self.Options.ShowAllPlatforms or playerPlatform == 1 then--Actually on nexus platform
 			specWarnFelstormBarrage:Show()

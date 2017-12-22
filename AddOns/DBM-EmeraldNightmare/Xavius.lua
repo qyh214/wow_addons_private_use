@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1726, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16987 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17021 $"):sub(12, -3))
 mod:SetCreatureID(103769)
 mod:SetEncounterID(1864)
 mod:SetZone()
@@ -525,7 +525,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	elseif spellId == 226194 then--Writhing Deep
 		warnNightmareTentacles:Show()
 		timerNightmareTentacleCD:Start()
-	elseif spellId == 205843 then
+	elseif spellId == 205843 and self:IsMythic() then
 		self.vb.dreamCount = self.vb.dreamCount + 1
 		local count = self.vb.dreamCount
 		specWarnDreaming:Show(count)

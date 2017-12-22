@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 16995 $"):sub(12, -3)),
-	DisplayVersion = "7.3.13", -- the string that is shown as version
-	ReleaseRevision = 16995 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 17026 $"):sub(12, -3)),
+	DisplayVersion = "7.3.14", -- the string that is shown as version
+	ReleaseRevision = 17026 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -60,9 +60,9 @@ if IsTestBuild() then
 end
 
 -- dual profile setup
-local _, class = UnitClass("player")
+local _, playerClass = UnitClass("player")
 DBM_UseDualProfile = true
-if class == "MAGE" or class == "WARLOCK" and class == "ROGUE" then
+if playerClass == "MAGE" or playerClass == "WARLOCK" and playerClass == "ROGUE" then
 	DBM_UseDualProfile = false
 end
 DBM_CharSavedRevision = 2
@@ -387,7 +387,7 @@ local UpdateChestTimer
 local breakTimerStart
 local AddMsg
 
-local fakeBWVersion, fakeBWHash = 82, "eff62c5"
+local fakeBWVersion, fakeBWHash = 85, "775b2ad"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -1262,6 +1262,7 @@ do
 				"LFG_PROPOSAL_SUCCEEDED",
 				"READY_CHECK",
 				"UPDATE_BATTLEFIELD_STATUS",
+				"PLAY_MOVIE",
 				"CINEMATIC_START",
 				"PLAYER_LEVEL_UP",
 				"PLAYER_SPECIALIZATION_CHANGED",
@@ -2567,7 +2568,7 @@ do
 				raid[playerName].shortname = playerName
 				raid[playerName].guid = UnitGUID("player")
 				raid[playerName].rank = 0
-				raid[playerName].class = class
+				raid[playerName].class = playerClass
 				raid[playerName].id = "player"
 				raid[playerName].groupId = 0
 				raid[playerName].revision = DBM.Revision
@@ -2706,7 +2707,7 @@ do
 			raid[playerName].shortname = playerName
 			raid[playerName].guid = UnitGUID("player")
 			raid[playerName].rank = 0
-			raid[playerName].class = class
+			raid[playerName].class = playerClass
 			raid[playerName].id = "player"
 			raid[playerName].groupId = 0
 			raid[playerName].revision = DBM.Revision
@@ -3347,7 +3348,7 @@ do
 
 		-- force enable dual profile (change default)
 		if DBM_CharSavedRevision < 12976 then
-			if class ~= "MAGE" and class ~= "WARLOCK" and class ~= "ROGUE" then
+			if playerClass ~= "MAGE" and playerClass ~= "WARLOCK" and playerClass ~= "ROGUE" then
 				DBM_UseDualProfile = true
 			end
 		end
@@ -6712,31 +6713,32 @@ do
 		[489] = true, -- Unknown, currently encrypted
 		[490] = true, -- Unknown, currently encrypted
 	}
-	MovieFrame:HookScript("OnEvent", function(self, event, id)
-		if event == "PLAY_MOVIE" and id and not neverFilter[id] then
+	function DBM:PLAY_MOVIE(id)
+		if id and not neverFilter[id] then
 			DBM:Debug("PLAY_MOVIE fired for ID: "..id, 2)
 			local isInstance, instanceType = IsInInstance()
 			if not isInstance or C_Garrison:IsOnGarrisonMap() or instanceType == "scenario" or DBM.Options.MovieFilter == "Never" then return end
 			if DBM.Options.MovieFilter == "Block" or DBM.Options.MovieFilter == "AfterFirst" and DBM.Options.MoviesSeen[id] then
-				MovieFrame_OnMovieFinished(self)
+				MovieFrame:Hide()--can only just hide movie frame safely now, which means can't stop audio anymore :\
 				DBM:AddMsg(DBM_CORE_MOVIE_SKIPPED)
 			else
 				DBM.Options.MoviesSeen[id] = true
 			end
 		end
-	end)
+	end
 
 	function DBM:CINEMATIC_START()
 		self:Debug("CINEMATIC_START fired", 2)
 		local isInstance, instanceType = IsInInstance()
 		if not isInstance or C_Garrison:IsOnGarrisonMap() or instanceType == "scenario" or self.Options.MovieFilter == "Never" then return end
 		SetMapToCurrentZone()
+		local currentMapID = GetCurrentMapAreaID()
 		local currentFloor = GetCurrentMapDungeonLevel() or 0
-		if self.Options.MovieFilter == "Block" or self.Options.MovieFilter == "AfterFirst" and self.Options.MoviesSeen[LastInstanceMapID..currentFloor] then
+		if self.Options.MovieFilter == "Block" or self.Options.MovieFilter == "AfterFirst" and self.Options.MoviesSeen[currentMapID..currentFloor] then
 			CinematicFrame_CancelCinematic()
 			self:AddMsg(DBM_CORE_MOVIE_SKIPPED)
 		else
-			self.Options.MoviesSeen[LastInstanceMapID..currentFloor] = true
+			self.Options.MoviesSeen[currentMapID..currentFloor] = true
 		end
 	end
 end
@@ -7922,6 +7924,14 @@ do
 			return false
 		end
 	end
+end
+
+function bossModPrototype:UnitClass(uId)
+	if uId then--Return unit requested
+		local _, class = UnitClass(uId)
+		return class
+	end
+	return playerClass--else return "player"
 end
 
 function bossModPrototype:IsTank()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1984, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16992 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16999 $"):sub(12, -3))
 mod:SetCreatureID(121975)
 mod:SetEncounterID(2063)
 mod:SetZone()
@@ -160,9 +160,6 @@ function mod:OnCombatEnd()
 --	end
 	if self.Options.NPAuraOnPresence then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
-	end
-	if self:IsMythic() then
-		DBM:AddMsg(DBM_CORE_NEED_LOGS)
 	end
 end
 
