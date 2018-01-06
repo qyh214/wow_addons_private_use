@@ -53,7 +53,8 @@ L:SetMiscLocalization({
 	Purifiers 	=	"Purifier",
 	Bats 		=	"Bats",
 	EonarHealth	= 	"Eonar Health",
-	EonarPower	= 	"Eonar Power"
+	EonarPower	= 	"Eonar Power",
+	NextLoc		=	"Next:"
 })
 
 ---------------------------
@@ -106,6 +107,13 @@ L:SetOptionLocalization({
 -- Aggramar --
 ---------------------------
 L= DBM:GetModLocalization(1984)
+
+L:SetMiscLocalization({
+	Foe			=	"Foe",
+	Rend		=	"Rend",
+	Tempest 	=	"Tempest",
+	Current		=	"Current:"
+})
 
 ---------------------------
 -- Argus the Unmaker --

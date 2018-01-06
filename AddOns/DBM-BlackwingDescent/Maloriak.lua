@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(173, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(41378)
 mod:SetEncounterID(1025)
 mod:SetZone()
@@ -74,10 +74,10 @@ local bitingChillIcon = 6
 local flashFreezeIcon = 8
 local prewarnedPhase2 = false
 local CVAR = false
-local Red = EJ_GetSectionInfo(2935)
-local Green = EJ_GetSectionInfo(2941)
-local Blue = EJ_GetSectionInfo(2938)
-local Dark = EJ_GetSectionInfo(2943)
+local Red = DBM:EJ_GetSectionInfo(2935)
+local Green = DBM:EJ_GetSectionInfo(2941)
+local Blue = DBM:EJ_GetSectionInfo(2938)
+local Dark = DBM:EJ_GetSectionInfo(2943)
 
 local function showBitingChillWarning()
 	warnBitingChill:Show(table.concat(bitingChillTargets, "<, >"))

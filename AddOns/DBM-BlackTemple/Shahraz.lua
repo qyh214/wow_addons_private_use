@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Shahraz", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 615 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(22947)
 mod:SetEncounterID(607)
 mod:SetModelID(21252)
@@ -29,8 +29,6 @@ local specWarnFA		= mod:NewSpecialWarningMoveAway(41001, nil, nil, nil, 1, 2)
 local timerFACD			= mod:NewCDTimer(20.7, 41001, nil, nil, nil, 3)--20-28
 local timerAura			= mod:NewTimer(15, "timerAura", 22599)
 local timerShriekCD		= mod:NewCDTimer(15.8, 40823, nil, nil, nil, 2)
-
-local voiceFA			= mod:NewVoice(41001)--scatter
 
 mod:AddSetIconOption("FAIcons", 41001, true)
 
@@ -67,7 +65,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnFA:CombinedShow(1, args.destName)
 		if args:IsPlayer() then
 			specWarnFA:Show()
-			voiceFA:Play("scatter")
+			specWarnFA:Play("scatter")
 		end
 		if self.Options.FAIcons then
 			self:SetSortedIcon(1, args.destName, 1)

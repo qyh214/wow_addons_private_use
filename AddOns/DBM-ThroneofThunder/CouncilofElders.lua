@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(816, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(69078, 69132, 69134, 69131)--69078 Sul the Sandcrawler, 69132 High Prestess Mar'li, 69131 Frost King Malakk, 69134 Kazra'jin --Adds: 69548 Shadowed Loa Spirit,
 mod:SetEncounterID(1570)
 mod:SetZone()
@@ -21,10 +21,10 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"
 )
 
-local Sul = EJ_GetSectionInfo(7049)
-local Malakk = EJ_GetSectionInfo(7047)
-local Marli = EJ_GetSectionInfo(7050)
-local Kazrajin = EJ_GetSectionInfo(7048)
+local Sul = DBM:EJ_GetSectionInfo(7049)
+local Malakk = DBM:EJ_GetSectionInfo(7047)
+local Marli = DBM:EJ_GetSectionInfo(7050)
+local Kazrajin = DBM:EJ_GetSectionInfo(7048)
 
 mod:SetBossHealthInfo(
 	69078, Sul,
@@ -101,7 +101,7 @@ mod:AddBoolOption("SetIconOnBitingCold", true)
 mod:AddBoolOption("SetIconOnFrostBite", true)
 mod:AddBoolOption("AnnounceCooldowns", "RaidCooldown")
 
-local lingeringPresence = GetSpellInfo(136467)
+local lingeringPresence = DBM:GetSpellInfo(136467)
 local boltCasts = 0
 local kazraPossessed = false
 local possessesDone = 0
@@ -109,6 +109,7 @@ local dischargeCount = 0
 local darkPowerWarned = false
 
 function mod:OnCombatStart(delay)
+	lingeringPresence = DBM:GetSpellInfo(136467)
 	kazraPossessed = false
 	darkPowerWarned = false
 	possessesDone = 0
@@ -229,7 +230,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnFrigidAssault:Show(amount)
 				end
 			else
-				if amount >= 9 and not UnitDebuff("player", GetSpellInfo(136903)) and not UnitIsDeadOrGhost("player") then
+				if amount >= 9 and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 					specWarnFrigidAssaultOther:Show(args.destName)
 				end
 			end

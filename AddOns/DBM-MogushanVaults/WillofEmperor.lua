@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(677, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(60399, 60400)--60396 (Rage), 60397 (Strength), 60398 (Courage), 60480 (Titan Spark), 60399 (Qin-xi), 60400 (Jan-xi)
 mod:SetEncounterID(1407)
 mod:SetZone()
@@ -70,7 +70,7 @@ mod:AddBoolOption("InfoFrame", false)
 mod:AddBoolOption("ArrowOnCombo", "Tank")--Very accurate for tank, everyone else not so much (tanks always in front, and boss always faces tank, so if he spins around on you, you expect it, melee on other hand have backwards arrows if you spun him around.
 
 --Upvales, don't need variables
-local focusedAssault = GetSpellInfo(116525)
+local focusedAssault = DBM:GetSpellInfo(116525)
 local UnitIsUnit, UnitPower, UnitGUID = UnitIsUnit, UnitPower, UnitGUID
 --Important, needs recover
 mod.vb.comboMob = nil
@@ -137,6 +137,7 @@ end
 
 
 function mod:OnCombatStart(delay)
+	focusedAssault = DBM:GetSpellInfo(116525)
 	self.vb.comboMob = nil
 	self.vb.comboCount = 0
 	self.vb.titanGasCast = 0
@@ -155,7 +156,7 @@ function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(focusedAssault)
-		DBM.InfoFrame:Show(10, "playerbaddebuff", 116525)
+		DBM.InfoFrame:Show(10, "playerbaddebuff", focusedAssault)
 	end
 end
 

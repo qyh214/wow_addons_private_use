@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Tonks", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterEvents(
@@ -26,8 +26,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName)
-	if spellName == GetSpellInfo(102178) then
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+	if spellId == 102178 then
 		timerGame:Start()
 		countdownGame:Start(60)
 	end

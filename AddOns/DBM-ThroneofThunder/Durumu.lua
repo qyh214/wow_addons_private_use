@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(818, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 88 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(68036)--Crimson Fog 69050
 mod:SetEncounterID(1572)
 mod:SetZone()
@@ -89,9 +89,10 @@ local lfrCrimsonFogRevealed = false
 local lfrAmberFogRevealed = false
 local lfrAzureFogRevealed = false
 local lfrEngaged = false
-local crimsonFog = EJ_GetSectionInfo(6892)
-local amberFog = EJ_GetSectionInfo(6895)
-local azureFog = EJ_GetSectionInfo(6898)
+local crimsonFog = DBM:EJ_GetSectionInfo(6892)
+local amberFog = DBM:EJ_GetSectionInfo(6895)
+local azureFog = DBM:EJ_GetSectionInfo(6898)
+local lifeDrain = DBM:GetSpellInfo(133795)
 local playerName = UnitName("player")
 local firstIcewall = false
 local CVAR = nil
@@ -165,6 +166,7 @@ local function findBeamJump(spellName, spellId)
 end
 
 function mod:OnCombatStart(delay)
+	lifeDrain = DBM:GetSpellInfo(133795)
 	lingeringGazeCD = 46
 	lastRed = nil
 	lastBlue = nil
@@ -321,7 +323,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnSeriousWound:Show(amount)
 			else
-				if not UnitDebuff("player", GetSpellInfo(133767)) and not UnitIsDeadOrGhost("player") then
+				if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 					specWarnSeriousWoundOther:Show(args.destName)
 				end
 			end
@@ -420,8 +422,8 @@ function mod:CHAT_MSG_MONSTER_EMOTE(msg, npc, _, _, target)
 			self:SetIcon(target, 8)--Skull
 		end
 		if self.Options.InfoFrame and not self:IsDifficulty("lfr25") then
-			DBM.InfoFrame:SetHeader(GetSpellInfo(133795))
-			DBM.InfoFrame:Show(5, "playerdebuffstacks", 133798)
+			DBM.InfoFrame:SetHeader(lifeDrain)
+			DBM.InfoFrame:Show(5, "playerdebuffstacks", lifeDrain)
 			self:Schedule(21, HideInfoFrame)
 		end
 	elseif msg:find("spell:134169") then

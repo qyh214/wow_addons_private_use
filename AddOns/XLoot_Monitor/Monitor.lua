@@ -15,11 +15,12 @@ local defaults = {
 	profile = {
 		anchor = {
 			direction = "up",
+			alignment = "left",
 			visible = true,
 			scale = 1.0,
 			draggable = true,
 			x = UIParent:GetWidth() * .75,
-			y = UIParent:GetHeight() * .15
+			y = UIParent:GetHeight() * .15,
 		},
 		name_width = 50,
 
@@ -88,7 +89,7 @@ end
 function addon:ApplyOptions()
 	opt = self.opt
 	anchor:UpdateSVData(opt.anchor)
-	anchor:Restack()
+	addon:Restack()
 end
 
 local events = {}
@@ -217,6 +218,7 @@ function addon:AddRow(icon, fade_time, ir, ig, ib, rr, rg, rb)
 	-- Anchor
 	anchor:AnchorChild(row)
 	table_insert(stack, 1, row)
+	-- Reanchor second newest
 	if stack[2] then
 		anchor:AnchorChild(stack[2], row)
 	end
@@ -232,8 +234,8 @@ end
 
 function addon:Restack()
 	for i,v in ipairs(stack) do
-		v:ClearAllPoints()
-		anchor:AnchorChild(v, i == 1 and nil or stack[i-1])
+		anchor:AnchorChild(v, i > 1 and stack[i-1] or nil)
+		v:ApplyOptions()
 	end
 end
 
@@ -294,6 +296,36 @@ do
 		self:FitToText()
 	end
 
+	local widgets = {
+		{ "icon_frame", 0 },
+		{ "name", 2 },
+		{ "text", 0 },
+	}
+
+	local function ApplyOptions(self)
+		local a, b, xmod = "LEFT", "RIGHT", 1
+		if opt.anchor.alignment == "right" then
+			a, b, xmod = b, a, -1
+		end
+		self.icon_frame:ClearAllPoints()
+		self.icon_frame:SetPoint(a)
+
+		self.name:ClearAllPoints()
+		self.name:SetPoint(a, self.icon_frame, b, 2 * xmod, 0)
+		self.name:SetJustifyH(a)
+		self.name:SetFont(opt.font, opt.font_size_loot, opt.font_flag)
+
+		self.text:ClearAllPoints()
+		self.text:SetPoint(a, self.name, b)
+		self.text:SetJustifyH(a)
+		self.text:SetFont(opt.font, opt.font_size_loot, opt.font_flag)
+
+		self.ilvl:SetFont(opt.font, opt.font_size_ilvl, opt.font_flag)
+		self.total:SetFont(opt.font, opt.font_size_quantity, opt.font_flag)
+
+		self:FitToText()
+	end
+
 	function addon.CreateRow()
 		local frame = CreateFrame("Button", nil, UIParent)
 		frame:SetFrameLevel(anchor:GetFrameLevel())
@@ -311,47 +343,39 @@ do
 
 		-- Item icon (For skin border)
 		local icon_frame = CreateFrame("Frame", nil, frame)
-		icon_frame:SetPoint("LEFT", 0, 0)
 		icon_frame:SetWidth(28)
 		icon_frame:SetHeight(28)
 		addon:Skin(icon_frame, "item")
 		addon:Highlight(icon_frame, "item_highlight")
+		frame.icon_frame = icon_frame
 
 		-- Item texture
 		local icon = icon_frame:CreateTexture(nil, "BACKGROUND")
 		icon:SetPoint("TOPLEFT", 3, -3)
 		icon:SetPoint("BOTTOMRIGHT", -3, 3)
 		icon:SetTexCoord(.07,.93,.07,.93)
+		frame.icon = icon
 
 		local ilvl = icon_frame:CreateFontString(nil, "OVERLAY")
-		ilvl:SetFont(opt.font, opt.font_size_ilvl, opt.font_flag)
 		ilvl:SetPoint("BOTTOM", icon_frame, "BOTTOM", 0, 0)
 		ilvl:SetJustifyH("CENTER")
 		frame.ilvl = ilvl
 
-		local name = frame:CreateFontString(nil, "OVERLAY")
-		name:SetPoint("LEFT", icon_frame, "RIGHT", 2, 0)
-		name:SetFont(opt.font, opt.font_size_loot, opt.font_flag)
-		name:SetJustifyH("LEFT")
+		frame.name = frame:CreateFontString(nil, "OVERLAY")
 
-		local text = frame:CreateFontString(nil, "OVERLAY")
-		text:SetPoint("LEFT", name, "RIGHT", 0, 0)
-		text:SetFont(opt.font, opt.font_size_loot, opt.font_flag)
-		text:SetJustifyH("LEFT")
+		frame.text = frame:CreateFontString(nil, "OVERLAY")
 
 		local total = icon_frame:CreateFontString(nil, "OVERLAY")
 		total:SetPoint("CENTER", icon_frame, "CENTER", 0, 0)
-		total:SetFont(opt.font, opt.font_size_quantity, opt.font_flag)
 		total:SetJustifyH("CENTER")
-
-		frame.icon = icon
-		frame.icon_frame = icon_frame
-		frame.name = name
-		frame.text = text
 		frame.total = total
+
 		frame.FitToText = FitToText
 		frame.SetTexts = SetTexts
 		frame.ShowTooltip = ShowTooltip
+		frame.ApplyOptions = ApplyOptions
+
+		frame:ApplyOptions()
 
 		return frame
 	end

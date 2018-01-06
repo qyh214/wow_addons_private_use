@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Illidan", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 621 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(22917)
 mod:SetEncounterID(609)
 mod:SetModelID(21135)
@@ -65,11 +65,6 @@ local timerPhase4			= mod:NewPhaseTimer(30)
 local timerCombatStart		= mod:NewCombatTimer(36)
 local berserkTimer			= mod:NewBerserkTimer(1500)
 
-local voiceParasite			= mod:NewVoice(41917)--targetyou
-local voiceBarrage			= mod:NewVoice(40585)--runout/keepmove
-local voiceShadowDemon		= mod:NewVoice(41117, "Dps")--killmob
-local voiceGTFO				= mod:NewVoice(40841, nil, DBM_CORE_AUTO_VOICE4_OPTION_TEXT)--runaway
-
 mod:AddRangeFrameOption(6, 40932)--Spell is 5 yards, but give it 6 or good measure since 5 yard check is probably least precise one since nerfs.
 mod:AddSetIconOption("ParasiteIcon", 41917)
 
@@ -117,7 +112,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerParasite:Start(args.destName)
 		if args:IsPlayer() then
 			specWarnParasite:Show()
-			voiceParasite:Play("targetyou")
+			specWarnParasite:Play("targetyou")
 		else
 			warnParasite:Show(args.destName)
 		end
@@ -129,8 +124,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerNextBarrage:Start()
 		if args:IsPlayer() then
 			specWarnBarrage:Show()
-			voiceBarrage:Play("runout")
-			voiceBarrage:Schedule(1, "keepmove")
+			specWarnBarrage:Play("runout")
+			specWarnBarrage:ScheduleVoice(1, "keepmove")
 		else
 			warnBarrage:Show(args.destName)
 		end
@@ -164,7 +159,7 @@ function mod:SPELL_CAST_START(args)
 		warnDrawSoul:Show()
 	elseif spellId == 41117 then
 		specWarnShadowDemon:Show()
-		voiceShadowDemon:Play("killmob")
+		specWarnShadowDemon:Play("killmob")
 	elseif spellId == 39849 then--Throw Glaive
 		self.vb.phase = 2
 		self.vb.flamesDown = 0
@@ -201,7 +196,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 40841 and destGUID == UnitGUID("player") and self:AntiSpam(4, 5) then--Flame Crash
 		specWarnGTFO:Show()
-		voiceGTFO:Play("runaway")
+		specWarnGTFO:Play("runaway")
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

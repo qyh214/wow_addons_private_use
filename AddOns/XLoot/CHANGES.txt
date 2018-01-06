@@ -1,24 +1,12 @@
-tag fa7e0615b89b00b8c691122e5c72bb71e14f1ab8 7.3-2
+tag 02de6b7312781f6343da12ccca5e51ba2f8317ff 7.3-3
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Fri Dec 8 01:09:44 2017 -0500
+Date:	Sun Dec 31 19:12:07 2017 -0500
 
-Monitor: Item level display
+Monitor: Right-alignment of frames
 
-commit 00acd940c3d38f6999f12bbcb364311622c2ce52
+commit 8e6fd10075581cd8e7bfa3fd374ff027cad4aba3
 Author: Xuerian <xuerian@gmail.com>
-Date:   Fri Dec 8 01:09:02 2017 -0500
+Date:   Sun Dec 31 19:10:52 2017 -0500
 
-    Monitor: Fix number formatting error
-
-commit adc122a0ee1e328eec1079f5c8b980385211d07f
-Author: Xuerian <xuerian@gmail.com>
-Date:   Fri Dec 8 01:07:12 2017 -0500
-
-    Monitor: Add item level display option
-
-commit 7168a81b6f687be3903133dec771c53baf2dd62d
-Author: Xuerian <xuerian@gmail.com>
-Date:   Mon Sep 4 01:07:40 2017 -0400
-
-    Monitor: Shorten obscene numbers for specialty farmers
+    Monitor: Allow right-alignment of frames. Probably the most requested feature for years. Possibly fix some lingering anchoring bugs
 

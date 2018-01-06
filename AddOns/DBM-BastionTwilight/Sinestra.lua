@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(168, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(45213)
 mod:SetEncounterID(1082, 1083)--Muiti encounter id. need to verify.
 mod:SetZone()
@@ -62,7 +62,7 @@ local calenGUID = 0
 local orbList = {}
 local orbWarned = nil
 local playerWarned = nil
-local wrackName = GetSpellInfo(89421)
+local wrackName = DBM:GetSpellInfo(89421)
 local wrackTargets = {}
 
 local function resetPlayerOrbStatus()
@@ -167,6 +167,7 @@ local function showWrackWarning()
 end
 
 function mod:OnCombatStart(delay)
+	wrackName = DBM:GetSpellInfo(89421)
 	eggDown = 0
 	eggRemoved = false
 	calenGUID = 0

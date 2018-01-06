@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(110, "DBM-Party-Cataclysm", 7, 67)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 180 $"):sub(12, -3))
 mod:SetCreatureID(43438)
 mod:SetEncounterID(1056)
 mod:SetZone()
@@ -14,7 +14,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
-local warnCrystalBarrage			= mod:NewTargetAnnounce(81634, 2)
+local warnCrystalBarrage			= mod:NewTargetAnnounce(81634, 2, nil, false, 2)
 local warnDampening					= mod:NewSpellAnnounce(82415, 2)
 local warnSubmerge					= mod:NewAnnounce("WarnSubmerge", 2, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
 local warnEmerge					= mod:NewAnnounce("WarnEmerge", 2, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
@@ -30,11 +30,6 @@ local crystalTargets = {}
 
 mod:AddBoolOption("CrystalArrow")
 mod:AddBoolOption("RangeFrame")
-
-local function warnCrystalTargets()
-	warnCrystalBarrage:Show(table.concat(crystalTargets, "<, >"))
-	table.wipe(crystalTargets)
-end
 
 function mod:OnCombatStart(delay)
 	timerSubmerge:Start(30-delay)
@@ -52,6 +47,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 86881 and not self:IsTrivial(90) then
+		warnCrystalBarrage:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnCrystalBarrage:Show()
 		else
@@ -59,7 +55,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if uId then--May also not work right if same spellid is applied to people near the target, then will need more work.
 				local inRange = DBM.RangeCheck:GetDistance("player", uId)
 				if inRange and inRange < 6 then
-					specWarnCrystalBarrageClose:Show(args.destName)
+					specWarnCrystalBarrageClose:CombinedShow(0.3, args.destName)
 					if self.Options.CrystalArrow then
 						local x, y = UnitPosition(uId)
 						DBM.Arrow:ShowRunAway(x, y, 8, 5)
@@ -67,9 +63,6 @@ function mod:SPELL_AURA_APPLIED(args)
 				end
 			end
 		end
-		crystalTargets[#crystalTargets + 1] = args.destName
-		self:Unschedule(warnCrystalTargets)
-		self:Schedule(0.2, warnCrystalTargets)
 	end
 end
 

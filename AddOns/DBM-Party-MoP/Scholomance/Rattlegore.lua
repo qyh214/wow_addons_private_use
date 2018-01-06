@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(665, "DBM-Party-MoP", 7, 246)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(59153)
 mod:SetEncounterID(1428)
 mod:SetZone()
@@ -33,7 +33,7 @@ local timerRusting		= mod:NewBuffActiveTimer(15, 113765, nil, "Tank")
 
 mod:AddBoolOption("InfoFrame")
 
-local boned = GetSpellInfo(113996)
+local boned = DBM:GetSpellInfo(113996)
 
 function mod:BoneSpikeTarget()
 	local targetname = self:GetBossTarget(59153)
@@ -42,13 +42,14 @@ function mod:BoneSpikeTarget()
 end
 
 function mod:OnCombatStart(delay)
+	boned = DBM:GetSpellInfo(113996)
 	timerBoneSpikeCD:Start(6.5-delay)
 	if not UnitDebuff("player", boned) then
 		specWarnGetBoned:Show()
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(L.PlayerDebuffs)
-		DBM.InfoFrame:Show(5, "playergooddebuff", 113996)
+		DBM.InfoFrame:Show(5, "playergooddebuff", boned)
 	end
 end
 

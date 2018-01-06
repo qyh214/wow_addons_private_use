@@ -85,10 +85,6 @@ L:SetOptionLocalization({
 	RangeFrame			= "$spell:99257 대상이 된 경우 거리 창 보기(5m)"
 })
 
-L:SetMiscLocalization({
-	VitalSpark			= GetSpellInfo(99262)
-})
-
 --------------------------------
 -- Majordomo Fandral Staghelm --
 --------------------------------

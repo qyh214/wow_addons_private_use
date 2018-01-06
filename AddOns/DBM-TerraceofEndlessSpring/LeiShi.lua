@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(729, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(62983)--62995 Animated Protector
 mod:SetEncounterID(1506)
 
@@ -49,6 +49,7 @@ local specialRemaining = 0
 local lostHealth = 0
 local prevlostHealth = 0
 local hideTime = 0
+local hideName = DBM:GetSpellInfo(123244)
 
 local bossTank
 do
@@ -66,6 +67,7 @@ function mod:ScaryFogRepeat()
 end
 
 function mod:OnCombatStart(delay)
+	hideName = DBM:GetSpellInfo(123244)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(3, bossTank)
 	end
@@ -129,7 +131,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				if amount >= 6 and args:IsPlayer() then
 					specWarnSpray:Show(amount)
 				else
-					if amount >= 6 and not UnitDebuff("player", GetSpellInfo(123121)) and not UnitIsDeadOrGhost("player") then
+					if amount >= 6 and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 						specWarnSprayOther:Show(args.destName)
 					end
 				end
@@ -208,7 +210,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT(event)
 	end
 	self:SetWipeTime(3)
 	self:UnregisterShortTermEvents()--Once boss appears, unregister event, so we ignore the next two that will happen, which will be 2nd time after reappear, and right before next Hide.
-	warnHideOver:Show(GetSpellInfo(123244))
+	warnHideOver:Show(hideName)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(3, bossTank)--Go back to showing only tanks
 	end

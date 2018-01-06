@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Buru", "DBM-AQ20", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 637 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(15370)
 mod:SetEncounterID(721)
 mod:SetModelID(15654)
@@ -17,11 +17,9 @@ local warnPursue				= mod:NewAnnounce("WarnPursue", 3, 62374)
 
 local specWarnDismember			= mod:NewSpecialWarningStack(96, nil, 5, nil, nil, 1, 6)
 local specWarnDismemberTaunt	= mod:NewSpecialWarningTaunt(96, nil, nil, nil, 1, 2)
-local specWarnPursue			= mod:NewSpecialWarning("SpecWarnPursue", nil, nil, nil, 4)
+local specWarnPursue			= mod:NewSpecialWarning("SpecWarnPursue", nil, nil, nil, 4, 2)
 
 local timerDismember			= mod:NewTargetTimer(10, 96, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
-
-local voiceDismember			= mod:NewVoice(96)--stackhigh/Tauntboss
 
 function mod:OnCombatStart(delay)
 	if not self:IsTrivial(80) then
@@ -44,10 +42,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		if amount >= 5 then
 			if args:IsPlayer() then
 				specWarnDismember:Show(amount)
-				voiceDismember:Play("stackhigh")
+				specWarnDismember:Play("stackhigh")
 			elseif not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 				specWarnDismemberTaunt:Show(args.destName)
-				voiceDismember:Play("tauntboss")
+				specWarnDismemberTaunt:Play("tauntboss")
 			else
 				WarnDismember:Show(args.destName, amount)
 			end
@@ -71,6 +69,7 @@ function mod:CHAT_MSG_MONSTER_EMOTE(msg, _, _, _, target)
 	if target then
 		if target == UnitName("player") then
 			specWarnPursue:Show()
+			specWarnPursue:Play("justrun")
 		else
 			warnPursue:Show(target)
 		end

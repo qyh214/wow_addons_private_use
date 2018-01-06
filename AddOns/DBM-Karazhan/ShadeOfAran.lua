@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Aran", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 633 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(16524)
 mod:SetEncounterID(658)
 mod:SetModelID(16621)
@@ -34,10 +34,6 @@ local timerElementals		= mod:NewBuffActiveTimer(90, 37053, nil, nil, nil, 6)
 local timerChains			= mod:NewTargetTimer(10, 29991, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
 
 local berserkTimer			= mod:NewBerserkTimer(900)
-
-local voiceFlameWreath		= mod:NewVoice(30004)--stopmove
-local voiceArcane			= mod:NewVoice(29973)--runtoedge
-local voiceBlizzard			= mod:NewVoice(29951)--runaway
 
 mod:AddBoolOption("WreathIcons", true)
 mod:AddSetIconOption("ElementalIcons", 37053, true, true)
@@ -76,7 +72,7 @@ function mod:SPELL_CAST_START(args)
 	elseif args.spellId == 29973 then
 		timerArcaneExplosion:Start()
 		specWarnArcane:Show()
-		voiceArcane:Play("runtoedge")
+		specWarnArcane:Play("runtoedge")
 		timerSpecial:Start()
 	elseif args.spellId == 29969 then
 		warningBlizzard:Show()
@@ -93,7 +89,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		WreathTargets[#WreathTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnFlameWreath:Show()
-			voiceFlameWreath:Play("stopmove")
+			specWarnFlameWreath:Play("stopmove")
 		end
 		if self.Options.WreathIcons then
 			self:SetIcon(args.destName, self.vb.flameWreathIcon, 20)
@@ -131,7 +127,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 29951 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnBlizzard:Show()
-		voiceBlizzard:Play("runaway")
+		specWarnBlizzard:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

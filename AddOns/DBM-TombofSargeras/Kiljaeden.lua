@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1898, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16969 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
 mod:SetCreatureID(117269)--121227 Illiden? 121193 Shadowsoul
 mod:SetEncounterID(2051)
 mod:SetZone()
@@ -42,11 +42,11 @@ local warnSingularitySoon			= mod:NewAnnounce("warnSingularitySoon", 4, 235059, 
 --Intermission: Eternal Flame
 local warnBurstingDreadFlame		= mod:NewTargetCountAnnounce(238430, 2)--Generic for now until more known, likely something cast fairly often
 --Stage Two:
-local warnPhase2					= mod:NewPhaseAnnounce(2, 2)
+local warnPhase2					= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnWailingReflection			= mod:NewTargetCountAnnounce(236378, 4)
 local warnSorrowfulWail				= mod:NewSpellAnnounce(241564, 4)
 --Stage Three: Darkness of A Thousand Souls
-local warnPhase3					= mod:NewPhaseAnnounce(3, 2)
+local warnPhase3					= mod:NewPhaseAnnounce(3, 2, nil, nil, nil, nil, nil, 2)
 local warnTearRift					= mod:NewCountAnnounce(243982, 2)--Positive message color?
 local warnDarknessofStuffEnded		= mod:NewEndAnnounce(238999, 1)
 
@@ -123,30 +123,6 @@ local countdownFocusedDread			= mod:NewCountdown("AltTwo", 238502)
 local countdownFelclaws				= mod:NewCountdown("Alt25", 239932, "Tank", 2)
 local countdownObelisk				= mod:NewCountdown(12, 239785, nil, nil, 5)
 
---Stage One: The Betrayer
-local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
-local voiceFelclaws					= mod:NewVoice(239932)--defensive/tauntboss
-local voiceRupturingSingularity		= mod:NewVoice(235059)--carefly
-local voiceArmageddon				= mod:NewVoice(240910)--helpsoak
-local voiceSRWailing				= mod:NewVoice(236378)--targetyou (temp, more customized after seen)
-local voiceSRErupting				= mod:NewVoice(236710)--targetyou
-local voiceLingeringEruption		= mod:NewVoice(243536)--watchorb/keepmove
-local voiceLingeringWail			= mod:NewVoice(243624)--defensive
-local voiceSorrowfulWail			= mod:NewVoice(241564)--runout
---Intermission: Eternal Flame
-local voiceFocusedDreadflame		= mod:NewVoice(238502)--helpsoak/range5/targetyou
-local voiceBurstingDreadFlame		= mod:NewVoice(238430)--scatter
---Stage Two: Reflected Souls
-local voiceSRHopeless				= mod:NewVoice(237590)--targetyou (temp, more customized after seen)
-local voiceSRMalignant				= mod:NewVoice(236498)--targetyou (temp, more customized after seen)
-local voiceMalignantAnguish			= mod:NewVoice(236597, "HasInterrupt", nil, 2)--kickcast
---Intermission: Deceiver's Veil
-
---Stage Three: Darkness of A Thousand Souls
-local voiceDarknesofSouls			= mod:NewVoice(238999)--findshelter
-local voiceObelisk					= mod:NewVoice(239785)--farfromline
-local voiceFlameOrbSpawn			= mod:NewVoice(239253)--watchstep/runout
-
 mod:AddSetIconOption("SetIconOnFocusedDread", 238502, true)
 mod:AddSetIconOption("SetIconOnBurstingDread", 238430, false)
 mod:AddSetIconOption("SetIconOnEruptingReflection", 236710, true)
@@ -169,7 +145,7 @@ mod.vb.lastTankHit = "None"
 mod.vb.clawCount = 0
 mod.vb.obeliskCount = 0
 mod.vb.wailingCount = 0
-local riftName, gravitySqueezeBuff = GetSpellInfo(239130), GetSpellInfo(239154)
+local riftName, gravitySqueezeBuff = DBM:GetSpellInfo(239130), DBM:GetSpellInfo(239154)
 local phase1LFRArmageddonTimers = {10, 22, 42}--Incomplete
 local phase1MythicArmageddonTimers = {10, 54, 38, 46}--Incomplete
 local phase1MythicSingularityTimers = {55, 25, 25}--Incomplete
@@ -194,7 +170,7 @@ local playerName = UnitName("player")
 local function ObeliskWarning(self)
 	self.vb.obeliskCount = self.vb.obeliskCount + 1
 	specWarnObelisk:Show(self.vb.obeliskCount)
-	voiceObelisk:Play("farfromline")
+	specWarnObelisk:Play("farfromline")
 	if self:IsMythic() then
 		timerObelisk:Start(12)
 		countdownObelisk:Start(12)
@@ -223,6 +199,7 @@ local function handleMissingEmote(self)
 end
 
 function mod:OnCombatStart(delay)
+	riftName, gravitySqueezeBuff = DBM:GetSpellInfo(239130), DBM:GetSpellInfo(239154)
 	self.vb.phase = 1
 	self.vb.armageddonCast = 0
 	self.vb.focusedDreadCast = 0
@@ -284,7 +261,7 @@ function mod:SPELL_CAST_START(args)
 			self:Schedule(28.5, ObeliskWarning, self)
 			timerObeliskCD:Start(28.5, self.vb.obeliskCount+1)
 		end
-		voiceDarknesofSouls:Play("findshelter")
+		specWarnDarknessofSouls:Play("findshelter")
 		timerDarknessofSoulsCD:Start(nil, self.vb.darknessCount+1)
 	elseif spellId == 243982 then
 		self.vb.riftCount = self.vb.riftCount + 1
@@ -293,7 +270,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 240910 then--Armageddon.
 		self.vb.armageddonCast = self.vb.armageddonCast + 1
 		specWarnArmageddon:Show(self.vb.armageddonCast)
-		voiceArmageddon:Play("helpsoak")
+		specWarnArmageddon:Play("helpsoak")
 		timerArmageddon:Start()
 		if self.vb.phase == 1.5 then
 			if self.vb.armageddonCast < 2 then
@@ -350,7 +327,7 @@ function mod:SPELL_CAST_START(args)
 		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
 		if tanking or (status == 3) then
 			specWarnFelclaws:Show()
-			voiceFelclaws:Play("defensive")
+			specWarnFelclaws:Play("defensive")
 		end
 	elseif spellId == 241983 and self.vb.phase < 2.5 then--Deceiver's Veil
 		timerFelclawsCD:Stop()
@@ -367,7 +344,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.phase = 2.5
 		self.vb.shadowSoulsRemaining = 5--Normal count anyways
 		self.vb.singularityCount = 0
-		voicePhaseChange:Play("phasechange")
+		warnPhase3:Play("phasechange")
 		if self:IsMythic() then
 			timerRupturingSingularityCD:Start(19.3, 1)
 		end
@@ -465,7 +442,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnBurstingDreadFlame:CombinedShow(0.5, self.vb.burstingDreadCast, args.destName)
 		if args:IsPlayer() then
 			specWarnBurstingDreadflame:Show()
-			voiceBurstingDreadFlame:Play("scatter")
+			specWarnBurstingDreadflame:Play("scatter")
 			yellBurstingDreadflame:Yell(self.vb.burstingDreadIcon, args.spellName, self.vb.burstingDreadIcon)
 			yellBurstingDreadflameFades:Countdown(5)
 		end
@@ -482,7 +459,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 241564 then
 		if self.Options.SpecWarn241564run then
 			specWarnSorrowfulWail:Show()
-			voiceSorrowfulWail:Play("runout")
+			specWarnSorrowfulWail:Play("runout")
 		else
 			warnSorrowfulWail:Show()
 		end
@@ -504,13 +481,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.vb.clawCount == 5 then
 			if (self.vb.lastTankHit ~= playerName) and self:AntiSpam(3, self.vb.lastTankHit) then
 				specWarnFelclawsOther:Show(self.vb.lastTankHit)
-				voiceFelclaws:Play("tauntboss")
+				specWarnFelclawsOther:Play("tauntboss")
 			end
 		end
 	elseif spellId == 236378 then--Wailing Shadow Reflection (Stage 1)
 		if args:IsPlayer() then
 			specWarnSRWailing:Show()
-			voiceSRWailing:Play("targetyou")
+			specWarnSRWailing:Play("targetyou")
 			yellSRWailing:Countdown(7)
 		else
 			warnWailingReflection:Show(self.vb.wailingCount, args.destName)
@@ -522,10 +499,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			
 			if self:IsMythic() then
 				specWarnSRErupting:Show(self:IconNumToTexture(icon))
-				voiceSRErupting:Play("mm"..icon)
+				specWarnSRErupting:Play("mm"..icon)
 			else
 				specWarnSRErupting:Show(BOSS)
-				voiceSRErupting:Play("gathershare")
+				specWarnSRErupting:Play("gathershare")
 			end
 			yellSRErupting:Countdown(8, nil, icon)
 		end
@@ -536,35 +513,35 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 237590 then--Hopeless Shadow Reflection (Stage 2)
 		if args:IsPlayer() then
 			specWarnSRHopeless:Show()
-			voiceSRHopeless:Play("targetyou")
+			specWarnSRHopeless:Play("targetyou")
 			yellSRHopeless:Countdown(8)
 		end
 	elseif spellId == 236498 then--Malignant Shadow Reflection (Stage 2)
 		if args:IsPlayer() then
 			specWarnSRMalignant:Show()
-			voiceSRMalignant:Play("targetyou")
+			specWarnSRMalignant:Play("targetyou")
 			yellSRMalignant:Countdown(8)
 		end
 	elseif spellId == 236597 then
 		if self:CheckInterruptFilter(args.destGUID) then
 			specWarnMalignantAnguish:Show(args.destName)
-			voiceMalignantAnguish:Play("kickcast")
+			specWarnMalignantAnguish:Play("kickcast")
 		end
 	elseif spellId == 241721 and args:IsPlayer() then
 		timerSightlessGaze:Start()
 	elseif spellId == 243536 and self:AntiSpam(3, 7) then
 		if args:IsPlayer() then
-			voiceLingeringEruption:Play("keepmove")
+			specWarnLingeringEruption:Play("keepmove")
 		else
 			if self:AntiSpam(3, 7) then
 				specWarnLingeringEruption:Show()
-				voiceLingeringEruption:Play("watchorb")
+				specWarnLingeringEruption:Play("watchorb")
 			end
 		end
 	elseif spellId == 243624 then
 		if args:IsPlayer() then
 			specWarnLingeringWail:Show()
-			voiceLingeringWail:Play("defensive")
+			specWarnLingeringWail:Play("defensive")
 			yellLingeringWail:Yell()
 		end
 	end
@@ -602,7 +579,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 239932 and not self.vb.phase ~= 1.5 then--Felclaws ended
 		if (self.vb.lastTankHit ~= playerName) and self:AntiSpam(3, self.vb.lastTankHit) then
 			specWarnFelclawsOther:Show(self.vb.lastTankHit)
-			voiceFelclaws:Play("tauntboss")
+			specWarnFelclawsOther:Play("tauntboss")
 		end
 	elseif spellId == 241983 and self:IsInCombat() then--Deceiver's Veil
 		self:Unschedule(handleMissingEmote)
@@ -614,7 +591,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		--timerDarknessofSoulsCD:Start(1, 1)--Cast intantly
 		timerSightlessGaze:Stop()
 		warnPhase3:Show()
-		voicePhaseChange:Play("pthree")
+		warnPhase3:Play("pthree")
 		timerTearRiftCD:Start(14, 1)
 		if self:IsMythic() then
 			timerBurstingDreadflameCD:Start(30, 1)
@@ -641,7 +618,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.felClawsCount = 0
 		self.vb.wailingCount = 0
 		warnPhase2:Show()
-		voicePhaseChange:Play("ptwo")
+		warnPhase2:Play("ptwo")
 		if self:IsMythic() then
 			timerFelclawsCD:Start(10.4, 1)
 			timerArmageddonCD:Start(18.2, 1)
@@ -714,7 +691,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 			end
 		end
 		if not self:IsEasy() then--TODO, this isn't mentioned in intermission, only in phase 2+ version. Investigate
-			voiceFocusedDreadflame:Schedule(1, "range5")
+			specWarnFocusedDreadflame:ScheduleVoice(1, "range5")
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(5, nil, nil, nil, nil, 6)
 			end
@@ -723,12 +700,12 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 		if target then
 			if target == UnitName("player") then
 				specWarnFocusedDreadflame:Show()
-				voiceFocusedDreadflame:Play("targetyou")
+				specWarnFocusedDreadflame:Play("targetyou")
 				yellFocusedDreadflame:Yell()
 				yellFocusedDreadflameFades:Countdown(5)
 			else
 				specWarnFocusedDreadflameOther:Show(target)
-				voiceFocusedDreadflame:Play("helpsoak")
+				specWarnFocusedDreadflameOther:Play("helpsoak")
 			end
 			if self.Options.SetIconOnFocusedDread then
 				self:SetIcon(target, 2, 6)
@@ -745,7 +722,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 					--Only show warning at start of each set
 					warnSingularitySoon:Countdown(9.7, 3)
 					specWarnRupturingSingularity:Show()
-					voiceRupturingSingularity:Play("carefly")
+					specWarnRupturingSingularity:Play("carefly")
 				end
 				local timer = phase1point5MythicSingularityTimers[self.vb.singularityCount+1]
 				if timer then
@@ -755,7 +732,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 			else
 				warnSingularitySoon:Countdown(9.7, 3)
 				specWarnRupturingSingularity:Show()
-				voiceRupturingSingularity:Play("carefly")
+				specWarnRupturingSingularity:Play("carefly")
 				if self.vb.singularityCount == 1 then
 					timerRupturingSingularityCD:Start(30, self.vb.singularityCount+1)
 				end
@@ -763,7 +740,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 		elseif self.vb.phase == 2 then
 			warnSingularitySoon:Countdown(9.7, 3)
 			specWarnRupturingSingularity:Show()
-			voiceRupturingSingularity:Play("carefly")
+			specWarnRupturingSingularity:Play("carefly")
 			local timer = self:IsMythic() and phase2MythicSingularityTimers[self.vb.singularityCount+1] or self:IsHeroic() and phase2HeroicSingularityTimers[self.vb.singularityCount+1] or self:IsNormal() and phase2NormalSingularityTimers[self.vb.singularityCount+1]
 			if timer then
 				timerRupturingSingularityCD:Start(timer, self.vb.singularityCount+1)
@@ -771,14 +748,14 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 		elseif self.vb.phase == 2.5 then--Second phase transition Mythic Only
 			warnSingularitySoon:Countdown(9.7, 3)
 			specWarnRupturingSingularity:Show()
-			voiceRupturingSingularity:Play("carefly")
+			specWarnRupturingSingularity:Play("carefly")
 			if self.vb.singularityCount == 1 then
 				timerRupturingSingularityCD:Start(10, 2)
 			end
 		else--Phase 1
 			warnSingularitySoon:Countdown(9.7, 3)
 			specWarnRupturingSingularity:Show()
-			voiceRupturingSingularity:Play("carefly")
+			specWarnRupturingSingularity:Play("carefly")
 			if self:IsMythic() then
 				local timer = phase1MythicSingularityTimers[self.vb.singularityCount+1]
 				if timer then
@@ -817,7 +794,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		countdownArmageddon:Cancel()
 		timerShadReflectionEruptingCD:Stop()
 		timerShadReflectionWailingCD:Stop()
-		voicePhaseChange:Play("phasechange")
+		warnPhase2:Play("phasechange")
 		if self:IsMythic() then
 			timerArmageddonCD:Start(6.7, 1)
 			countdownArmageddon:Start(6.7)
@@ -846,8 +823,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	elseif spellId == 244856 and self:AntiSpam(5, 3) then--Flaming Orb (more likely than combat log. this spell looks like it's entirely scripted)
 		self.vb.orbCount = self.vb.orbCount + 1
 		specWarnFlamingOrbSpawn:Show(self.vb.orbCount)
-		voiceFlameOrbSpawn:Play("watchstep")
-		voiceFlameOrbSpawn:Schedule(1, "runout")
+		specWarnFlamingOrbSpawn:Play("watchstep")
+		specWarnFlamingOrbSpawn:ScheduleVoice(1, "runout")
 		if self:IsMythic() then
 			--"Flaming Orb-244856-npc:117269 = pull:20.1, 15.0, 16.0, 64.0, 15.0, 16.0", -- [1]
 			if self.vb.orbCount % 3 == 0 then

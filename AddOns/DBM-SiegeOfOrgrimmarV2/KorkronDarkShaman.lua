@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(856, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(71859, 71858)--haromm, Kardris
 mod:SetEncounterID(1606)
 mod:SetZone()
@@ -236,7 +236,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnFroststormStrike:Show(amount)
 			else
-				if not (UnitDebuff("player", GetSpellInfo(144215)) or UnitDebuff("player", GetSpellInfo(144215))) and not UnitIsDeadOrGhost("player") then
+				if not (UnitDebuff("player", args.spellName) or UnitDebuff("player", args.spellName)) and not UnitIsDeadOrGhost("player") then
 					specWarnFroststormStrikeOther:Show(args.destName)
 				end
 			end

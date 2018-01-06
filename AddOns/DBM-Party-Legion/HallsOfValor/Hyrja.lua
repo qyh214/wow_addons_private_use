@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1486, "DBM-Party-Legion", 4, 721)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16092 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
 mod:SetCreatureID(95833)
 mod:SetEncounterID(1806)
 mod:SetZone()
@@ -21,7 +21,7 @@ mod:RegisterEventsInCombat(
 --["192044-Expel Light"] = "pull:79.7, 26.6, 30.3, 24.3, 30.3",
 --Maybe add a searing light interrupt helper if it matters enough on mythic+
 local warnExpelLight				= mod:NewTargetAnnounce(192048, 3)
-local warnPhase2					= mod:NewPhaseAnnounce(2, 2)
+local warnPhase2					= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 
 local specWarnShieldOfLight			= mod:NewSpecialWarningDefensive(192018, "Tank", nil, nil, 3, 2)--Journal lies, this is NOT dodgable
 local specWarnSanctify				= mod:NewSpecialWarningDodge(192158, nil, nil, nil, 2, 5)
@@ -37,19 +37,13 @@ local timerSpecialCD				= mod:NewNextTimer(30, 200736, nil, nil, nil, 2, 200901,
 local countdownSpecial				= mod:NewCountdown(30, 200736)
 local countdownShieldOfLight		= mod:NewCountdown("Alt28", 192018, "Tank")
 
-local voiceEyeofStorm				= mod:NewVoice(200901)--findshelter
-local voiceShieldOfLight			= mod:NewVoice(192018, "Tank")--defensive
-local voiceSanctify					= mod:NewVoice(192158)--watchorb
-local voiceExpelLight				= mod:NewVoice(192048)--runout
-local voiceSearingLight				= mod:NewVoice(192288, "HasInterrupt")--kickcast
-local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
-
 mod:AddRangeFrameOption(8, 192048)
 
-local eyeShortName = GetSpellInfo(91320)--Inner Eye
+local eyeShortName = DBM:GetSpellInfo(91320)--Inner Eye
 mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
+	eyeShortName = DBM:GetSpellInfo(91320)
 	self.vb.phase = 1
 end
 
@@ -64,7 +58,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 192048 then
 		if args:IsPlayer() then
 			specWarnExpelLight:Show()
-			voiceExpelLight:Play("runout")
+			specWarnExpelLight:Play("runout")
 			yellExpelLight:Yell()
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Hide()
@@ -86,7 +80,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 192158 or spellId == 192307 then
 		specWarnSanctify:Show()
-		voiceSanctify:Play("watchorb")
+		specWarnSanctify:Play("watchorb")
 		if spellId == 192307 then
 			timerSpecialCD:Start()
 			countdownSpecial:Cancel()
@@ -94,12 +88,12 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 192018 then
 		specWarnShieldOfLight:Show()
-		voiceShieldOfLight:Play("defensive")
+		specWarnShieldOfLight:Play("defensive")
 		timerShieldOfLightCD:Start()
 		countdownShieldOfLight:Start()
 	elseif spellId == 200901 then
 		specWarnEyeofStorm:Show(eyeShortName)
-		voiceEyeofStorm:Play("findshelter")
+		specWarnEyeofStorm:Play("findshelter")
 		if self.vb.phase == 2 then
 			timerSpecialCD:Start()
 			countdownSpecial:Cancel()
@@ -107,7 +101,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 192288 and self:CheckInterruptFilter(args.sourceGUID) then
 		specWarnSearingLight:Show(args.sourceName)
-		voiceSearingLight:Play("kickcast")
+		specWarnSearingLight:Play("kickcast")
 	end
 end
 
@@ -116,7 +110,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	if spellId == 192130 then
 		self.vb.phase = 2
 		warnPhase2:Show()
-		voicePhaseChange:Play("ptwo")
+		warnPhase2:Play("ptwo")
 		timerSpecialCD:Start(8.5)
 		countdownSpecial:Start(8.5)
 		timerShieldOfLightCD:Start(24)

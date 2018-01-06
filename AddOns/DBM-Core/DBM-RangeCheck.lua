@@ -531,7 +531,7 @@ do
 				local _, class = UnitClass(uId)
 				local icon = GetRaidTargetIndex(uId)
 				dot.class = class
-				if icon then
+				if icon and icon < 9 then
 					dot.icon = icon
 					dot:SetTexture(format("Interface\\TargetingFrame\\UI-RaidTargetingIcon_%d", icon))
 					dot:SetTexCoord(0, 1, 0, 1)
@@ -698,7 +698,7 @@ end
 updater = mainFrame:CreateAnimationGroup()
 updater:SetLooping("REPEAT")
 local anim = updater:CreateAnimation()
-anim:SetDuration(0.05)
+anim:SetDuration(0.1)
 
 mainFrame:SetScript("OnEvent", function(self, event, ...)
 	if event == "GROUP_ROSTER_UPDATE" or event == "RAID_TARGET_UPDATE" then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(333, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(56173)
 mod:SetEncounterID(1299)
 mod:SetZone()
@@ -84,23 +84,22 @@ local firstAspect = true
 local engageCount = 0
 local shrapnelTargets = {}
 local warnedCount = 0
---local hemorrhage = GetSpellInfo(105863)--Should no longer be needed to do by spell name, as it's down to only 1 spell id, but i'll leave just in case
---local fragment = GetSpellInfo(106775)--^
 local activateTetanusTimers = false
-local parasite = EJ_GetSectionInfo(4347)
+local parasite = DBM:EJ_GetSectionInfo(4347)
 local parasiteScan = 0
 local parasiteCasted = false
+local debuffFilterDebuff, NozPresence, AlexPresence = DBM:GetSpellInfo(108649), DBM:GetSpellInfo(106027), DBM:GetSpellInfo(106028)
 
 local debuffFilter
 do
 	debuffFilter = function(uId)
-		return UnitDebuff(uId, GetSpellInfo(108649))
+		return UnitDebuff(uId, debuffFilterDebuff)
 	end
 end
 
 function mod:updateRangeFrame()
 	if not self.Options.RangeFrame then return end
-	if UnitDebuff("player", GetSpellInfo(108649)) then
+	if UnitDebuff("player", debuffFilterDebuff) then
 		DBM.RangeCheck:Show(10, nil)--Show everyone.
 	else
 		DBM.RangeCheck:Show(10, debuffFilter)--Show only people who have debuff.
@@ -141,6 +140,7 @@ function mod:ScanParasite()
 end
 
 function mod:OnCombatStart(delay)
+	debuffFilterDebuff, NozPresence, AlexPresence = DBM:GetSpellInfo(108649), DBM:GetSpellInfo(106027), DBM:GetSpellInfo(106028)
 	firstAspect = true
 	activateTetanusTimers = false
 	engageCount = 0
@@ -202,7 +202,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 105651 then
 		warnElementiumBolt:Show()
 		specWarnElementiumBolt:Show()
-		if not UnitBuff("player", GetSpellInfo(106027)) and not UnitIsDeadOrGhost("player") then--Check for Nozdormu's Presence
+		if not UnitBuff("player", NozPresence) and not UnitIsDeadOrGhost("player") then--Check for Nozdormu's Presence
 			timerElementiumBlast:Start()
 			countdownBoltBlast:Start()
 			specWarnElementiumBoltDPS:Schedule(10)
@@ -277,7 +277,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnTetanus:Show(amount)
 			else
-				if not UnitIsDeadOrGhost("player") and not UnitDebuff("player", GetSpellInfo(106730)) then--You have no debuff and not dead
+				if not UnitIsDeadOrGhost("player") and not UnitDebuff("player", args.spellName) then--You have no debuff and not dead
 					specWarnTetanusOther:Show(args.destName)--So stop being a tool and taunt off other tank who has 4 stacks.
 				end
 			end
@@ -339,7 +339,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnHemorrhage:Show()
 		specWarnHemorrhage:Show()
 	elseif spellId == 105551 then--Spawn Blistering Tentacles
-		if not UnitBuff("player", GetSpellInfo(106028)) then--Check for Alexstrasza's Presence
+		if not UnitBuff("player", AlexPresence) then--Check for Alexstrasza's Presence
 			warnTentacle:Show()
 			specWarnTentacle:Show()
 		end

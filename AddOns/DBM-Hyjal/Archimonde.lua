@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Archimonde", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 630 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(17968)
 mod:SetEncounterID(622)
 mod:SetModelID(20939)
@@ -27,15 +27,13 @@ local timerFearCD		= mod:NewCDTimer(41, 31970, nil, nil, nil, 2)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-local voiceBurst		= mod:NewVoice(32014)--targetyou
-
 mod:AddBoolOption("BurstIcon", true)
 
 function mod:BurstTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnBurst:Show()
-		voiceBurst:Play("targetyou")
+		specWarnBurst:Play("targetyou")
 		yellBurst:Yell()
 	else
 		warnBurst:Show(targetname)

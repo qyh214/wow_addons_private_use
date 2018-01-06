@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Anetheron", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 630 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(17808)
 mod:SetEncounterID(619)
 mod:SetModelID(21069)
@@ -29,13 +29,11 @@ local timerSleep		= mod:NewBuffFadesTimer(10, 31298, nil, nil, nil, 3)
 local timerSleepCD		= mod:NewCDTimer(19, 31298, nil, nil, nil, 3)
 local timerInferno		= mod:NewCDTimer(51, 31299, nil, nil, nil, 3)
 
-local voiceInferno		= mod:NewVoice(31299)--targetyou
-
 function mod:InfernoTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnInferno:Show()
-		voiceInferno:Play("targetyou")
+		specWarnInferno:Play("targetyou")
 		yellInferno:Yell()
 	else
 		warnInferno:Show(targetname)

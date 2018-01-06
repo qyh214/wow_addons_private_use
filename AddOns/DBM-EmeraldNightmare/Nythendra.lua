@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1703, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17126 $"):sub(12, -3))
 mod:SetCreatureID(102672)
 mod:SetEncounterID(1853)
 mod:SetZone()
@@ -58,18 +58,11 @@ local countdownBreath				= mod:NewCountdown(36, 202977, false)--Can't in good co
 local countdownVolatileRot			= mod:NewCountdown("Alt20.5", 204463, false)--Same deal as above
 local countdownRot					= mod:NewCountdownFades("Alt5", 203096)
 
-local voiceBreath					= mod:NewVoice(202977)--breathsoon
-local voiceRot						= mod:NewVoice(203096)--runout
-local voiceVolatileRot				= mod:NewVoice(204463)--runout/TauntBoss
-local voiceInfestedGround			= mod:NewVoice(203045)--runaway
-local voiceBurst					= mod:NewVoice(203646)--runaway
-local voiceInfestedMind				= mod:NewVoice(205043, "Dps")--findmc
-local voiceSpreadInfestation		= mod:NewVoice(205070, "HasInterrupt")--kickcast
-local voiceInfestedStack			= mod:NewVoice(204504)--stackhigh
-
 mod:AddSetIconOption("SetIconOnRot", 203096)--Of course I'll probably be forced to change method when BW does their own thing, for compat.
 mod:AddRangeFrameOption(30, 204463)--Range not actually known, 30 used for now
 mod:AddInfoFrameOption(204506)
+
+local debuffName, stackDebuff = DBM:GetSpellInfo(204463), DBM:GetSpellInfo(204506)
 
 mod.vb.breathCount = 0
 mod.vb.rotCast = 0
@@ -79,7 +72,6 @@ local playerHasTen = false
 
 local debuffFilter
 do
-	local debuffName = GetSpellInfo(204463)
 	debuffFilter = function(uId)
 		if UnitDebuff(uId, debuffName) then
 			return true
@@ -88,6 +80,7 @@ do
 end
 
 function mod:OnCombatStart(delay)
+	debuffName, stackDebuff = DBM:GetSpellInfo(204463), DBM:GetSpellInfo(204506)
 	self.vb.breathCount = 0
 	self.vb.rotCast = 0
 	self.vb.volatileRotCast = 0
@@ -105,8 +98,8 @@ function mod:OnCombatStart(delay)
 		berserkTimer:Start(480-delay)
 	end
 	if self.Options.InfoFrame and self:IsMythic() then
-		DBM.InfoFrame:SetHeader(GetSpellInfo(204506))
-		DBM.InfoFrame:Show(8, "playerdebuffstacks", 204506)
+		DBM.InfoFrame:SetHeader(stackDebuff)
+		DBM.InfoFrame:Show(8, "playerdebuffstacks", stackDebuff)
 	end
 	if self:IsMythic() then
 		playerHasTen = false
@@ -143,15 +136,15 @@ function mod:SPELL_CAST_START(args)
 		DBM:Debug("CLEU event for breath, pruned. If you see this message it was unpruned!")
 	elseif spellId == 205070 and self:CheckInterruptFilter(args.sourceGUID) then
 		specWarnSpreadInfestation:Show(args.sourceName)
-		voiceSpreadInfestation:Play("kickcast")
+		specWarnSpreadInfestation:Play("kickcast")
 	elseif spellId == 225943 then
 		if playerHasTen then
 			specWarnInfestedMindYou:Show()
-			voiceInfestedMind:Play("targetyou")
+			specWarnInfestedMindYou:Play("targetyou")
 			yellInfestedMind:Yell()
 		else
 			specWarnInfestedMind:Show()
-			voiceInfestedMind:Play("findmc")
+			specWarnInfestedMind:Play("findmc")
 		end
 	end
 end
@@ -177,7 +170,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 204463 then
 		if args:IsPlayer() then
 			specWarnVolatileRot:Show()
-			voiceVolatileRot:Play("runout")
+			specWarnVolatileRot:Play("runout")
 			local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)
 			if expires then
 				local remaining = expires-GetTime()
@@ -191,7 +184,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			if self:IsTank() then
 				specWarnVolatileRotSwap:Show(args.destName)
-				voiceVolatileRot:Play("tauntboss")
+				specWarnVolatileRotSwap:Play("tauntboss")
 			else
 				warnVolatileRot:Show(args.destName)
 			end
@@ -203,7 +196,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnRot:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnRot:Show()
-			voiceRot:Play("runout")
+			specWarnRot:Play("runout")
 			local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)
 			if expires then
 				local remaining = expires-GetTime()
@@ -229,7 +222,7 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 			specWarnInfestedStack:Cancel()
 			specWarnInfestedStack:Schedule(0.5, amount)
 			if self:AntiSpam(2, 4) then
-				voiceInfestedStack:Play("stackhigh")
+				specWarnInfestedStack:Play("stackhigh")
 			end
 		end
 		if amount >= 10 then
@@ -275,7 +268,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 203646 and destGUID == UnitGUID("player") and self:AntiSpam(2, 3) then
 		specWarnBurst:Show()
-		voiceBurst:Play("runaway")
+		specWarnBurst:Play("runaway")
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
@@ -283,7 +276,7 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 203045 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
 		specWarnInfestedGround:Show()
-		voiceInfestedGround:Play("runaway")
+		specWarnInfestedGround:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
@@ -298,7 +291,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	elseif spellId == 202968 then--Infested Breath (CAST_SUCCESS and CAST_START pruned from combat log)
 		self.vb.breathCount = self.vb.breathCount + 1
 		specWarnBreath:Show(self.vb.breathCount)
-		voiceBreath:Play("breathsoon")
+		specWarnBreath:Play("breathsoon")
 		if self.vb.breathCount < 2 then
 			timerBreathCD:Start(nil, self.vb.breathCount+1)
 			countdownBreath:Start()

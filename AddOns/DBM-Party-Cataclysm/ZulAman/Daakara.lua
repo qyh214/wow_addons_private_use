@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(191, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 183 $"):sub(12, -3))
 mod:SetCreatureID(23863)
 mod:SetEncounterID(1194)
 mod:SetZone()
@@ -39,6 +39,12 @@ local timerLightningTotemCD	= mod:NewNextTimer(17, 97930)--Eagle Form Ability.
 mod:AddBoolOption("ThrowIcon", false)
 mod:AddBoolOption("ClawRageIcon", false)
 mod:AddBoolOption("InfoFrame")
+
+local surgeDebuff = DBM:GetSpellInfo(42402)
+
+function mod:OnCombatStart()
+	surgeDebuff = DBM:GetSpellInfo(42402)
+end
 
 function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
@@ -94,7 +100,7 @@ function mod:SPELL_CAST_START(args)
 		timerSurgeCD:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(L.PlayerDebuffs)
-			DBM.InfoFrame:Show(5, "playerbaddebuff", 42402)
+			DBM.InfoFrame:Show(5, "playerbaddebuff", surgeDebuff)
 		end
 	elseif args.spellId == 42606 then
 		timerThrow:Cancel()

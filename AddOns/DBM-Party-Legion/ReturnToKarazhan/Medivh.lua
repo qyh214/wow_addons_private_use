@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1817, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15607 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
 mod:SetCreatureID(114350)
 mod:SetEncounterID(1965)
 mod:SetZone()
@@ -38,13 +38,6 @@ local timerSpecialCD				= mod:NewCDSpecialTimer(30)
 
 local countdownSpecial				= mod:NewCountdown(30, 228582)
 
-local voiceArcaneMissiles			= mod:NewVoice(227628, "Tank")--defensive
-local voiceFrostbite				= mod:NewVoice(227592, "HasInterrupt")--kickcast
-local voiceInfernoBolt				= mod:NewVoice(227615)--scatter/gather
-local voiceCeaselessWinter			= mod:NewVoice(227779)--keepjump
-local voiceFlameWreath				= mod:NewVoice(228261)--stopmove
-local voiceGuardiansImage			= mod:NewVoice(228334)--killmob
-
 mod:AddSetIconOption("SetIconOnWreath", 228261, true)
 --mod:AddInfoFrameOption(198108, false)
 
@@ -53,6 +46,7 @@ mod.vb.imagesActive = false
 local frostBiteName, flameWreathName = GetSpellInfo(227592), GetSpellInfo(228261)
 
 function mod:OnCombatStart(delay)
+	frostBiteName, flameWreathName = GetSpellInfo(227592), GetSpellInfo(228261)
 	self.vb.playersFrozen = 0
 	self.vb.imagesActive = false
 	timerSpecialCD:Start(33.5)
@@ -63,13 +57,13 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 227628 then
 		specWarnArcaneMissiles:Show()
-		voiceArcaneMissiles:Play("defensive")
+		specWarnArcaneMissiles:Play("defensive")
 	elseif spellId == 227592 then
 		specWarnFrostbite:Show(args.sourceName)
-		voiceFrostbite:Play("kickcast")
+		specWarnFrostbite:Play("kickcast")
 	elseif spellId == 227779 then
 		specWarnCeaselessWinter:Show()
-		voiceCeaselessWinter:Play("keepjump")
+		specWarnCeaselessWinter:Play("keepjump")
 		timerSpecialCD:Start(32.5)
 		countdownSpecial:Start(32.5)
 	elseif spellId == 228269 then
@@ -79,7 +73,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 228334 then
 		self.vb.imagesActive = true
 		specWarnGuardiansImage:Show()
-		voiceGuardiansImage:Play("killmob")
+		specWarnGuardiansImage:Play("killmob")
 	end
 end
 
@@ -91,7 +85,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnFlameWreathTargets:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnFlameWreath:Show()
-			voiceFlameWreath:Play("stopmove")
+			specWarnFlameWreath:Play("stopmove")
 			yellFlameWreath:Yell()
 		end
 		if self.Options.SetIconOnWreath then
@@ -101,14 +95,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			if self.vb.playersFrozen == 0 then
 				specWarnInfernoBoltMoveAway:Show()
-				voiceInfernoBolt:Play("scatter")
+				specWarnInfernoBoltMoveAway:Play("scatter")
 			else
 				specWarnInfernoBoltMoveTo:Show(frostBiteName)
-				voiceInfernoBolt:Play("gather")
+				specWarnInfernoBoltMoveTo:Play("gather")
 			end
 		elseif self:CheckNearby(8, args.destName) and not UnitDebuff("player", frostBiteName) and not UnitDebuff("player", flameWreathName) then
 			specWarnInfernoBoltNear:Show(args.destName)
-			voiceInfernoBolt:Play("scatter")
+			specWarnInfernoBoltNear:Play("scatter")
 		else
 			warnInfernoBolt:Show(args.destName)
 		end

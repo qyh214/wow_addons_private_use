@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Alar", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 633 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(19514)
 mod:SetEncounterID(730)
 mod:SetModelID(18945)
@@ -29,11 +29,7 @@ local timerNextPlatform	= mod:NewTimer(34, "NextPlatform", 40192, nil, nil, 6)--
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-local voiceQuill		= mod:NewVoice(34229)--findshelter
-local voiceFire			= mod:NewVoice(35383)--runaway
-local voiceArmor		= mod:NewVoice(35410)--tauntboss
-
-local buffetName = GetSpellInfo(34121)
+local buffetName = DBM:GetSpellInfo(34121)
 local UnitGUID = UnitGUID
 local UnitName = UnitName
 mod.vb.phase2Start = 0
@@ -54,6 +50,7 @@ local function Add(self)--An attempt to avoid ugly target scanning, but i get fe
 end
 
 function mod:OnCombatStart(delay)
+	buffetName = DBM:GetSpellInfo(34121)
 	self:AntiSpam(30, 1)--Prevent it thinking add spawn on pull and messing up first platform timer
 	self.vb.flying = false
 	self.vb.phase = 1
@@ -98,15 +95,15 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 34229 then
 		specWarnQuill:Show()
-		voiceQuill:Play("findshelter")
+		specWarnQuill:Play("findshelter")
 		timerQuill:Start()
 	elseif args.spellId == 35383 and args:IsPlayer() and self:AntiSpam(3, 1) then
 		specWarnFire:Show()
-		voiceFire:Play("runaway")
+		specWarnFire:Play("runaway")
 	elseif args.spellId == 35410 then
 		if not args:IsPlayer() then
 			specWarnArmor:Show(args.destName)
-			voiceArmor:Play("tauntboss")
+			specWarnArmor:Play("tauntboss")
 		end
 		timerArmor:Start(args.destName)
 	end

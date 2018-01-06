@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Xariona", "DBM-Party-Cataclysm", 15)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(50061)
 mod:SetModelID(32229)
 mod:SetZone()
@@ -95,8 +95,8 @@ function mod:UNIT_POWER(uId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName)
-	if spellName == GetSpellInfo(93554) and not specialCharging then -- Fury of the twilight flight. Sometimes she bugs and doesn't cast this,if she doesnt, she won't gain unit power and thus won't use any specials.
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+	if spellId == 93554 and not specialCharging then -- Fury of the twilight flight. Sometimes she bugs and doesn't cast this,if she doesnt, she won't gain unit power and thus won't use any specials.
 		specialCharging = true
 		if not hasPower then--She retains power from previous wipes, so only start this bar if it's 0 on engage, otherwise don't bother, let update function start it later
 			timerUnleashedMagicCD:Start()

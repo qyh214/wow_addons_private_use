@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(814, "DBM-Pandaria", nil, 322)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(69099)
 mod:SetEncounterID(1571)
 mod:SetReCombatTime(20, 10)
@@ -31,7 +31,7 @@ mod:AddReadyCheckOption(32518, false)
 
 local stormcloudTargets = {}
 local tetherTargets = {}
-local cloudDebuff = GetSpellInfo(136340)
+local cloudDebuff = DBM:GetSpellInfo(136340)
 
 local debuffFilter
 do
@@ -44,7 +44,7 @@ local function warnStormcloudTargets()
 	warnStormcloud:Show(table.concat(stormcloudTargets, "<, >"))
 	table.wipe(stormcloudTargets)
 	if mod.Options.RangeFrame then
-		if UnitDebuff("player", GetSpellInfo(136340)) then--You have debuff, show everyone
+		if UnitDebuff("player", cloudDebuff) then--You have debuff, show everyone
 			DBM.RangeCheck:Show(10, nil)
 		else--You do not have debuff, only show players who do
 			DBM.RangeCheck:Show(10, debuffFilter)
@@ -58,6 +58,7 @@ local function warnTetherTargets()
 end
 
 function mod:OnCombatStart(delay, yellTriggered)
+	cloudDebuff = DBM:GetSpellInfo(136340)
 	table.wipe(stormcloudTargets)
 	table.wipe(tetherTargets)
 	if yellTriggered then

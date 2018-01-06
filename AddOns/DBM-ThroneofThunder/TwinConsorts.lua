@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(829, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 57 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(68905, 68904)--Lu'lin 68905, Suen 68904
 mod:SetEncounterID(1560)
 mod:SetZone()
@@ -90,10 +90,7 @@ local berserkTimer						= mod:NewBerserkTimer(600)
 mod:AddBoolOption("RangeFrame")--For various abilities that target even melee. UPDATE, cosmic barrage (worst of the 3 abilities) no longer target melee. However, light of day and tears of teh sun still do. melee want to split into 2-3 groups (depending on how many) but no longer have to stupidly spread about all crazy and out of range of boss during cosmic barrage to avoid dying. On that note, MAYBE change this to ranged default instead of all.
 
 local phase3Started = false
-local invokeTiger = GetSpellInfo(138264)
-local invokeCrane = GetSpellInfo(138189)
-local invokeSerpent = GetSpellInfo(138267)
-local invokeOx = GetSpellInfo(138254)
+local invokeTiger, invokeCrane, invokeSerpent, invokeOx = DBM:GetSpellInfo(138264), DBM:GetSpellInfo(138189), DBM:GetSpellInfo(138267), DBM:GetSpellInfo(138254)
 local infernoCount = 0
 local cosmicCount = 0
 
@@ -112,6 +109,7 @@ do
 end
 
 function mod:OnCombatStart(delay)
+	invokeTiger, invokeCrane, invokeSerpent, invokeOx = DBM:GetSpellInfo(138264), DBM:GetSpellInfo(138189), DBM:GetSpellInfo(138267), DBM:GetSpellInfo(138254)
 	phase3Started = false
 	infernoCount = 0
 	cosmicCount = 0
@@ -166,7 +164,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				warnFanOfFlames:Show(args.destName, amount)
 			end
 		else
-			if amount >= threatamount and not UnitDebuff("player", GetSpellInfo(137408)) and not UnitIsDeadOrGhost("player") then
+			if amount >= threatamount and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 				specWarnFanOfFlamesOther:Show(args.destName)
 			else
 				warnFanOfFlames:Show(args.destName, amount)

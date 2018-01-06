@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Felmyst", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 642 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(25038)
 mod:SetEncounterID(726)
 mod:SetModelID(22838)
@@ -39,12 +39,6 @@ local timerPhase			= mod:NewTimer(60, "TimerPhase", 31550, nil, nil, 6)
 
 local berserkTimer			= mod:NewBerserkTimer(600)
 
-local voiceGas				= mod:NewVoice(45855, "Healer")--helpdispel
-local voiceCorrosion		= mod:NewVoice(45866)--tauntboss
-local voiceEncaps			= mod:NewVoice(45665)--targetyou/runaway
-local voiceVapor			= mod:NewVoice(45402)--targetyou
-local voiceBreath			= mod:NewVoice(45717)--breathsoon
-
 mod:AddBoolOption("EncapsIcon", true)
 mod:AddBoolOption("VaporIcon", true)
 
@@ -65,11 +59,11 @@ function mod:EncapsulateTarget(targetname, uId)
 	end
 	if targetname == UnitName("player") then
 		specWarnEncaps:Show()
-		voiceEncaps:Play("targetyou")
+		specWarnEncaps:Play("targetyou")
 		yellEncaps:Yell()
 	elseif self:CheckNearby(21, targetname) then
 		specWarnEncapsNear:Show(targetname)
-		voiceEncaps:Play("runaway")
+		specWarnEncapsNear:Play("runaway")
 	else
 		warnEncaps:Show(targetname)
 	end
@@ -88,7 +82,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerCorrosion:Start(args.destName)
 		if not args:IsPlayer() then
 			specWarnCorrosion:Show(args.destName)
-			voiceCorrosion:Play("tauntboss")
+			specWarnCorrosion:Play("tauntboss")
 		end
 	end
 end
@@ -97,7 +91,7 @@ function mod:SPELL_SUMMON(args)
 	if args.spellId == 45392 then
 		if args.sourceName == UnitName("player") then
 			specWarnVapor:Show()
-			voiceVapor:Play("targetyou")
+			specWarnVapor:Play("targetyou")
 		else
 			warnVapor:Show(args.sourceName)
 		end
@@ -112,7 +106,7 @@ function mod:SPELL_CAST_START(args)
 		timerGasCD:Start()
 		if not self:IsTrivial(85) then
 			specWarnGas:Show()
-			voiceGas:Play("helpdispel")
+			specWarnGas:Play("helpdispel")
 		end
 	end
 end
@@ -132,7 +126,7 @@ function mod:RAID_BOSS_EMOTE(msg)
 	if msg == L.Breath or msg:find(L.Breath) then
 		self.vb.breathCounter = self.vb.breathCounter + 1
 		specWarnBreath:Show(self.vb.breathCounter)
-		voiceBreath:Play("breathsoon")
+		specWarnBreath:Play("breathsoon")
 		if self.vb.breathCounter < 3 then
 			timerBreath:Start(nil, self.vb.breathCounter+1)
 		end

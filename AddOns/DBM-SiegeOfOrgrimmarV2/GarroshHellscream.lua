@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(869, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 108 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(71865)
 mod:SetEncounterID(1623)
 mod:SetZone()
@@ -124,9 +124,8 @@ mod:AddBoolOption("InfoFrame", "Healer")
 --Upvales, don't need variables
 local UnitExists, UnitDebuff, UnitIsDeadOrGhost = UnitExists, UnitDebuff, UnitIsDeadOrGhost
 local bombardCD = {55, 40, 40, 25, 25}
-local spellName1 = GetSpellInfo(149004)
-local spellName2 = GetSpellInfo(148983)
-local spellName3 = GetSpellInfo(148994)
+local spellName1, spellName2, spellName3 = DBM:GetSpellInfo(149004), DBM:GetSpellInfo(148983), DBM:GetSpellInfo(148994)
+local starFixate, grippingDespair, empGrippingDespair = DBM:GetSpellInfo(147665), DBM:GetSpellInfo(145183), DBM:GetSpellInfo(145195)
 --Tables, can't recover
 local lines = {}
 --Not important, don't need to recover
@@ -187,6 +186,8 @@ function mod:DesecrateTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
+	spellName1, spellName2, spellName3 = DBM:GetSpellInfo(149004), DBM:GetSpellInfo(148983), DBM:GetSpellInfo(148994)
+	starFixate, grippingDespair, empGrippingDespair = DBM:GetSpellInfo(147665), DBM:GetSpellInfo(145183), DBM:GetSpellInfo(145195)
 	engineerDied = 0
 	self.vb.shamanAlive = 0
 	self.vb.phase = 1
@@ -263,7 +264,7 @@ function mod:SPELL_CAST_START(args)
 		countdownBombardment:Start(bombardCD[count] or 15)
 		timerClumpCheck:Start()
 	elseif spellId == 147011 then
-		if UnitDebuff("player", GetSpellInfo(147665)) then--Kiting an Unstable Iron Star
+		if UnitDebuff("player", starFixate) then--Kiting an Unstable Iron Star
 			specWarnManifestRage:Show()
 		else
 			warnManifestRage:Show()
@@ -336,7 +337,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnGrippingDespair:Show(amount)
 			else
-				if not (UnitDebuff("player", GetSpellInfo(145183)) or UnitDebuff("player", GetSpellInfo(145195))) and not UnitIsDeadOrGhost("player") then
+				if not (UnitDebuff("player", grippingDespair) or UnitDebuff("player", empGrippingDespair)) and not UnitIsDeadOrGhost("player") then
 					specWarnGrippingDespairOther:Show(args.destName)
 				end
 			end

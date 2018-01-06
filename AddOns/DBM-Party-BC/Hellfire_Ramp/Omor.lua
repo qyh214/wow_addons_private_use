@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(528, "DBM-Party-BC", 1, 248)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(17308)
 mod:SetEncounterID(1891)
 mod:SetUsedIcons(8)
@@ -20,8 +20,6 @@ local yellBane		= mod:NewYell(37566)
 
 local timerBane     = mod:NewTargetTimer(15, 37566, nil, nil, nil, 3)
 
-local voiceBane		= mod:NewVoice(37566)--runout
-
 mod:AddBoolOption("SetIconOnBaneTarget", true)
 mod:AddBoolOption("RangeFrame")
 
@@ -39,7 +37,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if args:IsPlayer() then
             specwarnBane:Show()
-            voiceBane:Play("runout")
+            specwarnBane:Play("runout")
             yellBane:Yell()
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(15)

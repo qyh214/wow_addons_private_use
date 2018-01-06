@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Thorim", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(32865)
 mod:SetEncounterID(1141)
 mod:SetModelID(28977)
@@ -32,8 +32,6 @@ local timerStormhammer			= mod:NewCastTimer(16, 62042)--Cast timer? Review if i 
 local timerLightningCharge	 	= mod:NewCDTimer(16, 62466, nil, nil, nil, 3) 
 local timerUnbalancingStrike	= mod:NewCDTimer(26, 62130, nil, "Tank", nil, 5)
 local timerHardmode				= mod:NewTimer(175, "TimerHardmode", 62042)
-
-local voiceLightningShock		= mod:NewVoice(62017)--runaway
 
 mod:AddBoolOption("RangeFrame")
 mod:AddSetIconOption("SetIconOnRunic", 62527, false)
@@ -104,7 +102,7 @@ function mod:SPELL_DAMAGE(_, _, _, _, _, destName, destFlags, _, spellId)
 		and bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) ~= 0
 		and self:AntiSpam(5) then
 			specWarnLightningShock:Show()
-			voiceLightningShock:Play("runaway")
+			specWarnLightningShock:Play("runaway")
 		end
 	elseif self.Options.AnnounceFails and spellId == 62466 and DBM:GetRaidRank() >= 1 and DBM:GetRaidUnitId(destName) ~= "none" and destName then
 		lastcharge[destName] = (lastcharge[destName] or 0) + 1

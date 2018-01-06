@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(184, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 183 $"):sub(12, -3))
 mod:SetCreatureID(52053)
 mod:SetEncounterID(1181)
 mod:SetZone()
@@ -30,6 +30,8 @@ local timerZanzilElixir		= mod:NewCDTimer(30, 96316)
 mod:AddBoolOption("SetIconOnGaze", false)
 mod:AddBoolOption("InfoFrame", "Healer")--on by default for healers, so they know what numpties to heal through gas
 
+local frameDebuff = DBM:GetSpellInfo(96328)
+
 function mod:GazeTarget()
 	local targetname = self:GetBossTarget(52054)
 	if not targetname then return end
@@ -44,9 +46,10 @@ function mod:GazeTarget()
 end
 
 function mod:OnCombatStart(delay)
+	frameDebuff = DBM:GetSpellInfo(96328)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(L.PlayerDebuffs)
-		DBM.InfoFrame:Show(5, "playergooddebuff", 96328)
+		DBM.InfoFrame:Show(5, "playergooddebuff", frameDebuff)
 	end
 end
 
@@ -72,7 +75,7 @@ function mod:SPELL_CAST_START(args)
 		warnZanzilFire:Show()
 	elseif args.spellId == 96338 then
 		warnZanzilGas:Show()
-		if not UnitDebuff("player", GetSpellInfo(96328)) and not UnitIsDeadOrGhost("player") then
+		if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 			specWarnToxic:Show()
 		end
 	elseif args.spellId == 96342 and self:IsInCombat() then

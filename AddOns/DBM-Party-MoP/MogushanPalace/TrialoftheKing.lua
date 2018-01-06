@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(708, "DBM-Party-MoP", 5, 321)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(61442, 61444, 61445)--61442 (Kuai the Brute), 61453 (Mu'Shiba, Kuai's Add), 61444 (Ming the Cunning), 61445 (Haiyan the Unstoppable)
 mod:SetEncounterID(1442)
 mod:SetZone()
@@ -42,9 +42,9 @@ local timerConflagCD		= mod:NewCDTimer(22, 120201, nil, nil, nil, 3)--Limited da
 local timerMeteorCD			= mod:NewNextTimer(55, 120195, nil, nil, nil, 3)--Assumed based on limited data
 
 local shockwaveCD = 15
-local kuai = EJ_GetSectionInfo(6015)
-local ming = EJ_GetSectionInfo(6019)
-local haiyan = EJ_GetSectionInfo(6023)
+local kuai = DBM:EJ_GetSectionInfo(6015)
+local ming = DBM:EJ_GetSectionInfo(6019)
+local haiyan = DBM:EJ_GetSectionInfo(6023)
 
 function mod:OnCombatStart(delay)
 	if DBM.BossHealth:IsShown() then

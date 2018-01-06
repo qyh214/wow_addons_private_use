@@ -839,7 +839,7 @@
 								</Scripts>
 							</ScrollFrame>
 						</Frames>
-					</Frame>						
+					</Frame>
 					<CheckButton name = "TrinketMenu_OptHideOnLoad" inherits = "TrinketMenu_CheckButtonTemplate">
 						<Anchors>
 							<Anchor point = "TOPLEFT" relativePoint = "BOTTOMLEFT">
@@ -855,7 +855,7 @@
 						TrinketMenu.ProfilesFrame_OnHide()
 					</OnHide>
 					<OnShow>
-						PlaySound(839)
+						PlaySound(624)
 					</OnShow>
 				</Scripts>
 			</Frame>

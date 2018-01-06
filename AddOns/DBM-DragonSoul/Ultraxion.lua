@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(331, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(55294)
 mod:SetEncounterID(1297)
 mod:SetZone()
@@ -57,6 +57,7 @@ mod:AddDropdownOption("SpecWarnHoTN", {"Never", "One", "Two", "Three"}, "Never",
 local hourOfTwilightCount = 0
 local fadingLightCount = 0
 local fadingLightTargets = {}
+local hourOfTwilight = DBM:GetSpellInfo(106371)
 
 local function warnFadingLightTargets()
 	warnFadingLight:Show(fadingLightCount, table.concat(fadingLightTargets, "<, >"))
@@ -64,12 +65,13 @@ local function warnFadingLightTargets()
 end
 
 function mod:OnCombatStart(delay)
+	hourOfTwilight = DBM:GetSpellInfo(106371)
 	table.wipe(fadingLightTargets)
 	hourOfTwilightCount = 0
 	fadingLightCount = 0
 	warnHourofTwilightSoon:Schedule(30.5)
 	if self.Options.SpecWarnHoTN == "One" then--Don't filter here, this is supposed to work for everyone. IF they don't want special warning they set SpecWarnHoTN to Never (it's default)
-		specWarnHourofTwilightN:Schedule(40.5, GetSpellInfo(106371), hourOfTwilightCount+1)
+		specWarnHourofTwilightN:Schedule(40.5, hourOfTwilight, hourOfTwilightCount+1)
 	end
 	timerHourofTwilightCD:Start(45.5-delay, 1)
 	countdownHourofTwilight:Start(45.5)
@@ -126,7 +128,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		elseif self:IsDifficulty("normal10", "normal25", "lfr25") and fadingLightCount < 2 then
 			timerFadingLightCD:Start(15)
 		end
-		if (args:IsPlayer() or UnitDebuff("player", GetSpellInfo(105925))) and self:AntiSpam(2) then--Sometimes the combatlog doesn't report all fading lights, so we perform an additional aura check 
+		if (args:IsPlayer() or UnitDebuff("player", args.spellName)) and self:AntiSpam(2) then--Sometimes the combatlog doesn't report all fading lights, so we perform an additional aura check 
 			local _, _, _, _, _, duration, expires = UnitDebuff("player", args.spellName)--Find out what our specific fading light is
 			if duration then
 				specWarnFadingLight:Show()
@@ -144,7 +146,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 109075 then--Non Tank ID
 		fadingLightTargets[#fadingLightTargets + 1] = args.destName
-		if (args:IsPlayer() or UnitDebuff("player", GetSpellInfo(109075))) and self:AntiSpam(2) then
+		if (args:IsPlayer() or UnitDebuff("player", args.spellName)) and self:AntiSpam(2) then
 			local _, _, _, _, _, duration, expires = UnitDebuff("player", args.spellName)
 			if duration then
 				specWarnFadingLight:Show()

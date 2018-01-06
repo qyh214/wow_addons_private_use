@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("XT002", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(33293)
 mod:SetEncounterID(1142)
 mod:SetModelID(28611)
@@ -36,10 +36,6 @@ local timerLightBomb				= mod:NewTargetTimer(9, 65121, nil, nil, nil, 3)
 local timerGravityBomb				= mod:NewTargetTimer(9, 64234, nil, nil, nil, 3)
 local timerAchieve					= mod:NewAchievementTimer(205, 2937, "TimerSpeedKill")
 
-local voiceLightBomb				= mod:NewVoice(65121)--runout
-local voiceGravityBomb				= mod:NewVoice(64234)--runout
-local voiceConsumption				= mod:NewVoice(64206)--runaway
-
 mod:AddBoolOption("SetIconOnLightBombTarget", true)
 mod:AddBoolOption("SetIconOnGravityBombTarget", true)
 
@@ -66,7 +62,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args:IsSpellID(63018, 65121) then 	-- Light Bomb
 		if args:IsPlayer() then
 			specWarnLightBomb:Show()
-			voiceLightBomb:Play("runout")
+			specWarnLightBomb:Play("runout")
 			yellLightBomb:Yell()
 		end
 		if self.Options.SetIconOnLightBombTarget then
@@ -77,7 +73,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args:IsSpellID(63024, 64234) then		-- Gravity Bomb
 		if args:IsPlayer() then
 			specWarnGravityBomb:Show()
-			voiceGravityBomb:Play("runout")
+			specWarnGravityBomb:Play("runout")
 			yellGravityBomb:Yell()
 		end
 		if self.Options.SetIconOnGravityBombTarget then
@@ -105,7 +101,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if (spellId == 64208 or spellId == 64206) and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnConsumption:Show()
-		voiceConsumption:Play("runaway")
+		specWarnConsumption:Play("runaway")
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

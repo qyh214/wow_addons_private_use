@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("VoWTrash", "DBM-Party-Legion", 10)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16776 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -21,10 +21,6 @@ local yellNightmares			= mod:NewYell(193069)
 local yellTorment				= mod:NewYell(202615)
 local specWarnMeteor			= mod:NewSpecialWarningSpell(196249, nil, nil, nil, 1, 2)
 
-local voiceUnleashedFury		= mod:NewVoice(196799)--aesoon
-local voiceNightmares			= mod:NewVoice(193069, "HasInterrupt")--kickcast
-local voiceMeteor				= mod:NewVoice(196249)--gathershare
-
 mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_START(args)
@@ -32,13 +28,13 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 196799 and self:AntiSpam(4, 1) then
 		specWarnUnleashedFury:Show()
-		voiceUnleashedFury:Play("aesoon")
+		specWarnUnleashedFury:Play("aesoon")
 	elseif spellId == 193069 and self:CheckInterruptFilter(args.sourceGUID) then
 		specWarnNightmares:Show(args.sourceName)
-		voiceNightmares:Play("kickcast")
+		specWarnNightmares:Play("kickcast")
 	elseif spellId == 196249 then
 		specWarnMeteor:Show()
-		voiceMeteor:Play("gathershare")
+		specWarnMeteor:Play("gathershare")
 	end
 end
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Sartura", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 637 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(15516)
 mod:SetEncounterID(711)
 mod:SetModelID(15583)
@@ -21,8 +21,6 @@ local specWarnWhirlwind	= mod:NewSpecialWarningRun(26083, nil, nil, 2, 4, 2)
 
 local timerWhirlwind	= mod:NewBuffActiveTimer(15, 26083, nil, nil, nil, 2)
 
-local voiceWhirlwind	= mod:NewVoice(26083, nil, nil, 2)--justrun
-
 mod.vb.prewarn_enrage = false
 
 function mod:OnCombatStart(delay)
@@ -34,7 +32,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerWhirlwind:Start()
 		if self:CheckInterruptFilter(args.sourceGUID, true) and self.Options.SpecWarn26083run then
 			specWarnWhirlwind:Show()
-			voiceWhirlwind:Play("justrun")
+			specWarnWhirlwind:Play("justrun")
 		else
 			warnWhirlwind:Show()
 		end

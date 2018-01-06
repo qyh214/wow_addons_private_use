@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1836, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15607 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
 mod:SetCreatureID(114462)
 mod:SetEncounterID(1964)
 mod:SetZone()
@@ -36,8 +36,6 @@ local timerEvo						= mod:NewBuffActiveTimer(20, 227254, nil, nil, nil, 6)
 --local berserkTimer					= mod:NewBerserkTimer(300)
 
 local countdownEvo					= mod:NewCountdown(70, 227254)
-
-local voicePowerDischarge			= mod:NewVoice(227465)--runaway
 
 function mod:OnCombatStart(delay)
 	timerSummonAddCD:Start(6-delay)
@@ -81,7 +79,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 227465 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
 		specWarnPowerDischarge:Show()
-		voicePowerDischarge:Play("runaway")
+		specWarnPowerDischarge:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

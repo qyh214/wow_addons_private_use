@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(610, "DBM-Party-WotLK", 15, 278)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 243 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(36658, 36661)
 mod:SetEncounterID(837, 838, 2000)
 mod:DisableESCombatDetection()
@@ -42,11 +42,6 @@ local timerUnholyPower			= mod:NewBuffActiveTimer(10, 69167, nil, "Tank|Healer",
 local timerHoarfrostCD			= mod:NewCDTimer(25.5, 69246, nil, nil, nil, 3)
 local timerForcefulSmash		= mod:NewCDTimer(40, 69155, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)--Highly Variable. 40-50
 
-local voiceHoarfrost			= mod:NewVoice(69246)--targetyou/watchstep
-local voiceIcyBlast				= mod:NewVoice(69238)--runaway
-local voiceOverlordsBrand		= mod:NewVoice(69172)--stopattack
-local voiceUnholyPower			= mod:NewVoice(69167, "Tank")--justrun
-
 mod:AddBoolOption("SetIconOnHoarfrostTarget", true)
 mod:AddRangeFrameOption(8, 69246)
 
@@ -65,7 +60,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 69167 then					-- Unholy Power
         specWarnUnholyPower:Show()
-        voiceUnholyPower:Play("justrun")
+        specWarnUnholyPower:Play("justrun")
 		timerUnholyPower:Start()
 	end
 end
@@ -82,7 +77,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerOverlordsBrandCD:Start()
 		if args:IsPlayer() then
 			specWarnOverlordsBrand:Show(args.sourceName)
-			voiceOverlordsBrand:Play("stopattack")
+			specWarnOverlordsBrand:Play("stopattack")
 			timerOverlordsBrand:Start()
 		else
 			warnOverlordsBrand:Show(args.destName)
@@ -93,7 +88,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 69238 and destGUID == UnitGUID("player") and self:AntiSpam() then		-- Icy Blast, MOVE!
 		specWarnIcyBlast:Show()
-		voiceIcyBlast:Play("runaway")
+		specWarnIcyBlast:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
@@ -111,14 +106,14 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		local target = DBM:GetUnitFullName(target)
 		if target == UnitName("player") then
 			specWarnHoarfrost:Show()
-			voiceHoarfrost:Play("targetyou")
+			specWarnHoarfrost:Play("targetyou")
 			yellHoarfrost:Yell()
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(8, nil, nil, nil, nil, 5)
 			end
 		elseif self:CheckNearby(8, target) then
 			specWarnHoarfrostNear:Show(target)
-			voiceHoarfrost:Play("watchstep")
+			specWarnHoarfrostNear:Play("watchstep")
 		else
 			warnHoarfrost:Show(target)
 		end

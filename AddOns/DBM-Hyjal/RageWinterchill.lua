@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Rage", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 630 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(17767)
 mod:SetEncounterID(618)
 mod:SetModelID(17444)
@@ -26,9 +26,6 @@ local timerDndCD		= mod:NewCDTimer(46, 31258, nil, nil, nil, 3)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-local voiceIceBolt		= mod:NewVoice(31249)--stunsoon (technically stunnow, but closest match)
-local voiceDnD			= mod:NewVoice(31258)--runaway
-
 mod:AddBoolOption("IceBoltIcon", false)
 
 function mod:OnCombatStart(delay)
@@ -39,7 +36,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 31249 then
 		if args:IsPlayer() then
 			specWarnIceBolt:Show()
-			voiceIceBolt:Play("stunsoon")
+			specWarnIceBolt:Play("stunsoon")
 		else
 			warnIceBolt:Show(args.destName)
 		end
@@ -48,7 +45,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args.spellId == 31258 and args:IsPlayer() and self:AntiSpam() then
 		specWarnDnD:Show()
-		voiceDnD:Play("runaway")
+		specWarnDnD:Play("runaway")
 	end
 end
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1673, "DBM-Party-Legion", 5, 767)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16091 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
 mod:SetCreatureID(91005)
 mod:SetEncounterID(1792)
 mod:SetZone()
@@ -28,9 +28,6 @@ local timerSpikedTongueCD			= mod:NewNextTimer(55, 199176, nil, "Tank|Healer", n
 local timerAddsCD					= mod:NewCDTimer(65, 199817, nil, nil, nil, 1, 226361)
 local timerRancidMawCD				= mod:NewCDTimer(18, 205549, nil, false, nil, 3)--Needed?
 local timerToxicRetchCD				= mod:NewCDTimer(14.3, 210150, nil, false, nil, 3)--Needed?
-
-local voiceAdds						= mod:NewVoice(199817, "Dps")--mobsoon
-local voiceSpikedTongue				= mod:NewVoice(199176)--runout/keepmove
 
 function mod:OnCombatStart(delay)
 	timerAddsCD:Start(5.5-delay)
@@ -62,8 +59,8 @@ function mod:SPELL_CAST_START(args)
 		--Do based on threat, because there is a good chance tank might die and backup melee needs warning too.
 		if tanking or (status == 3) then
 			specWarnSpikedTongue:Show()
-			voiceSpikedTongue:Play("runout")
-			voiceSpikedTongue:Schedule(1.5, "keepmove")
+			specWarnSpikedTongue:Play("runout")
+			specWarnSpikedTongue:ScheduleVoice(1.5, "keepmove")
 		end
 		timerSpikedTongueCD:Start()
 	elseif spellId == 205549 then
@@ -85,7 +82,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
 	if spellId == 199817 then--Call Minions
 		specWarnAdds:Show()
-		voiceAdds:Play("mobsoon")
+		specWarnAdds:Play("mobsoon")
 		timerAddsCD:Start()
 	end
 end

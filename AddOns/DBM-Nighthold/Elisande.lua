@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1743, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16858 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17095 $"):sub(12, -3))
 mod:SetCreatureID(106643)
 mod:SetEncounterID(1872)
 mod:SetZone()
@@ -37,11 +37,11 @@ local warnCompressedTime			= mod:NewSpellAnnounce(209590, 3)
 --Time Layer 1
 local warnAblation					= mod:NewStackAnnounce(209615, 2, nil, "Tank")
 --Time Layer 2
-local warnPhase2					= mod:NewPhaseAnnounce(2, 2)
+local warnPhase2					= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnDelphuricBeam				= mod:NewTargetAnnounce(214278, 3)
 local warnAblatingExplosion			= mod:NewTargetAnnounce(209973, 3)
 --Time Layer 3
-local warnPhase3					= mod:NewPhaseAnnounce(3, 2)
+local warnPhase3					= mod:NewPhaseAnnounce(3, 2, nil, nil, nil, nil, nil, 2)
 local warnPermaliativeTorment		= mod:NewTargetAnnounce(210387, 3, nil, "Healer")
 local warnConflexiveBurst			= mod:NewTargetAnnounce(209598, 4)
 
@@ -106,27 +106,6 @@ local countdownSpanningSingularity	= mod:NewCountdown(30, 209168, "Ranged")--Myt
 local countdownOrbs					= mod:NewCountdown("Alt6", 210022, "Ranged")
 --Time Layer 3
 local countdownConflexiveBurst		= mod:NewCountdown("AltTwo6", 209597)
-
---Base
-local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
-local voiceElemental				= mod:NewVoice(208887)--bigmob
-----Recursive Elemental
-local voiceRecursion				= mod:NewVoice(209620, "HasInterrupt")--kickcast
-local voiceBlast					= mod:NewVoice(221864, "HasInterrupt")--kickcast
-----Expedient Elemental
---local voiceExoRelease				= mod:NewVoice(209568, "HasInterrupt")--kickcast
-local voiceExpedite					= mod:NewVoice(209617, "HasInterrupt")--kickcast
---Time Layer 1
-local voiceArcaneticRing			= mod:NewVoice(208807)--watchorb
-local voiceAblation					= mod:NewVoice(209615)--tauntboss
-local voiceSpanningSingularity		= mod:NewVoice(209168)--watchstep/runtoedge
---Time Layer 2
-local voiceDelphuricBeam			= mod:NewVoice(214278)--targetyou
-local voiceEpochericOrb				= mod:NewVoice(210022, "-Tank", nil, 2)--161612(catch balls)
-local voiceAblatingExplosion		= mod:NewVoice(209973)--runout/tauntboss
---Time Layer 3
-local voiceConflexiveBurst			= mod:NewVoice(209598)--targetyou (review for better voice)
-local voiceAblativePulse			= mod:NewVoice(209971, "Tank", nil, 2)--kickcast
 
 mod:AddRangeFrameOption(8, 209973)
 mod:AddInfoFrameOption(209598)
@@ -211,7 +190,7 @@ function mod:OnCombatStart(delay)
 		timerSpanningSingularityCD:Start(53.7-delay, 2)
 		specWarnSpanningSingularityPre:Schedule(48.7, DBM_CORE_ROOM_EDGE)
 		if self.Options.SpecWarn209168moveto then
-			voiceSpanningSingularity:Schedule(48.7, "runtoedge")
+			specWarnSpanningSingularityPre:ScheduleVoice(48.7, "runtoedge")
 		end
 		countdownSpanningSingularity:Start(53.7)
 		timerArcaneticRing:Start(30-delay, 1)
@@ -245,35 +224,35 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 209620 then
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnRecursion:Show(args.sourceName)
-			voiceRecursion:Play("kickcast")
+			specWarnRecursion:Play("kickcast")
 		end
 	elseif spellId == 221864 then
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnBlast:Show(args.sourceName)
-			voiceBlast:Play("kickcast")
+			specWarnBlast:Play("kickcast")
 		end
 --[[	elseif spellId == 209568 then
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnExoRelease:Show(args.sourceName)
-			voiceExoRelease:Play("kickcast")
+			specWarnExoRelease:Play("kickcast")
 		end--]]
 	elseif spellId == 209617 then
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnExpedite:Show(args.sourceName)
-			voiceExpedite:Play("kickcast")
+			specWarnExpedite:Play("kickcast")
 		end
 	elseif spellId == 209971 then
 		--timerAblativePulseCD:Start()
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnAblativePulse:Show(args.sourceName)
-			voiceAblativePulse:Play("kickcast")
+			specWarnAblativePulse:Play("kickcast")
 		end
 	elseif spellId == 209595 then
 		warnTemporalisis:Show()
 	elseif spellId == 210022 and self:AntiSpam(15, 4) then
 		self.vb.orbCastCount = self.vb.orbCastCount + 1
 		specWarnEpochericOrb:Show()
-		voiceEpochericOrb:Play("161612")
+		specWarnEpochericOrb:Play("161612")
 		local nextCount = self.vb.orbCastCount + 1
 		local timer = self:IsMythic() and mythicOrbTimers[nextCount] or self:IsNormal() and normalOrbTimers[nextCount] or self:IsHeroic() and heroicOrbTimers[nextCount] or self:IsLFR() and lfrOrbTimers[nextCount]
 		if timer then
@@ -320,7 +299,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		local timer = self:IsMythic() and mythicOrbTimers[nextCount] or self:IsNormal() and normalOrbTimers[nextCount] or self:IsHeroic() and heroicOrbTimers[nextCount] or self:IsLFR() and lfrOrbTimers[nextCount]
 		if timer then
 			specWarnEpochericOrb:Schedule(timer-10)
-			voiceEpochericOrb:Schedule(timer-10, "161612")
+			specWarnEpochericOrb:ScheduleVoice(timer-10, "161612")
 			timerEpochericOrbCD:Start(timer-10, nextCount)
 			countdownOrbs:Start(timer-10)
 		end
@@ -336,7 +315,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if amount >= 2 then
 				if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 					specWarnAblation:Show(args.destName)
-					voiceAblation:Play("tauntboss")
+					specWarnAblation:Play("tauntboss")
 				else
 					warnAblation:Show(args.destName, amount)
 				end
@@ -348,7 +327,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnDelphuricBeam:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnDelphuricBeam:Show()
-			voiceDelphuricBeam:Play("targetyou")
+			specWarnDelphuricBeam:Play("targetyou")
 			yellDelphuricBeam:Yell()
 		end
 	elseif spellId == 209973 then
@@ -357,7 +336,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerAblatingExplosionCD:Start()
 		if args:IsPlayer() then
 			specWarnAblationExplosionOut:Show()
-			voiceAblatingExplosion:Play("runout")
+			specWarnAblationExplosionOut:Play("runout")
 			yellAblatingExplosion:Cancel()
 			yellAblatingExplosion:Schedule(3, 3)
 			yellAblatingExplosion:Schedule(4, 2)
@@ -367,7 +346,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		else
 			specWarnAblationExplosion:Show(args.destName)
-			voiceAblatingExplosion:Play("tauntboss")
+			specWarnAblationExplosion:Play("tauntboss")
 		end
 	elseif spellId == 209598 then
 		self.vb.burstDebuffCount = self.vb.burstDebuffCount + 1
@@ -375,10 +354,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if args:IsPlayer() then
 			specWarnConflexiveBurst:Show()
-			voiceConflexiveBurst:Play("targetyou")
+			specWarnConflexiveBurst:Play("targetyou")
 		elseif self:IsTanking(uId, "boss1") then
 			specWarnConflexiveBurstTank:Show(args.destName)
-			voiceConflexiveBurst:Play("tauntboss")
+			specWarnConflexiveBurstTank:Play("tauntboss")
 		end
 		if self.Options.SetIconOnConflexiveBurst then
 			self:SetAlphaIcon(0.5, args.destName)
@@ -420,7 +399,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 209433 and destGUID == UnitGUID("player") and self:AntiSpam(2, 5) then
 		specWarnSingularityGTFO:Show()
 		if not self:IsTank() then
-			voiceSpanningSingularity:Play("runaway")
+			specWarnSingularityGTFO:Play("runaway")
 		end
 	end
 end
@@ -459,7 +438,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		countdownOrbs:Cancel()
 		timerSpanningSingularityCD:Stop()
 		specWarnSpanningSingularityPre:Cancel()
-		voiceSpanningSingularity:Cancel()
+		specWarnSpanningSingularityPre:CancelVoice()
 		countdownSpanningSingularity:Cancel()
 		timerDelphuricBeamCD:Stop()
 		berserkTimer:Cancel()
@@ -473,7 +452,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		end
 		if self.vb.phase == 2 then
 			warnPhase2:Show()
-			voicePhaseChange:Play("ptwo")
+			warnPhase2:Play("ptwo")
 			timerAblatingExplosionCD:Start(22)--Verfied unchanged Dec 13 Heroic
 			if self:IsMythic() then--TODO: Fine tune these as they may be hit or miss by some seconds Hard to measure precise phase changes from WCL
 				timerEpochericOrbCD:Start(23.8, 1)
@@ -499,7 +478,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			end
 		elseif self.vb.phase == 3 then
 			warnPhase3:Show()
-			voicePhaseChange:Play("pthree")
+			warnPhase3:Play("pthree")
 			self.vb.burstCastCount = 0
 			timerAblatingExplosionCD:Stop()
 			yellAblatingExplosion:Cancel()
@@ -509,7 +488,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				timerEpochericOrbCD:Start(24, 1)
 				countdownOrbs:Start(24)
 				specWarnEpochericOrb:Schedule(24)--Spawning isn't in combat log in phase 3, only landing, so need to use schedule for warnings
-				voiceEpochericOrb:Schedule(24, "161612")
+				specWarnEpochericOrb:ScheduleVoice(24, "161612")
 				timerArcaneticRing:Start(42, 1)--Verified Jan 18
 				countdownArcaneticRing:Start(42)
 				timerConflexiveBurstCD:Start(48, 1)
@@ -519,7 +498,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				timerEpochericOrbCD:Start(27, 1)
 				countdownOrbs:Start(27)
 				specWarnEpochericOrb:Schedule(27)--Spawning isn't in combat log in phase 3, only landing, so need to use schedule for warnings
-				voiceEpochericOrb:Schedule(27, "161612")
+				specWarnEpochericOrb:ScheduleVoice(27, "161612")
 				timerPermaliativeTormentCD:Start(33, 1)
 				timerArcaneticRing:Start(45.7, 1)--Verified Jan 18
 				countdownArcaneticRing:Start(45.7)
@@ -546,7 +525,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		self.vb.slowElementalCount = self.vb.slowElementalCount + 1
 		--if self.vb.firstElementals then
 			specWarnTimeElementals:Show(SLOW)
-			voiceElemental:Play("bigmob")
+			specWarnTimeElementals:Play("bigmob")
 		--end
 		local timer
 		local nextCount = self.vb.slowElementalCount+1
@@ -562,7 +541,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		self.vb.fastElementalCount = self.vb.fastElementalCount + 1
 		--if self.vb.firstElementals then
 			specWarnTimeElementals:Show(FAST)
-			voiceElemental:Play("bigmob")
+			specWarnTimeElementals:Play("bigmob")
 		--end
 		local timer
 		local nextCount = self.vb.fastElementalCount+1
@@ -575,14 +554,11 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			timerTimeElementalsCD:Start(timer, FAST)
 		end
 	elseif spellId == 208887 then--Summon Time Elementals (summons both of them, used at beginning of each phase)
-		--self.vb.firstElementals = true
-		--specWarnTimeElementals:Show(STATUS_TEXT_BOTH)
-		--voiceElemental:Play("bigmob")
 		DBM:Debug("Both elementals summoned, this event still exists, probably need custom code for certain difficulties")
 	elseif (spellId == 209168 or spellId == 233013 or spellId == 233012 or spellId == 233011 or spellId == 233009 or spellId == 233010) and self:AntiSpam(4, 3) and not self.vb.transitionActive then
 		self.vb.singularityCount = self.vb.singularityCount + 1
 		specWarnSpanningSingularity:Show()
-		voiceSpanningSingularity:Play("watchstep")
+		specWarnSpanningSingularity:Play("watchstep")
 		local nextCount = self.vb.singularityCount + 1
 		if self.vb.phase == 1 then
 			self.vb.totalsingularityCasts = self.vb.totalsingularityCasts + 1
@@ -595,7 +571,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			if self:IsMythic() then
 				specWarnSpanningSingularityPre:Schedule(timer-5, DBM_CORE_ROOM_EDGE)
 				if self.Options.SpecWarn209168moveto then
-					voiceSpanningSingularity:Schedule(timer-5, "runtoedge")
+					specWarnSpanningSingularityPre:ScheduleVoice(timer-5, "runtoedge")
 				end
 				countdownSpanningSingularity:Start(timer)
 			end
@@ -627,7 +603,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 	if msg:find("spell:228877") and self:AntiSpam(5, 1) then
 		self.vb.ringCastCount = self.vb.ringCastCount + 1
 		specWarnArcaneticRing:Show()
-		voiceArcaneticRing:Play("watchorb")
+		specWarnArcaneticRing:Play("watchorb")
 		local nextCount = self.vb.ringCastCount + 1
 		if self.vb.phase == 1 then
 			self.vb.totalRingCasts = self.vb.totalRingCasts + 1
@@ -650,7 +626,7 @@ function mod:OnSync(msg, targetname)
 	if msg == "ArcaneticRing" and self:AntiSpam(5, 1) then
 		self.vb.ringCastCount = self.vb.ringCastCount + 1
 		specWarnArcaneticRing:Show()
-		voiceArcaneticRing:Play("watchorb")
+		specWarnArcaneticRing:Play("watchorb")
 		local nextCount = self.vb.ringCastCount + 1
 		if self.vb.phase == 1 then
 			self.vb.totalRingCasts = self.vb.totalRingCasts + 1
@@ -664,11 +640,11 @@ function mod:OnSync(msg, targetname)
 		end
 	elseif msg == "Orbs" and self:AntiSpam(15, 4) then
 		specWarnEpochericOrb:Cancel()
-		voiceEpochericOrb:Cancel()
+		specWarnEpochericOrb:CancelVoice()
 		countdownOrbs:Cancel()
 		self.vb.orbCastCount = self.vb.orbCastCount + 1
 		specWarnEpochericOrb:Show()
-		voiceEpochericOrb:Play("161612")
+		specWarnEpochericOrb:Play("161612")
 		local nextCount = self.vb.orbCastCount + 1
 		local timer = self:IsMythic() and mythicOrbTimers[nextCount] or self:IsNormal() and normalOrbTimers[nextCount] or self:IsHeroic() and heroicOrbTimers[nextCount] or self:IsLFR() and lfrOrbTimers[nextCount]
 		if timer then

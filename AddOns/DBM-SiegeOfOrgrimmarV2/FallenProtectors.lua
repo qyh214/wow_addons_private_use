@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(849, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(71479, 71475, 71480)--He-Softfoot, Rook Stonetoe, Sun Tenderheart
 mod:SetEncounterID(1598)
 mod:SetZone()
@@ -21,9 +21,9 @@ mod:RegisterEventsInCombat(
 	"UNIT_HEALTH_FREQUENT boss1 boss2 boss3 boss4 boss5"
 )
 
-local Softfoot = EJ_GetSectionInfo(7889)
-local Stonetoe = EJ_GetSectionInfo(7885)
-local Tenderheart = EJ_GetSectionInfo(7904)
+local Softfoot = DBM:EJ_GetSectionInfo(7889)
+local Stonetoe = DBM:EJ_GetSectionInfo(7885)
+local Tenderheart = DBM:EJ_GetSectionInfo(7904)
 
 mod:SetBossHealthInfo(
 	71479, Softfoot,
@@ -105,7 +105,7 @@ mod:AddRangeFrameOption(5, 143423, false)--For heroic. Need to chage smart range
 local UnitExists = UnitExists
 local UnitGUID = UnitGUID
 local UnitDetailedThreatSituation = UnitDetailedThreatSituation
-local calamitySpellText = GetSpellInfo(143491)
+local calamitySpellText = DBM:GetSpellInfo(143491)
 
 --Not important, don't need to recover
 local isInfernoTarget = false
@@ -144,6 +144,7 @@ function mod:InfernoStrikeTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
+	calamitySpellText = DBM:GetSpellInfo(143491)
 	isInfernoTarget = false
 	self.vb.calamityCount = 0
 	self.vb.warned71475 = 0

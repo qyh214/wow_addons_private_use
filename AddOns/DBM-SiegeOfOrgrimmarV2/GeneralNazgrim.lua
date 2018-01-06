@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(850, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 109 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(71515)
 mod:SetEncounterID(1603)
 mod:SetZone()
@@ -68,7 +68,7 @@ local yellHuntersMark				= mod:NewYell(143882, nil, false)
 local specWarnHuntersMarkOther		= mod:NewSpecialWarningTarget(143882, false)
 
 --Nazgrim Core Abilities
-local timerAddsCD					= mod:NewNextCountTimer(45, "ej7920", nil, nil, nil, 1, 2457)
+local timerAddsCD					= mod:NewNextCountTimer(45, "ej7920", nil, nil, nil, 1, "Interface\\Icons\\ability_warrior_offensivestance")
 local timerSunder					= mod:NewTargetTimer(30, 143494, nil, "Tank|Healer")
 local timerSunderCD					= mod:NewCDTimer(8, 143494, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerExecuteCD				= mod:NewCDTimer(18, 143502, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
@@ -91,7 +91,7 @@ mod:AddInfoFrameOption("ej7909")
 
 --Upvales, don't need variables
 local UnitName, UnitExists, UnitGUID, UnitDetailedThreatSituation = UnitName, UnitExists, UnitGUID, UnitDetailedThreatSituation
-local sunder = GetSpellInfo(143494)
+local spellName1, spellName2, spellName3, spellName4, sunder = DBM:GetSpellInfo(143500), DBM:GetSpellInfo(143536), DBM:GetSpellInfo(143503), DBM:GetSpellInfo(143872), DBM:GetSpellInfo(143494)
 --Tables, can't recover
 local dotWarned = {}
 --Important, needs recover
@@ -112,7 +112,6 @@ do
 	local bossPower = 0
 	local lines = {}
 	local sortedLines = {}
-	local spellName1, spellName2, spellName3, spellName4 = GetSpellInfo(143500), GetSpellInfo(143536), GetSpellInfo(143503), GetSpellInfo(143872)
 	local function addLine(key, value)
 		-- sort by insertion order
 		lines[key] = value
@@ -126,23 +125,23 @@ do
 		end
 		if bossPower < 50 then
 			addLine("|cFF088A08"..spellName1.."|r", bossPower)--Green
-			addLine(GetSpellInfo(143536), 50)
-			addLine(GetSpellInfo(143503), 70)
-			addLine(GetSpellInfo(143872), 100)
+			addLine(spellName2, 50)
+			addLine(spellName3, 70)
+			addLine(spellName4, 100)
 		elseif bossPower < 70 then
-			addLine(GetSpellInfo(143500), 25)
+			addLine(spellName1, 25)
 			addLine("|cFF088A08"..spellName2.."|r", bossPower)--Green (Would yellow be too hard to see on this?)
-			addLine(GetSpellInfo(143503), 70)
-			addLine(GetSpellInfo(143872), 100)
+			addLine(spellName3, 70)
+			addLine(spellName4, 100)
 		elseif bossPower < 100 then
-			addLine(GetSpellInfo(143500), 25)
-			addLine(GetSpellInfo(143536), 50)
+			addLine(spellName1, 25)
+			addLine(spellName2, 50)
 			addLine("|cFF088A08"..spellName3.."|r", bossPower)--Green (Maybe change to orange?)
-			addLine(GetSpellInfo(143872), 100)
+			addLine(spellName4, 100)
 		elseif bossPower == 100 then
-			addLine(GetSpellInfo(143500), 25)
-			addLine(GetSpellInfo(143536), 50)
-			addLine(GetSpellInfo(143503), 70)
+			addLine(spellName1, 25)
+			addLine(spellName2, 50)
+			addLine(spellName3, 70)
 			addLine("|cFFFF0000"..spellName4.."|r", bossPower)--Red (definitely work making this one red, it's really the only critically bad one)
 		end
 		if mod:IsMythic() then--Same on 10 heroic? TODO, get normal LFR and flex adds info verified
@@ -212,6 +211,7 @@ function mod:LeapTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
+	spellName1, spellName2, spellName3, spellName4, sunder = DBM:GetSpellInfo(143500), DBM:GetSpellInfo(143536), DBM:GetSpellInfo(143503), DBM:GetSpellInfo(143872), DBM:GetSpellInfo(143494)
 	table.wipe(dotWarned)
 	self.vb.addsCount = 0
 	self.vb.defensiveActive = false
@@ -264,7 +264,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnBattleStance:Show()
 		timerBerserkerStanceCD:Start()
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(GetSpellInfo(143589))
+			DBM.InfoFrame:SetHeader(args.spellName)
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif spellId == 143594 then
@@ -276,7 +276,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnDefensiveStanceSoon:Schedule(58, 2)
 		warnDefensiveStanceSoon:Schedule(59, 1)
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(GetSpellInfo(143594))
+			DBM.InfoFrame:SetHeader(args.spellName)
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif spellId == 143593 then
@@ -293,7 +293,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnDefensiveStance:Show()
 		timerBattleStanceCD:Start()
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(GetSpellInfo(143593))
+			DBM.InfoFrame:SetHeader(args.spellName)
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif spellId == 143536 then
@@ -321,7 +321,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnSunder:Show(amount)
 			end
 		else--Taunt as soon as stacks are clear, regardless of stack count.
-			if amount >= 3 and not UnitDebuff("player", sunder) and not UnitIsDeadOrGhost("player") then
+			if amount >= 3 and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 				specWarnSunderOther:Show(args.destName)
 			end
 		end

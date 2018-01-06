@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(593, "DBM-Party-WotLK", 5, 274)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 243 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(29307)
 mod:SetEncounterID(385, 386, 1983)
 --mod:SetZone()
@@ -18,8 +18,6 @@ local warningStone			= mod:NewSpellAnnounce("ej6418", 3, 54878)
 
 local specWarnPurpleShit	= mod:NewSpecialWarningMove(59451, nil, nil, nil, 1, 2)
 
-local voicePurpleShit		= mod:NewVoice(59451)--runaway
-
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 54850 then
 		warningElemental:Show()
@@ -31,6 +29,6 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 59451 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) and not self:IsTrivial(85) then
 		specWarnPurpleShit:Show()
-		voicePurpleShit:Play("runaway")
+		specWarnPurpleShit:Play("runaway")
 	end
 end

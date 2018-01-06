@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(532, "DBM-Party-BC", 16, 249)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 606 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 
 mod:SetCreatureID(24560)--24560 is main boss.
 mod:SetEncounterID(1895)
@@ -25,15 +25,11 @@ local specWarnFlashHeal	= mod:NewSpecialWarningInterrupt(17843, "HasInterrupt", 
 local specWarnLHW		= mod:NewSpecialWarningInterrupt(46181, "HasInterrupt", nil, 3, 1, 2)
 local specWarnPWS		= mod:NewSpecialWarningDispel(44175, "MagicDispeller", nil, 2, 1, 2)
 
-local voiceFlashHeal	= mod:NewVoice(17843, "HasInterrupt")--kickcast
-local voiceLHW			= mod:NewVoice(46181, "HasInterrupt")--kickcast
-local voicePWS			= mod:NewVoice(44175, "MagicDispeller")--dispelboss
-
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 17843 and self:CheckInterruptFilter(args.sourceGUID) then		-- Delrissa's Flash Heal
 		specWarnFlashHeal:Show(args.sourceName)
-		voiceFlashHeal:Play("kickcast")
+		specWarnFlashHeal:Play("kickcast")
 	elseif args:IsSpellID(44256, 46181) and self:CheckInterruptFilter(args.sourceGUID) then					-- Apoko's LHW
 		specWarnLHW:Show(args.sourceName)
 		specWarnLHW:Play("kickcast")
@@ -57,7 +53,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnSoC:Show(args.destName)
 	elseif args:IsSpellID(44175, 44291, 46193) and not args:IsDestTypePlayer() then    -- Delrissa's PWShield
 		specWarnPWS:Show(args.destName)
-		voicePWS:Play("dispelboss")
+		specWarnPWS:Play("dispelboss")
 	elseif args:IsSpellID(44174, 46192) and not args:IsDestTypePlayer() then           -- Delrissa's Renew
 		warnRenew:Show(args.destName)
 	end

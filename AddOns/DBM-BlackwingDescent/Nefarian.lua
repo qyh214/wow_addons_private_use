@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod(174, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
-local Nefarian	= EJ_GetSectionInfo(3279)
-local Onyxia	= EJ_GetSectionInfo(3283)
+local Nefarian	= DBM:EJ_GetSectionInfo(3279)
+local Onyxia	= DBM:EJ_GetSectionInfo(3283)
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(41376, 41270)
 mod:SetEncounterID(1026) -- ES fires when Nefarian engaged.
 mod:SetZone()
@@ -84,12 +84,12 @@ local shadowblazeTimer = 35
 local cinderIcons = 8
 local playerDebuffs = 0
 local cinderTargets	= {}
-local cinderDebuff = GetSpellInfo(79339)
+local cinderDebuff = DBM:GetSpellInfo(79339)
 local dominionTargets = {}
 local lastBlaze = 0--Do NOT use prototype for this, it's updated in a special way using different triggers then when method is called.
 local CVAR = false
 local shadowBlazeSynced = false
-local Charge = EJ_GetSectionInfo(3284)
+local Charge = DBM:EJ_GetSectionInfo(3284)
 
 --Credits to Caleb for original concept, modified with yell sync and timer tweaks.
 function mod:ShadowBlazeFunction()
@@ -121,9 +121,9 @@ do
 	end
 end
 
-local function warnCinderTargets()
-	if mod.Options.RangeFrame then
-		if UnitDebuff("player", GetSpellInfo(79339)) then--You have debuff, show everyone
+local function warnCinderTargets(self)
+	if self.Options.RangeFrame then
+		if UnitDebuff("player", cinderDebuff) then--You have debuff, show everyone
 			DBM.RangeCheck:Show(10, nil)
 		else--You do not have debuff, only show players who do
 			DBM.RangeCheck:Show(10, cindersDebuffFilter)
@@ -143,6 +143,7 @@ local function warnDominionTargets()
 end
 
 function mod:OnCombatStart(delay)
+	cinderDebuff = DBM:GetSpellInfo(79339)
 	shadowBlazeSynced = false
 	shadowblazeTimer = 35
 	playerDebuffs = 0
@@ -219,9 +220,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		self:Unschedule(warnCinderTargets)
 		if (self:IsDifficulty("heroic25") and #cinderTargets >= 3) or (self:IsDifficulty("heroic10") and #cinderTargets >= 1) then
-			warnCinderTargets()
+			warnCinderTargets(self)
 		else
-			self:Schedule(0.3, warnCinderTargets)
+			self:Schedule(0.3, warnCinderTargets, self)
 		end
 	elseif args.spellId == 79318 then
 		dominionTargets[#dominionTargets + 1] = args.destName

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TerestianIllhoof", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 631 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(15688)
 mod:SetEncounterID(657)
 mod:SetModelID(11343)
@@ -28,8 +28,6 @@ local timerSacrificeCD	= mod:NewNextTimer(43, 30115, nil, nil, nil, 1)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-local voiceSacrifice	= mod:NewVoice(30115)--targetyou
-
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
 end
@@ -43,7 +41,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerSacrificeCD:Start()
 		if args:IsPlayer() then
 			specWarnSacrifice:Show()
-			voiceSacrifice:Play("targetyou")
+			specWarnSacrifice:Play("targetyou")
 			yellSacrifice:Yell()
 		else
 			warningSacrifice:Show(args.destName)

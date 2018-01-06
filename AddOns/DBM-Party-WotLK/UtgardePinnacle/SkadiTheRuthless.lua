@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(643, "DBM-Party-WotLK", 11, 286)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 243 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(26693)
 mod:SetEncounterID(581, 582, 2029)
 mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
@@ -26,8 +26,6 @@ local timerPoison		= mod:NewTargetTimer(12, 59331)
 local timerWhirlwindCD	= mod:NewCDTimer(23, 59322)
 local timerAchieve		= mod:NewAchievementTimer(180, 1873, "TimerSpeedKill")
 
-local voiceWhirlwind		= mod:NewVoice(59322)--runout
-
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(59331, 50255) then
 		warningPoison:Show(args.destName)
@@ -36,7 +34,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerWhirlwindCD:Start()
 		if not self:IsTrivial(90) then
 			specWarnWhirlwind:Show()
-			voiceWhirlwind:Play("runout")
+			specWarnWhirlwind:Play("runout")
 		end
 	end
 end

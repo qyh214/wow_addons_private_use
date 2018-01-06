@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Geddon", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 637 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(12056)
 mod:SetEncounterID(668)
 mod:SetModelID(12129)
@@ -29,9 +29,6 @@ local timerBombCD		= mod:NewCDTimer(16, 20475, nil, nil, nil, 3)
 local timerBomb			= mod:NewTargetTimer(8, 20475, nil, nil, nil, 3)
 local timerArmageddon	= mod:NewCastTimer(8, 20478, nil, nil, nil, 2)
 
-local voiceBomb			= mod:NewVoice(20475)--runout
-local voiceInferno		= mod:NewVoice(19695)--aesoon
-
 mod:AddSetIconOption("SetIconOnBombTarget", 20475)
 
 function mod:OnCombatStart(delay)
@@ -47,7 +44,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if args:IsPlayer() then
 			specWarnBomb:Show()
-			voiceBomb:Play("runout")
+			specWarnBomb:Play("runout")
 			if self:IsDifficulty("event40") or not self:IsTrivial(75) then
 				yellBomb:Yell()
 				yellBombFades:Countdown(8)
@@ -75,7 +72,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 19695 then
 		if self:IsDifficulty("event40") or not self:IsTrivial(75) then
 			specWarnInferno:Show()
-			voiceInferno:Play("aesoon")
+			specWarnInferno:Play("aesoon")
 		else
 			warnInferno:Show()
 		end

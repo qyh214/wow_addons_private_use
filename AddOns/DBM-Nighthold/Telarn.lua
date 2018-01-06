@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1761, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16780 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17095 $"):sub(12, -3))
 mod:SetCreatureID(104528)--109042
 mod:SetEncounterID(1886)
 mod:SetZone()
@@ -37,11 +37,11 @@ local warnSummonChaosSpheres		= mod:NewSpellAnnounce(223034, 2)
 local warnParasiticFetter			= mod:NewTargetAnnounce(218304, 3)
 local warnParasiticFixate			= mod:NewTargetAnnounce(218342, 4, nil, false)--Spammy if things go to shit, so off by default
 --Stage 2: Nightosis
-local warnPhase2					= mod:NewPhaseAnnounce(2)
+local warnPhase2					= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnFlare						= mod:NewSpellAnnounce(218806, 2, nil, "Tank")
 local warnPlasmaSpheres				= mod:NewSpellAnnounce(218774, 2)
 --Stage 3: Pure Forms
-local warnPhase3					= mod:NewPhaseAnnounce(3)
+local warnPhase3					= mod:NewPhaseAnnounce(3, 2, nil, nil, nil, nil, nil, 2)
 local warnToxicSpores				= mod:NewSpellAnnounce(219049, 3)
 local warnCoN						= mod:NewTargetAnnounce(218809, 4)
 local warnGraceofNature				= mod:NewSoonAnnounce(218927, 4, nil, "Tank")
@@ -56,7 +56,7 @@ local specWarnParasiticFetter		= mod:NewSpecialWarningClose(218304, nil, nil, ni
 local specWarnParasiticFixate		= mod:NewSpecialWarningRun(218342, nil, nil, nil, 4, 2)
 local specWarnSolarCollapse			= mod:NewSpecialWarningDodge(218148, nil, nil, nil, 2, 2)
 --Stage 2: Nightosis
-local specwarnStarLow				= mod:NewSpecialWarning("warnStarLow", "Tank|Healer", nil, nil, 2)--aesoon?
+local specwarnStarLow				= mod:NewSpecialWarning("warnStarLow", "Tank|Healer", nil, nil, 2, 2)--aesoon?
 --Stage 3: Pure Forms
 local specWarnGraceOfNature			= mod:NewSpecialWarningMove(218927, "Tank", nil, nil, 3, 2)
 local specWarnCoN					= mod:NewSpecialWarningYouPos(218809, nil, nil, nil, 1, 5)
@@ -91,20 +91,6 @@ local countdownParasiticFetter		= mod:NewCountdown("Alt35", 218304, "-Tank")
 local countdownGraceOfNature		= mod:NewCountdown("Alt48", 218927, "Tank", nil, 6)
 local countdownCoN					= mod:NewCountdown("AltTwo50", 218809, "-Tank")
 
-local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
---Stage 1: The High Botanist
-local voiceRecursiveStrikes			= mod:NewVoice(218503)--tauntboss
-local voiceControlledChaos			= mod:NewVoice(218438)--watchstep
-local voiceLasher					= mod:NewVoice("ej13699", "RangedDps")--killmob
-local voiceParasiticFetter			= mod:NewVoice(218304)--runaway
-local voiceParasiticFixate			= mod:NewVoice(218342)--targetyou
-local voiceSolarCollapse			= mod:NewVoice(218148)--watchstep
---Stage 2: Nightosis
-
---Stage 3: Pure Forms
-local voiceGraceOfNature			= mod:NewVoice(218927, "Tank")--bossout
-local voiceCoN						= mod:NewVoice(218809)--targetyou
-
 mod:AddRangeFrameOption(8, 218807)
 mod:AddSetIconOption("SetIconOnFetter", 218304, true)
 mod:AddSetIconOption("SetIconOnCoN", 218807, true)
@@ -118,7 +104,7 @@ mod.vb.globalTimer = 35
 local sentLowHP = {}
 local warnedLowHP = {}
 local UnitDebuff = UnitDebuff
-local callOfNightName = GetSpellInfo(218809)
+local callOfNightName = DBM:GetSpellInfo(218809)
 local hasCoN, noCoN
 do
 	--hasCoN not used
@@ -206,7 +192,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 218438 then
 		specWarnControlledChaos:Show()
-		voiceControlledChaos:Play("watchstep")
+		specWarnControlledChaos:Play("watchstep")
 		--Add filter to make sure it doesn't start timers off chaos spheres dying?
 		timerControlledChaosCD:Start(self.vb.globalTimer)
 		countdownControlledChaos:Start(self.vb.globalTimer)
@@ -221,7 +207,7 @@ function mod:SPELL_CAST_START(args)
 		warnControlledChaos:Show(30)
 	elseif spellId == 218148 then
 		specWarnSolarCollapse:Show()
-		voiceSolarCollapse:Play("watchstep")
+		specWarnSolarCollapse:Play("watchstep")
 		timerSolarCollapseCD:Start(self.vb.globalTimer)
 	elseif spellId == 218806 and self:IsMythic() and self.vb.phase == 3 then
 		warnFlare:Show()
@@ -241,7 +227,7 @@ function mod:SPELL_CAST_START(args)
 		timerToxicSporesCD:Start()
 	elseif spellId == 218927 then
 		specWarnGraceOfNature:Show()
-		voiceGraceOfNature:Play("bossout")
+		specWarnGraceOfNature:Play("bossout")
 		timerGraceOfNatureCD:Start(self.vb.globalTimer)
 		countdownGraceOfNature:Start(self.vb.globalTimer)
 		warnGraceofNature:Schedule(self.vb.globalTimer-5)
@@ -249,7 +235,7 @@ function mod:SPELL_CAST_START(args)
 		self:Unschedule(checkForBuggedBalls)
 		self.vb.phase = 2
 		warnPhase2:Show()
-		voicePhaseChange:Play("ptwo")
+		warnPhase2:Play("ptwo")
 		timerControlledChaosCD:Stop()
 		countdownControlledChaos:Cancel()
 		timerParasiticFetterCD:Stop()
@@ -277,7 +263,7 @@ function mod:SPELL_CAST_START(args)
 		self:SetBossHPInfoToHighest()
 		self.vb.phase = 3
 		warnPhase3:Show()
-		voicePhaseChange:Play("pthree")
+		warnPhase3:Play("pthree")
 		timerControlledChaosCD:Stop()
 		countdownControlledChaos:Cancel()
 		timerParasiticFetterCD:Stop()
@@ -339,7 +325,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnCoN:Show(self:IconNumToString(number))
 			yellCoN:Yell(self:IconNumToString(number), number, number)
-			voiceCoN:Play("targetyou")
+			specWarnCoN:Play("targetyou")
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(8, noCoN, nil, nil, true)
 			end
@@ -352,7 +338,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if amount >= 5 then
 			if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") and self:AntiSpam(3, 1) then
 				specWarnRecursiveStrikes:Show(args.destName)
-				voiceRecursiveStrikes:Play("tauntboss")
+				specWarnRecursiveStrikes:Play("tauntboss")
 			else
 				if amount % 3 == 0 then
 					warnRecursiveStrikes:Show(args.destName, amount)
@@ -365,7 +351,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if self:CheckNearby(20, args.destName) and self:AntiSpam(2, 3.5) then
 			specWarnParasiticFetter:Show(args.destName)
-			voiceParasiticFetter:Play("runaway")
+			specWarnParasiticFetter:Play("runaway")
 		else
 			warnParasiticFetter:CombinedShow(0.5, args.destName)
 		end
@@ -377,7 +363,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnParasiticFixate:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnParasiticFixate:Show()
-			voiceParasiticFixate:Play("targetyou")
+			specWarnParasiticFixate:Play("targetyou")
 		end
 		if self.Options.NPAuraOnFixate then
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId)
@@ -386,7 +372,7 @@ function mod:SPELL_AURA_APPLIED(args)
 --		local targetName = args.destName
 --		if targetName == UnitName("target") or targetName == UnitName("focus") then
 --			specWarnGraceOfNature:Show(targetName)
---			voiceGraceOfNature:Play("bossout")
+--			specWarnGraceOfNature:Play("bossout")
 --		end
 	elseif spellId == 222021 or spellId == 222010 or spellId == 222020 then--Infusions
 		if not self:IsMythic() then return end--Just in case, I don't think this happens in other difficulties though.
@@ -512,7 +498,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 218304 then
 		if self:AntiSpam(5, 4) and not UnitDebuff("player", args.spellName) then
 			specWarnLasher:Show()
-			voiceLasher:Play("killmob")
+			specWarnLasher:Play("killmob")
 		end
 		if self.Options.SetIconOnFetter and not self:IsLFR() then
 			self:SetIcon(args.destName, 0)
@@ -539,5 +525,6 @@ function mod:OnSync(msg, guid)
 	if msg == "lowhealth" and guid and not warnedLowHP[guid] then
 		warnedLowHP[guid] = true
 		specwarnStarLow:Show()
+		specwarnStarLow:Play("aesoon")
 	end
 end

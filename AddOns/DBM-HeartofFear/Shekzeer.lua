@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(743, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(62837)--62847 Dissonance Field, 63591 Kor'thik Reaver, 63589 Set'thik Windblade
 mod:SetEncounterID(1501)
 mod:SetZone()
@@ -80,6 +80,7 @@ local resinTargets = {}
 local resinIcon = 2
 local phase3Started = false
 local fieldCount = 0
+local screechDebuff, fixateDebuff = DBM:GetSpellInfo(123735), DBM:GetSpellInfo(125390)
 
 local function warnVisionsTargets()
 	warnVisions:Show(table.concat(visonsTargets, "<, >"))
@@ -88,6 +89,7 @@ local function warnVisionsTargets()
 end
 
 function mod:OnCombatStart(delay)
+	screechDebuff, fixateDebuff = DBM:GetSpellInfo(123735), DBM:GetSpellInfo(125390)
 	phase3Started = false
 	resinIcon = 2
 	fieldCount = 0
@@ -128,7 +130,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() and amount >= 3 then
 			specWarnEyes:Show(amount)
 		else
-			if amount >= 2 and not UnitDebuff("player", GetSpellInfo(123735)) and not UnitIsDeadOrGhost("player") then
+			if amount >= 2 and not UnitDebuff("player", screechDebuff) and not UnitIsDeadOrGhost("player") then
 				specWarnEyesOther:Show(args.destName)
 			end
 		end
@@ -298,7 +300,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		timerPhase1:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(L.PlayerDebuffs)
-			DBM.InfoFrame:Show(10, "playerbaddebuff", 125390)
+			DBM.InfoFrame:Show(10, "playerbaddebuff", fixateDebuff)
 		end
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()

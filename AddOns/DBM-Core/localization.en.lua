@@ -1,12 +1,6 @@
 
-DBM_CORE_NEED_LOCALS				= "Are you good with programming or languages? If yes, the DBM needs your help in localizing DBM in more languages. If you can help, visit DBM forums or DBM Discord and contact MysticalOS"
-DBM_CORE_NEED_LOGS					= "DBM needs Transcriptor (http://www.wowace.com/addons/transcriptor/) log of this fight to make best mods possible. If you want to help, log this fight with transcriptor and post them to DBM forums or discord"
 DBM_HOW_TO_USE_MOD					= "Welcome to DBM. Type /dbm help for a list of supported commands. To access options type /dbm in your chat to begin configuration. Load specific zones manually to configure any boss specific settings to your liking as well. DBM will setup defaults for your spec, but you may want to fine tune these."
 DBM_SILENT_REMINDER					= "Reminder: DBM is still in silent mode."
-
-DBM_FORUMS_MESSAGE					= "Found a bug or wrong timer? Do you think some mod could use an additional warning, timer or special feature?\nVisit the DBM forums or DBM Discord and give your feedback."
-DBM_FORUMS_COPY_URL_DIALOG			= "Come visit our discussion and support forums"
-DBM_FORUMS_COPY_URL_DIALOG_NEWS		= "To learn more about this new feature and how it works, visit our forums"
 
 DBM_CORE_LOAD_MOD_ERROR				= "Error while loading boss mods for %s: %s"
 DBM_CORE_LOAD_MOD_SUCCESS			= "Loaded '%s' mods. For more options such as custom alert sounds and personalized warning notes, type /dbm."
@@ -17,8 +11,6 @@ DBM_CORE_BAD_LOAD					= "DBM has detected your mod for this instance failed to f
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s could not be loaded because your DBM-Core does not meet requirements. An updated version is required"
 DBM_CORE_LOAD_MOD_DISABLED			= "%s is installed but currently disabled. This mod will not be loaded unless you enable it."
 DBM_CORE_LOAD_MOD_DISABLED_PLURAL	= "%s are installed but currently disabled. These mods will not be loaded unless you enable them."
-
-DBM_CORE_WHATS_NEW					= "A few features were pruned or altered to remove some chat and link hooks that have potential to cuase issues with chat frame. This won't fix '/logout' issue as it's a blizzard bug, but it does make things cleaner."
 
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "Range Radar can not be used in instances. Legacy text range frame used instead"
@@ -415,14 +407,14 @@ DBM_CORE_AUTO_TIMER_TEXTS = {
 	cd			= "%s CD",
 	cdcount		= "%s CD (%%s)",
 	cdsource	= "%s CD: >%%s<",
-	cdspecial	= "Special Ability CD",
+	cdspecial	= "Special CD",
 	next		= "Next %s",
 	nextcount	= "Next %s (%%s)",
 	nextsource	= "Next %s: %%s",
-	nextspecial	= "Next Special Ability",
+	nextspecial	= "Next Special",
 	achievement	= "%s",
 	stage		= "Next Stage",
-	adds		= "Next Incoming Adds",
+	adds		= "Incoming Adds",
 	addscustom	= "Incoming Adds (%%s)",
 	roleplay	= GUILD_INTEREST_RP
 }
@@ -561,17 +553,25 @@ DBM_CORE_DUR_ENTRY					= "%s: Durability [%d percent] / Gear broken [%s]"
 DBM_CORE_LAG_FOOTER					= "No Response: %s"
 
 --Role Icons
-DBM_CORE_TANK_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:6:21:7:27|t"
-DBM_CORE_HEALER_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:70:86:7:27|t"
-DBM_CORE_DAMAGE_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:39:55:7:27|t"
+DBM_CORE_TANK_ICON			= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:6:21:7:27|t"
+DBM_CORE_HEALER_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:70:86:7:27|t"
+DBM_CORE_DAMAGE_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:39:55:7:27|t"
+
+DBM_CORE_TANK_ICON_SMALL	= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:12:12:0:0:255:66:6:21:7:27|t"
+DBM_CORE_HEALER_ICON_SMALL	= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:12:12:0:0:255:66:70:86:7:27|t"
+DBM_CORE_DAMAGE_ICON_SMALL	= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:12:12:0:0:255:66:39:55:7:27|t"
 --Importance Icons
-DBM_CORE_HEROIC_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:22:22:0:0:255:66:102:118:7:27|t"
-DBM_CORE_DEADLY_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:22:22:0:0:255:66:133:153:7:27|t"
-DBM_CORE_IMPORTANT_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:168:182:7:27|t"
+DBM_CORE_HEROIC_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:22:22:0:0:255:66:102:118:7:27|t"
+DBM_CORE_DEADLY_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:22:22:0:0:255:66:133:153:7:27|t"
+DBM_CORE_IMPORTANT_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:168:182:7:27|t"
+
+DBM_CORE_HEROIC_ICON_SMALL	= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:14:14:0:0:255:66:102:118:7:27|t"
+DBM_CORE_DEADLY_ICON_SMALL	= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:14:14:0:0:255:66:133:153:7:27|t"
+DBM_CORE_IMPORTANT_ICON_SMALL= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:12:12:0:0:255:66:168:182:7:27|t"
 --Type Icons
-DBM_CORE_INTERRUPT_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:198:214:7:27|t"
-DBM_CORE_MAGIC_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:229:247:7:27|t"
-DBM_CORE_POISON_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:39:55:40:58|t"
-DBM_CORE_DISEASE_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:70:86:40:58|t"
-DBM_CORE_CURSE_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:6:21:40:58|t"
-DBM_CORE_ENRAGE_ICON = "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:102:118:40:58|t"
+DBM_CORE_INTERRUPT_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:198:214:7:27|t"
+DBM_CORE_MAGIC_ICON			= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:229:247:7:27|t"
+DBM_CORE_POISON_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:39:55:40:58|t"
+DBM_CORE_DISEASE_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:70:86:40:58|t"
+DBM_CORE_CURSE_ICON			= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:6:21:40:58|t"
+DBM_CORE_ENRAGE_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:102:118:40:58|t"

@@ -85,10 +85,6 @@ L:SetOptionLocalization({
 	RangeFrame			= "Zeige Abstandsfenster (5m) für $spell:99257"
 })
 
-L:SetMiscLocalization({
-	VitalSpark		= GetSpellInfo(99262).." Stapel"
-})
-
 --------------------------------
 -- Majordomo Fandral Staghelm --
 --------------------------------

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Brutallus", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 642 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(24882)
 mod:SetEncounterID(725)
 mod:SetModelID(22711)
@@ -34,22 +34,21 @@ local timerBurnCD		= mod:NewCDTimer(20, 46394, nil, nil, nil, 3)
 
 local berserkTimer		= mod:NewBerserkTimer(360)
 
-local voiceMeteor		= mod:NewVoice(45150)--stackhigh
-local voiceBurn			= mod:NewVoice(46394)--targetyou
-
 mod:AddBoolOption("BurnIcon", true)
 mod:AddBoolOption("RangeFrame", true)
 
 mod.vb.burnIcon = 8
+local debuffName = DBM:GetSpellInfo(46394)
 
 local DebuffFilter
 do
 	DebuffFilter = function(uId)
-		return UnitDebuff(uId, GetSpellInfo(46394))
+		return UnitDebuff(uId, debuffName)
 	end
 end
 
 function mod:OnCombatStart(delay)
+	debuffName = DBM:GetSpellInfo(46394)
 	self.vb.burnIcon = 8
 	timerBurnCD:Start(-delay)
 	timerStompCD:Start(-delay)
@@ -79,10 +78,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if args:IsPlayer() then
 			specWarnBurn:Show()
-			voiceBurn:Play("targetyou")
+			specWarnBurn:Play("targetyou")
 		end
 		if self.Options.RangeFrame then
-			if UnitDebuff("player", GetSpellInfo(46394)) then--You have debuff, show everyone
+			if UnitDebuff("player", args.spellName) then--You have debuff, show everyone
 				DBM.RangeCheck:Show(4, nil)
 			else--You do not have debuff, only show players who do
 				DBM.RangeCheck:Show(4, DebuffFilter)
@@ -95,7 +94,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		if amount >= 4 then
 			specWarnMeteor:Show(amount)
-			voiceMeteor:Play("stackhigh")
+			specWarnMeteor:Play("stackhigh")
 		end
 	end
 end

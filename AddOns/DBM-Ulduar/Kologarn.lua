@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kologarn", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(32930)--, 32933, 32934
 mod:SetEncounterID(1137)
 mod:SetModelID(28638)
@@ -42,9 +42,6 @@ local timerNextGrip				= mod:NewCDTimer(20, 64292, nil, nil, nil, 3)
 local timerRespawnLeftArm		= mod:NewTimer(48, "timerLeftArm", nil, nil, nil, 1)
 local timerRespawnRightArm		= mod:NewTimer(48, "timerRightArm", nil, nil, nil, 1)
 local timerTimeForDisarmed		= mod:NewTimer(10, "achievementDisarmed")	-- 10 HC / 12 nonHC
-
-local voiceCrunchArmor2			= mod:NewVoice(64002)--stackhigh
-local voiceEyebeam				= mod:NewVoice(63346)--justrun/keepmove
 
 mod:AddBoolOption("HealthFrame", true)
 mod:AddBoolOption("SetIconOnGripTarget", true)
@@ -89,7 +86,7 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
         if args.amount >= 2 then 
             if args:IsPlayer() then
                 specWarnCrunchArmor2:Show(args.amount)
-                voiceCrunchArmor2:Play("stackhigh")
+                specWarnCrunchArmor2:Play("stackhigh")
             end
 		end
 	end
@@ -142,8 +139,8 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 function mod:RAID_BOSS_WHISPER(msg)
 	if msg:find(L.FocusedEyebeam) then
 		specWarnEyebeam:Show()
-		voiceEyebeam:Play("justrun")
-		voiceEyebeam:Schedule(1, "keepmove")
+		specWarnEyebeam:Play("justrun")
+		specWarnEyebeam:ScheduleVoice(1, "keepmove")
 		yellBeam:Yell()
 	end
 end

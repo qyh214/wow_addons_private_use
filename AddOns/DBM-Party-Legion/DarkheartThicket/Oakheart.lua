@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1655, "DBM-Party-Legion", 2, 762)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16091 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
 mod:SetCreatureID(103344)
 mod:SetEncounterID(1837)
 mod:SetZone()
@@ -25,9 +25,6 @@ local timerRootsCD					= mod:NewCDTimer(23, 204574, nil, nil, nil, 3)--23-31
 local timerBreathCD					= mod:NewCDTimer(26.5, 204667, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--26--35
 
 local countdownThrow				= mod:NewCountdown("Alt28", 204658, "Tank")
-
-local voiceRoots					= mod:NewVoice(204574)--watchstep
-local voiceBreath					= mod:NewVoice(204667, "Tank")--Defensive
 
 --AKA Crushing Grip
 function mod:ThrowTarget(targetname, uId)
@@ -67,11 +64,11 @@ function mod:SPELL_CAST_START(args)
 		timerShatteredEarthCD:Start()
 	elseif spellId == 204574 then
 		specWarnRoots:Show()
-		voiceRoots:Play("watchstep")
+		specWarnRoots:Play("watchstep")
 		timerRootsCD:Start()
 	elseif spellId == 204667 then
 		specWarnBreath:Show()
-		voiceBreath:Play("defensive")
+		specWarnBreath:Play("defensive")
 		timerBreathCD:Start()
 	end
 end

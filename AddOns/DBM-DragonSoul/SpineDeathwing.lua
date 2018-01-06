@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(318, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(53879)
 mod:SetEncounterID(1291)
 mod:SetZone()
@@ -52,16 +52,17 @@ mod:AddBoolOption("InfoFrame", true)
 mod:AddBoolOption("SetIconOnGrip", true)
 mod:AddBoolOption("ShowShieldInfo", false)--on 25 man this is quite frankly a spammy nightmare, especially on heroic. off by default since it's really only sensible in 10 man. Besides I may be adding an alternate frame option for "grip damage needed"
 
-local sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(GetSpellInfo(105847), 23)
+local sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(DBM:GetSpellInfo(105847), 23)
 local gripTargets = {}
 local gripIcon = 6
 local corruptionActive = {}
 local residueNum = 0
 local diedOozeGUIDS = {}
 local numberOfPlayers = 1
+local tendrilDebuff = DBM:GetSpellInfo(105563)
 
 local function checkTendrils()
-	if not UnitDebuff("player", GetSpellInfo(105563)) and not UnitIsDeadOrGhost("player") then
+	if not UnitDebuff("player", tendrilDebuff) and not UnitIsDeadOrGhost("player") then
 		specWarnTendril:Show()
 	end
 end
@@ -150,11 +151,12 @@ do
 end
 
 function mod:OnCombatStart(delay)
+	tendrilDebuff = DBM:GetSpellInfo(105563)
 	numberOfPlayers = DBM:GetNumRealGroupMembers()
 	if self:IsDifficulty("lfr25") then
-		sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(GetSpellInfo(105847), 34.5)
+		sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(DBM:GetSpellInfo(105847), 34.5)
 	else
-		sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(GetSpellInfo(105847), 23)
+		sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(DBM:GetSpellInfo(105847), 23)
 	end
 	table.wipe(gripTargets)
 	table.wipe(corruptionActive)
@@ -309,8 +311,8 @@ function mod:RAID_BOSS_EMOTE(msg)
 			countdownRoll:Start(10)
 		end
 		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
-			DBM.InfoFrame:SetHeader(L.NoDebuff:format(GetSpellInfo(105563)))
-			DBM.InfoFrame:Show(5, "playergooddebuff", 105563)
+			DBM.InfoFrame:SetHeader(L.NoDebuff:format(tendrilDebuff))
+			DBM.InfoFrame:Show(5, "playergooddebuff", tendrilDebuff)
 		end
 	elseif msg == L.DLevels or msg:find(L.DLevels) then
 		self:Unschedule(checkTendrils)

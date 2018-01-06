@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KazzakClassic", "DBM-Azeroth")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 636 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(121818)--121818 TW ID, need classic ID
 --mod:SetModelID(17887)
 mod:SetZone()
@@ -25,8 +25,6 @@ local specWarnMark				= mod:NewSpecialWarningMoveAway(243723, nil, nil, nil, 1, 
 local timerVoidBoltCD			= mod:NewCDTimer(20.8, 243713, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--Iffy
 local timerMarkCD				= mod:NewCDTimer(22.2, 243723, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
 local timerShadowBoltVolleyCD	= mod:NewCDTimer(11, 243712, nil, nil, nil, 2)
-
-local voiceMark					= mod:NewVoice(243723)--runout
 
 --mod:AddReadyCheckOption(48620, false)
 
@@ -58,7 +56,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerMarkCD:DelayedStart(0.5)
 		if args:IsPlayer() then
 			specWarnMark:Show()
-			voiceMark:Play("runout")
+			specWarnMark:Play("runout")
 		end
 	end
 end

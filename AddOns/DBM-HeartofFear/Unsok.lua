@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(737, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(62511)
 mod:SetEncounterID(1499)
 mod:SetZone()
@@ -99,9 +99,9 @@ local Totems = nil
 local Guardians = nil
 local Pets = nil
 local TPTPNormal = nil
-local amberExplosion = GetSpellInfo(122402)
-local Monstrosity = EJ_GetSectionInfo(6254)
-local MutatedConstruct = EJ_GetSectionInfo(6249)
+local amberExplosion = DBM:GetSpellInfo(122402)
+local Monstrosity = DBM:EJ_GetSectionInfo(6254)
+local MutatedConstruct = DBM:EJ_GetSectionInfo(6249)
 local canInterrupt = {}
 
 function mod:AmberExplosionAMWarning()
@@ -130,6 +130,7 @@ local function warnAmberExplosionCast(spellId)
 end
 
 function mod:OnCombatStart(delay)
+	amberExplosion = DBM:GetSpellInfo(122402)
 	warnedWill = true--avoid wierd bug on pull
 	willNumber = 100
 	Phase = 1

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(683, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(60585, 60586, 60583)--60583 Protector Kaolan, 60585 Elder Regail, 60586 Elder Asani
 mod:SetEncounterID(1409)
 mod:SetZone()
@@ -18,9 +18,9 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 117986 117052 118191"
 )
 
-local Kaolan = EJ_GetSectionInfo(5789)
-local Regail = EJ_GetSectionInfo(5793)
-local Asani = EJ_GetSectionInfo(5794)
+local Kaolan = DBM:EJ_GetSectionInfo(5789)
+local Regail = DBM:EJ_GetSectionInfo(5793)
+local Asani = DBM:EJ_GetSectionInfo(5794)
 
 mod:SetBossHealthInfo(
 	60583, Kaolan,
@@ -80,7 +80,7 @@ local phase = 1
 local totalTouchOfSha = 0
 local prisonTargets = {}
 local prisonIcon = 1--Will try to start from 1 and work up, to avoid using icons you are probalby putting on bosses (unless you really fail at spreading).
-local prisonDebuff = GetSpellInfo(79339)
+local prisonDebuff = DBM:GetSpellInfo(111850)
 local prisonCount = 0
 local asaniCasts = 0
 local corruptedCount = 0
@@ -103,7 +103,7 @@ end
 
 local function warnPrisonTargets()
 	if mod.Options.RangeFrame then
-		if UnitDebuff("player", GetSpellInfo(111850)) then--You have debuff, show everyone
+		if UnitDebuff("player", prisonDebuff) then--You have debuff, show everyone
 			DBM.RangeCheck:Show(8, nil)
 		else--You do not have debuff, only show players who do
 			DBM.RangeCheck:Show(8, DebuffFilter)
@@ -134,6 +134,7 @@ local function findGroupNumber()
 end
 
 function mod:OnCombatStart(delay)
+	prisonDebuff = DBM:GetSpellInfo(111850)
 	phase = 1
 	totalTouchOfSha = 0
 	prisonCount = 0

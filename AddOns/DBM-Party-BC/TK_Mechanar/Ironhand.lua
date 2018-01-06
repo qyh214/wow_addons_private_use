@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ironhand", "DBM-Party-BC", 13)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(19710)
 mod:SetEncounterID(1934)
 mod:SetModelID(21191)--Bad angle, but not terrible enough to disable i guess
@@ -24,15 +24,12 @@ local specWarnShadowpower   = mod:NewSpecialWarningDispel(35322, "MagicDispeller
 local timerShadowpower      = mod:NewBuffActiveTimer(15, 35322, nil, "Tank|MagicDispeller", 2, 5, nil, DBM_CORE_TANK_ICON)
 local timerJackhammer       = mod:NewBuffActiveTimer(8, 39194, nil, nil, nil, 2)
 
-local voiceJackHammer		= mod:NewVoice(39194, "Melee")--justrun
-local voiceShadowpower		= mod:NewVoice(35322, "MagicDispeller")--dispelboss
-
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(39193, 35322) and not args:IsDestTypePlayer() then     --Shadow Power
 		timerShadowpower:Start(args.destName)
 		if self.Options.SpecWarn35322dispel then
 			specWarnShadowpower:Show(args.destName)
-			voiceShadowpower:Play("dispelboss")
+			specWarnShadowpower:Play("dispelboss")
 		else
 			warnShadowpower:Show(args.destName)
 		end
@@ -55,9 +52,9 @@ function mod:RAID_BOSS_EMOTE(msg)
 	if msg == L.JackHammer then
 		if self.Options.SpecWarn39194run then
 			specWarnJackHammer:Show()
+			specWarnJackHammer:Play("justrun")
 		else
 			WarnJackHammer:Show()
 		end
-		voiceJackHammer:Play("justrun")
 	end
 end

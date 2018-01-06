@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2004, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17015 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
 mod:SetCreatureID(122578)
 mod:SetEncounterID(2088)
 mod:SetZone()
@@ -9,13 +9,13 @@ mod:SetZone()
 mod:SetUsedIcons(1, 2, 3)
 mod:SetHotfixNoticeRev(16945)
 mod:SetMinSyncRevision(16975)
---mod.respawnTime = 29
+mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 244312 254926 245807 252758 246692 246833 246516 257978 254919",
-	"SPELL_CAST_SUCCESS 252758 246692",
+	"SPELL_CAST_SUCCESS 252758 246692 248214",
 	"SPELL_AURA_APPLIED 254919 257978 246687 249680 246698 252760",
 	"SPELL_AURA_APPLIED_DOSE 254919 257978",
 	"SPELL_AURA_REMOVED 246687 249680 246516 246698 252760",
@@ -27,23 +27,20 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"
 )
 
---TODO, see if Reverberating Strike can be on anyone or just another tank only mechanic (determines what kind of range frame we need)
 --TODO, how does mythic reverberating decimatino work (18 yard spread?)
 --TODO, analyze DiabolicBomb
 --TODO, how to detect http://ptr.wowhead.com/spell=249920/weapons-upgrade
 --TODO, workin http://ptr.wowhead.com/spell=246629/apocalypse-blast
 --TODO, more work on infoframe for fel reaver construction status, etc.
---TODO, review all timers, they were adjusting his rate of energy gain throughough attempts
---TODO, review timers even more cause they keep tweaking them
---TODO, currently decimation & annihilation are only detectable via nameplate/target casts as such, it's pretty bad idea to support it unless it's really required
+--TODO, currently annihilation are only detectable via nameplate/target casts as such, it's pretty bad idea to support it unless it's really required
 --[[
 (ability.id = 244312 or ability.id = 254926 or ability.id = 245807 or ability.id = 252758 or ability.id = 246692 or ability.id = 246833 or ability.id = 246516 or ability.id = 257997 or ability.id = 257978 or ability.id = 254919) and type = "begincast"
- or (ability.id = 252758 or ability.id = 246692) and type = "cast"
+ or (ability.id = 252758 or ability.id = 246692 or ability.id = 248214) and type = "cast"
  or (ability.id = 246516 or ability.id = 246698 or ability.id = 252760) and (type = "removebuff" or type = "removedebuff")
 --]]
 --Stage: Deployment
 local warnShatteringStrike				= mod:NewSpellAnnounce(248375, 2)
-local warnDiabolicBomb					= mod:NewSpellAnnounce(246779, 3)
+local warnDiabolicBomb					= mod:NewSpellAnnounce(246779, 3, nil, nil, nil, nil, nil, 2)
 local warnReverberatingStrike			= mod:NewTargetAnnounce(254926, 3)
 --Reavers (or empowered boss from reaver deaths)
 local warnDecimation					= mod:NewTargetAnnounce(246687, 4)
@@ -56,7 +53,6 @@ local specWarnForgingStrikeOther		= mod:NewSpecialWarningTaunt(244312, nil, nil,
 local specWarnReverberatingStrike		= mod:NewSpecialWarningYou(254926, nil, nil, nil, 1, 2)
 local yellReverberatingStrike			= mod:NewYell(254926)
 local specWarnReverberatingStrikeNear	= mod:NewSpecialWarningClose(254926, nil, nil, nil, 1, 2)
---local specWarnDiabolicBomb				= mod:NewSpecialWarningDodge(246779, nil, nil, nil, 2, 2)
 local specWarnRuiner					= mod:NewSpecialWarningDodge(246840, nil, nil, nil, 3, 2)
 --Stage: Construction
 local specWarnInitializing				= mod:NewSpecialWarningSwitch(246504, nil, nil, nil, 1, 2)
@@ -70,16 +66,16 @@ local yellDemolish						= mod:NewPosYell(246692)
 local yellDemolishFades					= mod:NewIconFadesYell(246692)
 
 --Stage: Deployment
+mod:AddTimerLine(BOSS)
 local timerForgingStrikeCD				= mod:NewCDTimer(14.3, 244312, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerReverberatingStrikeCD		= mod:NewCDCountTimer(28, 254926, nil, nil, nil, 3)
---local timerDiabolicBombCD				= mod:NewAITimer(61, 246779, nil, nil, nil, 3)
+local timerDiabolicBombCD				= mod:NewCDTimer(20.3, 246779, nil, nil, nil, 3)
 local timerRuinerCD						= mod:NewCDCountTimer(29.1, 246840, nil, nil, nil, 3)
 --local timerShatteringStrikeCD			= mod:NewCDTimer(30, 248375, nil, nil, nil, 2)
 local timerApocProtocolCD				= mod:NewCDCountTimer(77, 246516, nil, nil, nil, 6)
-local timerInitializing					= mod:NewCastTimer(30, 246504, nil, nil, nil, 6)
 --Stage: Construction
---local timerCleansingProtocolCD		= mod:NewAITimer(30, 248061, nil, nil, nil, 6)
---Reavers (or empowered boss from reaver deaths)
+mod:AddTimerLine(DBM_ADDS)
+local timerInitializing					= mod:NewCastTimer(30, 246504, nil, nil, nil, 6)
 local timerDecimationCD					= mod:NewCDTimer(15.1, 246687, nil, nil, nil, 3)
 local timerAnnihilationCD				= mod:NewCDTimer(15.4, 245807, nil, nil, nil, 3)
 local timerDemolishCD					= mod:NewCDTimer(15.8, 246692, nil, nil, nil, 3)
@@ -90,18 +86,6 @@ local timerDemolishCD					= mod:NewCDTimer(15.8, 246692, nil, nil, nil, 3)
 local countdownApocProtocol				= mod:NewCountdown(77, 246516)
 local countdownForgingStrike			= mod:NewCountdown("Alt14", 244312, "Tank", nil, 3)
 local countdownRuiner					= mod:NewCountdown("AltTwo29", 246840)
-
---Stage: Deployment
---local voiceGTFO						= mod:NewVoice(238028, nil, DBM_CORE_AUTO_VOICE4_OPTION_TEXT)--runaway
-local voiceForgingStrike				= mod:NewVoice(244312)--defensive
-local voiceReverberatingStrike			= mod:NewVoice(254926)--watchstep
---local voiceDiabolicBomb					= mod:NewVoice(246779)--watchstep/watchorb?
-local voiceRuiner						= mod:NewVoice(246840)--farfromline (iffy) Maybe when it's not INVISIBLE I'll have better idea how to describe it
-local voiceInitializing					= mod:NewVoice(246504)--killmob
---Reavers (or empowered boss from reaver deaths)
-local voiceDecimation					= mod:NewVoice(246687)--scatter
-local voiceAnnihilation					= mod:NewVoice(245807)--helpsoak
-local voiceDemolish						= mod:NewVoice(246692)--gathershare/targetyou
 
 mod:AddSetIconOption("SetIconOnDemolish", 246692, true)
 mod:AddBoolOption("InfoFrame", true)
@@ -115,6 +99,7 @@ mod.vb.apocProtoCount = 0
 mod.vb.ruinerTimeLeft = 0
 mod.vb.reverbTimeLeft = 0
 mod.vb.forgingTimeLeft = 0
+mod.vb.bombTimeLeft = 0
 
 local DemolishTargets = {}
 local playerName = DBM:GetMyPlayerInfo()
@@ -123,11 +108,11 @@ function mod:ReverberatingTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnReverberatingStrike:Show()
-		voiceReverberatingStrike:Play("runaway")
+		specWarnReverberatingStrike:Play("runaway")
 		yellReverberatingStrike:Yell()
 	elseif self:CheckNearby(5, targetname) then
 		specWarnReverberatingStrikeNear:Show(targetname)
-		voiceReverberatingStrike:Play("watchstep")
+		specWarnReverberatingStrikeNear:Play("watchstep")
 	else
 		warnReverberatingStrike:Show(targetname)
 	end
@@ -151,15 +136,15 @@ local function warnDemolishTargets(self, spellName)
 			self:SetIcon(name, icon)
 		end
 	end
-	if not UnitDebuff("player", spellName) then
+	if not UnitDebuff("player", spellName) and not self:IsTank() then
 		specWarnDemolishOther:Show(DBM_ALLY)
-		voiceDemolish:Play("gathershare")
+		specWarnDemolishOther:Play("gathershare")
 	end
 end
 
+local demolishDebuff = DBM:GetSpellInfo(246692)
 local updateInfoFrame
 do
-	local demolishDebuff = GetSpellInfo(246692)
 	local lines = {}
 	local sortedLines = {}
 	local function addLine(key, value)
@@ -183,6 +168,7 @@ do
 end
 
 function mod:OnCombatStart(delay)
+	demolishDebuff = DBM:GetSpellInfo(246692)
 	self.vb.ruinerCast = 0
 	self.vb.forgingStrikeCast = 0
 	self.vb.reverbStrikeCast = 0
@@ -190,10 +176,11 @@ function mod:OnCombatStart(delay)
 	self.vb.ruinerTimeLeft = 0
 	self.vb.reverbTimeLeft = 0
 	self.vb.forgingTimeLeft = 0
+	self.vb.bombTimeLeft = 0
 	table.wipe(DemolishTargets)
 	timerForgingStrikeCD:Start(6-delay, 1)--6-7
 	countdownForgingStrike:Start(6-delay)
-	--timerDiabolicBombCD:Start(11-delay)
+	timerDiabolicBombCD:Start(11-delay)
 	timerReverberatingStrikeCD:Start(14.2-delay, 1)--14-15
 	timerRuinerCD:Start(21.1-delay, 1)--21-25
 	countdownRuiner:Start(21.1-delay)
@@ -225,7 +212,7 @@ function mod:SPELL_CAST_START(args)
 		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
 		if tanking or (status == 3) then--Player is current target
 			specWarnForgingStrike:Show()
-			voiceForgingStrike:Play("defensive")
+			specWarnForgingStrike:Play("defensive")
 		end
 		--1.5, 27.6, 30.1
 		if self:IsLFR() then
@@ -248,14 +235,14 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 245807 then
 		specWarnAnnihilation:Show()
-		voiceAnnihilation:Play("helpsoak")
+		specWarnAnnihilation:Play("helpsoak")
 	elseif spellId == 252758 or spellId == 246692 then
 		table.wipe(DemolishTargets)
 	elseif spellId == 246833 then--Ruiner
 		self.vb.ruinerCast = self.vb.ruinerCast + 1
 		specWarnRuiner:Show()
-		voiceRuiner:Play("farfromline")
-		voiceRuiner:Schedule(1.5, "keepmove")
+		specWarnRuiner:Play("farfromline")
+		specWarnRuiner:ScheduleVoice(1.5, "keepmove")
 		timerRuinerCD:Start(nil, self.vb.ruinerCast+1)--28-30 depending on difficulty
 		countdownRuiner:Start(29.1)
 		timerForgingStrikeCD:Stop()
@@ -266,9 +253,11 @@ function mod:SPELL_CAST_START(args)
 		self.vb.ruinerTimeLeft = timerRuinerCD:GetRemaining(self.vb.ruinerCast+1)
 		self.vb.reverbTimeLeft = timerReverberatingStrikeCD:GetRemaining(self.vb.reverbStrikeCast+1)
 		self.vb.forgingTimeLeft = timerForgingStrikeCD:GetRemaining(self.vb.forgingStrikeCast+1)
+		self.vb.bombTimeLeft = timerDiabolicBombCD:GetRemaining()
 		countdownForgingStrike:Cancel()
 		countdownRuiner:Cancel()
 		if self.Options.UseAddTime then
+			timerDiabolicBombCD:AddTime(42.3)
 			timerRuinerCD:AddTime(42.3, self.vb.ruinerCast+1)
 			countdownRuiner:Start(self.vb.ruinerTimeLeft+42.3)
 			timerReverberatingStrikeCD:AddTime(42.3, self.vb.reverbStrikeCast+1)
@@ -278,11 +267,12 @@ function mod:SPELL_CAST_START(args)
 			timerForgingStrikeCD:Stop()
 			timerReverberatingStrikeCD:Stop()
 			timerRuinerCD:Stop()
+			timerDiabolicBombCD:Stop()
 		end
 		--timerDiabolicBombCD:Stop()
 		--timerShatteringStrikeCD:Stop()
 		specWarnInitializing:Show()
-		voiceInitializing:Play("killmob")
+		specWarnInitializing:Play("killmob")
 		if self:IsLFR() then
 			timerInitializing:Start(42.3)
 		else
@@ -295,6 +285,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 252758 or spellId == 246692 then
 		timerDemolishCD:Start(nil, args.sourceGUID)
+	elseif spellId == 248214 then
+		warnDiabolicBomb:Show()
+		warnDiabolicBomb:Play("bombsoon")
+		timerDiabolicBombCD:Start()
 	end
 end
 
@@ -310,7 +304,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			if not UnitIsDeadOrGhost("player") and (not remaining or remaining and remaining < 14) then
 				specWarnForgingStrikeOther:Show(args.destName)
-				voiceForgingStrike:Play("changemt")
+				specWarnForgingStrikeOther:Play("changemt")
 			end
 		end
 	elseif spellId == 257978 then--LFR special edition, swap at 2 stacks
@@ -325,7 +319,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				end
 				if not UnitIsDeadOrGhost("player") and (not remaining or remaining and remaining < 8.5) then
 					specWarnForgingStrikeOther:Show(args.destName)
-					voiceForgingStrike:Play("tauntboss")
+					specWarnForgingStrikeOther:Play("tauntboss")
 				end
 			end
 		end
@@ -333,7 +327,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnDecimation:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnDecimation:Show()
-			voiceDecimation:Play("runout")
+			specWarnDecimation:Play("runout")
 			local _, _, _, _, _, _, expires = UnitDebuff("player", args.spellName)
 			if expires then
 				local remaining = expires-GetTime()
@@ -352,7 +346,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		--end
 		if args:IsPlayer() then
 			specWarnDemolish:Show()
-			voiceDemolish:Play("targetyou")
+			specWarnDemolish:Play("targetyou")
 		end
 		if self.Options.InfoFrame then
 			if #DemolishTargets == 1 then
@@ -392,6 +386,9 @@ function mod:SPELL_AURA_REMOVED(args)
 				timerForgingStrikeCD:Start(self.vb.forgingTimeLeft, self.vb.forgingStrikeCast+1)
 				countdownForgingStrike:Start(self.vb.forgingTimeLeft)
 			end
+			if self.vb.bombTimeLeft > 0 then
+				timerDiabolicBombCD:Start(self.vb.bombTimeLeft)
+			end
 		end
 		--timerDiabolicBombCD:Start(2)
 		--timerShatteringStrikeCD:Start(42)
@@ -415,16 +412,10 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 228007 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
 		specWarnGTFO:Show()
-		voiceGTFO:Play("runaway")
+		specWarnGTFO:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
-
-function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
-	if msg:find("spell:238502") then
-
-	end
-end
 --]]
 
 function mod:UNIT_DIED(args)
@@ -439,19 +430,15 @@ function mod:UNIT_DIED(args)
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if (spellId == 246779 or spellId == 248214) and self:AntiSpam(3, 1) then--Diabolic Bomb
-		warnDiabolicBomb:Show()
-		--voiceDiabolicBomb:Play("watchstep")
-		--timerDiabolicBombCD:Start()
-	elseif spellId == 248319 then--Consume Energy 100% (reaver fully charged and activated)
+	if spellId == 248319 then--Consume Energy 100% (reaver fully charged and activated)
 		--Info Frame usage situation?
 	elseif spellId == 246686 then--Decimation (ignore 246691 I'm pretty sure)
 		--specWarnDecimation:Show()
-		--voiceDecimation:Play("scatter")
+		--specWarnDecimation:Play("scatter")
 		timerDecimationCD:Start(nil, UnitGUID(uId))
 	elseif spellId == 246657 then--Annihilation
 		specWarnAnnihilation:Show()
-		voiceAnnihilation:Play("helpsoak")
+		specWarnAnnihilation:Play("helpsoak")
 		timerAnnihilationCD:Start(nil, UnitGUID(uId))
 	elseif spellId == 248375 and self:AntiSpam(5, 2) then--Shattering Strike
 		warnShatteringStrike:Show()

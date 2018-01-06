@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(865, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 108 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(71504)--71591 Automated Shredder
 mod:SetEncounterID(1601)
 mod:SetZone()
@@ -85,11 +85,11 @@ mod:AddSetIconOption("SetIconOnSawBlade", 143265, false)
 
 --Upvales, don't need variables
 --Names very long in english, makes frame HUGE, may switch to shorter localized names
-local assemblyLine = EJ_GetSectionInfo(8202)
-local crawlerMine = EJ_GetSectionInfo(8212)
-local shockwaveMissile = EJ_GetSectionInfo(8205)
-local laserTurret = EJ_GetSectionInfo(8208)
-local electroMagnet = EJ_GetSectionInfo(8210)
+local assemblyLine = DBM:EJ_GetSectionInfo(8202)
+local crawlerMine = DBM:EJ_GetSectionInfo(8212)
+local shockwaveMissile = DBM:EJ_GetSectionInfo(8205)
+local laserTurret = DBM:EJ_GetSectionInfo(8208)
+local electroMagnet = DBM:EJ_GetSectionInfo(8210)
 local assemblyName = {
 	[71606] = shockwaveMissile, -- Deactivated Missile Turret
 	[71790] = crawlerMine, -- Disassembled Crawler Mines

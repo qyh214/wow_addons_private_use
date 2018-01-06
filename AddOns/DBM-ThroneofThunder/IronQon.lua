@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(817, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(68078, 68079, 68080, 68081)--Ro'shak 68079, Quet'zal 68080, Dam'ren 68081, Iron Qon 68078
 mod:SetEncounterID(1559)
 mod:SetMainBossID(68078)
@@ -80,7 +80,7 @@ mod:AddBoolOption("InfoFrame")
 local Roshak = select(2, EJ_GetCreatureInfo(2, 817))
 local Quetzal = select(2, EJ_GetCreatureInfo(3, 817))
 local Damren = select(2, EJ_GetCreatureInfo(4, 817))
-local arcingName = GetSpellInfo(136193)
+local arcingName = DBM:GetSpellInfo(136193)
 mod.vb.phase = 1
 mod.vb.fistSmashCount = 0
 local spearSpecWarnFired = false
@@ -181,6 +181,7 @@ local function checkArcing()
 end
 
 function mod:OnCombatStart(delay)
+	arcingName = DBM:GetSpellInfo(136193)
 	self.vb.phase = 1
 	self.vb.fistSmashCount = 0
 	updateHealthFrame()
@@ -198,8 +199,8 @@ function mod:OnCombatStart(delay)
 		timerWhirlingWindsCD:Start(15-delay)
 		timerLightningStormCD:Start(22-delay)
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(GetSpellInfo(136193))
-			DBM.InfoFrame:Show(5, "playerbaddebuff", 136193)
+			DBM.InfoFrame:SetHeader(arcingName)
+			DBM.InfoFrame:Show(5, "playerbaddebuff", arcingName)
 		end
 	end
 	berserkTimer:Start(-delay)
@@ -397,7 +398,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			end
 			if self.Options.InfoFrame then
 				DBM.InfoFrame:SetHeader(arcingName)
-				DBM.InfoFrame:Show(5, "playerbaddebuff", 136193)
+				DBM.InfoFrame:Show(5, "playerbaddebuff", arcingName)
 			end
 		end
 	elseif spellId == 139172 then--Whirling Winds (Phase 1 Heroic).
@@ -442,7 +443,7 @@ function mod:UNIT_DIED(args)
 			end
 			if self.Options.InfoFrame and not self:IsDifficulty("lfr25") then
 				DBM.InfoFrame:SetHeader(arcingName)
-				DBM.InfoFrame:Show(5, "playerbaddebuff", 136193)
+				DBM.InfoFrame:Show(5, "playerbaddebuff", arcingName)
 			end
 			self.vb.phase = 2
 			updateHealthFrame()

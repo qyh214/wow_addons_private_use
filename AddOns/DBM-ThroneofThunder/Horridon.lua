@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(819, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 70 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(68476)
 mod:SetEncounterID(1575)
 mod:SetZone()
@@ -79,10 +79,10 @@ local doorNumber = 0
 local direNumber = 0
 local shamandead = 0
 local jalakEngaged = false
-local Farraki	= EJ_GetSectionInfo(7098)
-local Gurubashi	= EJ_GetSectionInfo(7100)
-local Drakkari	= EJ_GetSectionInfo(7103)
-local Amani		= EJ_GetSectionInfo(7106)
+local Farraki	= DBM:EJ_GetSectionInfo(7098)
+local Gurubashi	= DBM:EJ_GetSectionInfo(7100)
+local Drakkari	= DBM:EJ_GetSectionInfo(7103)
+local Amani		= DBM:EJ_GetSectionInfo(7106)
 local balcMobs = {
 	[69164] = true,
 	[69175] = true,
@@ -169,7 +169,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnPuncture:Show(amount)
 			end
 		else
-			if amount >= threatamount and not UnitDebuff("player", GetSpellInfo(136767)) and not UnitIsDeadOrGhost("player") then--Other tank has at least one stack and you have none
+			if amount >= threatamount and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then--Other tank has at least one stack and you have none
 				specWarnPunctureOther:Show(args.destName)--So nudge you to taunt it off other tank already.
 			end
 		end

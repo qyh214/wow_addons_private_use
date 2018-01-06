@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(820, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 82 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(69017)--69070 Viscous Horror, 69069 good ooze, 70579 bad ooze (patched out of game, :\)
 mod:SetEncounterID(1574)
 mod:SetZone()
@@ -60,6 +60,8 @@ local bigOozeCount = 0
 local bigOozeAlive = 0
 local bigOozeGUIDS = {}
 local UnitDebuff = UnitDebuff
+local good1, good2, good3, good4 = DBM:GetSpellInfo(136180), DBM:GetSpellInfo(136182), DBM:GetSpellInfo(136184), DBM:GetSpellInfo(136186)
+local bad1, bad2, bad3, bad4 = DBM:GetSpellInfo(136181), DBM:GetSpellInfo(136183), DBM:GetSpellInfo(136185), DBM:GetSpellInfo(136187)
 
 local function BigOoze()
 	bigOozeCount = bigOozeCount + 1
@@ -105,6 +107,8 @@ function mod:UPDATE_MOUSEOVER_UNIT()
 end
 
 function mod:OnCombatStart(delay)
+	good1, good2, good3, good4 = DBM:GetSpellInfo(136180), DBM:GetSpellInfo(136182), DBM:GetSpellInfo(136184), DBM:GetSpellInfo(136186)
+	bad1, bad2, bad3, bad4 = DBM:GetSpellInfo(136181), DBM:GetSpellInfo(136183), DBM:GetSpellInfo(136185), DBM:GetSpellInfo(136187)
 	metabolicBoost = false
 	acidSpinesActive = false
 	postulesActive = false
@@ -221,15 +225,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		specWarnFullyMutatedFaded:Show(args.spellName)
 	end
 end
-
-local good1 = GetSpellInfo(136180)
-local good2 = GetSpellInfo(136182)
-local good3 = GetSpellInfo(136184)
-local good4 = GetSpellInfo(136186)
-local bad1 = GetSpellInfo(136181)
-local bad2 = GetSpellInfo(136183)
-local bad3 = GetSpellInfo(136185)
-local bad4 = GetSpellInfo(136187)
 
 function mod:UNIT_AURA(uId)
 	local gcnt, gcnt1, gcnt2, gcnt3, gcnt4, bcnt, bcnt1, bcnt2, bcnt3, bcnt4

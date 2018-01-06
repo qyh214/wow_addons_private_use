@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(332, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(56598)--56427 is Boss, but engage trigger needs the ship which is 56598
 --mod:SetEncounterID(1298)--Fires when ship get actual engage. need to adjust timer.
 mod:SetMainBossID(56427)
@@ -61,10 +61,10 @@ local timerHarpoonActive			= mod:NewBuffActiveTimer(20, 108038, nil, "Dps", nil,
 local timerReloadingCast			= mod:NewCastTimer(10, 108039, nil, "Dps", nil, 5, nil, DBM_CORE_DAMAGE_ICON)
 local timerTwilightOnslaught		= mod:NewCastTimer(7, 107588, nil, nil, nil, 5)
 local timerTwilightOnslaughtCD		= mod:NewNextCountTimer(35, 107588, nil, nil, nil, 5)
-local timerSapperCD					= mod:NewNextTimer(40, "ej4200", nil, nil, nil, 1, 107752, DBM_CORE_HEROIC_ICON)
+local timerSapperCD					= mod:NewNextTimer(39.8, "ej4200", nil, nil, nil, 1, 107752, DBM_CORE_HEROIC_ICON)
 local timerDegenerationCD			= mod:NewCDTimer(8.5, 107558, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--8.5-9.5 variation.
 local timerBladeRushCD				= mod:NewCDTimer(15.5, 107595, nil, nil, nil, 3)
-local timerBroadsideCD				= mod:NewNextTimer(90, 110153, nil, nil, nil, nil, nil, DBM_CORE_HEROIC_ICON)
+local timerBroadsideCD				= mod:NewNextTimer(70, 110153, nil, nil, nil, nil, nil, DBM_CORE_HEROIC_ICON)
 local timerRoarCD					= mod:NewCDTimer(18.5, 108044, nil, nil, nil, 2)--18.5~24 variables
 local timerTwilightFlamesCD			= mod:NewNextTimer(8, 108051, nil, nil, nil, 3)
 local timerShockwaveCD				= mod:NewCDTimer(23, 108046, nil, nil, nil, 3)
@@ -91,7 +91,7 @@ local function Phase2Delay()
 	timerSapperCD:Cancel()
 	countdownSapper:Cancel()
 	timerRoarCD:Start(10)
-	timerTwilightFlamesCD:Start(12)
+	timerTwilightFlamesCD:Start(10.5)
 	timerShockwaveCD:Start(13)--13-16 second variation
 	if mod:IsDifficulty("heroic10", "heroic25") then
 		timerConsumingShroud:Start(45)	-- 45seconds once P2 starts?
@@ -139,8 +139,8 @@ function mod:OnCombatStart(delay)
 	timerCombatStart:Start(-delay)
 	timerAdd:Start(22.8-delay)
 	self:ScheduleMethod(22.8-delay, "AddsRepeat")
-	timerTwilightOnslaughtCD:Start(48-delay, 1)
-	countdownTwilightOnslaught:Start(48-delay)
+	timerTwilightOnslaughtCD:Start(46.9-delay, 1)
+	countdownTwilightOnslaught:Start(46.9-delay)
 	if self:IsDifficulty("heroic10", "heroic25") then
 		timerBroadsideCD:Start(57-delay)
 	end
@@ -149,7 +149,7 @@ function mod:OnCombatStart(delay)
 		countdownSapper:Start(69-delay)
 	end
 	if DBM.BossHealth:IsShown() then
-		local shipname = EJ_GetSectionInfo(4202)
+		local shipname = DBM:EJ_GetSectionInfo(4202)
 		DBM.BossHealth:Clear()
 		DBM.BossHealth:AddBoss(56598, shipname)
 	end
@@ -209,7 +209,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnSunder:Show(amount)
 			end
 		else
-			if amount >= 2 and not UnitDebuff("player", GetSpellInfo(108043)) and not UnitIsDeadOrGhost("player") then
+			if amount >= 2 and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 				specWarnSunderOther:Show(args.destName)
 			end
 		end

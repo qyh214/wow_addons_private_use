@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(713, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(63191)--Also has CID 62164. He has 2 CIDs for a single target, wtf? It seems 63191 is one players attack though so i'll try just it.
 mod:SetEncounterID(1463)
 mod:SetZone()
@@ -52,15 +52,16 @@ local timerPungency				= mod:NewBuffFadesTimer(120, 123081)
 local countdownCrush			= mod:NewCountdown(37, 122774, nil, L.countdownCrush)
 local berserkTimer				= mod:NewBerserkTimer(420)
 
---mod:AddBoolOption("InfoFrame", true)--Not sure how to do yet, i need to see 25 man first to get a real feel for number of people with debuff at once.
 mod:AddBoolOption("PheromonesIcon", true)
 
-local crushWarnText = GetSpellInfo(122774)
-local crushCountWarnText = GetSpellInfo(122774).." (%d)"
+local crushWarnText = DBM:GetSpellInfo(122774)
+local crushCountWarnText = DBM:GetSpellInfo(122774).." (%d)"
 local brokenLegs = 0
 local crushCount = 0
 
 function mod:OnCombatStart(delay)
+	crushWarnText = DBM:GetSpellInfo(122774)
+	crushCountWarnText = DBM:GetSpellInfo(122774).." (%d)"
 	brokenLegs = 0
 	timerFuriousSwipeCD:Start(-delay)--8-11 sec on pull
 	if self:IsHeroic() then

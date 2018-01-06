@@ -294,7 +294,9 @@ function TrinketMenu.Initialize()
 	TrinketMenu.UpdateWornTrinkets()
 	TrinketMenu.DockWindows()
 	TrinketMenu.OrientWindows()
-	TrinketMenu.StartTimer("CooldownUpdate")
+	if TrinketMenuOptions.NotifyThirty == "ON" or TrinketMenuOptions.Notify == "ON" then
+		TrinketMenu.StartTimer("CooldownUpdate")
+	end
 	TrinketMenu.ReflectRedRange()
 	if TrinketMenuPerOptions.Visible == "ON" and (GetInventoryItemLink("player", 13) or GetInventoryItemLink("player", 14)) then
 		TrinketMenu_MainFrame:Show()
@@ -1001,7 +1003,7 @@ function TrinketMenu.EquipTrinketByName(name, slot)
 		end
 	end
 	TrinketMenu.UpdateCombatQueue()
-end	
+end
 
 function TrinketMenu.UpdateCombatQueue()
 	local _, bag, slot
@@ -1025,7 +1027,7 @@ end
 --[[ Notify ]]
 
 function TrinketMenu.Notify(msg)
-	PlaySound(839)
+	PlaySound(4146)
 	if MikSBT then -- send via MSBT if it exists
 		MikSBT.DisplayMessage(msg, "Notification", true, 255, 0, 0, nil, nil, nil, nil)
 	elseif SCT_Display then -- send via SCT if it exists

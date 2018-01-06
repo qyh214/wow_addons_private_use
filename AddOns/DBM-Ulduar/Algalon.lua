@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Algalon", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(32871)
 mod:SetEncounterID(1130)
 mod:SetMinSyncRevision(234)
@@ -28,7 +28,7 @@ local announcePreBigBang		= mod:NewPreWarnAnnounce(64584, 10, 3)
 local announceBlackHole			= mod:NewSpellAnnounce(65108, 2)
 local announcePhasePunch		= mod:NewStackAnnounce(65108, 4, nil, "Tank|Healer")
 
-local specwarnStarLow			= mod:NewSpecialWarning("warnStarLow", "Tank|Healer")
+local specwarnStarLow			= mod:NewSpecialWarning("warnStarLow", "Tank|Healer", nil, nil, 1, 2)
 local specWarnPhasePunch		= mod:NewSpecialWarningStack(64412, nil, 4, nil, nil, 1, 6)
 local specWarnBigBang			= mod:NewSpecialWarningSpell(64584, nil, nil, nil, 3, 2)
 local specWarnCosmicSmash		= mod:NewSpecialWarningDodge(64596, nil, nil, nil, 2, 2)
@@ -41,10 +41,6 @@ local timerCDCosmicSmash		= mod:NewCDTimer(25, 64596, nil, nil, nil, 3)
 local timerCastCosmicSmash		= mod:NewCastTimer(4.5, 64596)
 local timerPhasePunch			= mod:NewTargetTimer(45, 64412, nil, "Tank", 2, 5)
 local timerNextPhasePunch		= mod:NewNextTimer(16, 64412, nil, "Tank", 2, 5)
-
-local voicePhasePunch			= mod:NewVoice(64412)--stackhigh
-local voiceBigBang				= mod:NewVoice(64584)--findshelter/defensive
-local voiceCosmicSmash			= mod:NewVoice(64596)--watchstep
 
 local sentLowHP = {}
 local warnedLowHP = {}
@@ -68,9 +64,9 @@ function mod:SPELL_CAST_START(args)
 		announcePreBigBang:Schedule(80)
 		specWarnBigBang:Show()
 		if self:IsTank() then
-			voiceBigBang:Play("defensive")
+			specWarnBigBang:Play("defensive")
 		else
-			voiceBigBang:Play("findshelter")
+			specWarnBigBang:Play("findshelter")
 		end
 	end
 end
@@ -82,7 +78,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerCastCosmicSmash:Start()
 		timerCDCosmicSmash:Start()
 		specWarnCosmicSmash:Show()
-		voiceCosmicSmash:Play("watchstep")
+		specWarnCosmicSmash:Play("watchstep")
 	end
 end
 
@@ -92,7 +88,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		if args:IsPlayer() and amount >= 4 then
 			specWarnPhasePunch:Show(args.amount)
-			voicePhasePunch:Play("stackhigh")
+			specWarnPhasePunch:Play("stackhigh")
 		end
 		timerPhasePunch:Start(args.destName)
 		announcePhasePunch:Show(args.destName, amount)
@@ -135,5 +131,6 @@ function mod:OnSync(msg, guid)
 	if msg == "lowhealth" and guid and not warnedLowHP[guid] then
 		warnedLowHP[guid] = true
 		specwarnStarLow:Show()
+		specwarnStarLow:Play("aesoon")
 	end
 end

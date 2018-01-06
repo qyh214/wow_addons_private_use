@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(169, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(42180, 42178, 42179, 42166)
 mod:SetEncounterID(1027)
 mod:SetZone()
@@ -109,10 +109,10 @@ local pulled = false
 local cloudSpam = 0--Uses custom resets, don't use prototype
 local incinerateCast = 0
 local encasing = false
-local Magmatron = EJ_GetSectionInfo(3207)
-local Electron = EJ_GetSectionInfo(3201)
-local Toxitron = EJ_GetSectionInfo(3208)
-local Arcanotron = EJ_GetSectionInfo(3194)
+local Magmatron = DBM:EJ_GetSectionInfo(3207)
+local Electron = DBM:EJ_GetSectionInfo(3201)
+local Toxitron = DBM:EJ_GetSectionInfo(3208)
+local Arcanotron = DBM:EJ_GetSectionInfo(3194)
 
 function mod:ChemicalBombTarget()
 	local targetname = self:GetBossTarget(42180)

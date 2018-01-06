@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Council", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 621 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(22949, 22950, 22951, 22952)
 mod:SetEncounterID(608)
 mod:SetModelID(21416)
@@ -49,12 +49,6 @@ local timerNextCoH			= mod:NewCDTimer(14, 41455, nil, nil, nil, 4, nil, DBM_CORE
 
 local berserkTimer			= mod:NewBerserkTimer(900)
 
-local voiceShield			= mod:NewVoice(41475, "Dps")--stopattack
-local voiceFlame			= mod:NewVoice(41481)--runaway
-local voiceBlizzard			= mod:NewVoice(41482)--runaway
-local voiceConsecration		= mod:NewVoice(41541)--runaway
-local voiceCoH				= mod:NewVoice(41455, "HasInterrupt")--kickcast
-
 mod:AddSetIconOption("PoisonIcon", 41485)
 
 function mod:OnCombatStart(delay)
@@ -70,19 +64,19 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 41481 and args:IsPlayer() and self:AntiSpam(3, 1) and not self:IsTrivial(85) then
 		 specWarnFlame:Show()
-		 voiceFlame:Play("runaway")
+		 specWarnFlame:Play("runaway")
 	elseif spellId == 41482 and args:IsPlayer() and self:AntiSpam(3, 2) and not self:IsTrivial(85) then
 		 specWarnBlizzard:Show()
-		 voiceBlizzard:Play("runaway")
+		 specWarnBlizzard:Play("runaway")
 	elseif spellId == 41541 and args:IsPlayer() and self:AntiSpam(3, 3) and not self:IsTrivial(85) then
 		 specWarnConsecration:Show()
-		 voiceConsecration:Play("runaway")
+		 specWarnConsecration:Play("runaway")
 	elseif spellId == 41476 then
 		warnVanish:Show(args.destName)
 		timerVanish:Start(args.destName)
 	elseif spellId == 41475 and not self:IsTrivial(85) then
 		specWarnShield:Show(args.destName)
-		voiceShield:Play("stopattack")
+		specWarnShield:Play("stopattack")
 		timerShield:Start(args.destName)
 	elseif spellId == 41452 and self:GetCIDFromGUID(args.destGUID) == 22949 then
 		warnDevAura:Show()
@@ -115,7 +109,7 @@ function mod:SPELL_CAST_START(args)
 		timerCoH:Start()
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnCoH:Show(args.sourceName)
-			voiceCoH:Play("kickcast")
+			specWarnCoH:Play("kickcast")
 		end
 	end
 end

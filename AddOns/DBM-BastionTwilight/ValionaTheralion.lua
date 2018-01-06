@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(157, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(45992, 45993)
 mod:SetEncounterID(1032)
 mod:SetZone()
@@ -89,8 +89,7 @@ local lastFab = 0--Leave this custom one, we use reset gettime on it in extra pl
 local markWarned = false
 local blackoutActive = false
 local ValionaLanded = false
-local meteorTarget = GetSpellInfo(88518)
-local fabFlames = GetSpellInfo(86497)
+local meteorTarget, fabFlames = DBM:GetSpellInfo(88518), DBM:GetSpellInfo(86497)
 
 local absorbHealth = {
 	["heroic25"] = 65000,
@@ -177,6 +176,7 @@ function mod:TwilightBlastTarget()
 end
 
 function mod:OnCombatStart(delay)
+	meteorTarget, fabFlames = DBM:GetSpellInfo(88518), DBM:GetSpellInfo(86497)
 	berserkTimer:Start(-delay)
 	timerBlackoutCD:Start(10-delay)
 	timerDevouringFlamesCD:Start(25.5-delay)

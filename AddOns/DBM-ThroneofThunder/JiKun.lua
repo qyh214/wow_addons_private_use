@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(828, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 70 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(69712)
 mod:SetEncounterID(1573)
 mod:SetZone()
@@ -55,7 +55,7 @@ mod:AddDropdownOption("ShowNestArrows", {"Never", "Northeast", "Southeast", "Sou
 
 mod.vb.flockCount = 0
 mod.vb.quillsCount = 0
-local flockName = EJ_GetSectionInfo(7348)
+local flockName = DBM:EJ_GetSectionInfo(7348)
 
 function mod:OnCombatStart(delay)
 	self.vb.flockCount = 0
@@ -97,7 +97,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnTalonRake:Show(amount)
 			end
 		else
-			if amount >= 1 and not UnitDebuff("player", GetSpellInfo(134366)) and not UnitIsDeadOrGhost("player") then
+			if amount >= 1 and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 				specWarnTalonRakeOther:Show(args.destName)
 			end
 		end

@@ -49,12 +49,9 @@ local function printDebug(tooltip, itemLink, bag, slot)
     addDoubleLine(tooltip, "Item subClass:", tostring(itemSubClass))
     addDoubleLine(tooltip, "Item equipSlot:", tostring(equipSlot))
 
-    local sourceID = CanIMogIt:GetSourceID(itemLink)
-    if sourceID ~= nil then
-        addDoubleLine(tooltip, "Item sourceID:", tostring(sourceID))
-    else
-        addDoubleLine(tooltip, "Item sourceID:", 'nil')
-    end
+    local sourceID, sourceIDSource = CanIMogIt:GetSourceID(itemLink)
+    addDoubleLine(tooltip, "Item sourceID:", tostring(sourceID))
+    addDoubleLine(tooltip, "Item sourceIDSource:", tostring(sourceIDSource))
     local appearanceID = CanIMogIt:GetAppearanceID(itemLink)
     addDoubleLine(tooltip, "Item appearanceID:", tostring(appearanceID))
 
@@ -143,7 +140,7 @@ local function addToTooltip(tooltip, itemLink, bag, slot)
     end
 
     local text;
-    text = CanIMogIt.GetTooltipText(CanIMogIt, itemLink, bag, slot)
+    text = CanIMogIt:GetTooltipText(itemLink, bag, slot)
     if text and text ~= "" then
         addDoubleLine(tooltip, " ", text)
         tooltip.CIMI_tooltipWritten = true

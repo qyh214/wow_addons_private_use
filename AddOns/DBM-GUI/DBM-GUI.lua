@@ -43,7 +43,7 @@
 --
 
 
-local revision =("$Revision: 16987 $"):sub(12, -3)
+local revision =("$Revision: 17129 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -72,7 +72,6 @@ end
 --------------------------------------------------------
 --  Cache frequently used global variables in locals  --
 --------------------------------------------------------
-local GetSpellInfo = GetSpellInfo
 local tinsert, tremove, tsort, twipe = table.insert, table.remove, table.sort, table.wipe
 local mfloor, mmax = math.floor, math.max
 
@@ -387,7 +386,7 @@ do
 
 	local function replaceSpellLinks(id)
 		local spellId = tonumber(id)
-		local spellName = GetSpellInfo(spellId)
+		local spellName = DBM:GetSpellInfo(spellId)
 		if not spellName then
 			spellName = DBM_CORE_UNKNOWN
 			DBM:Debug("Spell ID does not exist: "..spellId)
@@ -443,7 +442,7 @@ do
 		if name:find("%$spell:") then
 			if not isTimer and modvar then
 				local spellId = string.match(name, "spell:(%d+)")
-				noteSpellName = GetSpellInfo(spellId)
+				noteSpellName = spellId--Sending spellID instead of spell name sine spell name would be invalid if called on load
 			end
 			name = name:gsub("%$spell:(%d+)", replaceSpellLinks)
 		end
@@ -3374,8 +3373,9 @@ local function CreateOptionsMenu()
 
 	do
 		local spamPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_SpamFilter, "option")
-		local spamOutArea = spamPanel:CreateArea(L.Area_SpamFilter_Outgoing, nil, 190, true)
+		local spamOutArea = spamPanel:CreateArea(L.Area_SpamFilter_Outgoing, nil, 210, true)
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowAnnounce, true, nil, "DontShowBossAnnounces")
+		spamOutArea:CreateCheckButton(L.SpamBlockNoShowTgtAnnounce, true, nil, "DontShowTargetAnnouncements")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSpecWarn, true, nil, "DontShowSpecialWarnings")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowTimers, true, nil, "DontShowBossTimers")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowUTimers, true, nil, "DontShowUserTimers")

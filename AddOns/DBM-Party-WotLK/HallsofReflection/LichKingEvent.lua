@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(603, "DBM-Party-WotLK", 16, 276)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 236 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 249 $"):sub(12, -3))
 --mod:SetEncounterID(843, 844, 1990)
 
 mod:RegisterEvents(
@@ -17,9 +17,9 @@ mod:RemoveOption("HealthFrame")
 
 mod.vb.waveCount = 0
 
-local ragingGoul = EJ_GetSectionInfo(7276)
-local witchDoctor = EJ_GetSectionInfo(7278)
-local abomination = EJ_GetSectionInfo(7282)
+local ragingGoul = DBM:EJ_GetSectionInfo(7276)
+local witchDoctor = DBM:EJ_GetSectionInfo(7278)
+local abomination = DBM:EJ_GetSectionInfo(7282)
 
 local addWaves = {
 	[1] = { "6 "..ragingGoul, "1 "..witchDoctor },

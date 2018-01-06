@@ -26,9 +26,6 @@ local timerPhase2			= mod:NewTimer(120, "timerP2", "Interface\\Icons\\INV_Weapon
 local timerBlastNovaCD		= mod:NewCDTimer(54, 30616, nil, nil, nil, 2)
 local timerDebris			= mod:NewNextTimer(15, 36449, nil, nil, nil, 2)--Only happens once per fight, after the phase 3 yell.
 
-local voiceBlastNova		= mod:NewVoice(30616)--kickcast
-local voiceHeal				= mod:NewVoice(30528, "HasInterrupt")--kickcast
-
 mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
@@ -40,14 +37,14 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 30528 then
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnHeal:Show(args.sourceName)
-			voiceHeal:Play("kickcast")
+			specWarnHeal:Play("kickcast")
 			timerHeal:Start()
 		else
 			warningHeal:Show()
 		end
 	elseif args.spellId == 30616 then
 		specWarnBlastNova:Show(L.name)
-		voiceBlastNova:Play("kickcast")
+		specWarnBlastNova:Play("kickcast")
 		timerBlastNovaCD:Start()
 	end
 end

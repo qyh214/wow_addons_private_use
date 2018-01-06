@@ -51,28 +51,14 @@ do
 	end
 
 	function AnchorPrototype:AnchorChild(child, to)
-		local d = self.data.direction
-		local spacing = self.data.spacing or 2
-		local offset = self.data.offset or 0
-		if to and to ~= self then
-			local a, b, x, y = 'BOTTOMLEFT', 'TOPLEFT', offset, spacing
-			if d == 'down' then
-				a, b, x, y = 'TOPLEFT', 'BOTTOMLEFT', offset, -spacing
-			elseif d == 'left' then
-				a, b, x, y = 'RIGHT', 'LEFT', spacing, offset
-			elseif d == 'right' then
-				a, b, x, y = 'LEFT', 'RIGHT', -spacing, -offset
-			end
-			child:SetPoint(a, to, b, x, y)
-		else
-			local a, b = 'BOTTOMLEFT', 'TOPLEFT'
-			if d == 'down' then
-				a, b = 'TOPLEFT', 'BOTTOMLEFT'
-			elseif d == 'left' then
-				a, b = 'TOPRIGHT', 'BOTTOMRIGHT'
-			end
-			child:SetPoint(a, self, b)
-		end
+		child:ClearAllPoints()
+		child:SetPoint(
+			self.childPoint,
+			to ~= self and to or self,
+			self.parentPoint,
+			self.offset,
+			self.spacing
+		)
 		if self.data and self.data.scale then
 			child:SetScale(child.scale_mod and self.data.scale * child.scale_mod or self.data.scale)
 		elseif child.scale_mod then
@@ -94,6 +80,14 @@ do
 				self:Show()
 			else
 				self:Hide()
+			end
+			self.offset = svdata.offset or 0
+			self.spacing = svdata.spacing or 2
+			local horizontal = svdata.alignment == 'right' and 'RIGHT' or 'LEFT'
+			self.childPoint, self.parentPoint = 'BOTTOM'..horizontal, 'TOP'..horizontal
+			if svdata.direction == 'down' then
+				self.childPoint, self.parentPoint = self.parentPoint, self.childPoint
+				self.spacing = -self.spacing
 			end
 		else
 			self.data = {}
@@ -209,7 +203,7 @@ do
 		local children = self.children
 		for i,child in ipairs(self.children) do
 			child:ClearAllPoints()
-			self:AnchorChild(child, i == 1 and self or self.children[i-1])
+			self:AnchorChild(child, i == 1 and self or children[i-1])
 		end
 	end
 

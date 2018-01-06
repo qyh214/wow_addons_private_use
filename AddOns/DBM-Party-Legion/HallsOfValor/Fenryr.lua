@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1487, "DBM-Party-Legion", 4, 721)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15031 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17095 $"):sub(12, -3))
 mod:SetCreatureID(95674, 99868)
 mod:SetEncounterID(1807)
 mod:DisableEEKillDetection()
@@ -19,7 +19,7 @@ mod:RegisterEventsInCombat(
 
 --TODO, Keep checking/fixing timers
 local warnLeap							= mod:NewTargetAnnounce(197556, 2)
-local warnPhase2						= mod:NewPhaseAnnounce(2, 2)
+local warnPhase2						= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnFixate						= mod:NewTargetAnnounce(196838, 3)
 local warnClawFrenzy					= mod:NewSpellAnnounce(196512, 2, nil, "Tank")
 
@@ -36,11 +36,6 @@ local timerHowlCD						= mod:NewCDTimer(31.5, 196543, nil, "SpellCaster", nil, 2
 local timerFixateCD						= mod:NewCDTimer(36, 196838, nil, nil, nil, 3)--Poor data
 local timerWolvesCD						= mod:NewCDTimer(35, "ej12600", nil, nil, nil, 1, 199184)
 
-local voiceLeap							= mod:NewVoice(197556)--runout
-local voiceHowl							= mod:NewVoice(196543, "SpellCaster")--stopcast
-local voicePhaseChange					= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
-local voiceFixate						= mod:NewVoice(196838)--runaway/keepmove
-
 mod:AddRangeFrameOption(10, 197556)
 
 function mod:FixateTarget(targetname, uId)
@@ -48,8 +43,8 @@ function mod:FixateTarget(targetname, uId)
 	if self:AntiSpam(5, targetname) then
 		if targetname == UnitName("player") then
 			specWarnFixate:Show()
-			voiceFixate:Play("runaway")
-			voiceFixate:Schedule(1, "keepmove")
+			specWarnFixate:Play("runaway")
+			specWarnFixate:ScheduleVoice(1, "keepmove")
 		else
 			warnFixate:Show(targetname)
 		end
@@ -76,7 +71,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnLeap:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnLeap:Show()
-			voiceLeap:Play("runout")
+			specWarnLeap:Play("runout")
 			yellLeap:Yell()
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(10)
@@ -87,8 +82,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:AntiSpam(5, args.destName) then
 			if args:IsPlayer() then
 				specWarnFixate:Show()
-				voiceFixate:Play("runaway")
-				voiceFixate:Schedule(1, "keepmove")
+				specWarnFixate:Play("runaway")
+				specWarnFixate:ScheduleVoice(1, "keepmove")
 			else
 				warnFixate:Show(args.destName)
 			end
@@ -112,7 +107,7 @@ function mod:SPELL_CAST_START(args)
 		self:BossTargetScanner(99868, "FixateTarget", 0.2, 12, true, nil, nil, nil, true)--Target scanning used to grab target 2-3 seconds faster. Doesn't seem to anymore?
 	elseif spellId == 196543 then
 		specWarnHowl:Show()
-		voiceHowl:Play("stopcast")
+		specWarnHowl:Play("stopcast")
 	end
 end
 
@@ -144,7 +139,7 @@ function mod:ENCOUNTER_START(encounterID)
 --		self:SetWipeTime(5)
 --		self:UnregisterShortTermEvents()
 		warnPhase2:Show()
-		voicePhaseChange:Play("ptwo")
+		warnPhase2:Play("ptwo")
 		--timerWolvesCD:Start(5)
 		--timerHowlCD:Start(5)--2-6, useless timer
 		--timerFixateCD:Start(9.3)--7-20, useless timer

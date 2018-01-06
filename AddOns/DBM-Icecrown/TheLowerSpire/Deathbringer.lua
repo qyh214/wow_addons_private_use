@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Deathbringer", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 240 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(37813)
 mod:SetEncounterID(1096)
 mod:SetModelID(30790)
@@ -53,6 +53,7 @@ local boilingBloodTargets = {}
 local boilingBloodIcon 	= 8
 local Mark = 0
 local lastPower = 0
+local spellName = DBM:GetSpellInfo(72370)
 
 local function warnBoilingBloodTargets()
 	warnBoilingBlood:Show(table.concat(boilingBloodTargets, "<, >"))
@@ -66,8 +67,8 @@ end
 
 function mod:OnCombatStart(delay)
 	if DBM.BossHealth:IsShown() and self.Options.RunePowerFrame then
-		local name = GetSpellInfo(72370)
-		DBM.BossHealth:AddBoss(getPower, name)
+		spellName = DBM:GetSpellInfo(72370)
+		DBM.BossHealth:AddBoss(getPower, spellName)
 	end
 	if self:IsDifficulty("heroic10", "heroic25") then
 		enrageTimer:Start(360-delay)

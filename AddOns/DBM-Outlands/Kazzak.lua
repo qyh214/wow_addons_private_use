@@ -26,9 +26,6 @@ local timerFrenzyCD		= mod:NewCDTimer(60, 32964, nil, nil, nil, 3)
 --local timerTwistedCD	= mod:NewCDTimer(30, 21063, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON..DBM_CORE_MAGIC_ICON)--Unknown, but would be nice to have
 local timerMark			= mod:NewTargetTimer(10, 32960, nil, nil, nil, 3)
 
-local voiceMark			= mod:NewVoice(32960)--targetyou
-local voiceTwisted		= mod:NewVoice(21063, "Healer")--dispelnow
-
 mod:AddBoolOption("SetIconOnMark", true)
 
 function mod:OnCombatStart(delay)
@@ -41,7 +38,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerMark:Start(args.destName)
 		if args:IsPlayer() then
 			specWarnMark:Show()
-			voiceMark:Play("targetyou")
+			specWarnMark:Play("targetyou")
 		else
 			warningMark:Show(args.destName)
 		end
@@ -55,7 +52,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 21063 then
 		if self.Options.SpecWarn21063dispel then
 			specWarnTwisted:Show(args.destName)
-			voiceTwisted:Play("dispelnow")
+			specWarnTwisted:Play("dispelnow")
 		else
 			warningTwisted:Show(args.destName)
 		end

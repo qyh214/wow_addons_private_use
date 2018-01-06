@@ -7,7 +7,7 @@
 end)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 85 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetZone()
 mod.noStatistics = true
 
@@ -73,9 +73,6 @@ local timerSonicBlastCD		= mod:NewCDTimer(6, 145200, nil, nil, nil, 2)--8-11sec 
 
 local countdownTimer		= mod:NewCountdownFades(10, 141582)
 
-local voiceHealIllusion		= mod:NewVoice(142238)
-local voicePowerfulSlam		= mod:NewVoice(144401)
-
 mod:RemoveOption("HealthFrame")
 
 local started = false
@@ -96,7 +93,7 @@ function mod:SPELL_CAST_START(args)
 		warnPowerfulSlam:Show()
 		specWarnPowerfulSlam:Show()
 		timerPowerfulSlamCD:Start(args.sourceGUID)
-		voicePowerfulSlam:Play("shockwave")
+		specWarnPowerfulSlam:Play("shockwave")
 	elseif spellId == 142189 then
 		warnAmberGlobule:Show()
 		specWarnAmberGlob:Show()
@@ -105,7 +102,7 @@ function mod:SPELL_CAST_START(args)
 		warnHealIllusion:Show()
 		specWarnHealIllusion:Show(args.sourceName)
 		timerHealIllusionCD:Start(args.sourceGUID)
-		voiceHealIllusion:Play("kickcast")
+		specWarnHealIllusion:Play("kickcast")
 	elseif spellId == 145200 then
 		warnSonicBlast:Show()
 		specWarnSonicBlast:Show(args.sourceName)

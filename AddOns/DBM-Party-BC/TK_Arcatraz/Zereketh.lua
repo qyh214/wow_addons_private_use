@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(548, "DBM-Party-BC", 15, 254)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 
 mod:SetCreatureID(20870)
 mod:SetEncounterID(1916)
@@ -22,13 +22,10 @@ local specwarnSoC	= mod:NewSpecialWarningDispel(39367, "Healer", nil, nil, 1, 2)
 
 local timerSoC      = mod:NewTargetTimer(18, 39367, nil, "Healer", 2, 3)
 
-local voiceNova		= mod:NewVoice(39005) --aesoon
-local voiceSoC		= mod:NewVoice(39367, "Healer")--dispelnow
-
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(36127, 39005) then
 		specwarnNova:Show()
-		voiceNova:Play("aesoon")
+		specwarnNova:Play("aesoon")
 	end
 end
 
@@ -41,7 +38,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(39367, 32863) then
 		specwarnSoC:Show(args.destName)
-		voiceSoC:Play("dispelnow")
+		specwarnSoC:Play("dispelnow")
 		timerSoC:Start(args.destName)
 	end
 end

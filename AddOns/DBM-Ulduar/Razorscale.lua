@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Razorscale", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(33186)
 mod:SetEncounterID(1139)
 mod:SetModelID(28787)
@@ -33,8 +33,6 @@ local timerTurret3					= mod:NewTimer(93, "timerTurret3", 48642, nil, nil, 5)
 local timerTurret4					= mod:NewTimer(113, "timerTurret4", 48642, nil, nil, 5)
 local timerGrounded                 = mod:NewTimer(45, "timerGrounded", nil, nil, nil, 6)
 
-local voiceDevouringFlame			= mod:NewVoice(64733)--runaway
-
 local combattime = 0
 
 function mod:OnCombatStart(delay)
@@ -58,7 +56,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if (spellId == 64733 or spellId == 64704) and destGUID == UnitGUID("player") and self:AntiSpam() and not self:IsTrivial(100) then
 		specWarnDevouringFlame:Show()
-		voiceDevouringFlame:Play("runaway")
+		specWarnDevouringFlame:Play("runaway")
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

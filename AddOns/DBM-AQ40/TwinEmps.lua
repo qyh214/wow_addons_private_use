@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TwinEmpsAQ", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 640 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(15276, 15275)
 mod:SetEncounterID(715)
 mod:SetModelID(15778)
@@ -32,8 +32,6 @@ local berserkTimer			= mod:NewBerserkTimer(900)
 
 local countdownTeleport		= mod:NewCountdown(29.2, 800)
 
-local voiceStrike			= mod:NewVoice(26613)--defensive
-
 function mod:OnCombatStart(delay)
 	--timerStrikeCD:Start(14.2-delay)
 	berserkTimer:Start()
@@ -50,7 +48,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 26613 and not self:IsTrivial(80) then
 		if args:IsPlayer() then
 			specWarnStrike:Show()
-			voiceStrike:Play("defensive")
+			specWarnStrike:Play("defensive")
 		else
 			warnStrike:Show(args.destName)
 		end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1774, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15605 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17078 $"):sub(12, -3))
 mod:SetCreatureID(109331)
 mod:SetEncounterID(1952)
 mod:SetReCombatTime(20)
@@ -25,8 +25,8 @@ local warnAncientRageFire		= mod:NewSpellAnnounce(217563, 2)
 local warnBurningBomb			= mod:NewSpellAnnounce(217877, 3)
 local warnAncientRageFrost		= mod:NewSpellAnnounce(217831, 2)
 local warnHowlingGale			= mod:NewSpellAnnounce(217966, 2)
-local warnIcyComet				= mod:NewSpellAnnounce(217919, 2)
-local warnAncientRageArcane		= mod:NewTargetAnnounce(217834, 2)
+local warnIcyComet				= mod:NewSpellAnnounce(217925, 2)
+local warnAncientRageArcane		= mod:NewSpellAnnounce(217834, 2)
 
 local specBurningBomb			= mod:NewSpecialWarningYou(217877, nil, nil, nil, 1, 2)--You warning because you don't have to run out unless healer is afk. However still warn in case they are
 local yellBurningBomb			= mod:NewFadesYell(217877)
@@ -38,10 +38,6 @@ local timerBurningBombCD		= mod:NewCDTimer(13.4, 217877, nil, nil, nil, 3)
 local timerWrathfulFlamesCD		= mod:NewCDTimer(13.4, 217907, nil, nil, nil, 2)
 local timerHowlingGaleCD		= mod:NewCDTimer(13.8, 217966, nil, nil, nil, 2)
 local timerArcaneDesolationCD	= mod:NewCDTimer(12.2, 217986, nil, nil, nil, 2)
-
-local voiceBurningBomb			= mod:NewVoice(217877)--targetyou
-local voiceWrathfulFlames		= mod:NewVoice(217907)--watchstep/runaway
-local voiceArcaneDesolation		= mod:NewVoice(217986)--carefly
 
 mod:AddReadyCheckOption(43193, false)
 mod:AddRangeFrameOption(10, 217877)
@@ -72,13 +68,13 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 217986 then
 		self.vb.specialCast = self.vb.specialCast + 1
 		specArcaneDesolation:Show()
-		voiceArcaneDesolation:Play("carefly")
+		specArcaneDesolation:Play("carefly")
 		if self.vb.specialCast == 1 then
 			timerArcaneDesolationCD:Start()
 		end
 	elseif spellId == 217893 then
 		specWrathfulFlames:Show()
-		voiceWrathfulFlames:Play("watchstep")
+		specWrathfulFlames:Play("watchstep")
 	end
 end
 
@@ -98,7 +94,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnBurningBomb:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specBurningBomb:Show()
-			voiceBurningBomb:Play("targetyou")
+			specBurningBomb:Play("targetyou")
 			yellBurningBomb:Schedule(7, 1)
 			yellBurningBomb:Schedule(6, 2)
 			yellBurningBomb:Schedule(5, 3)
@@ -124,7 +120,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 217907 and destGUID == UnitGUID("player") and self:AntiSpam(2, 5) then
 		specWrathfulFlamesGTFO:Show()
-		voiceWrathfulFlames:Play("runaway")
+		specWrathfulFlamesGTFO:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

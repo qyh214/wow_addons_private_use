@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(672, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 102 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(56448)
 mod:SetEncounterID(1418)
 mod:SetZone()
@@ -33,7 +33,7 @@ mod:AddBoolOption("SetIconOnAdds", false)
 
 mod.vb.addsRemaining = 4--Also 4 on heroic?
 mod.vb.firstAdd = false
-local addsName = EJ_GetSectionInfo(5616)
+local addsName = DBM:EJ_GetSectionInfo(5616)
 
 function mod:UNIT_TARGET_UNFILTERED()
 	if self.Options.SetIconOnAdds and not DBM.Options.DontSetIcons and UnitName("target") == addsName then

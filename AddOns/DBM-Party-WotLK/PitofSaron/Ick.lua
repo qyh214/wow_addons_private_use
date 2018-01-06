@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(609, "DBM-Party-WotLK", 15, 278)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 243 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(36476)
 mod:SetEncounterID(835, 836, 2001)
 mod:SetUsedIcons(8)
@@ -31,17 +31,13 @@ local timerPursuitCast			= mod:NewCastTimer(5, 68987)
 local timerPursuitConfusion		= mod:NewBuffActiveTimer(12, 69029)
 local timerPoisonNova			= mod:NewCastTimer(5, 68989, nil, "Melee", 2, 2)
 
-local voiceToxic				= mod:NewVoice(69024)--runaway
-local voiceMines				= mod:NewVoice(69015)--watchstep/keepmove
-local voicePursuit				= mod:NewVoice(68987)--justrun
-local voicePoisonNova			= mod:NewVoice(68989, "Melee")--runout
-
 mod:AddBoolOption("SetIconOnPursuitTarget", true)
 
-local pursuit = GetSpellInfo(68987)
+local pursuit = DBM:GetSpellInfo(68987)
 local pursuitTable = {}
 
 function mod:OnCombatStart(delay)
+	pursuit = DBM:GetSpellInfo(68987)
 	table.wipe(pursuitTable)
 	timerSpecialCD:Start()
 end
@@ -55,11 +51,11 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 68989 then				-- Poison Nova
 		timerPoisonNova:Start()
 		specWarnPoisonNova:Show()
-		voicePoisonNova:Play("runout")
+		specWarnPoisonNova:Play("runout")
 		timerSpecialCD:Start()
 	elseif spellId == 69012 then				--Explosive Barrage
 		specWarnMines:Show()
-		voiceMines:Play("watchstep")
+		specWarnMines:Play("watchstep")
 		timerSpecialCD:Start(22)--Will be 2 seconds longer because of how long barrage lasts
 	end
 end
@@ -79,7 +75,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 69024 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnToxic:Show()
-		voiceToxic:Play("runaway")
+		specWarnToxic:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
@@ -96,7 +92,7 @@ function mod:UNIT_AURA_UNFILTERED(uId)
 		pursuitTable[name] = true
 		if UnitIsUnit(uId, "player") then
 			specWarnPursuit:Show()
-			voicePursuit:Play("justrun")
+			specWarnPursuit:Play("justrun")
 		else
 			warnPursuit:Show(name)
 		end

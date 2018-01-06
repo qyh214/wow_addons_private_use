@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1985, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16998 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17118 $"):sub(12, -3))
 mod:SetCreatureID(122104)
 mod:SetEncounterID(2064)
 mod:DisableESCombatDetection()--Remove if blizz fixes clicking portals causing this event to fire (even though boss isn't engaged)
@@ -24,17 +24,17 @@ mod:RegisterEventsInCombat(
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
 	"UNIT_DIED",
---	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"
 )
 
---TODO, maybe hide timers for platforms you aren't on as well, that's a bit uglier than just filtering a warning, besides you may still want to know these timers
+local Nexus = DBM:EJ_GetSectionInfo(15799)
+local Xoroth = DBM:EJ_GetSectionInfo(15800)
+local Rancora = DBM:EJ_GetSectionInfo(15801)
+local Nathreza = DBM:EJ_GetSectionInfo(15802)
+
 --TODO, interrupt rotation helper for Flames of Xoroth?
---TODO, Icons for the 3 debuffs you move from one portal to another?
---TODO, voice warnings for portals maybe, have to see fight to see if timing lines up first
 --TODO, find a workable cast ID for corrupt and enable interrupt warning
 --TODO, an overview info frame showing the needs of portal worlds (how many shields up, how much fel miasma, how many fires in dark realm if possible)
---TODO, timer correction off UNIT_POWER to auto correct main boss timer variances
 --[[
 (ability.id = 243983 or ability.id = 244689 or ability.id = 244000) and type = "begincast"
  or ability.id = 244016 and type = "cast"
@@ -43,17 +43,16 @@ mod:RegisterEventsInCombat(
  --]]
 --Platform: Nexus
 local warnRealityTear					= mod:NewStackAnnounce(244016, 2, nil, "Tank")
---local warnTransportPortal				= mod:NewSpellAnnounce(244677, 2)
 --Platform: Xoroth
-local warnXorothPortal					= mod:NewSpellAnnounce(244318, 2)
-local warnAegisofFlames					= mod:NewTargetAnnounce(244383, 3)
+local warnXorothPortal					= mod:NewSpellAnnounce(244318, 2, nil, nil, nil, nil, nil, 2)
+local warnAegisofFlames					= mod:NewTargetAnnounce(244383, 3, nil, nil, nil, nil, nil, nil, true)
 local warnAegisofFlamesEnded			= mod:NewEndAnnounce(244383, 1)
 local warnEverburningFlames				= mod:NewTargetAnnounce(244613, 2, nil, false)
 --Platform: Rancora
-local warnRancoraPortal					= mod:NewSpellAnnounce(246082, 2)
+local warnRancoraPortal					= mod:NewSpellAnnounce(246082, 2, nil, nil, nil, nil, nil, 2)
 local warnCausticSlime					= mod:NewTargetAnnounce(244849, 2, nil, false)
 --Platform: Nathreza
-local warnNathrezaPortal				= mod:NewSpellAnnounce(246157, 2)
+local warnNathrezaPortal				= mod:NewSpellAnnounce(246157, 2, nil, nil, nil, nil, nil, 2)
 local warnDelusions						= mod:NewTargetAnnounce(245050, 2, nil, "Healer")
 local warnCloyingShadows				= mod:NewTargetAnnounce(245118, 2, nil, false)
 local warnHungeringGloom				= mod:NewTargetAnnounce(245075, 2, nil, false)
@@ -88,18 +87,22 @@ local yellCloyingShadows				= mod:NewFadesYell(245118)
 local specWarnHungeringGloom			= mod:NewSpecialWarningMoveTo(245075, nil, nil, nil, 1)--No voice yet
 
 --Platform: Nexus
+mod:AddTimerLine(Nexus)
 local timerRealityTearCD				= mod:NewCDTimer(12.1, 244016, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerCollapsingWorldCD			= mod:NewCDTimer(32.9, 243983, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)--32.9-41
 local timerFelstormBarrageCD			= mod:NewCDTimer(32.2, 244000, nil, nil, nil, 3)--32.9-41
 local timerTransportPortalCD			= mod:NewCDTimer(41.2, 244677, nil, nil, nil, 1)--41.2-60. most of time 42 on nose.
 --Platform: Xoroth
+mod:AddTimerLine(Xoroth)
 --local timerSupernovaCD					= mod:NewCDTimer(6.1, 244598, nil, nil, nil, 3)
 local timerFlamesofXorothCD				= mod:NewCDTimer(6.9, 244607, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 --Platform: Rancora
+mod:AddTimerLine(Rancora)
 local timerFelSilkWrapCD				= mod:NewCDTimer(16.6, 244949, nil, nil, nil, 3)
 local timerPoisonEssenceCD				= mod:NewCDTimer(9.4, 246316, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
 local timerLeechEssenceCD				= mod:NewCDTimer(9.4, 244915, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
 --Platform: Nathreza
+mod:AddTimerLine(Nathreza)
 local timerDelusionsCD					= mod:NewCDTimer(14.6, 245050, nil, nil, nil, 3, nil, DBM_CORE_HEALER_ICON..DBM_CORE_MAGIC_ICON)
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
@@ -108,46 +111,20 @@ local timerDelusionsCD					= mod:NewCDTimer(14.6, 245050, nil, nil, nil, 3, nil,
 local countdownCollapsingWorld			= mod:NewCountdown(50, 243983, nil, nil, 3)
 local countdownRealityTear				= mod:NewCountdown("Alt12", 244016, "Tank")
 local countdownFelstormBarrage			= mod:NewCountdown("AltTwo32", 244000, nil, nil, 3)
---Platform: Xoroth
---Platform: Rancora
 
---Platform: Nexus
-local voiceRealityTear					= mod:NewVoice(244016)--tauntboss/stackhigh
-local voiceTransportPortal				= mod:NewVoice(244677)--killmob
-local voiceCollapsingWorld				= mod:NewVoice(243983)--watchstep
-local voiceFelstormBarrage				= mod:NewVoice(244000)--farfromline
-local voiceFieryDetonation				= mod:NewVoice(244709, "HasInterrupt", nil, 2)--kickcast
-local voiceHowlingShadows				= mod:NewVoice(245504, "HasInterrupt")--kickcast
---local voiceGTFO						= mod:NewVoice(238028, nil, DBM_CORE_AUTO_VOICE4_OPTION_TEXT)--runaway
---Platform: Xoroth
-local voiceFlamesofXoroth				= mod:NewVoice(244607, "HasInterrupt")--kickcast
-local voiceSuperNova					= mod:NewVoice(244598)--watchstep
---Platform: Rancora
-local voiceFelSilkWrap					= mod:NewVoice(244949)--changetarget/targetyou
---Platform: Nathreza
-local voiceDelusions					= mod:NewVoice(245050)--targetyou (not sure if better option)
---local voiceCorrupt					= mod:NewVoice(245040, "HasInterrupt")--kickcast
-
---mod:AddSetIconOption("SetIconOnFocusedDread", 238502, true)
---mod:AddInfoFrameOption(239154, true)
 mod:AddRangeFrameOption("8/10")
 mod:AddBoolOption("ShowAllPlatforms", false)
---"Transport Portal-244689-npc:122104 = pull:60.6, 51.2, 51.2, 41.6, 61.0, 42.7, 41.6, 41.6, 61.0", -- [10]
---"Transport Portal-244689-npc:122104 = pull:48.7, 42.5, 52.4, 50.0, 52.3, 51.1", -- [8]
---"Transport Portal-244689-npc:122104 = pull:41.3, 51.1, 42.6, 42.5, 52.3, 51.1, 51.2", -- [7]
---"Transport Portal-244689-npc:122104 = pull:43.1, 51.1, 51.1, 51.1, 42.6, 42.6, 52.4, 51.2, 51.1", -- [8]
---"Transport Portal-244689-npc:122104 = pull:45.7, 51.1, 42.2, 42.0, 41.6, 52.5, 41.5, 42.6, 60.8", -- [9]
 
 mod.vb.shieldsActive = false
 mod.vb.felBarrageCast = 0
 mod.vb.firstPortal = false
 local playerPlatform = 1--1 Nexus, 2 Xoroth, 3 Rancora, 4 Nathreza
-local mindFog, aegisFlames, felMiasma = GetSpellInfo(245099), GetSpellInfo(244383), GetSpellInfo(244826)
+local mindFog, aegisFlames, felMiasma = DBM:GetSpellInfo(245099), DBM:GetSpellInfo(244383), DBM:GetSpellInfo(244826)
+local everBurningFlames, causticSlime, CloyingShadows, hungeringGloom = DBM:GetSpellInfo(244613), DBM:GetSpellInfo(244849), DBM:GetSpellInfo(245118), DBM:GetSpellInfo(245075)
 local nexusPlatform, xorothPlatform, rancoraPlatform, nathrezaPlatform = {}, {}, {}, {}
 
 local updateRangeFrame
 do
-	local everBurningFlames, causticSlime, CloyingShadows, hungeringGloom = GetSpellInfo(244613), GetSpellInfo(244849), GetSpellInfo(245118), GetSpellInfo(245075)
 	local UnitDebuff = UnitDebuff
 	local function debuffFilter(uId)
 		if UnitDebuff(uId, everBurningFlames) or UnitDebuff(uId, hungeringGloom) or UnitDebuff(uId, causticSlime) then
@@ -196,6 +173,8 @@ local function updateAllTimers(self, ICD)
 end
 
 function mod:OnCombatStart(delay)
+	mindFog, aegisFlames, felMiasma = DBM:GetSpellInfo(245099), DBM:GetSpellInfo(244383), DBM:GetSpellInfo(244826)
+	everBurningFlames, causticSlime, CloyingShadows, hungeringGloom = DBM:GetSpellInfo(244613), DBM:GetSpellInfo(244849), DBM:GetSpellInfo(245118), DBM:GetSpellInfo(245075)
 	self.vb.shieldsActive = false
 	self.vb.firstPortal = false
 	self.vb.felBarrageCast = 0
@@ -220,16 +199,13 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
---	if self.Options.InfoFrame then
---		DBM.InfoFrame:Hide()
---	end
 end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 243983 then
 		if self:IsEasy() then
-			timerCollapsingWorldCD:Start(37.7)--37-43, mostly 42 but have to use 37
+			timerCollapsingWorldCD:Start(37.7)--37, but offen delayed by ICD
 			countdownCollapsingWorld:Start(37.8)
 		elseif self:IsMythic() then
 			timerCollapsingWorldCD:Start(27.1)
@@ -240,42 +216,35 @@ function mod:SPELL_CAST_START(args)
 		end
 		if self.Options.ShowAllPlatforms or playerPlatform == 1 then--Actually on nexus platform
 			specWarnCollapsingWorld:Show()
-			voiceCollapsingWorld:Play("watchstep")
+			specWarnCollapsingWorld:Play("watchstep")
 		end
 		updateAllTimers(self, 9.7)
 	elseif spellId == 244709 and self:CheckInterruptFilter(args.sourceGUID) then
 		specWarnFieryDetonation:Show(args.sourceName)
-		voiceFieryDetonation:Play("kickcast")
+		specWarnFieryDetonation:Play("kickcast")
 	elseif spellId == 245504 and self:CheckInterruptFilter(args.sourceGUID) then
 		specWarnHowlingShadows:Show(args.sourceName)
-		voiceHowlingShadows:Play("kickcast")
+		specWarnHowlingShadows:Play("kickcast")
 	elseif spellId == 244607 and self:CheckInterruptFilter(args.sourceGUID) then
 		specWarnFlamesofXoroth:Show(args.sourceName)
-		voiceFlamesofXoroth:Play("kickcast")
+		specWarnFlamesofXoroth:Play("kickcast")
 		timerFlamesofXorothCD:Start()
 	elseif spellId == 246316 then--Rancora platform
 		timerPoisonEssenceCD:Start()
 	elseif spellId == 244915 or spellId == 246805 then
-		if spellId == 244915 then--Rancora platform
+		if self.Options.ShowAllPlatforms or playerPlatform == 3 then--Actually on Rancora platform
 			timerLeechEssenceCD:Start()
-			if self.Options.ShowAllPlatforms or playerPlatform == 3 then--Actually on Rancora platform
-				specWarnLeechEssence:Show()
-			end
-		else--Mythic add on nexus platform
-			--timerLeechEssenceCD:Start() enable later with appropriate add filter
-			if self.Options.ShowAllPlatforms or playerPlatform == 1 then--Actually on Nexus platform
-				specWarnLeechEssence:Show()
-			end
+			specWarnLeechEssence:Show()
 		end
 	elseif spellId == 244689 then
 		if self:IsMythic() then
 			timerTransportPortalCD:Start(36.5)
 		else
-			timerTransportPortalCD:Start()--40 minimum but still quite variable
+			timerTransportPortalCD:Start()
 		end
 		if self.Options.ShowAllPlatforms or playerPlatform == 1 then--Actually on nexus platform
 			specWarnTransportPortal:Show()
-			voiceTransportPortal:Play("killmob")
+			specWarnTransportPortal:Play("killmob")
 		end
 		updateAllTimers(self, 8.5)
 	elseif spellId == 244000 then--Felstorm Barrage
@@ -292,7 +261,7 @@ function mod:SPELL_CAST_START(args)
 		end
 		if self.Options.ShowAllPlatforms or playerPlatform == 1 then--Actually on nexus platform
 			specWarnFelstormBarrage:Show()
-			voiceFelstormBarrage:Play("farfromline")
+			specWarnFelstormBarrage:Play("farfromline")
 		end
 		updateAllTimers(self, 9.7)
 	end
@@ -339,10 +308,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 			playerPlatform = 1--1 Nexus, 2 Xoroth, 3 Rancora, 4 Nathreza
 		end
 	elseif spellId == 244598 and self:AntiSpam(5, 1) then--Supernova
-		--timerSupernovaCD:Start()
 		if self.Options.ShowAllPlatforms or playerPlatform == 2 then--Actually on Xoroth platform
 			specWarnSupernova:Show()
-			voiceSuperNova:Play("watchstep")
+			specWarnSupernova:Play("watchstep")
 		end
 	elseif spellId == 244016 then
 		timerRealityTearCD:Start()
@@ -359,7 +327,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if amount >= 2 then
 				if args:IsPlayer() then--At this point the other tank SHOULD be clear.
 					specWarnRealityTear:Show(amount)
-					voiceRealityTear:Play("stackhigh")
+					specWarnRealityTear:Play("stackhigh")
 				else--Taunt as soon as stacks are clear, regardless of stack count.
 					local _, _, _, _, _, _, expireTime = UnitDebuff("player", args.spellName)
 					local remaining
@@ -368,7 +336,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					end
 					if not UnitIsDeadOrGhost("player") and (not remaining or remaining and remaining < 12) then
 						specWarnRealityTearOther:Show(args.destName)
-						voiceRealityTear:Play("tauntboss")
+						specWarnRealityTearOther:Play("tauntboss")
 					else
 						warnRealityTear:Show(args.destName, amount)
 					end
@@ -412,16 +380,16 @@ function mod:SPELL_AURA_APPLIED(args)
 			updateRangeFrame(self)
 		end
 	elseif spellId == 244949 then--Felsilk Wrap
-		timerFelSilkWrapCD:Start()
 		if args:IsPlayer() then
 			specWarnFelSilkWrap:Show()
-			voiceFelSilkWrap:Play("targetyou")
+			specWarnRealityTearOther:Play("targetyou")
 			yellFelSilkWrap:Yell()
 		else
 			if self.Options.ShowAllPlatforms or playerPlatform == 3 then--Actually on Rancora platform
+				timerFelSilkWrapCD:Start()
 				specWarnFelSilkWrapOther:Show()
 				if self.Options.SpecWarn244949switch then
-					voiceFelSilkWrap:Play("changetarget")
+					specWarnFelSilkWrapOther:Play("changetarget")
 				end
 			end
 		end
@@ -429,7 +397,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnDelusions:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnDelusions:Show()
-			voiceDelusions:Play("targetyou")
+			specWarnDelusions:Play("targetyou")
 		end
 	end
 end
@@ -467,26 +435,10 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 228007 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
 		specWarnGTFO:Show()
-		voiceGTFO:Play("runaway")
+		specWarnGTFO:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
-
-function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
-	if msg:find("spell:238502") then
-
-	end
-end
-
-function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
-	if msg:find("SPELL_MAGE_FLAMEORB") then
-		warnXorothPortal:Show()
-	elseif msg:find("ABILITY_CREATURE_POISON_02") then
-		warnRancoraPortal:Show()
-	elseif msg:find("SPELL_HOLY_CONSUMEMAGIC") then
-		warnNathrezaPortal:Show()
-	end
-end
 --]]
 
 function mod:UNIT_DIED(args)
@@ -506,9 +458,12 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 257939 then
 		self.vb.firstPortal = true
 		warnXorothPortal:Show()
+		warnXorothPortal:Play("newportal")
 	elseif spellId == 257941 then
 		warnRancoraPortal:Show()
+		warnRancoraPortal:Play("newportal")
 	elseif spellId == 257942 then
 		warnNathrezaPortal:Show()
+		warnNathrezaPortal:Play("newportal")
 	end
 end

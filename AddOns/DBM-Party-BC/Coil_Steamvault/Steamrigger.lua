@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(574, "DBM-Party-BC", 6, 261)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(17796)
 mod:SetEncounterID(1943)
 
@@ -20,8 +20,6 @@ local specWarnSummon	= mod:NewSpecialWarningSwitch("ej5999", "-Healer", nil, nil
 local timerNet			= mod:NewTargetTimer(6, 35107, nil, nil, nil, 3)
 
 local enrageTimer		= mod:NewBerserkTimer(300)
-
-local voiceSummon		= mod:NewVoice("ej5999", "-Healer")--killmob
 
 function mod:OnCombatStart(delay)
 	if self:IsDifficulty("heroic5") then
@@ -45,6 +43,6 @@ end
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.Mechs then		-- Adds
 		specWarnSummon:Show()
-		voiceSummon:Play("killmob")
+		specWarnSummon:Play("killmob")
 	end
 end

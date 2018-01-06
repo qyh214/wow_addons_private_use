@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(33432)
 mod:SetEncounterID(1138)
 mod:DisableESCombatDetection()
@@ -53,10 +53,6 @@ local timerFlameSuppressant		= mod:NewBuffActiveTimer(10, 65192)
 local timerNextFrostBomb		= mod:NewNextTimer(30, 64623, nil, nil, nil, 3)
 local timerBombExplosion		= mod:NewCastTimer(15, 65333, nil, nil, nil, 3)
 
-local voiceShockBlast			= mod:NewVoice(64412, "Melee")--runout
-local voiceDarkGlare			= mod:NewVoice(63293)--watchstep/keepmove
-local voicePlasmaBlast			= mod:NewVoice(63293)--defensive
-
 mod:AddBoolOption("HealthFramePhase4", true)
 mod:AddBoolOption("SetIconOnNapalm", false)
 mod:AddBoolOption("SetIconOnPlasmaBlast", false)
@@ -65,7 +61,7 @@ mod:AddBoolOption("RangeFrame")
 mod.vb.hardmode = false
 mod.vb.phase = 0
 mod.vb.napalmShellIcon = 7
-local spinningUp = GetSpellInfo(63414)
+local spinningUp = DBM:GetSpellInfo(63414)
 local lastSpinUp = 0
 local is_spinningUp = false
 local napalmShellTargets = {}
@@ -79,12 +75,13 @@ end
 local function show_warning_for_spinup()
 	if is_spinningUp then
 		warnDarkGlare:Show()
-		voiceDarkGlare:Play("watchstep")
-		voiceDarkGlare:Schedule(1, "keepmove")
+		warnDarkGlare:Play("watchstep")
+		warnDarkGlare:ScheduleVoice(1, "keepmove")
 	end
 end
 
 function mod:OnCombatStart(delay)
+	spinningUp = DBM:GetSpellInfo(63414)
 	self.vb.hardmode = false
 	enrage:Start(-delay)
 	self.vb.phase = 0
@@ -107,7 +104,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 63631 then
 		warnShockBlast:Show()
-		voiceShockBlast:Play("runout")
+		warnShockBlast:Play("runout")
 		timerShockBlast:Start()
 		timerNextShockblast:Start()
 	end
@@ -115,7 +112,7 @@ function mod:SPELL_CAST_START(args)
 		local tanking, status = UnitDetailedThreatSituation("player", "boss1")--Change boss unitID if it's not boss 1
 		if tanking or (status == 3) then
 			warnPlasmaBlast:Show()
-			voicePlasmaBlast:Play("defensive")
+			warnPlasmaBlast:Play("defensive")
 		end
 		timerPlasmaBlastCD:Start()
 	end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Azuregos", "DBM-Azeroth")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 635 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(121820)--121820 TW ID, need classic ID
 --mod:SetModelID(17887)
 mod:SetZone()
@@ -23,9 +23,6 @@ local timerReflectionCD			= mod:NewCDTimer(15.7, 243835, nil, "SpellCaster", nil
 local timerFrostBreathCD		= mod:NewCDTimer(8.5, 243789, nil, nil, nil, 3)--8.5-20.1
 local timerArcaneVacuumCD		= mod:NewCDTimer(19.8, 243784, nil, nil, nil, 2)
 
-local voiceArcaneVacuum			= mod:NewVoice(243784)--teleyou (you are teleported to boss)
-local voiceReflection			= mod:NewVoice(243835, "SpellCaster")--stilldanger (iffy)
-
 --mod:AddReadyCheckOption(48620, false)
 
 function mod:OnCombatStart(delay, yellTriggered)
@@ -39,7 +36,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 243784 then
 		specWarnArcaneVacuum:Show()
-		voiceArcaneVacuum:Play("teleyou")
+		specWarnArcaneVacuum:Play("teleyou")
 		timerArcaneVacuumCD:Start()
 	elseif args.spellId == 243789 and self:AntiSpam(3, 1) then
 		warningFrostBreath:Show()
@@ -50,7 +47,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 243784 then
 		specWarnReflection:Show()
-		voiceReflection:Play("stilldanger")
+		specWarnReflection:Play("stilldanger")
 		--pull:176.7, 31.3, 23.1, 20.8, 30.6, 26.2, 25.5, 15.7, 33.1, 30.1
 		timerReflectionCD:Start()
 	end

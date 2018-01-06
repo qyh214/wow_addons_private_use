@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GeneralVezax", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(33271)
 mod:SetEncounterID(1134)
 mod:SetModelID(28548)
@@ -37,10 +37,6 @@ local timerSaroniteVapors		= mod:NewNextTimer(30, 63322, nil, nil, nil, 5)
 local timerLifeLeech			= mod:NewTargetTimer(10, 63276)
 local timerHardmode				= mod:NewTimer(189, "hardmodeSpawn", nil, nil, nil, 1)
 
-local voiceShadowCrash			= mod:NewVoice(62660)--runaway
-local voiceSurgeDarkness		= mod:NewVoice(62662, "Tank")--defensive
-local voiceLifeLeech			= mod:NewVoice(63276)--runout/runaway
-
 mod:AddBoolOption("SetIconOnShadowCrash", true)
 mod:AddBoolOption("SetIconOnLifeLeach", true)
 
@@ -51,14 +47,14 @@ function mod:ShadowCrashTarget(targetname, uId)
 	end
 	if targetname == UnitName("player") then
 		specWarnShadowCrash:Show()
-		voiceShadowCrash:Play("runaway")
+		specWarnShadowCrash:Play("runaway")
 		yellShadowCrash:Yell()
 	elseif targetname then
 		if uId then
 			local inRange = CheckInteractDistance(uId, 2)
 			if inRange then
 				specWarnShadowCrashNear:Show(targetname)
-				voiceShadowCrash:Play("runaway")
+				specWarnShadowCrashNear:Play("runaway")
 			end
 		end
 	else
@@ -77,7 +73,7 @@ function mod:SPELL_CAST_START(args)
 		timerSearingFlamesCast:Start()
 	elseif args.spellId == 62662 then 
 		specWarnSurgeDarkness:Show()
-		voiceSurgeDarkness:Play("defensive")
+		specWarnSurgeDarkness:Play("defensive")
 		timerNextSurgeofDarkness:Start()
 	end
 end
@@ -110,7 +106,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerLifeLeech:Start(args.destName)
 		if args:IsPlayer() then
 			specWarnLifeLeechYou:Show()
-			voiceLifeLeech:Play("runout")
+			specWarnLifeLeechYou:Play("runout")
 			yellLifeLeech:Yell()
 		else
 			local uId = DBM:GetRaidUnitId(args.destName)
@@ -118,7 +114,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 				local inRange = CheckInteractDistance(uId, 2)
 				if inRange then
 					specWarnLifeLeechNear:Show(args.destName)
-					voiceLifeLeech:Play("runaway")
+					specWarnLifeLeechNear:Play("runaway")
 				else
 					warnLeechLife:Show(args.destName)
 				end

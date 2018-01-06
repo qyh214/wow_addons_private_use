@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -56,12 +56,6 @@ local timerCastDeafeningRoar		= mod:NewCastTimer(2.3, 64189, nil, nil, nil, 2)
 local timerNextDeafeningRoar		= mod:NewNextTimer(30, 64189, nil, nil, nil, 2)
 local timerAchieve					= mod:NewAchievementTimer(420, 3012, "TimerSpeedKill")
 
-local voiceBrainLink				= mod:NewVoice(63802)--linegather
-local voiceDeafeningRoar			= mod:NewVoice(64189)--silencesoon
-local voiceFervor					= mod:NewVoice(63138)--targetyou
-local voiceMalady					= mod:NewVoice(63830)--targetyou/runaway
-
-
 mod:AddBoolOption("ShowSaraHealth", false)
 mod:AddBoolOption("SetIconOnFearTarget", true)
 mod:AddBoolOption("SetIconOnFervorTarget", false)
@@ -93,7 +87,7 @@ function mod:FervorTarget()
 	if not targetname then return end
 	if targetname == UnitName("player") and self:AntiSpam(4, 1) then
 		specWarnFervor:Show()
-		voiceFervor:Play("targetyou")
+		specWarnFervor:Play("targetyou")
 	end
 end
 
@@ -117,7 +111,7 @@ function mod:SPELL_CAST_START(args)
 		warnDeafeningRoarSoon:Schedule(55)
 		timerCastDeafeningRoar:Start()
 		specWarnDeafeningRoar:Show()
-		voiceDeafeningRoar:Play("silencesoon")
+		specWarnDeafeningRoar:Play("silencesoon")
 	elseif args.spellId == 63138 and not self:IsTrivial(85) then		--Sara's Fervor
 		self:ScheduleMethod(0.2, "FervorTarget")
 		warnFervorCast:Show()
@@ -147,7 +141,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.brainLinkIcon = self.vb.brainLinkIcon - 1
 		if args:IsPlayer() then
 			specWarnBrainLink:Show()
-			voiceBrainLink:Play("linegather")
+			specWarnBrainLink:Play("linegather")
 		end
 		self:ScheduleMethod(0.2, "warnBrainLink")
 	elseif args:IsSpellID(63830, 63881) then   -- Malady of the Mind (Death Coil) 
@@ -157,14 +151,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if args:IsPlayer() then
 			specWarnMalady:Show()
-			voiceMalady:Play("targetyou")
+			specWarnMalady:Play("targetyou")
 		else
 			local uId = DBM:GetRaidUnitId(args.destName) 
 			if uId then 
 				local inRange = CheckInteractDistance(uId, 2)
 				if inRange then 
 					specWarnMaladyNear:Show(args.destName)
-					voiceMalady:Play("runaway")
+					specWarnMaladyNear:Play("runaway")
 				end
 			end
 		end 
@@ -181,7 +175,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if args:IsPlayer() and self:AntiSpam(4, 1) then 
 			specWarnFervor:Show()
-			voiceFervor:Play("targetyou")
+			specWarnFervor:Play("targetyou")
 		end
 	elseif args.spellId == 63894 then	-- Shadowy Barrier of Yogg-Saron (this is happens when p2 starts)
 		self.vb.phase = 2

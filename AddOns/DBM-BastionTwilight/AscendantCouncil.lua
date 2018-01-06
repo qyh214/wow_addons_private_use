@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(158, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 183 $"):sub(12, -3))
 mod:SetCreatureID(43686, 43687, 43688, 43689, 43735)
 mod:SetEncounterID(1028)
 mod:SetZone()
@@ -24,11 +24,11 @@ mod:RegisterEventsInCombat(
 	"UNIT_HEALTH boss1 boss2 boss3 boss4"
 )
 
-local Ignacious = EJ_GetSectionInfo(3118)
-local Feludius = EJ_GetSectionInfo(3110)
-local Arion = EJ_GetSectionInfo(3128)
-local Terrastra = EJ_GetSectionInfo(3135)
-local Monstrosity = EJ_GetSectionInfo(3145)
+local Ignacious = DBM:EJ_GetSectionInfo(3118)
+local Feludius = DBM:EJ_GetSectionInfo(3110)
+local Arion = DBM:EJ_GetSectionInfo(3128)
+local Terrastra = DBM:EJ_GetSectionInfo(3135)
+local Monstrosity = DBM:EJ_GetSectionInfo(3145)
 
 --Feludius
 local warnHeartIce			= mod:NewTargetAnnounce(82665, 3, nil, false)
@@ -150,8 +150,7 @@ local isBeacon = false
 local isRod = false
 local infoFrameUpdated = false
 local phase = 1
-local groundedName = GetSpellInfo(83581)
-local searingName = GetSpellInfo(83500)
+local groundedName, searingName = DBM:GetSpellInfo(83581), DBM:GetSpellInfo(83500)
 
 local shieldHealth = {
 	["heroic25"] = 2000000,
@@ -180,29 +179,29 @@ local function showGravityCrushWarning()
 	gravityCrushIcon = 8
 end
 
-local function checkGrounded()
+local function checkGrounded(self)
 	if not UnitDebuff("player", groundedName) and not UnitIsDeadOrGhost("player") then
 		specWarnGrounded:Show()
 	end
-	if mod.Options.InfoFrame and not infoFrameUpdated then
+	if self.Options.InfoFrame and not infoFrameUpdated then
 		infoFrameUpdated = true
 		DBM.InfoFrame:SetHeader(L.WrongDebuff:format(groundedName))
-		DBM.InfoFrame:Show(5, "playergooddebuff", 83581)
+		DBM.InfoFrame:Show(5, "playergooddebuff", groundedName)
 	end
 end
 
-local function checkSearingWinds()
+local function checkSearingWinds(self)
 	if not UnitDebuff("player", searingName) and not UnitIsDeadOrGhost("player") then
 		specWarnSearingWinds:Show()
 	end
-	if mod.Options.InfoFrame and not infoFrameUpdated then
+	if self.Options.InfoFrame and not infoFrameUpdated then
 		infoFrameUpdated = true
 		DBM.InfoFrame:SetHeader(L.WrongDebuff:format(searingName))
-		DBM.InfoFrame:Show(5, "playergooddebuff", 83500)
+		DBM.InfoFrame:Show(5, "playergooddebuff", searingName)
 	end
 end
 
-local function updateBossFrame()
+local function updateBossFrame(self)
 	if DBM.BossHealth:IsShown() then
 		DBM.BossHealth:Clear()
 		if phase == 1 then
@@ -218,9 +217,10 @@ local function updateBossFrame()
 end
 
 function mod:OnCombatStart(delay)
+	groundedName, searingName = DBM:GetSpellInfo(83581), DBM:GetSpellInfo(83500)
 	DBM:GetModByName("BoTrash"):SetFlamestrike(true)
 	phase = 1
-	updateBossFrame()
+	updateBossFrame(self)
 	table.wipe(frozenTargets)
 	table.wipe(lightningRodTargets)
 	table.wipe(gravityCrushTargets)
@@ -535,7 +535,7 @@ function mod:SPELL_CAST_START(args)
 		timerQuakeCD:Cancel()
 		timerQuakeCast:Start()
 		timerThundershockCD:Start()
-		self:Schedule(5, checkGrounded)
+		self:Schedule(5, checkGrounded, self)
 	elseif args.spellId == 83087 then
 		warnDisperse:Show()
 		timerDisperse:Start()
@@ -549,7 +549,7 @@ function mod:SPELL_CAST_START(args)
 		timerThundershockCD:Cancel()
 		timerThundershockCast:Start()
 		timerQuakeCD:Start()
-		self:Schedule(5, checkSearingWinds)
+		self:Schedule(5, checkSearingWinds, self)
 	elseif args.spellId == 84913 then
 		warnLavaSeed:Show()
 		timerLavaSeedCD:Start()
@@ -573,18 +573,18 @@ function mod:RAID_BOSS_EMOTE(msg)
 	if (msg == L.Quake or msg:find(L.Quake)) and phase == 2 then
 		timerQuakeCD:Update(23, 33)
 		warnQuakeSoon:Show()
-		checkSearingWinds()
+		checkSearingWinds(self)
 		if self:IsDifficulty("heroic10", "heroic25") then
-			self:Schedule(3.3, checkSearingWinds)
-			self:Schedule(6.6, checkSearingWinds)
+			self:Schedule(3.3, checkSearingWinds, self)
+			self:Schedule(6.6, checkSearingWinds, self)
 		end
 	elseif (msg == L.Thundershock or msg:find(L.Thundershock)) and phase == 2 then
 		timerThundershockCD:Update(23, 33)
 		warnThundershockSoon:Show()
-		checkGrounded()
+		checkGrounded(self)
 		if self:IsDifficulty("heroic10", "heroic25") then
-			self:Schedule(3.3, checkGrounded)
-			self:Schedule(6.6, checkGrounded)
+			self:Schedule(3.3, checkGrounded, self)
+			self:Schedule(6.6, checkGrounded, self)
 		end
 	end
 end
@@ -620,7 +620,7 @@ function mod:OnSync(msg, boss)
 		specWarnBossLow:Show(boss)
 	elseif msg == "Phase2" and self:IsInCombat() then
 		phase = 2
-		updateBossFrame()
+		updateBossFrame(self)
 		timerWaterBomb:Cancel()
 		timerGlaciate:Cancel()
 		timerAegisFlame:Cancel()
@@ -650,7 +650,7 @@ function mod:OnSync(msg, boss)
 		end
 	elseif msg == "Phase3" and self:IsInCombat() then
 		phase = 3
-		updateBossFrame()
+		updateBossFrame(self)
 		timerFrostBeaconCD:Cancel()--Cancel here to avoid problems with orbs that spawn during the transition.
 		timerLavaSeedCD:Start(18)
 		timerGravityCrushCD:Start(28)

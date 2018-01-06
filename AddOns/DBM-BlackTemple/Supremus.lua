@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Supremus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 621 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(22898)
 mod:SetEncounterID(602)
 mod:SetModelID(21145)
@@ -27,10 +27,6 @@ local timerPhase		= mod:NewTimer(60, "TimerPhase", 42052, nil, nil, 6)
 
 local berserkTimer		= mod:NewBerserkTimer(900)
 
-local voiceMolten		= mod:NewVoice(42052)--runaway
-local voiceVolcano		= mod:NewVoice(40265)--runaway
-local voiceFixate		= mod:NewVoice(41951)--runout
-
 mod:AddBoolOption("KiteIcon", true)
 
 --mod.vb.phase2 = false
@@ -44,8 +40,8 @@ local function ScanTarget(self)
 			self.vb.lastTarget = target
 			if UnitIsUnit(uId, "player") and not self:IsTrivial(85) then
 				specWarnFixate:Show()
-				voiceFixate:Play("justrun")
-				voiceFixate:Schedule(1, "keepmove")
+				specWarnFixate:Play("justrun")
+				specWarnFixate:ScheduleVoice(1, "keepmove")
 			else
 				warnFixate:Show(target)
 			end
@@ -82,8 +78,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			self.vb.lastTarget = args.destName
 			if args:IsPlayer() and not self:IsTrivial(85) then
 				specWarnFixate:Show()
-				voiceFixate:Play("justrun")
-				voiceFixate:Schedule(1, "keepmove")
+				specWarnFixate:Play("justrun")
+				specWarnFixate:ScheduleVoice(1, "keepmove")
 			else
 				warnFixate:Show(args.destName)
 			end
@@ -97,10 +93,10 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 40265 and destGUID == UnitGUID("player") and self:AntiSpam(4, 1) and not self:IsTrivial(85) then
 		specWarnMolten:Show()
-		voiceMolten:Play("runaway")
+		specWarnMolten:Play("runaway")
 	elseif spellId == 42052 and destGUID == UnitGUID("player") and self:AntiSpam(4, 2) and not self:IsTrivial(85) then
 		specWarnVolcano:Show()
-		voiceVolcano:Play("runaway")
+		specWarnVolcano:Play("runaway")
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
@@ -118,7 +114,7 @@ function mod:RAID_BOSS_EMOTE(msg)
 			--Melee Dps Not technically fixated but melee should run out at start of kite phase in case chosen.
 			--Tank should run out because boss actually fixates tank for couple seconds before choosing new target.
 			specWarnFixate:Show()
-			voiceFixate:Play("justrun")
+			specWarnFixate:Play("justrun")
 		end
 	elseif msg == L.PhaseTank or msg:find(L.PhaseTank) then
 		warnPhase:Show(L.Tank)

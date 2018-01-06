@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Twins", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 642 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(25165, 25166)
 mod:SetEncounterID(727)
 mod:SetModelID(23334)
@@ -46,12 +46,6 @@ local timerNova				= mod:NewCastTimer(3.5, 45329, nil, false, 2)
 
 local berserkTimer			= mod:NewBerserkTimer(360)
 
-local voiceConflag			= mod:NewVoice(45333)--targetyou
-local voiceNova				= mod:NewVoice(45329)--targetyou
-local voicePyro				= mod:NewVoice(45230, "MagicDispeller")--dispelboss
-local voiceDarkTouch		= mod:NewVoice(45347)--stackhigh
-local voiceFlameTouch		= mod:NewVoice(45348, false)--stackhigh
-
 mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("ConflagIcon", false)
 mod:AddBoolOption("NovaIcon", false)
@@ -72,16 +66,16 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 45230 and not args:IsDestTypePlayer() then
 		specWarnPyro:Show(args.destName)
-		voicePyro:Play("dispelboss")
+		specWarnPyro:Play("dispelboss")
 	elseif args.spellId == 45347 and args:IsPlayer() then
 		if (args.amount or 1) >= 8 then
 			specWarnDarkTouch:Show(args.amount)
-			voiceDarkTouch:Play("stackhigh")
+			specWarnDarkTouch:Play("stackhigh")
 		end
 	elseif args.spellId == 45348 and args:IsPlayer() then
 		if (args.amount or 1) >= 5 then
 			specWarnFlameTouch:Show(args.amount)
-			voiceFlameTouch:Play("stackhigh")
+			specWarnFlameTouch:Play("stackhigh")
 		end
 	end
 end
@@ -114,7 +108,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		timerNovaCD:Start()
 		if target == UnitName("player") then
 			specWarnNova:Show()
-			voiceNova:Play("targetyou")
+			specWarnNova:Play("targetyou")
 			yellNova:Yell()
 		else
 			warnNova:Show(target)
@@ -128,7 +122,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		timerConflagCD:Start()
 		if target == UnitName("player") then
 			specWarnConflag:Show()
-			voiceConflag:Play("targetyou")
+			specWarnConflag:Play("targetyou")
 			yellConflag:Yell()
 		else
 			warnConflag:Show(target)

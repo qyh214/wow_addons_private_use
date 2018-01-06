@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(197, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(52571)
 mod:SetEncounterID(1185)
 mod:SetZone()
@@ -48,9 +48,7 @@ local abilityCount = 0
 local recentlyJumped = false
 local kitty = false
 local targetScansDone = 0
-local leap = GetSpellInfo(98535)
-local swipe = GetSpellInfo(98474)
-local seedsDebuff = GetSpellInfo(98450)
+local leap, swipe, seedsDebuff = DBM:GetSpellInfo(98535), DBM:GetSpellInfo(98474), DBM:GetSpellInfo(98450)
 
 local abilityTimers = {
 	[0] = 17.3,--Still The same baseline.
@@ -143,6 +141,7 @@ function mod:TargetScanner(ScansDone)
 end
 
 function mod:OnCombatStart(delay)
+	leap, swipe, seedsDebuff = DBM:GetSpellInfo(98535), DBM:GetSpellInfo(98474), DBM:GetSpellInfo(98450)
 	berserkTimer:Start(-delay)
 	abilityCount = 0
 	kitty = false

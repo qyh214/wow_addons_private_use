@@ -76,7 +76,6 @@ local UnitName = UnitName
 local UnitHealth, UnitPower, UnitPowerMax = UnitHealth, UnitPower, UnitPowerMax
 local UnitDebuff, UnitBuff = UnitDebuff, UnitBuff
 local UnitIsDeadOrGhost, UnitThreatSituation = UnitIsDeadOrGhost, UnitThreatSituation
-local GetSpellInfo = GetSpellInfo
 local UnitPosition = UnitPosition
 local twipe = table.wipe
 local select, tonumber = select, tonumber
@@ -585,7 +584,7 @@ local function updateReverseBadPlayerDebuffs()
 	for uId in DBM:GetGroupMembers() do
 		if tankIgnored and (UnitGroupRolesAssigned(uId) == "TANK" or GetPartyAssignment("MAINTANK", uId, 1)) then
 		else
-			if not UnitDebuff(uId, spellName) and not UnitIsDeadOrGhost(uId) and not UnitDebuff(uId, GetSpellInfo(27827)) then--27827 Spirit of Redemption. This particular info frame wants to ignore this
+			if not UnitDebuff(uId, spellName) and not UnitIsDeadOrGhost(uId) and not UnitDebuff(uId, DBM:GetSpellInfo(27827)) then--27827 Spirit of Redemption. This particular info frame wants to ignore this
 				lines[UnitName(uId)] = ""
 			end
 		end
@@ -739,9 +738,10 @@ function onUpdate(frame)
 			frame:Hide()--Force close infoframe so it doesn't keep throwing 100s of errors onupdate. If leftText is broken the frame needs to be shut down
 			return
 		elseif leftText and type(leftText) ~= "string" then
-			error("DBM InfoFrame: leftText must be string, Notify DBM author. Infoframe force shutting down ", 2)
-			frame:Hide()--Force close infoframe so it doesn't keep throwing 100s of errors onupdate. If leftText is broken the frame needs to be shut down
-			return
+			tostring(leftText)
+			--error("DBM InfoFrame: leftText must be string, Notify DBM author. Infoframe force shutting down ", 2)
+			--frame:Hide()--Force close infoframe so it doesn't keep throwing 100s of errors onupdate. If leftText is broken the frame needs to be shut down
+			--return
 		end
 		local rightText = lines[leftText]
 		local icon = icons[leftText] and icons[leftText]..leftText
@@ -824,7 +824,8 @@ function infoFrame:Show(maxLines, event, ...)
 	--If spellId is given as value one, convert to spell name on show instead of in every onupdate
 	--this also allows spell name to be given by mod, since value 1 verifies it's a number
 	if type(value[1]) == "number" and event ~= "health" and event ~= "function" and event ~= "playertargets" and event ~= "playeraggro" and event ~= "playerpower" and event ~= "enemypower" and event ~= "test" then
-		value[1] = GetSpellInfo(value[1])
+		--value[1] = DBM:GetSpellInfo(value[1])
+		error("DBM-InfoFrame: Must pass spell NAME, not ID number. Report boss and this error to DBM author", 2)
 	end
 
 	if events[currentEvent] then
@@ -849,10 +850,14 @@ function infoFrame:RegisterCallback(cb)
 	updateCallbacks[#updateCallbacks + 1] = cb
 end
 
-function infoFrame:Update()
+function infoFrame:Update(time)
 	frame = frame or createFrame()
 	if frame:IsShown() then
-		onUpdate(frame)
+		if time then
+			C_Timer.After(time, function() onUpdate(frame) end)
+		else
+			onUpdate(frame)
+		end
 	end
 end
 

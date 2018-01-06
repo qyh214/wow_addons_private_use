@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(687, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(60701, 60708, 60709, 60710)--Adds: 60731 Undying Shadow, 60958 Pinning Arrow
 mod:SetEncounterID(1436)
 mod:SetZone()
@@ -98,11 +98,11 @@ local countdownShieldOfDarkness	= mod:NewCountdown(42.5, 117697)
 
 mod:AddBoolOption("RangeFrame", "Ranged")--For multiple abilities. the abiliies don't seem to target melee (unless a ranged is too close or a melee is too far.)
 
-local Zian = EJ_GetSectionInfo(5852)
-local Meng = EJ_GetSectionInfo(5835)
-local Qiang = EJ_GetSectionInfo(5841)
-local Subetai = EJ_GetSectionInfo(5846)
-local rainTimerText = DBM_CORE_AUTO_TIMER_TEXTS.cd:format(GetSpellInfo(118122))
+local Zian = DBM:EJ_GetSectionInfo(5852)
+local Meng = DBM:EJ_GetSectionInfo(5835)
+local Qiang = DBM:EJ_GetSectionInfo(5841)
+local Subetai = DBM:EJ_GetSectionInfo(5846)
+local rainTimerText = DBM_CORE_AUTO_TIMER_TEXTS.cd:format(DBM:GetSpellInfo(118122))
 local bossesActivated = {}
 local zianActive = false
 local mengActive = false
@@ -129,12 +129,12 @@ function mod:OnCombatStart(delay)
 	timerAnnihilateCD:Start(10.5)
 	timerFlankingOrdersCD:Start(25)
 	if self:IsHeroic() then
-		rainTimerText = DBM_CORE_AUTO_TIMER_TEXTS.next:format(GetSpellInfo(118122))
+		rainTimerText = DBM_CORE_AUTO_TIMER_TEXTS.next:format(DBM:GetSpellInfo(118122))
 		timerImperviousShieldCD:Start(40.7)
 		countdownImperviousShield:Start(40.7)
 		warnImperviousShieldSoon:Schedule(35.7)
 	else
-		rainTimerText = DBM_CORE_AUTO_TIMER_TEXTS.cd:format(GetSpellInfo(118122))
+		rainTimerText = DBM_CORE_AUTO_TIMER_TEXTS.cd:format(DBM:GetSpellInfo(118122))
 	end
 	if DBM.BossHealth:IsShown() then
 		DBM.BossHealth:Clear()

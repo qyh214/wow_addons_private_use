@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(543, "DBM-Party-BC", 9, 252)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 
 mod:SetCreatureID(18473)
 mod:SetEncounterID(1902)
@@ -19,12 +19,10 @@ local specWarnArcaneExplosion	= mod:NewSpecialWarningSpell(38197, nil, nil, nil,
 
 local timerArcaneExplosion		= mod:NewCastTimer(5, 38197, nil, nil, nil, 2)
 
-local voiceArcaneExplosion		= mod:NewVoice(38197)--findshelter
-
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(38197, 40425) then
 		specWarnArcaneExplosion:Show()
-		voiceArcaneExplosion:Play("findshelter")
+		specWarnArcaneExplosion:Play("findshelter")
 		timerArcaneExplosion:Start()
 	end
 end

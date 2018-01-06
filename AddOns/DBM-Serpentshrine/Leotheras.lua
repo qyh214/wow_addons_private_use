@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Leotheras", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 638 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(21215)
 mod:SetEncounterID(625)
 mod:SetModelID(20514)
@@ -34,9 +34,6 @@ local timerDemonCD		= mod:NewCDTimer(23, 37676, nil, nil, nil, 6)
 local timerDemon		= mod:NewBuffFadesTimer(30, 37676, nil, nil, nil, 6)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
-
-local voiceWhirl		= mod:NewVoice(37640)--runout
-local voiceDemon		= mod:NewVoice(37676)--targetyou
 
 mod:AddBoolOption("DemonIcon", false)
 
@@ -78,7 +75,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 37640 then
 		specWarnWhirl:Show()
-		voiceWhirl:Play("justrun")
+		specWarnWhirl:Play("justrun")
 		timerWhirl:Start()
 		if self.vb.phase ~= 2 then
 			self.vb.whirlCount = self.vb.whirlCount + 1
@@ -97,7 +94,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if args:IsPlayer() then
 			specWarnDemon:Show()
-			voiceDemon:Play("targetyou")
+			specWarnDemon:Play("targetyou")
 		end
 		if #warnDemonTargets >= 5 then
 			showDemonTargets(self)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1697, "DBM-Party-Legion", 9, 777)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15008 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
 --mod:SetCreatureID(99200)
 mod:SetEncounterID(1851)
 mod:SetZone()
@@ -26,8 +26,6 @@ mod:RegisterEventsInCombat(
 --local specWarnCurtainOfFlame		= mod:NewSpecialWarningMoveAway(153396)
 
 --local timerCurtainOfFlameCD			= mod:NewNextTimer(20, 153396, nil, nil, nil, 3)
-
---local voiceCurtainOfFlame			= mod:NewVoice(153392)
 
 --mod:AddRangeFrameOption(5, 153396)
 

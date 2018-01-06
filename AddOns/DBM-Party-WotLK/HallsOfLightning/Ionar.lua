@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(599, "DBM-Party-WotLK", 6, 275)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 243 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(28546)
 mod:SetEncounterID(559, 560, 1984)
 mod:SetZone()
@@ -24,8 +24,6 @@ local specWarnOverload		= mod:NewSpecialWarningMoveAway(52658, nil, nil, nil, 1,
 
 local timerOverload			= mod:NewTargetTimer(10, 52658)
 
-local voiceOverload			= mod:NewVoice(52658)--runout
-
 mod:AddRangeFrameOption(10, 52658)
 mod:AddBoolOption("SetIconOnOverloadTarget", true)
 
@@ -45,7 +43,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(52658, 59795) then
 		if args:IsPlayer() then
 			specWarnOverload:Show()
-			voiceOverload:Play("runout")
+			specWarnOverload:Play("runout")
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(10)
 			end

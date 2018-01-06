@@ -446,6 +446,11 @@ function addon:OnEnable() -- Construct addon option tables here
 		{ "down", L.down }
 	}
 
+	local leftright = {
+		{ "left", L.left },
+		{ "right", L.right },
+	}
+
 	-- Shared Media
 	local LSM = LibStub and LibStub("LibSharedMedia-3.0",1)
 
@@ -607,9 +612,10 @@ function addon:OnEnable() -- Construct addon option tables here
 				{ "test_settings", "execute", func = XLootMonitor.TestSettings }
 			}},
 			{ "anchor", "group", {
-				{ "visible", "toggle", set = set_anchor },
+				{ "visible", set = set_anchor, width = "double" },
+				{ "scale", "scale" },
 				{ "direction", "select", directions, name = L.growth_direction },
-				{ "scale", "scale" }
+				{ "alignment", "select", leftright, name = L.alignment },
 			}, defaults = { subtable = "anchor" } },
 			{ "thresholds", "group", {
 				{ "threshold_own", "select", item_qualities, name = L.items_own },

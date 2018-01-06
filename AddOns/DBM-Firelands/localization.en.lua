@@ -91,10 +91,6 @@ L:SetOptionLocalization({
 	RangeFrame			= "Show range frame (5) for $spell:99257"
 })
 
-L:SetMiscLocalization({
-	VitalSpark		= GetSpellInfo(99262).." stacks"
-})
-
 --------------------------------
 -- Majordomo Fandral Staghelm --
 --------------------------------

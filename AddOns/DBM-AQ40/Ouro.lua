@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ouro", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 637 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(15517)
 mod:SetEncounterID(716)
 mod:SetModelID(15509)
@@ -27,8 +27,6 @@ local timerEmerge		= mod:NewTimer(30, "TimerEmerge", "Interface\\AddOns\\DBM-Cor
 local timerSweepCD		= mod:NewNextTimer(20.5, 26103, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
 local timerBlastCD		= mod:NewNextTimer(23, 26102, nil, nil, nil, 2)
 
-local voiceBlast		= mod:NewVoice(26102)--stunsoon
-
 mod.vb.prewarn_enrage = false
 mod.vb.enraged = false
 
@@ -51,7 +49,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 26102 then
 		specWarnBlast:Show()
-		voiceBlast:Play("stunsoon")
+		specWarnBlast:Play("stunsoon")
 		timerBlastCD:Start()
 	elseif args.spellId == 26103 then
 		warnSweep:Show()

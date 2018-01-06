@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(673, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(56747)--56747 (Gu Cloudstrike), 56754 (Azure Serpent)
 mod:SetEncounterID(1303)
 mod:SetZone()
@@ -33,7 +33,7 @@ local timerStaticFieldCD		= mod:NewNextTimer(8, 106923, nil, nil, nil, 3)--^^
 local timerLightningBreathCD	= mod:NewNextTimer(9.7, 102573, nil, nil, nil, 5)--Phase 2 ability
 local timerMagneticShroudCD		= mod:NewCDTimer(12.5, 107140)--^^
 
-local staticFieldText = GetSpellInfo(106923)
+local staticFieldText = DBM:GetSpellInfo(106923)
 -- very poor code. not clean. (to replace %%s -> %s)
 local targetFormatText
 do
@@ -46,10 +46,10 @@ end
 
 function mod:StaticFieldTarget(targetname, uId)
 	if not targetname then--No one is targeting/focusing the cloud serpent, so just use generic warning
-		staticFieldText = GetSpellInfo(106923)
+		staticFieldText = DBM:GetSpellInfo(106923)
 		warnStaticField:Show(staticFieldText)
 	else--We have a valid target, so use target warnings.
-		staticFieldText = targetFormatText:format(GetSpellInfo(106923), targetname)
+		staticFieldText = targetFormatText:format(DBM:GetSpellInfo(106923), targetname)
 		warnStaticField:Show(staticFieldText)
 		if targetname == UnitName("player") then
 			specWarnStaticField:Show()

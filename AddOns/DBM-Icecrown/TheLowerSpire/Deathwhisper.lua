@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Deathwhisper", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 226 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(36855)
 mod:SetEncounterID(1100)
 mod:SetModelID(30893)
@@ -54,6 +54,7 @@ local dominateMindIcon = 6
 local deformedFanatic
 local empoweredAdherent
 local lastPower = 100
+local shieldName = DBM:GetSpellInfo(70842)
 
 local function showDominateMindWarning()
 	warnDominateMind:Show(table.concat(dominateMindTargets, "<, >"))
@@ -100,8 +101,8 @@ end
 
 function mod:OnCombatStart(delay)
 	if DBM.BossHealth:IsShown() and self.Options.ShieldHealthFrame then
-		local name = GetSpellInfo(70842)
-		DBM.BossHealth:AddBoss(getPower, name)
+		shieldName = DBM:GetSpellInfo(70842)
+		DBM.BossHealth:AddBoss(getPower, shieldName)
 	end
 	berserkTimer:Start(-delay)
 	timerAdds:Start(7)

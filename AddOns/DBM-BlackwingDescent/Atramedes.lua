@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(171, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 158 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(41442)
 mod:SetEncounterID(1022)
 mod:SetZone()
@@ -53,9 +53,9 @@ mod:AddBoolOption("TrackingIcon")
 mod:AddBoolOption("InfoFrame")
 
 local shieldsLeft = 10
-local pestered = GetSpellInfo(92685)
+local pestered = DBM:GetSpellInfo(92685)
 local pesteredWarned = false
-local SoundLevel = EJ_GetSectionInfo(3072)
+local SoundLevel = DBM:EJ_GetSectionInfo(3072)
 
 local function groundphase()
 	timerAirphase:Start()
@@ -65,6 +65,7 @@ local function groundphase()
 end
 
 function mod:OnCombatStart(delay)
+	pestered = DBM:GetSpellInfo(92685)
 	timerSonarPulseCD:Start(-delay)
 	timerSonicBreath:Start(25-delay)
 	warnSearingFlameSoon:Schedule(40-delay)

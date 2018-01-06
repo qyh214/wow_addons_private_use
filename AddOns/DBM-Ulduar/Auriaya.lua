@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Auriaya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 
 mod:SetCreatureID(33515)--34014--Add this (kitties) to pull detection when it can be ignored in kill
 mod:SetEncounterID(1131)
@@ -34,10 +34,6 @@ local timerNextSwarm 	= mod:NewNextTimer(36, 64396, nil, nil, nil, 1)
 local timerNextSonic 	= mod:NewNextTimer(27, 64688, nil, nil, nil, 2)
 local timerSonic		= mod:NewCastTimer(64688, nil, nil, nil, 2)
 
-local voiceFear			= mod:NewVoice(64386)--fearsoon
-local voiceBlast		= mod:NewVoice(64389, "HasInterrupt")--kickcast
-local voiceVoid			= mod:NewVoice(64675)--runaway
-
 mod.vb.catLives = 9
 
 function mod:OnCombatStart(delay)
@@ -51,10 +47,10 @@ end
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(64678, 64389) then -- Sentinel Blast
 		specWarnBlast:Show(args.sourceName)
-		voiceBlast:Play("kickcast")
+		specWarnBlast:Play("kickcast")
 	elseif args.spellId == 64386 then -- Terrifying Screech
 		specWarnFear:Show()
-		voiceFear:Play("fearsoon")
+		specWarnFear:Play("fearsoon")
 		timerNextFear:Schedule(2)
 		warnFearSoon:Schedule(34)
 	elseif args:IsSpellID(64688, 64422) then --Sonic Screech
@@ -76,7 +72,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if (spellId == 64459 or spellId == 64675) and destGUID == UnitGUID("player") and self:AntiSpam(3) then -- Feral Defender Void Zone
 		specWarnVoid:Show()
-		voiceVoid:Play("runaway")
+		specWarnVoid:Play("runaway")
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

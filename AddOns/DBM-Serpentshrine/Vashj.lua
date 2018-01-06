@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Vashj", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 638 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(21212)
 mod:SetEncounterID(628)
 mod:SetModelID(20748)
@@ -40,9 +40,6 @@ local timerElemental	= mod:NewTimer(22, "TimerElementalActive", 39088, nil, nil,
 local timerElementalCD	= mod:NewTimer(45, "TimerElemental", 39088, nil, nil, 1)--46-57 variation. because of high variation the pre warning special warning not useful, fortunately we can detect spawns with precise timing.
 local timerStrider		= mod:NewTimer(63, "TimerStrider", 475, nil, nil, 1)
 local timerNaga			= mod:NewTimer(47.5, "TimerNaga", 2120, nil, nil, 1)
-
-local voiceCharge		= mod:NewVoice(38280)--runout
-local voiceToxic		= mod:NewVoice(38575)--runaway
 
 mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("ChargeIcon", false)
@@ -103,7 +100,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerCharge:Start(args.destName)
 		if args:IsPlayer() then
 			specWarnCharge:Show()
-			voiceCharge:Play("runout")
+			specWarnCharge:Play("runout")
 			yellCharge:Yell()
 		else
 			warnCharge:Show(args.destName)
@@ -113,6 +110,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args.spellId == 38575 and args:IsPlayer() and self:AntiSpam() then
 		specWarnToxic:Show()
+		specWarnToxic:Play("runaway")
 	end
 end
 

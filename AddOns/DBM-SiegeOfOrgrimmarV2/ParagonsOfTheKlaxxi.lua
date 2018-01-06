@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(853, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(71152, 71153, 71154, 71155, 71156, 71157, 71158, 71160, 71161)
 mod:SetEncounterID(1593)
 mod:DisableESCombatDetection()
@@ -161,25 +161,28 @@ mod:AddSetIconOption("SetIconOnAim", 142948, false)
 mod:AddSetIconOption("SetIconOnMesmerize", 142671, false)
 mod:AddArrowOption("AimArrow", 142948, false, true)
 
-local GetSpellInfo = GetSpellInfo
-local RedDebuffs = {GetSpellInfo(143605), GetSpellInfo(143610), GetSpellInfo(143615), GetSpellInfo(143620), (GetSpellInfo(143627))}
-local PurpleDebuffs = {GetSpellInfo(143606), GetSpellInfo(143611), GetSpellInfo(143616), GetSpellInfo(143621), (GetSpellInfo(143628))}
-local BlueDebuffs = {GetSpellInfo(143607), GetSpellInfo(143612), GetSpellInfo(143617), GetSpellInfo(143622), (GetSpellInfo(143629))}
-local GreenDebuffs = {GetSpellInfo(143608), GetSpellInfo(143613), GetSpellInfo(143618), GetSpellInfo(143623), (GetSpellInfo(143630))}
-local YellowDebuffs = {GetSpellInfo(143610), GetSpellInfo(143614), GetSpellInfo(143619), GetSpellInfo(143624), (GetSpellInfo(143631))}
+local repairedSpellNames = false
+local calculatingDude, readyToFight = DBM:EJ_GetSectionInfo(8012), DBM:GetSpellInfo(143542)
+local vulnerable1, vulnerable2, vulnerable3, vulnerable4 = DBM:GetSpellInfo(143279), DBM:GetSpellInfo(143275), DBM:GetSpellInfo(142929), DBM:GetSpellInfo(142931)
+local catalystBlue, catalystRed, catalystYellow = DBM:GetSpellInfo(142532), DBM:GetSpellInfo(142533), DBM:GetSpellInfo(142534)
+local RedDebuffs = {DBM:GetSpellInfo(143605), DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143615), DBM:GetSpellInfo(143620), (DBM:GetSpellInfo(143627))}
+local PurpleDebuffs = {DBM:GetSpellInfo(143606), DBM:GetSpellInfo(143611), DBM:GetSpellInfo(143616), DBM:GetSpellInfo(143621), (DBM:GetSpellInfo(143628))}
+local BlueDebuffs = {DBM:GetSpellInfo(143607), DBM:GetSpellInfo(143612), DBM:GetSpellInfo(143617), DBM:GetSpellInfo(143622), (DBM:GetSpellInfo(143629))}
+local GreenDebuffs = {DBM:GetSpellInfo(143608), DBM:GetSpellInfo(143613), DBM:GetSpellInfo(143618), DBM:GetSpellInfo(143623), (DBM:GetSpellInfo(143630))}
+local YellowDebuffs = {DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143614), DBM:GetSpellInfo(143619), DBM:GetSpellInfo(143624), (DBM:GetSpellInfo(143631))}
 
-local SwordDebuffs = {GetSpellInfo(143605), GetSpellInfo(143606), GetSpellInfo(143607), GetSpellInfo(143608), (GetSpellInfo(143609))}
-local DrumDebuffs = {GetSpellInfo(143610), GetSpellInfo(143611), GetSpellInfo(143612), GetSpellInfo(143613), (GetSpellInfo(143614))}
-local BombDebuffs = {GetSpellInfo(143615), GetSpellInfo(143616), GetSpellInfo(143617), GetSpellInfo(143618), (GetSpellInfo(143619))}
-local MantidDebuffs = {GetSpellInfo(143620), GetSpellInfo(143621), GetSpellInfo(143622), GetSpellInfo(143623), (GetSpellInfo(143624))}
-local StaffDebuffs = {GetSpellInfo(143627), GetSpellInfo(143628), GetSpellInfo(143629), GetSpellInfo(143630), (GetSpellInfo(143631))}
+local SwordDebuffs = {DBM:GetSpellInfo(143605), DBM:GetSpellInfo(143606), DBM:GetSpellInfo(143607), DBM:GetSpellInfo(143608), (DBM:GetSpellInfo(143609))}
+local DrumDebuffs = {DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143611), DBM:GetSpellInfo(143612), DBM:GetSpellInfo(143613), (DBM:GetSpellInfo(143614))}
+local BombDebuffs = {DBM:GetSpellInfo(143615), DBM:GetSpellInfo(143616), DBM:GetSpellInfo(143617), DBM:GetSpellInfo(143618), (DBM:GetSpellInfo(143619))}
+local MantidDebuffs = {DBM:GetSpellInfo(143620), DBM:GetSpellInfo(143621), DBM:GetSpellInfo(143622), DBM:GetSpellInfo(143623), (DBM:GetSpellInfo(143624))}
+local StaffDebuffs = {DBM:GetSpellInfo(143627), DBM:GetSpellInfo(143628), DBM:GetSpellInfo(143629), DBM:GetSpellInfo(143630), (DBM:GetSpellInfo(143631))}
 
 local AllDebuffs = {
-GetSpellInfo(143605), GetSpellInfo(143606), GetSpellInfo(143607), GetSpellInfo(143608), GetSpellInfo(143609),
-GetSpellInfo(143610), GetSpellInfo(143611), GetSpellInfo(143612), GetSpellInfo(143613), GetSpellInfo(143614),
-GetSpellInfo(143615), GetSpellInfo(143616), GetSpellInfo(143617), GetSpellInfo(143618), GetSpellInfo(143619),
-GetSpellInfo(143620), GetSpellInfo(143621), GetSpellInfo(143622), GetSpellInfo(143623), GetSpellInfo(143624),
-GetSpellInfo(143627), GetSpellInfo(143628), GetSpellInfo(143629), GetSpellInfo(143630), (GetSpellInfo(143631))
+	DBM:GetSpellInfo(143605), DBM:GetSpellInfo(143606), DBM:GetSpellInfo(143607), DBM:GetSpellInfo(143608), DBM:GetSpellInfo(143609),
+	DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143611), DBM:GetSpellInfo(143612), DBM:GetSpellInfo(143613), DBM:GetSpellInfo(143614),
+	DBM:GetSpellInfo(143615), DBM:GetSpellInfo(143616), DBM:GetSpellInfo(143617), DBM:GetSpellInfo(143618), DBM:GetSpellInfo(143619),
+	DBM:GetSpellInfo(143620), DBM:GetSpellInfo(143621), DBM:GetSpellInfo(143622), DBM:GetSpellInfo(143623), DBM:GetSpellInfo(143624),
+	DBM:GetSpellInfo(143627), DBM:GetSpellInfo(143628), DBM:GetSpellInfo(143629), DBM:GetSpellInfo(143630), (DBM:GetSpellInfo(143631))
 }
 
 local FlavorTable = {
@@ -194,8 +197,7 @@ local FlavorTable = {
 	[71153] = L.hisekFlavor--Hisek the Swarmkeeper
 }
 
-local UnitDebuff, GetSpellInfo = UnitDebuff, GetSpellInfo
-local calculatingDude, readyToFight = EJ_GetSectionInfo(8012), GetSpellInfo(143542)
+local UnitDebuff = UnitDebuff
 local expectedWhirlCount = 4
 ------------------
 --Tables, can't recover
@@ -256,12 +258,12 @@ local function CheckBosses(self)
 			local cid = self:GetCIDFromGUID(unitGUID)
 			if cid == 71152 then--Skeer the Bloodseeker
 				timerBloodlettingCD:Start(5)--5-6
-				if UnitDebuff("player", GetSpellInfo(143279)) then vulnerable = true end
+				if UnitDebuff("player", vulnerable1) then vulnerable = true end
 			elseif cid == 71158 then--Rik'kal the Dissector
 				timerInjectionCD:Start(8)
 				countdownInjection:Start(8)
 				timerMutateCD:Start(23, 1)
-				if UnitDebuff("player", GetSpellInfo(143275)) then vulnerable = true end
+				if UnitDebuff("player", vulnerable2) then vulnerable = true end
 			elseif cid == 71153 then--Hisek the Swarmkeeper
 				timerAimCD:Start(32, 1)--Might be 35-37 with unitdebuff filter
 				if self:IsMythic() then
@@ -274,10 +276,10 @@ local function CheckBosses(self)
 				self:StopRepeatedScan("DFAScan")
 				self:ScheduleMethod(23, "StartRepeatedScan", unitGUID, "DFAScan", 0.25, true)--Not a large sample size, data shows it happen 29-30 seconds after IEEU fires on two different pulls. Although 2 is a poor sample
 				--timerDFACD:Start()
-				if UnitDebuff("player", GetSpellInfo(142929)) then vulnerable = true end
+				if UnitDebuff("player", vulnerable3) then vulnerable = true end
 			elseif cid == 71157 then--Xaril the Poisoned-Mind
 				timerToxicCatalystCD:Start(19.5)--May need tweaking by about a sec or two. Need some transcriptors
-				if UnitDebuff("player", GetSpellInfo(142931)) then vulnerable = true end
+				if UnitDebuff("player", vulnerable4) then vulnerable = true end
 			elseif cid == 71156 then--Kaz'tik the Manipulator
 --				timerMesmerizeCD:Start(20)--Need transcriptor log. Seems WILDLY variable though and probably not useful
 			elseif cid == 71155 then--Korven the Prime
@@ -438,6 +440,31 @@ function mod:FlashScan(targetname)
 end
 
 function mod:OnCombatStart(delay)
+	if not repairedSpellNames then--Because of high volume, don't repair every pull
+		calculatingDude, readyToFight = DBM:EJ_GetSectionInfo(8012), DBM:GetSpellInfo(143542)
+		vulnerable1, vulnerable2, vulnerable3, vulnerable4 = DBM:GetSpellInfo(143279), DBM:GetSpellInfo(143275), DBM:GetSpellInfo(142929), DBM:GetSpellInfo(142931)
+		catalystBlue, catalystRed, catalystYellow = DBM:GetSpellInfo(142532), DBM:GetSpellInfo(142533), DBM:GetSpellInfo(142534)
+		RedDebuffs = {DBM:GetSpellInfo(143605), DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143615), DBM:GetSpellInfo(143620), (DBM:GetSpellInfo(143627))}
+		PurpleDebuffs = {DBM:GetSpellInfo(143606), DBM:GetSpellInfo(143611), DBM:GetSpellInfo(143616), DBM:GetSpellInfo(143621), (DBM:GetSpellInfo(143628))}
+		BlueDebuffs = {DBM:GetSpellInfo(143607), DBM:GetSpellInfo(143612), DBM:GetSpellInfo(143617), DBM:GetSpellInfo(143622), (DBM:GetSpellInfo(143629))}
+		GreenDebuffs = {DBM:GetSpellInfo(143608), DBM:GetSpellInfo(143613), DBM:GetSpellInfo(143618), DBM:GetSpellInfo(143623), (DBM:GetSpellInfo(143630))}
+		YellowDebuffs = {DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143614), DBM:GetSpellInfo(143619), DBM:GetSpellInfo(143624), (DBM:GetSpellInfo(143631))}
+
+		SwordDebuffs = {DBM:GetSpellInfo(143605), DBM:GetSpellInfo(143606), DBM:GetSpellInfo(143607), DBM:GetSpellInfo(143608), (DBM:GetSpellInfo(143609))}
+		DrumDebuffs = {DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143611), DBM:GetSpellInfo(143612), DBM:GetSpellInfo(143613), (DBM:GetSpellInfo(143614))}
+		BombDebuffs = {DBM:GetSpellInfo(143615), DBM:GetSpellInfo(143616), DBM:GetSpellInfo(143617), DBM:GetSpellInfo(143618), (DBM:GetSpellInfo(143619))}
+		MantidDebuffs = {DBM:GetSpellInfo(143620), DBM:GetSpellInfo(143621), DBM:GetSpellInfo(143622), DBM:GetSpellInfo(143623), (DBM:GetSpellInfo(143624))}
+		StaffDebuffs = {DBM:GetSpellInfo(143627), DBM:GetSpellInfo(143628), DBM:GetSpellInfo(143629), DBM:GetSpellInfo(143630), (DBM:GetSpellInfo(143631))}
+
+		AllDebuffs = {
+			DBM:GetSpellInfo(143605), DBM:GetSpellInfo(143606), DBM:GetSpellInfo(143607), DBM:GetSpellInfo(143608), DBM:GetSpellInfo(143609),
+			DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143611), DBM:GetSpellInfo(143612), DBM:GetSpellInfo(143613), DBM:GetSpellInfo(143614),
+			DBM:GetSpellInfo(143615), DBM:GetSpellInfo(143616), DBM:GetSpellInfo(143617), DBM:GetSpellInfo(143618), DBM:GetSpellInfo(143619),
+			DBM:GetSpellInfo(143620), DBM:GetSpellInfo(143621), DBM:GetSpellInfo(143622), DBM:GetSpellInfo(143623), DBM:GetSpellInfo(143624),
+			DBM:GetSpellInfo(143627), DBM:GetSpellInfo(143628), DBM:GetSpellInfo(143629), DBM:GetSpellInfo(143630), (DBM:GetSpellInfo(143631))
+		}
+		repairedSpellNames = true
+	end
 	table.wipe(activeBossGUIDS)
 	table.wipe(activatedTargets)
 	calculatedShape = nil
@@ -486,7 +513,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.warnToxicCatalyst then
 			warnToxicCatalystBlue:Show()
 		end
-		if UnitDebuff("player", GetSpellInfo(142532)) then
+		if UnitDebuff("player", catalystBlue) then
 			specWarnCatalystBlue:Show()
 			if self.Options.yellToxicCatalyst then
 				yellCatalystBlue:Yell()
@@ -497,7 +524,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.warnToxicCatalyst then
 			warnToxicCatalystRed:Show()
 		end
-		if UnitDebuff("player", GetSpellInfo(142533)) then
+		if UnitDebuff("player", catalystRed) then
 			specWarnCatalystRed:Show()
 			if self.Options.yellToxicCatalyst then
 				yellCatalystRed:Yell()
@@ -508,7 +535,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.warnToxicCatalyst then
 			warnToxicCatalystYellow:Show()
 		end
-		if UnitDebuff("player", GetSpellInfo(142534)) then
+		if UnitDebuff("player", catalystYellow) then
 			specWarnCatalystYellow:Show()
 			if self.Options.yellToxicCatalyst then
 				yellCatalystYellow:Yell()
@@ -519,7 +546,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.warnToxicCatalyst then
 			warnToxicCatalystOrange:Show()
 		end
-		if UnitDebuff("player", GetSpellInfo(142533)) or UnitDebuff("player", GetSpellInfo(142534)) then--Red or Yellow
+		if UnitDebuff("player", catalystRed) or UnitDebuff("player", catalystYellow) then--Red or Yellow
 			specWarnCatalystOrange:Show()
 			if self.Options.yellToxicCatalyst then
 				yellCatalystOrange:Yell()
@@ -530,7 +557,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.warnToxicCatalyst then
 			warnToxicCatalystPurple:Show()
 		end
-		if UnitDebuff("player", GetSpellInfo(142533)) or UnitDebuff("player", GetSpellInfo(142532)) then--Red or Blue
+		if UnitDebuff("player", catalystRed) or UnitDebuff("player", catalystBlue) then--Red or Blue
 			specWarnCatalystPurple:Show()
 			if self.Options.yellToxicCatalyst then
 				yellCatalystPurple:Yell()
@@ -541,7 +568,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.warnToxicCatalyst then
 			warnToxicCatalystGreen:Show()
 		end
-		if UnitDebuff("player", GetSpellInfo(142534)) or UnitDebuff("player", GetSpellInfo(142532)) then--Yellow or Blue
+		if UnitDebuff("player", catalystYellow) or UnitDebuff("player", catalystBlue) then--Yellow or Blue
 			specWarnCatalystGreen:Show()
 			if self.Options.yellToxicCatalyst then
 				yellCatalystGreen:Yell()
@@ -586,7 +613,7 @@ function mod:SPELL_CAST_START(args)
 			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and UnitDetailedThreatSituation("player", bossUnitID) then
 				local elapsed, total = timerMutateCD:GetTime(self.vb.mutateCount+1)
 				local remaining = total - elapsed
-				if self:IsMythic() and (remaining < 20) and (self.vb.parasitesActive < 2) and not UnitDebuff("player", GetSpellInfo(143339)) then--NEED to know Mythic number of parasites
+				if self:IsMythic() and (remaining < 20) and (self.vb.parasitesActive < 2) and not UnitDebuff("player", args.spellName) then--NEED to know Mythic number of parasites
 					specWarnMoreParasites:Show()
 				else--We want to block attack and not spawn anything
 					specWarnInjection:Show()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ysondre", "DBM-Azeroth")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 636 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(121912)--121912 TW ID, 14887 classic ID
 --mod:SetModelID(17887)
 mod:SetZone()
@@ -26,8 +26,6 @@ local timerNoxiousBreathCD		= mod:NewCDTimer(19.4, 243401, nil, "Tank", nil, 5, 
 local timerSleepingFogCD		= mod:NewCDTimer(16.0, 243399, nil, nil, nil, 3)
 local timerLightningWaveCD		= mod:NewCDTimer(13.4, 243610, nil, nil, nil, 3)
 
-local voiceSleepingFog			= mod:NewVoice(243399)--watchstep
-
 --mod:AddReadyCheckOption(48620, false)
 
 function mod:OnCombatStart(delay, yellTriggered)
@@ -47,7 +45,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 243399 then
 		specWarnSleepingFog:Show()
-		voiceSleepingFog:Play("watchstep")
+		specWarnSleepingFog:Play("watchstep")
 		timerSleepingFogCD:Start()
 	end
 end

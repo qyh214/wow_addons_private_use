@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(594, "DBM-Party-WotLK", 5, 274)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 240 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(29305)
 mod:SetEncounterID(387, 388, 1980)
 --mod:SetZone()
@@ -17,8 +17,6 @@ local specWarnTransform		= mod:NewSpecialWarningInterruptCount(55098, nil, nil, 
 
 local timerTransform		= mod:NewCDTimer(10, 55098)--experimental
 
-local voiceTransform		= mod:NewVoice(55098)--kickcast
-
 mod.vb.lowHealth = false
 mod.vb.kickCount = 0
 
@@ -31,7 +29,7 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 55098 then
 		self.vb.kickCount = self.vb.kickCount + 1
 		specWarnTransform:Show(args.sourceName, self.vb.kickCount)
-		voiceTransform:Play("kickcast")
+		specWarnTransform:Play("kickcast")
 		if self.vb.lowHealth then
 			timerTransform:Start(5) --cast every 5 seconds below 50% health
 		else

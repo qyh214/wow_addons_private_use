@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(570, "DBM-Party-BC", 4, 260)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(17941)
 mod:SetEncounterID(1939)
 
@@ -13,11 +13,9 @@ mod:RegisterEventsInCombat(
 
 local specWarnCorruptedNova		= mod:NewSpecialWarningSwitch(31991, "Dps", nil, nil, 1, 2)
 
-local voiceCorruptingNova		= mod:NewVoice(31991)--attacktotem
-
 function mod:SPELL_SUMMON(args)
 	if args.spellId == 31991 then
 		specWarnCorruptedNova:Show()
-		voiceCorruptingNova:Play("attacktotem")
+		specWarnCorruptedNova:Play("attacktotem")
 	end
 end

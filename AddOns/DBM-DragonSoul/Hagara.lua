@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(317, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(55689)
 mod:SetEncounterID(1296)
 mod:SetZone()
@@ -71,8 +71,8 @@ local firstPhase = true
 local iceFired = false
 local assaultCount = 0
 local pillarsRemaining = 4
-local frostPillar = EJ_GetSectionInfo(4069)
-local lightningPillar = EJ_GetSectionInfo(3919)
+local frostPillar = DBM:EJ_GetSectionInfo(4069)
+local lightningPillar = DBM:EJ_GetSectionInfo(3919)
 local CVAR = false
 local CVAR2 = false
 

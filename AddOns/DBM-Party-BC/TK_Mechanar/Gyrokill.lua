@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gyrokill", "DBM-Party-BC", 13)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(19218)
 mod:SetEncounterID(1933)
 
@@ -18,14 +18,12 @@ local specWarnShadowpower   = mod:NewSpecialWarningDispel(35322, "MagicDispeller
 
 local timerShadowpower      = mod:NewBuffActiveTimer(15, 35322, nil, "Tank|MagicDispeller", 2, 5, nil, DBM_CORE_TANK_ICON)
 
-local voiceShadowpower		= mod:NewVoice(35322, "MagicDispeller")--dispelboss
-
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(39193, 35322) and not args:IsDestTypePlayer() then     --Shadow Power
 		timerShadowpower:Start(args.destName)
 		if self.Options.SpecWarn35322dispel then
 			specWarnShadowpower:Show(args.destName)
-			voiceShadowpower:Play("dispelboss")
+			specWarnShadowpower:Play("dispelboss")
 		else
 			warnShadowpower:Show(args.destName)
 		end

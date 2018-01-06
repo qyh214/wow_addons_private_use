@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1878, "DBM-Party-Legion", 12, 900)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16186 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
 mod:SetCreatureID(120793)
 mod:SetEncounterID(2039)
 mod:SetZone()
@@ -37,17 +37,15 @@ local timerCarrionSwarmCD			= mod:NewCDTimer(18, 233155, nil, "Tank", nil, 5, ni
 local timerDemonicUpheavalCD		= mod:NewCDTimer(32, 233963, nil, nil, nil, 3)--32-35
 local timerShadowFadeCD				= mod:NewCDTimer(40, 233206, nil, nil, nil, 6)
 
-local voiceCarrionSwarm				= mod:NewVoice(233155, "Tank")--shockwave
-local voiceDemonicUpheaval			= mod:NewVoice(233963)--runout
-
 mod:AddRangeFrameOption(8, 234817)--5 yards probably too small, next lowest range on crap api is 8
 mod:AddInfoFrameOption(234217, true)
 
-local demonicUpheaval = GetSpellInfo(233963)
+local demonicUpheaval, darkSolitude = DBM:GetSpellInfo(233963), DBM:GetSpellInfo(234217)
 local demonicUpheavalTable = {}
 local addsTable = {}
 
 function mod:OnCombatStart(delay)
+	demonicUpheaval, darkSolitude = DBM:GetSpellInfo(233963), DBM:GetSpellInfo(234217)
 	table.wipe(addsTable)
 	timerDemonicUpheavalCD:Start(3.2-delay)--Cast Start
 	timerDarkSolitudeCD:Start(8.1-delay)
@@ -71,7 +69,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 233155 then
 		specWarnCarrionSwarm:Show()
-		voiceCarrionSwarm:Play("shockwave")
+		specWarnCarrionSwarm:Play("shockwave")
 		timerCarrionSwarmCD:Start()
 	elseif spellId == 233206 then--Shadow Fade
 		warnShadowFade:Show()
@@ -85,7 +83,7 @@ function mod:SPELL_CAST_START(args)
 		warnDarkSolitude:Show()
 		timerDarkSolitudeCD:Start()
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(GetSpellInfo(234217))
+			DBM.InfoFrame:SetHeader(darkSolitude)
 			DBM.InfoFrame:Show(2, "enemypower", 2, ALTERNATE_POWER_INDEX)
 		end
 	elseif spellId == 233963 then
@@ -120,7 +118,7 @@ function mod:UNIT_AURA_UNFILTERED(uId)
 		warnDemonicUpheaval:CombinedShow(0.5, name)--Multiple targets in mythic
 		if UnitIsUnit(uId, "player") then
 			specWarnDemonicUpheaval:Show()
-			voiceDemonicUpheaval:Play("runout")
+			specWarnDemonicUpheaval:Play("runout")
 			yellDemonicUpheaval:Yell()
 		end
 	end
@@ -142,7 +140,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 192800 and destGUID == UnitGUID("player") and self:AntiSpam(2.5, 1) then
 		specWarnGas:Show()
-		voiceGas:Play("runaway")
+		specWarnGas:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

@@ -26,8 +26,6 @@ local timerGroundSlamCD	= mod:NewCDTimer(74, 36300, nil, nil, nil, 2)--74-80 sec
 local timerShatterCD	= mod:NewNextTimer(10, 33654, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)--10 seconds after ground slam
 local timerSilenceCD	= mod:NewCDTimer(32, 36300, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)--Also showing a HUGE variation of 32-48 seconds.
 
-local voiceCaveIn		= mod:NewVoice(36240)--runaway
-
 mod:AddBoolOption("RangeFrame", true)
 
 function mod:OnCombatStart(delay)
@@ -71,7 +69,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args.spellId == 36240 and args:IsPlayer() and not self:IsTrivial(85) then--Cave In
 		specWarnCaveIn:Show()
-		voiceCaveIn:Play("runaway")
+		specWarnCaveIn:Play("runaway")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED

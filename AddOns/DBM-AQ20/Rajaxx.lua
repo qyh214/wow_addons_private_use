@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Rajaxx", "DBM-AQ20", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 637 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(15341)
 mod:SetEncounterID(719)
 mod:SetModelID(15376)
@@ -24,14 +24,12 @@ local yellOrder			= mod:NewYell(25471)
 local timerOrder		= mod:NewTargetTimer(10, 25471, nil, nil, nil, 3)
 local timerCloud		= mod:NewBuffActiveTimer(15, 26550, nil, nil, nil, 3)--? Good color?
 
-local voiceOrder		= mod:NewVoice(25471)--targetyou
-
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 25471 then
 		timerOrder:Start(args.destName)
 		if args:IsPlayer() then
 			specWarnOrder:Show()
-			voiceOrder:Play("targetyou")
+			specWarnOrder:Play("targetyou")
 			yellOrder:Yell()
 		else
 			warnOrder:Show(args.destName)

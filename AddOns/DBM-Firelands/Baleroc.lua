@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(196, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 183 $"):sub(12, -3))
 mod:SetCreatureID(53494)
 mod:SetEncounterID(1200)
 mod:SetZone()
@@ -63,7 +63,7 @@ local shardCount = 0
 local tormentIcon = 8
 local countdownIcon = 2
 local countdownTargets = {}
-local tormentDebuff = GetSpellInfo(99257)
+local tormentDebuff, stackDebuff1, stackDebuff2 = DBM:GetSpellInfo(99257), DBM:GetSpellInfo(99262), DBM:GetSpellInfo(99263)
 
 local function showCountdownWarning()
 	warnCountdown:Show(table.concat(countdownTargets, "<, >"))
@@ -79,6 +79,9 @@ do
 end
 
 function mod:OnCombatStart(delay)
+	tormentDebuff, stackDebuff1, stackDebuff2 = DBM:GetSpellInfo(99257), DBM:GetSpellInfo(99262), DBM:GetSpellInfo(99263)
+	bladesName = DBM:GetSpellInfo(99351)
+	bladesName = DBM:GetSpellInfo(99353)
 	bladesName = nil
 	lastStrike = 0
 	currentStrike = 0
@@ -95,8 +98,8 @@ function mod:OnCombatStart(delay)
 		end
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(L.VitalSpark)
-		DBM.InfoFrame:Show(5, "playerbuffstacks", 99262, 99263, 1)
+		--DBM.InfoFrame:SetHeader(L.VitalSpark)
+		DBM.InfoFrame:Show(5, "playerbuffstacks", stackDebuff1, stackDebuff2, 1)
 	end
 end
 
@@ -140,7 +143,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 99263 and args:IsPlayer() then
 		timerVitalFlame:Start()
 	elseif spellId == 99352 then--Decimation Blades
-		bladesName = GetSpellInfo(99353)
+		bladesName = DBM:GetSpellInfo(99353)
 		lastStrike = GetTime()--Set last strike here too
 		strikeCount = 0--Reset count.
 		if self:IsDifficulty("normal25", "heroic25") then--The very first timer is subject to inaccuracis do to variation. But they are minor, usually within 0.5sec
@@ -149,7 +152,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerStrikeCD:Start(6, bladesName)--6 seconds on 10 man
 		end
 	elseif spellId == 99350 then--Inferno Blades
-		bladesName = GetSpellInfo(99351)
+		bladesName = DBM:GetSpellInfo(99351)
 		lastStrike = GetTime()--Set last strike here too
 		strikeCount = 0--Reset count.
 		timerStrikeCD:Start(2.5, bladesName)

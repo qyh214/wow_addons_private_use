@@ -92,10 +92,6 @@ L:SetOptionLocalization({
 	RangeFrame			= "Mostrar marco de distancia (5 m) para $spell:99257"
 })
 
-L:SetMiscLocalization({
-	VitalSpark		= "Acumulaciones de "..GetSpellInfo(99262)
-})
-
 ---------------------------
 -- Mayordomo Corzocelada --
 ---------------------------

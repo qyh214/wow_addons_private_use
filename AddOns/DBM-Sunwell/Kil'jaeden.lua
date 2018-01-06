@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kil", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 642 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(25315)
 mod:SetEncounterID(729)
 mod:SetModelID(23200)
@@ -39,9 +39,6 @@ local timerBomb			= mod:NewCastTimer(9, 46605, nil, nil, nil, 2, nil, DBM_CORE_D
 local timerBombCD		= mod:NewCDTimer(45, 46605, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 local timerSpike		= mod:NewCastTimer(28, 46680, nil, nil, nil, 3)
 local timerBlueOrb		= mod:NewTimer(37, "TimerBlueOrb", 45109, nil, nil, 5)
-
-local voiceBloom		= mod:NewVoice(45641)--targetyou
-local voiceBomb			= mod:NewVoice(46605)--findshield
 
 local berserkTimer		= mod:NewBerserkTimer(900)
 
@@ -87,7 +84,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.bloomIcon = self.vb.bloomIcon - 1
 		if args:IsPlayer() then
 			specWarnBloom:Show()
-			voiceBloom:Play("targetyou")
+			specWarnBloom:Play("targetyou")
 			yellBloom:Yell()
 		end
 		if #warnBloomTargets >= 5 then
@@ -109,7 +106,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 46605 then
 		specWarnBomb:Show(SHIELDSLOT)
-		voiceBomb:Play("findshield")
+		specWarnBomb:Play("findshield")
 		timerBomb:Start()
 		if self.vb.phase == 4 then
 			timerBombCD:Start(25)

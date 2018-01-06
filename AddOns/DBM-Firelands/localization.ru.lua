@@ -122,10 +122,6 @@ L:SetOptionLocalization({
 	RangeFrame			= "Показывать окно проверки дистанции (5м) для $spell:99404"
 })
 
-L:SetMiscLocalization({
-	VitalSpark			= GetSpellInfo(99262).." стаки"
-})
-
 --------------------------------
 -- Majordomo Fandral Staghelm --
 --------------------------------

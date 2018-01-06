@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1657, "DBM-Party-Legion", 2, 762)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15190 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
 mod:SetCreatureID(99192)
 mod:SetEncounterID(1839)
 mod:SetZone()
@@ -25,18 +25,15 @@ local warnParanoia					= mod:NewTargetAnnounce(200289, 3)
 local warnApocNightmare				= mod:NewSpellAnnounce(200050, 3)
 
 local specWarnFesteringRip			= mod:NewSpecialWarningDispel(200182, "Healer")--No disease dispeller in group? have fun wiping
-local specWarnNightmare				= mod:NewSpecialWarningYou(200243)
+local specWarnNightmare				= mod:NewSpecialWarningYou(200243, nil, nil, nil, 1, 2)
 local yellNightmare					= mod:NewYell(200243)
-local specWarnParanoia				= mod:NewSpecialWarningMoveAway(200289)
+local specWarnParanoia				= mod:NewSpecialWarningMoveAway(200289, nil, nil, nil, 1, 2)
 local yellParanoia					= mod:NewYell(200289)
 
 local timerFesteringRipCD			= mod:NewCDTimer(17, 200182, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_MAGIC_ICON)--17-21
 local timerNightmareCD				= mod:NewCDTimer(17, 200243, nil, nil, nil, 3)--17-25
 local timerParanoiaCD				= mod:NewCDTimer(18, 200359, nil, nil, nil, 3)--18-28
 --local timerApocNightmareCD			= mod:NewCDTimer(18, 200050, nil, nil, nil, 2)
-
-local voiceNightmare				= mod:NewVoice(200243)--Gathershare
-local voiceParanoia					= mod:NewVoice(200243)--scatter
 
 mod:AddSetIconOption("SetIconOnNightmare", 200243)
 
@@ -67,7 +64,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 200243 then
 		if args:IsPlayer() then
 			specWarnNightmare:Show()
-			voiceNightmare:Play("gathershare")
+			specWarnNightmare:Play("gathershare")
 			yellNightmare:Yell()
 		else
 			warnNightmare:Show(args.destName)
@@ -84,7 +81,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 200289 then
 		if args:IsPlayer() then
 			specWarnParanoia:Show()
-			voiceParanoia:Play("scatter")
+			specWarnParanoia:Play("scatter")
 			yellParanoia:Yell()
 		else
 			warnParanoia:Show(args.destName)

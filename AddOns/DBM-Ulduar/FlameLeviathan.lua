@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FlameLeviathan", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 
 mod:SetCreatureID(33113)
 mod:SetEncounterID(1132)
@@ -29,7 +29,7 @@ local timerFlameVents		= mod:NewCastTimer(10, 62396, nil, nil, nil, 2)
 local timerPursued			= mod:NewBuffFadesTimer(30, 62374, nil, nil, nil, 3)
 
 local guids = {}
-local function buildGuidTable()
+local function buildGuidTable(self)
 	table.wipe(guids)
 	for uId in DBM:GetGroupMembers() do
 		local name, server = GetUnitName(uId, true)
@@ -39,11 +39,11 @@ local function buildGuidTable()
 end
 
 function mod:OnCombatStart(delay)
-	buildGuidTable()
+	buildGuidTable(self)
 end
 
 function mod:OnTimerRecovery()
-	buildGuidTable()
+	buildGuidTable(self)
 end
 
 function mod:SPELL_AURA_APPLIED(args)

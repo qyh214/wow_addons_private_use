@@ -1,7 +1,7 @@
 ## Interface: 70300
 ## Title: XLoot
 ## Notes: Core module for Loot and Looting-related UI improvements
-## Version: 7.3-2
+## Version: 7.3-3
 ## Author: Xuerian
 ## X-Category: Inventory
 ## X-Name: XLoot

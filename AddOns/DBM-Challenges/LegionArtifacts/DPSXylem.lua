@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod("ArtifactXylem", "DBM-Challenges", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 84 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(115244)
 mod:SetZone()--Healer (1710), Tank (1698), DPS (1703-The God-Queen's Fury), DPS (Fel Totem Fall)
 mod.soloChallenge = true
@@ -19,7 +19,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 --Notes:
---TODO, all. mapids, mob iDs, win event to stop timers (currently only death event stops them)
 --TODO, more timer work/data.
 --TODO, phase 2
 --Frost Phase
@@ -45,14 +44,6 @@ local timerDrawPowerCD				= mod:NewCDTimer(18.2, 231522, nil, nil, nil, 4, nil, 
 
 --local countdownTimer				= mod:NewCountdownFades(10, 141582)
 
---Frost Phase
-local voiceRazorIce					= mod:NewVoice(232661)--watchstep
---Transition
-local voiceArcaneAnnihilation		= mod:NewVoice(234728)--kickcast
---Arcane Phase
-local voiceShadowBarrage			= mod:NewVoice(231443)--watchorb
-local voiceDrawPower				= mod:NewVoice(231522)--kickcast
-
 local activeBossGUIDS = {}
 
 function mod:OnCombatStart(delay)
@@ -63,7 +54,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 234423 then
 		specWarnArcaneAnnihilation:Show(args.sourceName)
-		voiceArcaneAnnihilation:Play("kickcast")
+		specWarnArcaneAnnihilation:Play("kickcast")
 	end
 end
 
@@ -71,11 +62,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 232661 then
 		specWarnRazorIce:Show()
-		voiceRazorIce:Play("watchstep")
+		specWarnRazorIce:Play("watchstep")
 		timerRazorIceCD:Start()
 	elseif spellId == 231522 then
 		specWarnDrawPower:Show(args.sourceName)
-		voiceDrawPower:Play("kickcast")
+		specWarnDrawPower:Play("kickcast")
 		timerDrawPowerCD:Start()
 	end
 end
@@ -84,31 +75,15 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 231443 then
 		specWarnShadowBarrage:Show()
-		voiceShadowBarrage:Play("watchorb")
+		specWarnShadowBarrage:Play("watchorb")
 		timerShadowBarrageCD:Start()
 	end
 end
---mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
-
---[[
-function mod:SPELL_AURA_REMOVED(args)
-	local spellId = args.spellId
-	if spellId == 238471 then
-		local amount = args.amount or 1
-		warnScale:Show(args.destName, amount)
-	end
-end
-mod.SPELL_AURA_REMOVED_DOSE = mod.SPELL_AURA_REMOVED
---]]
 
 function mod:UNIT_DIED(args)
 	if args.destGUID == UnitGUID("player") then--Solo scenario, a player death is a wipe
 		DBM:EndCombat(self, true)
 	end
-	--local cid = self:GetCIDFromGUID(args.destGUID)
---	if cid == 177933 then--Variss
-
---	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
@@ -128,28 +103,3 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		
 	end
 end
-
---[[
-function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
-	for i = 1, 5 do
-		local unitID = "boss"..i
-		local unitGUID = UnitGUID(unitID)
-		if UnitExists(unitID) and not activeBossGUIDS[unitGUID] then
-			local bossName = UnitName(unitID)
-			local cid = self:GetUnitCreatureId(unitID)
-			--Tank
-			if cid == 115244 then--Archmage Xylem
-
-			end
-		end
-	end
-end
-
---"<53.75 21:03:46> [CHAT_MSG_MONSTER_EMOTE] |TInterface\\Icons\\spell_shaman_earthquake:20|t%s readies itself to charge!#Jormog the Behemoth###Kylistà##0#0##0#12#nil#0#false#false#false#false", -- [133]
-function mod:CHAT_MSG_MONSTER_EMOTE(msg)
-	if msg:find("Interface\\Icons\\spell_shaman_earthquake") then
-		specWarnCharge:Show()
-		voiceCharge:Play("charge")
-	end
-end
---]]

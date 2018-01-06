@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(119, "DBM-Party-Cataclysm", 5, 69)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(43612)
 mod:SetEncounterID(1053)
 mod:SetZone()
@@ -35,8 +35,8 @@ local timerSoulSeverCD			= mod:NewCDTimer(11, 82255, nil, nil, nil, 3)
 mod:AddBoolOption("BossHealthAdds")
 
 local spamSIS = 0--We use custom updating so don't use prototype
-local BlazeHeavens = EJ_GetSectionInfo(2459)
-local HarbringerDarkness = EJ_GetSectionInfo(2473)
+local BlazeHeavens = DBM:EJ_GetSectionInfo(2459)
+local HarbringerDarkness = DBM:EJ_GetSectionInfo(2473)
 
 function mod:OnCombatStart(delay)
 	spamSIS = 0

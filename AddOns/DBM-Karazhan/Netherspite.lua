@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Netherspite", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 631 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(15689)
 mod:SetModelID(15363)
 mod:RegisterCombat("combat")
@@ -24,8 +24,6 @@ local timerBanishPhase		= mod:NewTimer(40, "timerBanishPhase", "Interface\\Icons
 local timerBreathCast		= mod:NewCastTimer(2.5, 38523, nil, nil, nil, 3)
 
 local berserkTimer			= mod:NewBerserkTimer(540)
-
-local voiceVoid				= mod:NewVoice(30533)--runaway
 
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
@@ -58,7 +56,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 30533 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnVoid:Show()
-		voiceVoid:Play("runaway")
+		specWarnVoid:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

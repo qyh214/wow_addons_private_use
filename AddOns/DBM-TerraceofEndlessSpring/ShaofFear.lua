@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(709, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(60999)--61042 Cheng Kang, 61046 Jinlun Kun, 61038 Yang Guoshi, 61034 Terror Spawn
 mod:SetEncounterID(1431)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -91,10 +91,7 @@ mod.vb.thrashCount = 0
 mod.vb.submergeCount = 0
 mod.vb.specialCount = 0
 local huddleIcon = 8
-local wallLight = GetSpellInfo(117964)
-local fearless = GetSpellInfo(118977)
-local waterspout = GetSpellInfo(120519)
-local huddleinterror = GetSpellInfo(120629)
+local wallLight, fearless, waterspout, huddleinterror = DBM:GetSpellInfo(117964), DBM:GetSpellInfo(118977), DBM:GetSpellInfo(120519), DBM:GetSpellInfo(120629)
 local ominousCackleTargets = {}
 local platformGUIDs = {}
 local waterspoutTargets = {}
@@ -213,6 +210,7 @@ function mod:LeavePlatform()
 end
 
 function mod:OnCombatStart(delay)
+	wallLight, fearless, waterspout, huddleinterror = DBM:GetSpellInfo(117964), DBM:GetSpellInfo(118977), DBM:GetSpellInfo(120519), DBM:GetSpellInfo(120629)
 	if self:IsDifficulty("normal10", "heroic10", "lfr25") then
 		timerOminousCackleCD:Start(40-delay)
 	else

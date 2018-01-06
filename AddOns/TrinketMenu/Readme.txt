@@ -278,7 +278,7 @@ __ Changes __
 2.21 8/21/05 - bug fixed: window scaling bug definitively fixed, and error when clicking an empty trinket slot
 2.2 8/20/05 - added: swap attempts while dead will queue trinkets to swap on revive, options to disable toggle, notify used only, and notify chats also, bugs fixed: error for more than 30 trinkets, notify corrected, hopeful fix for location bug some have: forced start/stopmove to save to layout-cache.txt, move the window to saved point going in/out of windowed mode
 2.11 8/17/05 - changed: swap attempts won't happen if anything on cursor, bug fixed: options window will appear on screen irregardless where minimap is, added: /trinket debug to help find location bug issue some see
-2.1 8/17/05 - added: a resize grip to lower right corner, trinket queue, option to dock/undock, notification when trinket cooldown ends (via SCT or overhead), bugs fixed: cooldown update made less frequent, 
+2.1 8/17/05 - added: a resize grip to lower right corner, trinket queue, option to dock/undock, notification when trinket cooldown ends (via SCT or overhead), bugs fixed: cooldown update made less frequent,
 2.0 8/14/05 - rewritten from scratch, added up to 30+2 trinkets, menu grows outward, cooldown numbers, keep menu open option, minimap icon and scaling, far better handling of bag/inventory updates, cooldown models won't update if they're off the screen
 1.1 7/20/05 - only react to BAG_UPDATE every second (by Thelgar), made lock/unlock more visually apparent and moved menu closer to main window
 1.0 4/8/05 - initial release

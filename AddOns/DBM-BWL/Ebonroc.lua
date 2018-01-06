@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ebonroc", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 627 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(14601)
 mod:SetEncounterID(614)
 mod:SetModelID(6377)
@@ -23,8 +23,6 @@ local specWarnShadow	= mod:NewSpecialWarningTaunt(23340, nil, nil, nil, 1, 2)
 local timerWingBuffet	= mod:NewNextTimer(31, 23339, nil, nil, nil, 2)
 local timerShadow		= mod:NewTargetTimer(8, 23340, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
 
-local voiceShadow		= mod:NewVoice(23340)--Tauntboss
-
 function mod:OnCombatStart(delay)
 	timerWingBuffet:Start(-delay)
 end
@@ -42,11 +40,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 23340 then
 		if args:IsPlayer() then
 			specWarnShadowYou:Show()
-			voiceShadow:Play("targetyou")
+			specWarnShadowYou:Play("targetyou")
 		else
 			if self.Options.SpecWarn23340taunt then
 				specWarnShadow:Show(args.destName)
-				voiceShadow:Play("tauntboss")
+				specWarnShadow:Play("tauntboss")
 			else
 				warnShadow:Show(args.destName)
 			end

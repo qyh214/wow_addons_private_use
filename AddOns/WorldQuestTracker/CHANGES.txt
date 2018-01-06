@@ -1,7 +1,7 @@
-changeset:   263:2622a9548910
-tag:         v7.3.2.263-release
+changeset:   265:6a0d46ca8141
+tag:         v7.3.2.265-release
 user:        Tercio
-date:        Sat Dec 09 11:41:05 2017 -0200
-summary:     - Back to convert to raid if the quest is an epic quest (world boss).
+date:        Fri Dec 22 09:53:38 2017 -0200
+summary:     - Fixed the size of glow borders for tracked zone quests.
 
 

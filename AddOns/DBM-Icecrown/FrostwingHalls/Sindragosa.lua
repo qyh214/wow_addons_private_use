@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Sindragosa", "DBM-Icecrown", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 240 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(36853)
 mod:SetEncounterID(1105)
 mod:SetModelID(30362)
@@ -70,6 +70,7 @@ local unchainedIcons = 7
 local playerUnchained = false
 local playerBeaconed = false
 local activeBeacons	= false
+local beaconDebuff, unchainedDebuff = DBM:GetSpellInfo(70126), DBM:GetSpellInfo(69762)
 
 local function ClearBeaconTargets()
 	table.wipe(beaconIconTargets)
@@ -99,7 +100,7 @@ end
 local beaconDebuffFilter
 do
 	beaconDebuffFilter = function(uId)
-		return UnitDebuff(uId, (GetSpellInfo(70126)))
+		return UnitDebuff(uId, beaconDebuff)
 	end
 end
 
@@ -119,7 +120,7 @@ end
 local unchainedDebuffFilter
 do
 	unchainedDebuffFilter = function(uId)
-		return UnitDebuff(uId, (GetSpellInfo(69762)))
+		return UnitDebuff(uId, unchainedDebuff)
 	end
 end
 
@@ -143,6 +144,7 @@ local function warnUnchainedTargets()
 end
 
 function mod:OnCombatStart(delay)
+	beaconDebuff, unchainedDebuff = DBM:GetSpellInfo(70126), DBM:GetSpellInfo(69762)
 	berserkTimer:Start(-delay)
 	timerNextAirphase:Start(50-delay)
 	timerNextBlisteringCold:Start(33-delay)

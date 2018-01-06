@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("VoidReaver", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 631 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(19516)
 mod:SetEncounterID(731)
 mod:SetModelID(18951)
@@ -25,8 +25,6 @@ local timerPounding		= mod:NewCDTimer(13, 34162, nil, nil, nil, 2)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-local voiceOrb			= mod:NewVoice(34172)--watchorb
-
 function mod:OnCombatStart(delay)
 	timerPounding:Start()
 	berserkTimer:Start(-delay)
@@ -36,7 +34,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 34172 then
 		if args:IsPlayer() then
 			specWarnOrb:Show()
-			voiceOrb:Play("watchorb")
+			specWarnOrb:Play("watchorb")
 			yellOrb:Yell()
 		else
 			warnOrb:Show(args.destName)

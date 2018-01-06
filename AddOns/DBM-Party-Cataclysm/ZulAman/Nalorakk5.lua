@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod(187, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 183 $"):sub(12, -3))
 mod:SetCreatureID(23576)
 mod:SetEncounterID(1190)
 mod:SetZone()
@@ -29,14 +29,17 @@ local berserkTimer		= mod:NewBerserkTimer(600)
 
 mod:AddBoolOption("InfoFrame")
 
+local surgeDebuff = DBM:GetSpellInfo(42402)
+
 function mod:OnCombatStart(delay)
+	surgeDebuff = DBM:GetSpellInfo(42402)
 	timerSurgeCD:Start(-delay)
 	timerBear:Start()
 	warnBearSoon:Schedule(25)
 	berserkTimer:Start(-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(L.PlayerDebuffs)
-		DBM.InfoFrame:Show(5, "playerbaddebuff", 42402)
+		DBM.InfoFrame:Show(5, "playerbaddebuff", surgeDebuff)
 	end
 end
 

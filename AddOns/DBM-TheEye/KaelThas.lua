@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KaelThas", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 631 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(19622)
 mod:SetEncounterID(733)
 mod:SetModelID(20023)
@@ -39,9 +39,9 @@ local warnPyro			= mod:NewCastAnnounce(36819, 4)
 local warnPhase5		= mod:NewPhaseAnnounce(5)
 local warnGravity		= mod:NewSpellAnnounce(35966, 4)
 
-local specWarnGaze		= mod:NewSpecialWarning("SpecWarnGaze", nil, nil, nil, 4)--Can't void generic special warnings
+local specWarnGaze		= mod:NewSpecialWarning("SpecWarnGaze", nil, nil, nil, 4, 2)
 local specWarnToy		= mod:NewSpecialWarningYou(37027, nil, nil, nil, 1, 2)
-local specWarnEgg		= mod:NewSpecialWarning("SpecWarnEgg")--Can't void generic special warnings
+local specWarnEgg		= mod:NewSpecialWarning("SpecWarnEgg", nil, nil, nil, 1, 2)
 local specWarnShield	= mod:NewSpecialWarningSpell(36815)--No decent voice for this
 local specWarnPyro		= mod:NewSpecialWarningInterrupt(36819, "HasInterrupt", nil, nil, 1, 2)
 local specWarnVapor		= mod:NewSpecialWarningStack(35859, nil, 2, nil, nil, 1, 6)
@@ -58,9 +58,6 @@ local timerGravityCD	= mod:NewNextTimer(92, 35941, nil, nil, nil, 6)
 local timerGravity		= mod:NewBuffActiveTimer(32, 35941, nil, nil, nil, 6)
 
 local countdownPhase	= mod:NewCountdown(105, 190978)
-
-local voicePyro			= mod:NewVoice(36819, "HasInterrupt")--kickcast
-local voiceVapor		= mod:NewVoice(35859)--stackhigh
 
 mod:AddBoolOption("HealthFrame", false)
 mod:AddBoolOption("MCIcon", true)
@@ -134,7 +131,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerShieldCD:Start()
 	elseif args.spellId == 35859 and args:IsPlayer() and self:IsInCombat() and (args.amount or 1) >= 2 then
 		specWarnVapor:Show(args.amount)
-		voiceVapor:Play("stackhigh")
+		specWarnVapor:Play("stackhigh")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -142,7 +139,7 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 36815 and self.vb.phase ~= 5 then
 		specWarnPyro:Show(args.sourceName)
-		voicePyro:Play("kickcast")
+		specWarnPyro:Play("kickcast")
 		self:UnscheduleMethod("RemoveShieldHealthBar", args.destGUID)
 		self:RemoveShieldHealthBar(args.destGUID)
 	elseif args.spellId == 36797 then
@@ -180,6 +177,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif args.spellId == 34341 and self:IsInCombat() then
 		warnEgg:Show()
 		specWarnEgg:Show()
+		specWarnEgg:Play("killmob")
 		timerRebirth:Show()
 		DBM.BossHealth:AddBoss(21364, L.Egg)
 		self:Schedule(15, function()
@@ -236,6 +234,7 @@ function mod:CHAT_MSG_MONSTER_EMOTE(msg, _, _, _, target)
 		timerNextGaze:Start()
 		if target == UnitName("player") then
 			specWarnGaze:Show()
+			specWarnGaze:Play("justrun")
 		else
 			warnGaze:Show(target)
 		end

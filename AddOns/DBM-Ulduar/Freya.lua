@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Freya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 
 mod:SetCreatureID(32906)
 mod:SetEncounterID(1133)
@@ -44,11 +44,6 @@ local timerFury				= mod:NewTargetTimer(10, 63571)
 local timerTremorCD 		= mod:NewCDTimer(28, 62859, nil, nil, nil, 2)
 local timerLifebinderCD 	= mod:NewCDTimer(40, 62869, nil, nil, nil, 1)
 
-local voiceLifebinder		= mod:NewVoice(62869, "Dps")--targetchange
-local voiceFury				= mod:NewVoice(63571)--runout
-local voiceTremor			= mod:NewVoice(62859, "SpellCaster")--stopcast
-local voiceBeam				= mod:NewVoice(62865)--runaway
-
 mod:AddSetIconOption("SetIconOnFury", 63571, false)
 mod:AddSetIconOption("SetIconOnRoots", 62438, false)
 mod:AddRangeFrameOption(8, 63571)
@@ -73,7 +68,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(62437, 62859) then
 		specWarnTremor:Show()
-		voiceTremor:Play("stopcast")
+		specWarnTremor:Play("stopcast")
 		timerTremorCD:Start()
 	end
 end 
@@ -83,7 +78,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerAlliesOfNature:Start()
 	elseif args.spellId == 62619 and self:GetUnitCreatureId(args.sourceName) == 33228 then -- Pheromones spell, cast by newly spawned Eonar's Gift second they spawn to allow melee to dps them while protector is up.
 		specWarnLifebinder:Show()
-		voiceLifebinder:Play("targetchange")
+		specWarnLifebinder:Play("targetchange")
 		timerLifebinderCD:Start()
 	elseif args:IsSpellID(63571, 62589) then -- Nature's Fury
 		if self.Options.SetIconOnFury then
@@ -93,7 +88,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnFury:Show(args.destName)
 		if args:IsPlayer() then -- only cast on players; no need to check destFlags
 			specWarnFury:Show()
-			voiceFury:Play("runout")
+			specWarnFury:Play("runout")
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(8)
 			end
@@ -111,7 +106,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args:IsSpellID(62451, 62865) and args:IsPlayer() then
 		specWarnBeam:Show()
-		voiceBeam:Play("runaway")
+		specWarnBeam:Play("runaway")
 	end 
 end
 

@@ -1,7 +1,7 @@
 local mod = DBM:NewMod("Commander", "DBM-Party-WotLK", 8)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 236 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 --mod:SetEncounterID(519)--FIXME in 7.1
 
 if UnitFactionGroup("player") == "Alliance" then
@@ -27,9 +27,6 @@ local specWarnWW		= mod:NewSpecialWarningRun(38619, "MeleeDps", nil, nil, 4, 2)
 local timerFearCD		= mod:NewCDTimer(20, 19134)--Correct?
 local timerWhirlwindCD	= mod:NewCDTimer(15, 38619)--Correct?
 
-local voiceWW			= mod:NewVoice(38619, "MeleeDps")
-
-
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 19134 then
 		warningFear:Show()
@@ -41,7 +38,7 @@ function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(38619, 38618) then
 		if self.Options.SpecWarn38619run then
 			specWarnWW:Show()
-			voiceWW:Play("runaway")
+			specWarnWW:Play("runaway")
 		else
 			warningWhirlwind:Show()
 		end

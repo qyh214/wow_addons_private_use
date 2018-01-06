@@ -124,7 +124,7 @@ function TrinketMenu.DragMinimapButton()
 end
 
 function TrinketMenu.MinimapButton_OnClick()
-	PlaySound(839)
+	PlaySound(825)
 	if IsShiftKeyDown() then
 		TrinketMenuOptions.Locked = TrinketMenuOptions.Locked == "ON" and "OFF" or "ON"
 		TrinketMenu.ReflectLock()
@@ -232,7 +232,7 @@ function TrinketMenu.CheckButton_OnClick(self)
 	local _, _, var = string.find(self:GetName(), "TrinketMenu_Opt(.+)")
 	if TrinketMenuOptions[var] then
 		TrinketMenuOptions[var] = self:GetChecked() and "ON" or "OFF"
-		PlaySound(self:GetChecked() and 839 or "")
+		PlaySound(self:GetChecked() and 856 or 857)
 		TrinketMenu.ValidateChecks()
 	end
 	if self == TrinketMenu_OptCooldownCount then
@@ -259,6 +259,12 @@ function TrinketMenu.CheckButton_OnClick(self)
 		TrinketMenu.ReflectRedRange()
 	elseif self == TrinketMenu_OptMenuOnRight then
 		TrinketMenu.ReflectMenuOnRight()
+	elseif self == TrinketMenu_OptNotify or self == TrinketMenu_OptNotifyThirty then
+		if TrinketMenu_OptNotify:GetChecked() or TrinketMenu_OptNotifyThirty:GetChecked() then
+			TrinketMenu.StartTimer("CooldownUpdate")
+		elseif not TrinketMenu_OptNotify:GetChecked() and not TrinketMenu_OptNotifyThirty:GetChecked() then
+			TrinketMenu.StopTimer("CooldownUpdate")
+		end
 	end
 end
 
@@ -312,7 +318,7 @@ end
 --[[ Titlebar buttons ]]
 
 function TrinketMenu.SmallButton_OnClick(self)
-	PlaySound(839)
+	PlaySound(856)
 	if self == TrinketMenu_CloseButton then
 		TrinketMenu_OptFrame:Hide()
 	elseif self == TrinketMenu_LockButton then
@@ -325,7 +331,7 @@ end
 --[[ Tabs ]]
 
 function TrinketMenu.Tab_OnClick(id)
-	PlaySound(839)
+	PlaySound(825)
 	local tab
 	if TrinketMenu_ProfilesFrame then
 		TrinketMenu_ProfilesFrame:Hide()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(620, "DBM-Party-WotLK", 8, 281)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 243 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(26794)
 mod:SetEncounterID(524, 525, 2012)
 mod:SetZone()
@@ -25,9 +25,6 @@ local timerReflection		= mod:NewBuffActiveTimer(15, 47981, nil, "SpellCaster", 2
 local timerReflectionCD		= mod:NewCDTimer(30, 47981, nil, "SpellCaster", 2, 5, nil, DBM_CORE_DEADLY_ICON)
 local timerSpikesCD			= mod:NewCDTimer(12.1, 47958, nil, nil, nil, 3)--Health based or CD?
 
-local voiceReflection		= mod:NewVoice(47981, "SpellCaster")
-local voiceSpikes			= mod:NewVoice(47958)
-
 function mod:OnCombatStart(delay)
 	timerSpikesCD:Start(10-delay)
 	timerReflectionCD:Start(20-delay)
@@ -37,7 +34,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(47958, 57082, 57083) then
 		specWarnSpikes:Show()
 		timerSpikesCD:Start()
-		voiceSpikes:Play("watchstep")
+		specWarnSpikes:Play("watchstep")
 	elseif args:IsSpellID(48017, 57086) then
 		warningFrenzy:Show()
 	end
@@ -48,7 +45,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerReflection:Start()
 		specWarnReflection:Show(args.sourceName)
 		timerReflectionCD:Start()
-		voiceReflection:Play("stopattack")
+		specWarnReflection:Play("stopattack")
 	end
 end
 

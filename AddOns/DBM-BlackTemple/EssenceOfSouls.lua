@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Souls", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 615 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(23420)
 mod:SetEncounterID(606)
 mod:SetModelID(21483)
@@ -55,9 +55,6 @@ local timerNextSoul		= mod:NewCDTimer(10, 41545, nil, "Tank", 2, 5, nil, DBM_COR
 
 local countdownDeaden	= mod:NewCountdown(31, 41410, "Tank" and select(2, UnitClass("player")) == "WARRIOR")
 
-local voiceShield		= mod:NewVoice(41431)--dispelboss
-local voiceSpite		= mod:NewVoice(41376)--defensive
-
 mod:AddSetIconOption("DrainIcon", 41303, false)
 mod:AddSetIconOption("SpiteIcon", 41376, false)
 
@@ -81,12 +78,12 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 41431 and not args:IsDestTypePlayer() then
 		timerNextShield:Start()
 		specWarnShield:Show(args.destName)
-		voiceShield:Play("dispelboss")
+		specWarnShield:Play("dispelboss")
 	elseif args.spellId == 41376 then
 		warnSpite:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnSpite:Show()
-			voiceSpite:Play("defensive")
+			specWarnSpite:Play("defensive")
 		end
 		if self.Options.SpiteIcon then
 			self:SetAlphaIcon(0.5, args.destName)

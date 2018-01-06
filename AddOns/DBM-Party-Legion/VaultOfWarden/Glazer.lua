@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1469, "DBM-Party-Legion", 10, 707)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15190 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
 mod:SetCreatureID(95887)
 mod:SetEncounterID(1817)
 mod:SetZone()
@@ -22,9 +22,6 @@ local specWarnGazeGTFO				= mod:NewSpecialWarningMove(194945, nil, nil, nil, 1, 
 
 local timerGazeCD					= mod:NewCDTimer(19.4, 194942, nil, nil, nil, 3)
 
-local voiceFocused					= mod:NewVoice(194289)--specialsoon
-local voiceGazeGTFO					= mod:NewVoice(194945)--runaway
-
 function mod:OnCombatStart(delay)
 	timerGazeCD:Start(11.8-delay)
 end
@@ -34,7 +31,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 193443 then--194289 backup if energize stops working.
 		timerGazeCD:Stop()
 		specWarnFocused:Show()
-		voiceFocused:Play("specialsoon")
+		specWarnFocused:Play("specialsoon")
 	elseif spellId == 194942 then
 		warnGaze:Show()
 		timerGazeCD:Start()
@@ -44,7 +41,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 194945 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
 		specWarnGazeGTFO:Show()
-		voiceGazeGTFO:Play("runaway")
+		specWarnGazeGTFO:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

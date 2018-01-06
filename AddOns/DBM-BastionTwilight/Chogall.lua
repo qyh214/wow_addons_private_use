@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(167, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(43324)
 mod:SetEncounterID(1029)
 mod:SetZone()
@@ -75,8 +75,8 @@ local firstFury = false
 local worshipIcon = 8
 local worshipCooldown = 20.5
 local shadowOrdersCD = 15
-local Corruption = GetSpellInfo(82235)
-local Bloodlevel = EJ_GetSectionInfo(3165)
+local Corruption = DBM:GetSpellInfo(82235)
+local Bloodlevel = DBM:EJ_GetSectionInfo(3165)
 
 local function showWorshipWarning()
 	warnWorship:Show(table.concat(worshipTargets, "<, >"))
@@ -115,6 +115,7 @@ function mod:CorruptingCrashTarget(sGUID)
 end
 
 function mod:OnCombatStart(delay)
+	Corruption = DBM:GetSpellInfo(82235)
 	timerFlamesOrders:Start(5-delay)
 	timerWorshipCD:Start(10-delay)
 	table.wipe(worshipTargets)

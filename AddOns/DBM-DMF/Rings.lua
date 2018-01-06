@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Rings", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -21,10 +21,11 @@ local countdownGame	= mod:NewCountdownFades(10, 170820)
 
 mod:RemoveOption("HealthFrame")
 
-local wingsName = GetSpellInfo(170820)
+local wingsName = DBM:GetSpellInfo(170820)
 local UnitBuff = UnitBuff
 
 local function checkBuff()
+	wingsName = DBM:GetSpellInfo(170820)
 	local name, _, _, _, _, duration, expires, _, _, _, spellId = UnitBuff("player", wingsName)
 	if name and spellId == 170820 then
 		local time = expires-GetTime()

@@ -34,10 +34,6 @@ local timerFelhunter		= mod:NewBuffActiveTimer(48.5, 33131, nil, nil, nil, 1)--B
 local timerPoH				= mod:NewCastTimer(4, 33152, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 local timerHeal				= mod:NewCastTimer(2, 33144, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 
-local voiceWhirlwind		= mod:NewVoice(33238, "Melee")--justrun
-local voicePoH				= mod:NewVoice(33152, "HasInterrupt")
-local voiceHeal				= mod:NewVoice(33144, "HasInterrupt")
-
 function mod:OnCombatStart(delay)
 	timerWhirlwindCD:Start(58-delay)
 end
@@ -46,7 +42,7 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 33152 then--Prayer of Healing
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnPoH:Show(args.sourceName)
-			voicePoH:Play("kickcast")
+			specWarnPoH:Play("kickcast")
 			timerPoH:Start()
 		else
 			warningPoH:Show()
@@ -54,7 +50,7 @@ function mod:SPELL_CAST_START(args)
 	elseif args.spellId == 33144 then--Heal
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnHeal:Show(args.sourceName)
-			voiceHeal:Play("kickcast")
+			specWarnHeal:Play("kickcast")
 			timerHeal:Start()
 		else
 			warningHeal:Show()
@@ -66,7 +62,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 33238 then
 		if self.Options.SpecWarn33238run then
 			specWarnWhirlwind:Show()
-			voiceWhirlwind:Play("justrun")
+			specWarnWhirlwind:Play("justrun")
 		else
 			warningWhirlwind:Show()
 		end

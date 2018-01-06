@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Bloodboil", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 621 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(22948)
 mod:SetEncounterID(605)
 mod:SetModelID(21443)
@@ -34,9 +34,6 @@ local timerRageEnd		= mod:NewBuffActiveTimer(28, 40604, nil, nil, nil, 5, nil, D
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-local voiceBlood		= mod:NewVoice(42005)--targetyou? (stack high is wrong beacuse you're supposed to soak stacks and for this warning you want to know whether or not soak is going to you
-local voiceRage			= mod:NewVoice(40604)--targetyou
-
 mod.vb.rage = false
 
 local function nextRage(self)
@@ -68,7 +65,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnBlood:CombinedShow(0.8, args.destName)
 		if args:IsPlayer() then
 			specWarnBlood:Show(args.amount or 1)
-			voiceBlood:Play("targetyou")
+			specWarnBlood:Play("targetyou")
 		end
 	elseif spellId == 40481 and not self.vb.rage then
 		local amount = args.amount or 1
@@ -86,7 +83,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self:Schedule(28, nextRage, self)
 		if args:IsPlayer() then
 			specWarnRage:Show()
-			voiceRage:Play("targetyou")
+			specWarnRage:Play("targetyou")
 			yellRage:Yell()
 		end
 	end

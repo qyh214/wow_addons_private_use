@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(742, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(62442)--62919 Unstable Sha, 62969 Embodied Terror
 mod:SetEncounterID(1505)
 mod:SetReCombatTime(60)--fix lfr combat re-starts after killed.
@@ -54,7 +54,7 @@ local countdownSunBreath				= mod:NewCountdown(29, 122855, "Healer")
 
 local berserkTimer						= mod:NewBerserkTimer(490)--a little over 8 min, basically 3rd dark phase is auto berserk.
 
-local terrorName = EJ_GetSectionInfo(6316)
+local terrorName = DBM:EJ_GetSectionInfo(6316)
 local terrorCount = 0
 local darkOfNightCount = 0
 local lightOfDayCount = 0

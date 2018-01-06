@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(866, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 94 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(72276)
 --mod:SetEncounterID(1624)
 mod:SetZone()
@@ -25,7 +25,7 @@ mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
-local boss = EJ_GetSectionInfo(8216)
+local boss = DBM:EJ_GetSectionInfo(8216)
 
 mod:SetBossHealthInfo(
 	72276, boss
@@ -81,7 +81,7 @@ local countdownLingeringCorruption		= mod:NewCountdown("Alt15.5", 144514)
 local countdownHurlCorruption			= mod:NewCountdown("Alt20", 144649)
 
 --Upvales, don't need variables
-local corruptionLevel = EJ_GetSectionInfo(8252)
+local corruptionLevel = DBM:EJ_GetSectionInfo(8252)
 local Ambiguate = Ambiguate
 --Tables, can't recover
 local residue = {}

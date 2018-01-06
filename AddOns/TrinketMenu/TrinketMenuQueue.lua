@@ -31,7 +31,7 @@ end
 function TrinketMenu.ReflectQueueEnabled()
 	TrinketMenu_Trinket0Check:SetChecked(TrinketMenuQueue.Enabled[0])
 	TrinketMenu_Trinket1Check:SetChecked(TrinketMenuQueue.Enabled[1])
-end	
+end
 
 function TrinketMenu.OpenSort(which)
 	TrinketMenu.CurrentlySorting = which
@@ -213,18 +213,18 @@ function TrinketMenu.SortValidate()
 	local stats = TrinketMenuQueue.Stats[list[TrinketMenu.SortSelected]]
 	TrinketMenu_SortDelay:SetText(stats and (stats.delay or "0") or "0")
 	TrinketMenu_SortPriority:SetChecked(stats and stats.priority)
-	TrinketMenu_SortKeepEquipped:SetChecked(stats and stats.keep)	
+	TrinketMenu_SortKeepEquipped:SetChecked(stats and stats.keep)
 	if not IsShiftKeyDown() and selected > 0 then -- keep selected visible on list, moving thumb as needed, unless shift is down
 		local parent = TrinketMenu_SortScrollScrollBar
 		local offset
 		if selected <= idx then
 			offset = (selected == 1) and 0 or (parent:GetValue() - (parent:GetHeight() / 2))
 			parent:SetValue(offset)
-			PlaySound(839)
+			PlaySound(1115)
 		elseif selected >= (idx + 10) then
 			offset = (selected == #list) and TrinketMenu_SortScroll:GetVerticalScrollRange() or (parent:GetValue() + (parent:GetHeight() / 2))
 			parent:SetValue(offset)
-			PlaySound(839)
+			PlaySound(1115)
 		end
 	end
 end
@@ -505,7 +505,7 @@ function TrinketMenu.ShowProfiles(show)
 end
 
 function TrinketMenu.ProfilesFrame_OnHide()
-	PlaySound(839)
+	PlaySound(624)
 	TrinketMenu.ResetProfileSelected()
 	TrinketMenu.ShowProfiles(nil)
 end

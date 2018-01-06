@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(867, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(71734)
 mod:SetEncounterID(1604)
 mod:SetZone()
@@ -83,7 +83,7 @@ mod.findFastestComputer = {"SetIconOnFragment"} -- for set icon stuff.
 
 --Upvales, don't need variables
 local UnitPower, UnitPowerMax, UnitIsDeadOrGhost, UnitGUID = UnitPower, UnitPowerMax, UnitIsDeadOrGhost, UnitGUID
-local prideLevel = EJ_GetSectionInfo(8255)
+local prideLevel = DBM:EJ_GetSectionInfo(8255)
 --Not important, don't need to recover
 local manifestationWarned = false
 local bpSpecWarnFired = false

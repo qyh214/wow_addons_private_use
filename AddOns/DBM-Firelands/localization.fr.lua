@@ -121,10 +121,6 @@ L:SetOptionLocalization({
 	RangeFrame			= "Cadre des portées (5) pour $spell:99404"
 })
 
-L:SetMiscLocalization({
-	VitalSpark		= "Cumuls |2 "..GetSpellInfo(99262)
-})
-
 --------------------------------
 -- Majordomo Fandral Staghelm --
 --------------------------------

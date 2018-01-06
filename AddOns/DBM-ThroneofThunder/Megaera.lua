@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(821, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(68065, 70235, 70247)--Frozen 70235, Venomous 70247 (only 2 heads that ever start in front, so no need to look for combat with arcane or fire for combat detection)
 mod:SetEncounterID(1578)
 mod:SetMainBossID(68065)
@@ -87,7 +87,7 @@ local rampageCast = 0
 local cinderIcon = 7
 local iceIcon = 6
 local activeHeadGUIDS = {}
-local iceTorrent = GetSpellInfo(139857)
+local iceTorrent = DBM:GetSpellInfo(139857)
 local torrentExpires = {}
 local arcaneRecent = false
 
@@ -171,6 +171,7 @@ local function clearHeadGUID(GUID)
 end
 
 function mod:OnCombatStart(delay)
+	iceTorrent = DBM:GetSpellInfo(139857)
 	table.wipe(activeHeadGUIDS)
 	rampageCount = 0
 	rampageCast = 0

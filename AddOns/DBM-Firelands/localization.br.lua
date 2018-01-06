@@ -99,10 +99,6 @@ L:SetOptionLocalization({
 	RangeFrame			= "Exibir medidor de distância (5) para $spell:99404"
 })
 
-L:SetMiscLocalization({
-	VitalSpark		= "Pilhas de "..GetSpellInfo(99262)
-})
-
 --------------------------------
 -- Majordomo Fandral Staghelm --
 --------------------------------

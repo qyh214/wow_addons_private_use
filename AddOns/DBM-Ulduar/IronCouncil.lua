@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("IronCouncil", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
 mod:SetCreatureID(32867, 32927, 32857)
 mod:SetEncounterID(1140)
 mod:DisableEEKillDetection()--Fires for first one dying not last
@@ -37,9 +37,7 @@ local timerOverload				= mod:NewCastTimer(6, 63481)
 local timerLightningWhirl		= mod:NewCastTimer(5, 63483)
 local specwarnLightningTendrils	= mod:NewSpecialWarningRun(63486, nil, nil, nil, 4, 2)
 local timerLightningTendrils	= mod:NewBuffActiveTimer(27, 63486, nil, nil, nil, 6)
-local voiceLightningTendrils	= mod:NewVoice(63486)--justrun
-local specwarnOverload			= mod:NewSpecialWarningRun(63481, nil, nil, nil, 4)
-local voiceOverload				= mod:NewVoice(63481)--runout
+local specwarnOverload			= mod:NewSpecialWarningRun(63481, nil, nil, nil, 4, 2)
 mod:AddBoolOption("AlwaysWarnOnOverload", false, "announce")
 
 -- Steelbreaker
@@ -60,10 +58,8 @@ local warnRuneofPower			= mod:NewTargetAnnounce(64320, 2)
 local warnRuneofDeath			= mod:NewSpellAnnounce(63490, 2)
 local warnShieldofRunes			= mod:NewSpellAnnounce(63489, 2)
 local warnRuneofSummoning		= mod:NewSpellAnnounce(62273, 3)
-local specwarnRuneofDeath		= mod:NewSpecialWarningMove(63490)
-local voiceRuneofDeath			= mod:NewVoice(63490)--runaway
-local specWarnRuneofShields		= mod:NewSpecialWarningDispel(63967, "MagicDispeller")
-local voiceRuneofShields		= mod:NewVoice(63967, "MagicDispeller")--dispelboss
+local specwarnRuneofDeath		= mod:NewSpecialWarningMove(63490, nil, nil, nil, 1, 2)
+local specWarnRuneofShields		= mod:NewSpecialWarningDispel(63967, "MagicDispeller", nil, nil, 1, 2)
 local timerRuneofDeath			= mod:NewCDTimer(30, 63490, nil, nil, nil, 3)
 local timerRuneofPower			= mod:NewCDTimer(30, 61974, nil, nil, nil, 5)
 
@@ -113,7 +109,6 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(63490, 62269) then		-- Rune of Death
 		warnRuneofDeath:Show()
-		voiceRuneofDeath:Play("runaway")
 		timerRuneofDeath:Start()
 	elseif args:IsSpellID(64321, 61974) then	-- Rune of Power
 		scansDone = 0
@@ -124,7 +119,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerOverload:Start()
 		if self.Options.AlwaysWarnOnOverload or UnitGUID("target") == args.sourceGUID then
 			specwarnOverload:Show()
-			voiceOverload:Play("runout")
+			specwarnOverload:Play("justrun")
 		end
 	end
 end
@@ -135,10 +130,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args:IsSpellID(62269, 63490) then	-- Rune of Death - move away from it
 		if args:IsPlayer() then
 			specwarnRuneofDeath:Show()
+			specwarnRuneofDeath:Play("runaway")
 		end
 	elseif args:IsSpellID(62277, 63967) and not args:IsDestTypePlayer() then		-- Shield of Runes
 		specWarnRuneofShields:Show(args.destName)
-		voiceRuneofShields:Play("dispelboss")
+		specWarnRuneofShields:Play("dispelboss")
 		timerRuneofShields:Start()
 	elseif args:IsSpellID(64637, 61888) then	-- Overwhelming Power
 		warnOverwhelmingPower:Show(args.destName)
@@ -157,7 +153,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args:IsSpellID(63486, 61887) then	-- Lightning Tendrils
 		timerLightningTendrils:Start()
 		specwarnLightningTendrils:Show()
-		voiceLightningTendrils:Play("justrun")
+		specwarnLightningTendrils:Play("justrun")
 	elseif args:IsSpellID(61912, 63494) then	-- Static Disruption (Hard Mode)
 		disruptTargets[#disruptTargets + 1] = args.destName
 		if self.Options.SetIconOnStaticDisruption then 

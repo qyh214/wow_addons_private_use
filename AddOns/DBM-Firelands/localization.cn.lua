@@ -126,10 +126,6 @@ L:SetOptionLocalization({
 	RangeFrame			= "距离监视器（5码）：应对$spell:99404"
 })
 
-L:SetMiscLocalization({
-	VitalSpark		= GetSpellInfo(99262).."堆叠"
-})
-
 --------------------------------
 -- Majordomo Fandral Staghelm --
 --------------------------------

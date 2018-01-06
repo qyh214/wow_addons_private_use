@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1664, "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14985 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17126 $"):sub(12, -3))
 mod:SetCreatureID(98949)
 mod:SetEncounterID(1834)
 mod:SetZone()
@@ -31,21 +31,19 @@ local specWarnBrutalHaymaker		= mod:NewSpecialWarningDefensive(198245, "Tank", n
 local timerStompCD					= mod:NewCDTimer(17, 198073, nil, nil, nil, 2)--Next timers but delayed by other casts
 local timerHatefulGazeCD			= mod:NewCDTimer(25.5, 198079, nil, nil, nil, 3)--Next timers but delayed by other casts
 
-local voiceStomp					= mod:NewVoice(198073)--carefly
-local voiceBrutalHeymaker			= mod:NewVoice(198073, "Tank|Healer")--defensive/tankheal
-local voiceHatefulGaze				= mod:NewVoice(198079)--targetyou
-
 mod:AddInfoFrameOption(198080)
 mod:AddSetIconOption("SetIconOnHatefulGaze", 198079, true)
 
 local superWarned = false
+local infoFrameDebuff = DBM:GetSpellInfo(198080)
 
 function mod:OnCombatStart(delay)
 	if not self:IsNormal() then
 		timerHatefulGazeCD:Start(5-delay)
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(GetSpellInfo(198080))
-			DBM.InfoFrame:Show(5, "reverseplayerbaddebuff", 198080)
+			infoFrameDebuff = DBM:GetSpellInfo(198080)
+			DBM.InfoFrame:SetHeader(infoFrameDebuff)
+			DBM.InfoFrame:Show(5, "reverseplayerbaddebuff", infoFrameDebuff)
 		end
 	end
 	timerStompCD:Start(12-delay)
@@ -70,7 +68,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnHatefulGaze:Show()
 			yellHatefulGaze:Yell()
-			voiceHatefulGaze:Play("targetyou")
+			specWarnHatefulGaze:Play("targetyou")
 		else
 			warnHatefulGaze:Show(args.destName)
 		end
@@ -92,14 +90,14 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 198073 then
 		specWarnStomp:Show()
 		timerStompCD:Start()
-		voiceStomp:Play("carefly")
+		specWarnStomp:Play("carefly")
 	elseif spellId == 198245 and not superWarned then--fallback, only 0.7 seconds warning vs 1.2 if power 100 works, but better than naught.
 		superWarned = true
 		specWarnBrutalHaymaker:Show()
 		if self:IsTank() then
-			voiceBrutalHeymaker:Play("defensive")
+			specWarnBrutalHaymaker:Play("defensive")
 		else
-			voiceBrutalHeymaker:Play("tankheal")
+			specWarnBrutalHaymaker:Play("tankheal")
 		end
 	end
 end
@@ -112,7 +110,7 @@ do
 		if power >= 85 and not warnedSoon then
 			warnedSoon = true
 			specWarnBrutalHaymakerSoon:Show()
-			voiceBrutalHeymaker:Play("energyhigh")
+			specWarnBrutalHaymakerSoon:Play("energyhigh")
 		elseif power < 50 and warnedSoon then
 			warnedSoon = false
 			superWarned = false
@@ -120,9 +118,9 @@ do
 			superWarned = true
 			specWarnBrutalHaymaker:Show()
 			if self:IsTank() then
-				voiceBrutalHeymaker:Play("defensive")
+				specWarnBrutalHaymaker:Play("defensive")
 			else
-				voiceBrutalHeymaker:Play("tankheal")
+				specWarnBrutalHaymaker:Play("tankheal")
 			end
 		end
 	end
