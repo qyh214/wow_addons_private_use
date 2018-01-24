@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod(2009, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17130 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17190 $"):sub(12, -3))
 mod:SetCreatureID(124158)--or 124158 or 125692
 mod:SetEncounterID(2082)
 mod:SetZone()
 --mod:SetBossHPInfoToHighest()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetHotfixNoticeRev(16961)
-mod.respawnTime = 35
+mod.respawnTime = 34.5
 
 mod:RegisterCombat("combat")
 
@@ -55,7 +55,6 @@ local yellStasisTrap					= mod:NewYell(247641, L.DispelMe)
 local specWarnSever						= mod:NewSpecialWarningTaunt(247687, nil, nil, nil, 1, 2)
 local specWarnChargedBlastsUnknown		= mod:NewSpecialWarningSpell(247716, nil, nil, nil, 2, 2)
 local specWarnShrapnalBlast				= mod:NewSpecialWarningDodge(247923, nil, nil, nil, 1, 2)
---local specWarnMalignantAnguish		= mod:NewSpecialWarningInterrupt(236597, "HasInterrupt")
 --Stage Three/Five: The Perfect Weapon
 local specWarnEmpPulseGrenade			= mod:NewSpecialWarningMoveAway(250006, nil, nil, nil, 1, 2)
 local yellEmpPulseGrenade				= mod:NewYell(250006)
@@ -194,7 +193,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnShrapnalBlast:Play("watchstep")
 		if self:IsMythic() then
 			if self.vb.phase == 2 then
-				timerShrapnalBlastCD:Start(17, self.vb.shrapnalCast+1)
+				timerShrapnalBlastCD:Start(16.4, self.vb.shrapnalCast+1)
 			elseif self.vb.phase == 3 then
 				timerShrapnalBlastCD:Start(14, self.vb.shrapnalCast+1)--14-15.8
 			elseif self.vb.phase == 4 then
@@ -233,7 +232,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 247552 or spellId == 254244 then
 		if self:IsMythic() then
-			timerSleepCanisterCD:Start(12)
+			timerSleepCanisterCD:Start(11.3)
 		else
 			timerSleepCanisterCD:Start()--10.7
 		end

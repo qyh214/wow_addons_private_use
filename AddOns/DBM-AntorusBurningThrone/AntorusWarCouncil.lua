@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1997, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17121 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17187 $"):sub(12, -3))
 mod:SetCreatureID(122369, 122333, 122367)--Chief Engineer Ishkar, General Erodus, Admiral Svirax
 mod:SetEncounterID(2070)
 mod:SetZone()
@@ -38,7 +38,7 @@ local warnExploitWeakness				= mod:NewStackAnnounce(244892, 2, nil, "Tank")
 local warnPsychicAssault				= mod:NewStackAnnounce(244172, 3, nil, "-Tank", 2)
 --In Pod
 ----Chief Engineer Ishkar
-local warnEntropicMine					= mod:NewSpellAnnounce(245161, 2, nil, nil, nil, nil, nil, 2)
+local warnEntropicMine					= mod:NewSpellAnnounce(245161, 2)
 ----General Erodus
 --local warnSummonReinforcements			= mod:NewSpellAnnounce(245546, 2, nil, false, 2)
 local warnDemonicCharge					= mod:NewTargetAnnounce(253040, 2, nil, false, 2)
@@ -78,7 +78,7 @@ local timerAssumeCommandCD				= mod:NewNextTimer(90, 245227, nil, nil, nil, 6)
 --In Pod
 ----Admiral Svirax
 mod:AddTimerLine(Svirax)
-local timerFusilladeCD					= mod:NewNextCountTimer(29.6, 244625, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerFusilladeCD					= mod:NewNextCountTimer(29.3, 244625, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 ----Chief Engineer Ishkar
 mod:AddTimerLine(Ishkar)
 local timerEntropicMineCD				= mod:NewCDTimer(10, 245161, nil, nil, nil, 3)
@@ -150,7 +150,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFusillade:Play("findshield")
 		timerFusilladeCD:Start(nil, self.vb.FusilladeCount+1)
 		if not self:IsLFR() then
-			countdownFusillade:Start(29.6)
+			countdownFusillade:Start(29.3)
 		end
 	elseif spellId == 246505 then
 		if self:CheckInterruptFilter(args.sourceGUID) and self:AntiSpam(3, 3) then
@@ -295,7 +295,7 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if (spellId == 245161 or spellId == 245304) and self:AntiSpam(5, 1) then
 		warnEntropicMine:Show()
-		warnEntropicMine:Play("watchstep")
+		--warnEntropicMine:Play("watchstep")
 		timerEntropicMineCD:Start()
 	elseif spellId == 245785 then--Pod Spawn Transition Cosmetic Missile
 		local name = UnitName(uId)

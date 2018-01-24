@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod("Algalon", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 253 $"):sub(12, -3))
 mod:SetCreatureID(32871)
 mod:SetEncounterID(1130)
+mod:DisableEEKillDetection()--EE always fires wipe
 mod:SetMinSyncRevision(234)
 mod:SetModelID(28641)
 mod:SetModelSound("Sound\\Creature\\AlgalonTheObserver\\UR_Algalon_Aggro01.ogg", "Sound\\Creature\\AlgalonTheObserver\\UR_Algalon_Slay02.ogg")
@@ -18,7 +19,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED_DOSE 64412",
 	"SPELL_AURA_REMOVED 64412",
 	"RAID_BOSS_EMOTE",
-	"CHAT_MSG_MONSTER_YELL",
+--	"CHAT_MSG_MONSTER_YELL",
+	"UNIT_SPELLCAST_SUCCEEDED boss1",
 	"UNIT_HEALTH boss1"
 )
 
@@ -48,11 +50,6 @@ mod.vb.warned_preP2 = false
 
 function mod:OnCombatStart(delay)
 	self.vb.warned_preP2 = false
-	enrageTimer:Start(360-delay)--All timers +8 for combat start RP
-	timerNextBigBang:Start(90-delay)
-	announcePreBigBang:Schedule(80-delay)
-	timerCDCosmicSmash:Start(25-delay)
-	timerNextCollapsingStar:Start(15-delay)
 	table.wipe(sentLowHP)
 	table.wipe(warnedLowHP)
 end
@@ -108,12 +105,14 @@ function mod:RAID_BOSS_EMOTE(msg)
 	end
 end
 
+--[[
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.Phase2 or msg:find(L.Phase2) then
 		timerNextCollapsingStar:Cancel()
 		warnPhase2:Show()
 	end
 end
+--]]
 
 function mod:UNIT_HEALTH(uId)
 	local cid = self:GetUnitCreatureId(uId)
@@ -127,10 +126,25 @@ function mod:UNIT_HEALTH(uId)
 	end
 end
 
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
+	if spellId == 65311 then--Supermassive Fail (fires when he becomes actually active)
+		timerNextCollapsingStar:Start(16-delay)
+		timerCDCosmicSmash:Start(26-delay)
+		announcePreBigBang:Schedule(80-delay)
+		timerNextBigBang:Start(90-delay)
+		enrageTimer:Start(360-delay)
+	elseif spellId == 65256 then--Self Stun (phase 2)
+		timerNextCollapsingStar:Stop()
+		warnPhase2:Show()
+	end
+end
+
 function mod:OnSync(msg, guid)
 	if msg == "lowhealth" and guid and not warnedLowHP[guid] then
 		warnedLowHP[guid] = true
-		specwarnStarLow:Show()
-		specwarnStarLow:Play("aesoon")
+		if self:AntiSpam(2.5, 1) then
+			specwarnStarLow:Show()
+			specwarnStarLow:Play("aesoon")
+		end
 	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1820, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17174 $"):sub(12, -3))
 mod:SetCreatureID(114284, 114251)
 mod:SetEncounterID(1957)--Shared (so not used for encounter START since it'd fire 3 mods)
 mod:DisableESCombatDetection()--However, with ES disabled, EncounterID can be used for BOSS_KILL/ENCOUNTER_END
@@ -33,7 +33,10 @@ local timerWondrousRadianceCD		= mod:NewCDTimer(8.5, 227410, nil, "Tank", nil, 5
 
 local countdownMagicMagnificent		= mod:NewCountdown(46.1, 198006)
 
+local defyGravity = DBM:GetSpellInfo(227405)
+
 function mod:OnCombatStart(delay)
+	defyGravity = DBM:GetSpellInfo(227405)
 	timerWondrousRadianceCD:Start(8.3-delay)
 	timerSummonAddsCD:Start(30-delay)
 	timerMagicMagnificentCD:Start(47-delay)
@@ -43,7 +46,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 227776 then
-		specWarnMagicMagnificent:Show(GetSpellInfo(227405))
+		specWarnMagicMagnificent:Show(defyGravity)
 		specWarnMagicMagnificent:Play("findshelter")
 		timerMagicMagnificentCD:Start()
 		countdownMagicMagnificent:Start()

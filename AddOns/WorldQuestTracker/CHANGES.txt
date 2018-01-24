@@ -1,7 +1,7 @@
-changeset:   265:6a0d46ca8141
-tag:         v7.3.2.265-release
+changeset:   267:85b0dc5238d4
+tag:         v7.3.2.267-release
 user:        Tercio
-date:        Fri Dec 22 09:53:38 2017 -0200
-summary:     - Fixed the size of glow borders for tracked zone quests.
+date:        Fri Jan 12 11:54:18 2018 -0200
+summary:     - Fixed all pet battles icons which was showing an interrogation mark.
 
 

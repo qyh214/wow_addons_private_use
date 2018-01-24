@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1985, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17118 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17145 $"):sub(12, -3))
 mod:SetCreatureID(122104)
 mod:SetEncounterID(2064)
 mod:DisableESCombatDetection()--Remove if blizz fixes clicking portals causing this event to fire (even though boss isn't engaged)
@@ -108,8 +108,8 @@ local timerDelusionsCD					= mod:NewCDTimer(14.6, 245050, nil, nil, nil, 3, nil,
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
 --Platform: Nexus
-local countdownCollapsingWorld			= mod:NewCountdown(50, 243983, nil, nil, 3)
-local countdownRealityTear				= mod:NewCountdown("Alt12", 244016, "Tank")
+local countdownCollapsingWorld			= mod:NewCountdown(50, 243983, true, 3, 3)
+local countdownRealityTear				= mod:NewCountdown("Alt12", 244016, false, 2, 3)
 local countdownFelstormBarrage			= mod:NewCountdown("AltTwo32", 244000, nil, nil, 3)
 
 mod:AddRangeFrameOption("8/10")

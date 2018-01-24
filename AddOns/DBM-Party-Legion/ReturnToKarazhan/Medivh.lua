@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1817, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17174 $"):sub(12, -3))
 mod:SetCreatureID(114350)
 mod:SetEncounterID(1965)
 mod:SetZone()
@@ -43,10 +43,10 @@ mod:AddSetIconOption("SetIconOnWreath", 228261, true)
 
 mod.vb.playersFrozen = 0
 mod.vb.imagesActive = false
-local frostBiteName, flameWreathName = GetSpellInfo(227592), GetSpellInfo(228261)
+local frostBiteName, flameWreathName = DBM:GetSpellInfo(227592), DBM:GetSpellInfo(228261)
 
 function mod:OnCombatStart(delay)
-	frostBiteName, flameWreathName = GetSpellInfo(227592), GetSpellInfo(228261)
+	frostBiteName, flameWreathName = DBM:GetSpellInfo(227592), DBM:GetSpellInfo(228261)
 	self.vb.playersFrozen = 0
 	self.vb.imagesActive = false
 	timerSpecialCD:Start(33.5)

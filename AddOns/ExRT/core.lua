@@ -1,6 +1,12 @@
---	17:31 21.11.2017
+--	2:17 24.01.2018
 
 --[[
+3905
+* Raid cooldowns: Added stuns to quick setup
+* Note: Added Antorus icons
+* Raid Check: added 1% versatility food
+* Minor fixes
+
 3900
 * Note: "Only trusted" option set to enabled for all users
 * Raid Check: added vantus runes checker
@@ -26,7 +32,7 @@
 ]]
 local GlobalAddonName, ExRT = ...
 
-ExRT.V = 3900
+ExRT.V = 3905
 ExRT.T = "R"
 
 ExRT.OnUpdate = {}		--> таймеры, OnUpdate функции

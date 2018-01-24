@@ -204,7 +204,7 @@ local function ShowBlock(timerID, elapsedTime, timeLimit)
 end
 
 hooksecurefunc("Scenario_ChallengeMode_UpdateTime", UpdateTime)
-hooksecurefunc("Scenario_ChallengeMode_SetUpAffixes", SetUpAffixes)
+--hooksecurefunc("Scenario_ChallengeMode_SetUpAffixes", SetUpAffixes)
 hooksecurefunc("Scenario_ChallengeMode_ShowBlock", ShowBlock)
 
 

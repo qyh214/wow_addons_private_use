@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("IronCouncil", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 253 $"):sub(12, -3))
 mod:SetCreatureID(32867, 32927, 32857)
 mod:SetEncounterID(1140)
 mod:DisableEEKillDetection()--Fires for first one dying not last
@@ -14,10 +14,9 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 61920 63479 61879 63483 61915 61903 63493 62274 63489 62273",
 	"SPELL_CAST_SUCCESS 63490 62269 64321 61974 61869 63481",
 	"SPELL_AURA_APPLIED 61903 63493 62269 63490 62277 63967 64637 61888 63486 61887 61912 63494",
+	"SPELL_AURA_REMOVED 64637 61888",
 	"UNIT_DIED"
 )
-
-mod:AddBoolOption("HealthFrame", true)
 
 mod:SetBossHealthInfo(
 	32867, L.Steelbreaker,
@@ -67,15 +66,11 @@ local enrageTimer				= mod:NewBerserkTimer(900)
 
 local disruptTargets = {}
 mod.vb.disruptIcon = 7
---local bosskilled = 0
-local scansDone = 0
 
 function mod:OnCombatStart(delay)
 	enrageTimer:Start(-delay)
 	table.wipe(disruptTargets)
 	self.vb.disruptIcon = 7
---	bosskilled = 0
-	scansDone = 0
 end
 
 function mod:RuneTarget(targetname, uId)
@@ -111,8 +106,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnRuneofDeath:Show()
 		timerRuneofDeath:Start()
 	elseif args:IsSpellID(64321, 61974) then	-- Rune of Power
-		scansDone = 0
-		self:RuneTarget()
 		self:BossTargetScanner(32927, "RuneTarget", 0.1, 16, true, true)--Scan only boss unitIDs, scan only hostile targets
 		timerRuneofPower:Start()
 	elseif args:IsSpellID(61869, 63481) then	-- Overload
@@ -138,17 +131,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerRuneofShields:Start()
 	elseif args:IsSpellID(64637, 61888) then	-- Overwhelming Power
 		warnOverwhelmingPower:Show(args.destName)
-		if self:IsDifficulty("normal10", "timewalker") then
-			timerOverwhelmingPower:Start(60, args.destName)
-		else
-			timerOverwhelmingPower:Start(35, args.destName)
-		end
+		timerOverwhelmingPower:Start(35, args.destName)
 		if self.Options.SetIconOnOverwhelmingPower then
-			if self:IsDifficulty("normal10", "timewalker") then
-				self:SetIcon(args.destName, 8, 60) -- skull for 60 seconds (until meltdown)
-			else
-				self:SetIcon(args.destName, 8, 35) -- skull for 35 seconds (until meltdown)
-			end
+			self:SetIcon(args.destName, 8)
 		end
 	elseif args:IsSpellID(63486, 61887) then	-- Lightning Tendrils
 		timerLightningTendrils:Start()
@@ -165,21 +150,23 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 
+function mod:SPELL_AURA_REMOVED(args)
+	if args:IsSpellID(64637, 61888) then	-- Overwhelming Power
+		if self.Options.SetIconOnOverwhelmingPower then
+			self:SetIcon(args.destName, 0)
+		end
+	end
+end
+
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 32867 then		--Steelbreaker
 		timerFusionPunchCast:Cancel()
---		bosskilled = bosskilled + 1
 	elseif cid == 32927 then	--Runemaster
 		timerRuneofDeath:Cancel()
 		timerRuneofPower:Cancel()
---		bosskilled = bosskilled + 1
 	elseif cid == 32857 then	--Stormcaller
 		timerOverload:Cancel()
 		timerLightningWhirl:Cancel()
---		bosskilled = bosskilled + 1
 	end
---	if bosskilled == 3 then
---		DBM:EndCombat(self)
---	end
 end

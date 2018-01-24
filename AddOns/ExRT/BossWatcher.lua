@@ -2066,6 +2066,7 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 				
 		
 		--------------> Other
+		--[[
 		if negateHealing[destGUID] then
 			spellTable.amount = spellTable.amount - amount
 			spellTable.over = spellTable.over + amount + absorbed
@@ -2076,6 +2077,7 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 				spellTable.critover = spellTable.critover - overhealing
 			end
 		end
+		]]
 		if spellID == 183998 then	--Light of the Martyr: effective healing fix
 			local lotmData = spellFix_LotM[sourceGUID]
 			if not lotmData then
@@ -2218,8 +2220,8 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 		
 		if spellID == 45181 or spellID == 211336 or spellID == 87024 or spellID == 229333 or spellID == 116888 or spellID == 209261 then	--Cheated Death, Archbishop Benedictus' Restitution, Cauterize, Sands of Time (Trinket), Shroud of Purgatory, Uncontained Fel 
 			AddNotRealDeath(destGUID,timestamp,spellID)
-		elseif spellID == 243961 then	--Varimatras Disable Healing Debuff
-			negateHealing[destGUID] = true
+		--elseif spellID == 243961 then	--Varimatras Disable Healing Debuff
+		--	negateHealing[destGUID] = true
 		end
 		
 		
@@ -2273,8 +2275,8 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 		--------------> Other
 		if spellID == 187464 then	--Shadow Mend
 			spellFix_SM[destGUID] = nil
-		elseif spellID == 243961 then	--Varimatras Disable Healing Debuff
-			negateHealing[destGUID] = nil
+		--elseif spellID == 243961 then	--Varimatras Disable Healing Debuff
+		--	negateHealing[destGUID] = nil
 		end
 
 	---------------------------------

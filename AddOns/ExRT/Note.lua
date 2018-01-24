@@ -111,11 +111,23 @@ function module.options:Load()
 	self:CreateTilte()
 
 	module.db.otherIconsAdditionalList = {
-		31821,62618,97462,98008,115310,64843,740,108280,204150,31842,196718,15286,0,
+		31821,62618,97462,98008,115310,64843,740,108280,204150,31842,196718,15286,207946,0,
 		47788,33206,6940,102342,114030,1022,116849,633,204018,207399,0,
 		2825,32182,80353,0,
 		106898,192077,46968,119381,179057,192058,0,
 		--"Interface\\Icons\\inv_60legendary_ring1c","Interface\\Icons\\inv_60legendary_ring1b","Interface\\Icons\\inv_60legendary_ring1a",0,
+		0,
+		246220,254948,244761,244969,0,
+		244056,244825,244057,244054,244055,248819,248815,244768,244131,0,
+		254130,244892,254771,244722,253037,244625,245227,246505,257974,244172,0,
+		244016,243983,244689,244915,244598,244926,245050,245118,244849,244613,244001,0,
+		246305,254769,249017,249015,249014,249016,245764,248332,0,
+		247367,247687,254244,247949,247641,247932,247681,248070,248068,0,
+		254919,248214,246833,246504,246516,249535,254795,244328,0,
+		243960,248732,244042,243999,244093,243968,243977,243980,243961,0,
+		250097,250333,250334,249793,252861,253650,245627,246329,253520,245532,250757,245518,244899,0,
+		255058,245458,255061,243431,244693,244912,254452,254022,245632,0,
+		258838,257296,258030,248165,255826,248317,257869,257931,257215,255199,253903,253901,257966,258000,251570,250669,258837,248396,248167,0,
 		0,
 		233283,230345,234264,233272,233062,231363,0,
 		233894,234015,239401,233426,233983,233441,236283,233430,0,
@@ -503,10 +515,10 @@ function module.options:Load()
 	end
 	
 	self.OtherIconsButton = ELib:Button(self.tab.tabs[1],L.NoteOtherIcons):Size(120,20):Point("TOPLEFT",self.buttonicons[#self.buttonicons],"TOPRIGHT",5,1):OnClick(function()
-		module.options.OtherIconsFrame:ShowClick()
+		module.options.OtherIconsFrame:ShowClick("TOPRIGHT")
 	end)
 	
-	self.OtherIconsFrame = ELib:Popup(L.NoteOtherIcons):Size(250,225)
+	self.OtherIconsFrame = ELib:Popup(L.NoteOtherIcons):Size(300,300)
 	self.OtherIconsFrame.ScrollFrame = ELib:ScrollFrame(self.OtherIconsFrame):Size(self.OtherIconsFrame:GetWidth()-10,self.OtherIconsFrame:GetHeight()-25):Point("TOP",0,-20):Height(500)
 	
 	local function CreateOtherIcon(pointX,pointY,texture,iconText)
@@ -540,7 +552,7 @@ function module.options:Load()
 			elseif type(spellID) == 'string' then
 				CreateOtherIcon(5+inLine*20,-2-(line-1)*20,spellID,"||T"..spellID..":0||t")
 				inLine = inLine + 1
-				if inLine > 10 and (not module.db.otherIconsAdditionalList[i+1] or module.db.otherIconsAdditionalList[i+1]~=0) then
+				if inLine > 12 and (not module.db.otherIconsAdditionalList[i+1] or module.db.otherIconsAdditionalList[i+1]~=0) then
 					line = line + 1
 					inLine = 0
 				end
@@ -549,7 +561,7 @@ function module.options:Load()
 				
 				CreateOtherIcon(5+inLine*20,-2-(line-1)*20,spellTexture,"{spell:"..spellID.."}")
 				inLine = inLine + 1
-				if inLine > 10 and (not module.db.otherIconsAdditionalList[i+1] or module.db.otherIconsAdditionalList[i+1]~=0) then
+				if inLine > 12 and (not module.db.otherIconsAdditionalList[i+1] or module.db.otherIconsAdditionalList[i+1]~=0) then
 					line = line + 1
 					inLine = 0
 				end

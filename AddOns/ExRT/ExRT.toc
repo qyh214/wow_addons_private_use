@@ -3,7 +3,7 @@
 ## Author: ykiigor
 ## Notes: Exorsus Raid Tools
 ## SavedVariables: VExRT
-## Version: 3900
+## Version: 3905
 core.lua
 Functions.lua
 embeds.xml

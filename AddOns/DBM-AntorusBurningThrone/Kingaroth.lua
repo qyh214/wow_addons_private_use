@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2004, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17164 $"):sub(12, -3))
 mod:SetCreatureID(122578)
 mod:SetEncounterID(2088)
 mod:SetZone()
@@ -167,6 +167,14 @@ do
 	end
 end
 
+--/run DBM:GetModByName("2004"):TestFunction(20)
+function mod:TestFunction(time)
+	timerForgingStrikeCD:AddTime(time, 1)
+	timerDiabolicBombCD:AddTime(time)
+	timerRuinerCD:AddTime(time, self.vb.ruinerCast+1)
+	timerReverberatingStrikeCD:AddTime(time, 1)
+end
+
 function mod:OnCombatStart(delay)
 	demolishDebuff = DBM:GetSpellInfo(246692)
 	self.vb.ruinerCast = 0
@@ -240,16 +248,16 @@ function mod:SPELL_CAST_START(args)
 		table.wipe(DemolishTargets)
 	elseif spellId == 246833 then--Ruiner
 		self.vb.ruinerCast = self.vb.ruinerCast + 1
+		timerForgingStrikeCD:Stop()
+		countdownForgingStrike:Cancel()
 		specWarnRuiner:Show()
 		specWarnRuiner:Play("farfromline")
 		specWarnRuiner:ScheduleVoice(1.5, "keepmove")
 		timerRuinerCD:Start(nil, self.vb.ruinerCast+1)--28-30 depending on difficulty
 		countdownRuiner:Start(29.1)
-		timerForgingStrikeCD:Stop()
-		countdownForgingStrike:Cancel()
 		timerForgingStrikeCD:Start(10, self.vb.forgingStrikeCast+1)
 		countdownForgingStrike:Start()
-	elseif spellId == 246516 then--Apocolypse Protocol
+	elseif spellId == 246516 and self:IsInCombat() then--Apocolypse Protocol
 		self.vb.ruinerTimeLeft = timerRuinerCD:GetRemaining(self.vb.ruinerCast+1)
 		self.vb.reverbTimeLeft = timerReverberatingStrikeCD:GetRemaining(self.vb.reverbStrikeCast+1)
 		self.vb.forgingTimeLeft = timerForgingStrikeCD:GetRemaining(self.vb.forgingStrikeCast+1)
@@ -366,7 +374,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			yellDecimation:Cancel()
 		end
-	elseif spellId == 246516 then--Apocolypse Protocol
+	elseif spellId == 246516 and self:IsInCombat() then--Apocolypse Protocol
 		self.vb.apocProtoCount = self.vb.apocProtoCount + 1
 		if self.vb.apocProtoCount % 2 == 1 then
 			DBM:Debug("Reverb first", 2)

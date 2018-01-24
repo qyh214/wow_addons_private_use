@@ -62,6 +62,9 @@ function module.options:Load()
 		elseif type == 3 then
 			self:SetTexCoord(0.625,0.6875,0.5,0.625)
 			self:SetVertexColor(.8,.8,0,1)
+		elseif type == 4 then
+			self:SetTexCoord(0.875,0.9375,0.5,0.625)
+			self:SetVertexColor(.8,.8,0,1)
 		end		
 	end
 	
@@ -390,6 +393,8 @@ function module.options:Load()
 					SetIcon(line.icons[j],0)
 				elseif db.noWA then
 					SetIcon(line.icons[j],3)
+				elseif type(db[ aura.name ]) == 'number' then
+					SetIcon(line.icons[j],db[ aura.name ])
 				elseif db[ aura.name ] then
 					SetIcon(line.icons[j],2)
 				else

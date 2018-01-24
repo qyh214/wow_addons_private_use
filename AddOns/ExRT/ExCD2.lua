@@ -1162,7 +1162,7 @@ module.db.spell_reduceCdCast = {	--Заклинания, применение к
 	
 	[194466]={{190319,235940},-9},
 	
-	[34026]={{193530,251756},-2},
+	[34026]={{193530,251756},-1.5},
 }
 module.db.spell_increaseDurationCast = {	--Заклинания, продляющие время действия
 	[23922]={{2565,203177},1.5},
@@ -1473,6 +1473,8 @@ module.db.itemsToSpells = {	-- Тринкеты вида [item ID] = spellID
 	[144293] = 235605,
 	[144355] = 235940,
 	[144242] = 235039,
+	
+	[151978] = 251946,
 }
 module.db.itemsArtifacts = {	-- Artifacts & First trait
 	[127857] = 224968,
@@ -4685,14 +4687,15 @@ function module.options:Load()
 	local function fastSetupFrameListLeave(self)
 		ELib.Tooltip:Hide()
 	end
-	local function fastSetupFrameListClick2(self)
+	self.fastSetupFrame = ELib:ListButton(self.tab.tabs[1],L.cd2fastSetupTitle..":",200,7):Size(18,18):Point("TOPRIGHT",-15,-9):Left():OnClick(function(self)
 		local list = {
 			{L.cd2fastSetupTitle1,{31821,204150,62618,98008,97462,31842,64843,108280,740,115310,196718,207399}},					--Raid Save
 			{L.cd2fastSetupTitle2,{102342,47788,33206,6940,633,116849,1022,204018}},								--Direct Save
 			{L.cd2fastSetupTitle3,{20484,20707,61999,20608,161642}},										--Battle Res
 			{L.cd2fastSetupTitle4,{6552,96231,147362,1766,15487,47528,47476,57994,2139,116705,106839,19647,91802,115781,78675,183752,}},	--Kicks
 			{L.cd2fastSetupTitle5,{114192,355,62124,56222,49576,115546,6795,185245,}},								--Taunts
-			{L.cd2fastSetupTitle6,{4987,32375,527,51886,115450,2782,475,115276,89808}},							--Dispels			
+			{L.cd2fastSetupTitle6,{4987,32375,527,51886,115450,2782,475,115276,89808}},							--Dispels	
+			{STUN,	{46968,109248,205369,192058,30283,119381,179057,	221562,108194,853,408,5211,}},		--Stuns
 		}
 		for i=1,#list do
 			local tooltip = {list[i][1]..":"}
@@ -4713,8 +4716,7 @@ function module.options:Load()
 			}
 		end
 		self.OnClick = nil
-	end
-	self.fastSetupFrame = ELib:ListButton(self.tab.tabs[1],L.cd2fastSetupTitle..":",200,6):Size(18,18):Point("TOPRIGHT",-15,-9):Left():OnClick(fastSetupFrameListClick2)
+	end)
 	self.fastSetupFrame.text:FontSize(11):Color(GameFontNormal:GetTextColor())
 	
 	self.borderList = CreateFrame("Frame",nil,self.tab.tabs[1])
@@ -8333,8 +8335,8 @@ module.db.allClassSpells = {
 	{193530,3,	nil,			{193530,120,	10},	nil,			nil,			},	--Дух дикой природы
 	{186289,3,	nil,			nil,			nil,			{186289,120,	10},	},	--Дух орла
 	{186265,4,	{186265,180,	8},	nil,			nil,			nil,			},	--Дух черепахи
-	{194291,4,	nil,			nil,			{194291,120,	0},	nil,			},	--Живость
-	{109304,4,	nil,			{109304,120,	0},	nil,			{109304,120,	0},	},	--Живость
+	--{194291,4,	nil,			nil,			{194291,120,	0},	nil,			},	--Живость
+	{109304,4,	nil,			{109304,120,	0},	{109304,120,	0},	{109304,120,	0},	},	--Живость
 	{187650,3,	{187650,30,	0},	nil,			nil,			nil			},	--Замораживающая ловушка
 	{19574,	3,	nil,			{19574,	90,	15},	nil,			nil,			},	--Звериный гнев
 	{201430,3,	nil,			{201430,180,	12},	nil,			nil,			},	--Звериный натиск
@@ -8758,7 +8760,9 @@ module.db.allClassSpells = {
 	{221803,3,	{221803,60,	10},	},	--Ravaged Seed Pod
 	{235169,3,	{235169,75,	10},	},	--Archimonde's Hatred Reborn
 	{235966,3,	{235966,75,	10},	},	--Velen's Future Sight
-	{235991,3,	{235991,75,	0},	},	--Kil'jaeden's Burning Wish	
+	{235991,3,	{235991,75,	0},	},	--Kil'jaeden's Burning Wish
+	{251946,3,	{251946,120,	3},	},	--ABT Bulwark of Flame
+	
 },
 }
 ]]

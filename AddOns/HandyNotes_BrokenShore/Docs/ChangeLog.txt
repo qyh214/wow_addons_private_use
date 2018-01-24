@@ -1,7 +1,12 @@
-$Id: ChangeLog.txt 82 2017-11-09 13:41:11Z arith $
+$Id: ChangeLog.txt 84 2018-01-22 15:35:12Z arith $
 
 Revision History:
 =================
+
+* v1.22 (Jan. 22, 2017)
+-----------------------
+- Translation update:
+  - Portuguese (cleitontf)
 
 * v1.22 (Nov. 09, 2017)
 -----------------------

@@ -1,0 +1,10 @@
+## Interface: 70000
+## LoadOnDemand: 1
+## Title: Lib: DogTag-Stats-3.0
+## Notes: A library to provide tags for player combat stats to LibDogTag-3.0
+## Author: Cybeloras
+## Version: 3.0
+## X-Category: Library
+## Dependencies: LibDogTag-3.0
+
+lib.xml

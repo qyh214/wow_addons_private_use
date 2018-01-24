@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1984, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17123 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17187 $"):sub(12, -3))
 mod:SetCreatureID(121975)
 mod:SetEncounterID(2063)
 mod:SetZone()
@@ -42,7 +42,7 @@ local specWarnTaeshalachReachOther		= mod:NewSpecialWarningTaunt(245990, nil, ni
 local specWarnScorchingBlaze			= mod:NewSpecialWarningMoveAway(245994, nil, nil, nil, 1, 2)
 local yellScorchingBlaze				= mod:NewYell(245994)
 local specWarnRavenousBlaze				= mod:NewSpecialWarningMoveAway(254452, nil, nil, nil, 1, 2)
-local yellRavenousBlaze					= mod:NewYell(254452, DBM_CORE_AUTO_YELL_CUSTOM_POSITION)
+local yellRavenousBlaze					= mod:NewPosYell(254452, DBM_CORE_AUTO_YELL_CUSTOM_POSITION)
 local specWarnWakeofFlame				= mod:NewSpecialWarningDodge(244693, nil, nil, nil, 2, 2)
 local yellWakeofFlame					= mod:NewYell(244693)
 --local specWarnFoeBreaker				= mod:NewSpecialWarningDodge(245458, nil, nil, nil, 3, 2)
@@ -201,29 +201,56 @@ do
 				addLine(L.Current, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(2)")
 			end
 		else--Not Mythic
-			if mod.vb.comboCount == 0 then
-				--Filler
-			elseif mod.vb.comboCount == 1 then
-				addLine(L.Current,  DBM_CORE_TANK_ICON_SMALL..L.Foe.."(1)")
-				addLine(mod.vb.comboCount+1, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend)
-				addLine(mod.vb.comboCount+2, DBM_CORE_TANK_ICON_SMALL..L.Foe.."(2)")
-				addLine(mod.vb.comboCount+3, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(2)")
-				addLine(mod.vb.comboCount+4, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
-			elseif mod.vb.comboCount == 2 then
-				addLine(L.Current, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend)
-				addLine(mod.vb.comboCount+1, DBM_CORE_TANK_ICON_SMALL..L.Foe.."(2)")
-				addLine(mod.vb.comboCount+2, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(2)")
-				addLine(mod.vb.comboCount+3, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
-			elseif mod.vb.comboCount == 3 then
-				addLine(L.Current, DBM_CORE_TANK_ICON_SMALL..L.Foe.."(2)")
-				addLine(mod.vb.comboCount+1, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(2)")
-				addLine(mod.vb.comboCount+2, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
-			elseif mod.vb.comboCount == 4 then
-				addLine(L.Current, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(2)")
-				addLine(mod.vb.comboCount+1, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
+			if mod:IsLFR() then
+				if mod.vb.comboCount == 0 then
+					--Filler
+				elseif mod.vb.comboCount == 1 then
+					addLine(L.Current,  DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(1)")
+					addLine(mod.vb.comboCount+1, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(2)")
+					addLine(mod.vb.comboCount+2, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(3)")
+					addLine(mod.vb.comboCount+3, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(4)")
+					addLine(mod.vb.comboCount+4, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
+				elseif mod.vb.comboCount == 2 then
+					addLine(L.Current, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(2)")
+					addLine(mod.vb.comboCount+1, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(3)")
+					addLine(mod.vb.comboCount+2, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(4)")
+					addLine(mod.vb.comboCount+3, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
+				elseif mod.vb.comboCount == 3 then
+					addLine(L.Current, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(3)")
+					addLine(mod.vb.comboCount+1, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(4)")
+					addLine(mod.vb.comboCount+2, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
+				elseif mod.vb.comboCount == 4 then
+					addLine(L.Current, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(4)")
+					addLine(mod.vb.comboCount+1, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
+				else
+					addLine(L.Current, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
+					--DBM.InfoFrame:Hide()
+				end
 			else
-				addLine(L.Current, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
-				--DBM.InfoFrame:Hide()
+				if mod.vb.comboCount == 0 then
+					--Filler
+				elseif mod.vb.comboCount == 1 then
+					addLine(L.Current,  DBM_CORE_TANK_ICON_SMALL..L.Foe.."(1)")
+					addLine(mod.vb.comboCount+1, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend)
+					addLine(mod.vb.comboCount+2, DBM_CORE_TANK_ICON_SMALL..L.Foe.."(2)")
+					addLine(mod.vb.comboCount+3, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(2)")
+					addLine(mod.vb.comboCount+4, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
+				elseif mod.vb.comboCount == 2 then
+					addLine(L.Current, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend)
+					addLine(mod.vb.comboCount+1, DBM_CORE_TANK_ICON_SMALL..L.Foe.."(2)")
+					addLine(mod.vb.comboCount+2, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(2)")
+					addLine(mod.vb.comboCount+3, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
+				elseif mod.vb.comboCount == 3 then
+					addLine(L.Current, DBM_CORE_TANK_ICON_SMALL..L.Foe.."(2)")
+					addLine(mod.vb.comboCount+1, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(2)")
+					addLine(mod.vb.comboCount+2, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
+				elseif mod.vb.comboCount == 4 then
+					addLine(L.Current, DBM_CORE_IMPORTANT_ICON_SMALL..L.Rend.."(2)")
+					addLine(mod.vb.comboCount+1, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
+				else
+					addLine(L.Current, DBM_CORE_DEADLY_ICON_SMALL..L.Tempest)
+					--DBM.InfoFrame:Hide()
+				end
 			end
 		end
 		return lines, sortedLines
@@ -258,8 +285,8 @@ function mod:OnCombatStart(delay)
 		berserkTimer:Start(540-delay)
 	else
 		timerScorchingBlazeCD:Start(4.8-delay)
-		timerWakeofFlameCD:Start(5.9-delay)
-		countdownWakeofFlame:Start(5.9-delay)
+		timerWakeofFlameCD:Start(5.1-delay)
+		countdownWakeofFlame:Start(5.1-delay)
 		timerTaeshalachTechCD:Start(35-delay, 1)
 		countdownTaeshalachTech:Start(35-delay)
 	end
@@ -346,8 +373,8 @@ function mod:SPELL_CAST_START(args)
 		else
 			specWarnFlameRend:Play("gathershare")
 		end
-		if self.vb.rendCount == 1 and not self:IsMythic() then
-			if self:IsEasy() then
+		if self.vb.rendCount == 1 and not self:IsMythic() and not self:IsLFR() then
+			if self:IsNormal() then
 				timerFlameRendCD:Start(10, 2)
 			else
 				timerFlameRendCD:Start(7.5, 2)
@@ -382,7 +409,8 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnTaeshalachReach:Show(amount)
 					specWarnTaeshalachReach:Play("stackhigh")
 				else--Taunt as soon as stacks are clear, regardless of stack count.
-					if not UnitIsDeadOrGhost("player") and not UnitDebuff("player", args.spellName) then
+					local techTimer = timerTaeshalachTechCD:GetRemaining(self.vb.techCount+1)
+					if not UnitIsDeadOrGhost("player") and not UnitDebuff("player", args.spellName) and (techTimer == 0 or techTimer >= 4) then
 						specWarnTaeshalachReachOther:Show(args.destName)
 						specWarnTaeshalachReachOther:Play("tauntboss")
 					else
@@ -546,7 +574,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
 		else
 			--Set sequence
 			--Foebreaker instantly so no need for timer
-			if self:IsEasy() then
+			if self:IsEasy() then--Check in LFR
 				timerFlameRendCD:Start(5, 1)
 				timerTempestCD:Start(20)
 			else

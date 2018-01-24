@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 253 $"):sub(12, -3))
 mod:SetCreatureID(33432)
 mod:SetEncounterID(1138)
 mod:DisableESCombatDetection()
 mod:SetModelID(28578)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 
-mod:RegisterCombat("yell", L.YellPull)
+mod:RegisterCombat("combat_yell", L.YellPull)
 mod:RegisterCombat("yell", L.YellHardPull)
 
 mod:RegisterEvents(
@@ -19,9 +19,10 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 63631 64529 62997 64570 64623",
 	"SPELL_CAST_SUCCESS 63027 63414 65192",
 	"SPELL_AURA_APPLIED 63666 65026 64529 62997",
-	"SPELL_AURA_REMOVED",--ALL EVENTS on purpose
+	"SPELL_AURA_REMOVED 64529 62997",
 	"SPELL_SUMMON 63811",
 	"UNIT_SPELLCAST_CHANNEL_STOP boss1 boss2 boss3 boss4",
+	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3",
 	"CHAT_MSG_LOOT"
 )
 
@@ -38,8 +39,8 @@ local warnPlasmaBlast			= mod:NewSpecialWarningDefensive(63293, nil, nil, nil, 1
 local enrage 					= mod:NewBerserkTimer(900)
 local timerHardmode				= mod:NewTimer(610, "TimerHardmode", 64582)
 local timerP1toP2				= mod:NewTimer(41.5, "TimeToPhase2", "Interface\\Icons\\Spell_Nature_WispSplode", nil, nil, 6)
-local timerP2toP3				= mod:NewTimer(25, "TimeToPhase3", "Interface\\Icons\\Spell_Nature_WispSplode", nil, nil, 6)
-local timerP3toP4				= mod:NewTimer(26.5, "TimeToPhase4", "Interface\\Icons\\Spell_Nature_WispSplode", nil, nil, 6)
+local timerP2toP3				= mod:NewTimer(29, "TimeToPhase3", "Interface\\Icons\\Spell_Nature_WispSplode", nil, nil, 6)
+local timerP3toP4				= mod:NewTimer(29, "TimeToPhase4", "Interface\\Icons\\Spell_Nature_WispSplode", nil, nil, 6)
 local timerProximityMines		= mod:NewNextTimer(35, 63027)
 local timerShockBlast			= mod:NewCastTimer(63631, nil, nil, nil, 2)
 local timerSpinUp				= mod:NewCastTimer(4, 63414, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
@@ -53,7 +54,7 @@ local timerFlameSuppressant		= mod:NewBuffActiveTimer(10, 65192)
 local timerNextFrostBomb		= mod:NewNextTimer(30, 64623, nil, nil, nil, 3)
 local timerBombExplosion		= mod:NewCastTimer(15, 65333, nil, nil, nil, 3)
 
-mod:AddBoolOption("HealthFramePhase4", true)
+mod:AddBoolOption("HealthFramePhase4", false)
 mod:AddBoolOption("SetIconOnNapalm", false)
 mod:AddBoolOption("SetIconOnPlasmaBlast", false)
 mod:AddBoolOption("RangeFrame")
@@ -159,27 +160,10 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 
-do 
-	local count = 0
-	local last = 0
-	local lastPhaseChange = 0
-	function mod:SPELL_AURA_REMOVED(args)
-		local cid = self:GetCIDFromGUID(args.destGUID)
-		if GetTime() - lastPhaseChange > 30 and (cid == 33432 or cid == 33651 or cid == 33670) then
-			if args.timestamp == last then	-- all events in the same tick to detect the phases earlier (than the yell) and localization-independent
-				count = count + 1
-				if (self:IsDifficulty("normal10") and count > 4) or (self:IsDifficulty("normal25") and count > 9) then
-					lastPhaseChange = GetTime()
-					self:NextPhase()
-				end
-			else
-				count = 1
-			end
-			last = args.timestamp
-		elseif args:IsSpellID(63666, 65026) then -- Napalm Shell
-			if self.Options.SetIconOnNapalm then
-				self:SetIcon(args.destName, 0)
-			end
+function mod:SPELL_AURA_REMOVED(args)
+	if args:IsSpellID(63666, 65026) then -- Napalm Shell
+		if self.Options.SetIconOnNapalm then
+			self:SetIcon(args.destName, 0)
 		end
 	end
 end
@@ -199,7 +183,6 @@ function mod:UNIT_SPELLCAST_CHANNEL_STOP(unit, spell)
 end
 
 function mod:CHAT_MSG_LOOT(msg)
-	-- DBM:AddMsg(msg) --> Meridium receives loot: [Magnetic Core]
 	local player, itemID = msg:match(L.LootMsg)
 	player = DBM:GetUnitFullName(player)
 	if player and itemID and tonumber(itemID) == 46029 and self:IsInCombat() then
@@ -214,7 +197,6 @@ function mod:NextPhase()
 			DBM.BossHealth:Clear()
 			DBM.BossHealth:AddBoss(33432, L.MobPhase1)
 		end
-
 	elseif self.vb.phase == 2 then
 		timerNextShockblast:Stop()
 		timerProximityMines:Stop()
@@ -241,7 +223,6 @@ function mod:NextPhase()
 			DBM.BossHealth:Clear()
 			DBM.BossHealth:AddBoss(33670, L.MobPhase3)
 		end
-
 	elseif self.vb.phase == 4 then
 		timerP3toP4:Start()
 		if self.Options.HealthFramePhase4 or DBM.BossHealth:IsShown() then
@@ -258,19 +239,7 @@ function mod:NextPhase()
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if (msg == L.YellPhase2 or msg:find(L.YellPhase2)) then
-		--DBM:AddMsg("ALPHA: yell detect phase2, syncing to clients")
-		self:SendSync("Phase2")	-- untested alpha! (this will result in a wrong timer)
-
-	elseif (msg == L.YellPhase3 or msg:find(L.YellPhase3)) then
-		--DBM:AddMsg("ALPHA: yell detect phase3, syncing to clients")
-		self:SendSync("Phase3")	-- untested alpha! (this will result in a wrong timer)
-
-	elseif (msg == L.YellPhase4 or msg:find(L.YellPhase4)) then
-		--DBM:AddMsg("ALPHA: yell detect phase3, syncing to clients")
-		self:SendSync("Phase4") -- SPELL_AURA_REMOVED detection might fail in phase 3...there are simply not enough debuffs on him
-
-	elseif msg == L.YellHardPull or msg:find(L.YellHardPull) then
+	if msg == L.YellHardPull or msg:find(L.YellHardPull) then
 		timerHardmode:Start()
 		timerNextFlameSuppressant:Start()
 		enrage:Stop()
@@ -278,6 +247,11 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
+	if spellId == 34098 then--ClearAllDebuffs
+		self:NextPhase()
+	end
+end
 
 function mod:OnSync(event, args)
 	if event == "SpinUpFail" then
@@ -286,12 +260,6 @@ function mod:OnSync(event, args)
 		timerDarkGlareCast:Cancel()
 		timerNextDarkGlare:Cancel()
 		warnDarkGlare:Cancel()
-	elseif event == "Phase2" and self.vb.phase == 1 then -- alternate localized-dependent detection
-		self:NextPhase()
-	elseif event == "Phase3" and self.vb.phase == 2 then
-		self:NextPhase()
-	elseif event == "Phase4" and self.vb.phase == 3 then
-		self:NextPhase()
 	elseif event == "LootMsg" and args then
 		lootannounce:Show(args)
 	end

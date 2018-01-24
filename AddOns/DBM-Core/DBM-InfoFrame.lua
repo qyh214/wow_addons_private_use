@@ -19,7 +19,7 @@
 --
 -- Special thanks to:
 --    * Arta
---    * Omegal @ US-Whisperwind (continuing mod support for 3.2+)
+--    * Omegal @ US-Kel'Thuzad (continuing mod support for 3.2+)
 --    * Tennberg (a lot of fixes in the enGB/enUS localization)
 --
 --
@@ -395,7 +395,7 @@ local function updateEnemyAbsorb()
 				else
 					text = absorbAmount
 				end
-				lines[UnitName(uId)] = mfloor(text)
+				lines[UnitName(uId)] = mfloor(text).."%"
 			end
 		end
 	end
@@ -424,7 +424,7 @@ local function updateAllAbsorb()
 				else
 					text = absorbAmount
 				end
-				lines[UnitName(uId)] = mfloor(text)
+				lines[UnitName(uId)] = mfloor(text).."%"
 			end
 		end
 	end
@@ -437,7 +437,7 @@ local function updateAllAbsorb()
 			else
 				text = absorbAmount
 			end
-			lines[UnitName(uId)] = mfloor(text)
+			lines[UnitName(uId)] = mfloor(text).."%"
 		end
 	end
 	updateLines()
@@ -457,7 +457,7 @@ local function updatePlayerAbsorb()
 			else
 				text = absorbAmount
 			end
-			lines[UnitName(uId)] = mfloor(text)
+			lines[UnitName(uId)] = mfloor(text).."%"
 		end
 	end
 	updateLines()

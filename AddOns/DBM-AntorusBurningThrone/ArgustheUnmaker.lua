@@ -1,38 +1,34 @@
 local mod	= DBM:NewMod(2031, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17166 $"):sub(12, -3))
 mod:SetCreatureID(124828)
 mod:SetEncounterID(2092)
 mod:SetZone()
---mod:SetBossHPInfoToHighest()
+mod:SetBossHPInfoToHighest()--Because of heal on mythic
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7)
 mod:SetHotfixNoticeRev(16993)
 mod:SetMinSyncRevision(16895)
---mod.respawnTime = 29
+mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 248165 248317 257296 255594 257645 252516 256542 255648 257619 255935",
+	"SPELL_CAST_START 248165 248317 257296 255594 257645 252516 256542 255648 257619",
 	"SPELL_CAST_SUCCESS 248499 258039 258838 252729 252616 256388 258029",
 	"SPELL_AURA_APPLIED 248499 248396 250669 251570 255199 253021 255496 255496 255478 252729 252616 255433 255430 255429 255425 255422 255419 255418 258647 258646 257869 257931 257966 258838",
 	"SPELL_AURA_APPLIED_DOSE 248499 258039 258838",
 	"SPELL_AURA_REMOVED 250669 251570 255199 253021 255496 255496 255478 255433 255430 255429 255425 255422 255419 255418 258039 257966 258647 258646 258838",
 	"SPELL_INTERRUPT",
---	"SPELL_PERIODIC_DAMAGE",
---	"SPELL_PERIODIC_MISSED",
---	"UNIT_DIED",
---	"CHAT_MSG_RAID_BOSS_EMOTE",
+	"SPELL_PERIODIC_DAMAGE 248167",
+	"SPELL_PERIODIC_MISSED 248167",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"
 )
 
---TODO, death fog GTFO
 --TODO, custom warning to combine soulburst and bomb into single message instead of two messages, while still separating targets
 --TODO, interrupt warnings for Designates if not affected by Inevitability?
---TODO, info frame for stage 4/3 (and other stages maybe) to show realms, and other stats, energy of boss and eonar's aid
+--TODO, More info on InfoFrame?
 --TODO, warnings when eonar transitions from gift to withering. other titan stuff?
---TODO, Scythes in p3, which don't appear on WCL so need transcriptor logs or video to fix
 --[[
 (ability.id = 256544 or ability.id = 255826 or ability.id = 248165 or ability.id = 248317 or ability.id = 257296 or ability.id = 255594 or ability.id = 252516 or ability.id = 255648 or ability.id = 257645 or ability.id = 256542 or ability.id = 257619 or ability.id = 255935) and type = "begincast"
  or (ability.id = 248499 or ability.id = 258039 or ability.id = 252729 or ability.id = 252616 or ability.id = 256388 or ability.id = 258838 or ability.id = 258029) and type = "cast"
@@ -71,17 +67,15 @@ local specWarnConeofDeath			= mod:NewSpecialWarningDodge(248165, nil, nil, nil, 
 local specWarnSoulblight			= mod:NewSpecialWarningMoveAway(248396, nil, nil, nil, 1, 2)
 local yellSoulblight				= mod:NewYell(248396)
 local specWarnGiftofSea				= mod:NewSpecialWarningYou(258647, nil, nil, nil, 1, 2)
-local yellGiftofSea					= mod:NewPosYell(258647, DBM_CORE_AUTO_YELL_CUSTOM_POSITION)
+local yellGiftofSea					= mod:NewPosYell(258647, L.SeaText)
 local specWarnGiftofSky				= mod:NewSpecialWarningYou(258646, nil, nil, nil, 1, 2)
-local yellGiftofSky					= mod:NewPosYell(258646, DBM_CORE_AUTO_YELL_CUSTOM_POSITION)
+local yellGiftofSky					= mod:NewPosYell(258646, L.SkyText)
 --Mythic P1
 local specWarnSargRage				= mod:NewSpecialWarningMoveAway(257869, nil, nil, nil, 3, 2)
 local yellSargRage					= mod:NewYell(257869)
 local specWarnSargFear				= mod:NewSpecialWarningMoveTo(257931, nil, nil, nil, 3, 2)
 local yellSargFear					= mod:NewYell(257931)
---local yellBurstingDreadflame		= mod:NewPosYell(238430, DBM_CORE_AUTO_YELL_CUSTOM_POSITION)
---local specWarnMalignantAnguish		= mod:NewSpecialWarningInterrupt(236597, "HasInterrupt")
---local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 2)
+local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 2)
 --Stage Two: The Protector Redeemed
 local specWarnSoulburst				= mod:NewSpecialWarningMoveAway(250669, nil, nil, nil, 1, 2)
 local yellSoulburst					= mod:NewPosYell(250669)
@@ -131,7 +125,6 @@ local timerAvatarofAggraCD			= mod:NewCDTimer(59.9, 255199, nil, nil, nil, 5, ni
 mod:AddTimerLine(SCENARIO_STAGE:format(3))
 local timerCosmicRayCD				= mod:NewCDTimer(19.9, 252729, nil, nil, nil, 3)--All adds seem to cast it at same time, so one timer for all
 local timerCosmicBeaconCD			= mod:NewCDTimer(19.9, 252616, nil, nil, nil, 3)--All adds seem to cast it at same time, so one timer for all
---local timerCosmicPowerCD			= mod:NewCDTimer(19.9, 255935, nil, nil, nil, 3)--All adds seem to cast it at same time, so one timer for all
 local timerDiscsofNorg				= mod:NewCastTimer(12, 252516, nil, nil, nil, 6)
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)--Mythic 3
 local timerSoulrendingScytheCD		= mod:NewCDTimer(8.5, 258838, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
@@ -162,7 +155,6 @@ mod:AddNamePlateOption("NPAuraOnInevitability", 253021)
 mod:AddNamePlateOption("NPAuraOnCosmosSword", 255496)
 mod:AddNamePlateOption("NPAuraOnEternalBlades", 255478)
 mod:AddNamePlateOption("NPAuraOnVulnerability", 255418)
---mod:AddRangeFrameOption("5/10")
 
 local avatarOfAggramar, aggramarsBoon = DBM:GetSpellInfo(255199), DBM:GetSpellInfo(255200)
 local playerAvatar = false
@@ -207,7 +199,7 @@ local function checkForMissingSentence(self)
 		timerSargSentenceCD:Start(timer-10, self.vb.sentenceCount+1)--Timer minus 10 or next expected sentence cast
 		self:Schedule(timer, checkForMissingSentence, self)--10 seconds after expected sentence cast
 	end
-	DBM:Debug("checkForMissingSentence ran, which means means all senence immuned", 2)
+	DBM:Debug("checkForMissingSentence ran, which means all sentence immuned", 2)
 end
 
 local function delayedBoonCheck(self, stage4)
@@ -250,7 +242,6 @@ function mod:OnCombatStart(delay)
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Show(4, "enemypower", 2)
-		--DBM.InfoFrame:Show(7, "function", updateInfoFrame, false, false)
 	end
 	if self.Options.NPAuraOnInevitability or self.Options.NPAuraOnCosmosSword or self.Options.NPAuraOnEternalBlades or self.Options.NPAuraOnVulnerability then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
@@ -258,9 +249,6 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
@@ -320,36 +308,41 @@ function mod:SPELL_CAST_START(args)
 			timerSargGazeCD:Start(28.4, 1)
 		end
 	elseif spellId == 257645 then--Temporal Blast (Stage 3)
-		self.vb.phase = 3
-		warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(3))
-		timerSweepingScytheCD:Stop()
-		timerTorturedRageCD:Stop()
-		timerSoulBombCD:Stop()
-		countdownSoulbomb:Cancel()
-		timerSoulBurstCD:Stop()
-		timerEdgeofObliterationCD:Stop()
-		timerAvatarofAggraCD:Stop()
-		--timerSargGazeCD:Stop()
-		if not self:IsMythic() then
-			timerCosmicRayCD:Start(30)
-			--timerCosmicPowerCD:Start(36.5)
-			timerCosmicBeaconCD:Start(40)
+		timerAvatarofAggraCD:Stop()--Always cancel this here, it's not canceled by argus becoming inactive and can still be cast during argus inactive transition phase
+		if self.vb.phase < 3 then
+			self.vb.phase = 3
+			warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(3))
+			timerSweepingScytheCD:Stop()
+			timerTorturedRageCD:Stop()
+			timerSoulBombCD:Stop()
+			countdownSoulbomb:Cancel()
+			timerSoulBurstCD:Stop()
+			timerEdgeofObliterationCD:Stop()
+			timerAvatarofAggraCD:Stop()
+			timerSargGazeCD:Stop()
+			if not self:IsMythic() then
+				timerCosmicRayCD:Start(30)
+				timerCosmicBeaconCD:Start(40)
+				if self.Options.InfoFrame then
+					DBM.InfoFrame:Hide()
+				end
+			end
 		end
 	elseif spellId == 256542 then--Reap Soul
 		if not self:IsMythic() then
 			self.vb.phase = 4
 			warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(4))
+			if self.Options.InfoFrame then
+				DBM.InfoFrame:Show(4, "enemypower", 2)
+			end
 		end
 		timerCosmicRayCD:Stop()
-		--timerCosmicPowerCD:Stop()
 		timerCosmicBeaconCD:Stop()
 		timerDiscsofNorg:Stop()
 		timerSargGazeCD:Stop()
 		timerNextPhase:Start(35)--or 53.8
-	elseif spellId == 257619 then--Gift of the Lifebinder (p4)
+	elseif spellId == 257619 then--Gift of the Lifebinder (p4/p3mythic)
 		warnGiftOfLifebinder:Show()
-	elseif spellId == 255935 then
-		--timerCosmicPowerCD:Start()
 	end
 end
 
@@ -538,20 +531,20 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnGiftofSea:Show()
 			specWarnGiftofSea:Play("targetyou")
-			yellGiftofSea:Yell(6, args.spellName, 6)
+			yellGiftofSea:Yell()
 		end
 		if self.Options.SetIconGift then
-			self.SetIcon(args.destName, 6)
+			self:SetIcon(args.destName, 6)
 		end
 	elseif spellId == 258646 then--Gift of Sky
 		warnSkyandSea:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnGiftofSky:Show()
 			specWarnGiftofSky:Play("targetyou")
-			yellGiftofSky:Yell(5, args.spellName, 5)
+			yellGiftofSky:Yell()
 		end
 		if self.Options.SetIconGift then
-			self.SetIcon(args.destName, 5)
+			self:SetIcon(args.destName, 5)
 		end
 	elseif spellId == 255433 or spellId == 255430 or spellId == 255429 or spellId == 255425 or spellId == 255422 or spellId == 255419 or spellId == 255418 then--Vulnerability
 		if self.Options.NPAuraOnVulnerability then
@@ -636,11 +629,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 258647 then--Gift of Sea
 		if self.Options.SetIconGift then
-			self.SetIcon(args.destName, 0)
+			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 258646 then--Gift of Sky
 		if self.Options.SetIconGift then
-			self.SetIcon(args.destName, 0)
+			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 253021 then--Inevitability
 		if self.Options.NPAuraOnInevitability then
@@ -718,46 +711,35 @@ function mod:SPELL_INTERRUPT(args)
 	end
 end
 
---[[
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 228007 and destGUID == UnitGUID("player") and self:AntiSpam(2, 5) then
-		specWarnGTFO:Show()
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
+	if spellId == 248167 and destGUID == UnitGUID("player") and self:AntiSpam(2, 5) then
+		specWarnGTFO:Show(spellName)
 		specWarnGTFO:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
-	if msg:find("spell:238502") then
-
-	end
-end
-
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 121193 then
-
-	end
-end
---]]
-
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
 	if spellId == 257300 and self:AntiSpam(5, 1) then--Ember of Rage
 		specWarnEmberofRage:Show()
 		specWarnEmberofRage:Play("watchstep")
-	elseif spellId == 258042 then--Argus P2 Energy Controller (16 seconds after Fury)
-		--Alternate and valid timer start point
-		--timerAvatarofAggraCD:Start(5)
-		--timerEdgeofObliterationCD:Start(6.2)
-		--timerSoulBombCD:Start(20.8)
-		--timerSoulBurstCD:Start(20.8, 1)
-	--elseif spellId == 34098 then--ClearAllDebuffs (12 before Tempoeral Blast)
-	
-	elseif spellId == 258044 then--Argus P4 Energy Controller (54 seconds after Reap Soul, 27 seconds after Gift of the Lifebinder)
-		--Old P4 controller, might still revert to it if I don't like SPELL_INTERRUPT
-	elseif spellId == 258104 then--Argus Mythic Transform
-		--Stop timer earlier than Reap Soul
+	elseif spellId == 34098 and self.vb.phase == 2 then--ClearAllDebuffs (12 before Tempoeral Blast)
+		self.vb.phase = 3
+		warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(3))
+		timerSweepingScytheCD:Stop()
+		timerTorturedRageCD:Stop()
+		timerSoulBombCD:Stop()
+		countdownSoulbomb:Cancel()
+		timerSoulBurstCD:Stop()
+		timerEdgeofObliterationCD:Stop()
 		timerSargGazeCD:Stop()
+		if not self:IsMythic() then
+			timerCosmicRayCD:Start(42)
+			timerCosmicBeaconCD:Start(52)
+			if self.Options.InfoFrame then
+				DBM.InfoFrame:Hide()
+			end
+		end
 	elseif spellId == 258068 then--Sargeras' Gaze
 		self.vb.gazeCount = self.vb.gazeCount + 1
 		if self.vb.phase == 2 then

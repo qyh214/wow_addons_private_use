@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1897, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17189 $"):sub(12, -3))
 mod:SetCreatureID(118289)
 mod:SetEncounterID(2052)
 mod:SetZone()
@@ -19,7 +19,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 235117 240209 235028 234891 243276",
 	"SPELL_PERIODIC_DAMAGE 238408 238028",
 	"SPELL_PERIODIC_MISSED 238408 238028",
---	"RAID_BOSS_WHISPER",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -74,7 +73,6 @@ local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_T
 
 mod:AddSetIconOption("SetIconOnInfusion", 235271, true)
 mod:AddInfoFrameOption(235117, true)
---mod:AddRangeFrameOption("5/8/15")
 
 mod.vb.unstableSoulCount = 0
 mod.vb.hammerCount = 0
@@ -82,10 +80,10 @@ mod.vb.infusionCount = 0
 mod.vb.spontFragmentationCount = 0
 mod.vb.massShitCount = 0
 mod.vb.shieldActive = false
-local AegynnsWard, felDebuff, lightDebuff, shieldname = DBM:GetSpellInfo(236420), DBM:GetSpellInfo(235240), DBM:GetSpellInfo(235213), DBM:GetSpellInfo(235028)
+local AegynnsWard, felDebuff, lightDebuff, shieldname, unstableSoul = DBM:GetSpellInfo(236420), DBM:GetSpellInfo(235240), DBM:GetSpellInfo(235213), DBM:GetSpellInfo(235028), DBM:GetSpellInfo(235117)
 
 function mod:OnCombatStart(delay)
-	AegynnsWard, felDebuff, lightDebuff, shieldname = DBM:GetSpellInfo(236420), DBM:GetSpellInfo(235240), DBM:GetSpellInfo(235213), DBM:GetSpellInfo(235028)
+	AegynnsWard, felDebuff, lightDebuff, shieldname, unstableSoul = DBM:GetSpellInfo(236420), DBM:GetSpellInfo(235240), DBM:GetSpellInfo(235213), DBM:GetSpellInfo(235028), DBM:GetSpellInfo(235117)
 	self.vb.shieldActive = false
 	self.vb.unstableSoulCount = 0
 	self.vb.hammerCount = 2
@@ -110,9 +108,6 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
@@ -243,23 +238,7 @@ mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 235240 then--Fel Infusion
-		--[[if self.Options.SetIconOnInfusion then
-			local uId = DBM:GetRaidUnitId(args.destName)
-			local currentIcon = GetRaidTargetIndex(uId) or 0
-			if self:IsTanking(uId) and currentIcon ~= 1 then--Fel infusion removed but light infusion icon is already set, don't touch it
-				self:SetIcon(args.destName, 0)
-			end
-		end--]]
-	elseif spellId == 235213 then--Light Infusion
-		--[[if self.Options.SetIconOnInfusion then
-			local uId = DBM:GetRaidUnitId(args.destName)
-			local currentIcon = GetRaidTargetIndex(uId) or 0
-			if self:IsTanking(uId) and currentIcon ~= 4 then--Light infusion removed but fel infusion icon is already set, don't touch it
-				self:SetIcon(args.destName, 0)
-			end
-		end-]]
-	elseif spellId == 235117 or spellId == 240209 or spellId == 243276 then
+	if spellId == 235117 or spellId == 240209 or spellId == 243276 then
 		self.vb.unstableSoulCount = self.vb.unstableSoulCount - 1
 		if args:IsPlayer() then
 			specWarnUnstableSoul:Cancel()
@@ -272,8 +251,16 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 235028 then--Bulwark Removed
 		specWarnWrathofCreators:Show(args.destName)
 		specWarnWrathofCreators:Play("kickcast")
-	elseif spellId == 234891 then--Wrath Interrupted
 		self.vb.shieldActive = false
+		if self.Options.InfoFrame then
+			if self.vb.unstableSoulCount > 0 then
+				DBM.InfoFrame:SetHeader(unstableSoul)
+				DBM.InfoFrame:Show(10, "playerdebuffremaining", unstableSoul)
+			else
+				DBM.InfoFrame:Hide()
+			end
+		end
+	elseif spellId == 234891 then--Wrath Interrupted
 		self.vb.hammerCount = 0
 		self.vb.infusionCount = 0
 		self.vb.massShitCount = 0
@@ -292,10 +279,6 @@ function mod:SPELL_AURA_REMOVED(args)
 				self.vb.spontFragmentationCount = 0
 				timerSpontFragmentationCD:Start(8, 1)
 			end
-		end
-		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(shieldname)
-			DBM.InfoFrame:Show(10, "playerdebuffremaining", shieldname)
 		end
 	end
 end

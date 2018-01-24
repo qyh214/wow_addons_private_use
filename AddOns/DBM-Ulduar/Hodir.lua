@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Hodir", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 251 $"):sub(12, -3))
 mod:SetCreatureID(32845,32926)
 mod:SetEncounterID(1135)
 mod:SetModelID(28743)
@@ -29,7 +29,7 @@ local enrageTimer			= mod:NewBerserkTimer(475)
 local timerFlashFreeze		= mod:NewCastTimer(9, 61968, nil, nil, nil, 2)
 local timerFrozenBlows		= mod:NewBuffActiveTimer(20, 63512, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_HEALER_ICON)
 local timerFlashFrCD		= mod:NewCDTimer(50, 61968, nil, nil, nil, 2)
-local timerAchieve			= mod:NewAchievementTimer(179, 3182, "TimerSpeedKill")
+local timerAchieve			= mod:NewAchievementTimer(179, 3182)
 
 mod:AddBoolOption("SetIconOnStormCloud")
 

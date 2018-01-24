@@ -13,10 +13,11 @@ module.db.tableFood = {
 [201330]=225,	[201332]=225,	[201223]=225,	[201334]=225,	[201336]=225,
 [225598]=300,	[225599]=300,	[225597]=300,	[225600]=300,	[225601]=300,	[177931]=300,	[201636]=300,	[201634]=300,	[201635]=300,	[201637]=300,
 [225603]=375,	[225604]=375,	[225602]=375,	[225605]=375,	[225606]=375,			[201640]=375,	[201638]=375,	[201639]=375,	[201641]=375,	
+						[185736]=475,
 }
 module.db.StaminaFood = {[201638]=true,}
 
-module.db.tableFood_headers = {0,225,300,375}
+module.db.tableFood_headers = {0,225,300,375,475}
 module.db.tableFlask = {
 	--Stamina,	Int,		Agi,		Str 
 	[188035]=1300,	[188031]=1300,	[188033]=1300,	[188034]=1300,
@@ -273,12 +274,15 @@ local function GetFood(checkType)
 						elseif spellId == 201636 or spellId == 201634 or spellId == 201635 or spellId == 201637 then 
 							stats = 300
 						end
+						
+						if spellId == 185736 then
+							stats = 475
+						end
 					
 						f[stats] = f[stats] or {}
 						f[stats][ #f[stats]+1 ] = name
-						if ExRT.F.table_find(module.db.tableFood_headers,stats) then
-							isAnyBuff = true
-						end
+
+						isAnyBuff = true
 					end
 				end
 			end
@@ -867,13 +871,13 @@ local function PrepareDataToChat(toSelf)
 			end
 		end
 		IsSendFoodByMe = true
-		ExRT.F.ScheduleTimer(ExRT.F.SendExMsg, 0.1, "raidcheck","FOOD")
+		ExRT.F.ScheduleTimer(ExRT.F.SendExMsg, 0.1, "raidcheck","FOOD\t"..ExRT.V)
 		IsSendFlaskByMe = true
-		ExRT.F.ScheduleTimer(ExRT.F.SendExMsg, 0.1, "raidcheck","FLASK")
+		ExRT.F.ScheduleTimer(ExRT.F.SendExMsg, 0.1, "raidcheck","FLASK\t"..ExRT.V)
 		IsSendRunesByMe = nil
 		if VExRT.RaidCheck.RunesCheck then
 			IsSendRunesByMe = true
-			ExRT.F.ScheduleTimer(ExRT.F.SendExMsg, 0.1, "raidcheck","RUNES")
+			ExRT.F.ScheduleTimer(ExRT.F.SendExMsg, 0.1, "raidcheck","RUNES\t"..ExRT.V)
 		end
 		ExRT.F.ScheduleTimer(SendDataToChat, 1)
 	end
@@ -966,21 +970,46 @@ do
 	end
 end
 
-function module:addonMessage(sender, prefix, ...)
+function module:addonMessage(sender, prefix, type, ver)
 	if prefix == "raidcheck" then
 		if sender then
-			if ExRT.F.IsPlayerRLorOfficer(ExRT.SDB.charName) == 2 then
-				return
-			end
-			if sender < ExRT.SDB.charName or ExRT.F.IsPlayerRLorOfficer(sender) == 2 then
-				local type = ...
-				if type == "FOOD" then
-					IsSendFoodByMe = nil
-				elseif type == "FLASK" then
-					IsSendFlaskByMe = nil
-				elseif type == "RUNES" then
-					IsSendRunesByMe = nil
+			if ExRT.V > 3905 then
+				ver = tonumber(ver or "0") or 0
+				if ver > ExRT.V then
+					if type == "FOOD" then
+						IsSendFoodByMe = nil
+					elseif type == "FLASK" then
+						IsSendFlaskByMe = nil
+					elseif type == "RUNES" then
+						IsSendRunesByMe = nil
+					end
+					return
 				end
+				if ExRT.F.IsPlayerRLorOfficer(ExRT.SDB.charName) == 2 then
+					return
+				end
+				if (sender < ExRT.SDB.charName or ExRT.F.IsPlayerRLorOfficer(sender) == 2) and ver >= ExRT.V then
+					if type == "FOOD" then
+						IsSendFoodByMe = nil
+					elseif type == "FLASK" then
+						IsSendFlaskByMe = nil
+					elseif type == "RUNES" then
+						IsSendRunesByMe = nil
+					end
+				end
+			else	--Only for ver 3905 or lower
+				if ExRT.F.IsPlayerRLorOfficer(ExRT.SDB.charName) == 2 then
+					return
+				end
+				if sender < ExRT.SDB.charName or ExRT.F.IsPlayerRLorOfficer(sender) == 2 then
+					if type == "FOOD" then
+						IsSendFoodByMe = nil
+					elseif type == "FLASK" then
+						IsSendFlaskByMe = nil
+					elseif type == "RUNES" then
+						IsSendRunesByMe = nil
+					end
+				end			
 			end
 		end
 	end

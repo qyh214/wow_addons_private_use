@@ -13,7 +13,7 @@
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: WotLK
-## X-DBM-Mod-No-Heroic: 1
+## X-DBM-Mod-Has-Single-Format: 1
 ## X-DBM-Mod-Has-TimeWalker: 1
 ## X-DBM-Mod-MapID: 603
 ## X-DBM-Mod-Sort: 404
