@@ -15,10 +15,10 @@
 -- ADDON GLOBALS AND LOCALS
 -- ---------------------------------
 
-TELLMEWHEN_VERSION = "8.4.2"
+TELLMEWHEN_VERSION = "8.4.3"
 
 TELLMEWHEN_VERSION_MINOR = ""
-local projectVersion = "8.4.2" -- comes out like "6.2.2-21-g4e91cee"
+local projectVersion = "8.4.3" -- comes out like "6.2.2-21-g4e91cee"
 if projectVersion:find("project%-version") then
 	TELLMEWHEN_VERSION_MINOR = "dev"
 elseif strmatch(projectVersion, "%-%d+%-") then
@@ -26,7 +26,7 @@ elseif strmatch(projectVersion, "%-%d+%-") then
 end
 
 TELLMEWHEN_VERSION_FULL = TELLMEWHEN_VERSION .. " " .. TELLMEWHEN_VERSION_MINOR
-TELLMEWHEN_VERSIONNUMBER = 84201 -- NEVER DECREASE THIS NUMBER (duh?).  IT IS ALSO ONLY INTERNAL (for versioning of)
+TELLMEWHEN_VERSIONNUMBER = 84305 -- NEVER DECREASE THIS NUMBER (duh?).  IT IS ALSO ONLY INTERNAL (for versioning of)
 
 TELLMEWHEN_FORCECHANGELOG = 82105 -- if the user hasn't seen the changelog until at least this version, show it to them.
 
@@ -136,7 +136,7 @@ local tostringall = tostringall
 
 ---------- Locals ----------
 local Locked
-local UPD_INTV = 0.06	--this is a default, local because i use it in onupdate functions
+local UPD_INTV = 0	--this is a default, local because i use it in onupdate functions
 local LastUpdate = 0
 
 local time = GetTime() TMW.time = time
@@ -206,8 +206,10 @@ TMW.Defaults = {
 		ReceiveComm       = true,
 		AllowCombatConfig = false,
 		ShowGUIDs         = false,
-		Interval          = UPD_INTV,
+		Interval          = 0.05,
 		EffThreshold      = 15,
+		BackupDbInOptions = true,
+		CreateImportBackup = true,
 
 		NumGroups         = 0,
 		-- Groups = {} -- this will be set to the profile group defaults in a second.
@@ -1348,6 +1350,11 @@ function TMW:GetSettingsFromGUID(GUID)
 
 	local owner = TMW.GUIDToOwner[GUID] or TMW.PreviousGUIDToOwner[GUID]
 	if owner and owner:GetGUID() == GUID then
+		if owner.IsIcon then
+			-- match returns that are returned when we get results from the iterator
+			-- for icons below (settings [,owner], groupSettings, domain, groupID, iconID)
+			return owner:GetSettings(), owner, owner.group:GetSettings(), owner.group.Domain, owner.group.ID, owner.ID
+		end
 		return owner:GetSettings(), owner
 	end
 
@@ -1368,9 +1375,9 @@ function TMW:GetSettingsFromGUID(GUID)
 	end
 
 	if iter then
-		for settings, a, b, c in iter(TMW) do
+		for settings, a, b, c, d in iter(TMW) do
 			if settings.GUID == GUID then
-				return settings, nil, a, b, c
+				return settings, nil, a, b, c, d
 			end
 		end
 	end
@@ -2336,7 +2343,7 @@ function TMW:GetBaseUpgrades()			-- upgrade functions
 		},
 		[15300] = {
 			icon = function(self, ics)
-				if ics.Alpha > 1 then
+				if ics.Alpha and ics.Alpha > 1 then
 					ics.Alpha = (ics.Alpha / 100)
 				else
 					ics.Alpha = 1
@@ -2503,6 +2510,7 @@ do	-- TMW:OnUpdate()
 
 	local updateInProgress, shouldSafeUpdate
 	local start
+	-- Assume in combat unless we find out otherwise.
 	local inCombatLockdown = 1
 
 	-- Limit in milliseconds for each OnUpdate cycle.
@@ -2521,7 +2529,7 @@ do	-- TMW:OnUpdate()
 			coroutine.yield()
 		end
 	end
-
+	
 	-- This is the main update engine of TMW.
 	local function OnUpdate()
 		while true do
@@ -2555,7 +2563,8 @@ do	-- TMW:OnUpdate()
 						local ConditionObject = group.ConditionObject
 						if ConditionObject and (ConditionObject.UpdateNeeded or ConditionObject.NextUpdateTime < time) then
 							ConditionObject:Check()
-							checkYield()
+
+							if inCombatLockdown then checkYield() end
 						end
 					end
 			
@@ -2563,13 +2572,15 @@ do	-- TMW:OnUpdate()
 						for i = 1, #IconsToUpdate do
 							local icon = IconsToUpdate[i]
 							safecall(icon.Update, icon)
-							checkYield()
+							if inCombatLockdown then checkYield() end
 						end
 					else
 						for i = 1, #IconsToUpdate do
 							--local icon = IconsToUpdate[i]
 							IconsToUpdate[i]:Update()
-							checkYield()
+
+							-- inCombatLockdown check here to avoid a function call.
+							if inCombatLockdown then checkYield() end
 						end
 					end
 				end
@@ -2579,7 +2590,7 @@ do	-- TMW:OnUpdate()
 
 			updateInProgress = nil
 			
-			checkYield()
+			if inCombatLockdown then checkYield() end
 
 			TMW:Fire("TMW_ONUPDATE_POST", time, Locked)
 

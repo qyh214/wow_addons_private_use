@@ -973,43 +973,28 @@ end
 function module:addonMessage(sender, prefix, type, ver)
 	if prefix == "raidcheck" then
 		if sender then
-			if ExRT.V > 3905 then
-				ver = tonumber(ver or "0") or 0
-				if ver > ExRT.V then
-					if type == "FOOD" then
-						IsSendFoodByMe = nil
-					elseif type == "FLASK" then
-						IsSendFlaskByMe = nil
-					elseif type == "RUNES" then
-						IsSendRunesByMe = nil
-					end
-					return
+			ver = max(tonumber(ver or "0") or 0,3910)	--set min ver to 3910
+			if ver > ExRT.V then
+				if type == "FOOD" then
+					IsSendFoodByMe = nil
+				elseif type == "FLASK" then
+					IsSendFlaskByMe = nil
+				elseif type == "RUNES" then
+					IsSendRunesByMe = nil
 				end
-				if ExRT.F.IsPlayerRLorOfficer(ExRT.SDB.charName) == 2 then
-					return
+				return
+			end
+			if ExRT.F.IsPlayerRLorOfficer(ExRT.SDB.charName) == 2 then
+				return
+			end
+			if (sender < ExRT.SDB.charName or ExRT.F.IsPlayerRLorOfficer(sender) == 2) and ver >= ExRT.V then
+				if type == "FOOD" then
+					IsSendFoodByMe = nil
+				elseif type == "FLASK" then
+					IsSendFlaskByMe = nil
+				elseif type == "RUNES" then
+					IsSendRunesByMe = nil
 				end
-				if (sender < ExRT.SDB.charName or ExRT.F.IsPlayerRLorOfficer(sender) == 2) and ver >= ExRT.V then
-					if type == "FOOD" then
-						IsSendFoodByMe = nil
-					elseif type == "FLASK" then
-						IsSendFlaskByMe = nil
-					elseif type == "RUNES" then
-						IsSendRunesByMe = nil
-					end
-				end
-			else	--Only for ver 3905 or lower
-				if ExRT.F.IsPlayerRLorOfficer(ExRT.SDB.charName) == 2 then
-					return
-				end
-				if sender < ExRT.SDB.charName or ExRT.F.IsPlayerRLorOfficer(sender) == 2 then
-					if type == "FOOD" then
-						IsSendFoodByMe = nil
-					elseif type == "FLASK" then
-						IsSendFlaskByMe = nil
-					elseif type == "RUNES" then
-						IsSendRunesByMe = nil
-					end
-				end			
 			end
 		end
 	end

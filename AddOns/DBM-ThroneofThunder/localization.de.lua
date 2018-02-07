@@ -54,7 +54,6 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	PHealthFrame		= "Zeige in Lebensanzeige den benötigten Schaden bis $spell:136442 endet<br/>(benötigt aktivierte Lebensanzeige)",
 	AnnounceCooldowns	= "Zähle akustisch die Anzahl der $spell:137166 Wirkungen<br/>(für \"Raid-Cooldowns\")"
 })
 

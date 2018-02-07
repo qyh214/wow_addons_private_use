@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(156, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetCreatureID(44600)
 mod:SetEncounterID(1030)
 mod:SetZone()
@@ -14,9 +14,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"UNIT_DIED"
+	"SPELL_CAST_START"
 )
 
 local warnBreath			= mod:NewSpellAnnounce(83707, 3)
@@ -37,8 +35,6 @@ local timerMalevolentStrike	= mod:NewTargetTimer(30, 83908, nil, "Tank|Healer", 
 
 local berserkTimer			= mod:NewBerserkTimer(360)
 
-mod:AddBoolOption("ShowDrakeHealth", true)
-
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
 	if mod:IsDifficulty("heroic10", "heroic25") then--On heroic we know for sure the drake has breath ability.
@@ -53,8 +49,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnParalysis:Show()
 		timerParalysis:Start()
 		timerParalysisCD:Start()
-	elseif args:IsSpellID(83601, 83603, 83611) and self.Options.ShowDrakeHealth and DBM.BossHealth:IsShown() then
-		DBM.BossHealth:AddBoss(self:GetCIDFromGUID(args.sourceGUID), args.sourceName)
 	elseif args.spellId == 83908 then
 		timerMalevolentStrike:Start(args.destName)
 	end
@@ -87,18 +81,5 @@ function mod:SPELL_CAST_START(args)
 	elseif args.spellId == 83703 then
 		specWarnShadowNova:Show(args.sourceName)
 		timerNovaCD:Start()
-	end
-end
-
-function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 83612 and self.Options.ShowDrakeHealth and DBM.BossHealth:IsShown() then
-		DBM.BossHealth:AddBoss(self:GetCIDFromGUID(args.sourceGUID), args.sourceName)
-	end
-end
-
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if self.Options.ShowDrakeHealth and (cid == 44652 or cid == 44645 or cid == 44797 or cid == 44650) and DBM.BossHealth:IsShown() then
-		DBM.BossHealth:RemoveBoss(cid)
 	end
 end

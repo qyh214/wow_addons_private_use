@@ -1,7 +1,7 @@
 local mod = DBM:NewMod("PortalTimers", "DBM-Party-WotLK", 12)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 232 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
 mod:SetCreatureID(30658)
 mod:SetZone()
 
@@ -19,8 +19,6 @@ local warningBossNow	= mod:NewAnnounce("WarningBossNow", 4, 33341)
 local timerPortalIn	= mod:NewTimer(122, "TimerPortalIn", 57687)
 
 mod:AddBoolOption("ShowAllPortalTimers", false, "timer")--rate they spawn seems to accelerate slowly over time. thus making timers inaccurate by end of fight
-
-mod:RemoveOption("HealthFrame")
 
 local lastWave = 0
 

@@ -18,7 +18,7 @@
 ## X-DBM-Mod-Category: CATA
 ## X-DBM-Mod-No-Heroic: 1
 ## X-DBM-Mod-MapID: 757
-## X-DBM-Mod-Sort: 302
+## X-DBM-Mod-Sort: 806
 ## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.de.lua

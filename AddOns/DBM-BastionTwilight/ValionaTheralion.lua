@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(157, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetCreatureID(45992, 45993)
 mod:SetEncounterID(1032)
 mod:SetZone()
@@ -79,24 +79,17 @@ mod:AddBoolOption("TwilightBlastArrow", false)
 mod:AddBoolOption("BlackoutIcon")
 mod:AddBoolOption("EngulfingIcon")
 mod:AddBoolOption("RangeFrame")
-mod:AddBoolOption("BlackoutShieldFrame", true, "misc")
+mod:AddInfoFrameOption(86788, true)
 
+mod.vb.blackoutCount = 0
 local engulfingMagicTargets = {}
 local engulfingMagicIcon = 7
 local dazzlingCast = 0
 local breathCast = 0
 local lastFab = 0--Leave this custom one, we use reset gettime on it in extra places and that cannot be done with prototype
 local markWarned = false
-local blackoutActive = false
 local ValionaLanded = false
 local meteorTarget, fabFlames = DBM:GetSpellInfo(88518), DBM:GetSpellInfo(86497)
-
-local absorbHealth = {
-	["heroic25"] = 65000,
-	["heroic10"] = 40000,
-	["normal25"] = 50000,
-	["normal10"] = 50000
-}
 
 local function showEngulfingMagicWarning()
 	warnEngulfingMagic:Show(table.concat(engulfingMagicTargets, "<, >"))
@@ -155,7 +148,7 @@ end
 function mod:TwilightBlastTarget()
 	local targetname = self:GetBossTarget(45993)
 	if not targetname then return end
-	if self.Options.TBwarnWhileBlackout or not blackoutActive then
+	if self.Options.TBwarnWhileBlackout or self.vb.blackoutCount == 0 then
 		if targetname == UnitName("player") then
 			specWarnTwilightBlast:Show()
 			yellTwilightBlast:Yell()
@@ -176,23 +169,20 @@ function mod:TwilightBlastTarget()
 end
 
 function mod:OnCombatStart(delay)
+	
 	meteorTarget, fabFlames = DBM:GetSpellInfo(88518), DBM:GetSpellInfo(86497)
 	berserkTimer:Start(-delay)
 	timerBlackoutCD:Start(10-delay)
 	timerDevouringFlamesCD:Start(25.5-delay)
 	timerNextDazzlingDestruction:Start(85-delay)
+	self.vb.blackoutCount = 0
 	dazzlingCast = 0
 	breathCast = 0
 	lastFab = 0
 	markWarned = false
-	blackoutActive = false
 	ValionaLanded = true
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(8)
-	end
-	if DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Show(L.name)
-		DBM.BossHealth:AddBoss(45992, 45993, L.name)
 	end
 end
 
@@ -200,11 +190,14 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 86788 then
-		blackoutActive = true
+		self.vb.blackoutCount = self.vb.blackoutCount + 1
 		warnBlackout:Show(args.destName)
 		timerBlackout:Start(args.destName)
 		timerBlackoutCD:Start()
@@ -214,9 +207,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnBlackout:Show()
 		end
-		if self.Options.BlackoutShieldFrame and DBM.BossHealth:IsShown() then
-			self:ShowAbsorbedHealHealthBar(args.destGUID, L.BlackoutTarget:format(args.destName), absorbHealth[(DBM:GetCurrentInstanceDifficulty())])
-			self:ScheduleMethod(15, "RemoveAbsorbedHealHealthBar", args.destGUID)
+		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
+			DBM.InfoFrame:SetHeader(args.spellName)
+			DBM.InfoFrame:Show(6, "playerabsorb", args.spellName, select(17, UnitDebuff(args.destName, args.spellName)))
 		end
 	elseif args.spellId == 86622 then
 		engulfingMagicTargets[#engulfingMagicTargets + 1] = args.destName
@@ -259,14 +252,13 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 86788 then
+		self.vb.blackoutCount = self.vb.blackoutCount - 1
+		if self.Options.InfoFrame and self.vb.blackoutCount == 0 then
+			DBM.InfoFrame:Hide()
+		end
 		timerBlackout:Cancel(args.destName)
 		if self.Options.BlackoutIcon then
 			self:SetIcon(args.destName, 0)
-		end
-		blackoutActive = false
-		if self.Options.BlackoutShieldFrame and DBM.BossHealth:IsShown() then
-			self:UnscheduleMethod("RemoveAbsorbedHealHealthBar", args.destGUID)
-			self:RemoveAbsorbedHealHealthBar(args.destGUID)
 		end
 	elseif args.spellId == 86622 then
 		if self.Options.EngulfingIcon then

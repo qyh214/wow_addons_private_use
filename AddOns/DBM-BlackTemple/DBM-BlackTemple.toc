@@ -15,7 +15,7 @@
 ## X-DBM-Mod-Has-Single-Format: 1
 ## X-DBM-Mod-Has-TimeWalker: 1
 ## X-DBM-Mod-MapID: 564
-## X-DBM-Mod-Sort: 501
+## X-DBM-Mod-Sort: 1002
 ## X-DBM-Mod-MinCoreRevision: 16406
 localization.en.lua
 localization.cn.lua

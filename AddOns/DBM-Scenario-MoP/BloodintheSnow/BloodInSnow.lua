@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d646", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1130)
@@ -30,8 +30,6 @@ local specWarnZandalarBanner= mod:NewSpecialWarningSwitch(142669)
 --Farastu
 local timerIceSpikesCD		= mod:NewCDTimer(10, 132980)
 local timerFrozenSolidCD	= mod:NewCDTimer(20, 141407)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 141423 then

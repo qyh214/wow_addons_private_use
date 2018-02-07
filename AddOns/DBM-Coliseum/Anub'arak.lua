@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Anub'arak_Coliseum", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 197 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 259 $"):sub(12, -3))
 mod:SetCreatureID(34564)
 mod:SetEncounterID(1085)
 mod:SetModelID(29268) 
@@ -10,10 +10,10 @@ mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REFRESH",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
+	"SPELL_AURA_APPLIED 67574 66013 66012 1022",
+	"SPELL_AURA_REFRESH 67574 66013 66012",
+	"SPELL_AURA_REMOVED 66013 1022",
+	"SPELL_CAST_START 66118 66134",
 	"RAID_BOSS_EMOTE"
 )
 
@@ -29,18 +29,17 @@ local warnSubmerge			= mod:NewAnnounce("WarnSubmerge", 3, "Interface\\AddOns\\DB
 local warnSubmergeSoon		= mod:NewAnnounce("WarnSubmergeSoon", 2, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
 local warnPhase3			= mod:NewPhaseAnnounce(3)
 
-local specWarnPursue		= mod:NewSpecialWarningRun(67574, nil, nil, 2, 4)
-local specWarnSubmergeSoon	= mod:NewSpecialWarningSoon("specWarnSubmergeSoon", "Tank")
-local specWarnShadowStrike	= mod:NewSpecialWarningInterrupt(66134, "Tank")
-local specWarnPCold			= mod:NewSpecialWarningYou(66013, false)
+local specWarnPursue		= mod:NewSpecialWarningRun(67574, nil, nil, 2, 4, 2)
+local specWarnShadowStrike	= mod:NewSpecialWarningSpell(66134, false, nil, 2, 1)--Don't have a good voice for this. Need a "stun mob now"
+local specWarnPCold			= mod:NewSpecialWarningYou(66013, false, nil, nil, 1, 2)
 
-local timerAdds				= mod:NewTimer(45, "timerAdds", 45419)
-local timerSubmerge			= mod:NewTimer(75, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
-local timerEmerge			= mod:NewTimer(65, "TimerEmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
-local timerFreezingSlash	= mod:NewCDTimer(20, 66012, nil, "Tank|Healer")
-local timerPCold			= mod:NewBuffActiveTimer(15, 66013)
-local timerShadowStrike		= mod:NewNextTimer(30.5, 66134)
-local timerHoP				= mod:NewBuffActiveTimer(10, 1022, nil, false)--So we will track bops to make this easier.
+local timerAdds				= mod:NewTimer(45, "timerAdds", 45419, nil, nil, 1)
+local timerSubmerge			= mod:NewTimer(75, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp", nil, nil, 6)
+local timerEmerge			= mod:NewTimer(65, "TimerEmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp", nil, nil, 6)
+local timerFreezingSlash	= mod:NewCDTimer(20, 66012, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerPCold			= mod:NewBuffActiveTimer(15, 66013, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)
+local timerShadowStrike		= mod:NewNextTimer(30.5, 66134, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerHoP				= mod:NewBuffActiveTimer(10, 1022, nil, false, nil, 5)--So we will track bops to make this easier.
 
 local enrageTimer			= mod:NewBerserkTimer(570)	-- 9:30 ? hmpf (no enrage while submerged... this sucks)
 
@@ -50,15 +49,14 @@ mod:AddBoolOption("AnnouncePColdIcons", false)
 mod:AddBoolOption("AnnouncePColdIconsRemoved", false)
 
 local PColdTargets = {}
-local Burrowed = false 
+mod.vb.Burrowed = false 
 
 function mod:OnCombatStart(delay)
-	Burrowed = false 
+	self.vb.Burrowed = false 
 	timerAdds:Start(10-delay) 
 	warnAdds:Schedule(10-delay) 
 	self:ScheduleMethod(10-delay, "Adds")
 	warnSubmergeSoon:Schedule(70-delay)
-	specWarnSubmergeSoon:Schedule(70-delay)
 	timerSubmerge:Start(80-delay)
 	enrageTimer:Start(-delay)
 	timerFreezingSlash:Start(-delay)
@@ -72,7 +70,7 @@ end
 
 function mod:Adds() 
 	if self:IsInCombat() then 
-		if not Burrowed then 
+		if not self.vb.Burrowed then 
 			timerAdds:Start() 
 			warnAdds:Schedule(45) 
 			self:ScheduleMethod(45, "Adds") 
@@ -116,15 +114,19 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 67574 then
 		if args:IsPlayer() then
 			specWarnPursue:Show()
+			specWarnPursue:Play("justrun")
+			specWarnPursue:ScheduleVoice(1.5, "keepmove")
+		else
+			warnPursue:Show(args.destName)
 		end
 		if self.Options.PursueIcon then
 			self:SetIcon(args.destName, 8, 15)
 		end
-		warnPursue:Show(args.destName)
 	elseif args.spellId == 66013 then
 		timerPCold:Show()
 		if args:IsPlayer() then
 			specWarnPCold:Show()
+			specWarnPCold:Play("targetyou")
 		end
 		if self.Options.SetIconsOnPCold then
 			table.insert(PColdTargets, DBM:GetRaidUnitId(args.destName))
@@ -133,7 +135,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				self:SetPcoldIcons()
 			else
 				if self:LatencyCheck() then
-					self:ScheduleMethod(0.3, "SetPcoldIcons")
+					self:ScheduleMethod(0.5, "SetPcoldIcons")
 				end
 			end
 		end
@@ -165,7 +167,6 @@ function mod:SPELL_CAST_START(args)
 		warnPhase3:Show()
 		warnEmergeSoon:Cancel()
 		warnSubmergeSoon:Cancel()
-		specWarnSubmergeSoon:Cancel()
 		timerEmerge:Stop()
 		timerSubmerge:Stop()
 		if self:IsDifficulty("normal10", "normal25") then
@@ -175,14 +176,17 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif args.spellId == 66134 then
 		self:ShadowStrike()
-		specWarnShadowStrike:Show()
-		warnShadowStrike:Show()
+		if self.Options.SpecWarn66134spell then
+			specWarnShadowStrike:Show()
+		else
+			warnShadowStrike:Show()
+		end
 	end
 end
 
 function mod:RAID_BOSS_EMOTE(msg)
 	if msg and msg:find(L.Burrow) then
-		Burrowed = true
+		self.vb.Burrowed = true
 		timerAdds:Cancel()
 		warnAdds:Cancel()
 		warnSubmerge:Show()
@@ -190,13 +194,12 @@ function mod:RAID_BOSS_EMOTE(msg)
 		timerEmerge:Start()
 		timerFreezingSlash:Stop()
 	elseif msg and msg:find(L.Emerge) then
-		Burrowed = false
+		self.vb.Burrowed = false
 		timerAdds:Start(5)
 		warnAdds:Schedule(5)
 		self:ScheduleMethod(5, "Adds")
 		warnEmerge:Show()
 		warnSubmergeSoon:Schedule(65)
-		specWarnSubmergeSoon:Schedule(65)
 		timerSubmerge:Start()
 		if self:IsDifficulty("heroic10", "heroic25") then
 			timerShadowStrike:Stop()

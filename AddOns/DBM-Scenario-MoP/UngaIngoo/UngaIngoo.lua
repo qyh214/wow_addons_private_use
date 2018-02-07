@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d499", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 21 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1048)
@@ -23,8 +23,6 @@ local specWarnOrange		= mod:NewSpecialWarningSpell(121895)
 --local timerOrangeCD		= mod:NewCDTimer(45, 121895)--Not good sample size, could be inaccurate
 
 local timerKegRunner		= mod:NewAchievementTimer(240, 7232)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 121934 and self:AntiSpam() then

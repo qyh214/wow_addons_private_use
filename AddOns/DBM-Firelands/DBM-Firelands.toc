@@ -26,7 +26,7 @@
 ## X-DBM-Mod-Name-zhCN: 火焰之地
 ## X-DBM-Mod-Name-frFR: Terres de Feu
 ## X-DBM-Mod-Name-ptBR: Terras do Fogo
-## X-DBM-Mod-Sort: 301
+## X-DBM-Mod-Sort: 802
 ## X-DBM-Mod-MapID: 720,951
 ## X-DBM-Mod-MinCoreRevision: 14002
 localization.en.lua

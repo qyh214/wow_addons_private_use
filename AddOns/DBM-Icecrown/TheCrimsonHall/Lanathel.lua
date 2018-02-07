@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Lanathel", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 208 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 257 $"):sub(12, -3))
 mod:SetCreatureID(37955)
 mod:SetEncounterID(1103)
 mod:SetModelID(31165)
@@ -10,32 +10,31 @@ mod:SetUsedIcons(4, 5, 6, 7, 8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_DAMAGE",
-	"SPELL_PERIODIC_DAMAGE",
-	"SPELL_PERIODIC_MISSED",
+	"SPELL_AURA_APPLIED 71340 71510 70838 70877 70867 70879 70923 71772",
+	"SPELL_AURA_REMOVED 71340 71510 70838 70877",
+	"SPELL_CAST_SUCCESS 73070",
+	"SPELL_DAMAGE 71726 70946",
+	"SPELL_PERIODIC_DAMAGE 71277",
+	"SPELL_PERIODIC_MISSED 71277",
 	"CHAT_MSG_RAID_BOSS_EMOTE"
 )
 
 local warnPactDarkfallen			= mod:NewTargetAnnounce(71340, 4)
 local warnBloodMirror				= mod:NewTargetAnnounce(71510, 3, nil, "Tank|Healer")
 local warnSwarmingShadows			= mod:NewTargetAnnounce(71266, 4)
-local warnInciteTerror				= mod:NewSpellAnnounce(73070, 3)
+local warnInciteTerror				= mod:NewSpellAnnounce(73070, 3, nil, nil, nil, nil, nil, 2)
 local warnVampricBite				= mod:NewTargetAnnounce(70946, 2)
-local warnMindControlled			= mod:NewTargetAnnounce(70923, 4)
 local warnBloodthirstSoon			= mod:NewSoonAnnounce(70877, 2)
 local warnBloodthirst				= mod:NewTargetAnnounce(70877, 3, nil, false)
 local warnEssenceoftheBloodQueen	= mod:NewTargetAnnounce(70867, 3, nil, false)
 
-local specWarnBloodBolt				= mod:NewSpecialWarningSpell(71772)
-local specWarnPactDarkfallen		= mod:NewSpecialWarningYou(71340)
-local specWarnEssenceoftheBloodQueen= mod:NewSpecialWarningYou(70867)
-local specWarnBloodthirst			= mod:NewSpecialWarningYou(70877)
+local specWarnBloodBolt				= mod:NewSpecialWarningSpell(71772, nil, nil, nil, 2, 2)
+local specWarnPactDarkfallen		= mod:NewSpecialWarningYou(71340, nil, nil, nil, 1, 2)
+local specWarnEssenceoftheBloodQueen= mod:NewSpecialWarningYou(70867, nil, nil, nil, 1, 2)
+local specWarnBloodthirst			= mod:NewSpecialWarningYou(70877, nil, nil, nil, 3, 2)
 local yellBloodthirst				= mod:NewYell(70877, L.YellFrenzy)
-local specWarnSwarmingShadows		= mod:NewSpecialWarningMove(71266)
-local specWarnMindConrolled			= mod:NewSpecialWarningTarget(70923, "Tank")
+local specWarnSwarmingShadows		= mod:NewSpecialWarningMove(71266, nil, nil, nil, 1, 2)
+local specWarnMindConrolled			= mod:NewSpecialWarningTarget(70923, "-Healer", nil, nil, 1, 2)
 
 local timerNextInciteTerror			= mod:NewNextTimer(100, 73070, nil, nil, nil, 6)
 local timerFirstBite				= mod:NewNextTimer(15, 70946, nil, "Dps", nil, 5)
@@ -55,13 +54,13 @@ mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("YellOnFrenzy", false, "announce")
 
 local pactTargets = {}
-local pactIcons = 6
+mod.vb.pactIcons = 6
 
-local function warnPactTargets()
+local function warnPactTargets(self)
 	warnPactDarkfallen:Show(table.concat(pactTargets, "<, >"))
 	table.wipe(pactTargets)
 	timerNextPactDarkfallen:Start(30)
-	pactIcons = 6
+	self.vb.pactIcons = 6
 end
 
 function mod:OnCombatStart(delay)
@@ -70,7 +69,7 @@ function mod:OnCombatStart(delay)
 	timerNextPactDarkfallen:Start(15-delay)
 	timerNextSwarmingShadows:Start(-delay)
 	table.wipe(pactTargets)
-	pactIcons = 6
+	self.vb.pactIcons = 6
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(8)
 	end
@@ -92,16 +91,17 @@ function mod:SPELL_AURA_APPLIED(args)
 		pactTargets[#pactTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnPactDarkfallen:Show()
+			specWarnPactDarkfallen:Play("linegather")
 		end
 		if self.Options.SetIconOnDarkFallen then--Debuff doesn't actually last 30 seconds
-			self:SetIcon(args.destName, pactIcons, 28)--it lasts forever, but if you still have it after 28 seconds
-			pactIcons = pactIcons - 1--then you're probably dead anyways
+			self:SetIcon(args.destName, self.vb.pactIcons, 28)--it lasts forever, but if you still have it after 28 seconds
 		end
+		self.vb.pactIcons = self.vb.pactIcons - 1--then you're probably dead anyways
 		self:Unschedule(warnPactTargets)
 		if #pactTargets >= 3 then
-			warnPactTargets()
+			warnPactTargets(self)
 		else
-			self:Schedule(0.3, warnPactTargets)
+			self:Schedule(0.3, warnPactTargets, self)
 		end
 	elseif args:IsSpellID(71510, 70838) then
 		warnBloodMirror:Show(args.destName)
@@ -112,6 +112,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnBloodthirst:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnBloodthirst:Show()
+			specWarnBloodthirst:Play("frenzy")--Eh, closest voice to blood thirst
 			yellBloodthirst:Yell()
 			if self:IsDifficulty("normal10", "heroic10") then
 				timerBloodThirst:Start(15)--15 seconds on 10 man
@@ -123,6 +124,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnEssenceoftheBloodQueen:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnEssenceoftheBloodQueen:Show()
+			specWarnEssenceoftheBloodQueen:Play("targetyou")
 			if self:IsDifficulty("normal10", "heroic10") then
 				timerEssenceoftheBloodQueen:Start(75)--75 seconds on 10 man
 				warnBloodthirstSoon:Schedule(70)
@@ -132,10 +134,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 	elseif args.spellId == 70923 then
-		warnMindControlled:Show(args.destName)
 		specWarnMindConrolled:Show(args.destName)
+		specWarnMindConrolled:Play("findmc")
 	elseif args.spellId == 71772 then
 		specWarnBloodBolt:Show()
+		specWarnBloodBolt:Play("scatter")
 		timerBloodBolt:Start()
 	end
 end
@@ -159,6 +162,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 73070 then				--Incite Terror (fear before air phase)
 		warnInciteTerror:Show()
+		warnInciteTerror:Play("fearsoon")
 		timerInciteTerror:Start()
 		timerNextSwarmingShadows:Start()--This resets the swarming shadows timer
 		timerNextPactDarkfallen:Start(25)--and the Pact timer also reset -5 seconds
@@ -179,6 +183,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 71277 and destGUID == UnitGUID("player") and self:AntiSpam() then		--Swarn of Shadows (spell damage, you're standing in it.)
 		specWarnSwarmingShadows:Show()
+		specWarnSwarmingShadows:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
@@ -186,10 +191,13 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:match(L.SwarmingShadows) then
 		local target = DBM:GetUnitFullName(target)
-		warnSwarmingShadows:Show(target)
 		timerNextSwarmingShadows:Start()
 		if target == UnitName("player") then
 			specWarnSwarmingShadows:Show()
+			specWarnSwarmingShadows:Play("runout")
+			specWarnSwarmingShadows:ScheduleVoice(1.5, "keepmove")
+		else
+			warnSwarmingShadows:Show(target)
 		end
 		if self.Options.SwarmingShadowsIcon then
 			self:SetIcon(target, 8, 6)

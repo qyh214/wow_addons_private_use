@@ -1259,6 +1259,10 @@ module.db.spell_isRacial = {		--Расовые заклинания
 	[25046]="BloodElf",
 	[50613]="BloodElf",
 	[202719]="BloodElf",
+	[256948]="VoidElf",
+	[260364]="Nightborne",
+	[255647]="LightforgedDraenei",
+	[255654]="HighmountainTauren",
 }
 
 module.db.def_col = {			--Стандартные положения в колонках
@@ -1366,7 +1370,7 @@ module.db.petsAbilities = {	--> PetTypes = HUNTERS[ Tenacity [1], Cunning = [2],
 	[L.creatureNames["Ghoul"]] = 		{0,	{91837,45,10},	{91802,30},	{91797,60},	},
 	[L.creatureNames["Felguard"]] = 		{0,	{89751,45,6},	{89766,30},	{30151,15},	},
 	[L.creatureNames["Felhunter"]] = 		{0,	{19647,24},	{19505,15},	},
-	[L.creatureNames["Fel Imp"]] = 		{0,	{115276,30},	},
+	[L.creatureNames["Fel Imp"]] = 		{0,	{115276,10},	},
 	[L.creatureNames["Imp"]] = 		{0,	{89808,10},	{119899,30,12},	{89792,20},	},
 	[L.creatureNames["Observer"]] = 		{0,	{115781,24},	{115284,15},	},
 	[L.creatureNames["Shivarra"]] = 		{0,	{115770,25},	{115268,30},	},
@@ -2323,6 +2327,33 @@ local function LineIconOnClick(self)
 	local chat_type = ExRT.F.chatType(true)
 	SendChatMessage(text,chat_type)
 end
+local function LineIconOnClickWhisper(self)
+	local parent = self:GetParent()
+	if not parent.data then	return end
+	if parent.data.specialClick then
+		parent.data.specialClick(parent.data)
+		return
+	end	
+	local time = parent.data.lastUse + parent.data.cd - GetTime()
+	if time > 0 then return end
+	local spellLink = GetSpellLink(parent.data.db[1])
+	if not spellLink or spellLink == "" then
+		spellLink = parent.data.spellName
+	end
+	local text = "Use "..spellLink
+	local chat_type = ExRT.F.chatType(true)
+	SendChatMessage(text,"WHISPER",nil,parent.data.fullName)
+end
+local function LineIconOnClickBoth(self)
+	local parent = self:GetParent()
+	if not parent.data then	return end
+	local time = parent.data.lastUse + parent.data.cd - GetTime()
+	if time > 0 then 
+		return LineIconOnClick(self)
+	else
+		return LineIconOnClickWhisper(self)
+	end
+end
 
 local function UpdateBarStyle(self)
 	local parent = self.parent
@@ -2439,9 +2470,16 @@ local function UpdateBarStyle(self)
 		self.icon:SetScript("OnLeave",nil)	
 	end
 	
-	if parent.methodsLineClick then
+	
+	if parent.methodsLineClick and parent.methodsLineClickWhisper then
+		self.clickFrame:SetScript("OnClick",LineIconOnClickBoth)
+		self.clickFrame:Show()	
+	elseif parent.methodsLineClick then
 		self.clickFrame:SetScript("OnClick",LineIconOnClick)
 		self.clickFrame:Show()
+	elseif parent.methodsLineClickWhisper then
+		self.clickFrame:SetScript("OnClick",LineIconOnClickWhisper)
+		self.clickFrame:Show()		
 	else
 		self.clickFrame:SetScript("OnClick",nil)
 		self.clickFrame:Hide()	
@@ -5066,7 +5104,7 @@ function module.options:Load()
 		line.userSpellName:SetScript("OnEnter",SpellsListUserSpellNameOnEnter)
 		line.userSpellName:SetScript("OnLeave",ELib.Tooltip.Hide)
 		
-		line.userClass = ELib:DropDown(line,130,12):Size(140):Point("LEFT",225,0):SetText(L.cd2Class)
+		line.userClass = ELib:DropDown(line,130,13):Size(140):Point("LEFT",225,0):SetText(L.cd2Class)
 		line.userClass._i = i
 		line.userClass.List = SpellsListClassDropDownList
 	
@@ -5090,6 +5128,7 @@ function module.options:Load()
 		module.options.addSpellFrame:Show()
 	end) 
 	self.butSpellsFrame:Hide()
+	self.butSpellsFrame.Texture:SetGradientAlpha("VERTICAL",0.05,0.26,0.09,1, 0.20,0.41,0.25,1)
 	
 	self.spellsModifyFrame = ELib:Popup():Size(560,180)
 	self.spellsModifyFrame.isDefaultSpell = nil
@@ -5309,75 +5348,294 @@ function module.options:Load()
 		line.add:SetScript("OnLeave", function(self) self.hl:Hide() end)
 	end
 	
-	self.addSpellFrame = ELib:Popup(L.cd2AddSpellFrameName):Size(550,422+10)
+	self.addSpellFrame = ELib:Popup(L.cd2AddSpellFrameName):Size(750,422+10)
 
 	self.addSpellFrame.backClassColor = self.addSpellFrame:CreateTexture(nil, "BORDER",nil,0)
-	self.addSpellFrame.backClassColor:SetPoint("TOP",0,-20)
-	self.addSpellFrame.backClassColor:SetSize(550,40)
+	self.addSpellFrame.backClassColor:SetPoint("TOPLEFT",0,-72)
+	self.addSpellFrame.backClassColor:SetPoint("RIGHT",0,0)
+	self.addSpellFrame.backClassColor:SetHeight(40)
 	self.addSpellFrame.backClassColor:SetColorTexture( 1, 1, 1, 1)
 	self.addSpellFrame.backClassColor:Hide()
 	
 	self.addSpellFrame.backClassColorBottom = self.addSpellFrame:CreateTexture(nil, "BORDER",nil,0)
-	self.addSpellFrame.backClassColorBottom:SetPoint("BOTTOM",0,0)
-	self.addSpellFrame.backClassColorBottom:SetSize(550,15)
+	self.addSpellFrame.backClassColorBottom:SetPoint("BOTTOMLEFT",0,0)
+	self.addSpellFrame.backClassColorBottom:SetPoint("RIGHT",0,0)
+	self.addSpellFrame.backClassColorBottom:SetHeight(15)
 	self.addSpellFrame.backClassColorBottom:SetColorTexture( 1, 1, 1, 1)
 	self.addSpellFrame.backClassColorBottom:Hide()
 	
+	self.addSpellFrame.backVertical = self.addSpellFrame:CreateTexture(nil, "BORDER",nil,-2)
+	self.addSpellFrame.backVertical:SetPoint("TOPLEFT",200,-72)
+	self.addSpellFrame.backVertical:SetPoint("BOTTOM",0,0)
+	self.addSpellFrame.backVertical:SetWidth(7)
+	self.addSpellFrame.backVertical:SetColorTexture( 1, 1, 1, 1)
+	self.addSpellFrame.backVertical:SetGradientAlpha("HORIZONTAL", 0,0,0, .7, 0,0,0, 0)
+	
+	self.addSpellFrame.classButtons = {}
+	for i=1,#module.db.classNames+1 do
+		local button = CreateFrame("Button",nil,self.addSpellFrame)
+		self.addSpellFrame.classButtons[i] = button
+		
+		button:SetSize(57,57)
+		if i==1 then
+			button:SetPoint("TOPLEFT",3,-15)
+		else
+			button:SetPoint("LEFT",self.addSpellFrame.classButtons[i-1],"RIGHT",0,0)
+		end
+		
+		button.icon = button:CreateTexture(nil, "ARTWORK")
+		button.icon:SetPoint("BOTTOM",0,15)
+		button.icon:SetSize(32,32)
+		
+		local isOtherCategory = i > #module.db.classNames
+				
+		local class = module.db.classNames[i]
+		if isOtherCategory then
+			button.icon:SetTexture("Interface\\Icons\\spell_priest_divinestar_holy")		
+		elseif CLASS_ICON_TCOORDS[class] then
+			button.icon:SetTexture("Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES")
+			button.icon:SetTexCoord(unpack(CLASS_ICON_TCOORDS[class]))
+		end
+		
+		button.text = button:CreateFontString(nil,"ARTWORK","GameFontNormal")
+		button.text:SetPoint("BOTTOM",0,3)
+		if isOtherCategory then
+			button.text:SetText("|cffb2b2b2"..L.classLocalizate[ "NO" ])
+		elseif class then
+			button.text:SetText("|c"..ExRT.F.classColor(class)..L.classLocalizate[ class ])
+		end
+		button.text:SetWidth(57)
+		button.text:SetMaxLines(1)
+		button.text:SetFont(button.text:GetFont(),10)
+		
+		button:SetScript("OnEnter",function(self)
+			if self.selected then
+				return
+			end
+			self.icon:SetSize(42,42)
+		end)
+		button:SetScript("OnLeave",function(self)
+			if self.selected then
+				return
+			end
+			self.icon:SetSize(32,32)
+		end)
+		button:SetScript("OnClick",function(self)
+			module.options.addSpellFrame.dropDown:SetValue(self.token)
+		end)
+		
+		button.token = class
+		if isOtherCategory then
+			button.token = "OTHER"	
+		end
+	end
+	
+	self.addSpellFrame.specButtons = {}
+	for i=1,4 do
+		local button = CreateFrame("Button",nil,self.addSpellFrame)
+		self.addSpellFrame.specButtons[i] = button
+		
+		button:SetSize(200,60)
+		
+		local cR,cG,cB = .35,.32,.44
+		
+		button.tGt = button:CreateTexture(nil, "BACKGROUND",nil,0)
+		button.tGt:SetPoint("TOPLEFT",0,0)
+		button.tGt:SetPoint("RIGHT",0,0)
+		button.tGt:SetHeight(10)
+		button.tGt:SetColorTexture( 1, 1, 1, 1)
+		button.tGt:SetGradientAlpha("VERTICAL", cR,cG,cB, 0, cR,cG,cB, 0.5)
+		
+		button.tGb = button:CreateTexture(nil, "BACKGROUND",nil,0)
+		button.tGb:SetPoint("BOTTOMLEFT",0,0)
+		button.tGb:SetPoint("RIGHT",0,0)
+		button.tGb:SetHeight(10)
+		button.tGb:SetColorTexture( 1, 1, 1, 1)
+		button.tGb:SetGradientAlpha("VERTICAL", cR,cG,cB, 0.5, cR,cG,cB, 0)
+		
+		button.b = button:CreateTexture(nil, "BACKGROUND",nil,-5)
+		button.b:SetPoint("TOPLEFT")
+		button.b:SetPoint("BOTTOMRIGHT")
+		button.b:SetColorTexture( .06, .06, .12, 1)
+		
+		button.icon = button:CreateTexture(nil, "ARTWORK")
+		button.icon:SetPoint("LEFT",4,0)
+		button.icon:SetSize(48,48)
+		
+		button.text = button:CreateFontString(nil,"ARTWORK","GameFontNormal")
+		button.text:SetPoint("LEFT",button.icon,"RIGHT",3,0)
+		button.text:SetPoint("RIGHT",-5,0)
+		
+		button.SetState = function(self,selected)
+			local cR,cG,cB
+			if selected then
+				cR,cG,cB = 1,.95,.44
+			else
+				cR,cG,cB = .35,.32,.44
+			end
+			self.tGt:SetGradientAlpha("VERTICAL", cR,cG,cB, 0, cR,cG,cB, 0.5)
+			self.tGb:SetGradientAlpha("VERTICAL", cR,cG,cB, 0.5, cR,cG,cB, 0)
+		end
+		button:SetScript("OnEnter",function(self)
+			if self.selected then
+				return
+			end
+			self.b:SetColorTexture( .12, .12, .22, 1)
+		end)
+		button:SetScript("OnLeave",function(self)
+			if self.selected then
+				return
+			end
+			self.b:SetColorTexture( .06, .06, .12, 1)
+		end)
+		button:SetScript("OnClick",function(self)
+			module.options.addSpellFrame.CURR_SPEC[module.options.addSpellFrame.CURR_CLASS] = i
+			module.options.addSpellFrame.dropDown:SetValue(module.options.addSpellFrame.CURR_CLASS)
+		end)
+	end
+	self.addSpellFrame.CURR_CLASS = nil
+	self.addSpellFrame.CURR_SPEC = {}
+	
+	function self.addSpellFrame:SetSpecButtons(class)
+	  	local specByClassTable = module.db.specByClass[class] or {0,-1,-2,-3}
+	  	local addSpellFrame = module.options.addSpellFrame
+	  	
+	  	local height = addSpellFrame:GetHeight() - 72
+	  	for i=2,#specByClassTable do
+	  		local button = addSpellFrame.specButtons[i-1]
+	  		button:SetPoint("LEFT",addSpellFrame,"TOPLEFT",0,-72-height/(#specByClassTable)*(i-1))
+	  		
+		  	local specID = specByClassTable[i]
+	  		if class == "OTHER" then
+	  			if specID == -1 then
+		  			button.text:SetText(L.cd2Racial)
+		  			button.icon:SetTexture("Interface\\Icons\\achievement_character_bloodelf_female")
+		  		elseif specID == -2 then	
+		  			button.text:SetText(L.cd2Items)
+		  			button.icon:SetTexture("Interface\\Icons\\inv_inscription_tarot_volcanocard")
+		  		elseif specID == -3 then	
+		  			button.text:SetText(L.classLocalizate["PET"])
+		  			button.icon:SetTexture("Interface\\Icons\\ability_hunter_aspectofthefox")	 
+		  		end
+	  		else
+		  		local role = ExRT.GDB.ClassSpecializationRole[specID]
+		  		if role then
+		  			role = "\n|cffffffff"..(role == 'TANK' and TANK or role == 'HEAL' and HEALER or DAMAGER)
+		  		end
+		  		
+		  		button.text:SetText(L.specLocalizate[ module.db.specInLocalizate[specID] ]..(role or ""))
+		  		button.icon:SetTexture(module.db.specIcons[specID])	  		
+	  		end
+	  		
+	  		if addSpellFrame.CURR_SPEC[addSpellFrame.CURR_CLASS] == i-1 then
+	  			button:SetState(true)
+	  		else
+	  			button:SetState(false)
+	  		end
+	  		
+	  		button:Show()
+	  	end
+	  	for i=#specByClassTable,4 do
+	  		addSpellFrame.specButtons[i]:Hide()
+	  	end
+	end
+	
 	self.addSpellFrame.sortedClasses = {}
 	
+	self.addSpellFrame.classNameText = self.addSpellFrame:CreateFontString(nil,"ARTWORK","GameFontWhite")
+	self.addSpellFrame.classNameText:SetPoint("TOP",self.addSpellFrame,"TOPLEFT",100,-80)
+	self.addSpellFrame.classNameText:SetWidth(190)
+	self.addSpellFrame.classNameText:SetMaxLines(1)
+	self.addSpellFrame.classNameText:SetFont(self.addSpellFrame.classNameText:GetFont(),18,"OUTLINE")
+	
 	self.addSpellFrame.dropDown = ELib:DropDown(self.addSpellFrame,200,10):Size(210):Point("TOPRIGHT",-5,-25)
+	self.addSpellFrame.dropDown:Hide()
 	function self.addSpellFrame.dropDown:SetValue(newValue)
 		local addSpellFrame = module.options.addSpellFrame
-		addSpellFrame.dropDown:SetText("|c"..ExRT.F.classColor(newValue)..(L.classLocalizate[newValue] or newValue == "RACIAL" and L.cd2Racial or newValue == "ITEMS" and L.cd2Items or "Unk"))
+		--addSpellFrame.dropDown:SetText("|c"..ExRT.F.classColor(newValue)..(L.classLocalizate[newValue] or newValue == "RACIAL" and L.cd2Racial or newValue == "ITEMS" and L.cd2Items or "Unk"))
 		ELib:DropDownClose()
-		if not addSpellFrame.sortedClasses[newValue] then
-			for i=1,#module.db.allClassSpells[newValue] do
-				local spellName = GetSpellInfo(module.db.allClassSpells[newValue][i][1])
-				module.db.allClassSpells[newValue][i].spellName = spellName or tostring(module.db.allClassSpells[newValue][i][1])
+		for i=1,#module.db.classNames+1 do
+			local button = addSpellFrame.classButtons[i]
+			if button.token == newValue then
+				button.selected = true
+				button.icon:SetSize(42,42)
+			else
+				button.selected = false
+				button.icon:SetSize(32,32)
 			end
-			sort(module.db.allClassSpells[newValue],function(a,b) return a.spellName < b.spellName end)
+		end
+		addSpellFrame.CURR_CLASS = newValue
+		addSpellFrame.CURR_SPEC[newValue] = addSpellFrame.CURR_SPEC[newValue] or 1
+		addSpellFrame:SetSpecButtons(newValue)
+		
+		addSpellFrame.classNameText:SetText(newValue == "OTHER" and "" or L.classLocalizate[newValue] or "")
+		
+		local specNum = addSpellFrame.CURR_SPEC[newValue]
+		
+		if newValue == "OTHER" then
+			if specNum == 1 then
+				newValue = "RACIAL"
+			elseif specNum == 2 then
+				newValue = "ITEMS"
+			elseif specNum == 3 then
+				newValue = "PET"
+			end
+		end
+		local classDB = module.db.allClassSpells[newValue]
+		
+		if not addSpellFrame.sortedClasses[newValue] then
+			for i=1,#classDB do
+				local spellName = GetSpellInfo(classDB[i][1])
+				classDB[i].spellName = spellName or tostring(classDB[i][1])
+			end
+			sort(classDB,function(a,b) return a.spellName < b.spellName end)
 			addSpellFrame.sortedClasses[newValue] = true
 		end
 		
-		for i=1,#module.db.allClassSpells[newValue] do
-			if i <= addSpellFrame.buttonsMax then
-				local SpellID = module.db.allClassSpells[newValue][i][1]
-				local spellName, _, spellTexture = GetSpellInfo(SpellID)
-				if module.db.differentIcons[ SpellID ] then
-					spellTexture = module.db.differentIcons[SpellID]
-				end
-				local buttonFrame = module.options.addSpellFrame.buttons[i]
-				
-				buttonFrame.icon:SetTexture(spellTexture or "Interface\\Icons\\INV_MISC_QUESTIONMARK")
-				buttonFrame.text:SetText(spellName or "?")
-				buttonFrame.spellID = SpellID
-				buttonFrame.spellLink = GetSpellLink(SpellID)
-				buttonFrame.colNum = module.db.allClassSpells[newValue][i][2]
-				
-				buttonFrame.line = module.db.allClassSpells[newValue][i]
-				
-				if newValue == "PET" then
-					buttonFrame.text:SetText("|c"..ExRT.F.classColor(module.db.allClassSpells[newValue][i][3])..L.classLocalizate[module.db.allClassSpells[newValue][i][3]].."|r "..(spellName or "?"))
-				end
-				
-				buttonFrame.disabled = nil
-				for j=1,#module.db.spellDB do
-					if module.db.spellDB[j][1] == SpellID then
-							buttonFrame.icon:SetDesaturated(true)
-							buttonFrame.text:SetTextColor(0.5,0.5,0.5,1)
-							buttonFrame.disabled = true
-						break
+		local buttonCount = 0
+		for i=1,#classDB do
+			local spellDB = classDB[i]
+			if spellDB[3] or spellDB[3+specNum] then
+				buttonCount = buttonCount + 1
+				local buttonFrame = module.options.addSpellFrame.buttons[buttonCount]
+				if buttonFrame then
+					local SpellID = spellDB[1]
+					local spellName, _, spellTexture = GetSpellInfo(SpellID)
+					if module.db.differentIcons[ SpellID ] then
+						spellTexture = module.db.differentIcons[SpellID]
 					end
+					
+					buttonFrame.icon:SetTexture(spellTexture or "Interface\\Icons\\INV_MISC_QUESTIONMARK")
+					buttonFrame.text:SetText(spellName or "?")
+					buttonFrame.spellID = SpellID
+					buttonFrame.spellLink = GetSpellLink(SpellID)
+					buttonFrame.colNum = spellDB[2]
+					
+					buttonFrame.line = spellDB
+					
+					if newValue == "PET" then
+						buttonFrame.text:SetText("|c"..ExRT.F.classColor(spellDB[3])..L.classLocalizate[spellDB[3]].."|r "..(spellName or "?"))
+					end
+					
+					buttonFrame.disabled = nil
+					for j=1,#module.db.spellDB do
+						if module.db.spellDB[j][1] == SpellID then
+								buttonFrame.icon:SetDesaturated(true)
+								buttonFrame.text:SetTextColor(0.5,0.5,0.5,1)
+								buttonFrame.disabled = true
+							break
+						end
+					end
+					if not buttonFrame.disabled then
+						buttonFrame.icon:SetDesaturated(nil)
+						buttonFrame.text:SetTextColor(1,1,1,1)
+					end
+		
+					buttonFrame:Show()
 				end
-				if not buttonFrame.disabled then
-					buttonFrame.icon:SetDesaturated(nil)
-					buttonFrame.text:SetTextColor(1,1,1,1)
-				end
-	
-				buttonFrame:Show()
 			end
 		end
-		for i=#module.db.allClassSpells[newValue]+1,addSpellFrame.buttonsMax do
+		for i=buttonCount+1,addSpellFrame.buttonsMax do
 			addSpellFrame.buttons[i]:Hide()
 		end
 		addSpellFrame.class = newValue
@@ -5580,13 +5838,14 @@ function module.options:Load()
 		self.addSpellFrame.buttonsMax = max(self.addSpellFrame.buttonsMax,now)
 	end
 	self.addSpellFrame.buttonsMax = max(self.addSpellFrame.buttonsMax,#module.db.allClassSpells["PET"])
-	self.addSpellFrame:SetHeight( 82 + 35 * ceil( self.addSpellFrame.buttonsMax / 4 ) )
+	--self.addSpellFrame:SetHeight( 82 + 35 * ceil( self.addSpellFrame.buttonsMax / 4 ) )
+	self.addSpellFrame:SetHeight( 420 )
 	
 	self.addSpellFrame.buttons = {}
 	for i=1,self.addSpellFrame.buttonsMax do
 		local buttonFrame = CreateFrame("Button",nil,self.addSpellFrame)
 		self.addSpellFrame.buttons[i] = buttonFrame
-		buttonFrame:SetPoint("TOPLEFT",(i-1)%4 * 130 + 15,-floor((i-1)/4) * 35 - 60)
+		buttonFrame:SetPoint("TOPLEFT",(i-1)%4 * 130 + 15 + 200,-floor((i-1)/4) * 35 - 60 - 57)
 		buttonFrame:SetSize(130,35)
 		buttonFrame:SetBackdrop({edgeFile = ExRT.F.defBorder, edgeSize = 8})
 		buttonFrame:SetBackdropBorderColor(1,1,1,0)
@@ -5642,7 +5901,7 @@ function module.options:Load()
 	end
 	
 	self.addSpellFrame.OnShow = function (self)
-		self.dropDown:SetValue(self.class or "WARRIOR")
+		self.dropDown:SetValue(self.CURR_CLASS or module.db.classNames[math.random(1,#module.db.classNames)])
 	end
 	
 	self.tab.tabs[1].decorationLine = CreateFrame("Frame",nil,self.tab.tabs[1])
@@ -5955,6 +6214,7 @@ function module.options:Load()
 		end
 		module.options.optColSet.chkIconTooltip:SetChecked(VExRT.ExCD2.colSet[i].methodsIconTooltip)
 		module.options.optColSet.chkLineClick:SetChecked(VExRT.ExCD2.colSet[i].methodsLineClick)
+		module.options.optColSet.chkLineClickWhisper:SetChecked(VExRT.ExCD2.colSet[i].methodsLineClickWhisper)
 		module.options.optColSet.chkNewSpellNewLine:SetChecked(VExRT.ExCD2.colSet[i].methodsNewSpellNewLine)
 		module.options.optColSet.chkHideOwnSpells:SetChecked(VExRT.ExCD2.colSet[i].methodsHideOwnSpells)
 		module.options.optColSet.chkAlphaNotInRange:SetChecked(VExRT.ExCD2.colSet[i].methodsAlphaNotInRange)
@@ -6744,8 +7004,16 @@ function module.options:Load()
 		module:ReloadAllSplits()
 	end)
 	
+	self.optColSet.chkLineClickWhisper = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2OtherSetLineClickWhisper):Point(10,-180):OnClick(function(self) 
+		if self:GetChecked() then
+			VExRT.ExCD2.colSet[module.options.optColTabs.selected].methodsLineClickWhisper = true
+		else
+			VExRT.ExCD2.colSet[module.options.optColTabs.selected].methodsLineClickWhisper = nil
+		end
+		module:ReloadAllSplits()
+	end)	
 	
-	self.optColSet.chkNewSpellNewLine = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2NewSpellNewLine):Point(10,-180):Tooltip(L.cd2NewSpellNewLineTooltip):OnClick(function(self) 
+	self.optColSet.chkNewSpellNewLine = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2NewSpellNewLine):Point(10,-205):Tooltip(L.cd2NewSpellNewLineTooltip):OnClick(function(self) 
 		if self:GetChecked() then
 			VExRT.ExCD2.colSet[module.options.optColTabs.selected].methodsNewSpellNewLine = true
 		else
@@ -6754,8 +7022,8 @@ function module.options:Load()
 		module:ReloadAllSplits()
 	end)
 	
-	self.optColSet.textSortingRules= ELib:Text(self.optColSet.superTabFrame.tab[6],L.cd2MethodsSortingRules..":",11):Size(200,20):Point(10,-205)
-	self.optColSet.dropDownSortingRules = ELib:DropDown(self.optColSet.superTabFrame.tab[6],405,6):Size(220):Point(180,-205)
+	self.optColSet.textSortingRules= ELib:Text(self.optColSet.superTabFrame.tab[6],L.cd2MethodsSortingRules..":",11):Size(200,20):Point(10,-230)
+	self.optColSet.dropDownSortingRules = ELib:DropDown(self.optColSet.superTabFrame.tab[6],405,6):Size(220):Point(180,-230)
 	self.optColSet.dropDownSortingRules.Rules = {L.cd2MethodsSortingRules1,L.cd2MethodsSortingRules2,L.cd2MethodsSortingRules3,L.cd2MethodsSortingRules4,L.cd2MethodsSortingRules5,L.cd2MethodsSortingRules6}
 	for i=1,#self.optColSet.dropDownSortingRules.Rules do
 		self.optColSet.dropDownSortingRules.List[i] = {
@@ -6771,7 +7039,7 @@ function module.options:Load()
 		}
 	end
 	
-	self.optColSet.chkHideOwnSpells = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2MethodsDisableOwn):Point(10,-230):OnClick(function(self) 
+	self.optColSet.chkHideOwnSpells = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2MethodsDisableOwn):Point(10,-255):OnClick(function(self) 
 		if self:GetChecked() then
 			VExRT.ExCD2.colSet[module.options.optColTabs.selected].methodsHideOwnSpells = true
 		else
@@ -6780,7 +7048,7 @@ function module.options:Load()
 		module:ReloadAllSplits()
 	end)
 	
-	self.optColSet.chkAlphaNotInRange = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2MethodsAlphaNotInRange):Point(10,-255):OnClick(function(self) 
+	self.optColSet.chkAlphaNotInRange = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2MethodsAlphaNotInRange):Point(10,-280):OnClick(function(self) 
 		if self:GetChecked() then
 			VExRT.ExCD2.colSet[module.options.optColTabs.selected].methodsAlphaNotInRange = true
 		else
@@ -6797,7 +7065,7 @@ function module.options:Load()
 		self:tooltipReload(self)
 	end)
 	
-	self.optColSet.chkDisableActive = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2ColSetDisableActive):Point(10,-280):OnClick(function(self) 
+	self.optColSet.chkDisableActive = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2ColSetDisableActive):Point(10,-305):OnClick(function(self) 
 		if self:GetChecked() then
 			VExRT.ExCD2.colSet[module.options.optColTabs.selected].methodsDisableActive = true
 		else
@@ -6806,7 +7074,7 @@ function module.options:Load()
 		module:ReloadAllSplits()
 	end)
 	
-	self.optColSet.chkOneSpellPerCol = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2ColSetOneSpellPerCol):Point(10,-305):OnClick(function(self) 
+	self.optColSet.chkOneSpellPerCol = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2ColSetOneSpellPerCol):Point(10,-330):OnClick(function(self) 
 		if self:GetChecked() then
 			VExRT.ExCD2.colSet[module.options.optColTabs.selected].methodsOneSpellPerCol = true
 		else
@@ -6825,10 +7093,10 @@ function module.options:Load()
 		self:doAlphas()
 	end)
 	function self.optColSet.chkGeneralMethods:doAlphas()
-		ExRT.lib.SetAlphas(VExRT.ExCD2.colSet[module.options.optColTabs.selected].methodsGeneral and module.options.optColTabs.selected ~= (module.db.maxColumns + 1) and 0.5 or 1,module.options.optColSet.chkShowOnlyOnCD,module.options.optColSet.chkBotToTop,module.options.optColSet.dropDownStyleAnimation,module.options.optColSet.dropDownTimeLineAnimation,module.options.optColSet.chkIconTooltip,module.options.optColSet.chkLineClick,module.options.optColSet.chkNewSpellNewLine,module.options.optColSet.dropDownSortingRules,module.options.optColSet.textSortingRules,module.options.optColSet.textStyleAnimation,module.options.optColSet.textTimeLineAnimation,module.options.optColSet.chkHideOwnSpells,module.options.optColSet.chkAlphaNotInRange,module.options.optColSet.sliderAlphaNotInRange,module.options.optColSet.chkDisableActive,module.options.optColSet.chkOneSpellPerCol)
+		ExRT.lib.SetAlphas(VExRT.ExCD2.colSet[module.options.optColTabs.selected].methodsGeneral and module.options.optColTabs.selected ~= (module.db.maxColumns + 1) and 0.5 or 1,module.options.optColSet.chkShowOnlyOnCD,module.options.optColSet.chkBotToTop,module.options.optColSet.dropDownStyleAnimation,module.options.optColSet.dropDownTimeLineAnimation,module.options.optColSet.chkIconTooltip,module.options.optColSet.chkLineClick,module.options.optColSet.chkNewSpellNewLine,module.options.optColSet.dropDownSortingRules,module.options.optColSet.textSortingRules,module.options.optColSet.textStyleAnimation,module.options.optColSet.textTimeLineAnimation,module.options.optColSet.chkHideOwnSpells,module.options.optColSet.chkAlphaNotInRange,module.options.optColSet.sliderAlphaNotInRange,module.options.optColSet.chkDisableActive,module.options.optColSet.chkOneSpellPerCol,module.options.optColSet.chkLineClickWhisper)
 	end
 	
-	self.optColSet.chkSortByAvailability = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2SortByAvailability,VExRT.ExCD2.SortByAvailability):Point(10,-330):OnClick(function(self) 
+	self.optColSet.chkSortByAvailability = ELib:Check(self.optColSet.superTabFrame.tab[6],L.cd2SortByAvailability,VExRT.ExCD2.SortByAvailability):Point(10,-355):OnClick(function(self) 
 		if self:GetChecked() then
 			VExRT.ExCD2.SortByAvailability = true
 		else
@@ -8037,6 +8305,7 @@ function module:ReloadAllSplits(argScaleFix)
 		
 		columnFrame.methodsIconTooltip = (not VExRT_ColumnOptions[i].methodsGeneral and VExRT_ColumnOptions[i].methodsIconTooltip) or (VExRT_ColumnOptions[i].methodsGeneral and VExRT_ColumnOptions[module.db.maxColumns+1].methodsIconTooltip) 
 		columnFrame.methodsLineClick = (not VExRT_ColumnOptions[i].methodsGeneral and VExRT_ColumnOptions[i].methodsLineClick) or (VExRT_ColumnOptions[i].methodsGeneral and VExRT_ColumnOptions[module.db.maxColumns+1].methodsLineClick)
+		columnFrame.methodsLineClickWhisper = (not VExRT_ColumnOptions[i].methodsGeneral and VExRT_ColumnOptions[i].methodsLineClickWhisper) or (VExRT_ColumnOptions[i].methodsGeneral and VExRT_ColumnOptions[module.db.maxColumns+1].methodsLineClickWhisper)
 		columnFrame.methodsNewSpellNewLine = (not VExRT_ColumnOptions[i].methodsGeneral and VExRT_ColumnOptions[i].methodsNewSpellNewLine) or (VExRT_ColumnOptions[i].methodsGeneral and VExRT_ColumnOptions[module.db.maxColumns+1].methodsNewSpellNewLine)
 		columnFrame.methodsSortingRules = (not VExRT_ColumnOptions[i].methodsGeneral and VExRT_ColumnOptions[i].methodsSortingRules) or (VExRT_ColumnOptions[i].methodsGeneral and VExRT_ColumnOptions[module.db.maxColumns+1].methodsSortingRules) or module.db.colsDefaults.methodsSortingRules
 		columnFrame.methodsHideOwnSpells = (not VExRT_ColumnOptions[i].methodsGeneral and VExRT_ColumnOptions[i].methodsHideOwnSpells) or (VExRT_ColumnOptions[i].methodsGeneral and VExRT_ColumnOptions[module.db.maxColumns+1].methodsHideOwnSpells)
@@ -8703,7 +8972,34 @@ module.db.allClassSpells = {
 },
 
 ["PET"] = {
-
+	{90355,	3,	"HUNTER"},
+	{159931,3,	"HUNTER"},
+	{26064,	3,	"HUNTER"},
+	{159956,3,	"HUNTER"},
+	{55709,	3,	"HUNTER"},
+	{53480,	2,	"HUNTER"},
+	{53478,	3,	"HUNTER"},
+	{61685,	3,	"HUNTER"},
+	{126393,3,	"HUNTER"},
+	{137798,3,	"HUNTER"},
+	{90361,	3,	"HUNTER"},
+	{91802,	5,	"DEATHKNIGHT"},
+	{91797,	3,	"DEATHKNIGHT"},
+	{89751,	3,	"WARLOCK"},
+	{89766,	5,	"WARLOCK"},
+	{115276,5,	"WARLOCK"},
+	{17767,	3,	"WARLOCK"},
+	{89808,	5,	"WARLOCK"},
+	{119899,4,	"WARLOCK"},
+	{89792,	3,	"WARLOCK"},
+	{115781,5,	"WARLOCK"},
+	{115831,3,	"WARLOCK"},
+	{115268,3,	"WARLOCK"},
+	{6358,	3,	"WARLOCK"},
+	{19647,	5,	"WARLOCK"},
+	{19505,	3,	"WARLOCK"},
+	{135029,3,	"MAGE"},
+	{33395,	3,	"MAGE"},
 },
 ["RACIAL"] = {
 	{68992,	3,	{68992,	120,	10},	},	--Worgen
@@ -8721,6 +9017,10 @@ module.db.allClassSpells = {
 	{26297,	3,	{26297,	180,	10},	},	--Troll
 	{28730,	3,	{28730,	90,	0},	},	--BloodElf
 	{107079,3,	{107079,120,	4},	},	--Pandaren
+	{256948,3,	{256948,120,	0},	},	--VoidElf
+	{260364,3,	{260364,180,	12},	},	--Nightborne
+	{255647,3,	{255647,150,	0},	},	--LightforgedDraenei
+	{255654,3,	{255654,120,	0},	},	--HighmountainTauren
 },
 ["ITEMS"] = {
 	{67826,	3,	{67826,	3600,	0},	},	--Jeevs

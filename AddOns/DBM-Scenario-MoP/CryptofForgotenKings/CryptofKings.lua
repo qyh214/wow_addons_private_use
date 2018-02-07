@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d504", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1030)
@@ -44,8 +44,6 @@ local timerBreathCD			= mod:NewCDTimer(21.5, 120929)--Limited sample size, may b
 local timerCloudofAngerCD	= mod:NewCDTimer(17, 120824)--Limited sample size, may be shorter
 local timerDarkforce		= mod:NewCastTimer(5, 120215)
 local timerDarkforceCD		= mod:NewCDTimer(32, 120215)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 142884 then

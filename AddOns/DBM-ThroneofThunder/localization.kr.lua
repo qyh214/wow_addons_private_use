@@ -54,7 +54,6 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	PHealthFrame		= "우두머리 체력 바 사용시 $spell:136442 사라짐까지 남은체력도 함께 보기",
 	AnnounceCooldowns	= "공격대 생존기 사용을 위해 $spell:137166 횟수를 소리로 듣기<br/>(카즈라진의 빙의가 풀리면 초기화됨)"
 })
 

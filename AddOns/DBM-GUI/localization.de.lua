@@ -195,21 +195,6 @@ L.SpecialWarnSound3			= "Sound für SEHR wichtige Spezialwarnungen"
 L.SpecialWarnSound4			= "Sound für \"Lauf weg!\"-Spezialwarnungen"
 L.SpecialWarnSound5			= "Sound für Spezialwarnungen mit Notizen die deinen Namen enthalten"
 
--- Tab: Heads Up Display Frame
-L.Panel_HUD					= "HudMap"
-L.Area_HUDOptions			= "Einstellungen für die HudMap"
-L.HUDColorOverride			= "Überschreibe Mod-spezifische Farben für die HudMap"
-L.HUDSizeOverride			= "Überschreibe Mod-spezifische Größen für die HudMap"
-L.HUDAlphaOverride			= "Überschreibe Mod-spezifische Alphawerte (Transparenz) für die HudMap"
-L.HUDTextureOverride		= "Überschreibe Mod-spezifische Texturen für die HudMap (wirkt nicht für 'Schlachtzugzeichen' Textureinstellungen)"
-L.HUDColorSelect			= "HM Farbe %d"
-L.HUDTextureSelect1			= "Textur für primäre HudMap"
-L.HUDTextureSelect2			= "Textur für sekundäre HudMap"
-L.HUDTextureSelect3			= "Textur für tertiäre HudMap"
-L.HUDTextureSelect4			= "Textur für 'lauf zu' HudMap"
-L.HUDSizeSlider				= "Kreisradius: %0.1f"
-L.HUDAlphaSlider			= "Alpha: %0.1f"
-
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Gesprochene Warnungen"
 L.Area_VoiceSelection		= "Stimmenauswahl für akustische Zählungen und gesprochene Warnungen (scrollbar per Mausrad)"
@@ -226,14 +211,6 @@ L.SWFAll					= "Spezialwarnungen eingestellt auf irgendeinen Sound"
 L.SpecWarn_AlwaysVoice		= "Spiele immer alle gesprochenen Warnungen (ignoriert Boss-spezifische Einstellung, nützlich für Schlachtzugsleiter)"
 
 
--- Tab: HealthFrame
-L.Panel_HPFrame				= "Lebensanzeige"
-L.Area_HPFrame				= "Einstellungen für die Lebensanzeige"
-L.HP_Enabled				= "Lebensanzeige immer anzeigen (ignoriert Boss-spezifische Einstellung)"
-L.HP_GrowUpwards			= "Erweitere Lebensanzeige nach oben"
-L.HP_ShowDemo				= "Anzeigen"
-L.BarWidth					= "Balkenbreite: %d"
-
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "Deaktivierung von DBM-Funktionen"
 L.Area_SpamFilter_Outgoing	= "Globale Deaktivierungs- und Filtereinstellungen für DBM"
@@ -246,7 +223,6 @@ L.SpamBlockNoRangeFrame		= "Zeige kein Abstandsfenster/-radar an"
 L.SpamBlockNoInfoFrame		= "Zeige kein Infofenster an"
 L.SpamBlockNoHudMap			= "Zeige keine HudMap"
 L.SpamBlockNoNameplate		= "Zeige keine Namensplakettenauras"
-L.SpamBlockNoHealthFrame	= "Zeige keine Lebensanzeige an"
 L.SpamBlockNoCountdowns		= "Spiele keine Countdown-Sounds"
 L.SpamBlockNoYells			= "Sende keine automatischen Schreie"
 L.SpamBlockNoNoteSync		= "Akzeptiere keine geteilten Notizen"

@@ -48,8 +48,7 @@ L:SetOptionLocalization({
 	warnHideOver			= "特殊警报：$spell:123244效果结束时",
 	timerSpecialCD			= "计时条：特殊能力冷却",
 	SetIconOnProtector		= "为$journal:6224的目标添加团队标记<br/>（当有多名团队助理时该功能不可靠）",
-	RangeFrame				= "距离监视（3码）：应对$spell:123121<br/>（隐藏阶段时显示所有人，其余时仅显示坦克位置）",
-	GWHealthFrame			= "生命值监视：移除$spell:123461还需要的伤害"
+	RangeFrame				= "距离监视（3码）：应对$spell:123121<br/>（隐藏阶段时显示所有人，其余时仅显示坦克位置）"
 })
 
 

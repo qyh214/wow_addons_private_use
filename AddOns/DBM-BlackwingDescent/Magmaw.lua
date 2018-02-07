@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(170, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetCreatureID(41570)
 mod:SetEncounterID(1024) --no ES fires this boss.
 mod:SetZone()
@@ -62,10 +62,6 @@ function mod:OnCombatStart(delay)
 	if self:IsDifficulty("heroic10", "heroic25") then
 		timerInferno:Start(30-delay)
 		specWarnInfernoSoon:Schedule(26-delay)
-	end
-	if DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss(41570, 42347, L.name)
 	end
 end
 

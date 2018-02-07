@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HoVTrash", "DBM-Party-Legion", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -17,8 +17,6 @@ local specWarnCrackle				= mod:NewSpecialWarningDodge(199805, nil, nil, nil, 1, 
 local yellCrackle					= mod:NewYell(199805)
 local specWarnCleansingFlame		= mod:NewSpecialWarningInterrupt(192563, "HasInterrupt", nil, nil, 1, 2)
 local specWarnUnrulyYell			= mod:NewSpecialWarningInterrupt(199726, "HasInterrupt", nil, nil, 1, 2)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:CrackleTarget(targetname, uId)
 	if not targetname then

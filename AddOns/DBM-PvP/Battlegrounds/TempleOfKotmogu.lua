@@ -1,7 +1,7 @@
 local mod		= DBM:NewMod("z998", "DBM-PvP", 2)
 local L			= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 48 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 69 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -26,8 +26,6 @@ mod:AddBoolOption("ShowKotmoguOrbsToWin", false, nil, function()
 		mod:HideOrbsToWin()
 	end
 end)
-
-mod:RemoveOption("HealthFrame")
 
 local ResPerSec = {
 	[0] = 1e-300,

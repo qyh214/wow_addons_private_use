@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Toravon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 259 $"):sub(12, -3))
 mod:SetCreatureID(38433)
 mod:SetEncounterID(1129)
 mod:SetModelID(31089)
@@ -9,10 +9,10 @@ mod:SetModelID(31089)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE"
+	"SPELL_CAST_START 72034 72091",
+	"SPELL_CAST_SUCCESS 72090",
+	"SPELL_AURA_APPLIED 72004",
+	"SPELL_AURA_APPLIED_DOSE 72004"
 )
 
 local warnFreezingGround	= mod:NewSpellAnnounce(72090, 1)
@@ -20,8 +20,8 @@ local warnWhiteout			= mod:NewSpellAnnounce(72034, 2)
 local warnOrb				= mod:NewSpellAnnounce(72091, 3)
 local WarnFrostbite			= mod:NewAnnounce("Frostbite", 2, 72004, "Tank|Healer")
 
-local timerNextFrostbite	= mod:NewNextTimer(5, 72004, nil, "Tank")
-local timerFrostbite		= mod:NewTargetTimer(20, 72004, nil, "Tank|Healer")
+local timerNextFrostbite	= mod:NewNextTimer(5, 72004, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerFrostbite		= mod:NewTargetTimer(20, 72004, nil, "Tank|Healer", nil, 5)
 local timerWhiteout			= mod:NewNextTimer(38, 72034, nil, nil, nil, 2)
 local timerNextOrb			= mod:NewNextTimer(32, 72091, nil, nil, nil, 1)
 

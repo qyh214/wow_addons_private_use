@@ -433,8 +433,6 @@ L:SetOptionLocalization{
 	TimeToPhase3			= "Montre le timer pour la Phase 3",
 	TimeToPhase4			= "Montre le timer pour la Phase 4",
 	MagneticCore			= "Annonce qui a loot le Core Magnétique",
-	HealthFramePhase4		= "Montre les barres de vie dans la phase 4",
-	AutoChangeLootToFFA		= "Met le butin en accès libre durant la phase 3",
 	WarnBombSpawn			= "Annonce les Robots Bombes",
 	TimerHardmode			= "Montre le timer pour le Hard Mode",
 	ShockBlastWarningInP1	= "Montre une alerte spéciale pour les Horions explosifs durant la Phase 1",
@@ -553,7 +551,6 @@ L:SetOptionLocalization{
 	WhisperBrainLink				= "Envoie un whisp aux Cerveaux liés",
 	SetIconOnFervorTarget			= "Met une icône sur les cible de la ferveur de Sara",
 	SetIconOnMCTarget				= "met une icône sur la cible du contrôle mental",
-	ShowSaraHealth					= "Montre la vie de Sara durant la P1 (Doit être sélectionnée par au moins un membre du raid)",
 	WarnEmpowerSoon					= "Alerte avant le Renforcement des ombres",
 	SpecWarnDeafeningRoar			= "Montre une alerte spéciale pour le Rugissement assourdissant (silence et haut-fait)",
 	SetIconOnBrainLinkTarget		= "Met une icone sur la cible des Cerveaux liés"

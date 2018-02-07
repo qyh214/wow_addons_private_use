@@ -306,8 +306,6 @@ L:SetOptionLocalization{
 	TimeToPhase3			= "Zeige Zeit bis Phase 3",
 	TimeToPhase4			= "Zeige Zeit bis Phase 4",
 	MagneticCore			= "Verkünde Spieler, die Magnetische Kerne plündern",
-	HealthFramePhase4		= "Zeige Lebensanzeige in Phase 4",
-	AutoChangeLootToFFA		= "Plündermodus in Phase 3 automatisch auf 'Jeder gegen jeden' einstellen",
 	WarnBombSpawn			= "Zeige Warnung für Bombenbot",
 	TimerHardmode			= "Zeige Timer für Hard Mode",
 	ShockBlastWarningInP1	= "Spezialwarnung für $spell:63631 in Phase 1",
@@ -394,7 +392,6 @@ L:SetOptionLocalization{
 	SpecWarnFervorCast				= "Spezialwarnung, wenn $spell:63138 auf dich gewirkt wird (muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
 	specWarnBrainPortalSoon			= "Spezialwarnung für nächste Gehirnportale",
 	NextPortal						= "Zeige Zeit bis nächste Gehirnportale",
-	ShowSaraHealth					= "Zeige Lebensanzeige für Sara in Phase 1 (muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
 	MaladyArrow						= "Zeige DBM-Pfeil, wenn $spell:63881 in deiner Nähe ist"
 }
 

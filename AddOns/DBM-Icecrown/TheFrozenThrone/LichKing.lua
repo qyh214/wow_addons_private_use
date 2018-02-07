@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("LichKing", "DBM-Icecrown", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 257 $"):sub(12, -3))
 mod:SetCreatureID(36597)
 mod:SetEncounterID(1106)
 mod:DisableEEKillDetection()--EE fires at 10%
@@ -42,7 +42,6 @@ local warnNecroticPlagueJump= mod:NewAnnounce("WarnNecroticPlagueJump", 4, 70337
 local warnPhase2			= mod:NewPhaseAnnounce(2)
 local valkyrWarning			= mod:NewAnnounce("ValkyrWarning", 3, 71844)--Phase 2 Ability
 local warnDefileSoon		= mod:NewSoonAnnounce(72762, 3)	--Phase 2+ Ability
-local warnSoulreaper		= mod:NewSpellAnnounce(69409, 4, nil, "Tank|Healer") --Phase 2+ Ability
 local warnDefileCast		= mod:NewTargetAnnounce(72762, 4) --Phase 2+ Ability
 local warnSummonValkyr		= mod:NewSpellAnnounce(69037, 3, 71844) --Phase 2 Add
 local warnPhase3			= mod:NewPhaseAnnounce(3)
@@ -51,23 +50,23 @@ local warnHarvestSoul		= mod:NewTargetAnnounce(68980, 3) --Phase 3 Ability
 local warnTrapCast			= mod:NewTargetAnnounce(73539, 4) --Phase 1 Heroic Ability
 local warnRestoreSoul		= mod:NewCastAnnounce(73650, 2) --Phase 3 Heroic
 
-local specWarnSoulreaper	= mod:NewSpecialWarningYou(69409) --Phase 1+ Ability
-local specWarnNecroticPlague= mod:NewSpecialWarningYou(70337) --Phase 1+ Ability
-local specWarnRagingSpirit	= mod:NewSpecialWarningYou(69200) --Transition Add
-local specWarnYouAreValkd	= mod:NewSpecialWarning("SpecWarnYouAreValkd") --Phase 2+ Ability
-local specWarnDefileCast	= mod:NewSpecialWarningYou(72762, nil, nil, nil, 3) --Phase 2+ Ability
+local specWarnSoulreaper	= mod:NewSpecialWarningDefensive(69409, nil, nil, nil, 1, 2) --Phase 1+ Ability
+local specWarnNecroticPlague= mod:NewSpecialWarningMoveAway(70337, nil, nil, nil, 1, 2) --Phase 1+ Ability
+local specWarnRagingSpirit	= mod:NewSpecialWarningYou(69200, nil, nil, nil, 1, 2) --Transition Add
+local specWarnYouAreValkd	= mod:NewSpecialWarning("SpecWarnYouAreValkd", nil, nil, nil, 1, 2) --Phase 2+ Ability
+local specWarnDefileCast	= mod:NewSpecialWarningMoveAway(72762, nil, nil, nil, 3, 2) --Phase 2+ Ability
 local yellDefile			= mod:NewYell(72762)
-local specWarnDefileNear	= mod:NewSpecialWarningClose(72762) --Phase 2+ Ability
-local specWarnDefile		= mod:NewSpecialWarningMove(72762) --Phase 2+ Ability
-local specWarnWinter		= mod:NewSpecialWarningMove(68983) --Transition Ability
-local specWarnHarvestSoul	= mod:NewSpecialWarningYou(68980) --Phase 3+ Ability
+local specWarnDefileNear	= mod:NewSpecialWarningClose(72762, nil, nil, nil, 1, 2) --Phase 2+ Ability
+local specWarnDefile		= mod:NewSpecialWarningMove(72762, nil, nil, nil, 1, 2) --Phase 2+ Ability
+local specWarnWinter		= mod:NewSpecialWarningMove(68983, nil, nil, nil, 1, 2) --Transition Ability
+local specWarnHarvestSoul	= mod:NewSpecialWarningYou(68980, nil, nil, nil, 1, 2) --Phase 3+ Ability
 local specWarnInfest		= mod:NewSpecialWarningSpell(70541, nil, nil, nil, 2) --Phase 1+ Ability
-local specwarnSoulreaper	= mod:NewSpecialWarningTarget(69409, "Tank") --phase 2+
-local specWarnTrap			= mod:NewSpecialWarningYou(73539, nil, nil, nil, 3) --Heroic Ability
+local specWarnSoulreaperOtr	= mod:NewSpecialWarningTaunt(69409, nil, nil, nil, 1, 2) --phase 2+
+local specWarnTrap			= mod:NewSpecialWarningYou(73539, nil, nil, nil, 3, 2) --Heroic Ability
 local yellTrap				= mod:NewYell(73539)
-local specWarnTrapNear		= mod:NewSpecialWarningClose(73539, nil, nil, nil, 3) --Heroic Ability
-local specWarnHarvestSouls	= mod:NewSpecialWarningSpell(73654) --Heroic Ability
-local specWarnValkyrLow		= mod:NewSpecialWarning("SpecWarnValkyrLow")
+local specWarnTrapNear		= mod:NewSpecialWarningClose(73539, nil, nil, nil, 3, 2) --Heroic Ability
+local specWarnHarvestSouls	= mod:NewSpecialWarningSpell(73654, nil, nil, nil, 1, 2) --Heroic Ability
+local specWarnValkyrLow		= mod:NewSpecialWarning("SpecWarnValkyrLow", nil, nil, nil, 1, 2)
 
 local timerCombatStart		= mod:NewCombatTimer(53.5)
 local timerPhaseTransition	= mod:NewTimer(62.5, "PhaseTransition", 72262, nil, nil, 6)
@@ -76,9 +75,9 @@ local timerSoulreaperCD	 	= mod:NewNextTimer(30.5, 69409, nil, "Tank|Healer", ni
 local timerHarvestSoul	 	= mod:NewTargetTimer(6, 68980)
 local timerHarvestSoulCD	= mod:NewNextTimer(75, 68980, nil, nil, nil, 6)
 local timerInfestCD			= mod:NewNextTimer(22.5, 70541, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)
-local timerNecroticPlagueCleanse = mod:NewTimer(5, "TimerNecroticPlagueCleanse", 70337, "Healer")
+local timerNecroticPlagueCleanse = mod:NewTimer(5, "TimerNecroticPlagueCleanse", 70337, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)
 local timerNecroticPlagueCD	= mod:NewNextTimer(30, 70337, nil, nil, nil, 3)
-local timerDefileCD			= mod:NewNextTimer(32.5, 72762, nil, nil, nil, 3)
+local timerDefileCD			= mod:NewNextTimer(32.5, 72762, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerEnrageCD			= mod:NewCDTimer(20, 72143, nil, "Tank|RemoveEnrage", nil, 5, nil, DBM_CORE_ENRAGE_ICON)
 local timerShamblingHorror 	= mod:NewNextTimer(60, 70372, nil, nil, nil, 1)
 local timerDrudgeGhouls 	= mod:NewNextTimer(20, 70358, nil, nil, nil, 1)
@@ -180,6 +179,7 @@ function mod:DefileTarget(targetname, uId)
 	end
 	if targetname == UnitName("player") then
 		specWarnDefileCast:Show()
+		specWarnDefileCast:Play("runout")
 		yellDefile:Yell()
 	else
 		if uId then
@@ -199,12 +199,14 @@ function mod:TrapTarget(targetname, uId)
 	end
 	if targetname == UnitName("player") then
 		specWarnTrap:Show()
+		specWarnTrap:Play("watchstep")
 		yellTrap:Yell()
 	else
 		if uId then
 			local inRange = CheckInteractDistance(uId, 2)
 			if inRange then
 				specWarnTrapNear:Show(targetname)
+				specWarnTrapNear:Play("watchstep")
 			end
 		end
 	end
@@ -270,27 +272,33 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 70337 then -- Necrotic Plague (SPELL_AURA_APPLIED is not fired for this spell)
 		lastPlague = args.destName
-		warnNecroticPlague:Show(lastPlague)
 		timerNecroticPlagueCD:Start()
 		timerNecroticPlagueCleanse:Start()
 		if args:IsPlayer() then
 			specWarnNecroticPlague:Show()
+			specWarnNecroticPlague:Play("runout")
+		else
+			warnNecroticPlague:Show(lastPlague)
 		end
 		if self.Options.NecroticPlagueIcon then
-			self:SetIcon(args.destName, 5, 5)
+			self:SetIcon(lastPlague, 5, 5)
 		end
 	elseif args.spellId == 69409 then -- Soul reaper (MT debuff)
-		warnSoulreaper:Show(args.destName)
-		specwarnSoulreaper:Show(args.destName)
 		timerSoulreaper:Start(args.destName)
 		timerSoulreaperCD:Start()
 		if args:IsPlayer() then
 			specWarnSoulreaper:Show()
+			specWarnSoulreaper:Play("defensive")
+		else
+			specWarnSoulreaperOtr:Show(args.destName)
+			specWarnSoulreaperOtr:Play("tauntboss")
 		end
 	elseif args.spellId == 69200 then -- Raging Spirit
-		warnRagingSpirit:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnRagingSpirit:Show()
+			specWarnRagingSpirit:Play("targetyou")
+		else
+			warnRagingSpirit:Show(args.destName)
 		end
 		if self.vb.phase == 1 then
 			timerRagingSpiritCD:Start()
@@ -301,17 +309,20 @@ function mod:SPELL_CAST_SUCCESS(args)
 			self:SetIcon(args.destName, 7, 5)
 		end
 	elseif args.spellId == 68980 then -- Harvest Soul
-		warnHarvestSoul:Show(args.destName)
 		timerHarvestSoul:Start(args.destName)
 		timerHarvestSoulCD:Start()
 		if args:IsPlayer() then
 			specWarnHarvestSoul:Show()
+			specWarnHarvestSoul:Play("targetyou")
+		else
+			warnHarvestSoul:Show(args.destName)
 		end
 		if self.Options.HarvestSoulIcon then
 			self:SetIcon(args.destName, 6, 5)
 		end
 	elseif args.spellId == 73654 then -- Harvest Souls (Heroic)
 		specWarnHarvestSouls:Show()
+		specWarnHarvestSouls:Play("phasechange")
 		timerVileSpirit:Cancel()
 		timerSoulreaperCD:Cancel()
 		timerDefileCD:Cancel()
@@ -336,6 +347,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerEnrageCD:Start(args.sourceGUID)
 	elseif args.spellId == 72754 and args:IsPlayer() and self:AntiSpam(2, 1) then		-- Defile Damage
 		specWarnDefile:Show()
+		specWarnDefile:Play("runaway")
 	elseif args.spellId == 73650 and self:AntiSpam(3, 2) then		-- Restore Soul (Heroic)
 		timerHarvestSoulCD:Start(58)
 		timerVileSpirit:Start(10)--May be wrong too but we'll see, didn't have enough log for this one.
@@ -356,6 +368,7 @@ do
 					valkyrTargets[uId] = true          -- this person has been announced
 					if UnitIsUnit(uId, "player") then
 						specWarnYouAreValkd:Show()
+						specWarnYouAreValkd:Play("targetyou")
 					end
 					if IsInGroup() and self.Options.AnnounceValkGrabs and DBM:GetRaidRank() > 1 then
 						local channel = (IsInRaid() and "RAID") or "PARTY"
@@ -399,6 +412,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 68983 and destGUID == UnitGUID("player") and self:AntiSpam(2, 3) then		-- Remorseless Winter
 		specWarnWinter:Show()
+		specWarnWinter:Play("runaway")
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
@@ -407,6 +421,7 @@ function mod:UNIT_HEALTH(uId)
 	if self:IsDifficulty("heroic10", "heroic25") and self:GetUnitCreatureId(uId) == 36609 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.55 and not warnedValkyrGUIDs[UnitGUID(uId)] then
 		warnedValkyrGUIDs[UnitGUID(uId)] = true
 		specWarnValkyrLow:Show()
+		specWarnValkyrLow:Play("stopattack")
 	end
 end
 

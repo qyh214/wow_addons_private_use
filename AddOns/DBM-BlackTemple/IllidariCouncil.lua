@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Council", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(22949, 22950, 22951, 22952)
 mod:SetEncounterID(608)
 mod:SetModelID(21416)
@@ -16,13 +16,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_INTERRUPT",
 	"SPELL_AURA_APPLIED 41485 41481 41482 41541 41476 41475 41452 41453 41450 41451",
 	"SPELL_AURA_REMOVED 41479 41485"
-)
-
-mod:SetBossHealthInfo(
-	22949, L.Gathios,
-	22950, L.Zerevor,
-	22951, L.Malande,
-	22952, L.Veras
 )
 
 local warnPoison			= mod:NewTargetAnnounce(41485, 3, nil, "Healer", 3)

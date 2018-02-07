@@ -24,7 +24,7 @@ L.MSG_CUSTOM_FONTS					= "사용자 글꼴"
 L.MSG_INVALID_CUSTOM_FONT_NAME		= "잘못된 글꼴 이름."
 L.MSG_FONT_NAME_ALREADY_EXISTS		= "글꼴 이름이 이미 존재합니다."
 L.MSG_INVALID_CUSTOM_FONT_PATH		= "글꼴 경로가 .ttf 파일을 가리켜야 합니다."
---L.MSG_UNABLE_TO_SET_FONT			= "Unable to set specified font." 
+--L.MSG_UNABLE_TO_SET_FONT			= "Unable to set specified font."
 --L.MSG_TESTING_FONT			= "Testing the specified font for validity..."
 L.MSG_CUSTOM_SOUNDS					= "사용자 소리"
 L.MSG_INVALID_CUSTOM_SOUND_NAME		= "잘못된 소리 이름."
@@ -471,8 +471,6 @@ obj["NOTIFICATION_CP_GAIN"]				= { label="연계 점수 획득", tooltip="연계
 obj["NOTIFICATION_CP_FULL"]				= { label="연계 점수 마무리", tooltip="연계 점수가 절정 (5 포인트)에 도달했음을 알려줍니다."}
 obj["NOTIFICATION_HOLY_POWER_CHANGE"]	= { label="신성한 힘 변환", tooltip="신성한 힘이 변환되면 알려줍니다."}
 obj["NOTIFICATION_HOLY_POWER_FULL"]		= { label="신성한 힘 최대", tooltip="최대 신성한 힘에 도달하면 알려줍니다."}
---obj["NOTIFICATION_SHADOW_ORBS_CHANGE"]	= { label="Shadow Orb Changes", tooltip="Enable when you change shadow orbs."}
---obj["NOTIFICATION_SHADOW_ORBS_FULL"]	= { label="Shadow Orbs Full", tooltip="Enable when you attain full shadow orbs."}
 obj["NOTIFICATION_HONOR_GAIN"]			= { label="명예 획득", tooltip="명예 점수 획득을 알려줍니다.."}
 obj["NOTIFICATION_REP_GAIN"]			= { label="평판 상승", tooltip="평판 수치 획득을 알려줍니다.."}
 obj["NOTIFICATION_REP_LOSS"]			= { label="평판 하락", tooltip="평판 수치 감소를 알려줍니다."}
@@ -529,7 +527,7 @@ obj["SPELL_CAST_FAILED"]		= "시전 실패"
 obj["SPELL_SUMMON"]				= "소환"
 obj["SPELL_CREATE"]				= "창조"
 obj["PARTY_KILL"]				= "결정타"
-obj["UNIT_DIED"]				= "유닛 죽음"
+--obj["UNIT_DIED"]				= "유닛 죽음"
 obj["UNIT_DESTROYED"]			= "유닛 사라짐"
 obj["SPELL_EXTRA_ATTACKS"]		= "추가 공격"
 obj["UNIT_HEALTH"]				= "생명력 변화"
@@ -537,14 +535,14 @@ obj["UNIT_POWER"]				= "마력 변화"
 obj["SKILL_COOLDOWN"]			= "플레이어 재사용 대기시간 종료"
 obj["PET_COOLDOWN"]				= "소환수 재사용 대기시간 종료"
 --obj["ITEM_COOLDOWN"]			= "Item Cooldown Complete"
- 
+
 -- Main event conditions.
 obj["sourceName"]				= "이벤트를 제공한 유닛의 이름"
 obj["sourceAffiliation"]		= "이벤트를 제공한 유닛의 소속"
 obj["sourceReaction"]			= "이벤트를 제공한 유닛과의 관계"
 obj["sourceControl"]			= "이벤트를 제공한 유닛의 제어"
 obj["sourceUnitType"]			= "이벤트를 제공한 유닛 유형"
-obj["recipientName"]			= "이벤트를 받은 유닛의 이름"    
+obj["recipientName"]			= "이벤트를 받은 유닛의 이름"
 obj["recipientAffiliation"]		= "이벤트를 받은 유닛의 소속"
 obj["recipientReaction"]		= "이벤트를 받은 유닛과의 관계"
 obj["recipientControl"]			= "이벤트를 받은 유닛의 제어"
@@ -588,7 +586,7 @@ obj["unavailableSkill"]			= "배우지 않은 기술"
 obj["warriorStance"]			= "전사 태세"
 obj["zoneName"]					= "지역 이름"
 obj["zoneType"]					= "지역 유형"
- 
+
 -- Relationships.
 obj["eq"]						= "일치함 ( = )"
 obj["ne"]						= "일치하지 않음 ( ≠ )"
@@ -596,7 +594,7 @@ obj["like"]						= "유사함"
 obj["unlike"]					= "유사하지 않음"
 obj["lt"]						= "보다 작음 ( < )"
 obj["gt"]						= "보다 큼 ( > )"
- 
+
 -- Affiliations.
 obj["affiliationMine"]			= "자신의 것"
 obj["affiliationParty"]			= "파티원"
@@ -616,7 +614,7 @@ obj["controlServer"]			= "서버"
 obj["controlHuman"]				= "유저"
 
 -- Unit types.
-obj["unitTypePlayer"]			= PLAYER 
+obj["unitTypePlayer"]			= PLAYER
 obj["unitTypeNPC"]				= "NPC"
 obj["unitTypePet"]				= PET
 obj["unitTypeGuardian"]			= "수호물"

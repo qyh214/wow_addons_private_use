@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("EmeraldNightmareTrash", "DBM-EmeraldNightmare")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
@@ -20,7 +20,6 @@ local specWarnBefoulment			= mod:NewSpecialWarningMoveTo(222719, nil, nil, nil, 
 local yellBefoulment				= mod:NewFadesYell(222719)
 local specWarnDarkLightning			= mod:NewSpecialWarningMove(223946, nil, nil, nil, 1, 2)
 
-mod:RemoveOption("HealthFrame")
 mod:AddRangeFrameOption(10, 221028)
 
 function mod:SPELL_AURA_APPLIED(args)

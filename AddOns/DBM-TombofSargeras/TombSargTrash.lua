@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TombSargTrash", "DBM-TombofSargeras")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
@@ -32,8 +32,6 @@ local specWarnSeverSoul				= mod:NewSpecialWarningRun(239810, "Melee", nil, nil,
 local specWarnElectroShock			= mod:NewSpecialWarningRun(240169, "Melee", nil, nil, 4, 2)
 local specWarnMassiveEruption		= mod:NewSpecialWarningRun(242909, "Melee", nil, nil, 4, 2)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(240176, nil, nil, nil, 1, 2)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end

@@ -47,8 +47,7 @@ L:SetWarningLocalization{
 L:SetOptionLocalization{
 	WarnAddsSoon					= "Montre une pré-alerte avant que les adds arrivent",
 	WarnReanimating					= "Montre une alerte quand les adds vont revenir a la vie",
-	TimerAdds						= "Montre le timer pour les nouveaux adds",
-	ShieldHealthFrame				= "Montre la vie du boss avec une barre de vie pour la $spell:70842"
+	TimerAdds						= "Montre le timer pour les nouveaux adds"
 }
 
 L:SetMiscLocalization{
@@ -362,8 +361,6 @@ L:SetOptionLocalization{
 	SpecWarnDefileCast			= "Montre une alerte spéciale pour la $spell:72762 sur vous",
 	SpecWarnDefileNear			= "Montre une alerte spéciale pour la $spell:72762 à coter de vous",
 	SpecWarnTrapNear			= "Montre une alerte spéciale pour le $spell:73539 à coter de vous",
-	DefileArrow					= "Montre les flèches de DBM quand $spell:72762 est à coter de vous",
-	TrapArrow					= "Montre les flèches de DBM quand $spell:73539 est à coter de vous",
 	SpecWarnValkyrLow		= "Show special warning when Valkyr is below 55% HP"
 }
 

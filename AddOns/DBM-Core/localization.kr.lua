@@ -13,6 +13,8 @@ DBM_CORE_LOAD_MOD_VER_MISMATCH		= "DBM-Core가 로딩 조건과 맞지 않아 %s
 DBM_CORE_LOAD_MOD_DISABLED			= "%s|1이;가; 설치는 돼있지만 켜져있질 않습니다. 직접 켜기 전까진 모드가 로딩되지 않습니다."
 DBM_CORE_LOAD_MOD_DISABLED_PLURAL	= "%s|1이;가; 설치는 돼있지만 켜져있질 않습니다. 직접 켜기 전까진 모드들이 로딩되지 않습니다."
 
+DBM_COPY_URL_DIALOG					= "URL 복사"
+
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "거리 레이더를 인스턴스 던전에서 사용할 수 없습니다. 예전의 텍스트 방식 거리창으로 대체됩니다."
 DBM_CORE_NO_ARROW					= "화살표 기능을 인스턴스 던전에서 사용할 수 없습니다"
@@ -114,7 +116,6 @@ DBM_CORE_GENERIC_TIMER_BERSERK		= "광폭화"
 DBM_CORE_OPTION_TIMER_BERSERK		= "$spell:26662 타이머 바 보기"
 DBM_CORE_GENERIC_TIMER_COMBAT		= "전투 시작"
 DBM_CORE_OPTION_TIMER_COMBAT		= "전투 시작 타이머 바 보기"
-DBM_CORE_OPTION_HEALTH_FRAME		= "보스 체력 창 보기"
 DBM_CORE_BAD						= "바닥"
 
 DBM_CORE_OPTION_CATEGORY_TIMERS		= "바"
@@ -236,8 +237,6 @@ DBM_CORE_TIMER_USAGE	= {
 }
 
 DBM_ERROR_NO_PERMISSION				= "이 명령어를 실행하기 위한 권한을 가지고 있지 않습니다."
-
-DBM_CORE_BOSSHEALTH_HIDE_FRAME		= "보스 체력 창 닫기"
 
 --Common Locals
 DBM_NEXT							= "다음 %s"

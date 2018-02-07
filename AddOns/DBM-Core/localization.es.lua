@@ -114,7 +114,6 @@ DBM_CORE_GENERIC_TIMER_BERSERK		= "Rabia"
 DBM_CORE_OPTION_TIMER_BERSERK		= "Mostrar tiempo restante para $spell:26662"
 DBM_CORE_GENERIC_TIMER_COMBAT		= "Comienza el encuentro"
 DBM_CORE_OPTION_TIMER_COMBAT		= "Mostrar temporizador para el inicio del encuentro"
-DBM_CORE_OPTION_HEALTH_FRAME		= "Mostrar marco de salud del jefe"
 DBM_CORE_BAD						= "Daño"
 
 DBM_CORE_OPTION_CATEGORY_TIMERS			= "Barras"
@@ -237,8 +236,6 @@ DBM_CORE_TIMER_USAGE	= {
 
 DBM_ERROR_NO_PERMISSION				= "No tienes permiso para hacer eso."
 
-DBM_CORE_BOSSHEALTH_HIDE_FRAME		= "Ocultar marco de salud"
-
 --Common Locals
 DBM_NEXT							= "Siguiente %s"
 DBM_COOLDOWN						= "%s TdR"
@@ -246,7 +243,9 @@ DBM_CORE_UNKNOWN					= "Desconocido"--UNKNOWN which is "Unknown" (does u vs U ma
 DBM_CORE_LEFT						= "Izquierda"
 DBM_CORE_RIGHT						= "Derecha"
 DBM_CORE_BACK						= "Detrás"--BACK
-DBM_CORE_MIDDLE						= "En medio"
+DBM_CORE_TOP						= "Arriba"
+DBM_CORE_BOTTOM						= "Abajo"
+DBM_CORE_MIDDLE						= "Medio"
 DBM_CORE_FRONT						= "Delante"
 DBM_CORE_EAST						= "Este"
 DBM_CORE_WEST						= "Oeste"
@@ -261,6 +260,7 @@ DBM_ADDS							= "esbirros"--Such as "Move to Ally"
 DBM_CORE_ROOM_EDGE					= "los bordes de la sala"
 DBM_CORE_FAR_AWAY					= "alejarte"
 DBM_CORE_SAFE						= "una zona segura"
+DBM_CORE_SHIELD						= "un escudo"
 DBM_INCOMING						= "%s en breve"
 --Common Locals end
 

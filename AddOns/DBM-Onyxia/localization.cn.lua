@@ -26,7 +26,7 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	TimerWhelps		= "为奥妮克希亚雏龙显示计时条",
 	WarnWhelpsSoon		= "为奥妮克希亚雏龙显示提前警报",
-	SoundWTF		= "为经典传奇式奥妮克希亚副本播放一些有趣的音效"
+	SoundWTF3		= "为经典传奇式奥妮克希亚副本播放一些有趣的音效"
 }
 
 L:SetMiscLocalization{

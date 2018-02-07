@@ -191,14 +191,14 @@ function HiddenArtifactTrackerFuncs.hideBar()
 				ArtifactWatchBar:Hide()
 				MainMenuMaxLevelBar0:GetParent():Hide()
 			end
-		end
 
-		if not MainMenuExpBar:IsVisible() and HiddenArtifactTrackerChars.hideArtBar==true then
-			ReputationWatchBar:ClearAllPoints()
-			ReputationWatchBar:SetPoint("BOTTOM", 0, 42)
-		else
-			ReputationWatchBar:ClearAllPoints()
-			ReputationWatchBar:SetPoint("BOTTOM", 0, 50)
+			if not MainMenuExpBar:IsVisible() then
+				ReputationWatchBar:ClearAllPoints()
+				ReputationWatchBar:SetPoint("BOTTOM", 0, 42)
+			else
+				ReputationWatchBar:ClearAllPoints()
+				ReputationWatchBar:SetPoint("BOTTOM", 0, 50)
+			end
 		end
 end
 function HiddenArtifactTrackerFuncs.isArtEquipped()
@@ -212,14 +212,9 @@ end
 
 MainMenuMaxLevelBar0:GetParent():SetScript("OnHide", ArtifactWatchBar:GetScript("OnShow"))
 
-local handler = GameTooltip:GetScript("OnTooltipSetItem")
-GameTooltip:SetScript("OnTooltipSetItem",
+GameTooltip:HookScript("OnTooltipSetItem",
 
 	function(...)
-
-		--default tooltip behaviours
-		handler(...)
-
 		if HiddenArtifactTrackerFuncs.recoverSaveData then 
 			HiddenArtifactTrackerFuncs.recoverSaveData()
 			HiddenArtifactTrackerFuncs.recoverSaveData = nil

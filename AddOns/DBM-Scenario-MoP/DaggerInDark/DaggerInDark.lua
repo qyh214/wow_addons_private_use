@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d616", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1095)
@@ -37,9 +37,6 @@ local timerAddsCD			= mod:NewTimer(60, "timerAddsCD", 2457)
 local timerDeathNova		= mod:NewCastTimer(20, 133804)
 --Rak'gor Bloodrazor
 local timerFixateCD			= mod:NewNextTimer(20, 132984)
-
-
-mod:RemoveOption("HealthFrame")
 
 function mod:CHAT_MSG_MONSTER_SAY(msg)
 	if msg == L.LizardLord or msg:find(L.LizardLord) then

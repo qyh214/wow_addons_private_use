@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ThreeBugs", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(15544, 15511, 15543)
 mod:SetEncounterID(710)
 mod:SetModelID(15657)
@@ -13,13 +13,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 25807",
 	"UNIT_DIED"
 )
-mod:SetBossHealthInfo(
-	15543, L.Yauj,
-	15544, L.Vem,
-	15511, L.Kri
-)
 
---TODO, cd timer for fear/heal?
 local warnFear			= mod:NewSpellAnnounce(26580, 2)
 local warnHeal			= mod:NewCastAnnounce(25807, 3)
 

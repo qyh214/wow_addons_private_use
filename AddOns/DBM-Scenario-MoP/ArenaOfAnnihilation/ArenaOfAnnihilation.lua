@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d511", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1031)
@@ -15,8 +15,6 @@ mod.onlyNormal = true
 local warnFlameWall				= mod:NewSpellAnnounce(123966, 4)
 
 local specWarnFlameWall			= mod:NewSpecialWarningSpell(123966, nil, nil, nil, 2)
-
-mod:RemoveOption("HealthFrame")
 
 --[[
 --Needs more data, i'm not sure if it has a CD or is just health based atm so no CD timer just yet.

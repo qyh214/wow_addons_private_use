@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ICCTrash", "DBM-Icecrown", 6)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 201 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
 mod:SetModelID(30459)
 mod:SetUsedIcons(1, 2, 8)
 mod.isTrashMod = true
@@ -62,7 +62,6 @@ local timerChainsofShadow		= mod:NewTargetTimer(10, 70645)
 local timerConflag				= mod:NewTargetTimer(10, 71785)
 local timerBanish				= mod:NewTargetTimer(6, 71298)
 
-mod:RemoveOption("HealthFrame")
 --Lower Spire
 mod:AddSetIconOption("SetIconOnDarkReckoning", 69483, true)
 --Crimson Hall

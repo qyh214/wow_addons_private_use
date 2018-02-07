@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Twins", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(25165, 25166)
 mod:SetEncounterID(727)
 mod:SetModelID(23334)
@@ -17,11 +17,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_DAMAGE 45256",
 	"SPELL_MISSED 45256",
 	"CHAT_MSG_RAID_BOSS_EMOTE"
-)
-
-mod:SetBossHealthInfo(
-	25165, L.Sacrolash,
-	25166, L.Alythess
 )
 
 local warnBlade				= mod:NewSpellAnnounce(45248, 3)

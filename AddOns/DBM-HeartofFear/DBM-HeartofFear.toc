@@ -17,7 +17,7 @@
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: MOP
 ## X-DBM-Mod-Has-LFR : 1
-## X-DBM-Mod-Sort: 204
+## X-DBM-Mod-Sort: 704
 ## X-DBM-Mod-MapID: 1009
 ## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua

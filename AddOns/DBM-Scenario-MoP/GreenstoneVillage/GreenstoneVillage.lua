@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d492", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1024)
@@ -32,8 +32,6 @@ local timerBrewBubbleCD			= mod:NewCDTimer(15, 131143)
 local timerJadeStatueCD			= mod:NewCDTimer(18, 119364)--Small sample size. May be incorrect.
 --Vengeful Hui
 local timerSummonSeedlingsCD	= mod:NewNextTimer(14.4, 117664)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 131143 then

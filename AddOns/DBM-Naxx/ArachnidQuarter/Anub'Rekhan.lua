@@ -1,30 +1,25 @@
 local mod	= DBM:NewMod("Anub'Rekhan", "DBM-Naxx", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 258 $"):sub(12, -3))
 mod:SetCreatureID(15956)
 mod:SetEncounterID(1107)
 mod:SetModelID(15931)
-mod:RegisterCombat("combat")
-
-mod:RegisterEvents(
-	"CHAT_MSG_MONSTER_YELL"
-)
+mod:RegisterCombat("combat_yell", L.Pull1, L.Pull2)
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_REMOVED",
+	"SPELL_CAST_START 28785 54021",
+	"SPELL_AURA_REMOVED 28785, 54021",
 	"UNIT_DIED"
 )
 
 local warningLocustSoon		= mod:NewSoonAnnounce(28785, 2)
-local warningLocustNow		= mod:NewSpellAnnounce(28785, 3)
-local warningLocustFaded	= mod:NewAnnounce("WarningLocustFaded", 1, 28785)
+local warningLocustFaded	= mod:NewFadesAnnounce(54021, 1)
 
-local specialWarningLocust	= mod:NewSpecialWarning("SpecialLocust")
+local specialWarningLocust	= mod:NewSpecialWarningSpell(54021, nil, nil, nil, 2, 2)
 
-local timerLocustIn			= mod:NewCDTimer(80, 28785)
-local timerLocustFade 		= mod:NewBuffActiveTimer(26, 28785)
+local timerLocustIn			= mod:NewCDTimer(80, 28785, nil, nil, nil, 6)
+local timerLocustFade 		= mod:NewBuffActiveTimer(26, 28785, nil, nil, nil, 6)
 
 mod:AddBoolOption("ArachnophobiaTimer", true, "timer")
 
@@ -41,8 +36,8 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(28785, 54021) then  -- Locust Swarm
-		warningLocustNow:Show()
 		specialWarningLocust:Show()
+		specialWarningLocust:Play("aesoon")
 		timerLocustIn:Stop()
 		if self:IsDifficulty("normal25") then
 			timerLocustFade:Start(23)
@@ -70,12 +65,5 @@ function mod:UNIT_DIED(args)
 			timerLocustFade:Cancel()
 			timerLocustIn:Cancel()
 		end
-	end
-end
-
---Secondary pull trigger, so we can detect combat when he's pulled while already in combat (which is about 99% of time)
-function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if (msg == L.Pull1 or msg == L.Pull2) and not self:IsInCombat() then
-		DBM:StartCombat(self, 0)
 	end
 end

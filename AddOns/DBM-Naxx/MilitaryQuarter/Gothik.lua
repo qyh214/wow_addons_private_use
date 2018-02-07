@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gothik", "DBM-Naxx", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 166 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 258 $"):sub(12, -3))
 mod:SetCreatureID(16060)
 mod:SetEncounterID(1109)
 mod:SetModelID(16279)
@@ -12,14 +12,15 @@ mod:RegisterEventsInCombat(
 )
 
 local warnWaveNow		= mod:NewAnnounce("WarningWaveSpawned", 3, nil, false)
-local warnWaveSoon		= mod:NewAnnounce("WarningWaveSoon", 1)
+local warnWaveSoon		= mod:NewAnnounce("WarningWaveSoon", 2)
 local warnRiderDown		= mod:NewAnnounce("WarningRiderDown", 4)
 local warnKnightDown	= mod:NewAnnounce("WarningKnightDown", 2)
-local warnPhase2		= mod:NewPhaseAnnounce(2, 4)
+local warnPhase2		= mod:NewPhaseAnnounce(2, 3)
 
-local timerPhase2		= mod:NewTimer(270, "TimerPhase2", "Interface\\Icons\\Spell_Nature_WispSplode") 
-local timerWave			= mod:NewTimer(20, "TimerWave", 69516)
+local timerPhase2		= mod:NewTimer(270, "TimerPhase2", "Interface\\Icons\\Spell_Nature_WispSplode", nil, nil, 6) 
+local timerWave			= mod:NewTimer(20, "TimerWave", 69516, nil, nil, 1)
 
+mod.vb.wave = 0
 local wavesNormal = {
 	{2, L.Trainee, next = 20},
 	{2, L.Trainee, next = 20},
@@ -65,7 +66,6 @@ local wavesHeroic = {
 
 
 local waves = wavesNormal
-local wave = 0
 
 local function getWaveString(wave)
 	local waveInfo = waves[wave]
@@ -78,28 +78,36 @@ local function getWaveString(wave)
 	end
 end
 
+function mod:NextWave()
+	self.vb.wave = self.vb.wave + 1
+	warnWaveNow:Show(self.vb.wave, getWaveString(self.vb.wave))
+	local next = waves[self.vb.wave].next
+	if next then
+		timerWave:Start(next, self.vb.wave + 1)
+		warnWaveSoon:Schedule(next - 3, self.vb.wave + 1, getWaveString(self.vb.wave + 1))
+		self:ScheduleMethod(next, "NextWave")
+	end
+end
+
 function mod:OnCombatStart(delay)
 	if self:IsDifficulty("normal25") then
 		waves = wavesHeroic
 	else
 		waves = wavesNormal
 	end
-	wave = 0
+	self.vb.wave = 0
 	timerPhase2:Start()
 	warnPhase2:Schedule(270)
-	timerWave:Start(25, wave + 1)
-	warnWaveSoon:Schedule(22, wave + 1, getWaveString(wave + 1))
+	timerWave:Start(25, self.vb.wave + 1)
+	warnWaveSoon:Schedule(22, self.vb.wave + 1, getWaveString(self.vb.wave + 1))
 	self:ScheduleMethod(25, "NextWave")
 end
 
-function mod:NextWave()
-	wave = wave + 1
-	warnWaveNow:Show(wave, getWaveString(wave))
-	local next = waves[wave].next
-	if next then
-		timerWave:Start(next, wave + 1)
-		warnWaveSoon:Schedule(next - 3, wave + 1, getWaveString(wave + 1))
-		self:ScheduleMethod(next, "NextWave")
+function mod:OnTimerRecovery()
+	if self:IsDifficulty("normal25") then
+		waves = wavesHeroic
+	else
+		waves = wavesNormal
 	end
 end
 

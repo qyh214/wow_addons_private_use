@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 253 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
 mod:SetCreatureID(33432)
 mod:SetEncounterID(1138)
 mod:DisableESCombatDetection()
@@ -51,10 +51,9 @@ local timerPlasmaBlastCD		= mod:NewCDTimer(30, 64529, nil, "Tank", 2, 5)
 local timerShell				= mod:NewBuffActiveTimer(6, 63666)
 local timerNextFlameSuppressant	= mod:NewNextTimer(60, 64570)
 local timerFlameSuppressant		= mod:NewBuffActiveTimer(10, 65192)
-local timerNextFrostBomb		= mod:NewNextTimer(30, 64623, nil, nil, nil, 3)
+local timerNextFrostBomb		= mod:NewNextTimer(30, 64623, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 local timerBombExplosion		= mod:NewCastTimer(15, 65333, nil, nil, nil, 3)
 
-mod:AddBoolOption("HealthFramePhase4", false)
 mod:AddBoolOption("SetIconOnNapalm", false)
 mod:AddBoolOption("SetIconOnPlasmaBlast", false)
 mod:AddBoolOption("RangeFrame")
@@ -85,11 +84,10 @@ function mod:OnCombatStart(delay)
 	spinningUp = DBM:GetSpellInfo(63414)
 	self.vb.hardmode = false
 	enrage:Start(-delay)
-	self.vb.phase = 0
+	self.vb.phase = 1
 	is_spinningUp = false
 	self.vb.napalmShellIcon = 7
 	table.wipe(napalmShellTargets)
-	self:NextPhase()
 	timerPlasmaBlastCD:Start(20-delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(6)
@@ -190,54 +188,6 @@ function mod:CHAT_MSG_LOOT(msg)
 	end
 end
 
-function mod:NextPhase()
-	self.vb.phase = self.vb.phase + 1
-	if self.vb.phase == 1 then
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:Clear()
-			DBM.BossHealth:AddBoss(33432, L.MobPhase1)
-		end
-	elseif self.vb.phase == 2 then
-		timerNextShockblast:Stop()
-		timerProximityMines:Stop()
-		timerFlameSuppressant:Stop()
-		timerNextFlameSuppressant:Stop()
-		timerPlasmaBlastCD:Stop()
-		timerP1toP2:Start()
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:Clear()
-			DBM.BossHealth:AddBoss(33651, L.MobPhase2)
-		end
-		if self.Options.RangeFrame then
-			DBM.RangeCheck:Hide()
-		end
-		if self.vb.hardmode then
-			timerNextFrostBomb:Start(42)
-		end
-	elseif self.vb.phase == 3 then
-		timerDarkGlareCast:Cancel()
-		timerNextDarkGlare:Cancel()
-		timerNextFrostBomb:Cancel()
-		timerP2toP3:Start()
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:Clear()
-			DBM.BossHealth:AddBoss(33670, L.MobPhase3)
-		end
-	elseif self.vb.phase == 4 then
-		timerP3toP4:Start()
-		if self.Options.HealthFramePhase4 or DBM.BossHealth:IsShown() then
-			DBM.BossHealth:Clear()
-			DBM.BossHealth:Show(L.name)
-			DBM.BossHealth:AddBoss(33670, L.MobPhase3)
-			DBM.BossHealth:AddBoss(33651, L.MobPhase2)
-			DBM.BossHealth:AddBoss(33432, L.MobPhase1)
-		end
---		if self.vb.hardmode then
---			timerNextFrostBomb:Start(73)
---		end
-	end
-end
-
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.YellHardPull or msg:find(L.YellHardPull) then
 		timerHardmode:Start()
@@ -249,7 +199,31 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
 	if spellId == 34098 then--ClearAllDebuffs
-		self:NextPhase()
+		self.vb.phase = self.vb.phase + 1
+		if self.vb.phase == 2 then
+			timerNextShockblast:Stop()
+			timerProximityMines:Stop()
+			timerFlameSuppressant:Stop()
+			timerNextFlameSuppressant:Stop()
+			timerPlasmaBlastCD:Stop()
+			timerP1toP2:Start()
+			if self.Options.RangeFrame then
+				DBM.RangeCheck:Hide()
+			end
+			if self.vb.hardmode then
+				timerNextFrostBomb:Start(42)
+			end
+		elseif self.vb.phase == 3 then
+			timerDarkGlareCast:Cancel()
+			timerNextDarkGlare:Cancel()
+			timerNextFrostBomb:Cancel()
+			timerP2toP3:Start()
+		elseif self.vb.phase == 4 then
+			timerP3toP4:Start()
+--			if self.vb.hardmode then
+--				timerNextFrostBomb:Start(73)
+--			end
+		end
 	end
 end
 

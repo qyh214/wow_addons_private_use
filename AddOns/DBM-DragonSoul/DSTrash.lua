@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("DSTrash", "DBM-DragonSoul")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetModelID(39378)
 mod:SetZone()
 mod.isTrashMod = true
@@ -26,8 +26,6 @@ local timerRoleplay			= mod:NewTimer(45.5, "timerRoleplay", "Interface\\Icons\\S
 --it still seems timed, just ends earlier if you kill 15 drakes.
 --No one knew it ended at 24 drakes before hotfix because timer always expired before any raid hit 24, so we often just saw the hard capped event limit.
 --I suspect some shitty LFR group is still gonna hit timer limit before 15 drakes, so we'll see
-
-mod:RemoveOption("HealthFrame")
 
 local drakeRunning = false
 local drakesCount = 15

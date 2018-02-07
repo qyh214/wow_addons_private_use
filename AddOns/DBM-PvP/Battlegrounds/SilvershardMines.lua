@@ -1,7 +1,7 @@
 local mod		= DBM:NewMod("z727", "DBM-PvP", 2)
 local L			= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 48 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 69 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -12,8 +12,6 @@ local cartTimer		= mod:NewTimer(9.5, "TimerCart", "Interface\\Icons\\INV_Misc_Po
 
 local bgzone = false
 local cartCount = 0
-
-mod:RemoveOption("HealthFrame")
 
 function mod:OnInitialize()
 	if DBM:GetCurrentArea() == 727 then

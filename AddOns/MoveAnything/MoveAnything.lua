@@ -907,9 +907,9 @@ function MovAny:Boot()
 	if not MADB.dontHookCreateFrame and CreateFrame then
 		hooksecurefunc("CreateFrame", self.hCreateFrame)
 	end
-	if ContainerFrame_GenerateFrame then
+	--[[if ContainerFrame_GenerateFrame then
 		hooksecurefunc("ContainerFrame_GenerateFrame", self.ContainerFrame_GenerateFrame)
-	end
+	end]]
 	if ShowUIPanel then
 		hooksecurefunc("ShowUIPanel", self.SyncUIPanels)
 	end

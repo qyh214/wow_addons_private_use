@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("IronCouncil", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 253 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
 mod:SetCreatureID(32867, 32927, 32857)
 mod:SetEncounterID(1140)
 mod:DisableEEKillDetection()--Fires for first one dying not last
@@ -16,12 +16,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 61903 63493 62269 63490 62277 63967 64637 61888 63486 61887 61912 63494",
 	"SPELL_AURA_REMOVED 64637 61888",
 	"UNIT_DIED"
-)
-
-mod:SetBossHealthInfo(
-	32867, L.Steelbreaker,
-	32927, L.RunemasterMolgeim,
-	32857, L.StormcallerBrundir
 )
 
 --TODO, needs some work to determing timers for timewalker mode, since don't know if TW based on 35 or 60 second fight design.

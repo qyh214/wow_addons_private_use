@@ -25,7 +25,7 @@ L.MSG_CUSTOM_FONTS					= "自定義字體"
 L.MSG_INVALID_CUSTOM_FONT_NAME		= "無效字體名."
 L.MSG_FONT_NAME_ALREADY_EXISTS		= "字體名字已經存在."
 L.MSG_INVALID_CUSTOM_FONT_PATH		= "字體路徑必須指向.ttf文件"
-L.MSG_UNABLE_TO_SET_FONT			= "無法使用選定字型" 
+L.MSG_UNABLE_TO_SET_FONT			= "無法使用選定字型"
 --L.MSG_TESTING_FONT			= "Testing the specified font for validity..."
 L.MSG_CUSTOM_SOUNDS					= "自定義聲音"
 L.MSG_INVALID_CUSTOM_SOUND_NAME		= "無效聲音名"
@@ -472,8 +472,6 @@ obj["NOTIFICATION_CP_GAIN"]				= { label="連擊點獲得", tooltip="顯示你�
 obj["NOTIFICATION_CP_FULL"]				= { label="連擊點全滿", tooltip="顯示你的連擊點已滿"}
 obj["NOTIFICATION_HOLY_POWER_CHANGE"]	= { label="神聖能量變化", tooltip="顯示你神聖能量的變化"}
 obj["NOTIFICATION_HOLY_POWER_FULL"]		= { label="神聖能量已滿", tooltip="顯示你神聖能量已滿"}
---obj["NOTIFICATION_SHADOW_ORBS_CHANGE"]	= { label="Shadow Orb Changes", tooltip="Enable when you change shadow orbs."}
---obj["NOTIFICATION_SHADOW_ORBS_FULL"]	= { label="Shadow Orbs Full", tooltip="Enable when you attain full shadow orbs."}
 obj["NOTIFICATION_HONOR_GAIN"]			= { label="獲得榮譽", tooltip="顯示你獲得榮譽"}
 obj["NOTIFICATION_REP_GAIN"]			= { label="聲望提高", tooltip="顯示你的聲望提高"}
 obj["NOTIFICATION_REP_LOSS"]			= { label="聲望下降", tooltip="顯示你的聲望下降"}
@@ -530,7 +528,7 @@ obj["SPELL_CAST_FAILED"]		= "施法失敗"
 obj["SPELL_SUMMON"]				= "召喚"
 obj["SPELL_CREATE"]				= "創造"
 obj["PARTY_KILL"]				= "隊友擊殺"
-obj["UNIT_DIED"]				= "單位死亡"
+--obj["UNIT_DIED"]				= "單位死亡"
 obj["UNIT_DESTROYED"]			= "單位被摧毀"
 obj["SPELL_EXTRA_ATTACKS"]		= "額外攻擊"
 obj["UNIT_HEALTH"]				= "生命值改變"
@@ -538,7 +536,7 @@ obj["UNIT_POWER"]				= "法力值改變"
 obj["SKILL_COOLDOWN"]			= "技能冷卻完成"
 obj["PET_COOLDOWN"]				= "寵物技能冷卻完成"
 obj["ITEM_COOLDOWN"]			= "物品冷卻完成"
- 
+
 -- Main event conditions.
 obj["sourceName"]				= "來源玩家名字"
 obj["sourceAffiliation"]		= "來源玩家聯系"
@@ -597,7 +595,7 @@ obj["like"]						= "像"
 obj["unlike"]					= "不像"
 obj["lt"]						= "少于"
 obj["gt"]						= "多于"
- 
+
 -- Affiliations.
 obj["affiliationMine"]			= "我的"
 obj["affiliationParty"]			= "隊友"
@@ -617,7 +615,7 @@ obj["controlServer"]			= "服務器"
 obj["controlHuman"]				= "玩家"
 
 -- Unit types.
-obj["unitTypePlayer"]			= PLAYER 
+obj["unitTypePlayer"]			= PLAYER
 obj["unitTypeNPC"]				= "NPC"
 obj["unitTypePet"]				= PET
 obj["unitTypeGuardian"]			= "護衛"

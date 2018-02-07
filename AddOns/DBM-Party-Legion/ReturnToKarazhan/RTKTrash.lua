@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("RTKTrash", "DBM-Party-Legion", 11)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -38,8 +38,6 @@ local specWarnRoyalty				= mod:NewSpecialWarningSwitch(229489, nil, nil, nil, 1,
 local specWarnFlashlight			= mod:NewSpecialWarningLookAway(227966, nil, nil, nil, 1, 2)
 
 local timerAchieve					= mod:NewBuffActiveTimer(480, 229074)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end

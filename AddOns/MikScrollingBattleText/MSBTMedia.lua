@@ -28,9 +28,9 @@ local string_len = string.len
 
 -- The default sound files to use.
 local DEFAULT_SOUND_FILES = {
- ["MSBT Low Health"]	= "Interface\\Addons\\MikScrollingBattleText\\Sounds\\LowHealth.ogg",
- ["MSBT Low Mana"]		= "Interface\\Addons\\MikScrollingBattleText\\Sounds\\LowMana.ogg",
- ["MSBT Cooldown"]		= "Interface\\Addons\\MikScrollingBattleText\\Sounds\\Cooldown.ogg",
+	["MSBT Low Health"]		= "Interface\\Addons\\MikScrollingBattleText\\Sounds\\LowHealth.ogg",
+	["MSBT Low Mana"]		= "Interface\\Addons\\MikScrollingBattleText\\Sounds\\LowMana.ogg",
+	["MSBT Cooldown"]		= "Interface\\Addons\\MikScrollingBattleText\\Sounds\\Cooldown.ogg",
 }
 
 -- Set the default font files to use to the locale specific fonts.
@@ -58,13 +58,13 @@ local sounds = {}
 -- See the included API.html file for usage info.
 -- ****************************************************************************
 local function RegisterFont(fontName, fontPath)
- -- Don't do anything if the font name or font path is invalid.
- if (type(fontName) ~= "string" or type(fontPath) ~= "string") then return end
- if (fontName == "" or fontPath == "") then return end
+	-- Don't do anything if the font name or font path is invalid.
+	if (type(fontName) ~= "string" or type(fontPath) ~= "string") then return end
+	if (fontName == "" or fontPath == "") then return end
 
- -- Register with MSBT and shared media.
- fonts[fontName] = fontPath
- SML:Register("font", fontName, fontPath, SML_LANG_MASK_ALL)
+	-- Register with MSBT and shared media.
+	fonts[fontName] = fontPath
+	SML:Register("font", fontName, fontPath, SML_LANG_MASK_ALL)
 end
 
 
@@ -73,7 +73,7 @@ end
 -- See the included API.html file for usage info.
 -- ****************************************************************************
 local function IterateFonts()
- return pairs(fonts)
+	return pairs(fonts)
 end
 
 
@@ -86,15 +86,15 @@ end
 -- See the included API.html file for usage info.
 -- ****************************************************************************
 local function RegisterSound(soundName, soundPath)
- -- Don't do anything if the sound name or sound path is invalid.
- if (type(soundName) ~= "string" or type(soundPath) ~= "string") then return end
- if (soundName == "" or soundPath == "") then return end
+	-- Don't do anything if the sound name or sound path is invalid.
+	if (type(soundName) ~= "string" or type(soundPath) ~= "string") then return end
+	if (soundName == "" or soundPath == "") then return end
 
- -- Register with MSBT.
- sounds[soundName] = soundPath
+	-- Register with MSBT.
+	sounds[soundName] = soundPath
 
- -- Register with shared media.
- SML:Register("sound", soundName, soundPath)
+	-- Register with shared media.
+	SML:Register("sound", soundName, soundPath)
 end
 
 
@@ -103,7 +103,7 @@ end
 -- See the included API.html file for usage info.
 -- ****************************************************************************
 local function IterateSounds()
- return pairs(sounds)
+	return pairs(sounds)
 end
 
 
@@ -115,11 +115,11 @@ end
 -- Called by shared media when media is registered.
 -- ****************************************************************************
 local function SMLRegistered(event, mediaType, name)
- if (mediaType == "font") then
-  fonts[name] = SML:Fetch(mediaType, name)
- elseif (mediaType == "sound") then
-  sounds[name] = SML:Fetch(mediaType, name)
- end
+	if (mediaType == "font") then
+		fonts[name] = SML:Fetch(mediaType, name)
+	elseif (mediaType == "sound") then
+		sounds[name] = SML:Fetch(mediaType, name)
+	end
 end
 
 
@@ -127,9 +127,9 @@ end
 -- Called when the mod variables are initialized.
 -- ****************************************************************************
 local function OnVariablesInitialized()
- -- Register custom fonts and sounds.
- for fontName, fontPath in pairs(MSBTProfiles.savedMedia.fonts) do RegisterFont(fontName, fontPath) end
- for soundName, soundPath in pairs(MSBTProfiles.savedMedia.sounds) do RegisterSound(soundName, soundPath) end
+	-- Register custom fonts and sounds.
+	for fontName, fontPath in pairs(MSBTProfiles.savedMedia.fonts) do RegisterFont(fontName, fontPath) end
+	for soundName, soundPath in pairs(MSBTProfiles.savedMedia.sounds) do RegisterSound(soundName, soundPath) end
 end
 
 

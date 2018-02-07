@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank2", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15647 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(46712)
 mod:SetZone()
 
@@ -26,8 +26,6 @@ local timerBoomBoomCD			= mod:NewAITimer(17, 236458)--Bill the Janitor
 local timerZenOrb				= mod:NewTargetTimer(15, 229884)--Master Paku
 
 local countdownZenOrb			= mod:NewCountdown(15, 229884)
-
-mod:RemoveOption("HealthFrame")
 
 local brawlersMod = DBM:GetModByName("Brawlers")
 

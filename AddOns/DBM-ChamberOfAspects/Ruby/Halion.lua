@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Halion", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 240 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 257 $"):sub(12, -3))
 mod:SetCreatureID(39863)--40142 (twilight form)
 mod:SetEncounterID(1150)
 mod:SetModelID(31952)
@@ -35,12 +35,12 @@ local warningShadowBreath			= mod:NewSpellAnnounce(74806, 2, nil, "Tank|Healer")
 local warningFieryBreath			= mod:NewSpellAnnounce(74525, 2, nil, "Tank|Healer")
 local warningTwilightCutter			= mod:NewAnnounce("TwilightCutterCast", 4, 74769)
 
-local specWarnShadowConsumption		= mod:NewSpecialWarningRun(74792, nil, nil, nil, 4)
+local specWarnShadowConsumption		= mod:NewSpecialWarningRun(74792, nil, nil, nil, 4, 2)
 local yellShadowconsumption			= mod:NewYell(74792)
-local specWarnFieryCombustion		= mod:NewSpecialWarningRun(74562, nil, nil, nil, 4)
+local specWarnFieryCombustion		= mod:NewSpecialWarningRun(74562, nil, nil, nil, 4, 2)
 local yellFieryCombustion			= mod:NewYell(74562)
-local specWarnMeteorStrike			= mod:NewSpecialWarningMove(74648)
-local specWarnTwilightCutter		= mod:NewSpecialWarningSpell(74769)
+local specWarnMeteorStrike			= mod:NewSpecialWarningMove(74648, nil, nil, nil, 1, 2)
+local specWarnTwilightCutter		= mod:NewSpecialWarningSpell(74769, nil, nil, nil, 3, 2)
 
 local timerShadowConsumptionCD		= mod:NewNextTimer(25, 74792, nil, nil, nil, 3)
 local timerFieryConsumptionCD		= mod:NewNextTimer(25, 74562, nil, nil, nil, 3)
@@ -57,24 +57,20 @@ local berserkTimer					= mod:NewBerserkTimer(480)
 mod:AddBoolOption("AnnounceAlternatePhase", true, "announce")
 mod:AddBoolOption("SetIconOnConsumption", true)
 
-local warned_preP2 = false
-local warned_preP3 = false
-local phasethree = false
+mod.vb.warned_preP2 = false
+mod.vb.warned_preP3 = false
+mod.vb.phase = 1
 local phases = {}
 
 function mod:OnCombatStart(delay)--These may still need retuning too, log i had didn't have pull time though.
 	table.wipe(phases)
-	warned_preP2 = false
-	warned_preP3 = false
-	phasethree = false
+	self.vb.warned_preP2 = false
+	self.vb.warned_preP3 = false
+	self.vb.phase = 1
 	berserkTimer:Start(-delay)
 	timerMeteorCD:Start(20-delay)
 	timerFieryConsumptionCD:Start(15-delay)
 	timerFieryBreathCD:Start(10-delay)
-	if DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss(39863,40142, L.Halion)
-	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -116,6 +112,7 @@ function mod:SPELL_AURA_APPLIED(args)--We don't use spell cast success for actua
 		end
 		if args:IsPlayer() then
 			specWarnShadowConsumption:Show()
+			specWarnShadowConsumption:Play("runout")
 			yellShadowconsumption:Yell()
 		end
 		if not self.Options.AnnounceAlternatePhase then
@@ -130,6 +127,7 @@ function mod:SPELL_AURA_APPLIED(args)--We don't use spell cast success for actua
 		end
 		if args:IsPlayer() then
 			specWarnFieryCombustion:Show()
+			specWarnFieryCombustion:Play("runout")
 			yellFieryCombustion:Yell()
 		end
 		if not self.Options.AnnounceAlternatePhase then
@@ -156,29 +154,24 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if (spellId == 74712 or spellId == 74717) and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnMeteorStrike:Show()
+		specWarnMeteorStrike:Play("runaway")
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:UNIT_HEALTH(uId)
-	if not warned_preP2 and self:GetUnitCreatureId(uId) == 39863 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.79 then
-		warned_preP2 = true
+	if not self.vb.warned_preP2 and self:GetUnitCreatureId(uId) == 39863 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.79 then
+		self.vb.warned_preP2 = true
 		warnPhase2Soon:Show()	
-	elseif not warned_preP3 and self:GetUnitCreatureId(uId) == 40142 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.54 then
-		warned_preP3 = true
+	elseif not self.vb.warned_preP3 and self:GetUnitCreatureId(uId) == 40142 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.54 then
+		self.vb.warned_preP3 = true
 		warnPhase3Soon:Show()	
 	end
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.Phase2 or msg:find(L.Phase2) then
-		timerFieryBreathCD:Cancel()
-		timerMeteorCD:Cancel()
-		timerFieryConsumptionCD:Cancel()
-		warnPhase2:Show()
-		timerShadowBreathCD:Start(25)
-		timerShadowConsumptionCD:Start(20)--not exact, 15 seconds from tank aggro, but easier to add 5 seconds to it as a estimate timer than trying to detect this
-		timerTwilightCutterCD:Start(35)
+		self:SendSync("Phase2")
 	elseif msg == L.Phase3 or msg:find(L.Phase3) then
 		self:SendSync("Phase3")
 	elseif msg == L.MeteorCast or msg:find(L.MeteorCast) then--There is no CLEU cast trigger for meteor, only yell
@@ -196,6 +189,7 @@ end
 function mod:RAID_BOSS_EMOTE(msg)
 	if msg == L.twilightcutter or msg:find(L.twilightcutter) then
 			specWarnTwilightCutter:Schedule(5)
+			specWarnTwilightCutter:ScheduleVoice(5, "farfromline")
 		if not self.Options.AnnounceAlternatePhase then
 			timerTwilightCutterCD:Cancel()
 			warningTwilightCutter:Show()
@@ -248,8 +242,17 @@ function mod:OnSync(msg, target)
 				timerFieryConsumptionCD:Start()
 			end
 		end
-	elseif msg == "Phase3" and not phasethree then
-		phasethree = true
+	elseif msg == "Phase2" and self.vb.phase < 2 then
+		self.vb.phase = 2
+		timerFieryBreathCD:Cancel()
+		timerMeteorCD:Cancel()
+		timerFieryConsumptionCD:Cancel()
+		warnPhase2:Show()
+		timerShadowBreathCD:Start(25)
+		timerShadowConsumptionCD:Start(20)--not exact, 15 seconds from tank aggro, but easier to add 5 seconds to it as a estimate timer than trying to detect this
+		timerTwilightCutterCD:Start(35)
+	elseif msg == "Phase3" and self.vb.phase < 3 then
+		self.vb.phase = 3
 		warnPhase3:Show()
 		timerMeteorCD:Start(30) --These i'm not sure if they start regardless of drake aggro, or if it varies as well.
 		timerFieryConsumptionCD:Start(20)--not exact, 15 seconds from tank aggro, but easier to add 5 seconds to it as a estimate timer than trying to detect this

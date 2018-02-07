@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("CThun", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 637 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(15589, 15727)
 mod:SetEncounterID(717)
 mod:RegisterCombat("combat")
@@ -43,10 +43,6 @@ function mod:OnCombatStart(delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(10)
 	end
-	if DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss(15589, L.Eye)
-	end
 end
 
 function mod:OnCombatEnd()
@@ -82,9 +78,5 @@ function mod:UNIT_DIED(args)
 		warnPhase2:Show()
 		self:UnscheduleMethod("EyeTentacle")
 		self:UnscheduleMethod("DarkGlare")
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:Clear()
-			DBM.BossHealth:AddBoss(15727, L.name)
-		end
 	end
 end

@@ -1,7 +1,7 @@
-changeset:   267:85b0dc5238d4
-tag:         v7.3.2.267-release
+changeset:   269:5191256b0807
+tag:         v7.3.2.269-release
 user:        Tercio
-date:        Fri Jan 12 11:54:18 2018 -0200
-summary:     - Fixed all pet battles icons which was showing an interrogation mark.
+date:        Fri Jan 26 14:28:13 2018 -0200
+summary:     - Added an option to reset the position of the tracker. This should solve problems where users drag the tracker outside the screen space.
 
 

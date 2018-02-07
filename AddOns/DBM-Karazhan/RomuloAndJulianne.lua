@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("RomuloAndJulianne", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 631 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(17534, 17533, 99999)--99999 bogus screature id to keep mod from pre mature combat end.
 --mod:SetEncounterID(655)--used by all 3 of them, so not usuable
 mod:SetModelID(17068)
@@ -32,25 +32,12 @@ local timerDaring		= mod:NewTargetTimer(8, 30841, nil, "Tank|MagicDispeller", 2,
 local timerDevotion		= mod:NewTargetTimer(10, 30887, nil, "Tank|MagicDispeller", 2, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_MAGIC_ICON)
 local timerCombatStart	= mod:NewCombatTimer(55)
 
-mod:AddBoolOption("HealthFrame", false)
-
 mod.vb.phase = 0
 mod.vb.JulianneDied = 0
 mod.vb.RomuloDied = 0
 
 local function NextPhase(self)
 	self.vb.phase = self.vb.phase + 1
-	if DBM.BossHealth:IsShown() then
-		if self.vb.phase == 1 then
-			DBM.BossHealth:Clear()
-			DBM.BossHealth:AddBoss(17534, L.Julianne)
-		elseif self.vb.phase == 2 then
-			DBM.BossHealth:AddBoss(17533, L.Romulo)
-		elseif self.vb.phase == 3 then
-			DBM.BossHealth:AddBoss(17534, L.Julianne)
-			DBM.BossHealth:AddBoss(17533, L.Romulo)
-		end
-	end
 end
 
 function mod:OnCombatStart(delay)
@@ -107,9 +94,6 @@ function mod:UNIT_DIED(args)
 				DBM:EndCombat(self)
 			end
 		else
-			if DBM.BossHealth:IsShown() then
-				DBM.BossHealth:RemoveBoss(cid)
-			end
 			warnPhase2:Show()
 			NextPhase(self)--Trigger phase 2
 		end
@@ -119,8 +103,6 @@ function mod:UNIT_DIED(args)
 			if (GetTime() - self.vb.JulianneDied) < 10 then
 				DBM:EndCombat(self)
 			end
-		elseif DBM.BossHealth:IsShown() then 
-			DBM.BossHealth:RemoveBoss(cid)
 		end
 	end
 end

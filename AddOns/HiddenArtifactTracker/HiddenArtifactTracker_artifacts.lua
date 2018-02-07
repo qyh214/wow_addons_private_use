@@ -233,6 +233,7 @@ HiddenArtifactTrackerFuncs["Ulthalesh, the Deadwind Harvester"] =
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Suramar: Apothecary Faldren",44032,1033)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Suramar: Colerian, Alteria, and Selenyi - Outrider Trio",41697,1033)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Suramar: Sorallus",44122,1033)
+			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Suramar: Scythmaster Cil'raman",42797,1033)
 
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Val'sharah: Kathaw the Savage",42870,1018)
 			HiddenArtifactTrackerFuncs.getWorldBossQ(false,"Val'sharah: Malisandra",42927,1018)

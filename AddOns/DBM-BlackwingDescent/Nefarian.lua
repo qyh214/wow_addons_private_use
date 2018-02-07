@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 local Nefarian	= DBM:EJ_GetSectionInfo(3279)
 local Onyxia	= DBM:EJ_GetSectionInfo(3283)
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetCreatureID(41376, 41270)
 mod:SetEncounterID(1026) -- ES fires when Nefarian engaged.
 mod:SetZone()
@@ -11,11 +11,6 @@ mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_Event09.ogg", "Soun
 --"Ha ha ha ha ha! The heroes have made it to the glorious finale. I take it you are in good spirits? Prepared for the final battle? Then gaze now upon my ultimate creation! RISE, SISTER!" = "Nefarian\\VO_BD_Nefarian_Event01",
 --Long: I have tried to be an accommodating host, but you simply will not die! Time to throw all pretense aside and just... KILL YOU ALL!.
 --Short: You really have to want it!
-
-mod:SetBossHealthInfo(
-	41376, Nefarian,
-	41270, Onyxia
-)
 
 mod:RegisterCombat("combat")
 
@@ -30,8 +25,7 @@ mod:RegisterEventsInCombat(
 	"SWING_DAMAGE",
 	"SWING_MISSED",
 	"CHAT_MSG_MONSTER_YELL",
-	"RAID_BOSS_EMOTE",
-	"UNIT_DIED"
+	"RAID_BOSS_EMOTE"
 )
 
 local warnOnyTailSwipe			= mod:NewAnnounce("OnyTailSwipe", 3, 77827)--we only care about onyxia's tailswipe. Nefarian's shouldn't get in the way or you're doing it wrong.
@@ -75,7 +69,6 @@ local countdownShadowblaze		= mod:NewCountdown(30, 81031, "Tank")
 
 mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("SetIconOnCinder", true)
-mod:AddBoolOption("HealthFrame", false)
 mod:AddBoolOption("InfoFrame", true)
 mod:AddBoolOption("SetWater", true)
 mod:AddBoolOption("TankArrow", false)--May be prone to some issues if you have 2 kiters, or unpicked up adds, but it's off by default so hopefully feature is used by smart people.
@@ -190,9 +183,6 @@ function mod:SPELL_CAST_START(args)
 			timerNefBreathCD:Start()
 		end
 	elseif args.spellId == 80734 then
-		if not DBM.BossHealth:HasBoss(args.sourceGUID) and DBM.BossHealth:IsShown() then
-			DBM.BossHealth:AddBoss(args.sourceGUID, args.sourceName)
-		end
 		if args.sourceGUID == UnitGUID("target") then--Only show warning/timer for your own target.
 			warnBlastNova:Show()
 			specWarnBlastsNova:Show(args.sourceName)
@@ -341,14 +331,5 @@ function mod:RAID_BOSS_EMOTE(msg)
 	if (msg == L.NefAoe or msg:find(L.NefAoe)) and self:IsInCombat() then
 		specWarnElectrocute:Show()
 		timerElectrocute:Start()
-	end
-end
-
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 41948 and DBM.BossHealth:IsShown() then--Also remove from boss health when they die based on GUID
-		DBM.BossHealth:RemoveBoss(args.destGUID)
-	elseif cid == 41270 and DBM.BossHealth:IsShown() then
-		DBM.BossHealth:RemoveBoss(cid)
 	end
 end

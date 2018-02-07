@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(119, "DBM-Party-Cataclysm", 5, 69)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetCreatureID(43612)
 mod:SetEncounterID(1053)
 mod:SetZone()
@@ -12,8 +12,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 82622 82506 82255 88814",
 	"SPELL_AURA_REMOVED 82622 82506",
 	"SPELL_DAMAGE 81942",
-	"SPELL_MISSED 81942",
-	"UNIT_DIED"
+	"SPELL_MISSED 81942"
 )
 
 --TODO, verify how soul sever stuff works, i don't remember it completely
@@ -32,17 +31,12 @@ local timerLashings				= mod:NewTargetTimer(20, 82506, nil, "Tank|Healer", 2, 5)
 local timerSoulSever			= mod:NewTargetTimer(4, 82255, nil, nil, nil, 1)
 local timerSoulSeverCD			= mod:NewCDTimer(11, 82255, nil, nil, nil, 3)
 
-mod:AddBoolOption("BossHealthAdds")
-
 local spamSIS = 0--We use custom updating so don't use prototype
 local BlazeHeavens = DBM:EJ_GetSectionInfo(2459)
 local HarbringerDarkness = DBM:EJ_GetSectionInfo(2473)
 
 function mod:OnCombatStart(delay)
 	spamSIS = 0
-	if DBM.BossHealth:IsShown() and self.Options.BossHealthAdds then
-		DBM.BossHealth:AddBoss(48906, BlazeHeavens)
-	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
@@ -56,10 +50,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 82320 and args.destName == L.name then
 		warnRepentance:Show()
 		spamSIS = GetTime()
-		if self.Options.BossHealthAdds and DBM.BossHealth:IsShown() then
-			DBM.BossHealth:AddBoss(43927, HarbringerDarkness)
-			DBM.BossHealth:RemoveBoss(48906)
-		end
 	elseif spellId == 82255 then
 		if args:IsPlayer() then
 			specWarnSoulSever:Show()
@@ -88,13 +78,6 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 81942 and destGUID == UnitGUID("player") and GetTime() - spamSIS > 3 then
 		spamSIS = GetTime()
 		specWarnHeavenFury:Show()
-	end
-end
-
-function mod:UNIT_DIED(args)
-	if self:GetCIDFromGUID(args.destGUID) == 43927 and self.Options.BossHealthAdds and DBM.BossHealth:IsShown() then
-		DBM.BossHealth:RemoveBoss(43927)
-		DBM.BossHealth:AddBoss(48906, BlazeHeavens)
 	end
 end
 		

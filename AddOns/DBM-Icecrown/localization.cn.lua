@@ -32,8 +32,7 @@ L:SetWarningLocalization{
 L:SetOptionLocalization{
 	WarnAddsSoon		= "为新的小怪出现显示预先警告",
 	WarnReanimating		= "当小怪再活化时显示警告",
-	TimerAdds			= "为新的小怪显示计时器",
-	ShieldHealthFrame	= "为$spell:70842显示首领血量框架"
+	TimerAdds			= "为新的小怪显示计时器"
 }
 
 L:SetMiscLocalization{
@@ -134,8 +133,7 @@ L:SetWarningLocalization{
 L:SetOptionLocalization{
 	WarnOozeSpawn		= "为小软泥的出现显示警告",
 	SpecWarnLittleOoze	= "当你被小软泥怪盯上时显示特別警告",
-	RangeFrame			= "显示距离框(8码)",
-	TankArrow			= "为大软泥怪副坦显示DBM箭头"
+	RangeFrame			= "显示距离框(8码)"
 }
 
 L:SetMiscLocalization{
@@ -153,8 +151,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	MalleableGooIcon	= "为第一个中$spell:72295的目标设置标记",
-	GooArrow			= "当你附近的人中了$spell:72295时显示DBM箭头"
+	MalleableGooIcon	= "为第一个中$spell:72295的目标设置标记"
 }
 
 ----------------------------
@@ -180,8 +177,7 @@ L:SetOptionLocalization{
 	WarnTargetSwitchSoon	= "为转换目标显示预先警告",
 	TimerTargetSwitch		= "为转换目标显示冷却计时器",
 	ActivePrinceIcon		= "设置标记在強化的亲王身上(头颅)",
-	RangeFrame				= "显示距离框(12码)",
-	VortexArrow				= "当你附近的人中了$spell:72037时显示DBM箭头"
+	RangeFrame				= "显示距离框(12码)"
 }
 
 L:SetMiscLocalization{

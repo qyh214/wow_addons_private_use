@@ -197,10 +197,6 @@ L:SetGeneralLocalization({
 ------------------------
 L= DBM:GetModLocalization(119)
 
-L:SetOptionLocalization{
-	BossHealthAdds	= "Zeige die Gesundheit der Adds in der Lebensanzeige"
-}
-
 ------------------------------------
 -- Siamat, Lord of the South Wind --
 ------------------------------------

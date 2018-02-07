@@ -59,7 +59,6 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnPossessed		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(136442),
 	specWarnPossessed	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch:format(136442),
-	PHealthFrame		= "Mostrar marco de salud restante para que $spell:136442 desaparezca (requiere que la opción de marco de salud del jefe esté habilitada)",
 	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(5),
 	AnnounceCooldowns	= "Anunciar (con contador, hasta 3) los lanzamientos de $spell:137166 para el uso de facultades potentes de sanación",
 	SetIconOnBitingCold	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136992),

@@ -2,7 +2,7 @@ local mod	= DBM:NewMod("Kal", "DBM-Sunwell")
 local Kal 	= DBM:GetModByName("Kal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(24850)
 mod:SetEncounterID(724)
 mod:SetModelID(26628)
@@ -55,11 +55,6 @@ function mod:OnCombatStart(delay)
 	end
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show()
-	end
-	if DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss(24850, L.name)
-		DBM.BossHealth:AddBoss(24892, L.Demon)
 	end
 end
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d517", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1005)
@@ -23,8 +23,6 @@ local specWarnSwampSmash		= mod:NewSpecialWarningSpell(115013, nil, nil, nil, 2)
 --Borokhula the Destroyer
 local timerSwampSmashCD			= mod:NewCDTimer(8, 115013)
 local timerEarthShatteringCD	= mod:NewCDTimer(18, 122142)--Limited sample size, may be shorter
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 115013 then

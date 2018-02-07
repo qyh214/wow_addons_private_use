@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(687, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetCreatureID(60701, 60708, 60709, 60710)--Adds: 60731 Undying Shadow, 60958 Pinning Arrow
 mod:SetEncounterID(1436)
 mod:SetZone()
@@ -135,10 +135,6 @@ function mod:OnCombatStart(delay)
 		warnImperviousShieldSoon:Schedule(35.7)
 	else
 		rainTimerText = DBM_CORE_AUTO_TIMER_TEXTS.cd:format(DBM:GetSpellInfo(118122))
-	end
-	if DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss(60709 ,Qiang)
 	end
 end
 
@@ -294,9 +290,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			timerShieldOfDarknessCD:Cancel()
 			countdownShieldOfDarkness:Cancel()
 			warnShieldOfDarknessSoon:Cancel()
-			if DBM.BossHealth:IsShown() then
-				DBM.BossHealth:RemoveBoss(60701)
-			end
 			timerUndyingShadowsCD:Start(30)--This boss retains Undying Shadows
 			if self.Options.RangeFrame and not subetaiActive then--Close range frame, but only if zian is also not active, otherwise we still need it
 				DBM.RangeCheck:Hide()
@@ -304,9 +297,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		elseif UnitName(uId) == Meng then
 			mengActive = false
 			timerDeliriousCD:Cancel()
-			if DBM.BossHealth:IsShown() then
-				DBM.BossHealth:RemoveBoss(60708)
-			end
 			timerMaddeningShoutCD:Start(30)--This boss retains Maddening Shout
 		elseif UnitName(uId) == Qiang then
 			qiangActive = false
@@ -315,18 +305,12 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			timerImperviousShieldCD:Cancel()
 			countdownImperviousShield:Cancel()
 			warnImperviousShieldSoon:Cancel()
-			if DBM.BossHealth:IsShown() then
-				DBM.BossHealth:RemoveBoss(60709)
-			end
 			timerFlankingOrdersCD:Start(30)--This boss retains Flanking Orders
 		elseif UnitName(uId) == Subetai then
 			subetaiActive = false
 			timerVolleyCD:Cancel()
 			timerRainOfArrowsCD:Cancel()
 			timerSleightOfHandCD:Cancel()
-			if DBM.BossHealth:IsShown() then
-				DBM.BossHealth:RemoveBoss(60710)
-			end
 			timerPillageCD:Start(30)--This boss retains Pillage
 			if self.Options.RangeFrame and not zianActive then--Close range frame, but only if subetai is also not active, otherwise we still need it
 				DBM.RangeCheck:Hide()
@@ -381,9 +365,6 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, boss)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(8)
 		end
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:AddBoss(60701, Zian)
-		end
 	elseif boss == Meng then
 		warnActivated:Show(boss)
 		mengActive = true
@@ -392,9 +373,6 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, boss)
 			timerMaddeningShoutCD:Start(40)--On heroic, he skips first cast as a failsafe unless you manage to kill it within 20 seconds. otherwise, first cast will actually be after about 40-45 seconds. Since this is VERY hard to do right now, lets just automatically skip it for now. Maybe find a better way to fix it later if it becomes a problem this expansion
 		else
 			timerMaddeningShoutCD:Start(20.5)
-		end
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:AddBoss(60708, Meng)
 		end
 	elseif boss == Qiang then
 		warnActivated:Show(boss)
@@ -411,9 +389,6 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, boss)
 		end
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(8)
-		end
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:AddBoss(60710, Subetai)
 		end
 	end
 end

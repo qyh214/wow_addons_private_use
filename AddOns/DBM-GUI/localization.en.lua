@@ -7,7 +7,7 @@ L.MainFrame = "Deadly Boss Mods"
 L.TranslationByPrefix		= "Translated by "
 L.TranslationBy 			= nil -- your name here, localizers!
 L.Website					= "Visit us on discord at |cFF73C2FBhttps://discord.gg/deadlybossmods|r. Follow on twitter @deadlybossmods or @MysticalOS"
-L.WebsiteButton				= "Forums"
+L.WebsiteButton				= "Discord"
 
 L.OTabBosses	= "Bosses"
 L.OTabOptions	= GAMEOPTIONS_MENU
@@ -204,21 +204,6 @@ L.SpecialWarnSound3			= "Set default sound for VERY important special warnings"
 L.SpecialWarnSound4			= "Set default sound for run away special warnings"
 L.SpecialWarnSound5			= "Set default sound for special warnings with notes containing your name"
 
--- Tab: Heads Up Display Frame
-L.Panel_HUD					= "Heads Up Display"
-L.Area_HUDOptions			= "HUD Options"
-L.HUDColorOverride			= "Override mod chosen colors for HUD"
-L.HUDSizeOverride			= "Override mod chosen sizes for HUD"
-L.HUDAlphaOverride			= "Override mod chosen alpha (transparency) for HUD"
-L.HUDTextureOverride		= "Override mod chosen textures for HUD (does not apply to 'icon' texture options)"
-L.HUDColorSelect			= "HUD color %d"
-L.HUDTextureSelect1			= "Set texture for primary HUD"
-L.HUDTextureSelect2			= "Set texture for secondary HUD"
-L.HUDTextureSelect3			= "Set texture for tertiary HUD"
-L.HUDTextureSelect4			= "Set texture for 'run to' HUD"
-L.HUDSizeSlider				= "Circle Radius: %0.1f"
-L.HUDAlphaSlider			= "Alpha: %0.1f"
-
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Spoken Alerts"
 L.Area_VoiceSelection		= "Voice Selections (scroll selection menus with mouse wheel)"
@@ -234,14 +219,12 @@ L.SWFDefaultOnly			= "when special warnings use default sounds. (Allows custom s
 L.SWFAll					= "when special warnings use any sound"
 L.SpecWarn_AlwaysVoice		= "Always play all spoken alerts (Overrides boss-specific options. Useful for RL)"
 --TODO, maybe add URLS right to GUI panel on where to acquire 3rd party voice packs?
-
--- Tab: HealthFrame
-L.Panel_HPFrame				= "Health Frame"
-L.Area_HPFrame				= "Health Frame Options"
-L.HP_Enabled				= "Always show health frame (Overrides boss-specific option)"
-L.HP_GrowUpwards			= "Expand health frame upward"
-L.HP_ShowDemo				= "Show HP frame"
-L.BarWidth					= "Bar width: %d"
+L.Area_GetVEM				= "Get VEM Voice Pack"
+L.VEMDownload				= "|cFF73C2FBhttps://wow.curseforge.com/projects/dbm-voicepack-vem|r"
+L.Area_BrowseOtherVP		= "Browse other voice packs on curse"
+L.BrowseOtherVPs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+voice|r"
+L.Area_BrowseOtherCT		= "Browse countdown packs on curse"
+L.BrowseOtherCTs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+count+pack|r"
 
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "DBM Global Disables & Filters"
@@ -256,7 +239,6 @@ L.SpamBlockNoRangeFrame		= "Do not show range frame"
 L.SpamBlockNoInfoFrame		= "Do not show info frame"
 L.SpamBlockNoHudMap			= "Do not show HudMap"
 L.SpamBlockNoNameplate		= "Do not show Nameplate Auras"
-L.SpamBlockNoHealthFrame	= "Do not show health frame"
 L.SpamBlockNoCountdowns		= "Do not play countdown sounds"
 L.SpamBlockNoYells			= "Do not send chat yells"
 L.SpamBlockNoNoteSync		= "Do not accept shared notes"

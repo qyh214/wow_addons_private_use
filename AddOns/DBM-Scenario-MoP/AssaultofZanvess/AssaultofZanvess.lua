@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d593", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1050)
@@ -21,9 +21,6 @@ local specWarnGuidedMissle	= mod:NewSpecialWarningPreWarn(135546, nil, 5)--So yo
 
 local timerGuidedMissle		= mod:NewCastTimer(5, 135546)--Time until impact
 local timerImpaleCD			= mod:NewNextTimer(6, 133942)
-
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 135546 then

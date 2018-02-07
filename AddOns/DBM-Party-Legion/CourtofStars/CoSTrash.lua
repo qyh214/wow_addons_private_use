@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("CoSTrash", "DBM-Party-Legion", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -29,7 +29,6 @@ local specWarnSealMagic				= mod:NewSpecialWarningRun(209404, false, nil, 2, 4, 
 local specWarnDisruptingEnergy		= mod:NewSpecialWarningMove(209512, nil, nil, nil, 1, 2)
 local specWarnWhirlingBlades		= mod:NewSpecialWarningRun(209378, "Melee", nil, nil, 4, 2)
 
-mod:RemoveOption("HealthFrame")
 mod:AddBoolOption("SpyHelper", true)
 
 function mod:SPELL_CAST_START(args)

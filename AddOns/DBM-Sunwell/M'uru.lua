@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Muru", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 642 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(25741)--25741 Muru, 25840 Entropius
 mod:SetEncounterID(728)
 mod:SetModelID(23404)
@@ -55,10 +55,6 @@ local function phase2(self)
 	self:Unschedule(HumanSpawn)
 	self:Unschedule(VoidSpawn)
 	timerBlackHoleCD:Start(17)
-	if DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss(25840, L.Entropius)
-	end
 end
 
 function mod:OnCombatStart(delay)

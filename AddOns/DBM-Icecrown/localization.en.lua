@@ -35,7 +35,6 @@ L:SetOptionLocalization{
 	WarnAddsSoon				= "Show pre-warning for adds spawning",
 	WarnReanimating				= "Show warning when an add is being revived",	-- Reanimated Adherent/Fanatic spawning
 	TimerAdds					= "Show timer for new adds",
-	ShieldHealthFrame			= "Show boss health with a health bar for $spell:70842",
 	SetIconOnDominateMind		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(71289),
 	SetIconOnDeformedFanatic	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70900),
 	SetIconOnEmpoweredAdherent	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70901)
@@ -140,8 +139,7 @@ L:SetOptionLocalization{
 	WarnOozeSpawn				= "Show warning for Little Ooze spawning",
 	SpecWarnLittleOoze			= "Show special warning when you are attacked by Little Ooze",--creatureid 36897
 	RangeFrame					= "Show range frame (8 yards)",
-	InfectionIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(69674),
-	TankArrow					= "Show DBM arrow for Big Ooze kiter"
+	InfectionIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(69674)
 }
 
 L:SetMiscLocalization{
@@ -162,8 +160,7 @@ L:SetOptionLocalization{
 	OozeAdhesiveIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70447),
 	GaseousBloatIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70672),
 	UnboundPlagueIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70911),
-	MalleableGooIcon			= "Set icon on first $spell:72295 target",
-	GooArrow					= "Show DBM arrow when $spell:72295 is near you"
+	MalleableGooIcon			= "Set icon on first $spell:72295 target"
 }
 
 ----------------------------
@@ -190,8 +187,7 @@ L:SetOptionLocalization{
 	TimerTargetSwitch		= "Show timer for target switch cooldown",
 	EmpoweredFlameIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(72040),
 	ActivePrinceIcon		= "Set icon on the empowered Prince (skull)",
-	RangeFrame				= "Show range frame (12 yards)",
-	VortexArrow				= "Show DBM arrow when $spell:72037 is near you"
+	RangeFrame				= "Show range frame (12 yards)"
 }
 
 L:SetMiscLocalization{

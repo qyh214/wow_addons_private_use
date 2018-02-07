@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TrialofValorTrash", "DBM-TrialofValor")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
@@ -13,8 +13,6 @@ mod:RegisterEvents(
 local specWarnShatterboneShield		= mod:NewSpecialWarningReflect(228845, nil, nil, nil, 1, 2)
 local specWarnBreathOfDread			= mod:NewSpecialWarningMove(228371, nil, nil, nil, 1, 2)
 local specWarnBindSpirit			= mod:NewSpecialWarningDispel(228395, "MagicDispeller", nil, nil, 1, 2)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end

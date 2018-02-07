@@ -46,8 +46,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	warnHideOver			= "Show warning when $spell:123244 has ended",
 	timerSpecialCD			= "Show timer for special ability CD",
-	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(Shows everyone during Hide, otherwise, only shows tanks)",
-	GWHealthFrame			= "Show remaining health frame for $spell:123461 fades<br/>(Requires boss health frame enabled)" -- maybe bad wording, needs review
+	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(Shows everyone during Hide, otherwise, only shows tanks)"
 })
 
 L:SetMiscLocalization{

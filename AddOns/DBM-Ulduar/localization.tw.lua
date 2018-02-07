@@ -307,8 +307,6 @@ L:SetOptionLocalization{
 	TimeToPhase3			= "為第3階段開始顯示計時器",
 	TimeToPhase4			= "為第4階段開始顯示計時器",
 	MagneticCore			= "提示磁能之核的拾取者",
-	HealthFramePhase4		= "顯示第4階段的首領血量框架",
-	AutoChangeLootToFFA		= "第3階段自動轉換拾取方式為自由拾取",
 	WarnBombSpawn			= "為炸彈機器人顯示警告",
 	TimerHardmode			= "為困難模式顯示計時器",
 	ShockBlastWarningInP1	= "為第1階段的$spell:63631顯示特別警告",
@@ -401,6 +399,5 @@ L:SetOptionLocalization{
 	SpecWarnFervorCast				= "當薩拉的熱誠正在對你施放時顯示特別警告(必須有最少一名團隊成員設置目標或專注目標)",
 	specWarnBrainPortalSoon			= "為下一次腦部傳送門顯示特別警告",
 	NextPortal						= "為下一次傳送門顯示計時器",
-	ShowSaraHealth					= "顯示薩拉在第1階段的血量(必須有最少一名團隊成員設置目標或專注目標)",
 	MaladyArrow						= "當你附近的人中了$spell:63881時顯示DBM箭頭"
 }

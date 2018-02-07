@@ -9,14 +9,7 @@ L:SetGeneralLocalization({
 	name = "Anub'Rekhan"
 })
 
-L:SetWarningLocalization({
-	SpecialLocust		= "Locust Swarm",
-	WarningLocustFaded	= "Locust Swarm faded"
-})
-
 L:SetOptionLocalization({
-	SpecialLocust		= "Show special warning for Locust Swarm",
-	WarningLocustFaded	= "Show warning for Locust Swarm fade",
 	ArachnophobiaTimer	= "Show timer for Arachnophobia (achievement)"
 })
 
@@ -350,13 +343,11 @@ L:SetOptionLocalization({
 	TimerAir			= "Show timer for air phase",
 	TimerLanding		= "Show timer for landing",
 	TimerIceBlast		= "Show timer for Frost Breath",
-	WarningDeepBreath	= "Show special warning for Frost Breath",
-	WarningIceblock		= "Yell on Ice Block"
+	WarningDeepBreath	= "Show special warning for Frost Breath"
 })
 
 L:SetMiscLocalization({
-	EmoteBreath			= "%s takes a deep breath.",
-	WarningYellIceblock	= "I'm an Ice Block!"
+	EmoteBreath			= "%s takes a deep breath."
 })
 
 L:SetWarningLocalization({

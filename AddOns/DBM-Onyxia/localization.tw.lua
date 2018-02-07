@@ -22,7 +22,7 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	TimerWhelps		= "為奧妮克希亞幼龍顯示計時器",
 	WarnWhelpsSoon	= "為奧妮克希亞幼龍顯示預先警告",
-	SoundWTF		= "為經典傳奇式奧妮克希亞副本播放一些有趣的音效"
+	SoundWTF3		= "為經典傳奇式奧妮克希亞副本播放一些有趣的音效"
 }
 
 L:SetMiscLocalization{

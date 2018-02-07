@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(692, "DBM-Party-MoP", 6, 324)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 113 $"):sub(12, -3))
 mod:SetCreatureID(61485)
 mod:SetEncounterID(1447)
 mod:SetZone()
@@ -16,7 +16,6 @@ mod:RegisterEventsInCombat(
 
 local warnBladeRush			= mod:NewSpellAnnounce(124283, 3)
 local warnTempest			= mod:NewSpellAnnounce(119875, 3)
-local warnBulwark			= mod:NewSpellAnnounce(119476, 3)
 
 local specWarnTempest		= mod:NewSpecialWarningSpell(119875, "Healer")
 local specWarnBulwark		= mod:NewSpecialWarningSpell(119476, nil, nil, nil, 2)
@@ -24,7 +23,7 @@ local specWarnBulwark		= mod:NewSpecialWarningSpell(119476, nil, nil, nil, 2)
 local timerBladeRushCD		= mod:NewCDTimer(12, 124283, nil, nil, nil, 3)--12-20sec variation
 local timerTempestCD		= mod:NewCDTimer(43, 119875)--Tempest has a higher cast priority than blade rush, if it's do, it'll delay blade rush.
 
-mod:AddBoolOption("HealthFrame", true)
+mod:AddInfoFrameOption(119875, true)
 
 mod.vb.phase = 1
 
@@ -33,20 +32,30 @@ function mod:OnCombatStart(delay)
 	timerBladeRushCD:Start(-delay)
 end
 
+function mod:OnCombatEnd()
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
+end
+
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 119476 then
-		self:ShowShieldHealthBar(args.destGUID, args.spellName, 1500000)
 		self.vb.phase = 2
-		warnBulwark:Show()
 		specWarnBulwark:Show()
 		timerBladeRushCD:Cancel()
 		timerTempestCD:Cancel()
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:SetHeader(args.spellName)
+			DBM.InfoFrame:Show(2, "enemyabsorb", nil, UnitGetTotalAbsorbs("boss1"))
+		end
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 119476 then--When bullwark breaks, he will instantly cast either tempest or blade rush, need more logs to determine if it's random or set.
-		self:RemoveShieldHealthBar(args.destGUID)
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:Hide()
+		end
 	end
 end
 

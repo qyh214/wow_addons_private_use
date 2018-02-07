@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d649", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1131)
@@ -33,8 +33,6 @@ local specWarnShatteredEarth		= mod:NewSpecialWarningMove(142768)
 local timerGlacialFreezeTotemCD		= mod:NewCDTimer(25, 142320)--Only got cast twice in my log, so cd may be variable, need more data.
 local timerRuinedEarth				= mod:NewBuffActiveTimer(15, 142306)
 local timerRuinedEarthCD			= mod:NewCDTimer(19.5, 142306)--Timer started when last ended, but actual CD is 34.5ish
-
-mod:RemoveOption("HealthFrame")
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.XorenthPull or msg:find(L.XorenthPull) then

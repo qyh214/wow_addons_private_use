@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 local Riplimb	= DBM:EJ_GetSectionInfo(2581)
 local Rageface	= DBM:EJ_GetSectionInfo(2583)
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetCreatureID(53691)
 mod:SetEncounterID(1205)
 mod:SetZone()
@@ -23,12 +23,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_SUMMON 99836 99839",
 	"UNIT_HEALTH boss1 boss2 boss3", -- probably needs just one (?)
 	"UNIT_DIED"
-)
-
-mod:SetBossHealthInfo(
-	53691,	L.name,
-	53694,	Riplimb,
-	53695,	Rageface
 )
 
 local warnFaceRage				= mod:NewTargetAnnounce(99947, 4)

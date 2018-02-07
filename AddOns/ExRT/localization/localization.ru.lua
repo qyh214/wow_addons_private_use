@@ -449,6 +449,7 @@ L.cd2OtherSetTabNameVisibility = "Отображение"
 L.cd2OtherVisibilityPartyType = "По типу группы"
 L.cd2OtherVisibilityPartyTypeRaid = "В рейде"
 L.cd2OtherVisibilityZoneType = "По типу зоны"
+L.cd2OtherSetLineClickWhisper = "Отправлять сообщение игроку при нажатии на полосу без кд"
 
 L.sallspellsEggClear = "Очистить"
 L.sallspellsEgg = "Лог заклинаний"

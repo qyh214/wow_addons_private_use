@@ -42,8 +42,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	warnHideOver			= "Предупреждение о появлении босса после $spell:123244",
 	timerSpecialCD			= "Отсчет времени до следующей спец-способности",
-	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(Показывает всех во время $spell:123244, иначе только танков)",
-	GWHealthFrame			= "Показывать полоску оставшегося здоровья босса до спадения $spell:123461<br/>(Требуется включить окно отображения здоровья босса)"
+	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(Показывает всех во время $spell:123244, иначе только танков)"
 })
 
 L:SetMiscLocalization{

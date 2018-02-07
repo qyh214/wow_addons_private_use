@@ -22,7 +22,7 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	TimerWhelps				= "Montre le timer pour l'arrivée des Jeunes dragonnets onyxien",
 	WarnWhelpsSoon			= "Montre une pré-alerte avant l'arrivée des Jeunes dragonnets onyxien",
-	SoundWTF				= "Joue des sons amusants du légendaire raid classic d'Onyxia"
+	SoundWTF3				= "Joue des sons amusants du légendaire raid classic d'Onyxia"
 }
 
 L:SetMiscLocalization{

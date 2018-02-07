@@ -1,8 +1,9 @@
 ------------------------------------------------------------------------
-r62 | nagboy@gmail.com | 2017-12-11 11:06:08 -0600 (Mon, 11 Dec 2017) | 1 line
+r64 | nagboy@gmail.com | 2018-02-06 22:26:06 +0000 (Tue, 06 Feb 2018) | 1 line
 Changed paths:
-   M /trunk/HandyNotes_DungeonLocations.lua
+   M /trunk/locales/Locales.xml
+   A /trunk/locales/ptBR.lua
 
-Corrected lockout information for Violet Hold
+Added Brazilian Portuguese locale thanks to cleitontf
 ------------------------------------------------------------------------
 

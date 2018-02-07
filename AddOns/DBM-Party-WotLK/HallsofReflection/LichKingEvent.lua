@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(603, "DBM-Party-WotLK", 16, 276)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 249 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
 --mod:SetEncounterID(843, 844, 1990)
 
 mod:RegisterEvents(
@@ -12,8 +12,6 @@ mod:RegisterEvents(
 local WarnWave		= mod:NewAnnounce("WarnWave", 2)
 
 local timerEscape	= mod:NewAchievementTimer(360, 4526, "achievementEscape")
-
-mod:RemoveOption("HealthFrame")
 
 mod.vb.waveCount = 0
 

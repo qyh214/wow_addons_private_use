@@ -23,7 +23,7 @@ L.MSG_CUSTOM_FONTS					= "Polices Personnalisées"
 L.MSG_INVALID_CUSTOM_FONT_NAME		= "Nom de Police incorrect."
 L.MSG_FONT_NAME_ALREADY_EXISTS		= "Le nom de la Police existe déjà."
 L.MSG_INVALID_CUSTOM_FONT_PATH		= "Le chemin de la Police doit pointé vers un fichier .ttf."
---L.MSG_UNABLE_TO_SET_FONT			= "Unable to set specified font." 
+--L.MSG_UNABLE_TO_SET_FONT			= "Unable to set specified font."
 --L.MSG_TESTING_FONT			= "Testing the specified font for validity..."
 L.MSG_CUSTOM_SOUNDS					= "Sons Personnalisés"
 L.MSG_INVALID_CUSTOM_SOUND_NAME		= "Nom du Son incorrect."
@@ -470,8 +470,6 @@ obj["NOTIFICATION_CP_GAIN"]				= { label="Gain de points de combo", tooltip="Aff
 obj["NOTIFICATION_CP_FULL"]				= { label="5 points de combo", tooltip="Afficher quand vous avez atteint 5 points de combo."}
 --obj["NOTIFICATION_HOLY_POWER_CHANGE"]	= { label="Holy Power Changes", tooltip="Enable when you change holy power."}
 --obj["NOTIFICATION_HOLY_POWER_FULL"]		= { label="Holy Power Full", tooltip="Enable when you attain full holy power."}
---obj["NOTIFICATION_SHADOW_ORBS_CHANGE"]	= { label="Shadow Orb Changes", tooltip="Enable when you change shadow orbs."}
---obj["NOTIFICATION_SHADOW_ORBS_FULL"]	= { label="Shadow Orbs Full", tooltip="Enable when you attain full shadow orbs."}
 obj["NOTIFICATION_HONOR_GAIN"]			= { label="Gains d'honneur", tooltip="Afficher les gains d'honneur."}
 obj["NOTIFICATION_REP_GAIN"]			= { label="Gains de réputation", tooltip="Afficher les gains de réputation."}
 obj["NOTIFICATION_REP_LOSS"]			= { label="Pertes de réputation", tooltip="Afficher les pertes de réputation."}
@@ -528,7 +526,7 @@ obj["SPELL_CAST_FAILED"]		= "Sort Echoué"
 obj["SPELL_SUMMON"]				= "Invoquer"
 obj["SPELL_CREATE"]				= "Créer"
 obj["PARTY_KILL"]				= "Coup Fatal"
-obj["UNIT_DIED"]				= "Unité Morte"
+--obj["UNIT_DIED"]				= "Unité Morte"
 obj["UNIT_DESTROYED"]			= "Unité Détruite"
 obj["SPELL_EXTRA_ATTACKS"]		= "Attaque Supplémentaire"
 obj["UNIT_HEALTH"]				= "Modification des Points de Vie"
@@ -536,7 +534,7 @@ obj["UNIT_POWER"]				= "Modification de Puissance"
 --obj["SKILL_COOLDOWN"]			= "Player Cooldown Complete"
 --obj["PET_COOLDOWN"]				= "Pet Cooldown Complete"
 --obj["ITEM_COOLDOWN"]			= "Item Cooldown Complete"
- 
+
 -- Main event conditions.
 obj["sourceName"]				= "Origine Unité Nom"
 obj["sourceAffiliation"]		= "Origine Unité Affiliation"
@@ -587,7 +585,7 @@ obj["unavailableSkill"]	= "Compétence Indisponible"
 obj["warriorStance"]	= "Position de Combat"
 obj["zoneName"]			= "Nom de la Zone"
 obj["zoneType"]			= "Type de la Zone"
- 
+
 -- Relationships.
 obj["eq"]		= "Est égal à"
 obj["ne"]		= "N'est pas égal à"
@@ -595,7 +593,7 @@ obj["like"]		= "Est comme"
 obj["unlike"]	= "N'est pas comme"
 obj["lt"]		= "Est moins que"
 obj["gt"]		= "Est plus grand que"
- 
+
 -- Affiliations.
 obj["affiliationMine"]		= "A Moi"
 obj["affiliationParty"]		= "Membre du Groupe"
@@ -615,7 +613,7 @@ obj["controlServer"]	= "Serveur"
 obj["controlHuman"]		= "Humain"
 
 -- Unit types.
-obj["unitTypePlayer"]	= "Joueur" 
+obj["unitTypePlayer"]	= "Joueur"
 obj["unitTypeNPC"]		= "NPC"
 obj["unitTypePet"]		= "Familier"
 obj["unitTypeGuardian"]	= "Gardien"

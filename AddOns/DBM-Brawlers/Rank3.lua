@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank3", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15647 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(28649)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -22,7 +22,6 @@ local specWarnPowerShot			= mod:NewSpecialWarningMoveTo(229124)--Johnny Awesome
 local timerShadowTorchCD		= mod:NewCDTimer(5.3, 232504, nil, nil, nil, 3)-- 5.3, 6.2, 5.9, 6.1, 6.0 Shadowmaster Aameen
 local timerPowerShotCD			= mod:NewAITimer(5.3, 229124, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--Johnny Awesome
 
-mod:RemoveOption("HealthFrame")
 mod:AddBoolOption("SetIconOnBlat", true)--Blat
 
 local brawlersMod = DBM:GetModByName("Brawlers")

@@ -19,16 +19,16 @@ local L = MikSBT.translations
 ------------------------------
 
 L.FONT_FILES = {
- ["MSBT Adventure"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\adventure.ttf",
- ["MSBT Bazooka"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\bazooka.ttf",
- ["MSBT Cooline"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\cooline.ttf",
- ["MSBT Diogenes"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\diogenes.ttf",
- ["MSBT Ginko"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\ginko.ttf",
- ["MSBT Heroic"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\heroic.ttf",
- ["MSBT Porky"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\porky.ttf",
- ["MSBT Talisman"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\talisman.ttf",
- ["MSBT Transformers"]	= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\transformers.ttf",
- ["MSBT Yellowjacket"]	= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\yellowjacket.ttf",
+	["MSBT Adventure"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\adventure.ttf",
+	["MSBT Bazooka"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\bazooka.ttf",
+	["MSBT Cooline"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\cooline.ttf",
+	["MSBT Diogenes"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\diogenes.ttf",
+	["MSBT Ginko"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\ginko.ttf",
+	["MSBT Heroic"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\heroic.ttf",
+	["MSBT Porky"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\porky.ttf",
+	["MSBT Talisman"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\talisman.ttf",
+	["MSBT Transformers"]	= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\transformers.ttf",
+	["MSBT Yellowjacket"]	= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\yellowjacket.ttf",
 }
 
 L.DEFAULT_FONT_NAME = "MSBT Porky"
@@ -45,13 +45,13 @@ L.COMMAND_SHOWVER	= "versione"
 L.COMMAND_HELP		= "aiuto"
 
 L.COMMAND_USAGE = {
- "Usage: " .. MikSBT.COMMAND .. " <command> [params]",
- " Commands:",
- "  " .. L.COMMAND_RESET .. " - REimposta il profilo corrente alle impostazioni di base.",
- "  " .. L.COMMAND_DISABLE .. " - Disabilita l'addon.",
- "  " .. L.COMMAND_ENABLE .. " - Abilita l'addon.",
- "  " .. L.COMMAND_SHOWVER .. " - Mostra la versione corrente.",
- "  " .. L.COMMAND_HELP .. " - Mostra come usare i comandi.",
+	"Usage: " .. MikSBT.COMMAND .. " <command> [params]",
+	" Commands:",
+	"  " .. L.COMMAND_RESET .. " - REimposta il profilo corrente alle impostazioni di base.",
+	"  " .. L.COMMAND_DISABLE .. " - Disabilita l'addon.",
+	"  " .. L.COMMAND_ENABLE .. " - Abilita l'addon.",
+	"  " .. L.COMMAND_SHOWVER .. " - Mostra la versione corrente.",
+	"  " .. L.COMMAND_HELP .. " - Mostra come usare i comandi.",
 }
 
 

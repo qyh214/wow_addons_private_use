@@ -23,7 +23,7 @@
 ## X-DBM-Mod-Name-esES: Mazmorras (Clásico)
 ## X-DBM-Mod-Name-koKR: 5인 던전(오리지널)
 ## X-DBM-Mod-Name-zhTW: 隊伍首領 (傳統)
-## X-DBM-Mod-Sort: 525
+## X-DBM-Mod-Sort: 1115
 ## X-DBM-Mod-MapID: 
 localization.en.lua
 localization.de.lua

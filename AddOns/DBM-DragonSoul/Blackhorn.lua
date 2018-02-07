@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(332, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetCreatureID(56598)--56427 is Boss, but engage trigger needs the ship which is 56598
 --mod:SetEncounterID(1298)--Fires when ship get actual engage. need to adjust timer.
 mod:SetMainBossID(56427)
@@ -148,11 +148,6 @@ function mod:OnCombatStart(delay)
 		timerSapperCD:Start(69-delay)
 		countdownSapper:Start(69-delay)
 	end
-	if DBM.BossHealth:IsShown() then
-		local shipname = DBM:EJ_GetSectionInfo(4202)
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss(56598, shipname)
-	end
 	if self.Options.SetTextures and GetCVarBool("projectedTextures") then--This is only true if projected textures were on when we pulled and option to control setting is also on.
 		CVAR = true--so set this variable to true, which means we are allowed to mess with users graphics settings
 		SetCVar("projectedTextures", 0)
@@ -232,9 +227,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		phase2Started = true
 		warnPhase2:Show()--We still warn phase 2 here though to get into position, especially since he can land on deck up to 5 seconds before his yell.
 		--timerCombatStart:Start(5)--5-8 seems variation, we use shortest.
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:AddBoss(56427, L.name)
-		end
 	elseif spellId == 110214 then
 		warnConsumingShroud:Show(args.destName)
 		timerConsumingShroud:Start()

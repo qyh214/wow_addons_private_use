@@ -174,7 +174,6 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	GatesHealthFrame		= "Portes endommagées",
 	SiegeEngine				= "Engin de Siège",
 	GoblinStartAlliance	= "Regarder ces Bombes d'hydroglycérine ? Utilisez-les sur les portes alors que je répare l'engin de siège !",
 	GoblinStartHorde		= "Je travaillerai sur l'engin de siège, regarde juste mon dos. Utilse ces  Bombes d'hydroglycérine sur les portes si tu en as besoin !",

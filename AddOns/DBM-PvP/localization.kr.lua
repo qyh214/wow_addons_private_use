@@ -184,7 +184,6 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	GatesHealthFrame		= "피해 입은 관문",
 	SiegeEngine				= "공성 전차",
 	GoblinStartAlliance		= "저기 시포리움 폭탄 보이세요? 제가 공성 전차를 수리하는 동안엔 그걸 사용해서 관문을 공격하세요!",
 	GoblinStartHorde		= "공성 전차를 수리하는 동안 날 좀 지켜 달라고. 필요하면 저기 있는 시포리움 폭탄을 관문에 사용해!",

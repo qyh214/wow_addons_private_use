@@ -8,7 +8,7 @@ local L = DBM_GUI_Translations
 L.TranslationByPrefix		= "번역: "
 L.TranslationBy 			= "Elnarfim"
 L.Website					= "디스코드 채널 |cFF73C2FBhttps://discord.gg/deadlybossmods|r를 방문해 보세요. 트위터 팔로우 @deadlybossmods 또는 @MysticalOS"
-L.WebsiteButton				= "포럼"
+L.WebsiteButton				= "디스코드"
 
 L.OTabBosses	= "보스"
 --L.OTabOptions	= GAMEOPTIONS_MENU
@@ -196,21 +196,6 @@ L.SpecialWarnSound3			= "매우 중요한 특수 경고의 기본 효과음 설�
 L.SpecialWarnSound4			= "도망 특수 경고의 기본 효과음 설정"
 L.SpecialWarnSound5			= "메모에 이름이 있을때 특수 경고의 기본 효과음 설정"
 
--- Tab: Heads Up Display Frame
-L.Panel_HUD					= "HUD (헤드 업 디스플레이)"
-L.Area_HUDOptions			= "HUD 설정"
-L.HUDColorOverride			= "모드에서 지정된 색상을 무시"
-L.HUDSizeOverride			= "모드에서 지정된 크기를 무시"
-L.HUDAlphaOverride			= "모드에서 지정된 투명도를 무시"
-L.HUDTextureOverride		= "모드에서 지정된 텍스쳐를 무시 (공격대 징표 텍스쳐 설정엔 적용 안됨)"
-L.HUDColorSelect			= "HUD 색상 %d"
-L.HUDTextureSelect1			= "1순위 HUD 텍스쳐"
-L.HUDTextureSelect2			= "2순위 HUD 텍스쳐"
-L.HUDTextureSelect3			= "3순위 HUD 텍스쳐"
-L.HUDTextureSelect4			= "'여기로 이동'을 가리키는 HUD 텍스쳐"
-L.HUDSizeSlider				= "원 반지름: %0.1f"
-L.HUDAlphaSlider			= "투명도: %0.1f"
-
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "음성 경보"
 L.Area_VoiceSelection		= "음성 선택 (마우스 휠로 메뉴 스크롤)"
@@ -226,14 +211,12 @@ L.SWFDefaultOnly			= "특수 경고가 기본 효과음만 재생할 때 (사용
 L.SWFAll					= "특수 경고가 모든 효과음을 사용할 때"
 L.SpecWarn_AlwaysVoice		= "모든 음성 경보 재생 (보스마다 지정된 설정을 무시합니다. 공대장에게 유용합니다.)"
 --TODO, maybe add URLS right to GUI panel on where to acquire 3rd party voice packs?
-
--- Tab: HealthFrame
-L.Panel_HPFrame				= "체력 창"
-L.Area_HPFrame				= "체력 창 설정"
-L.HP_Enabled				= "항상 체력 창 표시 (보스마다 지정된 설정 무시)"
-L.HP_GrowUpwards			= "체력 창 위로 확장"
-L.HP_ShowDemo				= "체력 창 보기"
-L.BarWidth					= "바 너비: %d"
+L.Area_GetVEM				= "무뉴뉴 음성팩 받기"
+L.VEMDownload				= "|cFF73C2FBhttps://wow.curseforge.com/projects/dbm-voicepack-mununyu|r"
+L.Area_BrowseOtherVP		= "Curse에 올라와있는 다른 음성팩 보기"
+L.BrowseOtherVPs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+voice|r"
+L.Area_BrowseOtherCT		= "Curse에 올라와있는 카운트다운 팩 보기"
+L.BrowseOtherCTs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+count+pack|r"
 
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "DBM 전역 기능 끄기 및 필터"
@@ -248,7 +231,6 @@ L.SpamBlockNoRangeFrame		= "거리 창 표시 안함"
 L.SpamBlockNoInfoFrame		= "정보 창 표시 안함"
 L.SpamBlockNoHudMap			= "HUD 표시 안함"
 L.SpamBlockNoNameplate		= "이름표 오라 표시 안함"
-L.SpamBlockNoHealthFrame	= "보스 체력 창 표시 안함"
 L.SpamBlockNoCountdowns		= "초읽기 효과음 재생 안함"
 L.SpamBlockNoYells			= "대화 알림 사용 안함"
 L.SpamBlockNoNoteSync		= "메모 공유 수락 안함"

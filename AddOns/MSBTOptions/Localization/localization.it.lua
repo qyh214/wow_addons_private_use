@@ -470,8 +470,6 @@ obj["NOTIFICATION_CP_GAIN"]				= { label="Guadagno Punti Combinazione", tooltip=
 obj["NOTIFICATION_CP_FULL"]				= { label="Punti Combinazione Pieni", tooltip="Abilita quando ottieni pieni PC."}
 obj["NOTIFICATION_HOLY_POWER_CHANGE"]	= { label="Carica Potere Divino", tooltip="Abilita quando cambia il tuo potere divino."}
 obj["NOTIFICATION_HOLY_POWER_FULL"]		= { label="Potere Divino Pieno", tooltip="Abilita quando il potere divino e' pieno (3 cariche)."}
---obj["NOTIFICATION_SHADOW_ORBS_CHANGE"]	= { label="Shadow Orb Changes", tooltip="Enable when you change shadow orbs."}
---obj["NOTIFICATION_SHADOW_ORBS_FULL"]	= { label="Shadow Orbs Full", tooltip="Enable when you attain full shadow orbs."}
 obj["NOTIFICATION_HONOR_GAIN"]			= { label="Guadagno Onore", tooltip="Abilita quando guadagni onore."}
 obj["NOTIFICATION_REP_GAIN"]			= { label="Guadagno Reputazione", tooltip="Abilita quando guadagni reputazione."}
 obj["NOTIFICATION_REP_LOSS"]			= { label="Perdita Reputazione", tooltip="Abiltia quando perdi reputazione."}
@@ -528,7 +526,7 @@ obj["SPELL_CAST_FAILED"]		= "Fallimento di Lancio"
 obj["SPELL_SUMMON"]				= "Evoca"
 obj["SPELL_CREATE"]				= "Crea"
 obj["PARTY_KILL"]				= "Colpo Mortale"
-obj["UNIT_DIED"]				= "Unita' Morta"
+--obj["UNIT_DIED"]				= "Unita' Morta"
 obj["UNIT_DESTROYED"]			= "Unita' Distrutta"
 obj["SPELL_EXTRA_ATTACKS"]		= "Attacco Extra"
 obj["UNIT_HEALTH"]				= "Cambio Vita"
@@ -536,7 +534,7 @@ obj["UNIT_POWER"]				= "Cambio Potere"
 obj["SKILL_COOLDOWN"]			= "Cooldown Giocatore Completo"
 obj["PET_COOLDOWN"]				= "Cooldown Famiglio Completo"
 obj["ITEM_COOLDOWN"]			= "Cooldown Oggetto Completo"
- 
+
 -- Main event conditions.
 obj["sourceName"]				= "Nome Unita' Sorgente"
 obj["sourceAffiliation"]		= "Affiliazione Unita' Sorgente"
@@ -587,7 +585,7 @@ obj["unavailableSkill"]			= "Abilita' non disponibile"
 obj["warriorStance"]			= "Postura del Guerriero"
 obj["zoneName"]					= "Nome Zona"
 obj["zoneType"]					= "Tipo Zona"
- 
+
 -- Relationships.
 obj["eq"]						= "E' UgualeIs A"
 obj["ne"]						= "Non E' Uguale A"
@@ -595,7 +593,7 @@ obj["like"]						= "E' Come"
 obj["unlike"]					= "Non E' Come"
 obj["lt"]						= "E' Meno Di"
 obj["gt"]						= "E' Piu' Di"
- 
+
 -- Affiliations.
 obj["affiliationMine"]			= "Mio"
 obj["affiliationParty"]			= "Membro Scorreria"
@@ -615,7 +613,7 @@ obj["controlServer"]			= "Server"
 obj["controlHuman"]				= "Umano"
 
 -- Unit types.
-obj["unitTypePlayer"]			= "Giocatore" 
+obj["unitTypePlayer"]			= "Giocatore"
 obj["unitTypeNPC"]				= "PNG"
 obj["unitTypePet"]				= "Famiglio"
 obj["unitTypeGuardian"]			= "Guardiano"

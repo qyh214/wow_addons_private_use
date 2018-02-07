@@ -205,10 +205,6 @@ L:SetGeneralLocalization({
 ------------------------
 L= DBM:GetModLocalization(119)
 
-L:SetOptionLocalization{
-	BossHealthAdds	= "Mostrar salud de los esbirros en el marco de salud del jefe"
-}
-
 ------------
 -- Siamat --
 ------------

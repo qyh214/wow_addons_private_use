@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 253 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 254 $"):sub(12, -3))
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -56,7 +56,6 @@ local timerCastDeafeningRoar		= mod:NewCastTimer(2.3, 64189, nil, nil, nil, 2)
 local timerNextDeafeningRoar		= mod:NewNextTimer(30, 64189, nil, nil, nil, 2)
 local timerAchieve					= mod:NewAchievementTimer(420, 3012, "TimerSpeedKill")
 
-mod:AddBoolOption("ShowSaraHealth", false)
 mod:AddBoolOption("SetIconOnFearTarget", true)
 mod:AddBoolOption("SetIconOnFervorTarget", false)
 mod:AddBoolOption("SetIconOnBrainLinkTarget", true)
@@ -73,12 +72,6 @@ function mod:OnCombatStart(delay)
 	self.vb.phase = 1
 	enrageTimer:Start()
 	timerAchieve:Start()
-	if self.Options.ShowSaraHealth and not DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Show(L.name)
-	end
-	if self.Options.ShowSaraHealth then
-		DBM.BossHealth:AddBoss(33134, L.Sara)
-	end
 	table.wipe(brainLinkTargets)
 end
 
@@ -185,12 +178,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnBrainPortalSoon:Schedule(57)
 		specWarnBrainPortalSoon:Schedule(57)
 		warnP2:Show()
-		if self.Options.ShowSaraHealth then
-			DBM.BossHealth:RemoveBoss(33134)
-		end
-		if not (self.Options.HealthFrame or DBM.Options.AlwaysShowHealthFrame) then
-			DBM.BossHealth:Hide()
-		end
 	elseif args:IsSpellID(64167, 64163) then	-- Lunatic Gaze (reduces sanity)
 		timerLunaricGaze:Start()
 	elseif args.spellId == 64465 then

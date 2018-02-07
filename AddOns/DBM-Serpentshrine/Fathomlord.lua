@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Fathomlord", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(21214)
 mod:SetEncounterID(626)
 mod:SetModelID(20662)
@@ -13,13 +13,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 38451 38452 38455",
 	"SPELL_CAST_START 38330",
 	"SPELL_SUMMON 38236"
-)
-
-mod:SetBossHealthInfo(
-	21214, L.name,
-	21964, L.Caribdis,
-	21965, L.Tidalvess,
-	21966, L.Sharkkis
 )
 
 local warnTotem			= mod:NewTargetAnnounce(38236, 4)

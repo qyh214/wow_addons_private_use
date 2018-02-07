@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Noth", "DBM-Naxx", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 258 $"):sub(12, -3))
 mod:SetCreatureID(15954)
 mod:SetEncounterID(1117)
 mod:SetModelID(16590)
@@ -12,28 +12,28 @@ mod:RegisterEvents(
 )
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_SUCCESS"
+	"SPELL_CAST_SUCCESS 29213 54835"
 )
 
 local warnTeleportNow	= mod:NewAnnounce("WarningTeleportNow", 3, 46573)
 local warnTeleportSoon	= mod:NewAnnounce("WarningTeleportSoon", 1, 46573)
 local warnCurse			= mod:NewSpellAnnounce(29213, 2)
 
-local timerTeleport		= mod:NewTimer(90, "TimerTeleport", 46573)
-local timerTeleportBack	= mod:NewTimer(70, "TimerTeleportBack", 46573)
+local timerTeleport		= mod:NewTimer(90, "TimerTeleport", 46573, nil, nil, 6)
+local timerTeleportBack	= mod:NewTimer(70, "TimerTeleportBack", 46573, nil, nil, 6)
 
-local phase = 0
+mod.vb.teleCount = 0
 
 function mod:OnCombatStart(delay)
-	phase = 0
+	self.vb.teleCount = 0
 	self:BackInRoom(delay)
 end
 
 function mod:Balcony()
 	local timer
-	if phase == 1 then timer = 70
-	elseif phase == 2 then timer = 97
-	elseif phase == 3 then timer = 120
+	if self.vb.teleCount == 1 then timer = 70
+	elseif self.vb.teleCount == 2 then timer = 97
+	elseif self.vb.teleCount == 3 then timer = 120
 	else return	end
 	timerTeleportBack:Show(timer)
 	warnTeleportSoon:Schedule(timer - 20)
@@ -43,11 +43,11 @@ end
 
 function mod:BackInRoom(delay)
 	delay = delay or 0
-	phase = phase + 1
+	self.vb.teleCount = self.vb.teleCount + 1
 	local timer
-	if phase == 1 then timer = 90 - delay
-	elseif phase == 2 then timer = 110 - delay
-	elseif phase == 3 then timer = 180 - delay
+	if self.vb.teleCount == 1 then timer = 90 - delay
+	elseif self.vb.teleCount == 2 then timer = 110 - delay
+	elseif self.vb.teleCount == 3 then timer = 180 - delay
 	else return end
 	timerTeleport:Show(timer)
 	warnTeleportSoon:Schedule(timer - 20)

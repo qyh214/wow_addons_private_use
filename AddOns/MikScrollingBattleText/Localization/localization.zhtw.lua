@@ -28,13 +28,13 @@ L.DEFAULT_FONT_NAME = "MSBT bKAI00M"
 ------------------------------
 
 L.COMMAND_USAGE = {
- "使用方法: " .. MikSBT.COMMAND .. " <指令> [參數]",
- " 指令:",
- "  " .. L.COMMAND_RESET .. " - 重置",
- "  " .. L.COMMAND_DISABLE .. " - 停用",
- "  " .. L.COMMAND_ENABLE .. " - 啟用",
- "  " .. L.COMMAND_SHOWVER .. " - 顯示目前版本",
- "  " .. L.COMMAND_HELP .. " - 幫助",
+	"使用方法: " .. MikSBT.COMMAND .. " <指令> [參數]",
+	" 指令:",
+	"  " .. L.COMMAND_RESET .. " - 重置",
+	"  " .. L.COMMAND_DISABLE .. " - 停用",
+	"  " .. L.COMMAND_ENABLE .. " - 啟用",
+	"  " .. L.COMMAND_SHOWVER .. " - 顯示目前版本",
+	"  " .. L.COMMAND_HELP .. " - 幫助",
 }
 
 

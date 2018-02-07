@@ -196,10 +196,6 @@ L:SetGeneralLocalization({
 ------------------------
 L= DBM:GetModLocalization(119)
 
-L:SetOptionLocalization{
-	BossHealthAdds	= "在首領血量框架顯示小怪血量"
-}
-
 ------------------------------------
 -- Siamat, Lord of the South Wind --
 ------------------------------------

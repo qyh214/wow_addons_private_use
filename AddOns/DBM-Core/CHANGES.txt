@@ -1,185 +1,54 @@
-tag e67c3fc105ac61c1ddd20f967f09e284912b27b3 7.3.18
+tag ec677b419b41a19ba6a14499a175097799c9b920 7.3.21
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Tue Jan 23 22:33:02 2018 +0100
+Date:	Thu Feb 1 20:03:07 2018 +0100
 
-Tagging as 7.3.18
+Tagging as 7.3.21
 
-commit b52a33a1d0abe91aebffbc390564108d44149258
+commit b86277b0ea426cc80aabe17a23355d1cfb01be9d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Jan 23 22:33:02 2018 +0100
+Date:   Thu Feb 1 20:03:07 2018 +0100
 
-    increment version number to 7.3.18
+    increment version number to 7.3.21
 
-commit 2e9facdf687cda1b0e7ed0b66ea90d6035cad7f4
+commit 78ad46e56a863e93caedbad3c8e8eb1d12cee7bd
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Jan 22 05:54:54 2018 +0100
+Date:   Thu Feb 1 17:49:22 2018 +0100
 
-    Omega via svn r17191:
-    make icon to string and icon to texture globally available to DBM, and use efficiently in hud object
-    improved code for special warning flash objects.
-    improved code for AI timer object
-    fixed bug with AI timer object where valid lowest time seen timers could get overwritten on phase changes in AI timer object
-    fixed a bug where AI timers could be created for first casts of a stage do to incomplete variables not wiped out on a boss wipe and then those variables used on next pull incorrectly.
-
-commit 53c0a8f8e5aa7ef58bd0fccdc0896482deec21b9
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Jan 21 05:41:25 2018 +0100
-
-    Omega via svn r17190:
-    Add extra protection against torment timers starting if they happen at exact time stamp of a wipe. It should never happen but user claimed it did so what the hell
-
-commit 097d62f6ba7c6bd77d67f9eccfbcb5d223b60520
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jan 20 05:35:08 2018 +0100
-
-    Omega via svn r17189:
-    update discord url
-
-commit d557117526dbcdec22f8b966e193fd0856397c1a
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jan 20 02:54:55 2018 +0100
-
-    Omega via svn r17188:
-    Infoframe tweaks for maiden
-
-commit 068e1eedcd10faeac239e8709dc34a6f9ed4a2ff
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jan 19 06:56:48 2018 +0100
-
-    Omega via svn r17187:
-    Few timer tweaks
-
-commit 8d0bda0eb7fa3b885aaf61bb37c018ba8629014b
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jan 19 06:51:43 2018 +0100
-
-    Omega via svn r17186:
-    Tweak to aggramar to disable taunt warning for stacks if combo is less than 4 seconds away
-
-commit d08b730b35430e8cf27ada25f54f1ad2ced95967
-Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Jan 18 19:55:59 2018 +0100
-
-    Omega via svn r17185:
-    Disable this again, since it made no diff and blizz patching things in next couple days
-
-commit 88e11f03985b1ab4fc323574fc708ad174ae87bf
-Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Jan 18 10:37:17 2018 +0100
-
-    Omega via svn r17184:
-    In this case, voice warning is overkill, tone down mine sound spam
-
-commit ff9ea805a0fc7d89f7021365afaf030bf5e06d56
-Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Jan 18 04:52:02 2018 +0100
-
-    Omega via svn r17183:
-    doesn?\226?\128?\153t use these two
-
-commit dca8d125a110c135552f45a96331f6a86158bc4e
-Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Jan 18 02:00:20 2018 +0100
-
-    ultrashining via svn r17182:
+    ultrashining via svn r17241:
     zhTW update
 
-commit f64e66f3fb3384d45f6d159d1895aa0a3ba9810c
+commit e11766b93da1281c60d9fc81d5c9c949a5c348dc
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 17 09:54:21 2018 +0100
+Date:   Thu Feb 1 11:21:01 2018 +0100
 
-    Omega via svn r17181:
-    Fix lua error
+    Omega via svn r17240:
+    HF
 
-commit 73101644b17f5dbd7163caa00089f38a2b2937a4
+commit abc3fd521305705ce1a4f24fa6ad12388993f3b2
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 17 08:38:17 2018 +0100
+Date:   Thu Feb 1 03:44:07 2018 +0100
 
-    Omega via svn r17180:
-    Kr Update
+    Omega via svn r17239:
+    Fix another bug/regression
 
-commit 5e70eea9f004e3fbe6df28cc08fd12d7c3b50121
+commit e46a7b6617046637b521f8387dc6f7144fe6c95e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 17 06:52:58 2018 +0100
+Date:   Thu Feb 1 02:25:49 2018 +0100
 
-    Omega via svn r17179:
-    Fix name
+    Omega via svn r17238:
+    Fix lua error, which will fix necrotic embrace for real this time
 
-commit 69b0146458f2c265864f5dca4ae8f8cde1139fd5
+commit 3d56183caf087cf765462db0ef15f1a6c8bcf934
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 17 06:48:34 2018 +0100
+Date:   Thu Feb 1 00:41:29 2018 +0100
 
-    Omega via svn r17178:
-    Cleanup compat code
+    Omega via svn r17237:
+    Improve fix
 
-commit 9f9e30d899e06a8c2a0a2ae29e6b3f81c8d231f1
+commit 52e2dbd9720307c72f28e88316d4cec4007eb75a
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 17 06:29:37 2018 +0100
+Date:   Wed Jan 31 11:29:43 2018 +0100
 
-    Omega via svn r17177:
-    Store name in timer object, so it?\226?\128?\153s only re-requested when it?\226?\128?\153s still missing.
-
-commit 1b91cb4eacef26377921e2142972f30f1836cb6e
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 17 04:12:32 2018 +0100
-
-    Omega via svn r17176:
-    Put sound channel fix back in
-
-commit fac9463f866c2a44f84bb2f0c99079a25c8635f1
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 17 02:13:51 2018 +0100
-
-    Omega via svn r17175:
-    LFR is 4 rends
-
-commit 6a0c1396f7db845bcc15a1fa7bbecb5f1e0c798d
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Jan 15 03:49:39 2018 +0100
-
-    Omega via svn r17174:
-    Fix some missed GetSpellInfos
-
-commit 9c0d34f691493e39ec145e7437ca6048dceec0d8
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jan 12 21:17:31 2018 +0100
-
-    Omega via svn r17173:
-    Fix typo
-
-commit eb41ba59362b267b5e3babd33ac23d7128460ba8
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jan 12 08:19:37 2018 +0100
-
-    Omega via svn r17172:
-    Fixed cosmicglare timer not showing for any bug first cast
-    Added option to control tank swap behavior for coven, by default it?\226?\128?\153s in 2/3 hybrid mode based on mythic or not.
-
-commit d87b3f41806eea35f70320cc5947402a03b840f9
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jan 12 04:48:40 2018 +0100
-
-    Omega via svn r17171:
-    All I had time to tweak, will tweak more after raid
-
-commit 723a303c63456e7333d4db36702944f2e2987812
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jan 12 04:08:41 2018 +0100
-
-    Omega via svn r17170:
-    Don?\226?\128?\153t use filter here
-
-commit 2a7c4db7af5afa7817d884c5daca97fd742f3d2f
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jan 12 02:02:19 2018 +0100
-
-    Omega via svn r17169:
-    Minor fixes to async handling in notes feature
-
-commit 052de0525402a9866be4aef6ef8894f6d91da885
-Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Jan 11 23:43:57 2018 +0100
-
-    tandanu via svn r17168:
+    tandanu via svn r17236:
     increment alpha version
 

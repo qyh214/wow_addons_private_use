@@ -1,15 +1,15 @@
 local mod	= DBM:NewMod("Maexxna", "DBM-Naxx", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 258 $"):sub(12, -3))
 mod:SetCreatureID(15952)
 mod:SetEncounterID(1116)
 mod:SetModelID(15928)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_SUCCESS"
+	"SPELL_AURA_APPLIED 28622",
+	"SPELL_CAST_SUCCESS 29484 54125"
 )
 
 local warnWebWrap		= mod:NewTargetAnnounce(28622, 2)
@@ -18,8 +18,8 @@ local warnWebSprayNow	= mod:NewSpellAnnounce(29484, 3)
 local warnSpidersSoon	= mod:NewAnnounce("WarningSpidersSoon", 2, 17332)
 local warnSpidersNow	= mod:NewAnnounce("WarningSpidersNow", 4, 17332)
 
-local timerWebSpray		= mod:NewNextTimer(40.5, 29484)
-local timerSpider		= mod:NewTimer(30, "TimerSpider", 17332)
+local timerWebSpray		= mod:NewNextTimer(40.5, 29484, nil, nil, nil, 3)
+local timerSpider		= mod:NewTimer(30, "TimerSpider", 17332, nil, nil, 1)
 
 function mod:OnCombatStart(delay)
 	warnWebSpraySoon:Schedule(35.5 - delay)

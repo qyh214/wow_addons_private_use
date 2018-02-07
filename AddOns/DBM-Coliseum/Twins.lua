@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ValkTwins", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 259 $"):sub(12, -3))
 mod:SetCreatureID(34497, 34496)
 mod:SetEncounterID(1089)
 mod:SetModelID(29240)
@@ -11,41 +11,37 @@ mod:SetUsedIcons(5, 6, 7, 8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
+	"SPELL_CAST_START 66046 66058 65875 65876",
+	"SPELL_AURA_APPLIED 65724 65748 65950 66001 65879 65916 65874 65858",
+	"SPELL_AURA_REMOVED 65874 65858 65950 66001",
 	"SPELL_INTERRUPT"
-)
-
-mod:SetBossHealthInfo(
-	34497, L.Fjola,
-	34496, L.Eydis
 )
 
 local warnSpecial					= mod:NewAnnounce("WarnSpecialSpellSoon", 3)
 local warnTouchDebuff				= mod:NewAnnounce("WarningTouchDebuff", 2, 66823)
-local warnPoweroftheTwins			= mod:NewAnnounce("WarningPoweroftheTwins", 4)
-local specWarnSpecial				= mod:NewSpecialWarning("SpecWarnSpecial")
-local specWarnSwitch				= mod:NewSpecialWarning("SpecWarnSwitchTarget")
-local specWarnKickNow 				= mod:NewSpecialWarning("SpecWarnKickNow")
-local specWarnPoweroftheTwins		= mod:NewSpecialWarning("SpecWarnPoweroftheTwins")
-local specWarnEmpoweredDarkness		= mod:NewSpecialWarningYou(65724)
-local specWarnEmpoweredLight		= mod:NewSpecialWarningYou(65748)
+local warnPoweroftheTwins			= mod:NewAnnounce("WarningPoweroftheTwins", 4, nil, "Healer", 2)
+
+local specWarnSpecial				= mod:NewSpecialWarning("SpecWarnSpecial")--Change Color, No voice ideas for this
+local specWarnSwitch				= mod:NewSpecialWarning("SpecWarnSwitchTarget", nil, nil, nil, 1, 2)
+local specWarnKickNow 				= mod:NewSpecialWarning("SpecWarnKickNow", "HasInterrupt", nil, 2, 1, 2)
+local specWarnPoweroftheTwins		= mod:NewSpecialWarningDefensive(65916, "Tank", nil, 2, 1, 2)
+local specWarnEmpoweredDarkness		= mod:NewSpecialWarningYou(65724)--No voice ideas for this
+local specWarnEmpoweredLight		= mod:NewSpecialWarningYou(65748)--No voice ideas for this
 
 local enrageTimer					= mod:NewBerserkTimer(360)
-local timerSpecial					= mod:NewTimer(45, "TimerSpecialSpell", "Interface\\Icons\\INV_Enchant_EssenceMagicLarge")
-local timerHeal						= mod:NewCastTimer(15, 65875)
-local timerLightTouch				= mod:NewTargetTimer(20, 65950)
-local timerDarkTouch				= mod:NewTargetTimer(20, 66001)
-local timerAchieve					= mod:NewAchievementTimer(180, 3815, "TimerSpeedKill")
+local timerSpecial					= mod:NewTimer(45, "TimerSpecialSpell", "Interface\\Icons\\INV_Enchant_EssenceMagicLarge", nil, nil, 6)
+local timerHeal						= mod:NewCastTimer(15, 65875, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerLightTouch				= mod:NewTargetTimer(20, 65950, nil, false, 2, 3)
+local timerDarkTouch				= mod:NewTargetTimer(20, 66001, nil, false, 2, 3)
+local timerAchieve					= mod:NewAchievementTimer(180, 3815)
 
 mod:AddBoolOption("SpecialWarnOnDebuff", false, "announce")
 mod:AddBoolOption("SetIconOnDebuffTarget", false)
-mod:AddBoolOption("HealthFrame", true)
+mod:AddInfoFrameOption(235117, true)
 
 local lightEssence, darkEssence = DBM:GetSpellInfo(67223), DBM:GetSpellInfo(67176)
 local debuffTargets					= {}
-local debuffIcon					= 8
+mod.vb.debuffIcon					= 8
 
 local shieldHealth = {
 	["heroic25"] = 1200000,
@@ -64,7 +60,13 @@ function mod:OnCombatStart(delay)
 	else
 		enrageTimer:Start(480-delay)
 	end
-	debuffIcon = 8
+	self.vb.debuffIcon = 8
+end
+
+function mod:OnCombatEnd()
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -79,12 +81,14 @@ function mod:SPELL_CAST_START(args)
 		self:SpecialAbility(true)
 		if self:GetUnitCreatureId("target") == 34497 then
 			specWarnSwitch:Show()
+			specWarnSwitch:Play("changetarget")
 		end
 	elseif args.spellId == 65876 then
 		timerHeal:Start()
 		self:SpecialAbility(true)
 		if self:GetUnitCreatureId("target") == 34496 then
 			specWarnSwitch:Show()
+			specWarnSwitch:Play("changetarget")
 		end
 	end
 end
@@ -97,8 +101,8 @@ function mod:SpecialAbility(debuff)
 	warnSpecial:Schedule(40)
 end
 
-function mod:resetDebuff()
-	debuffIcon = 8
+function mod:resetDebuff(self)
+	self.vb.debuffIcon = 8
 end
 
 function mod:warnDebuff()
@@ -110,9 +114,11 @@ end
 
 local function showPowerWarning(self, cid)
 	local target = self:GetBossTarget(cid)
-	warnPoweroftheTwins:Show(target)
+	if not target then return end
 	if target == UnitName("player") then
 		specWarnPoweroftheTwins:Show()
+	else
+		warnPoweroftheTwins:Show(target)
 	end
 end
 
@@ -127,9 +133,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		timerLightTouch:Start(args.destName)
 		if self.Options.SetIconOnDebuffTarget then
-			self:SetIcon(args.destName, debuffIcon, 15)
-			debuffIcon = debuffIcon - 1
+			self:SetIcon(args.destName, self.vb.debuffIcon, 15)
 		end
+		self.vb.debuffIcon = self.vb.debuffIcon - 1
 		debuffTargets[#debuffTargets + 1] = args.destName
 		self:UnscheduleMethod("warnDebuff")
 		self:ScheduleMethod(0.9, "warnDebuff")
@@ -139,33 +145,27 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		timerDarkTouch:Start(args.destName)
 		if self.Options.SetIconOnDebuffTarget then
-			self:SetIcon(args.destName, debuffIcon)
-			debuffIcon = debuffIcon - 1
+			self:SetIcon(args.destName, self.vb.debuffIcon)
 		end
+		self.vb.debuffIcon = self.vb.debuffIcon - 1
 		debuffTargets[#debuffTargets + 1] = args.destName
 		self:UnscheduleMethod("warnDebuff")
 		self:ScheduleMethod(0.75, "warnDebuff")
 	elseif args:IsSpellID(65879, 65916) then
 		self:Schedule(0.1, showPowerWarning, self, args:GetDestCreatureID())
-	elseif args:IsSpellID(65874, 65858) and DBM.BossHealth:IsShown() then
-		self:ShowShieldHealthBar(args.destGUID, args.spellName, shieldHealth[(DBM:GetCurrentInstanceDifficulty())])
-		self:ScheduleMethod(15, "RemoveShieldHealthBar", args.destGUID)
+	elseif args:IsSpellID(65874, 65858) and self.Options.InfoFrame then
+		DBM.InfoFrame:SetHeader(args.spellName)
+		DBM.InfoFrame:Show(2, "enemyabsorb", nil, shieldHealth[(DBM:GetCurrentInstanceDifficulty())])--UnitGetTotalAbsorbs()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 65874 then
-		if UnitCastingInfo("target") and self:GetUnitCreatureId("target") == 34496 then
-			specWarnKickNow:Show()
+	if args:IsSpellID(65874, 65858) then
+		specWarnKickNow:Show()
+		specWarnKickNow:Play("kickcast")
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:Hide()
 		end
-		self:UnscheduleMethod("RemoveShieldHealthBar", args.destGUID)
-		self:RemoveShieldHealthBar(args.destGUID)
-	elseif args.spellId == 65858 then
-		if UnitCastingInfo("target") and self:GetUnitCreatureId("target") == 34497 then
-			specWarnKickNow:Show()
-		end
-		self:UnscheduleMethod("RemoveShieldHealthBar", args.destGUID)
-		self:RemoveShieldHealthBar(args.destGUID)
 	elseif args.spellId == 65950 then
 		timerLightTouch:Stop(args.destName)
 		if self.Options.SetIconOnDebuffTarget then
@@ -181,6 +181,6 @@ end
 
 function mod:SPELL_INTERRUPT(args)
 	if type(args.extraSpellId) == "number" and (args.extraSpellId == 65875 or args.extraSpellId == 65876) then
-		timerHeal:Cancel()
+		timerHeal:Stop()
 	end
 end

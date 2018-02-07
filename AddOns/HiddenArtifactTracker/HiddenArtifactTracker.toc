@@ -1,4 +1,4 @@
-## Interface: 70300
+## Interface: 70305
 ## Title: Hidden Artifact Tracker
 ## SavedVariables: HiddenArtifactTracker
 ## SavedVariablesPerCharacter: HiddenArtifactTrackerChars

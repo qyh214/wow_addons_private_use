@@ -200,21 +200,6 @@ L.SpecialWarnSound3			= "针对非常重要事件(灭团点)的特殊警报播�
 L.SpecialWarnSound4			= "特殊警报: 快跑啊 小女孩"
 L.SpecialWarnSound5			= "使用自定义注记特殊警报的声音"
 
--- Tab: Heads Up Display Frame
-L.Panel_HUD					= "抬头显示设置(HUD)"
-L.Area_HUDOptions			= "HUD 选项"
-L.HUDColorOverride			= "全局HUD颜色"
-L.HUDSizeOverride			= "全局HUD大小"
-L.HUDAlphaOverride			= "全局HUD透明度"
-L.HUDTextureOverride		= "全局HUD材质 (当团队标记作为材质时不适用)"
-L.HUDColorSelect			= "HUD 颜色 %d"
-L.HUDTextureSelect1			= "选择主要HUD材质"
-L.HUDTextureSelect2			= "选择次要HUD材质"
-L.HUDTextureSelect3			= "选择第三HUD材质"
-L.HUDTextureSelect4			= "选择'跑向'HUD材质"
-L.HUDSizeSlider				= "圆环半径 %0.1f."
-L.HUDAlphaSlider			= "透明度: %0.1f"
-
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "语音警告"
 L.Area_VoiceSelection		= "语音选择"
@@ -231,14 +216,6 @@ L.SWFAll					= "当特殊警报使用任何默认声音时"
 L.SpecWarn_AlwaysVoice		= "总是播放所有语音警告(覆盖Boss特定的选项,建议指挥使用)"
 --TODO, maybe add URLS right to GUI panel on where to acquire 3rd party voice packs?
 
--- Tab: HealthFrame
-L.Panel_HPFrame				= "生命值框体"
-L.Area_HPFrame				= "生命值框体选项"
-L.HP_Enabled				= "总是显示生命值框体（无论该首领的相关设置如何）"
-L.HP_GrowUpwards			= "向上扩展"
-L.HP_ShowDemo				= "显示框体"
-L.BarWidth					= "计量条宽度: %d"
-
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "DBM全局过滤"
 L.Area_SpamFilter_Outgoing	= "DBM全局过滤设置"
@@ -249,7 +226,6 @@ L.SpamBlockNoSetIcon		= "不设定标记在目标上"
 L.SpamBlockNoRangeFrame		= "不显示距离雷达框体"
 L.SpamBlockNoInfoFrame		= "不显示信息框体"
 L.SpamBlockNoHudMap			= "不显示HudMap"
-L.SpamBlockNoHealthFrame	= "不显示生命值监视器"
 L.SpamBlockNoCountdowns		= "不要播放倒数语音"
 L.SpamBlockNoYells			= "不要再战斗中大喊我中了..."
 L.SpamBlockNoNoteSync		= "不接受别人分享的自定义注记"

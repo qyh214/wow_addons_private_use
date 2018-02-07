@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Archavon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 259 $"):sub(12, -3))
 mod:SetCreatureID(31125)
 mod:SetEncounterID(1126)
 mod:SetModelID(26967)
@@ -9,9 +9,9 @@ mod:SetModelID(26967)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED",
+	"SPELL_CAST_START 58663 60880",
+	"SPELL_CAST_SUCCESS 58963 60895",
+	"SPELL_AURA_APPLIED 58678 58941",
 	"CHAT_MSG_RAID_BOSS_EMOTE"
 )
 
@@ -20,13 +20,12 @@ mod:RegisterEventsInCombat(
 
 local warnShards			= mod:NewTargetAnnounce(58678, 2)
 local warnGrab				= mod:NewAnnounce("WarningGrab", 4, 53041)
-local timerShards			= mod:NewBuffActiveTimer(4, 58678)
-
 local warnLeap				= mod:NewSpellAnnounce(60894, 3)
 local warnStomp				= mod:NewSpellAnnounce(60880, 3)
 local warnStompSoon			= mod:NewPreWarnAnnounce(60880, 5, 2)
-local timerNextStomp		= mod:NewNextTimer(45, 60880, nil, nil, nil, 2)
 
+local timerNextStomp		= mod:NewNextTimer(45, 60880, nil, nil, nil, 2)
+local timerShards			= mod:NewTargetTimer(4, 58678, nil, nil, nil, 3)
 local timerArchavonEnrage	= mod:NewTimer(300, "ArchavonEnrage", 26662)
 
 function mod:OnCombatStart(delay)
@@ -45,7 +44,7 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
   if args:IsSpellID(58963, 60895) then
-    warnLeap:Show()
+    	warnLeap:Show()
 	end
 end
 

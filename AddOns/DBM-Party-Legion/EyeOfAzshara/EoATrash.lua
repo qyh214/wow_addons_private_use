@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("EoATrash", "DBM-Party-Legion", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -21,8 +21,6 @@ local specWarnUndertow			= mod:NewSpecialWarningInterrupt(195284, "HasInterrupt"
 local specWarnSpraySand			= mod:NewSpecialWarningDodge(196127, "Tank", nil, nil, 1, 2)
 local specWarnArcaneBomb		= mod:NewSpecialWarningMoveAway(192706, nil, nil, nil, 3, 2)
 local yellArcaneBomb			= mod:NewYell(192706)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end

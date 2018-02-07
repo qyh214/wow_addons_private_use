@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NightholdTrash", "DBM-Nighthold")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
@@ -52,8 +52,6 @@ local specWarnSearingWoundsOther	= mod:NewSpecialWarningTaunt(222079, nil, nil, 
 local specWarnNightwellDischarge	= mod:NewSpecialWarningDodge(231737, nil, nil, nil, 1, 2)
 
 local timerSearingWounds			= mod:NewTargetTimer(20, 222079, nil, "Tank", nil, 5)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end

@@ -1,22 +1,18 @@
 local mod		= DBM:NewMod("z628", "DBM-PvP", 2)
 local L			= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 63 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 69 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
 	"ZONE_CHANGED_NEW_AREA" 	-- Required for BG start
 )
 
-mod:RemoveOption("HealthFrame")
-
 local warnSiegeEngine 		= mod:NewAnnounce("WarnSiegeEngine", 3)
 local warnSiegeEngineSoon 	= mod:NewAnnounce("WarnSiegeEngineSoon", 2) 
 
 local POITimer 			= mod:NewTimer(60, "TimerPOI", "Interface\\Icons\\Spell_Misc_HellifrePVPHonorHoldFavor")	-- point of interest
 local timerSiegeEngine 	= mod:NewTimer(180, "TimerSiegeEngine", 15048)
-
-mod:AddBoolOption("ShowGatesHealth", true)
 
 local GetMapLandmarkInfo, GetNumMapLandmarks = C_WorldMap.GetMapLandmarkInfo, GetNumMapLandmarks
 local allyTowerIcon = "Interface\\AddOns\\DBM-PvP\\Textures\\GuardTower"
@@ -77,11 +73,8 @@ do
 				end
 			end
 			gateHP = {}
-			DBM.BossHealth:Clear()
 		elseif bgzone then
 			mod:UnregisterShortTermEvents()
-			DBM.BossHealth:Clear()
-			DBM.BossHealth:Hide()
 			mod:Stop()
 			bgzone = false
 		end
@@ -165,12 +158,6 @@ function mod:SPELL_BUILDING_DAMAGE(sourceGUID, _, _, _, destGUID, destName, _, _
 	local guid = destGUID
 	if gateHP[guid] == nil then -- first hit
 		gateHP[guid] = 600000 -- initial gate health: 600000
-		if self.Options.ShowGatesHealth then
-			if not DBM.BossHealth:IsShown() then
-				DBM.BossHealth:Show(L.GatesHealthFrame)
-			end
-			DBM.BossHealth:AddBoss(function() return gateHP[guid]/6000	end, destName)
-		end
 	end
 	if gateHP[guid] > amount then
 		gateHP[guid] = gateHP[guid] - amount

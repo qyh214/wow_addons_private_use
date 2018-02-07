@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRumble", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15647 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 mod:SetModelID(28649)
 mod:SetZone()
 
@@ -20,8 +20,6 @@ local specWarnHippoFixate	= mod:NewSpecialWarningRun(229593)--Senya
 
 --local timerMooseRunCD		= mod:NewAITimer(17, 228855, nil, nil, nil, 3)--Grief Warden
 --local timerHippoFixateCD	= mod:NewAITimer(17, 229593, nil, nil, nil, 3)--Senya
-
-mod:RemoveOption("HealthFrame")
 
 local brawlersMod = DBM:GetModByName("Brawlers")
 

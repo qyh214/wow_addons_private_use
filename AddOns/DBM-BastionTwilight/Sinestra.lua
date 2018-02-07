@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(168, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetCreatureID(45213)
 mod:SetEncounterID(1082, 1083)--Muiti encounter id. need to verify.
 mod:SetZone()
@@ -58,7 +58,6 @@ mod:AddBoolOption("InfoFrame", false)--Does not filter tanks. not putting ugly h
 
 local eggDown = 0
 local eggRemoved = false
-local calenGUID = 0
 local orbList = {}
 local orbWarned = nil
 local playerWarned = nil
@@ -170,7 +169,6 @@ function mod:OnCombatStart(delay)
 	wrackName = DBM:GetSpellInfo(89421)
 	eggDown = 0
 	eggRemoved = false
-	calenGUID = 0
 	timerDragon:Start(16-delay)
 	timerBreathCD:Start(21-delay)
 	timerOrbs:Start(29-delay)
@@ -233,15 +231,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnOrbs then
 			self:ClearIcons()
 		end
-	elseif args.spellId == 87231 and not args:IsDestTypePlayer() then
-		calenGUID = args.sourceGUID
-		if not DBM.BossHealth:HasBoss(args.sourceGUID) and DBM.BossHealth:IsShown() then
-			DBM.BossHealth:AddBoss(args.sourceGUID, args.sourceName)
-		end
 	elseif args.spellId == 87654 then
-		if not DBM.BossHealth:HasBoss(args.sourceGUID) and DBM.BossHealth:IsShown() then
-			DBM.BossHealth:AddBoss(args.sourceGUID, args.sourceName)
-		end
 		if self:AntiSpam(3) then
 			timerDragon:Cancel()
 			if eggRemoved then
@@ -282,14 +272,8 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 46842 then
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:RemoveBoss(args.destGUID)
-		end
 		eggDown = eggDown + 1
 		if eggDown >= 2 then
-			if DBM.BossHealth:IsShown() then
-				DBM.BossHealth:RemoveBoss(calenGUID)
-			end
 			timerEggWeaken:Cancel()
 			warnPhase3:Show()
 			timerBreathCD:Start()

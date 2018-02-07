@@ -3,6 +3,11 @@ if not TMW then return end
 TMW.CHANGELOG_LASTVER="6.2.6"
 
 TMW.CHANGELOG = [==[
+===v8.4.3===
+* Updates for Allied Races.
+* Minor options UI improvements.
+* Added options to disable TMW's built-in settings backup and the "backup" import source.
+
 ===v8.4.2===
 * Version bump & additional fixes for patch 7.3.0.
 

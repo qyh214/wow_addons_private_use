@@ -191,21 +191,6 @@ L.SpecialWarnSound3			= "Sonido por defecto para avisos especiales MUY important
 L.SpecialWarnSound4			= "Sonido por defecto para avisos especiales de movimiento"
 L.SpecialWarnSound5			= "Sonido por defecto para avisos especiales con notas que te mencionen"
 
--- Tab: Heads Up Display Frame
-L.Panel_HUD					= "Indicadores"
-L.Area_HUDOptions			= "Opciones de indicadores"
-L.HUDColorOverride			= "Ignorar colores del módulo"
-L.HUDSizeOverride			= "Ignorar tamaños del módulo"
-L.HUDAlphaOverride			= "Ignorar transparencias del módulo"
-L.HUDTextureOverride		= "Ignorar texturas del módulo (no se aplica a las opciones de textura de iconos)"
-L.HUDColorSelect			= "Indicador %d"
-L.HUDTextureSelect1			= "Textura del indicador principal"
-L.HUDTextureSelect2			= "Textura del indicador secundario"
-L.HUDTextureSelect3			= "Textura del indicador terciario"
-L.HUDTextureSelect4			= "Textura del indicador de ubicación objetivo"
-L.HUDSizeSlider				= "Radio: %0.1f"
-L.HUDAlphaSlider			= "Transparencia: %0.1f"
-
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Alertas de voz"
 L.Area_VoiceSelection		= "Selección de voces"
@@ -222,14 +207,6 @@ L.SWFAll					= "Cuando los avisos especiales usen cualquier sonido"
 L.SpecWarn_AlwaysVoice		= "Reproducir siempre todas las alertas de voz (ignora las opciones de jefe; útil para líderes de banda)"
 --TODO, maybe add URLS right to GUI panel on where to acquire 3rd party voice packs?
 
--- Tab: HealthFrame
-L.Panel_HPFrame				= "Barras de vida"
-L.Area_HPFrame				= "Opciones de barras de vida"
-L.HP_Enabled				= "Mostrar siempre las barras de vida (ignora las opciones de jefe)"
-L.HP_GrowUpwards			= "Expandir barras de vida hacia arriba"
-L.HP_ShowDemo				= "Mostrar barras de vida"
-L.BarWidth					= "Ancho: %d"
-
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "Filtros globales"
 L.Area_SpamFilter_Outgoing	= "Opciones de filtros globales"
@@ -242,7 +219,6 @@ L.SpamBlockNoRangeFrame		= "Ocultar marcos de distancia"
 L.SpamBlockNoInfoFrame		= "Ocultar marcos de información"
 L.SpamBlockNoHudMap			= "Ocultar indicadores"
 L.SpamBlockNoNameplate		= "Ocultar auras de placas de nombres"
-L.SpamBlockNoHealthFrame	= "Ocultar barras de vida"
 L.SpamBlockNoCountdowns		= "Desactivar sonidos de cuenta atrás"
 L.SpamBlockNoYells			= "Desactivar envío automático de mensajes en el chat"
 L.SpamBlockNoNoteSync		= "Rechazar automáticamente notas compartidas"

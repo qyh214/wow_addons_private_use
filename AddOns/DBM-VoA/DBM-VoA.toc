@@ -18,7 +18,7 @@
 ## X-DBM-Mod-Category: WotLK
 ## X-DBM-Mod-No-Heroic: 1
 ## X-DBM-Mod-MapID: 624
-## X-DBM-Mod-Sort: 407
+## X-DBM-Mod-Sort: 908
 ## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.de.lua

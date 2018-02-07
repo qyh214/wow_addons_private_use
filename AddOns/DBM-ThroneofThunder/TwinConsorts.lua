@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(829, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetCreatureID(68905, 68904)--Lu'lin 68905, Suen 68904
 mod:SetEncounterID(1560)
 mod:SetZone()
@@ -23,11 +23,6 @@ mod:RegisterEventsInCombat(
 
 local Lulin = select(2, EJ_GetCreatureInfo(1, 829))
 local Suen = select(2, EJ_GetCreatureInfo(2, 829))
-
-mod:SetBossHealthInfo(
-	68905, Lulin,
-	68904, Suen
-)
 
 --Darkness
 local warnNight							= mod:NewAnnounce("warnNight", 2, 108558)

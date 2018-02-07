@@ -1,4 +1,4 @@
-## Interface: 70200
+## Interface: 70300
 ## LoadOnDemand: 1
 ## Title: Lib: DogTag-Unit-3.0
 ## Notes: A library to provide unit-oriented tags to LibDogTag-3.0
@@ -7,7 +7,7 @@
 ## Version: 1.0
 ## X-Category: Library
 ## X-Credits: Shefki, Parnic
-## X-Compatible-With: 70100
+## X-Compatible-With: 70200
 ## Dependencies: LibDogTag-3.0
 ## OptionalDeps: LibDruidMana-1.0, RangeCheck-1.0, LibTalentQuery-1.0
 

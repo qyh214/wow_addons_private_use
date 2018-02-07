@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d620", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1135)
@@ -22,8 +22,6 @@ local timerEvent			= mod:NewBuffFadesTimer(299, 140000, nil, nil, nil, 6)
 local timerStoneSmash		= mod:NewCastTimer(3, 139777, nil, false)
 
 local countdownEvent		= mod:NewCountdownFades(299, 140000, nil, nil, 10)
-
-mod:RemoveOption("HealthFrame")
 
 local timerStarted = false
 local timerDebuff = DBM:GetSpellInfo(140000)

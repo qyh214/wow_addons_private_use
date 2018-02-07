@@ -7,7 +7,7 @@
 end)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 98 $"):sub(12, -3))
 mod:SetZone()
 mod.noStatistics = true
 
@@ -72,8 +72,6 @@ local timerAquaBombCD		= mod:NewCDTimer(12, 145206, nil, false, nil, 5)--12-22 s
 local timerSonicBlastCD		= mod:NewCDTimer(6, 145200, nil, nil, nil, 2)--8-11sec variation
 
 local countdownTimer		= mod:NewCountdownFades(10, 141582)
-
-mod:RemoveOption("HealthFrame")
 
 local started = false
 

@@ -185,7 +185,6 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	GatesHealthFrame		= "Beschädigte Tore",
 	SiegeEngine				= "Belagerungsmaschine",
 	GoblinStartAlliance		= "Seht Ihr diese Zephyriumbomben? Benutzt sie an den Toren, während ich die Belagerungsmaschine repariere!",
 	GoblinStartHorde		= "Ich arbeite an der Belagerungsmaschine. Haltet mir einfach nur den Rücken frei. Benutzt diese Zephyriumbomben an den Toren, solltet Ihr sie brauchen!",

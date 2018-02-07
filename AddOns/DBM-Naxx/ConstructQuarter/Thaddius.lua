@@ -2,16 +2,16 @@
 local mod	= DBM:NewMod("Thaddius", "DBM-Naxx", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 258 $"):sub(12, -3))
 mod:SetCreatureID(15928)
 mod:SetEncounterID(1120)
 mod:SetModelID(16137)
-mod:RegisterCombat("yell", L.Yell)
+mod:RegisterCombat("combat_yell", L.Yell)
 
 mod:EnableModel()
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
+	"SPELL_CAST_START 28089",
 	"RAID_BOSS_EMOTE",
 	"UNIT_AURA player"
 )
@@ -24,26 +24,20 @@ local warnThrow				= mod:NewSpellAnnounce(28338, 2)
 local warnThrowSoon			= mod:NewSoonAnnounce(28338, 1)
 
 local enrageTimer			= mod:NewBerserkTimer(365)
-local timerNextShift		= mod:NewNextTimer(30, 28089)
-local timerShiftCast		= mod:NewCastTimer(3, 28089)
-local timerThrow			= mod:NewNextTimer(20.6, 28338)
+local timerNextShift		= mod:NewNextTimer(30, 28089, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerShiftCast		= mod:NewCastTimer(3, 28089, nil, nil, nil, 2)
+local timerThrow			= mod:NewNextTimer(20.6, 28338, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 
 mod:AddBoolOption("ArrowsEnabled", false, "Arrows")
 mod:AddBoolOption("ArrowsRightLeft", false, "Arrows")
 mod:AddBoolOption("ArrowsInverse", false, "Arrows")
-mod:AddBoolOption("HealthFrame", true)
-
-mod:SetBossHealthInfo(
-	15930, L.Boss1,
-	15929, L.Boss2
-)
 
 local currentCharge
-local phase2
+mod.vb.phase = 1
 local down = 0
 
 function mod:OnCombatStart(delay)
-	phase2 = false
+	self.vb.phase = 1
 	currentCharge = nil
 	down = 0
 	self:ScheduleMethod(20.6 - delay, "TankThrow")
@@ -54,7 +48,7 @@ end
 local lastShift = 0
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 28089 then
-		phase2 = true
+		self.vb.phase = 2
 		timerNextShift:Start()
 		timerShiftCast:Start()
 		warnShiftCasting:Show()
@@ -64,7 +58,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:UNIT_AURA()
-	if not phase2 or (GetTime() - lastShift) > 5 or (GetTime() - lastShift) < 3 then return end
+	if self.vb.phase ~=2 or (GetTime() - lastShift) > 5 or (GetTime() - lastShift) < 3 then return end
 	local charge
 	local i = 1
 	while UnitDebuff("player", i) do
@@ -112,15 +106,13 @@ function mod:RAID_BOSS_EMOTE(msg)
 			self:UnscheduleMethod("TankThrow")
 			timerThrow:Cancel()
 			warnThrowSoon:Cancel()
-			DBM.BossHealth:Hide()
 			enrageTimer:Start()
 		end
 	end
 end
 
 function mod:TankThrow()
-	if not self:IsInCombat() or phase2 then
-		DBM.BossHealth:Hide()
+	if not self:IsInCombat() or self.vb.phase == 2 then
 		return
 	end
 	timerThrow:Start()

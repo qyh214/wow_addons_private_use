@@ -20,7 +20,7 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	TimerWhelps				= "Show timer for Onyxian Whelps",
 	WarnWhelpsSoon			= "Show pre-warning for Onyxian Whelps",
-	SoundWTF				= "Play some funny sounds from a legendary classic Onyxia raid"
+	SoundWTF3				= "Play some funny sounds from a legendary classic Onyxia raid"
 }
 
 L:SetMiscLocalization{

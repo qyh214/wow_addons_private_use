@@ -26,7 +26,7 @@ L.MSG_CUSTOM_FONTS					= "自定义字体"
 L.MSG_INVALID_CUSTOM_FONT_NAME		= "无效字体名."
 L.MSG_FONT_NAME_ALREADY_EXISTS		= "字体名字已经存在."
 L.MSG_INVALID_CUSTOM_FONT_PATH		= "字体路径必须指向.ttf文件"
-L.MSG_UNABLE_TO_SET_FONT			= "无法使用指定字体." 
+L.MSG_UNABLE_TO_SET_FONT			= "无法使用指定字体."
 --L.MSG_TESTING_FONT			= "Testing the specified font for validity..."
 L.MSG_CUSTOM_SOUNDS					= "自定义声音"
 L.MSG_INVALID_CUSTOM_SOUND_NAME		= "无效声音名"
@@ -473,8 +473,6 @@ obj["NOTIFICATION_CP_GAIN"]				= { label="连击点获得", tooltip="显示你�
 obj["NOTIFICATION_CP_FULL"]				= { label="连击点已满", tooltip="显示你的连击点已满"}
 obj["NOTIFICATION_HOLY_POWER_CHANGE"]	= { label="神圣能量变化", tooltip="显示你的神圣能量变化"}
 obj["NOTIFICATION_HOLY_POWER_FULL"]		= { label="神圣能量已满", tooltip="显示你的神圣能量已满"}
---obj["NOTIFICATION_SHADOW_ORBS_CHANGE"]	= { label="Shadow Orb Changes", tooltip="Enable when you change shadow orbs."}
---obj["NOTIFICATION_SHADOW_ORBS_FULL"]	= { label="Shadow Orbs Full", tooltip="Enable when you attain full shadow orbs."}
 obj["NOTIFICATION_HONOR_GAIN"]			= { label="获得荣誉", tooltip="显示你获得荣誉"}
 obj["NOTIFICATION_REP_GAIN"]			= { label="声望提高", tooltip="显示你的声望提高"}
 obj["NOTIFICATION_REP_LOSS"]			= { label="声望下降", tooltip="显示你的声望下降"}
@@ -531,7 +529,7 @@ obj["SPELL_CAST_FAILED"]		= "施法失败"
 obj["SPELL_SUMMON"]				= "召唤"
 obj["SPELL_CREATE"]				= "创造"
 obj["PARTY_KILL"]				= "队友击杀"
-obj["UNIT_DIED"]				= "单位死亡"
+--obj["UNIT_DIED"]				= "单位死亡"
 obj["UNIT_DESTROYED"]			= "单位被摧毁"
 obj["SPELL_EXTRA_ATTACKS"]		= "额外攻击"
 obj["UNIT_HEALTH"]				= "生命值改变"
@@ -539,7 +537,7 @@ obj["UNIT_POWER"]				= "法力值改变"
 obj["SKILL_COOLDOWN"]			= "技能冷却完成"
 obj["PET_COOLDOWN"]				= "宠物技能冷却完成"
 obj["ITEM_COOLDOWN"]			= "物品冷却完成"
- 
+
 -- Main event conditions.
 obj["sourceName"]				= "来源玩家名字"
 obj["sourceAffiliation"]		= "来源玩家联系"
@@ -590,7 +588,7 @@ obj["unavailableSkill"]			= "不可用技能"
 obj["warriorStance"]			= "战士姿态"
 obj["zoneName"]					= "地区名字"
 obj["zoneType"]					= "地区类型"
- 
+
 -- Relationships.
 obj["eq"]						= "相等"
 obj["ne"]						= "不相等"
@@ -598,7 +596,7 @@ obj["like"]						= "像"
 obj["unlike"]					= "不像"
 obj["lt"]						= "少于"
 obj["gt"]						= "多于"
- 
+
 -- Affiliations.
 obj["affiliationMine"]			= "我的"
 obj["affiliationParty"]			= "队友"
@@ -618,7 +616,7 @@ obj["controlServer"]			= "服务器"
 obj["controlHuman"]				= "玩家"
 
 -- Unit types.
-obj["unitTypePlayer"]			= PLAYER 
+obj["unitTypePlayer"]			= PLAYER
 obj["unitTypeNPC"]				= "NPC"
 obj["unitTypePet"]				= PET
 obj["unitTypeGuardian"]			= "护卫"

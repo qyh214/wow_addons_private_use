@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gnoll", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14037 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterEvents(
@@ -25,8 +25,6 @@ local countdownGame				= mod:NewCountdownFades(60, 101612)
 
 local gameEarnedPoints = 0
 local gameMaxPoints = 0
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 101612 and args:IsPlayer() then

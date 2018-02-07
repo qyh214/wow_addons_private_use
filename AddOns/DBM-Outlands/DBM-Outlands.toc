@@ -13,7 +13,7 @@
 ## X-DBM-Mod-Category: BC
 ## X-DBM-Mod-World-Boss: 1
 ## X-DBM-Mod-Has-Single-Format: 1
-## X-DBM-Mod-Sort: 507
+## X-DBM-Mod-Sort: 1006
 ## X-DBM-Mod-MapID: 530,565,544
 ## X-DBM-Mod-LoadCID: 17711,18728
 ## X-DBM-Mod-MinCoreRevision: 12473

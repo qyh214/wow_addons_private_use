@@ -54,7 +54,6 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	PHealthFrame		= "Показывать оставшееся здоровье босса до спадения $spell:136442<br/>(Требуется включить окно отображения здоровья босса)",
 	AnnounceCooldowns	= "Отсчитывать (до 3) какой сейчас каст $spell:137166 для рейдовых кулдаунов"
 })
 

@@ -449,6 +449,7 @@ L.cd2OtherSetTabNameVisibility = "Visibility"
 L.cd2OtherVisibilityPartyType = "By party type"
 L.cd2OtherVisibilityPartyTypeRaid = "In raid"
 L.cd2OtherVisibilityZoneType = "By zone type"
+L.cd2OtherSetLineClickWhisper = "Send whisper-to-use to player on click"
 
 L.sallspellsEggClear = "Clear"
 L.sallspellsEgg = "Combat log"

@@ -312,8 +312,6 @@ L:SetOptionLocalization{
 	TimeToPhase3			= "Отсчет времени для фазы 3",
 	TimeToPhase4			= "Отсчет времени для фазы 4",
 	MagneticCore			= "Объявлять подобравших Магнитное ядро",
-	HealthFramePhase4		= "Отображать индикатор здоровья в фазе 4",
-	AutoChangeLootToFFA		= "Смена режима добычи на Каждый за себя в фазе 3",
 	WarnBombSpawn			= "Предупреждение о Бомботах",
 	TimerHardmode			= "Отсчет времени для сложного режима",
 	ShockBlastWarningInP1	= "Спец-предупреждение для $spell:63631 в фазе 1",
@@ -408,7 +406,6 @@ L:SetOptionLocalization{
 	specWarnBrainPortalSoon			= "Спец-предупреждение о следующем Провале Безумия",
 	NextPortal						= "Отсчет времени до следующего Провала Безумия",
 	SetIconOnFervorTarget			= "Устанавливать метки на цели заклинания $spell:63138",
-	ShowSaraHealth					= "Показывать здоровье Сары в фазе 1 (должна быть в цели или фокусе хотя бы у одного члена рейда)",
 	SetIconOnBrainLinkTarget		= "Устанавливать метки на цели заклинания $spell:63802",
 	MaladyArrow						= "Показывать стрелку, когда $spell:63881 около вас"
 }

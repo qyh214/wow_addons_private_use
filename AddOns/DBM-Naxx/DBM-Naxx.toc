@@ -26,7 +26,7 @@
 ## X-DBM-Mod-SubCategories-esES: El Arrabal Arácnido,El Arrabal de los Ensamblajes,El Arrabal de la Plaga,El Arrabal Militar,Guarida Helada
 ## X-DBM-Mod-SubCategories-esMX: El Arrabal Arácnido,El Arrabal de los Ensamblajes,El Arrabal de la Plaga,El Arrabal Militar,Guarida Helada
 ## X-DBM-Mod-MapID: 533
-## X-DBM-Mod-Sort: 406
+## X-DBM-Mod-Sort: 907
 ## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.de.lua

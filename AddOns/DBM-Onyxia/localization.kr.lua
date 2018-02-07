@@ -22,7 +22,7 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	TimerWhelps				= "새끼용 등장 바 보기",
 	WarnWhelpsSoon			= "새끼용 등장 이전에 알림 보기",
-	SoundWTF				= "독특한 레이드를 즐기기 위한 웃긴 소리 재생(가급적 비활성화 추천)"
+	SoundWTF3				= "독특한 레이드를 즐기기 위한 웃긴 소리 재생(가급적 비활성화 추천)"
 }
 
 L:SetMiscLocalization{ 

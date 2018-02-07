@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(167, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetCreatureID(43324)
 mod:SetEncounterID(1029)
 mod:SetZone()
@@ -20,8 +20,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_DAMAGE",
 	"SPELL_MISSED",
 	"UNIT_HEALTH boss1",
-	"UNIT_AURA player",
-	"UNIT_DIED"
+	"UNIT_AURA player"
 )
 
 local warnWorship					= mod:NewTargetAnnounce(91317, 3)--Phase 1
@@ -201,9 +200,6 @@ function mod:SPELL_CAST_START(args)
 			end
 		end
 	elseif args.spellId == 81713 then
-		if not DBM.BossHealth:HasBoss(args.sourceGUID) and DBM.BossHealth:IsShown() then--Check if added to boss health
-			DBM.BossHealth:AddBoss(args.sourceGUID, args.sourceName)--And add if not.
-		end
 		if args.sourceGUID == UnitGUID("target") then--Only show warning for your own target.
 			specWarnDepravity:Show(args.sourceName)
 			if self:IsDifficulty("normal10", "heroic10") then
@@ -247,9 +243,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerFlamingDestructionCD:Start(10.8)--Half the time on normal since you don't actually have to kill elementals plus the only thing worth showing on normal.
 		end
 	elseif args.spellId == 81685 then
-		if not DBM.BossHealth:HasBoss(args.sourceGUID) and DBM.BossHealth:IsShown() then--Check if added to boss health
-			DBM.BossHealth:AddBoss(args.sourceGUID, args.sourceName)--And add if not.
-		end
 		self:ScheduleMethod(0.2, "CorruptingCrashTarget", args.sourceGUID)
 	end
 end
@@ -281,12 +274,5 @@ function mod:UNIT_AURA(uId)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(5)
 		end
-	end
-end
-
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 43622 and DBM.BossHealth:IsShown() then--Also remove from boss health when they die based on GUID
-		DBM.BossHealth:RemoveBoss(args.destGUID)
 	end
 end

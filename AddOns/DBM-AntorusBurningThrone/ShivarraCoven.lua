@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1986, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17191 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17210 $"):sub(12, -3))
 mod:SetCreatureID(122468, 122467, 122469)--122468 Noura, 122467 Asara, 122469 Diima, 125436 Thu'raya (mythic only)
 mod:SetEncounterID(2073)
 mod:SetZone()
@@ -115,9 +115,10 @@ local countdownStormofDarkness			= mod:NewCountdown("AltTwo57", 252861)
 
 mod:AddSetIconOption("SetIconOnFulminatingPulse2", 253520, false)
 mod:AddSetIconOption("SetIconOnChilledBlood2", 245586, false)
-mod:AddSetIconOption("SetIconOnCosmicGlare", 250757, false)
+mod:AddSetIconOption("SetIconOnCosmicGlare", 250757, true)
 mod:AddInfoFrameOption(245586, true)
 mod:AddNamePlateOption("NPAuraOnVisageofTitan", 249863)
+mod:AddBoolOption("SetLighting", true)
 mod:AddDropdownOption("TauntBehavior", {"TwoMythicThreeNon", "TwoAlways", "ThreeAlways"}, "TwoMythicThreeNon", "misc")
 
 local titanCount = {}
@@ -128,6 +129,7 @@ mod.vb.fpIcon = 6
 mod.vb.chilledIcon = 1
 mod.vb.glareIcon = 4
 mod.vb.touchCosmosCast = 0
+local CVAR1, CVAR2 = nil, nil
 
 function mod:OnCombatStart(delay)
 	self.vb.stormCount = 0
@@ -155,6 +157,11 @@ function mod:OnCombatStart(delay)
 	if self.Options.NPAuraOnVisageofTitan then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
+	if self.Options.SetLighting and not IsMacClient() then--Mac client doesn't support low (1) setting for lighting (and not InCombatLockdown() needed?)
+		CVAR1, CVAR2 = GetCVarBool("graphicsLightingQuality") or 3, GetCVarBool("raidGraphicsLightingQuality") or 2--Non raid cvar is nil if 3 (default) and raid one is nil if 2 (default)
+		SetCVar("graphicsLightingQuality", 1)
+		SetCVar("raidGraphicsLightingQuality", 1)
+	end
 end
 
 function mod:OnCombatEnd()
@@ -164,6 +171,11 @@ function mod:OnCombatEnd()
 	end
 	if self.Options.NPAuraOnVisageofTitan then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
+	end
+	if CVAR1 or CVAR2 then
+		CVAR1, CVAR2 = nil, nil
+		SetCVar("graphicsLightingQuality", CVAR1)
+		SetCVar("raidGraphicsLightingQuality", CVAR2)
 	end
 end
 
@@ -228,7 +240,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 246329 then--Shadow Blades
 		specWarnShadowBlades:Show()
-		specWarnShadowBlades:Play("watchstep")
+		specWarnShadowBlades:Play("watchwave")
 		timerShadowBladesCD:Start()
 	end
 end
@@ -243,11 +255,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			if self:IsMythic() and self.Options.TauntBehavior == "TwoMythicThreeNon" or self.Options.TauntBehavior == "TwoAlways" then
 				tauntStack = 2
 			end
-			if amount >= tauntStack then--Lasts 30 seconds, unknown reapplication rate, fine tune!
+			if amount >= tauntStack then
 				if args:IsPlayer() then--At this point the other tank SHOULD be clear.
 					specWarnFieryStrike:Show(amount)
 					specWarnFieryStrike:Play("stackhigh")
-				else--Taunt as soon as stacks are clear, regardless of stack count.
+				else
 					local _, _, _, _, _, _, expireTime = UnitDebuff("player", args.spellName)
 					local remaining
 					if expireTime then
@@ -282,7 +294,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) then
 			local amount = args.amount or 1
-			if amount >= 2 then--Lasts 30 seconds, unknown reapplication rate, fine tune!
+			local tauntStack = 3
+			if self:IsMythic() and self.Options.TauntBehavior == "TwoMythicThreeNon" or self.Options.TauntBehavior == "TwoAlways" then
+				tauntStack = 2
+			end
+			if amount >= tauntStack then--Lasts 30 seconds, unknown reapplication rate, fine tune!
 				if args:IsPlayer() then--At this point the other tank SHOULD be clear.
 					specWarnFlashfreeze:Show(amount)
 					specWarnFlashfreeze:Play("stackhigh")

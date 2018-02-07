@@ -13,6 +13,8 @@ DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s不能被讀取因為你的DBM核心未達�
 DBM_CORE_LOAD_MOD_DISABLED			= "%s已安裝但目前停用中。此模組不會載入除非你啟用它。"
 DBM_CORE_LOAD_MOD_DISABLED_PLURAL	= "%s已安裝但目前停用中。這些模組不會載入除非你啟用它們。"
 
+DBM_COPY_URL_DIALOG					= "複製網址"
+
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "距離雷達不能在副本中使用，使用傳統文字距離框架取代"
 DBM_CORE_NO_ARROW					= "箭頭不能在副本中使用"
@@ -114,7 +116,6 @@ DBM_CORE_GENERIC_TIMER_BERSERK		= "狂暴"
 DBM_CORE_OPTION_TIMER_BERSERK		= "為$spell:26662顯示計時器"
 DBM_CORE_GENERIC_TIMER_COMBAT		= "戰鬥開始"
 DBM_CORE_OPTION_TIMER_COMBAT		= "為戰鬥開始顯示計時器"
-DBM_CORE_OPTION_HEALTH_FRAME		= "顯示首領血量框架"
 DBM_CORE_BAD						= "地板技"
 
 DBM_CORE_OPTION_CATEGORY_TIMERS			= "計時器"
@@ -235,8 +236,6 @@ DBM_CORE_TIMER_USAGE	= {
 }
 
 DBM_ERROR_NO_PERMISSION				= "無權進行此操作。"
-
-DBM_CORE_BOSSHEALTH_HIDE_FRAME		= "關閉血量框架"
 
 --Common Locals
 DBM_NEXT							= "下一次%s"

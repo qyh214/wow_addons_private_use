@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Malygos", "DBM-EyeOfEternity")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 257 $"):sub(12, -3))
 mod:SetCreatureID(28859)
 mod:SetEncounterID(1094)
 mod:SetModelID(26752)
@@ -14,9 +14,9 @@ mod:RegisterEvents(
 )
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_AURA_APPLIED 60936 57407",
+	"SPELL_CAST_START 56505",
+	"SPELL_CAST_SUCCESS 56105 57430",
 	"RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
@@ -25,28 +25,29 @@ local warnSpark					= mod:NewSpellAnnounce(56140, 2, 59381)
 local warnVortex				= mod:NewSpellAnnounce(56105, 3)
 local warnVortexSoon			= mod:NewSoonAnnounce(56105, 2)
 local warnBreathInc				= mod:NewSoonAnnounce(56505, 3)
-local warnBreath				= mod:NewSpellAnnounce(56505, 4)
 local warnSurge					= mod:NewTargetAnnounce(60936, 3)
 local warnStaticField			= mod:NewTargetAnnounce(57430, 3)
 
-local specWarnBreath			= mod:NewSpecialWarningSpell(56505, nil, nil, nil, 2)
-local specWarnSurge				= mod:NewSpecialWarningYou(60936)
-local specWarnStaticField		= mod:NewSpecialWarningYou(57430)
-local specWarnStaticFieldNear	= mod:NewSpecialWarningClose(57430)
+local specWarnBreath			= mod:NewSpecialWarningSpell(56505, nil, nil, nil, 2, 2)
+local specWarnSurge				= mod:NewSpecialWarningDefensive(60936, nil, nil, nil, 1, 2)
+local specWarnStaticField		= mod:NewSpecialWarningYou(57430, nil, nil, nil, 1, 2)
+local specWarnStaticFieldNear	= mod:NewSpecialWarningClose(57430, nil, nil, nil, 1, 2)
 local yellStaticField			= mod:NewYell(57430)
 
 local timerSpark				= mod:NewNextTimer(30, 56140, nil, nil, nil, 1, 59381)
 local timerVortex				= mod:NewCastTimer(11, 56105, nil, nil, nil, 2)
 local timerVortexCD				= mod:NewNextTimer(60, 56105, nil, nil, nil, 2)
-local timerBreath				= mod:NewBuffActiveTimer(8, 56505)--lasts 5 seconds plus 3 sec cast.
+local timerBreath				= mod:NewBuffActiveTimer(8, 56505, nil, nil, nil, 2)--lasts 5 seconds plus 3 sec cast.
 local timerBreathCD				= mod:NewCDTimer(59, 56505, nil, nil, nil, 2)
 local timerStaticFieldCD		= mod:NewCDTimer(15.5, 57430, nil, nil, nil, 3)--High 15-25 second variatoin
-local timerAchieve      		= mod:NewAchievementTimer(360, 1875, "TimerSpeedKill")
+local timerAchieve      		= mod:NewAchievementTimer(360, 1875)
 
 local enrageTimer				= mod:NewBerserkTimer(615)
 
+local tableBuild = false
 local guids = {}
 local surgeTargets = {}
+mod.vb.phase = 1
 
 local function buildGuidTable()
 	table.wipe(guids)
@@ -55,6 +56,7 @@ local function buildGuidTable()
 		local fullName = name .. (server and server ~= "" and ("-" .. server) or "")
 		guids[UnitGUID(uId.."pet") or "none"] = fullName
 	end
+	tableBuild = true
 end
 
 local function announceTargets(self)
@@ -66,10 +68,13 @@ function mod:StaticFieldTarget()
 	local targetname, uId = self:GetBossTarget(28859)
 	if not targetname or not uId then return end
 	local targetGuid = UnitGUID(uId)
+	if not tableBuild then
+		buildGuidTable()
+	end
 	local announcetarget = guids[targetGuid]
-	warnStaticField:Show(announcetarget)
 	if announcetarget == UnitName("player") then
 		specWarnStaticField:Show()
+		specWarnStaticField:Play("runaway")
 		yellStaticField:Yell()
 	else
 		local uId2 = DBM:GetRaidUnitId(announcetarget)
@@ -77,12 +82,19 @@ function mod:StaticFieldTarget()
 			local inRange = DBM.RangeCheck:GetDistance("player", uId2)
 			if inRange and inRange < 13 then
 				specWarnStaticFieldNear:Show(announcetarget)
+				specWarnStaticFieldNear:Play("runaway")
+			else
+				warnStaticField:Show(announcetarget)
 			end
+		else
+			warnStaticField:Show(announcetarget)
 		end
 	end
 end
 
 function mod:OnCombatStart(delay)
+	tableBuild = false
+	self.vb.phase = 1
 	timerVortexCD:Start(48-delay)--Will verify with more logs next week.
 	enrageTimer:Start(-delay)
 	timerAchieve:Start(-delay)
@@ -96,12 +108,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			surgeTargets[#surgeTargets + 1] = target
 			self:Unschedule(announceTargets)
 			if #surgeTargets >= 3 then
-				announceTargets()
+				announceTargets(self)
 			else
 				self:Schedule(0.5, announceTargets, self)
 			end
 			if target == UnitName("player") then
 				specWarnSurge:Show()
+				specWarnSurge:Play("defensive")
 			end
 		end
 	end
@@ -109,8 +122,8 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 56505 then--His deep breath
-		warnBreath:Show()
 		specWarnBreath:Show()
+		specWarnBreath:Play("findshield")
 		timerBreath:Start()
 		timerBreathCD:Start()
 	end
@@ -163,6 +176,7 @@ end
 
 function mod:OnSync(event, arg)
 	if event == "Phase2" then
+		self.vb.phase = 2
 		timerSpark:Cancel()
 		timerVortexCD:Cancel()
 		warnVortexSoon:Cancel()
@@ -170,6 +184,7 @@ function mod:OnSync(event, arg)
 	elseif event == "BreathSoon" then
 		warnBreathInc:Show()
 	elseif event == "Phase3" then
+		self.vb.phase = 3
 		self:Schedule(6, buildGuidTable)
 		timerBreathCD:Cancel()
 --		timerStaticFieldCD:Start(49.5)--Consistent?

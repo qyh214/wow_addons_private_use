@@ -197,10 +197,6 @@ L:SetGeneralLocalization({
 ------------------------
 L= DBM:GetModLocalization(119)
 
-L:SetOptionLocalization{
-	BossHealthAdds	= "우두머리 체력 바 사용시 정령 체력도 함께 보기"
-}
-
 ------------------------------------
 -- Siamat, Lord of the South Wind --
 ------------------------------------

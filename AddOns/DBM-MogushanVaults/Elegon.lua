@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(726, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 81 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetCreatureID(60410)--Energy Charge (60913), Emphyreal Focus (60776), Cosmic Spark (62618), Celestial Protector (60793)
 mod:SetEncounterID(1500)
 mod:DisableESCombatDetection()
@@ -14,7 +14,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 124967 116994 117878 119389 118310 132226 132222",
 	"SPELL_AURA_APPLIED_DOSE 117878",
 	"SPELL_AURA_REMOVED 116994 132226 132222",
-	"SPELL_CAST_SUCCESS 116598 132265 116989",
+	"SPELL_CAST_SUCCESS 116598 132265",
 	"SPELL_CAST_START 117960 117954 117945 129711 117949 119358"
 )
 
@@ -134,9 +134,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if args:IsSpellID(116598, 132265) then--Cast when these are activated
 		focusActivated = focusActivated + 1
-		if DBM.BossHealth:IsShown() and not DBM.BossHealth:HasBoss(args.sourceGUID) then
-			DBM.BossHealth:AddBoss(args.sourceGUID, args.sourceName)
-		end
 		if self.Options.SetIconOnCreature then
 			self:ScanForMobs(args.sourceGUID, 0, 8, 6, 0.5, 10)
 		end
@@ -144,8 +141,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerDespawnFloor:Start()
 			specWarnDespawnFloor:Show()
 		end
-	elseif spellId == 116989 and DBM.BossHealth:IsShown() then--Cast when defeated (or rathor 1 HP)
-		DBM.BossHealth:RemoveBoss(args.sourceGUID)
 	end
 end
 

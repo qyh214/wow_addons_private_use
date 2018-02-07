@@ -3,6 +3,9 @@
 * Reseting bags while the bag is not opened won't reset it's scale to default.
 
 
+**16.3.2**
+* Updated for 7.3.5.
+
 **16.3.1**
 * Fixed a GUI issue.
 

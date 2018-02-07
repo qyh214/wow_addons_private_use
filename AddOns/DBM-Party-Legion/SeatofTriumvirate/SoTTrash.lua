@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("SoTTrash", "DBM-Party-Legion", 13)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -25,8 +25,6 @@ local specWarnVoidDiffusion			= mod:NewSpecialWarningInterrupt(245585, "HasInter
 local specWarnConsumeEssence		= mod:NewSpecialWarningInterrupt(245727, "HasInterrupt", nil, nil, 1, 2)
 local specWarnStygianBlast			= mod:NewSpecialWarningInterrupt(248133, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDarkFlay				= mod:NewSpecialWarningInterrupt(248184, "HasInterrupt", nil, nil, 1, 2)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end

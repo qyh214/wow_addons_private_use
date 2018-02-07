@@ -28,13 +28,13 @@ L.DEFAULT_FONT_NAME = "MSBT ARKai_C"
 ------------------------------
 
 L.COMMAND_USAGE = {
- "使用方法: " .. MikSBT.COMMAND .. " <命令> [参数]",
- " 命令:",
- "  " .. L.COMMAND_RESET .. " - 重置",
- "  " .. L.COMMAND_DISABLE .. " - 禁用",
- "  " .. L.COMMAND_ENABLE .. " - 启用",
- "  " .. L.COMMAND_SHOWVER .. " - 显示当前版本",
- "  " .. L.COMMAND_HELP .. " - 帮助",
+	"使用方法: " .. MikSBT.COMMAND .. " <命令> [参数]",
+	" 命令:",
+	"  " .. L.COMMAND_RESET .. " - 重置",
+	"  " .. L.COMMAND_DISABLE .. " - 禁用",
+	"  " .. L.COMMAND_ENABLE .. " - 启用",
+	"  " .. L.COMMAND_SHOWVER .. " - 显示当前版本",
+	"  " .. L.COMMAND_HELP .. " - 帮助",
 }
 
 

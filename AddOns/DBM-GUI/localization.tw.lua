@@ -195,21 +195,6 @@ L.SpecialWarnSound3			= "設定作用於極度重要的特別警告音效"
 L.SpecialWarnSound4			= "設定作用於快跑啊小女孩的特別警告音效"
 L.SpecialWarnSound5			= "設定作用於註記包含你的名字的特別警告音效"
 
--- Tab: Heads Up Display Frame
-L.Panel_HUD					= "HUD提醒顯示"
-L.Area_HUDOptions			= "HUD選項"
-L.HUDColorOverride			= "為HUD替換模組顏色"
-L.HUDSizeOverride			= "為HUD替換模組大小"
-L.HUDAlphaOverride			= "為HUD替換模組透明度"
-L.HUDTextureOverride		= "為HUD替換模組材質(這不套用到'圖示'材質選項)"
-L.HUDColorSelect			= "HUD顏色%d"
-L.HUDTextureSelect1			= "為主要HUD設定材質"
-L.HUDTextureSelect2			= "為次要HUD設定材質"
-L.HUDTextureSelect3			= "為第三HUD設定材質"
-L.HUDTextureSelect4			= "為'跑至某處'HUD設定材質"
-L.HUDSizeSlider				= "圓形半徑:%0.1f"
-L.HUDAlphaSlider			= "透明度:%0.1f"
-
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "語音警告"
 L.Area_VoiceSelection		= "語音選擇"
@@ -225,14 +210,13 @@ L.SWFDefaultOnly			= "當特別警告使用預設音效。(允許自訂音效繼
 L.SWFAll					= "當特別警告使用所有音效"
 L.SpecWarn_AlwaysVoice		= "總是播放所有語音警告(覆蓋所有特定首領選項)"
 --TODO, maybe add URLS right to GUI panel on where to acquire 3rd party voice packs?
+L.Area_GetVEM				= "取得VEM語言包"
+L.VEMDownload				= "|cFF73C2FBhttps://wow.curseforge.com/projects/dbm-voicepack-vem|r"
+L.Area_BrowseOtherVP		= "在Curse上瀏覽其他語言包"
+L.BrowseOtherVPs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+voice|r"
+L.Area_BrowseOtherCT		= "在Curse上瀏覽倒數包"
+L.BrowseOtherCTs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+count+pack|r"
 
--- Tab: HealthFrame
-L.Panel_HPFrame				= "血量框架"
-L.Area_HPFrame				= "血量框架選項"
-L.HP_Enabled				= "總是顯示血量框架 (覆蓋特定首領選項)"
-L.HP_GrowUpwards			= "血量框架向上延伸"
-L.HP_ShowDemo				= "顯示血量框架"
-L.BarWidth					= "寬度:%d"
 
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "DBM全局禁用及過濾"
@@ -247,7 +231,6 @@ L.SpamBlockNoRangeFrame		= "不顯示距離框架"
 L.SpamBlockNoInfoFrame		= "不顯示訊息框架"
 L.SpamBlockNoHudMap			= "不要顯示HudMap"
 L.SpamBlockNoNameplate		= "不要顯示名條光環"
-L.SpamBlockNoHealthFrame	= "不顯示血量框架"
 L.SpamBlockNoCountdowns		= "不播放倒數音效"
 L.SpamBlockNoYells			= "不送出大喊至頻道"
 L.SpamBlockNoNoteSync		= "不接受註記分享"

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(169, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetCreatureID(42180, 42178, 42179, 42166)
 mod:SetEncounterID(1027)
 mod:SetZone()
@@ -190,10 +190,6 @@ function mod:OnCombatStart(delay)
 	incinerateCast = 0
 	if self:IsDifficulty("heroic10", "heroic25") then
 		berserkTimer:Start(-delay)
-	end
-	if DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss(42180, 42178, 42179, 42166, L.name)
 	end
 end
 

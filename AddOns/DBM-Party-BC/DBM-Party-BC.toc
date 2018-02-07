@@ -30,7 +30,7 @@
 ## X-DBM-Mod-Name-koKR: 5인 던전(불타는 성전)
 ## X-DBM-Mod-Name-zhTW: 隊伍首領 (燃燒的遠征)
 ## X-DBM-Mod-Name-zhCN: 队伍首领 (燃烧的远征)
-## X-DBM-Mod-Sort: 525
+## X-DBM-Mod-Sort: 1015
 ## X-DBM-Mod-MapID: 540,558,556,555,542,546,545,547,553,554,552,557,269,560,543,585
 ## X-DBM-Mod-MinCoreRevision: 14002
 localization.en.lua

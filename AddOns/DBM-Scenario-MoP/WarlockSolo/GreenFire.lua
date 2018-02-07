@@ -2,7 +2,7 @@ if select(2, UnitClass("player")) ~= "WARLOCK" then return end
 local mod	= DBM:NewMod("d594", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1112)
@@ -52,8 +52,6 @@ local timerEnslaveDemon			= mod:NewTargetTimer(300, 1098)
 local timerDoom					= mod:NewBuffFadesTimer(419, 138558)
 
 local countdownDoom				= mod:NewCountdownFades(419, 138558, nil, nil, 10)
-
-mod:RemoveOption("HealthFrame")
 
 local kanrathadAlive = true--So we don't warn to enslave pit lord when he dies and enslave fades.
 

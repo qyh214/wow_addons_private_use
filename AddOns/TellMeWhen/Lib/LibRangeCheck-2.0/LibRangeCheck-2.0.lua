@@ -1,6 +1,6 @@
 --[[
 Name: LibRangeCheck-2.0
-Revision: $Revision: 174 $
+Revision: $Revision: 185 $
 Author(s): mitch0
 Website: http://www.wowace.com/projects/librangecheck-2-0/
 Description: A range checking library based on interact distances and spell ranges
@@ -41,7 +41,7 @@ License: Public Domain
 -- @class file
 -- @name LibRangeCheck-2.0
 local MAJOR_VERSION = "LibRangeCheck-2.0"
-local MINOR_VERSION = tonumber(("$Revision: 174 $"):match("%d+")) + 100000
+local MINOR_VERSION = tonumber(("$Revision: 185 $"):match("%d+")) + 100000
 
 local lib, oldminor = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
 if not lib then
@@ -52,11 +52,13 @@ end
 
 local UpdateDelay = .5
 local ItemRequestTimeout = 10.0
+local FriendColor = 'ff22ff22'
+local HarmColor = 'ffff2222'
 
 -- interact distance based checks. ranges are based on my own measurements (thanks for all the folks who helped me with this)
 local DefaultInteractList = {
     [3] = 8,
-    [2] = 9,
+--    [2] = 9,
     [4] = 28,
 }
 
@@ -64,12 +66,12 @@ local DefaultInteractList = {
 local InteractLists = {
     ["Tauren"] = {
         [3] = 6,
-        [2] = 7,
+--        [2] = 7,
         [4] = 25,
     },
     ["Scourge"] = {
         [3] = 7,
-        [2] = 8,
+--        [2] = 8,
         [4] = 27,
     },
 }
@@ -180,11 +182,25 @@ HarmSpells["WARLOCK"] = {
 -- Items [Special thanks to Maldivia for the nice list]
 
 local FriendItems  = {
-    [5] = {
+    [1] = {
+        90175, -- Gin-Ji Knife Set -- doesn't seem to work for pets (always returns nil)
+    },
+    [2] = {
         37727, -- Ruby Acorn
     },
-    [6] = {
+    [3] = {
+        42732, -- Everfrost Razor
+    },
+    [4] = {
+        129055, -- Shoe Shine Kit
+    },
+    [5] = {
+        8149, -- Voodoo Charm
+        136605, -- Solendra's Compassion
         63427, -- Worgsaw
+    },
+    [7] = {
+        61323, -- Ruby Seeds
     },
     [8] = {
         34368, -- Attuned Crystal Cores
@@ -229,6 +245,9 @@ local FriendItems  = {
     [35] = {
         18904, -- Zorbin's Ultra-Shrinker
     },
+    [38] = {
+        140786, -- Ley Spider Eggs
+    },
     [40] = {
         34471, -- Vial of the Sunwell
     },
@@ -237,6 +256,9 @@ local FriendItems  = {
     },
     [50] = {
         116139, -- Haunting Memento
+    },
+    [55] = {
+        74637, -- Kiryn's Poison Vial
     },
     [60] = {
         32825, -- Soul Cannon
@@ -248,17 +270,39 @@ local FriendItems  = {
     [80] = {
         35278, -- Reinforced Net
     },
+    [90] = {
+        133925, -- Fel Lash
+    },
     [100] = {
         41058, -- Hyldnir Harpoon
+    },
+    [150] = {
+        46954, -- Flaming Spears
+    },
+    [200] = {
+        75208, -- Rancher's Lariat
     },
 }
 
 local HarmItems = {
-    [5] = {
+    [1] = {
+    },
+    [2] = {
         37727, -- Ruby Acorn
     },
-    [6] = {
+    [3] = {
+        42732, -- Everfrost Razor
+    },
+    [4] = {
+        129055, -- Shoe Shine Kit
+    },
+    [5] = {
+        8149, -- Voodoo Charm
+        136605, -- Solendra's Compassion
         63427, -- Worgsaw
+    },
+    [7] = {
+        61323, -- Ruby Seeds
     },
     [8] = {
         34368, -- Attuned Crystal Cores
@@ -287,6 +331,9 @@ local HarmItems = {
         24269, -- Heavy Netherweave Net
         18904, -- Zorbin's Ultra-Shrinker
     },
+    [38] = {
+        140786, -- Ley Spider Eggs
+    },
     [40] = {
         28767, -- The Decapitator
     },
@@ -296,6 +343,9 @@ local HarmItems = {
     },
     [50] = {
         116139, -- Haunting Memento
+    },
+    [55] = {
+        74637, -- Kiryn's Poison Vial
     },
     [60] = {
         32825, -- Soul Cannon
@@ -307,9 +357,20 @@ local HarmItems = {
     [80] = {
         35278, -- Reinforced Net
     },
+    [90] = {
+        133925, -- Fel Lash
+    },
     [100] = {
         33119, -- Malister's Frost Wand
     },
+--[[ -- not much point in enabling these, as the target is lost at 100yd...
+    [150] = {
+        46954, -- Flaming Spears
+    },
+    [200] = {
+        75208, -- Rancher's Lariat
+    },
+]]--
 }
 
 -- This could've been done by checking player race as well and creating tables for those, but it's easier like this
@@ -452,8 +513,8 @@ local function findSpellIdx(spellName)
 end
 
 -- minRange should be nil if there's no minRange, not 0
-local function addChecker(t, range, minRange, checker)
-    local rc = { ["range"] = range, ["minRange"] = minRange, ["checker"] = checker }
+local function addChecker(t, range, minRange, checker, info)
+    local rc = { ["range"] = range, ["minRange"] = minRange, ["checker"] = checker, ["info"] = info }
     for i = 1, #t do
         local v = t[i]
         if rc.range == v.range then return end
@@ -467,6 +528,18 @@ end
 
 local function createCheckerList(spellList, itemList, interactList)
     local res = {}
+    if itemList then
+        for range, items in pairs(itemList) do
+            for i = 1, #items do
+                local item = items[i]
+                if GetItemInfo(item) then
+                    addChecker(res, range, nil, checkers_Item[item], "item:" .. item)
+                    break
+                end
+            end
+        end
+    end
+    
     if spellList then
         for i = 1, #spellList do
             local sid = spellList[i]
@@ -483,21 +556,9 @@ local function createCheckerList(spellList, itemList, interactList)
                     range = MeleeRange
                 end
                 if minRange then
-                    addChecker(res, range, minRange, checkers_SpellWithMin[spellIdx])
+                    addChecker(res, range, minRange, checkers_SpellWithMin[spellIdx], "spell:" .. sid .. ":" .. tostring(name))
                 else
-                    addChecker(res, range, minRange, checkers_Spell[spellIdx])
-                end
-            end
-        end
-    end
-    
-    if itemList then
-        for range, items in pairs(itemList) do
-            for i = 1, #items do
-                local item = items[i]
-                if GetItemInfo(item) then
-                    addChecker(res, range, nil, checkers_Item[item])
-                    break
+                    addChecker(res, range, minRange, checkers_Spell[spellIdx], "spell:" .. sid .. ":" .. tostring(name))
                 end
             end
         end
@@ -505,7 +566,7 @@ local function createCheckerList(spellList, itemList, interactList)
     
     if interactList and not next(res) then
         for index, range in pairs(interactList) do
-            addChecker(res, range, nil,  checkers_Interact[index])
+            addChecker(res, range, nil,  checkers_Interact[index], "interact:" .. index)
         end
     end
 
@@ -514,31 +575,23 @@ end
 
 -- returns minRange, maxRange  or nil
 local function getRange(unit, checkerList)
-    local min, max = 0, nil
-    for i = 1, #checkerList do
-        local rc = checkerList[i]
-        if not max or max > rc.range then
-            if rc.minRange then
-                local inRange, inMinRange = rc.checker(unit)
-                if inMinRange then
-                    max = rc.minRange
-                elseif inRange then
-                    min, max = rc.minRange, rc.range
-                elseif min > rc.range then
-                    return min, max
-                else
-                    return rc.range, max
-                end
-            elseif rc.checker(unit) then
-                max = rc.range
-            elseif min > rc.range then
-                return min, max
-            else
-                return rc.range, max
-            end
+    local lo, hi = 1, #checkerList
+    while lo <= hi do
+        local mid = math_floor((lo + hi) / 2)
+        local rc = checkerList[mid]
+        if rc.checker(unit) then
+            lo = mid + 1
+        else
+            hi = mid - 1
         end
     end
-    return min, max
+    if lo > #checkerList then
+        return 0, checkerList[#checkerList].range
+    elseif lo <= 1 then
+        return checkerList[1].range, nil
+    else
+        return checkerList[lo].range, checkerList[lo - 1].range
+    end
 end
 
 local function updateCheckers(origList, newList)
@@ -638,6 +691,15 @@ lib.failedItemRequests = {}
 
 -- << Public API
 
+--@do-not-package@
+-- this is here just for .docmeta
+--- A checker function. This type of function is returned by the various Get*Checker() calls.
+-- @param unit the unit to check range to.
+-- @return **true** if the unit is within the range for this checker.
+local function checker(unit)
+end
+
+--@end-do-not-package@ 
 
 --- The callback name that is fired when checkers are changed.
 -- @field
@@ -715,10 +777,10 @@ function lib:init(forced)
         -- fall back to interact distance checks
         if playerClass == "HUNTER" or playerRace == "Tauren" then
             -- for hunters, use interact4 as it's safer
-            -- for Taurens interact4 is actually closer than 25yd and interact2 is closer than 8yd, so we can't use that
+            -- for Taurens interact4 is actually closer than 25yd and interact3 is closer than 8yd, so we can't use that
             minRangeCheck = checkers_Interact[4]
         else
-            minRangeCheck = checkers_Interact[2]
+            minRangeCheck = checkers_Interact[3]
         end
     end
 
@@ -992,6 +1054,278 @@ function lib:scheduleAuraCheck()
     self.frame:Show()
 end
 
+--@do-not-package@
+-- << DEBUG STUFF
+
+local function pairsByKeys(t, f)
+    local a = {}
+    for n in pairs(t) do tinsert(a, n) end
+    table.sort(a, f)
+    local i = 0
+    local iter = function ()
+        i = i + 1
+        if a[i] == nil then
+            return nil
+        else
+            return a[i], t[a[i]]
+        end
+    end
+    return iter
+end
+
+function lib:cacheAllItems()
+    if (not self.initialized) or harmItemRequests then
+        print(MAJOR_VERSION .. ": init hasn't finished yet")
+        return
+    end
+    print(MAJOR_VERSION .. ": starting item cache")
+    initItemRequests(true)
+    self.frame:Show()
+end
+
+function lib:startMeasurement(unit, resultTable)
+    if (not self.initialized) or harmItemRequests then
+        print(MAJOR_VERSION .. ": init hasn't finished yet")
+        return
+    end
+    if self.measurements then
+        print(MAJOR_VERSION .. ": measurements already running")
+        return
+    end
+    print(MAJOR_VERSION .. ": starting measurements")
+    local _, playerClass = UnitClass("player")
+    local spellList
+    local itemList
+    if UnitCanAttack("player", unit) then
+        spellList = HarmSpells[playerClass]
+        itemList = HarmItems
+    elseif UnitCanAssist("player", unit) then
+        spellList = FriendSpells[playerClass]
+        itemList = FriendItems
+    end
+    self.spellsToMeasure = {}
+    if spellList then
+        for i = 1, #spellList do
+            local sid = spellList[i]
+            local name = GetSpellInfo(sid)
+            local spellIdx = findSpellIdx(name)
+            if spellIdx then
+                self.spellsToMeasure[name] = spellIdx
+            end
+        end
+    end
+    self.itemsToMeasure = {}
+    if itemList then
+        for range, items in pairs(itemList) do
+            for i = 1, #items do
+                local item = items[i]
+                local name = GetItemInfo(item)
+                if name then
+                    self.itemsToMeasure[name] = item
+                end
+            end
+        end
+    end
+    self.measurements = resultTable
+    self.measurementUnit = unit
+    self.measurementStart = GetTime()
+    self.lastMeasurements = {}
+    self:updateMeasurements()
+    self.frame:SetScript("OnUpdate", function(frame, elapsed) self:updateMeasurements() end)
+    self.frame:Show()
+end
+
+function lib:stopMeasurement()
+    print(MAJOR_VERSION .. ": stopping measurements")
+    self.frame:Hide()
+    self.frame:SetScript("OnUpdate", function(frame, elapsed)
+        lastUpdate = lastUpdate + elapsed
+        if lastUpdate < UpdateDelay then
+            return
+        end
+        lastUpdate = 0
+        self:initialOnUpdate()
+    end)
+    self.measurements = nil
+end
+
+function lib:checkItems(itemList, verbose, color)
+    if not itemList then return end
+    color = color or 'ffffffff'
+    for range, items in pairsByKeys(itemList) do
+        for i = 1, #items do
+            local item = items[i]
+            local name = GetItemInfo(item)
+            if not name then
+                print(MAJOR_VERSION .. ": |c" .. color .. tostring(item) .. "|r: " .. tostring(range) .. "yd: |cffeda500not in cache|r")
+            else
+                local res = IsItemInRange(item, "target") 
+                if res == nil or verbose then
+                    if res == nil then res = "|cffed0000nil|r" end
+                    print(MAJOR_VERSION .. ": |c" .. color .. tostring(item) .. ": " .. tostring(name) .. "|r: " .. tostring(range) .. "yd: " .. tostring(res))
+                end
+            end
+        end
+    end
+end
+
+function lib:checkSpells(spellList, verbose, color)
+    if not spellList then return end
+    color = color or 'ffffffff'
+    for i = 1, #spellList do 
+        local sid = spellList[i]
+        local name, _, _, _, minRange, range = GetSpellInfo(sid)
+        if (not name) or (name == "") or (not range) then
+            print(MAJOR_VERSION .. ": |c" .. color .. tostring(sid) .. "|r: " .. tostring(range) .. "yd: |cffeda500invalid spell id|r")
+        else
+            local spellIdx = self:findSpellIndex(sid)
+            if not spellIdx then
+                print(MAJOR_VERSION .. ": |c" .. color .. tostring(sid) .. ": " .. tostring(name) .. "|r: " .. tostring(minRange) .. "-" .. tostring(range) .. "yd: |cffeda500not in spellbook|r")
+            else
+                local res = IsSpellInRange(spellIdx, BOOKTYPE_SPELL, "target")
+                if res == nil or verbose then
+                    if res == nil then res = "|cffed0000nil|r" end
+                    print(MAJOR_VERSION .. ": |c" .. color .. tostring(sid) .. ": " .. tostring(name) .. "|r: " .. tostring(minRange) .. "-" .. tostring(range) .. "yd: " .. tostring(res))
+                end
+            end
+        end
+    end
+end
+
+function lib:checkAllItems()
+    print(MAJOR_VERSION .. ": Checking FriendItems...")
+    self:checkItems(FriendItems, true, FriendColor)
+    print(MAJOR_VERSION .. ": Checking HarmItems...")
+    self:checkItems(HarmItems, true, HarmColor)
+end
+
+function lib:checkAllSpells()
+    local _, playerClass = UnitClass("player")
+    print(MAJOR_VERSION .. ": Checking FriendSpells: " .. playerClass)
+    self:checkSpells(FriendSpells[playerClass], true, FriendColor)
+    print(MAJOR_VERSION .. ": Checking HarmSpells..." .. playerClass)
+    self:checkSpells(HarmSpells[playerClass], true, HarmColor)
+end
+
+local function dumpCheckerList(checkerList)
+    for _, rc in ipairs(checkerList) do
+        if rc.minRange then
+            print(rc.minRange .. "-" .. rc.range .. ": " .. rc.info)
+        else
+            print(rc.range .. ": " .. rc.info)
+        end
+    end
+end
+
+function lib:checkAllCheckers()
+    if not UnitExists("target") then
+        print(MAJOR_VERSION .. ": Invalid unit, cannot check")
+        return
+    end
+    local _, playerClass = UnitClass("player")
+    if UnitCanAttack("player", "target") then
+        print(MAJOR_VERSION .. ": Harm checker list: " .. playerClass)
+        dumpCheckerList(self.harmRC)
+        print(MAJOR_VERSION .. ": Checking HarmCheckers: " .. playerClass)
+        self:checkItems(HarmItems)
+        self:checkSpells(HarmSpells[playerClass])
+    elseif UnitCanAssist("player", "target") then
+        print(MAJOR_VERSION .. ": Friend checker list: " .. playerClass)
+        dumpCheckerList(self.friendRC)
+        print(MAJOR_VERSION .. ": Checking FriendCheckers: ")
+        self:checkItems(FriendItems)
+        self:checkSpells(FriendSpells[playerClass])
+    else
+        print(MAJOR_VERSION .. ": Misc checker list: " .. playerClass)
+        dumpCheckerList(self.miscRC)
+        print(MAJOR_VERSION .. ": Misc unit, cannot check")
+        return
+    end
+    print(MAJOR_VERSION .. ": done.")
+end
+
+local function logMeasurementChange(t, t0, key, last, curr)
+    local d = 0
+    local scale = 1240
+    if t0 then
+        local dx = scale * (t.x - t0.x)
+        local dy = scale * (t.y - t0.y)
+        d = _G.sqrt(dx * dx + dy * dy)
+    end
+    print(MAJOR_VERSION .. ": t=" .. ("%.4f"):format(t.stamp) .. ": d=" .. ("%.4f"):format(d) .. ": " .. tostring(key) .. ": " .. tostring(last) .. " ->  " .. tostring(curr))
+end
+
+local GetPlayerMapPosition = GetPlayerMapPosition
+function lib:updateMeasurements()
+    local now = GetTime() - self.measurementStart
+    local x, y = GetPlayerMapPosition("player")
+    local t0 = self.measurements[0]
+    local t = self.measurements[now]
+    local unit = self.measurementUnit
+    for name, id in pairs(self.spellsToMeasure) do
+        local key = 'spell: ' .. name
+        local last = self.lastMeasurements[key]
+        local curr = (IsSpellInRange(id, BOOKTYPE_SPELL, unit) == 1) and true or false
+        if last == nil or last ~= curr then
+            if not t then
+                t = {}
+                t.x, t.y, t.stamp, t.states = x, y, now, {}
+                self.measurements[now] = t
+            end
+            logMeasurementChange(t, t0, key, last, curr)
+            t.states[key]= curr
+            self.lastMeasurements[key] = curr
+        end
+    end
+    for name, item in pairs(self.itemsToMeasure) do
+        local key = 'item: ' .. name;
+        local last = self.lastMeasurements[key]
+        local curr = IsItemInRange(item, unit) and true or false
+        if last == nil or last ~= curr then
+            if not t then
+                t = {}
+                t.x, t.y, t.stamp, t.states = x, y, now, {}
+                self.measurements[now] = t
+            end
+            logMeasurementChange(t, t0, key, last, curr)
+            t.states[key]= curr
+            self.lastMeasurements[key] = curr
+        end
+    end
+    for i, v in pairs(DefaultInteractList) do
+        local key = 'interact: ' .. i
+        local last = self.lastMeasurements[key]
+        local curr = CheckInteractDistance(unit, i) and true or false
+        if last == nil or last ~= curr then
+            if not t then
+                t = {}
+                t.x, t.y, t.stamp, t.states = x, y, now, {}
+                self.measurements[now] = t
+            end
+            logMeasurementChange(t, t0, key, last, curr)
+            t.states[key] = curr
+            self.lastMeasurements[key] = curr
+        end
+    end
+end
+
+local debugprofilestop = debugprofilestop
+function lib:speedTest(numIterations)
+    if not UnitExists("target") then
+        print(MAJOR_VERSION .. ": Invalid unit, cannot check")
+        return
+    end
+    numIterations = numIterations or 10000
+    local start = debugprofilestop()
+    for i = 1, numIterations do
+        self:getRange("target")
+    end
+    local duration = debugprofilestop() - start
+    print("numIterations: " .. tostring(numIterations) .. ", time: " .. tostring(duration))
+end
+
+-- >> DEBUG STUFF
+--@end-do-not-package@ 
 
 -- << load-time initialization 
 

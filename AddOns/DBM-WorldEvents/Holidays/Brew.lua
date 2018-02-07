@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Brew", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15653 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetCreatureID(15467)
 --mod:SetModelID(15879)
 --mod:SetReCombatTime(10)
@@ -23,7 +23,6 @@ mod:RegisterEvents(
 --local timerCleaveCD			= mod:NewCDTimer(8.5, 104903, nil, nil, nil, 6)
 --local timerStarfallCD			= mod:NewCDTimer(15, 26540, nil, nil, nil, 2)
 
-mod:RemoveOption("HealthFrame")
 mod:AddBoolOption("NormalizeVolume", true, "misc")
 
 local setActive = false

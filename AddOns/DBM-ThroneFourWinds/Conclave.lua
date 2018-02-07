@@ -4,17 +4,11 @@ local Anshal	= DBM:EJ_GetSectionInfo(3166)
 local Nezir		= DBM:EJ_GetSectionInfo(3178)
 local Rohash	= DBM:EJ_GetSectionInfo(3172)
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetCreatureID(45870, 45871, 45872)
 mod:SetEncounterID(1035)
 mod:SetZone()
 mod:SetBossHPInfoToHighest()
-
-mod:SetBossHealthInfo(
-	45870, Anshal,
-	45871, Nezir,
-	45872, Rohash
-)
 
 mod:RegisterCombat("combat")
 
@@ -62,7 +56,6 @@ local timerSpecialActive	= mod:NewTimer(15, "timerSpecialActive", "Interface\\Ic
 local enrageTimer			= mod:NewBerserkTimer(480) -- Both normal and heroic mode
 
 mod:AddBoolOption("OnlyWarnforMyTarget", false, "announce")--Default off do to targeting dependance (not great for healers who don't set focus). Has ability to filter all timers/warnings for bosses you are not targeting or focusing.
-mod:AddBoolOption("HealthFrame", false)
 
 local windBlastCounter = 0
 local poisonCounter = 0

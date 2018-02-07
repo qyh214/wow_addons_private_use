@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank4", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15647 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(28115)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -22,7 +22,6 @@ local timerRockets				= mod:NewBuffActiveTimer(9, 133212)--Max Megablast (GG Eng
 
 local countdownWaterShield		= mod:NewCountdownFades(15, 228981)
 
-mod:RemoveOption("HealthFrame")
 --mod:AddBoolOption("SetIconOnDominika", true)--Dominika the Illusionist 
 
 local brawlersMod = DBM:GetModByName("Brawlers")

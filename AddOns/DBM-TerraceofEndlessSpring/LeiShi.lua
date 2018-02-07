@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(729, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetCreatureID(62983)--62995 Animated Protector
 mod:SetEncounterID(1506)
 
@@ -36,12 +36,9 @@ local timerScaryFogCD					= mod:NewNextTimer(10, 123705)
 
 local berserkTimer						= mod:NewBerserkTimer(600)
 
-mod:AddBoolOption("HealthFrame", true)
-mod:AddBoolOption("GWHealthFrame", true)
 mod:AddBoolOption("RangeFrame", true)
 mod:AddSetIconOption("SetIconOnProtector", "ej6224", false, true)
 
-local getAwayHP = 0 -- because max health is different between Asian and US 25-man encounter. Calculate manually.
 local specialsCast = 0
 local hideActive = false
 local lastProtect = 0
@@ -72,7 +69,6 @@ function mod:OnCombatStart(delay)
 		DBM.RangeCheck:Show(3, bossTank)
 	end
 	hideTime = 0
-	getAwayHP = 0
 	specialsCast = 0
 	hideActive = false
 	lastProtect = 0
@@ -117,10 +113,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			timerGetAway:Start()
 		end
-		if DBM.BossHealth:IsShown() and self.Options.GWHealthFrame then
-			local getAwayHealth = math.floor(UnitHealthMax("boss1") * 0.04)
-			self:ShowDamagedHealthBar(args.sourceGUID, args.spellName, getAwayHealth)
-		end
 	elseif spellId == 123121 then
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId, "boss1") then--Only want sprays that are on tanks, not bads standing on tanks.
@@ -159,9 +151,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerSpray:Cancel(args.destName)
 	elseif spellId == 123461 then
 		timerGetAway:Cancel()
-		if DBM.BossHealth:IsShown() and self.Options.GWHealthFrame then
-			self:RemoveDamagedHealthBar()
-		end
 	end
 end
 

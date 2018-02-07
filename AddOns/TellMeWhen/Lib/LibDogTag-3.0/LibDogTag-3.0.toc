@@ -1,4 +1,4 @@
-## Interface: 70200
+## Interface: 70300
 ## LoadOnDemand: 1
 ## Title: Lib: DogTag-3.0
 ## Notes: A library to provide a markup syntax
@@ -7,7 +7,7 @@
 ## Version: 1.0
 ## X-Category: Library
 ## X-Credit: Shefki
-## X-Compatible-With: 70100
+## X-Compatible-With: 70200
 ## OptionalDeps:
 
 LibStub\LibStub.lua

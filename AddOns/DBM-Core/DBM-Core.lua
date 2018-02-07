@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 17191 $"):sub(12, -3)),
-	DisplayVersion = "7.3.18", -- the string that is shown as version
-	ReleaseRevision = 17191 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 17241 $"):sub(12, -3)),
+	DisplayVersion = "7.3.21", -- the string that is shown as version
+	ReleaseRevision = 17241 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -126,7 +126,6 @@ DBM.DefaultOptions = {
 	SWarningAlphabetical = true,
 	SWarnNameInNote = true,
 	CustomSounds = 0,
-	AlwaysShowHealthFrame = false,
 	ShowBigBrotherOnCombatStart = false,
 	FilterTankSpec = true,
 	FilterInterrupt = true,
@@ -165,10 +164,6 @@ DBM.DefaultOptions = {
 	InfoFrameY = -75,
 	InfoFrameShowSelf = false,
 	InfoFrameLines = 0,
-	HPFramePoint = "CENTER",
-	HPFrameX = -50,
-	HPFrameY = 50,
-	HPFrameMaxEntries = 5,
 	WarningDuration2 = 1.5,
 	WarningPoint = "CENTER",
 	WarningX = 0,
@@ -209,29 +204,6 @@ DBM.DefaultOptions = {
 	SpecialWarningFlashRepeat5 = true,
 	SpecialWarningFlashRepeatAmount = 2,--Repeat 2 times, mean 3 flashes (first plus 2 repeat)
 	SWarnClassColor = true,
-	HUDColorOverride = false,
-	HUDSizeOverride = false,
-	HUDAlphaOverride = false,
-	HUDTextureOverride = false,
-	HUDSize1 = 5,
-	HUDSize2 = 5,
-	HUDSize3 = 5,
-	HUDSize4 = 5,
-	HUDAlpha1 = 0.5,
-	HUDAlpha2 = 0.5,
-	HUDAlpha3 = 0.5,
-	HUDAlpha4 = 0.5,
-	HUDColor1 = {1.0, 1.0, 0.0},--Yellow
-	HUDColor2 = {1.0, 0.0, 0.0},--Red
-	HUDColor3 = {1.0, 0.5, 0.0},--Orange
-	HUDColor4 = {0.0, 1.0, 0.0},--Green
-	HUDTexture1 = "highlight",
-	HUDTexture2 = "highlight",
-	HUDTexture3 = "highlight",
-	HUDTexture4 = "highlight",
-	HealthFrameGrowUp = false,
-	HealthFrameLocked = false,
-	HealthFrameWidth = 200,
 	ArrowPosX = 0,
 	ArrowPosY = -150,
 	ArrowPoint = "TOP",
@@ -249,7 +221,6 @@ DBM.DefaultOptions = {
 	DontShowInfoFrame = false,
 	DontShowHudMap2 = false,
 	DontShowNameplateIcons = false,
-	DontShowHealthFrame = false,
 	DontPlayCountdowns = false,
 	DontSendYells = false,
 	BlockNoteShare = false,
@@ -387,7 +358,7 @@ local UpdateChestTimer
 local breakTimerStart
 local AddMsg
 
-local fakeBWVersion, fakeBWHash = 86, "2adc318"
+local fakeBWVersion, fakeBWHash = 87, "299b522"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -395,8 +366,8 @@ local enableIcons = true -- set to false when a raid leader or a promoted player
 local bannedMods = { -- a list of "banned" (meaning they are replaced by another mod like DBM-Battlegrounds (replaced by DBM-PvP)) boss mods, these mods will not be loaded by DBM (and they wont show up in the GUI)
 	"DBM-Battlegrounds", --replaced by DBM-PvP
 	-- ZG and ZA are now part of the party mods for Cataclysm
-	"DBM-ZulAman",
-	"DBM-ZG",
+	"DBM-ZulAman",--Remove restriction in 8.0 classic wow
+	"DBM-ZG",--Remove restriction in 8.0 classic wow
 	"DBM-SiegeOfOrgrimmar",--Block legacy version. New version is "DBM-SiegeOfOrgrimmarV2"
 	"DBM-HighMail",
 	"DBM-ProvingGrounds-MoP",--Renamed to DBM-ProvingGrounds in 6.0 version since blizzard updated content for WoD
@@ -959,6 +930,7 @@ do
 		SPELL_LEECH = true,
 		SPELL_CAST_FAILED = true
 	}
+	--C_CombatLog, CombatLogGetCurrentEventInfo(), GetCurrentCombatTextEventInfo() (8.x)
 	function DBM:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, ...)
 		if not registeredEvents[event] then return end
 		local eventSub6 = event:sub(0, 6)
@@ -1689,10 +1661,6 @@ function DBM:RepositionFrames()
 	self:UpdateWarningOptions()
 	self:UpdateSpecialWarningOptions()
 	self.Arrow:LoadPosition()
-	if DBMBossHealth then
-		DBMBossHealth:ClearAllPoints()
-		DBMBossHealth:SetPoint(self.Options.HPFramePoint, UIParent, self.Options.HPFramePoint, self.Options.HPFrameX, self.Options.HPFrameY)
-	end
 	if DBMRangeCheck then
 		DBMRangeCheck:ClearAllPoints()
 		DBMRangeCheck:SetPoint(self.Options.RangeFramePoint, UIParent, self.Options.RangeFramePoint, self.Options.RangeFrameX, self.Options.RangeFrameY)
@@ -1759,7 +1727,11 @@ do
 			end
 		end
 		if not success then
-			DBM:AddMsg(DBM_ARROW_WAY_USAGE)
+			if DBM.Arrow:IsShown() then
+				DBM.Arrow:Hide()--Hide
+			else--error
+				DBM:AddMsg(DBM_ARROW_WAY_USAGE)
+			end
 		else
 			DBM:AddMsg(DBM_ARROW_WAY_SUCCESS)
 		end
@@ -2757,6 +2729,25 @@ do
 
 	function DBM:GetRaidUnitId(name)
 		return raid[name] and raid[name].id
+	end
+	
+	function DBM:GetEnemyUnitIdByGUID(guid)
+		for i = 1, 5 do
+			local unitId = "boss"..i
+			local guid2 = UnitGUID(unitId)
+			if guid == guid2 then
+				return unitId
+			end
+		end
+		local idType = (IsInRaid() and "raid") or "party"
+		for i = 0, GetNumGroupMembers() do
+			local unitId = ((i == 0) and "target") or idType..i.."target"
+			local guid2 = UnitGUID(unitId)
+			if guid == guid2 then
+				return unitId
+			end
+		end
+		return DBM_CORE_UNKNOWN
 	end
 	
 	function DBM:GetPlayerGUIDByName(name)
@@ -5426,7 +5417,6 @@ do
 					self:Unschedule(self.RequestTimers)
 				end
 			end
-			--show health frame
 			if not mod.inScenario then
 				if self.Options.HideTooltips then
 					--Better or cleaner way?
@@ -5437,31 +5427,10 @@ do
 					self.Options.sfxDisabled = true
 					SetCVar("Sound_EnableSFX", 0)
 				end
-				if (self.Options.AlwaysShowHealthFrame or mod.Options.HealthFrame) then
-					if not self.BossHealth:IsShown() then
-						self.BossHealth:Show(mod.localization.general.name)
-					else-- pulled other boss during combat, set header text.
-						self.BossHealth:SetHeaderText(BOSS)
-					end
-					if mod.bossHealthInfo then
-						if mod.bossHealthInfo[2] and type(mod.bossHealthInfo[2]) == "number" then
-							for i = 1, #mod.bossHealthInfo do--boss name gets from UnitName
-								self.BossHealth:AddBoss(mod.bossHealthInfo[i])
-							end
-						else
-							for i = 1, #mod.bossHealthInfo, 2 do
-								self.BossHealth:AddBoss(mod.bossHealthInfo[i], mod.bossHealthInfo[i + 1])
-							end
-						end
-					else
-						self.BossHealth:AddBoss(mod.combatInfo.mob, mod.localization.general.name)
-					end
-				--boss health info update scheduler if boss health frame is not enabled.
-				elseif not mod.CustomHealthUpdate then
+				--boss health info scheduler
+				if not mod.CustomHealthUpdate then
 					self:Schedule(1, checkBossHealth, self)
-				end
-				--this function must be scheduled if boss health frame enabled.
-				if mod.CustomHealthUpdate then
+				else
 					self:Schedule(1, checkCustomBossHealth, self, mod)
 				end
 			end
@@ -5865,7 +5834,6 @@ do
 				self:HideBlizzardEvents(0)
 				self:Unschedule(checkBossHealth)
 				self:Unschedule(checkCustomBossHealth)
-				self.BossHealth:Hide()
 				self.Arrow:Hide(true)
 				if watchFrameRestore then
 					ObjectiveTrackerFrame:Show()
@@ -5895,20 +5863,6 @@ do
 				eeSyncReceived = 0
 				targetMonitor = nil
 				self:CreatePizzaTimer(time, "", nil, nil, nil, nil, true)--Auto Terminate infinite loop timers on combat end
-			elseif self.BossHealth:IsShown() then
-				if mod.bossHealthInfo then
-					if mod.bossHealthInfo[2] and type(mod.bossHealthInfo[2]) == "number" then
-						for i = 1, #mod.bossHealthInfo do
-							self.BossHealth:RemoveBoss(mod.bossHealthInfo[i])
-						end
-					else
-						for i = 1, #mod.bossHealthInfo, 2 do
-							self.BossHealth:RemoveBoss(mod.bossHealthInfo[i])
-						end
-					end
-				else
-					self.BossHealth:RemoveBoss(mod.combatInfo.mob)
-				end
 			end
 		end
 	end
@@ -5925,7 +5879,6 @@ function DBM:OnMobKill(cId, synced)
 				sendSync("K", cId)
 			end
 			v.combatInfo.killMobs[cId] = false
-			self.BossHealth:RemoveBoss(cId)
 			if v.numBoss then
 				v.vb.bossLeft = (v.vb.bossLeft or v.numBoss) - 1
 				self:Debug("Boss left - "..v.vb.bossLeft.."/"..v.numBoss, 2)
@@ -6867,7 +6820,6 @@ do
 			tinsert(self.ModLists[modId], name)
 		end
 		modsById[name] = obj
-		obj:AddBoolOption("HealthFrame", false, "misc")
 		obj:SetZone()
 		return obj
 	end
@@ -7414,165 +7366,6 @@ do
 	end
 end
 
-do
-	--TODO, depricate this entire function and use infoframe for this instead. Support bars in infoframe?
-	local frame = CreateFrame("Frame", "DBMShields") -- frame for CLEU events, we don't want to run all *_MISSED events through the whole DBM event system...
-
-	local activeShields = {}
-	local shieldsByGuid = {}
-
-	frame:SetScript("OnEvent", function(self, _, _, subEvent, _, _, _, _, _, destGUID, _, _, _, ...)
-		local info = destGUID and shieldsByGuid[destGUID]
-		if info then
-			if info.maxAbsorb then
-				local _, absorbed
-				if subEvent == "SWING_MISSED" then
-					_, _, _, absorbed = ...
-				elseif subEvent == "RANGE_MISSED" or subEvent == "SPELL_MISSED" or subEvent == "SPELL_PERIODIC_MISSED" then
-					_, _, _, _, _, _, absorbed = ...
-				end
-				if absorbed then
-					info.absorbRemaining = info.absorbRemaining - absorbed
-				end
-			elseif info.maxDamage then
-				local _, damage
-				if subEvent == "SWING_DAMAGE" then 
-					damage = ...
-				elseif subEvent == "RANGE_DAMAGE" or subEvent == "SPELL_DAMAGE" or subEvent == "SPELL_PERIODIC_DAMAGE" then 
-					_, _, _, damage = ...
-				end
-				if damage then
-					info.damageRemaining = info.damageRemaining - damage
-				end
-			elseif info.maxHeal then
-				local _, absorbed
-				if subEvent == "SPELL_HEAL" or subEvent == "SPELL_PERIODIC_HEAL" then
-					_, _, _, _, _, absorbed = ...
-				end
-				if absorbed then
-					info.healed = info.healed + absorbed
-				end
-			end
-		end
-	end)
-
-	local function getShieldHPFunc(info, unitID)
-		return function()
-			if unitID then--Passed with unitID, use UnitGetTotalAbsorbs not CLEU and save CPU
-				info.absorbRemaining = UnitGetTotalAbsorbs(unitID)
-			end
-			return mmax(1, floor(info.absorbRemaining / info.maxAbsorb * 100))
-		end
-	end
-
-	function bossModPrototype:ShowShieldHealthBar(guid, name, absorb, unitID)
-		if DBM.BossHealth:IsShown() then
-			self:RemoveShieldHealthBar(guid, name)
-			if #activeShields == 0 and not unitID then
-				frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-			end
-			local obj = {
-				mod = self.id,
-				name = name,
-				guid = guid,
-				absorbRemaining = absorb,
-				maxAbsorb = absorb,
-			}
-			obj.func = getShieldHPFunc(obj, unitID)
-			activeShields[#activeShields + 1] = obj
-			shieldsByGuid[guid] = obj
-			DBM.BossHealth:AddBoss(obj.func, name)
-		end
-	end
-
-	function bossModPrototype:RemoveShieldHealthBar(guid, name)
-		if not guid then
-			self:RemoveAllSpecialHealthBars()
-		else
-			shieldsByGuid[guid] = nil
-			for i = #activeShields, 1, -1 do
-				if activeShields[i].guid == guid and activeShields[i].mod == self.id and (not name or activeShields[i].name == name) then
-					if DBM.BossHealth:IsShown() then
-						DBM.BossHealth:RemoveBoss(activeShields[i].func)
-					end
-					tremove(activeShields, i)
-				end
-			end
-			if #activeShields == 0 then
-				frame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-			end
-		end
-	end
-
-	local function getDamagedHPFunc(info)
-		return function()
-			return mmax(1, floor(info.damageRemaining / info.maxDamage * 100))
-		end
-	end
-
-	function bossModPrototype:ShowDamagedHealthBar(guid, name, damage)
-		if DBM.BossHealth:IsShown() then
-			self:RemoveDamagedHealthBar(guid, name)
-			if #activeShields == 0 then
-				frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-			end
-			local obj = {
-				mod = self.id,
-				name = name,
-				guid = guid,
-				damageRemaining = damage,
-				maxDamage = damage,
-			}
-			obj.func = getDamagedHPFunc(obj)
-			activeShields[#activeShields + 1] = obj
-			shieldsByGuid[guid] = obj
-			DBM.BossHealth:AddBoss(obj.func, name)
-		end
-	end
-	bossModPrototype.RemoveDamagedHealthBar = bossModPrototype.RemoveShieldHealthBar
-
-	local function getHealedHPFunc(info)
-		return function()
-			return mmax(1, floor(info.healed / info.maxHeal * 100))
-		end
-	end
-
-	function bossModPrototype:ShowAbsorbedHealHealthBar(guid, name, heal)
-		if DBM.BossHealth:IsShown() then
-			self:RemoveAbsorbedHealHealthBar(guid, name)
-			if #activeShields == 0 then
-				frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-			end
-			local obj = {
-				mod = self.id,
-				name = name,
-				guid = guid,
-				healed = 0,
-				maxHeal = heal,
-			}
-			obj.func = getHealedHPFunc(obj)
-			activeShields[#activeShields + 1] = obj
-			shieldsByGuid[guid] = obj
-			DBM.BossHealth:AddBoss(obj.func, name)
-		end
-	end
-	bossModPrototype.RemoveAbsorbedHealHealthBar = bossModPrototype.RemoveShieldHealthBar
-
-	-- removes all shield, damaged, healed bars of a boss mod
-	function bossModPrototype:RemoveAllSpecialHealthBars()
-		frame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-		for i = #activeShields, 1, -1 do
-			if activeShields[i].mod == self.id then
-				if DBM.BossHealth:IsShown() then
-					DBM.BossHealth:RemoveBoss(activeShields[i].func)
-				end
-				shieldsByGuid[activeShields[i].guid] = nil
-				tremove(activeShields, i)
-			end
-		end
-	end
-end
-
 ---------------------
 --  Class Methods  --
 ---------------------
@@ -8078,13 +7871,14 @@ function DBM:GetBossHP(cId)
 		return hp, "focus", UnitName("focus")
 	else
 		for i = 1, 5 do
-			local guid = UnitGUID("boss"..i)
-			if self:GetCIDFromGUID(guid) == cId and UnitHealthMax("boss"..i) ~= 0 then
-				if bossHealth[cId] and (UnitHealth("boss"..i) == 0 and not UnitIsDead("boss"..i)) then return bossHealth[cId], "boss"..i, UnitName("boss"..i) end--Return last non 0 value if value is 0, since it's last valid value we had.
-				local hp = UnitHealth("boss"..i) / UnitHealthMax("boss"..i) * 100
+			local unitID = "boss"..i
+			local guid = UnitGUID(unitID)
+			if self:GetCIDFromGUID(guid) == cId and UnitHealthMax(unitID) ~= 0 then
+				if bossHealth[cId] and (UnitHealth(unitID) == 0 and not UnitIsDead(unitID)) then return bossHealth[cId], unitID, UnitName(unitID) end--Return last non 0 value if value is 0, since it's last valid value we had.
+				local hp = UnitHealth(unitID) / UnitHealthMax(unitID) * 100
 				bossHealth[cId] = hp
-				bossHealthuIdCache[cId] = "boss"..i
-				return hp, "boss"..i, UnitName("boss"..i)
+				bossHealthuIdCache[cId] = unitID
+				return hp, unitID, UnitName(unitID)
 			end
 		end
 		local idType = (IsInRaid() and "raid") or "party"
@@ -8117,13 +7911,14 @@ function DBM:GetBossHPByGUID(guid)
 		return hp, "focus", UnitName("focus")
 	else
 		for i = 1, 5 do
-			local guid2 = UnitGUID("boss"..i)
-			if guid == guid2 and UnitHealthMax("boss"..i) ~= 0 then
-				if bossHealth[guid] and (UnitHealth("boss"..i) == 0 and not UnitIsDead("boss"..i)) then return bossHealth[guid], "boss"..i, UnitName("boss"..i) end--Return last non 0 value if value is 0, since it's last valid value we had.
-				local hp = UnitHealth("boss"..i) / UnitHealthMax("boss"..i) * 100
+			local unitID = "boss"..i
+			local guid2 = UnitGUID(unitID)
+			if guid == guid2 and UnitHealthMax(unitID) ~= 0 then
+				if bossHealth[guid] and (UnitHealth(unitID) == 0 and not UnitIsDead(unitID)) then return bossHealth[guid], unitID, UnitName(unitID) end--Return last non 0 value if value is 0, since it's last valid value we had.
+				local hp = UnitHealth(unitID) / UnitHealthMax(unitID) * 100
 				bossHealth[guid] = hp
-				bossHealthuIdCache[guid] = "boss"..i
-				return hp, "boss"..i, UnitName("boss"..i)
+				bossHealthuIdCache[guid] = unitID
+				return hp, unitID, UnitName(unitID)
 			end
 		end
 		local idType = (IsInRaid() and "raid") or "party"
@@ -8149,10 +7944,6 @@ function DBM:GetBossHPByUnitID(uId)
 		return hp, uId, UnitName(uId)
 	end
 	return nil
-end
-
-function bossModPrototype:SetBossHealthInfo(...)
-	self.bossHealthInfo = {...}
 end
 
 function bossModPrototype:SetMainBossID(cid)
@@ -9857,18 +9648,6 @@ do
 			self.Flash:Show(flashColor[1], flashColor[2], flashColor[3], self.Options["SpecialWarningFlashDura"..number], self.Options["SpecialWarningFlashAlph"..number], repeatCount)
 		end
 	end
-	
-	function DBM:ShowTestHUD()
-		if self:HasMapRestrictions() then
-			self:AddMsg(DBM_CORE_NO_HUD)
-			return
-		end
-		local x, y = UnitPosition("player")
-		DBMHudMap:RegisterPositionMarker(10000, "Test1", "highlight", x, y-20, 5, 10, 1, 1, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
-		DBMHudMap:RegisterPositionMarker(20000, "Test2", "highlight", x-20, y, 5, 10, 1, 0, 0, 0.5, nil, 2):Pulse(0.5, 0.5)
-		DBMHudMap:RegisterPositionMarker(30000, "Test3", "highlight", x+20, y, 5, 10, 1, 0.5, 0, 0.5, nil, 3):Pulse(0.5, 0.5)
-		DBMHudMap:RegisterPositionMarker(40000, "Test4", "highlight", x, y+20, 5, 10, 0, 1, 0, 0.5, nil, 4):Pulse(0.5, 0.5)
-	end
 end
 
 --------------------
@@ -11362,7 +11141,6 @@ do
 		__index = setmetatable({
 			timer_berserk = DBM_CORE_OPTION_TIMER_BERSERK,
 			timer_combat = DBM_CORE_OPTION_TIMER_COMBAT,
-			HealthFrame = DBM_CORE_OPTION_HEALTH_FRAME,
 		}, returnKey)
 	}
 	local defaultMiscLocalization = {

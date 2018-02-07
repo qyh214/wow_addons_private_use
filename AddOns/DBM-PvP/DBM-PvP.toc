@@ -39,7 +39,7 @@
 ## X-DBM-Mod-Name-esMX: JcJ
 ## X-DBM-Mod-Name-ptBR: JxJ
 ## X-DBM-Mod-MapID: 529,489,30,628,566,998,726,727,761,1105,1431,1681
-## X-DBM-Mod-Sort: 999
+## X-DBM-Mod-Sort: 599
 ## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.de.lua

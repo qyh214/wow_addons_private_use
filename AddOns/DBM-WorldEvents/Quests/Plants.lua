@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("PlantsVsZombies", "DBM-WorldEvents", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -22,8 +22,6 @@ local warnTotalAdds				= mod:NewAnnounce("warnTotalAdds", 2)
 local specWarnWave				= mod:NewSpecialWarning("specWarnWave", nil, nil, nil, 2, 2)
 
 --local timerWave					= mod:NewTimer(170, "timerWave")
-
-mod:RemoveOption("HealthFrame")
 
 local wave = 0
 local addCount = 0

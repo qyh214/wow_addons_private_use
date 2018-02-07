@@ -23,7 +23,7 @@ L.MSG_CUSTOM_FONTS					= "Benutzerdefinierte Schrift"
 L.MSG_INVALID_CUSTOM_FONT_NAME		= "Ungültiger Schriftname."
 L.MSG_FONT_NAME_ALREADY_EXISTS		= "Schriftname existiert bereits."
 L.MSG_INVALID_CUSTOM_FONT_PATH		= "Schriftpfad muss zu einer .ttf-Datei führen."
-L.MSG_UNABLE_TO_SET_FONT			= "Die ausgewählte Schrift kann nicht verwendet werden." 
+L.MSG_UNABLE_TO_SET_FONT			= "Die ausgewählte Schrift kann nicht verwendet werden."
 --L.MSG_TESTING_FONT			= "Testing the specified font for validity..."
 L.MSG_CUSTOM_SOUNDS					= "Benutzerdefinierte Sounds"
 L.MSG_INVALID_CUSTOM_SOUND_NAME		= "Ungültiger Sound-Name."
@@ -469,8 +469,6 @@ obj["NOTIFICATION_CP_GAIN"]				= { label="Combo-Punkte erhalten", tooltip="Aktiv
 obj["NOTIFICATION_CP_FULL"]				= { label="Combo-Punkte komplett", tooltip="Aktiviert, wenn du alle Combo-Punkte erreicht hast."}
 obj["NOTIFICATION_HOLY_POWER_CHANGE"]	= { label="Heilige Kraft verändert", tooltip="Aktiviert, wenn sich deine Heilige Kraft verändert."}
 obj["NOTIFICATION_HOLY_POWER_FULL"]		= { label="Heilige Kraft komplett", tooltip="Aktiviert, wenn deine Heilige Kraft voll ist."}
---obj["NOTIFICATION_SHADOW_ORBS_CHANGE"]	= { label="Shadow Orb Changes", tooltip="Enable when you change shadow orbs."}
---obj["NOTIFICATION_SHADOW_ORBS_FULL"]	= { label="Shadow Orbs Full", tooltip="Enable when you attain full shadow orbs."}
 obj["NOTIFICATION_HONOR_GAIN"]			= { label="Ehre erhalten", tooltip="Aktiviert, wenn du Ehre erhälst."}
 obj["NOTIFICATION_REP_GAIN"]			= { label="Ruf erhalten", tooltip="Aktiviert, wenn du Ruf erhälst."}
 obj["NOTIFICATION_REP_LOSS"]			= { label="Ruf verloren", tooltip="Aktiviert, wenn du Ruf verlierst."}
@@ -527,7 +525,7 @@ obj["SPELL_CAST_FAILED"]		= "Wirken fehlgeschlagen"
 obj["SPELL_SUMMON"]				= "Beschwören"
 obj["SPELL_CREATE"]				= "Erstellen"
 obj["PARTY_KILL"]				= "Todesstoß"
-obj["UNIT_DIED"]				= "Einheit tot"
+--obj["UNIT_DIED"]				= "Einheit tot"
 obj["UNIT_DESTROYED"]			= "Einheit zerstört"
 obj["SPELL_EXTRA_ATTACKS"]		= "Zusätzliche Attacken"
 obj["UNIT_HEALTH"]				= "Lebenspunkteveränderung"
@@ -535,7 +533,7 @@ obj["UNIT_POWER"]				= "Powerveränderung"
 obj["SKILL_COOLDOWN"]			= "Spielerabklingzeit abgelaufen"
 obj["PET_COOLDOWN"]				= "Begleiterabklingzeit abgelaufen"
 obj["ITEM_COOLDOWN"]			= "Gegenstandabklingzeit abgelaufen"
- 
+
 -- Main event conditions.
 obj["sourceName"]				= "Quellenname"
 obj["sourceAffiliation"]		= "Quellenzugehörigkeit"
@@ -586,7 +584,7 @@ obj["unavailableSkill"]			= "Fehlende Fähigkeit"
 obj["warriorStance"]			= "Krieger-Haltung"
 obj["zoneName"]					= "Zonenname"
 obj["zoneType"]					= "Zonenart"
- 
+
 -- Relationships.
 obj["eq"]						= "ist gleich wie"
 obj["ne"]						= "ist nicht gleich wie"
@@ -594,7 +592,7 @@ obj["like"]						= "ist wie"
 obj["unlike"]					= "ist nicht wie"
 obj["lt"]						= "ist kleiner als"
 obj["gt"]						= "ist größer als"
- 
+
 -- Affiliations.
 obj["affiliationMine"]			= "Mein"
 obj["affiliationParty"]			= "Gruppenmitglied"

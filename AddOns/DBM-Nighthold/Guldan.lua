@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1737, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17132 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17194 $"):sub(12, -3))
 mod:SetCreatureID(104154)--The Demon Within (111022)
 mod:SetEncounterID(1866)
 mod:SetZone()
@@ -876,7 +876,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		local count = self.vb.azzCount
 		specWarnManifestAzzinoth:Show(count)
 		specWarnManifestAzzinoth:Play("bigmob")
-		specWarnManifestAzzinoth:Schedulevoice(1.2, nil, "Interface\\AddOns\\DBM-VP"..DBM.Options.ChosenVoicePack.."\\count\\"..count..".ogg")
+		specWarnManifestAzzinoth:ScheduleVoice(1.2, nil, "Interface\\AddOns\\DBM-VP"..DBM.Options.ChosenVoicePack.."\\count\\"..count..".ogg")
 		timerBulwarkofAzzinothCD:Start(15)
 		timerManifestAzzinothCD:Start(40, count+1)
 	elseif spellId == 227071 then -- Flame Crash

@@ -215,6 +215,7 @@ local function AddConditionToDropDown(dropdown, conditionData)
 	info.arg1 = dropdown
 	info.arg2 = conditionData
 	info.icon = get(conditionData.icon)
+	info.atlas = get(conditionData.atlas)
 
 	info.disabled = get(conditionData.disabled)
 
@@ -407,7 +408,7 @@ function CNDT.BitFlags_DropDown(dropdown)
 			info.tooltipText = data.tooltip
 
 			info.icon = data.icon
-
+			info.atlas = data.atlas
 			if data.tcoords then
 				info.tCoordLeft = data.tcoords[1]
 				info.tCoordRight = data.tcoords[2]
@@ -1284,7 +1285,11 @@ function Module:Entry_AddToList_1(f, identifier)
 		f.tooltiptext = f.tooltiptext .. "\r\n\r\n" .. get(conditionData.tooltip)
 	end
 
-	f.Icon:SetTexture(get(conditionData.icon))
+	if conditionData.atlas then
+		f.Icon:SetAtlas(get(conditionData.atlas))
+	else
+		f.Icon:SetTexture(get(conditionData.icon))
+	end
 	if conditionData.tcoords then
 		f.Icon:SetTexCoord(unpack(conditionData.tcoords))
 	end

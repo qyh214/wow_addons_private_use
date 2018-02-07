@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d539", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 21 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1051)
@@ -23,8 +23,6 @@ local warnFireLine			= mod:NewCastAnnounce(125392, 4, 3)
 
 --Warbringer Qobi
 local specWarnFireLine		= mod:NewSpecialWarningSpell(125392, nil, nil, nil, 2)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 124428 then

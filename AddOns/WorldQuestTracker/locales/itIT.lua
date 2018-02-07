@@ -3,36 +3,29 @@ if not L then return end
 
 L["S_APOWER_AVAILABLE"] = "Disponibile"
 L["S_APOWER_DOWNVALUE"] = "Le Missioni con %s scadono dopo il completamento della ricerca artefatto."
-L["S_APOWER_NEXTLEVEL"] = "Prox Livello"
+L["S_APOWER_NEXTLEVEL"] = "Prossimo Livello"
 L["S_ENABLED"] = "Abilitato"
-L["S_ERROR_NOTIMELEFT"] = "E' scaduto il tempo per questa missione."
+L["S_ERROR_NOTIMELEFT"] = "Il tempo per questa missione è scaduto."
 L["S_ERROR_NOTLOADEDYET"] = "Questa quest non è ancora pronta, per favore aspetta qualche secondo. "
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Solo Tracciati"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Mostra solo le missioni tracciate"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Mostra Missioni Mondiali"
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_CANCELING"] = ""
-L["S_GROUPFINDER_ACTIONS_CREATE"] = "Non hai trovato nessun gruppo? Premi qui per crearne uno"
-L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = "Crea gruppo"
+L["S_GROUPFINDER_ACTIONS_CANCELING"] = "Cancellando..."
+L["S_GROUPFINDER_ACTIONS_CREATE"] = "Non hai trovato nessun gruppo?, Premi qui per crearne uno"
+L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = "Crea un gruppo"
 L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = "Vuoi abbandonare il gruppo?"
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_SEARCH"] = ""
+L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = "Lasciando il gruppo in (clicca per lasciare adesso):"
+L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = "Riprova ricerca"
+L["S_GROUPFINDER_ACTIONS_SEARCH"] = "clicca per iniziare la ricerca di un gruppo"
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = ""
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_SEARCHING"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = ""
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = ""
+L["S_GROUPFINDER_ACTIONS_SEARCHING"] = "cercando..."
+L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = "clicca per cercare altri membri per il gruppo"
+L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = "Lasciare l'attuale gruppo e cercarne un altro?"
 --Translation missing 
 -- L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = ""
 --Translation missing 
@@ -107,15 +100,15 @@ L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Abilita Suoni"
 L["S_MAPBAR_OPTIONSMENU_TOMTOM_WPPERSISTENT"] = "Ricorda Tappe"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Solo Questa Zona"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE"] = "Scala Tracciatore: %s"
-L["S_MAPBAR_OPTIONSMENU_TRACKERCONFIG"] = "Tracciamento"
+L["S_MAPBAR_OPTIONSMENU_TRACKERCONFIG"] = "Opzioni Tracciamento"
 L["S_MAPBAR_OPTIONSMENU_TRACKERMOVABLE_AUTO"] = "Posizione Automatica"
 L["S_MAPBAR_OPTIONSMENU_TRACKERMOVABLE_CUSTOM"] = "Posizione Personalizzata"
 L["S_MAPBAR_OPTIONSMENU_TRACKERMOVABLE_LOCKED"] = "Bloccato"
-L["S_MAPBAR_OPTIONSMENU_UNTRACKQUESTS"] = "Annulla Tracciamento"
-L["S_MAPBAR_OPTIONSMENU_WORLDMAPCONFIG"] = "Mappa Continentale"
+L["S_MAPBAR_OPTIONSMENU_UNTRACKQUESTS"] = "Annulla Tutti i Tracciamenti"
+L["S_MAPBAR_OPTIONSMENU_WORLDMAPCONFIG"] = "Opzioni Mappa Continentale"
 L["S_MAPBAR_OPTIONSMENU_YARDSDISTANCE"] = "Mostra Distanza in Iarde"
 L["S_MAPBAR_OPTIONSMENU_ZONE_QUESTSUMMARY"] = "Sommario Missione (schermo intero)"
-L["S_MAPBAR_OPTIONSMENU_ZONEMAPCONFIG"] = "Mappa Territoriale"
+L["S_MAPBAR_OPTIONSMENU_ZONEMAPCONFIG"] = "Opzioni Mappa Territoriale"
 L["S_MAPBAR_RESOURCES_TOOLTIP_TRACKALL"] = "Clicca per tracciare tutte le missioni |cFFFFFFFF%s|r."
 L["S_MAPBAR_SORTORDER"] = "Ordinamento"
 --Translation missing 
@@ -124,7 +117,7 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_OPTION"] = "Meno di %d Ore"
 --Translation missing 
 -- L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = ""
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Ordina per Tempo"
-L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Tempo Rimasto"
+L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Tempo Rimanente"
 L["S_MAPBAR_SUMMARY"] = "Sommario"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Legata all'Account"
 L["S_MAPBAR_SUMMARYMENU_MOREINFO"] = "Clicca per maggiori info"

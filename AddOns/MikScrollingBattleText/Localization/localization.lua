@@ -15,16 +15,16 @@ local L = MikSBT.translations
 ------------------------------
 
 L.FONT_FILES = {
- ["MSBT Adventure"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\adventure.ttf",
- ["MSBT Bazooka"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\bazooka.ttf",
- ["MSBT Cooline"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\cooline.ttf",
- ["MSBT Diogenes"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\diogenes.ttf",
- ["MSBT Ginko"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\ginko.ttf",
- ["MSBT Heroic"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\heroic.ttf",
- ["MSBT Porky"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\porky.ttf",
- ["MSBT Talisman"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\talisman.ttf",
- ["MSBT Transformers"]	= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\transformers.ttf",
- ["MSBT Yellowjacket"]	= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\yellowjacket.ttf",
+	["MSBT Adventure"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\adventure.ttf",
+	["MSBT Bazooka"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\bazooka.ttf",
+	["MSBT Cooline"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\cooline.ttf",
+	["MSBT Diogenes"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\diogenes.ttf",
+	["MSBT Ginko"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\ginko.ttf",
+	["MSBT Heroic"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\heroic.ttf",
+	["MSBT Porky"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\porky.ttf",
+	["MSBT Talisman"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\talisman.ttf",
+	["MSBT Transformers"]	= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\transformers.ttf",
+	["MSBT Yellowjacket"]	= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\yellowjacket.ttf",
 }
 
 L.DEFAULT_FONT_NAME = "MSBT Porky"
@@ -41,13 +41,13 @@ L.COMMAND_SHOWVER	= "version"
 L.COMMAND_HELP		= "help"
 
 L.COMMAND_USAGE = {
- "Usage: " .. MikSBT.COMMAND .. " <command> [params]",
- " Commands:",
- "  " .. L.COMMAND_RESET .. " - Reset the current profile to the default settings.",
- "  " .. L.COMMAND_DISABLE .. " - Disables the mod.",
- "  " .. L.COMMAND_ENABLE .. " - Enables the mod.",
- "  " .. L.COMMAND_SHOWVER .. " - Shows the current version.",
- "  " .. L.COMMAND_HELP .. " - Show the command usage.",
+	"Usage: " .. MikSBT.COMMAND .. " <command> [params]",
+	" Commands:",
+	"  " .. L.COMMAND_RESET .. " - Reset the current profile to the default settings.",
+	"  " .. L.COMMAND_DISABLE .. " - Disables the mod.",
+	"  " .. L.COMMAND_ENABLE .. " - Enables the mod.",
+	"  " .. L.COMMAND_SHOWVER .. " - Shows the current version.",
+	"  " .. L.COMMAND_HELP .. " - Show the command usage.",
 }
 
 
@@ -83,6 +83,8 @@ L.MSG_COMBAT					= "Combat"
 L.MSG_DISPEL					= "Dispel"
 L.MSG_CP						= "CP"
 L.MSG_CHI_FULL					= "Full Chi"
+L.MSG_AC						= "Arcane Charge"
+L.MSG_AC_FULL					= "Full Arcane Charges"
 L.MSG_CP_FULL					= "Finish It"
 L.MSG_HOLY_POWER_FULL			= "Full Holy Power"
 L.MSG_SHADOW_ORBS_FULL			= "Full Shadow Orbs"

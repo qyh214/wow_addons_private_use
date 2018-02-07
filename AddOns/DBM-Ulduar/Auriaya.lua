@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Auriaya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
 
 mod:SetCreatureID(33515)--34014--Add this (kitties) to pull detection when it can be ignored in kill
 mod:SetEncounterID(1131)
@@ -11,7 +11,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 64678 64389 64386 64688 64422",
-	"SPELL_AURA_APPLIED 64396 64455",
+	"SPELL_AURA_APPLIED 64396",
 	"SPELL_DAMAGE 64459 64675",
 	"SPELL_MISSED 64459 64675",
 	"UNIT_DIED"
@@ -64,8 +64,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 64396 then -- Guardian Swarm
 		warnSwarm:Show(args.destName)
 		timerNextSwarm:Start()
-	elseif args.spellId == 64455 and DBM.BossHealth:IsShown() then -- Feral Essence
-		DBM.BossHealth:AddBoss(34035, L.Defender:format(9))
 	end
 end
 
@@ -89,14 +87,6 @@ function mod:UNIT_DIED(args)
 				warnCatDied:Show(self.vb.catLives)
 				timerDefender:Start()
          	end
-			if DBM.BossHealth:IsShown() then
-				DBM.BossHealth:RemoveBoss(34035)
-				DBM.BossHealth:AddBoss(34035, L.Defender:format(self.vb.catLives))
-			end
-		else
-			if DBM.BossHealth:IsShown() then
-				DBM.BossHealth:RemoveBoss(34035)
-			end
 		end
 	end
 end

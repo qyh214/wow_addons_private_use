@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d589", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 30 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1104)
@@ -21,8 +21,6 @@ local specWarnBloodrage		= mod:NewSpecialWarningRun(134974, nil, nil, nil, 4)
 
 --Commander Scargash
 local timerBloodRage		= mod:NewTargetTimer(15, 134974)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 134974 then

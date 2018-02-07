@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kologarn", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 253 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
 mod:SetCreatureID(32930)--, 32933, 32934
 mod:SetEncounterID(1137)
 mod:SetModelID(28638)
@@ -19,12 +19,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_MISSED 63783 63982 63346 63976",
 	"RAID_BOSS_WHISPER",
 	"UNIT_DIED"
-)
-
-mod:SetBossHealthInfo(
-	32930, L.Health_Body,
-	32934, L.Health_Right_Arm,
-	32933, L.Health_Left_Arm
 )
 
 local warnFocusedEyebeam		= mod:NewTargetAnnounce(63346, 3)

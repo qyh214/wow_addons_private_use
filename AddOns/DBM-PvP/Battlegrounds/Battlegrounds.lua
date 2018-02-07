@@ -6,14 +6,13 @@
 local mod	= DBM:NewMod("Battlegrounds", "DBM-PvP", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 56 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 69 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:AddBoolOption("ColorByClass", true)
 --mod:AddBoolOption("ShowInviteTimer", true)
 mod:AddBoolOption("HideBossEmoteFrame", false)
 mod:AddBoolOption("AutoSpirit", false)
-mod:RemoveOption("HealthFrame")
 
 mod:RegisterEvents(
 	"ZONE_CHANGED_NEW_AREA",

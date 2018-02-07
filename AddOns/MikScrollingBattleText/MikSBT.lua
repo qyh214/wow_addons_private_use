@@ -56,16 +56,16 @@ local string_reverse = string.reverse
 -------------------------------------------------------------------------------
 
 -- Use standard SI suffixes at the end of shortened numbers.
-local SI_SUFFIXES = { "k", "M", "G", "T" }
+--local SI_SUFFIXES = { "k", "M", "G", "T" }
 
 -- Use Blizzard localized value to separate numbers if available.
-local LARGE_NUMBER_SEPERATOR = LARGE_NUMBER_SEPERATOR
+--[[local LARGE_NUMBER_SEPERATOR = LARGE_NUMBER_SEPERATOR
 
 if not LARGE_NUMBER_SEPERATOR or LARGE_NUMBER_SEPERATOR == "" then
 	LARGE_NUMBER_SEPERATOR = ","
 end
 
-local SEPARATOR_REPLACE_PATTERN = "%1"..(LARGE_NUMBER_SEPERATOR or ",").."%2"
+local SEPARATOR_REPLACE_PATTERN = "%1"..(LARGE_NUMBER_SEPERATOR or ",").."%2"--]]
 
 
 -------------------------------------------------------------------------------
@@ -76,20 +76,20 @@ local SEPARATOR_REPLACE_PATTERN = "%1"..(LARGE_NUMBER_SEPERATOR or ",").."%2"
 -- Copies the passed table and all its subtables.
 -- ****************************************************************************
 local function CopyTable(srcTable)
- -- Create a new table.
- local newTable = {}
+	-- Create a new table.
+	local newTable = {}
 
- -- Loop through all of the entries in the table.
- for key, value in pairs(srcTable) do
-  -- Recursively call the function to copy nested tables.
-  if (type(value) == "table") then value = CopyTable(value) end
+	-- Loop through all of the entries in the table.
+	for key, value in pairs(srcTable) do
+		-- Recursively call the function to copy nested tables.
+		if (type(value) == "table") then value = CopyTable(value) end
 
-  -- Make a copy of the value into the new table.
-  newTable[key] = value
- end
+		-- Make a copy of the value into the new table.
+		newTable[key] = value
+	end
 
- -- Return the new table.
- return newTable
+	-- Return the new table.
+	return newTable
 end
 
 
@@ -97,10 +97,10 @@ end
 -- Erases the passed table.  Subtables are NOT erased.
 -- ****************************************************************************
 local function EraseTable(t)
- -- Loop through all the keys in the table and clear it.
- for key in next, t do
-  t[key] = nil
- end
+	-- Loop through all the keys in the table and clear it.
+	for key in next, t do
+		t[key] = nil
+	end
 end
 
 
@@ -108,14 +108,14 @@ end
 -- Splits a string into the passed table using the delimeter.
 -- ****************************************************************************
 local function SplitString(text, delimeter, splitTable)
- local start = 1
- local splitStart, splitEnd = string_find(text, delimeter, start)  
- while splitStart do
-  splitTable[#splitTable+1] = string_sub(text, start, splitStart - 1)
-  start = splitEnd + 1
-  splitStart, splitEnd = string_find(text, delimeter, start)  
- end
- splitTable[#splitTable+1] = string_sub(text, start)
+	local start = 1
+	local splitStart, splitEnd = string_find(text, delimeter, start)
+	while splitStart do
+		splitTable[#splitTable+1] = string_sub(text, start, splitStart - 1)
+		start = splitEnd + 1
+		splitStart, splitEnd = string_find(text, delimeter, start)
+	end
+	splitTable[#splitTable+1] = string_sub(text, start)
 end
 
 
@@ -123,8 +123,8 @@ end
 -- Prints out the passed message to the default chat frame.
 -- ****************************************************************************
 local function Print(msg, r, g, b)
- -- Add the message to the default chat frame.
- DEFAULT_CHAT_FRAME:AddMessage("MSBT: " .. tostring(msg), r, g, b)
+	-- Add the message to the default chat frame.
+	DEFAULT_CHAT_FRAME:AddMessage("MSBT: " .. tostring(msg), r, g, b)
 end
 
 
@@ -132,11 +132,11 @@ end
 -- Returns a skill name for the passed id or unknown if the id invalid.
 -- ****************************************************************************
 local function GetSkillName(skillID)
- local skillName = GetSpellInfo(skillID)
- if (not skillName) then 
-  Print("Skill ID " .. tostring(skillID) .. " has been removed by Blizzard.")
- end
- return skillName or UNKNOWN
+	local skillName = GetSpellInfo(skillID)
+	if (not skillName) then
+		Print("Skill ID " .. tostring(skillID) .. " has been removed by Blizzard.")
+	end
+	return skillName or UNKNOWN
 end
 
 
@@ -144,14 +144,22 @@ end
 -- Returns an SI formatted value given a number and a precision.
 -- ****************************************************************************
 local function ShortenNumber(number, precision)
- local precisionFormatter = string_format("%%.%df", precision or 0)
- if (type(number) ~= "number") then number = tonumber(number) end
- if (not number) then return 0 end
- if (number >= 1e12) then return string_format(precisionFormatter, number / 1e12) .. SI_SUFFIXES[4] end
- if (number >= 1e9) then return string_format(precisionFormatter, number / 1e9) .. SI_SUFFIXES[3] end
- if (number >= 1e6) then return string_format(precisionFormatter, number / 1e6) .. SI_SUFFIXES[2] end
- if (number >= 1000) then return string_format(precisionFormatter, number / 1000) .. SI_SUFFIXES[1] end
- return number
+	local formatter = ("%%.%df"):format(precision or 0)
+	if (type(number) ~= "number") then number = tonumber(number) end
+	if not number then
+		return 0
+	elseif number >= 1e12 then
+		return formatter:format(number / 1e12).."T"
+	elseif number >= 1e9 then
+		return formatter:format(number / 1e9).."G"
+	elseif number >= 1e6 then
+		return formatter:format(number / 1e6).."M"
+	elseif number >= 1e3 then
+		return formatter:format(number / 1e3).."k"
+	else
+		return number
+	end
+	return number
 end
 
 
@@ -160,18 +168,18 @@ end
 -- locale's separator.
 -- ****************************************************************************
 
-local function SeparateNumber(number)
- if (type(number) ~= "number") then number = tonumber(number) end
- if (not number) then return 0 end
+--[[local function SeparateNumber(number)
+	if (type(number) ~= "number") then number = tonumber(number) end
+	if (not number) then return 0 end
 
- local formatted = number
- while true do
-   local k
-   formatted, k = string_gsub(formatted, "^(-?%d+)(%d%d%d)", SEPARATOR_REPLACE_PATTERN)
-   if (k==0) then break end
- end
- return formatted
-end
+	local formatted = number
+	while true do
+		local k
+		formatted, k = string_gsub(formatted, "^(-?%d+)(%d%d%d)", SEPARATOR_REPLACE_PATTERN)
+		if (k == 0) then break end
+	end
+	return formatted
+end--]]
 
 
 
@@ -191,4 +199,4 @@ mod.SplitString			= SplitString
 mod.Print				= Print
 mod.GetSkillName		= GetSkillName
 mod.ShortenNumber		= ShortenNumber
-mod.SeparateNumber		= SeparateNumber
+--mod.SeparateNumber		= SeparateNumber

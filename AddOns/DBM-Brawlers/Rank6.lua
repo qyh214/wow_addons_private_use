@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank6", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15657 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(39166)
 mod:SetZone()
 
@@ -17,8 +17,6 @@ local specWarnPolymorph		= mod:NewSpecialWarningSpell(133362)--Millie Watt
 local specWarnDinoDash		= mod:NewSpecialWarningDodge(232252)--Millie Watt
 
 local timerPolymorphCD		= mod:NewCDTimer(35, 133362, nil, nil, nil, 3)--Millie Watt
-
-mod:RemoveOption("HealthFrame")
 
 local brawlersMod = DBM:GetModByName("Brawlers")
 

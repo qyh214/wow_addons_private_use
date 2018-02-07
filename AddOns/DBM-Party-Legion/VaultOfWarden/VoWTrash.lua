@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("VoWTrash", "DBM-Party-Legion", 10)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -20,8 +20,6 @@ local specWarnNightmares		= mod:NewSpecialWarningInterrupt(193069, "HasInterrupt
 local yellNightmares			= mod:NewYell(193069)
 local yellTorment				= mod:NewYell(202615)
 local specWarnMeteor			= mod:NewSpecialWarningSpell(196249, nil, nil, nil, 1, 2)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end

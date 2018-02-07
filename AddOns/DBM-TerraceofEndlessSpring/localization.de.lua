@@ -42,8 +42,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	warnHideOver			= "Zeige Warnung, wenn $spell:123244 beendet ist",
 	timerSpecialCD			= "Abklingzeit der Spezialfähigkeiten anzeigen",
-	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(zeigt jeden während $spell:123244, sonst nur die Tanks)",
-	GWHealthFrame			= "Zeige in Lebensanzeige den benötigten Schaden bis $spell:123461 endet<br/>(benötigt aktivierte Lebensanzeige)"
+	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(zeigt jeden während $spell:123244, sonst nur die Tanks)"
 })
 
 L:SetMiscLocalization{

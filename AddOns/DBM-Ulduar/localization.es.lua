@@ -324,8 +324,6 @@ L:SetOptionLocalization{
 	TimeToPhase3			= "Mostrar temporizador para el cambio a Fase 3",
 	TimeToPhase4			= "Mostrar temporizador para el cambio a Fase 4",
 	MagneticCore			= "Anunciar jugadores que despojen Núcleos magnéticos",
-	HealthFramePhase4		= "Mostrar marco de salud en Fase 4",
-	AutoChangeLootToFFA		= "Cambiar botín a libre en Fase 3 (requiere líder)",
 	WarnBombSpawn			= "Mostrar aviso cuando aparezcan Bombabots",
 	TimerHardmode			= "Mostrar temporizador para la autodestrucción del modo difícil",
 	ShockBlastWarningInP1	= "Mostrar aviso especial para $spell:63631 en Fase 1",
@@ -418,7 +416,6 @@ L:SetOptionLocalization{
 	specWarnBrainPortalSoon			= "Mostrar aviso especial para los siguientes portales",
 	NextPortal						= "Mostrar temporizador para los siguientes portales",
 	SetIconOnFervorTarget			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63138),
-	ShowSaraHealth					= "Mostrar marco de salud de Sara en Fase 1",
 	SetIconOnBrainLinkTarget		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63802),
 	MaladyArrow						= "Mostrar flecha cuando $spell:63881 ocurra cerca de ti"
 }

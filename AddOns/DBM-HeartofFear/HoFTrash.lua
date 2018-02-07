@@ -19,7 +19,6 @@ local specWarnDispatch			= mod:NewSpecialWarningInterrupt(125877)
 
 local timerUnseenStrike			= mod:NewCastTimer(4.8, 123017)
 
-mod:RemoveOption("HealthFrame")
 mod:AddBoolOption("UnseenStrikeArrow")
 
 local scanTime = 0

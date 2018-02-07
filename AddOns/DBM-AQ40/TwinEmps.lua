@@ -1,15 +1,12 @@
 local mod	= DBM:NewMod("TwinEmpsAQ", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(15276, 15275)
 mod:SetEncounterID(715)
 mod:SetModelID(15778)
 mod:RegisterCombat("combat")
-mod:SetBossHealthInfo(
-	15276, L.Veklor,
-	15275, L.Veknil
-)
+
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 799 800 26613",
 	"SPELL_CAST_SUCCESS 802 804"--26613

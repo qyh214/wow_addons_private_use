@@ -47,8 +47,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	warnHideOver			= "Mostrar aviso cuando termine $spell:123244",
 	timerSpecialCD			= "Mostrar temporizador para el tiempo de reutilización de las facultades especiales",
-	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. " (muestra a todos durante Ocultar, y solo a los tanques el resto del tiempo)",
-	GWHealthFrame			= "Mostrar marco de salud restante para que $spell:123461 termine (requiere que la opción de mostrar marco de salud del jefe esté habilitada)" -- maybe bad wording, needs review
+	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. " (muestra a todos durante Ocultar, y solo a los tanques el resto del tiempo)"
 })
 
 L:SetMiscLocalization{

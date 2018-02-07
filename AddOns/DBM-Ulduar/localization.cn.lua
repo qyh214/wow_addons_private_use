@@ -392,8 +392,6 @@ L:SetOptionLocalization{
 	TimeToPhase3			= "为第3阶段开始显示计时条",
 	TimeToPhase4			= "为第4阶段开始显示计时条",
 	MagneticCore			= "提示磁核的拾取者",
-	HealthFramePhase4		= "显示第4阶段的首领血量框架",
-	AutoChangeLootToFFA		= "第3阶段自动转换拾取方式为自由拾取",
 	WarnBombSpawn			= "为炸弹机器人显示警报",
 	TimerHardmode			= "为困难模式显示计时条",
 	ShockBlastWarningInP1		= "为第1阶段的$spell:63631显示特别警报",
@@ -495,7 +493,6 @@ L:SetOptionLocalization{
 	specWarnBrainPortalSoon		= "为下一次脑部传送门显示特别警报",
 	NextPortal			= "为下一次传送门显示计时条",
 	SetIconOnFervorTarget		= "为萨拉的热情的目标设置标记",
-	ShowSaraHealth			= "显示萨拉在第1阶段的血量 (必须至少有一名团队成员设置首领为焦点目标)",
 	SetIconOnBrainLinkTarget		= "为$spell:63802的目标设置标记",
 	MaladyArrow			= "当你附近的人中了$spell:63881时显示DBM箭头"
 }

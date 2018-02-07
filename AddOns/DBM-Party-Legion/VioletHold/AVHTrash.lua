@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AVHTrash", "DBM-Party-Legion", 9)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -33,8 +33,6 @@ local yellFelPrison					= mod:NewYell(204608)
 
 local timerPortal					= mod:NewTimer(122, "TimerPortal", 57687, nil, nil, 6)
 --local timerShieldDestruction		= mod:NewNextTimer(12.5, 202312, nil, nil, nil, 1)--Time between boss yell and shield coming down.
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end

@@ -21,7 +21,7 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	TimerWhelps				= "Mostrar temporizador para las siguientes Crías de Onyxia",
 	WarnWhelpsSoon			= "Mostrar aviso previo para las siguientes Crías de Onyxia",
-	SoundWTF				= "Reproducir sonidos graciosos de cierta banda legendaria"
+	SoundWTF3				= "Reproducir sonidos graciosos de cierta banda legendaria"
 }
 
 L:SetMiscLocalization{

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Akama", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(22841)
 mod:SetEncounterID(603)
 mod:SetModelID(21357)
@@ -74,11 +74,6 @@ function mod:OnCombatStart(delay)
 		"SWING_MISSED",
 		"UNIT_SPELLCAST_SUCCEEDED boss1 boss2"
 	)
-	if DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:Show(L.name)
-		DBM.BossHealth:AddBoss(22841, L.name)
-	end
 	self:Schedule(1, defenderLoop, self)
 	self:Schedule(1, sorcLoop, self)
 	self:Schedule(1, addsWestLoop, self)

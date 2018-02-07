@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(866, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetCreatureID(72276)
 --mod:SetEncounterID(1624)
 mod:SetZone()
@@ -26,10 +26,6 @@ mod:RegisterEvents(
 )
 
 local boss = DBM:EJ_GetSectionInfo(8216)
-
-mod:SetBossHealthInfo(
-	72276, boss
-)
 
 --Amalgam of Corruption
 local warnSelfDoubt						= mod:NewStackAnnounce(146124, 2, nil, "Tank")

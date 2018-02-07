@@ -19,9 +19,9 @@ local L = MikSBT.translations
 ------------------------------
 
 L.FONT_FILES = {
- ["MSBT Morpheus"]		= "Fonts\\MORPHEUS.TTF",
- ["MSBT Nim"]			= "Fonts\\NIM_____.ttf",
- ["MSBT Skurri"]		= "Fonts\\SKURRI.TTF",
+	["MSBT Morpheus"]		= "Fonts\\MORPHEUS.TTF",
+	["MSBT Nim"]			= "Fonts\\NIM_____.ttf",
+	["MSBT Skurri"]			= "Fonts\\SKURRI.TTF",
 }
 
 L.DEFAULT_FONT_NAME = "MSBT Nim"
@@ -32,13 +32,13 @@ L.DEFAULT_FONT_NAME = "MSBT Nim"
 ------------------------------
 
 L.COMMAND_USAGE = {
- "Используйте: " .. MikSBT.COMMAND .. " <команда> [параметр]",
- " Команды:",
- "  " .. L.COMMAND_RESET .. " - Сброс текущего профиля на стандартные настройки.",
- "  " .. L.COMMAND_DISABLE .. " - Отключить данный мод.",
- "  " .. L.COMMAND_ENABLE .. " - Включить данный мод.",
- "  " .. L.COMMAND_SHOWVER .. " - Показать текущую версию.",
- "  " .. L.COMMAND_HELP .. " - Показать доступные команды.",
+	"Используйте: " .. MikSBT.COMMAND .. " <команда> [параметр]",
+	" Команды:",
+	"  " .. L.COMMAND_RESET .. " - Сброс текущего профиля на стандартные настройки.",
+	"  " .. L.COMMAND_DISABLE .. " - Отключить данный мод.",
+	"  " .. L.COMMAND_ENABLE .. " - Включить данный мод.",
+	"  " .. L.COMMAND_SHOWVER .. " - Показать текущую версию.",
+	"  " .. L.COMMAND_HELP .. " - Показать доступные команды.",
 }
 
 

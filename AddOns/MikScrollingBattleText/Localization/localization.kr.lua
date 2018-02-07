@@ -19,19 +19,19 @@ local L = MikSBT.translations
 ------------------------------
 
 L.FONT_FILES = {
- ["MSBT Adventure"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\adventure.ttf",
- ["MSBT Bazooka"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\bazooka.ttf",
- ["MSBT Cooline"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\cooline.ttf",
- ["MSBT Diogenes"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\diogenes.ttf",
- ["MSBT Ginko"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\ginko.ttf",
- ["MSBT Heroic"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\heroic.ttf",
- ["MSBT Porky"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\porky.ttf",
- ["MSBT Talisman"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\talisman.ttf",
- ["MSBT Transformers"]	= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\transformers.ttf",
- ["MSBT Yellowjacket"]	= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\yellowjacket.ttf",
- ["[WoW] 기본 글꼴"]		= "Fonts\\2002.TTF",
- ["[WoW] 타이틀 글꼴"]		= "Fonts\\2002B.TTF",
- ["[WoW] 데미지 글꼴"]		= "Fonts\\K_Damage.TTF",
+	["MSBT Adventure"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\adventure.ttf",
+	["MSBT Bazooka"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\bazooka.ttf",
+	["MSBT Cooline"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\cooline.ttf",
+	["MSBT Diogenes"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\diogenes.ttf",
+	["MSBT Ginko"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\ginko.ttf",
+	["MSBT Heroic"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\heroic.ttf",
+	["MSBT Porky"]			= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\porky.ttf",
+	["MSBT Talisman"]		= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\talisman.ttf",
+	["MSBT Transformers"]	= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\transformers.ttf",
+	["MSBT Yellowjacket"]	= "Interface\\Addons\\MikScrollingBattleText\\Fonts\\yellowjacket.ttf",
+	["[WoW] 기본 글꼴"]		= "Fonts\\2002.TTF",
+	["[WoW] 타이틀 글꼴"]		= "Fonts\\2002B.TTF",
+	["[WoW] 데미지 글꼴"]		= "Fonts\\K_Damage.TTF",
 }
 
 L.DEFAULT_FONT_NAME = "[WoW] 기본 글꼴"
@@ -41,13 +41,13 @@ L.DEFAULT_FONT_NAME = "[WoW] 기본 글꼴"
 -- Commands
 ------------------------------
 L.COMMAND_USAGE = {
- "사용법: " .. MikSBT.COMMAND .. " <명령어> [옵션]",
- " 명령어:",
- "  " .. L.COMMAND_RESET .. " - 현재 프로필을 기본 설정으로 초기화합니다.",
- "  " .. L.COMMAND_DISABLE .. " - 애드온의 사용을 중지합니다.",
- "  " .. L.COMMAND_ENABLE .. " - 애드온을 사용합니다.",
- "  " .. L.COMMAND_SHOWVER .. " - 현재 버전을 표시합니다.",
- "  " .. L.COMMAND_HELP .. " - 명령어 사용법을 표시합니다.",
+	"사용법: " .. MikSBT.COMMAND .. " <명령어> [옵션]",
+	" 명령어:",
+	"  " .. L.COMMAND_RESET .. " - 현재 프로필을 기본 설정으로 초기화합니다.",
+	"  " .. L.COMMAND_DISABLE .. " - 애드온의 사용을 중지합니다.",
+	"  " .. L.COMMAND_ENABLE .. " - 애드온을 사용합니다.",
+	"  " .. L.COMMAND_SHOWVER .. " - 현재 버전을 표시합니다.",
+	"  " .. L.COMMAND_HELP .. " - 명령어 사용법을 표시합니다.",
 }
 
 
