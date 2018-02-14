@@ -40,6 +40,8 @@ function Profile:OnInitialize()
                 ignore    = true,
                 spamWord  = true,
                 packedPvp = true,
+                spamLengthEnabled = true,
+                spamLength = 20,
             },
             minimap = {
                 minimapPos = 192.68,
@@ -87,6 +89,8 @@ function Profile:OnEnable()
         'ignore',
         'spamWord',
         'packedPvp',
+        'spamLengthEnabled',
+        'spamLength',
     }
 
     for _, key in ipairs(settings) do

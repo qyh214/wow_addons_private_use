@@ -53,17 +53,45 @@ function GetPlayerItemLevel(isPvP)
     end
 end
 
-DecodeCommetData = memorize.multirets(function(comment)
+-- DecodeCommetData = memorize.multirets(function(comment)
+--     if not comment or comment == '' then
+--         return nil
+--     end
+--     local summary, data = comment:match('^(.*)%((^1^.+^^)%)$')
+--     if data then
+--         if data:match('%^[ZBbTt][^^]') then
+--             return false
+--         end
+--         -- olddata = data
+--         -- data = data:gsub('%^([^%dSNFfTtBbZ^])', '\126\125%1')
+--         -- if olddata ~= data then
+--         --     print(data, olddata)
+--         -- end
+--         return true, summary, AceSerializer:Deserialize(data)
+--     else
+--         return false, comment
+--     end
+-- end)
+
+function DecodeCommetData(comment)
     if not comment or comment == '' then
-        return nil
+        return true, ''
     end
     local summary, data = comment:match('^(.*)%((^1^.+^^)%)$')
-    if data then
-        return summary, AceSerializer:Deserialize(data)
-    else
-        return comment
+    if not data then
+        return true, comment
     end
-end)
+
+    local proto = ActivityProto:New()
+    local ok, valid = proto:Deserialize(data)
+    if not ok then
+        return true, comment
+    end
+    if not valid then
+        return false
+    end
+    return true, summary, proto
+end
 
 function CompressNumber(n)
     n = tonumber(n)
@@ -88,7 +116,7 @@ function CodeCommentData(activity)
         GetAddonSource(),
         GetPlayerFullName(),
         GetPlayerSavedInstance(customId),
-        format('%s-%s-%s', activity:GetModeText(), activity:GetLootText(), activity:GetName()),
+        nil,
         CompressNumber(activity:IsUseHonorLevel() and UnitHonorLevel('player') or nil)
     ))
     return data
@@ -113,7 +141,7 @@ function GetSafeSummaryLength(activityId, customId, mode, loot)
         format('%s-%s-%s', GetModeName(mode), GetLootName(loot), GetActivityName(activityId, customId)),
         CompressNumber(IsUseHonorLevel(activityId) and UnitHonorLevel('player') or nil)
     ))
-    return MAX_SUMMARY_LETTERS - strlenutf8(data)
+    return min(MAX_MEETINGSTONE_SUMMARY_LETTERS, MAX_SUMMARY_LETTERS - strlenutf8(data))
 end
 
 function GetPlayerFullName()
@@ -368,7 +396,13 @@ function IterateGroupUnits()
 end
 
 function GetAddonSource()
-    
+    for line in gmatch('\066\105\103\070\111\111\116\058\049\010\033\033\033\049\054\051\085\073\033\033\033\058\050\010\068\117\111\119\097\110\058\052\010\069\108\118\085\073\058\056', '[^\r\n]+') do
+        local n, v = line:match('^(.+):(%d+)$')
+        if IsAddOnLoaded(n) then
+            return tonumber(v)
+        end
+    end
+    return 0
 end
 
 
@@ -408,6 +442,7 @@ function UnpackIds(data)
             offset = offset + 1
         end
     end
+    
     return list
 end
 
@@ -418,12 +453,4 @@ function ListToMap(list)
         end
     end
     return map
-end
-
-function CheckMode(mode)
-    return mode ~= 0 and rawget(ACTIVITY_MODE_NAMES, mode)
-end
-
-function CheckLoot(loot)
-    return loot ~= 0 and rawget(ACTIVITY_LOOT_NAMES, loot)
 end

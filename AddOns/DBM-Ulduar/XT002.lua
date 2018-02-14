@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("XT002", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 251 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 262 $"):sub(12, -3))
 mod:SetCreatureID(33293)
 mod:SetEncounterID(1142)
 mod:SetModelID(28611)
@@ -29,9 +29,9 @@ local yellGravityBomb				= mod:NewYell(64234)
 local specWarnConsumption			= mod:NewSpecialWarningMove(64206, nil, nil, nil, 1, 2)--Hard mode void zone dropped by Gravity Bomb
 
 local enrageTimer					= mod:NewBerserkTimer(600)
-local timerTympanicTantrum			= mod:NewBuffActiveTimer(8, 62776, nil, nil, nil, 2)
-local timerTympanicTantrumCD		= mod:NewCDTimer(62, 62776, nil, nil, nil, 2)
-local timerHeart					= mod:NewCastTimer(30, 63849, nil, nil, nil, 5)
+local timerTympanicTantrum			= mod:NewBuffActiveTimer(8, 62776, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
+local timerTympanicTantrumCD		= mod:NewCDTimer(62, 62776, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
+local timerHeart					= mod:NewCastTimer(30, 63849, nil, nil, nil, 6, nil, DBM_CORE_DAMAGE_ICON)
 local timerLightBomb				= mod:NewTargetTimer(9, 65121, nil, nil, nil, 3)
 local timerGravityBomb				= mod:NewTargetTimer(9, 64234, nil, nil, nil, 3)
 local timerAchieve					= mod:NewAchievementTimer(205, 2937)

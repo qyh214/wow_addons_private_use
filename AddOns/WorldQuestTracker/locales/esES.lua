@@ -15,20 +15,19 @@ L["S_GROUPFINDER_ACTIONS_CANCELING"] = "cancelando..."
 L["S_GROUPFINDER_ACTIONS_CREATE"] = "grupo no encontrado?, clic para comenzar uno"
 L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = "crear grupo"
 L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = "Salir del grupo?"
---Translation missing 
--- L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = ""
+L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = "Saliendo del grupo en (clic para salir inmediatamente):"
 L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = "reintentar búsqueda"
 L["S_GROUPFINDER_ACTIONS_SEARCH"] = "clic para empezar a buscar grupos"
 L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = "buscar un grupo para matar este raro"
 L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = "Unirse a algún grupo haciendo esta misión"
 L["S_GROUPFINDER_ACTIONS_SEARCHING"] = "buscando..."
 L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = "Clic para buscar más miembros de grupo"
-L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = "Salir y Buscar un grupo diferente?"
+L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = "¿Salir y buscar un grupo diferente?"
 L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = "Clic para remover la aplicación para que podamos crear un grupo nuevo"
 L["S_GROUPFINDER_ACTIONS_UNLIST"] = "Clic para deslistar su grupo actual"
-L["S_GROUPFINDER_ACTIONS_UNLISTING"] = "Delistando..."
-L["S_GROUPFINDER_ACTIONS_WAITING"] = "Esperando..."
-L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = "Auto Abrir al Seleccionar un Mob Raro"
+L["S_GROUPFINDER_ACTIONS_UNLISTING"] = "delistando..."
+L["S_GROUPFINDER_ACTIONS_WAITING"] = "esperando..."
+L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = "Auto abrir al seleccionar un monstruo raro"
 L["S_GROUPFINDER_ENABLED"] = "Auto Abrir en Nueva Misión"
 L["S_GROUPFINDER_INVASION_ENABLED"] = "Auto Abrir en Punto de Invasión"
 L["S_GROUPFINDER_LEAVEOPTIONS"] = "Opciones de Salida de Grupo"
@@ -39,16 +38,14 @@ L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"] = "Salir Inmediatamente al Completar
 L["S_GROUPFINDER_NOPVP"] = "Evitar Servidores PVP"
 L["S_GROUPFINDER_OT_ENABLED"] = "Mostrar botones en el Rastreador de Objetivos"
 L["S_GROUPFINDER_QUEUEBUSY"] = "Ya estás en cola."
---Translation missing 
--- L["S_GROUPFINDER_QUEUEBUSY2"] = ""
+L["S_GROUPFINDER_QUEUEBUSY2"] = "no se pudo mostrar la ventana del buscador de grupos; ya estás en un grupo o cola."
 L["S_GROUPFINDER_RESULTS_APPLYING"] = "Quedan %d grupos, clic nuevamente"
 L["S_GROUPFINDER_RESULTS_APPLYING1"] = "Queda 1 grupo para unirse, clic nuevamente"
---Translation missing 
--- L["S_GROUPFINDER_RESULTS_FOUND"] = ""
+L["S_GROUPFINDER_RESULTS_FOUND"] = [=[se encontraron %d grupos
+clic para unirse]=]
 L["S_GROUPFINDER_RESULTS_FOUND1"] = [=[encontrado 1 grupo
 clic para empezar a unirse]=]
---Translation missing 
--- L["S_GROUPFINDER_RESULTS_UNAPPLY"] = ""
+L["S_GROUPFINDER_RESULTS_UNAPPLY"] = "%d invitaciones pendientes..."
 L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = "Clic derecho para cerrar"
 L["S_GROUPFINDER_SECONDS"] = "Segundos"
 L["S_GROUPFINDER_TITLE"] = "Buscador de Grupo"
@@ -112,23 +109,16 @@ L["S_QUESTTYPE_PROFESSION"] = "Profesión"
 L["S_QUESTTYPE_PVP"] = "JcJ"
 L["S_QUESTTYPE_RESOURCE"] = "Recursos"
 L["S_QUESTTYPE_TRADESKILL"] = "Habilidad de comercio"
---Translation missing 
--- L["S_RAREFINDER_ADDFROMPREMADE"] = ""
+L["S_RAREFINDER_ADDFROMPREMADE"] = "Añadir raros encontrados en grupos prefabricados"
 L["S_RAREFINDER_NPC_NOTREGISTERED"] = "Raro no en la Base de Datos"
---Translation missing 
--- L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = ""
+L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = "Buscar siempre en inglés"
 L["S_RAREFINDER_OPTIONS_SHOWICONS"] = "Mostrar Iconos para Raros Activos"
---Translation missing 
--- L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = ""
---Translation missing 
--- L["S_RAREFINDER_SOUND_ENABLED"] = ""
---Translation missing 
--- L["S_RAREFINDER_SOUNDWARNING"] = ""
+L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = "Sonar incluso cuando los efectos de sonido están desactivados"
+L["S_RAREFINDER_SOUND_ENABLED"] = "Lanzar sonido por monstruo raro en minimapa"
+L["S_RAREFINDER_SOUNDWARNING"] = "sonido emitido debido a que hay un raro en el minimapa, puedes deshabilitar este sonido dentro del submenú opciones > buscador de raros"
 L["S_RAREFINDER_TITLE"] = "Buscador Raro"
---Translation missing 
--- L["S_RAREFINDER_TOOLTIP_REMOVE"] = ""
---Translation missing 
--- L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = ""
+L["S_RAREFINDER_TOOLTIP_REMOVE"] = "Eliminar"
+L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = "Buscar en otros reinos"
 L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Visto por"
 L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = "Minutos Atrás"
 L["S_SHAREPANEL_THANKS"] = [=[¡Gracias por compartir el Rastreador de Misiones del Mundo!

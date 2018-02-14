@@ -59,14 +59,13 @@ function BaseActivity:GetCode()
 end
 
 function BaseActivity:UpdateCustomData(comment, title)
-    local summary, isMeetingStone, customId, version, mode, loot,
-            class, itemLevel, progression, leaderPvPRating, minLevel, maxLevel, pvpRating, source, creator, savedInstance, _, honorLevel = DecodeCommetData(comment)
+    local valid, summary, proto = DecodeCommetData(comment)
+    if not valid then
+        return false
+    end
 
-    if isMeetingStone then    
-        if not CheckMode(mode) or not CheckLoot(loot) then
-            return false
-        end
-
+    if proto then
+        local customId = proto:GetCustomID()
         if customId == 0 then
             customId = nil
         end
@@ -75,17 +74,29 @@ function BaseActivity:UpdateCustomData(comment, title)
             customId = nil
             self:SetActivityID(changeTo)
         end
-        self:SetVersion(version)
-        self:SetMode(mode)
-        self:SetLoot(loot)
+        self:SetVersion(proto:GetVersion())
+        self:SetMode(proto:GetMode())
+        self:SetLoot(proto:GetLoot())
         self:SetSummary(summary)
         self:SetComment(nil)
         self:SetCustomID(customId)
-        self:SetMinLevel(minLevel or 1)
-        self:SetMaxLevel(maxLevel or MAX_PLAYER_LEVEL)
-        self:SetPvPRating(pvpRating or 0)
-        self:SetSource(source)
-        self:SetSavedInstance(savedInstance)
+        self:SetMinLevel(proto:GetMinLevel() or 1)
+        self:SetMaxLevel(proto:GetMaxLevel() or MAX_PLAYER_LEVEL)
+        self:SetPvPRating(proto:GetPvPRating() or 0)
+        self:SetSource(proto:GetAddonSource())
+        self:SetSavedInstance(proto:GetSavedInstance())
+        self:SetIsMeetingStone(true)
+
+        local check = proto:GetCheck()
+        if check ~= nil and check ~= format('%s-%s-%s', self:GetModeText(), self:GetLootText(), self:GetName()) then
+            
+            return false
+        end
+
+        if title ~= format('%s-%s-%s-%s', L['集合石'], self:GetLootText(), self:GetModeText(), self:GetName()) then
+            
+            return false
+        end
 
         creator = creator and Ambiguate(creator, 'none')
         if creator and creator ~= self:GetLeader() then
@@ -95,11 +106,11 @@ function BaseActivity:UpdateCustomData(comment, title)
             self:SetLeaderProgression(nil)
             self:SetLeaderHonorLevel(nil)
         else
-            self:SetLeaderClass(class)
-            self:SetLeaderItemLevel(itemLevel)
-            self:SetLeaderPvPRating(leaderPvPRating)
-            self:SetLeaderProgression(progression)
-            self:SetLeaderHonorLevel(honorLevel)
+            self:SetLeaderClass(proto:GetLeaderClass())
+            self:SetLeaderItemLevel(proto:GetLeaderItemLevel())
+            self:SetLeaderPvPRating(proto:GetLeaderPvPRating())
+            self:SetLeaderProgression(proto:GetLeaderProgression())
+            self:SetLeaderHonorLevel(proto:GetLeaderHonorLevel())
         end
     else
         self:SetVersion(nil)
@@ -116,8 +127,8 @@ function BaseActivity:UpdateCustomData(comment, title)
         self:SetPvPRating(0)
         self:SetSource(nil)
         self:SetSavedInstance(nil)
+        self:SetIsMeetingStone(false)
     end
-    self:SetIsMeetingStone(isMeetingStone)
 
     return true
 end

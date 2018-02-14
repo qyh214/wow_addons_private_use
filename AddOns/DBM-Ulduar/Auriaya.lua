@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Auriaya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 262 $"):sub(12, -3))
 
 mod:SetCreatureID(33515)--34014--Add this (kitties) to pull detection when it can be ignored in kill
 mod:SetEncounterID(1131)
@@ -21,11 +21,11 @@ local warnSwarm 		= mod:NewTargetAnnounce(64396, 2)
 local warnFearSoon	 	= mod:NewSoonAnnounce(64386, 1)
 local warnCatDied 		= mod:NewAnnounce("WarnCatDied", 3, 64455)
 local warnCatDiedOne	= mod:NewAnnounce("WarnCatDiedOne", 3, 64455)
-local warnSonic			= mod:NewCastAnnounce(64688, 2)
 
 local specWarnFear		= mod:NewSpecialWarningSpell(64386, nil, nil, nil, 2, 2)
 local specWarnBlast		= mod:NewSpecialWarningInterrupt(64389, "HasInterrupt", nil, 2, 1, 2)
 local specWarnVoid 		= mod:NewSpecialWarningMove(64675, nil, nil, nil, 1, 2)
+local specWarnSonic		= mod:NewSpecialWarningMoveTo(64688, nil, nil, nil, 2, 2)
 
 local enrageTimer		= mod:NewBerserkTimer(600)
 local timerDefender 	= mod:NewTimer(35, "timerDefender", 64455, nil, nil, 1)
@@ -54,7 +54,8 @@ function mod:SPELL_CAST_START(args)
 		timerNextFear:Schedule(2)
 		warnFearSoon:Schedule(34)
 	elseif args:IsSpellID(64688, 64422) then --Sonic Screech
-		warnSonic:Show()
+		specWarnSonic:Show(TANK)
+		specWarnSonic:Play("gathershare")
 		timerSonic:Start()
 		timerNextSonic:Start()
 	end

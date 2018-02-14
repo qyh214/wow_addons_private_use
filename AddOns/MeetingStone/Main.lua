@@ -1,7 +1,7 @@
 
 BuildEnv(...)
 
-debug = neteasedebug or nop
+debug = IsAddOnLoaded('!!!!!tdDevTools') and print or nop
 
 Addon = LibStub('AceAddon-3.0'):NewAddon('MeetingStone', 'AceEvent-3.0', 'LibModule-1.0', 'LibClass-2.0', 'AceHook-3.0')
 

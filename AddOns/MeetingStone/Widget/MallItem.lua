@@ -114,7 +114,7 @@ function MallItem:Constructor()
                 return
             end
             local frame = ModelPreviewFrame
-            ModelPreviewFrame_ShowModel(self.model, true)
+            ModelPreviewFrame_ShowModel(self.model, 10, true)
             frame.Display.Name:SetText(self.text)
         end)
     end

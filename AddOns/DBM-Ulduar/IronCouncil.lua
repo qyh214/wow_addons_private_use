@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("IronCouncil", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 261 $"):sub(12, -3))
 mod:SetCreatureID(32867, 32927, 32857)
 mod:SetEncounterID(1140)
 mod:DisableEEKillDetection()--Fires for first one dying not last
@@ -26,8 +26,8 @@ local warnSupercharge			= mod:NewSpellAnnounce(61920, 3)
 -- Stormcaller Brundir
 -- High Voltage ... 63498
 local warnChainlight			= mod:NewSpellAnnounce(64215, 1)
-local timerOverload				= mod:NewCastTimer(6, 63481)
-local timerLightningWhirl		= mod:NewCastTimer(5, 63483)
+local timerOverload				= mod:NewCastTimer(6, 63481, nil, nil, nil, 2)
+local timerLightningWhirl		= mod:NewCastTimer(5, 63483, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 local specwarnLightningTendrils	= mod:NewSpecialWarningRun(63486, nil, nil, nil, 4, 2)
 local timerLightningTendrils	= mod:NewBuffActiveTimer(27, 63486, nil, nil, nil, 6)
 local specwarnOverload			= mod:NewSpecialWarningRun(63481, nil, nil, nil, 4, 2)
@@ -36,10 +36,10 @@ mod:AddBoolOption("AlwaysWarnOnOverload", false, "announce")
 -- Steelbreaker
 -- High Voltage ... don't know what to show here - 63498
 local warnFusionPunch			= mod:NewSpellAnnounce(61903, 4)
-local timerFusionPunchCast		= mod:NewCastTimer(3, 61903)
-local timerFusionPunchActive	= mod:NewTargetTimer(4, 61903)
+local timerFusionPunchCast		= mod:NewCastTimer(3, 61903, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_MAGIC_ICON)
+local timerFusionPunchActive	= mod:NewTargetTimer(4, 61903, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_MAGIC_ICON)
 local warnOverwhelmingPower		= mod:NewTargetAnnounce(61888, 2)
-local timerOverwhelmingPower	= mod:NewTargetTimer(25, 61888)
+local timerOverwhelmingPower	= mod:NewTargetTimer(25, 61888, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 local warnStaticDisruption		= mod:NewTargetAnnounce(61912, 3) 
 mod:AddBoolOption("SetIconOnOverwhelmingPower", false)
 mod:AddBoolOption("SetIconOnStaticDisruption", false)
@@ -54,7 +54,7 @@ local warnRuneofSummoning		= mod:NewSpellAnnounce(62273, 3)
 local specwarnRuneofDeath		= mod:NewSpecialWarningMove(63490, nil, nil, nil, 1, 2)
 local specWarnRuneofShields		= mod:NewSpecialWarningDispel(63967, "MagicDispeller", nil, nil, 1, 2)
 local timerRuneofDeath			= mod:NewCDTimer(30, 63490, nil, nil, nil, 3)
-local timerRuneofPower			= mod:NewCDTimer(30, 61974, nil, nil, nil, 5)
+local timerRuneofPower			= mod:NewCDTimer(30, 61974, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 
 local enrageTimer				= mod:NewBerserkTimer(900)
 

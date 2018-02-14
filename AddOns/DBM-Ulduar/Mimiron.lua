@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 262 $"):sub(12, -3))
 mod:SetCreatureID(33432)
 mod:SetEncounterID(1138)
 mod:DisableESCombatDetection()
@@ -41,16 +41,16 @@ local timerHardmode				= mod:NewTimer(610, "TimerHardmode", 64582)
 local timerP1toP2				= mod:NewTimer(41.5, "TimeToPhase2", "Interface\\Icons\\Spell_Nature_WispSplode", nil, nil, 6)
 local timerP2toP3				= mod:NewTimer(29, "TimeToPhase3", "Interface\\Icons\\Spell_Nature_WispSplode", nil, nil, 6)
 local timerP3toP4				= mod:NewTimer(29, "TimeToPhase4", "Interface\\Icons\\Spell_Nature_WispSplode", nil, nil, 6)
-local timerProximityMines		= mod:NewNextTimer(35, 63027)
+local timerProximityMines		= mod:NewNextTimer(35, 63027, nil, nil, nil, 3)
 local timerShockBlast			= mod:NewCastTimer(63631, nil, nil, nil, 2)
 local timerSpinUp				= mod:NewCastTimer(4, 63414, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerDarkGlareCast		= mod:NewCastTimer(10, 63274, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerNextDarkGlare		= mod:NewNextTimer(41, 63274, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerNextShockblast		= mod:NewNextTimer(34, 63631, nil, nil, nil, 2)
 local timerPlasmaBlastCD		= mod:NewCDTimer(30, 64529, nil, "Tank", 2, 5)
-local timerShell				= mod:NewBuffActiveTimer(6, 63666)
-local timerNextFlameSuppressant	= mod:NewNextTimer(60, 64570)
-local timerFlameSuppressant		= mod:NewBuffActiveTimer(10, 65192)
+local timerShell				= mod:NewBuffActiveTimer(6, 63666, nil, "Healer", 2, 5, nil, DBM_CORE_HEALER_ICON)
+local timerNextFlameSuppressant	= mod:NewNextTimer(60, 64570, nil, nil, nil, 3)
+local timerFlameSuppressant		= mod:NewBuffActiveTimer(10, 65192, nil, nil, nil, 3)
 local timerNextFrostBomb		= mod:NewNextTimer(30, 64623, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 local timerBombExplosion		= mod:NewCastTimer(15, 65333, nil, nil, nil, 3)
 
@@ -234,7 +234,7 @@ function mod:OnSync(event, args)
 		timerDarkGlareCast:Cancel()
 		timerNextDarkGlare:Cancel()
 		warnDarkGlare:Cancel()
-	elseif event == "LootMsg" and args then
+	elseif event == "LootMsg" and args and self:AntiSpam(2, 1) then
 		lootannounce:Show(args)
 	end
 end

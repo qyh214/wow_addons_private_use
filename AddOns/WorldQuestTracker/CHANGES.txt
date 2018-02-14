@@ -1,7 +1,7 @@
-changeset:   269:5191256b0807
-tag:         v7.3.2.269-release
+changeset:   271:f88c4161dbea
+tag:         v7.3.5.271-release
 user:        Tercio
-date:        Fri Jan 26 14:28:13 2018 -0200
-summary:     - Added an option to reset the position of the tracker. This should solve problems where users drag the tracker outside the screen space.
+date:        Fri Feb 09 12:03:04 2018 -0200
+summary:     - Ticket #609: fixed rare icons not showing in the map.
 
 

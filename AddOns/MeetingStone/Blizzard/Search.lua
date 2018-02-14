@@ -14,25 +14,38 @@ function LFGSearchOptimize:OnEnable()
     self:RawHook('LFGListSearchPanel_SignUp', true)
     self:RawHook('LFGListSearchEntry_OnEnter', true)
     self:SecureHook('LFGListSearchEntry_Update')
+
+    LFGListFrame:UnregisterEvent('LFG_LIST_SEARCH_RESULTS_RECEIVED')
+    LFGListFrame:UnregisterEvent('LFG_LIST_SEARCH_FAILED')
+
+    self:RegisterMessage('MEETINGSTONE_ACTIVITIES_RESULT_RECEIVED')
 end
 
 function LFGSearchOptimize:OnDisable()
 end
 
+function LFGSearchOptimize:MEETINGSTONE_ACTIVITIES_RESULT_RECEIVED(_, isFailed)
+    if isFailed then
+        LFGListFrame_OnEvent(LFGListFrame, 'LFG_LIST_SEARCH_FAILED')
+    else
+        LFGListFrame_OnEvent(LFGListFrame, 'LFG_LIST_SEARCH_RESULTS_RECEIVED')
+    end
+end
+
 function LFGSearchOptimize:LFGListSearchPanel_UpdateResultList(frame)
-    local total, results = C_LFGList.GetSearchResults()
+    local _, results = C_LFGList.GetSearchResults()
+    local filtered = {}
 
     local spamWord = Profile:GetSetting('spamWord')
     local searchText = LFGListFrame.SearchPanel.SearchBox:GetText()
 
-    for i = #results, 1, -1 do
-        if self:FilterResult(results[i], spamWord, searchText) then
-            tremove(results, i)
-            total = total - 1
+    for _, id in ipairs(results) do
+        if not self:FilterResult(id, spamWord, searchText) then
+            table.insert(filtered, id)
         end
     end
 
-    frame.totalResults, frame.results = total, results
+    frame.totalResults, frame.results = #filtered, filtered
     frame.applications = C_LFGList.GetApplications()
     sort(frame.results, function(a, b)
         return Activity:Get(a):BaseSortHandler() < Activity:Get(b):BaseSortHandler()
@@ -40,7 +53,10 @@ function LFGSearchOptimize:LFGListSearchPanel_UpdateResultList(frame)
 end
 
 function LFGSearchOptimize:FilterResult(id, spamWord, searchText)
-    local activity = Activity:Get(id)
+    local activity = LfgService:GetActivity(id)
+    if not activity then
+        return true
+    end
     if activity:IsSoloActivity() and searchText ~= activity:GetName() then
         return true
     end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Thorim", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 262 $"):sub(12, -3))
 mod:SetCreatureID(32865)
 mod:SetEncounterID(1141)
 mod:SetModelID(28977)
@@ -17,21 +17,24 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
-local warnPhase2				= mod:NewPhaseAnnounce(2, 1)
-local warnStormhammer			= mod:NewTargetAnnounce(62470, 2)
-local warnLightningCharge		= mod:NewSpellAnnounce(62466, 2)
-local warnUnbalancingStrike		= mod:NewTargetAnnounce(62130, 4)
-local warningBomb				= mod:NewTargetAnnounce(62526, 4)
+local warnPhase2					= mod:NewPhaseAnnounce(2, 1)
+local warnStormhammer				= mod:NewTargetAnnounce(62470, 2)
+local warnLightningCharge			= mod:NewSpellAnnounce(62466, 2)
+local warningBomb					= mod:NewTargetAnnounce(62526, 4)
 
-local specWarnLightningShock	= mod:NewSpecialWarningMove(62017, nil, nil, nil, 1, 2)
+local yellBomb						= mod:NewYell(62526)
+local specWarnBomb					= mod:NewSpecialWarningClose(62526, nil, nil, nil, 1, 2)
+local specWarnLightningShock		= mod:NewSpecialWarningMove(62017, nil, nil, nil, 1, 2)
+local specWarnUnbalancingStrikeSelf	= mod:NewSpecialWarningDefensive(62130, nil, nil, nil, 1, 2)
+local specWarnUnbalancingStrike		= mod:NewSpecialWarningTaunt(62130, nil, nil, nil, 1, 2)
 
 mod:AddBoolOption("AnnounceFails", false, "announce")
 
-local enrageTimer				= mod:NewBerserkTimer(369)
-local timerStormhammer			= mod:NewCastTimer(16, 62042)--Cast timer? Review if i ever do this boss again.
-local timerLightningCharge	 	= mod:NewCDTimer(16, 62466, nil, nil, nil, 3) 
-local timerUnbalancingStrike	= mod:NewCDTimer(26, 62130, nil, "Tank", nil, 5)
-local timerHardmode				= mod:NewTimer(175, "TimerHardmode", 62042)
+local enrageTimer					= mod:NewBerserkTimer(369)
+local timerStormhammer				= mod:NewBuffActiveTimer(16, 62042, nil, nil, nil, 3)--Cast timer? Review if i ever do this boss again.
+local timerLightningCharge	 		= mod:NewCDTimer(16, 62466, nil, nil, nil, 3) 
+local timerUnbalancingStrike		= mod:NewCDTimer(26, 62130, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerHardmode					= mod:NewTimer(175, "TimerHardmode", 62042)
 
 mod:AddBoolOption("RangeFrame")
 mod:AddSetIconOption("SetIconOnRunic", 62527, false)
@@ -76,9 +79,22 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 62042 then 					-- Storm Hammer
 		warnStormhammer:Show(args.destName)
 	elseif args.spellId == 62130 then				-- Unbalancing Strike
-		warnUnbalancingStrike:Show(args.destName)
+		if args:IsPlayer() then
+			specWarnUnbalancingStrikeSelf:Show()
+			specWarnUnbalancingStrikeSelf:Play("defensive")
+		else
+			specWarnUnbalancingStrike:Show(args.destName)
+			specWarnUnbalancingStrike:Play("tauntboss")
+		end
 	elseif args:IsSpellID(62526, 62527) then	-- Runic Detonation
-		warningBomb:Show(args.destName)
+		if args:IsPlayer() then
+			yellBomb:Yell()
+		elseif self:CheckNearby(10, args.destName) then
+			specWarnBomb:Show(args.destName)
+			specWarnBomb:Play("runaway")
+		else
+			warningBomb:Show(args.destName)
+		end
 		if self.Options.SetIconOnRunic then
 			self:SetIcon(args.destName, 7, 5)
 		end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Razorscale", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 252 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 262 $"):sub(12, -3))
 mod:SetCreatureID(33186)
 mod:SetEncounterID(1139)
 mod:SetModelID(28787)
@@ -16,6 +16,7 @@ mod:RegisterEventsInCombat(
 	"RAID_BOSS_EMOTE"
 )
 
+--TODO, fuse armor taunt/swap warnings
 local warnTurretsReadySoon			= mod:NewAnnounce("warnTurretsReadySoon", 1, 48642)
 local warnTurretsReady				= mod:NewAnnounce("warnTurretsReady", 3, 48642)
 

@@ -149,7 +149,7 @@ function Activity:IsSelf()
     return self:GetLeader() and UnitIsUnit(self:GetLeader(), 'player')
 end
 
-function Activity:Match(search, bossFilter, enableSpamWord)
+function Activity:Match(search, bossFilter, enableSpamWord, spamLength)
     local summary, comment = self:GetSummary(), self:GetComment()
     if summary then
         summary = summary:lower()
@@ -172,6 +172,10 @@ function Activity:Match(search, bossFilter, enableSpamWord)
         else
             return false
         end
+    end
+
+    if spamLength and ((summary and strlenutf8(summary) > spamLength) or (comment and strlenutf8(comment) > spamLength)) then
+        return false
     end
 
     if bossFilter and next(bossFilter) then

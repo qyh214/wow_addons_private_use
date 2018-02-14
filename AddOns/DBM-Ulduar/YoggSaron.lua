@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 254 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 262 $"):sub(12, -3))
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -13,13 +13,12 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 64144",
 	"SPELL_SUMMON 62979",
 	"SPELL_AURA_APPLIED 63802 63830 63881 64126 64125 63138 63894 64167 64163",
-	"SPELL_AURA_REMOVED 63894 64167 64163 63830 63881",
+	"SPELL_AURA_REMOVED 63802 63894 64167 64163 63830 63138 63881",
 	"SPELL_AURA_REMOVED_DOSE 63050"
 )
 
 --TODO, if blizzard writes a dungeon journal for ulduar in 7.3.5, convert more of these warnings to auto local
 local warnMadness 					= mod:NewCastAnnounce(64059, 2)
-local warnFervorCast 				= mod:NewCastAnnounce(63138, 3)
 local warnSqueeze					= mod:NewTargetAnnounce(64125, 3)
 local warnFervor					= mod:NewTargetAnnounce(63138, 4)
 local warnDeafeningRoarSoon			= mod:NewPreWarnAnnounce(64189, 5, 3)
@@ -64,10 +63,10 @@ mod.vb.phase = 1
 local brainLinkTargets = {}
 mod.vb.brainLinkIcon = 7
 mod.vb.Guardians = 0
-local numberOfPlayers = 1
+mod.vb.numberOfPlayers = 1
 
 function mod:OnCombatStart(delay)
-	numberOfPlayers = DBM:GetNumRealGroupMembers()
+	self.vb.numberOfPlayers = DBM:GetNumRealGroupMembers()
 	self.vb.Guardians = 0
 	self.vb.phase = 1
 	enrageTimer:Start()
@@ -75,8 +74,11 @@ function mod:OnCombatStart(delay)
 	table.wipe(brainLinkTargets)
 end
 
-function mod:FervorTarget()
-	local targetname = self:GetBossTarget(33134)
+function mod:OnTimerRecovery()
+	self.vb.numberOfPlayers = DBM:GetNumRealGroupMembers()
+end
+
+function mod:FervorTarget(targetname, uId)
 	if not targetname then return end
 	if targetname == UnitName("player") and self:AntiSpam(4, 1) then
 		specWarnFervor:Show()
@@ -84,7 +86,7 @@ function mod:FervorTarget()
 	end
 end
 
-function mod:warnBrainLink()
+local function warnBrainLink(self)
 	warnBrainLink:Show(table.concat(brainLinkTargets, "<, >"))
 	timerBrainLinkCD:Start()--VERIFY ME
 	table.wipe(brainLinkTargets)
@@ -106,8 +108,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnDeafeningRoar:Show()
 		specWarnDeafeningRoar:Play("silencesoon")
 	elseif args.spellId == 63138 and not self:IsTrivial(85) then		--Sara's Fervor
-		self:ScheduleMethod(0.2, "FervorTarget")
-		warnFervorCast:Show()
+		self:BossTargetScanner(args.sourceGUID, "FervorTarget", 0.1, 12, true, nil, nil, nil, true)
 	end
 end
 
@@ -126,17 +127,21 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 63802 then		-- Brain Link
-		self:UnscheduleMethod("warnBrainLink")
+		self:Unschedule(warnBrainLink)
 		brainLinkTargets[#brainLinkTargets + 1] = args.destName
 		if self.Options.SetIconOnBrainLinkTarget then
-			self:SetIcon(args.destName, self.vb.brainLinkIcon, 30)
+			self:SetIcon(args.destName, self.vb.brainLinkIcon)
 		end
 		self.vb.brainLinkIcon = self.vb.brainLinkIcon - 1
 		if args:IsPlayer() then
 			specWarnBrainLink:Show()
 			specWarnBrainLink:Play("linegather")
 		end
-		self:ScheduleMethod(0.2, "warnBrainLink")
+		if #brainLinkTargets == 2 then
+			warnBrainLink(self)
+		else
+			self:Schedule(0.5, warnBrainLink, self)
+		end
 	elseif args:IsSpellID(63830, 63881) then   -- Malady of the Mind (Death Coil) 
 		timerMaladyCD:Start()
 		if self.Options.SetIconOnFearTarget then
@@ -164,7 +169,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnFervor:Show(args.destName)
 		timerFervor:Start(args.destName)
 		if self.Options.SetIconOnFervorTarget then
-			self:SetIcon(args.destName, 7, 15)
+			self:SetIcon(args.destName, 7)
 		end
 		if args:IsPlayer() and self:AntiSpam(4, 1) then 
 			specWarnFervor:Show()
@@ -188,7 +193,11 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 63894 then		-- Shadowy Barrier removed from Yogg-Saron (start p3)
+	if args.spellId == 63802 and self.Options.SetIconOnBrainLinkTarget then		-- Brain Link
+		self:SetIcon(args.destName, 0)
+	elseif args.spellId == 63138 and self.Options.SetIconOnFervorTarget then	-- Sara's Fervor
+		self:SetIcon(args.destName, 0)
+	elseif args.spellId == 63894 then		-- Shadowy Barrier removed from Yogg-Saron (start p3)
 		self:SendSync("Phase3")			-- Sync this because you don't get it in your combat log if you are in brain room.
 	elseif args:IsSpellID(64167, 64163) and self:AntiSpam(3, 2) then	-- Lunatic Gaze
 		timerNextLunaricGaze:Start()
@@ -216,7 +225,7 @@ function mod:OnSync(msg)
 		timerMaladyCD:Cancel()
 		timerBrainLinkCD:Cancel()
 		timerEmpower:Start()
-		if numberOfPlayers == 1 then
+		if self.vb.numberOfPlayers == 1 then
 			timerMadness:Cancel()
 			specWarnMadnessOutNow:Cancel()
 		end

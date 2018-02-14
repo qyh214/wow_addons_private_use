@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Freya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 262 $"):sub(12, -3))
 
 mod:SetCreatureID(32906)
 mod:SetEncounterID(1133)
@@ -34,13 +34,14 @@ local warnRoots				= mod:NewTargetAnnounce(62438, 2)
 
 local specWarnLifebinder	= mod:NewSpecialWarningSwitch(62869, "Dps", nil, nil, 1, 2)
 local specWarnFury			= mod:NewSpecialWarningMoveAway(63571, nil, nil, nil, 1, 2)
+local yellFury				= mod:NewYell(63571)
 local specWarnTremor		= mod:NewSpecialWarningCast(62859, "SpellCaster", nil, 2, 1, 2)	-- Hard mode
 local specWarnBeam			= mod:NewSpecialWarningMove(62865, nil, nil, nil, 1, 2)	-- Hard mode
 
 local enrage 				= mod:NewBerserkTimer(600)
-local timerAlliesOfNature	= mod:NewCDTimer(25, 62678, nil, nil, nil, 1)--I seen 25-35 Variation
-local timerSimulKill		= mod:NewTimer(12, "TimerSimulKill")
-local timerFury				= mod:NewTargetTimer(10, 63571)
+local timerAlliesOfNature	= mod:NewCDTimer(25, 62678, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)--I seen 25-35 Variation
+local timerSimulKill		= mod:NewTimer(12, "TimerSimulKill", nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
+local timerFury				= mod:NewTargetTimer(10, 63571, nil, false, 2, 3)
 local timerTremorCD 		= mod:NewCDTimer(28, 62859, nil, nil, nil, 2)
 local timerLifebinderCD 	= mod:NewCDTimer(40, 62869, nil, nil, nil, 1)
 
@@ -85,13 +86,15 @@ function mod:SPELL_CAST_SUCCESS(args)
 			self.vb.altIcon = not self.vb.altIcon	--Alternates between Skull and X
 			self:SetIcon(args.destName, self.vb.altIcon and 7 or 8, 10)
 		end
-		warnFury:Show(args.destName)
 		if args:IsPlayer() then -- only cast on players; no need to check destFlags
 			specWarnFury:Show()
 			specWarnFury:Play("runout")
+			yellFury:Yell()
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(8)
 			end
+		else
+			warnFury:Show(args.destName)
 		end
 		timerFury:Start(args.destName)
 	end

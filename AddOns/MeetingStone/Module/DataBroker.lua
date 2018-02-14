@@ -141,8 +141,6 @@ function DataBroker:MEETINGSTONE_SETTING_CHANGED(_, key, value, onUser)
             Addon:DisableModule('Misc')
         end
         IgnoreList_Update()
-    elseif key == 'spamWord' then
-        self:SendMessage('MEETINGSTONE_SPAMWORD_STATUS_UPDATE', value, onUser)
     end
 end
 
