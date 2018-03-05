@@ -1885,7 +1885,7 @@ local function TitanPanel_PlayerSettingsMenu()
 			info.func = function()			  
 				if TitanSettings.Players[info.value] then
 					TitanSettings.Players[info.value] = nil;
-					profname, _ = TitanUtils_ParseName(index)
+					profname = TitanUtils_ParseName(index)
 					TitanPrint(
 						L["TITAN_PANEL_MENU_PROFILE"]
 						.." '"..profname.."' "

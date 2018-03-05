@@ -63,7 +63,7 @@ end
 -- External --
 --------------
 
-AceGUI:RegisterLayout("Flow-KT",
+AceGUI:RegisterLayout("MSA-Flow",
 	function(content, children)
 		if layoutrecursionblock then return end
 		--used height so far

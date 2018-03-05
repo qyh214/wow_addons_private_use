@@ -98,7 +98,7 @@ L:SetWarningLocalization{
 	SpecWarnSwitchTarget		= "Cambia de objetivo",
 	SpecWarnKickNow				= "Interrumpe ahora",
 	WarningTouchDebuff			= "Perjuicio en >%s<",
-	WarningPoweroftheTwins		= "Poder de las Gemelas - ¡más sanación en >%s<!",
+	WarningPoweroftheTwins2		= "Poder de las Gemelas - ¡más sanación en >%s<!",
 	SpecWarnPoweroftheTwins		= "Poder de las Gemelas"
 }
 
@@ -116,7 +116,7 @@ L:SetOptionLocalization{
 	SpecialWarnOnDebuff			= "Mostrar aviso especial cuando estés afectado por un perjuicio (para cambiarlo por otro)",
 	SetIconOnDebuffTarget		= "Poner iconos en los objetivos de los perjuicios de $spell:65950 y $spell:66001 (dificultad heroica)",
 	WarningTouchDebuff			= "Anunciar objetivos de los perjuicios de $spell:65950 y $spell:66001",
-	WarningPoweroftheTwins		= "Anunciar la gemela afectada por $spell:65916",
+	WarningPoweroftheTwins2		= "Anunciar la gemela afectada por $spell:65916",
 	SpecWarnPoweroftheTwins		= "Mostrar aviso especial cuando estés tanqueando una gemela afectada por $spell:65916"
 }
 

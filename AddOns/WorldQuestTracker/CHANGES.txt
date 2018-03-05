@@ -1,7 +1,7 @@
-changeset:   271:f88c4161dbea
-tag:         v7.3.5.271-release
+changeset:   275:ed8fa308d9c7
+tag:         v7.3.5.275-release
 user:        Tercio
-date:        Fri Feb 09 12:03:04 2018 -0200
-summary:     - Ticket #609: fixed rare icons not showing in the map.
+date:        Mon Feb 26 11:16:54 2018 -0300
+summary:     - Fixed 'template not found' error caused by a newer version of the framework overwriting template tables from other addons.
 
 

@@ -22,8 +22,10 @@ local callbackMap = LD.callbackMap
 local frame = LD.frame
 
 local next, type, error, tonumber, format, match = next, type, error, tonumber, string.format, string.match
-local Ambiguate, GetTime, GetInventoryItemDurability, IsInGroup, IsInRaid, SendAddonMessage = Ambiguate, GetTime, GetInventoryItemDurability, IsInGroup, IsInRaid, SendAddonMessage
+local Ambiguate, GetTime, GetInventoryItemDurability, IsInGroup, IsInRaid, SendAddonMessage = Ambiguate, GetTime, GetInventoryItemDurability, IsInGroup, IsInRaid, SendAddonMessage or C_ChatInfo.SendAddonMessage
 local pName = UnitName("player")
+
+local RegisterAddonMessagePrefix = RegisterAddonMessagePrefix or C_ChatInfo.RegisterAddonMessagePrefix
 
 local function GetDurability()
 	local curTotal, maxTotal, broken = 0, 0, 0

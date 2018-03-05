@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(318, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 189 $"):sub(12, -3))
 mod:SetCreatureID(53879)
 mod:SetEncounterID(1291)
 mod:SetZone()
@@ -252,15 +252,18 @@ function mod:RAID_BOSS_EMOTE(msg)
 		self:Unschedule(checkTendrils)--In case you manage to spam spin him, we don't want to get a bunch of extra stuff scheduled.
 		self:Unschedule(clearTendrils)--^
 		countdownRoll:Cancel()--^
-		specWarnRoll:Show()--Warn you right away.
+		if self:AntiSpam(3, 1) then
+			specWarnRoll:Show()--Warn you right away.
+		end
 		self:Schedule(3, checkTendrils)--After 3 seconds of roll starting, check tendrals, you should have leveled him out by now if this wasn't on purpose.
-		self:Schedule(12, clearTendrils)--Clearing 3 seconds after the roll should be sufficent
 		if numberOfPlayers > 1 then
 			timerBarrelRoll:Start(5)
 			countdownRoll:Start(5)
+			self:Schedule(8, clearTendrils)--Clearing 3 seconds after the roll should be sufficent
 		else
 			timerBarrelRoll:Start(10)
 			countdownRoll:Start(10)
+			self:Schedule(13, clearTendrils)--Clearing 3 seconds after the roll should be sufficent
 		end
 		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
 			DBM.InfoFrame:SetHeader(L.NoDebuff:format(tendrilDebuff))

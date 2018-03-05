@@ -98,7 +98,7 @@ L:SetWarningLocalization{
 	SpecWarnSwitchTarget		= "立刻切换目标攻击双生相协",
 	SpecWarnKickNow			= "立刻打断",
 	WarningTouchDebuff		= "光明或黑暗之触 -> >%s<",
-	WarningPoweroftheTwins		= "双生之能 - 加大治疗 -> >%s<",
+	WarningPoweroftheTwins2		= "双生之能 - 加大治疗 -> >%s<",
 	SpecWarnPoweroftheTwins		= "双生之能"
 }
 
@@ -116,7 +116,7 @@ L:SetOptionLocalization{
 	SpecialWarnOnDebuff		= "当你中了光明或黑暗之触时显示特殊警报(需切换颜色)",
 	SetIconOnDebuffTarget		= "为光明或黑暗之触的目标设置标记(英雄模式)",
 	WarningTouchDebuff		= "提示光明或黑暗之触的目标",
-	WarningPoweroftheTwins		= "提示双生之能的目标",
+	WarningPoweroftheTwins2		= "提示双生之能的目标",
 	SpecWarnPoweroftheTwins		= "当你坦克的首领拥有双生之能时显示特殊警报"
 }
 

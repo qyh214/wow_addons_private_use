@@ -92,7 +92,7 @@ L:SetWarningLocalization{
 	SpecWarnSwitchTarget	= "快換目標打雙子契印",
 	SpecWarnKickNow			= "現在斷法",
 	WarningTouchDebuff		= "光明或黑暗之觸:>%s<",
-	WarningPoweroftheTwins	= "雙子威能 - 對>%s<加大治療",
+	WarningPoweroftheTwins2	= "雙子威能 - 對>%s<加大治療",
 	SpecWarnPoweroftheTwins	= "雙子威能"
 }
 
@@ -110,7 +110,7 @@ L:SetOptionLocalization{
 	SpecialWarnOnDebuff		= "當你中了光明或黑暗之觸時顯示特別警告 (需切換顏色)",
 	SetIconOnDebuffTarget	= "為光明或黑暗之觸的目標設置標記 (英雄模式)",
 	WarningTouchDebuff		= "提示光明或黑暗之觸的目標",
-	WarningPoweroftheTwins	= "提示雙子威能的目標",
+	WarningPoweroftheTwins2	= "提示雙子威能的目標",
 	SpecWarnPoweroftheTwins	= "當你坦住的首領擁有雙子威能時顯示特別警告"
 }
 

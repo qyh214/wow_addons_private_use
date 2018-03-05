@@ -183,6 +183,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
+	GatesHealthFrame		= "受損的大門",
 	SiegeEngine				= "攻城機具",
 	GoblinStartAlliance		= "看到那些爆鹽炸彈了嗎?當我維修攻城機具的時候用它們來轟破大門!",
 	GoblinStartHorde		= "修理攻城機具的工作就交給我，幫我看著點就夠了。如果你想要轟破大門的話，儘管把那些爆鹽炸彈拿去用吧!",

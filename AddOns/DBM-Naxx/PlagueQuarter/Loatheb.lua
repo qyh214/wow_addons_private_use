@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Loatheb", "DBM-Naxx", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 258 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 265 $"):sub(12, -3))
 mod:SetCreatureID(16011)
 mod:SetEncounterID(1115)
 mod:SetModelID(16110)
@@ -12,15 +12,15 @@ mod:RegisterEventsInCombat(
 	"UNIT_DIED"
 )
 
-local warnSporeNow	= mod:NewSpellAnnounce(32329, 2)
-local warnSporeSoon	= mod:NewSoonAnnounce(32329, 1)
+local warnSporeNow	= mod:NewSpellAnnounce(42524, 2)
+local warnSporeSoon	= mod:NewSoonAnnounce(42524, 1)
 local warnDoomNow	= mod:NewSpellAnnounce(29204, 3)
 local warnHealSoon	= mod:NewAnnounce("WarningHealSoon", 4, 48071)
 local warnHealNow	= mod:NewAnnounce("WarningHealNow", 1, 48071, false)
 
-local timerSpore	= mod:NewNextTimer(36, 32329)
-local timerDoom		= mod:NewNextTimer(180, 29204)
-local timerAura		= mod:NewBuffActiveTimer(17, 55593)
+local timerSpore	= mod:NewNextTimer(36, 42524, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
+local timerDoom		= mod:NewNextTimer(180, 29204, nil, nil, nil, 2)
+local timerAura		= mod:NewBuffActiveTimer(17, 55593, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)
 
 mod.vb.doomCounter	= 0
 mod.vb.sporeTimer	= 36

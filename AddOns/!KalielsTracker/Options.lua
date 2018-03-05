@@ -1,10 +1,11 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2016, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2018, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
 
 local addonName, KT = ...
+KT.forcedUpdate = false
 
 local ACD = LibStub("MSA-AceConfigDialog-3.0")
 local ACR = LibStub("AceConfigRegistry-3.0")
@@ -412,11 +413,13 @@ local options = {
 							values = WidgetLists.font,
 							set = function(_, value)
 								db.font = value
+								KT.forcedUpdate = true
 								KT:SetText()
 								ObjectiveTracker_Update()
 								if PetTracker then
 									PetTracker.Objectives:TrackingChanged()
 								end
+								KT.forcedUpdate = false
 							end,
 							order = 3.1,
 						},
@@ -428,11 +431,13 @@ local options = {
 							step = 1,
 							set = function(_, value)
 								db.fontSize = value
+								KT.forcedUpdate = true
 								KT:SetText()
 								ObjectiveTracker_Update()
 								if PetTracker then
 									PetTracker.Objectives:TrackingChanged()
 								end
+								KT.forcedUpdate = false
 							end,
 							order = 3.2,
 						},
@@ -449,11 +454,13 @@ local options = {
 							end,
 							set = function(_, value)
 								db.fontFlag = value
+								KT.forcedUpdate = true
 								KT:SetText()
 								ObjectiveTracker_Update()
 								if PetTracker then
 									PetTracker.Objectives:TrackingChanged()
 								end
+								KT.forcedUpdate = false
 							end,
 							order = 3.3,
 						},
@@ -465,11 +472,13 @@ local options = {
 							end,
 							set = function(_, value)
 								db.fontShadow = value and 1 or 0
+								KT.forcedUpdate = true
 								KT:SetText()
 								ObjectiveTracker_Update()
 								if PetTracker then
 									PetTracker.Objectives:TrackingChanged()
 								end
+								KT.forcedUpdate = false
 							end,
 							order = 3.4,
 						},
@@ -486,18 +495,13 @@ local options = {
 						},
 						textWordWrap = {
 							name = "Wrap long texts",
-							desc = "Long texts shows on two lines or on one line with ellipsis (...).",
+							desc = "Long texts shows on two lines or on one line with ellipsis (...).\n"..warning,
 							type = "toggle",
+							confirm = true,
+							confirmText = warning,
 							set = function()
 								db.textWordWrap = not db.textWordWrap
-								KT:SetText()
-								if dbChar.collapsed then
-									ObjectiveTracker_MinimizeButton_OnClick()
-									ObjectiveTracker_MinimizeButton_OnClick()
-								else
-									ObjectiveTracker_MinimizeButton_OnClick()
-									C_Timer.After(0, ObjectiveTracker_MinimizeButton_OnClick)
-								end
+								ReloadUI()
 							end,
 							order = 3.6,
 						},

@@ -100,10 +100,6 @@ L= DBM:GetModLocalization(1983)
 ------------------------
 L= DBM:GetModLocalization(1986)
 
-L:SetOptionLocalization({
-	SetLighting				= "Bajar automáticamente la calidad de iluminación a bajo al iniciar el combate (se restaurará a su configuración anterior al terminar el combate; no funciona en Mac)"
-})
-
 L:SetTimerLocalization({
 	timerBossIncoming		= DBM_INCOMING
 })
@@ -113,7 +109,8 @@ L:SetOptionLocalization({
 	TauntBehavior		= "Patrón de avisos para el cambio de tanque",
 	TwoMythicThreeNon	= "Cambiar a dos acumulaciones en mítico, tres en otras dificultades",--Default
 	TwoAlways			= "Cambiar a dos acumulaciones en todas las dificultades",
-	ThreeAlways			= "Cambiar a tres acumulaciones en todas las dificultades"
+	ThreeAlways			= "Cambiar a tres acumulaciones en todas las dificultades",
+	SetLighting				= "Bajar automáticamente la calidad de iluminación a bajo al iniciar el combate (se restaurará a su configuración anterior al terminar el combate; no funciona en Mac)"
 })
 
 --------------

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GeneralVezax", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 262 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 263 $"):sub(12, -3))
 mod:SetCreatureID(33271)
 mod:SetEncounterID(1134)
 mod:SetModelID(28548)
@@ -78,7 +78,7 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.interruptCount == 4 then
 			self.vb.interruptCount = 1
 		end
-		local kickCount = self.vb.touchCosmosCast
+		local kickCount = self.vb.interruptCount
 		specWarnSearingFlames:Show(args.sourceName, kickCount)
 		specWarnSearingFlames:Play("kick"..kickCount.."r")
 		timerSearingFlamesCast:Start()

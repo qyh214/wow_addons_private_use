@@ -67,7 +67,6 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	YellWebWrap	= "I'm wrapped! Help me!",
 	ArachnophobiaTimer	= "Arachnophobia"
 })
 
@@ -98,7 +97,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull				= "Die, trespasser!"
+	Pull				= "Die, trespasser!",
+	Adds				= "summons forth Skeletal Warriors!",
+	AddsTwo				= "raises more skeletons!"
 })
 
 --------------------------

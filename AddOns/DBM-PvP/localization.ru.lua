@@ -166,6 +166,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
+	GatesHealthFrame		= "Поврежденые ворота",
 	SiegeEngine				= "Осадная машина",
 	GoblinStartAlliance		= "See those seaforium bombs? Use them on the gates while I repair the siege engine!",
 	GoblinStartHorde		= "Я буду работать над осадной машиной, я ты меня прикрывай. Вот, можешь пользоваться этими сефориевыми бомбами, если тебе надо взорвать ворота.",

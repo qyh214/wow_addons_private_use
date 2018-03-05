@@ -81,21 +81,22 @@ L= DBM:GetModLocalization(1983)
 L= DBM:GetModLocalization(1986)
 
 L:SetOptionLocalization({
-	SetLighting			= "開戰後自動調整打光品質為低，戰鬥結束後恢復設定值(不支援Mac用戶)"
-})
-
-L:SetOptionLocalization({
 	timerBossIncoming	= "為下一次交換首領顯示計時器",
 	TauntBehavior		= "為坦克換坦設置嘲諷行為",
 	TwoMythicThreeNon	= "傳奇模式下兩層換坦，其他難度三層換坦",--Default
 	TwoAlways			= "無論任何難度皆兩層換坦",
-	ThreeAlways			= "無論任何難度皆三層換坦"
+	ThreeAlways			= "無論任何難度皆三層換坦",
+	SetLighting			= "開戰後自動調整打光品質為低，戰鬥結束後恢復設定值(不支援Mac用戶)"
 })
 
 ---------------------------
 -- Aggramar --
 ---------------------------
 L= DBM:GetModLocalization(1984)
+
+L:SetOptionLocalization({
+	ignoreThreeTank	= "當使用三或更多的坦克時過濾烈焰撕裂/碎敵者嘲諷特別警告(在此設定DBM無法得知確實的坦克循環)。如果坦克因死亡而數量降到2時。過濾會自動停用。"
+})
 
 L:SetMiscLocalization({
 	Foe			=	"碎敵者",
@@ -110,8 +111,10 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2031)
 
 L:SetMiscLocalization({
-	SeaText =		"{rt6}加速臨機",
-	SkyText =		"{rt5}爆擊精通"
+	SeaText =	"{rt6}加速臨機",
+	SkyText =	"{rt5}爆擊精通",
+	Blight	=	"靈魂之疫",
+	Burst	=	"靈魂驟發"
 })
 
 -------------

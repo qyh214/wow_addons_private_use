@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(868, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 92 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 117 $"):sub(12, -3))
 mod:SetCreatureID(72311, 72560, 72249, 73910, 72302, 72561, 73909)--Boss needs to engage off friendly NCPS, not the boss. I include the boss too so we don't detect a win off losing varian. :)
 mod:SetEncounterID(1622)
 mod:DisableESCombatDetection()
@@ -75,7 +75,7 @@ local timerCombatStarts				= mod:NewCombatTimer(34.5)
 local timerAddsCD					= mod:NewNextCountTimer(54.7, "ej8553", nil, nil, nil, 1, "Interface\\ICONS\\INV_Misc_Head_Orc_01.blp")
 local timerProtoCD					= mod:NewNextCountTimer(54.7, "ej8587", nil, nil, nil, 1, 59961)
 local timerTowerCD					= mod:NewTimer(99, "timerTowerCD", 88852, nil, nil, 5)
-local timerTowerGruntCD				= mod:NewTimer(60, "timerTowerGruntCD", 89253, nil, nil, 1, nil, DBM_CORE_HEROIC_ICON)
+local timerTowerGruntCD				= mod:NewTimer(60, "timerTowerGruntCD", 89253, nil, nil, 1, DBM_CORE_HEROIC_ICON)
 local timerDemolisherCD				= mod:NewNextTimer(20, "ej8562", nil, nil, nil, 1, 116040)--EJ is just not complete, shouldn't need localizing
 ----High Enforcer Thranok (Road)
 local timerShatteringCleaveCD		= mod:NewCDTimer(7.5, 146849, nil, "Tank", nil, 5)

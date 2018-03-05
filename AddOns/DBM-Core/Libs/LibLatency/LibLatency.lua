@@ -24,8 +24,10 @@ local callbackMap = LL.callbackMap
 local frame = LL.frame
 
 local next, type, error, tonumber, format, match = next, type, error, tonumber, string.format, string.match
-local Ambiguate, GetTime, GetNetStats, IsInGroup, IsInRaid, SendAddonMessage = Ambiguate, GetTime, GetNetStats, IsInGroup, IsInRaid, SendAddonMessage
+local Ambiguate, GetTime, GetNetStats, IsInGroup, IsInRaid, SendAddonMessage = Ambiguate, GetTime, GetNetStats, IsInGroup, IsInRaid, SendAddonMessage or C_ChatInfo.SendAddonMessage
 local pName = UnitName("player")
+
+local RegisterAddonMessagePrefix = RegisterAddonMessagePrefix or C_ChatInfo.RegisterAddonMessagePrefix
 
 RegisterAddonMessagePrefix("Lag")
 frame:SetScript("OnEvent", function(_, _, prefix, msg, channel, sender)

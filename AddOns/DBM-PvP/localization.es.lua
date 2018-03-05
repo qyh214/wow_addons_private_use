@@ -185,6 +185,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
+	GatesHealthFrame		= "Puertas dañadas",
 	SiegeEngine				= "Máquina de asedio",
 	GoblinStartAlliance		= "¿Ves esas bombas de seforio? Úsalas en las puertas mientras reparo la máquina de asedio.",
 	GoblinStartHorde		= "Trabajaré en la máquina de asedio, solo cúbreme las espaldas. ¡Usa esas bombas de seforio en las puertas si las necesitas!",

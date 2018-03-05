@@ -2,7 +2,6 @@ local L = LibStub("AceLocale-3.0"):NewLocale("WorldQuestTrackerAddon", "ruRU")
 if not L then return end 
 
 L["S_APOWER_AVAILABLE"] = "Доступно"
-L["S_APOWER_DOWNVALUE"] = "Задания с %s означают, что они доступны дольше, чем текущий уровень знаний."
 L["S_APOWER_NEXTLEVEL"] = "Следующий уровень"
 L["S_ENABLED"] = "Включено"
 L["S_ERROR_NOTIMELEFT"] = "Время выполнения задания истекло."

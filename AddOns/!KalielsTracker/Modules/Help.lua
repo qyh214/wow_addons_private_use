@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2016, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2018, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -189,10 +189,13 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 10
-			text = cTitle.."         What's NEW in version |cffffffff2.1.7|r\n\n"..
-				"- FIXED - issue #210 - error with PetTracker after start the game.\n"..
-				"- FIXED - issue #212 - error when hovering quest item, with enabled \"Color by"..
-				offs.."difficulty\".\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff2.1.8|r\n\n"..
+				"- FIXED - issue #224 - Error when Quest button does not exist.\n"..
+				"- FIXED - Highlight of Quest title or Quest item tag after update tracker.\n"..
+				"- FIXED - Support for Scenario spell buttons.\n"..
+				"- FIXED - Items order inside DropDown menu.\n"..
+				"- ADDED - Popup Quest font changeable.\n"..
+				"- Performance optimization.\n\n"..
 
 				cTitle.."Known issues|r\n"..
 				"- Work with World Map during combat generates LUA errors. This is because"..

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Maexxna", "DBM-Naxx", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 258 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 265 $"):sub(12, -3))
 mod:SetCreatureID(15952)
 mod:SetEncounterID(1116)
 mod:SetModelID(15928)
@@ -18,7 +18,10 @@ local warnWebSprayNow	= mod:NewSpellAnnounce(29484, 3)
 local warnSpidersSoon	= mod:NewAnnounce("WarningSpidersSoon", 2, 17332)
 local warnSpidersNow	= mod:NewAnnounce("WarningSpidersNow", 4, 17332)
 
-local timerWebSpray		= mod:NewNextTimer(40.5, 29484, nil, nil, nil, 3)
+local specWarnWebWrap	= mod:NewSpecialWarningSwitch(28622, "RangedDps", nil, nil, 1, 2)
+local yellWebWrap		= mod:NewYell(28622)
+
+local timerWebSpray		= mod:NewNextTimer(40.5, 29484, nil, nil, nil, 2)
 local timerSpider		= mod:NewTimer(30, "TimerSpider", 17332, nil, nil, 1)
 
 function mod:OnCombatStart(delay)
@@ -39,9 +42,12 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 28622 then -- Web Wrap
-		warnWebWrap:Show(args.destName)
+		warnWebWrap:CombinedShow(0.5, args.destName)
 		if args.destName == UnitName("player") then
-			SendChatMessage(L.YellWebWrap, "YELL")
+			yellWebWrap:Yell()
+		elseif not UnitDebuff("player", args.spellName) and self:AntiSpam(3, 1) then
+			specWarnWebWrap:Show()
+			specWarnWebWrap:Play("targetchange")
 		end
 	end
 end

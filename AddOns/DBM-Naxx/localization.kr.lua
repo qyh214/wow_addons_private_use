@@ -79,7 +79,6 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	YellWebWrap			= "저 거미줄에 걸렸어요!! 살려주세요!!",
 	ArachnophobiaTimer	= "거미의 공포"
 })
 

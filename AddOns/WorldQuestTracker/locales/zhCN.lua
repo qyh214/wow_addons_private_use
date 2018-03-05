@@ -2,7 +2,6 @@ local L = LibStub("AceLocale-3.0"):NewLocale("WorldQuestTrackerAddon", "zhCN")
 if not L then return end 
 
 L["S_APOWER_AVAILABLE"] = "可用的"
-L["S_APOWER_DOWNVALUE"] = "任务包含 %s 代表它比当前研究有更多时间。"
 L["S_APOWER_NEXTLEVEL"] = "下一等级"
 L["S_ENABLED"] = "已启用"
 L["S_ERROR_NOTIMELEFT"] = "此任务已过期。"

@@ -87,7 +87,7 @@ L:SetWarningLocalization{
 	SpecWarnSwitchTarget		= "대상 전환!",
 	SpecWarnKickNow				= "지금 차단!",
 	WarningTouchDebuff			= "손길 : >%s<",
-	WarningPoweroftheTwins		= "쌍둥이의 힘 : %s",
+	WarningPoweroftheTwins2		= "쌍둥이의 힘 : %s",
 	SpecWarnPoweroftheTwins		= "쌍둥이의 힘!"
 }
 
@@ -104,7 +104,7 @@ L:SetOptionLocalization{
 	SpecialWarnOnDebuff			= "빛/어둠의 손길 대상이 된 경우 특수 경고 보기",
 	SetIconOnDebuffTarget		= "빛/어둠의 손길 대상에게 전술 목표 아이콘 설정(영웅 난이도)",
 	WarningTouchDebuff			= "빛/어둠의 손길 대상 알림 보기",
-	WarningPoweroftheTwins		= "쌍둥이의 힘 대상 알림 보기",
+	WarningPoweroftheTwins2		= "쌍둥이의 힘 대상 알림 보기",
 	SpecWarnPoweroftheTwins		= "쌍둥이의 힘 특수 경고 보기"
 }
 

@@ -1,54 +1,89 @@
-tag ec677b419b41a19ba6a14499a175097799c9b920 7.3.21
+tag 6cb4aae6246f2986323a2cbd368364ea6516e0f1 7.3.23
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Thu Feb 1 20:03:07 2018 +0100
+Date:	Wed Feb 21 22:14:54 2018 +0100
 
-Tagging as 7.3.21
+Tagging as 7.3.23
 
-commit b86277b0ea426cc80aabe17a23355d1cfb01be9d
+commit 9b0ba08659b3e8b1beb98d2e25da071a4bdd51a2
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Feb 1 20:03:07 2018 +0100
+Date:   Wed Feb 21 22:14:54 2018 +0100
 
-    increment version number to 7.3.21
+    increment version number to 7.3.23
 
-commit 78ad46e56a863e93caedbad3c8e8eb1d12cee7bd
+commit c810219a66ba40862142a5f99820a392470fea02
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Feb 1 17:49:22 2018 +0100
+Date:   Wed Feb 21 08:02:50 2018 +0100
 
-    ultrashining via svn r17241:
-    zhTW update
+    Omega via svn r17327:
+    even shorter yells. really trim up the chat space to give most clear but short messages possible
 
-commit e11766b93da1281c60d9fc81d5c9c949a5c348dc
+commit 06d15a9359838f669dac68fa2cb4096b1f745b3b
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Feb 1 11:21:01 2018 +0100
+Date:   Wed Feb 21 06:54:41 2018 +0100
 
-    Omega via svn r17240:
-    HF
+    Omega via svn r17326:
+    Possibly fix gaze timer now showing in P3? can?\226?\128?\153t confirm it?\226?\128?\153s even broken but a user says it is so switching to emote until I can verify P3 still has a UNIT_ event for it
 
-commit abc3fd521305705ce1a4f24fa6ad12388993f3b2
+commit 745e984f8687f3d7634a9dee4ee92f5fee920832
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Feb 1 03:44:07 2018 +0100
+Date:   Wed Feb 21 06:14:43 2018 +0100
 
-    Omega via svn r17239:
-    Fix another bug/regression
+    Omega via svn r17325:
+    Countdown tweaks
 
-commit e46a7b6617046637b521f8387dc6f7144fe6c95e
+commit 95048fd50408063957a559f18e38f408bd9e7b17
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Feb 1 02:25:49 2018 +0100
+Date:   Wed Feb 21 04:32:28 2018 +0100
 
-    Omega via svn r17238:
-    Fix lua error, which will fix necrotic embrace for real this time
+    Omega via svn r17324:
+    Use red text for combo yells
 
-commit 3d56183caf087cf765462db0ef15f1a6c8bcf934
+commit 96463c329faee86293e874dcda0a81e95907a4d6
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Feb 1 00:41:29 2018 +0100
+Date:   Wed Feb 21 04:02:21 2018 +0100
 
-    Omega via svn r17237:
-    Improve fix
+    Omega via svn r17323:
+    Improve tank swap code for argus so it makes sure you taunt at 2-3 stacks if debuff will fade before next scythe, instead of waiting for debuff to fade first. This should fix serious issue where it wasn?\226?\128?\153t warning at 2 stacks on mythic
 
-commit 52e2dbd9720307c72f28e88316d4cec4007eb75a
+commit f911c482e8f6f786725a4215dcf20cad8f1dd939
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jan 31 11:29:43 2018 +0100
+Date:   Tue Feb 20 20:17:22 2018 +0100
 
-    tandanu via svn r17236:
+    Omega via svn r17322:
+    version check
+
+commit 64e403e51dfffc41882db4ef17042c48d7cda018
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Feb 20 19:49:24 2018 +0100
+
+    Omega via svn r17321:
+    Fixed regression that caused sentence of sargeras timers to break in last update
+
+commit ddaf34658ff50e13359c294547a2f8f038f56842
+Author: subversion <svn@deadlybossmods.com>
+Date:   Mon Feb 19 22:41:19 2018 +0100
+
+    Omega via svn r17320:
+    Change this warning to use dungeon journal for non english locals
+
+commit 16c4a3d1281351f119b035d0032d6e90d6d9124e
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Feb 16 06:20:37 2018 +0100
+
+    Omega via svn r17319:
+    small fix with warning text firing before variable reset.
+
+commit b9d7f09a5d74acf74fc2993fe392de0420689b76
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Feb 15 06:21:20 2018 +0100
+
+    Omega via svn r17318:
+    timer fixes and new countdown for mythic only
+
+commit 4406eb46353eaf7086e986d168060c323e26a582
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Feb 14 23:58:10 2018 +0100
+
+    tandanu via svn r17317:
     increment alpha version
 

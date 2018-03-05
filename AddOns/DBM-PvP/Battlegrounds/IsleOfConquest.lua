@@ -1,7 +1,7 @@
 local mod		= DBM:NewMod("z628", "DBM-PvP", 2)
 local L			= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 69 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -13,6 +13,8 @@ local warnSiegeEngineSoon 	= mod:NewAnnounce("WarnSiegeEngineSoon", 2)
 
 local POITimer 			= mod:NewTimer(60, "TimerPOI", "Interface\\Icons\\Spell_Misc_HellifrePVPHonorHoldFavor")	-- point of interest
 local timerSiegeEngine 	= mod:NewTimer(180, "TimerSiegeEngine", 15048)
+
+mod:AddBoolOption("ShowGatesHealth", true)
 
 local GetMapLandmarkInfo, GetNumMapLandmarks = C_WorldMap.GetMapLandmarkInfo, GetNumMapLandmarks
 local allyTowerIcon = "Interface\\AddOns\\DBM-PvP\\Textures\\GuardTower"
@@ -30,6 +32,28 @@ local function isInArgs(val, ...)	-- search for val in all args (...)
 		end
 	end
 	return false
+end
+
+local updateInfoFrame
+do
+	local lines = {}
+	local function addLine(key, value)
+		-- sort by insertion order
+		lines[key] = value
+		sortedLines[#sortedLines + 1] = key
+	end
+	updateInfoFrame = function()
+		table.wipe(lines)
+		table.wipe(sortedLines)
+		if #gateHP == 0 then
+			DBM.InfoFrame:Hide()
+		end
+		for i = 1, #gateHP do
+			local currentHealth = gateHP[i]/6000
+			lines[L.GatesHealthFrame] = math.floor(currentHealth).."%"
+		end
+		return lines
+	end
 end
 
 local poi = {}
@@ -77,6 +101,9 @@ do
 			mod:UnregisterShortTermEvents()
 			mod:Stop()
 			bgzone = false
+			if self.Options.ShowGatesHealth then
+				DBM.InfoFrame:Hide()
+			end
 		end
 	end
 	
@@ -158,11 +185,21 @@ function mod:SPELL_BUILDING_DAMAGE(sourceGUID, _, _, _, destGUID, destName, _, _
 	local guid = destGUID
 	if gateHP[guid] == nil then -- first hit
 		gateHP[guid] = 600000 -- initial gate health: 600000
+		if self.Options.ShowGatesHealth then
+			if not DBM.InfoFrame:IsShown() then
+				DBM.InfoFrame:Show(7, "function", updateInfoFrame, false, false, true)
+			else
+				DBM.InfoFrame:Update()
+			end
+		end
 	end
 	if gateHP[guid] > amount then
 		gateHP[guid] = gateHP[guid] - amount
 	else
 		gateHP[guid] = 0
+	end
+	if self.Options.ShowGatesHealth then
+		DBM.InfoFrame:Update()
 	end
 end
 

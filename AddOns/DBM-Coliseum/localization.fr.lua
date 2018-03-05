@@ -93,7 +93,7 @@ L:SetWarningLocalization{
 	SpecWarnSwitchTarget		= "Changement de cible !",
 	SpecWarnKickNow				= "Casser Maintenant !",
 	WarningTouchDebuff			= "Toucher sur >%s<",
-	WarningPoweroftheTwins		= "Puissance des jumelles - plus de soins sur >%s<",
+	WarningPoweroftheTwins2		= "Puissance des jumelles - plus de soins sur >%s<",
 	SpecWarnPoweroftheTwins		= "Puissance des jumelles!"
 }
 
@@ -113,7 +113,7 @@ L:SetOptionLocalization{
 	SpecialWarnOnDebuff			= "Montre une alerte spéciale quand vous avez un Toucher (pour changer de debuff)",
 	SetIconOnDebuffTarget		= "Met des icônes sur les cibles des Toucher (héroique)",
 	WarningTouchDebuff			= "Annoncer les cibles des débuff Toucher de Lumière/des Ténèbres",
-	WarningPoweroftheTwins		= "Annoncer la cible pour Puissance des jumelles",
+	WarningPoweroftheTwins2		= "Annoncer la cible pour Puissance des jumelles",
 	SpecWarnPoweroftheTwins		= "Montre une alerte spéciale quand vous êtes en train de tanker une Jumelle puissante"
 }
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Shot", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17247 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -12,7 +12,7 @@ mod:RegisterEvents(
 )
 mod.noStatistics = true
 
-local timerGame		= mod:NewBuffActiveTimer(60, 101871)
+local timerGame		= mod:NewBuffActiveTimer(60, 101871, nil, nil, nil, 6)
 
 local countdownGame	= mod:NewCountdownFades(60, 101871)
 

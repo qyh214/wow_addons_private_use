@@ -89,6 +89,9 @@ local function GetButtonText(self, id)
 	end
 	if TitanGetVar(id, "ShowPercent") then
 		local percent = math.floor((value) * 100 / (max))
+		if (max == 0) then
+			percent = 100
+		end
 
 		if showvalue then
 			text = text .. " (" .. percent .. "%)"
@@ -238,13 +241,18 @@ L.Elib({
 	name = L["Reputation"],
 	tooltip = L["Reputation"],
 	icon = "Interface\\Icons\\INV_MISC_NOTE_02",
-	category = "Information",
+	category = "TEST_CATEGORY",
 	version = VERSION,
 	getButtonText = GetButtonText,
 	getTooltipText = GetTooltipText,
 	eventsTable = eventsTable,
 	menus = menus,
-	onClick = OnClick
+	onClick = OnClick,
+	onLoad = function()
+		local categories = LibStub("AceLocale-3.0"):GetLocale(TITAN_ID, true)["TITAN_PANEL_MENU_CATEGORIES"]
+		table.insert(categories, "TESTE 1 2 3")
+		table.insert(TITAN_PANEL_BUTTONS_PLUGIN_CATEGORY, "TEST_CATEGORY")
+	end
 })
 
 

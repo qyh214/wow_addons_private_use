@@ -1805,7 +1805,7 @@ function TitanUtils_SetGlobalProfile(glob, toon)
 		-- The user asked for global
 		if toon == nil or toon == TITAN_PROFILE_NONE then
 			-- nothing was set before so use current player
-			toon, _, _ = TitanUtils_GetPlayer()
+			toon = TitanUtils_GetPlayer()
 		end
 	end
 	TitanAllSetVar("GlobalProfileName", toon or TITAN_PROFILE_NONE)

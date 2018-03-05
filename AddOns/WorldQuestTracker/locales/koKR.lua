@@ -2,7 +2,6 @@ local L = LibStub("AceLocale-3.0"):NewLocale("WorldQuestTrackerAddon", "koKR")
 if not L then return end 
 
 L["S_APOWER_AVAILABLE"] = "획득 가능"
-L["S_APOWER_DOWNVALUE"] = "%s|1으로;로; 표시된 퀘스트는 현재 유물 연구보다 더 긴 시간을 가집니다."
 L["S_APOWER_NEXTLEVEL"] = "다음 등급"
 L["S_ENABLED"] = "사용"
 L["S_ERROR_NOTIMELEFT"] = "이 퀘스트는 만료되었습니다."

@@ -34,6 +34,20 @@ local TitanPanelAce = LibStub("AceAddon-3.0"):NewAddon("TitanPanel", "AceHook-3.
 --	menuBarTop = 75;
 --end
 
+--[[From Resike to prevent tainting stuff to override the SetPoint calls securely.
+hooksecurefunc(FrameRef, "SetPoint", function(self)
+	if self.moving then
+		return
+	end
+	self.moving = true
+	self:SetMovable(true)
+	self:SetUserPlaced(true)
+	self:ClearAllPoints()
+	self:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	self:SetMovable(false)
+	self.moving = nil
+end)
+--]]
 
 --[[ Titan
 TitanMovable is a local table that is cleared then filled with the frames Titan needs to check and adjust, if necessary, with each 'adjust frame' check.
@@ -587,7 +601,7 @@ TitanDebug("... OverrideActionBar "
 	OverrideActionBar:ClearAllPoints()
 	OverrideActionBar:SetPoint("BOTTOM", TitanPanelBottomAnchor, "TOP", left, 0)
 	OverrideActionBar:SetPoint(point, relFrame, relPoint, xOff, TitanPanelBottomAnchor:GetTop()+0)
-	left, _ = OverrideActionBar:GetCenter()
+	left = OverrideActionBar:GetCenter()
 	bot = OverrideActionBar:GetBottom()
 TitanDebug("... OverrideActionBar "
 ..(bot or "?").." "
@@ -663,7 +677,7 @@ TitanDebug("... OverrideActionBar "
 	OverrideActionBar:ClearAllPoints()
 	OverrideActionBar:SetPoint("BOTTOM", TitanPanelBottomAnchor, "TOP", left, 0)
 --	OverrideActionBar:SetPoint(point, relFrame, relPoint, xOff, TitanPanelBottomAnchor:GetTop()+0)
-	left, _ = OverrideActionBar:GetCenter()
+	left = OverrideActionBar:GetCenter()
 	bot = OverrideActionBar:GetBottom()
 TitanDebug("... OverrideActionBar "
 ..(bot or "?").." "

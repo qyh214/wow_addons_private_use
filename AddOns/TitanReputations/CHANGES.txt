@@ -1,10 +1,12 @@
-lightweight tag 0a14ca55af49dc61fb1a71c337211a4d7b9cb202 v1.14
+lightweight tag 6618d89b68dd0f681a97c6d8185883ea06c66739 v1.15
 Author:	Eliote <>
-Date:	Wed Sep 20 20:59:41 2017 -0300
+Date:	Sun Mar 4 23:01:14 2018 -0300
 
-commit 0a14ca55af49dc61fb1a71c337211a4d7b9cb202
+commit 6618d89b68dd0f681a97c6d8185883ea06c66739
 Author: Eliote <>
-Date:   Wed Sep 20 20:59:41 2017 -0300
+Date:   Sun Mar 4 23:01:14 2018 -0300
 
-    Fix: nil concatenation
+    Fix: division by zero when exalted
+    
+    * The maximum reputation when exalted is now 0 instead of 1000
 

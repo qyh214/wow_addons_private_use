@@ -1096,7 +1096,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 					end
 
 					GroupContainer.width = "fill"
-					GroupContainer:SetLayout("Flow-KT")		-- MSA
+					GroupContainer:SetLayout("MSA-Flow")	-- MSA
 					container:AddChild(GroupContainer)
 					FeedOptions(appName,options,GroupContainer,rootframe,path,v,true)
 				end
@@ -1199,7 +1199,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 						local disabled = CheckOptionDisabled(v, options, path, appName)
 						local width = GetOptionsMemberValue("width",v,options,path,appName)
 						control = gui:Create("InlineGroup")
-						control:SetLayout("Flow-KT")	-- MSA
+						control:SetLayout("MSA-Flow")	-- MSA
 						control:SetTitle(name)
 						control.width = "fill"
 
@@ -1305,7 +1305,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 						end
 					else
 						control = gui:Create("InlineGroup")
-						control:SetLayout("Flow-KT")	-- MSA
+						control:SetLayout("MSA-Flow")	-- MSA
 						control:SetTitle(name)
 						control.width = "fill"
 
@@ -1596,14 +1596,14 @@ function AceConfigDialog:FeedGroup(appName,options,container,rootframe,path, isR
 		end
 	end
 
-	container:SetLayout("Flow-KT")	-- MSA
+	container:SetLayout("MSA-Flow")		-- MSA
 	local scroll
 
 	--Add a scrollframe if we are not going to add a group control, this is the inverse of the conditions for that later on
 	if (not (hasChildGroups and not inline)) or (grouptype ~= "tab" and grouptype ~= "select" and (parenttype == "tree" and not isRoot)) then
 		if container.type ~= "InlineGroup" and container.type ~= "SimpleGroup" then
 			scroll = gui:Create("ScrollFrame")
-			scroll:SetLayout("Flow-KT")		-- MSA
+			scroll:SetLayout("MSA-Flow")	-- MSA
 			scroll.width = "fill"
 			scroll.height = "fill"
 			container:SetLayout("fill")

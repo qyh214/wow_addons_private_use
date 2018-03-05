@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Freya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 262 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 268 $"):sub(12, -3))
 
 mod:SetCreatureID(32906)
 mod:SetEncounterID(1133)
@@ -40,7 +40,7 @@ local specWarnBeam			= mod:NewSpecialWarningMove(62865, nil, nil, nil, 1, 2)	-- 
 
 local enrage 				= mod:NewBerserkTimer(600)
 local timerAlliesOfNature	= mod:NewCDTimer(25, 62678, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)--I seen 25-35 Variation
-local timerSimulKill		= mod:NewTimer(12, "TimerSimulKill", nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
+local timerSimulKill		= mod:NewTimer(12, "TimerSimulKill", nil, nil, nil, 5, DBM_CORE_DAMAGE_ICON)
 local timerFury				= mod:NewTargetTimer(10, 63571, nil, false, 2, 3)
 local timerTremorCD 		= mod:NewCDTimer(28, 62859, nil, nil, nil, 2)
 local timerLifebinderCD 	= mod:NewCDTimer(40, 62869, nil, nil, nil, 1)

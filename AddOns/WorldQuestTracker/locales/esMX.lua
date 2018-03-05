@@ -2,7 +2,6 @@ local L = LibStub("AceLocale-3.0"):NewLocale("WorldQuestTrackerAddon", "esMX")
 if not L then return end 
 
 L["S_APOWER_AVAILABLE"] = "Disponible"
-L["S_APOWER_DOWNVALUE"] = "Misiones con %s significa que tienen más tiempo que la investigación actual."
 L["S_APOWER_NEXTLEVEL"] = "Siguiente nivel"
 L["S_ENABLED"] = "Habilitado"
 L["S_ERROR_NOTIMELEFT"] = "A esta misión no le queda tiempo."

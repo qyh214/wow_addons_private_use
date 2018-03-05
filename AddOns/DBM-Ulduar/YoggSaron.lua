@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 262 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 264 $"):sub(12, -3))
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -53,7 +53,7 @@ local timerEmpowerDuration			= mod:NewBuffActiveTimer(10, 64465, nil, nil, nil, 
 local timerMadness 					= mod:NewCastTimer(60, 64059, nil, nil, nil, 5)
 local timerCastDeafeningRoar		= mod:NewCastTimer(2.3, 64189, nil, nil, nil, 2)
 local timerNextDeafeningRoar		= mod:NewNextTimer(30, 64189, nil, nil, nil, 2)
-local timerAchieve					= mod:NewAchievementTimer(420, 3012, "TimerSpeedKill")
+local timerAchieve					= mod:NewAchievementTimer(420, 3012)
 
 mod:AddBoolOption("SetIconOnFearTarget", true)
 mod:AddBoolOption("SetIconOnFervorTarget", false)
@@ -86,7 +86,7 @@ function mod:FervorTarget(targetname, uId)
 	end
 end
 
-local function warnBrainLink(self)
+local function warnBrainLinkWarning(self)
 	warnBrainLink:Show(table.concat(brainLinkTargets, "<, >"))
 	timerBrainLinkCD:Start()--VERIFY ME
 	table.wipe(brainLinkTargets)
@@ -98,8 +98,8 @@ function mod:SPELL_CAST_START(args)
 		timerMadness:Start()
 		warnMadness:Show()
 		brainportal:Schedule(60)
-		warnBrainPortalSoon:Schedule(78)
-		specWarnBrainPortalSoon:Schedule(78)
+		warnBrainPortalSoon:Schedule(77)
+		specWarnBrainPortalSoon:Schedule(77)
 		specWarnMadnessOutNow:Schedule(55)
 	elseif args.spellId == 64189 then		--Deafening Roar
 		timerNextDeafeningRoar:Start()
@@ -127,7 +127,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 63802 then		-- Brain Link
-		self:Unschedule(warnBrainLink)
+		self:Unschedule(warnBrainLinkWarning)
 		brainLinkTargets[#brainLinkTargets + 1] = args.destName
 		if self.Options.SetIconOnBrainLinkTarget then
 			self:SetIcon(args.destName, self.vb.brainLinkIcon)
@@ -138,9 +138,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnBrainLink:Play("linegather")
 		end
 		if #brainLinkTargets == 2 then
-			warnBrainLink(self)
+			warnBrainLinkWarning(self)
 		else
-			self:Schedule(0.5, warnBrainLink, self)
+			self:Schedule(0.5, warnBrainLinkWarning, self)
 		end
 	elseif args:IsSpellID(63830, 63881) then   -- Malady of the Mind (Death Coil) 
 		timerMaladyCD:Start()

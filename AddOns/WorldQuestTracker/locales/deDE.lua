@@ -2,7 +2,6 @@ local L = LibStub("AceLocale-3.0"):NewLocale("WorldQuestTrackerAddon", "deDE")
 if not L then return end 
 
 L["S_APOWER_AVAILABLE"] = "Verfügbar"
-L["S_APOWER_DOWNVALUE"] = "%s bei einer Quest bedeutet, dass diese nach Abschluss der Forschung abläuft."
 L["S_APOWER_NEXTLEVEL"] = "Nächste Stufe"
 L["S_ENABLED"] = "Aktiviert"
 L["S_ERROR_NOTIMELEFT"] = "Diese Quest ist bereits abgelaufen."

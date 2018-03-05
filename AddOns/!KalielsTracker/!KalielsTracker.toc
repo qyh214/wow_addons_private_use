@@ -1,7 +1,7 @@
 ## Interface: 70300
 ## Title: Kaliel's Tracker
 ## Notes: Improved Blizzard Objective Tracker
-## Version: 2.1.7
+## Version: 2.1.8
 ## Author: Kaliel (Marouan Sabbagh)
 
 ## SavedVariables: KalielsTrackerDB
@@ -11,6 +11,7 @@
 Libs.xml
 
 KalielsTracker.lua
+KalielsTracker.xml
 Options.lua
 
 Modules.xml

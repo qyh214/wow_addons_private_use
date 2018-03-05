@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Cannon", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17247 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterEvents(
@@ -10,7 +10,7 @@ mod:RegisterEvents(
 )
 mod.noStatistics = true
 
-local timerMagicWings				= mod:NewBuffFadesTimer(8.5, 102116)
+local timerMagicWings				= mod:NewBuffFadesTimer(8.5, 102116, nil, nil, nil, 5)
 
 local MagicWingsCountdown			= mod:NewCountdownFades(7.5, 102116)
 

@@ -75,7 +75,6 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	YellWebWrap	= "¡Socorro! ¡Estoy atrapado!",
 	ArachnophobiaTimer	= "Logro: Aracnofobia"
 })
 
