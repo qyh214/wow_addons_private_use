@@ -20,6 +20,9 @@ ActivityProto:Property('MaxLevel', 'number,nil')
 ActivityProto:Property('PvPRating', 'number,nil')
 ActivityProto:Property('AddonSource', 'number,nil')
 ActivityProto:Property('LeaderFullName', function(value)
+    if not value or type(value) ~= 'string' then
+        return
+    end
     local name, realm = value:match('^(.+)%-(.+)$')
     if not name or not realm then
         return

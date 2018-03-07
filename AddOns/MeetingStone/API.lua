@@ -84,11 +84,11 @@ function DecodeCommetData(comment)
 
     local proto = ActivityProto:New()
     local ok, valid = proto:Deserialize(data)
-    if not ok then
-        return true, comment
-    end
     if not valid then
         return false
+    end
+    if not ok then
+        return true, comment
     end
     return true, summary, proto
 end

@@ -113,6 +113,9 @@ function BrowsePanel:OnInitialize()
                 formatHandler = function(grid, activity)
                     grid:SetActivity(activity)
                 end,
+                sortHandler = function(activity)
+                    return activity:GetMaxMembers() - activity:GetNumMembers()
+                end
             },
             {
                 key = 'Level',
@@ -131,6 +134,9 @@ function BrowsePanel:OnInitialize()
                         local color = activity:IsUnusable() and GRAY_FONT_COLOR or activity:IsLevelValid() and GREEN_FONT_COLOR or RED_FONT_COLOR
                         return text, color.r, color.g, color.b
                     end
+                end,
+                sortHandler = function(activity)
+                    return 0xFFFF - activity:GetMinLevel()
                 end
             },
             {
@@ -155,6 +161,9 @@ function BrowsePanel:OnInitialize()
                             return itemLevel, color.r, color.g, color.b
                         end
                     end
+                end,
+                sortHandler = function(activity)
+                    return 0xFFFF - activity:GetItemLevel()
                 end
             },
             {
@@ -301,7 +310,8 @@ function BrowsePanel:OnInitialize()
             self.SearchInput:GetText():lower(),
             self.bossFilter,
             Profile:GetSetting('spamWord'),
-            Profile:GetSetting('spamLengthEnabled') and Profile:GetSetting('spamLength') or nil
+            Profile:GetSetting('spamLengthEnabled') and Profile:GetSetting('spamLength') or nil,
+            Profile:GetSetting('spamChar')
         )
     end
 

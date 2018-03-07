@@ -22,6 +22,7 @@ Activity:InitAttr{
     'ApplicationDuration',
     'ApplicationExpiration',
     'DisplayType',
+    'MaxMembers',
 }
 
 Activity._Objects = setmetatable({}, {__mode = 'v'})
@@ -45,7 +46,7 @@ function Activity:Update()
         return false
     end
 
-    local name, shortName, category, group, iLevel, filters, minLevel, maxPlayers, displayType = C_LFGList.GetActivityInfo(activityId)
+    local name, shortName, category, group, iLevel, filters, minLevel, maxMembers, displayType = C_LFGList.GetActivityInfo(activityId)
     local _, appStatus, pendingStatus, appDuration = C_LFGList.GetApplicationInfo(id)
 
     if leader then
@@ -61,6 +62,7 @@ function Activity:Update()
     self:SetIsDelisted(isDelisted)
     self:SetLeader(leader)
     self:SetNumMembers(numMembers)
+    self:SetMaxMembers(maxMembers > 0 and maxMembers or 40)
     self:SetIsAnyFriend(numBNetFriends > 0 or numCharFriends > 0 or numGuildMates > 0)
 
     self:SetDisplayType(displayType)
@@ -132,9 +134,10 @@ function Activity:UpdateSortValue()
                             self:IsSelf() and 3 or
                             self:IsInActivity() and 4 or 7
 
-    self._baseSortValue = format('%d%s%02x%02x%08x',
+    self._baseSortValue = format('%d%s%04x%02x%02x%08x',
         self._statusSortValue,
         self:GetTypeSortValue(),
+        0xFFFF - self:GetItemLevel(),
         self:GetLoot(),
         self:GetMode(),
         self:GetID()
@@ -149,7 +152,7 @@ function Activity:IsSelf()
     return self:GetLeader() and UnitIsUnit(self:GetLeader(), 'player')
 end
 
-function Activity:Match(search, bossFilter, enableSpamWord, spamLength)
+function Activity:Match(search, bossFilter, enableSpamWord, spamLength, enableSpamChar)
     local summary, comment = self:GetSummary(), self:GetComment()
     if summary then
         summary = summary:lower()
@@ -159,6 +162,10 @@ function Activity:Match(search, bossFilter, enableSpamWord, spamLength)
     end
 
     if enableSpamWord and (CheckSpamWord(summary) or CheckSpamWord(comment)) then
+        return false
+    end
+
+    if enableSpamChar then
         return false
     end
 
