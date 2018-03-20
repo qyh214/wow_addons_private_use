@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 1083 $")
+end, "$Revision: 1084 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -1538,7 +1538,11 @@ function XPerl_Player_Events:UPDATE_SHAPESHIFT_FORM()
 		XPerl_Player_DruidBarUpdate(self)
 	end
 
-	XPerl_Unit_UpdatePortrait(self, true)
+	--[[if playerClass ~= "DRUID" then
+		return
+	end
+
+	XPerl_Unit_UpdatePortrait(self, true)]]
 end
 
 -- PLAYER_ENTER_COMBAT, PLAYER_LEAVE_COMBAT
@@ -1570,8 +1574,11 @@ end
 function XPerl_Player_Events:PLAYER_SPECIALIZATION_CHANGED()
 	if not InCombatLockdown() then
 		self.state:SetAttribute("playerSpec", GetSpecialization())
-
 		XPerl_Player_Set_Bits(self)
+
+		if ((playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST")) then
+			C_Timer.After(0.5, function() XPerl_Player_Set_Bits(self) end)
+		end
 	end
 
 	if XPerl_Player_Buffs_Position then
@@ -1839,6 +1846,7 @@ function XPerl_Player_Set_Bits(self)
 	self:SetHeight(max(h1, h2))
 
 	if (pconf.extendPortrait --[[or (self.runes and pconf.showRunes and pconf.dockRunes)]]) then
+		local druidBarExtra
 		if (UnitPowerType(self.partyid) > 0 and not pconf.noDruidBar) and ((playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST")) then
 			druidBarExtra = 1
 		else

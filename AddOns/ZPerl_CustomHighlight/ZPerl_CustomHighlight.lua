@@ -9,14 +9,14 @@ end
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new.custom
-end, "$Revision: 1053 $")
+end, "$Revision: 1084 $")
 
 local ch = CreateFrame("Frame", "ZPerl_Custom")
 ch.active = {}
 ch:RegisterEvent("PLAYER_ENTERING_WORLD")
 ch:RegisterEvent("UNIT_AURA")
 ch:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-ch:RegisterEvent("MINIMAP_ZONE_CHANGED")
+--ch:RegisterEvent("MINIMAP_ZONE_CHANGED")
 
 ch.RaidFrameArray = XPerl_Raid_GetFrameArray()
 
@@ -43,6 +43,11 @@ local XPERL_LOC_ZONE_BASTION_OF_TWILIGHT = EJ_GetInstanceInfo(72)
 local XPERL_LOC_ZONE_THRONE_OF_FOUR_WINDS = EJ_GetInstanceInfo(74)
 local XPERL_LOC_ZONE_FIRELANDS = EJ_GetInstanceInfo(78)
 local XPERL_LOC_ZONE_DRAGONSOUL = EJ_GetInstanceInfo(187)
+local XPERL_LOC_ZONE_EMERALD_NIGHTMARE = EJ_GetInstanceInfo(768)
+local XPERL_LOC_ZONE_TRIAL_OF_VALOR = EJ_GetInstanceInfo(861)
+local XPERL_LOC_ZONE_NIGHTHOLD = EJ_GetInstanceInfo(786)
+local XPERL_LOC_ZONE_TOMB_OF_SARGERAS = EJ_GetInstanceInfo(875)
+local XPERL_LOC_ZONE_ANTORUS = EJ_GetInstanceInfo(946)
 --[[
 -- Mists of Pandaria Raids
 local XPERL_LOC_ZONE_MOGUSHAN_VAULTS = EJ_GetInstanceInfo(317)
@@ -52,9 +57,41 @@ local XPERL_LOC_ZONE_HEART_OF_FEAR = EJ_GetInstanceInfo(1009)
 -- DefaultZoneData
 function ch:DefaultZoneData()
 	return {
+		[XPERL_LOC_ZONE_ANTORUS] =
+			{
+				[246220] = true,							-- Fel Bombardment (Garothi Worldbreaker)
+				[248819] = true,							-- Siphoned (Felhounds of Sargeras)
+				[248815] = true,							-- Enflamed (Felhounds of Sargeras)
+				[244768] = true,							-- Desolate Gaze (Felhounds of Sargeras)
+				[244071] = true,							-- Weight of Darkness (Felhounds of Sargeras)
+				[244086] = true,							-- Molten Touch (Felhounds of Sargeras)
+				[248861] = true,							-- Spear of Doom (Eonar)
+				[248326] = true,							-- Rain of Fel (Eonar)
+				[247552] = true,							-- Sleep Canister (Imonar)
+				[248068] = true,							-- Empowered Pulse Grenade (Imonar)
+				[253600] = true, 							-- Soulburn
+				[249297] = true, 							-- Flames of Reorigination
+				[252760] = true,							-- Demolish (Trash and Kin'garoth)
+				[246687] = true,							-- Decimation (Garothi, Trash and Kin'garoth)
+				[243961] = true,							-- Misery (Varimathras)
+				[245586] = true,							-- Chilled Blood (Coven)
+				[245995] = true,							-- Scorching Blaze (Aggramar)
+				[251570] = true,							-- Soulbomb (Argus)
+				[250669] = true,							-- Soulburst (Argus)
+				[255199] = true,							-- Avatar of Aggramar (Argus)
+			},
+		[XPERL_LOC_ZONE_TOMB_OF_SARGERAS] =
+			{
+				[236449] = true,							-- Soulbind (The Desolate Host)
+				[235213] = true,							-- Light Infusion (Maiden of Vigilance)
+				[235240] = true,							-- Fel Infusion (Maiden of Vigilance)
+				[240209] = true,							-- Unstable Soul (Maiden of Vigilance)
+				[235222] = true,							-- Blood Siphon (Trash in front of Kil'Jaeden)
+				[238429] = true,							-- Bursting Dreadflame (Kil'Jaeden)
+			},
 		[XPERL_LOC_ZONE_SERPENTSHRINE_CAVERN] =
 			{
-				[38132] = true								-- Paralyze - Picked up Tainted Core
+				[38132] = true,								-- Paralyze - Picked up Tainted Core
 			},
 		[XPERL_LOC_ZONE_BLACK_TEMPLE] =
 			{
@@ -361,7 +398,7 @@ function ch:PLAYER_ENTERING_WORLD()
 end
 
 ch.ZONE_CHANGED_NEW_AREA = ch.PLAYER_ENTERING_WORLD
-ch.MINIMAP_ZONE_CHANGED = ch.PLAYER_ENTERING_WORLD
+--ch.MINIMAP_ZONE_CHANGED = ch.PLAYER_ENTERING_WORLD
 
 -- UpdateRoster
 function ch:UpdateUnits()

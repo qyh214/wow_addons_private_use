@@ -1,89 +1,194 @@
-tag 6cb4aae6246f2986323a2cbd368364ea6516e0f1 7.3.23
+tag a9b45709536776404b30ec2f6e21a829afb57d96 7.3.25
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Wed Feb 21 22:14:54 2018 +0100
+Date:	Wed Mar 14 01:47:24 2018 +0100
 
-Tagging as 7.3.23
+Tagging as 7.3.25
 
-commit 9b0ba08659b3e8b1beb98d2e25da071a4bdd51a2
+commit 912e370dd5ccee634e9cc791969e385d8e28f53c
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Feb 21 22:14:54 2018 +0100
+Date:   Wed Mar 14 01:47:24 2018 +0100
 
-    increment version number to 7.3.23
+    increment version number to 7.3.25
 
-commit c810219a66ba40862142a5f99820a392470fea02
+commit d26124266a34c7479f70ec5813c1189a627474b9
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Feb 21 08:02:50 2018 +0100
+Date:   Wed Mar 14 01:43:22 2018 +0100
 
-    Omega via svn r17327:
-    even shorter yells. really trim up the chat space to give most clear but short messages possible
+    Omega via svn r17403:
+    self
 
-commit 06d15a9359838f669dac68fa2cb4096b1f745b3b
+commit 8ea67ed45546d8e69c88305f5c2ed7aa59092d6b
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Feb 21 06:54:41 2018 +0100
+Date:   Wed Mar 14 01:42:45 2018 +0100
 
-    Omega via svn r17326:
-    Possibly fix gaze timer now showing in P3? can?\226?\128?\153t confirm it?\226?\128?\153s even broken but a user says it is so switching to emote until I can verify P3 still has a UNIT_ event for it
+    Omega via svn r17402:
+    Fix case where mythic filter wouldn?\226?\128?\153t work
 
-commit 745e984f8687f3d7634a9dee4ee92f5fee920832
+commit 6670e50fc7698a748a036e3e2d499d117b2c34cd
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Feb 21 06:14:43 2018 +0100
+Date:   Tue Mar 13 22:17:10 2018 +0100
 
-    Omega via svn r17325:
-    Countdown tweaks
+    Omega via svn r17401:
+    Tweak
 
-commit 95048fd50408063957a559f18e38f408bd9e7b17
+commit aa2a50562b7f7f201782baa3ff4c9447a46f1f23
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Feb 21 04:32:28 2018 +0100
+Date:   Tue Mar 13 20:16:00 2018 +0100
 
-    Omega via svn r17324:
-    Use red text for combo yells
+    Omega via svn r17400:
+    CN update
 
-commit 96463c329faee86293e874dcda0a81e95907a4d6
+commit 7064dae7c956f363de7f50890f6d7f2887dcd723
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Feb 21 04:02:21 2018 +0100
+Date:   Tue Mar 13 05:49:33 2018 +0100
 
-    Omega via svn r17323:
-    Improve tank swap code for argus so it makes sure you taunt at 2-3 stacks if debuff will fade before next scythe, instead of waiting for debuff to fade first. This should fix serious issue where it wasn?\226?\128?\153t warning at 2 stacks on mythic
+    Omega via svn r17399:
+    Force disable victory sounds by default
 
-commit f911c482e8f6f786725a4215dcf20cad8f1dd939
+commit c644b42654244c08f9bfaed1b0356d22ba93660d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Feb 20 20:17:22 2018 +0100
+Date:   Mon Mar 12 20:50:38 2018 +0100
 
-    Omega via svn r17322:
-    version check
+    Omega via svn r17398:
+    Added support for an argus repopper macro (no automation, RL has to use run macro to activate)
 
-commit 64e403e51dfffc41882db4ef17042c48d7cda018
+commit 2c0ed878a9c6e70f3da4d18fdfc1571d45874119
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Feb 20 19:49:24 2018 +0100
+Date:   Mon Mar 12 20:29:25 2018 +0100
 
-    Omega via svn r17321:
-    Fixed regression that caused sentence of sargeras timers to break in last update
+    Omega via svn r17397:
+    Added some start/stop music callbacks, even if music options are disabled, so external mods can use same events DBM does i they want to play music using DBMs event handling.
 
-commit ddaf34658ff50e13359c294547a2f8f038f56842
+commit 54ba5364c0a259c3318593caa393da4fd64fa171
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Feb 19 22:41:19 2018 +0100
+Date:   Mon Mar 12 03:04:23 2018 +0100
 
-    Omega via svn r17320:
-    Change this warning to use dungeon journal for non english locals
+    ultrashining via svn r17396:
+    zhTW update
 
-commit 16c4a3d1281351f119b035d0032d6e90d6d9124e
+commit c7d7b44095ef4029d25c8331475c0f88ac4aaaea
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Feb 16 06:20:37 2018 +0100
+Date:   Mon Mar 12 02:36:40 2018 +0100
 
-    Omega via svn r17319:
-    small fix with warning text firing before variable reset.
+    Omega via svn r17395:
+    Tweak
 
-commit b9d7f09a5d74acf74fc2993fe392de0420689b76
+commit c1d734e9d121ba26dd5e1fc6e3865288ed489e6d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Feb 15 06:21:20 2018 +0100
+Date:   Sun Mar 11 04:49:48 2018 +0100
 
-    Omega via svn r17318:
-    timer fixes and new countdown for mythic only
+    Omega via svn r17394:
+    Some values to possibly use later to control delays before song transition
 
-commit 4406eb46353eaf7086e986d168060c323e26a582
+commit d198151fea500b2108941d1d6935ed1323fc8612
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Feb 14 23:58:10 2018 +0100
+Date:   Sun Mar 11 04:05:39 2018 +0100
 
-    tandanu via svn r17317:
+    Omega via svn r17393:
+    The alphabet is hard
+
+commit 3583302cf319e2b3159ffdb6086ec3b3910d94d5
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sun Mar 11 03:52:16 2018 +0100
+
+    Omega via svn r17392:
+    Some more feels
+
+commit 07ca4e024fe2a2d9ab9c6ed85ccdc3e5ecccd45c
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Mar 10 21:30:44 2018 +0100
+
+    Omega via svn r17391:
+    Startup some built in media options
+
+commit 243c900a344f29f576227427d26d01f42e090e1e
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Mar 10 21:02:07 2018 +0100
+
+    Omega via svn r17390:
+    KR update
+
+commit 596ffcdceb24fc0a49ca573c7d67b1c4225bc147
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Mar 10 06:42:15 2018 +0100
+
+    Omega via svn r17389:
+    Swap insert order so it looks better in menu with the packs
+
+commit fc95a0e2252f44ede65a4f5bd8f30fa699093cee
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Mar 10 06:09:00 2018 +0100
+
+    Omega via svn r17388:
+    Tweaks
+
+commit d1304db17903dca9b0ff45115bbb915ac781edd2
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Mar 10 05:44:56 2018 +0100
+
+    Omega via svn r17387:
+    And just because, add this easteregg
+
+commit cac73cbd651b073d924e8f143871ab8e171ce0ab
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Mar 10 04:46:04 2018 +0100
+
+    Omega via svn r17386:
+    Some sound event system refactoring to pretty up UI and make room for additional options/features
+
+commit 4056594b108282e90611f0668e7940641dead4c6
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Mar 9 06:06:36 2018 +0100
+
+    Omega via svn r17385:
+    do that with it?\226?\128?\153s own option
+
+commit e55d8495c19baeacb41c20d4ff14150a54ff32d7
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Mar 9 04:53:22 2018 +0100
+
+    Omega via svn r17384:
+    fix countdown for mythic
+
+commit 6468edd324db3cd342c9a05ae2b56e190c49b681
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Mar 9 03:48:36 2018 +0100
+
+    Omega via svn r17383:
+    Fix dumb
+
+commit 75302d6b4bec5667259220fd9ab07718d5887416
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Mar 8 01:29:54 2018 +0100
+
+    Omega via svn r17382:
+    Fix dumb
+
+commit aa73cdae162c2734afc846f111e0c5f2eb47aa82
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Mar 7 06:41:51 2018 +0100
+
+    Omega via svn r17381:
+    Add some more encounter IDs
+
+commit 7c32650a6ae09dc457d5f0be64a7f75c1efabb96
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Mar 7 02:50:49 2018 +0100
+
+    Omega via svn r17380:
+    Fix filter
+
+commit a6d0404c5186039954178228aacab50215f20e65
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Mar 7 01:28:43 2018 +0100
+
+    Omega via svn r17379:
+    Add Scythe warning by suggestion
+
+commit 4393cac741d5a2c1e08ab3fc88779e64602f6072
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Mar 6 15:38:01 2018 +0100
+
+    tandanu via svn r17378:
     increment alpha version
 

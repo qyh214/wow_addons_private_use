@@ -1305,13 +1305,13 @@
 							</OnClick>
 							<OnMouseDown>
 								if (arg1 == "LeftButton" and self:IsEnabled() == 1) then
-									getglobal(self:GetName().."Portrait"):SetPoint("TOPLEFT", 7, -7)
-									getglobal(self:GetName().."Portrait"):SetPoint("BOTTOMRIGHT", -5, 5)
+									_G[self:GetName().."Portrait"]:SetPoint("TOPLEFT", 7, -7)
+									_G[self:GetName().."Portrait"]:SetPoint("BOTTOMRIGHT", -5, 5)
 								end
 							</OnMouseDown>
 							<OnMouseUp>
-								getglobal(self:GetName().."Portrait"):SetPoint("TOPLEFT", 6, -6)
-								getglobal(self:GetName().."Portrait"):SetPoint("BOTTOMRIGHT", -6, 6)
+								_G[self:GetName().."Portrait"]:SetPoint("TOPLEFT", 6, -6)
+								_G[self:GetName().."Portrait"]:SetPoint("BOTTOMRIGHT", -6, 6)
 							</OnMouseUp>
 						</Scripts>
 					</Button>

@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1059 $")
+end, "$Revision: 1084 $")
 
 -- Upvalues
 local _G = _G
@@ -947,7 +947,7 @@ function XPerl_Target_UpdateHealth(self)
 			--hb.percent:SetText(XPERL_LOC_DEAD)
 			hbt:SetText(XPERL_LOC_FEIGNDEATH)
 		elseif (UnitIsDead(partyid)) then
-			self.statsFrame.manaBar.percent:Hide()
+			--self.statsFrame.manaBar.percent:Hide()
 			hb.percent:SetText(XPERL_LOC_DEAD)
 		elseif (UnitExists(partyid) and not UnitIsConnected(partyid)) then
 			self.statsFrame.manaBar.percent:Hide()

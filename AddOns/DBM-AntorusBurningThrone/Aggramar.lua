@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1984, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17319 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17395 $"):sub(12, -3))
 mod:SetCreatureID(121975)
 mod:SetEncounterID(2063)
 mod:SetZone()
@@ -78,7 +78,7 @@ local countdownWakeofFlame				= mod:NewCountdown("AltTwo24", 244693, "-Tank")
 mod:AddSetIconOption("SetIconOnBlaze2", 254452, false)--Both off by default, both conflit with one another
 mod:AddSetIconOption("SetIconOnAdds", 244903, false, true)--Both off by default, both conflit with one another
 mod:AddInfoFrameOption(244688, true)
-mod:AddRangeFrameOption("6")
+mod:AddRangeFrameOption("6", "Ranged")
 mod:AddNamePlateOption("NPAuraOnPresence", 244903)
 mod:AddBoolOption("ignoreThreeTank", true)
 

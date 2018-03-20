@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1837, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17343 $"):sub(12, -3))
 mod:SetCreatureID(114312)
 mod:SetEncounterID(1961)
 mod:SetZone()
@@ -102,7 +102,7 @@ function mod:OnCombatStart(delay)
 	timerVanishCD:Start(8.2-delay)
 	timerCoatCheckCD:Start(33-delay)
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(GetSpellInfo(227909))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(227909))
 		DBM.InfoFrame:Show(5, "function", updateInfoFrame, false, true)
 	end
 end

@@ -61,8 +61,8 @@
 					<OnLoad>
 						self:RegisterForClicks("AnyUp")
 						self:RegisterForDrag("LeftButton")
-						XPerl_RegisterUnitText(getglobal(self:GetName().."text"))
-						XPerl_RegisterUnitText(getglobal(self:GetName().."group"))
+						XPerl_RegisterUnitText(_G[self:GetName().."text"])
+						XPerl_RegisterUnitText(_G[self:GetName().."group"])
 						self:SetScript("OnEnter", function(self)
 							ZPerl_Unit_OnEnter(self:GetParent())
 						end)
@@ -330,7 +330,7 @@
 				</Backdrop>
 				<Scripts>
 					<OnLoad>
-						XPerl_RegisterUnitText(getglobal(self:GetName().."text"))
+						XPerl_RegisterUnitText(_G[self:GetName().."text"])
 					</OnLoad>
 				</Scripts>
 			</Frame>
@@ -414,7 +414,7 @@
 				</Layers>
 				<Scripts>
 					<OnLoad>
-						XPerl_RegisterUnitText(getglobal(self:GetName().."text"))
+						XPerl_RegisterUnitText(_G[self:GetName().."text"])
 					</OnLoad>
 				</Scripts>
 			</Frame>

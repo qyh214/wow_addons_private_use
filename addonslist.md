@@ -68,6 +68,8 @@ PersonalLootHelper 个人拾取帮助
 
 Quartz施法条美化（castbar替代品）
 
+RCLootCouncil
+
 RelicInspector
 
 SexyMap 小地图美化

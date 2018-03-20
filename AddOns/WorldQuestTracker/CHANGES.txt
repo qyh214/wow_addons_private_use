@@ -1,7 +1,7 @@
-changeset:   275:ed8fa308d9c7
-tag:         v7.3.5.275-release
+changeset:   277:3d3f13fdb898
+tag:         v7.3.5.277-release
 user:        Tercio
-date:        Mon Feb 26 11:16:54 2018 -0300
-summary:     - Fixed 'template not found' error caused by a newer version of the framework overwriting template tables from other addons.
+date:        Sat Mar 10 10:10:04 2018 -0300
+summary:     - Ticket #628: fullscreen quest summary is overlapping the class hall complete quest button.
 
 

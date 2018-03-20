@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("XT002", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 262 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 278 $"):sub(12, -3))
 mod:SetCreatureID(33293)
 mod:SetEncounterID(1142)
 mod:SetModelID(28611)
@@ -12,7 +12,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 62776",
 	"SPELL_AURA_APPLIED 62776 63018 65121 63024 64234 63849",
-	"SPELL_AURA_REMOVED 63018 65121 63024 64234",
+	"SPELL_AURA_REMOVED 63018 65121 63024 64234 63849",
 	"SPELL_DAMAGE 64208 64206",
 	"SPELL_MISSED 64208 64206"
 )
@@ -34,7 +34,7 @@ local timerTympanicTantrumCD		= mod:NewCDTimer(62, 62776, nil, nil, nil, 2, nil,
 local timerHeart					= mod:NewCastTimer(30, 63849, nil, nil, nil, 6, nil, DBM_CORE_DAMAGE_ICON)
 local timerLightBomb				= mod:NewTargetTimer(9, 65121, nil, nil, nil, 3)
 local timerGravityBomb				= mod:NewTargetTimer(9, 64234, nil, nil, nil, 3)
-local timerAchieve					= mod:NewAchievementTimer(205, 2937)
+local timerAchieve					= mod:NewAchievementTimer(205, 12329)--2937
 
 mod:AddBoolOption("SetIconOnLightBombTarget", true)
 mod:AddBoolOption("SetIconOnGravityBombTarget", true)
@@ -42,7 +42,7 @@ mod:AddBoolOption("SetIconOnGravityBombTarget", true)
 function mod:OnCombatStart(delay)
 	enrageTimer:Start(-delay)
 	timerAchieve:Start()
-	timerTympanicTantrumCD:Start(50-delay)
+	timerTympanicTantrumCD:Start(30-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -90,6 +90,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.SetIconOnGravityBombTarget then
 			self:SetIcon(args.destName, 0)
 		end
+	elseif args.spellId == 63849 then
+		timerHeart:Stop()
 	end
 end
 

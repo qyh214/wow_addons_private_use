@@ -3298,7 +3298,7 @@
 								self:SetScale(0.8)
 
 								local t = XPerl_Options_GetSibling("FadingBars",self)
-								local t2 = getglobal(t:GetName().."Text")
+								local t2 = _G[t:GetName().."Text"]
 								self:SetPoint("LEFT", t, "RIGHT", (t2:GetStringWidth() + 10) / 0.8, 0)
 
 								XPerl_SliderSetup(self)

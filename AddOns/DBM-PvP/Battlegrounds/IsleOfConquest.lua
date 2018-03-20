@@ -1,7 +1,7 @@
 local mod		= DBM:NewMod("z628", "DBM-PvP", 2)
 local L			= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 73 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -37,14 +37,8 @@ end
 local updateInfoFrame
 do
 	local lines = {}
-	local function addLine(key, value)
-		-- sort by insertion order
-		lines[key] = value
-		sortedLines[#sortedLines + 1] = key
-	end
 	updateInfoFrame = function()
 		table.wipe(lines)
-		table.wipe(sortedLines)
 		if #gateHP == 0 then
 			DBM.InfoFrame:Hide()
 		end

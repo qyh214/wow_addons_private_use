@@ -88,6 +88,7 @@ L.Warn_FontShadow			= "陰影"
 L.Warn_FontSize				= "字型大小:%d"
 L.Warn_Duration				= "警告持續時間:%0.1f秒"
 L.None						= "無"
+L.Random					= "隨機"
 L.Outline					= "輪廓"
 L.ThickOutline				= "厚輪廓"
 L.MonochromeOutline			= "黑白輪廓"
@@ -217,6 +218,20 @@ L.BrowseOtherVPs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+voi
 L.Area_BrowseOtherCT		= "在Curse上瀏覽倒數包"
 L.BrowseOtherCTs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+count+pack|r"
 
+-- Tab: Event Sounds
+L.Panel_EventSounds			= "事件音效"
+L.Area_SoundSelection		= "音效選項(使用滑鼠滾輪滾動)"
+L.EventVictorySound			= "設置戰鬥勝利時的音效"
+L.EventWipeSound			= "設置戰鬥滅團時的音效"
+L.EventEngageSound			= "設置戰鬥開戰時的音效"
+L.EventDungeonMusic			= "在地城/團隊內設置撥放的音樂"
+L.EventEngageMusic			= "設置戰鬥中的音樂"
+L.Area_EventSoundsExtras	= "事件音效選項"
+L.EventMusicCombined		= "允許在地城和戰鬥選擇的所有音效選項(此選項需要UI重載去反映改變)"
+L.Area_EventSoundsFilters	= "事件音效過濾條件"
+L.EventFilterDungMythicMusic= "不要在傳奇/傳奇+的難度中播放地城音樂"
+L.EventFilterMythicMusic	= "不要在傳奇/傳奇+的難度中播放戰鬥音樂"
+
 
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "DBM全局禁用及過濾"
@@ -310,14 +325,6 @@ L.Area_Advanced				= "進階選項"
 L.FakeBW					= "假裝使用BigWigs版本檢查而不是用DBM版本(適合用在工會強制使用BigWigs時)"
 L.AITimer					= "DBM為沒遇見過的戰鬥使用內建的AI計時器自動產生計時器(在初期的Beta或PTR的首領測試非常有幫助)。 註: 此功能不會在多目標使用相同技能生效。"
 L.AutoCorrectTimer			= "自動校正時間過長的計時器(適合在公會正在進行全新副本而首領模組還沒被更新至可靠的程度). 註: 這選項可能會使某些計時器錯亂，如首領重制計時器或階段轉換而DBM編碼還不能夠去處理。"
-
-L.PizzaTimer_Headline		= '建立一個計時條'
-L.PizzaTimer_Title			= '名稱（如“Pizza計時器”）'
-L.PizzaTimer_Hours 			= "時"
-L.PizzaTimer_Mins 			= "分"
-L.PizzaTimer_Secs 			= "秒"
-L.PizzaTimer_ButtonStart 	= "開始計時"
-L.PizzaTimer_BroadCast		= "向團隊廣播"
 
 L.Panel_Profile				= "配置檔"
 L.Area_CreateProfile        = "建立核心選項配置檔"

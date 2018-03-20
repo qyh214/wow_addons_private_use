@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Freya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 268 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 278 $"):sub(12, -3))
 
 mod:SetCreatureID(32906)
 mod:SetEncounterID(1133)
@@ -12,7 +12,7 @@ mod:SetUsedIcons(4, 5, 6, 7, 8)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 62437 62859",
-	"SPELL_CAST_SUCCESS 62678 62619 63571 62589",
+	"SPELL_CAST_SUCCESS 62678 62619 63571 62589 63601",
 	"SPELL_AURA_APPLIED 62861 62438 62451 62865",
 	"SPELL_AURA_REMOVED 62519 62861 62438 63571 62589",
 	"UNIT_DIED",
@@ -30,20 +30,21 @@ mod:RegisterEventsInCombat(
 local warnPhase2			= mod:NewPhaseAnnounce(2, 3)
 local warnSimulKill			= mod:NewAnnounce("WarnSimulKill", 1)
 local warnFury				= mod:NewTargetAnnounce(63571, 2)
-local warnRoots				= mod:NewTargetAnnounce(62438, 2)
+local warnRoots				= mod:NewTargetNoFilterAnnounce(62438, 2)
 
 local specWarnLifebinder	= mod:NewSpecialWarningSwitch(62869, "Dps", nil, nil, 1, 2)
 local specWarnFury			= mod:NewSpecialWarningMoveAway(63571, nil, nil, nil, 1, 2)
 local yellFury				= mod:NewYell(63571)
+local yellRoots				= mod:NewYell(62438)
 local specWarnTremor		= mod:NewSpecialWarningCast(62859, "SpellCaster", nil, 2, 1, 2)	-- Hard mode
 local specWarnBeam			= mod:NewSpecialWarningMove(62865, nil, nil, nil, 1, 2)	-- Hard mode
 
 local enrage 				= mod:NewBerserkTimer(600)
-local timerAlliesOfNature	= mod:NewCDTimer(25, 62678, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)--I seen 25-35 Variation
+local timerAlliesOfNature	= mod:NewCDTimer(25, 62678, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)--No longer has CD, they spawn instant last set is dead, and not a second sooner, except first set
 local timerSimulKill		= mod:NewTimer(12, "TimerSimulKill", nil, nil, nil, 5, DBM_CORE_DAMAGE_ICON)
-local timerFury				= mod:NewTargetTimer(10, 63571, nil, false, 2, 3)
-local timerTremorCD 		= mod:NewCDTimer(28, 62859, nil, nil, nil, 2)
-local timerLifebinderCD 	= mod:NewCDTimer(40, 62869, nil, nil, nil, 1)
+local timerTremorCD 		= mod:NewCDTimer(22.9, 62859, nil, nil, nil, 2)--22.9-47.8
+local timerLifebinderCD 	= mod:NewCDTimer(38.2, 62869, nil, nil, nil, 1)
+local timerRootsCD 			= mod:NewCDTimer(29.6, 62859, nil, nil, nil, 3)
 
 mod:AddSetIconOption("SetIconOnFury", 63571, false)
 mod:AddSetIconOption("SetIconOnRoots", 62438, false)
@@ -52,12 +53,15 @@ mod:AddRangeFrameOption(8, 63571)
 local adds = {}
 mod.vb.altIcon = true
 mod.vb.iconId = 6
+mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
 	self.vb.altIcon = true
 	self.vb.iconId = 6
+	self.vb.phase = 1
 	enrage:Start()
 	table.wipe(adds)
+	timerAlliesOfNature:Start(10-delay)
 end
 
 function mod:OnCombatEnd()
@@ -76,7 +80,7 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 62678 then -- Summon Allies of Nature
-		timerAlliesOfNature:Start()
+		--timerAlliesOfNature:Start()
 	elseif args.spellId == 62619 and self:GetUnitCreatureId(args.sourceName) == 33228 then -- Pheromones spell, cast by newly spawned Eonar's Gift second they spawn to allow melee to dps them while protector is up.
 		specWarnLifebinder:Show()
 		specWarnLifebinder:Play("targetchange")
@@ -96,13 +100,19 @@ function mod:SPELL_CAST_SUCCESS(args)
 		else
 			warnFury:Show(args.destName)
 		end
-		timerFury:Start(args.destName)
+	elseif args.spellId == 63601 then
+		--if self.vb.phase == 2 then
+			timerRootsCD:Start()
+		--end
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(62861, 62438) then
 		warnRoots:CombinedShow(0.5, args.destName)
+		if args:IsPlayer() then
+			yellRoots:Yell()
+		end
 		self.vb.iconId = self.vb.iconId - 1
 		if self.Options.SetIconOnRoots then
 			self:SetIcon(args.destName, self.vb.iconId, 15)
@@ -116,6 +126,7 @@ end
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 62519 then
 		warnPhase2:Show()
+		self.vb.phase = 2
 	elseif args:IsSpellID(62861, 62438) then
 		if self.Options.SetIconOnRoots then
 			self:RemoveIcon(args.destName)
@@ -137,7 +148,7 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 33202 or cid == 32916 or cid == 32919 then
-		if self:AntiSpam(20) then
+		if self:AntiSpam(20) and not self:IsTrivial(85) then
 			timerSimulKill:Start()
 			warnSimulKill:Show()
 		end

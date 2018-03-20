@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 17327 $"):sub(12, -3)),
-	DisplayVersion = "7.3.23", -- the string that is shown as version
-	ReleaseRevision = 17327 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 17403 $"):sub(12, -3)),
+	DisplayVersion = "7.3.25", -- the string that is shown as version
+	ReleaseRevision = 17403 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -101,6 +101,14 @@ DBM.DefaultOptions = {
 	ChosenVoicePack = "None",
 	VoiceOverSpecW2 = "DefaultOnly",
 	AlwaysPlayVoice = false,
+	EventSoundVictory2 = "None",
+	EventSoundWipe = "None",
+	EventSoundEngage = "",
+	EventSoundMusic = "None",
+	EventSoundDungeonBGM = "None",
+	EventSoundMusicCombined = false,
+	EventDungMusicMythicFilter = true,
+	EventMusicMythicFilter = true,
 	Enabled = true,
 	ShowWarningsInChat = true,
 	ShowSWarningsInChat = true,
@@ -235,12 +243,6 @@ DBM.DefaultOptions = {
 	BigBrotherAnnounceToRaid = false,
 	SettingsMessageShown = false,
 	ForumsMessageShown = false,
-	PGMessageShown2 = false,
-	MCMessageShown = false,
-	BCTWMessageShown = false,
-	WOTLKTWMessageShown = false,
-	CATATWMessageShown = false,
-	MISTSTWMessageShown = false,
 	AlwaysShowSpeedKillTimer2 = false,
 	ShowRespawn = true,
 	ShowQueuePop = true,
@@ -274,6 +276,45 @@ DBM.Counts = {
 	{	text	= "Bear (Male Child)",value = "Bear", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Bear\\", max = 10},
 	{	text	= "Anshlun (ptBR Male)",value = "Anshlun", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Anshlun\\", max = 10},
 	{	text	= "Neryssa (ptBR Female)",value = "Neryssa", path = "Interface\\AddOns\\DBM-Core\\Sounds\\Neryssa\\", max = 10},
+}
+DBM.Victory = {
+	{text = "None",value  = "None"},
+	{text = "Random",value  = "Random"},
+	{text = "Blakbyrd: FF Fanfare",value = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\bbvictory.ogg", length=4},
+	{text = "SMG: FF Fanfare",value = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\SmoothMcGroove_Fanfare.ogg", length=4},
+}
+DBM.Defeat = {
+	{text = "None",value  = "None"},
+	{text = "Random",value  = "Random"},
+	{text = "Kologarn: You Fail",value = "Sound\\Creature\\Kologarn\\UR_Kologarn_Slay02.ogg", length=4},
+	{text = "Alizabal: Incompetent Raiders",value = "Sound\\Creature\\ALIZABAL\\VO_BH_ALIZABAL_RESET_01.ogg", length=4},
+	{text = "Hodir: Tragic",value = "Sound\\Creature\\Hodir\\UR_Hodir_Slay01.ogg", length=4},
+	{text = "Thorim: Failures",value = "Sound\\Creature\\Thorim\\UR_Thorim_P1Wipe01.ogg", length=4},
+	{text = "Valithria: Failures",value = "Sound\\Creature\\ValithriaDreamwalker\\IC_Valithria_Berserk01.ogg", length=4},
+}
+DBM.Music = {--Contains all music media, period
+	{text = "None",value  = "None"},
+	{text = "Random",value  = "Random"},
+	{text = "Anduin Part 1 B",value = "sound\\music\\Legion\\MUS_70_AnduinPt1_B.mp3", length=140},
+	{text = "Anduin Part 2 B",value = "sound\\music\\Legion\\MUS_70_AnduinPt2_B.mp3", length=111},
+	{text = "Bronze Jam",value = "Sound\\Music\\ZoneMusic\\IcecrownRaid\\IR_BronzeJam.mp3", length=116},
+	{text = "Invincible",value = "Sound\\Music\\Draenor\\MUS_Invincible.mp3", length=197},
+	{text = "Nightsong",value = "Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3", length=160},
+	{text = "Ulduar: Titan Orchestra",value = "Sound\\Music\\ZoneMusic\\UlduarRaidInt\\UR_TitanOrchestraIntro.mp3", length=102},
+}
+DBM.DungeonMusic = {--Filtered list of media assigned to dungeon/raid background music catagory
+	{text = "None",value  = "None"},
+	{text = "Random",value  = "Random"},
+	{text = "Anduin Part 1 B",value = "sound\\music\\Legion\\MUS_70_AnduinPt1_B.mp3", length=140},
+	{text = "Nightsong",value = "Sound\\Music\\cataclysm\\MUS_NightElves_GU01.mp3", length=160},
+	{text = "Ulduar: Titan Orchestra",value = "Sound\\Music\\ZoneMusic\\UlduarRaidInt\\UR_TitanOrchestraIntro.mp3", length=102},
+}
+DBM.BattleMusic = {--Filtered list of media assigned to boss/encounter background music catagory
+	{text = "None",value  = "None"},
+	{text = "Random",value  = "Random"},
+	{text = "Anduin Part 2 B",value = "sound\\music\\Legion\\MUS_70_AnduinPt2_B.mp3", length=111},
+	{text = "Bronze Jam",value = "Sound\\Music\\ZoneMusic\\IcecrownRaid\\IR_BronzeJam.mp3", length=116},
+	{text = "Invincible",value = "Sound\\Music\\Draenor\\MUS_Invincible.mp3", length=197},
 }
 
 ------------------------
@@ -359,7 +400,7 @@ local breakTimerStart
 local AddMsg
 local delayedFunction
 
-local fakeBWVersion, fakeBWHash = 88, "5a0d494"
+local fakeBWVersion, fakeBWHash = 89, "e601bae"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -1197,6 +1238,48 @@ do
 						local loaded = LoadAddOn(addonName)
 						local voiceGlobal = GetAddOnMetadata(i, "X-DBM-CountPack-GlobalName")
 						local insertFunction = _G[voiceGlobal]
+						if loaded and insertFunction then
+							insertFunction()
+						else
+							DBM:Debug(addonName.." failed to load at time CountPack function ran", 2)
+						end
+					end
+				end
+				if GetAddOnMetadata(i, "X-DBM-VictoryPack") and enabled ~= 0 then
+					if checkEntry(bannedMods, addonName) then
+						AddMsg(self, "The mod " .. addonName .. " is deprecated and will not be available. Please remove the folder " .. addonName .. " from your Interface" .. (IsWindowsClient() and "\\" or "/") .. "AddOns folder to get rid of this message. Check for an updated version of " .. addonName .. " that is compatible with your game version.")
+					else
+						local loaded = LoadAddOn(addonName)
+						local victoryGlobal = GetAddOnMetadata(i, "X-DBM-VictoryPack-GlobalName")
+						local insertFunction = _G[victoryGlobal]
+						if loaded and insertFunction then
+							insertFunction()
+						else
+							DBM:Debug(addonName.." failed to load at time CountPack function ran", 2)
+						end
+					end
+				end
+				if GetAddOnMetadata(i, "X-DBM-DefeatPack") and enabled ~= 0 then
+					if checkEntry(bannedMods, addonName) then
+						AddMsg(self, "The mod " .. addonName .. " is deprecated and will not be available. Please remove the folder " .. addonName .. " from your Interface" .. (IsWindowsClient() and "\\" or "/") .. "AddOns folder to get rid of this message. Check for an updated version of " .. addonName .. " that is compatible with your game version.")
+					else
+						local loaded = LoadAddOn(addonName)
+						local defeatGlobal = GetAddOnMetadata(i, "X-DBM-DefeatPack-GlobalName")
+						local insertFunction = _G[defeatGlobal]
+						if loaded and insertFunction then
+							insertFunction()
+						else
+							DBM:Debug(addonName.." failed to load at time CountPack function ran", 2)
+						end
+					end
+				end
+				if GetAddOnMetadata(i, "X-DBM-MusicPack") and enabled ~= 0 then
+					if checkEntry(bannedMods, addonName) then
+						AddMsg(self, "The mod " .. addonName .. " is deprecated and will not be available. Please remove the folder " .. addonName .. " from your Interface" .. (IsWindowsClient() and "\\" or "/") .. "AddOns folder to get rid of this message. Check for an updated version of " .. addonName .. " that is compatible with your game version.")
+					else
+						local loaded = LoadAddOn(addonName)
+						local musicGlobal = GetAddOnMetadata(i, "X-DBM-MusicPack-GlobalName")
+						local insertFunction = _G[musicGlobal]
 						if loaded and insertFunction then
 							insertFunction()
 						else
@@ -2089,6 +2172,10 @@ do
 		elseif cmd:sub(1, 6) == "silent" then
 			DBM.Options.SilentMode = DBM.Options.SilentMode == false and true or false
 			DBM:AddMsg("SilentMode is " .. (DBM.Options.SilentMode and "ON" or "OFF"))
+		elseif cmd:sub(1, 10) == "musicstart" then
+			DBM:TransitionToDungeonBGM(true)
+		elseif cmd:sub(1, 9) == "musicstop" then
+			DBM:TransitionToDungeonBGM(false, true)
 		else
 			DBM:LoadGUI()
 		end
@@ -3000,7 +3087,7 @@ function DBM:LoadModOptions(modId, inCombat, first)
 			stats.timewalkerPulls = stats.timewalkerPulls or 0
 			mod.stats = stats
 			--run OnInitialize function
-			if mod.OnInitialize then mod:OnInitialize() end
+			if mod.OnInitialize then mod:OnInitialize(mod) end
 		end
 	end
 	--clean unused saved variables (do not work on combat load)
@@ -3495,41 +3582,78 @@ end
 --  Load Boss Mods on Demand  --
 --------------------------------
 do
-	local function checkMods(self)
-		if difficultyIndex == 24 or difficultyIndex == 33 then--Timewalking
-			if (LastInstanceMapID == 540 or LastInstanceMapID == 558 or LastInstanceMapID == 556 or LastInstanceMapID == 555 or LastInstanceMapID == 542 or LastInstanceMapID == 546 or LastInstanceMapID == 545 or LastInstanceMapID == 547 or LastInstanceMapID == 553 or LastInstanceMapID == 554 or LastInstanceMapID == 552 or LastInstanceMapID == 557 or LastInstanceMapID == 269 or LastInstanceMapID == 560 or LastInstanceMapID == 543 or LastInstanceMapID == 585) and not self.Options.BCTWMessageShown and not GetAddOnInfo("DBM-Party-BC") then
-				self.Options.BCTWMessageShown = true
-				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-Party-BC"))
-			elseif LastInstanceMapID == 564 and not self.Options.BCTWMessageShown and not GetAddOnInfo("DBM-BlackTemple") then
-				self.Options.BCTWMessageShown = true
-				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-BlackTemple"))
-			elseif LastInstanceMapID == 603 and not self.Options.WOTLKTWMessageShown and not GetAddOnInfo("DBM-Ulduar") then
-				self.Options.WOTLKTWMessageShown = true
-				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-Ulduar"))
-			elseif (LastInstanceMapID == 619 or LastInstanceMapID == 601 or LastInstanceMapID == 595 or LastInstanceMapID == 600 or LastInstanceMapID == 604 or LastInstanceMapID == 602 or LastInstanceMapID == 599 or LastInstanceMapID == 576 or LastInstanceMapID == 578 or LastInstanceMapID == 574 or LastInstanceMapID == 575 or LastInstanceMapID == 608 or LastInstanceMapID == 658 or LastInstanceMapID == 632 or LastInstanceMapID == 668 or LastInstanceMapID == 650) and not self.Options.WOTLKTWMessageShown and not GetAddOnInfo("DBM-Party-WotLK") then
-				self.Options.WOTLKTWMessageShown = true
-				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-Party-WotLK"))
-			elseif (LastInstanceMapID == 755 or LastInstanceMapID == 645 or LastInstanceMapID == 36 or LastInstanceMapID == 670 or LastInstanceMapID == 644 or LastInstanceMapID == 33 or LastInstanceMapID == 643 or LastInstanceMapID == 725 or LastInstanceMapID == 657 or LastInstanceMapID == 309 or LastInstanceMapID == 859 or LastInstanceMapID == 568 or LastInstanceMapID == 938 or LastInstanceMapID == 940 or LastInstanceMapID == 939) and not self.Options.CATATWMessageShown and not GetAddOnInfo("DBM-Party-Cataclysm") then
-				self.Options.CATATWMessageShown = true
-				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-Party-Cataclysm"))
-			elseif (LastInstanceMapID == 960 or LastInstanceMapID == 961 or LastInstanceMapID == 959 or LastInstanceMapID == 962 or LastInstanceMapID == 994 or LastInstanceMapID == 1011 or LastInstanceMapID == 1007 or LastInstanceMapID == 1001 or LastInstanceMapID == 1004) and not self.Options.MISTSTWMessageShown and not GetAddOnInfo("DBM-Party-MoP") then
-				self.Options.MISTSTWMessageShown = true
-				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-Party-MoP"))
+	local classicZones = {[509]=true,[531]=true,[469]=true,[409]=true,}
+	local bcZones = {[564]=true,[534]=true,[532]=true,[565]=true,[540]=true,[558]=true,[556]=true,[555]=true,[542]=true,[546]=true,[545]=true,[547]=true,[553]=true,[554]=true,[552]=true,[557]=true,[269]=true,[560]=true,[543]=true,[585]=true,[548]=true,[580]=true,[550]=true}
+	local wrathZones = {[615]=true,[724]=true,[649]=true,[616]=true,[631]=true,[533]=true,[249]=true,[619]=true,[601]=true,[595]=true,[600]=true,[604]=true,[602]=true,[599]=true,[576]=true,[578]=true,[574]=true,[575]=true,[608]=true,[658]=true,[632]=true,[668]=true,[650]=true,[603]=true,[624]=true}
+	local cataZones = {[757]=true,[671]=true,[669]=true,[967]=true,[720]=true,[951]=true,[755]=true,[645]=true,[36]=true,[670]=true,[644]=true,[33]=true,[643]=true,[725]=true,[657]=true,[309]=true,[859]=true,[568]=true,[938]=true,[940]=true,[939]=true,[646]=true,[754]=true}
+	local mopZones = {[1009]=true,[1008]=true,[960]=true,[961]=true,[959]=true,[962]=true,[994]=true,[1011]=true,[1007]=true,[1001]=true,[1004]=true,[1136]=true,[996]=true,[1098]=true}
+	local wodZones = {[1205]=true,[1448]=true,[1182]=true,[1175]=true,[1208]=true,[1195]=true,[1279]=true,[1176]=true,[1209]=true,[1358]=true}
+	local challengeScenarios = {[1148]=true,[1698]=true,[1710]=true,[1703]=true,[1702]=true,[1684]=true,[1673]=true,[1616]=true}
+	function DBM:CheckAvailableMods()
+		if BigWigs then return end--If they are running two boss mods at once, lets assume they are only using DBM for a specific feature and not nag
+		local timeWalking = difficultyIndex == 24 or difficultyIndex == 33 or false
+		if (classicZones[LastInstanceMapID] or bcZones[LastInstanceMapID]) and (timeWalking or playerLevel < 71) and not GetAddOnInfo("DBM-BlackTemple") then
+			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM BC/Vanilla mods"))
+		elseif wrathZones[LastInstanceMapID] and (timeWalking or playerLevel < 81) and not GetAddOnInfo("DBM-Ulduar") then
+			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM Wrath of the Lich King mods"))
+		elseif cataZones[LastInstanceMapID] and (timeWalking or playerLevel < 86) and not GetAddOnInfo("DBM-Party-Cataclysm") then
+			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM Cataclysm mods"))
+		elseif mopZones[LastInstanceMapID] and (timeWalking or playerLevel < 91) and not GetAddOnInfo("DBM-Party-MoP") then
+			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM Mists of Pandaria mods"))
+		elseif wodZones[LastInstanceMapID] and (timeWalking or playerLevel < 101) and not GetAddOnInfo("DBM-MC") then
+			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM Warlords of Draenor mods"))
+		elseif challengeScenarios[LastInstanceMapID] and not GetAddOnInfo("DBM-Challenges") then
+			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-Challenges"))
+		end
+	end
+	function DBM:TransitionToDungeonBGM(force, cleanup)
+		if cleanup then--Runs on zone change (first load delay) and combat end
+			self:Unschedule(self.TransitionToDungeonBGM)
+			if self.Options.tempMusicSetting then
+				SetCVar("Sound_EnableMusic", self.Options.tempMusicSetting)
+				self.Options.tempMusicSetting = nil
+				DBM:Debug("Restoring Sound_EnableMusic CVAR")
 			end
-		else
-			if (LastInstanceMapID == 1148 or LastInstanceMapID == 1698 or LastInstanceMapID == 1710 or LastInstanceMapID == 1703 or LastInstanceMapID == 1702 or LastInstanceMapID == 1684 or LastInstanceMapID == 1673 or LastInstanceMapID == 1616) and not self.Options.PGMessageShown2 and not GetAddOnInfo("DBM-Challenges") then
-				self.Options.PGMessageShown2 = true
-				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-Challenges"))
-			elseif LastInstanceMapID == 409 and not self.Options.MCMessageShown and not GetAddOnInfo("DBM-MC") then
-				self.Options.MCMessageShown = true
-				AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM-MC"))
+			if self.Options.musicPlaying then--Primarily so DBM doesn't call StopMusic unless DBM is one that started it. We don't want to screw with other addons
+				StopMusic()
+				self.Options.musicPlaying = nil
+				DBM:Debug("Stopping music")
 			end
+			fireEvent("DBM_MusicStop", "ZoneOrCombatEndTransition")
+			return
+		end
+		if LastInstanceType ~= "raid" and LastInstanceType ~= "party" and not force then return end
+		fireEvent("DBM_MusicStart", "RaidOrDungeon")
+		if self.Options.EventSoundDungeonBGM and self.Options.EventSoundDungeonBGM ~= "None" and self.Options.EventSoundDungeonBGM ~= "" and not (self.Options.EventDungMusicMythicFilter and (savedDifficulty == "mythic" or savedDifficulty == "challenge")) then
+			if not self.Options.tempMusicSetting then
+				self.Options.tempMusicSetting = tonumber(GetCVar("Sound_EnableMusic"))
+				if self.Options.tempMusicSetting == 0 then
+					SetCVar("Sound_EnableMusic", 1)
+				else
+					self.Options.tempMusicSetting = nil--Don't actually need it
+				end
+			end
+			local path = "MISSING"
+			if self.Options.EventSoundDungeonBGM == "Random" then
+				local usedTable = self.Options.EventSoundMusicCombined and DBM.Music or DBM.DungeonMusic
+				local random = fastrandom(3, #usedTable)
+				path = usedTable[random].value
+			else
+				path = self.Options.EventSoundDungeonBGM
+			end
+			PlayMusic(path)
+			self.Options.musicPlaying = true
+			DBM:Debug("Starting Dungeon music with file: "..path)
 		end
 	end
 	local function SecondaryLoadCheck(self)
 		local _, instanceType, difficulty, _, _, _, _, mapID, instanceGroupSize = GetInstanceInfo()
+		if not savedDifficulty then
+			savedDifficulty, difficultyText = self:GetCurrentInstanceDifficulty()
+		end
 		self:Debug("Instance Check fired with mapID "..mapID.." and difficulty "..difficulty, 2)
 		if LastInstanceMapID == mapID then
+			self:TransitionToDungeonBGM()
 			self:Debug("No action taken because mapID hasn't changed since last check", 2)
 			return
 		end--ID hasn't changed, don't waste cpu doing anything else (example situation, porting into garrosh stage 4 is a loading screen)
@@ -3557,7 +3681,7 @@ do
 		-- LoadMod
 		self:LoadModsOnDemand("mapId", mapID)
 		if not self.Options.DontShowReminders then
-			checkMods(self)
+			self:CheckAvailableMods()
 		end
 		if DBM:HasMapRestrictions() then
 			DBM.Arrow:Hide()
@@ -3575,6 +3699,7 @@ do
 		self:Debug("LOADING_SCREEN_DISABLED fired")
 		self:Unschedule(SecondaryLoadCheck)
 		SecondaryLoadCheck(self)
+		self:TransitionToDungeonBGM(false, true)
 		self:Schedule(5, SecondaryLoadCheck, self)
 		if DBM:HasMapRestrictions() then
 			DBM.Arrow:Hide()
@@ -5115,19 +5240,24 @@ do
 
 	function DBM:ENCOUNTER_START(encounterID, name, difficulty, size)
 		self:Debug("ENCOUNTER_START event fired: "..encounterID.." "..name.." "..difficulty.." "..size)
-		if dbmIsEnabled and combatInfo[LastInstanceMapID] then
-			for i, v in ipairs(combatInfo[LastInstanceMapID]) do
-				if not v.noESDetection then
-					if v.multiEncounterPullDetection then
-						for _, eId in ipairs(v.multiEncounterPullDetection) do
-							if encounterID == eId then
-								self:StartCombat(v.mod, 0, "ENCOUNTER_START")
-								return
+		if dbmIsEnabled then
+			if not self.Options.DontShowReminders then
+				self:CheckAvailableMods()
+			end
+			if combatInfo[LastInstanceMapID] then
+				for i, v in ipairs(combatInfo[LastInstanceMapID]) do
+					if not v.noESDetection then
+						if v.multiEncounterPullDetection then
+							for _, eId in ipairs(v.multiEncounterPullDetection) do
+								if encounterID == eId then
+									self:StartCombat(v.mod, 0, "ENCOUNTER_START")
+									return
+								end
 							end
+						elseif encounterID == v.eId then
+							self:StartCombat(v.mod, 0, "ENCOUNTER_START")
+							return
 						end
-					elseif encounterID == v.eId then
-						self:StartCombat(v.mod, 0, "ENCOUNTER_START")
-						return
 					end
 				end
 			end
@@ -5557,6 +5687,31 @@ do
 				if BigWigs and BigWigs.db.profile.raidicon and not self.Options.DontSetIcons and self:GetRaidRank() > 0 then--Both DBM and bigwigs have raid icon marking turned on.
 					self:AddMsg(DBM_CORE_BIGWIGS_ICON_CONFLICT)--Warn that one of them should be turned off to prevent conflict (which they turn off is obviously up to raid leaders preference, dbm accepts either or turned off to stop this alert)
 				end
+				if self.Options.EventSoundEngage and self.Options.EventSoundEngage ~= "" and self.Options.EventSoundEngage ~= "None" then
+					self:PlaySoundFile(self.Options.EventSoundEngage)
+				end
+				fireEvent("DBM_MusicStart", "BossEncounter")
+				if self.Options.EventSoundMusic and self.Options.EventSoundMusic ~= "None" and self.Options.EventSoundMusic ~= "" and not (self.Options.EventMusicMythicFilter and (savedDifficulty == "mythic" or savedDifficulty == "challenge")) then
+					if not self.Options.tempMusicSetting then
+						self.Options.tempMusicSetting = tonumber(GetCVar("Sound_EnableMusic"))
+						if self.Options.tempMusicSetting == 0 then
+							SetCVar("Sound_EnableMusic", 1)
+						else
+							self.Options.tempMusicSetting = nil--Don't actually need it
+						end
+					end
+					local path = "MISSING"
+					if self.Options.EventSoundMusic == "Random" then
+						local usedTable = self.Options.EventSoundMusicCombined and DBM.Music or DBM.BattleMusic
+						local random = fastrandom(3, #usedTable)
+						path = usedTable[random].value
+					else
+						path = self.Options.EventSoundMusic
+					end
+					PlayMusic(path)
+					self.Options.musicPlaying = true
+					DBM:Debug("Starting combat music with file: "..path)
+				end
 			else
 				self:AddMsg(DBM_CORE_COMBAT_STATE_RECOVERED:format(difficultyText..name, strFromTime(delay)))
 				if mod.OnTimerRecovery then
@@ -5720,6 +5875,14 @@ do
 					sendWhisper(k, msg)
 				end
 				fireEvent("wipe", mod)
+				if self.Options.EventSoundWipe and self.Options.EventSoundWipe ~= "None" and self.Options.EventSoundWipe ~= "" then
+					if self.Options.EventSoundWipe == "Random" then
+						local random = fastrandom(3, #DBM.Defeat)
+						self:PlaySoundFile(DBM.Defeat[random].value)
+					else
+						self:PlaySoundFile(self.Options.EventSoundWipe)
+					end
+				end
 			else
 				mod.lastKillTime = GetTime()
 				local thisTime = GetTime() - (mod.combatInfo.pull or 0)
@@ -5843,6 +6006,14 @@ do
 						end
 					end
 				end
+				if self.Options.EventSoundVictory2 and self.Options.EventSoundVictory2 ~= "" then
+					if self.Options.EventSoundVictory2 == "Random" then
+						local random = fastrandom(3, #DBM.Victory)
+						self:PlaySoundFile(DBM.Victory[random].value)
+					else
+						self:PlaySoundFile(self.Options.EventSoundVictory2)
+					end
+				end
 			end
 			if mod.OnCombatEnd then mod:OnCombatEnd(wipe) end
 			if mod.OnLeavingCombat then delayedFunction = mod.OnLeavingCombat end
@@ -5882,6 +6053,8 @@ do
 				eeSyncReceived = 0
 				targetMonitor = nil
 				self:CreatePizzaTimer(time, "", nil, nil, nil, nil, true)--Auto Terminate infinite loop timers on combat end
+				self:TransitionToDungeonBGM(false, true)
+				self:Schedule(22, self.TransitionToDungeonBGM, self)--
 			end
 		end
 	end
@@ -6082,7 +6255,7 @@ end
 function DBM:GetSpellInfo(spellId)
 	local name, rank, icon, castingTime, minRange, maxRange, returnedSpellId = GetSpellInfo(spellId)
 	if not returnedSpellId then--Bad request all together
-		DBM:Debug("Invalid call to GetSpellInfo for spellID: "..spellId)
+		DBM:Debug("|cffff0000Invalid call to GetSpellInfo for spellID: |r"..spellId)
 		return nil
 	elseif not name or name == "" then--7.3.5 PTR returned blank/nil name, name not yet cached and will only be available after next SPELL_NAME_UPDATE event
 		return "ReloadUI To Fix", rank, icon, castingTime, minRange, maxRange, returnedSpellId
@@ -8271,8 +8444,7 @@ do
 	-- TODO: is there a good reason that this is a weak table?
 	local cachedColorFunctions = setmetatable({}, {__mode = "kv"})
 	
-	local function setText(announceType, spellId, icon, castTime, preWarnTime)
-		local unparsedId = spellId
+	local function setText(announceType, spellId, castTime, preWarnTime)
 		local spellName
 		if type(spellId) == "string" and spellId:match("ej%d+") then
 			spellId = string.sub(spellId, 3)
@@ -8280,7 +8452,6 @@ do
 		else
 			spellName = DBM:GetSpellInfo(spellId) or DBM_CORE_UNKNOWN
 		end
-		icon = icon or unparsedId
 		local text
 		if announceType == "cast" then
 			local spellHaste = select(4, DBM:GetSpellInfo(53142)) / 10000 -- 53142 = Dalaran Portal, should have 10000 ms cast time
@@ -8329,7 +8500,7 @@ do
 			end
 			--Repair spell name on first announce through cpu inefficient and ugly hack
 			if self.spellName and self.spellName == "ReloadUI To Fix" then
-				self.text, self.spellName = setText(self.announceType, self.spellId, self.icon, self.castTime, self.preWarnTime)
+				self.text, self.spellName = setText(self.announceType, self.spellId, self.castTime, self.preWarnTime)
 			end
 			local message = pformat(self.text, unpack(argTable))
 			local text = ("%s%s%s|r%s"):format(
@@ -8387,6 +8558,9 @@ do
 	end
 
 	function announcePrototype:CombinedShow(delay, ...)
+		if self.option and not self.mod.Options[self.option] then return end
+		if DBM.Options.DontShowBossAnnounces then return end	-- don't show the announces if the spam filter option is set
+		if DBM.Options.DontShowTargetAnnouncements and (self.announceType == "target" or self.announceType == "targetcount") and not self.noFilter then return end--don't show announces that are generic target announces
 		local argTable = {...}
 		for i = 1, #argTable do
 			if type(argTable[i]) == "string" then
@@ -8445,6 +8619,10 @@ do
 			error("NewAnnounce: you must provide announce text", 2)
 			return
 		end
+		if type(optionName) == "number" then
+			DBM:Debug("Non auto localized optionNames cannot be numbers, fix this for "..text)
+			optionName = nil
+		end
 		if soundOption and type(soundOption) == "boolean" then
 			soundOption = 0--No Sound
 		end
@@ -8490,6 +8668,7 @@ do
 			return
 		end
 		local text, spellName = setText(announceType, spellId, icon, castTime, preWarnTime)
+		icon = icon or spellId
 		local obj = setmetatable( -- todo: fix duplicate code
 			{
 				text = text,
@@ -8752,7 +8931,7 @@ do
 			if timer <= count then count = floor(timer) end
 			if DBM.Options.DontPlayCountdowns then return end
 			if not path1 or not path2 or not path3 then
-				DBM:Debug("Voice cache not built at time of countdownProtoType:Start. On fly caching.")
+				DBM:Debug("Voice cache not built at time of countdownProtoType:Start. On fly caching.", 3)
 				DBM:BuildVoiceCountdownCache()
 			end
 			local voice, maxCount, path
@@ -9307,6 +9486,8 @@ do
 	end
 
 	function specialWarningPrototype:CombinedShow(delay, ...)
+		if DBM.Options.DontShowSpecialWarnings then return end
+		if self.option and not self.mod.Options[self.option] then return end
 		local argTable = {...}
 		for i = 1, #argTable do
 			if type(argTable[i]) == "string" then
@@ -9958,6 +10139,14 @@ do
 	end
 
 	function bossModPrototype:NewTimer(timer, name, icon, optionDefault, optionName, colorType, inlineIcon, r, g, b)
+		if r and type(r) == "string" then
+			DBM:Debug("|cffff0000r probably has inline icon in it and needs to be fixed for |r"..name..r)
+			r = nil--Fix it for users
+		end
+		if inlineIcon and type(inlineIcon) == "number" then
+			DBM:Debug("|cffff0000spellID texture path or colorType is in inlineIcon field and needs to be fixed for |r"..name..inlineIcon)
+			inlineIcon = nil--Fix it for users
+		end
 		local icon = (type(icon) == "string" and icon:match("ej%d+") and select(4, DBM:EJ_GetSectionInfo(string.sub(icon, 3))) ~= "" and select(4, DBM:EJ_GetSectionInfo(string.sub(icon, 3)))) or (type(icon) == "number" and GetSpellTexture(icon)) or icon or "Interface\\Icons\\Spell_Nature_WispSplode"
 		local obj = setmetatable(
 			{
@@ -9984,11 +10173,11 @@ do
 	-- note that the function might look unclear because it needs to handle different timer types, especially achievement timers need special treatment
 	local function newTimer(self, timerType, timer, spellId, timerText, optionDefault, optionName, colorType, texture, inlineIcon, r, g, b)
 		if type(timer) == "string" and timer:match("OptionVersion") then
-			DBM:Debug("OptionVersion hack depricated, remove it from: "..spellId)
+			DBM:Debug("|cffff0000OptionVersion hack depricated, remove it from: |r"..spellId)
 			return
 		end
 		if type(colorType) == "number" and colorType > 6 then
-			DBM:Debug("texture is in the colorType arg for: "..spellId)
+			DBM:Debug("|cffff0000texture is in the colorType arg for: |r"..spellId)
 		end
 		--Use option optionName for optionVersion as well, no reason to split.
 		--This ensures that remaining arg positions match for auto generated and regular NewTimer
@@ -10167,7 +10356,7 @@ do
 		if Name and Name ~= "ReloadUI To Fix" then
 			spellName = Name--Pull from name stored in object
 		elseif spellId then
-			DBM:Debug("GetLocalizedTimerText fallback, this should not happen and is a bug. this fallback should be deleted if this message is never seen after async code is live")
+			DBM:Debug("|cffff0000GetLocalizedTimerText fallback, this should not happen and is a bug. this fallback should be deleted if this message is never seen after async code is live|r")
 			if timerType == "achievement" then
 				spellName = select(2, GetAchievementInfo(spellId))
 			elseif type(spellId) == "string" and spellId:match("ej%d+") then
@@ -10769,7 +10958,7 @@ do
 		end
 		self:UnscheduleMethod("SetIcon", target)
 		if type(icon) ~= "number" or type(target) ~= "string" then--icon/target probably backwards.
-			DBM:Debug("SetIcon is being used impropperly. Check icon/target order")
+			DBM:Debug("|cffff0000SetIcon is being used impropperly. Check icon/target order|r")
 			return--Fail silently instead of spamming icon lua errors if we screw up
 		end
 		icon = icon and icon >= 0 and icon <= 8 and icon or 8
@@ -10811,7 +11000,7 @@ do
 			for i = 1, #iconSortTable do
 				local target = iconSortTable[i]
 				if i > 8 then 
-					DBM:Debug("Too many players to set icons, reconsider where using icons", 2)
+					DBM:Debug("|cffff0000Too many players to set icons, reconsider where using icons|r", 2)
 					return
 				end
 				if not self.iconRestore[target] then

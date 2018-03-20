@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1884, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17355 $"):sub(12, -3))
 mod:SetCreatureID(117303)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
@@ -30,7 +30,7 @@ local specWarnVirulentInfection		= mod:NewSpecialWarningMove(233850, nil, nil, n
 
 local timerIncitePanicCD			= mod:NewCDTimer(14.6, 233568, nil, nil, nil, 1)
 local timerPestilenceCD				= mod:NewCDTimer(14.2, 233614, nil, nil, nil, 3)
-local timerShadowBarrageCD			= mod:NewCDTimer(17.1, 234452, nil, nil, nil, 2)
+local timerShadowBarrageCD			= mod:NewCDTimer(16.7, 234452, nil, nil, nil, 2)
 
 --mod:AddReadyCheckOption(37460, false)
 mod:AddRangeFrameOption(8, 233568)

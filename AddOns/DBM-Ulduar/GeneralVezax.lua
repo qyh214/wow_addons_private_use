@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GeneralVezax", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 263 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 278 $"):sub(12, -3))
 mod:SetCreatureID(33271)
 mod:SetEncounterID(1134)
 mod:SetModelID(28548)
@@ -11,15 +11,15 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 62661 62662",
-	"SPELL_INTERRUPT 62661",
 	"SPELL_AURA_APPLIED 62662",
 	"SPELL_AURA_REMOVED 62662",
-	"SPELL_CAST_SUCCESS 62660 63276",
+	"SPELL_CAST_SUCCESS 62660 63276 63364",
 	"RAID_BOSS_EMOTE"
 )
 
 local warnShadowCrash			= mod:NewTargetAnnounce(62660, 4)
 local warnLeechLife				= mod:NewTargetAnnounce(63276, 3)
+local warnSaroniteVapor			= mod:NewCountAnnounce(63337, 2)
 
 local specWarnShadowCrash		= mod:NewSpecialWarningDodge(62660, nil, nil, nil, 1, 2)
 local specWarnShadowCrashNear	= mod:NewSpecialWarningClose(62660, nil, nil, nil, 1, 2)
@@ -29,19 +29,23 @@ local specWarnLifeLeechYou		= mod:NewSpecialWarningYou(63276, nil, nil, nil, 3, 
 local yellLifeLeech				= mod:NewYell(63276)
 local specWarnLifeLeechNear 	= mod:NewSpecialWarningClose(63276, nil, nil, 2, 1, 2)
 local specWarnSearingFlames		= mod:NewSpecialWarningInterruptCount(62661, "HasInterrupt", nil, nil, 1, 2)
+local specWarnAnimus			= mod:NewSpecialWarningSwitch("ej17651", nil, nil, nil, 1, 2)
 
 local timerEnrage				= mod:NewBerserkTimer(600)
-local timerSearingFlamesCast	= mod:NewCastTimer(2, 62661, nil, nil, nil, 4, nil, 5, nil, DBM_CORE_INTERRUPT_ICON)
 local timerSurgeofDarkness		= mod:NewBuffActiveTimer(10, 62662, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerNextSurgeofDarkness	= mod:NewCDTimer(62, 62662, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerSaroniteVapors		= mod:NewNextTimer(30, 63322, nil, nil, nil, 5)
-local timerLifeLeech			= mod:NewTargetTimer(10, 63276, nil, nil, nil, 3)
+local timerNextSurgeofDarkness	= mod:NewCDTimer(61.7, 62662, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerSaroniteVapors		= mod:NewNextCountTimer(30, 63322, nil, nil, nil, 5)
+local timerShadowCrashCD		= mod:NewCDTimer(12, 62660, nil, "Ranged", nil, 3)
+local timerLifeLeech			= mod:NewTargetTimer(10, 63276, nil, false, 2, 3)
+local timerLifeLeechCD			= mod:NewCDTimer(20.4, 63276, nil, nil, nil, 3)
 local timerHardmode				= mod:NewTimer(189, "hardmodeSpawn", nil, nil, nil, 1)
 
 mod:AddBoolOption("SetIconOnShadowCrash", true)
 mod:AddBoolOption("SetIconOnLifeLeach", true)
 
 mod.vb.interruptCount = 0
+mod.vb.vaporsCount = 0
+local animusName = DBM:EJ_GetSectionInfo(17651)
 
 function mod:ShadowCrashTarget(targetname, uId)
 	if not targetname then return end
@@ -67,6 +71,10 @@ end
 
 function mod:OnCombatStart(delay)
 	self.vb.interruptCount = 0
+	self.vb.vaporsCount = 0
+	timerShadowCrashCD:Start(10.9-delay)
+	timerLifeLeechCD:Start(16.9-delay)
+	timerSaroniteVapors:Start(30-delay, 1)
 	timerEnrage:Start(-delay)
 	timerHardmode:Start(-delay)
 	timerNextSurgeofDarkness:Start(-delay)
@@ -81,7 +89,6 @@ function mod:SPELL_CAST_START(args)
 		local kickCount = self.vb.interruptCount
 		specWarnSearingFlames:Show(args.sourceName, kickCount)
 		specWarnSearingFlames:Play("kick"..kickCount.."r")
-		timerSearingFlamesCast:Start()
 	elseif args.spellId == 62662 then 
 		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
 		if tanking or (status == 3) then--Player is current target
@@ -89,12 +96,6 @@ function mod:SPELL_CAST_START(args)
 			specWarnSurgeDarkness:Play("defensive")
 		end
 		timerNextSurgeofDarkness:Start()
-	end
-end
-
-function mod:SPELL_INTERRUPT(args)
-	if args.spellId == 62661 then
-		timerSearingFlamesCast:Stop()
 	end
 end
 
@@ -113,11 +114,13 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 62660 then		-- Shadow Crash
 		self:BossTargetScanner(33271, "ShadowCrashTarget", 0.05, 20)
+		timerShadowCrashCD:Start()
 	elseif args.spellId == 63276 then	-- Mark of the Faceless
 		if self.Options.SetIconOnLifeLeach then
 			self:SetIcon(args.destName, 7, 10)
 		end
 		timerLifeLeech:Start(args.destName)
+		timerLifeLeechCD:Start()
 		if args:IsPlayer() then
 			specWarnLifeLeechYou:Show()
 			specWarnLifeLeechYou:Play("runout")
@@ -134,11 +137,18 @@ function mod:SPELL_CAST_SUCCESS(args)
 				end
 			end
 		end
+	elseif args.spellId == 63364 then
+		specWarnAnimus:Show()
+		specWarnAnimus:Play("bigmob")
 	end
 end
 
 function mod:RAID_BOSS_EMOTE(emote)
 	if emote == L.EmoteSaroniteVapors or emote:find(L.EmoteSaroniteVapors) then
-		timerSaroniteVapors:Start()
+		self.vb.vaporsCount = self.vb.vaporsCount + 1
+		warnSaroniteVapor:Show(self.vb.vaporsCount)
+		if self.vb.vaporsCount < 6 then
+			timerSaroniteVapors:Start(nil, self.vb.vaporsCount+1)
+		end
 	end
 end

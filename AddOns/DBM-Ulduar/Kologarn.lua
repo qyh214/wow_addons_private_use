@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kologarn", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 278 $"):sub(12, -3))
 mod:SetCreatureID(32930)--, 32933, 32934
 mod:SetEncounterID(1137)
 mod:SetModelID(28638)
@@ -12,13 +12,15 @@ mod:SetMinSyncRevision(7)--Could break if someone is running out of date version
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
+	"SPELL_CAST_SUCCESS 64003",
 	"SPELL_AURA_APPLIED 64290 64292 64002 63355",
 	"SPELL_AURA_APPLIED_DOSE 64002",
 	"SPELL_AURA_REMOVED 64290 64292",
 	"SPELL_DAMAGE 63783 63982 63346 63976",
 	"SPELL_MISSED 63783 63982 63346 63976",
 	"RAID_BOSS_WHISPER",
-	"UNIT_DIED"
+	"UNIT_DIED",
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 local warnFocusedEyebeam		= mod:NewTargetAnnounce(63346, 3)
@@ -30,8 +32,9 @@ local specWarnEyebeam			= mod:NewSpecialWarningRun(63346, nil, nil, nil, 4, 2)
 local yellBeam					= mod:NewYell(63346)
 
 local timerCrunch10             = mod:NewTargetTimer(6, 63355)
-local timerNextShockwave		= mod:NewCDTimer(18, 63982, nil, nil, nil, 2)
-local timerNextEyebeam			= mod:NewCDTimer(17.5, 63346, nil, nil, nil, 3)--Experimental.
+local timerNextSmash			= mod:NewCDTimer(20.4, 64003, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerNextShockwave		= mod:NewCDTimer(15.9, 63982, nil, nil, nil, 2)--15.9-20
+local timerNextEyebeam			= mod:NewCDTimer(20.4, 63346, nil, nil, nil, 3)
 local timerNextGrip				= mod:NewCDTimer(20, 64292, nil, nil, nil, 3)
 local timerRespawnLeftArm		= mod:NewTimer(48, "timerLeftArm", nil, nil, nil, 1)
 local timerRespawnRightArm		= mod:NewTimer(48, "timerRightArm", nil, nil, nil, 1)
@@ -52,6 +55,17 @@ local function GripAnnounce(self)
 	table.wipe(gripTargets)
 end
 
+function mod:OnCombatStart(delay)
+	timerNextSmash:Start(10-delay)
+	timerNextEyebeam:Start(11-delay)
+	timerNextShockwave:Start(15.7-delay)
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 64003 then
+		timerNextSmash:Start()
+	end
+end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(64290, 64292) then
@@ -108,9 +122,7 @@ function mod:UNIT_DIED(args)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if (spellId == 63783 or spellId == 63982) and timerNextShockwave:GetTime() == 0 then
-		timerNextShockwave:Start()
-	elseif (spellId == 63346 or spellId == 63976) and destGUID == UnitGUID("player") and self:AntiSpam() then
+	if (spellId == 63346 or spellId == 63976) and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
 		specWarnEyebeam:Show()
 	end
 end
@@ -134,5 +146,13 @@ function mod:OnTranscriptorSync(msg, targetName)
 				self:SetIcon(targetName, 5, 8) 
 			end
 		end
+	end
+end
+
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
+	if spellId == 63983 then--Arm Sweep
+		timerNextShockwave:Start()
+	elseif spellId == 63342 then--Focused Eyebeam Summon Trigger
+		timerNextEyebeam:Start()
 	end
 end

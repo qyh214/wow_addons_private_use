@@ -1,3 +1,11 @@
+**r1084**
+* Added Antorus, the Burning Throne and Tomb of Sargeras spells for custom highlighting. (Thanks for Dainslaif63534)
+* Player portrait model fixes.
+* Powerbar percentage is no longer hidden for dead targets.
+* Version broadcast tweaks.
+* Removed getglobal calls.
+* Couple of other fixes.
+
 **r1083**
 * Player power value changes.
 

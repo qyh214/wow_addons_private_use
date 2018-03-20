@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Algalon", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 254 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 278 $"):sub(12, -3))
 mod:SetCreatureID(32871)
 mod:SetEncounterID(1130)
 mod:DisableEEKillDetection()--EE always fires wipe
@@ -37,12 +37,14 @@ local specWarnCosmicSmash		= mod:NewSpecialWarningDodge(64596, nil, nil, nil, 2,
 
 local enrageTimer				= mod:NewBerserkTimer(360)
 local timerNextBigBang			= mod:NewNextTimer(90.5, 64584, nil, nil, nil, 2)
-local timerBigBangCast			= mod:NewCastTimer(8, 64584, nil, nil, nil, 2)
+local timerBigBangCast			= mod:NewCastTimer(8, 64584, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 local timerNextCollapsingStar	= mod:NewTimer(15, "NextCollapsingStar", 227161)
-local timerCDCosmicSmash		= mod:NewCDTimer(25, 64596, nil, nil, nil, 3)
+local timerCDCosmicSmash		= mod:NewCDTimer(24.6, 64596, nil, nil, nil, 3)
 local timerCastCosmicSmash		= mod:NewCastTimer(4.5, 64596)
-local timerPhasePunch			= mod:NewTargetTimer(45, 64412, nil, "Tank", 2, 5)
-local timerNextPhasePunch		= mod:NewNextTimer(16, 64412, nil, "Tank", 2, 5)
+local timerPhasePunch			= mod:NewTargetTimer(45, 64412, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
+local timerNextPhasePunch		= mod:NewNextTimer(15.5, 64412, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
+
+mod:AddInfoFrameOption(64122, true)
 
 local sentLowHP = {}
 local warnedLowHP = {}
@@ -52,6 +54,16 @@ function mod:OnCombatStart(delay)
 	self.vb.warned_preP2 = false
 	table.wipe(sentLowHP)
 	table.wipe(warnedLowHP)
+	if self.Options.InfoFrame and not self:IsTrivial(80) then
+		DBM.InfoFrame:SetHeader(L.HealthInfo)
+		DBM.InfoFrame:Show(5, "health", 18000)
+	end
+end
+
+function mod:OnCombatEnd()
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 end
 
 function mod:SPELL_CAST_START(args)

@@ -1567,7 +1567,7 @@ local function TitanUpdateConfigAddons()
 				name = "< "..L["TITAN_PANEL_SHIFT_LEFT"].."  ",
 				order = 51,
 				func = function(info, arg1)
-					name = info[1]
+					local name = info[1]
 					if TitanPanel_IsPluginShown(name) then
 						TitanUtils_ShiftButtonOnBarLeft(name)
 					end
@@ -1578,7 +1578,7 @@ local function TitanUpdateConfigAddons()
 				name = "> "..L["TITAN_PANEL_SHIFT_RIGHT"],
 				order = 52,
 				func = function(info, arg1)
-					name = info[1]
+					local name = info[1]
 					if TitanPanel_IsPluginShown(info[1]) then
 						TitanUtils_ShiftButtonOnBarRight(name)
 					end

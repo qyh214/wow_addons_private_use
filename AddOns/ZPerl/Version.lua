@@ -28,13 +28,17 @@ function ZPerl:ADDON_LOADED(addon)
 end
 
 function ZPerl:PLAYER_ENTERING_WORLD()
-	self.timer = C_Timer.After(3, self.SendVersion)
+	self.timer = C_Timer.NewTimer(3, self.SendVersion)
 
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end
 
 function ZPerl:GROUP_MEMBERS_JOINED()
-	self.timer = C_Timer.After(3, self.SendVersion)
+	if self.timer and self.timer.Cancel then
+		self.timer:Cancel()
+	end
+
+	self.timer = C_Timer.NewTimer(3, self.SendVersion)
 end
 
 function ZPerl:GROUP_ROSTER_UPDATE()

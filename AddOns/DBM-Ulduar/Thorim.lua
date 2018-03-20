@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Thorim", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 262 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 278 $"):sub(12, -3))
 mod:SetCreatureID(32865)
 mod:SetEncounterID(1141)
 mod:SetModelID(28977)
@@ -33,7 +33,7 @@ mod:AddBoolOption("AnnounceFails", false, "announce")
 local enrageTimer					= mod:NewBerserkTimer(369)
 local timerStormhammer				= mod:NewBuffActiveTimer(16, 62042, nil, nil, nil, 3)--Cast timer? Review if i ever do this boss again.
 local timerLightningCharge	 		= mod:NewCDTimer(16, 62466, nil, nil, nil, 3) 
-local timerUnbalancingStrike		= mod:NewCDTimer(26, 62130, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerUnbalancingStrike		= mod:NewCDTimer(25.6, 62130, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerHardmode					= mod:NewTimer(175, "TimerHardmode", 62042)
 
 mod:AddBoolOption("RangeFrame")

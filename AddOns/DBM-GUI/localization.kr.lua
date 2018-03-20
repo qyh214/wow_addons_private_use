@@ -89,6 +89,7 @@ L.Warn_FontShadow			= "그림자"
 L.Warn_FontSize				= "글꼴 크기: %d"
 L.Warn_Duration				= "경보 지속시간: %0.1f초"
 L.None						= "없음"
+L.Random					= "무작위"
 L.Outline					= "외곽선"
 L.ThickOutline				= "두꺼운 외곽선"
 L.MonochromeOutline			= "단색 외곽선"
@@ -215,6 +216,20 @@ L.Area_GetVEM				= "VEM 음성팩 받기"
 L.Area_BrowseOtherVP		= "Curse에 올라와있는 다른 음성팩 보기"
 L.Area_BrowseOtherCT		= "Curse에 올라와있는 카운트다운 팩 보기"
 
+-- Tab: Event Sounds
+L.Panel_EventSounds			= "이벤트 효과음"
+L.Area_SoundSelection		= "효과음 선택 (마우스 휠로 스크롤)"
+L.EventVictorySound			= "보스를 잡았을 때 재생할 효과음 설정"
+L.EventWipeSound			= "전멸했을 때 재생할 효과음 설정"
+L.EventEngageSound			= "보스 전투 시작시 재생할 효과음 설정"
+L.EventDungeonMusic			= "던전/레이드에서 재생할 배경음 설정"
+L.EventEngageMusic			= "보스 전투 도중 재생할 배경음 설정"
+L.Area_EventSoundsExtras	= "이벤트 효과음 설정"
+L.EventMusicCombined		= "던전과 보스 전투 배경음에 모든 음악 사용 (변경사항을 적용하려면 UI 리로드 필요)"
+L.Area_EventSoundsFilters	= "이벤트 효과음 필터 적용 조건"
+L.EventFilterDungMythicMusic= "신화/신화+ 난이도에선 던전 배경음을 재생하지 않음"
+L.EventFilterMythicMusic	= "신화/신화+ 난이도에선 보스 전투 배경음을 재생하지 않음"
+
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "DBM 전역 기능 끄기 및 필터"
 L.Area_SpamFilter_Outgoing	= "DBM 전역 기능 끄기 및 필터 설정"
@@ -307,14 +322,6 @@ L.Area_Advanced				= "고급 설정"
 L.FakeBW					= "DBM 대신 BigWigs 사용자로 위장하기 (BigWigs 사용을 강제하는 공격대에서 유용)"
 L.AITimer					= "DBM 내장 인공지능 타이머를 사용하여 처음 하는 전투의 타이머를 자동으로 생성합니다. (베타나 테스트 서버에서 보스 테스트시 유용) 알림: 동일한 주문을 사용하는 쫄이 여러 종류가 나오는 전투에서는 제대로 작동하지 않습니다."
 L.AutoCorrectTimer			= "지나치게 긴 대기시간 바를 자동으로 교정합니다. (보스 모드가 업데이트되지 않은 최상위 콘텐츠를 공략하는 공격대에 유용) 알림: 보스 단계 전환시 타이머가 초기화될 경우 이 기능이 일부 타이머의 작동을 더 안좋게 만들 수 있습니다."
-
-L.PizzaTimer_Headline 		= '"피자 타이머" 생성'
-L.PizzaTimer_Title			= '이름 (예: "Pizza!")'
-L.PizzaTimer_Hours 			= "시"
-L.PizzaTimer_Mins 			= "분"
-L.PizzaTimer_Secs 			= "초"
-L.PizzaTimer_ButtonStart 	= "타이머 시작"
-L.PizzaTimer_BroadCast		= "공격대에 알림"
 
 L.Panel_Profile				= "프로필"
 L.Area_CreateProfile		= "DBM Core 프로필 생성"
