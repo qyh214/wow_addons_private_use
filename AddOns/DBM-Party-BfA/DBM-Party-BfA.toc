@@ -1,6 +1,7 @@
 ## Interface: 70300
 ## X-Min-Interface: 70300
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Party-BfA|r
+## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Gruppe-BfA|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf05인 던전-격전의 아제로스|r
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -13,6 +14,7 @@
 ## X-DBM-Mod-Has-Mythic : 1
 ## X-DBM-Mod-SubCategoriesID: 1763, 1754, 1762, 1864, 1822, 1877, 1594, 1841, 1771, 1862
 ## X-DBM-Mod-Name: Party (Battle for Azeroth)
+## X-DBM-Mod-Name-deDE: Gruppe (Battle for Azeroth)
 ## X-DBM-Mod-Name-koKR: 5인 던전 (격전의 아제로스)
 ## X-DBM-Mod-Sort: 415
 ## X-DBM-Mod-MapID: 1763, 1754, 1762, 1864, 1822, 1877, 1594, 1841, 1771, 1862
@@ -51,11 +53,11 @@ TempleofSethraliss\Merektha.lua
 TempleofSethraliss\Galvazzt.lua
 TempleofSethraliss\AvatarofSethraliss.lua
 TempleofSethraliss\SethralissTrash.lua
-TheUndermine\CrowdPummeler.lua
-TheUndermine\Tikali.lua
-TheUndermine\RixxaFluxflame.lua
-TheUndermine\MogulRazzdunk.lua
-TheUndermine\UndermineTrash.lua
+TheMotherload\CrowdPummeler.lua
+TheMotherload\Tikali.lua
+TheMotherload\RixxaFluxflame.lua
+TheMotherload\MogulRazzdunk.lua
+TheMotherload\UndermineTrash.lua
 TheUnderrot\ElderLeaxa.lua
 TheUnderrot\InfestedCrawg.lua
 TheUnderrot\SporecallerZancha.lua

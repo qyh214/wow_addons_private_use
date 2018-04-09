@@ -81,7 +81,7 @@ local function SetHooks()
 	end)
 
 	-- DropDown
-	function QuestMapQuestOptionsDropDown_Initialize(self)	-- replacement
+	function QuestMapQuestOptionsDropDown_Initialize(self)	-- R
 		local questLogIndex = GetQuestLogIndexByID(self.questID);
 		local info = MSA_DropDownMenu_CreateInfo();
 		info.isNotRadio = true;
@@ -111,9 +111,17 @@ local function SetHooks()
 			info.disabled = nil;
 			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWNMENU_MENU_LEVEL);
 		end
+
+		if db.menuWowheadURL then
+			info.text = "|cff33ff99Wowhead|r URL";
+			info.func = KT.ShowPopup;
+			info.arg1 = "quest";
+			info.arg2 = self.questID;
+			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+		end
 	end
 
-	function QuestMapLogTitleButton_OnClick(self, button)	-- replacement
+	function QuestMapLogTitleButton_OnClick(self, button)	-- R
 		if ( ChatEdit_TryInsertQuestLinkForQuestID(self.questID) ) then
 			return;
 		end
@@ -130,7 +138,11 @@ local function SetHooks()
 				dropDownFrame.questID = self.questID;
 				MSA_ToggleDropDownMenu(1, nil, dropDownFrame, "cursor", 6, -6, nil, nil, MSA_DROPDOWNMENU_SHOW_TIME);
 			else
-				QuestMapFrame_ShowQuestDetails(self.questID);
+				if IsModifiedClick(db.menuWowheadURLModifier) then
+					KT:ShowPopup("quest", self.questID)
+				else
+					QuestMapFrame_ShowQuestDetails(self.questID);
+				end
 			end
 		end
 	end

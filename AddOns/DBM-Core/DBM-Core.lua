@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 17403 $"):sub(12, -3)),
-	DisplayVersion = "7.3.25", -- the string that is shown as version
-	ReleaseRevision = 17403 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 17424 $"):sub(12, -3)),
+	DisplayVersion = "7.3.26", -- the string that is shown as version
+	ReleaseRevision = 17424 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -400,7 +400,7 @@ local breakTimerStart
 local AddMsg
 local delayedFunction
 
-local fakeBWVersion, fakeBWHash = 89, "e601bae"
+local fakeBWVersion, fakeBWHash = 93, "aaab2d6"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -3472,6 +3472,8 @@ function DBM:READY_CHECK()
 			self:PlaySoundFile("Sound\\interface\\levelup2.ogg", true)--Because regular sound uses SFX channel which is too low of volume most of time
 		end
 	end
+	self:TransitionToDungeonBGM(false, true)
+	self:Schedule(4, self.TransitionToDungeonBGM, self)
 end
 
 function DBM:PLAYER_SPECIALIZATION_CHANGED()

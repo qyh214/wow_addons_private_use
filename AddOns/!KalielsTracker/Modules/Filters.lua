@@ -23,6 +23,7 @@ local mediaPath = "Interface\\AddOns\\"..addonName.."\\Media\\"
 
 local KTF = KT.frame
 local OTF = ObjectiveTrackerFrame
+local OTFHeader = OTF.HeaderMenu
 
 local continents = { GetMapContinents() }
 local achievCategory = GetCategoryList()
@@ -504,18 +505,13 @@ function DropDown_Initialize(self, level)
 		info.text = "|cff00ff00Auto|r Zone"
 		info.notCheckable = false
 		info.disabled = false
-		info.leftPadding = 3
 		info.arg1 = 1
 		info.arg2 = "Zone"
 		info.checked = (db.filterAuto[info.arg1] == info.arg2)
 		info.func = Filter_AutoTrack
 		MSA_DropDownMenu_AddButton(info)
 
-		info.text = ""
-		info.notCheckable = true
-		info.leftPadding = nil
-		info.disabled = true
-		MSA_DropDownMenu_AddButton(info)
+		MSA_DropDownMenu_AddSeparator(info)
 
 		-- Achievements
 		info.text = TRACKER_HEADER_ACHIEVEMENTS
@@ -553,7 +549,6 @@ function DropDown_Initialize(self, level)
 		info.text = "|cff00ff00Auto|r Zone"
 		info.notCheckable = false
 		info.disabled = false
-		info.leftPadding = 3
 		info.arg1 = 2
 		info.arg2 = "Zone"
 		info.checked = (db.filterAuto[info.arg1] == info.arg2)
@@ -562,11 +557,7 @@ function DropDown_Initialize(self, level)
 
 		-- Addon - PetTracker
 		if KT.AddonPetTracker.isLoaded then
-			info.text = ""
-			info.notCheckable = true
-			info.leftPadding = nil
-			info.disabled = true
-			MSA_DropDownMenu_AddButton(info)
+			MSA_DropDownMenu_AddSeparator(info)
 
 			info.text = PETS
 			info.isTitle = true
@@ -575,7 +566,6 @@ function DropDown_Initialize(self, level)
 			info.isTitle = false
 			info.disabled = false
 			info.notCheckable = false
-			info.leftPadding = 3
 
 			info.text = PetTracker.Locals.TrackPets
 			info.checked = (not PetTracker.Sets.HideTracker)
@@ -639,7 +629,6 @@ function DropDown_Initialize(self, level)
 
 			info.keepShownOnClick = true
 			info.notCheckable = false
-			info.leftPadding = 3
 
 			for i=1, #achievCategory do
 				local id = achievCategory[i]
@@ -672,7 +661,8 @@ local function SetFrames()
 				SetHooks_AchievementUI()
 				self:UnregisterEvent(event)
 			elseif event == "QUEST_ACCEPTED" then
-				if db.filterAuto[1] == "Zone" then
+				local questID = ...
+				if not IsQuestBounty(questID) and not IsQuestTask(questID) and db.filterAuto[1] then
 					self:RegisterEvent("QUEST_POI_UPDATE")
 				end
 			elseif event == "QUEST_POI_UPDATE" then
@@ -721,6 +711,8 @@ local function SetFrames()
 		GameTooltip:Hide()
 	end)
 	KTF.FilterButton = button
+
+	OTFHeader.Title:SetWidth(OTFHeader.Title:GetWidth() - 20)
 
 	-- Move other buttons
 	if db.hdrOtherButtons then

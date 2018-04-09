@@ -1,194 +1,153 @@
-tag a9b45709536776404b30ec2f6e21a829afb57d96 7.3.25
+tag 5aa8304b18296c1703bef376964c3abd6d6d714a 7.3.26
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Wed Mar 14 01:47:24 2018 +0100
+Date:	Tue Apr 3 22:43:13 2018 +0200
 
-Tagging as 7.3.25
+Tagging as 7.3.26
 
-commit 912e370dd5ccee634e9cc791969e385d8e28f53c
+commit 9c030d18dd222c701f55b0dc1f2acfd384551614
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 14 01:47:24 2018 +0100
+Date:   Tue Apr 3 22:43:13 2018 +0200
 
-    increment version number to 7.3.25
+    increment version number to 7.3.26
 
-commit d26124266a34c7479f70ec5813c1189a627474b9
+commit cc7e4fa3269e253022acbeeb28576a2807efa851
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 14 01:43:22 2018 +0100
+Date:   Tue Apr 3 20:00:19 2018 +0200
 
-    Omega via svn r17403:
-    self
+    Omega via svn r17424:
+    update versionchecker
 
-commit 8ea67ed45546d8e69c88305f5c2ed7aa59092d6b
+commit 0b6efec13d4ce5b2d7487d2cac4975da73db6759
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 14 01:42:45 2018 +0100
+Date:   Mon Apr 2 23:51:12 2018 +0200
 
-    Omega via svn r17402:
-    Fix case where mythic filter wouldn?\226?\128?\153t work
+    ebmor via svn r17423:
+    deDE update
 
-commit 6670e50fc7698a748a036e3e2d499d117b2c34cd
+commit 64678ad0b706afd9039800081e3cb90c42a5a9b1
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Mar 13 22:17:10 2018 +0100
+Date:   Sat Mar 31 20:31:44 2018 +0200
 
-    Omega via svn r17401:
-    Tweak
+    Omega via svn r17422:
+    KR Update
 
-commit aa2a50562b7f7f201782baa3ff4c9447a46f1f23
+commit 8739a6e5a53f620d40c8b929763cfb2f369e9794
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Mar 13 20:16:00 2018 +0100
+Date:   Fri Mar 30 22:14:24 2018 +0200
 
-    Omega via svn r17400:
-    CN update
+    Omega via svn r17421:
+    Spam protection
 
-commit 7064dae7c956f363de7f50890f6d7f2887dcd723
+commit 6bfa7e19fa83d7cf8bb3ceb5ca2a901845baae05
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Mar 13 05:49:33 2018 +0100
+Date:   Fri Mar 30 01:26:38 2018 +0200
 
-    Omega via svn r17399:
-    Force disable victory sounds by default
+    Omega via svn r17420:
+    Fix parsing of little wigs clues
 
-commit c644b42654244c08f9bfaed1b0356d22ba93660d
+commit d028a676ddc15e96167dfd9f483df7fd48555c2a
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Mar 12 20:50:38 2018 +0100
+Date:   Thu Mar 29 07:11:45 2018 +0200
 
-    Omega via svn r17398:
-    Added support for an argus repopper macro (no automation, RL has to use run macro to activate)
+    Omega via svn r17419:
+    Inform users when arrow is activated, so they know the arrow is from DBM and that it?\226?\128?\153s likely been activated by a 3rd party addon and not by DBM, so they have a better idea where to look if they want to disable it.
 
-commit 2c0ed878a9c6e70f3da4d18fdfc1571d45874119
+commit aa1d740255b8c1c0ca43c42a1bda37eca449999f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Mar 12 20:29:25 2018 +0100
+Date:   Wed Mar 28 16:39:46 2018 +0200
 
-    Omega via svn r17397:
-    Added some start/stop music callbacks, even if music options are disabled, so external mods can use same events DBM does i they want to play music using DBMs event handling.
+    Omega via svn r17418:
+    Es update
 
-commit 54ba5364c0a259c3318593caa393da4fd64fa171
+commit ba31165058f432405d5a60b39732af7b5907cb50
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Mar 12 03:04:23 2018 +0100
+Date:   Mon Mar 26 04:09:10 2018 +0200
 
-    ultrashining via svn r17396:
-    zhTW update
+    Omega via svn r17417:
+    Add taloc stub
+    Rename titan discs stub
 
-commit c7d7b44095ef4029d25c8331475c0f88ac4aaaea
+commit 92de292369278a6f489a58bcd03de69091094cda
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Mar 12 02:36:40 2018 +0100
+Date:   Mon Mar 26 03:42:51 2018 +0200
 
-    Omega via svn r17395:
-    Tweak
+    Omega via svn r17416:
+    Rename Undermine to Motherload
 
-commit c1d734e9d121ba26dd5e1fc6e3865288ed489e6d
+commit dc1eb5b14ce2895eb2c6501886ef93f11d5e8223
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Mar 11 04:49:48 2018 +0100
+Date:   Sun Mar 25 21:43:34 2018 +0200
 
-    Omega via svn r17394:
-    Some values to possibly use later to control delays before song transition
+    Omega via svn r17415:
+    Disable boss to beam in LFR, there is no add in LFR
 
-commit d198151fea500b2108941d1d6935ed1323fc8612
+commit a03a9f3011c8ce7058446447dc65a3a5b6f7e65c
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Mar 11 04:05:39 2018 +0100
+Date:   Sat Mar 17 21:08:17 2018 +0100
 
-    Omega via svn r17393:
-    The alphabet is hard
+    Omega via svn r17414:
+    Add cosmic beacon cast warning, and improved visibility of interrupt timer (by actually making it an interrupt timer)
 
-commit 3583302cf319e2b3159ffdb6086ec3b3910d94d5
+commit 9703c1531ece55eead9f79f7eeee3f26d3aab5a7
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Mar 11 03:52:16 2018 +0100
+Date:   Sat Mar 17 06:58:42 2018 +0100
 
-    Omega via svn r17392:
-    Some more feels
+    Omega via svn r17413:
+    update VC
 
-commit 07ca4e024fe2a2d9ab9c6ed85ccdc3e5ecccd45c
+commit 38d1788599c341d6eb1173e37fbb03d08f50e3f3
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Mar 10 21:30:44 2018 +0100
+Date:   Thu Mar 15 20:59:34 2018 +0100
 
-    Omega via svn r17391:
-    Startup some built in media options
+    Omega via svn r17412:
+    Add counter to collapsing world
 
-commit 243c900a344f29f576227427d26d01f42e090e1e
+commit 0c8ddceb143101691c96f37fa0ac36b5a9f27860
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Mar 10 21:02:07 2018 +0100
+Date:   Wed Mar 14 07:06:08 2018 +0100
 
-    Omega via svn r17390:
-    KR update
+    Omega via svn r17411:
+    Shorten. thought I had already done this
 
-commit 596ffcdceb24fc0a49ca573c7d67b1c4225bc147
+commit 684c23471263df035f8008501c9aa8e7ebebad23
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Mar 10 06:42:15 2018 +0100
+Date:   Wed Mar 14 03:09:48 2018 +0100
 
-    Omega via svn r17389:
-    Swap insert order so it looks better in menu with the packs
+    Omega via svn r17410:
+    Revert last
 
-commit fc95a0e2252f44ede65a4f5bd8f30fa699093cee
+commit 44e92b214e97b13cc714576930b23da75909ab98
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Mar 10 06:09:00 2018 +0100
+Date:   Wed Mar 14 02:57:14 2018 +0100
 
-    Omega via svn r17388:
-    Tweaks
+    Omega via svn r17409:
+    Another fix
 
-commit d1304db17903dca9b0ff45115bbb915ac781edd2
+commit ea9267ba49c4b49e57b49f86dc356d46c8f3a9fb
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Mar 10 05:44:56 2018 +0100
+Date:   Wed Mar 14 02:52:15 2018 +0100
 
-    Omega via svn r17387:
-    And just because, add this easteregg
+    Omega via svn r17408:
+    Handle fact ready checks screw with music
 
-commit cac73cbd651b073d924e8f143871ab8e171ce0ab
+commit 2e81489b4e458fec439b8cb2eed740342efa45f1
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Mar 10 04:46:04 2018 +0100
+Date:   Wed Mar 14 02:20:03 2018 +0100
 
-    Omega via svn r17386:
-    Some sound event system refactoring to pretty up UI and make room for additional options/features
+    Omega via svn r17407:
+    Fix bug with checkbox
 
-commit 4056594b108282e90611f0668e7940641dead4c6
+commit afbbca4d2c217a4718a4b7fe0a6ed0ffbde5d000
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Mar 9 06:06:36 2018 +0100
+Date:   Wed Mar 14 02:10:23 2018 +0100
 
-    Omega via svn r17385:
-    do that with it?\226?\128?\153s own option
+    Omega via svn r17406:
+    GUI tweak
 
-commit e55d8495c19baeacb41c20d4ff14150a54ff32d7
+commit 9efe7d8d6cd647d5a6ce18d9de4e0276142069d4
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Mar 9 04:53:22 2018 +0100
+Date:   Wed Mar 14 01:47:54 2018 +0100
 
-    Omega via svn r17384:
-    fix countdown for mythic
-
-commit 6468edd324db3cd342c9a05ae2b56e190c49b681
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Mar 9 03:48:36 2018 +0100
-
-    Omega via svn r17383:
-    Fix dumb
-
-commit 75302d6b4bec5667259220fd9ab07718d5887416
-Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Mar 8 01:29:54 2018 +0100
-
-    Omega via svn r17382:
-    Fix dumb
-
-commit aa73cdae162c2734afc846f111e0c5f2eb47aa82
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 7 06:41:51 2018 +0100
-
-    Omega via svn r17381:
-    Add some more encounter IDs
-
-commit 7c32650a6ae09dc457d5f0be64a7f75c1efabb96
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 7 02:50:49 2018 +0100
-
-    Omega via svn r17380:
-    Fix filter
-
-commit a6d0404c5186039954178228aacab50215f20e65
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 7 01:28:43 2018 +0100
-
-    Omega via svn r17379:
-    Add Scythe warning by suggestion
-
-commit 4393cac741d5a2c1e08ab3fc88779e64602f6072
-Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Mar 6 15:38:01 2018 +0100
-
-    tandanu via svn r17378:
+    tandanu via svn r17405:
     increment alpha version
 

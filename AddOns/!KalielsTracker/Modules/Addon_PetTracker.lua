@@ -244,7 +244,7 @@ function M:OnInitialize()
 	_DBG("|cffffff00Init|r - "..self:GetName(), true)
 	db = KT.db.profile
 	dbChar = KT.db.char
-	self.isLoaded = (KT:CheckAddOn("PetTracker", "7.1.4") and db.addonPetTracker)
+	self.isLoaded = (KT:CheckAddOn("PetTracker", "7.3.0") and db.addonPetTracker)
 
 	if self.isLoaded then
 		tinsert(KT.db.defaults.profile.modulesOrder, "PETTRACKER_TRACKER_MODULE")

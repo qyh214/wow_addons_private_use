@@ -23,30 +23,37 @@ along with CustomTutorials. If not, see <http://www.gnu.org/licenses/>.
 General Arguments
 -----------------
  savedvariable
- icon ..... Default is "?" icon. Image path (tga or blp).
- title .... Default is "Tutorial".
- width .... Default is 350. Internal frame width (without borders).
- font ..... Default is game font (empty string).
+ icon ........... Default is "?" icon. Image path (tga or blp).
+ title .......... Default is "Tutorial".
+ width .......... Default is 350. Internal frame width (without borders).
+ font ........... Default is game font (empty string).
 
 Frame Arguments
 ---------------
- title .... Title relative to frame (replace General value).
- width .... Width relative to frame (replace General value).
+ title .......... Title relative to frame (replace General value).
+ width .......... Width relative to frame (replace General value).
 Note: All other arguments can be used as a general!
- image .... [optional] Image path (tga or blp).
- imageH ... Default is 128. Default image size is 256x128.
- imageX ... Default is 0 (center). Left/Right position relative to center. 
- imageY ... Default is 20 (top margin).
- text ..... Text string.
- textH .... Default is 0 (auto height).
- textX .... Default is 25. Left and Right margin.
- textY .... Default is 20 (top margin).
- shine .... [optional] The frame to anchor the flashing "look at me!" glow.
+ image .......... [optional] Image path (tga or blp).
+ imageHeight .... Default is 128. Default image size is 256x128.
+ imageX ......... Default is 0 (center). Left/Right position relative to center.
+ imageY ......... Default is 20 (top margin).
+ text ........... Text string.
+ textHeight ..... Default is 0 (auto height).
+ textX .......... Default is 25. Left and Right margin.
+ textY .......... Default is 20 (top margin).
+ editbox ........ [optional] Edit box text string (directing value). Edit box is out of content flow.
+ editboxWidth ... Default is 400.
+ editboxLeft, editboxBottom
+ button ......... [optional] Button text string (directing value). Button is out of content flow.
+ buttonWidth .... Default is 100.
+ buttonClick .... Function with button's click action.
+ buttonLeft, buttonBottom
+ shine .......... [optional] The frame to anchor the flashing "look at me!" glow.
  shineTop, shineBottom, shineLeft, shineRight
- point .... Default is "CENTER".
- anchor ... Default is "UIParent".
- relPoint . Default is "CENTER".
- x, y ..... Default is 0, 0.
+ point .......... Default is "CENTER".
+ anchor ......... Default is "UIParent".
+ relPoint ....... Default is "CENTER".
+ x, y ........... Default is 0, 0.
 --]]
 
 -- Lua API
@@ -56,7 +63,7 @@ local format = string.format
 local strfind = string.find
 local round = function(n) return floor(n + 0.5) end
 
-local Lib = LibStub:NewLibrary('MSA-Tutorials-1.0', 3)
+local Lib = LibStub:NewLibrary('MSA-Tutorials-1.0', 4)
 if Lib then
 	Lib.NewFrame, Lib.NewButton, Lib.UpdateFrame = nil
 	Lib.numFrames = Lib.numFrames or 1
@@ -72,12 +79,14 @@ local default = {
 	title = "Tutorial",
 	width = 350,
 	font = "",
-	imageH = 128,
+	imageHeight = 128,
 	imageX = 0,
 	imageY = 20,
-	textH = 0,
+	textHeight = 0,
 	textX = 25,
 	textY = 20,
+	editboxWidth = 400,
+	buttonWidth = 100,
 	point = "CENTER",
 	anchor = UIParent,
 	relPoint = "CENTER",
@@ -154,18 +163,40 @@ local function UpdateFrame(frame, i)
 	end
 	
 	-- Text
-	frame.text:SetPoint('TOP', frame, 0, -((data.image and 26 + data.imageY + data.imageH or 60) + data.textY))
+	frame.text:SetPoint('TOP', frame, 0, -((data.image and 26 + data.imageY + data.imageHeight or 60) + data.textY))
 	frame.text:SetWidth(data.width - (2 * data.textX))
 	frame.text:SetText(data.text)
 	
 	local textHeight = round(frame.text:GetHeight())
-	if data.textH > textHeight then
-		textHeight = data.textH
+	if data.textHeight > textHeight then
+		textHeight = data.textHeight
 	end 
 	textHeight = textHeight - fmod(textHeight, 2)
-	frame:SetHeight((data.image and 56 + data.imageY + data.imageH or 90) + (data.text and data.textY + textHeight or 0) + 18)
+	frame:SetHeight((data.image and 56 + data.imageY + data.imageHeight or 90) + (data.text and data.textY + textHeight or 0) + 18)
 	frame.i = i
 	frame:Show()
+
+	-- EditBox
+	if data.editbox then
+		frame.editbox:ClearFocus()
+		frame.editbox:SetWidth(data.editboxWidth)
+		frame.editbox:SetPoint('BOTTOMLEFT', 14 + data.textX + (data.editboxLeft or 0), 28 + 18 + (data.editboxBottom or 0))
+		frame.editbox:SetText(data.editbox)
+		frame.editbox:Show()
+	else
+		frame.editbox:Hide()
+	end
+
+	-- Button
+	if data.button then
+		frame.button:SetWidth(data.buttonWidth)
+		frame.button:SetPoint('BOTTOMLEFT', 8 + data.textX + (data.buttonLeft or 0), 28 + 18 + (data.buttonBottom or 0))
+		frame.button:SetText(data.button)
+		frame.button:SetScript('OnClick', data.buttonClick)
+		frame.button:Show()
+	else
+		frame.button:Hide()
+	end
 	
 	-- Shine
 	if data.shine then
@@ -185,7 +216,7 @@ local function UpdateFrame(frame, i)
 	else
 		frame.prev:Enable()
 	end
-	frame.pageNum:SetText((PAGE_NUMBER.."/%d"):format(i, frame.unlocked))
+	frame.pageNum:SetText(("%d/%d"):format(i, frame.unlocked))
 	if i < (frame.unlocked or 0) then
 		frame.next:Enable()
 	else
@@ -247,13 +278,23 @@ local function NewFrame(data)
 		frame.flash:Stop()
 		frame.shine:Hide()
 	end)
-	
+
+	frame.editbox = CreateFrame('EditBox', nil, frame, 'InputBoxTemplate')
+	frame.editbox:SetHeight(20)
+	frame.editbox:SetAutoFocus(false)
+	frame.editbox:Hide()
+
+	frame.button = CreateFrame('Button', nil, frame, 'UIPanelButtonTemplate')
+	frame.button:SetSize(100, 22)
+	frame.button:SetPoint("CENTER")
+	frame.button:Hide()
+
 	frame.shine = CreateFrame('Frame')
 	frame.shine:SetBackdrop({edgeFile = 'Interface\\TutorialFrame\\UI-TutorialFrame-CalloutGlow', edgeSize = 16})
 	for i = 1, frame.shine:GetNumRegions() do
 		select(i, frame.shine:GetRegions()):SetBlendMode('ADD')
 	end
-	
+
 	local flash = frame.shine:CreateAnimationGroup()
 	flash:SetLooping('BOUNCE')
 	frame.flash = flash

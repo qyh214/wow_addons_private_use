@@ -15,8 +15,8 @@ local db, dbChar
 local mediaPath = "Interface\\AddOns\\"..addonName.."\\Media\\"
 local helpPath = mediaPath.."Help\\"
 local helpName = "help"
-local helpNumPages = 10
-local cTitle = "|cffffd100"
+local helpNumPages = 11
+local cTitle = "|cffffd200"
 local cBold = "|cff00ffe3"
 local cNew = "|cff00ff00"
 local cWarning = "|cffff7f00"
@@ -35,7 +35,7 @@ local function AddonInfo(name)
 	if IsAddOnLoaded(name) then
 		info = info.." |cff00ff00is installed|r. Support you can enable/disable in Options."
 	else
-		info = info.." |cffff0000isn't installed|r."
+		info = info.." |cffff0000is not installed|r."
 	end
 	return info
 end
@@ -48,13 +48,13 @@ local function SetupTutorials()
 		icon = helpPath.."KT_logo",
 		font = "Fonts\\FRIZQT__.TTF",
 		width = 552,
-		imageH = 256,
+		imageHeight = 256,
 		{	-- 1
 			image = helpPath.."help_kaliels-tracker",
 			text = cTitle..KT.title.."|r is based on default Blizzard Objective Tracker and improves him.\n\n"..
 				"Some features:\n"..
 				"- Change tracker position\n"..
-				"- Expand/Collapse tracker relative to selected position (direction)\n"..
+				"- Expand / Collapse tracker relative to selected position (direction)\n"..
 				"- Auto set trackers height by content with max. height limit\n"..
 				"- Scrolling when content is greater than max. height\n"..
 				"- Remember collapsed tracker after logout/exit game\n\n"..
@@ -67,7 +67,7 @@ local function SetupTutorials()
 		},
 		{	-- 2
 			image = helpPath.."help_header-buttons",
-			imageH = 128,
+			imageHeight = 128,
 			text = cTitle.."Header buttons|r\n\n"..
 				"Minimize button:                                Other buttons:\n"..
 				"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:0:14:0:14:209:170:0|t "..cDots.."...|r Expand Tracker                           "..
@@ -88,7 +88,7 @@ local function SetupTutorials()
 		},
 		{	-- 3
 			image = helpPath.."help_quest-title-tags",
-			imageH = 128,
+			imageHeight = 128,
 			text = cTitle.."Quest title tags|r\n\n"..
 				"At the start of quest titles you see tags like this |cffff8000[100|cff00b3ffhc!|cffff8000]|r.\n"..
 				"Tags are also in quest titles inside Quest Log.\n\n"..
@@ -159,7 +159,7 @@ local function SetupTutorials()
 		{	-- 7
 			image = helpPath.."help_addon-masque",
 			text = cTitle.."Support addon Masque|r\n\n"..
-				"Masque adds skinning support for Quest Item buttons. It also affects the Active Button (see the prev page).\n"..
+				"Masque adds skinning support for Quest Item buttons. It also affects the Active Button (see prev page).\n"..
 				AddonInfo("Masque"),
 		},
 		{	-- 8
@@ -189,23 +189,47 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 10
-			text = cTitle.."         What's NEW in version |cffffffff2.1.8|r\n\n"..
-				"- FIXED - issue #224 - Error when Quest button does not exist.\n"..
-				"- FIXED - Highlight of Quest title or Quest item tag after update tracker.\n"..
-				"- FIXED - Support for Scenario spell buttons.\n"..
-				"- FIXED - Items order inside DropDown menu.\n"..
-				"- ADDED - Popup Quest font changeable.\n"..
-				"- Performance optimization.\n\n"..
+			image = helpPath.."help_tracker-modules",
+			text = cTitle.."Order of Modules|r "..beta.."\n\n"..
+					"Allows to change the order of modules inside the tracker. Supports all modules including external (e.g. PetTracker).",
+			shine = KTF,
+			shineTop = 5,
+			shineBottom = -5,
+			shineLeft = -6,
+			shineRight = 6,
+		},
+		{	-- 11
+			text = cTitle.."         What's NEW in version |cffffffff2.1.9|r\n\n"..
+				"- FIXED - issue #235 - Auto tracked World quests or Zone bonus quests don't"..
+				offs.."expand the tracker, when \"Auto Zone Quests\" filtering is enabled and no"..
+				offs.."quests in zone.\n"..
+				"- FIXED - Tracker collapse, after switch between auto/manually tracked World"..
+				offs.."quest.\n"..
+				"- FIXED - Longer line width inside all modules (e.g. Achievements).\n"..
+				"- ADDED - Kaliel's Tracker logo to collapsed tracker.\n"..
+				"- ADDED - Align right text inside collapsed tracker, when tracker background"..
+				offs.."is none.\n"..
+				"- ADDED - Wowhead URL menu item inside the tracker and Quest Log.\n"..
+				"- REMOVED - A bit chaotic info about completed daily quests from collapsed"..
+				offs.."tracker.\n"..
+				"- UPDATED - Addons support - PetTracker v7.3.0, TomTom v70300-1.0.0,"..
+				offs.."ElvUI v10.73, Tukui v17.17, RealUI v8.1 r20h, SyncUI v1.5.4, SuperVillain UI"..
+				offs.."v1.4.2.\n"..
+				"- UPDATED - Help - Order of Modules.\n"..
+				"- Minor improvements.\n\n"..
 
 				cTitle.."Known issues|r\n"..
 				"- Work with World Map during combat generates LUA errors. This is because"..
 				offs.."World Map was changed to Secure frame in Legion and use some functions"..
 				offs.."from the tracker. "..cWarning.."These errors I will not fix - it's not possible!|r\n\n"..
 
-				cTitle.."Issues reporting|r\n"..
-				"For reporting please use "..cBold.."Tickets|r (|cff666666https://wow.curseforge.com/projects/kaliels-tracker/issues|r) instead of Comments on Curse.com.\n\n"..
+				cTitle.."Issue reporting|r\n"..
+				"For reporting please use "..cBold.."Tickets|r instead of Comments on Curse.com.\n\n\n\n"..
+
 				cWarning.."Before reporting of errors, please deactivate other addons and make sure the bug is not caused by a collision with another addon.|r",
 			textY = -20,
+			editbox = "https://wow.curseforge.com/projects/kaliels-tracker/issues",
+			editboxBottom = 40,
 			shine = KTF,
 			shineTop = 5,
 			shineBottom = -5,
@@ -265,7 +289,7 @@ function M:OnEnable()
 		local data = T.GetTutorial(helpName)
 		local index = data.savedvariable[data.key]
 		if index then
-			last = index < helpNumPages and index+1 or true
+			last = index < helpNumPages and index or true
 			T.ResetTutorial(helpName)
 		end
 	end

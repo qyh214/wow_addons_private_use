@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("CoSTrash", "DBM-Party-Legion", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17420 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -10,6 +10,7 @@ mod.isTrashMod = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 209027 212031 209485 209410 209413 211470 211464 209404 209495 225100 211299 209378",
 	"SPELL_AURA_APPLIED 209033 209512",
+	"CHAT_MSG_MONSTER_SAY",
 	"GOSSIP_SHOW"
 )
 
@@ -198,6 +199,12 @@ do
 		table.wipe(hints)
 		DBM.InfoFrame:Hide()
 	end
+	
+	function mod:CHAT_MSG_MONSTER_SAY(msg)
+		if msg:find(L.Found) then
+			self:SendSync("Finished")
+		end
+	end
 
 	function mod:GOSSIP_SHOW()
 		if not self.Options.SpyHelper then return end
@@ -235,16 +242,20 @@ do
 	end
 	
 	function mod:OnSync(msg, clue)
-		if msg == "CoS" and clue and self.Options.SpyHelper then
+		if not self.Options.SpyHelper then return end
+		if msg == "CoS" and clue then
 			hints[clue] = true
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
+		elseif msg == "Finished" then
+			self:ResetGossipState()
 		end
 	end
-	function mod:OnBWSync(msg)
-		msg = tonumber(msg)
-		if msg and msg > 0 and msg < 15 then
-			DBM:Debug("Recieved BigWigs Comm:"..msg)
-			local bwClue = bwClues[msg]
+	function mod:OnBWSync(msg, extra)
+		if msg ~= "clue" then return end
+		extra = tonumber(extra)
+		if extra and extra > 0 and extra < 15 then
+			DBM:Debug("Recieved BigWigs Comm:"..extra)
+			local bwClue = bwClues[extra]
 			hints[bwClue] = true
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end

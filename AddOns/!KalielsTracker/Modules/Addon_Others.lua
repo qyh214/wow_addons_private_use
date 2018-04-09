@@ -59,8 +59,9 @@ end
 
 -- ElvUI
 local function ElvUI_SetSupport()
-    if KT:CheckAddOn("ElvUI", "10.62", true) then
+    if KT:CheckAddOn("ElvUI", "10.73", true) then
         local E = unpack(_G.ElvUI)
+        E.Blizzard.SetObjectiveFrameHeight = function() end
         E.Blizzard.MoveObjectiveFrame = function() end
         hooksecurefunc(E, "ToggleConfig", function(self)
             local ACD = LibStub("AceConfigDialog-3.0-ElvUI")
@@ -81,7 +82,7 @@ end
 
 -- Tukui
 local function Tukui_SetSupport()
-    if KT:CheckAddOn("Tukui", "17.13", true) then
+    if KT:CheckAddOn("Tukui", "17.17", true) then
         local T = unpack(_G.Tukui)
         T.Miscellaneous.ObjectiveTracker.Enable = function() end
     end
@@ -89,7 +90,7 @@ end
 
 -- RealUI
 local function RealUI_SetSupport()
-    if KT:CheckAddOn("nibRealUI", "8.1 r20d", true) then
+    if KT:CheckAddOn("nibRealUI", "8.1 r20h", true) then
         local R = _G.RealUI
         R:SetModuleEnabled("Objectives Adv.", false)
         -- Fade
@@ -111,7 +112,7 @@ end
 
 -- SyncUI
 local function SyncUI_SetSupport()
-    if KT:CheckAddOn("SyncUI", "1.0.4", true) then
+    if KT:CheckAddOn("SyncUI", "1.5.4", true) then
         SyncUI_ObjTracker.Show = function() end
         SyncUI_ObjTracker:Hide()
         SyncUI_ObjTracker:SetScript("OnLoad", nil)
@@ -143,7 +144,7 @@ end
 
 -- SuperVillain UI
 local function SVUI_SetSupport()
-    if KT:CheckAddOn("SVUI_!Core", "1.3.7", true) then
+    if KT:CheckAddOn("SVUI_!Core", "1.4.2", true) then
         if IsAddOnLoaded("SVUI_QuestTracker") then
             DisableAddOn("SVUI_QuestTracker")
             StaticPopup_Show(addonName.."_ReloadUI")

@@ -1,7 +1,7 @@
-changeset:   277:3d3f13fdb898
-tag:         v7.3.5.277-release
+changeset:   279:a47619685b64
+tag:         v7.3.5.279-release
 user:        Tercio
-date:        Sat Mar 10 10:10:04 2018 -0300
-summary:     - Ticket #628: fullscreen quest summary is overlapping the class hall complete quest button.
+date:        Fri Mar 30 12:58:57 2018 -0300
+summary:     - Added option to change the size of the text on the quest tracker.
 
 

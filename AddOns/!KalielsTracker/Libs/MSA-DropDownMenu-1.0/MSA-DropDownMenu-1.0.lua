@@ -10,7 +10,7 @@
 ---
 --- https://mods.curse.com/addons/wow/254936-msa-dropdownmenu-1-0
 
-local name, minor = "MSA-DropDownMenu-1.0", 3	-- 7.3.0.24920
+local name, minor = "MSA-DropDownMenu-1.0", 4	-- 7.3.0.24920
 
 local lib = LibStub:NewLibrary(name, minor)
 if not lib then return end
@@ -464,7 +464,7 @@ function MSA_DropDownMenu_AddButton(info, level)
 	local frame = MSA_DROPDOWNMENU_OPEN_MENU;
 	if ( frame and frame.displayMode == "MENU" ) then
 		if ( not info.notCheckable ) then
-			xPos = xPos - 6;
+			xPos = xPos - 2;	-- MSA
 		end
 	end
 	
@@ -1267,16 +1267,26 @@ end
 -- Tukui skin
 local function LoadSkin_Tukui()
 	if not IsAddOnLoaded("Tukui") then return end
-	local Backdrop
+	local backdrop
 	for i = 1, MSA_DROPDOWNMENU_MAXLEVELS do
-		Backdrop = _G["MSA_DropDownList"..i.."MenuBackdrop"]
-		Backdrop:SetTemplate("Default")
-		Backdrop:CreateShadow()
-		Backdrop.IsSkinned = true
-		Backdrop = _G["MSA_DropDownList"..i.."Backdrop"]
-		Backdrop:SetTemplate("Default")
-		Backdrop:CreateShadow()
-		Backdrop.IsSkinned = true
+		backdrop = _G["MSA_DropDownList"..i.."MenuBackdrop"]
+		backdrop:SetTemplate("Default")
+		backdrop:CreateShadow()
+		backdrop.IsSkinned = true
+		backdrop = _G["MSA_DropDownList"..i.."Backdrop"]
+		backdrop:SetTemplate("Default")
+		backdrop:CreateShadow()
+		backdrop.IsSkinned = true
+	end
+end
+
+-- Aurora skin
+local function LoadSkin_Aurora()
+	if not IsAddOnLoaded("Aurora") then return end
+	local F = _G.Aurora[1]
+	for i = 1, MSA_DROPDOWNMENU_MAXLEVELS do
+		F.CreateBD(_G["MSA_DropDownList"..i.."MenuBackdrop"])
+		F.CreateBD(_G["MSA_DropDownList"..i.."Backdrop"])
 	end
 end
 
@@ -1285,6 +1295,7 @@ local initFrame = CreateFrame("Frame")
 initFrame:SetScript("OnEvent", function(self, event)
 	LoadSkin_ElvUI()
 	LoadSkin_Tukui()
+	LoadSkin_Aurora()
 	self:UnregisterEvent(event)
 end)
 initFrame:RegisterEvent("PLAYER_ENTERING_WORLD")

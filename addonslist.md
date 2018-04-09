@@ -6,6 +6,8 @@ wow_addons_private_use
 
 !MoncaiCompare 装备比较
 
+163UI_TeamStats 团队成员装备信息汇总
+
 ACP插件管理
 
 AdiBags 背包整合、整理

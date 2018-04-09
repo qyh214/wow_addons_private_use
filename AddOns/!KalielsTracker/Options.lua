@@ -28,7 +28,9 @@ local anchors = { "TOPLEFT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMRIGHT" }
 local strata = { "LOW", "MEDIUM", "HIGH" }
 local flags = { [""] = "None", ["OUTLINE"] = "Outline", ["OUTLINE, MONOCHROME"] = "Outline Monochrome" }
 local textures = { "None", "Default (Blizzard)", "One line", "Two lines" }
+local modifiers = { [""] = "None", ["ALT"] = "Alt", ["CTRL"] = "Ctrl", ["ALT-CTRL"] = "Alt + Ctrl" }
 
+local cTitle = " "..NORMAL_FONT_COLOR_CODE
 local cBold = "|cff00ffe3"
 local cWarning = "|cffff7f00"
 local beta = "|cffff7fff[Beta]|r"
@@ -38,6 +40,8 @@ local KTF = KT.frame
 local OTF = ObjectiveTrackerFrame
 
 local GetModulesOptionsTable, MoveModule, SetSharedColor, IsSpecialLocale, DecToHex, RgbToHex	-- functions
+
+local _, numQuests = GetNumQuestLogEntries()
 
 local defaults = {
 	profile = {
@@ -82,12 +86,14 @@ local defaults = {
 		qiBgrBorder = false,
 		qiXOffset = -5,
 		qiActiveButton = true,
-		
+
+		hideEmptyTracker = false,
+		collapseInInstance = false,
 		tooltipShow = true,
 		tooltipShowRewards = true,
 		tooltipShowID = true,
-		hideEmptyTracker = false,
-		collapseInInstance = false,
+        menuWowheadURL = true,
+        menuWowheadURLModifier = "ALT",
 		
 		sink20OutputSink = "UIErrorsFrame",
 		sink20Sticky = false,
@@ -740,7 +746,7 @@ local options = {
 							order = 4.71,
 						},
 						hdrCollapsedTxt2 = {
-							name = ("0/%d (0)"):format(MAX_QUESTS),
+							name = ("%d/%d"):format(numQuests, MAX_QUESTS),
 							type = "toggle",
 							width = "half",
 							get = function()
@@ -753,9 +759,8 @@ local options = {
 							order = 4.72,
 						},
 						hdrCollapsedTxt3 = {
-							name = ("0/%d Quests  -  0 Dailies"):format(MAX_QUESTS),
+							name = ("%d/%d Quests"):format(numQuests, MAX_QUESTS),
 							type = "toggle",
-							width = "normal+half",
 							get = function()
 								return (db.hdrCollapsedTxt == 3)
 							end,
@@ -893,38 +898,11 @@ local options = {
 					inline = true,
 					order = 6,
 					args = {
-						tooltipShow = {
-							name = "Show tooltips",
-							desc = "Show Quest or Achievement tooltips.",
-							type = "toggle",
-							set = function()
-								db.tooltipShow = not db.tooltipShow
-							end,
+						trackerTitle = {
+							name = cTitle.."Tracker",
+							type = "description",
+							fontSize = "medium",
 							order = 6.1,
-						},
-						tooltipShowRewards = {
-							name = "Show Rewards in tooltips",
-							desc = "Show Quest Rewards inside tooltips.",
-							type = "toggle",
-							disabled = function()
-								return not db.tooltipShow
-							end,
-							set = function()
-								db.tooltipShowRewards = not db.tooltipShowRewards
-							end,
-							order = 6.2,
-						},
-						tooltipShowID = {
-							name = "Show ID in tooltips",
-							desc = "Show Quest or Achievement ID inside tooltips.",
-							type = "toggle",
-							disabled = function()
-								return not db.tooltipShow
-							end,
-							set = function()
-								db.tooltipShowID = not db.tooltipShowID
-							end,
-							order = 6.3,
 						},
 						hideEmptyTracker = {
 							name = "Hide empty tracker",
@@ -933,16 +911,86 @@ local options = {
 								db.hideEmptyTracker = not db.hideEmptyTracker
 								KT:ToggleEmptyTracker()
 							end,
-							order = 6.4,
+							order = 6.11,
 						},
 						collapseInInstance = {
 							name = "Collapse in instance",
-							desc = "Collapses the tracker when entering an instance.",
+							desc = "Collapses the tracker when entering an instance. Note: Enabled Auto filtering can expand the tracker.",
 							type = "toggle",
 							set = function()
 								db.collapseInInstance = not db.collapseInInstance
 							end,
-							order = 6.5,
+							order = 6.12,
+						},
+						tooltipTitle = {
+							name = "\n"..cTitle.."Tooltips",
+							type = "description",
+							fontSize = "medium",
+							order = 6.2,
+						},
+						tooltipShow = {
+							name = "Show tooltips",
+							desc = "Show Quest / World Quest / Achievement / Scenario tooltips.",
+							type = "toggle",
+							set = function()
+								db.tooltipShow = not db.tooltipShow
+							end,
+							order = 6.21,
+						},
+						tooltipShowRewards = {
+							name = "Show Rewards",
+							desc = "Show Quest Rewards inside tooltips - Artifact Power, Order Resources, Money, Equipment etc.",
+							type = "toggle",
+							disabled = function()
+								return not db.tooltipShow
+							end,
+							set = function()
+								db.tooltipShowRewards = not db.tooltipShowRewards
+							end,
+							order = 6.22,
+						},
+						tooltipShowID = {
+							name = "Show ID",
+							desc = "Show Quest / World Quest / Achievement ID inside tooltips.",
+							type = "toggle",
+							disabled = function()
+								return not db.tooltipShow
+							end,
+							set = function()
+								db.tooltipShowID = not db.tooltipShowID
+							end,
+							order = 6.23,
+						},
+						menuTitle = {
+							name = "\n"..cTitle.."Menu items",
+							type = "description",
+							fontSize = "medium",
+							order = 6.3,
+						},
+                        menuWowheadURL = {
+							name = "Wowhead URL",
+							desc = "Show Wowhead URL menu item inside the tracker and Quesl Log.",
+							type = "toggle",
+							set = function()
+								db.menuWowheadURL = not db.menuWowheadURL
+							end,
+							order = 6.31,
+						},
+                        menuWowheadURLModifier = {
+							name = "Wowhead URL click modifier",
+							type = "select",
+							values = modifiers,
+							get = function()
+								for k, v in pairs(modifiers) do
+									if db.menuWowheadURLModifier == k then
+										return k
+									end
+								end
+							end,
+							set = function(_, value)
+								db.menuWowheadURLModifier = value
+							end,
+							order = 6.32,
 						},
 					},
 				},
@@ -956,7 +1004,7 @@ local options = {
 			type = "group",
 			args = {
 				sec1 = {
-					name = "Order Modules "..beta,
+					name = "Order of Modules "..beta,
 					type = "group",
 					inline = true,
 					order = 1,
@@ -1173,14 +1221,14 @@ function GetModulesOptionsTable()
 	local text
 	local args = {
 		descCurOrder = {
-			name = " |cff0dadf2Current Order",
+			name = cTitle.."Current Order",
 			type = "description",
 			width = "double",
 			fontSize = "medium",
 			order = 0.1,
 		},
 		descDefOrder = {
-			name = "|T:1:45|t|cff0dadf2Default Order",
+			name = "|T:1:42|t"..cTitle.."Default Order",
 			type = "description",
 			width = "normal",
 			fontSize = "medium",

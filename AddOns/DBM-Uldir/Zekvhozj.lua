@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2169, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17343 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17417 $"):sub(12, -3))
 mod:SetCreatureID(134445)--Zol'thuum the Forgotten
 mod:SetEncounterID(2136)
 --mod:DisableESCombatDetection()

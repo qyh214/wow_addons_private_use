@@ -329,9 +329,6 @@ local function SetFrames()
 	end)
 	KTF.MinimizeButton = button
 
-	-- Other buttons
-	KT:ToggleOtherButtons()
-
 	-- Scroll frame
 	local Scroll = CreateFrame("ScrollFrame", addonName.."Scroll", KTF)
 	Scroll:SetPoint("TOPLEFT", 4, -4)
@@ -385,11 +382,14 @@ local function SetFrames()
 	OTFHeader:ClearAllPoints()
 	OTFHeader:SetPoint("TOPLEFT", -20, -1)
 	OTFHeader.Title:ClearAllPoints()
-	OTFHeader.Title:SetPoint("LEFT")
-	OTFHeader.Title:SetWidth(trackerWidth - 90)
+	OTFHeader.Title:SetPoint("LEFT", -5, -1)
+	OTFHeader.Title:SetWidth(trackerWidth - 40)
 	OTFHeader.Title:SetJustifyH("LEFT")
 	OTFHeader.Title:SetWordWrap(false)
 	ScenarioBlocksFrame:SetWidth(243)
+
+	-- Other buttons
+	KT:ToggleOtherButtons()
 
 	-- Buttons frame
 	local Buttons = CreateFrame("Frame", addonName.."Buttons", UIParent)
@@ -509,9 +509,9 @@ local function SetHooks()
 			local _, numQuests = GetNumQuestLogEntries()
 			local title = ""
 			if db.hdrCollapsedTxt == 2 then
-				title = ("%d/%d (%d)"):format(numQuests, MAX_QUESTS, GetDailyQuestsCompleted())
+				title = "|T"..mediaPath.."KT_logo:22:22:0:1|t"..("%d/%d"):format(numQuests, MAX_QUESTS)
 			elseif db.hdrCollapsedTxt == 3 then
-				title = ("%d/%d Quests  -  %d Dailies"):format(numQuests, MAX_QUESTS, GetDailyQuestsCompleted())
+				title = "|T"..mediaPath.."KT_logo:22:22:0:1|t"..("%d/%d Quests"):format(numQuests, MAX_QUESTS)
 			end
 			OTFHeader.Title:SetText(title)
 		end
@@ -933,13 +933,17 @@ local function SetHooks()
 		return button
 	end
 
+	hooksecurefunc(DEFAULT_OBJECTIVE_TRACKER_MODULE, "SetBlockHeader", function(self, block, text)
+		block.lineWidth = block.lineWidth or self.lineWidth - 8		-- mod default
+	end)
+
 	local bck_QUEST_TRACKER_MODULE_SetBlockHeader = QUEST_TRACKER_MODULE.SetBlockHeader
 	function QUEST_TRACKER_MODULE:SetBlockHeader(block, text, questLogIndex, isQuestComplete, questID)
 		local _, level, _, _, _, _, frequency, _ = GetQuestLogTitle(questLogIndex)
 		local tagID, _ = GetQuestTagInfo(questID)
 		text = KT:CreateQuestTag(level, tagID, frequency)..text
 		bck_QUEST_TRACKER_MODULE_SetBlockHeader(self, block, text, questLogIndex, isQuestComplete, questID)
-		block.lineWidth = block.lineWidth or self.lineWidth - 8		-- fix default
+		block.lineWidth = block.lineWidth or self.lineWidth - 8		-- mod default
 		block.level = level
 		block.title = text
 
@@ -1033,6 +1037,10 @@ local function SetHooks()
 		KT:RemoveFixedButton(block)
 		bck_WORLD_QUEST_TRACKER_MODULE_OnFreeBlock(self, block)
 	end
+
+	hooksecurefunc("BonusObjectiveTracker_UntrackWorldQuest", function(questID)
+		KT:ToggleEmptyTracker(KT.activeTask)
+	end)
 
 	local function SetProgressBarStyle(block, anchor, progressBar)
 		progressBar.Bar.Label:SetPoint("CENTER")
@@ -1277,6 +1285,8 @@ local function SetHooks()
 			MSA_CloseDropDownMenus();
 			if ( IsModifiedClick("QUESTWATCHTOGGLE") ) then
 				QuestObjectiveTracker_UntrackQuest(nil, block.id);
+			elseif IsModifiedClick(db.menuWowheadURLModifier) then
+				KT:ShowPopup("quest", block.id)
 			else
 				local questLogIndex = GetQuestLogIndexByID(block.id);
 				if ( IsQuestComplete(block.id) and GetQuestLogIsAutoComplete(questLogIndex) ) then
@@ -1334,6 +1344,15 @@ local function SetHooks()
 		info.arg1 = block.id;
 		info.checked = false;
 		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+
+		if db.menuWowheadURL then
+			info.text = "|cff33ff99Wowhead|r URL";
+			info.func = KT.ShowPopup;
+			info.arg1 = "quest";
+			info.arg2 = block.id;
+			info.checked = false;
+			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+		end
 	end
 
 	function ACHIEVEMENT_TRACKER_MODULE:OnBlockHeaderClick(block, mouseButton)  -- R
@@ -1349,6 +1368,8 @@ local function SetHooks()
 			end
 			if ( IsModifiedClick("QUESTWATCHTOGGLE") ) then
 				AchievementObjectiveTracker_UntrackAchievement(_, block.id);
+			elseif IsModifiedClick(db.menuWowheadURLModifier) then
+				KT:ShowPopup("achievement", block.id)
 			elseif ( not AchievementFrame:IsShown() ) then
 				AchievementFrame_ToggleAchievementFrame();
 				AchievementFrame_SelectAchievement(block.id);
@@ -1388,6 +1409,41 @@ local function SetHooks()
 		info.arg1 = block.id;
 		info.checked = false;
 		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+
+		if db.menuWowheadURL then
+			info.text = "|cff33ff99Wowhead|r URL";
+			info.func = KT.ShowPopup;
+			info.arg1 = "achievement";
+			info.arg2 = block.id;
+			info.checked = false;
+			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+		end
+	end
+
+	function BonusObjectiveTracker_OnBlockClick(self, button)	-- R
+		if self.module.ShowWorldQuests then
+			if button == "LeftButton" then
+				if ( not ChatEdit_TryInsertQuestLinkForQuestID(self.TrackedQuest.questID) ) then
+					MSA_CloseDropDownMenus();
+					if IsShiftKeyDown() then
+						if IsWorldQuestWatched(self.TrackedQuest.questID) then
+							BonusObjectiveTracker_UntrackWorldQuest(self.TrackedQuest.questID);
+						end
+					elseif IsModifiedClick(db.menuWowheadURLModifier) then
+						KT:ShowPopup("quest", self.TrackedQuest.questID)
+					else
+						local _, mapID = C_TaskQuest.GetQuestZoneID(self.TrackedQuest.questID);
+						if mapID then
+							ShowQuestLog();
+							SetMapByID(mapID);
+							WorldMapPing_StartPingQuest(self.TrackedQuest.questID);
+						end
+					end
+				end
+			elseif button == "RightButton" then
+				ObjectiveTracker_ToggleDropDown(self, BonusObjectiveTracker_OnOpenDropDown);
+			end
+		end
 	end
 
 	function BonusObjectiveTracker_OnOpenDropDown(self)  -- R
@@ -1419,6 +1475,15 @@ local function SetHooks()
 			info.func = function()
 				BonusObjectiveTracker_UntrackWorldQuest(questID);
 			end
+			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+		end
+
+		if db.menuWowheadURL then
+			info.text = "|cff33ff99Wowhead|r URL";
+			info.func = KT.ShowPopup;
+			info.arg1 = "quest";
+			info.arg2 = questID;
+			info.checked = false;
 			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
 		end
 	end
@@ -1622,7 +1687,9 @@ function KT:SetBackground()
 		KTF.Scroll:SetHitRectInsets(-150, 0, 0, 0.1)
 	else
 		KTF.Scroll:SetHitRectInsets(0.1, 0, 0, 0.1)
-	end
+    end
+
+    OTFHeader.Title:SetJustifyH(db.bgr == "None" and "RIGHT" or "LEFT")
 end
 
 function KT:SetText()
@@ -1672,9 +1739,11 @@ function KT:ToggleOtherButtons()
 		if KTF.QuestLogButton then
 			KTF.QuestLogButton:Hide()
 			KTF.AchievementsButton:Hide()
+			OTFHeader.Title:SetWidth(OTFHeader.Title:GetWidth() + 40)
 		end
 		return
 	end
+	OTFHeader.Title:SetWidth(OTFHeader.Title:GetWidth() - 40)
 	if KTF.QuestLogButton then
 		KTF.QuestLogButton:Show()
 		KTF.AchievementsButton:Show()
@@ -1920,6 +1989,40 @@ function KT:MergeTables(source, target)
 		end
 	end
 	return target
+end
+
+StaticPopupDialogs[addonName.."_WowheadURL"] = {
+	text = "|T"..mediaPath.."KT_logo:22:22:0:-1|t"..NORMAL_FONT_COLOR_CODE..KT.title.."|r - Wowhead URL",
+	button2 = CLOSE,
+	hasEditBox = 1,
+	editBoxWidth = 300,
+	EditBoxOnEnterPressed = function(self)
+		self:GetParent():Hide()
+	end,
+	EditBoxOnEscapePressed = function(self)
+		self:GetParent():Hide()
+	end,
+	OnShow = function(self)
+		local name = "..."
+		if self.text.text_arg1 == "quest" then
+			name = QuestUtils_GetQuestName(self.text.text_arg2)
+		elseif self.text.text_arg1 == "achievement" then
+			name = select(2, GetAchievementInfo(self.text.text_arg2))
+		end
+		local www = KT.locale:sub(1, 2)
+		if www == "zh" then www = "cn" end
+		self.text:SetText(self.text:GetText().."\n|cffff7f00"..name.."|r")
+		self.editBox:SetText("http://"..www..".wowhead.com/"..self.text.text_arg1.."="..self.text.text_arg2)
+		self.editBox:SetFocus()
+		self.editBox:HighlightText()
+	end,
+	timeout = 0,
+	whileDead = 1,
+	hideOnEscape = 1
+}
+
+function KT:ShowPopup(type, id)
+	StaticPopup_Show(addonName.."_WowheadURL", type, id)
 end
 
 -- Load ----------------------------------------------------------------------------------------------------------------
