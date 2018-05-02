@@ -76,9 +76,11 @@ v3.01 - Update for 7.1.
 
 v3.02 - Update for 7.2.
 
+v3.03 - Update for 7.3.
+
 --]]
 
-MBB_Version = "3.02";
+MBB_Version = "3.03";
 
 -- Setup some variable for debugging.
 MBB_DebugFlag = 0;

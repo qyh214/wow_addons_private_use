@@ -22,8 +22,8 @@ L["Hide Northrend"] = "Northrend ausblenden"
 L["Hide Outland"] = "Scherbenwelt ausblenden"
 L["Hide Pandaria"] = "Pandaria ausblenden"
 L["Hide Vanilla"] = "Vanilla ausblenden"
---Translation missing 
--- L["Invert Lockout"] = ""
+--[[Translation missing --]]
+--[[ L["Invert Lockout"] = ""--]] 
 L["Journal Integration"] = "Kompendium-Integration"
 L["Lockout Alpha"] = "Deckkraft bei Sperre"
 L["Lockout Gray Icon"] = "Graues Symbol bei Sperre"
@@ -44,8 +44,8 @@ L["The alpha of the icons shown on the zone map"] = "Die Deckkraft von Symbolen 
 L["The scale of the icons shown on the continent map"] = "Die Große von Symbolen auf der Kontinentkarte"
 L["The scale of the icons shown on the zone map"] = "Die Große von Symbolen auf der Zonenkarte"
 L["These settings control the look and feel of the icon."] = "Diese Einstellungen legen das Aussehen der Symbole fest."
---Translation missing 
--- L["Turn mixed icons grey when ANY dungeon or raid listed is locked"] = ""
+--[[Translation missing --]]
+--[[ L["Turn mixed icons grey when ANY dungeon or raid listed is locked"] = ""--]] 
 L["Use a different alpha for dungeons and raids that are locked to any extent"] = "Verwendet eine andere Deckkraft für Dungeons und Schlachtzügen, die in irgendeiner Weise gesperrt sind"
 L["Use gray icon for dungeons and raids that are locked to any extent"] = "Verwendet graue Symbole für Dungeons und Schlachtzüge, die in irgendeiner Weise gesperrt sind"
 L["Use Lockout Alpha"] = "Sperrdeckkraft verwenden"

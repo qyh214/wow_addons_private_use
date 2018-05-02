@@ -5,7 +5,7 @@ local rowCount = 4
 
 local requestKeystoneCheck
 
--- 1: Overflowing, 2: Skittish, 3: Volcanic, 4: Necrotic, 5: Teeming, 6: Raging, 7: Bolstering, 8: Sanguine, 9: Tyrannical, 10: Fortified
+-- 1: Overflowing, 2: Skittish, 3: Volcanic, 4: Necrotic, 5: Teeming, 6: Raging, 7: Bolstering, 8: Sanguine, 9: Tyrannical, 10: Fortified, 11: Bursting, 12: Grievous, 13: Explosive, 14: Quaking
 local affixSchedule = {
 	{ 6, 3, 9 },
 	{ 5, 13, 10 },
@@ -15,7 +15,7 @@ local affixSchedule = {
 	{ 5, 14, 10 },
 	{ 6, 4, 9 },
 	{ 7, 2, 10 },
-	{ 5, 4, 9 },
+	{ 5, 3, 9 },
 	{ 8, 12, 10 },
 	{ 7, 13, 9 },
 	{ 11, 14, 10 },

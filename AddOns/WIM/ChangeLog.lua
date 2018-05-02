@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 540 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 543 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,8 +16,11 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.7.15", "04/20/2018", [[
+	*Grabbed latest ChatThrottleLib for 8.x compat
+]]);
 addEntry("3.7.14", "09/03/2017", [[
-	*Fixed Officr chat Taint
+	*Fixed Officer chat Taint
 ]]);
 addEntry("3.7.13", "09/03/2017", [[
 	*Fixed Guild chat Taint
@@ -26,9 +29,6 @@ addEntry("3.7.12", "08/29/2017", [[
 	*7.3 Compat Fixes
 	*SC1 client icon support
 	*Updated some profile URLS
-]]);
-addEntry("3.7.11", "12/19/2016", [[
-	*Changed font used in 7.1 work around to avoid CYR font issues.
 ]]);
 
 

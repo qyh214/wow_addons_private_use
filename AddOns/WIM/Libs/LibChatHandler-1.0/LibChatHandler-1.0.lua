@@ -1,7 +1,7 @@
 --[[
 Name: LibChatHandler-1.0
 Revision: $Revision: 18 $
-Date: $Date: 2016-07-19 09:36:20 -0500 (Tue, 19 Jul 2016) $
+Date: $Date: 2016-07-19 14:36:20 +0000 (Tue, 19 Jul 2016) $
 Author: Pazza <Bronzebeard> (johnlangone@gmail.com)
 Website: http://www.wimaddon.com
 Documentation: http://www.wimaddon.com/wiki/LibChatHandler-1.0

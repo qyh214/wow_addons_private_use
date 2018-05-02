@@ -28,19 +28,19 @@ L["S_GROUPFINDER_ACTIONS_UNLISTING"] = "abmelden..."
 L["S_GROUPFINDER_ACTIONS_WAITING"] = "warten..."
 L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = "Beim Anvisieren eines seltenen Gegners automatisch öffnen"
 L["S_GROUPFINDER_ENABLED"] = "Bei neuer Quest automatisch öffnen"
---Translation missing 
--- L["S_GROUPFINDER_INVASION_ENABLED"] = ""
+--[[Translation missing --]]
+--[[ L["S_GROUPFINDER_INVASION_ENABLED"] = ""--]] 
 L["S_GROUPFINDER_LEAVEOPTIONS"] = "Optionen Gruppenverlassen"
 L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = "Nach X Sekunden verlassen"
---Translation missing 
--- L["S_GROUPFINDER_LEAVEOPTIONS_ASKX"] = ""
+--[[Translation missing --]]
+--[[ L["S_GROUPFINDER_LEAVEOPTIONS_ASKX"] = ""--]] 
 L["S_GROUPFINDER_LEAVEOPTIONS_DONTLEAVE"] = "Das Menü zum Verlassen nicht anzeigen"
 L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"] = "Nach Questabschluss sofort verlassen"
 L["S_GROUPFINDER_NOPVP"] = "PvP-Realms vermeiden"
 L["S_GROUPFINDER_OT_ENABLED"] = "Buttons auf der Questverfolgung zeigen."
 L["S_GROUPFINDER_QUEUEBUSY"] = "Du bist bereits in einer Warteschlange."
---Translation missing 
--- L["S_GROUPFINDER_QUEUEBUSY2"] = ""
+--[[Translation missing --]]
+--[[ L["S_GROUPFINDER_QUEUEBUSY2"] = ""--]] 
 L["S_GROUPFINDER_RESULTS_APPLYING"] = "Es gibt noch %d verbleibende Gruppen, klicke nochmal"
 L["S_GROUPFINDER_RESULTS_APPLYING1"] = "Es gibt noch 1 verbleibende Gruppe, klicke nochmal"
 L["S_GROUPFINDER_RESULTS_FOUND"] = [=[Es wurden %s Gruppen gefunden
@@ -114,16 +114,16 @@ L["S_QUESTTYPE_PROFESSION"] = "Beruf"
 L["S_QUESTTYPE_PVP"] = "PvP"
 L["S_QUESTTYPE_RESOURCE"] = "Ressourcen"
 L["S_QUESTTYPE_TRADESKILL"] = "Berufsfertigkeit"
---Translation missing 
--- L["S_RAREFINDER_ADDFROMPREMADE"] = ""
+--[[Translation missing --]]
+--[[ L["S_RAREFINDER_ADDFROMPREMADE"] = ""--]] 
 L["S_RAREFINDER_NPC_NOTREGISTERED"] = "Seltener NSC nicht in der Datenbank"
 L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = "Immer auf Englisch suchen"
 L["S_RAREFINDER_OPTIONS_SHOWICONS"] = "Symbole für aktive seltene Gegner anzeigen"
 L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = "Immer abspielen, selbst wenn Soundeffekte deaktiviert sind"
---Translation missing 
--- L["S_RAREFINDER_SOUND_ENABLED"] = ""
---Translation missing 
--- L["S_RAREFINDER_SOUNDWARNING"] = ""
+--[[Translation missing --]]
+--[[ L["S_RAREFINDER_SOUND_ENABLED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_RAREFINDER_SOUNDWARNING"] = ""--]] 
 L["S_RAREFINDER_TITLE"] = "Suche seltener Gegner"
 L["S_RAREFINDER_TOOLTIP_REMOVE"] = "Entfernen"
 L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = "Auf anderen Realms suchen"

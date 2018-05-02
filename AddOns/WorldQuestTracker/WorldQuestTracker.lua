@@ -256,6 +256,7 @@ local default_config = {
 		tracker_textsize = 12,
 		use_quest_summary = true,
 		zone_only_tracked = false,
+		low_level_tutorial = false, --
 		bar_anchor = "bottom",
 		use_old_icons = false,
 		history = {
@@ -281,6 +282,69 @@ local default_config = {
 		},
 	},
 }
+
+-------------------------------------------------------------------------------------------------------------------
+--search checkpoint: ~8 ~bfa ~kultiras ~zandalar
+
+
+--[=[
+	8.0 notepad
+	
+	- which zones will have world quests?
+	- what's the garrison resource for this expansion?
+	- check for new rewards
+	
+	
+	need new functions for:
+		- check for the player current standing map	
+		- get the current map shown in the map frame
+	
+	notes:
+		WorldMapFrame.currentStandingZone > might need changes
+		
+		Check if self <WorldMapFrame>.mapID still keep the mapID
+		
+		WorldQuestTracker.IsASubLevel() might need to be updated
+		
+		All argus and broken shore related functions can be removed
+		
+		GetCurrentMapAreaID() might have to be replaced
+		
+		Cleanup removing all these locals with the zone name and mapId
+	
+		Remove the filter exceptions
+		
+		Remove, put all in tables now
+		WorldQuestTracker.MAPID_DALARAN = 1014
+		WorldQuestTracker.MAPID_ARGUS = 1184
+		WorldQuestTracker.MAPID_BROKENISLES = 1007
+		local MAPID_BROKENISLES = 1007
+		
+--> BfA world quest zones:
+local PLACEHOLDER_MAPID = 0
+
+local BATTLE_FOR_AZEROTH_ZONES = {
+	--Zandalar horde zones
+		--Nazmir
+		[PLACEHOLDER_MAPID] = true,
+		--Zuldazar
+		[PLACEHOLDER_MAPID] = true,
+		--Voldun
+		[PLACEHOLDER_MAPID] = true,
+	
+	--Kul Tiras aliance zones
+		--Stormsong Valley
+		[PLACEHOLDER_MAPID] = true,
+		--Drustvar
+		[PLACEHOLDER_MAPID] = true,
+		--Tiragarde Sound
+		[PLACEHOLDER_MAPID] = true,
+}
+
+
+--]=]
+-------------------------------------------------------------------------------------------------------------------
+
 
 local azsuna_mapId = 1015
 local highmountain_mapId = 1024
@@ -343,7 +407,7 @@ local WQT_QUEST_NAMES_AND_ICONS = {
 	--[WQT_QUESTTYPE_PROFESSION] = {name = "Profession", icon = [[Interface\Garrison\MobileAppIcons]], coords = {256/1024, 384/1024, 0/1024, 128/1024}},
 	--[WQT_QUESTTYPE_PVP] = {name = "PvP", icon = [[Interface\PVPFrame\Icon-Combat]], coords = {0, 1, 0, 1}},
 	[WQT_QUESTTYPE_PVP] = {name = L["S_QUESTTYPE_PVP"], icon = [[Interface\QUESTFRAME\QuestTypeIcons]], coords = {37/128, 53/128, 19/64, 36/64}},
-	[WQT_QUESTTYPE_PETBATTLE] = {name = L["S_QUESTTYPE_PETBATTLE"], icon = [[Interface\MINIMAP\ObjectIconsAtlas]], coords = {387/512, 414/512, 378/512, 403/512}},
+	[WQT_QUESTTYPE_PETBATTLE] = {name = L["S_QUESTTYPE_PETBATTLE"], icon = [[Interface\MINIMAP\ObjectIconsAtlas]], coords = {208/512, 235/512, 443/512, 468/512}},
 	[WQT_QUESTTYPE_TRADE] = {name = L["S_QUESTTYPE_TRADESKILL"], icon = [[Interface\ICONS\INV_Blood of Sargeras]], coords = {5/64, 59/64, 5/64, 59/64}},
 }
 
@@ -6134,9 +6198,10 @@ function WorldQuestTracker.SetupWorldQuestButton (self, worldQuestType, rarity, 
 		elseif (worldQuestType == LE_QUEST_TAG_TYPE_PET_BATTLE) then
 			self.questTypeBlip:Show()
 			self.questTypeBlip:SetTexture ([[Interface\MINIMAP\ObjectIconsAtlas]])
-			--self.questTypeBlip:SetTexCoord (172/512, 201/512, 273/512, 301/512)
-			self.questTypeBlip:SetTexCoord (219/512, 246/512, 478/512, 502/512) -- left right    top botton  --7.2.5
-			self.questTypeBlip:SetTexCoord (387/512, 414/512, 378/512, 403/512) -- left right    top botton  --7.3
+			--self.questTypeBlip:SetTexCoord (172/512, 201/512, 273/512, 301/512) -- left right    top botton  --7.1.0
+			--self.questTypeBlip:SetTexCoord (219/512, 246/512, 478/512, 502/512) -- left right    top botton  --7.2.5
+			--self.questTypeBlip:SetTexCoord (387/512, 414/512, 378/512, 403/512) -- left right    top botton  --7.3
+			self.questTypeBlip:SetTexCoord (unpack (WQT_QUEST_NAMES_AND_ICONS [WQT_QUESTTYPE_PETBATTLE].coords)) -- left right    top botton  --7.3.5
 			self.questTypeBlip:SetAlpha (1)
 			
 		elseif (worldQuestType == LE_QUEST_TAG_TYPE_PROFESSION) then
@@ -7204,6 +7269,7 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 							if (questInfo.questType == QUESTTYPE_GOLD) then
 								rewardAmount = floor (questInfo.rewardAmount / 10000)
 							end
+							
 							local colorByRarity = ""
 
 							if (rarity  == LE_WORLD_QUEST_QUALITY_EPIC) then
@@ -7223,14 +7289,22 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 							else
 								color = "FFFF3322"
 							end
-							line.name:SetText ("|cFFFFDD00[" .. rewardAmount .. "]|r |c" .. colorByRarity .. title .. "|r")
-							line.timeleft:SetText (timeLeft > 0 and "|c" .. color .. SecondsToTime (timeLeft * 60) .. "|r" or "|cFFFF5500" .. L["S_SUMMARYPANEL_EXPIRED"] .. "|r")
+							
 							if (type (questInfo.rewardTexture) == "string" and questInfo.rewardTexture:find ("icon_artifactpower")) then
 								--for�ando sempre mostrar icone vermelho
 								line.icon:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\icon_artifactpower_blueT]])
+								
+								--format the artifact power amount
+								if (rewardAmount > 100000) then
+									rewardAmount = WorldQuestTracker.ToK (rewardAmount)
+								end
+								
 							else
 								line.icon:SetTexture (questInfo.rewardTexture)
 							end
+							
+							line.name:SetText ("|cFFFFDD00[" .. rewardAmount .. "]|r |c" .. colorByRarity .. title .. "|r")
+							line.timeleft:SetText (timeLeft > 0 and "|c" .. color .. SecondsToTime (timeLeft * 60) .. "|r" or "|cFFFF5500" .. L["S_SUMMARYPANEL_EXPIRED"] .. "|r")
 							
 							line.icon:SetTexCoord (5/64, 59/64, 5/64, 59/64)
 							line.name:SetWidth (100)
@@ -12065,7 +12139,15 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 	
 	if (UnitLevel ("player") < 110) then
 		WorldQuestTracker.HideWorldQuestsOnWorldMap()
+		
+		--> show a message telling why world quests aren't shown
+		if (WorldQuestTracker.db.profile and not WorldQuestTracker.db.profile.low_level_tutorial) then
+			WorldQuestTracker.db.profile.low_level_tutorial = true
+			WorldQuestTracker:Msg ("World quests aren't shown because you're below level 110.") --> localize-me
+		end
+		
 		return
+		
 	elseif (not IsQuestFlaggedCompleted (WORLD_QUESTS_AVAILABLE_QUEST_ID)) then
 		WorldQuestTracker.HideWorldQuestsOnWorldMap()
 		--print ("quest nao completada...")
@@ -12473,8 +12555,9 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 										widget.questTypeBlip:Show()
 										widget.questTypeBlip:SetTexture ([[Interface\MINIMAP\ObjectIconsAtlas]])
 										--widget.questTypeBlip:SetTexCoord (172/512, 201/512, 273/512, 301/512)
-										widget.questTypeBlip:SetTexCoord (219/512, 246/512, 478/512, 502/512) -- left right    top botton --7.2.5
-										widget.questTypeBlip:SetTexCoord (387/512, 414/512, 378/512, 403/512) -- left right    top botton --7.3
+										--widget.questTypeBlip:SetTexCoord (219/512, 246/512, 478/512, 502/512) -- left right    top botton --7.2.5
+										--widget.questTypeBlip:SetTexCoord (387/512, 414/512, 378/512, 403/512) -- left right    top botton --7.3
+										widget.questTypeBlip:SetTexCoord (unpack (WQT_QUEST_NAMES_AND_ICONS [WQT_QUESTTYPE_PETBATTLE].coords)) -- left right    top botton  --7.3.5
 										widget.questTypeBlip:SetAlpha (.85)
 										
 									elseif (worldQuestType == LE_QUEST_TAG_TYPE_DUNGEON) then

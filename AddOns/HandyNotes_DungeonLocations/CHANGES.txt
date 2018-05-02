@@ -1,9 +1,10 @@
 ------------------------------------------------------------------------
-r64 | nagboy@gmail.com | 2018-02-06 22:26:06 +0000 (Tue, 06 Feb 2018) | 1 line
+r66 | Caliaha | 2018-04-27 21:13:03 +0000 (Fri, 27 Apr 2018) | 2 lines
 Changed paths:
    M /trunk/locales/Locales.xml
-   A /trunk/locales/ptBR.lua
+   A /trunk/locales/ruRU.lua
 
-Added Brazilian Portuguese locale thanks to cleitontf
+Added russian localization
+
 ------------------------------------------------------------------------
 

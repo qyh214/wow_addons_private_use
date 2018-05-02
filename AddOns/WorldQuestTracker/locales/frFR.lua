@@ -125,8 +125,8 @@ L["S_RAREFINDER_TOOLTIP_REMOVE"] = [=[Supprimer
 ]=]
 L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = "Chercher sur d'autres royaumes"
 L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Repéré par"
---Translation missing 
--- L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = ""
+--[[Translation missing --]]
+--[[ L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = ""--]] 
 L["S_SHAREPANEL_THANKS"] = [=[Merci de partager World Quest Tracker !
 Envoyez notre lien à vos amis sur Facebook, Twitter, à l'Élysée...]=]
 L["S_SHAREPANEL_TITLE"] = "For All Those About to Rock!"

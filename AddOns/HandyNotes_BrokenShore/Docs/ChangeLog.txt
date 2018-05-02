@@ -1,9 +1,13 @@
-$Id: ChangeLog.txt 84 2018-01-22 15:35:12Z arith $
+$Id: ChangeLog.txt 87 2018-04-25 02:26:46Z arith $
 
 Revision History:
 =================
 
-* v1.22 (Jan. 22, 2017)
+* v1.24 (Apr. 25, 2017)
+-----------------------
+- Lib update: LibUIDropDownMenu
+
+* v1.23 (Jan. 22, 2017)
 -----------------------
 - Translation update:
   - Portuguese (cleitontf)

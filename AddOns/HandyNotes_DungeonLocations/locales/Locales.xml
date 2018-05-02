@@ -6,6 +6,7 @@
 	<Script file="deDE.lua"/>
 	<Script file="koKR.lua"/>
 	<Script file="ptBR.lua"/>
+	<Script file="ruRU.lua"/>
 	<Script file="zhTW.lua"/>
 </Ui>
 

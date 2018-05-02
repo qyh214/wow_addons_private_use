@@ -1,16 +1,9 @@
 ------------------------------------------------------------------------
-r109 | karlsnyder | 2017-05-07 15:04:59 -0500 (Sun, 07 May 2017) | 1 line
+r111 | karlsnyder | 2018-01-17 00:11:48 +0000 (Wed, 17 Jan 2018) | 1 line
 Changed paths:
    M /trunk/MBB.lua
    M /trunk/MBB.toc
 
-Updated for 7.2
-------------------------------------------------------------------------
-r108 | arith | 2017-04-12 09:32:51 -0500 (Wed, 12 Apr 2017) | 2 lines
-Changed paths:
-   M /trunk/localization-zhTW.lua
-
-MBB:- zhTW update
-
+Updated for 7.3
 ------------------------------------------------------------------------
 

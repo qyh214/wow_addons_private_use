@@ -935,7 +935,7 @@ local function instantiateWindow(obj)
                                 classTag = "ow";--"Interface\\FriendsFrame\\Battlenet-Overwatchicon"
                                 icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
                                 icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
-                elseif(self.bn and (self.bn.client == _G.BNET_CLIENT_APP or self.bn.client == _G.BNET_CLIENT_CLNT)) then--Battle.net Desktop App
+                elseif(self.bn and (self.bn.client == _G.BNET_CLIENT_APP or self.bn.client == _G.BNET_CLIENT_CLNT or self.bn.client == "BSAp")) then--Battle.net Desktop/Mobile Apps
                                 classTag = "bnd";--"Interface\\FriendsFrame\\Battlenet-Battleneticon"
                                 icon:SetTexture(GetSelectedSkin().message_window.widgets.client_icon.texture);
                                 icon:SetTexCoord(unpack(GetSelectedSkin().message_window.widgets.client_icon[classTag]));
