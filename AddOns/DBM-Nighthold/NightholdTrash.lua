@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NightholdTrash", "DBM-Nighthold")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17471 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
@@ -174,7 +174,7 @@ function mod:SPELL_AURA_APPLIED(args)
 						specWarnSearingWounds:Play("stackhigh")
 					end
 				else
-					if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
+					if not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 						specWarnSearingWoundsOther:Show(args.destName)
 						specWarnSearingWoundsOther:Play("changemt")
 					end

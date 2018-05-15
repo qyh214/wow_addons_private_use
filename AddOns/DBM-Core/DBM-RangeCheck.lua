@@ -573,7 +573,12 @@ do
 			radarFrame.text:SetText(DBM_CORE_RANGERADAR_HEADER:format(activeRange, mainFrame.redCircleNumPlayers))
 		end
 
-		local playerMapId = GetPlayerMapAreaID("player") or 0
+		local playerMapId
+		if C_Map then
+			playerMapId = C_Map.GetBestMapForUnit("player") or 0
+		else
+			playerMapId = GetPlayerMapAreaID("player") or 0
+		end
 		if not restricted then
 			rotation = pi2 - (GetPlayerFacing() or 0)
 		end
@@ -588,7 +593,12 @@ do
 		for i = 1, numPlayers do
 			local uId = unitList[i]
 			local dot = dots[i]
-			local mapId = GetPlayerMapAreaID(uId) or playerMapId
+			local mapId
+			if C_Map then
+				mapId = C_Map.GetBestMapForUnit(uId) or 0
+			else
+				mapId = GetPlayerMapAreaID(uId) or 0
+			end
 			if UnitExists(uId) and playerMapId == mapId and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and UnitInPhase(uId) and (not filter or filter(uId)) then
 				local range--Juset set to a number in case any api fails and returns nil
 				if restricted then--API restrictions are in play, so pretend we're back in BC

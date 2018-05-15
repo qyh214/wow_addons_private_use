@@ -43,7 +43,7 @@
 --
 
 
-local revision =("$Revision: 17407 $"):sub(12, -3)
+local revision =("$Revision: 17500 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -439,11 +439,9 @@ do
 		if name:find("%$spell:ej") then -- it is in fact a journal link :-)
 			name = name:gsub("%$spell:ej(%d+)", "$journal:%1")
 		end
-		local rawSpellId = 0
 		if name:find("%$spell:") then
 			if not isTimer and modvar then
 				local spellId = string.match(name, "spell:(%d+)")
-				rawSpellId = spellId
 				noteSpellName = DBM:GetSpellInfo(spellId)
 			end
 			name = name:gsub("%$spell:(%d+)", replaceSpellLinks)
@@ -485,7 +483,7 @@ do
 						if noteText then
 							DBM:Debug(tostring(noteText), 2)--Debug only
 						end
-						DBM:ShowNoteEditor(mod, modvar, noteSpellName, nil, nil, rawSpellId)
+						DBM:ShowNoteEditor(mod, modvar, noteSpellName)
 					end)
 				end
 			end
@@ -3081,10 +3079,11 @@ local function CreateOptionsMenu()
 
 	do
 		local spamPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_SpamFilter, "option")
-		local spamOutArea = spamPanel:CreateArea(L.Area_SpamFilter_Outgoing, nil, 210, true)
+		local spamOutArea = spamPanel:CreateArea(L.Area_SpamFilter_Outgoing, nil, 230, true)
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowAnnounce, true, nil, "DontShowBossAnnounces")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowTgtAnnounce, true, nil, "DontShowTargetAnnouncements")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSpecWarn, true, nil, "DontShowSpecialWarnings")
+		spamOutArea:CreateCheckButton(L.SpamBlockNoSpecWarnText, true, nil, "DontShowSpecialWarningText")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowTimers, true, nil, "DontShowBossTimers")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowUTimers, true, nil, "DontShowUserTimers")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSetIcon, true, nil, "DontSetIcons")

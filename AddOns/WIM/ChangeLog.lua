@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 543 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 546 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,6 +16,9 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.7.16", "05/02/2018", [[
+	*Fixed GetAutoCompleteResults for 8.x
+]]);
 addEntry("3.7.15", "04/20/2018", [[
 	*Grabbed latest ChatThrottleLib for 8.x compat
 ]]);

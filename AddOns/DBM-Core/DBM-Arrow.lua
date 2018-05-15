@@ -198,9 +198,19 @@ local function MapToWorldCoords(x, y)
 	return x, y
 end
 
-local function show(runAway, x, y, distance, time, legacy)
+local recentlyHidden = false
+local function clearVariable()
+	recentlyHidden = false
+end
+
+local function show(runAway, x, y, distance, time, legacy, dwayed)
 	if DBM:HasMapRestrictions() then return end
-	if not frame:IsShown() then
+	local wowToC = DBM:GetTOC()
+	if legacy and wowToC == 80000 then
+		DBM:AddMsg("Not Currently Supported in BfA")
+		return
+	end 
+	if not frame:IsShown() and not recentlyHidden then
 		DBM:AddMsg(DBM_CORE_ARROW_SUMMONED)
 	end
 	local player
@@ -224,6 +234,9 @@ local function show(runAway, x, y, distance, time, legacy)
 			x, y = MapToWorldCoords(x, y)
 		end
 		targetX, targetY = x, y
+	end
+	if dwayed then
+		DBM:AddMsg(DBM_ARROW_WAY_SUCCESS)
 	end
 end
 
@@ -255,7 +268,10 @@ function arrowFrame:IsShown()
 end
 
 function arrowFrame:Hide(autoHide)
+	recentlyHidden = true
 	frame:Hide()
+	DBM:Unschedule(clearVariable)
+	DBM:Schedule(10, clearVariable)
 end
 
 local function endMove()

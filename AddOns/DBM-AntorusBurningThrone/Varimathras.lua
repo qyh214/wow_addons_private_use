@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1983, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17308 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17506 $"):sub(12, -3))
 mod:SetCreatureID(122366)
 mod:SetEncounterID(2069)
 mod:SetZone()
@@ -141,7 +141,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			local uId = DBM:GetRaidUnitId(args.destName)
 			--Applied to a tank that's not you and you don't have it, taunt
-			if uId and self:IsTanking(uId) and self:CheckNearby(8, args.destName) and not UnitDebuff("player", args.spellName) then
+			if uId and self:IsTanking(uId) and self:CheckNearby(8, args.destName) and not DBM:UnitDebuff("player", spellId) then
 				specWarnMiseryTaunt:Show(args.destName)
 				specWarnMiseryTaunt:Play("tauntboss")
 			end

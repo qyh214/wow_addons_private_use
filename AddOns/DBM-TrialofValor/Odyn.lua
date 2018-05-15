@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1819, "DBM-TrialofValor", nil, 861)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17513 $"):sub(12, -3))
 mod:SetCreatureID(114263, 114361, 114360)--114263 Odyn, 114361 Hymdall, 114360 Hyrja 
 mod:SetEncounterID(1958)
 mod:SetZone()
@@ -125,13 +125,12 @@ local shieldTimers = {20.0, 20.0, 33.0, 22.0, 20.0}
 local expelLightTimers = {25.0, 20.0, 15.0, 30.0, 20.0}
 
 local debuffFilter
-local UnitDebuff = UnitDebuff
 local playerDebuff = nil
 local spellName, protected, expelLight, stormOfJustice = DBM:GetSpellInfo(231311), DBM:GetSpellInfo(229584), DBM:GetSpellInfo(228028), DBM:GetSpellInfo(227807)
 do
 	debuffFilter = function(uId)
 		if not playerDebuff then return true end
-		if not select(11, UnitDebuff(uId, spellName)) == playerDebuff then
+		if not DBM:UnitDebuff(uId, playerDebuff) then
 			return true
 		end
 	end
@@ -141,7 +140,7 @@ local function updateRangeFrame(self)
 	if not self.Options.RangeFrame then return end
 	if self.vb.brandActive then
 		DBM.RangeCheck:Show(15, debuffFilter)--There are no 15 yard items that are actually 15 yard, this will round to 18 :\
-	elseif UnitDebuff("player", expelLight) or UnitDebuff("player", stormOfJustice) then
+	elseif DBM:UnitDebuff("player", expelLight) or DBM:UnitDebuff("player", stormOfJustice) then
 		DBM.RangeCheck:Show(8)
 	elseif self.vb.hornCasting then--Spread for Horn of Valor
 		DBM.RangeCheck:Show(5)
@@ -194,7 +193,6 @@ do
 end
 
 function mod:OnCombatStart(delay)
-	spellName, protected, expelLight, stormOfJustice = DBM:GetSpellInfo(231311), DBM:GetSpellInfo(229584), DBM:GetSpellInfo(228028), DBM:GetSpellInfo(227807)
 	self.vb.phase = 1
 	self.vb.hornCasting = false
 	self.vb.hornCast = 0
@@ -379,7 +377,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 227626 then
 		local amount = args.amount or 1
-		if (amount == 5 or amount >= 9) and not self.vb.noTaunt and self:AntiSpam(3, 3) then--First warning at 5, then a decent amount of time until 8. then spam every 3 seconds at 8 and above.
+		if (amount == 5 or amount >= 9) and self:AntiSpam(3, 3) then--First warning at 5, then a decent amount of time until 8. then spam every 3 seconds at 8 and above.
 			local tanking, status = UnitDetailedThreatSituation("player", "boss1")
 			if tanking or (status == 3) then
 				specWarnOdynsTest:Show(amount)

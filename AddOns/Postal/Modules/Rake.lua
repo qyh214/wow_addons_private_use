@@ -1,4 +1,4 @@
-﻿local Postal = LibStub("AceAddon-3.0"):GetAddon("Postal")
+local Postal = LibStub("AceAddon-3.0"):GetAddon("Postal")
 local Postal_Rake = Postal:NewModule("Rake", "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Postal")
 Postal_Rake.description = L["Prints the amount of money collected during a mail session."]

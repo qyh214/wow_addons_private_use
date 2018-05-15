@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1818, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17126 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
 mod:SetCreatureID(114252)
 mod:SetEncounterID(1959)
 mod:SetZone()
@@ -35,7 +35,6 @@ mod:AddInfoFrameOption(227502, true)
 local unstableMana, looseMana = DBM:GetSpellInfo(227502), DBM:GetSpellInfo(227296)
 
 function mod:OnCombatStart(delay)
-	unstableMana, looseMana = DBM:GetSpellInfo(227502), DBM:GetSpellInfo(227296)
 	timerEnergyVoidCD:Start(14.5-delay)
 	timerCoalescePowerCD:Start(30-delay)
 	countdownCoalescePower:Start(30-delay)

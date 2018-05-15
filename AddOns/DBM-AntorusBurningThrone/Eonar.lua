@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2025, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17338 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
 mod:SetCreatureID(124445)
 mod:SetEncounterID(2075)
 mod:SetZone()
@@ -225,7 +225,6 @@ local function startBatsStuff(self)
 end
 
 function mod:OnCombatStart(delay)
-	lifeForceName = DBM:GetSpellInfo(250048)
 	self.vb.rainOfFelCount = 0
 	self.vb.destructors = 0
 	self.vb.obfuscators = 0

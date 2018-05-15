@@ -1,4 +1,4 @@
-﻿local Postal = LibStub("AceAddon-3.0"):GetAddon("Postal")
+local Postal = LibStub("AceAddon-3.0"):GetAddon("Postal")
 local Postal_Wire = Postal:NewModule("Wire", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Postal")
 Postal_Wire.description = L["Set subject field to value of coins sent if subject is blank."]

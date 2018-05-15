@@ -1,9 +1,11 @@
-﻿local Postal = LibStub("AceAddon-3.0"):GetAddon("Postal")
+local Postal = LibStub("AceAddon-3.0"):GetAddon("Postal")
 local Postal_BlackBook = Postal:NewModule("BlackBook", "AceEvent-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Postal")
 Postal_BlackBook.description = L["Adds a contact list next to the To: field."]
 Postal_BlackBook.description2 = L[ [[|cFFFFCC00*|r This module will list your contacts, friends, guild mates, alts and track the last 10 people you mailed.
 |cFFFFCC00*|r It will also autocomplete all names in your BlackBook.]] ]
+
+-- luacheck: globals AUTOCOMPLETE_FLAG_ALL AUTOCOMPLETE_FLAG_BNET AUTOCOMPLETE_FLAG_NONE AUTOCOMPLETE_FLAG_FRIEND AUTOCOMPLETE_FLAG_IN_GUILD
 
 local Postal_BlackBookButton
 local numFriendsOnList = 0
@@ -114,11 +116,11 @@ function Postal_BlackBook:AddAlt()
 			tremove(db, i)
 		end
 		if p ~= player and r == realm and f == faction then
-			enableAltsMenu = true			
+			enableAltsMenu = true
 		end
 		if p ~= player and r ~= realm then
-			enableAllAltsMenu = true		
-		end		
+			enableAllAltsMenu = true
+		end
 	end
 	tinsert(db, namestring)
 	table.sort(db)
@@ -142,8 +144,8 @@ function Postal_BlackBook.DeleteAlt(dropdownbutton, arg1, arg2, checked)
 				enableAltsMenu = true
 			end
 			if r ~= realm and p ~= player then
-			enableAllAltsMenu = true		
-			end		
+			enableAllAltsMenu = true
+			end
 		end
 	end
 	CloseDropDownMenus()
@@ -187,7 +189,7 @@ function Postal_BlackBook:MailFrameTab_OnClick(button, tab)
 		local realm = GetRealmName()
 		local faction = UnitFactionGroup("player")
 		local player = UnitName("player")
-		
+
 		-- Find the first eligible recently mailed
 		for i = 1, #Postal.db.profile.BlackBook.recent do
 			local p, r, f = strsplit("|", Postal.db.profile.BlackBook.recent[i])
@@ -226,14 +228,15 @@ function Postal_BlackBook:OnChar(editbox, ...)
 	local faction = UnitFactionGroup("player")
 	local player = UnitName("player")
 	local newname
-	
+
 		-- Check all alt list
 	if db.AutoCompleteAllAlts then
+		local nosptext = text:gsub("%s*","") -- ignore spaces in matching fully-qualified names
 		local db = Postal.db.global.BlackBook.alts
 		for i = 1, #db do
 			local p, r, f = strsplit("|", db[i])
 			if p ~= player and r ~= realm then
-				if strfind(strupper(p), text, 1, 1) == 1 then
+				if strfind(strupper(p.."-"..r):gsub("%s*",""), nosptext, 1, 1) == 1 then
 					newname = p.."-"..r
 					break
 				end
@@ -243,16 +246,21 @@ function Postal_BlackBook:OnChar(editbox, ...)
 
 	-- Check alt list
 	if db.AutoCompleteAlts then
+	   for pass = 1,2 do
 		local db = Postal.db.global.BlackBook.alts
 		for i = 1, #db do
 			local p, r, f = strsplit("|", db[i])
-			if r == realm and f == faction and p ~= player then
+			if r == realm and p ~= player and
+			( (pass == 1 and f ~= faction) or
+			  (pass == 2 and f == faction) ) -- prefer same faction, but don't require for alts
+			then
 				if strfind(strupper(p), text, 1, 1) == 1 then
 					newname = p
 					break
 				end
 			end
 		end
+	   end
 	end
 
 
@@ -365,7 +373,7 @@ function Postal_BlackBook:SortAndCountNumFriends()
 						alreadyOnList = true
 						break
 					end
-				end			
+				end
 				if not alreadyOnList then
 					numFriends = numFriends + 1
 					sorttable[numFriends] = toonName
@@ -438,7 +446,7 @@ function Postal_BlackBook.BlackBookMenu(self, level)
 		info.text = L["Alts"]
 		info.value = "alt"
 		UIDropDownMenu_AddButton(info, level)
-			
+
 		info.disabled = not enableAllAltsMenu
 		info.text = L["All Alts"]
 		info.value = "allalt"
@@ -503,7 +511,7 @@ function Postal_BlackBook.BlackBookMenu(self, level)
 			info.notCheckable = 1
 			for i = 1, #db do
 				local p, r, f, l, c = strsplit("|", db[i])
-				if r == realm and f == faction and p ~= player then
+				if r == realm and p ~= player then
 					if l and c then
 						local clr = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[c] or RAID_CLASS_COLORS[c]
 						info.text = format("%s |cff%.2x%.2x%.2x(%d %s)|r", p, clr.r*255, clr.g*255, clr.b*255, l, LOCALIZED_CLASS_NAMES_MALE[c])
@@ -541,7 +549,7 @@ elseif UIDROPDOWNMENU_MENU_VALUE == "allalt" then
 			for i = 1, #db do
 				local p, r, f, l, c = strsplit("|", db[i])
 				local pr = p.."-"..r
-				if (pr ~= plre ) then					
+				if (pr ~= plre ) then
 					if l and c then
 						local clr = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[c] or RAID_CLASS_COLORS[c]
 						info.text = format("%s-%s |cff%.2x%.2x%.2x(%d %s)|r", p, r, clr.r*255, clr.g*255, clr.b*255, l, LOCALIZED_CLASS_NAMES_MALE[c])
@@ -565,8 +573,12 @@ elseif UIDROPDOWNMENU_MENU_VALUE == "allalt" then
 			info.hasArrow = 1
 			info.keepShownOnClick = 1
 			info.func = self.UncheckHack
-			info.value = "deletealt"
+			info.value = "deleteallalt"
 			UIDropDownMenu_AddButton(info, level)
+
+			if DropDownList2 then -- ensure long lists stay on screen
+				DropDownList2:SetClampedToScreen(true)
+			end
 
 		elseif UIDROPDOWNMENU_MENU_VALUE == "friend" then
 			-- Friends list
@@ -627,14 +639,16 @@ elseif UIDROPDOWNMENU_MENU_VALUE == "allalt" then
 
 	elseif level >= 3 then
 		info.notCheckable = 1
-		if UIDROPDOWNMENU_MENU_VALUE == "deletealt" then
+		if UIDROPDOWNMENU_MENU_VALUE == "deletealt" or UIDROPDOWNMENU_MENU_VALUE == "deleteallalt" then
+			local all = ( UIDROPDOWNMENU_MENU_VALUE == "deleteallalt" )
 			local db = Postal.db.global.BlackBook.alts
 			local realm = GetRealmName()
 			local faction = UnitFactionGroup("player")
 			local player = UnitName("player")
 			for i = 1, #db do
 				local p, r, f, l, c = strsplit("|", db[i])
-				if r == realm and f == faction and p ~= player then
+				if p ~= player and ( r == realm or all ) then
+					p = all and p.."-"..r or p
 					if l and c then
 						local clr = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[c] or RAID_CLASS_COLORS[c]
 						info.text = format("%s |cff%.2x%.2x%.2x(%d %s)|r", p, clr.r*255, clr.g*255, clr.b*255, l, LOCALIZED_CLASS_NAMES_MALE[c])
@@ -741,7 +755,7 @@ function Postal_BlackBook.ModuleMenu(self, level)
 			info.arg2 = "AutoCompleteAlts"
 			info.checked = db.AutoCompleteAlts
 			UIDropDownMenu_AddButton(info, level)
-			
+
 			info.text = L["All Alts"]
 			info.arg2 = "AutoCompleteAllAlts"
 			info.checked = db.AutoCompleteAllAlts

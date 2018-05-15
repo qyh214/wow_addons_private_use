@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1706, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17126 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
 mod:SetCreatureID(102263)
 mod:SetEncounterID(1849)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -64,7 +64,6 @@ mod.vb.volatileScorpCount = 0
 local shardName, goodDebuff = DBM:GetSpellInfo(204292), DBM:GetSpellInfo(204284)
 
 function mod:OnCombatStart(delay)
-	shardName, goodDebuff = DBM:GetSpellInfo(204292), DBM:GetSpellInfo(204284)
 	self.vb.volatileScorpCount = 0
 	timerArcanoslashCD:Start(5-delay)
 	timerFocusedBlastCD:Start(13-delay)

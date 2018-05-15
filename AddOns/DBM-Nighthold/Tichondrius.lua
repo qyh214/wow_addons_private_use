@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1762, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
 mod:SetCreatureID(103685)
 mod:SetEncounterID(1862)
 mod:SetZone()
@@ -153,7 +153,6 @@ do
 end
 
 function mod:OnCombatStart(delay)
-	carrionDebuff, argusDebuff, batsName, essenceOfNightDebuff = DBM:GetSpellInfo(206480), DBM:GetSpellInfo(212794), DBM:EJ_GetSectionInfo(13528), DBM:GetSpellInfo(206466)
 	self.vb.phase = 1
 	self.vb.darkPhase = false
 	self.vb.carrionPlagueCast = 0

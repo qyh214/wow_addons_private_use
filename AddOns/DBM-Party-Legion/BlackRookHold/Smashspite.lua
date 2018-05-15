@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1664, "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17126 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17473 $"):sub(12, -3))
 mod:SetCreatureID(98949)
 mod:SetEncounterID(1834)
 mod:SetZone()
@@ -20,7 +20,7 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, maye GTFO for fire on ground (and timers and other stuff for it too maybe, seems all over place though).
-local warnHatefulGaze				= mod:NewTargetAnnounce(198079, 4)
+local warnHatefulGaze				= mod:NewTargetNoFilterAnnounce(198079, 4)
 
 local specWarnStomp					= mod:NewSpecialWarningSpell(198073, nil, nil, nil, 2, 2)
 local specWarnHatefulGaze			= mod:NewSpecialWarningDefensive(198079, nil, nil, nil, 1, 2)
@@ -35,15 +35,13 @@ mod:AddInfoFrameOption(198080)
 mod:AddSetIconOption("SetIconOnHatefulGaze", 198079, true)
 
 local superWarned = false
-local infoFrameDebuff = DBM:GetSpellInfo(198080)
 
 function mod:OnCombatStart(delay)
 	if not self:IsNormal() then
 		timerHatefulGazeCD:Start(5-delay)
 		if self.Options.InfoFrame then
-			infoFrameDebuff = DBM:GetSpellInfo(198080)
-			DBM.InfoFrame:SetHeader(infoFrameDebuff)
-			DBM.InfoFrame:Show(5, "reverseplayerbaddebuff", infoFrameDebuff)
+			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(198080))
+			DBM.InfoFrame:Show(5, "reverseplayerbaddebuffbyspellid", 224188)--Must match spellID to filter other debuffs out
 		end
 	end
 	timerStompCD:Start(12-delay)
@@ -67,8 +65,8 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 198079 then
 		if args:IsPlayer() then
 			specWarnHatefulGaze:Show()
-			yellHatefulGaze:Yell()
 			specWarnHatefulGaze:Play("targetyou")
+			yellHatefulGaze:Yell()
 		else
 			warnHatefulGaze:Show(args.destName)
 		end

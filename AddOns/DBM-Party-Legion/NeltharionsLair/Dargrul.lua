@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1687, "DBM-Party-Legion", 5, 767)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
 mod:SetCreatureID(91007)
 mod:SetEncounterID(1793)
 mod:SetZone()
@@ -35,7 +35,6 @@ local countdownMagmaWave			= mod:NewCountdown(60, 200404)
 local shelterName = DBM:GetSpellInfo(200551)
 
 function mod:OnCombatStart(delay)
-	shelterName = DBM:GetSpellInfo(200551)
 	timerMagmaSculptorCD:Start(7.3-delay)
 	timerLandSlideCD:Start(15.8-delay)
 	timerMoltenCrashCD:Start(19-delay)

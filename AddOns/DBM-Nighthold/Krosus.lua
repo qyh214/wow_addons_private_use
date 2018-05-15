@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1713, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
 mod:SetCreatureID(101002)
 mod:SetEncounterID(1842)
 mod:SetZone()
@@ -90,7 +90,6 @@ function DBMUpdateKrosusBeam(wasLeft)
 end
 
 function mod:OnCombatStart(delay)
-	burningPitchDebuff = DBM:GetSpellInfo(215944)
 	table.wipe(mobGUIDs)
 	self.vb.burningEmbers = 0
 	self.vb.slamCount = 0

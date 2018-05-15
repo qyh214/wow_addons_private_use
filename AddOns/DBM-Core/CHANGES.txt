@@ -1,153 +1,54 @@
-tag 5aa8304b18296c1703bef376964c3abd6d6d714a 7.3.26
+tag 8e497837b2015e1fadd58916420648aa71820e65 7.3.30
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Tue Apr 3 22:43:13 2018 +0200
+Date:	Sun May 13 02:33:42 2018 +0200
 
-Tagging as 7.3.26
+Tagging as 7.3.30
 
-commit 9c030d18dd222c701f55b0dc1f2acfd384551614
+commit a4c3aa492af1a040154b3c4bc067e32b3b2f5ee7
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Apr 3 22:43:13 2018 +0200
+Date:   Sun May 13 02:33:42 2018 +0200
 
-    increment version number to 7.3.26
+    increment version number to 7.3.30
 
-commit cc7e4fa3269e253022acbeeb28576a2807efa851
+commit 3470892bfbe64038bf0388a838493d769543973e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Apr 3 20:00:19 2018 +0200
+Date:   Sat May 12 20:11:43 2018 +0200
 
-    Omega via svn r17424:
-    update versionchecker
+    Omega via svn r17517:
+    Version check update
 
-commit 0b6efec13d4ce5b2d7487d2cac4975da73db6759
+commit 8c89bb2e03b288e0655a866f1bb916f6f8432001
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Apr 2 23:51:12 2018 +0200
+Date:   Sat May 12 08:37:51 2018 +0200
 
-    ebmor via svn r17423:
-    deDE update
+    Omega via svn r17516:
+    CN update
 
-commit 64678ad0b706afd9039800081e3cb90c42a5a9b1
+commit 7a7efbb12984ec8b4a5a8a28f023ed638901741d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Mar 31 20:31:44 2018 +0200
+Date:   Sat May 12 06:09:42 2018 +0200
 
-    Omega via svn r17422:
-    KR Update
+    Omega via svn r17515:
+    Updated G?\226?\128?\153huun P1 and P2 and added more P3 drycodes/ai timers
 
-commit 8739a6e5a53f620d40c8b929763cfb2f369e9794
+commit b408c7f3ae8901eff69f03d274bdabceb8fc8d1e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Mar 30 22:14:24 2018 +0200
+Date:   Sat May 12 03:34:11 2018 +0200
 
-    Omega via svn r17421:
-    Spam protection
+    Omega via svn r17514:
+    Push finished Zekvhozj mod
 
-commit 6bfa7e19fa83d7cf8bb3ceb5ca2a901845baae05
+commit 3780b18734f888eafed6a2326ac5f098521a7231
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Mar 30 01:26:38 2018 +0200
+Date:   Fri May 11 23:45:32 2018 +0200
 
-    Omega via svn r17420:
-    Fix parsing of little wigs clues
+    Omega via svn r17513:
+    lower tank swap amount on ghuun since he hits like a mack truck
 
-commit d028a676ddc15e96167dfd9f483df7fd48555c2a
+commit e92548006ce27588e1348e7b7e7ee97db26ae6d2
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Mar 29 07:11:45 2018 +0200
+Date:   Fri May 11 20:24:45 2018 +0200
 
-    Omega via svn r17419:
-    Inform users when arrow is activated, so they know the arrow is from DBM and that it?\226?\128?\153s likely been activated by a 3rd party addon and not by DBM, so they have a better idea where to look if they want to disable it.
-
-commit aa1d740255b8c1c0ca43c42a1bda37eca449999f
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 28 16:39:46 2018 +0200
-
-    Omega via svn r17418:
-    Es update
-
-commit ba31165058f432405d5a60b39732af7b5907cb50
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Mar 26 04:09:10 2018 +0200
-
-    Omega via svn r17417:
-    Add taloc stub
-    Rename titan discs stub
-
-commit 92de292369278a6f489a58bcd03de69091094cda
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Mar 26 03:42:51 2018 +0200
-
-    Omega via svn r17416:
-    Rename Undermine to Motherload
-
-commit dc1eb5b14ce2895eb2c6501886ef93f11d5e8223
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Mar 25 21:43:34 2018 +0200
-
-    Omega via svn r17415:
-    Disable boss to beam in LFR, there is no add in LFR
-
-commit a03a9f3011c8ce7058446447dc65a3a5b6f7e65c
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Mar 17 21:08:17 2018 +0100
-
-    Omega via svn r17414:
-    Add cosmic beacon cast warning, and improved visibility of interrupt timer (by actually making it an interrupt timer)
-
-commit 9703c1531ece55eead9f79f7eeee3f26d3aab5a7
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Mar 17 06:58:42 2018 +0100
-
-    Omega via svn r17413:
-    update VC
-
-commit 38d1788599c341d6eb1173e37fbb03d08f50e3f3
-Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Mar 15 20:59:34 2018 +0100
-
-    Omega via svn r17412:
-    Add counter to collapsing world
-
-commit 0c8ddceb143101691c96f37fa0ac36b5a9f27860
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 14 07:06:08 2018 +0100
-
-    Omega via svn r17411:
-    Shorten. thought I had already done this
-
-commit 684c23471263df035f8008501c9aa8e7ebebad23
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 14 03:09:48 2018 +0100
-
-    Omega via svn r17410:
-    Revert last
-
-commit 44e92b214e97b13cc714576930b23da75909ab98
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 14 02:57:14 2018 +0100
-
-    Omega via svn r17409:
-    Another fix
-
-commit ea9267ba49c4b49e57b49f86dc356d46c8f3a9fb
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 14 02:52:15 2018 +0100
-
-    Omega via svn r17408:
-    Handle fact ready checks screw with music
-
-commit 2e81489b4e458fec439b8cb2eed740342efa45f1
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 14 02:20:03 2018 +0100
-
-    Omega via svn r17407:
-    Fix bug with checkbox
-
-commit afbbca4d2c217a4718a4b7fe0a6ed0ffbde5d000
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 14 02:10:23 2018 +0100
-
-    Omega via svn r17406:
-    GUI tweak
-
-commit 9efe7d8d6cd647d5a6ce18d9de4e0276142069d4
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Mar 14 01:47:54 2018 +0100
-
-    tandanu via svn r17405:
+    tandanu via svn r17512:
     increment alpha version
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Cannon", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17471 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterEvents(
@@ -28,8 +28,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:UNIT_AURA(uId)
-	if UnitBuff("player", DBM:GetSpellInfo(102116)) and not markWings then
-		MagicWingsCountdown:Start(7.5)--Might need to reduce it by 1 or use UnitDebuff duration arg.
+	if DBM:UnitBuff("player", DBM:GetSpellInfo(102116)) and not markWings then
+		MagicWingsCountdown:Start(7.5)
 		timerMagicWings:Start()
 		markWings = true
 		self:Schedule(8.5, wingsRemoved)

@@ -63,8 +63,8 @@ if (GetLocale() == "esMX") then
 	["ReloadUI"] = "Recargar IU",
 	["Remove from current selection"] = "Eliminar de la selección actual",
 	["Rename"] = "Renombrar",
-	--Translation missing 
-	-- ["Resurse-ToolTip"] = "",
+	--[[Translation missing --]]
+	--[[ ["Resurse-ToolTip"] = "",--]] 
 	["Save"] = "Guardar",
 	["Save the current addon list to [%s]?"] = "¿Guardar la lista actual de Addons en [%s]?",
 	["Set "] = "Establecido",

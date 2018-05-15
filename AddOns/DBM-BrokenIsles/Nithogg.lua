@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1749, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17471 $"):sub(12, -3))
 mod:SetCreatureID(107023)
 mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
@@ -40,7 +40,7 @@ local timerStormBreathCD			= mod:NewCDTimer(23.1, 212852, nil, "Tank", nil, 5, n
 --mod:AddReadyCheckOption(37460, false)
 
 local function checkTankSwap(self, targetName, spellName)
-	if not UnitDebuff("player", spellName) then
+	if not DBM:UnitDebuff("player", spellName) then
 		specWarnBreathSwap:Show(targetName)
 		specWarnBreathSwap:Play("tauntboss")
 	end

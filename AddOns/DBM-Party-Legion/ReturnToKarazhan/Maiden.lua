@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1825, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
 mod:SetCreatureID(113971)
 mod:SetEncounterID(1954)
 mod:SetZone()
@@ -46,7 +46,6 @@ mod:AddInfoFrameOption(227817, true)
 local sacredGround = DBM:GetSpellInfo(227789)
 
 function mod:OnCombatStart(delay)
-	sacredGround = DBM:GetSpellInfo(227789)
 	timerSacredGroundCD:Start(10.9)
 	timerHolyShockCD:Start(15.8-delay)
 	timerRepentanceCD:Start(48.5-delay)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2010, "DBM-Argus", nil, 959)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17471 $"):sub(12, -3))
 mod:SetCreatureID(124514)
 mod:SetEncounterID(2081)
 --mod:SetReCombatTime(20)
@@ -61,7 +61,7 @@ function mod:SPELL_AURA_APPLIED(args)
 						specWarnInfectedClaws:Show(amount)
 						specWarnInfectedClaws:Play("stackhigh")
 					else--Taunt as soon as stacks are clear, regardless of stack count.
-						if not UnitIsDeadOrGhost("player") and not UnitDebuff("player", args.spellName) then
+						if not UnitIsDeadOrGhost("player") and not DBM:UnitDebuff("player", args.spellName) then
 							specWarnInfectedClawsOther:Show(args.destName)
 							specWarnInfectedClawsOther:Play("tauntboss")
 						else

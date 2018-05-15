@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2095, "DBM-Party-BfA", 2, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17290 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17428 $"):sub(12, -3))
 mod:SetCreatureID(126983)
 mod:SetEncounterID(2096)
 mod:SetZone()
@@ -118,7 +118,7 @@ function mod:UNIT_DIED(args)
 end
 --]]
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 257453 or spellId == 257304 then--Cannon Barrage (Stage 1), Cannon Barrage (Stage 2/3)
 		timerCannonBarrageCD:Start()
 	end

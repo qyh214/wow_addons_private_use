@@ -1,7 +1,6 @@
-﻿local Postal = LibStub("AceAddon-3.0"):NewAddon("Postal", "AceEvent-3.0", "AceHook-3.0")
+local Postal = LibStub("AceAddon-3.0"):NewAddon("Postal", "AceEvent-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Postal")
 _G["Postal"] = Postal
-local TOC = select(4, GetBuildInfo())
 
 -- defaults for storage
 local defaults = {
@@ -14,7 +13,6 @@ local defaults = {
 		Select = {
 			SpamChat = true,
 			KeepFreeSpace = 1,
-			UseMrPlow = true,
 		},
 		OpenAll = {
 			AHCancelled = true,
@@ -31,7 +29,6 @@ local defaults = {
 			Attachments = true,
 			SpamChat = true,
 			KeepFreeSpace = 1,
-			UseMrPlow = true,
 		},
 		Express = {
 			EnableAltClick = true,
@@ -72,9 +69,7 @@ Postal_DropDownMenu.info = {}
 Postal_DropDownMenu.levelAdjust = 0
 Postal_DropDownMenu.UncheckHack = function(dropdownbutton)
 	_G[dropdownbutton:GetName().."Check"]:Hide()
-	if TOC >= 40000 then
-		_G[dropdownbutton:GetName().."UnCheck"]:Hide()
-	end
+	_G[dropdownbutton:GetName().."UnCheck"]:Hide()
 end
 Postal_DropDownMenu.HideMenu = function()
 	if UIDROPDOWNMENU_OPEN_MENU == Postal_DropDownMenu then
@@ -243,13 +238,13 @@ StaticPopupDialogs["POSTAL_NEW_PROFILE"] = {
 		self.editBox:SetText(Postal.db:GetCurrentProfile())
 		self.editBox:SetFocus()
 	end,
-	OnHide = StaticPopupDialogs[TOC < 40000 and "SET_GUILDMOTD" or "SET_GUILDPLAYERNOTE"].OnHide,
+	OnHide = StaticPopupDialogs["SET_GUILDPLAYERNOTE"].OnHide,
 	EditBoxOnEnterPressed = function(self)
 		local parent = self:GetParent()
 		Postal.db:SetProfile(strtrim(parent.editBox:GetText()))
 		parent:Hide()
 	end,
-	EditBoxOnEscapePressed = StaticPopupDialogs[TOC < 40000 and "SET_GUILDMOTD" or "SET_GUILDPLAYERNOTE"].EditBoxOnEscapePressed,
+	EditBoxOnEscapePressed = StaticPopupDialogs["SET_GUILDPLAYERNOTE"].EditBoxOnEscapePressed,
 	timeout = 0,
 	exclusive = 1,
 	whileDead = 1,

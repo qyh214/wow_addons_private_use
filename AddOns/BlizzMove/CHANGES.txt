@@ -1,16 +1,16 @@
-lightweight tag ab7319bc8cbb85905a94770c3d78dc7b7fd23849 v1.5.6
-Author:	yess <yess@xan.at>
-Date:	Sun Sep 17 03:39:23 2017 +0200
+lightweight tag 666b95c3430930820d91c64f7b8fad483033eb72 v1.5.9
+Author:	GitHub <noreply@github.com>
+Date:	Sun May 6 23:24:01 2018 +0200
 
-commit ab7319bc8cbb85905a94770c3d78dc7b7fd23849
-Author: yess <yess@xan.at>
-Date:   Sun Sep 17 03:39:23 2017 +0200
+commit 666b95c3430930820d91c64f7b8fad483033eb72
+Author: Jessica <zanony@jsommer.at>
+Date:   Sun May 6 23:24:01 2018 +0200
 
-    added talkinghead frame
+    Update BlizzMove.lua
 
-commit 51e275b41addf9b029955a9a83fb1228dcf34437
-Author: Jessica <zanony@xan.at>
-Date:   Sun Sep 17 03:36:43 2017 +0200
+commit f380d68fa3b6f96beab21215c5bef225f6c74857
+Author: Jessica <jessica@Jessicas-iMac.local>
+Date:   Sun May 6 23:21:58 2018 +0200
 
-    Update toc
+    Fix debug message
 

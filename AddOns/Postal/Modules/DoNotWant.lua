@@ -1,7 +1,9 @@
-﻿local Postal = LibStub("AceAddon-3.0"):GetAddon("Postal")
+local Postal = LibStub("AceAddon-3.0"):GetAddon("Postal")
 local Postal_DoNotWant = Postal:NewModule("DoNotWant", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Postal")
 Postal_DoNotWant.description = L["Shows a clickable visual icon as to whether a mail will be returned or deleted on expiry."]
+
+-- luacheck: globals InboxFrame
 
 local _G = getfenv(0)
 local selectedID

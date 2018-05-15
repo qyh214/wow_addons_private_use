@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AntorusTrash", "DBM-AntorusBurningThrone")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17239 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17506 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
@@ -72,7 +72,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnDemolish:Show()
 			specWarnDemolish:Play("targetyou")
 			yellDemolish:Yell()
-			local _, _, _, _, _, _, expires = UnitDebuff("player", args.spellName)
+			local _, _, _, _, _, _, expires = DBM:UnitDebuff("player", spellId)
 			local remaining = expires-GetTime()
 			yellDemolishFades:Countdown(remaining)
 		end
@@ -82,7 +82,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnCloudofConfuse:Show()
 			specWarnDemolish:Play("runout")
 			yellCloudofConfuse:Yell()
-			local _, _, _, _, _, _, expires = UnitDebuff("player", args.spellName)
+			local _, _, _, _, _, _, expires = DBM:UnitDebuff("player", spellId)
 			local remaining = expires-GetTime()
 			yellCloudofConfuseFades:Countdown(remaining)
 		end

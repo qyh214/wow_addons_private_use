@@ -65,8 +65,8 @@ if (GetLocale() == "itIT") then
 	["ReloadUI"] = "RicaricaIU",
 	["Remove from current selection"] = "Rimuovi dalla selezione corrente",
 	["Rename"] = "Rinomina",
-	--Translation missing 
-	-- ["Resurse-ToolTip"] = "",
+	--[[Translation missing --]]
+	--[[ ["Resurse-ToolTip"] = "",--]] 
 	["Save"] = "Salva",
 	["Save the current addon list to [%s]?"] = "Salva la lista di addon corrente su [%s]?",
 	["Set "] = "Raccolta ",

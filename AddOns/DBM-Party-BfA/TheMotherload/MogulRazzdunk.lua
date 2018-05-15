@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2116, "DBM-Party-BfA", 7, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17274 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17428 $"):sub(12, -3))
 --mod:SetCreatureID(98542)
 mod:SetEncounterID(2108)
 mod:SetZone()
@@ -64,7 +64,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 257939 then
 	end
 end

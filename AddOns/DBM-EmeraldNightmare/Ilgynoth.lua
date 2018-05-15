@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1738, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17126 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17471 $"):sub(12, -3))
 mod:SetCreatureID(105393)
 mod:SetEncounterID(1873)
 mod:SetZone()
@@ -176,7 +176,7 @@ end
 
 local autoMarkOozes
 do
-	local UnitHealth, UnitHealthMax, UnitGUID, UnitCastingInfo, UnitIsUnit = UnitHealth, UnitHealthMax, UnitGUID, UnitCastingInfo, UnitIsUnit
+	local UnitHealth, UnitHealthMax, UnitGUID, UnitIsUnit = UnitHealth, UnitHealthMax, UnitGUID, UnitIsUnit
 	autoMarkOozes = function(self)
 		self:Unschedule(autoMarkOozes)
 		if self.vb.IchorCount == 0 then
@@ -265,7 +265,6 @@ function mod:OnCombatStart(delay)
 	end
 	if self.Options.InfoFrame then
 		if self.Options.InfoFrameBehavior == "Fixates" then
-			infoFrameSpell = DBM:GetSpellInfo(210099)
 			DBM.InfoFrame:SetHeader(infoFrameSpell)
 			DBM.InfoFrame:Show(10, "playerbaddebuff", infoFrameSpell)
 		else
@@ -456,7 +455,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnEyeOfFate:Show(amount)
 					specWarnEyeOfFate:Play("stackhigh")
 				else--Taunt as soon as stacks are clear, regardless of stack count.
-					local _, _, _, _, _, _, expireTime = UnitDebuff("player", args.spellName)
+					local _, _, _, _, _, _, expireTime = DBM:UnitDebuff("player", args.spellName)
 					if not UnitIsDeadOrGhost("player") and (not expireTime or expireTime and expireTime-GetTime() < 10) then
 						specWarnEyeOfFateOther:Show(args.destName)
 						specWarnEyeOfFateOther:Play("changemt")

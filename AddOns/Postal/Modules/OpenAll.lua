@@ -1,4 +1,4 @@
-﻿local Postal = LibStub("AceAddon-3.0"):GetAddon("Postal")
+local Postal = LibStub("AceAddon-3.0"):GetAddon("Postal")
 local Postal_OpenAll = Postal:NewModule("OpenAll", "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Postal")
 Postal_OpenAll.description = L["A button that collects all attachments and coins from mail."]
@@ -7,6 +7,8 @@ Postal_OpenAll.description2 = L[ [[|cFFFFCC00*|r Simple filters are available fo
 |cFFFFCC00*|r OpenAll will never delete any mail (mail without text is auto-deleted by the game when all attached items and gold are taken).
 |cFFFFCC00*|r OpenAll will skip CoD mails and mails from Blizzard.
 |cFFFFCC00*|r Disable the Verbose option to stop the chat spam while opening mail.]] ]
+
+-- luacheck: globals InboxFrame
 
 local MAX_MAIL_SHOWN = 50
 local mailIndex, attachIndex
@@ -113,6 +115,7 @@ function Postal_OpenAll:OnEnable()
 
 	self:RegisterEvent("MAIL_SHOW")
 	-- For enabling after a disable
+	OpenAllMail:Hide() -- hide Blizzard's Open All button
 	button:Show()
 	Postal_OpenAllMenuButton:SetScript("OnHide", Postal_DropDownMenu.HideMenu)
 	Postal_OpenAllMenuButton:Show()
@@ -121,6 +124,7 @@ end
 function Postal_OpenAll:OnDisable()
 	self:Reset()
 	button:Hide()
+	OpenAllMail:Show() -- show Blizzard's Open All button
 	Postal_OpenAllMenuButton:SetScript("OnHide", nil)
 	Postal_OpenAllMenuButton:Hide()
 end
@@ -162,7 +166,7 @@ function Postal_OpenAll:ProcessNext()
 	-- (new mail received in the last 60 seconds))
 	local currentFirstMailDaysLeft = select(7, GetInboxHeaderInfo(1))
 	if currentFirstMailDaysLeft ~= 0 and currentFirstMailDaysLeft ~= firstMailDaysLeft then
-		-- First mail's daysLeft changed, indicating we have a 
+		-- First mail's daysLeft changed, indicating we have a
 		-- fresh MAIL_INBOX_UPDATE that has new data from CheckInbox()
 		-- so we reopen from the last mail
 		return self:OpenAll(true) -- tail call
@@ -210,7 +214,7 @@ function Postal_OpenAll:ProcessNext()
 		local mailType = Postal:GetMailType(msgSubject)
 		if mailType == "NonAHMail" then
 			-- Skip mail with attachments according to user options
-			if msgItem and Postal.db.profile.OpenAll.Postmaster and sender 
+			if msgItem and Postal.db.profile.OpenAll.Postmaster and sender
 			   and (sender:find(L["The Postmaster"]) 	-- unlooted items (npc=34337)
 			     or sender:find(L["Thaumaturge Vashreen"]))	-- bonus roll w/ bags full (npc=54441)
 			   then
@@ -337,13 +341,6 @@ function Postal_OpenAll:ProcessNext()
 			return
 		end
 
-		if IsAddOnLoaded("MrPlow") and Postal.db.profile.OpenAll.UseMrPlow then
-			if MrPlow.DoStuff then
-				MrPlow:DoStuff("stack")
-			elseif MrPlow.ParseInventory then -- Backwards compat
-				MrPlow:ParseInventory()
-			end
-		end
 		if skipFlag then Postal:Print(L["Some Messages May Have Been Skipped."]) end
 		self:Reset()
 	end
@@ -382,7 +379,7 @@ function Postal_OpenAll.ModuleMenu(self, level)
 	wipe(info)
 	info.isNotRadio = 1
 	local db = Postal.db.profile.OpenAll
-	
+
 	if level == 1 + self.levelAdjust then
 		info.hasArrow = 1
 		info.keepShownOnClick = 1
@@ -460,16 +457,6 @@ function Postal_OpenAll.ModuleMenu(self, level)
 			info.arg2 = "SpamChat"
 			info.checked = db.SpamChat
 			UIDropDownMenu_AddButton(info, level)
-			
-			if IsAddOnLoaded("MrPlow") then
-				info.text = L["Use Mr.Plow after opening"]
-				info.hasArrow = nil
-				info.value = nil
-				info.func = Postal.SaveOption
-				info.arg2 = "UseMrPlow"
-				info.checked = db.UseMrPlow
-				UIDropDownMenu_AddButton(info, level)
-			end
 		end
 
 	elseif level == 3 + self.levelAdjust then

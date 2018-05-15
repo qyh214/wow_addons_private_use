@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1761, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17095 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17510 $"):sub(12, -3))
 mod:SetCreatureID(104528)--109042
 mod:SetEncounterID(1886)
 mod:SetZone()
@@ -103,18 +103,17 @@ mod.vb.globalTimer = 35
 
 local sentLowHP = {}
 local warnedLowHP = {}
-local UnitDebuff = UnitDebuff
 local callOfNightName = DBM:GetSpellInfo(218809)
 local hasCoN, noCoN
 do
 	--hasCoN not used
 	hasCoN = function(uId)
-		if UnitDebuff(uId, callOfNightName) then
+		if DBM:UnitDebuff(uId, callOfNightName) then
 			return true
 		end
 	end
 	noCoN = function(uId)
-		if not UnitDebuff(uId, callOfNightName) then
+		if not DBM:UnitDebuff(uId, callOfNightName) then
 			return true
 		end
 	end
@@ -336,7 +335,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 218503 then
 		local amount = args.amount or 1
 		if amount >= 5 then
-			if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") and self:AntiSpam(3, 1) then
+			if not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") and self:AntiSpam(3, 1) then
 				specWarnRecursiveStrikes:Show(args.destName)
 				specWarnRecursiveStrikes:Play("tauntboss")
 			else
@@ -349,7 +348,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			yellParasiticFetter:Yell()
 		end
-		if self:CheckNearby(20, args.destName) and self:AntiSpam(2, 3.5) then
+		if self:CheckNearby(20, args.destName) and self:AntiSpam(3.5, 2) then
 			specWarnParasiticFetter:Show(args.destName)
 			specWarnParasiticFetter:Play("runaway")
 		else
@@ -496,7 +495,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 218304 then
-		if self:AntiSpam(5, 4) and not UnitDebuff("player", args.spellName) then
+		if self:AntiSpam(5, 4) and not DBM:UnitDebuff("player", args.spellName) then
 			specWarnLasher:Show()
 			specWarnLasher:Play("killmob")
 		end

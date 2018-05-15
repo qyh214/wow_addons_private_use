@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2083, "DBM-Party-BfA", 1, 968)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17344 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17473 $"):sub(12, -3))
 mod:SetCreatureID(122963)
 mod:SetEncounterID(2086)
 mod:SetZone()
@@ -20,7 +20,7 @@ mod:RegisterEventsInCombat(
 local warnPursuit				= mod:NewTargetAnnounce(257407, 2)
 
 local specWarnTeeth				= mod:NewSpecialWarningDefensive(255434, "Tank", nil, nil, 1, 2)
-local specWarnFear				= mod:NewSpecialWarningDodge(255371, nil, nil, nil, 3, 2)--Dodge warning on purpose, you dodge it by LOS behind pillar
+local specWarnFear				= mod:NewSpecialWarningMoveTo(255371, nil, nil, nil, 3, 2)--Dodge warning on purpose, you dodge it by LOS behind pillar
 local yellPursuit				= mod:NewYell(257407)
 local specWarnPursuit			= mod:NewSpecialWarningRun(257407, nil, nil, nil, 4, 2)
 
@@ -50,7 +50,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 255371 then
-		specWarnFear:Show()
+		specWarnFear:Show(DBM_CORE_BREAK_LOS)
 		specWarnFear:Play("findshelter")
 		timerFearCD:Start()
 	elseif spellId == 257407 then
@@ -98,7 +98,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 257939 then
 	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2013, "DBM-Argus", nil, 959)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17471 $"):sub(12, -3))
 mod:SetCreatureID(124492)
 --mod:SetEncounterID(1952)--Does not have one
 --mod:SetReCombatTime(20)
@@ -76,7 +76,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnGushingWound:Show(amount)
 				specWarnGushingWound:Play("stackhigh")
 			else--Taunt as soon as stacks are clear, regardless of stack count.
-				if not UnitIsDeadOrGhost("player") and not UnitDebuff("player", args.spellName) then
+				if not UnitIsDeadOrGhost("player") and not DBM:UnitDebuff("player", args.spellName) then
 					specWarnGushingWoundOther:Show(args.destName)
 					specWarnGushingWoundOther:Play("tauntboss")
 				else

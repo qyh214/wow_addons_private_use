@@ -1,0 +1,50 @@
+------------------------------------------------------------------------
+r406 | stanzilla | 2018-05-10 20:59:49 +0000 (Thu, 10 May 2018) | 4 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/Modules/BlackBook.lua
+   M /trunk/Modules/CarbonCopy.lua
+   M /trunk/Modules/DoNotWant.lua
+   M /trunk/Modules/OpenAll.lua
+   M /trunk/Modules/Select.lua
+   M /trunk/Postal.lua
+
+- remove old MrPlow integration
+- fix a variable override
+- change to new wowace repo urls in pkgmeta
+- remove 4.0 compat code
+------------------------------------------------------------------------
+r405 | stanzilla | 2018-02-24 00:30:48 +0000 (Sat, 24 Feb 2018) | 1 line
+Changed paths:
+   A /trunk/.editorconfig
+   M /trunk/Localization.lua
+   M /trunk/Modules/BlackBook.lua
+   M /trunk/Modules/CarbonCopy.lua
+   M /trunk/Modules/DoNotWant.lua
+   M /trunk/Modules/Express.lua
+   M /trunk/Modules/OpenAll.lua
+   M /trunk/Modules/Rake.lua
+   M /trunk/Modules/Select.lua
+   M /trunk/Modules/Wire.lua
+   M /trunk/Postal.lua
+   M /trunk/Postal.toc
+
+whitespace cleanup and add .editorconfig file so this does not happen again.
+------------------------------------------------------------------------
+r404 | oscarucb | 2017-07-11 01:33:32 +0000 (Tue, 11 Jul 2017) | 5 lines
+Changed paths:
+   M /trunk/Modules/BlackBook.lua
+
+Alt handling improvements to Blackbook
+
+Match all alts regardless of faction, preferring same
+Ensure AllAlts lists stay on the screen
+
+------------------------------------------------------------------------
+r403 | gnarfoz | 2017-04-01 20:42:51 +0000 (Sat, 01 Apr 2017) | 1 line
+Changed paths:
+   M /trunk/Modules/OpenAll.lua
+
+Hide Blizzard's own Open All button, introduced with 7.2
+------------------------------------------------------------------------
+

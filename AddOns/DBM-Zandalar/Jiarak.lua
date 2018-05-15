@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2141, "DBM-Zandalar", nil, 1029)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17290 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17428 $"):sub(12, -3))
 mod:SetCreatureID(132253)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
@@ -87,7 +87,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 257939 then
 	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1751, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17124 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
 mod:SetCreatureID(104881)
 mod:SetEncounterID(1871)
 mod:SetZone()
@@ -160,7 +160,6 @@ local function findSearingMark(self)
 end
 
 function mod:OnCombatStart(delay)
-	MarkOfFrostDebuff, SearingBrandDebuff, annihilatedDebuff, frostBitten = DBM:GetSpellInfo(212587), DBM:GetSpellInfo(213166), DBM:GetSpellInfo(215458), DBM:GetSpellInfo(212647)
 	self.vb.annihilateCount = 0
 	self.vb.armageddonAdds = 0
 	self.vb.lastPhase = 1

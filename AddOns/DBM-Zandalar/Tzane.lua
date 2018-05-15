@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2139, "DBM-Zandalar", nil, 1029)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17290 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17428 $"):sub(12, -3))
 mod:SetCreatureID(132701)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
@@ -117,7 +117,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 257939 then
 	end
 end

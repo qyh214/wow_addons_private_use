@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2015, "DBM-Argus", nil, 959)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17471 $"):sub(12, -3))
 mod:SetCreatureID(124719)
 --mod:SetEncounterID(1952)--Does not have one
 --mod:SetReCombatTime(20)
@@ -87,7 +87,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnDrain:Show(amount)
 					specWarnDrain:Play("stackhigh")
 				else--Taunt as soon as stacks are clear, regardless of stack count.
-					if not UnitIsDeadOrGhost("player") and not UnitDebuff("player", args.spellName) and self:AntiSpam(1.5, 1) then
+					if not UnitIsDeadOrGhost("player") and not DBM:UnitDebuff("player", args.spellName) and self:AntiSpam(1.5, 1) then
 						specWarnDrainTaunt:Show(args.destName)
 						specWarnDrainTaunt:Play("tauntboss")
 					else

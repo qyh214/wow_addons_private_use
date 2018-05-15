@@ -125,6 +125,7 @@ DBM_CORE_OPTION_CATEGORY_WARNINGS_YOU	= "Personal Announces"
 DBM_CORE_OPTION_CATEGORY_WARNINGS_OTHER	= "Target Announces"
 DBM_CORE_OPTION_CATEGORY_WARNINGS_ROLE	= "Role Announces"
 DBM_CORE_OPTION_CATEGORY_SOUNDS			= "Sounds"
+DBM_CORE_OPTION_CATEGORY_DROPDOWNS		= "Dropdowns"
 
 DBM_CORE_AUTO_RESPONDED						= "Auto-responded."
 DBM_CORE_STATUS_WHISPER						= "%s: %s, %d/%d people alive"
@@ -201,6 +202,9 @@ DBM_CORE_INFOFRAME_SHOW_SELF		= "Always show your power"		-- Always show your ow
 DBM_CORE_INFOFRAME_SETLINES			= "Set max lines"
 DBM_CORE_INFOFRAME_LINESDEFAULT		= "Set by mod"
 DBM_CORE_INFOFRAME_LINES_TO			= "%d lines"
+DBM_CORE_INFOFRAME_POWER			= "Power"
+DBM_CORE_INFOFRAME_MAIN				= "Main:"--Main power
+DBM_CORE_INFOFRAME_ALT				= "Alt:"--Alternate Power
 
 DBM_LFG_INVITE						= "LFG Invite"
 
@@ -259,9 +263,11 @@ DBM_CORE_ORB						= "Orb"
 DBM_CHEST							= "Chest"--As in Treasure 'Chest'. Not Chest as in body part.
 DBM_NO_DEBUFF						= "Not %s"--For use in places like info frame where you put "Not Spellname"
 DBM_ALLY							= "Ally"--Such as "Move to Ally"
-DBM_ADDS							= "Adds"--Such as "Move to Ally"
+DBM_ADD								= "Add"--A fight Add as in "boss spawned extra adds"
+DBM_ADDS							= "Adds"
 DBM_CORE_ROOM_EDGE					= "Room Edge"
 DBM_CORE_FAR_AWAY					= "Far Away"
+DBM_CORE_BREAK_LOS					= "Break LOS"
 DBM_CORE_SAFE						= "Safe"
 DBM_CORE_SHIELD						= "Shield"
 DBM_INCOMING						= "%s Incoming"
@@ -486,6 +492,7 @@ DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT	= "Show range frame (%s)"--For when a rang
 DBM_CORE_AUTO_RRANGE_OPTION_TEXT		= "Show reverse range frame (%s) for $spell:%s"--Reverse range frame (green when players in range, red when not)
 DBM_CORE_AUTO_RRANGE_OPTION_TEXT_SHORT	= "Show reverse range frame (%s)"
 DBM_CORE_AUTO_INFO_FRAME_OPTION_TEXT	= "Show info frame for $spell:%s"
+DBM_CORE_AUTO_INFO_FRAME_OPTION_TEXT2	= "Show info frame for encounter overview"
 DBM_CORE_AUTO_READY_CHECK_OPTION_TEXT	= "Play ready check sound when boss is pulled (even if it's not targeted)"
 
 -- New special warnings

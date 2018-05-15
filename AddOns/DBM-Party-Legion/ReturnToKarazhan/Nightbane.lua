@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Nightbane", "DBM-Party-Legion", 11)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
 mod:SetCreatureID(114895)
 mod:SetEncounterID(2031)
 mod:SetZone()
@@ -59,7 +59,6 @@ mod.vb.interruptCount = 0
 local charredEarth, burningBones, filteredDebuff = DBM:GetSpellInfo(228808), DBM:GetSpellInfo(228829), DBM:GetSpellInfo(228796)
 
 function mod:OnCombatStart(delay)
-	charredEarth, burningBones, filteredDebuff = DBM:GetSpellInfo(228808), DBM:GetSpellInfo(228829), DBM:GetSpellInfo(228796)
 	self.vb.phase = 1
 	self.vb.interruptCount = 0
 	timerBreathCD:Start(8.5-delay)

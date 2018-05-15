@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1737, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17194 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
 mod:SetCreatureID(104154)--The Demon Within (111022)
 mod:SetEncounterID(1866)
 mod:SetZone()
@@ -227,7 +227,6 @@ local function upValueCapsAreStupid(self)
 end
 
 function mod:OnCombatStart(delay)
-	timeStopBuff, parasiteName = DBM:GetSpellInfo(206310), DBM:GetSpellInfo(206847)
 	self.vb.phase = 1
 	self.vb.addsDied = 0
 	self.vb.liquidHellfireCast = 0

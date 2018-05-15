@@ -2,7 +2,7 @@
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: 2018/03/13
+-- Last update: 2018/05/12
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
@@ -14,7 +14,7 @@ L.MainFrame 				= "Deadly Boss Mods"
 L.TranslationByPrefix		= "翻译:"
 L.TranslationBy 			= "Mini_Dragon(Brilla@金色平原) 原翻译：Diablohu & yleaf & sunlcy"
 L.Website					= "拜访我们的Discord |cFF73C2FBhttps://discord.gg/deadlybossmods|r. 在Twitter上关注 @deadlybossmods 或 @MysticalOS"
-L.WebsiteButton				= "Discord"
+L.WebsiteButton				= "网页"
 
 L.OTabBosses				= "模块"
 L.OTabOptions				= "选项"
@@ -95,6 +95,7 @@ L.Warn_FontShadow			= "阴影"
 L.Warn_FontSize				= "字体大小: %d"
 L.Warn_Duration				= "警告持续时间: %0.1f 秒"
 L.None						= "无"
+L.Random					= "Random"
 L.Outline					= "描边"
 L.ThickOutline				= "加粗描边"
 L.MonochromeOutline			= "单色描边"
@@ -233,7 +234,7 @@ L.EventEngageSound			= "设置开战音效"
 L.EventDungeonMusic			= "设置在副本内播放的音乐"
 L.EventEngageMusic			= "设置战斗过程中的音乐"
 L.Area_EventSoundsExtras	= "事件音效选项"
-L.EventMusicCombined		= "允许在副本内播放在影月选项中播放全部音效(需要reload)"
+L.EventMusicCombined		= "允许在副本内播放在音乐选项中的全部音效(需要reload)"
 L.Area_EventSoundsFilters	= "事件音效过滤条件"
 L.EventFilterDungMythicMusic= "不要在M/M+难度下播放副本音乐"
 L.EventFilterMythicMusic	= "不要在M/M+难度下播放战斗音乐"
@@ -244,6 +245,7 @@ L.Area_SpamFilter_Outgoing	= "DBM全局过滤设置"
 L.SpamBlockNoShowAnnounce	= "不显示警报或播放警报音效"
 L.SpamBlockNoShowTgtAnnounce= "不显示针对目标类型的警报或播放警报音效(上面那个优先级比这个高)"
 L.SpamBlockNoSpecWarn		= "不要显示特殊特殊警报和特殊警报音效"
+L.SpamBlockNoSpecWarnText	= "Do not show special warning text, but still allow voice packs (above filter overrides this one)"
 L.SpamBlockNoShowTimers		= "不显示DBM原装计时条"
 L.SpamBlockNoShowUTimers	= "不显示用户自定生成的计时条"
 L.SpamBlockNoSetIcon		= "不在目标上设定标记"
@@ -264,7 +266,6 @@ L.SpamBlockNoRangeRestore	= "当Boss模块隐藏距离窗体时不重置窗体�
 L.Area_SpamFilter			= "信息过滤设置"
 L.DontShowFarWarnings		= "不为过远的事件显示计时条/警报"
 L.StripServerName			= "警告和计时器中不显示服务器名"
-L.BlockVersionUpdateNotice	= "禁用DBM过期窗口并改在聊天窗口提示"
 
 L.Area_SpecFilter			= "角色过滤选项"
 L.FilterTankSpec			= "当非坦克专精时，过滤掉给予坦克的专用信息"

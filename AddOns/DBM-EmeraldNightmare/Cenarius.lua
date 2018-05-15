@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1750, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17126 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17471 $"):sub(12, -3))
 mod:SetCreatureID(104636)
 mod:SetEncounterID(1877)
 mod:SetZone()
@@ -96,7 +96,6 @@ function mod:BreathTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
-	debuffName, infoframeName = DBM:GetSpellInfo(211471), DBM:GetSpellInfo(210279)
 	scornedWarned = false
 	table.wipe(seenMobs)
 	self.vb.phase = 1
@@ -267,7 +266,7 @@ function mod:UNIT_DIED(args)
 		self.vb.sisterCount = self.vb.sisterCount - 1
 		timerTouchofLifeCD:Stop(args.destGUID)
 		timerScornedTouchCD:Stop(args.destGUID)
-		if self.Options.RangeFrame and self.vb.sisterCount == 0 and not UnitDebuff("player", DBM:GetSpellInfo(211471)) then--Do to shitty spellInfo code, it'll fail to hide first time
+		if self.Options.RangeFrame and self.vb.sisterCount == 0 and not DBM:UnitDebuff("player", debuffName) then--Do to shitty spellInfo code, it'll fail to hide first time
 			DBM.RangeCheck:Hide()
 		end
 	elseif cid == 105494 then--Rotten Drake
@@ -331,7 +330,7 @@ do
 	--Jumps didn't show in combat log during testing, only original casts. However, jumps need warnings too
 	--Check at later time if jumps are in combat log
 	function mod:UNIT_AURA(uId)
-		local hasDebuff = UnitDebuff("player", debuffName)
+		local hasDebuff = DBM:UnitDebuff("player", debuffName)
 		if hasDebuff and not scornedWarned then
 			specWarnScornedTouch:Show()
 			specWarnScornedTouch:Play("runout")

@@ -38,11 +38,6 @@ function ACP:SpecialCaseName(name)
         return name:sub(2, -1)
     elseif name == "ShadowedUF_Options" then
         return "ShadowedUnitFrames_Options"
-    --	elseif name == "Auc-Advanced" then
-    --		return "Auc"
-    --	elseif name:match("Auc%-") then
-    --		return name:gsub("Auc%-", "Auc_")
-    --	elseif
     end
 
     return name
@@ -438,9 +433,6 @@ local function toggle(flag)
     end
 end
 
-
-
-
 local function GetAddonIndex(addon, noerr)
     if type(addon) == 'number' then
         return addon
@@ -591,17 +583,6 @@ function ACP:OnLoad(this)
     for i,v in ipairs(ACP_BLIZZARD_ADDONS) do
         ACP_BLIZZARD_ADDONS[v] = i
     end
-    --	ACP_BLIZZARD_ADDONS = setmetatable(ACP_BLIZZARD_ADDONS, {
-    --		__index = function(t,k)
-    --			for i=1, #t do
-    --				if t[i] == k then
-    --
-    --					return i
-    --				end
-    --			end
-    --		end
-    --	} )
-
     local title = "Addon Control Panel"
     local version = GetAddOnMetadata(ACP_ADDON_NAME, "Version")
     if version then
@@ -738,48 +719,6 @@ function ACP:ResolveLibraryName(id)
 end
 
 
---function ACP:ProcessBugSack(which)
---    if BugSack then
---        local errs = BugSack:GetErrors(which)
---    	for i=1, #errs do
---    	    local str = errs[i].message
---    	    if type(str) == "table" then
---    	        str = table.concat(str)
---    	    end
---
---    	    local _,_,id = strfind(str, "Cannot find a library instance of ([_A-Za-z0-9-]+%.?%d?)")
---
---    	    if not id then
---    	        _,_,id = strfind(str, "Library \"([_A-Za-z0-9-]+%.?%d?)\" does not exist")
---    	    end
---
---    	    if not id then
---    	        _,_,id = strfind(str, ".-requires ([_A-Za-z0-9-]+%.?%d?)")
---    	    end
---
---    	    if id then
---                local name = self:ResolveLibraryName(id)
---
---        	    if name then
---        	        local _, _, _, enabled = GetAddOnInfo(name)
---                    if not enabled then
---                        local reload = Prat and Prat:GetReloadUILink("ACP") or L["Reload"]
---                	    ACP:Print(L["*** Enabling <%s> %s your UI ***"]:format(CLR:Addon(name), reload), 1.0, 1.0, 0.0)
---                	    ACP:EnableAddon(name)
---                    end
---            	else
---               	    ACP:Print(L["*** Unknown Addon <%s> Required ***"]:format(CLR:Addon(name)), 1.0, 0.0, 0.0)
---            	end
---            end
---    	end
---    end
---end
-
---ACP_Data.NoRecurse
---ACP_Data.NoChildren
---ACP_Data.NoRecurse
---ACP_Data.NoChildren
-local ACP_NOCHILDREN = "nochildren"
 local ACP_NORECURSE = "norecurse"
 
 local ACP_ADD_SET_D = "addset"
@@ -1002,36 +941,6 @@ addonListBuilders[AUTHOR] = function()
 
 end
 
-
---[[
-addonListBuilders["Ace2 Libs And Packages"] = function()
-	for k in pairs(masterAddonList) do
-		masterAddonList[k] = nil
-	end
-
-	-- Sort the addon list by Ace2 Categories.
-	table.sort(t, function(a, b)
-		local catA = GetAddOnMetadata(a, "Author")
-		local catB = GetAddOnMetadata(b, "Author")
-		if catA == catB then
-			local nameA = GetAddOnInfo(a)
-			local nameB = GetAddOnInfo(b)
-			return nameA < nameB
-		else
-			return tostring(catA) < tostring(catB)
-		end
-	end )
-
-
-	local numAddons = GetNumAddOns()
-	for i=1, numAddons do
-		table.insert(masterAddonList, i)
-	end
-	for i=1, NUM_BLIZZARD_ADDONS do
-		table.insert(masterAddonList, numAddons+i)
-	end
-end
---]]
 
 addonListBuilders[SEPARATE_LOD_LIST] = function()
     for k in pairs(masterAddonList) do

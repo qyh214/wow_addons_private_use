@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1997, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17187 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17508 $"):sub(12, -3))
 mod:SetCreatureID(122369, 122333, 122367)--Chief Engineer Ishkar, General Erodus, Admiral Svirax
 mod:SetEncounterID(2070)
 mod:SetZone()
@@ -52,6 +52,7 @@ local warnShockGrenade					= mod:NewTargetAnnounce(244737, 3, nil, false, 2)
 local specWarnExploitWeakness			= mod:NewSpecialWarningTaunt(244892, nil, nil, nil, 1, 2)
 local specWarnPsychicAssaultStack		= mod:NewSpecialWarningStack(244172, nil, 10, nil, nil, 1, 6)
 local specWarnPsychicAssault			= mod:NewSpecialWarningMove(244172, nil, nil, nil, 3, 2)--Two diff warnings cause we want to upgrade to high priority at 19+ stacks
+local specWarnAssumeCommand				= mod:NewSpecialWarningSwitch(253040, "Tank", nil, nil, 1, 2)
 --In Pod
 ----Admiral Svirax
 local specWarnFusillade					= mod:NewSpecialWarningMoveTo(244625, nil, nil, nil, 1, 5)
@@ -121,7 +122,6 @@ function mod:DemonicChargeTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
-	felShield = DBM:GetSpellInfo(244910)
 	self.vb.FusilladeCount = 0
 	self.vb.lastIcon = 8
 	--In pod
@@ -160,6 +160,8 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 253040 then
 		self:BossTargetScanner(args.sourceGUID, "DemonicChargeTarget", 0.2, 9)
 	elseif spellId == 245227 then--Assume Command (entering pod)
+		specWarnAssumeCommand:Show()
+		specWarnAssumeCommand:Play("targetchange")
 		timerShockGrenadeCD:Stop()
 		timerExploitWeaknessCD:Stop()
 		countdownExploitWeakness:Cancel()
@@ -233,7 +235,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:IsTanking(uId) then
 			local amount = args.amount or 1
 			if amount >= 2 then
-				local _, _, _, _, _, _, expireTime = UnitDebuff("player", args.spellName)
+				local _, _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
 				local remaining
 				if expireTime then
 					remaining = expireTime-GetTime()

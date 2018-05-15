@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1665, "DBM-Party-Legion", 5, 767)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17436 $"):sub(12, -3))
 mod:SetCreatureID(91004)
 mod:SetEncounterID(1791)
 mod:SetZone()
@@ -31,7 +31,7 @@ local timerStanceOfMountainCD		= mod:NewCDTimer(119.5, 216249, nil, nil, nil, 6)
 function mod:OnCombatStart(delay)
 	timerSunderCD:Start(7-delay)
 	timerStrikeCD:Start(15.8-delay)
-	timerStanceOfMountainCD:Start(26.7-delay)
+	--timerStanceOfMountainCD:Start(26.7-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -66,6 +66,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		warnStanceofMountain:Show()
 		timerSunderCD:Stop()
 		timerStrikeCD:Stop()
+		--timerStanceOfMountainCD:Stop()
 		--timerStanceOfMountainCD:Start()--Only seems to do it once now
 	elseif spellId == 198631 then--Stance of mountain ending
 		timerSunderCD:Start(3)
