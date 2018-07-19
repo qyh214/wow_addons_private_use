@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GunshipBattle", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 258 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 local addsIcon
 local bossID
 --mod:SetEncounterID(1099)--No ES fires this combat
@@ -102,7 +102,7 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 72340 then
 		DBM:EndCombat(self)
 	end

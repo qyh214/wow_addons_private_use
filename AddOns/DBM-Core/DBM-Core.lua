@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 17517 $"):sub(12, -3)),
-	DisplayVersion = "7.3.30", -- the string that is shown as version
-	ReleaseRevision = 17510 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 17623 $"):sub(12, -3)),
+	DisplayVersion = "8.0.0", -- the string that is shown as version
+	ReleaseRevision = 17623 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -53,7 +53,7 @@ if not DBM.Revision then
 	DBM.Revision = DBM.ReleaseRevision
 end
 
-local wowVersionString, _, _, wowTOC = GetBuildInfo()
+local wowVersionString, wowBuild, _, wowTOC = GetBuildInfo()
 local testBuild = false
 if IsTestBuild() then
 	testBuild = true
@@ -136,10 +136,10 @@ DBM.DefaultOptions = {
 	CustomSounds = 0,
 	ShowBigBrotherOnCombatStart = false,
 	FilterTankSpec = true,
-	FilterInterrupt = true,
+	FilterInterrupt2 = "TandFandBossCooldown",
 	FilterInterruptNoteName = false,
 	FilterDispel = true,
-	FilterSelfHud = true,
+	--FilterSelfHud = true,
 	AutologBosses = false,
 	AdvancedAutologBosses = false,
 	LogOnlyRaidBosses = false,
@@ -407,7 +407,7 @@ local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
 
-local bannedMods = { -- a list of "banned" (meaning they are replaced by another mod like DBM-Battlegrounds (replaced by DBM-PvP)) boss mods, these mods will not be loaded by DBM (and they wont show up in the GUI)
+local bannedMods = { -- a list of "banned" (meaning they are replaced by another mod or discontinued). These mods will not be loaded by DBM (and they wont show up in the GUI)
 	"DBM-Battlegrounds", --replaced by DBM-PvP
 	-- ZG and ZA are now part of the party mods for Cataclysm
 	"DBM-ZulAman",--Remove restriction in 8.0 classic wow
@@ -418,6 +418,9 @@ local bannedMods = { -- a list of "banned" (meaning they are replaced by another
 	"DBM-ProvingGrounds",--Renamed to DBM-Challenges going forward to include proving grounds and any new single player challendges of similar design such as mage tower artifact quests
 	"DBM-VPKiwiBeta",--Renamed to DBM-VPKiwi in final version.
 	"DBM-Suramar",--Renamed to DBM-Nighthold
+	"DBM-KulTiras",--Merged to DBM-Azeroth-BfA
+	"DBM-Zandalar",--Merged to DBM-Azeroth-BfA
+	"DBM-PvP",--Discontinued do to inability to maintain such large scale external projects with limitted time/resources
 }
 
 
@@ -455,7 +458,6 @@ local UnitExists, UnitIsDead, UnitIsFriend, UnitIsUnit = UnitExists, UnitIsDead,
 local GetSpellInfo, EJ_GetSectionInfo, GetSectionIconFlags, GetSpellTexture, GetSpellCooldown = GetSpellInfo, C_EncounterJournal.GetSectionInfo, C_EncounterJournal.GetSectionIconFlags, GetSpellTexture, GetSpellCooldown
 local EJ_GetEncounterInfo, EJ_GetCreatureInfo, GetDungeonInfo = EJ_GetEncounterInfo, EJ_GetCreatureInfo, GetDungeonInfo
 local GetInstanceInfo = GetInstanceInfo
-local GetCurrentMapDungeonLevel, SetMapToCurrentZone, GetPlayerMapAreaID = GetCurrentMapDungeonLevel, SetMapToCurrentZone, GetPlayerMapAreaID
 local GetSpecialization, GetSpecializationInfo, GetSpecializationInfoByID = GetSpecialization, GetSpecializationInfo, GetSpecializationInfoByID
 local UnitDetailedThreatSituation = UnitDetailedThreatSituation
 local UnitIsGroupLeader, UnitIsGroupAssistant = UnitIsGroupLeader, UnitIsGroupAssistant
@@ -463,8 +465,7 @@ local PlaySoundFile, PlaySound = PlaySoundFile, PlaySound
 local Ambiguate = Ambiguate
 local C_TimerNewTicker, C_TimerAfter = C_Timer.NewTicker, C_Timer.After
 
---TODO, remove RegisterAddonMessagePrefix upvalue in 8.x, this is only a temp live/beta work around
-local RegisterAddonMessagePrefix, SendAddonMessage = RegisterAddonMessagePrefix or C_ChatInfo.RegisterAddonMessagePrefix, SendAddonMessage or C_ChatInfo.SendAddonMessage
+local SendAddonMessage = C_ChatInfo.SendAddonMessage
 
 -- for Phanx' Class Colors
 local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
@@ -511,13 +512,28 @@ local function sendSync(prefix, msg)
 	if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
 		SendAddonMessage("D4", prefix .. "\t" .. msg, "INSTANCE_CHAT")
 	else
-		--if IsInRaid() and not wowTOC == 80000 then--Don't send syncs to raid in 8.x, raid no longer exists
 		if IsInRaid() then
 			SendAddonMessage("D4", prefix .. "\t" .. msg, "RAID")
 		elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
 			SendAddonMessage("D4", prefix .. "\t" .. msg, "PARTY")
 		else--for solo raid
 			SendAddonMessage("D4", prefix .. "\t" .. msg, "WHISPER", playerName)
+		end
+	end
+end
+
+--Custom sync function that should only be used for user generated sync messages
+local function sendLoggedSync(prefix, msg)
+	msg = msg or ""
+	if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
+		C_ChatInfo.SendAddonMessageLogged("D4", prefix .. "\t" .. msg, "INSTANCE_CHAT")
+	else
+		if IsInRaid() then
+			C_ChatInfo.SendAddonMessageLogged("D4", prefix .. "\t" .. msg, "RAID")
+		elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
+			C_ChatInfo.SendAddonMessageLogged("D4", prefix .. "\t" .. msg, "PARTY")
+		else--for solo raid
+			C_ChatInfo.SendAddonMessageLogged("D4", prefix .. "\t" .. msg, "WHISPER", playerName)
 		end
 	end
 end
@@ -568,7 +584,7 @@ local BNSendWhisper = sendWhisper
 local function stripServerName(cap)
 	cap = cap:sub(2, -2)
 	if DBM.Options.StripServerName then
-		cap = Ambiguate(cap, "short")
+		cap = Ambiguate(cap, "none")
 	end
 	return cap
 end
@@ -977,10 +993,8 @@ do
 		SPELL_LEECH = true,
 		SPELL_CAST_FAILED = true
 	}
-	function DBM:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, extraArg1, extraArg2, extraArg3, extraArg4, extraArg5, extraArg6, extraArg7, extraArg8, extraArg9, extraArg10, ...)
-		if wowTOC == 80000 then--In 8.x+, CLEU is just an event with no args, all args must be requested via CombatLogGetCurrentEventInfo
-			timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, extraArg1, extraArg2, extraArg3, extraArg4, extraArg5, extraArg6, extraArg7, extraArg8, extraArg9, extraArg10 = CombatLogGetCurrentEventInfo()
-		end
+	function DBM:COMBAT_LOG_EVENT_UNFILTERED()
+		local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, extraArg1, extraArg2, extraArg3, extraArg4, extraArg5, extraArg6, extraArg7, extraArg8, extraArg9, extraArg10 = CombatLogGetCurrentEventInfo()
 		if not registeredEvents[event] then return end
 		local eventSub6 = event:sub(0, 6)
 		if (eventSub6 == "SPELL_" or eventSub6 == "RANGE_") and not unfilteredCLEUEvents[event] and registeredSpellIds[event] then
@@ -989,7 +1003,7 @@ do
 		-- process some high volume events without building the whole table which is somewhat faster
 		-- this prevents work-around with mods that used to have their own event handler to prevent this overhead
 		if noArgTableEvents[event] then
-			return handleEvent(nil, event, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, extraArg1, extraArg2, extraArg3, extraArg4, extraArg5, extraArg6, extraArg7, extraArg8, extraArg9, extraArg10, ...)
+			return handleEvent(nil, event, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, extraArg1, extraArg2, extraArg3, extraArg4, extraArg5, extraArg6, extraArg7, extraArg8, extraArg9, extraArg10)
 		else
 			twipe(args)
 			args.timestamp = timestamp
@@ -1133,17 +1147,17 @@ do
 			onLoadCallbacks = nil
 			loadOptions(self)
 			if GetAddOnEnableState(playerName, "VEM-Core") >= 1 then
-				self:Disable()
+				self:Disable(true)
 				C_TimerAfter(15, function() AddMsg(self, DBM_CORE_VEM) end)
 				return
 			end
 			if GetAddOnEnableState(playerName, "DBM-Profiles") >= 1 then
-				self:Disable()
+				self:Disable(true)
 				C_TimerAfter(15, function() AddMsg(self, DBM_CORE_3RDPROFILES) end)
 				return
 			end
 			if GetAddOnEnableState(playerName, "DPMCore") >= 1 then
-				self:Disable()
+				self:Disable(true)
 				C_TimerAfter(15, function() AddMsg(self, DBM_CORE_DPMCORE) end)
 				return
 			end
@@ -1185,6 +1199,7 @@ do
 								hasMythic		= tonumber(GetAddOnMetadata(i, "X-DBM-Mod-Has-Mythic") or 0) == 1,
 								hasTimeWalker	= tonumber(GetAddOnMetadata(i, "X-DBM-Mod-Has-TimeWalker") or 0) == 1,
 								isWorldBoss		= tonumber(GetAddOnMetadata(i, "X-DBM-Mod-World-Boss") or 0) == 1,
+								isExpedition	= tonumber(GetAddOnMetadata(i, "X-DBM-Mod-Expedition") or 0) == 1,
 								minRevision		= tonumber(GetAddOnMetadata(i, "X-DBM-Mod-MinCoreRevision") or 0),
 								minExpansion	= tonumber(GetAddOnMetadata(i, "X-DBM-Mod-MinExpansion") or 0),
 								modId			= addonName,
@@ -1297,6 +1312,7 @@ do
 				"GROUP_ROSTER_UPDATE",
 				"INSTANCE_GROUP_SIZE_CHANGED",
 				"CHAT_MSG_ADDON",
+				--"CHAT_MSG_ADDON_LOGGED",--Enable in next Beta Build
 				"BN_CHAT_MSG_ADDON",
 				"PLAYER_REGEN_DISABLED",
 				"PLAYER_REGEN_ENABLED",
@@ -2156,13 +2172,14 @@ do
 		elseif cmd:sub(1, 8) == "whereiam" or cmd:sub(1, 8) == "whereami" then
 			if DBM:HasMapRestrictions() then
 				local _, _, _, map = UnitPosition("player")
-				local mapID = C_Map and C_Map.GetBestMapForUnit("player") or GetCurrentMapAreaID()
+				local mapID = C_Map.GetBestMapForUnit("player")
 				DBM:AddMsg(("Location Information\nYou are at zone %u (%s).\nLocal Map ID %u (%s)"):format(map, GetRealZoneText(map), mapID, GetZoneText()))
 			else
 				local x, y, _, map = UnitPosition("player")
-				SetMapToCurrentZone()
-				local mapID = C_Map and C_Map.GetBestMapForUnit("player") or GetCurrentMapAreaID()
-				local mapx, mapy = GetPlayerMapPosition("player")
+				local mapID, mapx, mapy
+				mapID = C_Map.GetBestMapForUnit("player")
+				local tempTable = C_Map.GetPlayerMapPosition(mapID, "player")
+				mapx, mapy = tempTable.x, tempTable.y
 				DBM:AddMsg(("Location Information\nYou are at zone %u (%s): x=%f, y=%f.\nLocal Map ID %u (%s): x=%f, y=%f"):format(map, GetRealZoneText(map), x, y, mapID, GetZoneText(), mapx, mapy))
 			end
 		elseif cmd:sub(1, 7) == "request" then
@@ -2430,9 +2447,9 @@ do
 		fireEvent("DBM_TimerStart", "DBMPizzaTimer", text, time, "Interface\\Icons\\Spell_Holy_BorrowedTime", "pizzatimer", nil, 0)
 		if broadcast then
 			if count then
-				sendSync("CU", ("%s\t%s"):format(time, text))
+				sendLoggedSync("CU", ("%s\t%s"):format(time, text))
 			else
-				sendSync("U", ("%s\t%s"):format(time, text))
+				sendLoggedSync("U", ("%s\t%s"):format(time, text))
 			end
 		end
 		if sender then self:ShowPizzaInfo(text, sender) end
@@ -3730,7 +3747,8 @@ do
 		timerRequestInProgress = false
 		self:Debug("LOADING_SCREEN_DISABLED fired")
 		self:Unschedule(SecondaryLoadCheck)
-		SecondaryLoadCheck(self)
+		--SecondaryLoadCheck(self)
+		self:Schedule(1, SecondaryLoadCheck, self)--Now delayed by one second to work around an issue on beta where spec info isn't available yet on reloadui
 		self:TransitionToDungeonBGM(false, true)
 		self:Schedule(5, SecondaryLoadCheck, self)
 		if DBM:HasMapRestrictions() then
@@ -4258,14 +4276,14 @@ do
 							if updateNotificationDisplayed < 3 then
 								updateNotificationDisplayed = 3
 								AddMsg(DBM, DBM_CORE_UPDATEREMINDER_DISABLE)
-								DBM:Disable()
+								DBM:Disable(true)
 							end
 						end
 					--Disable if out of date and it's a major patch.
 					elseif not testBuild and dbmToc < wowTOC then
 						updateNotificationDisplayed = 3
 						AddMsg(DBM, DBM_CORE_UPDATEREMINDER_MAJORPATCH)
-						DBM:Disable()
+						DBM:Disable(true)
 					end
 				end
 			end
@@ -4280,7 +4298,7 @@ do
 				if testBuild and revDifference > 5 then
 					updateNotificationDisplayed = 3
 					AddMsg(DBM, DBM_CORE_UPDATEREMINDER_DISABLE)
-					DBM:Disable()
+					DBM:Disable(true)
 				else
 					updateNotificationDisplayed = 2
 					AddMsg(DBM, DBM_CORE_UPDATEREMINDER_HEADER_ALPHA:format(revDifference))
@@ -4879,6 +4897,7 @@ do
 			end
 		end
 	end
+	--DBM.CHAT_MSG_ADDON_LOGGED = DBM.CHAT_MSG_ADDON
 	
 	function DBM:BN_CHAT_MSG_ADDON(prefix, msg, channel, sender)
 		if prefix == "D4" and msg then
@@ -5265,8 +5284,7 @@ do
 		end
 	end
 
-	function DBM:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
-		local spellId = legacySpellId or bfaSpellId
+	function DBM:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		local spellName = self:GetSpellInfo(spellId)
 		self:Debug("UNIT_SPELLCAST_SUCCEEDED fired: "..UnitName(uId).."'s "..spellName.."("..spellId..")", 3)
 	end
@@ -6187,6 +6205,7 @@ function DBM:SetCurrentSpecInfo()
 	currentSpecID = tonumber(currentSpecID)
 end
 
+--TODO C_IslandsQueue.GetIslandDifficultyInfo(), if 38-40 don't work
 function DBM:GetCurrentInstanceDifficulty()
 	local _, instanceType, difficulty, difficultyName, _, _, _, _, instanceGroupSize = GetInstanceInfo()
 	local keystoneLevel = C_ChallengeMode.GetActiveKeystoneInfo() or 0
@@ -6214,11 +6233,11 @@ function DBM:GetCurrentInstanceDifficulty()
 		return "heroic5", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
 	elseif difficulty == 12 then
 		return "normal5", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 14 then
+	elseif difficulty == 14 or difficulty == 38 then
 		return "normal", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 15 then
+	elseif difficulty == 15 or difficulty == 39 then
 		return "heroic", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 16 then
+	elseif difficulty == 16 or difficulty == 40 then
 		return "mythic", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
 	elseif difficulty == 17 then--Variable LFR (ie post WoD zones)
 		return "lfr", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
@@ -6295,50 +6314,22 @@ function DBM:GetSpellInfo(spellId)
 	end
 end
 
-function DBM:UnitDebuff(uId, spellInput, spellInput2, spellInput3)
-	if wowTOC == 80000 then
-		for i = 1, 60 do
-			local spellName, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3 = UnitDebuff(uId, i)
-			if not spellName then return end
-			if spellInput == spellName or spellInput == spellId or spellInput2 == spellName or spellInput2 == spellId or spellInput3 == spellName or spellInput3 == spellId then
-				return spellName, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3
-			end
-		end
-	else
-		if type(spellInput) == "number" then
-			for i = 1, 60 do
-				local spellName, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3 = UnitDebuff(uId, i)
-				if not spellName then return end
-				if spellInput == spellName or spellInput == spellId or spellInput2 == spellName or spellInput2 == spellId or spellInput3 == spellName or spellInput3 == spellId then
-					return spellName, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3
-				end
-			end
-		else
-			return UnitDebuff(uId, spellInput)
+function DBM:UnitDebuff(uId, spellInput, spellInput2, spellInput3, spellInput4)
+	for i = 1, 60 do
+		local spellName, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3 = UnitDebuff(uId, i)
+		if not spellName then return end
+		if spellInput == spellName or spellInput == spellId or spellInput2 == spellName or spellInput2 == spellId or spellInput3 == spellName or spellInput3 == spellId or spellInput4 == spellName or spellInput4 == spellId then
+			return spellName, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3
 		end
 	end
 end
 
-function DBM:UnitBuff(uId, spellInput, spellInput2, spellInput3)
-	if wowTOC == 80000 then
-		for i = 1, 60 do
-			local spellName, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3 = UnitBuff(uId, i)
-			if not spellName then return end
-			if spellInput == spellName or spellInput == spellId or spellInput2 == spellName or spellInput2 == spellId or spellInput3 == spellName or spellInput3 == spellId then
-				return spellName, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3
-			end
-		end
-	else
-		if type(spellInput) == "number" then
-			for i = 1, 60 do
-				local spellName, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3 = UnitBuff(uId, i)
-				if not spellName then return end
-				if spellInput == spellName or spellInput == spellId or spellInput2 == spellName or spellInput2 == spellId or spellInput3 == spellName or spellInput3 == spellId then
-					return spellName, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3
-				end
-			end
-		else
-			return UnitBuff(uId, spellInput)
+function DBM:UnitBuff(uId, spellInput, spellInput2, spellInput3, spellInput4)
+	for i = 1, 60 do
+		local spellName, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3 = UnitBuff(uId, i)
+		if not spellName then return end
+		if spellInput == spellName or spellInput == spellId or spellInput2 == spellName or spellInput2 == spellId or spellInput3 == spellName or spellInput3 == spellId or spellInput4 == spellName or spellInput4 == spellId then
+			return spellName, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3
 		end
 	end
 end
@@ -6540,14 +6531,14 @@ do
 			C_TimerAfter(25, function() if self.Options.SilentMode then self:AddMsg(DBM_SILENT_REMINDER) end end)
 			C_TimerAfter(30, function() if not self.Options.SettingsMessageShown then self.Options.SettingsMessageShown = true self:AddMsg(DBM_HOW_TO_USE_MOD) end end)
 		end
-		if type(RegisterAddonMessagePrefix) == "function" then
-			if not RegisterAddonMessagePrefix("D4") then -- main prefix for DBM4
+		if type(C_ChatInfo.RegisterAddonMessagePrefix) == "function" then
+			if not C_ChatInfo.RegisterAddonMessagePrefix("D4") then -- main prefix for DBM4
 				self:AddMsg("Error: unable to register DBM addon message prefix (reached client side addon message filter limit), synchronization will be unavailable") -- TODO: confirm that this actually means that the syncs won't show up
 			end
-			if not RegisterAddonMessagePrefix("BigWigs") then
+			if not C_ChatInfo.RegisterAddonMessagePrefix("BigWigs") then
 				self:AddMsg("Error: unable to register BigWigs addon message prefix (reached client side addon message filter limit), BigWigs version checks will be unavailable")
 			end
-			if not RegisterAddonMessagePrefix("Transcriptor") then
+			if not C_ChatInfo.RegisterAddonMessagePrefix("Transcriptor") then
 				self:AddMsg("Error: unable to register Transcriptor addon message prefix (reached client side addon message filter limit)")
 			end
 		end
@@ -6582,12 +6573,8 @@ do
 	local function getNumRealAlivePlayers()
 		local alive = 0
 		local isInInstance = IsInInstance() or false
-		local currentMapId = isInInstance and select(4, UnitPosition("player")) or C_Map and C_Map.GetBestMapForUnit("player") or GetPlayerMapAreaID("player")
-		if not currentMapId then--REMOVE in 8.x, C_Map should never fail
-			SetMapToCurrentZone()
-			currentMapId = C_Map and C_Map.GetCurrentMapID("player") or GetCurrentMapAreaID()
-		end
-		local currentMapName = C_Map and C_Map.GetMapInfo(currentMapId) or GetMapNameByID(currentMapId)
+		local currentMapId = isInInstance and select(4, UnitPosition("player")) or C_Map.GetBestMapForUnit("player") or 0
+		local currentMapName = C_Map.GetMapInfo(currentMapId) or DBM_CORE_UNKNOWN
 		if IsInRaid() then
 			for i = 1, GetNumGroupMembers() do
 				if isInInstance and select(4, UnitPosition("raid"..i)) == currentMapId or select(7, GetRaidRosterInfo(i)) == currentMapName then
@@ -6685,7 +6672,7 @@ end
 
 --This completely unregisteres or registers distruptive events so they don't obstruct combat
 --Toggle is for if we are turning off or on.
---Custom is for pvp mods to call function without duplication and allowing pvp mods custom toggle.
+--Custom is for external mods to call function without duplication and allowing pvp mods custom toggle.
 do
 	local unregisteredEvents = {}
 	local function DisableEvent(frameName, eventName)
@@ -6742,17 +6729,23 @@ end
 --------------------------
 --  Enable/Disable DBM  --
 --------------------------
-function DBM:Disable()
-	unscheduleAll()
-	dbmIsEnabled = false
-end
+do
+	local forceDisabled = false
+	function DBM:Disable(forceDisable)
+		unscheduleAll()
+		dbmIsEnabled = false
+		forceDisabled = forceDisable
+	end
 
-function DBM:Enable()
-	dbmIsEnabled = true
-end
+	function DBM:Enable()
+		if not forceDisabled then
+			dbmIsEnabled = true
+		end
+	end
 
-function DBM:IsEnabled()
-	return dbmIsEnabled
+	function DBM:IsEnabled()
+		return dbmIsEnabled
+	end
 end
 
 -----------------------
@@ -6904,7 +6897,7 @@ function DBM:AntiSpam(time, id)
 end
 
 function DBM:GetTOC()
-	return wowTOC, testBuild, wowVersionString
+	return wowTOC, testBuild, wowVersionString, wowBuild
 end
 
 function DBM:InCombat()
@@ -6949,8 +6942,7 @@ function DBM:FindInstanceIDs()
 	end
 end
 
---/run DBM:FindEncounterIDs(1028)--Kul Tiras
---/run DBM:FindEncounterIDs(1029)--Zandalar
+--/run DBM:FindEncounterIDs(1028)--Azeroth (BfA)
 --/run DBM:FindEncounterIDs(1031)--Uldir
 --/run DBM:FindEncounterIDs(1001, 23)--Dungeon Template (mythic difficulty)
 function DBM:FindEncounterIDs(instanceID, diff)
@@ -6999,20 +6991,13 @@ do
 		self:Debug("CINEMATIC_START fired", 2)
 		local isInstance, instanceType = IsInInstance()
 		if not isInstance or C_Garrison:IsOnGarrisonMap() or instanceType == "scenario" or self.Options.MovieFilter == "Never" then return end
-		SetMapToCurrentZone()
-		local currentMapID
-		if C_Map then
-			currentMapID = C_Map.GetBestMapForUnit("player")
-		else
-			currentMapID = GetCurrentMapAreaID()
-		end
+		local currentMapID = C_Map.GetBestMapForUnit("player")
 		if not currentMapID then return end--Protection from map failures in zones that have no maps yet
-		local currentFloor = GetCurrentMapDungeonLevel and GetCurrentMapDungeonLevel() or 0--REMOVE In 8.x
-		if self.Options.MovieFilter == "Block" or self.Options.MovieFilter == "AfterFirst" and self.Options.MoviesSeen[currentMapID..currentFloor] then
+		if self.Options.MovieFilter == "Block" or self.Options.MovieFilter == "AfterFirst" and self.Options.MoviesSeen[currentMapID] then
 			CinematicFrame_CancelCinematic()
 			self:AddMsg(DBM_CORE_MOVIE_SKIPPED)
 		else
-			self.Options.MoviesSeen[currentMapID..currentFloor] = true
+			self.Options.MoviesSeen[currentMapID] = true
 		end
 	end
 end
@@ -7281,9 +7266,28 @@ function bossModPrototype:IsTrivial(level)
 	return false
 end
 
-function bossModPrototype:CheckInterruptFilter(sourceGUID, skip)
-	if not DBM.Options.FilterInterrupt and not skip then return true end
-	if UnitGUID("target") == sourceGUID or UnitGUID("focus") == sourceGUID then
+function bossModPrototype:IsValidWarning(sourceGUID)
+	for uId in DBM:GetGroupMembers() do
+		local target = uId.."target"
+		if UnitExists(target) and UnitGUID(target) == sourceGUID and UnitAffectingCombat(target) then return true end
+	end
+	return false
+end
+
+--Skip param is used when CheckInterruptFilter is actually being used for a simpe target/focus check and nothing more.
+--checkCooldown should never be passed with skip or COUNT interrupt warnings. It should be passed with any other interrupt filter
+function bossModPrototype:CheckInterruptFilter(sourceGUID, skip, checkCooldown)
+	if DBM.Options.FilterInterrupt2 == "None" and not skip then return true end--use doesn't want to use interrupt filter, always return true
+	--Pummel, Mind Freeze, Counterspell, Kick, Skull Bash, Rebuke, Silence, Wind Shear
+	local InterruptAvailable = true
+	local requireCooldown = checkCooldown
+	if (DBM.Options.FilterInterrupt2 == "onlyTandF") or self.isTrashMod and (DBM.Options.FilterInterrupt2 == "TandFandBossCooldown") then
+		requireCooldown = false
+	end
+	if requireCooldown and ((GetSpellCooldown(6552)) ~= 0 or (GetSpellCooldown(47528)) ~= 0 or (GetSpellCooldown(2139)) ~= 0 or (GetSpellCooldown(1766)) ~= 0 or (GetSpellCooldown(106839)) ~= 0 or (GetSpellCooldown(96231)) ~= 0 or (GetSpellCooldown(15487)) ~= 0 or (GetSpellCooldown(57994)) ~= 0) then
+		InterruptAvailable = false--checkCooldown check requested and player has no spell that can interrupt available
+	end
+	if InterruptAvailable and (UnitGUID("target") == sourceGUID or UnitGUID("focus") == sourceGUID) then
 		return true
 	end
 	return false
@@ -7656,21 +7660,22 @@ do
 		["Tank"] = true,
 		["Dps"] = true,
 		["Healer"] = true,
-		["Melee"] = true,
+		["Melee"] = true,--ANY melee, including tanks or healers that are 100% excempt from healer/ranged mechanics (like mistweaver monks)
 		["MeleeDps"] = true,
 		["Physical"] = true,
-		["Ranged"] = true,
-		["RangedDps"] = true,
+		["Ranged"] = true,--ANY ranged, healer and dps included
+		["RangedDps"] = true,--Only ranged dps
 		["ManaUser"] = true,--Affected by things like mana drains, or mana detonation, etc
 		["SpellCaster"] = true,--Has channeled casts, can be interrupted/spell locked by roars, etc, include healers. Use CasterDps if dealing with reflect
 		["CasterDps"] = true,--Ranged dps that uses spells, relevant for spell reflect type abilities that only reflect spells but not ranged physical such as hunters
 		["RaidCooldown"] = true,
-		["RemovePoison"] = true,
-		["RemoveDisease"] = true,
-		["RemoveEnrage"] = true,--Depricated, no one can remove enrage anymore, returning in classic!
-		["RemoveCurse"] = true,
-		["MagicDispeller"] = true--Buffs on targets, not debuffs on players
-		["HasInterrupt"] = true,--Has an interrupt that is 24 seconds or less CD.
+		["RemovePoison"] = true,--from ally
+		["RemoveDisease"] = true,--from ally
+		["RemoveEnrage"] = true,--Can remove enemy enrage. returned in 8.x!
+		["RemoveCurse"] = true,--from ally
+		["MagicDispeller"] = true,--from ENEMY, not debuffs on players. use "Healer" for ally magic dispels. ALL healers can do that.
+		["HasInterrupt"] = true,--Has an interrupt that is 24 seconds or less CD that is BASELINE (not a talent)
+		["HasImmunity"] = true,--Has an immunity that can prevent or remove a spell effect (not just one that reduces damage like turtle or dispursion)
 	}]]
 
 	local specRoleTable = {
@@ -7683,6 +7688,8 @@ do
 			["CasterDps"] = true,
 			["MagicDispeller"] = true,
 			["HasInterrupt"] = true,
+			["HasImmunity"] = true,
+			["RemoveCurse"] = true,
 		},
 		[65] = {	--Holy Paladin
 			["Healer"] = true,
@@ -7692,6 +7699,7 @@ do
 			["RaidCooldown"] = true,--Devotion Aura
 			["RemovePoison"] = true,
 			["RemoveDisease"] = true,
+			["HasImmunity"] = true,
 		},
 		[66] = {	--Protection Paladin
 			["Tank"] = true,
@@ -7701,6 +7709,7 @@ do
 			["RemovePoison"] = true,
 			["RemoveDisease"] = true,
 			["HasInterrupt"] = true,
+			["HasImmunity"] = true,
 		},
 		[70] = {	--Retribution Paladin
 			["Dps"] = true,
@@ -7711,6 +7720,7 @@ do
 			["RemovePoison"] = true,
 			["RemoveDisease"] = true,
 			["HasInterrupt"] = true,
+			["HasImmunity"] = true,
 		},
 		[71] = {	--Arms Warrior
 			["Dps"] = true,
@@ -7725,6 +7735,7 @@ do
 			["Melee"] = true,
 			["Physical"] = true,
 			["HasInterrupt"] = true,
+			["RaidCooldown"] = true,--Rallying Cry (in 8.x)
 		},
 		[102] = {	--Balance Druid
 			["Dps"] = true,
@@ -7735,6 +7746,7 @@ do
 			["CasterDps"] = true,
 			["RemoveCurse"] = true,
 			["RemovePoison"] = true,
+			["RemoveEnrage"] = true,
 		},
 		[103] = {	--Feral Druid
 			["Dps"] = true,
@@ -7744,6 +7756,7 @@ do
 			["RemoveCurse"] = true,
 			["RemovePoison"] = true,
 			["HasInterrupt"] = true,
+			["RemoveEnrage"] = true,
 		},
 		[104] = {	--Guardian Druid
 			["Tank"] = true,
@@ -7752,6 +7765,7 @@ do
 			["RemoveCurse"] = true,
 			["RemovePoison"] = true,
 			["HasInterrupt"] = true,
+			["RemoveEnrage"] = true,
 		},
 		[105] = {	-- Restoration Druid
 			["Healer"] = true,
@@ -7761,6 +7775,7 @@ do
 			["RaidCooldown"] = true,--Tranquility
 			["RemoveCurse"] = true,
 			["RemovePoison"] = true,
+			["RemoveEnrage"] = true,
 		},
 		[250] = {	--Blood DK
 			["Tank"] = true,
@@ -7781,6 +7796,7 @@ do
 			["RangedDps"] = true,
 			["Physical"] = true,
 			["HasInterrupt"] = true,
+			["RemoveEnrage"] = true,
 		},
 		[255] = {	--Survival Hunter (Legion)
 			["Dps"] = true,
@@ -7788,13 +7804,14 @@ do
 			["MeleeDps"] = true,
 			["Physical"] = true,
 			["HasInterrupt"] = true,
+			["RemoveEnrage"] = true,
 		},
 		[256] = {	--Discipline Priest
 			["Healer"] = true,
 			["Ranged"] = true,
 			["ManaUser"] = true,
 			["SpellCaster"] = true,
-			["CasterDps"] = true,--Iffy
+			["CasterDps"] = true,--Iffy. Technically yes, but this can't be used to determine eligable target for dps only debuffs
 			["RaidCooldown"] = true,--Power Word: Barrier(Discipline) / Divine Hymn (Holy)
 			["RemoveDisease"] = true,
 			["MagicDispeller"] = true,
@@ -7814,6 +7831,7 @@ do
 			["MeleeDps"] = true,
 			["Physical"] = true,
 			["HasInterrupt"] = true,
+			["HasImmunity"] = true,
 		},
 		[262] = {	--Elemental Shaman
 			["Dps"] = true,
@@ -7888,24 +7906,26 @@ do
 			["MeleeDps"] = true,
 			["Physical"] = true,
 			["HasInterrupt"] = true,
+			["MagicDispeller"] = true,
 		},
 		[581] = {	--Vengeance Demon Hunter
 			["Tank"] = true,
 			["Melee"] = true,
 			["Physical"] = true,
 			["HasInterrupt"] = true,
+			["MagicDispeller"] = true,
 		},
 	}
-	specRoleTable[63] = specRoleTable[62]--Frost Mage
-	specRoleTable[64] = specRoleTable[62]--Fire Mage
-	specRoleTable[72] = specRoleTable[71]--Fury Warrior
-	specRoleTable[252] = specRoleTable[251]--Unholy DK
-	specRoleTable[254] = specRoleTable[253]--Markmanship Hunter
-	specRoleTable[257] = specRoleTable[256]--Holy Priest
-	specRoleTable[260] = specRoleTable[259]--Combat Rogue
-	specRoleTable[261] = specRoleTable[259]--Subtlety Rogue
-	specRoleTable[266] = specRoleTable[265]--Demonology Warlock
-	specRoleTable[267] = specRoleTable[265]--Destruction Warlock
+	specRoleTable[63] = specRoleTable[62]--Frost Mage same as arcane
+	specRoleTable[64] = specRoleTable[62]--Fire Mage same as arcane
+	specRoleTable[72] = specRoleTable[71]--Fury Warrior same as Arms
+	specRoleTable[252] = specRoleTable[251]--Unholy DK same as frost
+	specRoleTable[254] = specRoleTable[253]--Markmanship Hunter same as beast
+	specRoleTable[257] = specRoleTable[256]--Holy Priest same as disc
+	specRoleTable[260] = specRoleTable[259]--Combat Rogue same as Assassination
+	specRoleTable[261] = specRoleTable[259]--Subtlety Rogue same as Assassination
+	specRoleTable[266] = specRoleTable[265]--Demonology Warlock same as Affliction
+	specRoleTable[267] = specRoleTable[265]--Destruction Warlock same as Affliction
 
 	--[[function bossModPrototype:GetRoleFlagValue(flag)
 		if not flag then return false end
@@ -8090,7 +8110,7 @@ function bossModPrototype:IsHealer(uId)
 	end
 end
 
-function bossModPrototype:IsTanking(unit, boss, isName)
+function bossModPrototype:IsTanking(unit, boss, isName, onlyRequested)
 	if isName then--Passed combat log name, so pull unit ID
 		unit = DBM:GetRaidUnitId(unit)
 	end
@@ -8099,27 +8119,29 @@ function bossModPrototype:IsTanking(unit, boss, isName)
 		return false
 	end
 	--Prefer threat target first
-	if boss and UnitExists(boss) then--Only checking one bossID as requested
+	if boss then--Only checking one bossID as requested
 		local tanking, status = UnitDetailedThreatSituation(unit, boss)
 		if tanking or (status == 3) then
 			return true
 		end
 	else--Check all of them if one isn't defined
 		for i = 1, 5 do
-			if UnitExists("boss"..i) then
+			--if UnitExists("boss"..i) then
 				local tanking, status = UnitDetailedThreatSituation(unit, "boss"..i)
 				if tanking or (status == 3) then
 					return true
 				end
-			end
+			--end
 		end
 	end
-	--Use these as fallback if threat target not found
-	if GetPartyAssignment("MAINTANK", unit, 1) then
-		return true
-	end
-	if UnitGroupRolesAssigned(unit) == "TANK" then
-		return true
+	if not onlyRequested then
+		--Use these as fallback if threat target not found
+		if GetPartyAssignment("MAINTANK", unit, 1) then
+			return true
+		end
+		if UnitGroupRolesAssigned(unit) == "TANK" then
+			return true
+		end
 	end
 	return false
 end
@@ -9799,6 +9821,10 @@ do
 	
 	function bossModPrototype:NewSpecialWarningDodge(text, optionDefault, ...)
 		return newSpecialWarning(self, "dodge", text, nil, optionDefault, ...)
+	end
+	
+	function bossModPrototype:NewSpecialWarningDodgeLoc(text, optionDefault, ...)
+		return newSpecialWarning(self, "dodgeloc", text, nil, optionDefault, ...)
 	end
 	
 	function bossModPrototype:NewSpecialWarningMoveAway(text, optionDefault, ...)

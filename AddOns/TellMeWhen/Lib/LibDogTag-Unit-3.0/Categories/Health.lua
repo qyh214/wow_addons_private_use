@@ -117,7 +117,7 @@ DogTag:AddTag("Unit", "IncomingHeal", {
 	},
 	ret = 'number',
 	events = "UNIT_HEAL_PREDICTION#$unit",
-	doc = L["Return the total amount of damage the unit can take without losing health"],
+	doc = L["Return the estimated total amount of healing pending on the unit, such as incomplete casts"],
 	example = ('[IncomingHeal] => "%d"'):format(UnitHealthMax("player")*.258),
 	category = L["Health"],
 })

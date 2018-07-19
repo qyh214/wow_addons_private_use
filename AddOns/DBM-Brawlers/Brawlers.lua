@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Brawlers", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17471 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 --mod:SetCreatureID(60491)
 --mod:SetModelID(41448)
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
@@ -11,12 +11,12 @@ mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
-local warnQueuePosition		= mod:NewAnnounce("warnQueuePosition", 2, 132639, false)
+local warnQueuePosition		= mod:NewAnnounce("warnQueuePosition2", 2, 132639, true)
 local warnOrgPortal			= mod:NewCastAnnounce(135385, 1)--These are rare casts and linked to achievement.
 local warnStormPortal		= mod:NewCastAnnounce(135386, 1)--So warn for them being cast
 
-local specWarnOrgPortal		= mod:NewSpecialWarningSpell(135385)
-local specWarnStormPortal	= mod:NewSpecialWarningSpell(135386)
+local specWarnOrgPortal		= mod:NewSpecialWarningSpell(135385, nil, nil, nil, 1, 7)
+local specWarnStormPortal	= mod:NewSpecialWarningSpell(135386, nil, nil, nil, 1, 7)
 local specWarnYourNext		= mod:NewSpecialWarning("specWarnYourNext")
 local specWarnYourTurn		= mod:NewSpecialWarning("specWarnYourTurn")
 
@@ -73,12 +73,14 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 135385 then
 		if not playerIsFighting then--Do not distract player in arena with special warning
 			specWarnOrgPortal:Show()
+			specWarnOrgPortal:Play("newportal")
 		else
 			warnOrgPortal:Show()
 		end
 	elseif args.spellId == 135386 then
 		if not playerIsFighting then--Do not distract player in arena with special warning
 			specWarnStormPortal:Show()
+			specWarnStormPortal:Play("newportal")
 		else
 			warnStormPortal:Show()
 		end
@@ -118,7 +120,8 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
 	elseif msg:find(L.Rank10, 1, true) then
 		currentFighter = target
 		currentRank = 10
-	elseif currentFighter and target == currentFighter then--He's targeting current fighter but it's not a match begin yell, the only other time this happens is on match end.
+	--He's targeting current fighter but it's not a match begin yell, the only other time this happens is on match end and 10 second pre berserk warning. This tries to filter pre berserk warnings then pass match end
+	elseif currentFighter and (target == currentFighter) and not (msg:find(L.BizmoIgnored) or msg == L.BizmoIgnored or msg:find(L.BizmoIgnored2) or msg == L.BizmoIgnored2 or msg:find(L.BizmoIgnored3) or msg == L.BizmoIgnored3 or msg:find(L.BizmoIgnored4) or msg == L.BizmoIgnored4) then
 		self:SendSync("MatchEnd")
 		isMatchBegin = false
 	else
@@ -163,7 +166,6 @@ end
 function mod:ZONE_CHANGED_NEW_AREA()
 	currentZoneID = select(8, GetInstanceInfo())
 	if currentZoneID == 369 or currentZoneID == 1043 then
-		QueuedBuff = DBM:GetSpellInfo(132639)
 		playerIsFighting = false
 		currentFighter = nil
 		currentRank = 0
@@ -171,7 +173,7 @@ function mod:ZONE_CHANGED_NEW_AREA()
 		modsStopped = false
 		eventsRegistered = true
 		self:RegisterShortTermEvents(
-			"SPELL_CAST_START",
+			"SPELL_CAST_START 135385 135386",
 			"PLAYER_REGEN_ENABLED",
 			"UNIT_DIED",
 			"UNIT_AURA player"
@@ -222,7 +224,7 @@ function mod:OnSync(msg)
 		if not eventsRegistered then
 			eventsRegistered = true
 			self:RegisterShortTermEvents(
-				"SPELL_CAST_START",
+				"SPELL_CAST_START 135385 135386",
 				"PLAYER_REGEN_ENABLED",
 				"UNIT_DIED",
 				"UNIT_AURA player"
@@ -265,12 +267,15 @@ end
 
 do
 	function mod:UNIT_AURA(uId)
-		local currentQueueRank = select(17, DBM:UnitBuff("player", QueuedBuff))
+		local currentQueueRank = select(16, DBM:UnitBuff("player", QueuedBuff))
 		if currentQueueRank and currentQueueRank ~= lastRank then
 			lastRank = currentQueueRank
-			warnQueuePosition:Show(currentQueueRank)
-			if currentQueueRank == 1 then
-				specWarnYourNext:Show()
+			if currentQueueRank ~= 0 then
+				if currentQueueRank == 1 then
+					specWarnYourNext:Show()
+				else
+					warnQueuePosition:Show(currentQueueRank)
+				end
 			end
 			if self.Options.SpeakOutQueue then
 				DBM:PlayCountSound(currentQueueRank)

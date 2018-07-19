@@ -142,9 +142,10 @@ end
 --]]
 
 function DejaCharacterStats.SlashCmdHandler(msg, editbox)
+    msg = string.lower(msg)
 	--print("command is " .. msg .. "\n")
 	--if (string.lower(msg) == L["config"]) then --I think string.lowermight not work for Russian letters
-	if (string.lower(msg) == "config") then
+	if (msg == "config") then
 		InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats");
 		InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats");
 		InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats");
@@ -160,7 +161,7 @@ function DejaCharacterStats.SlashCmdHandler(msg, editbox)
 		end
 	--]]
 	--elseif (string.lower(msg) == L["reset"]) then
-	elseif (string.lower(msg) == "reset") then
+	elseif (msg == "reset") then
 		--DejaCharacterStatsDBPC = private.defaults;
 		gdbprivate.gdb.gdbdefaults = gdbprivate.gdbdefaults.gdbdefaults
 		ReloadUI();

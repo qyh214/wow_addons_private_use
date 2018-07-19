@@ -93,12 +93,11 @@ local function SetupTutorials()
 				"At the start of quest titles you see tags like this |cffff8000[100|cff00b3ffhc!|cffff8000]|r.\n"..
 				"Tags are also in quest titles inside Quest Log.\n\n"..
 				"|cff00b3ff!|r|T:14:3|t "..cDots..".......|r Daily quest|T:14:98|t|cff00b3ffr|r "..cDots..".......|r Raid quest\n"..
-				"|cff00b3ff!!|r "..cDots.."......|r Weekly quest|T:14:84|t|cff00b3ffr10|r "..cDots.."...|r 10-man raid quest\n"..
-				"|cff00b3ff+|r "..cDots..".......|r Elite quest|T:14:102|t|cff00b3ffr25|r "..cDots.."...|r 25-man raid quest\n"..
-				"|cff00b3ffg|r "..cDots..".......|r Group quest|T:14:90|t|cff00b3ffs|r "..cDots..".......|r Scenario quest\n"..
-				"|cff00b3ffpvp|r "..cDots.."...|r PvP quest|T:14:109|t|cff00b3ffa|r "..cDots..".......|r Account quest\n"..
-				"|cff00b3ffd|r "..cDots..".......|r Dungeon quest|T:14:73|t|cff00b3ffleg|r "..cDots.."....|r Legendary quest\n"..
-				"|cff00b3ffhc|r "..cDots..".....|r Heroic quest|T:14:1|t",
+				"|cff00b3ff!!|r "..cDots.."......|r Weekly quest|T:14:83|t|cff00b3ffr10|r "..cDots.."...|r 10-man raid quest\n"..
+				"|cff00b3ffg|r "..cDots..".......|r Group quest|T:14:89|t|cff00b3ffr25|r "..cDots.."...|r 25-man raid quest\n"..
+				"|cff00b3ffpvp|r "..cDots.."...|r PvP quest|T:14:109|t|cff00b3ffs|r "..cDots..".......|r Scenario quest\n"..
+				"|cff00b3ffd|r "..cDots..".......|r Dungeon quest|T:14:72|t|cff00b3ffa|r "..cDots..".......|r Account quest\n"..
+				"|cff00b3ffhc|r "..cDots..".....|r Heroic quest|T:14:88|t|cff00b3ffleg|r "..cDots.."....|r Legendary quest",
 			shineTop = 10,
 			shineBottom = -9,
 			shineLeft = -12,
@@ -199,29 +198,16 @@ local function SetupTutorials()
 			shineRight = 6,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff2.1.9|r\n\n"..
-				"- FIXED - issue #235 - Auto tracked World quests or Zone bonus quests don't"..
-				offs.."expand the tracker, when \"Auto Zone Quests\" filtering is enabled and no"..
-				offs.."quests in zone.\n"..
-				"- FIXED - Tracker collapse, after switch between auto/manually tracked World"..
-				offs.."quest.\n"..
-				"- FIXED - Longer line width inside all modules (e.g. Achievements).\n"..
-				"- ADDED - Kaliel's Tracker logo to collapsed tracker.\n"..
-				"- ADDED - Align right text inside collapsed tracker, when tracker background"..
-				offs.."is none.\n"..
-				"- ADDED - Wowhead URL menu item inside the tracker and Quest Log.\n"..
-				"- REMOVED - A bit chaotic info about completed daily quests from collapsed"..
-				offs.."tracker.\n"..
-				"- UPDATED - Addons support - PetTracker v7.3.0, TomTom v70300-1.0.0,"..
-				offs.."ElvUI v10.73, Tukui v17.17, RealUI v8.1 r20h, SyncUI v1.5.4, SuperVillain UI"..
-				offs.."v1.4.2.\n"..
-				"- UPDATED - Help - Order of Modules.\n"..
-				"- Minor improvements.\n\n"..
-
-				cTitle.."Known issues|r\n"..
-				"- Work with World Map during combat generates LUA errors. This is because"..
-				offs.."World Map was changed to Secure frame in Legion and use some functions"..
-				offs.."from the tracker. "..cWarning.."These errors I will not fix - it's not possible!|r\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.0.0|r\n\n"..
+				"- ADDED - Support for WoW 8.0.\n"..
+				"- ADDED - Progress bar skin - border and texture.\n"..
+				"- ADDED - Default Quests click action - World Map.\n"..
+				"- ADDED - BugGrabber addon Blacklist for non-fixable LUA errors."..
+				offs.."Now for error \"Deferred XML Node object\".\n"..
+                "- UPDATED - Addons support - ElvUI 10.75, Tukui 18.01, RealUI 2.0.0,"..
+                offs.."SpartanUI 4.6.0, SuperVillain UI 1.5\n"..
+				"- Temporary disabled support for addons PetTracker and TomTom."..
+				offs.."After update these addons, support will be enabled again.\n\n"..
 
 				cTitle.."Issue reporting|r\n"..
 				"For reporting please use "..cBold.."Tickets|r instead of Comments on Curse.com.\n\n\n\n"..

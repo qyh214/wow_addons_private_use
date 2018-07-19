@@ -504,8 +504,8 @@ function ACP:OnLoad(this)
     }
     StaticPopupDialogs["ACP_RELOADUI"] = {
         text = L["Reload your User Interface?"],
-        button1 = TEXT(ACCEPT),
-        button2 = TEXT(CANCEL),
+        button1 = ACCEPT,
+        button2 = CANCEL,
         OnAccept = function()
             ReloadUI()
         end,
@@ -518,8 +518,8 @@ function ACP:OnLoad(this)
 
     StaticPopupDialogs["ACP_RELOADUI_START"] = {
         text = L["ACP: Some protected addons aren't loaded. Reload now?"],
-        button1 = TEXT(ACCEPT),
-        button2 = TEXT(CANCEL),
+        button1 = ACCEPT,
+        button2 = CANCEL,
         OnAccept = function(this)
             ReloadUI()
         end,
@@ -535,8 +535,8 @@ function ACP:OnLoad(this)
 
     StaticPopupDialogs["ACP_SAVESET"] = {
         text = L["Save the current addon list to [%s]?"],
-        button1 = TEXT(YES),
-        button2 = TEXT(CANCEL),
+        button1 = YES,
+        button2 = CANCEL,
         OnAccept = function(this)
             self:SaveSet(self.savingSet)
             CloseDropDownMenus(1)
@@ -565,8 +565,8 @@ function ACP:OnLoad(this)
 
     StaticPopupDialogs["ACP_RENAMESET"] = {
         text = L["Enter the new name for [%s]:"],
-        button1 = TEXT(YES),
-        button2 = TEXT(CANCEL),
+        button1 = YES,
+        button2 = CANCEL,
         OnAccept = OnRenameSet,
         EditBoxOnEnterPressed = OnRenameSet,
         EditBoxOnEscapePressed = function(this)
@@ -590,7 +590,6 @@ function ACP:OnLoad(this)
         title = title .. " (" .. version .. ")"
     end
     ACP_AddonListHeaderTitle:SetText(title)
-    this:RegisterEvent("VARIABLES_LOADED")
     this:RegisterEvent("ADDON_LOADED")
 
     this:RegisterForDrag("LeftButton");
@@ -611,7 +610,7 @@ end
 local eventLibrary, bugeventreged
 
 function ACP:OnEvent(this, event, arg1, arg2, arg3)
-    if event == "VARIABLES_LOADED" then
+    if event == "ADDON_LOADED" and arg1 == "ACP" then
         if not ACP_Data then ACP_Data = {} end
 
         savedVar = ACP_Data
@@ -653,7 +652,6 @@ function ACP:OnEvent(this, event, arg1, arg2, arg3)
 
 
         this:RegisterEvent("PLAYER_ENTERING_WORLD")
-        this:UnregisterEvent("VARIABLES_LOADED")
     elseif event == "PLAYER_ALIVE" then
 
         for k,v in pairs(savedVar.ProtectedAddons) do
@@ -697,7 +695,9 @@ function ACP:OnEvent(this, event, arg1, arg2, arg3)
         end)
 
     --        ACP:ProcessBugSack("session")
-    elseif event == "ADDON_LOADED" then
+    end
+
+    if event == "ADDON_LOADED" then
         ACP:ADDON_LOADED(arg1)
     end
 

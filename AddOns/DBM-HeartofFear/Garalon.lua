@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(713, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(63191)--Also has CID 62164. He has 2 CIDs for a single target, wtf? It seems 63191 is one players attack though so i'll try just it.
 mod:SetEncounterID(1463)
 mod:SetZone()
@@ -60,8 +60,6 @@ local brokenLegs = 0
 local crushCount = 0
 
 function mod:OnCombatStart(delay)
-	crushWarnText = DBM:GetSpellInfo(122774)
-	crushCountWarnText = DBM:GetSpellInfo(122774).." (%d)"
 	brokenLegs = 0
 	timerFuriousSwipeCD:Start(-delay)--8-11 sec on pull
 	if self:IsHeroic() then
@@ -110,7 +108,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnPungency:Show(args.destName, amount)
 		end
 		if args:IsPlayer() then
-			local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)
+			local _, _, _, _, duration, expires = DBM:UnitDebuff("player", args.spellName)
 			if expires then
 				timerPungency:Start(expires-GetTime())
 			end

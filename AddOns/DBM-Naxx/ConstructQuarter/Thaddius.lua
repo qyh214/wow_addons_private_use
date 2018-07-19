@@ -2,7 +2,7 @@
 local mod	= DBM:NewMod("Thaddius", "DBM-Naxx", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 258 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(15928)
 mod:SetEncounterID(1120)
 mod:SetModelID(16137)
@@ -61,8 +61,8 @@ function mod:UNIT_AURA()
 	if self.vb.phase ~=2 or (GetTime() - lastShift) > 5 or (GetTime() - lastShift) < 3 then return end
 	local charge
 	local i = 1
-	while UnitDebuff("player", i) do
-		local _, _, icon, count = UnitDebuff("player", i)
+	while DBM:UnitDebuff("player", i) do
+		local _, icon, count = DBM:UnitDebuff("player", i)
 		if icon == "Interface\\Icons\\Spell_ChargeNegative" then
 			if count > 1 then return end
 			charge = L.Charge1

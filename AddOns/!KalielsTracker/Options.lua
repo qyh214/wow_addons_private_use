@@ -60,7 +60,8 @@ local defaults = {
 		borderAlpha = 1,
 		borderThickness = 16,
 		bgrInset = 4,
-		
+		progressBar = "Blizzard",
+
 		font = LSM:GetDefault("font"),
 		fontSize = 12,
 		fontFlag = "",
@@ -94,7 +95,8 @@ local defaults = {
 		tooltipShowID = true,
         menuWowheadURL = true,
         menuWowheadURLModifier = "ALT",
-		
+        questDefaultActionMap = false,
+
 		sink20OutputSink = "UIErrorsFrame",
 		sink20Sticky = false,
 
@@ -110,6 +112,7 @@ local defaults = {
 		addonMasque = false,
 		addonPetTracker = false,
 		addonTomTom = false,
+		addonBugGrabberBlacklist = false,
 	},
 	char = {
 		collapsed = false,
@@ -403,6 +406,19 @@ local options = {
 								KT:MoveButtons()
 							end,
 							order = 2.8,
+						},
+						progressBar = {
+							name = "Progress bar texture",
+							type = "select",
+							dialogControl = "LSM30_Statusbar",
+							values = WidgetLists.statusbar,
+							set = function(_, value)
+								db.progressBar = value
+								KT.forcedUpdate = true
+								ObjectiveTracker_Update()
+								KT.forcedUpdate = false
+							end,
+							order = 2.9,
 						},
 					},
 				},
@@ -992,6 +1008,22 @@ local options = {
 							end,
 							order = 6.32,
 						},
+                        questTitle = {
+                            name = cTitle.."\n Quests",
+                            type = "description",
+                            fontSize = "medium",
+                            order = 6.4,
+                        },
+                        questDefaultActionMap = {
+                            name = "Quest default action - World Map",
+                            desc = "Set the Quest default action as \"World Map\". Otherwise is the default action \"Quest Details\".",
+                            type = "toggle",
+                            width = "normal+half",
+                            set = function()
+                                db.questDefaultActionMap = not db.questDefaultActionMap
+                            end,
+                            order = 6.41,
+                        },
 					},
 				},
 				sec7 = {
@@ -1051,9 +1083,7 @@ local options = {
 							type = "toggle",
 							confirm = true,
 							confirmText = warning,
-							disabled = function()
-								return not IsAddOnLoaded("PetTracker")
-							end,
+							disabled = true,
 							set = function()
 								db.addonPetTracker = not db.addonPetTracker
 								PetTracker.Sets.HideTracker = not db.addonPetTracker
@@ -1068,9 +1098,7 @@ local options = {
 							type = "toggle",
 							confirm = true,
 							confirmText = warning,
-							disabled = function()
-								return not IsAddOnLoaded("TomTom")
-							end,
+							disabled = true,
 							set = function()
 								db.addonTomTom = not db.addonTomTom
 								ReloadUI()
@@ -1123,6 +1151,35 @@ local options = {
 						},
 					},
 				},
+				sec3 = {
+					name = "BugGrabber",
+					type = "group",
+					inline = true,
+					order = 3,
+					args = {
+						addonBugGrabberDesc = {
+							name = " BugGrabber addon Blacklist for non-fixable LUA errors:\n\n"..cBold..
+									"   Deferred XML Node object named ..... already exists\n",
+							type = "description",
+							order = 3.1,
+						},
+						addonBugGrabberBlacklist = {
+							name = "Enable BugGrabber Blacklist",
+							type = "toggle",
+                            width = "normal+half",
+							confirm = true,
+							confirmText = warning,
+							disabled = function()
+								return (not IsAddOnLoaded("!BugGrabber") or not KT.AddonOthers:IsEnabled())
+							end,
+							set = function()
+								db.addonBugGrabberBlacklist = not db.addonBugGrabberBlacklist
+								ReloadUI()
+							end,
+							order = 3.2,
+						},
+					},
+				},
 			},
 		},
 	},
@@ -1171,6 +1228,9 @@ function KT:SetupOptions()
 	db = self.db.profile
 	dbChar = self.db.char
 
+	db.addonPetTracker = false
+	db.addonTomTom = false
+
 	general.sec2.args.classBorder.name = general.sec2.args.classBorder.name:format(RgbToHex(self.classColor))
 
 	general.sec7 = self:GetSinkAce3OptionsDataTable()
@@ -1185,7 +1245,7 @@ function KT:SetupOptions()
 	options.args.profiles.args.new.confirmText = warning
 	options.args.profiles.args.choose.confirmText = warning
 	options.args.profiles.args.copyfrom.confirmText = warning
-	
+
 	ACR:RegisterOptionsTable(addonName, options, nil)
 	
 	self.optionsFrame = {}
@@ -1337,9 +1397,7 @@ function RgbToHex(color)
 	return r..g..b
 end
 
-local initFrame = CreateFrame("Frame")
-initFrame:SetScript("OnEvent", function(self, event)
+-- Init
+hooksecurefunc("ObjectiveTracker_Initialize", function(self)
 	modules.sec1.args = GetModulesOptionsTable()
-	self:UnregisterEvent(event)
 end)
-initFrame:RegisterEvent("PLAYER_ENTERING_WORLD")

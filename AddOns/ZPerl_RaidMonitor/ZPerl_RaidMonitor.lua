@@ -12,7 +12,7 @@ local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 
-XPerl_SetModuleRevision("$Revision: 1055 $")
+XPerl_SetModuleRevision("$Revision: 1086 $")
 
 XPERL_RAIDMON_UNIT_WIDTH_MIN = 50
 XPERL_RAIDMON_UNIT_WIDTH_MAX = 150
@@ -514,7 +514,7 @@ end
 function cast:UNIT_SPELLCAST_START(unit)
 	local bar = TableUnits[unit]
 	if (bar and bar:IsShown()) then
-		local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(unit)
+		local name, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(unit)
 		if (name) then
 			bar.castBar.name:SetText(name)
 			bar.castBar.icon:SetTexture(texture)
@@ -595,7 +595,7 @@ end
 function cast:UNIT_SPELLCAST_DELAYED(unit)
 	local bar = TableUnits[unit]
 	if (bar and bar:IsShown()) then
-		local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(unit)
+		local name, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(unit)
 		if (name) then
 			bar.startTime = startTime / 1000
 			bar.maxValue = endTime / 1000
@@ -608,7 +608,7 @@ end
 function cast:UNIT_SPELLCAST_CHANNEL_START(unit)
 	local bar = TableUnits[unit]
 	if (bar and bar:IsShown()) then
-		local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitChannelInfo(unit)
+		local name, text, texture, startTime, endTime, isTradeSkill = UnitChannelInfo(unit)
 		if (name) then
 			bar.castBar:SetStatusBarColor(castColours.channel.r, castColours.channel.g, castColours.channel.b)
 			bar.castBar.name:SetText(name)
@@ -633,7 +633,7 @@ end
 function cast:UNIT_SPELLCAST_CHANNEL_UPDATE(unit)
 	local bar = TableUnits[unit]
 	if (bar and bar:IsShown()) then
-		local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitChannelInfo(unit)
+		local name, text, texture, startTime, endTime, isTradeSkill = UnitChannelInfo(unit)
 		if (name) then
 			bar.startTime = startTime / 1000
 			bar.endTime = endTime / 1000
@@ -817,7 +817,7 @@ function cast:EnableDisable()
 		"UNIT_MAXPOWER",
 		"UNIT_MANA",
 		"UNIT_HEALTH",
-		"UNIT_HEALTHMAX",
+		--"UNIT_HEALTHMAX",
 		"UNIT_TARGET",
 		"PLAYER_TARGET_CHANGED",
 		"UNIT_SPELLCAST_START",

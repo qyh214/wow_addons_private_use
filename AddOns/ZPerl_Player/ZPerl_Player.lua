@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 1084 $")
+end, "$Revision: 1086 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -1109,10 +1109,10 @@ function XPerl_Player_UpdateHealth(self)
 		greyMsg = XPERL_LOC_GHOST
 	elseif (UnitIsAFK("player") and conf.showAFK) then
 		greyMsg = CHAT_MSG_AFK
-	elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
+	--[[elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
 		greyMsg = XPERL_LOC_FEIGNDEATHSHORT
 	elseif (UnitBuff(partyid, spiritOfRedemption)) then
-		greyMsg = XPERL_LOC_DEAD
+		greyMsg = XPERL_LOC_DEAD--]]
 	end
 
 	if (greyMsg) then
@@ -1384,7 +1384,7 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 		"UPDATE_EXHAUSTION",
 		--"PET_BATTLE_OPENING_START",
 		--"PET_BATTLE_CLOSE",
-		"HONOR_PRESTIGE_UPDATE",
+		--"HONOR_PRESTIGE_UPDATE",
 	}
 
 	for i, event in pairs(events) do
@@ -1503,12 +1503,8 @@ function XPerl_Player_Events:HONOR_PRESTIGE_UPDATE()
 	XPerl_Player_UpdatePVP(self)
 end
 
-function XPerl_Player_Events:UNIT_SPELLCAST_SUCCEEDED(spell, rank, lineID, spellID)
-	if spellID == 191477 then
-		XPerl_Unit_UpdatePortrait(self, true)
-
-		--C_Timer.After(1, XPerl_Unit_UpdatePortrait(self, true))
-	end
+function XPerl_Player_Events:UNIT_SPELLCAST_SUCCEEDED(spell, lineGUID, spellID)
+	XPerl_Unit_UpdatePortrait(self, true)
 end
 
 function XPerl_Player_Events:PLAYER_FLAGS_CHANGED()
@@ -1589,7 +1585,7 @@ end
 function XPerl_Player_Events:UNIT_AURA()
 	XPerl_Player_UpdateBuffs(self)
 
-	if conf.showFD then
+	--[[if conf.showFD then
 		local _, class = UnitClass(self.partyid)
 		if (class == "HUNTER") then
 			local feigning = UnitBuff(self.partyid, feignDeath)
@@ -1598,7 +1594,7 @@ function XPerl_Player_Events:UNIT_AURA()
 				XPerl_Player_UpdateHealth(self)
 			end
 		end
-	end
+	end--]]
 end
 
 -- PLAYER_CONTROL_LOST

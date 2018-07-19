@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1997, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17508 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(122369, 122333, 122367)--Chief Engineer Ishkar, General Erodus, Admiral Svirax
 mod:SetEncounterID(2070)
 mod:SetZone()
@@ -153,7 +153,7 @@ function mod:SPELL_CAST_START(args)
 			countdownFusillade:Start(29.3)
 		end
 	elseif spellId == 246505 then
-		if self:CheckInterruptFilter(args.sourceGUID) and self:AntiSpam(3, 3) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnPyroblast:Show(args.sourceName)
 			specWarnPyroblast:Play("kickcast")
 		end
@@ -235,7 +235,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:IsTanking(uId) then
 			local amount = args.amount or 1
 			if amount >= 2 then
-				local _, _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
 				local remaining
 				if expireTime then
 					remaining = expireTime-GetTime()
@@ -294,7 +294,7 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 --]]
 
 --"<14.68 23:07:26> [UNIT_SPELLCAST_SUCCEEDED] General Erodus(??) [[boss3:Summon Reinforcements::3-2083-1712-2166-245546-00015E79FE:245546]]", -- [121]
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if (spellId == 245161 or spellId == 245304) and self:AntiSpam(5, 1) then
 		warnEntropicMine:Show()
 		--warnEntropicMine:Play("watchstep")

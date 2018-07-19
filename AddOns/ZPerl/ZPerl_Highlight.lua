@@ -6,7 +6,7 @@ local playerClass, playerName, playerGUID
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1053 $")
+end, "$Revision: 1086 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -29,7 +29,7 @@ local hotSpells  = XPERL_HIGHLIGHT_SPELLS.hotSpells
 local pomSpells = XPERL_HIGHLIGHT_SPELLS.pomSpells
 local shieldSpells = XPERL_HIGHLIGHT_SPELLS.shieldSpells
 
-local function GetTalentPosition(findName)
+--[[local function GetTalentPosition(findName)
 	for i = 1, GetNumSpecializations() do
 		for j = 1, GetNumTalents(i) do
 			local name = GetTalentInfo(i, j)
@@ -66,7 +66,7 @@ local function getRankAmount(self, spellId)
 	if (amount) then
 		return amount * self:GetModifier()
 	end
-end
+end--]]
 
 local absorbSpells = {
 	-- Shield Barrier
@@ -86,8 +86,8 @@ local absorbSpells = {
 		},
 		school = "FROST",
 		class = "MAGE",
-		GetModifier = getTalentModifier,
-		GetRankAmount = getRankAmount,
+		--GetModifier = getTalentModifier,
+		--GetRankAmount = getRankAmount,
 	},
 	-- Power Word: Shield
 	[GetSpellInfo(17)] = {
@@ -102,8 +102,8 @@ local absorbSpells = {
 			ranks = 2,
 			percentPerRank = 5,
 		},]]
-		GetModifier = getTalentModifier,
-		GetRankAmount = getRankAmount,
+		--GetModifier = getTalentModifier,
+		--GetRankAmount = getRankAmount,
 	},
 }
 
@@ -1314,7 +1314,11 @@ end
 xpHigh.clEvents = {}
 -- COMBAT_LOG_EVENT_UNFILTERED
 -- Using this instead of UNIT_SPELLCAST_SUCCEEDED so we can use the dstGUID for a guarenteed correct target, rather than implied and not necessarily correct name
-function xpHigh:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
+function xpHigh:COMBAT_LOG_EVENT_UNFILTERED()
+	xpHigh:CombatLogEvent(CombatLogGetCurrentEventInfo())
+end
+
+function xpHigh:CombatLogEvent(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
 	local ev = self.clEvents[event]
 	if (ev) then
 		ev(self, timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)

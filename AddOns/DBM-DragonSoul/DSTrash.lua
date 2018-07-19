@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("DSTrash", "DBM-DragonSoul")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetModelID(39378)
 mod:SetZone()
 mod.isTrashMod = true
@@ -128,7 +128,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED_UNFILTERED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED_UNFILTERED(uId, _, spellId)
 	if spellId == 108161 then--Thrall starting drake event, comes later then yell but is only event that triggers after a wipe to this trash.
 		self:SendSync("Skyrim")
 	elseif spellId == 109904 then
@@ -144,7 +144,6 @@ end
 function mod:OnSync(msg, GUID)
 	if msg == "Skyrim" then
 		if not drakeRunning then
-			drakeEscape = DBM:GetSpellInfo(109904)
 			self:RegisterShortTermEvents(
 				"SPELL_DAMAGE",
 				"SPELL_MISSED",
@@ -167,7 +166,6 @@ function mod:OnSync(msg, GUID)
 	elseif msg == "SecondRP" then
 		timerRoleplay:Start(32)
 		if not drakeRunning then
-			drakeEscape = DBM:GetSpellInfo(109904)
 			self:RegisterShortTermEvents(
 				"SPELL_DAMAGE",
 				"SPELL_MISSED",

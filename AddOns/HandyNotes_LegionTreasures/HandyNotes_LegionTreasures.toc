@@ -1,4 +1,4 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: HandyNotes_LegionTreasures
 ## Notes: Where are the hidden treasures in Legion?
 ## Author: Kemayo

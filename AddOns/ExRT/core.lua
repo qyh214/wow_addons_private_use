@@ -1,44 +1,14 @@
---	3:31 03.02.2018
+--	06.07.2018
 
 --[[
-3910
-* Raid cooldowns: Added allied racial abilities
-* Raid cooldowns: Small redesign for custom spell frame
-* Raid cooldowns: Added whisper-to-use option
-* Minor fixes
-
-3905
-* Raid cooldowns: Added stuns to quick setup
-* Note: Added Antorus icons
-* Raid Check: added 1% versatility food
-* Minor fixes
-
-3900
-* Note: "Only trusted" option set to enabled for all users
-* Raid Check: added vantus runes checker
-* 7.3.2 & ABT raid Updates
-* Raid cooldowns: fixes for cd time for some abilities
-
-3890
-* Raid Inspect: added new gems
-* Raid Inspect: added 7.2.5 & 7.3.5 raid achievements
-* Minor fixes
-
-3885
-* 7.3.0 Update
-* Saving log: added options for difficulties
-
-3880
-* Note: added custom Weak Auras event for updating note: "EXRT_NOTE_UPDATE"
-* Fight log: minor fixes (powers gain, report for named mobs (KJ for ex.))
-* Coins: added 7.3 bosses
-* Minor fixes
+3930
+* BFA Update
 
 
 ]]
 local GlobalAddonName, ExRT = ...
 
-ExRT.V = 3910
+ExRT.V = 3930
 ExRT.T = "R"
 
 ExRT.OnUpdate = {}		--> таймеры, OnUpdate функции
@@ -87,7 +57,7 @@ ExRT.GDB = {}
 -------------> upvalues <-------------
 local pcall, unpack, pairs, coroutine, assert = pcall, unpack, pairs, coroutine, assert
 local GetTime, IsEncounterInProgress = GetTime, IsEncounterInProgress
-local SendAddonMessage, strsplit = SendAddonMessage, strsplit
+local SendAddonMessage, strsplit = C_ChatInfo.SendAddonMessage, strsplit
 local C_Timer_NewTicker, debugprofilestop = C_Timer.NewTicker, debugprofilestop
 
 if ExRT.T == "D" then
@@ -519,7 +489,7 @@ ExRT.frame:SetScript("OnEvent",function (self, event, ...)
 		end
 
 		for prefix,_ in pairs(ExRT.msg_prefix) do
-			RegisterAddonMessagePrefix(prefix)
+			C_ChatInfo.RegisterAddonMessagePrefix(prefix)
 		end
 		
 		VExRT.Addon.Version = tonumber(VExRT.Addon.Version or "0")

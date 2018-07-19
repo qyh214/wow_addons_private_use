@@ -1,16 +1,10 @@
-lightweight tag 666b95c3430930820d91c64f7b8fad483033eb72 v1.5.9
-Author:	GitHub <noreply@github.com>
-Date:	Sun May 6 23:24:01 2018 +0200
+lightweight tag e47e58e08c3efcdb89e8f5ee1be2fc545fb412f8 v1.6
+Author:	Jessica Sommer <jessica.sommer@agfa.com>
+Date:	Tue Jul 17 13:23:53 2018 +0200
 
-commit 666b95c3430930820d91c64f7b8fad483033eb72
-Author: Jessica <zanony@jsommer.at>
-Date:   Sun May 6 23:24:01 2018 +0200
+commit e47e58e08c3efcdb89e8f5ee1be2fc545fb412f8
+Author: Jessica Sommer <jessica.sommer@agfa.com>
+Date:   Tue Jul 17 13:23:53 2018 +0200
 
-    Update BlizzMove.lua
-
-commit f380d68fa3b6f96beab21215c5bef225f6c74857
-Author: Jessica <jessica@Jessicas-iMac.local>
-Date:   Sun May 6 23:21:58 2018 +0200
-
-    Fix debug message
+    Update toc.
 

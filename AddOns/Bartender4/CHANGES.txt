@@ -1,18 +1,18 @@
-tag 154e76502ed4433e6fe39b40b165892ae0f803a6 4.7.10
+tag 245f843f9bb77b949301d64e533c119dbeaf023b 4.8.1
 Author:	Hendrik Leppkes <h.leppkes@gmail.com>
-Date:	Wed Aug 30 08:55:06 2017 +0200
+Date:	Wed Jul 18 10:50:10 2018 +0200
 
-Tag as 4.7.10
+Tag as 4.8.1
 
-commit fe21ea01ebcb9dc7b843d04ac42cd1b5260c36eb
+commit 03ef1a82f0882e3e9559e8f13c159898770dfe90
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Tue Aug 29 16:36:00 2017 +0200
+Date:   Wed Jul 18 10:25:02 2018 +0200
 
-    Update TOC for 7.3
+    Remove XP/Rep/AP bar, they have been replaced by the Status bar
 
-commit 3ee94996819ed8819188558e7d7b82dd6d9e3e81
+commit 60cb27600621108f9354b623ab6bf361faa2a51d
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Tue Aug 29 16:35:39 2017 +0200
+Date:   Wed Jul 18 10:24:09 2018 +0200
 
-    Update PlaySound usage for 7.3
+    Update Presets to include the Status Tracking Bar
 

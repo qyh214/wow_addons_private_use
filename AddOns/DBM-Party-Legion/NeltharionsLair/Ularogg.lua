@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1665, "DBM-Party-Legion", 5, 767)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17436 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(91004)
 mod:SetEncounterID(1791)
 mod:SetZone()
@@ -60,8 +60,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 198509 then--Stance of the Mountain
 		warnStanceofMountain:Show()
 		timerSunderCD:Stop()

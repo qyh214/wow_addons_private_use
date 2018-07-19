@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2156, "DBM-Party-BfA", 4, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17470 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17568 $"):sub(12, -3))
 mod:SetCreatureID(134069)
 mod:SetEncounterID(2133)
 mod:SetZone()
@@ -72,7 +72,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnCalltheAbyss:Show()
 		specWarnCalltheAbyss:Play("moveboss")
 		timerCalltheAbyssCD:Start()
-	elseif spellId == 267385 then
+	elseif spellId == 267385 and self:AntiSpam(1.5, 2) then
 		warnTentacleSlam:Show()
 	elseif spellId == 267360 then
 		specWarnGrasp:Show()

@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1084 $")
-XPerl_SetModuleRevision("$Revision: 1084 $")
+end, "$Revision: 1089 $")
+XPerl_SetModuleRevision("$Revision: 1089 $")
 
 -- Upvalus
 local _G = _G
@@ -1225,7 +1225,7 @@ end
 -- XPerl_MinimapMenu_OnLoad
 function XPerl_MinimapMenu_OnLoad(self)
 	self.displayMode = "MENU"
-	Lib_UIDropDownMenu_Initialize(self, XPerl_MinimapMenu_Initialize)
+	UIDropDownMenu_Initialize(self, XPerl_MinimapMenu_Initialize)
 end
 
 -- XPerl_MinimapMenu_Initialize
@@ -1233,80 +1233,80 @@ function XPerl_MinimapMenu_Initialize(self, level)
 	local info
 
 	if (level == 2) then
-		--[[if (LIB_UIDROPDOWNMENU_MENU_VALUE == "raidbuffs") then
-			info = Lib_UIDropDownMenu_CreateInfo()
+		--[[if (UIDROPDOWNMENU_MENU_VALUE == "raidbuffs") then
+			info = UIDropDownMenu_CreateInfo()
 			info.isTitle = 1
 			info.text = XPERL_MINIMENU_RAIDBUFF
-			Lib_UIDropDownMenu_AddButton(info, level)
+			UIDropDownMenu_AddButton(info, level)
 
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = BINDING_NAME_TOGGLEBUFFCASTABLE
 			info.func = function() XPerl_ToggleRaidBuffs(1) end
-			Lib_UIDropDownMenu_AddButton(info, level)
+			UIDropDownMenu_AddButton(info, level)
 
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = BINDING_NAME_TOGGLEBUFFTYPE
 			info.func = XPerl_ToggleRaidBuffs
-			Lib_UIDropDownMenu_AddButton(info, level)
-		elseif (LIB_UIDROPDOWNMENU_MENU_VALUE == "raidsort") then
-			info = Lib_UIDropDownMenu_CreateInfo()
+			UIDropDownMenu_AddButton(info, level)
+		elseif (UIDROPDOWNMENU_MENU_VALUE == "raidsort") then
+			info = UIDropDownMenu_CreateInfo()
 			info.isTitle = 1
 			info.text = XPERL_MINIMENU_RAIDSORT
-			Lib_UIDropDownMenu_AddButton(info, level)
+			UIDropDownMenu_AddButton(info, level)
 
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = UIDropDownMenu_CreateInfo()
 			info.checked = XPerlDB.raid.sortByClass == nil
 			info.text = XPERL_MINIMENU_RAIDSORT_GROUP
 			info.func = function()
 				XPerl_ToggleRaidSort(1)
 			end
-			Lib_UIDropDownMenu_AddButton(info, level)
+			UIDropDownMenu_AddButton(info, level)
 
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = UIDropDownMenu_CreateInfo()
 			info.checked = XPerlDB.raid.sortByClass == 1
 			info.text = XPERL_MINIMENU_RAIDSORT_CLASS
 			info.func = function()
 				XPerl_ToggleRaidSort(0)
 			end
-			Lib_UIDropDownMenu_AddButton(info, level)
+			UIDropDownMenu_AddButton(info, level)
 		end]]
 		return
 	end
 
-	info = Lib_UIDropDownMenu_CreateInfo()
+	info = UIDropDownMenu_CreateInfo()
 	info.isTitle = 1
 	info.text = XPerl_ProductName
-	Lib_UIDropDownMenu_AddButton(info)
+	UIDropDownMenu_AddButton(info)
 
-	info = Lib_UIDropDownMenu_CreateInfo()
+	info = UIDropDownMenu_CreateInfo()
 	info.notCheckable = 1
 	info.func = XPerl_Toggle
 	info.text = XPERL_MINIMENU_OPTIONS
-	Lib_UIDropDownMenu_AddButton(info)
+	UIDropDownMenu_AddButton(info)
 
 	--[[if (XPerl_ToggleRaidBuffs) then
-		info = Lib_UIDropDownMenu_CreateInfo()
+		info = UIDropDownMenu_CreateInfo()
 		info.notCheckable = 1
 		info.text = XPERL_MINIMENU_RAIDBUFF
 		info.hasArrow = 1
 		info.value = "raidbuffs"
-		Lib_UIDropDownMenu_AddButton(info)
+		UIDropDownMenu_AddButton(info)
 	end]]
 
 	--[[if (XPerl_ToggleRaidSort) then
-		info = Lib_UIDropDownMenu_CreateInfo()
+		info = UIDropDownMenu_CreateInfo()
 		info.notCheckable = 1
 		info.text = XPERL_MINIMENU_RAIDSORT
 		info.hasArrow = 1
 		info.value = "raidsort"
-		Lib_UIDropDownMenu_AddButton(info)
+		UIDropDownMenu_AddButton(info)
 	end]]
 
 	if (IsAddOnLoaded("ZPerl_RaidHelper")) then
 		if (XPerl_Assists_Frame and not XPerl_Assists_Frame:IsShown()) then
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = XPERL_MINIMENU_ASSIST
 			info.func = function()
@@ -1314,46 +1314,46 @@ function XPerl_MinimapMenu_Initialize(self, level)
 					ZPerlConfigHelper.TargettingFrame = 1
 					XPerl_SetFrameSides()
 				end
-			Lib_UIDropDownMenu_AddButton(info)
+			UIDropDownMenu_AddButton(info)
 		end
 	end
 
 	if (IsAddOnLoaded("ZPerl_RaidMonitor")) then
 		if (XPerl_RaidMonitor_Frame and not XPerl_RaidMonitor_Frame:IsShown()) then
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = XPERL_MINIMENU_CASTMON
 			info.func = function()
 				ZPerlRaidMonConfig.enabled = 1
 				XPerl_RaidMonitor_Frame:SetFrameSizes()
 			end
-			Lib_UIDropDownMenu_AddButton(info)
+			UIDropDownMenu_AddButton(info)
 		end
 	end
 
 	if (IsAddOnLoaded("ZPerl_RaidAdmin")) then
 		if (XPerl_AdminFrame and not XPerl_AdminFrame:IsShown()) then
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = XPERL_MINIMENU_RAIDAD
 			info.func = function() XPerl_AdminFrame:Show() end
-			Lib_UIDropDownMenu_AddButton(info)
+			UIDropDownMenu_AddButton(info)
 		end
 
 		if (XPerl_Check and not XPerl_Check:IsShown()) then
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = XPERL_MINIMENU_ITEMCHK
 			info.func = function() XPerl_Check:Show() end
-			Lib_UIDropDownMenu_AddButton(info)
+			UIDropDownMenu_AddButton(info)
 		end
 
 		if (XPerl_RosterText and not XPerl_RosterText:IsShown()) then
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = XPERL_MINIMENU_ROSTERTEXT
 			info.func = function() XPerl_RosterText:Show() end
-			Lib_UIDropDownMenu_AddButton(info)
+			UIDropDownMenu_AddButton(info)
 		end
 	end
 end
@@ -1365,7 +1365,7 @@ function XPerl_MinimapMenu(self)
 		XPerl_MinimapMenu_OnLoad(XPerl_Minimap_Dropdown)
 	end
 
-	Lib_ToggleDropDownMenu(1, nil, XPerl_Minimap_Dropdown, "cursor", 0, 0)
+	ToggleDropDownMenu(1, nil, XPerl_Minimap_Dropdown, "cursor", 0, 0)
 end
 
 local xpModList = {"ZPerl", "ZPerl_Player", "ZPerl_PlayerBuffs", "ZPerl_PlayerPet", "ZPerl_Target", "ZPerl_TargetTarget", "ZPerl_Party", "ZPerl_PartyPet", "ZPerl_ArcaneBar", "ZPerl_RaidFrames", "ZPerl_RaidHelper", "ZPerl_RaidAdmin", "ZPerl_RaidMonitor", "ZPerl_RaidPets"}
@@ -1558,18 +1558,18 @@ function XPerl_GetDisplayedPowerType(unitID) -- copied from CompactUnitFrame.lua
 end
 
 local ManaColours = {
-	[SPELL_POWER_MANA] = "mana",
-	[SPELL_POWER_RAGE] = "rage",
-	[SPELL_POWER_FOCUS] = "focus",
-	[SPELL_POWER_ENERGY] = "energy",
-	[SPELL_POWER_RUNES] = "runes",
-	[SPELL_POWER_RUNIC_POWER] = "runic_power",
-	[SPELL_POWER_INSANITY] = "insanity",
-	[SPELL_POWER_LUNAR_POWER] = "lunar",
-	[SPELL_POWER_MAELSTROM] = "maelstrom",
-	[SPELL_POWER_FURY] = "fury",
-	[SPELL_POWER_PAIN] = "pain",
-	[SPELL_POWER_ALTERNATE_POWER] = "energy", -- used by some bosses, show it as energy bar
+	[Enum.PowerType.Mana] = "mana",
+	[Enum.PowerType.Rage] = "rage",
+	[Enum.PowerType.Focus] = "focus",
+	[Enum.PowerType.Energy] = "energy",
+	[Enum.PowerType.Runes] = "runes",
+	[Enum.PowerType.RunicPower] = "runic_power",
+	[Enum.PowerType.Insanity] = "insanity",
+	[Enum.PowerType.LunarPower] = "lunar",
+	[Enum.PowerType.Maelstrom] = "maelstrom",
+	[Enum.PowerType.Fury] = "fury",
+	[Enum.PowerType.Pain] = "pain",
+	[Enum.PowerType.Alternate] = "energy", -- used by some bosses, show it as energy bar
 }
 
 -- XPerl_SetManaBarType
@@ -2275,14 +2275,14 @@ local RaidFrameIgnores = {
 -- BuffException
 local showInfo
 local function BuffException(unit, index, flag, func, exceptions, raidFrames)
-	local name, rank, buff, count, debuffType, dur, max, isMine, isStealable
+	local name, buff, count, debuffType, dur, max, isMine, isStealable
 	if (flag ~= "RAID") then
 		-- Not filtered, just return it
-		name, rank, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, index)
-		return name, rank, buff, count, debuffType, dur, max, isMine, isStealable, index
+		name, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, index)
+		return name, buff, count, debuffType, dur, max, isMine, isStealable, index
 	end
 
-	name, rank, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, index, "RAID")
+	name, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, index, "RAID")
 	if (buff) then
 		-- We need the index of the buff unfiltered later for tooltips
 		for i = 1, 40 do
@@ -2296,7 +2296,7 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 			end
 		end
 
-		return name, rank, buff, count, debuffType, dur, max, isMine, isStealable, index
+		return name, buff, count, debuffType, dur, max, isMine, isStealable, index
 	end
 
 	-- See how many filtered buffs WoW has returned by default
@@ -2315,7 +2315,7 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 	local classExceptions = exceptions[playerClass]
 	local allExceptions = exceptions.ALL
 	for i = 1, 40 do
-		name, rank, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, i)
+		name, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, i)
 		if (not name) then
 			break
 		end
@@ -2341,7 +2341,7 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 		if (good) then
 			foundValid = foundValid + 1
 			if (foundValid + normalBuffFilterCount == index) then
-				return name, rank, buff, count, debuffType, dur, max, isMine, isStealable, i
+				return name, buff, count, debuffType, dur, max, isMine, isStealable, i
 			end
 		end
 	end
@@ -2349,17 +2349,17 @@ end
 
 -- DebuffException
 local function DebuffException(unit, start, flag, func, raidFrames)
-	local name, rank, buff, count, debuffType, dur, max, caster, isStealable, index
+	local name, buff, count, debuffType, dur, max, caster, isStealable, index
 	local valid = 0
 	for i = 1, 40 do
-		name, rank, buff, count, debuffType, dur, max, caster, isStealable, index = BuffException(unit, i, flag, func, DebuffExceptions, raidFrames)
+		name, buff, count, debuffType, dur, max, caster, isStealable, index = BuffException(unit, i, flag, func, DebuffExceptions, raidFrames)
 		if (not name) then
 			break
 		end
 		if (not SeasonalDebuffs[name] and not (raidFrames and RaidFrameIgnores[name])) then
 			valid = valid + 1
 			if (valid == start) then
-				return name, rank, buff, count, debuffType, dur, max, caster, isStealable, index
+				return name, buff, count, debuffType, dur, max, caster, isStealable, index
 			end
 		end
 	end
@@ -2381,7 +2381,7 @@ end
 -- XPerl_TooltipSetUnitBuff
 -- Retreives the index of the actual unfiltered buff, and uses this on unfiltered tooltip call
 function XPerl_TooltipSetUnitBuff(self, unit, ind, filter, raidFrames)
-	local name, rank, buff, count, _, dur, max, caster, isStealable, index = BuffException(unit, ind, filter, UnitBuff, BuffExceptions, raidFrames)
+	local name, buff, count, _, dur, max, caster, isStealable, index = BuffException(unit, ind, filter, UnitBuff, BuffExceptions, raidFrames)
 	if (name and index) then
 		if (Utopia_SetUnitBuff) then
 			Utopia_SetUnitBuff(self, unit, index)
@@ -2394,7 +2394,7 @@ end
 -- XPerl_TooltipSetUnitDebuff
 -- Retreives the index of the actual unfiltered debuff, and uses this on unfiltered tooltip call
 function XPerl_TooltipSetUnitDebuff(self, unit, ind, filter, raidFrames)
-	local name, rank, buff, count, debuffType, dur, max, caster, isStealable, index = XPerl_UnitDebuff(unit, ind, filter, raidFrames)
+	local name, buff, count, debuffType, dur, max, caster, isStealable, index = XPerl_UnitDebuff(unit, ind, filter, raidFrames)
 	if (name and index) then
 		if (Utopia_SetUnitDebuff) then
 			Utopia_SetUnitDebuff(self, unit, index)
@@ -2540,7 +2540,7 @@ end
 
 -- unitmenuOnPostClick
 local function unitmenuOnPostClick(self)
-	if (LIB_UIDROPDOWNMENU_OPEN_MENU == self.dropdownMenu and DropDownList1:IsShown()) then
+	if (UIDROPDOWNMENU_OPEN_MENU == self.dropdownMenu and DropDownList1:IsShown()) then
 		local parent = self
 		if (self:GetParent() and self:GetParent().nameFrame == self) then
 			parent = self:GetParent()
@@ -2598,11 +2598,11 @@ local function HideSetFocus()
 end
 --hooksecurefunc("UnitPopup_HideButtons", HideSetFocus)
 
--- TODO: Marked to delete --[=[
+--[=[
 -- XPerl_GenericDropDown_OnLoad
 function XPerl_GenericDropDown_OnLoad(self)
-	--Lib_UIDropDownMenu_Initialize(self, XPerl_GenericDropDown_Initialize, "MENU")
-	tinsert(UnitPopupFrames, "XPerl_DropDown")
+	--UIDropDownMenu_Initialize(self, XPerl_GenericDropDown_Initialize, "MENU")
+	--tinsert(UnitPopupFrames, "XPerl_DropDown")
 end
 
 -- XPerl_GenericDropDown_Initialize
@@ -2643,7 +2643,7 @@ function XPerl_ShowGenericMenu(self, unit, button, actionType)
 	XPerl_DropDown.unit = unit
 
 	if (unit) then
-		Lib_HideDropDownMenu(1)
+		HideDropDownMenu(1)
 		XPerl_DropDown.id = strmatch(unit or "", "(%d+)")
 		XPerl_DropDown.displayMode = "MENU"
 
@@ -2662,7 +2662,7 @@ function XPerl_ShowGenericMenu(self, unit, button, actionType)
 			parent = self:GetParent()
 		end
 
-		Lib_ToggleDropDownMenu(1, nil, XPerl_DropDown, parent, 0, 0)
+		ToggleDropDownMenu(1, nil, XPerl_DropDown, parent, 0, 0)
 	end
 end
 --]=]
@@ -2831,7 +2831,7 @@ local function AuraButtonOnShow(self)
 		cd.countdown:SetTextColor(1, 1, 0)
 	end
 
-	local name, rank, buff, count, _, duration, endTime, caster, isStealable = UnitAura("player", self.xindex, self.xfilter)
+	local name, buff, count, _, duration, endTime, caster, isStealable = UnitAura("player", self.xindex, self.xfilter)
 	if endTime and duration then
 		local start = endTime - duration
 		XPerl_CooldownFrame_SetTimer(self.cooldown, start, duration, 1, caster == "player")
@@ -3163,7 +3163,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 				-- our own buffs.
 				for buffnum = 1, maxBuffs do
 					local filter = castableOnly == 1 and "RAID" or nil
-					local name, rank, buff, count, _, duration, endTime, isMine, isStealable = XPerl_UnitBuff(partyid, buffnum, filter)
+					local name, buff, count, _, duration, endTime, isMine, isStealable = XPerl_UnitBuff(partyid, buffnum, filter)
 					if (not name) then
 						if (mine == 1) then
 							maxBuffs = buffnum - 1
@@ -3277,7 +3277,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 
 				for buffnum = 1, maxDebuffs do
 					local filter = (isFriendly and curableOnly == 1) and "RAID" or nil
-					local name, rank, debuff, debuffApplications, debuffType, duration, endTime, isMine, isStealable = XPerl_UnitDebuff(partyid, buffnum, filter)
+					local name, debuff, debuffApplications, debuffType, duration, endTime, isMine, isStealable = XPerl_UnitDebuff(partyid, buffnum, filter)
 					if (not name) then
 						if (mine == 1) then
 							maxDebuffs = buffnum - 1

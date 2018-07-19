@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1084 $")
+end, "$Revision: 1089 $")
 
 -- Upvalues
 local _G = _G
@@ -138,7 +138,7 @@ function XPerl_Target_OnLoad(self, partyid)
 		"UNIT_NAME_UPDATE",
 		--"PET_BATTLE_OPENING_START"
 		--"PET_BATTLE_CLOSE",
-		"HONOR_PRESTIGE_UPDATE",
+		--"HONOR_PRESTIGE_UPDATE",
 	}
 
 	for i, event in pairs(events) do
@@ -364,7 +364,7 @@ end
 
 -- XPerl_UnitDebuffInformation
 local function TargetDebuffInformation(debuff)
-	local name, rank, tex, count = UnitDebuff("target", debuff)
+	local name, tex, count = UnitDebuff("target", debuff)
 	return name and count or 0
 end
 
@@ -942,10 +942,10 @@ function XPerl_Target_UpdateHealth(self)
 		if (UnitIsGhost(partyid)) then
 			self.statsFrame.manaBar.percent:Hide()
 			hb.percent:SetText(XPERL_LOC_GHOST)
-		elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
+		--[[elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
 			--self.statsFrame.manaBar.percent:Hide()
 			--hb.percent:SetText(XPERL_LOC_DEAD)
-			hbt:SetText(XPERL_LOC_FEIGNDEATH)
+			hbt:SetText(XPERL_LOC_FEIGNDEATH)--]]
 		elseif (UnitIsDead(partyid)) then
 			--self.statsFrame.manaBar.percent:Hide()
 			hb.percent:SetText(XPERL_LOC_DEAD)
@@ -961,8 +961,8 @@ function XPerl_Target_UpdateHealth(self)
 	else
 		if (UnitIsGhost(partyid)) then
 			hbt:SetText(XPERL_LOC_GHOST)
-		elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
-			hbt:SetText(XPERL_LOC_FEIGNDEATH)
+		--[[elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
+			hbt:SetText(XPERL_LOC_FEIGNDEATH)--]]
 		elseif (UnitIsDead(partyid)) then
 			hbt:SetText(XPERL_LOC_DEAD)
 		elseif (UnitExists(partyid) and not UnitIsConnected(partyid)) then
@@ -1410,7 +1410,11 @@ local function DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGU
 end
 
 -- COMBAT_LOG_EVENT_UNFILTERED
-function XPerl_Target_Events:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
+function XPerl_Target_Events:COMBAT_LOG_EVENT_UNFILTERED()
+	XPerl_Target_Events:CombatLogEvent(CombatLogGetCurrentEventInfo())
+end
+
+function XPerl_Target_Events:CombatLogEvent(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
 	if (self.conf.hitIndicator and self.conf.portrait) then
 		if (bit_band(dstFlags, self.combatMask) ~= 0 and bit_band(srcFlags, 0x00000001) ~= 0) then
 			DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
@@ -1452,7 +1456,7 @@ function XPerl_Target_Events:PLAYER_TARGET_CHANGED()
 		end
 	end
 
-	self.feigning = UnitBuff(self.partyid, feignDeath)
+	--self.feigning = UnitBuff(self.partyid, feignDeath)
 	self.PlayerFlash = 0
 	XPerl_CombatFlashSetFrames(self)
 	XPerl_Target_UpdateDisplay(self)
@@ -1483,7 +1487,7 @@ function XPerl_Target_Events:PLAYER_FOCUS_CHANGED()
 		end
 	end
 
-	self.feigning = UnitBuff(self.partyid, feignDeath)
+	--self.feigning = UnitBuff(self.partyid, feignDeath)
 	self.PlayerFlash = 0
 	XPerl_CombatFlashSetFrames(self)
 	XPerl_Target_UpdateDisplay(self)
@@ -1582,7 +1586,7 @@ function XPerl_Target_Events:UNIT_AURA()
 	XPerl_Targets_BuffUpdate(self)
 	--XPerl_Target_DebuffUpdate(self)
 
-	if conf.showFD then
+	--[[if conf.showFD then
 		local _, class = UnitClass(self.partyid)
 		if class == "HUNTER" then
 			local feigning = UnitBuff(self.partyid, feignDeath)
@@ -1591,7 +1595,7 @@ function XPerl_Target_Events:UNIT_AURA()
 				XPerl_Target_UpdateHealth(self)
 			end
 		end
-	end
+	end--]]
 end
 
 -- UNIT_FACTION

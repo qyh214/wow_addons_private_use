@@ -764,6 +764,8 @@ L.BossWatcherOnlySegmentsWithAura = "Выбрать только сегмент�
 L.BossWatcherOnlySegmentsWithEnemy = "Выбрать только сегменты с активной целью"
 L.BossWatcherHealToTanks = "Только танки"
 L.BossWatcherHealToNonTanks = "Все, кроме танков"
+L.BossWatcherOverdamage = "Избыточный урон"
+L.BossWatcherOverhealing = "Избыточное исцеление"
 
 L.InspectViewerTalents = "Таланты и символы"
 L.InspectViewerInfo = "Другая информация"

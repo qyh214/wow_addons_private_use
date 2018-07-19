@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1719, "DBM-Party-Legion", 7, 800)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17522 $"):sub(12, -3))
 mod:SetCreatureID(104217)
 mod:SetEncounterID(1869)
 mod:SetZone()
@@ -30,16 +30,10 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 208165 then
-		--if self:CheckInterruptFilter(args.sourceGUID) then
-			--specWarnWitheringSoul:Show(args.sourceName)
-		--end
 		timerWitheringSoulCD:Start()
 	elseif spellId == 207881 then
 		specWarnInfernalEruption:Show()
 		specWarnInfernalEruption:Play("watchstep")
 		timerInfernalEruptionCD:Start()
---	elseif spellId == 207980 and self:CheckInterruptFilter(args.sourceGUID) then
-		--specWarnDisintegrationBeam:Show(args.sourceName)
-		--specWarnDisintegrationBeam:Play("kickcast")
 	end
 end

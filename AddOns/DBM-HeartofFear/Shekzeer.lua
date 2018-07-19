@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(743, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(62837)--62847 Dissonance Field, 63591 Kor'thik Reaver, 63589 Set'thik Windblade
 mod:SetEncounterID(1501)
 mod:SetZone()
@@ -89,7 +89,6 @@ local function warnVisionsTargets()
 end
 
 function mod:OnCombatStart(delay)
-	screechDebuff, fixateDebuff = DBM:GetSpellInfo(123735), DBM:GetSpellInfo(125390)
 	phase3Started = false
 	resinIcon = 2
 	fieldCount = 0
@@ -130,7 +129,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() and amount >= 3 then
 			specWarnEyes:Show(amount)
 		else
-			if amount >= 2 and not UnitDebuff("player", screechDebuff) and not UnitIsDeadOrGhost("player") then
+			if amount >= 2 and not DBM:UnitDebuff("player", screechDebuff) and not UnitIsDeadOrGhost("player") then
 				specWarnEyesOther:Show(args.destName)
 			end
 		end
@@ -288,7 +287,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 125098 then--Yell is about 1.5 seconds faster then this event, BUT, it also requires localizing. I don't think doing it this way hurts anything.
 		self:UnregisterShortTermEvents()
 		table.wipe(resinTargets)

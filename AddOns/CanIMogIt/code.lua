@@ -270,8 +270,10 @@ local exceptionItems = {
 -- Helper functions        --
 -----------------------------
 
+CanIMogIt.Utils = {}
 
-function pairsByKeys (t, f)
+
+function CanIMogIt.Utils.pairsByKeys (t, f)
     -- returns a sorted iterator for a table.
     -- https://www.lua.org/pil/19.3.html
     -- Why is it not a built in function? ¯\_(ツ)_/¯
@@ -289,7 +291,7 @@ function pairsByKeys (t, f)
 end
 
 
-function copyTable (t)
+function CanIMogIt.Utils.copyTable (t)
     -- shallow-copy a table
     if type(t) ~= "table" then return t end
     local target = {}
@@ -298,7 +300,7 @@ function copyTable (t)
 end
 
 
-function spairs(t, order)
+function CanIMogIt.Utils.spairs(t, order)
     -- Returns an iterator that is a sorted table. order is the function to sort by.
     -- http://stackoverflow.com/questions/15706270/sort-a-table-in-lua
     -- Again, why is this not a built in function? ¯\_(ツ)_/¯
@@ -324,6 +326,41 @@ function spairs(t, order)
         end
     end
 end
+
+
+function CanIMogIt.Utils.strsplit(delimiter, text)
+    -- from http://lua-users.org/wiki/SplitJoin
+    -- Split text into a list consisting of the strings in text,
+    -- separated by strings matching delimiter (which may be a pattern).
+    -- example: strsplit(",%s*", "Anna, Bob, Charlie,Dolores")
+    local list = {}
+    local pos = 1
+    if string.find("", delimiter, 1) then -- this would result in endless loops
+       error("delimiter matches empty string!")
+    end
+    while 1 do
+       local first, last = string.find(text, delimiter, pos)
+       if first then -- found?
+          table.insert(list, string.sub(text, pos, first-1))
+          pos = last+1
+       else
+          table.insert(list, string.sub(text, pos))
+          break
+       end
+    end
+    return list
+end
+
+
+function CanIMogIt.Utils.tablelength(T)
+    -- Count the number of keys in a table, because tables don't bother
+    -- counting themselves if it's filled with key-value pairs...
+    -- ¯\_(ツ)_/¯
+    local count = 0
+    for _ in pairs(T) do count = count + 1 end
+    return count
+end
+
 
 -----------------------------
 -- CanIMogIt Core methods  --
@@ -399,7 +436,7 @@ local function _GetAppearances()
     GetAppearancesTable()
     buffer = 0
 
-    if appearancesIter == nil then appearancesIter = pairsByKeys(appearancesTable) end
+    if appearancesIter == nil then appearancesIter = CanIMogIt.Utils.pairsByKeys(appearancesTable) end
     -- Add new appearances learned.
     for appearanceID, collected in appearancesIter do
         AddAppearance(appearanceID)
@@ -407,7 +444,7 @@ local function _GetAppearances()
         appearancesTable[appearanceID] = nil
     end
 
-    if removeIter == nil then removeIter = pairsByKeys(removeAppearancesTable) end
+    if removeIter == nil then removeIter = CanIMogIt.Utils.pairsByKeys(removeAppearancesTable) end
     -- Remove appearances that are no longer learned.
     for appearanceHash, sources in removeIter do
         for sourceID, source in pairs(sources.sources) do
@@ -452,7 +489,7 @@ function CanIMogIt:GetAppearances()
     if CanIMogItOptions["printDatabaseScan"] then
         CanIMogIt:Print(CanIMogIt.DATABASE_START_UPDATE_TEXT)
     end
-    removeAppearancesTable = copyTable(CanIMogIt.db.global.appearances)
+    removeAppearancesTable = CanIMogIt.Utils.copyTable(CanIMogIt.db.global.appearances)
     CanIMogIt.frame:SetScript("OnUpdate", GetAppearancesOnUpdate)
 end
 
@@ -637,7 +674,7 @@ function CanIMogIt:CalculateSetsVariantText(setID)
 
     local variantsText = ""
 
-    for i, variantSet in spairs(variantSets, function(t,a,b) return t[a].uiOrder < t[b].uiOrder end) do
+    for i, variantSet in CanIMogIt.Utils.spairs(variantSets, function(t,a,b) return t[a].uiOrder < t[b].uiOrder end) do
         local variantHave, variantTotal = CanIMogIt:_GetRatio(variantSet.setID)
 
         variantsText = variantsText .. CanIMogIt:_GetRatioTextColor(variantHave, variantTotal)
@@ -753,11 +790,6 @@ end
 
 function CanIMogIt:GetItemID(itemLink)
     return tonumber(itemLink:match("item:(%d+)"))
-end
-
-
-function CanIMogIt:GetItemLink(itemID)
-    return select(2, CanIMogIt:GetItemInfo(itemID))
 end
 
 
@@ -936,7 +968,7 @@ function CanIMogIt:GetSourceID(itemLink)
 
     if slots == nil or slots == false or IsDressableItem(itemLink) == false then return end
 
-    cached_source = CanIMogIt.cache:GetDressUpModelSource(itemLink)
+    local cached_source = CanIMogIt.cache:GetDressUpModelSource(itemLink)
     if cached_source then
         return cached_source, "DressUpModel:GetSlotTransmogSources cache"
     end
@@ -1008,7 +1040,8 @@ function CanIMogIt:PlayerKnowsTransmog(itemLink)
     -- Returns whether this item's appearance is already known by the player.
     local appearanceID = CanIMogIt:GetAppearanceID(itemLink)
     if appearanceID == nil then return false end
-    if CanIMogIt:DBHasAppearance(appearanceID, itemLink) then
+    local requirements = CanIMogIt.Requirements:GetRequirements()
+    if CanIMogIt:DBHasAppearanceForRequirements(appearanceID, itemLink, requirements) then
         if CanIMogIt:IsItemArmor(itemLink) then
             -- The character knows the appearance, check that it's from the same armor type.
             for sourceID, knownItem in pairs(CanIMogIt:DBGetSources(appearanceID, itemLink)) do

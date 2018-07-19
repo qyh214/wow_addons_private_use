@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1490, "DBM-Party-Legion", 3, 716)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17471 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(91789)
 mod:SetEncounterID(1811)
 mod:SetZone()
@@ -47,7 +47,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 193698 then
 		warnCurseofWitch:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
-			local _, _, _, _, _, _, expires = DBM:UnitDebuff("player", args.spellName)
+			local _, _, _, _, _, expires = DBM:UnitDebuff("player", args.spellName)
 			local debuffTime = expires - GetTime()
 			yellCurseofWitch:Schedule(debuffTime-1, 1)
 			yellCurseofWitch:Schedule(debuffTime-2, 2)

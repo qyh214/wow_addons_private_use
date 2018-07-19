@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(826, "DBM-Pandaria", nil, 322)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(69161)
 mod:SetEncounterID(1587)
 mod:SetReCombatTime(20, 10)
@@ -76,7 +76,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() and (args.amount or 1) >= 2 then
 			specWarnCrush:Show(args.amount)
 		else
-			if (args.amount or 1) >= 2 and not UnitIsDeadOrGhost("player") or not UnitDebuff("player", args.spellName) then
+			if (args.amount or 1) >= 2 and not UnitIsDeadOrGhost("player") or not DBM:UnitDebuff("player", args.spellName) then
 				specWarnCrushOther:Show(args.destName)
 			end
 		end

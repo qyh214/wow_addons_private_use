@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1838, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(114790)
 mod:SetEncounterID(2017)
 mod:SetZone()
@@ -174,8 +174,8 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 229284 then--Bombardment (more reliable than auras, which can be fickle and apply/remove multiple times
 		timerBombardmentCD:Start()
 	end

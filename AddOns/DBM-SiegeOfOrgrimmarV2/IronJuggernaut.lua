@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(864, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(71466)
 mod:SetEncounterID(1600)
 mod:SetZone()
@@ -182,7 +182,7 @@ function mod:RAID_BOSS_WHISPER(msg)--It was actually CHAT_MSG_RAID_BOSS_EMOTE du
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 145407 then
 		warnMortarCannon:Show()
 	elseif spellId == 144296 then--absolutely do NOT add 144218 to this. 144218 is an every 0.4 second periodic trigger that fires after 144296

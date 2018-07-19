@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(869, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(71865)
 mod:SetEncounterID(1623)
 mod:SetZone()
@@ -122,7 +122,7 @@ mod:AddBoolOption("InfoFrame", "Healer")
 --mod:AddBoolOption("RangeFrame")
 
 --Upvales, don't need variables
-local UnitExists, UnitDebuff, UnitIsDeadOrGhost = UnitExists, UnitDebuff, UnitIsDeadOrGhost
+local UnitExists, UnitIsDeadOrGhost = UnitExists, UnitIsDeadOrGhost
 local bombardCD = {55, 40, 40, 25, 25}
 local spellName1, spellName2, spellName3 = DBM:GetSpellInfo(149004), DBM:GetSpellInfo(148983), DBM:GetSpellInfo(148994)
 local starFixate, grippingDespair, empGrippingDespair = DBM:GetSpellInfo(147665), DBM:GetSpellInfo(145183), DBM:GetSpellInfo(145195)
@@ -144,7 +144,7 @@ mod.vb.phase4Correction = false
 local function updateInfoFrame()
 	table.wipe(lines)
 	for uId in DBM:GetGroupMembers() do
-		if not (UnitDebuff(uId, spellName1) or UnitDebuff(uId, spellName2) or UnitDebuff(uId, spellName3)) and not UnitIsDeadOrGhost(uId) then
+		if not DBM:UnitDebuff(uId, spellName1, spellName2, spellName3) and not UnitIsDeadOrGhost(uId) then
 			lines[UnitName(uId)] = ""
 		end
 	end
@@ -186,8 +186,6 @@ function mod:DesecrateTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
-	spellName1, spellName2, spellName3 = DBM:GetSpellInfo(149004), DBM:GetSpellInfo(148983), DBM:GetSpellInfo(148994)
-	starFixate, grippingDespair, empGrippingDespair = DBM:GetSpellInfo(147665), DBM:GetSpellInfo(145183), DBM:GetSpellInfo(145195)
 	engineerDied = 0
 	self.vb.shamanAlive = 0
 	self.vb.phase = 1
@@ -264,7 +262,7 @@ function mod:SPELL_CAST_START(args)
 		countdownBombardment:Start(bombardCD[count] or 15)
 		timerClumpCheck:Start()
 	elseif spellId == 147011 then
-		if UnitDebuff("player", starFixate) then--Kiting an Unstable Iron Star
+		if DBM:UnitDebuff("player", starFixate) then--Kiting an Unstable Iron Star
 			specWarnManifestRage:Show()
 		else
 			warnManifestRage:Show()
@@ -337,7 +335,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnGrippingDespair:Show(amount)
 			else
-				if not (UnitDebuff("player", grippingDespair) or UnitDebuff("player", empGrippingDespair)) and not UnitIsDeadOrGhost("player") then
+				if not DBM:UnitDebuff("player", grippingDespair, empGrippingDespair) and not UnitIsDeadOrGhost("player") then
 					specWarnGrippingDespairOther:Show(args.destName)
 				end
 			end
@@ -405,7 +403,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 144821 then--Warsong. Does not show in combat log
 		specWarnHellscreamsWarsong:Show()--Want this warning when adds get buff
 	elseif spellId == 145235 then--Throw Axe At Heart

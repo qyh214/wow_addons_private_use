@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1743, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17095 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(106643)
 mod:SetEncounterID(1872)
 mod:SetZone()
@@ -222,28 +222,23 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 209590 then
 		warnCompressedTime:Show()
 	elseif spellId == 209620 then
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnRecursion:Show(args.sourceName)
 			specWarnRecursion:Play("kickcast")
 		end
 	elseif spellId == 221864 then
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnBlast:Show(args.sourceName)
 			specWarnBlast:Play("kickcast")
 		end
---[[	elseif spellId == 209568 then
-		if self:CheckInterruptFilter(args.sourceGUID) then
-			specWarnExoRelease:Show(args.sourceName)
-			specWarnExoRelease:Play("kickcast")
-		end--]]
 	elseif spellId == 209617 then
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnExpedite:Show(args.sourceName)
 			specWarnExpedite:Play("kickcast")
 		end
 	elseif spellId == 209971 then
 		--timerAblativePulseCD:Start()
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnAblativePulse:Show(args.sourceName)
 			specWarnAblativePulse:Play("kickcast")
 		end
@@ -415,8 +410,8 @@ function mod:PARTY_KILL(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 211647 then--Time Stop
 		self.vb.transitionActive = true
 		self.vb.phase = self.vb.phase + 1

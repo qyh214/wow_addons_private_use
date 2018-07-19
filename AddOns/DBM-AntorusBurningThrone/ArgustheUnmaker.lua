@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2031, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17510 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(124828)
 mod:SetEncounterID(2092)
 mod:SetZone()
@@ -155,7 +155,7 @@ mod:AddSetIconOption("SetIconOnSoulBomb", 251570, true)--3 and 7
 mod:AddSetIconOption("SetIconOnSoulBurst", 250669, true)--2
 mod:AddSetIconOption("SetIconOnVulnerability", 255418, true, true)--1-7
 mod:AddInfoFrameOption(nil, true)--Change to EJ entry since spell not localized
-mod:AddRangeFrameOption(8, 257869)
+mod:AddRangeFrameOption(5, 257869)
 mod:AddNamePlateOption("NPAuraOnInevitability", 253021)
 mod:AddNamePlateOption("NPAuraOnCosmosSword", 255496)
 mod:AddNamePlateOption("NPAuraOnEternalBlades", 255478)
@@ -211,8 +211,8 @@ local function ToggleRangeFinder(self, hide)
 	if self:IsTank() or not self.Options.RangeFrame then return end--Tanks don't get rage
 	if not hide then
 		specWarnSargGaze:Show()
-		specWarnSargGaze:Play("scatter")
-		DBM.RangeCheck:Show(8)
+		specWarnSargGaze:Play("range5")
+		DBM.RangeCheck:Show(5)
 		self.vb.rangeCheckNoTouchy = true--Prevent SPELL_AURA_REMOVED of revious rage closing range finder during window we're expecting next rage
 	end
 	if hide and not DBM:UnitDebuff("player", 257869) then
@@ -285,17 +285,11 @@ do
 			end
 		end
 		--Tank Debuffs
-		--[[if #tankStacks > 0 then
-			for k, v in pairs(tankStacks) do
-				--addLine(k, v)
-				addLine(tankStacks[k], v)
-			end
-		end--]]
 		for i = 1, #tankStacks do
 			local name = tankStacks[i]
 			local uId = DBM:GetRaidUnitId(name)
 			if not uId then break end
-			local _, _, _, currentStack = DBM:UnitDebuff(uId, 248499, 258039, 258838)
+			local _, _, currentStack = DBM:UnitDebuff(uId, 248499, 258039, 258838)
 			if currentStack then
 				addLine(name, currentStack)
 			end
@@ -511,7 +505,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnSweepingScythe:Show(amount)
 					specWarnSweepingScythe:Play("stackhigh")
 				else--Taunt as soon as stacks are clear, regardless of stack count.
-					local _, _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+					local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
 					local remaining
 					if expireTime then
 						remaining = expireTime-GetTime()
@@ -894,7 +888,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 257300 and self:AntiSpam(5, 1) then--Ember of Rage
 		specWarnEmberofRage:Show()
 		specWarnEmberofRage:Play("watchstep")

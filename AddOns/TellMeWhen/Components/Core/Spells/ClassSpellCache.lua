@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
@@ -79,6 +79,12 @@ local Cache = {
 	}
 }
 
+
+-- Adjustments to the imported cache data:
+tinsert(Cache[3], 1, 75) -- Add "Auto Shot" to hunter.
+
+
+
 local CacheIsReady = false
 
 local PlayerSpells = {}
@@ -120,7 +126,7 @@ function ClassSpellCache:GetPlayerSpells()
 				if raceName == race then
 					-- Verify that it is valid for this class.
 					for classID = 1, MAX_CLASSES do
-						local name, token = GetClassInfoByID(classID)
+						local name, token = GetClassInfo(classID)
 						if token == pclass and bit.band(bit.lshift(1, classID-1), classReq) > 0 then
 							PlayerSpells[spellID] = 1
 							break
@@ -234,7 +240,7 @@ function GameTooltip:TMW_SetSpellByIDWithClassIcon(spellID)
 
 				-- Find the classes that it is valid for.
 				for classID = 1, MAX_CLASSES do
-					local name, token = GetClassInfoByID(classID)
+					local name, token = GetClassInfo(classID)
 					if bit.band(bit.lshift(1, classID-1), classReq) > 0 then
 						secondIcon = secondIcon .. " " .. getClassIconString(token)
 					end
@@ -269,7 +275,7 @@ end
 function ClassSpellCache:TMW_DB_INITIALIZED()
 	
 	for classID, spellList in ipairs(Cache) do
-		local name, token, classID = GetClassInfoByID(classID)
+		local name, token, classID = GetClassInfo(classID)
 
 		local spellDict = {}
 		for k, v in pairs(spellList) do
@@ -281,7 +287,7 @@ function ClassSpellCache:TMW_DB_INITIALIZED()
 	end
 
 	for spellID, classID in pairs(Cache.PET) do
-		Cache.PET[spellID] = select(2, GetClassInfoByID(classID))
+		Cache.PET[spellID] = select(2, GetClassInfo(classID))
 	end
 
 	for spellID, data in pairs(Cache.RACIAL) do

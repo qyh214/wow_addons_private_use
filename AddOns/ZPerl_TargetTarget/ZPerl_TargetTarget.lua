@@ -55,7 +55,7 @@ XPerl_RequestConfig(function(new)
 	if XPerl_PetTarget then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1053 $")
+end, "$Revision: 1089 $")
 
 local buffSetup
 
@@ -390,7 +390,7 @@ function XPerl_TargetTarget_OnUpdate(self, elapsed)
 		XPerl_Target_SetMana(self)
 	end
 
-	if conf.showFD then
+	--[[if conf.showFD then
 		local _, class = UnitClass(partyid)
 		if class == "HUNTER" then
 			local feigning = UnitBuff(partyid, feignDeath)
@@ -399,7 +399,7 @@ function XPerl_TargetTarget_OnUpdate(self, elapsed)
 				XPerl_Target_UpdateHealth(self)
 			end
 		end
-	end
+	end--]]
 
 	if (newGuid ~= self.guid) then
 		XPerl_TargetTarget_UpdateDisplay(self)
@@ -441,7 +441,7 @@ function XPerl_TargetTargetTarget_OnUpdate(self, elapsed)
 		XPerl_Target_SetMana(self)
 	end
 
-	if conf.showFD then
+	--[[if conf.showFD then
 		local _, class = UnitClass(partyid)
 		if class == "HUNTER" then
 			local feigning = UnitBuff(partyid, feignDeath)
@@ -450,7 +450,7 @@ function XPerl_TargetTargetTarget_OnUpdate(self, elapsed)
 				XPerl_Target_UpdateHealth(self)
 			end
 		end
-	end
+	end--]]
 
 	if (newGuid ~= self.guid) then
 		XPerl_TargetTarget_UpdateDisplay(self)

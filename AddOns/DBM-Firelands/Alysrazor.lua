@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(194, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(52530)
 mod:SetEncounterID(1206)
 mod:SetZone()
@@ -73,7 +73,6 @@ local initiateSpawns = {
 }
 
 function mod:OnCombatStart(delay)
-	PowerLevel = DBM:GetSpellInfo(98734)
 	if self:IsDifficulty("heroic10", "heroic25") then
 		timerFieryVortexCD:Start(243-delay)--Probably not right.
 		timerCataclysmCD:Start(32-delay)

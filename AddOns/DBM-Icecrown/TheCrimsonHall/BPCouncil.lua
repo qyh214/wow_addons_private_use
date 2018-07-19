@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BPCouncil", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 257 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(37970, 37972, 37973)
 mod:SetEncounterID(1095)
 mod:DisableEEKillDetection()--IEEU fires for this boss.
@@ -204,7 +204,7 @@ function mod:UNIT_TARGET_UNFILTERED()
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 72080 then--Verify spellIDs
 		warnKineticBomb:Show()
 		if self:IsDifficulty("normal10") or self:IsDifficulty("heroic10") then

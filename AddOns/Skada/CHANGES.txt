@@ -1,8 +1,43 @@
 ------------------------------------------------------------------------
-r748 | zarnivoop | 2017-08-30 11:59:44 -0500 (Wed, 30 Aug 2017) | 1 line
+r755 | nebula169 | 2018-07-18 14:53:20 +0000 (Wed, 18 Jul 2018) | 1 line
 Changed paths:
-   M /trunk/Skada.toc
+   M /trunk/modules/Tweaks.lua
 
-.toc update
+Fix typo
+------------------------------------------------------------------------
+r754 | nebula169 | 2018-07-18 14:52:18 +0000 (Wed, 18 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/Skada.lua
+   M /trunk/Skada.toc
+   M /trunk/modules/Tweaks.lua
+
+Update TOC for 8.0 and remove pre-8.0 compat
+------------------------------------------------------------------------
+r753 | nebula169 | 2018-05-02 06:44:10 +0000 (Wed, 02 May 2018) | 1 line
+Changed paths:
+   M /trunk/Skada.lua
+   M /trunk/modules/Tweaks.lua
+
+Tweaks: Remove GBoM, fix Akaari's Soul, and disable for 8.0
+------------------------------------------------------------------------
+r752 | nebula169 | 2018-05-01 11:21:27 +0000 (Tue, 01 May 2018) | 1 line
+Changed paths:
+   M /trunk/BarDisplay.lua
+   M /trunk/Skada.lua
+   M /trunk/modules/Tweaks.lua
+
+Add 8.0 support
+------------------------------------------------------------------------
+r751 | nebula169 | 2018-05-01 11:18:04 +0000 (Tue, 01 May 2018) | 1 line
+Changed paths:
+   M /trunk
+
+Update externals
+------------------------------------------------------------------------
+r750 | nebula169 | 2018-05-01 10:31:54 +0000 (Tue, 01 May 2018) | 1 line
+Changed paths:
+   M /trunk/modules/Power.lua
+
+Fix power gains
 ------------------------------------------------------------------------
 

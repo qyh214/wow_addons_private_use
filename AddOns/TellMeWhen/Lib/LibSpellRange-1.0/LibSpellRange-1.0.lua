@@ -10,7 +10,7 @@
 -- @name LibSpellRange-1.0.lua
 
 local major = "SpellRange-1.0"
-local minor = 11
+local minor = 12
 
 assert(LibStub, format("%s requires LibStub.", major))
 
@@ -99,18 +99,28 @@ local function UpdateBook(bookType)
 			local currentSpellID = tonumber(link and link:gsub("|", "||"):match("spell:(%d+)"))
 			
 			local baseSpellName = GetSpellInfo(baseSpellID)
+
+			-- For each entry we add to a table,
+			-- only add it if there isn't anything there already.
+			-- This prevents weird passives from overwriting real, legit spells.
+			-- For example, in WoW 7.3.5 the ret paladin mastery 
+			-- was coming back with a base spell named "Judgement",
+			-- which was overwriting the real "Judgement".
+			-- Passives usually come last in the spellbook,
+			-- so this should work just fine as a workaround.
+			-- This issue with "Judgement" is gone in BFA because the mastery changed.
 			
-			if currentSpellName then
+			if currentSpellName and not spellsByName[strlower(currentSpellName)] then
 				spellsByName[strlower(currentSpellName)] = spellBookID
 			end
-			if baseSpellName then
+			if baseSpellName and not spellsByName[strlower(baseSpellName)] then
 				spellsByName[strlower(baseSpellName)] = spellBookID
 			end
 			
-			if currentSpellID then
+			if currentSpellID and not spellsByID[currentSpellID] then
 				spellsByID[currentSpellID] = spellBookID
 			end
-			if baseSpellID then
+			if baseSpellID and not spellsByID[baseSpellID] then
 				spellsByID[baseSpellID] = spellBookID
 			end
 		end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d285", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17257 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(23682, 23775)
 --mod:SetModelID(22351)--Model doesn't work/render for some reason.
 mod:SetZone()
@@ -41,7 +41,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 --	"<48.6> Headless Horseman:Possible Target<Omegal>:target:Headless Horseman Climax - Command, Head Repositions::0:42410", -- [35]
 	if spellId == 42410 then
 		self:SendSync("HeadRepositions")

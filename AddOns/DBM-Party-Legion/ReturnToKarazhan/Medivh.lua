@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1817, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(114350)
 mod:SetEncounterID(1965)
 mod:SetZone()
@@ -99,7 +99,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnInfernoBoltMoveTo:Show(frostBiteName)
 				specWarnInfernoBoltMoveTo:Play("gather")
 			end
-		elseif self:CheckNearby(8, args.destName) and not UnitDebuff("player", frostBiteName) and not UnitDebuff("player", flameWreathName) then
+		elseif self:CheckNearby(8, args.destName) and not DBM:UnitDebuff("player", frostBiteName) and not DBM:UnitDebuff("player", flameWreathName) then
 			specWarnInfernoBoltNear:Show(args.destName)
 			specWarnInfernoBoltNear:Play("scatter")
 		else
@@ -119,8 +119,8 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 228582 and self.vb.imagesActive then--Mana Regen
 		self.vb.imagesActive = false
 		timerSpecialCD:Start()

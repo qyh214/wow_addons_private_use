@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
@@ -55,7 +55,7 @@ function Module:Entry_AddToList_1(f, index)
 	
 	f.insert = creaturetypeLocalized
 end
-function Module:Table_GetNormalSuggestions(suggestions, tbl, ...)
+function Module:Table_GetNormalSuggestions(suggestions, tbl)
 	local lastName = SUG.lastName
 
 

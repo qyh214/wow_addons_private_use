@@ -7,14 +7,13 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
 if not TMW then return end
 
 local clientVersion = select(4, GetBuildInfo())
-local wow_701 = clientVersion >= 70100 or GetBuildInfo() == "7.1.0" -- they haven't updated the interface number yet.
 
 ---------- Libraries ----------
 local LSM = LibStub("LibSharedMedia-3.0")
@@ -768,6 +767,12 @@ end
 
 function IE:Load(isRefresh)
 	if not isRefresh then
+		-- Finish caching really quickly when the icon editor is opened.
+		-- Users aren't going to care about their FPS so much when it gets opened.
+		-- It doesn't do much good to increase this too far - the more cached per frame,
+		-- the slower each frame will be.
+		TMW:GetModule("SpellCache"):SetNumCachePerFrame(3000)
+
 		IE:Show()
 	end
 	
@@ -1309,10 +1314,6 @@ TMW:NewClass("Config_Frame", "Frame", "CScriptProvider"){
 		self.text:SetHeight(30)
 		self.text:SetMaxLines(3)
 	end,
-
-	-- Wow 7.1 wow_701 shim. Delete when the patch is live.
-	DoesClipChildren = not wow_701 and function() return false end or nil,
-	SetClipsChildren = not wow_701 and TMW.NULLFUNC or nil,
 
 	SetAnimateHeightAdjustments = function(self, animateHeightAdjusts)
 		self.animateHeightAdjusts = animateHeightAdjusts
@@ -3749,10 +3750,13 @@ function TMW:MakeSerializedDataPretty(string)
 	gsub("%^ ^", "^^") -- remove double space at the end
 end
 
-function TMW:DeserializeDatum(string)
+function TMW:DeserializeDatum(string, silent)
 	local success, data, version, spaceControl, type = TMW:Deserialize(string)
-	
 	if not success or not data then
+		if not silent then
+			TMW:Warn(data)
+			TMW:Error(data)
+		end
 		-- corrupt/incomplete string
 		return nil
 	end
@@ -3760,13 +3764,13 @@ function TMW:DeserializeDatum(string)
 	if spaceControl then
 		if spaceControl:find("`|") then
 			-- EVERYTHING is broken. try really hard to salvage it. It probably won't be completely successful
-			return TMW:DeserializeDatum(string:gsub("`", "~`"):gsub("~`|", "~`~|"))
+			return TMW:DeserializeDatum(string:gsub("`", "~`"):gsub("~`|", "~`~|"), silent)
 		elseif spaceControl:find("`") then
 			-- if spaces have become corrupt, then reformat them and... re-deserialize
-			return TMW:DeserializeDatum(string:gsub("`", "~`"))
+			return TMW:DeserializeDatum(string:gsub("`", "~`"), silent)
 		elseif spaceControl:find("~|") then
 			-- if pipe characters have been screwed up by blizzard's method of escaping things combined with AS-3.0's way of escaping things, try to fix them.
-			return TMW:DeserializeDatum(string:gsub("~||", "~|"))
+			return TMW:DeserializeDatum(string:gsub("~||", "~|"), silent)
 		end
 	end
 
@@ -3805,7 +3809,7 @@ function TMW:DeserializeDatum(string)
 	return result
 end
 
-function TMW:DeserializeData(str)
+function TMW:DeserializeData(str, silent)
 	if not str then 
 		return
 	end
@@ -3817,7 +3821,7 @@ function TMW:DeserializeData(str)
 	for string in gmatch(str, "(^%d+.-^^)") do
 		results = results or {}
 
-		local result = TMW:DeserializeDatum(string)
+		local result = TMW:DeserializeDatum(string, silent)
 
 		tinsert(results, result)
 	end

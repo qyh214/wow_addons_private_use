@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(868, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 117 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(72311, 72560, 72249, 73910, 72302, 72561, 73909)--Boss needs to engage off friendly NCPS, not the boss. I include the boss too so we don't detect a win off losing varian. :)
 mod:SetEncounterID(1622)
 mod:DisableESCombatDetection()
@@ -26,7 +26,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_MISSED 147705",
 	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED",
-	"UPDATE_WORLD_STATES",
+	"UPDATE_UI_WIDGET",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_YELL"
 )
@@ -232,7 +232,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 50630 and self:AntiSpam(2, 3) then--Eject All Passengers:
 		timerAddsCD:Cancel()
 		timerProtoCD:Cancel()
@@ -265,8 +265,11 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
-function mod:UPDATE_WORLD_STATES()
-	local text = select(4, GetWorldStateUIInfo(5))
+function mod:UPDATE_UI_WIDGET(table)
+	local id = table.widgetID
+	if id ~= 751 and id ~= 752 then return end--751 south tower, 752 north tower
+	local widgetInfo = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(id)
+	local text = widgetInfo.text
 	local percent = tonumber(string.match(text or "", "%d+"))
 	if percent == 1 and (self.vb.firstTower == 0) and not self:IsMythic() then
 		self.vb.firstTower = 1

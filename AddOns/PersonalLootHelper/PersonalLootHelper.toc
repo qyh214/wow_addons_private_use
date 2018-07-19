@@ -1,13 +1,14 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: Personal Loot Helper
-## Version: 1.32
-## SavedVariables: PLH_NOTIFY_MODE, PLH_INCLUDE_BOE, PLH_MIN_QUALITY, PLH_MIN_ILVL, PLH_DEBUG, PLH_CURRENT_SPEC_ONLY, PLH_CHECK_CHARACTER_LEVEL, PLH_COORDINATE_ROLLS, PLH_NOTIFY_GROUP, PLH_HIGHLIGHT_RAID_FRAMES, PLH_HIGHLIGHT_SIZE
-## Notes: Simplifies trading of personal loot by notifying you when a drop is not an upgrade for the looter, but is an upgrade for you or others in your group.
+## Version: 2.03
+## SavedVariables: PLH_META, PLH_PREFS, PLH_STATS
+## Notes: Simplifies trading of personal loot with other group members.
 ## Author: Madone-Zul'Jin
 
-PersonalLootHelper-Constants.lua
+libs\LibStub\LibStub.lua
+libs\MSA-DropDownMenu-1.0\MSA-DropDownMenu-1.0.xml
+PersonalLootHelper-GlobalConstants.lua
 PersonalLootHelper-Trinkets.lua
 PersonalLootHelper-Util.lua
 PersonalLootHelper-Config.lua
 PersonalLootHelper-Core.lua
-

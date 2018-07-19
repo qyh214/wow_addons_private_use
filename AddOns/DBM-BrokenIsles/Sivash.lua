@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1885, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(117470)
 --mod:SetEncounterID(1880)--Bosses don't fire BOSS_KILL or have encounter IDs at time of this update
 mod:SetReCombatTime(20)
@@ -58,8 +58,8 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 233968 and self:AntiSpam(4, 1) then--Summon Honor Guard
 		warnSummonHonorGuard:Show()
 		timerSummonHonorGuardCD:Start()

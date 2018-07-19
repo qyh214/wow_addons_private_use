@@ -30,8 +30,6 @@ local TimeFmt = Quartz3.Util.TimeFormat
 local GetTime, UnitCastingInfo = GetTime, UnitCastingInfo
 local unpack, tonumber, format = unpack, tonumber, format
 
-local IsLegion = select(4, GetBuildInfo()) >= 70000
-
 local getOptions
 
 local castBar, castBarText, castBarTimeText, castBarIcon, castBarSpark, castBarParent
@@ -91,18 +89,14 @@ function Tradeskill:OnEnable()
 	self:RegisterEvent("UNIT_SPELLCAST_STOP")
 	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 	self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
-	if IsLegion then
-		self:SecureHook(C_TradeSkillUI, "CraftRecipe", "DoTradeSkill")
-	else
-		self:SecureHook("DoTradeSkill")
-	end
+	self:SecureHook(C_TradeSkillUI, "CraftRecipe", "DoTradeSkill")
 end
 
-function Tradeskill:UNIT_SPELLCAST_START(object, event, unit)
+function Tradeskill:UNIT_SPELLCAST_START(object, event, unit, guid, spellID)
 	if unit ~= "player" then
-		return self.hooks[object].UNIT_SPELLCAST_START(object, event, unit)
+		return self.hooks[object].UNIT_SPELLCAST_START(object, event, unit, guid, spellID)
 	end
-	local spell, _, displayName, icon, startTime, endTime, isTradeskill = UnitCastingInfo(unit)
+	local spell, displayName, icon, startTime, endTime, isTradeskill = UnitCastingInfo(unit)
 	if isTradeskill then
 		repeattimes = repeattimes or 1
 		duration = (endTime - startTime) / 1000
@@ -132,7 +126,7 @@ function Tradeskill:UNIT_SPELLCAST_START(object, event, unit)
 		castBarIcon:SetTexture(icon)
 	else
 		castBar:SetMinMaxValues(0, 1)
-		return self.hooks[object].UNIT_SPELLCAST_START(object, event, unit)
+		return self.hooks[object].UNIT_SPELLCAST_START(object, event, unit, guid, spellID)
 	end
 end
 

@@ -10,14 +10,7 @@ L:SetGeneralLocalization({
 	name = "Anub'Rekhan"
 })
 
-L:SetWarningLocalization({
-	SpecialLocust		= "Heuschreckenschwarm",
-	WarningLocustFaded	= "Heuschreckenschwarm Ende"
-})
-
 L:SetOptionLocalization({
-	SpecialLocust		= "Spezialwarnung für $spell:28785",
-	WarningLocustFaded	= "Zeige Warnung, wenn $spell:28785 endet",
 	ArachnophobiaTimer	= "Zeige Timer für Erfolg 'Arachnophobie'"
 })
 
@@ -75,7 +68,6 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	YellWebWrap	= "Ich bin eingenetzt! Hilfe!",
 	ArachnophobiaTimer	= "Arachnophobie"
 })
 
@@ -106,7 +98,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull				= "Sterbt, Eindringling!"
+	Pull				= "Sterbt, Eindringling!",
+	Adds				= "summons forth Skeletal Warriors!",--translate (trigger)
+	AddsTwo				= "raises more skeletons!"--translate (trigger)
 })
 
 --------------------------
@@ -350,13 +344,11 @@ L:SetOptionLocalization({
 	TimerAir			= "Zeige Zeit bis nächste Luftphase",
 	TimerLanding		= "Zeige Zeit bis nächste Bodenphase",
 	TimerIceBlast		= "Zeige Zeit bis $spell:28524",
-	WarningDeepBreath	= "Spezialwarnung für $spell:28524",
-	WarningIceblock		= "Schreie, wenn du ein Eisblock bist"
+	WarningDeepBreath	= "Spezialwarnung für $spell:28524"
 })
 
 L:SetMiscLocalization({
-	EmoteBreath			= "%s holt tief Luft.",
-	WarningYellIceblock	= "Ich bin ein Eisblock!"
+	EmoteBreath			= "%s holt tief Luft."
 })
 
 L:SetWarningLocalization({

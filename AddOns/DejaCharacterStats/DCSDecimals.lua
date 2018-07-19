@@ -284,7 +284,7 @@ local function DCS_Decimals()
 			statFrame.tooltip2 = dcs_format(CR_BLOCK_TOOLTIP, GetShieldBlock());
 			statFrame:Show();
 		end
-		PaperDollFrame_UpdateStats() -- needs to get called for checkbox Decimals
+		--PaperDollFrame_UpdateStats() -- needs to get called for checkbox Decimals; will get called for clicks in checkboxes but not during login
 end
 
 	gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowDecimalsChecked = {
@@ -307,7 +307,7 @@ local DCS_DecimalCheck = CreateFrame("CheckButton", "DCS_DecimalCheck", DejaChar
 	--DCS_DecimalCheck:SetPoint("TOPLEFT", 30, -205)
 	DCS_DecimalCheck:SetPoint("TOPLEFT", "dcsStatsPanelcategoryFS", 7, -55) 
 	DCS_DecimalCheck:SetScale(1)
-	DCS_DecimalCheck.tooltipText = L['Displays "Enhancements" category stats to two decimal places.'] --Creates a tooltip on mouseover.
+	DCS_DecimalCheck.tooltipText = L["Displays 'Enhancements' category stats to two decimal places."] --Creates a tooltip on mouseover.
 	_G[DCS_DecimalCheck:GetName() .. "Text"]:SetText(L["Decimals"])
 	
 	DCS_DecimalCheck:SetScript("OnEvent", function(self, event, arg1)
@@ -317,7 +317,7 @@ local DCS_DecimalCheck = CreateFrame("CheckButton", "DCS_DecimalCheck", DejaChar
 			set_statformat_multiplier_value()
 			--local status = self:GetChecked(true) --???
 			--DCS_Decimals(status)
-			DCS_Decimals()
+			DCS_Decimals() --PaperDollFrame_UpdateStats() here isn't needed
 			--gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDecimalsChecked.SetChecked = status --???
 		end
 	end)
@@ -328,6 +328,7 @@ local DCS_DecimalCheck = CreateFrame("CheckButton", "DCS_DecimalCheck", DejaChar
 		set_statformat_multiplier_value()
 		gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDecimalsChecked.SetChecked = notinteger
 		DCS_Decimals()
+		PaperDollFrame_UpdateStats() --for Enhancements to have updated accuracy and visibility
 	end)
 
 	gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsHideAtZeroChecked = {
@@ -345,7 +346,7 @@ local DCS_DCSHideAtZero = CreateFrame("CheckButton", "DCS_DCSHideAtZero", DejaCh
 	--DCS_DCSHideAtZero:SetPoint("TOPLEFT", 30, -165) 
 	DCS_DCSHideAtZero:SetPoint("TOPLEFT", "dcsStatsPanelcategoryFS", 7, -15) 
 	DCS_DCSHideAtZero:SetScale(1) 
-	DCS_DCSHideAtZero.tooltipText = L['Hides "Enhancements" stats if their displayed value would be zero. Checking "Decimals" changes the displayed value.'] --Creates a tooltip on mouseover. 
+	DCS_DCSHideAtZero.tooltipText = L["Hides 'Enhancements' stats if their displayed value would be zero. Checking 'Decimals' changes the displayed value."] --Creates a tooltip on mouseover. 
 	_G[DCS_DCSHideAtZero:GetName() .. "Text"]:SetText(L["DCS's Hide At Zero"]) 
 	
 DCS_DCSHideAtZero:SetScript("OnEvent", function(self, event) 
@@ -375,6 +376,7 @@ DCS_DCSHideAtZero:SetScript("OnClick", function(self)
 		DCS_BlizHideAtZero:SetChecked(false)  
 	end 
 	DCS_Decimals() 
+	PaperDollFrame_UpdateStats() --for Enhancements to have updated accuracy and visibility
 end) 
 
  _G[DCS_BlizHideAtZero:GetName() .. "Text"]:SetText(L["Blizzard's Hide At Zero"] ) 
@@ -384,7 +386,7 @@ DCS_BlizHideAtZero:ClearAllPoints()
 --DCS_BlizHideAtZero:SetPoint("TOPLEFT", 30, -185) 
 DCS_BlizHideAtZero:SetPoint("TOPLEFT", "dcsStatsPanelcategoryFS", 7, -35) 
 DCS_BlizHideAtZero:SetScale(1) 
-DCS_BlizHideAtZero.tooltipText = L['Hides "Enhancements" stats only if their numerical value is exactly zero. For example, if stat value is 0.001%, then it would be displayed as 0%.'] --Creates a tooltip on mouseover. 
+DCS_BlizHideAtZero.tooltipText = L["Hides 'Enhancements' stats only if their numerical value is exactly zero. For example, if stat value is 0.001%, then it would be displayed as 0%."] --Creates a tooltip on mouseover. 
 
 DCS_BlizHideAtZero:SetScript("OnClick", function(self)  
 	local status = self:GetChecked() 
@@ -395,4 +397,5 @@ DCS_BlizHideAtZero:SetScript("OnClick", function(self)
 		gdbprivate.gdb.gdbdefaults.dejacharacterstatsDCSZeroChecked.SetChecked = false 
 	end 
 	DCS_Decimals() 
+	PaperDollFrame_UpdateStats() --for Enhancements to have updated accuracy and visibility
 end)

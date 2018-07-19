@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank3", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17564 $"):sub(12, -3))
 --mod:SetModelID(28649)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -13,14 +13,14 @@ mod:RegisterEvents(
 )
 
 --TODO, powershot spellid/event is drycoded, it may be a SUCCESS or APPLIED channel event.
-local warnShadowTorch			= mod:NewCastAnnounce(232504, 3)--Shadowmaster Aameen
+local warnShadowTorch			= mod:NewSpellAnnounce(232504, 3)--Shadowmaster Aameen
 local warnPowershot				= mod:NewCastAnnounce(229124, 4)--Johnny Awesome
 
-local specWarnShadowTorch		= mod:NewSpecialWarningDodge(232504)--Shadowmaster Aameen
-local specWarnPowerShot			= mod:NewSpecialWarningMoveTo(229124)--Johnny Awesome
+local specWarnShadowTorch		= mod:NewSpecialWarningDodge(232504, nil, nil, nil, 3, 2)--Shadowmaster Aameen
+local specWarnPowerShot			= mod:NewSpecialWarningMoveTo(229124, nil, nil, nil, 1, 2)--Johnny Awesome
 
 local timerShadowTorchCD		= mod:NewCDTimer(5.3, 232504, nil, nil, nil, 3)-- 5.3, 6.2, 5.9, 6.1, 6.0 Shadowmaster Aameen
-local timerPowerShotCD			= mod:NewAITimer(5.3, 229124, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--Johnny Awesome
+local timerPowerShotCD			= mod:NewCDTimer(15.5, 229124, nil, nil, nil, 3)--Johnny Awesome
 
 mod:AddBoolOption("SetIconOnBlat", true)--Blat
 
@@ -36,6 +36,7 @@ function mod:SPELL_CAST_START(args)
 		timerPowerShotCD:Start()
 		if brawlersMod:PlayerFighting() then
 			specWarnPowerShot:Show(PET)
+			specWarnPowerShot:Play("findshelter")
 		else
 			warnPowershot:Show()
 		end
@@ -48,6 +49,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerShadowTorchCD:Start()
 		if brawlersMod:PlayerFighting() then
 			specWarnShadowTorch:Show()
+			specWarnShadowTorch:Play("farfromline")
 		else
 			warnShadowTorch:Show()
 		end

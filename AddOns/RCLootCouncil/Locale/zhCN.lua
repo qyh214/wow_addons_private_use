@@ -308,13 +308,19 @@ L["Open the Loot History"] = "打开拾取历史"
 L["open_the_loot_history_desc"] = "点击打开拾取历史。"
 L["Opens the synchronizer"] = "打开同步界面"
 L["Other piece"] = "其他套装"
+--[[Translation missing --]]
+--[[ L["Out of instance"] = ""--]] 
 L["'player' can't receive 'type'"] = "%s 不能接收 %s - 版本不符？"
 L["'player' declined your sync request"] = "%s拒绝了你的同步请求"
 L["'player' has asked you to reroll"] = "%s 要求你重新选择"
 L["'player' has ended the session"] = "%s 结束了分配"
 L["'player' has rolled 'roll' for: 'item'"] = "%s 掷出了 %d： %s"
 L["'player' hasn't opened the sync window"] = "%s 没有打开同步窗口 (/rc sync)"
+--[[Translation missing --]]
+--[[ L["Player is ineligible for this item"] = ""--]] 
 L["Player is not in the group"] = "玩家不在队伍中"
+--[[Translation missing --]]
+--[[ L["Player is not in this instance"] = ""--]] 
 L["Player is not in this instance or his inventory is full"] = "玩家不在副本中或者背包满"
 L["Player is not in this instance or is ineligible for this item"] = "玩家不在副本中或者无权拾取此物品。"
 L["Player is offline"] = "玩家不在线"
@@ -382,8 +388,8 @@ L["silent_auto_pass_desc"] = "勾选以隐藏自动放弃信息"
 L["Simple BBCode output."] = "简单BBCode导出。"
 L["Skins"] = "皮肤"
 L["skins_description"] = "选择一个默认皮肤或自己创建一个。注意这只有装饰效果。打开版本检查查看效果 ('/rc version')。"
---Translation missing 
--- L["Socket"] = ""
+--[[Translation missing --]]
+--[[ L["Socket"] = ""--]] 
 L["Something went wrong :'("] = "出现了一些问题"
 L["Something went wrong during syncing, please try again."] = "同步出现错误，请重试。"
 L["Sort Items"] = "物品排序"
@@ -483,6 +489,8 @@ L["winners"] = "获胜者"
 L["x days"] = "%d天"
 L["x out of x have voted"] = "%d / %d 已投票"
 L["You are not allowed to see the Voting Frame right now."] = "你现在无法查看投票界面。"
+--[[Translation missing --]]
+--[[ L["You are not in an instance"] = ""--]] 
 L["You can only auto award items with a quality lower than 'quality' to yourself due to Blizaard restrictions"] = "由于暴雪的限定，你只能自动分配低于%s品质的物品给自己"
 L["You cannot initiate a test while in a group without being the MasterLooter."] = "当你在队伍中且不是战利品分配者时无法开始测试。"
 L["You cannot start an empty session."] = "你无法开始不含任何物品的分配进程。"

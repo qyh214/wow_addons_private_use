@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(870, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 97 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(73720, 71512)
 mod:SetEncounterID(1594)
 mod:DisableESCombatDetection()
@@ -20,7 +20,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 145987 145692",
 	"UNIT_DIED",
 	"RAID_BOSS_WHISPER",
-	"UPDATE_WORLD_STATES"
+	"UPDATE_UI_WIDGET"
 )
 
 mod:RegisterEvents(
@@ -201,7 +201,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 145987 then
 		warnSetToBlow:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
-			local _, _, _, _, _, _, expires = UnitDebuff("player", args.spellName)
+			local _, _, _, _, _, expires = DBM:UnitDebuff("player", args.spellName)
 			local buffTime = expires-GetTime()
 			countdownSetToBlow:Start(buffTime)
 			timerSetToBlow:Start(buffTime)
@@ -279,8 +279,11 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
-function mod:UPDATE_WORLD_STATES()
-	local text = select(4, GetWorldStateUIInfo(1))
+function mod:UPDATE_UI_WIDGET(table)
+	local id = table.widgetID
+	if id ~= 746 then return end
+	local widgetInfo = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(id)
+	local text = widgetInfo.text
 	local time = tonumber(string.match(text or "", "%d+"))
 	if not time then return end
 	if time > worldTimer then

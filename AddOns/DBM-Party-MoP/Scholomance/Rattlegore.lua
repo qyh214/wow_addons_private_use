@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(665, "DBM-Party-MoP", 7, 246)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(59153)
 mod:SetEncounterID(1428)
 mod:SetZone()
@@ -42,9 +42,8 @@ function mod:BoneSpikeTarget()
 end
 
 function mod:OnCombatStart(delay)
-	boned = DBM:GetSpellInfo(113996)
 	timerBoneSpikeCD:Start(6.5-delay)
-	if not UnitDebuff("player", boned) then
+	if not DBM:UnitDebuff("player", boned) then
 		specWarnGetBoned:Show()
 	end
 	if self.Options.InfoFrame then

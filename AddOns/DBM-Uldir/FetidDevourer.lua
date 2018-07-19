@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2146, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17492 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17579 $"):sub(12, -3))
 mod:SetCreatureID(133298)
 mod:SetEncounterID(2128)
 mod:SetZone()
@@ -21,6 +21,9 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
+--[[
+(ability.id = 262292 or ability.id = 262288 or ability.id = 262364) and type = "begincast"
+--]]
 local warnFrenzy						= mod:NewSpellAnnounce(262378, 3)
 local warnThrashNotTanking				= mod:NewSpellAnnounce(262277, 3, nil, "Tank|Healer")
 
@@ -115,9 +118,14 @@ function mod:OnCombatStart(delay)
 	table.wipe(trackedAdds)
 	timerThrashCD:Start(6.7-delay)
 	countdownThrash:Start(6.7-delay)
-	timerShockwaveStompCD:Start(26.6-delay)
-	timerRottingRegurgCD:Start(42-delay)
-	countdownRottingRegurg:Start(42-delay)
+	if not self:IsEasy() then
+		timerShockwaveStompCD:Start(26.1-delay)
+		timerRottingRegurgCD:Start(40-delay)
+		countdownRottingRegurg:Start(40-delay)
+	else
+		timerRottingRegurgCD:Start(31.4-delay)
+		countdownRottingRegurg:Start(31.4-delay)
+	end
 	timerAddsCD:Start(55.1-delay)
 	countdownAdds:Start(55.1-delay)
 	berserkTimer:Start()
@@ -140,9 +148,19 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 262292 then
 		specWarnRottingRegurg:Show()
 		specWarnRottingRegurg:Play("shockwave")
-		timerRottingRegurgCD:Start()
-		countdownRottingRegurg:Start()
-	elseif spellId == 262288 then
+		if not self:IsEasy() then
+			if self:IsMythic() then
+				timerRottingRegurgCD:Start(37)--37
+				countdownRottingRegurg:Start(37)--37
+			else
+				timerRottingRegurgCD:Start()--40
+				countdownRottingRegurg:Start()--40
+			end
+		else
+			timerRottingRegurgCD:Start(30.3)
+			countdownRottingRegurg:Start(30.3)
+		end
+	elseif spellId == 262288 and self:AntiSpam(5, 1) then
 		specWarnShockwaveStomp:Show()
 		specWarnShockwaveStomp:Play("carefly")
 		timerShockwaveStompCD:Start()
@@ -154,11 +172,16 @@ function mod:SPELL_CAST_START(args)
 			DBM.InfoFrame:SetHeader(args.spellName)
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame, false, true)
 		end
-		if self:AntiSpam(10, 1) then
+		if self:AntiSpam(10, 2) then
 			specWarnAdds:Show()
 			specWarnAdds:Play("killmob")
-			timerAddsCD:Start()
-			countdownAdds:Start(54.8)
+			if self:IsEasy() then
+				timerAddsCD:Start()
+				countdownAdds:Start(54.8)
+			else
+				timerAddsCD:Start(59.8)
+				countdownAdds:Start(59.8)
+			end
 		end
 	elseif spellId == 262277 then
 		timerThrashCD:Start()
@@ -169,15 +192,16 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 262370 then--Consume Corruption
-		--2.5 energy per second, spell every 40 seconds there abouts (blizz energy formula still has standard variation)
-		--This basically means every add that's eaten add takes 8 seconds off timer
+		--2.5/3 energy per second, spell every 40/30 seconds there abouts (blizz energy formula still has standard variation)
+		--This basically means every add that's eaten add takes 8/6 seconds off timer
 		local elapsed, total = timerRottingRegurgCD:GetTime()--Grab current timer
-		elapsed = elapsed + 8
+		local adjustAmount = self:IsEasy() and 6 or self:IsMythic() and 7.4 or 8
+		elapsed = elapsed + adjustAmount
+		local remaining = total-elapsed
 		countdownRottingRegurg:Cancel()
 		timerRottingRegurgCD:Stop()--Trash old timer
-		if elapsed < 39 then--It's worth showing timer, if elapsed greater than 39 it means this power gain is going to make him cast it immediately
+		if remaining >= 3 then--It's worth showing updated timer
 			timerRottingRegurgCD:Start(elapsed, total)--Construct new timer with adjustment
-			local remaining = total-elapsed
 			countdownRottingRegurg:Start(remaining)
 		end
 	end
@@ -214,8 +238,7 @@ function mod:SPELL_AURA_REMOVED_DOSE(args)
 	if spellId == 262256 then
 		local amount = args.amount or 0
 		if amount == 1 then
-			local tanking, status = UnitDetailedThreatSituation("player", "boss1")
-			if tanking or (status == 3) then--Not thrash target
+			if self:IsTanking("player", "boss1", nil, true) then
 				warnThrashNotTanking:Show()
 			else
 				specWarnThrash:Show()

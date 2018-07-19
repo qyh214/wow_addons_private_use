@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- ---------------------------------
 
 
@@ -15,10 +15,10 @@
 -- ADDON GLOBALS AND LOCALS
 -- ---------------------------------
 
-TELLMEWHEN_VERSION = "8.4.3"
+TELLMEWHEN_VERSION = "8.5.0"
 
 TELLMEWHEN_VERSION_MINOR = ""
-local projectVersion = "8.4.3" -- comes out like "6.2.2-21-g4e91cee"
+local projectVersion = "8.5.0" -- comes out like "6.2.2-21-g4e91cee"
 if projectVersion:find("project%-version") then
 	TELLMEWHEN_VERSION_MINOR = "dev"
 elseif strmatch(projectVersion, "%-%d+%-") then
@@ -26,11 +26,11 @@ elseif strmatch(projectVersion, "%-%d+%-") then
 end
 
 TELLMEWHEN_VERSION_FULL = TELLMEWHEN_VERSION .. " " .. TELLMEWHEN_VERSION_MINOR
-TELLMEWHEN_VERSIONNUMBER = 84305 -- NEVER DECREASE THIS NUMBER (duh?).  IT IS ALSO ONLY INTERNAL (for versioning of)
+TELLMEWHEN_VERSIONNUMBER = 85009 -- NEVER DECREASE THIS NUMBER (duh?).  IT IS ALSO ONLY INTERNAL (for versioning of)
 
 TELLMEWHEN_FORCECHANGELOG = 82105 -- if the user hasn't seen the changelog until at least this version, show it to them.
 
-if TELLMEWHEN_VERSIONNUMBER > 85000 or TELLMEWHEN_VERSIONNUMBER < 84000 then
+if TELLMEWHEN_VERSIONNUMBER > 86000 or TELLMEWHEN_VERSIONNUMBER < 85000 then
 	-- safety check because i accidentally made the version number 414069 once
 	return error("TELLMEWHEN: THE VERSION NUMBER IS SCREWED UP OR MAYBE THE SAFETY LIMITS ARE WRONG")
 end
@@ -493,11 +493,7 @@ do	-- TMW.safecall
 	end
 
 	function TMW.safecall(func, ...)
-		-- I don't check if func is a function here because i hope that whoever calls it
-		-- is smart enough not to do stupid shit. If they arent, they will figure it out when it errors.
-		--  if type(func) == "function" then
-			return Dispatchers[select('#', ...)](func, ...)
-		-- end
+		return Dispatchers[select('#', ...)](func, ...)
 	end
 end
 local safecall = TMW.safecall
@@ -1027,11 +1023,11 @@ function TMW:PLAYER_LOGIN()
 	TMW.PLAYER_LOGIN = nil
 
 	-- Check for wrong WoW version
-	if select(4, GetBuildInfo()) < 70000 then
+	if select(4, GetBuildInfo()) < 80000 then
 		-- GLOBALS: StaticPopupDialogs, StaticPopup_Show, EXIT_GAME, CANCEL, ForceQuit
 		local version = GetBuildInfo()
 		StaticPopupDialogs["TMW_BADWOWVERSION"] = {
-			text = "TellMeWhen %s is not compatible with WoW %s. Please downgrade TellMeWhen or wait for a patch to WoW 7.0.3.", 
+			text = "TellMeWhen %s is not compatible with WoW %s. Please downgrade TellMeWhen, or wait for Battle for Azeroth to release.", 
 			button1 = OKAY,
 			timeout = 0,
 			showAlert = true,

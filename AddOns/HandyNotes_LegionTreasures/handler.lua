@@ -161,7 +161,7 @@ local get_point_info = function(point)
         elseif point.junk then
             category = "junk"
         end
-        return label, icon, category, point.quest, point.faction, point.scale
+        return label, icon, category, point.quest, point.faction, point.scale, point.alpha or 1
     end
 end
 local get_point_info_by_coord = function(mapFile, coord)
@@ -275,6 +275,10 @@ local function handle_tooltip(tooltip, point)
             end
             comparison:Show()
         end
+
+        if point.npc then
+            tooltip:AddLine("|cffeda55fClick|r to search for groups")
+        end
     else
         tooltip:SetText(UNKNOWN)
     end
@@ -368,10 +372,27 @@ do
     HL_Dropdown.initialize = generateMenu
 
     function HLHandler:OnClick(button, down, mapFile, coord)
+        currentZone = string.gsub(mapFile, "_terrain%d+$", "")
+        currentCoord = coord
+        -- given we're in a click handler, this really *should* exist, but just in case...
+        local point = ns.points[currentZone] and ns.points[currentZone][currentCoord]
         if button == "RightButton" and not down then
-            currentZone = string.gsub(mapFile, "_terrain%d+$", "")
-            currentCoord = coord
             ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
+        elseif button == "LeftButton" and down and point.npc then
+            if InCombatLockdown() then
+                print("|cFF33FF99" .. myname .. "|r: Can't search in combat")
+            else
+                local name = mob_name(point.npc)
+                PVEFrame_ShowFrame("GroupFinderFrame", LFGListPVEStub)
+                local panel = LFGListFrame.CategorySelection
+                LFGListCategorySelection_SelectCategory(panel, 6, 0)
+                LFGListCategorySelection_StartFindGroup(panel, name)
+                -- LFGListEntryCreation_SetAutoCreateMode(panel:GetParent().EntryCreation, "quest", activityID, questID)
+
+                -- C_LFGList.Search(6, LFGListSearchPanel_ParseSearchTerms(npcName), 0, 4)
+                -- LFG_LIST_SEARCH_RESULTS_RECEIVED
+                -- local number, ids = C_LFGList.GetSearchResults()
+            end
         end
     end
 end
@@ -393,13 +414,26 @@ do
         local state, value = next(t, prestate)
         while state do -- Have we reached the end of this zone?
             if value and ns.should_show_point(state, value, currentZone, currentLevel) then
-                local label, icon, _, _, _, scale = get_point_info(value)
+                local label, icon, _, _, _, scale, alpha = get_point_info(value)
                 scale = (scale or 1) * (icon and icon.scale or 1) * ns.db.icon_scale
-                return state, nil, icon, scale, ns.db.icon_alpha
+                return state, nil, icon, scale, ns.db.icon_alpha * alpha
             end
             state, value = next(t, state) -- Get next data
         end
         return nil, nil, nil, nil
+    end
+    local function UnitHasBuff(unit, spellid)
+        local buffname = GetSpellInfo(spellid)
+        for i = 1, 40 do
+            local name = UnitBuff(unit, i)
+            if not name then
+                -- reached the end, probably
+                return
+            end
+            if buffname == name then
+                return UnitBuff(unit, i)
+            end
+        end
     end
     function HLHandler:GetNodes(mapFile, minimap, level)
         Debug("GetNodes", mapFile, minimap, level)
@@ -407,8 +441,10 @@ do
         mapFile = string.gsub(mapFile, "_terrain%d+$", "")
         currentZone = mapFile
         if minimap and ns.map_spellids[mapFile] then
-            local buffName = GetSpellInfo(ns.map_spellids[mapFile])
-            if UnitBuff("player", buffName) then
+            if ns.map_spellids[mapFile] == true then
+                return iter
+            end
+            if UnitHasBuff("player", ns.map_spellids[mapFile]) then
                 return iter
             end
         end
@@ -428,13 +464,10 @@ function HL:OnInitialize()
     HandyNotes:RegisterPluginDB(myname:gsub("HandyNotes_", ""), HLHandler, ns.options)
 
     -- watch for LOOT_CLOSED
-    self:RegisterEvent("LOOT_CLOSED")
+    self:RegisterEvent("LOOT_CLOSED", "Refresh")
+    self:RegisterEvent("ZONE_CHANGED_INDOORS", "Refresh")
 end
 
 function HL:Refresh()
     self:SendMessage("HandyNotes_NotifyUpdate", myname:gsub("HandyNotes_", ""))
-end
-
-function HL:LOOT_CLOSED()
-    self:Refresh()
 end

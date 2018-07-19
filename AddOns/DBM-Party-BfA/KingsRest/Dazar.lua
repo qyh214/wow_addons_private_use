@@ -1,31 +1,58 @@
 local mod	= DBM:NewMod(2172, "DBM-Party-BfA", 3, 1041)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17428 $"):sub(12, -3))
---mod:SetCreatureID(98542)
+mod:SetRevision(("$Revision: 17550 $"):sub(12, -3))
+mod:SetCreatureID(136160)
 mod:SetEncounterID(2143)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
---[[
 mod:RegisterEventsInCombat(
 --	"SPELL_AURA_APPLIED",
---	"SPELL_CAST_START"
+	"SPELL_CAST_START 268403 268932 268586 269369",
+	"UNIT_DIED"
 )
 
---local warnSwirlingScythe			= mod:NewTargetAnnounce(195254, 2)
+--TODO, work on quaking leap target scanning code more
+--TODO, impaling spears?
+--TODO, too many spellIDs. Add Hunting Leap with logs later
+local warnGaleSlash					= mod:NewSpellAnnounce(268403, 2)
+local warnQuakingLeap				= mod:NewTargetAnnounce(268932, 2)
+local warnDeathlyRoar				= mod:NewSpellAnnounce(269369, 3)
 
---local specWarnReapSoul			= mod:NewSpecialWarningDodge(194956, "Tank", nil, nil, 3)
---local yellSwirlingScythe			= mod:NewYell(195254)
+local specWarnQuakingLeap			= mod:NewSpecialWarningYou(268932, nil, nil, nil, 1, 2)
+local yellQuakingLeap				= mod:NewYell(268932)
+local specWarnQuakingLeapNear		= mod:NewSpecialWarningClose(268932, nil, nil, nil, 1, 2)
+local specWarnBladeCombo			= mod:NewSpecialWarningDefensive(268586, nil, nil, nil, 1, 2)
 --local specWarnGTFO				= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 2)
 
---local timerReapSoulCD				= mod:NewNextTimer(13, 194956, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_DEADLY_ICON)
+local timerGaleSlashCD				= mod:NewAITimer(13, 268403, nil, nil, nil, 3)
+local timerQuakingLeapCD			= mod:NewAITimer(13, 268932, nil, nil, nil, 3)
+local timerBladeComboCD				= mod:NewAITimer(13, 268586, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
+--Adds
+local timerDeathlyRoarCD			= mod:NewAITimer(13, 269369, nil, nil, nil, 2)
 
 --mod:AddRangeFrameOption(5, 194966)
 
-function mod:OnCombatStart(delay)
+function mod:LeapTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnQuakingLeap:Show()
+		specWarnQuakingLeap:Play("targetyou")
+		yellQuakingLeap:Yell()
+	elseif self:CheckNearby(10, targetname) then
+		specWarnQuakingLeapNear:Show(targetname)
+		specWarnQuakingLeapNear:Play("runaway")
+	else
+		warnQuakingLeap:Show(targetname)
+	end
+end
 
+function mod:OnCombatStart(delay)
+	timerGaleSlashCD:Start(1-delay)
+	timerQuakingLeapCD:Start(1-delay)
+	timerBladeComboCD:Start(1-delay)
 end
 
 function mod:OnCombatEnd()
@@ -44,26 +71,42 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 195254 then
-
+	if spellId == 268403 then
+		warnGaleSlash:Show()
+		timerGaleSlashCD:Start()
+	elseif spellId == 268932 then
+		timerQuakingLeapCD:Start()
+		self:BossTargetScanner(args.sourceGUID, "LeapTarget", 0.05, 12, true)
+	elseif spellId == 268586 then
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnBladeCombo:Show()
+			specWarnBladeCombo:Play("defensive")
+		end
+		timerBladeComboCD:Start()
+	elseif spellId == 269369 then
+		warnDeathlyRoar:Show()
+		timerDeathlyRoarCD:Start()
 	end
 end
 
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 136984 then--Reban
+		
+	elseif cid == 136976 then--T'zala
+		timerDeathlyRoarCD:Stop()
+	end
+end
+
+--[[
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 228007 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
 		specWarnGTFO:Show()
 		specWarnGTFO:Play("runaway")
 	end
 end
+
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
-
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 124396 then
-		
-	end
-end
-
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 257939 then
 	end

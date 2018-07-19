@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(111, "DBM-Party-Cataclysm", 7, 67)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(43214)
 mod:SetEncounterID(1059)
 mod:SetZone()
@@ -71,7 +71,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 80803 then--Lava Fissure
 		warnFissure:Show()
 		timerFissureCD:Start()

@@ -1,5 +1,8 @@
 local GlobalAddonName, ExRT = ...
 
+--- outdated module, temp disable
+if true then return end
+
 local module = ExRT.mod:New("Arrow",ExRT.L.Arrow,true,true)
 local ELib,L = ExRT.lib,ExRT.L
 
@@ -541,7 +544,7 @@ function arrowFrame:ShowToBuff(spell)
 			else
 				for k=1,2 do
 					for j=1,40 do
-						local _, _, _, _, _, _, _, _, _, _, spellId = UnitAura(name, j, buffFilter[k])
+						local _, _, _, _, _, _, _, _, _, spellId = UnitAura(name, j, buffFilter[k])
 						if spellId and spellId == spell then
 							return self:ShowToPlayer(name)
 						end

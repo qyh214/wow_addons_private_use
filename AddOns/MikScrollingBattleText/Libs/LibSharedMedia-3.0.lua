@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 Name: LibSharedMedia-3.0
 Revision: $Revision: 91 $
 Author: Elkano (elkano@gmx.de)

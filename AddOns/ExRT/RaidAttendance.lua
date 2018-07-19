@@ -399,7 +399,7 @@ function module.options:Load()
 		}
 		self.DialogSelectBoss.dateFrom_Month.List = FM		
 		
-		local _, _, _, maxYear = CalendarGetDate()
+		local maxYear = C_Calendar.GetDate().year
 		local FY = {{text = " - ",func = FilterYear,arg2=false},}
 		for i=maxYear-5,maxYear do
 			FY[#FY+1]={text = i,func = FilterYear,arg1=i,arg2=false}
@@ -430,7 +430,7 @@ function module.options:Load()
 		}
 		self.DialogSelectBoss.dateTo_Month.List = FM		
 		
-		local _, _, _, maxYear = CalendarGetDate()
+		local maxYear = C_Calendar.GetDate().year
 		local FY = {{text = " - ",func = FilterYear,arg2=true},}
 		for i=maxYear-5,maxYear do
 			FY[#FY+1]={text = i,func = FilterYear,arg1=i,arg2=true}

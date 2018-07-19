@@ -1,8 +1,8 @@
 ## Title: Quartz
-## Interface: 70300
+## Interface: 80000
 ## Notes: Modular casting bar.
 ## Author: Nevcairiel, Nymbia
-## Version: 3.3.6
+## Version: 3.4.0
 ## X-License: GPL v2
 ## X-Credits: Ammo (some code based on PitBull_CastBar), kergoth (Tradeskill Merge module idea), Roartindon (Lag Embed mode for Latency module)
 

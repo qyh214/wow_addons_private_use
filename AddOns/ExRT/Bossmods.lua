@@ -1,5 +1,7 @@
 local GlobalAddonName, ExRT = ...
 
+--- ded module, RIP 2013 - 2017
+
 local UnitAura, UnitIsDeadOrGhost, UnitIsConnected, UnitPower, UnitGUID, UnitName, UnitPosition, UnitInRange, UnitIsUnit, UnitClass = UnitAura, UnitIsDeadOrGhost, UnitIsConnected, UnitPower, UnitGUID, UnitName, UnitPosition, UnitInRange, UnitIsUnit, UnitClass
 local GetTime, tonumber, tostring, sort, wipe, PI, pairs, type = GetTime, tonumber, tostring, table.sort, table.wipe, PI, pairs, type
 local cos, sin, sqrt, acos, abs, floor, min, max, atan, GGetPlayerMapPosition, GGetPlayerFacing, GetNumGroupMembers = math.cos, math.sin, math.sqrt, acos, math.abs, math.floor, math.min, math.max, atan, GetPlayerMapPosition, GetPlayerFacing, GetNumGroupMembers
@@ -6982,7 +6984,7 @@ end
 
 local function GetSpellText(spellID)
 	if spellID < 0 then
-		local name, _, _, abilityIcon = EJ_GetSectionInfo(-spellID)
+		local name, _, _, abilityIcon = C_EncounterJournal.GetSectionInfo(-spellID)[1]
 		if not name then
 			return ""
 		end
@@ -7481,6 +7483,9 @@ function ExRT.F:ExBossmodsCloseAll()
 end
 
 function module:miniMapMenu()
+	if true then
+		return
+	end
 	SetMapToCurrentZone()
 	local cmap = GetCurrentMapAreaID()
 	local clvl = GetCurrentMapDungeonLevel()
@@ -7615,7 +7620,7 @@ function module.main:ADDON_LOADED()
 	end
 	
 	if not VExRT.Bossmods.ModuleViewed3580 then
-		ExRT.Options:AddIcon(L.bossmods,{"Interface\\common\\help-i",28})
+		--ExRT.Options:AddIcon(L.bossmods,{"Interface\\common\\help-i",28})
 	end
 end
 

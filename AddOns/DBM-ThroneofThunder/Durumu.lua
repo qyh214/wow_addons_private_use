@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(818, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(68036)--Crimson Fog 69050
 mod:SetEncounterID(1572)
 mod:SetZone()
@@ -136,7 +136,7 @@ local function findBeamJump(spellName, spellId)
 	scanTime = scanTime + 1
 	for uId in DBM:GetGroupMembers() do
 		local name = DBM:GetUnitFullName(uId)
-		if spellId == 139202 and UnitDebuff(uId, spellName) and lastBlue ~= name then
+		if spellId == 139202 and DBM:UnitDebuff(uId, spellName) and lastBlue ~= name then
 			lastBlue = name
 			if name == UnitName("player") then
 				if mod:IsDifficulty("lfr25") and mod.Options.specWarnBlueBeam then
@@ -149,7 +149,7 @@ local function findBeamJump(spellName, spellId)
 				SetRaidTarget(uId, 6)--Square
 			end
 			return
-		elseif spellId == 139204 and UnitDebuff(uId, spellName) and lastRed ~= name then
+		elseif spellId == 139204 and DBM:UnitDebuff(uId, spellName) and lastRed ~= name then
 			lastRed = name
 			if name == UnitName("player") then
 				specWarnRedBeam:Show()
@@ -166,7 +166,6 @@ local function findBeamJump(spellName, spellId)
 end
 
 function mod:OnCombatStart(delay)
-	lifeDrain = DBM:GetSpellInfo(133795)
 	lingeringGazeCD = 46
 	lastRed = nil
 	lastBlue = nil
@@ -323,14 +322,14 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnSeriousWound:Show(amount)
 			else
-				if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
+				if not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 					specWarnSeriousWoundOther:Show(args.destName)
 				end
 			end
 		end
 	elseif spellId == 133597 and not args:IsDestTypeHostile() then--Dark Parasite (filtering the wierd casts they put on themselves periodicly using same spellid that don't interest us and would mess up cooldowns)
 		warnDarkParasite:CombinedShow(0.5, args.destName)
-		local _, _, _, _, _, duration = UnitDebuff(args.destName, args.spellName)
+		local _, _, _, _, duration = DBM:UnitDebuff(args.destName, args.spellName)
 		timerDarkParasite:Start(duration, args.destName)
 		if not lifeDrained then--Only time spell ever gets to use it's true 60 second cd without one of the two failsafes altering it. very first phase
 			timerDarkParasiteCD:DelayedStart(0.5)
@@ -339,7 +338,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetSortedIcon(0.5, args.destName, 5, 3, true)
 		end
 	elseif spellId == 133598 then--Dark Plague
-		local _, _, _, _, _, duration = UnitDebuff(args.destName, args.spellName)
+		local _, _, _, _, duration = DBM:UnitDebuff(args.destName, args.spellName)
 		--maybe add a warning/special warning for everyone if duration is too high and many adds expected
 		timerDarkPlague:Start(duration, args.destName)
 	elseif spellId == 134626 then

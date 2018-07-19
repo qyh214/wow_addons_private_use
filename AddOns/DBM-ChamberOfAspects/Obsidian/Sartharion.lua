@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Sartharion", "DBM-ChamberOfAspects", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 257 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(28860)
 mod:SetEncounterID(1090)
 mod:SetModelID(27035)
@@ -37,7 +37,6 @@ local timerVesperon         = mod:NewTimer(120, "TimerVesperon", 61251, nil, nil
 
 local lastvoids = {}
 local lastfire = {}
-local UnitDebuff = UnitDebuff
 local tsort, tinsert, twipe = table.sort, table.insert, table.wipe
 
 local function isunitdebuffed(spellID)
@@ -45,7 +44,7 @@ local function isunitdebuffed(spellID)
 	if not name then return false end
 
 	for i=1, DBM:GetNumGroupMembers(), 1 do
-		local debuffname = UnitDebuff("player", i, "HARMFUL")
+		local debuffname = DBM:UnitDebuff("player", i, "HARMFUL")
 		if debuffname == name then
 			return true
 		end
@@ -78,7 +77,6 @@ end
 
 function mod:OnCombatStart(delay)
 	--Cache spellnames so a solo player check doesn't fail in CheckDrakes in 8.0+
-	local blah1, blah2, blah3 = DBM:GetSpellInfo(61248), DBM:GetSpellInfo(58105), DBM:GetSpellInfo(61251)
 	self:Schedule(5, CheckDrakes, delay)
 	timerWall:Start(-delay)
 

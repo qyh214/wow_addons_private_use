@@ -25,6 +25,7 @@ local wipe = wipe
 local bit_band = bit.band
 local tremove = tremove
 local strsplit = strsplit
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 
 local VExRT = nil
 
@@ -365,7 +366,9 @@ do
 		module.main:ZONE_CHANGED_NEW_AREA()
 		module:RegisterSlash()
 		
-		if UnitAffectingCombat("player") then
+		if select(3,GetInstanceInfo()) == 8 and C_ChallengeMode.IsChallengeModeActive() then
+			module.main:CHALLENGE_MODE_START()
+		elseif UnitAffectingCombat("player") then
 			_BW_Start()
 		else
 			ExRT.F.Timer(CheckForCombat,3)
@@ -530,17 +533,26 @@ end
 local negateHealing = {}
 
 local SLTReductionAuraSpellID = 98007
-local SLTReductionAuraName = GetSpellInfo(SLTReductionAuraSpellID)
 local SLTReductionAuraData = {}
 local SLTReductionSourceGUID = nil
 
 local SLTReductionFrame = CreateFrame("Frame")
 SLTReductionFrame:SetScript("OnEvent",function(_,_,unit)
-	local name,_,icon,count,dispelType,duration,expires,caster,isStealable,_,spellId = UnitAura(unit, SLTReductionAuraName, nil, "HELPFUL")
+	local findEm = nil
+	for i=1,40 do
+		local name,icon,count,dispelType,duration,expires,caster,isStealable,_,spellId = UnitAura(unit, i, "HELPFUL")
+		if spellId == SLTReductionAuraSpellID then 
+			findEm = true
+			break
+		elseif not name then
+			break
+		end
+	end    
+
 	local guid = UnitGUID(unit)
 	if not guid then
 		return
-	elseif name and not SLTReductionAuraData[ guid ] then
+	elseif findEm and not SLTReductionAuraData[ guid ] then
 		if not fightData_auras then
 			return
 		end
@@ -565,7 +577,7 @@ SLTReductionFrame:SetScript("OnEvent",function(_,_,unit)
 		SLTReductionAuraData[ guid ] = true
 		
 		fightData_auras[ #fightData_auras + 1 ] = {GetTime() - module.db.timeFix[1] + module.db.timeFix[2],SLTReductionSourceGUID,UnitGUID(unit),true,true,SLTReductionAuraSpellID,"BUFF",1,1}		
-	elseif not name and SLTReductionAuraData[ guid ] then
+	elseif not findEm and SLTReductionAuraData[ guid ] then
 		if not fightData_auras then
 			return
 		end
@@ -652,7 +664,7 @@ local function addReductionOnPull(unit,destGUID)
 	
 	--------------> Add active reductions from current auras
 	for i=1,40 do
-		local _,_,_,stacksCount,_,_,_,casterUnit,_,_,spellID,_,_,_,_,_,val1,val2,val3,val4,val5 = UnitAura(unit,i)
+		local _,_,stacksCount,_,_,_,casterUnit,_,_,spellID,_,_,_,_,_,val1,val2,val3,val4,val5 = UnitAura(unit,i)
 		
 		if not spellID then
 			return
@@ -736,7 +748,8 @@ end
 local BossPhasesData = {
 	[1853] = {
 		events = {"COMBAT_LOG_EVENT_UNFILTERED"},
-		func = function(_,_,_,event,_,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellId)
+		func = function()
+			local _,event,_,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellId = CombatLogGetCurrentEventInfo()
 			if event == "SPELL_CAST_START" and spellId == 203552 then
 				active_phase = 2
 				C_Timer.After(23.7,function()
@@ -753,7 +766,8 @@ local BossPhasesData = {
 	},	--EN: Nethendra
 	[1873] = {
 		events = {"COMBAT_LOG_EVENT_UNFILTERED"},
-		func = function(_,_,_,event,_,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellId)
+		func = function()
+			local _,event,_,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellId = CombatLogGetCurrentEventInfo()
 			if event == "SPELL_AURA_APPLIED" and spellId == 209915 then
 				active_phase = 1
 			elseif event == "SPELL_AURA_REMOVED" and spellId == 209915 then
@@ -767,7 +781,7 @@ local BossPhasesData = {
 	},	--EN: Illgynoth
 	[1877] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 217368 then
 				active_phase = 2
 			end
@@ -779,7 +793,7 @@ local BossPhasesData = {
 	},	--EN: Cenarius
 	[1864] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 226193 then
 				active_phase = 2
 			elseif spellId == 226185 then
@@ -794,7 +808,7 @@ local BossPhasesData = {
 	},	--EN: Xavius
 	[1958] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 229168 then
 				active_phase = 2
 			elseif spellId == 228740 then
@@ -809,7 +823,7 @@ local BossPhasesData = {
 	},	--Tov: Odyn
 	[2008] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 34098 then
 				active_phase = 2
 			elseif spellId == 228546 then
@@ -824,7 +838,7 @@ local BossPhasesData = {
 	},	--Tov: Helya	
 	[1849] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 204448 then
 				active_phase = 1
 			elseif spellId == 204459 then
@@ -838,7 +852,7 @@ local BossPhasesData = {
 	},	--NH: Scorpion
 	[1865] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 207012 then
 				active_phase = 1
 			elseif spellId == 207011 then
@@ -855,7 +869,7 @@ local BossPhasesData = {
 	},	--NH: Anomaly	
 	[1867] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 206570 then
 				active_phase = 1
 			elseif spellId == 206557 then
@@ -872,7 +886,7 @@ local BossPhasesData = {
 	},	--NH: Trillax
 	[1871] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 216389 then
 				active_phase = 1
 			elseif spellId == 213867 then
@@ -889,7 +903,7 @@ local BossPhasesData = {
 	},	--NH: Aluriel
 	[1842] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 205862 then
 				encounterSpecial.slam = (encounterSpecial.slam or 0) + 1
 				if (encounterSpecial.slam % 3) == 0 then
@@ -908,7 +922,7 @@ local BossPhasesData = {
 	},	--NH: Krosus
 	[1862] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 206311 then
 				active_phase = 2
 				C_Timer.After(30,function()
@@ -925,7 +939,7 @@ local BossPhasesData = {
 	},	--NH: Tichondrius
 	[1863] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 222130 then
 				active_phase = 2
 			elseif spellId == 222133 then
@@ -943,7 +957,7 @@ local BossPhasesData = {
 	},	--NH: Etraeus
 	[1886] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"},{"UNIT_SPELLCAST_SUCCEEDED","boss2"},{"UNIT_SPELLCAST_SUCCEEDED","boss3"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if ((spellId == 216830 or spellId == 216877) and unit == "boss1") or spellId == 70628 then
 				active_phase = active_phase + 1
 			end
@@ -956,7 +970,7 @@ local BossPhasesData = {
 	},	--NH: Telarn	
 	[1872] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 208861 then
 				active_phase = active_phase + 1
 			end
@@ -969,7 +983,7 @@ local BossPhasesData = {
 	},	--NH: Elisande
 	[1866] = {
 		events = {"UNIT_SPELLCAST_SUCCEEDED"},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if not unit or not unit:find("^boss") then
 				return
 			elseif spellId == 118357 then
@@ -993,7 +1007,7 @@ local BossPhasesData = {
 	},	--NH: Guldan
 	[2037] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 239423 then
 				active_phase = min(active_phase + 1, 3)
 			end
@@ -1006,7 +1020,7 @@ local BossPhasesData = {
 	},	--ToS: Госпожа Сашж'ин
 	[2052] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"},{"UNIT_SPELLCAST_CHANNEL_STOP","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 235725 then
 				active_phase = 2
 			elseif event == "UNIT_SPELLCAST_CHANNEL_STOP" and spellId == 234891 then
@@ -1020,7 +1034,7 @@ local BossPhasesData = {
 	},	--ToS: Бдительная дева
 	[2038] = {
 		events = {{"UNIT_SPELLCAST_SUCCEEDED","boss1"}},
-		func = function(_, event, unit, spellName, _, _, spellId)
+		func = function(_, event, unit, _, spellId)
 			if spellId == 235597 then
 				active_phase = 2
 			end
@@ -1032,7 +1046,8 @@ local BossPhasesData = {
 	},	--ToS: Аватара Падшего
 	[2051] = {
 		events = {"COMBAT_LOG_EVENT_UNFILTERED"},
-		func = function(_,_,_,event,_,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellId)
+		func = function()
+			local _,event,_,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellId = CombatLogGetCurrentEventInfo()
 			if event == "SPELL_CAST_SUCCESS" then
 				if spellId == 244834 then
 					active_phase = 2
@@ -1646,7 +1661,12 @@ local EnvironmentalTypeToSpellID = {
 	-- UnkEnvDamage = 48360,
 }
 
-local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,...)
+local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14)
+	if not timestamp then
+		timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,
+		val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14
+				= CombatLogGetCurrentEventInfo()
+	end
 
 	if not guidData[sourceGUID] then guidData[sourceGUID] = sourceName or "nil" end
 	if not guidData[destGUID] then guidData[destGUID] = destName or "nil" end
@@ -1658,7 +1678,7 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 	------ damage
 	---------------------------------
 	if event == "SPELL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE" then
-		local spellID,_,_,amount,overkill,school,resisted,blocked,absorbed,critical,glancing,crushing,isOffHand,missType = ...
+		local spellID,_,_,amount,overkill,school,resisted,blocked,absorbed,critical,glancing,crushing,isOffHand,missType = val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14
 		--Note, missType param added by myself for tracking function
 		
 		--------------> Add damage
@@ -1914,7 +1934,7 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 		absorbs = if spell is absorb (ex. PW:S, HPally mastery, BloodDK mastery)
 		]]
 		
-		local spellID,_,school,amount,overhealing,absorbed,critical = ...
+		local spellID,_,school,amount,overhealing,absorbed,critical = val1,val2,val3,val4,val5,val6,val7
 		
 		--------------> Add heal
 		local sourceTable = fightData_heal[sourceGUID]
@@ -2103,7 +2123,7 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 	------ auras
 	---------------------------------	
 	elseif event == "SPELL_AURA_APPLIED" then
-		local spellID,spellName,school,auraType = ...
+		local spellID,spellName,school,auraType = val1,val2,val3,val4
 		
 		--fightData_auras[ #fightData_auras + 1 ] = {timestamp,sourceGUID,destGUID,UnitIsFriendlyByUnitFlag(sourceFlags),UnitIsFriendlyByUnitFlag(destFlags),spellID,auraType,1,1,s = active_segment}
 		fightData_auras[ #fightData_auras + 1 ] = {timestamp,sourceGUID,destGUID,bit_band(sourceFlags or 0,240) == 16,bit_band(destFlags or 0,240) == 16,spellID,auraType,1,1,s = active_segment}
@@ -2131,17 +2151,24 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 			end
 			
 			if funcAura then
-				local _,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,val1,val2,val3,val4,val5 = UnitAura(destName or "?",spellName or "?")
-				if val1 then
-					reduction, func = funcAura(val1 or 0,val2 or 0,val3 or 0,val4 or 0,val5 or 0)
-					if not reduction then
-						reduction = reductionTable[1]
-						func = reductionTable[2]
-						funcAura = nil
+				for i=1,40 do
+					local auraName,_,_,_,_,_,_,_,_,_,_,_,_,_,_,val1,val2,val3,val4,val5 = UnitAura(destName or "?",i)
+					if auraName == spellName then
+						if val1 then
+							reduction, func = funcAura(val1 or 0,val2 or 0,val3 or 0,val4 or 0,val5 or 0)
+							if not reduction then
+								reduction = reductionTable[1]
+								func = reductionTable[2]
+								funcAura = nil
+							end
+							--ExRT.F.dprint(format("%s > %s: %s [%d%%]",sourceName,destName,spellName,(reduction or 0)*100))
+						else
+							funcAura = nil
+						end
+						break
+					elseif not auraName then
+						break
 					end
-					--ExRT.F.dprint(format("%s > %s: %s [%d%%]",sourceName,destName,spellName,(reduction or 0)*100))
-				else
-					funcAura = nil
 				end
 			end
 			
@@ -2230,7 +2257,7 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 		
 		
 	elseif event == "SPELL_AURA_REMOVED" then
-		local spellID,_,school,auraType,amount = ...
+		local spellID,_,school,auraType,amount = val1,val2,val3,val4,val5
 	
 		--fightData_auras[ #fightData_auras + 1 ] = {timestamp,sourceGUID,destGUID,UnitIsFriendlyByUnitFlag(sourceFlags),UnitIsFriendlyByUnitFlag(destFlags),spellID,auraType,2,1,s = active_segment}
 		fightData_auras[ #fightData_auras + 1 ] = {timestamp,sourceGUID,destGUID,bit_band(sourceFlags or 0,240) == 16,bit_band(destFlags or 0,240) == 16,spellID,auraType,2,1,s = active_segment}
@@ -2287,7 +2314,7 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 	------ casts
 	---------------------------------	
 	elseif event == "SPELL_CAST_SUCCESS" then
-		local spellID = ...
+		local spellID = val1
 		
 		--------------> Add cast
 		local sourceTable = fightData_cast[sourceGUID]
@@ -2331,7 +2358,7 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 	------ powers
 	---------------------------------	
 	elseif event == "SPELL_ENERGIZE" or event == "SPELL_PERIODIC_ENERGIZE" then
-		local spellID, _, _, amount, overEnergize, powerType, alternatePowerType = ...
+		local spellID, _, _, amount, overEnergize, powerType, alternatePowerType = val1,val2,val3,val4,val5,val6,val7
 		
 		local sourceData = fightData_power[destGUID]
 		if not sourceData then
@@ -2354,12 +2381,12 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 	------ swing
 	---------------------------------	
 	elseif event == "SWING_DAMAGE" then
-		return CLEUParser(self,nil,timestamp,"SPELL_DAMAGE",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,6603,nil,nil,...)
+		return CLEUParser(self,nil,timestamp,"SPELL_DAMAGE",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,6603,nil,nil,val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14)
 	---------------------------------
 	------ aura (stacks)
 	---------------------------------	
 	elseif event == "SPELL_AURA_APPLIED_DOSE" then
-		local spellID,_,_,type,stack = ...
+		local spellID,_,_,type,stack = val1,val2,val3,val4,val5
 		
 		--fightData_auras[ #fightData_auras + 1 ] = {timestamp,sourceGUID,destGUID,UnitIsFriendlyByUnitFlag(sourceFlags),UnitIsFriendlyByUnitFlag(destFlags),spellID,type,3,stack,s = active_segment}
 		fightData_auras[ #fightData_auras + 1 ] = {timestamp,sourceGUID,destGUID,bit_band(sourceFlags or 0,240) == 16,bit_band(destFlags or 0,240) == 16,spellID,type,3,stack,s = active_segment}
@@ -2367,7 +2394,7 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 	------ cast (start)
 	---------------------------------	
 	elseif event == "SPELL_CAST_START" then
-		local spellID = ...
+		local spellID = val1
 		
 		--------------> Add cast
 		local sourceTable = fightData_cast[sourceGUID]
@@ -2416,14 +2443,16 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 		timestamp,attackerGUID,attackerName,attackerFlags,attackerFlags2,destGUID,destName,destFlags,destFlags2,attackerSpellId,attackerSpellName,attackerSchool,sourceGUID,sourceName,sourceFlags,sourceFlags2,spellID,spellName,school,amount
 		]]
 
-		local attackerSpellId,attackerSpellName,attackerSchool,sourceGUID,sourceName,sourceFlags,sourceFlags2,spellID,spellName,school,amount = ...
-		if not amount then
-			sourceGUID,sourceName,sourceFlags,sourceFlags2,spellID,spellName,school,amount = ...
+		local attackerSpellId,attackerSpellName,attackerSchool,sourceGUID,sourceName,sourceFlags,sourceFlags2,spellID,spellName,school,amount
+		if not val11 then
+			sourceGUID,sourceName,sourceFlags,sourceFlags2,spellID,spellName,school,amount = val1,val2,val3,val4,val5,val6,val7,val8
 			attackerSpellId = 6603
+		else
+			attackerSpellId,attackerSpellName,attackerSchool,sourceGUID,sourceName,sourceFlags,sourceFlags2,spellID,spellName,school,amount = val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11
 		end
 		if spellID == 20711 or spellID == 115069 or spellID == 157533 then	--Not real absorbs spells
 			return
-		end
+		end		
 		
 		
 		--------------> Add heal
@@ -2541,7 +2570,7 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 	------ miss
 	---------------------------------	
 	elseif event == "SPELL_MISSED" or event == "RANGE_MISSED" or event == "SPELL_PERIODIC_MISSED" then
-		local spellID,_,school,missType,isOffHand,amountMissed = ...
+		local spellID,_,school,missType,isOffHand,amountMissed = val1,val2,val3,val4,val5,val6
 		local newEvent = event == "SPELL_PERIODIC_MISSED" and "SPELL_PERIODIC_DAMAGE" or "SPELL_DAMAGE"
 		if missType == "ABSORB" then
 			CLEUParser(self,nil,timestamp,newEvent,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,nil,nil,0,0,school,nil,nil,amountMissed,nil,nil,nil,isOffHand)
@@ -2558,17 +2587,17 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 			spellTable.miss = spellTable.miss + 1	
 		end
 	elseif event == "SWING_MISSED" then
-		return CLEUParser(self,nil,timestamp,"SPELL_MISSED",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,6603,nil,0x1,...)
+		return CLEUParser(self,nil,timestamp,"SPELL_MISSED",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,6603,nil,0x1,val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14)
 	---------------------------------
 	------ range damage
 	---------------------------------	
 	elseif event == "RANGE_DAMAGE" then
-		return CLEUParser(self,nil,timestamp,"SPELL_DAMAGE",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,...)
+		return CLEUParser(self,nil,timestamp,"SPELL_DAMAGE",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14)
 	---------------------------------
 	------ aura (stacks)
 	---------------------------------	
 	elseif event == "SPELL_AURA_REMOVED_DOSE" then
-		local spellID,_,_,type,stack = ...
+		local spellID,_,_,type,stack = val1,val2,val3,val4,val5
 		
 		--fightData_auras[ #fightData_auras + 1 ] = {timestamp,sourceGUID,destGUID,UnitIsFriendlyByUnitFlag(sourceFlags),UnitIsFriendlyByUnitFlag(destFlags),spellID,type,4,stack,s = active_segment}
 		fightData_auras[ #fightData_auras + 1 ] = {timestamp,sourceGUID,destGUID,bit_band(sourceFlags or 0,240) == 16,bit_band(destFlags or 0,240) == 16,spellID,type,4,stack,s = active_segment}
@@ -2700,20 +2729,20 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 	------ summons
 	---------------------------------	
 	elseif event == "SPELL_SUMMON" or event == "SPELL_CREATE" then
-		local spellID = ...
+		local spellID = val1
 		fightData.summons[#fightData.summons+1]={sourceGUID,destGUID,spellID,timestamp,sourceFlags2,destFlags2,s = active_segment}		
 	---------------------------------
 	------ dispels
 	---------------------------------	
 	elseif event == "SPELL_DISPEL" or event == "SPELL_STOLEN" then
-		local spellID,_,_,destSpell = ...
+		local spellID,_,_,destSpell = val1,val2,val3,val4
 
 		fightData.dispels[#fightData.dispels+1]={sourceGUID,destGUID,spellID,destSpell,timestamp,sourceFlags2,destFlags2,s = active_segment}	
 	---------------------------------
 	------ cc break
 	---------------------------------	
 	elseif event == "SPELL_AURA_BROKEN_SPELL" or event == "SPELL_AURA_BROKEN" then
-		local spellID,_,_,extraSpellId,_,_,auraType = ...
+		local spellID,_,_,extraSpellId,_,_,auraType = val1,val2,val3,val4,val5,val6,val7
 		
 		if not auraType then
 			auraType = extraSpellId		--SPELL_AURA_BROKEN instead SPELL_AURA_BROKEN_SPELL
@@ -2725,7 +2754,7 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 	------ environmental damage
 	---------------------------------	
 	elseif event == "ENVIRONMENTAL_DAMAGE" then
-		local environmentalType,amount,overkill,school,resisted,blocked,absorbed,critical,glancing,crushing,isOffHand = ...
+		local environmentalType,amount,overkill,school,resisted,blocked,absorbed,critical,glancing,crushing,isOffHand = val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11
 		local environmentalSpellID = environmentalType and EnvironmentalTypeToSpellID[environmentalType] or 48360
 		
 		return CLEUParser(self,nil,timestamp,"SPELL_DAMAGE",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,environmentalSpellID,nil,nil,amount,overkill,school,resisted,blocked,absorbed,critical,glancing,crushing,isOffHand)
@@ -2733,29 +2762,29 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 	------ interrupt
 	---------------------------------	
 	elseif event == "SPELL_INTERRUPT" then
-		local spellID,_,_,destSpell = ...
+		local spellID,_,_,destSpell = val1,val2,val3,val4
 		
 		fightData.interrupts[#fightData.interrupts+1]={sourceGUID,destGUID,spellID,destSpell,timestamp,sourceFlags2,destFlags2,s = active_segment}
 	---------------------------------
 	------ other
 	---------------------------------	
 	elseif event == "DAMAGE_SPLIT" then
-		return CLEUParser(self,nil,timestamp,"SPELL_DAMAGE",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,...)
+		return CLEUParser(self,nil,timestamp,"SPELL_DAMAGE",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14)
 	elseif event == "SPELL_RESURRECT" then
-		local spellID = ...
+		local spellID = val1
 
 		fightData.resurrests[#fightData.resurrests+1]={sourceGUID,destGUID,spellID,timestamp,s = active_segment}
 	elseif event == "SPELL_DRAIN" or event == "SPELL_PERIODIC_DRAIN" then
-		local spellID,_,_,amount,powerType = ...
+		local spellID,_,_,amount,powerType = val1,val2,val3,val4,val5
 		return CLEUParser(self,nil,timestamp,"SPELL_ENERGIZE",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,nil,nil,-amount,powerType)
 	elseif event == "SPELL_LEECH" or event == "SPELL_PERIODIC_LEECH" then
-		local spellID,_,_,amount,powerType,extraAmount = ...
+		local spellID,_,_,amount,powerType,extraAmount = val1,val2,val3,val4,val5,val6
 		if extraAmount then
 			CLEUParser(self,nil,timestamp,"SPELL_ENERGIZE",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,nil,nil,extraAmount,powerType)
 		end
 		return CLEUParser(self,nil,timestamp,"SPELL_ENERGIZE",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,nil,nil,-amount,powerType)
 	elseif event == "SPELL_INSTAKILL" then
-		local spellID,_,school = ...
+		local spellID,_,school = val1,val2,val3
 		return CLEUParser(self,nil,timestamp,"SPELL_DAMAGE",hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,nil,nil,9999999,9999999,school)
 	end
 	
@@ -2767,11 +2796,12 @@ local function CLEUParser(self,_,timestamp,event,hideCaster,sourceGUID,sourceNam
 end
 
 function module.main:COMBAT_LOG_EVENT_UNFILTERED(_,timestamp,...)
+	local timestamp = CombatLogGetCurrentEventInfo()
 	if not module.db.timeFix then
 		module.db.timeFix = {GetTime(),timestamp}
 	end
 	module.main.COMBAT_LOG_EVENT_UNFILTERED = CLEUParser
-	CLEUParser(self,nil,timestamp,...)
+	CLEUParser(self,nil,CombatLogGetCurrentEventInfo())
 	module:RegisterEvents('COMBAT_LOG_EVENT_UNFILTERED')
 end
 
@@ -6373,7 +6403,7 @@ function BWInterfaceFrameLoad()
 			self.hl:Show()
 			if x <= AurasTab_Variables.NameWidth then
 				if GameTooltip:IsShown() then
-					local _,_,spellID = GameTooltip:GetSpell()
+					local _,spellID = GameTooltip:GetSpell()
 					if spellID == self.spellID then
 						return
 					end

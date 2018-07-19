@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Malygos", "DBM-EyeOfEternity")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 257 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(28859)
 mod:SetEncounterID(1094)
 mod:SetModelID(26752)
@@ -166,7 +166,7 @@ end
 
 --local free triggers but not reliable in instances that didn't impliment bossN args so backup emote/yell triggers still in place.
 --Anti spam will be handled by sync handler
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 --	"<39.8> [UNIT_SPELLCAST_SUCCEEDED] Malygos:Possible Target<Omegal>:target:Summon Power Spark::0:56140", -- [998]
 	if spellId == 56140 then
 		warnSpark:Show()

@@ -614,6 +614,7 @@ local statnames = {
   [CR_DODGE] = {name1 = L["Dodge Rating"], name2 = STAT_DODGE},
  --[CR_PARRY] = {name1 = L["Parry Rating"], name2 = L["parry"]},
  [CR_PARRY] = {name1 = L["Parry Rating"], name2 = STAT_PARRY},
+ [CR_SPEED] = {name1 = L["Speed Rating"], name2 = L["Movement Speed"]},--need tests with items that increase it, for example, Mark of Supreme Doom from Supreme Lord Kazzak
 }
 
 local function statframeratings(statFrame, unit, stat)
@@ -765,5 +766,10 @@ DCS_TableData.StatData.DODGE_RATING = {
 DCS_TableData.StatData.PARRY_RATING = {
 	updateFunc = function(statFrame, unit)
 		statframeratings(statFrame, unit, CR_PARRY)
+	end
+}
+DCS_TableData.StatData.SPEED_RATING = {
+	updateFunc = function(statFrame, unit)
+		statframeratings(statFrame, unit, CR_SPEED)
 	end
 }

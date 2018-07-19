@@ -86,7 +86,6 @@ L:SetMiscLocalization{
 	Anetheron		= "Se aproxima Anetheron",
 	Kazrogal		= "Se aproxima Kazrogal",
 	Azgalor			= "Se aproxima Azgalor",
-	WaveCheck		= "Oleada actual = (%d+) de 8",
 	WarnWave_0		= "Oleada %s/8",
 	WarnWave_1		= "Oleada %s/8 - %s %s",
 	WarnWave_2		= "Oleada %s/8 - %s %s y %s %s",

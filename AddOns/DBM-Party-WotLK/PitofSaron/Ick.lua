@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(609, "DBM-Party-WotLK", 15, 278)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(36476)
 mod:SetEncounterID(835, 836, 2001)
 mod:SetUsedIcons(8)
@@ -37,7 +37,6 @@ local pursuit = DBM:GetSpellInfo(68987)
 local pursuitTable = {}
 
 function mod:OnCombatStart(delay)
-	pursuit = DBM:GetSpellInfo(68987)
 	table.wipe(pursuitTable)
 	timerSpecialCD:Start()
 end
@@ -81,7 +80,7 @@ end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_AURA_UNFILTERED(uId)
-	local isPursuitDebuff = UnitDebuff(uId, pursuit)
+	local isPursuitDebuff = DBM:UnitDebuff(uId, pursuit)
 	local name = DBM:GetUnitFullName(uId)
 	if not isPursuitDebuff and pursuitTable[name] then
 		pursuitTable[name] = nil

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(709, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(60999)--61042 Cheng Kang, 61046 Jinlun Kun, 61038 Yang Guoshi, 61034 Terror Spawn
 mod:SetEncounterID(1431)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -162,13 +162,13 @@ end
 
 function mod:CheckWall()
 	local fearlessTime = timerFearless:GetTime()
-	if not onPlatform and not UnitBuff("player", wallLight) and (fearlessTime == 0 or fearlessTime > 21.5) and not UnitIsDeadOrGhost("player") then
+	if not onPlatform and not DBM:UnitBuff("player", wallLight) and (fearlessTime == 0 or fearlessTime > 21.5) and not UnitIsDeadOrGhost("player") then
 		specWarnBreathOfFearSoon:Show()
 	end
 end
 
 function mod:CheckPlatformLeaved()--Check you are leaved platform by Wall of Light buff. Failsafe for some siturations./
-	if UnitBuff("player", wallLight) then
+	if DBM:UnitBuff("player", wallLight) then
 		self:UnscheduleMethod("CheckPlatformLeaved")
 		self:LeavePlatform()
 	else
@@ -185,7 +185,7 @@ function mod:LeavePlatform()
 		MobID = nil
 		--Breath of fear timer recovery
 		if not self.Options.warnBreathOnPlatform then
-			local fearlessApplied = UnitBuff("player", fearless)
+			local fearlessApplied = DBM:UnitBuff("player", fearless)
 			local shaPower = UnitPower("boss1") --Get Boss Power
 			shaPower = shaPower / 3 --Divide it by 3 (cause he gains 3 power per second and we need to know how many seconds to subtrack from fear CD)
 			if (not fearlessApplied and shaPower < 30.3) or (fearlessApplied and shaPower < 5) then--If you have no fearless and breath timer less then 3s, you may not reach to wall. So ignore below 3 sec. Also if you have fearless and breath timer less then 28.3s, not need to warn breath.
@@ -205,7 +205,6 @@ function mod:LeavePlatform()
 end
 
 function mod:OnCombatStart(delay)
-	wallLight, fearless, waterspout, huddleinterror = DBM:GetSpellInfo(117964), DBM:GetSpellInfo(118977), DBM:GetSpellInfo(120519), DBM:GetSpellInfo(120629)
 	if self:IsDifficulty("normal10", "heroic10", "lfr25") then
 		timerOminousCackleCD:Start(40-delay)
 	else
@@ -470,7 +469,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 114936 and self:AntiSpam(10, 2) then--Heroic Phase 2
 		self.vb.phase = 2
 		platformSent = false

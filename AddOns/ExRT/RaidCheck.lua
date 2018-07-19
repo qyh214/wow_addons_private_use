@@ -1,6 +1,6 @@
 local GlobalAddonName, ExRT = ...
 
-local IsEncounterInProgress, GetTime = IsEncounterInProgress, GetTime
+local IsEncounterInProgress, GetTime, CombatLogGetCurrentEventInfo = IsEncounterInProgress, GetTime, CombatLogGetCurrentEventInfo
 
 local VExRT = nil
 
@@ -10,20 +10,27 @@ local ELib,L = ExRT.lib,ExRT.L
 module.db.isEncounter = nil
 module.db.tableFood = {
 --Haste		Mastery		Crit		Versa		Fire dmg	Other		Int		Str 		Agi		Stam
-[201330]=225,	[201332]=225,	[201223]=225,	[201334]=225,	[201336]=225,
-[225598]=300,	[225599]=300,	[225597]=300,	[225600]=300,	[225601]=300,	[177931]=300,	[201636]=300,	[201634]=300,	[201635]=300,	[201637]=300,
-[225603]=375,	[225604]=375,	[225602]=375,	[225605]=375,	[225606]=375,			[201640]=375,	[201638]=375,	[201639]=375,	[201641]=375,	
-						[185736]=475,
+[201330]=12,	[201332]=12,	[201223]=12,	[201334]=12,	[201336]=12,
+[225598]=16,	[225599]=16,	[225597]=16,	[225600]=16,	[225601]=16,	[177931]=16,	[201636]=16,	[201634]=16,	[201635]=16,	[201637]=16,
+[225603]=19,	[225604]=19,	[225602]=19,	[225605]=19,	[225606]=19,			[201640]=19,	[201638]=19,	[201639]=19,	[201641]=19,	
+						[185736]=12,
+						
+[257413]=41,	[257418]=41,	[257408]=41,	[257422]=41,					[259449]=75,	[259452]=75,	[259448]=75,	[259453]=75,
+[257415]=55,	[257420]=55,	[257410]=55,	[257424]=55,					[259455]=100,	[259456]=100,	[259454]=100,	[259457]=100,
 }
-module.db.StaminaFood = {[201638]=true,}
+if UnitLevel'player' > 110 then module.db.tableFood[185736]=41 end
+module.db.StaminaFood = {[201638]=true,[259457]=true,}
 
-module.db.tableFood_headers = {0,225,300,375,475}
-module.db.tableFlask = {
+module.db.tableFood_headers = UnitLevel'player' <= 110 and {0,12,16,19} or {0,41,55}
+module.db.tableFlask =  UnitLevel'player' <= 110 and {
 	--Stamina,	Int,		Agi,		Str 
-	[188035]=1300,	[188031]=1300,	[188033]=1300,	[188034]=1300,
+	[188035]=59,	[188031]=59,	[188033]=59,	[188034]=59,
+} or {
+	--Stamina,	Int,		Agi,		Str 
+	[251838]=238,	[251837]=238,	[251836]=238,	[251839]=238,
 }
-module.db.tableFlask_headers = {0,1300}
-module.db.tablePotion = {
+module.db.tableFlask_headers = UnitLevel'player' <= 110 and {0,59} or {0,238}
+module.db.tablePotion = UnitLevel'player' <= 110 and {
 	[229206]=true,	--All Stats
 	[188017]=true,	--Mana 3k, 17k
 	[188030]=true,	--Mana 4.5k, 25.5k
@@ -35,6 +42,24 @@ module.db.tablePotion = {
 	[188027]=true,	--Potion of Deadly Grace
 	[188020]=true,	--Sylvan Elixir
 	[188021]=true,	--Avalanche Elixir
+} or {
+	[188024]=true,	--Run haste
+	[250871]=true,	--Mana
+	[252753]=true,	--Mana channel
+	[250872]=true,	--Mana+hp
+
+	[279152]=true,	--Agi
+	[279151]=true,	--Int
+	[279154]=true,	--Stamina
+	[279153]=true,	--Str
+	[251231]=true,	--Armor
+	
+	[251316]=true,	--Potion of Bursting Blood
+	[269853]=true,	--Potion of Rising Death
+	
+	[250873]=true,	--Invis
+	[250878]=true,	--Run haste
+	[251143]=true,	--Fall
 }
 module.db.hsSpells = {
 	[6262] = true,
@@ -42,6 +67,12 @@ module.db.hsSpells = {
 	[156438] = true,
 	[188016] = true,
 	--[188018] = true,
+	[250870] = true,
+}
+module.db.raidBuffs = {
+	{ATTACK_POWER_TOOLTIP or "AP","WARRIOR",6673,264761},
+	{ITEM_MOD_STAMINA_SHORT or "Stamina","PRIEST",21562,264764},
+	{ITEM_MOD_INTELLECT_SHORT or "Int","MAGE",1459,264760},
 }
 module.db.potionList = {}
 module.db.hsList = {}
@@ -52,17 +83,31 @@ module.db.RaidCheckReadyCheckTable = {}
 module.db.RaidCheckReadyPPLNum = 0
 module.db.RaidCheckReadyCheckHideSchedule = nil
 
-module.db.tableRunes = {
-	[224001]=true,	--Legion
+module.db.tableRunes = UnitLevel'player' <= 110 and {[224001]=true} or {[270058]=true}
+
+module.db.minFoodLevelToActual = UnitLevel'player' <= 110 and {
+	[100] = 16,
+	[125] = 19,
+} or {
+	[100] = 41,
+	[125] = 55,
 }
 
-module.db.minFoodLevelToActual = {
-	[100] = 300,
-	[125] = 375,
-}
 
+local IsSendFoodByMe,IsSendFlaskByMe,IsSendRunesByMe,IsSendBuffsByMe = nil
 
-local IsSendFoodByMe,IsSendFlaskByMe,IsSendRunesByMe = nil
+local _GetRaidRosterInfo = GetRaidRosterInfo
+
+local function GetRaidRosterInfo(raidUnitID)
+	if IsInRaid() then
+		return _GetRaidRosterInfo(raidUnitID)
+	elseif raidUnitID <= 5 then
+		local unit = raidUnitID <= 4 and "party"..raidUnitID or "player"
+		return ExRT.F.UnitCombatlogname(unit),nil,1,nil,nil,select(2,UnitClass(unit))
+	else
+		return nil
+	end
+end
 
 local function GetPotion(arg1)
 	local h = L.raidcheckPotion
@@ -135,21 +180,23 @@ local function PublicResults(msg,chat_type)
 	end
 end
 
+local RUNE_POWER = UnitLevel'player' <= 110 and 15 or 60
+
 local function GetRunes(checkType)
-	local f = {[0]={},[325]={}}
+	local f = {[0]={},[RUNE_POWER]={}}
 	local gMax = ExRT.F.GetRaidDiffMaxGroup()
 	for j=1,40 do
 		local name,_,subgroup = GetRaidRosterInfo(j)
 		if name and subgroup <= gMax then
 			local isAnyBuff = nil
 			for i=1,40 do
-				local _,_,_,_,_,_,_,_,_,_,spellId = UnitAura(name, i,"HELPFUL")
+				local _,_,_,_,_,_,_,_,_,spellId = UnitAura(name, i,"HELPFUL")
 				if not spellId then
 					break
 				else
 					local isRune = module.db.tableRunes[spellId]
 					if isRune then
-						f[325][ #f[325]+1 ] = name
+						f[RUNE_POWER][ #f[RUNE_POWER]+1 ] = name
 						isAnyBuff = true
 						break
 					end
@@ -162,7 +209,7 @@ local function GetRunes(checkType)
 	end
 	
 	if not checkType or checkType == 1 then
-		for _,stats in ipairs({0,325}) do
+		for _,stats in ipairs({0,RUNE_POWER}) do
 			local result = format("|cff00ff00%d (%d):|r ",stats,#f[stats])
 			for i=1,#f[stats] do
 				result = result .. f[stats][i]
@@ -249,7 +296,7 @@ local function GetFood(checkType)
 		if name and subgroup <= gMax then
 			local isAnyBuff = nil
 			for i=1,40 do
-				local _,_,_,_,_,_,_,_,_,_,spellId,_,_,_,_,_,stats = UnitAura(name, i,"HELPFUL")
+				local _,_,_,_,_,_,_,_,_,spellId,_,_,_,_,_,stats = UnitAura(name, i,"HELPFUL")
 				if not spellId then
 					break
 				else
@@ -263,21 +310,17 @@ local function GetFood(checkType)
 						if module.db.StaminaFood[spellId] and stats then
 							stats = ceil( stats / 1.5 )
 						end
-						stats = stats or foodType
-						if spellId == 188534 then stats = 125
-						elseif spellId == 225606 then stats = 375
-						elseif spellId == 225601 then stats = 300
-						elseif spellId == 177931 then stats = 300 end
-						
+						stats = foodType or stats			---ALERT HERE, stats must be first; replace on future updates
+
 						if spellId == 201641 or spellId == 201640 or spellId == 201639 or spellId == 201638 then 
-							stats = 375
+							stats = foodType
 						elseif spellId == 201636 or spellId == 201634 or spellId == 201635 or spellId == 201637 then 
-							stats = 300
-						end
-						
-						if spellId == 185736 then
-							stats = 475
-						end
+							stats = foodType
+						elseif (spellId == 259449 or spellId == 259452 or spellId == 259448 or spellId == 259453) or (spellId == 259455 or spellId == 259456 or spellId == 259454 or spellId == 259457) then 
+							stats = foodType
+						elseif spellId == 185736 then
+							stats = foodType
+						end	
 					
 						f[stats] = f[stats] or {}
 						f[stats][ #f[stats]+1 ] = name
@@ -343,7 +386,7 @@ local function GetFlask(checkType)
 		if name and subgroup <= gMax then
 			local isAnyBuff = nil
 			for i=1,40 do
-				local _,_,_,_,_,_,expires,_,_,_,spellId = UnitAura(name, i,"HELPFUL")
+				local _,_,_,_,_,expires,_,_,_,spellId = UnitAura(name, i,"HELPFUL")
 				if not spellId then
 					break
 				else
@@ -428,40 +471,114 @@ local function GetFlask(checkType)
 	end
 end
 
+local function GetRaidBuffs(checkType)
+	local buffsList,buffsListLen = module.db.raidBuffs,#module.db.raidBuffs
+	local f = {}
+	for k=1,buffsListLen * 2 do
+		f[k] = 0
+	end
+	local gMax = ExRT.F.GetRaidDiffMaxGroup()
+	local isAnyBuff = {}
+	for j=1,40 do
+		local name,_,subgroup, _, _, class = GetRaidRosterInfo(j)
+		if name and subgroup <= gMax then
+			for k=1,buffsListLen * 2 do
+				isAnyBuff[k] = false
+			end
+			for k=1,buffsListLen do
+				if class == buffsList[k][2] then
+					f[-k] = true
+				end
+			end
+			for i=1,40 do
+				local _,_,_,_,_,_,_,_,_,auraSpellID = UnitAura(name, i,"HELPFUL")
+				if not auraSpellID then
+					break
+				else
+					for k=1,buffsListLen do
+						if auraSpellID == buffsList[k][3] then
+							isAnyBuff[k] = true
+							isAnyBuff[buffsListLen + k] = true
+						elseif auraSpellID == buffsList[k][4] then
+							isAnyBuff[buffsListLen + k] = true
+						end
+					end
+				end
+			end
+			for k=1,buffsListLen do
+				if not isAnyBuff[k] then
+					f[k] = f[k] + 1
+				end
+				if not isAnyBuff[buffsListLen + k] then
+					f[buffsListLen + k] = f[buffsListLen + k] + 1
+				end
+			end
+		end
+	end
+	
+	if true then
+		local result = format("|cff00ff00%s|r: ",GARRISON_MISSION_PARTY_BUFFS)
+	
+		local isAnyBuff = true
+		for k=1,buffsListLen do
+			if f[k] > 0 and f[-k] then
+				isAnyBuff = false
+				result = result .. buffsList[k][1] .. " ("..f[k].."), "
+			elseif f[buffsListLen + k] > 0 and not f[-k] and UnitLevel'player' >= 120 then	--check for minor buffs (7%), but only in BfA actually
+				isAnyBuff = false
+				result = result .. buffsList[k][1] .. " ("..f[buffsListLen + k].."), "				
+			end
+		end
+		if isAnyBuff then
+			result = result .. ALL
+		else
+			result = result:gsub(", $","")
+		end
+		PublicResults(result,checkType)
+	end
+end
+
 module.GetRunes = GetRunes
 module.GetVRunes = GetVRunes
 module.GetFood = GetFood
 module.GetFlask = GetFlask
+module.GetRaidBuffs = GetRaidBuffs
 
 function module.options:Load()
 	self:CreateTilte()
 
 	self.food = ELib:Button(self,L.raidcheckfood):Size(230,20):Point(5,-30):OnClick(function() GetFood() end)
-	self.food.txt = ELib:Text(self,"/rt food",11):Size(100,20):Point("LEFT",self.food,"RIGHT",5,0)
+	self.food.txt = ELib:Text(self,"/rt food",10):Size(100,20):Point("LEFT",self.food,"RIGHT",5,0)
 	
 	self.foodToChat = ELib:Button(self,L.raidcheckfoodchat):Size(230,20):Point("LEFT",self.food,"RIGHT",71,0):OnClick(function() GetFood(1) end)
-	self.foodToChat.txt = ELib:Text(self,"/rt foodchat",11):Size(100,20):Point("LEFT",self.foodToChat,"RIGHT",5,0)
+	self.foodToChat.txt = ELib:Text(self,"/rt foodchat",10):Size(100,20):Point("LEFT",self.foodToChat,"RIGHT",5,0)
 
 	self.flask = ELib:Button(self,L.raidcheckflask):Size(230,20):Point(5,-55):OnClick(function() GetFlask() end)
-	self.flask.txt = ELib:Text(self,"/rt flask",11):Size(100,20):Point("LEFT",self.flask,"RIGHT",5,0)
+	self.flask.txt = ELib:Text(self,"/rt flask",10):Size(100,20):Point("LEFT",self.flask,"RIGHT",5,0)
 	
 	self.flaskToChat = ELib:Button(self,L.raidcheckflaskchat):Size(230,20):Point("LEFT",self.flask,"RIGHT",71,0):OnClick(function() GetFlask(1) end)
-	self.flaskToChat.txt = ELib:Text(self,"/rt flaskchat",11):Size(100,20):Point("LEFT",self.flaskToChat,"RIGHT",5,0)
+	self.flaskToChat.txt = ELib:Text(self,"/rt flaskchat",10):Size(100,20):Point("LEFT",self.flaskToChat,"RIGHT",5,0)
 	
 	self.runes = ELib:Button(self,L.RaidCheckRunesCheck):Size(230,20):Point(5,-80):OnClick(function() GetRunes() end)
-	self.runes.txt = ELib:Text(self,"/rt check r",11):Size(60,22):Point("LEFT",self.runes,"RIGHT",5,0)
+	self.runes.txt = ELib:Text(self,"/rt check r",10):Size(60,22):Point("LEFT",self.runes,"RIGHT",5,0)
 	
 	self.runesToChat = ELib:Button(self,L.RaidCheckRunesChat):Size(230,20):Point("LEFT",self.runes,"RIGHT",71,0):OnClick(function() GetRunes(1) end)
-	self.runesToChat.txt = ELib:Text(self,"/rt check rc",11):Size(100,22):Point("LEFT",self.runesToChat,"RIGHT",5,0)
+	self.runesToChat.txt = ELib:Text(self,"/rt check rc",10):Size(100,22):Point("LEFT",self.runesToChat,"RIGHT",5,0)
 
 	self.vantusrunes = ELib:Button(self,L.RaidCheckVRunesCheck):Size(230,20):Point(5,-105):OnClick(function() GetVRunes() end)
-	self.vantusrunes.txt = ELib:Text(self,"/rt check v",11):Size(60,22):Point("LEFT",self.vantusrunes,"RIGHT",5,0)
+	self.vantusrunes.txt = ELib:Text(self,"/rt check v",10):Size(60,22):Point("LEFT",self.vantusrunes,"RIGHT",5,0)
 	
 	self.vantusrunesToChat = ELib:Button(self,L.RaidCheckVRunesChat):Size(230,20):Point("LEFT",self.vantusrunes,"RIGHT",71,0):OnClick(function() GetVRunes(1) end)
-	self.vantusrunesToChat.txt = ELib:Text(self,"/rt check vc",11):Size(100,22):Point("LEFT",self.vantusrunesToChat,"RIGHT",5,0)
+	self.vantusrunesToChat.txt = ELib:Text(self,"/rt check vc",10):Size(100,22):Point("LEFT",self.vantusrunesToChat,"RIGHT",5,0)
+
+	self.raidbuffs = ELib:Button(self,L.RaidCheckBuffs):Size(230,20):Point(5,-130):OnClick(function() GetRaidBuffs() end)
+	self.raidbuffs.txt = ELib:Text(self,"/rt check b",10):Size(60,22):Point("LEFT",self.raidbuffs,"RIGHT",5,0)
+	
+	self.raidbuffsToChat = ELib:Button(self,L.RaidCheckBuffsToChat):Size(230,20):Point("LEFT",self.raidbuffs,"RIGHT",71,0):OnClick(function() GetRaidBuffs(1) end)
+	self.raidbuffsToChat.txt = ELib:Text(self,"/rt check bc",10):Size(100,22):Point("LEFT",self.raidbuffsToChat,"RIGHT",5,0)
 
 	self.level2optLine = CreateFrame("Frame",nil,self)
-	self.level2optLine:SetPoint("TOPLEFT",0,-130)
+	self.level2optLine:SetPoint("TOPLEFT",0,-155)
 	self.level2optLine:SetSize(1,1)	
 
 	self.chkSlak = ELib:Check(self,L.raidcheckslak,VExRT.RaidCheck.ReadyCheck):Point("TOPLEFT",self.level2optLine,7,0):OnClick(function(self) 
@@ -597,7 +714,7 @@ function module.options:Load()
 	self.optReadyCheckFrame:SetBackdropColor(0,0,0,0.3)
 	self.optReadyCheckFrame:SetBackdropBorderColor(.24,.25,.30,0)
 	ELib:Border(self.optReadyCheckFrame,2,.24,.25,.30,1)
-	self.optReadyCheckFrame:SetPoint("TOP",0,-420)
+	self.optReadyCheckFrame:SetPoint("TOP",0,-445)
 
 	self.optReadyCheckFrameHeader = ELib:Text(self.optReadyCheckFrame,L.raidcheckReadyCheck):Size(550,20):Point("BOTTOMLEFT",self.optReadyCheckFrame,"TOPLEFT",10,1):Bottom()
 
@@ -651,7 +768,7 @@ local function CheckPotionsOnPull()
 		if name and subgroup <= gMax then
 			local b = nil
 			for i=1,40 do
-				local _,_,_,_,_,_,_,_,_,_,spellId = UnitAura(name, i,"HELPFUL")
+				local _,_,_,_,_,_,_,_,_,spellId = UnitAura(name, i,"HELPFUL")
 				if not spellId then
 					break
 				elseif module.db.tablePotion[spellId] then
@@ -729,6 +846,10 @@ function module:slash(arg)
 		GetVRunes()
 	elseif arg == "check vc" then
 		GetVRunes(1)
+	elseif arg == "check b" then
+		GetRaidBuffs()
+	elseif arg == "check bc" then
+		GetRaidBuffs(1)
 	end
 end
 
@@ -814,6 +935,10 @@ function module.main:ADDON_LOADED()
 	VExRT.RaidCheck = VExRT.RaidCheck or {}
 	
 	VExRT.RaidCheck.FlaskExp = VExRT.RaidCheck.FlaskExp or 1
+	
+	if VExRT.Addon.Version < 3930 then
+		VExRT.RaidCheck.BuffsCheck = true
+	end
 
 	if VExRT.RaidCheck.ReadyCheckLeft and VExRT.RaidCheck.ReadyCheckTop then
 		module.frame:ClearAllPoints()
@@ -835,7 +960,7 @@ function module.main:ADDON_LOADED()
 	if VExRT.RaidCheck.PotionCheck then
 		--module:RegisterEvents('COMBAT_LOG_EVENT_UNFILTERED')
 	end
-	
+		
 	module:RegisterSlash()
 	module:RegisterTimer()
 	module:RegisterAddonMessage()
@@ -851,9 +976,13 @@ local function SendDataToChat()
 	if IsSendRunesByMe then
 		GetRunes(2)
 	end
+	if IsSendBuffsByMe then
+		GetRaidBuffs(2)
+	end
 	IsSendFoodByMe = nil
 	IsSendFlaskByMe = nil
 	IsSendRunesByMe = nil
+	IsSendBuffsByMe = nil
 end
 
 local function PrepareDataToChat(toSelf)
@@ -862,6 +991,9 @@ local function PrepareDataToChat(toSelf)
 		GetFlask(3)
 		if VExRT.RaidCheck.RunesCheck then
 			GetRunes(3)
+		end
+		if VExRT.RaidCheck.BuffsCheck then
+			GetRaidBuffs(3)
 		end
 	else
 		if VExRT.RaidCheck.disableLFR then
@@ -878,6 +1010,11 @@ local function PrepareDataToChat(toSelf)
 		if VExRT.RaidCheck.RunesCheck then
 			IsSendRunesByMe = true
 			ExRT.F.ScheduleTimer(ExRT.F.SendExMsg, 0.1, "raidcheck","RUNES\t"..ExRT.V)
+		end
+		IsSendBuffsByMe = nil
+		if VExRT.RaidCheck.BuffsCheck then
+			IsSendBuffsByMe = true
+			ExRT.F.ScheduleTimer(ExRT.F.SendExMsg, 0.1, "raidcheck","BUFFS\t"..ExRT.V)
 		end
 		ExRT.F.ScheduleTimer(SendDataToChat, 1)
 	end
@@ -923,7 +1060,7 @@ function module.main:READY_CHECK_CONFIRM(unit,response,isTest)
 		local foodBuff = nil
 		local flaskBuff = nil
 		for i=1,40 do
-			local name,_,_,_,_,_,_,_,_,_,spellId = UnitAura(unit, i,"HELPFUL")
+			local name,_,_,_,_,_,_,_,_,spellId = UnitAura(unit, i,"HELPFUL")
 			if not spellId then
 				break
 			elseif module.db.tableFood[spellId] then
@@ -959,7 +1096,8 @@ end
 
 do
 	local _db = module.db
-	function module.main:COMBAT_LOG_EVENT_UNFILTERED(_,_,event,_,_,sourceName,_,_,_,_,_,_,spellId)
+	function module.main:COMBAT_LOG_EVENT_UNFILTERED()
+		local _,event,_,_,sourceName,_,_,_,_,_,_,spellId = CombatLogGetCurrentEventInfo()
 		if event == "SPELL_CAST_SUCCESS" and sourceName then
 			if _db.hsSpells[spellId] then
 				_db.hsList[sourceName] = _db.hsList[sourceName] and _db.hsList[sourceName] + 1 or 1
@@ -981,6 +1119,8 @@ function module:addonMessage(sender, prefix, type, ver)
 					IsSendFlaskByMe = nil
 				elseif type == "RUNES" then
 					IsSendRunesByMe = nil
+				elseif type == "BUFFS" then
+					IsSendBuffsByMe = nil
 				end
 				return
 			end
@@ -994,6 +1134,8 @@ function module:addonMessage(sender, prefix, type, ver)
 					IsSendFlaskByMe = nil
 				elseif type == "RUNES" then
 					IsSendRunesByMe = nil
+				elseif type == "BUFFS" then
+					IsSendBuffsByMe = nil
 				end
 			end
 		end

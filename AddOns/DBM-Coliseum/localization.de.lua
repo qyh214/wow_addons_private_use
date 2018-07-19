@@ -91,8 +91,7 @@ L:SetWarningLocalization{
 	SpecWarnSwitchTarget		= "Ziel wechseln",
 	SpecWarnKickNow				= "Jetzt unterbrechen",
 	WarningTouchDebuff			= "Berührung auf >%s<",
-	WarningPoweroftheTwins2		= "Macht der Zwillinge - Mehr Heilung auf >%s<",
-	SpecWarnPoweroftheTwins		= "Macht der Zwillinge"
+	WarningPoweroftheTwins2		= "Macht der Zwillinge - Mehr Heilung auf >%s<"
 }
 
 L:SetMiscLocalization{
@@ -109,8 +108,7 @@ L:SetOptionLocalization{
 	SpecialWarnOnDebuff			= "Spezialwarnung bei Berührung (um Farbe zu wechseln)",
 	SetIconOnDebuffTarget		= "Setze Zeichen auf Ziele von Berührung des Lichts/der Nacht (heroisch)",
 	WarningTouchDebuff			= "Verkünde Ziele von Berührung des Lichts/der Nacht",
-	WarningPoweroftheTwins2		= "Verkünde Ziele von Macht der Zwillinge",
-	SpecWarnPoweroftheTwins		= "Spezialwarnung, wenn du einen gestärkten Zwilling tankst"
+	WarningPoweroftheTwins2		= "Verkünde Ziele von Macht der Zwillinge"
 }
 
 -----------------

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(853, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(71152, 71153, 71154, 71155, 71156, 71157, 71158, 71160, 71161)
 mod:SetEncounterID(1593)
 mod:DisableESCombatDetection()
@@ -161,7 +161,6 @@ mod:AddSetIconOption("SetIconOnAim", 142948, false)
 mod:AddSetIconOption("SetIconOnMesmerize", 142671, false)
 mod:AddArrowOption("AimArrow", 142948, false, true)
 
-local repairedSpellNames = false
 local calculatingDude, readyToFight = DBM:EJ_GetSectionInfo(8012), DBM:GetSpellInfo(143542)
 local vulnerable1, vulnerable2, vulnerable3, vulnerable4 = DBM:GetSpellInfo(143279), DBM:GetSpellInfo(143275), DBM:GetSpellInfo(142929), DBM:GetSpellInfo(142931)
 local catalystBlue, catalystRed, catalystYellow = DBM:GetSpellInfo(142532), DBM:GetSpellInfo(142533), DBM:GetSpellInfo(142534)
@@ -197,7 +196,6 @@ local FlavorTable = {
 	[71153] = L.hisekFlavor--Hisek the Swarmkeeper
 }
 
-local UnitDebuff = UnitDebuff
 local expectedWhirlCount = 4
 ------------------
 --Tables, can't recover
@@ -251,19 +249,19 @@ local function CheckBosses(self)
 		local unitID = "boss"..i
 		local unitGUID = UnitGUID(unitID)
 		--Only 3 bosses activate on pull, however now the inactive or (next boss to activate) also fires IEEU. As such, we have to filter that boss by scaning for readytofight. Works well though.
-		if UnitExists(unitID) and not activeBossGUIDS[unitGUID] and not UnitBuff(unitID, readyToFight) then
+		if UnitExists(unitID) and not activeBossGUIDS[unitGUID] and not DBM:UnitBuff(unitID, readyToFight) then
 			activeBossGUIDS[unitGUID] = true
 			activatedTargets[#activatedTargets + 1] = UnitName(unitID)
 			--Activation Controller
 			local cid = self:GetCIDFromGUID(unitGUID)
 			if cid == 71152 then--Skeer the Bloodseeker
 				timerBloodlettingCD:Start(5)--5-6
-				if UnitDebuff("player", vulnerable1) then vulnerable = true end
+				if DBM:UnitDebuff("player", vulnerable1) then vulnerable = true end
 			elseif cid == 71158 then--Rik'kal the Dissector
 				timerInjectionCD:Start(8)
 				countdownInjection:Start(8)
 				timerMutateCD:Start(23, 1)
-				if UnitDebuff("player", vulnerable2) then vulnerable = true end
+				if DBM:UnitDebuff("player", vulnerable2) then vulnerable = true end
 			elseif cid == 71153 then--Hisek the Swarmkeeper
 				timerAimCD:Start(32, 1)--Might be 35-37 with unitdebuff filter
 				if self:IsMythic() then
@@ -276,10 +274,10 @@ local function CheckBosses(self)
 				self:StopRepeatedScan("DFAScan")
 				self:ScheduleMethod(23, "StartRepeatedScan", unitGUID, "DFAScan", 0.25, true)--Not a large sample size, data shows it happen 29-30 seconds after IEEU fires on two different pulls. Although 2 is a poor sample
 				--timerDFACD:Start()
-				if UnitDebuff("player", vulnerable3) then vulnerable = true end
+				if DBM:UnitDebuff("player", vulnerable3) then vulnerable = true end
 			elseif cid == 71157 then--Xaril the Poisoned-Mind
 				timerToxicCatalystCD:Start(19.5)--May need tweaking by about a sec or two. Need some transcriptors
-				if UnitDebuff("player", vulnerable4) then vulnerable = true end
+				if DBM:UnitDebuff("player", vulnerable4) then vulnerable = true end
 			elseif cid == 71156 then--Kaz'tik the Manipulator
 --				timerMesmerizeCD:Start(20)--Need transcriptor log. Seems WILDLY variable though and probably not useful
 			elseif cid == 71155 then--Korven the Prime
@@ -311,7 +309,7 @@ local function delayMonsterEmote(target)
 		local criteriaMatched = false--Now to start checking matches.
 		if calculatedColor == "Red" then
 			for _, spellname in ipairs(RedDebuffs) do
-				local _, _, _, count = UnitDebuff("player", spellname)
+				local _, _, count = DBM:UnitDebuff("player", spellname)
 				if count then--Found
 					criteriaMatched = true
 					break
@@ -319,7 +317,7 @@ local function delayMonsterEmote(target)
 			end
 		elseif calculatedColor == "Purple" then
 			for _, spellname in ipairs(PurpleDebuffs) do
-				local _, _, _, count = UnitDebuff("player", spellname)
+				local _, _, count = DBM:UnitDebuff("player", spellname)
 				if count then--Found
 					criteriaMatched = true
 					break
@@ -327,7 +325,7 @@ local function delayMonsterEmote(target)
 			end
 		elseif calculatedColor == "Blue" then
 			for _, spellname in ipairs(BlueDebuffs) do
-				local _, _, _, count = UnitDebuff("player", spellname)
+				local _, _, count = DBM:UnitDebuff("player", spellname)
 				if count then--Found
 					criteriaMatched = true
 					break
@@ -335,7 +333,7 @@ local function delayMonsterEmote(target)
 			end
 		elseif calculatedColor == "Green" then
 			for _, spellname in ipairs(GreenDebuffs) do
-				local _, _, _, count = UnitDebuff("player", spellname)
+				local _, _, count = DBM:UnitDebuff("player", spellname)
 				if count then--Found
 					criteriaMatched = true
 					break
@@ -343,7 +341,7 @@ local function delayMonsterEmote(target)
 			end
 		elseif calculatedColor == "Yellow" then
 			for _, spellname in ipairs(YellowDebuffs) do
-				local _, _, _, count = UnitDebuff("player", spellname)
+				local _, _, count = DBM:UnitDebuff("player", spellname)
 				if count then--Found
 					criteriaMatched = true
 					break
@@ -351,7 +349,7 @@ local function delayMonsterEmote(target)
 			end
 		elseif calculatedShape == "Sword" then
 			for _, spellname in ipairs(SwordDebuffs) do
-				local _, _, _, count = UnitDebuff("player", spellname)
+				local _, _, count = DBM:UnitDebuff("player", spellname)
 				if count then--Found
 					criteriaMatched = true
 					break
@@ -359,7 +357,7 @@ local function delayMonsterEmote(target)
 			end
 		elseif calculatedShape == "Drum" then
 			for _, spellname in ipairs(DrumDebuffs) do
-				local _, _, _, count = UnitDebuff("player", spellname)
+				local _, _, count = DBM:UnitDebuff("player", spellname)
 				if count then--Found
 					criteriaMatched = true
 					break
@@ -375,7 +373,7 @@ local function delayMonsterEmote(target)
 			end
 		elseif calculatedShape == "Mantid" then
 			for _, spellname in ipairs(MantidDebuffs) do
-				local _, _, _, count = UnitDebuff("player", spellname)
+				local _, _, count = DBM:UnitDebuff("player", spellname)
 				if count then--Found
 					criteriaMatched = true
 					break
@@ -383,7 +381,7 @@ local function delayMonsterEmote(target)
 			end
 		elseif calculatedShape == "Staff" then
 			for _, spellname in ipairs(StaffDebuffs) do
-				local _, _, _, count = UnitDebuff("player", spellname)
+				local _, _, count = DBM:UnitDebuff("player", spellname)
 				if count then--Found
 					criteriaMatched = true
 					break
@@ -391,7 +389,7 @@ local function delayMonsterEmote(target)
 			end
 		elseif calculatedNumber then
 			for _, spellname in ipairs(AllDebuffs) do
-				local _, _, _, count = UnitDebuff("player", spellname)
+				local _, _, count = DBM:UnitDebuff("player", spellname)
 				if count then--Found
 					if count == calculatedNumber then
 						criteriaMatched = true
@@ -440,31 +438,6 @@ function mod:FlashScan(targetname)
 end
 
 function mod:OnCombatStart(delay)
-	if not repairedSpellNames then--Because of high volume, don't repair every pull
-		calculatingDude, readyToFight = DBM:EJ_GetSectionInfo(8012), DBM:GetSpellInfo(143542)
-		vulnerable1, vulnerable2, vulnerable3, vulnerable4 = DBM:GetSpellInfo(143279), DBM:GetSpellInfo(143275), DBM:GetSpellInfo(142929), DBM:GetSpellInfo(142931)
-		catalystBlue, catalystRed, catalystYellow = DBM:GetSpellInfo(142532), DBM:GetSpellInfo(142533), DBM:GetSpellInfo(142534)
-		RedDebuffs = {DBM:GetSpellInfo(143605), DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143615), DBM:GetSpellInfo(143620), (DBM:GetSpellInfo(143627))}
-		PurpleDebuffs = {DBM:GetSpellInfo(143606), DBM:GetSpellInfo(143611), DBM:GetSpellInfo(143616), DBM:GetSpellInfo(143621), (DBM:GetSpellInfo(143628))}
-		BlueDebuffs = {DBM:GetSpellInfo(143607), DBM:GetSpellInfo(143612), DBM:GetSpellInfo(143617), DBM:GetSpellInfo(143622), (DBM:GetSpellInfo(143629))}
-		GreenDebuffs = {DBM:GetSpellInfo(143608), DBM:GetSpellInfo(143613), DBM:GetSpellInfo(143618), DBM:GetSpellInfo(143623), (DBM:GetSpellInfo(143630))}
-		YellowDebuffs = {DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143614), DBM:GetSpellInfo(143619), DBM:GetSpellInfo(143624), (DBM:GetSpellInfo(143631))}
-
-		SwordDebuffs = {DBM:GetSpellInfo(143605), DBM:GetSpellInfo(143606), DBM:GetSpellInfo(143607), DBM:GetSpellInfo(143608), (DBM:GetSpellInfo(143609))}
-		DrumDebuffs = {DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143611), DBM:GetSpellInfo(143612), DBM:GetSpellInfo(143613), (DBM:GetSpellInfo(143614))}
-		BombDebuffs = {DBM:GetSpellInfo(143615), DBM:GetSpellInfo(143616), DBM:GetSpellInfo(143617), DBM:GetSpellInfo(143618), (DBM:GetSpellInfo(143619))}
-		MantidDebuffs = {DBM:GetSpellInfo(143620), DBM:GetSpellInfo(143621), DBM:GetSpellInfo(143622), DBM:GetSpellInfo(143623), (DBM:GetSpellInfo(143624))}
-		StaffDebuffs = {DBM:GetSpellInfo(143627), DBM:GetSpellInfo(143628), DBM:GetSpellInfo(143629), DBM:GetSpellInfo(143630), (DBM:GetSpellInfo(143631))}
-
-		AllDebuffs = {
-			DBM:GetSpellInfo(143605), DBM:GetSpellInfo(143606), DBM:GetSpellInfo(143607), DBM:GetSpellInfo(143608), DBM:GetSpellInfo(143609),
-			DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143611), DBM:GetSpellInfo(143612), DBM:GetSpellInfo(143613), DBM:GetSpellInfo(143614),
-			DBM:GetSpellInfo(143615), DBM:GetSpellInfo(143616), DBM:GetSpellInfo(143617), DBM:GetSpellInfo(143618), DBM:GetSpellInfo(143619),
-			DBM:GetSpellInfo(143620), DBM:GetSpellInfo(143621), DBM:GetSpellInfo(143622), DBM:GetSpellInfo(143623), DBM:GetSpellInfo(143624),
-			DBM:GetSpellInfo(143627), DBM:GetSpellInfo(143628), DBM:GetSpellInfo(143629), DBM:GetSpellInfo(143630), (DBM:GetSpellInfo(143631))
-		}
-		repairedSpellNames = true
-	end
 	table.wipe(activeBossGUIDS)
 	table.wipe(activatedTargets)
 	calculatedShape = nil
@@ -513,7 +486,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.warnToxicCatalyst then
 			warnToxicCatalystBlue:Show()
 		end
-		if UnitDebuff("player", catalystBlue) then
+		if DBM:UnitDebuff("player", catalystBlue) then
 			specWarnCatalystBlue:Show()
 			if self.Options.yellToxicCatalyst then
 				yellCatalystBlue:Yell()
@@ -524,7 +497,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.warnToxicCatalyst then
 			warnToxicCatalystRed:Show()
 		end
-		if UnitDebuff("player", catalystRed) then
+		if DBM:UnitDebuff("player", catalystRed) then
 			specWarnCatalystRed:Show()
 			if self.Options.yellToxicCatalyst then
 				yellCatalystRed:Yell()
@@ -535,7 +508,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.warnToxicCatalyst then
 			warnToxicCatalystYellow:Show()
 		end
-		if UnitDebuff("player", catalystYellow) then
+		if DBM:UnitDebuff("player", catalystYellow) then
 			specWarnCatalystYellow:Show()
 			if self.Options.yellToxicCatalyst then
 				yellCatalystYellow:Yell()
@@ -546,7 +519,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.warnToxicCatalyst then
 			warnToxicCatalystOrange:Show()
 		end
-		if UnitDebuff("player", catalystRed) or UnitDebuff("player", catalystYellow) then--Red or Yellow
+		if DBM:UnitDebuff("player", catalystRed, catalystYellow) then--Red or Yellow
 			specWarnCatalystOrange:Show()
 			if self.Options.yellToxicCatalyst then
 				yellCatalystOrange:Yell()
@@ -557,7 +530,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.warnToxicCatalyst then
 			warnToxicCatalystPurple:Show()
 		end
-		if UnitDebuff("player", catalystRed) or UnitDebuff("player", catalystBlue) then--Red or Blue
+		if DBM:UnitDebuff("player", catalystRed, catalystBlue) then--Red or Blue
 			specWarnCatalystPurple:Show()
 			if self.Options.yellToxicCatalyst then
 				yellCatalystPurple:Yell()
@@ -568,7 +541,7 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.warnToxicCatalyst then
 			warnToxicCatalystGreen:Show()
 		end
-		if UnitDebuff("player", catalystYellow) or UnitDebuff("player", catalystBlue) then--Yellow or Blue
+		if DBM:UnitDebuff("player", catalystYellow, catalystBlue) then--Yellow or Blue
 			specWarnCatalystGreen:Show()
 			if self.Options.yellToxicCatalyst then
 				yellCatalystGreen:Yell()
@@ -613,7 +586,7 @@ function mod:SPELL_CAST_START(args)
 			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and UnitDetailedThreatSituation("player", bossUnitID) then
 				local elapsed, total = timerMutateCD:GetTime(self.vb.mutateCount+1)
 				local remaining = total - elapsed
-				if self:IsMythic() and (remaining < 20) and (self.vb.parasitesActive < 2) and not UnitDebuff("player", args.spellName) then--NEED to know Mythic number of parasites
+				if self:IsMythic() and (remaining < 20) and (self.vb.parasitesActive < 2) and not DBM:UnitDebuff("player", args.spellName) then--NEED to know Mythic number of parasites
 					specWarnMoreParasites:Show()
 				else--We want to block attack and not spawn anything
 					specWarnInjection:Show()

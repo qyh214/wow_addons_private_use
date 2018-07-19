@@ -34,12 +34,12 @@ module.db.otherIconsList = {
 	{"{bnet}","|TInterface\\FriendsFrame\\Battlenet-Portrait:16|t","Interface\\FriendsFrame\\Battlenet-Portrait"},
 	{"{alliance}","|TInterface\\FriendsFrame\\PlusManz-Alliance:16|t","Interface\\FriendsFrame\\PlusManz-Alliance"},
 	{"{horde}","|TInterface\\FriendsFrame\\PlusManz-Horde:16|t","Interface\\FriendsFrame\\PlusManz-Horde"},	
-	{"{T}","|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:16:16:0:0:64:64:0:19:22:41|t","Interface\\LFGFrame\\UI-LFG-ICON-ROLES",0,0.26171875,0.26171875,0.5234375},
-	{"{H}","|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:16:16:0:0:64:64:20:39:1:20|t","Interface\\LFGFrame\\UI-LFG-ICON-ROLES",0.26171875,0.5234375,0,0.26171875},
-	{"{D}","|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:16:16:0:0:64:64:20:39:22:41|t","Interface\\LFGFrame\\UI-LFG-ICON-ROLES",0.26171875,0.5234375,0.26171875,0.5234375},
 	{"{tank}","|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:16:16:0:0:64:64:0:19:22:41|t","Interface\\LFGFrame\\UI-LFG-ICON-ROLES",0,0.26171875,0.26171875,0.5234375},
 	{"{healer}","|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:16:16:0:0:64:64:20:39:1:20|t","Interface\\LFGFrame\\UI-LFG-ICON-ROLES",0.26171875,0.5234375,0,0.26171875},
 	{"{dps}","|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:16:16:0:0:64:64:20:39:22:41|t","Interface\\LFGFrame\\UI-LFG-ICON-ROLES",0.26171875,0.5234375,0.26171875,0.5234375},
+	{"{T}","|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:16:16:0:0:64:64:0:19:22:41|t","Interface\\LFGFrame\\UI-LFG-ICON-ROLES",0,0.26171875,0.26171875,0.5234375},
+	{"{H}","|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:16:16:0:0:64:64:20:39:1:20|t","Interface\\LFGFrame\\UI-LFG-ICON-ROLES",0.26171875,0.5234375,0,0.26171875},
+	{"{D}","|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:16:16:0:0:64:64:20:39:22:41|t","Interface\\LFGFrame\\UI-LFG-ICON-ROLES",0.26171875,0.5234375,0.26171875,0.5234375},
 }
 
 module.db.iconsLocalizatedNames = {
@@ -158,14 +158,10 @@ function module.options:Load()
 	}
 	
 	module.db.encountersList = {
-		{1188,2076,2074,2064,2070,2075,2082,2069,2088,2073,2063,2092},
-		{1147,2032,2048,2036,2037,2050,2054,2052,2038,2051},
-		{1088,1849,1865,1867,1871,1862,1886,1842,1863,1872,1866},
-		{1114,1958,1962,2008},
-		{1094,1853,1841,1873,1854,1876,1877,1864},
-		{1026,1778,1785,1787,1798,1786,1783,1788,1794,1777,1800,1784,1795,1799},
-		{988,1696,1691,1693,1694,1689,1692,1690,1713,1695,1704},
-		{994,1721,1706,1720,1722,1719,1723,1705},
+		{1148,2144,2141,2136,2128,2134,2145,2135,2122},
+		{909,2076,2074,2064,2070,2075,2082,2069,2088,2073,2063,2092},
+		{850,2032,2048,2036,2037,2050,2054,2052,2038,2051},
+		{764,1849,1865,1867,1871,1862,1886,1842,1863,1872,1866},
 	}
 
 	local BlackNoteNow = nil
@@ -348,7 +344,7 @@ function module.options:Load()
 		for i=1,#module.db.encountersList do
 			local instance = module.db.encountersList[i]
 			List[#List+1] = {
-				text = GetMapNameByID(instance[1]) or "???",
+				text = (C_Map.GetMapInfo(instance[1] or 0) or {}).name or "???",
 				isTitle = true,
 			}
 			for j=2,#instance do
@@ -499,7 +495,7 @@ function module.options:Load()
 		self.buttonicons[i].iconText = module.db.iconsLocalizatedNames[i]
 		self.buttonicons[i]:SetScript("OnClick", AddTextToEditBox)
 	end
-	for i=1,11 do
+	for i=1,12 do
 		self.buttonicons[i] = CreateFrame("Button", nil,self.tab.tabs[1])
 		self.buttonicons[i]:SetSize(18,18)
 		self.buttonicons[i]:SetPoint("TOPLEFT", 165+(i-1)*20,-30)
@@ -534,8 +530,8 @@ function module.options:Load()
 		return self
 	end
 	
-	for i=12,20 do
-		local icon = CreateOtherIcon(5+(i-12)*20,-2,module.db.otherIconsList[i][3],module.db.otherIconsList[i][1])
+	for i=13,#module.db.otherIconsList-3 do
+		local icon = CreateOtherIcon(5+(i-13)*20,-2,module.db.otherIconsList[i][3],module.db.otherIconsList[i][1])
 		if module.db.otherIconsList[i][4] then
 			icon.texture:SetTexCoord( unpack(module.db.otherIconsList[i],4,7) )
 		end

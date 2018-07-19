@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
@@ -117,6 +117,24 @@ ConditionCategory:RegisterCondition(5.3, "OVERRBAR", {
 	end,
 })
 
+ConditionCategory:RegisterCondition(5.4, "WARMODE", {
+	text = L["CONDITIONPANEL_WARMODE"],
+
+	bool = true,
+	
+	unit = PLAYER,
+	icon = "Interface\\Icons\\achievement_arena_2v2_5",
+	tcoords = CNDT.COMMON.standardtcoords,
+	Env = {
+		IsWarModeDesired = C_PvP.IsWarModeDesired,
+	},
+	funcstr = [[BOOLCHECK( IsWarModeDesired() )]],
+	events = function(ConditionObject, c)
+		return
+			ConditionObject:GenerateNormalEventString("PLAYER_FLAGS_CHANGED")
+	end,
+})
+
 local NumShapeshiftForms
 local GetShapeshiftForm = GetShapeshiftForm
 TMW:RegisterCallback("TMW_GLOBAL_UPDATE", function()
@@ -161,8 +179,8 @@ ConditionCategory:RegisterCondition(6,	 "STANCE", {
 			if i == 0 then
 				return NONE
 			else
-				local _, name = GetShapeshiftFormInfo(i)
-				return name or ""
+				local icons, active, catable, spellID = GetShapeshiftFormInfo(i)
+				return spellID and GetSpellInfo(spellID) or ""
 			end
 		end
 	},
@@ -238,7 +256,7 @@ ConditionCategory:RegisterCondition(13.1, "PETMODE2", {
 	Env = {
 		GetActivePetMode2 = function()
 			for i = NUM_PET_ACTION_SLOTS, 1, -1 do -- go backwards since they are probably at the end of the action bar
-				local name, _, _, isToken, isActive = GetPetActionInfo(i)
+				local name, _, isToken, isActive = GetPetActionInfo(i)
 				if isToken and isActive and PetModes[name] then
 					return PetModes[name]
 				end

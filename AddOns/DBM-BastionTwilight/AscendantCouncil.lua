@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(158, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(43686, 43687, 43688, 43689, 43735)
 mod:SetEncounterID(1028)
 mod:SetZone()
@@ -178,7 +178,7 @@ local function showGravityCrushWarning()
 end
 
 local function checkGrounded(self)
-	if not UnitDebuff("player", groundedName) and not UnitIsDeadOrGhost("player") then
+	if not DBM:UnitDebuff("player", groundedName) and not UnitIsDeadOrGhost("player") then
 		specWarnGrounded:Show()
 	end
 	if self.Options.InfoFrame and not infoFrameUpdated then
@@ -189,7 +189,7 @@ local function checkGrounded(self)
 end
 
 local function checkSearingWinds(self)
-	if not UnitDebuff("player", searingName) and not UnitIsDeadOrGhost("player") then
+	if not DBM:UnitDebuff("player", searingName) and not UnitIsDeadOrGhost("player") then
 		specWarnSearingWinds:Show()
 	end
 	if self.Options.InfoFrame and not infoFrameUpdated then
@@ -200,7 +200,6 @@ local function checkSearingWinds(self)
 end
 
 function mod:OnCombatStart(delay)
-	groundedName, searingName = DBM:GetSpellInfo(83581), DBM:GetSpellInfo(83500)
 	DBM:GetModByName("BoTrash"):SetFlamestrike(true)
 	phase = 1
 	table.wipe(frozenTargets)
@@ -571,7 +570,7 @@ function mod:RAID_BOSS_EMOTE(msg)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 --	"<60.5> Feludius:Possible Target<nil>:boss1:Frost Xplosion (DND)::0:94739"
 	if spellId == 94739 and self:AntiSpam(2, 2) then -- Frost Xplosion (Phase 2 starts)
 		self:SendSync("Phase2")

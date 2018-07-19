@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Souls", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 653 $"):sub(12, -3))
 mod:SetCreatureID(23420)
 mod:SetEncounterID(606)
 mod:SetModelID(21483)
@@ -139,7 +139,7 @@ end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 --Boss Unit IDs stilln ot present in 7.2.5 so mouseover/target and antispam required
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 28819 and self:AntiSpam(2, 2) then--Submerge Visual
 		self:SendSync("PhaseEnd")
 	end

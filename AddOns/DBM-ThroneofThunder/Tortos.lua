@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(825, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(67977)
 mod:SetEncounterID(1565)
 mod:SetZone()
@@ -71,7 +71,7 @@ local function clearStomp()
 end
 
 local function checkCrystalShell()
-	if not UnitDebuff("player", shelldName) and not UnitIsDeadOrGhost("player") then
+	if not DBM:UnitDebuff("player", shelldName) and not UnitIsDeadOrGhost("player") then
 		local percent = (UnitHealth("player") / UnitHealthMax("player")) * 100
 		if percent > 90 then
 			specWarnCrystalShell:Show(shelldName)
@@ -82,7 +82,6 @@ local function checkCrystalShell()
 end
 
 function mod:OnCombatStart(delay)
-	shelldName, shellConcussion = DBM:GetSpellInfo(137633), DBM:GetSpellInfo(136431)
 	stompActive = false
 	stompCount = 0
 	firstRockfall = false--First rockfall after a stomp
@@ -125,7 +124,9 @@ function mod:SPELL_CAST_START(args)
 		timerBreathCD:Start()
 		countdownBreath:Start()
 	elseif spellId == 136294 then
-		specWarnCallofTortos:Show()
+		if self:AntiSpam(5, 4) then
+			specWarnCallofTortos:Show()
+		end
 		if self:AntiSpam(59, 3) then -- On below 10%, he casts Call of Tortos always. This cast ignores cooldown, so filter below 10% cast.
 			timerCallTortosCD:Start()
 		end
@@ -213,7 +214,7 @@ end
 
 --Does not show in combat log, so UNIT_AURA must be used instead
 function mod:UNIT_AURA(uId)
-	local _, _, _, _, _, duration, expires = UnitDebuff(uId, shellConcussion)
+	local _, _, _, _, duration, expires = DBM:UnitDebuff(uId, shellConcussion)
 	if expires and lastConcussion ~= expires then
 		lastConcussion = expires
 		timerShellConcussion:Start()
@@ -223,7 +224,7 @@ function mod:UNIT_AURA(uId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 136685 then --Don't filter main tank, bat tank often taunts boss just before bats for vengeance, otherwise we lose threat to dps. Then main tank taunts back after bats spawn and we go get them, fully vengeanced (if you try to pick up bats without vengeance you will not hold aggro for shit)
 		specWarnSummonBats:Show()
 		timerSummonBatsCD:Start()

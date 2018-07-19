@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1827, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(114329, 114522, 114330, 114328)
 mod:SetEncounterID(1957)--Shared (so not used for encounter START since it'd fire 3 mods)
 mod:DisableESCombatDetection()--However, with ES disabled, EncounterID can be used for BOSS_KILL/ENCOUNTER_END
@@ -77,19 +77,19 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 228025 then
 		timerHeatWaveCD:Start()
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnHeatWave:Show(args.sourceName)
 			specWarnHeatWave:Play("kickcast")
 		end
 	elseif spellId == 228019 then
 		timerLeftoversCD:Start()
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnLeftovers:Show(args.sourceName)
 			specWarnLeftovers:Play("kickcast")
 		end
 	elseif spellId == 227987 then
 		timerDinnerBellCD:Start()
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnDinnerBell:Show(args.sourceName)
 			specWarnDinnerBell:Play("kickcast")
 		end
@@ -161,8 +161,8 @@ function mod:UNIT_DIED(args)
 end
 
 --[[
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 206341 then
 	
 	end

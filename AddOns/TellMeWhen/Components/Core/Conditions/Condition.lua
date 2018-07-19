@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
@@ -107,6 +107,15 @@ end
 
 function Condition:IsDeprecated()
 	return self.funcstr == "DEPRECATED"
+end
+
+function Condition:UsesTabularBitflags() 
+	if not self.bitFlags then return false end
+	for index, _ in pairs(self.bitFlags) do
+		if type(index) ~= "number" or index >= 32 or index < 1 then
+			return true
+		end
+	end
 end
 
 function Condition:PrepareEnv()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1726, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(103769)
 mod:SetEncounterID(1864)
 mod:SetZone()
@@ -102,7 +102,6 @@ local darkSoul, blackSoul, dreamDebuff, blackened = DBM:GetSpellInfo(206651), DB
 local bladesTarget = {}
 local gatherTarget = {}
 local playerName = UnitName("player")
-local UnitDebuff = UnitDebuff
 local playerHasDream = false
 mod.vb.phase = 1
 mod.vb.lurkingCount = 0
@@ -114,13 +113,13 @@ mod.vb.dreamCount = 0
 
 local function updateRangeFrame(self)
 	if not self.Options.RangeFrame then return end
-	if UnitDebuff("player", darkSoul) then
+	if DBM:UnitDebuff("player", darkSoul) then
 		if self:IsEasy() then
 			DBM.RangeCheck:Show(15)
 		else
 			DBM.RangeCheck:Show(25)
 		end
-	elseif UnitDebuff("player", blackSoul) then
+	elseif DBM:UnitDebuff("player", blackSoul) then
 		DBM.RangeCheck:Show(10)--10 for tainted discharge?
 	elseif self.vb.phase == 1 then--Maybe only show for ranged?
 		DBM.RangeCheck:Show(6)--Will be rounded up by 7.1 restrictions in 
@@ -200,13 +199,12 @@ function mod:SPELL_CAST_START(args)
 			countdownNightmareInfusion:Start()
 		end
 		local targetName, uId = self:GetBossTarget(args.sourceGUID, true)
-		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
-		if tanking or (status == 3) then
+		if self:IsTanking("player", "boss1", nil, true) then
 			--Player is current target, just give a generic warning, since if player has dream it doesn't matter, if player doesn't, it's OTHER tanks job to fix this
 			warnNightmareInfusion:Show()
 		else
 			--Player has dream buff and current tank does NOT so TAUNT warning.
-			if playerHasDream and not UnitDebuff(uId, dreamDebuff) then
+			if playerHasDream and not DBM:UnitDebuff(uId, dreamDebuff) then
 				specWarnNightmareInfusionOther:Show(targetName)
 				specWarnNightmareInfusionOther:Play("tauntboss")
 			end
@@ -275,7 +273,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					for i = 1, 5 do
 						--Check if tanking a big add
 						local bossUnitID = "boss"..i
-						if UnitExists(bossUnitID) and UnitDetailedThreatSituation("player", bossUnitID) and self:GetCIDFromGUID(UnitGUID(bossUnitID)) == 103695 then
+						if UnitExists(bossUnitID) and self:IsTanking("player", bossUnitID, nil, true) and self:GetCIDFromGUID(UnitGUID(bossUnitID)) == 103695 then
 							filterWarning = true--Tanking big add, in 3 tank strat means this tank has nothing to do with boss swapping.
 							break
 						end
@@ -304,13 +302,13 @@ function mod:SPELL_AURA_APPLIED(args)
 					for i = 1, 5 do
 						--Check if tanking a big add
 						local bossUnitID = "boss"..i
-						if UnitExists(bossUnitID) and UnitDetailedThreatSituation("player", bossUnitID) and self:GetCIDFromGUID(UnitGUID(bossUnitID)) == 103695 then
+						if UnitExists(bossUnitID) and self:IsTanking("player", bossUnitID, nil, true) and self:GetCIDFromGUID(UnitGUID(bossUnitID)) == 103695 then
 							filterWarning = true--Tanking big add, in 3 tank strat means this tank has nothing to do with boss swapping.
 							break
 						end
 					end
 				end
-				if not filterWarning and not UnitDebuff("player", blackened) then
+				if not filterWarning and not DBM:UnitDebuff("player", blackened) then
 					specWarnBlackeningSoulOther:Show(args.destName)
 					specWarnBlackeningSoulOther:Play("tauntboss")
 				end
@@ -436,8 +434,8 @@ function mod:SPELL_PERIODIC_ENERGIZE(_, _, _, _, destGUID, _, _, _, spellId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 206341 then--Corruption Meteor (casting not in combat log, targetting is finally but I trust this more for timer in case targetting can be gamed.)
 		self.vb.meteorCount = self.vb.meteorCount + 1
 		if self.vb.phase == 3 then

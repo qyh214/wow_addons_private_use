@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 local TMW = TMW
@@ -19,8 +19,8 @@ if not _G.C_LossOfControl then
 end
 
 local print = TMW.print
-local GetSpellLink, GetSpellInfo =
-	  GetSpellLink, GetSpellInfo
+local GetSpellInfo =
+	  GetSpellInfo
 local GetEventInfo = C_LossOfControl.GetEventInfo
 local GetNumEvents = C_LossOfControl.GetNumEvents
 

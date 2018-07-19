@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 local TMW = TMW
@@ -526,7 +526,7 @@ function Type:Setup(icon)
 	icon:SetUpdateMethod("manual")
 
 	icon:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-	icon:SetScript("OnEvent", CLEU_OnEvent)
+	icon:SetScript("OnEvent", function(self, event) CLEU_OnEvent(self, event, CombatLogGetCurrentEventInfo()) end)
 
 	if icon:IsGroupController() then
 		icon.capturedCLEUEvents = icon.capturedCLEUEvents or {}

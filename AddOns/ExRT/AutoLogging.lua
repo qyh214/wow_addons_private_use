@@ -21,11 +21,19 @@ function module.options:Load()
 		end
 	end)
 		
-	self.shtml1 = ELib:Text(self," -"..L.S_ZoneT19Nightmare.."\n -"..L.S_ZoneT19ToV.."\n -"..L.S_ZoneT19Suramar.."\n -"..L.S_ZoneT20ToS.."\n -"..L.S_ZoneT21A,12):Size(620,0):Point("TOP",0,-65):Top()
+	self.shtml1 = ELib:Text(self," -"..L.S_ZoneT22Uldir.."\n\n -"..L.S_ZoneT19Nightmare.."\n -"..L.S_ZoneT19ToV.."\n -"..L.S_ZoneT19Suramar.."\n -"..L.S_ZoneT20ToS.."\n -"..L.S_ZoneT21A,12):Size(620,0):Point("TOP",0,-65):Top()
 
 	self.shtml2 = ELib:Text(self,L.LoggingHelp1,12):Size(650,0):Point("TOP",self.shtml1,"BOTTOM",0,-15):Top()
 	
-	self.enable5ppLegion = ELib:Check(self,DUNGEONS..": "..EXPANSION_NAME6.." ("..PLAYER_DIFFICULTY6..", "..PLAYER_DIFFICULTY6.."+)",VExRT.Logging.enable5ppLegion):Point("TOP",self.shtml2,"BOTTOM",0,-15):Point("LEFT",self,5,0):OnClick(function(self) 
+	self.enable3ppScenario = ELib:Check(self,SCENARIOS,VExRT.Logging.enable3ppBFA):Point("TOP",self.shtml2,"BOTTOM",0,-15):Point("LEFT",self,5,0):OnClick(function(self) 
+		if self:GetChecked() then
+			VExRT.Logging.enable3ppBFA = true
+		else
+			VExRT.Logging.enable3ppBFA = nil
+		end
+	end)
+
+	self.enable5ppLegion = ELib:Check(self,DUNGEONS..": "..EXPANSION_NAME7.." ("..PLAYER_DIFFICULTY6..", "..PLAYER_DIFFICULTY6.."+)",VExRT.Logging.enable5ppLegion):Point("TOP",self.enable3ppScenario,"BOTTOM",0,-5):Point("LEFT",self,5,0):OnClick(function(self) 
 		if self:GetChecked() then
 			VExRT.Logging.enable5ppLegion = true
 		else
@@ -88,7 +96,7 @@ end
 
 local function GetCurrentMapForLogging()
 	if VExRT.Logging.enabled then
-		local _, zoneType, difficulty, _, _, _, _, mapID = GetInstanceInfo()
+		local _, zoneType, difficulty, _, maxPlayers, _, _, mapID = GetInstanceInfo()
 		if difficulty == 7 or difficulty == 17 then
 			if VExRT.Logging.enableLFR then
 				return true
@@ -98,6 +106,8 @@ local function GetCurrentMapForLogging()
 		elseif zoneType == 'raid' and (tonumber(mapID) and mapID >= module.db.minRaidMapID) and ((difficulty == 16 and not VExRT.Logging.disableMythic) or (difficulty == 15 and not VExRT.Logging.disableHeroic) or (difficulty == 14 and not VExRT.Logging.disableNormal) or (difficulty ~= 14 and difficulty ~= 15 and difficulty ~= 16)) then
 			return true
 		elseif VExRT.Logging.enable5ppLegion and (difficulty == 8 or difficulty == 23) and (tonumber(mapID) and mapID >= module.db.minPartyMapID) then
+			return true
+		elseif VExRT.Logging.enable3ppBFA and zoneType == 'scenario' and (maxPlayers or 0) > 1 and (tonumber(mapID) and mapID >= module.db.minPartyMapID) then
 			return true
 		end
 	end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TombSargTrash", "DBM-TombofSargeras")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17522 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
@@ -36,7 +36,7 @@ local specWarnGTFO					= mod:NewSpecialWarningGTFO(240176, nil, nil, nil, 1, 2)
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 243171 and self:CheckInterruptFilter(args.sourceGUID) then
+	if spellId == 243171 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnShadowBoltVolley:Show(args.sourceName)
 		specWarnShadowBoltVolley:Play("kickcast")
 	elseif spellId == 239810 and self:AntiSpam(4.5, 1) then

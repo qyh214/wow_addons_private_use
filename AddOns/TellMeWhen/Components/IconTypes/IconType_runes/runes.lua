@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 local TMW = TMW
@@ -248,7 +248,6 @@ function Type:Setup(icon)
 
 	icon:SetInfo("texture", "Interface\\Icons\\Spell_Deathknight_FrostPresence")
 
-	icon:RegisterSimpleUpdateEvent("RUNE_TYPE_UPDATE")
 	icon:RegisterSimpleUpdateEvent("RUNE_POWER_UPDATE")
 	
 	icon:SetUpdateMethod("manual")

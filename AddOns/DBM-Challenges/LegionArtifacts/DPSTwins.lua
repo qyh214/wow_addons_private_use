@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod("ArtifactTwins", "DBM-Challenges", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 105 $"):sub(12, -3))
 mod:SetCreatureID(116409, 116410)--Raest Magespear, Karam Magespear
 mod:SetZone()--Healer (1710), Tank (1698), DPS (1703-The God-Queen's Fury), DPS (Fel Totem Fall)
 mod:SetBossHPInfoToHighest()
@@ -81,8 +81,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID, spellId)
-	--local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 202081 then--Fixate (Karam Magespear returning in phase 3 and 5)
 		specWarnFixate:Show()
 		specWarnFixate:Play("justrun")

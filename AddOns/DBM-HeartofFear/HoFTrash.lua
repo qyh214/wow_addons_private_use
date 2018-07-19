@@ -28,7 +28,7 @@ local function findUnseen(spellName)
 	scanTime = scanTime + 1
 	for uId in DBM:GetGroupMembers() do
 		local name = DBM:GetUnitFullName(uId)
-		if UnitDebuff(uId, spellName) then
+		if DBM:UnitDebuff(uId, spellName) then
 			if name == UnitName("player") then
 				specWarnUnseenStrike:Show()
 				yellUnseenStrike:Yell()
@@ -55,10 +55,10 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if not self.Options.Enabled then return end
 	if spellId == 122949 and self:AntiSpam() and self:GetCIDFromGUID(UnitGUID(uId)) == 64340 then
-		self:SendSync("UnseenTrash", spellName)
+		self:SendSync("UnseenTrash", DBM:GetSpellInfo(spellId))
 	end
 end
 

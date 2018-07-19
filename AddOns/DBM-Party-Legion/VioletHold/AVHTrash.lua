@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AVHTrash", "DBM-Party-Legion", 9)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17522 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -39,7 +39,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 204966 and self:AntiSpam(2, 1) then
 		warnSummonBeasts:Show()
-	elseif spellId == 204963 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 204963 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnShadowBoltVolley:Show(args.sourceName)
 		specWarnShadowBoltVolley:Play("kickcast")
 	elseif spellId == 205090 then
@@ -58,7 +58,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnShadowBomb:CombinedShow(0.3, args.destName)
 		end
-	elseif spellId == 205088 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 205088 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnHellfire:Show(args.sourceName)
 		specWarnHellfire:Play("kickcast")
 	elseif spellId == 204608 then

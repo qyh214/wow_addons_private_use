@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1695, "DBM-Party-Legion", 10, 707)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17434 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(96015)
 mod:SetEncounterID(1850)
 mod:SetZone()
@@ -72,8 +72,8 @@ function mod:SPELL_AURA_APPLIED(args)
 	end	
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 214970 then--Summon Tormenting Orb
 		timerTormOrbCD:Start()
 	end

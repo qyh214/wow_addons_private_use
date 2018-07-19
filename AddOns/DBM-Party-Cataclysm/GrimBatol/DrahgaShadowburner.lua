@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(133, "DBM-Party-Cataclysm", 3, 71)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(40319)
 mod:SetEncounterID(1048)
 mod:SetZone()
@@ -36,7 +36,6 @@ local Valiona = DBM:EJ_GetSectionInfo(3369)
 local valionaLanded = false
 
 function mod:OnCombatStart(delay)
-	flamingFixate = DBM:GetSpellInfo(82850)
 	table.wipe(fixateWarned)
 	valionaLanded = false
 end
@@ -80,7 +79,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 end
 
 function mod:UNIT_AURA_UNFILTERED(uId)
-	local isFixate = UnitDebuff(uId, flamingFixate)
+	local isFixate = DBM:UnitDebuff(uId, flamingFixate)
 	local name = DBM:GetUnitFullName(uId)
 	if not isFixate and fixateWarned[name] then
 		fixateWarned[name] = nil

@@ -149,68 +149,15 @@ function SlashCmdList.HIDDENAT(msg, editbox)
 			HiddenArtifactTracker.forceTracking = not HiddenArtifactTracker.forceTracking
 		elseif imsg=="mage" then
 			HiddenArtifactTrackerChars.trackBosses = not HiddenArtifactTrackerChars.trackBosses
-		elseif imsg=="apbar" then
-			if HiddenArtifactTrackerChars.hideArtBar == false or HiddenArtifactTrackerChars.hideArtBar == nil then
-		 	--toggle to the HIDING state, and hide
-			print("The Artifact Power bar is now hidden.")
-				HiddenArtifactTrackerChars.hideArtBar = true
-				HiddenArtifactTrackerFuncs.hideBar()
-			else
-				HiddenArtifactTrackerChars.hideArtBar = false			--toggle to the SHOWING state, but only show if an artifact is actually equipped
-			print("The Artifact Power bar has been returned to default behaviour.")
-				if HiddenArtifactTrackerFuncs.isArtEquipped() and (not MainMenuExpBar:IsVisible() or not ReputationWatchBar:IsVisible() ) then
-					MainMenuMaxLevelBar0:GetParent():Hide()
-					ArtifactWatchBar:Show()
-				end
-			end
 		else
 			success = 0
 		end
 	end
 
 	if success ~= 1 or msg == "" then
-		print("Usage: /hat <option> where option is:\noff - deactivate\non - enable\nadv - toggle advanced tracking\ncolour - toggle coloured/white text\nmage - toggle display of dungeon boss tracking for mage tower skin\napbar - toggle display of the Artifact power bar")
+		print("Usage: /hat <option> where option is:\noff - deactivate\non - enable\nadv - toggle advanced tracking\ncolour - toggle coloured/white text\nmage - toggle display of dungeon boss tracking for mage tower skin")
 	end
 end
-
---these hide the artifact XP bar if something tries to show it, and we have set to hide
-local artbarShow = ArtifactWatchBar:GetScript("OnShow")
-local artbarHide = MainMenuMaxLevelBar0:GetParent():GetScript("OnHide")
-ArtifactWatchBar:SetScript("OnShow", 
-	function(...)
-		artbarShow(...)
-		HiddenArtifactTrackerFuncs.hideBar()
-	end)
-function HiddenArtifactTrackerFuncs.hideBar()
-		if HiddenArtifactTrackerChars.hideArtBar==true then
-			ArtifactWatchBar:Hide()
-			if not MainMenuExpBar:IsVisible() and not ReputationWatchBar:IsVisible() then
-				ArtifactWatchBar:Hide()
-				MainMenuMaxLevelBar0:GetParent():Show()
-			elseif not MainMenuExpBar:IsVisible() or not ReputationWatchBar:IsVisible() then
-				ArtifactWatchBar:Hide()
-				MainMenuMaxLevelBar0:GetParent():Hide()
-			end
-
-			if not MainMenuExpBar:IsVisible() then
-				ReputationWatchBar:ClearAllPoints()
-				ReputationWatchBar:SetPoint("BOTTOM", 0, 42)
-			else
-				ReputationWatchBar:ClearAllPoints()
-				ReputationWatchBar:SetPoint("BOTTOM", 0, 50)
-			end
-		end
-end
-function HiddenArtifactTrackerFuncs.isArtEquipped()
-	for key,value in pairs(artNumbers) do
-		if IsEquippedItem(key) then
-			return true
-		end
-	end
-	return false
-end
-
-MainMenuMaxLevelBar0:GetParent():SetScript("OnHide", ArtifactWatchBar:GetScript("OnShow"))
 
 GameTooltip:HookScript("OnTooltipSetItem",
 

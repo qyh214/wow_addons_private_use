@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(860, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(71953)
 mod:SetReCombatTime(20)
 mod:SetZone()
@@ -78,7 +78,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() and amount >= 5 then
 				specWarnSpectralSwipe:Show(amount)
 			else
-				if amount >= 2 and not UnitIsDeadOrGhost("player") or not UnitDebuff("player", args.spellName) then
+				if amount >= 2 and not UnitIsDeadOrGhost("player") or not DBM:UnitDebuff("player", args.spellName) then
 					specWarnSpectralSwipeOther:Show(args.destName)
 				end
 			end
@@ -99,7 +99,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 --This method works without local and doesn't fail with curse of tongs but requires at least ONE person in raid targeting boss to be running dbm (which SHOULD be most of the time)
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 148318 or spellId == 148317 or spellId == 149304 and self:AntiSpam(3, 2) then--use all 3 because i'm not sure which ones fire on repeat kills
 		self:SendSync("Victory")
 	end

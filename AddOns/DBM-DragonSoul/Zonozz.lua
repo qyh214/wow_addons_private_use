@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(324, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(55308)
 mod:SetEncounterID(1294)
 --mod:DisableRegenDetection()--Uncomment in next dbm release
@@ -57,14 +57,14 @@ end
 local shadowsDebuffFilter
 do
 	shadowsDebuffFilter = function(uId)
-		return UnitDebuff(uId, (filterDebuff))
+		return DBM:UnitDebuff(uId, (filterDebuff))
 	end
 end
 
 --"Never", "Normal", "DynamicPhase2", "DynamicAlways"
 function mod:updateRangeFrame()
 	if self:IsDifficulty("normal10", "normal25", "lfr25") or self.Options.CustomRangeFrame == "Never" then return end
-	if self.Options.CustomRangeFrame == "Normal" or UnitDebuff("player", filterDebuff) or self.Options.CustomRangeFrame == "DynamicPhase2" and not phase2Started then--You have debuff or only want normal range frame or it's phase 1 and you only want dymanic in phase 2
+	if self.Options.CustomRangeFrame == "Normal" or DBM:UnitDebuff("player", filterDebuff) or self.Options.CustomRangeFrame == "DynamicPhase2" and not phase2Started then--You have debuff or only want normal range frame or it's phase 1 and you only want dymanic in phase 2
 		DBM.RangeCheck:Show(10, nil)--Show everyone.
 	else
 		DBM.RangeCheck:Show(10, shadowsDebuffFilter)--Show only people who have debuff.
@@ -79,7 +79,6 @@ local function blackBloodEnds()
 end
 
 function mod:OnCombatStart(delay)
-	filterDebuff = DBM:GetSpellInfo(103434)
 	voidWarned = false
 	phase2Started = false
 	table.wipe(shadowsTargets)
@@ -157,7 +156,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	--Void of the unmaking cast, do not use spellname because we want to ignore events using spellid 103627 which fires when the sphere dispurses on the boss.
 	--It looks this event doesn't fire in raid finder. It seems to still fire in normal and heroic modes.
 	if spellId == 103571 and not voidWarned then

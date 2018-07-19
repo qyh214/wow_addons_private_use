@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(742, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(62442)--62919 Unstable Sha, 62969 Embodied Terror
 mod:SetEncounterID(1505)
 mod:SetReCombatTime(60)--fix lfr combat re-starts after killed.
@@ -155,7 +155,7 @@ function mod:RAID_BOSS_EMOTE(msg)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 122770 and self:AntiSpam(2, 1) then--Nightmares (Night Phase)
 		self:BossTargetScanner(62442, "ShadowsTarget")
 		if timerDayCD:GetTime() < 106 then

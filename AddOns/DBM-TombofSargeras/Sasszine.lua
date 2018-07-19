@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1861, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17471 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(115767)--116328 Vellius, 115795 Abyss Stalker, 116329/116843 Sarukel
 mod:SetEncounterID(2037)
 mod:SetZone()
@@ -177,8 +177,7 @@ function mod:SPELL_CAST_START(args)
 		end
 		timerThunderingShockCD:Start()
 	elseif spellId == 230201 then
-		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
-		if tanking or (status == 3) then
+		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnBurdenofPain:Show()
 			specWarnBurdenofPain:Play("defensive")
 		else
@@ -317,8 +316,8 @@ function mod:SPELL_DAMAGE(sourceGUID, _, _, _, _, _, _, _, spellId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 230227 and self:AntiSpam(3, 3) then
 		warnFromtheAbyss:Show()
 		timerFromtheAbyssCD:Start()

@@ -17,6 +17,7 @@ merge(ns.points["Azsuna"], {
     [37404320] = {quest=42280, npc=107113, item=141875}, -- Vorthax
     [41054180] = {quest=37537, npc=89016, item=129080}, -- Ravyn-Drath
     [43152815] = {quest=38352, npc=91579, item=129056}, -- Doomlord Kazrok
+    [43532458] = {quest=42069, npc=105938, item=129087}, -- Felwing
     [45305780] = {quest=37824, npc=89884, item=129090}, -- Flog the Captain-Eater
     [47203420] = {quest=37726, npc=89650, item=129082}, -- Valiyaka the Stormbringer
     [49105520] = {quest=37909, npc=90164, item=129069, note="Patrols the road"}, -- Warbringer Mox'na
@@ -158,13 +159,47 @@ merge(ns.points["Helheim"], {
 merge(ns.points["TempleofaThousandLights"], {
     [62303090] = {quest=42699, npc=108255, item=141877}, -- Coura, Mistress of Arcana
 })
+merge(ns.points["NeltharionsVault"], {
+    [54508400] = {quest=48381, npc=125951, item=141708, level=30}, -- Obsidian Deathwarder
+})
+
+-- Broken Shore:
+merge(ns.points["BrokenShore"], {
+    [31315933] = {quest=47028, npc=121112}, -- Somber Dawn
+    [39194241] = {quest=46095, npc=117091}, -- Felmaw Emberfiend
+    [39553265] = {quest=46965, npc=121029, note="Inside Blood Nest", alpha=0.4}, -- Brood Mother Nix
+    [40348045] = {quest=46202, npc=118993}, -- Dreadeye
+    [40385977] = {quest=46951, npc=120998, note="Inside the Pit of Agony", alpha=0.4}, -- Flllurlokkr
+    [41601723] = {quest=47026, npc=121107}, -- Lady Eldrathe
+    [42404282] = {quest=46092, npc=117094}, -- Malorus the Soulkeeper
+    [44645317] = {quest=46304, npc=119629, outdoors_only=true, item=142233, mount=true}, -- Lord Hel'Nurath
+    [49114800] = {quest=46100, npc=117090}, -- Xorogun the Flamecarver
+    [49553794] = {quest=46097, npc=117136}, -- Doombringer Zar'thoz
+    [51814293] = {quest=46093, npc=117086}, -- Emberfire
+    [54027882] = {quest=46953, npc=121016}, -- Aqueux
+    -- [54564848] = {quest=nil, npc=120968}, -- Bonegnasher the Petrifying
+    [57085649] = {quest=46094, npc=117096}, -- Potionmaster Gloop
+    [57793148] = {quest=46098, npc=117095}, -- Dreadblade Annihilator
+    [58294288] = {quest=46099, npc=117093}, -- Felbringer Xar'thok
+    [59692724] = {quest=46090, npc=117141, note="Inside Felbreach Hollow", alpha=0.4}, -- Malgrazoth
+    [60474504] = {quest=46313, npc=119718}, -- Imp Mother Bruva
+    [60965330] = {quest=46101, npc=116953}, -- Corrupted Bonebreaker
+    [61913840] = {quest=46096, npc=117089}, -- Inquisitor Chillbane
+    [64443020] = {quest=47068, npc=116166, note="Inside Felsworn Vault", alpha=0.4}, -- Eye of Gurgh
+    [65233182] = {quest=46091, npc=117140, outdoors_only = true,}, -- Salethan the Broodwalker
+    [77842292] = {quest=46995, npc=121037}, -- Grossir 
+    [78322747] = {quest=47036, npc=121134}, -- Duke Sithizi
+    [78334004] = {quest=47001, npc=121046}, -- Brother Badatin
+    [89473084] = {quest=46102, npc=117103}, -- Felcaller Zelthae
+    [89913238] = {quest=47090, npc=117471}, -- Si'vash
+})
 
 -- Argus:
 merge(ns.points["ArgusSurface"], { -- Krokuun
     [33007600] = {quest=48562, npc=122912}, -- Commander Sathrenael
     [38145920] = {quest=48563, npc=122911, item=153299, note="Either go through the Xenedar, or climb up from 42, 57.1"}, -- Commander Vecaya
     [41707020] = {quest=48666, npc=125820}, -- Imp Mother Laglath
-    [44390734] = {quest=48561, npc=125824, note="Entrance is south east at 50.3, 17.3"}, -- Khazaduum
+    [50301730] = {quest=48561, npc=125824, item=153316}, -- Khazaduum
     [44505870] = {quest=48564, npc=124775, item=153255}, -- Commander Endaxis
     [53403090] = {quest=48565, npc=123464, item=153124, toy=true}, -- Sister Subversia
     [55508020] = {quest=48628, npc=123689, item=153329}, -- Talestra the Vile
@@ -177,7 +212,7 @@ merge(ns.points["ArgusSurface"], { -- Krokuun
 
 merge(ns.points["ArgusCore"], { -- Antoran Wastes
     [50905530] = {quest=48820, npc=127118}, -- Worldsplitter Skuul
-    [52702950] = {quest=nil, npc=127291}, -- Watcher Aival
+    [52702950] = {quest=48822, npc=127291}, -- Watcher Aival
     [53103580] = {quest=48810, npc=126199, item=152903, mount=true}, -- Vrax'thul
     [54003800] = {quest=48966, npc=127581, item=153195, pet=true, note="Gather bones in Scavenger's Boneyard"}, -- The Many-Faced Devourer
     [55702190] = {quest=48824, npc=127300, item=153319}, -- Void Warden Valsuran
@@ -186,11 +221,11 @@ merge(ns.points["ArgusCore"], { -- Antoran Wastes
     [58001200] = {quest=48968, npc=127703, note="3 people on the runes to summon; don't interrupt Doom Star"}, -- Doomcaster Suprax
     [60575159] = {quest=48816, npc=127084, note="Use the portal slightly west from him at 80, 62.4"}, -- Commander Texlaz
     [60674831] = {quest=48815, npc=126946, item=151543}, -- Inquisitor Vethroz
-    [60902290] = {quest=nil, npc=127376}, -- Chief Alchemist Munculus
+    [60902290] = {quest=48865, npc=127376}, -- Chief Alchemist Munculus
     [61703720] = {quest=49183, npc=122958, item=152905, mount=true}, -- Blistermaw
     [61906430] = {quest=48814, npc=126338}, -- Wrath-Lord Yarez
     [62405380] = {quest=48813, npc=126254}, -- Lieutenant Xakaar
-    [63102520] = {quest=48821, npc=48835, item=152790, mount=true}, -- Houndmaster Kerrax
+    [63102520] = {quest=48821, npc=127288, item=152790, mount=true}, -- Houndmaster Kerrax
     [63225754] = {quest=48811, npc=126115, note="The entrance to the cave is north east from her in the spider area at 66, 54.1"}, -- Ven'orn
     [63902090] = {quest=48809, npc=126040, note="Entrance to the cave is south east - use the eastern bridge to get there."}, -- Puscilla
     [64304820] = {quest=48812, npc=126208, item=153190}, -- Varga
@@ -199,35 +234,35 @@ merge(ns.points["ArgusCore"], { -- Antoran Wastes
     [75605650] = {quest=48818, npc=127096}, -- All-Seer Xanarian
 })
 merge(ns.points["ArgusCitadelSpire"], { -- Nath'raxas Spire
-    [38954032] = {quest=48561, npc=125824}, -- Khazaduum
+    [38954032] = {quest=48561, npc=125824, item=153316}, -- Khazaduum
 })
 
 merge(ns.points["ArgusMacAree"], { -- MacAree
     [27202980] = {quest=48707, npc=126869}, -- Captain Faruq
-    [30304040] = {quest=nil, npc=127323}, -- Ataxon
+    [30304040] = {quest=48709, npc=127323, item=153056, pet=true}, -- Ataxon
     [33704750] = {quest=48705, npc=126867, item=152844, mount=true}, -- Venomtail Skyfin
-    [35203720] = {quest=nil, npc=126885}, -- Umbraliss
-    [35505870] = {quest=nil, npc=126896, note="On the 2nd floor."}, -- Herald of Chaos
-    [36302360] = {quest=nil, npc=126865}, -- Vigilant Thanos
+    [35203720] = {quest=48708, npc=126885}, -- Umbraliss
+    [35505870] = {quest=48711, npc=126896, note="On the 2nd floor."}, -- Herald of Chaos
+    [36302360] = {quest=48703, npc=126865}, -- Vigilant Thanos
     [38705580] = {quest=48697, npc=126860, item=153190}, -- Kaara the Pale
-    [39206660] = {quest=nil, npc=126868}, -- Turek the Lucid
-    [41301160] = {quest=nil, npc=126864, item=152998}, -- Feasel the Muffin Thief
+    [39716420] = {quest=48706, npc=126868, note="Inside the building"}, -- Turek the Lucid
+    [41301160] = {quest=48702, npc=126864, item=152998}, -- Feasel the Muffin Thief
     [43806020] = {quest=48700, npc=126862, item=153193, toy=true}, -- Baruut the Bloodthirsty
-    [44204980] = {quest=nil, npc=126898, item=153190}, -- Sabuul
-    [44607160] = {quest=nil, npc=122838}, -- Shadowcaster Voruun
-    [48504090] = {quest=nil, npc=126899}, -- Jed'hin Champion Vorusk
-    [49505280] = {quest=48935, npc=126913}, -- Slithon the Last
-    [49700990] = {quest=nil, npc=126912, mount=true}, -- Skreeg the Devourer
-    [55705990] = {quest=nil, npc=126852, item=152814, mount=true}, -- Wrangler Kravos
-    [56801450] = {quest=nil, npc=126910}, -- Commander Xethgar
-    [58003090] = {quest=nil, npc=125497}, -- Overseer Y'Sorna
+    [44204980] = {quest=48712, npc=126898, item=153190}, -- Sabuul
+    [44607160] = {quest=48692, npc=122838}, -- Shadowcaster Voruun
+    [48504090] = {quest=48713, npc=126899}, -- Jed'hin Champion Vorusk
+    [49505280] = {quest=48935, npc=126913, item=153203}, -- Slithon the Last
+    [49700990] = {quest=48721, npc=126912, item=152904, mount=true}, -- Skreeg the Devourer
+    [55705990] = {quest=48695, npc=126852, item=152814, mount=true}, -- Wrangler Kravos
+    [56801450] = {quest=48720, npc=126910}, -- Commander Xethgar
+    [58003090] = {quest=48716, npc=125497}, -- Overseer Y'Sorna
     [59203770] = {quest=48714, npc=124440}, -- Overseer Y'Beda
     [60402970] = {quest=48717, npc=125498}, -- Overseer Y'Morna
     [61405020] = {quest=48718, npc=126900, item=153181, toy=true, note="Can drop three different scroll toys"}, -- Instructor Tarahna
-    [63806460] = {quest=nil, npc=126866}, -- Vigilant Kuro
+    [63806460] = {quest=48704, npc=126866}, -- Vigilant Kuro
     [64002950] = {quest=48719, npc=126908}, -- Zul'tan the Numerous
-    [65306750] = {quest=nil, npc=126815}, -- Soultwisted Monstrosity
-    [70404670] = {quest=nil, npc=126889}, -- Sorolis the Ill-Fated
+    [52796704] = {quest=48693, npc=126815}, -- Soultwisted Monstrosity
+    [70404670] = {quest=48710, npc=126889}, -- Sorolis the Ill-Fated
 })
 
 -- DH starter:

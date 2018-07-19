@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(819, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(68476)
 mod:SetEncounterID(1575)
 mod:SetZone()
@@ -169,7 +169,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnPuncture:Show(amount)
 			end
 		else
-			if amount >= threatamount and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then--Other tank has at least one stack and you have none
+			if amount >= threatamount and not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then--Other tank has at least one stack and you have none
 				specWarnPunctureOther:Show(args.destName)--So nudge you to taunt it off other tank already.
 			end
 		end

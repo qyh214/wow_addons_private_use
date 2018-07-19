@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1744, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(106087)
 mod:SetEncounterID(1876)
 mod:SetZone()
@@ -102,14 +102,14 @@ local function findDebuff(self, spellName, spellId)
 	local found = 0
 	for uId in DBM:GetGroupMembers() do
 		local name = DBM:GetUnitFullName(uId)
-		if UnitDebuff(uId, spellName) then
+		if DBM:UnitDebuff(uId, spellName) then
 			found = found + 1
 			if spellId == 210864 then
 				warnTwistingShadows:CombinedShow(0.1, self.vb.twistedCast, name)
 				if name == UnitName("player") then
 					specWarnTwistingShadows:Show()
 					specWarnTwistingShadows:Play("runout")
-					local _, _, _, _, _, _, expires = UnitDebuff("Player", spellName)
+					local _, _, _, _, _, expires = DBM:UnitDebuff("Player", spellName)
 					local debuffTime = expires - GetTime()
 					if debuffTime then
 						yellTwistingShadows:Schedule(debuffTime-1, 1)
@@ -122,7 +122,7 @@ local function findDebuff(self, spellName, spellId)
 				if name == UnitName("player") then
 					specWarnNecroticVenom:Show()
 					specWarnNecroticVenom:Play("runout")
-					local _, _, _, _, _, _, expires = UnitDebuff("Player", spellName)
+					local _, _, _, _, _, expires = DBM:UnitDebuff("Player", spellName)
 					local debuffTime = expires - GetTime()
 					if debuffTime then
 						yellNecroticVenom:Schedule(debuffTime - 1, 1)
@@ -169,8 +169,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 215582 then
 		self.vb.talonsCast = self.vb.talonsCast + 1
 		local targetName, uId, bossuid = self:GetBossTarget(106087, true)
-		local tanking, status = UnitDetailedThreatSituation("player", bossuid)
-		if tanking or (status == 3) then--Player is current target
+		if self:IsTanking("player", bossuid, nil, true) then
 			specWarnRakingTalon:Show()
 			specWarnRakingTalon:Play("defensive")
 		end
@@ -303,8 +302,8 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 212364 then--Feeding Time
 		self.vb.feedingTimeCast = self.vb.feedingTimeCast + 1
 		specWarnFeedingTime:Show(self.vb.feedingTimeCast)

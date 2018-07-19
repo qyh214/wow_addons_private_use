@@ -1,14 +1,56 @@
-tag 114c87b20848e37b23af573633121af15197b75e v1.9.8
-Author:	Talyrius <contact@talyrius.net>
-Date:	Thu Aug 31 00:13:41 2017 -0700
+tag 0f0db7a21f349e0af67c8024eb0ea92ca8ee1109 v1.9.9
+Author:	U-DEREK-PC\Derek <Derek@Derek-PC.alteran.net>
+Date:	Wed Jul 18 01:32:39 2018 -0700
 
-Tagging as v1.9.8.
+Tagging as v1.9.9.
 
-commit 10a4840c051011d70e32c1fbbd3da77c0bcc583b
+commit 06266ea58a1de9458cb1580b8b48ee09f336935a
 Author: Talyrius <contact@talyrius.net>
-Date:   Thu Aug 31 00:11:38 2017 -0700
+Date:   Tue Jul 17 20:38:45 2018 -0700
 
-    Pull request #219 omitted some PlaySound calls.
+    Updated for Patch 8.0.1: Battle for Azeroth.
+
+commit ce2f318749ed8f8924188095a68f71e9d601e0e5
+Author: Talyrius <contact@talyrius.net>
+Date:   Tue Jul 17 20:38:02 2018 -0700
+
+    Stopped registering events that no longer exist.
     
-    Fixes #222.
+    Partially merges #263.
+    
+    Co-Authored-By: kaqualls <kaqualls@users.noreply.github.com>
+
+commit 8f96580aee1a55c07aa4dbd8eac5e4d58f279774
+Author: Talyrius <contact@talyrius.net>
+Date:   Tue Jul 17 20:37:35 2018 -0700
+
+    Updated previously deprecated functions to use the new C_EquipmentSet API.
+    
+    Fixes #177 and #185. Partially merges #263.
+    
+    Co-Authored-By: kaqualls <kaqualls@users.noreply.github.com>
+
+commit 83cd810457965a4dcbd62bca4b7f6f2ad70703a2
+Author: Ben Hamlin <bhamlin@microsoft.com>
+Date:   Tue Jul 17 20:15:06 2018 -0700
+
+    Fixed sorting "By quality and item level."
+    
+    Fixes #140.
+
+commit c7a4c11ad714b5609a06c1278842c29240abb899
+Author: Talyrius <contact@talyrius.net>
+Date:   Sat May 19 21:21:37 2018 -0700
+
+    Fixed interactivity with merged item stacks.
+    
+    Fixes #188; caused by b4c8337. Bag sorting will now be performed while closed.
+
+commit 6bea6e8a55e8e3ae1e2d247a51f4a9a26bd1a045
+Author: Paweł Jastrzębski <pawelj@iosphe.re>
+Date:   Thu Sep 28 16:26:38 2017 +0200
+
+    Fixed lack of color in new item glow.
+    
+    Merge pull request #238 from AcidWeb/ElvUI-AdiBags.
 

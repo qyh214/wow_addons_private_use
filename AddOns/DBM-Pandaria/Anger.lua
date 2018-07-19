@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(691, "DBM-Pandaria", nil, 322)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(60491)
 mod:SetEncounterID(1564)
 mod:SetReCombatTime(20, 10)
@@ -36,12 +36,12 @@ local bitterThought, growingAnger = DBM:GetSpellInfo(119601), DBM:GetSpellInfo(1
 local playerMCed = false
 
 local function debuffFilter(uId)
-	return UnitDebuff(uId, growingAnger)
+	return DBM:UnitDebuff(uId, growingAnger)
 end
 
 function mod:updateRangeFrame()
 	if not self.Options.RangeFrame then return end
-	if UnitDebuff("player", growingAnger) then
+	if DBM:UnitDebuff("player", growingAnger) then
 		DBM.RangeCheck:Show(5, nil)--Show everyone.
 	else
 		DBM.RangeCheck:Show(5, debuffFilter)--Show only people who have debuff.
@@ -49,7 +49,6 @@ function mod:updateRangeFrame()
 end
 
 function mod:OnCombatStart(delay, yellTriggered)
-	bitterThought, growingAnger = DBM:GetSpellInfo(119601), DBM:GetSpellInfo(119622)
 	playerMCed = false
 	if yellTriggered then
 		timerUnleashedWrathCD:Start(-delay)
@@ -110,7 +109,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:UNIT_AURA(uId)
-	if UnitDebuff("player", bitterThought) and self:AntiSpam(2) and not playerMCed then
+	if DBM:UnitDebuff("player", bitterThought) and self:AntiSpam(2) and not playerMCed then
 		specWarnBitterThoughts:Show()
 	end
 end

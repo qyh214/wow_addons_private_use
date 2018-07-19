@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1750, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17471 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(104636)
 mod:SetEncounterID(1877)
 mod:SetZone()
@@ -148,7 +148,7 @@ function mod:SPELL_CAST_START(args)
 			timerDisiccatingStompCD:Start(nil, args.SourceGUID)
 		end
 	elseif spellId == 211368 then
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnTouchofLife:Show(args.sourceName)
 			specWarnTouchofLife:Play("kickcast")
 		end
@@ -161,8 +161,7 @@ function mod:SPELL_CAST_START(args)
 		timerSpearOfNightmaresCD:Start()
 		countdownSpearOfNightmares:Start(18.2)
 		local targetName, uId, bossuid = self:GetBossTarget(104636, true)
-		local tanking, status = UnitDetailedThreatSituation("player", bossuid)
-		if tanking or (status == 3) then--Player is current target
+		if self:IsTanking("player", bossuid, nil, true) then
 			specWarnSpearOfNightmares:Show()
 			specWarnSpearOfNightmares:Play("defensive")
 		end
@@ -174,8 +173,7 @@ function mod:SPELL_CAST_START(args)
 		timerNightmareBlastCD:Start()
 		countdownNightmareBlast:Start(32.8)
 		local targetName, uId, bossuid = self:GetBossTarget(104636, true)
-		local tanking, status = UnitDetailedThreatSituation("player", bossuid)
-		if tanking or (status == 3) then--Player is current target
+		if self:IsTanking("player", bossuid, nil, true) then
 			specWarnNightmareBlast:Show()
 			specWarnNightmareBlast:Play("defensive")
 		else
@@ -278,8 +276,8 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 211189 then--Rotten Breath precast. Best method for fastest and most accurate target scanning
 		self:BossUnitTargetScanner(uId, "BreathTarget")
 		timerRottenBreathCD:Start(nil, UnitGUID(uId))

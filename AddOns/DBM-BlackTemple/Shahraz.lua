@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Shahraz", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 653 $"):sub(12, -3))
 mod:SetCreatureID(22947)
 mod:SetEncounterID(607)
 mod:SetModelID(21252)
@@ -102,8 +102,9 @@ function mod:UNIT_HEALTH_FREQUENT(uId)
 end
 
 --["40869-Fatal Attraction"] = "pull:24.4, 26.8, 28.0, 20.7, 21.9, 26.6, 22.0, 23.2, 23.0, 25.7, 26.6, 26.8, 25.6, 23.1, 26.8, 25.4",
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if aura[spellId] then
+		local spellName = DBM:GetSpellInfo(spellId)
 		timerAura:Start(spellName)
 	elseif spellId == 40869 then--Cast event not in combat log, only applied and that can be resisted (especially on non timewalker). this ensures timer always exists
 		timerFACD:Start()

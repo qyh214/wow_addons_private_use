@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Akama", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 653 $"):sub(12, -3))
 mod:SetCreatureID(22841)
 mod:SetEncounterID(603)
 mod:SetModelID(21357)
@@ -109,7 +109,7 @@ function mod:SWING_DAMAGE(_, sourceName)
 end
 mod.SWING_MISSED = mod.SWING_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if (spellId == 40607 or spellId == 40955) and self.vb.phase == 1 then--Fixate/Summon Shade of Akama Trigger
 		self:UnregisterShortTermEvents()
 		self.vb.phase = 2

@@ -26,18 +26,18 @@ local L = localization
 
 --- Class Names
 local classLocalizate = {
-	["WARRIOR"] = GetClassInfoByID(1),
-	["PALADIN"] = GetClassInfoByID(2),
-	["HUNTER"] = GetClassInfoByID(3),
-	["ROGUE"] = GetClassInfoByID(4),
-	["PRIEST"] = GetClassInfoByID(5),
-	["DEATHKNIGHT"] = GetClassInfoByID(6),
-	["SHAMAN"] = GetClassInfoByID(7),
-	["MAGE"] = GetClassInfoByID(8),
-	["WARLOCK"] = GetClassInfoByID(9),
-	["MONK"] = GetClassInfoByID(10),
-	["DRUID"] = GetClassInfoByID(11),
-	["DEMONHUNTER"] = GetClassInfoByID(12),
+	["WARRIOR"] = GetClassInfo(1),
+	["PALADIN"] = GetClassInfo(2),
+	["HUNTER"] = GetClassInfo(3),
+	["ROGUE"] = GetClassInfo(4),
+	["PRIEST"] = GetClassInfo(5),
+	["DEATHKNIGHT"] = GetClassInfo(6),
+	["SHAMAN"] = GetClassInfo(7),
+	["MAGE"] = GetClassInfo(8),
+	["WARLOCK"] = GetClassInfo(9),
+	["MONK"] = GetClassInfo(10),
+	["DRUID"] = GetClassInfo(11),
+	["DEMONHUNTER"] = GetClassInfo(12),
 	["PET"] = PETS,
 	["NO"] = SPECIAL,
 	["ALL"] = ALL_CLASSES,
@@ -236,12 +236,22 @@ local zoneEJids = {
 	S_ZoneT19Suramar = 786,
 	S_ZoneT20ToS = 875,
 	S_ZoneT21A = 946,
+	S_ZoneT22Uldir = 1031,
 }
 for prefix,eID in pairs(zoneEJids) do
 	L[prefix] = EJ_GetInstanceInfo(eID)
 end
 
 local encounterIDtoEJidData = {
+	[2144] = 2168,	--Taloc
+	[2141] = 2167,	--MOTHER
+	[2136] = 2169,	--Zek'voz
+	[2128] = 2146,	--Fetid Devourer
+	[2134] = 2166,	--Vectis
+	[2145] = 2195,	--Zul
+	[2135] = 2194,	--Mythrax
+	[2122] = 2147,	--G'huun
+
 	[2076] = 1992,	--Garothi Worldbreaker
 	[2074] = 1987,	--Hounds of Sargeras
 	[2064] = 1985,	--Portal Keeper Hasabel
@@ -328,7 +338,7 @@ local encounterIDtoEJidChache = {
 
 L.bossName = setmetatable({}, {__index=function (t, k)
 	if not encounterIDtoEJidChache[k] then
-		encounterIDtoEJidChache[k] = EJ_GetEncounterInfo(encounterIDtoEJidData[k]) or ""
+		encounterIDtoEJidChache[k] = EJ_GetEncounterInfo(encounterIDtoEJidData[k] or 0) or ""
 	end
 	return encounterIDtoEJidChache[k]
 end})

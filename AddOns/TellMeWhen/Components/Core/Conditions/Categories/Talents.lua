@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
@@ -25,8 +25,8 @@ local _, pclass = UnitClass("Player")
 
 local GetTalentInfo, GetNumTalents, GetGlyphLink, GetSpellInfo = 
       GetTalentInfo, GetNumTalents, GetGlyphLink, GetSpellInfo
-local GetSpecializationInfo, GetNumSpecializationsForClassID, GetSpecializationInfoForClassID, GetClassInfoByID, GetNumClasses, GetClassInfo = 
-      GetSpecializationInfo, GetNumSpecializationsForClassID, GetSpecializationInfoForClassID, GetClassInfoByID, GetNumClasses, GetClassInfo
+local GetSpecializationInfo, GetNumSpecializationsForClassID, GetSpecializationInfoForClassID, GetNumClasses, GetClassInfo = 
+      GetSpecializationInfo, GetNumSpecializationsForClassID, GetSpecializationInfoForClassID, GetNumClasses, GetClassInfo
 local GetNumBattlefieldScores, RequestBattlefieldScoreData, GetBattlefieldScore, GetNumArenaOpponents, GetArenaOpponentSpec =
       GetNumBattlefieldScores, RequestBattlefieldScoreData, GetBattlefieldScore, GetNumArenaOpponents, GetArenaOpponentSpec
 
@@ -75,7 +75,6 @@ function SPECS:UpdateUnitSpecs()
 	end
 end
 function SPECS:PrepareUnitSpecEvents()
-	SPECS:RegisterEvent("UPDATE_WORLD_STATES",   "UpdateUnitSpecs")
 	SPECS:RegisterEvent("UNIT_NAME_UPDATE",   "UpdateUnitSpecs")
 	SPECS:RegisterEvent("ARENA_OPPONENT_UPDATE", "UpdateUnitSpecs")
 	SPECS:RegisterEvent("GROUP_ROSTER_UPDATE", "UpdateUnitSpecs")
@@ -166,7 +165,7 @@ TMW:RegisterUpgrade(73019, {
 			condition.Type = "CLASS2"
 			condition.Checked = false
 			for i = 1, GetNumClasses() do
-				local name, token, classID = GetClassInfoByID(i)
+				local name, token, classID = GetClassInfo(i)
 				if token == self.classes[condition.Level] then
 					condition.BitFlags = {[i] = true}
 					return
@@ -182,7 +181,7 @@ ConditionCategory:RegisterCondition(0.2,  "CLASS2", {
 	bitFlags = (function()
 		local t = {}
 		for i = 1, GetNumClasses() do
-			local name, token, classID = GetClassInfoByID(i)
+			local name, token, classID = GetClassInfo(i)
 			t[i] = {
 				order = i,
 				text = PLAYER_CLASS_NO_SPEC:format(RAID_CLASS_COLORS[token].colorStr, name),
@@ -363,16 +362,14 @@ function CNDT:PLAYER_TALENT_UPDATE()
 		end
 	end
 
-
 	wipe(Env.PvpTalentMap)
-	for tier = 1, MAX_PVP_TALENT_TIERS do
-		for column = 1, MAX_PVP_TALENT_TIERS do
-			local id, name, icon, selected, available, _, unlocked = GetPvpTalentInfo(tier, column, 1)
-			local lower = name and strlowerCache[name]
-			if lower then
-				Env.PvpTalentMap[lower] = selected
-				Env.PvpTalentMap[id] = selected
-			end
+	local ids = C_SpecializationInfo.GetAllSelectedPvpTalentIDs()
+	for _, id in pairs(ids) do
+		local _, name = GetPvpTalentInfoByID(id);
+		local lower = name and strlowerCache[name]
+		if lower then
+			Env.PvpTalentMap[lower] = true
+			Env.PvpTalentMap[id] = true
 		end
 	end
 end
@@ -412,6 +409,7 @@ ConditionCategory:RegisterCondition(9,	 "PTSINTAL", {
 })
 
 
+
 ConditionCategory:RegisterCondition(10,	 "PVPTALENTLEARNED", {
 	text = L["UIPANEL_PVPTALENTLEARNED"],
 
@@ -422,7 +420,7 @@ ConditionCategory:RegisterCondition(10,	 "PVPTALENTLEARNED", {
 		editbox:SetTexts(L["SPELLTOCHECK"], L["CNDT_ONLYFIRST"])
 	end,
 	useSUG = "pvptalents",
-	icon = function() return select(3, GetPvpTalentInfo(1, 1, 1)) end,
+	icon = 1322720,
 	tcoords = CNDT.COMMON.standardtcoords,
 	funcstr = function(ConditionObject, c)
 		-- this is handled externally because PvpTalentMap is so extensive a process,
@@ -439,6 +437,7 @@ ConditionCategory:RegisterCondition(10,	 "PVPTALENTLEARNED", {
 			ConditionObject:GenerateNormalEventString("ACTIVE_TALENT_GROUP_CHANGED")
 	end,
 })
+
 
 ConditionCategory:RegisterCondition(11,	 "GLYPH", {
 	text = L["UIPANEL_GLYPH"],

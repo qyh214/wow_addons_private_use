@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
@@ -259,7 +259,7 @@ function Module:GetStartEndPositions(isClick)
 end
 
 
-function Module:Table_GetNormalSuggestions(suggestions, tbl, ...)
+function Module:Table_GetNormalSuggestions(suggestions, tbl)
 	local currentTag = getCurrentTag(SUG.Box)
 
 	for _, namespaceName in pairs(DogTag.unpackNamespaceList[DOGTAG.nsList]) do

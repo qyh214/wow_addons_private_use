@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 local TMW = TMW
@@ -183,7 +183,7 @@ TMW:RegisterCallback("TMW_OPTIONS_LOADED", function()
 			end
 		end
 	end
-	function Module:Table_GetNormalSuggestions(suggestions, tbl, ...)
+	function Module:Table_GetNormalSuggestions(suggestions, tbl)
 		local atBeginning = SUG.atBeginning
 		local lastName = SUG.lastName
 

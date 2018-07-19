@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Greench", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17257 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(54499)
 mod:SetModelID(39021)
 mod:SetReCombatTime(10, 5)
@@ -58,7 +58,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 --	The Abominable Greench:Possible Target<Omegathree>:target:Throw Strange Snowman Trigger::0:101942", -- [230]
 	if spellId == 101942 then
 		self:SendSync("SnowMan")

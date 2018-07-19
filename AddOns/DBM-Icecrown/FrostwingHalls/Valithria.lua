@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Valithria", "DBM-Icecrown", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 257 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(36789)
 mod:SetEncounterID(1098)
 mod:SetModelID(30318)
@@ -187,7 +187,7 @@ function mod:UNIT_TARGET_UNFILTERED()
 	end
 end
 
-function mod:UNIT_SPELLCAST_START(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_START(uId, _, spellId)
 	if spellId == 71189 then
 		DBM:EndCombat(self)
 	end

@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
@@ -264,7 +264,43 @@ ConditionCategory:RegisterCondition(2,	 "GROUP2", {
 
 ConditionCategory:RegisterSpacer(10)
 
+--[[
+	
+]]
 
+function CNDT:GetBitFlag(conditionSettings, index)
+	if type(conditionSettings.BitFlags) == "table" then
+		return conditionSettings.BitFlags[index]
+	else
+		local flag = bit.lshift(1, index-1)
+		return bit.band(conditionSettings.BitFlags, flag) == flag
+	end
+end
+
+TMW:RegisterUpgrade(85001, {
+	flagConversions = {
+		[1] = 12, -- kalimdor
+		[2] = 13, -- ek
+		[3] = 101, -- outland
+		[4] = 113, -- northrend
+		[5] = 948, -- maelstrom
+		[6] = 424, -- panda
+		[7] = 572, -- Draenor
+		[8] = 619, -- broken
+		[9] = 905, -- argus
+	},
+	condition = function(self, condition)
+		if condition.Type == "LOC_CONTINENT" then
+			local existing = { BitFlags = condition.BitFlags }
+			condition.BitFlags = {}
+			for old, new in pairs(self.flagConversions) do
+				if CNDT:GetBitFlag(condition, old) then
+					condition.BitFlags[new] = true
+				end
+			end
+		end
+	end,
+})
 
 ConditionCategory:RegisterCondition(13,   "LOC_CONTINENT", {
 	text = L["CONDITIONPANEL_LOC_CONTINENT"],
@@ -272,19 +308,39 @@ ConditionCategory:RegisterCondition(13,   "LOC_CONTINENT", {
 	unit = false,
 	bitFlagTitle = L["CONDITIONPANEL_BITFLAGS_CHOOSEMENU_CONTINENT"],
 	bitFlags = (function()
-		local t = GetContinentMaps()
-		for continentID in pairs(t) do
-			t[continentID] = GetContinentName(continentID)
+		if GetContinentMaps then -- Pre-wow-80000
+			local t = GetContinentMaps()
+			for continentID in pairs(t) do
+				t[continentID] = GetContinentName(continentID)
+			end
+			return t
+		else -- post-wow-80000
+			local t = {}
+			-- 946 is the cosmic map ID.
+			for id, mapInfo in pairs(C_Map.GetMapChildrenInfo(946, Enum.UIMapType.Continent, true)) do
+				t[mapInfo.mapID] = mapInfo.name
+			end
+			return t
 		end
-
-		return t
 	end)(),
 
 	nooperator = true,
 	icon = "Interface\\Icons\\inv_misc_map02",
 	tcoords = CNDT.COMMON.standardtcoords,
 	Env = {
-		GetCurrentMapContinent = GetCurrentMapContinent,
+		GetCurrentMapContinent = _G.GetCurrentMapContinent or function()
+			local mapID = C_Map.GetBestMapForUnit("player")
+			if not mapID then return nil end
+			local mapInfo = C_Map.GetMapInfo(mapID)
+			while mapInfo do
+				if mapInfo.mapType == Enum.UIMapType.Continent then
+					return mapInfo.mapID
+				end
+				mapInfo = C_Map.GetMapInfo(mapInfo.parentMapID);
+			end
+			
+			return nil
+		end,
 	},
 	funcstr = [[BITFLAGSMAPANDCHECK( GetCurrentMapContinent() )]],
 	events = function(ConditionObject, c)
@@ -362,7 +418,7 @@ TMW:RegisterCallback("TMW_OPTIONS_LOADED", function()
 	Module.noTexture = true
 	Module.showColorHelp = false
 
-	function Module:Table_GetNormalSuggestions(suggestions, tbl, ...)
+	function Module:Table_GetNormalSuggestions(suggestions, tbl)
 		local lastName = SUG.lastName
 
 		for name in pairs(tbl) do

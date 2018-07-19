@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(197, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(52571)
 mod:SetEncounterID(1185)
 mod:SetZone()
@@ -141,7 +141,6 @@ function mod:TargetScanner(ScansDone)
 end
 
 function mod:OnCombatStart(delay)
-	leap, swipe, seedsDebuff = DBM:GetSpellInfo(98535), DBM:GetSpellInfo(98474), DBM:GetSpellInfo(98450)
 	berserkTimer:Start(-delay)
 	abilityCount = 0
 	kitty = false
@@ -169,7 +168,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		abilityCount = 0
 		timerNextSpecial:Cancel()
 		timerNextSpecial:Start(abilityTimers[abilityCount], swipe, abilityCount+1)
-		if self.Options.RangeFrameCat and not UnitDebuff("player", seedsDebuff) then--Only hide range finder if you do not have seed.
+		if self.Options.RangeFrameCat and not DBM:UnitDebuff("player", seedsDebuff) then--Only hide range finder if you do not have seed.
 			DBM.RangeCheck:Hide()
 		end
 	elseif spellId == 97238 then
@@ -190,7 +189,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		timerOrb:Start()
 	elseif spellId == 98450 and args:IsPlayer() then
-		local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)--Find out what our specific seed timer is
+		local _, _, _, _, duration, expires = DBM:UnitDebuff("player", args.spellName)--Find out what our specific seed timer is
 		if expires then
 			specWarnSearingSeed:Schedule(expires - GetTime() - 5)	-- Show "move away" warning 5secs before explode
 			timerSearingSeed:Start(expires-GetTime())

@@ -78,7 +78,7 @@ local bDebugMode = false
 
 -- Required Titan variables
 local TITAN_SOCIAL_ID = "Social"
-local TITAN_SOCIAL_VERSION = "7.3.0"
+local TITAN_SOCIAL_VERSION = "8.0.1"
 local TITAN_SOCIAL_TOOLTIP_KEY = "TitanSocialTooltip"
 
 local MOBILE_HERE_ICON = "|TInterface\\ChatFrame\\UI-ChatIcon-ArmoryChat:0:0:0:0:16:16:0:16:0:16:73:177:73|t"
@@ -1206,9 +1206,6 @@ function _G.TitanPanelSocialButton_OnLoad(self)
 	-- RealID Events
 	self:RegisterEvent("BN_FRIEND_ACCOUNT_OFFLINE")
 	self:RegisterEvent("BN_FRIEND_ACCOUNT_ONLINE")
-	self:RegisterEvent("BN_FRIEND_TOON_OFFLINE")
-	self:RegisterEvent("BN_FRIEND_TOON_ONLINE")
-	self:RegisterEvent("BN_TOON_NAME_UPDATED")
 	self:RegisterEvent("BN_FRIEND_INFO_CHANGED")
 	self:RegisterEvent("CHAT_MSG_BN_INLINE_TOAST_BROADCAST") -- a friend changes their broadcast
 

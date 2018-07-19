@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(849, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(71479, 71475, 71480)--He-Softfoot, Rook Stonetoe, Sun Tenderheart
 mod:SetEncounterID(1598)
 mod:SetZone()
@@ -33,7 +33,6 @@ local warnCorruptedBrew				= mod:NewTargetAnnounce(143019, 2)--I do believe targ
 local warnDefiledGround				= mod:NewSpellAnnounce(143961, 3, nil, "Tank")--Embodied Misery
 local warnInfernoStrike				= mod:NewTargetAnnounce(143962, 3)
 --He Softfoot
-local warnGouge						= mod:NewCastAnnounce(143330, 4, nil, nil, "Tank")--The cast, so you can react and turn back to it and avoid stun.
 local warnGougeStun					= mod:NewTargetAnnounce(143301, 4, nil, "Tank")--Failed, stunned. the success ID is 143331 (knockback)
 local warnGarrote					= mod:NewTargetAnnounce(143198, 3, nil, "Healer")
 ----He Softfoot's Desperate Measures
@@ -59,11 +58,10 @@ local specWarnDefiledGround			= mod:NewSpecialWarningMove(143959)
 local specWarnInfernoStrike			= mod:NewSpecialWarningYou(143962)
 local yellInfernoStrike				= mod:NewYell(143962)
 --He Softfoot
-local specWarnGouge					= mod:NewSpecialWarningMove(143330, nil, nil, nil, 3)--Maybe localize it as a "turn away" warning.
+local specWarnGouge					= mod:NewSpecialWarningLookAway(143330, nil, nil, nil, 3, 2)
 local specWarnGougeStunOther		= mod:NewSpecialWarningTaunt(143301)--Tank is stunned, other tank must taunt or he'll start killing people
 local specWarnNoxiousPoison			= mod:NewSpecialWarningMove(144367)
 ----He Softfoot's Desperate measures
-local specWarnMarkOfAnquish			= mod:NewSpecialWarningSpell(143812)
 local specWarnMarked				= mod:NewSpecialWarningYou(143840)
 local yellMarked					= mod:NewYell(143840, nil, false)
 --Sun Tenderheart
@@ -138,7 +136,6 @@ function mod:InfernoStrikeTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
-	calamitySpellText = DBM:GetSpellInfo(143491)
 	isInfernoTarget = false
 	self.vb.calamityCount = 0
 	self.vb.warned71475 = 0
@@ -176,7 +173,6 @@ function mod:SPELL_CAST_START(args)
 			specWarnCorruptionShock:Show(source)
 		end
 	elseif spellId == 143330 then
-		warnGouge:Show()
 		timerGougeCD:Start()
 	elseif spellId == 143446 then
 		warnBane:Show()
@@ -201,7 +197,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 143962 then
 		timerInfernoStrikeCD:Start()
 		self:ScheduleMethod(0.2, "BossTargetScanner", args.sourceGUID, "InfernoStrikeTarget")
-	elseif spellId == 143497 then
+	elseif spellId == 143497 and self:AntiSpam(2, 1) then
 		warnBondGoldenLotus:Show()
 	elseif spellId == 144396 then
 		timerVengefulStrikesCD:Start()
@@ -271,7 +267,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		)
 	elseif spellId == 143812 then--Mark of Anguish
 		warnMarkOfAnguish:Show()
-		specWarnMarkOfAnquish:Show()
 		timerGougeCD:Cancel()
 		timerGarroteCD:Cancel()
 		timerCalamityCD:Cancel()--Can't be cast during THIS special
@@ -302,11 +297,11 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 144357 and destGUID == UnitGUID("player") and self:AntiSpam(1.5, 3) then
+	if spellId == 144357 and destGUID == UnitGUID("player") and self:AntiSpam(1.5, 3) and not self:IsTrivial(100) then
 		specWarnDefiledGround:Show()
-	elseif spellId == 144367 and destGUID == UnitGUID("player") and self:AntiSpam(1.5, 4) then
+	elseif spellId == 144367 and destGUID == UnitGUID("player") and self:AntiSpam(1.5, 4) and not self:IsTrivial(100) then
 		specWarnNoxiousPoison:Show()
-	elseif spellId == 143009 and destGUID == UnitGUID("player") and self:AntiSpam(1.5, 5) then
+	elseif spellId == 143009 and destGUID == UnitGUID("player") and self:AntiSpam(1.5, 5) and not self:IsTrivial(100) then
 		specWarnKick:Show()
 	end
 end
@@ -322,10 +317,11 @@ end
 function mod:RAID_BOSS_WHISPER(msg)
 	if msg:find("spell:143330") then--Emote giving ONLY to the person tanking boss. Better than scanning boss 1-5 for this one which fails from time to time
 		specWarnGouge:Show()--So show tank warning
+		specWarnGouge:Play("turnaway")
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 143019 then--Does not show in combat log on normal
 		self:BossTargetScanner(71475, "BrewTarget", 0.025)
 		timerCorruptedBrewCD:Start()
@@ -333,6 +329,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 end
 
 function mod:UNIT_HEALTH_FREQUENT(uId)
+	if self:IsTrivial(100) then return end
 	if self.vb.warned71475 == 2 and self.vb.warned71479 == 2 and self.vb.warned71480 == 2 then return end
 	local cId = self:GetUnitCreatureId(uId)
 	if cId == 71475 or cId == 71479 or cId == 71480 then

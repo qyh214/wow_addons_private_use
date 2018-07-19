@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(682, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 67 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(60143)
 mod:SetEncounterID(1434)
 mod:SetZone()
@@ -247,7 +247,7 @@ function mod:OnSync(msg, guid)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if (spellId == 117215 or spellId == 117218 or spellId == 117219 or spellId == 117222) then--Shadowy Attacks
 		timerShadowyAttackCD:Start()
 	elseif spellId == 116964 then--Summon Totem

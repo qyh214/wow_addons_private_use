@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(745, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(62980)--63554 (Special invisible Vizier that casts the direction based spellid versions of attenuation)
 mod:SetEncounterID(1507)
 mod:SetZone()
@@ -186,7 +186,7 @@ function mod:RAID_BOSS_EMOTE(msg)
 end
 
 --"<55.0 21:38:55> [CLEU] UNIT_DIED#true#0x0000000000000000#nil#-2147483648#-2147483648#0xF130FE9600003072#Echo of Force and Verve#68168#0", -- [10971]
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 122933 then--Clear Throat (4 seconds before force and verve)
 		specwarnForce:Show()
 		timerForceCast:Start()

@@ -448,9 +448,9 @@ UIDropDownMenu_Initialize(GroupLootDropDown, addon.DropdownInit, "MENU")
 BINDING_HEADER_XLOOTMASTER = "XLootMaster"
 
 StaticPopupDialogs["CONFIRM_XLOOT_DISTRIBUTION"] = {
-	text = TEXT(CONFIRM_LOOT_DISTRIBUTION),
-	button1 = TEXT(YES),
-	button2 = TEXT(NO),
+	text = CONFIRM_LOOT_DISTRIBUTION,
+	button1 = YES,
+	button2 = NO,
 	OnAccept = function(self,data)
 		addon.AnnounceAward(data)
 		GiveMasterLoot(data.slot, data.id);

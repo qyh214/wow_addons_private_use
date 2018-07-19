@@ -51,6 +51,10 @@ L= DBM:GetModLocalization(2093)
 -----------------------
 L= DBM:GetModLocalization(2094)
 
+L:SetMiscLocalization({
+	openingRP = "Gather 'round and place yer bets! We got a new set of vict-- uh... competitors! Take it away, Gurthok and Wodin!"
+})
+
 -----------------------
 -- Harlan Sweete --
 -----------------------
@@ -115,6 +119,10 @@ L= DBM:GetModLocalization(2154)
 -----------------------
 L= DBM:GetModLocalization(2155)
 
+L:SetMiscLocalization({
+	openingRP	= "It would seem you have guests, Lord Stormsong."
+})
+
 -----------------------
 -- Vol'zith the Whisperer --
 -----------------------
@@ -138,9 +146,11 @@ L:SetGeneralLocalization({
 L= DBM:GetModLocalization(2173)
 
 -----------------------
--- Chopper Redhook --
+-- Chopper Redhook / Sergeant Bainbridge --
 -----------------------
 L= DBM:GetModLocalization(2132)
+
+L= DBM:GetModLocalization(2133)
 
 -----------------------
 -- Hadal Darkfathom --
@@ -316,11 +326,6 @@ L= DBM:GetModLocalization(2128)
 -- Gorak Tul --
 -----------------------
 L= DBM:GetModLocalization(2129)
-
-L:SetMiscLocalization({
-	fireYell = "Hurry! Set them aflame before the Drust King resurrects them!"
-})
-
 
 ---------
 --Trash--

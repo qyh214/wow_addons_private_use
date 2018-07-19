@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(659, "DBM-Party-MoP", 7, 246)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(58633, 58664)--58633 is boss, 58664 is Phylactery. We register BOTH to avoid pre mature combat ending cause boss dies twice.
 --To re-emphesize again (although it was already spelled out in comments. THE BOSS DIES TWICE, if you only register 58633 then the boss will fire EndCombat at end of phase 1.
 --THIS is why we also register 58664, so end combat does not fire until the boss is actually dead
@@ -44,7 +44,7 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 111209 and self:AntiSpam(2, 2) then
 		warnFrigidGrasp:Show()
 		timerFrigidGrasp:Start()

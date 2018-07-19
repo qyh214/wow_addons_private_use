@@ -1,3 +1,4 @@
+if GetBuildInfo() ~= "7.2.0" then return end
 local ADDON, Addon = ...
 local Mod = Addon:NewModule('Schedule')
 

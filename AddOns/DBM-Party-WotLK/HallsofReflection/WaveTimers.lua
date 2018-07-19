@@ -1,12 +1,12 @@
 local mod = DBM:NewMod("HoRWaveTimer", "DBM-Party-WotLK", 16)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 255 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(30658)
 mod:SetZone()
 
 mod:RegisterEvents(
-	"UPDATE_WORLD_STATES",
+	"UPDATE_UI_WIDGET",
 	"UNIT_DIED"
 )
 mod.noStatistics = true
@@ -22,15 +22,17 @@ local lastWave = 0
 local FalricDead = false
 local falric = EJ_GetEncounterInfo(601)
 
-function mod:UPDATE_WORLD_STATES(args)
-	local text = select(4, GetWorldStateUIInfo(1))
+function mod:UPDATE_UI_WIDGET(table)
+	local id = table.widgetID
+	if id ~= 592 then return end
+	local widgetInfo = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(id)
+	local text = widgetInfo.text
 	if not text then return end
-	local _, _, wave = string.find(text, L.WaveCheck)
+	local wave = text:match("(%d+).+10")
 	if not wave then
 		wave = 0
 	end
 	wave = tonumber(wave)
-	lastWave = tonumber(lastWave)
 	if wave < lastWave then
 		lastWave = 0
 	end

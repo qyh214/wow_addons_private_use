@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1904, "DBM-Party-Legion", 12, 900)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(119542)--119883 Fel Portal Guardian 118834
 mod:SetEncounterID(2053)
 mod:SetZone()
@@ -82,8 +82,8 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 235822 or spellId == 235862 then--Start Wave 01/Start Wave 02
 		specWarnAdds:Show()
 		specWarnAdds:Play("killmob")

@@ -71,6 +71,9 @@ local player_relogged = true -- Determines if we potentially need data from the 
 local lootTable = {}
 
 local IsPartyLFG = IsPartyLFG
+-- Lua
+local time, date, tonumber, unpack, select, wipe, pairs, ipairs, format, table, tinsert, tremove, bit, tostring, type
+	 = time, date, tonumber, unpack, select, wipe, pairs, ipairs, format, table, tinsert, tremove, bit, tostring, type
 
 local playersData = {-- Update on login/encounter starts. it stores the information of the player at that moment.
 	gears = {}, -- Gears key: slot number(1-19), value: item link
@@ -432,6 +435,7 @@ function RCLootCouncil:OnEnable()
 	self:RegisterEvent("LOOT_OPENED",		"OnEvent")
 	self:RegisterEvent("LOOT_SLOT_CLEARED", "OnEvent")
 	self:RegisterEvent("LOOT_CLOSED",		"OnEvent")
+
 	--self:RegisterEvent("GROUP_ROSTER_UPDATE", "Debug", "event")
 
 	if IsInGuild() then
@@ -888,6 +892,9 @@ function RCLootCouncil:OnCommReceived(prefix, serializedMsg, distri, sender)
 
 			elseif command == "verTestReply" then
 				local name,_,_, otherVersion, tVersion, moduleData = unpack(data)
+				if not name then -- REVIEW v2.7.11 For some reason name can sometimes be missing (#341)!?
+					return self:DebugLog("Error - verTestReply with nil name", sender, name, otherVersion, tVersion, moduleData)
+				end
 				self.db.global.verTestCandidates[name] = otherVersion.. "-" .. tostring(tVersion) .. ": - " .. self.playerName
 				if strfind(otherVersion, "%a+") then return self:Debug("Someone's tampering with version?", otherVersion) end
 				if self:VersionCompare(self.version,otherVersion) and not self.verCheckDisplayed and (not (tVersion or self.tVersion)) then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(831, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(69473)--69888
 mod:SetEncounterID(1580, 1581)
 mod:SetZone()
@@ -102,7 +102,6 @@ function mod:checkVitaDistance()
 end
 
 function mod:OnCombatStart(delay)
-	vitaName, animaName, animaDebuff = DBM:GetSpellInfo(138332), DBM:GetSpellInfo(138331), DBM:GetSpellInfo(138288)
 	creationCount = 0
 	stalkerCount = 0
 	horrorCount = 0
@@ -245,7 +244,7 @@ function mod:SPELL_DAMAGE(_, sourceName, _, _, destGUID, destName, _, _, spellId
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 139040 then--Call Essence
 		specWarnCallEssence:Show()
 		timerCallEssenceCD:Start()
@@ -266,9 +265,9 @@ end
 
 function mod:UNIT_POWER_FREQUENT(uId)
 	local power = UnitPower(uId)
-	if power >= 80 and UnitBuff(uId, vitaName) and self:AntiSpam(4, 1) then
+	if power >= 80 and DBM:UnitBuff(uId, vitaName) and self:AntiSpam(4, 1) then
 		specWarnFatalStrike:Show()
-	elseif power >= 93 and UnitBuff(uId, animaName) and self:AntiSpam(10, 2) then
+	elseif power >= 93 and DBM:UnitBuff(uId, animaName) and self:AntiSpam(10, 2) then
 		specWarnMurderousStrike:Show()
 	end
 end

@@ -9,12 +9,25 @@ local _G, select, unpack = _G, select, unpack
 local ALTERNATE_POWER_INDEX, UnitPower, UnitPowerMax, UnitPowerType =
 	  ALTERNATE_POWER_INDEX, UnitPower, UnitPowerMax, UnitPowerType
 
+local SPELL_POWER_MANA, SPELL_POWER_RUNES, SPELL_POWER_CHI, SPELL_POWER_ECLIPSE, SPELL_POWER_SOUL_SHARDS, SPELL_POWER_ARCANE_CHARGES =
+	  SPELL_POWER_MANA, SPELL_POWER_RUNES, SPELL_POWER_CHI, SPELL_POWER_ECLIPSE, SPELL_POWER_SOUL_SHARDS, SPELL_POWER_ARCANE_CHARGES
+local SPELL_POWER_BURNING_EMBERS, SPELL_POWER_HOLY_POWER, SPELL_POWER_LIGHT_FORCE, SPELL_POWER_SHADOW_ORBS =
+	  SPELL_POWER_BURNING_EMBERS, SPELL_POWER_HOLY_POWER, SPELL_POWER_LIGHT_FORCE, SPELL_POWER_SHADOW_ORBS
+
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
 local wow_700 = select(4, GetBuildInfo()) >= 70000
+local wow_800 = select(4, GetBuildInfo()) >= 80000
 local mpEvents = "UNIT_POWER_FREQUENT#$unit;UNIT_MAXPOWER#$unit;UNIT_DISPLAYPOWER#$unit"
+
+if wow_800 then
+	SPELL_POWER_MANA, SPELL_POWER_RUNES, SPELL_POWER_CHI, SPELL_POWER_ECLIPSE, SPELL_POWER_SOUL_SHARDS, SPELL_POWER_ARCANE_CHARGES =
+	Enum.PowerType.Mana, Enum.PowerType.Runes, Enum.PowerType.Chi, Enum.PowerType.LunarPower, Enum.PowerType.SoulShards, Enum.PowerType.ArcaneCharges
+	SPELL_POWER_BURNING_EMBERS, SPELL_POWER_HOLY_POWER, SPELL_POWER_LIGHT_FORCE, SPELL_POWER_SHADOW_ORBS =
+	Enum.PowerType.Obsolete, Enum.PowerType.HolyPower, Enum.PowerType.Obsolete, Enum.PowerType.Obsolete
+end
 
 DogTag:AddTag("Unit", "MP", {
 	code = UnitPower,
@@ -416,6 +429,13 @@ local specialPowers = {
 		eventPowerIdentifier = "SOUL_SHARDS",
 	},
 	{
+		class = "WARLOCK",
+		tag = "SoulShardParts",
+		arg2 = SPELL_POWER_SOUL_SHARDS,
+		arg3 = true,
+		eventPowerIdentifier = "SOUL_SHARDS",
+	},
+	{
 		class = "PALADIN",
 		tag = "HolyPower",
 		arg2 = SPELL_POWER_HOLY_POWER,
@@ -457,14 +477,6 @@ if not wow_700 then -- Parnic: shadow orbs are no more in 7.0
 		tag = "DemonicFury",
 		arg2 = SPELL_POWER_DEMONIC_FURY,
 		eventPowerIdentifier = "DEMONIC_FURY",
-	}
-	specialPowers[#specialPowers + 1] =
-	{
-		class = "WARLOCK",
-		tag = "SoulShardParts",
-		arg2 = SPELL_POWER_SOUL_SHARDS,
-		arg3 = true,
-		eventPowerIdentifier = "SOUL_SHARDS",
 	}
 	specialPowers[#specialPowers + 1] =
 	{

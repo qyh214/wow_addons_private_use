@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1667, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(100497)
 mod:SetEncounterID(1841)
 mod:SetZone()
@@ -68,7 +68,7 @@ local unbalancedName, focusedGazeName, rendFlesh, overWhelm, momentum = DBM:GetS
 local GenerateSoakAssignment
 do
 	local soakTable = {}
-	local UnitDebuff, UnitIsUnit = UnitDebuff, UnitIsUnit
+	local UnitIsUnit = UnitIsUnit
 	local playerName = UnitName("player")
 	GenerateSoakAssignment = function(self, count, targetName)
 		table.wipe(soakTable)
@@ -79,7 +79,7 @@ do
 		DBM:Debug("Raid size: "..raidCount..". Soakers: "..soakerCount..". Soaker Half: "..soakerHalf)
 		for i = 1, raidCount do
 			local unitID = "raid"..i
-			if not UnitDebuff(unitID, unbalancedName) and not UnitDebuff(unitID, focusedGazeName) and not self:IsTanking(unitID) then
+			if not DBM:UnitDebuff(unitID, unbalancedName) and not DBM:UnitDebuff(unitID, focusedGazeName) and not self:IsTanking(unitID) then
 				soakers = soakers + 1
 				soakTable[#soakTable+1] = DBM:GetUnitFullName(unitID)
 				if UnitIsUnit("player", unitID) then
@@ -135,14 +135,13 @@ function mod:SPELL_CAST_START(args)
 		self.vb.rendCount = self.vb.rendCount + 1
 		timerRendFleshCD:Start(nil, self.vb.rendCount+1)
 		countdownRendFlesh:Start()
-		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
-		if tanking or (status == 3) then
+		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnRendFlesh:Show()
 			specWarnRendFlesh:Play("defensive")
 		else
 			--Other tank has overwhelm stacks and is about to die to rend flesh, TAUNT NOW!
 			if UnitExists("boss1target") and not UnitIsUnit("player", "boss1target") then
-				local _, _, _, _, _, _, expireTimeTarget = UnitDebuff("boss1target", overWhelm) -- Overwhelm
+				local _, _, _, _, _, expireTimeTarget = DBM:UnitDebuff("boss1target", overWhelm) -- Overwhelm
 				if expireTimeTarget and expireTimeTarget-GetTime() >= 2 then
 					specWarnRendFleshOther:Show(UnitName("boss1target"))
 					specWarnRendFleshOther:Play("tauntboss")
@@ -220,7 +219,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if not args:IsPlayer() then--Overwhelm Applied to someone that isn't you
 			--Taunting is safe now because your rend flesh will vanish (or is already gone), and not be cast again, before next overwhelm
 			local rendCooldown = timerRendFleshCD:GetRemaining(self.vb.rendCount+1) or 0
-			local _, _, _, _, _, _, expireTime = UnitDebuff("player", rendFlesh)
+			local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", rendFlesh)
 			if rendCooldown > 10 and (not expireTime or expireTime and expireTime-GetTime() < 10) then
 				specWarnOverwhelmOther:Show(args.destName)
 				specWarnOverwhelmOther:Play("tauntboss")

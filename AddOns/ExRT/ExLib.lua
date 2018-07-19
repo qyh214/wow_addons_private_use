@@ -151,7 +151,7 @@ CheckButton	ExRTRadioButtonModernTemplate
 local GlobalAddonName, ExRT = ...
 local isExRT = GlobalAddonName == "ExRT"
 
-local libVersion = 30
+local libVersion = 31
 
 if type(ELib)=='table' and type(ELib.V)=='number' and ELib.V > libVersion then return end
 
@@ -2890,11 +2890,11 @@ end
 
 do
 	local function ButtonOnEnter(self)
-		ELib.Tooltip.Show(self,"ANCHOR_TOP",self.tooltip,{self.tooltipText,1,1,1,true}) 
+		ELib.Tooltip.Show(self,"ANCHOR_TOP",self.tooltip,{type(self.tooltipText) == 'function' and self.tooltipText(self) or self.tooltipText,1,1,1,true}) 
 	end
 	local function Widget_Tooltip(self,text)
 		self.tooltip = self:GetText()
-		if self.tooltip == "" then self.tooltip = " " end
+		if self.tooltip == "" or not self.tooltip then self.tooltip = " " end
 		self.tooltipText = text
 		self:SetScript("OnEnter",ButtonOnEnter)
 		self:SetScript("OnLeave",ELib.Tooltip.Hide)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1826, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17522 $"):sub(12, -3))
 mod:SetCreatureID(114261, 114260, 999999)--Remove 9s if phase 1 and 2 don't fire UNIT_DIED events
 mod:SetEncounterID(1957)--Shared (so not used for encounter START since it'd fire 3 mods)
 mod:DisableESCombatDetection()--However, with ES disabled, EncounterID can be used for BOSS_KILL/ENCOUNTER_END
@@ -63,7 +63,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 227568 then
 		specWarnLegSweep:Show()
 		specWarnLegSweep:Play("runout")
-	elseif spellId == 227420 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 227420 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnBubbleBlast:Show(args.sourceName)
 		specWarnBubbleBlast:Play("kickcast")
 	elseif spellId == 227783 then

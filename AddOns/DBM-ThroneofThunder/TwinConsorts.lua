@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(829, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(68905, 68904)--Lu'lin 68905, Suen 68904
 mod:SetEncounterID(1560)
 mod:SetZone()
@@ -90,7 +90,7 @@ local infernoCount = 0
 local cosmicCount = 0
 
 local function isRunner(unit)
-	if UnitDebuff(unit, invokeTiger) or UnitDebuff(unit, invokeCrane) or UnitDebuff(unit, invokeSerpent) or UnitDebuff(unit, invokeOx) then
+	if DBM:UnitDebuff(unit, invokeTiger, invokeCrane, invokeSerpent, invokeOx) then
 		return true
 	end
 	return false
@@ -104,7 +104,6 @@ do
 end
 
 function mod:OnCombatStart(delay)
-	invokeTiger, invokeCrane, invokeSerpent, invokeOx = DBM:GetSpellInfo(138264), DBM:GetSpellInfo(138189), DBM:GetSpellInfo(138267), DBM:GetSpellInfo(138254)
 	phase3Started = false
 	infernoCount = 0
 	cosmicCount = 0
@@ -159,7 +158,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				warnFanOfFlames:Show(args.destName, amount)
 			end
 		else
-			if amount >= threatamount and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
+			if amount >= threatamount and not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 				specWarnFanOfFlamesOther:Show(args.destName)
 			else
 				warnFanOfFlames:Show(args.destName, amount)
@@ -246,7 +245,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 137105 then--Suen Ports away (Night Phase)
 		warnNight:Show()
 		timerDayCD:Start()

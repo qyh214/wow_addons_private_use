@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1905, "DBM-Party-Legion", 12, 900)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(117193)
 mod:SetEncounterID(2055)
 mod:SetZone()
@@ -99,8 +99,8 @@ function mod:RAID_BOSS_WHISPER(msg)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 236650 then--Choking Vines
 		timerChokingVinesCD:Start()
 	end

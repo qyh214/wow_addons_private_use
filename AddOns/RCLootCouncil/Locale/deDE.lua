@@ -311,13 +311,19 @@ L["Open the Loot History"] = "Beuteverlauf öffnen"
 L["open_the_loot_history_desc"] = "Klicken, um den Beuteverlauf zu öffnen."
 L["Opens the synchronizer"] = "Öffnet den Synchronisierer"
 L["Other piece"] = "Anderes Teil"
+--[[Translation missing --]]
+--[[ L["Out of instance"] = ""--]] 
 L["'player' can't receive 'type'"] = "%s kann %s nicht empfangen – Version stimmt nicht überein?"
 L["'player' declined your sync request"] = "%s hat deine Synchronisierungsanfrage abgelehnt"
 L["'player' has asked you to reroll"] = "%s bittet dich erneut zu würfeln"
 L["'player' has ended the session"] = "%s hat die Sitzung beendet."
 L["'player' has rolled 'roll' for: 'item'"] = "%s hat %d für %s gewürfelt."
 L["'player' hasn't opened the sync window"] = "%s hat das Synchronisierungsfenster nicht geöffnet (/rc sync)"
+--[[Translation missing --]]
+--[[ L["Player is ineligible for this item"] = ""--]] 
 L["Player is not in the group"] = "Spieler ist nicht in der Gruppe."
+--[[Translation missing --]]
+--[[ L["Player is not in this instance"] = ""--]] 
 L["Player is not in this instance or his inventory is full"] = "Spieler ist nicht in der Instanz oder hat ein volles Inventar."
 L["Player is not in this instance or is ineligible for this item"] = "Spieler ist nicht in der Instanz oder nicht beuteberechtigt für diesen Gegenstand."
 L["Player is offline"] = "Spieler ist offline."
@@ -485,6 +491,8 @@ L["winners"] = "Gewinner"
 L["x days"] = "%d Tage"
 L["x out of x have voted"] = "%d von %d haben abgestimmt"
 L["You are not allowed to see the Voting Frame right now."] = "Du bist nicht berechtigt, das Abstimmungsfenster jetzt zu sehen."
+--[[Translation missing --]]
+--[[ L["You are not in an instance"] = ""--]] 
 L["You can only auto award items with a quality lower than 'quality' to yourself due to Blizaard restrictions"] = "Du kannst, aufgrund von Einschränkungen seitens Blizzard, nur Gegenstände automatisch vergeben, die eine niedrigere Qualität als %s haben."
 L["You cannot initiate a test while in a group without being the MasterLooter."] = "Du kannst keinen Test einleiten, während du in einer Gruppe bist, ohne der Plündermeister zu sein."
 L["You cannot start an empty session."] = "Du kannst keine leere Sitzung starten."

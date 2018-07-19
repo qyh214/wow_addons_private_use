@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Jaraxxus", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 259 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(34780)
 mod:SetEncounterID(1087)
 mod:SetModelID(29615)
@@ -98,7 +98,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
 			DBM.InfoFrame:SetHeader(args.spellName)
-			DBM.InfoFrame:Show(6, "playerabsorb", args.spellName, select(17, UnitDebuff(args.destName, args.spellName)))
+			DBM.InfoFrame:Show(6, "playerabsorb", args.spellName, select(16, DBM:UnitDebuff(args.destName, args.spellName)))
 		end
 	elseif args.spellId == 66197 then
 		timerFlame:Start(args.destName)

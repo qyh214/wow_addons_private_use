@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 local TMW = TMW
@@ -17,8 +17,8 @@ local L = TMW.L
 local print = TMW.print
 local pairs, ipairs =
 	  pairs, ipairs
-local GetSpellLink, GetSpellInfo, UnitCastingInfo, UnitChannelInfo =
-	  GetSpellLink, GetSpellInfo, UnitCastingInfo, UnitChannelInfo
+local GetSpellInfo, UnitCastingInfo, UnitChannelInfo =
+	  GetSpellInfo, UnitCastingInfo, UnitChannelInfo
 
 local strlowerCache = TMW.strlowerCache
 
@@ -109,7 +109,6 @@ local events = {
 	UNIT_SPELLCAST_CHANNEL_START = true,
 	UNIT_SPELLCAST_CHANNEL_UPDATE = true,
 	UNIT_SPELLCAST_CHANNEL_STOP = true,
-	UNIT_SPELLCAST_CHANNEL_INTERRUPTED = true,
 	UNIT_SPELLCAST_INTERRUPTIBLE = true,
 	UNIT_SPELLCAST_NOT_INTERRUPTIBLE = true,
 }
@@ -138,13 +137,13 @@ local function Cast_OnUpdate(icon, time)
 
 		if GUID then
 
-			local name, _, _, iconTexture, start, endTime, _, _, notInterruptible = UnitCastingInfo(unit)
+			local name, _, iconTexture, start, endTime, _, _, notInterruptible = UnitCastingInfo(unit)
 			-- Reverse is used to reverse the timer sweep masking behavior. Regular casts should have it be false.
 			local reverse = false
 
 			-- There is no regular spellcast. Check for a channel.
 			if not name then
-				name, _, _, iconTexture, start, endTime, _, notInterruptible = UnitChannelInfo(unit)
+				name, _, iconTexture, start, endTime, _, notInterruptible = UnitChannelInfo(unit)
 				-- Channeled casts should reverse the timer sweep behavior.
 				reverse = true
 			end

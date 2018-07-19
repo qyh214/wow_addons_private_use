@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(741, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(62397)
 mod:SetEncounterID(1498)
 mod:SetZone()
@@ -91,7 +91,6 @@ local function clearWindBombTargets()
 end
 
 function mod:OnCombatStart(delay)
-	strikeSpell = DBM:GetSpellInfo(123963)
 	addsCount = 0
 	amberPrisonIcon = 2
 	zarthikCount = 0
@@ -139,7 +138,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellCorrosiveResin:Yell()
 		end
 	elseif spellId == 122055 and args:IsPlayer() then
-		local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)
+		local _, _, _, _, duration, expires = DBM:UnitDebuff("player", args.spellName)
 		if expires then
 			timerResidue:Start(expires-GetTime())
 		end
@@ -229,7 +228,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 124850 and self:AntiSpam(2, 1) then--Whirling Blade (Throw Cast spellid)
 		specWarnWhirlingBlade:Show()
 	elseif spellId == 123963 and self:AntiSpam(2, 2) then--Kor'thik Strike Trigger, only triggered once, then all non CCed Kor'thik cast the strike about 2 sec later
@@ -250,7 +249,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 end
 
 function mod:UNIT_AURA_UNFILTERED(uId)
-	if UnitDebuff(uId, strikeSpell) and not strikeTarget then
+	if DBM:UnitDebuff(uId, strikeSpell) and not strikeTarget then
 		strikeTarget = uId
 		local name = DBM:GetUnitFullName(uId)
 		warnKorthikStrike:Show(name)
@@ -260,7 +259,7 @@ function mod:UNIT_AURA_UNFILTERED(uId)
 		else
 			specWarnKorthikStrikeOther:Show(name)
 		end
-	elseif strikeTarget and strikeTarget == uId and not UnitDebuff(uId, strikeSpell) then
+	elseif strikeTarget and strikeTarget == uId and not DBM:UnitDebuff(uId, strikeSpell) then
 		strikeTarget = nil
 	end
 end

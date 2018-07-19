@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
@@ -264,7 +264,7 @@ function Module.Sorter(a, b)
 	end
 end
 
-function Module:Table_GetNormalSuggestions(suggestions, tbl, ...)
+function Module:Table_GetNormalSuggestions(suggestions, tbl)
 	local atBeginning = SUG.atBeginning
 
 	for name, id in pairs(tbl) do

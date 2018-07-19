@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(584, "DBM-Party-WotLK", 1, 271)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 248 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(29311)
 mod:SetEncounterID(215, 263, 1968)
 mod:SetZone()
@@ -59,7 +59,7 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_START(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_START(uId, _, spellId)
    if spellId == 57496 then -- Insanity
 		warningInsanity:Show()
 		timerInsanity:Start()

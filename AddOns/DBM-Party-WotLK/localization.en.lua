@@ -107,7 +107,6 @@ L:SetMiscLocalization({
 	Wave3		= "%d %s, %d %s and %d %s",
 	Wave4		= "%d %s, %d %s, %d %s and %d %s",
 	WaveBoss	= "%s",
-	WaveCheck	= "Scourge Wave = (%d+)/10",
 	Roleplay	= "Glad you could make it, Uther.",
 	Roleplay2	= "Everyone looks ready. Remember, these people are all infected with the plague and will die soon. We must purge Stratholme to protect the remainder of Lordaeron from the Scourge. Let's go."
 })
@@ -448,8 +447,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Sealbroken	= "We've broken through the prison gate! The way into Dalaran is clear! Now we finally put an end to the Nexus War!",
-	WavePortal	= "Portals Opened: (%d+)/18"
+	Sealbroken	= "We've broken through the prison gate! The way into Dalaran is clear! Now we finally put an end to the Nexus War!"
 })
 
 -----------------------------
@@ -594,10 +592,6 @@ L:SetOptionLocalization({
 	ShowAllWaveWarnings	= "Show warnings for all waves",
 	TimerNextWave		= "Show timer for next set of waves (after wave 5 boss)",
 	ShowAllWaveTimers	= "Show pre-warning and timers for all waves (Inaccurate)"
-})
-
-L:SetMiscLocalization({
-	WaveCheck	= "Spirit Wave = (%d+)/10"
 })
 
 --------------

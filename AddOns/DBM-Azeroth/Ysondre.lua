@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ysondre", "DBM-Azeroth")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 653 $"):sub(12, -3))
 mod:SetCreatureID(121912)--121912 TW ID, 14887 classic ID
 --mod:SetModelID(17887)
 mod:SetZone()
@@ -61,7 +61,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 243672 and self:AntiSpam(5, 1) then--Lightning Wave
 		warningLightningWave:Show()
 		timerLightningWaveCD:Start()

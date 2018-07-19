@@ -19,43 +19,25 @@ local dropDownFrame
 --------------
 
 local function SetHooks()
-	hooksecurefunc("QuestLogQuests_Update", function(poiTable)
-		local titleIndex = 0
-		local headerCollapsed, button, height, prevHeight, tagID
-		local numEntries, _ = GetNumQuestLogEntries()
-		for questLogIndex=1, numEntries do
-			local title, level, _, isHeader, isCollapsed, _, frequency, questID, _, _, _, _, isTask, isBounty = GetQuestLogTitle(questLogIndex)
-			if isHeader then
-				headerCollapsed = isCollapsed
-			elseif not isTask and not isBounty and not headerCollapsed then
-				tagID, _ = GetQuestTagInfo(questID)
-				title = KT:CreateQuestTag(level, tagID, frequency)..title
-				titleIndex = titleIndex + 1
-				button = QuestLogQuests_GetTitleButton(titleIndex)
-				prevHeight = button.Text:GetHeight()
-				button.Text:SetText(title)
-				height = button.Text:GetHeight()
-				if height > prevHeight then
-					button:SetHeight(button:GetHeight() + (height - prevHeight))
-				end
-				
-				local colorStyle
-				if IsQuestComplete(questID) then
-					colorStyle = OBJECTIVE_TRACKER_COLOR["Complete"]
-				elseif not db.colorDifficulty then
-					colorStyle = OBJECTIVE_TRACKER_COLOR["Header"]
-				end
-				if colorStyle then
-					button.Text:SetTextColor(colorStyle.r, colorStyle.g, colorStyle.b)
-				end
-				
-				if IsQuestHardWatched(questLogIndex) then
-					button.Check:SetPoint("LEFT", button.Text, button.Text:GetWrappedWidth() + 2, 0)
-				end
-			end
+	local bck_QuestLogQuests_AddQuestButton = QuestLogQuests_AddQuestButton
+	QuestLogQuests_AddQuestButton = function(prevButton, questLogIndex, poiTable, title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isBounty, isStory, isHidden, isScaling, layoutIndex)
+		local tagID, _ = GetQuestTagInfo(questID)
+		title = KT:CreateQuestTag(level, tagID, frequency)..title
+		local button = bck_QuestLogQuests_AddQuestButton(prevButton, questLogIndex, poiTable, title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isBounty, isStory, isHidden, isScaling, layoutIndex)
+
+		local colorStyle
+		if IsQuestComplete(questID) then
+			colorStyle = OBJECTIVE_TRACKER_COLOR["Complete"]
+		elseif not db.colorDifficulty then
+			colorStyle = OBJECTIVE_TRACKER_COLOR["Header"]
 		end
-	end)
-	
+		if colorStyle then
+			button.Text:SetTextColor(colorStyle.r, colorStyle.g, colorStyle.b)
+		end
+
+		return button
+	end
+
 	hooksecurefunc("QuestMapLogTitleButton_OnEnter", function(self)
 		local colorStyle
 		if IsQuestComplete(self.questID) then
@@ -96,6 +78,8 @@ local function SetHooks()
 		info.arg1 = self.questID;
 		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWNMENU_MENU_LEVEL);
 
+		info.disabled = false;
+
 		info.text = SHARE_QUEST;
 		info.func = function(_, questID) QuestMapQuestOptions_ShareQuest(questID) end;
 		info.arg1 = self.questID;
@@ -104,11 +88,12 @@ local function SetHooks()
 		end
 		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWNMENU_MENU_LEVEL);
 
+		info.disabled = false;
+
 		if CanAbandonQuest(self.questID) then
 			info.text = ABANDON_QUEST;
 			info.func = function(_, questID) QuestMapQuestOptions_AbandonQuest(questID) end;
 			info.arg1 = self.questID;
-			info.disabled = nil;
 			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWNMENU_MENU_LEVEL);
 		end
 
@@ -146,12 +131,6 @@ local function SetHooks()
 			end
 		end
 	end
-
-	-- Set scripts for 1st button
-	local firstButton = QuestLogQuests_GetTitleButton(1)
-	firstButton:SetScript("OnEnter", QuestMapLogTitleButton_OnEnter)
-	firstButton:SetScript("OnLeave", QuestMapLogTitleButton_OnLeave)
-	firstButton:SetScript("OnClick", QuestMapLogTitleButton_OnClick)
 end
 
 local function SetFrames()

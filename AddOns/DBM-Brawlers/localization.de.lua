@@ -11,13 +11,13 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	warnQueuePosition	= "Du bist %d. in der Warteschlange.",
+	warnQueuePosition2	= "Du bist %d. in der Warteschlange.",
 	specWarnYourNext	= "Du bist als nächstes dran!",
 	specWarnYourTurn	= "Du bist dran!"
 })
 
 L:SetOptionLocalization({
-	warnQueuePosition	= "Verkünde deine aktuelle Position in der Warteschlange<br/>(bei jeder Änderung)",
+	warnQueuePosition2	= "Verkünde deine aktuelle Position in der Warteschlange<br/>(bei jeder Änderung)",
 	specWarnYourNext	= "Spezialwarnung, wenn du als nächstes dran bist",
 	specWarnYourTurn	= "Spezialwarnung, wenn es dein Kampf ist",
 	SpectatorMode		= "Zeige Warnungen/Timer auch beim Zuschauen fremder Kämpfe<br/>(persönliche Spezialwarnungsmeldungen werden nicht angezeigt)",
@@ -28,6 +28,10 @@ L:SetOptionLocalization({
 L:SetMiscLocalization({
 	Bizmo			= "Bizmo",--Alliance
 	Bazzelflange	= "Boss Nobelflansch",--Horde
+	BizmoIgnored	= "We Don't have all night. Hurry it up already!",--translate (trigger)
+	BizmoIgnored2	= "Do you smell smoke?",--translate (trigger)
+	BizmoIgnored3	= "I think it's about time to call this fight.",--translate (trigger)
+	BizmoIgnored4	= "Is it getting hot in here? Or is it just me?",--translate (trigger)
 	--I wish there was a better way to do this....so much localizing. :(
 	Rank1			= "ersten Ranges",
 	Rank2			= "zweiten Ranges",

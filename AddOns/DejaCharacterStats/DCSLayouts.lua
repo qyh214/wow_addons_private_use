@@ -110,6 +110,8 @@ local DefaultTankData = DCS_TableData:MergeTable({
 		{ statKey = "AVOIDANCE_RATING", hideAt = 0 },
 		{ statKey = "DODGE_RATING", hideAt = 0 },
 		{ statKey = "PARRY_RATING", hideAt = 0 },
+		{ statKey = "SPEED_RATING", hideAt = 0, hidden = true },
+		{ statKey = "SPEED", hideAt = 0, hidden = true }, --seems like Blizzard's implemented speed rating
 })
 local DefaultNonTankData = DCS_TableData:MergeTable({
     { statKey = "ItemLevelFrame" },
@@ -158,6 +160,8 @@ local DefaultNonTankData = DCS_TableData:MergeTable({
 		{ statKey = "AVOIDANCE_RATING", hideAt = 0 },
 		{ statKey = "DODGE_RATING", hideAt = 0 },
 		{ statKey = "PARRY_RATING", hideAt = 0 },
+		{ statKey = "SPEED_RATING", hideAt = 0, hidden = true },
+		{ statKey = "SPEED", hideAt = 0, hidden = true }, --seems like Blizzard's implemented speed rating
 })
 --local ShownData = DefaultData
 local ShownData = DefaultNonTankData --TODO: find a reason why error during login with "local ShownData". Most probably too early PaperDollFrame_UpdateStats() calls due to DCS_configButton:RegisterEvent("UPDATE_INVENTORY_DURABILITY")
@@ -185,6 +189,29 @@ for k, v in pairs(DCS_TableData.StatData) do
 		end
 	end
 	v.frame.statKey = k
+end
+
+local function verify_sanity()
+	--local were_changes
+	for k, i in ipairs(ShownData) do
+		for l, j in ipairs(DefaultNonTankData) do
+			if i.statKey == j.statKey then
+				if i.hideAt ~= j.hideAt then
+					--print(i.statKey,"different")
+					--were_changes = true
+					ShownData[k] = DefaultNonTankData[l]
+				end
+			end
+		end
+	end
+	--[[
+	--seems like the saving isn't needed
+	if were_changes then
+		local uniqueKey = UnitName("player") .. ":" .. GetRealmName() .. ":" .. GetSpecialization()
+		ShownData.uniqueKey = uniqueKey
+		DCS_ClassSpecDB[uniqueKey] = ShownData
+	end
+	--]]
 end
 
 local function UpdateStatFrameWidth(width)
@@ -258,14 +285,14 @@ local function ShowCharacterStats(unit)
         stat = DCS_TableData.StatData[v.statKey]
 		--print(v.statKey)
 		if stat then -- if some stat gets removed or if experimenting with adding stats
-			stat.updateFunc(stat.frame, unit)
-			--[[
-			if v.statKey == "CRITCHANCE" then
-				print(v.statKey,stat.frame.numericValue) -- to verify that recorded numeric value is the one intended - either rounded or with many decimal digits
-			end
-			--]]
+			--stat.updateFunc(stat.frame, unit) --calculating stats only if there's high probability that it will be displayed
 			if (configMode) then
 				stat.frame:Show()
+				stat.updateFunc(stat.frame, unit)
+				--[[previous version with blank stats
+				stat.updateFunc(stat.frame, unit)
+				stat.frame:Show()
+				--]]
 				stat.frame.checkButton:Show()
 				stat.frame.checkButton:SetChecked(not v.hidden)
 				if (v.hidden) then
@@ -274,21 +301,27 @@ local function ShowCharacterStats(unit)
 					stat.frame:SetAlpha(1)
 				end
 			else
-				if hideatzero then
-					if v.hideAt then
-						if v.hideAt == stat.frame.numericValue then
-							stat.frame:Hide()
-						end
-					end
-				end
-				if (v.hidden) then
+				if v.hidden then
 					stat.frame:Hide()
 				else
+					stat.updateFunc(stat.frame, unit)
+					if hideatzero then
+						if v.hideAt then
+							if v.hideAt == stat.frame.numericValue then
+								stat.frame:Hide()
+							end
+						end
+					end
 					if (stat.frame.checkButton) then
 						stat.frame.checkButton:Hide()
 					end
 				end
 			end
+			--[[
+			if v.statKey == "CRITCHANCE" then
+				print(v.statKey,stat.frame.numericValue) -- to verify that recorded numeric value is the one intended - either rounded or with many decimal digits
+			end
+			--]]
 			if (stat.frame:IsShown()) then
 				stat.frame:ClearAllPoints()
 				stat.frame:SetPoint("TOPLEFT", StatFrame.AnchorFrame, "TOPLEFT", 0, -height)
@@ -400,6 +433,8 @@ local function DCS_Table_Relevant()
 		if v.statKey == "AVOIDANCE_RATING" then v.hidden = true end
 		if v.statKey == "DODGE_RATING" then v.hidden = true end
 		if v.statKey == "PARRY_RATING" then v.hidden = true end
+		if v.statKey == "SPEED_RATING" then v.hidden = true end
+		if v.statKey == "SPEED" then v.hidden = true end
 		if v.statKey == "ITEMLEVEL" then v.hidden = true end
 		--if v.statKey == "GeneralCategory" then v.hidden = true end
 		--if v.statKey == "OffenseCategory" then v.hidden = true end
@@ -409,7 +444,7 @@ local function DCS_Table_Relevant()
 	--gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = false
 	ShownData.uniqueKey = uniqueKey
 	DCS_ClassSpecDB[uniqueKey] = ShownData
-	ShowCharacterStats("player")
+	--ShowCharacterStats("player")
 end
 
 local function DCS_Login_Initialization()
@@ -425,15 +460,16 @@ local function DCS_Login_Initialization()
 	--print(uniqueKey)
 	if (DCS_ClassSpecDB[uniqueKey]) then
 		if (ShownData.uniqueKey ~= uniqueKey) then
-		ShownData = DCS_TableData:MergeTable(DCS_ClassSpecDB[uniqueKey]) --not so easy to understand when gets here. is it during change of specialisation?
-		--print("Set saved variables.")
+			ShownData = DCS_TableData:MergeTable(DCS_ClassSpecDB[uniqueKey]) --not so easy to understand when gets here. is it during change of specialisation?
+			--print("Set saved variables.")
+			verify_sanity()
 		end
-		ShowCharacterStats("player")
+		--ShowCharacterStats("player")  --probably doesn't need this call
 	else
 		--print("Set default initialization")
 		DCS_Table_Relevant()
 	end
-	--ShowCharacterStats("player") --DCS_Table_Relevant in the end calls it
+	--ShowCharacterStats("player") --it gets called if talents get changed through DCS_TableRelevantStats on event
 end
 
 local function DCS_Table_Reset()
@@ -461,6 +497,7 @@ local function DCS_Table_Reset()
 	ShownData.uniqueKey = uniqueKey
 	DCS_ClassSpecDB[uniqueKey] = ShownData
 	--DCS_Table_ShowAllStats()
+	if IsModifierKeyDown() then DCS_Table_Relevant() end
 	ShowCharacterStats("player")
 end
 
@@ -594,8 +631,8 @@ local function DCS_TableRelevantStats_OnLeave(self)
  end
  
 local DCS_TableRelevantStats = CreateFrame("Button", "DCS_TableRelevantStats", CharacterFrameInsetRight, "UIPanelButtonTemplate")
-	DCS_TableRelevantStats:RegisterEvent("ADDON_LOADED")
-	DCS_TableRelevantStats:RegisterEvent("PLAYER_TALENT_UPDATE")
+	DCS_TableRelevantStats:RegisterEvent("PLAYER_LOGIN")
+	DCS_TableRelevantStats:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
 	DCS_TableRelevantStats:ClearAllPoints()
 	DCS_TableRelevantStats:SetPoint("BOTTOMRIGHT", -130,-36)
 	DCS_TableRelevantStats:SetScale(0.80)
@@ -639,16 +676,20 @@ local DCS_TableRelevantStats = CreateFrame("Button", "DCS_TableRelevantStats", C
 			--gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = true
 		--return
 		end
+		ShowCharacterStats("player")
 		DCS_TableRelevantStats_OnEnter()
 	end)
 
 	DCS_TableRelevantStats:SetScript("OnEvent", function(self, event, ...)
-
-		if event == "ADDON_LOADED" or event == "PLAYER_TALENT_UPDATE" then
-			if IsLoggedIn() then
-				DCS_Login_Initialization()
-				DCS_TableRelevantStats_init()
-			end
+		--registered events PLAYER_ENTERING_WORLD and PLAYER_SPECIALIZATION_CHANGED
+		DCS_Login_Initialization()
+		DCS_TableRelevantStats_init()
+		
+		--Login error of "Division by zero" in BfA 8.0 alpha as the globals have not instantiated yet.
+		--May be an alpha issue. Try other events like "PLAYER_LOGIN" if found to be needed.
+		if event == "PLAYER_SPECIALIZATION_CHANGED" then 
+			-- print("changed")
+			ShowCharacterStats("player")
 		end
 	end)
 
@@ -707,6 +748,8 @@ local function set_config_mode(state)
 end
 
 local DCS_configButton = CreateFrame("Button", "DCS_configButton", PaperDollSidebarTab1)
+local DCS_InterfaceOptConfigButton = CreateFrame("Button", "DCS_InterfaceOptConfigButton", DejaCharacterStatsPanel)
+
 	DCS_configButton:SetSize(32, 32)
 	DCS_configButton:RegisterEvent("MERCHANT_SHOW")
 	DCS_configButton:RegisterEvent("MERCHANT_CLOSED")
@@ -759,7 +802,20 @@ local function DCS_ClassCrestBGCheck()
 		char_ctats_pane.ClassBackground:Hide()
 	end
 end
-	
+
+DejaCharacterStatsPanel:Hide()
+--[[
+--TODO: rewrite parenting changes with the help of DCS_InterfaceOptConfigButton and DejaCharacterStatsPanel
+DejaCharacterStatsPanel:HookScript("OnShow", function(self)
+	print("displaying DCS InterfaceOptions") --works
+end)
+DejaCharacterStatsPanel:HookScript("OnHide", function(self)
+	print("closing DCS InterfaceOptions with DejaCharacterStatsPanel") --doesn't work
+end)
+DCS_InterfaceOptConfigButton:HookScript("OnHide", function(self)
+	print("closing DCS InterfaceOptions with DCS_InterfaceOptConfigButton") --works
+end)
+--]]
 local function DCS_DefaultStatsAnchors()
 	DCS_InterfaceOptConfigButton:UnregisterEvent("UNIT_AURA")
 	DCS_InterfaceOptConfigButton:UnregisterEvent("UPDATE_INVENTORY_DURABILITY")
@@ -883,7 +939,7 @@ end)
 -- Interface Options Config Mode Toggle --
 ------------------------------------------
 
-local DCS_InterfaceOptConfigButton = CreateFrame("Button", "DCS_InterfaceOptConfigButton", DejaCharacterStatsPanel)
+--creation of DCS_InterfaceOptConfigButton near DCS_configButton
 	DCS_InterfaceOptConfigButton:RegisterEvent("PLAYER_LOGIN")
 	DCS_InterfaceOptConfigButton:ClearAllPoints()
 	DCS_InterfaceOptConfigButton:SetPoint("TOPRIGHT", 0, 29)

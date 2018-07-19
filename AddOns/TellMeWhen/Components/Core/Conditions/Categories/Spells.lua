@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
@@ -222,7 +222,8 @@ ConditionCategory:RegisterCondition(2.8, "LASTCAST", {
 			assert(pGUID, "pGUID was null when func string was generated!")
 
 			module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED",
-			function(_, _, e, _, sourceGuid, _, _, _, _, _, _, _, spellID, spellName)
+			function()
+				local _, e, _, sourceGuid, _, _, _, _, _, _, _, spellID, spellName = CombatLogGetCurrentEventInfo()
 				if e == "SPELL_CAST_SUCCESS" and sourceGuid == pGUID then
 					Env.LastPlayerCastName = strlower(spellName)
 					Env.LastPlayerCastID = spellID
@@ -676,9 +677,9 @@ ConditionCategory:RegisterSpacer(30)
 
 local UnitCastingInfo, UnitChannelInfo = UnitCastingInfo, UnitChannelInfo
 Env.UnitCast = function(unit, level, matchname)
-	local name, _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(unit)
+	local name, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(unit)
 	if not name then
-		name, _, _, _, _, _, _, notInterruptible = UnitChannelInfo(unit)
+		name, _, _, _, _, _, notInterruptible = UnitChannelInfo(unit)
 	end
 	name = strlowerCache[name]
 	if matchname == "" and name then
@@ -693,9 +694,9 @@ Env.UnitCast = function(unit, level, matchname)
 	end
 end
 Env.UnitCastTime = function(unit, level, matchname)
-	local name, _, _, _, _, endTime, _, _, notInterruptible = UnitCastingInfo(unit)
+	local name, _, _, _, endTime, _, _, notInterruptible = UnitCastingInfo(unit)
 	if not name then
-		name, _, _, _, _, endTime, _, notInterruptible = UnitChannelInfo(unit)
+		name, _, _, _, endTime, _, notInterruptible = UnitChannelInfo(unit)
 	end
 	name = strlowerCache[name]
 	if matchname == "" and name then
@@ -743,7 +744,6 @@ ConditionCategory:RegisterCondition(31,	 "CASTING", {
 			ConditionObject:GenerateNormalEventString("UNIT_SPELLCAST_CHANNEL_START", CNDT:GetUnit(c.Unit)),
 			ConditionObject:GenerateNormalEventString("UNIT_SPELLCAST_CHANNEL_UPDATE", CNDT:GetUnit(c.Unit)),
 			ConditionObject:GenerateNormalEventString("UNIT_SPELLCAST_CHANNEL_STOP", CNDT:GetUnit(c.Unit)),
-			ConditionObject:GenerateNormalEventString("UNIT_SPELLCAST_CHANNEL_INTERRUPTED", CNDT:GetUnit(c.Unit)),
 			ConditionObject:GenerateNormalEventString("UNIT_SPELLCAST_INTERRUPTIBLE", CNDT:GetUnit(c.Unit)),
 			ConditionObject:GenerateNormalEventString("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", CNDT:GetUnit(c.Unit))
 	end,
@@ -754,7 +754,8 @@ ConditionCategory:RegisterCondition(31,	 "CASTING", {
 
 
 local CastCounts
-local function CASTCOUNT_COMBAT_LOG_EVENT_UNFILTERED(e, _, cleuEvent, _, sourceGUID, _, _, _, destGUID, _, destFlags, _, spellID, spellName)
+local function CASTCOUNT_COMBAT_LOG_EVENT_UNFILTERED()
+	local _, cleuEvent, _, sourceGUID, _, _, _, destGUID, _, destFlags, _, spellID, spellName = CombatLogGetCurrentEventInfo()
 	if cleuEvent == "SPELL_CAST_SUCCESS" then
 		spellName = spellName and strlowerCache[spellName]
 		local castsForGUID = CastCounts[sourceGUID]

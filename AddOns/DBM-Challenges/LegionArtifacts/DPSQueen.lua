@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod("ArtifactQueen", "DBM-Challenges", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 101 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 105 $"):sub(12, -3))
 mod:SetCreatureID(116484, 116499, 116496)--Sigryn, Jarl Velbrand, Runeseer Faljar
 mod:SetEncounterID(2059)
 mod:SetZone()--Healer (1710), Tank (1698), DPS (1703-The God-Queen's Fury), DPS (Fel Totem Fall)
@@ -103,7 +103,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 237945 then
 		bloodCount = bloodCount + 1
-		specWarnBloodFather:Show(args.destName)
+		specWarnBloodFather:Show(args.sourceName)
 		specWarnBloodFather:Play("crowdcontrol")
 		local timer = bloodFatherTimers[bloodCount+1]
 		if timer then
@@ -131,7 +131,7 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 237849 or spellId == 238432 then
+	if (spellId == 237849 or spellId == 238432) and self:AntiSpam(5, 1) then
 		warnAdvance:Show()
 		--timerAdvanceCD:Start()
 	end
@@ -164,8 +164,7 @@ function mod:UNIT_DIED(args)
 --	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 237914 then--Runic Detonation
 		runicDetonationCount = runicDetonationCount + 1
 		specWarnRunicDetonation:Show(RUNES)

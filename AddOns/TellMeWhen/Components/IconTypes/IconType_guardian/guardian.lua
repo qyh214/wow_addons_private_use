@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 local TMW = TMW
@@ -299,8 +299,9 @@ local Guardian = TMW:NewClass(){
 
 
 
-function Type:COMBAT_LOG_EVENT_UNFILTERED(e, _, event, _, sourceGUID, sourceName, _, _, destGUID, destName, _, _, spellID)
-
+function Type:COMBAT_LOG_EVENT_UNFILTERED(e)
+	local _, event, _, sourceGUID, sourceName, _, _, destGUID, destName, _, _, spellID = CombatLogGetCurrentEventInfo()
+	
 	if event == "SPELL_SUMMON" then
 		local npcID = GetNPCID(destGUID)
 		local info = GuardianInfo[npcID]

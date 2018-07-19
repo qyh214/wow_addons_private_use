@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 278 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(33432)
 mod:SetEncounterID(1138)
 mod:DisableESCombatDetection()
@@ -84,7 +84,6 @@ local function show_warning_for_spinup(self)
 end
 
 function mod:OnCombatStart(delay)
-	spinningUp = DBM:GetSpellInfo(63414)
 	self.vb.hardmode = false
 	enrage:Start(-delay)
 	self.vb.phase = 1
@@ -176,7 +175,8 @@ function mod:SPELL_SUMMON(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_CHANNEL_STOP(unit, spell)
+function mod:UNIT_SPELLCAST_CHANNEL_STOP(unit, _, spellId)
+	local spell = DBM:GetSpellInfo(spellId)--DO BETTER with log
 	if spell == spinningUp and GetTime() - lastSpinUp < 3.9 then
 		self.vb.is_spinningUp = false
 		self:SendSync("SpinUpFail")
@@ -200,7 +200,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 34098 then--ClearAllDebuffs
 		self.vb.phase = self.vb.phase + 1
 		if self.vb.phase == 2 then

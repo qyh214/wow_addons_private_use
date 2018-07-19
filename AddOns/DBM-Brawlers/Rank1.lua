@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank1", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17562 $"):sub(12, -3))
 --mod:SetModelID(46327)--Last Boss of Rank 1
 mod:SetZone()
 
@@ -15,7 +15,7 @@ local warnShotgunRoar			= mod:NewCastAnnounce(234489, 3)--Oso
 
 local specWarnShotgunRoar		= mod:NewSpecialWarningDodge(234489)--Oso
 
-local timerShotgunRoarCD		= mod:NewAITimer(17, 234489, nil, nil, nil, 3)--Oso
+local timerShotgunRoarCD		= mod:NewCDTimer(11, 234489, nil, nil, nil, 3)--Oso
 
 local brawlersMod = DBM:GetModByName("Brawlers")
 

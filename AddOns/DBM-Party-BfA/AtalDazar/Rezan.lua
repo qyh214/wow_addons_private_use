@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2083, "DBM-Party-BfA", 1, 968)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17473 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17616 $"):sub(12, -3))
 mod:SetCreatureID(122963)
 mod:SetEncounterID(2086)
 mod:SetZone()
@@ -29,9 +29,9 @@ local timerFearCD				 mod:NewAITimer(13, 255371, nil, nil, nil, 2)
 local timerPursuitCD			 mod:NewAITimer(13, 257407, nil, nil, nil, 3)
 
 function mod:OnCombatStart(delay)
-	timerTeethCD:Start(1)
-	timerFearCD:Start(1)
-	timerPursuitCD:Start(1)
+	timerTeethCD:Start(1-delay)
+	timerFearCD:Start(1-delay)
+	timerPursuitCD:Start(1-delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)

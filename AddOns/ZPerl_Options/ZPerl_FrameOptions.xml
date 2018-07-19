@@ -385,7 +385,7 @@
 		</Scripts>
 	</Slider>
 
-	<EditBox name="XPerlOptEditBox" autoFocus="false" multiline="false" ignoreArrows="true" historyLines="0" letters="20" hidden="false" virtual="true">
+	<EditBox name="XPerlOptEditBox" autoFocus="false" multiLine="false" ignoreArrows="true" historyLines="0" letters="20" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="50" y="24"/>
 		</Size>
@@ -438,7 +438,6 @@
 				self:ClearFocus()
 			</OnEscapePressed>
 		</Scripts>
-		<FontString inherits="ChatFontNormal"/>
 	</EditBox>
 
 	<Button name="XPerlColorPickerTemplate" virtual="true">
@@ -751,7 +750,7 @@
 		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
-				<FontString name="$parentText" inherits="GameFontNormalSmall" justifyH="left" wraponspaces="false">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" justifyH="left">
 					<Size>
 						<AbsDimension x="200" y="22"/>
 					</Size>
@@ -1973,7 +1972,7 @@
 						<Layers>
 							<Layer level="ARTWORK">
 								<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_PLAYER_ALIGNMENT">
-								<Color r="1" g="1" b="1" a="1"/>
+									<Color r="1" g="1" b="1" a="1"/>
 									<Anchors>
 										<Anchor point="LEFT"/>
 									</Anchors>
@@ -2165,7 +2164,7 @@
 						<Layers>
 							<Layer level="ARTWORK">
 								<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_PARTY_ALIGNMENT">
-								<Color r="1" g="1" b="1" a="1"/>
+									<Color r="1" g="1" b="1" a="1"/>
 									<Anchors>
 										<Anchor point="LEFT"/>
 									</Anchors>
@@ -2275,7 +2274,7 @@
 						</Scripts>
 					</Button>
 
-					<Frame name="$parent_Anchor" inherits="Lib_UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="$parent_Anchor" inherits="UIDropDownMenuTemplate" enableMouse="true">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_BiggerGap" relativePoint="BOTTOMLEFT">
 								<Offset>
@@ -2406,7 +2405,7 @@
 						<Layers>
 							<Layer level="ARTWORK">
 								<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_RAID_ALIGNMENT">
-								<Color r="1" g="1" b="1" a="1"/>
+									<Color r="1" g="1" b="1" a="1"/>
 									<Anchors>
 										<Anchor point="LEFT"/>
 									</Anchors>
@@ -2415,7 +2414,7 @@
 						</Layers>
 					</Frame>
 
-					<Frame name="$parent_Anchor" inherits="Lib_UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="$parent_Anchor" inherits="UIDropDownMenuTemplate" enableMouse="true">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Title">
 								<Offset>
@@ -2732,7 +2731,7 @@
 						<Layers>
 							<Layer level="ARTWORK">
 								<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_FRAME_LAYOUT">
-								<Color r="1" g="1" b="1" a="1"/>
+									<Color r="1" g="1" b="1" a="1"/>
 									<Anchors>
 										<Anchor point="LEFT"/>
 									</Anchors>
@@ -4865,7 +4864,7 @@
 						</Scripts>
 					</Button>
 
-					<Frame name="XPerl_Options_DropDown_LoadSettings" inherits="Lib_UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="XPerl_Options_DropDown_LoadSettings" inherits="UIDropDownMenuTemplate" enableMouse="true">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_Reset" relativePoint="BOTTOMLEFT">
 								<Offset>
@@ -4908,7 +4907,7 @@
 						</Scripts>
 					</Frame>
 
-					<Frame name="XPerl_Options_DropDown_DeleteSettings" inherits="Lib_UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="XPerl_Options_DropDown_DeleteSettings" inherits="UIDropDownMenuTemplate" enableMouse="true">
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeTo="XPerl_Options_DropDown_LoadSettings" relativePoint="TOPLEFT">
 								<Offset>
@@ -5651,7 +5650,7 @@
 								<Layers>
 									<Layer level="ARTWORK">
 										<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_PLAYERBUFF_OPTIONS">
-										<Color r="1" g="1" b="1" a="1"/>
+											<Color r="1" g="1" b="1" a="1"/>
 											<Anchors>
 												<Anchor point="LEFT"/>
 											</Anchors>
@@ -6033,7 +6032,7 @@
 						<Layers>
 							<Layer level="ARTWORK">
 								<FontString inherits="GameFontNormalSmall" text="XPERL_CONF_PLAYER_TOTEMS">
-								<Color r="1" g="1" b="1" a="1"/>
+									<Color r="1" g="1" b="1" a="1"/>
 									<Anchors>
 										<Anchor point="TOPLEFT">
 											<Offset>
@@ -6521,7 +6520,7 @@
 								<Layers>
 									<Layer level="ARTWORK">
 										<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_PETTARGET_OPTIONS">
-										<Color r="1" g="1" b="1" a="1"/>
+											<Color r="1" g="1" b="1" a="1"/>
 											<Anchors>
 												<Anchor point="LEFT"/>
 											</Anchors>
@@ -8048,7 +8047,7 @@
 								<Layers>
 									<Layer level="ARTWORK">
 										<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_TARGETTARGET_OPTIONS">
-										<Color r="1" g="1" b="1" a="1"/>
+											<Color r="1" g="1" b="1" a="1"/>
 											<Anchors>
 												<Anchor point="LEFT"/>
 											</Anchors>
@@ -9735,7 +9734,7 @@
 								<Layers>
 									<Layer level="ARTWORK">
 										<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_FOCUSTARGET_OPTIONS">
-										<Color r="1" g="1" b="1" a="1"/>
+											<Color r="1" g="1" b="1" a="1"/>
 											<Anchors>
 												<Anchor point="LEFT"/>
 											</Anchors>
@@ -11622,7 +11621,7 @@
 								<Layers>
 									<Layer level="ARTWORK">
 										<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_PARTY_PETS_TITLE">
-										<Color r="1" g="1" b="1" a="1"/>
+											<Color r="1" g="1" b="1" a="1"/>
 											<Anchors>
 												<Anchor point="LEFT"/>
 											</Anchors>
@@ -12525,7 +12524,7 @@
 								<Layers>
 									<Layer level="ARTWORK">
 										<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_GROUPS">
-										<Color r="1" g="1" b="1" a="1"/>
+											<Color r="1" g="1" b="1" a="1"/>
 											<Anchors>
 												<Anchor point="LEFT"/>
 											</Anchors>
@@ -12815,7 +12814,7 @@
 								<Layers>
 									<Layer level="ARTWORK">
 										<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_CLASSES">
-										<Color r="1" g="1" b="1" a="1"/>
+											<Color r="1" g="1" b="1" a="1"/>
 											<Anchors>
 												<Anchor point="LEFT"/>
 											</Anchors>
@@ -14141,7 +14140,7 @@
 								<Layers>
 									<Layer level="ARTWORK">
 										<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_COLOUR_BARS">
-										<Color r="1" g="1" b="1" a="1"/>
+											<Color r="1" g="1" b="1" a="1"/>
 											<Anchors>
 												<Anchor point="LEFT"/>
 											</Anchors>
@@ -14715,7 +14714,6 @@
 							</Button>
 
 							<Button name="$parent_Reset" inherits="XPerlButtonTemplate">
-								<FontString inherits="GameFontNormalSmall"/>
 								<Size>
 									<AbsDimension x="70" y="24"/>
 								</Size>
@@ -14774,7 +14772,7 @@
 								<Layers>
 									<Layer level="ARTWORK">
 										<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_COLOUR_REACTIONS">
-										<Color r="1" g="1" b="1" a="1"/>
+											<Color r="1" g="1" b="1" a="1"/>
 											<Anchors>
 												<Anchor point="LEFT"/>
 											</Anchors>
@@ -14982,7 +14980,6 @@
 							</Button>
 
 							<Button name="$parent_Reset" inherits="XPerlButtonTemplate">
-								<FontString inherits="GameFontNormalSmall"/>
 								<Size>
 									<AbsDimension x="70" y="24"/>
 								</Size>
@@ -15042,7 +15039,7 @@
 								<Layers>
 									<Layer level="ARTWORK">
 										<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_FRAME_APPEARANCE">
-										<Color r="1" g="1" b="1" a="1"/>
+											<Color r="1" g="1" b="1" a="1"/>
 											<Anchors>
 												<Anchor point="LEFT"/>
 											</Anchors>
@@ -15207,7 +15204,6 @@
 							</Slider>
 
 							<Button name="$parent_Reset" inherits="XPerlButtonTemplate">
-								<FontString inherits="GameFontNormalSmall"/>
 								<Size>
 									<AbsDimension x="70" y="24"/>
 								</Size>
@@ -15266,7 +15262,7 @@
 								<Layers>
 									<Layer level="ARTWORK">
 										<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_COLOUR_FRAMES">
-										<Color r="1" g="1" b="1" a="1"/>
+											<Color r="1" g="1" b="1" a="1"/>
 											<Anchors>
 												<Anchor point="LEFT"/>
 											</Anchors>
@@ -15421,7 +15417,6 @@
 							</Button>
 
 							<Button name="$parent_Reset" inherits="XPerlButtonTemplate">
-								<FontString inherits="GameFontNormalSmall"/>
 								<Size>
 									<AbsDimension x="70" y="24"/>
 								</Size>
@@ -15475,7 +15470,7 @@
 						<Layers>
 							<Layer level="ARTWORK">
 								<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_TANK_TARGETS">
-								<Color r="1" g="1" b="1" a="1"/>
+									<Color r="1" g="1" b="1" a="1"/>
 									<Anchors>
 										<Anchor point="LEFT"/>
 									</Anchors>
@@ -15942,7 +15937,7 @@
 								<Layers>
 									<Layer level="ARTWORK">
 										<FontString name="$parentText" inherits="GameFontNormalSmall" text="XPERL_CONF_TARGET_COUNTERS">
-										<Color r="1" g="1" b="1" a="1"/>
+											<Color r="1" g="1" b="1" a="1"/>
 											<Anchors>
 												<Anchor point="LEFT"/>
 											</Anchors>
@@ -17090,7 +17085,6 @@
 				</Anchors>
 				<Frames>
 					<Button name="$parent_Defaults" inherits="XPerlButtonTemplate">
-						<FontString inherits="GameFontNormalSmall"/>
 						<Size>
 							<AbsDimension x="70" y="24"/>
 						</Size>
@@ -17114,7 +17108,6 @@
 						</Scripts>
 					</Button>
 					<Button name="$parent_New" inherits="XPerlButtonTemplate">
-						<FontString inherits="GameFontNormalSmall"/>
 						<Size>
 							<AbsDimension x="70" y="24"/>
 						</Size>
@@ -17131,7 +17124,6 @@
 						</Scripts>
 					</Button>
 					<Button name="$parent_Delete" inherits="XPerlButtonTemplate">
-						<FontString inherits="GameFontNormalSmall"/>
 						<Size>
 							<AbsDimension x="70" y="24"/>
 						</Size>
@@ -17236,7 +17228,6 @@
 						</Layers>
 					</EditBox>
 					<Button name="$parent_Cancel" inherits="XPerlButtonTemplate">
-						<FontString inherits="GameFontNormalSmall"/>
 						<Size>
 							<AbsDimension x="70" y="24"/>
 						</Size>

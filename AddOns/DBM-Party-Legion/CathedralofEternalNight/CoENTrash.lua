@@ -53,13 +53,13 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 239232 then
 		specWarnBlindingGlare:Show()
 		specWarnBlindingGlare:Play("turnaway")
-	elseif spellId == 237391 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 237391 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnAlluringAroma:Show(args.sourceName)
 		specWarnAlluringAroma:Play("kickcast")
-	elseif spellId == 238543 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 238543 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnDemonicMending:Show(args.sourceName)
 		specWarnDemonicMending:Play("kickcast")
-	elseif spellId == 242724 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 242724 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnDreadScream:Show(args.sourceName)
 		specWarnDreadScream:Play("kickcast")
 	elseif spellId == 242760 then
@@ -86,7 +86,8 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_START(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_START(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 238653 then
 		self:SendSync("ShadowWave")
 	end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(820, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(69017)--69070 Viscous Horror, 69069 good ooze, 70579 bad ooze (patched out of game, :\)
 mod:SetEncounterID(1574)
 mod:SetZone()
@@ -59,7 +59,6 @@ local badCount = 0
 local bigOozeCount = 0
 local bigOozeAlive = 0
 local bigOozeGUIDS = {}
-local UnitDebuff = UnitDebuff
 local good1, good2, good3, good4 = DBM:GetSpellInfo(136180), DBM:GetSpellInfo(136182), DBM:GetSpellInfo(136184), DBM:GetSpellInfo(136186)
 local bad1, bad2, bad3, bad4 = DBM:GetSpellInfo(136181), DBM:GetSpellInfo(136183), DBM:GetSpellInfo(136185), DBM:GetSpellInfo(136187)
 
@@ -107,8 +106,6 @@ function mod:UPDATE_MOUSEOVER_UNIT()
 end
 
 function mod:OnCombatStart(delay)
-	good1, good2, good3, good4 = DBM:GetSpellInfo(136180), DBM:GetSpellInfo(136182), DBM:GetSpellInfo(136184), DBM:GetSpellInfo(136186)
-	bad1, bad2, bad3, bad4 = DBM:GetSpellInfo(136181), DBM:GetSpellInfo(136183), DBM:GetSpellInfo(136185), DBM:GetSpellInfo(136187)
 	metabolicBoost = false
 	acidSpinesActive = false
 	postulesActive = false
@@ -190,7 +187,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 140546 and args:IsPlayer() then
 		specWarnFullyMutated:Show()
-		local _, _, _, _, _, _, expires = UnitDebuff("player", args.spellName)
+		local _, _, _, _, _, expires = DBM:UnitDebuff("player", args.spellName)
 		timerFullyMutated:Start(expires-GetTime())
 	end
 end
@@ -228,14 +225,14 @@ end
 
 function mod:UNIT_AURA(uId)
 	local gcnt, gcnt1, gcnt2, gcnt3, gcnt4, bcnt, bcnt1, bcnt2, bcnt3, bcnt4
-	gcnt1 = select(4, UnitDebuff("player", good1)) or 0
-	gcnt2 = select(4, UnitDebuff("player", good2)) or 0
-	gcnt3 = select(4, UnitDebuff("player", good3)) or 0
-	gcnt4 = select(4, UnitDebuff("player", good4)) or 0
-	bcnt1 = select(4, UnitDebuff("player", bad1)) or 0
-	bcnt2 = select(4, UnitDebuff("player", bad2)) or 0
-	bcnt3 = select(4, UnitDebuff("player", bad3)) or 0
-	bcnt4 = select(4, UnitDebuff("player", bad4)) or 0
+	gcnt1 = select(3, DBM:UnitDebuff("player", good1)) or 0
+	gcnt2 = select(3, DBM:UnitDebuff("player", good2)) or 0
+	gcnt3 = select(3, DBM:UnitDebuff("player", good3)) or 0
+	gcnt4 = select(3, DBM:UnitDebuff("player", good4)) or 0
+	bcnt1 = select(3, DBM:UnitDebuff("player", bad1)) or 0
+	bcnt2 = select(3, DBM:UnitDebuff("player", bad2)) or 0
+	bcnt3 = select(3, DBM:UnitDebuff("player", bad3)) or 0
+	bcnt4 = select(3, DBM:UnitDebuff("player", bad4)) or 0
 	gcnt = gcnt1 + gcnt2 + gcnt3 + gcnt4
 	bcnt = bcnt1 + bcnt2 + bcnt3 + bcnt4
 	if goodCount ~= gcnt or badCount ~= bcnt then

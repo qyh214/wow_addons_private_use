@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(171, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(41442)
 mod:SetEncounterID(1022)
 mod:SetZone()
@@ -65,7 +65,6 @@ local function groundphase()
 end
 
 function mod:OnCombatStart(delay)
-	pestered = DBM:GetSpellInfo(92685)
 	timerSonarPulseCD:Start(-delay)
 	timerSonicBreath:Start(25-delay)
 	warnSearingFlameSoon:Schedule(40-delay)
@@ -156,7 +155,7 @@ end
 
 function mod:UNIT_AURA(uId)
 	if pesteredWarned then return end
-	if UnitDebuff("player", pestered) then
+	if DBM:UnitDebuff("player", pestered) then
 		pesteredWarned = true--This aura is a periodic trigger, so we don't want to spam warn for it.
 		specWarnPestered:Show()
 		yellPestered:Yell()

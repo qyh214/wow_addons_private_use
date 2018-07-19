@@ -1,9 +1,9 @@
-## Interface: 70300
-## Title: Titan Panel [|cffeda55fPoints|r] |cff00aa007.3.0|r
+## Interface: 80000
+## Title: Titan Panel [|cffeda55fPoints|r] |cff00aa008.0.1|r
 ## Notes: A simple Currency Point list for the Titan Panel AddOn.
 ## Author: solocommand
 ## SavedVariables:
 ## OptionalDeps:
 ## Dependencies: Titan
-## Version: 7.3.0
+## Version: 8.0.1
 TitanPoints.xml

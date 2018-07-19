@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("DHTTrash", "DBM-Party-Legion", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17522 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -19,8 +19,5 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 198379 then
 		specWarnPrimalRampage:Show()
 		specWarnPrimalRampage:Play("chargemove")
---[[	elseif spellId == 195046 and self:CheckInterruptFilter(args.sourceGUID) then
-		specWarnStorm:Show(args.sourceName)
-		specWarnRejuvWaters:Play("kickcast")--]]
 	end
 end

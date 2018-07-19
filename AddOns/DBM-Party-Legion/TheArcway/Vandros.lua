@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1501, "DBM-Party-Legion", 6, 726)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(98208)
 mod:SetEncounterID(1829)
 mod:SetZone()
@@ -110,8 +110,8 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 147995 then--Interrupt Channeling
 		self.vb.interruptCount = 0
 		timerEvent:Cancel()

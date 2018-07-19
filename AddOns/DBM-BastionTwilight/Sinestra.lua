@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(168, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 188 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(45213)
 mod:SetEncounterID(1082, 1083)--Muiti encounter id. need to verify.
 mod:SetZone()
@@ -166,7 +166,6 @@ local function showWrackWarning()
 end
 
 function mod:OnCombatStart(delay)
-	wrackName = DBM:GetSpellInfo(89421)
 	eggDown = 0
 	eggRemoved = false
 	timerDragon:Start(16-delay)

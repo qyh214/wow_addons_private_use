@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod("ArtifactXylem", "DBM-Challenges", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 100 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 105 $"):sub(12, -3))
 mod:SetCreatureID(115244)
 mod:SetZone()--Healer (1710), Tank (1698), DPS (1703-The God-Queen's Fury), DPS (Fel Totem Fall)
 mod.soloChallenge = true
@@ -91,8 +91,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 242394 then--Frost Phase
 		timerDrawPowerCD:Stop()
 		warnFrostPhase:Show()

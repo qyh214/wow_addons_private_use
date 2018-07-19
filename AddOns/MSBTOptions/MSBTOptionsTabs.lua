@@ -820,7 +820,7 @@ local function GeneralTab_Create()
 	)
 	controls.enableCheckbox = checkbox
 
-		-- Enable Blizzard Damage.
+	-- Enable Blizzard Damage.
 	checkbox = MSBTControls.CreateCheckbox(tabFrame)
 	objLocale = L.CHECKBOXES["enableBlizzardDamage"]
 	checkbox:Configure(28, objLocale.label, objLocale.tooltip)
@@ -828,19 +828,19 @@ local function GeneralTab_Create()
 	checkbox:SetClickHandler(
 		function (this, isChecked)
 			if InCombatLockdown() then
-					return
+				return
 			end
 			MSBTProfiles.SetOption(nil, "enableBlizzardDamage", not isChecked)
 			if isChecked then
 				SetCVar("floatingCombatTextCombatDamage", 1)
 			else
-					SetCVar("floatingCombatTextCombatDamage", 0)
+				SetCVar("floatingCombatTextCombatDamage", 0)
 			end
 		end
 	)
 	controls.enableBlizzardDamage = checkbox
 
-		-- Enable Blizzard healing.
+	-- Enable Blizzard healing.
 	checkbox = MSBTControls.CreateCheckbox(tabFrame)
 	objLocale = L.CHECKBOXES["enableBlizzardHealing"]
 	checkbox:Configure(28, objLocale.label, objLocale.tooltip)
@@ -848,13 +848,13 @@ local function GeneralTab_Create()
 	checkbox:SetClickHandler(
 		function (this, isChecked)
 			if InCombatLockdown() then
-					return
+				return
 			end
 			MSBTProfiles.SetOption(nil, "enableBlizzardHealing", not isChecked)
 			if isChecked then
 				SetCVar("floatingCombatTextCombatHealing", 1)
 			else
-					SetCVar("floatingCombatTextCombatHealing", 0)
+				SetCVar("floatingCombatTextCombatHealing", 0)
 			end
 		end
 	)

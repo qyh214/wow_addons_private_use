@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Razorscale", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 278 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(33186)
 mod:SetEncounterID(1139)
 mod:SetModelID(28787)
@@ -91,7 +91,7 @@ function mod:SPELL_AURA_APPLIED(args)
                 specWarnFuseArmor:Show(args.amount)
                 specWarnFuseArmor:Play("stackhigh")
             else
-				local _, _, _, _, _, _, expireTime = UnitDebuff("player", args.spellName)
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", args.spellName)
 				local remaining
 				if expireTime then
 					remaining = expireTime-GetTime()
@@ -143,7 +143,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, mob)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 64821 then--Fuse Armor
 		timerFuseArmorCD:Start()
 	end

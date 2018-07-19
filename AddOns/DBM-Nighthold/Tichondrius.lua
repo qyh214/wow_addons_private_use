@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1762, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(103685)
 mod:SetEncounterID(1862)
 mod:SetZone()
@@ -128,7 +128,7 @@ do
 		for i = 1, #argusTargets do
 			local name = argusTargets[i]
 			local uId = DBM:GetRaidUnitId(name)
-			if uId and UnitDebuff(uId, argusDebuff) then
+			if uId and DBM:UnitDebuff(uId, argusDebuff) then
 				addLine(name, i)
 			end
 		end
@@ -250,7 +250,7 @@ function mod:SPELL_CAST_START(args)
 			timerSeekerSwarmCD:Start(timer, self.vb.seekerSwarmCast+1)
 			countdownSeekerSwarm:Start(timer)
 		end
-		if UnitDebuff("player", carrionDebuff) then
+		if DBM:UnitDebuff("player", carrionDebuff) then
 			yellSeekerSwarm:Yell()
 			specWarnSeekerSwarm:Play("targetyou")
 		else
@@ -291,7 +291,7 @@ function mod:SPELL_CAST_START(args)
 		countdownNightPhase:Start()
 		timerCarrionNightmare:Start(6, 1)
 		countdownCarrionNightmare:Start(6)
-	elseif spellId == 216034 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 216034 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnBlastNova:Show(args.sourceName)
 		specWarnBlastNova:Play("kickcast")
 	elseif spellId == 216723 then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Deathbringer", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 258 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(37813)
 mod:SetEncounterID(1096)
 mod:SetModelID(30790)
@@ -78,7 +78,6 @@ function mod:OnCombatStart(delay)
 		DBM.RangeCheck:Show(12)
 	end
 	if self.Options.InfoFrame then
-		spellName = DBM:GetSpellInfo(72370)
 		DBM.InfoFrame:SetHeader(spellName)
 		DBM.InfoFrame:Show(1, "enemypower", 2)
 	end

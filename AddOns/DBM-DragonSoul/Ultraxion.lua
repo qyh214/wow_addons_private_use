@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(331, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(55294)
 mod:SetEncounterID(1297)
 mod:SetZone()
@@ -65,7 +65,6 @@ local function warnFadingLightTargets()
 end
 
 function mod:OnCombatStart(delay)
-	hourOfTwilight = DBM:GetSpellInfo(106371)
 	table.wipe(fadingLightTargets)
 	hourOfTwilightCount = 0
 	fadingLightCount = 0
@@ -128,8 +127,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		elseif self:IsDifficulty("normal10", "normal25", "lfr25") and fadingLightCount < 2 then
 			timerFadingLightCD:Start(15)
 		end
-		if (args:IsPlayer() or UnitDebuff("player", args.spellName)) and self:AntiSpam(2) then--Sometimes the combatlog doesn't report all fading lights, so we perform an additional aura check 
-			local _, _, _, _, _, duration, expires = UnitDebuff("player", args.spellName)--Find out what our specific fading light is
+		if (args:IsPlayer() or DBM:UnitDebuff("player", args.spellName)) and self:AntiSpam(2) then--Sometimes the combatlog doesn't report all fading lights, so we perform an additional aura check 
+			local _, _, _, _, duration, expires = DBM:UnitDebuff("player", args.spellName)--Find out what our specific fading light is
 			if duration then
 				specWarnFadingLight:Show()
 				countdownFadingLight:Start(duration-1)--For some reason need to offset it by 1 second to make it accurate but otherwise it's perfect
@@ -146,8 +145,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 109075 then--Non Tank ID
 		fadingLightTargets[#fadingLightTargets + 1] = args.destName
-		if (args:IsPlayer() or UnitDebuff("player", args.spellName)) and self:AntiSpam(2) then
-			local _, _, _, _, _, duration, expires = UnitDebuff("player", args.spellName)
+		if (args:IsPlayer() or DBM:UnitDebuff("player", args.spellName)) and self:AntiSpam(2) then
+			local _, _, _, _, duration, expires = DBM:UnitDebuff("player", args.spellName)
 			if duration then
 				specWarnFadingLight:Show()
 				countdownFadingLight:Start(duration-1)

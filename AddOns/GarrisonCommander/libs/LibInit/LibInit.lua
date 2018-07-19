@@ -11,7 +11,7 @@
 
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):12:")) -- Always check line number in regexp and file
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 47
+local MINOR_VERSION = 48
 local LibStub=LibStub
 local dprint=function() end
 local function encapsulate()
@@ -123,14 +123,14 @@ local AceDB  = LibStub("AceDB-3.0",true)
 
 lib.mixinTargets=lib.mixinTargets or {}
 --- Runtime storage for variables.
--- 
+--
 lib.toggles=lib.toggles or {}
 lib.chats=lib.chats or {}
 --- Runtime storage for information on LibInit managed addons.
--- 
-lib.options=lib.options or {} 
+--
+lib.options=lib.options or {}
 --- Recycling system pool.
--- 
+--
 lib.pool=lib.pool or setmetatable({},{__mode="k",__tostring=function(t) return "Recycle Pool:" end})
 --- Mixins list
 --
@@ -139,7 +139,7 @@ wipe(lib.mixins)
 -- Recycling function from ACE3
 
 --- Table Recycling System.
--- 
+--
 -- A set of functions to allow for table reusing
 -- @section Recycle
 -- @usage
@@ -147,7 +147,7 @@ wipe(lib.mixins)
 -- local addon=LibStub("LibInit"):NewAddon("myaddon")
 -- local new=addon:Wrap("NewTable")
 -- local new=addon:Wrap("DelTable")
--- 
+--
 
 
 local new, del, add, recursivedel,copy, cached, stats
@@ -257,7 +257,7 @@ end
 -- -- Preferred usage is assigning to a local via wrap function
 -- @tparam table tbl table to be recycled
 -- @tparam[opt=true] boolean recursive If true, embedded tables added cia new table will be wiped and recycled
--- 
+--
 function lib:DelTable(tbl,recursive)
 	if type(recursive)=="nil" then recursive=true end
 	--assert(type(tbl)=="table","Usage: DelTable(table) called as DelTable(" ..tostring(tbl) ..','..tostring(recursive)..")")
@@ -275,14 +275,14 @@ end
 -- @section addon
 
 --- Create a new AceAddon-3.0 addon.
--- 
+--
 -- Any library you specified will be embeded, and the addon will be scheduled for
 -- its OnInitializee and OnEnabled callbacks.
--- 
+--
 -- The final addon object, with all libraries embeded, will be returned.
--- 
+--
 -- Options table format:
--- 
+--
 --* profile: choose the initial profile (if omittete, uses a per character one)
 --* noswitch: disables Ace profile managemente, user will not be able to change it
 --* nogui: do not generate a gui for configuration
@@ -408,7 +408,7 @@ end
 
 --- Returns a closure to call a method as simple local function
 -- @tparam string name Method name
--- @usage local print=self:Wrap("print") ; print("Hello") same as self:print("Hello") 
+-- @usage local print=self:Wrap("print") ; print("Hello") same as self:print("Hello")
 -- @treturn func Wrapper
 function lib:Wrap(name)
 	if (name=="Trace") then
@@ -435,7 +435,7 @@ end
 -- @tparam string stringa A string
 -- @tparam string colore Name of a color (red, rare, alliance and so on). If not existent uses yellow
 -- @treturn string Colored string
--- 
+--
 function lib:Colorize(stringa,colore)
 	return C(stringa,colore) .. "|r"
 end
@@ -457,7 +457,7 @@ if not lib.CombatScheduler then
 		for _,c in pairs(lib.coroutines) do
 			if c.waiting then
 				c.waiting=false
-				C_Timer.After(c.interval,c.repeater) -- to avoid hammering client with a shitload of corooutines starting together				
+				C_Timer.After(c.interval,c.repeater) -- to avoid hammering client with a shitload of corooutines starting together
 			end
 		end
 	end)
@@ -534,7 +534,7 @@ end
 --  Returns nil if chat does not exist
 -- @tparam[opt=DEFAULT_CHAT_FRAME] string chat Chat name
 -- @treturn frame|nil requested chat frame, can be nil if "chat" does not exist
---  
+--
 function lib:GetChatFrame(chat)
 	if (chat) then
 		if (lib.chats[chat]) then return lib.chats[chat] end
@@ -611,21 +611,21 @@ end
 -- Scans Bags for an item based on different criteria
 --
 -- All parameters are optional.
--- 
+--
 -- With no parameters ScanBags returns the first empty slot
--- 
+--
 -- Passing starbag and scanslot allows to continue scanning after the first finding
 --
 -- @tparam[opt=0] number index index in GetItemInfo result. 0 is a special case to match just itemid
 -- @tparam[opt=0] number value value against to match. 0 is a special case for empty slot
 -- @tparam[opt=0] number startbag Initialbag to start scan from
--- @tparam[opt=1] number startslot Initial slot to start scan from 
+-- @tparam[opt=1] number startslot Initial slot to start scan from
 -- @treturn[1] number ItemId
 -- @treturn[1] number bag
 -- @treturn[1] number slot
 -- @treturn[1] list all return value from GetItemInfo called on _Itemid_
 -- @treturn[2] bool false If nothing found
--- 
+--
 function lib:ScanBags(index,value,startbag,startslot)
 	index=index or 0
 	value=value or 0
@@ -1696,7 +1696,7 @@ function lib:OnEmbedDisable()
 end
 
 --- Called after VARIABLES_LOADED event, by OnInitialize Ace Hook
--- 
+--
 function lib:OnInitialized()
 	print("|cff33ff99"..tostring( self ).."|r:",format(ITEM_MISSING,"OnInitialized"))
 end
@@ -1707,9 +1707,9 @@ function lib:LoadHelp()
 end
 
 --- Called with the db default table as argument
--- 
+--
 -- You can customize defaults here
--- 
+--
 -- @tparam table tbl ACE DB default table
 function lib:SetDbDefaults(tbl)
 end
@@ -1718,7 +1718,7 @@ end
 --
 -- You can change the default options table here
 -- @tparam table tbl ACE Options Table
--- 
+--
 function lib:SetOptionsTable(tbl)
 end
 
@@ -1737,7 +1737,7 @@ end
 
 --- Called from the OnDisable ACE event
 -- @function lib:OnDisabled
--- 
+--
 function lib:OnDisable(...)
 	if (self.OnDisabled) then
 		if (not self.db.global.silent) then
@@ -1886,10 +1886,10 @@ local function kpairs(t,f)
 end
 function lib:Kpairs(t,f)
 	return kpairs(t,f)
-end 
+end
 --- Returns kpairs implementation
 -- Deprecated in favour of Wrap("Kpairs")
--- 
+--
 function lib:GetKpairs()
 	return kpairs
 end
@@ -1897,7 +1897,7 @@ lib.getKpairs=lib.GetKpairs
 
 --- Implements PHP empty function.
 -- @tparam any obj variable to be tested
--- @treturn boolean 
+-- @treturn boolean
 function lib:Empty(obj)
 	if not obj then return true end -- Simplest case, obj evaluates to false in boolean context
 	local t=type(obj)
@@ -2092,7 +2092,7 @@ function lib:coroutineExecute(interval,action,combatSafe,...)
 	c.co=coroutine.create(action)
 	c.running=true
 	c.paused=false
-	do 
+	do
 		local args={...}
 		local obj=self
 		local c=c
@@ -2128,7 +2128,7 @@ end
 function lib:coroutineRestart(signature)
 	local c=coroutines[signature]
 	if c then
-		if c.paused then 
+		if c.paused then
 			c.paused=false
 			local rc,res=pcall(c.repeater)
 			if not rc then error(res,2) end
@@ -2151,8 +2151,8 @@ function NDTProto:UpdateTimes(seconds)
 	self.expire=GetTime()+seconds-0.05
 end
 function NDTProto:Start(seconds)
-	self:UpdateTimes(seconds) 
-	return self:Callback() 
+	self:UpdateTimes(seconds)
+	return self:Callback()
 end
 function NDTProto:Callback(reset)
 	if reset then self.running=false end
@@ -2165,7 +2165,7 @@ function NDTProto:Callback(reset)
 			C_Timer.After(self.delay,function() return self:Callback(true) end)
 			self.running=true
 		end
-		
+
 	end
 end
 function NDTProto:New(callback)
@@ -2174,14 +2174,14 @@ function NDTProto:New(callback)
 	timer.delay=0.001
 	timer.callback=callback
 	return timer
-end	
+end
 
 --- Delayable timers
 -- Create a timer that can be delayed. Useful for example for throttling sliders' events
 -- This function just create the timer, to start (or delay) it use the :Start(seconds) method
 -- @tparam function callback Function to be called at expire time
 -- @treturn object
--- 
+--
 function lib:NewDelayableTimer(callback)
 	return NDTProto:New(callback)
 end
@@ -2202,30 +2202,30 @@ end
 --  self:StopAutomaticEvents()
 --  end
 
---- 
+---
 -- Starts all automatic events.
 -- Automatic events are the one for which exists and EvtEVENTNAME method
--- 
+--
 function lib:StartAutomaticEvents()
 	for k,v in pairs(self) do
 		if (type(v)=='function') then
 			if (k:sub(1,3)=='Evt') then
 				_G.print(self,"Registering",k)
-				self:Print("Registering",k)				
+				self:Print("Registering",k)
 				self:RegisterEvent(k:sub(4),k)
 			end
 		end
 	end
 end
 
---- 
+---
 -- Stops all automatic events.
 -- Automatic events are the one for which exists and EvtEVENTNAME method
 -- @tparam[opt] string ignore Name of an event method not to be stopped
 -- @usage
 -- self:StopAutomaticEvents("ADDON_LOADED")
 -- -- Will stop all events but ADDON_LOADED
--- 
+--
 function lib:StopAutomaticEvents(ignore)
 	for k,v in pairs(self) do
 		if (type(v)=='function') then

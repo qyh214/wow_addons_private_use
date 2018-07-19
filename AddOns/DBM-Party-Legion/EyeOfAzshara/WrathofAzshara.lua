@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1492, "DBM-Party-Legion", 3, 716)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(96028)
 mod:SetEncounterID(1814)
 mod:SetZone()
@@ -102,8 +102,8 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, targetname)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 192680 then--Mythic Tornado
 		warnMythicTornado:Show()
 		if self.vb.phase == 2 then

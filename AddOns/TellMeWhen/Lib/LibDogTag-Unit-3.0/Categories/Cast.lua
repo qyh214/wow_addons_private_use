@@ -19,6 +19,8 @@ local castData = {}
 local UnitGUID = UnitGUID
 local IsNormalUnit = DogTag.IsNormalUnit
 
+local wow_800 = select(4, GetBuildInfo()) >= 80000
+
 local playerGuid = nil
 DogTag:AddEventHandler("Unit", "PLAYER_LOGIN", function()
 	playerGuid = UnitGUID("player")
@@ -36,12 +38,23 @@ local function updateInfo(event, unit)
 		castData[guid] = data
 	end
 	
-	local spell, rank, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
+	local spell, rank, displayName, icon, startTime, endTime
 	local channeling = false
-	if not spell then
-		spell, rank, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
-		channeling = true
+	if wow_800 then
+		spell, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
+		rank = nil
+		if not spell then
+			spell, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
+			channeling = true
+		end
+	else
+		spell, rank, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
+		if not spell then
+			spell, rank, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
+			channeling = true
+		end
 	end
+
 	if spell then
 		data.spell = spell
 		rank = rank and tonumber(rank:match("%d+"))
@@ -163,7 +176,10 @@ DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_STOP", updateInfo)
 DogTag:AddEventHandler("Unit", "UnitChanged", updateInfo)
 
 DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_SENT", function(event, unit, spell, rank, target)
-	if unit == "player" then
+	
+	-- The purpose of this event is to predict the next spell target.
+	-- This seems to be removed in at least wow_800
+	if unit == "player" and not wow_800 then
 		nextSpell = spell
 		nextRank = rank and tonumber(rank:match("%d+"))
 		nextTarget = target ~= "" and target or nil

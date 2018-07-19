@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(816, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(69078, 69132, 69134, 69131)--69078 Sul the Sandcrawler, 69132 High Prestess Mar'li, 69131 Frost King Malakk, 69134 Kazra'jin --Adds: 69548 Shadowed Loa Spirit,
 mod:SetEncounterID(1570)
 mod:SetZone()
@@ -100,7 +100,6 @@ local dischargeCount = 0
 local darkPowerWarned = false
 
 function mod:OnCombatStart(delay)
-	lingeringPresence = DBM:GetSpellInfo(136467)
 	kazraPossessed = false
 	darkPowerWarned = false
 	possessesDone = 0
@@ -162,8 +161,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		possessesDone = possessesDone + 1
 		warnPossessed:Show(args.destName, possessesDone)
 		specWarnPossessed:Show(args.spellName, args.destName)
-		if uid and UnitBuff(uid, lingeringPresence) then
-			local _, _, _, stack = UnitBuff(uid, lingeringPresence)
+		if uid and DBM:UnitBuff(uid, lingeringPresence) then
+			local _, _, stack = DBM:UnitBuff(uid, lingeringPresence)
 			if self:IsHeroic() then
 				timerDarkPowerCD:Start(math.floor(68/(0.15*stack+1.0)+0.5))--(68, 59, 52, 47)
 			elseif self:IsDifficulty("normal25") then
@@ -217,7 +216,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnFrigidAssault:Show(amount)
 				end
 			else
-				if amount >= 9 and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
+				if amount >= 9 and not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 					specWarnFrigidAssaultOther:Show(args.destName)
 				end
 			end
@@ -337,7 +336,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 137107 then--Pre cast trigger. there are other later spellids but they aren't consistent, only this one is.
 		warnRecklessCharge:Schedule(2)--warning 4 seconds early on something cast every 6 seconds seems silly. Lets warn 2 seconds early.
 		if kazraPossessed then--While possessed he gains "Overload" which will make his charge cd way different.

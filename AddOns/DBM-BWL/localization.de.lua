@@ -40,6 +40,10 @@ L:SetGeneralLocalization{
 	name	= "Brutwächter Dreschbringer"
 }
 
+L:SetMiscLocalization{
+	Pull	= "Euresgleichen sollte nicht hier sein! Ich werde Euch vernichten!"
+}
+
 ---------------
 --  Firemaw  --
 ---------------
@@ -99,16 +103,14 @@ L:SetGeneralLocalization{
 	name = "Nefarian"
 }
 L:SetWarningLocalization{
-	WarnClassCall		= "%s Ruf",
-	WarnPhase			= "Phase %s"
+	WarnClassCall		= "%s Ruf"
 }
 L:SetTimerLocalization{
-	TimerClassCall		= "%s Ruf"
+	TimerClassCall		= "%s Ruf endet"
 }
 L:SetOptionLocalization{
 	TimerClassCall		= "Dauer der Klassenrufe anzeigen",
-	WarnClassCall		= "Verkünde Klassenrufe",
-	WarnPhase			= "Verkünde Phasenwechsel"
+	WarnClassCall		= "Verkünde Klassenrufe"
 }
 L:SetMiscLocalization{
 	YellP2		= "Sehr gut, meine Diener. Der Mut der Sterblichen scheint zu schwinden! Nun lasst uns sehen, wie sie sich gegen den wahren Herrscher des Schwarzfels behaupten werden!",

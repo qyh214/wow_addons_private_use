@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NorthrendBeasts", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 259 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(34796, 35144, 34799, 34797)
 --mod:SetEncounterID(1088)--Buggy, never enable this
 mod:SetMinSyncRevision(104)
@@ -83,7 +83,6 @@ mod.vb.AcidmawDead = false
 mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
-	bileName = DBM:GetSpellInfo(66869)
 	table.wipe(bileTargets)
 	table.wipe(toxinTargets)
 	self.vb.burnIcon = 8

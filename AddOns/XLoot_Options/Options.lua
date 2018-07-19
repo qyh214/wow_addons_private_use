@@ -650,7 +650,7 @@ function addon:OnEnable() -- Construct addon option tables here
 		-- Item quality dropdown generator
 		local item_qualities = {}
 		do
-			for i, v in ipairs(UnitPopupMenus["LOOT_THRESHOLD"]) do -- we only care for the qualities available as ML filters
+			for i, v in ipairs({ "ITEM_QUALITY2_DESC", "ITEM_QUALITY3_DESC", "ITEM_QUALITY4_DESC", "CANCEL" }) do -- we only care for the qualities available as ML filters
 				local quality = tonumber(strmatch(v,"%d+"))
 				if quality then
 					local hex = select(4, GetItemQualityColor(quality))

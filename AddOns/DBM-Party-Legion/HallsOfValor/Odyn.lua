@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1489, "DBM-Party-Legion", 4, 721)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(95676)
 mod:SetEncounterID(1809)
 mod:SetZone()
@@ -106,7 +106,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnShatterSpears:Show()
 		specWarnShatterSpears:Play("watchorb")
 		timerShatterSpearsCD:Start()
-	elseif spellId == 198750 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 198750 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnSurge:Show(args.sourceName)
 		specWarnSurge:Play("kickcast")
 	end
@@ -124,8 +124,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 198396 then
 		warnSpear:Show()
 	elseif spellId == 201221 then--Summon Stormforged

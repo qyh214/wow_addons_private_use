@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HoVTrash", "DBM-Party-Legion", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17204 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17522 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -37,10 +37,10 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 199805 then
 		self:BossTargetScanner(args.sourceGUID, "CrackleTarget", 0.1, 9)
-	elseif spellId == 192563 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 192563 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnCleansingFlame:Show(args.sourceName)
 		specWarnCleansingFlame:Play("kickcast")
-	elseif spellId == 199726 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 199726 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnUnrulyYell:Show(args.sourceName)
 		specWarnUnrulyYell:Play("kickcast")
 	end

@@ -102,14 +102,14 @@ local function AddWaypoint(questID)
 	local mapID, floorNumber = GetQuestWorldMapAreaID(questID)
 	if mapID ~= 0 then
 		if IsMapGarrisonMap(mapID) then
-			SetMapByID(mapID)	-- fix
+			KT.SetMapByID(mapID)	-- fix
 			local parentData = GetMapHierarchy()
 			if parentData then
 				mapID = parentData[1].id
 			end
 		end
 		
-		SetMapByID(mapID)
+		KT.SetMapByID(mapID)
 		if floorNumber ~= 0 then
 			SetDungeonMapLevel(floorNumber)
 		end
@@ -141,7 +141,7 @@ local function AddWaypoint(questID)
 	questWaypoints[questID] = uid
 
 	KT:MoveButtons()	-- For addon PetTracker
-	SetMapToCurrentZone()	-- fire WORLD_MAP_UPDATE event
+	KT.SetMapToCurrentZone()	-- fire WORLD_MAP_UPDATE event
 	Announce("Added a quest waypoint - "..title)
 end
 

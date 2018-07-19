@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(817, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(68078, 68079, 68080, 68081)--Ro'shak 68079, Quet'zal 68080, Dam'ren 68081, Iron Qon 68078
 mod:SetEncounterID(1559)
 mod:SetMainBossID(68078)
@@ -85,7 +85,7 @@ mod.vb.phase = 1
 mod.vb.fistSmashCount = 0
 local spearSpecWarnFired = false
 --Spear/arcing methods called VERY often, so cache these globals locally
-local UnitDetailedThreatSituation, UnitExists, UnitClass, UnitDebuff = UnitDetailedThreatSituation, UnitExists, UnitClass, UnitDebuff
+local UnitDetailedThreatSituation, UnitExists, UnitClass = UnitDetailedThreatSituation, UnitExists, UnitClass
 
 --Custom, don't use IsTanking prototype here
 local function notEligable(unit)
@@ -143,7 +143,7 @@ end
 local function checkArcing()
 	local arcingDebuffs = 0
 	for uId in DBM:GetGroupMembers() do
-		if UnitDebuff(uId, arcingName) then
+		if DBM:UnitDebuff(uId, arcingName) then
 			arcingDebuffs = arcingDebuffs + 1
 		end
 	end
@@ -161,7 +161,6 @@ local function checkArcing()
 end
 
 function mod:OnCombatStart(delay)
-	arcingName = DBM:GetSpellInfo(136193)
 	self.vb.phase = 1
 	self.vb.fistSmashCount = 0
 	warnPhase1:Show()
@@ -318,7 +317,7 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 134611 then--Unleashed Flame internal CD. He cannot use more often than every 6 seconds. 137991 is ability activation on pull, before 137991 is cast, he can't use ability at all
 		warnUnleashedFlame:Show()
 		timerUnleashedFlameCD:Start()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(846, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(71454)
 mod:SetEncounterID(1595)
 mod:SetZone()
@@ -62,7 +62,6 @@ mod:AddArrowOption("BloodrageArrow", 142879, true, true)
 
 --Upvales, don't need variables
 local displacedEnergyDebuff = GetSpellInfo(142913)
-local UnitDebuff = UnitDebuff
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 --Not important, don't need to recover
 local playerDebuffs = 0
@@ -76,12 +75,11 @@ mod.vb.rageActive = false
 local debuffFilter
 do
 	debuffFilter = function(uId)
-		return UnitDebuff(uId, displacedEnergyDebuff)
+		return DBM:UnitDebuff(uId, displacedEnergyDebuff)
 	end
 end
 
 function mod:OnCombatStart(delay)
-	displacedEnergyDebuff = GetSpellInfo(142913)
 	playerDebuffs = 0
 	self.vb.breathCast = 0
 	self.vb.arcingSmashCount = 0
@@ -190,7 +188,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetSortedIcon(0.5, args.destName, 1)
 		end
 		if self.Options.RangeFrame then
-			if UnitDebuff("player", displacedEnergyDebuff) then--You have debuff, show everyone
+			if DBM:UnitDebuff("player", displacedEnergyDebuff) then--You have debuff, show everyone
 				DBM.RangeCheck:Show(8, nil)
 			else--You do not have debuff, only show players who do
 				DBM.RangeCheck:Show(8, debuffFilter)
@@ -207,7 +205,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then--At this point the other tank SHOULD be clear.
 				specWarnFatalStrike:Show(amount)
 			else--Taunt as soon as stacks are clear, regardless of stack count.
-				if not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
+				if not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 					specWarnFatalStrikeOther:Show(args.destName)
 				end
 			end
@@ -232,7 +230,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 142898 then--Faster than combat log
 		self.vb.arcingSmashCount = self.vb.arcingSmashCount + 1
 		specWarnArcingSmash:Show(self.vb.arcingSmashCount)

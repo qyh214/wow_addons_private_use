@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlChallenges", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17611 $"):sub(12, -3))
 --mod:SetCreatureID(60491)
 --mod:SetModelID(48465)
 mod:SetZone()
@@ -30,9 +30,9 @@ local warnBulwark				= mod:NewAddsLeftAnnounce(138901, 2)--Ahoo'ru
 local warnCharge				= mod:NewCastAnnounce(138845, 1)--Ahoo'ru
 local warnCompleteHeal			= mod:NewCastAnnounce(142621, 4)--Ahoo'ru
 local warnDivineCircle			= mod:NewSpellAnnounce(142585, 3)--Ahoo'ru
-local warnSmolderingHeat			= mod:NewTargetAnnounce(142400, 4)--Anthracite
-local warnCooled					= mod:NewTargetAnnounce(141371, 1)--Anthracite
-local warnOnFire					= mod:NewTargetAnnounce(141388, 4)--Anthracite
+local warnSmolderingHeat			= mod:NewTargetNoFilterAnnounce(142400, 4)--Anthracite
+local warnCooled					= mod:NewTargetNoFilterAnnounce(141371, 1)--Anthracite
+local warnOnFire					= mod:NewTargetNoFilterAnnounce(141388, 4)--Anthracite
 local warnRockPaperScissors			= mod:NewSpellAnnounce(141206, 3)--Ro-Shambo
 local warnPowerCrystal				= mod:NewSpellAnnounce(133398, 3)--Millhouse Manastorm
 local warnDoom						= mod:NewSpellAnnounce(133650, 4)--Millhouse Manastorm
@@ -207,7 +207,8 @@ end
 
 --This event won't really work well for spectators if they target the player instead of boss. This event only fires if boss is on target/focus
 --It is however the ONLY event you can detect this spell using.
-function mod:UNIT_SPELLCAST_CHANNEL_START(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_CHANNEL_START(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
 	if spellId == 134527 and self:AntiSpam() then
 		timerLumberingChargeCD:Start()

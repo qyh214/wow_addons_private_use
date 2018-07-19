@@ -2,7 +2,7 @@
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: 2018/05/12
+-- Last update: 2018/07/12
 
 if GetLocale() ~= "zhCN" then return end
 
@@ -36,7 +36,7 @@ DBM_CORE_LOOT_SPEC_REMINDER			= "你当前的人物专精为 %s。你当前的�
 
 DBM_CORE_BIGWIGS_ICON_CONFLICT		= "DBM检测到你同时开启了Bigwigs,请关闭自动标记以避免冲突。"
 
-DBM_CORE_MOD_AVAILABLE				= "DBM已经为%s制作了相关模块。你可以在 deadlybossmods.com 或Curse上找到新版本。本消息只显示一次。"
+DBM_CORE_MOD_AVAILABLE				= "DBM已经为%s制作了相关模块。你可以在 deadlybossmods.com 或Curse上找到新版本。"
 
 DBM_CORE_COMBAT_STARTED				= "%s作战开始，祝你走运 :)"
 DBM_CORE_COMBAT_STARTED_IN_PROGRESS	= "已进行的战斗-%s正在作战。祝你走运 :)"
@@ -161,11 +161,11 @@ DBM_CORE_VOICE_MISSING				= "DBM找不到你当前选择的语音包。语音包
 DBM_CORE_VOICE_DISABLED				= "你安装了语音包但是没有启动它。请在选项中的语音报警菜单中开启语音包。如果不需要语音报警请卸载语音包。"
 DBM_CORE_VOICE_COUNT_MISSING		= "在 %d 语音包中找不到倒计时语音。倒计时已恢复为默认值"
 
-DBM_CORE_UPDATEREMINDER_HEADER			= "你的DBM版本已过期。\n你可以在如下地址下载到新版本%s（r%d）："
-DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "你的DBM Alpha 版本已过期了%d个版本。这可能导致你或其他团队成员出错。"
+DBM_CORE_UPDATEREMINDER_HEADER			= "您的DBM版本已过期。\n您可以在Curse/Twitch, WOWI, 或者deadlybossmods.com下载到新版本：%s（r%d）。如果您使用整合包，请使用更新器更新。"
+DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "您正在使用的Alpha DBM 版本已至少落后主干%d个版本。\n 我们建议使用Alpha版本的用户时刻追随主干更新，否则请切换到正式发行版。Alpha版的版本检查会比正式发行版严格。"
 DBM_CORE_UPDATEREMINDER_FOOTER			= "按下 " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "复制下载地址到剪切板。"
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "按下 " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "复制链接到剪切板。"
-DBM_CORE_UPDATEREMINDER_DISABLE			= "警告：你的DBM已经过期了%d个版本，它已被禁用，直到你更新。这是为了确保它不会导致你或其他团队成员出错。"
+DBM_CORE_UPDATEREMINDER_DISABLE			= "警告：你的DBM已经过期太久，它已被强制禁用，直到你更新。这是为了确保它不会导致你或其他团队成员出错。"
 DBM_CORE_UPDATEREMINDER_HOTFIX			= "你的DBM版本会在这首领战斗中有问题。最新版的DBM已经修复了这个问题。"
 DBM_CORE_UPDATEREMINDER_HOTFIX_ALPHA	= "你的DBM版本会在这首领战斗中有问题。最新版的DBM（或Alpha版本）已经修复了这个问题。"
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "你的DBM已经过期,它已被禁用,直到你更新.这是为了确保它不会导致你或其他团队成员出错.这次更新是一个非常重要的补丁,请确保你得到的是最新版."
@@ -257,6 +257,7 @@ DBM_CORE_UNKNOWN					= "未知"
 DBM_CORE_LEFT						= "左"
 DBM_CORE_RIGHT						= "右"
 DBM_CORE_BACK						= "后"
+DBM_CORE_SIDE						= "旁边"
 DBM_CORE_MIDDLE						= "中"
 DBM_CORE_FRONT						= "前"
 DBM_CORE_EAST						= "东"
@@ -350,6 +351,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt				= ">%%s<中了%s - 快嘲讽"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close				= "你附近的>%%s<中了%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move				= "%s - 快躲开"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dodge				= "%s - 躲开攻击"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.dodgeloc			= "%s - 躲开%%s边"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveaway			= "%s - 离开人群"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveto			= "%s - 靠近 >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.jump				= "%s - 快跳"
@@ -385,6 +387,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt 			= "特殊警报：当另外一个T中�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close			= "特殊警报：当你附近有人受到$spell:%s影响时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move			= "特殊警报：当你受到$spell:%s影响时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dodge			= "特殊警报：当你受到$spell:%s影响并需要躲开攻击"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dodgeloc		= "特殊警报：当你受到$spell:%s影响并需要朝某个方向躲开攻击"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveaway		= "特殊警报：当你受到$spell:%s影响并需要跑开人群时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveto			= "特殊警报：当他人中了$spell:%s并需要你去靠近时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.jump			= "特殊警报：当你受到$spell:%s影响并需要跳起来时"

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1987, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17155 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(122477, 122135)--122477 F'harg, 122135 Shatug
 mod:SetEncounterID(2074)
 mod:SetZone()
@@ -338,7 +338,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 end
 --]]
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 244159 then--Consuming Sphere
 		specWarnComsumingSphere:Show()
 		specWarnComsumingSphere:Play("watchorb")

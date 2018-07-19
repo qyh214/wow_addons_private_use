@@ -337,7 +337,7 @@ end
 
 do
 	local module_db_spellsCoins = module.db.spellsCoins
-	function module.main:UNIT_SPELLCAST_SUCCEEDED(unitID,_,_,_,spellID)
+	function module.main:UNIT_SPELLCAST_SUCCEEDED(unitID,_,spellID)
 		if module_db_spellsCoins[spellID] and unitID:find("^raid%d+$") then
 			local name = ExRT.F.UnitCombatlogname(unitID)
 			if name then

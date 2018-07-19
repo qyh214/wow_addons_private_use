@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2169, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17514 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17579 $"):sub(12, -3))
 mod:SetCreatureID(134445)--Zek'vhozj, 134503/qiraji-warrior
 mod:SetEncounterID(2136)
 --mod:DisableESCombatDetection()
@@ -17,7 +17,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 267180 267239 270620 265231 265530",
 	"SPELL_CAST_SUCCESS 264382",
-	"SPELL_AURA_APPLIED 265264 265360 265662 265646",
+	"SPELL_AURA_APPLIED 265264 265360 265662 265646 265237",
 	"SPELL_AURA_APPLIED_DOSE 265264",
 	"SPELL_AURA_REMOVED 265360 265662",
 --	"SPELL_PERIODIC_DAMAGE",
@@ -32,6 +32,11 @@ mod:RegisterEventsInCombat(
 --TODO, mark mind controlled players?
 --TODO, find a log that drags out P1 so can see timer between eye beams/warrior adds. Or wait til mythic when P1 mechanics don't disable
 --TODO, maybe a "next bounce" timer
+--[[
+(ability.id = 267239 or ability.id = 265231 or ability.id = 265530) and type = "begincast"
+ or ability.id = 264382 and type = "cast"
+ or (ability.id = 267180 or ability.id = 270620) and type = "begincast"
+--]]
 --local warnXorothPortal					= mod:NewSpellAnnounce(244318, 2, nil, nil, nil, nil, nil, 7)
 local warnVoidLash						= mod:NewStackAnnounce(265264, 2, nil, "Tank")
 --Stage One: Chaos
@@ -46,7 +51,7 @@ local warnWillofCorruptor				= mod:NewTargetAnnounce(265646, 4, nil, false)
 --General
 local specWarnSurgingDarkness			= mod:NewSpecialWarningDodge(265451, nil, nil, nil, 3, 2)
 local specWarnMightofVoid				= mod:NewSpecialWarningDefensive(267312, nil, nil, nil, 1, 2)
-local specWarnVoidLashTaunt				= mod:NewSpecialWarningTaunt(265264, nil, nil, nil, 1, 2)
+local specWarnShatter					= mod:NewSpecialWarningTaunt(265237, nil, nil, nil, 1, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 2)
 --Stage One: Chaos
 local specWarnEyeBeam					= mod:NewSpecialWarningMoveAway(264382, nil, nil, nil, 1, 2)
@@ -119,7 +124,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 267180 then
 		--timerVoidBoltCD:Start(args.sourceGUID)
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnVoidbolt:Show(args.sourceName)
 			specWarnVoidbolt:Play("kickcast")
 		end
@@ -128,13 +133,12 @@ function mod:SPELL_CAST_START(args)
 		specWarnOrbOfCorruption:Show(self.vb.orbCount)
 		specWarnOrbOfCorruption:Play("161612")--catch balls
 		timerOrbofCorruptionCD:Start()
-	elseif spellId == 270620 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 270620 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnEntropicBlast:Show(args.sourceName)
 		specWarnEntropicBlast:Play("kickcast")
 	elseif spellId == 265231 then--First Void Lash
 		timerMightofVoidCD:Start()
-		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
-		if tanking or (status == 3) then
+		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnMightofVoid:Show()
 			specWarnMightofVoid:Play("defensive")
 		end
@@ -164,21 +168,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) then
 			local amount = args.amount or 1
-			if amount >= 2 then
-				if args:IsPlayer() then
-					warnVoidLash:Show(args.destName, amount)
-				else
-					if not UnitIsDeadOrGhost("player") then
-						specWarnVoidLashTaunt:Show(args.destName)
-						specWarnVoidLashTaunt:Play("tauntboss")
-					else
-						warnVoidLash:Show(args.destName, amount)
-					end
-				end
-			else
-				warnVoidLash:Show(args.destName, amount)
-			end
+			warnVoidLash:Show(args.destName, amount)
 		end
+	elseif spellId == 265237 then
+		specWarnShatter:Schedule(4.5, args.destName)
+		specWarnShatter:ScheduleVoice(4.5, "tauntboss")
 	elseif spellId == 265360 then
 		if args:IsPlayer() then
 			specWarnRoilingDeceit:Show(DBM_CORE_ROOM_EDGE)

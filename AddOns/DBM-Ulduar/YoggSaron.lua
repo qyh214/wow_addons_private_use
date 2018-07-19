@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 278 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -70,7 +70,6 @@ mod.vb.Guardians = 0
 mod.vb.numberOfPlayers = 1
 
 function mod:OnCombatStart(delay)
-	SanityBuff = DBM:GetSpellInfo(63050)
 	self.vb.numberOfPlayers = DBM:GetNumRealGroupMembers()
 	self.vb.brainLinkIcon = 2
 	self.vb.beaconIcon = 8
@@ -81,7 +80,7 @@ function mod:OnCombatStart(delay)
 	table.wipe(brainLinkTargets)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(SanityBuff)
-		DBM.InfoFrame:Show(6, "playerdebuffstacks", SanityBuff, 2)--Sorted lowest first (highest first is defualt of arg not given)
+		DBM.InfoFrame:Show(6, "playerdebuffstacks", 63050, 2)--Sorted lowest first (highest first is default of arg not given)
 	end
 end
 

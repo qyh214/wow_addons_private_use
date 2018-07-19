@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("LichKing", "DBM-Icecrown", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 268 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(36597)
 mod:SetEncounterID(1106)
 mod:DisableEEKillDetection()--EE fires at 10%
@@ -150,7 +150,6 @@ local function RestoreWipeTime(self)
 end
 
 function mod:OnCombatStart(delay)
-	plagueHop = DBM:GetSpellInfo(70338)
 	numberOfPlayers = DBM:GetNumRealGroupMembers()
 	if UnitExists("pet") then
 		numberOfPlayers = numberOfPlayers + 1
@@ -441,7 +440,7 @@ end
 function mod:UNIT_AURA_UNFILTERED(uId)
 	local name = DBM:GetUnitFullName(uId)
 	if (not name) or (name == lastPlague) then return end
-	local _, _, _, _, _, _, expires, _, _, _, spellId = UnitDebuff(uId, plagueHop)
+	local _, _, _, _, _, expires, _, _, _, spellId = DBM:UnitDebuff(uId, plagueHop)
 	if not spellId or not expires then return end
 	if spellId == 70338 and expires > 0 and not plagueExpires[expires] then
 		plagueExpires[expires] = true

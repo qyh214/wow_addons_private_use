@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Hydross", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 653 $"):sub(12, -3))
 mod:SetCreatureID(21216)
 mod:SetEncounterID(623)
 mod:SetModelID(20162)
@@ -41,7 +41,6 @@ local damageNext = {
 }
 
 function mod:OnCombatStart(delay)
-	markOfH, markOfC = DBM:GetSpellInfo(38215), DBM:GetSpellInfo(38219)
 	timerMark:Start(16-delay, markOfH, "10%")
 	berserkTimer:Start(-delay)
 	if self.Options.RangeFrame then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1878, "DBM-Party-Legion", 12, 900)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(120793)
 mod:SetEncounterID(2039)
 mod:SetZone()
@@ -108,7 +108,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:UNIT_AURA_UNFILTERED(uId)
-	local hasDebuff = UnitDebuff(uId, demonicUpheaval)
+	local hasDebuff = DBM:UnitDebuff(uId, demonicUpheaval)
 	local name = DBM:GetUnitFullName(uId)
 	if not hasDebuff and demonicUpheavalTable[name] then
 		demonicUpheavalTable[name] = nil
@@ -124,7 +124,8 @@ function mod:UNIT_AURA_UNFILTERED(uId)
 end
 
 --TODO, syncing maybe do to size and spread in room, not all nameplates will be caught by one person
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	--"<51.81 19:21:30> [UNIT_SPELLCAST_SUCCEEDED] Unknown(??) [[nameplate1:Shadow of Mephistroth Cosmetic::3-3020-1677-21626-234034-00025D92FA:234034]]", -- [308]
 	if spellId == 234034 then--Only will trigger if nameplate is in range
 		local guid = UnitGUID(uId)

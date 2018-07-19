@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(333, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(56173)
 mod:SetEncounterID(1299)
 mod:SetZone()
@@ -93,13 +93,13 @@ local debuffFilterDebuff, NozPresence, AlexPresence = DBM:GetSpellInfo(108649), 
 local debuffFilter
 do
 	debuffFilter = function(uId)
-		return UnitDebuff(uId, debuffFilterDebuff)
+		return DBM:UnitDebuff(uId, debuffFilterDebuff)
 	end
 end
 
 function mod:updateRangeFrame()
 	if not self.Options.RangeFrame then return end
-	if UnitDebuff("player", debuffFilterDebuff) then
+	if DBM:UnitDebuff("player", debuffFilterDebuff) then
 		DBM.RangeCheck:Show(10, nil)--Show everyone.
 	else
 		DBM.RangeCheck:Show(10, debuffFilter)--Show only people who have debuff.
@@ -140,7 +140,6 @@ function mod:ScanParasite()
 end
 
 function mod:OnCombatStart(delay)
-	debuffFilterDebuff, NozPresence, AlexPresence = DBM:GetSpellInfo(108649), DBM:GetSpellInfo(106027), DBM:GetSpellInfo(106028)
 	firstAspect = true
 	activateTetanusTimers = false
 	engageCount = 0
@@ -202,7 +201,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 105651 then
 		warnElementiumBolt:Show()
 		specWarnElementiumBolt:Show()
-		if not UnitBuff("player", NozPresence) and not UnitIsDeadOrGhost("player") then--Check for Nozdormu's Presence
+		if not DBM:UnitBuff("player", NozPresence) and not UnitIsDeadOrGhost("player") then--Check for Nozdormu's Presence
 			timerElementiumBlast:Start()
 			countdownBoltBlast:Start()
 			specWarnElementiumBoltDPS:Schedule(10)
@@ -277,7 +276,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnTetanus:Show(amount)
 			else
-				if not UnitIsDeadOrGhost("player") and not UnitDebuff("player", args.spellName) then--You have no debuff and not dead
+				if not UnitIsDeadOrGhost("player") and not DBM:UnitDebuff("player", args.spellName) then--You have no debuff and not dead
 					specWarnTetanusOther:Show(args.destName)--So stop being a tool and taunt off other tank who has 4 stacks.
 				end
 			end
@@ -331,7 +330,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 110663 and self:AntiSpam(2, 3) then--Elementium Meteor Transform (apparently this doesn't fire UNIT_DIED anymore, need to use this alternate method)
 		self:SendSync("BoltDied")--Send sync because Elementium bolts do not have a bossN arg, which means event only fires if it's current target/focus.
 	-- Actually i have a pretty good idea what problem is now. thinking about it, with no uId filter, it's triggering off a rogue in raid (also have hemorrhage spell)
@@ -339,7 +338,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnHemorrhage:Show()
 		specWarnHemorrhage:Show()
 	elseif spellId == 105551 then--Spawn Blistering Tentacles
-		if not UnitBuff("player", AlexPresence) then--Check for Alexstrasza's Presence
+		if not DBM:UnitBuff("player", AlexPresence) then--Check for Alexstrasza's Presence
 			warnTentacle:Show()
 			specWarnTentacle:Show()
 		end

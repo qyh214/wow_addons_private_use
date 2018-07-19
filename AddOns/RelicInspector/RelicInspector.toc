@@ -1,8 +1,8 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: RelicInspector
 ## Notes: Displays artifact weapon relics in the tooltip
 ## Author: Thoralie
-## Version: 2.0.7
+## Version: 3.0
 ## SavedVariables: RelicInspectorDB
 ## SavedVariablesPerCharacter: RelicInspectorCharDB
 
@@ -14,5 +14,4 @@ Libs\AceDB-3.0\AceDB-3.0.xml
 Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 
 ArtifactData.lua
-TraitSpellIDs.lua
 RelicInspector.lua

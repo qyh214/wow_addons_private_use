@@ -1,7 +1,7 @@
 local GlobalAddonName, ExRT = ...
 
 local math_ceil, IsEncounterInProgress, abs, UnitHealth, UnitHealthMax, GetTime, format, tableCopy = math.ceil, IsEncounterInProgress, abs, UnitHealth, UnitHealthMax, GetTime, format, ExRT.F.table_copy2
-
+local SendAddonMessage = C_ChatInfo.SendAddonMessage
 local VExRT = nil
 
 local module = ExRT.mod:New("Timers",ExRT.L.timers,nil,true)
@@ -537,7 +537,7 @@ do
 						local time = timeSnapshots[ iSnapshot ] - timeSnapshots[ prevSnapshot ]
 						local dps = diff / time
 						
-						local t = nowHP / dps
+						local t = dps ~= 0 and nowHP / dps or 0
 						if t < 0 or t > 600 then
 							module.frame.killTime:SetText("")
 						elseif t >= 60 then

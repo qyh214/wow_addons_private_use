@@ -4,6 +4,8 @@ L["Adds tooltips to items showing if you have learned a transmog appearance."] =
 L["Also shows a summary in the Appearance Sets UI of how many pieces of a transmog set you have collected."] = "Também mostra um resumo na Interface de Aparência de Conjuntos de quantas peças de aparência de conjunto já foram coletadas."
 L["Another class can learn this item."] = "Outra classe pode aprender este item."
 L["Appearances updated: "] = "Aparências atualizadas: "
+--[[Translation missing --]]
+--[[ L["Ask me later"] = ""--]] 
 L["Can be learned by:"] = "Pode ser aprendida por:"
 L["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Mensagem importante do Can I Mog It?:  Por favor, entre em todos seus personagens para compilar os dados das aparência de transmogrificação completamente."
 L["CanIMogItOptions not found, loading defaults!"] = "Opções do CanIMogIt não encontradas, carregando padrões!"
@@ -12,6 +14,8 @@ L["Cannot be learned."] = "Não pode ser aprendido."
 L["Cannot determine status on other characters."] = "Não é possível determinar o estado dos outros personagens."
 L["Cannot learn:"] = "Não pode aprender:"
 L["Cannot learn: Soulbound"] = "Não pode aprender: Vinculado"
+--[[Translation missing --]]
+--[[ L["Database migrated to:"] = ""--]] 
 L["Database Scanning chat messages"] = "Mensagens de chat para escaneamento de banco de dados"
 L["Debug Tooltip"] = "‎Depurar dica de ferramenta‎"
 L["Detailed information for debug purposes. Use this when sending bug reports."] = "‎Informações detalhadas para fins de depuração. Use esta opção quando enviar relatórios de erro.‎"
@@ -23,7 +27,11 @@ L["Learned for a different class."] = "Aprendido para uma classe diferente."
 L["Learned from another item but cannot transmog yet."] = "Aprendido por outro item, mas não pode transmogrificar ainda."
 L["Learned from another item."] = "Aprendido por outro item."
 L["Learned."] = "Aprendido."
+--[[Translation missing --]]
+--[[ L["Migrating Database version to:"] = ""--]] 
 L["Not learned."] = "Não aprendido."
+--[[Translation missing --]]
+--[[ L["Okay"] = ""--]] 
 L["Okay, I'll go log onto all of my toons!"] = "Tudo bem, irei entrar em todos meus personagens!"
 L["Only show on items that can be equipped."] = "‎Mostrar apenas itens que podem ser equipados."
 L["Only show on items that can be transmoggrified."] = "‎Mostrar apenas itens que podem ser transmogrificados."
@@ -38,10 +46,14 @@ L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor
 L["Shows chat messages on login about the database scan."] = "Mostra mensagens no chat ao entrar sobre escaneamento do banco de dados."
 L["Shows messages on login about the database scan."] = "Mostra mensagens ao entrar sobre escaneamento do banco de dados."
 L["Shows the icon directly on the item in your bag."] = "‎Mostra o ícone diretamente sobre o item na sua bolsa.‎"
+--[[Translation missing --]]
+--[[ L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = ""--]] 
 L["Transmoggable Items Only"] = "‎Apenas os itens Transmogrificáveis"
 L["Unknown Items Only"] = "‎Apenas Itens Desconhecidos‎"
 L["Updating appearances database."] = "Atualizando banco de dados das aparências."
 L["Verbose Text"] = "‎Texto detalhado‎"
+--[[Translation missing --]]
+--[[ L["We need to update our database. This may freeze the game for a few seconds."] = ""--]] 
 
 
 

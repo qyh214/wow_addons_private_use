@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(859, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(71954)
 mod:SetReCombatTime(20)
 mod:SetZone()
@@ -57,7 +57,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 148318 or spellId == 148317 or spellId == 149304 and self:AntiSpam(3, 2) then--use all 3 because i'm not sure which ones fire on repeat kills
 		self:SendSync("Victory")
 	end

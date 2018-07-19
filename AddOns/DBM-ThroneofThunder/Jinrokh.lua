@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(827, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(69465)
 mod:SetEncounterID(1577)
 mod:SetZone()
@@ -49,13 +49,13 @@ local scanFailed = false
 local ionization, stormDebuff, Fluidity, focusedLight = DBM:GetSpellInfo(138732), DBM:GetSpellInfo(137313), DBM:GetSpellInfo(138002), DBM:GetSpellInfo(137422)
 
 local function checkWaterIonization()
-	if UnitDebuff("player", Fluidity) and UnitDebuff("player", ionization) and not UnitIsDeadOrGhost("player") then
+	if DBM:UnitDebuff("player", Fluidity) and DBM:UnitDebuff("player", ionization) and not UnitIsDeadOrGhost("player") then
 		specWarnWaterMove:Show(ionization)
 	end
 end
 
 local function checkWaterStorm()
-	if UnitDebuff("player", Fluidity) and not UnitIsDeadOrGhost("player") then
+	if DBM:UnitDebuff("player", Fluidity) and not UnitIsDeadOrGhost("player") then
 		specWarnWaterMove:Show(stormDebuff)
 	end
 end
@@ -77,7 +77,6 @@ function mod:FocusedLightningTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
-	ionization, stormDebuff, Fluidity, focusedLight = DBM:GetSpellInfo(138732), DBM:GetSpellInfo(137313), DBM:GetSpellInfo(138002), DBM:GetSpellInfo(137422)
 	scanFailed = false
 	timerFocusedLightningCD:Start(8-delay)
 	timerStaticBurstCD:Start(13-delay)
@@ -147,7 +146,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 138732 and args:IsPlayer() then
 		timerIonization:Start()
 		self:Schedule(19, checkWaterIonization)--Extremely dangerous. (if conducted, then auto wipe). So check before 5 sec.
-		if self.Options.RangeFrame and not UnitDebuff("player", focusedLight) then--if you have 137422 then you have range 8 open and we don't want to make it 4
+		if self.Options.RangeFrame and not DBM:UnitDebuff("player", focusedLight) then--if you have 137422 then you have range 8 open and we don't want to make it 4
 			DBM.RangeCheck:Show(4)
 		end
 	end
@@ -158,12 +157,12 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 138732 and args:IsPlayer() then
 		timerIonization:Cancel()
 		self:Unschedule(checkWaterIonization)
-		if self.Options.RangeFrame and not UnitDebuff("player", focusedLight) then--if you have 137422 we don't want to hide it either.
+		if self.Options.RangeFrame and not DBM:UnitDebuff("player", focusedLight) then--if you have 137422 we don't want to hide it either.
 			DBM.RangeCheck:Hide()
 		end
 	elseif spellId == 137422 and args:IsPlayer() then
 		if self.Options.RangeFrame then
-			if UnitDebuff("player", ionization) then--if you have 138732 then switch to 4 yards
+			if DBM:UnitDebuff("player", ionization) then--if you have 138732 then switch to 4 yards
 				DBM.RangeCheck:Show(4)
 			else
 				DBM.RangeCheck:Hide()

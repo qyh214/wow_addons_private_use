@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
@@ -26,7 +26,7 @@ local ItemCache_Cache
 local Module = SUG:NewModule("texture_withVarTex", SUG:GetModule("texture"))
 Module.Slots = {}
 
-function Module:Table_GetSpecialSuggestions_1(suggestions, tbl, ...)
+function Module:Table_GetSpecialSuggestions_1(suggestions)
 	local lastName = SUG.lastName
 	
 	if SUG.lastName:sub(1, 1) == "$" then

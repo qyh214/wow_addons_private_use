@@ -309,7 +309,7 @@ end
 -- ****************************************************************************
 -- Successful spell casts.
 -- ****************************************************************************
-function eventFrame:UNIT_SPELLCAST_SUCCEEDED(unitID, spellName, spellRank, lineID, skillID)
+function eventFrame:UNIT_SPELLCAST_SUCCEEDED(unitID, lineID, skillID)
 	if (unitID == "player") then OnSpellCast("player", skillID) end
 end
 
@@ -317,7 +317,11 @@ end
 -- ****************************************************************************
 -- Combat log event for detecting pet casts.
 -- ****************************************************************************
-function eventFrame:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, recipientGUID, recipientName, recipientFlags, recipientRaidFlags, skillID)
+function eventFrame:COMBAT_LOG_EVENT_UNFILTERED()
+	eventFrame:CombatLogEvent(CombatLogGetCurrentEventInfo())
+end
+
+function eventFrame:CombatLogEvent(timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, recipientGUID, recipientName, recipientFlags, recipientRaidFlags, skillID)
 	if (event ~= "SPELL_CAST_SUCCESS") then return end
 	if (sourceGUID == UnitGUID("pet")) then OnSpellCast("pet", skillID) end
 end

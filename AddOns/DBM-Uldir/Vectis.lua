@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod(2166, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17484 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(134442)--135016 Plague Amalgam
 mod:SetEncounterID(2134)
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 --mod:SetHotfixNoticeRev(16950)
 --mod:SetMinSyncRevision(16950)
---mod.respawnTime = 35
+mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
@@ -27,22 +27,27 @@ mod:RegisterEventsInCombat(
 
 --TODO, determine highest tolerable tank stacks. Need a better idea of raid numbers/tuning. Was wildly variable between 4 and 11 in testing, so leaving at 6 for now
 --TODO, Immunosuppression Timer for big adds??
+--[[
+(ability.id = 267242 or ability.id = 265217 or ability.id = 265212) and type = "begincast"
+ or (ability.id = 265178 or ability.id = 266459) and type = "cast"
+ or ability.id = 265217 and type = "removebuff"
+--]]
 --local warnXorothPortal					= mod:NewSpellAnnounce(244318, 2, nil, nil, nil, nil, nil, 7)
 local warnMutagenicPathogen					= mod:NewStackAnnounce(265178, 2, nil, "Tank")
 local warnGestate							= mod:NewTargetAnnounce(265212, 3)
 local warnHypergenesis						= mod:NewSpellAnnounce(266926, 3)
 local warnContagion							= mod:NewCountAnnounce(267242, 3)
 
-local specWarnMutagenicPathogen				= mod:NewSpecialWarningStack(265178, nil, 6, nil, nil, 1, 6)
---local specWarnMutagenicPathogenOther		= mod:NewSpecialWarningTaunt(265178, nil, nil, nil, 1, 2)
-local yellMutagenicPathogen					= mod:NewShortFadesYell(265178)
+local specWarnMutagenicPathogen				= mod:NewSpecialWarningStack(265178, nil, 2, nil, nil, 1, 6)
+local specWarnMutagenicPathogenOther		= mod:NewSpecialWarningTaunt(265178, nil, nil, nil, 1, 2)
+--local yellMutagenicPathogen					= mod:NewShortFadesYell(265178)
 local specWarnOmegaVector					= mod:NewSpecialWarningYou(265129, nil, nil, nil, 1, 2)
 local yellOmegaVector						= mod:NewYell(265129)
 local yellOmegaVectorFades					= mod:NewShortFadesYell(265129)
 local specWarnGestate						= mod:NewSpecialWarningYou(265212, nil, nil, nil, 1, 2)
 local yellGestate							= mod:NewYell(265212)
 local specWarnGestateNear					= mod:NewSpecialWarningClose(265212, nil, nil, nil, 1, 2)
-local specWarnAmalgam						= mod:NewSpecialWarningSwitch("ej18007", "Dps", nil, nil, 1, 2)
+local specWarnAmalgam						= mod:NewSpecialWarningSwitch("ej18007", "-Healer", nil, 2, 1, 2)
 local specWarnSpawnParasite					= mod:NewSpecialWarningSwitch(275055, "Dps", nil, nil, 1, 2)--Mythic
 --local specWarnContagion						= mod:NewSpecialWarningCount(267242, nil, nil, nil, 2, 2)
 local specWarnLiquefy						= mod:NewSpecialWarningRun(265217, nil, nil, nil, 4, 2)
@@ -145,31 +150,32 @@ function mod:SPELL_AURA_APPLIED(args)
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) then
 			local amount = args.amount or 1
-			if amount >= 6 then
+			if amount >= 2 then
 				if args:IsPlayer() then
+					warnMutagenicPathogen:Show(args.destName, amount)
 					specWarnMutagenicPathogen:Show(amount)
 					specWarnMutagenicPathogen:Play("stackhigh")
-					yellMutagenicPathogen:Cancel()
-					yellMutagenicPathogen:Countdown(12)
+					--yellMutagenicPathogen:Cancel()
+					--yellMutagenicPathogen:Countdown(12)
 				else
-					local _, _, _, _, _, expireTime = UnitDebuff("player", spellId)
+					local _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
 					local remaining
 					if expireTime then
 						remaining = expireTime-GetTime()
 					end
-					--if not UnitIsDeadOrGhost("player") and (not remaining or remaining and remaining < 8) then
-					--	specWarnMutagenicPathogenOther:Show(args.destName)
-					--	specWarnMutagenicPathogenOther:Play("tauntboss")
-					--else
+					if not UnitIsDeadOrGhost("player") and (not remaining or remaining and remaining < 8) then
+						specWarnMutagenicPathogenOther:Show(args.destName)
+						specWarnMutagenicPathogenOther:Play("tauntboss")
+					else
 						warnMutagenicPathogen:Show(args.destName, amount)
-					--end
+					end
 				end
 			else
 				warnMutagenicPathogen:Show(args.destName, amount)
 			end
 		end
 	elseif spellId == 265129 then
-		if args:IsPlayer() then
+		if args:IsPlayer() and self:AntiSpam(1.5, 2) then
 			specWarnOmegaVector:Show()
 			specWarnOmegaVector:Play("targetyou")
 			yellOmegaVector:Yell()
@@ -221,7 +227,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 265178 then
 		if args:IsPlayer() then
-			yellMutagenicPathogen:Cancel()
+			--yellMutagenicPathogen:Cancel()
 		end
 	elseif spellId == 265129 then
 		if args:IsPlayer() then

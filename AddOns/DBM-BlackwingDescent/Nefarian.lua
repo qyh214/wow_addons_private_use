@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 local Nefarian	= DBM:EJ_GetSectionInfo(3279)
 local Onyxia	= DBM:EJ_GetSectionInfo(3283)
 
-mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(41376, 41270)
 mod:SetEncounterID(1026) -- ES fires when Nefarian engaged.
 mod:SetZone()
@@ -110,13 +110,13 @@ end
 local cindersDebuffFilter
 do
 	cindersDebuffFilter = function(uId)
-		return UnitDebuff(uId, cinderDebuff)
+		return DBM:UnitDebuff(uId, cinderDebuff)
 	end
 end
 
 local function warnCinderTargets(self)
 	if self.Options.RangeFrame then
-		if UnitDebuff("player", cinderDebuff) then--You have debuff, show everyone
+		if DBM:UnitDebuff("player", cinderDebuff) then--You have debuff, show everyone
 			DBM.RangeCheck:Show(10, nil)
 		else--You do not have debuff, only show players who do
 			DBM.RangeCheck:Show(10, cindersDebuffFilter)
@@ -136,7 +136,6 @@ local function warnDominionTargets()
 end
 
 function mod:OnCombatStart(delay)
-	cinderDebuff = DBM:GetSpellInfo(79339)
 	shadowBlazeSynced = false
 	shadowblazeTimer = 35
 	playerDebuffs = 0

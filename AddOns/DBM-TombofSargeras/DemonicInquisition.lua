@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1867, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17085 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(116691, 116689)--Belac (116691), Atrigan (116689)
 mod:SetEncounterID(2048)
 mod:SetZone()
@@ -252,7 +252,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		updateAllAtriganTimers(self, 16, true)
 		for i = 1, 2 do
 			local bossUnitID = "boss"..i
-			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and UnitDetailedThreatSituation("player", bossUnitID) then--We are highest threat target
+			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and self:IsTanking("player", bossUnitID, nil, true) then--We are highest threat target
 				specWarnBoneSawMelee:Schedule(2, "keepmove")--The active tank doesn't just run out, they keep kiting
 				break
 			end
@@ -363,8 +363,8 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 233895 then
 		warnSuffocatingDark:Show()
 		timerSuffocatingDarkCD:Start()

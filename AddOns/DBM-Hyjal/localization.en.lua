@@ -85,7 +85,6 @@ L:SetMiscLocalization{
 	Anetheron		= "Anetheron incoming",
 	Kazrogal		= "Kazrogal incoming",
 	Azgalor			= "Azgalor incoming",
-	WaveCheck		= "Current Wave = (%d+) of 8",
 	WarnWave_0		= "Wave %s/8",
 	WarnWave_1		= "Wave %s/8 - %s %s",
 	WarnWave_2		= "Wave %s/8 - %s %s and %s %s",

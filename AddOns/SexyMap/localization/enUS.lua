@@ -90,7 +90,6 @@ L["Guild Dungeon Difficulty Indicator (When Available)"] = "Guild Dungeon Diffic
 L["Challenge Mode Button (When Available)"] = "Challenge Mode Button (When Available)"
 L["Dungeon Difficulty Indicator (When Available)"] = "Dungeon Difficulty Indicator (When Available)"
 L["New Mail Indicator (When Available)"] = "New Mail Indicator (When Available)"
-L["Voice Chat Button (When Available)"] = "Voice Chat Button (When Available)"
 L["Queue Status (PvP/LFG) Button (When Available)"] = "Queue Status (PvP/LFG) Button (When Available)"
 L["Garrison Button (When Available)"] = "Garrison Button (When Available)"
 
@@ -119,6 +118,8 @@ L["Lock Coordinates"] = "Lock Coordinates"
 L["Font Size"] = "Font Size"
 L["Font Color"] = "Font Color"
 L["Reset Position"] = "Reset Position"
+L.updateRate = "Update Rate (seconds)"
+L.updateRateDesc = "The lower the value, the faster the coordinates will update, but the more memory and CPU will be consumed due to asking the game for fresh coordinate data."
 
 -- ./Fader.lua
 L["Enable Minimap Fader"] = "Enable Minimap Fader"

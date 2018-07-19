@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(828, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(69712)
 mod:SetEncounterID(1573)
 mod:SetZone()
@@ -97,7 +97,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnTalonRake:Show(amount)
 			end
 		else
-			if amount >= 1 and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
+			if amount >= 1 and not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 				specWarnTalonRakeOther:Show(args.destName)
 			end
 		end
@@ -132,7 +132,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_SPELLCAST_CHANNEL_START(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_CHANNEL_START(uId, _, spellId)
 	if spellId == 137528 then
 		specWarnFeedYoung:Show()
 		if self:IsDifficulty("normal10", "heroic10", "lfr25") then
@@ -143,7 +143,7 @@ function mod:UNIT_SPELLCAST_CHANNEL_START(uId, _, _, _, spellId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_START(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_START(uId, _, spellId)
 	if spellId == 134380 then
 		self.vb.quillsCount = self.vb.quillsCount + 1
 		specWarnQuills:Show(self.vb.quillsCount)

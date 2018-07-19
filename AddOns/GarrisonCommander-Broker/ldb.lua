@@ -192,7 +192,10 @@ end
 function addon:CheckDateReset()
 	local oldToday=today
 	local reset=GetQuestResetTime()
-	local weekday, month, day, year = CalendarGetDate()
+	local t= C_Calendar.GetDate()
+	local day=t.monthDay
+	local year=t.year
+	local month=t.month
 	if (day <1 or reset<1) then
 		self:ScheduleTimer("CheckDateReset",1)
 		return day,reset
@@ -212,14 +215,11 @@ function addon:CheckDateReset()
 		today=yesterday
 	end
 	self:ScheduleTimer("CheckDateReset",60)
---[===[@debug@
-	if (false and today~=oldToday) then
-		self:Popup(format("o:%s y:%s t:%s r:%s [w:%s m:%s d:%s y:%s] ",oldToday,yesterday,today,reset,CalendarGetDate()))
+	if (today~=oldToday) then
 		dataobj:Update()
 		farmobj:Update()
 		workobj:Update()
 	end
---@end-debug@]===]
 end
 function addon:CountMissing()
 	local tot=0

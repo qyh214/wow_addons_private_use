@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(852, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(71543)
 mod:SetEncounterID(1602)
 mod:SetReCombatTime(45)--Lets just assume he has same bug as tsulong in advance and avoid problems
@@ -25,9 +25,9 @@ local warnSplit							= mod:NewSpellAnnounce(143020, 2, nil, false)--Blizzard on
 local warnReform						= mod:NewSpellAnnounce(143469, 2, nil, false)--These are redundant, but some DO like them for the DBM sound vs blizz one so not completely removed
 local warnSwellingCorruptionCast		= mod:NewSpellAnnounce(143578, 2, 143574)--Heroic (this is the boss spellcast trigger spell NOT personal debuff warning)
 
-local specWarnBreath					= mod:NewSpecialWarningSpell(143436, "Tank|Healer")
-local specWarnShaSplash					= mod:NewSpecialWarningMove(143297)
-local specWarnSwirl						= mod:NewSpecialWarningSpell(143309, nil, nil, nil, 2)
+local specWarnBreath					= mod:NewSpecialWarningSpell(143436, "Tank|Healer", nil, nil, 1, 2)
+local specWarnShaSplash					= mod:NewSpecialWarningMove(143297, nil, nil, nil, 1, 2)
+local specWarnSwirl						= mod:NewSpecialWarningSpell(143309, nil, nil, nil, 2, 2)
 local specWarnSwellingCorruptionTarget	= mod:NewSpecialWarningTarget(143578, false)
 local specWarnSwellingCorruptionFades	= mod:NewSpecialWarningFades(143578, false)
 
@@ -57,9 +57,11 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 143436 then
 		specWarnBreath:Show()
+		specWarnBreath:Play("breathsoon")
 		timerBreathCD:Start()
 	elseif spellId == 143309 then
 		specWarnSwirl:Show()
+		specWarnSwirl:Play("watchstep")
 		timerSwirl:Start()
 		timerSwirlCD:Show()
 	end
@@ -71,8 +73,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerShaResidue:Start()
 	elseif spellId == 143524 and args:IsPlayer() then
 		timerPurifiedResidue:Start()
-	elseif spellId == 143297 and args:IsPlayer() and self:AntiSpam(2, 1) then
+	elseif spellId == 143297 and args:IsPlayer() and self:AntiSpam(2, 1) and not self:IsTrivial(100) then
 		specWarnShaSplash:Show()
+		specWarnShaSplash:Play("runaway")
 	elseif spellId == 143574 then
 		specWarnSwellingCorruptionTarget:Show(args.destName)
 	end
@@ -97,7 +100,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 143578 then--Swelling Corruption
 		warnSwellingCorruptionCast:Show()
 		timerSwellingCorruptionCD:Start()

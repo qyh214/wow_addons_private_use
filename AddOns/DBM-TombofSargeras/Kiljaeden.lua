@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1898, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(117269)--121227 Illiden? 121193 Shadowsoul
 mod:SetEncounterID(2051)
 mod:SetZone()
@@ -522,7 +522,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellSRMalignant:Countdown(8)
 		end
 	elseif spellId == 236597 then
-		if self:CheckInterruptFilter(args.destGUID) then
+		if self:CheckInterruptFilter(args.destGUID, false, true) then
 			specWarnMalignantAnguish:Show(args.destName)
 			specWarnMalignantAnguish:Play("kickcast")
 		end
@@ -779,7 +779,8 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 242377 then--Kil'jaeden Take Off Sound (intermission 1)
 		self.vb.phase = 1.5
 		self.vb.armageddonCast = 0

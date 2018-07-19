@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Deathwhisper", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 268 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(36855)
 mod:SetEncounterID(1100)
 mod:SetModelID(30893)
@@ -93,7 +93,6 @@ local function TrySetTarget(self)
 end
 
 function mod:OnCombatStart(delay)
-	shieldName = DBM:GetSpellInfo(70842)
 	berserkTimer:Start(-delay)
 	timerAdds:Start(7)
 	warnAddsSoon:Schedule(4)			-- 3sec pre-warning on start

@@ -96,7 +96,7 @@ local SPELL_SUDDEN_DOOM				= GetSkillName(81340)	-- XXX: No trigger atm - DK
 --local SPELL_TASTE_FOR_BLOOD		= GetSkillName(56636)
 --local SPELL_THE_ART_OF_WAR		= GetSkillName(59578)
 local SPELL_TIDAL_WAVES				= GetSkillName(53390)
-local SPELL_ULTIMATUM				= GetSkillName(122510)
+--local SPELL_ULTIMATUM				= GetSkillName(122510)
 local SPELL_VICTORY_RUSH			= GetSkillName(SPELLID_VICTORY_RUSH)  -- XXX: Update for buff
 --local SPELL_VITAL_MISTS			= GetSkillName(122107)
 
@@ -1499,7 +1499,7 @@ local masterProfile = {
 			classes			= "SHAMAN",
 			mainEvents		= "SPELL_AURA_APPLIED{skillName;;eq;;" .. SPELL_TIDAL_WAVES .. ";;recipientAffiliation;;eq;;" .. FLAG_YOU .. "}",
 		},
-		MSBT_TRIGGER_ULTIMATUM = {
+		--[[MSBT_TRIGGER_ULTIMATUM = {
 			colorR			= 0,
 			colorG			= 0.5,
 			message			= SPELL_ULTIMATUM .. "!",
@@ -1507,7 +1507,7 @@ local masterProfile = {
 			fontSize		= 26,
 			classes			= "WARRIOR",
 			mainEvents		= "SPELL_AURA_APPLIED{skillName;;eq;;" .. SPELL_ULTIMATUM .. ";;recipientAffiliation;;eq;;" .. FLAG_YOU .. "}",
-		},
+		},]]
 		MSBT_TRIGGER_VICTORY_RUSH = {
 			colorG			= 0.25,
 			colorB			= 0.25,

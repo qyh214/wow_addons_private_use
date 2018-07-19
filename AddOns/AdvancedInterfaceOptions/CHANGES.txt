@@ -1,12 +1,26 @@
-tag 0eee875b0371227f04cfaf8845527cb7aea0e4d4 1.2.2
-Author:	Benjamin Staneck <staneck@gmail.com>
-Date:	Tue Sep 26 16:23:38 2017 +0200
+lightweight tag 9f6512cbc8e136791b6f506f23935f3b9b467e2a 1.2.4
+Author:	semlar <teslagraafs@gmail.com>
+Date:	Wed Jul 18 19:31:13 2018 -0400
 
-commit f4f51f3da3640d252c7e16aeb3ae0b67eb7e19a7
+commit 9f6512cbc8e136791b6f506f23935f3b9b467e2a
 Author: semlar <teslagraafs@gmail.com>
-Date:   Mon Sep 25 23:24:57 2017 -0400
+Date:   Wed Jul 18 19:31:13 2018 -0400
 
-    Fixed an issue caused by the last fix
+    Visibly disabled "enforce settings" checkbox
+
+commit c3e3b2550c7853cda93007135f3089c883434f7a
+Author: semlar <teslagraafs@gmail.com>
+Date:   Wed Jul 18 19:28:12 2018 -0400
+
+    Removed entire Status Text page
     
-    It turns out pcall has a second argument
+    This is causing too many taint-related problems in its current form and needs to be cut, might come back later.
+
+commit 4d45e2f50a1b1d2e4c14593a177c8f97e06a48ab
+Author: semlar <teslagraafs@gmail.com>
+Date:   Wed Jul 18 19:22:57 2018 -0400
+
+    Disabled "enforce settings" setting
+    
+    Disabling "enforce settings" to keep the addon from showing the intro cinematic every time the character select screen is up
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1985, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17506 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(122104)
 mod:SetEncounterID(2064)
 mod:DisableESCombatDetection()--Remove if blizz fixes clicking portals causing this event to fire (even though boss isn't engaged)
@@ -209,13 +209,13 @@ function mod:SPELL_CAST_START(args)
 			specWarnCollapsingWorld:Play("watchstep")
 		end
 		updateAllTimers(self, 9.7)
-	elseif spellId == 244709 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 244709 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnFieryDetonation:Show(args.sourceName)
 		specWarnFieryDetonation:Play("kickcast")
-	elseif spellId == 245504 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 245504 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnHowlingShadows:Show(args.sourceName)
 		specWarnHowlingShadows:Play("kickcast")
-	elseif spellId == 244607 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 244607 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnFlamesofXoroth:Show(args.sourceName)
 		specWarnFlamesofXoroth:Play("kickcast")
 		timerFlamesofXorothCD:Start()
@@ -283,7 +283,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnRealityTear:Show(amount)
 					specWarnRealityTear:Play("stackhigh")
 				else--Taunt as soon as stacks are clear, regardless of stack count.
-					local _, _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+					local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
 					local remaining
 					if expireTime then
 						remaining = expireTime-GetTime()
@@ -408,7 +408,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 257939 then
 		self.vb.firstPortal = true
 		warnXorothPortal:Show()

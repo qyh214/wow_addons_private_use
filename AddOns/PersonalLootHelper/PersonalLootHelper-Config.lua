@@ -1,133 +1,254 @@
 function PLH_CreateOptionsPanel()
 
-	local VERTICAL_SPACE_BETWEEN_ELEMENTS = 15
-
 	--[[ Main Panel ]]--
-	local PLHConfigFrame = CreateFrame('Frame', 'PLHConfigFrame', InterfaceOptionsFramePanelContainer)
-	PLHConfigFrame:Hide()
-	PLHConfigFrame.name = PLH_LONG_ADDON_NAME
-	InterfaceOptions_AddCategory(PLHConfigFrame)
+	local configFrame = CreateFrame('Frame', 'PLHConfigFrame', InterfaceOptionsFramePanelContainer)
+	configFrame:Hide()
+	configFrame.name = 'Personal Loot Helper'
+	InterfaceOptions_AddCategory(configFrame)
 
 	--[[ Title ]]--
-	local TitleLabel = PLHConfigFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
-	TitleLabel:SetPoint('TOPLEFT', PLHConfigFrame, 'TOPLEFT', 16, -16)
-	TitleLabel:SetText(PLH_LONG_ADDON_NAME)
+	local titleLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
+	titleLabel:SetPoint('TOPLEFT', configFrame, 'TOPLEFT', 16, -16)
+	titleLabel:SetText('Personal Loot Helper (PLH)')
 
 	-- [[ Version ]] --
-	local AddonVersion = GetAddOnMetadata("PersonalLootHelper", "Version")
-	local VersionLabel = PLHConfigFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
-	VersionLabel:SetPoint('BOTTOMLEFT', TitleLabel, 'BOTTOMRIGHT', 8, 0)
-	VersionLabel:SetText('v' .. AddonVersion)
+	local versionLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
+	versionLabel:SetPoint('BOTTOMLEFT', titleLabel, 'BOTTOMRIGHT', 8, 0)
+	versionLabel:SetText('v' .. GetAddOnMetadata('PersonalLootHelper', 'Version'))
 
 	--[[ Author ]]--
-	local AuthorLabel = PLHConfigFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
-	AuthorLabel:SetPoint('TOPRIGHT', PLHConfigFrame, 'TOPRIGHT', -16, -24)
-	AuthorLabel:SetText('Author: ' .. PLH_AUTHOR_NAME)
+	local authorLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
+	authorLabel:SetPoint('TOPRIGHT', configFrame, 'TOPRIGHT', -16, -24)
+	authorLabel:SetText("Author: Madone-Zul'Jin")
 
-	--[[ PLH_INCLUDE_BOE ]]--
-	PLH_IncludeBOECheckbox = CreateFrame('CheckButton', 'PLHIncludeBOE', PLHConfigFrame, 'InterfaceOptionsCheckButtonTemplate')
-	PLH_IncludeBOECheckbox:SetPoint('TOPLEFT', TitleLabel, 'BOTTOMLEFT', 0, -VERTICAL_SPACE_BETWEEN_ELEMENTS)
-	PLH_IncludeBOECheckbox:SetChecked(PLH_INCLUDE_BOE)
-
-	local IncludeBOELabel = PLH_IncludeBOECheckbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
-	IncludeBOELabel:SetPoint('LEFT', PLH_IncludeBOECheckbox, 'RIGHT', 0, 0)
-	IncludeBOELabel:SetText('Include Bind on Equip items')
-
-	--[[ PLH_CURRENT_SPEC_ONLY ]]--
-	PLH_CurrentSpecOnlyCheckbox = CreateFrame('CheckButton', 'PLHCurrentSpecOnly', PLHConfigFrame, 'InterfaceOptionsCheckButtonTemplate')
-	PLH_CurrentSpecOnlyCheckbox:SetPoint('TOPLEFT', PLH_IncludeBOECheckbox, 'BOTTOMLEFT', 0, -VERTICAL_SPACE_BETWEEN_ELEMENTS)
-	PLH_CurrentSpecOnlyCheckbox:SetChecked(PLH_CURRENT_SPEC_ONLY)
-
-	local CurrentSpecOnlyLabel = PLH_CurrentSpecOnlyCheckbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
-	CurrentSpecOnlyLabel:SetPoint('LEFT', PLH_CurrentSpecOnlyCheckbox, 'RIGHT', 0, 0)
-	CurrentSpecOnlyLabel:SetText('Evaluate based on current spec only')
-
-	--[[ PLH_NOTIFY_GROUP ]]--
-	PLH_NotifyGroupCheckbox = CreateFrame('CheckButton', 'PLHNotifyGroup', PLHConfigFrame, 'InterfaceOptionsCheckButtonTemplate')
-	PLH_NotifyGroupCheckbox:SetPoint('TOPLEFT', PLH_CurrentSpecOnlyCheckbox, 'BOTTOMLEFT', 0, -VERTICAL_SPACE_BETWEEN_ELEMENTS)
-	PLH_NotifyGroupCheckbox:SetChecked(PLH_NOTIFY_GROUP)
-
-	local NotifyGroupLabel = PLH_NotifyGroupCheckbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
-	NotifyGroupLabel:SetPoint('LEFT', PLH_NotifyGroupCheckbox, 'RIGHT', 0, 0)
-	NotifyGroupLabel:SetText('Notify group (automatically disabled in LFR)')
-
-	--[[ PLH_COORDINATE_ROLLS ]]--
-	PLH_CoordinateRollsCheckbox = CreateFrame('CheckButton', 'PLHCoordinateRolls', PLHConfigFrame, 'InterfaceOptionsCheckButtonTemplate')
-	PLH_CoordinateRollsCheckbox:SetPoint('TOPLEFT', PLH_NotifyGroupCheckbox, 'BOTTOMLEFT', 0, -VERTICAL_SPACE_BETWEEN_ELEMENTS)
-	PLH_CoordinateRollsCheckbox:SetChecked(PLH_COORDINATE_ROLLS)
-
-	PLH_CoordinateRollsLabel1 = PLH_CoordinateRollsCheckbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
-	PLH_CoordinateRollsLabel1:SetPoint('LEFT', PLH_CoordinateRollsCheckbox, 'RIGHT', 0, 0)
-	PLH_CoordinateRollsLabel1:SetText('Coordinate rolls (group leaders or assistants only)')
-
-	PLH_CoordinateRollsLabel2 = PLH_CoordinateRollsCheckbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
-	PLH_CoordinateRollsLabel2:SetPoint('TOPLEFT', PLH_CoordinateRollsLabel1, 'BOTTOMLEFT', 20, -10)
-	PLH_CoordinateRollsLabel2:SetText('Manage loot rolls. Players can whisper the roll coordinator with "trade" or "trade [item]" to initiate rolls.')
-	PLH_CoordinateRollsLabel2:SetWordWrap(true)
-	PLH_CoordinateRollsLabel2:SetJustifyH('LEFT')
-	PLH_CoordinateRollsLabel2:SetWidth(450)
-
-	--[[ PLH_CHECK_CHARACTER_LEVEL ]]--
-	PLH_CheckCharacterLevelCheckbox = CreateFrame('CheckButton', 'PLHCheckCharacterLevel', PLHConfigFrame, 'InterfaceOptionsCheckButtonTemplate')
-	PLH_CheckCharacterLevelCheckbox:SetPoint('TOPLEFT', PLH_CoordinateRollsCheckbox, 'BOTTOMLEFT', 0, -VERTICAL_SPACE_BETWEEN_ELEMENTS*2)
-	PLH_CheckCharacterLevelCheckbox:SetChecked(PLH_CHECK_CHARACTER_LEVEL)
-
-	local CheckCharacterLevelLabel = PLH_CheckCharacterLevelCheckbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
-	CheckCharacterLevelLabel:SetPoint('LEFT', PLH_CheckCharacterLevelCheckbox, 'RIGHT', 0, 0)
-	CheckCharacterLevelLabel:SetText('Exclude notifications if character is too low level to equip item')
-
-	--[[ PLH_HIGHLIGHT_RAID_FRAMES ]]--
-	PLH_HighlightRaidFramesCheckbox = CreateFrame('CheckButton', 'PLHHighlightRaidFrames', PLHConfigFrame, 'InterfaceOptionsCheckButtonTemplate')
-	PLH_HighlightRaidFramesCheckbox:SetPoint('TOPLEFT', PLH_CheckCharacterLevelCheckbox, 'BOTTOMLEFT', 0, -VERTICAL_SPACE_BETWEEN_ELEMENTS)
-	PLH_HighlightRaidFramesCheckbox:SetChecked(PLH_HIGHLIGHT_RAID_FRAMES)
-
-	local HighlightRaidFramesLabel = PLH_HighlightRaidFramesCheckbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
-	HighlightRaidFramesLabel:SetPoint('LEFT', PLH_HighlightRaidFramesCheckbox, 'RIGHT', 0, 0)
-	HighlightRaidFramesLabel:SetText('Show tradeable items in raid frames')
-
-	--[[ PLH_HIGHLIGHT_SIZE ]]--
-	PLH_HighlightSizeSlider = CreateFrame("Slider", "PLHHighlightSize", PLHConfigFrame, "OptionsSliderTemplate")
-	PLHConfigFrame.ScalingSlider = slider
-	PLH_HighlightSizeSlider:SetOrientation("HORIZONTAL")
-	PLH_HighlightSizeSlider:SetMinMaxValues(10, 30)
-	PLH_HighlightSizeSlider:SetValueStep(1)
-	PLH_HighlightSizeSlider:SetObeyStepOnDrag(true)
-	PLH_HighlightSizeSlider:SetWidth(180)
-	PLH_HighlightSizeSlider:SetHeight(16)
-	PLH_HighlightSizeSlider:SetPoint("LEFT", HighlightRaidFramesLabel, "RIGHT", 20, 0)
-	_G[PLH_HighlightSizeSlider:GetName().."High"]:SetText("large")
-	_G[PLH_HighlightSizeSlider:GetName().."Low"]:SetText("small")
-	_G[PLH_HighlightSizeSlider:GetName().."Text"]:SetText("icon size")
-	PLH_HighlightSizeSlider:SetValue(PLH_HIGHLIGHT_SIZE)
+	--[[ Display Options ]]--
+	local displayLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	displayLabel:SetPoint('TOPLEFT', titleLabel, 'BOTTOMLEFT', 0, -20)
+	displayLabel:SetText("Display options")
 	
-	--[[ Thank you message ]] --
-	local ThankYouLabel = PLHConfigFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
-	ThankYouLabel:SetPoint('BOTTOM', PLHConfigFrame, 'BOTTOM', 0, 48)
-	ThankYouLabel:SetText('Thank you to all of the players who trade loot to others who can use it! Your generosity is part of what makes the WoW community great.\nYou rock!!!')
-	ThankYouLabel:SetWidth(300)
-	ThankYouLabel:SetWordWrap(true)
+	--[[ PLH_PREFS_AUTO_HIDE ]]--
+	local autoHideCheckbox = CreateFrame('CheckButton', nil, configFrame, 'InterfaceOptionsCheckButtonTemplate')
+	autoHideCheckbox:SetPoint('TOPLEFT', displayLabel, 'BOTTOMLEFT', 20, -5)
+	autoHideCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_AUTO_HIDE])
 
+	local autoHideLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	autoHideLabel:SetPoint('LEFT', autoHideCheckbox, 'RIGHT', 0, 0)
+	autoHideLabel:SetText("Automatically hide PLH when there is no loot to trade")
+
+	--[[ PLH_PREFS_SKIP_CONFIRMATION ]]--
+	local skipConfirmationCheckbox = CreateFrame('CheckButton', nil, configFrame, 'InterfaceOptionsCheckButtonTemplate')
+	skipConfirmationCheckbox:SetPoint('TOPLEFT', autoHideCheckbox, 'BOTTOMLEFT', 0, -5)
+	skipConfirmationCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_SKIP_CONFIRMATION])
+
+	local skipConfirmationLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	skipConfirmationLabel:SetPoint('LEFT', skipConfirmationCheckbox, 'RIGHT', 0, 0)
+	skipConfirmationLabel:SetText("Automatically skip confirmation when offering or requesting loot")
+
+	--[[ Looter Options ]]--
+	local looterLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	looterLabel:SetPoint('TOPLEFT', skipConfirmationCheckbox, 'BOTTOMLEFT', -20, -15)
+	looterLabel:SetText("When I receive tradeable loot...")
+	
+	--[[ PLH_PREFS_ONLY_OFFER_IF_UPGRADE ]]
+	local onlyOfferIfUpgradeCheckbox = CreateFrame('CheckButton', nil, configFrame, 'InterfaceOptionsCheckButtonTemplate')
+	onlyOfferIfUpgradeCheckbox:SetPoint('TOPLEFT', looterLabel, 'BOTTOMLEFT', 20, -5)
+	onlyOfferIfUpgradeCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_ONLY_OFFER_IF_UPGRADE])
+
+	local onlyOfferIfUpgradeLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	onlyOfferIfUpgradeLabel:SetPoint('LEFT', onlyOfferIfUpgradeCheckbox, 'RIGHT', 0, 0)
+	onlyOfferIfUpgradeLabel:SetText("Only prompt me to trade if loot is an ilvl upgrade for other players")
+
+	--[[ PLH_PREFS_NEVER_OFFER_BOE ]]--
+	local neverOfferBOECheckbox = CreateFrame('CheckButton', nil, configFrame, 'InterfaceOptionsCheckButtonTemplate')
+	neverOfferBOECheckbox:SetPoint('TOPLEFT', onlyOfferIfUpgradeCheckbox, 'BOTTOMLEFT', 0, -5)
+	neverOfferBOECheckbox:SetChecked(PLH_PREFS[PLH_PREFS_NEVER_OFFER_BOE])
+
+	local neverOfferBOELabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	neverOfferBOELabel:SetPoint('LEFT', neverOfferBOECheckbox, 'RIGHT', 0, 0)
+	neverOfferBOELabel:SetText("Never prompt me to trade Bind on Equip loot")
+
+	--[[ Non-looter Options ]]--
+	local nonLooterLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	nonLooterLabel:SetPoint('TOPLEFT', neverOfferBOECheckbox, 'BOTTOMLEFT', -20, -15)
+	nonLooterLabel:SetText("When others receive tradeable loot...")
+
+	--[[ PLH_PREFS_CURRENT_SPEC_ONLY ]]--
+	local currentSpecOnlyCheckbox = CreateFrame('CheckButton', nil, configFrame, 'InterfaceOptionsCheckButtonTemplate')
+	currentSpecOnlyCheckbox:SetPoint('TOPLEFT', nonLooterLabel, 'BOTTOMLEFT', 20, -5)
+	currentSpecOnlyCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_CURRENT_SPEC_ONLY])
+
+	local currentSpecOnlyLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	currentSpecOnlyLabel:SetPoint('LEFT', currentSpecOnlyCheckbox, 'RIGHT', 0, 0)
+	currentSpecOnlyLabel:SetText("Only prompt me if I can equip in current spec")
+
+	--[[ PLH_PREFS_ILVL_THRESHOLD ]]--
+
+	local ilvlThresholdLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	ilvlThresholdLabel:SetPoint('TOPLEFT', currentSpecOnlyCheckbox, 'BOTTOMLEFT', 5, -10)
+	ilvlThresholdLabel:SetText("Only prompt me if")
+
+	local ilvlThresholdValue = {
+		0,
+		-1,
+		-6,
+		-11,
+		-16,
+		-21,
+		-26,
+		-31,
+		-9999
+	}
+
+	local ilvlThresholdDescription = {
+		"ilvl >  equipped",
+		"ilvl >= equipped",
+		"ilvl >= equipped -5",
+		"ilvl >= equipped -10",
+		"ilvl >= equipped -15",
+		"ilvl >= equipped -20",
+		"ilvl >= equipped -25",
+		"ilvl >= equipped -30",
+		"always show all items"
+	}
+
+	local ilvlThresholdMenu = CreateFrame('Button', 'ilvlThresholdMenu', configFrame, 'MSA_DropDownMenuTemplate')
+	ilvlThresholdMenu:SetPoint('LEFT', ilvlThresholdLabel, 'RIGHT', -5, 0)
+
+	local function ilvlThresholdMenu_OnClick(self, arg1, arg2, checked)
+		MSA_DropDownMenu_SetText(ilvlThresholdMenu, ilvlThresholdDescription[arg1])
+	end
+
+	local function ilvlThresholdMenu_Initialize(self, level)
+		local info = MSA_DropDownMenu_CreateInfo()
+		info.func = ilvlThresholdMenu_OnClick
+		for i = 1, #ilvlThresholdValue do
+			info.arg1 = i
+			info.text = ilvlThresholdDescription[i]
+			MSA_DropDownMenu_AddButton(info)
+		end
+	end
+
+	MSA_DropDownMenu_Initialize(ilvlThresholdMenu, ilvlThresholdMenu_Initialize)
+	MSA_DropDownMenu_SetWidth(ilvlThresholdMenu, 150);
+	MSA_DropDownMenu_JustifyText(ilvlThresholdMenu, 'LEFT')
+
+	local function GetILVLThresholdDescription(ilvlThreshold)
+		for i = 1, #ilvlThresholdValue do
+			if ilvlThresholdValue[i] == ilvlThreshold then
+				return ilvlThresholdDescription[i]
+			end
+		end
+		return ilvlThresholdDescription[2]  -- we couldn't find a match, so return default
+	end
+
+	local function GetILVLThresholdValue(description)
+		for i = 1, #ilvlThresholdDescription do
+			if ilvlThresholdDescription[i] == description then
+				return ilvlThresholdValue[i]
+			end
+		end
+		return ilvlThresholdValue[2]  -- we couldn't find a match, so return default
+	end
+
+	MSA_DropDownMenu_SetText(ilvlThresholdMenu, GetILVLThresholdDescription(PLH_PREFS[PLH_PREFS_ILVL_THRESHOLD]))
+	
+	--[[ PLH_PREFS_INCLUDE_XMOG ]]--
+	
+	local includeXMOGCheckbox = CreateFrame('CheckButton', nil, configFrame, 'InterfaceOptionsCheckButtonTemplate')
+	includeXMOGCheckbox:SetPoint('TOPLEFT', neverOfferBOECheckbox, 'BOTTOMLEFT', 0, -90)
+	includeXMOGCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_INCLUDE_XMOG])
+
+	local includeXMOGLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	includeXMOGLabel:SetPoint('LEFT', includeXMOGCheckbox, 'RIGHT', 0, 0)
+	includeXMOGLabel:SetText("Prompt me for transmog even if item is not an upgrade")
+
+	-- [[ PLH_PREFS_WHISPER_MESSAGE ]]--
+	
+	local sampleItem = '\124cffa335ee\124Hitem:151981::::::::110::::2:1522:3610:\124h[Life-Bearing Footpads]\124h\124r'
+	local whisperMessageLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	whisperMessageLabel:SetPoint('TOPLEFT', includeXMOGCheckbox, 'BOTTOMLEFT', -25, -15)
+	whisperMessageLabel:SetText("Enter message to whisper when requesting loot from players who are not using PLH.\n" ..
+		"You may include the looted item by using %item.  For example:\n" ..
+		"      \"" .. PLH_DEFAULT_PREFS[PLH_PREFS_WHISPER_MESSAGE] .. "\" could appear as\n" ..
+		"      \"" .. PLH_GetWhisperMessage(sampleItem, PLH_DEFAULT_PREFS[PLH_PREFS_WHISPER_MESSAGE]) .. "\"\n")
+	whisperMessageLabel:SetWordWrap(true)
+	whisperMessageLabel:SetJustifyH('LEFT')
+	whisperMessageLabel:SetWidth(500)
+	whisperMessageLabel:SetSpacing(3)
+
+	local whisperMessageEditBox = CreateFrame('EditBox', nil, configFrame)
+	whisperMessageEditBox:SetWidth(450)
+	whisperMessageEditBox:SetHeight(30)
+	whisperMessageEditBox:SetTextInsets(4, 4, 4, 4)
+	whisperMessageEditBox:SetMaxLetters(100)
+	whisperMessageEditBox:SetAutoFocus(false)
+	whisperMessageEditBox:SetFont('Fonts\\FRIZQT__.TTF', 11)
+	whisperMessageEditBox:SetPoint('TOPLEFT', whisperMessageLabel, 'BOTTOMLEFT', 20, -10)
+	whisperMessageEditBox:SetText(PLH_PREFS[PLH_PREFS_WHISPER_MESSAGE])
+	
+	local whisperMessageEditBoxBackdrop = {
+		bgFile = nil, 
+		edgeFile = 'Interface/Tooltips/UI-Tooltip-Border',
+		tile = false,
+		tileSize = 8,
+		edgeSize = 8,
+		insets = { left = 4, right = 4, top = 4, bottom = 4 }
+	}
+
+	local whisperMessageEditBoxBorder = CreateFrame('Frame', nil, whisperMessageEditBox)
+	whisperMessageEditBoxBorder:SetWidth(whisperMessageEditBox:GetWidth() + 5)
+	whisperMessageEditBoxBorder:SetHeight(whisperMessageEditBox:GetHeight() + 5)
+	whisperMessageEditBoxBorder:SetPoint('CENTER', whisperMessageEditBox, 'CENTER')
+	whisperMessageEditBoxBorder:SetBackdrop(whisperMessageEditBoxBackdrop)
+
+	--[[ Thank You Message ]] --
+	local thankYouLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
+	thankYouLabel:SetPoint('BOTTOM', configFrame, 'BOTTOM', 0, 24)
+	thankYouLabel:SetSpacing(5)
+	thankYouLabel:SetWidth(500)
+	thankYouLabel:SetWordWrap(true)
+	
+	local function UpdateThankYouLabel()
+		local text = ''
+--		if PLH_STATS[PLH_ITEMS_REQUESTED] > 0 or PLH_STATS[PLH_ITEMS_RECEIVED] > 0 then
+--			text = text .. "You have requested " .. PLH_STATS[PLH_ITEMS_REQUESTED] .. " and received " .. PLH_STATS[PLH_ITEMS_RECEIVED] .. " item(s) through PLH\n"
+--		end
+--		if PLH_STATS[PLH_ITEMS_OFFERED] > 0 or PLH_STATS[PLH_ITEMS_GIVEN_AWAY] > 0 then
+--			text = text .. "You have offered " .. PLH_STATS[PLH_ITEMS_OFFERED] .. " and given away " .. PLH_STATS[PLH_ITEMS_GIVEN_AWAY] .. " item(s) through PLH\n"
+--		end
+--		if PLH_GetNumberOfPLHUsers() > 0 then
+--			text = text .. PLH_GetNumberOfPLHUsers() .. " of " .. GetNumGroupMembers() .. " group members are running PLH\n"
+--		end
+		text = text .. "\nIf you find PLH to be useful, please tell your friends and guildmates about it!"
+		thankYouLabel:SetText(text)
+	end
+	
 	--[[ OnShow Event]]
-	PLHConfigFrame:SetScript('OnShow', function(frame)
-		PLH_IncludeBOECheckbox:SetChecked(PLH_INCLUDE_BOE)
-		PLH_CurrentSpecOnlyCheckbox:SetChecked(PLH_CURRENT_SPEC_ONLY)
-		PLH_CheckCharacterLevelCheckbox:SetChecked(PLH_CHECK_CHARACTER_LEVEL)
-		PLH_HighlightRaidFramesCheckbox:SetChecked(PLH_HIGHLIGHT_RAID_FRAMES)
-		PLH_NotifyGroupCheckbox:SetChecked(PLH_NOTIFY_GROUP)
-		PLH_CoordinateRollsCheckbox:SetChecked(PLH_COORDINATE_ROLLS)
-		PLH_HighlightSizeSlider:SetValue(PLH_HIGHLIGHT_SIZE)
+	configFrame:SetScript('OnShow', function(frame)
+		autoHideCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_AUTO_HIDE])
+		skipConfirmationCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_SKIP_CONFIRMATION])
+		onlyOfferIfUpgradeCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_ONLY_OFFER_IF_UPGRADE])
+		neverOfferBOECheckbox:SetChecked(PLH_PREFS[PLH_PREFS_NEVER_OFFER_BOE])
+		currentSpecOnlyCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_CURRENT_SPEC_ONLY])
+		MSA_DropDownMenu_SetText(ilvlThresholdMenu, GetILVLThresholdDescription(PLH_PREFS[PLH_PREFS_ILVL_THRESHOLD]))
+		includeXMOGCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_INCLUDE_XMOG])
+		whisperMessageEditBox:SetText(PLH_PREFS[PLH_PREFS_WHISPER_MESSAGE])
+		UpdateThankYouLabel()
 	end)
 
 	--[[ Okay Action ]]--
-	function PLHConfigFrame.okay(arg1, arg2, arg3, ...)
-		PLH_INCLUDE_BOE = PLH_IncludeBOECheckbox:GetChecked()
-		PLH_CURRENT_SPEC_ONLY = PLH_CurrentSpecOnlyCheckbox:GetChecked()
-		PLH_CHECK_CHARACTER_LEVEL = PLH_CheckCharacterLevelCheckbox:GetChecked()
-		PLH_HIGHLIGHT_RAID_FRAMES = PLH_HighlightRaidFramesCheckbox:GetChecked()
-		PLH_NOTIFY_GROUP = PLH_NotifyGroupCheckbox:GetChecked()
-		PLH_COORDINATE_ROLLS = PLH_CoordinateRollsCheckbox:GetChecked()
-		PLH_HIGHLIGHT_SIZE = PLH_HighlightSizeSlider:GetValue()
-		PLH_ResizeHighlights()
+	function configFrame.okay(arg1, arg2, arg3, ...)
+		PLH_PREFS[PLH_PREFS_AUTO_HIDE] = autoHideCheckbox:GetChecked()
+		PLH_PREFS[PLH_PREFS_SKIP_CONFIRMATION] = skipConfirmationCheckbox:GetChecked()
+		PLH_PREFS[PLH_PREFS_ONLY_OFFER_IF_UPGRADE] = onlyOfferIfUpgradeCheckbox:GetChecked()
+		PLH_PREFS[PLH_PREFS_NEVER_OFFER_BOE] = neverOfferBOECheckbox:GetChecked()
+		PLH_PREFS[PLH_PREFS_CURRENT_SPEC_ONLY] = currentSpecOnlyCheckbox:GetChecked()
+		PLH_PREFS[PLH_PREFS_ILVL_THRESHOLD] = GetILVLThresholdValue(MSA_DropDownMenu_GetText(ilvlThresholdMenu))
+		PLH_PREFS[PLH_PREFS_INCLUDE_XMOG] = includeXMOGCheckbox:GetChecked()
+		if PLH_PREFS[PLH_PREFS_WHISPER_MESSAGE] ~= whisperMessageEditBox:GetText() then
+			PLH_PREFS[PLH_PREFS_WHISPER_MESSAGE] = whisperMessageEditBox:GetText()
+			PLH_META[PLH_SHOW_WHISPER_WARNING] = true
+		end
 	end
 
 end

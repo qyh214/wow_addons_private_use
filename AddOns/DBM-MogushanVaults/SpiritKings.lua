@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(687, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(60701, 60708, 60709, 60710)--Adds: 60731 Undying Shadow, 60958 Pinning Arrow
 mod:SetEncounterID(1436)
 mod:SetZone()
@@ -270,7 +270,7 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 118088 and self:AntiSpam(2, 1) then--Volley
 		warnVolley:Show()
 		specWarnVolley:Show()

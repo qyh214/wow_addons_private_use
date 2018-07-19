@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(New)
 	for k, v in pairs(PartyPetFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 1053 $")
+end, "$Revision: 1089 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -35,7 +35,15 @@ function XPerl_Party_Pet_OnLoadEvents(self)
 	self.time = 0
 
 	local events = {
-		"UNIT_COMBAT", "UNIT_FACTION", "UNIT_AURA", "UNIT_FLAGS", "UNIT_HEALTH", "UNIT_MAXHEALTH", "PLAYER_ENTERING_WORLD", "PET_BATTLE_OPENING_START", "PET_BATTLE_CLOSE"
+		"UNIT_COMBAT",
+		"UNIT_FACTION",
+		"UNIT_AURA",
+		"UNIT_FLAGS",
+		"UNIT_HEALTH",
+		"UNIT_MAXHEALTH",
+		"PLAYER_ENTERING_WORLD",
+		"PET_BATTLE_OPENING_START",
+		"PET_BATTLE_CLOSE"
 	}
 
 	for i, event in pairs(events) do

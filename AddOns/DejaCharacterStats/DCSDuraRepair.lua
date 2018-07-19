@@ -20,13 +20,17 @@ local DCSITEM_SLOT_FRAMES = {
 }
 
 local DCSITEM_SLOT_FRAMES_RIGHT = {
-	CharacterHeadSlot,CharacterShoulderSlot,CharacterChestSlot,CharacterWristSlot,CharacterSecondaryHandSlot,
+	[CharacterHeadSlot]={},[CharacterShoulderSlot]={},[CharacterChestSlot]={},[CharacterWristSlot]={},[CharacterSecondaryHandSlot]={},
 }
 
-local DCSITEM_SLOT_FRAMES_LEFT = {
-	CharacterHandsSlot,CharacterWaistSlot,CharacterLegsSlot,CharacterFeetSlot,CharacterMainHandSlot,
-}
+--local DCSITEM_SLOT_FRAMES_LEFT = { --no need for this
+--	CharacterHandsSlot,CharacterWaistSlot,CharacterLegsSlot,CharacterFeetSlot,CharacterMainHandSlot,
+--}
 
+local DCSITEM_TWO_HANDED_WEAPONS = {
+	"Bows","Crossbows","Guns","Fishing Poles","Polearms","Staves","Two-Handed Axes","Two-Handed Maces","Two-Handed Swords",
+}
+	
 --local duraMean
 local duraTotal
 local duraMaxTotal
@@ -35,12 +39,12 @@ local duraFinite = 0
 --------------------
 -- Create Objects --
 --------------------
-local duraMeanFS = DCS_CharacterShirtSlot:CreateFontString("FontString","OVERLAY","GameTooltipText")
+local duraMeanFS = DCS_CharacterShirtSlot:CreateFontString("FontString","OVERLAY","GameTooltipText") --text for average durability on shirt
 	duraMeanFS:SetPoint("CENTER",DCS_CharacterShirtSlot,"CENTER",1,-2)
 	duraMeanFS:SetFont("Fonts\\FRIZQT__.TTF", 15, "THINOUTLINE")
 	duraMeanFS:SetFormattedText("")
 
-local duraMeanTexture = DCS_CharacterShirtSlot:CreateTexture(nil,"ARTWORK")
+local duraMeanTexture = DCS_CharacterShirtSlot:CreateTexture(nil,"ARTWORK") --bar for average durability on shirt 
 
 local duraDurabilityFrameFS = DurabilityFrame:CreateFontString("FontString","OVERLAY","GameTooltipText")
 	duraDurabilityFrameFS:SetPoint("CENTER",DurabilityFrame,"CENTER",0,0)
@@ -162,7 +166,7 @@ local function DCS_Durability_Frame_Mean_Display()
 		duraDurabilityFrameFS:SetTextColor(0, 1, 0)
 	elseif addon.duraMean > 33 then --If mean is 33% or greater then color the text yellow.
 		duraDurabilityFrameFS:SetTextColor(1, 1, 0)
-	elseif addon.duraMean >= 0 then --If mean is 0% or greater then color the text red.
+	elseif addon.duraMean >= 0 then --If mean is 0% or greater then color the text red. Is this check needed?
 		duraDurabilityFrameFS:SetTextColor(1, 0, 0)
 	end
 end
@@ -170,6 +174,23 @@ end
 -----------------------------------
 -- Mean Durability Shirt Display --
 -----------------------------------
+local function DCS_Mean_Durability()
+	DCS_Mean_DurabilityCalc()
+    if addon.duraMean < 10 then
+		duraMeanFS:SetTextColor(1, 0, 0)
+	elseif addon.duraMean < 33 then
+		duraMeanFS:SetTextColor(1, 0, 0)
+	elseif addon.duraMean < 66 then
+	    duraMeanFS:SetTextColor(1, 1, 0)
+	elseif addon.duraMean < 80 then
+		duraMeanFS:SetTextColor(0, 1, 0)
+	elseif addon.duraMean < 100 then
+		duraMeanFS:SetTextColor(0.753, 0.753, 0.753)
+	end
+	DCS_Durability_Frame_Mean_Display()
+end
+
+--[[ previous version of DCS_Mean_Durability()
 local function DCS_Mean_Durability()
 	DCS_Mean_DurabilityCalc()
 	--for k, v in ipairs(DCSITEM_SLOT_FRAMES) do -- seems like the loop isn't needed
@@ -205,6 +226,8 @@ local function DCS_Mean_Durability()
 	DCS_Durability_Frame_Mean_Display()
 end
 
+--]]
+
 ----------------------------
 -- Item Durability Colors --
 ----------------------------
@@ -217,27 +240,29 @@ local function DCS_Item_DurabilityTop()
 		--	v.durability:SetFormattedText("")
 		--elseif ( durCur == durMax ) then
 		if ( durCur == durMax ) then
-			v.duratexture:SetColorTexture(0, 0, 0, 0)
+			--v.duratexture:SetColorTexture(0, 0, 0, 0) --moving texture stuff to textures
 			v.durability:SetFormattedText("")
 		else --if ( durCur ~= durMax ) then -- no need to check, can remain as comment for easier understanding
 			duraFinite = ((durCur/durMax)*100)
 			--print(duraFinite)
 		    v.durability:SetFormattedText("%.0f%%", duraFinite)
-			if duraFinite == 100 then
-				v.duratexture:SetColorTexture(0,  0, 0, 0)
-				v.durability:SetTextColor(0, 0, 0, 0)
-			elseif duraFinite > 66 then
-				v.duratexture:SetColorTexture(0, 1, 0)
+			--if duraFinite == 100 then --this should be covered by durCur == durMax
+			--	v.duratexture:SetColorTexture(0,  0, 0, 0)
+			--	v.durability:SetTextColor(0, 0, 0, 0)
+			--	print ("what is this")
+			--elseif duraFinite > 66 then
+			if duraFinite > 66 then
+				--v.duratexture:SetColorTexture(0, 1, 0)
 				v.durability:SetTextColor(0, 1, 0)
 			elseif duraFinite > 33 then
-				v.duratexture:SetColorTexture(1, 1, 0)
+				--v.duratexture:SetColorTexture(1, 1, 0)
 				v.durability:SetTextColor(1, 1, 0)
 			elseif duraFinite > 10 then
-				v.duratexture:SetColorTexture(1, 0, 0)
+				--v.duratexture:SetColorTexture(1, 0, 0)
 				v.durability:SetTextColor(1, 0, 0)
 			else --if duraFinite <= 10 then -- no need to check, can remain as comment for easier understanding
 				--v.duratexture:SetAllPoints(v) -Removed so green boxes do not appear when durability is at zero.
-				v.duratexture:SetColorTexture(1, 0, 0, 0.10)
+				--v.duratexture:SetColorTexture(1, 0, 0, 0.10)
 				v.durability:SetTextColor(1, 0, 0)
 			end
 		end
@@ -317,6 +342,9 @@ end)
 --------------------------------------
 -- Durability Bar Textures Creation --
 --------------------------------------
+
+
+--[[ previous version of DCS_Durability_Bar_Textures() for prosperity
 local function DCS_Durability_Bar_Textures()
 	-- I see really similar loop in DCS_Item_DurabilityTop(), can't they be merged (of course, need to check whether they get called within the same condition)
 	for _, v in ipairs(DCSITEM_SLOT_FRAMES_RIGHT) do
@@ -328,6 +356,7 @@ local function DCS_Durability_Bar_Textures()
 		--elseif ( durCur == durMax ) then
 		if ( durCur == durMax ) then
 			v.duratexture:SetColorTexture(0, 0, 0, 0)
+			print("texture DCS_Durability_Bar_Textures")
 		else --if ( durCur ~= durMax ) then -- no need to check, can remain as comment for easier understanding
 			--duraFinite = ((durCur/durMax)*100)
 			duraFinite = durCur/durMax
@@ -358,7 +387,69 @@ local function DCS_Durability_Bar_Textures()
 		--duraMeanTexture:Show() --no need to show the texture for shirt within loop; will be done by later code in DCS_ShowDuraTextureCheck
 	end
 end
+--]]
 
+local function DCS_Durability_Bar_Textures()
+	-- I see really similar loop in DCS_Item_DurabilityTop(), can't they be merged (of course, need to check whether they get called within the same condition)
+	duraTotal = 0 --calculation of average for shirt bar is also here
+	duraMaxTotal = 0
+	for _, v in ipairs(DCSITEM_SLOT_FRAMES) do
+		local slotId = v:GetID()
+		local durCur, durMax = GetInventoryItemDurability(slotId)
+		if durCur == nil then durCur = 0 end
+		if durMax == nil then durMax = 0 end
+		duraTotal = duraTotal + durCur
+		duraMaxTotal = duraMaxTotal + durMax
+		if ( durCur == durMax ) then
+			v.duratexture:SetColorTexture(0, 0, 0, 0)
+		else --if ( durCur ~= durMax ) then -- no need to check, can remain as comment for easier understanding
+			duraFinite = durCur/durMax
+            if duraFinite > 0.66 then
+	            v.duratexture:SetColorTexture(0, 1, 0)
+		    elseif duraFinite > 0.33 then
+				v.duratexture:SetColorTexture(1, 1, 0)
+			elseif duraFinite > 0.10 then
+				v.duratexture:SetColorTexture(1, 0, 0)
+			else --if duraFinite <= 0.10 then -- no need to check, can remain as comment for easier understanding
+				v.duratexture:SetColorTexture(1, 0, 0, 0.10)
+			end
+		    if DCSITEM_SLOT_FRAMES_RIGHT[v] then
+		        v.duratexture:SetPoint("BOTTOMLEFT",v,"BOTTOMRIGHT",1,3)
+			    v.duratexture:SetSize(4, (31*duraFinite))
+			else
+                v.duratexture:SetPoint("BOTTOMRIGHT",v,"BOTTOMLEFT",-2,3)
+				v.duratexture:SetSize(3, (31*duraFinite))
+			end
+		    v.duratexture:Show()
+		end
+	end
+	if duraMaxTotal == 0 then 
+		duraMaxTotal = 1
+		duraTotal = 1 --if nothing to break then durability should be 100%
+	end
+	local duraMean = duraTotal/duraMaxTotal
+	duraMeanTexture:SetSize(4, 31*duraMean)
+	if duraMean == 1 then 
+		duraMeanTexture:SetColorTexture(0, 0, 0, 0)
+	elseif duraMean < 0.10 then
+		--duraMeanTexture:SetColorTexture(1, 0, 0)
+		duraMeanTexture:SetColorTexture(1, 0, 0, 0.15)
+	elseif duraMean < 0.33 then
+		duraMeanTexture:SetColorTexture(1, 0, 0)
+	elseif duraMean < 0.66 then
+		duraMeanTexture:SetColorTexture(1, 1, 0)
+	elseif duraMean < 0.80 then
+		duraMeanTexture:SetColorTexture(0, 1, 0)
+	else --if duraMean < 1 then -- no need to check, can remain as comment for easier understanding
+		duraMeanTexture:SetColorTexture(0.753, 0.753, 0.753)
+	end
+	duraMeanTexture:ClearAllPoints()
+	if duraMean > 0.10 then 
+		duraMeanTexture:SetPoint("BOTTOMLEFT",DCS_CharacterShirtSlot,"BOTTOMRIGHT",1,3)
+	else --if duraMean <= 0.10 then -- no need to check, can remain as comment for easier understanding
+		duraMeanTexture:SetAllPoints(DCS_CharacterShirtSlot)
+	end
+end
 
 gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowDuraTextureChecked = {
 	ShowDuraTextureSetChecked = true,
@@ -382,8 +473,8 @@ DCS_ShowDuraTextureCheck:SetScript("OnEvent", function(self, ...)
 	end
 	if showtextures then
 		DCS_Durability_Bar_Textures()
-		DCS_Mean_Durability()
-		DCS_Item_DurabilityTop()
+		--DCS_Mean_Durability() --average durability for bar near shirt should be in DCS_Durability_Bar_Textures()
+		--DCS_Item_DurabilityTop() --all single item durability stuff should be in DCS_Durability_Bar_Textures()
 		duraMeanTexture:Show()
 	else
 		for _, v in ipairs(DCSITEM_SLOT_FRAMES) do
@@ -413,8 +504,8 @@ DCS_ShowDuraTextureCheck:SetScript("OnClick", function(self)
 	gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDuraTextureChecked.ShowDuraTextureSetChecked = showtextures
 	if showtextures then
 		DCS_Durability_Bar_Textures()
-		DCS_Mean_Durability()
-		DCS_Item_DurabilityTop()
+		--DCS_Mean_Durability() --average durability for bar near shirt should be in DCS_Durability_Bar_Textures()
+		--DCS_Item_DurabilityTop() --all single item durability stuff should be in DCS_Durability_Bar_Textures()
 		duraMeanTexture:Show()
 	else
 		for _, v in ipairs(DCSITEM_SLOT_FRAMES) do
@@ -688,6 +779,7 @@ end)
 
 local function DCS_Item_Level_Center()
 	local summar_ilvl = 0
+	local NeckValue = 0
 	local _, equipped = GetAverageItemLevel()
 	--print("Dura", DCSRelicTotal)
 	--equipped = round(equipped * 16)
@@ -709,12 +801,23 @@ local function DCS_Item_Level_Center()
 					if value then
 						local _, _, itemRarity = GetItemInfo(itemLink) --least scope for itemRarity
 						v.ilevel:SetTextColor(GetItemQualityColor(itemRarity))
-						if (itemRarity == 6) then 	--supposedly only artifacts after crucible return wrong ilvl
+						if (itemRarity == 6) and (v ~= CharacterNeckSlot) then 	--supposedly only artifacts after crucible return wrong ilvl							
 							value = (equipped - summar_ilvl)/2
+							v.ilevel:SetText(value)
 						else
+							v.ilevel:SetText(value)
+							if (v == CharacterMainHandSlot) then							
+								for _, twohands in ipairs(DCSITEM_TWO_HANDED_WEAPONS) do
+									if IsEquippedItemType(twohands) then
+										value = (value*2)
+									end
+								end
+							end
 							summar_ilvl = summar_ilvl + value
-						end
-						v.ilevel:SetText(value)
+						end							
+						-- if IsEquippedItem("Heart of Azeroth") then
+						-- 	CharacterNeckSlot.ilevel:SetText((equipped-(summar_ilvl)) + 280)
+						-- end
 					end
 				end
 			end

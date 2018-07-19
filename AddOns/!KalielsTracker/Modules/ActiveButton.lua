@@ -49,8 +49,7 @@ local function SetFrames()
 			_DBG("Event - "..event, true)
 			if event == "QUEST_WATCH_LIST_CHANGED" or
 			   event == "ZONE_CHANGED" or
-			   event == "QUEST_POI_UPDATE" or
-			   event == "WORLD_MAP_UPDATE" then
+			   event == "QUEST_POI_UPDATE" then
 				M:Update()
 			elseif event == "UPDATE_BINDINGS" then
 				UpdateHotkey()
@@ -60,7 +59,6 @@ local function SetFrames()
 	eventFrame:RegisterEvent("QUEST_WATCH_LIST_CHANGED")
 	eventFrame:RegisterEvent("ZONE_CHANGED")
 	eventFrame:RegisterEvent("QUEST_POI_UPDATE")
-	eventFrame:RegisterEvent("WORLD_MAP_UPDATE")
 	eventFrame:RegisterEvent("UPDATE_BINDINGS")
 	
 	-- Button frame

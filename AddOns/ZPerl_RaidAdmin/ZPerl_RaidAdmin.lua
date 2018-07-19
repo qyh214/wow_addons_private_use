@@ -4,7 +4,7 @@
 
 local AddonName, Addon = ...
 
-XPerl_SetModuleRevision("$Revision: 1055 $")
+XPerl_SetModuleRevision("$Revision: 1086 $")
 
 local SavedRoster = nil
 local XswapCount = 0

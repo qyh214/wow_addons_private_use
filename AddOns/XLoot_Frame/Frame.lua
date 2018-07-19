@@ -171,7 +171,7 @@ function addon:OnEnable()
 	XLootFrame:RegisterEvent("LOOT_CLOSED")
 	XLootFrame:RegisterEvent("LOOT_SLOT_CLEARED")
 	XLootFrame:RegisterEvent("MODIFIER_STATE_CHANGED")
-	XLootFrame:RegisterEvent("PARTY_MEMBERS_CHANGED")
+	XLootFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 	-- Disable default frame
 	LootFrame:UnregisterEvent("LOOT_OPENED")
@@ -215,8 +215,8 @@ function addon:ApplyOptions(in_options)
 	-- Update preview frame in options
 	if in_options then
 		local Fake = XLootFakeFrame
-		Fake:UpdateAppearance()
 		Fake.opt = opt
+		Fake:UpdateAppearance()
 		local slot, max_width, max_quality = 0, 0, 0
 		for i,v in ipairs(preview_loot) do
 			local t = GetItemInfoTable(v[1])
@@ -1075,7 +1075,7 @@ local auto_states = {
 }
 
 
-function addon:PARTY_MEMBERS_CHANGED()
+function addon:GROUP_ROSTER_UPDATE()
 	auto_states.solo = not IsInGroup()
 	auto_states.raid = IsInRaid()
 	auto_states.party = not auto_states.raid
@@ -1107,7 +1107,7 @@ function XLootFrame:Update(no_snap, is_refresh)
 		addon:BuildLootFrame(self)
 		self:ParseAutolootList()
 		self.auto_items = auto_items
-		addon:PARTY_MEMBERS_CHANGED()
+		addon:GROUP_ROSTER_UPDATE()
 	end
 
 	-- References
@@ -1123,7 +1123,7 @@ function XLootFrame:Update(no_snap, is_refresh)
 	-- Update rows
 	local max_quality, max_width, our_slot, slot, need_refresh = 0, 0, 0
 	for slot = 1, numloot do
-		local _, icon, name, quantity, quality, locked, isQuestItem, questID, startsQuest = pcall(GetLootSlotInfo, slot)
+		local _, icon, name, quantity, currencyID, quality, locked, isQuestItem, questID, startsQuest = pcall(GetLootSlotInfo, slot)
 		-- Already looted or erroring slot
 		if not name then
 			if not is_refresh and opt.show_slot_errors then
@@ -1232,7 +1232,7 @@ function XLootFrame:Update(no_snap, is_refresh)
 				local width = row:Update(slotData)
 				
 				max_width = max(width, max_width)
-				max_quality = max(quality, max_quality)
+				max_quality = max(slotData.quality or 0, max_quality)
 			end
 		end
 	end

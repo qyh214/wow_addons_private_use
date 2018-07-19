@@ -409,6 +409,9 @@ local function FormatEvent(message, amount, damageType, overhealAmount, overkill
 			-- Substitute all %n event codes with the name.
 			message = string_gsub(message, "%%n", name)
 		end
+	else
+		message = string_gsub(message, "%%n", "")
+		checkParens = true
 	end
 
 
@@ -447,7 +450,12 @@ local function FormatEvent(message, amount, damageType, overhealAmount, overkill
 
 
 	-- Remove empty parenthesis left frame ignoring event codes.
-	if (checkParens) then message = string_gsub(message, "%(%)", "") end
+	if (checkParens) then
+		message = string_gsub(message, "%(%)", "")
+		message = string_gsub(message, "%[%]", "")
+		message = string_gsub(message, "%{%}", "")
+		message = string_gsub(message, "%<%>", "")
+	end
 
 
 	-- Substitute damage types.
@@ -1328,7 +1336,7 @@ end
 -- ****************************************************************************
 -- Called when a unit's power changes.
 -- ****************************************************************************
-function eventFrame:UNIT_POWER(unitID, powerToken)
+function eventFrame:UNIT_POWER_UPDATE(unitID, powerToken)
 	-- Ignore the event if it isn't for the player.
 	if (unitID ~= "player") then return end
 
@@ -1409,7 +1417,7 @@ end
 -- ****************************************************************************
 local function Enable()
 	-- Register events to handle extra notifications.
-	eventFrame:RegisterEvent("UNIT_POWER")
+	eventFrame:RegisterEvent("UNIT_POWER_UPDATE")
 	eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 	eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 	eventFrame:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
@@ -1471,10 +1479,10 @@ for powerToken, powerType in pairs(powerTypes) do
 end
 
 -- Create map of power types that are handled uniquely.
-uniquePowerTypes[powerTypes["HOLY_POWER"]] = true
-uniquePowerTypes[powerTypes["CHI"]] = true
-uniquePowerTypes[powerTypes["COMBO_POINTS"]] = true
-uniquePowerTypes[powerTypes["ARCANE_CHARGES"]] = true
+uniquePowerTypes[Enum.PowerType.HolyPower] = true
+uniquePowerTypes[Enum.PowerType.Chi] = true
+uniquePowerTypes[Enum.PowerType.ComboPoints] = true
+uniquePowerTypes[Enum.PowerType.ArcaneCharges] = true
 
 -- Create damage type and damage color profile maps.
 CreateDamageMaps()

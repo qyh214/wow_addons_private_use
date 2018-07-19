@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2098, "DBM-Party-BfA", 9, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17473 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17615 $"):sub(12, -3))
 mod:SetCreatureID(127484)
 mod:SetEncounterID(2102)
 mod:SetZone()
@@ -32,7 +32,7 @@ local timerFlashingDaggerCD			= mod:NewCDTimer(31.6, 257785, nil, nil, nil, 2, n
 --mod:AddRangeFrameOption(5, 194966)
 
 function mod:OnCombatStart(delay)
-	timerCripShivCD:start(7.2-delay)--SUCCESS
+	timerCripShivCD:Start(7.2-delay)--SUCCESS
 	timerHowlingFearCD:Start(8.5-delay)
 	timerFlashingDaggerCD:Start(12.2-delay)
 end
@@ -68,7 +68,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 257791 then
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnHowlingFear:Show(args.sourceName)
 			specWarnHowlingFear:Play("kickcast")
 		end

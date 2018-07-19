@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(157, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(45992, 45993)
 mod:SetEncounterID(1032)
 mod:SetZone()
@@ -169,8 +169,6 @@ function mod:TwilightBlastTarget()
 end
 
 function mod:OnCombatStart(delay)
-	
-	meteorTarget, fabFlames = DBM:GetSpellInfo(88518), DBM:GetSpellInfo(86497)
 	berserkTimer:Start(-delay)
 	timerBlackoutCD:Start(10-delay)
 	timerDevouringFlamesCD:Start(25.5-delay)
@@ -209,7 +207,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
 			DBM.InfoFrame:SetHeader(args.spellName)
-			DBM.InfoFrame:Show(6, "playerabsorb", args.spellName, select(17, UnitDebuff(args.destName, args.spellName)))
+			DBM.InfoFrame:Show(6, "playerabsorb", args.spellName, select(16, DBM:UnitDebuff(args.destName, args.spellName)))
 		end
 	elseif args.spellId == 86622 then
 		engulfingMagicTargets[#engulfingMagicTargets + 1] = args.destName
@@ -320,7 +318,7 @@ function mod:RAID_BOSS_EMOTE(msg)
 end
 
 function mod:UNIT_AURA(uId)
-	if UnitDebuff("player", meteorTarget) and not markWarned then
+	if DBM:UnitDebuff("player", meteorTarget) and not markWarned then
 		specWarnTwilightMeteorite:Show()
 		timerTwilightMeteorite:Start()
 		yellTwilightMeteorite:Yell()
@@ -329,7 +327,8 @@ function mod:UNIT_AURA(uId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+	local spellName = DBM:GetSpellInfo(spellId)--Shit workaround, fix
 	if spellName == fabFlames and not ValionaLanded and self:AntiSpam(2, 2) then
 		self:ScheduleMethod(0.1, "FabFlamesTarget")
 		timerNextFabFlames:Start()

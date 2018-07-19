@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Noth", "DBM-Naxx", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 267 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(15954)
 mod:SetEncounterID(1117)
 mod:SetModelID(16590)
@@ -79,7 +79,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 29231 then--Teleport Return
 		self.vb.addsCount = 0
 		self.vb.curseCount = 0

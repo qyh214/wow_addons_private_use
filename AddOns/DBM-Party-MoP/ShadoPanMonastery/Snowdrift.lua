@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(657, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(56541)
 mod:SetEncounterID(1304)
 mod:SetZone()
@@ -69,7 +69,7 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 110324 then
 		self.vb.phase = self.vb.phase + 1
 		if self.vb.phase == 2 then

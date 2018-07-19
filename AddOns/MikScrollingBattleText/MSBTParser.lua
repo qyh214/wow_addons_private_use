@@ -27,6 +27,10 @@ local UnitName = UnitName
 local Print = MikSBT.Print
 local EraseTable = MikSBT.EraseTable
 
+local Obliterate = GetSpellInfo(49020)
+local FrostStrike = GetSpellInfo(49143)
+local Stormstrike = GetSpellInfo(17364)
+
 
 -------------------------------------------------------------------------------
 -- Constants.
@@ -397,6 +401,15 @@ local function ParseLogMessage(timestamp, event, hideCaster, sourceGUID, sourceN
 	-- Map the local arguments into the parser event table.
 	captureFunc(parserEvent, ...)
 
+	-- Merge Obliterate, Frost Strike and Stormstrike main hand and off-hand damage.
+	if parserEvent.skillID == 66198 then
+		parserEvent.skillName = Obliterate
+	elseif parserEvent.skillID == 66196 then
+		parserEvent.skillName = FrostStrike
+	elseif parserEvent.skillID == 32175 or parserEvent.skillID == 32176 then
+		parserEvent.skillName = Stormstrike
+	end
+
 	-- Track reflected skills.
 	if (parserEvent.eventType == "miss" and parserEvent.missType == "REFLECT" and recipientUnit == "player") then
 		-- Clean up old entries.
@@ -629,7 +642,7 @@ local function CreateCaptureFuncs()
 		ENVIRONMENTAL_DAMAGE = function (p, ...) p.eventType, p.hazardType, p.amount, p.overkillAmount, p.damageType, p.resistAmount, p.blockAmount, p.absorbAmount, p.isCrit, p.isGlancing, p.isCrushing = "environmental", ... end,
 
 		-- Power events.
-		SPELL_ENERGIZE = function (p, ...) p.eventType, p.isGain, p.skillID, p.skillName, p.skillSchool, p.amount, p.unknownArg, p.powerType = "power", true, ... end,
+		SPELL_ENERGIZE = function (p, ...) p.eventType, p.isGain, p.skillID, p.skillName, p.skillSchool, p.amount, p.overEnergized, p.powerType = "power", true, ... end,
 		SPELL_DRAIN = function (p, ...) p.eventType, p.isDrain, p.skillID, p.skillName, p.skillSchool, p.amount, p.powerType, p.extraAmount = "power", true, ... end,
 		SPELL_LEECH = function (p, ...) p.eventType, p.isLeech, p.skillID, p.skillName, p.skillSchool, p.amount, p.powerType, p.extraAmount = "power", true, ... end,
 
@@ -787,7 +800,7 @@ end
 local function OnEvent(this, event, arg1, arg2, ...)
 	-- Combat log events.
 	if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
-		ParseLogMessage(arg1, arg2, ...)
+		ParseLogMessage(CombatLogGetCurrentEventInfo())
 
 	-- Mouseover changes.
 	elseif (event == "UPDATE_MOUSEOVER_UNIT") then

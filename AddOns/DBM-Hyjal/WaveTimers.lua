@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod("HyjalWaveTimers", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 653 $"):sub(12, -3))
 
 mod:RegisterEvents(
 	"GOSSIP_SHOW",
 	"QUEST_PROGRESS",
-	"UPDATE_WORLD_STATES",
+	"UPDATE_UI_WIDGET",
 	"UNIT_DIED",
 	"SPELL_AURA_APPLIED"
 )
@@ -51,10 +51,13 @@ function mod:GOSSIP_SHOW()
 end
 mod.QUEST_PROGRESS = mod.GOSSIP_SHOW
 
-function mod:UPDATE_WORLD_STATES()
-	local text = select(4, GetWorldStateUIInfo(3))
+function mod:UPDATE_UI_WIDGET(table)
+	local id = table.widgetID
+	if id ~= 528 then return end
+	local widgetInfo = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(id)
+	local text = widgetInfo.text
 	if not text then return end
-	local _,_,currentWave = text:find(L.WaveCheck)
+	local currentWave = text:match("(%d)")
 	if not currentWave then
 		currentWave = 0
 	end
@@ -90,7 +93,6 @@ end
 function mod:WaveFunction(currentWave)
 	local timer = 0
 	currentWave = tonumber(currentWave)
-	lastWave = tonumber(lastWave)
 	if currentWave > lastWave then
 		if boss == 0 then--unconfirmed
 			timer = 125

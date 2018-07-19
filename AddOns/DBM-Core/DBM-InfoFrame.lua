@@ -80,7 +80,6 @@ local twipe = table.wipe
 local select, tonumber = select, tonumber
 local mfloor = math.floor
 local getGroupId = DBM.GetGroupId
-local betaCompat = false
 
 -- for Phanx' Class Colors
 local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
@@ -403,11 +402,7 @@ local function updateEnemyAbsorb()
 		if UnitExists(uId) then
 			local absorbAmount
 			if spellName then--Get specific spell absorb
-				if betaCompat then
-					absorbAmount = select(16, DBM:UnitBuff(uId, spellName)) or select(16, DBM:UnitDebuff(uId, spellName))
-				else
-					absorbAmount = select(17, DBM:UnitBuff(uId, spellName)) or select(17, DBM:UnitDebuff(uId, spellName))
-				end
+				absorbAmount = select(16, DBM:UnitBuff(uId, spellName)) or select(16, DBM:UnitDebuff(uId, spellName))
 			else--Get all of them
 				absorbAmount = UnitGetTotalAbsorbs(uId)
 			end
@@ -436,11 +431,7 @@ local function updateAllAbsorb()
 		if UnitExists(uId) then
 			local absorbAmount
 			if spellName then--Get specific spell absorb
-				if betaCompat then
-					absorbAmount = select(16, DBM:UnitBuff(uId, spellName)) or select(16, DBM:UnitDebuff(uId, spellName))
-				else
-					absorbAmount = select(17, DBM:UnitBuff(uId, spellName)) or select(17, DBM:UnitDebuff(uId, spellName))
-				end
+				absorbAmount = select(16, DBM:UnitBuff(uId, spellName)) or select(16, DBM:UnitDebuff(uId, spellName))
 			else--Get all of them
 				absorbAmount = UnitGetTotalAbsorbs(uId)
 			end
@@ -456,12 +447,7 @@ local function updateAllAbsorb()
 		end
 	end
 	for uId in DBM:GetGroupMembers() do
-		local absorbAmount
-		if betaCompat then
-			absorbAmount = select(16, DBM:UnitBuff(uId, spellName)) or select(16, DBM:UnitDebuff(uId, spellName))
-		else
-			absorbAmount = select(17, DBM:UnitBuff(uId, spellName)) or select(17, DBM:UnitDebuff(uId, spellName))
-		end
+		local absorbAmount = select(16, DBM:UnitBuff(uId, spellName)) or select(16, DBM:UnitDebuff(uId, spellName))
 		if absorbAmount then
 			local text
 			if totalAbsorb2 then
@@ -481,12 +467,7 @@ local function updatePlayerAbsorb()
 	local spellName = value[1]
 	local totalAbsorb = value[2]
 	for uId in DBM:GetGroupMembers() do
-		local absorbAmount
-		if betaCompat then
-			absorbAmount = select(16, DBM:UnitBuff(uId, spellName)) or select(16, DBM:UnitDebuff(uId, spellName))
-		else
-			absorbAmount = select(17, DBM:UnitBuff(uId, spellName)) or select(17, DBM:UnitDebuff(uId, spellName))
-		end
+		local absorbAmount = select(16, DBM:UnitBuff(uId, spellName)) or select(16, DBM:UnitDebuff(uId, spellName))
 		if absorbAmount then
 			local text
 			if totalAbsorb then
@@ -536,14 +517,15 @@ local function updateGoodPlayerDebuffs()
 end
 
 --Debuffs that are bad to have, therefor it is bad to have them.
+--Function will auto handle spellName or spellId via DBMs unit debuff handler and spellInput type
 local function updateBadPlayerDebuffs()
 	twipe(lines)
-	local spellName = value[1]
+	local spellInput = value[1]
 	local tankIgnored = value[2]
 	for uId in DBM:GetGroupMembers() do
 		if tankIgnored and (UnitGroupRolesAssigned(uId) == "TANK" or GetPartyAssignment("MAINTANK", uId, 1)) then
 		else
-			if DBM:UnitDebuff(uId, spellName) and not UnitIsDeadOrGhost(uId) then
+			if DBM:UnitDebuff(uId, spellInput) and not UnitIsDeadOrGhost(uId) then
 				lines[UnitName(uId)] = ""
 			end
 		end
@@ -555,14 +537,9 @@ end
 --Debuffs with important durations that we track
 local function updatePlayerDebuffRemaining()
 	twipe(lines)
-	local spellName = value[1]
+	local spellInput = value[1]
 	for uId in DBM:GetGroupMembers() do
-		local expires
-		if betaCompat then
-			expires = select(6, DBM:UnitDebuff(uId, spellName))
-		else
-			expires = select(7, DBM:UnitDebuff(uId, spellName))
-		end
+		local expires = select(6, DBM:UnitDebuff(uId, spellInput))
 		if expires then
 			if expires == 0 then
 				lines[UnitName(uId)] = 9000--Force sorting the unknowns under the ones we do know.
@@ -579,14 +556,9 @@ end
 --Buffs with important durations that we track
 local function updatePlayerBuffRemaining()
 	twipe(lines)
-	local spellName = value[1]
+	local spellInput = value[1]
 	for uId in DBM:GetGroupMembers() do
-		local expires
-		if betaCompat then
-			expires = select(6, DBM:UnitBuff(uId, spellName))
-		else
-			expires = select(7, DBM:UnitBuff(uId, spellName))
-		end
+		local expires = select(6, DBM:UnitBuff(uId, spellInput))
 		if expires then
 			if expires == 0 then
 				lines[UnitName(uId)] = 9000--Force sorting the unknowns under the ones we do know.
@@ -600,51 +572,16 @@ local function updatePlayerBuffRemaining()
 	updateIcons()
 end
 
---Duplicate of updateBadPlayerDebuffs
---needed when specific spellid must be checked because spellname for more than 1 spell
-local function updateBadPlayerDebuffsBySpellID()
-	twipe(lines)
-	local spellName = value[1]
-	local tankIgnored = value[2]
-	for uId in DBM:GetGroupMembers() do
-		if tankIgnored and (UnitGroupRolesAssigned(uId) == "TANK" or GetPartyAssignment("MAINTANK", uId, 1)) then
-		else
-			local spellId = betaCompat and select(10, DBM:UnitDebuff(uId, spellName)) or select(11, DBM:UnitDebuff(uId, spellName))
-			if spellId == value[1] and not UnitIsDeadOrGhost(uId) then
-				lines[UnitName(uId)] = ""
-			end
-		end
-	end
-	updateLines()
-	updateIcons()
-end
-
 --Debuffs that are bad to have, but we want to show players who do NOT have them
-local spiritofRedemption = GetSpellInfo(27827)
-local function updateReverseBadPlayerDebuffsBySpellID()
-	twipe(lines)
-	local spellName = value[1]
-	local tankIgnored = value[2]
-	for uId in DBM:GetGroupMembers() do
-		if tankIgnored and (UnitGroupRolesAssigned(uId) == "TANK" or GetPartyAssignment("MAINTANK", uId, 1)) then
-		else
-			local spellId = betaCompat and select(10, DBM:UnitDebuff(uId, spellName)) or select(11, DBM:UnitDebuff(uId, spellName))
-			if spellId == value[1] and not UnitIsDeadOrGhost(uId) and not DBM:UnitDebuff(uId, spiritofRedemption) then
-				lines[UnitName(uId)] = ""
-			end
-		end
-	end
-	updateLines()
-	updateIcons()
-end
+--Function will auto handle spellName or spellId via DBMs unit debuff handler and spellInput type
 local function updateReverseBadPlayerDebuffs()
 	twipe(lines)
-	local spellName = value[1]
+	local spellInput = value[1]
 	local tankIgnored = value[2]
 	for uId in DBM:GetGroupMembers() do
 		if tankIgnored and (UnitGroupRolesAssigned(uId) == "TANK" or GetPartyAssignment("MAINTANK", uId, 1)) then
 		else
-			if not DBM:UnitDebuff(uId, spellName) and not UnitIsDeadOrGhost(uId) and not DBM:UnitDebuff(uId, spiritofRedemption) then--27827 Spirit of Redemption. This particular info frame wants to ignore this
+			if not DBM:UnitDebuff(uId, spellInput) and not UnitIsDeadOrGhost(uId) and not DBM:UnitDebuff(uId, 27827) then--27827 Spirit of Redemption. This particular info frame wants to ignore this
 				lines[UnitName(uId)] = ""
 			end
 		end
@@ -655,15 +592,10 @@ end
 
 local function updatePlayerBuffStacks()
 	twipe(lines)
-	local spellName = value[1]
+	local spellInput = value[1]
 	for uId in DBM:GetGroupMembers() do
-		if DBM:UnitBuff(uId, spellName) then
-			local count
-			if betaCompat then
-				count = select(3, DBM:UnitBuff(uId, spellName))
-			else
-				count = select(4, DBM:UnitBuff(uId, spellName))
-			end
+		local spellName, _, count = DBM:UnitBuff(uId, spellInput)
+		if spellName and count then
 			lines[UnitName(uId)] = count
 		end
 	end
@@ -673,15 +605,10 @@ end
 
 local function updatePlayerDebuffStacks()
 	twipe(lines)
-	local spellName = value[1]
+	local spellInput = value[1]
 	for uId in DBM:GetGroupMembers() do
-		if DBM:UnitDebuff(uId, spellName) then
-			local count
-			if betaCompat then
-				count = select(3, DBM:UnitDebuff(uId, spellName))
-			else
-				count = select(4, DBM:UnitDebuff(uId, spellName))
-			end
+		local spellName, _, count = DBM:UnitDebuff(uId, spellInput)
+		if spellName and count then
 			lines[UnitName(uId)] = count
 		end
 	end
@@ -759,9 +686,7 @@ local events = {
 	["playerbaddebuff"] = updateBadPlayerDebuffs,
 	["playerdebuffremaining"] = updatePlayerDebuffRemaining,
 	["playerbuffremaining"] = updatePlayerBuffRemaining,
-	["playerbaddebuffbyspellid"] = updateBadPlayerDebuffsBySpellID,
 	["reverseplayerbaddebuff"] = updateReverseBadPlayerDebuffs,
-	["reverseplayerbaddebuffbyspellid"] = updateReverseBadPlayerDebuffsBySpellID,
 	["playeraggro"] = updatePlayerAggro,
 	["playerbuffstacks"] = updatePlayerBuffStacks,
 	["playerdebuffstacks"] = updatePlayerDebuffStacks,
@@ -782,9 +707,7 @@ local friendlyEvents = {
 	["playerbaddebuff"] = true,
 	["playerdebuffremaining"] = true,
 	["playerbuffremaining"] = true,
-	["playerbaddebuffbyspellid"] = true,
 	["reverseplayerbaddebuff"] = true,
-	["reverseplayerbaddebuffbyspellid"] = true,
 	["playeraggro"] = true,
 	["playerbuffstacks"] = true,
 	["playerdebuffstacks"] = true,
@@ -832,7 +755,7 @@ function onUpdate(frame)
 				end
 				linesShown = linesShown + 1
 				if leftText == playerName then--It's player.
-					if currentEvent == "health" or currentEvent == "playerpower" or currentEvent == "playerabsorb" or currentEvent == "playerbuff" or currentEvent == "playergooddebuff" or currentEvent == "playerbaddebuff" or currentEvent == "playerdebuffremaining" or currentEvent == "playerbuffremaining" or currentEvent == "playerbaddebuffbyspellid" or currentEvent == "playertargets" or (currentEvent == "playeraggro" and value[1] == 3) then--Red
+					if currentEvent == "health" or currentEvent == "playerpower" or currentEvent == "playerabsorb" or currentEvent == "playerbuff" or currentEvent == "playergooddebuff" or currentEvent == "playerbaddebuff" or currentEvent == "playerdebuffremaining" or currentEvent == "playerbuffremaining" or currentEvent == "playertargets" or (currentEvent == "playeraggro" and value[1] == 3) then--Red
 						frame:AddDoubleLine(icon or leftText, rightText, 255, 0, 0, 255, 255, 255)-- (leftText, rightText, left.R, left.G, left.B, right.R, right.G, right.B)
 					else--Green
 						frame:AddDoubleLine(icon or leftText, rightText, 0, 255, 0, 255, 255, 255)
@@ -893,12 +816,25 @@ function infoFrame:Show(maxLines, event, ...)
 	else
 		maxlines = maxLines or 5
 	end
-	currentEvent = event
 	for i = 1, select("#", ...) do
 		value[i] = select(i, ...)
 	end
 	frame = frame or createFrame()
-
+	--Orders event to use spellID no matter what and not spell name
+	if event:find("byspellid") then
+		event = event:gsub("byspellid", "")--just strip off the byspellid, it served it's purpose, it simply told infoframe to not convert to spellName
+		if type(value[1]) ~= "number" then
+			error("DBM-InfoFrame: byspellid method must use spellId", 2)
+			return
+		end
+	--If spellId is given as value one and it's not a byspellid event, convert to spellname
+	--this also allows spell name to be given by mod, since value 1 verifies it's a number
+	elseif type(value[1]) == "number" and event ~= "health" and event ~= "function" and event ~= "playertargets" and event ~= "playeraggro" and event ~= "playerpower" and event ~= "enemypower" and event ~= "test" then
+		--Outside of "byspellid" functions, typical frames will still use spell NAME matching not spellID.
+		--This just determines if we convert the spell input to a spell Name, if a spellId was provided for a non byspellid infoframe
+		value[1] = DBM:GetSpellInfo(value[1])
+	end
+	currentEvent = event
 	if event == "playerbuff" or event == "playerbaddebuff" or event == "playergooddebuff" then
 		sortMethod = 3
 	elseif event == "health" or event == "playerdebuffremaining" then
@@ -910,20 +846,12 @@ function infoFrame:Show(maxLines, event, ...)
 	else
 		sortMethod = 1
 	end
-	
-	--If spellId is given as value one, convert to spell name on show instead of in every onupdate
-	--this also allows spell name to be given by mod, since value 1 verifies it's a number
-	if type(value[1]) == "number" and event ~= "health" and event ~= "function" and event ~= "playertargets" and event ~= "playeraggro" and event ~= "playerpower" and event ~= "enemypower" and event ~= "test" and event ~= "playerbaddebuffbyspellid" and event ~= "reverseplayerbaddebuffbyspellid" then
-		value[1] = DBM:GetSpellInfo(value[1])
-	end
-
 	if events[currentEvent] then
 		events[currentEvent]()
 	else
 		error("DBM-InfoFrame: Unsupported event", 2)
 		return
 	end
-
 	if not friendlyEvents[currentEvent] then
 		twipe(icons)
 	end
@@ -934,9 +862,6 @@ function infoFrame:Show(maxLines, event, ...)
 		frame.ticker = C_Timer.NewTicker(0.5, function() onUpdate(frame) end)
 	end
 	local wowToc, testBuild, wowVersionString = DBM:GetTOC()
-	if wowVersionString == "8.0.1" then
-		betaCompat = true
-	end
 end
 
 function infoFrame:RegisterCallback(cb)
@@ -970,7 +895,6 @@ function infoFrame:Hide()
 	end
 	currentEvent = nil
 	sortMethod = 1
-	betaCompat = false
 end
 
 function infoFrame:IsShown()

@@ -232,6 +232,17 @@ function HiddenArtifactTrackerFuncs.recoverSaveData()
 
 		for k,v in pairs(neededKeys) do
 			for i,d in pairs(classWeaponQuests[classID]) do
+
+				if d== nil or d[2]==nil then
+					break
+				end
+				if HiddenArtifactTrackerChars == nil then
+					HiddenArtifactTrackerChars = {}
+				end
+				if HiddenArtifactTrackerChars[d[2]] == nil then
+					HiddenArtifactTrackerChars[d[2]] = {}
+				end
+
 				if HiddenArtifactTrackerChars[d[2]][k] == nil then
 					if k~="quest" then
 						HiddenArtifactTrackerChars[d[2]][k] = v

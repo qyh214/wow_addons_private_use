@@ -1,9 +1,9 @@
-## Interface: 70300
+## Interface: 80000
 
 ## Title: Bartender4
 ## Notes: Simple and Advanced combined - Bartender4 ActionBar AddOn
 
-## Version: 4.7.10
+## Version: 4.8.1
 
 ## Author: Nevcairiel
 ## X-Email: h.leppkes at gmail dot com
@@ -63,11 +63,11 @@ BagBar.lua
 PetBar.lua
 StanceBar.lua
 MicroMenu.lua
-RepXPBar.lua
 VehicleBar.lua
 BlizzardArt.lua
 ExtraActionBar.lua
 ZoneAbilityBar.lua
+StatusTrackingBar.lua
 
 ## Options ##
 Options\AceGUIWidget-NumberEditBox.lua
@@ -82,11 +82,11 @@ Options\BagBar.lua
 Options\MicroMenu.lua
 Options\PetBar.lua
 Options\StanceBar.lua
-Options\RepXPBar.lua
 Options\VehicleBar.lua
 Options\BlizzardArt.lua
 Options\ExtraActionBar.lua
 Options\ZoneAbilityBar.lua
+Options\StatusTrackingBar.lua
 
 ## Presets -- needs to be the last ##
 Options\Presets.lua

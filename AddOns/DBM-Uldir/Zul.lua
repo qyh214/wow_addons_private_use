@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(2195, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17499 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17579 $"):sub(12, -3))
 mod:SetCreatureID(138967)
 mod:SetEncounterID(2145)
 mod:DisableESCombatDetection()--ES fires moment you throw out CC, so it can't be trusted for combatstart
 mod:SetZone()
 --mod:SetBossHPInfoToHighest()
---mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
+mod:SetUsedIcons(8)
 --mod:SetHotfixNoticeRev(16950)
 --mod:SetMinSyncRevision(16950)
 --mod.respawnTime = 35
@@ -17,12 +17,13 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 273889 274098 274119 273316 273451 273350",
 	"SPELL_CAST_SUCCESS 273360 273365 271640 274358 274168",
-	"SPELL_AURA_APPLIED 273365 271640 273434 276093 273288 274358 274271 273432",
+	"SPELL_AURA_APPLIED 273365 271640 273434 276093 273288 274358 274271 273432 276434",
 	"SPELL_AURA_APPLIED_DOSE 274358",
-	"SPELL_AURA_REMOVED 273365 271640 276093 273288 274358 274271 273432",
+	"SPELL_AURA_REMOVED 273365 271640 276093 273288 274358 274271 273432 276434",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
 	"UNIT_DIED",
+	"UNIT_TARGET_UNFILTERED",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
@@ -33,9 +34,16 @@ mod:RegisterEventsInCombat(
 --TODO, check if all blood triggers associated with correct mobs, it was hard to see from video
 --TODO, minion of zul fixate detection?
 --TODO, maybe switch warning for minions of zul, or detectable spawns, show on a custom infoframe number of adds up (each type)
+--[[
+(ability.id = 273889 or ability.id = 274098 or ability.id = 274119) and type = "begincast"
+ or (ability.id = 274358 or ability.id = 274168 or ability.id = 273365 or ability.id = 271640 or ability.id = 273360) and type = "cast"
+ or (ability.id = 273889 or ability.id = 274098 or ability.id = 274119) and type = "cast"
+ or (ability.id = 273316 or ability.id = 273451) and type = "begincast"
+--]]
 --local warnXorothPortal				= mod:NewSpellAnnounce(244318, 2, nil, nil, nil, nil, nil, 7)
 --Stage One: The Forces of Blood
 local warnPoolofDarkness				= mod:NewCountAnnounce(273361, 4)--Generic warning since you want to be aware of it but not emphesized unless you're an assigned soaker
+local warnActiveDecay					= mod:NewTargetNoFilterAnnounce(276434, 1)
 --Stage Two: Zul, Awakened
 local warnPhase2						= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnRupturingBlood				= mod:NewStackAnnounce(273365, 2, nil, "Tank")
@@ -91,18 +99,58 @@ mod:AddNamePlateOption("NPAuraOnPresence", 276093)
 mod:AddNamePlateOption("NPAuraOnThrumming", 273288)
 mod:AddNamePlateOption("NPAuraOnBoundbyShadow", 273432)
 mod:AddNamePlateOption("NPAuraOnEngorgedBurst", 276299)
+mod:AddNamePlateOption("NPAuraOnDecayingFlesh", 276434)
+mod:AddSetIconOption("SetIconOnDecay", 276434, true, true)
 
 mod.vb.phase = 1
 mod.vb.poolCount = 0
 mod.vb.CrawgSpawnCount = 0
 mod.vb.HexerSpawnCount = 0
 mod.vb.CrusherSpawnCount = 0
+mod.vb.activeDecay = nil
 local unitTracked = {}
 --P1 Add Timers (heroic)
-local CrawgTimers = {35, 43.9, 46.6, 47.2}
+local CrawgTimers = {35, 42, 46.6, 47.2}
 local HexerTimers = {51, 62.4, 62.9}
 local CrusherTimers = {70, 63.6}
 local CrawgName, HexerName, CrusherName = DBM:EJ_GetSectionInfo(18541), DBM:EJ_GetSectionInfo(18540), DBM:EJ_GetSectionInfo(18539)
+
+local updateInfoFrame
+do
+	local lines = {}
+	local sortedLines = {}
+	local function addLine(key, value)
+		-- sort by insertion order
+		lines[key] = value
+		sortedLines[#sortedLines + 1] = key
+	end
+	updateInfoFrame = function()
+		table.wipe(lines)
+		table.wipe(sortedLines)
+		--Boss Powers first
+		for i = 1, 5 do
+			local uId = "boss"..i
+			--Primary Power
+			local currentPower, maxPower = UnitPower(uId), UnitPowerMax(uId)
+			if maxPower and maxPower ~= 0 then
+				if currentPower / maxPower * 100 >= 1 then
+					addLine(UnitName(uId), currentPower)
+				end
+			end
+		end
+		--Player personal checks
+		local spellName3, _, _, _, _, expireTime = DBM:UnitDebuff("player", 276672)
+		if spellName3 and expireTime then--Personal Unleashed Shadow
+			local remaining = expireTime-GetTime()
+			addLine(spellName3, remaining)
+		end
+		local spellName4, _, currentStack = DBM:UnitDebuff("player", 274195)
+		if spellName4 and currentStack then--Personal Corrupted Blood
+			addLine(spellName4, currentStack)
+		end
+		return lines, sortedLines
+	end
+end
 
 function mod:OnCombatStart(delay)
 	DBM:AddMsg("There is no Dana, only Zul")
@@ -111,17 +159,18 @@ function mod:OnCombatStart(delay)
 	self.vb.CrawgSpawnCount = 0
 	self.vb.HexerSpawnCount = 0
 	self.vb.CrusherSpawnCount = 0
+	self.vb.activeDecay = nil
 	timerPoolofDarknessCD:Start(20.5-delay, 1)
 	timerDarkRevolationCD:Start(30-delay)
 	timerCallofCrawgCD:Start(35, 1)--35-38
 	timerCallofHexerCD:Start(51.3, 1)--51-54
 	timerCallofCrusherCD:Start(70, 1)--70-73
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM_CORE_INFOFRAME_POWER)
-		DBM.InfoFrame:Show(4, "enemypower", 1)
+		--DBM.InfoFrame:SetHeader(DBM_CORE_INFOFRAME_POWER)
+		DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
 	end
 	table.wipe(unitTracked)
-	if self.Options.NPAuraOnPresence or self.Options.NPAuraOnThrumming or self.Options.NPAuraOnBoundbyShadow or self.Options.NPAuraOnEngorgedBurst then
+	if self.Options.NPAuraOnPresence or self.Options.NPAuraOnThrumming or self.Options.NPAuraOnBoundbyShadow or self.Options.NPAuraOnEngorgedBurst or self.Options.NPAuraOnDecayingFlesh then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 		if self.Options.NPAuraOnEngorgedBurst then
 			self:RegisterOnUpdateHandler(function(self)
@@ -170,7 +219,7 @@ function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
-	if self.Options.NPAuraOnPresence or self.Options.NPAuraOnThrumming or self.Options.NPAuraOnBoundbyShadow or self.Options.NPAuraOnEngorgedBurst then
+	if self.Options.NPAuraOnPresence or self.Options.NPAuraOnThrumming or self.Options.NPAuraOnBoundbyShadow or self.Options.NPAuraOnEngorgedBurst or self.Options.NPAuraOnDecayingFlesh then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
 	end
 end
@@ -210,7 +259,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnCongealBlood:Show()
 		specWarnCongealBlood:Play("targetchange")
 		timerCongealBloodCD:Start(23, args.sourceGUID)
-	elseif spellId == 273350 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 273350 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnBloodshard:Show(args.sourceName)
 		specWarnBloodshard:Play("kickcast")
 	end
@@ -322,6 +371,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.NPAuraOnBoundbyShadow then
 			DBM.Nameplate:Show(true, args.destGUID, spellId)
 		end
+	elseif spellId == 276434 then--Decaying Flesh
+		self.vb.activeDecay = args.destGUID
+		warnActiveDecay:Show(args.destName)
+		if self.Options.NPAuraOnDecayingFlesh then
+			DBM.Nameplate:Show(true, args.destGUID, spellId)
+		end
 	elseif spellId == 274271 then
 		if self:AntiSpam(5, 4) then
 			timerDeathwishCD:Start()
@@ -361,6 +416,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.NPAuraOnBoundbyShadow then
 			DBM.Nameplate:Hide(true, args.destGUID, spellId)
 		end
+	elseif spellId == 276434 then--Decaying Flesh
+		if self.Options.NPAuraOnDecayingFlesh then
+			DBM.Nameplate:Hide(true, args.destGUID, spellId)
+		end
 	elseif spellId == 274358 then
 		if args:IsPlayer() then
 			yellRupturingBloodFades:Cancel()
@@ -390,6 +449,28 @@ function mod:UNIT_DIED(args)
 		timerCongealBloodCD:Stop(args.destGUID)
 	elseif cid == 139059 then--Bloodthirsty Crawg
 		DBM.Nameplate:Hide(true, args.destGUID)
+	end
+end
+
+do
+	local function TrySetTarget(self)
+		if DBM:GetRaidRank() >= 1 then
+			for uId in DBM:GetGroupMembers() do
+				if UnitGUID(uId.."target") == self.vb.activeDecay then
+					self.vb.activeDecay = nil
+					SetRaidTarget(uId.."target", 8)
+				end
+				if not (self.vb.activeDecay) then
+					break
+				end
+			end
+		end
+	end
+
+	function mod:UNIT_TARGET_UNFILTERED()
+		if self.Options.SetIconOnDecay and self.vb.activeDecay then
+			TrySetTarget(self)
+		end
 	end
 end
 

@@ -32,9 +32,9 @@ local function SetHooks_Enabled()
 	end)
 
 	function PetTracker.Objectives:Startup()
+		self:SetParent(content)
 		self.Anchor:SetWidth(content:GetWidth())
 		self.Anchor:SetPoint("TOPLEFT", content, -10, 0)
-		self:SetParent(OTF.BlocksFrame)
 		self.Header = header
 		self.maxEntries = 100
 	end
@@ -151,7 +151,7 @@ local function SetHooks_PetTracker_Journal()
 		end)
 
 		CollectionsJournal:HookScript("OnHide", function()
-			SetMapToCurrentZone()
+			KT.SetMapToCurrentZone()
 		end)
 	end
 end
@@ -259,7 +259,7 @@ function M:OnInitialize()
 	end
 
 	SetFrames_Init()
-	SetHooks_Disabled()
+	--SetHooks_Disabled()
 end
 
 function M:OnEnable()

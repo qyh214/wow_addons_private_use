@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1981, "DBM-Party-Legion", 13, 945)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(124874)
 mod:SetEncounterID(2067)
 mod:SetZone()
@@ -88,8 +88,8 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 245038 then
 		warnTentacles:Show()
 		timerUmbralTentaclesCD:Start()

@@ -76,7 +76,6 @@ L:SetMiscLocalization{
 	Anetheron		= "Анетерон",
 	Kazrogal		= "Каз'рогал",
 	Azgalor			= "Азгалор",
-	WaveCheck		= "Текущая волна = (%d+) из 8",
 	WarnWave_0		= "Волна %s/8",
 	WarnWave_1		= "Волна %s/8 - %s %s",
 	WarnWave_2		= "Волна %s/8 - %s %s и %s %s",

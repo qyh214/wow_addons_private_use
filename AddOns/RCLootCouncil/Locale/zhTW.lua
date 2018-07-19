@@ -303,13 +303,19 @@ L["Open the Loot History"] = "開啟拾取歷史"
 L["open_the_loot_history_desc"] = "打開拾取歷史"
 L["Opens the synchronizer"] = "開啟同步"
 L["Other piece"] = "其他裝備"
+--[[Translation missing --]]
+--[[ L["Out of instance"] = ""--]] 
 L["'player' can't receive 'type'"] = "%s無法獲得%s - 版本不同?"
 L["'player' declined your sync request"] = "%s拒絕你的同步要求"
 L["'player' has asked you to reroll"] = "%s請你重新骰"
 L["'player' has ended the session"] = "%s結束了分配"
 L["'player' has rolled 'roll' for: 'item'"] = "%s 擲出了 %d： %s"
 L["'player' hasn't opened the sync window"] = "%s還沒開啟同步視窗 (/rc sync)"
+--[[Translation missing --]]
+--[[ L["Player is ineligible for this item"] = ""--]] 
 L["Player is not in the group"] = "玩家不在隊伍中"
+--[[Translation missing --]]
+--[[ L["Player is not in this instance"] = ""--]] 
 L["Player is not in this instance or his inventory is full"] = "玩家不在副本中或者背包滿"
 L["Player is not in this instance or is ineligible for this item"] = "玩家不在副本中或者無權拾取此物品。"
 L["Player is offline"] = "玩家不在線"
@@ -375,8 +381,8 @@ L["silent_auto_pass_desc"] = "隱藏自動放棄信息"
 L["Simple BBCode output."] = "簡易BBCode輸出"
 L["Skins"] = "外觀"
 L["skins_description"] = "選取預設的外觀或者製作你自己的外觀。註解: 這只會影響外觀。打開版本檢查可以馬上看到結果 ('/rc version')。"
---Translation missing 
--- L["Socket"] = ""
+--[[Translation missing --]]
+--[[ L["Socket"] = ""--]] 
 L["Something went wrong :'("] = "出現了一些問題 哭哭"
 L["Something went wrong during syncing, please try again."] = "同步發生錯誤，請再試一次。"
 L["Sort Items"] = "物品排序"
@@ -474,6 +480,8 @@ L["winners"] = "贏家"
 L["x days"] = "%d天"
 L["x out of x have voted"] = "%d/%d已經投票"
 L["You are not allowed to see the Voting Frame right now."] = "你現在無法查看投票界面。"
+--[[Translation missing --]]
+--[[ L["You are not in an instance"] = ""--]] 
 L["You can only auto award items with a quality lower than 'quality' to yourself due to Blizaard restrictions"] = "由於暴雪限制，你只能自動分配低於%s品質的物品給自己"
 L["You cannot initiate a test while in a group without being the MasterLooter."] = "你無法在隊伍中且無分配權的狀態下做測試。"
 L["You cannot start an empty session."] = "你無法開始不含任何物品的分配進程。"

@@ -1,30 +1,48 @@
-tag 5cf164130d6aee1e55d8f6ac61575af143052fb6 3.3.6
+tag 718ee65f78f42dc989d309781bb8a79ea9a931c3 3.4.0
 Author:	Hendrik Leppkes <h.leppkes@gmail.com>
-Date:	Wed Aug 30 08:51:17 2017 +0200
+Date:	Tue Jul 17 20:25:40 2018 +0200
 
-Tag as 3.3.6
+Tag as 3.4.0
 
-commit 8ad4f8c33e84a5b6163dd20066827e434a4e6afa
+commit ea8414533867252725d7927ee6d91a894d54eaa3
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Tue Aug 29 23:26:50 2017 +0200
+Date:   Sun Jun 24 02:19:38 2018 +0200
 
-    Update TOC for 7.3
+    Replace locale script
 
-commit 16b2dbaeee0bd589c0b342a054d95719e2c59a4e
+commit ffde356a4c8147756f62aaed3abfb89e35be4f33
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Tue Aug 29 23:26:31 2017 +0200
+Date:   Fri Jun 22 14:00:39 2018 +0200
 
-    Update PlaySound usage for 7.3
+    Remove old compat code
 
-commit 92d98a4d5eb9a1d3478e9a11669fee5559bdd55f
+commit 9dcbc15d42b5621d34a7a42788223bbf28c2e265
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Sat Jul 15 10:04:58 2017 +0200
+Date:   Fri Jun 22 14:00:20 2018 +0200
 
-    Apparently UNIT_SPELLCAST_CHANNEL_INTERRUPTED never existed, wherever it came from
+    Update TOC
 
-commit 3a4e4cc7d2d103931fd15303735d262d5319245f
+commit f087479e8a93be5f8dfef4302ff62606f089c9b3
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Wed Jul 12 14:15:47 2017 +0200
+Date:   Fri Jun 22 13:51:02 2018 +0200
 
-    Switch to ignoring missing locale strings
+    GCD: Fix spellcast even args
+
+commit 638e587e38745d15873adb280be0daa63c3dd680
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Fri Jun 22 12:37:17 2018 +0200
+
+    Fix CLEU based modules
+
+commit 355ee1c36bea5e07b7bd4b10a2533879d5a9d4a7
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Thu May 3 13:32:24 2018 +0200
+
+    Update UNIT_SPELLCAST_SENT for recent changes
+
+commit bce8e9b1ff962ea3fb3f406df08240ce8acfae37
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Sat Apr 21 14:38:10 2018 +0200
+
+    Update for 8.0 API changes
 

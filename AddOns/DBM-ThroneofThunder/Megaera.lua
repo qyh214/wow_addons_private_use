@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(821, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(68065, 70235, 70247)--Frozen 70235, Venomous 70247 (only 2 heads that ever start in front, so no need to look for combat with arcane or fire for combat detection)
 mod:SetEncounterID(1578)
 mod:SetMainBossID(68065)
@@ -115,8 +115,8 @@ local function findTorrent()
 	for uId in DBM:GetGroupMembers() do
 		local name = DBM:GetUnitFullName(uId)
 		if not name then break end
-		local expires = select(7, UnitDebuff(uId, iceTorrent)) or 0
-		local spellId = select(11, UnitDebuff(uId, iceTorrent)) or 0
+		local expires = select(6, DBM:UnitDebuff(uId, iceTorrent)) or 0
+		local spellId = select(10, DBM:UnitDebuff(uId, iceTorrent)) or 0
 		if spellId == 139857 and expires > 0 and not torrentExpires[expires] then
 			torrentExpires[expires] = true
 			warnTorrent(name)
@@ -171,7 +171,6 @@ local function clearHeadGUID(GUID)
 end
 
 function mod:OnCombatStart(delay)
-	iceTorrent = DBM:GetSpellInfo(139857)
 	table.wipe(activeHeadGUIDS)
 	rampageCount = 0
 	rampageCast = 0
@@ -369,7 +368,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 end
 
 --Unfortunately we need to update the counts sooner than UNIT_DIED fires because we need those counts BEFORE CHAT_MSG_RAID_BOSS_EMOTE fires.
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 70628 then--Permanent Feign Death
 		local cid = self:GetCIDFromGUID(UnitGUID(uId))
 		if cid == 70235 then--Frozen

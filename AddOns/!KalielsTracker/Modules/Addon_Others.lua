@@ -59,10 +59,13 @@ end
 
 -- ElvUI
 local function ElvUI_SetSupport()
-    if KT:CheckAddOn("ElvUI", "10.73", true) then
+    if KT:CheckAddOn("ElvUI", "10.75", true) then
         local E = unpack(_G.ElvUI)
         E.Blizzard.SetObjectiveFrameHeight = function() end
         E.Blizzard.MoveObjectiveFrame = function() end
+        hooksecurefunc(E, "CheckIncompatible", function(self)
+            self.private.skins.blizzard.objectiveTracker = false
+        end)
         hooksecurefunc(E, "ToggleConfig", function(self)
             local ACD = LibStub("AceConfigDialog-3.0-ElvUI")
             if ACD.OpenFrames[self.name] then
@@ -74,7 +77,7 @@ local function ElvUI_SetSupport()
                     type = "description",
                     order = options.objectiveFrameHeader.order + 0.5
                 }
-                ACD["Open"](ACD, self.name)
+                self.Options.args.skins.args.blizzard.args.objectiveTracker.disabled = true
             end
         end)
     end
@@ -82,7 +85,7 @@ end
 
 -- Tukui
 local function Tukui_SetSupport()
-    if KT:CheckAddOn("Tukui", "17.17", true) then
+    if KT:CheckAddOn("Tukui", "18.01", true) then
         local T = unpack(_G.Tukui)
         T.Miscellaneous.ObjectiveTracker.Enable = function() end
     end
@@ -90,7 +93,7 @@ end
 
 -- RealUI
 local function RealUI_SetSupport()
-    if KT:CheckAddOn("nibRealUI", "8.1 r20h", true) then
+    if KT:CheckAddOn("nibRealUI", "2.0.0", true) then
         local R = _G.RealUI
         R:SetModuleEnabled("Objectives Adv.", false)
         -- Fade
@@ -101,11 +104,6 @@ local function RealUI_SetSupport()
         local bck_UIFrameFadeOut = UIFrameFadeOut
         function UIFrameFadeOut(frame, ...)
             if frame ~= OTF then bck_UIFrameFadeOut(frame, ...) end
-        end
-        -- Replace original function!
-        function R:UPDATE_PENDING_MAIL()
-            self:UnregisterEvent("UPDATE_PENDING_MAIL")
-            _G.CancelEmote()   -- Cancel Map Holding animation
         end
     end
 end
@@ -123,14 +121,13 @@ end
 
 -- SpartanUI
 local function SpartanUI_SetSupport()
-    if KT:CheckAddOn("SpartanUI", "4.4.0", true) then
-        local S = LibStub("AceAddon-3.0"):GetAddon("SpartanUI")
+    if KT:CheckAddOn("SpartanUI", "4.6.0", true) then
         local ACD = LibStub("AceConfigDialog-3.0")
-        DB.EnabledComponents.Objectives = false
+        SUI.DB.EnabledComponents.Objectives = false
         local bck_ACD_Open = ACD.Open
         function ACD:Open(name, ...)
             if name == "SpartanUI" then
-                local options = S.opt.args.ModSetting.args.Enabled.args.Components.args
+                local options = SUI.opt.args.ModSetting.args.Components.args
                 options.Objectives.disabled = true
                 options[addonName.."Warning"] = {
                     name = KTwarning,
@@ -144,11 +141,47 @@ end
 
 -- SuperVillain UI
 local function SVUI_SetSupport()
-    if KT:CheckAddOn("SVUI_!Core", "1.4.2", true) then
+    if KT:CheckAddOn("SVUI_!Core", "1.5", true) then
         if IsAddOnLoaded("SVUI_QuestTracker") then
             DisableAddOn("SVUI_QuestTracker")
             StaticPopup_Show(addonName.."_ReloadUI")
         end
+    end
+end
+
+-- BugGrabber
+local function BugGrabber_Blacklist()
+    if db.addonBugGrabberBlacklist and IsAddOnLoaded("!BugGrabber") then
+        local patterns = {
+            "Deferred XML Node object named .* already exists",
+        }
+        local ERROR_DETECTED = "%s |cffffff00captured, click the link for more information.|r"
+
+        local bck_BugGrabber_StoreError = BugGrabber.StoreError
+        function BugGrabber:StoreError(errorObject)
+            for _, pattern in ipairs(patterns) do
+                if strfind(errorObject.message, pattern) then return end
+            end
+            bck_BugGrabber_StoreError(self, errorObject)
+        end
+
+        local bck_BugGrabber_RegisterCallback = BugGrabber.RegisterCallback
+        BugGrabber.RegisterCallback = function(addon, eventname, onError)
+            BugGrabber.UnregisterCallback(KT, "BugGrabber_BugGrabbed")
+            onError = onError or function(...) addon[eventname](addon, ...) end
+            bck_BugGrabber_RegisterCallback(addon, eventname, function(callback, errorObject)
+                for _, pattern in ipairs(patterns) do
+                    if strfind(errorObject.message, pattern) then return end
+                end
+                onError(callback, errorObject)
+            end)
+        end
+
+        -- Fake BugGrabber, because it has functions in local scope.
+        function KT:BugGrabber_BugGrabbed(callback, errorObject)
+            print(ERROR_DETECTED:format(BugGrabber:GetChatLink(errorObject)))
+        end
+        BugGrabber.RegisterCallback(KT, "BugGrabber_BugGrabbed")
     end
 end
 
@@ -160,6 +193,8 @@ function M:OnInitialize()
     _DBG("|cffffff00Init|r - "..self:GetName(), true)
     db = KT.db.profile
     KT:CheckAddOn("Masque", "7.3.0")
+
+    BugGrabber_Blacklist()
 end
 
 function M:OnEnable()

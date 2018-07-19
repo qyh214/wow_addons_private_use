@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(698, "DBM-Party-MoP", 5, 321)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(61398)
 mod:SetEncounterID(1441)
 mod:SetZone()
@@ -50,7 +50,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 120109 then
 		warnStaff:Show()
 		timerStaffCD:Start()

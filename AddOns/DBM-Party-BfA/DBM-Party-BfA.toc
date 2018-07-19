@@ -1,5 +1,5 @@
-## Interface: 70300
-## X-Min-Interface: 70300
+## Interface: 80000
+## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Party-BfA|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Gruppe-BfA|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf05인 던전-격전의 아제로스|r
@@ -23,6 +23,7 @@
 localization.en.lua
 localization.kr.lua
 localization.cn.lua
+localization.es.lua
 AtalDazar\Alunza.lua
 AtalDazar\Volkaal.lua
 AtalDazar\Rezan.lua
@@ -34,8 +35,8 @@ Freehold\RingofBooty.lua
 Freehold\HarlanSweete.lua
 Freehold\FreeholdTrash.lua
 KingsRest\GoldenSerpent.lua
-KingsRest\MummificationConstruct.lua
-KingsRest\WarringWarlords.lua
+KingsRest\Mchimba.lua
+KingsRest\CouncilofTribes.lua
 KingsRest\Dazar.lua
 KingsRest\KingsRestTrash.lua
 ShrineoftheStorm\Agusirr.lua
@@ -44,9 +45,9 @@ ShrineoftheStorm\Stormsong.lua
 ShrineoftheStorm\Volzith.lua
 ShrineoftheStorm\SotSTrash.lua
 SiegeofBoralus\Lockwood.lua
-SiegeofBoralus\Redhook.lua
+SiegeofBoralus\Redhook_Bainbridge.lua
 SiegeofBoralus\Darkfathom.lua
-SiegeofBoralus\Kraken.lua
+SiegeofBoralus\ViqGoth.lua
 SiegeofBoralus\BoralusTrash.lua
 TempleofSethraliss\AdderisandAspix.lua
 TempleofSethraliss\Merektha.lua
@@ -54,14 +55,14 @@ TempleofSethraliss\Galvazzt.lua
 TempleofSethraliss\AvatarofSethraliss.lua
 TempleofSethraliss\SethralissTrash.lua
 TheMotherload\CrowdPummeler.lua
-TheMotherload\Tikali.lua
+TheMotherload\Azerokk.lua
 TheMotherload\RixxaFluxflame.lua
 TheMotherload\MogulRazzdunk.lua
 TheMotherload\UndermineTrash.lua
 TheUnderrot\ElderLeaxa.lua
 TheUnderrot\InfestedCrawg.lua
 TheUnderrot\SporecallerZancha.lua
-TheUnderrot\Taloc.lua
+TheUnderrot\Unbound.lua
 TheUnderrot\UnderrotTrash.lua
 TolDagor\TheSandQueen.lua
 TolDagor\JesHowlis.lua

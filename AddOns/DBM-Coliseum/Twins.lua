@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ValkTwins", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 268 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(34497, 34496)
 mod:SetEncounterID(1089)
 mod:SetModelID(29240)
@@ -51,7 +51,6 @@ local shieldHealth = {
 }
 
 function mod:OnCombatStart(delay)
-	lightEssence, darkEssence = DBM:GetSpellInfo(65686), DBM:GetSpellInfo(65684)
 	timerSpecial:Start(-delay)
 	warnSpecial:Schedule(40-delay)
 	timerAchieve:Start(-delay)
@@ -71,10 +70,10 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 66046 then
-		local debuff = UnitDebuff("player", lightEssence)
+		local debuff = DBM:UnitDebuff("player", lightEssence)
 		self:SpecialAbility(debuff)
 	elseif args.spellId == 66058 then
-		local debuff = UnitDebuff("player", darkEssence)
+		local debuff = DBM:UnitDebuff("player", darkEssence)
 		self:SpecialAbility(debuff)
 	elseif args.spellId == 65875 then
 		timerHeal:Start()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1979, "DBM-Party-Legion", 13, 945)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17077 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17603 $"):sub(12, -3))
 mod:SetCreatureID(124871)
 mod:SetEncounterID(2065)
 mod:SetZone()
@@ -127,7 +127,8 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 end
 --]]
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 247576 then--Umbra Shift
 		--timerUmbraShiftCD:Start()
 	end

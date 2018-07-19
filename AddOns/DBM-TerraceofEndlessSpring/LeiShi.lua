@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(729, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(62983)--62995 Animated Protector
 mod:SetEncounterID(1506)
 
@@ -64,7 +64,6 @@ function mod:ScaryFogRepeat()
 end
 
 function mod:OnCombatStart(delay)
-	hideName = DBM:GetSpellInfo(123244)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(3, bossTank)
 	end
@@ -123,7 +122,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				if amount >= 6 and args:IsPlayer() then
 					specWarnSpray:Show(amount)
 				else
-					if amount >= 6 and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
+					if amount >= 6 and not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 						specWarnSprayOther:Show(args.destName)
 					end
 				end
@@ -184,7 +183,7 @@ function mod:UNIT_HEALTH(uId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 127524 then
 		DBM:EndCombat(self)
 	end	

@@ -1,18 +1,12 @@
-tag a3447ee95ed0f6f28dae819e08478ad642d5840e 2.18.5
+tag 8d05c0765deed00cf51d770e754792b2a63e376e 2.18.6
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Fri Nov 3 16:15:17 2017 +0100
+Date:	Wed Jul 18 12:30:29 2018 +0200
 
-Removed OrderHallCommander advertising
+Battle for Azeroth
 
-commit 797379e3c267fc45791bd547aa5bcb120ddc5a6e
+commit 66478f8a1932410b6a9f8f4eb20e4290e8798639
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Fri Nov 3 16:14:44 2017 +0100
+Date:   Wed Jul 18 12:25:18 2018 +0200
 
-    doc
-
-commit 31846d809767fe07728a6be8b82fb24a60b4c72a
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Fri Nov 3 16:10:21 2017 +0100
-
-    OrderHallCommander advertising removed
+    TOC Bumped
 

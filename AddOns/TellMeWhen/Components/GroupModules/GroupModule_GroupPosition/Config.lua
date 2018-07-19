@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
@@ -73,7 +73,7 @@ end
 function Module:Table_Get()
 	return self.Table
 end
-function Module:Table_GetNormalSuggestions(suggestions, tbl, ...)
+function Module:Table_GetNormalSuggestions(suggestions, tbl)
 	local atBeginning = SUG.atBeginning
 	local strfindsug = SUG.strfindsug
 	local lastName = SUG.lastName

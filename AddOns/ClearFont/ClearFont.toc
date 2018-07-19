@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+﻿## Interface: 80000
 ## Title: ClearFont |r|cFF0099FFby Ice|r
 ## Title-zhTW: ClearFont |r|cFF0099FFby 逆袭的蓝|r
 ## Notes: Modify Game Fonts and Size, Color, Shadow Of Them.(For FontShow ZhTW Mode)

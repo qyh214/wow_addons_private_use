@@ -165,9 +165,11 @@ L["Vehicle Seat"] = "Assento do Veículo"
 L["Vertical Nudge"] = "Cutucada Vertical" -- Needs review
 L["Vertical Position"] = "Posição Vertical"
 L["Visibility"] = "Visibilidade"
-L["Voice Chat Button (When Available)"] = "Botão de chat de voz (Quando disponível)"
 L["Width"] = "Largura"
 -- L["You can set a background and edge file for the minimap like you would with any frame. This is useful when you want to create static square backdrops for your minimap."] = "You can set a background and edge file for the minimap like you would with any frame. This is useful when you want to create static square backdrops for your minimap."
 L["Zone Text"] = "Texto da Zona" -- Needs review
 L["Zoom In Button"] = "Botão aumentar o Zoom"
 L["Zoom Out Button"] = "Botão diminuir o Zoom"
+
+--L.updateRate = "Update Rate (seconds)"
+--L.updateRateDesc = "The lower the value, the faster the coordinates will update, but the more memory and CPU will be consumed due to asking the game for fresh coordinate data."

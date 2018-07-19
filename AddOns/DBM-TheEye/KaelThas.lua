@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KaelThas", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 653 $"):sub(12, -3))
 mod:SetCreatureID(19622)
 mod:SetEncounterID(733)
 mod:SetModelID(20023)
@@ -275,7 +275,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 36735 then
 		warnFlamestrike:Show()
 	end

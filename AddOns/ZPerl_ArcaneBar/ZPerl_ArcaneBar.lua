@@ -14,7 +14,7 @@ end
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1000 $")
+end, "$Revision: 1086 $")
 
 -- Registers frame to spellcast events.
 
@@ -83,9 +83,9 @@ end
 -- See if we're probably still casting a spell, even though some other spell END event occured
 local function ActiveCasting(self)
 	local t = GetTime() * 1000
-	local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(self.unit)
+	local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(self.unit)
 	if (not name) then
-		name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitChannelInfo(self.unit)
+		name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitChannelInfo(self.unit)
 	end
 	if (name and endTime > t + 500) then
 		return true
@@ -128,7 +128,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 	end
 
 	if (event == "UNIT_SPELLCAST_START") then
-		local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(self.unit)
+		local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(self.unit)
 		if (not name or (not self.showTradeSkills and isTradeSkill)) then
 			self:Hide()
 			return
@@ -158,8 +158,8 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 			self.castTimeText:Hide()
 		end
 	elseif ((event == "UNIT_SPELLCAST_STOP" and self.casting) or (event == "UNIT_SPELLCAST_CHANNEL_STOP" and self.channeling)) then
-		local spell, rank, lineID, spellID = ...
-		if event == "UNIT_SPELLCAST_STOP" and self.castID ~= 0 and self.castID ~= lineID then
+		local spell, lineGUID, spellID = ...
+		if event == "UNIT_SPELLCAST_STOP" and self.castID ~= 0 and self.castID ~= lineGUID then
 			return
 		end
 		if (not ActiveCasting(self)) then
@@ -185,8 +185,8 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 			end
 		end
 	elseif (event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_INTERRUPTED") then
-		local spell, rank, lineID, spellID = ...
-		if self.castID ~= 0 and self.castID ~= lineID then
+		local spell, lineGUID, spellID = ...
+		if self.castID ~= 0 and self.castID ~= lineGUID then
 			return
 		end
 		if (not self.fadeOut and self:IsShown() and not ActiveCasting(self)) then
@@ -209,7 +209,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 		end
 	elseif (event == "UNIT_SPELLCAST_DELAYED") then
 		if (self:IsShown()) then
-			local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(self.unit)
+			local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(self.unit)
 			if (not name or (not self.showTradeSkills and isTradeSkill)) then
 				-- if there is no name, there is no bar
 				self:Hide()
@@ -220,7 +220,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 			self:SetMinMaxValues(self.startTime, self.maxValue)
 		end
 	elseif (event == "UNIT_SPELLCAST_CHANNEL_START") then
-		local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(self.unit)
+		local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(self.unit)
 		if (not name or (not self.showTradeSkills and isTradeSkill)) then
 			-- if there is no name, there is no bar
 			self:Hide()
@@ -252,7 +252,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 		end
 	elseif (event == "UNIT_SPELLCAST_CHANNEL_UPDATE") then
 		if (self:IsShown()) then
-			local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(self.unit)
+			local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(self.unit)
 			if (not name or (not self.showTradeSkills and isTradeSkill)) then
 				-- if there is no name, there is no bar
 				self:Hide()

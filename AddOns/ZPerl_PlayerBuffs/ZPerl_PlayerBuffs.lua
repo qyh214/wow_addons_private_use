@@ -6,7 +6,7 @@ local conf, pconf
 XPerl_RequestConfig(function(new)
 	conf = new
 	pconf = new.player
-end, "$Revision: 1059 $")
+end, "$Revision: 1086 $")
 
 --local playerClass
 
@@ -358,7 +358,7 @@ function XPerl_PlayerBuffs_Update(self)
 		local unit = SecureButton_GetUnit(self:GetParent()) or "player"
 
 		if (filter and unit) then
-			local name, rank, buff, count, debuffType, duration, endTime, isMine, isStealable = UnitAura(unit, index, filter)
+			local name, buff, count, debuffType, duration, endTime, isMine, isStealable = UnitAura(unit, index, filter)
 			self.filter = filter
 			self:SetAlpha(1)
 

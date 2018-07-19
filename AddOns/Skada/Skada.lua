@@ -502,8 +502,8 @@ function Window:set_mode_title()
 end
 
 function sort_modes()
-	table_sort(modes, 
-        function(a, b) 
+	table_sort(modes,
+        function(a, b)
             if Skada.db.profile.sortmodesbyusage and Skada.db.profile.modeclicks then
                 -- Most frequest usage order
                 return (Skada.db.profile.modeclicks[a:GetName()] or 0) > (Skada.db.profile.modeclicks[b:GetName()] or 0)
@@ -1731,7 +1731,7 @@ local RAID_FLAGS = bit.bor(COMBATLOG_OBJECT_AFFILIATION_MINE, COMBATLOG_OBJECT_A
 cleuFrame = CreateFrame("Frame") -- Dedicated event handler for a small performance improvement.
 Skada.cleuFrame = cleuFrame -- For tweaks
 
-cleuFrame:SetScript("OnEvent", function(frame, event, timestamp, eventtype, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
+local function cleuHandler(timestamp, eventtype, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
 	local src_is_interesting = nil
 	local dst_is_interesting = nil
 
@@ -1884,6 +1884,11 @@ cleuFrame:SetScript("OnEvent", function(frame, event, timestamp, eventtype, hide
 
 		end
 	end
+end
+Skada.cleuHandler = cleuHandler -- For tweaks
+
+cleuFrame:SetScript("OnEvent", function()
+	cleuHandler(CombatLogGetCurrentEventInfo())
 end)
 
 function Skada:AssignPet(ownerguid, ownername, petguid)
@@ -2044,7 +2049,7 @@ function Skada:UpdateDisplay(force)
 
 					d.id = mode:GetName()
 					d.label = mode:GetName()
-					d.value = 1    
+					d.value = 1
 					if set and mode.GetSetSummary ~= nil then
 						d.valuetext = mode:GetSetSummary(set)
 					end
@@ -2055,12 +2060,12 @@ function Skada:UpdateDisplay(force)
 
                 -- Tell window to sort by our data order. Our modes are in the correct order already.
                 win.metadata.ordersort = true
-                
+
                 -- Let display provider/tooltip know we are showing a mode list.
                 if set then
                     win.metadata.is_modelist = true
                 end
-                
+
 				-- Let window display the data.
 				win:UpdateDisplay()
 			else
@@ -2079,7 +2084,7 @@ function Skada:UpdateDisplay(force)
                 end
 
 				nr = nr + 1
-				local d = win.dataset[nr] or {}
+				d = win.dataset[nr] or {}
 				win.dataset[nr] = d
 
 				d.id = "current"
@@ -2141,16 +2146,15 @@ end
 function Skada:FormatNumber(number)
 	if number then
 		if self.db.profile.numberformat == 1 then
-            if number > 1000000000 then
-                return ("%02.3fB"):format(number / 1000000000)
-            elseif number > 1000000 then
+			if number > 1000000000 then
+				return ("%02.3fB"):format(number / 1000000000)
+			elseif number > 1000000 then
 				return ("%02.2fM"):format(number / 1000000)
-			else
+			elseif number > 9999 then
 				return ("%02.1fK"):format(number / 1000)
 			end
-		else
-			return math.floor(number)
 		end
+		return math.floor(number)
 	end
 end
 
@@ -2209,7 +2213,7 @@ function Skada:AddMode(mode, category)
 
     -- Set mode category (used for menus)
     mode.category = category or L['Other']
-    
+
     -- Add to mode list
 	tinsert(modes, mode)
 
@@ -2479,12 +2483,12 @@ end
 function Skada:ShowTooltip(win, id, label)
 	local t = GameTooltip
 	if Skada.db.profile.tooltips then
-        
+
         if win.metadata.is_modelist and Skada.db.profile.informativetooltips then
             t:ClearLines()
-            
+
             Skada:AddSubviewToTooltip(t, win, find_mode(id), id, label)
-            
+
             t:Show()
         elseif win.metadata.click1 or win.metadata.click2 or win.metadata.click3 or win.metadata.tooltip then
             t:ClearLines()
@@ -2538,7 +2542,7 @@ function Skada:ShowTooltip(win, id, label)
             end
             t:Show()
         end
-        
+
     end
 end
 
@@ -2822,7 +2826,7 @@ do
 			lds:EnhanceDatabase(self.db, "SkadaDB")
 			lds:EnhanceOptions(LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db), self.db)
 		end
-        
+
         -- Blizzard options frame
         local panel = CreateFrame("Frame", "SkadaBlizzOptions")
         panel.name = "Skada"
@@ -2864,7 +2868,7 @@ do
 			self.db.profile.total = nil
 			self.db.profile.sets = nil
 		end
-        
+
         self:SetNotifyIcon("Interface\\Icons\\Spell_Lightning_LightningBolt01")
         self:SetNotifyStorage(self.db.profile.versions)
         self:NotifyOnce(self.versions)

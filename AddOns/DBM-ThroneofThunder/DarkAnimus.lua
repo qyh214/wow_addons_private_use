@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(824, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(69427)
 mod:SetEncounterID(1576)
 mod:SetZone()
@@ -85,7 +85,6 @@ function mod:AnimaRingTarget(targetname)
 end
 
 function mod:OnCombatStart(delay)
-	crimsonWake = DBM:GetSpellInfo(138485)
 	siphon = 0
 	jolt = 0
 	berserkTimer:Start(-delay)
@@ -143,7 +142,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnExplosiveSlam:Show(amount)
 				end
 			else
-				if amount >= 4 and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
+				if amount >= 4 and not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 					specWarnExplosiveSlamOther:Show(args.destName)
 				end
 			end

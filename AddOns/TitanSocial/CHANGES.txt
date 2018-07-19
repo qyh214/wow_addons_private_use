@@ -1,16 +1,20 @@
-lightweight tag 3bb777c9994c38ebcbaf1d0ac0f76bcf51261669 7.3.2
+lightweight tag d98dbc46e1e92bb106ab4db9dc9c0e8c6757dde4 8.0.1
 Author:	GitHub <noreply@github.com>
-Date:	Wed Nov 1 21:08:56 2017 -0500
+Date:	Wed Jul 18 19:56:17 2018 -0500
 
-commit 0975861150d695aa100f6b4be92d063b2426b257
+commit 4b2ad96227616ddbcc925b35f382fbf90842f10a
 Author: Josh Worden <solocommand@gmail.com>
-Date:   Wed Nov 1 21:08:31 2017 -0500
+Date:   Wed Jul 18 19:55:33 2018 -0500
 
-    Group mobile with battle.net app
+    Battle for Azeroth Update
+    
+    Remove deprecated events and update versions
 
-commit 0975861150d695aa100f6b4be92d063b2426b257
+commit 4b2ad96227616ddbcc925b35f382fbf90842f10a
 Author: Josh Worden <solocommand@gmail.com>
-Date:   Wed Nov 1 21:08:31 2017 -0500
+Date:   Wed Jul 18 19:55:33 2018 -0500
 
-    Group mobile with battle.net app
+    Battle for Azeroth Update
+    
+    Remove deprecated events and update versions
 

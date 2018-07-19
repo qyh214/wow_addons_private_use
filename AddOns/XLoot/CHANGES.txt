@@ -1,12 +1,12 @@
-tag 02de6b7312781f6343da12ccca5e51ba2f8317ff 7.3-3
+tag 88989b5e2bf199165b3073718c516b1c3bf38538 8.0-3
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Sun Dec 31 19:12:07 2017 -0500
+Date:	Wed Jul 18 21:48:22 2018 -0400
 
-Monitor: Right-alignment of frames
+Frame: Probably fix Locked incorrectly being displayed
 
-commit 8e6fd10075581cd8e7bfa3fd374ff027cad4aba3
+commit 981a7ae69d6b233707cc3136005f969876ce1153
 Author: Xuerian <xuerian@gmail.com>
-Date:   Sun Dec 31 19:10:52 2017 -0500
+Date:   Wed Jul 18 21:47:59 2018 -0400
 
-    Monitor: Allow right-alignment of frames. Probably the most requested feature for years. Possibly fix some lingering anchoring bugs
+    Frame: Probably fix Locked incorrectly being displayed
 

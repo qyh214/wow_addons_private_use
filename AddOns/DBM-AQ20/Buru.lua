@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Buru", "DBM-AQ20", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 653 $"):sub(12, -3))
 mod:SetCreatureID(15370)
 mod:SetEncounterID(721)
 mod:SetModelID(15654)
@@ -43,7 +43,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnDismember:Show(amount)
 				specWarnDismember:Play("stackhigh")
-			elseif not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
+			elseif not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 				specWarnDismemberTaunt:Show(args.destName)
 				specWarnDismemberTaunt:Play("tauntboss")
 			else

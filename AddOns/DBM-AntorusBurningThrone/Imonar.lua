@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2009, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17507 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(124158)--or 124158 or 125692
 mod:SetEncounterID(2082)
 mod:SetZone()
@@ -245,7 +245,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:IsTanking(uId) then
 			local amount = args.amount or 1
 			if spellId == 247367 and amount >= 4 then
-				local _, _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
 				local remaining
 				if expireTime then
 					remaining = expireTime-GetTime()
@@ -265,7 +265,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:IsTanking(uId) then
 			local amount = args.amount or 1
 			if amount >= 2 then
-				local _, _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
 				local remaining
 				if expireTime then
 					remaining = expireTime-GetTime()
@@ -433,7 +433,7 @@ do
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 248995 or spellId == 248194 then
 		timerSeverCD:Stop()
 		timerChargedBlastsCD:Stop()

@@ -1,10 +1,10 @@
-## Interface: 70300
+## Interface: 80000
 
 ## Title: AdiBags Configuration
 ## Notes: Adirelle's bag addon.
 ## Author: Adirelle
-## Version: v1.9.8
-## X-Date: 2017-08-31T12:11:38Z
+## Version: v1.9.9
+## X-Date: 2018-07-18T3:38:45Z
 ## X-Part-Of: AdiBags
 ## LoadOnDemand: 1
 ## Dependencies: AdiBags

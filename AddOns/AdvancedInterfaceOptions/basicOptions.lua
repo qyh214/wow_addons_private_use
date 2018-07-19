@@ -66,6 +66,7 @@ end
 function E:Init() -- Runs after our saved variables are loaded and cvars have been loaded
 	MergeTable(AdvancedInterfaceOptionsSaved, DefaultSettings) -- Repair database if keys are missing
 
+	--[[
 	for k, v in pairs(AdvancedInterfaceOptionsSaved.CustomVars) do
 		if statusTextOptions[k] then
 			statusTextOptions[k](v and "statusText")
@@ -89,6 +90,7 @@ function E:Init() -- Runs after our saved variables are loaded and cvars have be
 			end
 		end
 	end
+	--]]
 end
 
 function addon:RecordCVar(cvar, value) -- Save cvar to DB for loading later
@@ -433,6 +435,7 @@ local enforceBox = newCheckbox(AIO, nil,
 	'Enforce Settings on Startup',
 	"Reapplies all settings when you log in or change characters.\n\nCheck this if your settings aren't being saved between sessions.")
 enforceBox:SetPoint("LEFT", title, "RIGHT", 5, 0)
+enforceBox:Disable(true)
 
 -- Button to reset all of our settings back to their defaults
 StaticPopupDialogs['AIO_RESET_EVERYTHING'] = {
@@ -816,7 +819,7 @@ InterfaceOptions_AddCategory(AIO, addonName)
 InterfaceOptions_AddCategory(AIO_Chat, addonName)
 InterfaceOptions_AddCategory(AIO_C, addonName)
 InterfaceOptions_AddCategory(AIO_FCT, addonName)
-InterfaceOptions_AddCategory(AIO_ST, addonName)
+-- InterfaceOptions_AddCategory(AIO_ST, addonName)
 InterfaceOptions_AddCategory(AIO_NP, addonName)
 
 -- Slash handler

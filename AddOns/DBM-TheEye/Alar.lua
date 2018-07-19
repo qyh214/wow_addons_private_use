@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Alar", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 653 $"):sub(12, -3))
 mod:SetCreatureID(19514)
 mod:SetEncounterID(730)
 mod:SetModelID(18945)
@@ -50,7 +50,6 @@ local function Add(self)--An attempt to avoid ugly target scanning, but i get fe
 end
 
 function mod:OnCombatStart(delay)
-	buffetName = DBM:GetSpellInfo(34121)
 	self:AntiSpam(30, 1)--Prevent it thinking add spawn on pull and messing up first platform timer
 	self.vb.flying = false
 	self.vb.phase = 1

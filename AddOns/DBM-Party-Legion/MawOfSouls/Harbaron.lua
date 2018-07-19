@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1512, "DBM-Party-Legion", 8, 727)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17379 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17522 $"):sub(12, -3))
 mod:SetCreatureID(96754)
 mod:SetEncounterID(1823)
 mod:SetZone()
@@ -60,7 +60,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnServitor:Show()
 		specWarnServitor:Play("bigmob")
 		timerServitorCD:Start()
-	elseif spellId == 194266 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 194266 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnVoidSnap:Show(args.sourceName)
 		specWarnVoidSnap:Play("kickcast")
 	elseif spellId == 194216 then

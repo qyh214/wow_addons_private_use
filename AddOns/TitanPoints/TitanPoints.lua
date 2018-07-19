@@ -6,7 +6,7 @@
 
 local bDebugMode = false;
 TITAN_POINTS_ID = "Points";
-TITAN_POINTS_VERSION = "7.3.0";
+TITAN_POINTS_VERSION = "8.0.1";
 TITAN_NIL = false;
 TITAN_POINTS_TAB = "TokenFrame";    -- Currency Tab
 
@@ -52,7 +52,6 @@ function TitanPanelPointsButton_OnLoad(self)
 
     -- Currency Events
     self:RegisterEvent("PLAYER_ENTERING_WORLD");
-    self:RegisterEvent("KNOWN_CURRENCY_TYPES_UPDATE");
     self:RegisterEvent("CURRENCY_DISPLAY_UPDATE");
 
 end

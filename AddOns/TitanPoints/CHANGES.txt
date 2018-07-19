@@ -1,16 +1,12 @@
-lightweight tag d01a65eae88993e13522a976bff24f10c39aab01 7.3.0
-Author:	GitHub <noreply@github.com>
-Date:	Mon Oct 16 10:31:30 2017 -0500
+lightweight tag 706c99736ff43b49a5e14da09d8d05483428067d 8.0.1
+Author:	Josh Worden <solocommand@gmail.com>
+Date:	Wed Jul 18 20:28:46 2018 -0500
 
-commit ba07bf17bed3f8a9d542f46c0bb6d703b41afe5b
+commit 706c99736ff43b49a5e14da09d8d05483428067d
 Author: Josh Worden <solocommand@gmail.com>
-Date:   Mon Oct 16 10:31:05 2017 -0500
+Date:   Wed Jul 18 20:28:46 2018 -0500
 
-    version bump
-
-commit ba07bf17bed3f8a9d542f46c0bb6d703b41afe5b
-Author: Josh Worden <solocommand@gmail.com>
-Date:   Mon Oct 16 10:31:05 2017 -0500
-
-    version bump
+    Battle for Azeroth Update
+    
+    Remove deprecated currency event and updated interface versions
 

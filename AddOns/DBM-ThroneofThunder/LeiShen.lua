@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(832, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(68397)--Diffusion Chain Conduit 68696, Static Shock Conduit 68398, Bouncing Bolt conduit 68698, Overcharge conduit 68697
 mod:SetEncounterID(1579)
 mod:SetZone()
@@ -398,9 +398,9 @@ end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 135153 and destGUID == UnitGUID("player") and self:AntiSpam(1.5, 4) then
+	if spellId == 135153 and destGUID == UnitGUID("player") and self:AntiSpam(1.5, 4) and not self:IsTrivial(110) then
 		specWarnCrashingThunder:Show()
-	elseif spellId == 137176 and destGUID == UnitGUID("player") and self:AntiSpam(3, 5) then
+	elseif spellId == 137176 and destGUID == UnitGUID("player") and self:AntiSpam(3, 5) and not self:IsTrivial(110) then
 		specWarnOverloadedCircuits:Show()
 	end
 end
@@ -535,7 +535,7 @@ function mod:UNIT_HEALTH_FREQUENT(uId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 137146 and self:AntiSpam(2, 2) then--Supercharge Conduits (comes earlier than other events so we use this one)
 		self.vb.intermissionActive = true
 		specWarnDiffusionChainSoon:Cancel()

@@ -1,20 +1,9 @@
-local PLH_LONG_ADDON_NAME_PREFIX = '<' .. PLH_LONG_ADDON_NAME .. '> '
-local PLH_SHORT_ADDON_NAME_PREFIX = '<' .. PLH_SHORT_ADDON_NAME .. '> '
-PLH_ITEM_LEVEL_PATTERN = _G.ITEM_LEVEL
-PLH_ITEM_LEVEL_PATTERN = PLH_ITEM_LEVEL_PATTERN:gsub('%%d', '(%%d+)')  -- 'Item Level (%d+)'
-PLH_RELIC_TOOLTIP_TYPE_PATTERN = _G.RELIC_TOOLTIP_TYPE
-PLH_RELIC_TOOLTIP_TYPE_PATTERN = PLH_RELIC_TOOLTIP_TYPE_PATTERN:gsub('%%s', '(.+)')  -- '(.+) Artifact Relic'
-	  
-local tooltip
+-- Keys for the waitFrames and waitTables arrays
+PLH_WAIT_FOR_ENABLE_OR_DISABLE = 1
+PLH_WAIT_FOR_INSPECT = 2
 
-local waitTable = {};     -- used by PLH_wait
-local waitFrame = nil;    -- used by PLH_wait
-
-local waitTable2 = {};     -- used by PLH_wait
-local waitFrame2 = nil;    -- used by PLH_wait
-
-local waitTable3 = {};     -- used by PLH_wait
-local waitFrame3 = nil;    -- used by PLH_wait
+local waitFrames = {}
+local waitTables = {}
 
 --[[
 informational - possible tooltip item type row arrangements
@@ -64,160 +53,43 @@ creates an empty tooltip that is ready to be populated with the information from
 	4 - Upgrade Level: 2/2, nil
 	5 - Binds when picked up, nil
 	6 - Head, Leather
+	
+	rows - how many rows of the tooltip to populate; prior to version 1.24 we only cared about the first 6 rows, but to find the 'classes:' row we have to go much deeper
 ]]--
-local function CreateEmptyTooltip()
-    local tip = CreateFrame('GameTooltip')
+function PLH_CreateEmptyTooltip(rows)
+    local tooltip = CreateFrame('GameTooltip')
 	local leftside = {}
 	local rightside = {}
 	local L, R
-    for i = 1, 6 do
-        L, R = tip:CreateFontString(), tip:CreateFontString()
+    for i = 1, rows do
+        L, R = tooltip:CreateFontString(), tooltip:CreateFontString()
         L:SetFontObject(GameFontNormal)
         R:SetFontObject(GameFontNormal)
-        tip:AddFontStrings(L, R)
+        tooltip:AddFontStrings(L, R)
         leftside[i] = L
 		rightside[i] = R
     end
-    tip.leftside = leftside
-	tip.rightside = rightside
-    return tip
+    tooltip.leftside = leftside
+	tooltip.rightside = rightside
+	tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
+    return tooltip
 end
 
-function PLH_GetRelicType(item)
-	local relicType = nil
-	
-	if item ~= nil then
-		tooltip = tooltip or CreateEmptyTooltip()
-		tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
-		tooltip:ClearLines()
-		tooltip:SetHyperlink(item)
-
-		local index = 1
-		local t
-		while not relicType and tooltip.leftside[index] do
-			t = tooltip.leftside[index]:GetText()
-			if t ~= nil then
---				relicType = t:match('(.+) Artifact Relic')
-				relicType = t:match(PLH_RELIC_TOOLTIP_TYPE_PATTERN)				
-			end
-			index = index + 1
-		end
-
-		tooltip:Hide()
-	end
-	
-	return relicType
-end
-
---[[
-function PLH_IsBoundToPlayer(item)
-	local isBoundToPlayer = false
-	
-	if item ~= nil then
-		tooltip = tooltip or CreateEmptyTooltip()
-		tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
-		tooltip:ClearLines()
-		tooltip:SetHyperlink(item)
-
-		-- scan the leftside lines for any signs of the item being bound to the player
-		local index = 1
-		local t
-		while not isBoundToPlayer and tooltip.leftside[index] do
-			t = tooltip.leftside[index]:GetText()
-			if t ~= nil then
---				if (string.find(t, 'Binds when picked up') or string.find(t, 'Soulbound') or string.find(t, 'Binds to Battle.net account')) then
-				if (string.find(t, _G.ITEM_SOULBOUND) or string.find(t, _G.ITEM_BIND_ON_PICKUP) or string.find(t, _G.ITEM_BIND_TO_BNETACCOUNT) or string.find(t, _G.ITEM_BNETACCOUNTBOUND)) then
-					isBoundToPlayer = true
-				end
-			end
-			index = index + 1
-		end
-
-		tooltip:Hide()
-
-	end
-	return isBoundToPlayer
-end
-]]--
-
-function PLH_GetRealILVL(item)
-	local realILVL = nil
-	
-	if item ~= nil then
-		tooltip = tooltip or CreateEmptyTooltip()
-		tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
-		tooltip:ClearLines()
-		tooltip:SetHyperlink(item)
-		local t = tooltip.leftside[2]:GetText()
-		if t ~= nil then
---			realILVL = t:match('Item Level (%d+)')
-			realILVL = t:match(PLH_ITEM_LEVEL_PATTERN)
-		end
-		-- ilvl can be in the 2nd or 3rd line dependng on the tooltip; if we didn't find it in 2nd, try 3rd
-		if realILVL == nil then
-			t = tooltip.leftside[3]:GetText()
-			if t ~= nil then
---				realILVL = t:match('Item Level (%d+)')
-				realILVL = t:match(PLH_ITEM_LEVEL_PATTERN)
-			end
-		end
-		tooltip:Hide()
-		
-		-- if realILVL is still nil, we couldn't find it in the tooltip - try grabbing it from getItemInfo, even though
-		--   that doesn't return upgrade levels
-		if realILVL == nil then
-			_, _, _, realILVL, _, _, _, _, _, _, _ = GetItemInfo(item)
-		end
-	end
-	
-	if realILVL == nil then
-		return 0
-	else		
-		return tonumber(realILVL)
-	end
-end
-
-function PLH_GetFullName(name, realm)
+function PLH_GetFullName(name)
 	if name == nil then
 		return nil
-	elseif realm == nil then
+	elseif string.find(name, '-') then
 		return name
 	else
-		return name .. '-' .. realm
-	end
-end
-
-function PLH_GetUnitNameWithRealm(unit)
-	local guid
-	if unit ~= nil then
-		guid = UnitGUID(unit)
-	end
-	if guid ~= nil then
-		local _, _, _, _, _, name, realm = GetPlayerInfoByGUID(guid)
-		if not realm or realm == '' then
-			realm = GetRealmName()
+		local name, realm = UnitFullName(name)
+		if name == nil then
+			return nil
+		elseif realm == nil or realm == '' then
+			return name .. '-' .. GetRealmName()
+		else
+			return name .. '-' .. realm
 		end
-		return PLH_GetFullName(name, realm)
-	else
-		return nil
 	end
-end
-
-function PLH_GetNameWithoutRealm(name)
-	return (Ambiguate(name, 'short'))
-end
-
--- given a name-realm combo, returns the GUID for that character
-function PLH_GetUnitGUIDFromFullname(fullname)
-	local guid = UnitGUID(fullname)
-	if guid == nil then
-		guid = UnitGUID(Ambiguate(fullname, 'short'))
-	end
-	return guid
-end
-
-function PLH_IsInLFR()
-	return IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and IsInRaid()
 end
 
 local function CanUseRaidWarning()
@@ -258,120 +130,71 @@ local function GetColoredMessage(message, color)
 end
 
 function PLH_SendBroadcast(message, isHighPriority)
-	SendChatMessage(PLH_SHORT_ADDON_NAME_PREFIX .. message, GetBroadcastChannel(isHighPriority))
+	SendChatMessage('<PLH>' .. message, GetBroadcastChannel(isHighPriority))
 end	
 
 function PLH_SendWhisper(message, person)
-	SendChatMessage(PLH_SHORT_ADDON_NAME_PREFIX .. message, 'WHISPER', nil, person)
+	SendChatMessage('<PLH>' .. message, 'WHISPER', nil, person)
 end
 
 function PLH_SendAlert(message)
-	print(GetColoredMessage(PLH_SHORT_ADDON_NAME_PREFIX, _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.GREEN_FONT_COLOR_CODE))
+	print(GetColoredMessage('<PLH>', _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.GREEN_FONT_COLOR_CODE))
 end	
 
 function PLH_SendUserMessage(message)
-	print(GetColoredMessage(PLH_SHORT_ADDON_NAME_PREFIX, _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.LIGHTYELLOW_FONT_COLOR_CODE))
+	print(GetColoredMessage('<PLH>', _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.LIGHTYELLOW_FONT_COLOR_CODE))
 end	
 
 function PLH_SendDebugMessage(message)
-	if PLH_DEBUG then
-		print(GetColoredMessage(PLH_SHORT_ADDON_NAME_PREFIX, _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.GRAY_FONT_COLOR_CODE))
+	if PLH_PREFS[PLH_PREFS_DEBUG] then
+		print(GetColoredMessage('<PLH>', _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.GRAY_FONT_COLOR_CODE))
 	end		
 end	
 
--- having 3 of the same function is very much a hack...multiple waits can happen during inspect loop, so we need different global vars to track separate timers
--- I could consolidate to a single function with a param determining which globals to use, but I'm not even sure this will
--- solve the inspect issues, hence the quick-and-dirty approach
-function PLH_wait(delay, func, ...)
-  if(type(delay)~='number' or type(func)~='function') then
-  print('bad types')
-    return false;
-  end
-  if(waitFrame == nil) then
-    waitFrame = CreateFrame('Frame','WaitFrame', UIParent);
-    waitFrame:SetScript('onUpdate',function (self,elapse)
-      local count = #waitTable;
-      local i = 1;
-      while(i<=count) do
-        local waitRecord = tremove(waitTable,i);
-        local d = tremove(waitRecord,1);
-        local f = tremove(waitRecord,1);
-        local p = tremove(waitRecord,1);
-        if(d>elapse) then
-          tinsert(waitTable,i,{d-elapse,f,p});
-          i = i + 1;
-        else
-          count = count - 1;
-          f(unpack(p));
-        end
-      end
-    end);
-  end
-  tinsert(waitTable,{delay,func,{...}});
-  return true;
+-- Returns the message that would be whispered when player requests an item
+function PLH_GetWhisperMessage(itemLink, message)
+	if message == nil then
+		message = PLH_PREFS[PLH_PREFS_WHISPER_MESSAGE]
+	end
+	return message:gsub('%%item', itemLink)
 end
 
-function PLH_wait2(delay, func, ...)
-  if(type(delay)~='number' or type(func)~='function') then
-  print('bad types')
-    return false;
-  end
-  if(waitFrame2 == nil) then
-    waitFrame2 = CreateFrame('Frame','WaitFrame2', UIParent);
-    waitFrame2:SetScript('onUpdate',function (self,elapse)
-      local count = #waitTable2;
-      local i = 1;
-      while(i<=count) do
-        local waitRecord = tremove(waitTable2,i);
-        local d = tremove(waitRecord,1);
-        local f = tremove(waitRecord,1);
-        local p = tremove(waitRecord,1);
-        if(d>elapse) then
-          tinsert(waitTable2,i,{d-elapse,f,p});
-          i = i + 1;
-        else
-          count = count - 1;
-          f(unpack(p));
-        end
-      end
-    end);
-  end
-  tinsert(waitTable2,{delay,func,{...}});
-  return true;
+-- Waits for delay seconds before executing func
+-- the waitType parameter allows us to have multiple wait loops going on at once; pass in a unique ID for each possible type of wait loop
+function PLH_wait(waitType, delay, func, ...)
+	if (type(delay) == 'number' and type(func) == 'function') then
+		if waitTables[waitType] == nil then
+			waitTables[waitType] = {}
+		end
+		if waitFrames[waitType] == nil then
+			waitFrames[waitType] = CreateFrame('Frame', 'PLH_WaitFrame' .. waitType, UIParent)
+			waitFrames[waitType]:SetScript('onUpdate', function (self, elapse)
+				local count = #waitTables[waitType]
+				local i = 1
+				while i <= count do
+					local waitRecord = tremove(waitTables[waitType], i)
+					local d = tremove(waitRecord, 1)
+					local f = tremove(waitRecord, 1)
+					local p = tremove(waitRecord, 1)
+					if d > elapse then
+						tinsert(waitTables[waitType], i, {d - elapse, f, p})
+						i = i + 1
+					else
+						count = count - 1
+						f(unpack(p))
+					end
+				end
+			end);
+		end
+		tinsert(waitTables[waitType], {delay, func, {...}});
+	else
+		print('Bad types in PLH_wait')
+	end
 end
 
 --[[
 -- not used, but keeping for educational purposes
 function GetEscapedItemLink(item)
 	return string.gsub(item, '|', '||')
-end
-
--- not used, but keeping for educational purposes
-function GetRaidRosterInfoByName(playerName)
-	local index = 1
-	local name
-	while GetRaidRosterInfo(index) ~= nil do
-		name, _, _, _, _, _, _, _, _, _, _ = GetRaidRosterInfo(index)
-		if (name == playerName) then 
-			return GetRaidRosterInfo(index)
-		end
-		index = index + 1
-	end
-	return nil
-end
-
--- not used, but keeping for educational purposes
-function GetClassByName(playerName)
-	local name, class
-	if GetNumGroupMembers() < 2 then  -- you're solo, or have started a group and nobody has joined yet
-		class, _, _, _, _, name, _ = GetPlayerInfoByGUID(UnitGUID('player'))
-		if name == playerName then
-			return class
-		end
-	else 
-		_, _, _, _, class, _, _, _, _, _, _ = GetRaidRosterInfoByName(playerName)
-		return class
-	end
-	return ''
 end
 ]]--

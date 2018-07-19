@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(744, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(62543)
 mod:SetEncounterID(1504)
 mod:SetZone()
@@ -91,7 +91,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnOverwhelmingAssault:Show(amount)
 			end
 		else
-			if amount >= 1 and not UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then--Other tank has at least one stack and you have none
+			if amount >= 1 and not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then--Other tank has at least one stack and you have none
 				specWarnOverwhelmingAssaultOther:Show(args.destName)--So nudge you to taunt it off other tank already.
 			end
 		end
@@ -154,7 +154,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 122839 then--Tempest Slash. DO NOT ADD OTHER SPELLID. 122839 is primary cast, 122842 is secondary cast 3 seconds later. We only need to warn for primary and start CD off it and it alone.
 		warnTempestSlash:Show()
 		if self:IsDifficulty("lfr25") then

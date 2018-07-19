@@ -17,7 +17,7 @@ function ZPerl:ADDON_LOADED(addon)
 		return
 	end
 
-	RegisterAddonMessagePrefix("ZPerlVersion")
+	C_ChatInfo.RegisterAddonMessagePrefix("ZPerlVersion")
 
 	self:RegisterEvents()
 
@@ -117,6 +117,6 @@ function ZPerl:SendVersion()
 			version = ZPerl.newVersion
 		end
 
-		SendAddonMessage("ZPerlVersion", version, channel)
+		C_ChatInfo.SendAddonMessage("ZPerlVersion", version, channel)
 	end
 end

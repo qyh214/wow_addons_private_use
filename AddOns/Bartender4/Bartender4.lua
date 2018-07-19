@@ -117,19 +117,18 @@ function Bartender4:HideBlizzard()
 		_G["MultiBarLeftButton" .. i]:UnregisterAllEvents()
 		_G["MultiBarLeftButton" .. i]:SetAttribute("statehidden", true)
 	end
-	--UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarRight"] = nil
-	--UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarLeft"] = nil
-	--UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil
-	--UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomRight"] = nil
 	UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBar"] = nil
 	UIPARENT_MANAGED_FRAME_POSITIONS["StanceBarFrame"] = nil
 	UIPARENT_MANAGED_FRAME_POSITIONS["PossessBarFrame"] = nil
 	UIPARENT_MANAGED_FRAME_POSITIONS["PETACTIONBAR_YPOS"] = nil
 
 	--MainMenuBar:UnregisterAllEvents()
-	--MainMenuBar:Hide()
 	--MainMenuBar:SetParent(UIHider)
+	--MainMenuBar:Hide()
 	MainMenuBar:EnableMouse(false)
+	MainMenuBar:UnregisterEvent("DISPLAY_SIZE_CHANGED")
+	MainMenuBar:UnregisterEvent("UI_SCALE_CHANGED")
+
 
 	local animations = {MainMenuBar.slideOut:GetAnimations()}
 	animations[1]:SetOffset(0,0)
@@ -137,36 +136,46 @@ function Bartender4:HideBlizzard()
 	animations = {OverrideActionBar.slideOut:GetAnimations()}
 	animations[1]:SetOffset(0,0)
 
-	--MainMenuBarArtFrame:UnregisterEvent("PLAYER_ENTERING_WORLD")
-	--MainMenuBarArtFrame:UnregisterEvent("BAG_UPDATE")
-	--MainMenuBarArtFrame:UnregisterEvent("ACTIONBAR_PAGE_CHANGED")
-	--MainMenuBarArtFrame:UnregisterEvent("KNOWN_CURRENCY_TYPES_UPDATE")
-	--MainMenuBarArtFrame:UnregisterEvent("CURRENCY_DISPLAY_UPDATE")
-	--MainMenuBarArtFrame:UnregisterEvent("ADDON_LOADED")
-	--MainMenuBarArtFrame:UnregisterEvent("UNIT_ENTERING_VEHICLE")
-	--MainMenuBarArtFrame:UnregisterEvent("UNIT_ENTERED_VEHICLE")
-	--MainMenuBarArtFrame:UnregisterEvent("UNIT_EXITING_VEHICLE")
-	--MainMenuBarArtFrame:UnregisterEvent("UNIT_EXITED_VEHICLE")
 	MainMenuBarArtFrame:Hide()
 	MainMenuBarArtFrame:SetParent(UIHider)
 
-	--MainMenuExpBar:UnregisterAllEvents()
-	--MainMenuExpBar:Hide()
-	MainMenuExpBar:SetParent(UIHider)
-	MainMenuExpBar:SetDeferAnimationCallback(nil)
+	if MicroButtonAndBagsBar then
+		MicroButtonAndBagsBar:Hide()
+		MicroButtonAndBagsBar:SetParent(UIHider)
+	end
 
-	MainMenuBarMaxLevelBar:Hide()
-	MainMenuBarMaxLevelBar:SetParent(UIHider)
+	if MainMenuExpBar then
+		--MainMenuExpBar:UnregisterAllEvents()
+		--MainMenuExpBar:Hide()
+		MainMenuExpBar:SetParent(UIHider)
+		MainMenuExpBar:SetDeferAnimationCallback(nil)
+	end
 
-	--ReputationWatchBar:UnregisterAllEvents()
-	--ReputationWatchBar:Hide()
-	ReputationWatchBar:SetParent(UIHider)
+	if MainMenuBarMaxLevelBar then
+		MainMenuBarMaxLevelBar:Hide()
+		MainMenuBarMaxLevelBar:SetParent(UIHider)
+	end
 
-	ArtifactWatchBar:SetParent(UIHider)
-	ArtifactWatchBar.StatusBar:SetDeferAnimationCallback(nil)
+	if ReputationWatchBar then
+		--ReputationWatchBar:UnregisterAllEvents()
+		--ReputationWatchBar:Hide()
+		ReputationWatchBar:SetParent(UIHider)
+	end
 
-	HonorWatchBar:SetParent(UIHider)
-	HonorWatchBar.StatusBar:SetDeferAnimationCallback(nil)
+	if ArtifactWatchBar then
+		ArtifactWatchBar:SetParent(UIHider)
+		ArtifactWatchBar.StatusBar:SetDeferAnimationCallback(nil)
+	end
+
+	if HonorWatchBar then
+		HonorWatchBar:SetParent(UIHider)
+		HonorWatchBar.StatusBar:SetDeferAnimationCallback(nil)
+	end
+
+	if StatusTrackingBarManager then
+		StatusTrackingBarManager:Hide()
+		--StatusTrackingBarManager:SetParent(UIHider)
+	end
 
 	StanceBarFrame:UnregisterAllEvents()
 	StanceBarFrame:Hide()
@@ -259,7 +268,7 @@ end
 
 function Bartender4:UpdateBlizzardVehicle()
 	if self.db.profile.blizzardVehicle then
-		MainMenuBar:SetParent(UIParent)
+		--MainMenuBar:SetParent(UIParent)
 		OverrideActionBar:SetParent(UIParent)
 		if not self.vehicleController then
 			self.vehicleController = CreateFrame("Frame", nil, UIParent, "SecureHandlerStateTemplate")
@@ -292,7 +301,7 @@ function Bartender4:UpdateBlizzardVehicle()
 		end
 		RegisterStateDriver(self.vehicleController, "vehicle", "[overridebar]override;[vehicleui]vehicle;novehicle")
 	else
-		MainMenuBar:SetParent(self.UIHider)
+		--MainMenuBar:SetParent(self.UIHider)
 		OverrideActionBar:SetParent(self.UIHider)
 		if self.vehicleController then
 			UnregisterStateDriver(self.vehicleController, "vehicle")
@@ -346,8 +355,8 @@ function Bartender4:ShowUnlockDialog()
 		}
 		f:SetPoint("TOP", 0, -50)
 		f:Hide()
-		f:SetScript('OnShow', function() PlaySound(SOUNDKIT and SOUNDKIT.IG_MAINMENU_OPTION or 'igMainMenuOption') end)
-		f:SetScript('OnHide', function() PlaySound(SOUNDKIT and SOUNDKIT.GS_TITLE_OPTION_EXIT or 'gsTitleOptionExit') end)
+		f:SetScript('OnShow', function() PlaySound(SOUNDKIT.IG_MAINMENU_OPTION) end)
+		f:SetScript('OnHide', function() PlaySound(SOUNDKIT.GS_TITLE_OPTION_EXIT) end)
 
 		f:RegisterForDrag('LeftButton')
 		f:SetScript('OnDragStart', function(f) f:StartMoving() end)

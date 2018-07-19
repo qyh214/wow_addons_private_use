@@ -78,7 +78,6 @@ L:SetMiscLocalization{
 	Anetheron		= "곧 아네테론",
 	Kazrogal		= "곧 카즈로갈",
 	Azgalor			= "곧 아즈갈로",
-	WaveCheck		= "현재 공격 = (%d+)/8",
 	WarnWave_0		= "공격 %s/8",
 	WarnWave_1		= "공격 %s/8 - %s %s",
 	WarnWave_2		= "공격 %s/8 - %s %s, %s %s",

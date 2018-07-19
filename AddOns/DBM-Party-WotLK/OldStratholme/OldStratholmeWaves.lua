@@ -1,10 +1,10 @@
 local mod	= DBM:NewMod("StratWaves", "DBM-Party-WotLK", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 243 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 
 mod:RegisterEvents(
-	"UPDATE_WORLD_STATES",
+	"UPDATE_UI_WIDGET",
 	"UNIT_DIED",
 	"CHAT_MSG_MONSTER_SAY"
 )
@@ -62,20 +62,22 @@ local function getWaveString(wave)
 	end
 end
 
-function mod:UPDATE_WORLD_STATES(args)
+function mod:UPDATE_UI_WIDGET(table)
+	local id = table.widgetID
+	if id ~= 541 then return end
+	local widgetInfo = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(id)
+	local text = widgetInfo.text
 	if self:IsDifficulty("heroic5") then 
 		waves = wavesHeroic 
 	else 
 		waves = wavesNormal 
 	end
-	local text = select(4, GetWorldStateUIInfo(2))
 	if not text then return end
-	local _, _, wave = string.find(text, L.WaveCheck)
+	local wave = text:match("(%d+).+10")
 	if not wave then
 		wave = 0
 	end
 	wave = tonumber(wave)
-	lastWave = tonumber(lastWave)
 	if wave < lastWave then
 		lastWave = 0
 	end

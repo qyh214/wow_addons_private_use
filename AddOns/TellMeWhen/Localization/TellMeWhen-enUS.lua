@@ -136,8 +136,6 @@ Anchoring groups to the cursor can be useful for icons that are checking the 'mo
 
 To anchor a group to the cursor, |cff7fffffRight-Click-and-drag|r an icon to this dummy.
 
-Due to a Blizzard bug, the cooldown sweep animation will bug out when it moves around, so you probably should disable it for cursor-anchored icons.
-
 |cff7fffffLeft-Click and drag|r to move this dummy.]]
 
 L["ERROR_ANCHORSELF"] = "%s was trying to anchor to itself, so TellMeWhen reset it's anchor to the center of the screen to prevent catastrophic failure."
@@ -840,6 +838,10 @@ L["UIPANEL_BAR_BORDERBAR"] = "Bar Border"
 L["UIPANEL_BAR_BORDERBAR_DESC"] = "Set a border around the bar."
 L["UIPANEL_BAR_BORDERCOLOR"] = "Border Color"
 L["UIPANEL_BAR_BORDERCOLOR_DESC"] = "Change the color of the icon and bar borders."
+L["UIPANEL_BAR_SIZE_X"] = "Icon Width"
+L["UIPANEL_BAR_SIZE_X_DESC"] = "Modifies the width of icons in this group."
+L["UIPANEL_BAR_SIZE_Y"] = "Icon Height"
+L["UIPANEL_BAR_SIZE_Y_DESC"] = "Modifies the height of icons in this group."
 
 
 L["UIPANEL_ICONS"] = "Icons"
@@ -1437,6 +1439,7 @@ This includes the current flex raid tuning.]]
 L["CONDITIONPANEL_SWIMMING"] = "Swimming"
 L["CONDITIONPANEL_RESTING"] = "Resting"
 L["CONDITIONPANEL_INPETBATTLE"] = "In pet battle"
+L["CONDITIONPANEL_WARMODE"] = "War Mode enabled"
 L["CONDITIONPANEL_OVERRBAR"] = "Action bar overridden"
 L["CONDITIONPANEL_OVERRBAR_DESC"] = "Checks if you have some effect that override your primary action bar. This does not include pet battles."
 L["CONDITIONPANEL_MANAUSABLE"] = "Spell Usable (Mana/Energy/etc.)"
@@ -1976,7 +1979,7 @@ L["CONFIGPANEL_BACKDROP_HEADER"] = "Bar Backdrop"
 
 
 
-L["CACHING"] = [[TellMeWhen is caching and filtering all spells in the game. This only needs to be done once per WoW patch. You can speed up or slow down the process using the slider below.
+L["CACHING"] = [[TellMeWhen is caching and filtering all spells in the game.
 
 You do not have to wait for this process to complete in order to use TellMeWhen. Only the suggestion list is dependent on the completion of the spell cache.]]
 L["CACHINGSPEED"] = "Spells per frame:"

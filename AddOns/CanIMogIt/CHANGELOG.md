@@ -1,3 +1,32 @@
+8.0.0v1.9 Release - 2018/07/15
+
+Patch 8.0.
+
+* [#38](https://gitlab.com/toreltwiddler/CanIMogIt/issues/38) LiteBag support added by LiteBag author Xodiv.
+* Updated TOC.
+
+*****
+
+7.3.5v1.8 Release - 2018/07/09
+
+Items with Class Restrictions are now properly considered for if you know the appearance or not based on the class you are on.
+
+Bug fixes & Improvements
+
+* Added "/cimi count" which reports the total number of known appearances across all characters.
+* [#185](https://gitlab.com/toreltwiddler/CanIMogIt/issues/185) Fixed issue with class restrictions not being taken into account.
+* [#168](https://gitlab.com/toreltwiddler/CanIMogIt/issues/168) & [#176](https://gitlab.com/toreltwiddler/CanIMogIt/issues/176) Fixes for database storage of Class Restriction information.
+* [#182](https://gitlab.com/toreltwiddler/CanIMogIt/issues/182) Fixes PairByKeys error when jumping from a very old version of the addon to a new version.
+* [#172](https://gitlab.com/toreltwiddler/CanIMogIt/issues/172) Fixes the tooltip not showing up after multiple chat link clicks.
+
+*****
+
+7.3.5v1.7.2 Release - 2018/05/27
+
+* [#169](https://gitlab.com/toreltwiddler/CanIMogIt/issues/169) Avoid lag when looting by only recalculating the looted item, not all items.
+
+*****
+
 7.3.5v1.7.1 Release - 2018/03/30
 
 * [#174](https://gitlab.com/toreltwiddler/CanIMogIt/issues/174) & [#175](https://gitlab.com/toreltwiddler/CanIMogIt/issues/175) Hopefully prevents memory leak by removing DressUpModel redraw.

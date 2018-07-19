@@ -165,9 +165,11 @@ L["Vehicle Seat"] = "Место в транспорте" -- Needs review
 L["Vertical Nudge"] = "Сдвиг по вертикали" -- Needs review
 L["Vertical Position"] = "Расположение по вертикали" -- Needs review
 L["Visibility"] = "Видимость" -- Needs review
-L["Voice Chat Button (When Available)"] = "кнопку голосовой связи (если доступно)" -- Needs review
 L["Width"] = "Ширина"
 L["You can set a background and edge file for the minimap like you would with any frame. This is useful when you want to create static square backdrops for your minimap."] = "Вы можете установить для миникарты фон и файл границы так же, как и для любого другого фрейма." -- Needs review
 L["Zone Text"] = "Текст игровой зоны" -- Needs review
 L["Zoom In Button"] = "кнопку приближения" -- Needs review
 L["Zoom Out Button"] = "кнопку отдаления" -- Needs review
+
+--L.updateRate = "Update Rate (seconds)"
+--L.updateRateDesc = "The lower the value, the faster the coordinates will update, but the more memory and CPU will be consumed due to asking the game for fresh coordinate data."

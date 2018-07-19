@@ -2,8 +2,8 @@
 ## Title: Lib: ItemUpgradeInfo-1.0
 ## Notes: Database of item upgrade IDs
 ## Author: eridius
-## Version: Release-70300-28 70200
-## X-Revision: d071858
+## Version: @project-version@ 70200
+## X-Revision: @project-abbreviated-hash@
 ## X-Category: Library
 
 LibItemUpgradeInfo-1.0.xml

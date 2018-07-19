@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(291, "DBM-Party-Cataclysm", 13, 185)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(54853)
 mod:SetEncounterID(1273)
 mod:SetZone()
@@ -53,7 +53,7 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 102334 and self:AntiSpam() then
 		warnServant:Show()
 		specWarnServant:Show()

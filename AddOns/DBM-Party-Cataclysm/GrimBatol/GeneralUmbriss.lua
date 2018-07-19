@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(131, "DBM-Party-Cataclysm", 3, 71)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(39625)
 mod:SetEncounterID(1051)
 mod:SetZone()
@@ -92,7 +92,7 @@ function mod:UNIT_HEALTH(uId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 74859 then
 		specWarnSummonSkardyn:Show()
 	end

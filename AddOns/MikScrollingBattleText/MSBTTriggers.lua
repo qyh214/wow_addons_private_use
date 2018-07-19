@@ -369,7 +369,7 @@ local function CategorizeTrigger(triggerSettings)
 				end -- Loop through conditions.
 
 			-- Power events.
-			elseif (mainEvent == "UNIT_POWER") then
+			elseif (mainEvent == "UNIT_POWER_UPDATE") then
 				listenEvents[mainEvent] = true
 
 				-- Detect power type.  The powerType and unitID conditions are required for power triggers.
@@ -810,7 +810,7 @@ local function OnEvent(this, event, arg1, arg2, ...)
 		HandleHealthAndPowerTriggers(arg1, event, UnitHealth(arg1), UnitHealthMax(arg1))
 
 	-- Power.
-	elseif (event == "UNIT_POWER") then
+	elseif (event == "UNIT_POWER_UPDATE") then
 		-- Ignore the event if there are no triggers to search for it.
 		if (not categorizedTriggers[event]) then return end
 		local powerType = powerTypes[arg2]
@@ -820,7 +820,7 @@ local function OnEvent(this, event, arg1, arg2, ...)
 
 	-- Combat log event.
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
-		HandleCombatLogTriggers(arg1, arg2, ...)
+		HandleCombatLogTriggers(CombatLogGetCurrentEventInfo())
 
 	end -- Event types.
 end
@@ -866,23 +866,23 @@ CreateTestFuncs()
 CreateConditionFuncs()
 
 -- Create the power types lookup map.
-powerTypes["MANA"] = SPELL_POWER_MANA
-powerTypes["RAGE"] = SPELL_POWER_RAGE
-powerTypes["FOCUS"] = SPELL_POWER_FOCUS
-powerTypes["ENERGY"] = SPELL_POWER_ENERGY
-powerTypes["COMBO_POINTS"] = SPELL_POWER_COMBO_POINTS
-powerTypes["RUNES"] = SPELL_POWER_RUNES
-powerTypes["RUNIC_POWER"] = SPELL_POWER_RUNIC_POWER
-powerTypes["SOUL_SHARDS"] = SPELL_POWER_SOUL_SHARDS
-powerTypes["LUNAR_POWER"] = SPELL_POWER_LUNAR_POWER
-powerTypes["HOLY_POWER"] = SPELL_POWER_HOLY_POWER
-powerTypes["ALTERNATE_POWER"] = SPELL_POWER_ALTERNATE_POWER
-powerTypes["MAELSTROM"] = SPELL_POWER_MAELSTROM
-powerTypes["CHI"] = SPELL_POWER_CHI
-powerTypes["INSANITY"] = SPELL_POWER_INSANITY
-powerTypes["ARCANE_CHARGES"] = SPELL_POWER_ARCANE_CHARGES
-powerTypes["FURY"] = SPELL_POWER_FURY
-powerTypes["PAIN"] = SPELL_POWER_PAIN
+powerTypes["MANA"] = Enum.PowerType.Mana
+powerTypes["RAGE"] = Enum.PowerType.Rage
+powerTypes["FOCUS"] = Enum.PowerType.Focus
+powerTypes["ENERGY"] = Enum.PowerType.Energy
+powerTypes["COMBO_POINTS"] = Enum.PowerType.ComboPoints
+powerTypes["RUNES"] = Enum.PowerType.Runes
+powerTypes["RUNIC_POWER"] = Enum.PowerType.RunicPower
+powerTypes["SOUL_SHARDS"] = Enum.PowerType.SoulShards
+powerTypes["LUNAR_POWER"] = Enum.PowerType.LunarPower
+powerTypes["HOLY_POWER"] = Enum.PowerType.HolyPower
+powerTypes["ALTERNATE_POWER"] = Enum.PowerType.Alternate
+powerTypes["MAELSTROM"] = Enum.PowerType.Maelstrom
+powerTypes["CHI"] = Enum.PowerType.Chi
+powerTypes["INSANITY"] = Enum.PowerType.Insanity
+powerTypes["ARCANE_CHARGES"] = Enum.PowerType.ArcaneCharges
+powerTypes["FURY"] = Enum.PowerType.Fury
+powerTypes["PAIN"] = Enum.PowerType.Pain
 
 -------------------------------------------------------------------------------
 -- Module interface.

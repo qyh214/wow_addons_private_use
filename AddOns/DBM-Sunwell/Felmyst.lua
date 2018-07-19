@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Felmyst", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 653 $"):sub(12, -3))
 mod:SetCreatureID(25038)
 mod:SetEncounterID(726)
 mod:SetModelID(22838)
@@ -133,7 +133,7 @@ function mod:RAID_BOSS_EMOTE(msg)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 45661 and self:AntiSpam(2, 1) then
 		self:BossTargetScanner(25038, "EncapsulateTarget", 0.05, 10)
 	end

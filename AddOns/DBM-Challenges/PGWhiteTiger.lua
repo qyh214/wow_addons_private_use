@@ -7,7 +7,7 @@
 end)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 98 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 105 $"):sub(12, -3))
 mod:SetZone()
 mod.noStatistics = true
 
@@ -194,21 +194,23 @@ function mod:SCENARIO_UPDATE(newStep)
 	end
 end
 
-local mode = {
-	[1] = CHALLENGE_MODE_MEDAL1,
-	[2] = CHALLENGE_MODE_MEDAL2,
-	[3] = CHALLENGE_MODE_MEDAL3,
-	[4] = L.Endless,
-}
-function mod:CHAT_MSG_WHISPER(msg, name, _, _, _, status)
-	if status ~= "GM" then--Filter GMs
-		name = Ambiguate(name, "none")
-		local diffID, currWave, maxWave, duration = C_Scenario.GetProvingGroundsInfo()
-		local message = L.ReplyWhisper:format(UnitName("player"), mode[diffID], currWave)
-		if msg == "status" then
-			SendChatMessage(message, "WHISPER", nil, name)
-		elseif self:AntiSpam(20, name) then--If not "status" then auto respond only once per 20 seconds per person.
-			SendChatMessage(message, "WHISPER", nil, name)
+do
+	local mode = {
+		[1] = CHALLENGE_MODE_MEDAL1,
+		[2] = CHALLENGE_MODE_MEDAL2,
+		[3] = CHALLENGE_MODE_MEDAL3,
+		[4] = L.Endless,
+	}
+	function mod:CHAT_MSG_WHISPER(msg, name, _, _, _, status)
+		if status ~= "GM" then--Filter GMs
+			name = Ambiguate(name, "none")
+			local diffID, currWave, maxWave, duration = C_Scenario.GetProvingGroundsInfo()
+			local message = L.ReplyWhisper:format(UnitName("player"), mode[diffID], currWave)
+			if msg == "status" then
+				SendChatMessage(message, "WHISPER", nil, name)
+			elseif self:AntiSpam(20, name) then--If not "status" then auto respond only once per 20 seconds per person.
+				SendChatMessage(message, "WHISPER", nil, name)
+			end
 		end
 	end
 end

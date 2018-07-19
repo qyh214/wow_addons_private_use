@@ -282,7 +282,7 @@
 				</Scripts>
 			</Frame>
 
-			<!--<Frame name="$parentDropDown" inherits="Lib_UIDropDownMenuTemplate" parentKey="dropDown" hidden="true">
+			<!--<Frame name="$parentDropDown" inherits="UIDropDownMenuTemplate" parentKey="dropDown" hidden="true">
 				<Size>
 					<AbsDimension x="10" y="10"/>
 				</Size>

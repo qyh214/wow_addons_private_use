@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2025, "DBM-AntorusBurningThrone", nil, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(124445)
 mod:SetEncounterID(2075)
 mod:SetZone()
@@ -22,7 +22,6 @@ mod:RegisterEventsInCombat(
 --	"SPELL_MISSED 248329",
 	"UNIT_DIED",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5",
 	"UNIT_SPELLCAST_CHANNEL_STOP boss1 boss2 boss3 boss4 boss5",
 	"UNIT_SPELLCAST_STOP boss1 boss2 boss3 boss4 boss5"
 )
@@ -308,7 +307,6 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 250701 and self:CheckInterruptFilter(args.sourceGUID, true) then
 		specWarnSwing:Show()
 		specWarnSwing:Play("watchstep")
-
 	end
 end
 
@@ -503,7 +501,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 	end
 end
 
-function mod:UNIT_SPELLCAST_CHANNEL_STOP(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_CHANNEL_STOP(uId, _, spellId)
 	if spellId == 249121 then
 		timerFinalDoom:Stop()
 	end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(155, "DBM-ThroneFourWinds", nil, 75)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 188 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(46753)
 mod:SetEncounterID(1034)
 mod:SetZone()
@@ -173,7 +173,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 91129 and self:AntiSpam(2, 3) then -- Squall Line (Tornados)
 		warnSquallLine:Show()
 		if not phase2Started then

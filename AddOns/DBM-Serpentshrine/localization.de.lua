@@ -121,7 +121,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-	WarnMurlocs		= "Murlocs",
 	SpecWarnMurlocs	= "Murlocs kommen!"
 }
 
@@ -130,7 +129,6 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	WarnMurlocs		= "Zeige Warnung, wenn Murlocs erscheinen",
 	SpecWarnMurlocs	= "Spezialwarnung, wenn Murlocs erscheinen",
 	TimerMurlocs	= "Zeige Zeit bis Murlocs erscheinen"
 }

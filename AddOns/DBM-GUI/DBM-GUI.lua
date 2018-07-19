@@ -43,7 +43,7 @@
 --
 
 
-local revision =("$Revision: 17500 $"):sub(12, -3)
+local revision =("$Revision: 17608 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -3106,10 +3106,19 @@ local function CreateOptionsMenu()
 
 		local spamSpecArea = spamPanel:CreateArea(L.Area_SpecFilter, nil, 120, true)
 		spamSpecArea:CreateCheckButton(L.FilterTankSpec, true, nil, "FilterTankSpec")
-		spamSpecArea:CreateCheckButton(L.FilterInterrupts, true, nil, "FilterInterrupt")
-		spamSpecArea:CreateCheckButton(L.FilterInterruptNoteName, true, nil, "FilterInterruptNoteName")
 		spamSpecArea:CreateCheckButton(L.FilterDispels, true, nil, "FilterDispel")
-		spamSpecArea:CreateCheckButton(L.FilterSelfHud, true, nil, "FilterSelfHud")
+		local FilterInterruptNote = spamSpecArea:CreateCheckButton(L.FilterInterruptNoteName, true, nil, "FilterInterruptNoteName")
+		
+		local interruptOptions = {
+			{	text	= L.SWFNever,			value 	= "None"},
+			{	text	= L.FilterInterrupts,	value 	= "onlyTandF"},
+			{	text	= L.FilterInterrupts2,	value 	= "TandFandBossCooldown"},
+			{	text	= L.FilterInterrupts3,	value 	= "TandFandAllCooldown"},
+		}
+		local interruptDropDown		= spamSpecArea:CreateDropdown(L.FilterInterruptsHeader, interruptOptions, "DBM", "FilterInterrupt2", function(value)
+			DBM.Options.FilterInterrupt2 = value
+		end)
+		interruptDropDown:SetPoint("TOPLEFT", FilterInterruptNote, "TOPLEFT", 0, -45)
 
 		local spamPTArea = spamPanel:CreateArea(L.Area_PullTimer, nil, 180, true)
 		spamPTArea:CreateCheckButton(L.DontShowPTNoID, true, nil, "DontShowPTNoID")
@@ -3444,7 +3453,7 @@ do
 				bottom2value1:SetText( stats.timewalkerKills )
 				bottom2value2:SetText( stats.timewalkerPulls-stats.timewalkerKills )
 				bottom2value3:SetText( stats.timewalkerBestTime and ("%d:%02d"):format(mfloor(stats.timewalkerBestTime / 60), stats.timewalkerBestTime % 60) or "-" )	
-			elseif statsType == 11 then--Party: Mythic, Mythic+ (7.0 mythic only dungeons)
+			elseif statsType == 11 then--Party: Mythic, Mythic+ (7.0/8.0 mythic only dungeons)
 				top1value1:SetText( stats.mythicKills )
 				top1value2:SetText( stats.mythicPulls-stats.mythicKills )
 				top1value3:SetText( stats.mythicBestTime and ("%d:%02d"):format(mfloor(stats.mythicBestTime / 60), stats.mythicBestTime % 60) or "-" )
@@ -3455,7 +3464,7 @@ do
 				else
 					top2value3:SetText( stats.challengeBestTime and ("%d:%02d"):format(mfloor(stats.challengeBestTime / 60), stats.challengeBestTime % 60) or "-")
 				end
-			elseif statsType == 12 then--Party: Normal, Heroic, Mythic instance (Assault Violet Hold in legion. Basically a mythic dungeon that has no challenge mode/mythic+)
+			elseif statsType == 12 then--Party: Normal, Heroic, Mythic instance (Basically a mythic dungeon that has no challenge mode/mythic+ or an isle expedition)
 				top1value1:SetText( stats.normalKills )
 				top1value2:SetText( stats.normalPulls - stats.normalKills )
 				top1value3:SetText( stats.normalBestTime and ("%d:%02d"):format(mfloor(stats.normalBestTime / 60), stats.normalBestTime % 60) or "-" )
@@ -3847,7 +3856,7 @@ do
 								Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline)-(L.FontHeight*10*doubleline))
 								area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*10 )
 								doubleline = doubleline + 1
-							elseif mod.imaspecialsnowflake then--Normal, heroic, Mythic. rule soley for Assault Violet Hold which is only dungeon in game with this layout
+							elseif mod.imaspecialsnowflake or mod.addon.isExpedition then--Normal, heroic, Mythic. Assault of violetHold or island expeditions
 								statsType = 12
 								--Use top1, top2, top3 area.
 								top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)

@@ -7,7 +7,7 @@
 --		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
--- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
+-- Cybeloras of Aerie Peak
 -- --------------------
 
 
@@ -68,16 +68,19 @@ end
 Module.Entry_Colorize_1 = TMW.NULLFUNC
 
 
-
+-- TODO: Redo this for the new pvp talent system.
 local Module = SUG:NewModule("pvptalents", SUG:GetModule("talents"))
 Module.table = {}
 
 function Module:Table_Get()
 	wipe(self.table)
 
-	for tier = 1, MAX_TALENT_TIERS do
-		for column = 1, NUM_TALENT_COLUMNS do
-			local id, name = GetPvpTalentInfo(tier, column, 1)
+	for slot = 1, 10 do
+		local info = C_SpecializationInfo.GetPvpTalentSlotInfo(slot)
+		if not info then break end
+
+		for _, id in pairs(info.availableTalentIDs) do 
+			local _, name = GetPvpTalentInfoByID(id)
 			
 			local lower = name and strlowerCache[name]
 			if lower then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Algalon", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 278 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 mod:SetCreatureID(32871)
 mod:SetEncounterID(1130)
 mod:DisableEEKillDetection()--EE always fires wipe
@@ -138,7 +138,7 @@ function mod:UNIT_HEALTH(uId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 65311 then--Supermassive Fail (fires when he becomes actually active)
 		timerNextCollapsingStar:Start(16)
 		timerCDCosmicSmash:Start(26)

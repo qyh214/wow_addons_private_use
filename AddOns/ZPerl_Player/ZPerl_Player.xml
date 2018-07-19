@@ -36,7 +36,7 @@
 			</OnDragStop>
 		</Scripts>
 		<Frames>
-			<Frame name="$parentportraitFrame" inherits="XPerl_Portrait_Template_Secure">
+			<Frame name="$parentportraitFrame" inherits="XPerl_Portrait_Template">
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
@@ -363,7 +363,7 @@
 				</Backdrop>
 			</Frame>
 			<!-- Player Stats -->
-			<Frame name="$parentstatsFrame" inherits="XPerl_Stats_Template_Secure">
+			<Frame name="$parentstatsFrame" inherits="XPerl_Stats_Template">
 				<Anchors>
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentnameFrame">
 						<Offset>

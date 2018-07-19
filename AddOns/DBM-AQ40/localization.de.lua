@@ -97,7 +97,6 @@ L:SetGeneralLocalization{
 }
 L:SetWarningLocalization{
 	WarnEyeTentacle			= "Augententakel erscheinen",
-	WarnWeakened			= "C'Thun geschwächt",
 	SpecWarnWeakened		= "C'Thun geschwächt!"
 }
 L:SetTimerLocalization{
@@ -106,7 +105,6 @@ L:SetTimerLocalization{
 }
 L:SetOptionLocalization{
 	WarnEyeTentacle			= "Zeige Warnung, wenn Augententakel erscheinen",
-	WarnWeakened			= "Zeige Warnung, wenn C'Thun geschwächt ist",
 	SpecWarnWeakened		= "Spezialwarnung, wenn C'Thun geschwächt ist",
 	TimerEyeTentacle		= "Zeige Zeit bis die nächsten Augententakel erscheinen",
 	TimerWeakened			= "Dauer der Schwäche von C'Thun anzeigen",

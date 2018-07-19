@@ -29,7 +29,7 @@
 		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
-				<FontString name="$parenttext" inherits="GameFontNormalSmall" justifyH="left" wraponspaces="false">
+				<FontString name="$parenttext" inherits="GameFontNormalSmall" justifyH="left">
 					<Size>
 						<AbsDimension x="200" y="12"/>
 					</Size>
@@ -387,7 +387,7 @@
 							</OnMouseDown>
 						</Scripts>
 						<ScrollChild>
-							<EditBox name="$parenttext" multiLine="true" maxLines="50" letters="1000" wraponspaces="true" autoFocus="false">
+							<EditBox name="$parenttext" multiLine="true" maxLines="50" letters="1000" autoFocus="false">
 								<Size>
 									<AbsDimension x="200" y="2000"/>
 								</Size>

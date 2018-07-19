@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1703, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetCreatureID(102672)
 mod:SetEncounterID(1853)
 mod:SetZone()
@@ -73,7 +73,7 @@ local playerHasTen = false
 local debuffFilter
 do
 	debuffFilter = function(uId)
-		if UnitDebuff(uId, debuffName) then
+		if DBM:UnitDebuff(uId, debuffName) then
 			return true
 		end
 	end
@@ -133,7 +133,7 @@ function mod:SPELL_CAST_START(args)
 		timerSwarm:Start()
 	elseif spellId == 202977 then
 		DBM:Debug("CLEU event for breath, pruned. If you see this message it was unpruned!")
-	elseif spellId == 205070 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 205070 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnSpreadInfestation:Show(args.sourceName)
 		specWarnSpreadInfestation:Play("kickcast")
 	elseif spellId == 225943 then
@@ -170,7 +170,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnVolatileRot:Show()
 			specWarnVolatileRot:Play("runout")
-			local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)
+			local _, _, _, _, duration, expires = DBM:UnitDebuff("player", args.spellName)
 			if expires then
 				local remaining = expires-GetTime()
 				yellVolatileRot:Schedule(remaining-1, 1)
@@ -196,7 +196,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnRot:Show()
 			specWarnRot:Play("runout")
-			local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)
+			local _, _, _, _, duration, expires = DBM:UnitDebuff("player", args.spellName)
 			if expires then
 				local remaining = expires-GetTime()
 				yellRot:Schedule(remaining-1, 1)
@@ -280,8 +280,8 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 203095 then--CAST Doesn't show in combat log for some reason. Applied does but don't want to risk misses
 		self.vb.rotCast = self.vb.rotCast + 1
 		if self.vb.rotCast < 5 then
