@@ -1,9 +1,10 @@
 ------------------------------------------------------------------------
-r75 | Caliaha | 2018-06-23 00:22:24 +0000 (Sat, 23 Jun 2018) | 2 lines
+r77 | Caliaha | 2018-07-19 21:51:45 +0000 (Thu, 19 Jul 2018) | 2 lines
 Changed paths:
    M /trunk/HandyNotes_DungeonLocations.lua
+   M /trunk/HandyNotes_DungeonLocations.toc
 
-Fixed issue with serpentshrine cavern lockout not showing, hopefully didn't break others
+Updated for Battle for Azeroth
 
 ------------------------------------------------------------------------
 

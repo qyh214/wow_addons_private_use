@@ -47,6 +47,8 @@ L["All items has been awarded and  the loot session concluded"] = "Todos os iten
 --[[Translation missing --]]
 --[[ L["Alternatively, flag the loot as award later."] = ""--]] 
 L["Always use RCLootCouncil when I'm Master Looter"] = "Sempre usar RCLootCouncil quando eu for o Mestre do Saque"
+--[[Translation missing --]]
+--[[ L["Always use RCLootCouncil with Personal Loot"] = ""--]] 
 L["Always use when leader"] = "Sempre usar quando eu liderar"
 --[[Translation missing --]]
 --[[ L["always_show_tooltip_howto"] = ""--]] 
@@ -58,6 +60,8 @@ L["Announce Considerations"] = "Anunciar Considerações"
 --[[ L["announce_&l_desc"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["announce_&n_desc"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["announce_&o_desc"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["announce_&p_desc"] = ""--]] 
 --[[Translation missing --]]
@@ -89,6 +93,8 @@ L["Are you sure you want to give #item to #player?"] = "Você tem certeza que de
 --[[ L["Are you sure you want to request rolls for all unawarded items from %s?"] = ""--]] 
 L["Armor Token"] = "Token de Armaduras"
 L["Ask me every time I become Master Looter"] = "Perguntar toda vez que eu me tornar o Mestre do Saque"
+--[[Translation missing --]]
+--[[ L["Ask me every time Personal Loot is enabled"] = ""--]] 
 L["Ask me when leader"] = "Perguntar quando eu for o líder"
 L["Auto Award"] = "Premiação Automática"
 L["Auto Award to"] = "Premiação Automática para"
@@ -300,6 +306,8 @@ L["Autoloot BoE"] = "Saque automático para itens Vinculados ao Equipar"
 --[[Translation missing --]]
 --[[ L["Diff"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["Discord friendly output."] = ""--]] 
+--[[Translation missing --]]
 --[[ L["disenchant_desc"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Done syncing"] = ""--]] 
@@ -329,6 +337,8 @@ L["Autoloot BoE"] = "Saque automático para itens Vinculados ao Equipar"
 --[[ L["Enter your note:"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["EQdkp-Plus XML output, tailored for Enjin import."] = ""--]] 
+--[[Translation missing --]]
+--[[ L["error_test_as_non_leader"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Everyone have voted"] = ""--]] 
 --[[Translation missing --]]
@@ -767,6 +777,8 @@ L["Autoloot BoE"] = "Saque automático para itens Vinculados ao Equipar"
 --[[ L["tier_token_normal"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Time"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["time_remaining_warning"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Timeout"] = ""--]] 
 --[[Translation missing --]]

@@ -1,12 +1,12 @@
-tag 8d05c0765deed00cf51d770e754792b2a63e376e 2.18.6
+tag 20bceaf559600157108d7b8827e32096baaadedc 2.18.7
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Wed Jul 18 12:30:29 2018 +0200
+Date:	Thu Jul 19 19:51:37 2018 +0200
 
-Battle for Azeroth
+Removed some lua warnings added in BFA
 
-commit 66478f8a1932410b6a9f8f4eb20e4290e8798639
+commit a1f35612a6f3dbaa994692c963041dac3f2179fd
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Wed Jul 18 12:25:18 2018 +0200
+Date:   Thu Jul 19 19:51:00 2018 +0200
 
-    TOC Bumped
+    Removed warning
 

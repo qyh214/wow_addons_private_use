@@ -186,8 +186,8 @@ end
 StaticPopupDialogs['MENUITEM_SET_MAIN'] = {
 	preferredindex = STATICPOPUP_NUMDIALOGS,
 	text		= L["Who is %s's main?"],
-	button1		= TEXT(ACCEPT),
-	button2		= TEXT(CANCEL),
+	button1		= ACCEPT,
+	button2		= CANCEL,
 	hasEditBox	= 1,
 	maxLetters	= 128,
 	exclusive	= 0,

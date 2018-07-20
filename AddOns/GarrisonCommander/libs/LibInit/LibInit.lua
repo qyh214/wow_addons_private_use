@@ -1,21 +1,24 @@
 --- Main methods directly available in your addon
 -- @classmod lib
 -- @author Alar of Runetotem
--- @release 47
+-- @release 49
 -- @set sort=true
 -- @usage
 -- -- Create a new addon this way:
 -- local me,ns=... -- Wow engine passes you your addon name and a private table to use
 -- addon=LibStub("LibInit"):newAddon(ns,me)
 -- -- Since now, all LibInit methods are available on self
-
+local me, ns = ...
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):12:")) -- Always check line number in regexp and file
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 48
+local MINOR_VERSION = 49
 local LibStub=LibStub
 local dprint=function() end
-local function encapsulate()
-if LibDebug and AlarDbg then LibDebug() dprint=print end
+local encapsulate  = function ()
+  if LibDebug and AlarDbg then
+    LibDebug()
+    dprint=print
+  end
 end
 encapsulate()
 local obj,old=LibStub:NewLibrary(MAJOR_VERSION,MINOR_VERSION)
@@ -31,7 +34,7 @@ else
 end
 local off=(_G.RED_FONT_COLOR_CODE or '|cffff0000') .. (_G.VIDEO_OPTIONS_DISABLED or  'Off') .. ( _G.FONT_COLOR_CODE_CLOSE or '|r')
 local on=(_G.GREEN_FONT_COLOR_CODE or '|cff00ff00') .. (_G.VIDEO_OPTIONS_ENABLED or 'On') .. ( _G.FONT_COLOR_CODE_CLOSE or '|r')
-local nop=function()end
+local nop=function() end
 local pp=print -- Keeping a handy plain print around
 local assert=assert
 local strconcat=strconcat
@@ -42,7 +45,6 @@ local _G=_G -- Unmodified env
 -- Checking packager behaviour
 --@end-debug@
 
-local me, ns = ...
 local lib=obj --#Lib
 function lib:Info()
 	print(MAJOR_VERSION,MINOR_VERSION,' loaded from ',__FILE__)

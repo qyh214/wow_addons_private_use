@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1086 $")
+XPerl_SetModuleRevision("$Revision: 1098 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -552,12 +552,12 @@ end
 -- XPerl_Options_LoadSettings_OnLoad
 function XPerl_Options_LoadSettings_OnLoad(self)
 	self.displayMode = "MENU"
-	UIDropDownMenu_Initialize(self, XPerl_Options_LoadSettings_Initialize)
-	UIDropDownMenu_SetWidth(self, 140)
+	Lib_UIDropDownMenu_Initialize(self, XPerl_Options_LoadSettings_Initialize)
+	Lib_UIDropDownMenu_SetWidth(self, 140)
 	if (MyIndex == 0) then
 		XPerl_Options_DropDown_LoadSettingsText:SetText("")
 	else
-		UIDropDownMenu_SetSelectedID(self, MyIndex, 1)
+		Lib_UIDropDownMenu_SetSelectedID(self, MyIndex, 1)
 	end
 end
 
@@ -566,18 +566,18 @@ function XPerl_Options_LoadSettings_Initialize()
 	local list = GetPlayerList()
 
 	for i, entry in pairs(list) do
-		local info = UIDropDownMenu_CreateInfo()
+		local info = Lib_UIDropDownMenu_CreateInfo()
 		info.text = entry.name
 		info.func = XPerl_Options_LoadSettings_OnClick
-		UIDropDownMenu_AddButton(info)
+		Lib_UIDropDownMenu_AddButton(info)
 	end
 end
 
 -- XPerl_Options_DeleteSettings_OnLoad
 function XPerl_Options_DeleteSettings_OnLoad(self)
 	self.displayMode = "MENU"
-	UIDropDownMenu_Initialize(self, XPerl_Options_DeleteSettings_Initialize)
-	UIDropDownMenu_SetWidth(self, 140)
+	Lib_UIDropDownMenu_Initialize(self, XPerl_Options_DeleteSettings_Initialize)
+	Lib_UIDropDownMenu_SetWidth(self, 140)
 	XPerl_Options_DropDown_DeleteSettingsText:SetText("")
 end
 
@@ -586,20 +586,20 @@ function XPerl_Options_DeleteSettings_Initialize()
 	local list = GetPlayerList()
 
 	for i, entry in pairs(list) do
-		local info = UIDropDownMenu_CreateInfo()
+		local info = Lib_UIDropDownMenu_CreateInfo()
 		info.text = entry.name
 		info.func = XPerl_Options_DeleteSettings_OnClick
-		UIDropDownMenu_AddButton(info)
+		Lib_UIDropDownMenu_AddButton(info)
 	end
 end
 
 -- XPerl_Options_Anchor_OnLoad
 function XPerl_Options_Anchor_OnLoad(self)
 	self.displayMode = "MENU"
-	UIDropDownMenu_Initialize(self, XPerl_Options_Anchor_Initialize)
+	Lib_UIDropDownMenu_Initialize(self, XPerl_Options_Anchor_Initialize)
 	local current = self.varGet() or "TOP"
-	UIDropDownMenu_SetSelectedName(self, current, 1)
-	UIDropDownMenu_SetWidth(self, 100)
+	Lib_UIDropDownMenu_SetSelectedName(self, current, 1)
+	Lib_UIDropDownMenu_SetWidth(self, 100)
 end
 
 -- XPerl_Options_Anchor_Initialize
@@ -613,7 +613,7 @@ function XPerl_Options_Anchor_Initialize(dropdown)
 		info.func = function(self)
 			dropdown.varSet(XPerl_AnchorList[self:GetID()])
 
-			UIDropDownMenu_SetSelectedName(dropdown, v, 1)
+			Lib_UIDropDownMenu_SetSelectedName(dropdown, v, 1)
 
 			XPerl_ProtectedCall(dropdown.setFunc)
 
@@ -626,7 +626,7 @@ function XPerl_Options_Anchor_Initialize(dropdown)
 			end
 		end
 
-		UIDropDownMenu_AddButton(info)
+		Lib_UIDropDownMenu_AddButton(info)
 	end
 end
 

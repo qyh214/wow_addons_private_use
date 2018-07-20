@@ -27,7 +27,7 @@
 	<Script file="Modules\EditBoxHistory.lua" />
 	<Script file="Modules\DelayGMOTD.lua" />
 	<Script file="Modules\AutoPopup.lua" />
-	<Script file="Modules\BNet.lua" />
+	<!-- <Script file="Modules\BNet.lua" /> -->
 	<Script file="Modules\ServerStorage.lua" />
 	<Script file="Modules\AllResize.lua" />
 	<Include file="Modules\ChatFrameBorders.xml" />

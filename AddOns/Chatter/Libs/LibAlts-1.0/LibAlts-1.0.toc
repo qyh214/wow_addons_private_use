@@ -1,13 +1,9 @@
-## Interface: 40300
+## Interface: 70100
 ## X-Since-Interface: 30300
-## X-Curse-Packaged-Version: r46
-## X-Curse-Project-Name: LibAlts-1.0
-## X-Curse-Project-ID: libalts-1-0
-## X-Curse-Repository-ID: wow/libalts-1-0/mainline
 
 ## Title: Lib: LibAlts-1.0
 ## Notes: Shared handling of alternate identity data between addons.
-## Version: r46 
+## Version: @project-version@ 
 ## Author: Sylvanaar
 ## X-Category: Library
 

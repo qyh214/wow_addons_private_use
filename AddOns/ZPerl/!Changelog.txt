@@ -1,3 +1,28 @@
+**r1100**
+* Status highlight fixes.
+
+**r1098**
+* Fixed an issue with target hit indicators.
+* Readded custom dropdown handlers.
+
+**r1096**
+* Version bump.
+
+**r1094**
+* Fixed castbar related issues.
+
+**r1092**
+* Combo point fixes.
+* Removed prestige related code.
+* Target should show the proper class icons.
+* Feign Death status is broken for now. (Gonna fix that later)
+
+**r1090**
+* Fixed an issue with the target's target.
+
+**r1088**
+* Updated for 8.0.1.
+
 **r1084**
 * Added Antorus, the Burning Throne and Tomb of Sargeras spells for custom highlighting. (Thanks for Dainslaif63534)
 * Player portrait model fixes.

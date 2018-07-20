@@ -1,13 +1,11 @@
 --[[
 
 TODOs:
-	Possible bug when running with characters who have the same name as each other from different realms...IsPlayer() gets screwy
+	Bug with people being shown pass/whisper instead of keep/offer when looting...may be related to cyrillic names?  or same name from different realms in IsPlayer()?
+	Don't show PLH UI if group is using RCLootCouncil
 	Add BfA trinkets
 	Azerite armor is not tradeable - look for "Active Azerite Powers" string (TOOLTIP_AZERITE_UNLOCK_LEVELS or CURRENTLY_SELECTED_AZERITE_POWERS) in tooltip
 
-WHEN CHECKING IN:
-	Add MSA-DropDownMenu-1.0 as a dependency when checking in
-  
 Known Limitations:
 	PLH assumes everyone in the group is eligible to receive tradeable loot; it doesn't check whether everyone
 		tagged the mob or whether anyone was already loot-locked
@@ -35,6 +33,17 @@ Future Enhancement Ideas:
 
 CHANGELOG:
 
+20180719 - 2.04
+	Added option to notify individual of loot they can trade to others in the group (instead of only notifying in UI for other PLH users).
+	Renamed "offer to group" button to "offer to plh users" to make it clearer; if you want to offer an item to non-PLH users,
+		do so manually via whispers or instance chat.
+	Made ilvl descriptions in options clearer
+	Fixed bug that prevented requests from working cross-realm
+	Fixed bug that caused prior items to be shown when doing "/plh show" (by moving ClearLootedItemsDisplay() earlier in UpdateLootedItemsDisplay())
+	Increased time between inspections to allow cache to populate correctly
+	Default whisper message if it is ''
+	Removed some debug statements
+	
 20180718 - 2.03
 	Hopefully fixed bug reported by many players of preferences not saving (config was only setting values in OnShow, not during creation)
 
@@ -56,7 +65,7 @@ CHANGELOG:
 ]]--
 
 -- Constants to control inspection process
-local DELAY_BETWEEN_INSPECTIONS			= .5	-- in seconds
+local DELAY_BETWEEN_INSPECTIONS			= 1		-- in seconds
 local MIN_DELAY_BETWEEN_CACHE_REFRESHES	= 5		-- in seconds
 local MAX_INSPECT_LOOPS 				= 3    	-- maximum # of times to retry calling NotifyInspect on all members in the roster for whom we've cached fewer than the expected number of items
 
@@ -820,7 +829,6 @@ local function IsAnUpgradeForAnyCharacter(fullItemInfo)
 		end
 		index = index + 1
 	end
-
 	return #isAnUpgradeForAnyCharacterNames > 0, isAnUpgradeForAnyCharacterNames
 end
 
@@ -1144,8 +1152,9 @@ local function UpdateLootedItemsDisplay()
 	buttonIndex = 0
 	itemFrameIndex = 0
 
+	ClearLootedItemsDisplay()
+
 	if ShouldShowLootedItemsDisplay() or not PLH_PREFS[PLH_PREFS_AUTO_HIDE] then
-		ClearLootedItemsDisplay()
 
 		for lootedItemIndex = 1, #lootedItems do
 			lootedItem = lootedItems[lootedItemIndex]
@@ -1305,7 +1314,7 @@ local function UpdateLootedItemsDisplay()
 					end
 
 					if lootedItemStatus == STATUS_DEFAULT then
-						CreateButton("OFFER TO GROUP", 120, INDENT + 65, verticalOffset, PLH_DoTradeItem, lootedItemIndex)
+						CreateButton("OFFER TO PLH USERS", 160, INDENT + 65, verticalOffset, PLH_DoTradeItem, lootedItemIndex)
 					elseif lootedItemStatus == STATUS_REQUESTED then
 						CreateButton("OFFER TO SELECTED PLAYER", 180, INDENT + 65, verticalOffset, PLH_DoOfferItem, lootedItemIndex)
 					end
@@ -1626,16 +1635,17 @@ local function CreateAddonTextString(process, lootedItem, options)
 end
 
 local function PLH_SendAddonMessage(addonTextString, characterName)
-	if characterName == nil then
+-- per documentation at https://wow.gamepedia.com/API_SendAddonMessage, whispers don't work cross-realm, so we'll have to broadcast requests to everyone
+--	if characterName == nil then
 		PLH_SendDebugMessage('Sending AddonMessage: ' .. addonTextString)
-	else
-		PLH_SendDebugMessage('Sending AddonMessage: ' .. addonTextString .. ' to ' .. characterName)
-	end
+--	else
+--		PLH_SendDebugMessage('Sending AddonMessage: ' .. addonTextString .. ' to ' .. characterName)
+--	end
 
 	if IsInGroup() then
-		if characterName ~= nil then
-			C_ChatInfo.SendAddonMessage('PLH', addonTextString, 'WHISPER', Ambiguate(characterName, 'mail'))
-		elseif IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and IsInInstance() then
+--		if characterName ~= nil then
+--			C_ChatInfo.SendAddonMessage('PLH', addonTextString, 'WHISPER', Ambiguate(characterName, 'mail'))
+		if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and IsInInstance() then
 			C_ChatInfo.SendAddonMessage('PLH', addonTextString, 'INSTANCE_CHAT')
 		elseif IsInRaid() then
 			C_ChatInfo.SendAddonMessage('PLH', addonTextString, 'RAID')  -- TODO per DBM sendSync() comments this may be going away in 8.x?  Test in beta
@@ -1650,7 +1660,7 @@ end
 --[[ FUNCTIONS FIRED WHEN MESSAGE IS RECEIVED FROM OTHER PLAYERS ]]
 
 function PLH_ProcessKeepItemMessage(looterName, lootedItemID)
-	PLH_SendDebugMessage('Entering PLH_ProcessKeepItemMessage (' .. looterName .. ', ' .. lootedItemID .. ')')
+--	PLH_SendDebugMessage('Entering PLH_ProcessKeepItemMessage (' .. looterName .. ', ' .. lootedItemID .. ')')
 
 	if not IsPlayer(looterName) then
 		local lootedItem = GetLootedItem(looterName, lootedItemID)
@@ -1667,7 +1677,7 @@ function PLH_ProcessKeepItemMessage(looterName, lootedItemID)
 end
 
 function PLH_ProcessTradeItemMessage(looterName, item)
-	PLH_SendDebugMessage('Entering PLH_ProcessTradeItemMessage (' .. looterName .. ', ' .. item .. ')')
+--	PLH_SendDebugMessage('Entering PLH_ProcessTradeItemMessage (' .. looterName .. ', ' .. item .. ')')
 
 	if not IsPlayer(looterName) then
 		local fullItemInfo = GetFullItemInfo(item)
@@ -1680,7 +1690,7 @@ function PLH_ProcessTradeItemMessage(looterName, item)
 end
 
 function PLH_ProcessOfferItemMessage(looterName, lootedItemID, requestorName)
-	PLH_SendDebugMessage('Entering PLH_ProcessOfferItemMessage (' .. looterName .. ', ' .. lootedItemID .. ', ' .. requestorName .. ')')
+--	PLH_SendDebugMessage('Entering PLH_ProcessOfferItemMessage (' .. looterName .. ', ' .. lootedItemID .. ', ' .. requestorName .. ')')
 	
 	if not IsPlayer(looterName) then
 		local lootedItem = GetLootedItem(looterName, lootedItemID)
@@ -1715,7 +1725,7 @@ local function FindRequestorIndex(lootedItem, requestorName)
 end
 
 function PLH_ProcessRequestItemMessage(looterName, lootedItemID, requestorName, requestType)
-	PLH_SendDebugMessage('Entering PLH_ProcessRequestItemMessage (' .. looterName .. ', ' .. lootedItemID .. ', ' .. requestorName .. ', ' .. requestType .. ')')
+--	PLH_SendDebugMessage('Entering PLH_ProcessRequestItemMessage (' .. looterName .. ', ' .. lootedItemID .. ', ' .. requestorName .. ', ' .. requestType .. ')')
 
 	if IsPlayer(looterName) then
 		local lootedItem = GetLootedItem(looterName, lootedItemID)
@@ -1744,7 +1754,7 @@ function PLH_ProcessRequestItemMessage(looterName, lootedItemID, requestorName, 
 end
 
 local function PLH_ProcessVersionMessage(plhUser, version)
-	PLH_SendDebugMessage('Entering PLH_ProcessVersionMessage (' .. plhUser .. ', ' .. version .. ')')
+--	PLH_SendDebugMessage('Entering PLH_ProcessVersionMessage (' .. plhUser .. ', ' .. version .. ')')
 
 	if plhUsers[plhUser] == nil or plhUsers[plhUser] ~= version then
 		plhUsers[plhUser] = version
@@ -1755,7 +1765,7 @@ local function PLH_ProcessVersionMessage(plhUser, version)
 end
 
 local function PLH_ProcessIdentifyUsersMessage()
-	PLH_SendDebugMessage('Entering PLH_ProcessIdentifyUsersMessage()')
+--	PLH_SendDebugMessage('Entering PLH_ProcessIdentifyUsersMessage()')
 
 	PLH_SendAddonMessage('VERSION~ ~' .. PLH_GetFullName('player') .. '~' .. GetAddOnMetadata('PersonalLootHelper', 'Version'))
 end	
@@ -1880,17 +1890,95 @@ local function ShouldBeEvaluated(fullItemInfo)
 		and (fullItemInfo[FII_BIND_TYPE] == LE_ITEM_BIND_ON_ACQUIRE or (fullItemInfo[FII_BIND_TYPE] == LE_ITEM_BIND_ON_EQUIP and not PLH_PREFS[PLH_PREFS_NEVER_OFFER_BOE]))
 end		
 
+-- creates a copy of the table
+local function ShallowCopy(t)
+	local t2 = {}
+	for k, v in pairs(t) do
+		t2[k] = v
+	end
+	return t2
+end
+
+-- returns the names from the given array, with 'and others' if array size > limit
+local function GetNames(namelist, limit)
+	local names = ''
+	if namelist ~= nil then
+		if limit == nil then  -- no limit; show all names
+			limit = #namelist
+		end
+		if namelist[1] ~= nil then
+			-- sort the array by ilvl first
+			local sortedNamelist = namelist
+			if #namelist > 1 then
+				local copiedNamelist = ShallowCopy(namelist)  -- we will destroy elements in the list while sorting, so copy it
+				sortedNamelist = {}
+				local lowestILVL
+				local lowestIndex
+				local ilvl
+				local i = 1
+				local size = #copiedNamelist
+				while i <= size do
+					lowestILVL = 1000000
+					lowestIndex = 1  -- we could be sorting a list without ilvls, in which case just keep the same order
+					for j = 1, #copiedNamelist do
+						if copiedNamelist[j] ~= nil then
+							ilvl = string.match(copiedNamelist[j], '(%d+)')
+							if ilvl ~= nil then
+								ilvl = tonumber(ilvl)
+								if ilvl < lowestILVL then
+									lowestILVL = ilvl
+									lowestIndex = j
+								end
+							end
+						end
+					end
+					table.insert(sortedNamelist, table.remove(copiedNamelist, lowestIndex))
+					i = i + 1
+				end
+			end
+		
+			names = sortedNamelist[1]
+			local maxnames = min(#sortedNamelist, limit)
+			for i = 2, maxnames do
+				if #sortedNamelist == 2 then
+					names = names .. ' '
+				else
+					names = names .. ', '
+				end
+				if i == #sortedNamelist then -- last person
+					names = names .. 'and '
+				end
+				names = names .. sortedNamelist[i]
+			end
+			if #sortedNamelist > limit then
+				names = names .. ', and others'
+			end
+		end
+	end
+	return names
+end
+
 -- Checks whether or not the loot items should be added to the lootedItems array; adds item if it meets the criteria
 local function PerformNotify(fullItemInfo, looterName)
 	if ShouldBeEvaluated(fullItemInfo) then
 		if IsPlayer(looterName) then
-			if PLH_GetNumberOfPLHUsers() > 1 then
---				local isTradeable = fullItemInfo[FII_TRADE_TIME_WARNING_SHOWN] or not IsAnUpgradeForCharacter(fullItemInfo, looterName)
-				local isTradeable = not IsAnUpgradeForCharacter(fullItemInfo, looterName, 0)
-				if isTradeable then
-					if not PLH_PREFS[PLH_PREFS_ONLY_OFFER_IF_UPGRADE] or IsAnUpgradeForAnyCharacter(fullItemInfo) then
+--			local isTradeable = fullItemInfo[FII_TRADE_TIME_WARNING_SHOWN] or not IsAnUpgradeForCharacter(fullItemInfo, looterName)
+			local isTradeable = not IsAnUpgradeForCharacter(fullItemInfo, looterName, 0)
+			if isTradeable then
+
+				local isAnUpgradeForAnyCharacter, isAnUpgradeForAnyCharacterNames = IsAnUpgradeForAnyCharacter(fullItemInfo)
+
+				if PLH_GetNumberOfPLHUsers() > 1 then
+					if not PLH_PREFS[PLH_PREFS_ONLY_OFFER_IF_UPGRADE] or isAnUpgradeForAnyCharacter then
 						AddLootedItem(fullItemInfo, looterName)
 						UpdateLootedItemsDisplay()
+					end
+				end
+				if PLH_PREFS[PLH_PREFS_SHOW_TRADEABLE_ALERT] then
+					if isAnUpgradeForAnyCharacter then
+						local names = GetNames(isAnUpgradeForAnyCharacterNames, 5)
+						PLH_SendAlert('You can trade ' .. fullItemInfo[FII_ITEM] .. ', which is an ilvl upgrade for ' .. names)
+						PlaySound(600)  -- 'GLUECREATECHARACTERBUTTON'
 					end
 				end			
 			end
@@ -1948,7 +2036,6 @@ local function LootReceivedEvent(self, event, ...)
 ]]--
 	
 	local message, _, _, _, looter = ...
-	
 	local lootedItem = message:match(LOOT_ITEM_SELF_PATTERN)
 	if lootedItem == nil then
 		_, lootedItem = message:match(LOOT_ITEM_PATTERN)
@@ -2024,7 +2111,7 @@ local function UpdateGroupInfoCache(unit)
 			groupInfoCache[name][FORCE_REFRESH] = false
 		end
 		
-		PLH_SendDebugMessage('      Updated ' .. updatedItemCount .. ' items for ' .. name)
+--		PLH_SendDebugMessage('      Updated ' .. updatedItemCount .. ' items for ' .. name)
 	end
 end
 
@@ -2062,7 +2149,7 @@ end
 local function InspectGroupMember(characterName)
 	if not IsPlayer(characterName) then
 		if CanInspect(characterName) and (not InspectFrame or not InspectFrame:IsShown()) then
-			PLH_SendDebugMessage('   Calling NotifyInspect for ' .. characterName .. ' (' .. inspectLoop .. ',' .. inspectIndex .. ')')
+--			PLH_SendDebugMessage('   Calling NotifyInspect for ' .. characterName .. ' (' .. inspectLoop .. ',' .. inspectIndex .. ')')
 			NotifyInspect(characterName)
 			notifyInspectName = characterName
 			PLH_wait(PLH_WAIT_FOR_INSPECT, DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
@@ -2131,7 +2218,7 @@ local function PopulateGroupInfoCache()
 		-- remove characters from the cache if they're no long in the raid/party
 		for name, details in pairs(groupInfoCache) do
 			if not IsCharacterInGroup(name) then
-				PLH_SendDebugMessage('Removing entry for ' .. name .. ' from cache')
+--				PLH_SendDebugMessage('Removing entry for ' .. name .. ' from cache')
 				groupInfoCache[name] = nil
 			end
 		end
@@ -2142,7 +2229,7 @@ local function PopulateGroupInfoCache()
 			-- and inspectLoop > MAX_INSPECT_LOOPS, then we know we've finished all inspections for all loops, so
 			-- we can start a brand new loop!
 			if inspectLoop == 0 or (inspectIndex > maxInspectIndex and inspectLoop > MAX_INSPECT_LOOPS) then
-				PLH_SendDebugMessage('Refreshing groupInfoCache')
+--				PLH_SendDebugMessage('Refreshing groupInfoCache')
 				inspectLoop = 1
 				inspectIndex = 1
 				maxInspectIndex = GetNumGroupMembers()
@@ -2240,7 +2327,7 @@ local function AddonLoadedEvent(self, event, addonName, ...)
 		end
 
 		for key, value in pairs(PLH_DEFAULT_PREFS) do
-			if PLH_PREFS[key] == nil then
+			if PLH_PREFS[key] == nil or PLH_PREFS[key] == '' then
 				PLH_PREFS[key] = value
 			end
 		end
@@ -2502,7 +2589,7 @@ function PLH_Test()
 	LootReceivedEvent(self, nil, UnitName('player') .. ' receives loot: ' .. PLH_TEST_ITEM_1 .. '.', nil, nil, nil, playerName)
 	PLH_ProcessTradeItemMessage("Killindmice-Zul'jin", PLH_TEST_ITEM_7)
 	PLH_ProcessTradeItemMessage("Boomerz-Zul'jin", PLH_TEST_ITEM_6)
-	
+
 --[[	
 	PLH_SendDebugMessage("Adding test item " .. PLH_TEST_ITEM_1)
 	local lootString = 'Madone receives loot: ' .. PLH_TEST_ITEM_1 .. '.'

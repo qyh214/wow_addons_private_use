@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1089 $")
+end, "$Revision: 1098 $")
 
 -- Upvalues
 local _G = _G
@@ -138,7 +138,6 @@ function XPerl_Target_OnLoad(self, partyid)
 		"UNIT_NAME_UPDATE",
 		--"PET_BATTLE_OPENING_START"
 		--"PET_BATTLE_CLOSE",
-		--"HONOR_PRESTIGE_UPDATE",
 	}
 
 	for i, event in pairs(events) do
@@ -330,7 +329,7 @@ function XPerl_Target_UpdateCombo(self)
 	if not count then
 		count = 0
 	end]]
-	local combopoints = UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", SPELL_POWER_COMBO_POINTS)
+	local combopoints = UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
 	--local combopoints = GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player", self.partyid) + count
 	local r, g, b = GetComboColour(combopoints)
 	if (tconf.combo.enable) then
@@ -422,53 +421,25 @@ local function XPerl_Target_UpdatePVP(self)
 	local partyid = self.partyid
 
 	local pvpIcon = self.nameFrame.pvp
-	local prestigeIcon = self.nameFrame.prestige
 
 	local factionGroup, factionName = UnitFactionGroup(partyid)
 
 	if self.conf.pvpIcon and UnitIsPVPFreeForAll(partyid) then
-		local prestige = UnitPrestige(partyid)
-
-		if prestige > 0 then
-			prestigeIcon.icon:SetTexture(GetPrestigeInfo(prestige))
-			prestigeIcon:Show()
-			pvpIcon:Hide()
-		else
-			prestigeIcon:Hide()
-			pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
-			pvpIcon:Show()
-		end
+		pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
+		pvpIcon:Show()
 	elseif self.conf.pvpIcon and factionGroup and factionGroup ~= "Neutral" and UnitIsPVP(partyid) then
-		local prestige = UnitPrestige(partyid)
+		pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
 
-		if prestige > 0 then
-			if UnitIsMercenary(partyid) then
-				if factionGroup == "Horde" then
-					factionGroup = "Alliance"
-				elseif factionGroup == "Alliance" then
-					factionGroup = "Horde"
-				end
+		if UnitIsMercenary(partyid) then
+			if factionGroup == "Horde" then
+				pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
+			elseif factionGroup == "Alliance" then
+				pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
 			end
-
-			prestigeIcon.icon:SetTexture(GetPrestigeInfo(prestige))
-			prestigeIcon:Show()
-			pvpIcon:Hide()
-		else
-			prestigeIcon:Hide()
-			pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
-
-			if UnitIsMercenary(partyid) then
-				if factionGroup == "Horde" then
-					pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
-				elseif factionGroup == "Alliance" then
-					pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
-				end
-			end
-
-			pvpIcon:Show()
 		end
+
+		pvpIcon:Show()
 	else
-		prestigeIcon:Hide()
 		pvpIcon:Hide()
 	end
 
@@ -815,7 +786,7 @@ local function XPerl_Target_UpdateType(self)
 				self.bossFrame:SetWidth(self.bossFrame.text:GetStringWidth() + 10)
 			else
 				if (UnitIsPlayer(partyid) or not UnitPlayerControlled(partyid)) then
-					local l, r, t, b = XPerl_ClassPos(PlayerClass)
+					local l, r, t, b = XPerl_ClassPos(LocalClass)
 					self.typeFramePlayer.classTexture:SetTexCoord(l, r, t, b)
 					self.typeFramePlayer:Show()
 				end
@@ -1410,14 +1381,11 @@ local function DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGU
 end
 
 -- COMBAT_LOG_EVENT_UNFILTERED
-function XPerl_Target_Events:COMBAT_LOG_EVENT_UNFILTERED()
-	XPerl_Target_Events:CombatLogEvent(CombatLogGetCurrentEventInfo())
-end
-
-function XPerl_Target_Events:CombatLogEvent(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
+function XPerl_Target_Events:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
 	if (self.conf.hitIndicator and self.conf.portrait) then
+		local _, _, _, _, _, srcFlags, _, _, _, dstFlags = CombatLogGetCurrentEventInfo()
 		if (bit_band(dstFlags, self.combatMask) ~= 0 and bit_band(srcFlags, 0x00000001) ~= 0) then
-			DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
+			DoEvent(self, CombatLogGetCurrentEventInfo())
 		end
 	end
 end
@@ -1810,7 +1778,7 @@ end
 
 function XPerl_Target_ComboFrame_Update()
 	--local comboPoints = GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player")
-	local comboPoints = UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", SPELL_POWER_COMBO_POINTS)
+	local comboPoints = UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
 	if comboPoints > 0 and UnitCanAttack(UnitHasVehicleUI("player") and "vehicle" or "player", "target") then
 		if not ComboFrame:IsShown() then
 			ComboFrame:Show()

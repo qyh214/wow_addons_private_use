@@ -1,9 +1,9 @@
 --- Class used to build lightweight widgets for configuration options.
 -- You can obtain it calling GetFactory() method.
--- 
+--
 -- All widgets communicate with your code via the OnChange Callback and expose a
 -- SetOnChange method to set it
--- 
+--
 -- @classmod factory
 -- @author Alar of Runetotem
 -- @usage
@@ -24,7 +24,7 @@ local GameTooltip=GameTooltip
 local CreateFrame=CreateFrame
 local type=type
 local tostring=tostring
- 
+
 local factory=LibStub:NewLibrary("LibInit-Factory",MINOR_VERSION) --#factory
 if (not factory) then return end
 factory.nonce=factory.nonce or 0
@@ -72,7 +72,7 @@ local function OnTooltip(this)
 				GameTooltip:AddLine(row, nil, nil, nil, nil, (this.tooltipStyle or true))
 			else
 				GameTooltip:AddDoubleLine(i,row)
-			end		
+			end
 		end
 	else
 		GameTooltip:AddLine(this.tooltip, nil, nil, nil, nil, (this.tooltipStyle or true))
@@ -113,16 +113,16 @@ local function SetUp(father,widgetType,message,tooltip,maxwidth)
 	return frame,name
 end
 --- Creates a slider.
--- 
+--
 -- @tparam frame father Parent frame to use
 -- @tparam number min Minimum value
 -- @tparam number max Maximum value
 -- @tparam number current Actual value
--- @tparam string|table message String with description or table with .desc and .tooltip fields 
+-- @tparam string|table message String with description or table with .desc and .tooltip fields
 -- @tparam[opt] string tooltip Tooltip message (ignored if message is a table). Can be a table for a multiline tooltip
 -- @tparam[opt] number maxwidth maximum widget width
 -- @treturn widget slider widget object
--- 
+--
 function factory:Slider(father,min,max,current,...)
 	local frame,name=SetUp(father,"Slider",...)
 	local sl = CreateFrame('Slider',name, frame, 'OptionsSliderTemplate')
@@ -150,7 +150,7 @@ function factory:Slider(father,min,max,current,...)
 	frame.SetText=function(this,value) this.Text:SetText(value) end
 	frame.SetFormattedText=function(this,...) this.Text:SetFormattedText(...) end
 	frame.SetTextColor=function(this,...) this.Text:SetTextColor(...) end
-	if frame.tooltip then 
+	if frame.tooltip then
 		sl:SetScript("OnEnter",function() frame:GetScript("OnEnter")(frame) end)
 	end
 	frame.lastvalue=max+1 -- makes sure that first update fires
@@ -174,8 +174,8 @@ function factory:Slider(father,min,max,current,...)
 		frame.lastvalue=value
 		OnChange(frame,value)
 	end
-	function frame:SetOnChange(func) 
-		OnChange=func 
+	function frame:SetOnChange(func)
+		OnChange=func
 	end
 	function frame:SetScript(script,value)
 		if script=="OnValueChanged" then
@@ -189,14 +189,14 @@ function factory:Slider(father,min,max,current,...)
 	return frame
 end
 --- Creates a checkbox.
--- 
+--
 -- @tparam frame father Parent frame to use
 -- @tparam bool current Actual value
--- @tparam string|table message String with description or table with .desc and .tooltip fields 
+-- @tparam string|table message String with description or table with .desc and .tooltip fields
 -- @tparam[opt] string tooltip Tooltip message (ignored if message is a table).Can be a table for a multiline tooltip
 -- @tparam[opt] number maxwidth maximum widget width
 -- @treturn widget checkbox widget object
--- 
+--
 function factory:Checkbox(father,current,...)
 	local frame,name=SetUp(father,"Checkbox",...)
 	local ck=CreateFrame("CheckButton",name,frame,"ChatConfigCheckButtonTemplate")
@@ -213,7 +213,7 @@ function factory:Checkbox(father,current,...)
 	ck:SetChecked(current)
 	local r,g,b,a=ck.Text:GetTextColor()
 	if current then ck.Text:SetTextColor(0,1,0,1) end
-	if frame.tooltip then 
+	if frame.tooltip then
 		ck:SetScript("OnEnter",function() frame:GetScript("OnEnter")(frame) end)
 	end
 	frame:SetWidth(ck:GetWidth()+ck.Text:GetWidth()+2)
@@ -228,21 +228,21 @@ function factory:Checkbox(father,current,...)
 			ck.Text:SetTextColor(0,1,0,1)
 		else
 			ck.Text:SetTextColor(r,g,b,a)
-		end 
-		self:CustomOnChange(value) 
+		end
+		self:CustomOnChange(value)
 	end
 	function frame:CustomOnChange(value) end
 	function frame:SetOnChange(func) self.CustomOnChange=func end
 	return frame
 end
 --- Creates a buttom.
--- 
+--
 -- @tparam frame father Parent frame to use
--- @tparam string|table message String with description or table with .desc and .tooltip fields 
+-- @tparam string|table message String with description or table with .desc and .tooltip fields
 -- @tparam[opt] string tooltip Tooltip message (ignored if message is a table. Can be a table for a multiline tooltip
 -- @tparam[opt] number maxwidth maximum widget width
 -- @treturn widget button widget object
--- 
+--
 function factory:Button(father,...)
 	local bt,name=SetUp(father,"Button",...)
 	bt:SetText(bt.message)
@@ -265,17 +265,17 @@ end
 -- @tparam frame father Parent frame to use
 -- @tparam mixed current Initial value
 -- @tparam tab list Option list
--- @tparam string|table message String with description or table with .desc and .tooltip fields 
--- @tparam[opt] string tooltip Tooltip message (ignored if message is a table). Can be a table for a multiline tooltip 
+-- @tparam string|table message String with description or table with .desc and .tooltip fields
+-- @tparam[opt] string tooltip Tooltip message (ignored if message is a table). Can be a table for a multiline tooltip
 -- @tparam[opt] number maxwidth maximum widget width
 -- @treturn widget dropdown widget object
--- 
+--
 	function factory:DropDown(father,current,list,...)
 	local frame,name=SetUp(father,"Dropdown",...)
 	frame:SetHeight(50)
 	frame:SetWidth(frame.maxwidth)
 	frame.SetOnChange=function() end
-	local dd=CreateFrame("Frame",name,frame,"MSA_DropDownMenuTemplate")
+	local dd=CreateFrame("Frame",name,frame,"UIDropDownMenuTemplate")
 	dd:SetPoint("BOTTOMLEFT")
 	dd:SetPoint("BOTTOMRIGHT")
 	dd.Left=_G[name.."Left"]
@@ -298,31 +298,31 @@ end
 	--dd:SetPoint("TOPRIGHT",0,-h)
 	frame.SetScript=SetScript
 	frame.child=dd
-	if frame.tooltip then 
+	if frame.tooltip then
 		dd:SetScript("OnEnter",function() frame:GetScript("OnEnter")(frame) end)
 	end
-	
+
 	dd:SetScript("OnLeave",function() GameTooltip:Hide() end)
 	dd.list=list
-	MSA_DropDownMenu_Initialize(dd, function(...)
+	UIDropDownMenu_Initialize(dd, function(...)
 		local i=0
 		for k,v in pairs(dd.list) do
 			i=i+1
-			local info=MSA_DropDownMenu_CreateInfo()
+			local info=UIDropDownMenu_CreateInfo()
 			info.text=v
 			info.value=k
 			info.func=function(...) return dd:OnValueChanged(...) end
 			info.arg1=i
 			info.arg2=k
 			--info.notCheckable=true
-			MSA_DropDownMenu_AddButton(info)
+			UIDropDownMenu_AddButton(info)
 		end
 	end)
-	MSA_DropDownMenu_SetSelectedValue(dd, current)
-	MSA_DropDownMenu_JustifyText(dd, "LEFT")
+	UIDropDownMenu_SetSelectedValue(dd, current)
+	UIDropDownMenu_JustifyText(dd, "LEFT")
 	function dd:OnValueChanged(this,index,value,...)
 		value=value or index
-		MSA_DropDownMenu_SetSelectedID(dd,index)
+		UIDropDownMenu_SetSelectedID(dd,index)
 		return frame:OnChange(value)
 	end
 	function frame:OnChange(value) end
@@ -337,11 +337,11 @@ end
 -- All data for the widget are inferred for the variable
 -- @tparam table addon The addon wich defined the variable
 -- @tparam frame father Parent frame to use
--- @tparam string flag name of the variable to use 
+-- @tparam string flag name of the variable to use
 -- @tparam[opt] number maxwidth maximum widget width
 function factory:Option(addon,father,flag,maxwidth)
 	if not addon or not addon.GetVarInfo or not father or not flag then
-		return		
+		return
 	end
 	local info=addon:GetVarInfo(flag)
 	if not info then error("factory:Option() Not existent " ..flag,2) end
@@ -353,7 +353,7 @@ function factory:Option(addon,father,flag,maxwidth)
 		w=self:Checkbox(f,addon:ToggleGet(flag,tipo),info)
 		w:SetOnChange(ToggleSet)
 	elseif( tipo=="select") then
-		w=self:DropDown(f,addon:ToggleGet(flag,tipo),info.values,info)			
+		w=self:DropDown(f,addon:ToggleGet(flag,tipo),info.values,info)
 		w:SetOnChange(ToggleSet)
 	elseif (tipo=="range") then
 		w=self:Slider(f,info.min,info.max,addon:ToggleGet(flag,info.type),info)
@@ -367,7 +367,7 @@ function factory:Option(addon,father,flag,maxwidth)
 	w.flag=flag
 	w.tipo=tipo
 	w.obj=addon
-	return w		
+	return w
 end
 factory.Dropdown=factory.DropDown -- compatibility
 libinit:_SetFactory(factory)

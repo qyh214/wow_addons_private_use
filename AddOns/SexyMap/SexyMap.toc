@@ -1,5 +1,5 @@
 ## Interface: 80000
-## Version: v8.0.1
+## Version: v8.0.2
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
 ## Notes-deDE: Spice up your minimap with some sexy options.

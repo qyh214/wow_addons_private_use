@@ -424,7 +424,6 @@
 	</Frame>
 	<Button name="GarrisonTraitCounterTemplate" inherits="GarrisonThreatCounterTemplate" virtual="true" enableMouse="true">
 		<Scripts>
-			<OnEnter function="GarrisonTraitCounter_OnEnter"/>
 			<OnLeave function="GameTooltip_Hide"/>
 			<OnClick>
 				PlaySound("igMainMenuOptionCheckBoxOn");

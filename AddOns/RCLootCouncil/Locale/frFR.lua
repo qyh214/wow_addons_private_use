@@ -45,6 +45,8 @@ L["Alt click Looting"] = "Butin en Alt-clic"
 L["alt_click_looting_desc"] = "Active le butin en Alt-clic, c.-à-d. qu'une session sera lancée en laissant appuyer le bouton Alt et en cliquant (clic gauche) avec la souris sur un objet."
 L["Alternatively, flag the loot as award later."] = "Sinon, désigner le butin comme devant être attribué plus tard."
 L["Always use RCLootCouncil when I'm Master Looter"] = "Toujours utiliser RCLootCouncil lorsque je suis maître du butin"
+--[[Translation missing --]]
+--[[ L["Always use RCLootCouncil with Personal Loot"] = ""--]] 
 L["Always use when leader"] = "Toujours utiliser lorsque je suis chef"
 --[[Translation missing --]]
 --[[ L["always_show_tooltip_howto"] = ""--]] 
@@ -56,6 +58,8 @@ L["Announce Considerations"] = "Annoncer les objets en examen"
 --[[ L["announce_&l_desc"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["announce_&n_desc"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["announce_&o_desc"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["announce_&p_desc"] = ""--]] 
 --[[Translation missing --]]
@@ -84,6 +88,8 @@ L["Are you sure you want to give #item to #player?"] = "Êtes-vous certain de vo
 --[[ L["Are you sure you want to request rolls for all unawarded items from %s?"] = ""--]] 
 L["Armor Token"] = "Jeton d'armure"
 L["Ask me every time I become Master Looter"] = "Me demander à chaque fois que je suis maître du butin"
+--[[Translation missing --]]
+--[[ L["Ask me every time Personal Loot is enabled"] = ""--]] 
 L["Ask me when leader"] = "Me demander lorsque je suis chef"
 L["Auto Award"] = "Attribution automatique"
 L["Auto Award to"] = "Attribuer automatiquement à"
@@ -227,6 +233,8 @@ L["Delete Skin"] = "Supprimer l'apparence"
 L["delete_skin_desc"] = "Supprimer l'apparence sélectionnée dans la liste."
 L["Deselect responses to filter them"] = "Désélectionner les réponses avant de pouvoir les filtrer"
 L["Diff"] = true
+--[[Translation missing --]]
+--[[ L["Discord friendly output."] = ""--]] 
 L["disenchant_desc"] = "Sélectionner cette option pour que ce motif soit choisi lorsque vous attribuez un objet par le biais du bouton 'Désenchanter'"
 --[[Translation missing --]]
 --[[ L["Done syncing"] = ""--]] 
@@ -248,6 +256,8 @@ L["enable_loot_history_desc"] = "Active l'historique. RCLootCouncil ne répertor
 L["enable_timeout_desc"] = "Cocher pour activer le délai de vote dans la fenêtre de butin"
 L["Enter your note:"] = "Saisissez votre note"
 L["EQdkp-Plus XML output, tailored for Enjin import."] = "Exporter en EQdkp-Plus XML, adapté pour être importé sur Enjin."
+--[[Translation missing --]]
+--[[ L["error_test_as_non_leader"] = ""--]] 
 L["Everyone have voted"] = "Tout le monde a voté"
 L["Export"] = "Exporter"
 --[[Translation missing --]]
@@ -549,6 +559,8 @@ L["tier_token_heroic"] = "Héroïque"
 L["tier_token_mythic"] = "Mythique"
 L["tier_token_normal"] = "Normal"
 L["Time"] = "Temps"
+--[[Translation missing --]]
+--[[ L["time_remaining_warning"] = ""--]] 
 L["Timeout"] = "Délai de vote"
 --[[Translation missing --]]
 --[[ L["Timeout when giving 'item' to 'player'"] = ""--]] 

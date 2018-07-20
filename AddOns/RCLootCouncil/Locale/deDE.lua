@@ -4,7 +4,7 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("RCLootCouncil", "deDE")
 if not L then return end
 
-L[" is not active in this raid."] = "ist in diesem Schlachtzug nicht aktiv."
+L[" is not active in this raid."] = "Ist in diesem Schlachtzug nicht aktiv."
 L[" you are now the Master Looter and RCLootCouncil is now handling looting."] = "Du bist jetzt der Plündermeister und RCLootCouncil erledigt jetzt das Plündern."
 L["&p was awarded with &i for &r!"] = "&i wurde an &p wegen &r vergeben!"
 L["2 Piece"] = "2 Teile"
@@ -41,6 +41,8 @@ L["Alt click Looting"] = "Alt-Klick-Plündern"
 L["alt_click_looting_desc"] = "Aktiviert das Plündern mit Alt-Klick, das heißt, dass eine Plündersitzung beginnt, wenn du Alt gedrückt hältst und auf einen Gegenstand (links)klickst."
 L["Alternatively, flag the loot as award later."] = "Alternativ, Markiere die Beute zur späteren Vergabe."
 L["Always use RCLootCouncil when I'm Master Looter"] = "Benutze immer RCLootCouncil, wenn ich Plündermeister bin"
+--[[Translation missing --]]
+--[[ L["Always use RCLootCouncil with Personal Loot"] = ""--]] 
 L["Always use when leader"] = "Immer benutzen, wenn ich Anführer bin"
 L["always_show_tooltip_howto"] = "Tooltip durch Doppelklick ein-/ausschalten"
 L["Announce Awards"] = "Vergaben ankündigen"
@@ -48,6 +50,8 @@ L["Announce Considerations"] = "Betrachtungen ankündigen"
 L["announce_&i_desc"] = "|cfffcd400 &i|r: Link zum Gegenstand. "
 L["announce_&l_desc"] = "|cfffcd400 &l|r: Gegenstandsstufe. "
 L["announce_&n_desc"] = "|cfffcd400 &n|r: Beim Erhalt würfeln. "
+--[[Translation missing --]]
+--[[ L["announce_&o_desc"] = ""--]] 
 L["announce_&p_desc"] = "|cfffcd400 &p|r: Name des Spielers, der die Beute bekommen hat. "
 L["announce_&r_desc"] = "|cfffcd400 &r|r: Begründung."
 L["announce_&s_desc"] = "|cfffcd400 &s|r: Sitzungs-ID."
@@ -69,6 +73,8 @@ L["Are you sure you want to reannounce all unawarded items to %s?"] = "Möchtest
 L["Are you sure you want to request rolls for all unawarded items from %s?"] = "Möchtest Du wirklich um alle nicht vergebenen Gegenstände von %s erneut würfeln lassen? "
 L["Armor Token"] = "Rüstungsmarke"
 L["Ask me every time I become Master Looter"] = "Frage mich jedes Mal, wenn ich Plündermeister werde"
+--[[Translation missing --]]
+--[[ L["Ask me every time Personal Loot is enabled"] = ""--]] 
 L["Ask me when leader"] = "Frage mich, wenn ich Anführer bin"
 L["Auto Award"] = "Automatische Vergabe"
 L["Auto Award to"] = "Automatisch vergeben an"
@@ -190,6 +196,8 @@ L["Delete Skin"] = "Optik löschen"
 L["delete_skin_desc"] = "Löscht die momentan ausgewählte Nicht-Standard-Optik von der Liste."
 L["Deselect responses to filter them"] = "Wähle Antworten ab, um sie zu filtern."
 L["Diff"] = "Diff."
+--[[Translation missing --]]
+--[[ L["Discord friendly output."] = ""--]] 
 L["disenchant_desc"] = "Auswählen, um diesen Grund zu benutzen, wenn du einen Gegenstand über den Button 'Entzaubern' vergibst."
 L["Done syncing"] = "Synchronisierung abgeschlossen"
 L["Double click to delete this entry."] = "Doppelklick, um diesen Eintrag zu löschen"
@@ -205,6 +213,8 @@ L["enable_tierbuttons_desc"] = "Aktivieren, um alternative Optionen anzugeben, w
 L["enable_timeout_desc"] = "Anhaken, um eine Zeitbeschränkung im Beutefenster zu aktivieren"
 L["Enter your note:"] = "Gib deine Notiz ein:"
 L["EQdkp-Plus XML output, tailored for Enjin import."] = "EQdkp-Plus-XML-Ausgabe, maßgeschneidert für den Enjin-Import."
+--[[Translation missing --]]
+--[[ L["error_test_as_non_leader"] = ""--]] 
 L["Everyone have voted"] = "Jeder hat abgestimmt"
 L["Export"] = "Exportieren"
 L["Following items were registered in the award later list:"] = "Die folgenden Gegenstände wurden in die \"Später vergeben\"-Liste eingetragen:"
@@ -311,19 +321,16 @@ L["Open the Loot History"] = "Beuteverlauf öffnen"
 L["open_the_loot_history_desc"] = "Klicken, um den Beuteverlauf zu öffnen."
 L["Opens the synchronizer"] = "Öffnet den Synchronisierer"
 L["Other piece"] = "Anderes Teil"
---[[Translation missing --]]
---[[ L["Out of instance"] = ""--]] 
+L["Out of instance"] = "Keine Instanz"
 L["'player' can't receive 'type'"] = "%s kann %s nicht empfangen – Version stimmt nicht überein?"
 L["'player' declined your sync request"] = "%s hat deine Synchronisierungsanfrage abgelehnt"
 L["'player' has asked you to reroll"] = "%s bittet dich erneut zu würfeln"
 L["'player' has ended the session"] = "%s hat die Sitzung beendet."
 L["'player' has rolled 'roll' for: 'item'"] = "%s hat %d für %s gewürfelt."
 L["'player' hasn't opened the sync window"] = "%s hat das Synchronisierungsfenster nicht geöffnet (/rc sync)"
---[[Translation missing --]]
---[[ L["Player is ineligible for this item"] = ""--]] 
+L["Player is ineligible for this item"] = "Spieler ist für diesen Gegenstand nicht geegnet"
 L["Player is not in the group"] = "Spieler ist nicht in der Gruppe."
---[[Translation missing --]]
---[[ L["Player is not in this instance"] = ""--]] 
+L["Player is not in this instance"] = "Spieler befindet sich nicht in dieser Instanz"
 L["Player is not in this instance or his inventory is full"] = "Spieler ist nicht in der Instanz oder hat ein volles Inventar."
 L["Player is not in this instance or is ineligible for this item"] = "Spieler ist nicht in der Instanz oder nicht beuteberechtigt für diesen Gegenstand."
 L["Player is offline"] = "Spieler ist offline."
@@ -444,6 +451,8 @@ L["tier_token_heroic"] = "Heroisch"
 L["tier_token_mythic"] = "Mythisch"
 L["tier_token_normal"] = "Normal"
 L["Time"] = "Zeit"
+--[[Translation missing --]]
+--[[ L["time_remaining_warning"] = ""--]] 
 L["Timeout"] = "Zeitbeschränkung"
 L["Timeout when giving 'item' to 'player'"] = "Zeitüberschreitung beim Zuteilen von %s an %s"
 L["To target"] = "An Ziel"
@@ -491,8 +500,7 @@ L["winners"] = "Gewinner"
 L["x days"] = "%d Tage"
 L["x out of x have voted"] = "%d von %d haben abgestimmt"
 L["You are not allowed to see the Voting Frame right now."] = "Du bist nicht berechtigt, das Abstimmungsfenster jetzt zu sehen."
---[[Translation missing --]]
---[[ L["You are not in an instance"] = ""--]] 
+L["You are not in an instance"] = "Ihr seid in keiner Instanz"
 L["You can only auto award items with a quality lower than 'quality' to yourself due to Blizaard restrictions"] = "Du kannst, aufgrund von Einschränkungen seitens Blizzard, nur Gegenstände automatisch vergeben, die eine niedrigere Qualität als %s haben."
 L["You cannot initiate a test while in a group without being the MasterLooter."] = "Du kannst keinen Test einleiten, während du in einer Gruppe bist, ohne der Plündermeister zu sein."
 L["You cannot start an empty session."] = "Du kannst keine leere Sitzung starten."

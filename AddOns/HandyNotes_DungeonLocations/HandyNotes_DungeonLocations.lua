@@ -11,8 +11,6 @@ if not HandyNotes then return end
 local L = LibStub("AceLocale-3.0"):GetLocale("HandyNotes_DungeonLocations")
 
 local iconDefault = "Interface\\Icons\\TRADE_ARCHAEOLOGY_CHESTOFTINYGLASSANIMALS"
---local iconDungeon = "Interface\\Addons\\HandyNotes_DungeonLocations\\dungeon.tga"
---local iconRaid = "Interface\\Addons\\HandyNotes_DungeonLocations\\raid.tga"
 local iconDungeon = "Interface\\MINIMAP\\Dungeon"
 local iconRaid = "Interface\\MINIMAP\\Raid"
 local iconMixed = "Interface\\Addons\\HandyNotes_DungeonLocations\\merged.tga"
@@ -24,38 +22,15 @@ local nodes = { }
 local minimap = { } -- For nodes that need precise minimap locations but would look wrong on zone or continent maps
 local alterName = { }
 local extraInfo = { }
-local mapLevels = { } -- Bad juju, I use this to hide nodes from appearing on the wrong map levels.  e.g the new Dalaran; definitely probably a better way to do this
-local legionInstancesDiscovered = { } -- Extrememly bad juju
---local lockouts = { }
+local legionInstancesDiscovered = { } -- Extrememly bad juju, needs fixing in BfA
+local coordToDungeon = { } -- If it isn't obvious by now, I have no idea how to actually program
 
 if (DEBUG) then
- HNDL_NODES = nodes
- HNDL_MINIMAP = minimap
- HNDL_ALTERNAME = alterName
- --HNDL_LOCKOUTS = lockouts
- 
+	HNDL_NODES = nodes
+	HNDL_MINIMAP = minimap
+	HNDL_ALTERNAME = alterName
+	--HNDL_LOCKOUTS = lockouts
 end
-
-local internalNodes = {  -- List of zones to be excluded from continent map
- ["BlackrockMountain"] = true,
- ["CavernsofTime"] = true,
- ["DeadminesWestfall"] = true,
- ["Dalaran"] = true,
- ["MaraudonOutside"] = true,
- ["NewTinkertownStart"] = true,
- ["ScarletMonasteryEntrance"] = true,
- ["WailingCavernsBarrens"] = true,
-}
-
-local continents = {
-	["Azeroth"] = true, -- Eastern Kingdoms
-	["Draenor"] = true,
-	["Expansion01"] = true, -- Outland
-	["Kalimdor"] = true,
-	["Northrend"] = true,
-	["Pandaria"] = true,
- ["BrokenIsles"] = true,
-}
 
 local LOCKOUTS = { }
 local function updateLockouts()
@@ -73,18 +48,23 @@ local function updateLockouts()
 end
 
 local pluginHandler = { }
-function pluginHandler:OnEnter(mapFile, coord) -- Copied from handynotes
+function pluginHandler:OnEnter(uiMapId, coord) -- Copied from handynotes
  --GameTooltip:AddLine("text" [, r [, g [, b [, wrap]]]])
  -- Maybe check for situations where minimap and node coord overlaps
     local nodeData = nil
 	
     --if (not nodes[mapFile][coord]) then return end
+	if (coordToDungeon[coord]) then
+		nodeData = coordToDungeon[coord]
+	end
+	
 	if (minimap[mapFile] and minimap[mapFile][coord]) then
 	 nodeData = minimap[mapFile][coord]
 	end
 	if (nodes[mapFile] and nodes[mapFile][coord]) then
 	 nodeData = nodes[mapFile][coord]
 	end
+	
 	if (not nodeData) then return end
 	
 	local tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip
@@ -133,75 +113,142 @@ function pluginHandler:OnLeave(mapFile, coord)
 end
 
 do
- local scale, alpha = 1, 1
- local function iter(t, prestate)
-  if not t then return nil end
-		
-  local state, value = next(t, prestate)
-  while state do
-   if (db.show[value.type]) then -- Only show types that are set to be shown in the options
-	local icon
-    if (value.type == "Dungeon") then
-     icon = iconDungeon
-    elseif (value.type == "Raid") then
-     icon = iconRaid
-    elseif (value.type == "Mixed") then
-     icon = iconMixed
-    else
-     icon = iconDefault
-    end
-  
-    local allLocked = true
-    local anyLocked = false
-    local instances = { strsplit("\n", value.name) }
-    for i, v in pairs(instances) do
-     if (not LOCKOUTS[v] and not LOCKOUTS[alterName[v]]) then
- 	 allLocked = false
-     else
-	  anyLocked = true
-	 end
-    end
-  
-    -- I feel like this inverted lockout thing could be done far better
-    if ((anyLocked and db.invertlockout) or (allLocked and not db.invertlockout) and db.lockoutgray) then   
-     icon = iconGray
-    end
-    if ((anyLocked and db.invertlockout) or (allLocked and not db.invertlockout) and db.uselockoutalpha) then
-     alpha = db.lockoutalpha
-    else
-     alpha = isContinent and db.continentAlpha or db.zoneAlpha
-    end
-		
-    return state, nil, icon, scale, alpha
-   end
-  state, value = next(t, state)
-  end 
- end
- function pluginHandler:GetNodes(mapFile, isMinimapUpdate, mapLevel)
-  if (DEBUG) then
-   print(mapFile, mapLevel, isMinimapUpdate)
-   if (mapLevels[mapFile]) then
-    for k, v in pairs(mapLevels[mapFile]) do
-     print(k, v)
-    end
-   end
-  end
-  if (mapLevels[mapFile] and not mapLevels[mapFile][mapLevel]) then -- I put this here to stop nodes from showing up on other maplevels for certain zones e.g the new Dalaran
-   return iter
-  end
-  local isContinent = continents[mapFile]
-  scale = isContinent and db.continentScale or db.zoneScale
-  alpha = isContinent and db.continentAlpha or db.zoneAlpha
-  
-  if (isMinimapUpdate and minimap[mapFile]) then
-   return iter, minimap[mapFile]
-  end
-  if (isContinent and not db.continent) then
-   return iter
-  else
-   return iter, nodes[mapFile]
-  end
- end
+	local tablepool = setmetatable({}, {__mode = 'k'})
+
+	local function iter(t, prestate)
+		if not t then return end
+		local data = t.data
+
+		local state, value = next(data, prestate)
+
+		if value then
+			if (not coordToDungeon[state]) then
+				coordToDungeon[state] = value
+			end
+			local icon, alpha
+			if (value.type == "Dungeon") then
+				icon = iconDungeon
+			elseif (value.type == "Raid") then
+				icon = iconRaid
+			elseif (value.type == "Mixed") then
+				icon = iconMixed
+			else
+				icon = iconDefault
+			end
+			
+			local allLocked = true
+			local anyLocked = false
+			local instances = { strsplit("\n", value.name) }
+			for i, v in pairs(instances) do
+				if (not LOCKOUTS[v] and not LOCKOUTS[alterName[v]]) then
+					allLocked = false
+				else
+					anyLocked = true
+				end
+			end
+
+			-- I feel like this inverted lockout thing could be done far better
+			if ((anyLocked and db.invertlockout) or (allLocked and not db.invertlockout) and db.lockoutgray) then   
+				icon = iconGray
+			end
+			if ((anyLocked and db.invertlockout) or (allLocked and not db.invertlockout) and db.uselockoutalpha) then
+				alpha = db.lockoutalpha
+			else
+				alpha = db.zoneAlpha
+			end
+			
+			return state, nil, icon, db.zoneScale, alpha
+		end
+		wipe(t)
+		tablepool[t] = true
+	end
+
+
+	-- This is a funky custom iterator we use to iterate over every zone's nodes
+	-- in a given continent + the continent itself
+	local function iterCont(t, prestate)
+		if not t then return end
+
+		local zone = t.C[t.Z]
+		local data = nodes[zone]
+		local state, value
+		while zone do
+			if data then -- Only if there is data for this zone
+				state, value = next(data, prestate)
+				while state do -- Have we reached the end of this zone?
+					if (not coordToDungeon[state]) then
+						coordToDungeon[state] = value
+					end
+					local icon, alpha
+					if (value.type == "Dungeon") then
+						icon = iconDungeon
+					elseif (value.type == "Raid") then
+						icon = iconRaid
+					elseif (value.type == "Mixed") then
+						icon = iconMixed
+					else
+						icon = iconDefault
+					end
+					local allLocked = true
+					local anyLocked = false
+					local instances = { strsplit("\n", value.name) }
+					for i, v in pairs(instances) do
+						if (not LOCKOUTS[v] and not LOCKOUTS[alterName[v]]) then
+							allLocked = false
+						else
+							anyLocked = true
+						end
+					end
+	  
+					-- I feel like this inverted lockout thing could be done far better
+					if ((anyLocked and db.invertlockout) or (allLocked and not db.invertlockout) and db.lockoutgray) then   
+						icon = iconGray
+					end
+					if ((anyLocked and db.invertlockout) or (allLocked and not db.invertlockout) and db.uselockoutalpha) then
+						alpha = db.lockoutalpha
+					else
+						alpha = db.continentAlpha
+					end
+					
+					if not value.hideOnContinent or zone == t.contId then -- Show on continent?
+						return state, zone, icon, db.continentScale, alpha
+					end
+					state, value = next(data, state) -- Get next data
+				end
+			end
+			-- Get next zone
+			t.Z = next(t.C, t.Z)
+			zone = t.C[t.Z]
+			data = nodes[zone]
+			prestate = nil
+		end
+		wipe(t)
+		tablepool[t] = true
+	end
+
+	function pluginHandler:GetNodes2(uiMapId, isMinimapUpdate)
+		local C = HandyNotes:GetContinentZoneList(uiMapId) -- Is this a continent?
+		if C then
+			local tbl = next(tablepool) or {}
+			tablepool[tbl] = nil
+			tbl.C = C
+			table.insert(tbl.C, uiMapId) -- Did this because otherwise nodes only on continent maps don't show up
+			tbl.Z = next(C)
+			tbl.contId = uiMapId
+			return iterCont, tbl, nil
+		else -- It is a zone
+			if (nodes[uiMapId] == nil) then return iter end -- Throws error if I don't do this
+			--print('zone')
+			local tbl = next(tablepool) or {}
+			tablepool[tbl] = nil
+			if (isMinimapUpdate and minimap[uiMapId]) then
+				tbl.data = minimap[uiMapId]
+			else
+				tbl.data = nodes[uiMapId]
+			end
+			return iter, tbl, nil
+		end
+	end
 end
 
 local waypoints = {}
@@ -214,9 +261,9 @@ local function setWaypoint(mapFile, coord)
 	end
 
 	local title = dungeon.name
-	local zone = HandyNotes:GetMapFiletoMapID(mapFile)
 	local x, y = HandyNotes:getXY(coord)
-	waypoints[dungeon] = TomTom:AddMFWaypoint(zone, nil, x, y, {
+	--print(x, y)
+	waypoints[dungeon] = TomTom:AddWaypoint(mapFile, x, y, {
 		title = dungeon.name,
 		persistent = nil,
 		minimap = true,
@@ -226,6 +273,7 @@ end
 
 function pluginHandler:OnClick(button, pressed, mapFile, coord)
  if (not pressed) then return end
+ --print(button, pressed, mapFile, coord)
  if (button == "RightButton" and db.tomtom and TomTom) then
   setWaypoint(mapFile, coord)
   return
@@ -235,13 +283,21 @@ function pluginHandler:OnClick(button, pressed, mapFile, coord)
    UIParentLoadAddOn('Blizzard_EncounterJournal')
   end
   local dungeonID
-  if (type(nodes[mapFile][coord].id) == "table") then
+  --[[if (type(nodes[mapFile][coord].id) == "table") then
    dungeonID = nodes[mapFile][coord].id[1]
   else
    dungeonID = nodes[mapFile][coord].id
+  end]]--
+  if (coordToDungeon[coord] and type(coordToDungeon[coord].id) == "table") then
+   dungeonID = coordToDungeon[coord].id[1]
+  else
+   dungeonID = coordToDungeon[coord].id
   end
+  
   if (not dungeonID) then return end
+  --print(dungeonID)
   local name, _, _, _, _, _, _, link = EJ_GetInstanceInfo(dungeonID)
+  if not link then return end
   local difficulty = string.match(link, 'journal:.-:.-:(.-)|h') 
   if (not dungeonID or not difficulty) then return end
   EncounterJournal_OpenJournal(difficulty, dungeonID)
@@ -287,7 +343,6 @@ local function updateStuff()
 end
 
 function Addon:PLAYER_ENTERING_WORLD()
- --print("PLAYER_ENTERING_WORLD Fired!")
  self:CheckForPOIs()
  updateStuff()
 end
@@ -501,9 +556,11 @@ end
 -- This could also probably be done better maybe
 -- Looks like this function used to rely on the map id, changed so it doesn't error but needs further testing
 function Addon:PopulateMinimap() -- This use to ignore duplicate dungeon's but now it doesn't
+ --print('Populating minimap')
  local temp = { }
  for k,v in pairs(nodes) do
   if (minimap[k]) then
+	--print('Minimap already exists')
    for a,b in pairs(minimap[k]) do -- Looks at the nodes we already have on the minimap and marks them down in a temp table
 	temp[a] = true
    end
@@ -532,7 +589,7 @@ table.wipe(minimap)
 -- },
 -- VANILLA
 if (not self.db.profile.hideVanilla) then
-nodes["AhnQirajTheFallenKingdom"] = {
+nodes[327] = { -- AhnQirajTheFallenKingdom
  [59001430] = {
   id = 743,
   type = "Raid",
@@ -543,14 +600,14 @@ nodes["AhnQirajTheFallenKingdom"] = {
   hideOnContinent = true
  }, -- Temple of Ahn'Qiraj Silithus 24308730, World 40908570
 }
-nodes["Ashenvale"] = {
+nodes[63] = { -- Ashenvale
  --[16501100] = { 227,  type = "Dungeon" }, -- Blackfathom Deeps 14101440 May look more accurate
  [14001310] = {
   id = 227,
   type = "Dungeon",
  }, -- Blackfathom Deeps, not at portal but look
 }
-nodes["Badlands"] = {
+nodes[15] = { -- Badlands
  [41801130] = { 
   id = 239,
   type = "Dungeon",
@@ -561,19 +618,20 @@ nodes["Badlands"] = {
   hideOnMinimap = true,
  }, -- Uldaman (Secondary Entrance)
 }
-minimap["Badlands"] = {
+minimap[15] = { -- Badlands
  [60683744] = {
   id = 239,
   type = "Dungeon"
  }, -- Uldaman (Secondary Entrance)
 }
-nodes["Barrens"] = {
+nodes[10] = { -- Barrens
 [42106660] = {
  id = 240,
  type = "Dungeon",
+ cont = true,
  }, -- Wailing Caverns
 }
-nodes["BurningSteppes"] = {
+nodes[36] = { -- BurningSteppes
  [20303260] = {
   id = { 66, 228, 229, 559, 741, 742 },
   type = "Mixed", 
@@ -585,7 +643,7 @@ nodes["BurningSteppes"] = {
   hideOnContinent = true,
  }, -- Blackwind Descent
 }
-nodes["DeadwindPass"] = {
+nodes[42] = { -- DeadwindPass
  [46907470] = {
   id = 745,
   type = "Raid",
@@ -597,25 +655,25 @@ nodes["DeadwindPass"] = {
   hideOnContinent = true,
  }, -- Return to Karazhan
 }
-nodes["Desolace"] = {
+nodes[66] = { -- Desolace
  [29106250] = {
   id = 232,
   type = "Dungeon",
  }, -- Maraudon 29106250 Door at beginning
 }
-nodes["DunMorogh"] = {
+nodes[27] = { -- DunMorogh
  [29903560] = {
   id = 231,
   type = "Dungeon",
  }, -- Gnomeregan
 }
-nodes["Dustwallow"] = {
+nodes[70] = { -- Dustwallow
  [52907770] = {
   id = 760,
   type = "Raid",
  }, -- Onyxia's Lair
 }
-nodes["EasternPlaguelands"] = {
+nodes[23] = { -- EasternPlaguelands
  [27201160] = {
   id = 236,
   lfgid = 40,
@@ -627,7 +685,7 @@ nodes["EasternPlaguelands"] = {
   type = "Dungeon", -- Stratholme Service Entrance
  },
 }
-nodes["Feralas"] = {
+nodes[69] = { -- Feralas
  [65503530] = {
   id = 230,
   lfgid = 34,
@@ -656,13 +714,13 @@ nodes["Feralas"] = {
   hideOnContinent = true,
  }, -- Dire Maul (at Lariss Pavillion)
 }
-nodes["Orgrimmar"] = {
+nodes[85] = { -- Orgrimmar
  [52405800] = {
   id = 226,
   type = "Dungeon",
  }, -- Ragefire Chasm Cleft of Shadow 70104880
 }
-nodes["SearingGorge"] = {
+nodes[32] = { -- SearingGorge
  [41708580] = {
   id = { 66, 228, 229, 559, 741, 742 },
   type = "Mixed",
@@ -674,7 +732,8 @@ nodes["SearingGorge"] = {
   hideOnContinent = true,
  }, -- Blackwind Descent
 }
-nodes["Silithus"] = {
+
+nodes[81] = { -- Silithus
  [36208420] = {
   id = 743,
   type = "Raid",
@@ -684,43 +743,43 @@ nodes["Silithus"] = {
   type = "Raid",
  }, -- Temple of Ahn'Qiraj
 }
-nodes["Silverpine"] = {
+nodes[21] = { -- Silverpine
  [44806780] = {
   id = 64,
   type = "Dungeon",
  }, -- Shadowfang Keep
 }
-nodes["SouthernBarrens"] = {
+nodes[199] = { -- SouthernBarrens
  [40909450] = {
   id = 234,
   type = "Dungeon",
  }, -- Razorfen Kraul
 }
-nodes["StormwindCity"] = {
+nodes[84] = { -- StormwindCity
  [50406640] = {
   id = 238,
   type = "Dungeon",
  }, -- The Stockade
 }
-nodes["StranglethornJungle"] = {
+nodes[50] = { -- StranglethornJungle
  [72203290] = {
   id = 76,
   type = "Dungeon",
  }, -- Zul'Gurub
 }
-nodes["StranglethornVale"] = { -- Jungle and Cape are subzones of this zone (weird)
+nodes[224] = { -- StranglethornVale Jungle and Cape are subzones of this zone (weird)
  [63402180] = {
   id = 76,
   type = "Dungeon",
  }, -- Zul'Gurub
 }
-nodes["SwampOfSorrows"] = {
+nodes[51] = { -- SwampOfSorrows
  [69505250] = {
   id = 237,
   type = "Dungeon",
  }, -- The Temple of Atal'hakkar
 }
-nodes["Tanaris"] = {
+nodes[71] = { --Tanaris
  [65604870] = {
   id = { 279, 255, 251, 750, 184, 185, 186, 187 },
   type = "Mixed",
@@ -739,7 +798,7 @@ nodes["Tanaris"] = {
   type = "Dungeon",
  }, -- Zul'Farrak
 }
-nodes["Tirisfal"] = {
+nodes[18] = { -- Tirisfal
  [85303220] = {
   id = 311,
   type = "Dungeon",
@@ -751,19 +810,19 @@ nodes["Tirisfal"] = {
   hideOnContinent = true,
  }, -- Scarlet Monastery
 }
-nodes["ThousandNeedles"] = {
+nodes[64] = { -- ThousandNeedles
  [47402360] = {
   id = 233,
   type = "Dungeon",
  }, -- Razorfen Downs
 }
-nodes["WesternPlaguelands"] = {
+nodes[22] = { -- WesternPlaguelands
  [69007290] = {
   id = 246,
   type = "Dungeon",
  }, -- Scholomance World 50903650
 }
-nodes["Westfall"] = {
+nodes[52] = { -- Westfall
  --[38307750] = { 63,  type = "Dungeon" }, -- Deadmines 43707320  May look more accurate
  [43107390] = {
   id = 63,
@@ -772,10 +831,11 @@ nodes["Westfall"] = {
 }
 
 -- Vanilla Continent, For things that should be shown or merged only at the continent level
- nodes["Azeroth"] = {
+ nodes[13] = { -- Eastern Kingdoms
   [46603050] = {
    id = { 311, 316 },
    type = "Dungeon",
+   cont = true,
   }, -- Scarlet Halls/Monastery
   [47316942] = {
    id = { 66, 73, 228, 229, 559, 741, 742 },
@@ -787,13 +847,13 @@ nodes["Westfall"] = {
    type = "Mixed",
   }, -- Karazhan/Return to Karazhan
  }
- nodes["Kalimdor"] = {
+ nodes[12] = { -- Kalimdor
   [44006850] = {
    id = 230,
    type = "Dungeon"
-  }, -- Dire Maul
+  }, -- 	 Maul
  }
- minimap["Feralas"] = {
+ minimap[69] = { -- Feralas
   [65503530] = {
    id = 230,
    lfgid = 34,
@@ -818,16 +878,10 @@ nodes["Westfall"] = {
    type = "Dungeon",
    hideOnContinent = true,
   }, -- Dire Maul, probably dire maul west
- --[[ [76463590] = {
-   id = 230,
-   lfgid = 34,
-   type = "Dungeon",
-   hideOnContinent = true,
-  },Lariss Pavillion Entrance]]--
  }
 
 -- Vanilla Subzone maps
-nodes["BlackrockMountain"] = {
+nodes[33] = { -- BlackrockMountain
  [71305340] = {
   id = 66,
   type = "Dungeon",
@@ -853,7 +907,7 @@ nodes["BlackrockMountain"] = {
   type = "Raid",
  }, -- Blackwing Lair
 }
-nodes["CavernsofTime"] = {
+nodes[75] = { -- CavernsofTime
  [57608260] = {
   id = 279,
   type = "Dungeon",
@@ -887,36 +941,49 @@ nodes["CavernsofTime"] = {
   type = "Raid",
  }, -- Dragon Soul
 }
-nodes["DeadminesWestfall"] = {
+nodes[55] = { -- DeadminesWestfall
  [25505090] = {
   id = 63,
   type = "Dungeon",
  }, -- Deadmines
 }
-nodes["MaraudonOutside"] = {
- [52102390] = {
-  id = 232,
-  lfgid = 272,
-  type = "Dungeon"
- }, -- Maraudon 30205450 
+nodes[67] = { -- MaraudonOutside Wicked Grotto I swapped the lfgid for this one and the 26 one to better match map name
  [78605600] = {
   id = 232,
-  lfgid = 26,
+  lfgid = 272,
   type = "Dungeon",
  }, -- Maraudon 36006430
+}
+nodes[68] = { -- Maraudon Foulspore Cavern
+ [52102390] = {
+  id = 232,
+  lfgid = 26,
+  type = "Dungeon"
+ }, -- Maraudon 30205450 
+
  [44307680] = {
   id = 232,
   lfgid = 273,
   type = "Dungeon",
  },  -- Maraudon
 }
-nodes["NewTinkertownStart"] = {
+nodes[469] = { -- NewTinkertownStart
  [31703450] = {
   id = 231,
   type = "Dungeon",
  }, -- Gnomeregan
 }
-nodes["ScarletMonasteryEntrance"] = { -- Internal Zone
+nodes[30] = { -- New Tinker Town
+ [30167457] = {
+  id = 231,
+  type = "Dungeon"
+ }, -- Gnomeregan
+ [44631377] = {
+  id = 231,
+  type = "Dungeon",
+ }, -- Gnomeregan
+}
+nodes[19] = { -- Internal Zone ScarletMonasteryEntrance
  [68802420] = {
   id = 316,
   type = "Dungeon",
@@ -926,7 +993,7 @@ nodes["ScarletMonasteryEntrance"] = { -- Internal Zone
   type = "Dungeon",
  }, -- Scarlet Halls
 }
-nodes["WailingCavernsBarrens"] = {
+nodes[11] = {
  [55106640] = {
   id = 240,
   type = "Dungeon",
@@ -936,19 +1003,19 @@ end
 
 -- OUTLAND
 if (not self.db.profile.hideOutland) then
-nodes["BladesEdgeMountains"] = {
+nodes[105] = { -- BladesEdgeMountains
  [69302370] = {
   id = 746,
   type = "Raid",
  }, -- Gruul's Lair World 45301950
 }
-nodes["Ghostlands"] = {
+nodes[95] = { -- Ghostlands
  [85206430] = {
   id = 77,
   type = "Dungeon",
  }, -- Zul'Aman World 58302480
 }
-nodes["Hellfire"] = {
+nodes[100] = { -- Hellfire
  --[47505210] = { 747,type = "Raid" }, -- Magtheridon's Lair World 56705270
  --[47605360] = { 248,  type = "Dungeon" }, -- Hellfire Ramparts World 56805310 Stone 48405240 World 57005280
  --[47505200] = { 259,  type = "Dungeon" }, -- The Shattered Halls World 56705270
@@ -959,7 +1026,7 @@ nodes["Hellfire"] = {
   hideOnMinimap = true,
  }, -- Hellfire Ramparts, The Blood Furnace, The Shattered Halls, Magtheridon's Lair
 }
-nodes["Netherstorm"] = {
+nodes[109] = { -- Netherstorm
  [71705500] = {
   id = 257,
   type = "Dungeon",
@@ -977,7 +1044,7 @@ nodes["Netherstorm"] = {
   type = "Raid",
  }, -- The Eye World 66602350
 }
-nodes["TerokkarForest"] = {
+nodes[108] = { -- TerokkarForest
  [34306560] = {
   id = 247,
   type = "Dungeon",
@@ -995,13 +1062,13 @@ nodes["TerokkarForest"] = {
   type = "Dungeon",
  }, -- Shadow Labyrinth World 46108130
 }
-nodes["ShadowmoonValley"] = {
+nodes[104] = { -- ShadowmoonValley
  [71004660] = {
   id = 751,
   type = "Raid",
  }, -- Black Temple World 72608410
 }
-nodes["Sunwell"] = {
+nodes[122] = { -- Sunwell, Isle of Quel'Danas
  [61303090] = {
   id = 249,
   type = "Dungeon",
@@ -1011,7 +1078,7 @@ nodes["Sunwell"] = {
   type = "Raid",
  }, -- Sunwell Plateau World 55300380
 }
-nodes["Zangarmarsh"] = {
+nodes[102] = { -- Zangarmarsh
  --[54203450] = { 262,  type = "Dungeon" }, -- Underbog World 35804330
  --[48903570] = { 260,  type = "Dungeon" }, -- Slave Pens World 34204370
  --[51903280] = { 748,  type = "Raid" }, -- Serpentshrine Cavern World 35104280
@@ -1021,7 +1088,7 @@ nodes["Zangarmarsh"] = {
   hideOnMinimap = true,
  }, -- Mixed Location
 }
-minimap["Hellfire"] = {
+minimap[100] = { -- Hellfire
  [47605360] = {
   id = 248,
   type = "Dungeon",
@@ -1039,7 +1106,7 @@ minimap["Hellfire"] = {
   type = "Raid",
  }, -- Magtheridon's Lair World 56705270, Old 47505210.  Adjusted for clarity
 }
-minimap["Zangarmarsh"] = {
+minimap[102] = { -- Zangarmarsh
  [48903570] = {
   id = 260,
   type = "Dungeon",
@@ -1061,7 +1128,7 @@ end
 
 -- NORTHREND (16 Dungeons, 9 Raids)
 if (not self.db.profile.hideNorthrend) then
-nodes["BoreanTundra"] = {
+nodes[114] = { --"BoreanTundra"
  [27602660] = {
   id = { 282, 756, 281 },
   type = "Mixed",
@@ -1069,16 +1136,24 @@ nodes["BoreanTundra"] = {
  -- Oculus same as eye of eternity
  --[27502610] = { "The Nexus",  type = "Dungeon" },
 }
-nodes["CrystalsongForest"] = {
+nodes[125] = {
+ [66726812] = {
+  id = 283,
+  type = "Dungeon",
+  hideOnContinent = true,
+ }, -- The Violet Hold
+}
+nodes[127] = {
  [28203640] = {
   id = 283,
   type = "Dungeon",
  }, -- The Violet Hold
 }
-nodes["Dragonblight"] = {
+nodes[115] = { -- Dragonblight
  [28505170] = {
   id = 271,
   type = "Dungeon",
+  cont = true,
  }, -- Ahn'kahet: The Old Kingdom
  [26005090] = {
   id = 272,
@@ -1097,7 +1172,7 @@ nodes["Dragonblight"] = {
   type = "Raid",
  }, -- The Obsidian Sanctum
 }
-nodes["HowlingFjord"] = {
+nodes[117] = { -- HowlingFjord
  --[57304680] = { 285,  type = "Dungeon" }, -- Utgarde Keep, more accurate but right underneath Utgarde Pinnacle
  [58005000] = {
   id = 285,
@@ -1108,7 +1183,7 @@ nodes["HowlingFjord"] = {
   type = "Dungeon",
  }, -- Utgarde Pinnacle
 }
-nodes["IcecrownGlacier"] = { 
+nodes[118] = { -- IcecrownGlacier
  [54409070] = {
   id = { 276, 278, 280 },
   type = "Dungeon",
@@ -1129,13 +1204,13 @@ nodes["IcecrownGlacier"] = {
   type = "Raid",
  }, -- Icecrown Citadel
 }
-nodes["LakeWintergrasp"] = {
+nodes[123] = { -- LakeWintergrasp
  [50001160] = {
   id = 753,
   type = "Raid",
  }, -- Vault of Archavon
 }
-nodes["TheStormPeaks"] = {
+nodes[120] = { -- TheStormPeaks
  [45302140] = {
   id = 275,
   type = "Dungeon",
@@ -1149,7 +1224,7 @@ nodes["TheStormPeaks"] = {
   type = "Raid",
  }, -- Ulduar
 }
-nodes["ZulDrak"] = {
+nodes[121] = { -- ZulDrak
  [28508700] = {
   id = 273,
   type = "Dungeon",
@@ -1163,15 +1238,9 @@ nodes["ZulDrak"] = {
   type = "Dungeon",
  }, -- Gundrak Right Entrance
 }
-nodes["Dalaran"] = {
- [68407000] = {
-  id = 283,
-  type = "Dungeon",
- }, -- The Violet Hold
-}
 
 -- NORTHREND MINIMAP, For things that would be too crowded on the continent or zone maps but look correct on the minimap
-minimap["IcecrownGlacier"] = {
+minimap[118] = { -- IcecrownGlacier
  [54908980] = {
   id = 280,
   type = "Dungeon",
@@ -1190,7 +1259,7 @@ minimap["IcecrownGlacier"] = {
 }
 
 -- NORTHREND CONTINENT, For things that should be shown or merged only at the continent level
-nodes["Northrend"] = {
+nodes[113] = { -- Northrend
  --[80407600] = { 285,  type = "Dungeon", false, 286 }, -- Utgarde Keep, Utgarde Pinnacle CONTINENT MERGE Location is slightly incorrect
  [47501750] = {
   id = { 757, 284 },
@@ -1201,25 +1270,25 @@ end
 
 -- CATACLYSM
 if (not self.db.profile.hideCata) then
-nodes["Deepholm"] = {
+nodes[207] = { -- Deepholm
  [47405210] = {
   id = 67,
   type = "Dungeon",
  }, -- The Stonecore (Maelstrom: 51002790)
 }
-nodes["Hyjal"] = {
+nodes[198] = { -- Hyjal
  [47307810] = {
   id = 78,
   type = "Raid",
  }, -- Firelands
 }
-nodes["TolBarad"] = {
+nodes[244] = { -- TolBarad
  [46104790] = {
   id = 75,
   type = "Raid",
  }, -- Baradin Hold
 }
-nodes["TwilightHighlands"] = {
+nodes[241] = { -- TwilightHighlands
  [19105390] = {
   id = 71,
   type = "Dungeon",
@@ -1229,7 +1298,7 @@ nodes["TwilightHighlands"] = {
   type = "Raid",
  }, -- The Bastion of Twilight World 55005920
 }
-nodes["Uldum"] = {
+nodes[249] = { -- Uldum
  [76808450] = {
   id = 68,
   type = "Dungeon",
@@ -1247,14 +1316,14 @@ nodes["Uldum"] = {
   type = "Raid",
  }, -- Throne of the Four Winds
 }
-nodes["Vashjir"] = {
+nodes[203] = { -- Vashjir
  [48204040] =  {
   id = 65,
   type = "Dungeon",
   hideOnContinent = true,
  }, -- Throne of Tides
 }
-nodes["VashjirDepths"] = {
+nodes[204] = { -- VashjirDepths
  [69302550] = {
   id = 65,
   type = "Dungeon",
@@ -1264,20 +1333,20 @@ end
 
 -- PANDARIA
 if (not self.db.profile.hidePandaria) then
-nodes["DreadWastes"] = {
+nodes[422] = { -- DreadWastes
  [38803500] = {
   id = 330,
   type = "Raid",
  }, -- Heart of Fear
 }
-nodes["IsleoftheThunderKing"] = {
+nodes[504] = { -- IsleoftheThunderKing
  [63603230] = {
   id = 362,
   type = "Raid",
   hideOnContinent = true
  }, -- Throne of Thunder
 }
-nodes["KunLaiSummit"] = {
+nodes[379] = { -- KunLaiSummit
  [59503920] = {
   id = 317,
   type = "Raid",
@@ -1287,25 +1356,25 @@ nodes["KunLaiSummit"] = {
   type = "Dungeon",
  }, -- Shado-Pan Monastery
 }
-nodes["TheHiddenPass"] = {
+nodes[433] = { -- TheHiddenPass
  [48306130] = {
   id = 320,
   type = "Raid",
  }, -- Terrace of Endless Spring
 }
-nodes["TheJadeForest"] = {
+nodes[371] = { -- TheJadeForest
  [56205790] = {
   id = 313,
   type = "Dungeon",
  }, -- Temple of the Jade Serpent
 }
-nodes["TownlongWastes"] = {
+nodes[388] = { -- TownlongWastes
  [34708150] = {
   id = 324,
   type = "Dungeon",
  }, -- Siege of Niuzao Temple
 }
-nodes["ValeofEternalBlossoms"] = {
+nodes[390 ] = { -- ValeofEternalBlossoms
  [15907410] = {
   id = 303,
   type = "Dungeon",
@@ -1319,7 +1388,7 @@ nodes["ValeofEternalBlossoms"] = {
   type = "Raid",
  }, -- Siege of Orgrimmar
 }
-nodes["ValleyoftheFourWinds"] = {
+nodes[376] = { -- ValleyoftheFourWinds
  [36106920] = {
   id = 302,
   type = "Dungeon",
@@ -1327,7 +1396,7 @@ nodes["ValleyoftheFourWinds"] = {
 }
 
 -- PANDARIA Continent, For things that should be shown or merged only at the continent level
-nodes["Pandaria"] = {
+nodes[424] = { -- Pandaria
  [23100860] = {
   id = 362,
   type = "Raid",
@@ -1337,13 +1406,13 @@ end
 
 -- DRAENOR
 if (not self.db.profile.hideDraenor) then
-nodes["FrostfireRidge"] = {
+nodes[525] = { -- FrostfireRidge
  [49902470] = {
   id = 385,
   type = "Dungeon",
  }, -- Bloodmaul Slag Mines
 }
-nodes["Gorgrond"] = {
+nodes[543] = { -- Gorgrond
  [51502730] = {
   id = 457,
   type = "Raid",
@@ -1361,31 +1430,31 @@ nodes["Gorgrond"] = {
   type = "Dungeon",
  }, -- Iron Docks
 }
-nodes["NagrandDraenor"] = {
+nodes[550] = { -- NagrandDraenor
  [32903840] = {
   id = 477,
   type = "Raid",
  }, -- Highmaul
 }
-nodes["ShadowmoonValleyDR"] = {
+nodes[539] = { -- ShadowmoonValleyDR
  [31904260] = {
   id = 537,
   type = "Dungeon",
  }, -- Shadowmoon Burial Grounds
 }
-nodes["SpiresOfArak"] = {
+nodes[542] = { -- SpiresOfArak
  [35603360] = {
   id = 476,
   type = "Dungeon",
  }, -- Skyreach
 }
-nodes["Talador"] = {
+nodes[535] = { -- Talador
  [46307390] = {
   id = 547,
   type = "Dungeon",
  }, -- Auchindoun
 }
-nodes["TanaanJungle"] = {
+nodes[534] = { -- TanaanJungle
  [45605360] = {
   id = 669,
   type = "Raid",
@@ -1393,44 +1462,40 @@ nodes["TanaanJungle"] = {
 }
 end
 
--- Adding Zones and things to this will hide nodes from all but the listed mapLevels
-mapLevels["Dalaran70"] = { [10] = true, }
-mapLevels["CavernsofTime"] = { [18] = true, }
-
-if (not self.db.profile.hideBrokenIsles) then
+if (not self.db.profile.hideBrokenIsles) then -- FIX ME
 -- Legion Dungeons/Raids for minimap and continent map for consistency
 -- This seems to be the only legion dungeon/raid that isn't shown at all
 -- I have made this into an ugly abomination
 
- nodes["BrokenIsles"] = { }
- nodes["BrokenIsles"][35402850] = {
+ nodes[619] = { } -- BrokenIsles
+ nodes[619][35402850] = {
   id = { 762, 768 },
   type = "Mixed",
   hideOnMinimap = true,
  } -- The Emerald Nightmare 35102910
- nodes["BrokenIsles"][65003870] = {
+ nodes[619][65003870] = {
   id = { 721, 861 },
   type = "Mixed",
   hideOnMinimap = true,
  } -- Halls of Valor/Trial of Valor
- nodes["BrokenIsles"][46704780] = {
+ nodes[619][46704780] = {
   id = { 726, 786 },
   type = "Mixed",
   hideOnMinimap = true,
  }
-  nodes["BrokenIsles"][46606550] = {
+  nodes[619][46606550] = {
   id = 777,
   type = "Dungeon",
   hideOnMinimap = true,
  } -- Assault on Violet Hold
- nodes["BrokenIsles"][56506240] = { -- Always show because merged
+ nodes[619][56506240] = { -- Always show because merged
   id = { 875, 900 },
   type = "Mixed",
   hideOnMinimap = true,
  } -- Tomb of Sargeras and Cathedral of the Night
 
 
-nodes["Dalaran70"] = {
+nodes[627] = { -- Dalaran70
  [66406850] = {
   id = 777,
   type = "Dungeon",
@@ -1439,14 +1504,14 @@ nodes["Dalaran70"] = {
 }
 
 if (not legionInstancesDiscovered[946]) then
-nodes["ArgusCore"] = {
+nodes[885] = { -- ArgusCore
  [54786241] = {
   id = 946,
   type = "Raid",
  }, -- Antorus, the burning throne
 }
 else
- minimap["ArgusCore"] = {
+ minimap[885] = {
   [54786241] = {
    id = 946,
    type = "Raid",
@@ -1454,7 +1519,7 @@ else
  }
 end
 if (not legionInstancesDiscovered[945]) then
-nodes["ArgusMacAree"] = {
+nodes[882] = { -- ArgusMacAree
  -- 22.20 55.84
  [22205584] = {
   id = 945,
@@ -1462,7 +1527,7 @@ nodes["ArgusMacAree"] = {
  }, -- Seat of the Triumvirate
 }
 else
-minimap["ArgusMacAree"] = {
+minimap[882] = {
  -- 22.20 55.84
  [22205584] = {
   id = 945,
@@ -1471,54 +1536,54 @@ minimap["ArgusMacAree"] = {
 }
 end
 if (not legionInstancesDiscovered[716]) then
- nodes["Azsuna"] = { }
- nodes["Azsuna"][61204110] = {
+ nodes[630] = { } -- Azsuna
+ nodes[630][61204110] = {
   id = 716,
   type = "Dungeon",
  }
 else
- minimap["Azsuna"] = { }
- minimap["Azsuna"][61204110] = {
+ minimap[630] = { }
+ minimap[630][61204110] = {
   id = 716,
   type = "Dungeon",
  }
- nodes["BrokenIsles"][38805780] = {
+ nodes[619][38805780] = {
   id = 716,
   type = "Dungeon",
   hideOnMinimap = true,
  }
 end
 if (not legionInstancesDiscovered[707]) then
- if (not nodes["Azsuna"]) then
-  nodes["Azsuna"] = { }
+ if (not nodes[630]) then -- Azsuna
+  nodes[630] = { }
  end
- nodes["Azsuna"][48308030] = {
+ nodes[630][48308030] = {
   id = 707,
   type = "Dungeon"
  }
 else
- if (not minimap["Azsuna"]) then
-  minimap["Azsuna"] = { }
+ if (not minimap[630]) then
+  minimap[630] = { }
  end
- minimap["Azsuna"][48308030] = {
+ minimap[630][48308030] = {
   id = 707,
   type = "Dungeon"
  }
- nodes["BrokenIsles"][34207210] = {
+ nodes[619][34207210] = {
   id = 707,
   type = "Dungeon",
   hideOnMinimap = true,
  }
 end
 if (not legionInstancesDiscovered[875]) then
- nodes["BrokenShore"] = { }
- nodes["BrokenShore"][64602070] = {
+ nodes[619] = { }
+ nodes[619][64602070] = {
   id = 875,
   type = "Raid",
   hideOnContinent = true,
  }
 else
- minimap["BrokenShore"] = {
+ minimap[619] = {
   [64602070] = {
    id = 875,
    type = "Raid",
@@ -1526,52 +1591,52 @@ else
  }
 end
 if (not legionInstancesDiscovered[900]) then
- if (not nodes["BrokenShore"]) then
-  nodes["BrokenShore"] = { }
+ if (not nodes[646]) then -- BrokenShore
+  nodes[646] = { }
  end
- nodes["BrokenShore"][64701660] = {
+ nodes[646][64701660] = {
   id = 900,
   type = "Dungeon",
   hideOnContinent = true,
  }
 else
- if (not minimap["BrokenShore"]) then
-  minimap["BrokenShore"] = { }
+ if (not minimap[646]) then
+  minimap[646] = { }
  end
- minimap["BrokenShore"][64701660] = {
+ minimap[646][64701660] = {
   id = 900,
   type = "Dungeon",
  }
 end
 if (not legionInstancesDiscovered[767]) then
- nodes["Highmountain"] = {
+ nodes[650] = { -- Highmountain
   [49606860] = {
    id = 767,
    type = "Dungeon",
   },
  }
 else
- minimap["Highmountain"] = {
+ minimap[650] = {
   [49606860] = {
    id = 767,
    type = "Dungeon",
   },
  }
- nodes["BrokenIsles"][47302810] = {
+ nodes[619][47302810] = {
   id = 767,
   type = "Dungeon",
   hideOnMinimap = true,
  }
 end
 if (not legionInstancesDiscovered[861]) then
- nodes["Stormheim"] = { }
- nodes["Stormheim"][71107280] = {
+ nodes[634] = { } -- Stormheim
+ nodes[634][71107280] = {
   id = 861,
   type = "Raid",
   hideOnContinent = true,
  }
 else
- minimap["Stormheim"] = {
+ minimap[634] = {
   [71107280] = {
    id = 861,
    type = "Raid",
@@ -1579,47 +1644,47 @@ else
  }
 end
 if (not legionInstancesDiscovered[721]) then
- if (not nodes["Stormheim"]) then
-  nodes["Stormheim"] = { }
+ if (not nodes[634]) then
+  nodes[634] = { }
  end
- nodes["Stormheim"][72707050] = {
+ nodes[634][72707050] = {
   id = 721,
   type = "Dungeon",
   hideOnContinent = true,
  }
 else
- if (not minimap["Stormheim"]) then
-  minimap["Stormheim"] = { }
+ if (not minimap[634]) then
+  minimap[634] = { }
  end
- minimap["Stormheim"][72707050] = {
+ minimap[634][72707050] = {
   id = 721,
   type = "Dungeon",
  }
 end
 if (not legionInstancesDiscovered[727]) then
- if (not nodes["Stormheim"]) then
-  nodes["Stormheim"] = { }
+ if (not nodes[634]) then
+  nodes[634] = { }
  end
- nodes["Stormheim"][52504530] = {
+ nodes[634][52504530] = {
   id = 727,
   type = "Dungeon",
  }
 else
- if (not minimap["Stormheim"]) then
-  minimap["Stormheim"] = { }
+ if (not minimap[634]) then
+  minimap[634] = { }
  end
- minimap["Stormheim"][52504530] = {
+ minimap[634][52504530] = {
   id = 727,
   type = "Dungeon",
  }
- nodes["BrokenIsles"][59003060] = {
+ nodes[619][59003060] = {
   id = 727,
   type = "Dungeon",
   hideOnMinimap = true,
  }
 end
 if (not legionInstancesDiscovered[726]) then
- nodes["Suramar"] = {
+ nodes[680] = { -- Suramar
   [41106170] = {
    id = 726,
    type = "Dungeon",
@@ -1627,7 +1692,7 @@ if (not legionInstancesDiscovered[726]) then
   },
  }
 else
- minimap["Suramar"] = {
+ minimap[680] = {
   [41106170] = {
    id = 726,
    type = "Dungeon",
@@ -1635,98 +1700,98 @@ else
  }
 end
 if (not legionInstancesDiscovered[800]) then
- if (not nodes["Suramar"]) then
-  nodes["Suramar"] = { }
+ if (not nodes[680]) then
+  nodes[680] = { }
  end
- nodes["Suramar"][50806550] = {
+ nodes[680][50806550] = {
   id = 800,
   type = "Dungeon",
  }
 else
- if (not minimap["Suramar"]) then
-  minimap["Suramar"] = { }
+ if (not minimap[680]) then
+  minimap[680] = { }
  end
- minimap["Suramar"][50806550] = {
+ minimap[680][50806550] = {
   id = 800,
   type = "Dungeon",
  }
- nodes["BrokenIsles"][49104970] = {
+ nodes[619][49104970] = {
   id = 800,
   type = "Dungeon",
   hideOnMinimap = true,
  }
 end
 if (not legionInstancesDiscovered[786]) then
- if (not nodes["Suramar"]) then
-  nodes["Suramar"] = { }
+ if (not nodes[680]) then
+  nodes[680] = { }
  end
- nodes["Suramar"][44105980] = {
+ nodes[680][44105980] = {
   id = 786,
   type = "Raid",
   hideOnContinent = true,
  }
 else
- if (not minimap["Suramar"]) then
-  minimap["Suramar"] = { }
+ if (not minimap[680]) then
+  minimap[680] = { }
  end
- minimap["Suramar"][44105980] = {
+ minimap[680][44105980] = {
   id = 786,
   type = "Raid",
  }
 end
 if (not legionInstancesDiscovered[740]) then
- nodes["Valsharah"] = {
+ nodes[641] = { -- Valsharah
   [37205020] = {
    id = 740,
    type = "Dungeon",
   },
  }
 else
- minimap["Valsharah"] = {
+ minimap[641] = {
   [37205020] = {
    id = 740,
    type = "Dungeon",
   },
  }
- nodes["BrokenIsles"][29403300] = {
+ nodes[619][29403300] = {
   id = 740,
   type = "Dungeon",
   hideOnMinimap = true,
  }
 end
 if (not legionInstancesDiscovered[762]) then
- if (not nodes["Valsharah"]) then
-  nodes["Valsharah"] = { }
+ if (not nodes[641]) then
+  nodes[641] = { }
  end
- nodes["Valsharah"][59003120] = {
+ nodes[641][59003120] = {
   id = 762,
   type = "Dungeon",
   hideOnContinent = true,
  }
 else
- if (not minimap["Valsharah"]) then
-  minimap["Valsharah"] = { }
+ if (not minimap[641]) then
+  minimap[641] = { }
  end
- minimap["Valsharah"][59003120] = {
+ minimap[641][59003120] = {
   id = 762,
   type = "Dungeon",
  }
 
 end
 if (not legionInstancesDiscovered[768]) then
- if (not nodes["Valsharah"]) then
-  nodes["Valsharah"] = { }
+ if (not nodes[641]) then
+  nodes[641] = { }
  end
- nodes["Valsharah"][56303680] = {
+ nodes[641][56303680] = {
   id = 768,
   type = "Raid",
   hideOnContinent = true,
  }
 else
-if (not minimap["Valsharah"]) then
-  minimap["Valsharah"] = { }
+if (not minimap[641]) then
+  minimap[641] = { }
  end
- minimap["Valsharah"][56303680] = {
+ minimap[641][56303680] = {
   id = 768,
   type = "Raid",
  }
@@ -1874,32 +1939,6 @@ for i,v in pairs(nodes) do
    end
   end
  end
- 
- local HereBeDragons = LibStub("HereBeDragons-1.0") -- Phanx
- local continents = { GetMapContinents() }
- local temp = { } -- I switched to the temp table because modifying the nodes table while iterating over it sometimes stopped it short for some reason
- for mapFile, coords in pairs(nodes) do
-  if not continents[mapFile] and not (internalNodes[mapFile]) then
-   if (DEBUG) then print(mapFile) end
-   local continentMapID = continents[2 * HandyNotes:GetCZ(mapFile) - 1]
-   local continentMapFile = HandyNotes:GetMapIDtoMapFile(continentMapID)
-   mapToContinent[mapFile] = continentMapFile
-   for coord, criteria in next, coords do
-    if (not criteria.hideOnContinent) then
-     local x, y = HandyNotes:getXY(coord)
-     x, y = HereBeDragons:GetWorldCoordinatesFromZone(x, y, mapFile)
-     x, y = HereBeDragons:GetZoneCoordinatesFromWorld(x, y, continentMapID)
-     if x and y then
-      temp[continentMapFile] = temp[continentMapFile] or {}
-      temp[continentMapFile][HandyNotes:getCoord(x, y)] = criteria
-	 end
-	end
-   end
-  end
- end
- for mapFile, coords in pairs(temp) do
-   nodes[mapFile] = coords
- end
 end
 
 -- Takes ids and fetchs and stores data to node.name
@@ -1975,9 +2014,9 @@ function Addon:CheckForPOIs()
  if (WorldMapFrame:IsVisible()) then return end -- This function will interrupt the user if map is open while we do stuff
  local needsUpdate = false
  local LegionInstanceMapIDs = { 1015, 1017, 1018, 1024, 1033, 1170, 1171 }
- for k,v in pairs(LegionInstanceMapIDs) do
-  SetMapByID(v)  
-  for i=1,GetNumMapLandmarks() do
+ for k,v in pairs(LegionInstanceMapIDs) do --FIXME
+  --SetMapByID(v)  
+  --[[for i=1,GetNumMapLandmarks() do
    local landmarkType, name, description, _, _, _, mapLinkID = C_WorldMap.GetMapLandmarkInfo(i)
    if (landmarkType == LE_MAP_LANDMARK_TYPE_DUNGEON_ENTRANCE) then
    --print(name, description, mapLinkID)
@@ -1985,7 +2024,7 @@ function Addon:CheckForPOIs()
 	legionInstancesDiscovered[mapLinkID] = true
     --print (name, mapLinkID, landmarkType, description)
    end
-  end
+  end ]]--
  end 
  
  if (needsUpdate) then self:FullUpdate() end

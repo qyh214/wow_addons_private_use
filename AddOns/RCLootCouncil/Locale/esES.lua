@@ -43,6 +43,8 @@ L["Alt click Looting"] = "Pulsar ALT para Repartir"
 L["alt_click_looting_desc"] = "Activar el clic de ALT para repartir el loot, es decir, se inicia una sesión de reparto del loot manteniendo pulsada la tecla Alt (izquierdo) y haciendo clic en un objeto."
 L["Alternatively, flag the loot as award later."] = "Alternativamente, marcar el loot para premiar más tarde."
 L["Always use RCLootCouncil when I'm Master Looter"] = "Utilizar siempre RCLootCouncil cuando soy el Maestro Despojador"
+--[[Translation missing --]]
+--[[ L["Always use RCLootCouncil with Personal Loot"] = ""--]] 
 L["Always use when leader"] = "Utilizar siempre cuando sea el lider"
 --[[Translation missing --]]
 --[[ L["always_show_tooltip_howto"] = ""--]] 
@@ -54,6 +56,8 @@ L["Announce Considerations"] = "Anunciar consideraciones"
 --[[ L["announce_&l_desc"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["announce_&n_desc"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["announce_&o_desc"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["announce_&p_desc"] = ""--]] 
 --[[Translation missing --]]
@@ -80,6 +84,8 @@ L["Are you sure you want to give #item to #player?"] = "¿Estás seguro que quie
 --[[ L["Are you sure you want to request rolls for all unawarded items from %s?"] = ""--]] 
 L["Armor Token"] = "Ficha de armadura"
 L["Ask me every time I become Master Looter"] = "Preguntarme cada vez que me convierta en Maestro Despojador"
+--[[Translation missing --]]
+--[[ L["Ask me every time Personal Loot is enabled"] = ""--]] 
 L["Ask me when leader"] = "Preguntarme cuando sea el lider"
 L["Auto Award"] = "Recompensa automática"
 L["Auto Award to"] = "Recompensar automáticamente a"
@@ -213,6 +219,8 @@ L["Delete Skin"] = "Borrar apariencia"
 L["delete_skin_desc"] = "Borrar la apariencia seleccionada (que no sea por defecto) de la lista."
 L["Deselect responses to filter them"] = "Anule la seleccion de respuestas para filtrarlas"
 L["Diff"] = "Diferente"
+--[[Translation missing --]]
+--[[ L["Discord friendly output."] = ""--]] 
 L["disenchant_desc"] = "Seleccionar para usar esta razon en la adjudicacion de un elemento a traves del boton 'Desencantar'"
 L["Done syncing"] = "Sincronización completa"
 L["Double click to delete this entry."] = "Doble click para borrar esta entrada."
@@ -228,6 +236,8 @@ L["enable_tierbuttons_desc"] = "Marca para activar un conjunto de botones separa
 L["enable_timeout_desc"] = "Marca la casilla para habilitar tiempo maximo en la ventana de Loot"
 L["Enter your note:"] = "Escribe tu nota"
 L["EQdkp-Plus XML output, tailored for Enjin import."] = "Exportar para EQdkp-Plus XML, hecho para importar en Enjin."
+--[[Translation missing --]]
+--[[ L["error_test_as_non_leader"] = ""--]] 
 L["Everyone have voted"] = "Todos han votado"
 L["Export"] = "Exportar"
 L["Following items were registered in the award later list:"] = "Los siguientes objetos no están registrados en la lista de recompensar mas tarde"
@@ -515,6 +525,8 @@ L["tier_token_heroic"] = "Heroico"
 L["tier_token_mythic"] = "Mítico"
 L["tier_token_normal"] = "Normal"
 L["Time"] = "Tiempo"
+--[[Translation missing --]]
+--[[ L["time_remaining_warning"] = ""--]] 
 L["Timeout"] = "Se acabó el tiempo"
 --[[Translation missing --]]
 --[[ L["Timeout when giving 'item' to 'player'"] = ""--]] 

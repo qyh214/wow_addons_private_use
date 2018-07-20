@@ -60,7 +60,9 @@ function Postal_BlackBook:OnEnable()
 		db.AutoCompleteGuild and AUTOCOMPLETE_FLAG_NONE or AUTOCOMPLETE_FLAG_IN_GUILD)
 	Postal_BlackBook_Autocomplete_Flags.include = bit.bxor(
 		db.ExcludeRandoms and (bit.bor(AUTOCOMPLETE_FLAG_FRIEND, AUTOCOMPLETE_FLAG_IN_GUILD)) or AUTOCOMPLETE_FLAG_ALL, exclude)
-	SendMailNameEditBox.autoCompleteParams = Postal_BlackBook_Autocomplete_Flags
+
+	-- apply new flag filter to the editbox
+	AutoCompleteEditBox_SetAutoCompleteSource(SendMailNameEditBox, GetAutoCompleteResults, Postal_BlackBook_Autocomplete_Flags.include, Postal_BlackBook_Autocomplete_Flags.exclude)
 
 	-- Delete Real ID database. Patch 4.0.1 onwards no longer allows addons to obtain Real ID information.
 	Postal.db.global.BlackBook.realID = nil

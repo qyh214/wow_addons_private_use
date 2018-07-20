@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1055 $")
+XPerl_SetModuleRevision("$Revision: 1098 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -2022,9 +2022,9 @@ function XPerl_Check_Channels_OnLoad(self)
 	end
 
 	self.displayMode = "MENU"
-	UIDropDownMenu_Initialize(self, XPerl_Check_Channels_Initialize)
-	UIDropDownMenu_SetSelectedID(self, outputChannelSelection)
-	UIDropDownMenu_SetWidth(XPerl_CheckButtonChannel, 100)
+	Lib_UIDropDownMenu_Initialize(self, XPerl_Check_Channels_Initialize)
+	Lib_UIDropDownMenu_SetSelectedID(self, outputChannelSelection)
+	Lib_UIDropDownMenu_SetWidth(XPerl_CheckButtonChannel, 100)
 	XPerl_CheckButtonChannelText:SetTextColor(unpack(outputChannelColour))
 end
 
@@ -2034,7 +2034,7 @@ local function XPerl_Channel_OnClick(self)
 	outputChannel = v.channel
 	outputChannelIndex = v.index
 	outputChannelSelection = self:GetID()
-	UIDropDownMenu_SetSelectedID(XPerl_CheckButtonChannel, outputChannelSelection)
+	Lib_UIDropDownMenu_SetSelectedID(XPerl_CheckButtonChannel, outputChannelSelection)
 
 	XPerl_CheckButtonChannelText:SetTextColor(v.red, v.green, v.blue)
 end
@@ -2053,11 +2053,11 @@ function XPerl_Check_Channels_Initialize()
 			end
 		end
 
-		local info = UIDropDownMenu_CreateInfo()
+		local info = Lib_UIDropDownMenu_CreateInfo()
 		info.text = entry.display
 		info.func = XPerl_Channel_OnClick
 		info.value = {channel = entry.channel, index = entry.index, red = r, green = g, blue = b}
 		info.colorCode = format("|cFF%02X%02X%02X", r * 255, g * 255, b * 255)
-		UIDropDownMenu_AddButton(info)
+		Lib_UIDropDownMenu_AddButton(info)
 	end
 end

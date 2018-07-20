@@ -1,10 +1,10 @@
-lightweight tag e47e58e08c3efcdb89e8f5ee1be2fc545fb412f8 v1.6
-Author:	Jessica Sommer <jessica.sommer@agfa.com>
-Date:	Tue Jul 17 13:23:53 2018 +0200
+lightweight tag 94fb57f044d0306a02e3268825981bc07f0c5c78 v1.7.2
+Author:	Jessica <jessica@Jessicas-MacBook.local>
+Date:	Fri Jul 20 13:43:08 2018 +0200
 
-commit e47e58e08c3efcdb89e8f5ee1be2fc545fb412f8
-Author: Jessica Sommer <jessica.sommer@agfa.com>
-Date:   Tue Jul 17 13:23:53 2018 +0200
+commit 94fb57f044d0306a02e3268825981bc07f0c5c78
+Author: Jessica <jessica@Jessicas-MacBook.local>
+Date:   Fri Jul 20 13:43:08 2018 +0200
 
-    Update toc.
+    Cofigure addon for auto build to wowinterface.com
 

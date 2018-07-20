@@ -314,7 +314,7 @@ function module:GetMissionResults(success,currentMission)
 		PlaySound(SOUNDKIT.UI_GARRISON_MISSION_COMPLETE_MISSION_SUCCESS)
 	else
 		report:AddMissionResult(currentMission.missionID,false)
-		PlaySound(SOUNDKIT.UI_GARRISON_MISSION_COMPLETE_MISSION_FAIL_STINGER)	
+		PlaySound(SOUNDKIT.UI_GARRISON_MISSION_COMPLETE_MISSION_FAIL_STINGER)
 	end
 	if success then
 		local resourceMultiplier=currentMission.resourceMultiplier or {}
@@ -344,7 +344,7 @@ function module:MissionsPrintResults(success)
 		local qm=addon:GetModule("Quick")
 		addon.ScheduleTimer(qm,"RunQuick",0.2)
 		return
-	end	
+	end
 	local reported
 	local followers
 	for k,v in pairs(rewards.currencies) do
@@ -354,7 +354,7 @@ function module:MissionsPrintResults(success)
 			report:AddIconText(v.icon,GetMoneyString(v.qt))
 		else
 			-- Other currency reward
-			report:AddIconText(v.icon,GetCurrencyLink(k),v.qt)
+			report:AddIconText(v.icon,GetCurrencyLink(k,v.qt))
 		end
 	end
 	local items=new()

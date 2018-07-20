@@ -40,6 +40,8 @@ L["Alt click Looting"] = "Alt+左鍵分配"
 L["alt_click_looting_desc"] = "啟用Alt+左鍵分配。使用Alt+左鍵點擊物品以開始分配。"
 L["Alternatively, flag the loot as award later."] = "另外，標記該物品為稍后分配。"
 L["Always use RCLootCouncil when I'm Master Looter"] = "當擁有分配權時，總是使用RCLootCouncil"
+--[[Translation missing --]]
+--[[ L["Always use RCLootCouncil with Personal Loot"] = ""--]] 
 L["Always use when leader"] = "當為隊長時，總是使用"
 L["always_show_tooltip_howto"] = "雙擊切換是否總顯示tooltip"
 L["Announce Awards"] = "通知分配"
@@ -47,6 +49,8 @@ L["Announce Considerations"] = "通知考慮的物品"
 L["announce_&i_desc"] = "|cfffcd400 &i|r: 物品連結"
 L["announce_&l_desc"] = "|cfffcd400 &l|r: 物品等級"
 L["announce_&n_desc"] = "|cfffcd400 &n|r: 擲骰結果，如果有的話。"
+--[[Translation missing --]]
+--[[ L["announce_&o_desc"] = ""--]] 
 L["announce_&p_desc"] = "|cfffcd400 &p|r: 獲得物品的玩家名稱"
 L["announce_&r_desc"] = "|cfffcd400 &r|r: 理由"
 L["announce_&s_desc"] = "|cfffcd400 &s|r: 會話id。"
@@ -70,6 +74,8 @@ L["Are you sure you want to reannounce all unawarded items to %s?"] = "你確定
 L["Are you sure you want to request rolls for all unawarded items from %s?"] = "你確定要讓 %s 對所有未分配物品擲點嗎？"
 L["Armor Token"] = "裝備代幣"
 L["Ask me every time I become Master Looter"] = "擁有分配權時，總是詢問"
+--[[Translation missing --]]
+--[[ L["Ask me every time Personal Loot is enabled"] = ""--]] 
 L["Ask me when leader"] = "身為隊長時，總是詢問"
 L["Auto Award"] = "自動分配"
 L["Auto Award to"] = "自動分配給"
@@ -185,6 +191,8 @@ L["Delete Skin"] = "刪除外觀"
 L["delete_skin_desc"] = "從選單中刪除目前選取的非預設外觀"
 L["Deselect responses to filter them"] = "取消回應以過濾"
 L["Diff"] = "差異"
+--[[Translation missing --]]
+--[[ L["Discord friendly output."] = ""--]] 
 L["disenchant_desc"] = "當你經由分解按鈕贏得物品時使用這個理由"
 L["Done syncing"] = "同步結束"
 L["Double click to delete this entry."] = "點擊兩下刪除此條目"
@@ -200,6 +208,8 @@ L["enable_tierbuttons_desc"] = "點選讓T裝代幣使用例外一組按鈕"
 L["enable_timeout_desc"] = "點選啟動拾取視窗超時功能"
 L["Enter your note:"] = "輸入你的筆記："
 L["EQdkp-Plus XML output, tailored for Enjin import."] = "EQdkp-Plus XML輸出，適用於Enjin輸入。"
+--[[Translation missing --]]
+--[[ L["error_test_as_non_leader"] = ""--]] 
 L["Everyone have voted"] = "所有投票成員都已投票"
 L["Export"] = "輸出"
 L["Following items were registered in the award later list:"] = "以下物品已被稍后分配列表登記："
@@ -434,6 +444,8 @@ L["tier_token_heroic"] = "英雄"
 L["tier_token_mythic"] = "傳奇"
 L["tier_token_normal"] = "普通"
 L["Time"] = "時間"
+--[[Translation missing --]]
+--[[ L["time_remaining_warning"] = ""--]] 
 L["Timeout"] = "時間已到"
 L["Timeout when giving 'item' to 'player'"] = "將%s分配給 %s 時超時"
 L["To target"] = "向目標"

@@ -25,36 +25,23 @@ local GetFontSizes = function()
 end
 
 local GetDifficulties = function()
-	local diffs,id = {[0]=_G.NONE}, 1
-	
-	for i=1,33 do
+	local diffs = {[0]=_G.NONE}
+	for i = 1,33 do
 		local name = GetDifficultyInfo(i)
 		if name and name ~= "" then
-			diffs[i] = name
+			diffs[i] = "["..i.."] "..name
 		end
 	end
-	--[[local name = GetDifficultyInfo(id) -- 5.3,5.4 have gaps in the ids
-	while (name and name ~= "") do
-		diffs[id] = name
-		id = id+1
-		name = GetDifficultyInfo(id)
-	end]]
 	return diffs
 end
 local getDiffDefaults = function()
-	local defaults,id = {[0]=true}, 1
-	for i=1,33 do
+	local defaults = {[0] = true}
+	for i = 1,33 do
 		local name = GetDifficultyInfo(i)
 		if name and name ~= "" then
 			defaults[i] = true
 		end
 	end
-	--[[local name = GetDifficultyInfo(id)
-	while (name and name ~= "") do
-		defaults[id] = true
-		id = id+1
-		name = GetDifficultyInfo(id)
-	end]]
 	return defaults
 end
 
@@ -63,7 +50,6 @@ local dataDefaults = {
 	legendaryloot = true,
 	achievement = true,
 	groupstatus = {["1solo"]=true,["2party"]=true,["3raid"]=true},
-	rares = true, 
 	repchange = true, 
 	delay1 = 1.2,  
 	delay2 = 2, 
@@ -75,7 +61,7 @@ local dataDefaults = {
 	uihide = false, 
 	played = false, 
 	charpane = false, 
-	guildlevelup = true, 
+	--guildlevelup = true, 
 	guildachievement = true, 
 	challengemode = true,
 	battleground = true,
@@ -83,7 +69,7 @@ local dataDefaults = {
 	history = {}, 
 	delay3 = 20, 
 	timeLineEnable = false, 
-	garissonbuild = true,
+	--garissonbuild = true,
 	watermark = false, 
 	watermarkformat = "$n($l) $c $b$z - $d$b$r", 
 	watermarkanchor = "TOP",
@@ -105,12 +91,14 @@ local dataOptions = {
       name = L["levelups"],
       get = function() return MultishotConfig.levelup end,
       set = function(_,v) MultishotConfig.levelup = v end },
+	  --[[
     guildlevelups = {
       order = 2, 
       type = "toggle",
       name = L["guildlevelups"],
       get = function() return MultishotConfig.guildlevelup end,
       set = function(_,v) MultishotConfig.guildlevelup = v end },
+	  --]]
     achievements = {
       order = 3,
       type = "toggle",
@@ -153,12 +141,14 @@ local dataOptions = {
       name = L["trade"],
       get = function() return MultishotConfig.trade end,
       set = function(_,v) MultishotConfig.trade = v end },
+	  --[[
     garissonbuild = {
     	order = 10,
     	type = "toggle",
     	name = L["garissonbuild"],
     	get = function() return MultishotConfig.garissonbuild end,
-    	set = function(_,v) MultishotConfig.garissonbuild = v end },   
+    	set = function(_,v) MultishotConfig.garissonbuild = v end },  
+	--]]		
 	legendaryloot = {
 		order = 11,
 		type = "toggle",
@@ -175,12 +165,6 @@ local dataOptions = {
       name = L["firstkills"],
       get = function() return MultishotConfig.firstkill end, 
       set = function(_,v) MultishotConfig.firstkill = v end },
-    rares = {
-      order = 14,
-      type = "toggle",
-      name = L["rarekills"],
-      get = function() return MultishotConfig.rares end, 
-      set = function(_,v) MultishotConfig.rares = v end },
     groupstatus = {
       order = 15,
       type = "multiselect",

@@ -1315,7 +1315,7 @@
 							</OnMouseUp>
 						</Scripts>
 					</Button>
-					<Frame name="$parentChannel" inherits="UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="$parentChannel" inherits="Lib_UIDropDownMenuTemplate" enableMouse="true">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="XPerl_CheckListPlayers">
 								<Offset>

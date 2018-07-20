@@ -1,9 +1,9 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: Postal
-## Version: v3.5.9
-## X-Build: 406
-## X-ReleaseDate: 2018-05-10T20:59:49Z
-## X-Revision: $Revision: 405 $
+## Version: v3.6.0
+## X-Build: 409
+## X-ReleaseDate: 2018-07-20T8:41:50Z
+## X-Revision: $Revision: 409 $
 ## Author: Xinhuan
 ## X-Credits: Ammo, Rabbit, Grennon, Mikk, oscarucb
 ## X-Category: Mail

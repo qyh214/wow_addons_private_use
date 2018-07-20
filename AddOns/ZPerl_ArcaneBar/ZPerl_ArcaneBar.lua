@@ -14,7 +14,7 @@ end
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1086 $")
+end, "$Revision: 1094 $")
 
 -- Registers frame to spellcast events.
 
@@ -158,7 +158,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 			self.castTimeText:Hide()
 		end
 	elseif ((event == "UNIT_SPELLCAST_STOP" and self.casting) or (event == "UNIT_SPELLCAST_CHANNEL_STOP" and self.channeling)) then
-		local spell, lineGUID, spellID = ...
+		local lineGUID, spellID = ...
 		if event == "UNIT_SPELLCAST_STOP" and self.castID ~= 0 and self.castID ~= lineGUID then
 			return
 		end
@@ -185,7 +185,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 			end
 		end
 	elseif (event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_INTERRUPTED") then
-		local spell, lineGUID, spellID = ...
+		local lineGUID, spellID = ...
 		if self.castID ~= 0 and self.castID ~= lineGUID then
 			return
 		end

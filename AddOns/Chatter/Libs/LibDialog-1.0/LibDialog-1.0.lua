@@ -8,8 +8,6 @@
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
-local _G = getfenv(0)
-
 -- Functions
 local error = _G.error
 local pairs = _G.pairs
@@ -26,7 +24,7 @@ local MAJOR = "LibDialog-1.0"
 
 _G.assert(LibStub, MAJOR .. " requires LibStub")
 
-local MINOR = 7 -- Should be manually increased
+local MINOR = 8 -- Should be manually increased
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not lib then
@@ -237,7 +235,7 @@ local function _Dialog_OnShow(dialog)
         return
     end
 
-    _G.PlaySound("igMainMenuOpen")
+    _G.PlaySound(SOUNDKIT.IG_MAINMENU_OPEN, "Master")
 
     if delegate.on_show then
         delegate.on_show(dialog, dialog.data)
@@ -245,16 +243,16 @@ local function _Dialog_OnShow(dialog)
 end
 
 local function _Dialog_OnHide(dialog)
-    local delegate = dialog.delegate
-
-    _G.PlaySound("igMainMenuClose")
+    _G.PlaySound(SOUNDKIT.IG_MAINMENU_CLOSE, "Master")
 
     -- Required so lib:ActiveDialog() will return false if called from code which is called from the delegate's on_hide
     _RecycleWidget(dialog, active_dialogs, dialog_heap)
 
+    local delegate = dialog.delegate
     if delegate.on_hide then
         delegate.on_hide(dialog, dialog.data)
     end
+
     _ReleaseDialog(dialog)
 
     if #delegate_queue > 0 then

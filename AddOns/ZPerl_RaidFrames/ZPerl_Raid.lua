@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 1086 $")
+end, "$Revision: 1098 $")
 
 --[[if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -321,7 +321,7 @@ end]]
 		me = self:GetParent()
 	end
 
-	HideDropDownMenu(1)
+	Lib_HideDropDownMenu(1)
 	FriendsDropDown.initialize = XPerl_RaidFrameDropDown_Initialize
 	FriendsDropDown.displayMode = "MENU"
 
@@ -330,7 +330,7 @@ end]]
 	FriendsDropDown.id = tonumber(strmatch(FriendsDropDown.unit, "(%d+)"))
 
 	XPerl_ShouldHideSetFocus = true
-	ToggleDropDownMenu(1, nil, FriendsDropDown, me.statsFrame:GetName(), 0, 0)
+	Lib_ToggleDropDownMenu(1, nil, FriendsDropDown, me.statsFrame:GetName(), 0, 0)
 	XPerl_ShouldHideSetFocus = nil
 end]]
 
@@ -698,9 +698,9 @@ local function onAttrChanged(self, name, value)
 end
 
 --[[local function XPerl_SetMenuFunc(frame, menuFunc)
-	UIDropDownMenu_Initialize(frame.dropDown, menuFunc, "MENU")
+	Lib_UIDropDownMenu_Initialize(frame.dropDown, menuFunc, "MENU")
 	frame.menu = function()
-		ToggleDropDownMenu(1, nil, frame.dropDown, "cursor", 0, 0)
+		Lib_ToggleDropDownMenu(1, nil, frame.dropDown, "cursor", 0, 0)
 	end
 end
 

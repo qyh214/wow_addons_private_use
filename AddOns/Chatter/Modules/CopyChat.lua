@@ -47,11 +47,11 @@ function mod:OnInitialize()
 	frame:Hide()
 	frame:SetFrameStrata("DIALOG")
 	self.frame = frame
-	
+
 	local scrollArea = CreateFrame("ScrollFrame", "ChatterCopyScroll", frame, "UIPanelScrollFrameTemplate")
 	scrollArea:SetPoint("TOPLEFT", frame, "TOPLEFT", 8, -30)
 	scrollArea:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -30, 8)
-	
+
 	local editBox = CreateFrame("EditBox", nil, frame)
 	editBox:SetMultiLine(true)
 	editBox:SetMaxLetters(99999)
@@ -62,9 +62,9 @@ function mod:OnInitialize()
 	editBox:SetHeight(270)
 	editBox:SetScript("OnEscapePressed", function() frame:Hide() end)
 	self.editBox = editBox
-	
+
 	scrollArea:SetScrollChild(editBox)
-	
+
 	local close = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
 	close:SetPoint("TOPRIGHT", frame, "TOPRIGHT")
 end
@@ -176,7 +176,7 @@ end
 local menuButtons = {}
 function mod:Menu(chatTab, button)
 	local frame = _G["ChatFrame" .. chatTab:GetID()]
-	
+
 	local info = menuButtons[chatTab:GetID()]
 	if not info then
 		info = {}
@@ -188,40 +188,24 @@ function mod:Menu(chatTab, button)
 	return info
 end
 
+function clean(msg)
+	msg = gsub(msg, "(|TInterface(.*)|t)", "")
+	msg = gsub(msg, "(|c%x%x%x%x%x%x%x%x", "")
+	return msg
+end
+
 function mod:Copy(frame)
-	local _, size = frame:GetFont()
-	FCF_SetChatWindowFontSize(frame, frame, 0.01)
-	local lineCt = self:GetLines(frame:GetRegions())
-	local text = table_concat(lines, "\n", 1, lineCt)
-	FCF_SetChatWindowFontSize(frame, frame, size)
+	local lines = {}
+	for index, line in ipairs(frame.visibleLines) do
+		if line and line.messageInfo and line.messageInfo.message then
+			tinsert(lines, 1, clean(line.messageInfo.message))
+		end
+	end
+	local text = table_concat(lines, "\n")
 	self.frame:Show()
 	self.editBox:SetText(text)
 	self.editBox:HighlightText(0)
 end
-
-local function fixName(misc, id, moreMisc, fakeName, tag, colon)
-	local _, charName, _, _, _, _, _, englishClass = BNGetGameAccountInfo(id)
-	if charName then 
-		return charName..colon
-	else 
-	end
-end
-
-function mod:GetLines(...)
-	local ct = 1
-	wipe(lines)
-	for i = select("#", ...), 1, -1 do
-		local region = select(i, ...)
-		if region:GetObjectType() == "FontString" then
-			local linez = tostring(region:GetText())
-			lines[ct] = gsub(linez, "(|HBNplayer:%S-|k:)(%d-)(:%S-|h)(%S-)(|?h?)(:)", fixName)
-			lines[ct] = gsub(lines[ct], "(|TInterface(.*)|t)", "")
-			ct = ct + 1
-		end
-	end
-	return ct - 1
-end
-
 
 function mod:OnShow(cft)
 	local cfn = cft:GetName():match("ChatFrame%d")

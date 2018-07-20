@@ -106,19 +106,6 @@
 								</Anchor>
 							</Anchors>
 						</Texture>
-						<!-- Prestige Icon -->
-						<Texture name="$parentprestigueIcon" hidden="true">
-							<Size>
-								<AbsDimension x="28" y="28"/>
-							</Size>
-							<Anchors>
-								<Anchor point="RIGHT">
-									<Offset>
-										<AbsDimension x="1" y="0"/>
-									</Offset>
-								</Anchor>
-							</Anchors>
-						</Texture>
 						<!-- 30 Yard Range Icon -->
 						<Texture name="$parentrangeIcon" file="Interface\Addons\ZPerl\Images\XPerl_30Yard" hidden="true">
 							<Size>

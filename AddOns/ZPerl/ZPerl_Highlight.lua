@@ -6,7 +6,7 @@ local playerClass, playerName, playerGUID
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1086 $")
+end, "$Revision: 1100 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -29,7 +29,7 @@ local hotSpells  = XPERL_HIGHLIGHT_SPELLS.hotSpells
 local pomSpells = XPERL_HIGHLIGHT_SPELLS.pomSpells
 local shieldSpells = XPERL_HIGHLIGHT_SPELLS.shieldSpells
 
---[[local function GetTalentPosition(findName)
+local function GetTalentPosition(findName)
 	for i = 1, GetNumSpecializations() do
 		for j = 1, GetNumTalents(i) do
 			local name = GetTalentInfo(i, j)
@@ -66,7 +66,7 @@ local function getRankAmount(self, spellId)
 	if (amount) then
 		return amount * self:GetModifier()
 	end
-end--]]
+end
 
 local absorbSpells = {
 	-- Shield Barrier
@@ -86,8 +86,8 @@ local absorbSpells = {
 		},
 		school = "FROST",
 		class = "MAGE",
-		--GetModifier = getTalentModifier,
-		--GetRankAmount = getRankAmount,
+		GetModifier = getTalentModifier,
+		GetRankAmount = getRankAmount,
 	},
 	-- Power Word: Shield
 	[GetSpellInfo(17)] = {
@@ -102,8 +102,8 @@ local absorbSpells = {
 			ranks = 2,
 			percentPerRank = 5,
 		},]]
-		--GetModifier = getTalentModifier,
-		--GetRankAmount = getRankAmount,
+		GetModifier = getTalentModifier,
+		GetRankAmount = getRankAmount,
 	},
 }
 
@@ -172,8 +172,8 @@ function xpHigh:Add(guid, highlightType, duration, source)
 				if (highlightType == "HEAL" and (UnitInRaid(source) or UnitInParty(source))) then
 					if (source and not UnitIsUnit("player", source)) then
 						-- We'll query their cast bar and get accurate highlight time info
-						local spellName, rank, spellNameAlso, iconTexture, startTime, endTime, isTradeSkill = UnitCastingInfo(source)
-						if (spellName and rank and rank ~= "") then
+						local spellName, text, texture, startTime, endTime = UnitCastingInfo(source)
+						if (spellName) then
 							newEndTime = endTime / 1000
 						end
 
@@ -603,7 +603,7 @@ end
 function xpHigh:GetMyHotTime(unit)
 	local maxDur, maxTimeLeft = 0, 0
 	for i = 1, 40 do
-		local name, rank, tex, count, buffType, dur, endTime, isMine = UnitBuff(unit, i, "PLAYER")
+		local name, tex, count, buffType, dur, endTime, isMine = UnitBuff(unit, i, "PLAYER")
 		if (not name) then
 			break
 		end
@@ -681,7 +681,7 @@ end
 -- xpHigh:HasMyHOT(unit)
 function xpHigh:HasMyHOT(unit)
 	for i = 1, 40 do
-		local name, rank, tex, count, buffType, dur, endTime, caster = UnitBuff(unit, i, "PLAYER")
+		local name, tex, count, buffType, dur, endTime, caster = UnitBuff(unit, i, "PLAYER")
 		if (not name) then
 			break
 		end
@@ -721,7 +721,7 @@ end
 -- GetMyPomEndTime
 function xpHigh:GetMyPomEndTime(unit)
 	for i = 1, 40 do
-		local name, rank, tex, count, buffType, dur, endTime, isMine = UnitBuff(unit, i, "PLAYER")
+		local name, tex, count, buffType, dur, endTime, isMine = UnitBuff(unit, i, "PLAYER")
 		if (not name) then
 			break
 		end
@@ -1382,7 +1382,6 @@ function xpHigh.clEvents:SPELL_PERIODIC_HEAL(timestamp, event, srcGUID, srcName,
 					-- was triggered
 
 					-- Find our HOT and get the duration left for it, then add a flashy!
-					local name, rank, tex, count, buffType, dur, endTime, isMine
 					local checkName = dstName;
 					-- If the dstName is NOT in our party/raid but it IS target/focus we MUST use target/focus instead of their name
 					if (not UnitInParty(dstName) and not UnitPlayerOrPetInRaid(dstName) and not UnitPlayerOrPetInParty(dstName)) then
@@ -1395,7 +1394,16 @@ function xpHigh.clEvents:SPELL_PERIODIC_HEAL(timestamp, event, srcGUID, srcName,
 						end
 					end
 
-					name, rank, tex, count, buffType, dur, endTime, isMine = UnitBuff(checkName, spellName, "", "PLAYER")
+					local index = 40
+					for i = 1, 39 do
+						local _, _, _, _, _, _, _, _, _, ID = UnitBuff(checkName, i, "PLAYER")
+						if ID == spellId then
+							index = i
+							break
+						end
+					end
+
+					local name, tex, count, buffType, dur, endTime, isMine = UnitBuff(checkName, index, "PLAYER")
 
 					if (isMine) then
 						-- Figure out how many seconds are left in the HOT so we can ensure the flashy only stays up as long as the HOT is active
@@ -1591,7 +1599,7 @@ end
 -- xpHigh:HasMyPomPom(unit)
 function xpHigh:HasMyPomPom(unit)
 	for i = 1, 40 do
-		local name, rank, tex, count, buffType, dur, endTime, isMine = UnitBuff(unit, i, "PLAYER")
+		local name, tex, count, buffType, dur, endTime, isMine = UnitBuff(unit, i, "PLAYER")
 		if (not name) then
 			break
 		end
@@ -1604,7 +1612,7 @@ end
 -- xpHigh:HasMyShield(unit)
 function xpHigh:HasMyShield(unit)
 	for i = 1, 40 do
-		local name, rank, tex, count, buffType, dur, endTime, isMine = UnitBuff(unit, i, "PLAYER")
+		local name, tex, count, buffType, dur, endTime, isMine = UnitBuff(unit, i, "PLAYER")
 		if (not name) then
 			break
 		end

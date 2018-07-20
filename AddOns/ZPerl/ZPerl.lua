@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1089 $")
-XPerl_SetModuleRevision("$Revision: 1089 $")
+end, "$Revision: 1100 $")
+XPerl_SetModuleRevision("$Revision: 1100 $")
 
 -- Upvalus
 local _G = _G
@@ -360,12 +360,13 @@ local function DoRangeCheck(unit, opt)
 	end
 
 	if (not range) then
-		local playerRealm = UnitDebuff("player", SpiritRealm)
-		local unitRealm = UnitDebuff(unit, SpiritRealm)
+		--local playerRealm = UnitDebuff("player", SpiritRealm)
+		--local unitRealm = UnitDebuff(unit, SpiritRealm)
 
-		if playerRealm ~= unitRealm then
+		--[[if playerRealm ~= unitRealm then
 			range = nil
-		elseif (opt.interact) then
+		else--]]
+		if (opt.interact) then
 			if (opt.interact == 6) then
 				--[[range, checkedRange = UnitInRange(unit) -- 40 yards
 				if not checkedRange then
@@ -458,8 +459,23 @@ local function DoRangeCheck(unit, opt)
 			-- 3 = Duel = 7 yards
 			-- 4 = Follow = 28 yards
 			-- 5 = ??? = 7 yards
-		elseif (opt.spell and UnitCanAssist("player", unit)) then
-			range = IsSpellInRange(opt.spell, unit)
+		elseif (opt.spell) then
+			if UnitCanAssist("player", unit) then
+				range = IsSpellInRange(opt.spell, unit)
+				if range == nil then
+					-- Fallback (28y)
+					range = CheckInteractDistance(unit, 1)
+				end
+			elseif UnitCanAttack("player", unit) then
+				range = IsSpellInRange(opt.spell, unit)
+				if range == nil then
+					-- Fallback (28y)
+					range = CheckInteractDistance(unit, 1)
+				end
+			else
+				-- Fallback (28y)
+				range = CheckInteractDistance(unit, 1)
+			end
 		elseif (opt.item and UnitCanAssist("player", unit)) then
 			range = IsItemInRange(opt.item, unit)
 		else
@@ -1121,9 +1137,9 @@ end
 --	return unpack(ClassPos[class] or ClassPos.none)
 --end
 
-local ClassPos = CLASS_ICON_TCOORDS
-function XPerl_ClassPos(class)
-	local b = ClassPos[class]		-- Now using the Blizzard supplied from FrameXML/WorldStateFrame.lua
+local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
+function XPerl_ClassPos(unitClass)
+	local b = CLASS_ICON_TCOORDS[unitClass]		-- Now using the Blizzard supplied from FrameXML/WorldStateFrame.lua
 	if (b) then
 		return unpack(b)
 	end
@@ -1225,7 +1241,7 @@ end
 -- XPerl_MinimapMenu_OnLoad
 function XPerl_MinimapMenu_OnLoad(self)
 	self.displayMode = "MENU"
-	UIDropDownMenu_Initialize(self, XPerl_MinimapMenu_Initialize)
+	Lib_UIDropDownMenu_Initialize(self, XPerl_MinimapMenu_Initialize)
 end
 
 -- XPerl_MinimapMenu_Initialize
@@ -1233,80 +1249,80 @@ function XPerl_MinimapMenu_Initialize(self, level)
 	local info
 
 	if (level == 2) then
-		--[[if (UIDROPDOWNMENU_MENU_VALUE == "raidbuffs") then
-			info = UIDropDownMenu_CreateInfo()
+		--[[if (LIB_UIDROPDOWNMENU_MENU_VALUE == "raidbuffs") then
+			info = Lib_UIDropDownMenu_CreateInfo()
 			info.isTitle = 1
 			info.text = XPERL_MINIMENU_RAIDBUFF
-			UIDropDownMenu_AddButton(info, level)
+			Lib_UIDropDownMenu_AddButton(info, level)
 
-			info = UIDropDownMenu_CreateInfo()
+			info = Lib_UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = BINDING_NAME_TOGGLEBUFFCASTABLE
 			info.func = function() XPerl_ToggleRaidBuffs(1) end
-			UIDropDownMenu_AddButton(info, level)
+			Lib_UIDropDownMenu_AddButton(info, level)
 
-			info = UIDropDownMenu_CreateInfo()
+			info = Lib_UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = BINDING_NAME_TOGGLEBUFFTYPE
 			info.func = XPerl_ToggleRaidBuffs
-			UIDropDownMenu_AddButton(info, level)
-		elseif (UIDROPDOWNMENU_MENU_VALUE == "raidsort") then
-			info = UIDropDownMenu_CreateInfo()
+			Lib_UIDropDownMenu_AddButton(info, level)
+		elseif (LIB_UIDROPDOWNMENU_MENU_VALUE == "raidsort") then
+			info = Lib_UIDropDownMenu_CreateInfo()
 			info.isTitle = 1
 			info.text = XPERL_MINIMENU_RAIDSORT
-			UIDropDownMenu_AddButton(info, level)
+			Lib_UIDropDownMenu_AddButton(info, level)
 
-			info = UIDropDownMenu_CreateInfo()
+			info = Lib_UIDropDownMenu_CreateInfo()
 			info.checked = XPerlDB.raid.sortByClass == nil
 			info.text = XPERL_MINIMENU_RAIDSORT_GROUP
 			info.func = function()
 				XPerl_ToggleRaidSort(1)
 			end
-			UIDropDownMenu_AddButton(info, level)
+			Lib_UIDropDownMenu_AddButton(info, level)
 
-			info = UIDropDownMenu_CreateInfo()
+			info = Lib_UIDropDownMenu_CreateInfo()
 			info.checked = XPerlDB.raid.sortByClass == 1
 			info.text = XPERL_MINIMENU_RAIDSORT_CLASS
 			info.func = function()
 				XPerl_ToggleRaidSort(0)
 			end
-			UIDropDownMenu_AddButton(info, level)
+			Lib_UIDropDownMenu_AddButton(info, level)
 		end]]
 		return
 	end
 
-	info = UIDropDownMenu_CreateInfo()
+	info = Lib_UIDropDownMenu_CreateInfo()
 	info.isTitle = 1
 	info.text = XPerl_ProductName
-	UIDropDownMenu_AddButton(info)
+	Lib_UIDropDownMenu_AddButton(info)
 
-	info = UIDropDownMenu_CreateInfo()
+	info = Lib_UIDropDownMenu_CreateInfo()
 	info.notCheckable = 1
 	info.func = XPerl_Toggle
 	info.text = XPERL_MINIMENU_OPTIONS
-	UIDropDownMenu_AddButton(info)
+	Lib_UIDropDownMenu_AddButton(info)
 
 	--[[if (XPerl_ToggleRaidBuffs) then
-		info = UIDropDownMenu_CreateInfo()
+		info = Lib_UIDropDownMenu_CreateInfo()
 		info.notCheckable = 1
 		info.text = XPERL_MINIMENU_RAIDBUFF
 		info.hasArrow = 1
 		info.value = "raidbuffs"
-		UIDropDownMenu_AddButton(info)
+		Lib_UIDropDownMenu_AddButton(info)
 	end]]
 
 	--[[if (XPerl_ToggleRaidSort) then
-		info = UIDropDownMenu_CreateInfo()
+		info = Lib_UIDropDownMenu_CreateInfo()
 		info.notCheckable = 1
 		info.text = XPERL_MINIMENU_RAIDSORT
 		info.hasArrow = 1
 		info.value = "raidsort"
-		UIDropDownMenu_AddButton(info)
+		Lib_UIDropDownMenu_AddButton(info)
 	end]]
 
 	if (IsAddOnLoaded("ZPerl_RaidHelper")) then
 		if (XPerl_Assists_Frame and not XPerl_Assists_Frame:IsShown()) then
-			info = UIDropDownMenu_CreateInfo()
+			info = Lib_UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = XPERL_MINIMENU_ASSIST
 			info.func = function()
@@ -1314,46 +1330,46 @@ function XPerl_MinimapMenu_Initialize(self, level)
 					ZPerlConfigHelper.TargettingFrame = 1
 					XPerl_SetFrameSides()
 				end
-			UIDropDownMenu_AddButton(info)
+			Lib_UIDropDownMenu_AddButton(info)
 		end
 	end
 
 	if (IsAddOnLoaded("ZPerl_RaidMonitor")) then
 		if (XPerl_RaidMonitor_Frame and not XPerl_RaidMonitor_Frame:IsShown()) then
-			info = UIDropDownMenu_CreateInfo()
+			info = Lib_UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = XPERL_MINIMENU_CASTMON
 			info.func = function()
 				ZPerlRaidMonConfig.enabled = 1
 				XPerl_RaidMonitor_Frame:SetFrameSizes()
 			end
-			UIDropDownMenu_AddButton(info)
+			Lib_UIDropDownMenu_AddButton(info)
 		end
 	end
 
 	if (IsAddOnLoaded("ZPerl_RaidAdmin")) then
 		if (XPerl_AdminFrame and not XPerl_AdminFrame:IsShown()) then
-			info = UIDropDownMenu_CreateInfo()
+			info = Lib_UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = XPERL_MINIMENU_RAIDAD
 			info.func = function() XPerl_AdminFrame:Show() end
-			UIDropDownMenu_AddButton(info)
+			Lib_UIDropDownMenu_AddButton(info)
 		end
 
 		if (XPerl_Check and not XPerl_Check:IsShown()) then
-			info = UIDropDownMenu_CreateInfo()
+			info = Lib_UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = XPERL_MINIMENU_ITEMCHK
 			info.func = function() XPerl_Check:Show() end
-			UIDropDownMenu_AddButton(info)
+			Lib_UIDropDownMenu_AddButton(info)
 		end
 
 		if (XPerl_RosterText and not XPerl_RosterText:IsShown()) then
-			info = UIDropDownMenu_CreateInfo()
+			info = Lib_UIDropDownMenu_CreateInfo()
 			info.notCheckable = 1
 			info.text = XPERL_MINIMENU_ROSTERTEXT
 			info.func = function() XPerl_RosterText:Show() end
-			UIDropDownMenu_AddButton(info)
+			Lib_UIDropDownMenu_AddButton(info)
 		end
 	end
 end
@@ -1365,7 +1381,7 @@ function XPerl_MinimapMenu(self)
 		XPerl_MinimapMenu_OnLoad(XPerl_Minimap_Dropdown)
 	end
 
-	ToggleDropDownMenu(1, nil, XPerl_Minimap_Dropdown, "cursor", 0, 0)
+	Lib_ToggleDropDownMenu(1, nil, XPerl_Minimap_Dropdown, "cursor", 0, 0)
 end
 
 local xpModList = {"ZPerl", "ZPerl_Player", "ZPerl_PlayerBuffs", "ZPerl_PlayerPet", "ZPerl_Target", "ZPerl_TargetTarget", "ZPerl_Party", "ZPerl_PartyPet", "ZPerl_ArcaneBar", "ZPerl_RaidFrames", "ZPerl_RaidHelper", "ZPerl_RaidAdmin", "ZPerl_RaidMonitor", "ZPerl_RaidPets"}
@@ -2540,7 +2556,7 @@ end
 
 -- unitmenuOnPostClick
 local function unitmenuOnPostClick(self)
-	if (UIDROPDOWNMENU_OPEN_MENU == self.dropdownMenu and DropDownList1:IsShown()) then
+	if (LIB_UIDROPDOWNMENU_OPEN_MENU == self.dropdownMenu and DropDownList1:IsShown()) then
 		local parent = self
 		if (self:GetParent() and self:GetParent().nameFrame == self) then
 			parent = self:GetParent()
@@ -2584,9 +2600,9 @@ end
 
 -- Hide set focus from the raid dropdown
 local function HideSetFocus()
-	local unit = UIDROPDOWNMENU_INIT_MENU.unit
-	if unit and strsub(unit, 0, 4) == "raid" and string.find(UIDROPDOWNMENU_INIT_MENU:GetName(), "XPerl") then
-		for index, value in ipairs(UnitPopupMenus[UIDROPDOWNMENU_INIT_MENU.which]) do
+	local unit = LIB_UIDROPDOWNMENU_INIT_MENU.unit
+	if unit and strsub(unit, 0, 4) == "raid" and string.find(LIB_UIDROPDOWNMENU_INIT_MENU:GetName(), "XPerl") then
+		for index, value in ipairs(UnitPopupMenus[LIB_UIDROPDOWNMENU_INIT_MENU.which]) do
 			if (UnitPopupShown[1][index] == 1) then
 				if (value == "SET_FOCUS") then
 					UnitPopupShown[1][index] = 0
@@ -2601,7 +2617,7 @@ end
 --[=[
 -- XPerl_GenericDropDown_OnLoad
 function XPerl_GenericDropDown_OnLoad(self)
-	--UIDropDownMenu_Initialize(self, XPerl_GenericDropDown_Initialize, "MENU")
+	--Lib_UIDropDownMenu_Initialize(self, XPerl_GenericDropDown_Initialize, "MENU")
 	--tinsert(UnitPopupFrames, "XPerl_DropDown")
 end
 
@@ -2643,7 +2659,7 @@ function XPerl_ShowGenericMenu(self, unit, button, actionType)
 	XPerl_DropDown.unit = unit
 
 	if (unit) then
-		HideDropDownMenu(1)
+		Lib_HideDropDownMenu(1)
 		XPerl_DropDown.id = strmatch(unit or "", "(%d+)")
 		XPerl_DropDown.displayMode = "MENU"
 
@@ -2662,7 +2678,7 @@ function XPerl_ShowGenericMenu(self, unit, button, actionType)
 			parent = self:GetParent()
 		end
 
-		ToggleDropDownMenu(1, nil, XPerl_DropDown, parent, 0, 0)
+		Lib_ToggleDropDownMenu(1, nil, XPerl_DropDown, parent, 0, 0)
 	end
 end
 --]=]

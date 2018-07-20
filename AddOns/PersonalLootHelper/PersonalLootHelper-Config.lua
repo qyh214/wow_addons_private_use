@@ -67,9 +67,18 @@ function PLH_CreateOptionsPanel()
 	neverOfferBOELabel:SetPoint('LEFT', neverOfferBOECheckbox, 'RIGHT', 0, 0)
 	neverOfferBOELabel:SetText("Never prompt me to trade Bind on Equip loot")
 
+	-- [[ PLH_PREFS_SHOW_TRADEABLE_ALERT ]] --
+	local showTradeableAlertCheckbox = CreateFrame('CheckButton', nil, configFrame, 'InterfaceOptionsCheckButtonTemplate')
+	showTradeableAlertCheckbox:SetPoint('TOPLEFT', neverOfferBOECheckbox, 'BOTTOMLEFT', 0, -5)
+	showTradeableAlertCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_SHOW_TRADEABLE_ALERT])
+
+	local showTradeableAlertLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	showTradeableAlertLabel:SetPoint('LEFT', showTradeableAlertCheckbox, 'RIGHT', 0, 0)
+	showTradeableAlertLabel:SetText("Show me a list of who can use the loot")
+	
 	--[[ Non-looter Options ]]--
 	local nonLooterLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
-	nonLooterLabel:SetPoint('TOPLEFT', neverOfferBOECheckbox, 'BOTTOMLEFT', -20, -15)
+	nonLooterLabel:SetPoint('TOPLEFT', showTradeableAlertCheckbox, 'BOTTOMLEFT', -20, -15)
 	nonLooterLabel:SetText("When others receive tradeable loot...")
 
 	--[[ PLH_PREFS_CURRENT_SPEC_ONLY ]]--
@@ -100,14 +109,14 @@ function PLH_CreateOptionsPanel()
 	}
 
 	local ilvlThresholdDescription = {
-		"ilvl >  equipped",
-		"ilvl >= equipped",
-		"ilvl >= equipped -5",
-		"ilvl >= equipped -10",
-		"ilvl >= equipped -15",
-		"ilvl >= equipped -20",
-		"ilvl >= equipped -25",
-		"ilvl >= equipped -30",
+		"looted ilvl is higher than equipped ilvl",
+		"looted ilvl is at least equal to equipped ilvl",
+		"looted ilvl is at least equal to equipped ilvl -5",
+		"looted ilvl is at least equal to equipped ilvl -10",
+		"looted ilvl is at least equal to equipped ilvl -15",
+		"looted ilvl is at least equal to equipped ilvl -20",
+		"looted ilvl is at least equal to equipped ilvl -25",
+		"looted ilvl is at least equal to equipped ilvl -30",
 		"always show all items"
 	}
 
@@ -129,7 +138,7 @@ function PLH_CreateOptionsPanel()
 	end
 
 	MSA_DropDownMenu_Initialize(ilvlThresholdMenu, ilvlThresholdMenu_Initialize)
-	MSA_DropDownMenu_SetWidth(ilvlThresholdMenu, 150);
+	MSA_DropDownMenu_SetWidth(ilvlThresholdMenu, 300);
 	MSA_DropDownMenu_JustifyText(ilvlThresholdMenu, 'LEFT')
 
 	local function GetILVLThresholdDescription(ilvlThreshold)
@@ -155,7 +164,7 @@ function PLH_CreateOptionsPanel()
 	--[[ PLH_PREFS_INCLUDE_XMOG ]]--
 	
 	local includeXMOGCheckbox = CreateFrame('CheckButton', nil, configFrame, 'InterfaceOptionsCheckButtonTemplate')
-	includeXMOGCheckbox:SetPoint('TOPLEFT', neverOfferBOECheckbox, 'BOTTOMLEFT', 0, -90)
+	includeXMOGCheckbox:SetPoint('TOPLEFT', neverOfferBOECheckbox, 'BOTTOMLEFT', 0, -120)
 	includeXMOGCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_INCLUDE_XMOG])
 
 	local includeXMOGLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
@@ -229,6 +238,7 @@ function PLH_CreateOptionsPanel()
 		skipConfirmationCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_SKIP_CONFIRMATION])
 		onlyOfferIfUpgradeCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_ONLY_OFFER_IF_UPGRADE])
 		neverOfferBOECheckbox:SetChecked(PLH_PREFS[PLH_PREFS_NEVER_OFFER_BOE])
+		showTradeableAlertCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_SHOW_TRADEABLE_ALERT])
 		currentSpecOnlyCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_CURRENT_SPEC_ONLY])
 		MSA_DropDownMenu_SetText(ilvlThresholdMenu, GetILVLThresholdDescription(PLH_PREFS[PLH_PREFS_ILVL_THRESHOLD]))
 		includeXMOGCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_INCLUDE_XMOG])
@@ -242,6 +252,7 @@ function PLH_CreateOptionsPanel()
 		PLH_PREFS[PLH_PREFS_SKIP_CONFIRMATION] = skipConfirmationCheckbox:GetChecked()
 		PLH_PREFS[PLH_PREFS_ONLY_OFFER_IF_UPGRADE] = onlyOfferIfUpgradeCheckbox:GetChecked()
 		PLH_PREFS[PLH_PREFS_NEVER_OFFER_BOE] = neverOfferBOECheckbox:GetChecked()
+		PLH_PREFS[PLH_PREFS_SHOW_TRADEABLE_ALERT] = showTradeableAlertCheckbox:GetChecked()
 		PLH_PREFS[PLH_PREFS_CURRENT_SPEC_ONLY] = currentSpecOnlyCheckbox:GetChecked()
 		PLH_PREFS[PLH_PREFS_ILVL_THRESHOLD] = GetILVLThresholdValue(MSA_DropDownMenu_GetText(ilvlThresholdMenu))
 		PLH_PREFS[PLH_PREFS_INCLUDE_XMOG] = includeXMOGCheckbox:GetChecked()

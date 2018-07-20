@@ -91,30 +91,6 @@
 							</Layer>
 						</Layers>
 					</Frame>
-					<!-- Prestige Icon -->
-					<Frame name="$parentprestige" hidden="true">
-						<Scripts>
-							<OnLoad>
-								self:SetScale(0.7)
-								self:SetFrameLevel(self:GetParent():GetFrameLevel() + 2)
-							</OnLoad>
-						</Scripts>
-						<Size>
-							<AbsDimension x="38" y="38"/>
-						</Size>
-						<Anchors>
-							<Anchor point="TOPLEFT">
-								<Offset>
-									<AbsDimension x="-2" y="2"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<Layers>
-							<Layer level="BACKGROUND">
-								<Texture name="$parenticon" setAllPoints="true"/>
-							</Layer>
-						</Layers>
-					</Frame>
 					<!-- Raid Target Icon -->
 					<Frame name="$parentraidIcon" hidden="true">
 						<Scripts>

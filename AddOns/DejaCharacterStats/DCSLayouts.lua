@@ -101,6 +101,7 @@ local DefaultTankData = DCS_TableData:MergeTable({
         { statKey = "DODGE", hideAt = 0 },
         { statKey = "PARRY", hideAt = 0 },
         { statKey = "BLOCK", hideAt = 0 },
+		{ statKey = "STAGGER", hideAt = 0, roles = {"TANK"} },
 	{ statKey = "RatingCategory" },
 		{ statKey = "CRITCHANCE_RATING", hideAt = 0 },
 		{ statKey = "HASTE_RATING", hideAt = 0 },
@@ -162,6 +163,7 @@ local DefaultNonTankData = DCS_TableData:MergeTable({
 		{ statKey = "PARRY_RATING", hideAt = 0 },
 		{ statKey = "SPEED_RATING", hideAt = 0, hidden = true },
 		{ statKey = "SPEED", hideAt = 0, hidden = true }, --seems like Blizzard's implemented speed rating
+		{ statKey = "STAGGER", hideAt = 0, roles = {"TANK"} },
 })
 --local ShownData = DefaultData
 local ShownData = DefaultNonTankData --TODO: find a reason why error during login with "local ShownData". Most probably too early PaperDollFrame_UpdateStats() calls due to DCS_configButton:RegisterEvent("UPDATE_INVENTORY_DURABILITY")
@@ -423,6 +425,15 @@ local function DCS_Table_Relevant()
 			if v.statKey == "DODGE" then v.hidden = true end
 			if v.statKey == "PARRY" then v.hidden = true end
 			if v.statKey == "BLOCK" then v.hidden = true end
+		end
+		if v.roles then
+			hidden = true
+			for _,j in pairs(v.roles) do
+				if j == role then
+					hidden = false
+				end
+			end
+			v.hidden = hidden
 		end
 		--visibility of ratings is off by default
 		if v.statKey == "CRITCHANCE_RATING" then v.hidden = true end
