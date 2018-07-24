@@ -9,8 +9,8 @@ local MOVANY = _G.MOVANY
 
 StaticPopupDialogs["MOVEANYTHING_PROFILE_RESET_CONFIRM"] = {
 	text = MOVANY.PROFILE_RESET_CONFIRM,
-	button1 = TEXT(YES),
-	button2 = TEXT(NO),
+	button1 = YES,
+	button2 = NO,
 	OnAccept = function()
 		MovAny:ResetProfile()
 	end,
@@ -23,8 +23,8 @@ StaticPopupDialogs["MOVEANYTHING_PROFILE_RESET_CONFIRM"] = {
 
 StaticPopupDialogs["MOVEANYTHING_PROFILE_ADD"] = {
 	text = MOVANY.PROFILE_ADD_TEXT,
-	button1 = TEXT(MOVANY.ADD),
-	button2 = TEXT(CANCEL),
+	button1 = MOVANY.ADD,
+	button2 = CANCEL,
 	OnShow = function(self)
 		self.editBox:SetScript("OnEnterPressed", function()
 			if MovAny:AddProfile(self.editBox:GetText()) then
@@ -50,8 +50,8 @@ StaticPopupDialogs["MOVEANYTHING_PROFILE_ADD"] = {
 
 StaticPopupDialogs["MOVEANYTHING_PROFILE_RENAME"] = {
 	text = MOVANY.PROFILE_RENAME_TEXT,
-	button1 = TEXT(MOVANY.RENAME),
-	button2 = TEXT(CANCEL),
+	button1 = MOVANY.RENAME,
+	button2 = CANCEL,
 	OnShow = function(self)
 		self.pn = MovAny:GetProfileName()
 		self.editBox:SetScript("OnEnterPressed", function()
@@ -78,8 +78,8 @@ StaticPopupDialogs["MOVEANYTHING_PROFILE_RENAME"] = {
 
 StaticPopupDialogs["MOVEANYTHING_PROFILE_SAVE_AS"] = {
 	text = MOVANY.PROFILE_SAVE_AS_TEXT,
-	button1 = TEXT(MOVANY.SAVE),
-	button2 = TEXT(CANCEL),
+	button1 = MOVANY.SAVE,
+	button2 = CANCEL,
 	OnShow = function(self)
 		self.pn = MovAny:GetProfileName()
 		self.editBox:SetScript("OnEnterPressed", function()
@@ -106,8 +106,8 @@ StaticPopupDialogs["MOVEANYTHING_PROFILE_SAVE_AS"] = {
 
 StaticPopupDialogs["MOVEANYTHING_PROFILE_DELETE"] = {
 	text = MOVANY.PROFILE_DELETE_TEXT,
-	button1 = TEXT(MOVANY.DELETE),
-	button2 = TEXT(CANCEL),
+	button1 = MOVANY.DELETE,
+	button2 = CANCEL,
 	OnAccept = function(self)
 		MovAny:DeleteProfile(MovAny:GetProfileName())
 	end,

@@ -4,41 +4,31 @@ wow_addons_private_use
 
 !KalielsTracker 任务列表美化、整理
 
-!MoncaiCompare 装备比较
-
-163UI_TeamStats 团队成员装备信息汇总
-
-ACP插件管理
-
-AdiBags 背包整合、整理
+AddOnSkins 插件皮肤统一（配合elvui）
 
 AdvancedInterfaceOptions 额外界面设置
 
 AngryKeystones 大秘境钥石插件
 
-AuctionLite AH拍卖行增强插件
-
-BagSync
-
-Bartender4 动作条美化
+Auctionator AH拍卖行增强插件
 
 BlizzMove 暴雪系统窗体移动
 
-BuyEmAll
+BuyEmAll 批量购买物品增强（某些只能一个个买的，改进堆叠购买）
 
 CanIMogIt 幻化提示插件
 
-Chatter 聊天增强
-
-ClearFont 字体修正
-
-CompactRaid团队框架
-
-DBM 首领报警
+DBM 首领报警及其语音包
 
 DejaCharacterStats 角色信息增强
 
-EnhancedMenu
+ElvUI ElvUI整合界面插件
+
+ElvUI_Enhanced ElvUI增强插件
+
+ElvUI_SLE  ElvUI增强插件shadow & light（与addonskins or ElvUI_Enhanced互斥）
+
+ExRT 团队插件
 
 Fizzle 装备耐久与品质显示
 
@@ -48,11 +38,7 @@ HandyNotes
 
 HiddenArtifactTracker
 
-MBB 小地图图标整合
-
 MeetingStone 集合石
-
-merchantEx 自动售卖垃圾、修理装备（若npc该功能可用）
 
 MikScrollingBattleText（MSBT战斗浮动信息，parrot替代品）
 
@@ -60,47 +46,24 @@ MoveAnything
 
 Multishot 自动截图
 
-NomiCakes 诺米助手
-
-OmniCC 冷却计时
+PersonalLootHelper 个人拾取帮助
 
 Postal 邮件增强
 
-PersonalLootHelper 个人拾取帮助
-
-Quartz施法条美化（castbar替代品）
-
-RCLootCouncil
-
-RelicInspector
-
-SexyMap 小地图美化
+RelicInspector 圣物提示
 
 Skada伤害统计
 
-SlashRL /rl
-
-SpeakinSpell 技能台词喊话RP插件
-
-TidyPlates 血条美化
+TellMeWhen
 
 TinyInspect 角色面板信息增强显示额外的装备展示、与TinyTooltip结合更好实现玩家等级显示
 
 TinyTooltip  tooltip美化（TipTac替代品）
 
-Titan 泰坦信息条
-
-TrinketMenu 
-
-WardrobeSort
-
-WhisperInvite 私密邀请
-
 WIM聊天窗口美化
 
-WorldQuestTracker 破碎群岛世界任务插件
+WorldQuestTracker 世界任务插件
 
 XLoot掉落美化
 
-ZPerl姓名版美化
 

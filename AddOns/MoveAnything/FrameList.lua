@@ -238,8 +238,8 @@ local m = {
 			{"MainMenuBar", "DISABLEMOUSE"},
 			}
 		}, c)
-		API:AddElement({name = "MainMenuBarLeftEndCap", displayName = "Left Gryphon"}, c)
-		API:AddElement({name = "MainMenuBarRightEndCap", displayName = "Right Gryphon"}, c)
+		API:AddElement({name = "MainMenuBarArtFrameLeftEndCapMover", displayName = "Left Gryphon", noScale = 1}, c)
+		API:AddElement({name = "MainMenuBarArtFrameRightEndCapMover", displayName = "Right Gryphon", noScale = 1}, c)
 		API:AddElement({name = "MainMenuExpBar", displayName = "Experience Bar", scaleWH = 1, hideOnScale = {
 			MainMenuXPBarTexture0,
 			MainMenuXPBarTexture1,

@@ -1,7 +1,10 @@
 --[[
 
 TODOs:
+    If there is no loot, add a msg to window saying "check auto-hide to get rid of this window"?
+	Add legacy mode to show system alerts only?
 	Bug with people being shown pass/whisper instead of keep/offer when looting...may be related to cyrillic names?  or same name from different realms in IsPlayer()?
+	Bug - whisper message doesn't allow special characters
 	Don't show PLH UI if group is using RCLootCouncil
 	Add BfA trinkets
 	Azerite armor is not tradeable - look for "Active Azerite Powers" string (TOOLTIP_AZERITE_UNLOCK_LEVELS or CURRENTLY_SELECTED_AZERITE_POWERS) in tooltip
@@ -33,6 +36,10 @@ Future Enhancement Ideas:
 
 CHANGELOG:
 
+20180720 - 2.05
+	Fixed bug that was causing some gear to not be identified as equippable (leather gear looted by int-specced druid not identified as
+		equippable by rogues, for example)
+	
 20180719 - 2.04
 	Added option to notify individual of loot they can trade to others in the group (instead of only notifying in UI for other PLH users).
 	Renamed "offer to group" button to "offer to plh users" to make it clearer; if you want to offer an item to non-PLH users,
@@ -658,7 +665,19 @@ local function IsEquippableItemForCharacter(fullItemInfo, characterName)
 		
 		if fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_CLOAK' or fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_FINGER' or fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_NECK' then
 			return true
-		else
+		end
+
+		if fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_TRINKET' or
+			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_WEAPON' or
+			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_SHIELD' or
+			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_2HWEAPON' or
+			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_WEAPONMAINHAND' or
+			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_WEAPONOFFHAND' or
+			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_HOLDABLE' or
+			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_RANGED' or
+			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_THROWN' or
+			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_RANGEDRIGHT' then
+			
 			local itemPrimaryAttribute = GetItemPrimaryAttribute(fullItemInfo[FII_ITEM])
 			if itemPrimaryAttribute ~= nil then
 				local isValidPrimaryAttribute = false
@@ -674,29 +693,29 @@ local function IsEquippableItemForCharacter(fullItemInfo, characterName)
 					return false
 				end
 			end
+		end
 
-			if fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_TRINKET' then
-				for _, spec in pairs(SPEC_BY_CLASS[characterClass]) do
-					if characterSpec == spec or not PLH_PREFS[PLH_PREFS_CURRENT_SPEC_ONLY] then
-						if IsTrinketUsable(fullItemInfo[FII_ITEM], ROLE_BY_SPEC[spec]) then
-							return true
-						end
+		if fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_TRINKET' then
+			for _, spec in pairs(SPEC_BY_CLASS[characterClass]) do
+				if characterSpec == spec or not PLH_PREFS[PLH_PREFS_CURRENT_SPEC_ONLY] then
+					if IsTrinketUsable(fullItemInfo[FII_ITEM], ROLE_BY_SPEC[spec]) then
+						return true
 					end
 				end
-				return IsTrinketUsable(fullItemInfo[FII_ITEM], PLH_ROLE_UNKNOWN) == true
-			else
-				local subClasses		
-				for _, spec in pairs(SPEC_BY_CLASS[characterClass]) do
-					if characterSpec == spec or not PLH_PREFS[PLH_PREFS_CURRENT_SPEC_ONLY] then
-						if fullItemInfo[FII_CLASS] == LE_ITEM_CLASS_ARMOR then
-							subClasses = EQUIPPABLE_ARMOR_BY_SPEC[spec]
-						else
-							subClasses = EQUIPPABLE_WEAPON_BY_SPEC[spec]
-						end
-						for _, subClass in pairs(subClasses) do
-							if subClass == fullItemInfo[FII_SUB_CLASS] then
-								return true
-							end
+			end
+			return IsTrinketUsable(fullItemInfo[FII_ITEM], PLH_ROLE_UNKNOWN) == true
+		else
+			local subClasses		
+			for _, spec in pairs(SPEC_BY_CLASS[characterClass]) do
+				if characterSpec == spec or not PLH_PREFS[PLH_PREFS_CURRENT_SPEC_ONLY] then
+					if fullItemInfo[FII_CLASS] == LE_ITEM_CLASS_ARMOR then
+						subClasses = EQUIPPABLE_ARMOR_BY_SPEC[spec]
+					else
+						subClasses = EQUIPPABLE_WEAPON_BY_SPEC[spec]
+					end
+					for _, subClass in pairs(subClasses) do
+						if subClass == fullItemInfo[FII_SUB_CLASS] then
+							return true
 						end
 					end
 				end
@@ -712,6 +731,8 @@ end
 -- returns two variables:  true if the item is an upgrade over equippedItem (based on ilvl), equipped ilvl
 local function IsAnUpgrade(itemILVL, equippedItem, threshold)
 	local equippedILVL = GetRealILVL(equippedItem)
+--print("         drop ilvl = ", itemILVL)	
+--print("         equippedILVL ilvl = ", equippedILVL)	
 	if equippedILVL == nil then  -- this means we couldn't find an equippedItem
 		return false, 0
 	else
@@ -821,9 +842,12 @@ local function IsAnUpgradeForAnyCharacter(fullItemInfo)
 	local characterName
 	while GetRaidRosterInfo(index) ~= nil do
 		characterName = PLH_GetFullName(select(1, GetRaidRosterInfo(index)))
+--print("   characterName = ", characterName)		
 		if IsEquippableItemForCharacter(fullItemInfo, characterName) then
+--print("      isEquippable = true")		
 			isAnUpgrade, equippedILVL = IsAnUpgradeForCharacter(fullItemInfo, characterName, 0)
 			if isAnUpgrade then
+--print("      isAnUpgrade!")		
 				isAnUpgradeForAnyCharacterNames[#isAnUpgradeForAnyCharacterNames + 1] = Ambiguate(characterName, 'short') .. ' (' .. equippedILVL .. ')'
 			end
 		end
@@ -1961,21 +1985,30 @@ end
 -- Checks whether or not the loot items should be added to the lootedItems array; adds item if it meets the criteria
 local function PerformNotify(fullItemInfo, looterName)
 	if ShouldBeEvaluated(fullItemInfo) then
+--print("evaluating ", fullItemInfo[FII_ITEM])	
 		if IsPlayer(looterName) then
+--print("   looter is player")		
 --			local isTradeable = fullItemInfo[FII_TRADE_TIME_WARNING_SHOWN] or not IsAnUpgradeForCharacter(fullItemInfo, looterName)
 			local isTradeable = not IsAnUpgradeForCharacter(fullItemInfo, looterName, 0)
 			if isTradeable then
+--print("   item is tradeable")		
 
 				local isAnUpgradeForAnyCharacter, isAnUpgradeForAnyCharacterNames = IsAnUpgradeForAnyCharacter(fullItemInfo)
+--print("   isAnUpgradeForAnyCharacter = ", isAnUpgradeForAnyCharacter)
+--print("   isAnUpgradeForAnyCharacterNames = ", isAnUpgradeForAnyCharacterNames)
 
 				if PLH_GetNumberOfPLHUsers() > 1 then
+--print("   there are plh users")		
 					if not PLH_PREFS[PLH_PREFS_ONLY_OFFER_IF_UPGRADE] or isAnUpgradeForAnyCharacter then
+--print("   adding looted item")		
 						AddLootedItem(fullItemInfo, looterName)
 						UpdateLootedItemsDisplay()
 					end
 				end
 				if PLH_PREFS[PLH_PREFS_SHOW_TRADEABLE_ALERT] then
+--print("   show tradeable alert is true")		
 					if isAnUpgradeForAnyCharacter then
+--print("   is upg for any char")		
 						local names = GetNames(isAnUpgradeForAnyCharacterNames, 5)
 						PLH_SendAlert('You can trade ' .. fullItemInfo[FII_ITEM] .. ', which is an ilvl upgrade for ' .. names)
 						PlaySound(600)  -- 'GLUECREATECHARACTERBUTTON'

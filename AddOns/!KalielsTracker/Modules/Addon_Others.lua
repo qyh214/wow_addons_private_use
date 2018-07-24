@@ -18,7 +18,7 @@ local db
 local OTF = ObjectiveTrackerFrame
 local msqGroup1, msqGroup2
 
-local KTwarning = "|cff00ffffAddon "..KT.title.." is active."
+local KTwarning = "  |cff00ffffAddon "..KT.title.." is active.  "
 
 StaticPopupDialogs[addonName.."_ReloadUI"] = {
     text = KTwarning,
@@ -185,6 +185,28 @@ local function BugGrabber_Blacklist()
     end
 end
 
+-- Chinchilla
+local function Chinchilla_SetCompatibility()
+    if IsAddOnLoaded("Chinchilla") then
+        Chinchilla:GetModule("QuestTracker"):Disable()
+        local bck_Chinchilla_CreateConfig = Chinchilla.CreateConfig
+        function Chinchilla:CreateConfig()
+            local options = bck_Chinchilla_CreateConfig(self)
+            options.args.QuestTracker.args.enabled.disabled = true
+            options.args.QuestTracker.args[addonName.."Warning"] = {
+                name = KTwarning,
+                type = "description",
+            }
+            options.args.Position.args.questWatch.disabled = true
+            options.args.Position.args.questWatch.args[addonName.."Warning"] = {
+                name = KTwarning,
+                type = "description",
+            }
+            return options
+        end
+    end
+end
+
 --------------
 -- External --
 --------------
@@ -206,6 +228,7 @@ function M:OnEnable()
     SyncUI_SetSupport()
     SpartanUI_SetSupport()
     SVUI_SetSupport()
+    Chinchilla_SetCompatibility()
 end
 
 -- Masque

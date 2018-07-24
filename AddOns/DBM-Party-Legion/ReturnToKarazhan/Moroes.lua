@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1837, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17630 $"):sub(12, -3))
 mod:SetCreatureID(114312)
 mod:SetEncounterID(1961)
 mod:SetZone()
@@ -75,7 +75,7 @@ do
 			if UnitExists(uId) then
 				for s = 1, #ccList do
 					local spellName = ccList[s]
-					local _, _, _, _, _, _, expires = DBM:UnitDebuff(uId, spellName)
+					local _, _, _, _, _, expires = DBM:UnitDebuff(uId, spellName)
 					if expires then
 						local debuffTime = expires - GetTime()
 						lines[UnitName(uId)] = floor(debuffTime)

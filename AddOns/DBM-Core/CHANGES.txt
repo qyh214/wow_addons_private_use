@@ -1,182 +1,89 @@
-tag 00af32c70fbfd1bb3ebaa5eef530eec69e86ee4b 8.0.0
+tag 6772f991ae6cfcef97a89ca05b0deab8c2106ae6 8.0.1
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Tue Jul 17 15:16:47 2018 +0200
+Date:	Sun Jul 22 22:14:06 2018 +0200
 
-Tagging as 8.0.0
+Tagging as 8.0.1
 
-commit d7cc98c437e42c4a1b01e352555f7122e702371a
+commit ab2eccb3c1de64594f07e566fa3b3fb4314a02df
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Jul 17 15:16:47 2018 +0200
+Date:   Sun Jul 22 22:14:06 2018 +0200
 
-    increment version number to 8.0.0
+    increment version number to 8.0.1
 
-commit 33e58cc925e10ac3a035662c0bed9f48e9029afb
+commit a988a5ea6eb94a6f4fff04e517f29b2b3cf63ff5
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Jul 17 13:36:46 2018 +0200
+Date:   Sun Jul 22 21:40:44 2018 +0200
 
-    Omega via svn r17623:
-    8.0 Update
+    Omega via svn r17635:
+    Fix another bad case of bad registered event
 
-commit c9786eefa77b2901b568b46aad2c5e68d5a38bb9
+commit dc5bb7b1672451bb0d4aa59027d7be278473eb90
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Jul 12 09:56:43 2018 +0200
+Date:   Sat Jul 21 23:03:26 2018 +0200
 
-    Omega via svn r17622:
-    CN update
+    Omega via svn r17634:
+    Do it more efficiently and also consider a level 120 while at it
 
-commit bef01d1fb3f6b5b0109118e4d3f0ef86791f04cc
+commit f79d630e97b037597fd08ef1afda297d484ce6c4
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Jul 10 10:25:05 2018 +0200
+Date:   Sat Jul 21 22:59:38 2018 +0200
 
-    Omega via svn r17621:
-    CN update
+    Omega via svn r17633:
+    Tone down stack warnings on krosus with post nerfs, especially in LFR where you can solo tank anyways.
 
-commit d7a387c4601e4c7b4ef952fa89fa22021afe82af
+commit 835dd50505c8093e3cfe40bcde2ceeeaded55979
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Jul 9 03:40:20 2018 +0200
+Date:   Sat Jul 21 21:50:26 2018 +0200
 
-    Omega via svn r17620:
-    Push the partial razzdunk mod
+    Omega via svn r17632:
+    update to latest CallbackHandler
 
-commit 24d0c38c5503e2c0a05b5df323bd7662206bd6cb
+commit 3e50de67da575873c3c84a56a0a4741bda977bab
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Jul 9 02:58:42 2018 +0200
+Date:   Fri Jul 20 03:38:47 2018 +0200
 
-    Omega via svn r17619:
-    remove support for DBM pvp mods. without a maintainer, they will break in about a week for everyone and only spam hella lua errors with obsolete map code. I have to focus my one man crew effort on pve content and can?\226?\128?\153t maintain side projects like this anymore without more support, so some things have to give.
+    Omega via svn r17631:
+    Fix lua error with Calendar Date in brewfest mod
 
-commit f78983583f89cb688ae035835260895758146bc2
+commit 9b6760fd782660ebbafa8d357472494d183e0402
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jul 6 09:21:39 2018 +0200
+Date:   Fri Jul 20 01:30:21 2018 +0200
 
-    Omega via svn r17618:
-    handle dooms howl and lions roar being same boss (but faction dependent) much like boralas boss
+    Omega via svn r17630:
+    Fixed some errors in kara
 
-commit 95e87fb9ba248c2fa869e60341450a41699ce52a
+commit ddc709baf1874cc139c655f398202bba3f2eb4e2
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jul 4 21:12:22 2018 +0200
+Date:   Thu Jul 19 06:12:51 2018 +0200
 
-    Omega via svn r17617:
-    Fix dooms howl not loading
+    Omega via svn r17629:
+    Fix a bug where PARTY_KILL would be registered as a regular event instead of CLEU event
 
-commit 9c4f3395c3d77eddc67ba89abc68f8928172a681
+commit f1b6a563947e4686dc2134d7b4820031c90e1049
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Jul 3 06:10:45 2018 +0200
+Date:   Thu Jul 19 05:30:13 2018 +0200
 
-    Omega via svn r17616:
-    add -delay
+    Omega via svn r17628:
+    fix elisande error
 
-commit 16b12909e7f58a534f5a5e9de5059fc0c33ed045
+commit 8063d1699965622683e6bfc2528ac25c774edf00
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Jul 3 05:17:17 2018 +0200
+Date:   Thu Jul 19 05:25:20 2018 +0200
 
-    Omega via svn r17615:
-    More nil protection against maps with no name
+    Omega via svn r17627:
+    Remove invalid spell
 
-commit 035ad51438e724b4b7f543433df08d915f0afa0e
+commit 65dab7c8e1c5b5a8d333b01c91ca6c06fa9a60b3
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Jul 2 21:03:45 2018 +0200
+Date:   Wed Jul 18 00:58:27 2018 +0200
 
-    ebmor via svn r17614:
-    deDE update
+    Omega via svn r17626:
+    Mac client supports low lighting now
 
-commit 219e8e6af1f8238589112936a66d6dae648a61b7
+commit d1f34c8be76dc71e9abba2dd88291bf96384f308
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Jul 1 22:14:01 2018 +0200
+Date:   Tue Jul 17 15:18:42 2018 +0200
 
-    Omega via svn r17613:
-    Kr update
-
-commit 4b14075517f868393167e0d568b56b9087291389
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Jul 1 19:30:17 2018 +0200
-
-    Omega via svn r17612:
-    Support up to 4 checks at once, as it makes sense to do for legacy mods
-
-commit 02658597594819e245344b00f8644e398a02f0ca
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Jul 1 19:04:19 2018 +0200
-
-    Omega via svn r17611:
-    Some more Unit_spellcast fixes for bfa
-
-commit 6933273eae85b4705e9220c6b48ae59e779f4eb7
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Jul 1 18:10:29 2018 +0200
-
-    Omega via svn r17610:
-    Finally dd Skovald RP
-    Fixed court of stars helper not closing earlier, when finding correct noble
-
-commit eaf0b2cd1a5bc60b2ea84cd4fe354e45780f72c8
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Jul 1 03:58:52 2018 +0200
-
-    Omega via svn r17609:
-    Antispam this for when mass pulling
-
-commit e40545a955f382e9dbcb2419a594ffac1f790bdb
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 30 01:33:36 2018 +0200
-
-    Omega via svn r17608:
-    Support stats layout too
-
-commit 1583be71531fdbf85f8f52c51732caa88eecf69e
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 30 01:26:31 2018 +0200
-
-    Omega via svn r17607:
-    Add isles difficulty detection
-
-commit 458d0bbe842fe392dbc14fc0c317739328f2d199
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Jun 25 05:12:33 2018 +0200
-
-    Omega via svn r17606:
-    Most of motherload drycoded
-
-commit 262b3de40119a974f2854ffcc5a6c6e1307c1fac
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jun 20 20:44:33 2018 +0200
-
-    Omega via svn r17605:
-    Antispam lockdown with aggressive validity checks, like slag mines had to use in wod for trash fighting trash
-
-commit 2d79e5e3b44c38dd8a8e944401ab1a8106da4f9a
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jun 20 09:16:20 2018 +0200
-
-    Omega via svn r17604:
-    Fix a regression with guldan from a few weeks ago that caused it to spam invalid targets for bonds of fel
-    Try to fix a rare bug on aggramar where it tells you to taunt on first foebreaker, when code explicitly says second one only
-
-commit 44261399a3a8467f5a801cee78ce6acae6497fa9
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Jun 17 06:39:08 2018 +0200
-
-    Omega via svn r17603:
-    Make very legion mod for entire expansion compatible with UNIT_SPELLCAST changes, so people testing PTR legion content instead of BfA, can use these mods
-
-commit 7bf756c5f1ba5b4bf210528e87263f5b199237f1
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 16 20:47:42 2018 +0200
-
-    Omega via svn r17602:
-    Es update
-
-commit ddb0177ffadd5b1c93e2a6831fbc3476aadf18e3
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 16 09:25:01 2018 +0200
-
-    Omega via svn r17601:
-    Fix yell for matrix core not showing
-
-commit 0e39021dde29435bcadb7535ecb32cf518e03e43
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jun 16 01:14:13 2018 +0200
-
-    tandanu via svn r17600:
+    tandanu via svn r17625:
     increment alpha version
 

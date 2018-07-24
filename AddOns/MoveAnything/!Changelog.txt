@@ -3,6 +3,9 @@
 * Reseting bags while the bag is not opened won't reset it's scale to default.
 
 
+**17.0.0**
+* Updated for 8.0.1.
+
 **16.3.2**
 * Updated for 7.3.5.
 

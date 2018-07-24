@@ -1,0 +1,29 @@
+## Interface: 80000
+## Title: |cff1784d1ElvUI|r Enhanced (BfA)
+## Author: Feraldin
+## X-Credits: Instant, Tristimdorio (Omega1970), Azilroka, Lockslap, Sortokk, Repooc, moresunders
+## Version: 3.3.0-beta5
+## Notes: Plugin-Enhancements for |cff1784d1ElvUI|r.
+## X-Category: Plugins
+## URL: https://wow.curseforge.com/addons/elvui-enhanced-again/
+## X-Website: https://wow.curseforge.com/addons/elvui-enhanced-again/
+## RequiredDeps: ElvUI
+## DefaultState: Enabled
+
+## OptionalDeps: LibRangeCheck-2.0
+## X-Embeds: LibRangeCheck-2.0
+
+## X-Localizations: enUS, enGB, deDE, frFR, esES, esMX, zhCN, zhTW, koKR, ruRU
+## X-CompatibleLocales: enUS, enGB, deDE, frFR, esES, esMX, zhCN, zhTW, koKR, ruRU
+
+developer\load_developer.xml
+
+#@no-lib-strip@
+libs\load_libs.xml
+#@end-no-lib-strip@
+
+locales\load_locales.xml
+media\load_media.xml
+config\load_config.xml
+modules\load_modules.xml
+ElvUI_Enhanced.lua

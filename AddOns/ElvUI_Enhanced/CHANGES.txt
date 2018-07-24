@@ -1,0 +1,12 @@
+tag beb49c51c69f372d80c2250f6b0ce2a43d6cdf16 3.3.0-beta5
+Author:	Nick <git@bocky.nl>
+Date:	Mon Jul 23 13:16:39 2018 +0200
+
+Fixed #59
+
+commit d15f86755904c2b05d7de348cb35471d5cfc8a73
+Author: Nick <git@bockmeulen.nl>
+Date:   Sun Jul 22 09:07:05 2018 +0200
+
+    Fxied #59
+

@@ -279,7 +279,7 @@ function Guild:GUILD_ROSTER_UPDATE()
 		--_G.GuildControlSetRank(rankIndex);
                 local guildchat_listen, guildchat_speak, officerchat_listen, officerchat_speak, promote, demote,
                         invite_member, remove_member, set_motd, edit_public_note, view_officer_note, edit_officer_note,
-                        modify_guild_info, _, withdraw_repair, withdraw_gold, create_guild_event = _G.GuildControlGetRankFlags();
+                        modify_guild_info, _, withdraw_repair, withdraw_gold, create_guild_event = _G.C_GuildInfo.GuildControlGetRankFlags(rankIndex);
         	if(guildchat_listen) then
 					name = _G.Ambiguate(name, "none")
                     count = count + 1;
@@ -308,7 +308,7 @@ function Guild:CHAT_MSG_GUILD(...)
     end
     arg2 = _G.Ambiguate(arg2, "none")
     local win = getChatWindow(_G.GUILD, "guild");
-    local color = _G.ChatTypeInfo["GUILD"];
+    local color = _G.ChatTypeInfo["GUILD"] or _G.NORMAL_FONT_COLOR;
     self.guildWindow = win;
     if(not self.chatLoaded) then
         Guild:GUILD_ROSTER_UPDATE();
@@ -376,7 +376,7 @@ function Officer:GUILD_ROSTER_UPDATE()
                 --_G.GuildControlSetRank(rankIndex);
                 local guildchat_listen, guildchat_speak, officerchat_listen, officerchat_speak, promote, demote,
                         invite_member, remove_member, set_motd, edit_public_note, view_officer_note, edit_officer_note,
-                        modify_guild_info, _, withdraw_repair, withdraw_gold, create_guild_event = _G.GuildControlGetRankFlags();
+                        modify_guild_info, _, withdraw_repair, withdraw_gold, create_guild_event = _G.C_GuildInfo.GuildControlGetRankFlags(rankIndex);
         	if(officerchat_listen) then
 					name = _G.Ambiguate(name, "none")
                     count = count + 1;
@@ -405,7 +405,7 @@ function Officer:CHAT_MSG_OFFICER(...)
     end
     arg2 = _G.Ambiguate(arg2, "none")
     local win = getChatWindow(_G.GUILD_RANK1_DESC, "officer");
-    local color = _G.ChatTypeInfo["OFFICER"];
+    local color = _G.ChatTypeInfo["OFFICER"] or _G.NORMAL_FONT_COLOR;
     Officer.officerWindow = win;
     if(not self.chatLoaded) then
         Officer:GUILD_ROSTER_UPDATE();
@@ -497,7 +497,7 @@ function Party:CHAT_MSG_PARTY(...)
     end
     arg2 = _G.Ambiguate(arg2, "none")
     local win = getChatWindow(_G.PARTY, "party");
-    local color = _G.ChatTypeInfo["PARTY"];
+    local color = _G.ChatTypeInfo["PARTY"] or _G.NORMAL_FONT_COLOR;
     Party.partyWindow = win;
     if(not self.chatLoaded) then
         Party:GROUP_ROSTER_UPDATE();
@@ -535,7 +535,7 @@ function Party:CHAT_MSG_PARTY_LEADER(...)
     end
     arg2 = _G.Ambiguate(arg2, "none")
     local win = getChatWindow(_G.PARTY, "party");
-    local color = _G.ChatTypeInfo["PARTY_LEADER"];
+    local color = _G.ChatTypeInfo["PARTY_LEADER"] or _G.NORMAL_FONT_COLOR;
     self.raidWindow = win;
     if(not self.chatLoaded) then
         Party:GROUP_ROSTER_UPDATE();
@@ -624,7 +624,7 @@ function Raid:CHAT_MSG_RAID(...)
     end
     arg2 = _G.Ambiguate(arg2, "none")
     local win = getChatWindow(_G.RAID, "raid");
-    local color = _G.ChatTypeInfo["RAID"];
+    local color = _G.ChatTypeInfo["RAID"] or _G.NORMAL_FONT_COLOR;
     self.raidWindow = win;
     if(not self.chatLoaded) then
         Raid:GROUP_ROSTER_UPDATE();
@@ -662,7 +662,7 @@ function Raid:CHAT_MSG_RAID_LEADER(...)
     end
     arg2 = _G.Ambiguate(arg2, "none")
     local win = getChatWindow(_G.RAID, "raid");
-    local color = _G.ChatTypeInfo["RAID_LEADER"];
+    local color = _G.ChatTypeInfo["RAID_LEADER"] or _G.NORMAL_FONT_COLOR;
     self.raidWindow = win;
     if(not self.chatLoaded) then
         Raid:GROUP_ROSTER_UPDATE();
@@ -700,7 +700,7 @@ function Raid:CHAT_MSG_RAID_WARNING(...)
     end
     arg2 = _G.Ambiguate(arg2, "none")
     local win = getChatWindow(_G.RAID, "raid");
-    local color = _G.ChatTypeInfo["RAID_WARNING"];
+    local color = _G.ChatTypeInfo["RAID_WARNING"] or _G.NORMAL_FONT_COLOR;
     self.raidWindow = win;
     if(not self.chatLoaded) then
         Raid:GROUP_ROSTER_UPDATE();
@@ -788,7 +788,7 @@ function Battleground:CHAT_MSG_INSTANCE_CHAT(...)
     arg2 = _G.Ambiguate(arg2, "none")
     local win = getChatWindow(_G.INSTANCE_CHAT, "battleground");
     win.widgets.chat_info:SetText(getBattlegroundCount());
-    local color = _G.ChatTypeInfo["INSTANCE_CHAT"];
+    local color = _G.ChatTypeInfo["INSTANCE_CHAT"] or _G.NORMAL_FONT_COLOR;
     self.battlegroundWindow = win;
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
@@ -824,7 +824,7 @@ function Battleground:CHAT_MSG_INSTANCE_CHAT_LEADER(...)
     arg2 = _G.Ambiguate(arg2, "none")
     local win = getChatWindow(_G.INSTANCE_CHAT, "battleground");
     win.widgets.chat_info:SetText(getBattlegroundCount());
-    local color = _G.ChatTypeInfo["INSTANCE_CHAT_LEADER"];
+    local color = _G.ChatTypeInfo["INSTANCE_CHAT_LEADER"] or _G.NORMAL_FONT_COLOR;
     self.battlegroundWindow = win;
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
@@ -889,10 +889,14 @@ function Say:CHAT_MSG_SAY(...)
     end
     arg2 = _G.Ambiguate(arg2, "none")
     local win = getChatWindow(_G.SAY, "say");
-    local color = _G.ChatTypeInfo["SAY"];
+    local color = _G.ChatTypeInfo["SAY"] or _G.NORMAL_FONT_COLOR;
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
-    --win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_SAY", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+    --Don't handle say messages during encounters, when boss mods are handling them
+    local fightingBoss = _G.IsEncounterInProgress() or DBM and DBM:InCombat() or false
+    if not fightingBoss then
+    	win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_SAY", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+    end
     if(arg2 ~= _G.UnitName("player")) then
         win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
         if(not db.chat.say.neverPop) then
@@ -903,7 +907,9 @@ function Say:CHAT_MSG_SAY(...)
             win:Pop("out");
         end
     end
-    --CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_SAY", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+    if not fightingBoss then
+   		CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_SAY", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+   	end
 end
 
 
@@ -963,7 +969,7 @@ local function updateJoinLeave(event, ...)
     for _, win in pairs(Windows) do
         if(win.channelIdentifier == channelIdentifier) then
             win.widgets.chat_info:SetText(GetChannelCount(win.channelNumber));
-            local color = _G.ChatTypeInfo["CHANNEL"..channelNumber];
+            local color = _G.ChatTypeInfo["CHANNEL"..channelNumber] or _G.NORMAL_FONT_COLOR;
             win:AddEventMessage(color.r, color.g, color.b, event, ...);
             return;
         end
@@ -984,7 +990,7 @@ function Channel:CHAT_MSG_CHANNEL_NOTICE(...)
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11 = ...;
     for _, win in pairs(Windows) do
         if(win.channelIdentifier == arg4) then
-            local color = _G.ChatTypeInfo["CHANNEL"..arg8];
+            local color = _G.ChatTypeInfo["CHANNEL"..arg8] or _G.NORMAL_FONT_COLOR;
             win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_CHANNEL_NOTICE", ...);
             return;
         end
@@ -1000,7 +1006,7 @@ function Channel:CHAT_MSG_CHANNEL_NOTICE_USER(...)
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11 = ...;
     for _, win in pairs(Windows) do
         if(win.channelIdentifier == arg4) then
-            local color = _G.ChatTypeInfo["CHANNEL"..arg8];
+            local color = _G.ChatTypeInfo["CHANNEL"..arg8] or _G.NORMAL_FONT_COLOR;
             win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_CHANNEL_NOTICE_USER", ...);
             return;
         end
@@ -1056,7 +1062,7 @@ function Channel:CHAT_MSG_CHANNEL(...)
     end
     arg2 = _G.Ambiguate(arg2, "none")
     local win = getChatWindow(channelName, "channel");
-    local color = _G.ChatTypeInfo["CHANNEL"..arg8];
+    local color = _G.ChatTypeInfo["CHANNEL"..arg8] or _G.NORMAL_FONT_COLOR;
     if(arg7 == 1 or arg7 == 2 or arg7 == 22 or arg7 == 23 or arg7 == 26) then
         win.widgets.char_info:SetText(arg9);
         win.channelSpecial = _G.time();
@@ -1121,7 +1127,7 @@ function ChatAlerts:PostEvent_ChatMessage(event, ...)
         local win = getChatWindow(channelName, "channel");
         local showAlert = db.chat[isWorld and "world" or "custom"].channelSettings[channelName] and db.chat[isWorld and "world" or "custom"].channelSettings[channelName].showAlerts;
         if(showAlert and win and not win:IsVisible() and win.unreadCount) then
-            local color = _G.ChatTypeInfo["CHANNEL"..arg8];
+            local color = _G.ChatTypeInfo["CHANNEL"..arg8] or _G.NORMAL_FONT_COLOR;
             MinimapPushAlert(win.theUser, RGBPercentToHex(color.r, color.g, color.b), win.unreadCount);
         end
     else
@@ -1142,7 +1148,7 @@ function ChatAlerts:PostEvent_ChatMessage(event, ...)
         
         if(win and not win:IsVisible() and win.unreadCount and win.unreadCount > 0) then
             local chat_type = win.chatType == "battleground" and "INSTANCE_CHAT" or string.upper(win.chatType);
-            local color = _G.ChatTypeInfo[chat_type]; -- Drii: ticket 344 color error if party/instance chat handled by WIM
+            local color = _G.ChatTypeInfo[chat_type] or _G.NORMAL_FONT_COLOR; -- Drii: ticket 344 color error if party/instance chat handled by WIM
             MinimapPushAlert(win.theUser, RGBPercentToHex(color.r, color.g, color.b), win.unreadCount);
         end
     end
@@ -1229,7 +1235,7 @@ local function loadChatOptions()
                     f.sub.list.buttons[i].neverSuppress:SetChecked(db.chat[channelType].channelSettings[name] and db.chat[channelType].channelSettings[name].neverSuppress);
                     f.sub.list.buttons[i].showAlerts:SetChecked(db.chat[channelType].channelSettings[name] and db.chat[channelType].channelSettings[name].showAlerts);
                     f.sub.list.buttons[i].noHistory:SetChecked(db.chat[channelType].channelSettings[name] and db.chat[channelType].channelSettings[name].noHistory);
-                    local color = _G.ChatTypeInfo["CHANNEL"..channelNumber];
+                    local color = _G.ChatTypeInfo["CHANNEL"..channelNumber] or _G.NORMAL_FONT_COLOR;
                     f.sub.list.buttons[i].title:SetTextColor(color.r, color.g, color.b);
                     if(active) then
                         f.sub.list.buttons[i].title:SetAlpha(1);

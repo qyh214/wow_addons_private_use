@@ -210,20 +210,18 @@ local function Init()
 	KT:SetQuestsHeaderText()
 	KT:SetAchievsHeaderText()
 
-	KT.initialized = true
 	KT.stopUpdate = false
 	KT.inWorld = true
 
 	if dbChar.collapsed then
 		ObjectiveTracker_MinimizeButton_OnClick()
-	else
-		OTF.BlocksFrame:Hide()
-		ObjectiveTracker_Update()
-		OTF.BlocksFrame:Show()
-		ObjectiveTracker_Update()
 	end
 
 	C_Timer.After(0, function()
+		OTF:KTSetPoint("TOPLEFT", 30, -1)
+		OTF:KTSetPoint("BOTTOMRIGHT")
+
+		KT.initialized = true
 		KT.wqInitialized = true
 	end)
 end
@@ -380,9 +378,8 @@ local function SetFrames()
 	KTF.Bar = Bar
 
 	-- Blizzard frame
+	OTF:KTSetPoint("TOPLEFT")
 	OTF:KTSetParent(Child)
-	OTF:KTSetPoint("TOPLEFT", 30, -1)
-	OTF:KTSetPoint("BOTTOMRIGHT")
 	OTFHeader:Show()
 	OTFHeader.Hide = function() end
 	OTFHeader.SetShown = function() end
@@ -512,7 +509,13 @@ local function SetHooks()
 	ObjectiveTracker_Update = function(reason, id)
 		if KT.stopUpdate then return end
 		if reason ~= OBJECTIVE_TRACKER_UPDATE_STATIC then
-			_DBG("|cffffff00Update ... "..(reason and format("%x", reason) or ""), true)
+			local dbgReason
+			if reason == OBJECTIVE_TRACKER_UPDATE_ALL then
+				dbgReason = "FFFFFFFF"
+			else
+				dbgReason = reason and format("%x", reason) or ""
+			end
+			_DBG("|cffffff00Update ... "..dbgReason, true)
 		end
 		bck_ObjectiveTracker_Update(reason, id)
 		OTF.isUpdating = true
@@ -2148,6 +2151,7 @@ function KT:OnInitialize()
 	OTF.EnableMouse = function() end
 	OTF:SetMovable(false)
 	OTF.SetMovable = function() end
+	OTF:ClearAllPoints()
 	OTF.ClearAllPoints = function() end
 	OTF.SetAllPoints = function() end
 	OTF.KTSetPoint = OTF.SetPoint

@@ -198,16 +198,11 @@ local function SetupTutorials()
 			shineRight = 6,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.0.0|r\n\n"..
-				"- ADDED - Support for WoW 8.0.\n"..
-				"- ADDED - Progress bar skin - border and texture.\n"..
-				"- ADDED - Default Quests click action - World Map.\n"..
-				"- ADDED - BugGrabber addon Blacklist for non-fixable LUA errors."..
-				offs.."Now for error \"Deferred XML Node object\".\n"..
-                "- UPDATED - Addons support - ElvUI 10.75, Tukui 18.01, RealUI 2.0.0,"..
-                offs.."SpartanUI 4.6.0, SuperVillain UI 1.5\n"..
-				"- Temporary disabled support for addons PetTracker and TomTom."..
-				offs.."After update these addons, support will be enabled again.\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.0.1|r\n\n"..
+				"- FIXED - ticket #263 - Blizzard LUA implementation - error string.format with"..
+				offs.."border value of 32 bit integer.\n"..
+				"- FIXED - ticket #264 - collision with new tracker positioning in WoW 8.0\n"..
+				"- ADDED - Compatibility - addon Chinchilla Minimap.\n\n"..
 
 				cTitle.."Issue reporting|r\n"..
 				"For reporting please use "..cBold.."Tickets|r instead of Comments on Curse.com.\n\n\n\n"..

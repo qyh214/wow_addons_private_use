@@ -596,16 +596,9 @@ function CF_ExtractTellTarget(editBox, msg)
 		--Pull off everything after the last space.
 			target = string.match(target, "(.+)%s+[^%s]*");
 			target = _G.Ambiguate(target, "none")
-			if _G.CombatLogGetCurrentEventInfo then--8.x
-				if (_G.GetAutoCompleteResults(target, 1, 0, tellTargetExtractionAutoComplete.include,
-					tellTargetExtractionAutoComplete.exclude, 1, nil, true)) then
-					break;
-				end
-			else
-				if (_G.GetAutoCompleteResults(target, tellTargetExtractionAutoComplete.include,
-					tellTargetExtractionAutoComplete.exclude, 1, nil, true)) then
-					break;
-				end
+			if (_G.GetAutoCompleteResults(target, 1, 0, tellTargetExtractionAutoComplete.include,
+				tellTargetExtractionAutoComplete.exclude, 1, nil, true)) then
+				break;
 			end
 		end
 		msg = string.sub(msg, string.len(target) + 2);

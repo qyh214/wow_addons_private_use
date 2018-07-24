@@ -1,7 +1,7 @@
-changeset:   291:8f35062849fa
-tag:         v8.0.1.291
+changeset:   293:66e65a76b0c5
+tag:         v8.0.1.293
 user:        Tercio
-date:        Thu Jul 19 16:15:46 2018 -0300
-summary:     - Several fixes for 8.0.1
+date:        Fri Jul 20 16:56:36 2018 -0300
+summary:     - Tutorial revap.
 
 

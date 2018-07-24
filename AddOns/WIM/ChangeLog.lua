@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 546 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 554 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,6 +16,12 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.7.17", "07/22/2018", [[
+	*Bumped TOC
+	*Fixed armory link
+	*Re-enabled support for SAY chat, with a new exception to disable during boss encounters
+	*Guild chat support should be working again.
+]]);
 addEntry("3.7.16", "05/02/2018", [[
 	*Fixed GetAutoCompleteResults for 8.x
 ]]);
@@ -27,11 +33,6 @@ addEntry("3.7.14", "09/03/2017", [[
 ]]);
 addEntry("3.7.13", "09/03/2017", [[
 	*Fixed Guild chat Taint
-]]);
-addEntry("3.7.12", "08/29/2017", [[
-	*7.3 Compat Fixes
-	*SC1 client icon support
-	*Updated some profile URLS
 ]]);
 
 

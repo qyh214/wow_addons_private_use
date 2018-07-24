@@ -1,14 +1,14 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: MoveAnything
-## Version: 16.3.2
+## Version: 17.0.0
 ## Author: Wagthaa
 ## Notes: Move, scale, hide and adjust transparency of just about any screen element in the game.
 ## DefaultState: Enabled
 ## SavedVariables: MADB
 
+Libs\LibStub\LibStub.lua
 Libs\!NoTaint\!NoTaint.xml
 Libs\!NoTaint\!NoTaint.lua
-Libs\LibStub\LibStub.lua
 Libs\UIDropDownMenu\UIDropDownMenu.xml
 
 Localizations\Localization.br.lua

@@ -1179,6 +1179,56 @@ MovAny.lVirtualMovers = {
 			f.MAHidden = nil
 		end
 	},
+	MainMenuBarArtFrameLeftEndCapMover = {
+		w = 128,
+		h = 76,
+		point = {"BOTTOMLEFT", "MainMenuBar", "BOTTOMLEFT", -98, 0},
+		OnMAHook = function(self)
+			local b = MainMenuBarArtFrame.LeftEndCap
+			MovAny:UnlockPoint(b)
+			b:ClearAllPoints()
+			b:SetPoint("TOPRIGHT", self, "TOPRIGHT")
+			MovAny:LockPoint(b)
+		end,
+		OnMAPostReset = function(self)
+			local b = MainMenuBarArtFrame.LeftEndCap
+			MovAny:UnlockPoint(b)
+			b:ClearAllPoints()
+			b:SetPoint("BOTTOMLEFT", "MainMenuBar", "BOTTOMLEFT", -98, 0)
+		end,
+		OnMAHide = function(self, hidden)
+			if hidden then
+				MovAny:LockVisibility(MainMenuBarArtFrame.LeftEndCap)
+			else
+				MovAny:UnlockVisibility(MainMenuBarArtFrame.LeftEndCap)
+			end
+		end
+	},
+	MainMenuBarArtFrameRightEndCapMover = {
+		w = 128,
+		h = 76,
+		point = {"BOTTOMRIGHT", "MainMenuBar", "BOTTOMRIGHT", 98, 0},
+		OnMAHook = function(self)
+			local b = MainMenuBarArtFrame.RightEndCap
+			MovAny:UnlockPoint(b)
+			b:ClearAllPoints()
+			b:SetPoint("TOPRIGHT", self, "TOPRIGHT")
+			MovAny:LockPoint(b)
+		end,
+		OnMAPostReset = function(self)
+			local b = MainMenuBarArtFrame.RightEndCap
+			MovAny:UnlockPoint(b)
+			b:ClearAllPoints()
+			b:SetPoint("BOTTOMRIGHT", "MainMenuBar", "BOTTOMRIGHT", 98, 0)
+		end,
+		OnMAHide = function(self, hidden)
+			if hidden then
+				MovAny:LockVisibility(MainMenuBarArtFrame.RightEndCap)
+			else
+				MovAny:UnlockVisibility(MainMenuBarArtFrame.RightEndCap)
+			end
+		end
+	},
 	BagButtonsMover = {
 		w = 158,
 		h = 30,

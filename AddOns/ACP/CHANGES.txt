@@ -1,7 +1,0 @@
-changeset:   256:18908f7b65fe
-tag:         3.4.39
-user:        sylvanaar <sylvanaar@mindspring.com>
-date:        Sun May 27 12:48:52 2018 -0700
-summary:     BFA Fixes
-
-
