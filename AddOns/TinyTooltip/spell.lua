@@ -17,7 +17,7 @@ end
 
 local function SpellIcon(tip)
     if (addon.db.spell.showIcon) then
-        local id = select(3, tip:GetSpell())
+        local id = select(2, tip:GetSpell())
         local texture = GetSpellTexture(id or 0)
         local text = addon:GetLine(tip,1):GetText()
         if (texture and not strfind(text, "^|T")) then

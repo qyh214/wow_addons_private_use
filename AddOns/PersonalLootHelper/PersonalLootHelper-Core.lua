@@ -36,6 +36,15 @@ Future Enhancement Ideas:
 
 CHANGELOG:
 
+20180723 - 2.06
+	Fixed bug that could cause upgrades to not be identified if player's items weren't cached
+		(Added player items to cache instead of using GetInventoryItemLink() since player items are guaranteed to be cached post-8.0)
+	Fixed bug that could cause users to not be prompted for items if items weren't cached
+		(in PLH_ProcessTradeItemMessage)
+	Fixed bug that could cause trinkets with primary stats to not be evaluated correctly
+		(Removed trinkets from isEquippableItemForCharacter primary attribute check)
+	Changed groupInfoCache to cache FullItemInfo(s) instead of items
+	
 20180720 - 2.05
 	Fixed bug that was causing some gear to not be identified as equippable (leather gear looted by int-specced druid not identified as
 		equippable by rogues, for example)
@@ -74,7 +83,7 @@ CHANGELOG:
 -- Constants to control inspection process
 local DELAY_BETWEEN_INSPECTIONS			= 1		-- in seconds
 local MIN_DELAY_BETWEEN_CACHE_REFRESHES	= 5		-- in seconds
-local MAX_INSPECT_LOOPS 				= 3    	-- maximum # of times to retry calling NotifyInspect on all members in the roster for whom we've cached fewer than the expected number of items
+local MAX_INSPECT_LOOPS 				= 4    	-- maximum # of times to retry calling NotifyInspect on all members in the roster for whom we've cached fewer than the expected number of items
 
 -- Colors for display in the looted items frame
 local COLOR_PLAYER_LOOTED_ITEM		= _G.LIGHTYELLOW_FONT_COLOR_CODE
@@ -415,10 +424,11 @@ local buttonIndex = 0						-- index of the most recently created button
 local itemFrames = {}
 local itemFrameIndex = 0					-- index of the most recently created item frame
 
-local tooltipShort							-- tooltip with the first  3 lines of the tooltip (for getting ilvl)
-local tooltipLong							-- tooltip with the first 30 lines of the tooltip (for getting full item info)
+local tooltipLong 							-- tooltip with the first 30 lines of the tooltip (for getting ilvl)
 
 local plhUsers = {}							-- array of PLH users; keyed by name-realm of user, valued with version
+
+local itemCache = {}						-- keeps track of items that we're waiting to be loaded into the cache so they can be processed
 
 local groupInfoCache = {}  					-- array of items equipped by group members; keyed by name-realm of group member
 	--[[									   structure is as follows, for each group member:
@@ -426,22 +436,22 @@ local groupInfoCache = {}  					-- array of items equipped by group members; key
 		groupInfoCache[name-realm][SPEC]				group member's spec from GetInspectSpecialization()
 		groupInfoCache[name-realm][LEVEL]				group member's character level
 		groupInfoCache[name-realm][FORCE_REFRESH]		boolean for whether to force a refresh of this member's data during next cache refresh
-		groupInfoCache[name-realm][INVSLOT_HEAD]		item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_NECK]		item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_SHOULDER]	item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_BACK]		item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_CHEST]		item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_WRIST]		item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_HAND]		item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_WAIST]		item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_LEGS]		item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_FEET]		item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_FINGER1]		item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_FINGER2]		item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_TRINKET1]	item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_TRINKET2]	item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_MAINHAND]	item link of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_OFFHAND]		item link of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_HEAD]		FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_NECK]		FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_SHOULDER]	FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_BACK]		FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_CHEST]		FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_WRIST]		FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_HAND]		FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_WAIST]		FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_LEGS]		FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_FEET]		FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_FINGER1]		FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_FINGER2]		FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_TRINKET1]	FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_TRINKET2]	FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_MAINHAND]	FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_OFFHAND]		FULL_ITEM_INFO of the item equipped in this slot
 	]]--
 
 local lootedItems = {}  					-- array of items looted by player; keyed by name-realm of looter
@@ -520,23 +530,6 @@ local function GetILVLFromTooltip(tooltip)
 		end
 	end
 	return ilvl
-end
-
-local function GetRealILVL(item)
-	local realILVL = nil
-	
-	if item ~= nil then
-		tooltipShort = tooltipShort or PLH_CreateEmptyTooltip(3)
-		tooltipShort:ClearLines()
-		tooltipShort:SetHyperlink(item)
-
-		realILVL = GetILVLFromTooltip(tooltipShort)
-		if realILVL == nil then  -- if we still couldn't find it (shouldn't happen), just use the base ilvl we got from GetItemInfo()
-			realILVL = select(4, GetItemInfo(item))
-		end
-	end
-	
-	return tonumber(realILVL)
 end
 
 local function GetFullItemInfo(item)
@@ -667,8 +660,7 @@ local function IsEquippableItemForCharacter(fullItemInfo, characterName)
 			return true
 		end
 
-		if fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_TRINKET' or
-			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_WEAPON' or
+		if fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_WEAPON' or
 			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_SHIELD' or
 			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_2HWEAPON' or
 			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_WEAPONMAINHAND' or
@@ -729,10 +721,7 @@ end
 --[[ FUNCTIONS TO CHECK IF ITEM IS AN UPGRADE ]]--
 
 -- returns two variables:  true if the item is an upgrade over equippedItem (based on ilvl), equipped ilvl
-local function IsAnUpgrade(itemILVL, equippedItem, threshold)
-	local equippedILVL = GetRealILVL(equippedItem)
---print("         drop ilvl = ", itemILVL)	
---print("         equippedILVL ilvl = ", equippedILVL)	
+local function IsAnUpgrade(itemILVL, equippedILVL, threshold)
 	if equippedILVL == nil then  -- this means we couldn't find an equippedItem
 		return false, 0
 	else
@@ -775,16 +764,12 @@ local function GetSlotID(itemEquipLoc)
 	end
 end
 
--- Returns the item that character has equipped in slotID
+-- Returns the FULL_ITEM_INFO that character has equipped in slotID
 local function GetEquippedItem(characterName, slotID)
 	local item = nil
-	if IsPlayer(characterName) then
-		item = GetInventoryItemLink('player', slotID)
-	else
-		local characterDetails = groupInfoCache[characterName]
-		if characterDetails ~= nil then
-			item = characterDetails[slotID]
-		end
+	local characterDetails = groupInfoCache[characterName]
+	if characterDetails ~= nil then
+		item = characterDetails[slotID]
 	end
 	return item
 end
@@ -813,20 +798,20 @@ local function IsAnUpgradeForCharacter(fullItemInfo, characterName, threshold)
 		elseif itemEquipLoc == 'INVTYPE_WEAPON' then
 			equippedItem1 = GetEquippedItem(characterName, INVSLOT_MAINHAND)
 			equippedItem2 = GetEquippedItem(characterName, INVSLOT_OFFHAND)
-			if equippedItem2 ~= nil and select(9, GetItemInfo(equippedItem2)) == 'INVTYPE_SHIELD' then
+			if equippedItem2 ~= nil and equippedItem2[FII_ITEM_EQUIP_LOC] == 'INVTYPE_SHIELD' then
 				equippedItem2 = nil		-- ignore this slot if we have a shield equipped in offhand
 			end
 		else
 			slotID = GetSlotID(itemEquipLoc)
-			equippedItem1 =  GetEquippedItem(characterName, slotID)
+			equippedItem1 = GetEquippedItem(characterName, slotID)
 		end
 		if equippedItem2 ~= nil then
-			isAnUpgrade1, equippedILVL1 = IsAnUpgrade(itemRealILVL, equippedItem1, threshold)
-			isAnUpgrade2, equippedILVL2 = IsAnUpgrade(itemRealILVL, equippedItem2, threshold)
+			isAnUpgrade1, equippedILVL1 = IsAnUpgrade(itemRealILVL, equippedItem1[FII_REAL_ILVL], threshold)
+			isAnUpgrade2, equippedILVL2 = IsAnUpgrade(itemRealILVL, equippedItem2[FII_REAL_ILVL], threshold)
 			isAnUpgrade1 = isAnUpgrade1 or isAnUpgrade2
 			equippedILVL1 = min(equippedILVL1, equippedILVL2)
 		else
-			isAnUpgrade1, equippedILVL1 = IsAnUpgrade(itemRealILVL, equippedItem1, threshold)
+			isAnUpgrade1, equippedILVL1 = IsAnUpgrade(itemRealILVL, equippedItem1[FII_REAL_ILVL], threshold)
 		end
 	end
 
@@ -842,12 +827,9 @@ local function IsAnUpgradeForAnyCharacter(fullItemInfo)
 	local characterName
 	while GetRaidRosterInfo(index) ~= nil do
 		characterName = PLH_GetFullName(select(1, GetRaidRosterInfo(index)))
---print("   characterName = ", characterName)		
 		if IsEquippableItemForCharacter(fullItemInfo, characterName) then
---print("      isEquippable = true")		
 			isAnUpgrade, equippedILVL = IsAnUpgradeForCharacter(fullItemInfo, characterName, 0)
 			if isAnUpgrade then
---print("      isAnUpgrade!")		
 				isAnUpgradeForAnyCharacterNames[#isAnUpgradeForAnyCharacterNames + 1] = Ambiguate(characterName, 'short') .. ' (' .. equippedILVL .. ')'
 			end
 		end
@@ -1700,15 +1682,30 @@ function PLH_ProcessKeepItemMessage(looterName, lootedItemID)
 	end
 end
 
+-- Event handler for GET_ITEM_INFO_RECEIVED event
+function GetItemInfoReceivedEvent(self, event, ...)
+	for item, looterName in pairs(itemCache) do
+		if GetItemInfo(item) then
+			itemCache[item] = nil
+			PLH_ProcessTradeItemMessage(looterName, item)
+		end
+	end
+end
+
 function PLH_ProcessTradeItemMessage(looterName, item)
 --	PLH_SendDebugMessage('Entering PLH_ProcessTradeItemMessage (' .. looterName .. ', ' .. item .. ')')
 
 	if not IsPlayer(looterName) then
-		local fullItemInfo = GetFullItemInfo(item)
-		if shouldAddLootedItem(fullItemInfo) then
-			local lootedItemIndex = AddLootedItem(fullItemInfo, looterName)
-			lootedItems[lootedItemIndex][STATUS] = STATUS_AVAILABLE
-			UpdateLootedItemsDisplay()
+		if GetItemInfo(item) == nil then
+			-- we need to wait for the item to be loaded into the cache
+			itemCache[item] = looterName
+		else
+			local fullItemInfo = GetFullItemInfo(item)
+			if shouldAddLootedItem(fullItemInfo) then
+				local lootedItemIndex = AddLootedItem(fullItemInfo, looterName)
+				lootedItems[lootedItemIndex][STATUS] = STATUS_AVAILABLE
+				UpdateLootedItemsDisplay()
+			end
 		end
 	end
 end
@@ -1985,7 +1982,6 @@ end
 -- Checks whether or not the loot items should be added to the lootedItems array; adds item if it meets the criteria
 local function PerformNotify(fullItemInfo, looterName)
 	if ShouldBeEvaluated(fullItemInfo) then
---print("evaluating ", fullItemInfo[FII_ITEM])	
 		if IsPlayer(looterName) then
 --print("   looter is player")		
 --			local isTradeable = fullItemInfo[FII_TRADE_TIME_WARNING_SHOWN] or not IsAnUpgradeForCharacter(fullItemInfo, looterName)
@@ -2102,8 +2098,8 @@ local function GetItemCountFromCache(name)
 	return itemCount
 end
 
--- The following uses GetInventoryItemLink() to look up unit's equipped items.  That method can only be called for
---   the player, or within the scope of an INSPECT_READY event for other group members.
+-- The following uses GetInventoryItemLink() to look up unit's equipped items.
+-- That method can only be called within the scope of an INSPECT_READY event.
 local function UpdateGroupInfoCache(unit)
 	local name = PLH_GetFullName(unit)
 
@@ -2127,10 +2123,10 @@ local function UpdateGroupInfoCache(unit)
 		for invslot = _G.INVSLOT_FIRST_EQUIPPED, _G.INVSLOT_LAST_EQUIPPED do
 			if invslot ~= _G.INVSLOT_BODY and invslot ~= INVSLOT_TABARD then -- ignore shirt and tabard slots
 				item = GetInventoryItemLink(UnitName(unit), invslot)
-				if item ~= nil then
+				if item ~= nil and GetItemInfo(item) ~= nil then
 					if characterDetails[invslot] == nil or characterDetails[invslot] ~= item then
 						updatedItemCount = updatedItemCount + 1
-						characterDetails[invslot] = item
+						characterDetails[invslot] = GetFullItemInfo(item)
 					end
 				end
 			end
@@ -2180,16 +2176,14 @@ end
 
 -- Attempt to queue a group member for inspection.  Returns true if we were able to queue an inspection, false otherwise
 local function InspectGroupMember(characterName)
-	if not IsPlayer(characterName) then
-		if CanInspect(characterName) and (not InspectFrame or not InspectFrame:IsShown()) then
+	if CanInspect(characterName) and (not InspectFrame or not InspectFrame:IsShown()) then
 --			PLH_SendDebugMessage('   Calling NotifyInspect for ' .. characterName .. ' (' .. inspectLoop .. ',' .. inspectIndex .. ')')
-			NotifyInspect(characterName)
-			notifyInspectName = characterName
-			PLH_wait(PLH_WAIT_FOR_INSPECT, DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
-			return true
-		else
-			PLH_SendDebugMessage('   Unable to inspect ' .. characterName)
-		end
+		NotifyInspect(characterName)
+		notifyInspectName = characterName
+		PLH_wait(PLH_WAIT_FOR_INSPECT, DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
+		return true
+	else
+		PLH_SendDebugMessage('   Unable to inspect ' .. characterName)
 	end
 	return false
 end
@@ -2208,7 +2202,7 @@ function PLH_InspectNextGroupMember()
 
 	while inspectIndex <= maxInspectIndex  and not queuedAnInspection do
 		characterName = select(1, GetRaidRosterInfo(inspectIndex))
-		if characterName ~= nil and not IsPlayer(characterName) then	-- safeguard; character may have left the roster between the time we started the call and now
+		if characterName ~= nil then	-- safeguard; character may have left the roster between the time we started the call and now
 			local fullname = PLH_GetFullName(characterName)	-- characterName may or may not have realm.  we want to preserve it the way it is for the call to InspectGroupMember,
 															--    but need the name-realm version of the name to look up the element in the cache
 			if fullname ~= nil then
@@ -2275,13 +2269,11 @@ end
 -- Event handler for PLAYER_SPECIALIZATION_CHANGED and UNIT_INVENTORY_CHANGED events
 local function GroupMemberInfoChangedEvent(self, event, ...)
 	local unit = ...
-	if not IsPlayer(unit) then
-		local name = PLH_GetFullName(unit)
-		if name ~= nil then
-			if groupInfoCache[name] ~= nil then
-				groupInfoCache[name][FORCE_REFRESH] = true
-				PopulateGroupInfoCache()
-			end
+	local name = PLH_GetFullName(unit)
+	if name ~= nil then
+		if groupInfoCache[name] ~= nil then
+			groupInfoCache[name][FORCE_REFRESH] = true
+			PopulateGroupInfoCache()
 		end
 	end
 end
@@ -2304,6 +2296,8 @@ local function Enable()
 	eventHandlerFrame:RegisterEvent('PLAYER_REGEN_DISABLED')   -- player entered combat
 	eventHandlerFrame:RegisterEvent('PLAYER_SPECIALIZATION_CHANGED')
 	eventHandlerFrame:RegisterEvent('UNIT_INVENTORY_CHANGED')
+	eventHandlerFrame:RegisterEvent('GET_ITEM_INFO_RECEIVED')
+
 	PLH_SendAddonMessage('IDENTIFY_USERS~ ~' .. PLH_GetFullName('player'))
 end
 
@@ -2407,6 +2401,8 @@ local function ProcessEvent(self, event, ...)
 		CombatStatusChangedEvent(self, event, ...)
 	elseif event == 'PLAYER_SPECIALIZATION_CHANGED' or event == 'UNIT_INVENTORY_CHANGED' then
 		GroupMemberInfoChangedEvent(self, event, ...)
+	elseif event == 'GET_ITEM_INFO_RECEIVED' then
+		GetItemInfoReceivedEvent(self, event, ...)
 	end
 end
 
@@ -2467,7 +2463,7 @@ function PLH_PrintCache(characterName)
 		local item_msg = ''
 		for name, characterDetails in pairs(groupInfoCache) do
 			num_characters = num_characters + 1
-			item_msg = item_msg .. GetItemCountFromCache(name) .. '/ ' 
+			item_msg = item_msg .. GetItemCountFromCache(name) .. '/' 
 		end
 		PLH_SendDebugMessage('Cache contains ' .. num_characters .. ' member(s). Item count per member: ' .. item_msg)
 		
@@ -2479,7 +2475,7 @@ function PLH_PrintCache(characterName)
 						PLH_SendDebugMessage('      details is nil')
 					else
 						for slotID, item in pairs(details) do
-							PLH_SendDebugMessage('      ' .. slotID .. ' = ' .. tostring(item))
+							PLH_SendDebugMessage('      ' .. slotID .. ' = ' .. tostring(item[FII_ITEM]))
 						end
 					end
 				end
@@ -2540,7 +2536,7 @@ function PLH_TestItems(characterIndex)
 			end
 
 			if item ~= nil then
-				PLH_SendDebugMessage('   evaluating ' .. item)
+				PLH_SendDebugMessage('   evaluating ' .. item[FII_ITEM])
 				
 				local isEquippable
 				for evalIndex = 1, GetNumGroupMembers() do
@@ -2549,10 +2545,10 @@ function PLH_TestItems(characterIndex)
 						evalName = PLH_GetFullName(evalName)
 					end
 				
-					isEquippable = IsEquippableItemForCharacter(item, evalName)
+					isEquippable = IsEquippableItemForCharacter(item[FII_ITEM], evalName)
 					PLH_SendDebugMessage('      For ' .. evalName ..
 						' equippable = ' .. tostring(isEquippable) ..
-						'; upgrade = ' .. tostring(isEquippable and IsAnUpgradeForCharacter(item, evalName, 0))
+						'; upgrade = ' .. tostring(isEquippable and IsAnUpgradeForCharacter(item[FII_ITEM], evalName, 0))
 						)
 				end
 			end

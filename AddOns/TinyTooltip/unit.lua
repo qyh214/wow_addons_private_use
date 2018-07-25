@@ -1,8 +1,11 @@
 
 local LibEvent = LibStub:GetLibrary("LibEvent.7000")
 
+local AFK = AFK
+local DND = DND
 local PVP = PVP
 local LEVEL = LEVEL
+local OFFLINE = FRIENDS_LIST_OFFLINE
 local FACTION_HORDE = FACTION_HORDE
 local FACTION_ALLIANCE = FACTION_ALLIANCE
 

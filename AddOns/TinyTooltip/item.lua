@@ -9,6 +9,12 @@ local function ColorBorder(tip, r, g, b)
     end
 end
 
+if (GameTooltip_SetBackdropStyle) then
+    hooksecurefunc("GameTooltip_SetBackdropStyle", function(self, style)
+        self:SetBackdrop(nil)
+    end)
+end
+
 local function ItemIcon(tip, link)
     if (addon.db.item.showItemIcon) then
         local texture = select(10, GetItemInfo(link))

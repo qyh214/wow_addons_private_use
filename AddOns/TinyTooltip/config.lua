@@ -2,7 +2,7 @@
 local addon = TinyTooltip
 
 addon.db = {
-    version = 2,
+    version = 2.5,
     general = {
         scale             = 1,                      --縮放
         mask              = true,                   --頂部遮罩層
@@ -33,7 +33,7 @@ addon.db = {
     unit = {
         player = {
             coloredBorder = "class",                --玩家邊框顔色 default|class|level|reaction|itemQuality|selection|faction|HEX
-            background = { colorfunc = "default", alpha = 0.9, },
+            background = { colorfunc = "class", alpha = 0.9, },
             anchor = { position = "inherit", returnInCombat = true, returnOnUnitFrame = false, cp = "BOTTOM", p = "BOTTOMRIGHT", },
             showTarget = true,                      --顯示目標
             showTargetBy = true,                    --顯示被關注

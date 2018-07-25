@@ -34,6 +34,7 @@ ns.L = {
     GuildNews                   = "Новости гильдии",
     PaperDoll                   = "Окно персонажа",
     Chat                        = "Чат",
+    --Loot                        = "",
 }
 
 BINDING_NAME_InspectRaidFrame = "рамку"

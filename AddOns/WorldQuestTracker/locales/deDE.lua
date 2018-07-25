@@ -53,9 +53,6 @@ L["S_GROUPFINDER_SECONDS"] = "Sekunden"
 L["S_GROUPFINDER_TITLE"] = "Dungeonbrowser"
 L["S_GROUPFINDER_TUTORIAL1"] = "Erledige deine Weltquests schneller, indem du Gruppen beitrittst, die die gleiche Quest machen!"
 L["S_MAPBAR_AUTOWORLDMAP"] = "Autom. Weltkarte"
-L["S_MAPBAR_AUTOWORLDMAP_DESC"] = [=[Wenn du dich in Dalaran oder in der Klassenordenshalle befindest, öffnet das Drücken von "M" direkt die Karte der Verheerten Inseln.
-
-Drücke "M" zweimal, um die Karte deines aktuellen Standorts zu öffnen.]=]
 L["S_MAPBAR_FILTER"] = "Filter"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES"] = "Fraktionsziele"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES_DESC"] = "Zeigt Fraktionsquests, selbst wenn sie durch obenstehende Filter herausgefiltert wurden."
@@ -139,13 +136,7 @@ L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "Charakterspezifische Statist
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Andere Charaktere"
 L["S_TUTORIAL_AMOUNT"] = "Zeigt die zu erhaltene Anzahl an"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Klicken, um eine Quest zu verfolgen."
-L["S_TUTORIAL_CLOSE"] = "Anleitung schließen"
-L["S_TUTORIAL_FACTIONBOUNTY"] = "Zeigt an, dass diese Quest zur Erfüllung der Abgesandtenquest der ausgewählten Fraktion beiträgt."
-L["S_TUTORIAL_FACTIONBOUNTY_AMOUNTQUESTS"] = "Zeigt an, wie viele Quests auf der Karte zur Erfüllung der Abgesandtenquest der ausgewählten Fraktion beitragen."
-L["S_TUTORIAL_HOWTOADDTRACKER"] = "Linksklick, um eine Quest zu verfolgen, |cFFFFFFFFRechtsklick|r, um sie nicht mehr zu verfolgen."
 L["S_TUTORIAL_PARTY"] = "Wenn du in einer Gruppe bist, zeigt ein blauer Stern bei einer Quest an, dass diese alle Gruppenmitglieder haben."
-L["S_TUTORIAL_RARITY"] = "Zeigt die Seltenheit an (gewöhnlich, selten, episch)"
-L["S_TUTORIAL_REWARD"] = "Zeigt die Belohnung an (Ausrüstung, Gold, Artefaktmacht, Ressourcen, Reagenzien)"
 L["S_TUTORIAL_TIMELEFT"] = "Zeigt die verbleibende Zeit an (+4 Stunden, +90 Minuten, +30 Minuten, weniger als 30 Minuten)"
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Diese Schaltfläche öffnet die Karte der Verheerten Inseln."
 L["S_UNKNOWNQUEST"] = "Unbekannte Quest"

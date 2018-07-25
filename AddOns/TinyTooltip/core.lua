@@ -290,6 +290,7 @@ function addon:GetUnitInfo(unit)
     local pvpName = UnitPVPName(unit)
     local gender = UnitSex(unit)
     local level = UnitLevel(unit)
+    local effectiveLevel = UnitEffectiveLevel(unit)
     local raceName, race = UnitRace(unit)
     local className, class = UnitClass(unit)
     local factionGroup, factionName = UnitFactionGroup(unit)
@@ -329,7 +330,8 @@ function addon:GetUnitInfo(unit)
     t.moveSpeed    = self:GetUnitSpeed(unit)
     t.zone         = self:GetZone(unit)
     t.unit         = unit                     --unit
-    t.level        = level                    --1~113|-1
+    t.level        = level                    --1~123|-1
+    t.effectiveLevel = effectiveLevel or level
     t.race         = race                     --nil|NightElf|Troll...
     t.class        = class                    --DRUID|HUNTER...
     t.factionGroup = factionGroup             --Alliance|Horde|Neutral
@@ -416,12 +418,19 @@ end
 addon.filterfunc, addon.colorfunc = {}, {}
 
 addon.colorfunc.class = function(raw)
+    if (CUSTOM_CLASS_COLORS) then
+        local color = CUSTOM_CLASS_COLORS[raw.class]
+        if color then
+            return color.r, color.g, color.b, addon:GetHexColor(color.r, color.g, color.b)
+        end
+        return 1, 1, 1, "ffffff"
+    end
     local r, g, b = GetClassColor(raw.class)
     return r, g, b, addon:GetHexColor(r, g, b)
 end
 
 addon.colorfunc.level = function(raw)
-    local color = GetCreatureDifficultyColor(raw.level>0 and raw.level or 999)
+    local color = GetCreatureDifficultyColor(raw.effectiveLevel>0 and raw.effectiveLevel or 999)
     return color.r, color.g, color.b, addon:GetHexColor(color)
 end
 

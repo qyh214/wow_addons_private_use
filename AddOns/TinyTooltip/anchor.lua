@@ -4,6 +4,14 @@ local LibSchedule = LibStub:GetLibrary("LibSchedule.7000")
 
 local addon = TinyTooltip
 
+local function AnchorCursorOnExecute(self)
+    if (not self.tip:IsShown()) then return true end
+    if (self.tip:GetAnchorType() ~= "ANCHOR_CURSOR") then return true end
+    local x, y = GetCursorPosition()
+    self.tip:ClearAllPoints()
+    self.tip:SetPoint(self.cp, UIParent, "BOTTOMLEFT", floor(x/self.scale+self.cx), floor(y/self.scale+self.cy))
+end
+
 local function AnchorCursor(tip, parent, cp, cx, cy)
     local x, y = GetCursorPosition()
     local scale = tip:GetEffectiveScale()
@@ -20,13 +28,7 @@ local function AnchorCursor(tip, parent, cp, cx, cy)
         cx       = cx,
         cy       = cy,
         scale    = scale,
-        onExecute = function(self)
-            if (not self.tip:IsShown()) then return true end
-            if (self.tip:GetAnchorType() ~= "ANCHOR_CURSOR") then return true end
-            local x, y = GetCursorPosition()
-            self.tip:ClearAllPoints()
-            self.tip:SetPoint(self.cp, UIParent, "BOTTOMLEFT", floor(x/self.scale+self.cx), floor(y/self.scale+self.cy))
-        end,
+        onExecute = AnchorCursorOnExecute,
     })
 end
 

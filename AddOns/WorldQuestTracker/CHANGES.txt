@@ -1,7 +1,7 @@
-changeset:   293:66e65a76b0c5
-tag:         v8.0.1.293
+changeset:   295:7d3cfcfe4acc
+tag:         v8.0.1.295
 user:        Tercio
-date:        Fri Jul 20 16:56:36 2018 -0300
-summary:     - Tutorial revap.
+date:        Tue Jul 24 13:21:57 2018 -0300
+summary:     - Fixed integration with TomTom.
 
 

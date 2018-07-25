@@ -51,9 +51,6 @@ L["S_GROUPFINDER_SECONDS"] = "초"
 L["S_GROUPFINDER_TITLE"] = "파티 찾기"
 L["S_GROUPFINDER_TUTORIAL1"] = "같은 퀘스트를 수행하는 파티에 참가하여 빠르게 전역 퀘스트를 완료하세요!"
 L["S_MAPBAR_AUTOWORLDMAP"] = "자동 세계 지도"
-L["S_MAPBAR_AUTOWORLDMAP_DESC"] = [=[달라란이나 직업 전당에 있을 때, 'M' 키를 누르면 바로 부서진 섬 지도를 표시합니다.
-
-'M' 키를 두번 누르면 현재 있는 지역의 지도를 표시합니다.]=]
 L["S_MAPBAR_FILTER"] = "필터"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES"] = "사절 퀘스트"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES_DESC"] = "선별하도록 설정하지 않은 퀘스트라도 사절 퀘스트에 포함되면 표시합니다."
@@ -133,13 +130,7 @@ L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "캐릭터 전체 시간 통�
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "다른 캐릭터"
 L["S_TUTORIAL_AMOUNT"] = "받을 수 있는 보상의 양을 나타냅니다"
 L["S_TUTORIAL_CLICKTOTRACK"] = "퀘스트를 추적하려면 클릭하세요."
-L["S_TUTORIAL_CLOSE"] = "기본 설명서 닫기"
-L["S_TUTORIAL_FACTIONBOUNTY"] = "사절 퀘스트 여부를 나타냅니다."
-L["S_TUTORIAL_FACTIONBOUNTY_AMOUNTQUESTS"] = "지도에 선택된 진영의 퀘스트가 몇개 있는 지 나타냅니다."
-L["S_TUTORIAL_HOWTOADDTRACKER"] = "퀘스트를 추적하려면 클릭하세요. 추적 해제하려면 추적기에서 |cFFFFFFFF오른쪽 클릭|r하세요."
 L["S_TUTORIAL_PARTY"] = "파티 중일 때 모든 파티원이 수행 중인 퀘스트에 파란색 별이 표시됩니다!"
-L["S_TUTORIAL_RARITY"] = "등급을 나타냅니다 (일반, 희귀, 영웅)"
-L["S_TUTORIAL_REWARD"] = "보상 종류를 나타냅니다 (장비, 골드, 유물력, 자원, 재료)"
 L["S_TUTORIAL_TIMELEFT"] = "남은 시간을 나타냅니다 (+4시간, +90분, +30분, 30분 미만)"
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "이 버튼을 누르면 부서진 섬 지도로 변경됩니다."
 L["S_UNKNOWNQUEST"] = "알 수 없는 퀘스트"

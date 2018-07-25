@@ -5,7 +5,7 @@
 
 local LibEvent = LibStub:GetLibrary("LibEvent.7000")
 
-local VERSION = 2.25
+local VERSION = 2.4
 
 local addon, ns = ...
 
@@ -31,15 +31,15 @@ local DefaultDB = {
         EnableItemLevelPaperDoll = true,
         EnableItemLevelGuildNews = true,
         EnableItemLevelChat = true,
+        EnableItemLevelLoot = true,
     ShowInspectAngularBorder = false,     --觀察面板直角邊框
     ShowInspectColoredLabel = true,       --觀察面板高亮橙裝武器標簽
     ShowOwnFrameWhenInspecting = false,   --觀察同時顯示自己裝備列表
-    ShowItemStats = false,                --顯示裝備屬性統計
-    DisplayPercentageStats = false,       --裝備屬性換算成百分比數值
+    ShowItemStats = true,                 --顯示裝備屬性統計
     ShowCharacterItemSheet = true,        --顯示玩家自己裝備列表
     EnablePartyItemLevel = true,          --小隊裝等
-        SendPartyItemLevelToSelf = false, --發送小隊裝等到自己面板
-        SendPartyItemLevelToParty = true, --發送小隊裝等到隊伍頻道
+        SendPartyItemLevelToSelf = true,  --發送小隊裝等到自己面板
+        SendPartyItemLevelToParty = false, --發送小隊裝等到隊伍頻道
         ShowPartySpecialization = true,   --顯示隊友天賦
     EnableRaidItemLevel = false,          --團隊裝等
     EnableMouseItemLevel = true,          --鼠標裝等
@@ -47,6 +47,7 @@ local DefaultDB = {
     EnableMouseWeaponLevel = true,        --鼠標武器等級
     PaperDollItemLevelOutsideString = false, --PaperDoll文字外邊顯示(沒有在配置面板)
     ItemLevelAnchorPoint = "TOP",         --裝等位置
+    ShowPluginGreenState = false,         --裝備綠字屬性前綴顯示
 }
 
 local options = {
@@ -67,6 +68,7 @@ local options = {
         { key = "GuildNews" },
         { key = "PaperDoll" },
         { key = "Chat" },
+        { key = "Loot" },
       },
       anchorkey = "ItemLevelAnchorPoint",
     },
@@ -74,11 +76,7 @@ local options = {
     { key = "ShowInspectColoredLabel" },
     { key = "ShowCharacterItemSheet" },
     { key = "ShowOwnFrameWhenInspecting" },
-    { key = "ShowItemStats", 
-      child = {
-        { key = "DisplayPercentageStats" },
-      }
-    },
+    { key = "ShowItemStats" },
     { key = "EnablePartyItemLevel",
       child = {
         { key = "ShowPartySpecialization" },
@@ -97,6 +95,10 @@ local options = {
       }
     },
 }
+
+if (GetLocale():sub(1,2) == "zh") then
+    tinsert(options, { key = "ShowPluginGreenState" })
+end
 
 TinyInspectDB = DefaultDB
 
@@ -204,6 +206,7 @@ local function CreateAnchorFrame(anchorkey, parent)
     CreateAnchorButton(frame, "TOPRIGHT")
     CreateAnchorButton(frame, "RIGHT")
     CreateAnchorButton(frame, "BOTTOMRIGHT")
+    CreateAnchorButton(frame, "CENTER")
 end
 
 local function CreateCheckbox(list, parent, anchor, offsetx, offsety)

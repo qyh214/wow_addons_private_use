@@ -1,23 +1,23 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: TinyTooltip
 ## Notes: TinyTooltip
 ## Author: M
-## Version: 2.1.8.3
+## Version: 8.0.0
 ## SavedVariables: BigTipDB
 
 libs\lib.xml
-core.lua
-config.lua
-general.lua
-anchor.lua
-unit.lua
-target.lua
-model.lua
-item.lua
-spell.lua
-quest.lua
-linkid.lua
-skinframes.lua
+Core.lua
+Config.lua
+General.lua
+Anchor.lua
+Unit.lua
+Target.lua
+Model.lua
+Item.lua
+Spell.lua
+Quest.lua
+LinkID.lua
+SkinFrames.lua
 
 locales\locales.xml
-options.lua
+Options.lua

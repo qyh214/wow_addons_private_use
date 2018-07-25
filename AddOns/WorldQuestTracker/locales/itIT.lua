@@ -77,9 +77,6 @@ L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = "Lasciare l'attuale gruppo e cercarne u
 --[[ L["S_GROUPFINDER_TUTORIAL1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_MAPBAR_AUTOWORLDMAP"] = ""--]] 
-L["S_MAPBAR_AUTOWORLDMAP_DESC"] = [=[Quando ti trovi a Dalaran o nell'Enclave di Classe, premendo 'M' viene mostrata la mappa delle Isole Disperse.
-
-Premendo due volte 'M' viene mostrata la mappa corrente.]=]
 L["S_MAPBAR_FILTER"] = "Filtro"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES"] = "Obiettivi Fazione"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES_DESC"] = "Mostra missioni fazioni anche se filtrate."
@@ -179,17 +176,8 @@ L["S_SUMMARYPANEL_LAST15DAYS"] = "Ultimi 15 Giorni"
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Altri Personaggi"
 L["S_TUTORIAL_AMOUNT"] = "indica la quantità da ricevere"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Clicca per tracciare una missione."
-L["S_TUTORIAL_CLOSE"] = "Chiudi Tutorial"
---[[Translation missing --]]
---[[ L["S_TUTORIAL_FACTIONBOUNTY"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_TUTORIAL_FACTIONBOUNTY_AMOUNTQUESTS"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_TUTORIAL_HOWTOADDTRACKER"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_TUTORIAL_PARTY"] = ""--]] 
-L["S_TUTORIAL_RARITY"] = "indica la rarità (comune, rara, epica)"
-L["S_TUTORIAL_REWARD"] = "indica la ricompensa (equipaggiamento, oro, potere artefatto, risorse, reagenti)"
 L["S_TUTORIAL_TIMELEFT"] = "indica il tempo rimasto (+4 ore, +90 minuti, + 30 minuti, meno di 30 minuti)"
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Questo pulsante mostra la mappa delle Isole Disperse."
 L["S_UNKNOWNQUEST"] = "Missione Sconosciuta"
