@@ -122,7 +122,7 @@ local function GetChatIcon(sender)
 		SLE:GetRegion()
 		specialChatIcons = SLE.SpecialChatIcons[SLE.region]
 	end
-	local senderName, senderRealm
+	local senderName, senderRealm, icon
 	if sender then
 		senderName, senderRealm = T.split('-', sender)
 	else
@@ -132,15 +132,13 @@ local function GetChatIcon(sender)
 	senderRealm = T.gsub(senderRealm, ' ', '')
 
 	if specialChatIcons and specialChatIcons[senderRealm] and specialChatIcons[senderRealm][senderName] then
-		return specialChatIcons[senderRealm][senderName]
+		icon = specialChatIcons[senderRealm][senderName]
+	end
+	if T.IsInGuild() and C.db.guildmaster then
+		if senderName == C.GMName and senderRealm == C.GMRealm then icon = icon and (leader..icon) or leader end
 	end
 
-	if not T.IsInGuild() then return nil end
-	if not C.db.guildmaster then return nil end
-	if senderName == C.GMName and senderRealm == C.GMRealm then
-		return leader 
-	end
-	return nil
+	return icon
 end
 
 function C:GMCheck()
@@ -174,11 +172,6 @@ end
 
 function C:Combat(event)
 	--To get rid of "script ran too long" in links
-	if event == "PLAYER_REGEN_DISABLED" then
-		C:Unhook("SetItemRef")
-	elseif event == "PLAYER_REGEN_ENABLED" then
-		C:RawHook("SetItemRef", true)
-	end
 	if C.db.combathide == "NONE" or not C.db.combathide then return end
 	if event == "PLAYER_REGEN_DISABLED" then
 		if C.db.combathide == "BOTH" or C.db.combathide == "RIGHT" then
@@ -354,7 +347,7 @@ function C:Initialize()
 	LO:ToggleChatPanels()
 	local setupDelay = E.global.sle.advanced.chat.setupDelay
 	E:Delay(setupDelay, function() CH:SetupChat() end) --This seems to actually fix some issues with detecting right panel chat frame
-	--Justify
+	-- Justify
 	for i = 1, NUM_CHAT_WINDOWS do
 		C:JustifyChat(i)
 	end

@@ -21,8 +21,6 @@ local Toolkit = {}
 SLE.elvV = tonumber(E.version)
 SLE.elvR = tonumber(GetAddOnMetadata("ElvUI_SLE", "X-ElvVersion"))
 
-SLE.myfaction = UnitFactionGroup('player')
-
 --Setting up table to unpack. Why? no idea
 Engine[1] = SLE
 Engine[2] = Toolkit
@@ -103,10 +101,11 @@ local _CompList = {
 	"ElvUI_Enhanced",
 	"DejaCharacterStats",
 	"ElvUI_ExtraActionBars",
-	"ElvUI_NenaUI",
+	"ElvUI_ChaoticUI",
 	"TradeSkillMaster",
 	"WorldQuestTracker",
 	"ElvUI_PagedLootHistory",
+	"SunnArt",
 }
 for i = 1, #_CompList do
 	if GetAddOnEnableState(E.myname, _CompList[i]) == 0 then SLE._Compatibility[_CompList[i]] = nil else SLE._Compatibility[_CompList[i]] = true end

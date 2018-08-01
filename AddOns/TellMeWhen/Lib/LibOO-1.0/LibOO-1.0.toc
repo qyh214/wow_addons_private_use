@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 80000
 ## Title: Lib: OO-1.0
 ## Notes: LibOO-1.0 provides an object-oriented framework to World of Warcraft addons
 ## Author: Cybeloras of Aerie Peak

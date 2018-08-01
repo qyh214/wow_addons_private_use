@@ -200,14 +200,14 @@ LP.Spells = {
 	},
 }
 
+local C_Map_GetBestMapForUnit = C_Map.GetBestMapForUnit
+local C_Map_GetPlayerMapPosition = C_Map.GetPlayerMapPosition
 local function CreateCoords()
-	local playerPosition = T.GetPlayerMapPosition(0, "player")
-	local x, y
-	if playerPosition then
-		x, y = playerPosition:GetXY()
-	end
-	if x then x = T.format(LP.db.format, x * 100) else x = "0" end
-	if y then y = T.format(LP.db.format, y * 100) else y = "0" end
+	local x, y = 0, 0
+	local playerPosition = C_Map_GetPlayerMapPosition( C_Map_GetBestMapForUnit("player"), "player" )
+	if playerPosition then x, y = playerPosition:GetXY() end
+	x = T.format(LP.db.format, x * 100)
+	y = T.format(LP.db.format, y * 100)
 
 	return x, y
 end
@@ -280,15 +280,21 @@ function LP:UpdateCoords(elapsed)
 	LP.elapsed = LP.elapsed + elapsed
 	if LP.elapsed < (LP.db.throttle or 0.2) then return end
 	--Coords
-	if not LP.RestrictedArea then
+
+	if T.tonumber(E.version) >= 10.78 and E.MapInfo then
+		local x, y = E.MapInfo.x, E.MapInfo.y
+		if x then x = T.format(LP.db.format, x * 100) else x = "0" end
+		if y then y = T.format(LP.db.format, y * 100) else y = "0" end
+		if x == "0" or x == "0.0" or x == "0.00" then x = "-" end
+		if y == "0" or y == "0.0" or y == "0.00" then y = "-" end
+		loc_panel.Xcoord.Text:SetText(x)
+		loc_panel.Ycoord.Text:SetText(y)
+	elseif T.tonumber(E.version) < 10.78 then
 		local x, y = CreateCoords()
 		if x == "0" or x == "0.0" or x == "0.00" then x = "-" end
 		if y == "0" or y == "0.0" or y == "0.00" then y = "-" end
 		loc_panel.Xcoord.Text:SetText(x)
 		loc_panel.Ycoord.Text:SetText(y)
-	else
-		loc_panel.Xcoord.Text:SetText("-")
-		loc_panel.Ycoord.Text:SetText("-")
 	end
 	--Coords coloring
 	local colorC = {r = 1, g = 1, b = 1}
@@ -558,7 +564,7 @@ function LP:PopulateDropdown(click)
 					MENU_WIDTH = LP.db.portals.customWidth and LP.db.portals.customWidthValue or _G["SLE_LocationPanel"]:GetWidth()
 					T.tinsert(LP.SecondaryMenu, {text = "<< "..BACK, func = function() T.twipe(LP.MainMenu); ToggleFrame(LP.Menu2); LP:PopulateDropdown() end})
 					T.tinsert(LP.SecondaryMenu, {text = L["Teleports"]..":", title = true, nohighlight = true})
-					LP:SpellList(LP.Spells["teleports"][SLE.myfaction], LP.SecondaryMenu)
+					LP:SpellList(LP.Spells["teleports"][E.myfaction], LP.SecondaryMenu)
 					T.tinsert(LP.SecondaryMenu, {text = CLOSE, title = true, ending = true, func = function() T.twipe(LP.MainMenu); T.twipe(LP.SecondaryMenu); ToggleFrame(LP.Menu2) end})
 					SLE:DropDown(LP.SecondaryMenu, LP.Menu2, anchor, point, 0, 1, _G["SLE_LocationPanel"], MENU_WIDTH, LP.db.portals.justify)
 				end})
@@ -567,7 +573,7 @@ function LP:PopulateDropdown(click)
 					MENU_WIDTH = LP.db.portals.customWidth and LP.db.portals.customWidthValue or _G["SLE_LocationPanel"]:GetWidth()
 					T.tinsert(LP.SecondaryMenu, {text = "<< "..BACK, func = function() T.twipe(LP.MainMenu); ToggleFrame(LP.Menu2) LP:PopulateDropdown() end})
 					T.tinsert(LP.SecondaryMenu, {text = L["Portals"]..":", title = true, nohighlight = true})
-					LP:SpellList(LP.Spells["portals"][SLE.myfaction], LP.SecondaryMenu)
+					LP:SpellList(LP.Spells["portals"][E.myfaction], LP.SecondaryMenu)
 					T.tinsert(LP.SecondaryMenu, {text = CLOSE, title = true, ending = true, func = function() T.twipe(LP.MainMenu); T.twipe(LP.SecondaryMenu); ToggleFrame(LP.Menu2) end})
 					SLE:DropDown(LP.SecondaryMenu, LP.Menu2, anchor, point, 0, 1, _G["SLE_LocationPanel"], MENU_WIDTH, LP.db.portals.justify)
 				end})
@@ -606,12 +612,6 @@ function LP:PLAYER_REGEN_ENABLED()
 	if LP.db.enable then loc_panel:Show() end
 end
 
-function LP:PLAYER_ENTERING_WORLD()
-	local position = T.GetPlayerMapPosition(0, "player")
-	if position then LP.RestrictedArea = false else LP.RestrictedArea = true end
-	LP:UNIT_AURA(nil, "player")
-end
-
 function LP:UNIT_AURA(event, unit)
 	if unit ~= "player" then return end
 	if LP.db.enable and LP.db.orderhallhide then
@@ -641,7 +641,6 @@ function LP:Initialize()
 
 	LP:RegisterEvent("PLAYER_REGEN_DISABLED")
  	LP:RegisterEvent("PLAYER_REGEN_ENABLED")
- 	LP:RegisterEvent("PLAYER_ENTERING_WORLD")
 	LP:RegisterEvent("UNIT_AURA")
 	LP:RegisterEvent("CHAT_MSG_SKILL")
 	

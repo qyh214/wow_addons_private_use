@@ -168,6 +168,7 @@ do
 	-- in a given continent + the continent itself
 	local function iterCont(t, prestate)
 		if not t then return end
+		if not db.continent then return end
 
 		local zone = t.C[t.Z]
 		local data = nodes[zone]

@@ -22,7 +22,7 @@ local AceDB = LibStub("AceDB-3.0")
 
 -- GLOBALS: LibStub
 -- GLOBALS: TMWOptDB
--- GLOBALS: TELLMEWHEN_VERSION, TELLMEWHEN_VERSION_MINOR, TELLMEWHEN_VERSION_FULL, TELLMEWHEN_VERSIONNUMBER, TELLMEWHEN_MAXROWS
+-- GLOBALS: TELLMEWHEN_VERSION_FULL, TELLMEWHEN_VERSIONNUMBER, TELLMEWHEN_MAXROWS
 -- GLOBALS: NORMAL_FONT_COLOR, HIGHLIGHT_FONT_COLOR, INVSLOT_FIRST_EQUIPPED, INVSLOT_LAST_EQUIPPED, SPELL_RECAST_TIME_MIN, SPELL_RECAST_TIME_SEC, NONE, SPELL_CAST_CHANNELED, NUM_BAG_SLOTS, CANCEL
 -- GLOBALS: GameTooltip
 -- GLOBALS: UIParent, WorldFrame, TellMeWhen_IconEditor, GameFontDisable, GameFontHighlight, CreateFrame, collectgarbage 
@@ -1920,7 +1920,9 @@ TMW:NewClass("Config_EditBox", "EditBox", "Config_Frame"){
 	
 	-- Constructor
 	OnNewInstance_EditBox = function(self)
-		self:SetSpacing(2)
+	  	-- Cursor location displays incorrectly with non-zero spacing in WoW 8.0.
+	  	-- We used to use a value of 2 here, but can't anymore.
+		self:SetSpacing(0)
 
 		self.BackgroundText:SetWidth(self:GetWidth())
 
@@ -3342,7 +3344,7 @@ TMW:NewClass("IconEditorTabGroup", "IconEditorTabBase"){
 	end,
 
 	OnClick = function(self)
-		PlaySound(SOUNDKIT and SOUNDKIT.IG_CHARACTER_INFO_TAB or "igCharacterInfoTab") -- SOUNDKIT is patch 7.3 compat
+		PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB)
 
 		IE.CurrentTabGroup = self
 
@@ -3443,7 +3445,7 @@ TMW:NewClass("IconEditorTab", "IconEditorTabBase"){
 	end,
 
 	OnClick = function(self)
-		PlaySound(SOUNDKIT and SOUNDKIT.IG_CHARACTER_INFO_TAB or "igCharacterInfoTab") -- SOUNDKIT is patch 7.3 compat
+		PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB)
 
 		if IE.CurrentTabGroup ~= self.parent then
 			self.parent:Click()

@@ -10,26 +10,33 @@ to easily populate these arrays:
 	paste into OpenOffice
 	=concatenate("[";b1;"] = true, -- ";d1)
 	ensure curly quotes are off in tools -> autocorrect options -> localized options
-]]--	[
+]]--
 
 local TRINKET_AGILITY_DPS = {
-	-- 8.0 Trinkets as of 20180511
-	[158374] = true, -- Tiny Electromental in a Jar
-	[158319] = true, -- My'das Talisman
+	-- 8.0 Trinkets
+	[161412] = true, -- Spiritbound Voodoo Burl
+	[161125] = true, -- Kaja-fied Banana
+	[161119] = true, -- Ravasaur Skull Bijou
+	[161113] = true, -- Incessantly Ticking Clock
+	[160653] = true, -- Xalzaix's Veiled Eye
+	[160652] = true, -- Construct Overcharger
+	[160648] = true, -- Frenetic Corpuscle
+	[160263] = true, -- Snowpelt Mangler
+	[159628] = true, -- Kul Tiran Cannonball Runner
+	[159626] = true, -- Lingering Sporepods
+	[159623] = true, -- Dead-Eye Spyglass
 	[159618] = true, -- Mchimba's Ritual Bandages
 	[159617] = true, -- Lustrous Golden Plumage
-	[159626] = true, -- Lingering Sporepods
-	[155881] = true, -- Harlan's Loaded Dice
 	[159614] = true, -- Galecaller's Boon
-	[159623] = true, -- Dead-Eye Spyglass
-	[159628] = true, -- Cannonball Hurdler
-	[161412] = true, -- Spiritbound Burl
-	[161415] = true, -- Razorcrest of the Enraged Matriarch
-	[161378] = true, -- Plume of the Seaborne Avian
-	[161381] = true, -- Permafrost-Encrusted Heart
-	[160648] = true, -- Frenetic Corpuscle
-	[161418] = true, -- Dunewalker's Survival Kit
-	[160652] = true, -- Construct Overcharger
+	[158556] = true, -- Siren's Tongue
+	[158555] = true, -- Doom Shroom
+	[158374] = true, -- Tiny Electromental in a Jar
+	[158319] = true, -- My'das Talisman
+	[158224] = true, -- Vial of Storms
+	[158218] = true, -- Dadalea's Wing
+	[158216] = true, -- Living Oil Cannister
+	[155881] = true, -- Harlan's Loaded Dice
+	[155568] = true, -- Galewind Chimes
 	
 	-- Legion Trinkets
 	[154174] = true, -- Golganneth's Vitality
@@ -77,22 +84,31 @@ local TRINKET_AGILITY_DPS = {
 }
 
 local TRINKET_INTELLECT_DPS = {
-	-- 8.0 Trinkets as of 20180511
-	[161417] = true, -- Idol of the Sandcrawler
-	[161414] = true, -- Wing Bone of the Budding Tempest
+	-- 8.0 Trinkets
+	[161472] = true, -- Lion's Grace
+	[161461] = true, -- Doom's Hatred
 	[161411] = true, -- T'zane's Barkspines
-	[161380] = true, -- Drust-Runed Icicle
-	[161377] = true, -- Azurethos' Ruffling Plumage
+	[161377] = true, -- Azurethos' Singed Plumage
+	[161125] = true, -- Kaja-fied Banana
+	[161119] = true, -- Ravasaur Skull Bijou
+	[161113] = true, -- Incessantly Ticking Clock
 	[160651] = true, -- Vigilant's Bloodshaper
 	[160649] = true, -- Inoculating Extract
+	[160263] = true, -- Snowpelt Mangler
 	[159631] = true, -- Lady Waycrest's Music Box
 	[159624] = true, -- Rotcrusted Voodoo Doll
 	[159622] = true, -- Hadal's Nautilus
 	[159620] = true, -- Conch of Dark Whispers
 	[159615] = true, -- Ignition Mage's Fuse
 	[159610] = true, -- Vessel of Skittering Shadows
+	[158556] = true, -- Siren's Tongue
+	[158555] = true, -- Doom Shroom
 	[158368] = true, -- Fangs of Intertwined Essence
 	[158320] = true, -- Revitalizing Voodoo Totem
+	[158224] = true, -- Vial of Storms
+	[158218] = true, -- Dadalea's Wing
+	[158216] = true, -- Living Oil Cannister
+	[155568] = true, -- Galewind Chimes
 	
 	-- Legion Trinkets
 	[156288] = true, -- Elemental Focus Stone
@@ -140,15 +156,17 @@ local TRINKET_INTELLECT_DPS = {
 }
 
 local TRINKET_STRENGTH_DPS = {
-	-- 8.0 Trinkets as of 20180511
-	[161419] = true, -- Kraulock's Claw
-	[161416] = true, -- Hurricane Heart
-	[161413] = true, -- Knot of Spiritual Fury
-	[161382] = true, -- Sublimating Iceshard
+	-- 8.0 Trinkets
+	[161474] = true, -- Lion's Strength
+	[161463] = true, -- Doom's Fury
 	[161379] = true, -- Galecaller's Beak
+	[161125] = true, -- Kaja-fied Banana
+	[161119] = true, -- Ravasaur Skull Bijou
+	[161113] = true, -- Incessantly Ticking Clock
 	[160655] = true, -- Syringe of Bloodborne Infirmity
-	[160654] = true, -- Vanquished Tendril of G'huun
+	[160653] = true, -- Xalzaix's Veiled Eye
 	[160650] = true, -- Disc of Systematic Regression
+	[160263] = true, -- Snowpelt Mangler
 	[159627] = true, -- Jes' Howler
 	[159626] = true, -- Lingering Sporepods
 	[159619] = true, -- Briny Barnacle
@@ -156,7 +174,13 @@ local TRINKET_STRENGTH_DPS = {
 	[159616] = true, -- Gore-Crusted Butcher's Block
 	[159611] = true, -- Razdunk's Big Red Button
 	[158712] = true, -- Rezan's Gleaming Eye
+	[158556] = true, -- Siren's Tongue
+	[158555] = true, -- Doom Shroom
 	[158367] = true, -- Merektha's Fang
+	[158224] = true, -- Vial of Storms
+	[158218] = true, -- Dadalea's Wing
+	[158216] = true, -- Living Oil Cannister
+	[155568] = true, -- Galewind Chimes
 	
 	-- Legion Trinkets
 	[154176] = true, -- Khaz'goroth's Courage
@@ -198,23 +222,32 @@ local TRINKET_STRENGTH_DPS = {
 }
 
 local TRINKET_HEALER = {
-	-- 8.0 Trinkets as of 20180511
-	[161417] = true, -- Idol of the Sandcrawler
-	[161414] = true, -- Wing Bone of the Budding Tempest
+	-- 8.0 Trinkets
+	[161472] = true, -- Lion's Grace
+	[161461] = true, -- Doom's Hatred
 	[161411] = true, -- T'zane's Barkspines
-	[161380] = true, -- Drust-Runed Icicle
-	[161377] = true, -- Azurethos' Ruffling Plumage
+	[161377] = true, -- Azurethos' Singed Plumage
+	[161125] = true, -- Kaja-fied Banana
+	[161119] = true, -- Ravasaur Skull Bijou
+	[161113] = true, -- Incessantly Ticking Clock
 	[160651] = true, -- Vigilant's Bloodshaper
 	[160649] = true, -- Inoculating Extract
+	[160263] = true, -- Snowpelt Mangler
 	[159631] = true, -- Lady Waycrest's Music Box
 	[159624] = true, -- Rotcrusted Voodoo Doll
 	[159622] = true, -- Hadal's Nautilus
 	[159620] = true, -- Conch of Dark Whispers
 	[159615] = true, -- Ignition Mage's Fuse
 	[159610] = true, -- Vessel of Skittering Shadows
+	[158556] = true, -- Siren's Tongue
+	[158555] = true, -- Doom Shroom
 	[158368] = true, -- Fangs of Intertwined Essence
 	[158320] = true, -- Revitalizing Voodoo Totem
-	
+	[158224] = true, -- Vial of Storms
+	[158218] = true, -- Dadalea's Wing
+	[158216] = true, -- Living Oil Cannister
+	[155568] = true, -- Galewind Chimes
+
 	-- Legion Trinkets
 	[156288] = true, -- Elemental Focus Stone
 	[156245] = true, -- Show of Faith
@@ -261,23 +294,21 @@ local TRINKET_HEALER = {
 }
 
 local TRINKET_TANK = {
-	-- 8.0 Trinkets as of 20180511
-	[161419] = true, -- Kraulock's Claw
-	[161418] = true, -- Dunewalker's Survival Kit
-	[161416] = true, -- Hurricane Heart
-	[161415] = true, -- Razorcrest of the Enraged Matriarch
-	[161413] = true, -- Knot of Spiritual Fury
-	[161412] = true, -- Spiritbound Burl
-	[161382] = true, -- Sublimating Iceshard
-	[161381] = true, -- Permafrost-Encrusted Heart
+	-- 8.0 Trinkets
+	[161474] = true, -- Lion's Strength
+	[161463] = true, -- Doom's Fury
+	[161412] = true, -- Spiritbound Voodoo Burl
 	[161379] = true, -- Galecaller's Beak
-	[161378] = true, -- Plume of the Seaborne Avian
+	[161125] = true, -- Kaja-fied Banana
+	[161119] = true, -- Ravasaur Skull Bijou
+	[161113] = true, -- Incessantly Ticking Clock
 	[160655] = true, -- Syringe of Bloodborne Infirmity
-	[160654] = true, -- Vanquished Tendril of G'huun
+	[160653] = true, -- Xalzaix's Veiled Eye
 	[160652] = true, -- Construct Overcharger
 	[160650] = true, -- Disc of Systematic Regression
 	[160648] = true, -- Frenetic Corpuscle
-	[159628] = true, -- Cannonball Hurdler
+	[160263] = true, -- Snowpelt Mangler
+	[159628] = true, -- Kul Tiran Cannonball Runner
 	[159627] = true, -- Jes' Howler
 	[159626] = true, -- Lingering Sporepods
 	[159623] = true, -- Dead-Eye Spyglass
@@ -288,10 +319,16 @@ local TRINKET_TANK = {
 	[159614] = true, -- Galecaller's Boon
 	[159611] = true, -- Razdunk's Big Red Button
 	[158712] = true, -- Rezan's Gleaming Eye
+	[158556] = true, -- Siren's Tongue
+	[158555] = true, -- Doom Shroom
 	[158374] = true, -- Tiny Electromental in a Jar
 	[158367] = true, -- Merektha's Fang
 	[158319] = true, -- My'das Talisman
+	[158224] = true, -- Vial of Storms
+	[158218] = true, -- Dadalea's Wing
+	[158216] = true, -- Living Oil Cannister
 	[155881] = true, -- Harlan's Loaded Dice
+	[155568] = true, -- Galewind Chimes
 	
 	-- Legion Trinkets
 	[154176] = true, -- Khaz'goroth's Courage
@@ -351,9 +388,21 @@ local TRINKET_TANK = {
 }
 
 local TRINKET_UNKNOWN = {
-	-- 8.0 Trinkets as of 20180511
+	-- 8.0 Trinkets
+	[163703] = true, -- Crawg Gnawed Femur
+	[161473] = true, -- Lion's Guile
+	[161462] = true, -- Doom's Wake
+	[161419] = true, -- Kraulok's Claw
+	[161381] = true, -- Permafrost-Encrusted Heart
+	[161380] = true, -- Drust-Runed Icicle
+	[161378] = true, -- Plume of the Seaborne Avian
+	[161376] = true, -- Prism of Dark Intensity
+	[160656] = true, -- Twitching Tentacle of Xalzaix
+	[160654] = true, -- Vanquished Tendril of G'huun
 	[159630] = true, -- Balefire Branch
+	[159625] = true, -- Vial of Animated Blood
 	[159612] = true, -- Azerokk's Resonating Heart
+	[158215] = true, -- Whirlwing's Plumage
 	
 	-- Legion Trinkets
 	[156458] = true, -- Vanquished Clutches of Yogg-Saron

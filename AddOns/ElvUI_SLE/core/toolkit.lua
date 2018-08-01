@@ -137,6 +137,7 @@ T.next = next
 T.FlipCameraYaw = FlipCameraYaw
 --Instance
 T.IsInInstance = IsInInstance
+T.GetLFGDungeonNumEncounters = GetLFGDungeonNumEncounters
 T.GetLFGDungeonEncounterInfo = GetLFGDungeonEncounterInfo
 T.GetInstanceInfo = GetInstanceInfo
 --Combat
@@ -159,7 +160,7 @@ T.GetMinimapZoneText = GetMinimapZoneText
 T.GetMapNameByID = C_Map.GetMapInfo
 T.GetCurrentMapAreaID = C_Map.GetCurrentMapAreaID
 T.GetSubZoneText = GetSubZoneText
-T.GetPlayerMapPosition = C_Map.GetPlayerMapPosition
+T.GetBestMapForUnit = C_Map.GetBestMapForUnit
 T.GetZonePVPInfo = GetZonePVPInfo
 --Currency
 T.GetCurrencyListSize = GetCurrencyListSize
@@ -378,9 +379,14 @@ end
 
 function SLE:GetMapInfo(id, arg)
 	if not arg then return end
-	local MapInfo = C_Map.GetMapInfo(id)
+	local MapInfo
+	if T.MapInfoTable[id] then
+		MapInfo = T.MapInfoTable[id]
+	else
+		MapInfo = C_Map.GetMapInfo(id)
+		T.MapInfoTable[id] = MapInfo
+	end
 	if not MapInfo then return UNKNOWN end
-	-- for k,v in pairs(MapInfo) do print(k,v) end
 	if arg == "all" then return MapInfo["name"], MapInfo["mapID"], MapInfo["parentMapID"], MapInfo["mapType"] end
 	return MapInfo[arg]
 end

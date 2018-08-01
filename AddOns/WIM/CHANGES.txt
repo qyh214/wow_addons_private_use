@@ -1,51 +1,16 @@
 ------------------------------------------------------------------------
-r554 | mysticalos | 2018-07-22 23:23:53 +0000 (Sun, 22 Jul 2018) | 2 lines
+r557 | mysticalos | 2018-07-27 20:26:46 +0000 (Fri, 27 Jul 2018) | 1 line
 Changed paths:
    M /trunk/ChangeLog.lua
-   M /trunk/Modules/ChatEngine.lua
-
-Fix _G.NORMAL_FONT_COLOR since wim declares it�s own global space
-Update changelog
-------------------------------------------------------------------------
-r553 | mysticalos | 2018-07-22 23:16:36 +0000 (Sun, 22 Jul 2018) | 1 line
-Changed paths:
-   M /trunk/Modules/ChatEngine.lua
-
-Guild chat is fully fixed now
-------------------------------------------------------------------------
-r552 | mysticalos | 2018-07-22 23:00:17 +0000 (Sun, 22 Jul 2018) | 1 line
-Changed paths:
-   M /trunk/Modules/ChatEngine.lua
-
-update GuildControlGetRankFlags usage, which is now under C_GuildInfo
-------------------------------------------------------------------------
-r551 | mysticalos | 2018-07-22 22:44:46 +0000 (Sun, 22 Jul 2018) | 2 lines
-Changed paths:
-   M /trunk/Modules/ChatEngine.lua
-
-use correct api for getting chat color.
-In addition, added fallback to NORMAL_FONT_COLOR if Chat_GetChannelColor doesn�t return.
-------------------------------------------------------------------------
-r550 | mysticalos | 2018-07-21 20:23:23 +0000 (Sat, 21 Jul 2018) | 1 line
-Changed paths:
-   M /trunk/ChangeLog.lua
-   M /trunk/Modules/ChatEngine.lua
-
-Re-enable say message handling if NOT in a boss encounter. if in a boss encounter, do nothing so boss mods can continue to handle them.
-------------------------------------------------------------------------
-r549 | mysticalos | 2018-07-21 20:05:06 +0000 (Sat, 21 Jul 2018) | 1 line
-Changed paths:
-   M /trunk/Modules/URLHandler.lua
-
-update url handling for WoW Armory
-------------------------------------------------------------------------
-r548 | mysticalos | 2018-07-21 19:54:05 +0000 (Sat, 21 Jul 2018) | 1 line
-Changed paths:
-   M /trunk/ChangeLog.lua
-   M /trunk/Modules/WhisperEngine.lua
    M /trunk/WIM.lua
    M /trunk/WIM.toc
 
-nothing fancy, just a toc bump and removal of some 7.x compat code.
+bump version
+------------------------------------------------------------------------
+r556 | mysticalos | 2018-07-27 20:11:58 +0000 (Fri, 27 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/Modules/URLHandler.lua
+
+Fix link copying
 ------------------------------------------------------------------------
 

@@ -1,10 +1,9 @@
 ------------------------------------------------------------------------
-r77 | Caliaha | 2018-07-19 21:51:45 +0000 (Thu, 19 Jul 2018) | 2 lines
+r79 | Caliaha | 2018-07-28 20:29:22 +0000 (Sat, 28 Jul 2018) | 2 lines
 Changed paths:
    M /trunk/HandyNotes_DungeonLocations.lua
-   M /trunk/HandyNotes_DungeonLocations.toc
 
-Updated for Battle for Azeroth
+Fixed 'Show on Continent' options
 
 ------------------------------------------------------------------------
 

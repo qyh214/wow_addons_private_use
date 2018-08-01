@@ -1,8 +1,8 @@
 ## Interface: 80000
 ## Title: |cff1784d1AddOnSkins|r
-## Version: 3.74
+## Version: 3.76
 ## Author: Azilroka, ChaoticVoid
-## SavedVariables: AddOnSkinsDB
+## SavedVariables: AddOnSkinsDB, AddOnSkinsDS
 ## OptionalDeps: ProjectAzilroka, ElvUI, BuyEmAll, DSM, Tukui
 
 Load_AddOnSkins.xml

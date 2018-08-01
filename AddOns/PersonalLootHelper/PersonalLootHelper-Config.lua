@@ -27,6 +27,7 @@ function PLH_CreateOptionsPanel()
 	displayLabel:SetText("Display options")
 	
 	--[[ PLH_PREFS_AUTO_HIDE ]]--
+--[[
 	local autoHideCheckbox = CreateFrame('CheckButton', nil, configFrame, 'InterfaceOptionsCheckButtonTemplate')
 	autoHideCheckbox:SetPoint('TOPLEFT', displayLabel, 'BOTTOMLEFT', 20, -5)
 	autoHideCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_AUTO_HIDE])
@@ -34,10 +35,11 @@ function PLH_CreateOptionsPanel()
 	local autoHideLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
 	autoHideLabel:SetPoint('LEFT', autoHideCheckbox, 'RIGHT', 0, 0)
 	autoHideLabel:SetText("Automatically hide PLH when there is no loot to trade")
+]]--
 
 	--[[ PLH_PREFS_SKIP_CONFIRMATION ]]--
 	local skipConfirmationCheckbox = CreateFrame('CheckButton', nil, configFrame, 'InterfaceOptionsCheckButtonTemplate')
-	skipConfirmationCheckbox:SetPoint('TOPLEFT', autoHideCheckbox, 'BOTTOMLEFT', 0, -5)
+	skipConfirmationCheckbox:SetPoint('TOPLEFT', displayLabel, 'BOTTOMLEFT', 20, -5)
 	skipConfirmationCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_SKIP_CONFIRMATION])
 
 	local skipConfirmationLabel = configFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
@@ -234,7 +236,7 @@ function PLH_CreateOptionsPanel()
 	
 	--[[ OnShow Event]]
 	configFrame:SetScript('OnShow', function(frame)
-		autoHideCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_AUTO_HIDE])
+--		autoHideCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_AUTO_HIDE])
 		skipConfirmationCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_SKIP_CONFIRMATION])
 		onlyOfferIfUpgradeCheckbox:SetChecked(PLH_PREFS[PLH_PREFS_ONLY_OFFER_IF_UPGRADE])
 		neverOfferBOECheckbox:SetChecked(PLH_PREFS[PLH_PREFS_NEVER_OFFER_BOE])
@@ -248,7 +250,7 @@ function PLH_CreateOptionsPanel()
 
 	--[[ Okay Action ]]--
 	function configFrame.okay(arg1, arg2, arg3, ...)
-		PLH_PREFS[PLH_PREFS_AUTO_HIDE] = autoHideCheckbox:GetChecked()
+--		PLH_PREFS[PLH_PREFS_AUTO_HIDE] = autoHideCheckbox:GetChecked()
 		PLH_PREFS[PLH_PREFS_SKIP_CONFIRMATION] = skipConfirmationCheckbox:GetChecked()
 		PLH_PREFS[PLH_PREFS_ONLY_OFFER_IF_UPGRADE] = onlyOfferIfUpgradeCheckbox:GetChecked()
 		PLH_PREFS[PLH_PREFS_NEVER_OFFER_BOE] = neverOfferBOECheckbox:GetChecked()

@@ -30,10 +30,7 @@ local wow_400 = wow_ver >= 40000
 local wow_500 = wow_ver >= 50000
 local wow_600 = wow_ver >= 60000
 local wow_700 = wow_ver >= 70000
-local petHappinessEvent = "UNIT_HAPPINESS"
-if wow_400 then
-	petHappinessEvent = "UNIT_POWER"
-end
+local petHappinessEvent = "UNIT_POWER_UPDATE"
 local partyChangedEvent = "PARTY_MEMBERS_CHANGED"
 if wow_500 then
 	UnitIsPartyLeader = UnitIsGroupLeader

@@ -6,7 +6,7 @@ local EXPANSION_NAME3, EXPANSION_NAME4, EXPANSION_NAME5, EXPANSION_NAME6, EXPANS
 
 local function configTable()
 	if not SLE.initialized then return end
-
+	local expackNum = 5
 	E.Options.args.sle.args.modules.args.datatext.args.sldatatext.args.timedt = {
 		type = "group",
 		name = RAID_FINDER,
@@ -26,44 +26,44 @@ local function configTable()
 				get = function(info) return E.db.sle.lfr[ info[#info] ] end,
 				set = function(info, value) E.db.sle.lfr[ info[#info] ] = value; end,
 				args = {
-					Cata = {
-						order = 1, type = "group",
-						name = EXPANSION_NAME3,
-						guiInline = true,
-						get = function(info) return E.db.sle.lfr.cata[ info[#info] ] end,
-						set = function(info, value) E.db.sle.lfr.cata[ info[#info] ] = value; end,
-						args = {
-							ds = { order = 1, type = "toggle", name = SLE:GetMapInfo(409, "name") },
-						},
-					},
-					MoP = {
-						order = 2, type = "group",
-						name = EXPANSION_NAME4,
-						guiInline = true,
-						get = function(info) return E.db.sle.lfr.mop[ info[#info] ] end,
-						set = function(info, value) E.db.sle.lfr.mop[ info[#info] ] = value; end,
-						args = {
-							mv = { order = 1, type = "toggle", name = SLE:GetMapInfo(471, "name") },
-							hof = { order = 2, type = "toggle", name = SLE:GetMapInfo(474, "name") },
-							toes = { order = 3, type = "toggle", name = SLE:GetMapInfo(456, "name") },
-							tot = { order = 4, type = "toggle", name = SLE:GetMapInfo(508, "name") },
-							soo = { order = 5, type = "toggle", name = SLE:GetMapInfo(556, "name") },
-						},
-					},
-					WoD = {
-						order = 3, type = "group",
-						name = EXPANSION_NAME5,
-						guiInline = true,
-						get = function(info) return E.db.sle.lfr.wod[ info[#info] ] end,
-						set = function(info, value) E.db.sle.lfr.wod[ info[#info] ] = value; end,
-						args = {
-							hm = { order = 1, type = "toggle", name = SLE:GetMapInfo(610, "name") },
-							brf = { order = 2, type = "toggle", name = SLE:GetMapInfo(596, "name")},
-							hfc = { order = 3, type = "toggle", name = SLE:GetMapInfo(661, "name") },
-						},
-					},
+					-- Cata = {
+						-- order = expackNum, type = "group",
+						-- name = EXPANSION_NAME3,
+						-- guiInline = true,
+						-- get = function(info) return E.db.sle.lfr.cata[ info[#info] ] end,
+						-- set = function(info, value) E.db.sle.lfr.cata[ info[#info] ] = value; end,
+						-- args = {
+							-- ds = { order = 1, type = "toggle", name = SLE:GetMapInfo(409, "name") },
+						-- },
+					-- },
+					-- MoP = {
+						-- order = expackNum-1, type = "group",
+						-- name = EXPANSION_NAME4,
+						-- guiInline = true,
+						-- get = function(info) return E.db.sle.lfr.mop[ info[#info] ] end,
+						-- set = function(info, value) E.db.sle.lfr.mop[ info[#info] ] = value; end,
+						-- args = {
+							-- mv = { order = 1, type = "toggle", name = SLE:GetMapInfo(471, "name") },
+							-- hof = { order = 2, type = "toggle", name = SLE:GetMapInfo(474, "name") },
+							-- toes = { order = 3, type = "toggle", name = SLE:GetMapInfo(456, "name") },
+							-- tot = { order = 4, type = "toggle", name = SLE:GetMapInfo(508, "name") },
+							-- soo = { order = 5, type = "toggle", name = SLE:GetMapInfo(556, "name") },
+						-- },
+					-- },
+					-- WoD = {
+						-- order = expackNum-2, type = "group",
+						-- name = EXPANSION_NAME5,
+						-- guiInline = true,
+						-- get = function(info) return E.db.sle.lfr.wod[ info[#info] ] end,
+						-- set = function(info, value) E.db.sle.lfr.wod[ info[#info] ] = value; end,
+						-- args = {
+							-- hm = { order = 1, type = "toggle", name = SLE:GetMapInfo(610, "name") },
+							-- brf = { order = 2, type = "toggle", name = SLE:GetMapInfo(596, "name")},
+							-- hfc = { order = 3, type = "toggle", name = SLE:GetMapInfo(661, "name") },
+						-- },
+					-- },
 					Legion = {
-						order = 4, type = "group",
+						order = expackNum-3, type = "group",
 						name = EXPANSION_NAME6,
 						guiInline = true,
 						get = function(info) return E.db.sle.lfr.legion[ info[#info] ] end,
@@ -77,15 +77,13 @@ local function configTable()
 						},
 					},
 					BFA = {
-						order = 5, type = "group",
+						order = expackNum-4, type = "group",
 						name = EXPANSION_NAME7,
 						guiInline = true,
-						get = function(info) return E.db.sle.lfr.legion[ info[#info] ] end,
-						set = function(info, value) E.db.sle.lfr.legion[ info[#info] ] = value; end,
+						get = function(info) return E.db.sle.lfr.bfa[ info[#info] ] end,
+						set = function(info, value) E.db.sle.lfr.bfa[ info[#info] ] = value; end,
 						args = {
-							soon = {
-								order = 1, type = "description", name = "Soon™",
-							},
+							uldir = { order = 1, type = "toggle", name = SLE:GetMapInfo(1148 , "name") },
 						},
 					},
 				},

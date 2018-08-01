@@ -18,14 +18,14 @@ local function ShowMinimap()
 	end
 end
 
+local C_Map_GetBestMapForUnit = C_Map.GetBestMapForUnit
+local C_Map_GetPlayerMapPosition = C_Map.GetPlayerMapPosition
 local function CreateCoords()
-	local playerPosition = T.GetPlayerMapPosition(0, "player")
-	local x, y
-	if playerPosition then
-		x, y = playerPosition:GetXY()
-	end
-	if x then x = T.format(E.db.sle.minimap.coords.format, x * 100) else x = "0" end
-	if y then y = T.format(E.db.sle.minimap.coords.format, y * 100) else y = "0" end
+	local x, y = 0, 0
+	local playerPosition = C_Map_GetPlayerMapPosition( C_Map_GetBestMapForUnit("player"), "player" )
+	if playerPosition then x, y = playerPosition:GetXY() end
+	x = T.format(E.db.sle.minimap.coords.format, x * 100)
+	y = T.format(E.db.sle.minimap.coords.format, y * 100)
 
 	return x, y
 end
@@ -33,7 +33,14 @@ end
 function MM:UpdateCoords(elapsed)
 	MM.coordspanel.elapsed = (MM.coordspanel.elapsed or 0) + elapsed
 	if MM.coordspanel.elapsed < E.db.sle.minimap.coords.throttle then return end
-	if not MM.RestrictedArea then
+	if T.tonumber(E.version) >= 10.78 and E.MapInfo then
+		local x, y = E.MapInfo.x, E.MapInfo.y
+		if x then x = T.format(E.db.sle.minimap.coords.format, x * 100) else x = "0" end
+		if y then y = T.format(E.db.sle.minimap.coords.format, y * 100) else y = "0" end
+		if x == "0" or x == "0.0" or x == "0.00" then x = "-" end
+		if y == "0" or y == "0.0" or y == "0.00" then y = "-" end
+		MM.coordspanel.Text:SetText(x.." , "..y)
+	elseif T.tonumber(E.version) < 10.78 then
 		local x, y = CreateCoords()
 		if x == "0" or x == "0.0" or x == "0.00" then x = "-" end
 		if y == "0" or y == "0.0" or y == "0.00" then y = "-" end
@@ -94,15 +101,6 @@ function MM:CreateCoordsFrame()
 	MM:UpdateCoordinatesPosition()
 end
 
-function MM:LOADING_SCREEN_DISABLED()
-	local position = T.GetPlayerMapPosition(0, "player")
-	if not position then
-		MM.RestrictedArea = true
-	else
-		MM.RestrictedArea = false
-	end
-end
-
 function MM:UpdateSettings()
 	if E.db.sle.minimap.alpha then E.db.sle.minimap.alpha = nil end
 	if not MM.coordspanel then
@@ -126,7 +124,6 @@ end
 function MM:Initialize()
 	if not SLE.initialized or not E.private.general.minimap.enable then return end
 
-	self:RegisterEvent("LOADING_SCREEN_DISABLED")
 	hooksecurefunc(M, 'UpdateSettings', MM.UpdateSettings)
 
 	MM:UpdateSettings()

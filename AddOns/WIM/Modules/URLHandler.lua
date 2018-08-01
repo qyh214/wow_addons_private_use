@@ -177,7 +177,7 @@ local function displayURL(link)
     _G.StaticPopupDialogs["WIM_SHOW_URL"] = {
     	preferredIndex = STATICPOPUP_NUMDIALOGS,
         text = "URL : %s",
-        button2 = _G.TEXT(_G.ACCEPT),
+        button2 = _G.ACCEPT,
         hasEditBox = 1,
         hasWideEditBox = 1,
 		editBoxWidth = 350,

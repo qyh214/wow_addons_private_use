@@ -2,6 +2,7 @@
 	<Script file='core.lua'/>
 	<Script file='globals.lua'/>
 	<Script file='toolkit.lua'/>
+	<Script file='cache.lua'/>
 	<Script file='dropdown.lua'/>
 	<Script file='toolsRu.lua'/>
 	<Script file='gameMenu.lua'/>

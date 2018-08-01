@@ -24,7 +24,8 @@ local CancelPetPVPDuel = C_PetBattles.CancelPVPDuel
 local SOUNDKIT = SOUNDKIT
 
 function PvP:Release()
-	if (PvP.db.rebirth and not GetSortedSelfResurrectOptions()) or not PvP.db.rebirth then RepopMe() end
+	local resOptions = GetSortedSelfResurrectOptions()
+	if (PvP.db.rebirth and not resOptions[1]) or not PvP.db.rebirth then print("Should repop") RepopMe() end
 end
 
 function PvP:Dead()
@@ -61,7 +62,7 @@ function PvP:OpponentsTable()
 	T.twipe(BG_Opponents)
 	for index = 1, T.GetNumBattlefieldScores() do
 		local name, _, _, _, _, faction, _, _, classToken = T.GetBattlefieldScore(index)
-		if (SLE.myfaction == "Horde" and faction == 1) or (SLE.myfaction == "Alliance" and faction == 0) then
+		if (E.myfaction == "Horde" and faction == 1) or (E.myfaction == "Alliance" and faction == 0) then
 			BG_Opponents[name] = classToken
 		end
 	end

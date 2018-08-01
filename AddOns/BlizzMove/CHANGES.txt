@@ -1,10 +1,12 @@
-lightweight tag 94fb57f044d0306a02e3268825981bc07f0c5c78 v1.7.2
-Author:	Jessica <jessica@Jessicas-MacBook.local>
-Date:	Fri Jul 20 13:43:08 2018 +0200
+tag 64a0c19300c08d0d13621a9f8931046795fafb9b v1.8
+Author:	zanony <zanony@jsommer.at>
+Date:	Sun Jul 29 08:26:04 2018 +0200
 
-commit 94fb57f044d0306a02e3268825981bc07f0c5c78
-Author: Jessica <jessica@Jessicas-MacBook.local>
-Date:   Fri Jul 20 13:43:08 2018 +0200
+BlizzMove 1.8
 
-    Cofigure addon for auto build to wowinterface.com
+commit 706087e759d674547da9d9b223c00e62a5c72058
+Author: zanony <zanony@jsommer.at>
+Date:   Sun Jul 29 08:24:57 2018 +0200
+
+    Fix OrderHallMissionFrame and remove the message: expected frame got nil.
 

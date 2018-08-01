@@ -1,6 +1,18 @@
-8.0.0v1.9 Release - 2018/07/15
+8.0.0v1.10 Release - 2018/07/29
 
-Patch 8.0.
+Fixed ArkInventory.
+
+* [#86](https://gitlab.com/toreltwiddler/CanIMogIt/issues/86) & [#190](https://gitlab.com/toreltwiddler/CanIMogIt/issues/190)  Fixed ArkInventory overlay and ArkInventory offline character mode.
+* [#187](https://gitlab.com/toreltwiddler/CanIMogIt/issues/187) Fixed overlay not always updating after certain actions.
+* [#191](https://gitlab.com/toreltwiddler/CanIMogIt/issues/191) Added 3 BfA pre-patch world quest items to exception list (monk shoulders, monk gloves, hunter shoulders).
+ 
+*****
+
+8.0.0v1.9 Release - 2018/07/17
+
+Patch 8.0 and LiteBag support.
+
+![LiteBag overlay!](https://i.imgur.com/H1sDNSl.png)
 
 * [#38](https://gitlab.com/toreltwiddler/CanIMogIt/issues/38) LiteBag support added by LiteBag author Xodiv.
 * Updated TOC.

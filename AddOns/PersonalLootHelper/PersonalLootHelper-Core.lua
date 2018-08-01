@@ -1,13 +1,13 @@
 --[[
 
 TODOs:
-    If there is no loot, add a msg to window saying "check auto-hide to get rid of this window"?
 	Add legacy mode to show system alerts only?
+	Add legacy coordinate rolls mode back?
+	Remove whisper/ms/os/xmog prompts right away when players leave group?  (ex: end of lfr)
+	When offering loot, show how many people are eligible and keep track of who still may roll?
 	Bug with people being shown pass/whisper instead of keep/offer when looting...may be related to cyrillic names?  or same name from different realms in IsPlayer()?
 	Bug - whisper message doesn't allow special characters
 	Don't show PLH UI if group is using RCLootCouncil
-	Add BfA trinkets
-	Azerite armor is not tradeable - look for "Active Azerite Powers" string (TOOLTIP_AZERITE_UNLOCK_LEVELS or CURRENTLY_SELECTED_AZERITE_POWERS) in tooltip
 
 Known Limitations:
 	PLH assumes everyone in the group is eligible to receive tradeable loot; it doesn't check whether everyone
@@ -36,6 +36,17 @@ Future Enhancement Ideas:
 
 CHANGELOG:
 
+20180725 - 2.08
+	Increased time between inspections for slower computers & connections
+
+20180724 - 2.07
+	Removed "Automatically hide PLH when there is no loot to trade" as an option; instead, PLH is always auto-hidden
+	Updated to never show Azerite armor as being tradeable
+	Added BfA trinkets
+	Fixed LUA error in IsAnUpgradeForCharacter
+	Changed button back from "OFFER TO PLH USERS" to "OFFER TO GROUP".  I can't decide on the best way to label this button - I'm open
+		to suggestions!
+		
 20180723 - 2.06
 	Fixed bug that could cause upgrades to not be identified if player's items weren't cached
 		(Added player items to cache instead of using GetInventoryItemLink() since player items are guaranteed to be cached post-8.0)
@@ -81,7 +92,7 @@ CHANGELOG:
 ]]--
 
 -- Constants to control inspection process
-local DELAY_BETWEEN_INSPECTIONS			= 1		-- in seconds
+local DELAY_BETWEEN_INSPECTIONS			= 2		-- in seconds
 local MIN_DELAY_BETWEEN_CACHE_REFRESHES	= 5		-- in seconds
 local MAX_INSPECT_LOOPS 				= 4    	-- maximum # of times to retry calling NotifyInspect on all members in the roster for whom we've cached fewer than the expected number of items
 
@@ -122,6 +133,7 @@ local FII_HAS_INDESTRUCTIBLE		= 'HAS_INDESTRUCTIBLE'			-- true if the item has i
 local FII_HAS_LEECH					= 'HAS_LEECH'					-- true if the item has leech
 local FII_HAS_SPEED					= 'HAS_SPEED'					-- true if the item has speed
 local FII_XMOGGABLE					= 'XMOGGABLE'					-- true if the player needs this item for xmog
+local FII_IS_AZERITE_ITEM			= 'IS_AZERITE_ITEM'				-- true if the item is an Azerite item
 
 -- Keys for the groupInfoCache
 local CLASS_NAME					= 'CLASS_NAME'
@@ -517,7 +529,6 @@ end
 
 local function GetILVLFromTooltip(tooltip)
 	local ITEM_LEVEL_PATTERN				= _G.ITEM_LEVEL:gsub('%%d', '(%%d+)')  				-- Item Level (%d+)
-	
 	local ilvl = nil
 	local text = tooltip.leftside[2]:GetText()
 	if text ~= nil then
@@ -537,6 +548,8 @@ local function GetFullItemInfo(item)
 	local BIND_TRADE_TIME_REMAINING_PATTERN = _G.BIND_TRADE_TIME_REMAINING:gsub('%%s', '(.+)')  -- You may trade this item with players that were also eligible to loot this item for the next (.+).
 	local TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN_PATTERN 				= _G.TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN:gsub('%%s', '(.+)')			-- You haven't collected this appearance
 	local TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN_PATTERN 	= _G.TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN:gsub('%%s', '(.+)')	-- You've collected this appearance, but not from this item
+	local TOOLTIP_AZERITE_UNLOCK_LEVELS_PATTERN							= _G.TOOLTIP_AZERITE_UNLOCK_LEVELS:gsub('%(0/%%d%)', '%%(0/%%d%%)')  		-- Azerite Powers (0/%d):
+	local CURRENTLY_SELECTED_AZERITE_POWERS_PATTERN						= _G.CURRENTLY_SELECTED_AZERITE_POWERS:gsub('%(%%d/%%d%)', '%%(%%d/%%d%%)')	-- Active Azerite Powers (%d/%d):
 	local fullItemInfo = {}
 
 	if item ~= nil then
@@ -570,8 +583,9 @@ local function GetFullItemInfo(item)
 			local hasLeech = false
 			local hasSpeed = false
 			local xmoggable = false
-			
+			local isAzeriteItem = false
 			local text
+
 			local index = 6 -- the elements we're looking for are all further down in the tooltip
 			while tooltipLong.leftside[index] do
 				text = tooltipLong.leftside[index]:GetText()
@@ -584,6 +598,7 @@ local function GetFullItemInfo(item)
 					hasLeech = hasLeech or text:find(_G.STAT_LIFESTEAL) ~= nil
 					hasSpeed = hasSpeed or text:find(_G.STAT_SPEED) ~= nil
 					xmoggable = xmoggable or text:find(TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN_PATTERN) ~= nil or text:find(TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN_PATTERN) ~= nil
+					isAzeriteItem = isAzeriteItem or text:match(TOOLTIP_AZERITE_UNLOCK_LEVELS_PATTERN) ~= nil or text:match(CURRENTLY_SELECTED_AZERITE_POWERS_PATTERN) ~= nil
 				end
 				index = index + 1
 			end
@@ -605,6 +620,7 @@ local function GetFullItemInfo(item)
 			fullItemInfo[FII_HAS_LEECH] = hasLeech
 			fullItemInfo[FII_HAS_SPEED] = hasSpeed
 			fullItemInfo[FII_XMOGGABLE] = xmoggable
+			fullItemInfo[FII_IS_AZERITE_ITEM] = isAzeriteItem
 		end
 	end
 
@@ -805,13 +821,15 @@ local function IsAnUpgradeForCharacter(fullItemInfo, characterName, threshold)
 			slotID = GetSlotID(itemEquipLoc)
 			equippedItem1 = GetEquippedItem(characterName, slotID)
 		end
-		if equippedItem2 ~= nil then
-			isAnUpgrade1, equippedILVL1 = IsAnUpgrade(itemRealILVL, equippedItem1[FII_REAL_ILVL], threshold)
-			isAnUpgrade2, equippedILVL2 = IsAnUpgrade(itemRealILVL, equippedItem2[FII_REAL_ILVL], threshold)
-			isAnUpgrade1 = isAnUpgrade1 or isAnUpgrade2
-			equippedILVL1 = min(equippedILVL1, equippedILVL2)
-		else
-			isAnUpgrade1, equippedILVL1 = IsAnUpgrade(itemRealILVL, equippedItem1[FII_REAL_ILVL], threshold)
+		if equippedItem1 ~= nil then
+			if equippedItem2 ~= nil then
+				isAnUpgrade1, equippedILVL1 = IsAnUpgrade(itemRealILVL, equippedItem1[FII_REAL_ILVL], threshold)
+				isAnUpgrade2, equippedILVL2 = IsAnUpgrade(itemRealILVL, equippedItem2[FII_REAL_ILVL], threshold)
+				isAnUpgrade1 = isAnUpgrade1 or isAnUpgrade2
+				equippedILVL1 = min(equippedILVL1, equippedILVL2)
+			else
+				isAnUpgrade1, equippedILVL1 = IsAnUpgrade(itemRealILVL, equippedItem1[FII_REAL_ILVL], threshold)
+			end
 		end
 	end
 
@@ -1160,7 +1178,7 @@ local function UpdateLootedItemsDisplay()
 
 	ClearLootedItemsDisplay()
 
-	if ShouldShowLootedItemsDisplay() or not PLH_PREFS[PLH_PREFS_AUTO_HIDE] then
+	if ShouldShowLootedItemsDisplay() then
 
 		for lootedItemIndex = 1, #lootedItems do
 			lootedItem = lootedItems[lootedItemIndex]
@@ -1320,7 +1338,7 @@ local function UpdateLootedItemsDisplay()
 					end
 
 					if lootedItemStatus == STATUS_DEFAULT then
-						CreateButton("OFFER TO PLH USERS", 160, INDENT + 65, verticalOffset, PLH_DoTradeItem, lootedItemIndex)
+						CreateButton("OFFER TO GROUP", 120, INDENT + 65, verticalOffset, PLH_DoTradeItem, lootedItemIndex)
 					elseif lootedItemStatus == STATUS_REQUESTED then
 						CreateButton("OFFER TO SELECTED PLAYER", 180, INDENT + 65, verticalOffset, PLH_DoOfferItem, lootedItemIndex)
 					end
@@ -1378,7 +1396,7 @@ local function UpdateLootedItemsDisplay()
 		HideOffScreenWidgets()
 
 		lootedItemsFrame:Show()
-	elseif PLH_PREFS[PLH_PREFS_AUTO_HIDE] then
+	else
 		lootedItemsFrame:Hide()
 	end
 end
@@ -1518,9 +1536,7 @@ local function CreateLootedItemsDisplay()
 		end
 	end)
 
-	if PLH_PREFS[PLH_PREFS_AUTO_HIDE] then
-		lootedItemsFrame:Hide()
-	end
+	lootedItemsFrame:Hide()
 	
 	-- Welcome message
 	if PLH_META[PLH_LAST_SEEN_MESSAGE_VERSION] == nil or tonumber(PLH_META[PLH_LAST_SEEN_MESSAGE_VERSION]) < 2.0 then
@@ -1905,10 +1921,12 @@ end
 --   1. item is equippable
 --   2. quality is rare or epic
 --   3. item is BoP, or user specified to include BoE items in preferences
+--   4. item does not have azerite armor slots
 local function ShouldBeEvaluated(fullItemInfo)
 	return fullItemInfo[FII_IS_EQUIPPABLE]
 		and (fullItemInfo[FII_QUALITY] == LE_ITEM_QUALITY_RARE or fullItemInfo[FII_QUALITY] == LE_ITEM_QUALITY_EPIC)
 		and (fullItemInfo[FII_BIND_TYPE] == LE_ITEM_BIND_ON_ACQUIRE or (fullItemInfo[FII_BIND_TYPE] == LE_ITEM_BIND_ON_EQUIP and not PLH_PREFS[PLH_PREFS_NEVER_OFFER_BOE]))
+		and (not fullItemInfo[FII_IS_AZERITE_ITEM])
 end		
 
 -- creates a copy of the table
@@ -1983,28 +2001,20 @@ end
 local function PerformNotify(fullItemInfo, looterName)
 	if ShouldBeEvaluated(fullItemInfo) then
 		if IsPlayer(looterName) then
---print("   looter is player")		
 --			local isTradeable = fullItemInfo[FII_TRADE_TIME_WARNING_SHOWN] or not IsAnUpgradeForCharacter(fullItemInfo, looterName)
 			local isTradeable = not IsAnUpgradeForCharacter(fullItemInfo, looterName, 0)
 			if isTradeable then
---print("   item is tradeable")		
 
 				local isAnUpgradeForAnyCharacter, isAnUpgradeForAnyCharacterNames = IsAnUpgradeForAnyCharacter(fullItemInfo)
---print("   isAnUpgradeForAnyCharacter = ", isAnUpgradeForAnyCharacter)
---print("   isAnUpgradeForAnyCharacterNames = ", isAnUpgradeForAnyCharacterNames)
 
 				if PLH_GetNumberOfPLHUsers() > 1 then
---print("   there are plh users")		
 					if not PLH_PREFS[PLH_PREFS_ONLY_OFFER_IF_UPGRADE] or isAnUpgradeForAnyCharacter then
---print("   adding looted item")		
 						AddLootedItem(fullItemInfo, looterName)
 						UpdateLootedItemsDisplay()
 					end
 				end
 				if PLH_PREFS[PLH_PREFS_SHOW_TRADEABLE_ALERT] then
---print("   show tradeable alert is true")		
 					if isAnUpgradeForAnyCharacter then
---print("   is upg for any char")		
 						local names = GetNames(isAnUpgradeForAnyCharacterNames, 5)
 						PLH_SendAlert('You can trade ' .. fullItemInfo[FII_ITEM] .. ', which is an ilvl upgrade for ' .. names)
 						PlaySound(600)  -- 'GLUECREATECHARACTERBUTTON'
@@ -2693,4 +2703,10 @@ function PLH_TestInv()
 			end
         end
     end
+end
+
+function PLH_PrintFII(item)
+	local fii = GetFullItemInfo(item)
+	print("fii[FII_ITEM] = ", fii[FII_ITEM])
+	print("   fii[FII_IS_AZERITE_ITEM] = ", fii[FII_IS_AZERITE_ITEM])
 end
