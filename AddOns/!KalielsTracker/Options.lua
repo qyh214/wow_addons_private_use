@@ -112,7 +112,6 @@ local defaults = {
 		addonMasque = false,
 		addonPetTracker = false,
 		addonTomTom = false,
-		addonBugGrabberBlacklist = false,
 	},
 	char = {
 		collapsed = false,
@@ -517,13 +516,14 @@ local options = {
 						},
 						textWordWrap = {
 							name = "Wrap long texts",
-							desc = "Long texts shows on two lines or on one line with ellipsis (...).\n"..warning,
+							desc = "Long texts shows on two lines or on one line with ellipsis (...).",
 							type = "toggle",
-							confirm = true,
-							confirmText = warning,
 							set = function()
 								db.textWordWrap = not db.textWordWrap
-								ReloadUI()
+								KT.forcedUpdate = true
+								ObjectiveTracker_Update()
+								ObjectiveTracker_Update()
+								KT.forcedUpdate = false
 							end,
 							order = 3.6,
 						},
@@ -1083,7 +1083,9 @@ local options = {
 							type = "toggle",
 							confirm = true,
 							confirmText = warning,
-							disabled = true,
+							disabled = function()
+								return not IsAddOnLoaded("PetTracker")
+							end,
 							set = function()
 								db.addonPetTracker = not db.addonPetTracker
 								PetTracker.Sets.HideTracker = not db.addonPetTracker
@@ -1151,35 +1153,6 @@ local options = {
 						},
 					},
 				},
-				sec3 = {
-					name = "BugGrabber",
-					type = "group",
-					inline = true,
-					order = 3,
-					args = {
-						addonBugGrabberDesc = {
-							name = " BugGrabber addon Blacklist for non-fixable LUA errors:\n\n"..cBold..
-									"   Deferred XML Node object named ..... already exists\n",
-							type = "description",
-							order = 3.1,
-						},
-						addonBugGrabberBlacklist = {
-							name = "Enable BugGrabber Blacklist",
-							type = "toggle",
-                            width = "normal+half",
-							confirm = true,
-							confirmText = warning,
-							disabled = function()
-								return (not IsAddOnLoaded("!BugGrabber") or not KT.AddonOthers:IsEnabled())
-							end,
-							set = function()
-								db.addonBugGrabberBlacklist = not db.addonBugGrabberBlacklist
-								ReloadUI()
-							end,
-							order = 3.2,
-						},
-					},
-				},
 			},
 		},
 	},
@@ -1228,7 +1201,6 @@ function KT:SetupOptions()
 	db = self.db.profile
 	dbChar = self.db.char
 
-	db.addonPetTracker = false
 	db.addonTomTom = false
 
 	general.sec2.args.classBorder.name = general.sec2.args.classBorder.name:format(RgbToHex(self.classColor))
@@ -1398,6 +1370,8 @@ function RgbToHex(color)
 end
 
 -- Init
-hooksecurefunc("ObjectiveTracker_Initialize", function(self)
-	modules.sec1.args = GetModulesOptionsTable()
+OTF:HookScript("OnEvent", function(self, event)
+	if event == "PLAYER_ENTERING_WORLD" and not KT.initialized then
+		modules.sec1.args = GetModulesOptionsTable()
+	end
 end)

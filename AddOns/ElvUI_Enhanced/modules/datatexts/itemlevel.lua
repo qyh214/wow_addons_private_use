@@ -6,7 +6,7 @@ local displayString = ''
 local lastPanel
 local floor = math.floor
 
-local slots = {
+--[[local slots = {
 	[1] = { "HeadSlot", HEADSLOT },
 	[2] = { "NeckSlot", NECKSLOT },
 	[3] = { "ShoulderSlot", SHOULDERSLOT },
@@ -23,6 +23,25 @@ local slots = {
 	[14] = { "Trinket1Slot", TRINKET1SLOT_UNIQUE },
 	[15] = { "MainHandSlot", MAINHANDSLOT },
 	[16] = { "SecondaryHandSlot", SECONDARYHANDSLOT },
+}--]]
+
+local slots = {
+  ["HeadSlot"] = { true, true },
+  ["NeckSlot"] = { true, false },
+  ["ShoulderSlot"] = { true, true },
+  ["BackSlot"] = { true, false },
+  ["ChestSlot"] = { true, true },
+  ["WristSlot"] = { true, true },
+  ["MainHandSlot"] = { true, true },
+  ["SecondaryHandSlot"] = { true, true },
+  ["HandsSlot"] = { true, true },
+  ["WaistSlot"] = { true, true },
+  ["LegsSlot"] = { true, true },
+  ["FeetSlot"] = { true, true },
+  ["Finger0Slot"] = { true, false },
+  ["Finger1Slot"] = { true, false },
+  ["Trinket0Slot"] = { true, false },
+  ["Trinket1Slot"] = { true, false },
 }
 
 local levelColors = {
@@ -45,22 +64,23 @@ function PD:UpdateDataTextItemLevel(self)
 end
 
 local function OnEnter(self)
-	local	avgItemLevel, avgEquipItemLevel = GetAverageItemLevel()
+	local avgItemLevel, avgEquipItemLevel = GetAverageItemLevel()
 	local color, itemLink, itemLevel
 	
 	DT:SetupTooltip(self)
 	DT.tooltip:AddDoubleLine(TOTAL, floor(avgItemLevel), 1, 1, 1, 0, 1, 0)
 	DT.tooltip:AddDoubleLine(GMSURVEYRATING3, floor(avgEquipItemLevel), 1, 1, 1, 0, 1, 0)
 	DT.tooltip:AddLine(" ")
-	for i = 1, 16 do
-		itemLink = GetInventoryItemLink("player", GetInventorySlotInfo(slots[i][1]))
+	for k, info in pairs(slots) do
+		slot = GetInventorySlotInfo(k)
+		local itemLink = GetInventoryItemLink("player", slot)
 		if itemLink then
-  		itemLevel = PD:GetItemLevel("player", itemLink)
-      if itemLevel and avgEquipItemLevel then
-      	color = levelColors[(itemLevel < avgEquipItemLevel - 10 and 0 or (itemLevel > avgEquipItemLevel + 10 and 1 or (2)))]
-      	DT.tooltip:AddDoubleLine(slots[i][2], itemLevel, 1, 1, 1, color[1], color[2], color[3])
-      end
-		end
+			itemLevel = PD:GetItemLevel("player", slot)
+			if itemLevel and avgEquipItemLevel then
+	      		color = levelColors[(itemLevel < avgEquipItemLevel - 10 and 0 or (itemLevel > avgEquipItemLevel + 10 and 1 or (2)))]
+	      		DT.tooltip:AddDoubleLine(k, itemLevel, 1, 1, 1, color[1], color[2], color[3])
+	      	end
+	     end
 	end
 	DT.tooltip:Show()
 end

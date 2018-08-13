@@ -202,12 +202,9 @@ function addon:CheckDateReset()
 	end
 
 	today=year*10000+month*100+day
-	if month==1 and day==1 then
-		local m, y, numdays, firstday = CalendarGetAbsMonth( 12, year-1 )
-		yesterday=y*10000+m*100+numdays
-	elseif day==1 then
-		local m, y, numdays, firstday = CalendarGetAbsMonth( month-1, year)
-		yesterday=y*10000+m*100+numdays
+	if day==1 then
+    local t=C_Calendar.GetMonthInfo(-1)
+		yesterday=t.year*10000+t.month*100+t.numDays
 	else
 		yesterday=year*10000+month*100+day-1
 	end

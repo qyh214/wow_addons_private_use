@@ -1,12 +1,19 @@
-tag beb49c51c69f372d80c2250f6b0ce2a43d6cdf16 3.3.0-beta5
-Author:	Nick <git@bocky.nl>
-Date:	Mon Jul 23 13:16:39 2018 +0200
+tag 544d056b7e5ac7635832c1b5b373e53e837770e7 3.3.0-beta8
+Author:	Feraldin <nickbock@hoarder.bocky.nl>
+Date:	Thu Aug 9 22:02:54 2018 +0200
 
-Fixed #59
+3.3.0-beta8
+* Fixed iLvl Datatext hover lua error - https://github.com/nickbock/ElvUI_Enhanced_Again/issues/50
 
-commit d15f86755904c2b05d7de348cb35471d5cfc8a73
+commit 9afa5954e9bebada1164f690391bd9ededdffd6a
 Author: Nick <git@bockmeulen.nl>
-Date:   Sun Jul 22 09:07:05 2018 +0200
+Date:   Wed Aug 8 12:43:31 2018 +0200
 
-    Fxied #59
+    version and changelog
+
+commit 17bf0ce3b7d81a7447afe6642f437023a4572460
+Author: Nick <git@bockmeulen.nl>
+Date:   Wed Aug 8 12:18:16 2018 +0200
+
+    fix ilvl datatekst onmouseover
 

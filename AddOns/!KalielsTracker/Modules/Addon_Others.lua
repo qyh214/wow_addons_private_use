@@ -149,42 +149,6 @@ local function SVUI_SetSupport()
     end
 end
 
--- BugGrabber
-local function BugGrabber_Blacklist()
-    if db.addonBugGrabberBlacklist and IsAddOnLoaded("!BugGrabber") then
-        local patterns = {
-            "Deferred XML Node object named .* already exists",
-        }
-        local ERROR_DETECTED = "%s |cffffff00captured, click the link for more information.|r"
-
-        local bck_BugGrabber_StoreError = BugGrabber.StoreError
-        function BugGrabber:StoreError(errorObject)
-            for _, pattern in ipairs(patterns) do
-                if strfind(errorObject.message, pattern) then return end
-            end
-            bck_BugGrabber_StoreError(self, errorObject)
-        end
-
-        local bck_BugGrabber_RegisterCallback = BugGrabber.RegisterCallback
-        BugGrabber.RegisterCallback = function(addon, eventname, onError)
-            BugGrabber.UnregisterCallback(KT, "BugGrabber_BugGrabbed")
-            onError = onError or function(...) addon[eventname](addon, ...) end
-            bck_BugGrabber_RegisterCallback(addon, eventname, function(callback, errorObject)
-                for _, pattern in ipairs(patterns) do
-                    if strfind(errorObject.message, pattern) then return end
-                end
-                onError(callback, errorObject)
-            end)
-        end
-
-        -- Fake BugGrabber, because it has functions in local scope.
-        function KT:BugGrabber_BugGrabbed(callback, errorObject)
-            print(ERROR_DETECTED:format(BugGrabber:GetChatLink(errorObject)))
-        end
-        BugGrabber.RegisterCallback(KT, "BugGrabber_BugGrabbed")
-    end
-end
-
 -- Chinchilla
 local function Chinchilla_SetCompatibility()
     if IsAddOnLoaded("Chinchilla") then
@@ -214,9 +178,7 @@ end
 function M:OnInitialize()
     _DBG("|cffffff00Init|r - "..self:GetName(), true)
     db = KT.db.profile
-    KT:CheckAddOn("Masque", "7.3.0")
-
-    BugGrabber_Blacklist()
+    KT:CheckAddOn("Masque", "8.0.1")
 end
 
 function M:OnEnable()

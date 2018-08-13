@@ -15,6 +15,7 @@ local frameGroups = {5, 25, 40}
 
 local healGlowFrame
 local healGlowTime
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 
 local function ShowHealGlows(self, elapsed)
 	self.elapsed = (self.elapsed or 0) + elapsed
@@ -41,7 +42,7 @@ function HG:SetupVariables()
 	
 	for _, spellID in ipairs({
 		-- Druid
-		81269, -- Wild Mushroom
+		48438, -- Wild Growth
 		-- Monk
 		130654, -- Chi Burst
 		124040, -- Chi Torpedo
@@ -51,9 +52,7 @@ function HG:SetupVariables()
 		-- Paladin
 		114852, -- Holy Prism (enemy target)
 		114871, -- Holy Prism (friendly target)
-		82327,  -- Holy Radiance
 		85222,  -- Light of Dawn
-		121129, -- Daybreak
 		-- Priest
 		121148, -- Cascade
 		34861,  -- Circle of Healing
@@ -91,9 +90,8 @@ function HG:SetupVariables()
 	healGlowFrame = CreateFrame("Frame")
 	healGlowFrame:SetScript("OnEvent", function(self, event, ...)
 		if (event=="COMBAT_LOG_EVENT_UNFILTERED") then
-	  	local _, event, _, sourceGUID, _, _, _, destGUID, _, _, _, spellID, spellName = select(1, ...)
-	  	
-			if not (sourceGUID == playerId and event == "SPELL_HEAL" and spells[spellName]) then
+	  	local _, event, _, sourceGUID, _, _, _, destGUID, _, _, _, spellID, spellName = CombatLogGetCurrentEventInfo()
+			if not (sourceGUID == playerId and (event == "SPELL_AURA_APPLIED" or event == "SPELL_HEAL")  and spells[spellName]) then
 				return
 			end
 			

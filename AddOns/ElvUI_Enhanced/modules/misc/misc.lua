@@ -12,7 +12,7 @@ function M:LoadAutoRelease()
 		local inInstance, instanceType = IsInInstance()
 		if (inInstance and (instanceType == "pvp")) then
 			local soulstone = GetSpellInfo(20707)
-			if ((E.myclass ~= "SHAMAN") and not (soulstone and UnitBuff("player", soulstone))) then
+			if ((E.myclass ~= "SHAMAN") and not (soulstone and AuraUtil.FindAuraByName(soulstone, "player"))) then
 				RepopMe()
 			end
 		end

@@ -13,16 +13,40 @@ local digits ={
 	[2] = { .1, '%.2f' },
 }
 
+local function setRestricted(zone)
+	if zone then
+		inRestrictedArea = true
+	end
+	xMap.text:SetText("N/A")
+	yMap.text:SetText("N/A")
+	return
+end
+
+local function getPos(zone)
+	local mapID = C_Map.GetBestMapForUnit("player")
+	if not mapID then 
+		setRestricted(zone)
+		return 
+	end
+	local pos = C_Map.GetPlayerMapPosition(mapID, "player")
+	if not pos then 
+		setRestricted(zone)
+		return 
+	end
+	inRestrictedArea = false
+	return pos 
+end
+
 local function UpdateLocation(self, elapsed)
 	if inRestrictedArea then return; end
 	
 	location.elapsed = (location.elapsed or 0) + elapsed
 	if location.elapsed < digits[E.private.general.minimap.locationdigits][1] then return end
 
-	local mapID = C_Map.GetBestMapForUnit("player")
-	xMap.pos, yMap.pos = C_Map.GetPlayerMapPosition(mapID, "player"):GetXY()
+	local pos = getPos()
+	if not pos then return end
+	xMap.pos, yMap.pos = pos:GetXY()
 
-	--xMap.pos, yMap.pos = GetPlayerMapPosition('player')
 	xMap.text:SetFormattedText(digits[E.private.general.minimap.locationdigits][2], xMap.pos * 100)
 	yMap.text:SetFormattedText(digits[E.private.general.minimap.locationdigits][2], yMap.pos * 100)
 
@@ -97,22 +121,7 @@ hooksecurefunc(M, 'Update_ZoneText', function()
 	location.text:SetTextColor(M:GetLocTextColor())
 	location.text:SetText(strsub(GetMinimapZoneText(),1,25))
 
-	local mapID = C_Map.GetBestMapForUnit("player")
-	if not mapID then 
-		inRestrictedArea = true
-		xMap.text:SetText("N/A")
-		yMap.text:SetText("N/A")
-		return 
-	end
-	local x = C_Map.GetPlayerMapPosition(mapID, "player")
-	
-	if not x then
-		inRestrictedArea = true
-		xMap.text:SetText("N/A")
-		yMap.text:SetText("N/A")
-	else
-		inRestrictedArea = false
-	end
+	getPos(1)
 
 end)
 

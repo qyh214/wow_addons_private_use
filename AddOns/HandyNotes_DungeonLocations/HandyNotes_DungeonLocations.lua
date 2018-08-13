@@ -229,6 +229,7 @@ do
 
 	function pluginHandler:GetNodes2(uiMapId, isMinimapUpdate)
 		local C = HandyNotes:GetContinentZoneList(uiMapId) -- Is this a continent?
+		--print(uiMapId)
 		if C then
 			local tbl = next(tablepool) or {}
 			tablepool[tbl] = nil
@@ -1576,9 +1577,9 @@ else
   hideOnMinimap = true,
  }
 end
-if (not legionInstancesDiscovered[875]) then
- nodes[619] = { }
- nodes[619][64602070] = {
+if (not legionInstancesDiscovered[875]) then -- Tomb of Sargeras
+ nodes[646] = { }
+ nodes[646][64602070] = {
   id = 875,
   type = "Raid",
   hideOnContinent = true,

@@ -6,6 +6,15 @@ hooksecurefunc(UF, "Update_FocusFrame", function(self, frame, db)
 	local gps = frame.gps
 	if not gps then return end
 
+	if gpsRestricted == true then
+		if (gps.timer) then
+			UF:CancelTimer(gps.timer)
+			gps.timer = nil
+		end
+		gps:Hide()
+	return
+	end
+
 	if db.gps.enable then
 		local x, y = UF:GetPositionOffset(db.gps.position)		
 		gps:ClearAllPoints()

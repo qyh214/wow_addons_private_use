@@ -12,8 +12,8 @@
 ## Notes-zhTW: 发送所有的追随者与点击多任务
 ## Notes-zhCN: 發送所有的追隨者與點擊多任務
 ## Author: Alar of Daggerspine
-## Version: 2.18.7 70200
-## X-Revision: a1f3561
+## Version: 2.18.8 70200
+## X-Revision: 04a2710
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
 ## OptionalDeps: Ace3,LibInit
@@ -28,7 +28,7 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2018-07-19T17:51:00Z
+## X-Date: 2018-08-01T11:10:53Z
 ## X-Embeds: LibInit
 embeds.xml
 wowhead.lua

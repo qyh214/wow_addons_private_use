@@ -1,3 +1,19 @@
+3.3.0-beta8
+* Fixed iLvl Datatext hover lua error - https://github.com/nickbock/ElvUI_Enhanced_Again/issues/50
+
+3.3.0-beta7
+* Fixed LUA error in Map Cord - https://github.com/nickbock/ElvUI_Enhanced_Again/issues/67
+* Fixed Auto release in PvP - https://github.com/nickbock/ElvUI_Enhanced_Again/issues/65
+
+3.3.0-beta6
+* Fixed healglow - https://github.com/nickbock/ElvUI_Enhanced_Again/issues/62
+* Fixed GPS erros - https://github.com/nickbock/ElvUI_Enhanced_Again/issues/61
+* Fixed https://github.com/nickbock/ElvUI_Enhanced_Again/issues/55
+* Fixed GPS module as a whole. Now only works in the open world. following Blizzards restrictions.
+
+3.3.0-beta5
+* Fixed https://github.com/nickbock/ElvUI_Enhanced_Again/issues/59
+
 3.3.0-beta4
 * Fixed https://github.com/nickbock/ElvUI_Enhanced_Again/issues/57
 

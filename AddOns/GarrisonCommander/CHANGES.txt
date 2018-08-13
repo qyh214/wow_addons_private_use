@@ -1,12 +1,15 @@
-tag 20bceaf559600157108d7b8827e32096baaadedc 2.18.7
+tag 38384f854f3eef8ce28310078db1b0fca7a778f1 2.18.8
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Thu Jul 19 19:51:37 2018 +0200
+Date:	Wed Aug 1 13:11:51 2018 +0200
 
-Removed some lua warnings added in BFA
+Fixed lua error
 
-commit a1f35612a6f3dbaa994692c963041dac3f2179fd
+commit 04a271003a0bbcb740aecce240b6e9603f73733e
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Thu Jul 19 19:51:00 2018 +0200
+Date:   Wed Aug 1 13:10:53 2018 +0200
 
-    Removed warning
+    Lua error fixed
+    
+    1x [string "return GetMonthInfo(6)"]:1: attempt to call global
+    'GetMonthInfo' (a nil value)
 

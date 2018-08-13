@@ -7,6 +7,9 @@ self:HF_Paragraph("Description")
 self:HF_Pre([[
 Data broker for Garrison stuff.
 ]])
+self:RelNotes(2,18,8,[[
+Fix: Removed lua error GetAbsoluteMonth
+]])
 self:RelNotes(2,15,3,[[
 Fix: Ticket 158  attempt to call method 'loadHelp' (a nil value)
 ]])

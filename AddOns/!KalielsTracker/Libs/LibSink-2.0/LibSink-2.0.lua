@@ -1,6 +1,6 @@
 --[[
 Name: Sink-2.0
-Revision: $Rev: 115 $
+Revision: $Rev: 124 $
 Author(s): Funkydude
 Description: Library that handles chat output.
 Dependencies: LibStub, SharedMedia-3.0 (optional)
@@ -18,7 +18,7 @@ If you derive from the library or change it in any way, you are required to cont
 -- Sink-2.0
 
 local SINK20 = "LibSink-2.0"
-local SINK20_MINOR = 90103
+local SINK20_MINOR = 90104
 
 local sink = LibStub:NewLibrary(SINK20, SINK20_MINOR)
 if not sink then return end
@@ -248,7 +248,7 @@ sink.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 do
 	local function loop(...)
 		wipe(sink.channelMappingIds)
-		for i = 1, select("#", ...), 2 do
+		for i = 1, select("#", ...), 3 do
 			local id, name = select(i, ...)
 			sink.channelMappingIds[name] = id
 		end

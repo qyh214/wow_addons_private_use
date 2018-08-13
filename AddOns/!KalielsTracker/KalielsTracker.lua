@@ -154,9 +154,7 @@ local function SetMessage(text, pattern, r, g, b, icon, x, y)
 		y = y or 0
 		if db.sink20OutputSink == "Blizzard" then
 			x = floor(x * 3 * COMBAT_TEXT_X_SCALE)
-			y = y - 7
-		elseif db.sink20OutputSink == "SCT" or db.sink20OutputSink == "MikSBT" then
-			y = y - 1
+			y = y - 8
 		end
 		text = format("|T%s:0:0:%d:%d|t%s", icon, x, y, text)
 	end
@@ -220,6 +218,7 @@ local function Init()
 	C_Timer.After(0, function()
 		OTF:KTSetPoint("TOPLEFT", 30, -1)
 		OTF:KTSetPoint("BOTTOMRIGHT")
+		ObjectiveTracker_Update()
 
 		KT.initialized = true
 		KT.wqInitialized = true
@@ -301,7 +300,7 @@ local function SetFrames()
 	KTF:RegisterEvent("PLAYER_LEVEL_UP")
 
 	-- DropDown frame
-	KT.DropDown = CreateFrame("Frame", addonName.."DropDown", KTF, "MSA_DropDownMenuTemplate")
+	KT.DropDown = MSA_DropDownMenu_Create(addonName.."DropDown", KTF)
 	MSA_DropDownMenu_Initialize(KT.DropDown, nil, "MENU")
 
 	-- Minimize button
@@ -501,8 +500,10 @@ local function SetHooks()
 		end
 	end
 
-	hooksecurefunc("ObjectiveTracker_Initialize", function(self)
-		Init()
+	OTF:HookScript("OnEvent", function(self, event)
+		if event == "PLAYER_ENTERING_WORLD" and not KT.initialized then
+			Init()
+		end
 	end)
 
 	local bck_ObjectiveTracker_Update = ObjectiveTracker_Update
@@ -1046,7 +1047,7 @@ local function SetHooks()
 
 	local bck_WORLD_QUEST_TRACKER_MODULE_OnFreeBlock = WORLD_QUEST_TRACKER_MODULE.OnFreeBlock
 	function WORLD_QUEST_TRACKER_MODULE:OnFreeBlock(block)
-		if KT.activeTask == block.id then
+		if KT.initialized and KT.activeTask == block.id then
 			KT.activeTask = nil
 		end
 		KT:RemoveFixedButton(block)
@@ -1055,7 +1056,7 @@ local function SetHooks()
 
     local bck_BONUS_OBJECTIVE_TRACKER_MODULE_OnFreeBlock = BONUS_OBJECTIVE_TRACKER_MODULE.OnFreeBlock
     function BONUS_OBJECTIVE_TRACKER_MODULE:OnFreeBlock(block)
-        if KT.activeTask == block.id then
+        if KT.initialized and KT.activeTask == block.id then
             KT.activeTask = nil
         end
         KT:RemoveFixedButton(block)

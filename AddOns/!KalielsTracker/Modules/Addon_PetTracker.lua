@@ -16,29 +16,15 @@ local PetTracker = PetTracker
 
 local eventFrame
 local header, content
+local filterButton
 
-OBJECTIVE_TRACKER_UPDATE_MODULE_PETTRACKER = 0x80000
-OBJECTIVE_TRACKER_UPDATE_PETTRACKER = 0x80001
+OBJECTIVE_TRACKER_UPDATE_MODULE_PETTRACKER = 0x100000
+OBJECTIVE_TRACKER_UPDATE_PETTRACKER = 0x200000
 PETTRACKER_TRACKER_MODULE = ObjectiveTracker_GetModuleInfoTable()
 
 --------------
 -- Internal --
 --------------
-
-local function SetHooks_Enabled()
-	hooksecurefunc("ObjectiveTracker_Initialize", function(self)
-		tinsert(self.MODULES, PETTRACKER_TRACKER_MODULE)
-		tinsert(self.MODULES_UI_ORDER, PETTRACKER_TRACKER_MODULE)
-	end)
-
-	function PetTracker.Objectives:Startup()
-		self:SetParent(content)
-		self.Anchor:SetWidth(content:GetWidth())
-		self.Anchor:SetPoint("TOPLEFT", content, -10, 0)
-		self.Header = header
-		self.maxEntries = 100
-	end
-end
 
 local function SetHooks_Disabled()
 	if not db.addonPetTracker and PetTracker then
@@ -47,7 +33,23 @@ local function SetHooks_Disabled()
 end
 
 local function SetHooks()
-	function PetTracker.Objectives:TrackingChanged()
+	hooksecurefunc("ObjectiveTracker_Initialize", function(self)
+		tinsert(self.MODULES, PETTRACKER_TRACKER_MODULE)
+		tinsert(self.MODULES_UI_ORDER, PETTRACKER_TRACKER_MODULE)
+	end)
+
+	function PetTracker.Objectives:Startup()	-- R
+		self:SetScript("OnEvent", self.TrackingChanged)
+		self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+
+		self:SetParent(content)
+		self.Anchor:SetWidth(content:GetWidth())
+		self.Anchor:SetPoint("TOPLEFT", content, -10, 0)
+		self.Header = header
+		self.maxEntries = 100
+	end
+
+	function PetTracker.Objectives:TrackingChanged()	-- R
 		if not PetTracker.Sets.HideTracker then
 			self:Update()
 		end
@@ -55,7 +57,7 @@ local function SetHooks()
 		ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_PETTRACKER)
 	end
 	
-	function PetTracker.Tracker:AddSpecie(specie, quality, level)
+	function PetTracker.Tracker:AddSpecie(specie, quality, level)	-- R
 		local Journal = PetTracker.Journal
 		local sourceIcon = Journal:GetSourceIcon(specie)
 		if sourceIcon then
@@ -89,13 +91,31 @@ local function SetHooks()
 
 	-- Disable DropDown (it was moved to filters menu)
 	PetTracker.Tracker.ShowOptions = function() end
-	
+
+	-- WorldMap (for hacked Sushi Lib)
+	hooksecurefunc(PetTracker.MapFilter, "Init", function(self, frame)
+		if not filterButton then
+			for i, overlay in ipairs(frame.overlayFrames) do
+				if overlay.OnClick == WorldMapTrackingOptionsButtonMixin.OnClick then
+					filterButton = overlay
+					break
+				end
+			end
+		end
+	end)
+
+	hooksecurefunc(PetTracker.MapFilter, "UpdateFrames", function(self)
+		SushiDropFrame:CloseAll()
+		SushiDropFrame:Toggle("TOPLEFT", filterButton, "BOTTOMLEFT", 0, -15, true, self.ShowTrackingTypes)
+	end)
+
 	-- Sushi Lib - hack - revert back DropDownMenu
 	if SushiDropFrame then
-		local dropDownFrame = CreateFrame("Frame", "SushiDropDownFrameFix", nil, "MSA_DropDownMenuTemplate")
+		local dropDownFrame = MSA_DropDownMenu_Create("SushiDropDownFrameFix")
 		function dropDownFrame:AddLine(data)
 			MSA_DropDownMenu_AddButton(data)
 		end
+
 		function SushiDropFrame:Toggle(...)
 			local n = select("#", ...)
 			if n < 4 then
@@ -116,10 +136,12 @@ local function SetHooks()
 			self.target = dropDownFrame.relativeTo
 			MSA_ToggleDropDownMenu(1, nil, dropDownFrame)
 		end
+
 		function SushiDropFrame:Display(...)
 			self.target = nil
 			self:Toggle(...)
 		end
+
 		function SushiDropFrame:CloseAll()
 			MSA_CloseDropDownMenus()
 		end
@@ -166,8 +188,6 @@ local function SetFrames_Init()
 				SetHooks_PetTracker_Journal()
 				self:UnregisterEvent(event)
 			elseif event == "PLAYER_ENTERING_WORLD" then
-				SetHooks()
-				KT:ToggleEmptyTracker()
 				self:RegisterEvent("PET_JOURNAL_LIST_UPDATE")
 				self:UnregisterEvent(event)
 			elseif event == "PET_JOURNAL_LIST_UPDATE" then
@@ -244,7 +264,7 @@ function M:OnInitialize()
 	_DBG("|cffffff00Init|r - "..self:GetName(), true)
 	db = KT.db.profile
 	dbChar = KT.db.char
-	self.isLoaded = (KT:CheckAddOn("PetTracker", "7.3.0") and db.addonPetTracker)
+	self.isLoaded = (KT:CheckAddOn("PetTracker", "8.0.5") and db.addonPetTracker)
 
 	if self.isLoaded then
 		tinsert(KT.db.defaults.profile.modulesOrder, "PETTRACKER_TRACKER_MODULE")
@@ -259,13 +279,13 @@ function M:OnInitialize()
 	end
 
 	SetFrames_Init()
-	--SetHooks_Disabled()
+	SetHooks_Disabled()
 end
 
 function M:OnEnable()
 	_DBG("|cff00ff00Enable|r - "..self:GetName(), true)
 	SetFrames()
-	SetHooks_Enabled()
+	SetHooks()
 
 	PETTRACKER_TRACKER_MODULE.updateReasonModule = OBJECTIVE_TRACKER_UPDATE_MODULE_PETTRACKER
 	PETTRACKER_TRACKER_MODULE.updateReasonEvents = OBJECTIVE_TRACKER_UPDATE_PETTRACKER
@@ -276,7 +296,7 @@ end
 
 function M:IsShown()
 	return (self.isLoaded and
-		not PetTracker.Sets.HideTracker and
+		(PetTracker.Sets and not PetTracker.Sets.HideTracker) and
 		PetTracker.Objectives:IsShown())
 end
 

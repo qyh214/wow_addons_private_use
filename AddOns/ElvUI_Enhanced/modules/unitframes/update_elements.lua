@@ -7,6 +7,7 @@ local pairs, type, select, unpack = pairs, type, select, unpack
 local GetPlayerMapPosition, GetPlayerFacing = GetPlayerMapPosition, GetPlayerFacing
 local unitframeFont
 
+
 local function CalculateCorner(r)
 	return 0.5 + cos(r) / sqrt2, 0.5 + sin(r) / sqrt2;
 end
@@ -23,7 +24,7 @@ end
 function UF:UpdateGPS(frame)
 	local gps = frame.gps
 	if not gps then return end
-	
+
 	-- GPS Disabled or not GPS parent frame visible or not in Party or Raid, Hide gps
 	if not frame:IsVisible() or UnitIsUnit(gps.unit, 'player') or not (UnitInParty(gps.unit) or UnitInRaid(gps.unit)) then
 		gps:Hide()
@@ -31,7 +32,8 @@ function UF:UpdateGPS(frame)
 	end
 
 	-- Arbitrary method to determine if we should try to calculate the map position
-	local x, y = GetPlayerMapPosition(gps.unit)
+	local x, y = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit(gps.unit), gps.unit):GetXY()
+
 	local distance, angle
 	if not (x == 0 and y == 0) then
 		-- Unit is in acceptable range, calculate position fast

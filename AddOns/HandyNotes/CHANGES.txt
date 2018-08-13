@@ -1,31 +1,32 @@
 ------------------------------------------------------------------------
-r299 | nevcairiel | 2018-07-18 11:25:26 +0000 (Wed, 18 Jul 2018) | 1 line
-Changed paths:
-   M /trunk/.pkgmeta
-   M /trunk/HandyNotes.toc
-   M /trunk/HandyNotes_HandyNotes.lua
-
-Remove AceHook, its unused
-------------------------------------------------------------------------
-r298 | nevcairiel | 2018-07-18 10:25:57 +0000 (Wed, 18 Jul 2018) | 1 line
-Changed paths:
-   M /trunk/HandyNotes.toc
-
-Remove HereBeDragons-1.0 from the TOC load
-------------------------------------------------------------------------
-r297 | nevcairiel | 2018-07-18 10:25:28 +0000 (Wed, 18 Jul 2018) | 1 line
+r305 | nevcairiel | 2018-07-24 12:05:59 +0000 (Tue, 24 Jul 2018) | 1 line
 Changed paths:
    M /trunk/HandyNotes.lua
-   M /trunk/HandyNotes_EditFrame.lua
-   M /trunk/HandyNotes_HandyNotes.lua
 
-Cleanup unused variables
+style nit
 ------------------------------------------------------------------------
-r296 | nevcairiel | 2018-07-18 10:21:19 +0000 (Wed, 18 Jul 2018) | 1 line
+r304 | nevcairiel | 2018-07-24 12:04:36 +0000 (Tue, 24 Jul 2018) | 1 line
 Changed paths:
    M /trunk/HandyNotes.lua
-   M /trunk/HandyNotes_HandyNotes.lua
 
-Cleanup some Legion left-overs
+Clean out commented code
+------------------------------------------------------------------------
+r303 | nevcairiel | 2018-07-24 12:02:03 +0000 (Tue, 24 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/HandyNotes.lua
+
+Support all mouse buttons for clicks
+------------------------------------------------------------------------
+r302 | nevcairiel | 2018-07-24 09:10:11 +0000 (Tue, 24 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/HandyNotes.lua
+
+Verify that coordinates are valid before creating pins
+------------------------------------------------------------------------
+r301 | nevcairiel | 2018-07-20 07:25:09 +0000 (Fri, 20 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/HandyNotes.lua
+
+Protect against errors when the addon is disabled
 ------------------------------------------------------------------------
 

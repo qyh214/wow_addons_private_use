@@ -52,13 +52,13 @@ local function SetupTutorials()
 		{	-- 1
 			image = helpPath.."help_kaliels-tracker",
 			text = cTitle..KT.title.."|r is based on default Blizzard Objective Tracker and improves him.\n\n"..
-				"Some features:\n"..
-				"- Change tracker position\n"..
-				"- Expand / Collapse tracker relative to selected position (direction)\n"..
-				"- Auto set trackers height by content with max. height limit\n"..
-				"- Scrolling when content is greater than max. height\n"..
-				"- Remember collapsed tracker after logout/exit game\n\n"..
-				"... and many other enhancements (see next pages).",
+					"Some features:\n"..
+					"- Change tracker position\n"..
+					"- Expand / Collapse tracker relative to selected position (direction)\n"..
+					"- Auto set trackers height by content with max. height limit\n"..
+					"- Scrolling when content is greater than max. height\n"..
+					"- Remember collapsed tracker after logout/exit game\n\n"..
+					"... and many other enhancements (see next pages).",
 			shine = KTF,
 			shineTop = 5,
 			shineBottom = -5,
@@ -69,17 +69,17 @@ local function SetupTutorials()
 			image = helpPath.."help_header-buttons",
 			imageHeight = 128,
 			text = cTitle.."Header buttons|r\n\n"..
-				"Minimize button:                                Other buttons:\n"..
-				"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:0:14:0:14:209:170:0|t "..cDots.."...|r Expand Tracker                           "..
-				"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:2:-1:32:64:16:30:0:14:209:170:0|t  "..cDots.."...|r Open Quest Log\n"..
-				"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:0:14:16:30:209:170:0|t "..cDots.."...|r Collapse Tracker                         "..
-				"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:2:-1:32:64:16:30:16:30:209:170:0|t  "..cDots.."...|r Open Achievements\n"..
-				"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:0:14:32:46:209:170:0|t "..cDots.."...|r when is tracker empty                "..
-				"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:2:-1:32:64:16:30:32:46:209:170:0|t  "..cDots.."...|r Open Filters menu\n\n"..
-				"Buttons |T"..mediaPath.."UI-KT-HeaderButtons:14:14:0:-1:32:64:16:30:0:14:209:170:0|t and "..
-				"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:0:-1:32:64:16:30:16:30:209:170:0|t you can disable in Options.\n\n"..
-				"You can set "..cBold.."[key bind]|r for Minimize button.\n"..
-				cBold.."Alt+Click|r on Minimize button opens "..KT.title.." Options.",
+					"Minimize button:                                Other buttons:\n"..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:0:14:0:14:209:170:0|t "..cDots.."...|r Expand Tracker                           "..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:2:-1:32:64:16:30:0:14:209:170:0|t  "..cDots.."...|r Open Quest Log\n"..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:0:14:16:30:209:170:0|t "..cDots.."...|r Collapse Tracker                         "..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:2:-1:32:64:16:30:16:30:209:170:0|t  "..cDots.."...|r Open Achievements\n"..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:0:14:32:46:209:170:0|t "..cDots.."...|r when is tracker empty                "..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:2:-1:32:64:16:30:32:46:209:170:0|t  "..cDots.."...|r Open Filters menu\n\n"..
+					"Buttons |T"..mediaPath.."UI-KT-HeaderButtons:14:14:0:-1:32:64:16:30:0:14:209:170:0|t and "..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:0:-1:32:64:16:30:16:30:209:170:0|t you can disable in Options.\n\n"..
+					"You can set "..cBold.."[key bind]|r for Minimize button.\n"..
+					cBold.."Alt+Click|r on Minimize button opens "..KT.title.." Options.",
 			textY = 16,
 			shine = KTF.MinimizeButton,
 			shineTop = 13,
@@ -90,14 +90,14 @@ local function SetupTutorials()
 			image = helpPath.."help_quest-title-tags",
 			imageHeight = 128,
 			text = cTitle.."Quest title tags|r\n\n"..
-				"At the start of quest titles you see tags like this |cffff8000[100|cff00b3ffhc!|cffff8000]|r.\n"..
-				"Tags are also in quest titles inside Quest Log.\n\n"..
-				"|cff00b3ff!|r|T:14:3|t "..cDots..".......|r Daily quest|T:14:98|t|cff00b3ffr|r "..cDots..".......|r Raid quest\n"..
-				"|cff00b3ff!!|r "..cDots.."......|r Weekly quest|T:14:83|t|cff00b3ffr10|r "..cDots.."...|r 10-man raid quest\n"..
-				"|cff00b3ffg|r "..cDots..".......|r Group quest|T:14:89|t|cff00b3ffr25|r "..cDots.."...|r 25-man raid quest\n"..
-				"|cff00b3ffpvp|r "..cDots.."...|r PvP quest|T:14:109|t|cff00b3ffs|r "..cDots..".......|r Scenario quest\n"..
-				"|cff00b3ffd|r "..cDots..".......|r Dungeon quest|T:14:72|t|cff00b3ffa|r "..cDots..".......|r Account quest\n"..
-				"|cff00b3ffhc|r "..cDots..".....|r Heroic quest|T:14:88|t|cff00b3ffleg|r "..cDots.."....|r Legendary quest",
+					"At the start of quest titles you see tags like this |cffff8000[100|cff00b3ffhc!|cffff8000]|r.\n"..
+					"Tags are also in quest titles inside Quest Log.\n\n"..
+					"|cff00b3ff!|r|T:14:3|t "..cDots..".......|r Daily quest|T:14:98|t|cff00b3ffr|r "..cDots..".......|r Raid quest\n"..
+					"|cff00b3ff!!|r "..cDots.."......|r Weekly quest|T:14:83|t|cff00b3ffr10|r "..cDots.."...|r 10-man raid quest\n"..
+					"|cff00b3ffg|r "..cDots..".......|r Group quest|T:14:89|t|cff00b3ffr25|r "..cDots.."...|r 25-man raid quest\n"..
+					"|cff00b3ffpvp|r "..cDots.."...|r PvP quest|T:14:109|t|cff00b3ffs|r "..cDots..".......|r Scenario quest\n"..
+					"|cff00b3ffd|r "..cDots..".......|r Dungeon quest|T:14:72|t|cff00b3ffa|r "..cDots..".......|r Account quest\n"..
+					"|cff00b3ffhc|r "..cDots..".....|r Heroic quest|T:14:88|t|cff00b3ffleg|r "..cDots.."....|r Legendary quest",
 			shineTop = 10,
 			shineBottom = -9,
 			shineLeft = -12,
@@ -106,14 +106,14 @@ local function SetupTutorials()
 		{	-- 4
 			image = helpPath.."help_tracker-filters",
 			text = cTitle.."Tracker Filters|r\n\n"..
-				"For open Filters menu "..cBold.."Click|r on the button |T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:16:30:32:46:209:170:0|t.\n\n"..
-				"There are two types of filters:\n"..
-				cTitle.."Static filter|r - adds quests/achievements to tracker by criterion (e.g. \"Daily\") and then you can add/remove items by hand.\n"..
-				cTitle.."Dynamic filter|r - automatically adding quests/achievements to tracker by criterion (e.g. \"|cff00ff00Auto|r Zone\") "..
-				"and continuously changing them. This type doesn't allow add/remove items by hand."..
-				"When is some Dynamic filter active, header button is green |T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:16:30:32:46:0:255:0|t.\n\n"..
-				"For Achievements can change searched categories, it will affect the outcome of the filter.\n\n"..
-				"This menu displays other options affecting the content of the tracker (e.g. options for addon PetTracker).",
+					"For open Filters menu "..cBold.."Click|r on the button |T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:16:30:32:46:209:170:0|t.\n\n"..
+					"There are two types of filters:\n"..
+					cTitle.."Static filter|r - adds quests/achievements to tracker by criterion (e.g. \"Daily\") and then you can add/remove items by hand.\n"..
+					cTitle.."Dynamic filter|r - automatically adding quests/achievements to tracker by criterion (e.g. \"|cff00ff00Auto|r Zone\") "..
+					"and continuously changing them. This type doesn't allow add/remove items by hand."..
+					"When is some Dynamic filter active, header button is green |T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:16:30:32:46:0:255:0|t.\n\n"..
+					"For Achievements can change searched categories, it will affect the outcome of the filter.\n\n"..
+					"This menu displays other options affecting the content of the tracker (e.g. options for addon PetTracker).",
 			textY = 16,
 			shine = KTF.FilterButton,
 			shineTop = 10,
@@ -124,13 +124,13 @@ local function SetupTutorials()
 		{	-- 5
 			image = helpPath.."help_quest-item-buttons",
 			text = cTitle.."Quest Item buttons|r\n\n"..
-				"Buttons are out of the tracker, because Blizzard doesn't allow to work with the action buttons in the default UI.\n\n"..
-				"|T"..helpPath.."help_quest-item-buttons_2:32:32:1:0:64:32:0:32:0:32|t "..cDots.."...|r  This tag indicates quest item in quest. The number inside is for\n"..
-				"              identification moved quest item button.\n\n"..
-				"|T"..helpPath.."help_quest-item-buttons_2:32:32:0:3:64:32:32:64:0:32|t "..cDots.."...|r  Real quest item button is moved out of the tracker to the left/right\n"..
-				"              side (by selected anchor point). The number is the same as for the tag.\n\n"..
-				cWarning.."Warning:|r\n"..
-				"In some situation during combat, actions around the quest item buttons paused and carried it up after a player is out of combat.",
+					"Buttons are out of the tracker, because Blizzard doesn't allow to work with the action buttons in the default UI.\n\n"..
+					"|T"..helpPath.."help_quest-item-buttons_2:32:32:1:0:64:32:0:32:0:32|t "..cDots.."...|r  This tag indicates quest item in quest. The number inside is for\n"..
+					"              identification moved quest item button.\n\n"..
+					"|T"..helpPath.."help_quest-item-buttons_2:32:32:0:3:64:32:32:64:0:32|t "..cDots.."...|r  Real quest item button is moved out of the tracker to the left/right\n"..
+					"              side (by selected anchor point). The number is the same as for the tag.\n\n"..
+					cWarning.."Warning:|r\n"..
+					"In some situation during combat, actions around the quest item buttons paused and carried it up after a player is out of combat.",
 			shineTop = 3,
 			shineBottom = -2,
 			shineLeft = -4,
@@ -139,17 +139,17 @@ local function SetupTutorials()
 		{	-- 6
 			image = helpPath.."help_active-button",
 			text = cTitle.."Active Button|r\n\n"..
-				"Active Button is for a better use of quest items. Displays quest item button for CLOSEST quest as Extra Action Button (like Draenor zone ability).\n\n"..
-				"Features:\n"..
-				"- Auto show Active Button when you approach the place of performance"..
-				offs.."of the quest.\n"..
-				"- You can set "..cBold.."[key bind]|r to use quest item. Key set up in "..KT.title..
-				offs.."Options. Active Button uses the same key bind as the Extra Action Button.\n"..
-				"- Button is movable using some addons (e.g. Bartender4, MoveAnything)."..
-				offs.."For position change, move \"Extra Action Button\" resp. \"Extra Action Bar\".\n\n"..
-				cWarning.."Warning:|r\n"..
-				"- Active Button works only for tracked quests.\n"..
-				"- When tracker is collapsed, Active Button feature is paused.",
+					"Active Button is for a better use of quest items. Displays quest item button for CLOSEST quest as Extra Action Button (like Draenor zone ability).\n\n"..
+					"Features:\n"..
+					"- Auto show Active Button when you approach the place of performance"..
+					offs.."of the quest.\n"..
+					"- You can set "..cBold.."[key bind]|r to use quest item. Key set up in "..KT.title..
+					offs.."Options. Active Button uses the same key bind as the Extra Action Button.\n"..
+					"- Button is movable using some addons (e.g. Bartender4, MoveAnything)."..
+					offs.."For position change, move \"Extra Action Button\" resp. \"Extra Action Bar\".\n\n"..
+					cWarning.."Warning:|r\n"..
+					"- Active Button works only for tracked quests.\n"..
+					"- When tracker is collapsed, Active Button feature is paused.",
 			shineTop = 30,
 			shineBottom = -30,
 			shineLeft = -80,
@@ -158,30 +158,30 @@ local function SetupTutorials()
 		{	-- 7
 			image = helpPath.."help_addon-masque",
 			text = cTitle.."Support addon Masque|r\n\n"..
-				"Masque adds skinning support for Quest Item buttons. It also affects the Active Button (see prev page).\n"..
-				AddonInfo("Masque"),
+					"Masque adds skinning support for Quest Item buttons. It also affects the Active Button (see prev page).\n"..
+					AddonInfo("Masque"),
 		},
 		{	-- 8
 			image = helpPath.."help_addon-pettracker",
 			text = cTitle.."Support addon PetTracker|r\n\n"..
-				"PetTracker support adjusts display of zone pet tracking inside "..KT.title..". Also fix some visual bugs in the display.\n"..
-				AddonInfo("PetTracker"),
+					"PetTracker support adjusts display of zone pet tracking inside "..KT.title..". It also fix some visual bugs.\n"..
+					AddonInfo("PetTracker"),
 		},
 		{	-- 9
 			image = helpPath.."help_addon-tomtom",
 			text = cTitle.."Support addon TomTom|r\n\n"..
-				"TomTom support combined Blizzard's POI and TomTom's Arrow.\n\n"..
-				"|TInterface\\WorldMap\\UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:224:256:224:256|t"..
-				"|TInterface\\WorldMap\\UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:128:160:96:128|t"..cDots.."...|r  Default Blizzard POI button\n"..
-				"|T"..mediaPath.."UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:224:256:224:256|t"..
-				"|T"..mediaPath.."UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:128:160:96:128|t"..cDots.."...|r  POI button of quest with TomTom Waypoint\n \n"..
-				"Features:\n"..
-				"- The newly tracked quests automatically gets waypoints.\n"..
-				"- Waypoints of untracked or abandoned quests will be removed.\n"..
-				"- "..cBold.."Click|r on POI button add new waypoint or activate existing waypoint.\n"..
-				"- If quest doesn't have POI button, "..cBold.."Right Click|r on quest and use context menu.\n"..
-				"- Or use "..cBold.."[modifier key]+Left Click|r, modifier set up in "..KT.title.." Options.\n"..
-				AddonInfo("TomTom"),
+					"TomTom support combined Blizzard's POI and TomTom's Arrow.\n\n"..
+					"|TInterface\\WorldMap\\UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:224:256:224:256|t"..
+					"|TInterface\\WorldMap\\UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:128:160:96:128|t"..cDots.."...|r  Default Blizzard POI button\n"..
+					"|T"..mediaPath.."UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:224:256:224:256|t"..
+					"|T"..mediaPath.."UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:128:160:96:128|t"..cDots.."...|r  POI button of quest with TomTom Waypoint\n \n"..
+					"Features:\n"..
+					"- The newly tracked quests automatically gets waypoints.\n"..
+					"- Waypoints of untracked or abandoned quests will be removed.\n"..
+					"- "..cBold.."Click|r on POI button add new waypoint or activate existing waypoint.\n"..
+					"- If quest doesn't have POI button, "..cBold.."Right Click|r on quest and use context menu.\n"..
+					"- Or use "..cBold.."[modifier key]+Left Click|r, modifier set up in "..KT.title.." Options.\n"..
+					AddonInfo("TomTom"),
 			shineTop = 10,
 			shineBottom = -10,
 			shineLeft = -11,
@@ -198,16 +198,17 @@ local function SetupTutorials()
 			shineRight = 6,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.0.1|r\n\n"..
-				"- FIXED - ticket #263 - Blizzard LUA implementation - error string.format with"..
-				offs.."border value of 32 bit integer.\n"..
-				"- FIXED - ticket #264 - collision with new tracker positioning in WoW 8.0\n"..
-				"- ADDED - Compatibility - addon Chinchilla Minimap.\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.0.3|r\n\n"..
+					"- UPDATED - Lib - MSA-DropDownMenu-1.0."..
+					offs.."Now these errors gone: "..cBold.."Deferred XML Node object named ..... already exists|r\n\n"..
 
-				cTitle.."Issue reporting|r\n"..
-				"For reporting please use "..cBold.."Tickets|r instead of Comments on Curse.com.\n\n\n\n"..
+					cTitle.."Note|r\n"..
+					"Support of addon TomTom is still temporarily disabled. I'm working on the update.\n\n"..
 
-				cWarning.."Before reporting of errors, please deactivate other addons and make sure the bug is not caused by a collision with another addon.|r",
+					cTitle.."Issue reporting|r\n"..
+					"For reporting please use "..cBold.."Tickets|r instead of Comments on Curse.com.\n\n\n\n"..
+
+					cWarning.."Before reporting of errors, please deactivate other addons and make sure the bug is not caused by a collision with another addon.|r",
 			textY = -20,
 			editbox = "https://wow.curseforge.com/projects/kaliels-tracker/issues",
 			editboxBottom = 40,

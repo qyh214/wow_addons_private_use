@@ -171,7 +171,6 @@ GameTooltip:HookScript("OnTooltipSetItem",
 		local name = GameTooltip:GetItem()
 
 		if GetLocale() ~= "enUS" and GetLocale() ~= "enGB" then --have to do longer item matching for non-english clients
-			
 			for key,value in pairs(artNumbers) do
 				local localName = GetItemInfo(key)
 				if localName == name then
@@ -179,7 +178,6 @@ GameTooltip:HookScript("OnTooltipSetItem",
 					break
 				end
 			end
-
 		end
 	
 

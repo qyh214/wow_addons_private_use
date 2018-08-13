@@ -1,23 +1,10 @@
 local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames')
-
---local eclipsedirection = {
-  --["sun"] = function (frame, change)
-  --	frame.Text:SetText(change and "#>" or ">")
-  --	frame.Text:SetTextColor(cahnge and 1 or .2 , change and 1 or .2, 1, 1) 
-  --end,
-  --["moon"] = function (frame, change)
-  --	frame.Text:SetText(change and "<#" or "<") 
-  --	frame.Text:SetTextColor(1, 1, change and 1 or .3, 1) 
-  --end,
-  --["none"] = function (frame, change)
---		frame.Text:SetText() 
---  end,
---}
+gpsRestricted = nil
 
 function UF:Construct_Unit_GPS(frame, unit)
 	if not frame then return end
-	
+
 	local gps = CreateFrame("Frame", nil, frame)
 	gps:SetTemplate("Transparent")
 	gps:EnableMouse(false)
@@ -52,26 +39,6 @@ function UF:Construct_HealGlow(frame)
 	
 	return x
 end
-
---function UF:EnhanceDruidEclipse()
-	-- add eclipse prediction when playing druid
-	--if E.myclass == "DRUID" then
-		--ElvUF_Player.EclipseBar.callbackid = LibBalancePowerTracker:RegisterCallback(function(energy, direction, virtual_energy, virtual_direction, virtual_eclipse)
-			--if (ElvUF_Player.EclipseBar:IsVisible()) then
-				-- improve visibility of eclipse direction indicator
-				--ElvUF_Player.EclipseBar.Text:SetFont([[Interface\AddOns\ElvUI\media\fonts\Continuum_Medium.ttf]], 18, 'OUTLINE')
-				--eclipsedirection[virtual_direction](ElvUF_Player.EclipseBar, direction ~= virtual_direction)
-			--end
-		--end)
-		
-		--ElvUF_Player.EclipseBar.PostUpdatePower = function()
-			--if (ElvUF_Player.EclipseBar:IsVisible()) then
-			--	energy, direction, virtual_energy, virtual_direction, virtual_eclipse = LibBalancePowerTracker:GetEclipseEnergyInfo()
-			--	eclipsedirection[virtual_direction](ElvUF_Player.EclipseBar, direction ~= virtual_direction)	
-			--end
-		--end
-	--end
---end
 
 function UF:AddShouldIAttackIcon(frame)
 	if not frame then return end
@@ -143,11 +110,21 @@ function UF:UpdateRoleIconFrame(frame)
 end
 
 function UF:ApplyUnitFrameEnhancements()
-	--UF:ScheduleTimer("EnhanceDruidEclipse", 5)
+	UF:ScheduleTimer("checkGpsRestriction", 6)
 	UF:ScheduleTimer("AddShouldIAttackIcon", 8, _G["ElvUF_Target"])
 	UF:ScheduleTimer("Construct_Unit_GPS", 10, _G["ElvUF_Target"], 'target')
 	UF:ScheduleTimer("Construct_Unit_GPS", 12, _G["ElvUF_Focus"], 'focus')
 	UF:ScheduleTimer("EnhanceUpdateRoleIcon", 15)
+
+	UF:RegisterEvent("ZONE_CHANGED_NEW_AREA", "checkGpsRestriction")
+	UF:RegisterEvent("ZONE_CHANGED", "checkGpsRestriction")
+	UF:RegisterEvent("ZONE_CHANGED_INDOORS", "checkGpsRestriction")
+end
+
+function UF:checkGpsRestriction()
+	gpsRestricted, _ = IsInInstance()
+	UF:CreateAndUpdateUF("target")
+	UF:CreateAndUpdateUF("focus")
 end
 
 local CF = CreateFrame('Frame')

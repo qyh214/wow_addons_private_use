@@ -1,38 +1,16 @@
-lightweight tag c5b6187074db1280497068d849deabd94a780310 3.76
+lightweight tag 1e2ab56b669f8109d5b21355b5b2c54ca4f4e73c 3.87
 Author:	Michael James <darktemplar9900@yahoo.com>
-Date:	Sun Jul 29 09:55:51 2018 -0500
+Date:	Sun Aug 12 20:00:45 2018 -0500
 
-commit c5b6187074db1280497068d849deabd94a780310
+commit 1e2ab56b669f8109d5b21355b5b2c54ca4f4e73c
 Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sun Jul 29 09:55:51 2018 -0500
+Date:   Sun Aug 12 20:00:45 2018 -0500
 
-    3.76
+    3.87
 
-commit f90967b9fb6324d79b590bd3422a841abd2fe57a
+commit 591347645910ad04f3d8ec0a9eddcf0a952d7685
 Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sun Jul 29 07:05:05 2018 -0500
+Date:   Sun Aug 12 19:55:38 2018 -0500
 
-    PVP Skin
-    
-    Issue #125
-
-commit f90967b9fb6324d79b590bd3422a841abd2fe57a
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sun Jul 29 07:05:05 2018 -0500
-
-    PVP Skin
-    
-    Issue #125
-
-commit d29bd52deeb84d6f72d1f02e3164c0cffe53e69c
-Author: Paweł Jastrzębski <pawelj@iosphe.re>
-Date:   Sun Jul 29 10:35:26 2018 +0200
-
-    Skins moved to addon
-
-commit ad550e5ada7589eb15e9a57574a898c56958d689
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sun Jul 29 01:10:20 2018 -0500
-
-    WorldMap
+    Bug Report Frame
 
