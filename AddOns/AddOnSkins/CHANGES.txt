@@ -1,16 +1,28 @@
-lightweight tag 1e2ab56b669f8109d5b21355b5b2c54ca4f4e73c 3.87
+lightweight tag 6eb961363882bccae96c4463a7fcb33271ab5e58 3.90
 Author:	Michael James <darktemplar9900@yahoo.com>
-Date:	Sun Aug 12 20:00:45 2018 -0500
+Date:	Fri Aug 17 22:39:03 2018 -0500
 
-commit 1e2ab56b669f8109d5b21355b5b2c54ca4f4e73c
+commit 6eb961363882bccae96c4463a7fcb33271ab5e58
 Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sun Aug 12 20:00:45 2018 -0500
+Date:   Fri Aug 17 22:39:03 2018 -0500
 
-    3.87
+    3.90
 
-commit 591347645910ad04f3d8ec0a9eddcf0a952d7685
+commit cef5e3b22cc875ea18454e85e7f8c6da239f88a9
 Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sun Aug 12 19:55:38 2018 -0500
+Date:   Fri Aug 17 22:38:36 2018 -0500
 
-    Bug Report Frame
+    Re-enable AAP
+
+commit 375ce85c94281d746071401866b33db65fb4f1a1
+Author: Michael James <darktemplar9900@yahoo.com>
+Date:   Thu Aug 16 21:29:38 2018 -0500
+
+    Fix AddOn Detection / Versioning
+
+commit 9f744b925238708004c62ed5703a872e300338c6
+Author: Michael James <darktemplar9900@yahoo.com>
+Date:   Wed Aug 15 19:40:51 2018 -0500
+
+    AAP
 

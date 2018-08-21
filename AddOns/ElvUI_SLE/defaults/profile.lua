@@ -488,6 +488,7 @@ P["sle"] = {
 			["fontSize"] = 12,
 			["fontOutline"] = "OUTLINE",
 			["throttle"] = 0.2,
+			["color"] = {r = 1,g = 1,b = 1},
 		},
 		["buttons"] = {
 			["anchor"] = "NOANCHOR",
@@ -776,6 +777,7 @@ P["sle"] = {
 					["enable"] = false,
 					["xoffset"] = 0,
 					["yoffset"] = 0,
+					["level"] = true,
 				},
 				["auras"] = {
 					["buffs"] = {
@@ -815,6 +817,9 @@ P["sle"] = {
 			["target"] = {
 				["higherPortrait"] = false,
 				["portraitAlpha"] = 0.35,
+				["pvpIconText"] = {
+					["level"] = true,
+				},
 				["auras"] = {
 					["buffs"] = {
 						["threshold"] = 4,

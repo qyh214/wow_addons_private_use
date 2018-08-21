@@ -100,6 +100,17 @@ local function OnLeave(self)
 	end
 end
 
+function MB:ResetGarrisonSize()
+	local garrisonType = C_Garrison.GetLandingPageGarrisonType();
+	if garrisonType == 9 then 
+		GarrisonLandingPageMinimapButton:Size(E.minimapbuttons.db.buttonSize);
+	else
+		MB:UnregisterEvent("ZONE_CHANGED_NEW_AREA");
+		MB:UnregisterEvent("ZONE_CHANGED");
+		MB:UnregisterEvent("ZONE_CHANGED_INDOORS");
+	end
+end
+
 function MB:SkinButton(frame)
 	if not E.minimapbuttons.db.mbcalendar then
 		table.insert(ignoreButtons, "GameTimeFrame")
@@ -131,8 +142,9 @@ function MB:SkinButton(frame)
 	if name ~= "GarrisonLandingPageMinimapButton" then 
 		frame:SetPushedTexture(nil)
 		frame:SetDisabledTexture(nil)
+		frame:SetHighlightTexture(nil)
 	end
-	frame:SetHighlightTexture(nil)
+	--frame:SetHighlightTexture(nil)
 	
 	if name == "DBMMinimapButton" then frame:SetNormalTexture("Interface\\Icons\\INV_Helmet_87") end
 	if name == "SmartBuff_MiniMapButton" then frame:SetNormalTexture(select(3, GetSpellInfo(12051))) end
@@ -232,7 +244,7 @@ function MB:UpdateLayout()
 	else
 		MB:UnregisterEvent("PLAYER_REGEN_ENABLED")
  	end
-	
+
 	local direction = E.minimapbuttons.db.layoutDirection == 'NORMAL'
 	local offset = direction and -2 or 2
 
@@ -350,12 +362,9 @@ end
 
 function MB:CreateFrames()
 	minimapButtonBarAnchor = CreateFrame("Frame", "MinimapButtonBarAnchor", E.UIParent)
-	
-	--if E.db.auras.consolidatedBuffs.enable then
-	--	minimapButtonBarAnchor:Point("TOPRIGHT", ElvConfigToggle, "BOTTOMRIGHT", 0, -2)
-	--else
+
 	minimapButtonBarAnchor:Point("TOPRIGHT", RightMiniPanel, "BOTTOMRIGHT", 0, -2)
-	--end
+
 	minimapButtonBarAnchor:Size(200, 32)
 	minimapButtonBarAnchor:SetFrameStrata("BACKGROUND")
 	
@@ -380,6 +389,12 @@ function MB:Initialize()
 	E.minimapbuttons.db = E.private.general.minimapbar
 
 	if not E.minimapbuttons.db.skinButtons then return end
+
+	if E.minimapbuttons.db.mbgarrison then
+		MB:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ResetGarrisonSize");
+		MB:RegisterEvent("ZONE_CHANGED", "ResetGarrisonSize");
+		MB:RegisterEvent("ZONE_CHANGED_INDOORS", "ResetGarrisonSize");
+	end
 
 	self:CreateFrames()
 end

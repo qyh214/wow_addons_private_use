@@ -1,0 +1,60 @@
+commit 3e0b37a1e09985e4e3937bbeb43b15cc67589089
+Author: fuba <q3fuba@hotmail.de>
+Date:   Thu Aug 2 14:38:38 2018 +0200
+
+    Updated .pkgmeta
+
+commit fe5daa42c5e5857d89d78992252c31c20318c797
+Author: fuba <41425685+fubaBfA@users.noreply.github.com>
+Date:   Thu Aug 2 14:09:55 2018 +0200
+
+    Update README.md
+
+commit 69f90d68c2b703faa8d7053394f325abb7492cdd
+Author: fuba <41425685+fubaBfA@users.noreply.github.com>
+Date:   Thu Aug 2 14:09:13 2018 +0200
+
+    Update README.md
+
+commit 0e1f2470910682233b1e337ac297afba2b2612bd
+Author: fuba <q3fuba@hotmail.de>
+Date:   Thu Aug 2 13:22:56 2018 +0200
+
+    Updated TOC
+
+commit 15a04b881a943919567c6f77fedec38cc7369d34
+Author: fuba <41425685+fubaBfA@users.noreply.github.com>
+Date:   Thu Aug 2 13:20:00 2018 +0200
+
+    Update README.md
+
+commit f6616a21d57bc3274e1a7ca786f8f51a76d3055e
+Author: fuba <41425685+fubaBfA@users.noreply.github.com>
+Date:   Thu Aug 2 13:19:52 2018 +0200
+
+    Update README.md
+
+commit 3b9512353d4e0ee6e6159502b3ae1e62e723fa46
+Author: fuba <41425685+fubaBfA@users.noreply.github.com>
+Date:   Thu Aug 2 13:19:21 2018 +0200
+
+    Update README.md
+
+commit 93c24df1f008b4092ff7f51f02539b847f28f207
+Author: fuba <41425685+fubaBfA@users.noreply.github.com>
+Date:   Thu Aug 2 13:18:11 2018 +0200
+
+    Update README.md
+
+commit 96875de791e27132b391c5c9ccb55a1a55f425ca
+Author: fuba <q3fuba@hotmail.de>
+Date:   Tue Jul 24 13:01:08 2018 +0200
+
+    Initial Release
+
+commit 0720447d46a7ba48d8a879f28a5f181388cadaf7
+Author: fuba <q3fuba@hotmail.de>
+Date:   Tue Jul 24 12:56:49 2018 +0200
+
+    Initial commit
+

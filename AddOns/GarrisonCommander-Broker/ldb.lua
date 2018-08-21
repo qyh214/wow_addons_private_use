@@ -70,9 +70,11 @@ local GARRISON_CACHE=GARRISON_CACHE
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
 local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0
+local LE_FOLLOWER_TYPE_GARRISON_8_0=_G.LE_FOLLOWER_TYPE_GARRISON_8_0
 local LE_GARRISON_TYPE_6_0=_G.LE_GARRISON_TYPE_6_0
 local LE_GARRISON_TYPE_6_2=_G.LE_GARRISON_TYPE_6_2
 local LE_GARRISON_TYPE_7_0=_G.LE_GARRISON_TYPE_7_0
+local LE_GARRISON_TYPE_8_0=_G.LE_GARRISON_TYPE_8_0
 local dbversion=1
 local frequency=5
 local ldbtimer=nil
@@ -611,6 +613,7 @@ function dataobj:OnTooltipShow()
 					followerType=tonumber(followerType) or LE_FOLLOWER_TYPE_GARRISON_6_0
 					local name= (followerType==LE_FOLLOWER_TYPE_SHIPYARD_6_2) and C(G.GetMissionName(missionID),"cyan") or
 									(followerType==LE_FOLLOWER_TYPE_GARRISON_7_0) and C(G.GetMissionName(missionID),"epic") or
+                  (followerType==LE_FOLLOWER_TYPE_GARRISON_8_0) and C(G.GetMissionName(missionID),"blue") or
 									G.GetMissionName(missionID)
 					if name then
 						if not remove and pc==ns.me then

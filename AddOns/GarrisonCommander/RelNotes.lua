@@ -22,11 +22,20 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(2,19,0,[[
+Feature: Addon can no longer log out the game. No workaround found, so Autologout and logout were removed
+]])
+self:RelNotes(2,18,10,[[
+Fix:Removes hookedbutton chat spam
+]])
+self:RelNotes(2,18,9,[[
+Fix: Message: ...rface\AddOns\GarrisonCommander\GarrisonCommander.lua:3158: attempt to index local 'module' (a nil value)
+]])
 self:RelNotes(2,18,5,[[
-Fix: OrderHallCommander advertising removed. I still stronlgy suggest to install it because Order Hall support in GC is totally outdated  
+Fix: OrderHallCommander advertising removed. I still stronlgy suggest to install it because Order Hall support in GC is totally outdated
 ]])
 self:RelNotes(2,18,4,[[
-Fix: Error when playing sounds 
+Fix: Error when playing sounds
 ]])
 self:RelNotes(2,18,2,[[
 Fix: Message: Interface\AddOns\GarrisonCommander\FollowerCache.lua:25: attempt to perform arithmetic on local 'GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY' (a table value)
@@ -43,14 +52,14 @@ self:RelNotes(2,17,0,[[
 Feature: Fast mode: if you keep the CTRL key pressed while opening the mission table, GC automagically completes pending mission and schedule new ones
 Feature: Fast mode works for both Garrison and Shipyard mission
 Feature: On auto logout informs you if you have items to salvage
-Feature: No longer includes OrderHallCommander: be sure you added it to Curse Client or manually update it 
-Fix: Lua error when trying to close header in Order Hall if OrderHallCommander was not installed 
+Feature: No longer includes OrderHallCommander: be sure you added it to Curse Client or manually update it
+Fix: Lua error when trying to close header in Order Hall if OrderHallCommander was not installed
 ]])
 self:RelNotes(2,16,1,[[
 Fix: Mission control was reusing followers
 Feature: Option to always fill Oil Rig mission when available
-Feature: Blockade Missions are always enabled when needed 
-Feature: OrderHallCommander 1.0.0 
+Feature: Blockade Missions are always enabled when needed
+Feature: OrderHallCommander 1.0.0
 ]])
 self:RelNotes(2,16,0,[[
 Feature: Mission control added to Shipyard. Send your naval mission with one click!

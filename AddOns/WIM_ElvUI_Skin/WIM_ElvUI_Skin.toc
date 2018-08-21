@@ -1,0 +1,11 @@
+## Interface: 80000
+## Title: WIM - ElvUI Skin
+## Version: 80000.01-Release
+## Author: fuba
+## Original Author: Divico / Alleria EU
+## Notes: A simple skin matching the Design of Elvui
+## Dependencies: WIM
+
+# Core files
+skin.xml
+skin.lua

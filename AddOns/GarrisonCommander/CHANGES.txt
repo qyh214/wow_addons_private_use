@@ -1,15 +1,18 @@
-tag 38384f854f3eef8ce28310078db1b0fca7a778f1 2.18.8
+tag 657b4c12d33ce902e9d4af86ff9486dbbb2ef927 2.19.0
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Wed Aug 1 13:11:51 2018 +0200
+Date:	Fri Aug 17 13:27:19 2018 +0200
 
-Fixed lua error
+Removed autologout function (no longer allowed from Blizzard)
 
-commit 04a271003a0bbcb740aecce240b6e9603f73733e
+commit f87acf58dc4e774da8ae1f13d8f7156eae4f664a
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Wed Aug 1 13:10:53 2018 +0200
+Date:   Fri Aug 17 13:24:35 2018 +0200
 
-    Lua error fixed
-    
-    1x [string "return GetMonthInfo(6)"]:1: attempt to call global
-    'GetMonthInfo' (a nil value)
+    rel notes
+
+commit 6cd27752bcf4554792b300e52b556a8b967f5324
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Fri Aug 17 13:21:27 2018 +0200
+
+    Logout can no longer be called by addons
 

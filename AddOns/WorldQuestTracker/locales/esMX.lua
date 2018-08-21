@@ -30,8 +30,6 @@ L["S_GROUPFINDER_ACTIONS_WAITING"] = "Esperando..."
 L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = "Auto Abrir al Seleccionar un Mob Raro"
 L["S_GROUPFINDER_ENABLED"] = "Auto Abrir en Misión de Mundo Nueva"
 --[[Translation missing --]]
---[[ L["S_GROUPFINDER_INVASION_ENABLED"] = ""--]] 
---[[Translation missing --]]
 --[[ L["S_GROUPFINDER_LEAVEOPTIONS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = ""--]] 

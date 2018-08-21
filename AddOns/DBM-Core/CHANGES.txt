@@ -1,89 +1,33 @@
-tag 6772f991ae6cfcef97a89ca05b0deab8c2106ae6 8.0.1
+tag 651f41e9cdaf6f2c263b92c7846eda325711dbce 8.0.3
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Sun Jul 22 22:14:06 2018 +0200
+Date:	Wed Aug 15 23:24:35 2018 +0200
 
-Tagging as 8.0.1
+Tagging as 8.0.3
 
-commit ab2eccb3c1de64594f07e566fa3b3fb4314a02df
+commit 53200dabfd7c42204604af26d92f2a8acb9e8dfd
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Jul 22 22:14:06 2018 +0200
+Date:   Wed Aug 15 23:24:35 2018 +0200
 
-    increment version number to 8.0.1
+    increment version number to 8.0.3
 
-commit a988a5ea6eb94a6f4fff04e517f29b2b3cf63ff5
+commit da6bbbde85681e4c477d6ed5966f9a2e41c48827
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Jul 22 21:40:44 2018 +0200
+Date:   Wed Aug 15 23:09:36 2018 +0200
 
-    Omega via svn r17635:
-    Fix another bad case of bad registered event
+    Omega via svn r17699:
+    remove return on DBM-LDB check. It wasn?\226?\128?\153t supposed to be an abort, just a warning.
 
-commit dc5bb7b1672451bb0d4aa59027d7be278473eb90
+commit a0f04625c1a1a8089addcd006616003505696a26
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jul 21 23:03:26 2018 +0200
+Date:   Wed Aug 15 20:54:28 2018 +0200
 
-    Omega via svn r17634:
-    Do it more efficiently and also consider a level 120 while at it
+    Omega via svn r17698:
+    More library nil checks. I don?\226?\128?\153t know why peoples libraries are missing but need to act as if they all are.
 
-commit f79d630e97b037597fd08ef1afda297d484ce6c4
+commit 7839e5b8d50a5c96321b4dc9b831a31bc5ce4cff
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jul 21 22:59:38 2018 +0200
+Date:   Tue Aug 14 21:54:26 2018 +0200
 
-    Omega via svn r17633:
-    Tone down stack warnings on krosus with post nerfs, especially in LFR where you can solo tank anyways.
-
-commit 835dd50505c8093e3cfe40bcde2ceeeaded55979
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Jul 21 21:50:26 2018 +0200
-
-    Omega via svn r17632:
-    update to latest CallbackHandler
-
-commit 3e50de67da575873c3c84a56a0a4741bda977bab
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jul 20 03:38:47 2018 +0200
-
-    Omega via svn r17631:
-    Fix lua error with Calendar Date in brewfest mod
-
-commit 9b6760fd782660ebbafa8d357472494d183e0402
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Jul 20 01:30:21 2018 +0200
-
-    Omega via svn r17630:
-    Fixed some errors in kara
-
-commit ddc709baf1874cc139c655f398202bba3f2eb4e2
-Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Jul 19 06:12:51 2018 +0200
-
-    Omega via svn r17629:
-    Fix a bug where PARTY_KILL would be registered as a regular event instead of CLEU event
-
-commit f1b6a563947e4686dc2134d7b4820031c90e1049
-Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Jul 19 05:30:13 2018 +0200
-
-    Omega via svn r17628:
-    fix elisande error
-
-commit 8063d1699965622683e6bfc2528ac25c774edf00
-Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Jul 19 05:25:20 2018 +0200
-
-    Omega via svn r17627:
-    Remove invalid spell
-
-commit 65dab7c8e1c5b5a8d333b01c91ca6c06fa9a60b3
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Jul 18 00:58:27 2018 +0200
-
-    Omega via svn r17626:
-    Mac client supports low lighting now
-
-commit d1f34c8be76dc71e9abba2dd88291bf96384f308
-Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Jul 17 15:18:42 2018 +0200
-
-    tandanu via svn r17625:
+    tandanu via svn r17697:
     increment alpha version
 

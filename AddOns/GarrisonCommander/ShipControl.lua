@@ -90,7 +90,7 @@ end
 -- Builds a mission list based on user preferences
 -- @param #module self self
 -- @param #table workList table to be filled with mission list
--- 
+--
 function module:CreateMissionList(workList)
 	local ar=settings.allowedRewards
 	wipe(priority)
@@ -113,7 +113,7 @@ function module:CreateMissionList(workList)
 			if missionID==OILRIG and settings.rig then
 				self:AcceptMission(missionID,class,10,name,choosenby)
 				break
-			end		
+			end
 			if class=='blockade' then
 				self:AcceptMission(missionID,class,10,name,choosenby)
 				break
@@ -179,7 +179,7 @@ function module:RunMission(missionID,start)
 	if (start) then
 		G.StartMission(missionID)
 		PlaySound(SOUNDKIT.UI_GARRISON_COMMAND_TABLE_MISSION_START)
-		
+
 		addon:RefreshFollowerStatus()
 		return
 	end
@@ -288,7 +288,7 @@ do
 							party.perc=0
 							party.full=nil
 							self:MCMatchMaker(missionID,party,false,100)
-						end	 
+						end
 					end
 					--[===[@debug@
 					print(missionID,"  Accepted",party.perc,minimumChance)
@@ -317,7 +317,7 @@ end
 function module:OnClick_Run(this,button)
 	local GMC=GSF.MissionControlTab
 	this:Disable()
-	GMC.logoutButton:Disable()
+	--GMC.logoutButton:Disable()
 	do
 		local elapsed=0
 		local co=coroutine.wrap(self.RunMission)
@@ -329,7 +329,7 @@ function module:OnClick_Run(this,button)
 				local rc=co(self)
 				if (not rc) then
 					self:Unhook(GMC.runButton,'OnUpdate')
-					GMC.logoutButton:Enable()
+					--GMC.logoutButton:Enable()
 					if not ns.quick and addon:GetBoolean("SAUTOLOGOUT") then
 						addon:LogoutPopup(5)
 					end
@@ -686,7 +686,7 @@ local function clone(from,to)
 end
 function module:RefreshConfig(event)
 	settings=addon.db.profile.shipControl
-	classlist=settings.rewardList	
+	classlist=settings.rewardList
 	addon:RefreshConfig(event,settings,nil,classlist,class2order,LE_FOLLOWER_TYPE_SHIPYARD_6_2)
 	if event ~="Init" then -- Initialization routine, we cant design yet
 		drawItemButtons()
@@ -796,7 +796,7 @@ function module:BuildFlags()
 	addon:AddToggle("SAUTOLOGOUT",false,L["Auto Logout"],L["Automatically logout after sending missions"])
 	addon:Trigger('SGCMINLEVEL')
 	addon:Trigger('SGCSKIPEPIC')
-	
+
 end
 function module:BuildDuration()
 	-- Duration
@@ -861,7 +861,7 @@ function module:BuildMissionList()
 	ml.widget:Show()
 	GMC.startButton = CreateFrame('BUTTON',nil,  ml.widget.frame, 'GameMenuButtonTemplate')
 	GMC.startButton:SetText('Calculate')
-	GMC.startButton:SetWidth(148)
+	GMC.startButton:SetWidth(200)
 	GMC.startButton:SetPoint('TOPLEFT',10,25)
 	GMC.startButton:SetScript('OnClick', function(this,button) self:OnClick_Start(this,button) end)
 	GMC.startButton:SetScript('OnEnter', function() GameTooltip:SetOwner(GMC.startButton, 'ANCHOR_TOPRIGHT') GameTooltip:AddLine('Assign your followers to missions.') GameTooltip:Show() end)
@@ -875,20 +875,20 @@ function module:BuildMissionList()
 		GameTooltip:Show()
 	end)
 	GMC.runButton:SetScript('OnLeave', function() GameTooltip:Hide() end)
-	GMC.runButton:SetWidth(148)
+	GMC.runButton:SetWidth(200)
 	GMC.runButton:SetScript('OnClick',function(this,button) self:OnClick_Run(this,button) end)
 	GMC.runButton:Disable()
 	GMC.runButton:SetPoint('TOPRIGHT',-10,25)
-	GMC.logoutButton=CreateFrame('BUTTON', nil,ml.widget.frame, 'GameMenuButtonTemplate')
-	GMC.logoutButton:SetText(LOGOUT)
-	GMC.logoutButton:SetWidth(ns.bigscreen and 148 or 90)
-	GMC.logoutButton:SetScript("OnClick",function()
-		GSF:Hide()
-		module:Popup(LOGOUT)
-		module:ScheduleTimer(Logout,0.5)
-		end
-	)
-	GMC.logoutButton:SetPoint('TOP',0,25)
+	--GMC.logoutButton=CreateFrame('BUTTON', nil,ml.widget.frame, 'GameMenuButtonTemplate')
+	--GMC.logoutButton:SetText(LOGOUT)
+	--GMC.logoutButton:SetWidth(ns.bigscreen and 148 or 90)
+	--GMC.logoutButton:SetScript("OnClick",function()
+	--	GSF:Hide()
+	--	module:Popup(LOGOUT)
+	--	module:ScheduleTimer(Logout,0.5)
+	--	end
+	--)
+	--GMC.logoutButton:SetPoint('TOP',0,25)
 	return ml
 end
 

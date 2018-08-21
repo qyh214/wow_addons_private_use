@@ -25,7 +25,7 @@ local SOUNDKIT = SOUNDKIT
 
 function PvP:Release()
 	local resOptions = GetSortedSelfResurrectOptions()
-	if (PvP.db.rebirth and not resOptions[1]) or not PvP.db.rebirth then print("Should repop") RepopMe() end
+	if (PvP.db.rebirth and not resOptions[1]) or not PvP.db.rebirth then RepopMe() end
 end
 
 function PvP:Dead()
@@ -93,10 +93,6 @@ function PvP:Initialize()
 	PvP.ScoreWidget:ClearAllPoints()
 	PvP.ScoreWidget:SetPoint("CENTER", PvP.holder)
 
-	hooksecurefunc(UIWidgetManager.registeredWidgetSetContainers[2], "layoutFunc", function(widgetContainer, sortedWidgets)
-		widgetContainer:ClearAllPoints()
-		widgetContainer:SetPoint("TOP", PvP.ScoreWidget, "BOTTOM", 0, -10)
-	end)
 	E:CreateMover(PvP.holder, "PvPMover", "PvP", nil, nil, nil, "ALL,S&L,S&L MISC")
 
 	self:RegisterEvent("DUEL_REQUESTED", "Duels")

@@ -198,9 +198,12 @@ local function SetupTutorials()
 			shineRight = 6,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.0.3|r\n\n"..
-					"- UPDATED - Lib - MSA-DropDownMenu-1.0."..
-					offs.."Now these errors gone: "..cBold.."Deferred XML Node object named ..... already exists|r\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.0.4|r\n\n"..
+					"- UPDATED - Achievements - Zone filter for \"Battle for Azeroth\".\n"..
+					"- UPDATED - Quest item buttons - some improvements.\n"..
+					"- UPDATED - Active button - range was increased from 150 to 175 sq yards.\n"..
+					"- UPDATED - Filters - Auto Zone Quests - stops showing messages of Completed"..
+					offs.."quests, when change zone or track new quest etc.\n\n"..
 
 					cTitle.."Note|r\n"..
 					"Support of addon TomTom is still temporarily disabled. I'm working on the update.\n\n"..

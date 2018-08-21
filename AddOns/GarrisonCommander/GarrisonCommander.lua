@@ -282,12 +282,12 @@ local sorters={
 		Garrison_SortMissions_Chance=function(mission)
 			local p=addon:GetParty(mission.missionID)
 			if not p.full then return 0 end
-			return -p.perc or 0 
+			return -p.perc or 0
 		end,
-		Garrison_SortMissions_Level=function(mission) 
+		Garrison_SortMissions_Level=function(mission)
 			return -mission.level * 1000 - (mission.iLevel or 0)
 		end,
-		Garrison_SortMissions_Age=function(mission) 
+		Garrison_SortMissions_Age=function(mission)
 			return addon:GetMissionData(mission.missionID,'offerEndTime',0)
 		end,
 		Garrison_SortMissions_Xp=function(mission)
@@ -300,12 +300,12 @@ local sorters={
 			return addon:GetMissionData(mission.missionID,'improvedDurationSeconds',0)
 		end,
 		Garrison_SortMissions_Class=function(mission)
-			return addon:GetMissionData(mission.missionID,'class','other')		
+			return addon:GetMissionData(mission.missionID,'class','other')
 		end,
 		Garrison_SortMissions_Followers=function(mission)
 			return addon:GetMissionData(mission.missionID,'numFollowers',1)
 		end,
-		
+
 }
 local function sortfuncProgress(a,b)
 	return a.timeLeftSeconds < b.timeLeftSeconds
@@ -388,7 +388,8 @@ function addon:OnInitialized()
 	ns.custom={
 		[LE_FOLLOWER_TYPE_GARRISON_6_0]=addon,
 		[LE_FOLLOWER_TYPE_SHIPYARD_6_2]=self:GetModule("ShipYard"),
-		[LE_FOLLOWER_TYPE_GARRISON_7_0]=self:GetModule("OrderHall"),
+		--[LE_FOLLOWER_TYPE_GARRISON_7_0]=self:GetModule("OrderHall"),
+    --[LE_FOLLOWER_TYPE_GARRISON_8_0]=self:GetModule("BFA"),
 
 	}
 	self:SafeRegisterEvent("GARRISON_MISSION_COMPLETE_RESPONSE")
@@ -1170,7 +1171,7 @@ function addon:CreateHeader(module,MOVEPANEL,PIN)
 	local _,minor=LibStub("LibInit")
 	local LL=LibStub("AceLocale-3.0"):GetLocale("LibInit" .. minor,true)
 	self:MarkAsNew(GCF,self:NumericVersion(),LL["Release notes"] .. ' ' .. self.version,"Help")
-	
+
 --[===[@alpha@
 	GCF.Warning:SetText("Alpha Version")
 --@end-alpha@]===]
@@ -1247,7 +1248,7 @@ function addon:CreateHeader(module,MOVEPANEL,PIN)
 	GCF:RegisterForDrag("LeftButton")
 --@non-debug@
 	GCF:SetScript("OnDragStart",function(frame) print(MOVEPANEL,self:GetBoolean(MOVEPANEL)) if self:GetBoolean(MOVEPANEL) then frame:StartMoving() end end)
---@end-non-debug@	
+--@end-non-debug@
 --[===[@debug@
 	GCF:SetScript("OnDragStart",function(frame) print(self,MOVEPANEL,self:GetBoolean(MOVEPANEL)) frame:StartMoving() end)
 --@end-debug@]===]
@@ -1569,7 +1570,7 @@ print("Setup")
 	local tabQ=CreateFrame("Button",nil,GMF,"SpellBookSkillLineTabTemplate")
 	GMF.tabQ=tabQ
 	tabQ.tooltip=L["Automatically process completed missions and schedules new ones."].."\n"..
-		format(L["Check %s in mission control in order to be also logged out"],L["Auto Logout"]) .. "\n" .. 
+		format(L["Check %s in mission control in order to be also logged out"],L["Auto Logout"]) .. "\n" ..
 		C(format(L["Keep pressed %s while opening table to automate processing"],CTRL_KEY),"green")
 	tabQ:SetNormalTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
 	tabQ:SetPushedTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
@@ -1759,7 +1760,7 @@ function addon:ScriptGarrisonMissionFrame_OnShow(...)
 	if IsControlKeyDown() then
 		self:EnableAutoLogout()
 		self:ScheduleTimer("RunQuick",0.1,true)
-	end	
+	end
 	self:RawHook(GMFMissions,"UpdateMissions","OnUpdateMissions",true)
 	GMFMissions:Update()
 	return self:RefreshMissions()
@@ -3155,6 +3156,9 @@ function addon:HookedGarrisonMissionButton_SetRewards(frame,rewards,numRewards)
 	collectgarbage("step",300)
 	local mission=frame.info
 	local module=self:GetMissionModule(mission.followerTypeID)
+	if not module then
+	 return
+	end
 	local main=module:GetMain()
 	if not main or not main:IsVisible() then return end
 	local Missions=module:GetMissions()
@@ -3266,15 +3270,15 @@ function addon:OnUpdateMissions()
 --[===[@debug@
 	local start=debugprofilestop()
 	addon:Print(C("OnUpdateMissions","GREEN"),GMFMissions:IsVisible(),GMFRewardSplash:IsVisible())
---@end-debug@	]===]
+--@end-debug@]===]
 	self:SecureHook("Garrison_SortMissions","SortMissions")
 
 	self.hooks[GMFMissions].UpdateMissions(GMFMissions)
-	self:Unhook("Garrison_SortMissions") 
+	self:Unhook("Garrison_SortMissions")
 --[===[@debug@
 	addon:Print(C("OnPostUpdateMissions","RED"),debugprofilestop()-start)
 --@end-debug@]===]
-	collectgarbage("collect")	
+	collectgarbage("collect")
 end
 
 --addon:SafeRawHook(GMF.MissionTab.MissionList.listScroll,"update","HookedGMFMissionsListScroll_update")

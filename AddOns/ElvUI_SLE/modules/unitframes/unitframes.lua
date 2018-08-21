@@ -5,6 +5,8 @@ local RC = LibStub("LibRangeCheck-2.0")
 --GLOBALS: hooksecurefunc, CreateFrame
 local _G = _G
 local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
+local UnitHonorLevel = UnitHonorLevel
+local UnitIsPVP = UnitIsPVP
 
 function SUF:NewTags()
 	_G["ElvUF"].Tags.Events['health:current:sl-rehok'] = 'UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_CONNECTION PLAYER_FLAGS_CHANGED'
@@ -80,6 +82,12 @@ function SUF:NewTags()
 		else
 			return ""
 		end
+	end
+	
+	_G["ElvUF"].Tags.Events['sl:pvplevel'] = "HONOR_LEVEL_UPDATE PLAYER_FLAGS_CHANGED"
+	_G["ElvUF"].Tags.Methods['sl:pvplevel'] = function(unit)
+		-- if unit ~= "target" and unit ~= "player" then return "" end
+		return (UnitIsPVP(unit) and UnitHonorLevel(unit) > 0) and UnitHonorLevel(unit) or ""
 	end
 end
 

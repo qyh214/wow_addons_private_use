@@ -38,8 +38,6 @@ L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = "Lasciare l'attuale gruppo e cercarne u
 --[[Translation missing --]]
 --[[ L["S_GROUPFINDER_ENABLED"] = ""--]] 
 --[[Translation missing --]]
---[[ L["S_GROUPFINDER_INVASION_ENABLED"] = ""--]] 
---[[Translation missing --]]
 --[[ L["S_GROUPFINDER_LEAVEOPTIONS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = ""--]] 
