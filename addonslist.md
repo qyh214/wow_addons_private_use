@@ -10,7 +10,7 @@ AdvancedInterfaceOptions 额外界面设置
 
 AngryKeystones 大秘境钥石插件
 
-Auctionator AH拍卖行增强插件
+AuctionLite AH拍卖行增强插件
 
 BlizzMove 暴雪系统窗体移动
 
@@ -27,6 +27,12 @@ ElvUI ElvUI整合界面插件
 ElvUI_Enhanced ElvUI增强插件
 
 ElvUI_SLE  ElvUI增强插件shadow & light（与addonskins or ElvUI_Enhanced互斥）
+
+ELvUI_wimskin
+
+ElvUI_BagFilter
+
+ElvUI_WindTools
 
 ExRT 团队插件
 

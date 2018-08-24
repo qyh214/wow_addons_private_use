@@ -7,7 +7,6 @@ hooksecurefunc(UF, "Update_TargetFrame", function(self, frame, db)
 	--GPS
 	local gps = frame.gps
 	if not gps then return end
-	
 	if gpsRestricted == true then
 		if (gps.timer) then
 			UF:CancelTimer(gps.timer)

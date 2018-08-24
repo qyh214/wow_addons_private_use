@@ -92,12 +92,12 @@ local function SetupTutorials()
 			text = cTitle.."Quest title tags|r\n\n"..
 					"At the start of quest titles you see tags like this |cffff8000[100|cff00b3ffhc!|cffff8000]|r.\n"..
 					"Tags are also in quest titles inside Quest Log.\n\n"..
-					"|cff00b3ff!|r|T:14:3|t "..cDots..".......|r Daily quest|T:14:98|t|cff00b3ffr|r "..cDots..".......|r Raid quest\n"..
-					"|cff00b3ff!!|r "..cDots.."......|r Weekly quest|T:14:83|t|cff00b3ffr10|r "..cDots.."...|r 10-man raid quest\n"..
-					"|cff00b3ffg|r "..cDots..".......|r Group quest|T:14:89|t|cff00b3ffr25|r "..cDots.."...|r 25-man raid quest\n"..
-					"|cff00b3ffpvp|r "..cDots.."...|r PvP quest|T:14:109|t|cff00b3ffs|r "..cDots..".......|r Scenario quest\n"..
-					"|cff00b3ffd|r "..cDots..".......|r Dungeon quest|T:14:72|t|cff00b3ffa|r "..cDots..".......|r Account quest\n"..
-					"|cff00b3ffhc|r "..cDots..".....|r Heroic quest|T:14:88|t|cff00b3ffleg|r "..cDots.."....|r Legendary quest",
+					"|cff00b3ff!|r|T:14:3|t "..cDots..".......|r Daily quest|T:14:122|t|cff00b3ffr|r "..cDots..".......|r Raid quest\n"..
+					"|cff00b3ff!!|r "..cDots.."......|r Weekly quest|T:14:108|t|cff00b3ffr10|r "..cDots.."...|r 10-man raid quest\n"..
+					"|cff00b3ffg3|r "..cDots..".....|r Group quest w/ group size|T:14:22|t|cff00b3ffr25|r "..cDots.."...|r 25-man raid quest\n"..
+					"|cff00b3ffpvp|r "..cDots.."...|r PvP quest|T:14:133|t|cff00b3ffs|r "..cDots..".......|r Scenario quest\n"..
+					"|cff00b3ffd|r "..cDots..".......|r Dungeon quest|T:14:97|t|cff00b3ffa|r "..cDots..".......|r Account quest\n"..
+					"|cff00b3ffhc|r "..cDots..".....|r Heroic quest|T:14:113|t|cff00b3ffleg|r "..cDots.."....|r Legendary quest",
 			shineTop = 10,
 			shineBottom = -9,
 			shineLeft = -12,
@@ -198,12 +198,16 @@ local function SetupTutorials()
 			shineRight = 6,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.0.4|r\n\n"..
-					"- UPDATED - Achievements - Zone filter for \"Battle for Azeroth\".\n"..
-					"- UPDATED - Quest item buttons - some improvements.\n"..
-					"- UPDATED - Active button - range was increased from 150 to 175 sq yards.\n"..
-					"- UPDATED - Filters - Auto Zone Quests - stops showing messages of Completed"..
-					offs.."quests, when change zone or track new quest etc.\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.1.0|r\n\n"..
+					"- FIXED - Quest - Sometimes show wrong number of quests (0/25) inside Quest"..
+					offs.."header.\n"..
+					"- ADDED - Find Group buttons.\n"..
+					"- ADDED - Suggested group size to group \"g\" tag.\n"..
+					"- ADDED - Compatibility - addon Dugi Questing Essential.\n"..
+					"- ADDED - Notification sounds.\n"..
+					"- ADDED - Media files to LibSharedMedia (textures, sounds).\n"..
+					"- UPDATED - Notification messages.\n"..
+					"- UPDATED - Zone filtering.\n\n"..
 
 					cTitle.."Note|r\n"..
 					"Support of addon TomTom is still temporarily disabled. I'm working on the update.\n\n"..

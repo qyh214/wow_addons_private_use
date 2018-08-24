@@ -1,7 +1,7 @@
-changeset:   303:3210fd44fdb1
-tag:         v8.0.1.303
+changeset:   305:a608ca28bece
+tag:         v8.0.1.305
 user:        Tercio
-date:        Sun Aug 19 20:17:50 2018 -0300
-summary:     - Ticket #781: Fixed (can't compare gear).
+date:        Tue Aug 21 17:54:11 2018 -0300
+summary:     - Fixed tooltips in the Taxi frame.
 
 

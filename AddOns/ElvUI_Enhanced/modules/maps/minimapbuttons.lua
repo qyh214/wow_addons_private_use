@@ -101,6 +101,7 @@ local function OnLeave(self)
 end
 
 function MB:ResetGarrisonSize()
+	if InCombatLockdown() then return end
 	local garrisonType = C_Garrison.GetLandingPageGarrisonType();
 	if garrisonType == 9 then 
 		GarrisonLandingPageMinimapButton:Size(E.minimapbuttons.db.buttonSize);
@@ -108,6 +109,7 @@ function MB:ResetGarrisonSize()
 		MB:UnregisterEvent("ZONE_CHANGED_NEW_AREA");
 		MB:UnregisterEvent("ZONE_CHANGED");
 		MB:UnregisterEvent("ZONE_CHANGED_INDOORS");
+		MB:UnregisterEvent("GARRISON_SHOW_LANDING_PAGE");
 	end
 end
 
@@ -394,6 +396,7 @@ function MB:Initialize()
 		MB:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ResetGarrisonSize");
 		MB:RegisterEvent("ZONE_CHANGED", "ResetGarrisonSize");
 		MB:RegisterEvent("ZONE_CHANGED_INDOORS", "ResetGarrisonSize");
+		MB:RegisterEvent("GARRISON_SHOW_LANDING_PAGE", "ResetGarrisonSize");
 	end
 
 	self:CreateFrames()

@@ -1,12 +1,10 @@
-tag 88989b5e2bf199165b3073718c516b1c3bf38538 8.0-3
+lightweight tag c0a56103d1ff46259e491fc8748d9cb03b6a8651 8.0-5
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Wed Jul 18 21:48:22 2018 -0400
+Date:	Fri Aug 24 00:46:03 2018 -0400
 
-Frame: Probably fix Locked incorrectly being displayed
-
-commit 981a7ae69d6b233707cc3136005f969876ce1153
+commit c0a56103d1ff46259e491fc8748d9cb03b6a8651
 Author: Xuerian <xuerian@gmail.com>
-Date:   Wed Jul 18 21:47:59 2018 -0400
+Date:   Fri Aug 24 00:46:03 2018 -0400
 
-    Frame: Probably fix Locked incorrectly being displayed
+    Frame: Respect padding options when collapsing looted slots
 

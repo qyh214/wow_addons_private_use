@@ -1,0 +1,22 @@
+## Interface: 80000
+## Title: AuctionLite: Advanced Search
+## Version: 1.5.3
+## Author: Cybeloras of Aerie Peak
+## Notes: Provides advanced search capabilities to AuctionLite
+
+## RequiredDeps: AuctionLite
+## LoadWith: AuctionLite
+
+Locale\enUS.lua
+Locale\deDE.lua
+Locale\esES.lua
+Locale\esMX.lua
+Locale\frFR.lua
+Locale\koKR.lua
+Locale\ruRU.lua
+Locale\zhCN.lua
+Locale\zhTW.lua
+Locale\ptBR.lua
+
+AuctionLite_AdvSearch.xml
+AuctionLite_AdvSearch.lua

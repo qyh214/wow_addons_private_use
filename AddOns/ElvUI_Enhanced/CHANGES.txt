@@ -1,19 +1,21 @@
-tag 74896f3af8452c0c7f0d84ec54c2810ab092bf42 3.3.0-beta9
+tag 94d22344fee005199e0b510f379ac99b9a8de6c3 3.3.1-beta2
 Author:	Feraldin <nickbock@hoarder.bocky.nl>
-Date:	Tue Aug 21 01:07:46 2018 +0200
+Date:	Thu Aug 23 22:48:15 2018 +0200
 
-3.3.0-beta9
-* Partial Fix for https://github.com/nickbock/ElvUI_Enhanced_Again/issues/74 see issue for details.
+3.3.1-beta2
+* Fix for lua error when in instance. Issue https://github.com/nickbock/ElvUI_Enhanced_Again/issues/75
 
-commit 9654103c4401e5a65e1a892dd8fde4ec503f0d88
+commit 97b06e1b362098740287e0f675de604186be3509
 Author: Nick <git@bockmeulen.nl>
-Date:   Tue Aug 21 01:05:43 2018 +0200
+Date:   Thu Aug 23 22:47:02 2018 +0200
 
-    version update
+    changelog and version
 
-commit bc97405b4685abf2ec47c47da9cca60e82a2bbe9
+commit 5362d18da21891feaac46bbf66a0b5912d84f175
 Author: Nick <git@bockmeulen.nl>
-Date:   Tue Aug 21 01:04:36 2018 +0200
+Date:   Thu Aug 23 22:43:57 2018 +0200
 
-    fix #74 partially
+    update_elements.lua:35
+    
+    fixing issue #75
 

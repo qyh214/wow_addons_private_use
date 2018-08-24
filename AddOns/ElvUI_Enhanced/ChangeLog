@@ -1,3 +1,10 @@
+3.3.1-beta2
+* Fix for lua error when in instance. Issue https://github.com/nickbock/ElvUI_Enhanced_Again/issues/75
+
+3.3.1-beta1
+* Added WarResources datatext based on the classhall datatext from ElvUI
+* Extra fixing for garrison icon
+
 3.3.0-beta9
 * Partial Fix for https://github.com/nickbock/ElvUI_Enhanced_Again/issues/74 see issue for details.
 
