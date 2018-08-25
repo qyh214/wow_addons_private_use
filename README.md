@@ -42,4 +42,19 @@ ElvUI下载地址：https://www.tukui.org/download.php?ui=elvui&changelog
 
 自动截图插件：http://bbs.ngacn.cc/read.php?tid=7534350
 
+TinyInspect、Tiny系列：http://bbs.ngacn.cc/read.php?tid=10240957
+
+SimpleChat：http://bbs.ngacn.cc/read.php?tid=9633520
+
 其他单体插件可用curse客户端管理，curse客户端下载地址：https://www.curseforge.com/twitch-client
+
+## 一些有用的重要命令
+最远镜头距离：`/console cameraDistanceMaxZoomFactor 2.6`
+
+总是对比装备：`/console alwaysCompareItems 1`
+
+WTF：
+```
+SET overrideArchive "0"
+SET profanityFilter "0"
+```

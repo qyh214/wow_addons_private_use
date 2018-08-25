@@ -60,6 +60,8 @@ RelicInspector 圣物提示
 
 Skada伤害统计
 
+SimpleChat
+
 TellMeWhen
 
 TinyInspect 角色面板信息增强显示额外的装备展示、与TinyTooltip结合更好实现玩家等级显示
