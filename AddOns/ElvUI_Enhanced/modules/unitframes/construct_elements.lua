@@ -123,8 +123,8 @@ end
 
 function UF:checkGpsRestriction()
 	gpsRestricted, _ = IsInInstance()
-	UF:CreateAndUpdateUF("target")
-	UF:CreateAndUpdateUF("focus")
+	--UF:CreateAndUpdateUF("target")
+	--UF:CreateAndUpdateUF("focus")
 end
 
 local CF = CreateFrame('Frame')

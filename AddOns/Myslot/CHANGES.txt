@@ -1,0 +1,52 @@
+lightweight tag adcf66ddc9da50a9838057aa0516abad01f5f69d v5.2.6
+Author:	Boshi Lian <farmer1992@gmail.com>
+Date:	Wed Jul 25 23:06:41 2018 -0700
+
+commit adcf66ddc9da50a9838057aa0516abad01f5f69d
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Wed Jul 25 23:06:41 2018 -0700
+
+    make name to Myslot
+
+commit e5800b521ccf0af04b898ea8a3900be4286cb203
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Wed Jul 25 22:34:37 2018 -0700
+
+    remove sym lnk
+
+commit 66ea407336e6a79531d9afd4a71693f65c4b542b
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Wed Jul 25 22:25:50 2018 -0700
+
+    remote link to help build
+
+commit f69d1171c65fb9ed9587431fa56595942842cbce
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Wed Jul 25 22:20:17 2018 -0700
+
+    change space
+
+commit 3953b2d01861088e107fec04dfb5e6dc84c6a25a
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Wed Jul 25 22:14:25 2018 -0700
+
+    trigger build by changing meta
+
+commit 97950f17107b2319a60c4e4b45b8df0729767ac1
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Wed Jul 25 03:17:40 2018 -0700
+
+    bump build script ver
+
+commit ec1c723b881a7c33735683196177d8259d6852d0
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Tue Jul 24 16:57:38 2018 -0700
+
+    test new package syntax
+
+commit b646eef6605f6397ed9968b71cf3a8d5654df1b1
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Tue Jul 24 16:25:57 2018 -0700
+
+    update to new packing address
+

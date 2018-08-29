@@ -1,0 +1,61 @@
+### v1.1.6
+- [x] Fixed King's Rest for german clients
+
+### v1.1.5
+- [x] Fixed a major issue with locales wrongly creating a new table instead of replacing its values
+
+### v1.1.4
+- [x] Fixed some BfA dungeons for deDE locale
+- [x] Added license
+
+### v1.1.3
+- [x] Fixed wrong tooltip after previous fix
+
+### v1.1.2
+- [x] Fixed wrong boss count for Siege of Boralus
+
+### v1.1.1
+- [x] Fixed The Underrot for french clients
+
+### v1.1.0
+- [x] Added zhTW locale, thanks to BNSSNB
+- [x] Fixed Deadmines for french clients
+
+### v1.0.9
+- [x] Minor code changes
+
+### v1.0.8
+- [x] Added Azurethos to BfA World Bosses
+
+### v1.0.7
+- [x] Fixed Violet Hold for english clients
+
+### v1.0.6
+- [x] Fixed all dungeons of The Burning Crusade
+
+### v1.0.5
+- [x] Fixed wrong loop
+
+### v1.0.4
+- [x] Updated for Battle for Azeroth
+- [x] Tooltips are now sorted according to encounters
+- [x] Cleaned up code
+- [x] Initial release
+
+### v1.0.3
+- [x] Fixed Black Temple tracking for french clients
+- [x] Fixed AQ40 tracking for english clients
+
+### v1.0.2
+- [x] Fixed Black Temple tracking
+
+### v1.0.1
+- [x] Fixed some Worldbosses typos
+
+### v1.0.0
+- [x] Initial fork commit
+- [x] Fixed Sunwell, SSC and Tempest Keep tracking
+- [x] Added LFR tracking
+- [x] Added Worldbosses tracking
+- [x] Removed the timer of lockouts weekly reset
+- [x] New display for tooltips

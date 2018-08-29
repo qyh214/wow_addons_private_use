@@ -7,16 +7,17 @@ hooksecurefunc(UF, "Update_TargetFrame", function(self, frame, db)
 	--GPS
 	local gps = frame.gps
 	if not gps then return end
-	if gpsRestricted == true then
-		if (gps.timer) then
-			UF:CancelTimer(gps.timer)
-			gps.timer = nil
-		end
-		gps:Hide()
-	return
-	end
 
 	if db.gps.enable then
+		if gpsRestricted == true then
+			if (gps.timer) then
+				UF:CancelTimer(gps.timer)
+				gps.timer = nil
+			end
+			gps:Hide()
+			return
+		end
+
 		local x, y = UF:GetPositionOffset(db.gps.position)
 		gps:ClearAllPoints()
 		gps:Point(db.gps.position, frame.Health, db.gps.position, x, y)

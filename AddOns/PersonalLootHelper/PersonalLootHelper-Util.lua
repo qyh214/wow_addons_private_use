@@ -130,24 +130,24 @@ local function GetColoredMessage(message, color)
 end
 
 function PLH_SendBroadcast(message, isHighPriority)
-	SendChatMessage('<PLH>' .. message, GetBroadcastChannel(isHighPriority))
+	SendChatMessage('<PLH> ' .. message, GetBroadcastChannel(isHighPriority))
 end	
 
 function PLH_SendWhisper(message, person)
-	SendChatMessage('<PLH>' .. message, 'WHISPER', nil, person)
+	SendChatMessage('<PLH> ' .. message, 'WHISPER', nil, person)
 end
 
 function PLH_SendAlert(message)
-	print(GetColoredMessage('<PLH>', _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.GREEN_FONT_COLOR_CODE))
+	print(GetColoredMessage('<PLH> ', _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.GREEN_FONT_COLOR_CODE))
 end	
 
 function PLH_SendUserMessage(message)
-	print(GetColoredMessage('<PLH>', _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.LIGHTYELLOW_FONT_COLOR_CODE))
+	print(GetColoredMessage('<PLH> ', _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.LIGHTYELLOW_FONT_COLOR_CODE))
 end	
 
 function PLH_SendDebugMessage(message)
 	if PLH_PREFS[PLH_PREFS_DEBUG] then
-		print(GetColoredMessage('<PLH>', _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.GRAY_FONT_COLOR_CODE))
+		print(GetColoredMessage('<PLH> ', _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.GRAY_FONT_COLOR_CODE))
 	end		
 end	
 
@@ -190,6 +190,12 @@ function PLH_wait(waitType, delay, func, ...)
 	else
 		print('Bad types in PLH_wait')
 	end
+end
+
+function PLH_PreemptWait(waitType)
+	local waiting = #waitTables[waitType] ~= nil and #waitTables[waitType] > 0
+	waitTables[waitType] = {}
+	return waiting
 end
 
 --[[

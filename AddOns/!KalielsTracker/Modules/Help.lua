@@ -198,16 +198,13 @@ local function SetupTutorials()
 			shineRight = 6,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.1.0|r\n\n"..
-					"- FIXED - Quest - Sometimes show wrong number of quests (0/25) inside Quest"..
-					offs.."header.\n"..
-					"- ADDED - Find Group buttons.\n"..
-					"- ADDED - Suggested group size to group \"g\" tag.\n"..
-					"- ADDED - Compatibility - addon Dugi Questing Essential.\n"..
-					"- ADDED - Notification sounds.\n"..
-					"- ADDED - Media files to LibSharedMedia (textures, sounds).\n"..
-					"- UPDATED - Notification messages.\n"..
-					"- UPDATED - Zone filtering.\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.1.1|r\n\n"..
+					"- FIXED - ticket #284 - Wrong minimize button and no auto expand, when"..
+					offs.."collapsed tracker contains only World Quest / Bonus Quest.\n"..
+					"- FIXED - ticket #295 - Addons support - PetTracker - World Map error.\n"..
+					"- FIXED - ticket #297 - Addons compatibility - Dugi Questing Essential.\n"..
+					"- IMPROVED - Hide number next to \"g\" tag, when the group size is 0.\n"..
+					"- IMPROVED - Notification sounds - option for enable / disable sounds.\n\n"..
 
 					cTitle.."Note|r\n"..
 					"Support of addon TomTom is still temporarily disabled. I'm working on the update.\n\n"..

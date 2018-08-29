@@ -1,0 +1,6 @@
+## Interface: 80000
+## Author: 苏彩彩
+## Title: SkadaPlus
+## Dependencies: Skada
+## Notes-zhCN: Skada单位万亿补丁
+SkadaPlus.lua

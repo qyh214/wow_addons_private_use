@@ -1,3 +1,7 @@
+3.3.2-beta1
+* Optimalisation to remove micro stutter.
+* Added functionalty for multiple columns in the minimap bar. (beta)
+
 3.3.1-beta2
 * Fix for lua error when in instance. Issue https://github.com/nickbock/ElvUI_Enhanced_Again/issues/75
 

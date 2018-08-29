@@ -20,6 +20,7 @@ V.general.minimapbar = {
 	['mouseover'] = false,
 	['mbcalendar'] =  false,
 	['mbgarrison'] = false,
+	['buttonsPerRow'] = 5,
 }
 
 V.general.raidmarkerbar = {

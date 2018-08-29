@@ -1,21 +1,44 @@
-tag 94d22344fee005199e0b510f379ac99b9a8de6c3 3.3.1-beta2
+tag 382bd22992b655807ebf04a07bdb2a2582dc309e 3.3.2-beta1
 Author:	Feraldin <nickbock@hoarder.bocky.nl>
-Date:	Thu Aug 23 22:48:15 2018 +0200
+Date:	Mon Aug 27 23:58:39 2018 +0200
 
-3.3.1-beta2
-* Fix for lua error when in instance. Issue https://github.com/nickbock/ElvUI_Enhanced_Again/issues/75
+3.3.2-beta1
+* Optimalisation to remove micro stutter.
+* Added functionalty for multiple columns in the minimap bar. (beta)
 
-commit 97b06e1b362098740287e0f675de604186be3509
+commit b199ed2d112e232d8aea9a37a3b85a92c5c872f6
 Author: Nick <git@bockmeulen.nl>
-Date:   Thu Aug 23 22:47:02 2018 +0200
+Date:   Mon Aug 27 23:57:51 2018 +0200
 
-    changelog and version
+    version bumb and changelog
 
-commit 5362d18da21891feaac46bbf66a0b5912d84f175
+commit 95283bc3c9b941ad836ded6ab1a97c7ba8247dc6
 Author: Nick <git@bockmeulen.nl>
-Date:   Thu Aug 23 22:43:57 2018 +0200
+Date:   Mon Aug 27 00:13:04 2018 +0200
 
-    update_elements.lua:35
-    
-    fixing issue #75
+    remove debug
+
+commit 95283bc3c9b941ad836ded6ab1a97c7ba8247dc6
+Author: Nick <git@bockmeulen.nl>
+Date:   Mon Aug 27 00:13:04 2018 +0200
+
+    remove debug
+
+commit 1b04173541c1b5a30a6e5cf88a2f444d49ae914d
+Author: Nick <git@bockmeulen.nl>
+Date:   Sun Aug 26 13:35:53 2018 +0200
+
+    remove debug
+
+commit 5bf83b75cd8afe1f8603efbd4ebdc3ed38560ddd
+Author: Nick <git@bockmeulen.nl>
+Date:   Sun Aug 26 02:06:51 2018 +0200
+
+    first setup
+
+commit 1bf066401943d5ad4d5c5cf4f54bbf9c2c20920b
+Author: Nick <git@bockmeulen.nl>
+Date:   Sat Aug 25 17:46:20 2018 +0200
+
+    microstutter fix1
 

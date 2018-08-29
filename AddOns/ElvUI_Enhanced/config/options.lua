@@ -334,14 +334,22 @@ function EO:MapOptions()
 				min = 16, max = 40, step = 1,
 				disabled = function() return not E.private.general.minimapbar.skinButtons or E.private.general.minimapbar.skinStyle == 'NOANCHOR' end,
 			},
+			buttonsPerRow = {
+				order = 5,
+				type = 'range',
+				name = L['Buttons per row'],
+				desc = L['The max number of buttons when a new row starts.'],
+				min = 2, max = 20, step = 1,
+				disabled = function() return not E.private.general.minimapbar.skinButtons or E.private.general.minimapbar.skinStyle == 'NOANCHOR' end,
+			},
 			backdrop = {
 				type = 'toggle',
-				order = 5,
+				order = 6,
 				name = L["Backdrop"],
 				disabled = function() return not E.private.general.minimapbar.skinButtons or E.private.general.minimapbar.skinStyle == 'NOANCHOR' end,
 			},			
 			mouseover = {
-				order = 6,
+				order = 7,
 				name = L['Mouse Over'],
 				desc = L['The frame is not shown unless you mouse over the frame.'],
 				type = "toggle",
@@ -349,7 +357,7 @@ function EO:MapOptions()
 				disabled = function() return not E.private.general.minimapbar.skinButtons or E.private.general.minimapbar.skinStyle == 'NOANCHOR' end,
 			},
 			mmbuttons = {
-				order = 7,
+				order = 8,
 				type = "group",
 				name = L["Minimap Buttons"],
 				guiInline = true,

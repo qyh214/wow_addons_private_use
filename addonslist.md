@@ -22,6 +22,8 @@ DBM 首领报警及其语音包
 
 DejaCharacterStats 角色信息增强
 
+EncounterJournalSavedInstances
+
 ElvUI ElvUI整合界面插件
 
 ElvUI_Enhanced ElvUI增强插件
@@ -52,6 +54,8 @@ MoveAnything
 
 Multishot 自动截图
 
+Myslot
+
 PersonalLootHelper 个人拾取帮助
 
 Postal 邮件增强
@@ -59,6 +63,8 @@ Postal 邮件增强
 RelicInspector 圣物提示
 
 Skada伤害统计
+
+SkadaPlus
 
 SimpleChat
 

@@ -247,8 +247,18 @@ function MB:UpdateLayout()
 		MB:UnregisterEvent("PLAYER_REGEN_ENABLED")
  	end
 
+	local AnchorX, AnchorY, MaxX = 0, 1, E.minimapbuttons.db.buttonsPerRow
+	local ButtonsPerRow = E.minimapbuttons.db.buttonsPerRow
+	local NumColumns = ceil(#moveButtons / ButtonsPerRow)
+	local Spacing, Mult = 2, 1
+	local Size = E.minimapbuttons.db.buttonSize
+	local ActualButtons, Maxed = 0
 	local direction = E.minimapbuttons.db.layoutDirection == 'NORMAL'
 	local offset = direction and -2 or 2
+
+	if NumColumns == 1 and ButtonsPerRow > #moveButtons then
+		ButtonsPerRow = #moveButtons
+	end
 
 	if E.minimapbuttons.db.skinStyle == 'HORIZONTAL' then
 		minimapButtonBar:SetPoint(direction and 'LEFT' or 'RIGHT', minimapButtonBarAnchor, direction and 'LEFT' or 'RIGHT', -2, 0)
@@ -261,7 +271,15 @@ function MB:UpdateLayout()
 	
 	for i = 1, #moveButtons do
 		local frame =	_G[moveButtons[i]]
-		
+
+		AnchorX = AnchorX + 1
+		ActualButtons = ActualButtons + 1
+		if AnchorX > MaxX then
+			AnchorY = AnchorY + 1
+			AnchorX = 1
+			Maxed = true
+		end
+
 		if E.minimapbuttons.db.skinStyle == 'NOANCHOR' then
 			frame:SetParent(frame.original.Parent)
 			if frame.original.DragStart then
@@ -295,31 +313,33 @@ function MB:UpdateLayout()
 			frame:Size(E.minimapbuttons.db.buttonSize)
 
 			if E.minimapbuttons.db.skinStyle == 'HORIZONTAL' then
-				anchor1 = direction and 'RIGHT' or 'LEFT'
-				anchor2 = direction and 'LEFT' or 'RIGHT'
-				offsetX = offset
-				offsetY = 0
+				anchor1 = direction and 'TOPLEFT' or 'TOPRIGHT'
+				anchor2 = direction and 'TOPRIGHT' or 'TOPLEFT'
+				offsetX = (Spacing + ((Size + Spacing) * (AnchorX - 1)))
+				offsetY = (- Spacing - ((Size + Spacing) * (AnchorY - 1)))
 			else
-				anchor1 = direction and 'TOP' or 'BOTTOM'
-				anchor2 = direction and 'BOTTOM' or 'TOP'
-				offsetX = 0
-				offsetY = offset
+				anchor1 = direction and 'BOTTOMRIGHT' or 'TOPRIGHT'
+				anchor2 = direction and 'TOPRIGHT' or 'BOTTOMRIGHT'
+				offsetX = (- ((Size + Spacing) * (AnchorY - 1)))
+				offsetY = (Spacing + ((Size + Spacing) * (AnchorX - 1)))
 			end
-			
-			if not lastFrame then
-				frame:SetPoint(anchor1, minimapButtonBar, anchor1, offsetX, offsetY)
-			else
-				frame:SetPoint(anchor1, lastFrame, anchor2, offsetX, offsetY)
-			end
+			frame:SetPoint(anchor1, minimapButtonBar, anchor1, offsetX, offsetY)
+			if Maxed then ActualButtons = ButtonsPerRow end
+
 		end
-		lastFrame = frame	
+
 	end
 	
 	if E.minimapbuttons.db.skinStyle ~= 'NOANCHOR' and #moveButtons > 0 then
 		if E.minimapbuttons.db.skinStyle == "HORIZONTAL" then
-			minimapButtonBar:SetWidth((E.minimapbuttons.db.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
+			--minimapButtonBar:SetWidth((E.minimapbuttons.db.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
+			local BarWidth = (Spacing + ((Size * (ActualButtons * Mult)) + ((Spacing * (ActualButtons - 1)) * Mult) + (Spacing * Mult)))
+			local BarHeight = (Spacing + ((Size * (AnchorY * Mult)) + ((Spacing * (AnchorY - 1)) * Mult) + (Spacing * Mult)))
+			minimapButtonBar:SetSize(BarWidth, BarHeight)
 		else
-			minimapButtonBar:SetHeight((E.minimapbuttons.db.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
+			local BarWidth = (Spacing + ((Size * (AnchorY * Mult)) + ((Spacing * (AnchorY - 1)) * Mult) + (Spacing * Mult)))
+			local BarHeight = (Spacing + ((Size * (ActualButtons * Mult)) + ((Spacing * (ActualButtons - 1)) * Mult) + (Spacing * Mult)))
+			minimapButtonBar:SetSize(BarWidth, BarHeight)
 		end
 		minimapButtonBarAnchor:SetSize(minimapButtonBar:GetSize())
 		minimapButtonBar:Show()
@@ -384,13 +404,6 @@ function MB:CreateFrames()
 
 	self:ChangeMouseOverSetting()
 	self:SkinMinimapButtons()
-end
-
-function MB:Initialize()
-	E.minimapbuttons = MB
-	E.minimapbuttons.db = E.private.general.minimapbar
-
-	if not E.minimapbuttons.db.skinButtons then return end
 
 	if E.minimapbuttons.db.mbgarrison then
 		MB:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ResetGarrisonSize");
@@ -398,7 +411,12 @@ function MB:Initialize()
 		MB:RegisterEvent("ZONE_CHANGED_INDOORS", "ResetGarrisonSize");
 		MB:RegisterEvent("GARRISON_SHOW_LANDING_PAGE", "ResetGarrisonSize");
 	end
+end
 
+function MB:Initialize()
+	E.minimapbuttons = MB
+	E.minimapbuttons.db = E.private.general.minimapbar
+	if not E.minimapbuttons.db.skinButtons then return end
 	self:CreateFrames()
 end
 

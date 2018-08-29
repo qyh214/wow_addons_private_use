@@ -8,6 +8,8 @@ TODOs:
 	Bug with people being shown pass/whisper instead of keep/offer when looting...may be related to cyrillic names?  or same name from different realms in IsPlayer()?
 	Bug - whisper message doesn't allow special characters
 	Don't show PLH UI if group is using RCLootCouncil
+	Do something special when multiple of same item drop?  i.e. tell looter that [name] offered a duplicate of this item to [name]?
+	Localization
 
 Known Limitations:
 	PLH assumes everyone in the group is eligible to receive tradeable loot; it doesn't check whether everyone
@@ -30,11 +32,30 @@ Known Bugs:
 		Created https://us.battle.net/forums/en/wow/topic/20764046364#1 to discuss
 	Sometimes when clicking resize, window will double in size
 		
-Future Enhancement Ideas:
-	Do something special when multiple of same item drop?  i.e. tell looter that [name] offered a duplicate of this item to [name]?
-	Localization
-
 CHANGELOG:
+
+20180828 - 2.14
+	Fixed notifications for rings and trinkets where the loot is an upgrade for one slot but not the other
+	Fixed trinket recommendations to pay attention to primary attributes
+	
+20180828 - 2.13
+	Fixed version notification
+	
+20180828 - 2.12
+    Added azerite armor back into evaluations since Blizzard is allowing Azerite armor to be traded
+	
+20180826 - 2.11
+	Fixed announce trades to work when traded item is not something the group leader could have used
+	
+20180826 - 2.10
+	Added option to announce trades in guild groups
+
+20180825 - 2.09
+	Fixed item caching issue that was resulting in missed or incorrect recommendations
+	Added alert to show when a new version of PLH is available
+	Fixed a few taint issues:
+		function GetItemInfoReceivedEvent()
+		variables inside RestoreMainWindowPosition()
 
 20180725 - 2.08
 	Increased time between inspections for slower computers & connections
@@ -92,8 +113,9 @@ CHANGELOG:
 ]]--
 
 -- Constants to control inspection process
-local DELAY_BETWEEN_INSPECTIONS			= 2		-- in seconds
-local MIN_DELAY_BETWEEN_CACHE_REFRESHES	= 5		-- in seconds
+local DELAY_BETWEEN_INSPECTIONS_LONG	= 12	-- in seconds
+local DELAY_BETWEEN_INSPECTIONS_SHORT	= 0.2	-- in seconds
+local MIN_DELAY_BETWEEN_CACHE_REFRESHES	= 10	-- in seconds
 local MAX_INSPECT_LOOPS 				= 4    	-- maximum # of times to retry calling NotifyInspect on all members in the roster for whom we've cached fewer than the expected number of items
 
 -- Colors for display in the looted items frame
@@ -414,6 +436,7 @@ local enableOrDisableEventFrame
 -- Variables to control addon's status
 local isEnabled = false
 local priorCacheRefreshTime = 0
+local showedVersionAlert = false
 
 -- Variables to control inspection process
 local inspectLoop = 0
@@ -448,22 +471,22 @@ local groupInfoCache = {}  					-- array of items equipped by group members; key
 		groupInfoCache[name-realm][SPEC]				group member's spec from GetInspectSpecialization()
 		groupInfoCache[name-realm][LEVEL]				group member's character level
 		groupInfoCache[name-realm][FORCE_REFRESH]		boolean for whether to force a refresh of this member's data during next cache refresh
-		groupInfoCache[name-realm][INVSLOT_HEAD]		FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_NECK]		FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_SHOULDER]	FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_BACK]		FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_CHEST]		FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_WRIST]		FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_HAND]		FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_WAIST]		FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_LEGS]		FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_FEET]		FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_FINGER1]		FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_FINGER2]		FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_TRINKET1]	FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_TRINKET2]	FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_MAINHAND]	FULL_ITEM_INFO of the item equipped in this slot
-		groupInfoCache[name-realm][INVSLOT_OFFHAND]		FULL_ITEM_INFO of the item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_HEAD]		item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_NECK]		item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_SHOULDER]	item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_BACK]		item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_CHEST]		item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_WRIST]		item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_HAND]		item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_WAIST]		item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_LEGS]		item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_FEET]		item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_FINGER1]		item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_FINGER2]		item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_TRINKET1]	item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_TRINKET2]	item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_MAINHAND]	item equipped in this slot
+		groupInfoCache[name-realm][INVSLOT_OFFHAND]		item equipped in this slot
 	]]--
 
 local lootedItems = {}  					-- array of items looted by player; keyed by name-realm of looter
@@ -647,7 +670,6 @@ local function IsEquippableItemForCharacter(fullItemInfo, characterName)
 	local characterClass
 	local characterSpec
 	local characterLevel
-
 	if fullItemInfo ~= nil and characterName ~= nil and fullItemInfo[FII_IS_EQUIPPABLE] then
 		if IsPlayer(characterName) then
 			_, characterClass = UnitClass('player')
@@ -684,7 +706,8 @@ local function IsEquippableItemForCharacter(fullItemInfo, characterName)
 			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_HOLDABLE' or
 			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_RANGED' or
 			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_THROWN' or
-			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_RANGEDRIGHT' then
+			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_RANGEDRIGHT' or
+			fullItemInfo[FII_ITEM_EQUIP_LOC] == 'INVTYPE_TRINKET' then
 			
 			local itemPrimaryAttribute = GetItemPrimaryAttribute(fullItemInfo[FII_ITEM])
 			if itemPrimaryAttribute ~= nil then
@@ -783,16 +806,24 @@ end
 -- Returns the FULL_ITEM_INFO that character has equipped in slotID
 local function GetEquippedItem(characterName, slotID)
 	local item = nil
-	local characterDetails = groupInfoCache[characterName]
-	if characterDetails ~= nil then
-		item = characterDetails[slotID]
+	if IsPlayer(characterName) then
+		item = GetInventoryItemLink('player', slotID)
+		if item ~= nil then
+			item = GetFullItemInfo(item)
+		end
+	else
+		local characterDetails = groupInfoCache[characterName]
+		if characterDetails ~= nil then
+			item = GetFullItemInfo(characterDetails[slotID])
+		end
 	end
 	return item
 end
 
 -- returns two variables:  true if the item is an upgrade over equippedItem (based on ilvl), equipped ilvl
 -- note: doesn't check if item is equippable, so make sure you do that check beforehand
-local function IsAnUpgradeForCharacter(fullItemInfo, characterName, threshold)
+-- both parameter:  if true, return true for rings/trinkets only if it's an upgrade for both slots
+local function IsAnUpgradeForCharacter(fullItemInfo, characterName, threshold, both)
 	local itemEquipLoc = fullItemInfo[FII_ITEM_EQUIP_LOC]
 	local itemRealILVL = fullItemInfo[FII_REAL_ILVL]
 
@@ -825,7 +856,11 @@ local function IsAnUpgradeForCharacter(fullItemInfo, characterName, threshold)
 			if equippedItem2 ~= nil then
 				isAnUpgrade1, equippedILVL1 = IsAnUpgrade(itemRealILVL, equippedItem1[FII_REAL_ILVL], threshold)
 				isAnUpgrade2, equippedILVL2 = IsAnUpgrade(itemRealILVL, equippedItem2[FII_REAL_ILVL], threshold)
-				isAnUpgrade1 = isAnUpgrade1 or isAnUpgrade2
+				if both then
+					isAnUpgrade1 = isAnUpgrade1 and isAnUpgrade2
+				else
+					isAnUpgrade1 = isAnUpgrade1 or isAnUpgrade2
+				end
 				equippedILVL1 = min(equippedILVL1, equippedILVL2)
 			else
 				isAnUpgrade1, equippedILVL1 = IsAnUpgrade(itemRealILVL, equippedItem1[FII_REAL_ILVL], threshold)
@@ -1417,10 +1452,10 @@ end
 
 -- modified from Recount
 local function RestoreMainWindowPosition()
-	x = PLH_META[PLH_LOOTED_ITEMS_FRAME_X]
-	y = PLH_META[PLH_LOOTED_ITEMS_FRAME_Y]
-	width = PLH_META[PLH_LOOTED_ITEMS_FRAME_WIDTH]
-	height = PLH_META[PLH_LOOTED_ITEMS_FRAME_HEIGHT]
+	local x = PLH_META[PLH_LOOTED_ITEMS_FRAME_X]
+	local y = PLH_META[PLH_LOOTED_ITEMS_FRAME_Y]
+	local width = PLH_META[PLH_LOOTED_ITEMS_FRAME_WIDTH]
+	local height = PLH_META[PLH_LOOTED_ITEMS_FRAME_HEIGHT]
 
 	local s = lootedItemsFrame:GetEffectiveScale()
 	local uis = UIParent:GetScale()
@@ -1607,28 +1642,37 @@ local function GetLootedItem(looterName, lootedItemID)
 end
 
 -- Adds the item to the lootedItems array; returns the index of the newly added item
-local function AddLootedItem(fullItemInfo, characterName)
+local function AddLootedItem(fullItemInfo, characterName, status)
 	local lootedItemIndex = #lootedItems + 1
 
 	lootedItems[lootedItemIndex] = {}
 	lootedItems[lootedItemIndex][LOOTER_NAME] = characterName
 	lootedItems[lootedItemIndex][FULL_ITEM_INFO] = fullItemInfo
-	if IsPlayer(characterName) or IsPLHUser(characterName) then
-		lootedItems[lootedItemIndex][STATUS] = STATUS_DEFAULT
-	else
-		lootedItems[lootedItemIndex][STATUS] = STATUS_AVAILABLE
-	end
 	lootedItems[lootedItemIndex][SELECTED_REQUESTOR_INDEX] = ''
 	lootedItems[lootedItemIndex][DEFAULT_REQUESTOR_INDEX] = ''
 	lootedItems[lootedItemIndex][REQUESTORS] = {}
+	
+	if status == nil then
+		if IsPlayer(characterName) or IsPLHUser(characterName) then
+			lootedItems[lootedItemIndex][STATUS] = STATUS_DEFAULT
+		else
+			lootedItems[lootedItemIndex][STATUS] = STATUS_AVAILABLE
+		end
 
-	if IsPlayer(characterName) then
-		PlaySound(600)  -- 'GLUECREATECHARACTERBUTTON'
+		if IsPlayer(characterName) then
+			PlaySound(600)  -- 'GLUECREATECHARACTERBUTTON'
+		else
+			PlaySound(888)  -- 'LEVELUP'
+		end
 	else
-		PlaySound(888)  -- 'LEVELUP'
+		lootedItems[lootedItemIndex][STATUS] = status
 	end
 	
 	return lootedItemIndex
+end
+
+local function ShouldAnnounceTrades()
+	return PLH_PREFS[PLH_PREFS_ANNOUNCE_TRADES] and InGuildParty() and UnitIsGroupLeader('player')
 end
 
 local function shouldAddLootedItem(fullItemInfo)
@@ -1699,7 +1743,7 @@ function PLH_ProcessKeepItemMessage(looterName, lootedItemID)
 end
 
 -- Event handler for GET_ITEM_INFO_RECEIVED event
-function GetItemInfoReceivedEvent(self, event, ...)
+local function GetItemInfoReceivedEvent(self, event, ...)
 	for item, looterName in pairs(itemCache) do
 		if GetItemInfo(item) then
 			itemCache[item] = nil
@@ -1721,6 +1765,8 @@ function PLH_ProcessTradeItemMessage(looterName, item)
 				local lootedItemIndex = AddLootedItem(fullItemInfo, looterName)
 				lootedItems[lootedItemIndex][STATUS] = STATUS_AVAILABLE
 				UpdateLootedItemsDisplay()
+			elseif ShouldAnnounceTrades() then
+				AddLootedItem(fullItemInfo, looterName, STATUS_HIDDEN)
 			end
 		end
 	end
@@ -1729,8 +1775,9 @@ end
 function PLH_ProcessOfferItemMessage(looterName, lootedItemID, requestorName)
 --	PLH_SendDebugMessage('Entering PLH_ProcessOfferItemMessage (' .. looterName .. ', ' .. lootedItemID .. ', ' .. requestorName .. ')')
 	
+	local lootedItem = GetLootedItem(looterName, lootedItemID)
+
 	if not IsPlayer(looterName) then
-		local lootedItem = GetLootedItem(looterName, lootedItemID)
 		if lootedItem ~= nil then
 			lootedItem[CONFIRMATION_MESSAGE] = nil
 			if IsPlayer(requestorName) then
@@ -1745,6 +1792,11 @@ function PLH_ProcessOfferItemMessage(looterName, lootedItemID, requestorName)
 			end
 		end
 	end
+	
+	if lootedItem ~= nil and ShouldAnnounceTrades() then
+		PLH_SendBroadcast(looterName .. ' offered ' .. lootedItem[FULL_ITEM_INFO][FII_ITEM] .. ' to ' .. requestorName, false)
+	end
+	
 end
 
 local function FindRequestorIndex(lootedItem, requestorName)
@@ -1797,6 +1849,10 @@ local function PLH_ProcessVersionMessage(plhUser, version)
 		plhUsers[plhUser] = version
 		if ShouldShowLootedItemsDisplay() then
 			UpdateLootedItemsDisplay()
+		end
+		if version > GetAddOnMetadata('PersonalLootHelper', 'Version') and not showedVersionAlert then
+			PLH_SendUserMessage("Your version of Personal Loot Helper is out-of-date. You can download version " .. version .. " from the Twitch app or by searching for PLH on curseforge.com")
+			showedVersionAlert = true
 		end
 	end
 end
@@ -1926,7 +1982,7 @@ local function ShouldBeEvaluated(fullItemInfo)
 	return fullItemInfo[FII_IS_EQUIPPABLE]
 		and (fullItemInfo[FII_QUALITY] == LE_ITEM_QUALITY_RARE or fullItemInfo[FII_QUALITY] == LE_ITEM_QUALITY_EPIC)
 		and (fullItemInfo[FII_BIND_TYPE] == LE_ITEM_BIND_ON_ACQUIRE or (fullItemInfo[FII_BIND_TYPE] == LE_ITEM_BIND_ON_EQUIP and not PLH_PREFS[PLH_PREFS_NEVER_OFFER_BOE]))
-		and (not fullItemInfo[FII_IS_AZERITE_ITEM])
+--		and (not fullItemInfo[FII_IS_AZERITE_ITEM])
 end		
 
 -- creates a copy of the table
@@ -2002,7 +2058,7 @@ local function PerformNotify(fullItemInfo, looterName)
 	if ShouldBeEvaluated(fullItemInfo) then
 		if IsPlayer(looterName) then
 --			local isTradeable = fullItemInfo[FII_TRADE_TIME_WARNING_SHOWN] or not IsAnUpgradeForCharacter(fullItemInfo, looterName)
-			local isTradeable = not IsAnUpgradeForCharacter(fullItemInfo, looterName, 0)
+			local isTradeable = not IsAnUpgradeForCharacter(fullItemInfo, looterName, 0, true)
 			if isTradeable then
 
 				local isAnUpgradeForAnyCharacter, isAnUpgradeForAnyCharacterNames = IsAnUpgradeForAnyCharacter(fullItemInfo)
@@ -2021,10 +2077,12 @@ local function PerformNotify(fullItemInfo, looterName)
 					end
 				end			
 			end
-		elseif not IsPLHUser(looterName) and fullItemInfo[FII_BIND_TYPE] ~= LE_ITEM_BIND_ON_EQUIP and not IsAnUpgradeForCharacter(fullItemInfo, looterName, 0) then
+		elseif not IsPLHUser(looterName) and fullItemInfo[FII_BIND_TYPE] ~= LE_ITEM_BIND_ON_EQUIP and not IsAnUpgradeForCharacter(fullItemInfo, looterName, 0, true) then
 			if shouldAddLootedItem(fullItemInfo) then
 				AddLootedItem(fullItemInfo, looterName)
 				UpdateLootedItemsDisplay()
+			elseif ShouldAnnounceTrades() then
+				AddLootedItem(fullItemInfo, looterName, STATUS_HIDDEN)
 			end
 		end
 	end
@@ -2112,7 +2170,9 @@ end
 -- That method can only be called within the scope of an INSPECT_READY event.
 local function UpdateGroupInfoCache(unit)
 	local name = PLH_GetFullName(unit)
-
+	
+	PLH_SendDebugMessage('      Entering UpdateGroupInfoCache() for ' .. name)
+	
 	if name ~= nil then
 		local characterDetails
 		if groupInfoCache[name] == nil then
@@ -2127,7 +2187,7 @@ local function UpdateGroupInfoCache(unit)
 		else
 			characterDetails = groupInfoCache[name]
 		end
-		
+
 		local updatedItemCount = 0
 		local item
 		for invslot = _G.INVSLOT_FIRST_EQUIPPED, _G.INVSLOT_LAST_EQUIPPED do
@@ -2136,7 +2196,8 @@ local function UpdateGroupInfoCache(unit)
 				if item ~= nil and GetItemInfo(item) ~= nil then
 					if characterDetails[invslot] == nil or characterDetails[invslot] ~= item then
 						updatedItemCount = updatedItemCount + 1
-						characterDetails[invslot] = GetFullItemInfo(item)
+--						characterDetails[invslot] = GetFullItemInfo(item)
+						characterDetails[invslot] = item
 					end
 				end
 			end
@@ -2150,7 +2211,7 @@ local function UpdateGroupInfoCache(unit)
 			groupInfoCache[name][FORCE_REFRESH] = false
 		end
 		
---		PLH_SendDebugMessage('      Updated ' .. updatedItemCount .. ' items for ' .. name)
+		PLH_SendDebugMessage('         Updated ' .. updatedItemCount .. ' items for ' .. name)
 	end
 end
 
@@ -2175,25 +2236,34 @@ end
 local function InspectReadyEvent(self, event, ...)
 	local guid = select(1, ...)
 	local name = select(6, GetPlayerInfoByGUID(guid))
+	
+	PLH_SendDebugMessage('   Entering InspectReadyEvent() for ' .. name)
+
 	if notifyInspectName ~= nil and (notifyInspectName == name or notifyInspectName == PLH_GetFullName(name)) then
 		UpdateGroupInfoCache(name)
 		if not InspectFrame or not InspectFrame:IsShown() then
 			ClearInspectPlayer()
 		end
 		notifyInspectName = nil
+		
+		if PLH_PreemptWait(PLH_WAIT_FOR_INSPECT) then
+			PLH_wait(PLH_WAIT_FOR_INSPECT, DELAY_BETWEEN_INSPECTIONS_SHORT, PLH_InspectNextGroupMember)
+		end
 	end
 end
 
 -- Attempt to queue a group member for inspection.  Returns true if we were able to queue an inspection, false otherwise
 local function InspectGroupMember(characterName)
-	if CanInspect(characterName) and (not InspectFrame or not InspectFrame:IsShown()) then
---			PLH_SendDebugMessage('   Calling NotifyInspect for ' .. characterName .. ' (' .. inspectLoop .. ',' .. inspectIndex .. ')')
-		NotifyInspect(characterName)
-		notifyInspectName = characterName
-		PLH_wait(PLH_WAIT_FOR_INSPECT, DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
-		return true
-	else
-		PLH_SendDebugMessage('   Unable to inspect ' .. characterName)
+	if characterName ~= nil and not IsPlayer(characterName) then   -- no need to inspect ourselves
+		if CanInspect(characterName) and (not InspectFrame or not InspectFrame:IsShown()) then
+			PLH_SendDebugMessage('Calling NotifyInspect for ' .. characterName .. ' (' .. inspectLoop .. ',' .. inspectIndex .. ')')
+			notifyInspectName = characterName
+			NotifyInspect(characterName)
+			PLH_wait(PLH_WAIT_FOR_INSPECT, DELAY_BETWEEN_INSPECTIONS_LONG, PLH_InspectNextGroupMember)
+			return true
+		else
+			PLH_SendDebugMessage('   Unable to inspect ' .. characterName)
+		end
 	end
 	return false
 end
@@ -2485,7 +2555,7 @@ function PLH_PrintCache(characterName)
 						PLH_SendDebugMessage('      details is nil')
 					else
 						for slotID, item in pairs(details) do
-							PLH_SendDebugMessage('      ' .. slotID .. ' = ' .. tostring(item[FII_ITEM]))
+							PLH_SendDebugMessage('      ' .. slotID .. ' = ' .. tostring(GetFullItemInfo(item)[FII_ITEM]))
 						end
 					end
 				end

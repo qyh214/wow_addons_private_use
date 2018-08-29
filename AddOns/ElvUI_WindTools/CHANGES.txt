@@ -1,16 +1,22 @@
-lightweight tag 42027d6e5a8c1257bb75f4978666c90c39b9f1bd 1.2.1
-Author:	GitHub <noreply@github.com>
-Date:	Tue Aug 14 20:10:08 2018 +0900
+lightweight tag 4e7b2b13b873b5e9f385c498d3a53b2046ba839f 1.2.2
+Author:	SomeBlu <webmaster@someblu.com>
+Date:	Sat Aug 25 19:32:54 2018 -0700
 
-commit ce2f050bce3e90732c787ccd10cc73eb760b5017
-Author: Zhou Fang <houshuu@live.jp>
-Date:   Mon Aug 13 21:16:38 2018 +0900
+commit 4e7b2b13b873b5e9f385c498d3a53b2046ba839f
+Author: SomeBlu <webmaster@someblu.com>
+Date:   Sat Aug 25 19:32:54 2018 -0700
 
-    添加艾泽里特特质选择界面移动
+    修复一处设置项的错误
 
-commit ce2f050bce3e90732c787ccd10cc73eb760b5017
-Author: Zhou Fang <houshuu@live.jp>
-Date:   Mon Aug 13 21:16:38 2018 +0900
+commit d63a5edb3cecb62bc77af2c3b7487a179cefe5d1
+Author: SomeBlu <webmaster@someblu.com>
+Date:   Sat Aug 25 17:16:51 2018 -0700
 
-    添加艾泽里特特质选择界面移动
+    临时修复举报功能的函数调用错误
+
+commit d63a5edb3cecb62bc77af2c3b7487a179cefe5d1
+Author: SomeBlu <webmaster@someblu.com>
+Date:   Sat Aug 25 17:16:51 2018 -0700
+
+    临时修复举报功能的函数调用错误
 
