@@ -14,7 +14,6 @@ local ignoreButtons = {
 	"ElvConfigToggle",
 	"ElvUIConfigToggle",
 	"ElvUI_ConsolidatedBuffs",
-	--"GameTimeFrame",
 	"HelpOpenTicketButton",
 	"MMHolder",
 	"DroodFocusMinimapButton",
@@ -33,6 +32,13 @@ local genericIgnores = {
 	"MinimMap",
 	"Spy_MapNoteList_mini",
 	"ZGVMarker",
+	'poiMinimap',
+	'GuildMap3Mini',
+	'LibRockConfig-1.0_MinimapButton',
+	'NauticusMiniIcon',
+	'WestPointer',
+	'Cork',
+	'DugisArrowMinimapPoint',
 }
 
 -- ignore all frames where then name contains this text
@@ -40,6 +46,7 @@ local partialIgnores = {
 	"Node",
 	"Note",
 	"Pin",
+	"POI",
 }
 
 -- whitelist all frames starting with
@@ -102,16 +109,8 @@ end
 
 function MB:ResetGarrisonSize()
 	if InCombatLockdown() then return end
-	local garrisonType = C_Garrison.GetLandingPageGarrisonType();
-	if garrisonType == 9 then 
 		GarrisonLandingPageMinimapButton:Size(E.minimapbuttons.db.buttonSize);
-	else
-		MB:UnregisterEvent("ZONE_CHANGED_NEW_AREA");
-		MB:UnregisterEvent("ZONE_CHANGED");
-		MB:UnregisterEvent("ZONE_CHANGED_INDOORS");
-		MB:UnregisterEvent("GARRISON_SHOW_LANDING_PAGE");
 	end
-end
 
 function MB:SkinButton(frame)
 	if not E.minimapbuttons.db.mbcalendar then
@@ -150,7 +149,16 @@ function MB:SkinButton(frame)
 	
 	if name == "DBMMinimapButton" then frame:SetNormalTexture("Interface\\Icons\\INV_Helmet_87") end
 	if name == "SmartBuff_MiniMapButton" then frame:SetNormalTexture(select(3, GetSpellInfo(12051))) end
-	if name == "GarrisonLandingPageMinimapButton" and E.minimapbuttons.db.mbgarrison then frame:SetScale(1) end
+	if name == "GarrisonLandingPageMinimapButton" and E.minimapbuttons.db.mbgarrison then 
+		frame:SetScale(1)
+		if not frame.isRegister then
+			MB:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ResetGarrisonSize");
+			MB:RegisterEvent("ZONE_CHANGED", "ResetGarrisonSize");
+			MB:RegisterEvent("ZONE_CHANGED_INDOORS", "ResetGarrisonSize");
+			MB:RegisterEvent("GARRISON_SHOW_LANDING_PAGE", "ResetGarrisonSize"); 
+		end
+		frame.isRegister = true
+	end
 	if name == "GRM_MinimapButton" then frame.GRM_MinimapButtonBorder:Hide() end
 	
 	if not frame.isSkinned then
@@ -271,7 +279,6 @@ function MB:UpdateLayout()
 	
 	for i = 1, #moveButtons do
 		local frame =	_G[moveButtons[i]]
-
 		AnchorX = AnchorX + 1
 		ActualButtons = ActualButtons + 1
 		if AnchorX > MaxX then
@@ -315,13 +322,13 @@ function MB:UpdateLayout()
 			if E.minimapbuttons.db.skinStyle == 'HORIZONTAL' then
 				anchor1 = direction and 'TOPLEFT' or 'TOPRIGHT'
 				anchor2 = direction and 'TOPRIGHT' or 'TOPLEFT'
-				offsetX = (Spacing + ((Size + Spacing) * (AnchorX - 1)))
+				offsetX = direction and (Spacing + ((Size + Spacing) * (AnchorX - 1))) or (- (Spacing + ((Size + Spacing) * (AnchorX - 1))))
 				offsetY = (- Spacing - ((Size + Spacing) * (AnchorY - 1)))
 			else
 				anchor1 = direction and 'BOTTOMRIGHT' or 'TOPRIGHT'
 				anchor2 = direction and 'TOPRIGHT' or 'BOTTOMRIGHT'
 				offsetX = (- ((Size + Spacing) * (AnchorY - 1)))
-				offsetY = (Spacing + ((Size + Spacing) * (AnchorX - 1)))
+				offsetY = direction and (Spacing + ((Size + Spacing) * (AnchorX - 1))) or (- (Spacing + ((Size + Spacing) * (AnchorX - 1))))
 			end
 			frame:SetPoint(anchor1, minimapButtonBar, anchor1, offsetX, offsetY)
 			if Maxed then ActualButtons = ButtonsPerRow end
@@ -404,13 +411,6 @@ function MB:CreateFrames()
 
 	self:ChangeMouseOverSetting()
 	self:SkinMinimapButtons()
-
-	if E.minimapbuttons.db.mbgarrison then
-		MB:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ResetGarrisonSize");
-		MB:RegisterEvent("ZONE_CHANGED", "ResetGarrisonSize");
-		MB:RegisterEvent("ZONE_CHANGED_INDOORS", "ResetGarrisonSize");
-		MB:RegisterEvent("GARRISON_SHOW_LANDING_PAGE", "ResetGarrisonSize");
-	end
 end
 
 function MB:Initialize()

@@ -1,23 +1,9 @@
 ------------------------------------------------------------------------
-r276 | Talyrius | 2018-07-29 18:13:32 +0000 (Sun, 29 Jul 2018) | 1 line
+r278 | nebula169 | 2018-08-29 23:41:15 +0000 (Wed, 29 Aug 2018) | 1 line
 Changed paths:
-   M /trunk/AuctionLite.toc
-   M /trunk/BuyFrame.xml
-
-Updated for Patch 8.0.1: Battle for Azeroth.
-------------------------------------------------------------------------
-r275 | Deahgib | 2017-10-16 23:33:53 +0000 (Mon, 16 Oct 2017) | 1 line
-Changed paths:
+   M /trunk/CreateAuctions.lua
    M /trunk/SellFrame.lua
-   M /trunk/SellFrame.xml
 
-Sell tab, added Max buttons to stack size and item size textfields. Copiying remote App functionality. 
-------------------------------------------------------------------------
-r274 | cybeloras | 2016-07-29 06:02:37 +0000 (Fri, 29 Jul 2016) | 1 line
-Changed paths:
-   M /trunk/SellFrame.lua
-   M /trunk/Util.lua
-
-Attempt to suppress suffixes in the competing options list, since the main reason people still sell greens is because of transmog.
+Update for deposit changes
 ------------------------------------------------------------------------
 

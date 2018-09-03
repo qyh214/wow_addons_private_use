@@ -1,18 +1,18 @@
-tag 657b4c12d33ce902e9d4af86ff9486dbbb2ef927 2.19.0
+tag 9a7ecb947ebeb0906003a8ed635b077709c17e18 3.0.0
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Fri Aug 17 13:27:19 2018 +0200
+Date:	Fri Aug 31 17:53:21 2018 +0200
 
-Removed autologout function (no longer allowed from Blizzard)
+BFA new fixes
 
-commit f87acf58dc4e774da8ae1f13d8f7156eae4f664a
+commit d64531b38fd27c824e0749e21f7c90b6cd6393dd
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Fri Aug 17 13:24:35 2018 +0200
+Date:   Fri Aug 31 17:52:50 2018 +0200
 
-    rel notes
+    Hopefully final round of fixes for BFA
 
-commit 6cd27752bcf4554792b300e52b556a8b967f5324
+commit c08038f645e602ac53b19fe3562ec179c8739b33
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Fri Aug 17 13:21:27 2018 +0200
+Date:   Fri Aug 17 13:32:08 2018 +0200
 
-    Logout can no longer be called by addons
+    Linked pkgmeta
 

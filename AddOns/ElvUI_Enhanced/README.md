@@ -2,7 +2,7 @@
 Since version 3.2.3-beta1 you need at least ElvUI version 10.62 or higher for the addon to work.
 
 # General Information
-This is a continuation of ElvUI Enhanced (Abandoned http://wow.curseforge.com/addons/elvui-enhanced/). Updated for Legion.
+This is a continuation of ElvUI Enhanced (Abandoned http://wow.curseforge.com/addons/elvui-enhanced/). Updated for BFA.
 
 If you find any bugs or features that are not working please let me know by creating a ticket: https://github.com/nickbock/ElvUI_Enhanced_Again/issues
 

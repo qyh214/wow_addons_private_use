@@ -1,7 +1,19 @@
-changeset:   305:a608ca28bece
-tag:         v8.0.1.305
+changeset:   311:19e1bed70fba
+tag:         tip
 user:        Tercio
-date:        Tue Aug 21 17:54:11 2018 -0300
-summary:     - Fixed tooltips in the Taxi frame.
+date:        Thu Aug 30 10:54:11 2018 -0300
+summary:     - Fixed an issue where world in the world map won't show for some characters.
+
+
+changeset:   310:4eea84a94106
+user:        Tercio
+date:        Wed Aug 29 19:32:42 2018 -0300
+summary:     - Fixed the Failed to load due to an extra space character in the .toc file.
+
+
+changeset:   309:4937dbf56eb0
+user:        Tercio
+date:        Tue Aug 28 20:17:20 2018 -0300
+summary:     - Fixing broken version, tested the version before sent.
 
 

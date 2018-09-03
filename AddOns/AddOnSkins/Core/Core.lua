@@ -162,7 +162,7 @@ function AS:RegisteredSkin(addonName, priority, func, events)
 	end
 end
 
-function AS:RegisterForPreload(addonName, skinFunc, addon1)
+function AS:RegisterSkinForPreload(addonName, skinFunc, addon1)
 	AS.preload[addonName] = { func = skinFunc, addon = addon1 }
 end
 
@@ -204,8 +204,8 @@ function AS:UnregisterSkinEvent(addonName, event)
 	if not AS.events[event] then return end
 	if not AS.events[event][addonName] then return end
 	AS.events[event][addonName] = nil
-	for addonName, _ in pairs(AS.events[event]) do
-		if addonName then
+	for addon, _ in pairs(AS.events[event]) do
+		if addon then
 			return
 		end
 	end
@@ -230,7 +230,7 @@ function AS:StartSkinning(event)
 		for Version, SkinTable in pairs(AddOnSkinsDS) do
 			if Version == AS.Version or Version < AS.Version then
 				for addonName, _ in pairs(SkinTable) do
-					AS:SetOption(addonName, (Version == AS.Version and false or true))
+					AS:SetOption(addonName, ((Version == AS.Version) and false or (Version < AS.Version) and true))
 				end
 				if Version < AS.Version then
 					AddOnSkinsDS[Version] = nil
@@ -332,7 +332,7 @@ function AS:BugReportFrame(ErrorIndex)
 		AS:CreateShadow(BugReportFrame)
 		BugReportFrame:SetPoint('CENTER', UIParent, 'CENTER')
 		BugReportFrame:SetFrameStrata('DIALOG')
-		BugReportFrame:SetSize(480, 260)
+		BugReportFrame:SetSize(480, 460)
 		BugReportFrame:EnableMouse(true)
 		BugReportFrame:SetMovable(true)
 		BugReportFrame:RegisterForDrag('LeftButton')
@@ -342,6 +342,11 @@ function AS:BugReportFrame(ErrorIndex)
 		BugReportFrame.Title:SetFont(AS.Font, 14)
 		BugReportFrame.Title:SetPoint('TOP', BugReportFrame, 'TOP', 0, -4)
 		BugReportFrame.Title:SetText(ASL['AddOnSkins Bug Report'])
+
+		BugReportFrame.Report = BugReportFrame:CreateFontString(nil, "OVERLAY")
+		BugReportFrame.Report:SetFont(AS.Font, 14)
+		BugReportFrame.Report:SetPoint('TOP', BugReportFrame, 'TOP', 0, -26)
+		BugReportFrame.Report:SetText("Step 1: Open Favorite Internet Browser. \n\n Step 2: Enter GitLab link into address bar. \n\n Step 3: Check Current Issues. \n\n Step 4: If not present open New Issue. \n\n Step 5: Enter details from below.")
 
 		for _, Name in pairs({ 'GitLab', 'BugTitle', 'BugError'}) do
 			BugReportFrame[Name] = CreateFrame("EditBox", nil, BugReportFrame, "InputBoxTemplate")
@@ -353,18 +358,18 @@ function AS:BugReportFrame(ErrorIndex)
 			BugReportFrame[Name].Text = BugReportFrame[Name]:CreateFontString(nil, 'OVERLAY', "ChatFontNormal")
 		end
 
-		BugReportFrame.GitLab:SetPoint("TOP", 0, -30)
+		BugReportFrame.GitLab:SetPoint("TOP", 0, -180)
 		BugReportFrame.GitLab:SetSize(250, 19)
 		BugReportFrame.GitLab:SetText(AS.TicketTracker)
 		BugReportFrame.GitLab.Text:SetPoint('RIGHT', BugReportFrame.GitLab, 'LEFT', -10, 0)
 		BugReportFrame.GitLab.Text:SetText('GitLab')
 
-		BugReportFrame.BugTitle:SetPoint("TOP", 0, -60)
+		BugReportFrame.BugTitle:SetPoint("TOP", 0, -210)
 		BugReportFrame.BugTitle:SetSize(250, 19)
 		BugReportFrame.BugTitle.Text:SetPoint('RIGHT', BugReportFrame.BugTitle, 'LEFT', -10, 0)
 		BugReportFrame.BugTitle.Text:SetText('Ticket Title')
 
-		BugReportFrame.BugError:SetPoint("TOP", 0, -110)
+		BugReportFrame.BugError:SetPoint("TOP", 0, -260)
 		BugReportFrame.BugError:SetSize(350, 150)
 		BugReportFrame.BugError:SetMultiLine(true)
 		BugReportFrame.BugError.Text:SetPoint('BOTTOM', BugReportFrame.BugError, 'TOP', 0, 5)
@@ -377,7 +382,7 @@ function AS:BugReportFrame(ErrorIndex)
 		BugReportFrame.Prev = CreateFrame('Button', nil, BugReportFrame, 'OptionsButtonTemplate')
 		AS:SkinButton(BugReportFrame.Prev)
 		BugReportFrame.Prev:SetSize(70, 25)
-		AddOnSkinsBugReportFrame.Prev:SetPoint('RIGHT', BugReportFrame, 'BOTTOM', -80, 20)
+		BugReportFrame.Prev:SetPoint('RIGHT', BugReportFrame, 'BOTTOM', -80, 20)
 		BugReportFrame.Prev:SetFormattedText('|cFFFFFFFF%s|r', PREVIOUS)
 
 		BugReportFrame.Prev:SetScript('OnClick', function()

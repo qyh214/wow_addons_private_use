@@ -102,6 +102,8 @@ local spellids={
 	[158745]='mine',
 	[170599]='mine',
 	[170691]='herb',
+	[195122]='herb',
+	[195114]='mine',
 }
 local buildids={
 	mine={61,62,63},
@@ -174,7 +176,7 @@ function addon:QUEST_TURNED_IN(event,quest,item,gold)
 	end
 
 end
-function addon:UNIT_SPELLCAST_START(event,unit,name,rank,lineID,spellID)
+function addon:UNIT_SPELLCAST_START(event,unit,lineID,spellID)
 	if (unit=='player') then
 		if spellids[spellID] then
 			name=names[spellids[spellID]]

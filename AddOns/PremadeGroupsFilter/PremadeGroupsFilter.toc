@@ -1,0 +1,28 @@
+## Interface: 80000
+## Title: Premade Groups Filter
+## Version: 1.20
+## Notes: Allows filtering of premade groups using an UI or advanced filter expressions.
+## Author: Elotheon-Arthas-EU
+## SavedVariables:
+## SavedVariablesPerCharacter: PremadeGroupsFilterState
+
+Init.lua
+Localization\enUS.lua
+Localization\frFR.lua
+Localization\deDE.lua
+Localization\koKR.lua
+Localization\zhTW.lua
+Localization\ruRU.lua
+Localization\esES.lua
+Modules\Util.lua
+Modules\Difficulty.lua
+Modules\Lockout.lua
+Modules\Expression.lua
+Modules\Macro.lua
+Main.lua
+Dialog\PopupMenu.xml
+Dialog\PopupMenu.lua
+Dialog\Help.lua
+Dialog\Setup.lua
+Dialog\Dialog.lua
+Dialog\Dialog.xml

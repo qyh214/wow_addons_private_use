@@ -78,16 +78,24 @@ end
 function PLH_GetFullName(name)
 	if name == nil then
 		return nil
-	elseif string.find(name, '-') then
+	elseif string.find(name, '-') ~= nil then
 		return name
 	else
-		local name, realm = UnitFullName(name)
-		if name == nil then
-			return nil
-		elseif realm == nil or realm == '' then
-			return name .. '-' .. GetRealmName()
+		local guid = UnitGUID(name)
+		if guid ~= nil then
+			local _, _, _, _, _, shortname, realm = GetPlayerInfoByGUID(guid)
+			if not realm or realm == '' then
+				realm = GetRealmName()
+			end
+			if shortname == nil then
+				return nil
+			elseif realm == nil then
+				return shortname
+			else
+				return shortname .. '-' .. realm
+			end
 		else
-			return name .. '-' .. realm
+			return name
 		end
 	end
 end

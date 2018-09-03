@@ -22,6 +22,10 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(3,0,0,[[
+Feature: Updated broker
+]])
+
 self:RelNotes(2,19,0,[[
 Feature: Addon can no longer log out the game. No workaround found, so Autologout and logout were removed
 ]])

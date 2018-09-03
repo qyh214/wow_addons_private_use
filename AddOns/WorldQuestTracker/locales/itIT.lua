@@ -18,10 +18,8 @@ L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = "Vuoi abbandonare il gruppo?"
 L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = "Lasciando il gruppo in (clicca per lasciare adesso):"
 L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = "Riprova ricerca"
 L["S_GROUPFINDER_ACTIONS_SEARCH"] = "clicca per iniziare la ricerca di un gruppo"
---[[Translation missing --]]
---[[ L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = ""--]] 
+L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = "Cerca un gruppo per uccidere questo raro"
+L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = "Unisciti ad un gruppo che stia facendo questa missione"
 L["S_GROUPFINDER_ACTIONS_SEARCHING"] = "cercando..."
 L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = "clicca per cercare altri membri per il gruppo"
 L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = "Lasciare l'attuale gruppo e cercarne un altro?"

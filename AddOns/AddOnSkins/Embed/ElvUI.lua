@@ -54,6 +54,19 @@ function AS:EmbedSystemHooks()
 			GameTooltip:AddDoubleLine(L['Right Click:'], L['Toggle Embedded Addon'], 1, 1, 1)
 			GameTooltip:Show()
 		end)
+
+		local RightChatToggle = function()
+			if not E.db[RightChatToggleButton.parent:GetName()..'Faded'] then
+				AS:SetOption('EmbedIsHidden', true)
+				EmbedSystem_MainWindow:Hide()
+			else
+				AS:SetOption('EmbedIsHidden', false)
+				EmbedSystem_MainWindow:Show()
+			end
+		end
+
+		hooksecurefunc(_G, "HideRightChat", RightChatToggle)
+		hooksecurefunc(_G, "HideBothChat", RightChatToggle)
 	end
 end
 

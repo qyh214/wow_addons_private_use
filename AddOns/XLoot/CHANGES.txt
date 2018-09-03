@@ -1,10 +1,18 @@
-lightweight tag c0a56103d1ff46259e491fc8748d9cb03b6a8651 8.0-5
+tag 7a26607406426153ca4e3cc93a80103eeae00776 8.0-6
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Fri Aug 24 00:46:03 2018 -0400
+Date:	Fri Aug 31 02:52:25 2018 -0400
 
-commit c0a56103d1ff46259e491fc8748d9cb03b6a8651
+Options fixes
+
+commit 5b0877a773260da355fb7e1f5de65d6295016ab5
 Author: Xuerian <xuerian@gmail.com>
-Date:   Fri Aug 24 00:46:03 2018 -0400
+Date:   Fri Aug 24 01:29:15 2018 -0400
 
-    Frame: Respect padding options when collapsing looted slots
+    Options: Unify options formatting
+
+commit 00ecdff6c0540a1faff02d3a63b0f0ac381a18eb
+Author: Xuerian <xuerian@gmail.com>
+Date:   Fri Aug 24 01:08:40 2018 -0400
+
+    Options: Correctly handle untyped select elements with more positional arguments
 

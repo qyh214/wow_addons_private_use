@@ -1,44 +1,52 @@
-tag 382bd22992b655807ebf04a07bdb2a2582dc309e 3.3.2-beta1
+tag 270badf19f8401c2db9091b442387ae9c3a3e653 3.3.2-beta2
 Author:	Feraldin <nickbock@hoarder.bocky.nl>
-Date:	Mon Aug 27 23:58:39 2018 +0200
+Date:	Sun Sep 2 12:25:30 2018 +0200
 
-3.3.2-beta1
-* Optimalisation to remove micro stutter.
-* Added functionalty for multiple columns in the minimap bar. (beta)
+3.3.2-beta2
+* Minimapbar improvements
 
-commit b199ed2d112e232d8aea9a37a3b85a92c5c872f6
+commit af292e2a9995225ef8e08ca6a1337f65b876bb29
 Author: Nick <git@bockmeulen.nl>
-Date:   Mon Aug 27 23:57:51 2018 +0200
+Date:   Sun Sep 2 12:20:18 2018 +0200
 
-    version bumb and changelog
+    typos
 
-commit 95283bc3c9b941ad836ded6ab1a97c7ba8247dc6
+commit f9c5bb192e8cbeec6165eb5a1a74bb9790ae5a60
 Author: Nick <git@bockmeulen.nl>
-Date:   Mon Aug 27 00:13:04 2018 +0200
+Date:   Sun Sep 2 12:19:41 2018 +0200
 
-    remove debug
+    changelog
 
-commit 95283bc3c9b941ad836ded6ab1a97c7ba8247dc6
+commit 50474625bc480b6256904df3135d62f70a6caf51
 Author: Nick <git@bockmeulen.nl>
-Date:   Mon Aug 27 00:13:04 2018 +0200
+Date:   Sun Sep 2 12:11:49 2018 +0200
 
-    remove debug
+    minimapbar improvements
 
-commit 1b04173541c1b5a30a6e5cf88a2f444d49ae914d
+commit ee1b15972c4f48b3073ad91751e134d3cc8cae0f
 Author: Nick <git@bockmeulen.nl>
-Date:   Sun Aug 26 13:35:53 2018 +0200
+Date:   Sat Sep 1 15:50:38 2018 +0200
 
-    remove debug
+    gitignore update
 
-commit 5bf83b75cd8afe1f8603efbd4ebdc3ed38560ddd
+commit 695830ad55e967e6a131ba13987b6d8bca983592
 Author: Nick <git@bockmeulen.nl>
-Date:   Sun Aug 26 02:06:51 2018 +0200
+Date:   Sat Sep 1 15:47:28 2018 +0200
 
-    first setup
+    Version bumb
 
-commit 1bf066401943d5ad4d5c5cf4f54bbf9c2c20920b
+commit 29ad142da4ba01565849e8f2d0219595a5fa6e97
 Author: Nick <git@bockmeulen.nl>
-Date:   Sat Aug 25 17:46:20 2018 +0200
+Date:   Sat Sep 1 15:45:51 2018 +0200
 
-    microstutter fix1
+    improve minibar
+    
+    * Garrison button improvement
+    * Max icons per column improvement
+
+commit dfb774daa67fd302705228ba8ce5adbcfc862202
+Author: Nick Bockmeulen <git@bockmeulen.nl>
+Date:   Tue Aug 28 12:28:42 2018 +0200
+
+    Update README.md
 

@@ -1,0 +1,16 @@
+lightweight tag f08c8e13105fe27f1a0f893ac3b3f090c3f5bdd7 1.20
+Author:	Bernhard Saumweber <b.saumweber@gmail.com>
+Date:	Wed Aug 22 22:54:11 2018 +0200
+
+commit f08c8e13105fe27f1a0f893ac3b3f090c3f5bdd7
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Wed Aug 22 22:54:11 2018 +0200
+
+    Fixed keywords kr, sob, tml, tosl, tur by adding missing activity IDs
+
+commit 2846e9a45be2c35959cf06667c847e9524e418cc
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Sat Aug 11 22:45:57 2018 +0200
+
+    Set version to next release version: 1.20
+
