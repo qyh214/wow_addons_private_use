@@ -46,8 +46,6 @@ HandyNotes
 
 HiddenArtifactTracker
 
-MeetingStone 集合石
-
 MikScrollingBattleText（MSBT战斗浮动信息，parrot替代品）
 
 MoveAnything 
@@ -55,6 +53,8 @@ MoveAnything
 Multishot 自动截图
 
 Myslot
+
+PremadeGroupsFilter
 
 PersonalLootHelper 个人拾取帮助
 

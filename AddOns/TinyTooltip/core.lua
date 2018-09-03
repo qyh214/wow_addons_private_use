@@ -39,6 +39,7 @@ addon.tooltips = {
     ItemRefShoppingTooltip2,
     WorldMapCompareTooltip1,
     WorldMapCompareTooltip2,
+    NamePlateTooltip,
 }
 
 -- 圖標集
@@ -186,7 +187,7 @@ end
 
 -- PVP圖標
 function addon:GetPVPIcon(unit)
-    if (UnitIsPVPFreeForAll(unit) and UnitPrestige(unit) <= 0) then
+    if (UnitIsPVPFreeForAll(unit) and UnitPrestige(unit) and UnitPrestige(unit) <= 0) then
         return self.icons.pvp
     end
 end

@@ -44,7 +44,12 @@ ElvUI下载地址：https://www.tukui.org/download.php?ui=elvui&changelog
 
 自动截图插件：http://bbs.ngacn.cc/read.php?tid=7534350
 
-TinyInspect、Tiny系列：http://bbs.ngacn.cc/read.php?tid=10240957
+TinyInspect、TinyTooltip：
+http://bbs.ngacn.cc/read.php?tid=10240957
+
+http://www.wowinterface.com/downloads/info24688-TinyTooltip-8.0-BFA.html
+
+http://www.wowinterface.com/downloads/info24689-TinyInspect-8.0-BFA.html
 
 SimpleChat：http://bbs.ngacn.cc/read.php?tid=9633520
 

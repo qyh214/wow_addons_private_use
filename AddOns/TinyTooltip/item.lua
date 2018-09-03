@@ -11,7 +11,9 @@ end
 
 if (GameTooltip_SetBackdropStyle) then
     hooksecurefunc("GameTooltip_SetBackdropStyle", function(self, style)
-        self:SetBackdrop(nil)
+        if (self.style) then
+            self:SetBackdrop(nil)
+        end
     end)
 end
 
