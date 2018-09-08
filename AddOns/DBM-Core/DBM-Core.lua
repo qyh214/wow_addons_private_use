@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 17739 $"):sub(12, -3)),
-	DisplayVersion = "8.0.5", -- the string that is shown as version
-	ReleaseRevision = 17739 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 17762 $"):sub(12, -3)),
+	DisplayVersion = "8.0.6", -- the string that is shown as version
+	ReleaseRevision = 17762 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -105,6 +105,7 @@ DBM.DefaultOptions = {
 	EventSoundWipe = "None",
 	EventSoundEngage = "",
 	EventSoundMusic = "None",
+	EventSoundTurle = "None",
 	EventSoundDungeonBGM = "None",
 	EventSoundMusicCombined = false,
 	EventDungMusicMythicFilter = true,
@@ -292,6 +293,7 @@ DBM.Defeat = {
 	{text = "Hodir: Tragic",value = "Sound\\Creature\\Hodir\\UR_Hodir_Slay01.ogg", length=4},
 	{text = "Thorim: Failures",value = "Sound\\Creature\\Thorim\\UR_Thorim_P1Wipe01.ogg", length=4},
 	{text = "Valithria: Failures",value = "Sound\\Creature\\ValithriaDreamwalker\\IC_Valithria_Berserk01.ogg", length=4},
+	--{text = "Scrollsage Nola: Cycle",value = "Sound\\Creature\\Thorim\\UR_Thorim_P1Wipe01.ogg", length=4},--When someone gives me the correct sound path (not media ID), this will be added
 }
 DBM.Music = {--Contains all music media, period
 	{text = "None",value  = "None"},
@@ -1357,7 +1359,8 @@ do
 				"PLAYER_SPECIALIZATION_CHANGED",
 				"PARTY_INVITE_REQUEST",
 				"LOADING_SCREEN_DISABLED",
-				"SCENARIO_COMPLETED"
+				"SCENARIO_COMPLETED",
+				"UPDATE_VEHICLE_ACTIONBAR"
 			)
 			if RolePollPopup:IsEventRegistered("ROLE_POLL_BEGIN") then
 				RolePollPopup:UnregisterEvent("ROLE_POLL_BEGIN")
@@ -3749,6 +3752,44 @@ function DBM:SCENARIO_COMPLETED()
 	end
 end
 
+do
+	local function delayedVehicleCheck(self)
+		if self.Options.turtlePlaying and not HasVehicleActionBar() then
+			DBM:TransitionToDungeonBGM(false, true)
+			return
+		end
+		if self:GetCIDFromGUID(UnitGUID("pet")) == 138172 then
+			fireEvent("DBM_MusicStart", "Turtle")
+			if not self.Options.tempMusicSetting then
+				self.Options.tempMusicSetting = tonumber(GetCVar("Sound_EnableMusic"))
+				if self.Options.tempMusicSetting == 0 then
+					SetCVar("Sound_EnableMusic", 1)
+				else
+					self.Options.tempMusicSetting = nil--Don't actually need it
+				end
+			end
+			local path = "MISSING"
+			if self.Options.EventSoundTurle == "Random" then
+				local usedTable = self.Options.EventSoundMusicCombined and DBM.Music or DBM.BattleMusic
+				local random = fastrandom(3, #usedTable)
+				path = usedTable[random].value
+			else
+				path = self.Options.EventSoundTurle
+			end
+			PlayMusic(path)
+			self.Options.turtlePlaying = true
+			DBM:Debug("Starting turtle music with file: "..path)
+		end
+	end
+
+	function DBM:UPDATE_VEHICLE_ACTIONBAR()
+		if self.Options.EventSoundTurle and self.Options.EventSoundTurle ~= "None" and self.Options.EventSoundTurle ~= "" then
+			self:Unschedule(delayedVehicleCheck)
+			self:Schedule(1, delayedVehicleCheck, self)
+		end
+	end
+end
+
 --------------------------------
 --  Load Boss Mods on Demand  --
 --------------------------------
@@ -3785,9 +3826,10 @@ do
 				self.Options.tempMusicSetting = nil
 				DBM:Debug("Restoring Sound_EnableMusic CVAR")
 			end
-			if self.Options.musicPlaying then--Primarily so DBM doesn't call StopMusic unless DBM is one that started it. We don't want to screw with other addons
+			if self.Options.musicPlaying or self.Options.turtlePlaying then--Primarily so DBM doesn't call StopMusic unless DBM is one that started it. We don't want to screw with other addons
 				StopMusic()
 				self.Options.musicPlaying = nil
+				self.Options.turtlePlaying = nil
 				DBM:Debug("Stopping music")
 			end
 			fireEvent("DBM_MusicStop", "ZoneOrCombatEndTransition")
@@ -6274,7 +6316,7 @@ do
 	local autoTLog = false
 	
 	local function isCurrentContent()
-		if LastInstanceMapID == 1520 or LastInstanceMapID == 1530 or LastInstanceMapID == 1220 or LastInstanceMapID == 1648 or LastInstanceMapID == 1676 or LastInstanceMapID == 1712 then--Legion
+		if LastInstanceMapID == 1861 then--BfA
 			return true
 		end
 		return false
@@ -7935,7 +7977,14 @@ do
 			["HasInterrupt"] = true,
 			["RemoveEnrage"] = true,
 		},
-		[255] = {	--Survival Hunter (Legion)
+		[254] = {	--Markmanship Hunter Hunter
+			["Dps"] = true,
+			["Ranged"] = true,
+			["RangedDps"] = true,
+			["Physical"] = true,
+			["HasInterrupt"] = true,
+		},
+		[255] = {	--Survival Hunter (Legion+)
 			["Dps"] = true,
 			["Melee"] = true,
 			["MeleeDps"] = true,
@@ -8057,7 +8106,6 @@ do
 	specRoleTable[64] = specRoleTable[62]--Fire Mage same as arcane
 	specRoleTable[72] = specRoleTable[71]--Fury Warrior same as Arms
 	specRoleTable[252] = specRoleTable[251]--Unholy DK same as frost
-	specRoleTable[254] = specRoleTable[253]--Markmanship Hunter same as beast
 	specRoleTable[257] = specRoleTable[256]--Holy Priest same as disc
 	specRoleTable[260] = specRoleTable[259]--Combat Rogue same as Assassination
 	specRoleTable[261] = specRoleTable[259]--Subtlety Rogue same as Assassination

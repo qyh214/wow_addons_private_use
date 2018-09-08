@@ -2,7 +2,7 @@ local AS = unpack(AddOnSkins)
 
 if not AS:CheckAddOn('Baggins') then return end
 
-function AS:Baggins()
+function AS:Baggins(event)
 	local AddOnSkins_BagginsSkin = {
 		BagLeftPadding = 10,
 		BagRightPadding = 10,
@@ -58,9 +58,7 @@ function AS:Baggins()
 	local BankColor = { 0, .5, 1 }
 
 	function AddOnSkins_BagginsSkin:SetBankVisual(frame, isBank)
-		local color = isBank and BankColor or AS.BorderColor
-
-		frame:SetBackdropBorderColor(unpack(color))
+		frame.Backdrop:SetBackdropBorderColor(unpack(isBank and BankColor or AS.BorderColor))
 	end
 
 	function AddOnSkins_BagginsSkin:SkinSection(frame)

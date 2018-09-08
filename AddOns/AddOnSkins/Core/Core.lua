@@ -119,12 +119,15 @@ function AS:RegisterSkin(addonName, skinFunc, ...)
 end
 
 function AS:UnregisterSkin(addonName, skinFunc)
-	if not AS.register[addonName] then return end
+	if (not AS.register[addonName] or not AS.preload[addonName]) then return end
 
 	if skinFunc then
 		AS.register[addonName][skinFunc] = nil
 	else
 		AS.register[addonName] = nil
+	end
+	if AS.preload[addonName] then
+		AS.preload[addonName] = nil
 	end
 end
 
@@ -167,7 +170,7 @@ function AS:RegisterSkinForPreload(addonName, skinFunc, addon1)
 end
 
 function AS:RunPreload(addonName)
-	if AS:CheckAddOn(addonName) and AS.preload[addonName] then
+	if AS:CheckAddOn(addonName) and AS:CheckOption(addonName) and AS.preload[addonName] then
 		pcall(AS.preload[addonName].func, self, 'ADDON_LOADED', AS.preload[addonName].addon or addonName)
 	end
 end
@@ -251,10 +254,6 @@ function AS:StartSkinning(event)
 		end
 	end
 
-	if AS:CheckAddOn('ElvUI') then
-		ElvUI[1]:UpdateCooldownSettings('global')
-	end
-
 	if AS:CheckAddOn('AddonLoader') then
 		AS:AcceptFrame('AddOnSkins is not compatible with AddonLoader.\nPlease remove it if you would like all the skins to function.')
 	end
@@ -274,6 +273,7 @@ function AS:Init(event, addon)
 
 		self:RunPreload(addon)
 	end
+
 	if event == 'PLAYER_LOGIN' then
 		AS:BuildOptions()
 		AS:UpdateMedia()

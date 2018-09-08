@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AtalDazarTrash", "DBM-Party-BfA", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17735 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17762 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -27,7 +27,7 @@ local specWarnMendingWord			= mod:NewSpecialWarningInterrupt(253517, "HasInterru
 local specWarnDinoMight				= mod:NewSpecialWarningInterrupt(256849, "HasInterrupt", nil, nil, 1, 2)
 local specWarnUnstableHex			= mod:NewSpecialWarningInterrupt(252781, "HasInterrupt", nil, nil, 1, 2)
 local specWarnTransfusion			= mod:NewSpecialWarningMoveTo(260666, nil, nil, nil, 3, 2)
-local specWarnFanaticsRageDispel	= mod:NewSpecialWarningDispel(255824, "RemoveEnrage", nil, nil, 1, 2)
+local specWarnFanaticsRageDispel	= mod:NewSpecialWarningDispel(255824, "RemoveEnrage", nil, 2, 1, 2)
 local specWarnDinoMightDispel		= mod:NewSpecialWarningDispel(256849, "MagicDispeller", nil, nil, 1, 2)
 local specWarnVenomfangStrikeDispel	= mod:NewSpecialWarningDispel(252687, "RemovePoison", nil, nil, 1, 2)
 
@@ -68,7 +68,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnTransfusion:Play("takedamage")
 	elseif spellId == 255824 then
 		specWarnFanaticsRageDispel:Show(args.destName)
-		specWarnFanaticsRageDispel:Play("trannow")
+		specWarnFanaticsRageDispel:Play("helpdispel")
 	elseif spellId == 256849 then
 		specWarnDinoMightDispel:Show(args.destName)
 		specWarnDinoMightDispel:Play("helpdispel")
@@ -76,7 +76,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnUnstableHexSelf:Show()
 		specWarnUnstableHexSelf:Play("runout")
 		yellUnstableHex:Yell()
-	elseif spellId == 252687 then
+	elseif spellId == 252687 and args:IsDestTypePlayer() then
 		if args:IsPlayer() then
 			specWarnVenomfangStrike:Show()
 			specWarnVenomfangStrike:Play("defensive")
@@ -93,7 +93,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 253583 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnFieryEnchant:Show(args.sourceName)
 		specWarnFieryEnchant:Play("kickcast")
-	elseif spellId == 253721 then
+	elseif spellId == 253721 and self:AntiSpam(3, 1) then
 		warnBulwarkofJuju:Show()
 	end
 end

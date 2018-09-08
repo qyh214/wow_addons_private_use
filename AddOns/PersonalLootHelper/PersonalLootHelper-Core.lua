@@ -33,6 +33,9 @@ Known Bugs:
 		
 CHANGELOG:
 
+20180903 - 2.17
+	Fixed issue that caused PLH to not work for players whose realms have spaces in their names
+	
 20180902 - 2.16
 	Fixed several more bugs that affected loot trading
 	
@@ -1886,7 +1889,7 @@ end
 -- Event handler for CHAT_MSG_ADDON event
 local function AddonMessageReceivedEvent(self, event, ...)
 	local prefix, message, _, sender = ...
-	
+
 	if prefix == 'PLH' then
 	
 		sender = PLH_GetFullName(sender)
@@ -1898,7 +1901,7 @@ local function AddonMessageReceivedEvent(self, event, ...)
 			process, lootedItemID, looterName = message:match('(.+)~(.+)~(.+)')
 		end
 		looterName = PLH_GetFullName(looterName)
-		
+
 		if process == "KEEP" then
 			PLH_ProcessKeepItemMessage(sender, lootedItemID)
 		elseif process == "TRADE" then

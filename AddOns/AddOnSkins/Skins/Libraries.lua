@@ -209,6 +209,29 @@ function AS:SkinLibraries()
 	if DBIcon then
 		AS:SkinTooltip(LibDBIconTooltip)
 	end
+
+	local LET = LibStub('LibExtraTip-1', true)
+	if LET then
+		LET:AddCallback(function(tip,_,_,_,_,quality)
+			local extraTip = LET:GetExtraTip(tip)
+			if extraTip then
+				AS:SetTemplate(extraTip)
+				if quality and quality > 1 then
+					local color = BAG_ITEM_QUALITY_COLORS[quality]
+					extraTip:SetBackdropBorderColor(color.r, color.g, color.b)
+				end
+			end
+		end, 0)
+	end
+
+	local LQT = LibStub("LibQTip-1.0", true)
+	if LQT then
+		hooksecurefunc(LQT, 'Acquire', function()
+			for _, Tooltip in LQT:IterateTooltips() do
+				AS:SkinFrame(Tooltip)
+			end
+		end)
+	end
 end
 
 AS:RegisterSkin('Libraries', AS.SkinLibraries)

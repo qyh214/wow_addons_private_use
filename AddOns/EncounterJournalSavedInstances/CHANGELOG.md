@@ -1,3 +1,6 @@
+### v.1.1.9
+- [x] Encounter Journal should now properly display current instance if you're inside
+
 ### v1.1.8
 - [x] Various improvements code-side
 - [x] Instance progress frames should now be updated by switching tab as intended, no more ``/reload`` needed

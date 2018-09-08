@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2155, "DBM-Party-BfA", 4, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17712 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17761 $"):sub(12, -3))
 mod:SetCreatureID(134060)
 mod:SetEncounterID(2132)
 mod:SetZone()
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 )
 
 mod:RegisterEvents(
-	"CHAT_MSG_MONSTER_YELL"
+	"CHAT_MSG_MONSTER_SAY"
 )
 
 --local warnSwirlingScythe			= mod:NewTargetAnnounce(195254, 2)
@@ -31,7 +31,7 @@ local yellAncientMindbender			= mod:NewYell(269131)
 local timerRP						= mod:NewRPTimer(68)
 local timerVoidBoltCD				= mod:NewCDTimer(7.3, 268347, nil, "HasInterrupt", nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 local timerMindRendCD				= mod:NewCDTimer(10.5, 268896, nil, nil, nil, 3, nil, DBM_CORE_HEALER_ICON..DBM_CORE_MAGIC_ICON)
-local timerWakentheVoidCD			= mod:NewCDTimer(52.3, 269097, nil, nil, nil, 3)--IFFY, could be health based
+--local timerWakentheVoidCD			= mod:NewCDTimer(52.3, 269097, nil, nil, nil, 3)--IFFY, could be health based
 local timerAncientMindbenderCD		= mod:NewCDTimer(42.5, 269131, nil, nil, nil, 3, nil, DBM_CORE_DAMAGE_ICON)--Health based?
 
 --mod:AddRangeFrameOption(5, 194966)
@@ -41,7 +41,7 @@ mod.vb.interruptCount = 0
 function mod:OnCombatStart(delay)
 	self.vb.interruptCount = 0
 	timerMindRendCD:Start(16-delay)
-	timerWakentheVoidCD:Start(13.1-delay)
+	--timerWakentheVoidCD:Start(13.1-delay)
 	timerAncientMindbenderCD:Start(19.6-delay)--SUCCESS
 end
 
@@ -74,7 +74,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 269097 then
 		specWarnWakentheVoid:Show()
 		specWarnWakentheVoid:Play("watchorb")
-		timerWakentheVoidCD:Start()
+		--timerWakentheVoidCD:Start()
 	elseif spellId == 268347 then
 		timerVoidBoltCD:Start()
 		if self.vb.interruptCount == 2 then self.vb.interruptCount = 0 end
@@ -98,7 +98,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
+function mod:CHAT_MSG_MONSTER_SAY(msg, npc, _, _, target)
 	--"<5.12 02:26:06> [CHAT_MSG_MONSTER_SAY] It would seem you have guests, Lord Stormsong.#Queen Azshara###Omegal##0#0##0#979#nil#0#false#false#false#false", -- [11]
 	--"<34.74 02:26:36> [ENCOUNTER_START] ENCOUNTER_START#2132#Lord Stormsong#1#5", -- [20]
 	if (msg == L.openingRP or msg:find(L.openingRP)) and self:LatencyCheck() then

@@ -1,178 +1,110 @@
-lightweight tag 3d9e2c5d6a7246ff0d0af3101e8d5711b1cbb25c 3.91
+lightweight tag 3318a4a5f6d33e20a839c85f271e442654b011f6 3.92
 Author:	Azilroka <darktemplar9900@yahoo.com>
-Date:	Sat Sep 1 12:26:14 2018 -0500
+Date:	Mon Sep 3 12:33:08 2018 -0500
 
-commit 3d9e2c5d6a7246ff0d0af3101e8d5711b1cbb25c
+commit 3318a4a5f6d33e20a839c85f271e442654b011f6
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Sep 1 12:26:14 2018 -0500
+Date:   Mon Sep 3 12:33:08 2018 -0500
 
-    3.91
+    3.92
 
-commit a0654b1fec4ed0b11a7425cfc80fde64ad6fdf66
+commit 5069c9c44cee2cbabff8921de94abb000134e45e
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Sep 1 12:25:23 2018 -0500
+Date:   Mon Sep 3 12:32:42 2018 -0500
 
-    AAP, Capping, Soundtrack, TinyDPS, MinArch
+    AzCastBar
 
-commit 0e34b45a0ea21a9e6711d64a2296ff22baa99513
+commit d5e3f0ecfb566d3ca83ac19886745fe57a7fea79
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Sep 1 11:14:20 2018 -0500
+Date:   Mon Sep 3 11:47:26 2018 -0500
 
-    Baggins
+    PetTracker
+    
+    Issue #223, #225, #226, #227, #230, #231
 
-commit 6ea3c1e57ee8a6cd51a9b68a572cf2357a2d3250
+commit 73c04be0f7d504e67a76ced92f6ea2a2df2d9f4e
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Aug 31 21:41:33 2018 -0500
+Date:   Sun Sep 2 21:49:42 2018 -0500
 
-    Bug Report Step by Step..
+    Better Inverted Shadow / PetTracker
 
-commit 229fa9066f810c9cfbea8a3933b4688c03b73498
-Author: AcidWeb <pawelj@iosphe.re>
-Date:   Fri Aug 31 06:28:02 2018 -0400
-
-    Updated Baggins skin
-
-commit 229fa9066f810c9cfbea8a3933b4688c03b73498
-Author: AcidWeb <pawelj@iosphe.re>
-Date:   Fri Aug 31 06:28:02 2018 -0400
-
-    Updated Baggins skin
-
-commit 229fa9066f810c9cfbea8a3933b4688c03b73498
-Author: AcidWeb <pawelj@iosphe.re>
-Date:   Fri Aug 31 06:28:02 2018 -0400
-
-    Updated Baggins skin
-
-commit b18756b524f27f3024b9ecd9aabece7015e283df
+commit 0dac8f12f4b7a5609d96433037108ad9ca3e1ee9
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Aug 31 03:57:43 2018 -0500
+Date:   Sun Sep 2 18:39:48 2018 -0500
 
-    RegisterForPreload -> RegisterSkinForPreload
+    Options & TMW
 
-commit 352a1cce47f7003e36a628ac5141f5682763d7fd
+commit 571fa0317e0f94819464fde0a392226d392ca961
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Aug 31 03:52:01 2018 -0500
+Date:   Sun Sep 2 17:16:19 2018 -0500
 
-    Fix Baggins load error.
+    PetTracker
 
-commit e4e594f8d42e558f03c33521ee8b0fea72136479
+commit 98f7f7c9e4663e063229146881fc3af2d9a64508
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Aug 31 03:42:55 2018 -0500
+Date:   Sun Sep 2 16:49:27 2018 -0500
 
-    Baggins / Remove MRP ElvUI Extentsion
+    Preload: Allow for Unregister
 
-commit 0b6e1d476923808b014c5e58eb41a44877268210
-Author: AcidWeb <pawelj@iosphe.re>
-Date:   Fri Aug 31 02:27:52 2018 -0400
-
-    Updated Baggins skin
-
-commit 0b6e1d476923808b014c5e58eb41a44877268210
-Author: AcidWeb <pawelj@iosphe.re>
-Date:   Fri Aug 31 02:27:52 2018 -0400
-
-    Updated Baggins skin
-
-commit d7f55199eb487488341951fa7caec0f99961c620
+commit d23dc4e3186ee9f30cf7da241de31eaf87642a0c
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Aug 30 22:12:13 2018 -0500
+Date:   Sun Sep 2 16:39:57 2018 -0500
 
-    Change Embed Strata / DBM / Libraries
+    Preload: API, Core, Options
 
-commit 52a5e460d18655ad8b579a7be2128fd0597ea70e
+commit d5d3493ecf06e91b17efe6488c82993ef6c0885e
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Aug 30 21:00:07 2018 -0500
+Date:   Sun Sep 2 12:25:29 2018 -0500
 
-    Update Several Issues
+    Libraries
+    
+    Issue #224
 
-commit 25afdf72252f015495352471e4cdd24ee802929a
-Author: Aldarana <micheller.baran.2012@gmail.com>
-Date:   Thu Aug 30 09:28:51 2018 -0400
-
-    Updated AAP skin for AAP questlist changes.
-
-commit 25afdf72252f015495352471e4cdd24ee802929a
-Author: Aldarana <micheller.baran.2012@gmail.com>
-Date:   Thu Aug 30 09:28:51 2018 -0400
-
-    Updated AAP skin for AAP questlist changes.
-
-commit 1d041a37ff664c32364de192aed7e4d4d2153b25
+commit 1025ef1f6ee6e5a341da3e98de4d928232eef44a
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Wed Aug 29 18:48:36 2018 -0500
+Date:   Sun Sep 2 08:49:39 2018 -0500
 
-    Altoholic / BuyEmAll / Extended Vendore / WA
+    Altoholic / TMW
 
-commit 4d4939e6a6005d579e617f1a8294a8bfd4e8d8f5
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sun Aug 26 10:30:28 2018 -0500
+commit fe21f6c9c8e1c35547d94aba50d25c48476fc7f3
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sun Sep 2 07:57:33 2018 -0500
 
-    Update Locales & Options
+    BarberShop / Bags / Libraries
 
-commit 00c69d6d19da49e54b232494892997f11bd09c83
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sun Aug 26 10:16:29 2018 -0500
+commit b920181a959bd0daf395d569fe533461951c6760
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sun Sep 2 07:51:03 2018 -0500
 
-    Remove Ancient AddOns / Cleanup
+    Baggins: Fix Backdrop Color
 
-commit fad9b1c8cee44404fe84435118696d97c760a77c
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sun Aug 26 07:54:02 2018 -0500
+commit 1e588a40b59b93913f621b1ac310a7eed8a87cbd
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sun Sep 2 07:38:15 2018 -0500
 
-    Ace3 Skin
+    This will allow Baggins hooks to be disabled.
 
-commit f4e88c3542faaa5af0b86902021d9df8241d34f0
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sun Aug 26 07:51:23 2018 -0500
+commit 752aa49f8e1cce53ce618de017d624080711703f
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sat Sep 1 16:23:31 2018 -0500
 
-    Code Cleanup / Talking Head
+    TinyInspect / WhisperPop
 
-commit be2c7bf1b68f9768dcbfe11450cb2fb23c19cbee
-Author: Whiro <mj.tindal@gmail.com>
-Date:   Sat Aug 25 21:41:57 2018 -0700
+commit be18ea59997cc1c68ed0469d15ff06a2c0cfa802
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sat Sep 1 14:57:36 2018 -0500
 
-    Make MerathilisUI styling an option, disabled by default.
+    Embed: ElvUI Macro Button Hide Chats
 
-commit 1d7c3f031cfb3ec604d47084f1605fac5850bb8b
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Wed Aug 22 18:24:11 2018 -0500
+commit f3936a4ec533010c93ebf41462e54fd853196372
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sat Sep 1 13:18:28 2018 -0500
 
-    Fix the Shadow on TalkingHead
+    TellMeWhen
 
-commit f29066fdafaed9ba7e1ed1702d4aa3fedc28781a
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Mon Aug 20 22:30:13 2018 -0500
+commit 31637fd8d3df7bfa196ad3837c6f03b36ccdcdc2
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sat Sep 1 12:32:36 2018 -0500
 
-    Stack Split / Talking Head / World Map
-
-commit dd7e22e15ac93b1c7fbd89968dd9dafed23aa81e
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sun Aug 19 22:30:34 2018 -0500
-
-    AddOnManager / Archeology
-
-commit 142d4a8d6ee8599bad98c6295b9e37a053ef6af4
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sat Aug 18 10:27:01 2018 -0500
-
-    Parchment Remover
-
-commit c38776f3d5606e84cd11424a44fc3acc50b828ee
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sat Aug 18 08:11:48 2018 -0500
-
-    Right Chat Fix
-
-commit 224e92458302fd63a772807c89830a3581667b05
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sat Aug 18 07:11:47 2018 -0500
-
-    ExtraQuestButton
-
-commit d7359c448512daca97a61a85a102fbe5d8099f05
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Sat Aug 18 06:17:27 2018 -0500
-
-    ElvUI: Support Hide Right Chat
+    Not needed anymore. It's in the WA skin.
 

@@ -1,52 +1,19 @@
-tag 270badf19f8401c2db9091b442387ae9c3a3e653 3.3.2-beta2
+tag 1b86ed32b20a3981855384d925119d47ce5290b7 3.3.3-beta2
 Author:	Feraldin <nickbock@hoarder.bocky.nl>
-Date:	Sun Sep 2 12:25:30 2018 +0200
+Date:	Sat Sep 8 00:27:43 2018 +0200
 
-3.3.2-beta2
-* Minimapbar improvements
+3.3.3-beta2
+* Progression tooltip was not working
 
-commit af292e2a9995225ef8e08ca6a1337f65b876bb29
+commit de67a7f5924125f97be0b47c1d21323b03dd9c8b
 Author: Nick <git@bockmeulen.nl>
-Date:   Sun Sep 2 12:20:18 2018 +0200
+Date:   Sat Sep 8 00:27:23 2018 +0200
 
-    typos
+    changelog and toc update
 
-commit f9c5bb192e8cbeec6165eb5a1a74bb9790ae5a60
+commit 323021684fd5bdd188d9f3cc88475fe114527ad3
 Author: Nick <git@bockmeulen.nl>
-Date:   Sun Sep 2 12:19:41 2018 +0200
+Date:   Sat Sep 8 00:26:46 2018 +0200
 
-    changelog
-
-commit 50474625bc480b6256904df3135d62f70a6caf51
-Author: Nick <git@bockmeulen.nl>
-Date:   Sun Sep 2 12:11:49 2018 +0200
-
-    minimapbar improvements
-
-commit ee1b15972c4f48b3073ad91751e134d3cc8cae0f
-Author: Nick <git@bockmeulen.nl>
-Date:   Sat Sep 1 15:50:38 2018 +0200
-
-    gitignore update
-
-commit 695830ad55e967e6a131ba13987b6d8bca983592
-Author: Nick <git@bockmeulen.nl>
-Date:   Sat Sep 1 15:47:28 2018 +0200
-
-    Version bumb
-
-commit 29ad142da4ba01565849e8f2d0219595a5fa6e97
-Author: Nick <git@bockmeulen.nl>
-Date:   Sat Sep 1 15:45:51 2018 +0200
-
-    improve minibar
-    
-    * Garrison button improvement
-    * Max icons per column improvement
-
-commit dfb774daa67fd302705228ba8ce5adbcfc862202
-Author: Nick Bockmeulen <git@bockmeulen.nl>
-Date:   Tue Aug 28 12:28:42 2018 +0200
-
-    Update README.md
+    fix progression tooltip
 

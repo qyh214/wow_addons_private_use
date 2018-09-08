@@ -75,11 +75,21 @@ function PLH_CreateEmptyTooltip(rows)
     return tooltip
 end
 
+local function GetNameWithoutSpacesInRealm(name)
+	if name == nil or string.find(name, '-') == nil then
+		return name
+	else
+		local shortname, realm = name:match('(.+)-(.+)')
+		realm = realm:gsub("%s+","")
+		return shortname .. '-' .. realm
+	end
+end
+
 function PLH_GetFullName(name)
 	if name == nil then
 		return nil
 	elseif string.find(name, '-') ~= nil then
-		return name
+		return GetNameWithoutSpacesInRealm(name)
 	else
 		local guid = UnitGUID(name)
 		if guid ~= nil then
@@ -92,7 +102,7 @@ function PLH_GetFullName(name)
 			elseif realm == nil then
 				return shortname
 			else
-				return shortname .. '-' .. realm
+				return GetNameWithoutSpacesInRealm(shortname .. '-' .. realm)
 			end
 		else
 			return name

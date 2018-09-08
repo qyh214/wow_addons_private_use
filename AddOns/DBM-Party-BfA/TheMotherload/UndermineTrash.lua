@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("UndermineTrash", "DBM-Party-BfA", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17738 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17757 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -32,7 +32,7 @@ local specWarnInhaleVapors			= mod:NewSpecialWarningInterrupt(262092, "HasInterr
 local specWarnForceCannon			= mod:NewSpecialWarningDodge(268865, nil, nil, nil, 2, 2)
 local specWarnAzeriteInjection		= mod:NewSpecialWarningDispel(262947, "MagicDispeller", nil, nil, 1, 2)
 local specWarnOverchargeDispel		= mod:NewSpecialWarningDispel(262540, "MagicDispeller", nil, nil, 1, 2)
-local specWarnInhaleVaporsDispel	= mod:NewSpecialWarningDispel(262092, "RemoveEnrage", nil, nil, 1, 2)
+local specWarnInhaleVaporsDispel	= mod:NewSpecialWarningDispel(262092, "RemoveEnrage", nil, 2, 1, 2)
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
@@ -80,14 +80,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 268702 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnFuriousQuake:Show(args.sourceName)
 		specWarnFuriousQuake:Play("kickcast")
-	elseif spellId == 262947 and not args:IsDestTypePlayer() then
-		specWarnAzeriteInjection:Show(args.sourceName)
+	elseif spellId == 262947 and not args:IsDestTypePlayer() and self:AntiSpam(3, 4) then
+		specWarnAzeriteInjection:Show(args.destName)
 		specWarnAzeriteInjection:Play("helpdispel")
-	elseif spellId == 262540 and not args:IsDestTypePlayer() then
-		specWarnOverchargeDispel:Show(args.sourceName)
+	elseif spellId == 262540 and not args:IsDestTypePlayer() and self:AntiSpam(3, 4) then
+		specWarnOverchargeDispel:Show(args.destName)
 		specWarnOverchargeDispel:Play("helpdispel")
-	elseif spellId == 262092 and self:AntiSpam(4, 4) then
-		specWarnInhaleVaporsDispel:Show(args.sourceName)
+	elseif spellId == 262092 and not args:IsDestTypePlayer() and self:AntiSpam(3, 4) then
+		specWarnInhaleVaporsDispel:Show(args.destName)
 		specWarnInhaleVaporsDispel:Play("helpdispel")
 	end
 end

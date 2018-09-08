@@ -1,158 +1,174 @@
-tag 92a0045c7ecc0fcf5647ae4856ee4cfc416d2e1d 8.0.5
+tag b7f810c01edd7ad5389459b79dbcc9fde0f83ca4 8.0.6
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Tue Aug 28 20:21:03 2018 +0200
+Date:	Mon Sep 3 11:37:50 2018 +0200
 
-Tagging as 8.0.5
+Tagging as 8.0.6
 
-commit c6fac77946b2861f534ea5e3a312765be623dffa
+commit a807cda5d65360cd677ac49a8bb931c6f9ff79b3
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Aug 28 20:21:03 2018 +0200
+Date:   Mon Sep 3 11:37:50 2018 +0200
 
-    increment version number to 8.0.5
+    increment version number to 8.0.6
 
-commit 5b590fb042133364c862eab6723274abe6b07eb5
+commit 784268ecc8f5b4c8683793807411ca2492e3e2d1
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Aug 28 10:42:04 2018 +0200
+Date:   Mon Sep 3 11:06:29 2018 +0200
 
-    Omega via svn r17739:
-    identified bug causing trash filter not to work
+    Omega via svn r17762:
+    Use helpdispel instead of trannow
+    Reason. Tranq shot is still gone, hunters use pet to dispel and druids ?\226?\128?\156sooth?\226?\128?\157 no one uses ?\226?\128?\156tranq shot?\226?\128?\157
 
-commit dea5adbbfe3e6503eb7ffa7b3f1a7b132dde9a6a
+commit 5af566d8d4bb126a4f9de7ac2f94fe85177cdfb0
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Aug 28 08:38:44 2018 +0200
+Date:   Mon Sep 3 02:46:38 2018 +0200
 
-    Omega via svn r17738:
-    Add trash warning I missed to motherload
-    Fix redundancy on Azerokk
+    Omega via svn r17761:
+    Fix stormsong RP timer, wrong event
 
-commit 85e52ee6d2f5a02dc66c86b7ed2c47b0455fef8e
+commit 6906a3d4fbdd5178fca1b9a982e0cb612b04b0a3
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Aug 28 08:31:25 2018 +0200
+Date:   Mon Sep 3 02:44:05 2018 +0200
 
-    Omega via svn r17737:
-    *Improved drill smash speed by 5 seconds
-    *removed IsValidWarning check on activate mech, since it caused half those warnings not to show (IsValidWarning make sure at least one member of group is in combat with unit, which isn?\226?\128?\153t always true for mechs since they don?\226?\128?\153t engage members of group, they run off)
+    Omega via svn r17760:
+    *Improve detection of debuffs/buffs that players spellsteal, or reflect, to reduce false trash warnings.
+    *Added 11 new trash warnings to Tol Dagor
 
-commit 37d828befdd2d0586ea449abc460d6ff83fa45d0
+commit 9f220d7582dbb921496c51d6082541a1c7411cf1
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Aug 28 05:18:28 2018 +0200
+Date:   Mon Sep 3 00:08:23 2018 +0200
 
-    Omega via svn r17736:
-    Another freehold trash warning pass, adding about 10 more warnings.
+    Omega via svn r17759:
+    *ES update
+    *Added yells to Fetid Devourer and optimized UnitDebuff check some.
 
-commit a7cede5428feec942f872184a44abd71f02eaca9
+commit c3186e572586279c3f388dca724566483dde1e49
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Aug 28 04:24:49 2018 +0200
+Date:   Sun Sep 2 10:27:53 2018 +0200
 
-    Omega via svn r17735:
-    Make the global normal/heroic trash filter on by default.
-    Added 13 new trash warnings to Atal Dazar
-    Wildfire trash warning in Atal Dazar is now OFF by default
-    Some voice pack fixes in Boralus and Kings rest trash mods
+    ebmor via svn r17758:
+    deDE update
 
-commit 4eade83f99e1ba613b0d56837c0b9ac41190ca0e
+commit e462e62bb3f73bdcc6f9ac81ef04b3f71d83d3fd
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Aug 27 07:46:06 2018 +0200
+Date:   Sat Sep 1 06:30:28 2018 +0200
 
-    Omega via svn r17734:
-    Rename voice
+    Omega via svn r17757:
+    *minor trash fixes
+    *Added Snake Charm to Avatar of Sethraliss encounter.
+    *Removed borrow timer from Merektha encounter (it?\226?\128?\153s health based)
+    *Added 16 trash warnings to Sethraliss Trash mod
 
-commit a899660c524cd8a928edc094784914c806ec691a
+commit f34afda3e18e4fed2e52d62a0e66a61dca451edb
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Aug 26 06:26:32 2018 +0200
+Date:   Fri Aug 31 22:30:03 2018 +0200
 
-    Omega via svn r17733:
-    *added 15 trash warnings to Siege of Boralus
-    *Updated all bosses in Siege of Boralus to improve/fix warnings and timers across the board
+    Omega via svn r17756:
+    Fix beachhead check
 
-commit 7786de0c1ece5211d8faa2d56ec953cfafd065fe
+commit e05f8a4f76e116bfc74d1375da3ec5299312aa5b
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Aug 25 07:24:13 2018 +0200
+Date:   Fri Aug 31 06:58:30 2018 +0200
 
-    Omega via svn r17732:
-    *Fixed some trash warnings that were on for everyone that should only be on for tanks
-    Work around another blizzard bug where ENCOUNTER_START fires for trash mobs near the boss (even though boss isn?\226?\128?\153t engaged)
-    *Added 23 trash warnings to Kings Rest
-    *Updated all boss mods in Kings Rest
+    Omega via svn r17755:
+    Scrapped an invalid warning in boralus.
+    Additional antispam tweaks across all mods to combine similar type warnings under same thresholds to ensure large pulls don?\226?\128?\153t result in higher spam.
 
-commit 9f157819f197014b2e0cefac74bfadabf74b0c8c
+commit 1979415f9caefad6eccbf04fdaf4cf50f0d2ac5e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Aug 24 06:14:18 2018 +0200
+Date:   Fri Aug 31 06:38:33 2018 +0200
 
-    Omega via svn r17731:
-    A lot more Motherload trash warnings
+    Omega via svn r17754:
+    Combined uproot and splinterspike dodge warnings into same antispam threshold, so when fighting both mobs together, the warnings will actually antispam eachother and avoid feeling extra spamy
 
-commit a32d2812f059f8b10035d77667129808bfbcf9b2
+commit 3e6f0e47940c0c873cba5ace498ed585fa98bc33
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Aug 24 05:48:36 2018 +0200
+Date:   Fri Aug 31 06:36:00 2018 +0200
 
-    Omega via svn r17730:
-    Fix some spam caused by mobs fighting mobs again
+    Omega via svn r17753:
+    Antispam Bulwark
 
-commit b083292393d6766fcab22a8876a519e9a4af025a
+commit c0b3a385be220af43ee1e2ba05a7d26b72a1fc1e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Aug 24 03:44:30 2018 +0200
+Date:   Fri Aug 31 06:34:42 2018 +0200
 
-    Omega via svn r17729:
-    don?\226?\128?\153t attempt to set icon if mob already has an icon
+    Omega via svn r17752:
+    Fix kite warning so it?\226?\128?\153s just tank and not everyone
 
-commit 70cb967776c3f35b367dbf908d82d0e47285d376
+commit bb47838a28ac137d9c6a11fc5e43598b15b3e895
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Aug 24 02:07:03 2018 +0200
+Date:   Fri Aug 31 02:35:40 2018 +0200
 
-    Omega via svn r17728:
-    Fix same saved variables probelm with azeroth-BfA
+    Omega via svn r17751:
+    Fix kite warning so it?\226?\128?\153s just tank and not everyone
 
-commit 826e4cb6d01ca504d2400d2453f5e96982638374
+commit 304ec5f818b264563e3c97d4175c68b2a26f5c5f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Aug 24 01:51:35 2018 +0200
+Date:   Fri Aug 31 01:08:51 2018 +0200
 
-    Omega via svn r17727:
-    Fix a bug that?\226?\128?\153d cause party variables not to save
+    Omega via svn r17750:
+    Coding looks good for turtle feature. but can?\226?\128?\153t test til next quest pops. but pushing now cause maybe someone else can test :D
 
-commit 80620ad31933aeb92efcf5b63823793d5caa032d
+commit 911fd90b71b6e4bf2b2b5cd705a32b5161f73c95
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 23 19:49:12 2018 +0200
+Date:   Thu Aug 30 20:51:44 2018 +0200
 
-    Omega via svn r17726:
-    Fix error
+    Omega via svn r17749:
+    Fix marksman hunters getting RemoveEnrage warnings when they can?\226?\128?\153t
 
-commit 27db8a7105e7918409b48acf64f9efaf676d5905
+commit bae5ef74bdb947d27e24a3be76478ce9e2bed07c
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 23 10:31:31 2018 +0200
+Date:   Thu Aug 30 11:13:34 2018 +0200
 
-    Omega via svn r17725:
-    Take precaution and filter mobs that might be fighting with npcs
+    Omega via svn r17748:
+    Some minor timer tweaks
 
-commit dc9f87338104975a8e2eaa8069473c6fd5df9316
+commit a9778073c79a7ffcaa84eef26098106a8ad73097
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 23 10:25:08 2018 +0200
+Date:   Thu Aug 30 05:24:17 2018 +0200
 
-    Omega via svn r17724:
-    Make the vokaal warning an actual interrupt warning
-    two new trash warning additions to underrot and begin work on siege trash with 2 warnings
+    Omega via svn r17747:
+    Disable adds warning until i can verify how to fix it on horde side
 
-commit a42446eb82e6c2689bcd9c12afef811d956281a1
+commit 36cb6bb98b56a74893a526520e613176779f6195
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 23 02:56:17 2018 +0200
+Date:   Thu Aug 30 04:55:09 2018 +0200
 
-    Omega via svn r17723:
-    CN update
+    Omega via svn r17746:
+    Disable that timer, it?\226?\128?\153s health based
 
-commit ad96b44a4783852f6d07a084e099ffd2a8678472
+commit 1d0b9aab882f5c8648ede9f80ccc7bd911c3108a
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Aug 22 06:22:22 2018 +0200
+Date:   Thu Aug 30 04:52:48 2018 +0200
 
-    Omega via svn r17722:
-    Fixed bug where the Aura of dread move warning didn?\226?\128?\153t fire on Triad in Waycrest Manor
-    Fixed bug where Death Lens didn?\226?\128?\153t show in correct color on Gorkatul in Waycrest Manor, as well as fixed bug where if two targets affected, it wouldn?\226?\128?\153t combine them into one warning.
-    Slight timer adjustment on deadeye for Korgus in Tol Dagor
-    Added like 15 new trash warnings to Waycrest Manor.
+    Omega via svn r17745:
+    Fix two bugs
 
-commit 1cabd88c6ddd3a7394dc55f827d97adac7d48106
+commit ff023b56bf05e1effbd30b4c8ec609389d792dd7
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Aug 21 13:18:52 2018 +0200
+Date:   Thu Aug 30 04:13:09 2018 +0200
 
-    tandanu via svn r17721:
+    Omega via svn r17744:
+    tweak stack count
+
+commit fa03d4cc28c8702e5b861b35383f93024cfbabec
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Aug 30 01:28:55 2018 +0200
+
+    Omega via svn r17743:
+    *Re-enabled interrupt warning by default on tidesage council, but made it smarter by having it check if Blessing of Tempest is up and if it is, ignoring interrupt warning until buff is gone.
+    Added about 18 new trash warnings to Shrine of Storms
+
+commit 30484f31b05c137dc2fea09a92c6b1b1fde970a2
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Aug 29 21:06:57 2018 +0200
+
+    Omega via svn r17742:
+    forgot other unit in api, fix some lua errors
+
+commit 1fbbd481af50cb7751199fd6719df27c1569a6b3
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Aug 28 20:22:31 2018 +0200
+
+    tandanu via svn r17741:
     increment alpha version
 
