@@ -1,6 +1,6 @@
 ## Interface: 80000
 ## Title: Premade Groups Filter
-## Version: 1.20
+## Version: 1.21
 ## Notes: Allows filtering of premade groups using an UI or advanced filter expressions.
 ## Author: Elotheon-Arthas-EU
 ## SavedVariables:
@@ -11,6 +11,7 @@ Localization\enUS.lua
 Localization\frFR.lua
 Localization\deDE.lua
 Localization\koKR.lua
+Localization\zhCN.lua
 Localization\zhTW.lua
 Localization\ruRU.lua
 Localization\esES.lua

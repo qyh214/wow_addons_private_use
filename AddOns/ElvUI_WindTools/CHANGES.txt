@@ -1,34 +1,28 @@
-lightweight tag 5f098ad7db3c034816d498a153ddfbe9c32af2e7 1.3.1
+lightweight tag 16d4c903d9372f81649569aa64d0e2186ca61b9e 1.3.3
 Author:	Zhou Fang <houshuu@live.jp>
-Date:	Thu Sep 6 01:16:35 2018 +0900
+Date:	Mon Sep 10 13:39:38 2018 +0900
 
-commit 5f098ad7db3c034816d498a153ddfbe9c32af2e7
+commit 16d4c903d9372f81649569aa64d0e2186ca61b9e
 Author: Zhou Fang <houshuu@live.jp>
-Date:   Thu Sep 6 01:16:35 2018 +0900
+Date:   Mon Sep 10 13:39:38 2018 +0900
 
-    更新 Readme
+    翻译更新
 
-commit 66053a3641620141f3a0195ec95ab03a54240728
+commit 4c449bdb754c7db25aa3334cb55e1795ad023bb5
 Author: Zhou Fang <houshuu@live.jp>
-Date:   Thu Sep 6 00:41:35 2018 +0900
+Date:   Mon Sep 10 13:35:36 2018 +0900
 
-    通告系统部分设定回复为老版本
-    
-    其实打断和嘲讽当时已经做过bfa适配了。
-    由于之后也计划重写为更佳详细的设定模式，所以其他就没继续改。
+    更新版本号到1.3.3
 
-commit 66053a3641620141f3a0195ec95ab03a54240728
+commit 4c449bdb754c7db25aa3334cb55e1795ad023bb5
 Author: Zhou Fang <houshuu@live.jp>
-Date:   Thu Sep 6 00:41:35 2018 +0900
+Date:   Mon Sep 10 13:35:36 2018 +0900
 
-    通告系统部分设定回复为老版本
-    
-    其实打断和嘲讽当时已经做过bfa适配了。
-    由于之后也计划重写为更佳详细的设定模式，所以其他就没继续改。
+    更新版本号到1.3.3
 
-commit 742d3dee817a3967bca6203b143064d35c51b537
+commit d6118d5df0bddf669628cc0e9f664234cb73aaa9
 Author: Zhou Fang <houshuu@live.jp>
-Date:   Wed Sep 5 21:07:41 2018 +0900
+Date:   Mon Sep 10 13:31:07 2018 +0900
 
-    修复CVars工具重构中的疏漏
+    修复特质显示重复的问题
 

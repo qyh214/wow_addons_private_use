@@ -7,6 +7,8 @@ L["Continent Alpha"] = "Непрозрачность на континенте"
 L["Continent Scale"] = "Размер на континенте"
 L["Enable TomTom integration"] = "Интеграция с TomTom "
 L["Filter Options"] = "Параметры фильтрации"
+--[[Translation missing --]]
+--[[ L["Hide all BfA nodes from the map"] = ""--]] 
 L["Hide all Broken Isle nodes from the map"] = "Скрыть все метки Расколотых островов на карте "
 L["Hide all Cataclysm nodes from the map"] = "Скрыть все метки Катаклизма на карте"
 L["Hide all Draenor nodes from the map"] = "Скрыть все метки Дренора на карте"
@@ -14,6 +16,8 @@ L["Hide all Northrend nodes from the map"] = "Скрыть все метки Н�
 L["Hide all Outland nodes from the map"] = "Скрыть все метки Запределья на карте"
 L["Hide all Pandaria nodes from the map"] = "Скрыть все метки Пандарии на карте"
 L["Hide all Vanilla nodes from the map"] = "Скрыть все метки Классика на карте"
+--[[Translation missing --]]
+--[[ L["Hide Battle for Azeroth"] = ""--]] 
 L["Hide Broken Isles"] = "Скрыть Расколотые острова "
 L["Hide Cataclysm"] = "Скрыть Катаклизм "
 L["Hide Draenor"] = "Скрыть Дренор "

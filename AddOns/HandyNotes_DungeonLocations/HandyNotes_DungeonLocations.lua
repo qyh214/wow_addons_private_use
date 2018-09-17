@@ -138,6 +138,7 @@ do
 			
 			local allLocked = true
 			local anyLocked = false
+			if value.name == nil then value.name = value.id end
 			local instances = { strsplit("\n", value.name) }
 			for i, v in pairs(instances) do
 				if (not LOCKOUTS[v] and not LOCKOUTS[alterName[v]]) then
@@ -157,7 +158,11 @@ do
 				alpha = db.zoneAlpha
 			end
 			
-			return state, nil, icon, db.zoneScale, alpha
+			--print('Minimap', t.minimapUpdate, legionInstancesDiscovered[value.id])
+			if not legionInstancesDiscovered[value.id] or t.minimapUpdate then
+			 return state, nil, icon, db.zoneScale, alpha
+			end
+			state, value = next(data, state)
 		end
 		wipe(t)
 		tablepool[t] = true
@@ -181,6 +186,7 @@ do
 						coordToDungeon[state] = value
 					end
 					local icon, alpha
+
 					if (value.type == "Dungeon") then
 						icon = iconDungeon
 					elseif (value.type == "Raid") then
@@ -243,6 +249,8 @@ do
 			--print('zone')
 			local tbl = next(tablepool) or {}
 			tablepool[tbl] = nil
+			--print(isMinimapUpdate)
+			tbl.minimapUpdate = isMinimapUpdate
 			if (isMinimapUpdate and minimap[uiMapId]) then
 				tbl.data = minimap[uiMapId]
 			else
@@ -297,7 +305,7 @@ function pluginHandler:OnClick(button, pressed, mapFile, coord)
   end
   
   if (not dungeonID) then return end
-  --print(dungeonID)
+  --dungeonID)
   local name, _, _, _, _, _, _, link = EJ_GetInstanceInfo(dungeonID)
   if not link then return end
   local difficulty = string.match(link, 'journal:.-:.-:(.-)|h') 
@@ -327,6 +335,7 @@ local defaults = {
   hidePandaria = false,
   hideDraenor = false,
   hideBrokenIsles = false,
+  hideBfa = false,
   show = {
    Dungeon = true,
    Raid = true,
@@ -345,6 +354,8 @@ local function updateStuff()
 end
 
 function Addon:PLAYER_ENTERING_WORLD()
+ self.faction = UnitFactionGroup("player")
+ --print(self.faction)
  self:CheckForPOIs()
  updateStuff()
 end
@@ -532,6 +543,13 @@ function Addon:PLAYER_LOGIN()
    order = 26.7,
    set = function(info, v) db[info[#info]] = v self:FullUpdate() HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "DungeonLocations") end,
   },
+  hideBfA = {
+   type = "toggle",
+   name = L["Hide Battle for Azeroth"],
+   desc = L["Hide all BfA nodes from the map"],
+   order = 26.7,
+   set = function(info, v) db[info[#info]] = v self:FullUpdate() HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "DungeonLocations") end,
+  },
  },
 }
 
@@ -549,8 +567,9 @@ function Addon:PLAYER_LOGIN()
  -- Populate Dungeon/Raid names based on Journal
  
  updateLockouts()
- Addon:RegisterEvent("PLAYER_ENTERING_WORLD") -- Check for any lockout changes when we zone
- Addon:RegisterEvent("UPDATE_INSTANCE_INFO")
+ self:CheckForPOIs()
+ --Addon:RegisterEvent("PLAYER_ENTERING_WORLD") -- Check for any lockout changes when we zone (FIX ME)
+ --Addon:RegisterEvent("UPDATE_INSTANCE_INFO") -- FIX ME
  --Addon:RegisterEvent("WORLD_MAP_UPDATE") -- For the mess that is the legion stuff I've done
 end
 
@@ -1799,6 +1818,95 @@ if (not minimap[641]) then
  }
 end
 end
+
+if (not self.db.profile.hideBfA) then
+nodes[862] = { } -- Zuldazar
+nodes[863] = { } -- Nazmir
+nodes[864] = { } -- Vol'Dun
+nodes[895] = { } -- Tiragarde Sound
+nodes[896] = { } -- Drustvar
+nodes[942] = { } -- Stormsong Valley
+nodes[1165] = { } -- Dazar'alor
+nodes[1169] = { } -- Tol Dagor
+
+nodes[862][43323947] = {
+ id = 968,
+ type = "Dungeon",
+}
+
+nodes[862][39227137] = {
+ id = 1012,
+ type = "Dungeon",
+} -- The MOTHERLODE ALLIANCE
+
+nodes[862][55995989] = {
+ id = 1012,
+ type = "Dungeon",
+} -- The MOTHERLODE HORDE
+
+nodes[862][37463948] = {
+ id = 1041,
+ type = "Dungeon",
+}
+
+nodes[863][51386483] = {
+ id = 1022,
+ type = "Dungeon",
+} -- The Underrot
+
+nodes[863][53886268] = {
+ id = 1031,
+ type = "Raid",
+} -- Uldir
+
+nodes[864][51932484] = {
+ id = 1030,
+ type = "Dungeon",
+} -- Temple of Sethraliss
+
+nodes[895][84457887] = {
+ id = 1001,
+ type = "Dungeon",
+} -- Freehold
+
+nodes[1165][44049256] = {
+ id = 1012,
+ type = "Dungeon",
+} -- The MOTHERLODE HORDE
+
+nodes[1169][39576833] = {
+ id = 1002,
+ type = "Dungeon",
+} -- Tol Dagor
+
+nodes[896][33681233] = {
+ id = 1021,
+ type = "Dungeon",
+} -- Waycrest Manor
+
+
+nodes[942][78932647] = {
+ id = 1036,
+ type = "Dungeon",
+} -- Shrine of Storm
+
+nodes[895][88305105] = {
+ id = 1023,
+ type = "Dungeon",
+} -- Siege of Baralus
+
+	--if (self.faction == "Alliance") then
+		nodes[895][74752350] = {
+		 id = 1023, -- LFG 1700, 1701
+		 type = "Dungeon",
+		} -- Siege of Baralus
+		nodes[1161] = { } -- Boralus
+		nodes[1161][71961540] = {
+		 id = 1023, -- LFG 1700, 1701
+		 type = "Dungeon",
+		} -- Siege of Baralus
+--	end
+end
 end
 
 
@@ -2015,19 +2123,17 @@ end
 function Addon:CheckForPOIs()
  if (WorldMapFrame:IsVisible()) then return end -- This function will interrupt the user if map is open while we do stuff
  local needsUpdate = false
- local LegionInstanceMapIDs = { 1015, 1017, 1018, 1024, 1033, 1170, 1171 }
- for k,v in pairs(LegionInstanceMapIDs) do --FIXME
-  --SetMapByID(v)  
-  --[[for i=1,GetNumMapLandmarks() do
-   local landmarkType, name, description, _, _, _, mapLinkID = C_WorldMap.GetMapLandmarkInfo(i)
-   if (landmarkType == LE_MAP_LANDMARK_TYPE_DUNGEON_ENTRANCE) then
-   --print(name, description, mapLinkID)
-    if (not legionInstancesDiscovered[mapLinkID]) then needsUpdate = true end
-	legionInstancesDiscovered[mapLinkID] = true
-    --print (name, mapLinkID, landmarkType, description)
-   end
-  end ]]--
- end 
+ local LegionBfaInstanceMapIDs = { 627, 630, 634, 641, 646, 650, 680, 862, 863, 864, 895, 896, 942, 1169 }
+ for k,v in pairs(LegionBfaInstanceMapIDs) do
+  WorldMapFrame:SetMapID(v)
+  for pin in WorldMapFrame:EnumeratePinsByTemplate("DungeonEntrancePinTemplate") do
+   if not legionInstancesDiscovered[pin.journalInstanceID] then
+    --print(pin.name, 'Discovered')
+    legionInstancesDiscovered[pin.journalInstanceID] = true
+    needsUpdate = true
+  end
+ end
+end 
  
  if (needsUpdate) then self:FullUpdate() end
 end

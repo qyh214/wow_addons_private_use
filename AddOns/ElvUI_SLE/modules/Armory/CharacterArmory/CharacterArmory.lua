@@ -273,7 +273,7 @@ function CA:Setup_CharacterArmory()
 	end)
 	hooksecurefunc('PaperDollFrame_SetLevel', function()
 		if Info.CharacterArmory_Activate then 
-			_G["CharacterLevelText"]:SetText('|c'..RAID_CLASS_COLORS[E.myclass].colorStr.._G["CharacterLevelText"]:GetText())
+		_G["CharacterLevelText"]:SetText(_G["CharacterLevelText"]:GetText())
 
 			_G["CharacterFrameTitleText"]:ClearAllPoints()
 			_G["CharacterFrameTitleText"]:Point('TOP', self, 0, 35)
@@ -482,20 +482,14 @@ function CA:Setup_CharacterArmory()
 
 		-- Azerite
 		Slot.AzeriteAnchor = CreateFrame('Button', nil, Slot)
-		Slot.AzeriteAnchor:Size(14)
-		Slot.AzeriteAnchor:SetFrameLevel(Slot:GetFrameLevel() + 2)
+		Slot.AzeriteAnchor:Size(41)
+		Slot.AzeriteAnchor:SetFrameLevel(Slot:GetFrameLevel() + 1)
 		Slot.AzeriteAnchor:Point('TOP'..Slot.Direction, Slot, Slot.Direction == 'LEFT' and -2 or 2, -1)
 
 		Slot.AzeriteAnchor.Texture = Slot.AzeriteAnchor:CreateTexture(nil, 'OVERLAY')
+		Slot.AzeriteAnchor.Texture:SetAtlas("AzeriteIconFrame")
+		Slot.AzeriteAnchor.Texture:SetTexCoord(0,1,0,1)
 		Slot.AzeriteAnchor.Texture:SetInside()
-		Slot.AzeriteAnchor.Texture:SetTexture('Interface\\AddOns\\ElvUI_SLE\\modules\\Armory\\Media\\Textures\\Anchor')
-		Slot.AzeriteAnchor.Texture:SetVertexColor(.77,.05,.13)
-
-		if Slot.Direction == 'LEFT' then
-			Slot.AzeriteAnchor.Texture:SetTexCoord(0, 1, 1, 0)
-		else
-			Slot.AzeriteAnchor.Texture:SetTexCoord(1, 0, 1, 0)
-		end
 
 		Slot.AzeriteAnchor:Hide()
 
@@ -545,17 +539,22 @@ end
 function CA:ScanData()
 	self.NeedUpdate = nil
 	if not self.DurabilityUpdated then
+		if KF.DebugEnabled then print("Update_Durability: ", self:Update_Durability()) end
 		self.NeedUpdate = self:Update_Durability() or self.NeedUpdate
 	end
+	if KF.DebugEnabled then print("1: ", self.NeedUpdate) end
 	if self.GearUpdated ~= true then
+		if KF.DebugEnabled then print("Update_Gear: ", self:Update_Gear()) end
 		self.NeedUpdate = self:Update_Gear() or self.NeedUpdate
 	end
+	if KF.DebugEnabled then print("2: ", self.NeedUpdate) end
 	if not self.NeedUpdate and self:IsShown() then
 		self:SetScript('OnUpdate', nil)
 		self:Update_Display(true)
 	elseif self.NeedUpdate then
 		self:SetScript('OnUpdate', self.ScanData)
 	end
+	if KF.DebugEnabled then print("3: ", self.NeedUpdate) end
 	if _G["CharacterModelFrame"] and _G["CharacterModelFrame"].BackgroundTopLeft and _G["CharacterModelFrame"].BackgroundTopLeft:IsShown() then
 		_G["CharacterModelFrame"].BackgroundTopLeft:Hide()
 		_G["CharacterModelFrame"].BackgroundTopRight:Hide()
@@ -674,95 +673,94 @@ function CA:Update_Gear()
 						GemCount_Default, GemCount_Now, GemCount = 0, 0, 0
 							
 						-- First, Counting default gem sockets
-							ItemData.FixedLink = ItemData[1]
+						ItemData.FixedLink = ItemData[1]
 
-							for i = 2, #ItemData do
-								if i == 4 or i == 5 or i == 6 or i == 7 then
-									ItemData.FixedLink = ItemData.FixedLink..':'..0
-								else
-									ItemData.FixedLink = ItemData.FixedLink..':'..ItemData[i]
-								end
+						for i = 2, #ItemData do
+							if i == 4 or i == 5 or i == 6 or i == 7 then
+								ItemData.FixedLink = ItemData.FixedLink..':'..0
+							else
+								ItemData.FixedLink = ItemData.FixedLink..':'..ItemData[i]
 							end
-
-							self:ClearTooltip(self.ScanTT)
-							self.ScanTT:SetHyperlink(ItemData.FixedLink)
-
-							-- First, Counting default gem sockets
-							for i = 1, MAX_NUM_SOCKETS do
-								GemTexture = _G["Knight_CharacterArmory_ScanTTTexture"..i]:GetTexture()
-								if GemTexture and GemTexture:find('Interface\\ItemSocketingFrame\\') then
-									GemCount_Default = GemCount_Default + 1
-									Slot["Socket"..GemCount_Default].GemType = T.upper(T.gsub(GemTexture, 'Interface\\ItemSocketingFrame\\UI--EmptySocket--', ''))
-								end
-							end
-				
-							-- Second, Check if slot's item enable to adding a socket
-							--[[
-							if (SlotName == 'WaistSlot' and UnitLevel('player') >= 70) or -- buckle
-								((SlotName == 'WristSlot' or SlotName == 'HandsSlot') and self.PlayerProfession.BlackSmithing and self.PlayerProfession.BlackSmithing >= 550) then -- BlackSmith
-
-								GemCount_Enable = GemCount_Enable + 1
-								Slot["Socket'..GemCount_Enable].GemType = 'PRISMATIC'
-							end
-							]]
-
-							self:ClearTooltip(self.ScanTT)
-							self.ScanTT:SetInventoryItem('player', Slot.ID)
-
-							-- Apply current item's gem setting
-							for i = 1, MAX_NUM_SOCKETS do
-								GemTexture = _G['Knight_CharacterArmory_ScanTTTexture'..i]:GetTexture()
-								GemID = ItemData[i + 3] ~= '' and tonumber(ItemData[i + 3]) or 0
-								_, GemLink = GetItemGem(ItemLink, i)
-
-								if Slot["Socket"..i].GemType and Info.Armory_Constants.GemColor[Slot["Socket"..i].GemType] then
-									R, G, B = T.unpack(Info.Armory_Constants.GemColor[Slot["Socket"..i].GemType])
-									Slot["Socket"..i].Socket:SetBackdropColor(R, G, B, .5)
-									Slot["Socket"..i].Socket:SetBackdropBorderColor(R, G, B)
-								else
-									Slot["Socket"..i].Socket:SetBackdropColor(1, 1, 1, .5)
-									Slot["Socket"..i].Socket:SetBackdropBorderColor(1, 1, 1)
-								end
-
-								if GemTexture or GemLink then
-									if E.db.sle.Armory.Character.Gem.Display == 'Always' or E.db.sle.Armory.Character.Gem.Display == 'MouseoverOnly' and Slot.Mouseovered or E.db.sle.Armory.Character.Gem.Display == 'MissingOnly' then
-										Slot["Socket"..i]:Show()
-										Slot.SocketWarning:Point(Slot.Direction, Slot["Socket"..i], (Slot.Direction == 'LEFT' and 'RIGHT' or 'LEFT'), Slot.Direction == 'LEFT' and 3 or -3, 0)
-									end
-
-									GemCount_Now = GemCount_Now + 1
-
-									if GemID ~= 0 then
-										GemCount = GemCount + 1
-										Slot["Socket"..i].GemItemID = GemID
-										Slot["Socket"..i].Socket.Link = GemLink
-
-										GemTexture = T.select(10, T.GetItemInfo(GemID))
-
-										if GemTexture then
-											Slot["Socket"..i].Texture:SetTexture(GemTexture)
-										else
-											NeedUpdate = true
-										end
-									else
-										if Slot['Socket'..i].GemType == nil then Slot['Socket'..i].GemType = 'PRISMATIC' GemCount_Default = GemCount_Default + 1 end
-										Slot['Socket'..i].Socket.Message = '|cffffffff'.._G['EMPTY_SOCKET_'..Slot['Socket'..i].GemType]
-									end
-								end
-							end
-						
-							--print(SlotName..' : ', GemCount_Default, GemCount_Enable, GemCount_Now, GemCount)
-							if GemCount_Now < GemCount_Default then -- ItemInfo not loaded
-								NeedUpdate = true
-							end
-							Slot.GemCount_Enable = GemCount_Default
 						end
+
+						self:ClearTooltip(self.ScanTT)
+						self.ScanTT:SetHyperlink(ItemData.FixedLink)
+
+						-- First, Counting default gem sockets
+						for i = 1, MAX_NUM_SOCKETS do
+							GemTexture = _G["Knight_CharacterArmory_ScanTTTexture"..i]:GetTexture()
+							if GemTexture and GemTexture:find('Interface\\ItemSocketingFrame\\') then
+								GemCount_Default = GemCount_Default + 1
+								Slot["Socket"..GemCount_Default].GemType = T.upper(T.gsub(GemTexture, 'Interface\\ItemSocketingFrame\\UI--EmptySocket--', ''))
+							end
+						end
+
+						-- Second, Check if slot's item enable to adding a socket
+						--[[
+						if (SlotName == 'WaistSlot' and UnitLevel('player') >= 70) or -- buckle
+							((SlotName == 'WristSlot' or SlotName == 'HandsSlot') and self.PlayerProfession.BlackSmithing and self.PlayerProfession.BlackSmithing >= 550) then -- BlackSmith
+
+							GemCount_Enable = GemCount_Enable + 1
+							Slot["Socket'..GemCount_Enable].GemType = 'PRISMATIC'
+						end
+						]]
+
+						self:ClearTooltip(self.ScanTT)
+						self.ScanTT:SetInventoryItem('player', Slot.ID)
+
+						-- Apply current item's gem setting
+						for i = 1, MAX_NUM_SOCKETS do
+							GemTexture = _G['Knight_CharacterArmory_ScanTTTexture'..i]:GetTexture()
+							GemID = ItemData[i + 3] ~= '' and tonumber(ItemData[i + 3]) or 0
+							_, GemLink = GetItemGem(ItemLink, i)
+
+							if Slot["Socket"..i].GemType and Info.Armory_Constants.GemColor[Slot["Socket"..i].GemType] then
+								R, G, B = T.unpack(Info.Armory_Constants.GemColor[Slot["Socket"..i].GemType])
+								Slot["Socket"..i].Socket:SetBackdropColor(R, G, B, .5)
+								Slot["Socket"..i].Socket:SetBackdropBorderColor(R, G, B)
+							else
+								Slot["Socket"..i].Socket:SetBackdropColor(1, 1, 1, .5)
+								Slot["Socket"..i].Socket:SetBackdropBorderColor(1, 1, 1)
+							end
+
+							if GemTexture or GemLink then
+								if E.db.sle.Armory.Character.Gem.Display == 'Always' or E.db.sle.Armory.Character.Gem.Display == 'MouseoverOnly' and Slot.Mouseovered or E.db.sle.Armory.Character.Gem.Display == 'MissingOnly' then
+									Slot["Socket"..i]:Show()
+									Slot.SocketWarning:Point(Slot.Direction, Slot["Socket"..i], (Slot.Direction == 'LEFT' and 'RIGHT' or 'LEFT'), Slot.Direction == 'LEFT' and 3 or -3, 0)
+								end
+
+								GemCount_Now = GemCount_Now + 1
+
+								if GemID ~= 0 then
+									GemCount = GemCount + 1
+									Slot["Socket"..i].GemItemID = GemID
+									Slot["Socket"..i].Socket.Link = GemLink
+
+									GemTexture = T.select(10, T.GetItemInfo(GemID))
+
+									if GemTexture then
+										Slot["Socket"..i].Texture:SetTexture(GemTexture)
+									else
+										NeedUpdate = true
+									end
+								else
+									if Slot['Socket'..i].GemType == nil then Slot['Socket'..i].GemType = 'PRISMATIC' GemCount_Default = GemCount_Default + 1 end
+									Slot['Socket'..i].Socket.Message = '|cffffffff'.._G['EMPTY_SOCKET_'..Slot['Socket'..i].GemType]
+								end
+							end
+						end
+
+						--print(SlotName..' : ', GemCount_Default, GemCount_Enable, GemCount_Now, GemCount)
+						if GemCount_Now < GemCount_Default then -- ItemInfo not loaded
+							NeedUpdate = true
+						end
+						Slot.GemCount_Enable = GemCount_Default
+					end
 
 					--<< Enchant Parts >>--
 					Slot.ItemEnchant:SetText("")
 					for i = 1, self.ScanTT:NumLines() do
 						CurrentLineText = _G["Knight_CharacterArmory_ScanTTTextLeft"..i]:GetText()
-						-- print(i, CurrentLineText:gsub("|cff", ""))
 						if CurrentLineText:find(Info.Armory_Constants.ItemLevelKey_Alt) then
 								TrueItemLevel = T.tonumber(CurrentLineText:match(Info.Armory_Constants.ItemLevelKey_Alt))
 						elseif CurrentLineText:find(Info.Armory_Constants.ItemLevelKey) then

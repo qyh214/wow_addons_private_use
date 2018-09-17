@@ -1,16 +1,34 @@
-lightweight tag f08c8e13105fe27f1a0f893ac3b3f090c3f5bdd7 1.20
+lightweight tag 492bee885c318b59fc3f31f016dca75f5a67ea8e 1.21
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Wed Aug 22 22:54:11 2018 +0200
+Date:	Sat Sep 15 18:16:10 2018 +0200
 
-commit f08c8e13105fe27f1a0f893ac3b3f090c3f5bdd7
+commit 492bee885c318b59fc3f31f016dca75f5a67ea8e
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Wed Aug 22 22:54:11 2018 +0200
+Date:   Sat Sep 15 18:16:10 2018 +0200
 
-    Fixed keywords kr, sob, tml, tosl, tur by adding missing activity IDs
+    New keywords ranged, ranged_strict, melees and melees_strict
 
-commit 2846e9a45be2c35959cf06667c847e9524e418cc
+commit 1d74f10c3302f7c0185244b1248a7f5bfb54fe18
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sat Aug 11 22:45:57 2018 +0200
+Date:   Sat Sep 15 17:38:35 2018 +0200
 
-    Set version to next release version: 1.20
+    Added simplified chinese localization to TOC file
+
+commit b117cc77cd7fdea3f19c94e5a0399c7d31ee5a91
+Author: jasminexie <ameliasgoldfish@gmail.com>
+Date:   Mon Sep 10 15:34:49 2018 +0800
+
+    Localization: zhCN
+
+commit fb045419d7ffd7e39583cda6d55a057ce3ebd024
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Tue Sep 4 18:33:49 2018 +0200
+
+    Use parent PVEFrame instead of UIParent so the PGF window is shown when the group finder frame is clicked
+
+commit b43af42d3b35d5c9e12781c0ed5cbe4634ea8667
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Wed Aug 22 22:55:30 2018 +0200
+
+    Set version to next release version: 1.21
 

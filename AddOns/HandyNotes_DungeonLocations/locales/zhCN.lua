@@ -7,6 +7,8 @@ L["Continent Alpha"] = "世界地图图标透明度"
 L["Continent Scale"] = "世界地图图标缩放大小"
 L["Enable TomTom integration"] = "启用 TomTom 整合"
 L["Filter Options"] = "过滤选项"
+--[[Translation missing --]]
+--[[ L["Hide all BfA nodes from the map"] = ""--]] 
 L["Hide all Broken Isle nodes from the map"] = "隐藏地图上所有破碎群岛的副本图标"
 L["Hide all Cataclysm nodes from the map"] = "隐藏地图上所有大地的裂变的副本图标"
 L["Hide all Draenor nodes from the map"] = "隐藏地图上所有德拉诺的副本图标"
@@ -14,6 +16,8 @@ L["Hide all Northrend nodes from the map"] = "隐藏地图上所有诺森德的�
 L["Hide all Outland nodes from the map"] = "隐藏地图上所有外域的副本图标"
 L["Hide all Pandaria nodes from the map"] = "隐藏地图上所有潘达利亚的副本图标"
 L["Hide all Vanilla nodes from the map"] = "隐藏地图上所有艾泽拉斯的副本图标"
+--[[Translation missing --]]
+--[[ L["Hide Battle for Azeroth"] = ""--]] 
 L["Hide Broken Isles"] = "隐藏破碎群岛"
 L["Hide Cataclysm"] = "隐藏大地的裂变"
 L["Hide Draenor"] = "隐藏德拉诺"

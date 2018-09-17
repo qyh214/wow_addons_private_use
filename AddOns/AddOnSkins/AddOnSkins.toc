@@ -1,8 +1,8 @@
 ## Interface: 80000
 ## Title: |cff1784d1AddOnSkins|r
-## Version: 3.92
+## Version: 3.93
 ## Author: Azilroka, Whiro
 ## SavedVariables: AddOnSkinsDB, AddOnSkinsDS
-## OptionalDeps: ProjectAzilroka, ElvUI, BuyEmAll, DSM, Tukui, ElvUI_MerathilisUI
+## OptionalDeps: ProjectAzilroka, ElvUI, Tukui
 
 Load_AddOnSkins.xml

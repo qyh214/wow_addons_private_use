@@ -1,9 +1,9 @@
 ------------------------------------------------------------------------
-r81 | Caliaha | 2018-08-04 00:27:28 +0000 (Sat, 04 Aug 2018) | 2 lines
+r85 | Caliaha | 2018-09-10 02:39:30 +0000 (Mon, 10 Sep 2018) | 2 lines
 Changed paths:
    M /trunk/HandyNotes_DungeonLocations.lua
 
-Fixed issue with Tomb of Sargeras Node
+Added Battle for Azeroth dungeons and raid
 
 ------------------------------------------------------------------------
 

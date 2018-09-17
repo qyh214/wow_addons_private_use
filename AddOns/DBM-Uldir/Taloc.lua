@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2168, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17686 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17826 $"):sub(12, -3))
 mod:SetCreatureID(137119)--Taloc
 mod:SetEncounterID(2144)
 mod:SetZone()
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 271296 271728 271895",
 	"SPELL_CAST_SUCCESS 271224 275205 278888",
 	"SPELL_AURA_APPLIED 271224 271965 275270 275189 275205 278888",
-	"SPELL_AURA_REMOVED 271225 271965 275189 275205",
+	"SPELL_AURA_REMOVED 271225 271965 275189 275205 271224 278888",
 	"SPELL_PERIODIC_DAMAGE 270290",
 	"SPELL_PERIODIC_MISSED 270290"
 )
@@ -40,10 +40,10 @@ local specWarnSanguineStaticYou			= mod:NewSpecialWarningYou(272582, nil, nil, n
 local specWarnSanguineStatic			= mod:NewSpecialWarningDodge(272582, nil, nil, nil, 2, 2)
 local yellSanguineStatic				= mod:NewYell(272582)
 local specWarnFixate					= mod:NewSpecialWarningYou(275270, nil, nil, nil, 1, 2)
-local specWarnCloggedArteries			= mod:NewSpecialWarningMoveAway(275189, nil, nil, nil, 1, 2)
-local yellCloggedArteries				= mod:NewYell(275189)
-local yellCloggedArteriesFades			= mod:NewShortFadesYell(275189)
-local specWarnCloggedArteriesNear		= mod:NewSpecialWarningClose(275189, nil, nil, nil, 1, 2)
+local specWarnHardenedArteries			= mod:NewSpecialWarningMoveAway(275189, nil, nil, nil, 1, 2)
+local yellHardenedArteries				= mod:NewYell(275189)
+local yellHardenedArteriesFades			= mod:NewShortFadesYell(275189)
+local specWarnHardenedArteriesNear		= mod:NewSpecialWarningClose(275189, nil, nil, nil, 1, 2)
 local specWarnEnlargedHeart				= mod:NewSpecialWarningYou(275205, nil, nil, nil, 1, 2)
 local yellEnlargedHeart					= mod:NewYell(275205)
 local yellEnlargedHeartFades			= mod:NewFadesYell(275205)
@@ -52,18 +52,17 @@ local specWarnEnlargedHeartOther		= mod:NewSpecialWarningMoveTo(275205, "-Tank",
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(270290, nil, nil, nil, 1, 2)
 
 mod:AddTimerLine(BOSS)
-local timerPlasmaDischargeCD			= mod:NewCDTimer(30.4, 271225, nil, nil, nil, 3)--30.4-42
-local timerCudgelOfGoreCD				= mod:NewCDTimer(58.4, 271296, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)--60.4-63
+local timerPlasmaDischargeCD			= mod:NewCDCountTimer(30.4, 271225, nil, nil, nil, 3)--30.4-42
+local timerCudgelOfGoreCD				= mod:NewCDCountTimer(58.4, 271296, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)--60.4-63
 local timerSanguineStaticCD				= mod:NewCDTimer(55, 272582, nil, nil, nil, 3)--60.4-63
-local timerCloggedArteriesCD			= mod:NewCDTimer(60.4, 275189, nil, nil, nil, 3)--60.4-63
-local timerEnlargedHeartCD				= mod:NewCDTimer(60.4, 275205, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)--60.4-63
+local timerEnlargedHeartCD				= mod:NewCDCountTimer(60.4, 275205, nil, nil, nil, 3, nil, DBM_CORE_TANK_ICON)--60.4-63 (also timer for hardened, go out at same time, no need for two)
 mod:AddTimerLine(DBM:GetSpellInfo(271965))
 local timerPoweredDown					= mod:NewBuffActiveTimer(88.6, 271965, nil, nil, nil, 6)
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
 local countdownCudgelofGore				= mod:NewCountdown(58, 271296)
-local countdownEnlargedHeart			= mod:NewCountdown("Alt60", 275205, "Tank")
+local countdownEnlargedHeart			= mod:NewCountdown("Alt60", 275205, true, 2)
 --local countdownFelstormBarrage			= mod:NewCountdown("AltTwo32", 244000, nil, nil, 3)
 
 mod:AddSetIconOption("SetIconPlasmaDischarge", 271225, true)
@@ -74,6 +73,8 @@ mod:AddInfoFrameOption(275270, true)
 local bloodStorm = DBM:GetSpellInfo(270290)
 local ignoreGTFO = false
 mod.vb.plasmaCast = 0
+mod.vb.cudgelCount = 0
+mod.vb.enlargedCount = 0
 mod.vb.phase = 1
 
 function mod:StaticTarget(targetname, uId)
@@ -90,15 +91,16 @@ end
 
 function mod:OnCombatStart(delay)
 	self.vb.plasmaCast = 0
+	self.vb.cudgelCount = 0
+	self.vb.enlargedCount = 0
 	self.vb.phase = 1
-	timerPlasmaDischargeCD:Start(5.9-delay)
+	timerPlasmaDischargeCD:Start(5.9-delay, 1)
 	timerSanguineStaticCD:Start(18-delay)
-	timerCudgelOfGoreCD:Start(35-delay)
+	timerCudgelOfGoreCD:Start(35-delay, 1)
 	countdownCudgelofGore:Start(35)
 	if self:IsMythic() then
-		timerCloggedArteriesCD:Start(24-delay)
-		timerEnlargedHeartCD:Start(25-delay)
-		countdownEnlargedHeart:Start(25-delay)
+		timerEnlargedHeartCD:Start(24-delay, 1)
+		countdownEnlargedHeart:Start(24-delay)
 	end
 	ignoreGTFO = false
 end
@@ -115,7 +117,10 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 271296 then
-		timerCudgelOfGoreCD:Start()
+		if self:AntiSpam(5, 4) then--Don't incriment counter on stutter casts because tank died.
+			self.vb.cudgelCount = self.vb.cudgelCount + 1
+		end
+		timerCudgelOfGoreCD:Start(nil, self.vb.cudgelCount+1)
 		countdownCudgelofGore:Start(58.4)
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnCudgelofGore:Show(bloodStorm)
@@ -143,21 +148,22 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.plasmaCast = self.vb.plasmaCast + 1
 		if self.vb.phase == 1 then
 			if self.vb.plasmaCast == 1 then
-				timerPlasmaDischargeCD:Start(41)
+				timerPlasmaDischargeCD:Start(41, self.vb.plasmaCast+1)
 			else
-				timerPlasmaDischargeCD:Start(35)
+				timerPlasmaDischargeCD:Start(35, self.vb.plasmaCast+1)
 			end
 		else
 			if self.vb.plasmaCast == 1 then
-				timerPlasmaDischargeCD:Start(40)
+				timerPlasmaDischargeCD:Start(40, self.vb.plasmaCast+1)
 			elseif self.vb.plasmaCast == 2 then
-				timerPlasmaDischargeCD:Start(35)
+				timerPlasmaDischargeCD:Start(35, self.vb.plasmaCast+1)
 			else
-				timerPlasmaDischargeCD:Start(30)
+				timerPlasmaDischargeCD:Start(30, self.vb.plasmaCast+1)
 			end
 		end
 	elseif spellId == 275205 then
-		timerEnlargedHeartCD:Start()
+		self.vb.enlargedCount = self.vb.enlargedCount + 1
+		timerEnlargedHeartCD:Start(nil, self.vb.enlargedCount+1)
 		countdownEnlargedHeart:Start(60.4)
 	end
 end
@@ -166,7 +172,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 271224 or spellId == 278888 then
 		warnPlastmaDischarge:CombinedShow(0.3, args.destName)
-		if args:IsPlayer() then
+		if args:IsPlayer() and self:AntiSpam(3, 5) then
 			specWarnPlasmaDischarge:Show()
 			specWarnPlasmaDischarge:Play("runout")
 			specWarnPlasmaDischarge:ScheduleVoice(1.5, "keepmove")
@@ -181,7 +187,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerCudgelOfGoreCD:Stop()
 		countdownCudgelofGore:Cancel()
 		timerSanguineStaticCD:Stop()
-		timerCloggedArteriesCD:Stop()
 		timerEnlargedHeartCD:Stop()
 		countdownEnlargedHeart:Cancel()
 		if self.Options.InfoFrame then
@@ -196,18 +201,16 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnFixate:Show(args.destName)
 		end
 	elseif spellId == 275189 then
-		if self:AntiSpam(3, 3) then
-			timerCloggedArteriesCD:Start()
-		end
 		if args:IsPlayer() then
-			specWarnCloggedArteries:Show()
-			specWarnCloggedArteries:Play("runout")
-			yellCloggedArteries:Yell()
-			yellCloggedArteriesFades:Countdown(6)
+			specWarnHardenedArteries:Show()
+			specWarnHardenedArteries:Play("runout")
+			yellHardenedArteries:Yell()
+			yellHardenedArteriesFades:Countdown(6)
+			specWarnHardenedArteriesNear:Cancel()--Cancel CombinedShow if you get affected
 		elseif self:CheckNearby(8, args.destName) and not DBM:UnitDebuff("player", spellId) then
-			specWarnCloggedArteriesNear:CombinedShow(0.3, args.destName)
-			specWarnCloggedArteriesNear:CancelVoice()--Avoid spam
-			specWarnCloggedArteriesNear:ScheduleVoice(0.3, "runaway")
+			specWarnHardenedArteriesNear:CombinedShow(0.5, args.destName)
+			specWarnHardenedArteriesNear:CancelVoice()--Avoid spam
+			specWarnHardenedArteriesNear:ScheduleVoice(0.5, "runaway")
 		end
 	elseif spellId == 275205 then
 		if args:IsPlayer() then
@@ -233,26 +236,31 @@ function mod:SPELL_AURA_REMOVED(args)
 
 	elseif spellId == 271965 then
 		self.vb.plasmaCast = 0
+		self.vb.cudgelCount = 0
+		self.vb.enlargedCount = 0
 		self.vb.phase = 2
 		warnPoweringDownOver:Show()
 		warnPoweringDownOver:Play("phasechange")
 		timerPoweredDown:Stop()
-		timerPlasmaDischargeCD:Start(12.8)--6
+		timerPlasmaDischargeCD:Start(12.8, 1)--6
 		timerSanguineStaticCD:Start(27)--18
-		timerCudgelOfGoreCD:Start(37)--35
+		timerCudgelOfGoreCD:Start(37, 1)--35
 		countdownCudgelofGore:Start(37)--35
 		if self:IsMythic() then
-			timerCloggedArteriesCD:Start(24.4)
-			timerEnlargedHeartCD:Start(25.7)
-			countdownEnlargedHeart:Start(25.7)
+			timerEnlargedHeartCD:Start(30.7, 1)
+			countdownEnlargedHeart:Start(30.7)
 		end
 	elseif spellId == 275189 then
 		if args:IsPlayer() then
-			yellCloggedArteriesFades:Cancel()
+			yellHardenedArteriesFades:Cancel()
 		end
 	elseif spellId == 275205 then
 		if args:IsPlayer() then
 			yellEnlargedHeartFades:Cancel()
+		end
+	elseif spellId == 271224 or spellId == 278888 then
+		if args:IsPlayer() then
+			specWarnPlasmaDischarge:CancelVoice()
 		end
 	end
 end

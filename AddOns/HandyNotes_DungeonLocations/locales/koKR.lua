@@ -7,6 +7,8 @@ L["Continent Alpha"] = "대륙 투명토"
 L["Continent Scale"] = "대륙 크기 비율"
 L["Enable TomTom integration"] = "TomTom 기능 활성화"
 L["Filter Options"] = "필터 옵션"
+--[[Translation missing --]]
+--[[ L["Hide all BfA nodes from the map"] = ""--]] 
 L["Hide all Broken Isle nodes from the map"] = "지도에서 부서진 섬의 모든 위치 표시를 숨깁니다"
 L["Hide all Cataclysm nodes from the map"] = "지도에서 대격변의 모든 위치 표시를 숨깁니다"
 L["Hide all Draenor nodes from the map"] = "지도에서 드레노어의 모든 위치 표시를 숨깁니다"
@@ -14,6 +16,8 @@ L["Hide all Northrend nodes from the map"] = "지도에서 노스렌드의 모�
 L["Hide all Outland nodes from the map"] = "지도에서 아웃랜드의 모든 위치 표시를 숨깁니다"
 L["Hide all Pandaria nodes from the map"] = "지도에서 판다리아의 모든 위치 표시를 숨깁니다"
 L["Hide all Vanilla nodes from the map"] = "지도에서 오리지널의 모든 위치 표시를 숨깁니다"
+--[[Translation missing --]]
+--[[ L["Hide Battle for Azeroth"] = ""--]] 
 L["Hide Broken Isles"] = "부서진 섬 숨기기"
 L["Hide Cataclysm"] = "대격변 숨기기"
 L["Hide Draenor"] = "드레노어 숨기기"

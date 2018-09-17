@@ -1,174 +1,256 @@
-tag b7f810c01edd7ad5389459b79dbcc9fde0f83ca4 8.0.6
+tag 7dfd7f2fa5448c1b4f2f89462251ba2b64612c14 8.0.9
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Mon Sep 3 11:37:50 2018 +0200
+Date:	Sun Sep 16 21:13:24 2018 +0200
 
-Tagging as 8.0.6
+Tagging as 8.0.9
 
-commit a807cda5d65360cd677ac49a8bb931c6f9ff79b3
+commit 1c8807d778f05ca9b9f7dd2e3111cb9482af621a
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 3 11:37:50 2018 +0200
+Date:   Sun Sep 16 21:13:24 2018 +0200
 
-    increment version number to 8.0.6
+    increment version number to 8.0.9
 
-commit 784268ecc8f5b4c8683793807411ca2492e3e2d1
+commit 19fdd1c2b1802fb3cf1437185cbd39c7f3d66576
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 3 11:06:29 2018 +0200
+Date:   Sun Sep 16 11:05:20 2018 +0200
 
-    Omega via svn r17762:
-    Use helpdispel instead of trannow
-    Reason. Tranq shot is still gone, hunters use pet to dispel and druids ?\226?\128?\156sooth?\226?\128?\157 no one uses ?\226?\128?\156tranq shot?\226?\128?\157
+    Omega via svn r17855:
+    Kr UPdate
 
-commit 5af566d8d4bb126a4f9de7ac2f94fe85177cdfb0
+commit bf393cfbe717090f306b3fb5c5f0c3b8716c7135
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 3 02:46:38 2018 +0200
+Date:   Sun Sep 16 09:42:52 2018 +0200
 
-    Omega via svn r17761:
-    Fix stormsong RP timer, wrong event
+    Omega via svn r17854:
+    Kr update
 
-commit 6906a3d4fbdd5178fca1b9a982e0cb612b04b0a3
+commit 1ea8bfbd3979b3fc0594f0e3ffad5baece3451ff
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 3 02:44:05 2018 +0200
+Date:   Sun Sep 16 07:26:20 2018 +0200
 
-    Omega via svn r17760:
-    *Improve detection of debuffs/buffs that players spellsteal, or reflect, to reduce false trash warnings.
-    *Added 11 new trash warnings to Tol Dagor
+    Omega via svn r17853:
+    Kraulok update
+    Fix bug with bonus roll filter
 
-commit 9f220d7582dbb921496c51d6082541a1c7411cf1
+commit 5b82eb5290aa3465f93a46093a461973ae5d972b
 Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 3 00:08:23 2018 +0200
+Date:   Sun Sep 16 07:06:44 2018 +0200
 
-    Omega via svn r17759:
-    *ES update
-    *Added yells to Fetid Devourer and optimized UnitDebuff check some.
+    Omega via svn r17852:
+    fix
 
-commit c3186e572586279c3f388dca724566483dde1e49
+commit 07d1a136595f11bac467146591bb8eef6c9dacb9
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Sep 2 10:27:53 2018 +0200
+Date:   Sun Sep 16 06:28:06 2018 +0200
 
-    ebmor via svn r17758:
-    deDE update
+    Omega via svn r17851:
+    Take 2
 
-commit e462e62bb3f73bdcc6f9ac81ef04b3f71d83d3fd
+commit cb1d5582e2128fe3abcea8e9e33fdf23f4ae18a1
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Sep 1 06:30:28 2018 +0200
+Date:   Sun Sep 16 06:05:43 2018 +0200
 
-    Omega via svn r17757:
-    *minor trash fixes
-    *Added Snake Charm to Avatar of Sethraliss encounter.
-    *Removed borrow timer from Merektha encounter (it?\226?\128?\153s health based)
-    *Added 16 trash warnings to Sethraliss Trash mod
+    Omega via svn r17850:
+    Longer cd on crawgs for mythic?
+    can?\226?\128?\153t tell for other adds since zerg strat with rogues doesn?\226?\128?\153t get them
 
-commit f34afda3e18e4fed2e52d62a0e66a61dca451edb
+commit d51e9d8e6bdf9fb56d2457083faa06bf152522e6
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Aug 31 22:30:03 2018 +0200
+Date:   Sun Sep 16 05:53:57 2018 +0200
 
-    Omega via svn r17756:
-    Fix beachhead check
+    Omega via svn r17849:
+    Make the switch warnings on doom?\226?\128?\153s howl/Lion?\226?\128?\153s roar more clear that engineer is priority
 
-commit e05f8a4f76e116bfc74d1375da3ec5299312aa5b
+commit 8bf69856d107308024c657398a3085b0ce917195
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Aug 31 06:58:30 2018 +0200
+Date:   Sun Sep 16 05:02:22 2018 +0200
 
-    Omega via svn r17755:
-    Scrapped an invalid warning in boralus.
-    Additional antispam tweaks across all mods to combine similar type warnings under same thresholds to ensure large pulls don?\226?\128?\153t result in higher spam.
+    Omega via svn r17848:
+    Comment out rest of unused
 
-commit 1979415f9caefad6eccbf04fdaf4cf50f0d2ac5e
+commit b9bf10ee79c0251352c544de022b50eb677c59cc
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Aug 31 06:38:33 2018 +0200
+Date:   Sun Sep 16 04:36:54 2018 +0200
 
-    Omega via svn r17754:
-    Combined uproot and splinterspike dodge warnings into same antispam threshold, so when fighting both mobs together, the warnings will actually antispam eachother and avoid feeling extra spamy
+    Omega via svn r17847:
+    Scrap bonus roll feature for now, can?\226?\128?\153t make a feature if none of the fucking events that are supposed to fire, fire for it. BONUS_ROLL_STARTED doesn?\226?\128?\153t fire, BONUS_ROLL_ACTIVATED doesn?\226?\128?\153t fire, SPELL_CONFIRMATION_PROMPT doesn?\226?\128?\153t fire
 
-commit 3e6f0e47940c0c873cba5ace498ed585fa98bc33
+commit e206c40e830963451d33515769fc9e53b7f0bd22
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Aug 31 06:36:00 2018 +0200
+Date:   Sun Sep 16 04:16:06 2018 +0200
 
-    Omega via svn r17753:
-    Antispam Bulwark
+    Omega via svn r17846:
+    Fix change to option default on wrong warning
 
-commit c0b3a385be220af43ee1e2ba05a7d26b72a1fc1e
+commit ca65856985d5310dcc598931ca3c49d06b9aefbe
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Aug 31 06:34:42 2018 +0200
+Date:   Sun Sep 16 03:52:54 2018 +0200
 
-    Omega via svn r17752:
-    Fix kite warning so it?\226?\128?\153s just tank and not everyone
+    Omega via svn r17845:
+    tweak dooms howl interrupt warning to NOT require target, so damn engineers get interrrupted
 
-commit bb47838a28ac137d9c6a11fc5e43598b15b3e895
+commit 8c8a581c8416c590d040641cc6dd4f30039d3fbd
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Aug 31 02:35:40 2018 +0200
+Date:   Sun Sep 16 03:46:37 2018 +0200
 
-    Omega via svn r17751:
-    Fix kite warning so it?\226?\128?\153s just tank and not everyone
+    Omega via svn r17844:
+    debug
 
-commit 304ec5f818b264563e3c97d4175c68b2a26f5c5f
+commit 73ee61af1b031ddedf643469f00decd81ee4197d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Aug 31 01:08:51 2018 +0200
+Date:   Sun Sep 16 03:45:34 2018 +0200
 
-    Omega via svn r17750:
-    Coding looks good for turtle feature. but can?\226?\128?\153t test til next quest pops. but pushing now cause maybe someone else can test :D
+    Omega via svn r17843:
+    Fix it not working cause SPELL_CONFIRMATION_PROMPT wasn?\226?\128?\153t registered
 
-commit 911fd90b71b6e4bf2b2b5cd705a32b5161f73c95
+commit 1dac3913e4b7ffa3e6a678a63265096492677d6c
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 30 20:51:44 2018 +0200
+Date:   Sun Sep 16 03:22:07 2018 +0200
 
-    Omega via svn r17749:
-    Fix marksman hunters getting RemoveEnrage warnings when they can?\226?\128?\153t
+    Omega via svn r17842:
+    Preliminary bonus roll filter code
 
-commit bae5ef74bdb947d27e24a3be76478ce9e2bed07c
+commit 9eee91d0f3d8cf7acf071c747500bb8a1cdf54b3
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 30 11:13:34 2018 +0200
+Date:   Sat Sep 15 07:24:05 2018 +0200
 
-    Omega via svn r17748:
-    Some minor timer tweaks
+    Omega via svn r17841:
+    Kr Update
 
-commit a9778073c79a7ffcaa84eef26098106a8ad73097
+commit 38817ed5bad5a21356451159095763b231c4c10f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 30 05:24:17 2018 +0200
+Date:   Sat Sep 15 02:11:48 2018 +0200
 
-    Omega via svn r17747:
-    Disable adds warning until i can verify how to fix it on horde side
+    Omega via svn r17840:
+    More work on vectis
 
-commit 36cb6bb98b56a74893a526520e613176779f6195
+commit ee284a2c3008517241ccbaaaddefefeab4c828e5
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 30 04:55:09 2018 +0200
+Date:   Fri Sep 14 05:25:15 2018 +0200
 
-    Omega via svn r17746:
-    Disable that timer, it?\226?\128?\153s health based
+    Omega via svn r17839:
+    Coding tweak, no reason to count table here.
 
-commit 1d0b9aab882f5c8648ede9f80ccc7bd911c3108a
+commit eeb89c54c928c30b4ee514937be2636c93b42f5d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 30 04:52:48 2018 +0200
+Date:   Fri Sep 14 04:44:50 2018 +0200
 
-    Omega via svn r17745:
-    Fix two bugs
+    Omega via svn r17838:
+    Disable this
 
-commit ff023b56bf05e1effbd30b4c8ec609389d792dd7
+commit 4dc39f1a6f11942e88f2d0ccec5cc0ab8a14c4ab
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 30 04:13:09 2018 +0200
+Date:   Fri Sep 14 02:30:21 2018 +0200
 
-    Omega via svn r17744:
-    tweak stack count
+    Omega via svn r17837:
+    Public logs finally, YAY
+    **Fetid Update:
+    *Added cast time for Enticing
+    *Optimized infoframe to use boss unit IDs and not nameplates
+    *Acount for fact that Miasma and Paroxyms can stack and updated yell scheduling and warnings for this.
+    *Removed some unused events
 
-commit fa03d4cc28c8702e5b861b35383f93024cfbabec
+commit 31aa7dc339e42c703cf9fc4fdf1a995fa826553f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Aug 30 01:28:55 2018 +0200
+Date:   Fri Sep 14 01:41:05 2018 +0200
 
-    Omega via svn r17743:
-    *Re-enabled interrupt warning by default on tidesage council, but made it smarter by having it check if Blessing of Tempest is up and if it is, ignoring interrupt warning until buff is gone.
-    Added about 18 new trash warnings to Shrine of Storms
+    Omega via svn r17836:
+    Update LFR Zekvoz timers
 
-commit 30484f31b05c137dc2fea09a92c6b1b1fde970a2
+commit d016ad2909107d9ef30fae8f707e9c5872c006fb
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Aug 29 21:06:57 2018 +0200
+Date:   Thu Sep 13 06:43:19 2018 +0200
 
-    Omega via svn r17742:
-    forgot other unit in api, fix some lua errors
+    Omega via svn r17835:
+    Add two adds remaining warnings
 
-commit 1fbbd481af50cb7751199fd6719df27c1569a6b3
+commit 03b8d5f666eeb3d8da5ee5ee9020841572c9c126
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Aug 28 20:22:31 2018 +0200
+Date:   Thu Sep 13 05:37:17 2018 +0200
 
-    tandanu via svn r17741:
+    Omega via svn r17834:
+    Add count to eyebeam and roiling target warnings and yells
+
+commit fea096ef4aa17177d82298a3552b6c98a4d285c0
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Sep 13 00:26:04 2018 +0200
+
+    Omega via svn r17833:
+    Revert to original vectis icon table method and improve upon it for infoframe integration. It?\226?\128?\153s probably not compatible with BW, but that?\226?\128?\153s fine at this point. can?\226?\128?\153t keep redoing my code to be compatible (especially since the first time I did it, it was moving backwards). raids running both mods will simply have to elect which mod will do icons and turn icon option off in other mod.
+
+commit df972692edf8f612cea24b37e31a7b3e8dfa1e78
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Sep 12 08:38:27 2018 +0200
+
+    Omega via svn r17832:
+    Remove infoframe from zekvoz for now. it?\226?\128?\153s not useful at all.
+
+commit a671d4de70a5e9941959df1acbab49c789c405e6
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Sep 12 08:13:38 2018 +0200
+
+    Omega via svn r17831:
+    Don?\226?\128?\153t reset contageon counter, it?\226?\128?\153s useful for healing cds to keep count going on Vectis
+    Changed Oblivion sphere from a bad switch warning to a useful general count warning for CD usage and more raid awareness without confusing ranged dps
+    Fixed Uldir trash warning for Blood Shield so it actually works
+    Added Uldir trash Warning to watch step for Wild Leap
+    Added a Ball Lands timer to Zekvhoz to assist with ball catching
+    Changed ball catch target announces to be a non filtered warning and added count to it on Zekvhoz
+    Added deathwish general announce/counter to assist with CDs, Also added count to timers
+
+commit c0f4302b240ee0aa67ce34cff0dcc72793282a64
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Sep 12 06:40:05 2018 +0200
+
+    Omega via svn r17830:
+    Mother has 25 second respawn
+
+commit bbea8865d7c89357e00c1310c936ac627afb6a9e
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Sep 12 01:15:22 2018 +0200
+
+    Omega via svn r17829:
+    Reworked Council of Tribes so it doesn?\226?\128?\153t warn to dispel until earth totem is dead.
+
+commit fb0621f0c1100abbe0926ad99873317f1adf6951
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Sep 12 00:32:41 2018 +0200
+
+    Omega via svn r17828:
+    No P3 adds
+
+commit b54872bc7b278934a2c9169e10b7161dc8505a07
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Sep 12 00:23:59 2018 +0200
+
+    Omega via svn r17827:
+    Update Zekvhozj for mythic
+
+commit 7038a0e0022065d06d35dff153e9770daeffff92
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Sep 11 23:56:24 2018 +0200
+
+    Omega via svn r17826:
+    eliminate redundancy on Taloc, and tweak mythic timers
+
+commit ae3b720138a09ff27fb4285100883ee79348fb86
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Sep 11 23:16:04 2018 +0200
+
+    Omega via svn r17825:
+    Fix Mythic Mother defense beam timers/warnings
+
+commit 4930ea4b34f32148abed82de52d4d8dcc0291af7
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Sep 11 22:56:06 2018 +0200
+
+    Omega via svn r17824:
+    Fix regression that caused normal mode P3 ghuun timers to be wrong after updating them for heroic. the timers between two modes are NOT The same. Now mod will use correct timers in both modes
+
+commit 3d5781feefe3f0e81b6cd263798c5a3d5d1c2559
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Sep 11 20:49:38 2018 +0200
+
+    tandanu via svn r17823:
     increment alpha version
 

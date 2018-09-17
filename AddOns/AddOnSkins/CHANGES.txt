@@ -1,110 +1,82 @@
-lightweight tag 3318a4a5f6d33e20a839c85f271e442654b011f6 3.92
+lightweight tag 57e7692121276bd7863f3236f8f730722740fcf3 3.93
 Author:	Azilroka <darktemplar9900@yahoo.com>
-Date:	Mon Sep 3 12:33:08 2018 -0500
+Date:	Sun Sep 9 19:43:13 2018 -0500
 
-commit 3318a4a5f6d33e20a839c85f271e442654b011f6
+commit 57e7692121276bd7863f3236f8f730722740fcf3
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Mon Sep 3 12:33:08 2018 -0500
+Date:   Sun Sep 9 19:43:13 2018 -0500
 
-    3.92
+    3.93
 
-commit 5069c9c44cee2cbabff8921de94abb000134e45e
+commit 580415c0c21b3131010eac4f85ebd7feb6b0adb9
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Mon Sep 3 12:32:42 2018 -0500
+Date:   Sun Sep 9 19:41:54 2018 -0500
 
-    AzCastBar
+    WA
 
-commit d5e3f0ecfb566d3ca83ac19886745fe57a7fea79
+commit ff02c0bccf7fb6233272fef722ee2fa9b370adcc
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Mon Sep 3 11:47:26 2018 -0500
+Date:   Sun Sep 9 13:29:52 2018 -0500
 
-    PetTracker
-    
-    Issue #223, #225, #226, #227, #230, #231
+    Protect this more.
 
-commit 73c04be0f7d504e67a76ced92f6ea2a2df2d9f4e
+commit 2a8a35d8c20eeb71672fc0e3c4dd26b96ffe658d
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 2 21:49:42 2018 -0500
+Date:   Sun Sep 9 11:40:22 2018 -0500
 
-    Better Inverted Shadow / PetTracker
+    WA: Icon can be on everything
 
-commit 0dac8f12f4b7a5609d96433037108ad9ca3e1ee9
+commit 02731352c72a98597c73e7f37c2999b938cb30f4
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 2 18:39:48 2018 -0500
+Date:   Sun Sep 9 10:37:30 2018 -0500
 
-    Options & TMW
+    Talentless & WA
 
-commit 571fa0317e0f94819464fde0a392226d392ca961
+commit 80f21e01c2b555b8642a1119fc33d6f58bb4ca56
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 2 17:16:19 2018 -0500
+Date:   Sat Sep 8 17:46:11 2018 -0500
 
-    PetTracker
+    Recount
 
-commit 98f7f7c9e4663e063229146881fc3af2d9a64508
+commit b6a2cf54beb87ac39364e7eff8fec639e6667d68
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 2 16:49:27 2018 -0500
+Date:   Sat Sep 8 17:37:59 2018 -0500
 
-    Preload: Allow for Unregister
+    ArkInventory Border Color
 
-commit d23dc4e3186ee9f30cf7da241de31eaf87642a0c
+commit 484693406cd51c322db0ceee3331073ada5a750b
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 2 16:39:57 2018 -0500
+Date:   Sat Sep 8 12:43:59 2018 -0500
 
-    Preload: API, Core, Options
+    3.921
 
-commit d5d3493ecf06e91b17efe6488c82993ef6c0885e
+commit 3fd5d289998823865ac245a0115193491e969411
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 2 12:25:29 2018 -0500
+Date:   Sat Sep 8 12:41:39 2018 -0500
 
-    Libraries
-    
-    Issue #224
+    ToC: Correct OptionalDeps
 
-commit 1025ef1f6ee6e5a341da3e98de4d928232eef44a
+commit 6633202eb02cb2ce7f73353a8f77f8edd4c68fd7
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 2 08:49:39 2018 -0500
+Date:   Sat Sep 8 01:05:00 2018 -0500
 
-    Altoholic / TMW
+    SkinRadioButton
 
-commit fe21f6c9c8e1c35547d94aba50d25c48476fc7f3
+commit 47371ebb2a529f96c2436fcaf9bee8468fcd1c73
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 2 07:57:33 2018 -0500
+Date:   Fri Sep 7 12:24:25 2018 -0500
 
-    BarberShop / Bags / Libraries
+    Fix typo in Load_Skins
 
-commit b920181a959bd0daf395d569fe533461951c6760
+commit a4e507009ed61b513e514593f644b8c684533df3
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 2 07:51:03 2018 -0500
+Date:   Thu Sep 6 18:37:20 2018 -0500
 
-    Baggins: Fix Backdrop Color
+    Libraries Update
 
-commit 1e588a40b59b93913f621b1ac310a7eed8a87cbd
+commit acc92aa53e1ac74f8263c41630a9c78408f7a50f
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 2 07:38:15 2018 -0500
+Date:   Thu Sep 6 17:58:05 2018 -0500
 
-    This will allow Baggins hooks to be disabled.
-
-commit 752aa49f8e1cce53ce618de017d624080711703f
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Sep 1 16:23:31 2018 -0500
-
-    TinyInspect / WhisperPop
-
-commit be18ea59997cc1c68ed0469d15ff06a2c0cfa802
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Sep 1 14:57:36 2018 -0500
-
-    Embed: ElvUI Macro Button Hide Chats
-
-commit f3936a4ec533010c93ebf41462e54fd853196372
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Sep 1 13:18:28 2018 -0500
-
-    TellMeWhen
-
-commit 31637fd8d3df7bfa196ad3837c6f03b36ccdcdc2
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Sep 1 12:32:36 2018 -0500
-
-    Not needed anymore. It's in the WA skin.
+    Details / Core / FlightMapEnhanced
 

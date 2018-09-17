@@ -7,6 +7,8 @@ L["Continent Alpha"] = "Deckkraft auf Kontinent"
 L["Continent Scale"] = "Größe auf Kontinent"
 L["Enable TomTom integration"] = "TomTom-Integration aktivieren"
 L["Filter Options"] = "Filteroptionen"
+--[[Translation missing --]]
+--[[ L["Hide all BfA nodes from the map"] = ""--]] 
 L["Hide all Broken Isle nodes from the map"] = "Versteckt alle Knoten der Verheerten Inseln auf der Karte"
 L["Hide all Cataclysm nodes from the map"] = "Versteckt alle Knoten von Cataclysm auf der Karte"
 L["Hide all Draenor nodes from the map"] = "Versteckt alle Knoten von Draenor auf der Karte"
@@ -14,6 +16,8 @@ L["Hide all Northrend nodes from the map"] = "Versteckt alle Knoten von Northren
 L["Hide all Outland nodes from the map"] = "Versteckt alle Knoten der Scherbenwelt auf der Karte"
 L["Hide all Pandaria nodes from the map"] = "Versteckt alle Knoten von Pandaria auf der Karte"
 L["Hide all Vanilla nodes from the map"] = "Versteckt alle Knoten von Vanilla auf der Karte"
+--[[Translation missing --]]
+--[[ L["Hide Battle for Azeroth"] = ""--]] 
 L["Hide Broken Isles"] = "Verheerte Inseln Ausblenden"
 L["Hide Cataclysm"] = "Cataclysm ausblenden"
 L["Hide Draenor"] = "Draenor ausblenden"

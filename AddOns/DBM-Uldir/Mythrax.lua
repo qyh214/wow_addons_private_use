@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(2194, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17670 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17835 $"):sub(12, -3))
 mod:SetCreatureID(134546)--138324 Xalzaix
 mod:SetEncounterID(2135)
 --mod:DisableESCombatDetection()
 mod:SetZone()
 mod:SetBossHPInfoToHighest()
---mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
+mod:SetUsedIcons(1, 2)
 --mod:SetHotfixNoticeRev(16950)
 --mod:SetMinSyncRevision(16950)
 --mod.respawnTime = 35
@@ -38,18 +38,20 @@ mod:RegisterEventsInCombat(
 --]]
 --Stage One: Oblivion's Call
 local warnPhase2						= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
+local warnOblivionSphere				= mod:NewCountAnnounce(272407, 4)
+--Stage Two:
+local warnDestroyerRemaining			= mod:NewAddsLeftAnnounce("ej18508", 2, 274693)
 
 --Stage One: Oblivion's Call
 local specWarnEssenceShearDodge			= mod:NewSpecialWarningDodge(274693, false, nil, nil, 3, 2)
 local specWarnEssenceShear				= mod:NewSpecialWarningDefensive(274693, nil, nil, nil, 1, 2)
 local specWarnEssenceShearOther			= mod:NewSpecialWarningTaunt(274693, nil, nil, nil, 1, 2)
 local specWarnObliterationBlast			= mod:NewSpecialWarningDodge(273538, nil, nil, nil, 2, 2)--Mythic
-local specWarnOblivionSphere			= mod:NewSpecialWarningSwitch(272407, "RangedDps", nil, nil, 1, 2)
 local yellOblivionSphere				= mod:NewYell(272407)
-local specWarnImminentRuin				= mod:NewSpecialWarningMoveAway(272536, nil, nil, nil, 1, 2)
-local yellImminentRuin					= mod:NewYell(272536, 139073)--Short name "Ruin"
-local yellImminentRuinFades				= mod:NewFadesYell(272536, 139073)
-local specWarnImminentRuinNear			= mod:NewSpecialWarningClose(272536, nil, nil, nil, 1, 2)
+local specWarnImminentRuin				= mod:NewSpecialWarningYouPos(272536, nil, nil, nil, 1, 2)
+local yellImminentRuin					= mod:NewPosYell(272536, 139073)--Short name "Ruin"
+local yellImminentRuinFades				= mod:NewIconFadesYell(272536, 139073)
+local specWarnImminentRuinNear			= mod:NewSpecialWarningClose(272536, false, nil, 2, 1, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 2)
 --Stage Two: Fury of the C'thraxxi
 local specWarnObliterationbeam			= mod:NewSpecialWarningDodge(272115, nil, nil, nil, 2, 2)--Generic for now
@@ -73,8 +75,8 @@ local countdownOblivionSphere			= mod:NewCountdown(19.9, 272407, nil, nil, 3)
 local countdownEssenceShear				= mod:NewCountdown("Alt20", 274693, "Tank", nil, 3)
 local countdownImminentRuin				= mod:NewCountdown("AltTwo20", 272536, "-Tank", nil, 3)
 
---mod:AddSetIconOption("SetIconBeam", 272115, true)
---mod:AddRangeFrameOption("8/10")
+mod:AddSetIconOption("SetIconRuin", 272536, true)
+mod:AddRangeFrameOption(5, 272407)
 mod:AddInfoFrameOption(272146, true)
 
 mod.vb.phase = 1
@@ -82,6 +84,7 @@ mod.vb.ruinCast = 0
 mod.vb.sphereCast = 0
 mod.vb.beamCast = 0
 mod.vb.destroyersRemaining = 2
+mod.vb.ruinIcon = 1
 local beamTimers = {20, 12, 12, 12, 12}--20, 14, 10, 12 (old) (if it remains 12 repeating, table should be eliminated)
 
 function mod:OnCombatStart(delay)
@@ -89,6 +92,7 @@ function mod:OnCombatStart(delay)
 	self.vb.ruinCast = 0
 	self.vb.sphereCast = 0
 	self.vb.beamCast = 0
+	self.vb.ruinIcon = 1
 	self.vb.destroyersRemaining = 2
 	timerImminentRuinCD:Start(4.9-delay, 1)
 	timerOblivionSphereCD:Start(9-delay, 1)
@@ -100,12 +104,15 @@ function mod:OnCombatStart(delay)
 		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(272146))
 		DBM.InfoFrame:Show(5, "playerdebuffstacks", 272146, 1)
 	end
+	if self.Options.RangeFrame then
+		DBM.RangeCheck:Show(5)
+	end
 end
 
 function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
+	if self.Options.RangeFrame then
+		DBM.RangeCheck:Hide()
+	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
@@ -218,17 +225,25 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellOblivionSphere:Yell()
 		end
 	elseif spellId == 272536 then
+		local icon = self.vb.ruinIcon
 		if args:IsPlayer() then
-			specWarnImminentRuin:Show()
-			specWarnImminentRuin:Play("runout")
-			yellImminentRuin:Yell()
-			yellImminentRuinFades:Countdown(self:IsMythic() and 8 or 12)
+			specWarnImminentRuin:Show(self:IconNumToTexture(icon))
+			specWarnImminentRuin:Play("mm"..icon)
+			yellImminentRuin:Yell(icon, icon, icon)
+			yellImminentRuinFades:Countdown(self:IsMythic() and 8 or 12, nil, icon)
 		elseif self:CheckNearby(12, args.destName) and not DBM:UnitDebuff("player", spellId) then
 			specWarnImminentRuinNear:CombinedShow(0.3, args.destName)--Combined show to prevent warning spam if multiple targets near you
 			specWarnImminentRuinNear:CancelVoice()--Avoid spam
 			specWarnImminentRuinNear:ScheduleVoice(0.3, "runaway")
 		--else
 			--warnImminentRuin:CombinedShow(0.3, args.destName)
+		end
+		if self.Options.SetIconRuin then
+			self:SetIcon(args.destName, icon)
+		end
+		self.vb.ruinIcon = self.vb.ruinIcon + 1
+		if self.vb.ruinIcon == 3 then
+			self.vb.ruinIcon = 1
 		end
 	elseif spellId == 274230 then
 		timerVeil:Start()
@@ -244,6 +259,9 @@ function mod:SPELL_AURA_REMOVED(args)
 		--Icon Marking?
 		if args:IsPlayer() then
 			yellImminentRuinFades:Cancel()
+		end
+		if self.Options.SetIconRuin then
+			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 274230 then--Boss active again
 		self.vb.sphereCast = 0--Does this reset? does it follow same rules? 40 seconds after each multiple of 3?
@@ -279,6 +297,7 @@ function mod:UNIT_DIED(args)
 		--TODO, infoframe add tracking
 	elseif cid == 139381 then--N'raqi Destroyer
 		self.vb.destroyersRemaining = self.vb.destroyersRemaining - 1
+		warnDestroyerRemaining:Show(self.vb.destroyersRemaining)
 		--TODO, infoframe add tracking
 		if self.vb.destroyersRemaining == 0 then
 			timerEssenceShearCD:Stop(DBM_ADD)
@@ -289,8 +308,7 @@ end
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 272177 then--Oblivion Sphere (yes it's in combat log, but needs antispam event since it fires twice there)
 		self.vb.sphereCast = self.vb.sphereCast + 1
-		specWarnOblivionSphere:Show()
-		specWarnOblivionSphere:Play("killmob")
+		warnOblivionSphere:Show(self.vb.sphereCast)
 		timerOblivionSphereCD:Start(15, self.vb.sphereCast+1)
 		countdownOblivionSphere:Start(15)
 	end
