@@ -240,7 +240,7 @@ do
 			local tbl = next(tablepool) or {}
 			tablepool[tbl] = nil
 			tbl.C = C
-			table.insert(tbl.C, uiMapId) -- Did this because otherwise nodes only on continent maps don't show up
+			--table.insert(tbl.C, uiMapId) -- Did this because otherwise nodes only on continent maps don't show up
 			tbl.Z = next(C)
 			tbl.contId = uiMapId
 			return iterCont, tbl, nil
@@ -711,7 +711,7 @@ nodes[69] = { -- Feralas
   id = 230,
   lfgid = 34,
   type = "Dungeon",
-  hideOnContinent = true,
+  --hideOnContinent = true,
  }, -- Dire Maul, probably dire maul east
  [60403070] = {
   id = 230,
