@@ -30,7 +30,7 @@ L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = "Beim Anvisieren eines seltenen G
 L["S_GROUPFINDER_ENABLED"] = "Bei neuer Quest automatisch öffnen"
 L["S_GROUPFINDER_LEAVEOPTIONS"] = "Optionen Gruppenverlassen"
 L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = "Nach X Sekunden verlassen"
-L["S_GROUPFINDER_LEAVEOPTIONS_ASKX"] = "Verlasse nicht automatisch, frage nur für X Sekunden"
+L["S_GROUPFINDER_LEAVEOPTIONS_ASKX"] = "Nicht automatisch verlassen, sondern für X Sekunden fragen"
 L["S_GROUPFINDER_LEAVEOPTIONS_DONTLEAVE"] = "Das Menü zum Verlassen nicht anzeigen"
 L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"] = "Nach Questabschluss sofort verlassen"
 L["S_GROUPFINDER_NOPVP"] = "PvP-Realms vermeiden"
@@ -44,7 +44,7 @@ Klicke, um beizutreten]=]
 L["S_GROUPFINDER_RESULTS_FOUND1"] = [=[Es wurden eine Gruppe gefunden
 Klicke, um beizutreten]=]
 L["S_GROUPFINDER_RESULTS_UNAPPLY"] = "%d verbleibende Anmeldungen..."
-L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = "Rechtsklick, um dieses Menü zu schließen"
+L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = "Rechtsklicken zum Schließen"
 L["S_GROUPFINDER_SECONDS"] = "Sekunden"
 L["S_GROUPFINDER_TITLE"] = "Dungeonbrowser"
 L["S_GROUPFINDER_TUTORIAL1"] = "Erledige deine Weltquests schneller, indem du Gruppen beitrittst, die die gleiche Quest machen!"

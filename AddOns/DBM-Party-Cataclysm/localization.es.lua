@@ -98,10 +98,6 @@ L:SetTimerLocalization({
 ---------------------
 L= DBM:GetModLocalization(131)
 
-L:SetOptionLocalization{
-	PingBlitz	= "Marcar en el minimapa cuando el General Umbriss vaya a usar $spell:74670 en ti"
-}
-
 -------------------------------
 -- Maestro de forja Throngus --
 -------------------------------

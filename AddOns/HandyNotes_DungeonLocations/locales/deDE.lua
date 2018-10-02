@@ -5,6 +5,8 @@ L["Allow left click to open journal to dungeon or raid"] = "Per Linksklick öffn
 L["Allow right click to create waypoints with TomTom"] = "Per Rechtsklick werden Wegpunkte mit TomTom erstellt"
 L["Continent Alpha"] = "Deckkraft auf Kontinent"
 L["Continent Scale"] = "Größe auf Kontinent"
+--[[Translation missing --]]
+--[[ L["Don't show discovered dungeons"] = ""--]] 
 L["Enable TomTom integration"] = "TomTom-Integration aktivieren"
 L["Filter Options"] = "Filteroptionen"
 --[[Translation missing --]]
@@ -48,6 +50,8 @@ L["The alpha of the icons shown on the zone map"] = "Die Deckkraft von Symbolen 
 L["The scale of the icons shown on the continent map"] = "Die Große von Symbolen auf der Kontinentkarte"
 L["The scale of the icons shown on the zone map"] = "Die Große von Symbolen auf der Zonenkarte"
 L["These settings control the look and feel of the icon."] = "Diese Einstellungen legen das Aussehen der Symbole fest."
+--[[Translation missing --]]
+--[[ L["This will check for legion and bfa dungeons that have already been discovered. THIS IS KNOWN TO CAUSE TAINT, ENABLE AT OWN RISK."] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Turn mixed icons grey when ANY dungeon or raid listed is locked"] = ""--]] 
 L["Use a different alpha for dungeons and raids that are locked to any extent"] = "Verwendet eine andere Deckkraft für Dungeons und Schlachtzügen, die in irgendeiner Weise gesperrt sind"

@@ -1,0 +1,16 @@
+###############################################################################
+## Interface: 70300
+## Title: SpeakinSpell_Patches
+## Title-deDE: SpeakinSpell_Patches
+## Author: Stonarius of Antonidas
+## Version: 7.3.2.01
+## Notes: Patch updater module for SpeakinSpell, loads on demand, only used once per character after updating SpeakinSpell
+## X-Credits: Created by Stonarius
+## X-Category: Chat
+## Dependencies: SpeakinSpell
+## OptionalDeps: Ace3, LibDBIcon-1.0
+## DefaultState: Enabled
+## LoadOnDemand: 1
+###############################################################################
+
+patches.lua

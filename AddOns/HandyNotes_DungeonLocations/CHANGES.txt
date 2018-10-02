@@ -1,9 +1,9 @@
 ------------------------------------------------------------------------
-r87 | Caliaha | 2018-09-18 00:43:53 +0000 (Tue, 18 Sep 2018) | 2 lines
+r93 | Caliaha | 2018-09-26 21:11:12 +0000 (Wed, 26 Sep 2018) | 2 lines
 Changed paths:
    M /trunk/HandyNotes_DungeonLocations.lua
 
-Removed a line responsible for possible recursion or something idk
+'Fixed' taint issue
 
 ------------------------------------------------------------------------
 

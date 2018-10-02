@@ -120,6 +120,8 @@ P["sle"] = {
 			["select"] = false,
 			["style"] = "DEFAULT",
 			["color"] = {r = 1, g = 1, b = 1},
+			["resize"] = "None",
+			["customWidth"] = 50,
 		},
 		["invite"] = {
 			["altInv"] = false,
@@ -590,7 +592,6 @@ P["sle"] = {
 		},
 		["visibleRange"] = 60,
 	},
-	--Order Halls
 
 	--Quests
 	["quests"] = {
@@ -732,11 +733,12 @@ P["sle"] = {
 			["NameStyle"] = "SHORT",
 			["DifStyle"] = "SHORT",
 			["raids"] = {
-				["nightmare"] = true,
-				["trial"] = true,
-				["nighthold"] = true,
-				["sargeras"] = true,
-				["antorus"] = true,
+				["nightmare"] = false,
+				["trial"] = false,
+				["nighthold"] = false,
+				["sargeras"] = false,
+				["antorus"] = false,
+				["uldir"] = true,
 			},
 		},
 	},

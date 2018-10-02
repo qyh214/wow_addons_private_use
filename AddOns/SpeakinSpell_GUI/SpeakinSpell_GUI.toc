@@ -1,0 +1,32 @@
+###############################################################################
+## Interface: 70300
+## Title: SpeakinSpell_GUI
+## Title-deDE: SpeakinSpell_GUI
+## Author: Stonarius of Antonidas
+## Author: Bazor (Akarf of Dawnbringer)
+## Version: 7.3.2.01
+## Notes: GUI module for SpeakinSpell, loads on demand
+## X-Credits: Created by Stonarius and Duerma
+## X-Category: Chat
+## Dependencies: SpeakinSpell
+## OptionalDeps: Ace3, LibDBIcon-1.0
+## DefaultState: Enabled
+## LoadOnDemand: 1
+###############################################################################
+
+
+###############################################################################
+## OPTIONS GUI
+###############################################################################
+
+gui.lua
+generaloptions.lua
+currentmessages.lua
+createnew.lua
+randomsubs.lua
+help.lua
+#trade.lua
+import.lua
+colors.lua
+networkgui.lua
+

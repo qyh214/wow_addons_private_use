@@ -68,6 +68,8 @@ SkadaPlus skada的单位补丁插件
 
 SimpleChat 底部聊天窗口改进，添加频道切换条和一些功能
 
+SpeakinSpell 
+
 TellMeWhen
 
 TinyInspect 角色面板信息增强显示额外的装备展示、与TinyTooltip结合更好实现玩家等级显示

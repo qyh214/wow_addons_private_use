@@ -1,26 +1,10 @@
-lightweight tag 9f6512cbc8e136791b6f506f23935f3b9b467e2a 1.2.4
+tag e3462393bed2ca7c58a053cd728cfb502847b037 1.2.8
 Author:	semlar <teslagraafs@gmail.com>
-Date:	Wed Jul 18 19:31:13 2018 -0400
+Date:	Mon Oct 1 13:40:50 2018 -0400
 
-commit 9f6512cbc8e136791b6f506f23935f3b9b467e2a
+commit 48f0d5d6268e27d1fb51cdb5aeaf66577f6f3be2
 Author: semlar <teslagraafs@gmail.com>
-Date:   Wed Jul 18 19:31:13 2018 -0400
+Date:   Mon Oct 1 13:40:26 2018 -0400
 
-    Visibly disabled "enforce settings" checkbox
-
-commit c3e3b2550c7853cda93007135f3089c883434f7a
-Author: semlar <teslagraafs@gmail.com>
-Date:   Wed Jul 18 19:28:12 2018 -0400
-
-    Removed entire Status Text page
-    
-    This is causing too many taint-related problems in its current form and needs to be cut, might come back later.
-
-commit 4d45e2f50a1b1d2e4c14593a177c8f97e06a48ab
-Author: semlar <teslagraafs@gmail.com>
-Date:   Wed Jul 18 19:22:57 2018 -0400
-
-    Disabled "enforce settings" setting
-    
-    Disabling "enforce settings" to keep the addon from showing the intro cinematic every time the character select screen is up
+    Removed old status text custom settings
 

@@ -19,6 +19,14 @@ L= DBM:GetModLocalization(2167)
 ---------------------------
 L= DBM:GetModLocalization(2146)
 
+L:SetWarningLocalization({
+	addsSoon		= "Chute has opened - Adds Soon"
+})
+
+L:SetOptionLocalization({
+	addsSoon		= "Show pre warning for when chutes open and start spawning adds"
+})
+
 ---------------------------
 -- Zek'vhozj --
 ---------------------------
@@ -29,7 +37,8 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	timerOrbLands	 =	"Show timer for when Orb of Corruption Lands"
+	timerOrbLands	 =	"Show timer for when Orb of Corruption Lands",
+	EarlyTankSwap	 =	"Show tank swap warning immediately after Shatter, instead of waiting for 2nd Void Lash"
 })
 
 L:SetMiscLocalization({
@@ -44,7 +53,12 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2166)
 
 L:SetOptionLocalization({
-	ShowHighestFirst2	 =	"Sort Lingering Infection Infoframe by highest debuff stack (instead of lowest)"
+	ShowHighestFirst2	 =	"Sort Lingering Infection Infoframe by highest debuff stack (instead of lowest)",
+	ShowOnlyParty		 =	"Show Lingering Infection only for your party"
+})
+
+L:SetMiscLocalization({
+	BWIconMsg			 =	"DBM's has passed icon marking to a promoted BW user in raid to avoid icon conflicts, make sure they have marking enabled or demote them to enable DBM marking"
 })
 
 ---------------

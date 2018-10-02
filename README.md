@@ -55,6 +55,8 @@ SimpleChat：http://bbs.ngacn.cc/read.php?tid=9633520
 
 SkadaPlus：https://github.com/Yeatol/SkadaPlus
 
+SpeakinSpell：https://github.com/Toludin/SpeakinSpell
+
 其他单体插件可用curse客户端管理，curse客户端下载地址：https://www.curseforge.com/twitch-client
 
 ## 一些有用的重要命令

@@ -5,6 +5,8 @@ L["Allow left click to open journal to dungeon or raid"] = "允許使用左鍵�
 L["Allow right click to create waypoints with TomTom"] = "允許使用右鍵建立 TomTom 導引箭頭"
 L["Continent Alpha"] = "大陸地圖圖示透明度"
 L["Continent Scale"] = "大陸地圖圖示縮放大小"
+--[[Translation missing --]]
+--[[ L["Don't show discovered dungeons"] = ""--]] 
 L["Enable TomTom integration"] = "啟用 TomTom 整合"
 L["Filter Options"] = "過濾選項"
 L["Hide all BfA nodes from the map"] = "隱藏地圖上所有決戰艾澤拉斯的副本圖示"
@@ -45,6 +47,8 @@ L["The alpha of the icons shown on the zone map"] = "區域地圖上的圖示透
 L["The scale of the icons shown on the continent map"] = "大陸地圖上的圖示大小"
 L["The scale of the icons shown on the zone map"] = "區域地圖上的圖示大小"
 L["These settings control the look and feel of the icon."] = "這些設定控制圖示的外觀及風格。"
+--[[Translation missing --]]
+--[[ L["This will check for legion and bfa dungeons that have already been discovered. THIS IS KNOWN TO CAUSE TAINT, ENABLE AT OWN RISK."] = ""--]] 
 L["Turn mixed icons grey when ANY dungeon or raid listed is locked"] = "列出的任何地城或團隊已擊殺時，將混合的圖示顯示為灰色。"
 L["Use a different alpha for dungeons and raids that are locked to any extent"] = "使用不同的透明度來顯示首領已擊殺的地城和團隊副本 (任何難度)"
 L["Use gray icon for dungeons and raids that are locked to any extent"] = "使用灰色圖示來顯示首領已擊殺的地城和團隊副本 (任何難度)"

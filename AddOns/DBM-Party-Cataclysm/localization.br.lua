@@ -96,10 +96,6 @@ L:SetTimerLocalization({
 ---------------------
 L= DBM:GetModLocalization(131)
 
-L:SetOptionLocalization{
-	PingBlitz	= "Apontar no minimapa quando o General Umbriss está prestes a usar Ataque Relâmpago em você"
-}
-
 --------------------------
 -- Forgemaster Throngus --
 --------------------------

@@ -5,6 +5,8 @@ L["Allow left click to open journal to dungeon or raid"] = "Permitir usar o cliq
 L["Allow right click to create waypoints with TomTom"] = "Permitir usar o clique direito para criar waypoints com o TomTom"
 L["Continent Alpha"] = "Alfa do continente"
 L["Continent Scale"] = "Escala de Continente"
+--[[Translation missing --]]
+--[[ L["Don't show discovered dungeons"] = ""--]] 
 L["Enable TomTom integration"] = "Habilitar a integração com o TomTom"
 L["Filter Options"] = "Opções de filtro"
 --[[Translation missing --]]
@@ -47,6 +49,8 @@ L["The alpha of the icons shown on the zone map"] = "O alfa dos ícones mostrado
 L["The scale of the icons shown on the continent map"] = "A escala dos ícones mostrados no mapa do continente"
 L["The scale of the icons shown on the zone map"] = "A escala dos ícones mostrados no mapa da zona"
 L["These settings control the look and feel of the icon."] = "Essas configurações controlam a aparência do ícone."
+--[[Translation missing --]]
+--[[ L["This will check for legion and bfa dungeons that have already been discovered. THIS IS KNOWN TO CAUSE TAINT, ENABLE AT OWN RISK."] = ""--]] 
 L["Turn mixed icons grey when ANY dungeon or raid listed is locked"] = "Transformar o ícones em cinza quando QUALQUER Masmorra ou Raide listado estiver bloqueado"
 L["Use a different alpha for dungeons and raids that are locked to any extent"] = "Use um alfa diferente para masmorras e raides que estão bloqueados em qualquer alcance"
 L["Use gray icon for dungeons and raids that are locked to any extent"] = "Use um ícone cinza para masmorras e raides que estão bloqueados em qualquer alcance"

@@ -91,10 +91,6 @@ L:SetTimerLocalization({
 ---------------------
 L= DBM:GetModLocalization(131)
 
-L:SetOptionLocalization{
-	PingBlitz	= "$spell:74670 대상이 된 경우 미니맵에 위치 보기"
-}
-
 --------------------------
 -- Forgemaster Throngus --
 --------------------------

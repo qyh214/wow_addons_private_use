@@ -15,6 +15,12 @@ end
 -- luacheck: globals TextStatusBar_UpdateTextString PlayerFrameAlternateManaBar MainMenuExpBar MAX_PARTY_MEMBERS UVARINFO
 
 AdvancedInterfaceOptionsSaved = {}
+local DBVersion = 3
+
+local CVarBlacklist = {
+	-- Lowercase list of cvars to never record the value for, even if the user manually sets them
+	['playintromovie'] = true,
+}
 
 -- Saved settings
 local DefaultSettings = {
@@ -24,6 +30,7 @@ local DefaultSettings = {
 	-- this will override anything that sets a cvar outside of this addon
 	CustomVars = {}, -- custom options for missing/removed cvars
 	ModifiedCVars = {}, -- [cvar:lower()] = 'last addon to modify it'
+	DBVersion = DBVersion, -- Database version for wiping out incompatible data
 }
 
 local AlwaysCharacterSpecificCVars = {
@@ -64,6 +71,11 @@ local function MergeTable(a, b) -- Non-destructively merges table b into table a
 end
 
 function E:Init() -- Runs after our saved variables are loaded and cvars have been loaded
+	if AdvancedInterfaceOptionsSaved.DBVersion ~= DBVersion then
+		-- Wipe out previous settings if database versions don't match
+		AdvancedInterfaceOptionsSaved['DBVersion'] = DBVersion
+		AdvancedInterfaceOptionsSaved['AccountVars'] = {}
+	end
 	MergeTable(AdvancedInterfaceOptionsSaved, DefaultSettings) -- Repair database if keys are missing
 
 	--[[
@@ -72,13 +84,14 @@ function E:Init() -- Runs after our saved variables are loaded and cvars have be
 			statusTextOptions[k](v and "statusText")
 		end
 	end
+	--]]
 
 	if AdvancedInterfaceOptionsSaved.EnforceSettings then
 		if not AdvancedInterfaceOptionsSaved.AccountVars then
 			AdvancedInterfaceOptionsSaved['AccountVars'] = {}
 		end
 		for cvar, value in pairs(AdvancedInterfaceOptionsSaved.AccountVars) do
-			if addon.hiddenOptions[cvar] and addon:CVarExists(cvar) then -- confirm we still use this cvar
+			if addon.hiddenOptions[cvar] and addon:CVarExists(cvar) and not CVarBlacklist[cvar:lower()] then -- confirm we still use this cvar
 				if GetCVar(cvar) ~= value then
 					if not InCombatLockdown() or not addon.combatProtected[cvar] then
 						SetCVar(cvar, value)
@@ -90,7 +103,6 @@ function E:Init() -- Runs after our saved variables are loaded and cvars have be
 			end
 		end
 	end
-	--]]
 end
 
 function addon:RecordCVar(cvar, value) -- Save cvar to DB for loading later
@@ -110,13 +122,32 @@ function addon:RecordCVar(cvar, value) -- Save cvar to DB for loading later
 				end
 			end
 		end
-		if found then -- only record cvars that exist in our database
+		if found and not CVarBlacklist[cvar:lower()] then -- only record cvars that exist in our database
 			-- If we don't save the value if it's set to the default, and something else changes it from the default, we won't know to set it back
 			--if GetCVar(cvar) == GetCVarDefault(cvar) then -- don't bother recording if default value
 			--	AdvancedInterfaceOptionsSaved.AccountVars[cvar] = nil
 			--else
 				AdvancedInterfaceOptionsSaved.AccountVars[cvar] = GetCVar(cvar) -- not necessarily the same as "value"
 			--end
+		end
+	end
+end
+
+function addon:DontRecordCVar(cvar, value) -- Wipe out saved variable if another addon modifies it
+	if not AlwaysCharacterSpecificCVars[cvar] then
+		local found = rawget(addon.hiddenOptions, cvar)
+		if not found then
+			local mk = cvar:lower()
+			for k,v in pairs(addon.hiddenOptions) do
+				if k:lower() == mk then
+					cvar = k
+					found = true
+					break
+				end
+			end
+		end
+		if found then
+			AdvancedInterfaceOptionsSaved.AccountVars[cvar] = nil
 		end
 	end
 end
@@ -196,7 +227,11 @@ end
 -----------
 local function sliderGetCVar(self) return GetCVar(self.cvar) end
 local function sliderRefresh(self) self:SetValue(self:GetCVarValue()) end
-local function sliderSetCVar(self, checked) addon:SetCVar(self.cvar, checked) end
+local function sliderSetCVar(self, value, userInput)
+	if userInput then -- only record value if user manually changed it
+		addon:SetCVar(self.cvar, value)
+	end
+end
 
 local function sliderDisable(self)
 	self.text:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
@@ -420,6 +455,7 @@ local enforceBox = newCheckbox(AIO, nil,
 	end,
 	function(self, checked) -- setter
 		AdvancedInterfaceOptionsSaved.EnforceSettings = checked
+		--[[
 		if checked then
 			AdvancedInterfaceOptionsSaved.AccountVars = {}
 			--for widget, cvar in pairs(Widgets) do
@@ -431,11 +467,11 @@ local enforceBox = newCheckbox(AIO, nil,
 				end
 			end
 		end
+		--]]
 	end,
 	'Enforce Settings on Startup',
 	"Reapplies all settings when you log in or change characters.\n\nCheck this if your settings aren't being saved between sessions.")
 enforceBox:SetPoint("LEFT", title, "RIGHT", 5, 0)
-enforceBox:Disable(true)
 
 -- Button to reset all of our settings back to their defaults
 StaticPopupDialogs['AIO_RESET_EVERYTHING'] = {

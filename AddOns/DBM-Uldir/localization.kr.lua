@@ -20,6 +20,14 @@ L= DBM:GetModLocalization(2167)
 ---------------------------
 L= DBM:GetModLocalization(2146)
 
+L:SetWarningLocalization({
+	addsSoon		= "쓰레기 처리 장치 열림 - 곧 쫄 등장"
+})
+
+L:SetOptionLocalization({
+	addsSoon		= "쓰레기 처리 장치가 열리고 쫄 생성이 시작되면 사전 경고 보기"
+})
+
 ---------------------------
 -- Zek'vhozj --
 ---------------------------
@@ -30,7 +38,8 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	timerOrbLands	 =	"타락의 보주가 나오면 타이머 바 보기"
+	timerOrbLands	 =	"타락의 보주가 나오면 타이머 바 보기",
+	EarlyTankSwap	 =	"산산조각을 맞으면 2번째 공허의 채찍을 기다리지 않고 바로 탱커 교대 경고 보기"
 })
 
 L:SetMiscLocalization({
@@ -45,7 +54,12 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2166)
 
 L:SetOptionLocalization({
-	ShowHighestFirst2	 =	"중첩이 높은 순서대로 정보 프레임에 끈질긴 감염 대상자 정렬 (중첩 낮은순 대신)"
+	ShowHighestFirst2	 =	"중첩이 높은 순서대로 정보 프레임에 잔존하는 감염 대상자 정렬 (중첩 낮은순 대신)",
+	ShowOnlyParty		 =	"내 파티원의 잔존하는 감염 중첩만 보기"
+})
+
+L:SetMiscLocalization({
+	BWIconMsg			 =	"징표 충돌을 방지하기 위해 DBM의 징표 기능을 권한이 있는 공격대 내 빅윅 사용자에게 넘겨줬습니다. 빅윅 사용자가 징표 기능을 켰는지 확인하시고 DBM의 징표 기능을 활성화하고 싶을땐 빅윅 사용자의 등급을 내리면 됩니다"
 })
 
 ---------------

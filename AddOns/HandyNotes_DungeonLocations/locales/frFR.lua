@@ -6,6 +6,8 @@ L["Allow right click to create waypoints with TomTom"] = [=[
 Autoriser le clic gauche pour créer des repéres avec TomTom]=]
 L["Continent Alpha"] = true
 L["Continent Scale"] = "Continent Echelle"
+--[[Translation missing --]]
+--[[ L["Don't show discovered dungeons"] = ""--]] 
 L["Enable TomTom integration"] = "Permettre l'intégration de TomTom"
 L["Filter Options"] = "Option de filtre"
 --[[Translation missing --]]
@@ -53,6 +55,8 @@ L["The scale of the icons shown on the zone map"] = [=[
 L'échelle des icônes affichées sur la carte des zones]=]
 L["These settings control the look and feel of the icon."] = [=[
 Ces paramètres contrôlent l'apparence de l'icône.]=]
+--[[Translation missing --]]
+--[[ L["This will check for legion and bfa dungeons that have already been discovered. THIS IS KNOWN TO CAUSE TAINT, ENABLE AT OWN RISK."] = ""--]] 
 L["Turn mixed icons grey when ANY dungeon or raid listed is locked"] = [=[
 Transformez les icônes mixtes en gris lorsque TOUT donjon ou raid listé est verrouillé]=]
 L["Use a different alpha for dungeons and raids that are locked to any extent"] = "Utilisez un alpha différent pour les donjons et les raids qui sont verrouillés dans certaines conditions"

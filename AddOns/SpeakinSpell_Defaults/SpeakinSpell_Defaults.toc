@@ -1,0 +1,26 @@
+###############################################################################
+## Interface: 70300
+## Title: SpeakinSpell_Defaults
+## Title-deDE: SpeakinSpell_Defaults
+## Author: Stonarius of Antonidas
+## Version: 7.3.2.01
+## Notes: Default speeches for SpeakinSpell, loads on demand, only used when you first install, reset to defaults, or run the "/ss import" browser
+## X-Credits: Created by Stonarius
+## X-Category: Chat
+## Dependencies: SpeakinSpell
+## OptionalDeps: Ace3, LibDBIcon-1.0
+## DefaultState: Enabled
+## LoadOnDemand: 1
+###############################################################################
+
+DefaultEventHooks-enUS.lua
+DefaultEventHooks-deDE.lua
+DefaultEventHooks-koKR.lua
+DefaultEventHooks-frFR.lua
+
+DefaultSpeeches-enUS.lua
+DefaultSpeeches-deDE.lua
+DefaultSpeeches-koKR.lua
+DefaultSpeeches-frFR.lua
+
+templates.lua

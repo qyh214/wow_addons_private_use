@@ -185,7 +185,6 @@ local rules = {
     {pat = "^%s+", repl = ""}
 }
 
--- 时间格式化字符串
 -- 文字修改函数
 local function AddMessage(frame, text, ...)
     -- 频道标签精简
@@ -211,5 +210,9 @@ function SimpleChat_InitChannel()
             newAddMsg[format("%s%d", "ChatFrame", i)] = f.AddMessage
             f.AddMessage = AddMessage
         end
+    end
+    if not GuildControlUIRankSettingsFrameRosterLabel then
+        GuildControlUIRankSettingsFrameRosterLabel = CreateFrame("frame")
+        GuildControlUIRankSettingsFrameRosterLabel:Hide()
     end
 end

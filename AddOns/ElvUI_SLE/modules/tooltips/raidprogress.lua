@@ -75,19 +75,34 @@ RP.bosses = {
 		"sargeras",
 	},
 	{ -- Antorus, the Burning Throne
-        { -- Mythic
-            11956, 11959, 11962, 11965, 11968, 11971, 11974, 11977, 11980, 11983, 11986
-        },
-        { -- Heroic
-            11955, 11958, 11961, 11964, 11967, 11970, 11973, 11976, 11979, 11982, 11985
-        },
-        { -- Normal
-            11954, 11957, 11960, 11963, 11966, 11969, 11972, 11975, 11978, 11981, 11984
-        },
+		{ -- Mythic
+			11956, 11959, 11962, 11965, 11968, 11971, 11974, 11977, 11980, 11983, 11986
+		},
+		{ -- Heroic
+			11955, 11958, 11961, 11964, 11967, 11970, 11973, 11976, 11979, 11982, 11985
+		},
+		{ -- Normal
+			11954, 11957, 11960, 11963, 11966, 11969, 11972, 11975, 11978, 11981, 11984
+		},
 		{ -- LFR
-            12117, 12118, 12119, 12120, 12121, 12122, 12123, 12124, 12125, 12126, 12127
-        },
+			12117, 12118, 12119, 12120, 12121, 12122, 12123, 12124, 12125, 12126, 12127
+		},
 		"antorus",
+	},
+	{ -- Uldir
+		{ -- Mythic
+			12789, 12793, 12797, 12801, 12805, 12811, 12816, 12820,
+		},
+		{ -- Heroic
+			12788, 12792, 12796, 12800, 12804, 12810, 12815, 12819,
+		},
+		{ -- Normal
+			12787, 12791, 12795, 12799, 12803, 12809, 12814, 12818,
+		},
+		{ -- LFR
+			12786, 12790, 12794, 12798, 12802, 12808, 12813, 12817,
+		},
+		"uldir",
 	},
 }
 RP.Raids = {
@@ -97,6 +112,7 @@ RP.Raids = {
 		SLE:GetMapInfo(764, "name"),
 		SLE:GetMapInfo(850 , "name"),
 		SLE:GetMapInfo(909, "name"),
+		SLE:GetMapInfo(1148, "name"),
 	},
 	["SHORT"] = {
 		L["RAID_EN"],
@@ -104,6 +120,7 @@ RP.Raids = {
 		L["RAID_NH"],
 		L["RAID_TOS"],
 		L["RAID_ANTO"],
+		SLE:GetMapInfo(1148, "name"),
 	},
 }
 RP.modes = { 
@@ -203,10 +220,9 @@ local function AchieveReady(event, GUID)
 	TT:UnregisterEvent("INSPECT_ACHIEVEMENT_READY")
 end
 
-local function OnInspectInfo(self, tt, unit, level, r, g, b, numTries)
+local function OnInspectInfo(self, tt, unit, r, g, b)
 	if T.InCombatLockdown() then return end
 	if not E.db.sle.tooltip.RaidProg.enable then return end
-	if not level or level < MAX_PLAYER_LEVEL then return end
 	if not (unit and T.CanInspect(unit)) then return end
 	
 	local guid = T.UnitGUID(unit)
