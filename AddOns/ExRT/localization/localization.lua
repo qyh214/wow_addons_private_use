@@ -237,12 +237,27 @@ local zoneEJids = {
 	S_ZoneT20ToS = 875,
 	S_ZoneT21A = 946,
 	S_ZoneT22Uldir = 1031,
+	S_ZoneT23Siege = 1176,
+	S_ZoneT23Storms = 1177,
 }
 for prefix,eID in pairs(zoneEJids) do
 	L[prefix] = EJ_GetInstanceInfo(eID)
 end
 
 local encounterIDtoEJidData = {
+	[2269] = 2328,	--The Restless Cabal
+	[2273] = 2332,	--Uu'nat, Harbinger of the Void
+
+	[2263] = 2325,	--Grong; For alliance 2340
+	[2265] = 2333,	--Frida Ironbellows, Paladin;  For alliance Ra'wani Kanae, 2344
+	[2266] = 2341,	--Flamefist and the Illuminated; For alliance Grimfang and Firecaller, Duel with a Duo 2323
+	[2271] = 2342,	--Treasure Guardian
+	[2268] = 2330,	--Loa Council
+	[2272] = 2335,	--King Rastakhan (A)
+	[2276] = 2334,	--Mekkatorque (H)
+	[2280] = 2337,	--Sea Priest
+	[2281] = 2343,	--Jaina
+
 	[2144] = 2168,	--Taloc
 	[2141] = 2167,	--MOTHER
 	[2136] = 2169,	--Zek'voz
@@ -341,6 +356,16 @@ L.bossName = setmetatable({}, {__index=function (t, k)
 		encounterIDtoEJidChache[k] = EJ_GetEncounterInfo(encounterIDtoEJidData[k] or 0) or ""
 	end
 	return encounterIDtoEJidChache[k]
+end})
+
+
+local instanceIDtoEJidChache = {
+}
+L.EJInstanceName = setmetatable({}, {__index=function (t, k)
+	if not instanceIDtoEJidChache[k] then
+		instanceIDtoEJidChache[k] = EJ_GetInstanceInfo(k) or ""
+	end
+	return instanceIDtoEJidChache[k]
 end})
 
 

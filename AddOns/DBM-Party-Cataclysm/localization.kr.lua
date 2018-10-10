@@ -276,7 +276,6 @@ L:SetOptionLocalization({
 	WarnSubmerge	= "잠수 알림 보기",
 	TimerEmerge		= "다음 등장 바 보기",
 	TimerSubmerge	= "다음 잠수 바 보기",
-	CrystalArrow	= "$spell:81634 대상이 가까이 있을 경우 DBM 화살표 보기",
 	RangeFrame		= "거리 창 보기(5m)"
 })
 
@@ -372,8 +371,7 @@ L:SetOptionLocalization{
 L= DBM:GetModLocalization(186)
 
 L:SetOptionLocalization{
-	RangeFrame		= "거리 창 보기(10m)",
-	StormArrow		= "$spell:43648 활성화 중에 DBM 화살표 보기"
+	RangeFrame		= "거리 창 보기(10m)"
 }
 
 ---------------
@@ -481,10 +479,6 @@ L:SetMiscLocalization{
 -- High Priest Venoxis --
 -------------------------
 L= DBM:GetModLocalization(175)
-
-L:SetOptionLocalization{
-	LinkArrow			= "$spell:96477 대상이 된 경우 DBM 화살표 보기"
-}
 
 ------------------------
 -- Bloodlord Mandokir --

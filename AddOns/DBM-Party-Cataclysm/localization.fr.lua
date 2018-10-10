@@ -340,8 +340,7 @@ L= DBM:GetModLocalization(186)
 
 L:SetOptionLocalization{
 	StormIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(43648),
-	RangeFrame	= "Show range frame (10 yards)",
-	StormArrow	= "Show DBM Arrow for $spell:43648"
+	RangeFrame	= "Show range frame (10 yards)"
 }
 
 ---------------
@@ -440,8 +439,7 @@ L:SetOptionLocalization{
 L= DBM:GetModLocalization(175)
 
 L:SetOptionLocalization{
-	SetIconOnToxicLink	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(96477),
-	LinkArrow		= "Show DBM arrow when you are affected by $spell:96477"
+	SetIconOnToxicLink	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(96477)
 }
 
 ------------------------

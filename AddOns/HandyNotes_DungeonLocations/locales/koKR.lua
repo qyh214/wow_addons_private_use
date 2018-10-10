@@ -5,8 +5,7 @@ L["Allow left click to open journal to dungeon or raid"] = "던전이나 공격�
 L["Allow right click to create waypoints with TomTom"] = "TomTom으로 웨이포인트 생성하도록 오른쪽 클릭 허용"
 L["Continent Alpha"] = "대륙 투명토"
 L["Continent Scale"] = "대륙 크기 비율"
---[[Translation missing --]]
---[[ L["Don't show discovered dungeons"] = ""--]] 
+L["Don't show discovered dungeons"] = "미발견 던전 표시하지 않음"
 L["Enable TomTom integration"] = "TomTom 기능 활성화"
 L["Filter Options"] = "필터 옵션"
 L["Hide all BfA nodes from the map"] = "지도에서 모든 격전의 아제로스 위치를 숨깁니다."
@@ -47,8 +46,8 @@ L["The alpha of the icons shown on the zone map"] = "지역 지도에 표시되�
 L["The scale of the icons shown on the continent map"] = "대륙 지도에 표시되는 아이콘의 크기 비율"
 L["The scale of the icons shown on the zone map"] = "지역 지도에 표시되는 아이콘의 크기 비율"
 L["These settings control the look and feel of the icon."] = "아이콘의 모양을 조절하는 설정입니다."
---[[Translation missing --]]
---[[ L["This will check for legion and bfa dungeons that have already been discovered. THIS IS KNOWN TO CAUSE TAINT, ENABLE AT OWN RISK."] = ""--]] 
+L["This will check for legion and bfa dungeons that have already been discovered. THIS IS KNOWN TO CAUSE TAINT, ENABLE AT OWN RISK."] = [=[이미 위치를 알고 있는 군단 및 격전의 아제로스 던전을 검토할 것입니다. 또한 이 설정은
+taint 오류를 일으킬 수 있으며, 사용자의 몫입니다.]=]
 L["Turn mixed icons grey when ANY dungeon or raid listed is locked"] = "합쳐진 아이콘에 포함된 던전이나 공격대 중 하나라도 귀속되었을 때 회색으로 바꿉니다"
 L["Use a different alpha for dungeons and raids that are locked to any extent"] = "하나라도 묶인 던전과 공격대에 다른 투명도를 사용합니다"
 L["Use gray icon for dungeons and raids that are locked to any extent"] = "하나라도 묶인 던전과 공격대에 회색 아이콘을 사용합니다"

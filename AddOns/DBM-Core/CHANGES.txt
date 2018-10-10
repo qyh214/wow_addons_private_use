@@ -1,312 +1,187 @@
-tag f02a7057c63c6cfe5ba2614c63983ce745069681 8.0.11
+tag ad11f012f6b6e519939d0ad0b57dc4dd6002dc5d 8.0.12
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Sat Sep 29 00:21:36 2018 +0200
+Date:	Thu Oct 4 23:21:51 2018 +0200
 
-Tagging as 8.0.11
+Tagging as 8.0.12
 
-commit 50035591a2c68a6f54457ab9c2009d05aea84048
+commit eb16bf2144c884d0a4da063650a6e882182f4be0
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Sep 29 00:21:36 2018 +0200
+Date:   Thu Oct 4 23:21:51 2018 +0200
 
-    increment version number to 8.0.11
+    increment version number to 8.0.12
 
-commit b9f7eea2220c1d016c9151397dedad2dab1c1ad6
+commit 04e08c5d548405c05e9a89c0e9c701faf4fd179f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Sep 29 00:16:19 2018 +0200
+Date:   Thu Oct 4 23:20:59 2018 +0200
 
-    Omega via svn r17934:
-    KR update
+    Omega via svn r17959:
+    Add some estimated respawns
 
-commit f56dab2b4b2ff360a196a4a0285d23d7f567a3a7
+commit 6f487e5d1caae3cfc87c071fafbfac4ee0f880ee
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Sep 29 00:14:18 2018 +0200
+Date:   Thu Oct 4 17:42:42 2018 +0200
 
-    Omega via svn r17933:
-    Update Jiarak
+    Omega via svn r17957:
+    Forgot to push this. updated timers for Hailstone Construct
 
-commit a87a127c5c51752580b48fa4ff3cf5187fd998e4
+commit 2e52aeb8ab106b8ad287c5de350b1312b5faa4bf
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Sep 28 21:57:30 2018 +0200
+Date:   Thu Oct 4 17:36:42 2018 +0200
 
-    Omega via svn r17932:
-    update LSM to 106
+    Omega via svn r17956:
+    Change flags on these to what is assumed to make sense
 
-commit 0c0b5616f5615196dc85f7931016ed94fe2191b7
+commit aef45340951184a830633b23a4742622f1a1695e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Sep 28 16:14:12 2018 +0200
+Date:   Thu Oct 4 07:32:12 2018 +0200
 
-    ultrashining via svn r17931:
+    Omega via svn r17955:
+    Flag grong as shared while at it
+
+commit c155eac4884a4b6a2b9de2f087bd95b29bd7972f
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Oct 4 07:29:23 2018 +0200
+
+    Omega via svn r17954:
+    Add load blockers for duplicate Grongs
+
+commit b0f54006b7efae0db6ff35fc867bf8de528043c0
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Oct 4 07:16:48 2018 +0200
+
+    Omega via svn r17953:
+    *Pushed change so that Look Away warnings now require source name, since distinction is important when source can be any number of npcs on a single fight.
+    *Pushed Frida/Kanye mod drycode
+
+commit cfd5777aea594cf6305ddbabe7227920b16fec31
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Oct 4 04:32:55 2018 +0200
+
+    Omega via svn r17952:
+    Push Grong Drycodes (both of them)
+
+commit 92ffe3159364003dc1db20f1dcc00e0c0a706dd3
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Oct 4 02:12:19 2018 +0200
+
+    Omega via svn r17951:
+    assume journal is just wrong on these two bosses and set faction flags myself to what makes most sense
+
+commit d836f596e80032827ee5f69e8ad2c167a558cb9e
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Oct 4 01:37:51 2018 +0200
+
+    Omega via svn r17950:
+    Sync 8.1 mods with todays build
+
+commit 0df54a068f6f6f58d59e39d1bd830be4d3adb308
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Oct 3 18:39:37 2018 +0200
+
+    Omega via svn r17949:
+    fix a drop down code change from over 3 years ago that broke DBM RaidLeadTools
+
+commit 6ec7a0bc84d23dd57a2069306b079b516265ff71
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Oct 2 22:13:58 2018 +0200
+
+    Omega via svn r17948:
+    Allow ScheduleVoice to unschedule at same time, so it can be used like CombinedShow is.
+
+commit e6e81eef24240d53ac2b4cc2050ea8c81295645b
+Author: subversion <svn@deadlybossmods.com>
+Date:   Mon Oct 1 14:37:35 2018 +0200
+
+    ultrashining via svn r17947:
     zhTW update
 
-commit 46fea4a931468cb71c98106c15dd2ab4456aa90f
+commit 8944801edfbe129d0e0300780825f7e294078b34
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Sep 28 07:41:51 2018 +0200
+Date:   Mon Oct 1 04:24:30 2018 +0200
 
-    Omega via svn r17930:
-    Couple tweaks here too
+    Omega via svn r17946:
+    Insert temp names for now
 
-commit 968faca4fb4e8905e6cac6550b2bf7b07c74cbba
+commit f9baefbd733a38c9985f4076e15aed0f9ab35bc9
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Sep 28 07:39:48 2018 +0200
+Date:   Mon Oct 1 01:39:34 2018 +0200
 
-    Omega via svn r17929:
-    Fix intermission timers for mythrax, again. because they were changed again and didn?\226?\128?\153t notice it until reported to me tonight (they literally removed one of beams on non mythic and one of visions)
+    Omega via svn r17945:
+    Fix a couple bugs
 
-commit ef08d2ba1a7037e28e32e6380c571c2b5a343d87
+commit 7359fe0f13da4194f0cdd7ea0cfe624280266f98
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Sep 27 16:55:32 2018 +0200
+Date:   Mon Oct 1 01:17:22 2018 +0200
 
-    ultrashining via svn r17928:
-    zhTW update
+    Omega via svn r17944:
+    Add all currently supportable 8.1 raid zones/bosses with blank mods and basic combat detection
 
-commit 23a69b0d17a97d364396ad1d19e5d9ef3e13e649
+commit 7359fe0f13da4194f0cdd7ea0cfe624280266f98
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Sep 27 06:34:36 2018 +0200
+Date:   Mon Oct 1 01:17:22 2018 +0200
 
-    Omega via svn r17927:
-    change text
+    Omega via svn r17944:
+    Add all currently supportable 8.1 raid zones/bosses with blank mods and basic combat detection
 
-commit 03368c5b90f858050d55225703fb619216aaf1c1
+commit 742a7beed71cf61114d68940f97660138b391284
+Author: MysticalOS <MysticalOS@nomail.com>
+Date:   Sun Sep 30 17:21:13 2018 -0400
+
+    Update pkgmeta
+
+commit 219c6a06171c82243ce9f75d8ca90472f68dce5d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Sep 27 06:34:11 2018 +0200
+Date:   Sun Sep 30 20:43:15 2018 +0200
 
-    Omega via svn r17926:
-    fine tune ranges. they aren?\226?\128?\153t that high anymore
+    Omega via svn r17943:
+    Fix couple dungeon bugs reported
 
-commit a19e9ca885bd08ca9faf84ca2850f779d007c849
+commit c13e9c9fb94b8230fcd9884e5f6295d440447e75
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Sep 27 06:16:33 2018 +0200
+Date:   Sun Sep 30 03:50:58 2018 +0200
 
-    Omega via svn r17925:
-    Try this
+    Omega via svn r17942:
+    Change look away to be diff sound from growth
 
-commit 1b9bbe9d88decd13376a4cc2ad0a5e26f4b90922
+commit 7822daa69b3d43daa88d14a8a5fbbdc9b7382927
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Sep 27 05:51:35 2018 +0200
+Date:   Sat Sep 29 08:49:29 2018 +0200
 
-    Omega via svn r17924:
-    Fix time left logic
+    Omega via svn r17941:
+    0.2 second timer tweak for P3 and fix timer being too short on heroic in P2
 
-commit e2d60944487273c6bbd2462f0bf254acb082f021
+commit 44a8564105fa0af629d06a4cc4e527707203247a
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Sep 27 05:26:25 2018 +0200
+Date:   Sat Sep 29 08:16:19 2018 +0200
 
-    Omega via svn r17923:
-    Don?\226?\128?\153t sort info frame on fetid, so objects stop bouncing around
+    Omega via svn r17940:
+    Add side to warning as well
 
-commit 823b47736b1b16e589dabd20a573edd4e45e3446
+commit f2cb30f65833ab86cab1dd6d426ff703dad6e9fd
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Sep 27 05:20:39 2018 +0200
+Date:   Sat Sep 29 06:48:09 2018 +0200
 
-    Omega via svn r17922:
-    Fix double / 1000
+    Omega via svn r17939:
+    Even further tweak
 
-commit 9b783ae09e1fdef5584d8e06bbb23c19125d2541
+commit 7a4685e0c1467e9008ca6e818f8a072c3ef16551
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Sep 27 04:37:17 2018 +0200
+Date:   Sat Sep 29 06:36:09 2018 +0200
 
-    Omega via svn r17921:
-    Infoframe fixes and antispam for using debuff as a wipe
-    Disable cast time timer and just use infoframe instead
+    Omega via svn r17938:
+    Add missing updateAllTimers condition, the 8.5 second ICD triggered by beams to all abilities except tank strike. This should make mother timers more correct in certain interaction timings.
 
-commit 084cfac6f6b4561da63c173c54752ac200bfadb6
+commit 00771ab10ccdc9f3f13101ba3cbc0408eb0cd678
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Sep 25 21:06:12 2018 +0200
+Date:   Sat Sep 29 03:46:13 2018 +0200
 
-    Omega via svn r17920:
-    Small timer adjust
-    small antispam adjust
+    Omega via svn r17937:
+    Fix voice pack errors on Jiarak
 
-commit 43b933f351395bc32c5878b603686fa23cd42046
+commit dd0132d693791e0091c45476e3eb891dafc04048
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Sep 25 19:23:12 2018 +0200
+Date:   Sat Sep 29 00:21:53 2018 +0200
 
-    Omega via svn r17919:
-    Add burrow timer
-
-commit cf60c1fa3d45966e6e5744597b78596bc81986be
-Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Sep 25 07:55:40 2018 +0200
-
-    Omega via svn r17918:
-    Kr Update
-
-commit 7d6887c00fb83b8afbc7afc9d14f3de0d31c6336
-Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Sep 25 03:19:34 2018 +0200
-
-    Omega via svn r17917:
-    Fix icons not showing with custom injections into front name
-
-commit b9ad45536030bd8eeb0d87502faf48f9cc5c8e57
-Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Sep 25 03:02:16 2018 +0200
-
-    Omega via svn r17916:
-    KR update
-
-commit 8ff5db3bb13381f0789c397f99fd10633d1a95bf
-Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Sep 25 02:59:10 2018 +0200
-
-    Omega via svn r17915:
-    Fix adds timers for mythic. i swear they were 55 week one, same as heroic, must have been one of the nerfs.
-
-commit 756c4d7aaf435ccd3f1885c730df9e44776f20cb
-Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Sep 25 02:54:15 2018 +0200
-
-    Omega via svn r17914:
-    Announce chutes with general announce
-
-commit a34f7892654f78677494466b62a1aa9de8459574
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 24 23:58:08 2018 +0200
-
-    Omega via svn r17913:
-    Fix new prototypes not having a cat assigned yet
-    Added new prototype for Cast timers to have count
-    More mythic Ghuun updates
-
-commit 383598e33c0d57b9d6543537a15afc59c139e660
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 24 08:08:13 2018 +0200
-
-    Omega via svn r17912:
-    Make NPAuraOnEngorgedBurst2 off by default. Most ignore these icons and they drown out the more important icons. If anyone wants this they can turn it on.
-    It?\226?\128?\153s also probably the most cpu heavy operation of the zul mod as well, so no reason to waste cpu for a function very few pay attention to.
-
-commit f0893b4569674e0c729e459a8a8944569a8e6b8f
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 24 08:04:04 2018 +0200
-
-    Omega via svn r17911:
-    Cleanup on zul, and reduce info frame for zul down to generic power one. Debuff checks aren?\226?\128?\153t that meaningful so there is no reason for additional overhead checking them.
-    Remove ghostbusters joke. It had it?\226?\128?\153s time, but that time has passed
-
-commit 4253f681435827d01882b47fa099fda3308f567d
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 24 07:46:00 2018 +0200
-
-    Omega via svn r17910:
-    Reduce spam on zul by not announcing decaying on crawgs, nameplate aura and skull enough for that. but continue announcing when on priority targets
-
-commit 21c93d8814568283e4fe4ef1be76dcbfb1a3cdc0
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 24 02:53:45 2018 +0200
-
-    Omega via svn r17909:
-    Subtrack 8 from all timers since using incorrect event for now
-
-commit 413217238851920d2c1a54bd35d37e138fe33959
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 24 02:40:06 2018 +0200
-
-    Omega via svn r17908:
-    Add this here as well
-
-commit 840211a5ec09d6c519bbf8ea3657f3110d11e205
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 24 02:07:48 2018 +0200
-
-    Omega via svn r17907:
-    HF revision
-
-commit 3c0d1654bc4968d84fa063b6cbb8c9e0734f357c
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Sep 24 02:03:43 2018 +0200
-
-    Omega via svn r17906:
-    *Thanks to Inception, mythic Ghuun timers updated/improved.
-    *In addition, added icon option for Bursting Boil
-    *Changed icon on Feast of Blood from 6 to 7, so first 6 icons could be reserved for Bursting Boil
-
-commit f4ed8460173644ab6fc8aa6dab50beefbec47656
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Sep 23 21:36:07 2018 +0200
-
-    Omega via svn r17905:
-    Make this tank only by default, they should be ones aiming it correctly
-
-commit 33b604443ee69fc315e93f56b5f7267bd9d0d5a8
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Sep 23 21:28:29 2018 +0200
-
-    Omega via svn r17904:
-    Add option to tank swap earlier on zekvoz
-    Fixed broadside warning on Lockwood
-
-commit 01a03ac57f5d48b80be2b4ee480dc92de59be2bf
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Sep 23 10:01:04 2018 +0200
-
-    Omega via svn r17903:
-    Add timer for first one as well
-    Also added optional Rock Lance interrupt warning (off by default)
-
-commit e11c16d870b2d09019294f1024a8411a1b3e16ec
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Sep 23 09:55:35 2018 +0200
-
-    Omega via svn r17902:
-    Fix bug where captain timers didn?\226?\128?\153t cancel when captains died on Council of Captains
-    Added warnings for all 3 brew casts from bartender as well as CD timer for them
-
-commit 9e1daf106979747c8ffe4581c5e3e5fa9c7b44ed
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Sep 23 00:59:17 2018 +0200
-
-    ebmor via svn r17901:
-    deDE update
-
-commit 07fbdd7c70a61db7db6a1ad49589de329cb5cf58
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Sep 22 07:42:46 2018 +0200
-
-    Omega via svn r17900:
-    tweak infoframe
-
-commit 1d2eb0aa56988cd3f484b74b6ac7446eeb7cb80d
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Sep 22 06:58:29 2018 +0200
-
-    Omega via svn r17899:
-    Reduce useless nameplate aura
-
-commit 7a3ae0969603c3afea7a2d321bceb1a21fa14ee6
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Sep 22 04:31:18 2018 +0200
-
-    Omega via svn r17898:
-    Add Gale Force yell
-
-commit 9f82f9322fac95c2d6abd63bd104963496d05b84
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Sep 22 02:05:18 2018 +0200
-
-    tandanu via svn r17897:
-    core: fix potential nil error on revision check
-
-commit b28070141b40fe2e505603995f902836ccab1800
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Sep 21 10:41:31 2018 +0200
-
-    Omega via svn r17896:
-    Kr Update
-
-commit e41ed19ffec01f0ace7a14949e7130bdd469dfe3
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Sep 21 09:35:02 2018 +0200
-
-    Omega via svn r17895:
-    CN update
-    Fixed countdown yell on mythrax on mythic
-    fixed initial timers after intermission on mythic mythrax
-
-commit 9b743039cb587a168ab3b0a17d4ccdd23cf7e719
-Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Sep 20 17:12:23 2018 +0200
-
-    tandanu via svn r17894:
+    tandanu via svn r17936:
     increment alpha version
 

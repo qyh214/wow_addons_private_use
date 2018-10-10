@@ -1,4 +1,4 @@
---	22.08.2018
+--	08.10.2018
 
 --[[
 3930
@@ -14,10 +14,34 @@
 * Raid Inspect: ilvl fix
 * Minor fixes
 
+3970
+* New module: Visual note [test mode]
+* Note: parts of note can be shown only for specific role. Use {D}...{/D},{H}...{/H},{T}...{/T} format
+* Note: parts of note can be shown only for specific players. Use {p:PlayerName,OtherPlayerName}...{/p} format
+* Note: autoload removed
+* Note: added option for text colors in edit mode
+* Raid Inspect: You can check all alternate azerite choices in tier if you hover azerite icon
+* Fight log: fixed calculations for players in mind control
+* Removed outdated modules
+* Minor fixes
+
+3975
+* Fixes for note editing
+
+3990
+* Note: copy-pasting with colors must be much easier
+* Note: added button "Duplicate"
+* Note: added 5ppl dungeons to bosses list
+* Note: added highlighting drafts for nearest bosses
+* Note: added {icon:PATH} format for any ingame icon (older format for spells still works ({spell:SPELL_ID}))
+* Visual note: fixes
+* Visual note: outdated versions no longer supports
+* Raid Inspect: added bfa achievements (BFA 5ppl, Uldir)
+* Raid Inspect: fixed weapon enchants for dk & hunters
 ]]
 local GlobalAddonName, ExRT = ...
 
-ExRT.V = 3950
+ExRT.V = 3990
 ExRT.T = "R"
 
 ExRT.OnUpdate = {}		--> таймеры, OnUpdate функции
@@ -99,6 +123,9 @@ do
 		self.title = ExRT.lib:Text(self,self.name,16):Point(5,-5):Top()
 	end
 	function ExRT.mod:New(moduleName,localizatedName,disableOptions,enableLoadInCombat)
+		if ExRT.A[moduleName] then
+			return false
+		end
 		local self = {}
 		setmetatable(self, ExRT.mod)
 		
@@ -143,6 +170,8 @@ do
 		
 		return self
 	end
+
+	ExRT.New = ExRT.mod.New
 end
 
 function ExRT.mod:Event(event,...)
@@ -530,6 +559,8 @@ ExRT.frame:SetScript("OnEvent",function (self, event, ...)
 			ExRT.frame:SetScript("OnUpdate", ExRT.frame.OnUpdate)
 		end,1)
 		self:UnregisterEvent("ADDON_LOADED")
+
+		ExRT.AddonLoaded = true
 
 		return true	
 	end

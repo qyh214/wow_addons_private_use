@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2141, "DBM-Azeroth-BfA", nil, 1028)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17933 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17937 $"):sub(12, -3))
 mod:SetCreatureID(132253)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
@@ -57,10 +57,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 261467 then
 		specWarnMatriarchsCall:Show()
+		specWarnMatriarchsCall:Play("killmob")
 		timerMatriarchCallCD:Start()
 	elseif spellId == 261088 then
 		specWarnHurricaneCrash:Show()
-		specWarnHurricaneCrash:Play("run")
+		specWarnHurricaneCrash:Play("justrun")
 		specWarnHurricaneCrash:ScheduleVoice(1.5, "keepmove")
 		timerHurricaneCrashCD:Start()
 	end

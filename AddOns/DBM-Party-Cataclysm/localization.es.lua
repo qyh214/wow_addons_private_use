@@ -286,7 +286,6 @@ L:SetOptionLocalization({
 	WarnSubmerge	= "Mostrar aviso cuando Corborus se sumerja en la tierra",
 	TimerEmerge		= "Mostrar temporizador para cuando Corborus regrese a la superficie",
 	TimerSubmerge	= "Mostrar temporizador para cuando Corborus se sumerja en la tierra",
-	CrystalArrow	= "Mostrar flecha cuando $spell:81634 ocurra cerca de ti",
 	RangeFrame		= "Mostrar marco de distancia (5 m)"
 })
 
@@ -390,8 +389,7 @@ L= DBM:GetModLocalization(186)
 
 L:SetOptionLocalization{
 	StormIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(43648),
-	RangeFrame	= "Mostrar marco de distancia (10 m)",
-	StormArrow	= "Mostrar flecha para $spell:43648"
+	RangeFrame	= "Mostrar marco de distancia (10 m)"
 }
 
 --------------
@@ -508,8 +506,7 @@ L:SetMiscLocalization{
 L= DBM:GetModLocalization(175)
 
 L:SetOptionLocalization{
-	SetIconOnToxicLink	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(96477),
-	LinkArrow			= "Mostrar flecha cuando te afecte $spell:96477"
+	SetIconOnToxicLink	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(96477)
 }
 
 -------------------------------

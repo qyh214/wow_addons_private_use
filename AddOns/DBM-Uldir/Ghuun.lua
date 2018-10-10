@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2147, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17919 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17959 $"):sub(12, -3))
 mod:SetCreatureID(132998)
 mod:SetEncounterID(2122)
 mod:SetZone()
@@ -9,7 +9,7 @@ mod:SetZone()
 mod:SetUsedIcons(7, 6, 5, 4, 3, 2, 1)
 mod:SetHotfixNoticeRev(17906)
 mod:SetMinSyncRevision(17776)
---mod.respawnTime = 35
+mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
@@ -82,7 +82,7 @@ local specWarnBurstingBoil				= mod:NewSpecialWarningYou(277007, nil, nil, nil, 
 ----Arena Floor P3
 local specWarnCollapse					= mod:NewSpecialWarningDodge(276839, nil, nil, nil, 2, 2)
 local specWarnMalignantGrowth			= mod:NewSpecialWarningDodge(274582, nil, nil, nil, 2, 2)
-local specWarnGazeofGhuun				= mod:NewSpecialWarningLookAway(275160, nil, nil, nil, 2, 2)
+local specWarnGazeofGhuun				= mod:NewSpecialWarningLookAway(275160, nil, nil, 2, 3, 2)
 --Upper Platforms
 local specWarnPowerMatrix				= mod:NewSpecialWarningYou(263420, nil, nil, nil, 1, 8)--New voice "Matrix on you"
 local yellPowerMatrix					= mod:NewYell(263420)
@@ -318,7 +318,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnMindNumbingChatter:Play("stopcast")
 		timerMindNumbingChatterCD:Start(nil, args.sourceGUID)
 	elseif spellId == 275160 then
-		specWarnGazeofGhuun:Show()
+		specWarnGazeofGhuun:Show(args.sourceName)
 		specWarnGazeofGhuun:Play("turnaway")
 		local timer = self:IsHard() and 26.7 or self:IsEasy() and 31.6--TODO, LFR, easy is assumed
 		timerGazeofGhuunCD:Start(timer)
@@ -415,8 +415,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 			local timer = self:IsMythic() and 44 or 26
 			timerExplosiveCorruptionCD:Start(timer, self.vb.explosiveCount+1)
 			countdownExplosiveCorruption:Start(timer)
-		else
-			local timer = self:IsMythic() and 25.5 or self:IsHeroic() and 13.4 or self:IsEasy() and 15.8--TODO, LFR
+		elseif self.vb.phase == 2 then
+			timerExplosiveCorruptionCD:Start(15.8, self.vb.explosiveCount+1)--15.8 in all, except mythic, doesn't exist in mythic P2
+			countdownExplosiveCorruption:Start(15.8)
+		else--Phase 3
+			local timer = self:IsMythic() and 25.5 or self:IsHeroic() and 13.2 or self:IsEasy() and 15.8--TODO, LFR
 			timerExplosiveCorruptionCD:Start(timer, self.vb.explosiveCount+1)
 			countdownExplosiveCorruption:Start(timer)
 		end
@@ -652,9 +655,11 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 			else
 				self.vb.matrixSide = DBM_CORE_LEFT
 			end
+			warnMatrixSpawn:Show(self.vb.matrixCount.."-"..self.vb.matrixSide)
+		else
+			warnMatrixSpawn:Show(self.vb.matrixCount)
 		end
 		self.vb.matrixCount = self.vb.matrixCount + 1
-		warnMatrixSpawn:Show(self.vb.matrixCount)
 	end
 end
 
