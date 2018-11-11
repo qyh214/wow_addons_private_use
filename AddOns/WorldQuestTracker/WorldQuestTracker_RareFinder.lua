@@ -615,10 +615,9 @@ rf:SetScript ("OnEvent", function (self, event, ...)
 				rf:UnregisterEvent ("COMBAT_LOG_EVENT_UNFILTERED")
 
 				--> check if the group finder window is shown with the mob we just killed
+				--> check if the group finder window is shown with the mob we just killed
 				if (ff:IsShown()) then
-					if (ff.QuestName2Text.text == alvo_name) then
-						ff.HideMainFrame()
-					end
+					ff:HideFrame (true)
 				end
 				
 				--> ask to leave the group

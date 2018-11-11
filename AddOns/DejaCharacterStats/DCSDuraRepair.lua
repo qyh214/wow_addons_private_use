@@ -187,7 +187,9 @@ local function DCS_Mean_Durability()
 	elseif addon.duraMean < 100 then
 		duraMeanFS:SetTextColor(0.753, 0.753, 0.753)
 	end
-	DCS_Durability_Frame_Mean_Display()
+	if DurabilityFrame:IsVisible() then
+		DCS_Durability_Frame_Mean_Display()
+	end
 end
 
 --[[ previous version of DCS_Mean_Durability()
@@ -564,19 +566,20 @@ local DCS_ShowAverageDuraCheck = CreateFrame("CheckButton", "DCS_ShowAverageDura
 			showavgdur = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowAverageRepairChecked.ShowAverageRepairSetChecked
 			self:SetChecked(showavgdur)
 		end
-		if PaperDollFrame:IsVisible() then
-			if showavgdur then
-				DCS_Mean_Durability()
-				if addon.duraMean == 100 then --check after calculation
-					duraMeanFS:SetFormattedText("")
-				else
-					duraMeanFS:SetFormattedText("%.0f%%", addon.duraMean)
-				end
-			else
+		--print(..., DurabilityFrame:IsVisible(),DurabilityFrame:IsShown())
+		--if PaperDollFrame:IsVisible() then --introduces bug that DurabilityFrame fontstring(created by us) doesn't get updated unless PaperDollFrame is open
+		if showavgdur and (DurabilityFrame:IsVisible() or PaperDollFrame:IsVisible()) then
+			DCS_Mean_Durability()
+			if addon.duraMean == 100 then --check after calculation
 				duraMeanFS:SetFormattedText("")
-				duraDurabilityFrameFS:Hide()
+			else
+				duraMeanFS:SetFormattedText("%.0f%%", addon.duraMean)
 			end
+		else
+			duraMeanFS:SetFormattedText("")
+			duraDurabilityFrameFS:Hide()
 		end
+		--end
 		--[[
 		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowAverageRepairChecked
 		self:SetChecked(checked.ShowAverageRepairSetChecked)
@@ -845,16 +848,34 @@ end
 
 local getItemQualityColor = GetItemQualityColor
 
+local function attempt_ilvl(v,attempts)
+	if attempts > 0 then
+		local item = Item:CreateFromEquipmentSlot(v:GetID())
+		local value = item:GetCurrentItemLevel()
+		if value then --ilvl of nil probably indicates that there's no tem in that slot
+			if value > 0 then --ilvl of 0 probably indicates that item is not fully loaded
+				v.ilevel:SetTextColor(getItemQualityColor(item:GetItemQuality())) --upvalue call
+				v.ilevel:SetText(value)
+			else
+				C_Timer.After(0.2, function() attempt_ilvl(v,attempts-1) end)
+			end
+		else
+			v.ilevel:SetText("")
+		end
+	end
+end
+
 local function DCS_Item_Level_Center()
 	--local summar_ilvl = 0 --assuming artefact weapons are handled correctly
 	--local _, equipped = GetAverageItemLevel()
 	--equipped = round(equipped * 16)
 	--equipped = equipped * 16 --in tested cases worked without rounding
 	for _, v in ipairs(DCSITEM_SLOT_FRAMES) do
-		local item = Item:CreateFromEquipmentSlot(v:GetID())
-		local value = item:GetCurrentItemLevel()
-		if value then
-			v.ilevel:SetTextColor(getItemQualityColor(item:GetItemQuality())) --upvalue call
+		attempt_ilvl(v,20)
+		--local item = Item:CreateFromEquipmentSlot(v:GetID())
+		--local value = item:GetCurrentItemLevel()
+		--if value then
+			--v.ilevel:SetTextColor(getItemQualityColor(item:GetItemQuality())) --upvalue call
 			--local color = item:GetItemQualityColor()
 			--v.ilevel:SetTextColor(color.r,color.g,color.b) --v.ilevel:SetTextColor(item:GetItemQualityColor()) doesn't work because it's a table; seems to use less function calls than itemlink
 			--v.ilevel:SetTextColor(item:GetItemQualityColor())
@@ -874,10 +895,10 @@ local function DCS_Item_Level_Center()
 				summar_ilvl = summar_ilvl + value
 			end
 			--]]
-			v.ilevel:SetText(value)
-		else
-			v.ilevel:SetText("")
-		end
+			--v.ilevel:SetText(value)
+		--else
+			--v.ilevel:SetText("")
+		--end
 	end
 end
 

@@ -2,12 +2,13 @@ local AS = unpack(AddOnSkins)
 
 function AS:Blizzard_Calendar(event, addon)
 	if addon ~= 'Blizzard_Calendar' then return end
+
 	AS:SkinFrame(CalendarFrame)
 	AS:SkinCloseButton(CalendarCloseButton)
 	CalendarCloseButton:SetPoint("TOPRIGHT", CalendarFrame, "TOPRIGHT", -4, -4)
 
-	AS:SkinNextPrevButton(CalendarPrevMonthButton)
-	AS:SkinNextPrevButton(CalendarNextMonthButton)
+	AS:SkinArrowButton(CalendarPrevMonthButton)
+	AS:SkinArrowButton(CalendarNextMonthButton)
 
 	AS:StripTextures(CalendarFilterFrame)
 	CalendarFilterFrame:SetWidth(155)
@@ -19,7 +20,7 @@ function AS:Blizzard_Calendar(event, addon)
 	CalendarFilterButton:SetPoint("RIGHT", CalendarFilterFrame, "RIGHT", -10, 3)
 	CalendarFilterButton.SetPoint = AS.Noop
 
-	AS:SkinNextPrevButton(CalendarFilterButton, true)
+	AS:SkinArrowButton(CalendarFilterButton)
 
 	AS:CreateBackdrop(CalendarFilterFrame, 'Default')
 	CalendarFilterFrame.Backdrop:SetPoint("TOPLEFT", 20, 2)
@@ -49,10 +50,10 @@ function AS:Blizzard_Calendar(event, addon)
 		AS:SkinFrame(CalendarTodayFrame)
 		AS:CreateBackdrop(CalendarTodayFrame)
 		CalendarTodayFrame:SetSize(CalendarDayButton1:GetWidth(), CalendarDayButton1:GetHeight())
-		CalendarTodayFrame:SetBackdropBorderColor(0, 0.44, .87, 1)
+		CalendarTodayFrame:SetBackdropBorderColor(unpack(AS.Color))
 		CalendarTodayFrame:SetBackdropColor(0, 0, 0, 0)
 		CalendarTodayFrame:HookScript('OnUpdate', function(self) self:SetAlpha(CalendarTodayTextureGlow:GetAlpha()) end)
-		CalendarTodayFrame.Backdrop:SetBackdropBorderColor(0, 0.44, .87, 1)
+		CalendarTodayFrame.Backdrop:SetBackdropBorderColor(unpack(AS.Color))
 		CalendarTodayFrame.Backdrop:SetBackdropColor(0, 0, 0, 0)
 		CalendarTodayFrame.Backdrop:CreateShadow()
 	end
@@ -71,7 +72,7 @@ function AS:Blizzard_Calendar(event, addon)
 
 	AS:SkinEditBox(CalendarCreateEventInviteEdit)
 	AS:SkinEditBox(CalendarCreateEventTitleEdit)
-	AS:SkinDropDownBox(CalendarCreateEventTypeDropDown, 120)
+	AS:SkinDropDownBox(CalendarCreateEventTypeDropDown)
 
 	AS:SkinFrame(CalendarCreateEventDescriptionContainer)
 
@@ -80,10 +81,10 @@ function AS:Blizzard_Calendar(event, addon)
 
 	AS:SkinCheckBox(CalendarCreateEventLockEventCheck)
 
-	AS:SkinDropDownBox(CalendarCreateEventHourDropDown, 68)
-	AS:SkinDropDownBox(CalendarCreateEventMinuteDropDown, 68)
-	AS:SkinDropDownBox(CalendarCreateEventAMPMDropDown, 68)
-	AS:SkinDropDownBox(CalendarCreateEventDifficultyOptionDropDown, 120)
+	AS:SkinDropDownBox(CalendarCreateEventHourDropDown)
+	AS:SkinDropDownBox(CalendarCreateEventMinuteDropDown)
+	AS:SkinDropDownBox(CalendarCreateEventAMPMDropDown)
+	AS:SkinDropDownBox(CalendarCreateEventDifficultyOptionDropDown)
 	AS:SkinTexture(CalendarCreateEventIcon)
 	CalendarCreateEventIcon.SetTexCoord = AS.Noop
 
@@ -164,6 +165,8 @@ function AS:Blizzard_Calendar(event, addon)
 	AS:StripTextures(CalendarEventPickerCloseButton)
 	AS:SkinCloseButton(CalendarEventPickerCloseButton)
 	AS:SkinScrollBar(CalendarCreateEventDescriptionScrollFrameScrollBar)
+
+	AS:UnregisterSkinEvent(addon, event)
 end
 
 AS:RegisterSkin('Blizzard_Calendar', AS.Blizzard_Calendar, 'ADDON_LOADED')

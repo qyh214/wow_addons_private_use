@@ -345,6 +345,12 @@ function WorldQuestTracker.UpdateBorder (self, rarity, worldQuestType, mapID)
 			AnimatedShine_Start (self, 1, 1, 1);
 			
 		elseif (worldQuestType == LE_QUEST_TAG_TYPE_INVASION) then
+			if (UnitFactionGroup("player") == "Alliance") then
+				self.invasionBorder:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\border_alliance]])
+				
+			elseif (UnitFactionGroup("player") == "Horde") then
+				self.invasionBorder:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\border_horde]])
+			end
 			self.invasionBorder:Show()
 			
 		end

@@ -1,42 +1,96 @@
 local AS = unpack(AddOnSkins)
 
---[[
-function AS:Blizzard_BindingUI() -- ADDON_LOADED Blizzard_BindingUI
-	local buttons = {
-		"KeyBindingFrameDefaultButton",
-		"KeyBindingFrameUnbindButton",
-		"KeyBindingFrameOkayButton",
-		"KeyBindingFrameCancelButton",
-	}
+function AS:Blizzard_BindingUI(event, addon)
+	if addon ~= 'Blizzard_BindingUI' then return end
 
-	for _, v in pairs(buttons) do
-		AS:StripTextures(_G[v])
-		AS:SkinButton(_G[v])
+	for _, v in pairs({ "defaultsButton", "unbindButton", "okayButton", "cancelButton" }) do
+		AS:SkinButton(KeyBindingFrame[v])
 	end
 
-	AS:SkinCheckBox(KeyBindingFrameCharacterButton)
-	KeyBindingFrameHeaderText:ClearAllPoints()
-	KeyBindingFrameHeaderText:SetPoint("TOP", KeyBindingFrame, "TOP", 0, -4)
-	AS:StripTextures(KeyBindingFrame)
-	AS:SetTemplate(KeyBindingFrame, 'Default')
+	AS:SkinFrame(KeyBindingFrame)
 
-	for i = 1, KEY_BINDINGS_DISPLAYED  do
-		local button1 = _G["KeyBindingFrameBinding"..i.."Key1Button"]
-		local button2 = _G["KeyBindingFrameBinding"..i.."Key2Button"]
-		AS:StripTextures(button1, true)
-		AS:StyleButton(button1)
-		AS:SetTemplate(button1, 'Default', true)
-		AS:StripTextures(button2, true)
-		AS:StyleButton(button2)
-		AS:SetTemplate(button2, 'Default', true)
-	end
-
-	KeyBindingFrameUnbindButton:SetPoint("RIGHT", KeyBindingFrameOkayButton, "LEFT", -3, 0)
-	KeyBindingFrameOkayButton:SetPoint("RIGHT", KeyBindingFrameCancelButton, "LEFT", -3, 0)
-
+	AS:StripTextures(KeyBindingFrame.header)
+	AS:StripTextures(KeyBindingFrameScrollFrame)
 	AS:SkinScrollBar(KeyBindingFrameScrollFrameScrollBar)
+
+	AS:SkinCheckBox(KeyBindingFrame.characterSpecificButton)
+	KeyBindingFrame.header:ClearAllPoints()
+	KeyBindingFrame.header:Point("TOP", KeyBindingFrame, "TOP", 0, -4)
+
+	AS:SkinFrame(KeyBindingFrameCategoryList)
+	AS:SkinFrame(KeyBindingFrame.bindingsContainer)
+
+	for i = 1, KEY_BINDINGS_DISPLAYED, 1 do
+		AS:SkinButton(_G["KeyBindingFrameKeyBinding"..i.."Key1Button"])
+		AS:SkinButton(_G["KeyBindingFrameKeyBinding"..i.."Key2Button"])
+	end
+
+	KeyBindingFrame.okayButton:Point("BOTTOMLEFT", KeyBindingFrame.unbindButton, "BOTTOMRIGHT", 3, 0)
+	KeyBindingFrame.cancelButton:Point("BOTTOMLEFT", KeyBindingFrame.okayButton, "BOTTOMRIGHT", 3, 0)
+	KeyBindingFrame.unbindButton:Point("BOTTOMRIGHT", KeyBindingFrame, "BOTTOMRIGHT", -211, 16)
+
+	AS:UnregisterSkinEvent(addon, event)
 end
-]]
+
+function AS:Blizzard_MacroUI(event, addon)
+	if addon ~= 'Blizzard_MacroUI' then return end
+
+	AS:SkinFrame(MacroFrame)
+	MacroFrame:SetWidth(360)
+	AS:SkinCloseButton(MacroFrame.CloseButton)
+
+	AS:SkinFrame(MacroPopupFrame)
+	MacroPopupFrame:SetHeight(MacroPopupFrame:GetHeight() + 15)
+	AS:StripTextures(MacroPopupFrame.BorderBox)
+	AS:SkinButton(MacroPopupFrame.BorderBox.OkayButton)
+	AS:SkinButton(MacroPopupFrame.BorderBox.CancelButton)
+	MacroPopupFrame.BorderBox.CancelButton:SetPoint("BOTTOMRIGHT", -11, 10)
+
+	for i = 1, MAX_ACCOUNT_MACROS do
+		AS:SkinIconButton(_G["MacroButton"..i])
+	end
+
+	AS:Delay(0, function() for i = 1, 90 do AS:SkinIconButton(_G["MacroPopupButton"..i]) end end)
+
+	local Buttons = { MacroDeleteButton, MacroNewButton, MacroExitButton, MacroEditButton, MacroSaveButton, MacroCancelButton }
+
+	for _, Button in pairs(Buttons) do
+		AS:SkinButton(Button)
+	end
+
+	for i = 1, 2 do
+		AS:SkinButton(_G['MacroFrameTab'..i], true)
+		_G['MacroFrameTab'..i]:Height(22)
+	end
+
+	MacroFrameTab1:SetPoint("TOPLEFT", MacroFrame, "TOPLEFT", 85, -39)
+	MacroFrameTab2:SetPoint("LEFT", MacroFrameTab1, "RIGHT", 4, 0)
+
+	AS:StripTextures(MacroButtonScrollFrame)
+	AS:SkinScrollBar(MacroButtonScrollFrameScrollBar)
+	AS:SkinScrollBar(MacroFrameScrollFrameScrollBar)
+	AS:SkinScrollBar(MacroPopupScrollFrameScrollBar)
+	MacroPopupScrollFrame:SetHeight(MacroPopupScrollFrame:GetHeight() + 14)
+	AS:StripTextures(MacroFrameInset)
+
+	AS:SkinEditBox(MacroPopupEditBox)
+	MacroPopupNameLeft:SetAlpha(0)
+	MacroPopupNameMiddle:SetAlpha(0)
+	MacroPopupNameRight:SetAlpha(0)
+
+	AS:SkinBackdropFrame(MacroFrameTextBackground)
+	MacroFrameTextBackground.Backdrop:SetPoint('TOPLEFT', 6, -3)
+	MacroFrameTextBackground.Backdrop:SetPoint('BOTTOMRIGHT', 0, 1)
+	AS:StripTextures(MacroPopupScrollFrame)
+
+	MacroEditButton:ClearAllPoints()
+	MacroEditButton:SetPoint("BOTTOMLEFT", MacroFrameSelectedMacroButton, "BOTTOMRIGHT", 10, 0)
+
+	AS:SkinIconButton(MacroFrameSelectedMacroButton)
+
+	AS:UnregisterSkinEvent(addon, event)
+end
+
 function AS:Blizzard_Options(event, addon)
 	if addon == 'Blizzard_GMSurveyUI' then
 		AS:StripTextures(GMSurveyHeader)
@@ -56,54 +110,15 @@ function AS:Blizzard_Options(event, addon)
 		for i = 1, 11 do
 			AS:StripTextures(_G["GMSurveyQuestion"..i])
 		end
+
+		AS:UnregisterSkinEvent(addon, event)
 	end
 	if event == 'PLAYER_ENTERING_WORLD' then
 		-- Sytem / Interface Panel
 
-		local OptionsFrames = {
-			InterfaceOptionsFrame,
-			InterfaceOptionsFrameCategories,
-			InterfaceOptionsFramePanelContainer,
-			InterfaceOptionsFrameAddOns,
-			VideoOptionsFrame,
-			VideoOptionsFrameCategoryFrame,
-			VideoOptionsFramePanelContainer,
-			Display_,
-			Graphics_,
-			RaidGraphics_,
-		}
-
-		for _, Frame in pairs(OptionsFrames) do
-			AS:SkinFrame(Frame)
-		end
-
-		local OptionsFrameBackdrops = {
-			AudioOptionsSoundPanelHardware,
-			AudioOptionsSoundPanelVolume,
-			AudioOptionsSoundPanelPlayback,
-			AudioOptionsVoicePanelTalking,
-			AudioOptionsVoicePanelListening,
-			AudioOptionsVoicePanelBinding,
-		}
-
-		for _, Frame in pairs(OptionsFrameBackdrops) do
-			AS:SkinBackdropFrame(Frame)
-			Frame.Backdrop:SetAllPoints()
-		end
-
-		local OptionsTabs = {
-			InterfaceOptionsFrameTab1,
-			InterfaceOptionsFrameTab2,
-			GraphicsButton,
-			RaidButton,
-		}
-
-		for _, Tab in pairs(OptionsTabs) do
-			AS:SkinTab(Tab, true)
-		end
-
-		local a, b, c, d, e = InterfaceOptionsFrameTab1:GetPoint()
-		InterfaceOptionsFrameTab1:SetPoint(a, b, c, d, e + 2)
+		local OptionsFrames = { InterfaceOptionsFrame, InterfaceOptionsFrameCategories, InterfaceOptionsFramePanelContainer, InterfaceOptionsFrameAddOns, VideoOptionsFrame, VideoOptionsFrameCategoryFrame, VideoOptionsFramePanelContainer, Display_, Graphics_, RaidGraphics_ }
+		local OptionsFrameBackdrops = { AudioOptionsSoundPanelHardware, AudioOptionsSoundPanelVolume, AudioOptionsSoundPanelPlayback, AudioOptionsVoicePanelTalking, AudioOptionsVoicePanelListening, AudioOptionsVoicePanelBinding }
+		local OptionsButtons = { GraphicsButton, RaidButton }
 
 		local InterfaceOptions = {
 			InterfaceOptionsFrame,
@@ -144,6 +159,18 @@ function AS:Blizzard_Options(event, addon)
 			AudioOptionsVoicePanelChatMode2,
 		}
 
+		for _, Frame in pairs(OptionsFrames) do
+			AS:SkinFrame(Frame)
+		end
+
+		for _, Frame in pairs(OptionsFrameBackdrops) do
+			AS:SkinBackdropFrame(Frame, nil, nil, nil, true)
+		end
+
+		for _, Tab in pairs(OptionsButtons) do
+			AS:SkinButton(Tab)
+		end
+
 		for _, Panel in pairs(InterfaceOptions) do
 			for i = 1, Panel:GetNumChildren() do
 				local Child = select(i, Panel:GetChildren())
@@ -152,59 +179,28 @@ function AS:Blizzard_Options(event, addon)
 				elseif Child:IsObjectType('Button') then
 					AS:SkinButton(Child)
 				elseif Child:IsObjectType('Slider') then
-					AS:SkinSlideBar(Child, nil, true)
+					AS:SkinSlideBar(Child, true)
 				elseif Child:IsObjectType('Tab') then
 					AS:SkinTab(Child)
-				elseif Child:IsObjectType('Frame') and Child:GetName() and strfind(Child:GetName(), 'DropDown') then
+				elseif Child:IsObjectType('Frame') and Child.Left and Child.Middle and Child.Right then
 					AS:SkinDropDownBox(Child)
 				end
 			end
 		end
 
-		Graphics_Quality:HookScript('OnUpdate', function()
-			AS:StripTextures(Graphics_Quality, true)
-			if Graphics_RightQuality then
-				AS:StripTextures(Graphics_RightQuality, true)
-			end
-		end)
+		InterfaceOptionsFrameTab1:SetPoint('BOTTOMLEFT', InterfaceOptionsFrameCategories, 'TOPLEFT', 6, 1)
+		InterfaceOptionsFrameTab2:SetPoint('TOPLEFT', InterfaceOptionsFrameTab1, 'TOPRIGHT', 1, 0)
+		InterfaceOptionsSocialPanel.EnableTwitter.Logo:SetAtlas("WoWShare-TwitterLogo")
 
-		RaidGraphics_Quality:HookScript('OnUpdate', function()
-			AS:StripTextures(RaidGraphics_Quality, true)
-			if RaidGraphics_RightQuality then
-				AS:StripTextures(RaidGraphics_RightQuality, true)
-			end
-		end)
+		AS:SkinFrame(ColorPickerFrame, nil, true)
+		AS:SkinButton(ColorPickerOkayButton)
+		AS:SkinButton(ColorPickerCancelButton)
+		ColorPickerCancelButton:SetPoint("BOTTOMRIGHT", -11, 6)
+		ColorPickerOkayButton:SetPoint("RIGHT", ColorPickerCancelButton, "LEFT", -3, 0)
+		AS:SkinSlideBar(OpacitySliderFrame)
+		ColorPickerFrameHeader:SetTexture(nil)
 
-		local InterfaceOptionsDropDowns = {
-			InterfaceOptionsObjectivesPanelQuestSorting,
-			InterfaceOptionsSocialPanelChatStyle,
-			InterfaceOptionsSocialPanelTimestamps,
-			InterfaceOptionsSocialPanelWhisperMode,
-			InterfaceOptionsSocialPanelBnWhisperMode,
-			Advanced_MultisampleAlphaTest,
-		}
-
-		for _, DropDown in pairs(InterfaceOptionsDropDowns) do
-			AS:SkinDropDownBox(DropDown)
-		end
-
-		InterfaceOptionsDisplayPanelOutlineDropDown:SetWidth(210)
-		InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown:SetWidth(190)
-		AudioOptionsSoundPanelHardwareDropDown:SetWidth(190)
-		AudioOptionsSoundPanelSoundChannelsDropDown:SetWidth(190)
-
-		-- -- Color Picker
-		-- AS:SkinFrame(ColorPickerFrame, nil, true)
-		-- AS:SkinButton(ColorPickerOkayButton)
-		-- AS:SkinButton(ColorPickerCancelButton)
-		-- ColorPickerCancelButton:SetPoint("BOTTOMRIGHT", -11, 6)
-		-- ColorPickerOkayButton:SetPoint("RIGHT", ColorPickerCancelButton, "LEFT", -3, 0)
-		-- AS:SkinFrame(OpacitySliderFrame)
-		-- OpacitySliderFrame:GetThumbTexture():Size(14)
-		-- OpacitySliderFrame:GetThumbTexture():SetTexture(unpack(AS.BorderColor))
-		-- ColorPickerFrameHeader:SetTexture(nil)
-
-		-- AS:SkinFrame(OpacityFrame)
+		AS:SkinFrame(OpacityFrame)
 
 		-- Item Text Frame -- Needs Parchment
 		AS:SkinFrame(ItemTextFrame, nil, nil, true)
@@ -212,8 +208,8 @@ function AS:Blizzard_Options(event, addon)
 		AS:StripTextures(ItemTextScrollFrame)
 		AS:SkinScrollBar(ItemTextScrollFrameScrollBar)
 		AS:SkinCloseButton(ItemTextFrameCloseButton)
-		AS:SkinNextPrevButton(ItemTextPrevPageButton)
-		AS:SkinNextPrevButton(ItemTextNextPageButton)
+		AS:SkinArrowButton(ItemTextPrevPageButton)
+		AS:SkinArrowButton(ItemTextNextPageButton)
 		ItemTextPageText:SetTextColor(1, 1, 1)
 		ItemTextPageText.SetTextColor = AS.Noop
 
@@ -230,115 +226,27 @@ function AS:Blizzard_Options(event, addon)
 			CombatConfigColorsColorizeDamageNumber,
 			CombatConfigColorsColorizeDamageSchool,
 			CombatConfigColorsColorizeEntireLine,
+			ChatConfigChatSettingsLeft,
+			ChatConfigOtherSettingsCombat,
+			ChatConfigOtherSettingsPVP,
+			ChatConfigOtherSettingsSystem,
+			ChatConfigOtherSettingsCreature,
+			ChatConfigChannelSettingsLeft,
 			CombatConfigMessageSourcesDoneBy,
-			CombatConfigMessageSourcesDoneTo,
 			CombatConfigColorsUnitColors,
+			CombatConfigMessageSourcesDoneTo,
 		}
-
-		for _, Frame in pairs(ChatFrames) do
-			AS:SkinFrame(Frame)
-		end
-
-		-- AS:StripTextures(ChatConfigChatSettingsClassColorLegend)
-		-- AS:StripTextures(ChatConfigChannelSettingsClassColorLegend)
-		-- AS:StripTextures(ChatConfigChatSettingsLeft)
-		-- AS:StripTextures(ChatConfigChannelSettingsLeft)
-		-- AS:StripTextures(ChatConfigOtherSettingsCombat)
-		-- AS:StripTextures(ChatConfigOtherSettingsPVP)
-		-- AS:StripTextures(ChatConfigOtherSettingsSystem)
-		-- AS:StripTextures(ChatConfigOtherSettingsCreature)
-
-		local Colors = {
-			CombatConfigColorsColorizeSpellNames,
-			CombatConfigColorsColorizeDamageNumber,
-			CombatConfigColorsColorizeDamageSchool,
-			CombatConfigColorsColorizeEntireLine,
-		}
-
-		for _, Frame in pairs(Colors) do
-			local point, relativeTo, relativePoint, xOffset, yOffset = Frame:GetPoint()
-			Frame:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset - 2)
-		end
-
-		hooksecurefunc('ChatConfig_UpdateCheckboxes', function(frame)
-			if ( not FCF_GetCurrentChatFrame() ) then
-				return
-			end
-			for index, value in ipairs(frame.checkBoxTable) do
-				local checkBoxNameString = frame:GetName().."CheckBox"
-				local checkBoxName = checkBoxNameString..index
-				local checkBox = _G[checkBoxName]
-				local check = _G[checkBoxName.."Check"]
-				if checkBox and not checkBox.isSkinned then
-					AS:StripTextures(checkBox)
-					AS:SkinCheckBox(check)
-					if _G[checkBoxName.."ColorClasses"] then
-						AS:SkinCheckBox(_G[checkBoxName.."ColorClasses"])
-					end
-					checkBox.isSkinned = true
-				end
-			end
-		end)
-
-		hooksecurefunc('ChatConfig_UpdateTieredCheckboxes', function(frame, index)
-			local group = frame.checkBoxTable[index]
-			local groupChecked
-			local baseName = frame:GetName().."CheckBox"..index
-			local checkBox = _G[baseName]
-			if ( checkBox ) then
-				AS:SkinCheckBox(checkBox)
-			end
-			if ( group.subTypes ) then
-				for k, v in ipairs(group.subTypes) do
-					local subCheckBox = _G[baseName.."_"..k]
-					AS:SkinCheckBox(subCheckBox)
-				end
-			end
-		end)
-
-		hooksecurefunc('ChatConfig_UpdateSwatches', function(frame)
-			if ( not FCF_GetCurrentChatFrame() ) then
-				return
-			end
-			local table = frame.swatchTable
-			local nameString = frame:GetName().."Swatch"
-			for index, value in ipairs(table) do
-				local baseName = nameString..index
-				AS:StripTextures(_G[baseName])
-			end
-		end)
-
-		for i = 1, #COMBAT_CONFIG_TABS do
-			local Tab = _G["CombatConfigTab"..i]
-			if Tab then
-				AS:SkinTab(Tab)
-				Tab:SetHeight(Tab:GetHeight()-2)
-				Tab:SetWidth(math.ceil(Tab:GetWidth()+1.6))
-				_G["CombatConfigTab"..i.."Text"]:SetPoint("BOTTOM", 0, 10)
-			end
-		end
-
-		CombatConfigTab1:SetPoint("BOTTOMLEFT", ChatConfigBackgroundFrame, "TOPLEFT", 6, -2)
 
 		local ChatButtons = {
-			ChatConfigFrameOkayButton,
 			ChatConfigFrameDefaultButton,
-			CombatLogDefaultButton,
+			ChatConfigFrameRedockButton,
+			ChatConfigFrameOkayButton,
 			ChatConfigCombatSettingsFiltersDeleteButton,
 			ChatConfigCombatSettingsFiltersAddFilterButton,
 			ChatConfigCombatSettingsFiltersCopyFilterButton,
 			CombatConfigSettingsSaveButton,
+			CombatLogDefaultButton,
 		}
-
-		for _, Button in pairs(ChatButtons) do
-			AS:SkinButton(Button)
-		end
-
-		ChatConfigFrameOkayButton:SetPoint("RIGHT", "$parentCancelButton", "RIGHT", -1, -3)
-		ChatConfigFrameDefaultButton:SetPoint("BOTTOMLEFT", 12, 10)
-		ChatConfigCombatSettingsFiltersDeleteButton:SetPoint("TOPRIGHT", "$parent", "BOTTOMRIGHT", -3, -1)
-		ChatConfigCombatSettingsFiltersAddFilterButton:SetPoint("RIGHT", "$parentDeleteButton", "LEFT", -2, 0)
-		ChatConfigCombatSettingsFiltersCopyFilterButton:SetPoint("RIGHT", "$parentAddFilterButton", "LEFT", -2, 0)
 
 		local ChatCheckBoxs = {
 			CombatConfigColorsHighlightingLine,
@@ -364,22 +272,95 @@ function AS:Blizzard_Options(event, addon)
 			CombatConfigSettingsRaid,
 		}
 
+		for _, Frame in pairs(ChatFrames) do
+			AS:SkinFrame(Frame)
+		end
+
 		for _, CheckBox in pairs(ChatCheckBoxs) do
 			AS:SkinCheckBox(CheckBox)
 		end
 
-		AS:SkinNextPrevButton(ChatConfigMoveFilterUpButton, true)
-		AS:SkinNextPrevButton(ChatConfigMoveFilterDownButton, true)
+		for _, Button in pairs(ChatButtons) do
+			AS:SkinButton(Button)
+		end
+
+		for i in pairs(COMBAT_CONFIG_TABS) do
+			AS:SkinTab(_G["CombatConfigTab"..i])
+			_G["CombatConfigTab"..i].Backdrop:SetPoint("TOPLEFT", 0, -10)
+			_G["CombatConfigTab"..i].Backdrop:SetPoint("BOTTOMRIGHT", -2, 3)
+			_G["CombatConfigTab"..i.."Text"]:SetPoint("BOTTOM", 0, 10)
+		end
+
+		CombatConfigTab1:ClearAllPoints()
+		CombatConfigTab1:SetPoint("BOTTOMLEFT", ChatConfigBackgroundFrame, "TOPLEFT", 6, -2)
+
+		AS:SkinEditBox(CombatConfigSettingsNameEditBox)
+		AS:SkinArrowButton(ChatConfigMoveFilterUpButton)
+		AS:SkinArrowButton(ChatConfigMoveFilterDownButton)
 		ChatConfigMoveFilterUpButton:SetSize(19, 19)
 		ChatConfigMoveFilterDownButton:SetSize(19, 19)
 		ChatConfigMoveFilterUpButton:SetPoint("TOPLEFT", "$parent", "BOTTOMLEFT", 0, -3)
 		ChatConfigMoveFilterDownButton:SetPoint("LEFT", ChatConfigMoveFilterUpButton, "RIGHT", 3, 0)
 
-		AS:SkinEditBox(CombatConfigSettingsNameEditBox)
+		ChatConfigFrameOkayButton:SetPoint("RIGHT", "$parentCancelButton", "RIGHT", -1, -3)
+		ChatConfigFrameDefaultButton:SetPoint("BOTTOMLEFT", 12, 10)
+		ChatConfigCombatSettingsFiltersDeleteButton:SetPoint("TOPRIGHT", "$parent", "BOTTOMRIGHT", -3, -1)
+		ChatConfigCombatSettingsFiltersAddFilterButton:SetPoint("RIGHT", "$parentDeleteButton", "LEFT", -2, 0)
+		ChatConfigCombatSettingsFiltersCopyFilterButton:SetPoint("RIGHT", "$parentAddFilterButton", "LEFT", -2, 0)
 
-		-- AS:SkinScrollBar(ChannelRosterScrollFrameScrollBar)
+		ChatConfigFrame:HookScript("OnShow", function()
+			for tab in ChatConfigFrameChatTabManager.tabPool:EnumerateActive() do
+				AS:SkinButton(tab, true)
+			end
+		end)
+
+		hooksecurefunc('ChatConfig_UpdateCheckboxes', function(frame)
+			if ( not FCF_GetCurrentChatFrame() ) then
+				return
+			end
+			for index in ipairs(frame.checkBoxTable) do
+				local checkBoxNameString = frame:GetName().."CheckBox"
+				local checkBoxName = checkBoxNameString..index
+				local checkBox = _G[checkBoxName]
+				local check = _G[checkBoxName.."Check"]
+				if checkBox and not checkBox.isSkinned then
+					AS:StripTextures(checkBox)
+					AS:SkinCheckBox(check)
+					if _G[checkBoxName.."ColorClasses"] then
+						AS:SkinCheckBox(_G[checkBoxName.."ColorClasses"])
+					end
+					checkBox.isSkinned = true
+				end
+			end
+		end)
+
+		hooksecurefunc('ChatConfig_UpdateTieredCheckboxes', function(frame, index)
+			local group = frame.checkBoxTable[index]
+			local checkBox = _G[frame:GetName().."CheckBox"..index]
+			if ( checkBox ) then
+				AS:SkinCheckBox(checkBox)
+			end
+			if ( group.subTypes ) then
+				for k in ipairs(group.subTypes) do
+					AS:SkinCheckBox(_G[frame:GetName().."CheckBox"..index.."_"..k])
+				end
+			end
+		end)
+
+		hooksecurefunc('ChatConfig_UpdateSwatches', function(frame)
+			if ( not FCF_GetCurrentChatFrame() ) then
+				return
+			end
+			for index in ipairs(frame.swatchTable) do
+				AS:StripTextures(_G[frame:GetName().."Swatch"..index])
+			end
+		end)
 
 		-- Help
+		AS:SkinFrame(HelpFrame, nil, nil, true)
+		AS:SkinCloseButton(HelpFrameCloseButton)
+		AS:SkinCloseButton(HelpFrameKnowledgebaseErrorFrameCloseButton)
+
 		local HelpFrames = {
 			HelpFrameLeftInset,
 			HelpFrameMainInset,
@@ -416,17 +397,10 @@ function AS:Blizzard_Options(event, addon)
 			end
 		end
 
-		local HelpSideButtons = {
-			HelpFrameButton1,
-			HelpFrameButton2,
-			HelpFrameButton3,
-			HelpFrameButton4,
-			HelpFrameButton5,
-			HelpFrameButton6,
-			HelpFrameButton16,
-		}
+		local HelpSideButtons = { 1, 2, 3, 4, 5, 6, 16 }
 
-		for _, Button in pairs(HelpSideButtons) do
+		for _, Num in pairs(HelpSideButtons) do
+			local Button = HelpFrame['button'..Num]
 			Button.selected:SetTexture('')
 			Button:SetNormalTexture('')
 			Button:SetPushedTexture('')
@@ -439,15 +413,11 @@ function AS:Blizzard_Options(event, addon)
 		HelpFrameButton6:SetPoint(point, relativeTo, relativePoint, xOffset + 2, yOffset)
 
 		hooksecurefunc('HelpFrame_SetSelectedButton', function(Button)
-			for _, Button in pairs(HelpSideButtons) do
-				Button:SetBackdropBorderColor(unpack(AS.BorderColor))
+			for _, Num in pairs(HelpSideButtons) do
+				HelpFrame['button'..Num]:SetBackdropBorderColor(unpack(AS.BorderColor))
 			end
 			Button:SetBackdropBorderColor(0, 0.44, .87)
 		end)
-
-		AS:SkinFrame(HelpFrame, nil, nil, true)
-		AS:SkinCloseButton(HelpFrameCloseButton)
-		AS:SkinCloseButton(HelpFrameKnowledgebaseErrorFrameCloseButton)
 
 		HelpFrameCharacterStuckHearthstone:SetHighlightTexture(nil)
 		HelpFrameCharacterStuckHearthstone.SetHighlightTexture = AS.Noop
@@ -485,7 +455,7 @@ function AS:Blizzard_Options(event, addon)
 		end
 
 		for _, Button in pairs({ HelpBrowserNavBack, HelpBrowserNavForward }) do
-			AS:SkinNextPrevButton(Button)
+			AS:SkinArrowButton(Button)
 		end
 
 		AS:SkinFrame(BrowserSettingsTooltip)
@@ -494,4 +464,6 @@ function AS:Blizzard_Options(event, addon)
 	end
 end
 
+AS:RegisterSkin("Blizzard_BindingUI", AS.Blizzard_BindingUI, 'ADDON_LOADED')
+AS:RegisterSkin('Blizzard_MacroUI', AS.Blizzard_MacroUI, 'ADDON_LOADED')
 AS:RegisterSkin('Blizzard_Options', AS.Blizzard_Options, 'ADDON_LOADED')

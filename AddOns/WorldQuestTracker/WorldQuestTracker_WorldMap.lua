@@ -1039,6 +1039,12 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 										widget.questTypeBlip:SetTexCoord (0, 1, 0, 1)
 										widget.questTypeBlip:SetAlpha (.80)
 										
+	elseif (rarity == LE_WORLD_QUEST_QUALITY_RARE) then
+		widget.questTypeBlip:Show()
+		widget.questTypeBlip:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\icon_star]])
+		widget.questTypeBlip:SetTexCoord (6/32, 26/32, 5/32, 27/32)
+		widget.questTypeBlip:SetAlpha (.89)										
+										
 									else
 										widget.questTypeBlip:Hide()
 									end

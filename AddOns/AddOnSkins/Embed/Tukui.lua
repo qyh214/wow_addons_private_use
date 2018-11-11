@@ -35,7 +35,7 @@ end
 function AS:CreateToggleButton(Name, Text, Panel, TooltipText)
 	local Frame = CreateFrame('Button', Name, UIParent)
 	Frame:SetFrameStrata("DIALOG")
-	Frame:SetTemplate('Transparent')
+	AS:SetTemplate(Frame, 'Transparent')
 	Frame:Size(17, Panel:GetHeight() - 4)
 	Frame:FontString('Text', AS.ActionBarFont, 12)
 	Frame.Text:SetText(Text)
@@ -81,4 +81,3 @@ function AS:EmbedSystem_WindowResize()
 		_G.Enhanced_Config.Options.args.addonskins.args.embed.args.EmbedLeftWidth.max = floor(_G.EmbedSystem_MainWindow:GetWidth() * .75)
 	end
 end
-

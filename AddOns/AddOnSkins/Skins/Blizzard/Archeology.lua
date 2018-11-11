@@ -1,18 +1,15 @@
 local AS = unpack(AddOnSkins)
 
-function AS:Blizzard_Archaeology(event, addon)
+function AS:Blizzard_ArchaeologyUI(event, addon)
 	if addon ~= "Blizzard_ArchaeologyUI" then return end
 
-	AS:SkinFrame(ArchaeologyFrame)
+	AS:SkinFrame(ArchaeologyFrame, nil, nil, true)
 	AS:CreateShadow(ArchaeologyFrame)
 	AS:SkinCloseButton(ArchaeologyFrame.CloseButton)
 
 	ArchaeologyFrame.portrait:Hide()
-	ArchaeologyFrame.Inset:Hide()
-	ArchaeologyFrame.bgLeft:Hide()
-	ArchaeologyFrame.bgRight:Hide()
 
-	AS:SkinDropDownBox(ArchaeologyFrame.raceFilterDropDown, 125)
+	AS:SkinDropDownBox(ArchaeologyFrame.raceFilterDropDown)
 	AS:SkinStatusBar(ArchaeologyFrame.rankBar)
 
 	AS:SkinButton(ArchaeologyFrame.artifactPage.solveFrame.solveButton, true)
@@ -28,7 +25,7 @@ function AS:Blizzard_Archaeology(event, addon)
 		AS:SkinTexture(artifact.icon)
 		AS:CreateBackdrop(artifact)
 		artifact.Backdrop:SetOutside(artifact.icon)
-		artifact.artifactName:SetTextColor(1, 1, 0)
+		artifact.artifactName:SetTextColor(1, .8, .1)
 		artifact.artifactSubText:SetTextColor(0.6, 0.6, 0.6)
 	end
 
@@ -36,14 +33,14 @@ function AS:Blizzard_Archaeology(event, addon)
 		for i = 1, Frame:GetNumRegions() do
 			local Region = select(i, Frame:GetRegions())
 			if Region:IsObjectType("FontString") then
-				Region:SetTextColor(1, 1, 0)
+				Region:SetTextColor(1, .8, .1)
 			end
 		end
 	end
 
 	ArchaeologyFrame.completedPage.infoText:SetTextColor(1, 1, 1)
 
-	ArchaeologyFrame.artifactPage.historyTitle:SetTextColor(1, 1, 0)
+	ArchaeologyFrame.artifactPage.historyTitle:SetTextColor(1, .8, .1)
 
 	AS:SkinTexture(ArchaeologyFrame.artifactPage.icon)
 
@@ -52,20 +49,22 @@ function AS:Blizzard_Archaeology(event, addon)
 
 	ArchaeologyFrameArtifactPageHistoryScrollChildText:SetTextColor(1, 1, 1)
 
-	ArchaeologyFrame.helpPage.titleText:SetTextColor(1, 1, 0)
+	ArchaeologyFrame.helpPage.titleText:SetTextColor(1, .8, .1)
 
-	ArchaeologyFrameHelpPageDigTitle:SetTextColor(1, 1, 0)
+	ArchaeologyFrameHelpPageDigTitle:SetTextColor(1, .8, .1)
 	ArchaeologyFrameHelpPageHelpScrollHelpText:SetTextColor(1, 1, 1)
 
-	AS:SkinNextPrevButton(ArchaeologyFrame.summaryPage.prevPageButton)
-	AS:SkinNextPrevButton(ArchaeologyFrame.summaryPage.nextPageButton)
+	AS:SkinArrowButton(ArchaeologyFrame.summaryPage.prevPageButton)
+	AS:SkinArrowButton(ArchaeologyFrame.summaryPage.nextPageButton)
 
-	AS:SkinNextPrevButton(ArchaeologyFrame.completedPage.prevPageButton)
-	AS:SkinNextPrevButton(ArchaeologyFrame.completedPage.nextPageButton)
+	AS:SkinArrowButton(ArchaeologyFrame.completedPage.prevPageButton)
+	AS:SkinArrowButton(ArchaeologyFrame.completedPage.nextPageButton)
 
 	AS:StripTextures(ArcheologyDigsiteProgressBar)
 	AS:SkinStatusBar(ArcheologyDigsiteProgressBar.FillBar)
 	ArcheologyDigsiteProgressBar.FillBar:SetStatusBarColor(.61, .25, 0)
+
+	AS:UnregisterSkinEvent(addon, event)
 end
 
-AS:RegisterSkin("Blizzard_ArchaeologyUI", AS.Blizzard_Archaeology, 'ADDON_LOADED')
+AS:RegisterSkin("Blizzard_ArchaeologyUI", AS.Blizzard_ArchaeologyUI, 'ADDON_LOADED')

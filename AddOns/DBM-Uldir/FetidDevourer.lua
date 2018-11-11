@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2146, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17938 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18026 $"):sub(12, -3))
 mod:SetCreatureID(133298)
 mod:SetEncounterID(2128)
 mod:SetZone()
@@ -42,11 +42,11 @@ local specWarnPutridParoxysmStack		= mod:NewSpecialWarningStack(262314, nil, 2, 
 local yellPutridParoxysm				= mod:NewYell(262314)
 local yellPutridParoxysmFades			= mod:NewFadesYell(262314)
 local specWarnAdds						= mod:NewSpecialWarningAdds(262364, "Dps", nil, nil, 1, 2)
---local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 2)
+--local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 
-local timerThrashCD						= mod:NewCDTimer(6, 262277, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerRottingRegurgCD				= mod:NewCDTimer(40.1, 262292, nil, nil, nil, 3)
-local timerShockwaveStompCD				= mod:NewCDCountTimer(28.8, 262288, nil, nil, nil, 2)
+local timerThrashCD						= mod:NewCDTimer(6, 262277, 74979, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--Short Name "Thrash"
+local timerRottingRegurgCD				= mod:NewCDTimer(40.1, 262292, 21131, nil, nil, 3)--Short Name "Breath"
+local timerShockwaveStompCD				= mod:NewCDCountTimer(28.8, 262288, 116969, nil, nil, 2)--Short Name "Stomp"
 local timerAddsCD						= mod:NewAddsTimer(54.8, 262364, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
 --local timerEnticingCast					= mod:NewCastTimer(30, 262364, nil, nil, nil, 6, nil, DBM_CORE_DAMAGE_ICON)
 
@@ -122,8 +122,8 @@ end
 
 function mod:OnCombatStart(delay)
 	self.vb.stompCount = 0
-	timerThrashCD:Start(6.7-delay)
-	countdownThrash:Start(6.7-delay)
+	timerThrashCD:Start(5.7-delay)
+	countdownThrash:Start(5.7-delay)
 	if not self:IsEasy() then
 		timerShockwaveStompCD:Start(26.1-delay, 1)
 		timerRottingRegurgCD:Start(40-delay)
@@ -206,7 +206,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		countdownRottingRegurg:Cancel()
 		timerRottingRegurgCD:Stop()--Trash old timer
 		if remaining >= 3 then--It's worth showing updated timer
-			timerRottingRegurgCD:Start(elapsed, total)--Construct new timer with adjustment
+			timerRottingRegurgCD:Update(elapsed, total)--Construct new timer with adjustment
 			countdownRottingRegurg:Start(remaining)
 		end
 	elseif spellId == 274470 and self:AntiSpam(5, 3) then
@@ -219,7 +219,9 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 262313 and args:IsPlayer() then
 		local amount = args.amount or 1
 		if amount == 1 then
-			yellMalodorousMiasma:Yell()
+			if self:IsMythic() then
+				yellMalodorousMiasma:Yell()
+			end
 			specWarnMalodorousMiasma:Show()
 			specWarnMalodorousMiasma:Play("targetyou")
 		elseif self:AntiSpam(2, 4) then
@@ -234,7 +236,9 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 262314 and args:IsPlayer() then
 		local amount = args.amount or 1
 		if amount == 1 then
-			yellPutridParoxysm:Yell()
+			if self:IsMythic() then
+				yellPutridParoxysm:Yell()
+			end
 			specWarnPutridParoxysm:Show()
 			specWarnPutridParoxysm:Play("defensive")
 		else

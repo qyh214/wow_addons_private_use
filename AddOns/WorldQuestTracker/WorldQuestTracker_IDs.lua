@@ -127,7 +127,7 @@ WorldQuestTracker.mapTables = {
 		[1161] = {
 			widgets = {},
 			Anchor_X = 0.99,
-			Anchor_Y = 0.46,
+			Anchor_Y = 0.45,
 			GrowRight = false,
 			show_on_map = WorldQuestTracker.MapData.ZoneIDs.KULTIRAS,
 		},
@@ -135,8 +135,8 @@ WorldQuestTracker.mapTables = {
 		--dazar'alor
 --		[1165] = {
 --			widgets = {},
---			Anchor_X = 0.58,
---			Anchor_Y = 0.54,
+--			Anchor_X = 0.99,
+--			Anchor_Y = 0.51,
 --			GrowRight = true,
 --			show_on_map = WorldQuestTracker.MapData.ZoneIDs.ZANDALAR,
 --		},
@@ -145,28 +145,28 @@ WorldQuestTracker.mapTables = {
 		[WorldQuestTracker.MapData.ZoneIDs.TIRAGARDE] = {
 			widgets = {},
 			Anchor_X = 0.99,
-			Anchor_Y = 0.72,
+			Anchor_Y = 0.67,
 			GrowRight = false,
 			show_on_map = WorldQuestTracker.MapData.ZoneIDs.KULTIRAS,
 		},
 		[WorldQuestTracker.MapData.ZoneIDs.STORMSONG] = {
 			widgets = {},
 			Anchor_X = 0.99,
-			Anchor_Y = 0.32,
+			Anchor_Y = 0.25,
 			GrowRight = false,
 			show_on_map = WorldQuestTracker.MapData.ZoneIDs.KULTIRAS,
 		},
 		[WorldQuestTracker.MapData.ZoneIDs.DRUSTVAR] = {
 			widgets = {},
 			Anchor_X = 0.01,
-			Anchor_Y = 0.65,
+			Anchor_Y = 0.44,
 			GrowRight = true,
 			show_on_map = WorldQuestTracker.MapData.ZoneIDs.KULTIRAS,
 		},
 		[WorldQuestTracker.MapData.ZoneIDs.TOLDAGOR] = {
 			widgets = {},
 			Anchor_X = 0.99,
-			Anchor_Y = 0.58,
+			Anchor_Y = 0.56,
 			GrowRight = false,
 			show_on_map = WorldQuestTracker.MapData.ZoneIDs.KULTIRAS,
 		},
@@ -175,7 +175,7 @@ WorldQuestTracker.mapTables = {
 		[WorldQuestTracker.MapData.ZoneIDs.ZULDAZAAR] = {
 			widgets = {},
 			Anchor_X = 0.99,
-			Anchor_Y = 0.72,
+			Anchor_Y = 0.62,
 			GrowRight = false,
 			show_on_map = WorldQuestTracker.MapData.ZoneIDs.ZANDALAR,
 		},

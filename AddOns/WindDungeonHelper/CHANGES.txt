@@ -1,0 +1,16 @@
+lightweight tag 110f50f9e27f261b33d9aa174c12f5b6c1d88cd0 1.2.2
+Author:	Zhou Fang <houshuu@live.jp>
+Date:	Tue Oct 9 14:27:16 2018 +0900
+
+commit 110f50f9e27f261b33d9aa174c12f5b6c1d88cd0
+Author: Zhou Fang <houshuu@live.jp>
+Date:   Tue Oct 9 14:27:16 2018 +0900
+
+    add profile switch
+
+commit 09fd56b23c5f2643bf38fd47aeead320bdbc3315
+Author: Zhou Fang <houshuu@live.jp>
+Date:   Mon Oct 8 00:35:47 2018 +0900
+
+    fix issue: customization not work
+

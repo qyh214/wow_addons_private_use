@@ -1907,18 +1907,19 @@ nodes[942][78932647] = {
 nodes[895][88305105] = {
  id = 1023,
  type = "Dungeon",
-} -- Siege of Baralus
+} -- Siege of Boralus
 
 	--if (self.faction == "Alliance") then
 		nodes[895][74752350] = {
 		 id = 1023, -- LFG 1700, 1701
 		 type = "Dungeon",
-		} -- Siege of Baralus
+		} -- Siege of Boralus
+		--[[
 		nodes[1161] = { } -- Boralus
 		nodes[1161][71961540] = {
 		 id = 1023, -- LFG 1700, 1701
 		 type = "Dungeon",
-		} -- Siege of Baralus
+		} -- Siege of Boralus ]]--
 --	end
 end
 end

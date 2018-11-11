@@ -30,8 +30,9 @@ L["Critical Strike Rating"] = "Kritische Trefferwertung"
 L["DCS's Hide At Zero"] = "DCS Verstecken bei Null"
 L["Decimals"] = "Nachkommastellen"
 L["Defense"] = "Verteidigung"
+--[[Translation missing --]]
+--[[ L["Dejablue's improved character stats panel view."] = ""--]] 
 L["DejaCharacterStats Slash commands (/dcstats):"] = "DejaCharacterStats Slashbefehle (/dcstats):"
-L["Displays \"Enhancements\" category stats to two decimal places."] = "Zeigt die Werte in der Kategorie \"Verstärkungen\" mit 2 Nachkommastellen an."
 L["Displays a durability bar next to each item."] = "Zeigt neben jedem Gegenstand eine Haltbarkeitsleiste an."
 L["Displays average item durability on the character shirt slot and durability frames."] = "Zeigt die durchschnittliche Haltbarkeit im Hemdplatz und in der Liste unter Haltbarkeit an."
 L["Displays average item level to one decimal place."] = "Zeigt die durchschnittliche Gegenstandsstufe mit einer Nachkommastelle an."
@@ -39,6 +40,7 @@ L["Displays average item level to two decimal places."] = "Zeigt die durchschnit
 L["Displays average item level with class colors."] = "Zeigt das durchschnittliche Gegenstandslevel mit der Klassenfarbe an."
 L["Displays each equipped item's durability."] = "Zeigt die Haltbarkeit von jedem ausgerüsteten Gegenstand an."
 L["Displays each equipped item's repair cost."] = "Zeigt die Reparaturkosten von jedem ausgerüsteten Gegenstand an."
+L["Displays 'Enhancements' category stats to two decimal places."] = "Zeigt die Werte in der Kategorie 'Verstärkungen' mit 2 Nachkommastellen an."
 L["Displays Equipped/Available item levels unless equal."] = "Zeigt das Itemlevel von Ausgerüstet/Verfügbar an bis diese gleich sind."
 L["Displays the class crest background."] = "Zeigt den Klassenwappen Hintergrund an."
 L["Displays the DCS scrollbar."] = "Zeigt den DCS Scrollbalken."
@@ -54,8 +56,12 @@ L["General global cooldown refresh time."] = "Allgemeine Abklingzeit."
 L["Global Cooldown"] = "Globale Abklingzeit"
 L["Haste Rating"] = "Tempowertung"
 L["Hide Character Stats"] = "Versteckt die Charakterwerte"
-L["Hides \"Enhancements\" stats if their displayed value would be zero. Checking \"Decimals\" changes the displayed value."] = "Blendet \"Verstärkungen\" Statistiken aus,wenn ihr angezeigter Wert gleich Null wäre. \"Nachkommastellen\" auswählen verändert den angezeigten Wert."
-L["Hides \"Enhancements\" stats only if their numerical value is exactly zero. For example, if stat value is 0.001%, then it would be displayed as 0%."] = "Blendet \"Verstärkungen\" Statistiken nur aus,wenn ihr numerischer Wert genau Null ist. Zum Beispiel,wenn der Wert 0,001% ist,dann würde er als 0% angezeigt werden."
+--[[Translation missing --]]
+--[[ L["Hide low level mastery"] = ""--]] 
+L["Hides 'Enhancements' stats if their displayed value would be zero. Checking 'Decimals' changes the displayed value."] = "Blendet 'Verstärkungen' Statistiken aus,wenn ihr angezeigter Wert gleich Null wäre. 'Nachkommastellen' auswählen verändert den angezeigten Wert."
+L["Hides 'Enhancements' stats only if their numerical value is exactly zero. For example, if stat value is 0.001%, then it would be displayed as 0%."] = "Blendet 'Verstärkungen' Statistiken nur aus,wenn ihr numerischer Wert genau Null ist. Zum Beispiel,wenn der Wert 0,001% ist,dann würde er als 0% angezeigt werden."
+--[[Translation missing --]]
+--[[ L["Hides Mastery stat until the character starts to have benefit from it. Hiding Mastery with Select-A-Stat™ in the character panel has priority over this setting."] = ""--]] 
 L["Item Durability"] = "Gegenstandshaltbarkeit"
 L["Item Level"] = "Gegenstandslevel"
 L["Item Repair Cost"] = "Gegenstandsreparaturkosten"

@@ -19,7 +19,7 @@ function AS:EmbedSkadaWindow(window, width, height, point, relativeFrame, relati
 		ofsy = 2 + (window.db.enabletitle and window.db.title.height or 0)
 	end
 	window.db.barwidth = width - 4
-	window.db.background.height = height - (window.db.enabletitle and window.db.title.height or 0) - (AS.PixelMode and 4 or 5)
+	window.db.background.height = height - (window.db.enabletitle and window.db.title.height or 0) - (AS.PixelPerfect and 4 or 5)
 	window.db.spark = false
 	window.db.barslocked = true
 	window.db.background.bordertexture = "None"
@@ -35,7 +35,7 @@ function AS:EmbedSkadaWindow(window, width, height, point, relativeFrame, relati
 	window.bargroup:SetFrameLevel(relativeFrame:GetFrameLevel())
 	window.bargroup:SetBackdrop(nil)
 	if window.bargroup.Backdrop then
-		window.bargroup.Backdrop:SetTemplate(AS:CheckOption('TransparentEmbed') and "Transparent" or 'Default')
+		AS:SetTemplate(window.bargroup.Backdrop, AS:CheckOption('TransparentEmbed') and "Transparent" or 'Default')
 		if AS:CheckOption('SkadaBackdrop') then
 			window.bargroup.Backdrop:Show()
 		else

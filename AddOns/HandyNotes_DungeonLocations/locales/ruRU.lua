@@ -5,12 +5,10 @@ L["Allow left click to open journal to dungeon or raid"] = "Щелкните л�
 L["Allow right click to create waypoints with TomTom"] = "Щелкните правой кнопкой мыши, чтобы создать путевые точки с помощью TomTom"
 L["Continent Alpha"] = "Непрозрачность на континенте"
 L["Continent Scale"] = "Размер на континенте"
---[[Translation missing --]]
---[[ L["Don't show discovered dungeons"] = ""--]] 
+L["Don't show discovered dungeons"] = "Не показывать обнаруженные подземелья"
 L["Enable TomTom integration"] = "Интеграция с TomTom "
 L["Filter Options"] = "Параметры фильтрации"
---[[Translation missing --]]
---[[ L["Hide all BfA nodes from the map"] = ""--]] 
+L["Hide all BfA nodes from the map"] = "Скрыть все метки Битвы за Азерот на карте"
 L["Hide all Broken Isle nodes from the map"] = "Скрыть все метки Расколотых островов на карте "
 L["Hide all Cataclysm nodes from the map"] = "Скрыть все метки Катаклизма на карте"
 L["Hide all Draenor nodes from the map"] = "Скрыть все метки Дренора на карте"
@@ -18,8 +16,7 @@ L["Hide all Northrend nodes from the map"] = "Скрыть все метки Н�
 L["Hide all Outland nodes from the map"] = "Скрыть все метки Запределья на карте"
 L["Hide all Pandaria nodes from the map"] = "Скрыть все метки Пандарии на карте"
 L["Hide all Vanilla nodes from the map"] = "Скрыть все метки Классика на карте"
---[[Translation missing --]]
---[[ L["Hide Battle for Azeroth"] = ""--]] 
+L["Hide Battle for Azeroth"] = "Скрыть Битву за Азерот"
 L["Hide Broken Isles"] = "Скрыть Расколотые острова "
 L["Hide Cataclysm"] = "Скрыть Катаклизм "
 L["Hide Draenor"] = "Скрыть Дренор "
@@ -49,8 +46,7 @@ L["The alpha of the icons shown on the zone map"] = "Непрозрачност�
 L["The scale of the icons shown on the continent map"] = "Масштаб значков, отображаемых на карте континента"
 L["The scale of the icons shown on the zone map"] = "Масштаб значков, отображаемых на карте зоны"
 L["These settings control the look and feel of the icon."] = "Эти настройки определяют внешний вид значка."
---[[Translation missing --]]
---[[ L["This will check for legion and bfa dungeons that have already been discovered. THIS IS KNOWN TO CAUSE TAINT, ENABLE AT OWN RISK."] = ""--]] 
+L["This will check for legion and bfa dungeons that have already been discovered. THIS IS KNOWN TO CAUSE TAINT, ENABLE AT OWN RISK."] = "Это проверяет наличие подземелий Легиона и Битвы за Азерот, которые уже были обнаружены. ЭТА ФУНКЦИЯ МОЖЕТ ВЫЗЫВАТЬ ОШИБКИ, ИСПОЛЬЗУЙТЕ НА СВОЙ РИСК."
 L["Turn mixed icons grey when ANY dungeon or raid listed is locked"] = "Изменяет смешанный значок на серый, если ЛЮБОЕ подземелье или рейд заблокирован "
 L["Use a different alpha for dungeons and raids that are locked to any extent"] = "Использует другую непрозрачность подземелий и рейдов, которые заблокированы в любой сложности"
 L["Use gray icon for dungeons and raids that are locked to any extent"] = "Использует серый значок для подземелий и рейдов, которые заблокированы в любой сложности"

@@ -1,82 +1,34 @@
-lightweight tag 57e7692121276bd7863f3236f8f730722740fcf3 3.93
+lightweight tag bb772aa433735187d0108002e245bc3825f4ea67 4.01
 Author:	Azilroka <darktemplar9900@yahoo.com>
-Date:	Sun Sep 9 19:43:13 2018 -0500
+Date:	Tue Nov 6 18:59:44 2018 -0600
 
-commit 57e7692121276bd7863f3236f8f730722740fcf3
+commit bb772aa433735187d0108002e245bc3825f4ea67
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 9 19:43:13 2018 -0500
+Date:   Tue Nov 6 18:59:44 2018 -0600
 
-    3.93
+    4.01
 
-commit 580415c0c21b3131010eac4f85ebd7feb6b0adb9
+commit 428e8c8d12047f58049c6bde69680d847e0ce2b3
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 9 19:41:54 2018 -0500
+Date:   Tue Nov 6 18:58:48 2018 -0600
 
-    WA
+    Fix Core / Options
 
-commit ff02c0bccf7fb6233272fef722ee2fa9b370adcc
+commit 3e6b1d2f39e6d037f2f12a18ac8a81b8a44b16af
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 9 13:29:52 2018 -0500
+Date:   Tue Nov 6 16:10:33 2018 -0600
 
-    Protect this more.
+    CQL
 
-commit 2a8a35d8c20eeb71672fc0e3c4dd26b96ffe658d
+commit 05e839c7c9cf31c2d2b55ce5784bc20d92ba554d
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 9 11:40:22 2018 -0500
+Date:   Tue Nov 6 04:35:52 2018 -0600
 
-    WA: Icon can be on everything
+    Remove WA Options
 
-commit 02731352c72a98597c73e7f37c2999b938cb30f4
+commit b00db06aa0c584728e9fbb4c4e6f1d53cdff25c3
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 9 10:37:30 2018 -0500
+Date:   Mon Nov 5 21:11:57 2018 -0600
 
-    Talentless & WA
-
-commit 80f21e01c2b555b8642a1119fc33d6f58bb4ca56
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Sep 8 17:46:11 2018 -0500
-
-    Recount
-
-commit b6a2cf54beb87ac39364e7eff8fec639e6667d68
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Sep 8 17:37:59 2018 -0500
-
-    ArkInventory Border Color
-
-commit 484693406cd51c322db0ceee3331073ada5a750b
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Sep 8 12:43:59 2018 -0500
-
-    3.921
-
-commit 3fd5d289998823865ac245a0115193491e969411
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Sep 8 12:41:39 2018 -0500
-
-    ToC: Correct OptionalDeps
-
-commit 6633202eb02cb2ce7f73353a8f77f8edd4c68fd7
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Sep 8 01:05:00 2018 -0500
-
-    SkinRadioButton
-
-commit 47371ebb2a529f96c2436fcaf9bee8468fcd1c73
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Sep 7 12:24:25 2018 -0500
-
-    Fix typo in Load_Skins
-
-commit a4e507009ed61b513e514593f644b8c684533df3
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Sep 6 18:37:20 2018 -0500
-
-    Libraries Update
-
-commit acc92aa53e1ac74f8263c41630a9c78408f7a50f
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Sep 6 17:58:05 2018 -0500
-
-    Details / Core / FlightMapEnhanced
+    Ace3
 

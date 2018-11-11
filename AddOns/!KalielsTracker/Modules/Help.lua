@@ -156,38 +156,6 @@ local function SetupTutorials()
 			shineRight = 80,
 		},
 		{	-- 7
-			image = helpPath.."help_addon-masque",
-			text = cTitle.."Support addon Masque|r\n\n"..
-					"Masque adds skinning support for Quest Item buttons. It also affects the Active Button (see prev page).\n"..
-					AddonInfo("Masque"),
-		},
-		{	-- 8
-			image = helpPath.."help_addon-pettracker",
-			text = cTitle.."Support addon PetTracker|r\n\n"..
-					"PetTracker support adjusts display of zone pet tracking inside "..KT.title..". It also fix some visual bugs.\n"..
-					AddonInfo("PetTracker"),
-		},
-		{	-- 9
-			image = helpPath.."help_addon-tomtom",
-			text = cTitle.."Support addon TomTom|r\n\n"..
-					"TomTom support combined Blizzard's POI and TomTom's Arrow.\n\n"..
-					"|TInterface\\WorldMap\\UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:224:256:224:256|t"..
-					"|TInterface\\WorldMap\\UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:128:160:96:128|t"..cDots.."...|r  Default Blizzard POI button\n"..
-					"|T"..mediaPath.."UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:224:256:224:256|t"..
-					"|T"..mediaPath.."UI-QuestPoi-NumberIcons:28:28:-2:1:256:256:128:160:96:128|t"..cDots.."...|r  POI button of quest with TomTom Waypoint\n \n"..
-					"Features:\n"..
-					"- The newly tracked quests automatically gets waypoints.\n"..
-					"- Waypoints of untracked or abandoned quests will be removed.\n"..
-					"- "..cBold.."Click|r on POI button add new waypoint or activate existing waypoint.\n"..
-					"- If quest doesn't have POI button, "..cBold.."Right Click|r on quest and use context menu.\n"..
-					"- Or use "..cBold.."[modifier key]+Left Click|r, modifier set up in "..KT.title.." Options.\n"..
-					AddonInfo("TomTom"),
-			shineTop = 10,
-			shineBottom = -10,
-			shineLeft = -11,
-			shineRight = 11,
-		},
-		{	-- 10
 			image = helpPath.."help_tracker-modules",
 			text = cTitle.."Order of Modules|r "..beta.."\n\n"..
 					"Allows to change the order of modules inside the tracker. Supports all modules including external (e.g. PetTracker).",
@@ -197,17 +165,62 @@ local function SetupTutorials()
 			shineLeft = -6,
 			shineRight = 6,
 		},
+		{	-- 8
+			image = helpPath.."help_addon-masque",
+			text = cTitle.."Support addon Masque|r\n\n"..
+					"Masque adds skinning support for Quest Item buttons. It also affects the Active Button (see prev page).\n"..
+					AddonInfo("Masque"),
+		},
+		{	-- 9
+			image = helpPath.."help_addon-pettracker",
+			text = cTitle.."Support addon PetTracker|r\n\n"..
+					"PetTracker support adjusts display of zone pet tracking inside "..KT.title..". It also fix some visual bugs.\n"..
+					AddonInfo("PetTracker"),
+		},
+		{	-- 10
+			image = helpPath.."help_addon-tomtom",
+			text = cTitle.."Support addon TomTom|r\n\n"..
+					"TomTom support combined Blizzard's POI and TomTom's Arrow.\n\n"..
+					"|TInterface\\WorldMap\\UI-QuestPoi-NumberIcons:32:32:-2:0:256:256:128:160:96:128|t+"..
+					"|T"..mediaPath.."KT-TomTomTag:32:32:-8:0|t"..cDots.."...|r   Active POI button of quest with TomTom Waypoint.\n \n"..
+					"Features:\n"..
+					"- Available for Quests and World Quests, but Quest waypoints are only for"..
+					offs.."current zone!|r (TomTom and Blizzard limitations)\n"..
+					"- "..cBold.."Click|r on POI button (inside the Tracker or World Map) add waypoint for"..
+					offs.."the quest.\n"..
+					"- The newly tracked or closest quest automatically gets a waypoint.\n"..
+					"- Waypoint of untracked or abandoned quest will be removed.\n"..
+					AddonInfo("TomTom"),
+			shineTop = 10,
+			shineBottom = -10,
+			shineLeft = -11,
+			shineRight = 11,
+		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.1.1|r\n\n"..
-					"- FIXED - ticket #284 - Wrong minimize button and no auto expand, when"..
-					offs.."collapsed tracker contains only World Quest / Bonus Quest.\n"..
-					"- FIXED - ticket #295 - Addons support - PetTracker - World Map error.\n"..
-					"- FIXED - ticket #297 - Addons compatibility - Dugi Questing Essential.\n"..
-					"- IMPROVED - Hide number next to \"g\" tag, when the group size is 0.\n"..
-					"- IMPROVED - Notification sounds - option for enable / disable sounds.\n\n"..
-
-					cTitle.."Note|r\n"..
-					"Support of addon TomTom is still temporarily disabled. I'm working on the update.\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.1.3|r\n\n"..
+					"- FIXED - ticket #320 - problem after change position of PetTracker - changed"..
+					offs.."addon initialization.\n"..
+					"- FIXED - Quests - after click on quest inside the tracker, sometimes open map"..
+					offs.."but no quest detail (Blizz bug).\n"..
+					"- FIXED - Achievements - with no padding, when it has an option, without text"..
+					offs.."(Blizzard bug).\n"..
+					"- FIXED - Filters - Achievements - detection of instance type.\n"..
+					"- FIXED - ProgressBar duplicity.\n"..
+					"- UPDATED - Filters - track completed Bounty quests.\n"..
+					"- UPDATED - Wowhead URL - show it inside auto-tracked World Quest context"..
+					offs.."menu.\n"..
+					"- UPDATED - Addons support - PetTracker 8.0.6, TomTom v80001-1.0.2\n"..
+					"- UPDATED - Lib - MSA-DropDownMenu-1.0\n"..
+					"- IMPROVED - Addon TomTom - changed tag icon, removed click modifier,"..
+					offs.."added World Quest support, waypoint add by click on POI button, waypoint"..
+					offs.."update after change objective (see prev page).\n"..
+					"- IMPROVED - Dungeon / Scenario support (include fix for \"Collapse in"..
+					offs.."instance\" problem).\n"..
+					"- IMPROVED - Filters menu - War Campaign detection, added faction color and"..
+					offs.."icon for War Campaign item.\n"..
+					"- IMPROVED - Tooltip - Quests - add choices, better show of Azerite as Artifact"..
+					offs.."power.\n"..
+					"- IMPROVED - Tooltip - World Quests - better show of Azerite as Artifact power.\n\n"..
 
 					cTitle.."Issue reporting|r\n"..
 					"For reporting please use "..cBold.."Tickets|r instead of Comments on Curse.com.\n\n\n\n"..
@@ -242,12 +255,12 @@ local function SetupTutorials()
 				self[i].shine = KTF.Buttons
 			elseif i == 6 then
 				self[i].shine = KTF.ActiveButton
-			elseif i == 9 then
+			elseif i == 10 then
 				for j=1, GetNumQuestWatches() do
-					local questID, _ = GetQuestWatchInfo(j)
+					local questID = GetQuestWatchInfo(j)
 					local hasLocalPOI = select(16, GetQuestWatchInfo(j))
 					local block = QUEST_TRACKER_MODULE.usedBlocks[questID]
-					if block and hasLocalPOI then
+					if block and (hasLocalPOI or block.questCompleted) then
 						self[i].shine = QuestPOI_FindButton(ObjectiveTrackerFrame.BlocksFrame, questID)
 						break
 					end

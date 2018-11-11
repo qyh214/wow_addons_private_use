@@ -2,8 +2,8 @@ local AS = unpack(AddOnSkins)
 
 function AS:Blizzard_Merchant()
 	AS:SkinFrame(MerchantFrame, nil, nil, true)
+	AS:SkinCloseButton(MerchantFrame.CloseButton)
 
-	AS:StripTextures(MerchantFrameInset)
 	AS:StripTextures(MerchantMoneyBg)
 	AS:StripTextures(MerchantMoneyInset)
 	AS:SkinDropDownBox(MerchantFrameLootFilter)
@@ -11,7 +11,6 @@ function AS:Blizzard_Merchant()
 	AS:StripTextures(MerchantExtraCurrencyBg)
 	AS:StripTextures(MerchantExtraCurrencyInset)
 
-	-- skin tabs
 	for i = 1, 2 do
 		AS:SkinTab(_G["MerchantFrameTab"..i])
 	end
@@ -23,119 +22,76 @@ function AS:Blizzard_Merchant()
 		AS:StyleButton(Slot.ItemButton)
 		AS:SkinTexture(Slot.ItemButton.icon)
 		Slot.ItemButton.icon:SetInside()
+		Slot.ItemButton:SetPoint("TOPLEFT", Slot, "TOPLEFT", 4, -4)
 		Slot.ItemButton.IconBorder:SetAlpha(0)
 
-		Slot.ItemButton:SetPoint("TOPLEFT", Slot, "TOPLEFT", 4, -4)
+		hooksecurefunc(Slot.ItemButton.IconBorder, 'SetVertexColor', function(self, r, g, b) Slot.ItemButton:SetBackdropBorderColor(r, g, b) end)
+		hooksecurefunc(Slot.ItemButton.IconBorder, 'Hide', function(self) Slot.ItemButton:SetBackdropBorderColor(unpack(AS.BorderColor)) end)
 
 		_G["MerchantItem"..i.."MoneyFrame"]:ClearAllPoints()
 		_G["MerchantItem"..i.."MoneyFrame"]:Point("BOTTOMLEFT", Slot.ItemButton, "BOTTOMRIGHT", 3, 0)
 
 		for j = 1, 3 do
-			AS:CreateBackdrop(_G["MerchantItem"..i.."AltCurrencyFrameItem"..j])
-			_G["MerchantItem"..i.."AltCurrencyFrameItem"..j].Backdrop:SetOutside(_G["MerchantItem"..i.."AltCurrencyFrameItem"..j.."Texture"])
-			AS:SkinTexture(_G["MerchantItem"..i.."AltCurrencyFrameItem"..j.."Texture"])
+			AS:SkinTexture(_G["MerchantItem"..i.."AltCurrencyFrameItem"..j.."Texture"], true)
 		end
 	end
 
-	hooksecurefunc('MerchantFrame_UpdateMerchantInfo', function()
-		local numMerchantItems = GetMerchantNumItems()
-		for i = 1, MERCHANT_ITEMS_PER_PAGE, 1 do
-			local index = (((MerchantFrame.page - 1) * MERCHANT_ITEMS_PER_PAGE) + i)
-			local itemButton = _G["MerchantItem"..i.."ItemButton"]
-			local merchantButton = _G["MerchantItem"..i]
-			local merchantMoney = _G["MerchantItem"..i.."MoneyFrame"]
-			local merchantAltCurrency = _G["MerchantItem"..i.."AltCurrencyFrame"]
-			if ( index <= numMerchantItems ) then
-				local link = GetMerchantItemLink(index)
-				if link then
-					local quality = select(3, GetItemInfo(link))
-					if (quality and quality > LE_ITEM_QUALITY_COMMON and BAG_ITEM_QUALITY_COLORS[quality]) then
-						itemButton:SetBackdropBorderColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b)
-					else
-						itemButton:SetBackdropBorderColor(unpack(AS.BorderColor))
-					end
-				end
-				local Point = _G["MerchantItem"..i.."AltCurrencyFrame"]:GetPoint()
-				if Point == "BOTTOMLEFT" then
-					_G["MerchantItem"..i.."AltCurrencyFrame"]:SetPoint("BOTTOMLEFT", _G["MerchantItem"..i.."NameFrame"], "BOTTOMLEFT", 2, 37)
-				elseif Point == "LEFT" then
-					_G["MerchantItem"..i.."AltCurrencyFrame"]:SetPoint("LEFT", merchantMoney:GetName(), "RIGHT", -14, 0)
-				end
-			end
-		end
-		local buybackName = GetBuybackItemInfo(GetNumBuybackItems())
-		MerchantBuyBackItemItemButton:SetBackdropBorderColor(unpack(AS.BorderColor))
-		if ( buybackName ) then
-			local link = GetBuybackItemInfo(GetNumBuybackItems())
-			if link then
-				local quality = select(3, GetItemInfo(link))
-				if (quality and quality > LE_ITEM_QUALITY_COMMON and BAG_ITEM_QUALITY_COLORS[quality]) then
-					MerchantBuyBackItemItemButton:SetBackdropBorderColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b)
-				else
-					MerchantBuyBackItemItemButton:SetBackdropBorderColor(unpack(AS.BorderColor))
-				end
-			end
-		end
-	end)
+	AS:SkinBackdropFrame(MerchantBuyBackItem)
+	MerchantBuyBackItem.Backdrop:SetOutside(MerchantBuyBackItem, 6, 6)
 
-	hooksecurefunc('MerchantFrame_UpdateBuybackInfo', function()
-		local numBuybackItems = GetNumBuybackItems()
-		local itemButton
-		for i = 1, BUYBACK_ITEMS_PER_PAGE do
-			itemButton = _G["MerchantItem"..i.."ItemButton"]
-			if ( i <= numBuybackItems ) then
-				local link = GetBuybackItemInfo(i)
-				if link then
-					local quality = select(3, GetItemInfo(link))
-					if (quality and quality > LE_ITEM_QUALITY_COMMON and BAG_ITEM_QUALITY_COLORS[quality]) then
-						itemButton:SetBackdropBorderColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b)
-					else
-						itemButton:SetBackdropBorderColor(unpack(AS.BorderColor))
-					end
-				end
+	AS:SkinFrame(MerchantBuyBackItem.ItemButton)
+	AS:StyleButton(MerchantBuyBackItem.ItemButton)
+	AS:SkinTexture(MerchantBuyBackItem.ItemButton.icon)
+	MerchantBuyBackItem.ItemButton.icon:SetInside()
+	MerchantBuyBackItem.ItemButton.IconBorder:SetAlpha(0)
+	hooksecurefunc(MerchantBuyBackItem.ItemButton.IconBorder, 'SetVertexColor', function(self, r, g, b) MerchantBuyBackItem.ItemButton:SetBackdropBorderColor(r, g, b) end)
+	hooksecurefunc(MerchantBuyBackItem.ItemButton.IconBorder, 'Hide', function(self) MerchantBuyBackItem.ItemButton:SetBackdropBorderColor(unpack(AS.BorderColor)) end)
+
+	AS:SkinButton(MerchantRepairItemButton)
+	MerchantRepairItemButton:GetRegions():SetTexCoord(0.04, 0.24, 0.06, 0.5)
+	MerchantRepairItemButton:GetRegions():SetInside()
+
+	AS:SkinButton(MerchantGuildBankRepairButton)
+	MerchantGuildBankRepairButtonIcon:SetTexCoord(0.61, 0.82, 0.1, 0.52)
+	MerchantGuildBankRepairButtonIcon:SetInside()
+
+	AS:SkinButton(MerchantRepairAllButton)
+	MerchantRepairAllIcon:SetTexCoord(0.34, 0.1, 0.34, 0.535, 0.535, 0.1, 0.535, 0.535)
+	MerchantRepairAllIcon:SetInside()
+
+	MerchantFrame:SetWidth(345)
+	AS:SkinArrowButton(MerchantNextPageButton)
+	AS:SkinArrowButton(MerchantPrevPageButton)
+
+	hooksecurefunc('MerchantFrame_UpdateMerchantInfo', function()
+		for i = 1, MERCHANT_ITEMS_PER_PAGE do
+			local Frame = _G["MerchantItem"..i.."AltCurrencyFrame"]
+			local Point = Frame:GetPoint()
+			if Point == "BOTTOMLEFT" then
+				Frame:SetPoint("BOTTOMLEFT", _G["MerchantItem"..i.."NameFrame"], "BOTTOMLEFT", 2, 35)
+			elseif Point == "LEFT" then
+				Frame:SetPoint("LEFT", _G["MerchantItem"..i.."MoneyFrame"], "RIGHT", -14, 0)
 			end
 		end
 	end)
 
 	hooksecurefunc('MerchantFrame_UpdateCurrencies', function()
 		for i = 1, MAX_MERCHANT_CURRENCIES do
-			if _G["MerchantToken"..i] then
-				AS:CreateBackdrop(_G["MerchantToken"..i])
-				_G["MerchantToken"..i].Backdrop:SetOutside(_G["MerchantToken"..i].icon)
-				AS:SkinTexture(_G["MerchantToken"..i].icon)
-				_G["MerchantToken"..i].icon:SetPoint("LEFT", _G["MerchantToken"..i].count, "RIGHT", 2, 0)
+			local Token = _G["MerchantToken"..i]
+			if Token then
+				AS:SkinTexture(Token.icon, true)
+				Token.icon:SetPoint("LEFT", Token.count, "RIGHT", 2, 0)
 			end
 		end
 	end)
+end
 
-	AS:SkinBackdropFrame(MerchantBuyBackItem)
-	MerchantBuyBackItem.Backdrop:SetOutside(MerchantBuyBackItem, 6, 6)
-
-	AS:SkinFrame(MerchantBuyBackItemItemButton)
-	AS:StyleButton(MerchantBuyBackItemItemButton)
-	AS:SkinTexture(MerchantBuyBackItemItemButtonIconTexture)
-	MerchantBuyBackItemItemButtonIconTexture:SetInside()
-
-	AS:StyleButton(MerchantRepairItemButton)
-	AS:SetTemplate(MerchantRepairItemButton, 'Default', true)
-	MerchantRepairItemButton:GetRegions():SetTexCoord(0.04, 0.24, 0.06, 0.5)
-	MerchantRepairItemButton:GetRegions():SetInside()
-
-	AS:StyleButton(MerchantGuildBankRepairButton)
-	AS:SetTemplate(MerchantGuildBankRepairButton, 'Default', true)
-	MerchantGuildBankRepairButtonIcon:SetTexCoord(0.61, 0.82, 0.1, 0.52)
-	MerchantGuildBankRepairButtonIcon:SetInside()
-
-	AS:StyleButton(MerchantRepairAllButton)
-	AS:SetTemplate(MerchantRepairAllButton, 'Default', true)
-	MerchantRepairAllIcon:SetTexCoord(0.34, 0.1, 0.34, 0.535, 0.535, 0.1, 0.535, 0.535)
-	MerchantRepairAllIcon:SetInside()
-
-	-- Skin misc frames
-	MerchantFrame:SetWidth(345)
-	AS:SkinCloseButton(MerchantFrameCloseButton)
-	AS:SkinNextPrevButton(MerchantNextPageButton)
-	AS:SkinNextPrevButton(MerchantPrevPageButton)
+function AS:Blizzard_StackSplit()
+	AS:SkinFrame(StackSplitFrame)
+	AS:CreateShadow(StackSplitFrame)
+	AS:SkinButton(StackSplitOkayButton)
+	AS:SkinButton(StackSplitCancelButton)
 end
 
 AS:RegisterSkin('Blizzard_Merchant', AS.Blizzard_Merchant)
+AS:RegisterSkin('Blizzard_StackSplit', AS.Blizzard_StackSplit)

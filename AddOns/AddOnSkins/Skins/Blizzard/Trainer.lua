@@ -1,81 +1,150 @@
 local AS = unpack(AddOnSkins)
 
-function AS:Blizzard_Trainer(event, addon)
-	if addon ~= 'Blizzard_TrainerUI' then return end
+function AS:Blizzard_TradeSkill(event, addon)
+	if addon ~= 'Blizzard_TradeSkillUI' then return end
+	AS:SkinFrame(TradeSkillFrame, nil, nil, true)
 
-	AS:SkinFrame(ClassTrainerFrame, nil, nil, true)
-	AS:SkinCloseButton(ClassTrainerFrameCloseButton)
+	TradeSkillFrame:SetHeight(TradeSkillFrame:GetHeight() + 12)
 
-	AS:SkinButton(ClassTrainerTrainButton, true)
+	AS:SkinStatusBar(TradeSkillFrame.RankFrame)
 
-	AS:StripTextures(ClassTrainerFrameInset)
-	AS:StripTextures(ClassTrainerFrameBottomInset)
-	AS:StripTextures(ClassTrainerScrollFrameScrollChild)
+	AS:SkinButton(TradeSkillFrame.FilterButton)
 
-	AS:SkinStatusBar(ClassTrainerStatusBar)
-	--ClassTrainerStatusBar:SetStatusBarColor(0, 1, 0)
-	ClassTrainerStatusBar:ClearAllPoints()
-	ClassTrainerStatusBar:SetPoint("TOPLEFT", ClassTrainerFrame, "TOPLEFT", 15, -35)
+	TradeSkillFrame.LinkToButton:GetNormalTexture():SetTexCoord(0.25, 0.7, 0.37, 0.75)
+	TradeSkillFrame.LinkToButton:GetPushedTexture():SetTexCoord(0.25, 0.7, 0.45, 0.8)
+	TradeSkillFrame.LinkToButton:GetHighlightTexture():Kill()
+	AS:CreateBackdrop(TradeSkillFrame.LinkToButton)
+	TradeSkillFrame.LinkToButton:SetSize(17, 14)
+	TradeSkillFrame.LinkToButton:SetPoint("BOTTOMRIGHT", TradeSkillFrame.FilterButton, "TOPRIGHT", -2, 4)
 
-	AS:SkinDropDownBox(ClassTrainerFrameFilterDropDown, 155)
-	ClassTrainerFrameFilterDropDown:ClearAllPoints()
-	ClassTrainerFrameFilterDropDown:SetPoint("TOPRIGHT", ClassTrainerFrame, "TOPRIGHT", 0, -32)
-	AS:SkinScrollBar(ClassTrainerScrollFrameScrollBar)
+	AS:SkinEditBox(TradeSkillFrame.SearchBox)
+	AS:SkinCloseButton(TradeSkillFrame.CloseButton)
 
-	AS:SkinBackdropFrame(ClassTrainerFrameSkillStepButton)
-	AS:SkinTexture(ClassTrainerFrameSkillStepButton.icon)
-	ClassTrainerFrameSkillStepButtonHighlight:SetTexture('')
+	AS:SkinBackdropFrame(TradeSkillFrame.RecipeInset)
+	TradeSkillFrame.RecipeInset.Backdrop:SetFrameLevel(TradeSkillFrame.RecipeInset.Backdrop:GetFrameLevel() + 1)
+	TradeSkillFrame.RecipeInset.Backdrop:SetPoint("TOPLEFT", 0, -1)
+	TradeSkillFrame.RecipeInset.Backdrop:SetPoint("BOTTOMRIGHT", 0, -2)
 
-	ClassTrainerFrameSkillStepButton.icon.Backdrop = CreateFrame('Frame', nil, ClassTrainerFrameSkillStepButton)
-	AS:SetTemplate(ClassTrainerFrameSkillStepButton.icon.Backdrop)
-	ClassTrainerFrameSkillStepButton.icon.Backdrop:SetBackdropColor(0, 0, 0, 0)
-	ClassTrainerFrameSkillStepButton.icon.Backdrop:SetOutside(ClassTrainerFrameSkillStepButton.icon)
+	AS:StripTextures(TradeSkillFrame.RecipeList.LearnedTab)
+	AS:StripTextures(TradeSkillFrame.RecipeList.UnlearnedTab)
 
-	ClassTrainerFrameSkillStepButton:HookScript('OnEnter', function(self)
-		self.Backdrop:SetBackdropBorderColor(1, .82, 0)
-	end)
-	ClassTrainerFrameSkillStepButton:HookScript('OnLeave', function(self)
-		if self.selectedTex:IsShown() then
-			self.Backdrop:SetBackdropBorderColor(0, 0.44, .87, 1)
-		else
-			self.Backdrop:SetBackdropBorderColor(unpack(AS.BorderColor))
+	AS:SkinScrollBar(TradeSkillFrame)
+
+	AS:StripTextures(TradeSkillFrame.DetailsFrame)
+
+	AS:SkinBackdropFrame(TradeSkillFrame.DetailsInset)
+	TradeSkillFrame.DetailsInset.Backdrop:SetFrameLevel(TradeSkillFrame.DetailsInset.Backdrop:GetFrameLevel() + 1)
+	TradeSkillFrame.DetailsInset.Backdrop:SetPoint("TOPLEFT", 4, -1)
+	TradeSkillFrame.DetailsInset.Backdrop:SetPoint("BOTTOMRIGHT", 1, 1)
+
+	AS:SkinScrollBar(TradeSkillFrame.DetailsFrame.ScrollBar)
+
+	TradeSkillFrame.DetailsFrame.Background:Hide()
+
+	AS:SkinEditBox(TradeSkillFrame.DetailsFrame.CreateMultipleInputBox)
+
+	TradeSkillFrame.DetailsFrame.CreateMultipleInputBox:DisableDrawLayer("BACKGROUND")
+
+	AS:SkinButton(TradeSkillFrame.DetailsFrame.CreateAllButton, true)
+	AS:SkinButton(TradeSkillFrame.DetailsFrame.CreateButton, true)
+	AS:SkinButton(TradeSkillFrame.DetailsFrame.ExitButton, true)
+
+	AS:SkinArrowButton(TradeSkillFrame.DetailsFrame.CreateMultipleInputBox.DecrementButton)
+	AS:SkinArrowButton(TradeSkillFrame.DetailsFrame.CreateMultipleInputBox.IncrementButton)
+	TradeSkillFrame.DetailsFrame.CreateMultipleInputBox.IncrementButton:SetPoint("LEFT", TradeSkillFrame.DetailsFrame.CreateMultipleInputBox, "RIGHT", 4, 0)
+
+	hooksecurefunc(TradeSkillFrame.DetailsFrame, "RefreshDisplay", function(self)
+		AS:StyleButton(self.Contents.ResultIcon)
+		AS:SetTemplate(self.Contents.ResultIcon)
+
+		if self.Contents.ResultIcon:GetNormalTexture() then
+			AS:SkinTexture(self.Contents.ResultIcon:GetNormalTexture())
+			self.Contents.ResultIcon:GetNormalTexture():SetInside()
+		end
+
+		self.Contents.ResultIcon.ResultBorder:SetTexture("")
+		self.Contents.ResultIcon.IconBorder:SetTexture("")
+		self.Contents.ResultIcon:SetBackdropBorderColor(self.Contents.ResultIcon.IconBorder:GetVertexColor())
+
+		for _, Button in pairs(self.Contents.Reagents) do
+			AS:SkinTexture(Button.Icon, true)
+			Button.NameFrame:SetTexture("")
 		end
 	end)
 
-	for i = 1, #ClassTrainerFrame.scrollFrame.buttons do
-		local Button = _G["ClassTrainerScrollFrameButton"..i]
-		AS:StripTextures(Button)
-		AS:StyleButton(Button)
+	--Guild Crafters
+	AS:SkinCloseButton(TradeSkillFrame.DetailsFrame.GuildFrame.CloseButton)
+	AS:SkinButton(TradeSkillFrame.DetailsFrame.ViewGuildCraftersButton)
+	TradeSkillFrame.DetailsFrame.ViewGuildCraftersButton.LeftSeparator:SetTexture(nil)
+	TradeSkillFrame.DetailsFrame.ViewGuildCraftersButton.RightSeparator:SetTexture(nil)
+	AS:SkinFrame(TradeSkillFrame.DetailsFrame.GuildFrame)
+	AS:SkinFrame(TradeSkillFrame.DetailsFrame.GuildFrame.Container)
+
+	AS:UnregisterSkinEvent(addon, event)
+end
+
+function AS:Blizzard_TrainerUI(event, addon)
+	if addon ~= 'Blizzard_TrainerUI' then return end
+
+	AS:SkinFrame(ClassTrainerFrame, nil, nil, true)
+	AS:SkinCloseButton(ClassTrainerFrame.CloseButton)
+
+	AS:SkinStatusBar(ClassTrainerStatusBar)
+	ClassTrainerStatusBar:SetPoint("TOPLEFT", ClassTrainerFrame, "TOPLEFT", 15, -35)
+
+	AS:SkinButton(ClassTrainerTrainButton, true)
+
+	AS:SkinDropDownBox(ClassTrainerFrameFilterDropDown)
+	ClassTrainerFrameFilterDropDown:SetPoint("TOPRIGHT", ClassTrainerFrame, "TOPRIGHT", -6, -32)
+
+	AS:SkinScrollBar(ClassTrainerScrollFrameScrollBar)
+	AS:StripTextures(ClassTrainerFrame.scrollFrame.ScrollChild)
+
+	AS:SkinFrame(ClassTrainerFrame.skillStepButton)
+	AS:SkinTexture(ClassTrainerFrame.skillStepButton.icon)
+	ClassTrainerFrame.skillStepButton:SetHighlightTexture('')
+
+	ClassTrainerFrame.skillStepButton:HookScript('OnEnter', function(self)
+		self:SetBackdropBorderColor(1, .82, 0)
+	end)
+	ClassTrainerFrame.skillStepButton:HookScript('OnLeave', function(self)
+		if self.selectedTex:IsShown() then
+			self:SetBackdropBorderColor(unpack(AS.Color))
+		else
+			self:SetBackdropBorderColor(unpack(AS.BorderColor))
+		end
+	end)
+
+	for _, Button in pairs(ClassTrainerFrame.scrollFrame.buttons) do
+		AS:SkinFrame(Button)
 		AS:SkinTexture(Button.icon)
-		AS:CreateBackdrop(Button)
-		Button.Backdrop:SetInside(Button, 1, 1)
+
 		Button:SetHighlightTexture('')
 		Button:SetPushedTexture('')
 		Button:HookScript('OnEnter', function(self)
-			self.Backdrop:SetBackdropBorderColor(1, .82, 0)
+			self:SetBackdropBorderColor(1, .82, 0)
 		end)
 		Button:HookScript('OnLeave', function(self)
 			if self.selectedTex:IsShown() then
-				self.Backdrop:SetBackdropBorderColor(0, 0.44, .87, 1)
+				self:SetBackdropBorderColor(unpack(AS.Color))
 			else
-				self.Backdrop:SetBackdropBorderColor(unpack(AS.BorderColor))
+				self:SetBackdropBorderColor(unpack(AS.BorderColor))
 			end
 		end)
-		Button.icon.Backdrop = CreateFrame('Frame', nil, Button)
-		AS:SetTemplate(Button.icon.Backdrop)
-		Button.icon.Backdrop:SetBackdropColor(0, 0, 0, 0)
-		Button.icon.Backdrop:SetOutside(Button.icon)
 
 		Button.selectedTex:SetTexture('')
 	end
 
 	hooksecurefunc('ClassTrainerFrame_SetServiceButton', function(skillButton, skillIndex, playerMoney, selected, isTradeSkill)
 		if ( ClassTrainerFrame.selectedService and selected == skillIndex ) then
-			skillButton.Backdrop:SetBackdropBorderColor(0, 0.44, .87)
+			skillButton:SetBackdropBorderColor(unpack(AS.Color))
 		else
-			skillButton.Backdrop:SetBackdropBorderColor(unpack(AS.BorderColor))
+			skillButton:SetBackdropBorderColor(unpack(AS.BorderColor))
 		end
 	end)
+
+	AS:UnregisterSkinEvent(addon, event)
 end
 
-AS:RegisterSkin("Blizzard_Trainer", AS.Blizzard_Trainer, 'ADDON_LOADED')
+AS:RegisterSkin('Blizzard_TradeSkill', AS.Blizzard_TradeSkill, 'ADDON_LOADED')
+AS:RegisterSkin("Blizzard_TrainerUI", AS.Blizzard_TrainerUI, 'ADDON_LOADED')

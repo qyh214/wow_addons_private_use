@@ -1,43 +1,46 @@
 local AS = unpack(AddOnSkins)
 
 function AS:Blizzard_TimeManager(event, addon)
-	if addon == "Blizzard_TimeManager" or IsAddOnLoaded('Blizzard_TimeManager') then
-		AS:SkinFrame(TimeManagerFrame)
+	if addon ~= "Blizzard_TimeManager" then return end
 
-		AS:StripTextures(TimeManagerFrameInset)
-		AS:SkinCloseButton(TimeManagerFrameCloseButton)
+	AS:SkinFrame(TimeManagerFrame)
 
-		AS:SkinDropDownBox(TimeManagerAlarmHourDropDown, 80)
-		AS:SkinDropDownBox(TimeManagerAlarmMinuteDropDown, 80)
-		AS:SkinDropDownBox(TimeManagerAlarmAMPMDropDown, 80)
+	AS:StripTextures(TimeManagerFrameInset)
+	AS:SkinCloseButton(TimeManagerFrameCloseButton)
 
-		AS:SkinEditBox(TimeManagerAlarmMessageEditBox)
+	AS:SkinDropDownBox(TimeManagerAlarmHourDropDown)
+	AS:SkinDropDownBox(TimeManagerAlarmMinuteDropDown)
+	AS:SkinDropDownBox(TimeManagerAlarmAMPMDropDown)
 
-		AS:SkinButton(TimeManagerAlarmEnabledButton)
-		TimeManagerAlarmEnabledButton:SetSize(16, 16)
-		TimeManagerAlarmEnabledButtonText:SetPoint("RIGHT", 76, 0)
+	AS:SkinEditBox(TimeManagerAlarmMessageEditBox)
 
-		AS:SkinCheckBox(TimeManagerMilitaryTimeCheck)
-		AS:SkinCheckBox(TimeManagerLocalTimeCheck)
+	AS:SkinButton(TimeManagerAlarmEnabledButton)
+	TimeManagerAlarmEnabledButton:SetSize(16, 16)
+	TimeManagerAlarmEnabledButtonText:SetPoint("RIGHT", 76, 0)
 
-		AS:StripTextures(TimeManagerStopwatchFrame)
-		AS:SetTemplate(TimeManagerStopwatchCheck)
-		AS:SkinTexture(TimeManagerStopwatchCheck:GetNormalTexture())
-		TimeManagerStopwatchCheck:GetNormalTexture():SetInside()
-		AS:StyleButton(TimeManagerStopwatchCheck)
+	AS:SkinCheckBox(TimeManagerMilitaryTimeCheck)
+	AS:SkinCheckBox(TimeManagerLocalTimeCheck)
 
-		AS:SkinBackdropFrame(StopwatchFrame)
-		StopwatchFrame.Backdrop:SetPoint("TOPLEFT", 0, -17)
-		StopwatchFrame.Backdrop:SetPoint("BOTTOMRIGHT", 0, 2)
+	AS:StripTextures(TimeManagerStopwatchFrame)
+	AS:SetTemplate(TimeManagerStopwatchCheck)
+	AS:SkinTexture(TimeManagerStopwatchCheck:GetNormalTexture())
+	TimeManagerStopwatchCheck:GetNormalTexture():SetInside()
+	AS:StyleButton(TimeManagerStopwatchCheck)
 
-		AS:StripTextures(StopwatchTabFrame)
-		AS:SkinCloseButton(StopwatchCloseButton)
-		AS:SkinNextPrevButton(StopwatchPlayPauseButton)
-		AS:SkinNextPrevButton(StopwatchResetButton)
-		StopwatchPlayPauseButton:SetPoint("RIGHT", StopwatchResetButton, "LEFT", -4, 0)
-		StopwatchResetButton:SetPoint("BOTTOMRIGHT", StopwatchFrame, "BOTTOMRIGHT", -4, 6)
-		AS:UnregisterSkinEvent('Blizzard_TimeManager', 'ADDON_LOADED')
-	end
+	AS:SkinBackdropFrame(StopwatchFrame)
+	StopwatchFrame.Backdrop:SetPoint("TOPLEFT", 0, -17)
+	StopwatchFrame.Backdrop:SetPoint("BOTTOMRIGHT", 0, 2)
+
+	AS:StripTextures(StopwatchTabFrame)
+	AS:SkinCloseButton(StopwatchCloseButton)
+
+	AS:SkinArrowButton(StopwatchPlayPauseButton)
+	AS:SkinArrowButton(StopwatchResetButton)
+
+	StopwatchPlayPauseButton:SetPoint("RIGHT", StopwatchResetButton, "LEFT", -4, 0)
+	StopwatchResetButton:SetPoint("BOTTOMRIGHT", StopwatchFrame, "BOTTOMRIGHT", -4, 6)
+
+	AS:UnregisterSkinEvent(addon, event)
 end
 
-AS:RegisterSkin("Blizzard_TimeManager", AS.Blizzard_TimeManager)
+AS:RegisterSkin("Blizzard_TimeManager", AS.Blizzard_TimeManager, 'ADDON_LOADED')

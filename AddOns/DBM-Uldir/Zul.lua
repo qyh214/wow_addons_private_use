@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2195, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17959 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18028 $"):sub(12, -3))
 mod:SetCreatureID(138967)
 mod:SetEncounterID(2145)
 mod:DisableESCombatDetection()--ES fires moment you throw out CC, so it can't be trusted for combatstart
@@ -10,16 +10,16 @@ mod:SetZone()
 mod:SetUsedIcons(1, 2, 8)
 mod:SetHotfixNoticeRev(17775)
 --mod:SetMinSyncRevision(16950)
-mod.respawnTime = 29
+mod.respawnTime = 32
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 273316 273451 273350",
 	"SPELL_CAST_SUCCESS 273365 271640 274358 274168 273889 274098 274119",
-	"SPELL_AURA_APPLIED 273365 271640 273434 276093 273288 274358 274271 273432 276434",
+	"SPELL_AURA_APPLIED 273365 271640 273434 276093 273288 274358 274271 273432 276434 274195",
 	"SPELL_AURA_APPLIED_DOSE 274358",
-	"SPELL_AURA_REMOVED 273365 271640 276093 273288 274358 274271 273432 276434",
+	"SPELL_AURA_REMOVED 273365 271640 276093 273288 274358 274271 273432 276434 274195",
 	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
@@ -60,7 +60,7 @@ local specWarnMinionofZul				= mod:NewSpecialWarningSwitch("ej18530", "MagicDisp
 ----Forces of Blood
 local specWarnCongealBlood				= mod:NewSpecialWarningSwitch(273451, "Dps", nil, nil, 3, 2)
 local specWarnBloodshard				= mod:NewSpecialWarningInterrupt(273350, false, nil, 4, 1, 2)--Spam cast, so opt in, not opt out
---local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 2)
+--local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 --Stage Two: Zul, Awakened
 local specWarnRupturingBlood			= mod:NewSpecialWarningStack(274358, nil, 3, nil, nil, 1, 6)
 local specWarnRupturingBloodTaunt		= mod:NewSpecialWarningTaunt(274358, nil, nil, nil, 1, 2)
@@ -93,7 +93,7 @@ local timerDeathwishCD					= mod:NewNextCountTimer(27.9, 274271, nil, nil, nil, 
 
 --mod:AddSetIconOption("SetIconGift", 255594, true)
 --mod:AddRangeFrameOption("8/10")
-mod:AddInfoFrameOption(258040, true)
+mod:AddInfoFrameOption(274195, true)
 mod:AddNamePlateOption("NPAuraOnPresence", 276093)
 mod:AddNamePlateOption("NPAuraOnThrumming", 273288)
 mod:AddNamePlateOption("NPAuraOnBoundbyShadow", 273432)
@@ -114,8 +114,64 @@ mod.vb.DarkRevIcon = 1
 mod.vb.deathwishCount = 0
 mod.vb.activeDecay = nil
 local unitTracked = {}
+local corruptedBloodTarget = {}
+
+local updateInfoFrame
+do
+	local floor, tsort = math.floor, table.sort
+	local lines = {}
+	local tempLines = {}
+	local tempLinesSorted = {}
+	local sortedLines = {}
+	local function sortFuncDesc(a, b) return tempLines[a] > tempLines[b] end
+	local function addLine(key, value)
+		-- sort by insertion order
+		lines[key] = value
+		sortedLines[#sortedLines + 1] = key
+	end
+	updateInfoFrame = function()
+		table.wipe(lines)
+		table.wipe(tempLines)
+		table.wipe(tempLinesSorted)
+		table.wipe(sortedLines)
+		--Boss Powers first
+		for i = 1, 5 do
+			local uId = "boss"..i
+			--Primary Power
+			local currentPower, maxPower = UnitPower(uId), UnitPowerMax(uId)
+			if maxPower and maxPower ~= 0 then
+				local adjustedPower = currentPower / maxPower * 100
+				if adjustedPower >= 1 and adjustedPower ~= 100 then--Filter 100 power, to basically eliminate cced Adds
+					addLine(UnitName(uId), currentPower)
+				end
+			end
+		end
+		if mod:IsMythic() then
+			addLine(" ", " ")--Insert a blank entry to split the two debuffs
+			--Corrupted Blood Stacks (UGLY code)
+			for i=1, #corruptedBloodTarget do
+				local name = corruptedBloodTarget[i]
+				local uId = DBM:GetRaidUnitId(name)
+				local spellName, _, count = DBM:UnitDebuff(uId, 274195)
+				if spellName and count then
+					local unitName = UnitName(uId)
+					tempLines[unitName] = count
+					tempLinesSorted[#tempLinesSorted + 1] = unitName
+				end
+			end
+			--Sort debuffs by highest then inject into regular table
+			tsort(tempLinesSorted, sortFuncDesc)
+			for _, name in ipairs(tempLinesSorted) do
+				addLine(name, tempLines[name])
+			end
+		end
+		return lines, sortedLines
+	end
+end
+
 
 function mod:OnCombatStart(delay)
+	table.wipe(corruptedBloodTarget)
 	self.vb.phase = 1
 	self.vb.poolCount = 0
 	self.vb.darkRevCount = 0
@@ -133,7 +189,7 @@ function mod:OnCombatStart(delay)
 	timerCallofCrusherCD:Start(70, 1)--70-73
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM_CORE_INFOFRAME_POWER)
-		DBM.InfoFrame:Show(5, "enemypower", 1)
+		DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
 	end
 	table.wipe(unitTracked)
 	if self:IsMythic() then
@@ -390,6 +446,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnDeathwishNear:CancelVoice()--Avoid spam
 			specWarnDeathwishNear:ScheduleVoice(0.3, "runaway")
 		end
+	elseif spellId == 274195 then
+		if not tContains(corruptedBloodTarget, args.destName) then
+			table.insert(corruptedBloodTarget, args.destName)
+		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -426,6 +486,8 @@ function mod:SPELL_AURA_REMOVED(args)
 			specWarnRupturingBloodEdge:Cancel()
 			specWarnRupturingBloodEdge:CancelVoice()
 		end
+	elseif spellId == 274195 then
+		tDeleteItem(corruptedBloodTarget, args.destName)
 	end
 end
 
@@ -433,7 +495,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 228007 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
 		specWarnGTFO:Show()
-		specWarnGTFO:Play("runaway")
+		specWarnGTFO:Play("watchfeet")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

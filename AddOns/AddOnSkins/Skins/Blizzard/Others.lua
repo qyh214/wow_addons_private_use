@@ -1,168 +1,70 @@
 local AS = unpack(AddOnSkins)
 
 function AS:Blizzard_Others()
-	-- Others Blizzard frame we want to reskin
-	-- local skins = {
-		-- "StaticPopup1",
-		-- "StaticPopup2",
-		-- "StaticPopup3",
-		-- "StaticPopup4",
-		-- "GameMenuFrame",
-		-- "LFDDungeonReadyStatus",
-		-- "TicketStatusFrameButton",
-		-- "LFDSearchStatus",
-		-- "AutoCompleteBox",
-		-- "ConsolidatedBuffsTooltip",
-		-- "ReadyCheckFrame",
-		-- "StackSplitFrame",
-		-- "CharacterFrame",
-		-- "VoiceChatTalkers"
-	-- }
-
-	-- for i = 1, getn(skins) do
-		-- if _G[skins[i]] then
-			-- AS:SetTemplate(_G[skins[i]], 'Default')
-			-- if _G[skins[i]] ~= _G["AutoCompleteBox"] then -- frame to blacklist from create shadow function
-				-- _G[skins[i]]:CreateShadow('Default')
-			-- end
-		-- end
-	-- end
-
 	local function SkinNavBarButtons(self)
 		local navButton = self.navList[#self.navList]
 		if navButton and not navButton.isSkinned then
 			AS:SkinButton(navButton, true)
 			if navButton.MenuArrowButton then
-				AS:SkinNextPrevButton(navButton.MenuArrowButton, true)
+				AS:SkinArrowButton(navButton.MenuArrowButton)
+				navButton.MenuArrowButton:SetBackdrop(nil)
+				navButton.MenuArrowButton:SetSize(22, 22)
 			end
+
+			navButton.xoffset = 1
 
 			navButton.isSkinned = true
 		end
 	end
 	hooksecurefunc("NavBar_AddButton", SkinNavBarButtons)
 
-	--LFD Role Picker frame
-	AS:StripTextures(LFDRoleCheckPopup)
-	AS:SetTemplate(LFDRoleCheckPopup, 'Default')
+	AS:SkinBackdropFrame(LFDRoleCheckPopup)
 	AS:SkinButton(LFDRoleCheckPopupAcceptButton)
 	AS:SkinButton(LFDRoleCheckPopupDeclineButton)
-	AS:SkinCheckBox(LFDRoleCheckPopupRoleButtonTank:GetChildren())
-	AS:SkinCheckBox(LFDRoleCheckPopupRoleButtonDPS:GetChildren())
-	AS:SkinCheckBox(LFDRoleCheckPopupRoleButtonHealer:GetChildren())
-	LFDRoleCheckPopupRoleButtonTank:GetChildren():SetFrameLevel(LFDRoleCheckPopupRoleButtonTank:GetChildren():GetFrameLevel() + 1)
-	LFDRoleCheckPopupRoleButtonDPS:GetChildren():SetFrameLevel(LFDRoleCheckPopupRoleButtonDPS:GetChildren():GetFrameLevel() + 1)
-	LFDRoleCheckPopupRoleButtonHealer:GetChildren():SetFrameLevel(LFDRoleCheckPopupRoleButtonHealer:GetChildren():GetFrameLevel() + 1)
+	AS:SkinCheckBox(LFDRoleCheckPopupRoleButtonTank.checkButton)
+	AS:SkinCheckBox(LFDRoleCheckPopupRoleButtonDPS.checkButton)
+	AS:SkinCheckBox(LFDRoleCheckPopupRoleButtonHealer.checkButton)
 
-	-- Cinematic Popup
 	AS:SetTemplate(CinematicFrameCloseDialog)
 	CinematicFrameCloseDialog:SetScale(UIParent:GetScale())
 	AS:SkinButton(CinematicFrameCloseDialogConfirmButton)
 	AS:SkinButton(CinematicFrameCloseDialogResumeButton)
 
-	-- Movie Frame Popup
 	AS:SetTemplate(MovieFrame.CloseDialog)
 	MovieFrame.CloseDialog:SetScale(UIParent:GetScale())
 	AS:SkinButton(MovieFrame.CloseDialog.ConfirmButton)
 	AS:SkinButton(MovieFrame.CloseDialog.ResumeButton)
 
-	-- Report Cheats
-	AS:StripTextures(ReportCheatingDialog)
-	AS:SetTemplate(ReportCheatingDialog)
-	AS:SkinButton(ReportCheatingDialogReportButton)
+	AS:SkinFrame(ReportCheatingDialog)
+	AS:SkinButton(ReportCheatingDialog.reportButton)
 	AS:SkinButton(ReportCheatingDialogCancelButton)
-	AS:StripTextures(ReportCheatingDialogCommentFrame)
-	AS:SkinEditBox(ReportCheatingDialogCommentFrameEditBox)
+	AS:StripTextures(ReportCheatingDialog.CommentFrame)
+	AS:SkinEditBox(ReportCheatingDialog.CommentFrame.EditBox)
 
-	-- reskin popup buttons
 	for i = 1, 4 do
-		for j = 1, 3 do
-			AS:SkinButton(_G["StaticPopup"..i.."Button"..j])
-			AS:SkinEditBox(_G["StaticPopup"..i.."EditBox"])
-			AS:SkinEditBox(_G["StaticPopup"..i.."MoneyInputFrameGold"])
-			AS:SkinEditBox(_G["StaticPopup"..i.."MoneyInputFrameSilver"])
-			AS:SkinEditBox(_G["StaticPopup"..i.."MoneyInputFrameCopper"])
-			_G["StaticPopup"..i.."EditBox"].Backdrop:SetPoint("TOPLEFT", -2, -4)
-			_G["StaticPopup"..i.."EditBox"].Backdrop:SetPoint("BOTTOMRIGHT", 2, 4)
-			_G["StaticPopup"..i.."ItemFrameNameFrame"]:Kill()
-			_G["StaticPopup"..i.."ItemFrame"]:GetNormalTexture():Kill()
-			AS:SetTemplate(_G["StaticPopup"..i.."ItemFrame"], 'Default')
-			AS:StyleButton(_G["StaticPopup"..i.."ItemFrame"])
-			AS:SkinTexture(_G["StaticPopup"..i.."ItemFrameIconTexture"])
-			_G["StaticPopup"..i.."ItemFrameIconTexture"]:ClearAllPoints()
-			_G["StaticPopup"..i.."ItemFrameIconTexture"]:Point("TOPLEFT", 2, -2)
-			_G["StaticPopup"..i.."ItemFrameIconTexture"]:Point("BOTTOMRIGHT", -2, 2)
+		local Popup = _G["StaticPopup"..i]
+
+		AS:SkinFrame(Popup, nil, true)
+
+		for j = 1, 4 do
+			AS:SkinButton(Popup['button'..j])
 		end
+
+		AS:SkinButton(Popup.extraButton)
+
+		AS:SkinEditBox(_G["StaticPopup"..i.."EditBox"])
+		_G["StaticPopup"..i.."EditBox"].Backdrop:SetPoint("TOPLEFT", -2, -4)
+		_G["StaticPopup"..i.."EditBox"].Backdrop:SetPoint("BOTTOMRIGHT", 2, 4)
+
+		AS:SkinEditBox(_G["StaticPopup"..i.."MoneyInputFrameGold"])
+		AS:SkinEditBox(_G["StaticPopup"..i.."MoneyInputFrameSilver"])
+		AS:SkinEditBox(_G["StaticPopup"..i.."MoneyInputFrameCopper"])
+
+		AS:SkinFrame(Popup.ItemFrame)
+		AS:StyleButton(Popup.ItemFrame)
+		AS:SkinTexture(Popup.ItemFrame.icon)
+		Popup.ItemFrame.icon:SetInside()
 	end
-
-	-- -- reskin all esc/menu buttons
-	-- local BlizzardMenuButtons = {
-		-- "Options",
-		-- "SoundOptions",
-		-- "UIOptions",
-		-- "Keybindings",
-		-- "Macros",
-		-- "Ratings",
-		-- "AddOns",
-		-- "Logout",
-		-- "Quit",
-		-- "Continue",
-		-- "MacOptions",
-		-- "Help",
-		-- "Store",
-	-- }
-
-	-- for i = 1, getn(BlizzardMenuButtons) do
-		-- local button = _G["GameMenuButton"..BlizzardMenuButtons[i]]
-		-- if button then
-			-- AS:SkinButton(button)
-		-- end
-	-- end
-
-	-- if IsAddOnLoaded("OptionHouse") then
-		-- AS:SkinButton(GameMenuButtonOptionHouse)
-	-- end
-
-	-- -- hide header textures and move text/buttons.
-	-- local BlizzardHeader = {
-		-- "GameMenuFrame",
-	-- }
-
-	-- for i = 1, getn(BlizzardHeader) do
-		-- local title = _G[BlizzardHeader[i].."Header"]
-		-- if title then
-			-- title:SetTexture("")
-			-- title:ClearAllPoints()
-			-- title:SetPoint("TOP", GameMenuFrame, 0, 7)
-		-- end
-	-- end
-
-	-- here we reskin all "normal" buttons
-	-- local BlizzardButtons = {
-		-- "ReadyCheckFrameYesButton",
-		-- "ReadyCheckFrameNoButton",
-		-- "StackSplitOkayButton",
-		-- "StackSplitCancelButton",
-		-- "RolePollPopupAcceptButton",
-		-- "CompactUnitFrameProfilesGeneralOptionsFrameResetPositionButton",
-	-- }
-
-	-- for i = 1, getn(BlizzardButtons) do
-		-- local Buttons = _G[BlizzardButtons[i]]
-		-- if Buttons then
-			-- AS:SkinButton(Buttons)
-		-- end
-	-- end
-
-	-- if a button position is not really where we want, we move it here
-	-- _G["ReadyCheckFrameYesButton"]:SetParent(_G["ReadyCheckFrame"])
-	-- _G["ReadyCheckFrameNoButton"]:SetParent(_G["ReadyCheckFrame"])
-	-- _G["ReadyCheckFrameYesButton"]:ClearAllPoints()
-	-- _G["ReadyCheckFrameNoButton"]:ClearAllPoints()
-	-- _G["ReadyCheckFrameYesButton"]:SetPoint("RIGHT", _G["ReadyCheckFrame"], "CENTER", -2, -20)
-	-- _G["ReadyCheckFrameNoButton"]:SetPoint("LEFT", _G["ReadyCheckFrameYesButton"], "RIGHT", 3, 0)
-	-- _G["ReadyCheckFrameText"]:SetParent(_G["ReadyCheckFrame"])
-	-- _G["ReadyCheckFrameText"]:ClearAllPoints()
-	-- _G["ReadyCheckFrameText"]:SetPoint("TOP", 0, -12)
 
 	AS:SetTemplate(_G["GeneralDockManagerOverflowButtonList"])
 
@@ -170,20 +72,99 @@ function AS:Blizzard_Others()
 	AS:CreateShadow(RolePollPopup)
 	AS:SkinCloseButton(RolePollPopupCloseButton)
 
-	-- AS:StripTextures(BasicScriptErrors)
-	-- AS:SetTemplate(BasicScriptErrors)
-	-- AS:CreateShadow(BasicScriptErrors)
-	-- AS:SkinButton(BasicScriptErrorsButton)
-	-- BasicScriptErrors:SetScale(AS.UIScale)
+	AS:SkinFrame(ReadyCheckFrame)
+	AS:SkinButton(ReadyCheckFrameYesButton)
+	AS:SkinButton(ReadyCheckFrameNoButton)
 
-	-- for i = 1, 4 do
-		-- local button = _G["StaticPopup"..i.."CloseButton"]
-		-- button:SetNormalTexture("")
-		-- button.SetNormalTexture = T.dummy
-		-- button:SetPushedTexture("")
-		-- button.SetPushedTexture = T.dummy
-		-- AS:SkinCloseButton(button)
-	-- end
+	AS:SkinBackdropFrame(GameMenuFrame)
+	AS:CreateBackdrop(GameMenuFrameHeader, 'Default')
+	for i = 1, GameMenuFrame:GetNumRegions() do
+		local Region = select(i, GameMenuFrame:GetRegions())
+		if Region.IsObjectType and Region:IsObjectType('FontString') then
+			Region:SetTextColor(1, 1, 1)
+			GameMenuFrameHeader.Backdrop:SetOutside(Region, 24, 6)
+			GameMenuFrameHeader.Backdrop:SetFrameLevel(GameMenuFrame:GetFrameLevel())
+		end
+	end
+	for _, Button in pairs({GameMenuFrame:GetChildren()}) do
+		if Button.IsObjectType and Button:IsObjectType("Button") then
+			AS:SkinButton(Button)
+		end
+	end
+
+	AS:SkinSlideBar(UnitPopupVoiceSpeakerVolume.Slider)
+	AS:SkinSlideBar(UnitPopupVoiceMicrophoneVolume.Slider)
+	AS:SkinSlideBar(UnitPopupVoiceUserVolume.Slider)
+
+	hooksecurefunc("UIDropDownMenu_CreateFrames", function(level, index)
+		local listFrame = _G["DropDownList"..level];
+		local listFrameName = listFrame:GetName();
+		local expandArrow = _G[listFrameName.."Button"..index.."ExpandArrow"];
+		if expandArrow then
+			expandArrow:SetNormalTexture([[Interface\AddOns\AddOnSkins\Media\Textures\Arrow]])
+			expandArrow:SetSize(12, 12)
+			expandArrow:GetNormalTexture():SetVertexColor(unpack(AS.Color))
+			expandArrow:GetNormalTexture():SetRotation(AS.ArrowRotation['right'])
+		end
+	end)
+
+	hooksecurefunc("UIDropDownMenu_SetIconImage", function(icon, texture)
+		if texture:find("Divider") then
+			local r, g, b = unpack(AS.Color)
+			icon:SetColorTexture(r, g, b, 0.45)
+			icon:SetHeight(1)
+		end
+	end)
+
+	hooksecurefunc("ToggleDropDownMenu", function(level)
+		if ( not level ) then
+			level = 1;
+		end
+
+		local r, g, b = unpack(AS.Color)
+
+		for i = 1, UIDROPDOWNMENU_MAXBUTTONS do
+			local button = _G["DropDownList"..level.."Button"..i]
+			local check = _G["DropDownList"..level.."Button"..i.."Check"]
+			local uncheck = _G["DropDownList"..level.."Button"..i.."UnCheck"]
+			local highlight = _G["DropDownList"..level.."Button"..i.."Highlight"]
+
+			highlight:SetTexture([[Interface\AddOns\AddOnSkins\Media\Textures\Highlight]])
+			highlight:SetVertexColor(r, g, b)
+
+			AS:CreateBackdrop(check)
+			if check.Backdrop then
+				check.Backdrop:Hide()
+			end
+
+			if not button.notCheckable then
+				uncheck:SetTexture('')
+				local _, co = check:GetTexCoord()
+				if co == 0 then
+					check:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+					check:SetVertexColor(r, g, b, 1)
+					check:SetSize(20, 20)
+					check:SetDesaturated(true)
+					check.Backdrop:SetInside(check, 4, 4)
+				else
+					check:SetTexture(AS.NormTex)
+					check:SetVertexColor(r, g, b, .6)
+					check:SetSize(10, 10)
+					check:SetDesaturated(false)
+					check.Backdrop:SetOutside(check)
+				end
+
+				check.Backdrop:Show()
+				check:SetTexCoord(0, 1, 0, 1);
+			else
+				check:SetSize(16, 16)
+			end
+		end
+	end)
+
+	AS:CreateBackdrop(SplashFrame)
+	AS:SkinButton(SplashFrame.BottomCloseButton)
+	AS:SkinCloseButton(SplashFrame.TopCloseButton)
 end
 
 AS:RegisterSkin('Blizzard_Others', AS.Blizzard_Others)

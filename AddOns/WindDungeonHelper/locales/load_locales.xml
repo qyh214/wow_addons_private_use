@@ -1,0 +1,5 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Include file="enus.lua"/>
+	<Include file="zhcn.lua"/>
+	<Include file="zhtw.lua"/>
+</Ui>

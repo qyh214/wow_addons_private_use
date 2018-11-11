@@ -1,6 +1,6 @@
 local AS = unpack(AddOnSkins)
 
-function AS:Blizzard_BarberShop(event, addon)
+function AS:Blizzard_BarbershopUI(event, addon)
 	if addon ~= "Blizzard_BarbershopUI" then return end
 
 	AS:SkinFrame(BarberShopFrame)
@@ -19,8 +19,8 @@ function AS:Blizzard_BarberShop(event, addon)
 		if selector then
 			selector:StripTextures()
 
-			AS:SkinNextPrevButton(selector.Prev, nil, true)
-			AS:SkinNextPrevButton(selector.Next)
+			AS:SkinArrowButton(selector.Prev, nil, true)
+			AS:SkinArrowButton(selector.Next)
 
 			if i ~= 1 then
 				selector:ClearAllPoints()
@@ -40,6 +40,8 @@ function AS:Blizzard_BarberShop(event, addon)
 
 	AS:SkinFrame(BarberShopAltFormFrame)
 	BarberShopAltFormFrame:SetPoint("BOTTOM", BarberShopFrame, "TOP", 0, 5)
+
+	AS:UnregisterSkinEvent(addon, event)
 end
 
-AS:RegisterSkin('Blizzard_BarberShop', AS.Blizzard_BarberShop, 'ADDON_LOADED')
+AS:RegisterSkin('Blizzard_BarbershopUI', AS.Blizzard_BarbershopUI, 'ADDON_LOADED')

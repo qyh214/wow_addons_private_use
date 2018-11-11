@@ -2,36 +2,55 @@ local AS = unpack(AddOnSkins)
 
 function AS:Blizzard_Friends()
 	AS:SkinFrame(FriendsFrame)
-	FriendsFrameIcon:SetTexture('')
+	FriendsFrameIcon:SetPoint('TOPLEFT', FriendsFrame, 'TOPLEFT', 0, 0)
+	FriendsFrameIcon:SetTexture([[Interface\AddOns\AddOnSkins\Media\Icons\Bnet]])
 	hooksecurefunc(FriendsFrameIcon, 'SetTexture', function(self, texture)
-		if texture ~= '' then
-			self:SetTexture('')
+		if texture ~= [[Interface\AddOns\AddOnSkins\Media\Icons\Bnet]] then
+			self:SetTexture([[Interface\AddOns\AddOnSkins\Media\Icons\Bnet]])
 		end
 	end)
+	FriendsListFrame:HookScript("OnShow", function()
+		FriendsFrameIcon:SetAlpha(1)
+	end)
+	FriendsListFrame:HookScript("OnHide", function()
+		FriendsFrameIcon:SetAlpha(0)
+	end)
+	FriendsFrame:HookScript("OnUpdate", function(self, elapsed)
+		AnimateTexCoords(FriendsFrameIcon, 512, 256, 64, 64, 25, elapsed, 0.01)
+	end)
+
+	AS:SkinCloseButton(FriendsFrame.CloseButton)
+	AS:SkinTooltip(FriendsTooltip)
+
 	AS:SkinBackdropFrame(FriendsFrameFriendsScrollFrame)
-	FriendsFrameFriendsScrollFrame.Backdrop:SetPoint('TOPLEFT', -4, 3)
+	FriendsFrameFriendsScrollFrame.Backdrop:SetPoint('TOPLEFT', -4, 1)
 	FriendsFrameFriendsScrollFrame.Backdrop:SetPoint('BOTTOMRIGHT', 0, -3)
+
 	AS:SkinScrollBar(FriendsFrameFriendsScrollFrameScrollBar)
-	AS:StripTextures(FriendsFrameInset)
-	AS:SkinFrame(FriendsTooltip, nil, true)
-	AS:SkinCloseButton(FriendsFrameCloseButton)
 	AS:SkinDropDownBox(FriendsFrameStatusDropDown, 70)
+	FriendsFrameStatusDropDown:SetPoint('TOPLEFT', 43, -24)
+	FriendsFrameStatusDropDownStatus:SetPoint('LEFT', '$parent', 'LEFT', 23, 0)
+
 	AS:SkinBackdropFrame(FriendsFrameBattlenetFrame)
-	FriendsFrameBattlenetFrame.Backdrop:SetPoint('TOPLEFT', -1, -3)
+	FriendsFrameBattlenetFrame.Backdrop:SetPoint('TOPLEFT', -1, -4)
 	FriendsFrameBattlenetFrame.Backdrop:SetPoint('BOTTOMRIGHT', -3, 5)
 	FriendsFrameBattlenetFrame.Backdrop:SetBackdropColor(24/255, 40/255, 55/255)
-	FriendsFrameBattlenetFrame.BroadcastButton:SetSize(17, 17)
-	FriendsFrameBattlenetFrame.BroadcastButton:SetPoint("LEFT", FriendsFrameBattlenetFrame, "RIGHT", 2, 1)
-	AS:SkinBackdropFrame(FriendsFrameBattlenetFrame.BroadcastButton, nil, true)
-	AS:StripTextures(FriendsFrameBattlenetFrame.BroadcastButton)
+
+	AS:SkinButton(FriendsFrameBattlenetFrame.BroadcastButton)
+	FriendsFrameBattlenetFrame.BroadcastButton:SetPoint("LEFT", FriendsFrameBattlenetFrame, "RIGHT", 2, 0)
+	FriendsFrameBattlenetFrame.BroadcastButton:SetSize(20, 20)
 	FriendsFrameBattlenetFrame.BroadcastButton:SetNormalTexture([[Interface\FriendsFrame\BroadcastIcon]])
-	FriendsFrameBattlenetFrame.BroadcastButton.SetNormalTexture = AS.Noop
+	FriendsFrameBattlenetFrame.BroadcastButton:GetNormalTexture():SetInside()
 	FriendsFrameBattlenetFrame.BroadcastButton:SetPushedTexture([[Interface\FriendsFrame\BroadcastIcon]])
+	FriendsFrameBattlenetFrame.BroadcastButton.SetNormalTexture = AS.Noop
 	FriendsFrameBattlenetFrame.BroadcastButton.SetPushedTexture = AS.Noop
+
 	AS:SkinFrame(FriendsFrameBattlenetFrame.BroadcastFrame)
-	AS:SkinFrame(FriendsFrameBattlenetFrame.BroadcastFrame.ScrollFrame)
+	AS:SkinBackdropFrame(FriendsFrameBattlenetFrame.BroadcastFrame.ScrollFrame)
+	FriendsFrameBattlenetFrame.BroadcastFrame.ScrollFrame.Backdrop:SetOutside(FriendsFrameBattlenetFrame.BroadcastFrame.ScrollFrame, 3, 3)
 	AS:SkinButton(FriendsFrameBattlenetFrame.BroadcastFrame.ScrollFrame.CancelButton)
 	AS:SkinButton(FriendsFrameBattlenetFrame.BroadcastFrame.ScrollFrame.UpdateButton)
+
 	AS:SkinButton(FriendsFrameAddFriendButton)
 	AS:SkinButton(FriendsFrameSendMessageButton)
 	AS:SkinButton(FriendsFrameIgnorePlayerButton)
@@ -42,30 +61,19 @@ function AS:Blizzard_Friends()
 	FriendsFrameIgnoreScrollFrame:SetHeight(294)
 	FriendsFrameIgnoreScrollFrameScrollBar:SetPoint("TOPLEFT", FriendsFrameIgnoreScrollFrame, "TOPRIGHT", 42, -10)
 
-	--[[
-	AS:StripTextures(PendingListFrame)
-	AS:SkinButton(FriendsFramePendingButton1AcceptButton)
-	AS:SkinButton(FriendsFramePendingButton1DeclineButton)
-	AS:SkinButton(FriendsFramePendingButton2AcceptButton)
-	AS:SkinButton(FriendsFramePendingButton2DeclineButton)
-	AS:SkinButton(FriendsFramePendingButton3AcceptButton)
-	AS:SkinButton(FriendsFramePendingButton3DeclineButton)
-	AS:SkinButton(FriendsFramePendingButton4AcceptButton)
-	AS:SkinButton(FriendsFramePendingButton4DeclineButton)
-	]]
-
-	AS:SkinFrame(FriendsFriendsFrame, nil, nil, true)
-	AS:SkinFrame(FriendsFriendsList)
-	AS:SkinDropDownBox(FriendsFriendsFrameDropDown, 150)
+	AS:SkinFrame(FriendsFriendsFrame)
+	AS:SkinFrame(FriendsFriendsScrollFrame)
+	AS:StripTextures(FriendsFriendsList)
+	AS:SkinDropDownBox(FriendsFriendsFrameDropDown)
 	AS:SkinScrollBar(FriendsFriendsScrollFrameScrollBar)
 	AS:SkinButton(FriendsFriendsSendRequestButton)
 	AS:SkinButton(FriendsFriendsCloseButton)
 
-	AS:SkinButton(FriendsTabHeaderRecruitAFriendButton)
-	AS:StyleButton(FriendsTabHeaderRecruitAFriendButton)
-	FriendsTabHeaderRecruitAFriendButtonIcon:SetDrawLayer("OVERLAY")
-	AS:SkinTexture(FriendsTabHeaderRecruitAFriendButtonIcon)
-	FriendsTabHeaderRecruitAFriendButtonIcon:SetInside()
+	AS:SkinButton(FriendsTabHeader.RaFButton)
+	AS:StyleButton(FriendsTabHeader.RaFButton)
+	AS:SkinTexture(FriendsTabHeader.RaFButton.Icon)
+	FriendsTabHeader.RaFButton.Icon:SetDrawLayer("ARTWORK")
+	FriendsTabHeader.RaFButton.Icon:SetInside()
 
 	AS:SkinFrame(RecruitAFriendFrame)
 	AS:SkinEditBox(RecruitAFriendNameEditBox)
@@ -102,7 +110,7 @@ function AS:Blizzard_Friends()
 	WhoFrameEditBox:SetPoint("BOTTOM", 1, 30)
 	AS:StripTextures(WhoListScrollFrame, true)
 
-	AS:SkinDropDownBox(WhoFrameDropDown, 150)
+	AS:SkinDropDownBox(WhoFrameDropDown)
 
 	for i = 1, 3 do
 		AS:SkinTab(_G["FriendsFrameTab"..i])
