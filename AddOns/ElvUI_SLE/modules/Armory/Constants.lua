@@ -60,6 +60,7 @@ Info.Armory_Constants = {
 	EnchantKey = ENCHANTED_TOOLTIP_LINE:gsub('%%s', '(.+)'),
 	ItemSetBonusKey = ITEM_SET_BONUS:gsub('%%s', '(.+)'),
 	ItemUpgradeKey = ITEM_UPGRADE_TOOLTIP_FORMAT:gsub('%%d', '(.+)'),
+	ItemRaceKey = ITEM_RACES_ALLOWED:gsub('%%s', '(.+)'),
 	HonorLevel = HONOR_LEVEL_LABEL:gsub('%%d', '%%s'),
 	HonorKills = INSPECT_HONORABLE_KILLS:gsub('%%d', '%%s'):gsub("|cffffd200", ""),
 	--TransmogrifiedKey = TRANSMOGRIFIED:gsub('%%s', '(.+)'),
@@ -126,10 +127,17 @@ Info.Armory_Constants = {
 		[ITEM_BIND_TO_ACCOUNT] = true,
 		[ITEM_BIND_TO_BNETACCOUNT] = true
 	},
+	TransmogHeader = { 
+		[TRANSMOGRIFIED_HEADER] = true
+	},
 	
 	CanTransmogrifySlot = {
 		HeadSlot = true, ShoulderSlot = true, BackSlot = true, ChestSlot = true, WristSlot = true,
 		HandsSlot = true, WaistSlot = true, LegsSlot = true, FeetSlot = true, MainHandSlot = true, SecondaryHandSlot = true
+	},
+
+	AzeriteSlot = {
+		HeadSlot = true, ShoulderSlot = true, ChestSlot = true,
 	},
 
 	CanIllusionSlot = {
@@ -144,7 +152,9 @@ Info.Armory_Constants = {
 		['Alliance-bliz'] = [[Interface\LFGFrame\UI-PVP-BACKGROUND-Alliance]],
 		['Horde-bliz'] = [[Interface\LFGFrame\UI-PVP-BACKGROUND-Horde]],
 		['Arena-bliz'] = [[Interface\PVPFrame\PvpBg-NagrandArena-ToastBG]]
-	}
+	},
+
+	AzeriteTraitAvailableColor = {0.95, 0.95, 0.32, 1},
 }
 	
 for ProfessionID, ProfessionKey in pairs({

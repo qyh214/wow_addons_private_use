@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Taerar", "DBM-Azeroth")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 659 $"):sub(12, -3))
 mod:SetCreatureID(121911)--121911 TW ID, 14890 classic ID
 --mod:SetModelID(17887)
 mod:SetZone()
@@ -36,10 +36,10 @@ function mod:OnCombatStart(delay, yellTriggered)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 243661 then
+	if args.spellId == 243661 and self:AntiSpam(3, 1) then
 		warningBellowingRoar:Show()
 		timerBellowingRoarCD:Start()
-	elseif args.spellId == 243401 then
+	elseif args.spellId == 243401 and self:AntiSpam(3, 2) then
 		timerNoxiousBreathCD:Start()
 	end
 end

@@ -31,7 +31,7 @@ local m = {
 			local r, g, b = f:GetBackdropColor()
 			f:SetBackdropColor(r, g, b, alpha)
 		end
-		
+
 		if not readOnly then
 			e.userData.backdropAlpha = nil
 			e.userData.orgBackdropAlpha = nil

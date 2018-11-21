@@ -80,7 +80,7 @@ function SLE:DropdownList(list, frame, customWidth, justify)
 
 		local icon = ""
 		if list[i].icon then
-			icon = "|T"..list[i].icon..":14:14|t "
+			icon = "|T"..list[i].icon..":14:14:0:0:64:64:4:60:4:60|t "
 		end
 
 		btn.text:SetText(icon..list[i].text)
@@ -123,7 +123,7 @@ function SLE:DropdownList(list, frame, customWidth, justify)
 			elseif btn.secure.buttonType == "macro" then
 				btn:SetAttribute("macrotext", btn.secure.ID)
 			else
-				SLE:ErrorPrint("Wrong argument for button type: "..btn.secure.buttonType)
+				SLE:Print("Wrong argument for button type: "..btn.secure.buttonType, "error")
 			end
 		end
 		btn.UseTooltip = list[i].UseTooltip

@@ -60,6 +60,7 @@
 	<Script file="Hack.lua"/>
 	<Script file="Healium.lua"/>
 	<Script file="Hekili.lua"/>
+	<Script file="Immersion.lua"/>
 	<Script file="InboxMailBag.lua"/>
 	<Script file="Incoming.lua"/>
 	<Script file="InspectEquip.lua"/>
@@ -131,6 +132,7 @@
 	<Script file="TrainAll.lua"/>
 	<Script file="Vendomatic.lua"/>
 	<Script file="WardrobeSort.lua"/>
+	<Script file="WeakAuras.lua"/>
 	<Script file="WhisperPop.lua"/>
 	<Script file="Wholly.lua"/>
 	<Script file="WorldBossStatus.lua"/>

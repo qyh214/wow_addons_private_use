@@ -305,7 +305,8 @@ local function List_AltCurrencyFrame_Update(item, texture, cost, itemID, currenc
 	item.count:SetText(cost);
 	item.icon:SetTexture(texture);
 	item.count:SetPoint("RIGHT", item.icon, "LEFT", -2, 0);
-	item.icon:SetTexCoord(0, 1, 0, 1);
+	-- item.icon:SetTexCoord(0, 1, 0, 1);
+	item.icon:SetTexCoord(unpack(E.TexCoords));
 
 	local iconWidth = 17;
 	item.icon:SetWidth(iconWidth);
@@ -463,6 +464,7 @@ local function List_MerchantUpdate()
 			
 			button.itemname:SetText((numAvailable >= 0 and "|cffffffff["..numAvailable.."]|r " or "")..(quantity > 1 and "|cffffffff"..quantity.."x|r " or "")..(name or "|cffff0000"..RETRIEVING_ITEM_INFO));
 			button.icon:SetTexture(texture);
+			button.icon:SetTexCoord(unpack(E.TexCoords));
 			
 			List_UpdateAltCurrency(button, offset, i);
 			if ( extendedCost and price <= 0 ) then
@@ -721,6 +723,15 @@ local function MerchantListSkinInit()
 
 	hooksecurefunc("MerchantFrame_Update", ListStyle_Update);
 	hooksecurefunc("MerchantFrame_OnHide", ListItem_OnHide);
+	hooksecurefunc("MerchantFrame_UpdateCurrencies", function()
+		for index = 1, 3 do
+			local tokenButton = _G["MerchantToken"..index];
+			if tokenButton and not tokenButton.SLE_ListMerchantStyled then
+				tokenButton.icon:SetTexCoord(unpack(E.TexCoords))
+				tokenButton.SLE_ListMerchantStyled = true
+			end
+		end
+	end);
 
 	_G["MerchantBuyBackItem"]:ClearAllPoints();
 	_G["MerchantBuyBackItem"]:SetPoint("TOPRIGHT", frame.scrollframe, "BOTTOMRIGHT", 17, -12);
@@ -736,7 +747,7 @@ local function MerchantListSkinInit()
 		E:Delay(0.25, function() List_CurrencyUpdate(); List_MerchantUpdate(); MerchantUpdating = false end)
 	end)
 	if not locale[GetLocale()] then
-		SLE:ErrorPrint("Your language is unavailable for selected merchant style. We would appretiate if ou contact us and provide needed translations.")
+		SLE:Print("Your language is unavailable for selected merchant style. We would appretiate if you contact us and provide needed translations.", "warning")
 	end
 	CreateFrame("GameTooltip", "SLE_Merchant_HiddenTooltip", UIParent, "GameTooltipTemplate");
 end

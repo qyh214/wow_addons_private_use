@@ -345,7 +345,7 @@ function CA:PaperDollFrame_UpdateStats()
 		if E.db.sle.Armory.Character.Stats.IlvlColor then
 			local R, G, B = E:ColorGradient((equipped / total), 1, 0, 0, 1, 1, 0, 0, 1, 0)
 			local avColor = E.db.sle.Armory.Character.Stats.AverageColor
-			_G["CharacterStatsPane"].ItemLevelFrame.Value:SetFormattedText("%s%.2f|r / %s%.2f|r", E:RGBToHex(R, G, B), equipped, E:RGBToHex(avColor.r, avColor.g, avColor.b), total)
+			_G["CharacterStatsPane"].ItemLevelFrame.Value:SetFormattedText("%s%.2f|r |cffffffff/|r %s%.2f|r", E:RGBToHex(R, G, B), equipped, E:RGBToHex(avColor.r, avColor.g, avColor.b), total)
 		else
 			_G["CharacterStatsPane"].ItemLevelFrame.Value:SetFormattedText("%.2f / %.2f", equipped, total)
 		end
@@ -410,6 +410,8 @@ function CA:PaperDollFrame_UpdateStats()
 			if ( showStat ) then
 				statFrame.onEnterFunc = nil;
 				PAPERDOLL_STATINFO[stat.stat].updateFunc(statFrame, "player");
+				statFrame.Label:FontTemplate(E.LSM:Fetch('font', E.db.sle.Armory.Character.Stats.ItemLevel.font), 12, E.db.sle.Armory.Character.Stats.ItemLevel.outline)
+				statFrame.Value:FontTemplate(E.LSM:Fetch('font', E.db.sle.Armory.Character.Stats.ItemLevel.font), 12, E.db.sle.Armory.Character.Stats.ItemLevel.outline)
 				if ( not stat.hideAt or stat.hideAt ~= statFrame.numericValue ) then
 					if ( numStatInCat == 0 ) then
 						if ( lastAnchor ) then

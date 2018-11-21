@@ -5,6 +5,7 @@ local SLE, T, E, L, V, P, G = unpack(select(2, ...))
 local KF, Info, Timer = unpack(ElvUI_KnightFrame)
 local ElvUI_BagModule, ElvUI_DataBars = SLE:GetElvModules("Bags", "DataBars")
 local Lib_Search = LibStub('LibItemSearch-1.2-ElvUI')
+local LCG = LibStub('LibCustomGlow-1.0')
 --GLOBALS: CreateFrame, UIParent, SLE_ArmoryDB, hooksecurefunc, GetInventoryItemGems
 
 local _
@@ -318,7 +319,12 @@ function CA:Setup_CharacterArmory()
 
 		-- Azerite
 		hooksecurefunc(_G["Character"..SlotName], "SetAzeriteItem", function(self, itemLocation)
-			if not itemLocation or not CA[SlotName].AzeriteAnchor then return end
+			if not CA[SlotName].AzeriteAnchor then return end
+			if not itemLocation then
+				CA[SlotName].AzeriteAnchor:Hide()
+				LCG.PixelGlow_Stop(self, "_AzeriteTraitGlow")
+				return
+			end
 			self.AzeriteTexture:Hide()
 			self.AvailableTraitFrame:Hide()
 			local isAzeriteEmpoweredItem = C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(itemLocation);
@@ -326,15 +332,15 @@ function CA:Setup_CharacterArmory()
 				CA[SlotName].AzeriteAnchor:Show()
 			else
 				CA[SlotName].AzeriteAnchor:Hide()
-				ActionButton_HideOverlayGlow(self)
+				LCG.PixelGlow_Stop(self, "_AzeriteTraitGlow")
 			end
 		end)
 
 		hooksecurefunc(_G["Character"..SlotName], "DisplayAsAzeriteEmpoweredItem", function(self, itemLocation)
 			if HasAnyUnselectedPowers(itemLocation) then
-				ActionButton_ShowOverlayGlow(self)
+				LCG.PixelGlow_Start(self, Info.Armory_Constants.AzeriteTraitAvailableColor, nil,-0.25,nil, 3, nil,nil,nil, "_AzeriteTraitGlow")
 			else
-				ActionButton_HideOverlayGlow(self)
+				LCG.PixelGlow_Stop(self, "_AzeriteTraitGlow")
 			end
 		end)
 
@@ -403,7 +409,7 @@ function CA:Setup_CharacterArmory()
 				FontSize = E.db.sle.Armory.Character.Durability.FontSize,
 				FontStyle = E.db.sle.Armory.Character.Durability.FontStyle,
 				directionH = Slot.Direction
-			}, 'TOP'..Slot.Direction, _G["Character"..SlotName], 'TOP'..Slot.Direction, Slot.Direction == 'LEFT' and 0 + E.db.sle.Armory.Character.Durability.xOffset or 0 - E.db.sle.Armory.Character.Durability.xOffset, -3 + E.db.sle.Armory.Character.Durability.yOffset)
+			}, 'TOP'..Slot.Direction, _G["Character"..SlotName], 'TOP'..Slot.Direction, Slot.Direction == 'LEFT' and 2 + E.db.sle.Armory.Character.Durability.xOffset or 0 - E.db.sle.Armory.Character.Durability.xOffset, -3 + E.db.sle.Armory.Character.Durability.yOffset)
 			
 			Slot.Durability = _G["Character"..SlotName].Durability
 			
@@ -481,17 +487,19 @@ function CA:Setup_CharacterArmory()
 			end
 
 		-- Azerite
-		Slot.AzeriteAnchor = CreateFrame('Button', nil, Slot)
-		Slot.AzeriteAnchor:Size(41)
-		Slot.AzeriteAnchor:SetFrameLevel(Slot:GetFrameLevel() + 1)
-		Slot.AzeriteAnchor:Point('TOP'..Slot.Direction, Slot, Slot.Direction == 'LEFT' and -2 or 2, -1)
+		if Info.Armory_Constants.AzeriteSlot[SlotName] then
+			Slot.AzeriteAnchor = CreateFrame('Button', nil, Slot)
+			Slot.AzeriteAnchor:Size(41)
+			Slot.AzeriteAnchor:SetFrameLevel(Slot:GetFrameLevel() + 1)
+			Slot.AzeriteAnchor:Point('TOP'..Slot.Direction, Slot, Slot.Direction == 'LEFT' and -2 or 2, -1)
 
-		Slot.AzeriteAnchor.Texture = Slot.AzeriteAnchor:CreateTexture(nil, 'OVERLAY')
-		Slot.AzeriteAnchor.Texture:SetAtlas("AzeriteIconFrame")
-		Slot.AzeriteAnchor.Texture:SetTexCoord(0,1,0,1)
-		Slot.AzeriteAnchor.Texture:SetInside()
+			Slot.AzeriteAnchor.Texture = Slot.AzeriteAnchor:CreateTexture(nil, 'OVERLAY')
+			Slot.AzeriteAnchor.Texture:SetAtlas("AzeriteIconFrame")
+			Slot.AzeriteAnchor.Texture:SetTexCoord(0,1,0,1)
+			Slot.AzeriteAnchor.Texture:SetInside()
 
-		Slot.AzeriteAnchor:Hide()
+			Slot.AzeriteAnchor:Hide()
+		end
 
 			-- Illusion
 			if Info.Armory_Constants.CanIllusionSlot[SlotName] then
@@ -628,7 +636,11 @@ function CA:Update_Gear()
 		ErrorDetected = nil
 
 		if not (SlotName == 'ShirtSlot' or SlotName == 'TabardSlot') then
-			do --<< Clear Setting >>--
+			local ItemInfoAvailable
+			if ItemLink then
+				ItemInfoAvailable = T.GetItemInfo(ItemLink)
+			end
+			if ItemInfoAvailable or not ItemLink then --<< Clear Setting >>--
 				NeedUpdate, TrueItemLevel, UsableEffect, ItemUpgradeID, CurrentUpgrade, MaxUpgrade, ItemType, ItemTexture, IsTransmogrified = nil, nil, nil, nil, nil, nil, nil, nil, nil
 				Slot.ItemRarity = nil
 				Slot.ItemLevel:SetText(nil)
@@ -654,17 +666,21 @@ function CA:Update_Gear()
 					Slot.TransmogrifyAnchor.SourceID = nil
 					Slot.TransmogrifyAnchor.Link = nil
 					Slot.TransmogrifyAnchor:Hide()
+					LCG.AutoCastGlow_Stop(_G["Character"..SlotName],"_TransmogGlow")
 				end
 				
 				if Slot.IllusionAnchor then
 					Slot.IllusionAnchor.Link = nil
 					Slot.IllusionAnchor:Hide()
 				end
+			else
+				NeedUpdate = true
 			end
-			if ItemLink then
+			if ItemLink and ItemInfoAvailable then
 				if not ItemLink:find('%[%]') then -- sometimes itemLink is malformed so we need to update when crashed
 
 					ItemData = { T.split(':', ItemLink) }
+					local ItemInfoAvailable
 
 					_, _, Slot.ItemRarity, BasicItemLevel, _, _, _, _, ItemType = T.GetItemInfo(ItemLink)
 					R, G, B = T.GetItemQualityColor(Slot.ItemRarity)
@@ -854,6 +870,7 @@ function CA:Update_Gear()
 					if Slot.TransmogrifyAnchor and C_Transmog_GetSlotInfo(Slot.ID, LE_TRANSMOG_TYPE_APPEARANCE) then
 						Slot.TransmogrifyAnchor.Link = T.select(6, C_TransmogCollection_GetAppearanceSourceInfo(T.select(3, C_Transmog_GetSlotVisualInfo(Slot.ID, LE_TRANSMOG_TYPE_APPEARANCE))));
 						Slot.TransmogrifyAnchor:Show()
+						LCG.AutoCastGlow_Start(_G["Character"..SlotName],{1, .5, 1, 1},6,0.25,1.2,nil,nil,"_TransmogGlow")
 					end
 					--<< Illusion Parts >>--
 					if Slot.IllusionAnchor then
@@ -873,6 +890,8 @@ function CA:Update_Gear()
 				else
 					NeedUpdate = true
 				end
+			else
+				NeedUpdate = true
 			end
 
 			if NeedUpdate then
@@ -963,7 +982,7 @@ function CA:Update_Display(Force)
 				else
 					Slot.Durability:Hide()
 				end
-				Slot.Durability:Point('TOP'..Slot.Direction, _G["Character"..SlotName], 'TOP'..Slot.Direction, Slot.Direction == 'LEFT' and 0 + E.db.sle.Armory.Character.Durability.xOffset or 0 - E.db.sle.Armory.Character.Durability.xOffset, -3 + E.db.sle.Armory.Character.Durability.yOffset)
+				Slot.Durability:Point('TOP'..Slot.Direction, _G["Character"..SlotName], 'TOP'..Slot.Direction, Slot.Direction == 'LEFT' and 2 + E.db.sle.Armory.Character.Durability.xOffset or 0 - E.db.sle.Armory.Character.Durability.xOffset, -3 + E.db.sle.Armory.Character.Durability.yOffset)
 			end
 
 			SocketVisible = nil

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Vashj", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 654 $"):sub(12, -3))
 mod:SetCreatureID(21212)
 mod:SetEncounterID(628)
 mod:SetModelID(20748)
@@ -74,9 +74,6 @@ function mod:OnCombatStart(delay)
 	self.vb.nagaCount = 1
 	self.vb.striderCount = 1
 	self.vb.elementalCount = 1
-	if self.Options.RangeFrame then
-		DBM.RangeCheck:Show()
-	end
 --	if IsInGroup() and DBM:GetRaidRank() == 2 then
 --		lootmethod, _, masterlooterRaidID = GetLootMethod()
 --	end
@@ -102,6 +99,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnCharge:Show()
 			specWarnCharge:Play("runout")
 			yellCharge:Yell()
+			if self.Options.RangeFrame then
+				DBM.RangeCheck:Show()
+			end
 		else
 			warnCharge:Show(args.destName)
 		end
@@ -119,6 +119,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerCharge:Stop(args.destName)
 		if self.Options.ChargeIcon then
 			self:SetIcon(args.destName, 0)
+		end
+		if args:IsPlayer() then
+			if self.Options.RangeFrame then
+				DBM.RangeCheck:Hide()
+			end
 		end
 	elseif args.spellId == 38132 then
 		if self.Options.LootIcon then
@@ -196,14 +201,16 @@ end
 function mod:CHAT_MSG_LOOT(msg)
 	-- DBM:AddMsg(msg) --> Meridium receives loot: [Magnetic Core]
 	local player, itemID = msg:match(L.LootMsg)
-	player = DBM:GetUnitFullName(player)
 	if player and itemID and tonumber(itemID) == 31088 and self:IsInCombat() then
 		self:SendSync("LootMsg", player)
 	end
 end
 
-function mod:OnSync(event, args)
-	if event == "LootMsg" and args then
-		warnLoot:Show(args)
+function mod:OnSync(event, playerName)
+	if event == "LootMsg" and playerName then
+		playerName = DBM:GetUnitFullName(playerName)
+		if self:AntiSpam(2, playerName) then
+			warnLoot:Show(playerName)
+		end
 	end
 end

@@ -15,7 +15,7 @@ local orc = blizzPath..[[Achievement_Character_Orc_Male:16:16|t ]]
 local goldicon = [[|TInterface\MONEYFRAME\UI-GoldIcon:12:12|t]]
 local classTable = {
 	deathknight = blizzPath..[[ClassIcon_DeathKnight:16:16|t ]],
-	-- demonhunter = blizzPath..[[ClassIcon_DemonHunter:16:16|t ]],
+	demonhunter = blizzPath..[[ClassIcon_DemonHunter:16:16|t ]],
 	druid = blizzPath..[[ClassIcon_Druid:16:16|t ]],
 	hunter = blizzPath..[[ClassIcon_Hunter:16:16|t ]],
 	mage = blizzPath..[[ClassIcon_Mage:16:16|t ]],
@@ -115,7 +115,7 @@ SLE.SpecialChatIcons = {
 		["Ревущийфьорд"] = {
 			["Рыжая"] = friend,
 			["Рыжа"] = friend,
-			["Шензори"] = classTable.hunter,
+			["Шензо"] = classTable.hunter,
 			--Some people
 			["Маразм"] = classTable.shaman,
 			["Брэгар"] = test

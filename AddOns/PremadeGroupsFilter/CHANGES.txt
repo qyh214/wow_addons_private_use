@@ -1,28 +1,22 @@
-lightweight tag a08a0671b67004d9613e83427bde05b658a95aa7 1.22
+lightweight tag 5cdaa0bd6672368df3cb9aee5b21502bd2a9ef7e 1.23
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Wed Oct 17 16:42:08 2018 +0200
+Date:	Tue Nov 13 19:42:22 2018 +0100
 
-commit a08a0671b67004d9613e83427bde05b658a95aa7
+commit 5cdaa0bd6672368df3cb9aee5b21502bd2a9ef7e
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Wed Oct 17 16:42:08 2018 +0200
+Date:   Tue Nov 13 19:42:22 2018 +0100
 
-    Advanced expression is now put in braces to avoid operator precedence mistakes when using the or-operator
+    Better indentation
 
-commit fe3b9fc3eb6a0bc8ac05c92828d9aeac6b91978f
+commit 39cff2a20cd9665c84f4e04c7d245c4493647387
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Wed Oct 17 16:40:29 2018 +0200
+Date:   Sun Nov 11 12:36:11 2018 +0100
 
-    Added raider.io aliases ml, undr and siege
+    Added support for mythic+ RaiderIO metrics (if addon is installed) with new keywords: hasrio, norio, rio, riodps, rioheal, riotank, riokey5plus, riokey10plus, riokey15plus and riokeymax
 
-commit a303af7b1544341be13eb4183c4cf81f21cc79bd
+commit f021878a0675c7dbb1b31168d8e7bf806b5c57ce
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sun Sep 16 22:52:40 2018 +0200
+Date:   Wed Oct 17 16:59:59 2018 +0200
 
-    Set version to next release version: 1.22
-
-commit 87ec4a5cd00dd683f088610456c9798ef9d3551c
-Author: Ahmed Snoussi <ahmed@roadoo-network.com>
-Date:   Sun Sep 16 22:48:52 2018 +0200
-
-    Added 2v2 and 3v3 filtering (#13)
+    Set version to next release version: 1.23
 

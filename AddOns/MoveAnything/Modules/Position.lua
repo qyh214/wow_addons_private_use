@@ -120,7 +120,7 @@ local m = {
 			umfp = true
 			f.ignoreFramePositionManager = nil
 		end
-		
+
 		if opt.orgPos then
 			self:RestoreOrgPoints(f, opt, readOnly)
 		else

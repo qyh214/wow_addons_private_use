@@ -451,7 +451,7 @@ L["Delete character info"] = true
 L["Remove selected character from the stored gold values"] = true
 L["Are you sure you want to remove |cff1784d1%s|r from currency datatexts?"] = true
 L["Hide panel background"] = true
-L["SLE_DT_CURRENCY_WARNING_GOLD"] = [[Your datapanel %s has ElvUI's "Gold" datatext active while "S&L Currency" datatext is selected elsewhere. To ensure the correct functioning of "S&L Currency" datatext we are disabling some functions of "Gold" datatext. To avoid this conflict you need to replace one of conflicting datatexts.]]
+L["SLE_DT_CURRENCY_WARNING_GOLD"] = [[Your datapanel %s has ElvUI's |cff3cbf27"Gold"|r datatext active while |cff3cbf27"S&L Currency"|r datatext is selected elsewhere. To ensure the correct functioning of |cff3cbf27"S&L Currency"|r datatext we are disabling some functions of |cff3cbf27"Gold"|r datatext. To avoid this conflict you need to replace one of conflicting datatexts.]]
 L["Gold Sorting"] = true
 L["Normal"] = true
 L["Reversed"] = true
@@ -657,6 +657,7 @@ L["Ignore missing info"] = true
 L["SLE_LOCPANEL_IGNOREMISSINGINFO"] = [[Due to how client functions some item info may become unavailable for a period of time. This mostly happens to toys info.
 When called the menu will wait for all information being available before showing up. This may resul in menu opening after some concidarable amount of time, depends on how fast the server will answer info requests.
 By enabling this option you'll make the menu ignore items with missing info, resulting in them not showing up in the list.]]
+L["HS Toys Order"] = true
 
 --Miscs
 L["Error Frame"] = true
@@ -830,12 +831,6 @@ L["Auto Work Orders for equipment"] = true
 L["Always Compare Items"] = true
 L["Faction Icon"] = true
 L["Show faction icon to the left of player's name on tooltip."] = true
-L["TTOFFSET_DESC"] = "This adds the ability to have the tooltip offset from the cursor.  Make sure to have the \"Cursor Anchor\" option enabled in ElvUI's Tooltip section to use this feature."
-L["Tooltip Cursor Offset"] = true
-L["Tooltip X-offset"] = true
-L["Offset the tooltip on the X-axis."] = true
-L["Tooltip Y-offset"] = true
-L["Offset the tooltip on the Y-axis."] = true
 L["RAID_TOS"] = "ToS"
 L["RAID_NH"] = "NH"
 L["RAID_TOV"] = "ToV"

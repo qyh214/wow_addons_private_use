@@ -58,6 +58,8 @@ end
 --{ItemID, ButtonText, isToy}
 LP.Hearthstones = {
 	{6948}, --Hearthstone
+	{163045, nil, true}, --Hallow HS
+	{162973, nil, true}, --Winter HS
 	{93672, nil, true}, --Dark Portal
 	{54452, nil, true}, --Etherial Portal
 	{142542, nil, true}, --Tome of Town Portal (Diablo Event)
@@ -119,6 +121,9 @@ LP.Spells = {
 	},
 	["WARLOCK"] = {},
 	["WARRIOR"] = {},
+	["DarkIronDwarf"] = {
+		[1] = {text = T.GetSpellInfo(265225),icon = SLE:GetIconFromID("spell", 265225),secure = {buttonType = "spell",ID = 265225}, UseTooltip = true}, -- Mole Machine (Dark Iron Dwarfs)
+	},
 	["teleports"] = {
 		["Horde"] = {
 			[1] = {text = T.GetSpellInfo(3563),icon = SLE:GetIconFromID("spell", 3563),secure = {buttonType = "spell",ID = 3563}, UseTooltip = true},-- TP:Undercity
@@ -263,7 +268,7 @@ function LP:OnClick(btn)
 			ToggleFrame(_G["WorldMapFrame"])
 		end
 	elseif btn == "RightButton" and LP.db.portals.enable and not T.InCombatLockdown() then
-		if LP.ListBuilding then SLE:ErrorPrint(L["Info for some items is not available yet. Please try again later"]) return end
+		if LP.ListBuilding then SLE:Print(L["Info for some items is not available yet. Please try again later"], "error") return end
 		LP:PopulateDropdown(true)
 	end
 end
@@ -420,25 +425,42 @@ function LP:ItemList(check)
 	T.tinsert(LP.MainMenu, {text = ITEMS..":", title = true, nohighlight = true})
 
 	if LP.db.portals.showHearthstones then
+		local priority = 100
+		local ShownHearthstone
+		local tmp = {}
+		local hsPrio = {T.split(",", E.db.sle.minimap.locPanel.portals.hsPrio)}
+		local hsRealPrio = {}
+		for key = 1, #hsPrio do hsRealPrio[hsPrio[key]] = key end
 		for i = 1, #LP.Hearthstones do
-			local tmp = {}
 			local data = LP.Hearthstones[i]
 			local ID, isToy = data.secure.ID, data.secure.isToy
 			isToy = (LP.db.portals.showToys and isToy)
 			if not LP.db.portals.ignoreMissingInfo and ((isToy and PlayerHasToy(ID)) and C_ToyBox.IsToyUsable(ID) == nil) then return false end
 			if (not isToy and (SLE:BagSearch(ID) and T.IsUsableItem(ID))) or (isToy and (PlayerHasToy(ID) and C_ToyBox.IsToyUsable(ID))) then
 				if data.text then
-					local cd = DD:GetCooldown("Item", ID)
-					E:CopyTable(tmp, data)
-					if cd or (T.tonumber(cd) and T.tonumber(cd) > 1.5) then
-						tmp.text = "|cff636363"..tmp.text.."|r"..T.format(LP.CDformats[LP.db.portals.cdFormat], cd)
-						T.tinsert(LP.MainMenu, tmp)
+					if not isToy then
+						ShownHearthstone = data
+						break
 					else
-						T.tinsert(LP.MainMenu, data)
+						local curPriorirty = hsRealPrio[T.tostring(ID)]
+						if curPriorirty < priority then
+							priority = curPriorirty
+							ShownHearthstone = data
+						end
+						if priority == 1 then break end
 					end
-					break
 				end
 			end
+		end
+		local data = ShownHearthstone
+		local ID, isToy = data.secure.ID, data.secure.isToy
+		local cd = DD:GetCooldown("Item", ID)
+		E:CopyTable(tmp, data)
+		if cd or (T.tonumber(cd) and T.tonumber(cd) > 1.5) then
+			tmp.text = "|cff636363"..tmp.text.."|r"..T.format(LP.CDformats[LP.db.portals.cdFormat], cd)
+			T.tinsert(LP.MainMenu, tmp)
+		else
+			T.tinsert(LP.MainMenu, data)
 		end
 	end
 
@@ -458,7 +480,6 @@ function LP:ItemList(check)
 				else
 					T.tinsert(LP.MainMenu, data)
 				end
-
 			end
 		end
 	end
@@ -523,7 +544,7 @@ function LP:PopulateDropdown(click)
 	if LP.Menu2:IsShown() then ToggleFrame(LP.Menu2) return end
 	local full_list = LP:ItemList()
 	if not full_list then
-		if not LP.ListUpdating then SLE:ErrorPrint(L["Item info is not available. Waiting for it. This can take some time. Menu will be opened automatically when all info becomes available. Calling menu again during the update will cancel it."]); LP.ListUpdating = true end
+		if not LP.ListUpdating then SLE:Print(L["Item info is not available. Waiting for it. This can take some time. Menu will be opened automatically when all info becomes available. Calling menu again during the update will cancel it."], "error"); LP.ListUpdating = true end
 		if not LP.InfoUpdatingTimer then LP.InfoUpdatingTimer = LP:ScheduleTimer(LP.PopulateDropdown, 3) end
 		T.twipe(LP.MainMenu)
 		return
@@ -533,7 +554,7 @@ function LP:PopulateDropdown(click)
 	local MENU_WIDTH
 
 	if LP.db.portals.showSpells then
-		if LP:SpellList(LP.Spells[E.myclass], nil, true) or  LP:SpellList(LP.Spells.challenge, nil, true) or E.myclass == "MAGE" then
+		if LP:SpellList(LP.Spells[E.myclass], nil, true) or  LP:SpellList(LP.Spells.challenge, nil, true) or E.myclass == "MAGE" or E.myrace == "DarkIronDwarf" then
 			T.tinsert(LP.MainMenu, {text = SPELLS..":", title = true, nohighlight = true})
 			LP:SpellList(LP.Spells[E.myclass], LP.MainMenu)
 			if LP:SpellList(LP.Spells.challenge, nil, true) then
@@ -566,6 +587,9 @@ function LP:PopulateDropdown(click)
 					T.tinsert(LP.SecondaryMenu, {text = CLOSE, title = true, ending = true, func = function() T.twipe(LP.MainMenu); T.twipe(LP.SecondaryMenu); ToggleFrame(LP.Menu2) end})
 					SLE:DropDown(LP.SecondaryMenu, LP.Menu2, anchor, point, 0, 1, _G["SLE_LocationPanel"], MENU_WIDTH, LP.db.portals.justify)
 				end})
+			end
+			if E.myrace == "DarkIronDwarf" then
+				LP:SpellList(LP.Spells[E.myrace], LP.MainMenu)
 			end
 		end
 	end

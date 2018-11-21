@@ -435,7 +435,7 @@ L["Delete character info"] = "캐릭터 정보 삭제"
 L["Remove selected character from the stored gold values"] = "저장된 골드 값에서 선택한 캐릭터를 제거합니다."
 L["Are you sure you want to remove |cff1784d1%s|r from currency datatexts?"] = "정말로 화폐 정보문자에서 |cff1784d1%s|r를 제거하고 싶으십니까?"
 L["Hide panel background"] = "패널 배경 숨김"
-L["SLE_DT_CURRENCY_WARNING_GOLD"] = [[Your datapanel %s has ElvUI's "Gold" datatext active while "S&L Currency" datatext is selected elsewhere. To ensure the correct functioning of "S&L Currency" datatext we are disabling some functions of "Gold" datatext. To avoid this conflict you need to replace one of conflicting datatexts.]]
+L["SLE_DT_CURRENCY_WARNING_GOLD"] = [[Your datapanel %s has ElvUI's |cff3cbf27"Gold"|r datatext active while |cff3cbf27"S&L Currency"|r datatext is selected elsewhere. To ensure the correct functioning of |cff3cbf27"S&L Currency"|r datatext we are disabling some functions of |cff3cbf27"Gold"|r datatext. To avoid this conflict you need to replace one of conflicting datatexts.]]
 L["Gold Sorting"] = "골드 정렬"
 L["Normal"] = "보통"
 L["Reversed"] = '반대로"'
@@ -641,6 +641,7 @@ L["Ignore missing info"] = true
 L["SLE_LOCPANEL_IGNOREMISSINGINFO"] = [[Due to how client functions some item info may become unavailable for a period of time. This mostly happens to toys info.
 When called the menu will wait for all information being available before showing up. This may resul in menu opening after some concidarable amount of time, depends on how fast the server will answer info requests.
 By enabling this option you'll make the menu ignore items with missing info, resulting in them not showing up in the list.]]
+L["HS Toys Order"] = true
 
 --Miscs
 L["Error Frame"] = "오류 프레임"
@@ -814,12 +815,6 @@ L["Auto Work Orders for equipment"] = "장비 자동 주문"
 L["Always Compare Items"] = "항상 아이템 비교"
 L["Faction Icon"] = "얼/호 아이콘"
 L["Show faction icon to the left of player's name on tooltip."] = "툴팁에서 캐릭명 왼쪽에 얼라/호드 아이콘을 표시합니다."
-L["TTOFFSET_DESC"] = "This adds the ability to have the tooltip offset from the cursor.  Make sure to have the \"Cursor Anchor\" option enabled in ElvUI's Tooltip section to use this feature."
-L["Tooltip Cursor Offset"] = "커서 툴팁 위치"
-L["Tooltip X-offset"] = "툴팁 가로위치"
-L["Offset the tooltip on the X-axis."] = "툴팁의 X축 위치를 지정합니다."
-L["Tooltip Y-offset"] = "툴팁 세로위치"
-L["Offset the tooltip on the Y-axis."] = "툴팁의 Y축 위치를 지정합니다."
 L["RAID_TOS"] = "살게무덤"
 L["RAID_NH"] = "밤요"
 L["RAID_TOV"] = "용시"

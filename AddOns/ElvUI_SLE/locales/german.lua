@@ -442,7 +442,7 @@ L["Delete character info"] = "Charakterinfo löschen"
 L["Remove selected character from the stored gold values"] = "Ausgewählten Charakter Golddaten löschen"
 L["Are you sure you want to remove |cff1784d1%s|r from currency datatexts?"] = "Bist du dir sicher dass du |cff1784d1%s|r vom Goldinfotext entfernen möchtest?"
 L["Hide panel background"] = "Versteckt Leistenhintergrund"
-L["SLE_DT_CURRENCY_WARNING_GOLD"] = [[Deine Infoleiste %s hat ElvUI's "Goldinfotext" aktiv während "S&L Währüngs-Infotext" irgendwo anders ausgewählt ist. Um sicher zu gehen das "S&L Währüngs-Infotext" ordentlich funktioniert, werden einige Funktionen vom "Gold" Infotext deaktiviert. Um den Konflikt zu umgehen, solltest du einen betroffenen Infotext ersetzen.]]
+L["SLE_DT_CURRENCY_WARNING_GOLD"] = [[Deine Infoleiste %s hat ElvUI's |cff3cbf27"Goldinfotext"|r aktiv während |cff3cbf27"S&L Währüngs-Infotext"|r irgendwo anders ausgewählt ist. Um sicher zu gehen das "S&L Währüngs-Infotext" ordentlich funktioniert, werden einige Funktionen vom "Gold" Infotext deaktiviert. Um den Konflikt zu umgehen, solltest du einen betroffenen Infotext ersetzen.]]
 L["Gold Sorting"] = "Gold Sortierung"
 L["Normal"] = true
 L["Reversed"] = "Umgekehrt"
@@ -648,6 +648,7 @@ L["Ignore missing info"] = true
 L["SLE_LOCPANEL_IGNOREMISSINGINFO"] = [[Due to how client functions some item info may become unavailable for a period of time. This mostly happens to toys info.
 When called the menu will wait for all information being available before showing up. This may resul in menu opening after some concidarable amount of time, depends on how fast the server will answer info requests.
 By enabling this option you'll make the menu ignore items with missing info, resulting in them not showing up in the list.]]
+L["HS Toys Order"] = true
 
 --Miscs
 L["Error Frame"] = true
@@ -822,12 +823,6 @@ L["Auto Work Orders for equipment"] = true
 L["Always Compare Items"] = true
 L["Faction Icon"] = true
 L["Show faction icon to the left of player's name on tooltip."] = true
-L["TTOFFSET_DESC"] = "This adds the ability to have the tooltip offset from the cursor.  Make sure to have the \"Cursor Anchor\" option enabled in ElvUI's Tooltip section to use this feature."
-L["Tooltip Cursor Offset"] = true
-L["Tooltip X-offset"] = true
-L["Offset the tooltip on the X-axis."] = true
-L["Tooltip Y-offset"] = true
-L["Offset the tooltip on the Y-axis."] = true
 L["RAID_TOS"] = "ToS"
 L["RAID_NH"] = "NH"
 L["RAID_TOV"] = "ToV"

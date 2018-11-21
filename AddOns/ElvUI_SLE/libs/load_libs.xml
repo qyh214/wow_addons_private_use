@@ -9,4 +9,5 @@
 	<Script file="oUF_DeadSLE\oUF_DeadSLE.lua"/>
 	<Script file="LibRealmInfo\LibRealmInfo.lua"/>
 	<Include file="LibProcessable\LibProcessable.lua"/>
+	<Include file="LibCustomGlow-1.0\LibCustomGlow-1.0.lua"/>
 </Ui>

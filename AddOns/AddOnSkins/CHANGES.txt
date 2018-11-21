@@ -1,34 +1,76 @@
-lightweight tag bb772aa433735187d0108002e245bc3825f4ea67 4.01
+lightweight tag 28f0740613110a83f4d254e67dec38db3697def9 4.02
 Author:	Azilroka <darktemplar9900@yahoo.com>
-Date:	Tue Nov 6 18:59:44 2018 -0600
+Date:	Sun Nov 11 18:34:01 2018 -0600
 
-commit bb772aa433735187d0108002e245bc3825f4ea67
+commit 28f0740613110a83f4d254e67dec38db3697def9
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Nov 6 18:59:44 2018 -0600
+Date:   Sun Nov 11 18:34:01 2018 -0600
 
-    4.01
+    4.02
 
-commit 428e8c8d12047f58049c6bde69680d847e0ce2b3
+commit e4fdb1d3f9cabfd412c4f31778a31d33bf020e64
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Nov 6 18:58:48 2018 -0600
+Date:   Sun Nov 11 18:27:21 2018 -0600
 
-    Fix Core / Options
+    More Options Tweaks
 
-commit 3e6b1d2f39e6d037f2f12a18ac8a81b8a44b16af
+commit 8a9dfe62ff31f7dd7dc95fb28792f77d2cc13408
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Nov 6 16:10:33 2018 -0600
+Date:   Sun Nov 11 18:17:42 2018 -0600
 
-    CQL
+    Bring ParchmentRemover up to date
 
-commit 05e839c7c9cf31c2d2b55ce5784bc20d92ba554d
+commit 5e258550ba6cc0ff657bb4fa968246f3aa29ea35
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Nov 6 04:35:52 2018 -0600
+Date:   Sun Nov 11 18:16:42 2018 -0600
 
-    Remove WA Options
+    Update Options | Ace3 | Spellbook | WorldMap
 
-commit b00db06aa0c584728e9fbb4c4e6f1d53cdff25c3
+commit 33851ceb66d85dbdf09525f01dcc06ce1b077ce9
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Mon Nov 5 21:11:57 2018 -0600
+Date:   Thu Nov 8 16:59:54 2018 -0600
+
+    Make these only show with 'ElvUI Style'
+
+commit 09fa6d0a3a9631806b291c15407459200b8dc50d
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Thu Nov 8 06:31:16 2018 -0600
+
+    Fix Blizzard Names
+
+commit 4a96f1b5c7fec5ec1215a8a329bed6c1d0bbc2fd
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Wed Nov 7 12:54:03 2018 -0600
 
     Ace3
+
+commit 954ed0eaac7d3474bb2818fed5aa33d83cb7bf9e
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Wed Nov 7 06:01:30 2018 -0600
+
+    Fix this popup
+
+commit 37ebbfaa78a44f760a23100946255b362ee79b4b
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Wed Nov 7 06:00:19 2018 -0600
+
+    WA
+
+commit 54adf9ea01abb3ea6c34cfa17739c222b51fe028
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Wed Nov 7 05:50:30 2018 -0600
+
+    WA
+
+commit 0358de8679c557e169d2eaae5290e2b67c94788e
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Wed Nov 7 05:50:10 2018 -0600
+
+    Options
+
+commit 2fceb9006b2a97e745e5ca0d4c58c93a8db32478
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Wed Nov 7 05:06:59 2018 -0600
+
+    Island Party Pose
 

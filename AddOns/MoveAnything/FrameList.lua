@@ -279,7 +279,7 @@ local m = {
 		}, c)
 		API:AddElement({name = "HonorWatchBar", displayName = "Honor Bar"}, c)
 		API:AddElement({name = "ArtifactWatchBar", displayName = "Artifact Bar"}, c)
-		API:AddElement({name = "MainMenuBarMaxLevelBar", displayName = "Max Level Bar Filler", noFE = 1, noScale = 1}, c)
+		--API:AddElement({name = "MainMenuBarMaxLevelBar", displayName = "Max Level Bar Filler", noFE = 1, noScale = 1}, c)
 		API:AddElement({name = "ReputationWatchBar", displayName = "Reputation Tracker Bar", runOnce = function()
 			if ReputationWatchBar_Update then
 				hooksecurefunc("ReputationWatchBar_Update", MovAny.hReputationWatchBar_Update)
@@ -296,8 +296,8 @@ local m = {
 			}
 		}, c)
 		API:AddElement({name = "MicroButtonsMover", displayName = "Micro Menu"}, c)
-		API:AddElement({name = "MicroButtonsSplitMover", displayName = "Micro Menu - Split"}, c)
-		API:AddElement({name = "MicroButtonsVerticalMover", displayName = "Micro Menu - Vertical"}, c)
+		--API:AddElement({name = "MicroButtonsSplitMover", displayName = "Micro Menu - Split"}, c)
+		--API:AddElement({name = "MicroButtonsVerticalMover", displayName = "Micro Menu - Vertical"}, c)
 		API:AddElement({name = "MainMenuBarVehicleLeaveButton", displayName = "Leave Vehicle Button"}, c)
 		c = API:GetCategory("Class Specific")
 		API:AddElement({name = "PlayerFrameAlternateManaBar", displayName = "Alternate Mana Bar"}, c)
@@ -712,7 +712,7 @@ local m = {
 		--API:AddElement({name = "AlwaysUpFrame1", hidden = 1, onlyOnceCreated = 1}, c)
 		--API:AddElement({name = "AlwaysUpFrame2", hidden = 1, onlyOnceCreated = 1}, c)
 		--API:AddElement({name = "AlwaysUpFrame3", hidden = 1, onlyOnceCreated = 1}, c)
-		API:AddElement({name = "MainMenuBarArtFrame", hidden = 1, noScale = 1}, c)
+		--API:AddElement({name = "MainMenuBarArtFrame", hidden = 1, noScale = 1}, c)
 		--API:AddElement({name = "WorldMapFrame", hidden = 1, refuseSync = "Unsuppported", unsupported = 1}, c)
 		API:AddElement({name = "PaperDollFrame", hidden = 1, unsupported = 1}, c)
 		API.default = nil

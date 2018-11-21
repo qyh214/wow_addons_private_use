@@ -132,6 +132,7 @@ T.twipe = table.wipe
 T.unpack = unpack
 T.select = select
 T.sort = table.sort
+T.tconcat = table.concat
 T.next = next
 --Camera
 T.FlipCameraYaw = FlipCameraYaw
@@ -140,6 +141,7 @@ T.IsInInstance = IsInInstance
 T.GetLFGDungeonNumEncounters = GetLFGDungeonNumEncounters
 T.GetLFGDungeonEncounterInfo = GetLFGDungeonEncounterInfo
 T.GetInstanceInfo = GetInstanceInfo
+T.IsLFGDungeonJoinable = IsLFGDungeonJoinable
 --Combat
 T.InCombatLockdown = InCombatLockdown
 --PvP
@@ -147,7 +149,6 @@ T.GetNumWorldPVPAreas = GetNumWorldPVPAreas
 T.GetWorldPVPAreaInfo = GetWorldPVPAreaInfo
 T.GetNumBattlefieldScores = GetNumBattlefieldScores
 T.GetBattlefieldScore = GetBattlefieldScore
-T.CanPrestige = CanPrestige
 T.GetPVPLifetimeStats = GetPVPLifetimeStats
 T.GetPersonalRatedInfo = GetPersonalRatedInfo
 T.GetInspectArenaData = GetInspectArenaData
@@ -302,12 +303,16 @@ function SLE:AddTutorials()
 end
 
 --S&L print
-function SLE:Print(msg)
-	T.print(E["media"].hexvaluecolor..'S&L:|r', msg)
-end
-
-function SLE:ErrorPrint(msg)
-	T.print("|cffFF0000S&L Error:|r", msg)
+function SLE:Print(msg, type)
+	if type == "error" then
+		(_G[E.db.general.messageRedirect] or DEFAULT_CHAT_FRAME):AddMessage(strjoin("", "|cffff0000S&L Error:|r ", msg))
+	elseif type == "warning" then
+		(_G[E.db.general.messageRedirect] or DEFAULT_CHAT_FRAME):AddMessage(strjoin("", "|cffd3cf00S&L Warning:|r ", msg))
+	elseif type == "info" then
+		(_G[E.db.general.messageRedirect] or DEFAULT_CHAT_FRAME):AddMessage(strjoin("", "|cff14adcdS&L Info:|r ", msg))
+	else
+		(_G[E.db.general.messageRedirect] or DEFAULT_CHAT_FRAME):AddMessage(strjoin("", E["media"].hexvaluecolor, "S&L Message:|r ", msg))
+	end
 end
 
 --A function to ensure any files which set movers will be recognised as text by git.
@@ -492,6 +497,83 @@ function SLE:UpdateAll()
 	SLE:SetCompareItems()
 
 	collectgarbage('collect');
+end
+
+--Movable buttons in config stuff. Some Simpy's billshit applied
+local function MovableButton_Value(value)
+	return T.gsub(value,'([%(%)%.%%%+%-%*%?%[%^%$])','%%%1')
+end
+local function MovableButton_Match(s,v)
+	local m1, m2, m3, m4 = "^"..v.."$", "^"..v..",", ","..v.."$", ","..v..","
+	return (T.match(s, m1) and m1) or (T.match(s, m2) and m2) or (T.match(s, m3) and m3) or (T.match(s, m4) and v..",")
+end
+function SLE:MovableButtonSettings(db, key, value, remove, movehere)
+	local str = db[key]
+	if not db or not str or not value then return end
+	local found = MovableButton_Match(str, MovableButton_Value(value))
+	if found and movehere then
+		local tbl, sv, sm = {T.split(",", str)}
+		for i in T.ipairs(tbl) do
+			if tbl[i] == value then sv = i elseif tbl[i] == movehere then sm = i end
+			if sv and sm then break end
+		end
+		T.tremove(tbl, sm);
+		T.tinsert(tbl, sv, movehere);
+
+		db[key] = T.tconcat(tbl,',')
+
+	elseif found and remove then
+		db[key] = T.gsub(str, found, "")
+	elseif not found and not remove then
+		db[key] = (str == '' and value) or (str..","..value)
+	end
+end
+
+function SLE:CreateMovableButtons(Order, Name, CanRemove, db, key)
+	local moveItemFrom, moveItemTo
+	local config = {
+		order = Order,
+		dragdrop = true,
+		type = "multiselect",
+		name = Name,
+		dragOnLeave = function() end, --keep this here
+		dragOnEnter = function(info)
+			moveItemTo = info.obj.value
+		end,
+		dragOnMouseDown = function(info)
+			moveItemFrom, moveItemTo = info.obj.value, nil
+		end,
+		dragOnMouseUp = function(info)
+			SLE:MovableButtonSettings(db, key, moveItemTo, nil, moveItemFrom) --add it in the new spot
+			moveItemFrom, moveItemTo = nil, nil
+		end,
+		stateSwitchGetText = function(info, TEXT)
+			local text = T.GetItemInfo(T.tonumber(TEXT))
+			info.userdata.text = text
+			return text
+		end,
+		stateSwitchOnClick = function(info)
+			SLE:MovableButtonSettings(db, key, moveItemFrom)
+		end,
+		values = function()
+			local str = db[key]
+			if str == "" then return nil end
+			return {T.split(",",str)}
+		end,
+		get = function(info, value)
+			local str = db[key]
+			if str == "" then return nil end
+			local tbl = {T.split(",",str)}
+			return tbl[value]
+		end,
+		set = function(info, value) end,
+	}
+	if CanRemove then --This allows to remove shit
+		config.dragOnClick = function(info)
+			SLE:MovableButtonSettings(db, key, moveItemFrom, true)
+		end
+	end
+	return config
 end
 
 --New API
